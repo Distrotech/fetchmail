@@ -22,12 +22,19 @@
 
 #include "fetchmail.h"
 
-struct query cmd_opts;	/* where to put command-line info */
+/* parser reads these */
+char *rcfile;			/* path name of rc file */
+struct query cmd_opts;		/* where to put command-line info */
+
+/* parser sets these */
+int poll_interval;		/* poll interval in seconds */
+char *logfile;			/* log file for daemon mode */
+bool use_syslog;		/* if syslog was set */
 struct query *querylist;	/* head of server list (globally visible) */
 
-int yydebug;	/* in case we didn't generate with -- debug */
+int yydebug;			/* in case we didn't generate with -- debug */
 
-static struct query current;		/* current server record */
+static struct query current;	/* current server record */
 static int prc_errflag;
 
 static void record_current();
@@ -256,7 +263,7 @@ const char *pathname;		/* pathname for the configuration file */
     errno = 0;
 
     /* special cases useful for debugging purposes */
-    if (strcmp("/dev/null", pathname) == 0 || versioninfo)
+    if (strcmp("/dev/null", pathname) == 0)
 	return(0);
 
     /* the run control file must have the same uid as the REAL uid of this 
@@ -291,15 +298,18 @@ const char *pathname;		/* pathname for the configuration file */
     return(0);
 }
 
-int prc_parse_file (pathname)
+int prc_parse_file (pathname, securecheck)
 /* digest the configuration into a linked list of host records */
 const char *pathname;		/* pathname for the configuration file */
+const bool securecheck;		/* check for a secure rc file? */
 {
     prc_errflag = 0;
     querylist = hosttail = (struct query *)NULL;
 
+    errno = 0;
+
     /* Check that the file is secure */
-    if ((prc_errflag = prc_filecheck(pathname)) != 0)
+    if (securecheck && (prc_errflag = prc_filecheck(pathname)) != 0)
 	return(prc_errflag);
 
     if (errno == ENOENT)

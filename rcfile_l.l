@@ -115,5 +115,50 @@ remote(folder)? {
 
 [ \t\r]+	;	/* whitespace */
 
+%%
+#include <string.h>
 
+void escapes(cp, tp)
+/* process standard C-style escape sequences in a string */
+const char	*cp;	/* source string with escapes */
+char		*tp;	/* target buffer for digested string */
+{
+    while (*cp)
+    {
+	int	cval = 0;
+
+	if (*cp == '\\' && strchr("0123456789xX", cp[1]))
+	{
+	    char *dp, *hex = "00112233445566778899aAbBcCdDeEfF";
+	    int dcount = 0;
+
+	    if (*++cp == 'x' || *cp == 'X')
+		for (++cp; (dp = strchr(hex, *cp)) && (dcount++ < 2); cp++)
+		    cval = (cval * 16) + (dp - hex) / 2;
+	    else if (*cp == '0')
+		while (strchr("01234567",*cp) != (char*)NULL && (dcount++ < 3))
+		    cval = (cval * 8) + (*cp++ - '0');
+	    else
+		while ((strchr("0123456789",*cp)!=(char*)NULL)&&(dcount++ < 3))
+		    cval = (cval * 10) + (*cp++ - '0');
+	}
+	else if (*cp == '\\')		/* C-style character escapes */
+	{
+	    switch (*++cp)
+	    {
+	    case '\\': cval = '\\'; break;
+	    case 'n': cval = '\n'; break;
+	    case 't': cval = '\t'; break;
+	    case 'b': cval = '\b'; break;
+	    case 'r': cval = '\r'; break;
+	    default: cval = *cp;
+	    }
+	    cp++;
+	}
+	else
+	    cval = *cp++;
+	*tp++ = cval;
+    }
+    *tp = '\0';
+}
 

@@ -239,7 +239,7 @@ void optmerge(struct query *, struct query *);
 char *MD5Digest (char *);
 int daemonize(const char *, void (*)(int));
 
-int prc_parse_file(const char *);
+int prc_parse_file(const char *, bool);
 int prc_filecheck(const char *);
 
 void interface_parse(char *, struct hostdata *);

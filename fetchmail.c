@@ -55,17 +55,13 @@ static char *visbuf(const char *);
 int outlevel;    	/* see the O_.* constants above */
 
 /* daemon mode control */
-int poll_interval;	/* poll interval in seconds */
 bool nodetach;		/* if TRUE, don't detach daemon process */
-char *logfile;		/* log file for daemon mode */
-bool use_syslog;	/* if --syslog was set */
 bool quitmode;		/* if --quit was set */
 bool check_only;	/* if --probe was set */
 char *cmd_logfile;	/* if --logfile was set */
 int cmd_daemon; 	/* if --daemon was set */
 
 /* miscellaneous global controls */
-char *rcfile;		/* path name of rc file */
 char *idfile;		/* UID list file */
 bool versioninfo;	/* emit only version info */
 char *user;		/* the name of the invoking user */
@@ -539,7 +535,7 @@ static int load_params(int argc, char **argv, int optind)
     save_str(&def_opts.smtphunt, -1, fetchmailhost);
 
     /* this builds the host list */
-    if (prc_parse_file(rcfile) != 0)
+    if (prc_parse_file(rcfile, !versioninfo) != 0)
 	exit(PS_SYNTAX);
 
     if ((implicitmode = (optind >= argc)))
@@ -677,7 +673,7 @@ static int load_params(int argc, char **argv, int optind)
     }
 
     /* initialize UID handling */
-    if ((st = prc_filecheck(idfile)) != 0)
+    if (!versioninfo && (st = prc_filecheck(idfile)) != 0)
 	exit(st);
     else
 	initialize_saved_lists(querylist, idfile);
@@ -1010,52 +1006,6 @@ void dump_params (struct query *ctl)
 		for (idp = ctl->oldsaved; idp; idp = idp->next)
 		    fprintf(stderr, "\t%s\n", idp->id);
 	}
-}
-
-/* helper functions for string interpretation and display */
-
-void escapes(cp, tp)
-/* process standard C-style escape sequences in a string */
-const char	*cp;	/* source string with escapes */
-char		*tp;	/* target buffer for digested string */
-{
-    while (*cp)
-    {
-	int	cval = 0;
-
-	if (*cp == '\\' && strchr("0123456789xX", cp[1]))
-	{
-	    char *dp, *hex = "00112233445566778899aAbBcCdDeEfF";
-	    int dcount = 0;
-
-	    if (*++cp == 'x' || *cp == 'X')
-		for (++cp; (dp = strchr(hex, *cp)) && (dcount++ < 2); cp++)
-		    cval = (cval * 16) + (dp - hex) / 2;
-	    else if (*cp == '0')
-		while (strchr("01234567",*cp) != (char*)NULL && (dcount++ < 3))
-		    cval = (cval * 8) + (*cp++ - '0');
-	    else
-		while ((strchr("0123456789",*cp)!=(char*)NULL)&&(dcount++ < 3))
-		    cval = (cval * 10) + (*cp++ - '0');
-	}
-	else if (*cp == '\\')		/* C-style character escapes */
-	{
-	    switch (*++cp)
-	    {
-	    case '\\': cval = '\\'; break;
-	    case 'n': cval = '\n'; break;
-	    case 't': cval = '\t'; break;
-	    case 'b': cval = '\b'; break;
-	    case 'r': cval = '\r'; break;
-	    default: cval = *cp;
-	    }
-	    cp++;
-	}
-	else
-	    cval = *cp++;
-	*tp++ = cval;
-    }
-    *tp = '\0';
 }
 
 static char *visbuf(const char *buf)
