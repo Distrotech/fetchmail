@@ -439,7 +439,7 @@ struct query *ctl;	/* query control record */
 char *realname;		/* real name of host */
 {
     char buf[MSGBUFSIZE+1], return_path[MSGBUFSIZE+1]; 
-    int	from_offs, to_offs, cc_offs, bcc_offs, ctt_offs, env_offs;
+    int	from_offs, ctt_offs, env_offs, addressoffs[128], next_address;
     char *headers, *received_for;
     int n, linelen, oldlen, ch, remaining;
     char		*cp;
@@ -450,14 +450,14 @@ char *realname;		/* real name of host */
 #endif /* HAVE_RES_SEARCH */
     int			olderrs;
 
-    sizeticker = 0;
+    next_address = sizeticker = 0;
     has_nuls = FALSE;
     return_path[0] = '\0';
     olderrs = ctl->errcount;
 
     /* read message headers */
     headers = received_for = NULL;
-    from_offs = to_offs = cc_offs = bcc_offs = ctt_offs = env_offs = -1;
+    from_offs = ctt_offs = env_offs = -1;
     oldlen = 0;
     for (remaining = len; remaining > 0; remaining -= linelen)
     {
@@ -592,20 +592,32 @@ char *realname;		/* real name of host */
 	else if (from_offs == -1 && !strncasecmp("Apparently-From:", line, 16))
 	    from_offs = (line - headers);
 
-	else if (!strncasecmp("To:", line, 3))
-	    to_offs = (line - headers);
-
 	else if (ctl->server.envelope != STRING_DISABLED && env_offs == -1
 		 && !strncasecmp(ctl->server.envelope,
 						line,
 						strlen(ctl->server.envelope)))
 	    env_offs = (line - headers);
 
+	else if (!strncasecmp("To:", line, 3))
+	{
+	    if (next_address >= sizeof(addressoffs)/sizeof(addressoffs[0]))
+		error(PS_UNDEFINED, errno, "too many destination headers");
+	    addressoffs[next_address++] = (line - headers);
+	}
+
 	else if (!strncasecmp("Cc:", line, 3))
-	    cc_offs = (line - headers);
+	{
+	    if (next_address >= sizeof(addressoffs)/sizeof(addressoffs[0]))
+		error(PS_UNDEFINED, errno, "too many destination headers");
+	    addressoffs[next_address++] = (line - headers);
+	}
 
 	else if (!strncasecmp("Bcc:", line, 4))
-	    bcc_offs = (line - headers);
+	{
+	    if (next_address >= sizeof(addressoffs)/sizeof(addressoffs[0]))
+		error(PS_UNDEFINED, errno, "too many destination headers");
+	    addressoffs[next_address++] = (line - headers);
+	}
 
 	else if (!strncasecmp("Content-Transfer-Encoding:", line, 26))
 	    ctt_offs = (line - headers);
@@ -656,16 +668,14 @@ char *realname;		/* real name of host */
 	    map_name(received_for, ctl, &xmit_names);
 	else
 	{
+	    int	i;
+
 	    /*
 	     * We haven't extracted the envelope address.
 	     * So check all the header addresses.
 	     */
-	    if (to_offs > -1)
-		find_server_names(headers + to_offs,  ctl, &xmit_names);
-	    if (cc_offs > -1)
-		find_server_names(headers + cc_offs,  ctl, &xmit_names);
-	    if (bcc_offs > -1)
-		find_server_names(headers + bcc_offs, ctl, &xmit_names);
+	    for (i = 0; i < next_address; i++)
+		find_server_names(headers + addressoffs[i],  ctl, &xmit_names);
 	}
 	if (!accept_count)
 	{

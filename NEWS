@@ -4,9 +4,6 @@
   form "foo"@bar.com are not parsed correctly, even though they are
   technically RFC822 legal. The general problem is mentioned on the man page.
 
-* If a message has more than two destination headers of the same kind (such
-  as To, or Cc), only the last one will be checked for multidrop addresses.
-
 			    Features To Consider
 
 * Generate bounce messages when delivery is refused.  See RFC1891, RFC1894.
@@ -18,6 +15,9 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+pl 3.9.9 ():
+* We can now process multiple To headers a la Microsoft Exchange Server.
+
 pl 3.9.8 (Sat Jun 14 14:19:32 EDT 1997):
 * Fetchmail is now normally built with optimization.
 * POP2 support is no longer compiled by default, but you can configure
