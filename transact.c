@@ -685,6 +685,7 @@ int readheaders(int sock,
 	    oldlen = newlen;
 	}
 
+	/* find offsets of various special headers */
 	if (!strncasecmp("From:", line, 5))
 	    from_offs = (line - msgblk.headers);
 	else if (!strncasecmp("Reply-To:", line, 9))
@@ -734,49 +735,50 @@ int readheaders(int sock,
  	}
 #endif /* __UNUSED__ */
 
-	else if (!MULTIDROP(ctl))
-	    continue;
-
-	else if (!strncasecmp("To:", line, 3)
-			|| !strncasecmp("Cc:", line, 3)
-			|| !strncasecmp("Bcc:", line, 4)
-			|| !strncasecmp("Apparently-To:", line, 14))
+	/* if multidrop is on, gather addressee headers */
+	if (MULTIDROP(ctl))
 	{
-	    *to_chainptr = xmalloc(sizeof(struct addrblk));
-	    (*to_chainptr)->offset = (line - msgblk.headers);
-	    to_chainptr = &(*to_chainptr)->next; 
-	    *to_chainptr = NULL;
-	}
-
-	else if (!strncasecmp("Resent-To:", line, 10)
-			|| !strncasecmp("Resent-Cc:", line, 10)
-			|| !strncasecmp("Resent-Bcc:", line, 11))
-	{
-	    *resent_to_chainptr = xmalloc(sizeof(struct addrblk));
-	    (*resent_to_chainptr)->offset = (line - msgblk.headers);
-	    resent_to_chainptr = &(*resent_to_chainptr)->next; 
-	    *resent_to_chainptr = NULL;
-	}
-
-	else if (ctl->server.envelope != STRING_DISABLED)
-	{
-	    if (ctl->server.envelope 
-			&& strcasecmp(ctl->server.envelope, "Received"))
+	    if (!strncasecmp("To:", line, 3)
+		|| !strncasecmp("Cc:", line, 3)
+		|| !strncasecmp("Bcc:", line, 4)
+		|| !strncasecmp("Apparently-To:", line, 14))
 	    {
-		if (env_offs == -1 && !strncasecmp(ctl->server.envelope,
-						line,
-						strlen(ctl->server.envelope)))
-		{				
+		*to_chainptr = xmalloc(sizeof(struct addrblk));
+		(*to_chainptr)->offset = (line - msgblk.headers);
+		to_chainptr = &(*to_chainptr)->next; 
+		*to_chainptr = NULL;
+	    }
+
+	    else if (!strncasecmp("Resent-To:", line, 10)
+		     || !strncasecmp("Resent-Cc:", line, 10)
+		     || !strncasecmp("Resent-Bcc:", line, 11))
+	    {
+		*resent_to_chainptr = xmalloc(sizeof(struct addrblk));
+		(*resent_to_chainptr)->offset = (line - msgblk.headers);
+		resent_to_chainptr = &(*resent_to_chainptr)->next; 
+		*resent_to_chainptr = NULL;
+	    }
+
+	    else if (ctl->server.envelope != STRING_DISABLED)
+	    {
+		if (ctl->server.envelope 
+		    && strcasecmp(ctl->server.envelope, "Received"))
+		{
+		    if (env_offs == -1 && !strncasecmp(ctl->server.envelope,
+						       line,
+						       strlen(ctl->server.envelope)))
+		    {				
+			if (skipcount++ < ctl->server.envskip)
+			    continue;
+			env_offs = (line - msgblk.headers);
+		    }    
+		}
+		else if (!received_for && !strncasecmp("Received:", line, 9))
+		{
 		    if (skipcount++ < ctl->server.envskip)
 			continue;
-		    env_offs = (line - msgblk.headers);
-		}    
-	    }
-	    else if (!received_for && !strncasecmp("Received:", line, 9))
-	    {
-		if (skipcount++ < ctl->server.envskip)
-		    continue;
-		received_for = parse_received(ctl, line);
+		    received_for = parse_received(ctl, line);
+		}
 	    }
 	}
     }
