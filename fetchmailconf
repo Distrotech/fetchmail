@@ -926,7 +926,8 @@ class ServerEdit(Frame, MyWidget):
 
     def refreshPort(self):
 	proto = self.protocol.get()
-	self.port.set(defaultports[proto])
+        if self.port.get() == 0:
+            self.port.set(defaultports[proto])
 	if not proto in ("POP3", "APOP", "KPOP"): self.uidl.state = DISABLED 
 
     def user_edit(self, username, mode):
@@ -1170,6 +1171,11 @@ To work around this, it is recommended that you set the `fetchall'
 option on all user entries associated with this server, so any stuck
 mail will be retrieved next time around.
 
+"""
+            if string.find(greetline, "POP3 Server Ready") > 0:
+                warnings = warnings + """
+Some server that uses this greeting line has been observed to choke on
+TOP %d 99999999.  Use the fetchall option. if necessary, to force RETR.
 """
             if string.find(greetline, "IMAP4rev1") > 0:
                 warnings = warnings + """

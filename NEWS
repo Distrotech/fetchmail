@@ -14,6 +14,8 @@ fetchmail-4.7.8 ():
   allows SMTP error bouncemail to be redirected from sender to local
   postmaster.
 * Suppress dancing progress dots when syslog is on.
+* es.po update by Javier Kohen.
+* Fixed fetchmailconf to handle `port' properly.
 
 There are 257 people on fetchmail-friends and 348 on fetchmail-announce.
 
