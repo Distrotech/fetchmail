@@ -220,10 +220,11 @@ Specify a hunt list of hosts to forward mail to (one or more
 hostnames, comma-separated).  In ETRN mode, set the host that the
 mailserver is asked to ship mail to.  Hosts are tried in list order;
 the first one that is up becomes the forwarding or ETRN target for the
-current run.  In all modes except ETRN, `localhost' is added to the
-end of the list as an invisible default.  Each hostname may have a
-'/'-delimited suffix specifying a port or service to forward to; the
-default is 25 (or "smtp" under IPv6). 
+current run.  In ETRN mode, the FQDN of the machine running fetchmail
+is added to the end of the list as an invisible default; in all other
+modes `localhost' is added to the end of the list as an invisible
+default.  Each hostname may have a '/'-delimited suffix specifying a
+port or service to forward to; the default is 25 (or "smtp" under IPv6). 
 .TP
 .B \-D domain, --smtpaddress domain
 (Keyword: smtpaddress) 

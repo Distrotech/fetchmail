@@ -67,7 +67,6 @@ flag check_only;	/* if --probe was set */
 flag versioninfo;	/* emit only version info */
 char *user;		/* the name of the invoking user */
 char *home;		/* invoking user's home directory */
-char *fetchmailhost;	/* the name of the host running fetchmail */
 char *program_name;	/* the name to prefix error messages with */
 flag configdump;	/* dump control blocks for configurator */
 
@@ -839,13 +838,48 @@ static int load_params(int argc, char **argv, int optind)
 	    /* make sure we have a nonempty host list to forward to */
 	    if (!ctl->smtphunt)
 	    {
-		save_str(&ctl->smtphunt, fetchmailhost, FALSE);
-		/* for non ETRN try to deliver mails to localhost if
-		 * fetchmailhost fails
+		char	tmpbuf[HOSTLEN+1];
+		/*
+		 * If we're using ETRN, the smtp hunt list is the list of
+		 * systems we're polling on behalf of; these have to be 
+		 * fully-qualified domain names.  The default for this list
+		 * should be the FQDN of localhost.
 		 */
-		if (ctl->server.protocol != P_ETRN) {
-		    save_str(&ctl->smtphunt, "localhost", FALSE);
+		if (ctl->server.protocol == P_ETRN)
+		{
+		    char *fetchmailhost;
+
+		    if (gethostname(tmpbuf, sizeof(tmpbuf)))
+		    {
+			fprintf(stderr, "%s: can't determine your host!",
+				program_name);
+			exit(PS_DNS);
+		    }
+#ifdef HAVE_GETHOSTBYNAME
+		    /* if we got a . in the hostname assume it is a FQDN */
+		    if (strchr(tmpbuf, '.') == NULL)
+		    {
+			struct hostent *hp;
+
+			/* if we got a basename (as we do in Linux) make a FQDN of it */
+			hp = gethostbyname(tmpbuf);
+			if (hp == (struct hostent *) NULL)
+			{
+			    /* exit with error message */
+			    fprintf(stderr,
+				    "gethostbyname failed for %s\n", tmpbuf);
+			    exit(PS_DNS);
+			}
+			fetchmailhost = xstrdup(hp->h_name);
+		    }
+		    else
+#endif /* HAVE_GETHOSTBYNAME */
+			fetchmailhost = xstrdup(tmpbuf);
+
+		    save_str(&ctl->smtphunt, fetchmailhost, FALSE);
 		}
+		else
+		    save_str(&ctl->smtphunt, "localhost", FALSE);
 	    }
 
 	    /* keep lusers from shooting themselves in the foot :-) */

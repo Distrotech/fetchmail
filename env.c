@@ -55,32 +55,6 @@ void envquery(int argc, char **argv)
 	}
     }
 
-    /* we'll need this for the SMTP forwarding target and error messages */
-    if (gethostname(tmpbuf, sizeof(tmpbuf)))
-    {
-	fprintf(stderr, "%s: can't determine your host!", program_name);
-	exit(PS_IOERR);
-    }
-#ifdef HAVE_GETHOSTBYNAME
-    /* if we got a . in the hostname assume it is a FQDN */
-    if (strchr(tmpbuf, '.') == NULL)
-    {
-	struct hostent *hp;
-
-	/* in case we got a basename (as we do in Linux) make a FQDN of it */
-	hp = gethostbyname(tmpbuf);
-	if (hp == (struct hostent *) NULL)
-	{
-	    /* exit with error message */
-	    fprintf(stderr, "gethostbyname failed for %s\n", tmpbuf);
-	    exit(PS_DNS);
-	}
-	fetchmailhost = xstrdup(hp->h_name);
-    }
-    else
-#endif /* HAVE_GETHOSTBYNAME */
-	fetchmailhost = xstrdup(tmpbuf);
-
 #define RCFILE_NAME	".fetchmailrc"
     rcfile = (char *) xmalloc(strlen(home)+strlen(RCFILE_NAME)+2);
     /* avoid //.fetchmailrc */
