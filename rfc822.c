@@ -154,7 +154,7 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 {
     static char *tp, address[POPBUFSIZE+1];
     static const char *hp;
-    static int	state;
+    static int	state, oldstate;
     int parendepth;
 
     /*
@@ -163,11 +163,11 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
      * a marker for RFC822 continuations elsewhere.
      */
 #define START_HDR	0	/* before header colon */
-#define BARE_ADDRESS	1	/* collecting address without delimiters */
-#define INSIDE_DQUOTE	2	/* inside double quotes */
-#define INSIDE_PARENS	3	/* inside parentheses */
-#define INSIDE_BRACKETS	4	/* inside bracketed address */
-#define STR_INSIDE_BR	5	/* copying string within bracketed address */
+#define SKIP_JUNK	1	/* skip whitespace, \n, and junk */
+#define BARE_ADDRESS	2	/* collecting address without delimiters */
+#define INSIDE_DQUOTE	3	/* inside double quotes */
+#define INSIDE_PARENS	4	/* inside parentheses */
+#define INSIDE_BRACKETS	5	/* inside bracketed address */
 #define ENDIT_ALL	6	/* after last address */
 
     if (hdr)
@@ -188,45 +188,58 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	    }
 	    else if (*hp == ':')
 	    {
-		state = BARE_ADDRESS;
+		state = SKIP_JUNK;
 		tp = address;
 	    }
 	    break;
 
+	case SKIP_JUNK:		/* looking for address start */
+	    if (*hp == '\n')		/* no more addresses */
+	    {
+		state = ENDIT_ALL;
+		return(NULL);
+	    }
+	    else if (*hp == '"')	/* quoted string */
+	    {
+		oldstate = SKIP_JUNK;
+	        state = INSIDE_DQUOTE;
+		*tp++ = *hp;
+	    }
+	    else if (*hp == '(')	/* address comment -- ignore */
+	    {
+		parendepth = 1;
+		state = INSIDE_PARENS;    
+	    }
+	    else if (*hp == '<')	/* begin <address> */
+	    {
+		state = INSIDE_BRACKETS;
+		tp = address;
+	    }
+	    else if (!isspace(*hp))	/* ignore space */
+	    {
+		--hp;
+	        state = BARE_ADDRESS;
+	    }
+	    break;
+
 	case BARE_ADDRESS:   /* collecting address without delimiters */
-	    if (*hp == '\n')	/* end of address list */
+	    if (*hp == '\n')	/* end of bare address */
 	    {
 	        *tp++ = '\0';
 		state = ENDIT_ALL;
 		return(tp = address);
 	    }
-	    else if (*hp == ',')  /* end of address */
+	    else if (*hp == ',' || isspace(*hp))  /* end of address */
 	    {
 		if (tp > address)
 		{
 		    *tp++ = '\0';
 		    ++hp;
+		    state = SKIP_JUNK;
 		    return(tp = address);
 		}
 	    }
-	    else if (*hp == '"') /* quoted string */
-	    {
-	        state = INSIDE_DQUOTE;
-		*tp++ = *hp;
-	    }
-	    else if (*hp == '(') /* address comment -- ignore */
-	    {
-		parendepth = 1;
-		state = INSIDE_PARENS;    
-	    }
-	    else if (*hp == '<') /* begin <address> */
-	    {
-		state = INSIDE_BRACKETS;
-		tp = address;
-	    }
-	    else if (isspace(*hp)) /* ignore space */
-	        state = BARE_ADDRESS;
-	    else   /* just take it */
+	    else   		/* just take it */
 	    {
 		state = BARE_ADDRESS;
 		*tp++ = *hp;
@@ -244,7 +257,7 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	    else
 	    {
 	        *tp++ = *hp;
-		state = BARE_ADDRESS;
+		state = oldstate;
 	    }
 	    break;
 
@@ -256,14 +269,14 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	    else if (*hp == ')')
 		--parendepth;
 	    if (parendepth == 0)
-		state = BARE_ADDRESS;
+		state = SKIP_JUNK;
 	    break;
 
 	case INSIDE_BRACKETS:   /* possible <>-enclosed address */
 	    if (*hp == '>') /* end of address */
 	    {
 		*tp++ = '\0';
-		state = BARE_ADDRESS;
+		state = SKIP_JUNK;
 		++hp;
 		return(tp = address);
 	    }
@@ -272,25 +285,11 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	    else if (*hp == '"') /* quoted address */
 	    {
 	        *tp++ = *hp;
-		state = STR_INSIDE_BR;
+		oldstate = INSIDE_BRACKETS;
+		state = INSIDE_DQUOTE;
 	    }
 	    else  /* just copy address */
 		*tp++ = *hp;
-	    break;
-
-	case STR_INSIDE_BR:   /* we're in a quoted address, copy verbatim */
-	    if (*hp == '\n')  /* mismatched quotes */
-	    {
-		state = ENDIT_ALL;
-		return(NULL);
-	    }
-	    if (*hp != '"')  /* just copy it if it isn't a quote */
-	        *tp++ = *hp;
-	    else if (*hp == '"')  /* end of quoted string */
-	    {
-	        *tp++ = *hp;
-		state = INSIDE_BRACKETS;
-	    }
 	    break;
 
 	case ENDIT_ALL:	/* after last address */
