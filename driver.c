@@ -1277,8 +1277,8 @@ int num;		/* index of message */
 		free_str_list(&xmit_names);
 		return(PS_REFUSED);
 
-	    default:	/* retry with invoking user's address */
-		if (SMTP_from(ctl->smtp_socket, user, options) != SM_OK)
+	    default:	/* retry with postmaster's address */
+		if (SMTP_from(ctl->smtp_socket,run.postmaster,options)!=SM_OK)
 		{
 		    error(0, -1, "SMTP error: %s", smtp_response);
 		    free(headers);
