@@ -313,7 +313,7 @@ static void send_size_warnings(struct query *ctl)
     close_warning_by_mail(ctl, (struct msgblk *)NULL);
 }
 
-static int lockstep_fetch(int mailserver_socket, struct query *ctl, 
+static int fetch_messages(int mailserver_socket, struct query *ctl, 
 			  int count, int *msgsizes, 
 			  int new, int force, int maxfetch,
 			  int *fetches, int *dispatches, int *deletions)
@@ -596,8 +596,7 @@ static int lockstep_fetch(int mailserver_socket, struct query *ctl,
 	    struct idlist	*sdp;
 
 	    for (sdp = ctl->newsaved; sdp; sdp = sdp->next)
-		if ((sdp->val.status.num == num)
-		    && (!toolarge || oldmsg)) 
+		if ((sdp->val.status.num == num) && (!toolarge || oldmsg)) 
 		{
 		    sdp->val.status.mark = UID_SEEN;
 		    save_str(&ctl->oldsaved, sdp->id,UID_SEEN);
@@ -1176,7 +1175,7 @@ is restored."));
 		    stage = STAGE_FETCH;
 
 		    /* fetch in lockstep mode */
-		    if (!lockstep_fetch(mailserver_socket, ctl, 
+		    if (!fetch_messages(mailserver_socket, ctl, 
 					count, msgsizes, 
 					new, force_retrieval, maxfetch,
 					&fetches, &dispatches, &deletions))
