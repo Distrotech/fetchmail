@@ -993,7 +993,8 @@ different accounts sorted into different mailboxes (this could, for
 example, occur if you have an account on the same server running a
 mailing list, and are subscribed to the list using that account). The
 default is not adding any such header.  In
-.fetchmailrc, this is called `tracepolls'.
+.IR .fetchmailrc , 
+this is called `tracepolls'.
 
 .SH RETRIEVAL FAILURE MODES
 The protocols \fIfetchmail\fR uses to talk to mailservers are next to
