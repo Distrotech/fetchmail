@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/03/27 15:14:36 $
+<td width="30%" align=right>$Date: 1999/03/27 16:07:00 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1034,11 +1034,24 @@ from the local user name.<p>
 <hr>
 <h2><a name="T3">T3. How can I use fetchmail with exim?</a></h2><p>
 
-By default, the exim listener enforces the the RFC1123 requirement
-that MAIL FROM and RCPT TO addresses you pass to it have to be canonical
-(e.g. with a fully qualified hostname part).  <p>
+If you have <CODE>rewrite</CODE> on: <P>
 
-Fetchmail always passes fully qualified RCPT TO addresses.  But
+There is an RFC1123 requirement that MAIL FROM and RCPT TO addresses
+you pass to it have to be canonical (e.g. with a fully qualified
+hostname part).  Therefore fetchmail tries to pass fully qualified
+RCPT TO addresses.  But exim does not by default accept `localhost' as
+a fully qualified domain.  This can be fixed.<P>
+
+In exim.conf, add `localhost' to your local_domains declaration if it's not
+already present.  For example, the author's site at thyrsus.com would
+have a line reading:<P>
+
+<pre>
+       local_domains = thyrsus.com:localhost
+</pre>
+
+If you have <CODE>rewrite</CODE> off:<P>
+
 MAIL FROM is a potential problem if the MTAs upstream from your fetchmail
 don't necessarily pass canonicalized From and Return-Path addresses,
 and fetchmail's <CODE>rewrite</CODE> option is off.  The specific case
@@ -2280,7 +2293,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/03/27 15:14:36 $
+<td width="30%" align=right>$Date: 1999/03/27 16:07:00 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
