@@ -868,7 +868,7 @@ move to 550 soon.
 The
 .I fetchmail
 code recognizes and discards the message on any of a list of responses
-that defaults to [571, 550, 501] but can be set with the `antispam'
+that defaults to [571, 550, 501, 554] but can be set with the `antispam'
 option.  This is one of the
 .I only
 two circumstance under which fetchmail ever discards mail (the others

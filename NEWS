@@ -17,6 +17,7 @@ fetchmail-5.0.6 ():
 * Lexer states added to tell the lexer to return a string after a
   `username' or `password' keyword, courtesy of Brian Boutel.
 * Interface option fix from Bill Currie.
+* 554 added to default antispam vaklues (for Postfix).
 
 There are 267 people on fetchmail-friends and 420 on fetchmail-announce.
 
