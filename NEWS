@@ -1,8 +1,16 @@
+				To do:
+
+* Warn user that fetchmailconf autoprobe may take a while?  (It can hang for
+  10 or 12 minutes if it hits a firewall that drops SYN packets sent to denied
+  ports.)
 
 				Release Notes:
 
 fetchmail-4.7.6 ():
 * Henrik Storner's fix for mimedecode
+* ' now works as a string quote in. fetchmailrc syntax, just like ".
+
+There are 255 people on fetchmail-friends and 331 on fetchmail-announce.
 
 fetchmail-4.7.5 (Sat Jan  9 17:01:13 EST 1999):
 * Issue proper logout after running fetchmail -c

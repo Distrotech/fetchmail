@@ -130,6 +130,14 @@ remote(folder)? {
 			yylval.sval = (char *) xstrdup(buf);
 			return STRING;
 		}
+\'[^\']*\'	{
+			char buf[MSGBUFSIZE];
+
+			yytext[strlen(yytext)-1] = '\0';
+			escapes(yytext+1, buf);
+			yylval.sval = (char *) xstrdup(buf);
+			return STRING;
+		}
 [^=;:, \t\r\n]+	{
 			char buf[MSGBUFSIZE];
 
