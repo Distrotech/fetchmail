@@ -547,8 +547,8 @@ struct hostrec *queryctl;	/* query control record */
 		 */
 		for (idp = xmit_names; idp; idp = idp->next)
 		    nlocals++;
-		sp = sargv = (char **)alloca(queryctl->mda_argcount + nlocals);
-		for (i = 0; i < queryctl->mda_argcount; i++)
+		sp = sargv = (char **)alloca(queryctl->mda_argcount+nlocals+2);
+		for (i = 0; i <= queryctl->mda_argcount; i++)
 		    *sp++ = queryctl->mda_argv[i];
 		for (idp = xmit_names; idp; idp = idp->next)
 		    *sp++ = idp->id;

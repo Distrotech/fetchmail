@@ -84,7 +84,6 @@ struct hostrec
     /* MDA arguments */
     int mda_argcount;
     char *mda_argv[MDA_MAXARGS];
-    char mdabuf[MDALEN+1];
 
     /* control flags */
     int keep;

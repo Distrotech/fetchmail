@@ -231,8 +231,7 @@ char **argv;
 		char *argp;
 
 		/* punch nulls into the delimiting whitespace in the args */
-		hostp->mda_argcount = 0;
-		for (argp = hostp->mdabuf, hostp->mda_argcount = 1; *argp != '\0'; hostp->mda_argcount++)
+		for (argp = hostp->mda, hostp->mda_argcount = 1; *argp != '\0'; hostp->mda_argcount++)
 		{
 		    hostp->mda_argv[hostp->mda_argcount] = argp;
 		    while (!(*argp == '\0' || isspace(*argp)))
