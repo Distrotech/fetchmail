@@ -691,14 +691,13 @@ static int load_params(int argc, char **argv, int optind)
 			|| str_in_list(&ctl->server.akalist, argv[optind]))
 		    goto foundit;
 
-	    ctl = hostalloc(&cmd_opts);
-	    ctl->server.pollname = xstrdup(argv[optind]);
+	    /*
+	     * Allocate and link record without copying in command-line args;
+	     * we'll do that with the optmerge call later on.
+	     */
+	    ctl = hostalloc((struct query *)NULL);
 
-	    /* avoid making pathological circular lists */
-	    ctl->server.localdomains = (struct idlist *)NULL;
-	    ctl->localnames = (struct idlist *)NULL;
-	    ctl->mailboxes = (struct idlist *)NULL;
-	    ctl->smtphunt = (struct idlist *)NULL;
+	    ctl->server.pollname = xstrdup(argv[optind]);
 
 	foundit:
 	    ctl->active = TRUE;

@@ -434,7 +434,8 @@ struct query *init;	/* pointer to block containing initial values */
     node = (struct query *) xmalloc(sizeof(struct query));
 
     /* initialize it */
-    memcpy(node, init, sizeof(struct query));
+    if (init)
+	memcpy(node, init, sizeof(struct query));
 
     /* append to end of list */
     if (hosttail != (struct query *) 0)
@@ -458,6 +459,11 @@ static void record_current(void)
 /* register current parameters and append to the host list */
 {
 #define FLAG_FORCE(fld) if (cmd_opts.fld) current.fld = cmd_opts.fld
+    FLAG_FORCE(server.localdomains);
+    FLAG_FORCE(localnames);
+    FLAG_FORCE(mailboxes);
+    FLAG_FORCE(smtphunt);
+
     FLAG_FORCE(server.via);
     FLAG_FORCE(server.protocol);
 #if INET6
@@ -484,10 +490,6 @@ static void record_current(void)
 
     FLAG_FORCE(remotename);
     FLAG_FORCE(password);
-    if (cmd_opts.mailboxes)
-	current.mailboxes = cmd_opts.mailboxes;
-    if (cmd_opts.smtphunt)
-	current.smtphunt = cmd_opts.smtphunt;
     FLAG_FORCE(mda);
     FLAG_FORCE(smtpaddress);
     FLAG_FORCE(antispam);

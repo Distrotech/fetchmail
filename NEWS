@@ -16,6 +16,7 @@
 ------------------------------------------------------------------------------
 fetchmail-4.4.2 ():
 * Use TOP for POP3 retrieval to avoid marking messages seen.  Duh!
+* Another fix for command-line --smtphost option.
 
 fetchmail-4.4.1 (Tue Mar 24 00:01:20 EST 1998):
 * We now properly shroud IMAP passwords containing ", \, and SP.
