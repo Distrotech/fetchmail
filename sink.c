@@ -1534,7 +1534,12 @@ int open_warning_by_mail(struct query *ctl, struct msgblk *msg)
     }
     else				/* send to postmaster  */
 	status = open_sink(ctl, &reply, &good, &bad);
-    if (status == 0) stuff_warning(ctl, "Date: %s", rfc822timestamp());
+    if (status == 0) {
+	stuff_warning(ctl, "Date: %s", rfc822timestamp());
+	stuff_warning(ctl, "MIME-Version: 1.0");
+	stuff_warning(ctl, "Content-Transfer-Encoding: 8bit");
+	stuff_warning(ctl, "Content-Type: text/plain; charset=\"%s\"", nl_langinfo(CODESET));
+    }
     return(status);
 }
 

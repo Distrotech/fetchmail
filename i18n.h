@@ -6,6 +6,7 @@
 #ifdef ENABLE_NLS
 #undef __OPTIMIZE__
 #include <libintl.h>
+#include <langinfo.h>
 #define GT_(String) gettext((String))
 #define NGT_(String) (String)
 #else
