@@ -7,6 +7,13 @@
 #include "config.h"
 
 #include <stdio.h>
+#if defined(HAVE_ALLOCA_H)
+#include <alloca.h>
+#else
+#ifdef _AIX
+ #pragma alloca
+#endif
+#endif
 #include <pwd.h>
 #include <string.h>
 #include <errno.h>
@@ -406,18 +413,17 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'r':
 	case LA_FOLDER:
-	    buf = xmalloc(strlen(optarg));
+	    buf = alloca(strlen(optarg));
 	    strcpy(buf, optarg);
 	    cp = strtok(buf, ",");
 	    do {
 		save_str(&ctl->mailboxes, cp, 0);
 	    } while
 		((cp = strtok((char *)NULL, ",")));
-	    free(buf);
 	    break;
 	case 'S':
 	case LA_SMTPHOST:
-	    buf = xmalloc(strlen(optarg));
+	    buf = alloca(strlen(optarg));
 	    strcpy(buf, optarg);
 	    cp = strtok(buf, ",");
 	    do {
@@ -425,7 +431,6 @@ struct query *ctl;	/* option record to be initialized */
 	    } while
 		((cp = strtok((char *)NULL, ",")));
 	    ocount++;
-	    free(buf);
 	    break;
 	case 'D':
 	case LA_SMTPADDR:
@@ -433,7 +438,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'Z':
 	case LA_ANTISPAM:
-	    buf = xmalloc(strlen(optarg));
+	    buf = alloca(strlen(optarg));
 	    strcpy(buf, optarg);
 	    cp = strtok(buf, ",");
 	    do {
@@ -442,7 +447,6 @@ struct query *ctl;	/* option record to be initialized */
 		idp->val.status.num = atoi(cp);
 	    } while
 		((cp = strtok((char *)NULL, ",")));
-	    free(buf);
 	    break;
 	case 'b':
 	case LA_BATCHLIMIT:

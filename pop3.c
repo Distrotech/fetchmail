@@ -7,6 +7,13 @@
 #include  "config.h"
 #ifdef POP3_ENABLE
 #include  <stdio.h>
+#if defined(HAVE_ALLOCA_H)
+#include <alloca.h>
+#else
+#ifdef _AIX
+ #pragma alloca
+#endif
+#endif
 #include  <string.h>
 #include  <ctype.h>
 #if defined(HAVE_UNISTD_H)
@@ -218,12 +225,11 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	    *++end = '\0';
 
 	/* copy timestamp and password into digestion buffer */
-	msg = (char *)xmalloc((end-start+1) + strlen(ctl->password) + 1);
+	msg = (char *)alloca((end-start+1) + strlen(ctl->password) + 1);
 	strcpy(msg,start);
 	strcat(msg,ctl->password);
 
 	strcpy(ctl->digest, MD5Digest(msg));
-	free(msg);
 
 	ok = gen_transact(sock, "APOP %s %s", ctl->remotename, ctl->digest);
 	break;

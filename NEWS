@@ -1,5 +1,10 @@
 				Release Notes:
 
+fetchmail-4.6.1 ():
+* Fixed a minor memory leak in the IP-address-comparison code.
+* Mark Staveley's patch to suppress progress dots from non-detached daemon
+  fetchmails.
+
 fetchmail-4.6.0 (Fri Sep 18 13:17:17 EDT 1998):
 * Added Bill Adams's mailqueue.pl to the contrib directory.
 * Try to enable KPOP initialization to work even if `no dns' is on.

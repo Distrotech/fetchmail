@@ -13,6 +13,13 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#if defined(HAVE_ALLOCA_H)
+#include <alloca.h>
+#else
+#ifdef _AIX
+ #pragma alloca
+#endif
+#endif
 #include "mx.h"
 #include "fetchmail.h"
 
@@ -48,7 +55,7 @@ static int is_ip_alias(const char *name1,const char *name2)
     {
 	struct in_addr in;
 	(void) memcpy(&in.s_addr, *p, sizeof (in.s_addr));
-	host_a_addr = (address_e *)xmalloc(sizeof( address_e));
+	host_a_addr = (address_e *)alloca(sizeof( address_e));
 	memset (host_a_addr,0, sizeof (address_e));
 	host_a_addr->next = dummy_addr;
 	(void) memcpy(&host_a_addr->address, *p, sizeof (in.s_addr));
@@ -62,7 +69,7 @@ static int is_ip_alias(const char *name1,const char *name2)
     {
 	struct in_addr in;
 	(void) memcpy(&in.s_addr, *p, sizeof (in.s_addr));
-	host_b_addr = (address_e *)xmalloc(sizeof( address_e));
+	host_b_addr = (address_e *)alloca(sizeof( address_e));
 	memset (host_b_addr,0, sizeof (address_e));
 	host_b_addr->next = dummy_addr;
 	(void) memcpy(&host_b_addr->address, *p, sizeof (in.s_addr));
@@ -121,7 +128,7 @@ int is_host_alias(const char *name, struct query *ctl)
 #else
     /*
      * The only code that calls the BIND library is here and in the
-     * start-of-run probe with gethostbyname(3).
+     * start-of-run probe with gethostbyname(3) under ETRN/Kerberos.
      *
      * We know DNS service was up at the beginning of the run.
      * If it's down, our nameserver has crashed.  We don't want to try

@@ -210,7 +210,7 @@ int main (int argc, char **argv)
 
     /* set up to do lock protocol */
 #define	FETCHMAIL_PIDFILE	"fetchmail.pid"
-    tmpbuf = xmalloc(strlen(home) + strlen(FETCHMAIL_PIDFILE) + 3);
+    tmpbuf = alloca(strlen(home) + strlen(FETCHMAIL_PIDFILE) + 3);
     if (!getuid())
 	sprintf(tmpbuf, "%s/%s", PID_DIR, FETCHMAIL_PIDFILE);
     else {
@@ -352,7 +352,7 @@ int main (int argc, char **argv)
     }
 
     /* parse the ~/.netrc file (if present) for future password lookups. */
-    netrc_file = (char *) xmalloc (strlen (home) + 8);
+    netrc_file = (char *) alloca (strlen (home) + 8);
     strcpy (netrc_file, home);
     strcat (netrc_file, "/.netrc");
     netrc_list = parse_netrc(netrc_file);
@@ -403,9 +403,8 @@ int main (int argc, char **argv)
 #endif /* GSSAPI */
                 && !ctl->password)
 	    {
-		free(tmpbuf);
 #define	PASSWORD_PROMPT	"Enter password for %s@%s: "
-		tmpbuf = xmalloc(strlen(PASSWORD_PROMPT) +
+		tmpbuf = alloca(strlen(PASSWORD_PROMPT) +
 					strlen(ctl->remotename) +
 					strlen(ctl->server.pollname) + 1);
 		(void) sprintf(tmpbuf, PASSWORD_PROMPT,
@@ -414,10 +413,6 @@ int main (int argc, char **argv)
 #undef	PASSWORD_PROMPT
 	    }
 	}
-
-    /* we don't need tmpbuf anymore */
-    free(tmpbuf);
-    tmpbuf = NULL;	/* firewall code */
 
     /*
      * Maybe time to go to demon mode...
@@ -430,7 +425,7 @@ int main (int argc, char **argv)
     }
     else
 #endif
-	error_init(run.poll_interval == 0 && !run.logfile);
+	error_init((run.poll_interval == 0 || nodetach) && !run.logfile);
 
     if (run.poll_interval)
     {

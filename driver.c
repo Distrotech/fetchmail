@@ -1633,7 +1633,7 @@ const char *canonical;	/* server name */
     Key_schedule schedule;
     int rem;
   
-    ticket = ((KTEXT) (malloc (sizeof (KTEXT_ST))));
+    ticket = ((KTEXT) (alloca (sizeof (KTEXT_ST))));
     rem = (krb_sendauth (0L, socket, ticket, "pop",
 			 canonical,
 			 ((char *) (krb_realmofhost (canonical))),
@@ -1644,7 +1644,6 @@ const char *canonical;	/* server name */
 			 ((struct sockaddr_in *) 0),
 			 ((struct sockaddr_in *) 0),
 			 "KPOPV0.1"));
-    free (ticket);
     if (rem != KSUCCESS)
     {
 	error(0, -1, "kerberos error %s", (krb_get_err_text (rem)));
