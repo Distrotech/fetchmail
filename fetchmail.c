@@ -59,6 +59,12 @@ static int lastsig;
 
 RETSIGTYPE donothing(sig) int sig; {signal(sig, donothing); lastsig = sig;}
 
+static void unlockit()
+/* must-do actions for exit (but we can't count on being able to do malloc) */
+{
+    unlink(lockfile);
+}
+
 int main (argc,argv)
 int argc;
 char **argv;
@@ -284,6 +290,7 @@ char **argv;
 	if (poll_interval)
 	    fprintf(lockfp," %d", poll_interval);
 	fclose(lockfp);
+	atexit(unlockit);
     }
 
     /*
@@ -571,7 +578,6 @@ void termhook(int sig)
     if (!check_only)
 	write_saved_lists(querylist, idfile);
 
-    unlink(lockfile);
     exit(popstatus);
 }
 

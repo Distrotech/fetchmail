@@ -165,6 +165,9 @@ int doPOP2 (struct query *);
 int doPOP3 (struct query *);
 int doIMAP (struct query *);
 
+void reply_hack(char *, const char *);
+char *nxtaddr(const char *);
+
 void initialize_saved_lists(struct query *, char *);
 void save_uid(struct idlist **, int, char *);
 void free_uid_list(struct idlist **);
