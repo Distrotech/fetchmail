@@ -107,3 +107,17 @@ If you have problems, try to switch to IMAP.
 
 Enjoy!
 
+7. REPORTING BUGS
+
+When reporting bugs, please include the following:
+
+1. Your operating system.
+2. The release and patch level of the fetchmail you are running.  You can see
+   your patchlevel by typing `fetchmail -V'.
+3. The output of fetchmail -V (this will not reveal your password).
+4. Any command-line options you used.
+
+It is helpful if you include your .fetchmailrc but not necessary
+unless your bug involves an error in configuration parsing.
+
+A transcript of the failed session with -v on is often useful.
