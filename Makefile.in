@@ -272,7 +272,7 @@ config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/configure \
 scripts = $(srcdir)/install.sh $(srcdir)/mkinstalldirs \
 	$(srcdir)/specgen.sh $(srcdir)/lsmgen.sh $(srcdir)/fetchmailconf
 all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) \
-	$(srcdir)/rh-config/* $(srcdir)/debian/* $(srcdir)/contrib/*[A-Za-uw-z] \
+	$(srcdir)/rh-config/* $(srcdir)/contrib/*[A-Za-uw-z] \
 	$(srcdir)/intl/* $(srcdir)/po/* $(srcdir)/beos/* ABOUT-NLS \
 	$(srcdir)/MANIFEST
 
