@@ -81,7 +81,7 @@ with **.
 
 You can easily fetch the latest version of fetchmail  via FTP from:
 
-	ftp://ftp.ccil.org/pub/esr/fetchmail-1.9.tar.gz
+	ftp://ftp.ccil.org/pub/esr/fetchmail-2.0.tar.gz
 
 Or you can get it from Eric's home page:
 
