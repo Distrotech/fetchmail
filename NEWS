@@ -1,9 +1,9 @@
 			To-do list:
 
 At this point, the fetchmail code appears to be stable and free of
-bugs affecting normal operation (that is, forwarding to SMTP from a
-single server host).  It will probably undergo substantial change only
-if and when support for a new retrieval protocol is added.
+bugs affecting normal operation (that is, forwarding to SMTP using
+POP3 or IMAP on a default port).  It will probably undergo substantial
+change only if and when support for a new retrieval protocol is added.
 
 Support IMAP4 extensions for secure challenge-response, once they're actually
 standardized.
@@ -12,7 +12,7 @@ Inflict severe pain on the person(s) responsible for removing LAST from POP3.
 
 			Release Notes:
 
-fetchmail-1.8 (Wed Oct  9 13:10:17 EDT 1996):
+fetchmail-1.8 (Wed Oct  9 16:00:15 EDT 1996):
 
 features --
 
