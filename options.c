@@ -126,6 +126,7 @@ struct query *ctl;	/* option record to be initialized */
 	case 'd':
 	case LA_DAEMON:
 	    poll_interval = atoi(optarg);
+	    ctl->fetchall = TRUE;
 	    break;
 	case 'N':
 	case LA_NODETACH:
