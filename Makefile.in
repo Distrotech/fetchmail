@@ -73,7 +73,7 @@ CTAGS = ctags -tw
 
 popobjs = socket.o getpass.o pop2.o pop3.o imap.o fetchmail.o options.o	\
        rcfile_l.o rcfile_y.o rcfile.o daemon.o driver.o smtp.o xmalloc.o \
-       md5c.o md5ify.o
+       uid.o md5c.o md5ify.o
 
 objs = $(popobjs) $(extras) $(EXTRAOBJ)
 
@@ -81,7 +81,7 @@ srcs = $(srcdir)/socket.c $(srcdir)/getpass.c $(srcdir)/pop2.c 		\
        $(srcdir)/pop3.c $(srcdir)/imap.c $(srcdir)/fetchmail.c		\
        $(srcdir)/options.c $(srcdir)/rcfile.c $(srcdir)/daemon.c 	\
        $(srcdir)/driver.c $(srcdir)/smtp.c $(srcdir)/xmalloc.c 		\
-       $(srcdir)/md5c.c $(srcdir)/md5ify.c
+       $(srcdir)/uid.c $(srcdir)/md5c.c $(srcdir)/md5ify.c
 
 .SUFFIXES:
 .SUFFIXES: .o .c .h .y .l .ps .dvi .info .texi

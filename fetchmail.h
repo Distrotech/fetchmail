@@ -55,6 +55,13 @@
 
 #define		SIZETICKER	1024	/* print 1 dot per this many bytes */
 
+struct idlist
+{
+    int num;
+    char *id;
+    struct idlist *next;
+};
+
 struct hostrec
 {
     /* per-host data */
@@ -79,6 +86,9 @@ struct hostrec
     int flush;
     int norewrite;
     int skip;
+
+    /* current, previous state of mailbox (initially from .fetchids) */
+    struct idlist *saved, *current;
 
     /* internal use */
     int active;
@@ -121,6 +131,7 @@ extern int check_only;		/* if --check was set */
 
 /* miscellaneous global controls */
 extern char *rcfile;		/* path name of rc file */
+extern char *idfile;		/* path name of UID file */
 extern int linelimit;		/* limit # lines retrieved per site */
 extern int versioninfo;		/* emit only version info */
 
@@ -133,6 +144,14 @@ int gen_transact ();
 int doPOP2 (struct hostrec *); 
 int doPOP3 (struct hostrec *);
 int doIMAP (struct hostrec *);
+
+void initialize_saved_lists(struct hostrec *, char *);
+void save_uid(struct idlist **, int, char *);
+void free_uid_list(struct idlist **);
+int delete_uid(struct idlist **, char *);
+int uid_in_list(struct idlist **, char *);
+void update_uid_lists(struct hostrec *);
+void write_saved_lists(struct hostrec *, char *);
 
 struct hostrec *hostalloc(struct hostrec *); 
 int parsecmdline (int, char **, struct hostrec *);

@@ -36,11 +36,12 @@
 #define LA_SMTPHOST	16
 #define LA_MDA		17
 #define LA_LOGFILE	18
-#define LA_QUIT		19
-#define LA_NOREWRITE	20
-#define LA_CHECK	21
-#define LA_HELP		22
-#define LA_YYDEBUG	23
+#define LA_IDFILE	19
+#define LA_QUIT		20
+#define LA_NOREWRITE	21
+#define LA_CHECK	22
+#define LA_HELP		23
+#define LA_YYDEBUG	24
 
 static char *shortoptions = "P:p:VaKkvS:m:sFd:f:u:r:L:qN?";
 static struct option longoptions[] = {
@@ -63,6 +64,7 @@ static struct option longoptions[] = {
   {"smtphost",	required_argument, (int *) 0, LA_SMTPHOST   },
   {"mda",	required_argument, (int *) 0, LA_MDA        },
   {"logfile",	required_argument, (int *) 0, LA_LOGFILE    },
+  {"idfile",	required_argument, (int *) 0, LA_IDFILE     },
   {"quit",	no_argument,	   (int *) 0, LA_QUIT       },
   {"norewrite",	no_argument,	   (int *) 0, LA_NOREWRITE  },
   {"check",	no_argument,	   (int *) 0, LA_CHECK      },
@@ -174,6 +176,11 @@ struct hostrec *queryctl;
         rcfile = (char *) xmalloc(strlen(optarg)+1);
         strcpy(rcfile,optarg);
         break;
+      case 'i':
+      case LA_IDFILE:
+        idfile = (char *) xmalloc(strlen(optarg)+1);
+        strcpy(idfile,optarg);
+        break;
       case 'u':
       case LA_USERNAME:
         strncpy(queryctl->remotename,optarg,sizeof(queryctl->remotename)-1);
@@ -248,6 +255,7 @@ struct hostrec *queryctl;
     fputs("  -L, --logfile     specify logfile name\n", stderr);
     fputs("  -q, --quit        kill daemon process\n", stderr);
     fputs("  -f, --fetchmailrc specify alternate run control file\n", stderr);
+    fputs("  -i, --idfile      specify alternate UIDs file\n", stderr);
 
     fputs("  -p, --protocol    specify pop2, pop3, imap, apop, rpop, kpop\n", stderr);
     fputs("  -P, --port        TCP/IP service port to connect to\n",stderr);

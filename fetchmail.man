@@ -85,6 +85,10 @@ Specify a non-default name for the
 .I .fetchmailrc
 run control file.
 .TP
+.B \-i pathname, --idfile pathname
+Specify an alternate name for the .fetchids file used to save POP3
+UIDs. 
+.TP
 .B \-k, --keep
 Keep retrieved messages in folder on remote mailserver.  Normally, messages 
 are deleted from the folder on the mailserver after they have been retrieved.
@@ -300,13 +304,15 @@ One could be that you're using POP2.  The POP2 protocol includes no
 representation of `new' or `old' state in messages, so \fIfetchmail\fR
 must treat all messages as new all the time.  POP2 is obsolete.
 .PP
-Under POP3, blame RFC1725.  That late version of the POP3 protocol
-specification ill-advisedly removed the LAST command, and some POP
-servers (including the one distributed with at least some versions of
-SunOS) follow it (you can verify this by invoking \fIfetchmail -v\fR
-to the mail server and watching the response to LAST early in the
-query).  The fix is to install an older POP3 server with LAST or
-(better) switch to an IMAP server.
+Under POP3, blame RFC1725.  That version of the POP3 protocol
+specification removed the LAST command, and some POP servers follow it
+(you can verify this by invoking \fIfetchmail -v\fR to the mail server
+and watching the response to LAST early in the query).  The
+\fIfetchmail\fR code tries to compensate by using POP3's UID feature,
+storing the identifiers of messages seen in each session until the
+next session,in the \fI.fetchids\fR file.  But this doesn't track
+messages seen with other clients or read but not deleted directly with
+a mailer on the host.  A better solution would be to switch to IMAP.
 .PP
 Another potential POP3 problem might be servers that insert messages
 in the middle of mailboxes (some VMS implementations of mail are
@@ -579,6 +585,11 @@ created by the new SMTP forwarding default.
 .TP 5
 ~/.fetchmailrc
 default run control file
+.TP 5
+~/.fetchids
+default location of file associating hosts with last message IDs seen
+(used only with newer RFC1725-compliant POP3 servers supporting the
+UIDL command).
 .TP 5
 ${TMPDIR}/fetchmail-${HOST}-${USER}
 lock file to help prevent concurrent runs.

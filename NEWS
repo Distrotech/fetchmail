@@ -37,6 +37,8 @@ features --
 * New --check option for asking server whether there is mail without
   actually retrieving or deleting it.
 
+* UID support is back by popular demand.  Bletch.
+
 bugs --
 
 * Fix buggy getopt specification of P and p options.
