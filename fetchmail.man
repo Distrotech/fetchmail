@@ -211,7 +211,7 @@ current run.
 .TP
 .B \-D domain, --smtpaddress domain
 (Keyword: smtpaddress) 
-Specify the domain to be put in MAIL FROM lines shipped to SMTP. The
+Specify the domain to be put in RCPT TO lines shipped to SMTP. The
 name of the SMTP server (as specified by --smtphost, or defaulted to
 "localhost") is used when this is not specified.
 .TP
