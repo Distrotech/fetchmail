@@ -982,13 +982,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     {
         if (outlevel >= O_DEBUG)
             report (stdout, _("NTLM authentication is supported\n"));
-    if ((ok = do_imap_ntlm (sock, ctl)))
-        {
-            if (outlevel >= O_MONITOR)
-                report (stdout, "IMAP> *\n");
-            SockWrite (sock, "*\r\n", 3);
-        }
-        return ok;
+        return do_imap_ntlm (sock, ctl);
     }
 #endif /* NTLM_ENABLE */
 
@@ -1257,6 +1251,21 @@ static int imap_trail(int sock, struct query *ctl, int number)
 	/* UW IMAP returns "OK FETCH", Cyrus returns "OK Completed" */
 	if (strstr(buf, "OK"))
 	    break;
+
+	/*
+	 * We've had a report of one server (not yet identified) that 
+	 * fails to set SEEN on a body fetch.  This becomes an issue when
+	 * keep is on, because seen messages aren't deleted and get
+	 * refetched on each poll.  As a workaround, if keep is on
+	 * we set the Seen flag explicitly.
+	 */
+	if (ctl->keep)
+	    if ((ok = gen_transact(sock,
+			imap_version == IMAP4 
+				? "STORE %d +FLAGS.SILENT (\\Seen)"
+				: "STORE %d +FLAGS (\\Seen)", 
+			number)))
+		return(ok);
     }
 
     return(PS_SUCCESS);
