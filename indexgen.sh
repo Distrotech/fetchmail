@@ -2,8 +2,8 @@
 #
 # indexgen.sh -- generate current version of fetchmail home page.
 #
-goldvers="4.7.0"
-goldname="4.7.0"
+goldvers="5.0.0"
+goldname="5.0.0"
 version=`sed -n <Makefile.in "/VERSION *= */s/VERSION *= *\([^ 	]*\)/\1/p"`
 date=`date "+%d %b %Y"`
 
@@ -254,7 +254,7 @@ designed to work with fetchmail.   Jochen's tools can report selected
 header lines, or move incoming messages to named mailboxes based on
 the contents of headers.<p>
 
-Hugo Rabson has written a script called `hotmole' that can retrieve
+Hugo Rabson has written a script called \`hotmole' that can retrieve
 Hotmail mail via the web using Lynx.  The script is available on <a
 href="http://www.jin-sei-kai.demon.co.uk/hugo/linux.html"> Hugo
 Rabson's Linux page</a>.<P>
