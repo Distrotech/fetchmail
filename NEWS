@@ -15,6 +15,10 @@
 ------------------------------------------------------------------------------
 fetchmail-2.6 (Wed Dec 25 05:56:24 EST 1996)
 
+features -- 
+
+* --interface option format is now simpler.
+
 bugs --
 
 * Fixed length-computation bug (apparently introduced in 2.3) that messed

@@ -107,26 +107,24 @@ Specify an alternate name for the .fetchids file used to save POP3
 UIDs. 
 .TP
 .B \-I specification, --interface specification
-.I fetchmail
-relies on the underlying TCP/IP protocol to reach the server host.
-Transient links are commonly established directly to a mail host and are
-relatively secure channels to communicate.  When other routes exist, or
-when a transient link is established to a different remote host, your
-username and password may be vulnerable to snooping when daemon mode
-automatically polls for mail.
+Require that a point-to-point connection to a given IP address be up
+before polling.  Normally fetchmail is used via a transient
+point-to-point TCP/IP link established directly to a mailserver via
+SLIP or PPP; this is a relatively secure channel.  But when other
+TCP/IP routes to the mailserver exist, your username and password may
+be vulnerable to snooping (especially when daemon mode automatically
+polls for mail, shipping a clear password over the net at predictable
+intervals).  The --interface option may be used to prevent this by
+specifying a connection IP address (or range) for the mailserver
+TCP/IP link.  When the specified link is not up or is not connected to
+a matching IP address, polling will be skipped.  The format is:
 .sp
-This option may be used to specify a connection IP address (or range)
-for a system TCP/IP interface.  When the link is not up or is connected
-to a different host, polling will be skipped.  The format is:
+	iii.iii.iii.iii/mmm.mmm.mmm.mmm
 .sp
-	interface/iii.iii.iii.iii/mmm.mmm.mmm.mmm
-.sp
-The field after the first slash is the acceptable IP address and the
-field after the second slash is a mask which specifies a range of IP
-addresses to accept.  If no mask is present 255.255.255.255 is assumed
-(i.e. an exact match).
-.sp
-This option is currently only supported under Linux.
+The field before the slash is the acceptable IP address and the field
+after the slash is a mask which specifies a range of IP addresses to
+accept.  If no mask is present 255.255.255.255 is assumed (i.e. an
+exact match). This option is currently only supported under Linux.
 .TP
 .B \-M interface, --monitor interface
 Daemon mode can cause transient links which are automatically taken down
@@ -827,7 +825,11 @@ Use of any of the supported protocols other than APOP or KPOP requires
 that the program send unencrypted passwords over the TCP/IP connection
 to the mailserver.  This creates a risk that name/password pairs
 might be snaffled with a packet sniffer or more sophisticated
-monitoring software.
+monitoring software.  Under Linux, the --interface option can be used
+to restrict polling to a specified point-to-point link, but snooping
+is still possible if (a) either host has a network device that can be
+opened in promiscuous mode, or (b) the intervening network link can
+be tapped.
 .PP
 Send comments, bug reports, gripes, and the like to Eric S. Raymond
 <esr@thyrsus.com>.

@@ -34,6 +34,9 @@ pop-perl5-1.2, popc, popmail-1.6 and upop) are marked with **.
 	** Support for retrieving and forwarding from multi-drop mailboxes
 	   that is guaranteed not to cause mail loops.
 
+	** (Linux only) Security option to permit fetchmail to run only
+	   when an interface to a particular IP address is up.
+
 	*  Easy control via command line or free-format run control file.
 
 	*  Daemon mode -- fetchmail can be run in background to poll
@@ -60,11 +63,11 @@ pop-perl5-1.2, popc, popmail-1.6 and upop) are marked with **.
 	   feedback is rapid, bugs get found and fixed rapidly.
 
 The fetchmail code appears to be stable and free of bugs affecting
-normal operation (that is, retrieving from POP3 or IMAP and forwarding
-99via SMTP to sendmail).  It will probably undergo substantial change
-only if and when support for a new retrieval protocol or authentication
-is added.  See the distribution files NEWS for detailed information on
-recent changes and NOTES for design notes.
+normal operation (that is, retrieving from POP3 or IMAP in single-drop
+mode and forwarding via SMTP to sendmail).  It will probably undergo
+substantial change only if and when support for a new retrieval
+protocol or authentication is added.  See the distribution files NEWS
+for detailed information on recent changes and NOTES for design notes.
 
 You can easily fetch the latest version of fetchmail  via FTP from the
 following FTP directory:
