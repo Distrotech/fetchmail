@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="/~esr/index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/03/07 21:30:41 $
+<td width="30%" align=right>$Date: 2001/03/11 17:32:55 $
 </table>
 <HR>
 <H1 ALIGN=CENTER>Design Notes On Fetchmail</H1>
@@ -57,10 +57,10 @@ in its class.  The name change quickly followed.<P>
 
 <H1>The rewrite option</H1>
 
-RFC 1123 stipulates that MTAs ought to canonicalize the addresses of
-outgoing mail so that From:, To:, Cc:, Bcc: and other address headers
-contain only fully qualified domain names.  Failure to do so can break
-the reply function on many mailers.<P>
+MTAs ought to canonicalize the addresses of outgoing non-local mail so
+that From:, To:, Cc:, Bcc: and other address headers contain only
+fully qualified domain names.  Failure to do so can break the reply
+function on many mailers.  (Sendmail has an option to do this.)<P>
 
 This problem only becomes obvious when a reply is generated on a
 machine different from where the message was delivered.  The
@@ -554,7 +554,7 @@ RFC2221 IMAP4 Login Referrals
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/03/07 21:30:41 $
+<td width="30%" align=right>$Date: 2001/03/11 17:32:55 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
