@@ -23,7 +23,26 @@ int prc_lineno = 1;
 
 %%
 
-<NAME>[^=;:, \t\r\n\"\']+	{
+\"[^\"]*\"	{
+			char buf[MSGBUFSIZE];
+
+			yytext[strlen(yytext)-1] = '\0';
+			escapes(yytext+1, buf);
+			yylval.sval = (char *) xstrdup(buf);
+                        BEGIN(0);
+			return STRING;
+		}
+\'[^\']*\'	{
+			char buf[MSGBUFSIZE];
+
+			yytext[strlen(yytext)-1] = '\0';
+			escapes(yytext+1, buf);
+			yylval.sval = (char *) xstrdup(buf);
+                        BEGIN(0);
+			return STRING;
+		}
+
+<NAME>[^=;:, \t\r\n]+	{
 			char buf[MSGBUFSIZE];
 
 			escapes(yytext, buf);
@@ -142,32 +161,10 @@ options		{/* EMPTY */}
 (etrn)|(ETRN)   { yylval.proto = P_ETRN;  return PROTO; }
 (kpop)|(KPOP)	{ return KPOP; }
 
-remote(folder)? {
-		fprintf(stderr, 
-			"fetchmail: `remote' keyword is gone, use `folder'\n");
-		}
-
-
 (#.*)?\\?\n	{ prc_lineno++;	}   /* newline is ignored */
 
 [0-9]+		{ yylval.number = atoi(yytext); return NUMBER; }
 
-\"[^\"]*\"	{
-			char buf[MSGBUFSIZE];
-
-			yytext[strlen(yytext)-1] = '\0';
-			escapes(yytext+1, buf);
-			yylval.sval = (char *) xstrdup(buf);
-			return STRING;
-		}
-\'[^\']*\'	{
-			char buf[MSGBUFSIZE];
-
-			yytext[strlen(yytext)-1] = '\0';
-			escapes(yytext+1, buf);
-			yylval.sval = (char *) xstrdup(buf);
-			return STRING;
-		}
 [^=;:, \t\r\n]+	{
 			char buf[MSGBUFSIZE];
 
