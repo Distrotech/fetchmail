@@ -1,7 +1,5 @@
 			To Do:
 
-The --quit flag is broken when running as root.
-
 Try to change the daemon-mode loop so the poll comes before the wait,
 not after it.
 

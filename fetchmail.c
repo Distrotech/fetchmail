@@ -90,7 +90,7 @@ static void unlockit(void)
 int main (int argc, char **argv)
 {
     int st, bkgd = FALSE;
-    int parsestatus, implicitmode, sigwakeup;
+    int parsestatus, implicitmode;
     char *home, *tmpdir, tmpbuf[BUFSIZ]; 
     struct passwd *pw;
     struct query *ctl;
@@ -158,12 +158,9 @@ int main (int argc, char **argv)
 	implicitmode = load_params(argc, argv, optind);
 
     /* set up to do lock protocol */
-    if (poll_interval && getuid() == 0) {
-	sigwakeup = SIGHUP;
+    if (!getuid())
 	strcpy(tmpbuf, "/var/run/fetchmail.pid");
-    }
     else {
-	sigwakeup = SIGUSR1;
 	strcpy(tmpbuf, home);
 	strcat(tmpbuf, "/.fetchmail");
     }
@@ -273,7 +270,7 @@ int main (int argc, char **argv)
 		 pid);
 		return(PS_EXCLUDE);
 	}
-	else if (kill(pid, sigwakeup) == 0)
+	else if (kill(pid, SIGUSR1) == 0)
 	{
 	    fprintf(stderr,
 		    "fetchmail: background fetchmail at %d awakened.\n",
@@ -360,7 +357,11 @@ int main (int argc, char **argv)
      * side effect of interrupting any sleep that may be going on,
      * forcing fetchmail to re-poll its hosts.
      */
-    signal(sigwakeup, donothing);
+    signal(SIGUSR1, donothing);
+
+    /* pacify people who think all system daemons wake up on SIGHUP */
+    if (poll_interval && !getuid())
+	signal(SIGHUP, donothing);
 
     /* here's the exclusion lock */
     if ( (lockfp = fopen(lockfile,"w")) != NULL ) {
@@ -414,7 +415,9 @@ int main (int argc, char **argv)
 		signal(SIGALRM, donothing);
 		pause();
 		signal(SIGALRM, SIG_IGN);
-		if (lastsig == sigwakeup) {
+		if (lastsig == SIGUSR1
+			|| ((poll_interval && !getuid()) && lastsig == SIGHUP))
+		{
 #ifdef SYS_SIGLIST_DECLARED
 		    error(0, 0, "awakened by %s", sys_siglist[lastsig]);
 #else
@@ -431,7 +434,6 @@ int main (int argc, char **argv)
 		fprintf(stderr, "fetchmail: awakened at %s", ctime(&now));
 	    }
 	}
-
 
 #ifdef	linux
 	if (!interface_approve())
