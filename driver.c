@@ -1749,9 +1749,34 @@ const struct method *proto;	/* protocol method table */
 			    }
 			}
 
-			/* check to see if the numbers matched? */
+			/*
+			 * Check to see if the numbers matched?
+			 *
+			 * Yes, some servers foo this up horribly.
+			 * All IMAP servers seem to get it right, and
+			 * so does Eudora QPOP at least in 2.xx
+			 * versions.
+			 *
+			 * Microsoft Exchange gets it completely
+			 * wrong, reporting compressed rather than
+			 * actual sizes (so the actual length of
+			 * message is longer than the reported size).
+			 *
+			 * Some older POP servers, like the old UCB
+			 * POP server and the pre-QPOP QUALCOMM
+			 * versions, report a longer size in the LIST
+			 * response than actually gets shipped up.
+			 * It's unclear what is going on here, as the
+			 * QUALCOMM server (at least) seems to be
+			 * reporting the on-disk size correctly.
+			 */
 			if (msgsizes && msglen != msgsizes[num-1])
-			    error(0, 0, "size of message %d (%d) was not what was expected (%d)", num, msglen, msgsizes[num-1]);
+			{
+			    if (outlevel >= O_VERBOSE)
+				error(0, 0,
+		      "message %d was not the expected length (%d != %d)",
+				      num, msglen, msgsizes[num-1]);
+			}
 
 			/* end-of-message processing starts here */
 
