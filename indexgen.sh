@@ -46,27 +46,41 @@ cat >index.html <<EOF
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Fetchmail Home Page</title>
-<link rev=made href=mailto:esr@snark.thyrsus.com />
-<meta name="description" content="The fetchmail home page." />
-<meta name="keywords" content="fetchmail, POP, POP3, IMAP, IMAP2bis, IMAP4, IMAP4rev1, ETRN, OTP, RPA" /> 
+<link rev="made" href="mailto:esr@snark.thyrsus.com" />
+<link rel="stylesheet" href="/~esr/sitestyle.css" type="text/css"/>
+<meta name="description" content="Home page of the fetchmail project" />
+<meta name="keywords" content="" />
+<meta name="MSSmartTagsPreventParsing" content="TRUE" />
+<title>The fechmail home page</title>
 </head>
 <body>
-<table width="100%" cellpadding=0 summary="Canned page header"><tr>
-<td width="30%">Back to
-<a href="http://$WWWVIRTUAL/~esr/software.html">Software</a>
-<td width="30%" align=center>Up to <a href="http://$WWWVIRTUAL/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$date
-</tr></table>
-<hr />
-<center>
-<table border="10" summary="framed fetchmail logo">
+
+<div id="Header">
+<table width="100%" cellpadding="0" summary="Canned page header">
 <tr>
-<td>
-<center><img src="bighand.png" alt="fetchmail logo" /></center>
-</td>
+<td>The fetchmail home page</td>
+<td align="right">$date</td>
 </tr>
 </table>
+</div>
+
+<div id="Menu">
+	<hr/>
+	<a href="/~esr" title="My home page">Home Page</a><br />
+	<a href="/~esr/sitemap.html" title="Map of the site">Site Map</a><br />
+	<a href="/~esr/software.html" title="Software I maintain">Software</a><br />
+	<a href="/~esr/projects.html" title="My projects">Projects</a><br />
+	<a href="/~esr/faqs/" title="My FAQ documents">HOWTOs</a><br />
+	<a href="/~esr/writings/" title="Essays and ruminations">Essays</a><br />
+	<a href="/~esr/personal.html" title="Portrait of the author">Personal</a><br />
+	<a href="http://armedndangerous.blogspot.com">Weblog</a><br/>	
+	<a href="/~esr/netfreedom/">Freedom!</a><br />
+	<a href="/~esr/guns/">Firearms!</a><br />
+	<hr/>
+</div>
+
+<div id="Content">
+
 <h1>The fetchmail Home Page</h1>
 </center>
 
@@ -365,16 +379,8 @@ ftp://ftp.win.ne.jp/pub/network/mail/fetchmail</a>.
 
 <p>Fetchmail was a five-star Editor's Pick at Softlandindia.</p>
 
-<hr />
-<table width="100%" cellpadding=0 summary="Canned page footer"><tr>
-<td width="30%">Back to 
-<a href="http://$WWWVIRTUAL/~esr/software.html">Software</a>
-<td width="30%" align=center>Up to <a href="http://$WWWVIRTUAL/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$date
-</tr></table>
+</div>
 
-<br clear="left" />
-<address>Eric S. Raymond <a href="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</a></address>
 </body>
 </html>
 EOF

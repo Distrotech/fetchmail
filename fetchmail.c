@@ -368,6 +368,15 @@ int main(int argc, char **argv)
 	    if (argc == 2)
 		exit(PS_EXCLUDE);
 	}
+	else if (getpid() == pid)
+	{
+	    /* this test enables re-execing on a changed rcfile */
+	    if (argc == 2)
+	    {
+		fprintf(stderr,GT_("fetchmail: no other fetchmail is running\n"));
+		exit(PS_EXCLUDE);
+	    }
+	}
 	else if (kill(pid, SIGTERM) < 0)
 	{
 	    fprintf(stderr,GT_("fetchmail: error killing %s fetchmail at %d; bailing out.\n"),
