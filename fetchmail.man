@@ -356,6 +356,7 @@ run control file.  Unless the --version option is also on, the file must have
 permissions no more open than  0600 (u=rw,g=,o=) or else be /dev/null.
 .TP
 .B \-i pathname, --idfile pathname
+(Keyword: idfile)
 Specify an alternate name for the .fetchids file used to save POP3
 UIDs. 
 .TP

@@ -13,10 +13,11 @@ fetchmail-4.4.7 ()
 * Gunther Leber's fix to processing of command-line options.
 * George Colouris's second try at NetBSD autoconfiguration.
 * Bruce Mah's fix for core dump in command-line host specification.
+* Missing `idfile' declaration added to .fetchmailrc processing.
 * Mimedecode default turned off pending a fix for the PGP-signature-
   munging bug.
 
-There are 270 people on fetchmail-friends and 212 on fetchmail-announce.
+There are 270 people on fetchmail-friends and 216 on fetchmail-announce.
 
 fetchmail-4.4.6 (Sat May 16 14:16:49 EDT 1998)
 * Fix a bug introduced by my 4.4.5 bug-fix release :-(

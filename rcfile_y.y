@@ -67,7 +67,7 @@ extern char * yytext;
 %token SPAMRESPONSE PRECONNECT POSTCONNECT LIMIT
 %token IS HERE THERE TO MAP WILDCARD
 %token BATCHLIMIT FETCHLIMIT EXPUNGE
-%token SET LOGFILE DAEMON SYSLOG INVISIBLE NETSEC INTERFACE MONITOR
+%token SET LOGFILE DAEMON SYSLOG IDFILE INVISIBLE NETSEC INTERFACE MONITOR
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
@@ -88,6 +88,7 @@ optmap		: MAP | /* EMPTY */;
 
 /* future global options should also have the form SET <name> optmap <value> */
 statement	: SET LOGFILE optmap STRING	{logfile = xstrdup($4);}
+		| SET IDFILE optmap STRING	{idfile = xstrdup($4);}
 		| SET DAEMON optmap NUMBER	{poll_interval = $4;}
 		| SET SYSLOG			{errors_to_syslog = TRUE;}
 		| SET INVISIBLE			{use_invisible = TRUE;}

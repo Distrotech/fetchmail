@@ -191,8 +191,8 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'i':
 	case LA_IDFILE:
-	    idfile = (char *) xmalloc(strlen(optarg)+1);
-	    strcpy(idfile,optarg);
+	    cmd_idfile = (char *) xmalloc(strlen(optarg)+1);
+	    strcpy(cmd_idfile,optarg);
 	    break;
 	case 'p':
 	case LA_PROTOCOL:

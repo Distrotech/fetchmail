@@ -62,6 +62,7 @@ flag nodetach;		/* if TRUE, don't detach daemon process */
 flag quitmode;		/* if --quit was set */
 flag check_only;	/* if --probe was set */
 char *cmd_logfile;	/* if --logfile was set */
+char *cmd_idfile;	/* if --idfile was set */
 int cmd_daemon; 	/* if --daemon was set */
 
 /* miscellaneous global controls */
@@ -837,6 +838,10 @@ static int load_params(int argc, char **argv, int optind)
     /* if cmd_logfile was explicitly set, use it to override logfile */
     if (cmd_logfile)
 	logfile = cmd_logfile;
+
+    /* if cmd_idfile was explicitly set, use it to override idfile */
+    if (cmd_idfile)
+	logfile = cmd_idfile;
 
     /* likewise for poll_interval */
     if (cmd_daemon >= 0)
