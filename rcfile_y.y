@@ -366,13 +366,7 @@ user_option	: TO localnames HERE
 		| NO MIMEDECODE		{current.mimedecode  = FLAG_FALSE;}
 		| NO IDLE		{current.idle        = FLAG_FALSE;}
 
-		| NO SSL 	        {
-#ifdef SSL_ENABLE
-		    current.use_ssl = FLAG_FALSE;
-#else
-		    yyerror(GT_("SSL is not enabled"));
-#endif 
-		}
+		| NO SSL 	        {current.use_ssl     = FLAG_FALSE;}
 
 		| LIMIT NUMBER		{current.limit       = NUM_VALUE_IN($2);}
 		| WARNINGS NUMBER	{current.warnings    = NUM_VALUE_IN($2);}

@@ -517,6 +517,9 @@ static int imap_getrange(int sock,
 		return(ok);
 	    }
 	}
+	/* if recentcount is 0, return no mail */
+	if (recentcount == 0)
+		count = 0;
 	if (outlevel >= O_DEBUG)
 	    report(stdout, GT_("%d messages waiting after re-poll\n"), count);
     }
@@ -617,6 +620,7 @@ static int imap_getrange(int sock,
 	unseen = -1;
 
     *newp = unseen;
+    count = 0;
     expunged = 0;
     deletions = 0;
 

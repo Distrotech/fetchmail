@@ -618,6 +618,7 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
     char		**from_responses;
 #endif /* EXPLICIT_BOUNCE_ON_BAD_ADDRESS */
     int		total_addresses;
+    int		force_transient_error;
 
     /*
      * Compute ESMTP options.
@@ -727,7 +728,8 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
 #ifdef EXPLICIT_BOUNCE_ON_BAD_ADDRESS
  		    char errbuf[POPBUFSIZE];
 #endif /* EXPLICIT_BOUNCE_ON_BAD_ADDRESS */
-		handle_smtp_report(ctl, msg);
+		if (handle_smtp_report(ctl, msg) == PS_TRANSIENT)
+		    force_transient_error = 1;
 
 #ifdef EXPLICIT_BOUNCE_ON_BAD_ADDRESS
 #ifdef HAVE_SNPRINTF
@@ -774,6 +776,14 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
      */
     if (!(*good_addresses)) 
     {
+	if (force_transient_error) {
+		/* do not risk dataloss due to overengineered multidrop
+		 * crap. If one of the recipients returned PS_TRANSIENT,
+		 * we return exactly that.
+		 */
+		SMTP_rset(ctl->smtp_socket);        /* required by RFC1870 */
+		return(PS_TRANSIENT);
+	}
 	if (!run.postmaster[0])
 	{
 	    if (outlevel >= O_VERBOSE)

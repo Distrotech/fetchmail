@@ -4,6 +4,22 @@
 
 * Updated Turkish translation.
 * Added warning about auth failures on the GMX server.
+* HMH's Debian 5.9.10 patches:
+1. Fix minor typo in FAQ
+2. Fix partial implementation of ESMTP auth, and some minor
+   fetchmailconf stuff
+3. Add proper error reporting to bad logfile creation.
+   patch by Sunil Shetye <shetye@bombay.retortsoft.com>
+4. Fix incredible aggravating bug that caused dataloss
+   risks if 4xx errors were returned by the MTA
+5. Corrected version of the fix-timeouts-for-ssl and descriptor
+   leaking patches from Sylvain Benoist <sylvainb@whitepj.com>
+   Also fix outdated comments in driver.c
+6. Sunil Shetye's patch to stop fetchmail from trying to fetch
+   twice with IMAP
+7. Stop stupid complaint about turning off SSL being illegal
+   without SSL support.
+8. Byrial Jensen <byrial@image.dk> i18n fixes
 
 fetchmail-5.9.10 (Sun Mar 10 15:09:57 EST 2002), 21529 lines:
 

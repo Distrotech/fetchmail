@@ -118,6 +118,8 @@ class Server:
 	    ('monitor',   'String'),
 	    ('plugin',    'String'),
 	    ('plugout',   'String'),
+            ('esmtpname', 'String'),
+            ('esmtppassword', 'String'),
 	    ('netsec',    'String'),
 	    ('principal', 'String'),
 	    ('tracepolls','Boolean'))
@@ -1189,7 +1191,7 @@ class ServerEdit(Frame, MyWidget):
 	for (protocol, port) in (("IMAP",143), ("POP3",110), ("POP2",109)):
 	    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	    try:
-		sock.connect(realhost, port)
+                sock.connect((realhost, port))
 		greetline = sock.recv(1024)
 		sock.close()
 	    except:
@@ -1386,7 +1388,7 @@ You may have to use the fetchall option.
 	    if string.find(greetline, " IMS POP3") > 0:
 		warnings = warnings + """
 Some servers issuing the greeting line 'IMS POP3' have been known to
-do byte-stuffing correctly.  This means that if a message you receive
+do byte-stuffing incorrectly.  This means that if a message you receive
 has a . (period) at start of line, fetchmail will become confused and
 probably wedge itself.  (This bug was recorded on IMS POP3 0.86.)
 

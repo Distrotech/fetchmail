@@ -36,7 +36,6 @@
 #else
 #include <varargs.h>
 #endif
-#include <signal.h>
 #include "socket.h"
 #include "fetchmail.h"
 #include "i18n.h"
@@ -67,6 +66,8 @@ static int h_errno;
 #endif
 
 #endif /* ndef h_errno */
+
+extern int mailserver_socket_temp;	/* Socket to close if connect timeout */
 
 #if NET_SECURITY
 #include <net/security.h>
@@ -219,10 +220,6 @@ int SockCheckOpen(int fd)
 
 int UnixOpen(const char *path)
 {
-#ifdef HAVE_SIGPROCMASK
-    sigset_t	allsigs;
-#endif /* HAVE_SIGPROCMASK */
-
     int sock = -1;
     struct sockaddr_un ad;
     memset(&ad, 0, sizeof(ad));
@@ -236,13 +233,12 @@ int UnixOpen(const char *path)
 	return -1;
     }
 
-#ifdef HAVE_SIGPROCMASK
-    /* avoid socket leak on alarm signal during connect(2) */
-    sigfillset(&allsigs);
-    sigprocmask(SIG_BLOCK, &allsigs, NULL);
-#endif /* HAVE_SIGPROCMASK */
-
-    if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) < 0)
+	/* Socket opened saved. Usefull if connect timeout 
+	 * because it can be closed.
+	 */
+	mailserver_socket_temp = sock;
+    
+	if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) < 0)
     {
 	int olderr = errno;
 	fm_close(sock);	/* don't use SockClose, no traffic yet */
@@ -250,10 +246,9 @@ int UnixOpen(const char *path)
 	errno = olderr;
 	sock = -1;
     }
-
-#ifdef HAVE_SIGPROCMASK
-    sigprocmask(SIG_UNBLOCK, &allsigs, NULL);
-#endif /* HAVE_SIGPROCMASK */
+	
+	/* No connect timeout, then no need to set mailserver_socket_temp */
+	mailserver_socket_temp = -1;
 
     return sock;
 }
@@ -262,10 +257,6 @@ int UnixOpen(const char *path)
 int SockOpen(const char *host, const char *service, const char *options,
 	     const char *plugin)
 {
-#ifdef HAVE_SIGPROCMASK
-    sigset_t	allsigs;
-#endif /* HAVE_SIGPROCMASK */
-
     struct addrinfo *ai, *ai0, req;
     int i;
 #if NET_SECURITY
@@ -304,28 +295,28 @@ int SockOpen(const char *host, const char *service, const char *options,
 	break;
 #else
 
-#ifdef HAVE_SIGPROCMASK
-    /* avoid socket leak on alarm signal during connect(2) */
-    sigfillset(&allsigs);
-    sigprocmask(SIG_BLOCK, &allsigs, NULL);
-#endif /* HAVE_SIGPROCMASK */
-
     i = -1;
     for (ai = ai0; ai; ai = ai->ai_next) {
 	i = socket(ai->ai_family, ai->ai_socktype, 0);
 	if (i < 0)
 	    continue;
+
+	/* Socket opened saved. Usefull if connect timeout 
+	 * because it can be closed.
+	 */
+	mailserver_socket_temp = i;
+
 	if (connect(i, (struct sockaddr *) ai->ai_addr, ai->ai_addrlen) < 0) {
 	    fm_close(i);
 	    i = -1;
 	    continue;
 	}
+	
+	/* No connect timeout, then no need to set mailserver_socket_temp */
+	mailserver_socket_temp = -1;
+	
 	break;
     }
-
-#ifdef HAVE_SIGPROCMASK
-    sigprocmask(SIG_UNBLOCK, &allsigs, NULL);
-#endif /* HAVE_SIGPROCMASK */
 
 #endif
 #endif /* NET_SECURITY */
@@ -389,6 +380,12 @@ int SockOpen(const char *host, int clientPort, const char *options,
             h_errno = 0;
             return -1;
         }
+
+		/* Socket opened saved. Usefull if connect timeout because
+		 * it can be closed
+		 */
+		mailserver_socket_temp = sock;
+		
         if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) < 0)
         {
             int olderr = errno;
@@ -397,6 +394,10 @@ int SockOpen(const char *host, int clientPort, const char *options,
             errno = olderr;
             return -1;
         }
+
+		/* No connect timeout, then no need to set mailserver_socket_temp */
+		mailserver_socket_temp = -1;
+		
 #ifndef HAVE_INET_ATON
     }
 #else
@@ -434,10 +435,19 @@ int SockOpen(const char *host, int clientPort, const char *options,
 		h_errno = 0;
 		return -1;
 	    }
+
+		/* Socket opened saved. Usefull if connect timeout because
+		 * it can be closed
+		 */
+		mailserver_socket_temp = sock;
+		
 	    ad.sin_port = htons(clientPort);
 	    memcpy(&ad.sin_addr, *pptr, sizeof(struct in_addr));
-	    if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) == 0)
-		break; /* success */
+	    if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) == 0) {
+			/* No connect timeout, then no need to set mailserver_socket_temp */
+			mailserver_socket_temp = -1;
+			break; /* success */
+		}	
 	    fm_close(sock);	/* don't use SockClose, no traffic yet */
 	    memset(&ad, 0, sizeof(ad));
 	    ad.sin_family = AF_INET;
@@ -804,11 +814,11 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 				}
 				tp += esz;
 			}
-			if (outlevel > O_SILENT)
+			if (outlevel > O_NORMAL)
 			    report(stdout, GT_("%s key fingerprint: %s\n"), _server_label, text);
 			if (_check_digest != NULL) {
 				if (strcmp(text, _check_digest) == 0) {
-				    if (outlevel > O_SILENT)
+				    if (outlevel > O_NORMAL)
 					report(stdout, GT_("%s fingerprints match.\n"), _server_label);
 				} else {
 				    if (outlevel > O_SILENT)

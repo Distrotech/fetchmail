@@ -234,12 +234,19 @@ nottyDetach:
   }
 
   if (logfile)
-    fd = open(logfile, O_CREAT|O_WRONLY|O_APPEND, 0666);	/* stdout */
+  {
+    if ((fd = open(logfile, O_CREAT|O_WRONLY|O_APPEND, 0666)) < 0) {	/* stdout */
+      report(stderr, "open %s (%s)\n", logfile, strerror(errno));
+      return(PS_IOERR);
+    }
+  }
   else
+  {
     if (dup(fd) < 0) {				/* stdout */
       report(stderr, "dup (%s)\n", strerror(errno));
       return(PS_IOERR);
     }
+  }
   if (dup(fd) < 0) {				/* stderr */
     report(stderr, "dup (%s)\n", strerror(errno));
     return(PS_IOERR);

@@ -64,6 +64,7 @@ int stage;		/* where are we? */
 int phase;		/* where are we, for error-logging purposes? */
 int batchcount;		/* count of messages sent in current batch */
 flag peek_capable;	/* can we peek for better error recovery? */
+int mailserver_socket_temp;	/* socket to free if connect timeout */ 
 
 static int timeoutcount;		/* count consecutive timeouts */
 
@@ -557,11 +558,6 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	    {
 		if (suppress_readbody)
 		{
-		    /* When readheaders returns PS_TRUNCATED,
-		     * the body (which has no content)
-		     * has already been read by readheaders,
-		     * so we say readbody returned PS_SUCCESS
-		     */
 		    err = PS_SUCCESS;
 		}
 		else
@@ -746,7 +742,12 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	sigfillset(&allsigs);
 	sigprocmask(SIG_UNBLOCK, &allsigs, NULL);
 #endif /* HAVE_SIGPROCMASK */
-
+	
+	/* If there was a connect timeout, the socket should be closed.
+	 * mailserver_socket_temp contains the socket to close.
+	 */
+	mailserver_socket = mailserver_socket_temp;
+	
 	if (js == THROW_SIGPIPE)
 	{
 	    signal(SIGPIPE, SIG_IGN);
@@ -1008,10 +1009,14 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	    phase = oldphase;
 	    goto closeUp;
 	}
-	set_timeout(0);
-	phase = oldphase;
 
 #ifdef SSL_ENABLE
+	/* Save the socket opened. Usefull if Fetchmail hangs on SSLOpen 
+	 * because the socket can be closed
+	 */
+	mailserver_socket_temp = mailserver_socket;
+	set_timeout(mytimeout);
+
 	/* perform initial SSL handshake on open connection */
 	/* Note:  We pass the realhost name over for certificate
 		verification.  We may want to make this configurable */
@@ -1021,8 +1026,18 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	    report(stderr, GT_("SSL connection failed.\n"));
 	    goto closeUp;
 	}
+	
+	/* Fetchmail didn't hang on SSLOpen, 
+	 * then no need to set mailserver_socket_temp 
+	 */
+	mailserver_socket_temp = -1;
 #endif
-
+	
+	/* A timeout is still defined before SSLOpen, 
+	 * then Fetchmail hanging on SSLOpen is handled.
+	 */
+	set_timeout(0);
+	phase = oldphase;
 #ifdef KERBEROS_V4
 	if (ctl->server.authenticate == A_KERBEROS_V4)
 	{
@@ -1352,6 +1367,8 @@ is restored."));
 			    continue;
 			else if (ctl->server.base_protocol->is_old && (ctl->server.base_protocol->is_old)(mailserver_socket,ctl,num))
 			    msgcodes[num-1] = MSGLEN_OLD;
+/*			else if (msgsizes[num-1] == 512)
+				msgcodes[num-1] = MSGLEN_OLD;  (hmh) sample code to skip message */
 		    }
 
 		    /* read, forward, and delete messages */
