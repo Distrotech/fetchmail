@@ -135,10 +135,10 @@ tags: $(tagsrcs)
 
 .PHONY: install installdirs
 install: installdirs \
-	 $(bindir)/$(instname) $(mandir)/$(instname).$(manext)
+	 $(bindir)/$(instname) $(mandir)/$(instname).$(manext) # $(infodir)/fetchmail.info
 
 installdirs:
-	$(SHELL) ${srcdir}/mkinstalldirs $(bindir) $(infodir) $(mandir)
+	$(SHELL) ${srcdir}/mkinstalldirs $(bindir) $(mandir) # $(infodir)
 
 $(bindir)/$(instname): fetchmail
 	$(INSTALL_PROGRAM) fetchmail $@
@@ -174,7 +174,7 @@ distclean: clean
 	-rm -f TAGS tags
 	-rm -f fetchmail.log fetchmail.toc fetchmail.*aux
 
-realclean: fetchmail.info* distclean
+realclean: distclean # fetchmail.info*
 
 mostlyclean: clean
 
