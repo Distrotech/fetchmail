@@ -13,6 +13,7 @@ fetchmail-4.5.0 ():
 * Harry McGavran's fix for subdirectory installation.
 * Marty Lee fixed a bug in activation of hosts named on the command-line.
 * The fetchall option forces RETR again.  We can cope with USA.NET now. 
+* Gunther Leber's patch to make fetchmail -V less chatty when mode is ETRN.
 
 There are 279 people on fetchmail-friends and 217 on fetchmail-announce.
 

@@ -532,7 +532,8 @@ int main (int argc, char **argv)
 		    }
 #endif  /* POP3_ENABLE */
 		}
-		else if (!check_only)
+		else if (!check_only && 
+			 ((querystatus!=PS_NOMAIL) || (outlevel==O_VERBOSE)))
 		    error(0, 0, "Query status=%d", querystatus);
 
 #if defined(linux) && !INET6
@@ -1147,7 +1148,7 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 	printf("Options for retrieving from %s@%s:\n",
 	       ctl->remotename, visbuf(ctl->server.pollname));
 
-	if (ctl->server.via)
+	if (ctl->server.via && (ctl->server.protocol != P_ETRN))
 	    printf("  Mail will be retrieved via %s\n", ctl->server.via);
 
 	if (ctl->server.interval)
@@ -1158,7 +1159,9 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 	if (ctl->server.skip || outlevel == O_VERBOSE)
 	    printf("  This host will%s be queried when no host is specified.\n",
 		   ctl->server.skip ? " not" : "");
-	if (!ctl->password)
+	/* don't poll for password when there is one or when using the ETRN
+	** protocol */
+	if (!ctl->password && (ctl->server.protocol != P_ETRN))
 	    printf("  Password will be prompted for.\n");
 	else if (outlevel == O_VERBOSE)
 	    if (ctl->server.protocol == P_APOP)
@@ -1189,7 +1192,7 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 #endif /* INET6 */
 	else if (outlevel == O_VERBOSE)
 	    printf(" (using default port)");
-	if (ctl->server.uidl)
+	if (ctl->server.uidl && (ctl->server.protocol != P_ETRN))
 	    printf(" (forcing UIDL use)");
 	putchar('.');
 	putchar('\n');
@@ -1204,64 +1207,66 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 	else
 	    printf(".\n");
 
-	if (!ctl->mailboxes->id)
-	    printf("  Default mailbox selected.\n");
-	else
-	{
-	    struct idlist *idp;
+	if (ctl->server.protocol != P_ETRN) {
+		if (!ctl->mailboxes->id)
+		    printf("  Default mailbox selected.\n");
+		else
+		{
+		    struct idlist *idp;
 
-	    printf("  Selected mailboxes are:");
-	    for (idp = ctl->mailboxes; idp; idp = idp->next)
-		printf(" %s", idp->id);
-	    printf("\n");
+		    printf("  Selected mailboxes are:");
+		    for (idp = ctl->mailboxes; idp; idp = idp->next)
+			printf(" %s", idp->id);
+		    printf("\n");
+		}
+		printf("  %s messages will be retrieved (--all %s).\n",
+		       ctl->fetchall ? "All" : "Only new",
+		       ctl->fetchall ? "on" : "off");
+		printf("  Fetched messages will%s be kept on the server (--keep %s).\n",
+		       ctl->keep ? "" : " not",
+		       ctl->keep ? "on" : "off");
+		printf("  Old messages will%s be flushed before message retrieval (--flush %s).\n",
+		       ctl->flush ? "" : " not",
+		       ctl->flush ? "on" : "off");
+		printf("  Rewrite of server-local addresses is %sabled (--norewrite %s).\n",
+		       ctl->rewrite ? "en" : "dis",
+		       ctl->rewrite ? "off" : "on");
+		printf("  Carriage-return stripping is %sabled (stripcr %s).\n",
+		       ctl->stripcr ? "en" : "dis",
+		       ctl->stripcr ? "on" : "off");
+		printf("  Carriage-return forcing is %sabled (forcecr %s).\n",
+		       ctl->forcecr ? "en" : "dis",
+		       ctl->forcecr ? "on" : "off");
+		printf("  Interpretation of Content-Transfer-Encoding is %sabled (pass8bits %s).\n",
+		       ctl->pass8bits ? "dis" : "en",
+		       ctl->pass8bits ? "on" : "off");
+		printf("  MIME decoding is %sabled (mimedecode %s).\n",
+		       ctl->mimedecode ? "en" : "dis",
+		       ctl->mimedecode ? "on" : "off");
+		printf("  Nonempty Status lines will be %s (dropstatus %s)\n",
+		       ctl->dropstatus ? "discarded" : "kept",
+		       ctl->dropstatus ? "on" : "off");
+		if (NUM_NONZERO(ctl->limit))
+		    printf("  Message size limit is %d bytes (--limit %d).\n", 
+			   ctl->limit, ctl->limit);
+		else if (outlevel == O_VERBOSE)
+		    printf("  No message size limit (--limit 0).\n");
+		if (NUM_NONZERO(ctl->fetchlimit))
+		    printf("  Received-message limit is %d (--fetchlimit %d).\n",
+			   ctl->fetchlimit, ctl->fetchlimit);
+		else if (outlevel == O_VERBOSE)
+		    printf("  No received-message limit (--fetchlimit 0).\n");
+		if (NUM_NONZERO(ctl->batchlimit))
+		    printf("  SMTP message batch limit is %d.\n", ctl->batchlimit);
+		else if (outlevel == O_VERBOSE)
+		    printf("  No SMTP message batch limit (--batchlimit 0).\n");
+		if (ctl->server.protocol == P_IMAP)
+		    if (NUM_NONZERO(ctl->expunge))
+			printf("  Deletion interval between expunges is %d (--expunge %d).\n", ctl->expunge, ctl->expunge);
+		    else if (outlevel == O_VERBOSE)
+			printf("  No expunges (--expunge 0).\n");
 	}
-	printf("  %s messages will be retrieved (--all %s).\n",
-	       ctl->fetchall ? "All" : "Only new",
-	       ctl->fetchall ? "on" : "off");
-	printf("  Fetched messages will%s be kept on the server (--keep %s).\n",
-	       ctl->keep ? "" : " not",
-	       ctl->keep ? "on" : "off");
-	printf("  Old messages will%s be flushed before message retrieval (--flush %s).\n",
-	       ctl->flush ? "" : " not",
-	       ctl->flush ? "on" : "off");
-	printf("  Rewrite of server-local addresses is %sabled (--norewrite %s).\n",
-	       ctl->rewrite ? "en" : "dis",
-	       ctl->rewrite ? "off" : "on");
-	printf("  Carriage-return stripping is %sabled (stripcr %s).\n",
-	       ctl->stripcr ? "en" : "dis",
-	       ctl->stripcr ? "on" : "off");
-	printf("  Carriage-return forcing is %sabled (forcecr %s).\n",
-	       ctl->forcecr ? "en" : "dis",
-	       ctl->forcecr ? "on" : "off");
-	printf("  Interpretation of Content-Transfer-Encoding is %sabled (pass8bits %s).\n",
-	       ctl->pass8bits ? "dis" : "en",
-	       ctl->pass8bits ? "on" : "off");
-	printf("  MIME decoding is %sabled (mimedecode %s).\n",
-	       ctl->mimedecode ? "en" : "dis",
-	       ctl->mimedecode ? "on" : "off");
-	printf("  Nonempty Status lines will be %s (dropstatus %s)\n",
-	       ctl->dropstatus ? "discarded" : "kept",
-	       ctl->dropstatus ? "on" : "off");
-	if (NUM_NONZERO(ctl->limit))
-	    printf("  Message size limit is %d bytes (--limit %d).\n", 
-		   ctl->limit, ctl->limit);
-	else if (outlevel == O_VERBOSE)
-	    printf("  No message size limit (--limit 0).\n");
-	if (NUM_NONZERO(ctl->fetchlimit))
-	    printf("  Received-message limit is %d (--fetchlimit %d).\n",
-		   ctl->fetchlimit, ctl->fetchlimit);
-	else if (outlevel == O_VERBOSE)
-	    printf("  No received-message limit (--fetchlimit 0).\n");
-	if (NUM_NONZERO(ctl->batchlimit))
-	    printf("  SMTP message batch limit is %d.\n", ctl->batchlimit);
-	else if (outlevel == O_VERBOSE)
-	    printf("  No SMTP message batch limit (--batchlimit 0).\n");
-	if (ctl->server.protocol == P_IMAP)
-	    if (NUM_NONZERO(ctl->expunge))
-		printf("  Deletion interval between expunges is %d (--expunge %d).\n", ctl->expunge, ctl->expunge);
-	    else if (outlevel == O_VERBOSE)
-		printf("  No expunges (--expunge 0).\n");
-	if (ctl->mda)
+	if (ctl->mda && (ctl->server.protocol != P_ETRN))
 	    printf("  Messages will be delivered with '%s.'\n", visbuf(ctl->mda));
 	else
 	{
@@ -1279,11 +1284,13 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 		printf("  Host part of MAIL FROM line will be %s\n",
 		       ctl->smtpaddress);
 	}
-	if (ctl->antispam != -1)
-	    printf("  Listener SMTP reponse %d will be treated as a spam block\n",
-		   ctl->antispam);
-	else if (outlevel == O_VERBOSE)
-	    printf("  Spam-blocking disabled\n");
+	if (ctl->server.protocol != P_ETRN) {
+		if (ctl->antispam != -1)
+		    printf("  Listener SMTP reponse %d will be treated as a spam block\n",
+			   ctl->antispam);
+		else if (outlevel == O_VERBOSE)
+		    printf("  Spam-blocking disabled\n");
+	}
 	if (ctl->preconnect)
 	    printf("  Server connection will be brought up with '%s.'\n",
 		   visbuf(ctl->preconnect));
@@ -1294,73 +1301,75 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 		   visbuf(ctl->postconnect));
 	else if (outlevel == O_VERBOSE)
 	    printf("  No post-connection command.\n");
-	if (!ctl->localnames)
-	    printf("  No localnames declared for this host.\n");
-	else
-	{
-	    struct idlist *idp;
-	    int count = 0;
-
-	    for (idp = ctl->localnames; idp; idp = idp->next)
-		++count;
-
-	    if (count > 1 || ctl->wildcard)
-		printf("  Multi-drop mode: ");
-	    else
-		printf("  Single-drop mode: ");
-
-	    printf("%d local name(s) recognized.\n", count);
-	    if (outlevel == O_VERBOSE)
-	    {
-		for (idp = ctl->localnames; idp; idp = idp->next)
-		    if (idp->val.id2)
-			printf("\t%s -> %s\n", idp->id, idp->val.id2);
-		    else
-			printf("\t%s\n", idp->id);
-		if (ctl->wildcard)
-		    fputs("*\n", stdout);
-	    }
-
-	    if (count > 1 || ctl->wildcard)
-	    {
-		printf("  DNS lookup for multidrop addresses is %sabled.\n",
-		       ctl->server.dns ? "en" : "dis");
-
-		if (ctl->server.envelope == STRING_DISABLED)
-		    printf("  Envelope-address routing is disabled\n");
+	if (ctl->server.protocol != P_ETRN) {
+		if (!ctl->localnames)
+		    printf("  No localnames declared for this host.\n");
 		else
 		{
-		    printf("  Envelope header is assumed to be: %s\n",
-			   ctl->server.envelope ? ctl->server.envelope:"Received");
-		    if (ctl->server.envskip > 1 || outlevel >= O_VERBOSE)
-			printf("  Number of envelope header to be parsed: %d\n",
-			       ctl->server.envskip);
-		    if (ctl->server.qvirtual)
-			printf("  Prefix %s will be removed from user id\n",
-			       ctl->server.qvirtual);
-		    else if (outlevel >= O_VERBOSE) 
-			printf("  No prefix stripping\n");
-		}
-
-		if (ctl->server.akalist)
-		{
 		    struct idlist *idp;
+		    int count = 0;
 
-		    printf("  Predeclared mailserver aliases:");
-		    for (idp = ctl->server.akalist; idp; idp = idp->next)
-			printf(" %s", idp->id);
-		    putchar('\n');
-		}
-		if (ctl->server.localdomains)
-		{
-		    struct idlist *idp;
+		    for (idp = ctl->localnames; idp; idp = idp->next)
+			++count;
 
-		    printf("  Local domains:");
-		    for (idp = ctl->server.localdomains; idp; idp = idp->next)
-			printf(" %s", idp->id);
-		    putchar('\n');
+		    if (count > 1 || ctl->wildcard)
+			printf("  Multi-drop mode: ");
+		    else
+			printf("  Single-drop mode: ");
+
+		    printf("%d local name(s) recognized.\n", count);
+		    if (outlevel == O_VERBOSE)
+		    {
+			for (idp = ctl->localnames; idp; idp = idp->next)
+			    if (idp->val.id2)
+				printf("\t%s -> %s\n", idp->id, idp->val.id2);
+			    else
+				printf("\t%s\n", idp->id);
+			if (ctl->wildcard)
+			    fputs("*\n", stdout);
+		    }
+
+		    if (count > 1 || ctl->wildcard)
+		    {
+			printf("  DNS lookup for multidrop addresses is %sabled.\n",
+			       ctl->server.dns ? "en" : "dis");
+
+			if (ctl->server.envelope == STRING_DISABLED)
+			    printf("  Envelope-address routing is disabled\n");
+			else
+			{
+			    printf("  Envelope header is assumed to be: %s\n",
+				   ctl->server.envelope ? ctl->server.envelope:"Received");
+			    if (ctl->server.envskip > 1 || outlevel >= O_VERBOSE)
+				printf("  Number of envelope header to be parsed: %d\n",
+				       ctl->server.envskip);
+			    if (ctl->server.qvirtual)
+				printf("  Prefix %s will be removed from user id\n",
+				       ctl->server.qvirtual);
+			    else if (outlevel >= O_VERBOSE) 
+				printf("  No prefix stripping\n");
+			}
+
+			if (ctl->server.akalist)
+			{
+			    struct idlist *idp;
+
+			    printf("  Predeclared mailserver aliases:");
+			    for (idp = ctl->server.akalist; idp; idp = idp->next)
+				printf(" %s", idp->id);
+			    putchar('\n');
+			}
+			if (ctl->server.localdomains)
+			{
+			    struct idlist *idp;
+
+			    printf("  Local domains:");
+			    for (idp = ctl->server.localdomains; idp; idp = idp->next)
+				printf(" %s", idp->id);
+			    putchar('\n');
+			}
+		    }
 		}
-	    }
 	}
 #ifdef	linux
 	if (ctl->server.interface)
@@ -1373,7 +1382,7 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 	    printf("  No monitor interface specified.\n");
 #endif
 
-	if (ctl->server.protocol > P_POP2)
+	if (ctl->server.protocol > P_POP2 && (ctl->server.protocol != P_ETRN))
 	    if (!ctl->oldsaved)
 		printf("  No UIDs saved from this host.\n");
 	    else
