@@ -1,6 +1,9 @@
 
 				Release Notes:
 
+fetchmail-4.7.6 ():
+* Henrik Storner's fix for mimedecode
+
 fetchmail-4.7.5 (Sat Jan  9 17:01:13 EST 1999):
 * Issue proper logout after running fetchmail -c
 * Fix prefix problem with internationalized version.

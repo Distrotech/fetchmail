@@ -4,7 +4,7 @@
 # So just uncomment all the lines marked QNX.
 
 PACKAGE = fetchmail
-VERSION = 4.7.5
+VERSION = 4.7.6
 
 SUBDIRS = @INTLSUB@ @POSUB@  
 
@@ -121,8 +121,8 @@ rfc822: rfc822.c
 	gcc -DTESTMAIN -g rfc822.c -o rfc822
 
 # Stand-alone MIME decoder
-unmime: unmime.c base64.c rfc822.c xmalloc.c error.c memmove.c
-	$(CC) -DSTANDALONE -g -o $@ $^ 
+unmime: unmime.c base64.c rfc822.c xmalloc.c error.c
+	$(CC) -DSTANDALONE -DHAVE_CONFIG_H -I. -g -o $@ $^
 
 .c.o:
 	$(CC) $(defines) -c $(CPFLAGS) -I$(srcdir) -I. $(CEFLAGS) $(CFLAGS) $<

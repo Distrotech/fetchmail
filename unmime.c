@@ -250,6 +250,7 @@ static int  BodyState = S_BODY_DATA;
  * a quoted-printable body part.
  */
 static int  CurrEncodingIsQP = 0;
+static int  CurrTypeNeedsDecode = 0;
 
 /* 
  * Delimiter for multipart messages. RFC 2046 states that this must
@@ -325,6 +326,36 @@ static char *GetBoundary(char *CntType)
 }
 
 
+int CheckContentType(char *CntType)
+{
+  /*
+   * Static array of Content-Type's for which we will do
+   * quoted-printable decoding, if requested. 
+   * It is probably wise to do this only on known text-only types;
+   * be really careful if you change this.
+   */
+
+  static char *DecodedTypes[] = {
+    "text/",        /* Will match ALL content-type's starting with 'text/' */
+    "message/rfc822", 
+    NULL
+  };
+
+  char *p = CntType;
+  int i;
+
+  /* Skip whitespace, if any */
+  for (; isspace(*p); p++) ;
+
+  for (i=0; 
+       (DecodedTypes[i] && 
+	(strncasecmp(p, DecodedTypes[i], strlen(DecodedTypes[i])))); 
+       i++) ;
+
+  return (DecodedTypes[i] != NULL);
+}
+
+
 /*
  * This routine does three things:
  * 1) It determines - based on the message headers - whether the
@@ -336,8 +367,9 @@ static char *GetBoundary(char *CntType)
  *    - All other messages are assumed NOT to include 8-bit data.
  * 2) It determines the delimiter-string used in multi-part message
  *    bodies.
- * 3) It sets the initial values of the CurrEncodingIsQP and BodyState
- *    variables, from the header contents.
+ * 3) It sets the initial values of the CurrEncodingIsQP, 
+ *    CurrTypeNeedsDecode, and BodyState variables, from the header 
+ *    contents.
  *
  * The return value is a bitmask.
  */
@@ -350,7 +382,7 @@ int MimeBodyType(unsigned char *hdrs, int WantDecode)
 
   /* Setup for a standard (no MIME, no QP, 7-bit US-ASCII) message */
   MultipartDelimiter[0] = '\0';
-  CurrEncodingIsQP = 0;
+  CurrEncodingIsQP = CurrTypeNeedsDecode = 0;
   BodyState = S_BODY_DATA;
   BodyType = 0;
 
@@ -418,6 +450,8 @@ int MimeBodyType(unsigned char *hdrs, int WantDecode)
   /* Done looking through the headers, now check what they say */
   if ((MimeVer != NULL) && (strcmp(MimeVer, "1.0") == 0)) {
 
+    CurrTypeNeedsDecode = CheckContentType(CntType);
+
     /* Check Content-Type to see if this is a multipart message */
     if ( (CntType != NULL) &&
          ((strncasecmp(CntType, "multipart/", 10) == 0) ||
@@ -442,7 +476,7 @@ int MimeBodyType(unsigned char *hdrs, int WantDecode)
       if (strcasecmp(XferEnc, "quoted-printable") == 0) {
 	CurrEncodingIsQP = 1;
 	BodyType = (MSG_IS_8BIT | MSG_NEEDS_DECODE);
-	if (WantDecode) {
+	if (WantDecode && CurrTypeNeedsDecode) {
            SetEncoding8bit(XferEncOfs);
         }
       }
@@ -546,17 +580,27 @@ int UnMimeBodyline(unsigned char **bufp, int collapsedoubledot)
   switch (BodyState) {
   case S_BODY_HDR:
     UnMimeHeader(buf);   /* Headers in body-parts can be encoded, too! */
-    if (strncasecmp("Content-Transfer-Encoding:", buf, 26) == 0) {
+    if ((*buf == '\0') || (*buf == '\n') || (strcmp(buf, "\r\n") == 0)) {
+      BodyState = S_BODY_DATA;
+    } 
+    else if (strncasecmp("Content-Transfer-Encoding:", buf, 26) == 0) {
       char *XferEnc;
 
       XferEnc = nxtaddr(buf);
       if ((XferEnc != NULL) && (strcasecmp(XferEnc, "quoted-printable") == 0)) {
 	CurrEncodingIsQP = 1;
-	SetEncoding8bit(buf);
+
+        /* Hmm ... we cannot be really sure that CurrTypeNeedsDecode
+           has been set - we may not have seen the Content-Type header
+           yet. But *usually* the Content-Type header comes first, so
+           this will work. And there is really no way of doing it 
+           "right" as long as we stick with the line-by-line processing. */
+	if (CurrTypeNeedsDecode) SetEncoding8bit(buf);
       }
     }
-    else if ((*buf == '\0') || (*buf == '\n') || (strcmp(buf, "\r\n") == 0))
-      BodyState = S_BODY_DATA;
+    else if (strncasecmp("Content-Type:", buf, 13) == 0) {
+      CurrTypeNeedsDecode = CheckContentType(nxtaddr(buf));
+    }
 
     *bufp = (buf + strlen(buf));
     break;
@@ -565,10 +609,10 @@ int UnMimeBodyline(unsigned char **bufp, int collapsedoubledot)
     if ((*MultipartDelimiter) && 
 	(strncmp(buf, MultipartDelimiter, strlen(MultipartDelimiter)) == 0)) {
       BodyState = S_BODY_HDR;
-      CurrEncodingIsQP = 0;
+      CurrEncodingIsQP = CurrTypeNeedsDecode = 0;
     }
 
-    if (CurrEncodingIsQP) 
+    if (CurrEncodingIsQP && CurrTypeNeedsDecode) 
       ret = DoOneQPLine(bufp, collapsedoubledot);
     else
      *bufp = (buf + strlen(buf));
@@ -584,6 +628,7 @@ int UnMimeBodyline(unsigned char **bufp, int collapsedoubledot)
 #include <unistd.h>
 
 char *program_name = "unmime";
+int outlevel = 0;
 
 #define BUFSIZE_INCREMENT 4096
 
