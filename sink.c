@@ -637,7 +637,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		  "%s@%s", ctl->remotename, ctl->server.truename);
 	    ap = addr;
 	}
-	else if (strchr(msg->return_path, '@'))
+	else if (strchr(msg->return_path,'@') || strchr(msg->return_path,'!'))
 	    ap = msg->return_path;
 	else		/* in case Return-Path existed but was local */
 	{

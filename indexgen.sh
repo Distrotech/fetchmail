@@ -326,6 +326,13 @@ that assists you in installing sendmail and fetchmail together/
 href="http://www.hawkins.emu.id.au/gotmail/">gotmail</a>
 that can retrieve Hotmail. 
 
+<P>A hacker identifying himself simply as `Steines' has written a
+filter which rewrites the to-line with a line which only includes
+receipients for a given domain and renames the old to-line. It also
+rewrites the domainpart of addresses if the offical domain is
+different to local domain. You can find it <a 
+href="http://www.steines.com/mailf/">here</a>.
+
 <H1>Fetchmail's funniest fan letter:</H1>
 
 <A HREF="funny.html">This letter</A> still cracks me up whenever I reread it. 

@@ -273,7 +273,7 @@ POP3, ETRN, or ODMR.
 Tell fetchail to poll trace information in the form `polling %s
 account %s' to the Received line it generates, where the %s parts are
 replaced by the user's remote name and the poll label (the Received
-header also normally inclodes the server's truename).  This can be
+header also normally includes the server's truename).  This can be
 used to facilate mail filtering based on the account it is being
 received from.
 .TP
@@ -1802,12 +1802,13 @@ in a multi-user entry must include it.  Here's an example:
 .nf
   poll pop.provider.net proto pop3 port 3111
         user "jsmith" with pass "secret1" is "smith" here
-        user jones with pass "secret2" is "jjones" here
+        user jones with pass "secret2" is "jjones" here keep
 .fi
 
 This associates the local username `smith' with the pop.provider.net
 username `jsmith' and the local username `jjones' with the
-pop.provider.net username `jones'.
+pop.provider.net username `jones'.  Mail for `jones' is kept on the
+server after download.
 .PP
 Here's what a simple retrieval configuration for a multi-drop mailbox
 looks like:
@@ -2189,10 +2190,10 @@ mutt(1), elm(1), mail(1), sendmail(8), popd(8), imapd(8), netrc(5)
 .SH APPLICABLE STANDARDS
 .TP 5
 SMTP/ESMTP:
-RFC 821, RFC 1869, RFC 1652, RFC 1870, RFC1983, RFC 1985
+RFC 821, RFC2821, RFC 1869, RFC 1652, RFC 1870, RFC1983, RFC 1985
 .TP 5
 mail:
-RFC 822, RFC 1123, RFC 1892, RFC 1894
+RFC 822, RFC2822, RFC 1123, RFC 1892, RFC 1894
 .TP 5
 POP2:
 RFC 937

@@ -100,8 +100,11 @@ statement	: SET LOGFILE optmap STRING	{run.logfile = xstrdup($4);}
 		| SET NO SPAMBOUNCE		{run.spambounce = FALSE;}
 		| SET PROPERTIES optmap STRING	{run.properties =xstrdup($4);}
 		| SET SYSLOG			{run.use_syslog = TRUE;}
+		| SET NO SYSLOG			{run.use_syslog = FALSE;}
 		| SET INVISIBLE			{run.invisible = TRUE;}
+		| SET NO INVISIBLE		{run.invisible = FALSE;}
 		| SET SHOWDOTS			{run.showdots = TRUE;}
+		| SET NO SHOWDOTS		{run.showdots = FALSE;}
 
 /* 
  * The way the next two productions are written depends on the fact that

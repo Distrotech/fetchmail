@@ -672,13 +672,19 @@ static int imap_fetch_headers(int sock, struct query *ctl,int number,int *lenp)
     gen_send(sock, "FETCH %d RFC822.HEADER", number);
 
     /* looking for FETCH response */
-    do {
+    for (;;) 
+    {
 	int	ok;
 
 	if ((ok = gen_recv(sock, buf, sizeof(buf))))
 	    return(ok);
-    } while
-	(sscanf(buf+2, "%d FETCH (%*s {%d}", &num, lenp) != 2);
+	if (sscanf(buf+2, "%d FETCH (%*s {%d}", &num, lenp) == 2)
+	    break;
+	else if (sscanf(buf+2, "%d NO", &num) == 1)
+	    return(PS_ERROR);
+	else if (sscanf(buf+2, "%d BAD", &num) == 1)
+	    return(PS_ERROR);
+    }
 
     if (num != number)
 	return(PS_ERROR);
