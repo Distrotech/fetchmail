@@ -696,8 +696,12 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		    char	errbuf[POPBUFSIZE];
 		    int		res;
 
-		    if ((res = handle_smtp_report(ctl, msg))==PS_REFUSED)
-			return(PS_REFUSED);
+		    /*
+		     * Do *not* interpret a PS_REFUSED here as a directive
+		     * to break out of the address loop.  We want to go through
+		     * and process the rest of the RCPT TO addresses.
+		     */
+		    handle_smtp_report(ctl, msg);
 
 #ifdef HAVE_SNPRINTF
 		    snprintf(errbuf, sizeof(errbuf), "%s: %s",

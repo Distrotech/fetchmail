@@ -2,9 +2,14 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
-* Corrected Rob Braun's remote-build change, it broke change the build
-  with NLS.
+fetchmail-5.8.14 (Thu Jul 12 03:19:57 EDT 2001), 21058 lines:
 
+* Corrected Rob Braun's remote-build change, it broke the build with NLS.
+* Found (and killed) a subtle SMTP protocol error that was probably lurking 
+  behind a lot of the bug reports related to bounce mail, thanks to Quoc Luu.
+  (Only manifested when the MTA rejected mail due to a bad RCPT TO address.)
+
+There are 357 people on fetchmail-friends and 607 on fetchmail-announce.
 
 fetchmail-5.8.13 (Tue Jul 10 17:00:50 EDT 2001), 21057 lines:
 
