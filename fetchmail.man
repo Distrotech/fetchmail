@@ -506,7 +506,7 @@ The --stdout, --local, --mda and --limit arguments of previous
 versions have been removed, greatly simplifying the code and making it
 faster.  Those features did jobs that belonged to your local MDA and
 mail reader. The job of
-.I popclient
+.I fetchmail
 is to forward local mail to your MDA, not to be one.  Saint-Exupery
 said, "Perfection [in design] is achieved not when there is nothing
 more to add, but rather when there is nothing more to take away."
