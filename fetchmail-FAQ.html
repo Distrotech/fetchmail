@@ -85,6 +85,7 @@ when I may have multiple login sessions going?</a><br>
 <a href="#M3">M3. I tried to run a mailing list using multidrop, and I have a mail loop!</a><br>
 <a href="#M4">M4. My multidrop fetchmail seems to be having DNS problems.</a><br>
 <a href="#M5">M5. I'm seeing long DNS delays before each message is processed.</a><br>
+<a href="#M6">M6. How do I get multidrop mode to work with majordomo?</a>
 
 <h1>Mangled mail:</h1>
 
@@ -948,9 +949,9 @@ things: <p>
 
 <strong>1. You've actually set up your .fetchmailrc entry to invoke multidrop mode.</strong><p>
 
-Many people set a `<CODE>localdomains</CODE>' list and then forget that fetchmail
-wants to see more than one name (or the wildcard `*') in a `<CODE>here</CODE>' list
-before it will do multidrop routing.<p>
+Many people set a `<CODE>localdomains</CODE>' list and then forget
+that fetchmail wants to see more than one name (or the wildcard `*')
+in a `<CODE>here</CODE>' list before it will do multidrop routing.<p>
 
 <strong>2. You may have to set `no envelope'.</strong><p>
 
@@ -1000,6 +1001,58 @@ parts from being looked up at all.<p>
 
 Sometimes delays are unavoidable.  Some SMTP listeners try to call DNS
 on the From-address hostname as a way of checking that the address is valid.<p>
+
+<hr>
+<h2><a name="M6">M6. How do I get multidrop mode to work with majordomo?</a></h2>
+
+In order for sendmail to execute the command strings in the majordomo
+alias file, it is necessary for sendmail to think that the mail it
+receives via SMTP really is destined for a local user name.  A normal
+virtual-domain setup results in delivery to the default mailbox,
+rather than expansion through majordomo.<P>
+
+Michael &lt;michael@bizsystems.com&gt; gave us a recipe for dealing
+with this case that pairs a run control file like this:<P>
+
+<pre>
+poll your.pop3.server proto pop3:
+    no envelope no dns
+    localdomains virtual.localdomain1.com virtual.localdomain2.com ...
+    user yourISPusername is root * here,
+    password yourISPpassword fetchall
+</pre>
+
+with a hack on your local sendmail.cf like this:<P>
+
+<pre>
+#############################################
+#  virtual info, local hack for ruleset 98  #
+#############################################
+
+# domains to treat as direct mapped local domain
+
+CVvirtual.localdomain1.com virtual.localdomain2.com ...
+---------------------------
+in ruleset 98 add
+-------------------------
+# handle virtual users
+
+R$+ &lt;@ $=V . &gt;          $: $1 &lt; @ $j . &gt;
+R&lt; @ &gt; $+ &lt; @ $=V . &gt;   $: $1 &lt; @ $j . &gt;
+R&lt; @ &gt; $+               $: $1
+R&lt; error : $- $+ &gt; $*   $#error $@ $1 $: $2
+R&lt; $+ &gt; $+ &lt; @ $+ &gt;     $: $&gt;97 $1
+</pre>
+
+This ruleset just strips virtual domain names off the addresses of incoming
+mail.  Your sendmail must be 8.8 or newer for this to work.  Michael
+says:<P>
+
+<BLOCKQUOTE>
+I use this scheme with 2 virtual domains and the default ISP 
+user+domain and service about 30 mail accounts + majordomo on my 
+inside pop3 server with fetchmail and sendmail 8.83<P>
+</BLOCKQUOTE>
 
 <hr>
 <h2><a name="X1">X1. Why is fetched mail being logged with my name, not the real From address?</a></h2>
@@ -1135,7 +1188,7 @@ biff n
 
 to solve the problem system-wide.<P>
 
-$Id: fetchmail-FAQ.html,v 1.44 1997/07/08 03:23:25 esr Exp $<p>
+$Id: fetchmail-FAQ.html,v 1.45 1997/07/08 20:36:18 esr Exp $<p>
 
 <HR>
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
