@@ -279,7 +279,7 @@ Donncha O Caoihm has written a Perl script called
 that assists you in installing sendmail and fetchmail together/<p>
 
 Peter Hawkins has written a script called <a
-href="http://www.ozemail.com.au/~peterhawkins/gotmail/">gotmail</a>
+href="http://hawkins.emu.id.au/gotmail/">gotmail</a>
 that can retrieve Hotmail. <P>
 
 <H1>Fetchmail's funniest fan letter:</H1>
