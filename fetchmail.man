@@ -242,7 +242,7 @@ down host.  This would be particularly annoying for a \fIfetchmail\fR
 running in background.  There is a default timeout which fetchmail -V
 will report.  If a given connection receives too many timeouts in 
 succession, fetchmail will consider it wedged and stop retrying,
-the calkling user will be notified by email if this happens.
+the calling user will be notified by email if this happens.
 .TP
 .B \--plugin <command>
 (Keyword: plugin) The plugin option allows you to use an external
