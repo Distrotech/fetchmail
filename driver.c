@@ -1510,23 +1510,23 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	    if (timeoutcount > MAX_TIMEOUTS 
 		&& !open_warning_by_mail(ctl, (struct msgblk *)NULL))
 	    {
+#define TIMEOUT_WARNING \
+    "This could mean that your mailserver is stuck, or that your SMTP\r\n" \
+    "server is wedged, or that your mailbox file on the server has been\r\n" \
+    "corrupted by a server error.  You can run `fetchmail -v -v' to\r\n" \
+    "diagnose the problem.\r\n\r\n" \
+    "Fetchmail won't poll this mailbox again until you restart it.\r\n"
 		stuff_warning(ctl,
 			      _("Subject: fetchmail sees repeated timeouts\r\n"));
 		stuff_warning(ctl,
-			      _("Fetchmail saw more than %d timeouts while attempting to get mail from %s@%s.\n"), 
+			      _("Fetchmail saw more than %d timeouts while attempting to get mail from %s@%s.\r\n"), 
 			      MAX_TIMEOUTS,
 			      ctl->remotename,
 			      ctl->server.truename);
-		stuff_warning(ctl, 
-			      _("This could mean that your mailserver is stuck, or that your SMTP listener"));
-		stuff_warning(ctl, 
-			      _("is wedged, or that your mailbox file on the server has been corrupted by"));
-		stuff_warning(ctl, 
-			      _("a server error.  You can run `fetchmail -v -v' to diagnose the problem."));
-		stuff_warning(ctl,
-			      _("Fetchmail won't poll this mailbox again until you restart it."));
+		stuff_warning(ctl, _(TIMEOUT_WARNING));
 		close_warning_by_mail(ctl, (struct msgblk *)NULL);
 		ctl->wedged = TRUE;
+#undef TIMEOUT_WARNING
 	    }
 
 	    ok = PS_ERROR;
@@ -1694,16 +1694,15 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		     * failure once it looks like this isn't a fluke 
 		     * due to the server being temporarily inaccessible.
 		     */
+		    if (run.poll_interval
+			&& ctl->authfailcount++ > MAX_AUTHFAILS 
+			&& !open_warning_by_mail(ctl, (struct msgblk *)NULL))
+		    {
 #define LOGIN_ERROR	\
     "The attempt to get authorization failed.\r\n" \
     "This probably means your password is invalid, but POP3 servers have\r\n" \
     "other failure modes that fetchmail cannot distinguish from this\r\n" \
     "because they don't send useful error messages on login failure.\r\n"
-
-		    if (run.poll_interval
-			&& ctl->authfailcount++ > MAX_AUTHFAILS 
-			&& !open_warning_by_mail(ctl, (struct msgblk *)NULL))
-		    {
 			stuff_warning(ctl,
 			    _("Subject: fetchmail authentication failed\r\n"));
 			stuff_warning(ctl,
@@ -1713,6 +1712,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 			stuff_warning(ctl, _(LOGIN_ERROR));
 			close_warning_by_mail(ctl, (struct msgblk *)NULL);
 			ctl->wedged = TRUE;
+#undef LOGIN_ERROR
 		    }
 		}
 		goto cleanUp;
