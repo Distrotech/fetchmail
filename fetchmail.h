@@ -178,6 +178,7 @@ extern char *idfile;		/* path name of UID file */
 extern int linelimit;		/* limit # lines retrieved per site */
 extern int versioninfo;		/* emit only version info */
 extern char *user;		/* name of invoking user */
+extern char *fetchmailhost;	/* the name of the host running fetchmail */
 
 /* prototypes for globally callable functions */
 #if defined(HAVE_STDARG_H)

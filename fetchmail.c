@@ -65,6 +65,7 @@ char *rcfile;		/* path name of rc file */
 char *idfile;		/* UID list file */
 int versioninfo;	/* emit only version info */
 char *user;		/* the name of the invoking user */
+char *fetchmailhost;	/* the name of the host running fetchmail */
 char *program_name;	/* the name to prefix error messages with */
 
 static char *lockfile;		/* name of lockfile */
@@ -114,6 +115,10 @@ int main (int argc, char **argv)
 	    exit(PS_UNDEFINED);
 	}
     }
+
+    /* we'll need this for error messages */
+    gethostname(tmpbuf, sizeof(tmpbuf));
+    fetchmailhost = xstrdup(tmpbuf);
 
     /*
      * Backward-compatibility hack.  If we're called by the name of the
