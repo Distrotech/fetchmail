@@ -186,17 +186,16 @@ int *countp, *newp;
     return(0);
 }
 
-static int *pop3_getsizes(socket, count)
+static int pop3_getsizes(socket, count, sizes)
 /* capture the sizes of all messages */
 int	socket;
 int	count;
+int	*sizes;
 {
-    int	ok, *sizes;
+    int	ok;
 
     if ((ok = gen_transact(socket, "LIST")) != 0)
-	return((int *)NULL);
-    else if ((sizes = (int *)malloc(sizeof(int) * count)) == (int *)NULL)
-	return((int *)NULL);
+	return(ok);
     else
     {
 	char buf [POPBUFSIZE+1];
@@ -215,12 +214,12 @@ int	count;
 		sizes[num - 1] = -1;
 	}
 
-	return(sizes);
+	return(0);
     }
 }
 
 static int pop3_is_old(socket, ctl, num)
-/* is the goiven message old? */
+/* is the given message old? */
 int socket;
 struct query *ctl;
 int num;

@@ -111,39 +111,34 @@ int *countp, *newp;
     return(0);
 }
 
-static int *imap_getsizes(socket, count)
+static int imap_getsizes(socket, count, sizes)
 /* capture the sizes of all messages */
 int	socket;
 int	count;
+int	*sizes;
 {
-    int	ok, *sizes;
+    char buf [POPBUFSIZE+1];
 
-    if ((sizes = (int *)malloc(sizeof(int) * count)) == (int *)NULL)
-	return((int *)NULL);
-    else
+    gen_send(socket, "FETCH 1:%d RFC822.SIZE", count);
+    while (SockGets(socket, buf, sizeof(buf)) >= 0)
     {
-	char buf [POPBUFSIZE+1];
+	int num, size;
 
-	gen_send(socket, "FETCH 1:%d RFC822.SIZE", count);
-	while (SockGets(socket, buf, sizeof(buf)) >= 0)
-	{
-	    int num, size;
-
-	    if (outlevel == O_VERBOSE)
-		fprintf(stderr,"%s\n",buf);
-	    if (strstr(buf, "OK"))
-		break;
-	    else if (sscanf(buf, "* %d FETCH (RFC822.SIZE %d)", &num, &size) == 2)
-		sizes[num - 1] = size;
-	    else
-		sizes[num - 1] = -1;
-	}
-
-	return(sizes);
+	if (outlevel == O_VERBOSE)
+	    fprintf(stderr,"%s\n",buf);
+	if (strstr(buf, "OK"))
+	    break;
+	else if (sscanf(buf, "* %d FETCH (RFC822.SIZE %d)", &num, &size) == 2)
+	    sizes[num - 1] = size;
+	else
+	    sizes[num - 1] = -1;
     }
+
+    return(0);
 }
 
 static imap_is_old(socket, ctl, num)
+/* is the given message old? */
 int socket;
 struct query *ctl;
 int num;
@@ -182,7 +177,7 @@ int *lenp;
 }
 
 static imap_trail(socket, ctl, number)
-/* discard tail of FETCH response */
+/* discard tail of FETCH response after reading message text */
 int socket;
 struct query *ctl;
 int number;

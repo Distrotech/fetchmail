@@ -838,8 +838,12 @@ struct method *proto;		/* protocol method table */
 	/* we may need to get sizes in order to check message limits */
 	msgsizes = (int *)NULL;
 	if (!ctl->fetchall && proto->getsizes && ctl->limit)
-	    if ((msgsizes = (proto->getsizes)(socket, count)) == (int *)NULL)
+	{
+	    msgsizes = (int *)alloca(sizeof(int) * count);
+
+	    if ((ok = (proto->getsizes)(socket, count, msgsizes)) != 0)
 		return(PS_ERROR);
+	}
 
 	if (check_only)
 	{

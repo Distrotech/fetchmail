@@ -204,7 +204,7 @@ $(srcdir)/rcfile_y.c: $(srcdir)/rcfile_y.y
 
 parser = $(srcdir)/rcfile_l.l $(srcdir)/rcfile_y.y
 headers = $(srcdir)/fetchmail.h $(srcdir)/socket.h $(srcdir)/smtp.h \
-	$(srcdir)/md5.h $(srcdir)/md5global.h
+	$(srcdir)/mx.h $(srcdir)/md5.h $(srcdir)/md5global.h
 extra = $(srcdir)/alloca.c $(srcdir)/getopt.[ch] $(srcdir)/getopt1.c \
 	$(srcdir)/strcasecmp.c
 docs = $(srcdir)/COPYING $(srcdir)/README $(srcdir)/INSTALL $(srcdir)/NEWS \
