@@ -237,8 +237,6 @@ char **argv;
 	tmpdir = "/tmp";
     strcpy(tmpbuf, tmpdir);
     strcat(tmpbuf, "/fetchmail-");
-    gethostname(tmpbuf + strlen(tmpbuf), HOSTLEN+1);
-    strcat(tmpbuf, "-");
     strcat(tmpbuf, user);
 
     /* perhaps we just want to check options? */
