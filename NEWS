@@ -13,6 +13,7 @@
 ------------------------------------------------------------------------------
 fetchmail-4.3.2 ()
 * More slow-UIDL patches from Wolfgang Wander.
+* Yet another attempt to fix IMAP-K4.
 
 fetchmail-4.3.1 (Mon Oct 13 17:12:40 EDT 1997)
 * Minor portation fixes for early AIX versions and NextSTEP.
