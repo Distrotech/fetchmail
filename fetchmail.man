@@ -2208,7 +2208,7 @@ The `principal' option only handles Kerberos IV, not V.
 Send comments, bug reports, gripes, and the like to the
 fetchmail-friends list <fetchmail-friends@lists.ccil.org>.  An HTML FAQ is
 available at the fetchmail home page; surf to
-http://www.tuxedo.org/~esr/fetchmail or do a WWW search for pages with
+http://www.catb.org/~esr/fetchmail or do a WWW search for pages with
 `fetchmail' in their titles.
 
 .SH AUTHOR
