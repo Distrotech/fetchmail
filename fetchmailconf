@@ -482,15 +482,17 @@ To do this, find the site's label in the listbox and double-click it.
 This will take you to a site configuration dialogue.
 """}
 
+mode_to_help = {'novice':novicehelp, 'expert':experthelp}
+
 class ConfigurationEdit(Frame):
     def __init__(self, configuration, mode, master=None):
 	Frame.__init__(self, master)
-	self.master.title('fetchmail " + mode + " configurator');
-	self.master.iconname('fetchmail " + mode + configurator');
+	self.master.title('fetchmail ' + mode + ' configurator');
+	self.master.iconname('fetchmail ' + mode + ' configurator');
 	self.configuration = configuration
 	Pack.config(self)
-        self.makeWidgets()
         self.mode = mode
+        self.makeWidgets()
 
     def makeWidgets(self):
 	self.poll_interval = StringVar(self)
@@ -504,7 +506,9 @@ class ConfigurationEdit(Frame):
 	if self.configuration.idfile: self.idfile.set(self.configuration.idfile);
 	self.invisible = BooleanVar(self)
 	self.invisible.set(self.configuration.invisible)
-	dispose_window(self, 'Expert Configurator Controls', experthelp)
+	dispose_window(self,
+                       'Configurator ' + self.mode + ' Controls',
+                       mode_to_help[self.mode])
 
 	gf = Frame(self, relief=RAISED, bd = 5)
 	Label(gf,
@@ -692,11 +696,11 @@ def dispose_window(master, legend, help):
     dispose = Frame(master, relief=RAISED, bd=5)
     Label(dispose, text=legend).pack(side=TOP,pady=10)
     Button(dispose, text='Save', fg='blue',
-		command=master.save).pack(side=LEFT)
+           command=master.save).pack(side=LEFT)
     Button(dispose, text='Quit', fg='blue',
-		command=master.nosave).pack(side=LEFT)
+           command=master.nosave).pack(side=LEFT)
     Button(dispose, text='Help', fg='blue',
-	       command=lambda: helpwin(help)).pack(side=RIGHT)
+           command=lambda x=help: helpwin(x)).pack(side=RIGHT)
     dispose.pack(fill=X)
     return dispose
 
