@@ -289,7 +289,7 @@ NOTES: design-notes.html
 # man2html no longer chokes and dies on this man page,
 # but manServer.pl does a much better job. 
 fetchmail-man.html: fetchmail.man
-	man2Server.pl fetchmail.man >fetchmail-man.html
+	manServer.pl fetchmail.man >fetchmail-man.html
 
 # Make distribution, update LSM with proper size, remake distribution
 # (Making fetchmail-man.html is a kluge to ensure that it will be
