@@ -6,6 +6,12 @@
 
 				Release Notes:
 
+fetchmail-4.7.7 ():
+* Fixed off-by-one error in batchlimit logic (thanks to Brian Warner).
+* Added MD5 checksums to web page.
+
+There are 263 people on fetchmail-friends and 342 on fetchmail-announce.
+
 fetchmail-4.7.6 (Sat Jan 30 19:44:24 EST 1999):
 * Henrik Storner's fix for mimedecode
 * ' now works as a string quote in. fetchmailrc syntax, just like ".

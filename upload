@@ -21,6 +21,7 @@ put design-notes.html
 #put funny.html
 #put fetchmail.gif
 #put bighand.gif
+put checksums
 put index.html
 close
 echo "Upload to tuxedo complete"

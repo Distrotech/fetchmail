@@ -14,6 +14,21 @@ fetchmailsize=$1
 
 rm -f index.html
 
+# Compute MD5 checksums for security audit
+rm -f checksums
+for file in fetchmail-$version.tar.gz fetchmail-$version-1.i386.rpm fetchmail-$version-1.src.rpm
+do 
+    md5sum $file >>checksums
+done
+
+if [ $version != $goldvers ]
+then
+    for file in fetchmail-$goldvers.tar.gz fetchmail-$goldvers-1.i386.rpm fetchmail-$goldvers-1.src.rpm
+    do
+	md5sum $file >>checksums
+    done
+fi
+
 cat >index.html <<EOF
 <!doctype HTML public "-//W3O//DTD W3 HTML 3.2//EN">
 <HTML>
@@ -110,9 +125,10 @@ You can get any of the following leading-edge resources here:
 	Source RPM of fetchmail $version</a>
 </UL>
 
+MD5 <a href="checksums">checksums</a> are available for these files.<p>
 EOF
 
-if [ $version = $goldvers ]
+if [ $version != $goldvers ]
 then
     cat >>index.html <<EOF
 
