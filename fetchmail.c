@@ -373,7 +373,10 @@ struct hostrec *queryctl;
     char *cp;
 
     printf("  Username = '%s'\n", queryctl->remotename);
-    printf("  Password = '%s'\n", queryctl->password);
+    if (queryctl->password)
+	printf("  Password = '%s'\n", queryctl->password);
+    if (queryctl->rpopid)
+	printf("  RPOP id = '%s'\n", queryctl->rpopid);
     printf("  Protocol is %s", showproto(queryctl->protocol));
     if (queryctl->port)
 	printf(" (using port %d)", queryctl->port);

@@ -12,6 +12,8 @@ popclient \- retrieve mail from a mailserver using POP or IMAP
 is a mail retrieval client which supports 
 POP2 (as specified in RFC 937), POP3 (RFC 1725), IMAP2bis (as
 implemented by the 4.4BSD imapd program), and IMAP4 (RFC1730).
+It can use (but does not require) the RPOP and LAST facilities
+removed from later POP3 versions.
 .PP
 The,
 .I popclient
@@ -138,15 +140,12 @@ Post Office Protocol 2
 Post Office Protocol 3
 .IP APOP
 Use POP3 with MD5 authentication.
-.IP RPOP
-Use POP3 with trusted-host-based authentication (like rlogin/rsh). 
-.I popclient
-must be installed as a setuid root program to use RPOP.
 .RE
 .TP
 .B \-P, --port
-The  option permits you to specify a TCP/IP port to connect on.
-This will seldom be necessary as all the supported protocols have
+The  option permits you to specify a TCP/IP port to connect on.  You
+will need to specify this in order to use RPOP authentication.  Otherwise
+this option will seldom be necessary as all the supported protocols have
 well-established default port numbers.
 .TP
 .B \-r folder, --remote folder
@@ -247,6 +246,15 @@ On mailservers that do not provide ordinary user accounts, your user-id and
 password are usually assigned by the server administrator when you apply for 
 a mailbox on the server.  Contact your server administrator if you don't know 
 the correct user-id and password for your mailbox account.
+.PP
+POP3 versions up to the RFC1225 version supported an alternate
+authentication mechanism called RPOP intended to remove the security
+risk inherent in sending unencrypted account passwords across the net
+(in RFC1460 this facility was replaced with APOP).  If your .poprc
+file specifies an RPOP id and a connection port in the privileged
+range (1..1024),
+.I popclient will
+ship the id with an RPOP command rather than sending a password.
 .PP
 .SH OUTPUT OPTIONS
 The default behavior of 
@@ -386,6 +394,7 @@ Legal keywords are:
     protocol (or proto)
     username (or user)
     password (or pass)
+    rpopid
     remotefolder (or remote)
     localfolder (or local)
     mda
@@ -508,11 +517,9 @@ connection.  If you don't know what a socket is, don't worry about it --
 just treat this as an 'unrecoverable error'.
 .IP 3
 The user authentication step failed.  This usually means that a bad 
-user-id or password was specified.
+user-id, password, or RPOP id was specified.
 .IP 4
-Some sort of protocol error was detected.  POP is not especially forgiving
-when it comes to unexpected responses, commands, etc -- the protocol invariably
-calls for terminating the connection under such error conditions.
+Some sort of fatal protocol error was detected.
 .IP 5
 There was a syntax error in the arguments to 
 .I popclient.
@@ -561,10 +568,8 @@ find a POP2 server to test the necessary code reorganization with.
 The --remotefolder option doesn't work with POP3, the protocol won't
 support it.
 .PP
-The UIDL support for RFC1725-compliant servers without LAST is not yet
-very well tested.
-.PP
-No RPOP support yet.
+The RPOP support, and the UIDL support for RFC1725-compliant servers
+without LAST, are not yet very well tested.
 .PP
 Send comments, bug reports, gripes, and the like to Eric S. Raymond
 <esr@thyrsus.com>.

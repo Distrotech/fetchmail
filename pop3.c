@@ -86,69 +86,67 @@ int socket;
 struct hostrec *queryctl;
 char *greeting;
 {
-  char buf [POPBUFSIZE];
+    char buf [POPBUFSIZE];
 
 #if defined(HAVE_APOP_SUPPORT)
-  /* build MD5 digest from greeting timestamp + password */
-  if (queryctl->protocol == P_APOP) 
-    if (POP3_BuildDigest(greeting,queryctl) != 0) {
-      return(PS_AUTHFAIL);
-    }
-#endif
+    /* build MD5 digest from greeting timestamp + password */
+    if (queryctl->protocol == P_APOP) 
+	if (POP3_BuildDigest(greeting,queryctl) != 0) {
+	    return(PS_AUTHFAIL);
+	}
+#endif  /* HAVE_APOP_SUPPORT */
 
-  switch (queryctl->protocol) {
+    switch (queryctl->protocol) {
     case P_POP3:
-      SockPrintf(socket,"USER %s\r\n",queryctl->remotename);
-      if (outlevel == O_VERBOSE)
-        fprintf(stderr,"> USER %s\n",queryctl->remotename);
-      if (pop3_ok(buf,socket) != 0)
-        goto badAuth;
+	SockPrintf(socket,"USER %s\r\n",queryctl->remotename);
+	if (outlevel == O_VERBOSE)
+	    fprintf(stderr,"> USER %s\n",queryctl->remotename);
+	if (pop3_ok(buf,socket) != 0)
+	    goto badAuth;
 
-      SockPrintf(socket,"PASS %s\r\n",queryctl->password);
-      if (outlevel == O_VERBOSE)
-        fprintf(stderr,"> PASS password\n");
-      if (pop3_ok(buf,socket) != 0)
-        goto badAuth;
-    
-      break;
+	if (queryctl->rpopid[0])
+	{
+	    SockPrintf(socket, "RPOP %s\r\n", queryctl->rpopid);
+	    if (outlevel == O_VERBOSE)
+		fprintf(stderr,"> RPOP %s %s\n",queryctl->rpopid);
+	}
+	else
+	{
+	    SockPrintf(socket,"PASS %s\r\n",queryctl->password);
+	    if (outlevel == O_VERBOSE)
+		fprintf(stderr,"> PASS password\n");
+	}
+	if (pop3_ok(buf,socket) != 0)
+	    goto badAuth;
+	break;
 
 #if defined(HAVE_APOP_SUPPORT)
     case P_APOP:
-      SockPrintf(socket,"APOP %s %s\r\n", 
-                 queryctl->remotename, queryctl->digest);
-      if (outlevel == O_VERBOSE)
-        fprintf(stderr,"> APOP %s %s\n",queryctl->remotename, queryctl->digest);
-      if (pop3_ok(buf,socket) != 0) 
-        goto badAuth;
-      break;
+	SockPrintf(socket,"APOP %s %s\r\n", 
+		   queryctl->remotename, queryctl->digest);
+	if (outlevel == O_VERBOSE)
+	    fprintf(stderr,"> APOP %s %s\n",queryctl->remotename, queryctl->digest);
+	if (pop3_ok(buf,socket) != 0) 
+	    goto badAuth;
+	break;
 #endif  /* HAVE_APOP_SUPPORT */
 
-#if defined(HAVE_RPOP_SUPPORT)
-    case P_RPOP:
-      SockPrintf(socket, "RPOP %s\r\n", queryctl->remotename);
-      if (pop3_ok(buf,socket) != 0)
-         goto badAuth;
-      if (outlevel == O_VERBOSE)
-        fprintf(stderr,"> RPOP %s %s\n",queryctl->remotename);
-      break;
-#endif  /* HAVE_RPOP_SUPPORT */
-
     default:
-      fprintf(stderr,"Undefined protocol request in POP3_auth\n");
-  }
+	fprintf(stderr,"Undefined protocol request in POP3_auth\n");
+    }
 
-  /* we're approved */
-  return(0);
+    /* we're approved */
+    return(0);
 
-  /*NOTREACHED*/
+    /*NOTREACHED*/
 
 badAuth:
-  if (outlevel > O_SILENT && outlevel < O_VERBOSE)
-    fprintf(stderr,"%s\n",buf);
-  else
-    ; /* say nothing */
+    if (outlevel > O_SILENT && outlevel < O_VERBOSE)
+	fprintf(stderr,"%s\n",buf);
+    else
+	; /* say nothing */
 
-  return(PS_ERROR);
+    return(PS_ERROR);
 }
 
 static int use_uidl;
