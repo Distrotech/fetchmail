@@ -45,7 +45,7 @@
 #define		TO_STDOUT	2	/* use stdout */
 #define		TO_MDA		3	/* use agent */
 
-struct optrec {
+struct hostrec {
   char servername [HOSTLEN];
   char localname [USERNAMELEN];
   char remotename [USERNAMELEN];
@@ -60,7 +60,7 @@ struct optrec {
 
   /* dependent on the above members */
   int output;
-  struct optrec *next;
+  struct hostrec *next;
 
 #if defined(HAVE_APOP_SUPPORT)
   /* internal use only */ 
@@ -85,15 +85,15 @@ extern int versioninfo;		/* emit only version info */
 #ifdef HAVE_PROTOTYPES
 
 /* prototypes for globally callable functions */
-int doPOP2 (struct optrec *options); 
-int doPOP3 (struct optrec *options);
+int doPOP2 (struct hostrec *options); 
+int doPOP3 (struct hostrec *options);
 
-int parsecmdline (int argc, char **argv, struct optrec *options);
-int setdefaults (struct optrec *options);
+int parsecmdline (int argc, char **argv, struct hostrec *options);
+int setdefaults (struct hostrec *options);
 char *getnextserver (int argc, char **argv, int *optind);
-int openuserfolder (struct optrec *options);
+int openuserfolder (struct hostrec *options);
 int closeuserfolder (int fd);
-int openmailpipe (struct optrec *options);
+int openmailpipe (struct hostrec *options);
 int closemailpipe (int fd);
 char *MD5Digest (char *);
 void reply_hack(char *buf, const char *host);

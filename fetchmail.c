@@ -43,11 +43,11 @@
 
 #ifdef HAVE_PROTOTYPES
 /* prototypes for internal functions */
-int showoptions (struct optrec *options);
-int parseMDAargs (struct optrec *options);
+int showoptions (struct hostrec *options);
+int parseMDAargs (struct hostrec *options);
 int showversioninfo (void);
-int dump_options (struct optrec *options);
-int query_host(struct optrec *options);
+int dump_options (struct hostrec *options);
+int query_host(struct hostrec *options);
 #endif
 
 /* controls the detail level of status/progress messages written to stderr */
@@ -89,10 +89,10 @@ int argc;
 char **argv;
 { 
   int mboxfd;
-  struct optrec cmd_opts, def_opts;
+  struct hostrec cmd_opts, def_opts;
   int parsestatus;
   char *servername; 
-  struct optrec *hostp, *hostlist = (struct optrec *)NULL;
+  struct hostrec *hostp, *hostlist = (struct hostrec *)NULL;
   FILE	*tmpfp;
   pid_t pid;
 
@@ -116,7 +116,7 @@ char **argv;
     if (strcmp(servername, "defaults") == 0)
       continue;
 
-    hostp = (struct optrec *)xmalloc(sizeof(struct optrec));
+    hostp = (struct hostrec *)xmalloc(sizeof(struct hostrec));
 
     prc_mergeoptions(servername, &cmd_opts, &def_opts, hostp);
     strcpy(hostp->servername, servername);
@@ -228,7 +228,7 @@ void termhook()
 
 int query_host(options)
 /* perform fetch transaction with single host */
-struct optrec *options;
+struct hostrec *options;
 {
   if (outlevel != O_SILENT)
     fprintf(stderr, "popclient: querying %s\n", options->servername);
@@ -272,7 +272,7 @@ int showversioninfo()
 *********************************************************************/
 
 int dump_options (options)
-struct optrec *options;
+struct hostrec *options;
 {
   printf("  Username = '%s'\n", options->remotename);
   printf("  Password = '%s'\n", options->password);
@@ -341,7 +341,7 @@ struct optrec *options;
  *********************************************************************/
 
 int openuserfolder (options)
-struct optrec *options;
+struct hostrec *options;
 {
   int fd;
 
@@ -380,7 +380,7 @@ struct optrec *options;
  *********************************************************************/
 
 int openmailpipe (options)
-struct optrec *options;
+struct hostrec *options;
 {
   int pipefd [2];
   int childpid;
@@ -494,7 +494,7 @@ int fd;
  *********************************************************************/
 
 int parseMDAargs (options)
-struct optrec *options;
+struct hostrec *options;
 {
   int argi;
   char *argp;

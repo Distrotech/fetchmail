@@ -34,14 +34,14 @@
 #ifdef HAVE_PROTOTYPES
 /* prototypes for internal functions */
 int POP3_OK (char *buf, int socket);
-int POP3_auth (struct optrec *options, int socket);
+int POP3_auth (struct hostrec *options, int socket);
 int POP3_sendQUIT (int socket);
 int POP3_sendSTAT (int *msgcount, int socket);
 int POP3_sendRETR (int msgnum, int socket);
 int POP3_sendDELE (int msgnum, int socket);
 int POP3_sendLAST (int *last, int socket);
 int POP3_readmsg (int socket, int mboxfd, char *host, int topipe);
-int POP3_BuildDigest (char *buf, struct optrec *options);
+int POP3_BuildDigest (char *buf, struct hostrec *options);
 #endif
 
 
@@ -61,7 +61,7 @@ int POP3_BuildDigest (char *buf, struct optrec *options);
  *********************************************************************/
 
 int doPOP3 (options)
-struct optrec *options;
+struct hostrec *options;
 {
   int ok;
   int mboxfd;
@@ -290,7 +290,7 @@ int socket;
  *********************************************************************/
 
 int POP3_auth (options,socket) 
-struct optrec *options;
+struct hostrec *options;
 int socket;
 {
   char buf [POPBUFSIZE];
@@ -713,7 +713,7 @@ int socket;
 #if defined(HAVE_APOP_SUPPORT)
 POP3_BuildDigest (buf,options)
 char *buf;
-struct optrec *options;
+struct hostrec *options;
 {
   char *start,*end;
   char *msg;

@@ -74,7 +74,7 @@ static struct option longoptions[] = {
   arguments:
     argc         argument count.
     argv         argument strings.
-    options      pointer to a struct optrec to receive the parsed 
+    options      pointer to a struct hostrec to receive the parsed 
                  options.
 
   return value:  if positive, argv index of last parsed option + 1
@@ -91,7 +91,7 @@ static struct option longoptions[] = {
 int parsecmdline (argc,argv,options)
 int argc;
 char **argv;
-struct optrec *options;
+struct hostrec *options;
 {
   int c,i;
   int fflag = 0;     /* TRUE when -o or -c has been specified */
@@ -102,7 +102,7 @@ struct optrec *options;
   extern int optind, opterr;     /* defined in getopt(2) */
   extern char *optarg;          /* defined in getopt(2) */
 
-  bzero(options,sizeof(struct optrec));    /* start clean */
+  bzero(options,sizeof(struct hostrec));    /* start clean */
 
   while (!errflag && 
          (c = getopt_long(argc,argv,shortoptions,
@@ -277,7 +277,7 @@ struct optrec *options;
  *********************************************************************/
 
 int setdefaults (options)
-struct optrec *options;
+struct hostrec *options;
 {
   int uid;
   struct passwd *pw;

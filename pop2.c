@@ -64,7 +64,7 @@ int POP2_stateXFER (int msgsize, int socket, int mboxfd, int topipe);
  *********************************************************************/
 
 int doPOP2 (options)
-struct optrec *options;
+struct hostrec *options;
 {
   int mboxfd;
   int socket;
