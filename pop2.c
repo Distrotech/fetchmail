@@ -146,6 +146,7 @@ const static struct method pop2 =
     NULL,				/* no way to fetch body alone */
     pop2_trail,				/* eat message trailer */
     NULL,				/* no POP2 delete method */
+    NULL,				/* how to mark a message as seen */
     pop2_logout,			/* log out, we're done */
     FALSE,				/* no, we can't re-poll */
 };

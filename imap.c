@@ -876,11 +876,6 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
      * craps out during the message, it will still be marked `unseen' on
      * the server.
      *
-     * However...*don't* do this if we're using keep to suppress deletion!
-     * In that case, marking the seen flag is the only way to prevent the
-     * message from being re-fetched on subsequent runs (and according
-     * to RFC2060 p.43 this fetch should set Seen as a side effect).
-     *
      * According to RFC2060, and Mark Crispin the IMAP maintainer,
      * FETCH %d BODY[TEXT] and RFC822.TEXT are "functionally 
      * equivalent".  However, we know of at least one server that
@@ -898,17 +893,11 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
     switch (imap_version)
     {
     case IMAP4rev1:	/* RFC 2060 */
-	if (!ctl->keep)
-	    gen_send(sock, "FETCH %d BODY.PEEK[TEXT]", number);
-	else
-	    gen_send(sock, "FETCH %d BODY[TEXT]", number);
+	gen_send(sock, "FETCH %d BODY.PEEK[TEXT]", number);
 	break;
 
     case IMAP4:		/* RFC 1730 */
-	if (!ctl->keep)
-	    gen_send(sock, "FETCH %d RFC822.TEXT.PEEK", number);
-	else
-	    gen_send(sock, "FETCH %d RFC822.TEXT", number);
+	gen_send(sock, "FETCH %d RFC822.TEXT.PEEK", number);
 	break;
 
     default:		/* RFC 1176 */
@@ -958,26 +947,6 @@ static int imap_trail(int sock, struct query *ctl, int number)
 	/* UW IMAP returns "OK FETCH", Cyrus returns "OK Completed" */
 	if (strstr(buf, "OK"))
 	    break;
-
-#ifdef __UNUSED__
-	/*
-	 * Any IMAP server that fails to set Seen on a BODY[TEXT]
-	 * fetch violates RFC2060 p.43 (top).  This becomes an issue
-	 * when keep is on, because seen messages aren't deleted and
-	 * get refetched on each poll.  As a workaround, if keep is on
-	 * we can set the Seen flag explicitly.
-	 *
-	 * This code isn't used yet because we don't know of any IMAP
-	 * servers broken in this way.
-	 */
-	if (ctl->keep)
-	    if ((ok = gen_transact(sock,
-			imap_version == IMAP4 
-				? "STORE %d +FLAGS.SILENT (\\Seen)"
-				: "STORE %d +FLAGS (\\Seen)", 
-			number)))
-		return(ok);
-#endif /* __UNUSED__ */
     }
 
     return(PS_SUCCESS);
@@ -1022,6 +991,16 @@ static int imap_delete(int sock, struct query *ctl, int number)
     return(PS_SUCCESS);
 }
 
+static int imap_mark_seen(int sock, struct query *ctl, int number)
+/* mark the given message as seen */
+{
+    return(gen_transact(sock,
+	imap_version == IMAP4
+	? "STORE %d +FLAGS.SILENT (\\Seen)"
+	: "STORE %d +FLAGS (\\Seen)",
+	number));
+}
+
 static int imap_logout(int sock, struct query *ctl)
 /* send logout command */
 {
@@ -1059,6 +1038,7 @@ const static struct method imap =
     imap_fetch_body,	/* request given message body */
     imap_trail,		/* eat message trailer */
     imap_delete,	/* delete the message */
+    imap_mark_seen,	/* how to mark a message as seen */
     imap_logout,	/* expunge and exit */
     TRUE,		/* yes, we can re-poll */
 };

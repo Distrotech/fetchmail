@@ -655,25 +655,6 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	 * now.
 	 */
 
-	/*
-	 * Tell the UID code we've seen this.
-	 * Matthias Andree: only register the UID if we could actually
-	 * forward this mail. If we omit this !suppress_delete check,
-	 * fetchmail will never retry mail that the local listener
-	 * refused temporarily.
-	 */
-	if (ctl->newsaved && !suppress_delete)
-	{
-	    struct idlist	*sdp;
-
-	    for (sdp = ctl->newsaved; sdp; sdp = sdp->next)
-		if ((sdp->val.status.num == num) && (msgcodes[num-1] >= 0))
-		{
-		    sdp->val.status.mark = UID_SEEN;
-		    save_str(&ctl->oldsaved, sdp->id,UID_SEEN);
-		}
-	}
-
 	/* maybe we delete this message now? */
 	if (retained)
 	{
@@ -690,11 +671,10 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	    err = (ctl->server.base_protocol->delete)(mailserver_socket, ctl, num);
 	    if (err != 0)
 		return(err);
-#ifdef POP3_ENABLE
-	    delete_str(&ctl->newsaved, num);
-#endif /* POP3_ENABLE */
 	}
-	else if (   (outlevel >= O_VERBOSE) ||
+	else
+	{
+	    if (   (outlevel >= O_VERBOSE) ||
          		/* To avoid flooding the syslog when using --keep,
          		 * report "Skipped message" only when:
          		 *  1) --verbose is on, or
@@ -705,6 +685,17 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	           (outlevel > O_SILENT && (!run.use_syslog || msgcodes[num-1] != MSGLEN_OLD))
 	       )
 	    report_complete(stdout, GT_(" not flushed\n"));
+
+	    /* maybe we mark this message as seen now? */
+	    if (ctl->server.base_protocol->mark_seen
+		&& !suppress_delete
+		&& (msgcodes[num-1] >= 0 && ctl->keep))
+	    {
+		err = (ctl->server.base_protocol->mark_seen)(mailserver_socket, ctl, num);
+		if (err != 0)
+		    return(err);
+	    }
+	}
 
 	/* perhaps this as many as we're ready to handle */
 	if (maxfetch && maxfetch <= *fetches && *fetches < count)

@@ -140,6 +140,7 @@ const static struct method etrn =
     NULL,		/* no way to fetch body */
     NULL,		/* no message trailer */
     NULL,		/* how to delete a message */
+    NULL,		/* how to mark a message as seen */
     etrn_logout,	/* log out, we're done */
     FALSE,		/* no, we can't re-poll */
 };

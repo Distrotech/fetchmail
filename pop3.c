@@ -792,11 +792,40 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
     return(PS_SUCCESS);
 }
 
+static void mark_uid_seen(struct query *ctl, int number)
+/* Tell the UID code we've seen this. */
+{
+    if (ctl->newsaved)
+    {
+	struct idlist	*sdp;
+
+	for (sdp = ctl->newsaved; sdp; sdp = sdp->next)
+	    if (sdp->val.status.num == number)
+	    {
+		sdp->val.status.mark = UID_SEEN;
+		save_str(&ctl->oldsaved, sdp->id,UID_SEEN);
+	    }
+    }
+}
+
 static int pop3_delete(int sock, struct query *ctl, int number)
 /* delete a given message */
 {
+    int ok;
+    mark_uid_seen(ctl, number);
     /* actually, mark for deletion -- doesn't happen until QUIT time */
-    return(gen_transact(sock, "DELE %d", number));
+    ok = gen_transact(sock, "DELE %d", number);
+    if (ok != PS_SUCCESS)
+	return(ok);
+    delete_str(&ctl->newsaved, number);
+    return(PS_SUCCESS);
+}
+
+static int pop3_mark_seen(int sock, struct query *ctl, int number)
+/* mark a given message as seen */
+{
+    mark_uid_seen(ctl, number);
+    return(PS_SUCCESS);
 }
 
 static int pop3_logout(int sock, struct query *ctl)
@@ -856,6 +885,7 @@ const static struct method pop3 =
     NULL,		/* no way to fetch body alone */
     NULL,		/* no message trailer */
     pop3_delete,	/* how to delete a message */
+    pop3_mark_seen,	/* how to mark a message as seen */
     pop3_logout,	/* log out, we're done */
     FALSE,		/* no, we can't re-poll */
 };

@@ -229,6 +229,7 @@ const static struct method odmr =
     NULL,		/* no way to fetch body */
     NULL,		/* no message trailer */
     NULL,		/* how to delete a message */
+    NULL,		/* how to mark a message as seen */
     odmr_logout,	/* log out, we're done */
     FALSE,		/* no, we can't re-poll */
 };
