@@ -29,7 +29,7 @@
 
 #ifdef HAVE_PROTOTYPES
 /* prototypes for internal functions */
-static void load_params(int, char **, int);
+static int load_params(int, char **, int);
 static void dump_params (struct query *);
 static int query_host(struct query *);
 static char *visbuf(const char *);
@@ -119,7 +119,7 @@ char **argv;
 
     /* avoid parsing the config file if all we're doing is killing a daemon */ 
     if (!quitmode)
-	load_params(argc, argv, optind);
+	implicitmode = load_params(argc, argv, optind);
 
     /* set up to do lock protocol */
     if ((tmpdir = getenv("TMPDIR")) == (char *)NULL)
@@ -278,6 +278,7 @@ char **argv;
      */
     signal(SIGHUP, donothing);
 
+    /* here's the exclusion lock */
     if ( (lockfp = fopen(lockfile,"w")) != NULL ) {
 	fprintf(lockfp,"%d",getpid());
 	if (poll_interval)
@@ -371,7 +372,7 @@ char **argv;
     exit(popstatus);
 }
 
-static void load_params(argc, argv, optind)
+static int load_params(argc, argv, optind)
 int	argc;
 char	**argv;
 int	optind;
@@ -550,6 +551,8 @@ int	optind;
 	exit(st);
     else
 	initialize_saved_lists(querylist, idfile);
+
+    return(implicitmode);
 }
 
 void termhook(int sig)
