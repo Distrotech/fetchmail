@@ -1070,9 +1070,6 @@ The RFC822 parser used in multidrop mode chokes on some @-addresses that
 are technically legal but bizarre.  Strange uses of quoting and
 embedded comments are likely to confuse it.
 .PP
-Retrieval using IMAP will hang if a message has embedded NUL
-characters.  (This will be fixed in a future release.)
-.PP
 Use of any of the supported protocols other than APOP, KPOP, or ETRN requires
 that the program send unencrypted passwords over the TCP/IP connection
 to the mailserver.  This creates a risk that name/password pairs

@@ -18,9 +18,6 @@ every user entry in a multi-user poll declaration.
   re-code this so --limit is still operative with --fetchall on, but you
   can turn off the size limit with --limit 0.
 
-* When using the IMAP protocol, fetchmail will hang if your messages have
-  embedded NUL characters.  This is mentioned on the man page.
-
 				Release Notes:
 
 ------------------------------------------------------------------------------
@@ -31,6 +28,7 @@ pl 3.9.4 ():
 * Changes to compile correctly on systems that have on_exit() but not atexit().
 * Changes to forbid duplicate server names in the rc file.
 * Do caseblind comparisons of host and user names everywhere.
+* IMAP retrieval can now handle messages with embedded NULs
 
 There are 248 people on the fetchmail-friends list.
 
