@@ -75,14 +75,23 @@ static char *encode_words(char *const *words, int nwords, const char *charset)
     return out;
 }
 
+/** RFC-2047 encode string with given charset. Only the Q encoding
+ * (quoted-printable) supported at this time.
+ * WARNING: this code returns a static buffer!
+ */
 char *rfc2047e(const char *string, const char *charset) {
-    char *t, *out;
+    static char *out;
+    char *t;
     const char *r;
     int count, minlen, idx, i;
     char **words = NULL;
     size_t l;
 
     assert(strlen(charset) < 40);
+    if (out) {
+	free(out);
+	out = NULL;
+    }
 
     /* phase 1: split original into words */
     /* 1a: count, 1b: copy */
