@@ -68,12 +68,11 @@ char *buf;
 		  queryctl->remotename, queryctl->password));
 }
 
-static pop2_getrange(socket, queryctl, countp, firstp)
+static pop2_getrange(socket, queryctl, countp)
 /* get range of messages to be fetched */
 int socket;
 struct hostrec *queryctl;
 int *countp;
-int *firstp;
 {
     /*
      * We should have picked up a count of messages in the user's
@@ -93,7 +92,6 @@ int *firstp;
 	    return(PS_ERROR);
     }
 
-    *firstp = 1;
     *countp = pound_arg;
 
     return(0);
@@ -127,7 +125,7 @@ int number;
     return(gen_transact(socket, queryctl->keep ? "ACKS" : "ACKD"));
 }
 
-static struct method pop2 =
+const static struct method pop2 =
 {
     "POP2",				/* Post Office Protocol v2 */
     109,				/* standard POP2 port */
@@ -136,7 +134,7 @@ static struct method pop2 =
     pop2_ok,				/* parse command response */
     pop2_getauth,			/* get authorization */
     pop2_getrange,			/* query range of messages */
-    NULL,				/* no UID check */
+    NULL,				/* messages are always new */
     pop2_fetch,				/* request given message */
     pop2_trail,				/* eat message trailer */
     NULL,				/* no POP2 delete method */

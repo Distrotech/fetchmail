@@ -90,12 +90,11 @@ char *buf;
 		  queryctl->remotename, queryctl->password));
 }
 
-static imap_getrange(socket, queryctl, countp, firstp)
+static imap_getrange(socket, queryctl, countp)
 /* get range of messages to be fetched */
 int socket;
 struct hostrec *queryctl;
 int *countp;
-int *firstp;
 {
     int ok;
 
@@ -107,7 +106,6 @@ int *firstp;
 	return(ok);
 
     *countp = count;
-    *firstp = 1;
 
     return(0);
 }
@@ -173,7 +171,7 @@ int number;
     return(gen_transact(socket, "STORE %d +FLAGS (\\Deleted)", number));
 }
 
-static struct method imap =
+const static struct method imap =
 {
     "IMAP",		/* Internet Message Access Protocol */
     143,		/* standard IMAP2bis/IMAP4 port */

@@ -491,7 +491,7 @@ struct method *proto;
 #ifdef HAVE_RRESVPORT_H
     int privport = -1;
 #endif /* HAVE_RRESVPORT_H */
-    int first, num, count;
+    int num, count, deletions = 0;
 
     tagnum = 0;
     protocol = proto;
@@ -534,24 +534,18 @@ struct method *proto;
     if (ok != 0)
 	goto cleanUp;
 
-    /* compute count and first, and get UID list if possible */
-    if ((*protocol->getrange)(socket, queryctl, &count, &first) != 0)
+    /* compute count, and get UID list if possible */
+    if ((*protocol->getrange)(socket, queryctl, &count) != 0)
 	goto cleanUp;
 
-    /* show user how many messages we'll be downloading */
+    /* show user how many messages we downloaded */
     if (outlevel > O_SILENT && outlevel < O_VERBOSE)
 	if (count == 0)
 	    fprintf(stderr, "No mail from %s\n", queryctl->servername);
-	else if (first > 1) 
-	    fprintf(stderr,
-		    "%d message%s from %s, %d new messages.\n", 
-		    count, count > 1 ? "s" : "", 
-		    queryctl->servername, count - first + 1);
 	else
 	    fprintf(stderr,
-		    "%d %smessage%s from %s.\n",
-		    count, ok ? "" : "new ", 
-		    count > 1 ? "s" : "", 
+		    "%d message%s from %s.\n",
+		    count, count > 1 ? "s" : "", 
 		    queryctl->servername);
 
     if (count > 0)
@@ -575,17 +569,15 @@ struct method *proto;
 	}
 
 	/* read, forward, and delete messages */
-	for (num = queryctl->flush ? 1 : first;  num <= count; num++)
+	for (num = 1; num <= count; num++)
 	{
-	    if (queryctl->flush && num < first && !queryctl->fetchall) 
-		ok = 0;  /* retrieval suppressed */
-	    else
-	    {
-		/* we may want to reject this message based on its UID */
-		if (!queryctl->fetchall && *protocol->is_old)
-		    if ((*protocol->is_old)(socket, queryctl, num))
-			continue;
+	    int	treat_as_new = 
+		!*protocol->is_old 
+		|| !(*protocol->is_old)(socket, queryctl, num);
 
+	    /* we may want to reject this message if it's old */
+	    if (treat_as_new || queryctl->fetchall)
+	    {
 		/* request a message */
 		(*protocol->fetch)(socket, num, &len);
 		if (outlevel == O_VERBOSE)
@@ -615,20 +607,21 @@ struct method *proto;
 	    }
 
 	    /* maybe we delete this message now? */
-	    if (protocol->delete)
+	    if (protocol->delete
+		&& !queryctl->keep
+		&& (treat_as_new || queryctl->flush))
 	    {
-		if ((num < first && queryctl->flush) || !queryctl->keep) {
-		    if (outlevel > O_SILENT && outlevel < O_VERBOSE) 
-			fprintf(stderr,"flushing message %d\n", num);
-		    ok = (protocol->delete)(socket, queryctl, num);
-		    if (ok != 0)
-			goto cleanUp;
-		}
+		deletions++;
+		if (outlevel > O_SILENT && outlevel < O_VERBOSE) 
+		    fprintf(stderr,"flushing message %d\n", num);
+		ok = (protocol->delete)(socket, queryctl, num);
+		if (ok != 0)
+		    goto cleanUp;
 	    }
 	}
 
 	/* remove all messages flagged for deletion */
-        if (!queryctl->keep && protocol->expunge_cmd)
+        if (protocol->expunge_cmd && deletions > 0)
 	{
 	    ok = gen_transact(socket, protocol->expunge_cmd);
 	    if (ok != 0)

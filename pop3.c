@@ -17,6 +17,8 @@
 #include  "socket.h"
 #include  "fetchmail.h"
 
+static int last;
+
 int pop3_ok (argbuf,socket)
 /* parse command response */
 char *argbuf;
@@ -138,12 +140,11 @@ badAuth:
     return(PS_ERROR);
 }
 
-static pop3_getrange(socket, queryctl, countp, firstp)
+static pop3_getrange(socket, queryctl, countp)
 /* get range of messages to be fetched */
 int socket;
 struct hostrec *queryctl;
 int *countp;
-int *firstp;
 {
     int ok;
     char buf [POPBUFSIZE+1];
@@ -159,23 +160,26 @@ int *firstp;
     /*
      * Newer, RFC-1725-conformant POP servers may not have the LAST command.
      */
-    *firstp = 1;
+    last = 0;
     if (*countp > 0 && !queryctl->fetchall)
     {
 	char id [IDLEN+1];
-	int num;
 
 	gen_send(socket,"LAST");
 	ok = pop3_ok(buf,socket);
-	if (ok == 0 && sscanf(buf, "%d", &num) == 0)
+	if (ok == 0 && sscanf(buf, "%d", &last) == 0)
 	    return(PS_ERROR);
-
-	/* crucial fork in the road here */
-	if (ok != 0)
-	    *firstp = num + 1;
     }
 
     return(0);
+}
+
+static int pop3_is_old(socket, queryctl, num)
+int socket;
+struct hostrec *queryctl;
+int num;
+{
+    return (num <= last);
 }
 
 static int pop3_fetch(socket, number, lenp)
@@ -201,7 +205,7 @@ int number;
 	return(ok);
 }
 
-static struct method pop3 =
+const static struct method pop3 =
 {
     "POP3",		/* Post Office Protocol v3 */
     110,		/* standard POP3 port */
@@ -210,7 +214,7 @@ static struct method pop3 =
     pop3_ok,		/* parse command response */
     pop3_getauth,	/* get authorization */
     pop3_getrange,	/* query range of messages */
-    NULL,		/* can't check for recent */
+    pop3_is_old,	/* how do we tell a message is old? */
     pop3_fetch,		/* request given message */
     NULL,		/* no message trailer */
     pop3_delete,	/* how to delete a message */
