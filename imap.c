@@ -202,12 +202,17 @@ static int imap_trail(FILE *sockfp, struct query *ctl, int number)
 static int imap_delete(FILE *sockfp, struct query *ctl, int number)
 /* set delete flag for given message */
 {
+    int	ok;
+
     /* use SILENT if possible as a minor throughput optimization */
-    return(gen_transact(sockfp,
+    if ((ok = gen_transact(sockfp,
 			imap4 
 				? "STORE %d +FLAGS.SILENT (\\Deleted)"
 				: "STORE %d +FLAGS (\\Deleted)", 
-			number));
+			number)))
+	return(ok);
+
+    return(gen_transact(sockfp, "EXPUNGE"));
 }
 
 const static struct method imap =
@@ -224,7 +229,6 @@ const static struct method imap =
     imap_fetch,		/* request given message */
     imap_trail,		/* eat message trailer */
     imap_delete,	/* set IMAP delete flag */
-    "EXPUNGE",		/* the IMAP expunge command */
     "LOGOUT",		/* the IMAP exit command */
 };
 

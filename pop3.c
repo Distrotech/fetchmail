@@ -280,7 +280,6 @@ const static struct method pop3 =
     pop3_fetch,		/* request given message */
     NULL,		/* no message trailer */
     pop3_delete,	/* how to delete a message */
-    NULL,		/* no POP3 expunge command */
     "QUIT",		/* the POP3 exit command */
 };
 

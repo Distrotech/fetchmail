@@ -128,7 +128,6 @@ struct method
     int (*fetch)();		/* fetch a given message */
     int (*trail)();		/* eat trailer of a message */
     int (*delete)();		/* delete method */
-    char *expunge_cmd;		/* expunge command */
     char *exit_cmd;		/* exit command */
 };
 

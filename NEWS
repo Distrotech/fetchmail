@@ -18,6 +18,9 @@ bugs --
 * Ensure that default server parameters get properly zeroed out after each
   poll or skip statement in .fetchmailrc. 
 
+* Arrange an EXPUNGE after each delete when using IMAP, so deletions get done
+  OK even if there's a socket error before termination.
+
 There are 188 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------

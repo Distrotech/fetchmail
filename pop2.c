@@ -128,7 +128,6 @@ const static struct method pop2 =
     pop2_fetch,				/* request given message */
     pop2_trail,				/* eat message trailer */
     NULL,				/* no POP2 delete method */
-    NULL,				/* no POP2 expunge command */
     "QUIT",				/* the POP2 exit command */
 };
 

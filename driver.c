@@ -1204,15 +1204,6 @@ const struct method *proto;	/* protocol method table */
 		    break;
 	    }
 
-	    /* remove all messages flagged for deletion */
-	    if (protocol->expunge_cmd && deletions > 0)
-	    {
-		ok = gen_transact(sockfp, protocol->expunge_cmd);
-		if (ok != 0)
-		    goto cleanUp;
-		vtalarm(ctl->server.timeout);
-	    }
-
 	    ok = gen_transact(sockfp, protocol->exit_cmd);
 	    if (ok == 0)
 		ok = PS_SUCCESS;
