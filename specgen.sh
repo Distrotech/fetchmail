@@ -84,7 +84,6 @@ rm -rf \$RPM_BUILD_ROOT
 /usr/lib/rhs/control-panel/fetchmailconf.xpm
 /usr/lib/rhs/control-panel/fetchmailconf.init
 /etc/X11/wmconfig/fetchmailconf
-/usr/share/locale/*/LC_MESSAGES/fetchmail.mo
 %defattr (644, root, man)
 /usr/man/man1/*.1.gz
 %defattr (755, root, root)

@@ -4,8 +4,8 @@
 # Dumps a release notice and diffs as a MIME multipart message 
 # in RELEASE_NOTES
 #
-$version=`grep VERS= Makefile.in`;
-$version =~ /VERS=(.*)/;
+$version=`grep 'VERSION *=' Makefile.in`;
+$version =~ /VERSION *= *(.*)/;
 $version = $1;
 $rcsid = $version;
 $rcsid =~ tr/./-/;
