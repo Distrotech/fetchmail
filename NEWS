@@ -6,18 +6,19 @@
 
 				Release Notes:
 
-fetchmail-4.7.8 ():
+fetchmail-4.7.8 (Mon Feb 22 10:06:04 EST 1999):
 * FreeBSD support for interface and monitor options by Andy Doran <ad@psn.ie>.
-* Fixed server-deletion bug in fetchmailconf.
+* Fixed server-deletion bug in fetchmailconf.  Also, handle `port' properly.
 * Timestamps now generated into logfiles at start of poll cycle.
 * New `nobounce' debugging option (specifically exempted from feature freeze)
   allows SMTP error bouncemail to be redirected from sender to local
   postmaster.
 * Suppress dancing progress dots when syslog is on.
 * es.po update by Javier Kohen.
-* Fixed fetchmailconf to handle `port' properly.
+* Added FAQ material on what to do for a "do not relay" sendmail error.
+* Can now build under Lynx 3.0.0.
 
-There are 257 people on fetchmail-friends and 348 on fetchmail-announce.
+There are 261 people on fetchmail-friends and 358 on fetchmail-announce.
 
 fetchmail-4.7.7 (Tue Feb  2 18:57:04 EST 1999):
 * Fixed off-by-one error in batchlimit logic (thanks to Brian Warner).
