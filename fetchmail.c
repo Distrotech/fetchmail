@@ -228,7 +228,7 @@ struct optrec *options;
 {
   if (outlevel != O_SILENT)
     fprintf(stderr, "popclient: querying %s\n", options->servername);
-  switch (options->whichpop) {
+  switch (options->protocol) {
   case P_POP2:
     return(doPOP2(options));
     break;
@@ -274,7 +274,7 @@ struct optrec *options;
   printf("  Password = '%s'\n", options->password);
 
   printf("  Protocol is ");
-  switch (options->whichpop)
+  switch (options->protocol)
   {
   case P_POP2: printf("POP2\n"); break;
   case P_POP3: printf("POP3\n"); break;
@@ -307,7 +307,7 @@ struct optrec *options;
   default:
     printf("  Message destination unknown?!?\n");
   }
-  if (options->verbose)
+  if (outlevel == O_VERBOSE)
     {
       if (options->output != TO_FOLDER)
 	printf("  (Mail folder would have been '%s')\n", options->userfolder);

@@ -109,10 +109,10 @@ struct optrec *options;
 
     switch (c) {
       case '2':
-        options->whichpop = P_POP2;
+        options->protocol = P_POP2;
         break;
       case '3':
-        options->whichpop = P_POP3;
+        options->protocol = P_POP3;
         break;
       case 'V':
       case LA_VERSION:
@@ -164,15 +164,15 @@ struct optrec *options;
       case LA_PROTOCOL:
         /* XXX -- should probably use a table lookup here */
         if (strcasecmp(optarg,"pop2") == 0)
-          options->whichpop = P_POP2;
+          options->protocol = P_POP2;
         else if (strcasecmp(optarg,"pop3") == 0)
-          options->whichpop = P_POP3;
+          options->protocol = P_POP3;
         else if (strcasecmp(optarg,"imap") == 0)
-          options->whichpop = P_IMAP;
+          options->protocol = P_IMAP;
         else if (strcasecmp(optarg,"apop") == 0)
-          options->whichpop = P_APOP;
+          options->protocol = P_APOP;
         else if (strcasecmp(optarg,"rpop") == 0)
-          options->whichpop = P_RPOP;
+          options->protocol = P_RPOP;
         else {
           fprintf(stderr,"Invalid protocol '%s'\n specified.\n", optarg);
           errflag++;
@@ -289,7 +289,7 @@ struct optrec *options;
     return(-1);
   }
 
-  options->whichpop = DEF_PROTOCOL;
+  options->protocol = DEF_PROTOCOL;
 
 #if defined(KEEP_IS_DEFAULT)
   options->keep = 1;

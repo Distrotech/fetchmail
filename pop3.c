@@ -295,7 +295,7 @@ int socket;
 {
   char buf [POPBUFSIZE];
 
-  switch (options->whichpop) {
+  switch (options->protocol) {
     case P_POP3:
       SockPrintf(socket,"USER %s\r\n",options->remotename);
       if (outlevel == O_VERBOSE)

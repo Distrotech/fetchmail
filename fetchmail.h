@@ -45,12 +45,10 @@
 #define		TO_STDOUT	2	/* use stdout */
 #define		TO_MDA		3	/* use agent */
 
-/* Command-line arguments are passed in this structure type */
 struct optrec {
   int versioninfo;
   int keep;
-  int verbose;
-  int whichpop;
+  int protocol;
   int limit;
   int fetchall;
   int flush;
