@@ -255,7 +255,7 @@ rcfile_y.o: rcfile_y.c config.h fetchmail.h
 
 parser = $(srcdir)/rcfile_l.l $(srcdir)/rcfile_y.y
 headers = $(srcdir)/fetchmail.h $(srcdir)/socket.h $(srcdir)/smtp.h \
-	$(srcdir)/mx.h $(srcdir)/md5.h $(srcdir)/md5global.h \
+	$(srcdir)/mx.h $(srcdir)/md5.h \
 	$(srcdir)/netrc.h $(srcdir)/tunable.h $(srcdir)/i18n.h \
 	$(srcdir)/ntlm.h $(srcdir)/smb.h $(srcdir)/kerberos.h \
 	$(srcdir)/smbbyteorder.h $(srcdir)/smbdes.h $(srcdir)/smbencrypt.h \
