@@ -101,7 +101,7 @@ struct method
     char *exit_cmd;		/* exit command */
 };
 
-#define TAGLEN	5
+#define TAGLEN	6
 extern char tag[TAGLEN];
 
 /* controls the detail level of status/progress messages written to stderr */
