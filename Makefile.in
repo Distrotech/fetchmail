@@ -94,7 +94,7 @@ srcs = $(srcdir)/socket.c $(srcdir)/getpass.c $(srcdir)/pop2.c 		\
 .SUFFIXES:
 .SUFFIXES: .o .c .h .y .l .ps .dvi .info .texi
 
-all: fetchmail fetchmail.spec
+all: fetchmail
 
 # Some makes apparently use .PHONY as the default goal if it is before `all'.
 .PHONY: all check
@@ -104,6 +104,9 @@ $(protobjs): fetchmail.h
 fetchmail: $(srcdir)/rcfile_l.c $(srcdir)/rcfile_y.c $(objs)
 	$(CC) $(LDFLAGS) $(objs) $(LOADLIBS) -o fetchmail
 
+# Tester for address parsing
+rfc822: rfc822.c
+	gcc -DTESTMAIN -g rfc822.c -o rfc822
 
 # -I. is needed to find config.h in the build directory.
 .c.o:
@@ -148,9 +151,6 @@ $(bindir)/$(instname): fetchmail
 $(mandir)/$(instname).$(manext): fetchmail.man
 	$(INSTALL_DATA) $(srcdir)/fetchmail.man $@
 
-fetchmail.spec: $(srcdir)/Makefile.in $(srcdir)/specgen.sh
-	$(srcdir)/specgen.sh $(VERS) $(PL) >fetchmail.spec
-
 .PHONY: clean realclean distclean mostlyclean
 clean: 
 	-rm -f fetchmail *.o core fetchmail.dvi \
@@ -162,7 +162,7 @@ distclean: clean
 	-rm -f Makefile config.h
 	-rm -f config.cache config.status config.log stamp-config
 	-rm -f TAGS tags
-	-rm -f fetchmail.log fetchmail.toc fetchmail.*aux fetchmail.spec
+	-rm -f fetchmail.log fetchmail.toc fetchmail.*aux
 
 realclean: distclean # fetchmail.info*
 
@@ -187,7 +187,6 @@ config.h.in: acconfig.h
 
 # This tells versions [3.59,3.63) of GNU make not to export all variables.
 .NOEXPORT:
-
 
 # Special dependencies, not easily handled without explicit rules
 $(srcdir)/rcfile_l.c: $(srcdir)/rcfile_l.l
@@ -221,9 +220,11 @@ fetchmail-$(VERS).tar: $(all)
 fetchmail-$(VERS).tar.gz: fetchmail-$(VERS).tar
 	gzip -f fetchmail-$(VERS).tar
 
-# Tester for address parsing
-rfc822: rfc822.c
-	gcc -DTESTMAIN -g rfc822.c -o rfc822
+RPMROOT=/usr/src/redhat
+rpm: fetchmail-$(VERS).tar.gz
+	cp fetchmail-$(VERS).tar.gz $(RPMROOT)/SOURCES;
+	$(srcdir)/specgen.sh $(VERS) $(PL) >$(RPMROOT)/SPECS/fetchmail.spec
+	cd $(RPMROOT)/SPECS; rpm -ba fetchmail.spec	
 
 # The automatically generated dependencies below may omit config.h
 # because it is included with ``#include <config.h>'' rather than
