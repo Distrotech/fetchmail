@@ -12,27 +12,6 @@ portable to other Unix variants (it uses GNU autoconf).  It has also
 been ported to QNX; to build under QNX, see the header comments in the
 Makefile.
 
-The fetchmail program was originally authored (under the name
-popclient) by Carl Harris <ceharris@mal.com>. Eric S. Raymond,
-<esr@thyrsus.com> took over development in June 1996 and subsequently
-renamed the program `fetchmail' to reflect the addition of IMAP
-support.  See the distribution files NEWS for detailed information on
-recent changes and NOTES for design notes.
-
-Before accepting responsibility for the popclient sources from Carl, I
-had investigated and used and tinkered with every other UNIX
-remote-mail forwarder I could find, including fetchpop1.9,
-PopTart-0.9.3, get-mail, gwpop, pimp-1.0, pop-perl5-1.2, popc,
-popmail-1.6 and upop.  I learned from all of them, and fetchmail is a
-carefully-thought-out attempt to render obsolete every other program
-in its class.
-
-The fetchmail code appears to be stable and free of bugs affecting
-normal operation (that is, retrieving from POP3 or IMAP and forwarding
-via SMTP to sendmail).  It will probably undergo substantial change
-only if and when support for a new retrieval protocol or authentication
-is added.
-
 Here are fetchmail's main features.  Those unique to fetchmail are marked
 with **.
 
@@ -75,13 +54,20 @@ with **.
            every day and it has never lost mail, not even in experimental
 	   versions.
 
-	*  Large user community -- fetchmail has inherited a significant
-	   user base from Carl Harris's popclient community.   This means
+	*  Large user community -- fetchmail has a large user base (the
+	   author's beta list includes over a hundred people).  This means
 	   feedback is rapid, bugs get found and fixed rapidly.
+
+The fetchmail code appears to be stable and free of bugs affecting
+normal operation (that is, retrieving from POP3 or IMAP and forwarding
+via SMTP to sendmail).  It will probably undergo substantial change
+only if and when support for a new retrieval protocol or authentication
+is added.  See the distribution files NEWS for detailed information on
+recent changes and NOTES for design notes.
 
 You can easily fetch the latest version of fetchmail  via FTP from:
 
-	ftp://ftp.ccil.org/pub/esr/fetchmail-2.0.tar.gz
+	ftp://ftp.ccil.org/pub/esr/fetchmail-2.1.tar.gz
 
 Or you can get it from Eric's home page:
 

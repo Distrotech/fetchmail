@@ -726,18 +726,16 @@ When
 .I fetchmail
 queries more than one host, the returned status is that of the last
 host queried.
-.SH AUTHORS
-.I fetchmail
-was originated (under the name `popclient') by Carl Harris at Virginia
-Polytechnic Institute and State University (a.k.a. Virginia Tech).
-.PP
-Version 3.0 of popclient was extensively rewritten and improved by
-Eric S. Raymond <esr@snark.thyrsus.com>. The program's name was
-then changed to
-.I fetchmail
-to reflect both the presence of IMAP support and the symmetry with sendmail
-created by the new SMTP forwarding default.
+.SH AUTHOR
+Eric S. Raymond <esr@snark.thyrsus.com>.  
 .SH BACKWARD COMPATIBILITY
+This program is descended
+from and replaces
+.IR popclient , 
+by Carl Harris <ceharris@mal.com>; the internals are quite different, 
+but some of its interface design is directly traceable to that
+ancestral program.  Some effort has been made to preserve compatibility.
+.PP
 If called through a link named `popclient', \fIfetchmail\fR will look
 in ~/.poprc for its run control file.  As long as the file does not
 use the removed `localfolder' option or `limit' (which now takes a
