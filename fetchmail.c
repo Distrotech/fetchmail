@@ -788,6 +788,7 @@ static int load_params(int argc, char **argv, int optind)
 		ctl->server.via =
 		    ctl->server.pollname = xstrdup(argv[optind]);
 		ctl->active = TRUE;
+		ctl->server.lead_server = (struct hostdata *)NULL;
 	    }
 	}
 
