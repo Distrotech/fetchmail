@@ -191,6 +191,11 @@ static int is_host_alias(const char *name, struct query *ctl)
     return(TRUE);
 }
 
+#define XMIT_ACCEPT		1
+#define XMIT_REJECT		2
+#define XMIT_ANTISPAM		3	
+static int accept_count, reject_count;
+
 static void map_name(name, ctl, xmit_names)
 /* add given name to xmit_names if it matches declared localnames */
 const char *name;		/* name to map */
@@ -207,7 +212,8 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
     {
 	if (outlevel == O_VERBOSE)
 	    error(0, 0, "mapped %s to local %s", name, lname);
-	save_str(xmit_names, -1, lname);
+	save_str(xmit_names, XMIT_ACCEPT, lname);
+	accept_count++;
     }
 }
 
@@ -247,7 +253,8 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 			    if (outlevel == O_VERBOSE)
 				error(0, 0, "passed through %s matching %s", 
 				      cp, idp->id);
-			    save_str(xmit_names, -1, cp);
+			    save_str(xmit_names, XMIT_ACCEPT, cp);
+			    accept_count++;
 			    continue;
 			}
 		    }
@@ -259,7 +266,11 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 		     * going and try to find a mapping to a client name.
 		     */
 		    if (!is_host_alias(atsign+1, ctl))
+		    {
+			save_str(xmit_names, XMIT_REJECT, cp);
+			reject_count++;
 			continue;
+		    }
 		    atsign[0] = '\0';
 		}
 
@@ -589,7 +600,7 @@ char *realname;		/* real name of host */
 
     /* cons up a list of local recipients */
     xmit_names = (struct idlist *)NULL;
-    bad_addresses = good_addresses = 0;
+    bad_addresses = good_addresses = accept_count = reject_count = 0;
 #ifdef HAVE_RES_SEARCH
     /* is this a multidrop box? */
     if (MULTIDROP(ctl))
@@ -616,10 +627,10 @@ char *realname;		/* real name of host */
 	    if (bcc_offs > -1)
 		find_server_names(headers + bcc_offs, ctl, &xmit_names);
 	}
-	if (!xmit_names)
+	if (!accept_count)
 	{
 	    no_local_matches = TRUE;
-	    save_str(&xmit_names, -1, user);
+	    save_str(&xmit_names, XMIT_ACCEPT, user);
 	    if (outlevel == O_VERBOSE)
 		error(0, 0, 
 		      "no local matches, forwarding to %s",
@@ -628,7 +639,7 @@ char *realname;		/* real name of host */
     }
     else	/* it's a single-drop box, use first localname */
 #endif /* HAVE_RES_SEARCH */
-	save_str(&xmit_names, -1, ctl->localnames->id);
+	save_str(&xmit_names, XMIT_ACCEPT, ctl->localnames->id);
 
 
     /*
@@ -828,7 +839,7 @@ char *realname;		/* real name of host */
 	    else
 	    {
 		bad_addresses++;
-		idp->val.num = 0;
+		idp->val.num = XMIT_ANTISPAM;
 		error(0, 0, 
 		      "SMTP listener doesn't like recipient address `%s'", idp->id);
 	    }
@@ -902,7 +913,16 @@ char *realname;		/* real name of host */
 #ifdef HAVE_RES_SEARCH
 	if (no_local_matches)
 	{
-	    strcat(errhd, "no recipient addresses matched declared local names");
+	    if (reject_count != 1)
+		strcat(errhd, "no recipient addresses matched declared local names");
+	    else
+	    {
+		for (idp = xmit_names; idp; idp = idp->next)
+		    if (idp->val.num == XMIT_REJECT)
+			break;
+		sprintf(errhd, "recipient address %s didn't match any local name", idp->id);
+	    }
+
 	    if (bad_addresses)
 		strcat(errhd, "; ");
 	}
@@ -913,13 +933,13 @@ char *realname;		/* real name of host */
 	    strcat(errhd, "SMTP listener rejected local recipient addresses: ");
 	    errlen = strlen(errhd);
 	    for (idp = xmit_names; idp; idp = idp->next)
-		if (!idp->val.num)
+		if (idp->val.num == XMIT_ANTISPAM)
 		    errlen += strlen(idp->id) + 2;
 
 	    errmsg = alloca(errlen+3);
 	    (void) strcpy(errmsg, errhd);
 	    for (idp = xmit_names; idp; idp = idp->next)
-		if (!idp->val.num)
+		if (idp->val.num == XMIT_ANTISPAM)
 		{
 		    strcat(errmsg, idp->id);
 		    if (idp->next)
