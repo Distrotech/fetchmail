@@ -2,12 +2,18 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.3.7 (Sun Apr 16 03:46:13 EDT 2000), 18975 lines:
+
 * Updated and corrected version of contrib/domino.
 * Galician translation added, courtesy of Jesus Bravo Alvarez <jba@pobox.com>.
 * Spanish translation updated, courtesy of Javier Kohen.
 * Removed an unnecessary Kereberos check that seemed to be causing lossage.
 * FETCHMAILHOME environment variable introduced to optionally override the
   normal $HOME location of fetchmail's rc, id, and pid files.
+* Fixed a bug in the SEARCH UNSEEN code that resulted in only half the
+  available messages getting fetched each run.
+
+There are 290 people on fetchmail-friends and 511 on fetchmail-announce.
 
 fetchmail-5.3.6 (Sat Apr  8 03:54:04 EDT 2000), 18947 lines:
 
