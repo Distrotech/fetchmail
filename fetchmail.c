@@ -34,13 +34,6 @@
 #ifdef HAVE_NET_SOCKET_H
 #include <net/socket.h>
 #endif
-#ifdef HAVE_GETHOSTBYNAME
-#include <netdb.h>
-#endif /* HAVE_GETHOSTBYNAME */
-
-#ifdef HESIOD
-#include <hesiod.h>
-#endif
 
 #include "getopt.h"
 #include "fetchmail.h"
@@ -1086,26 +1079,6 @@ static int load_params(int argc, char **argv, int optind)
 		ctl->server.queryname = xstrdup(ctl->server.via);
 	    else
 		ctl->server.queryname = xstrdup(ctl->server.pollname);
-
-#ifdef HESIOD
-	    /* If either the pollname or vianame are "hesiod" we want to
-	       lookup the user's hesiod pobox host */
-	    if (!strcasecmp(ctl->server.queryname, "hesiod")) {
-		struct hes_postoffice *hes_p;
-		hes_p = hes_getmailhost(ctl->remotename);
-		if (hes_p != NULL && strcmp(hes_p->po_type, "POP") == 0) {
-		     free(ctl->server.queryname);
-		     ctl->server.queryname = xstrdup(hes_p->po_host);
-		     if (ctl->server.via)
-			 free(ctl->server.via);
-		     ctl->server.via = xstrdup(hes_p->po_host);
-		} else {
-		     report(stderr,
-			    GT_("couldn't find HESIOD pobox for %s\n"),
-			    ctl->remotename);
-		}
-	    }
-#endif /* HESIOD */
 
 	    /*
 	     * We no longer do DNS lookups at startup.
