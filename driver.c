@@ -88,6 +88,11 @@ static void timeout_handler (int signal)
     longjmp(restart, 1);
 }
 
+#define XMIT_ACCEPT		1
+#define XMIT_REJECT		2
+#define XMIT_ANTISPAM		3	
+static int accept_count, reject_count;
+
 #ifdef HAVE_RES_SEARCH
 #define MX_RETRIES	3
 
@@ -190,11 +195,6 @@ static int is_host_alias(const char *name, struct query *ctl)
     save_str(&ctl->server.lead_server->names, -1, name);
     return(TRUE);
 }
-
-#define XMIT_ACCEPT		1
-#define XMIT_REJECT		2
-#define XMIT_ANTISPAM		3	
-static int accept_count, reject_count;
 
 static void map_name(name, ctl, xmit_names)
 /* add given name to xmit_names if it matches declared localnames */
