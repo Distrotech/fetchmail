@@ -12,7 +12,6 @@ fetchmail-5.8.3 (Sat May 12 04:07:12 EDT 2001), 20502 lines:
 * Plug another hole that was letting zombies through.
 * SA_RESTART portability fix for SunOS.
 * Ignore Sender and Resent-Sender headers unless they contain @.
-* Makefile no longer requires GNU make.
 
 There are 333 people on fetchmail-friends and 582 on fetchmail-announce.
 
