@@ -16,7 +16,7 @@
 #include  "fetchmail.h"
 #include  "socket.h"
 
-static int count, seen, recent, unseen, imap4;
+static int count, seen, recent, unseen, imap4, deletecount;
 
 int imap_ok (FILE *sockfp,  char *argbuf)
 /* parse command response */
@@ -113,6 +113,8 @@ static int imap_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
     else
 	*newp = -1;	/* should never happen, RECENT is mandatory */ 
 
+    deletecount = 0;
+
     return(0);
 }
 
@@ -143,12 +145,15 @@ static int imap_getsizes(FILE *sockfp, int count, int *sizes)
     return(0);
 }
 
-static int imap_is_old(FILE *sockfp, struct query *ctl, int num)
+static int imap_is_old(FILE *sockfp, struct query *ctl, int number)
 /* is the given message old? */
 {
     int ok;
 
-    if ((ok = gen_transact(sockfp, "FETCH %d FLAGS", num)) != 0)
+    /* expunges change the fetch numbers */
+    number -= deletecount;
+
+    if ((ok = gen_transact(sockfp, "FETCH %d FLAGS", number)) != 0)
 	return(PS_ERROR);
 
     return(seen);
@@ -159,6 +164,9 @@ static int imap_fetch(FILE *sockfp, struct query *ctl, int number, int *lenp)
 {
     char buf [POPBUFSIZE+1];
     int	num;
+
+    /* expunges change the fetch numbers */
+    number -= deletecount;
 
     /*
      * If we're using IMAP4, we can fetch the message without setting its
@@ -193,6 +201,9 @@ static int imap_trail(FILE *sockfp, struct query *ctl, int number)
 {
     char buf [POPBUFSIZE+1];
 
+    /* expunges change the fetch numbers */
+    /* number -= deletecount; */
+
     if (!SockGets(buf, sizeof(buf), sockfp))
 	return(PS_SOCKET);
     else
@@ -204,6 +215,9 @@ static int imap_delete(FILE *sockfp, struct query *ctl, int number)
 {
     int	ok;
 
+    /* expunges change the fetch numbers */
+    number -= deletecount;
+
     /* use SILENT if possible as a minor throughput optimization */
     if ((ok = gen_transact(sockfp,
 			imap4 
@@ -212,7 +226,17 @@ static int imap_delete(FILE *sockfp, struct query *ctl, int number)
 			number)))
 	return(ok);
 
-    return(gen_transact(sockfp, "EXPUNGE"));
+    /*
+     * We do an expunge after each message, rather than just before quit,
+     * so that a line hit during a long session won't result in lots of
+     * messages being fetched again during the next session.
+     */
+    if ((ok = gen_transact(sockfp, "EXPUNGE")))
+	return(ok);
+
+    deletecount++;
+
+    return(0);
 }
 
 const static struct method imap =
@@ -228,7 +252,7 @@ const static struct method imap =
     imap_is_old,	/* no UID check */
     imap_fetch,		/* request given message */
     imap_trail,		/* eat message trailer */
-    imap_delete,	/* set IMAP delete flag */
+    imap_delete,	/* delete the message */
     "LOGOUT",		/* the IMAP exit command */
 };
 
