@@ -2166,9 +2166,6 @@ The UIDL code is generally flaky and tends to lose its state on errors
 and line drops (so that old messages are re-seen).  If this happens to
 you, switch to IMAP4.
 .PP
-Usuing LMTP with a localname that is not a full email name (containing
-@ and having a host part) will fail.
-.PP
 The `principal' option only handles Kerberos IV, not V.
 .PP
 Send comments, bug reports, gripes, and the like to the

@@ -49,6 +49,8 @@ static int lmtp_responses;
 int smtp_open(struct query *ctl)
 /* try to open a socket to the appropriate SMTP server for this query */ 
 {
+    char *parsed_host = NULL;
+
     /* maybe it's time to close the socket in order to force delivery */
     if (NUM_NONZERO(ctl->batchlimit) && (ctl->smtp_socket != -1) && ++batchcount == ctl->batchlimit)
     {
@@ -95,7 +97,7 @@ int smtp_open(struct query *ctl)
 	set_timeout(ctl->server.timeout);
 	for (idp = ctl->smtphunt; idp; idp = idp->next)
 	{
-	    char	*cp, *parsed_host;
+	    char	*cp;
 #ifdef INET6_ENABLE 
 	    char	*portnum = SMTP_PORT;
 #else
@@ -169,8 +171,19 @@ int smtp_open(struct query *ctl)
      * or MX but not a CNAME.  Some listeners (like exim)
      * enforce this.  Now that we have the actual hostname,
      * compute what we should canonicalize with.
+     * 
+     * make sure we do not forget to drop the /port if
+     * using LMTP (hmh)
      */
-    ctl->destaddr = ctl->smtpaddress ? ctl->smtpaddress : ( ctl->smtphost && ctl->smtphost[0] != '/' ? ctl->smtphost : "localhost");
+    if (ctl->listener == LMTP_MODE && !ctl->smtpaddress) 
+    {
+	if (parsed_host && parsed_host[0] != 0)
+		ctl->destaddr = xstrdup(parsed_host);
+	else 
+		ctl->destaddr = (ctl->smtphost && ctl->smtphost[0] != '/') ? ctl->smtphost : "localhost";
+    } 
+    else 
+	ctl->destaddr = ctl->smtpaddress ? ctl->smtpaddress : ( ctl->smtphost && ctl->smtphost[0] != '/' ? ctl->smtphost : "localhost");
 
     if (outlevel >= O_DEBUG && ctl->smtp_socket != -1)
 	report(stdout, _("forwarding to %s\n"), ctl->smtphost);
@@ -695,8 +708,6 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		    (*good_addresses)++;
 		else
 		{
-		    char	errbuf[POPBUFSIZE];
-
 		    handle_smtp_report(ctl, msg);
 
 		    (*bad_addresses)++;
