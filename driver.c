@@ -460,6 +460,9 @@ struct hostrec *queryctl;
 	    if (outlevel > O_SILENT && outlevel < O_VERBOSE)
 		fputc('.',stderr);
 	    sizeticker -= SIZETICKER;
+
+	    /* reset timeout so we don't choke on very long messsages */
+	    alarm(timeout);
 	}
 	lines++;
     }
