@@ -759,15 +759,14 @@ int main(int argc, char **argv)
 static void list_merge(struct idlist **dstl, struct idlist **srcl, int force)
 {
     /*
-     * If force is off, modify h2 fields only when they're empty (treat h1
-     * as defaults).  If force is on, modify each h2 field whenever h1
-     * is nonempty (treat h1 as an override).  
+     * If force is off, modify dstl fields only when they're empty (treat srcl
+     * as defaults).  If force is on, modify each dstl field whenever scrcl
+     * is nonempty (treat srcl as an override).  
      */
-    if (force ? !!srcl : !dstl)
+    if (force ? !!*srcl : !*dstl)
     {
 	struct idlist *cpl = copy_str_list(*srcl);
 
-	free_str_list(dstl);
 	append_str_list(dstl, &cpl);
     }
 }
