@@ -690,7 +690,6 @@ struct query *ctl;	/* query control record */
 	    for (cp = headers; cp < headers + oldlen; cp++)
 		if (*cp == '\r')
 		    *cp = '\n';
-	    headers[oldlen++] = '\0';
 
 	    /* replace all LFs with CR-LF before sending to the SMTP server */
 	    if (!ctl->mda[0])
