@@ -1,7 +1,8 @@
 /*
  * interface.c -- implements fetchmail 'interface' and 'monitor' commands
  *
- * This module was implemented by George M. Sipe and is
+ * This module was implemented by George M. Sipe <gsipe@mindspring.com>
+ * or <gsipe@acm.org> and is:
  *
  *	Copyright (c) 1996 by George M. Sipe - ALL RIGHTS RESERVED
  *
@@ -16,7 +17,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
-#include <arpa/inet.h>
+#include <netinet/in.h>
 #include <linux/netdevice.h>
 #include "fetchmail.h"
 
@@ -115,10 +116,8 @@ void interface_parse(void)
 		return;
 
 	/* find and isolate just the IP address */
-	if (!(cp1 = strchr(interface, '/'))) {
-		(void) fprintf(stderr, "missing IP interface address\n");
-		exit(PS_SYNTAX);
-	}
+	if (!(cp1 = strchr(interface, '/')))
+		(void) error(PS_SYNTAX, 0, "missing IP interface address");
 	*cp1++ = '\000';
 
 	/* find and isolate just the netmask */
@@ -128,14 +127,10 @@ void interface_parse(void)
 		*cp2++ = '\000';
 
 	/* convert IP address and netmask */
-	if (!inet_aton(cp1, &interface_address)) {
-		(void) fprintf(stderr, "invalid IP interface address\n");
-		exit(PS_SYNTAX);
-	}
-	if (!inet_aton(cp2, &interface_mask)) {
-		(void) fprintf(stderr, "invalid IP interface mask\n");
-		exit(PS_SYNTAX);
-	}
+	if (!inet_aton(cp1, &interface_address))
+		(void) error(PS_SYNTAX, 0, "invalid IP interface address");
+	if (!inet_aton(cp2, &interface_mask))
+		(void) error(PS_SYNTAX, 0, "invalid IP interface mask");
 	/* apply the mask now to the IP address (range) required */
 	interface_address.s_addr &= interface_mask.s_addr;
 	return;
@@ -164,15 +159,15 @@ int interface_approve(void)
 	if (interface) {
 		/* get interface info */
 		if (!get_ifinfo(interface, &ifinfo)) {
-			fprintf(stderr, "fetchmail: skipping poll, %s down\n",
+			(void) error(0, 0, "skipping poll, %s down",
 				interface);
 			return(FALSE);
 		}
 		/* check the IP address (range) */
 		if ((ifinfo.addr.s_addr & interface_mask.s_addr) !=
 				interface_address.s_addr) {
-			fprintf(stderr,
-			   "fetchmail: skipping poll, %s IP address excluded\n",
+			(void) error(0, 0,
+			   "skipping poll, %s IP address excluded",
 			   interface);
 			return(FALSE);
 		}
@@ -181,8 +176,7 @@ int interface_approve(void)
 	/* if monitoring, check link for activity if it is up */
 	if (monitor && get_ifinfo(monitor, &ifinfo) &&
 			monitor_io == ifinfo.rx_packets + ifinfo.tx_packets) {
-		fprintf(stderr, "fetchmail: skipping poll, %s inactive\n",
-			monitor);
+		(void) error(0, 0, "skipping poll, %s inactive", monitor);
 		return(FALSE);
 	}
 
