@@ -312,6 +312,7 @@ static void send_size_warnings(struct query *ctl)
     int msg_to_send = FALSE;
     struct idlist *head=NULL, *current=NULL;
     int max_warning_poll_count;
+    char *tmp;
 
     head = ctl->skipped;
     if (!head)
@@ -332,10 +333,12 @@ static void send_size_warnings(struct query *ctl)
     if (open_warning_by_mail(ctl, (struct msgblk *)NULL))
 	return;
     stuff_warning(ctl,
-	   GT_("Subject: Fetchmail oversized-messages warning.\n"
-	     "\n"
-	     "The following oversized messages remain on the mail server %s:"),
-		  ctl->server.pollname);
+	    tmp = rfc2047e(
+	   GT_("Subject: Fetchmail oversized-messages warning"), nl_langinfo(CODESET)));
+    stuff_warning(ctl, "");
+    stuff_warning(ctl,
+	    GT_("The following oversized messages remain on the mail server %s:"),
+	    ctl->server.pollname);
 
     stuff_warning(ctl, "");
 
@@ -908,7 +911,8 @@ static int do_session(
 		&& !open_warning_by_mail(ctl, (struct msgblk *)NULL))
 	    {
 		stuff_warning(ctl,
-			      GT_("Subject: fetchmail sees repeated timeouts\n"));
+			      rfc2047e(GT_("Subject: fetchmail sees repeated timeouts"),nl_langinfo(CODESET)));
+		stuff_warning(ctl, "");
 		stuff_warning(ctl,
 			      GT_("Fetchmail saw more than %d timeouts while attempting to get mail from %s@%s.\n"), 
 			      MAX_TIMEOUTS,
@@ -1105,9 +1109,9 @@ static int do_session(
 		if (open_warning_by_mail(ctl, (struct msgblk *)NULL) == 0)
 		{
 		    stuff_warning(ctl,
-			 GT_("Subject: Fetchmail unreachable-server warning.\n"
-			   "\n"
-			   "Fetchmail could not reach the mail server %s:")
+			 rfc2047e(GT_("Subject: Fetchmail unreachable-server warning."), nl_langinfo(CODESET)));
+		    stuff_warning(ctl, "");
+		    stuff_warning(ctl, GT_("Fetchmail could not reach the mail server %s:"),
 				  ctl->server.pollname);
 		    stuff_warning(ctl, errbuf, ctl->server.pollname);
 		    close_warning_by_mail(ctl, (struct msgblk *)NULL);
@@ -1220,8 +1224,9 @@ static int do_session(
 		    {
 			ctl->wehavesentauthnote = 1;
 			stuff_warning(ctl,
-				      GT_("Subject: fetchmail authentication failed on %s@%s\n"),
+				      rfc2047e(GT_("Subject: fetchmail authentication failed on %s@%s"), nl_langinfo(CODESET)),
 			    ctl->remotename, ctl->server.truename);
+			stuff_warning(ctl, "");
 			stuff_warning(ctl,
 				      GT_("Fetchmail could not get mail from %s@%s.\n"), 
 				      ctl->remotename,
@@ -1292,8 +1297,9 @@ is restored."));
 		    if (!open_warning_by_mail(ctl, (struct msgblk *)NULL))
 		    {
 			stuff_warning(ctl,
-			      GT_("Subject: fetchmail authentication OK on %s@%s\n"),
+			      rfc2047e(GT_("Subject: fetchmail authentication OK on %s@%s"), nl_langinfo(CODESET)),
 				      ctl->remotename, ctl->server.truename);
+			stuff_warning(ctl, "");
 			stuff_warning(ctl,
 			      GT_("Fetchmail was able to log into %s@%s.\n"), 
 				      ctl->remotename,
