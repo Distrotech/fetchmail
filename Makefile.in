@@ -1,0 +1,241 @@
+#
+#	Makefile for popclient
+#	Carl Harris, ceharris@mal.com
+#
+#	$Log: Makefile.in,v $
+#	Revision 1.1  1996/06/25 14:29:44  esr
+#	Initial revision
+#
+#	Revision 1.5  1995/08/10 00:32:19  ceharris
+#	Preparation for 3.0b3 beta release:
+#	-	added code for --kill/--keep, --limit, --protocol, --flush
+#		options; --pop2 and --pop3 options now obsoleted by --protocol.
+#	- 	added support for APOP authentication, including --with-APOP
+#		argument for configure.
+#	-	provisional and broken support for RPOP
+#	-	added buffering to SockGets and SockRead functions.
+#	-	fixed problem of command-line options not being correctly
+#		carried into the merged options record.
+#
+#	Revision 1.4  1995/08/09 01:32:41  ceharris
+#	Version 3.0 beta 2 release.
+#	Added
+#	-	.poprc functionality
+#	-	GNU long options
+#	-	multiple servers on the command line.
+#	Fixed
+#	-	Passwords showing up in ps output.
+#
+#	Revision 1.3  1995/08/08 01:01:11  ceharris
+#	Added GNU-style long options processing.
+#	Fixed password in 'ps' output problem.
+#	Fixed various RCS tag blunders.
+#	Integrated .poprc parser, lexer, etc into Makefile processing.
+#
+#
+
+# Ultrix 2.2 make doesn't expand the value of VPATH.
+srcdir = @srcdir@
+VPATH = @srcdir@
+
+CC = @CC@
+
+CFLAGS = @CFLAGS@
+LDFLAGS = @LDFLAGS@
+LEX = @LEX@
+LEXFLAGS=
+YACC = @YACC@
+YACCFLAGS=-d
+
+# How to invoke ranlib.  This is only used by the `glob' subdirectory.
+RANLIB = @RANLIB@
+
+# NeXT 1.0a uses an old version of GCC, which required -D__inline=inline.
+# See also `config.h'.
+defines = @DEFS@
+
+# If your system needs extra libraries loaded in, define them here.
+LOADLIBES = @LIBS@ @LEXLIB@
+
+# Any extra object files your system needs.
+extras = @LIBOBJS@
+
+# Extra sources/objects for library functions not provided on the host system.
+EXTRASRC = @EXTRASRC@
+EXTRAOBJ = @EXTRAOBJ@
+
+# Common prefix for machine-independent installed files.
+prefix = /usr/local
+# Common prefix for machine-dependent installed files.
+exec_prefix = $(prefix)
+
+# Name under which to install popclient
+instname = popclient
+# Directory in which to install.
+bindir = $(exec_prefix)/bin
+# Directory to install the Info files in.
+infodir = $(prefix)/info
+# Directory to install the man page in.
+mandir = $(prefix)/man/man$(manext)
+# Number to put on the man page filename.
+manext = 1
+
+# Program to install `make'.
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+# Program to install the man page.
+INSTALL_DATA = @INSTALL_DATA@
+# Generic install program.
+INSTALL = @INSTALL@
+
+# Program to format Texinfo source into Info files.
+MAKEINFO = makeinfo
+# Program to format Texinfo source into DVI files.
+TEXI2DVI = texi2dvi
+
+# Programs to make tags files.
+ETAGS = etags -tw
+CTAGS = ctags -tw
+
+objs = socket.o getpass.o pop2.o pop3.o popclient.o options.o		\
+       poprc_l.o poprc_y.o poprc.o xmalloc.o				\
+       $(EXTRAOBJ) $(extras)
+
+srcs = $(srcdir)/socket.c $(srcdir)/getpass.c $(srcdir)/pop2.c 		\
+       $(srcdir)/pop3.c $(srcdir)/popclient.c $(srcdir)/options.c	\
+       $(srcdir)/poprc_l.c $(srcdir)/poprc_y.c $(srcdir)/poprc.c	\
+       $(srcdir)/xmalloc.c						\
+       $(EXTRASRC)
+
+
+.SUFFIXES:
+.SUFFIXES: .o .c .h .y .l .ps .dvi .info .texi
+
+all: popclient
+check: # No tests.
+depend:
+	test -f config.h || touch config.h
+	test -f poprc_y.h || touch poprc_y.h
+	makedepend -fMakefile.in *.c
+
+info: popclient.info
+dvi: popclient.dvi
+# Some makes apparently use .PHONY as the default goal is it is before `all'.
+.PHONY: all check info dvi
+
+popclient.info: popclient.texi
+	$(MAKEINFO) -I$(srcdir) $(srcdir)/popclient.texi -o popclient.info
+
+popclient.dvi: popclient.texi
+	$(TEXI2DVI) $(srcdir)/popclient.texi
+
+popclient.ps: popclient.dvi
+	dvi2ps popclient.dvi > popclient.ps
+
+popclient: $(srcdir)/poprc_l.c $(srcdir)/poprc_y.c $(objs)
+	$(CC) $(LDFLAGS) $(objs) $(LOADLIBES) -o popclient
+
+
+# -I. is needed to find config.h in the build directory.
+.c.o:
+	$(CC) $(defines) -c -I. -I$(srcdir) $(CFLAGS) $< $(OUTPUT_OPTION)
+
+# lex rule
+.l.o:
+
+.l.c:
+	$(LEX) $(LEXFLAGS) $<
+	mv lex.yy.c $@
+
+# yacc rule
+.y.o:
+
+.y.c:
+	$(YACC) $(YACCFLAGS) $<
+	mv y.tab.c $@
+	mv -f y.tab.h $*.h
+
+# For some losing Unix makes.
+SHELL = /bin/sh
+MAKE = make
+
+FORCE:
+
+tagsrcs = $(srcs)
+TAGS: $(tagsrcs)
+	$(ETAGS) $(tagsrcs)
+tags: $(tagsrcs)
+	$(CTAGS) $(tagsrcs)
+
+.PHONY: install installdirs
+install: installdirs \
+	 $(bindir)/$(instname) $(infodir)/popclient.info \
+	 $(mandir)/$(instname).$(manext)
+
+installdirs:
+	$(SHELL) ${srcdir}/mkinstalldirs $(bindir) $(infodir) $(mandir)
+
+$(bindir)/$(instname): popclient
+	$(INSTALL_PROGRAM) popclient $@
+
+$(infodir)/popclient.info: popclient.info
+	if [ -r ./popclient.info ]; then dir=.; else dir=$(srcdir); fi; \
+	for file in $${dir}/popclient.info*; do \
+	  name="`basename $$file`"; \
+	  $(INSTALL_DATA) $$file \
+	    `echo $@ | sed "s,popclient.info\$$,$$name,"`; \
+	done
+# Run install-info only if it exists.
+# Use `if' instead of just prepending `-' to the
+# line so we notice real errors from install-info.
+# We use `$(SHELL) -c' because some shells do not
+# fail gracefully when there is an unknown command.
+	if $(SHELL) -c 'install-info --version' >/dev/null 2>&1; then \
+	  install-info --infodir=$(infodir) $$dir/popclient.info; \
+	else true; fi
+
+$(mandir)/$(instname).$(manext): popclient.man
+	$(INSTALL_DATA) $(srcdir)/popclient.man $@
+
+
+.PHONY: clean realclean distclean mostlyclean
+clean: 
+	-rm -f popclient *.o core popclient.dvi \
+	       poprc_l.c poprc_y.h poprc_y.c
+
+distclean: clean 
+	-rm -f Makefile config.h
+	-rm -f config.cache config.status config.log stamp-config
+	-rm -f TAGS tags
+	-rm -f popclient.log popclient.toc popclient.*aux
+
+realclean: popclient.info* distclean
+
+mostlyclean: clean
+
+Makefile: config.status $(srcdir)/Makefile.in
+	$(SHELL) config.status
+
+config.h: stamp-config 
+
+stamp-config: config.status $(srcdir)/config.h.in
+	$(SHELL) config.status
+	touch stamp-config
+
+configure: configure.in
+	autoconf $(ACFLAGS)
+
+# This tells versions [3.59,3.63) of GNU make not to export all variables.
+.NOEXPORT:
+
+
+# Special dependencies, not easily handled without explicit rules
+$(srcdir)/poprc_l.c: $(srcdir)/poprc_l.l
+$(srcdir)/poprc_y.c: $(srcdir)/poprc_y.y
+
+
+# The automatically generated dependencies below may omit config.h
+# because it is included with ``#include <config.h>'' rather than
+# ``#include "config.h"''.  So we add the explicit dependency to make sure.
+$(objs): config.h
+
+# Automatically generated dependencies will be put at the end of the file.
