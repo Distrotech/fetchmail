@@ -61,7 +61,7 @@ int SMTP_ehlo(int sock, char *host, int *opt)
       if (smtp_response[strlen(smtp_response)-1] == '\n')
 	  smtp_response[strlen(smtp_response)-1] = '\0';
       if (smtp_response[strlen(smtp_response)-1] == '\r')
-	  smtp_response[strlen(smtp_response)-1] = '\r';
+	  smtp_response[strlen(smtp_response)-1] = '\0';
       if (n < 4)
 	  return SM_ERROR;
       smtp_response[n] = '\0';
