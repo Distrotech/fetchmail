@@ -525,6 +525,19 @@ char *realname;		/* real name of host */
     }
 
     /*
+     * Hack time.  If the first line of the message was blank, with no headers
+     * (this happens occasionally due to bad gatewaying software) cons up
+     * a set of fake headers.
+     */
+    if (headers == (char *)NULL)
+    {
+	sprintf(buf, 
+"From: FETCHMAIL-DAEMON\r\nTo: %s\r\nSubject: Headerless mail from %s@%s\r\n",
+		ctl->localnames->id, ctl->remotename, realname);
+	headers = xstrdup(buf);
+    }
+
+    /*
      * We can now process message headers before reading the text.
      * In fact we have to, as this will tell us where to forward to.
      */

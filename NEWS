@@ -1,7 +1,7 @@
 			Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-3.4 (Wed Feb 12 13:57:00 EST 1997)
+fetchmail-3.4 (Wed Feb 12 19:23:06 EST 1997)
 
 features --
 
@@ -9,6 +9,8 @@ features --
 
 * It is now possible to turn off option flags in individual server entries
   that had been turned on in a `defaults' entry.
+
+* The code should now deal gracefully with headerless mail.
 
 bugs --
 
