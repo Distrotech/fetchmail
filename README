@@ -28,6 +28,8 @@ major new features since 2.0:
 	** (Linux only) Security option to permit fetchmail to poll a host 
 	   only when a point-to-point link to a particular IP address is up.
 
+	** RPOP support is back.
+
 There have also been numerous improvements in multidrop mailbox handling.
 Under many circumstances fetchmail can now determine a mail message's
 envelope address from its headers, making multidrop forwarding more reliable.
@@ -36,7 +38,7 @@ Here are fetchmail's main features.  Those unique to fetchmail
 (relative to fetchpop1.9, PopTart-0.9.3, get-mail, gwpop, pimp-1.0,
 pop-perl5-1.2, popc, popmail-1.6 and upop) are marked with **.
 
-	*  **POP2, POP3, **APOP, **IMAP2bis, **IMAP4 support.
+	*  **POP2, POP3, **APOP, **RPOP, **IMAP2bis, **IMAP4 support.
 
 	** Support for Kerberos user authentication (either MIT or Cygnus).
 

@@ -8,6 +8,7 @@
 #define		P_POP3		3
 #define		P_IMAP		4
 #define		P_APOP		5
+#define		P_RPOP		6
 
 #define		KPOP_PORT	1109
 

@@ -136,6 +136,8 @@ Post Office Protocol 2
 Post Office Protocol 3
 .IP APOP
 Use POP3 with MD5 authentication.
+.IP RPOP
+Use POP3 with RPOP authentication.
 .IP KPOP
 Use POP3 with Kerberos authentication on port 1109.
 .RE
@@ -329,6 +331,19 @@ On mailservers that do not provide ordinary user accounts, your user-id and
 password are usually assigned by the server administrator when you apply for 
 a mailbox on the server.  Contact your server administrator if you don't know 
 the correct user-id and password for your mailbox account.
+.PP
+Early versions of POP3 (RFC1081, RFC1225) supported a crude form of
+independent authentication using the
+.I rhosts
+file on the mailserver side.  Under this RPOP variant, a fixed
+per-user ID equivalent to a password was sent in clear over a link to
+a reserved port, with the command RPOP rather than PASS to alert the
+server that it should do special checking.  RPOP is supported
+by
+.I fetchmail
+(you can specify `protocol RPOP' to have the program send `RPOP'
+rather than `PASS') but its use is strongly discouraged.  This
+facility was vulnerable to spoofing and was withdrawn in RFC1460.
 .PP
 RFC1460 introduced APOP authentication.  In this variant of POP3,
 you register an APOP password on your server host (the program
@@ -966,6 +981,12 @@ RFC 937
 .TP 5
 POP3:
 RFC 1081, RFC 1225, RFC 1460, RFC 1725, RFC 1939
+.TP 5
+APOP:
+RFC 1460, RFC 1725, RFC 1939
+.TP 5
+RPOP:
+RFC 1081, RFC 1225
 .TP 5
 IMAP2/IMAP2BIS:
 RFC 1176, RFC 1732

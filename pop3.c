@@ -104,7 +104,7 @@ int pop3_getauth(FILE *sockfp, struct query *ctl, char *greeting)
 
     switch (ctl->server.protocol) {
     case P_POP3:
-	if ((gen_transact(sockfp,"USER %s", ctl->remotename)) != 0)
+	if ((gen_transact(sockfp, "USER %s", ctl->remotename)) != 0)
 	    PROTOCOL_ERROR
 
 	if ((gen_transact(sockfp, "PASS %s", ctl->password)) != 0)
@@ -114,6 +114,14 @@ int pop3_getauth(FILE *sockfp, struct query *ctl, char *greeting)
     case P_APOP:
 	if ((gen_transact(sockfp, "APOP %s %s",
 			  ctl->remotename, ctl->digest)) != 0)
+	    PROTOCOL_ERROR
+	break;
+
+    case P_RPOP:
+	if ((gen_transact(sockfp,"USER %s", ctl->remotename)) != 0)
+	    PROTOCOL_ERROR
+
+	if ((gen_transact(sockfp, "RPOP %s", ctl->password)) != 0)
 	    PROTOCOL_ERROR
 	break;
 

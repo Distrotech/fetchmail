@@ -647,6 +647,13 @@ static int load_params(int argc, char **argv, int optind)
 			       ctl->server.names->id);
 		exit(PS_SYNTAX);
 	    }
+	    if (ctl->server.protocol == P_RPOP && ctl->server.port >= 1024)
+	    {
+		(void) fprintf(stderr,
+			       "%s configuration invalid, RPOP requires a privileged port",
+			       ctl->server.names->id);
+		exit(PS_SYNTAX);
+	    }
 	}
     }
 
@@ -702,6 +709,7 @@ static char *showproto(int proto)
     case P_POP3: return("POP3"); break;
     case P_IMAP: return("IMAP"); break;
     case P_APOP: return("APOP"); break;
+    case P_RPOP: return("RPOP"); break;
     default: return("unknown?!?"); break;
     }
 }
@@ -740,6 +748,7 @@ static int query_host(struct query *ctl)
 	break;
     case P_POP3:
     case P_APOP:
+    case P_RPOP:
 	return(doPOP3(ctl));
 	break;
     case P_IMAP:
@@ -777,6 +786,8 @@ void dump_params (struct query *ctl)
     else if (outlevel == O_VERBOSE)
 	if (ctl->server.protocol == P_APOP)
 	    printf("  APOP secret = '%s'.\n", visbuf(ctl->password));
+	else if (ctl->server.protocol == P_RPOP)
+	    printf("  RPOP id = '%s'.\n", visbuf(ctl->password));
         else
 	    printf("  Password = '%s'.\n", visbuf(ctl->password));
     if (ctl->server.protocol == P_POP3 
