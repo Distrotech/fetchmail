@@ -1505,7 +1505,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		       ctl->mda ? "MDA" : "SMTP");
 	    else if (phase == LISTENER_WAIT)
 		report(stdout,
-		       _("timeout after %d seconds waiting for listener to respond.\n", ctl->server.timeout));
+		       _("timeout after %d seconds waiting for listener to respond.\n"), ctl->server.timeout);
 	    else
 		report(stdout, 
 		       _("timeout after %d seconds.\n"), ctl->server.timeout);
