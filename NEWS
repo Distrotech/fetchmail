@@ -16,7 +16,7 @@ features --
 
 * It is now possible to set a default poll interval with `set daemon'.
 
-* -U option to force UIDL use under POP3 (thanks, Ingmar Baumgart).
+* -U/uidl option to force UIDL use under POP3 (thanks, Ingmar Baumgart).
 
 bugs -- 
 
@@ -29,7 +29,11 @@ bugs --
 
 * --nowrewrite was a no-op.  Fixed.
 
-There are 261 people on the fetchmail-friends list.
+* Fetchmail was aborting with "partial message buffer overflow" on Suns
+  due to unreliable vsprintf return.  This has been fixed with changes
+  to error.c.
+
+There are 268 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-3.8 (Fri Mar  7 17:34:02 EST 1997)

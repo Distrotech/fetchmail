@@ -17,6 +17,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 /* Written by David MacKenzie <djm@gnu.ai.mit.edu>.
  * Heavily modified by Dave Bodenstab and ESR.
+ * Bludgeoned into submission for SunOS 4.1.3 by
+ *     Chris Cheyney <cheyney@netcom.com>.
+ * Now it works even when the return from vprintf is unreliable.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -269,13 +272,13 @@ error_build (message, va_alist)
   if (partial_message_size == 0)
     {
       partial_message_size_used = 0;
-      partial_message_size = 512;
+      partial_message_size = 2048;
       partial_message = xmalloc (partial_message_size);
     }
   else
-    if (partial_message_size - partial_message_size_used < 256)
+    if (partial_message_size - partial_message_size_used < 1024)
       {
-        partial_message_size += 512;
+        partial_message_size += 2048;
         partial_message = xrealloc (partial_message, partial_message_size);
       }
 
@@ -294,11 +297,12 @@ error_build (message, va_alist)
 	  break;
 	}
 
-      partial_message_size += 512;
+      partial_message_size += 2048;
       partial_message = xrealloc (partial_message, partial_message_size);
     }
 #else
-  partial_message_size_used += vsprintf (partial_message + partial_message_size_used, message, args);
+  vsprintf (partial_message + partial_message_size_used, message, args);
+  partial_message_size_used += strlen(partial_message+partial_message_size_used);
 
   /* Attempt to catch memory overwrites... */
   if (partial_message_size_used >= partial_message_size)
@@ -322,7 +326,7 @@ error_build (message, va_alist)
 	  break;
 	}
 
-      partial_message_size += 512;
+      partial_message_size += 2048;
       partial_message = xrealloc (partial_message, partial_message_size);
     }
 #else
@@ -370,13 +374,13 @@ error_complete (status, errnum, message, va_alist)
   if (partial_message_size == 0)
     {
       partial_message_size_used = 0;
-      partial_message_size = 512;
+      partial_message_size = 2048;
       partial_message = xmalloc (partial_message_size);
     }
   else
-    if (partial_message_size - partial_message_size_used < 256)
+    if (partial_message_size - partial_message_size_used < 1024)
       {
-        partial_message_size += 512;
+        partial_message_size += 2048;
         partial_message = xrealloc (partial_message, partial_message_size);
       }
 
@@ -395,11 +399,12 @@ error_complete (status, errnum, message, va_alist)
 	  break;
 	}
 
-      partial_message_size += 512;
+      partial_message_size += 2048;
       partial_message = xrealloc (partial_message, partial_message_size);
     }
 #else
-  partial_message_size_used += vsprintf (partial_message + partial_message_size_used, message, args);
+  vsprintf (partial_message + partial_message_size_used, message, args);
+  partial_message_size_used += strlen(partial_message+partial_message_size_used);
 
   /* Attempt to catch memory overwrites... */
   if (partial_message_size_used >= partial_message_size)
@@ -423,7 +428,7 @@ error_complete (status, errnum, message, va_alist)
 	  break;
 	}
 
-      partial_message_size += 512;
+      partial_message_size += 2048;
       partial_message = xrealloc (partial_message, partial_message_size);
     }
 #else
