@@ -791,7 +791,7 @@ authentication or multiple timeouts.
 The option
 .B --quit
 will kill a running daemon process instead of waking it up (if there
-is no such option, 
+is no such process, 
 .I fetchmail
 notifies you).  If the --quit option is the only command-line option,
 that's all there is to it.
@@ -1536,7 +1536,7 @@ followed by a string sets the same global specified by --logfile.  A
 command-line --logfile option will override this.  Also, `set daemon'
 sets the poll interval as --daemon does.  This can be overridden by a
 command-line --daemon option; in particular --daemon 0 can be used to
-force foreground operation. The `set postmater' statement sets the
+force foreground operation. The `set postmaster' statement sets the
 address to which multidrop mail defaults if there are no local
 matches.  Finally, `set syslog' sends log messages to syslogd(8).
 
