@@ -442,29 +442,29 @@ int readheaders(int sock,
 	    linelen += n;
 	    msgblk.msglen += n;
 
-		/*
-		 * Try to gracefully handle the case, where the length of a
-		 * line exceeds MSGBUFSIZE.
-		 */
-		if ( n && buf[n-1] != '\n' ) {
-			overlong = TRUE;
-			rline = (char *) realloc(line, linelen + 1);
-			if (rline == NULL)
-			{
-			    free (line);
-			    return(PS_IOERR);
-			}
-			line = rline;
-			memcpy(line + linelen - n, buf, n);
-			line[linelen] = '\0';
-			ch = ' '; /* So the next iteration starts */
-			continue;
+	    /*
+	     * Try to gracefully handle the case where the length of a
+	     * line exceeds MSGBUFSIZE.
+	     */
+	    if (n && buf[n-1] != '\n') 
+	    {
+		overlong = TRUE;
+		rline = (char *) realloc(line, linelen + 1);
+		if (rline == NULL)
+		{
+		    free (line);
+		    return(PS_IOERR);
 		}
-
+		line = rline;
+		memcpy(line + linelen - n, buf, n);
+		line[linelen] = '\0';
+		ch = ' '; /* So the next iteration starts */
+		continue;
+	    }
 
 	    /* lines may not be properly CRLF terminated; fix this for qmail */
-		/* we don't want to overflow the buffer here */
-	    if (ctl->forcecr && buf[n-1] == '\n' && (n == 1 || buf[n-2] != '\r'))
+	    /* we don't want to overflow the buffer here */
+	    if (ctl->forcecr && buf[n-1]=='\n' && (n==1 || buf[n-2]!='\r'))
 	    {
 		char * tcp;
 		rline = (char *) realloc(line, linelen + 2);
