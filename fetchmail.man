@@ -207,7 +207,10 @@ machine in the server's queue of undelivered mail.
 Force UIDL use (effective only with POP3).  Force client-side tracking
 of `newness' of messages (UIDL stands for ``unique ID listing'' and is
 described in RFC1725).  Use with `keep' to use a mailbox as a baby
-news drop for a group of users.
+news drop for a group of users.  Note: the implementation of this
+feature is fragile.  If you poll with a host specified on the command line,
+your saved data about seen-message UIDLs on \fIother\fR hosts is liable 
+to get clobbered. 
 .TP
 .B \-P, --port
 (Keyword: port)
