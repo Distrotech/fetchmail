@@ -1305,8 +1305,7 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 
 		    printf("  Recognized listener spam block responses are:",
 			   ctl->antispam);
-		    for (idp = ctl->antispam; idp; idp = 
-idp->next)
+		    for (idp = ctl->antispam; idp; idp = idp->next)
 			printf(" %d", idp->val.status.num);
 		    printf("\n");
 		}
