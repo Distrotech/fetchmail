@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/02/26 04:34:10 $
+<td width="30%" align=right>$Date: 2000/02/26 08:20:05 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -430,10 +430,16 @@ concentrator you dial in to and the mailserver host).<P>
 
 Having realized this, you need to ask whether password encryption
 alone will really address your security exposure.  If you think you
-might be snooped, it's better to use end-to-end encryption on your
-whole mail stream so none of it can be read.  One of the advantages of
-fetchmail over conventional SMTP-push delivery is that you may be able
-to arrange this by using ssh(1); see <a href="#K3">K3</a>.<P>
+might be snooped between server and client, it's better to use
+end-to-end encryption on your whole mail stream so none of it can be
+read.  One of the advantages of fetchmail over conventional SMTP-push
+delivery is that you may be able to arrange this by using ssh(1); see
+<a href="#K3">K3</a>.<P>
+
+Note that ssh is not a complete privacy solution either, as your mail
+could have been snooped in transit to your POP server.  For best
+security, agree with your correspondents to use a tool such as GPG
+(Gnu Privacy Guard) or PGP (Pretty Good Privacy).<P>
 
 If ssh/sshd isn't available, or you find it too complicated for you to
 set up, password encryption will at least keep a malicious cracker
@@ -2608,7 +2614,7 @@ terminate it.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/02/26 04:34:10 $
+<td width="30%" align=right>$Date: 2000/02/26 08:20:05 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
