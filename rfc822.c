@@ -21,7 +21,7 @@ char *buf;		/* header to be hacked */
 const char *host;	/* server hostname */
 {
     const char *from;
-    int parendepth, state = 0, tokencount = 0;
+    int parendepth, oldstate, state = 0, tokencount = 0, nlterm = 0;
     char mycopy[POPBUFSIZE+1];
 
     if (strncmp("From: ", buf, 6)
@@ -33,7 +33,14 @@ const char *host;	/* server hostname */
     }
 
     strcpy(mycopy, buf);
-    strcat(mycopy, ",");
+    if (mycopy[strlen(mycopy) - 1] == '\n')
+    {
+	mycopy[strlen(mycopy) - 1] = '\0';
+	nlterm = TRUE;
+    }
+    if (mycopy[strlen(mycopy) - 1] != ',')
+	strcat(mycopy, ",");
+
     for (from = mycopy; *from; from++)
     {
 #ifdef FOO
@@ -60,6 +67,7 @@ const char *host;	/* server hostname */
 	    else if (*from == '(')
 	    {
 		parendepth = 1;
+		oldstate = 1;
 		state = 4;    
 	    }
 	    else if (*from == '<')
@@ -91,7 +99,7 @@ const char *host;	/* server hostname */
 	    else if (*from == ')')
 		--parendepth;
 	    if (parendepth == 0)
-		state = 1;
+		state = oldstate;
 	    break;
 
 	case 5:   /* we're in a <>-enclosed address */
@@ -109,6 +117,12 @@ const char *host;	/* server hostname */
 
 	    else if (*from == '<')
 		state = 5;
+
+	    else if (*from == '(')
+	    {
+		oldstate = 6;
+		state = 4;
+	    }
 
 	    /* on proper termination with no @, insert hostname */
 	    else if (*from == ',')
@@ -131,7 +145,13 @@ const char *host;	/* server hostname */
 		    continue;
 		if (*cp == '(')
 		{
-		    INSERT_HOSTNAME
+		    char	*bp = strchr(cp, '<');
+		    char	*ep = strchr(cp, ',');
+
+		    if (!bp || bp > ep)
+		    {
+			INSERT_HOSTNAME
+		    }
 		}
 	    }
 
@@ -154,6 +174,9 @@ const char *host;	/* server hostname */
 
     /* back up and nuke the appended comma sentinel */
     *--buf = '\0';
+
+    if (nlterm)
+	strcat(buf, "\n");
 }
 
 char *nxtaddr(hdr)
