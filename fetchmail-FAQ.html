@@ -3,8 +3,6 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta name="generator"
-content="HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org"/>
 <title>The Fetchmail FAQ</title>
 <link rev="made" href="mailto:esr@thyrsus.com"/>
 <meta name="description"
@@ -18,7 +16,7 @@ content="Frequently asked questions about fetchmail."/>
 Page</a></td>
 <td width="30%" align="center">To <a href="/~esr/sitemap.html">Site
 Map</a></td>
-<td width="30%" align="right">$Date: 2002/09/04 13:58:24 $</td>
+<td width="30%" align="right">$Date: 2002/09/10 17:02:48 $</td>
 </tr>
 </table>
 
@@ -99,42 +97,29 @@ host?.</a><br/>
 <h1>How to make fetchmail work with various servers:</h1>
 
 <a href="#S1">S1. How can I use fetchmail with qpopper?</a><br/>
-<a href="#S2">S2. How can I use fetchmail with Microsoft
-Exchange?</a><br/>
-<a href="#S3">S3. How can I use fetchmail with Compuserve
-RPA?</a><br/>
-<a href="#S4">S4. How can I use fetchmail with Demon Internet's
-SDPS?</a><br/>
-<a href="#S5">S5. How can I use fetchmail with usa.net's
-servers?</a><br/>
-<a href="#S6">S6. How can I use fetchmail with HP
-OpenMail?</a><br/>
-<a href="#S7">S7. How can I use fetchmail with geocities POP3
-servers?</a><br/>
+<a href="#S2">S2. How can I use fetchmail with Microsoft Exchange?</a><br/>
+<a href="#S3">S3. How can I use fetchmail with Compuserve RPA?</a><br/>
+<a href="#S4">S4. How can I use fetchmail with Demon Internet's SDPS?</a><br/>
+<a href="#S5">S5. How can I use fetchmail with usa.net's servers?</a><br/>
+<a href="#S6">S6. How can I use fetchmail with HP OpenMail?</a><br/>
+<a href="#S7">S7. How can I use fetchmail with geocities POP3 servers?</a><br/>
 <a href="#S8">S8. How can I use fetchmail with Hotmail?</a><br/>
 <a href="#S9">S9. How can I use fetchmail with MSN?</a><br/>
 <a href="#S10">S10. How can I use fetchmail with SpryNet?</a><br/>
 <a href="#S11">S11. How can I use fetchmail with FTGate?</a><br/>
 <a href="#S12">S12. How can I use fetchmail with MailMax?</a><br/>
-<a href="#S13">S13. How can I use fetchmail with Novell
-GroupWise?</a><br/>
-<a href="#S14">S14. How can I use fetchmail with
-InterChange?</a><br/>
-<a href="#S15">S15. How can I use fetchmail with GMX?</a><br/>
- 
+<a href="#S13">S13. How can I use fetchmail with Novell GroupWise?</a><br/>
+<a href="#S14">S14. How can I use fetchmail with InterChange?</a><br/>
+<a href="#S15">S15. How can I use fetchmail with www.gmx.de?</a><br/>
 
 <h1>How to set up well-known security and authentication
 methods:</h1>
 
 <a href="#K1">K1. How can I use fetchmail with SOCKS?</a><br/>
-<a href="#K2">K2. How can I use fetchmail with IPv6 and
-IPsec?</a><br/>
-<a href="#K3">K3. How can I get fetchmail to work with
-ssh?</a><br/>
-<a href="#K4">K4. What do I have to do to use the IMAP-GSS
-protocol?</a><br/>
+<a href="#K2">K2. How can I use fetchmail with IPv6 and IPsec?</a><br/>
+<a href="#K3">K3. How can I get fetchmail to work with ssh?</a><br/>
+<a href="#K4">K4. What do I have to do to use the IMAP-GSS protocol?</a><br/>
 <a href="#K5">K5. How can I use fetchmail with SSL?</a><br/>
- 
 
 <h1>Runtime fatal errors:</h1>
 
@@ -148,19 +133,14 @@ file.</a><br/>
 normally otherwise.</a><br/>
 <a href="#R5">R5. Running fetchmail in daemon mode doesn't
 work.</a><br/>
-<a href="#R6">R6. Fetchmail randomly dies with socket
-errors.</a><br/>
+<a href="#R6">R6. Fetchmail randomly dies with socket errors.</a><br/>
 <a href="#R7">R7. Fetchmail running as root stopped working after
 an OS upgrade</a><br/>
 <a href="#R8">R8. Fetchmail is timing out after fetching certain
 messages but before deleting them</a><br/>
-<a href="#R9">R9. Fetchmail is timing out during message
-fetches</a><br/>
+<a href="#R9">R9. Fetchmail is timing out during message fetches</a><br/>
 <a href="#R10">R10. Fetchmail is dying with SIGPIPE.</a><br/>
-<a href="#R11">R11. My server is hanging up or emitting errors on
-CAPA.</a><br/>
- 
-
+<a href="#R11">R11. My server is hanging or emitting errors on CAPA.</a><br/>
 <h1>Hangs and lockups:</h1>
 
 <a href="#H1">H1. Fetchmail hangs when used with pppd.</a><br/>
@@ -1990,8 +1970,7 @@ is no fix yet. If you must use this server, force RETR with the
 <tt>fetchall</tt> option.</p>
 
 <hr/>
-<h2><a id="S13" name="S13">S13. How can I use fetchmail with Novell
-GroupWise?</a></h2>
+<h2><a id="S13" name="S13">S13. How can I use fetchmail with Novell GroupWise?</a></h2>
 
 <p>The Novell GroupWise IMAP server would be better named
 GroupFoolish; it is (according to the designer of IMAP) unusably
@@ -2016,11 +1995,10 @@ them on TOP or RETR.</p>
 me that their new 3.61.08 release of InterChange fixes this
 problem. I don't have any reports one way or the other yet.</p>
 
-<h2><a id="S15" name="S15">S15. How can I use fetchmail with
-GMX?</a></h2>
+<h2><a id="S15" name="S15">S15. How can I use fetchmail with www.gmx.de?</a></h2>
 
-<p>Use IMAP. The GMX StreamProxy server behaves badly on
-authentication failures, sending back a non-conformant error
+<p>You can't, not reliably anyway. The GMX StreamProxy server behaves
+badly on authentication failures, sending back a non-conformant error
 message (missing an <code>-ERR</code> tag) that confuses
 fetchmail.</p>
 
@@ -2437,7 +2415,7 @@ sendmail instance dies. The problem is messages with a single dot
 at start of a text line.</p>
 
 <hr/>
-<h2><a id="R11" name="R11">R11. My server is hanging up or emitting
+<h2><a id="R11" name="R11">R11. My server is hanging or emitting
 errors on CAPA.</a></h2>
 
 <p>Your POP3 server is broken. You can work around this with the
@@ -3441,7 +3419,7 @@ the received date from the last Received header.</p>
 Page</a></td>
 <td width="30%" align="center">To <a href="/~esr/sitemap.html">Site
 Map</a></td>
-<td width="30%" align="right">$Date: 2002/09/04 13:58:24 $</td>
+<td width="30%" align="right">$Date: 2002/09/10 17:02:48 $</td>
 </tr>
 </table>
 
