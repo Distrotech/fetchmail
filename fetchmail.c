@@ -13,6 +13,7 @@
 #if defined(HAVE_UNISTD_H)
 #include <unistd.h>
 #endif
+#include <fcntl.h>
 #include <string.h>
 #include <signal.h>
 #if defined(HAVE_SYSLOG)
@@ -521,11 +522,15 @@ int main (int argc, char **argv)
     signal(SIGQUIT, termhook);
 
     /* here's the exclusion lock */
-    if ((lockfp = fopen(lockfile,"w")) != NULL) {
-	fprintf(lockfp,"%d",getpid());
+    if ((st = open(lockfile, O_WRONLY | O_CREAT | O_EXCL, 0666)) != -1) {
+	sprintf(tmpbuf,"%d", getpid());
+	write(st, tmpbuf, strlen(tmpbuf));
 	if (run.poll_interval)
-	    fprintf(lockfp," %d", run.poll_interval);
-	fclose(lockfp);
+	{
+	    sprintf(tmpbuf," %d", run.poll_interval);
+	    write(st, tmpbuf, strlen(tmpbuf));
+	}
+	close(st);
 
 #ifdef HAVE_ATEXIT
 	atexit(unlockit);

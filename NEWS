@@ -13,8 +13,9 @@ fetchmail-5.0.5 ():
 * Added Spanish and German descriptions to spec (thanks to Horst von Brand).
 * Moved MIME decoding earlier to avoid messing with header length after
   offsets have been calculated.
+* Make the .fetchmail_pid lockfile with O_ECL.  Duhh...
 
-There are 261 people on fetchmail-friends and 408 on fetchmail-announce.
+There are 258 people on fetchmail-friends and 412 on fetchmail-announce.
 
 fetchmail-5.0.4 (Fri Jun 11 18:32:58 EDT 1999):
 * Fixed compilation error on systems without vnsprintf.
