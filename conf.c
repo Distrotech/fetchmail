@@ -262,7 +262,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	numdump("fetchlimit", ctl->fetchlimit);
 	numdump("batchlimit", ctl->batchlimit);
 	numdump("expunge", ctl->expunge);
-	listdump("smtphost", ctl->smtphunt);
+	listdump("smtphunt", ctl->smtphunt);
 	stringdump("smtpaddress", ctl->smtpaddress);
 	numdump("antispam", ctl->antispam);
 	listdump("mailboxes", ctl->mailboxes);

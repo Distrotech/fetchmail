@@ -151,7 +151,7 @@ class User:
 	self.localnames = None		# Local names
 	self.password = ""		# Password for mail account access
 	self.mailboxes = None		# Remote folders to retrieve from
-	self.smtphost = 'localhost'	# Host to forward to
+	self.smtphunt = None		# Hosts to forward to
 	self.smtpaddress = None;	# Append this to MAIL FROM line
 	self.preconnect = ""		# Connection setup
 	self.postconnect = ""		# Connection wrapup
@@ -174,7 +174,7 @@ class User:
 	    ('remote',      'String'),
 	    # leave out mailboxes and localnames
 	    ('password',    'String'),
-	    ('smtphost',    'String'),
+            # Leave out smtphunt
 	    ('smtpaddress',  'String'),
 	    ('preconnect',  'String'),
 	    ('postconnect', 'String'),
@@ -327,7 +327,6 @@ class ListEdit(Frame):
     def __init__(self, newlegend, list, editor, master, helptxt):
 	self.editor = editor
 	self.list = list
-        print "Here's the initial list: " + `self.list`
 
 	# Set up a widget to accept new elements
 	self.newval = StringVar(master)
@@ -340,8 +339,9 @@ class ListEdit(Frame):
 	listframe = Frame(master)
 	scroll = Scrollbar(listframe)
 	self.listwidget = Listbox(listframe, height=0, selectmode='browse')
-        for x in self.list:
-            self.listwidget.insert(END, x)
+        if self.list:
+            for x in self.list:
+                self.listwidget.insert(END, x)
 	listframe.pack(side=TOP, expand=YES, fill=BOTH)
 	self.listwidget.config(yscrollcommand=scroll.set, relief=SUNKEN)
 	self.listwidget.pack(side=LEFT, expand=YES, fill=BOTH)
@@ -933,8 +933,9 @@ class UserEdit(Frame):
 
 	targwin = Frame(leftwin, relief=RAISED, bd=5)
 	Label(targwin, text="Forwarding Options").pack(side=TOP)
-	LabeledEntry(targwin, 'System to forward to:',
-		     self.smtphost, '26').pack(side=TOP, fill=X)
+        Label(targwin, text="Listeners to forward to").pack(side=TOP)
+#XXX This needs to be made work
+#        ListEdit("New listener:", self.smtphunt, None, targwin, None)
 	LabeledEntry(targwin, 'Append to MAIL FROM line:',
 		     self.smtpaddress, '26').pack(side=TOP, fill=X)
 	LabeledEntry(targwin, 'Connection setup command:',
@@ -1014,7 +1015,6 @@ class ExpertConfigure(Frame, ControlEdit):
 	lf.pack(fill=X)
 
     def editSite(self, site):
-	print "Editing " + site;
 	ServerEdit(site, self.configuration.servers, Toplevel())
 
     def nosave(self):
