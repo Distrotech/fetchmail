@@ -49,6 +49,8 @@ struct mxentry *getmxrecords(const char *name)
     static char MXHostBuf[PACKETSZ - HFIXEDSZ]; 
     HEADER *hp;
 
+    pmx->name = (char *)NULL;
+    pmx->pref = -1;
     n = res_search(name,C_IN,T_MX,(unsigned char*)&answer, sizeof(answer));
     if (n == -1)
 	return((struct mxentry *)NULL);
