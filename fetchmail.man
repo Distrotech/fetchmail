@@ -1164,6 +1164,9 @@ T}
 no uidl   	\&	T{
 Turn off POP3 use of client-side UIDLs (default)
 T}
+interval   	\&	T{
+Only check this site every N poll cycles; N is a numeric argument.
+T}
 .TE
 
 Here are the legal user options:
