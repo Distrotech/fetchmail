@@ -41,7 +41,6 @@ in the Subject line unsubscribes you, and "help" returns general list help) <p>
 <a href="#G4">G4. I have this idea for a neat feature. Will you add it?</a><br>
 <a href="#G5">G5. So, what's this I hear about a fetchmail paper?</a><br>
 
-
 <h1>Fetchmail configuration file grammar questions:</h1>
 
 <a href="#F1">F1. Why does my .fetchmailrc from 3.9 or earlier no longer work?</a><br>
@@ -74,6 +73,7 @@ when I may have multiple login sessions going?</a><br>
 <a href="#R4">R4. Fetchmail dumps core in -V mode, but operates normally otherwise.</a><br>
 <a href="#R5">R5. Mail that was being fetched when I interrupted my fetchmail seems to have been vanished.</a></br>
 <a href="#R6">R6. Fetchmail dumps core when I use a .netrc file but works otherwise.</a><br>
+<a href="#R7">R7. All my mail seems to disappear after an interrupt.</a><br>
 
 <h1>Multidrop-mode problems:</h1>
 
@@ -821,6 +821,25 @@ corruption screw.  But the symptom doesn't reproduce under Linux with the
 same .fetchmailrc and .netrc.<p>
 
 <hr>
+<h2><a name="R7">R7. All my mail seems to disappear after an interrupt.</a></h2>
+
+One POP3 daemon used in the Berkeley Unix world that reports itself as
+Pop3 version 1.004 actually throws the queue away. 1.005 fixed that.
+If you're running this one, upgrade immediately.<P>
+
+Many POP servers, if an interruption occurs, will restore the whole
+mail queue after about 10 minutes.  Others will restore it right
+away. If you have an interruption and don't see it right away, cross
+your fingers and wait ten minutes brfore retrying.<P>
+
+Some servers (such as Microsoft's NTMail) are mis-designed to restore
+the entire queue, including messages you have deleted.  If you have
+one of these and it flakes out on you a lot, try setting a small
+<code>--fetchlimit</code> value.  This will result in more IP connects
+to the server but will mean it actually executes changes to the queue
+more often.<P>
+
+<hr>
 <h2><a name="M1">M1. I've declared local names, but all my multidrop
 mail is going to root anyway.</a></h2>
 
@@ -1040,7 +1059,7 @@ biff n
 
 to solve theproblem system-wide.
 
-$Id: fetchmail-FAQ.html,v 1.36 1997/06/18 23:26:13 esr Exp $<p>
+$Id: fetchmail-FAQ.html,v 1.37 1997/06/24 16:12:12 esr Exp $<p>
 
 <HR>
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
