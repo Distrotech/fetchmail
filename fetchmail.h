@@ -197,10 +197,6 @@ void gen_send ();
 int gen_transact ();
 #endif
 
-void *xmalloc(int);
-void *xrealloc(void *, int);
-char *xstrdup(const char *);
-
 int do_protocol(struct query *, const struct method *);
 int doPOP2 (struct query *); 
 int doPOP3 (struct query *);
@@ -242,6 +238,16 @@ void escapes(const char *, char *);
 
 void yyerror(const char *);
 int yylex(void);
+
+#if defined(HAVE_VOIDPOINTER)
+#define XMALLOCTYPE void
+#else
+#define XMALLOCTYPE char
+#endif
+
+XMALLOCTYPE *xmalloc(int);
+XMALLOCTYPE *xrealloc(XMALLOCTYPE *, int);
+char *xstrdup(const char *);
 
 #define FALSE	0
 #define TRUE	1
