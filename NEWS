@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* More configure fixes -- include missing.h stub script in the distribution.
+
 fetchmail-5.7.6 (Thu Mar 22 16:22:48 EST 2001), 20456 lines:
 
 * Fix POP2 and POP3 password shrouding.

@@ -4,7 +4,7 @@
 # So just uncomment all the lines marked QNX.
 
 PACKAGE = fetchmail
-VERSION = 5.7.6
+VERSION = 5.7.7
 
 # Ultrix 2.2 make doesn't expand the value of VPATH.
 srcdir = @srcdir@
@@ -271,7 +271,7 @@ docs = $(srcdir)/COPYING $(srcdir)/FEATURES $(srcdir)/fetchmail-features.html \
 config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/configure \
 	$(srcdir)/config.guess $(srcdir)/config.h.in $(srcdir)/config.sub \
 	$(srcdir)/acconfig.h $(srcdir)/aclocal.m4
-scripts = $(srcdir)/install.sh $(srcdir)/mkinstalldirs \
+scripts = $(srcdir)/install.sh $(srcdir)/missing.sh $(srcdir)/mkinstalldirs \
 	$(srcdir)/specgen.sh $(srcdir)/lsmgen.sh $(srcdir)/fetchmailconf
 all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) \
 	$(srcdir)/rh-config/* $(srcdir)/contrib/*[A-Za-uw-z] \

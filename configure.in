@@ -15,19 +15,19 @@ PACKAGE=`sed -n '/PACKAGE *= *\(.*\)/s//\1/p' <$srcdir/Makefile.in`
 VERSION=`sed -n '/VERSION *= *\(.*\)/s//\1/p' <$srcdir/Makefile.in`
 AM_INIT_AUTOMAKE("$PACKAGE", "$VERSION")
 
-dnl Map autoconf, autoheader and aclocal to (/bin/true) if they are
+dnl Map autoconf, autoheader and aclocal to missing.sh if they are
 dnl not available in the system, so as not to cause problems in
 dnl Makefile.in.  Be sure to fix this hack if we start supporting
 dnl automake (Makefile.am).
 
 if test -z "$AUTOCONF" ; then
-	AUTOCONF=true
+	AUTOCONF="missing.sh autoconf"
 fi
 if test -z "$ACLOCAL" ; then
-	ACLOCAL=true
+	ACLOCAL="missing.sh aclocal"
 fi
 if test -z "$AUTOHEADER" ; then
-	AUTOHEADER=true
+	AUTOHEADER="missing.sh autoheader"
 fi
 
 AC_CANONICAL_HOST
