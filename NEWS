@@ -12,7 +12,8 @@ fetchmail-4.7.4 ():
   po file by Javier Cohen <jkohen@tough.com>.
 * Accept 'passwd' as a synonym for 'password' in .netrc files.
 * In fetchmailconf, Save or Quit in a frame first performs that action
-  on all detendent frames.
+  on all dependent frames.
+* Source distribution now includes Debian package data under debian/
 
 There are 249 people on fetchmail-friends and 335 on fetchmail-announce.
 
