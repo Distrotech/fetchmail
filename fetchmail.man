@@ -53,9 +53,10 @@ working \fI.fetchmailrc\fR file set up.
 .TP
 .B \-a, --all
 Retrieve both old (seen) and new messages from the mailserver.  The
-default is to fetch only messages the server has not marked seen.  Note
-that POP2 retrieval, and POP3 retrieval on servers without the LAST
-command, behaves as though --all is always on (see KNOWN PROBLEMS below).
+default is to fetch only messages the server has not marked seen.
+Note that POP2 retrieval, and POP3 retrieval on servers without the
+LAST command, behaves as though --all is always on (see RETRIEVAL
+FAILURE MODES below).
 .TP
 .B \-S host, --smtphost host
 Specify an host to forward mail to (other than localhost).
@@ -173,7 +174,6 @@ command line will be queried.  If you don't specify any servers
 on the command line, each server in your 
 .I ~/.fetchmailrc
 file will be queried.
-.PP
 .SH USER AUTHENTICATION
 User authentication in 
 .I fetchmail
@@ -240,7 +240,6 @@ file.  Each time
 logs in, it sends a cryptographically secure hash of your password and
 the server greeting time to the server, which can verify it by
 checking its authorization database. 
-.PP
 .SH DAEMON MODE
 The 
 .B --daemon
@@ -277,6 +276,50 @@ or
 option allows you to redirect status messages emitted while in daemon
 mode into a specified logfile (follow the option with the logfile name).
 This is primarily useful for debugging configurations.
+.SH RETRIEVAL FAILURE MODES
+The protocols \fIfetchmail\fR uses to talk to mail servers are next to
+bulletproof.  In normal operation forwarding to port 25, no message is
+ever deleted (or even marked for deletion) on the host until the SMTP
+listener on the client has acknowledged to \fIfetchmail\fRthat the
+message has been accepted for delivery.  When forwarding to an MDA,
+however, there is more possibility of error (because there's no way
+for fetchmail to get a reliable positive acknowledgement from the MDA).
+.PP
+The normal mode of \fIfetchmail\fR is to try to download only `new'
+messages, leaving untouched (and undeleted) messages you have already
+read directly on the server (or fetched with a previous \fIfetchmail
+--keep\fR).  But you may find that messages you've already read on the
+server are being fetched (and deleted) even when you don't specify
+--all.  There are several reasons this can happen.
+.PP
+One could be that you're using POP2.  The POP2 protocol includes no
+representation of `new' or `old' state in messages, so \fIfetchmail\fR
+must treat all messages as new all the time.  POP2 is obsolete.
+.PP
+Under POP3, blame RFC1725.  That late version of the POP3 protocol
+specification ill-advisedly removed the LAST command, and some POP
+servers (including the one distributed with at least some versions of
+SunOS) follow it (you can verify this by invoking \fIfetchmail -v\fR
+to the mail server and watching the response to LAST early in the
+query).  The fix is to install an older POP3 server with LAST or
+(better) switch to an IMAP server.
+.PP
+Another potential POP3 problem might be servers that insert messages
+in the middle of mailboxes (some VMS implementations of mail are
+rumored to do this).  The \fIfetchmail\fR code assumes that new
+messages are appended to the end of the mailbox; when this is not true
+it may treat some old messages as new and vice versa.  The only 
+real fix for this problem is to  switch to IMAP.
+.PP
+The IMAP code uses the presence or absence of the server flag \eSeen
+to decide whether or not a message is new.  Under Unix, it counts on
+your IMAP server to notice the BSD-style Status flags set by mail user
+agents and set the \Seen flag from them when appropriate.  All Unix
+IMAP servers we know of do this, though it's not specified by the IMAP
+RFCs.  If you ever trip over a server that doesn't, the symptom will
+be that messages you have already read on your host will look new to
+the server.  In this (unlikely) case, only messages you fetched with
+\fIfetchmail --keep\fR will be both undeleted and marked old.
 .SH THE RUN CONTROL FILE
 The preferred way to set up fetchmail (and the only way if you want to
 avoid specifying passwords each time it runs) is to write a
@@ -497,37 +540,7 @@ For correct initialization,
 requires either that both the USER and HOME environment variables are
 correctly set, or that \fBgetpwuid\fR(3) be able to retrieve a password
 entry from your user ID.
-.SH OLD-MESSAGE PROBLEMS
-The normal mode of \fIfetchmail\fR is to try to download only `new'
-messages, leaving untouched (and undeleted) messages you have already
-read directly on the server (or fetched with a previous \fIfetchmail
---keep\fR).  But you may find that messages you've already read on the
-server are being fetched and deleted even when you don't specify
---all.  There are several reasons this can happen.
-.PP
-One could be that you're using POP2.  The POP2 protocol includes no
-representation of `new' or `old' state in messages, so \fIfetchmail\fR
-must treat all messages as new all the time.
-.PP
-Under POP3, blame RFC1725.  That late version of the POP3 protocol
-specification ill-advisedly removed the LAST command, and some POP
-servers (including the one distributed with at least some versions of
-SunOS) follow it (you can verify this by invoking \fIfetchmail -v\fR
-and watching the response to LAST early in the query).  The fix is to
-install an older POP3 server with LAST or switch to an IMAP server.
-.PP
-Another potential POP3 problem might be servers that insert messages
-.PP
-The IMAP code uses the presence or absence of the server flag \eSeen
-to decide whether or not a message is new.  Under Unix, it counts on
-your IMAP server to notice the BSD-style Status flags set by mail user
-agents and set the \Seen flag from them when appropriate.  All Unix
-IMAP servers we know of do this, though it's not specified by the IMAP
-RFCs.  If you ever trip over a server that doesn't, the symptom will
-be that messages you have already read on your host will look new to
-the server.  In this (unlikely) case, only messages you fetched with
-\fIfetchmail --keep\fR will be both undeleted and marked old.
-.SH OTHER KNOWN PROBLEMS
+.SH BUGS AND KNOWN PROBLEMS
 Use of any of the supported protocols other than APOP requires that
 the program send unencrypted passwords over the TCP/IP connection to
 the mail server.  This creates a risk that name/password pairs might
