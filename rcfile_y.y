@@ -42,7 +42,7 @@ static int reset_server(char *name, int skip);
 }
 
 %token DEFAULTS POLL SKIP AKA LOCALDOMAINS PROTOCOL
-%token AUTHENTICATE TIMEOUT KPOP KERBEROS_V4
+%token AUTHENTICATE TIMEOUT KPOP KERBEROS4
 %token ENVELOPE USERNAME PASSWORD FOLDER SMTPHOST MDA PRECONNECT LIMIT
 %token IS HERE THERE TO MAP WILDCARD
 %token SET BATCHLIMIT FETCHLIMIT LOGFILE DAEMON INTERFACE MONITOR
@@ -122,7 +122,7 @@ serv_option	: AKA alias_list
 		| NO UIDL		{current.server.uidl  = FLAG_FALSE;}
 		| PORT NUMBER		{current.server.port = $2;}
 		| AUTHENTICATE PASSWORD	{current.server.authenticate = A_PASSWORD;}
-		| AUTHENTICATE KERBEROS_V4	{current.server.authenticate = A_KERBEROS_V4;}
+		| AUTHENTICATE KERBEROS4	{current.server.authenticate = A_KERBEROS_V4;}
 		| TIMEOUT NUMBER	{current.server.timeout = $2;}
 		| ENVELOPE STRING	{current.server.envelope = xstrdup($2);}
 		| INTERFACE STRING	{

@@ -34,8 +34,8 @@ local(domains)	{ return LOCALDOMAINS; }
 proto(col)? 	{ return PROTOCOL; }
 port		{ return PORT; }
 auth(enticate)?	{ return AUTHENTICATE; }
-kerberos_v4	{ return KERBEROS_V4; }
-kerberos	{ return KERBEROS_V4; }
+kerberos_v4	{ return KERBEROS4; }
+kerberos	{ return KERBEROS4; }
 timeout		{ return TIMEOUT;}
 envelope	{ return ENVELOPE; }
 
