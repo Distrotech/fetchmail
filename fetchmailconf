@@ -644,7 +644,8 @@ available.
 
 Normally the TCP/IP service port to use is 
 dictated by the protocol choice.  The `Port'
-field lets you set a non-standard port.
+field (only present in expert mode) lets you
+set a non-standard port.
 """}
 
 sechelp = {
@@ -800,7 +801,8 @@ class ServerEdit(Frame):
 	Label(userwin, text="User entries for " + host).pack(side=TOP)
 	ListEdit("New user: ",
                  map(lambda x: x.remote, self.server.users),
-                 self.edituser, userwin, suserhelp)
+                 lambda u, m=mode, s=self.server: UserEdit(m,u,s, Toplevel()),
+                 userwin, suserhelp)
 	userwin.pack(fill=X)
 
 	leftwin.pack(side=LEFT, anchor=N, fill=X);
@@ -841,9 +843,6 @@ class ServerEdit(Frame):
 
             rightwin.pack(side=LEFT, anchor=N);
 
-    def edituser(self, user):
-	UserEdit(user, self.server, Toplevel())
-
 #
 # User editing stuff
 #
@@ -879,7 +878,7 @@ page section on multidrop mode.
 """}
 
 class UserEdit(Frame):
-    def __init__(self, username, server, master=None):
+    def __init__(self, mode, username, server, master=None):
 	Frame.__init__(self, master)
 	Pack.config(self)
 	self.master.title('Fetchmail user ' + username + ' querying ' + server.pollname);
@@ -896,7 +895,7 @@ class UserEdit(Frame):
 	    server.users.append(self.user)
 
 	self.post()
-	self.makeWidgets()
+	self.makeWidgets(mode)
 #	self.grab_set()
 #	self.focus_set()
 #	self.wait_window()
@@ -931,7 +930,7 @@ class UserEdit(Frame):
 	self.gather()
 	Widget.destroy(self.master)
 
-    def makeWidgets(self):
+    def makeWidgets(self, mode):
 	dispose_window(self,
 			"User options for " + self.user.remote,
 			userhelp)
