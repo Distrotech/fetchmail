@@ -847,15 +847,6 @@ void dump_params (struct query *ctl)
 	       ctl->server.interval);
     if (ctl->server.truename)
 	printf("  True name of server is %s.\n", ctl->server.truename);
-    if (ctl->server.akalist)
-    {
-	struct idlist *idp;
-
-	printf("  Predeclared mailserver aliases:");
-	for (idp = ctl->server.akalist; idp; idp = idp->next)
-	    printf(" %s", idp->id);
-	putchar('\n');
-    }
     if (ctl->server.skip || outlevel == O_VERBOSE)
 	printf("  This host will%s be queried when no host is specified.\n",
 	       ctl->server.skip ? " not" : "");
@@ -890,15 +881,6 @@ void dump_params (struct query *ctl)
 	printf(" (default).\n");
     else
 	printf(".\n");
-    if (ctl->server.localdomains)
-    {
-	struct idlist *idp;
-
-	printf("  Local domains:");
-	for (idp = ctl->server.localdomains; idp; idp = idp->next)
-	    printf(" %s", idp->id);
-	putchar('\n');
-    }
 
     if (!ctl->mailboxes->id)
 	printf("  Default mailbox selected.\n");
@@ -997,15 +979,36 @@ void dump_params (struct query *ctl)
 		fputs("*\n", stdout);
 	}
 
-	printf("  DNS lookup for multidrop addresses is %sabled.\n",
-	       ctl->server.dns ? "en" : "dis");
+	if (count > 1 || ctl->wildcard)
+	{
+	    printf("  DNS lookup for multidrop addresses is %sabled.\n",
+		   ctl->server.dns ? "en" : "dis");
 
-	if (count > 1)
 	    if (ctl->server.envelope == STRING_DISABLED)
 		printf("  Envelope-address routing is disabled\n");
 	    else
 		printf("  Envelope header is assumed to be: %s\n",
-		       ctl->server.envelope ? ctl->server.envelope : "Received");
+		       ctl->server.envelope ? ctl->server.envelope:"Received");
+
+	    if (ctl->server.akalist)
+	    {
+		struct idlist *idp;
+
+		printf("  Predeclared mailserver aliases:");
+		for (idp = ctl->server.akalist; idp; idp = idp->next)
+		    printf(" %s", idp->id);
+		putchar('\n');
+	    }
+	    if (ctl->server.localdomains)
+	    {
+		struct idlist *idp;
+
+		printf("  Local domains:");
+		for (idp = ctl->server.localdomains; idp; idp = idp->next)
+		    printf(" %s", idp->id);
+		putchar('\n');
+	    }
+	}
     }
 #ifdef	linux
     if (ctl->server.interface)
