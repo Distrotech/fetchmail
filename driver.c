@@ -1010,7 +1010,7 @@ static int readheaders(int sock,
 		for (idp = msgblk.recipients; idp; idp = idp->next)
 		    if (idp->val.status.mark == XMIT_REJECT)
 			break;
-		sprintf(errhd+strlen(errhd), _("recipient address %s didn't match any local name\n"), idp->id);
+		sprintf(errhd+strlen(errhd), _("recipient address %s didn't match any local name"), idp->id);
 	    }
 	}
 
