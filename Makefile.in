@@ -85,7 +85,8 @@ CTAGS = ctags
 protobjs = rcfile_y.o rcfile_l.o socket.o getpass.o pop2.o pop3.o imap.o \
        etrn.o fetchmail.o env.o options.o daemon.o driver.o sink.o \
        rfc822.o smtp.o xmalloc.o uid.o mxget.o md5c.o md5ify.o rpa.o \
-       interface.o netrc.o base64.o error.o unmime.o conf.o checkalias.o
+       interface.o netrc.o base64.o error.o unmime.o conf.o checkalias.o \
+       smbdes.o smbencrypt.o smbmd4.o smbutil.o
 
 objs = $(protobjs) $(extras) $(EXTRAOBJ)
 
@@ -98,7 +99,8 @@ srcs = $(srcdir)/socket.c $(srcdir)/getpass.c $(srcdir)/pop2.c 		\
        $(srcdir)/md5c.c $(srcdir)/md5ify.c $(srcdir)/rpa.c	  	\
        $(srcdir)/interface.c $(srcdir)/netrc.c $(srcdir)/base64.c	\
        $(srcdir)/error.c $(srcdir)/unmime.c $(srcdir)/conf.c		\
-       $(srcdir)/checkalias.c
+       $(srcdir)/checkalias.c $(srcdir)/smbdes.c $(srcdir)/smbencrypt.c \
+       $(srcdir)/smbmd4.c $(srcdir)/smbutil.c
 
 .SUFFIXES:
 .SUFFIXES: .o .c .h .y .l .ps .dvi .info .texi
@@ -220,14 +222,16 @@ parser = $(srcdir)/rcfile_l.l $(srcdir)/rcfile_y.y
 headers = $(srcdir)/fetchmail.h $(srcdir)/socket.h $(srcdir)/smtp.h \
 	$(srcdir)/mx.h $(srcdir)/md5.h $(srcdir)/md5global.h \
 	$(srcdir)/netrc.h $(srcdir)/tunable.h $(srcdir)/i18n.h \
-	$(srcdir)/aclocal.m4
+	$(srcdir)/aclocal.m4 $(srcdir)/ntlm.h $(srcdir)/smb.h \
+	$(srcdir)/smbbyteorder.h $(srcdir)/smbdes.h $(srcdir)/smbencrypt.h \
+	$(srcdir)/smbmd4.h
 extra = $(srcdir)/alloca.c $(srcdir)/getopt.[ch] $(srcdir)/getopt1.c \
 	$(srcdir)/strcasecmp.c $(srcdir)/strstr.c $(srcdir)/memmove.c
 docs = $(srcdir)/COPYING $(srcdir)/FEATURES $(srcdir)/fetchmail-features.html \
 	$(srcdir)/design-notes.html $(srcdir)/NOTES \
-	$(srcdir)/INSTALL $(srcdir)/NEWS  $(srcdir)/README \
-	$(srcdir)/fetchmail.lsm $(srcdir)/sample.rcfile \
-	$(srcdir)/*.man	$(srcdir)/FAQ $(srcdir)/fetchmail-FAQ.html
+	$(srcdir)/INSTALL $(srcdir)/NEWS $(srcdir)/README \
+	$(srcdir)/README.NTLM $(srcdir)/fetchmail.lsm $(srcdir)/sample.rcfile \
+	$(srcdir)/*.man	$(srcdir)/FAQ $(srcdir)/fetchmail-FAQ.html \
 config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/configure \
 	$(srcdir)/config.guess $(srcdir)/config.h.in $(srcdir)/config.sub \
 	$(srcdir)/acconfig.h

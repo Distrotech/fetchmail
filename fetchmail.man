@@ -650,6 +650,12 @@ compile in the support, \fIfetchmail\fR will try to perform an RPA pass-phrase
 authentication instead of sending over the password en clair if it
 detects "@compuserve.com" in the hostname.
 .PP
+Microsoft's NTLM authentication (used by Microsoft Exchange) is
+supported. If you compile in the support, \fIfetchmail\fR will try to
+perform an NTLM authentication (instead of sending over the
+password en clair) whenever the server returns AUTH=NTLM in its
+capability response.
+.PP
 If you are using IPsec, the -T (--netsec) option can be used to pass
 an IP security request to be used when outgoing IP connections are
 initialized.  You can also do this using the `netsec' server option

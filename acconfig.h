@@ -94,6 +94,9 @@
 /* Define if you want RPA support compiled in */
 #undef RPA_ENABLE
 
+/* Define if you want NTLM authentication */
+#undef NTLM_ENABLE
+
 /* Define if you want SDPS support compiled in */
 #undef SDPS_ENABLE
 

@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/08/21 06:04:18 $
+<td width="30%" align=right>$Date: 1999/09/14 07:38:00 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1181,6 +1181,10 @@ for details.  The solution is to upgrade your fetchmail.<p>
 <hr>
 <h2><a name="S2">S2. How can I use fetchmail with Microsoft Exchange?</a></h2>
 
+Fetchmail now supports the proprietary NTLM mode used with M$ Exchange
+servers. To enable this, configure fetchmail with the --enable-NTLM
+option and recompile it.<P>
+
 M$ Exchange violates the POP3 RFCs.  Its LIST command does not reveal
 the real sizes of mail in the pop mailbox, but the sizes of the
 compressed versions in the exchange mail database (thanks to Arjan De
@@ -1413,6 +1417,10 @@ document it, so nobody but their Windows clients can speak it.<p>
 
 This is a customer lock-in tactic; we recommend boycotting MSN as the
 only appropriate response.<p>
+
+As of 5.0.8, we have support for the client side of NTLM
+authentication.  It's possible this may enable fetchmail to talk to
+MSN; if so, somebody should report it so this FAQ can be corrected.<p>
 
 <hr>
 <h2><a name="S10">S10. How can I use fetchmail with SpryNet?</a></h2>
@@ -2457,7 +2465,7 @@ inactivity timeout.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/08/21 06:04:18 $
+<td width="30%" align=right>$Date: 1999/09/14 07:38:00 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

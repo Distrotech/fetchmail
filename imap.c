@@ -666,6 +666,83 @@ static void hmac_md5 (unsigned char *password,  size_t pass_len,
     MD5Final (response, &ctx);
 }
 
+#if NTLM_ENABLE
+#include "ntlm.h"
+
+static tSmbNtlmAuthRequest   request;		   
+static tSmbNtlmAuthChallenge challenge;
+static tSmbNtlmAuthResponse  response;
+
+/*
+ * NTLM support by Grant Edwards.
+ *
+ * Handle MS-Exchange NTLM authentication method.  This is the same
+ * as the NTLM auth used by Samba for SMB related services. We just
+ * encode the packets in base64 instead of sending them out via a
+ * network interface.
+ * 
+ * Much source (ntlm.h, smb*.c smb*.h) was borrowed from Samba.
+ */
+
+static int do_imap_ntlm(int sock, struct query *ctl)
+{
+    char msgbuf[2048];
+    int result,len;
+  
+    gen_send(sock, "AUTHENTICATE NTLM");
+
+    if ((result = gen_recv(sock, msgbuf, sizeof msgbuf)))
+	return result;
+  
+    if (msgbuf[0] != '+')
+	return PS_AUTHFAIL;
+  
+    buildSmbNtlmAuthRequest(&request,ctl->remotename,NULL);
+
+    if (outlevel >= O_DEBUG)
+	dumpSmbNtlmAuthRequest(stdout, &request);
+
+    memset(msgbuf,0,sizeof msgbuf);
+    to64frombits (msgbuf, (unsigned char*)&request, SmbLength(&request));
+  
+    if (outlevel >= O_MONITOR)
+	report(stdout, "IMAP> %s\n", msgbuf);
+  
+    strcat(msgbuf,"\r\n");
+    SockWrite (sock, msgbuf, strlen (msgbuf));
+
+    if ((gen_recv(sock, msgbuf, sizeof msgbuf)))
+	return result;
+  
+    len = from64tobits ((unsigned char*)&challenge, msgbuf);
+    
+    if (outlevel >= O_DEBUG)
+	dumpSmbNtlmAuthChallenge(stdout, &challenge);
+    
+    buildSmbNtlmAuthResponse(&challenge, &response,ctl->remotename,ctl->password);
+  
+    if (outlevel >= O_DEBUG)
+	dumpSmbNtlmAuthResponse(stdout, &response);
+  
+    memset(msgbuf,0,sizeof msgbuf);
+    to64frombits (msgbuf, (unsigned char*)&response, SmbLength(&response));
+
+    if (outlevel >= O_MONITOR)
+	report(stdout, "IMAP> %s\n", msgbuf);
+      
+    strcat(msgbuf,"\r\n");
+
+    SockWrite (sock, msgbuf, strlen (msgbuf));
+  
+    if ((result = gen_recv (sock, msgbuf, sizeof msgbuf)))
+	return result;
+  
+    if (strstr (msgbuf, "OK"))
+	return PS_SUCCESS;
+    else
+	return PS_AUTHFAIL;
+}
+#endif /* NTLM */
 
 static int do_cram_md5 (int sock, struct query *ctl)
 /* authenticate as per RFC2195 */
@@ -869,7 +946,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     }
 #endif /* KERBEROS_V4 */
 
-    if (strstr (capabilities, "AUTH=CRAM-MD5"))
+    if (strstr(capabilities, "AUTH=CRAM-MD5"))
     {
         if (outlevel >= O_DEBUG)
             report (stdout, _("CRAM-MD5 authentication is supported\n"));
@@ -881,6 +958,21 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
         }
         return ok;
     }
+
+#ifdef NTLM_ENABLE
+    if (strstr (capabilities, "AUTH=NTLM"))
+    {
+        if (outlevel >= O_DEBUG)
+            report (stdout, _("NTLM authentication is supported\n"));
+    if ((ok = do_imap_ntlm (sock, ctl)))
+        {
+            if (outlevel >= O_MONITOR)
+                report (stdout, "IMAP> *\n");
+            SockWrite (sock, "*\r\n", 3);
+        }
+        return ok;
+    }
+#endif /* NTLM_ENABLE */
 
 #ifdef __UNUSED__	/* The Cyrus IMAP4rev1 server chokes on this */
     /* this handles either AUTH=LOGIN or AUTH-LOGIN */
