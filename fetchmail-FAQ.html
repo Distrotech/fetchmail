@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/12/14 03:32:11 $
+<td width="30%" align=right>$Date: 2001/12/25 04:55:14 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -106,15 +106,20 @@ IP address?</a><br>
 <a href="#R3">R3. Fetchmail dumps core when given an invalid rc file.</a><br>
 <a href="#R4">R4. Fetchmail dumps core in -V mode, but operates normally otherwise.</a><br>
 <a href="#R5">R5. Running fetchmail in daemon mode doesn't work.</a><br>
-<a href="#R6">R6. Fetchmail hangs when used with pppd.</a><br>
-<a href="#R7">R7. Fetchmail randomly dies with socket errors.</a><br>
-<a href="#R8">R8. Fetchmail running as root stopped working after an OS upgrade</a><br>
-<a href="#R9">R9. Fetchmail is timing out after fetching certain
+<a href="#R6">R6. Fetchmail randomly dies with socket errors.</a><br>
+<a href="#R7">R7. Fetchmail running as root stopped working after an OS upgrade</a><br>
+<a href="#R8">R8. Fetchmail is timing out after fetching certain
 messages but before deleting them</a><br>
-<a href="#R10">R10. Fetchmail is timing out during message fetches</a><br>
-<a href="#R11">R11. Fetchmail is dying with SIGPIPE.</a><br>
+<a href="#R9">R9. Fetchmail is timing out during message fetches</a><br>
+<a href="#R10">R10. Fetchmail is dying with SIGPIPE.</a><br>
 
-<h1>Disappearing mail</h1>
+<h1>Hangs and lockups:</h1>
+
+<a href="#H1">H1. Fetchmail hangs when used with pppd.</a><br>
+<a href="#H2">H2. Fetchmail hangs during the MAIL FROM exchange.</a><br>
+<a href="#H3">H3. Fetchmail hangs while fetching mail.</a><br>
+
+<h1>Disappearing mail:</h1>
 
 <a href="#D1">D1. I think I've set up fetchmail correctly, but I'm not getting any mail.</a><br>
 <a href="#D2">D2. All my mail seems to disappear after a dropped connection.</a><br>
@@ -646,14 +651,14 @@ on a 64-bit machine by then, you'll deserve to lose.
 <hr>
 <h2><a name="G14">G14. Is there a way in fetchmail to support disconnected IMAP mode?</a></H2>
 
-No. Fetchmail is a mail transport agent, best understood as a protocol
+<p>No. Fetchmail is a mail transport agent, best understood as a protocol
 gateway between POP3/IMAP servers and SMTP.  Disconnected operation
 requires an elaborate interactive client.  It's a very different problem.
 
 <hr>
 <h2><a name="G15">G15. How will fetchmail perform under heavy loads?</a></h2>
 
-Fetchmail streams message bodies line-by-line; the most core it
+<p>Fetchmail streams message bodies line-by-line; the most core it
 ever requires per message is enough memory to hold the RFC822 header, and
 that storage is freed when body processing begins. It is, accordingly,
 quite economical in its use of memory.
@@ -673,14 +678,14 @@ latency).
 <hr>
 <h2><a name="B1">B1. Make coughs and dies when building on FreeBSD.</a></h2>
 
-The vendor-supplied make on FreeBSD systems can only be used within
+<p>The vendor-supplied make on FreeBSD systems can only be used within
 FreeBSD's "scope", e.g. the ports collection.  Type "gmake" to run GNU
 make and better things will happen.
 
 <hr>
 <h2><a name="B2">B2. Lex bombs out while building the fetchmail lexer.</a></h2>
 
-In the immortal words of Alan Cox the last time this came up: ``Take
+<p>In the immortal words of Alan Cox the last time this came up: ``Take
 the Solaris lex and stick it up the backside of a passing Sun
 salesman, then install <a
 href="ftp://ftp.gnu.org/pub/non-gnu/flex/">flex</a> and use that.  All
@@ -2019,14 +2024,7 @@ interactive shell.  The line above makes sure fetchmail lives after
 that!
 
 <hr>
-<h2><a name="R6">R6. Fetchmail hangs when used with pppd.</a></h2>
-
-Your problem may be with pppd's `demand' option.  We have a report that
-fetchmail doesn't play well with it, but works with pppd if `demand'
-is turned off.  We have no idea why this is.
-
-<hr>
-<h2><a name="R7">R7. Fetchmail randomly dies with socket errors.</a></h2>
+<h2><a name="R6">R6. Fetchmail randomly dies with socket errors.</a></h2>
 
 Check the MTU value in your PPP interface reported by
 <code>/sbin/ifconfig</code>.  If it's over 600, change it in your PPP
@@ -2046,7 +2044,7 @@ name of one of the servers in the ring or to a corresponding IP
 address.
 
 <hr>
-<h2><a name="R8">R8. Fetchmail running as root stopped working after an OS upgrade</a></h2>
+<h2><a name="R7">R7. Fetchmail running as root stopped working after an OS upgrade</a></h2>
 
 In RH 6.0, the HOME value in the boot-time root environment changed
 from /root to / as the result of a change in init.  Move your
@@ -2054,7 +2052,7 @@ from /root to / as the result of a change in init.  Move your
 (Oddly, a similar problem has been reported from Debian systems.)
 
 <hr>
-<h2><a name="R9">R9. Fetchmail is timing out after fetching certain
+<h2><a name="R8">R8. Fetchmail is timing out after fetching certain
 messages but before deleting them</a></h2>
 
 There's a TCP/IP stalling problem under Redhat 6.0 (and possibly other
@@ -2079,12 +2077,80 @@ restores normal behaviour.  To do this, [execute]
 </blockquote>
 
 <hr>
-<h2><a name="R10">R10. Fetchmail is timing out during message fetches</a></h2>
+<h2><a name="R9">R9. Fetchmail is timing out during message fetches</a></h2>
 
 This is probably a general networking issue.  Sending a "RETR" command will
 cause the server to start sending large amounts of data, which means
 large packets.  If your networking layer has a packet-fragmentation
 problem, that's where you'll see it.
+
+<hr>
+<h2><a name="R10">R10. Fetchmail is dying with SIGPIPE.</a></h2>
+
+This probably means you have an <code>mda</code> option.  Your MDA is
+croaking while being passed a message.  Best fix is to remove the
+<code>mda</code> option and pass mail to your port 25 SMTP listener.
+
+<hr>
+<h2><a name="H1">H1. Fetchmail hangs when used with pppd.</a></h2>
+
+Your problem may be with pppd's `demand' option.  We have a report that
+fetchmail doesn't play well with it, but works with pppd if `demand'
+is turned off.  We have no idea why this is.
+
+<hr>
+<h2><a name="H2">H2. Fetchmail hangs during the MAIL FROM exchange.</a></h2>
+
+<p>The symptom: 'fetchmail -v' retrieves mail fine, but appears to hang after
+sending the MAIL FROM command
+
+<pre>
+SMTP> MAIL FROM: <someone@somewhere>
+</pre>
+
+<p>The hang is actually occuring when sendmail looks up a sender's
+address in DNS.  The problem isn't in fetchmail but in the
+configuration of sendmail.  You must enable the 'nodns' and
+'nocanonify' features of sendmail.
+
+<p>Here was my fix for RedHat 7.2:
+
+<ol>
+<li># cd /etc/mail
+<li># cp sendmail.mc sendmail-mine.mc
+<li>Edit sendmail-mine.mc and add lines:
+<pre>
+   FEATURE(nodns)
+   FEATURE(nocanonify)
+</pre>
+<li>Build a new sendmail.cf
+<pre>
+   # m4 sendmail-mine.cf > /etc/sendmail.cf
+</pre>
+<li>Restart sendmail.
+</ol>
+
+<p>For more details consult the file /usr/share/sendmail-cf/README.
+
+<hr>
+<h2><a name="H3">H3. Fetchmail hangs while fetching mail.</a></h2>
+
+<p>The symption: 'fetchmail -v' retrieves the first few messages, but
+hangs returning:
+
+<pre>
+ fetchmail: SMTP< 550 5.0.0 Access denied
+ fetchmail: SMTP> RSET
+ fetchmail: SMTP< 250 2.0.0 Reset state
+ .......fetchmail:  flushed
+ fetchmail: POP3> DELE 1
+ fetchmail: POP3< +OK marked deleted
+</pre>
+
+<p>Check and see if you're allowing sendmail connections through TCP
+wrappers.
+
+<p>Adding 'sendmail : ALL' to /etc/hosts.allow could solve this problem.
 
 <hr>
 <h2><a name="D1">D1. I think I've set up fetchmail correctly, but I'm not getting any mail.</a></h2>
@@ -2098,13 +2164,6 @@ should; see question <a href="#C1">C1</a>.
 
 <p>Or you may not be connecting to the SMTP listener.   Run fetchmail -v
 and see <a href="#R1">R1</a>.
-
-<hr>
-<h2><a name="R11">R11. Fetchmail is dying with SIGPIPE.</a></h2>
-
-This probably means you have an <code>mda</code> option.  Your MDA is
-croaking while being passed a message.  Best fix is to remove the
-<code>mda</code> option and pass mail to your port 25 SMTP listener.
 
 <hr>
 <h2><a name="D2">D2. All my mail seems to disappear after a dropped connection.</a></h2>
@@ -2929,7 +2988,7 @@ date from the last Received header.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/12/14 03:32:11 $
+<td width="30%" align=right>$Date: 2001/12/25 04:55:14 $
 </table>
 
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@thyrsus.com&gt;</A></ADDRESS>
