@@ -851,8 +851,6 @@ void dump_params (struct query *ctl)
 
 /* helper functions for string interpretation and display */
 
-#define CTRL(x)	((x) & 0x1f)
-
 void escapes(cp, tp)
 /* process standard C-style escape sequences in a string */
 const char	*cp;	/* source string with escapes */
@@ -888,11 +886,6 @@ char		*tp;	/* target buffer for digested string */
 	    case 'r': cval = '\r'; break;
 	    default: cval = *cp;
 	    }
-	    cp++;
-	}
-	else if (*cp == '^')		/* expand control-character syntax */
-	{
-	    cval = CTRL(*++cp);
 	    cp++;
 	}
 	else
