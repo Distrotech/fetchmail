@@ -28,6 +28,8 @@ features --
 * Normal start-of-read message now displays the byte (excuse me, "octet")
   size of the message.  Yes, 3schwend, you can stop noodging me now :-).
 
+* Normal progress notifications now take only 1 line per message, not 2.
+
 bugs --
 
 * Fix buggy getopt specification of P and p options.

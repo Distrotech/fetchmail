@@ -290,10 +290,6 @@ struct hostrec *queryctl;
     /* This keeps the retrieved message count for display purposes */
     static int msgnum = 0;  
 
-    /* set up for status message if outlevel allows it */
-    if (outlevel > O_SILENT && outlevel < O_VERBOSE)
-	fprintf(stderr,"reading message %d",++msgnum);
-
     /* read the message content from the server */
     inheaders = 1;
     headers = unixfrom = fromhdr = tohdr = cchdr = bcchdr = NULL;
@@ -464,13 +460,6 @@ struct hostrec *queryctl;
 	lines++;
     }
 
-
-    /* finish up display output */
-    if (outlevel == O_VERBOSE)
-	fprintf(stderr,"\n(%d lines of message content)\n",lines);
-    else if (outlevel > O_SILENT) 
-	fputs("\n", stderr);
-
     if (alarmed)
        return (0);
     /* write message terminator */
@@ -597,15 +586,17 @@ struct method *proto;
 	    {
 		/* request a message */
 		(protocol->fetch)(socket, num, &len);
-		if (outlevel == O_VERBOSE)
-		    if (protocol->delimited)
-			fprintf(stderr,
-				"fetching message %d (delimited)\n",
-				num);
+
+		if (outlevel > O_SILENT)
+		{
+		    fprintf(stderr, "reading message %d", num);
+		    if (len > 0)
+			fprintf(stderr, " (%d bytes)", len);
+		    if (outlevel == O_VERBOSE)
+			fputc('\n', stderr);
 		    else
-			fprintf(stderr,
-				"fetching message %d (%d bytes)\n",
-				num, len);
+			fputc(',', stderr);
+		}
 
 		/* open the delivery pipe now if we're using an MDA */
 		if (queryctl->mda[0])
@@ -645,11 +636,13 @@ struct method *proto;
 	    {
 		deletions++;
 		if (outlevel > O_SILENT && outlevel < O_VERBOSE) 
-		    fprintf(stderr,"flushing message %d\n", num);
+		    fprintf(stderr, " flushed\n", num);
 		ok = (protocol->delete)(socket, queryctl, num);
 		if (alarmed || ok != 0)
 		    goto cleanUp;
 	    }
+	    else if (outlevel > O_SILENT && outlevel < O_VERBOSE) 
+		fprintf(stderr, " not flushed\n", num);	
 	}
 
 	/* remove all messages flagged for deletion */
