@@ -33,30 +33,53 @@ extern char *program_name;
 void envquery(int argc, char **argv)
 /* set up basic stuff from the environment (including the rc file name) */
 {
-    struct passwd *pw;
+    struct passwd by_name, by_uid, *pwp;
+
+    if (!(user = getenv("LOGNAME")))
+	user = getenv("USER");
+
+    if (!(pwp = getpwuid(getuid())))
+    {
+	fprintf(stderr,
+		_("%s: You don't exist.  Go away.\n"),
+		program_name);
+	exit(PS_UNDEFINED);
+    }
+    else
+    {
+	memcpy(&by_uid, pwp, sizeof(struct passwd));
+	if (!user)
+	    pwp = &by_uid;
+	else if ((pwp = getpwnam(user)))
+	{
+	    /*
+	     * This logic is needed to handle gracefully the possibility
+	     * that multiple names might be mapped to one UID
+	     */
+	    memcpy(&by_name, pwp, sizeof(struct passwd));
+
+	    if (by_name.pw_uid == by_uid.pw_uid)
+		pwp = &by_name;
+	    else
+		pwp = &by_uid;
+	}
+	else
+	{
+	    fprintf(stderr,
+		    _("%s: can't find your name and home directory!\n"),
+		    program_name);
+	    exit(PS_UNDEFINED);
+	}
+	user = xstrdup(pwp->pw_name);
+    }
+
+    if (!(home = getenv("HOME")))
+	home = pwp->pw_dir;
 
     if ((program_name = strrchr(argv[0], '/')) != NULL)
 	++program_name;
     else
 	program_name = argv[0];
-
-    if ((pw = getpwuid(getuid())) != NULL)
-    {
-	user = pw->pw_name;
-	home = pw->pw_dir;
-    }
-    else if ((home = getenv("HOME")))
-    {
-	if ((user = getenv("LOGNAME")) == (char *)NULL || user[0] == '\0')
-	    user = getenv("USER");
-    }
-    else
-    {
-	fprintf(stderr,
-		_("%s: can't find your name and home directory!\n"),
-		program_name);
-	exit(PS_UNDEFINED);
-    }
 
 #define RCFILE_NAME	".fetchmailrc"
     rcfile = (char *) xmalloc(strlen(home)+strlen(RCFILE_NAME)+2);
