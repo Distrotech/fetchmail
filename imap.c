@@ -680,10 +680,6 @@ static int imap_fetch_headers(int sock, struct query *ctl,int number,int *lenp)
 	    return(ok);
 	if (sscanf(buf+2, "%d FETCH (%*s {%d}", &num, lenp) == 2)
 	    break;
-	else if (sscanf(buf+2, "%d NO", &num) == 1)
-	    return(PS_ERROR);
-	else if (sscanf(buf+2, "%d BAD", &num) == 1)
-	    return(PS_ERROR);
     }
 
     if (num != number)
