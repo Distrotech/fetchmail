@@ -70,27 +70,6 @@ then
   LIBS="$LIBS -lkrb -ldes"
 fi
 
-dnl Configure command line options
-opt_enable_stdio=unset
-
-AC_ARG_ENABLE(stdio, --enable-stdio	enable stdio for socket I/O, opt_enable_stdio=$enableval)
-
-if test $opt_enable_stdio = unset; then
-  dnl Set USE_STDIO based on $host
-  case $host in
-    *-*-*freebsd*)
-      AC_DEFINE(USE_STDIO)
-      ;;
-  case $host in
-    *-*-*linux*)
-      AC_DEFINE(USE_STDIO)
-      ;;
-  esac
-elif test $opt_enable_stdio = yes; then
-  AC_DEFINE(USE_STDIO)
-fi
-
-
 dnl All AC_CHECK_FUNCs must precede the following AC_SUBSTs
 
 AC_SUBST(EXTRASRC)
@@ -139,6 +118,18 @@ AC_TRY_LINK([#include <signal.h>
 #endif], [char *msg = *(sys_siglist + 1);],
   [AC_DEFINE(SYS_SIGLIST_DECLARED) AC_MSG_RESULT(yes)],
   AC_MSG_RESULT(no))
+
+dnl Configure command line options
+with_stdio="yes";
+AC_ARG_ENABLE(stdio,
+	[  --disable-stdio         don't use standard I/O for socket buffering],
+	[with_stdio=$enableval],
+	[with_stdio=yes])
+if test "$with_stdio" = "yes"
+then
+	AC_DEFINE(USE_STDIO)
+	AC_MSG_RESULT("Dynamic buffering with stdio will be used for socket I/O")
+fi
 
 AC_OUTPUT(Makefile, [
 # Makefile uses this timestamp file to know when to remake Makefile,
