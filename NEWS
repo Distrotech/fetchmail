@@ -4,6 +4,12 @@
 
 * Autoprobe now recognizes Domino IMAP servers and warns the user.
 * Add a needed pclose(3) call in interface.c (thank Matthias Andree).
+* In IMAP, use SEARCH UNSEEN instead of flag queries to count and identify
+  unseen messages (thanks to Alexis Lê-Quôc <alq666@hotmail.com>).
+* Added contrib/domino, a workaround for the Domino attachment problem.
+* Added contrib/toprocmail, which demonstrates how a plugin can
+  displaty selected mail headers.
+* French internationalization update from Guy Brand.
 
 fetchmail-5.3.5 (Wed Mar 29 18:17:19 EST 2000), 18840 lines:
 
