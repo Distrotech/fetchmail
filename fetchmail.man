@@ -107,26 +107,26 @@ Specify an alternate name for the .fetchids file used to save POP3
 UIDs. 
 .TP
 .B \-I specification, --interface specification
-Require that a point-to-point connection to a given IP address be up
-before polling.  Normally fetchmail is used via a transient
-point-to-point TCP/IP link established directly to a mailserver via
-SLIP or PPP; this is a relatively secure channel.  But when other
-TCP/IP routes to the mailserver exist, your username and password may
-be vulnerable to snooping (especially when daemon mode automatically
-polls for mail, shipping a clear password over the net at predictable
-intervals).  The --interface option may be used to prevent this by
-specifying an interface device and connection IP address (or range)
-for the mailserver TCP/IP link.  When the specified link is not up or
-is not connected to a matching IP address, polling will be skipped.
-The format is:
+Require that a specific interface device be up and have a specific local
+IP address (or range) before polling.  Frequently
+.I fetchmail
+is used over a transient point-to-point TCP/IP link established directly
+to a mailserver via SLIP or PPP.  That is a relatively secure channel.
+But when other TCP/IP routes to the mailserver exist (e.g. when the link
+is connected to an alternate ISP), your username and password may be
+vulnerable to snooping (especially when daemon mode automatically polls
+for mail, shipping a clear password over the net at predictable
+intervals).  The --interface option may be used to prevent this.  When
+the specified link is not up or is not connected to a matching IP
+address, polling will be skipped.  The format is:
 .sp
 	interface/iii.iii.iii.iii/mmm.mmm.mmm.mmm
 .sp
 The field before the first slash is the interface name (i.e. sl0, ppp0
-etc). The field before the second slash is the acceptable IP address.
+etc.).  The field before the second slash is the acceptable IP address.
 The field after the second slash is a mask which specifies a range of
 IP addresses to accept.  If no mask is present 255.255.255.255 is
-assumed (i.e. an exact match). This option is currently only supported
+assumed (i.e. an exact match).  This option is currently only supported
 under Linux.
 .TP
 .B \-M interface, --monitor interface
@@ -704,9 +704,11 @@ your \fI.fetchmailrc\fR, declare \&`to esr fetchmail-friends here'.
 Then, when mail including `fetchmail-friends' in any of its recipient
 lines gets fetched, the list name will be appended to the list of
 recipients your SMTP listener sees.  Therefore it will undergo alias
-expansion locally.  (Be sure to include `esr' in the local alias
+expansion locally.  Be sure to include `esr' in the local alias
 expansion of fetchmail-friends, or you'll never see mail sent only to
-the list!)
+the list.  Also be sure that your listener has the "me-too" option set
+(sendmail's -oXm command-line option or OXm declaration) so your name
+isn't removed from alias expansions in messages you send.
 .PP
 This trick is not without its problems, however.  You'll begin to see
 this when a message comes in that is addressed only to a mailing list
@@ -828,10 +830,10 @@ that the program send unencrypted passwords over the TCP/IP connection
 to the mailserver.  This creates a risk that name/password pairs
 might be snaffled with a packet sniffer or more sophisticated
 monitoring software.  Under Linux, the --interface option can be used
-to restrict polling to a specified point-to-point link, but snooping
-is still possible if (a) either host has a network device that can be
-opened in promiscuous mode, or (b) the intervening network link can
-be tapped.
+to restrict polling to availability of a specific interface device with
+a specific local IP address, but snooping is still possible if (a)
+either host has a network device that can be opened in promiscuous mode,
+or (b) the intervening network link can be tapped.
 .PP
 Send comments, bug reports, gripes, and the like to Eric S. Raymond
 <esr@thyrsus.com>.

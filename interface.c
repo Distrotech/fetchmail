@@ -14,13 +14,11 @@
 #ifdef	linux
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <netinet/in.h>
 #include <linux/netdevice.h>
-#include <errno.h>
 #include "fetchmail.h"
 
 static struct in_addr interface_address;
@@ -47,9 +45,8 @@ static int _get_ifinfo_(int socket_fd, FILE *stats_file, const char *ifname,
 
 	/* see if the interface is up */
 	strcpy(request.ifr_name, ifname);
-	errno = 0;
 	if (ioctl(socket_fd, SIOCGIFFLAGS, &request) < 0)
-		error(PS_IOERR, errno, "interface status check failed");
+		return(FALSE);
 	if (!(request.ifr_flags & IFF_RUNNING))
 		return(FALSE);
 
@@ -106,7 +103,9 @@ static int get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
 
 void interface_parse(void)
 {
+	int socket_fd = socket(AF_INET, SOCK_DGRAM, 0);
 	char *cp1, *cp2;
+	struct ifreq request;
 
 	/* in the event we point to a null string, make pointer null */
 	if (interface && !*interface)
@@ -122,6 +121,13 @@ void interface_parse(void)
 	if (!(cp1 = strchr(interface, '/')))
 		(void) error(PS_SYNTAX, 0, "missing IP interface address");
 	*cp1++ = '\000';
+
+	/* validate specified interface exists */
+	strcpy(request.ifr_name, interface);
+	if (ioctl(socket_fd, SIOCGIFFLAGS, &request) < 0)
+		(void) error(PS_SYNTAX, 0, "no such interface device '%s'",
+			interface);
+	close(socket_fd);
 
 	/* find and isolate just the netmask */
 	if (!(cp2 = strchr(cp1, '/')))

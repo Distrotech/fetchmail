@@ -169,7 +169,7 @@ int main (int argc, char **argv)
 	    printf("No SMTP message batch limit.\n");
 #ifdef	linux
 	if (interface)
-	    printf("TCP/IP interface requirements are %s.\n", interface);
+	    printf("TCP/IP interface requirements for %s.\n", interface);
 	else if (outlevel == O_VERBOSE)
 	    printf("No TCP/IP interface requirements specified.\n");
 	if (monitor)
@@ -335,15 +335,19 @@ int main (int argc, char **argv)
      * reflect the status of that transaction.
      */
     do {
-#ifdef	linux
-	if (poll_interval && monitor)
-	    sleep(3);	/* allow some time for the link to quiesce */
-
-	interface_note_activity();
-#endif
-
 	if (poll_interval)
 	{
+#ifdef	linux
+	    if (monitor)
+	    {
+		/*
+		 * Allow some time for the link to quiesce.
+		 * Note: this delay is important!  Don't remove it casually!
+		 */
+		sleep(3);
+		interface_note_activity();
+	    }
+#endif
 	    if (outlevel == O_VERBOSE)
 	    {
 		time_t	now;
