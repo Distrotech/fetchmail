@@ -68,12 +68,6 @@ more, and using an MDA for delivery is discouraged.  If you throw
 those options away, fetchmail will now forward your mail into your
 system's normal Internet-mail delivery path.
 
-If you use an MDA with popclient or an older version of fetchmail that
-requires %s in the MDA string in order to substitute in a local
-delivery address, remove it.  One consequences of the internal changes
-to support multi-drop mailboxes is that local delivery addresses will
-be appended to the end of the command in the obvious way.
-
 Actually, using an MDA is now almost always the wrong thing; the MDA
 facility has been retained only for people who can't or won't run a
 sendmail-like SMTP listener on port 25. The default, SMTP forwarding
@@ -105,21 +99,25 @@ of gcc seem to have an optimizer bug that affects fetchmail.  If your
 fetchmail core dumps (especially near startup) try recompiling without
 -O.  Alternatively, you can drop back to gcc 2.7.2 or below.
 
-6. USE IT
-
-Enjoy!
-
-7. REPORTING BUGS
+6. REPORTING BUGS
 
 When reporting bugs, please include the following:
 
-1. Your operating system.
+1. Your operating system and compiler version.
 2. The release and patch level of the fetchmail you are running.  You can see
    your patchlevel by typing `fetchmail -V'.
 3. The output of fetchmail -V (this will not reveal your password).
 4. Any command-line options you used.
 
-It is helpful if you include your .fetchmailrc but not necessary
-unless your bug involves an error in configuration parsing.
+It is helpful if you include your .fetchmailrc, but not necessary
+unless your symptom seems to involve an error in configuration parsing.
 
-A transcript of the failed session with -v on is often useful.
+A transcript of the failed session with -v on is almost always useful.
+If the bug involves a core dump, a gdb stack trace is good to have.
+
+Best of all is a mail file which, when fetched, will reproduce the bug.
+
+7. USE IT
+
+Enjoy!
+
