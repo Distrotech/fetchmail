@@ -119,12 +119,14 @@ specifying a connection IP address (or range) for the mailserver
 TCP/IP link.  When the specified link is not up or is not connected to
 a matching IP address, polling will be skipped.  The format is:
 .sp
-	iii.iii.iii.iii/mmm.mmm.mmm.mmm
+	interface/iii.iii.iii.iii/mmm.mmm.mmm.mmm
 .sp
-The field before the slash is the acceptable IP address and the field
-after the slash is a mask which specifies a range of IP addresses to
-accept.  If no mask is present 255.255.255.255 is assumed (i.e. an
-exact match). This option is currently only supported under Linux.
+The field before the first slash is the interface name (i.e. sl0, ppp0
+etc). The field before the second slash is the acceptable IP address.
+The field after the second slash is a mask which specifies a range of
+IP addresses to accept.  If no mask is present 255.255.255.255 is
+assumed (i.e. an exact match). This option is currently only supported
+under Linux.
 .TP
 .B \-M interface, --monitor interface
 Daemon mode can cause transient links which are automatically taken down
@@ -787,8 +789,7 @@ host queried.
 .SH AUTHOR
 Eric S. Raymond <esr@snark.thyrsus.com>.  
 .SH BACKWARD COMPATIBILITY
-This program is descended
-from and replaces
+This program is descended from and replaces 
 .IR popclient , 
 by Carl Harris <ceharris@mal.com>; the internals are quite different, 
 but some of its interface design is directly traceable to that
