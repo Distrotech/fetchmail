@@ -11,27 +11,11 @@ Group: Mail
 %setup
 
 %build
-%ifarch i386
-CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=/usr 
-%endif
-
-%ifarch axp
-CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=/usr 
-%endif
-
+CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=/usr
 make
 
 %install
 make install
-
-
-%ifarch i386
-%endif
-
-%ifarch i386
-%post
-%endif
-
 
 %files
 %doc README NEWS NOTES COPYING INSTALL sample.rcfile
