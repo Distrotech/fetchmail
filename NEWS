@@ -2,6 +2,9 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Autoprobe now recognizes Domino IMAP servers and warns the user.
+* Add a needed pclose(3) call in interface.c (thank Matthias Andree).
+
 fetchmail-5.3.5 (Wed Mar 29 18:17:19 EST 2000), 18840 lines:
 
 * Back out the InterChange workaround, it breaks operation with M$ Exchange.

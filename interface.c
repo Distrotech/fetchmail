@@ -81,12 +81,11 @@ void interface_init(void)
     {
 	int major, minor;
 
-	if (fscanf(fp, "%d.%d.%*d", &major, &minor) != 2)
-	    return;
-
-	if (major >= 2 && minor >= 2)
+	if (fscanf(fp, "%d.%d.%*d", &major, &minor) >= 2
+					&& major >= 2 && minor >= 2)
 	    /* Linux 2.2 -- transmit packet count in 10th field */
 	    netdevfmt = "%d %d %*d %*d %*d %d %*d %*d %*d %d %*d %*d %d";
+	pclose(fp);
     }
 }
 
