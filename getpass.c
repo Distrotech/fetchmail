@@ -12,12 +12,10 @@
  ***********************************************************************/
 
 #include <config.h>
-
-#if defined(STDC_HEADERS)
 #include <stdio.h>
-#endif
-
 #include <signal.h>
+
+extern int optind;
 
 #define INPUT_BUF_SIZE	MAX_PASSWORD_LENGTH
 
