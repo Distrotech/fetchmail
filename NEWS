@@ -7,10 +7,10 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.4.7 ()
+fetchmail-4.4.7 (Sat May 23 08:26:58 EDT 1998)
 * FEATURE FREEZE IS NOW IN EFFECT!  No new features until after 4.5.0.
 * Better workaround for TOP bounds-checking in qpopper 2.3+.
-* Gunther Leber's fix to processing of command-line options.
+* Several fixes for option-parsing and elsewhere by Gunther Leber.
 * George Colouris's second try at NetBSD autoconfiguration.
 * Bruce Mah's fix for core dump in command-line host specification.
 * Missing `idfile' declaration added to .fetchmailrc processing.
