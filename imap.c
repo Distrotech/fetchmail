@@ -595,7 +595,7 @@ static int do_gssauth(int sock, char *hostname, char *username)
     }
     to64frombits(buf1, send_token.value, send_token.length);
     if (outlevel >= O_DEBUG) {
-        report(stdout, _("Requesting authorisation as %s\n"), username);
+        report(stdout, _("Requesting authorization as %s\n"), username);
         report(stdout, "IMAP> %s\n",buf1);
     }
     strcat(buf1, "\r\n");

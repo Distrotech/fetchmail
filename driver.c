@@ -1509,7 +1509,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		stuff_warning(ctl,
 			      _("Subject: fetchmail sees repeated timeouts\r\n"));
 		stuff_warning(ctl,
-			      _("Fetchmail saw more than %d timouts while attempting to get mail from %s@%s.\n"), 
+			      _("Fetchmail saw more than %d timeouts while attempting to get mail from %s@%s.\n"), 
 			      MAX_TIMEOUTS,
 			      ctl->remotename,
 			      ctl->server.truename);
