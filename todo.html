@@ -19,7 +19,7 @@ content="Known bugs and to-do items in fetchmail" />
 <tr>
 <td width="30%">Back to <a href="/~esr">Eric's Home Page</a></td>
 <td width="30%" align="center">Up to <a href="/~esr/sitemap.html">Site Map</a></td>
-<td width="30%" align="right">$Date: 2003/07/17 00:55:18 $</td>
+<td width="30%" align="right">$Date: 2003/10/10 10:55:46 $</td>
 </tr>
 </table>
 
@@ -72,6 +72,17 @@ SockOpen (this will get rid of the kluge in rcfile_y.y).</p>
 @ ought to be treated as an smtpname option, with the domain part
 removed for other purposes such as local-address matching.</p>
 
+<p>Maybe refuse multidrop configuration unless "envelope" is _explicitly_
+configured (and tell the user he needs to configure the envelope
+option) and change the envelope default to nil.  This would 
+prevent a significant class of shoot-self-in-foot problems.</p>
+
+<p>Given the above change, perhaps treat a delivery as "temporarily
+failed" (leaving the message on the server, not putting it into
+.fetchids) when the header listed in the "envelope" option is not
+found.  (This is so you don't lose mail if you configure the wrong
+envelope header.)</p>
+
 <p>The <a
 href="http://bugs.debian.org/cgi-bin/pkgreport.cgi?pkg=fetchmail&amp;archive=no">
 Debian bug-tracking page for fetchmail</a> lists other bug
@@ -82,7 +93,7 @@ reports.</p>
 <tr>
 <td width="30%">Back to <a href="/~esr">Eric's Home Page</a></td>
 <td width="30%" align="center">Up to <a href="/~esr/sitemap.html">Site Map</a></td>
-<td width="30%" align="right">$Date: 2003/07/17 00:55:18 $</td>
+<td width="30%" align="right">$Date: 2003/10/10 10:55:46 $</td>
 </tr>
 </table>
 

@@ -12,6 +12,8 @@
   flushing if both "flush" and "limit" were specified.
 * rfc822.c fixes for CAN-2003-0790 and CAN-2003-0792 potential 
   remote DOS attack vulnerabilities.
+* Benjamin Drieu's patch for Debian bug #156592, incorrect handing of host/port
+  option.
 
 fetchmail-6.2.4 (Wed Aug 13 04:27:35 EDT 2003), 22625 lines:
 

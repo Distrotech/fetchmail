@@ -418,7 +418,9 @@ after removing any single quotes they may contain, before the MDA
 command is passed to the shell.  Do \fInot\fR use an MDA invocation
 like "sendmail -i -t" that dispatches on the contents of To/Cc/Bcc, it
 will create mail loops and bring the just wrath of many postmasters
-down upon your head.
+down upon your head.  Also, do \fInot\fR try to combine multidrop
+mode with an MDA such as procmail that can only accept one addressee;
+you will lose.
 .TP 
 .B \-\-lmtp
 (Keyword: lmtp)

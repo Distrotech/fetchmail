@@ -211,7 +211,39 @@ int smtp_open(struct query *ctl)
 		ctl->destaddr = (ctl->smtphost && ctl->smtphost[0] != '/') ? ctl->smtphost : "localhost";
     } 
     else 
-	ctl->destaddr = ctl->smtpaddress ? ctl->smtpaddress : ( ctl->smtphost && ctl->smtphost[0] != '/' ? ctl->smtphost : "localhost");
+      {
+	/* 
+	 * Here we try to find a correct domain name part for the RCPT
+	 * TO address.  If smtpaddress is set, no need to guestimate
+	 * it.  Otherwise, using ctl->smtphost as a base is a good
+	 * base, although we may have to strip any port appended to
+	 * communicate with SMTP servers that do not listen on the
+	 * SMTP port.  (benj) */
+	if (ctl->smtpaddress)
+	  ctl->destaddr = ctl->smtpaddress;
+	else if (ctl->smtphost && ctl->smtphost[0] != '/')
+	  {
+	    char * cp;
+	    if (cp = strchr (ctl->smtphost, '/'))
+	    {
+	      /* As an alternate port for smtphost is specified, we
+		 need to strip it from domain name. */
+	      char *smtpname;
+	      xalloca(smtpname, char *, cp - ctl->smtphost + 1);
+	      strncpy(smtpname, ctl->smtphost, cp - ctl->smtphost +1);
+	      cp = strchr(smtpname, '/');
+	      *cp = 0;
+	      ctl->destaddr = smtpname;
+	    }
+	    else
+	      /* No need to strip port, domain name is smtphost. */
+	      ctl->destaddr = ctl->smtphost;
+	  }
+	/* No smtphost is specified or it is a UNIX socket, then use
+	   localhost as a domain part. */
+	else
+	  ctl->destaddr = "localhost";
+      }
 
     if (outlevel >= O_DEBUG && ctl->smtp_socket != -1)
 	report(stdout, GT_("forwarding to %s\n"), ctl->smtphost);
