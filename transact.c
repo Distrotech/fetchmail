@@ -746,10 +746,10 @@ int readheaders(int sock,
 	 * human user or a computer program) rather than a standard
 	 * address."  That implies that the contents of the Sender
 	 * field don't need to be a legal email address at all So
-	 * ignore any Sender or Resent-Semnder lines unless they
+	 * ignore any Sender or Resent-Sender lines unless they
 	 * contain @.
 	 *
-	 * (RFC2822 says the condents of Sender must be a valid mailbox
+	 * (RFC2822 says the contents of Sender must be a valid mailbox
 	 * address, which is also what RFC822 4.4.4 implies.)
 	 */
 	else if (!strncasecmp("Sender:", line, 7) && (strchr(line, '@') || strchr(line, '!')))
