@@ -916,7 +916,7 @@ static int pop3_getrange(int sock,
 static int pop3_getpartialsizes(int sock, int first, int last, int *sizes)
 /* capture the size of message #first */
 {
-    int	ok, i;
+    int	ok = 0, i;
     char buf [POPBUFSIZE+1];
     unsigned int num, size;
 
