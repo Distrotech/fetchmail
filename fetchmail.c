@@ -85,7 +85,7 @@ char **argv;
     struct hostrec def_opts;
     int parsestatus, implicitmode;
     char *servername, *user, *home, *tmpdir, tmpbuf[BUFSIZ]; 
-    FILE	*tmpfp;
+    FILE	*lockfp;
     pid_t pid;
 
     memset(&def_opts, '\0', sizeof(struct hostrec));
@@ -265,6 +265,8 @@ char **argv;
 	exit(PS_SYNTAX);
     }
 
+    /* check for another fetchmail running concurrently */
+    pid = -1;
     if ((lockfile = (char *) malloc(strlen(tmpbuf) + 1)) == NULL)
     {
 	fprintf(stderr,"fetchmail: cannot allocate memory for lock name.\n");
@@ -272,36 +274,43 @@ char **argv;
     }
     else
 	(void) strcpy(lockfile, tmpbuf);
-
-    /* perhaps user asked us to remove a lock */
-    if (quitmode)
+    if ((lockfp = fopen(lockfile, "r")) != NULL )
     {
-	FILE* fp;
+	fscanf(lockfp,"%d",&pid);
 
-	if ( (fp = fopen(lockfile, "r")) == NULL ) {
-	    fprintf(stderr,"fetchmail: no other fetchmail is running\n");
-	    return(PS_EXCLUDE);
+	if (kill(pid, 0) == -1) {
+	    fprintf(stderr,"fetchmail: removing stale lockfile\n");
+	    remove(lockfile);
 	}
-  
-	fscanf(fp,"%d",&pid);
-	fprintf(stderr,"fetchmail: killing fetchmail at PID %d\n",pid);
-	if ( kill(pid,SIGTERM) < 0 )
-	    fprintf(stderr,"fetchmail: error killing the process %d.\n",pid);
-	else
-	    fprintf(stderr,"fetchmail: fetchmail at %d is dead.\n", pid);
-  
-	fclose(fp);
-	remove(lockfile);
-	exit(0);
+	fclose(lockfp);
     }
 
+    /* perhaps user asked us to kill the other fetchmail */
+    if (quitmode)
+    {
+	if (pid == -1) 
+	{
+	    fprintf(stderr,"fetchmail: no other fetchmail is running\n");
+	    exit(PS_EXCLUDE);
+	}
+	else if (kill(pid, SIGTERM) < 0)
+	{
+	    fprintf(stderr,"fetchmail: error killing fetchmail at %d.\n",pid);
+	    exit(PS_EXCLUDE);
+	}
+	else
+	{
+	    fprintf(stderr,"fetchmail: fetchmail at %d killed.\n", pid);
+	    remove(lockfile);
+	    exit(0);
+	}
+    }
 
-    /* beyond here we don't want more than one fetchmail running per user */
-    umask(0077);
-    if ( (tmpfp = fopen(lockfile, "r")) != NULL ) {
-	fscanf(tmpfp,"%d",&pid);
-	fprintf(stderr,"Another session appears to be running at pid %d.\nIf you are sure that this is incorrect, remove %s file.\n",pid,lockfile);
-	fclose(tmpfp);
+    /* otherwise die if another fetchmail is running */
+    if (pid != -1)
+    {
+	fprintf(stderr,
+		"fetchmail: another fetchmail is running at pid %d.\n", pid);
 	return(PS_EXCLUDE);
     }
 
@@ -321,7 +330,8 @@ char **argv;
     if (poll_interval)
 	daemonize(logfile, termhook);
 
-    /* if not locked, assert a lock */
+    /* beyond here we don't want more than one fetchmail running per user */
+    umask(0077);
     signal(SIGABRT, termhook);
     signal(SIGINT, termhook);
     signal(SIGTERM, termhook);
@@ -329,9 +339,9 @@ char **argv;
     signal(SIGHUP, termhook);
     signal(SIGPIPE, termhook);
     signal(SIGQUIT, termhook);
-    if ( (tmpfp = fopen(lockfile,"w")) != NULL ) {
-	fprintf(tmpfp,"%d",getpid());
-	fclose(tmpfp);
+    if ( (lockfp = fopen(lockfile,"w")) != NULL ) {
+	fprintf(lockfp,"%d",getpid());
+	fclose(lockfp);
     }
 
     /*
