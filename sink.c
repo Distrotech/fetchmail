@@ -293,7 +293,7 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
 			   int nerrors, char *errors[])
 /* bounce back an error report a la RFC 1892 */
 {
-    char daemon_name[18 + HOSTLEN] = "FETCHMAIL-DAEMON@";
+    char daemon_name[15 + HOSTLEN] = "MAILER-DAEMON@";
     char boundary[BUFSIZ], *bounce_to;
     int sock;
     static char *fqdn_of_host = NULL;
@@ -326,7 +326,7 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
     }
 
     if (SMTP_helo(sock, fetchmailhost) != SM_OK
-	|| SMTP_from(sock, daemon_name, (char *)NULL) != SM_OK
+	|| SMTP_from(sock, "<>", (char *)NULL) != SM_OK
 	|| SMTP_rcpt(sock, bounce_to) != SM_OK
 	|| SMTP_data(sock) != SM_OK) 
     {
@@ -351,9 +351,10 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
 	report(stderr, GT_("mail from %s bounced to %s\n"),
 	       daemon_name, bounce_to);
 
+
     /* bouncemail headers */
-    SockPrintf(sock, "Return-Path: <>\r\n");
-    SockPrintf(sock, "From: %s\r\n", daemon_name);
+    SockPrintf(sock, "Subject: Mail delivery failed: returning message to sender\r\n");
+    SockPrintf(sock, "From: Mail Delivery System <%s>\r\n", daemon_name);
     SockPrintf(sock, "To: %s\r\n", bounce_to);
     SockPrintf(sock, "MIME-Version: 1.0\r\n");
     SockPrintf(sock, "Content-Type: multipart/report; report-type=delivery-status;\r\n\tboundary=\"%s\"\r\n", boundary);
@@ -363,8 +364,9 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
     SockPrintf(sock, "--%s\r\n", boundary); 
     SockPrintf(sock,"Content-Type: text/plain\r\n");
     SockPrintf(sock, "\r\n");
-    SockWrite(sock, message, strlen(message));
-    SockPrintf(sock, "\r\n");
+    SockPrintf(sock, "This message was created automatically by mail delivery software.\r\n\r\n");
+    SockPrintf(sock, "A message that you sent could not be delivered to one or more of its\r\n");
+    SockPrintf(sock, "recipients. This is a permanent error. The following address(es) failed:\r\n");
     SockPrintf(sock, "\r\n");
 
     if (nerrors)
@@ -372,11 +374,31 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
 	struct idlist	*idp;
 	int		nusers;
 	
+        nusers = 0;
+        for (idp = msg->recipients; idp; idp = idp->next)
+        {
+            if (idp->val.status.mark == userclass)
+            {
+                char	*error;
+                SockPrintf(sock, "%s\r\n", rcpt_address (ctl, idp->id, 1));
+                
+                if (nerrors == 1) error = errors[0];
+                else if (nerrors <= nusers)
+                {
+                    SockPrintf(sock, "Internal error: SMTP error count doesn't match number of recipients.\r\n");
+                    break;
+                }
+                else error = errors[nusers++];
+                        
+                SockPrintf(sock, "   SMTP error: %s\r\n\r\n", error);
+            }
+        }
+    
 	/* RFC1892 part 2 -- machine-readable responses */
 	SockPrintf(sock, "--%s\r\n", boundary); 
 	SockPrintf(sock,"Content-Type: message/delivery-status\r\n");
 	SockPrintf(sock, "\r\n");
-	SockPrintf(sock, "Reporting-MTA: dns; %s\r\n", fetchmailhost);
+	SockPrintf(sock, "Reporting-MTA: dns; %s\r\n", fqdn_of_host);
 
 	nusers = 0;
 	for (idp = msg->recipients; idp; idp = idp->next)
@@ -666,10 +688,11 @@ int stuffline(struct query *ctl, char *buf)
     {
 	if (ctl->server.base_protocol->delimited)	/* server has already byte-stuffed */
 	{
-	    if (ctl->mda)
+	    if (ctl->mda) {
 		++buf;
-	    else
+	    } else {
 		/* writing to SMTP, leave the byte-stuffing in place */;
+	    }
 	}
         else /* if (!protocol->delimited)	-- not byte-stuffed already */
 	{
@@ -1497,7 +1520,7 @@ int open_warning_by_mail(struct query *ctl, struct msgblk *msg)
      * option to ESMTP; the message length would be more trouble than
      * it's worth to compute.
      */
-    struct msgblk reply = {NULL, NULL, "FETCHMAIL-DAEMON@", 0};
+    struct msgblk reply = {NULL, NULL, "FETCHMAIL-DAEMON@", 0, 0};
     int status;
 
     strcat(reply.return_path, ctl->smtpaddress ? ctl->smtpaddress :
