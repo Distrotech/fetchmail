@@ -1259,9 +1259,12 @@ same messages will be downloaded over and over.
 """
             if string.find(greetline, "InterChange") > 0:
                 warnings = warnings + """
-The InterChange IMAP server screws up on mail with attachments.  It reports
-the message size with attachments included, but doesn't download them on a
-RETR or TOP (this violates the IMAP RFCs).  You should get rid of it. 
+The InterChange IMAP server screws up on mail with attachments.  It
+doesn't fetch them if you give it a BODY[TEXT] request, though it
+does if you request RFC822.TEXT (according to the IMAP RFCs and their
+maintainer these should be equivalent).  We have worked around this
+bug, but suspect InterChange is likely to be broken in other ways.
+You should get rid of it. 
 
 """
             if string.find(greetline, "Imail") > 0:

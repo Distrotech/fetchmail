@@ -1246,15 +1246,29 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
      * In that case, marking the seen flag is the only way to prevent the
      * message from being re-fetched on subsequent runs (and according
      * to RFC2060 p.43 this fetch should set Seen as a side effect).
+     *
+     * According to RFC2060, and Mark Crispin the IMAP maintainer,
+     * FETCH %d BODY[TEXT] and RFC822.TEXT are "functionally 
+     * equivalent".  However, we know of at least one server that
+     * treats them differently in the presence of MIME attachments;
+     * the latter form downloads the attachment, the former does not.
+     * The server is InterChange, and the fool who implemented this
+     * misfeature ought to be strung up by his thumbs.  
+     *
+     * To work around this, we disable use of the 4rev1 form.  It's
+     * all too easy to imagine other clever idiots deciding that the
+     * message body doesn't include attachments.
      */
     switch (imap_version)
     {
     case IMAP4rev1:	/* RFC 2060 */
+#ifdef __UNUSED__
 	if (!ctl->keep)
 	    gen_send(sock, "FETCH %d BODY.PEEK[TEXT]", number);
 	else
 	    gen_send(sock, "FETCH %d BODY[TEXT]", number);
 	break;
+#endif /* UNUSED -- FALL THROGH */
 
     case IMAP4:		/* RFC 1730 */
 	if (!ctl->keep)
