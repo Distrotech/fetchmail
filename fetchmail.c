@@ -233,7 +233,7 @@ char **argv;
 	   * This is a nasty kluge.  V8 sendmail doesn't like daemon mode, it
 	   * consistently bombs after the first delivery.
 	   */
-	  if (hostp->output == TO_MDA
+	  if (poll_interval && hostp->output == TO_MDA
 			&& strncmp("/usr/lib/sendmail", hostp->mda, 18) == 0)
 	      hostp->output = TO_FOLDER;
 
@@ -244,14 +244,20 @@ char **argv;
   } while
       (poll_interval);
 
-  termhook();
+  if (outlevel == O_VERBOSE)
+      fprintf(stderr, "normal termination\n");
+
+  termhook(0);
   exit(popstatus);
 }
 
-void termhook()
+void termhook(int sig)
 {
   FILE *tmpfp;
   int idcount = 0;
+
+  if (sig != 0)
+      fprintf(stderr, "terminated with signal %d\n", sig);
 
   for (hostp = hostlist; hostp; hostp = hostp->next) {
     if (hostp->lastid[0])
@@ -534,6 +540,9 @@ int fd;
   int err;
   int childpid;
 
+  if (outlevel == O_VERBOSE)
+      fprintf(stderr, "about to close pipe %d\n", fd);
+
   err = close(fd);
 #if defined(STDC_HEADERS)
   childpid = wait(NULL);
@@ -543,6 +552,9 @@ int fd;
   if (err)
     perror("popclient: closemailpipe: close");
 
+  if (outlevel == O_VERBOSE)
+    fprintf(stderr, "closed pipe %d\n", fd);
+  
   return(err);
 }
 
