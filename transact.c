@@ -797,14 +797,14 @@ int readheaders(int sock,
 						line,
 						strlen(ctl->server.envelope)))
 		{				
-		    if (skipcount++ != ctl->server.envskip)
+		    if (skipcount++ < ctl->server.envskip)
 			continue;
 		    env_offs = (line - msgblk.headers);
 		}    
 	    }
 	    else if (!received_for && !strncasecmp("Received:", line, 9))
 	    {
-		if (skipcount++ != ctl->server.envskip)
+		if (skipcount++ < ctl->server.envskip)
 		    continue;
 		received_for = parse_received(ctl, line);
 	    }
