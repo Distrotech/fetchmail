@@ -78,7 +78,7 @@ ETAGS = etags -tw
 CTAGS = ctags -tw
 
 protobjs = socket.o getpass.o pop2.o pop3.o imap.o etrn.o fetchmail.o  \
-       options.o rcfile_l.o rcfile_y.o daemon.o smtp.o driver.o rfc822.o  \
+       options.o rcfile_y.o rcfile_l.o daemon.o smtp.o driver.o rfc822.o  \
        xmalloc.o uid.o mxget.o md5c.o md5ify.o interface.o netrc.o error.o
 
 objs = $(protobjs) $(extras) $(EXTRAOBJ)
@@ -98,8 +98,6 @@ all: fetchmail
 
 # Some makes apparently use .PHONY as the default goal if it is before `all'.
 .PHONY: all check
-
-$(protobjs): fetchmail.h
 
 fetchmail: $(objs)
 	$(CC) $(LDFLAGS) $(objs) $(LOADLIBS) -o fetchmail
@@ -159,9 +157,8 @@ clean:
 	       rfc822
 
 distclean: clean 
-	-rm -f Makefile config.h
+	-rm -f Makefile config.h TAGS tags
 	-rm -f config.cache config.status config.log stamp-config
-	-rm -f TAGS tags
 	-rm -f fetchmail.log fetchmail.toc fetchmail.*aux
 
 realclean: distclean # fetchmail.info*
@@ -189,8 +186,8 @@ config.h.in: acconfig.h
 .NOEXPORT:
 
 # Special dependencies, not easily handled without explicit rules
-$(srcdir)/rcfile_l.c: $(srcdir)/rcfile_l.l
-$(srcdir)/rcfile_y.c: $(srcdir)/rcfile_y.y
+$(srcdir)/rcfile_l.c $(srcdir)/rcfile_l.h: $(srcdir)/rcfile_l.l
+$(srcdir)/rcfile_y.c $(srcdir)/rcfile_y.h: $(srcdir)/rcfile_y.y
 
 parser = $(srcdir)/rcfile_l.l $(srcdir)/rcfile_y.y
 headers = $(srcdir)/fetchmail.h $(srcdir)/socket.h $(srcdir)/smtp.h \
@@ -232,6 +229,8 @@ rpm: fetchmail-$(VERS).tar.gz
 # because it is included with ``#include <config.h>'' rather than
 # ``#include "config.h"''.  So we add the explicit dependency to make sure.
 $(objs): config.h
+
+rcfile_l.o: rcfile_y.h
 
 # Automatically generated dependencies will be put at the end of the makefile.
 # DO NOT DELETE THIS LINE -- make depend depends on it.
