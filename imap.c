@@ -63,10 +63,8 @@ int imap_ok (int sock,  char *argbuf)
 	     */
 	    unseen = 0;
 	    for (cp = buf; *cp && !isdigit(*cp); cp++)
-	    {
-		unseen = atoi(cp);
-		break;
-	    }
+		continue;
+	    unseen = atoi(cp);
 	}
 	if (strstr(buf, "FLAGS"))
 	    seen = (strstr(buf, "Seen") != (char *)NULL);
