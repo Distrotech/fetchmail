@@ -54,7 +54,7 @@
 #define		TO_STDOUT	3	/* use stdout */
 #define		TO_MDA		4	/* use agent */
 
-#define		TICKERSIZE	1024	/* print 1 dot per this many bytes */
+#define		SIZETICKER	1024	/* print 1 dot per this many bytes */
 
 struct hostrec
 {
