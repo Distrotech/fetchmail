@@ -14,7 +14,11 @@
 #include  <config.h>
 #include  <stdio.h>
 #include  <stdlib.h>
+#ifdef QNX
+#include  <stdarg.h>
+#else
 #include  <varargs.h>
+#endif
 #include  <sys/time.h>
 #include  <signal.h>
 #include  <string.h>
@@ -842,10 +846,15 @@ closeUp:
   globals:       reads outlevel.
  *********************************************************************/
 
+#if defined(QNX)
+void gen_send(int socket, char *fmt, ... )
+{
+#else
 void gen_send(socket, fmt, va_alist)
 int socket;
 const char *fmt;
 va_dcl {
+#endif
 
     char buf [POPBUFSIZE+1];
     va_list ap;
@@ -855,7 +864,11 @@ va_dcl {
     else
 	buf[0] = '\0';
 
+#if defined(QNX)
+    va_start(ap, fmt) ;
+#else
     va_start(ap);
+#endif
     vsprintf(buf + strlen(buf), fmt, ap);
     va_end(ap);
 
@@ -899,7 +912,11 @@ va_dcl {
   else
       buf[0] = '\0';
 
+#if defined(QNX)
+  va_start(ap, fmt) ;
+#else
   va_start(ap);
+#endif
   vsprintf(buf + strlen(buf), fmt, ap);
   va_end(ap);
 

@@ -10,6 +10,7 @@ srcdir = @srcdir@
 VPATH = @srcdir@
 
 CC = @CC@
+# CC = cc		# QNX
 
 CFLAGS = @CFLAGS@
 # CFLAGS =  -g2 -5	# QNX
@@ -18,6 +19,7 @@ LDFLAGS = @LDFLAGS@
 LEX = @LEX@
 LEXFLAGS=
 YACC = @YACC@
+# YACC = yacc
 YACCFLAGS = -dt
 
 # How to invoke ranlib.  This is only used by the `glob' subdirectory.
@@ -25,8 +27,9 @@ RANLIB = @RANLIB@
 
 # NeXT 1.0a uses an old version of GCC, which required -D__inline=inline.
 # See also `config.h'.
-defines = -DRELEASE_ID=\"$(VERS)\" @DEFS@
-# defines = -DHAVE_CONFIG_H -DQNX -DHAVE_UNISTD_H -DSTDC_HEADERS	# QNX
+DEFS = @DEFS@
+# DEFS = -DHAVE_CONFIG_H -DQNX -DHAVE_UNISTD_H -DSTDC_HEADERS	# QNX
+defines =  -DRELEASE_ID=\"$(VERS)\" $(DEFS)
 
 # If your system needs extra libraries loaded in, define them here.
 LOADLIBS = @LIBS@ @LEXLIB@
@@ -37,7 +40,9 @@ extras = @LIBOBJS@
 
 # Extra sources/objects for library functions not provided on the host system.
 EXTRASRC = @EXTRASRC@
+# EXTRASRC = $(srcdir)/strcasecmp.c $(srcdir)/getopt.c $(srcdir)/getopt1.c $(srcdir)/alloca.c	# QNX
 EXTRAOBJ = @EXTRAOBJ@
+# EXTRAOBJS = strcasecmp.o getopt.o getopt1.o alloca.o
 
 # Common prefix for machine-independent installed files.
 prefix = @prefix@
