@@ -350,6 +350,19 @@ int main (int argc, char **argv)
 	{
 	    if (ctl->active && !(implicitmode && ctl->server.skip))
 	    {
+		/* check skip interval first so that it counts all polls */
+		if (poll_interval && ctl->server.interval) 
+		{
+		    if (ctl->server.poll_count++ % ctl->server.interval) 
+		    {
+			if (outlevel == O_VERBOSE)
+			    fprintf(stderr,
+				    "fetchmail: interval not reached, not querying %s\n",
+				    ctl->server.pollname);
+			continue;
+		    }
+		}
+
 #ifdef linux
 		/* interface_approve() does its own error logging */
 		if (!interface_approve(&ctl->server))
@@ -739,18 +752,6 @@ static int query_host(struct query *ctl)
 /* perform fetch transaction with single host */
 {
     int i, st;
-
-    if (poll_interval && ctl->server.interval) 
-    {
-	if (ctl->server.poll_count++ % ctl->server.interval) 
-	{
-	    if (outlevel == O_VERBOSE)
-		fprintf(stderr,
-		    "fetchmail: interval not reached, not querying %s\n",
-		    ctl->server.pollname);
-	    return PS_NOMAIL;
-	}
-    }
 
     if (outlevel == O_VERBOSE)
     {

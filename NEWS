@@ -12,7 +12,7 @@
 
 * Use the libmd functions for md5 under Free BSD?  (Low priority.)
 
-* Make interval count polls skipped because of interface or monitor option?
+* Send notification mail on messages skipped due to --limit?
 
 				Other TO-DO items:
 
@@ -24,6 +24,7 @@
 fetchmail-4.0.7 ()
 * Fixed a minor bug in handling of DNS errors in multidrop mode.
 * Added a `postconnect' analogous to `preconnect'.
+* Make `interval' count polls skipped because of interface or monitor option.
 
 There are 258 people on the fetchmail-friends list.
 
