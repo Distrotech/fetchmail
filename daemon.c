@@ -35,15 +35,15 @@
 #endif
 
 /* BSD portability hack */
-#if !defined(SIGCLD) && defined(SIGCHLD)
-#define SIGCLD	SIGCHLD
+#if !defined(SIGCHLD) && defined(SICHLD)
+#define SIGCHLD	SIGCLD
 #endif
 
 #include "fetchmail.h"
 
 RETSIGTYPE
 sigchld_handler (int sig)
-/* process SIGCHLD/SIGCLD to obtain the exit code of the terminating process */
+/* process SIGCHLD to obtain the exit code of the terminating process */
 {
   pid_t pid;
 
@@ -178,7 +178,7 @@ nottyDetach:
 #endif
 
   /* set up to catch child process termination signals */ 
-  signal(SIGCLD, sigchld_handler); 
+  signal(SIGCHLD, sigchld_handler); 
 #if defined(SIGPWR)
   signal(SIGPWR, sigchld_handler); 
 #endif

@@ -44,8 +44,8 @@
 #include  "smtp.h"
 
 /* BSD portability hack...I know, this is an ugly place to put it */
-#if !defined(SIGCLD) && defined(SIGCHLD)
-#define SIGCLD	SIGCHLD
+#if !defined(SIGCHLD) && defined(SIGCLD)
+#define SIGCHLD	SIGCLD
 #endif
 
 #define	SMTP_PORT	25	/* standard SMTP service port */
@@ -539,7 +539,7 @@ struct query *ctl;	/* query control record */
 		    return(PS_IOERR);
 		}
 
-		sigchld = signal(SIGCLD, SIG_DFL);
+		sigchld = signal(SIGCHLD, SIG_DFL);
 	    }
 	    else
 	    {
@@ -635,7 +635,7 @@ struct query *ctl;	/* query control record */
 		if (ctl->mda[0])
 		{
 		    closemailpipe(mboxfd);
-		    signal(SIGCLD, sigchld);
+		    signal(SIGCHLD, sigchld);
 		}
 		return(PS_IOERR);
 	    }
@@ -723,7 +723,7 @@ struct query *ctl;	/* query control record */
 	    if (ctl->mda[0])
 	    {
 		closemailpipe(mboxfd);
-		signal(SIGCLD, sigchld);
+		signal(SIGCHLD, sigchld);
 	    }
 	    return(PS_IOERR);
 	}
@@ -740,7 +740,7 @@ struct query *ctl;	/* query control record */
 
 	/* close the delivery pipe, we'll reopen before next message */
 	rc = closemailpipe(mboxfd);
-	signal(SIGCLD, sigchld);
+	signal(SIGCHLD, sigchld);
 	if (rc)
 	    return(PS_IOERR);
     }
