@@ -678,7 +678,7 @@ system at the mailserver.
 .PP
 If the mailserver is a Unix machine on which you have an ordinary user 
 account, your regular login name and password are used with 
-.I fetchmail.
+.IR fetchmail .
 If you use the same login name on both the server and the client machines,
 you needn't worry about specifying a user-id with the 
 .B \-u
