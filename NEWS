@@ -15,7 +15,7 @@ fetchmail-4.5.5 (Mon Aug  3 16:08:14 EDT 1998):
   of local DNS configuration quirks.
 * Added experimental SDPS code for demon.co.uk users.
 
-There are 257 people on fetchmail-friends and 255 on fetchmail-announce.
+There are 256 people on fetchmail-friends and 256 on fetchmail-announce.
 
 fetchmail-4.5.4 (Sat Jul 25 10:25:14 EDT 1998):
 * Fixed processing of --antispam option.
