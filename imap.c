@@ -53,8 +53,8 @@ static int imap_ok(int sock, char *argbuf)
 
 	/* all tokens in responses are caseblind */
 	for (cp = buf; *cp; cp++)
-	    if (islower(*cp))
-		*cp = toupper(*cp);
+	    if (islower((unsigned char)*cp))
+		*cp = toupper((unsigned char)*cp);
 
 	/* interpret untagged status responses */
 	if (strstr(buf, "* CAPABILITY"))
@@ -137,9 +137,9 @@ static int imap_ok(int sock, char *argbuf)
 	char	*cp;
 
 	/* skip the tag */
-	for (cp = buf; !isspace(*cp); cp++)
+	for (cp = buf; !isspace((unsigned char)*cp); cp++)
 	    continue;
-	while (isspace(*cp))
+	while (isspace((unsigned char)*cp))
 	    cp++;
 
         if (strncasecmp(cp, "OK", 2) == 0)
@@ -747,7 +747,7 @@ static int imap_getrange(int sock,
 		while (*cp && unseen < count)
 		{
 		    /* skip whitespace */
-		    while (*cp && isspace(*cp))
+		    while (*cp && isspace((unsigned char)*cp))
 			cp++;
 		    if (*cp) 
 		    {
@@ -894,9 +894,9 @@ static int imap_is_old(int sock, struct query *ctl, int number)
 
 static char *skip_token(char *ptr)
 {
-    while(isspace(*ptr)) ptr++;
-    while(!isspace(*ptr) && !iscntrl(*ptr)) ptr++;
-    while(isspace(*ptr)) ptr++;
+    while(isspace((unsigned char)*ptr)) ptr++;
+    while(!isspace((unsigned char)*ptr) && !iscntrl((unsigned char)*ptr)) ptr++;
+    while(isspace((unsigned char)*ptr)) ptr++;
     return(ptr);
 }
 

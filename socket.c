@@ -90,7 +90,7 @@ static char *const *parse_plugin(const char *plugin, const char *host, const cha
 	unsigned int service_len = strlen(service);
 
 	for (c = p = plugin; *c; c++)
-	{	if (isspace(*c) && !isspace(*p))
+	{	if (isspace((unsigned char)*c) && !isspace((unsigned char)*p))
 			s += sizeof(char*);
 		if (*p == '%' && *c == 'h')
 			host_count++;
@@ -134,14 +134,14 @@ static char *const *parse_plugin(const char *plugin, const char *host, const cha
 	}
 	memset(argvec, 0, s);
 	for (c = p = plugin_copy, i = 0; *c; c++)
-	{	if ((!isspace(*c)) && (c == p ? 1 : isspace(*p))) {
+	{	if ((!isspace((unsigned char)*c)) && (c == p ? 1 : isspace((unsigned char)*p))) {
 			argvec[i] = c;
 			i++;
 		}
 		p = c;
 	}
 	for (cp = plugin_copy; *cp; cp++)
-	{	if (isspace(*cp))
+	{	if (isspace((unsigned char)*cp))
 			*cp = 0;
 	}
 	return (char *const*)argvec;

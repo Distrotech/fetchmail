@@ -279,7 +279,7 @@ char *visbuf(const char *buf)
 	    *tp++ = '\\'; *tp++ = '\\';
 	    buf++;
 	}
-	else if (isprint(*buf) || *buf == ' ')
+	else if (isprint((unsigned char)*buf) || *buf == ' ')
 	    *tp++ = *buf++;
 	else if (*buf == '\n')
 	{

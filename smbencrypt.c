@@ -108,8 +108,8 @@ while (*s)
       s += skip;
     else
       {
-      if (islower(*s))
-	*s = toupper(*s);
+      if (islower((unsigned char)*s))
+	*s = toupper((unsigned char)*s);
       s++;
       }
     }

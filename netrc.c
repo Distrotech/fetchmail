@@ -107,7 +107,7 @@ parse_netrc (file)
 	ln++;
 
 	/* Strip trailing CRLF */
-	for (p = buf + strlen(buf) - 1; (p >= buf) && isspace(*p); p--)
+	for (p = buf + strlen(buf) - 1; (p >= buf) && isspace((unsigned char)*p); p--)
 	    *p = '\0';
 
 	/* Parse the line. */
@@ -129,7 +129,7 @@ parse_netrc (file)
 	    char *pp;
 
 	    /* Skip any whitespace. */
-	    while (*p && isspace (*p))
+	    while (*p && isspace ((unsigned char)*p))
 		p++;
 
 	    /* Discard end-of-line comments. */
@@ -139,7 +139,7 @@ parse_netrc (file)
 	    tok = pp = p;
 
 	    /* Find the end of the token. */
-	    while (*p && (quote_char || !isspace (*p)))
+	    while (*p && (quote_char || !isspace ((unsigned char)*p)))
 	    {
 		if (quote_char)
 		{

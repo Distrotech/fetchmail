@@ -207,17 +207,17 @@ static char *parse_received(struct query *ctl, char *bufp)
     {
 	if (!(ok = strstr(base, "by")))
 	    break;
-	else if (!isspace(ok[-1]) || !isspace(ok[2]))
+	else if (!isspace((unsigned char)ok[-1]) || !isspace((unsigned char)ok[2]))
 	    continue;
 	else
 	{
 	    char	*sp, *tp;
 
 	    /* extract space-delimited token after "by" */
-	    for (sp = ok + 2; isspace(*sp); sp++)
+	    for (sp = ok + 2; isspace((unsigned char)*sp); sp++)
 		continue;
 	    tp = rbuf;
-	    for (; !isspace(*sp); sp++)
+	    for (; !isspace((unsigned char)*sp); sp++)
 		RBUF_WRITE(*sp);
 	    *tp = '\0';
 
@@ -255,17 +255,17 @@ static char *parse_received(struct query *ctl, char *bufp)
 	{
 	    if (!(ok = strstr(base, "for")))
 		break;
-	    else if (!isspace(ok[-1]) || !isspace(ok[3]))
+	    else if (!isspace((unsigned char)ok[-1]) || !isspace((unsigned char)ok[3]))
 		continue;
 	    else
 	    {
 		char	*sp, *tp;
 
 		/* extract space-delimited token after "for" */
-		for (sp = ok + 3; isspace(*sp); sp++)
+		for (sp = ok + 3; isspace((unsigned char)*sp); sp++)
 		    continue;
 		tp = rbuf;
-		for (; !isspace(*sp); sp++)
+		for (; !isspace((unsigned char)*sp); sp++)
 		    RBUF_WRITE(*sp);
 		*tp = '\0';
 
@@ -281,7 +281,7 @@ static char *parse_received(struct query *ctl, char *bufp)
 	    char	*sp, *tp;
 
 	    /* char after "for" could be space or a continuation newline */
-	    for (sp = ok + 4; isspace(*sp); sp++)
+	    for (sp = ok + 4; isspace((unsigned char)*sp); sp++)
 		continue;
 	    tp = rbuf;
 	    RBUF_WRITE(':');	/* Here is the hack.  This is to be friends */
@@ -295,9 +295,9 @@ static char *parse_received(struct query *ctl, char *bufp)
 		while (*sp && *sp++ != ':')
 		    continue;
             while (*sp
-                   && (want_gt ? (*sp != '>') : !isspace(*sp))
+                   && (want_gt ? (*sp != '>') : !isspace((unsigned char)*sp))
                    && *sp != ';')
-		if (!isspace(*sp))
+		if (!isspace((unsigned char)*sp))
 		{
 		    RBUF_WRITE(*sp);
 		    sp++;
@@ -543,7 +543,7 @@ int readheaders(int sock,
 	     * line before the body! Without this check fetchmail segfaults.
 	     * With it, we treat such messages as spam and refuse them.
 	     */
-	    if (!refuse_mail && !isspace(line[0]) && !strchr(line, ':'))
+	    if (!refuse_mail && !isspace((unsigned char)line[0]) && !strchr(line, ':'))
 	    {
 		if (linelen != strlen (line))
 		    has_nuls = TRUE;
@@ -696,7 +696,7 @@ int readheaders(int sock,
 	    else
 		cp = NULL;
 	    if (cp) {
-		while (*cp && isspace(*cp)) cp++;
+		while (*cp && isspace((unsigned char)*cp)) cp++;
 		if (!*cp || ctl->dropstatus)
 		{
 		    free(line);

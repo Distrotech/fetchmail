@@ -291,7 +291,7 @@ static char *GetBoundary(char *CntType)
   do {
     p2 = strchr(p1, ';'); 
     if (p2)
-      for (p2++; isspace(*p2); p2++);
+      for (p2++; isspace((unsigned char)*p2); p2++);
 
     p1 = p2;
   } while ((p1) && (strncasecmp(p1, "boundary", 8) != 0));
@@ -301,7 +301,7 @@ static char *GetBoundary(char *CntType)
     return NULL;
 
   /* Skip "boundary", whitespace and '='; check that we do have a '=' */
-  for (p1+=8, flag=0; (isspace(*p1) || (*p1 == '=')); p1++)
+  for (p1+=8, flag=0; (isspace((unsigned char)*p1) || (*p1 == '=')); p1++)
     flag |= (*p1 == '=');
   if (!flag)
     return NULL;
@@ -349,7 +349,7 @@ static int CheckContentType(char *CntType)
   if (CntType == NULL) return 0;
 
   /* Skip whitespace, if any */
-  for (; isspace(*p); p++) ;
+  for (; isspace((unsigned char)*p); p++) ;
 
   for (i=0; 
        (DecodedTypes[i] && 

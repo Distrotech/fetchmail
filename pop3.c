@@ -148,7 +148,7 @@ static int pop3_ok (int sock, char *argbuf)
 	else
 	    return(PS_PROTOCOL);
 
-	while (isalpha(*bufp))
+	while (isalpha((unsigned char)*bufp))
 	    bufp++;
 
 	if (*bufp)

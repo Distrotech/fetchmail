@@ -402,9 +402,9 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
 		    /* errors correspond 1-1 to selected users */
 		    error = errors[nusers++];
 		
-		if (strlen(error) > 9 && isdigit(error[4])
-			&& error[5] == '.' && isdigit(error[6])
-			&& error[7] == '.' && isdigit(error[8]))
+		if (strlen(error) > 9 && isdigit((unsigned char)error[4])
+			&& error[5] == '.' && isdigit((unsigned char)error[6])
+			&& error[7] == '.' && isdigit((unsigned char)error[8]))
 		    /* Enhanced status code available, use it */
 		    SockPrintf(sock, "Status: %5.5s\r\n", &(error[4]));
 		else
@@ -781,7 +781,7 @@ static const char *is_quad(const char *q)
     return NULL;
   if (*q == '.')
     q++;
-  for(r=q;isdigit(*r);r++)
+  for(r=q;isdigit((unsigned char)*r);r++)
     ;
   if ( ((*r) && (*r != '.')) || ((r-q) < 1) || ((r-q)>3) )
     return NULL;
