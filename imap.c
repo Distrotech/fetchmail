@@ -414,6 +414,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	imap_canonicalize(remotename, ctl->remotename, NAMELEN);
 	imap_canonicalize(password, ctl->password, PASSWORDLEN);
 
+	strcpy(shroud, ctl->password);
 	ok = gen_transact(sock, "LOGIN \"%s\" \"%s\"", remotename, password);
 	shroud[0] = '\0';
 	if (ok)

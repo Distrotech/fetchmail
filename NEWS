@@ -4,6 +4,8 @@
 
 * The `localhost' special case of `via' is gone.  Use `plugin %h' for talking
   to ssh instead.
+* Prevent POP3 code from authenticating multiple times on success.
+* Fixed IMAP password shrouding.
 * GCC warning cleanups from ahaas@neosoft.com.
 * Plug another hole that was letting zombies through.
 * SA_RESDTART portability fix for SunOS.
