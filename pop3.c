@@ -34,6 +34,10 @@ static int phase;
 #define PHASE_FETCH	3
 #define PHASE_LOGOUT	4
 static int last;
+#ifdef SDPS_ENABLE
+static flag sdps_enable = FALSE;
+char *sdps_envto;
+#endif /* SDPS_ENABLE */
 
 #if OPIE
 static char lastok[POPBUFSIZE+1];
@@ -109,6 +113,15 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 #endif /* OPIE */
 
     phase = PHASE_GETAUTH;
+
+#ifdef SDPS_ENABLE
+    /*
+     * This needs to catch both demon.co.uk and demon.net.
+     * If we see either, and we're in multidrop mode, try to use
+     * the SDPS *ENV extension.
+     */
+    sdps_enable = MULTIDROP(ctl) && strstr(greeting, "demon.");
+#endif /* SDPS_ENABLE */
 
     switch (ctl->server.protocol) {
     case P_POP3:
@@ -521,6 +534,33 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
     char buf[POPBUFSIZE+1];
 
     /* phase = PHASE_FETCH */
+
+#ifdef SDPS_ENABLE
+    /*
+     * See http://www.demon.net/services/mail/sdps-tech.html
+     * for a description of what we're parsing here.
+     */
+    if (sdps_enable)
+    {
+	int	linecount = 0;
+
+	sdps_envto = (char *)NULL;
+	gen_send(sock, "*ENV %d", number);
+	do {
+	    if (gen_recv(sock, buf, sizeof(buf)))
+		break;
+	    linecount++;
+	    if (buf[0] == '-' || strncmp(buf , "+OK", 3))
+		break;
+	    if (linecount == 4)
+	    {
+		sdps_envto = strdup(buf);
+		error(0, 0, "*ENV returned envelope address %s");
+	    }
+	} while
+	    (buf[0] != '.' && (buf[1] == '\r' || buf[1] == '\n'));
+    }
+#endif /* SDPS_ENABLE */
 
     /*
      * Though the POP RFCs don't document this fact, on every POP3 server

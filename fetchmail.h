@@ -381,6 +381,9 @@ char *visbuf(const char *);
 char *showproto(int);
 void dump_config(struct runctl *runp, struct query *querylist);
 int is_host_alias(const char *, struct query *);
+#ifdef SDPS_ENABLE
+char *sdps_envto;
+#endif /* SDPS_ENABLE */
 
 void yyerror(const char *);
 int yylex(void);

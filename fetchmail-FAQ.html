@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/07/31 20:56:28 $
+<td width="30%" align=right>$Date: 1998/08/03 19:21:44 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -67,24 +67,24 @@ IP address?</a><br>
 <a href="#T6">T6. How can I use fetchmail with Lotus Notes?</a><br>
 <a href="#T7">T7. How can I use fetchmail with Microsoft Exchange?</a><br>
 <a href="#T8">T8. How can I use fetchmail with Compuserve RPA?</a><br>
-<a href="#T9">T9. How can I use fetchmail with usa.net's servers?</a><br>
-<a href="#T10">T10. How can I use fetchmail with HP OpenMail?</a><br>
-<a href="#T11">T11. How can I use fetchmail with SOCKS?</a><br>
-<a href="#T12">T12. How can I use fetchmail with IPv6 and IPsec?</a><br>
-<a href="#T13">T13. How can I get fetchmail to work with ssh?</a><br>
-<a href="#T14">T14. What do I have to do to use the IMAP-GSS protocol?</a><br>
+<a href="#T9">T9. How can I use fetchmail with Demon Internet's SDPS?</a><br>
+<a href="#T10">T10. How can I use fetchmail with usa.net's servers?</a><br>
+<a href="#T11">T11. How can I use fetchmail with HP OpenMail?</a><br>
+<a href="#T12">T12. How can I use fetchmail with SOCKS?</a><br>
+<a href="#T13">T13. How can I use fetchmail with IPv6 and IPsec?</a><br>
+<a href="#T14">T14. How can I get fetchmail to work with ssh?</a><br>
+<a href="#T15">T15. What do I have to do to use the IMAP-GSS protocol?</a><br>
 
 <h1>Runtime fatal errors:</h1>
 
-<a href="#R1">R1. Fetchmail's initial gethostbyname call fails on my host.</a><br>
-<a href="#R2">R2. Fetchmail isn't working, and -v shows `SMTP connect failed' messages.</a><br>
-<a href="#R3">R3. When I try to configure an MDA, fetchmail doesn't work.</a><br>
-<a href="#R4">R4. Fetchmail dumps core when given an invalid rc file.</a><br>
-<a href="#R5">R5. Fetchmail dumps core in -V mode, but operates normally otherwise.</a><br>
-<a href="#R6">R6. Fetchmail dumps core when I use a .netrc file but works otherwise.</a><br>
-<a href="#R7">R7. Running fetchmail in daemon mode doesn't work.</a><br>
-<a href="#R8">R8. Fetchmail hangs when used with pppd.</a><br>
-<a href="#R9">R9. Fetchmail randomly dies with socket errors.</a><br>
+<a href="#R1">R1. Fetchmail isn't working, and -v shows `SMTP connect failed' messages.</a><br>
+<a href="#R2">R2. When I try to configure an MDA, fetchmail doesn't work.</a><br>
+<a href="#R3">R3. Fetchmail dumps core when given an invalid rc file.</a><br>
+<a href="#R4">R4. Fetchmail dumps core in -V mode, but operates normally otherwise.</a><br>
+<a href="#R5">R5. Fetchmail dumps core when I use a .netrc file but works otherwise.</a><br>
+<a href="#R6">R6. Running fetchmail in daemon mode doesn't work.</a><br>
+<a href="#R7">R7. Fetchmail hangs when used with pppd.</a><br>
+<a href="#R8">R8. Fetchmail randomly dies with socket errors.</a><br>
 
 <h1>Disappearing mail</h1>
 
@@ -364,7 +364,7 @@ alone will really address your security exposure.  If you think you
 might be snooped, it's better to use end-to-end encryption on your
 whole mail stream so none of it can be read.  One of the advantages of
 fetchmail over conventional SMTP-push delivery is that you may be able
-to arrange this by using ssh(1); see <a href="#T13">T13</a>.<P>
+to arrange this by using ssh(1); see <a href="#T14">T14</a>.<P>
 
 If ssh/sshd isn't available, or you find it too complicated for you to
 set up, password encryption will at least keep a malicious cracker
@@ -500,7 +500,7 @@ the <a href="http://www.socks.nec.com/">SOCKS distribution
 site</a>.)<P>
 
 The specific recipe for using fetchmail with a firewall is at <a
-href="#T11">T11</a><P>
+href="#T12">T12</a><P>
 
 <hr>
 <h2><a name="B1">B1. Lex bombs out while building the fetchmail lexer.</a></h2>
@@ -1150,7 +1150,25 @@ poll non-rpa.csi.com via "pop.site1.csi.com" with proto POP3 and options no dns
 </pre>
 
 <hr>
-<h2><a name="T9">T9. How can I use fetchmail with usa.net's servers?</a></h2>
+<h2><a name="T9">T9. How can I use fetchmail with Demon Internet's SDPS?</a></h2>
+
+Demon Internet's SDPS service is a slight extension of POP3.  You
+don't need to do anything special unless you want to retrieve in
+multidrop mode.<P>
+
+If you do want multidrop, make sure your fetchmail has SDPS enabled
+(if so, the first line of the fetchmail -V response will include the
+string "+SDPS").  If it dioesn't, rebuild from source the
+--enable-SDPS option.<P>
+
+Once you have SDPS enabled, fetchmail will automatically detect when it's
+talking to a Demon Internet host in multidrop mode, and use the *ENV
+extension to get envelope To addresses.<P>
+
+(Note: in stock 4.5.5, the SDPS code is present but untested.)<P>
+
+<hr>
+<h2><a name="T10">T10. How can I use fetchmail with usa.net's servers?</a></h2>
 
 Enable `<CODE>fetchall</CODE>'.  A user reports that the 2.2 version
 of USA.NET's POP server reports that you must use the
@@ -1172,7 +1190,7 @@ They seem to be chronically flaky.  We recommend finding another
 provider.)<P>
 
 <hr>
-<h2><a name="T10">T10. How can I use fetchmail with HP OpenMail?</a></h2>
+<h2><a name="T11">T11. How can I use fetchmail with HP OpenMail?</a></h2>
 
 No special configuration is required, but OpenMail has an annoying bug
 similar to the big one in <a href="#T7">Microsoft Exchange</a>.
@@ -1184,7 +1202,7 @@ As with M$ Exchange, the only real fix for these problems is to get a
 POP (or preferably IMAP) server that isn't brain-dead.<P>
 
 <hr>
-<h2><a name="#T11">T11. How can I use fetchmail with SOCKS?</a></h2>
+<h2><a name="T12">T12. How can I use fetchmail with SOCKS?</a></h2>
 
 Daniel Sobral &lt<a href="mailto:dcs@gns.com.br">dcs@gns.com.br</a>
 gave us the following recipe:<P>
@@ -1208,7 +1226,7 @@ gave us the following recipe:<P>
 It wasn't that hard, was it? :-)<P>
 
 <hr>
-<h2><a name="T12">T12. How can I use fetchmail with IPv6 and IPsec?</a></h2>
+<h2><a name="T13">T13. How can I use fetchmail with IPv6 and IPsec?</a></h2>
 
 To use fetchmail with IPv6, you need a system that supports IPv6, the "Basic
 Socket Interface Extensions for IPv6" (RFC 2133), and the inet6-apps kit.
@@ -1246,7 +1264,7 @@ http://www.bieringer.de/linux/IPv6/IPv6-HOWTO/IPv6-HOWTO.html</a>
 </UL>
 
 <hr>
-<h2><a name="T13">T13. How can I get fetchmail to work with ssh?</a></h2>
+<h2><a name="T14">T14. How can I get fetchmail to work with ssh?</a></h2>
 
 We have two recipes for this.  The first is a little easier to set up,
 but only supports one user at a time.<P>
@@ -1342,7 +1360,7 @@ Send a HUP signal to your inetd.
 Now just use localhost:1234 to access your POP server.<P>
 
 <hr>
-<h2><a name="T14">T14. What do I have to do to use the IMAP-GSS protocol?</a></h2>
+<h2><a name="T15">T15. What do I have to do to use the IMAP-GSS protocol?</a></h2>
 
 Fetchmail can use RFC1731 GSSAPI authorization to safely identify you
 to your IMAP server, as long as you can share Kerberos V credentials
@@ -1378,14 +1396,7 @@ Now you don't have to worry about your password appearing in cleartext in
 your .fetchmailrc, or across the network.<p>
 
 <hr>
-<h2><a name="R1">R1. Fetchmail's initial gethostbyname call fails on my host.</a></h2>
-
-This is probably due to a DNS or NIS misconfiguration.  The first
-thing to do is check your /etc/hosts file for duplicate or missing
-entries related to your host.<P>
-
-<hr>
-<h2><a name="R2">R2. Fetchmail isn't working, and -v shows `SMTP connect failed' messages.</a></h2>
+<h2><a name="R1">R1. Fetchmail isn't working, and -v shows `SMTP connect failed' messages.</a></h2>
 
 Fetchmail itself is probably working, but your SMTP port 25 listener
 is down or inaccessible.<p>
@@ -1452,7 +1463,7 @@ linked only if it is actually needed.  So under Linux it won't be, and
 this particular cause should go away.<p>
 
 <hr>
-<h2><a name="R3">R3. When I try to configure an MDA, fetchmail doesn't work.</a></h2>
+<h2><a name="R2">R2. When I try to configure an MDA, fetchmail doesn't work.</a></h2>
 
 (I hear this one from people who have run into the blank-line problem in <a href="#X1">X1</a>.)<p>
 
@@ -1467,7 +1478,7 @@ match what you sent, then fetchmail or something on the server is
 broken.<p>
 
 <hr>
-<h2><a name="#R4">R4. Fetchmail dumps core when given an invalid rc file.</a></h2>
+<h2><a name="#R3">R3. Fetchmail dumps core when given an invalid rc file.</a></h2>
 
 This is usually reported from AIX or Ultrix, but has even been known
 to happen on Linuxes without a recent version of <code>flex</code>
@@ -1483,7 +1494,7 @@ href="http://www.gnu.ai.mit.edu/order/ftp.html">mirror site</a>
 will help you get it faster.<P>
 
 <hr>
-<h2><a name="R5">R5. Fetchmail dumps core in -V mode, but operates normally otherwise.</a></h2>
+<h2><a name="R4">R4. Fetchmail dumps core in -V mode, but operates normally otherwise.</a></h2>
 
 We've had this reported to us under Linux using libc-5.4.17 and gcc-2.7.2.
 It does not occur with libc-5.3.12 or earlier versions.<p>
@@ -1499,7 +1510,7 @@ fetchmail code (they're all from within fclose, and not an fclose called
 by fetchmail, either).<p>
 
 <hr>
-<h2><a name="R6">R6. Fetchmail dumps core when I use a .netrc file but works otherwise.</a></h2>
+<h2><a name="R5">R5. Fetchmail dumps core when I use a .netrc file but works otherwise.</a></h2>
 
 We have a report that under Solaris 2.5 using gcc-2.7.2, if fetchmail
 is compiled with -O or -O2, it segfaults on startup when reading a
@@ -1513,7 +1524,7 @@ corruption screw.  But the symptom doesn't reproduce under Linux with the
 same .fetchmailrc and .netrc.<p>
 
 <hr>
-<h2><a name="R7">R7. Running fetchmail in daemon mode doesn't work.</a><br></h2>
+<h2><a name="R6">R6. Running fetchmail in daemon mode doesn't work.</a><br></h2>
 
 We have one report from a Solaris 4.1.4 user that trying to run
 fetchmail in detached daemon mode doesn't work, but that using the
@@ -1527,14 +1538,14 @@ fetchmail with -N and an ampersand to background it.<P>
 This should not happen under Linux or any truly POSIX-conformant Unix.<P>
 
 <hr>
-<h2><a name="R8">R8. Fetchmail hangs when used with pppd.</a></h2>
+<h2><a name="R7">R7. Fetchmail hangs when used with pppd.</a></h2>
 
 Your problem may be with pppd's `demand' option.  We have a report that
 fetchmail doesn't play well with it, but works with pppd if `demand'
 is turned off.  We have no idea why this is.<p>
 
 <hr>
-<h2><a name="#R9">R9. Fetchmail randomly dies with socket errors.</a></h2>
+<h2><a name="R8">R8. Fetchmail randomly dies with socket errors.</a></h2>
 
 Check the MTU value in your PPP interface reported by
 <code>/sbin/ifconfig</code>.  If it's over 600, change it in your PPP
@@ -2064,7 +2075,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/07/31 20:56:28 $
+<td width="30%" align=right>$Date: 1998/08/03 19:21:44 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

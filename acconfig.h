@@ -73,6 +73,9 @@
 /* Define if you want RPA support compiled in */
 #undef RPA_ENABLE
 
+/* Define if you want SDPS support compiled in */
+#undef SDPS_ENABLE
+
 /* Define if you want OPIE support compiled in */
 #undef OPIE
 

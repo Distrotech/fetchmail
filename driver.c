@@ -953,7 +953,15 @@ int num;		/* index of message */
 	     * hostnames go through.
 	     */
 	    find_server_names(received_for, ctl, &xmit_names);
-	else {
+#ifdef SDPS_ENABLE
+	else if (sdps_envto)
+	{
+	    find_server_names(sdps_envto, ctl, &xmit_names);
+	    free(sdps_envto);
+	}
+#endif /* SDPS_ENABLE */ 
+	else
+	{
 	    /*
 	     * We haven't extracted the envelope address.
 	     * So check all the "Resent-To" header addresses if 

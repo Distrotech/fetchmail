@@ -13,6 +13,7 @@ fetchmail-4.5.5 ():
 * Modes other than ETRN no longer need to know the fetchmail host's FQDN.
   This eliminates a gethostbyname() call and makes fetchmail more independent
   of local DNS configuration quirks.
+* Added experimental SDPS code for demon.co.uk users.
 
 There are 257 people on fetchmail-friends and 255 on fetchmail-announce.
 

@@ -167,6 +167,9 @@ int main (int argc, char **argv)
 #ifdef RPA_ENABLE
 	printf("+RPA");
 #endif /* RPA_ENABLE */
+#ifdef SDPS_ENABLE
+	printf("+SDPS");
+#endif /* SDPS_ENABLE */
 #ifndef ETRN_ENABLE
 	printf("-ETRN");
 #endif /* ETRN_ENABLE */
