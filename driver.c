@@ -1543,7 +1543,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
     }
     else
     {
-	char buf[POPBUFSIZE+1], *realhost;
+	char buf[MSGBUFSIZE+1], *realhost;
 	int len, num, count, new, bytes, deletions = 0, *msgsizes = NULL;
 #if INET6_ENABLE
 	int fetches, dispatches, oldphase;
