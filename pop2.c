@@ -1,5 +1,5 @@
 /*
- * pop2.c -- POP@ protocol methods
+ * pop2.c -- POP2 protocol methods
  *
  * Copyright 1996 by Eric S. Raymond
  * All rights reserved.
@@ -7,6 +7,7 @@
  */
 
 #include  <config.h>
+#ifdef POP2_ENABLE
 #include  <stdio.h>
 #if defined(STDC_HEADERS)
 #include <stdlib.h>
@@ -137,5 +138,6 @@ int doPOP2 (struct query *ctl)
     peek_capable = FALSE;
     return(do_protocol(ctl, &pop2));
 }
+#endif /* POP2_ENABLE */
 
 /* pop2.c ends here */

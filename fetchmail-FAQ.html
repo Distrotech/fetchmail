@@ -153,7 +153,14 @@ unless your symptom seems to involve an error in configuration parsing.<p>
 A transcript of the failed session with -v on is almost always useful.
 If the bug involves a core dump or hang, a gdb stack trace is good to have.
 (Bear in mind that you can attach gdb to a running but hung process by
-giving the process ID as a second argument.)<p>
+giving the process ID as a second argument.)  You will need to
+reconfigure with <p>
+
+<LISTING>
+CFLAGS=-g LDFLAGS=" " ./configure
+</LISTING>
+
+and then rebuild in order to generate a version that can br gdb-traced.<p>
 
 Best of all is a mail file which, when fetched, will reproduce the
 bug under the latest (current) version.<p>
@@ -978,7 +985,7 @@ without hacking potentially fragile startup scripts.  To get around
 it, just touch(1) the logfile before you run fetchmail (this will have
 no effect on the contents of the logfile if it already exists).<P>
 
-$Id: fetchmail-FAQ.html,v 1.27 1997/06/10 20:30:50 esr Exp $<p>
+$Id: fetchmail-FAQ.html,v 1.28 1997/06/11 04:28:15 esr Exp $<p>
 
 <HR>
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

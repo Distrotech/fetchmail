@@ -25,6 +25,8 @@ fetchmail-4.0 ():
 * Architecture-independent RPM building.
 * If a .fetchmailrc entry has multiple user parts, the opening `username'
   keyword is now required for all.
+* POP2 support is no longer compiled by default, but you can configure
+  it in with `configure --enable-POP2'.
 
 There are 256 people on the fetchmail-friends list.
 

@@ -22,7 +22,18 @@ variable CC before you run configure.
 
 The configure script accepts certain standard configuration options.
 These include --prefix, --exec-prefix, --bindir, --infodir, --mandir,
-and --srcdir.  Do `config --help' for more.
+and --srcdir.  Do `configure --help' for more.
+
+POP2 support is no longer compiled in by default, as POP2 is way obsolete
+and there don't seem to be any live servers for it anymore.  You can
+configure it back in if you want with `configure --enable-POP2', but
+leaving it out cuts the executable's size slightly.
+
+If you want to build for debugging, 
+
+	CFLAGS=-g LDFLAGS=" " ./configure
+
+will do that.
 
 If you're running QNX, edit the distributed Makefile directly.  The
 QNX values for various macros are there but commented out; all you

@@ -46,6 +46,9 @@
 #undef SIZEOF_SHORT
 #undef SIZEOF_LONG
 
+/* Define if you want POP2 support compiled in */
+#undef POP2_ENABLE
+
 
 /* Leave that blank line there!!  Autoheader needs it.
    If you're adding to this file, keep in mind:

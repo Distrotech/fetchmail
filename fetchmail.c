@@ -736,7 +736,9 @@ static char *showproto(int proto)
     switch (proto)
     {
     case P_AUTO: return("auto"); break;
+#ifdef POP2_ENABLE
     case P_POP2: return("POP2"); break;
+#endif /* POP2_ENABLE */
     case P_POP3: return("POP3"); break;
     case P_IMAP: return("IMAP"); break;
     case P_IMAP_K4: return("IMAP-K4"); break;
@@ -750,7 +752,11 @@ static char *showproto(int proto)
 /*
  * Sequence of protocols to try when autoprobing, most capable to least.
  */
+#ifdef POP2_ENABLE
 static const int autoprobe[] = {P_IMAP, P_POP3, P_POP2};
+#else
+static const int autoprobe[] = {P_IMAP, P_POP3};
+#endif /* POP2_ENABLE */
 
 static int query_host(struct query *ctl)
 /* perform fetch transaction with single host */
@@ -790,7 +796,12 @@ static int query_host(struct query *ctl)
 	return(st);
 	break;
     case P_POP2:
+#ifdef POP2_ENABLE
 	return(doPOP2(ctl));
+#else
+	fprintf(stderr, "POP2 support is not configured.\n");
+	return(PS_PROTOCOL);
+#endif /* POP2_ENABLE */
 	break;
     case P_POP3:
     case P_APOP:
