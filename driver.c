@@ -332,14 +332,15 @@ struct query *ctl;	/* query control record */
 	else if (headers)	/* OK, we're at end of headers now */
 	{
 	    char		*cp;
-	    struct idlist 	*idp, *xmit_names, *bad_addresses;
+	    struct idlist 	*idp, *xmit_names;
+	    int			good_addresses, bad_addresses;
 #ifdef HAVE_RES_SEARCH
 	    int			no_local_matches = FALSE;
 #endif /* HAVE_RES_SEARCH */
 
 	    /* cons up a list of local recipients */
 	    xmit_names = (struct idlist *)NULL;
-	    bad_addresses = (struct idlist *)NULL;
+	    bad_addresses = good_addresses = 0;
 #ifdef HAVE_RES_SEARCH
 	    /* is this a multidrop box? */
 	    if (MULTIDROP(ctl))
@@ -436,18 +437,26 @@ struct query *ctl;	/* query control record */
 		}
 
 		for (idp = xmit_names; idp; idp = idp->next)
-		    if (SMTP_rcpt(sinkfp, idp->id) != SM_OK)
+		    if (SMTP_rcpt(sinkfp, idp->id) == SM_OK)
+			good_addresses++;
+		    else
 		    {
-			save_uid(&bad_addresses, -1, idp->id);
+			bad_addresses++;
+			idp->val.num = 0;
 			fprintf(stderr, 
 				"fetchmail: SMTP listener doesn't like recipient address `%s'\n", idp->id);
 		    }
+		if (!good_addresses && SMTP_rcpt(sinkfp, user) != SM_OK)
+		{
+		    fprintf(stderr, 
+			    "fetchmail: can't even send to calling user!\n");
+		    return(PS_SMTP);
+		}
 
 		SMTP_data(sinkfp);
 		if (outlevel == O_VERBOSE)
 		    fputs("SMTP> ", stderr);
 	    }
-	    free_uid_list(&xmit_names);
 
 	    /* change continuation markers back to regular newlines */
 	    for (cp = headers; cp < headers + oldlen; cp++)
@@ -502,18 +511,19 @@ struct query *ctl;	/* query control record */
 #endif /* HAVE_RES_SEARCH */
 		strcat(errhd, "SMTP listener rejected recipient addresses: ");
 		errlen = strlen(errhd);
-		for (idp = bad_addresses; idp; idp = idp->next)
-		    errlen += strlen(idp->id) + 2;
+		for (idp = xmit_names; idp; idp = idp->next)
+		    if (!idp->val.num)
+			errlen += strlen(idp->id) + 2;
 
 		errmsg = alloca(errlen+1);
 		(void) strcpy(errmsg, errhd);
-		for (idp = bad_addresses; idp; idp = idp->next)
-		{
-		    strcat(errmsg, idp->id);
-		    if (idp->next)
-			strcat(errmsg, ", ");
-		}
-		free_uid_list(&bad_addresses);
+		for (idp = xmit_names; idp; idp = idp->next)
+		    if (!idp->val.num)
+		    {
+			strcat(errmsg, idp->id);
+			if (idp->next)
+			    strcat(errmsg, ", ");
+		    }
 
 		strcat(errmsg, "\n");
 
@@ -522,6 +532,8 @@ struct query *ctl;	/* query control record */
 		else
 		    SockWrite(errmsg, strlen(errmsg), sinkfp);
 	    }
+
+	    free_uid_list(&xmit_names);
 	}
 
 	/* SMTP byte-stuffing */
