@@ -667,21 +667,17 @@ int SockClose(int sock)
     /* Half-close the connection first so the other end gets notified.
      *
      * This stops sends but allows receives (effectively, it sends a
-     * TCP <FIN>).  We ignore the return from this function because
-     * some older BSD-based implementations fail shutdown() if a TCP
-     * reset has been recieved.  In any case, if it fails it means the
-     * connection is already closed anyway, so it doesn't matter.
+     * TCP <FIN>).
      */
-    shutdown(sock, 1);
-
-    /* If there is any data still waiting in the queue, discard it.
-     * Call recv() until either it returns 0 (meaning we received a FIN)
-     * or any error occurs.  This makes sure all data sent by the other
-     * side is acknowledged at the TCP level.
-     */
-    if (recv(sock, &ch, 1, MSG_PEEK) > 0)
-	while (read(sock, &ch, 1) > 0)
-	    continue;
+    if (shutdown(sock, 1) == SUCCESS)
+	/* If there is any data still waiting in the queue, discard it.
+	 * Call recv() until either it returns 0 (meaning we received a FIN)
+	 * or any error occurs.  This makes sure all data sent by the other
+	 * side is acknowledged at the TCP level.
+	 */
+	if (recv(sock, &ch, 1, MSG_PEEK) > 0)
+	    while (read(sock, &ch, 1) > 0)
+		continue;
 
     /* if there's an error closing at this point, not much we can do */
     return(close(sock));	/* this is guarded */
