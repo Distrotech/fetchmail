@@ -77,7 +77,7 @@ ETAGS = etags -tw
 CTAGS = ctags -tw
 
 protobjs = rcfile_y.o rcfile_l.o socket.o getpass.o pop2.o pop3.o imap.o \
-       etrn.o fetchmail.o options.o daemon.o smtp.o driver.o rfc822.o \
+       etrn.o fetchmail.o env.o options.o daemon.o smtp.o driver.o rfc822.o \
        xmalloc.o uid.o mxget.o md5c.o md5ify.o interface.o netrc.o base64.o \
        error.o
 
@@ -85,7 +85,8 @@ objs = $(protobjs) $(extras) $(EXTRAOBJ)
 
 srcs = $(srcdir)/socket.c $(srcdir)/getpass.c $(srcdir)/pop2.c 		\
        $(srcdir)/pop3.c $(srcdir)/imap.c $(srcdir)/etrn.c 		\
-       $(srcdir)/fetchmail.c $(srcdir)/options.c $(srcdir)/daemon.c 	\
+       $(srcdir)/fetchmail.c $(srcdir)/env.c				\
+       $(srcdir)/options.c $(srcdir)/daemon.c 				\
        $(srcdir)/driver.c $(srcdir)/rfc822.c $(srcdir)/smtp.c		\
        $(srcdir)/xmalloc.c $(srcdir)/uid.c $(srcdir)/mxget.c 		\
        $(srcdir)/md5c.c $(srcdir)/md5ify.c $(srcdir)/interface.c 	\

@@ -90,49 +90,14 @@ int main (int argc, char **argv)
 {
     int st, bkgd = FALSE;
     int parsestatus, implicitmode = FALSE;
-    char *home, *tmpdir, tmpbuf[BUFSIZ]; 
     struct passwd *pw;
     struct query *ctl;
     FILE	*lockfp;
     netrc_entry *netrc_list;
-    char *netrc_file;
+    char *netrc_file, tmpbuf[BUFSIZ];
     pid_t pid;
 
-    if ((program_name = strrchr(argv[0], '/')) != NULL)
-	++program_name;
-    else
-	program_name = argv[0];
-
-    if ((user = getenv("USER")) == (char *)NULL)
-        user = getenv("LOGNAME");
-
-    if ((user == (char *)NULL) || (home = getenv("HOME")) == (char *)NULL)
-    {
-	if ((pw = getpwuid(getuid())) != NULL)
-	{
-	    user = pw->pw_name;
-	    home = pw->pw_dir;
-	}
-	else
-	{
-	    fprintf(stderr,"fetchmail: can't find your name and home directory!\n");
-	    exit(PS_UNDEFINED);
-	}
-    }
-
-    /* we'll need this for the SMTP forwarding target and error messages */
-    if (gethostname(tmpbuf, sizeof(tmpbuf)))
-    {
-	fprintf(stderr, "fetchmail: can't determine fetchmail's host!");
-	exit(PS_IOERR);
-    }
-    fetchmailhost = xstrdup(tmpbuf);
-
-#define RCFILE_NAME	".fetchmailrc"
-    rcfile = (char *) xmalloc(strlen(home)+strlen(RCFILE_NAME)+2);
-    strcpy(rcfile, home);
-    strcat(rcfile, "/");
-    strcat(rcfile, RCFILE_NAME);
+    envquery(argc, argv);
 
 #define IDFILE_NAME	".fetchids"
     idfile = (char *) xmalloc(strlen(home)+strlen(IDFILE_NAME)+2);
@@ -720,25 +685,6 @@ void termhook(int sig)
 	write_saved_lists(querylist, idfile);
 
     exit(querystatus);
-}
-
-static char *showproto(int proto)
-/* protocol index to protocol name mapping */
-{
-    switch (proto)
-    {
-    case P_AUTO: return("auto"); break;
-#ifdef POP2_ENABLE
-    case P_POP2: return("POP2"); break;
-#endif /* POP2_ENABLE */
-    case P_POP3: return("POP3"); break;
-    case P_IMAP: return("IMAP"); break;
-    case P_IMAP_K4: return("IMAP-K4"); break;
-    case P_APOP: return("APOP"); break;
-    case P_RPOP: return("RPOP"); break;
-    case P_ETRN: return("ETRN"); break;
-    default: return("unknown?!?"); break;
-    }
 }
 
 /*

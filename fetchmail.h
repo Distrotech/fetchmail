@@ -166,6 +166,10 @@ extern char tag[TAGLEN];
 /* list of hosts assembled from run control file and command line */
 extern struct query cmd_opts, *querylist;
 
+/* what's returned by envquery */
+extern void envquery(int, char **);
+char *user, *home, *fetchmailhost;
+
 /* controls the detail level of status/progress messages written to stderr */
 extern int outlevel;    	/* see the O_.* constants above */
 extern int yydebug;		/* enable parse debugging */
@@ -220,6 +224,7 @@ int doETRN (struct query *);
 void reply_hack(char *, const char *);
 char *nxtaddr(const char *);
 
+/* UID support */
 void initialize_saved_lists(struct query *, const char *);
 struct idlist *save_str(struct idlist **, int, const char *);
 void free_str_list(struct idlist **);
@@ -249,6 +254,7 @@ int interface_approve(struct hostdata *);
 char *getpassword(char *);
 
 void escapes(const char *, char *);
+char *showproto(int);
 
 void yyerror(const char *);
 int yylex(void);
