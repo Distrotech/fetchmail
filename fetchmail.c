@@ -308,6 +308,21 @@ char **argv;
 	endhostent();		/* release TCP/IP connection to nameserver */
 #endif /* HAVE_GETHOSTBYNAME */
 
+	/*
+	 * Close all SMTP delivery sockets.  For optimum performance
+	 * we'd like to hold them open til end of run, but (1) this
+	 * loses if our poll interval is longer than the MTA's inactivity
+	 * timeout, and (2) some MTAs (like smail) don't deliver after
+	 * each message, but rather queue up mail and wait to actually
+	 * deliver it until the input socket is closed. 
+	 */
+	for (ctl = querylist; ctl; ctl = ctl->next)
+	    if (ctl->smtp_sockfp)
+	    {
+		fclose(ctl->smtp_sockfp);
+		ctl->smtp_sockfp = (FILE *)NULL;
+	    }
+
 	if (poll_interval)
 	{
 	    if (outlevel == O_VERBOSE)
