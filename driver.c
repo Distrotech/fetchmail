@@ -333,15 +333,14 @@ static void send_size_warnings(struct query *ctl)
      */
     if (open_warning_by_mail(ctl, (struct msgblk *)NULL))
 	return;
-    stuff_warning(ctl,
-	    rfc2047e(
-	   GT_("Subject: Fetchmail oversized-messages warning"), nl_langinfo(CODESET)));
-    stuff_warning(ctl, "");
-    stuff_warning(ctl,
+    stuff_warning(nl_langinfo(CODESET), ctl,
+	   GT_("Subject: Fetchmail oversized-messages warning"));
+    stuff_warning(NULL, ctl, "");
+    stuff_warning(NULL, ctl,
 	    GT_("The following oversized messages remain on the mail server %s:"),
 	    ctl->server.pollname);
 
-    stuff_warning(ctl, "");
+    stuff_warning(NULL, ctl, "");
 
     if (run.poll_interval == 0)
 	max_warning_poll_count = 0;
@@ -355,7 +354,7 @@ static void send_size_warnings(struct query *ctl)
 	{
 	    nbr = current->val.status.mark;
 	    size = atoi(current->id);
-	    stuff_warning(ctl, 
+	    stuff_warning(NULL, ctl,
 		    GT_("  %d msg %d octets long skipped by fetchmail."),
 		    nbr, size);
 	}
@@ -366,7 +365,7 @@ static void send_size_warnings(struct query *ctl)
 	    current->val.status.num = 0;
     }
 
-    stuff_warning(ctl, "");
+    stuff_warning(NULL, ctl, "");
 
     close_warning_by_mail(ctl, (struct msgblk *)NULL);
 }
@@ -911,15 +910,14 @@ static int do_session(
 	    if (timeoutcount > MAX_TIMEOUTS 
 		&& !open_warning_by_mail(ctl, (struct msgblk *)NULL))
 	    {
-		stuff_warning(ctl,
-			      rfc2047e(GT_("Subject: fetchmail sees repeated timeouts"),nl_langinfo(CODESET)));
-		stuff_warning(ctl, "");
-		stuff_warning(ctl,
+		stuff_warning(nl_langinfo(CODESET), ctl,
+			      GT_("Subject: fetchmail sees repeated timeouts"));
+		stuff_warning(NULL, ctl, "");
+		stuff_warning(NULL, ctl,
 			      GT_("Fetchmail saw more than %d timeouts while attempting to get mail from %s@%s.\n"), 
 			      MAX_TIMEOUTS,
-			      ctl->remotename,
-			      ctl->server.truename);
-		stuff_warning(ctl, 
+			      ctl->remotename, ctl->server.truename);
+		stuff_warning(NULL, ctl, 
     GT_("This could mean that your mailserver is stuck, or that your SMTP\n" \
     "server is wedged, or that your mailbox file on the server has been\n" \
     "corrupted by a server error.  You can run `fetchmail -v -v' to\n" \
@@ -1088,10 +1086,14 @@ static int do_session(
 			strcpy(errbuf, GT_("temporary name server error."));
 		    else
 #ifdef HAVE_SNPRINTF
-			snprintf(errbuf, sizeof(errbuf),
+			snprintf
 #else
-			sprintf(errbuf,
+			sprintf
 #endif /* HAVE_SNPRINTF */
+			(errbuf,
+#ifdef HAVE_SNPRINTF
+			 sizeof(errbuf),
+#endif
 			  GT_("unknown DNS error %d."), h_errno);
 		}
 		else
@@ -1109,12 +1111,12 @@ static int do_session(
 		/* warn the system administrator */
 		if (open_warning_by_mail(ctl, (struct msgblk *)NULL) == 0)
 		{
-		    stuff_warning(ctl,
-			 rfc2047e(GT_("Subject: Fetchmail unreachable-server warning."), nl_langinfo(CODESET)));
-		    stuff_warning(ctl, "");
-		    stuff_warning(ctl, GT_("Fetchmail could not reach the mail server %s:"),
+		    stuff_warning(nl_langinfo(CODESET), ctl,
+			 GT_("Subject: Fetchmail unreachable-server warning."));
+		    stuff_warning(NULL, ctl, "");
+		    stuff_warning(NULL, ctl, GT_("Fetchmail could not reach the mail server %s:"),
 				  ctl->server.pollname);
-		    stuff_warning(ctl, errbuf, ctl->server.pollname);
+		    stuff_warning(NULL, ctl, errbuf, ctl->server.pollname);
 		    close_warning_by_mail(ctl, (struct msgblk *)NULL);
 		}
 #endif
@@ -1224,16 +1226,16 @@ static int do_session(
 			&& !open_warning_by_mail(ctl, (struct msgblk *)NULL))
 		    {
 			ctl->wehavesentauthnote = 1;
-			stuff_warning(ctl,
-				      rfc2047e(GT_("Subject: fetchmail authentication failed on %s@%s"), nl_langinfo(CODESET)),
+			stuff_warning(nl_langinfo(CODESET), ctl,
+				      GT_("Subject: fetchmail authentication failed on %s@%s"),
 			    ctl->remotename, ctl->server.truename);
-			stuff_warning(ctl, "");
-			stuff_warning(ctl,
+			stuff_warning(NULL, ctl, "");
+			stuff_warning(NULL, ctl,
 				      GT_("Fetchmail could not get mail from %s@%s.\n"), 
 				      ctl->remotename,
 				      ctl->server.truename);
 			if (ctl->wehaveauthed)
-			    stuff_warning(ctl, GT_("\
+			    stuff_warning(NULL, ctl, GT_("\
 The attempt to get authorization failed.\n\
 Since we have already succeeded in getting authorization for this\n\
 connection, this is probably another failure mode (such as busy server)\n\
@@ -1248,7 +1250,7 @@ The fetchmail daemon will continue running and attempt to connect\n\
 at each cycle.  No future notifications will be sent until service\n\
 is restored."));
 			else
-			    stuff_warning(ctl, GT_("\
+			    stuff_warning(NULL, ctl, GT_("\
 The attempt to get authorization failed.\n\
 This probably means your password is invalid, but some servers have\n\
 other failure modes that fetchmail cannot distinguish from this\n\
@@ -1297,15 +1299,15 @@ is restored."));
 			   ctl->server.truename);
 		    if (!open_warning_by_mail(ctl, (struct msgblk *)NULL))
 		    {
-			stuff_warning(ctl,
-			      rfc2047e(GT_("Subject: fetchmail authentication OK on %s@%s"), nl_langinfo(CODESET)),
+			stuff_warning(nl_langinfo(CODESET), ctl,
+			      GT_("Subject: fetchmail authentication OK on %s@%s"), 
 				      ctl->remotename, ctl->server.truename);
-			stuff_warning(ctl, "");
-			stuff_warning(ctl,
+			stuff_warning(NULL, ctl, "");
+			stuff_warning(NULL, ctl,
 			      GT_("Fetchmail was able to log into %s@%s.\n"), 
 				      ctl->remotename,
 				      ctl->server.truename);
-			stuff_warning(ctl, 
+			stuff_warning(NULL, ctl, 
 				      GT_("Service has been restored.\n"));
 			close_warning_by_mail(ctl, (struct msgblk *)NULL);
 		    

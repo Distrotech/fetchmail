@@ -1536,23 +1536,27 @@ int open_warning_by_mail(struct query *ctl, struct msgblk *msg)
     else				/* send to postmaster  */
 	status = open_sink(ctl, &reply, &good, &bad);
     if (status == 0) {
-	stuff_warning(ctl, "Date: %s", rfc822timestamp());
-	stuff_warning(ctl, "MIME-Version: 1.0");
-	stuff_warning(ctl, "Content-Transfer-Encoding: 8bit");
-	stuff_warning(ctl, "Content-Type: text/plain; charset=\"%s\"", nl_langinfo(CODESET));
+	stuff_warning(NULL, ctl, "Date: %s", rfc822timestamp());
+	stuff_warning(NULL, ctl, "MIME-Version: 1.0");
+	stuff_warning(NULL, ctl, "Content-Transfer-Encoding: 8bit");
+	stuff_warning(NULL, ctl, "Content-Type: text/plain; charset=\"%s\"", nl_langinfo(CODESET));
     }
     return(status);
 }
 
+/* format and ship a warning message line by mail */
+/* if rfc2047charset is non-NULL, encode the line (that is assumed to be
+ * a header line) as per RFC-2047 using rfc2047charset as the character
+ * set field */
 #if defined(HAVE_STDARG_H)
-void stuff_warning(struct query *ctl, const char *fmt, ... )
+void stuff_warning(const char *rfc2047charset, struct query *ctl, const char *fmt, ... )
 #else
-void stuff_warning(struct query *ctl, fmt, va_alist)
+void stuff_warning(rfc2047charset, ctl, fmt, va_alist)
+const char *charset;
 struct query *ctl;
 const char *fmt;	/* printf-style format */
 va_dcl
 #endif
-/* format and ship a warning message line by mail */
 {
     /* make huge -- i18n can bulk up error messages a lot */
     char	buf[2*MSGBUFSIZE+4];
@@ -1587,13 +1591,13 @@ va_dcl
     buf[MSGBUFSIZE+2] = '\n';
     buf[MSGBUFSIZE+3] = '\0';
 
-    stuffline(ctl, buf);
+    stuffline(ctl, rfc2047charset != NULL ? rfc2047e(buf, rfc2047charset) : buf);
 }
 
 void close_warning_by_mail(struct query *ctl, struct msgblk *msg)
 /* sign and send mailed warnings */
 {
-    stuff_warning(ctl, GT_("--\n\t\t\t\tThe Fetchmail Daemon\n"));
+    stuff_warning(NULL, ctl, GT_("-- \nThe Fetchmail Daemon"));
     close_sink(ctl, msg, TRUE);
 }
 
