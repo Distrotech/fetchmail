@@ -102,7 +102,7 @@ options		{/* EMPTY */}
 			yylval.sval = (char *) xstrdup(buf);
 			return STRING;
 		}
-[^;:, \t\r\n]+	{
+[^=;:, \t\r\n]+	{
 			char buf[POPBUFSIZE];
 
 			escapes(yytext, buf);
