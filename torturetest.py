@@ -30,8 +30,8 @@ class TestSite:
               "Userid: %s\n" \
               "Password: %s\n" \
               "Protocol: %s\n" \
-              "Options: '%s'\n" \
-              "Capabilities: '%s'\n" \
+              "Options: %s\n" \
+              "Capabilities: %s\n" \
               "Version: %s\n" \
               "Comment: %s\n" \
               % self.allattrs()
@@ -91,14 +91,20 @@ if __name__ == "__main__":
     # Start by reading in the sitelist
     ifp = open("testsites")
     sitelist = []
+    linect = 0
     while 1:
+        linect += 1
         line = ifp.readline()
         if not line:
             break
         elif line[0] in ("#", "\n"):
             continue
         else:
-            sitelist.append(TestSite(line))
+            try:
+                sitelist.append(TestSite(line))
+            except:
+                print "Error on line %d" % linect
+                sys.exit(0)
 
     (options, arguments) = getopt.getopt(sys.argv[1:], "dfp:tigv")
     verbose = 0
