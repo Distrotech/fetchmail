@@ -7,6 +7,7 @@ Name:		%{name}
 Version:	%{version}
 Release:	1
 Vendor:		Eric Conspiracy Secret Labs
+Packager:	Eric S. Raymond <esr@thyrsus.com>
 URL:		http://www.tuxedo.org/~esr/fetchmail
 Source:         %{name}-%{version}.tar.gz
 Group:		Applications/Mail
