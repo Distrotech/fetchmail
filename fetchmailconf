@@ -1275,6 +1275,15 @@ attachments; the effect is to drop the attachments on the floor.  We
 recommend you upgrade to a non-broken IMAP server.
 
 """
+            if string.find(greetline, "Domino IMAP4") > 0:
+                warnings = warnings + """
+Your IMAP server appears to be Lotus Domino.  This server, at least up
+to version 4.6.2a, has a bug in its generation of MIME boundaries (see
+the details in the fetchmail FAQ).  As a result, even MIME aware MUAs
+will see attachments as part of the message text.  If your Domino server's
+POP3 facility is enabled, we recommend you fall back on it.
+
+"""
 
 ### Checks for protocol variants start here
 
