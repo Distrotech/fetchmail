@@ -124,4 +124,7 @@ rm -rf \$RPM_BUILD_ROOT
 %defattr (755, root, root)
 /usr/bin/fetchmail
 /usr/bin/fetchmailconf
+/usr/share/locale/es/LC_MESSAGES/fetchmail.mo
+/usr/share/locale/pl/LC_MESSAGES/fetchmail.mo
+/usr/share/locale/pt_BR/LC_MESSAGES/fetchmail.mo
 EOF
