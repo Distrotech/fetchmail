@@ -15,10 +15,15 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.1.0 ()
+fetchmail-4.0.1 (Wed Jul 16 14:32:08 EDT 1997)
 
-* Improvements in failed-connection error messages.
+(Minor cleanup release for non-Linux systems.)
+
 * Compilation cleanup for DEC Unix 4.0 and AIX.
+* Corrected the machinery for remote builds.
+* Minor improvements in failed-connection error messages.
+
+There are 254 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-4.0.0 (Wed Jul  9 10:30:16 EDT 1997)
