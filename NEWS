@@ -4,8 +4,8 @@
 
 fetchmail-5.7.4 (Mon Mar 12 00:02:23 EST 2001), 20323 lines:
 
-* SECURITY FIX: insecure tempfile creation bug in fetchmailconf, thanks 
-  to Colin Phipps <cph@cph.demon.co.uk> for popinting this out.
+* SECURITY FIX: unsecure tempfile creation bug in fetchmailconf, thanks 
+  to Colin Phipps <cph@cph.demon.co.uk> for pointing this out.
 * Configure cleanup from HMH.
 * Documentation refresh.
 
