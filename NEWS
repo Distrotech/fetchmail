@@ -1,10 +1,11 @@
 				Release Notes:
 
-fetchmail-4.6.4 ():
+fetchmail-4.6.4 (Tue Oct 27 09:07:58 EST 1998):
 * Code cleanup fixes by Jonathan T. Agnew <jtagnew@amherst.edu>.
 * Fix to fetchmailconf to not output empty properties.
 * Better instrumentation for the rewrite code -- hopefully this will
   enable us to nail Sam Steingold's bug.
+* Fixed bug in %T expansion.
 
 There are 245 people on fetchmail-friends and 304 on fetchmail-announce.
 
