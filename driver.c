@@ -1552,12 +1552,12 @@ const struct method *proto;	/* protocol method table */
 		force_retrieval = !peek_capable && (ctl->errcount > 0);
 
 		/*
-		 * We may need to get sizes in order to check message
-		 * limits.  Or it may be forced because the fetch methods
-		 * don't return reliable sizes.
+		 * We need the size of each method before it's loaded in
+		 * order to pass via the ESMTP SIZE option.  If the protocol
+		 * has a getsizes method, we presume this means it doesn't
+		 * get reliable sizes from message fetch responses. 
 		 */
-		msgsizes = (int *)NULL;
-		if (proto->getsizes && (proto->force_getsizes || ctl->limit > 0))
+		if (proto->getsizes)
 		{
 		    msgsizes = (int *)alloca(sizeof(int) * count);
 

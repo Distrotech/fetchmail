@@ -433,20 +433,26 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
 #ifdef __UNUSED__ 
     /* 
      * Look for "nnn octets" -- there may or may not be preceding cruft.
-     * It's OK to punt and pass back -1 as a failure indication here, as 
-     * long as the force_getsizes flag has forced sizes to be preloaded.
+     * This works with Eudora qpopper and some other common servers.
+     * It's OK to punt and pass back -1 as a failure indication here.
      */
-    if ((cp = strstr(buf, " octets")) == (char *)NULL)
-	*lenp = -1;
-    else
+    if ((cp = strstr(buf, " octets")) != (char *)NULL)
     {
 	while (--cp >= buf && isdigit(*cp))
 	    continue;
 	*lenp = atoi(++cp);
     }
+    else
+	*lenp = -1;
 #endif /* __UNUSED__ */
 
-    *lenp = -1;		/* POP3 is delimited, we don't care about lengths */
+    /* 
+     * POP3 is delimited, we don't care about lengths.
+     * Editorial comment: it's really bogus that standard POP3
+     * doesn't give you a length in the fetch response, before
+     * the message.  Even freakin' *POP2* got this right!
+     */
+    *lenp = -1;
 
     return(0);
 }
@@ -476,7 +482,6 @@ const static struct method pop3 =
     110,		/* standard POP3 port */
     FALSE,		/* this is not a tagged protocol */
     TRUE,		/* this uses a message delimiter */
-    TRUE,		/* RFC 1725 doesn't require a size field in fetch */
     pop3_ok,		/* parse command response */
     pop3_getauth,	/* get authorization */
     pop3_getrange,	/* query range of messages */

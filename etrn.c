@@ -153,7 +153,6 @@ const static struct method etrn =
     25,			/* standard SMTP port */
     FALSE,		/* this is not a tagged protocol */
     FALSE,		/* this does not use a message delimiter */
-    FALSE,		/* no getsizes method */
     etrn_ok,		/* parse command response */
     NULL,		/* no need to get authentication */
     etrn_getrange,	/* initialize message sending */

@@ -120,7 +120,6 @@ const static struct method pop2 =
     109,				/* standard POP2 port */
     FALSE,				/* this is not a tagged protocol */
     FALSE,				/* does not use message delimiter */
-    FALSE,				/* no getsizes method */
     pop2_ok,				/* parse command response */
     pop2_getauth,			/* get authorization */
     pop2_getrange,			/* query range of messages */

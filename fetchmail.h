@@ -159,7 +159,6 @@ struct method
     int	port;			/* service port */
     flag tagged;		/* if true, generate & expect command tags */
     flag delimited;		/* if true, accept "." message delimiter */
-    flag force_getsizes;	/* if true, fetch's size return unreliable */
     int (*parse_response)();	/* response_parsing function */
     int (*getauth)();		/* authorization fetcher */
     int (*getrange)();		/* get message range to fetch */
