@@ -79,37 +79,51 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 	ctl->skipped = ctl->oldsaved = ctl->newsaved = (struct idlist *)NULL;
 
     /* let's get stored message UIDs from previous queries */
-    if ((tmpfp = fopen(idfile, "r")) != (FILE *)NULL) {
+    if ((tmpfp = fopen(idfile, "r")) != (FILE *)NULL)
+    {
 	char buf[POPBUFSIZE+1],host[HOSTLEN+1],user[USERNAMELEN+1],id[IDLEN+1];
+       
+	char userhost[USERNAMELEN+1]; /* temp string for parsing the UID */
+	char *atsign;	/* temp pointer used in parsing user and host */
 
 	while (fgets(buf, POPBUFSIZE, tmpfp) != (char *)NULL)
 	{
-	    /*
-	     * This inelegant hack was brought to you by the fact that
-	     * some dial-up resellers actually use account names with
-	     * @ in them.  So we need to split on the rightmost @...
-	     */
-	    char	*atsign = strrchr(buf, '@');
-
-	    if (atsign)
-		*atsign = ' ';
-
-	    if ((st = sscanf(buf, "%s %s %s\n", user, host, id)) == 3)
+	  /*
+	   * At this point, we assume the bug has two fields -- a user@host 
+	   * part, and an ID part. Either field may contain spurious @ signs. 
+           * The previous version of this code presumed one could split at 
+           * the rightmost '@'.  This is not correct, as InterMail puts an 
+           * '@' in the UIDL.
+	   */
+	  
+	  /* First, we split the buf into a userhost part and an id part */
+	  if ((st = sscanf(buf, "%s %s\n", userhost, id)) == 2)
 	    {
-		for (ctl = hostlist; ctl; ctl = ctl->next)
-		{
-		    if (ctl->server.truename &&
-		        strcasecmp(host, ctl->server.truename) == 0
-				&& strcasecmp(user, ctl->remotename) == 0)
-		    {
-			save_str(&ctl->oldsaved, id, UID_SEEN);
-			break;
-		    }
-		}
+	      /* we should now have parsed out the ID and must resolve 
+                 user and host. We assume that the field can now be divided 
+                 by the rightmost '@' */
+	      atsign = strrchr(userhost,'@');
+	      if(atsign) *atsign = ' '; /* replace right-@ with space */
 
-		/* if it's not in a host we're querying, save it anyway */
-		if (ctl == (struct query *)NULL)
+	      /* we should now be able to parse userhost into user and host */
+	      if ((st = sscanf(userhost, "%s %s", user, host)) == 2)
+		{
+
+		  for (ctl = hostlist; ctl; ctl = ctl->next)
+		    {
+		      if (ctl->server.truename &&
+			  strcasecmp(host, ctl->server.truename) == 0
+			  && strcasecmp(user, ctl->remotename) == 0)
+			{
+			  save_str(&ctl->oldsaved, id, UID_SEEN);
+			  break;
+			}
+		    }
+
+		  /* if it's not in a host we're querying, save it anyway */
+		  if (ctl == (struct query *)NULL)
 		    save_str(&scratchlist, buf, UID_SEEN);
+		}
 	    }
 	}
 	fclose(tmpfp);
