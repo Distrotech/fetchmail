@@ -380,7 +380,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 	}
 	/* else fall through to ourdinary AUTH=LOGIN case */
     }
-    else if (ctl->server.protocol == P_IMAP_K4))
+    else if (ctl->server.protocol == P_IMAP_K4)
     {
 	error(0,-1, "Required KERBEROS_V4 capability not supported by server");
 	return(PS_AUTHFAIL);
