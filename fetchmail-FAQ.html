@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/09/06 16:39:25 $
+<td width="30%" align=right>$Date: 2000/09/07 15:38:23 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1947,6 +1947,10 @@ option in your .fetchmailrc or on the command line) and get a greeting
 line from the listener.  If the SMTP host is inaccessible or the listener
 is down, fix that first.<p>
 
+In Red Hat Linux 6.9, SMTP is disabled by default.  To fix this,
+set "DAEMON=yes" in your /etc/sysconfig/sendmail file, then restart
+sendmail by running "/sbin/service sendmail restart".<p>
+
 If the listener seems to be up when you test with telnet, the most
 benign and typical problem is that the listener had a momentary seizure
 due to resource exhaustion while fetchmail was polling it -- process
@@ -2908,7 +2912,7 @@ install Linux on your server...<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/09/06 16:39:25 $
+<td width="30%" align=right>$Date: 2000/09/07 15:38:23 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
