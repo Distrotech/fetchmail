@@ -603,9 +603,9 @@ static int pop3_gettopid( int sock, int num , char *id)
     int ok;
     int got_it;
     char buf [POPBUFSIZE+1];
-    sprintf( buf, "TOP %d 1", num );
+    snprintf(buf, sizeof(buf), "TOP %d 1", num);
     if ((ok = gen_transact(sock, buf )) != 0)
-       return ok; 
+       return ok;
     got_it = 0;
     while ((ok = gen_recv(sock, buf, sizeof(buf))) == 0) 
     {
