@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.9.5 (Thu Nov  8 14:14:35 EST 2001), 21162 lines:
+
 * Changed the logging logic along lines suggested by Jan Klaverstijn,
 * fetchmailconf looks first in the directory it's running from to find
   fetchmail.
@@ -20,6 +22,8 @@
   leak if we're hit by an alarm signal during connect(2).
 * Set queryname even when server is inactive; avoids a core-dump bug in
   the fetchids code.
+
+There are 396 people on fetchmail-friends and 627 on fetchmail-announce.
 
 fetchmail-5.9.4 (Wed Oct  3 07:47:45 EDT 2001), 21104 lines:
 
