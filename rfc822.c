@@ -233,29 +233,34 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	case BARE_ADDRESS:   	/* collecting address without delimiters */
 	    if (*hp == '\n')		/* end of bare address */
 	    {
-	        *tp++ = '\0';
-		state = ENDIT_ALL;
-		return(tp = address);
+		if (tp > address)
+		{
+		    *tp++ = '\0';
+		    state = ENDIT_ALL;
+		    return(tp = address);
+		}
 	    }
 	    else if (*hp == '\\')	/* handle RFC822 escaping */
 	    {
 	        *tp++ = *hp++;			/* take the escape */
 	        *tp++ = *hp;			/* take following char */
 	    }
-	    else if (*hp == ',' || isspace(*hp))  /* end of address */
+	    else if (*hp == ',')  	/* end of address */
 	    {
 		if (tp > address)
 		{
 		    *tp++ = '\0';
-		    ++hp;
 		    state = SKIP_JUNK;
 		    return(tp = address);
 		}
 	    }
-	    else   		/* just take it */
+	    else if (*hp == '<')  	/* beginning of real address */
 	    {
-		*tp++ = *hp;
+		state = INSIDE_BRACKETS;
+		tp = address;
 	    }
+	    else   		/* just take it */
+		*tp++ = *hp;
 	    break;
 
 	case INSIDE_DQUOTE:	/* we're in a quoted string, copy verbatim */
