@@ -9,14 +9,14 @@
 #define		P_AUTO		1
 #define		P_POP2		2
 #define		P_POP3		3
-#define		P_IMAP		4
-#define		P_IMAP_K4	5
-#define		P_IMAP_GSS	6
-#define		P_APOP		7
-#define		P_RPOP		8
-#define		P_ETRN		9
-#define		P_IMAP_CRAM_MD5	10
-#define		P_IMAP_LOGIN	11
+#define		P_APOP		4
+#define		P_RPOP		5
+#define		P_IMAP		6
+#define		P_IMAP_K4	7
+#define		P_IMAP_GSS	8
+#define		P_IMAP_CRAM_MD5	9
+#define		P_IMAP_LOGIN	10
+#define		P_ETRN		11
 
 #if INET6
 #define		SMTP_PORT	"smtp"

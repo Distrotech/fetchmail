@@ -199,6 +199,8 @@ const char *showproto(int proto)
 #ifdef GSSAPI
     case P_IMAP_GSS: return("IMAP-GSS");
 #endif /* GSSAPI */
+    case P_IMAP_CRAM_MD5: return("IMAP-LOGIN");
+    case P_IMAP_LOGIN: return("IMAP-LOGIN");
     case P_APOP: return("APOP");
     case P_RPOP: return("RPOP");
     case P_ETRN: return("ETRN");
