@@ -816,7 +816,7 @@ to the client via SMTP.  Therefore it sends only undelivered messages.
 
 .SH SPAM FILTERING
 Many SMTP listeners allow administrators to set up `spam filters' that
-block unsolicited email from specified domains.  A MAIL FROM line that
+block unsolicited email from specified domains.  A MAIL FROM or DATA line that
 triggers this feature will elicit an SMTP response which
 (unfortunately) varies according to the listener.
 .PP

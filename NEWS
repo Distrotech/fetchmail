@@ -1,6 +1,6 @@
 				Release Notes:
 
-fetchmail-4.7.0 ():
+fetchmail-4.7.0 (Mon Dec 14 12:05:27 EST 1998):
 * Minor correction to make i18n subdirectory builds work better.
 * Rob Funk's old-message-check optimization.
 * Fix an error in the logic for detecting when all connections are wedged.
@@ -10,7 +10,7 @@ fetchmail-4.7.0 ():
 * Search .netrc on via name as well as poll name (thanks to Rob Funk).
 * Handle SMTP error responses from DATA, so zmailer will work.
 
-There are 243 people on fetchmail-friends and 322 on fetchmail-announce.
+There are 246 people on fetchmail-friends and 327 on fetchmail-announce.
 
 fetchmail-4.6.9 (Tue Dec  1 14:46:19 EST 1998):
 * Better RFC822 conformance in fetchmail trace headers.
