@@ -394,7 +394,7 @@ then
   else
       searchdirs="/usr/kerberos /usr/local/krb5 /usr/athena /usr"
   fi
-  LDEFLAGS="$LDEFLAGS $with_kerberos5"
+  LDEFLAGS="$LDEFLAGS -L${with_kerberos5}/"
   with_kerberos5=
   for dir in $searchdirs
   do AC_MSG_CHECKING([for Kerberos V in $dir])
