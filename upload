@@ -7,6 +7,7 @@ if [ $* ]
 then
     ../upload $*
 else
+echo "Beginning web upload..."
 # First, copy to primary website
 dest=esr@${WWWHOST}:${WWWDIR}/fetchmail
 scp fetchmail-${version}.tar.gz $dest
@@ -32,7 +33,8 @@ scp index.html $dest
 scp history.html $dest
 echo "Upload to ${WWWVIRTUAL} complete"
 
-    lftp <<EOF
+echo "Beginning FTP upload..."
+lftp <<EOF
 # Copy to FTP site
 open $FTPHOST
 cd $FTPDIR/fetchmail
@@ -40,8 +42,10 @@ put fetchmail-${version}.tar.gz
 put fetchmail-${version}-1.i386.rpm
 put fetchmail-${version}-1.src.rpm
 close
+echo "FTP upload complete."
 
 # Next, upload to Metalab
+echo "Beginning Metalab upload..."
 open -u anonymous,esr@thyrsus.com metalab.unc.edu
 cd incoming/Linux 
 put fetchmail-${version}.tar.gz
@@ -54,6 +58,7 @@ close
 echo "Upload to Metalab complete"
 
 # Finally, upload the RPMS to Red Hat
+echo "Beginning Red Hat upload"
 open incoming.redhat.com
 cd libc6
 put fetchmail-${version}-1.i386.rpm
