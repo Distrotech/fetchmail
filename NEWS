@@ -2,6 +2,8 @@
 
 fetchmail-4.5.4 ():
 * Fixed processing of --antispam option.
+* Antispam default value is now the list [571, 550, 501] corresponding
+  to the sendmail, old exim, and new exim spam-block responses.
 
 There are 265 people on fetchmail-friends and 249 on fetchmail-announce.
 
