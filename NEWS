@@ -8,7 +8,7 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.5.2 ():
+fetchmail-4.5.2 (Tue Jul 14 19:02:52 EDT 1998):
 * German-language internationalization in the RPM, thanks to Jochen Hayek.
 * .fetchmailrc files are now permitted to be executable by user and group.
 * Eric Daniel's guard code against very long lines.
