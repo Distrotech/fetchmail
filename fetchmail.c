@@ -1316,6 +1316,7 @@ static int query_host(struct query *ctl)
 	report(stderr, GT_("IMAP support is not configured.\n"));
 	st = PS_PROTOCOL;
 #endif /* IMAP_ENABLE */
+	break;
     case P_ETRN:
 #ifndef ETRN_ENABLE
 	report(stderr, GT_("ETRN support is not configured.\n"));
@@ -1327,6 +1328,7 @@ static int query_host(struct query *ctl)
 	report(stderr, GT_("Cannot support ETRN without gethostbyname(2).\n"));
 	st = PS_PROTOCOL;
 #endif /* HAVE_GETHOSTBYNAME */
+	break;
 #endif /* ETRN_ENABLE */
     case P_ODMR:
 #ifndef ODMR_ENABLE
@@ -1340,6 +1342,7 @@ static int query_host(struct query *ctl)
 	st = PS_PROTOCOL;
 #endif /* HAVE_GETHOSTBYNAME */
 #endif /* ODMR_ENABLE */
+	break;
     default:
 	report(stderr, GT_("unsupported protocol selected.\n"));
 	st = PS_PROTOCOL;
