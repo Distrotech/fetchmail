@@ -1544,6 +1544,10 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	port = ctl->server.port ? ctl->server.port : protocol->port;
 #endif /* !INET6 */
 	realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;
+
+	/* allow time for the port to be set up if we have a plugin */
+	if (ctl->server.plugin)
+	    (void)sleep(1);
 #if INET6
 	if ((mailserver_socket = SockOpen(realhost, 
 			     ctl->server.service ? ctl->server.service : protocol->service,
