@@ -24,6 +24,7 @@ batchlimit	{ return BATCHLIMIT; }
 fetchlimit	{ return FETCHLIMIT; }
 logfile		{ return LOGFILE; }
 daemon		{ return DAEMON; }
+syslog		{ return SYSLOG; }
 
 defaults 	{ return DEFAULTS; }
 server 		{ return POLL; }

@@ -20,6 +20,8 @@ every user entry in a multi-user poll declaration.
 
 * Use the libmd functions for md5 under Free BSD?  (Low priority.)
 
+* More log levels?
+
 				Release Notes:
 
 ------------------------------------------------------------------------------
@@ -28,12 +30,12 @@ pl 3.9.7 ():
 * Complain and die if user tries to start fetchmail with options while a
   background fetchmail is running. 
 * Various installation headaches are gone, INSTALL edited accordingly.
-* Treat exim's 501 antispam response as equivalent to 571.  Note: this
-  is temporary.  The right thing is to get exim to return 571; I'm 
-  working on it.
+* Treat exim's 501 and (soon) 550 antispam responses as equivalent to 571.
 * Fess up to sometimes only counting header bytes in the progress messages.
+* Man page updates, including removal of restriction on --syslog.
+* You can now set --syslog in the .fetchmailrc file.
 
-There are 257 people on the fetchmail-friends list.
+There are 252 people on the fetchmail-friends list.
 
 pl 3.9.6 (Wed May 28 18:28:35 EDT 1997):
 * Fix the libc6 configuration stuff (thanks to Jesse Thilo).

@@ -453,8 +453,7 @@ This is primarily useful for debugging configurations.
 .PP
 The
 .B --syslog
-option allows you to redirect status and error messages emitted while in
-daemon mode to the
+option allows you to redirect status and error messages emitted to the
 .IR syslog (3)
 system daemon if available.
 Messages are logged with an id of \fBfetchmail\fR, the facility \fBLOG_MAIL\fR,
@@ -756,7 +755,7 @@ ticket at the start of each query instead, and send an arbitrary
 string as the password.
 .PP
 Specifying `kpop' sets POP3 protocol over port 1109 with Kerberos V4
-authentication.  These defaults may be overridden by later options.
+preauthentication.  These defaults may be overridden by later options.
 .PP
 You can use the noise keywords `and', `with',
 \&`has', `wants', and `options' anywhere in an entry to make
@@ -772,12 +771,13 @@ or reverse it by saying `user esr here is eric there'
 .PP
 For backward compatibility, the word `server' is a synonym for `poll'.
 .PP
-There are currently two global option statements; `set logfile = '
+There are currently three global option statements; `set logfile = '
 followed by a string sets the same global specified by --logfile.  A
 command-line --logfile option will override this.  Also, `set daemon'
 sets the poll interval as --daemon does.  This can be overridden by
-a command-line --daemon option; iin particular --daemon 0 can be used 
-to force foreground operation.
+a command-line --daemon option; in particular --daemon 0 can be used 
+to force foreground operation. Finally, `set syslog' set\nds log
+messages to syslogd(8).
 .PP
 Basic format is:
 

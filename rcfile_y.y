@@ -49,7 +49,7 @@ extern char * yytext;
 %token AUTHENTICATE TIMEOUT KPOP KERBEROS4
 %token ENVELOPE USERNAME PASSWORD FOLDER SMTPHOST MDA PRECONNECT LIMIT
 %token IS HERE THERE TO MAP WILDCARD
-%token SET BATCHLIMIT FETCHLIMIT LOGFILE DAEMON INTERFACE MONITOR
+%token SET BATCHLIMIT FETCHLIMIT LOGFILE DAEMON SYSLOG INTERFACE MONITOR
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
@@ -68,6 +68,7 @@ statement_list	: statement
 /* future global options should also have the form SET <name> <value> */
 statement	: SET LOGFILE MAP STRING	{logfile = xstrdup($4);}
 		| SET DAEMON NUMBER		{poll_interval = $3;}
+		| SET SYSLOG			{use_syslog = TRUE;}
 
 /* 
  * The way the next two productions are written depends on the fact that

@@ -76,7 +76,8 @@
 # Legal global option statements are
 #
 #   set logfile =		-- must be followed by a string
-#   set daemon =		-- must be followed by a number   
+#   set daemon			-- must be followed by a number   
+#   set syslog
 #
 # The noise keywords `and', `with', `has', `wants', and `options' are ignored
 # anywhere in an entry; they can be used to make it resemble English.  The
