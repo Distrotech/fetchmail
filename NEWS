@@ -6,13 +6,14 @@ fetchmail-4.6.3 ():
 * fetchmailconf now has access to information about which fetchmail
   compile-time options have been enabled, and uses it to control
   the choices in various panels.
+* Added `properties' option for extension scripts.
 
-There are 252 people on fetchmail-friends and 295 on fetchmail-announce.
+There are 250 people on fetchmail-friends and 294 on fetchmail-announce.
 
 fetchmail-4.6.2 (Fri Oct 16 12:49:30 EDT 1998):
 * Time out server open requests like we do reads.  This protects against
   buggy TCP/IP configurations that hang forever on a bad open.
-* The '--limit' option can now be used with daemon mode. The user is notfied
+* The '--limit' option can now be used with daemon mode. The user is notified
   that some messages are being skipped on the mail server; the user get
   notified by email that mentions all the messages being skipped (including
   their size). A -w/--warnings per-user option specifies at what intervals

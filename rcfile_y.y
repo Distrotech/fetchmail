@@ -63,7 +63,7 @@ extern char * yytext;
 %token SPAMRESPONSE PRECONNECT POSTCONNECT LIMIT
 %token NETSEC INTERFACE MONITOR
 %token IS HERE THERE TO MAP WILDCARD
-%token BATCHLIMIT FETCHLIMIT EXPUNGE
+%token BATCHLIMIT FETCHLIMIT EXPUNGE PROPERTIES
 %token SET LOGFILE DAEMON SYSLOG IDFILE INVISIBLE POSTMASTER WARNINGS
 %token <proto> PROTO
 %token <sval>  STRING
@@ -323,6 +323,8 @@ user_option	: TO localnames HERE
 		| FETCHLIMIT NUMBER	{current.fetchlimit = NUM_VALUE($2);}
 		| BATCHLIMIT NUMBER	{current.batchlimit = NUM_VALUE($2);}
 		| EXPUNGE NUMBER	{current.expunge    = NUM_VALUE($2);}
+
+		| PROPERTIES STRING	{current.properties = xstrdup($2);}
 		;
 %%
 

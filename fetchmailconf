@@ -198,6 +198,7 @@ class User:
 	self.fetchlimit = 0		# Max messages fetched per batch
 	self.batchlimit = 0		# Max message forwarded per batch
 	self.expunge = 1		# Interval between expunges (IMAP)
+        self.properties = None		# Extension properties
 	User.typemap = (
 	    ('remote',      'String'),
 	    # leave out mailboxes and localnames
@@ -221,7 +222,8 @@ class User:
 	    ('warnings',    'Int'),
 	    ('fetchlimit',  'Int'),
 	    ('batchlimit',  'Int'),
-	    ('expunge',     'Int'))
+	    ('expunge',     'Int'),
+            ('properties',   'String'))
 
     def __repr__(self):
 	str = "    "
@@ -271,6 +273,8 @@ class User:
 	    str = str + " batchlimit " + `self.batchlimit`
 	if self.expunge != UserDefaults.expunge:
 	    str = str + " expunge " + `self.expunge`
+	if self.properties != UserDefaults.properties:
+	    str = str + " properties " + `self.properties`
         str = str + "\n"
         trimmed = self.smtphunt;
         if trimmed != [] and trimmed[len(trimmed) - 1] == "localhost":
@@ -1229,14 +1233,16 @@ class UserEdit(Frame, MyWidget):
 		      self.fetchlimit, '30').pack(side=TOP, fill=X)
             LabeledEntry(limwin, 'Max messages to forward per poll:',
 		      self.batchlimit, '30').pack(side=TOP, fill=X)
-            LabeledEntry(limwin, 'Interval between expunges (IMAP):',
-		      self.expunge, '30').pack(side=TOP, fill=X)
+            if self.server.protocol in ('IMAP', 'IMAP-K4', 'IMAP-GSS'):
+                LabeledEntry(limwin, 'Interval between expunges (IMAP):',
+                             self.expunge, '30').pack(side=TOP, fill=X)
             limwin.pack(fill=X)
 
-            foldwin = Frame(rightwin, relief=RAISED, bd=5)
-            Label(foldwin, text="Remote folders (IMAP only)").pack(side=TOP)
-            ListEdit("New folder:", self.user.mailboxes, None, foldwin, None)
-            foldwin.pack(fill=X, anchor=N)
+            if self.server.protocol in ('IMAP', 'IMAP-K4', 'IMAP-GSS'):
+                foldwin = Frame(rightwin, relief=RAISED, bd=5)
+                Label(foldwin, text="Remote folders (IMAP only)").pack(side=TOP)
+                ListEdit("New folder:", self.user.mailboxes, None, foldwin, None)
+                foldwin.pack(fill=X, anchor=N)
 
         if mode != 'novice':
             rightwin.pack(side=LEFT)

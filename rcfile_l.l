@@ -64,6 +64,7 @@ monitor		{ return MONITOR; }
 batchlimit	{ return BATCHLIMIT; }
 fetchlimit	{ return FETCHLIMIT; }
 expunge		{ return EXPUNGE; }
+properties	{ return PROPERTIES; }
 
 is		{ return IS; }
 here		{ return HERE; }

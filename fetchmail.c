@@ -774,6 +774,8 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(fetchlimit);
     FLAG_MERGE(batchlimit);
     FLAG_MERGE(expunge);
+
+    FLAG_MERGE(properties);
 #undef FLAG_MERGE
 }
 

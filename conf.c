@@ -322,6 +322,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	numdump("fetchlimit", ctl->fetchlimit);
 	numdump("batchlimit", ctl->batchlimit);
 	numdump("expunge", ctl->expunge);
+	stringdump("properties", ctl->properties);
 	listdump("smtphunt", ctl->smtphunt);
 	stringdump("smtpaddress", ctl->smtpaddress);
 

@@ -803,9 +803,10 @@ spam message bodies.
 
 .SH THE RUN CONTROL FILE
 The preferred way to set up fetchmail is to write a
-\&\fI.fetchmailrc\fR file in your home directory.  When there is a
-conflict between the command-line arguments and the arguments in this
-file, the command-line arguments take precedence.
+\&\fI.fetchmailrc\fR file in your home directory (you may do this
+directly, with a text editor, or indirectly via \fIfetchmailconf\fR).
+When there is a conflict between the command-line arguments and the
+arguments in this file, the command-line arguments take precedence.
 .PP
 To protect the security of your passwords, when --version is not on
 your \fI~/.fetchmailrc\fR may not have more than 0600 (u=rw,g=,o=) permissions;
@@ -856,9 +857,37 @@ line.  (The `skip' verb allows you to experiment with test entries
 safely, or easily disable entries for hosts that are temporarily down.)
 .PP
 .SS Keyword/Option Summary
-Here are the legal server options.  Keyword suffixes enclosed in
+Here are the legal options.  Keyword suffixes enclosed in
 square brackets are optional.  Those corresponding to command-line
 options are followed by `-' and the appropriate option letter.
+
+Here are the legal global options:
+
+.TS
+l l lw34.
+Keyword  	Opt	Function
+_
+set daemon  	\&	T{
+Set a background poll interval in seconds
+T}
+set postmaster  	\&	T{
+Give the name of the last-resort mail recipient
+T}
+set logfile  	\&	T{
+Name of a file to dump error and status messages to
+T}
+set idfile  	\&	T{
+Name of the file to store UID lists in
+T}
+set syslog  	\&	T{
+Do error logging through syslog(3).
+T}
+set nosyslog  	\&	T{
+Turn off error logging through syslog(3).
+T}
+.TE
+
+Here are the legal user options:
 
 .TS
 l l lw34.
@@ -1027,11 +1056,8 @@ T}
 expunge 	-e	T{
 Perform an expunge on every #th message (IMAP only)
 T}
-syslog  	\&	T{
-Do error logging through syslog(3).
-T}
-nosyslog  	\&	T{
-Turn off error logging through syslog(3).
+properties  	\&	T{
+String value is ignored by fetchmail (may be used by extension scripts)
 T}
 .TE
 .PP
@@ -1208,6 +1234,12 @@ like sendmail), then this will automatically convert quoted-printable
 message headers and data into 8-bit data, making it easier to
 understand when reading mail. If your e-mail programs know how to
 deal with MIME messages, then this option is not needed.
+.PP
+The `properties' option is an extension mechanism.  It takes a string
+argument, which is ignored by fetchmail itself.  The string argument may be
+used to store configuration information for scripts which require it.
+In particular, the output of `--configdump' option will make properties
+associated with a user entry readily available to a Python script.
 .PP
 .SS Miscellaneous Run Control Options
 The words `here' and `there' have useful English-like

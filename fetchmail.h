@@ -224,6 +224,7 @@ struct query
     int	fetchlimit;		/* max # msgs to get in single poll */
     int	batchlimit;		/* max # msgs to pass in single SMTP session */
     int	expunge;		/* max # msgs to pass between expunges */
+    char *properties;		/* passthrough properties for extensions */
 
     struct idlist *oldsaved, *newsaved;
 
