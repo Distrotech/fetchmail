@@ -40,7 +40,11 @@ AC_CHECK_FUNC(socket,
     AC_CHECK_LIB(socket,socket)
     AC_CHECK_LIB(inet,socket))
 
-AC_CHECK_LIB(nsl,inet_addr)
+# The condition in this test copes with the presence of inet_addr in libc6.
+AC_CHECK_FUNC(inet_addr,
+    AC_MSG_RESULT(using libc's inet_addr),
+    AC_CHECK_LIB(nsl,inet_addr))
+
 AC_CHECK_LIB(opie,opiegenerator)
 
 dnl Port hack for Interactive UNIX System V/386 Release 3.2

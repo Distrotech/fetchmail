@@ -17,6 +17,7 @@
 ------------------------------------------------------------------------------
 fetchmail-4.2.5 ()
 * Alexander Kourakos corrected his patch to avoid a buffer overrun.
+* Greg Stark's patch for better autoconfiguration on mixed libc5/libc6 systems.
 
 There are 287 people on the fetchmail-friends list.
 
