@@ -33,6 +33,14 @@
 #include  <ctype.h>
 #include  <time.h>
 
+/* for W* macros after pclose() */
+#define _USE_BSD
+#include <sys/types.h>
+#include <sys/time.h>
+#include <sys/resource.h>
+#include <sys/wait.h>
+
+
 #include  "fetchmail.h"
 #include  "socket.h"
 #include  "smtp.h"
@@ -1246,8 +1254,17 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 
 	if (rc)
 	{
-	    report(stderr, 
-		   GT_("MDA returned nonzero status %d\n"), rc);
+	    if (WIFSIGNALED(rc)) {
+		report(stderr, 
+			GT_("MDA died of signal %d\n"), WTERMSIG(rc));
+	    } else if (WIFEXITED(rc)) {
+		report(stderr, 
+			GT_("MDA returned nonzero status %d\n"), WEXITSTATUS(rc));
+	    } else {
+		report(stderr,
+			GT_("Strange: MDA pclose returned %d, cannot handle at %s:%d\n"), rc, __FILE__, __LINE__);
+	    }
+
 	    return(FALSE);
 	}
     }
