@@ -505,10 +505,6 @@ struct method *proto;
     char buf [POPBUFSIZE+1], host[HOSTLEN+1];
     int socket;
     void (*sigsave)();
-
-#ifdef HAVE_RRESVPORT_H
-    int privport = -1;
-#endif /* HAVE_RRESVPORT_H */
     int num, count, deletions = 0;
 
     alarmed = 0;
@@ -684,11 +680,6 @@ cleanUp:
 	gen_transact(socket, protocol->exit_cmd);
 	close(socket);
     }
-
-#ifdef HAVE_RRESVPORT_H
-    if (privport != -1)
-	close(privport);	/* no big deal if this fails */
-#endif /* HAVE_RRESVPORT_H */
 
 closeUp:
     if (mboxfd != -1)
