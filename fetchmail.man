@@ -612,8 +612,16 @@ Running more than one concurrent instance of
 on the same mailbox may cause messages to be lost or remain unfetched.
 (This is a design problem of the POP2, POP3 and IMAP2bis protocols.)
 .PP
-The RPOP support, and the UIDL support for RFC1725-compliant POP servers
-without LAST, are not yet well tested.
+If, using POP3, you find that messages you've already read on the
+server are being fetched, blame RFC1725.  That late version pf the
+POP3 protocol specification ill-advisedly removed the LAST command, and
+some servers (including the one distributed with at least some
+versions of SunOS) follow it (you can verify this by invoking
+.I fetchmail -v
+and watching the response to LAST early in the query).  The fix is to
+install an older POP3 server with LAST or switch to an IMAP server.
+.PP
+The RPOP support is not yet well tested.
 .PP
 Send comments, bug reports, gripes, and the like to Eric S. Raymond
 <esr@thyrsus.com>.
