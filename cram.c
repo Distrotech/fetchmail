@@ -109,7 +109,7 @@ int do_cram_md5 (int sock, struct query *ctl)
               response, sizeof (response));
 
 #ifdef HAVE_SNPRINTF
-    snprintf (reply, sizeof (reply),
+    snprintf (reply, sizeof(reply),
 #else
     sprintf(reply,
 #endif
@@ -120,14 +120,7 @@ int do_cram_md5 (int sock, struct query *ctl)
               response[8], response[9], response[10], response[11],
               response[12], response[13], response[14], response[15]);
 
-    if (outlevel >= O_DEBUG) {
-        report (stdout, _("replying with %s\n"), reply);
-    }
-
     to64frombits (buf1, reply, strlen(reply));
-    if (outlevel >= O_MONITOR) {
-	report (stdout, "CRAM> %s\n", buf1);
-    }
 
     /* ship the authentication back, accept the server's responses */
     /* PMDF5.2 IMAP has a bug that requires this to be a single write */
