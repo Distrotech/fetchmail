@@ -198,13 +198,16 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 
 	/*
 	 * AUTH command may return a list of available mechanisms.
-	 * if it doesn't, no harm done.  Efficiency hack: most servers
-	 * don't implement this, so don't do it at all unless the
-	 * server advertises APOP with <> in the greeting line.  This
-	 * certainly catches IMAP-2000's POP3 gateway.
+	 * if it doesn't, no harm done.
+	 *
+	 * APOP was introduced in RFC 1450, and POP3 AUTH not until
+	 * RFC1734. So the < check is an easy way to prevent AUTH from
+	 * being sent to the more primitive POP3 servers dating from
+	 * RFC 1081 and RFC 1225, which seem more likely to choke on
+	 * it.  This certainly catches IMAP-2000's POP3 gateway.
 	 * 
 	 * These authentication methods are blessed by RFC1734,
-	 * POP3 AUTHentication command.
+	 * describing the POP3 AUTHentication command.
 	 */
 	if (strchr(greeting, '<') && gen_transact(sock, "AUTH") == 0)
 	{
