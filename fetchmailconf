@@ -706,9 +706,16 @@ These options control the remote-mail protocol
 and TCP/IP service port used to query this
 server.
 
+If you click the `Probe for a server' button, fetchmail
+will try to find you the most capable server on the
+selected host (this will only work if you're conncted
+to the Internet).  The probe only checks for ordinary
+IMAP and POP protocols; fortunately these are the most
+frequently supported.
+
 The `Protocol' button bar offers you a choice of
 all the different protocols available.  The `auto'
-protocol is a special mode that probes the host
+protocol is the default mode; it probes the host
 ports for POP3 and IMAP to see if either is
 available.
 
@@ -905,7 +912,11 @@ class ServerEdit(Frame, MyWidget):
         confwin = Toplevel()
         if greetline == None:
             title = "Autoprobe of " + realhost + " failed"
-            confirm = "I didn't find any mailservers active."
+            confirm = """
+Fetchmail didn't find any mailservers active.
+This could mean the host doesn't support any,
+or just that your Internet connection is down.
+"""
         else:
             title = "Autoprobe of " + realhost + " succeeded"
             confirm = "The " + protocol + " server said:\n\n" + greetline
