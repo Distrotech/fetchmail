@@ -1373,10 +1373,14 @@ if __name__ == '__main__':
 
     # OK, now run the configuration edit
     root = MainWindow(rcfile)
-    icon_image = PhotoImage(data=fetchmail_gif)
-    icon_window = Toplevel()
-    Label(icon_window, image=icon_image, bg='black').pack()
-    root.master.iconwindow(icon_window)
+    try:
+        # Some older pythons will error out on this
+        icon_image = PhotoImage(data=fetchmail_gif)
+        icon_window = Toplevel()
+        Label(icon_window, image=icon_image, bg='black').pack()
+        root.master.iconwindow(icon_window)
+    except:
+        pass
     root.mainloop()
 
 # The following sets edit modes for GNU EMACS
