@@ -721,7 +721,7 @@ static int open_bsmtp_sink(struct query *ctl, struct msgblk *msg,
 
     /* see the ap computation under the SMTP branch */
     fprintf(sinkfp, 
-	    "MAIL FROM: %s", (msg->return_path[0]) ? msg->return_path : user);
+	    "MAIL FROM:%s", (msg->return_path[0]) ? msg->return_path : user);
 
     if (ctl->pass8bits || (ctl->mimemsg & MSG_IS_8BIT))
 	fputs(" BODY=8BITMIME", sinkfp);

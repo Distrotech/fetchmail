@@ -232,13 +232,13 @@ int SMTP_from(int sock, const char *from, const char *opts)
     int ok;
     char buf[MSGBUFSIZE];
 
-    if (strchr(from, '<'))
+    if (from[0]=='<')
 #ifdef HAVE_SNPRINTF
 	snprintf(buf, sizeof(buf),
 #else
 	sprintf(buf,
 #endif /* HAVE_SNPRINTF */
-		"MAIL FROM: %s", from);
+		"MAIL FROM:%s", from);
     else
 #ifdef HAVE_SNPRINTF
     snprintf(buf, sizeof(buf),
