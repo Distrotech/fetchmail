@@ -13,7 +13,7 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.2.2 ()
+fetchmail-4.2.2 (Wed Sep 17 22:56:05 EDT 1997)
 * Re-enable --limit under IMAP (bug introduced in 4.2.0).
 * Autoconfigure root-mode PID-file directory to /etc if no /var/run.
 * ETRN mode no longer tries to flush queue for "localhost".
@@ -21,7 +21,7 @@ fetchmail-4.2.2 ()
 * More portation tweaks for unusual Unixes.
 * Make sure any X-Fetchmail-Error: line is properly terminated.
 
-There are 287 people on the fetchmail-friends list.
+There are 289 people on the fetchmail-friends list.
 
 fetchmail-4.2.1 (Sun Sep 14 16:31:58 EDT 1997)
 * Type and inclusion changes to eliminate warnings on weird Unixes.
