@@ -47,7 +47,7 @@ support IPv6 and IPSEC.<P>
 
 Fetchmail retrieves mail from remote mail servers and forwards it via
 SMTP, so it can then be be read by normal mail user agents such as <a
-href="http://www.cs.hmc.edu/~me/mutt/">mutt</a>, elm(1) or BSD Mail.
+href="http://www.mutt.org/">mutt</a>, elm(1) or BSD Mail.
 It allows all your system MTA's filtering, forwarding, and aliasing
 facilities to work just as they would on normal mail.<P>
 
