@@ -1221,8 +1221,7 @@ static void clean_skipped_list(struct idlist **skipped_list)
     *skipped_list = head;
 }
 
-static void send_warning(struct query *ctl, 
-			 struct idlist **skipped_list, const char *user)
+static void send_warning(struct query *ctl)
 /* send warning mail with skipped msg; reset msg count when user notified */
 {
     int size, nbr;
@@ -1232,7 +1231,7 @@ static void send_warning(struct query *ctl,
     int max_warning_poll_count, good, bad;
     char	buf[100];
 
-    head = *skipped_list;
+    head = ctl->skipped;
     if (!head)
 	return;
 
@@ -1295,18 +1294,11 @@ const struct method *proto;	/* protocol method table */
 {
     int ok, js, sock = -1;
     char *msg;
-    char localuser[32];
     void (*sigsave)();
     struct idlist *current=NULL, *prev=NULL, *next=NULL, *head=NULL, *tmp=NULL;
 
     protocol = (struct method *)proto;
     ctl->server.base_protocol = protocol;
-
-    strcpy(localuser, "root");
-    if (ctl->localnames)
-    {
-	strcpy(localuser, ctl->localnames->id);
-    }
 
 #ifndef KERBEROS_V4
     if (ctl->server.preauthenticate == A_KERBEROS_V4)
@@ -1920,7 +1912,7 @@ const struct method *proto;	/* protocol method table */
 		    if (!check_only && ctl->skipped)
 		    {
 			clean_skipped_list(&ctl->skipped);
-			send_warning(ctl, &ctl->skipped, localuser);
+			send_warning(ctl);
 		    }
 		}
 	    } while
