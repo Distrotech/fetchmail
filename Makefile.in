@@ -204,7 +204,8 @@ headers = $(srcdir)/fetchmail.h $(srcdir)/socket.h $(srcdir)/smtp.h \
 extra = $(srcdir)/alloca.c $(srcdir)/getopt.[ch] $(srcdir)/getopt1.c \
 	$(srcdir)/strcasecmp.c
 docs = $(srcdir)/COPYING $(srcdir)/FEATURES $(srcdir)/fetchmail-features.html \
-	$(srcdir)/INSTALL $(srcdir)/NEWS $(srcdir)/NOTES $(srcdir)/README \
+	$(srcdir)/design-notes.html $(srcdir)/NOTES \
+	$(srcdir)/INSTALL $(srcdir)/NEWS  $(srcdir)/README \
 	$(srcdir)/fetchmail.lsm $(srcdir)/sample.rcfile \
 	$(srcdir)/*.man	$(srcdir)/FAQ $(srcdir)/fetchmail.FAQ.html
 config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/configure \
@@ -220,10 +221,16 @@ MANIFEST: $(srcdir) Makefile.in
 	@wc -l MANIFEST
 
 FAQ: fetchmail.FAQ.html
-	lynx -dump -nolist fetchmail.FAQ.html >FAQ
+	echo "(This document was generated from fetchmail.FAQ.html)" >FAQ
+	lynx -dump -nolist fetchmail.FAQ.html >>FAQ
 
 FEATURES: fetchmail-features.html
-	lynx -dump -nolist fetchmail-features.html | grep -v "Back to " >FEATURES
+	echo "(This document was generated from fetchmail-features.html)" >FEATURES
+	lynx -dump -nolist fetchmail-features.html | grep -v "Back to " >>FEATURES
+
+NOTES: design-notes.html
+	echo "(This document was generated from design-notes.html)" >NOTES
+	lynx -dump -nolist design-notes.html | grep -v "Back to " >NOTES
 
 # Make distribution, update LSM with proper size, remake distribution
 dist: Makefile.in  
