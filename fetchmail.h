@@ -30,8 +30,10 @@
  */
 #define		HOSTLEN		635	/* max hostname length (RFC1123) */
 #define		POPBUFSIZE	512	/* max length of response (RFC1939) */
-#define		USERNAMELEN	40	/* max POP3 arg length (RFC1939) */
 #define		IDLEN		128	/* max length of UID (RFC1939) */
+
+/* per RFC1939 this should be 40, but Microsoft Exchange ignores that limit */
+#define		USERNAMELEN	128	/* max POP3 arg length */
 
 /* clear a netBSD kernel parameter out of the way */ 
 #undef		MSGBUFSIZE
