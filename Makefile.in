@@ -208,10 +208,11 @@ docs = $(srcdir)/COPYING $(srcdir)/README $(srcdir)/INSTALL $(srcdir)/NEWS \
 config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/configure \
 	$(srcdir)/config.guess $(srcdir)/config.h.in $(srcdir)/config.sub
 scripts = $(srcdir)/install.sh $(srcdir)/mkinstalldirs
-all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) MANIFEST
+all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) \
+	$(srcdir)/MANIFEST
 
-manifest: $(all)
-	@echo $(all) | tr "[ \t]" '\n' | sort | sed "s/\\./fetchmail-$(VERS)/"
+MANIFEST: $(srcdir)
+	@echo $(all) | tr "[ \t]" '\n' | sort | sed "s/\\./fetchmail-$(VERS)/" >MANIFEST
 
 fetchmail-$(VERS).tar: $(all)
 	(cd ..; tar -cf fetchmail-$(VERS).tar `cat fetchmail-$(VERS)/MANIFEST`)
