@@ -21,6 +21,9 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.0.8 ()
+* Fixed core dump bug in UID handling introduced by the 4.0.6 change.
+
 fetchmail-4.0.7 (Tue Aug  5 22:47:11 EDT 1997)
 * Fixed a minor bug in handling of DNS errors in multidrop mode.
 * Added a `postconnect' analogous to `preconnect'.
