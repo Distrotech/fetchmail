@@ -198,11 +198,7 @@ int socket;
 struct hostrec *queryctl;
 int number;
 {
-    int	ok;
-
-    /* send the deletion request */
-    if ((ok = gen_transact(socket, "DELE %d", number)) != 0)
-	return(ok);
+    return(gen_transact(socket, "DELE %d", number);
 }
 
 const static struct method pop3 =
