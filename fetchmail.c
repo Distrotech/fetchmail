@@ -326,12 +326,12 @@ struct hostrec *queryctl;
 {
     int i, st;
 
-    if (outlevel != O_SILENT)
+    if (outlevel == O_VERBOSE)
     {
 	time_t now;
 
 	time(&now);
-	fprintf(stderr, "fetchmail: querying %s (protocol %s) at %s",
+	fprintf(stderr, "Querying %s (protocol %s) at %s",
 	    queryctl->servername, showproto(queryctl->protocol), ctime(&now));
     }
     switch (queryctl->protocol) {

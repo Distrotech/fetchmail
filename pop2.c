@@ -131,9 +131,12 @@ struct hostrec *queryctl;
 
   /* tell 'em how many messages are waiting */
   if (outlevel > O_SILENT && outlevel < O_VERBOSE)
-    fprintf(stderr,"%d messages in folder %s\n",number,queryctl->remotefolder);
-  else
-    ;
+    if (number == 0)
+      fprintf(stderr,"No mail from %s\n",number,queryctl->servername);
+    else
+      fprintf(stderr,"%d message%s from %s\n",
+	      number, number > 1 ? "s" : "", queryctl->servername);
+
 
   /* fall into a retrieve/acknowledge loop */
   if (number > 0) { 

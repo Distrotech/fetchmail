@@ -115,7 +115,7 @@ struct method *proto;
     }
 
     /* print the greeting */
-    if (outlevel > O_SILENT && outlevel < O_VERBOSE) 
+    if (outlevel == O_VERBOSE) 
 	fprintf(stderr,"%s greeting: %s\n", protocol->name, buf);
 
     /* try to get authorized to fetch mail */
@@ -131,11 +131,17 @@ struct method *proto;
 
     /* show them how many messages we'll be downloading */
     if (outlevel > O_SILENT && outlevel < O_VERBOSE)
-	if (first > 1) 
-	    fprintf(stderr,"%d messages in folder, %d new messages.\n", 
-		    count, count - first + 1);
+	if (count == 0)
+	    fprintf(stderr, "No mail from %s\n", queryctl->servername);
+	else if (first > 1) 
+	    fprintf(stderr,
+		    "%d message%s from %s, %d new messages.\n", 
+		    count, count > 1 ? "s" : "", 
+		    queryctl->servername, count - first + 1);
 	else
-	    fprintf(stderr,"%d %smessages in folder.\n", count, ok ? "" : "new ");
+	    fprintf(stderr,
+		    "%d %smessages from %s.\n",
+		    count, ok ? "" : "new ", queryctl->servername);
 
     if (count > 0) { 
 	for (number = queryctl->flush ? 1 : first;  number<=count; number++) {
