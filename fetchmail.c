@@ -1062,12 +1062,29 @@ static int load_params(int argc, char **argv, int optind)
 			       ctl->server.pollname);
 		exit(PS_SYNTAX);
 	    }
-	    if (ctl->server.port == 25 && ctl->listener == LMTP_MODE)
+	    if (ctl->listener == LMTP_MODE)
 	    {
-		(void) fprintf(stderr,
-			       "%s configuration invalid, LMTP can't use SMTP port",
-			       ctl->server.pollname);
-		exit(PS_SYNTAX);
+		struct idlist	*idp;
+
+		for (idp = ctl->smtphunt; idp; idp = idp->next)
+		{
+		    char	*cp;
+
+		    if ((cp = strrchr(idp->id, '/')))
+		    {
+#ifdef INET6 
+			if (strcmp(++cp, SMTP_PORT) == 0)
+#else
+			if (atoi(++cp) == SMTP_PORT)
+#endif /* INET6 */
+			{
+			    (void) fprintf(stderr,
+					   "%s configuration invalid, LMTP can't use SMTP port",
+					   ctl->server.pollname);
+			    exit(PS_SYNTAX);
+			}
+		    }
+		}
 	    }
 #endif /* !INET6 */
 	}
