@@ -152,7 +152,7 @@ const unsigned char *host;	/* server hostname */
 		    bscount = 0;
 		    for (bp = from - 1; *bp == '\\'; bp--)
 			bscount++;
-		    if (bscount % 2)
+		    if (!(bscount % 2))
 			state = 1;
 		}
 		break;
