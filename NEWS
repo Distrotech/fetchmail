@@ -24,12 +24,14 @@ every user entry in a multi-user poll declaration.
 
 ------------------------------------------------------------------------------
 
-pl 3.9.6 ():
+pl 3.9.6 (Wed May 28 18:28:35 EDT 1997):
 * Fix the libc6 configuration stuff (thanks to Jesse Thilo).
 * Support for Kerberos-v4-authenticated IMAP.
 * Don't choke on RFC822 group names.
 * More improvements in RFC822 name parsing.
 * Interval skip feature, courtesy of Hal DeVore.
+
+There are 257 people on the fetchmail-friends list.
 
 pl 3.9.5 (Sun May 18 01:05:13 EDT 1997):
 * Add an error notification when an incoming message has embedded NULs.
