@@ -1,27 +1,16 @@
-/* Copyright 1996 by Eric S. Raymond
+/*
+ * imap.c -- IMAP2bis protocol methods
+ *
+ * Copyright 1996 by Eric S. Raymond
  * All rights reserved.
  * For license terms, see the file COPYING in this directory.
  */
-
-/***********************************************************************
-  module:       imap.c
-  project:      fetchmail
-  programmer:   Eric S. Raymond
-  description:  IMAP client code
-
- ***********************************************************************/
 
 #include  <config.h>
 #include  <stdio.h>
 #include  <string.h>
 #include  "socket.h"
 #include  "fetchmail.h"
-
-/*********************************************************************
-
- Method declarations for IMAP 
-
- *********************************************************************/
 
 static int count, seen;
 
@@ -201,4 +190,4 @@ struct hostrec *queryctl;
     return(do_protocol(queryctl, &imap));
 }
 
-
+/* imap.c ends here */

@@ -1,15 +1,8 @@
 /*
+ * xmalloc.c -- allocate space or die 
+ *
  * For license terms, see the file COPYING in this directory.
  */
-
-/***********************************************************************
-  module:       xmalloc.c
-  project:      fetchmail
-  programmer:   Carl Harris, ceharris@mal.com
-  description:  malloc wrapper.
-
- ***********************************************************************/
-
 
 #include <config.h>
 #include <stdio.h>
@@ -45,3 +38,5 @@ char *s;
   strcpy(p,s);
   return p;
 }
+
+/* xmalloc.c ends here */

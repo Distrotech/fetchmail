@@ -1,18 +1,8 @@
 /*
+ * damemon.c -- turn a process into a daemon under POSIX, SYSV, BSD.
+ *
  * For license terms, see the file COPYING in this directory.
  */
-
-
-/***********************************************************************
-  module:       daemon
-  project:      fetchmail
-  programmer:   Carl Harris, ceharris@mal.com
-  description:  This module contains all of the code needed to 
-	 	turn a process into a daemon for POSIX, SysV, and
-		BSD systems.
-
- ***********************************************************************/
-
 
 #include <config.h>
 
@@ -41,19 +31,9 @@
 
 #include "fetchmail.h"
 
-/******************************************************************
-  function:	sigchld_handler
-  description:	Process the SIGCHLD (a.k.a SIGCLD) signal by calling
-		a wait() variant to obtain the exit code of the 
-		terminating process.
-  arguments:	none.
-  ret. value:	none (or undefined if REGSIGTYPE is int).
-  globals:	none.
-  calls:	none.
- *****************************************************************/
-
 RETSIGTYPE
 sigchld_handler ()
+/* process SIGCHLD/SIGCLD to obtain the exit code of the terminating process */
 {
   pid_t pid;
 
@@ -75,24 +55,9 @@ sigchld_handler ()
 
 }
 
-
-
-/******************************************************************
-  function:	daemonize
-  description:	become a daemon process; i.e. detach from the 
-		control terminal, don't reacquire a control terminal,
-                become process group leader of our own process group,
-                and set up to catch child process termination signals.
-  arguments:
-    logfile     file to direct stdout and stderr to, if non-NULL.
-
-  ret. value:	none.
-  globals:	termhook, sigchld_handler().
-  calls:	none.
- *****************************************************************/
-
 int
 daemonize (logfile, termhook)
+/* detach from control TTY, become process group leader, catch SIGCHLD */
 const char *logfile;
 void (*termhook)(int);
 {
@@ -210,3 +175,5 @@ nottyDetach:
   signal(SIGPWR, sigchld_handler); 
 #endif
 }
+
+/* daemon.c ends here */

@@ -1,14 +1,11 @@
 /*
+ * socket.c -- socket library functions
+ *
+ * These were designed and coded by Carl Harris <ceharris@mal.com>
+ * and are essentially unchanged from the ancestral popclient.
+ *
  * For license terms, see the file COPYING in this directory.
  */
-
-/***********************************************************************
-  module:       socket.c
-  project:      fetchmail
-  programmer:   Carl Harris, ceharris@mal.com
-  description:  socket library functions
-
- ***********************************************************************/
 
 #include <config.h>
 
@@ -271,3 +268,5 @@ va_dcl {
     return SockWrite(socket, buf, strlen(buf));
 
 }
+
+/* socket.c ends here */

@@ -1,5 +1,7 @@
 %{
 /*
+ * rcfile_y.y -- Run control file parser for fetchmail
+ *
  * For license terms, see the file COPYING in this directory.
  */
 

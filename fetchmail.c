@@ -1,18 +1,10 @@
 /*
+ * fetchmail.c -- main driver module for fetchmail
+ *
  * For license terms, see the file COPYING in this directory.
  */
 
-/***********************************************************************
-  module:       fetchmail.c
-  project:      fetchmail
-  programmer:   Eric S. Raymond <esr@thyrsus.com>
-  description:	main driver module for fetchmail
-
- ***********************************************************************/
-
-
 #include <config.h>
-
 #include <stdio.h>
 
 #if defined(STDC_HEADERS)
@@ -58,19 +50,6 @@ int check_only;		/* if --probe was set */
 char *rcfile;		/* path name of rc file */
 char *idfile;		/* UID list file */
 int versioninfo;	/* emit only version info */
-
-/*********************************************************************
-  function:      main
-  description:   main driver routine 
-  arguments:     
-    argc         argument count as passed by runtime startup code.
-    argv         argument strings as passed by runtime startup code.
-
-  return value:  an exit status code for the shell -- see the 
-                 PS_.* constants defined above.
-  calls:         parsecmdline, setdefaults, openuserfolder, doPOP2.
-  globals:       none.
- *********************************************************************/
 
 static void termhook();
 static char *lockfile;
@@ -442,17 +421,8 @@ void termhook(int sig)
     exit(popstatus);
 }
 
-/*********************************************************************
-  function:      showproto
-  description:   protocol index to name mapping
-  arguments:
-    proto        protocol index
-  return value:  string name of protocol
-  calls:         none.
-  globals:       none.
- *********************************************************************/
-
 static char *showproto(proto)
+/* protocol index to protocol name mapping */
 int proto;
 {
     switch (proto)
@@ -512,19 +482,9 @@ struct hostrec *queryctl;
     }
 }
 
-/*********************************************************************
-  function:      dump_params
-  description:   display program options in English
-  arguments:
-    queryctl      merged options
-
-  return value:  none.
-  calls:         none.
-  globals:       outlimit.
-*********************************************************************/
-
 int dump_params (queryctl)
-struct hostrec *queryctl;
+/* display query parameters in English */
+struct hostrec *queryctl;	/* query parameter block */
 {
     printf("Options for %s retrieving from %s:\n",
 	   hostp->localname, visbuf(hostp->servername));
@@ -604,19 +564,9 @@ struct hostrec *queryctl;
 	}
 }
 
- /*********************************************************************
-  function:      openmailpipe
-  description:   open a one-way pipe to the mail delivery agent.
-  arguments:     
-    queryctl     fully-determined options (i.e. parsed, defaults invoked,
-                 etc).
-
-  return value:  open file descriptor for the pipe or -1.
-  calls:         none.
- *********************************************************************/
-
 int openmailpipe (queryctl)
-struct hostrec *queryctl;
+/* open a one-way pipe to a mail delivery agent */
+struct hostrec *queryctl;	/* query control block */
 {
     int pipefd [2];
     int childpid;
@@ -652,19 +602,8 @@ struct hostrec *queryctl;
     return(pipefd[1]);
 }
 
-/*********************************************************************
-  function:      closemailpipe
-  description:   close pipe to the mail delivery agent.
-  arguments:     
-    queryctl     fully-determined options record
-    fd           pipe descriptor.
-
-  return value:  0 if success, else -1.
-  calls:         none.
-  globals:       none.
- *********************************************************************/
-
 int closemailpipe (fd)
+/* close the pipe to the mail delivery agent */
 int fd;
 {
     int err, status;
@@ -702,8 +641,8 @@ int fd;
 
 void escapes(cp, tp)
 /* process standard C-style escape sequences in a string */
-const char	*cp;
-char		*tp;
+const char	*cp;	/* source string with escapes */
+char		*tp;	/* target buffer for digested string */
 {
     while (*cp)
     {
@@ -789,3 +728,5 @@ const char *buf;
     *tp++ = '\0';
     return(vbuf);
 }
+
+/* fetchmail.c ends here */

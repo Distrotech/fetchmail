@@ -1,14 +1,8 @@
 /*
+ * pop3.c -- POP3 protocol methods
+ *
  * For license terms, see the file COPYING in this directory.
  */
-
-/***********************************************************************
-  module:       pop3.c
-  project:      fetchmail
-  programmer:   Eric S. Raymond <esr@thyrsus.com>
-  description:  POP3 client code.
-
- ***********************************************************************/
 
 #include  <config.h>
 #include  <stdio.h>
@@ -243,4 +237,4 @@ struct hostrec *queryctl;
     return(do_protocol(queryctl, &pop3));
 }
 
-
+/* pop3.c ends here */

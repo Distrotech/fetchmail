@@ -1,17 +1,10 @@
 %{
 
 /*
+ * rcfile_l.l -- lexer for the run control file
+ *
  * For license terms, see the file COPYING in this directory.
  */
-
-/***********************************************************************
-  module:       rcfile_l.l
-  project:      fetchmail
-  programmer:   Carl Harris, ceharris@mal.com
-		Extensively hacked by esr.
-  description:  configuration lexer
-
- ***********************************************************************/
 
 #include <config.h>
 #include "fetchmail.h"

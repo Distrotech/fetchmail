@@ -1,14 +1,8 @@
 /*
+ * options.c -- command-line option processing
+ *
  * For license terms, see the file COPYING in this directory.
  */
-
-/***********************************************************************
-  module:       options.c
-  project:      fetchmail
-  programmer:   Eric S. Raymond, <esr@thyrsus.com>
-  description:	command-line option processing
-
- ***********************************************************************/
 
 #include <config.h>
 #include <stdio.h>
@@ -79,32 +73,20 @@ static struct option longoptions[] = {
   {(char *) 0,  no_argument,       (int *) 0, 0              }
 };
 
-
-/*********************************************************************
-  function:      parsecmdline
-  description:   parse/validate the command line options.
-  arguments:
-    argc         argument count.
-    argv         argument strings.
-    queryctl     pointer to a struct hostrec to receive the parsed 
-                 options.
-
-  return value:  if positive, argv index of last parsed option + 1
-		 (presumes one or more server names follows).
-		 if zero, the command line switches are such that
-		 no server names are required (e.g. --version).
-		 if negative, the command line is has one or more
-	   	 syntax errors.
-  calls:         none.  
-  globals:       writes outlevel, versioninfo, yydebug, logfile, 
-		 poll_interval, quitmode, rcfile
- *********************************************************************/
-
 int parsecmdline (argc,argv,queryctl)
-int argc;
-char **argv;
-struct hostrec *queryctl;
+/* parse and validate the command line options */
+int argc;			/* argument count */
+char **argv;			/* argument strings */
+struct hostrec *queryctl;	/* option record to be initialized */
 {
+    /*
+     * return value: if positive, argv index of last parsed option + 1
+     * (presumes one or more server names follows).  if zero, the
+     * command line switches are such that no server names are
+     * required (e.g. --version).  if negative, the command line is
+     * has one or more syntax errors.
+     */
+
     int c;
     int ocount = 0;     /* count of destinations specified */
     int errflag = 0;   /* TRUE when a syntax error is detected */
@@ -282,3 +264,4 @@ struct hostrec *queryctl;
     return(optind);
 }
 
+/* options.c ends here */

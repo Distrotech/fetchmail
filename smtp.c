@@ -1,17 +1,13 @@
-/* Copyright 1996 Eric S. Raymond
+/*
+ * smtp.c -- code for speaking SMTP to a listener port
+ *
+ * Concept due to Harry Hochheiser.  Implementation by ESR.  Cleanup and
+ * strict RFC821 compliance by Cameron MacPherson.
+ *
+ * Copyright 1996 Eric S. Raymond
  * All rights reserved.
  * For license terms, see the file COPYING in this directory.
  */
-
-/***********************************************************************
-  module:       smtp.c
-  project:      fetchmail
-  programmer:   Harry Hochheiser
-                cleaned up and made rfc821 compliant by Cameron MacPherson
-  description:  Handling of SMTP connections, and processing of mail 
-                 to be forwarded via SMTP connections.
-
- ***********************************************************************/
 
 #include <stdio.h>
 #include <config.h>
@@ -22,17 +18,8 @@
 #include "fetchmail.h"
 #include "smtp.h"
 
-/*********************************************************************
-  function:      SMTP_helo
-  description:   Send a "HELO" message to the SMTP server.
-
-  arguments:     
-    socket       TCP/IP socket for connection to SMTP
-  return value:  Result of SMTP_OK: based on codes in fetchmail.h.
-                 
- *********************************************************************/
-
 int SMTP_helo(int socket,char *host)
+/* send a "HELO" message to the SMTP listener */
 {
   int ok;
 
@@ -43,21 +30,8 @@ int SMTP_helo(int socket,char *host)
   return ok;
 }
 
-/*********************************************************************
-  function:      SMTP_from
-  description:   Send a "MAIL FROM:" message to the SMTP server.
-
-  arguments:     
-    socket       TCP/IP socket for connection to SMTP
-    from         user name/host of originator
-
-    Note: these args are likely to change, as we get fancier about
-    handling the names.
-
-  return value:  Result of SMTP_ok: based on codes in fetchmail.h.
-                 
- *********************************************************************/
 int SMTP_from(int socket, char *from)
+/* send a "MAIL FROM:" message to the SMTP listener */
 {
   int ok;
 
@@ -68,19 +42,8 @@ int SMTP_from(int socket, char *from)
   return ok;
 }
 
-/*********************************************************************
-  function:      SMTP_rcpt
-  description:   Send a "RCPT TO:" message to the SMTP server.
-
-  arguments:     
-    socket       TCP/IP socket for connection to SMTP
-    touser:      user name of recipient
-    tohost:      host name of recipient
-
-  return value:  Result of SMTP_OK: based on codes in fetchmail.h.
-                 
- *********************************************************************/
-int SMTP_rcpt(int socket,char *to)
+int SMTP_rcpt(int socket, char *to)
+/* send a "RCPT TO:" message to the SMTP listener */
 {
   int ok;
 
@@ -91,15 +54,8 @@ int SMTP_rcpt(int socket,char *to)
   return ok;
 }
 
-/*********************************************************************
-  function:      SMTP_data
-  description:   Send a "DATA" message to the SMTP server.
-
-  arguments:     
-    socket       TCP/IP socket for connection to SMTP
-
- *********************************************************************/
 int SMTP_data(int socket)
+/* send a "DATA" message to the SMTP listener */
 {
   int ok;
 
@@ -110,17 +66,8 @@ int SMTP_data(int socket)
   return ok;
 }
 
-/*********************************************************************
-  function:      SMTP_quit
-  description:   Send a "QUIT" message to the SMTP server.
-
-  arguments:     
-    socket       TCP/IP socket for connection to SMTP
-
-  return value:  Result of SMTP_OK: based on codes in fetchmail.h.
-
- *********************************************************************/
 int SMTP_quit(int socket)
+/* send a "QUIT" message to the SMTP listener */
 {
   int ok;
 
@@ -131,17 +78,8 @@ int SMTP_quit(int socket)
   return ok;
 }
 
-/*********************************************************************
-  function:      SMTP_eom
-  description:   Send a message data termination to the SMTP server.
-
-  arguments:     
-    socket       TCP/IP socket for connection to SMTP
-  return value:  Result of SMTP_OK: based on codes in fetchmail.h.
-                 
- *********************************************************************/
-
 int SMTP_eom(int socket)
+/* send a message data terminator to the SMTP listener */
 {
   int ok;
 
@@ -152,30 +90,16 @@ int SMTP_eom(int socket)
   return ok;
 }
 
-/*********************************************************************
-  function:      SMTP_rset
-  description:   Send a "RSET" message to the SMTP server.
-
-  arguments:     
-    socket       TCP/IP socket for connection to SMTP
-
- *********************************************************************/
 void SMTP_rset(int socket)
+/* send a "RSET" message to the SMTP listener */
 {
   SockPrintf(socket,"RSET\r\n");
   if (outlevel == O_VERBOSE)
       fprintf(stderr, "SMTP> RSET\n");
 }
 
-/*********************************************************************
-  function:      SMTP_check
-  description:   Returns the status of the smtp connection
-  arguments:     
-    socket       TCP/IP socket for connection to SMTP
-  return value:  based on codes in fetchmail.h.
-                 Do the dirty work of seeing what the status is..
- *********************************************************************/
 static int SMTP_check(int socket,char *argbuf)
+/* returns status of SMTP connection */
 {
   int  ok;  
   char buf[SMTPBUFSIZE];
@@ -196,14 +120,8 @@ static int SMTP_check(int socket,char *argbuf)
   return (ok);
 }
 
-/*********************************************************************
-  function:      SMTP_ok
-  description:   Returns the statsus of the smtp connection
-  arguments:     
-    socket       TCP/IP socket for connection to SMTP
-  return value:  based on codes in fetchmail.h.
- *********************************************************************/
 int SMTP_ok(int socket,char *argbuf)
+/* accepts SMTP response, returns status of SMTP connection */
 {
   int  ok;  
 
@@ -231,14 +149,10 @@ int SMTP_ok(int socket,char *argbuf)
   return ok;
 }
 
-/*********************************************************************
-  function:      SMTP_Gets
-  description:   Gets  a line from the SMTP connection
-  arguments:     
-    socket       TCP/IP socket for connection to SMTP
-  return value:  number of bytes read.
- *********************************************************************/
 int SMTP_Gets(int socket,char *buf,int sz)
+/* gets a line from the SMTP connection, returns bytes read */
 {
   return read(socket,buf,sz);
 }
+
+/* smtp.c ends here */

@@ -1,15 +1,10 @@
-/* Copyright 1996 by Eric S. Raymond
+/*
+ * driver.c -- generic driver for mail fetch method protocols
+ *
+ * Copyright 1996 by Eric S. Raymond
  * All rights reserved.
  * For license terms, see the file COPYING in this directory.
  */
-
-/***********************************************************************
-  module:       driver.c
-  project:      fetchmail
-  programmer:   Eric S. Raymond
-  description:  Generic driver for mail fetch method protocols
-
- ***********************************************************************/
 
 #include  <config.h>
 #include  <stdio.h>
@@ -49,23 +44,10 @@ static int tagnum;
 
 static char *shroud;
 
-/*********************************************************************
-  function:      
-  description:   hack message headers so replies will work properly
-
-  arguments:
-    after        where to put the hacked header
-    before       header to hack
-    host         name of the pop header
-
-  return value:  none.
-  calls:         none.
- *********************************************************************/
-
 static void reply_hack(buf, host)
-/* hack local mail IDs -- code by Eric S. Raymond 20 Jun 1996 */
-char *buf;
-const char *host;
+/* hack message headers so replies will work properly */
+char *buf;		/* header to be hacked */
+const char *host;	/* server hostname */
 {
     const char *from;
     int state = 0;
@@ -151,24 +133,18 @@ const char *host;
     *buf++ = '\0';
 }
 
-/*********************************************************************
-  function:      nxtaddr
-  description:   Parse addresses in succession out of a specified RFC822
-                 header.  Note 1: RFC822 escaping with \ is *not* handled.
-                 Note 2: it is important that this routine not stop on \r,
-                 since we use \r as a marker for RFC822 continuations below.
-  arguments:     
-    hdr          header line to be parsed, NUL to continue in previous hdr
-
-  return value:  next address, or NUL if there is no next address
-  calls:         none
- *********************************************************************/
-
 static char *nxtaddr(hdr)
-char *hdr;
+/* parse addresses in succession out of a specified RFC822 header */
+char *hdr;	/* header line to be parsed, NUL to continue in previous hdr */
 {
     static char	*hp, *tp, address[POPBUFSIZE+1];
     static	state;
+
+    /*
+     * Note 1: RFC822 escaping with \ is *not* handled.  Note 2: it is
+     * important that this routine not stop on \r, since we use \r as
+     * a marker for RFC822 continuations below.
+     */
 
     if (hdr)
     {
@@ -271,30 +247,13 @@ char *hdr;
     return(NULL);
 }
 
-/*********************************************************************
-  function:      gen_readmsg
-  description:   Read the message content 
-
- as described in RFC 1225.
-  arguments:     
-    socket       ... to which the server is connected.
-    mboxfd       open file descriptor to which the retrieved message will
-                 be written.
-    len          length of text 
-    delimited    does the protocol use a message delimiter?
-    queryctl     host control block
-
-  return value:  zero if success else PS_* return code.
-  calls:         SockGets.
-  globals:       reads outlevel. 
- *********************************************************************/
-
 static int gen_readmsg (socket, mboxfd, len, delimited, queryctl)
-int socket;
-int mboxfd;
-long len;
-int delimited;
-struct hostrec *queryctl;
+/* read message content and ship to SMTP or MDA */
+int socket;	/* to which the server is connected */
+int mboxfd;	/* descriptor to which retrieved message will be written */
+long len;	/* length of message */
+int delimited;	/* does the protocol use a message delimiter? */
+struct hostrec *queryctl;	/* query control record */
 { 
     char buf [MSGBUFSIZE+1]; 
     char fromBuf[MSGBUFSIZE+1];
@@ -501,24 +460,11 @@ struct hostrec *queryctl;
 }
 
 #ifdef KERBEROS_V4
-/*********************************************************************
-  function:      kerberos_auth
-  description:   Authenticate to the server host using Kerberos V4
-
-  arguments:     
-    socket       socket to server
-    servername   server name
-
-  return value:  exit code from the set of PS_.* constants defined in 
-                 fetchmail.h
-  calls:
-  globals:       reads outlevel.
- *********************************************************************/
-
 int
 kerberos_auth (socket, servername) 
-     int socket;
-     char *servername;
+/* authenticate to the server host using Kerberos V4 */
+int socket;		/* socket to server host */
+char *servername;	/* server name */
 {
     char * host_primary;
     KTEXT ticket;
@@ -562,25 +508,10 @@ kerberos_auth (socket, servername)
 }
 #endif /* KERBEROS_V4 */
 
-/*********************************************************************
-  function:      do_protocol
-  description:   retrieve messages from the specified mail server
-                 using a given set of methods
-
-  arguments:     
-    queryctl     fully-specified options (i.e. parsed, defaults invoked,
-                 etc).
-    proto        protocol method pointer
-
-  return value:  exit code from the set of PS_.* constants defined in 
-                 fetchmail.h
-  calls:
-  globals:       reads outlevel.
- *********************************************************************/
-
 int do_protocol(queryctl, proto)
-struct hostrec *queryctl;
-struct method *proto;
+/* retrieve messages from server using given protocol method table */
+struct hostrec *queryctl;	/* parsed options with merged-in defaults */
+struct method *proto;		/* protocol method table */
 {
     int ok, len;
     int mboxfd = -1;
@@ -814,26 +745,15 @@ closeUp:
     return(ok);
 }
 
-/*********************************************************************
-  function:      gen_send
-  description:   Assemble command in print style and send to the server
-
-  arguments:     
-    socket       socket to which the server is connected.
-    fmt          printf-style format
-
-  return value:  none.
-  calls:         SockPuts.
-  globals:       reads outlevel.
- *********************************************************************/
-
 #if defined(HAVE_STDARG_H)
 void gen_send(int socket, char *fmt, ... )
+/* assemble command in printf(3) style and send to the server */
 {
 #else
 void gen_send(socket, fmt, va_alist)
-int socket;
-const char *fmt;
+/* assemble command in printf(3) style and send to the server */
+int socket;		/* socket to which server is connected */
+const char *fmt;	/* printf-style format */
 va_dcl {
 #endif
 
@@ -865,27 +785,15 @@ va_dcl {
     }
 }
 
-/*********************************************************************
-  function:      gen_transact
-  description:   Assemble command in print style and send to the server.
-                 then accept a protocol-dependent response.
-
-  arguments:     
-    socket       socket to which the server is connected.
-    fmt          printf-style format
-
-  return value:  none.
-  calls:         SockPuts.
-  globals:       reads outlevel.
- *********************************************************************/
-
 #if defined(HAVE_STDARG_H)
 int gen_transact(int socket, char *fmt, ... )
+/* assemble command in printf(3) style, send to server, accept a response */
 {
 #else
 int gen_transact(socket, fmt, va_alist)
-int socket;
-const char *fmt;
+/* assemble command in printf(3) style, send to server, accept a response */
+int socket;		/* socket to which server is connected */
+const char *fmt;	/* printf-style format */
 va_dcl {
 #endif
 
@@ -922,24 +830,11 @@ va_dcl {
   return(ok);
 }
 
-/*********************************************************************
-  function:      strcrlf
-  description:   replace LFs with CR-LF
-
-  arguments:     
-    dst          new string with CR-LFs
-    src          original string with LFs
-    count        length of src
-
-  return value:  length of dst
-  calls:         none.
-  globals:       none.
- *********************************************************************/
-
 int strcrlf(dst, src, count)
-char *dst;
-char *src;
-int count;
+/* replace LFs with CR-LF; return length of string with replacements */
+char *dst;	/* new string with CR-LFs */
+char *src;	/* original string with LFs */
+int count;	/* length of src */
 {
   int len = count;
 
@@ -955,24 +850,15 @@ int count;
   *dst = '\0';
   return len;
 }
-/*********************************************************************
-  function:      alarm_handler
-  description:   In real life process can get stuck waiting for 
-                 something. This deadlock is avoided here by this 
-                 sending  SIGALRM
 
-  arguments:     
-    signal       hopefully SIGALRM
-
-  return value:  none.
-  calls:         none
-  globals:       sets alarmed to 1
- *********************************************************************/
 void 
 alarm_handler (int signal)
+/* handle server-timeout signal */
 {
     alarmed = 1;
     fprintf(stderr,
 	    "fetchmail: timeout after %d seconds waiting for %s.\n",
 	    mytimeout, srvname);
 }
+
+/* driver.c ends here */

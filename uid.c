@@ -1,14 +1,8 @@
 /*
+ * uid.c -- UIDL handling for POP3 servers without LAST
+ *
  * For license terms, see the file COPYING in this directory.
  */
-
-/***********************************************************************
-  module:       uid.c
-  project:      fetchmail
-  programmer:   Eric S. Raymond
-  description:	UID list handling
-
- ***********************************************************************/
 
 #include <config.h>
 
@@ -222,3 +216,5 @@ char *idfile;
 	    fclose(tmpfp);
 	}
 }
+
+/* uid.c ends here */

@@ -1,15 +1,10 @@
-/* Copyright 1996 by Eric S. Raymond
+/*
+ * pop2.c -- POP@ protocol methods
+ *
+ * Copyright 1996 by Eric S. Raymond
  * All rights reserved.
  * For license terms, see the file COPYING in this directory.
  */
-
-/***********************************************************************
-  module:       pop2.c
-  project:      fetchmail
-  programmer:   Eric S. Raymond
-  description:  POP2 method code.
-
- ***********************************************************************/
 
 #include  <config.h>
 #include  <stdio.h>
@@ -143,7 +138,10 @@ const static struct method pop2 =
 };
 
 int doPOP2 (queryctl)
+/* retrieve messages using POP2 */
 struct hostrec *queryctl;
 {
     return(do_protocol(queryctl, &pop2));
 }
+
+/* pop2.c ends here */
