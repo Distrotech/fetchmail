@@ -138,7 +138,7 @@ rm -rf \$RPM_BUILD_ROOT
 
 %files
 %defattr (644, root, root, 755)
-%doc README NEWS NOTES FAQ COPYING FEATURES sample.rcfile contrib
+%doc README NEWS NOTES FAQ COPYING FEATURES contrib
 %doc fetchmail-features.html fetchmail-FAQ.html design-notes.html
 %attr(644, root, man) %{_mandir}/man1/*.1*
 %attr(755, root, root) /usr/bin/fetchmail
