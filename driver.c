@@ -1704,6 +1704,9 @@ const struct method *proto;	/* protocol method table */
 			 */
 			if (protocol->fetch_body) 
 			{
+			    if (outlevel == O_VERBOSE)
+				fputc('\n', stderr);
+
 			    if ((ok = (protocol->trail)(sock, ctl, num)))
 				goto cleanUp;
 			    set_timeout(ctl->server.timeout);
@@ -1734,6 +1737,9 @@ const struct method *proto;	/* protocol method table */
 			    /* tell server we got it OK and resynchronize */
 			    if (protocol->trail)
 			    {
+				if (outlevel == O_VERBOSE)
+				    fputc('\n', stderr);
+
 				ok = (protocol->trail)(sock, ctl, num);
 				if (ok != 0)
 				    goto cleanUp;
@@ -1741,13 +1747,11 @@ const struct method *proto;	/* protocol method table */
 			    }
 			}
 
-			/* end-of-message processing starts here */
-			if (outlevel == O_VERBOSE)
-			    fputc('\n', stderr);
-
 			/* check to see if the numbers matched? */
 			if (msgsizes && msglen != msgsizes[num-1])
 			    error(0, 0, "size of message %d (%d) was not what was expected (%d)", num, msglen, msgsizes[num-1]);
+
+			/* end-of-message processing starts here */
 
 			if (ctl->mda)
 			{
