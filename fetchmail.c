@@ -158,7 +158,7 @@ int main(int argc, char **argv)
     }
 
 #define IDFILE_NAME	".fetchids"
-    run.idfile = (char *) xmalloc(strlen(fmhome)+sizeof(IDFILE_NAME)+1);
+    run.idfile = (char *) xmalloc(strlen(fmhome)+sizeof(IDFILE_NAME)+2);
     strcpy(run.idfile, fmhome);
     strcat(run.idfile, "/");
     strcat(run.idfile, IDFILE_NAME);
@@ -288,7 +288,7 @@ int main(int argc, char **argv)
 
 #define	NETRC_FILE	".netrc"
     /* parse the ~/.netrc file (if present) for future password lookups. */
-    xalloca(netrc_file, char *, strlen(home) + sizeof(NETRC_FILE) + 1);
+    xalloca(netrc_file, char *, strlen(home) + sizeof(NETRC_FILE) + 2);
     strcpy (netrc_file, home);
     strcat (netrc_file, "/");
     strcat (netrc_file, NETRC_FILE);

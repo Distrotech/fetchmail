@@ -95,7 +95,7 @@ void envquery(int argc, char **argv)
      * for its files. We don't want to do that if fetchmail has its
      * own home ($FETCHMAILHOME), however.
      */
-    rcfile = (char *)xmalloc(strlen(fmhome)+sizeof(RCFILE_NAME)+(fmhome==home)+1);
+    rcfile = (char *)xmalloc(strlen(fmhome)+sizeof(RCFILE_NAME)+(fmhome==home)+2);
     /* avoid //.fetchmailrc */
     if (strcmp(fmhome, "/") != 0)
 	strcpy(rcfile, fmhome);
