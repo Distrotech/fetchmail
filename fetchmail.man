@@ -776,13 +776,13 @@ compile in the support, \fIfetchmail\fR will try to perform an RPA pass-phrase
 authentication instead of sending over the password en clair if it
 detects "@compuserve.com" in the hostname.
 .PP
-Microsoft's NTLM authentication (used by Microsoft Exchange) is
-supported. If you compile in the support, \fIfetchmail\fR will try to
-perform an NTLM authentication (instead of sending over the
+If you are using IMAP, Microsoft's NTLM authentication (used by Microsoft
+Exchange) is supported. If you compile in the support, \fIfetchmail\fR
+will try to perform an NTLM authentication (instead of sending over the
 password en clair) whenever the server returns AUTH=NTLM in its
-capability response.  Note: if you specify a user option value
-that looks like `user@domain', the part to the left of the @ will
-be passed as the username and the part to the right as the NTLM domain.
+capability response. Specify a user option value that looks like
+`user@domain': the part to the left of the @ will be passed as the
+username and the part to the right as the NTLM domain.
 .PP
 If you are using IPsec, the -T (--netsec) option can be used to pass
 an IP security request to be used when outgoing IP connections are
@@ -1242,7 +1242,7 @@ T}
 port    	-P	T{
 Specify TCP/IP service port
 T}
-auth[enticate]	-A	T{
+auth[enticate]	\&	T{
 Set authentication type (default `password')
 T}
 timeout  	-t	T{
@@ -1671,13 +1671,15 @@ Legal protocol identifiers for use with the `protocol' keyword are:
     kpop (or KPOP)
 
 .PP
-Legal authentication types are `password', `kerberos', and `gssapi'.
+Legal authentication types are `any', `password', `kerberos', 'kereberos_v5' 
+and `gssapi', `cram-md5', `otp', `ntlm', `ssh`.
 The `password' type specifies authentication by normal transmission of a
 password (the password may be plaintext or subject to
 protocol-specific encryption as in APOP); `kerberos' tells
 \fIfetchmail\fR to try to get a Kerberos ticket at the start of each
 query instead, and send an arbitrary string as the password; and
-`gssapi' tells fetchmail to use GSSAPI authentication.
+`gssapi' tells fetchmail to use GSSAPI authentication.  See the description
+of the `auth' keyword for more.
 .PP
 Specifying `kpop' sets POP3 protocol over port 1109 with Kerberos V4
 authentication.  These defaults may be overridden by later options.

@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/07/25 07:18:36 $
+<td width="30%" align=right>$Date: 2001/07/25 09:06:23 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -508,7 +508,7 @@ for AUTH=KERBEROS_V4 in the CAPABILITY response.
 <p>If you are fetching mail from a CompuServe POP3 account, you can use
 their RPA authentication (which works much like APOP).  See <a
 href="#S3">S3</a> for details.  If you are fetching mail from
-Microsoft Exchange, you will be able to use NTLM.
+Microsoft Exchange using IMAP, you will be able to use NTLM.
 
 <p>Your POP3 server may have the RFC1938 OTP capability to use one-time
 passwords (if it doesn't, you can get OTP patches for the 2.2 version
@@ -1376,10 +1376,11 @@ RFC-compliant server.  IMAP is alleged to work OK, though.
 
 <p>Older versions of Exchange are semi-usable.
 
-<p>Fetchmail supports the proprietary NTLM mode used with M$ Exchange
-servers. To enable this, configure fetchmail with the --enable-NTLM
-option and recompile it.  Note: if you specify a user option value
-that looks like `user@domain', the part to the left of the @ will
+
+<p>Fetchmail using IMAP supports the proprietary NTLM mode used with
+M$ Exchange servers. To enable this, configure fetchmail with the
+--enable-NTLM option and recompile it.  Specify a user option value
+that looks like `user@domain': the part to the left of the @ will
 be passed as the username and the part to the right as the NTLM domain.
 
 <p>M$ Exchange violates the POP3 RFCs.  Its LIST command does not reveal
@@ -1464,8 +1465,6 @@ our friends in Redmond.
 <p>You've got several options:
 
 <ul>
-<li>
-Try giving fetchmail a username of "/NTDomain/NTUsername/MailboxName".
 <li>
 Get your administrator to configure the server so that
 usernames and mailbox names are the same.
@@ -2880,7 +2879,7 @@ date from the last Received header.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/07/25 07:18:36 $
+<td width="30%" align=right>$Date: 2001/07/25 09:06:23 $
 </table>
 
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@thyrsus.com&gt;</A></ADDRESS>
