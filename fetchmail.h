@@ -259,6 +259,7 @@ extern flag use_invisible;	/* if invisible was set */
 extern flag quitmode;		/* if --quit was set */
 extern flag check_only;		/* if --check was set */
 extern char *cmd_logfile;	/* if --logfile was set */
+extern char *cmd_idfile;	/* if --idfile was set */
 extern int cmd_daemon;		/* if --daemon was set */
 
 /* these get computed */
