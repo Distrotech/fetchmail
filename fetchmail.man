@@ -131,8 +131,6 @@ any successful attempt.
 .I proto 
 may be one of the following:
 .RS
-.IP IMAP
-IMAP2bis, a compatible subset of IMAP4.
 .IP POP2
 Post Office Protocol 2
 .IP POP3
@@ -143,9 +141,18 @@ Use POP3 with MD5 authentication.
 Use POP3 with RPOP authentication.
 .IP KPOP
 Use POP3 with Kerberos authentication on port 1109.
+.IP IMAP
+IMAP2bis, IMAP4, or IMAP4rev1 (\fIfetchmail\fR autodetects their capabilities).
 .IP ETRN
 Use the ESMTP ETRN option.
 .RE
+All these alternatives work in basically the same way (communicating
+with server daemons to fetch mail already delivered to a mailbox on
+the server) except ETRN.  The ETRN mode allows you to ask an RFC-1985
+complient ESMTP server (such as BSD sendmail at release 8.8.0 or
+higher) to immediately open an sender-SMTP connection to your your
+client machine and begin forwarding any items addressed to your client
+machine in the server's queue of undelivered mail.
 .TP
 .B \-P, --port
 The  option permits you to specify a TCP/IP port to connect on. 
