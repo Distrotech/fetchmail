@@ -39,8 +39,10 @@ char tag[TAGLEN];
 static int tagnum;
 #define GENSYM	(sprintf(tag, "a%04d", ++tagnum), tag)
 
+#ifdef HAVE_PROTOTYPES
 static int gen_readmsg (int socket, int mboxfd, long len, int delimited,
        char *host, int topipe, int rewrite);
+#endif /* HAVE_PROTOTYPES */
 
 /*********************************************************************
   function:      do_protocol
@@ -301,6 +303,195 @@ va_dcl {
 }
 
 /*********************************************************************
+  function:      
+  description:   hack message headers so replies will work properly
+
+  arguments:
+    after        where to put the hacked header
+    before       header to hack
+    host         name of the pop header
+
+  return value:  none.
+  calls:         none.
+ *********************************************************************/
+
+static void reply_hack(buf, host)
+/* hack local mail IDs -- code by Eric S. Raymond 20 Jun 1996 */
+char *buf;
+const char *host;
+{
+    const char *from;
+    int state = 0;
+    char mycopy[POPBUFSIZE];
+
+    if (strncmp("From: ", buf, 6)
+	&& strncmp("To: ", buf, 4)
+	&& strncmp("Reply-", buf, 6)
+	&& strncmp("Cc: ", buf, 4)
+	&& strncmp("Bcc: ", buf, 5)) {
+	return;
+    }
+
+    strcpy(mycopy, buf);
+    for (from = mycopy; *from; from++)
+    {
+	switch (state)
+	{
+	case 0:   /* before header colon */
+	    if (*from == ':')
+		state = 1;
+	    break;
+
+	case 1:   /* we've seen the colon, we're looking for addresses */
+	    if (*from == '"')
+		state = 2;
+	    else if (*from == '(')
+		state = 3;    
+	    else if (*from == '<' || isalnum(*from))
+		state = 4;
+	    break;
+
+	case 2:   /* we're in a quoted human name, copy and ignore */
+	    if (*from == '"')
+		state = 1;
+	    break;
+
+	case 3:   /* we're in a parenthesized human name, copy and ignore */
+	    if (*from == ')')
+		state = 1;
+	    break;
+
+	case 4:   /* the real work gets done here */
+	    /*
+	     * We're in something that might be an address part,
+	     * either a bare unquoted/unparenthesized text or text
+	     * enclosed in <> as per RFC822.
+	     */
+	    /* if the address part contains an @, don't mess with it */
+	    if (*from == '@')
+		state = 5;
+
+	    /* If the address token is not properly terminated, ignore it. */
+	    else if (*from == ' ' || *from == '\t')
+		state = 1;
+
+	    /*
+	     * On proper termination with no @, insert hostname.
+	     * Case '>' catches <>-enclosed mail IDs.  Case ',' catches
+	     * comma-separated bare IDs.  Cases \r and \n catch the case
+	     * of a single ID alone on the line.
+	     */
+	    else if (strchr(">,\r\n", *from))
+	    {
+		strcpy(buf, "@");
+		strcat(buf, host);
+		buf += strlen(buf);
+		state = 1;
+	    }
+
+	    /* everything else, including alphanumerics, just passes through */
+	    break;
+
+	case 5:   /* we're in a remote mail ID, no need to append hostname */
+	    if (*from == '>' || *from == ',' || isspace(*from))
+		state = 1;
+	    break;
+	}
+
+	/* all characters from the old buffer get copied to the new one */
+	*buf++ = *from;
+    }
+    *buf++ = '\0';
+}
+
+/*********************************************************************
+  function:      nxtaddr
+  description:   Parse addresses in succession out of a specified RFC822
+                 header.  Note: RFC822 escaping with \ is *not* handled.
+
+  arguments:     
+    hdr          header line to be parsed, NUL to continue in previous hdr
+
+  return value:  next address, or NUL if there is no next address
+  calls:         none
+ *********************************************************************/
+
+static char *nxtaddr(hdr)
+char *hdr;
+{
+    static char	*hp, *tp, address[POPBUFSIZE];
+    static	state;
+
+    if (hdr)
+    {
+	hp = hdr;
+	state = 0;
+    }
+
+    for (; *hp; hp++)
+    {
+	switch (state)
+	{
+	case 0:   /* before header colon */
+	    if (*hp == ':')
+		state = 1;
+	    break;
+
+	case 1:   /* we've seen the colon, we're looking for addresses */
+	    if (*hp == '"')
+		state = 2;
+	    else if (*hp == '(')
+		state = 3;    
+	    else if (*hp == '<')
+	    {
+		state = 4;
+		tp = address;
+	    }
+	    else if (isalnum(*hp))
+	    {
+		state = 5;
+		tp = address;
+	    }
+	    break;
+
+	case 2:   /* we're in a quoted human name, copy and ignore */
+	    if (*hp == '"')
+		state = 1;
+	    break;
+
+	case 3:   /* we're in a parenthesized human name, copy and ignore */
+	    if (*hp == ')')
+		state = 1;
+	    break;
+
+	case 4:   /* possible <>-enclosed address */
+	    if (*hp == '>')
+	    {
+		*tp++ = '\0';
+		state = 1;
+		return(address);
+	    }
+	    else
+		*tp++ = *hp;
+	    break;
+
+	case 5:	/* address not <>-enclosed, terminate on any whitespace */
+	    if (isspace(*hp))
+	    {
+		*tp++ = '\0';
+		state = 1;
+		return(address);
+	    }
+	    else
+		*tp++ = *hp;
+	    break;
+	}
+    }
+
+    return(NULL);
+}
+
+/*********************************************************************
   function:      gen_readmsg
   description:   Read the message content 
 
@@ -405,9 +596,31 @@ int rewrite;
 	}
 	else if (headers)
 	{
+	    char	*cp;
+
 	    switch (output)
 	    {
 	    case TO_SMTP:
+		if (SMTP_from(mboxfd, nxtaddr(fromhdr)) != SM_OK)
+		    return(PS_SMTP);
+		if ((cp = nxtaddr(tohdr)) != (char *)NULL)
+		    do {
+			if (SMTP_rcpt(mboxfd, cp) == SM_UNRECOVERABLE)
+			    return(PS_SMTP);
+		    } while
+			(cp = nxtaddr(NULL));
+		if ((cp = nxtaddr(cchdr)) != (char *)NULL)
+		    do {
+			if (SMTP_rcpt(mboxfd, cp) == SM_UNRECOVERABLE)
+			    return(PS_SMTP);
+		    } while
+			(cp = nxtaddr(NULL));
+		if ((cp = nxtaddr(bcchdr)) != (char *)NULL)
+		    do {
+			if (SMTP_rcpt(mboxfd, cp) == SM_UNRECOVERABLE)
+			    return(PS_SMTP);
+		    } while
+			(cp = nxtaddr(NULL));
 		SMTP_data(mboxfd);
 		break;
 
@@ -418,7 +631,12 @@ int rewrite;
 		else
 		{
 		    now = time(NULL);
-		    sprintf(fromBuf,"From POPmail %s",ctime(&now));
+		    if (fromhdr && (cp = nxtaddr(fromhdr)))
+			sprintf(fromBuf,
+				"From %s %s", cp, ctime(&now));
+		    else
+			sprintf(fromBuf,
+				"From POPmail %s",ctime(&now));
 		}
 
 		if (write(mboxfd,fromBuf,strlen(fromBuf)) < 0) {
@@ -465,11 +683,7 @@ int rewrite;
     switch (output)
     {
     case TO_SMTP:
-	if (write(mboxfd,".\r\n",3) < 0) {
-	    perror("gen_readmsg: write");
-	    return(PS_IOERR);
-	}
-	if (SMTP_ok(mboxfd, NULL) != SM_OK)
+	if (SMTP_eom(mboxfd) != SM_OK)
 	    return(PS_SMTP);
 	break;
 

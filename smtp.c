@@ -48,8 +48,7 @@ int SMTP_helo(int socket,char *host)
 
   arguments:     
     socket       TCP/IP socket for connection to SMTP
-    fromuser:    user name of originator
-    fromhost:    host name of originator.  
+    from         user name/host of originator
 
     Note: these args are likely to change, as we get fancier about
     handling the names.
@@ -57,11 +56,11 @@ int SMTP_helo(int socket,char *host)
   return value:  Result of SMTP_ok: based on codes in popclient.h.
                  
  *********************************************************************/
-int SMTP_from(int socket,char *fromuser,char *fromhost)
+int SMTP_from(int socket,char *from)
 {
   char buf[SMTPBUFSIZE];  /* it's as good as size as any... */
   int ok;
-  SockPrintf(socket,"MAIL FROM %s@%s\n",fromuser,fromhost);
+  SockPrintf(socket, "MAIL FROM %s\n", from);
   ok = SMTP_ok(socket,buf);
 
   return ok;
@@ -80,12 +79,12 @@ int SMTP_from(int socket,char *fromuser,char *fromhost)
   return value:  Result of SMTP_OK: based on codes in popclient.h.
                  
  *********************************************************************/
-int SMTP_rcpt(int socket,char *touser, char *tohost)
+int SMTP_rcpt(int socket,char *to)
 {
   char buf[SMTPBUFSIZE];  /* it's as good as size as any... */
   int ok;
 
-  SockPrintf(socket,"RCPT TO: %s@%s\n",touser,tohost);
+  SockPrintf(socket, "RCPT TO: %s\n", to);
   ok = SMTP_ok(socket,buf);
   
   return ok;
@@ -105,6 +104,24 @@ int SMTP_data(int socket)
   SockPrintf(socket,"DATA\n");
 }
 
+/*********************************************************************
+  function:      SMTP_eom
+  description:   Send a message data termination to the SMTP server.
+
+  arguments:     
+    socket       TCP/IP socket for connection to SMTP
+  return value:  Result of SMTP_OK: based on codes in popclient.h.
+                 
+ *********************************************************************/
+
+int SMTP_eom(int socket)
+{
+  int ok;
+
+  SockPuts(socket,".");
+  ok = SMTP_ok(socket,NULL);
+  return ok;
+}
 
 /*********************************************************************
   function:      SMTP_rset
