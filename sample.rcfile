@@ -67,7 +67,7 @@
 # 
 # This is what the developer's .fetchmailrc looks like:
 
-set batchlimit 0	# I forward to sendmail
+set batchlimit = 0	# I forward to sendmail
 
 defaults password not_blowing_my_cover;
 
