@@ -21,11 +21,12 @@ fetchmail-4.3.1 (Mon Oct 13 17:12:40 EDT 1997)
 * Added skip prefix clause on `envelope' option
 * Don't use TCP/IP for DNS queries, it interacts badly with diald.
 * Allow usernames up to 40 chars long a la RFC1939.
+* Fixed IMAP-K4 authorization sequence.
 * Added --invisible option.  Note: you can now either make fetchmail generate
   a Received header (the default) *or* spoof your listener into thinking
   fetchmail connected from the mailserver machine, *but not both*.
 
-There are 270 people on fetchmail-friends and 37 on fetchmail-announce.
+There are 268 people on fetchmail-friends and 39 on fetchmail-announce.
 
 ------------------------------------------------------------------------------
 fetchmail-4.3.0 (Mon Oct  6 16:44:38 EDT 1997)
