@@ -9,6 +9,7 @@
   bugmail.
 * Kerberos build patch by HH.
 * Don't cough and die from failure to resolve a skipped host.
+* Do aka suffix match even if DNS checking is enabled (Johannes Stille's bug).
 
 fetchmail-5.8.1 (Tue Apr 10 09:32:04 EDT 2001), 20511 lines:
 

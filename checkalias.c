@@ -123,8 +123,6 @@ int is_host_alias(const char *name, struct query *ctl)
 	return(TRUE);
     else if (str_in_list(&lead_server->akalist, name, TRUE))
 	return(TRUE);
-    else if (!ctl->server.dns)
-	return(FALSE);
 
     /*
      * Now check for a suffix match on the akalist.  The theory here is
@@ -149,6 +147,8 @@ int is_host_alias(const char *name, struct query *ctl)
 	    return(TRUE);
     }
 
+    if (!ctl->server.dns)
+	return(FALSE);
 #ifndef HAVE_RES_SEARCH
     return(FALSE);
 #else
