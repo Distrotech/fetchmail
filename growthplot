@@ -43,7 +43,8 @@ EOF
 			    echo "set label '$legend' at $lastday-10, $endy+15"
 			else
 			    arrowhead=$((lasttotal-5))
-			    echo "set label '$legend' at $lastday-475, $endy-15"
+			    lablen=475
+			    echo "set label '$legend' at $lastday-$lablen, $endy-15"
 			fi
 			echo set arrow \
 				from $lastday, $endy \
