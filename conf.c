@@ -127,7 +127,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 
     indent_level = 0;
 
-    fputs("from Tkinter import *\t# for FALSE\n\n", stdout);
+    fputs("from Tkinter import TRUE FALSE\n\n", stdout);
 
     fputs("# Start of initializer\n", stdout);
     fputs("configuration = ", stdout);
@@ -159,7 +159,9 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	{
 	    indent(']');
 	    indent('}');
-	    indent('\0'); putc(',', stdout);
+	    indent('\0'); 
+	    putc(',', stdout);
+	    putc('\n', stdout);
 	}
 
 	indent(0);
