@@ -79,7 +79,7 @@ class TestSite:
         try:
             ofp = open(TestSite.temp, "w")
             ofp.write('defaults mda "(echo; echo \'From torturetest\' `date`; cat) >>TEST.LOG"\n')
-            ofp.write(site.entryprint())
+            ofp.write(self.entryprint())
             ofp.close()
             (self.status, self.output) = commands.getstatusoutput("fetchmail -d0 -v -f - <%s"%TestSite.temp)
         finally:
@@ -118,7 +118,8 @@ class TortureGUI:
 	mydict = {}
 	for key in ('on_torturetest_destroy',
                     'on_quitbutton_clicked',
-                    'on_savebutton_clicked',
+                    'on_newbutton_clicked',
+                    'on_testbutton_clicked',
                     'on_combo_entry1_activate'):
 	    mydict[key] = getattr(self, key)
 	self.wtree.signal_autoconnect(mydict)
@@ -160,14 +161,8 @@ class TortureGUI:
         gtk.mainquit()
     def on_quitbutton_clicked(self, obj):
         gtk.mainquit()
-    def on_savebutton_clicked(self, obj):
-        print "Save"
-    def on_deletebutton_activate(self, obj):
-        print "Delete"
-    def on_new1_activate(self, obj):
+    def on_newbutton_clicked(self, obj):
         print "New"
-    def on_open1_activate(self, obj):
-        print "Open"
 
     def on_combo_entry1_activate(self, obj):
         key = self.combo.entry.get_text()
@@ -176,7 +171,7 @@ class TortureGUI:
                 self.site = site
                 self.display(self.site)
                 break
-    def on_test_button_activate(self, obj):
+    def on_testbutton_clicked(self, obj):
         self.site.fetch()
         print site.output
 
