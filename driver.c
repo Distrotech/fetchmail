@@ -70,8 +70,15 @@ flag peek_capable;	/* can we peek for better error recovery? */
 int mailserver_socket_temp = -1;	/* socket to free if connect timeout */ 
 
 static int timeoutcount;		/* count consecutive timeouts */
+static int idletimeout;			/* timeout occured in idle stage? */
 
 static jmp_buf	restart;
+
+int isidletimeout(void)
+/* last timeout occured in idle stage? */
+{
+    return idletimeout;
+}
 
 void set_timeout(int timeleft)
 /* reset the nonresponse-timeout */
@@ -81,6 +88,8 @@ void set_timeout(int timeleft)
 
     if (timeleft == 0)
 	timeoutcount = 0;
+
+    idletimeout = 1;
 
     ntimeout.it_interval.tv_sec = ntimeout.it_interval.tv_usec = 0;
     ntimeout.it_value.tv_sec  = timeleft;
@@ -92,8 +101,11 @@ void set_timeout(int timeleft)
 static RETSIGTYPE timeout_handler (int signal)
 /* handle SIGALRM signal indicating a server timeout */
 {
-    timeoutcount++;
-    longjmp(restart, THROW_TIMEOUT);
+    if(stage != STAGE_IDLE) {
+	timeoutcount++;
+	longjmp(restart, THROW_TIMEOUT);
+    } else
+	idletimeout = 1;
 }
 
 static RETSIGTYPE sigpipe_handler (int signal)
