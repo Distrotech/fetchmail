@@ -3,7 +3,14 @@
 * Generate bounce messages when delivery is refused.  See RFC1891, RFC1892.
 * Use the libmd functions for md5 under Free BSD?  (Low priority.)
 * More log levels?
-* Allow an explicit "append" option to specify what reqwrite appends?
+* Allow an explicit "append" option to specify what reqwrite appends?  (For
+  when user's pop3 host isn't the same as his SMTP host.)
+* Add logic to check whether *all* entries have `no dns' in them and allow
+  fetchmail to proceed in that case even if dns is down.
+* Periodically check for listener-up and croak gracefully if it's not.
+* Rewrite maps "From: John Smith (Systems) <jsmith@domain>" to 
+  "From: John Smith@my.pop.server (Systems) <jsmith@domain>".  Is this
+  just GIGO, or should we try to cope
 
 				Other TO-DO items:
 
@@ -18,8 +25,15 @@ fetchmail-4.3.3 ()
 * Fixed expansion of MDA %-escapes (thanks Wez Furlong <wjf103@york.ac.uk>).
 * Deal with the possibility that IMAP NOOP issued on rescan might not get an
   EXISTS response (thanks to Jonathan T. Agnew <jtagnew@amherst.edu>).
+* contrib/runfetchmail copyright now meets Debian Free Software Guidelines.
+* RPA code is changed to track a change I'm told CompuServe made on the weekend
+  of November 15.
+* Set %p 3000 in the lexer source to fix the Solaris 2.4 build.
+* Changed the summary status message emitted by a foreground run.  The old
+  user@host produced odd results under some virtual-domain setups, so it's
+  "user at host" now.
 
-There are 272 people on fetchmail-friends and 73 on fetchmail-announce.
+There are 281 people on fetchmail-friends and 83 on fetchmail-announce.
 
 fetchmail-4.3.2 (Wed Oct 22 20:30:14 EDT 1997)
 * More slow-UIDL patches from Wolfgang Wander.

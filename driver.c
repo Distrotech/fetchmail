@@ -1595,27 +1595,27 @@ const struct method *proto;	/* protocol method table */
 
 		/* show user how many messages we downloaded */
 		if (idp->id)
-		    (void) sprintf(buf, "%s@%s:%s",
+		    (void) sprintf(buf, "%s at %s (folder %s)",
 				   ctl->remotename, ctl->server.truename, idp->id);
 		else
-		    (void) sprintf(buf, "%s@%s", ctl->remotename, ctl->server.truename);
+		    (void) sprintf(buf, "%s at %s", ctl->remotename, ctl->server.truename);
 		if (outlevel > O_SILENT)
 		    if (count == -1)		/* only used for ETRN */
 			error(0, 0, "Polling %s", ctl->server.truename);
 		    else if (count != 0)
 		    {
 			if (new != -1 && (count - new) > 0)
-			    error(0, 0, "%d message%s (%d seen) at %s.",
+			    error(0, 0, "%d message%s (%d seen) for %s.",
 				  count, count > 1 ? "s" : "", count-new, buf);
 			else
-			    error(0, 0, "%d message%s at %s.", 
+			    error(0, 0, "%d message%s for %s.", 
 				  count, count > 1 ? "s" : "", buf);
 		    }
 		    else
 		    {
 			/* these are pointless in normal daemon mode */
 			if (pass == 1 && (poll_interval == 0 || outlevel == O_VERBOSE))
-			    error(0, 0, "No mail at %s", buf); 
+			    error(0, 0, "No mail for %s", buf); 
 		    }
 
 		/* very important, this is where we leave the do loop */ 

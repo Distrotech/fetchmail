@@ -104,44 +104,32 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
     case P_POP3:
 	 ok = gen_transact(sock, "USER %s", ctl->remotename);
 
-	 if (ok != 0)
 #ifdef RPA_ENABLE
-            /* if CompuServe rejected our userid, try RPA */
-            if (strstr(greeting, "csi.com"))
-            {
-                /* AUTH command should return a list of available mechanisms */
-                if (gen_transact(sock, "AUTH") == 0)
-                {
-                    char buffer[10];
-                    flag has_rpa = FALSE;
-                    flag authenticated = FALSE;
+	 /*
+	  * CompuServe has changed its RPA behavior.  Used to be they didn't
+	  * accept USER, but I'm told this changed in mid-November.
+	  */
+	 if (strstr(greeting, "csi.com"))
+	 {
+	     /* AUTH command should return a list of available mechanisms */
+	     if (gen_transact(sock, "AUTH") == 0)
+	     {
+		 char buffer[10];
+		 flag has_rpa = FALSE;
 
-                    while ((ok = gen_recv(sock, buffer, sizeof(buffer))) == 0)
-                    {
-
-                        if (buffer[0] == '.')
-                            break;
-                        if (strncasecmp(buffer, "rpa", 3) == 0)
-                            has_rpa = TRUE;
-                    }
-                    if(has_rpa) {
-                        if (POP3_auth_rpa(ctl->remotename,
-                                          ctl->password, sock) == PS_SUCCESS)
-                        {
-                            authenticated = TRUE;
-                            break;
-                        }
-                    }
-                    if (authenticated) {
-                        /* we could return(PS_SUCCESS) here */
-                        ok = PS_SUCCESS;
-                        break;
-                    }
-                }
-            }
-	    else	/* not a CompuServe host, fail in the ordinary way */
+		 while ((ok = gen_recv(sock, buffer, sizeof(buffer))) == 0)
+		 {
+		     if (buffer[0] == '.')
+			 break;
+		     if (strncasecmp(buffer, "rpa", 3) == 0)
+			 has_rpa = TRUE;
+		 }
+		 if (has_rpa && !POP3_auth_rpa(ctl->remotename, 
+					       ctl->password, sock))
+		     return(PS_SUCCESS);
+	     }
+	 }
 #endif /* RPA_ENABLE */
-		break;
 
 #if defined(HAVE_LIBOPIE) && defined(OPIE_ENABLE)
 	/* see RFC1938: A One-Time Password System */

@@ -130,7 +130,7 @@ mailserver.  This option does not work with ETRN.
 Delete retrieved messages from the remote mailserver.  This
 option forces retrieved mail to be deleted.  It may be useful if
 you have specified a default of \fBkeep\fR in your
-\fI.fetchmailrc\fR.  This option is forced on with ETRN.
+\&\fI.fetchmailrc\fR.  This option is forced on with ETRN.
 .TP
 .B \-F, --flush
 POP3/IMAP only.  Delete old (previously retrieved) messages from the mailserver
@@ -956,7 +956,8 @@ which DNS tells it are aliases of the mailserver.  See the discussion
 of `dns', `localdomains', and `aka' for details on how matching
 addresses are handled.  If \fIfetchmail\fR cannot match any mailserver
 usernames or localdomain addresses, the default recipient is the
-calling user.
+calling user (as set by the USER or LOGNAME variable in the
+environment; you could use this to redirect to an alias like postmaster).
 .PP
 The `dns' option (normally on) controls the way addresses from
 multidrop mailboxes are checked.  On, it enables logic to check each
