@@ -681,7 +681,7 @@ struct method *proto;
 		    if (outlevel == O_VERBOSE)
 			fputc('\n', stderr);
 		    else
-			fputc(',', stderr);
+			fputc(' ', stderr);
 		}
 
 		/* open the delivery pipe now if we're using an MDA */
