@@ -154,7 +154,7 @@ nottyDetach:
   }
 
   if (logfile)
-    fd = open(logfile, O_CREAT|O_WRONLY|O_APPEND, 0777);	/* stdout */
+    fd = open(logfile, O_CREAT|O_WRONLY|O_APPEND, 0666);	/* stdout */
   else
     if (dup(fd) < 0) {				/* stdout */
       error(0, errno, "dup");

@@ -325,8 +325,12 @@ int main (int argc, char **argv)
     	openlog(program_name, LOG_PID, LOG_MAIL);
 #endif
 
-    if (poll_interval && !nodetach)
-	daemonize(logfile, termhook);
+    if (poll_interval)
+    {
+	if (!nodetach)
+	    daemonize(logfile, termhook);
+	error( 0, 0, "starting fetchmail %s.%s daemon ", RELEASE_ID, PATCHLEVEL);
+    }
 
     /* beyond here we don't want more than one fetchmail running per user */
     umask(0077);
