@@ -55,7 +55,6 @@ struct optrec {
   int fetchall;
   int flush;
   int output;
-  char *poprcfile;
   char localname [USERNAMELEN];
   char remotename [USERNAMELEN];
   char password [PASSWORDLEN];
@@ -92,7 +91,7 @@ extern int poll_interval;	/* poll interval in seconds */
 extern char *logfile;		/* log file for daemon mode */
 extern int quitmode;		/* if --quit was set */
 
-extern char *prc_pathname;	/* path name of rc file */
+extern char *poprcfile;		/* path name of rc file */
 
 #ifdef HAVE_PROTOTYPES
 
@@ -108,7 +107,6 @@ int closeuserfolder (int fd);
 int openmailpipe (struct optrec *options);
 int closemailpipe (int fd);
 char *MD5Digest (char *);
-char *prc_getpathname (struct optrec *cmd_opts, struct optrec *def_opts);
 void reply_hack(char *buf, const char *host);
 void append_server_names(int *pargc, char **argv);
 int daemonize(const char *logfile, void (*)(void));
@@ -117,7 +115,6 @@ int daemonize(const char *logfile, void (*)(void));
 
 char *getnextserver();
 char *MD5Digest ();
-char *prc_getpathname();
 void reply_hack ();
 void append_server_names ();
 int daemonize ();

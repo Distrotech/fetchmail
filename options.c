@@ -184,8 +184,8 @@ struct optrec *options;
         break;
       case 'f':
       case LA_POPRC:
-        options->poprcfile = (char *) xmalloc(strlen(optarg)+1);
-        strcpy(options->poprcfile,optarg);
+        poprcfile = (char *) xmalloc(strlen(optarg)+1);
+        strcpy(poprcfile,optarg);
         break;
       case 'u':
       case LA_USERNAME:
@@ -309,12 +309,12 @@ struct optrec *options;
 
   (void) sprintf(options->mda, DEF_MDA, options->localname);
 
-  options->poprcfile = 
+   poprcfile = 
       (char *) xmalloc(strlen(pw->pw_dir)+strlen(POPRC_NAME)+2);
 
-  strcpy(options->poprcfile, pw->pw_dir);
-  strcat(options->poprcfile, "/");
-  strcat(options->poprcfile, POPRC_NAME);
+  strcpy(poprcfile, pw->pw_dir);
+  strcat(poprcfile, "/");
+  strcat(poprcfile, POPRC_NAME);
 
   outlevel = O_NORMAL;
 

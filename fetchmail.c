@@ -64,6 +64,8 @@ int poll_interval;	/* polling interval for daemon mode */
 char *logfile;		/* logfile to ship progress reports to */ 
 int quitmode;		/* if -quit was set */
 
+char *poprcfile;	/* path name of rc file */
+
 /* args for the MDA, parsed out in the usual fashion by parseMDAargs() */
 char *mda_argv [32];
 
@@ -105,7 +107,7 @@ char **argv;
   if (cmd_opts.versioninfo)
     showversioninfo();
 
-  if (prc_parse_file(prc_getpathname(&cmd_opts,&def_opts)) != 0)
+  if (prc_parse_file(poprcfile) != 0)
     exit(PS_SYNTAX);
 
   if (optind >= argc)
@@ -129,14 +131,14 @@ char **argv;
 
   /* perhaps we just want to check options? */
   if (cmd_opts.versioninfo) {
-    printf("Taking options from command line and %s\n", prc_pathname);
+    printf("Taking options from command line and %s\n", poprcfile);
     for (hostp = hostlist; hostp; hostp = hostp->next) {
       printf("Options for host %s:\n", hostp->servername);
       dump_options(&hostp->options);
     }
     if (hostlist == NULL)
 	(void) printf("No mailservers set up -- perhaps %s is missing?\n",
-		      prc_pathname);
+		      poprcfile);
     exit(0);
   }
   else if (hostlist == NULL) {
