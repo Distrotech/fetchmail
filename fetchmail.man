@@ -651,7 +651,8 @@ delimiters in strings.
 .PP
 Each server entry consists of one of the keywords `poll' or `skip',
 followed by a server name, followed by server options, followed by any
-number of user descriptions.
+number of user descriptions.  Note: the most common cause of syntax
+errors is mixing up user and server options.
 .PP
 For backward compatibility, the word `server' is a synonym for `poll'.
 .PP
@@ -818,6 +819,8 @@ syslog  	\&	T{
 Do error logging through syslog(3).
 T}
 .TE
+.PP
+Remember that all user options must \fIfollow\fR all server options.
 .SS Keywords Not Corresponding To Option Switches
 .PP
 The `folder' and `smtphost' options (unlike their command-line
