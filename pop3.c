@@ -27,6 +27,12 @@
 extern char *strstr();	/* needed on sysV68 R3V7.1. */
 #endif /* strstr */
 
+static int phase;
+#define PHASE_GETAUTH	0
+#define PHASE_GETRANGE	1
+#define PHASE_GETSIZES	2
+#define PHASE_FETCH	3
+#define PHASE_LOGOUT	4
 static int last;
 
 #if HAVE_LIBOPIE
@@ -63,6 +69,8 @@ int pop3_ok (int sock, char *argbuf)
 	}
 	else if (strcmp(buf,"-ERR") == 0)
 	{
+	    if (phase > PHASE_GETAUTH) 
+		ok = PS_PROTOCOL;
 	    /*
 	     * We're checking for "lock busy", "unable to lock", 
 	     * "already locked" etc. here.  This indicates that we
@@ -73,7 +81,7 @@ int pop3_ok (int sock, char *argbuf)
 	     * versions the Berkeley popper;	QPOP (version 2.2)  and
 	     * QUALCOMM Pop server derived from UCB (version 2.1.4-R3)
 	     */
-	    if (strstr(bufp,"lock")||strstr(bufp,"Lock")||strstr(bufp,"LOCK"))
+	    else if (strstr(bufp,"lock")||strstr(bufp,"Lock")||strstr(bufp,"LOCK"))
 		ok = PS_LOCKBUSY;
 	    else
 		ok = PS_AUTHFAIL;
@@ -99,6 +107,8 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 #if HAVE_LIBOPIE
     char *challenge;
 #endif /* HAVE_LIBOPIE */
+
+    phase = PHASE_GETAUTH;
 
     switch (ctl->server.protocol) {
     case P_POP3:
@@ -339,6 +349,8 @@ static int pop3_getrange(int sock,
     int ok;
     char buf [POPBUFSIZE+1];
 
+    phase = PHASE_GETRANGE;
+
     /* Ensure that the new list is properly empty */
     ctl->newsaved = (struct idlist *)NULL;
 
@@ -424,6 +436,8 @@ static int pop3_getsizes(int sock, int count, int *sizes)
 {
     int	ok;
 
+    /* phase = PHASE_GETSIZES */
+
     if ((ok = gen_transact(sock, "LIST")) != 0)
 	return(ok);
     else
@@ -461,6 +475,8 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
     int ok;
     char buf [POPBUFSIZE+1];
 
+    /* phase = PHASE_FETCH */
+
     gen_send(sock, "RETR %d", number);
     if ((ok = pop3_ok(sock, buf)) != 0)
 	return(ok);
@@ -480,8 +496,11 @@ static int pop3_delete(int sock, struct query *ctl, int number)
 static int pop3_logout(int sock, struct query *ctl)
 /* send logout command */
 {
-    int ok = gen_transact(sock, "QUIT");
+    int ok;
 
+    /* phase = PHASE_LOGOUT */
+
+    ok = gen_transact(sock, "QUIT");
     if (!ok)
 	expunge_uids(ctl);
 

@@ -25,6 +25,7 @@ fetchmail-4.3.4 (Sat Nov 22 01:51:41 EST 1997)
 * Allow `--quit' to be given with other options to shut down a running daemon
   before anything else gets done (suggested by Greg Stark).
 * Added Gordon Matzigkeit's warning about -F to the man page.
+* Improved POP3 protocol-synchronization error messages.
 
 There are 277 people on fetchmail-friends and 92 on fetchmail-announce.
 
