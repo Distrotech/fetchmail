@@ -337,10 +337,8 @@ void yyerror (const char *s)
     prc_errflag++;
 }
 
-int prc_filecheck(pathname, securecheck)
+int prc_filecheck(const char *pathname, const flag securecheck)
 /* check that a configuration file is secure */
-const char *pathname;		/* pathname for the configuration file */
-const flag securecheck;
 {
 #ifndef __EMX__
     struct stat statbuf;
