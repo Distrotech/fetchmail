@@ -69,6 +69,7 @@ flag check_only;	    /* if --probe was set */
 flag versioninfo;	    /* emit only version info */
 char *user;		    /* the name of the invoking user */
 char *home;		    /* invoking user's home directory */
+char *fmhome;		    /* fetchmail's home directory */
 char *program_name;	    /* the name to prefix error messages with */
 flag configdump;	    /* dump control blocks for configurator */
 const char *fetchmailhost;  /* either `localhost' or the host's FQDN */
@@ -157,8 +158,8 @@ int main(int argc, char **argv)
     }
 
 #define IDFILE_NAME	".fetchids"
-    run.idfile = (char *) xmalloc(strlen(home)+sizeof(IDFILE_NAME)+1);
-    strcpy(run.idfile, home);
+    run.idfile = (char *) xmalloc(strlen(fmhome)+sizeof(IDFILE_NAME)+1);
+    strcpy(run.idfile, fmhome);
     strcat(run.idfile, "/");
     strcat(run.idfile, IDFILE_NAME);
   
@@ -261,9 +262,11 @@ int main(int argc, char **argv)
 		sizeof(PID_DIR) + sizeof(FETCHMAIL_PIDFILE));
 	sprintf(tmpbuf, "%s/%s", PID_DIR, FETCHMAIL_PIDFILE);
     } else {
-	xalloca(tmpbuf, char *, strlen(home) + sizeof(FETCHMAIL_PIDFILE) + 2);
-	strcpy(tmpbuf, home);
-	strcat(tmpbuf, "/.");
+	xalloca(tmpbuf, char *, strlen(fmhome) + sizeof(FETCHMAIL_PIDFILE) + 2);
+	strcpy(tmpbuf, fmhome);
+	strcat(tmpbuf, "/");
+        if (fmhome == home)
+ 	   strcat(tmpbuf, ".");
 	strcat(tmpbuf, FETCHMAIL_PIDFILE);
     }
 #undef FETCHMAIL_PIDFILE
@@ -285,7 +288,7 @@ int main(int argc, char **argv)
 
 #define	NETRC_FILE	".netrc"
     /* parse the ~/.netrc file (if present) for future password lookups. */
-    xalloca(netrc_file, char *, strlen (home) + sizeof(NETRC_FILE) + 1);
+    xalloca(netrc_file, char *, strlen(home) + sizeof(NETRC_FILE) + 1);
     strcpy (netrc_file, home);
     strcat (netrc_file, "/");
     strcat (netrc_file, NETRC_FILE);

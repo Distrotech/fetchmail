@@ -1911,12 +1911,12 @@ default location of file associating hosts with last message IDs seen
 (used only with newer RFC1725-compliant POP3 servers supporting the
 UIDL command).
 .TP 5
+~/.fetchmail.pid
+lock file to help prevent concurrent runs (non-root mode).
+.TP 5
 ~/.netrc 
 your FTP run control file, which (if present) will be searched for
 passwords as a last resort before prompting for one interactively.
-.TP 5
-~/.fetchmail.pid
-lock file to help prevent concurrent runs (non-root mode).
 .TP 5
 /var/run/fetchmail.pid
 lock file to help prevent concurrent runs (root mode, Linux systems).
@@ -1925,12 +1925,19 @@ lock file to help prevent concurrent runs (root mode, Linux systems).
 lock file to help prevent concurrent runs (root mode, systems without /var/run).
 
 .SH ENVIRONMENT
-If either the LOGNAME or USER and the variable is correctly set
+If either the LOGNAME or USER variable is correctly set
 (e.g. the corresponding UID matches the session user ID) then that
 name is used as the default local name.  Otherwise \fBgetpwuid\fR(3)
 must be able to retrieve a password entry for the session ID (this
 elaborate logic is designed to handle the case of multiple names per
 userid gracefully).
+
+If the environment variable FETCHMAILHOME is set to a valid and
+existing directory name, the .fetchmailrc and .fetchids and
+\&.fetchmail.pid files are put there instead of in the invoking user's
+home directory (and lose the leading dots on theirt names).  The
+.netrc file is looked for in the the invoking user's home directory
+regardless of FETCHMAILHOME's setting.
 
 .SH SIGNALS
 If a

@@ -75,23 +75,36 @@ void envquery(int argc, char **argv)
 	user = xstrdup(pwp->pw_name);
     }
 
+    /* compute user's home directory */
     if (!(home = getenv("HOME")))
 	home = pwp->pw_dir;
+
+    /* compute fetchmail's home directory */
+    if (!(fmhome = getenv("FETCHMAILHOME")))
+	fmhome = home;
 
     if ((program_name = strrchr(argv[0], '/')) != NULL)
 	++program_name;
     else
 	program_name = argv[0];
 
-#define RCFILE_NAME	".fetchmailrc"
-    rcfile = (char *) xmalloc(strlen(home)+sizeof(RCFILE_NAME)+1);
+#define RCFILE_NAME	"fetchmailrc"
+    /*
+     * The (fmhome==home) leaves an extra character for a . at the
+     * beginning of the rc file's name, iff fetchmail is using $HOME
+     * for its files. We don't want to do that if fetchmail has its
+     * own home ($FETCHMAILHOME), however.
+     */
+    rcfile = (char *)xmalloc(strlen(fmhome)+sizeof(RCFILE_NAME)+(fmhome==home)+1);
     /* avoid //.fetchmailrc */
-    if (strcmp(home, "/") != 0) {
-    	strcpy(rcfile, home);
+    if (strcmp(fmhome, "/") != 0) {
+    	strcat(rcfile, fmhome);
     } else {
     	*rcfile = '\0';
     }
     strcat(rcfile, "/");
+    if (fmhome==home)
+	strcat(rcfile, ".");
     strcat(rcfile, RCFILE_NAME);
 }
 
