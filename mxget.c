@@ -7,7 +7,7 @@
  */
 
 #include "config.h"
-#ifdef HAVE_GETHOSTBYNAME
+#ifdef HAVE_RES_SEARCH
 #include <netdb.h>
 #include <sys/types.h>
 #include <netinet/in.h>
@@ -18,6 +18,24 @@
 /*
  * This ought to be in the bind library.  It's adapted from sendmail.
  */
+
+/*
+ * These are defined in RFC833. Some bind interface headers don't declare them.
+ * Ghod help us if they're ever actually incompatible with what's in 
+ * the arpa/nameser.h header.
+ */
+#ifndef PACKETSZ
+#define PACKETSZ	512		/* maximum packet size */
+#endif
+#ifndef HFIXEDSZ
+#define	HFIXEDSZ	12		/* #/bytes of fixed data in header */
+#endif
+#ifndef INT32SZ
+#define	INT32SZ		4		/* for systems without 32-bit ints */
+#endif
+#ifndef INT16SZ
+#define	INT16SZ		2		/* for systems without 16-bit ints */
+#endif
 
 /* minimum possible size of MX record in packet */
 #define MIN_MX_SIZE	8	/* corresp to "a.com 0" w/ terminating space */
@@ -80,7 +98,7 @@ const char *name;
     pmx[ind].pref = -1;
     return(pmx);
 }
-#endif /* HAVE_GETHOSTBYNAME */
+#endif /* HAVE_RES_SEARCH */
 
 #ifdef TESTMAIN
 main(int argc, char *argv[])

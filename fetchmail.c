@@ -302,9 +302,9 @@ char **argv;
      * reflect the status of that transaction.
      */
     do {
-#ifdef HAVE_GETHOSTBYNAME
+#ifdef HAVE_RES_SEARCH
 	sethostent(TRUE);	/* use TCP/IP for mailserver queries */
-#endif /* HAVE_GETHOSTBYNAME */
+#endif /* HAVE_RES_SEARCH */
 
 	for (ctl = querylist; ctl; ctl = ctl->next)
 	{
@@ -316,9 +316,9 @@ char **argv;
 	    }
 	}
 
-#ifdef HAVE_GETHOSTBYNAME
+#ifdef HAVE_RES_SEARCH
 	endhostent();		/* release TCP/IP connection to nameserver */
-#endif /* HAVE_GETHOSTBYNAME */
+#endif /* HAVE_RES_SEARCH */
 
 	/*
 	 * Close all SMTP delivery sockets.  For optimum performance
@@ -490,7 +490,9 @@ int	optind;
 		else
 		    ctl->canonical_name = xstrdup((char *)namerec->h_name);
 	    }
-#else
+#endif /* HAVE_GETHOSTBYNAME */
+
+#if !defined(HAVE_GETHOSTBYNAME) || !defined(HAVE_RES_SEARCH)
 	    /* can't handle multidrop mailboxes unless we can do DNS lookups */
 	    if (ctl->localnames && ctl->localnames->next)
 	    {
@@ -498,7 +500,7 @@ int	optind;
 			stderr);
 		exit(PS_SYNTAX);
 	    }
-#endif /* HAVE_GETHOSTBYNAME */
+#endif /* !HAVE_GETHOSTBYNAME || !HAVE_RES_SEARCH */
 
 	    /*
 	     * Assign SMTP leaders.  We want to allow all query blocks

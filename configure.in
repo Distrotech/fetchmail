@@ -61,7 +61,7 @@ dnl All AC_CHECK_FUNCs must precede the following AC_SUBSTs
 AC_SUBST(EXTRASRC)
 AC_SUBST(EXTRAOBJ)
 
-AC_CHECK_FUNCS(tcsetattr stty setsid seteuid gethostbyname)
+AC_CHECK_FUNCS(tcsetattr stty setsid seteuid gethostbyname res_search)
 
 dnl AC_FUNC_SETVBUF_REVERSED
 

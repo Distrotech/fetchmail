@@ -35,11 +35,6 @@ build it, you may find you need flex at version 2.5.3 or greater.  The
 stock lex distributed with Linux does not work -- it yields a parser
 which core-dumps on syntax errors.
 
-If mxget.c fails to compile, your DNS-query support isn't compatible
-with BSD's and Linux's.  Manually undefine HAVE_GETHOSTBYNAME in
-config.h and rebuild.  You'll lose the multidrop-mailbox feature and
-Kerberos option, but nothing else.
-
 3. INSTALL
 
 Lastly, become root and run
