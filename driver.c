@@ -1534,6 +1534,7 @@ const struct method *proto;	/* protocol method table */
 			    {
 				if ((ok=(protocol->fetch_body)(sock,ctl,num,&len)))
 				    goto cleanUp;
+				error_build(" (%d body bytes) ", len);
 				set_timeout(ctl->server.timeout);
 			    }
 			}
