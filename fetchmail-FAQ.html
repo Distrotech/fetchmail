@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/11/23 16:16:32 $
+<td width="30%" align=right>$Date: 1998/11/29 02:03:48 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -2011,11 +2011,12 @@ the equivalent command-line options):<P>
     mda "cat >MBOX" keep fetchall
 </pre>
 
-This will capture exactly what fetchmail gets from the server, except
-for (a) the extra Received header line fetchmail prepends, (b) header address
-changes due to <code>rewrite</code>, and (c) any changes due to the 
-<code>forcecr</code> and <code>stripcr</code> options.  MBOX will in fact
-contain what programs downstream of fetchmail see.<P>
+This will capture what fetchmail gets from the server, except for (a)
+the extra Received header line fetchmail prepends, (b) header address
+changes due to <code>rewrite</code>, and (c) any end-of-line changes
+due to the <code>forcecr</code> and <code>stripcr</code> options.
+MBOX will in fact contain what programs downstream of fetchmail
+see.<P>
 
 The most common causes of mangling are bugs and misconfigurations in
 those downstream programs.  If MBOX looks unmangled, you will know
@@ -2051,10 +2052,11 @@ you think might be useful about the server, like the server host's
 operating system.<P>
 
 If your manual fetchmail simulation shows an unmangled message,
-congratulations.  You've found an actual fetchmail bug.  Complain
-to us and we'll fix it.  Please include the session transcript of
-your manual fetchmail simulation along with the other things described
-in the FAQ entry on <a href="#G3">reporting bugs</a>.
+congratulations.  You've found an actual fetchmail bug, which is a
+pretty rare thing these days.  Complain to us and we'll fix it.
+Please include the session transcript of your manual fetchmail
+simulation along with the other things described in the FAQ entry on
+<a href="#G3">reporting bugs</a>.
 
 <hr>
 <h2><a name="O1">O1. The --logfile option doesn't work if the logfile doesn't exist.</a></h2>
@@ -2216,7 +2218,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/11/23 16:16:32 $
+<td width="30%" align=right>$Date: 1998/11/29 02:03:48 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
