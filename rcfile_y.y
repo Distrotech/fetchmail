@@ -236,6 +236,10 @@ const char *pathname;		/* pathname for the configuration file */
 {
     struct stat statbuf;
 
+    /* special case, useful for debugging purposes */
+    if (strcmp("/dev/null", pathname) == 0)
+	return(0);
+
     /* the run control file must have the same uid as the REAL uid of this 
        process, it must have permissions no greater than 600, and it must not 
        be a symbolic link.  We check these conditions here. */
