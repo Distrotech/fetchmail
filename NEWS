@@ -4,6 +4,7 @@ fetchmail-4.6.1 ():
 * Fixed a minor memory leak in the IP-address-comparison code.
 * Mark Staveley's patch to suppress progress dots from non-detached daemon
   fetchmails.
+* Removed -pipe optin, it confuses too many non-GCC compilers.
 
 fetchmail-4.6.0 (Fri Sep 18 13:17:17 EDT 1998):
 * Added Bill Adams's mailqueue.pl to the contrib directory.
