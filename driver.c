@@ -660,12 +660,16 @@ struct method *proto;
     /* show user how many messages we downloaded */
     if (outlevel > O_SILENT && outlevel < O_VERBOSE)
 	if (count == 0)
-	    fprintf(stderr, "No mail from %s@%s\n", 
-		    queryctl->remotename, queryctl->servername);
+	    fprintf(stderr, "No mail for %s from %s@%s\n", 
+		    queryctl->remotename,
+		    queryctl->localname,
+		    queryctl->servername);
 	else
 	    fprintf(stderr,
-		    "%d message%s from %s.\n",
+		    "%d message%s from %s for %s@%s.\n",
 		    count, count > 1 ? "s" : "", 
+		    queryctl->remotename,
+		    queryctl->localname,
 		    queryctl->servername);
 
     if ((count > 0) && (!check_only))
