@@ -98,7 +98,7 @@ srcs = $(srcdir)/socket.c $(srcdir)/getpass.c $(srcdir)/pop2.c 		\
 all: fetchmail
 
 # Some makes apparently use .PHONY as the default goal if it is before `all'.
-.PHONY: all check
+.PHONY: all
 
 fetchmail: $(objs)
 	$(CC) $(LDFLAGS) $(objs) $(LOADLIBS) -o fetchmail
@@ -114,15 +114,13 @@ rfc822: rfc822.c
 SHELL = /bin/sh
 MAKE = make
 
-FORCE:
-
 tagsrcs = $(srcs) rcfile_l.c rcfile_y.c
 TAGS: $(tagsrcs)
 	$(ETAGS) $(tagsrcs)
 tags: $(tagsrcs)
 	$(CTAGS) $(tagsrcs)
 
-.PHONY: install installdirs
+.PHONY: install installdirs uninstall
 install: installdirs $(bindir)/$(instname) $(mandir)/$(instname).$(manext)
 
 installdirs:
@@ -134,6 +132,9 @@ $(bindir)/$(instname): fetchmail
 $(mandir)/$(instname).$(manext): fetchmail.man
 	$(INSTALL_DATA) $(srcdir)/fetchmail.man $@
 
+uninstall:
+	rm -f $(bindir)/$(instname) $(mandir)/$(instname).$(manext)
+
 .PHONY: clean realclean distclean mostlyclean
 clean: 
 	-rm -f fetchmail *.o core fetchmail.dvi \
@@ -144,9 +145,8 @@ clean:
 distclean: clean 
 	-rm -f Makefile config.h TAGS tags
 	-rm -f config.cache config.status config.log stamp-config
-	-rm -f fetchmail.log fetchmail.toc fetchmail.*aux
 
-realclean: distclean # fetchmail.info*
+realclean: distclean
 	-rm -f FAQ FEATURES NOTES MANIFEST 
 	-rm -f config.cache config.log configure Makefile
 	-rm -f fetchmail-*.tar.gz fetchmail-*.rpm 
@@ -234,7 +234,7 @@ dist: Makefile.in
 fetchmail-$(VERS).tar.gz: $(all)
 	tar --name-prefix='fetchmail-$(VERS)/' -czf fetchmail-$(VERS).tar.gz `cat MANIFEST`
 
-# You need to be root to make this work
+# Make RPMs.  You need to be root to make this work
 RPMROOT=/usr/src/redhat
 RPM = rpm
 RPMFLAGS = -ba
