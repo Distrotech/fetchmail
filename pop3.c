@@ -15,6 +15,7 @@
 #include  <stdlib.h>
 #endif
  
+#include  "socket.h"
 #include  "fetchmail.h"
 
 #define PROTOCOL_ERROR	{fputs("fetchmail: protocol error\n", stderr); return(PS_ERROR);}
@@ -30,9 +31,9 @@ char *argbuf;
   char buf [POPBUFSIZE+1];
   char *bufp;
 
-  if (fgets(buf, sizeof(buf), sockfp) != (char *)NULL) {
+  if (SockGets(buf, sizeof(buf), sockfp) >= 0) {
     if (outlevel == O_VERBOSE)
-      fprintf(stderr,"%s",buf);
+      fprintf(stderr,"%s\n",buf);
 
     bufp = buf;
     if (*bufp == '+' || *bufp == '-')
@@ -170,7 +171,7 @@ int *countp, *newp;
 		int	num;
 
 		*newp = 0;
- 		while (fgets(buf, sizeof(buf), sockfp) != (char *)NULL)
+ 		while (SockGets(buf, sizeof(buf), sockfp) >= 0)
 		{
  		    if (outlevel == O_VERBOSE)
  			fprintf(stderr,"%s\n",buf);
@@ -182,7 +183,6 @@ int *countp, *newp;
 			if (!uid_in_list(&ctl->oldsaved, id))
 			    (*newp)++;
 		    }
-		    fseek(sockfp, 0L, SEEK_CUR);
  		}
  	    }
  	}
@@ -205,7 +205,7 @@ int	*sizes;
     {
 	char buf [POPBUFSIZE+1];
 
-	while (fgets(buf, sizeof(buf), sockfp) != (char *)NULL)
+	while (SockGets(buf, sizeof(buf), sockfp) >= 0)
 	{
 	    int num, size;
 
@@ -218,7 +218,6 @@ int	*sizes;
 	    else
 		sizes[num - 1] = -1;
 	}
-	fseek(sockfp, 0L, SEEK_CUR);
 
 	return(0);
     }

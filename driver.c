@@ -36,6 +36,7 @@
 #include <netinet/in.h>		/* must be included before "socket.h".*/
 #include <netdb.h>
 #endif /* KERBEROS_V4 */
+#include  "socket.h"
 #include  "fetchmail.h"
 #include  "smtp.h"
 
@@ -472,7 +473,7 @@ struct query *ctl;
     /* if no socket to this host is already set up, try to open one */
     if (ctl->smtp_sockfp == (FILE *)NULL)
     {
-	if ((ctl->smtp_sockfp = sockopen(ctl->smtphost, SMTP_PORT)) == (FILE *)NULL)
+	if ((ctl->smtp_sockfp = Socket(ctl->smtphost, SMTP_PORT)) == (FILE *)NULL)
 	    return((FILE *)NULL);
 	else if (SMTP_ok(ctl->smtp_sockfp, NULL) != SM_OK
 		 || SMTP_helo(ctl->smtp_sockfp, ctl->servername) != SM_OK)
@@ -483,27 +484,6 @@ struct query *ctl;
     }
 
     return(ctl->smtp_sockfp);
-}
-
-static int strip_gets(buf, len, sockfp)
-/* get a line of input, stripping out \r and \n */
-char *buf;
-int len;
-FILE *sockfp;
-{
-    if (fgets(buf, len, sockfp) == (char *)NULL)
-	return(-1);
-    else
-    {
-	char	*sp, *tp;
-
-	for (tp = sp = buf; *sp; sp++)
-	    if (*sp != '\r' && *sp != '\n')
-		*tp++ = *sp;
-	*tp++ = '\0';
-
-	return(strlen(buf));
-    }
 }
 
 static int gen_readmsg (sockfp, len, delimited, ctl)
@@ -527,19 +507,12 @@ struct query *ctl;	/* query control record */
     oldlen = 0;
     while (delimited || len > 0)
     {
-	char	*sp, *tp;
-
-	if (fgets(buf,sizeof(buf),sockfp) == (char *)NULL)
+	if ((n = SockGets(buf,sizeof(buf),sockfp)) < 0)
 	    return(PS_SOCKET);
 	vtalarm(ctl->timeout);
 
-	for (tp = sp = buf; *sp; sp++)
-	    if (*sp != '\r' && *sp != '\n')
-		*tp++ = *sp;
-	*tp++ = '\0';
-
 	/* write the message size dots */
-	if ((n = strlen(buf)) > 0)
+	if (n > 0)
 	{
 	    sizeticker += n;
 	    while (sizeticker >= SIZETICKER)
@@ -568,9 +541,7 @@ struct query *ctl;	/* query control record */
 	    if (!lines)
 	    {
 		oldlen = strlen(bufp);
-		headers = malloc(oldlen + 1);
-		if (headers == NULL)
-		    return(PS_SYNTAX);
+		headers = xmalloc(oldlen + 1);
 		(void) strcpy(headers, bufp);
 		bufp = headers;
 	    }
@@ -582,7 +553,7 @@ struct query *ctl;	/* query control record */
 		 * We deal with RFC822 continuation lines here.
 		 * Replace previous '\n' with '\r' so nxtaddr 
 		 * and reply_hack will be able to see past it.
-		 * (We know this is safe because we stripped
+		 * (We know this is safe because SocketGets stripped
 		 * out all carriage returns in the read loop above
 		 * and we haven't reintroduced any since then.)
 		 * We'll undo this before writing the header.
@@ -593,7 +564,7 @@ struct query *ctl;	/* query control record */
 		newlen = oldlen + strlen(bufp);
 		headers = realloc(headers, newlen + 1);
 		if (headers == NULL)
-		    return(PS_SYNTAX);
+		    return(PS_IOERR);
 		strcpy(headers + oldlen, bufp);
 		bufp = headers + oldlen;
 		oldlen = newlen;
@@ -648,7 +619,8 @@ struct query *ctl;	/* query control record */
 
 		/*
 		 * We go through this in order to be able to handle very
-		 * long lists of users and (re)implement %s.
+		 * long lists of users and (re
+)implement %s.
 		 */
 		for (idp = xmit_names; idp; idp = idp->next)
 		    nlocals++;
@@ -737,7 +709,7 @@ struct query *ctl;	/* query control record */
 	    if (ctl->mda[0])
 		n = write(mboxfd,headers,oldlen);
 	    else
-		n = fwrite(headers, sizeof(char), oldlen, sinkfp);
+		n = SockWrite(headers, oldlen, sinkfp);
 
 	    if (n < 0)
 	    {
@@ -754,7 +726,7 @@ struct query *ctl;	/* query control record */
 
 	/* SMTP byte-stuffing */
 	if (*bufp == '.' && ctl->mda[0] == 0)
-	    fwrite(".", sizeof(char), 1, sinkfp);
+	    SockWrite(".", 1, sinkfp);
 
 	/* replace all LFs with CR-LF  in the line */
 	if (!ctl->mda[0])
@@ -769,7 +741,7 @@ struct query *ctl;	/* query control record */
 	if (ctl->mda[0])
 	    n = write(mboxfd,bufp,strlen(bufp));
 	else
-	    n = fwrite(bufp, sizeof(char), strlen(bufp), sinkfp);
+	    n = SockWrite(bufp, strlen(bufp), sinkfp);
 
 	if (!ctl->mda[0])
 	    free(bufp);
@@ -784,14 +756,6 @@ struct query *ctl;	/* query control record */
     skipwrite:;
 	lines++;
     }
-
-    /*
-     * Required by Standard C and the Linux stdio library,
-     * which wants a seek between read and write operations on a
-     * read/write stream.  Without this we got weird lossage
-     * trying to issue delete commands after reading a long message.
-     */
-    fseek(sockfp, 0L, SEEK_CUR);
 
     if (ctl->mda[0])
     {
@@ -911,8 +875,8 @@ const struct method *proto;	/* protocol method table */
 	FILE *sockfp;
 
 	/* open a socket to the mail server */
-	if ((sockfp = sockopen(ctl->servername,
-			     ctl->port ? ctl->port : protocol->port)) == (FILE *)NULL)
+	if ((sockfp = Socket(ctl->servername,
+			     ctl->port ? ctl->port : protocol->port))<0)
 	{
 	    perror("fetchmail, connecting to host");
 	    ok = PS_SOCKET;
@@ -1054,10 +1018,13 @@ const struct method *proto;	/* protocol method table */
 		    vtalarm(ctl->timeout);
 		    if (ok != 0)
 			goto cleanUp;
-		    delete_uid(&ctl->newsaved, num);
 		}
 		else if (outlevel > O_SILENT) 
+		{
+		    /* nuke it from the unseen-messages list */
+		    delete_uid(&ctl->newsaved, num);
 		    fprintf(stderr, " not flushed\n");
+		}
 	    }
 
 	    /* remove all messages flagged for deletion */
@@ -1119,7 +1086,7 @@ const struct method *proto;	/* protocol method table */
     }
     if (ok==PS_SOCKET || ok==PS_AUTHFAIL || ok==PS_SYNTAX || ok==PS_IOERR
 		|| ok==PS_ERROR || ok==PS_PROTOCOL || ok==PS_SMTP)
-	fprintf(stderr, "error while talking to %s\n", ctl->servername);
+	fprintf(stderr, " error while talking to %s\n", ctl->servername);
 
 closeUp:
     signal(SIGVTALRM, sigsave);
@@ -1155,7 +1122,7 @@ va_dcl {
     va_end(ap);
 
     strcat(buf, "\r\n");
-    fputs(buf, sockfp); fseek(sockfp, 0L, SEEK_CUR);
+    SockWrite(buf, strlen(buf), sockfp);
 
     if (outlevel == O_VERBOSE)
     {
@@ -1197,7 +1164,7 @@ va_dcl {
   va_end(ap);
 
   strcat(buf, "\r\n");
-  fputs(buf, sockfp); fseek(sockfp, 0L, SEEK_CUR);
+  SockWrite(buf, strlen(buf), sockfp);
   if (outlevel == O_VERBOSE)
   {
       char *cp;

@@ -186,8 +186,6 @@ int openmailpipe (char **);
 int closemailpipe(int);
 int daemonize(const char *, void (*)(int));
 
-FILE *sockopen(char *, int);
-
 int prc_parse_file(const char *);
 int prc_filecheck(const char *);
 

@@ -9,10 +9,12 @@
  * For license terms, see the file COPYING in this directory.
  */
 
-#include <config.h>
 #include <stdio.h>
+#include <config.h>
+#include <sys/types.h>
 #include <unistd.h>
 #include <string.h>
+#include "socket.h"
 #include "fetchmail.h"
 #include "smtp.h"
 
@@ -21,7 +23,7 @@ int SMTP_helo(FILE *sockfp,char *host)
 {
   int ok;
 
-  fprintf(sockfp,"HELO %s\r\n", host);
+  SockPrintf(sockfp,"HELO %s\r\n", host);
   if (outlevel == O_VERBOSE)
       fprintf(stderr, "SMTP> HELO %s\n", host);
   ok = SMTP_ok(sockfp,NULL);
@@ -33,7 +35,7 @@ int SMTP_from(FILE *sockfp, char *from)
 {
   int ok;
 
-  fprintf(sockfp,"MAIL FROM:<%s>\r\n", from);
+  SockPrintf(sockfp,"MAIL FROM:<%s>\r\n", from);
   if (outlevel == O_VERBOSE)
       fprintf(stderr, "SMTP> MAIL FROM:<%s>\n", from);
   ok = SMTP_ok(sockfp,NULL);
@@ -45,7 +47,7 @@ int SMTP_rcpt(FILE *sockfp, char *to)
 {
   int ok;
 
-  fprintf(sockfp,"RCPT TO:<%s>\r\n", to);
+  SockPrintf(sockfp,"RCPT TO:<%s>\r\n", to);
   if (outlevel == O_VERBOSE)
       fprintf(stderr, "SMTP> RCPT TO:<%s>\n", to);
   ok = SMTP_ok(sockfp,NULL);
@@ -57,7 +59,7 @@ int SMTP_data(FILE *sockfp)
 {
   int ok;
 
-  fprintf(sockfp,"DATA\r\n");
+  SockPrintf(sockfp,"DATA\r\n");
   if (outlevel == O_VERBOSE)
       fprintf(stderr, "SMTP> DATA\n");
   ok = SMTP_ok(sockfp,NULL);
@@ -69,7 +71,7 @@ int SMTP_quit(FILE *sockfp)
 {
   int ok;
 
-  fprintf(sockfp,"QUIT\r\n");
+  SockPrintf(sockfp,"QUIT\r\n");
   if (outlevel == O_VERBOSE)
       fprintf(stderr, "SMTP> QUIT\n");
   ok = SMTP_ok(sockfp,NULL);
@@ -81,7 +83,7 @@ int SMTP_eom(FILE *sockfp)
 {
   int ok;
 
-  fprintf(sockfp,".\r\n");
+  SockPrintf(sockfp,".\r\n");
   if (outlevel == O_VERBOSE)
       fprintf(stderr, "SMTP>. (EOM)\n");
   ok = SMTP_ok(sockfp,NULL);
@@ -91,7 +93,7 @@ int SMTP_eom(FILE *sockfp)
 void SMTP_rset(FILE *sockfp)
 /* send a "RSET" message to the SMTP listener */
 {
-  fprintf(sockfp,"RSET\r\n");
+  SockPrintf(sockfp,"RSET\r\n");
   if (outlevel == O_VERBOSE)
       fprintf(stderr, "SMTP> RSET\n");
 }
@@ -102,17 +104,10 @@ static int SMTP_check(FILE *sockfp,char *argbuf)
   int  ok;  
   char buf[SMTPBUFSIZE];
   
-  if (fgets(buf, sizeof(buf)-1, sockfp) != (char *)NULL) {
+  if ((ok = SockGets(buf, sizeof(buf)-1, sockfp)) > 0) {
+    buf[ok] = '\0';
     if (outlevel == O_VERBOSE)
-    {
-	char	*sp, *tp;
-
-	for (tp = sp = buf; *sp; sp++)
-	    if (*sp != '\r')
-		*tp++ = *sp;
-	*tp++ = '\0';
 	fprintf(stderr, "SMTP< %s", buf);
-    }
     if (argbuf)
       strcpy(argbuf,buf);
     if (buf[0] == '1' || buf[0] == '2' || buf[0] == '3')

@@ -7,10 +7,10 @@
 #include <config.h>
 
 #include <stdio.h>
-#include <string.h>
 
 #if defined(STDC_HEADERS)
 #include <stdlib.h>
+#include <string.h>
 #endif
 
 #if defined(HAVE_UNISTD_H)

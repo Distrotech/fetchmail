@@ -13,6 +13,7 @@
 #if defined(STDC_HEADERS)
 #include  <stdlib.h>
 #endif
+#include  "socket.h"
 #include  "fetchmail.h"
 
 static int count, seen, recent, unseen;
@@ -26,11 +27,11 @@ FILE *sockfp;
 
     seen = 0;
     do {
-	if (fgets(buf, sizeof(buf), sockfp) == (char *)NULL)
+	if (SockGets(buf, sizeof(buf), sockfp) < 0)
 	    return(PS_SOCKET);
 
 	if (outlevel == O_VERBOSE)
-	    fprintf(stderr,"%s",buf);
+	    fprintf(stderr,"%s\n",buf);
 
 	/* interpret untagged status responses */
 	if (strstr(buf, "EXISTS"))
@@ -120,7 +121,7 @@ int	*sizes;
     char buf [POPBUFSIZE+1];
 
     gen_send(sockfp, "FETCH 1:%d RFC822.SIZE", count);
-    while (fgets(buf, sizeof(buf), sockfp) != (char *)NULL)
+    while (SockGets(buf, sizeof(buf), sockfp) >= 0)
     {
 	int num, size;
 
@@ -133,7 +134,6 @@ int	*sizes;
 	else
 	    sizes[num - 1] = -1;
     }
-    fseek(sockfp, 0L, SEEK_CUR);
 
     return(0);
 }
@@ -165,11 +165,10 @@ int *lenp;
 
     /* looking for FETCH response */
     do {
-	if (fgets(buf, sizeof(buf), sockfp)  == (char *)NULL)
+	if (SockGets(buf, sizeof(buf), sockfp) < 0)
 	    return(PS_SOCKET);
     } while
 	    (sscanf(buf+2, "%d FETCH (RFC822 {%d}", &num, lenp) != 2);
-    fseek(sockfp, 0L, SEEK_CUR);
 
     if (num != number)
 	return(PS_ERROR);
@@ -185,13 +184,10 @@ int number;
 {
     char buf [POPBUFSIZE+1];
 
-    if (fgets(buf, sizeof(buf), sockfp) == (char *)NULL)
+    if (SockGets(buf, sizeof(buf), sockfp) < 0)
 	return(PS_SOCKET);
     else
-    {
-	fseek(sockfp, 0L, SEEK_CUR);
 	return(0);
-    }
 }
 
 static int imap_delete(sockfp, ctl, number)

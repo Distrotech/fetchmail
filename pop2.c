@@ -11,6 +11,7 @@
 #if defined(STDC_HEADERS)
 #include <stdlib.h>
 #endif
+#include  "socket.h"
 #include  "fetchmail.h"
 
 static int pound_arg, equal_arg;
@@ -24,9 +25,9 @@ char *argbuf;
     char buf [POPBUFSIZE+1];
 
     pound_arg = equal_arg = -1;
-    if (fgets(buf, sizeof(buf), sockfp) != (char *)NULL) {
+    if (SockGets(buf, sizeof(buf), sockfp) >= 0) {
 	if (outlevel == O_VERBOSE)
-	    fprintf(stderr,"%s",buf);
+	    fprintf(stderr,"%s\n",buf);
 
 	if (buf[0] == '+')
 	    ok = 0;
