@@ -504,15 +504,26 @@ int MimeBodyType(unsigned char *hdrs, int WantDecode)
  * Return flag set if this line ends with a soft line-break.
  * 'bufp' is modified to point to the end of the output buffer.
  */
-static int DoOneQPLine(unsigned char **bufp, int collapsedoubledot)
+static int DoOneQPLine(unsigned char **bufp, flag delimited, flag issoftline)
 {
   unsigned char *buf = *bufp;
   unsigned char *p_in, *p_out, *p;
   int n;
   int ret = 0;
 
+  /*
+   * Special case: line consists of a single =2E and messages are 
+   * dot-terminated.  Line has to be dot-stuffed after decoding.
+   */
+  if (delimited && !issoftline && buf[0]=='=' && !strncmp(*bufp, "=2E\r\n", 5))
+  {
+      strcpy(buf, "..\r\n");
+      *bufp += 5;
+      return(FALSE);
+  }
+
   p_in = buf;
-  if (collapsedoubledot && (strncmp(buf, "..", 2) == 0))
+  if (delimited && issoftline && (strncmp(buf, "..", 2) == 0))
     p_in++;
 
   for (p_out = buf; (*p_in); ) {
@@ -575,7 +586,7 @@ static int DoOneQPLine(unsigned char **bufp, int collapsedoubledot)
  * 'bufp' is modified to point to the end of the output buffer.
  */
 
-int UnMimeBodyline(unsigned char **bufp, int collapsedoubledot)
+int UnMimeBodyline(unsigned char **bufp, flag delimited, flag softline)
 {
   unsigned char *buf = *bufp;
   int ret = 0;
@@ -593,12 +604,15 @@ int UnMimeBodyline(unsigned char **bufp, int collapsedoubledot)
       if ((XferEnc != NULL) && (strcasecmp(XferEnc, "quoted-printable") == 0)) {
 	CurrEncodingIsQP = 1;
 
-        /* Hmm ... we cannot be really sure that CurrTypeNeedsDecode
-           has been set - we may not have seen the Content-Type header
-           yet. But *usually* the Content-Type header comes first, so
-           this will work. And there is really no way of doing it 
-           "right" as long as we stick with the line-by-line processing. */
-	if (CurrTypeNeedsDecode) SetEncoding8bit(buf);
+        /*
+	 * Hmm ... we cannot be really sure that CurrTypeNeedsDecode
+         * has been set - we may not have seen the Content-Type header
+         * yet. But *usually* the Content-Type header comes first, so
+         * this will work. And there is really no way of doing it 
+         * "right" as long as we stick with the line-by-line processing.
+	 */
+	if (CurrTypeNeedsDecode)
+	    SetEncoding8bit(buf);
       }
     }
     else if (strncasecmp("Content-Type:", buf, 13) == 0) {
@@ -616,7 +630,7 @@ int UnMimeBodyline(unsigned char **bufp, int collapsedoubledot)
     }
 
     if (CurrEncodingIsQP && CurrTypeNeedsDecode) 
-      ret = DoOneQPLine(bufp, collapsedoubledot);
+      ret = DoOneQPLine(bufp, delimited, softline);
     else
      *bufp = (buf + strlen(buf));
     break;

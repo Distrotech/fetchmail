@@ -1114,7 +1114,7 @@ static int readbody(int sock, struct query *ctl, flag forward, int len)
 	msglen += linelen;
 
 	if (ctl->mimedecode && (ctl->mimemsg & MSG_NEEDS_DECODE)) {
-	    issoftline = UnMimeBodyline(&inbufp, (protocol->delimited && issoftline));
+	    issoftline = UnMimeBodyline(&inbufp, protocol->delimited, issoftline);
 	    if (issoftline && (sizeof(buf)-1-(inbufp-buf) < 200))
 	    {
 		/*

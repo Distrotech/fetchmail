@@ -4,6 +4,8 @@
   10 or 12 minutes if it hits a firewall that drops SYN packets sent to denied
   ports.)
 
+* --all option that forces poll of skipped entries?
+
 				Release Notes:
 
 fetchmail-5.0.0 ():
@@ -13,6 +15,8 @@ fetchmail-5.0.0 ():
 * Added French internationalization (LC_ALL=fr) from Guy Brand.
 * Added Hugo Rabson's script for fetching from Hotmail.
 * Test for .fetchmailrc ownership using geteuid() when possible.
+* Prevent parsing of delimited protocols from tripping up on a 
+  MIME-armored line consisting of "=2E\r\n".
 
 There are 262 people on fetchmail-friends and 359 on fetchmail-announce.
 
