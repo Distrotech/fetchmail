@@ -9,6 +9,12 @@
 				Release Notes:
 
 fetchmail-5.0.1 (Sun Apr 18 14:59:56 EDT 1999):
+* The IMAP driver now sets SEEN just before deleting, in case the server
+  ships DSNs when that bit is set.
+
+There are 254 people on fetchmail-friends and 372 on fetchmail-announce.
+
+fetchmail-5.0.1 (Sun Apr 18 14:59:56 EDT 1999):
 * Try to discover user/home via getpwuid(getuid()) before using LOGNAME/HOME.
 * Mike Pearce's fix for buggy DEFAULT handling in .netrc.
 * Keep validation errors from generating message lines that qmail will reject.

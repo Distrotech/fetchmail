@@ -972,11 +972,16 @@ static int imap_delete(int sock, struct query *ctl, int number)
     /*
      * Use SILENT if possible as a minor throughput optimization.
      * Note: this has been dropped from IMAP4rev1.
+     *
+     * We set Seen because there are some IMAP servers that do
+     * message-receipt DSNs, but only when the seen bit is set.
+     * This is the appropriate time -- we get here right after
+     * the local SMTP response that says delivery was successful.
      */
     if ((ok = gen_transact(sock,
 			imap_version == IMAP4 
-				? "STORE %d +FLAGS.SILENT (\\Deleted)"
-				: "STORE %d +FLAGS (\\Deleted)", 
+				? "STORE %d +FLAGS.SILENT (\\Seen \\Deleted)"
+				: "STORE %d +FLAGS (\\Seen \\Deleted)", 
 			number)))
 	return(ok);
     else
