@@ -3,6 +3,7 @@
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
 * Fix configuration error in handling of long options.
+* Thomas Moestl's patch to use querynames in UID files.
 
 fetchmail-5.9.2 (Wed Sep 26 12:47:00 EDT 2001), 21118 lines:
 

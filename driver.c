@@ -32,10 +32,10 @@
 #include <hesiod.h>
 #endif
 
-#ifdef HAVE_RES_SEARCH
+#if defined(HAVE_RES_SEARCH) || defined(HAVE_GETHOSTBYNAME)
 #include <netdb.h>
 #include "mx.h"
-#endif /* HAVE_RES_SEARCH */
+#endif /* defined(HAVE_RES_SEARCH) || defined(HAVE_GETHOSTBYNAME) */
 
 #include "kerberos.h"
 #ifdef KERBEROS_V4
