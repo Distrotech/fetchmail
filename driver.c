@@ -995,10 +995,13 @@ int num;		/* index of message */
 	for (idp = xmit_names; idp; idp = idp->next)
 	    if (idp->val.num == XMIT_ACCEPT)
 	    {
+		if (strchr(idp->id, '@'))
+		    strcpy(addr, idp->id);
+		else
 #ifdef HAVE_SNPRINTF
-		snprintf(addr, sizeof(addr)-1, "%s@%s", idp->id, desthost);
+		    snprintf(addr, sizeof(addr)-1, "%s@%s", idp->id, desthost);
 #else
-		sprintf(addr, "%s@%s", idp->id, desthost);
+		    sprintf(addr, "%s@%s", idp->id, desthost);
 #endif /* HAVE_SNPRINTF */
 
 		if (SMTP_rcpt(ctl->smtp_socket, addr) == SM_OK)
@@ -1014,12 +1017,12 @@ int num;		/* index of message */
 	if (!good_addresses)
 	{
 #ifdef HAVE_SNPRINTF
-	    snprintf(addr, sizeof(addr)-1, "%s@%s", idp->id,  desthost);
+	    snprintf(addr, sizeof(addr)-1, "%s@%s", user,  desthost);
 #else
-	    sprintf(addr, "%s@%s", idp->id, desthost);
+	    sprintf(addr, "%s@%s", user, desthost);
 #endif /* HAVE_SNPRINTF */
 
-	    if (SMTP_rcpt(ctl->smtp_socket, user) != SM_OK)
+	    if (SMTP_rcpt(ctl->smtp_socket, addr) != SM_OK)
 	    {
 		error(0, 0, "can't even send to calling user!");
 		free(headers);
