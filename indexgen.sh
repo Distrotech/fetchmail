@@ -163,7 +163,7 @@ checksum file is cryptographically signed and can be verified with the
 command:</p>
 
 <pre>
-gpg --verify checksums.asc
+gpg --verify checksums
 </pre>
 
 EOF
@@ -228,7 +228,8 @@ FAQ covers them like a blanket.</p>
 href="../index.html">Eric S. Raymond</a>.  There are some designated
 backup maintainers (<a href="mailto:funk+@osu.edu">Rob Funk</a>, <a
 href="http://www.dallas.net/~fox/">David DeSimone aka Fuzzy Fox</a>,
-<a href="mailto:imdave@mcs.net">Dave Bodenstab</a>).  Other backup
+<a href="mailto:imdave@mcs.net">Dave Bodenstab</a> and <a 
+href="mailto:shetye@bombay.retortsoft.com">Sunil Shetye</a>).  Other backup
 maintainers may be added in the future, in order to ensure continued
 support should Eric S.  Raymond drop permanently off the net for any
 reason.</p>

@@ -1110,6 +1110,10 @@ The
 .I postfix
 MTA runs 554 as an antispam response.
 .PP
+.I Zmailer 
+may reject code with a 500 response (followed by an enhanced status
+code that contains more information).
+.PP
 Return codes which 
 .I fetchmail
 treats as antispam responses and discards

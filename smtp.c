@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <signal.h>
 #include "fetchmail.h"
 #include "socket.h"
 #include "smtp.h"
@@ -322,29 +323,60 @@ int SMTP_eom(int sock)
   return ok;
 }
 
+/* ignore SIGALRM signal indicating a timeout during smtp ok */
+static void smtp_timeout_handler (int signal) { }
+
 int SMTP_ok(int sock)
 /* returns status of SMTP connection */
 {
+    void (*alrmsave)(int);
+
+    /* set an alarm for smtp ok */
+    alrmsave = signal(SIGALRM, smtp_timeout_handler);
+    set_timeout(mytimeout);
+
     while ((SockRead(sock, smtp_response, sizeof(smtp_response)-1)) != -1)
     {
-	int  n = strlen(smtp_response);
+	int n;
 
-	if (smtp_response[strlen(smtp_response)-1] == '\n')
-	    smtp_response[strlen(smtp_response)-1] = '\0';
-	if (smtp_response[strlen(smtp_response)-1] == '\r')
-	    smtp_response[strlen(smtp_response)-1] = '\0';
-	if (n < 4)
-	    return SM_ERROR;
+	/* restore alarm */
+	set_timeout(0);
+	signal(SIGALRM, alrmsave);
+
+	n = strlen(smtp_response);
+	if (n > 0 && smtp_response[n-1] == '\n')
+	    n--;
+	if (n > 0 && smtp_response[n-1] == '\r')
+	    n--;
 	smtp_response[n] = '\0';
 	if (outlevel >= O_MONITOR)
 	    report(stdout, "%cMTP< %s\n", smtp_mode, smtp_response);
-	if ((smtp_response[0] == '1' || smtp_response[0] == '2' || smtp_response[0] == '3') && smtp_response[3] == ' ')
+	if (n < 4 ||
+	    (smtp_response[3] != ' ' && smtp_response[3] != '-'))
+	{
+	    if (outlevel >= O_MONITOR)
+		report(stderr, GT_("smtp listener protocol error\n"));
+	    return SM_UNRECOVERABLE;
+	}
+
+	if ((smtp_response[0] == '1' || smtp_response[0] == '2' || smtp_response[0] == '3') &&
+	    smtp_response[3] == ' ')
 	    return SM_OK;
 	else if (smtp_response[3] != '-')
 	    return SM_ERROR;
+
+	/* set an alarm for smtp ok */
+	signal(SIGALRM, smtp_timeout_handler);
+	set_timeout(mytimeout);
+
     }
+
+    /* restore alarm */
+    set_timeout(0);
+    signal(SIGALRM, alrmsave);
+
     if (outlevel >= O_MONITOR)
-	report(stderr, GT_("smtp listener protocol error"));
+	report(stderr, GT_("smtp listener protocol error\n"));
     return SM_UNRECOVERABLE;
 }
 

@@ -76,7 +76,7 @@ const unsigned char *host;	/* server hostname */
     for (cp = buf; *cp; cp++)
 	if (*cp == ',' || isspace(*cp))
 	    addresscount++;
-    buf = (unsigned char *)xrealloc(buf, strlen(buf) + addresscount * strlen(host) + 1);
+    buf = (unsigned char *)xrealloc(buf, strlen(buf) + addresscount * (strlen(host) + 1) + 1);
 #endif /* MAIN */
 
     /*
