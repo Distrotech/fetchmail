@@ -270,7 +270,14 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	numdump("expunge", ctl->expunge);
 	listdump("smtphunt", ctl->smtphunt);
 	stringdump("smtpaddress", ctl->smtpaddress);
-	numdump("antispam", ctl->antispam);
+	fprintf(stdout, "'antispam':[");
+	for (idp = ctl->antispam; idp; idp = idp->next)
+	{
+	    fprintf(stdout, "%d", idp->val.status.num);
+	    if (idp->next)
+		fputs(", ", stdout);
+	}
+	fputs("],\n", stdout);
 	listdump("mailboxes", ctl->mailboxes);
 
 	indent('}');

@@ -1193,7 +1193,7 @@ int num;		/* index of message */
 	{
 	    int smtperr = atoi(smtp_response);
 
-	    if (smtperr == ctl->antispam)
+	    if (str_find(&ctl->antispam, smtperr))
 	    {
 		/*
 		 * SMTP listener explicitly refuses to deliver mail

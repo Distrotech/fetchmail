@@ -426,8 +426,16 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'Z':
 	case LA_ANTISPAM:
-	    c = xatoi(optarg, &errflag);
-	    ctl->antispam = NUM_VALUE(c);
+	    strcpy(buf, optarg);
+	    cp = strtok(buf, ",");
+	    do {
+		struct idlist	*idp = save_str(&ctl->antispam, NULL, 0);;
+
+		idp->val.status.num = atoi(cp);
+	    } while
+		((cp = strtok((char *)NULL, ",")));
+	    free(buf);
+	    break;
 	case 'b':
 	case LA_BATCHLIMIT:
 	    c = xatoi(optarg, &errflag);
@@ -543,7 +551,7 @@ struct query *ctl;	/* option record to be initialized */
 #endif /* NET_SECURITY */
 	fputs("  -S, --smtphost    set SMTP forwarding host\n", stderr);
 	fputs("  -D, --smtpaddress set SMTP delivery domain to use\n", stderr);
-	fputs("  -Z, --antispam,   set antispam response value\n", stderr);
+	fputs("  -Z, --antispam,   set antispam response values\n", stderr);
 	fputs("  -b, --batchlimit  set batch limit for SMTP connections\n", stderr);
 	fputs("  -B, --fetchlimit  set fetch limit for server connections\n", stderr);
 	fputs("  -e, --expunge     set max deletions between expunges\n", stderr);

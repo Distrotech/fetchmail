@@ -678,6 +678,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     LIST_MERGE(h2->localnames, h1->localnames);
     LIST_MERGE(h2->mailboxes, h1->mailboxes);
     LIST_MERGE(h2->smtphunt, h1->smtphunt);
+    LIST_MERGE(h2->antispam, h1->antispam);
 #undef LIST_MERGE
 
 #define FLAG_MERGE(fld) if (force ? !!h1->fld : !h2->fld) h2->fld = h1->fld
@@ -711,7 +712,6 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(password);
     FLAG_MERGE(mda);
     FLAG_MERGE(smtpaddress);
-    FLAG_MERGE(antispam);
     FLAG_MERGE(preconnect);
 
     FLAG_MERGE(keep);
@@ -739,7 +739,7 @@ static int load_params(int argc, char **argv, int optind)
     memset(&def_opts, '\0', sizeof(struct query));
     def_opts.smtp_socket = -1;
     def_opts.smtpaddress = (char *)0;
-    def_opts.antispam = 571;
+    save_str(&def_opts.antispam, (char *)NULL, 0)->val.status.num = 571;
 
     def_opts.server.protocol = P_AUTO;
     def_opts.server.timeout = CLIENT_TIMEOUT;
@@ -1297,10 +1297,19 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 		printf("  Host part of MAIL FROM line will be %s\n",
 		       ctl->smtpaddress);
 	}
-	if (ctl->server.protocol != P_ETRN) {
-		if (ctl->antispam != -1)
-		    printf("  Listener SMTP reponse %d will be treated as a spam block\n",
+	if (ctl->server.protocol != P_ETRN)
+	{
+		if (ctl->antispam != (struct idlist *)NULL)
+		{
+		    struct idlist *idp;
+
+		    printf("  Recognized listener spam block responses are:",
 			   ctl->antispam);
+		    for (idp = ctl->antispam; idp; idp = 
+idp->next)
+			printf(" %d", idp->val.status.num);
+		    printf("\n");
+		}
 		else if (outlevel == O_VERBOSE)
 		    printf("  Spam-blocking disabled\n");
 	}

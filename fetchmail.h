@@ -174,7 +174,7 @@ struct query
     struct idlist *smtphunt;	/* list of SMTP hosts to try forwarding to */
     char *smtphost;		/* actual SMTP host to point to */
     char *smtpaddress;		/* address we want to force in the delivery messages */ 
-    int	antispam;		/* listener's antispam response */
+    struct idlist *antispam;	/* list of listener's antispam response */
     char *mda;			/* local MDA to pass mail to */
     char *preconnect;		/* pre-connection command to execute */
     char *postconnect;		/* post-connection command to execute */

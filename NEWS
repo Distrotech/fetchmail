@@ -8,6 +8,7 @@ fetchmail-4.5.3 ():
   of run, and then only if they'll actually be needed later for multidrop
   checking or fetching Kerberos tickets.  This change eliminates many
   gethostbyname calls.
+* It's now possible to specify multiple spam-block responses as a list.
 * 1.1 version of fetchmailconf.
 
 Note: the DNS-usage change might conceivably break your configuration

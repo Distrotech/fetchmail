@@ -231,11 +231,12 @@ Specify the domain to be put in RCPT TO lines shipped to SMTP. The
 name of the SMTP server (as specified by --smtphost, or defaulted to
 "localhost") is used when this is not specified.
 .TP
-.B \-Z nnn, --antispam nnn
+.B \-Z nnn, --antispam nnn[,nnn[,nnn...]]
 (Keyword: antispam) 
-Specifies the numeric SMTP error that is to be interpreted as a
-spam-block response from the listener.  A value of -1 disables
-this option.
+Specifies the list of numeric SMTP errors that are to be interpreted
+as a spam-block response from the listener.  A value of -1 disables
+this option.  For the command-line option, the list values should
+be comma-separated.
 .TP
 .B \-m, \--mda
 (Keyword: mda)
@@ -927,7 +928,7 @@ smtpaddress	-D	T{
 Specify the domain to be put in RCPT TO lines
 T}
 antispam	-Z	T{
-Specify what SMTP return is interpreted as a spam-policy block
+Specify what SMTP returns are interpreted as spam-policy blocks
 T}
 mda     	-m	T{
 Specify MDA for local delivery

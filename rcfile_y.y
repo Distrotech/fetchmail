@@ -261,6 +261,18 @@ smtp_list	: STRING		{save_str(&current.smtphunt, $1,TRUE);}
 		| smtp_list STRING	{save_str(&current.smtphunt, $2,TRUE);}
 		;
 
+num_list	: NUMBER		{
+					    struct idlist *id;
+		    			    id=save_str(&current.antispam,0,0);
+					    id->val.status.num = $1;
+					}
+		| num_list NUMBER	{
+					    struct idlist *id;
+					    id=save_str(&current.antispam,0,0);
+					    id->val.status.num = $2;
+					}
+		;
+
 user_option	: TO localnames HERE
 		| TO localnames
 		| IS localnames HERE
@@ -271,7 +283,7 @@ user_option	: TO localnames HERE
 		| FOLDER folder_list
 		| SMTPHOST smtp_list
 		| SMTPADDRESS STRING	{current.smtpaddress = xstrdup($2);}
-		| SPAMRESPONSE NUMBER	{current.antispam = $2;}
+		| SPAMRESPONSE num_list
 		| MDA STRING		{current.mda        = xstrdup($2);}
 		| PRECONNECT STRING	{current.preconnect = xstrdup($2);}
 		| POSTCONNECT STRING	{current.postconnect = xstrdup($2);}
