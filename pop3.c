@@ -247,24 +247,18 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	}
 
 #ifdef SSL_ENABLE
-       if (has_ssl && !ctl->use_ssl &&
-#if INET6_ENABLE
-           ctl->server.service && (strcmp(ctl->server.service, "pop3s"))
-#else /* INET6_ENABLE */
-           ctl->server.port != 995
-#endif /* INET6_ENABLE */
-           )
-       {
-           char *realhost;
+	if (has_ssl && !ctl->use_ssl)
+	{
+	    char *realhost;
 
-           realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;           gen_transact(sock, "STLS");
-           if (SSLOpen(sock,ctl->sslcert,ctl->sslkey,ctl->sslproto,ctl->sslcertck, ctl->sslcertpath,ctl->sslfingerprint,realhost,ctl->server.pollname) == -1)
-           {
-               report(stderr,
-                      GT_("SSL connection failed.\n"));
-               return(PS_AUTHFAIL);
-           }
-       }
+	    realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;           gen_transact(sock, "STLS");
+	    if (SSLOpen(sock,ctl->sslcert,ctl->sslkey,ctl->sslproto,ctl->sslcertck, ctl->sslcertpath,ctl->sslfingerprint,realhost,ctl->server.pollname) == -1)
+	    {
+		report(stderr,
+		       GT_("SSL connection failed.\n"));
+		return(PS_AUTHFAIL);
+	    }
+	}
 #endif /* SSL_ENABLE */
 
 	/*
