@@ -20,7 +20,6 @@
 #ifdef HAVE_PROTOTYPES
 /* prototypes for internal functions */
 int POP3_sendSTAT (int *msgcount, int socket);
-int POP3_sendLAST (int *last, int socket);
 int POP3_sendUIDL (int num, int socket, char **cp);
 int POP3_BuildDigest (char *buf, struct hostrec *options);
 #endif
@@ -171,7 +170,10 @@ int *firstp;
     int num;
 
     /* try LAST first */
-    ok = POP3_sendLAST(firstp, socket);
+    gen_send(socket,"LAST");
+    ok = pop3_ok(buf,socket);
+    if (ok == 0 && sscanf(buf, "%d", firstp) == 0)
+	return(PS_ERROR);
     use_uidl = (ok != 0); 
 
     /* otherwise, if we have a stored last ID for this host,
@@ -285,40 +287,6 @@ int socket;
     sscanf(buf,"%d %d",msgcount,&totalsize);
   else if (outlevel > O_SILENT && outlevel < O_VERBOSE)
     fprintf(stderr,"%s\n",buf);
-
-  return(ok);
-}
-
-/******************************************************************
-  function:	POP3_sendLAST
-  description:	send the LAST command to the server, which should
-                return the number of the last message number retrieved 
-                from the server.
-  arguments:
-    last	integer buffer to receive last message# 
-
-  ret. value:	zero if success, else status code.
-  globals:	SockPrintf, pop3_ok.
-  calls:	reads outlevel.
- *****************************************************************/
-
-int POP3_sendLAST (last, socket)
-int *last;
-int socket;
-{
-  int ok;
-  char buf [POPBUFSIZE];
-
-  SockPrintf(socket,"LAST\r\n");
-  if (outlevel == O_VERBOSE)
-    fprintf(stderr,"> LAST\n");
-
-  ok = pop3_ok(buf,socket);
-  if (ok == 0 && sscanf(buf,"%d",last) == 0)
-    ok = PS_ERROR;
-
-  if (ok != 0 && outlevel > O_SILENT) 
-    fprintf(stderr,"Server says '%s' to LAST command.\n",buf);
 
   return(ok);
 }
