@@ -41,6 +41,14 @@ struct interface_pair_s {
 	struct in_addr interface_mask;
 } *interface_pair;
 
+#ifdef linux22
+/* Linux 2.2 /proc/net/dev format -- transmit packet count in 10th field */
+#define PROCNETDEV	"%d %d %*d %*d %*d %d %*d %*d %*d %*d %d %*d %d"
+#else
+/* pre-linux-2.2 format -- transmit packet count in 8th field */
+#define PROCNETDEV	"%d %d %*d %*d %*d %d %*d %d %*d %*d %*d %*d %d"
+#endif
+
 static int _get_ifinfo_(int socket_fd, FILE *stats_file, const char *ifname,
 		ifinfo_t *ifinfo)
 /* get active network interface information - return non-zero upon success */
@@ -60,8 +68,8 @@ static int _get_ifinfo_(int socket_fd, FILE *stats_file, const char *ifname,
 		if (!strncmp(cp, ifname, namelen) &&
 				cp[namelen] == ':') {
 			cp += namelen + 1;
-			if (sscanf(cp, "%d %d %*d %*d %*d %d %*d %d %*d %*d"
-			       " %*d %*d %d",counts, counts+1, counts+2, 
+			if (sscanf(cp, PROCNETDEV,
+				   counts, counts+1, counts+2, 
 				   counts+3,&found)>4) { /* found = dummy */
 			        /* newer kernel with byte counts */
 			        ifinfo->rx_packets=counts[1];
@@ -263,6 +271,12 @@ int interface_approve(struct hostdata *hp)
 			hp->pollname, hp->monitor);
 		return(FALSE);
 	}
+
+#ifdef ACTIVITY_DEBUG
+       error(0, 0, _("activity on %s was %d, is %d"),
+             hp->monitor, hp->monitor_io,
+             ifinfo.rx_packets + ifinfo.tx_packets);
+#endif
 
 	return(TRUE);
 }
