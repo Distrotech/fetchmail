@@ -682,7 +682,11 @@ static int do_cram_md5 (int sock, struct query *ctl)
               msg_id, strlen (msg_id),
               response, sizeof (response));
 
+#ifdef HAVE_SNPRINTF
     snprintf (reply, sizeof (reply),
+#else
+    sprintf(reply,
+#endif
               "%s %02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x", 
               ctl->remotename,
               response[0], response[1], response[2], response[3],
