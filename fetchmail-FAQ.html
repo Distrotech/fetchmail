@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/02/24 05:57:57 $
+<td width="30%" align=right>$Date: 2000/02/26 03:16:53 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -51,8 +51,7 @@ IP address?</a><br>
 <a href="#F1">F1. Why does my old .fetchmailrc no longer work?</a><br>
 <a href="#F2">F2. The .fetchmailrc parser won't accept my all-numeric user name.</a><br>
 <a href="#F3">F3. The .fetchmailrc parser won't accept my host or username beginning with `no'.</a><br>
-<a href="#F4">F4. I'm migrating from popclient.  How do I need to modify my .poprc?</a><br>
-<a href="#F5">F5. I'm getting a `parse error' message I don't understand.</a><br>
+<a href="#F4">F4. I'm getting a `parse error' message I don't understand.</a><br>
 
 <h1>Configuration questions:</h1>
 
@@ -574,17 +573,6 @@ The specific recipe for using fetchmail with a firewall is at <a
 href="#K1">K1</a><P>
 
 <hr>
-<h2><a name="B1">B1. Lex bombs out while building the fetchmail lexer.</a></h2>
-
-In the immortal words of Alan Cox the last time this came up: ``Take
-the Solaris lex and stick it up the backside of a passing Sun
-salesman, then install <a
-href="ftp://prep.ai.mit.edu/ftp/pub/gnu">flex</a> and use that.  All
-will be happier.''<P>
-
-I couldn't have put it better myself, and ain't going to try now.<P>
-
-<hr>
 <h2><a name="G12">G12. Is any special configuration needed to <em>send</em> mail?</a></h2>
 
 A user asks: but how do we send mail out to the POP3 server? Do I need
@@ -618,6 +606,17 @@ on a 64-bit machine by then, you deserve to lose.<P>
 No. Fetchmail is a mail transport agent, best understood as a protocol
 gateway between POP3/IMAP servers and SMTP.  Disconnected operation
 requires an elaborate interactive client.  It's a very different problem.<p>
+
+<hr>
+<h2><a name="B1">B1. Lex bombs out while building the fetchmail lexer.</a></h2>
+
+In the immortal words of Alan Cox the last time this came up: ``Take
+the Solaris lex and stick it up the backside of a passing Sun
+salesman, then install <a
+href="ftp://prep.ai.mit.edu/ftp/pub/gnu">flex</a> and use that.  All
+will be happier.''<P>
+
+I couldn't have put it better myself, and ain't going to try now.<P>
 
 <hr>
 <h2><a name="B2">B2. I get link failures when I try to build fetchmail.</a></h2>
@@ -745,60 +744,7 @@ Upgrade to a 5.0.6 or later fetchmail, or put string quotes around your
 token.<p>
 
 <hr>
-<h2><a name="F4">F4. I'm migrating from popclient.  How do I need to modify my .poprc?</a></h2>
-
-If you have been using popclient (the ancestor of this program)
-at version 3.0b6 or later, start with this<p>
-
-<pre>
-(cd; mv .poprc .fetchmailrc)
-</pre>
-
-and do <code>fetchmail -V</code> to see if fetchmail's parser understands
-your configuration.<p>
-
-Be aware that some of popclient's unnecessary options have been
-removed (see the NOTES file in the distribution for explanation).  You
-can't deliver to a local mail file or to standard output any more, and
-using an MDA for delivery is discouraged.  If you throw those options
-away, fetchmail will now forward your mail into your system's normal
-Internet-mail delivery path.<p>
-
-Actually, using an MDA is now almost always the wrong thing; the MDA
-facility has been retained only for people who can't or won't run a
-sendmail-like SMTP listener on port 25. The default, SMTP forwarding
-to port 25, is better for at least three major reasons.  One: it feeds
-retrieved POP and IMAP mail into your system's normal delivery path
-along with local mail and normal Internet mail, so all your normal
-filtering/aliasing/forwarding setup for local mail works.  Two:
-because the port 25 listener returns a positive acknowledge, fetchmail
-can be sure you're not going to lose mail to a disk-full or some other
-resource-exhaustion problem.  Three: it means fetchmail doesn't have 
-to know where the system mailboxes are, or futz with file locking
-(which makes two fewer places for it to potentially mess up).<p>
-
-If you used to use <CODE>-mda "procmail -d</CODE>
-<em>&lt;you&gt;</em><CODE>"</CODE> or something similar, forward to port
-25 and do "<CODE>| procmail -d</CODE> <em>&lt;you&gt;</em><CODE>"</CODE> in
-your ~/.forward file.<p>
-
-As long as your new .fetchmailrc file does not use the removed
-`localfolder' option or `<CODE>limit</CODE>' (which now takes a
-maximum byte size rather than a line count), a straight move or copy
-of your .poprc will often work.  (The new run control file syntax also
-has to be a little stricter about the order of options than the old,
-in order to support multiple user descriptions per server; thus you
-may have to rearrange things a bit.)<p>
-
-Run control files in the minimal .poprc format (without the `username'
-token) will trigger a warning.  To eliminate this warning, add the
-`<CODE>username</CODE>' keyword before your first user entry per server (it is
-already required before second and subsequent user entries per server.<p>
-
-In some future version the `<CODE>username</CODE>' keyword will be required.<p>
-
-<hr>
-<h2><a name="F5">F5. I'm getting a `parse error' message I don't understand.</a></h2>
+<h2><a name="F4">F4. I'm getting a `parse error' message I don't understand.</a></h2>
 
 The most common cause of mysterious parse errors is putting a server
 option after a user option.  Check the manual page; you'll probably
@@ -2654,7 +2600,7 @@ terminate it.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/02/24 05:57:57 $
+<td width="30%" align=right>$Date: 2000/02/26 03:16:53 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
