@@ -1367,7 +1367,7 @@ const struct method *proto;	/* protocol method table */
 	    if (ok != 0)
 	    {
 		if (ok == PS_LOCKBUSY)
-		    error(0, -1, "Lock Busy error on %s@%s",
+		    error(0, -1, "Lock-busy error on %s@%s",
 			  ctl->remotename,
 			  realname);
 		else
