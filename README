@@ -16,7 +16,7 @@ ESMTP ETRN.
 
 The fetchmail code was developed under Linux, but has also been
 extensively tested under the BSD variants, AIX, HP-UX versions 9 and
-10, SunOS, Solaris, NEXTSTEP, OSF 3.2, and Rhapsody.
+10, SunOS, Solaris, NEXTSTEP, OSF 3.2, IRIX, and Rhapsody.
 
 It should be readily portable to other Unix variants (it uses GNU
 autoconf).  It has been ported to LynxOS and will build there without
