@@ -20,7 +20,7 @@ set tics out
 set autoscale  y
 set y2range [5000:50000]
 set key bottom right box
-set terminal gif
+set terminal png color
 
 EOF
 
@@ -66,20 +66,14 @@ cat >>/tmp/growthimage$$ <<EOF
 plot [] [0:] '/tmp/growthnumbers$$' using 6:5 \
 		title "Both lists" with points 3, \
      '/tmp/growthannounce$$' using 6:4 \
-		title "fetchmail-announce" with points 4, \
+		title "fetchmail-announce" with points 5, \
      '/tmp/growthannounce$$' using 6:3 \
 		title "fetchmail-friends" with points 2, \
      '/tmp/growthnumbers$$' using 6:2 axes x1y2 \
-		title "Lines of code" with points 6
+		title "Lines of code" with points 7
 EOF
 
-# The gnuplot driver for PNG doesn't do color
-if gnuplot /tmp/growthimage$$ >growth.gif
-then
-    gif2png -s -d growth.gif
-else
-    echo "Plot failed."
-fi
+gnuplot /tmp/growthimage$$ >growth.png
 
 rm -f /tmp/growth*
 
