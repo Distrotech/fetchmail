@@ -115,8 +115,8 @@ int SockWrite(int sock, char *buf, int len)
 
 int SockRead(int sock, char *buf, int len)
 {
-    char *p, *bp = buf;
-    int n, readlen;
+    char *newline, *bp = buf;
+    int n;
 
     if (--len < 1)
 	return(-1);
@@ -127,26 +127,18 @@ int SockRead(int sock, char *buf, int len)
 	 * (2) to return the true length of data read, even if the
 	 *     data coming in has embedded NULS.
 	 */
-	readlen = 0;
-
 	if ((n = recv(sock, bp, len, MSG_PEEK)) <= 0)
 	    return(-1);
-	if ((p = memchr(bp, '\n', n)) != NULL)
-	    n = ++p - bp;
+	if ((newline = memchr(bp, '\n', n)) != NULL)
+	    n = newline - bp + 1;
 	if ((n = read(sock, bp, n)) == -1)
 	    return(-1);
-	readlen += n;
 	bp += n;
 	len -= n;
-	if (p)
-	{
-	    *p = '\0';
-	    break;
-	}
     } while 
-	    (len);
+	    (!newline && len);
     *bp = '\0';
-    return readlen;
+    return bp - buf;
 }
 
 int SockPeek(int sock)
