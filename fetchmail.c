@@ -72,10 +72,10 @@ char *home;
 char *fetchmailhost;	/* the name of the host running fetchmail */
 char *program_name;	/* the name to prefix error messages with */
 
-#if NETSEC
+#if NET_SECURITY
 void *request = NULL;
 int requestlen = 0;
-#endif /* NETSEC */
+#endif /* NET_SECURITY */
 
 static char *lockfile;		/* name of lockfile */
 static int querystatus;		/* status of query */
@@ -146,9 +146,9 @@ int main (int argc, char **argv)
 #if INET6
 	printf("+INET6");
 #endif /* INET6 */
-#if NETSEC
+#if NET_SECURITY
 	printf("+NETSEC");
-#endif /* NETSEC */
+#endif /* NET_SECURITY */
 	putchar('\n');
 
 	/* this is an attempt to help remote debugging */
@@ -952,7 +952,7 @@ void dump_params (struct query *ctl)
     if (ctl->server.service)
 	printf(" (using service %s)", ctl->server.service);
     if (ctl->server.netsec)
-	printf(" (using IPsec options %s)", ctl->server.netsec);
+	printf(" (using network security options %s)", ctl->server.netsec);
 #else /* INET6 */
     if (ctl->server.port)
 	printf(" (using port %d)", ctl->server.port);

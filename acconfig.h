@@ -74,7 +74,7 @@
 #undef INET6
 
 /* Define if you want network security support compiled in */
-#undef NETSEC
+#undef NET_SECURITY
 
 /* Leave that blank line there!!  Autoheader needs it.
    If you're adding to this file, keep in mind:

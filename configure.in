@@ -198,14 +198,14 @@ AC_ARG_ENABLE(inet6,
           AC_DEFINE(INET6, 1) ])
 
 AC_ARG_ENABLE(netsec,
-	[  --enable-netsec      support network security (req. the inet6-apps library)],
+	[  --enable-netsec      support network security (requires inet6-apps library)],
         [ unset ac_cv_lib_inet6_net_security_strtorequest; AC_CHECK_LIB(inet6, net_security_strtorequest,,
 	[ unset ac_cv_lib_inet6_net_security_strtorequest; LDFLAGS="$LDFLAGS -L/usr/inet6/lib"; AC_CHECK_LIB(inet6, net_security_strtorequest,,
         [ echo 'configure: cannot find net_security_strtorequest in libinet6, which is required';
           echo '           for network security support. Either it does not exist, or it was';
           echo '           not built with network security support enabled.';
           exit 1]) ])
-          AC_DEFINE(NETSEC, 1) ])
+          AC_DEFINE(NET_SECURITY, 1) ])
   
 ###	use option --with-gssapi=DIR to compile in GSSAPI support
 AC_ARG_WITH(gssapi,

@@ -164,12 +164,12 @@ serv_option	: AKA alias_list
 
 		| QVIRTUAL STRING	{current.server.qvirtual=xstrdup($2);}
 		| NETSEC STRING		{
-#ifdef INET6
+#ifdef NET_SECURITY
 					    current.server.netsec = 
 						xstrdup($2);
 #else
-					    yyerror("IPV6 support disabled")
-#endif /* INET6 */
+					    yyerror("Network-security support disabled")
+#endif /* NET_SECURITY */
 					}
 		| INTERFACE STRING	{
 #if defined(linux) && !defined(INET6)

@@ -341,12 +341,12 @@ struct query *ctl;	/* option record to be initialized */
 
 	case 'T':
 	case LA_NETSEC:
-#if NETSEC
+#if NET_SECURITY
 	    ctl->server.ipsec = (void *)optarg;
 #else
 	    fprintf(stderr, "fetchmail: IPv6 support is disabled\n");
 	    errflag++;
-#endif /* NETSEC */
+#endif /* NET_SECURITY */
 	    break;
 
 #if defined(linux) && !INET6
@@ -419,9 +419,9 @@ struct query *ctl;	/* option record to be initialized */
 	fputs("  -n, --norewrite   don't rewrite header addresses\n", stderr);
 	fputs("  -l, --limit       don't fetch messages over given size\n", stderr);
 
-#if NETSEC
+#if NET_SECURITY
 	fputs("  -T, --netsec      set IP security request\n", stderr);
-#endif /* NETSEC */
+#endif /* NET_SECURITY */
 	fputs("  -S, --smtphost    set SMTP forwarding host\n", stderr);
 	fputs("  -D, --smtpaddress set SMTP delivery domain to use\n", stderr);
 	fputs("  -b, --batchlimit  set batch limit for SMTP connections\n", stderr);
