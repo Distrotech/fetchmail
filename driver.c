@@ -1555,35 +1555,42 @@ const struct method *proto;	/* protocol method table */
 			 * or other PS_REFUSED error response during
 			 * read_headers.
 			 */
-			if (protocol->fetch_body && !suppress_forward)
+			if (protocol->fetch_body) 
 			{
 			    if ((ok = (protocol->trail)(sock, ctl, num)))
 				goto cleanUp;
 			    set_timeout(ctl->server.timeout);
-			    if ((ok = (protocol->fetch_body)(sock, ctl, num, &len)))
-				goto cleanUp;
-			    set_timeout(ctl->server.timeout);
+			    len = 0;
+			    if (!suppress_forward)
+			    {
+				if ((ok=(protocol->fetch_body)(sock,ctl,num,&len)))
+				    goto cleanUp;
+				set_timeout(ctl->server.timeout);
+			    }
 			}
 
 			/* process the body now */
-			ok = readbody(sock,
-				      ctl,
-				      !suppress_forward,
-				      len,
-				      protocol->delimited);
-			if (ok == PS_TRANSIENT)
-			    suppress_delete = TRUE;
-			else if (ok)
-			    goto cleanUp;
-			set_timeout(ctl->server.timeout);
-
-			/* tell the server we got it OK and resynchronize */
-			if (protocol->trail)
+			if (len > 0)
 			{
-			    ok = (protocol->trail)(sock, ctl, num);
-			    if (ok != 0)
+			    ok = readbody(sock,
+					  ctl,
+					  !suppress_forward,
+					  len,
+					  protocol->delimited);
+			    if (ok == PS_TRANSIENT)
+				suppress_delete = TRUE;
+			    else if (ok)
 				goto cleanUp;
 			    set_timeout(ctl->server.timeout);
+
+			    /* tell server we got it OK and resynchronize */
+			    if (protocol->trail)
+			    {
+				ok = (protocol->trail)(sock, ctl, num);
+				if (ok != 0)
+				    goto cleanUp;
+				set_timeout(ctl->server.timeout);
+			    }
 			}
 
 			fetches++;
