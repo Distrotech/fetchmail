@@ -136,30 +136,13 @@ tags: $(tagsrcs)
 	$(CTAGS) $(tagsrcs)
 
 .PHONY: install installdirs
-install: installdirs \
-	 $(bindir)/$(instname) $(mandir)/$(instname).$(manext) # $(infodir)/fetchmail.info
+install: installdirs $(bindir)/$(instname) $(mandir)/$(instname).$(manext)
 
 installdirs:
-	$(SHELL) ${srcdir}/mkinstalldirs $(bindir) $(mandir) # $(infodir)
+	$(SHELL) ${srcdir}/mkinstalldirs $(bindir) $(mandir)
 
 $(bindir)/$(instname): fetchmail
 	$(INSTALL_PROGRAM) fetchmail $@
-
-$(infodir)/fetchmail.info: fetchmail.info
-	if [ -r ./fetchmail.info ]; then dir=.; else dir=$(srcdir); fi; \
-	for file in $${dir}/fetchmail.info*; do \
-	  name="`basename $$file`"; \
-	  $(INSTALL_DATA) $$file \
-	    `echo $@ | sed "s,fetchmail.info\$$,$$name,"`; \
-	done
-# Run install-info only if it exists.
-# Use `if' instead of just prepending `-' to the
-# line so we notice real errors from install-info.
-# We use `$(SHELL) -c' because some shells do not
-# fail gracefully when there is an unknown command.
-	if $(SHELL) -c 'install-info --version' >/dev/null 2>&1; then \
-	  install-info --infodir=$(infodir) $$dir/fetchmail.info; \
-	else true; fi
 
 $(mandir)/$(instname).$(manext): fetchmail.man
 	$(INSTALL_DATA) $(srcdir)/fetchmail.man $@
