@@ -821,7 +821,7 @@ const struct method *proto;	/* protocol method table */
 	    {
 		int	toolarge = msgsizes && (msgsizes[num-1] > ctl->limit);
 		int	fetch_it = ctl->fetchall ||
-		    (!toolarge && (force_retrieval || !(protocol->is_old && (protocol->is_old)(sockfp,ctl,num)));
+		    (!toolarge && (force_retrieval || !(protocol->is_old && (protocol->is_old)(sockfp,ctl,num))));
 
 		/* we may want to reject this message if it's old */
 		if (!fetch_it)
