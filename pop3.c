@@ -534,16 +534,19 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
      * In that case, marking the seen flag is the only way to prevent the
      * message from being re-fetched on subsequent runs.
      *
-     * The line count passed is the maximum value of a twos-complement
-     * signed integer minus 1 (we take advantage of the fact that, according
-     * to all the POP RFCs, "if the number of lines requested by the
-     * POP3 client is greater than than the number of lines in the
-     * body, then the POP3 server sends the entire message.").
+     * We take advantage here of the fact that, according to all the
+     * POP RFCs, "if the number of lines requested by the POP3 client
+     * is greater than than the number of lines in the body, then the
+     * POP3 server sends the entire message.").
+     *
+     * The line count passed (99999999) is the maximum value CompuServe will
+     * accept; it's much lower than the natural value 2147483646 (the maximum
+     * twos-complement signed 32-bit integer minus 1)
      */
     if (ctl->keep)
 	gen_send(sock, "RETR %d", number);
     else
-	gen_send(sock, "TOP %d 2147483646", number);
+	gen_send(sock, "TOP %d 99999999", number);
     if ((ok = pop3_ok(sock, buf)) != 0)
 	return(ok);
 

@@ -8,6 +8,7 @@
 
 ------------------------------------------------------------------------------
 fetchmail-4.4.9 ():
+* 0.92 version of fetchmailconf.
 * Merging of command-line argument  has been fixed (I think!).
 * Make fetchmail 64-bit clean (thanks to John Franklin <john@iptimaging.com>).
 * Fix man-page installation (thanks to Kevin Hawkins <khawkins@ncsa.uiuc.edu>).
@@ -15,8 +16,9 @@ fetchmail-4.4.9 ():
 * CompuServe RPA and idfile fixes from Rich Beerman <rbeerman@pobox.com>.
 * Hajimu UMEMOTO <ume@calm.imasy.or.jp> patched the address-rewrite logic to
   deal with addresses of the form "John Smith (foo) <jsmith@bar.com>" better.
+* TOP argument reduced to 99999999, the most CompuServe will accept.
 
-There are 277 people on fetchmail-friends and 216 on fetchmail-announce.
+There are 279 people on fetchmail-friends and 216 on fetchmail-announce.
 
 fetchmail-4.4.8 (Tue May 26 12:30:58 EDT 1998):
 * Added 0.90 beta version of fetchmailconf.
