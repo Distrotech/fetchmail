@@ -7,11 +7,6 @@
   messages would wind up as separate syslog calls (probably not the desired
   result).
 
-* Bob Friesenhahn reports that under Solaris the configure.in test looking
-  for res_search fails to detect that res_search is in libresolv.  But I can't
-  find an error in the configure macros, not if the autoconf docs are 
-  correct.  It will take an autoconf expert on a Solaris box to fix this.
-
 * Chris LewisMoss reports that he gets a parse error when the last line of
   his .fetchmailrc is a comment.
 
