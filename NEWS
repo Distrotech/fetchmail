@@ -6,6 +6,10 @@
 
 			    Features To Consider
 
+* It would be nice to be able to have the '-c' and standard retrieval modes
+  return a zero exit status if *any* host had mail, not just the last one
+  checked.
+
 * Generate bounce messages when delivery is refused.  See RFC1891, RFC1894.
 
 * More log levels?
@@ -18,6 +22,7 @@
 pl 3.9.9 ():
 * We can now process multiple To headers a la Microsoft Exchange Server.
 * Avoid sending LIST and getting an error when no messages are waiting.
+* Allow `fetchmail' to do wakeup even when no .fetchmailrc.
 
 pl 3.9.8 (Sat Jun 14 14:19:32 EDT 1997):
 * Fetchmail is now normally built with optimization.

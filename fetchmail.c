@@ -195,10 +195,6 @@ int main (int argc, char **argv)
 		"No mailservers set up -- perhaps %s is missing?\n", rcfile);
 	exit(0);
     }
-    else if (!quitmode && querylist == NULL) {
-	(void) fputs("fetchmail: no mailservers have been specified.\n", stderr);
-	exit(PS_SYNTAX);
-    }
 
     /* check for another fetchmail running concurrently */
     pid = -1;
@@ -220,6 +216,12 @@ int main (int argc, char **argv)
 	    unlink(lockfile);
 	}
 	fclose(lockfp);
+    }
+
+    /* if no mail servers listed and nothing in background, we're done */
+    if (!quitmode && pid == -1 && querylist == NULL) {
+	(void)fputs("fetchmail: no mailservers have been specified.\n",stderr);
+	exit(PS_SYNTAX);
     }
 
     /* perhaps user asked us to kill the other fetchmail */
@@ -285,8 +287,8 @@ int main (int argc, char **argv)
 	{
 	    /*
 	     * Should never happen -- possible only if a background fetchmail
-	     * croaks after the first kill probe above but before the SIGUSR1/SIGHUP
-	     * transmission.
+	     * croaks after the first kill probe above but before the
+	     * SIGUSR1/SIGHUP transmission.
 	     */
 	    fprintf(stderr,
 		    "fetchmail: elder sibling at %d died mysteriously.\n",
