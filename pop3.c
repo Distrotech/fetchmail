@@ -361,8 +361,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	 * These authentication methods are blessed by RFC1734,
 	 * describing the POP3 AUTHentication command.
 	 */
-	if ((ctl->use_ssl != FLAG_FALSE) ||
-	    (ctl->server.authenticate == A_ANY) ||
+	if ((ctl->server.authenticate == A_ANY) ||
 	    (ctl->server.authenticate == A_GSSAPI) ||
 	    (ctl->server.authenticate == A_KERBEROS_V4) ||
 	    (ctl->server.authenticate == A_OTP) ||

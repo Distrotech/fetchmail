@@ -8,6 +8,9 @@
 * Include James Stone's moldremover.py script.
 * Enable .fetchmailrc permissions checking under Cygwin.
 * Nalin Dahyabai's fix for POP3 strong authentication.
+* Revised Nalin Dahyabai's fix for POP3 strong authentication (Matthias
+  Andree, the original version would go into an infinite loop when CAPA
+  failed; found by David Greaves.)
 * HOME_ETC patch for PLD Linux.
 * Sunil Shetye's fix for SSL configuration.
 * Simon Josefsson's patch for GSS library support.
