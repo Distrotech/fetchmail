@@ -92,7 +92,8 @@ static int imap_ok(int sock, char *argbuf)
 		stage = STAGE_FETCH;
 	    }
 	}
-	else if (strstr(buf, "RECENT"))
+	/* a space is required to avoid confusion with the \Recent flag */
+	else if (strstr(buf, " RECENT"))
 	{
 	    recentcount = atoi(buf+2);
 	}
@@ -133,15 +134,15 @@ static int imap_ok(int sock, char *argbuf)
 	while (isspace(*cp))
 	    cp++;
 
-        if (strncmp(cp, "OK", 2) == 0)
+        if (strncasecmp(cp, "OK", 2) == 0)
 	{
 	    if (argbuf)
 		strcpy(argbuf, cp);
 	    return(PS_SUCCESS);
 	}
-	else if (strncmp(cp, "BAD", 3) == 0)
+	else if (strncasecmp(cp, "BAD", 3) == 0)
 	    return(PS_ERROR);
-	else if (strncmp(cp, "NO", 2) == 0)
+	else if (strncasecmp(cp, "NO", 2) == 0)
 	{
 	    if (stage == STAGE_GETAUTH) 
 		return(PS_AUTHFAIL);	/* RFC2060, 6.2.2 */
@@ -548,6 +549,10 @@ static int imap_getrange(int sock,
 	 * for new mail.
 	 */
 
+	/* some servers do not report RECENT after an EXPUNGE. this check
+	 * forces an incorrect recentcount to be ignored. */
+	if (recentcount > count)
+	    recentcount = 0;
 	/* this is a while loop because imap_idle() might return on other
 	 * mailbox changes also */
 	while (recentcount == 0 && do_idle) {
@@ -732,15 +737,20 @@ static int imap_getsizes(int sock, int count, int *sizes)
     {
 	unsigned int num, size;
 	int ok;
+	char *cp;
 
 	if ((ok = gen_recv(sock, buf, sizeof(buf))))
 	    return(ok);
+	/* we want response matching to be case-insensitive */
+	for (cp = buf; *cp; cp++)
+	    *cp = toupper(*cp);
 	/* an untagged NO means that a message was not readable */
-	else if (strstr(buf, "* NO"))
+	if (strstr(buf, "* NO"))
 	    ;
 	else if (strstr(buf, "OK") || strstr(buf, "NO"))
 	    break;
-	else if (sscanf(buf, "* %u FETCH (RFC822.SIZE %u)", &num, &size) == 2) {
+	else if (sscanf(buf, "* %u FETCH (RFC822.SIZE %u)", &num, &size) == 2) 
+	{
 	    if (num > 0 && num <= count)
 	        sizes[num - 1] = size;
 	    else
