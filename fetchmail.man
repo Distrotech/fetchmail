@@ -254,6 +254,17 @@ work --
 has to bind to a privileged port locally in order for the mail 
 server to believe it's allowed to bind to a privileged remote port.)
 .PP
+RFC1460 introduced APOP authentication.  In this variant of POP3,
+you register an APOP password on your server host (the program
+to do this with on the server is probably called \fIpopauth\fR(8)).  You
+put the same password in your 
+.I .fetchmailrc
+file.  Each time 
+.I fetchmail
+logs in, it sends a cryptographically secure hash of your password and
+the server greeting time to the server, which can verify it by
+checking its authorization database. 
+.PP
 .SH OUTPUT OPTIONS
 The default behavior of 
 .I fetchmail

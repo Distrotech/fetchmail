@@ -410,8 +410,10 @@ struct hostrec *queryctl;
     if (queryctl->password[0] == '\0')
 	printf("  Password will be prompted for.\n");
     else if (outlevel == O_VERBOSE)
-	if (queryctl->protocol == P_RPOP)
-	    printf("  RPOP id = '%s'\n", queryctl->password);
+	if (queryctl->protocol == P_APOP)
+	    printf("  APOP secret = '%s'\n", queryctl->password);
+	else if (queryctl->protocol == P_RPOP)
+	    printf("  RPOP secret = '%s'\n", queryctl->password);
         else
 	    printf("  Password = '%s'\n", queryctl->password);
     printf("  Protocol is %s", showproto(queryctl->protocol));

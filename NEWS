@@ -8,6 +8,12 @@ to a true IMAP4 server and do the UID thing (see header comments in imap.c).
 
 			Release Notes:
 
+fetchmail-1.0 ():
+
+* In POP3, don't send LAST if STAT shows count of waiting messages to be zero.
+
+* Document APOP better, we know it works now.
+
 fetchmail-1.0 (Thu Sep 26 11:59:38 EDT 1996):
 
 * SMTP forwarding and header-rewrite features work with POP2 now.

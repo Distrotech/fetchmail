@@ -171,7 +171,7 @@ int *firstp;
    */
   *firstp = 1;
   use_uidl = 0;
-  if (!queryctl->fetchall) {
+  if (*countp > 0 && !queryctl->fetchall) {
     char id [IDLEN+1];
     int num;
 

@@ -819,13 +819,11 @@ va_dcl {
   va_end(ap);
 
   SockPuts(socket, buf);
-
   if (outlevel == O_VERBOSE)
     fprintf(stderr,"> %s\n", buf);
 
+  /* we presume this does its own response echoing */
   ok = (protocol->parse_response)(buf,socket);
-  if (outlevel == O_VERBOSE)
-    fprintf(stderr,"%s\n",buf);
 
   return(ok);
 }
