@@ -1108,6 +1108,26 @@ you'll have to build it from sources yourself with the configure
 switch --enable-POP2.
 
 """
+
+# The greeting line on the server known to be buggy is:
+# +OK POP3 server ready (running FTGate V2, 2, 1, 0 Jun 21 1999 09:55:01)
+#
+if string.find(greetline, "FTGate") > 0:
+                warnings = warnings + """
+This POP server has a weird bug; it says OK twice in response to TOP.
+Its response to RETR is normal, so use the `fetchall'.
+
+"""
+
+if string.find(greetline, "POP-Max") > 0:
+                warnings = warnings + """
+The Mail Max server screws up on mail with attachments.  It reports the
+message size with attachments included, but doesn't downloasd them on a
+RETR or TOP.  You should get rid of it -- and the brain-dead NT server
+it rode in on. 
+
+"""
+
             if string.find(greetline, "1.003") > 0 or string.find(greetline, "1.004") > 0:
                 warnings = warnings + """
 This appears to be an old version of the UC Davis POP server.  These are
@@ -1683,6 +1703,10 @@ def copy_instance(toclass, fromdict):
 # -f: specify the run control file to read.
 
 if __name__ == '__main__': 
+
+    if not os.environ.has_key("DISPLAY"):
+        print "fetchmailconf must be run under X"
+        sys.exit(1)
 
     fetchmail_gif = """
 R0lGODdhPAAoAPcAAP///wgICBAQEISEhIyMjJSUlKWlpa2trbW1tcbGxs7Ozufn5+/v7//39yEY

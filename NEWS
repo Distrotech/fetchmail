@@ -9,6 +9,21 @@ a Certifying Authority we recognize?).
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.2.0 (Tue Nov 30 14:24:25 EST 1999), 18302 lines:
+* fetchmailconf now complains and exits gracefully when not run under X.
+* configure.in port patch for OpenBSD from Federico G. Schwindt.
+* configure.in port patch fror Heimdal from Leif Johansson <leifj@it.su.se>
+* configure.in fix for OpenSSL configuration problems.
+* Teach fetchmail about the buggy FTGate server.
+* cs.po update from Jiri Pavlovsky.
+* Edmund Grimley's patch to uid.c to fix the `uidl keep expunge 1' case.
+* Abort startup if the configuration directory is nonexistent; this 
+  probably means an NFS mount of user's home directory failed.
+* Added warnings and FAQ items about the MailMax server, which doesn't
+  download attachments.
+
+There are 278 people on fetchmail-friends and 472 on fetchmail-announce.
+
 fetchmail-5.1.4 (Sun Nov  7 17:40:21 EST 1999), 18302 lines:
 * Mike Pearce's patch to fix a compile-time error recently introduced into
   the socket code when HAVE_INET_ATON is off.

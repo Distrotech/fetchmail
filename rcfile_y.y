@@ -428,7 +428,17 @@ int prc_parse_file (const char *pathname, const flag securecheck)
     if ( (prc_errflag = prc_filecheck(pathname, securecheck)) != 0 )
 	return(prc_errflag);
 
-    if (errno == ENOENT)
+    /*
+     * Croak if the configuration directory does not exist.
+     * This probably means an NFS mount failed and we can't
+     * see a configuration file that ought to be there.
+     * Question: is this a portable check? It's not clear
+     * that all implementations of lstat() will return ENOTDIR
+     * rather than plain ENOENT in this case...
+     */
+    if (errno == ENOTDIR)
+	return(PS_IOERR);
+    else if (errno == ENOENT)
 	return(PS_SUCCESS);
 
     /* Open the configuration file and feed it to the lexer. */

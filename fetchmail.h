@@ -434,6 +434,7 @@ char *idpair_find(struct idlist **, const char *);
 void append_str_list(struct idlist **, struct idlist **);
 void expunge_uids(struct query *);
 void update_str_lists(struct query *);
+void uid_expunge(struct query *);
 void write_saved_lists(struct query *, const char *);
 
 /* rcfile_y.y */

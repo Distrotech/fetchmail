@@ -389,6 +389,18 @@ void update_str_lists(struct query *ctl)
     }
 }
 
+void uid_expunge(struct query *ctl)
+/* transfer seen UIDs from newsaved to oldsaved
+   to simulate writing anad rereading .fetchids */
+{
+    struct idlist *i;
+
+    for (i = ctl->newsaved; i; i = i->next)
+	if (i->val.status.mark == UID_SEEN &&
+	    !str_in_list(&ctl->oldsaved, i->id, FALSE))
+	    save_str(&ctl->oldsaved, i->id, UID_SEEN);
+}
+
 void write_saved_lists(struct query *hostlist, const char *idfile)
 /* perform end-of-run write of seen-messages list */
 {
