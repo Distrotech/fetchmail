@@ -1,5 +1,7 @@
 			To-do list:
 
+Torture-test RPOP and RFC1725 POP UIDL features against a server that has them.
+
 Support IMAP4 extensions for secure challenge-response, once they're actually
 standardized.  Also, use the CAPABILITY command to detect when we're talking
 to a true IMAP4 server and do the UID thing (see header comments in imap.c).
