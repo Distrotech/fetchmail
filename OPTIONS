@@ -1,0 +1,77 @@
+Summary of responses on `Nuke the options?': 
+
+Yes:
+
+Felix Morley Finch <felix@crowfix.com>
+Nathan Myers <ncm@cantrip.org>
+Irving Wolfe <Irving_Wolfe@wolfe.net>
+Craig Metz <cmetz@inner.net>
+Alexander Kourakos <awk@bnt.com>
+John Swinbank <john@swinbank.u-net.com>
+Alexandros Manoussakis <alx@beryl.kapatel.gr>
+
+No:
+
+Guenther Leber <gleber@gams.at>
+Dave Bodenstab <imdave@mcs.net>
+Erik Soosalu <esoosalu@geocities.com>
+Jonathan Marten <jonathan.marten@uk.Sun.COM>
+
+Other:
+
+Chris Hanson <cph@martigny.ai.mit.edu> thinks --smtphost can be useful,
+but says the change won't affect him.
+
+Matt Simmons <simmonmt@acm.org> didn't express a general opinion but wants 
+-B/fetchlimit kept.
+
+Steffen Opel <opel@rumpelkammer.uni-mannheim.de> makes a good argument
+that --limit should be settable from the command line as a way to throttle
+fetches according to day-night rates.
+
+Comments:
+	felix@crowfix.com:  "Using --fetchmailrc, someone could
+write a Perl wrapper which would dummy up a temporary control file
+using the soon-to-be-banned options, if someone really wanted such a
+program."
+	ncm@cantrip.org doesn't want fetchmailrc to require a control file.
+	gleber@gams.at: "I like the flexibility I get from [command-line
+options] and use it very often."
+	awk@bnt.com: keep -u, -p, nuke the others.
+	alx@beryl.kapatel.gr: keep -u, -p, -t, nuke the others.
+	esoosalu@geocities.com: "I would have an objection to removing
+command line options:  It makes it a lot harder to debug the inital setup."
+	jonathan.marten@uk.Sun.COM: particularly (and not unreasonably)
+objects to losing -r.
+
+Alexandros Manoussakis <alx@beryl.kapatel.gr> offered the following summary:
+
+It seems like many of us want to be able to use
+fetchmail without the need of a .fetchmailrc file.
+Regarding your list of commands to remove from
+the command line, taking into account the feedback
+regarding the matter we have (* denotes wanted options):
+
+  -I, --interface   interface required specification
+  -M, --monitor     monitor interface for activity
+*  -p, --protocol    specify pop2, pop3, imap, apop, rpop, kpop, etrn
+  -U, --uidl        force the use of UIDLs (pop3 only)
+  -P, --port        TCP/IP service port to connect to
+  -A, --auth        authentication type (password or kerberos)
+  -E, --envelope    envelope address header
+  -Q, --qvirtual    prefix to remove from local user id
+*  -u, --username    specify users's login on server
+  -n, --norewrite   don't rewrite header addresses
+*  -l, --limit       don't fetch messages over given size
+*  -K, --nokeep      delete new messages after retrieval
+*  -S, --smtphost    set SMTP forwarding host
+  -D, --smtpaddress set SMTP delivery domain to use
+  -Z, --antispam,   set antispam response value
+  -b, --batchlimit  set batch limit for SMTP connections
+  -B, --fetchlimit  set fetch limit for server connections
+  -e, --expunge     set max deletions between expunges
+*  -r, --folder      specify remote folder name
+*  -t, --timeout     server nonresponse timeout
+
+Let's see how it goes and you can remove at least the options
+no-one complains about!

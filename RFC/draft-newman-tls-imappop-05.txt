@@ -1,0 +1,618 @@
+
+
+
+
+
+
+Network Working Group                                          C. Newman
+Internet Draft: Using TLS with IMAP4, POP3 and ACAP             Innosoft
+Document: draft-newman-tls-imappop-05.txt                  November 1998
+
+
+                  Using TLS with IMAP4, POP3 and ACAP
+
+
+Status of this memo
+
+     This document is an Internet-Draft.  Internet-Drafts are working
+     documents of the Internet Engineering Task Force (IETF), its areas,
+     and its working groups.  Note that other groups may also distribute
+     working documents as Internet-Drafts.
+
+     Internet-Drafts are draft documents valid for a maximum of six
+     months and may be updated, replaced, or obsoleted by other
+     documents at any time.  It is inappropriate to use Internet-Drafts
+     as reference material or to cite them other than as "work in
+     progress."
+
+     To view the entire list of current Internet-Drafts, please check
+     the "1id-abstracts.txt" listing contained in the Internet-Drafts
+     Shadow Directories on ftp.is.co.za (Africa), ftp.nordu.net
+     (Northern Europe), ftp.nis.garr.it (Southern Europe), munnari.oz.au
+     (Pacific Rim), ftp.ietf.org (US East Coast), or ftp.isi.edu (US
+     West Coast).
+
+Abstract
+
+     This specification defines extensions to IMAP [IMAP4], POP [POP3]
+     and ACAP [ACAP] which activate TLS [TLS].  This also defines a
+     simple PLAIN SASL [SASL] mechanism for use underneath strong TLS
+     encryption with ACAP or other protocols lacking a clear-text login
+     command.
+
+1. Motivation
+
+     The TLS protocol [TLS] (formerly known as SSL) provides a way to
+     secure a TCP connection from tampering and eavesdropping.
+     Obviously, the option of using such security is desirable for IMAP
+     [IMAP4], POP [POP3] and ACAP [ACAP].  Although advanced SASL [SASL]
+     authentication mechanisms can provide a lightweight version of this
+     service, TLS is a full service security layer and is complimentary
+     to simple authentication-only SASL mechanisms or clear-text
+     password login commands. Furthermore, many sites have a high
+     investment in authentication infrastructure (e.g., a large database
+     of a one-way-function applied to user passwords), so a privacy
+
+
+
+Newman                                                          [Page 1]
+
+Internet Draft    Using TLS with IMAP4, POP3 and ACAP      November 1998
+
+
+     layer which is not tightly bound to user authentication can protect
+     against network eavesdropping attacks without requiring a new
+     authentication infrastructure and/or forcing all users to change
+     their password.
+
+1.1. Conventions Used in this Document
+
+     The key words "REQUIRED", "MUST", "MUST NOT", "SHOULD", "SHOULD
+     NOT", "MAY", and "OPTIONAL" in this document are to be interpreted
+     as described in "Key words for use in RFCs to Indicate Requirement
+     Levels" [KEYWORDS].
+
+     Formal syntax is defined using ABNF [ABNF].
+
+     In examples, "C:" and "S:" indicate lines sent by the client and
+     server respectively.
+
+2. Basic Interoperability and Security Requirements
+
+     The following requirements apply to all implementations of the
+     STARTTLS extension for IMAP4, POP3 and ACAP.
+
+2.1. Cipher Suite Requirements
+
+     Implementation of the TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA cipher
+     suite is REQUIRED.  This is important as it assures that any two
+     compliant implementations can be configured to interoperate.
+
+     All other cipher suites are OPTIONAL.
+
+2.2. TLS Operational Mode Security Requirements
+
+     Both clients and servers SHOULD have an operational mode where use
+     of TLS encryption is required to login.  Clients MAY have an
+     operational mode where TLS is used only when advertised by the
+     server, but login occurs regardless.  For backwards compatibility,
+     servers SHOULD have an operational mode which permits clients to
+     login when TLS is not used.
+
+2.3. Clear-Text Password Requirement
+
+     A server which implements both STARTTLS and a clear-text password
+     authentication mechanism (including but not limited to the IMAP4
+     LOGIN command, POP3 PASS command and the PLAIN mechanism in section
+     6) MUST have an operational mode where all clear-text login
+     commands and mechanisms are disabled unless TLS encryption is
+     active.
+
+
+
+
+Newman                                                          [Page 2]
+
+Internet Draft    Using TLS with IMAP4, POP3 and ACAP      November 1998
+
+
+2.4. Server Identity Check
+
+     During the TLS negotiation, the client MUST check its understanding
+     of the server hostname against the server's identity as presented
+     in the server Certificate message, in order to prevent
+     man-in-the-middle attacks.  Matching is performed according to
+     these rules:
+
+     o   The client MUST use the server hostname it used to open the
+         connection as the value to compare against the server name as
+         expressed in the server certificate.  The client MUST NOT use
+         any form of the server hostname derived from an insecure remote
+         source (e.g., insecure DNS reverse lookup).
+
+     o   If a subjectAltName extension of type dNSName is present in the
+         certificate, it SHOULD be used as the source of the server's
+         identity.
+
+     o   Matching is case-insensitive.
+
+     o   A "*" wildcard character MAY be used as the left-most name
+         component in the certificate.  For example, *.example.com would
+         match a.example.com, foo.example.com, etc. but would not match
+         example.com.
+
+     o   If the certificate contains multiple names (e.g. more than one
+         dNSName field), then a match with any one of the fields is
+         considered acceptable.
+
+     If the match fails, the client SHOULD either ask for explicit user
+     confirmation, or terminate the connection and indicate the server's
+     identity is suspect.
+
+3. IMAP4 STARTTLS extension
+
+     When the TLS extension is present in IMAP4, "STARTTLS" is listed as
+     a capability in response to the CAPABILITY command.  This extension
+     adds a single command, "STARTTLS" to the IMAP4 protocol which is
+     used to begin a TLS negotiation.
+
+3.1. STARTTLS Command
+
+   Arguments:  none
+
+   Responses:  no specific responses for this command
+
+   Result:     OK - begin TLS negotiation
+               NO - security layer already active
+
+
+
+Newman                                                          [Page 3]
+
+Internet Draft    Using TLS with IMAP4, POP3 and ACAP      November 1998
+
+
+               BAD - command unknown or arguments invalid
+
+      A TLS negotiation begins immediately after the CRLF at the end of
+      the tagged OK response from the server.  Once a client issues a
+      STARTTLS command, it MUST NOT issue further commands until a
+      server response is seen and the TLS negotiation is complete.
+
+      The STARTTLS command is only valid in non-authenticated state.
+      The server remains in non-authenticated state, even if client
+      credentials are supplied during the TLS negotiation.  The SASL
+      [SASL] EXTERNAL mechanism MAY be used to authenticate once TLS
+      client credentials are successfully exchanged, but servers
+      supporting the STARTTLS command are not required to support the
+      EXTERNAL mechanism.
+
+      Once TLS has been started, the client SHOULD discard cached
+      information about server capabilities and re-issue the CAPABILITY
+      command.  This is necessary to protect against man-in-the-middle
+      attacks which alter the capabilities list prior to STARTTLS.  The
+      server MAY advertise different capabilities after STARTTLS.
+
+      The formal syntax for IMAP4 is amended as follows:
+
+        command_any   =/  "STARTTLS"
+
+   Example:    C: a001 CAPABILITY
+               S: * CAPABILITY IMAP4rev1 STARTTLS
+               S: a001 OK CAPABILITY completed
+               C: a002 STARTTLS
+               S: a002 OK Begin TLS negotiation now
+               <TLS negotiation, further commands are under TLS layer>
+               C: a003 CAPABILITY
+               S: * CAPABILITY IMAP4rev1 AUTH=EXTERNAL
+               S: a003 OK CAPABILITY completed
+               C: a004 LOGIN joe password
+               S: a004 OK LOGIN completed
+
+4. POP3 STARTTLS extension
+
+   The POP3 STARTTLS extension adds the STLS command to POP3 servers.
+   If this is implemented, the POP3 extension mechanism [POP3EXT] MUST
+   also be implemented to avoid the need for client probing of multiple
+   commands.  The capability name "STLS" indicates this command is
+   present.
+
+      STLS
+
+         Arguments: none
+
+
+
+Newman                                                          [Page 4]
+
+Internet Draft    Using TLS with IMAP4, POP3 and ACAP      November 1998
+
+
+         Restrictions:
+             Only permitted in AUTHORIZATION state.
+
+         Discussion:
+             A TLS negotiation begins immediately after the CRLF at the
+             end of the +OK response from the server.  A -ERR response
+             MAY result if a security layer is already active.  Once a
+             client issues a STLS command, it MUST NOT issue further
+             commands until a server response is seen and the TLS
+             negotiation is complete.
+
+             The STLS command is only permitted in AUTHORIZATION state
+             and the server remains in AUTHORIZATION state, even if
+             client credentials are supplied during the TLS negotiation.
+             The AUTH command [POP-AUTH] with the EXTERNAL mechanism
+             [SASL] MAY be used to authenticate once TLS client
+             credentials are successfully exchanged, but servers
+             supporting the STLS command are not required to support the
+             EXTERNAL mechanism.
+
+             Once TLS has been started, the client SHOULD discard cached
+             information about server capabilities and re-issue the CAPA
+             command.  This is necessary to protect against
+             man-in-the-middle attacks which alter the capabilities list
+             prior to STLS.  The server MAY advertise different
+             capabilities after STLS.
+
+         Possible Responses:
+             +OK -ERR
+
+         Examples:
+             C: STLS
+             S: +OK Begin TLS negotiation
+             <TLS negotiation, further commands are under TLS layer>
+               ...
+             C: STLS
+             S: -ERR Security Layer already active
+
+5. ACAP STARTTLS extension
+
+     When the TLS extension is present in ACAP, "STARTTLS" is listed as
+     a capability in the ACAP greeting.  No arguments to this capability
+     are defined at this time.  This extension adds a single command,
+     "STARTTLS" to the ACAP protocol which is used to begin a TLS
+     negotiation.
+
+
+
+
+
+
+Newman                                                          [Page 5]
+
+Internet Draft    Using TLS with IMAP4, POP3 and ACAP      November 1998
+
+
+5.1. STARTTLS Command
+
+   Arguments:  none
+
+   Responses:  no specific responses for this command
+
+   Result:     OK - begin TLS negotiation
+               NO - security layer already active
+               BAD - command unknown or arguments invalid
+
+      A TLS negotiation begins immediately after the CRLF at the end of
+      the tagged OK response from the server.  Once a client issues a
+      STARTTLS command, it MUST NOT issue further commands until a
+      server response is seen and the TLS negotiation is complete.
+
+      The STARTTLS command is only valid in non-authenticated state.
+      The server remains in non-authenticated state, even if client
+      credentials are supplied during the TLS negotiation.  The SASL
+      [SASL] EXTERNAL mechanism MAY be used to authenticate once TLS
+      client credentials are successfully exchanged, but servers
+      supporting the STARTTLS command are not required to support the
+      EXTERNAL mechanism.
+
+      After the TLS layer is established, the server MUST re-issue an
+      untagged ACAP greeting.  This is necessary to protect against
+      man-in-the-middle attacks which alter the capabilities list prior
+      to STARTTLS.  The client SHOULD discard cached capability
+      information and replace it with the information from the new ACAP
+      greeting.  The server MAY advertise different capabilities after
+      STARTTLS.
+
+      The formal syntax for ACAP is amended as follows:
+
+        command_any   =/  "STARTTLS"
+
+   Example:    S: * ACAP (SASL "CRAM-MD5") (STARTTLS)
+               C: a002 STARTTLS
+               S: a002 OK "Begin TLS negotiation now"
+               <TLS negotiation, further commands are under TLS layer>
+               S: * ACAP (SASL "CRAM-MD5" "PLAIN" "EXTERNAL")
+
+6. PLAIN SASL mechanism
+
+     Clear-text passwords are simple, interoperate with almost all
+     existing operating system authentication databases, and are useful
+     for a smooth transition to a more secure password-based
+     authentication mechanism.  The drawback is that they are
+     unacceptable for use over an unencrypted network connection.
+
+
+
+Newman                                                          [Page 6]
+
+Internet Draft    Using TLS with IMAP4, POP3 and ACAP      November 1998
+
+
+     This defines the "PLAIN" SASL mechanism for use with ACAP and other
+     protocols with no clear-text login command.  This MUST NOT be
+     implemented unless strong TLS encryption or an equivalent strong
+     encryption layer is also implemented.
+
+     The mechanism consists of a single message from the client to the
+     server.  The client sends the authorization identity (identity to
+     login as), followed by a US-ASCII NUL character, followed by the
+     authentication identity (identity whose password will be used),
+     followed by a US-ASCII NUL character, followed by the clear-text
+     password.  The client may leave the authorization identity empty to
+     indicate that it is the same as the authentication identity.
+
+     The server will verify the authentication identity and password
+     with the system authentication database and verify that the
+     authentication credentials permit the client to login as the
+     authorization identity.  If both steps succeed, the user is logged
+     in.
+
+     The server MAY also use the password to initialize any new
+     authentication database, such as one suitable for CRAM-MD5
+     [CRAM-MD5].
+
+     Non-US-ASCII characters are permitted as long as they are
+     represented in UTF-8 [UTF-8].  Use of non-visible characters or
+     characters which a user may be unable to enter on some keyboards is
+     discouraged.
+
+     Clients are encouraged to support pure-binary passwords as they may
+     be safe from dictionary attacks.  However, if the client offers a
+     character-based interface for password entry it MUST use UTF-8
+     encoding for the characters.
+
+     The formal grammar for the client message using Augmented BNF
+     [ABNF] follows.
+
+     message         = [authorize-id] NUL authenticate-id NUL password
+     authenticate-id = 1*UTF8-SAFE      ; MUST accept up to 255 octets
+     authorize-id    = 1*UTF8-SAFE      ; MUST accept up to 255 octets
+     password        = *NZ-OCTET        ; MUST accept up to 255 octets
+     NUL             = %x00
+     NZ-OCTET        = %x01-FF          ; all non-NUL octet values
+     UTF8-SAFE       = %x01-09 / %x0B-0C / %x0E-7F / UTF8-2 /
+                       UTF8-3 / UTF8-4 / UTF8-5 / UTF8-6
+     UTF8-1          = %x80-BF
+     UTF8-2          = %xC0-DF UTF8-1
+     UTF8-3          = %xE0-EF 2UTF8-1
+     UTF8-4          = %xF0-F7 3UTF8-1
+
+
+
+Newman                                                          [Page 7]
+
+Internet Draft    Using TLS with IMAP4, POP3 and ACAP      November 1998
+
+
+     UTF8-5          = %xF8-FB 4UTF8-1
+     UTF8-6          = %xFC-FD 5UTF8-1
+
+     Here is an example of how this might be used to initialize a
+     CRAM-MD5 authentication database for ACAP:
+
+     Example:    S: * ACAP (SASL "CRAM-MD5") (STARTTLS)
+                 C: a001 AUTHENTICATE "CRAM-MD5"
+                 S: + "<1896.697170952@postoffice.reston.mci.net>"
+                 C: "tim b913a602c7eda7a495b4e6e7334d3890"
+                 S: a001 NO (TRANSITION-NEEDED)
+                    "Please change your password, or use TLS to login"
+                 C: a002 STARTTLS
+                 S: a002 OK "Begin TLS negotiation now"
+                 <TLS negotiation, further commands are under TLS layer>
+                 S: * ACAP (SASL "CRAM-MD5" "PLAIN" "EXTERNAL")
+                 C: a003 AUTHENTICATE "PLAIN" {21+}
+                 C: <NUL>tim<NUL>tanstaaftanstaaf
+                 S: a003 OK CRAM-MD5 password initialized
+
+     Note: In this example, <NUL> represents a single ASCII NUL octet.
+
+     Here is an example session where a client erroneously attempts to
+     use PLAIN prior to starting TLS:
+
+     Example:    S: * ACAP (SASL "CRAM-MD5" "PLAIN") (STARTTLS)
+                 C: a001 AUTHENTICATE "PLAIN" {21}
+                 S: a001 NO (ENCRYPT-NEEDED)
+                    "Can't use PLAIN without encryption"
+
+7. imaps and pop3s ports
+
+     The common practice of using a separate port for a "secure" version
+     of each protocol has a number of disadvantages in the IMAP [IMAP4],
+     ACAP [ACAP] and POP [POP3] environment.  Rather than using the best
+     security available, it means that clients have to be explicitly
+     configured to use the separate secure port or suffer the
+     performance loss of probing for active ports.  Furthermore this is
+     even more serious as it would require a new URL scheme which could
+     only be resolved by TLS-enabled clients.
+
+     Separate "imaps" and "pop3s" ports were registered for use with
+     TLS.  Use of these ports is discouraged in favor of the STARTTLS or
+     STLS command.
+
+     One of the arguments used in favor of the separate port technique
+     is that it simplifies configuration of firewalls which filter by IP
+     port.  However, a quality server implementation running on the
+
+
+
+Newman                                                          [Page 8]
+
+Internet Draft    Using TLS with IMAP4, POP3 and ACAP      November 1998
+
+
+     standard port can be configured to require use of the STARTTLS
+     command or a suitably strong SASL mechanism for non-local
+     connections.  This provides superior functionality as the client
+     need not be re-configured for use outside the firewall and faster
+     non-clear-text SASL mechanisms may be acceptable to many sites for
+     non-local connections.
+
+8. IANA Considerations
+
+     This document constitutes registration of the "STARTTLS" IMAP4
+     capability as required by section 7.2.1 of RFC 2060.
+
+     This document defines the "STLS" POP3 capability as follows:
+
+     CAPA tag:                   STLS
+     Arguments:                  none
+     Added commands:             STLS
+     Standard commands affected: May enable USER/PASS as a side-effect.
+       CAPA command should be re-issued after successful completion.
+     Announced states/Valid states: AUTHORIZATION state only.
+     Specification reference:    this memo
+
+     This document defines the "STARTTLS" ACAP capability as follows:
+
+     Capability name:            STARTTLS
+     Capability keyword:         STARTTLS
+     Capability arguments:       none
+     Published Specification(s): this memo
+     Person and email address for further information:
+         see author's address section below
+
+     This document defines the "PLAIN" SASL mechanism as follows:
+
+     SASL mechanism name:        PLAIN
+     Security Considerations:    See section 9 of this memo
+     Published specification:    this memo
+     Person & email address to contact for further information:
+         see author's address section below
+     Intended usage:             COMMON
+     Author/Change controller:   see author's address section below
+
+9. Security Considerations
+
+     TLS only provides protection for data sent over a network
+     connection.  Messages transferred over IMAP or POP3 are still
+     available to server administrators and usually subject to
+     eavesdropping, tampering and forgery when transmitted through SMTP
+     or NNTP.  TLS is no substitute for an end-to-end message security
+
+
+
+Newman                                                          [Page 9]
+
+Internet Draft    Using TLS with IMAP4, POP3 and ACAP      November 1998
+
+
+     mechanism using MIME security multiparts [MIME-SEC].
+
+     An active attacker can remove STARTTLS from the capability list.
+     In order to detect such an attack, clients SHOULD either warn the
+     user when session privacy is not active, or be configurable to
+     refuse to proceed without an acceptable level of security.
+
+     Both client and server MUST verify the level of protection
+     negotiated by TLS is adequate for local security policy, and
+     terminate the TCP connection if it is not.  An active attacker can
+     always cause a down-negotiation to the weakest authentication
+     mechanism or cipher suite available.  For this reason,
+     implementations need to be configurable to refuse weak mechanisms
+     or cipher suites.
+
+     Any protocol interactions prior to the TLS handshake are performed
+     in the clear and can be modified by an active attacker.  For this
+     reason, clients SHOULD discard cached information about server
+     capabilities advertised prior to the start of the TLS handshake.
+
+     Clients are encouraged to clearly distinguish between a level of
+     encryption known to be vulnerable to a reasonable attack using
+     modern hardware (such as encryption with a 40-bit key) and one
+     which is believed to be safe from such an attack.
+
+     When the PLAIN mechanism (or the IMAP4 LOGIN or POP3 PASS command)
+     is used, the server gains the ability to impersonate the user to
+     all services with the same password regardless of any encryption
+     provided by TLS or other network privacy mechanisms.  Stronger SASL
+     authentication mechanisms such as Kerberos address this issue.
+
+     Use of clear-text login mechanisms (e.g., the IMAP4 LOGIN command,
+     POP3 PASS command or the PLAIN mechanism) without a suitable
+     encryption layer such as that provided by TLS expose the user's
+     password to a common network eavesdropping attack.  Therefore, the
+     PLAIN mechanism MUST NOT be implemented unless a suitable
+     encryption layer, such as that provided by TLS is also implemented.
+
+     Additional security requirements are discussed in section 2.
+
+10. References
+
+     [ABNF] Crocker, Overell, "Augmented BNF for Syntax Specifications:
+     ABNF", RFC 2234, Internet Mail Consortium, Demon Internet Ltd,
+     November 1997.
+
+     [ACAP] Newman, Myers, "ACAP -- Application Configuration Access
+     Protocol", RFC 2244, Innosoft, Netscape, November 1997.
+
+
+
+Newman                                                         [Page 10]
+
+Internet Draft    Using TLS with IMAP4, POP3 and ACAP      November 1998
+
+
+     [CRAM-MD5] Klensin, Catoe, Krumviede, "IMAP/POP AUTHorize Extension
+     for Simple Challenge/Response", RFC 2195, MCI, September 1997.
+
+     [IMAP4] Crispin, M., "Internet Message Access Protocol - Version
+     4rev1", RFC 2060, University of Washington, December 1996.
+
+     [IMAP-AUTH] Myers, J., "IMAP4 Authentication Mechanism", RFC 1731,
+     Carnegie-Mellon University, December 1994.
+
+     [KEYWORDS] Bradner, S., "Key words for use in RFCs to Indicate
+     Requirement Levels", RFC 2119, Harvard University, March 1997.
+
+     [MIME-SEC] Galvin, Murphy, Crocker, Freed, "Security Multiparts for
+     MIME: Multipart/Signed and Multipart/Encrypted", RFC 1847, Trusted
+     Information Systems, CyberCash, Innosoft International, October
+     1995.
+
+     [POP3] Myers, J., Rose, M., "Post Office Protocol - Version 3", RFC
+     1939, Carnegie Mellon, Dover Beach Consulting, Inc., May 1996.
+
+     [POP3EXT] Gellens, Newman, Lundblade "POP3 Extension Mechanism",
+     Work in progress.
+
+     [POP-AUTH] Myers, J., "POP3 AUTHentication command", RFC 1734,
+     Carnegie Mellon, December 1994.
+
+     [SASL] Myers, J., "Simple Authentication and Security Layer
+     (SASL)", RFC 2222, Netscape Communications, October 1997.
+
+     [TLS] Dierks, Allen, "The TLS Protocol Version 1.0", Work in
+     progress.
+
+     [UTF-8] Yergeau, F. "UTF-8, a transformation format of ISO 10646",
+     RFC 2279, Alis Technologies, January 1998.
+
+11. Author's Address
+
+     Chris Newman
+     Innosoft International, Inc.
+     1050 Lakes Drive
+     West Covina, CA 91790 USA
+
+     Email: chris.newman@innosoft.com
+
+
+
+
+
+
+
+
+Newman                                                         [Page 11]

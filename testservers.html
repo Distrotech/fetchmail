@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rev=made href="mailto:esr@snark.thyrsus.com"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/> 
+<title>Fetchmail's Test List</title>
+</head>
+<body>
+<table width="100%" cellpadding=0 summary="Canned page header"><tr>
+<td width="30%">Back to <a href="/~esr">Eric's Home Page</a>
+<td width="30%" align=center>Up to <a href="/~esr/sitemap.html">Site Map</a>
+<td width="30%" align=right>Mon Jan 12 15:52:14 EST 2004
+</tr></table>
+<hr />
+<h1>Fetchmail's Test List</h1>
+
+<p>Here are the server types on my regression-test list:</p>
+
+<table border=1 width=80% align=center summary="Server list">
+<tr>
+<td><strong>Protocol &amp; Version:</strong></td>
+<td><strong>Special Options:</strong></td>
+</tr>
+<tr><td>IMAP: CommuniGate IMAP server</td><td>IMAPrev1 STARTTLS AUTH=CRAM-MD5 AUTH=DIGEST-MD5</td>
+<tr><td>POP3: CommuniGate POP3 server</td><td>CAPA LAST APOP CRAM-MD5</td>
+<tr><td>POP3: IntraStore POP3 mail server</td><td>!CAPA LAST</td>
+<tr><td>APOP: IntraStore POP3 mail server</td><td>!CAPA LAST APOP</td>
+<tr><td>IMAP: IntraStore IMAP mail server</td><td>IMAPrev1 IDLE AUTH=CRAM-MD5 AUTH=SKEY AUTH=ANONYMOUS</td>
+<tr><td>POP3: Eudora EIMS</td><td>CAPA LAST APOP SASL CRAM-MD5 NTLM</td>
+<tr><td>POP3: gmx.de pop server</td><td>!CAPA UIDL</td>
+<tr><td>IMAP: IMail IMAP server</td><td>IMAP4rev1 AUTH=CRAM-MD5</td>
+<tr><td>IMAP: Microsoft Exchange</td><td>IDLE AUTH=NTLM</td>
+<tr><td>POP3: qpopper 3.1.2 (Eudora) patched with mysql</td><td>CAPA UIDL</td>
+<tr><td>IMAP: Courier IMAP</td><td>IMAP4rev1</td>
+<tr><td>POP3: Courier POP3</td><td>CAPA UIDL</td>
+<tr><td>APOP: Qpopper using APOP</td><td>!CAPA</td>
+<tr><td>IMAP: UW IMAP</td><td>IMAPrev1</td>
+<tr><td>IMAP: Courier IMAP</td><td>IMAP4rev1</td>
+<tr><td>POP3: Qpopper 4.0.5</td><td>CAPA UIDL</td>
+</tr></table>
+
+<p>If you control a post-office server that is not one of the types listed
+here, please consider lending me a test account.  Note that I do <em>not</em>
+need shell access, just the permissions to send mail to a mailbox the server
+looks at and to fetch mail off of it.</p>
+
+<p>I'd like to have weird things like a POP2 server on here.  Also more
+closed-source servers because they tend to be broken in odd
+ways. These are the real robustness tests.</p>
+
+<hr />
+<table width="100%" cellpadding=0 summary="Canned page header"><tr>
+<td width="30%">Back to <a href="/~esr">Eric's Home Page</a>
+<td width="30%" align=center>Up to <a href="/~esr/sitemap.html">Site Map</a>
+<td width="30%" align=right>Mon Jan 12 15:52:14 EST 2004
+</tr></table>
+
+<br clear="left" />
+<ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@thyrsus.com&gt;</A></ADDRESS>
+</BODY>
+</HTML>

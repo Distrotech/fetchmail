@@ -1,0 +1,610 @@
+***************
+*** 1,13 ****
+  # Copyright (C) 1998 Free Software Foundation, Inc.
+- # Pawe³ Krawczyk <kravietz@ceti.com.pl>, 1998.
+- #
+  msgid ""
+  msgstr ""
+- "Project-Id-Version: fetchmail-4.7.7\n"
+- "POT-Creation-Date: 2003-10-15 15:23-0400\n"
+- "PO-Revision-Date: 1999-02-09 17:46+01:00\n"
+  "Last-Translator: Pawe³ Krawczyk <kravietz@ceti.com.pl>\n"
+- "Language-Team: Polish <pl@li.org>\n"
+  "MIME-Version: 1.0\n"
+  "Content-Type: text/plain; charset=iso-8859-2\n"
+  "Content-Transfer-Encoding: 8bit\n"
+--- 1,16 ----
++ # Polish translation for fetchmail.
+  # Copyright (C) 1998 Free Software Foundation, Inc.
++ # Pawe³ Krawczyk <kravietz@ceti.com.pl>, 1998,1999.
++ # Jakub Bogusz <qboosh@pld-linux.org>, 2002-2003.
++ # Adam Go³êbiowski <adamg@pld-linux.org>, 2003.
+  msgid ""
+  msgstr ""
++ "Project-Id-Version: fetchmail-6.2.5\n"
++ "Report-Msgid-Bugs-To: \n"
++ "POT-Creation-Date: 2003-10-19 20:57+0200\n"
++ "PO-Revision-Date: 2003-09-05 22:02+0200\n"
+  "Last-Translator: Pawe³ Krawczyk <kravietz@ceti.com.pl>\n"
++ "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
+  "MIME-Version: 1.0\n"
+  "Content-Type: text/plain; charset=iso-8859-2\n"
+  "Content-Transfer-Encoding: 8bit\n"
+***************
+*** 59,79 ****
+  "\n"
+  "The following oversized messages remain on the mail server %s:"
+  msgstr ""
+  
+  #: driver.c:354
+- #, fuzzy, c-format
+  msgid "\t%d msg %d octets long skipped by fetchmail.\n"
+- msgstr "\tlist %d o d³ugo¶ci %d zosta³ pominiêty.\n"
+  
+  #: driver.c:494
+- #, fuzzy, c-format
+  msgid "skipping message %s@%s:%d"
+- msgstr "pomijam list %d (%d bajtów)\n"
+  
+  #: driver.c:546
+- #, fuzzy, c-format
+  msgid "skipping message %s@%s:%d (%d octets)"
+- msgstr "pomijam list %d (%d bajtów)\n"
+  
+  #.
+  #. * Invalid lengths are produced by Post Office/NT's
+--- 59,82 ----
+  "\n"
+  "The following oversized messages remain on the mail server %s:"
+  msgstr ""
++ "Subject: Ostrze¿enie fetchmaila o zbyt du¿ych listach.\n"
++ "\n"
++ "Nastêpuj±ce zbyt du¿e listy pozosta³y na serwerze poczty %s:"
+  
+  #: driver.c:354
++ #, c-format
+  msgid "\t%d msg %d octets long skipped by fetchmail.\n"
++ msgstr "\tlist %d o d³ugo¶ci %d zosta³ pominiêty przez fetchmaila.\n"
+  
+  #: driver.c:494
++ #, c-format
+  msgid "skipping message %s@%s:%d"
++ msgstr "pomijam list %s@%s:%d"
+  
+  #: driver.c:546
++ #, c-format
+  msgid "skipping message %s@%s:%d (%d octets)"
++ msgstr "pomijam list %s@%s:%d (%d bajtów)"
+  
+  #.
+  #. * Invalid lengths are produced by Post Office/NT's
+***************
+*** 87,108 ****
+  #.
+  #: driver.c:562
+  msgid " (length -1)"
+- msgstr ""
+  
+  #: driver.c:565
+- #, fuzzy
+  msgid " (oversized)"
+- msgstr " (za du¿y, %d bajtów)\n"
+  
+  #: driver.c:580
+  #, c-format
+  msgid "couldn't fetch headers, message %s@%s:%d (%d octets)\n"
+- msgstr ""
+  
+  #: driver.c:597
+- #, fuzzy, c-format
+  msgid "reading message %s@%s:%d of %d"
+- msgstr "pobieram %d list z %d"
+  
+  # budowanie komunikatu z pojedynczych slow - uwaga
+  # na spacje i odmiane -PK
+--- 90,110 ----
+  #.
+  #: driver.c:562
+  msgid " (length -1)"
++ msgstr " (d³ugo¶æ -1)"
+  
+  #: driver.c:565
+  msgid " (oversized)"
++ msgstr " (za du¿y)"
+  
+  #: driver.c:580
+  #, c-format
+  msgid "couldn't fetch headers, message %s@%s:%d (%d octets)\n"
++ msgstr "nie mo¿na ¶ci±gn±æ nag³ówków, list %s@%s:%d (%d bajtów)\n"
+  
+  #: driver.c:597
++ #, c-format
+  msgid "reading message %s@%s:%d of %d"
++ msgstr "pobieram list %s@%s:%d z %d"
+  
+  # budowanie komunikatu z pojedynczych slow - uwaga
+  # na spacje i odmiane -PK
+***************
+*** 121,131 ****
+  msgstr " (%d bajtów tre¶ci)"
+  
+  #: driver.c:733
+- #, fuzzy, c-format
+  msgid ""
+  "message %s@%s:%d was not the expected length (%d actual != %d expected)\n"
+  msgstr ""
+- "d³ugo¶æ listu %d nie odpowiada d³ugo¶ci zg³oszonej przez serwer (%d != %d)\n"
+  
+  #: driver.c:764
+  msgid " retained\n"
+--- 123,134 ----
+  msgstr " (%d bajtów tre¶ci)"
+  
+  #: driver.c:733
++ #, c-format
+  msgid ""
+  "message %s@%s:%d was not the expected length (%d actual != %d expected)\n"
+  msgstr ""
++ "d³ugo¶æ listu %s@%s:%d nie odpowiada d³ugo¶ci zg³oszonej przez serwer (%d != "
++ "%d)\n"
+  
+  #: driver.c:764
+  msgid " retained\n"
+***************
+*** 140,152 ****
+  msgstr " nie zosta³ skasowany\n"
+  
+  #: driver.c:806
+- #, fuzzy, c-format
+  msgid "fetchlimit %d reached; %d messages left on server %s account %s\n"
+- msgstr "limit pobranych listów zosta³ osi±gniêty: %d pozosta³o na serwerze\n"
+  
+  #: driver.c:866
+  msgid "SIGPIPE thrown from an MDA or a stream socket error\n"
+- msgstr ""
+  
+  #: driver.c:873
+  #, c-format
+--- 143,157 ----
+  msgstr " nie zosta³ skasowany\n"
+  
+  #: driver.c:806
++ #, c-format
+  msgid "fetchlimit %d reached; %d messages left on server %s account %s\n"
++ msgstr ""
++ "limit pobranych listów %d osi±gniêty: %d pozosta³o na serwerze %s na koncie %"
++ "s\n"
+  
+  #: driver.c:866
+  msgid "SIGPIPE thrown from an MDA or a stream socket error\n"
++ msgstr "SIGPIPE otrzymany od MDA lub b³±d gniazda strumienia\n"
+  
+  #: driver.c:873
+  #, c-format
+***************
+*** 180,186 ****
+  "Subject: fetchmail zg³asza wielokrotne przekroczenie czasu oczekiwania\n"
+  
+  #: driver.c:903
+- #, fuzzy, c-format
+  msgid ""
+  "Fetchmail saw more than %d timeouts while attempting to get mail from %s@%"
+  "s.\n"
+--- 185,191 ----
+  "Subject: fetchmail zg³asza wielokrotne przekroczenie czasu oczekiwania\n"
+  
+  #: driver.c:903
++ #, c-format
+  msgid ""
+  "Fetchmail saw more than %d timeouts while attempting to get mail from %s@%"
+  "s.\n"
+***************
+*** 208,254 ****
+  
+  #: driver.c:990
+  msgid "Lead server has no name.\n"
+- msgstr ""
+  
+  #: driver.c:1013
+- #, fuzzy, c-format
+  msgid "couldn't find canonical DNS name of %s (%s)\n"
+- msgstr "nie mogê znale¼æ kanonicznej nazwy %s\n"
+  
+  #: driver.c:1050
+- #, fuzzy
+  msgid "internal inconsistency\n"
+- msgstr "fetchmail: niezgodno¶æ danych wewnêtrznych\n"
+  
+  #: driver.c:1060
+- #, fuzzy, c-format
+  msgid "%s connection to %s failed"
+- msgstr "po³±czenie %cMTP z %s nie powiod³o siê\n"
+  
+  #: driver.c:1066
+- #, fuzzy
+  msgid "host is unknown."
+- msgstr ": nieznany host\n"
+  
+  #: driver.c:1069
+- #, fuzzy
+  msgid "name is valid but has no IP address."
+- msgstr "nazwa istnieje, ale nie posiada adresu IP\n"
+  
+  #: driver.c:1072
+- #, fuzzy
+  msgid "unrecoverable name server error."
+- msgstr ": b³±d serwera DNS uniemo¿liwiajacy dalsz± pracê\n"
+  
+  #: driver.c:1074
+- #, fuzzy
+  msgid "temporary name server error."
+- msgstr "chwilowy problem z serwerem DNS\n"
+  
+  #: driver.c:1081
+- #, fuzzy, c-format
+  msgid "unknown DNS error %d."
+- msgstr ": nieznany b³±d %d serwera DNS\n"
+  
+  #: driver.c:1099
+  #, c-format
+--- 219,260 ----
+  
+  #: driver.c:990
+  msgid "Lead server has no name.\n"
++ msgstr "Serwer prowadz±cy nie ma nazwy.\n"
+  
+  #: driver.c:1013
++ #, c-format
+  msgid "couldn't find canonical DNS name of %s (%s)\n"
++ msgstr "nie mogê znale¼æ kanonicznej nazwy %s (%s)\n"
+  
+  #: driver.c:1050
+  msgid "internal inconsistency\n"
++ msgstr "niezgodno¶æ danych wewnêtrznych\n"
+  
+  #: driver.c:1060
++ #, c-format
+  msgid "%s connection to %s failed"
++ msgstr "po³±czenie %s z %s nie powiod³o siê"
+  
+  #: driver.c:1066
+  msgid "host is unknown."
++ msgstr "nieznany host."
+  
+  #: driver.c:1069
+  msgid "name is valid but has no IP address."
++ msgstr "nazwa istnieje, ale nie posiada adresu IP."
+  
+  #: driver.c:1072
+  msgid "unrecoverable name server error."
++ msgstr "b³±d serwera nazw uniemo¿liwiaj±cy dalsz± pracê."
+  
+  #: driver.c:1074
+  msgid "temporary name server error."
++ msgstr "chwilowy problem z serwerem nazw."
+  
+  #: driver.c:1081
++ #, c-format
+  msgid "unknown DNS error %d."
++ msgstr "nieznany b³±d %d serwera nazw."
+  
+  #: driver.c:1099
+  #, c-format
+***************
+*** 257,267 ****
+  "\n"
+  "Fetchmail could not reach the mail server %s:"
+  msgstr ""
+  
+  #: driver.c:1128 imap.c:366 pop3.c:410
+- #, fuzzy
+  msgid "SSL connection failed.\n"
+- msgstr "po³±czenie SSL nie powiod³o siê."
+  
+  #: driver.c:1181
+  #, c-format
+--- 263,275 ----
+  "\n"
+  "Fetchmail could not reach the mail server %s:"
+  msgstr ""
++ "Subject: Ostrze¿enie fetchmaila o nieosi±galnym serwerze.\n"
++ "\n"
++ "Fetchmail nie móg³ po³±czyæ siê z serwerem poczty %s:"
+  
+  #: driver.c:1128 imap.c:366 pop3.c:410
+  msgid "SSL connection failed.\n"
++ msgstr "po³±czenie SSL nie powiod³o siê.\n"
+  
+  #: driver.c:1181
+  #, c-format
+***************
+*** 269,294 ****
+  msgstr "B³±d blokady pliku dla %s@%s\n"
+  
+  #: driver.c:1185
+- #, fuzzy, c-format
+  msgid "Server busy error on %s@%s\n"
+- msgstr "B³±d blokady pliku dla %s@%s\n"
+  
+  #: driver.c:1190
+- #, fuzzy, c-format
+  msgid "Authorization failure on %s@%s%s\n"
+- msgstr "B³±d autoryzacji dla %s@%s\n"
+  
+  #: driver.c:1193
+  msgid " (previously authorized)"
+- msgstr ""
+  
+  #: driver.c:1214
+- #, fuzzy, c-format
+  msgid "Subject: fetchmail authentication failed on %s@%s\n"
+- msgstr "Subject: b³±d autoryzacji fetchmaila\n"
+  
+  #: driver.c:1217
+- #, fuzzy, c-format
+  msgid "Fetchmail could not get mail from %s@%s.\n"
+  msgstr "Fetchmail nie móg³ pobraæ poczty z %s@%s.\n"
+  
+--- 277,302 ----
+  msgstr "B³±d blokady pliku dla %s@%s\n"
+  
+  #: driver.c:1185
++ #, c-format
+  msgid "Server busy error on %s@%s\n"
++ msgstr "Serwer zajêty dla %s@%s\n"
+  
+  #: driver.c:1190
++ #, c-format
+  msgid "Authorization failure on %s@%s%s\n"
++ msgstr "B³±d autoryzacji dla %s@%s%s\n"
+  
+  #: driver.c:1193
+  msgid " (previously authorized)"
++ msgstr " (poprzednio zautoryzowano)"
+  
+  #: driver.c:1214
++ #, c-format
+  msgid "Subject: fetchmail authentication failed on %s@%s\n"
++ msgstr "Subject: b³±d autoryzacji fetchmaila dla %s@%s\n"
+  
+  #: driver.c:1217
++ #, c-format
+  msgid "Fetchmail could not get mail from %s@%s.\n"
+  msgstr "Fetchmail nie móg³ pobraæ poczty z %s@%s.\n"
+  
+***************
+*** 320,355 ****
+  "at each cycle.  No future notifications will be sent until service\n"
+  "is restored."
+  msgstr ""
+  
+  #: driver.c:1251
+  #, c-format
+  msgid "Repoll immediately on %s@%s\n"
+- msgstr ""
+  
+  #: driver.c:1256
+  #, c-format
+  msgid "Unknown login or authentication error on %s@%s\n"
+- msgstr ""
+  
+  #: driver.c:1280
+- #, fuzzy, c-format
+  msgid "Authorization OK on %s@%s\n"
+- msgstr "B³±d autoryzacji dla %s@%s\n"
+  
+  #: driver.c:1286
+- #, fuzzy, c-format
+  msgid "Subject: fetchmail authentication OK on %s@%s\n"
+- msgstr "Subject: b³±d autoryzacji fetchmaila\n"
+  
+  #: driver.c:1289
+- #, fuzzy, c-format
+  msgid "Fetchmail was able to log into %s@%s.\n"
+- msgstr "Fetchmail nie móg³ pobraæ poczty z %s@%s.\n"
+  
+  #: driver.c:1293
+- #, fuzzy
+  msgid "Service has been restored.\n"
+- msgstr "Wersja RPA %d.%d\n"
+  
+  #: driver.c:1324
+  #, c-format
+--- 340,381 ----
+  "at each cycle.  No future notifications will be sent until service\n"
+  "is restored."
+  msgstr ""
++ "Próba uzyskania autoryzacji nie powiod³a siê.\n"
++ "Oznacza to prawdopodobnie, ¿e has³o jest niew³a¶ciwe, ale niektóre\n"
++ "serwery maj± inne rodzaje b³êdów, których fetchmail nie mo¿e odró¿niæ\n"
++ "od tego, poniewa¿ nie zwracaj± u¿ytecznych komunikatów o b³êdzie.\n"
++ "\n"
++ "Demon fetchmaila bêdzie nadal próbowa³ siê po³±czyæ w ka¿dym cyklu.\n"
++ "Dalsze powiadomienia do czasu wznowienia us³ugi nie bêd± wysy³ane."
+  
+  #: driver.c:1251
+  #, c-format
+  msgid "Repoll immediately on %s@%s\n"
++ msgstr "Natychmiastowe ponowne ¶ci±ganie z %s@%s\n"
+  
+  #: driver.c:1256
+  #, c-format
+  msgid "Unknown login or authentication error on %s@%s\n"
++ msgstr "Nieznany login lub b³±d uwierzytelniania dla %s@%s\n"
+  
+  #: driver.c:1280
++ #, c-format
+  msgid "Authorization OK on %s@%s\n"
++ msgstr "Autoryzacja powiod³a siê dla %s@%s\n"
+  
+  #: driver.c:1286
++ #, c-format
+  msgid "Subject: fetchmail authentication OK on %s@%s\n"
++ msgstr "Subject: autoryzacja fetchmaila powiod³a siê dla %s@%s\n"
+  
+  #: driver.c:1289
++ #, c-format
+  msgid "Fetchmail was able to log into %s@%s.\n"
++ msgstr "Fetchmail móg³ zalogowaæ siê na %s@%s.\n"
+  
+  #: driver.c:1293
+  msgid "Service has been restored.\n"
++ msgstr "Us³uga zosta³a wznowiona.\n"
+  
+  #: driver.c:1324
+  #, c-format
+***************
+*** 361,374 ****
+  msgstr "ponowna próba po³±czenia z domy¶lnym folderem\n"
+  
+  #: driver.c:1342
+- #, fuzzy, c-format
+  msgid "%s at %s (folder %s)"
+- msgstr "%s na %s (folder %s)\n"
+  
+  #: driver.c:1350 rcfile_y.y:397
+- #, fuzzy, c-format
+  msgid "%s at %s"
+- msgstr "%s na %s\n"
+  
+  #. only used for ETRN
+  #: driver.c:1355
+--- 387,400 ----
+  msgstr "ponowna próba po³±czenia z domy¶lnym folderem\n"
+  
+  #: driver.c:1342
++ #, c-format
+  msgid "%s at %s (folder %s)"
++ msgstr "%s na %s (folder %s)"
+  
+  #: driver.c:1350 rcfile_y.y:397
++ #, c-format
+  msgid "%s at %s"
++ msgstr "%s na %s"
+  
+  #. only used for ETRN
+  #: driver.c:1355
+***************
+*** 377,385 ****
+  msgstr "Próba po³±czenia z %s\n"
+  
+  #: driver.c:1359
+- #, fuzzy, c-format
+  msgid "%d %s (%d %s) for %s"
+- msgstr "%d %s (%d przeczytanych) dla %s."
+  
+  #: driver.c:1360 driver.c:1367
+  msgid "messages"
+--- 403,411 ----
+  msgstr "Próba po³±czenia z %s\n"
+  
+  #: driver.c:1359
++ #, c-format
+  msgid "%d %s (%d %s) for %s"
++ msgstr "%d %s (%d %s) dla %s."
+  
+  #: driver.c:1360 driver.c:1367
+  msgid "messages"
+***************
+*** 390,398 ****
+  msgstr "list"
+  
+  #: driver.c:1363
+- #, fuzzy
+  msgid "seen"
+- msgstr " "
+  
+  #: driver.c:1366
+  #, c-format
+--- 416,423 ----
+  msgstr "list"
+  
+  #: driver.c:1363
+  msgid "seen"
++ msgstr "widzianych"
+  
+  #: driver.c:1366
+  #, c-format
+***************
+*** 400,417 ****
+  msgstr "%d %s dla %s."
+  
+  #: driver.c:1372
+- #, fuzzy, c-format
+  msgid " (%d octets).\n"
+- msgstr "(%d bajtów)."
+  
+  #: driver.c:1378
+- #, fuzzy, c-format
+  msgid "No mail for %s\n"
+- msgstr "Nie ma poczty dla %s"
+  
+  #: driver.c:1411
+  msgid "bogus message count!"
+- msgstr ""
+  
+  #: driver.c:1512
+  msgid "socket"
+--- 425,442 ----
+  msgstr "%d %s dla %s."
+  
+  #: driver.c:1372
++ #, c-format
+  msgid " (%d octets).\n"
++ msgstr "(%d bajtów).\n"
+  
+  #: driver.c:1378
++ #, c-format
+  msgid "No mail for %s\n"
++ msgstr "Nie ma poczty dla %s\n"
+  
+  #: driver.c:1411
+  msgid "bogus message count!"
++ msgstr "b³êdna liczba listów!"
+  
+  #: driver.c:1512
+  msgid "socket"
+***************
+*** 439,459 ****
+  
+  #: driver.c:1530
+  msgid "SMTP transaction"
+- msgstr "transakcja SMTP"
+  
+  #: driver.c:1533
+  msgid "DNS lookup"
+- msgstr "DNSu"
+  
+  #: driver.c:1536
+- #, fuzzy
+  msgid "undefined error\n"
+- msgstr "niezdefiniowany\n"
+  
+  #: driver.c:1547
+- #, fuzzy, c-format
+  msgid "%s error while delivering to SMTP host %s\n"
+- msgstr "b³±d %s podczas pobierania listów z %s\n"
+  
+  #: driver.c:1549
+  #, c-format
+--- 464,483 ----
+  
+  #: driver.c:1530
+  msgid "SMTP transaction"
++ msgstr "transakcji SMTP"
+  
+  #: driver.c:1533
+  msgid "DNS lookup"
++ msgstr "DNS-u"
+  
+  #: driver.c:1536
+  msgid "undefined error\n"
++ msgstr "niezdefiniowany b³±d\n"
+  
+  #: driver.c:1547
++ #, c-format
+  msgid "%s error while delivering to SMTP host %s\n"
++ msgstr "b³±d %s podczas dostarczania listów po SMTP do %s\n"
+  
+  #: driver.c:1549
+  #, c-format

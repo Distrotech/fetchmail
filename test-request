@@ -1,0 +1,20 @@
+I maintain an open-source POP and IMAP client called fetchmail.  It is
+widely used in the Linux and open-source community, and is probably
+the single most popular remote-mail client in that world.  You can
+find out more about this project at
+<http://www.catb.org/~esr/fetchmail>.
+
+In order to be able to do thorough regression testing before each release,
+I collect test accounts on as many different kinds of POP3, IMAP, and
+ODMR servers as possible.  Because fetchmail is strictly conformant to the 
+remote-mail RFCs, many server developers have found fetchmail a useful
+standards-conformance test.
+
+I'm writing to request test accounts on your server.  I support all flavors 
+of POP2, POP3, IMAP and ODMR with either plain-password, CRAM-MD5, NTLM, 
+GSSAPI, or Kerberos authentication.  I also support SSL/TLS.
+
+It would be very helpful if I could have a separate test account for
+each protocol you support (that is, separate POP3, IMAP, and ODMR
+accounts) so I can do automated regression testing without worrying
+about mailbox race conditions.

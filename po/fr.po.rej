@@ -1,0 +1,116 @@
+***************
+*** 9,15 ****
+  # mise à jour par Sébastien KALT <ustilago@bigfoot.com>
+  # mise à jour par Thierry Vignaud <tvignaud@mandrakesoft.com>, 2001-2003
+  # mise à jour par Philippe Verdy <verdy_p@wanadoo.fr> 2003.
+- # Commentaires bienvenus
+  #
+  msgid ""
+  msgstr ""
+--- 9,15 ----
+  # mise à jour par Sébastien KALT <ustilago@bigfoot.com>
+  # mise à jour par Thierry Vignaud <tvignaud@mandrakesoft.com>, 2001-2003
+  # mise à jour par Philippe Verdy <verdy_p@wanadoo.fr> 2003.
++ # Commentaires bienvenus.
+  #
+  msgid ""
+  msgstr ""
+***************
+*** 255,270 ****
+  
+  #: driver.c:1072
+  msgid "unrecoverable name server error."
+- msgstr "erreur irrécupérable avec le serveur de noms."
+  
+  #: driver.c:1074
+  msgid "temporary name server error."
+- msgstr "erreur temporaire avec le serveur de noms."
+  
+  #: driver.c:1081
+  #, c-format
+  msgid "unknown DNS error %d."
+- msgstr "erreur DNS inconnue %d."
+  
+  #: driver.c:1099
+  #, c-format
+--- 255,270 ----
+  
+  #: driver.c:1072
+  msgid "unrecoverable name server error."
++ msgstr "erreur irrécupérable du serveur de noms."
+  
+  #: driver.c:1074
+  msgid "temporary name server error."
++ msgstr "erreur temporaire du serveur de noms."
+  
+  #: driver.c:1081
+  #, c-format
+  msgid "unknown DNS error %d."
++ msgstr "erreur DNS %d inconnue."
+  
+  #: driver.c:1099
+  #, c-format
+***************
+*** 286,297 ****
+  #: driver.c:1181
+  #, c-format
+  msgid "Lock-busy error on %s@%s\n"
+- msgstr "Erreur «lock-busy» sur %s@%s\n"
+  
+  #: driver.c:1185
+  #, c-format
+  msgid "Server busy error on %s@%s\n"
+- msgstr "Erreur «busy» sur %s@%s\n"
+  
+  #: driver.c:1190
+  #, c-format
+--- 286,297 ----
+  #: driver.c:1181
+  #, c-format
+  msgid "Lock-busy error on %s@%s\n"
++ msgstr "Erreur verrou-occupé sur %s@%s\n"
+  
+  #: driver.c:1185
+  #, c-format
+  msgid "Server busy error on %s@%s\n"
++ msgstr "Erreur (serveur occupé) sur %s@%s\n"
+  
+  #: driver.c:1190
+  #, c-format
+***************
+*** 509,525 ****
+  #: driver.c:1597
+  #, c-format
+  msgid "Option --flush is not supported with %s\n"
+- msgstr "Option --flush non supportée avec %s\n"
+  
+  #: driver.c:1603
+  #, c-format
+  msgid "Option --all is not supported with %s\n"
+- msgstr "Option --all non supportée avec %s\n"
+  
+  #: driver.c:1611
+  #, c-format
+  msgid "Option --limit is not supported with %s\n"
+- msgstr "Option --limit non supportée avec %s\n"
+  
+  #: env.c:60
+  #, c-format
+--- 509,525 ----
+  #: driver.c:1597
+  #, c-format
+  msgid "Option --flush is not supported with %s\n"
++ msgstr "L'option --flush n'est pas supportée avec %s\n"
+  
+  #: driver.c:1603
+  #, c-format
+  msgid "Option --all is not supported with %s\n"
++ msgstr "L'option --all n'est pas supportée avec %s\n"
+  
+  #: driver.c:1611
+  #, c-format
+  msgid "Option --limit is not supported with %s\n"
++ msgstr "L'option --limit n'est pas supportée avec %s\n"
+  
+  #: env.c:60
+  #, c-format

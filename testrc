@@ -1,0 +1,14 @@
+# Configuration created Thu Oct 23 20:13:55 2003 by fetchmailconf
+set syslog
+set postmaster "postmaster"
+set bouncemail
+set no spambounce
+set properties ""
+poll pop.whosey.net with proto POP3
+       user 'foo' there with password '*' is 'me' here
+       user 'bar' there with password '*' is 'her' here
+       user 'baz' there with password '*' is 'that' here
+
+poll mail.whatsey.ca with proto POP3 interval 60
+       user 'nimble' there with password '*' is 'her' here
+

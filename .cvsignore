@@ -1,0 +1,8 @@
+aclocal.m4
+config.h.in
+configure
+config.guess
+config.sub
+install-sh
+mkinstalldirs
+missing
