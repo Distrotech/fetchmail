@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Security fix: don't trust the message count passed back by the server.
+
 fetchmail-5.9.9 (Sat Mar  9 08:54:28 EST 2002), 21508 lines:
 
 * Renamed misnamed tr.po and da.po files

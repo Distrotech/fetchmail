@@ -15,6 +15,7 @@
 #endif /* HAVE_MEMORY_H */
 #if defined(STDC_HEADERS)
 #include  <stdlib.h>
+#include  <limits.h>
 #endif
 #if defined(HAVE_UNISTD_H)
 #include <unistd.h>
@@ -1300,6 +1301,19 @@ is restored."));
 		     * messages to be considered new if it's nonzero.
 		     */
 		    force_retrieval = !peek_capable && (ctl->errcount > 0);
+
+		    /*
+		     * Don't trust the message count passed by the server.
+		     * Without this check, it might be possible to do a
+		     * DNS-spoofing attack that would pass back a ridiculous 
+		     * count, and allocate a malloc area that would overlap
+		     * a portion of the stack.
+		     */
+		    if (count > INT_MAX/sizeof(int))
+		    {
+			report(stderr, "bogus message count!");
+			return(PS_PROTOCOL);
+		    }
 
 		    /* OK, we're going to gather size info next */
 		    xalloca(msgsizes, int *, sizeof(int) * count);

@@ -364,8 +364,7 @@ ftp://ftp.win.ne.jp/pub/network/mail/fetchmail</a>.
 <P>Fetchmail was DaveCentral's Best Of Linux winner for
 <a href="http://linux.davecentral.com/bol_19990630.html">June 30 1999</a>.
 
-<P>Fetchmail was a five-star Editor's Pick at 
-<a href="http://www.softlandindia.com/Linux/EmailClients.htm">Softlandindia</a>
+<P>Fetchmail was a five-star Editor's Pick at Softlandindia.
 
 <HR>
 <table width="100%" cellpadding=0><tr>
