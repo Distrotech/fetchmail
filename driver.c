@@ -408,9 +408,8 @@ char *realname;		/* real name of host */
 {
     char buf [MSGBUFSIZE+1]; 
     int	from_offs, to_offs, cc_offs, bcc_offs, ctt_offs, env_offs;
-    char *headers, *received_for, *line;
-    int n, oldlen, ch;
-    int sizeticker, delete_ok;
+    char *headers, *received_for;
+    int n, oldlen, ch, sizeticker, delete_ok;
     FILE *sinkfp;
     RETSIGTYPE (*sigchld)();
 #ifdef HAVE_GETHOSTBYNAME
@@ -430,13 +429,10 @@ char *realname;		/* real name of host */
     headers = received_for = NULL;
     from_offs = to_offs = cc_offs = bcc_offs = ctt_offs = env_offs = -1;
     oldlen = 0;
-    line = (char *)NULL;
     for (;;)
     {
-	char *bufp;
+	char *bufp, *line;
 
-	if (line)
-	    free(line);
 	line = xmalloc(sizeof(buf));
 	line[0] = '\0';
 	do {
@@ -463,8 +459,12 @@ char *realname;		/* real name of host */
 	}
 	len -= n;
 
+	/* check for end of headers; don't save terminating line */
 	if (line[0] == '\r' && line[1] == '\n')
-		break;  /* end of message */
+	{
+	    free(line);
+	    break;
+	}
      
 	if (!ctl->no_rewrite)
 	    reply_hack(line, realname);
@@ -489,6 +489,7 @@ char *realname;		/* real name of host */
 	    bufp = headers + oldlen;
 	    oldlen = newlen;
 	}
+	free(line);
 
 	if (from_offs == -1 && !strncasecmp("From:", bufp, 5))
 	    from_offs = (bufp - headers);
@@ -500,9 +501,9 @@ char *realname;		/* real name of host */
 	else if (!strncasecmp("To:", bufp, 3))
 	    to_offs = (bufp - headers);
 
-	else if (env_offs == -1 && !strncasecmp("Apparently-To:", bufp, 14))
-	    env_offs = (bufp - headers);
-	else if (env_offs == -1 && !strncasecmp(ctl->server.envelope, bufp, 14))
+	else if (env_offs == -1 && !strncasecmp(ctl->server.envelope,
+						bufp,
+						strlen(ctl->server.envelope)))
 	    env_offs = (bufp - headers);
 
 	else if (!strncasecmp("Cc:", bufp, 3))
@@ -519,9 +520,6 @@ char *realname;		/* real name of host */
 	    received_for = parse_received(ctl, bufp);
 #endif /* HAVE_RES_SEARCH */
     }
-
-    if (line)
-	free(line);
 
     /*
      * We can now process message headers before reading the text.
