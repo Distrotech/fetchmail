@@ -2,6 +2,11 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Updated and corrected version of contrib/domino.
+* Galician translation added, courtesy of Jesus Bravo Alvarez <jba@pobox.com>.
+* Spanish translation updated, courtesy of Javier Kohen.
+* Removed an unnecessary Kereberos check that seemed to be causing lossage.
+
 fetchmail-5.3.6 (Sat Apr  8 03:54:04 EDT 2000), 18947 lines:
 
 * Autoprobe now recognizes Domino IMAP servers and warns the user.

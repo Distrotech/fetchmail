@@ -323,12 +323,18 @@ static int do_rfc1731(int sock, char *truename)
 	return PS_AUTHFAIL;
     }
 
+#ifdef __UNUSED__
+    /*
+     * Andrew H. Chatham <andrew.chatham@duke.edu> alleges that this check
+     * is not necessary and has consistently been messing him up.
+     */
     if (strcmp(tktuser, user) != 0) {
 	report(stderr, 
 	       _("principal %s in ticket does not match -u %s\n"), tktuser,
 		user);
 	return PS_AUTHFAIL;
     }
+#endif /* __UNUSED__ */
 
     if (tktinst[0]) {
 	report(stderr, 
