@@ -584,7 +584,9 @@ static int imap_trail(int sock, struct query *ctl, int number)
 
 	if ((ok = gen_recv(sock, buf, sizeof(buf))))
 	    return(ok);
-	if (strstr(buf, "OK FETCH"))
+
+	/* UW IMAP returns "OK FETCH", Cyrus returns "OK Completed" */
+	if (strstr(buf, "OK"))
 	    break;
     }
 
