@@ -25,6 +25,7 @@
 #   interval                  -- must be followed by an interval skip count
 #   protocol (or proto)       -- must be followed by a protocol ID
 #   uidl
+#   no uidl
 #   port                      -- must be followed by a TCP/IP port number
 #   authenticate (or auth)    -- must be followed by an authentication type
 #   timeout                   -- must be followed by a numeric timeout value
