@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/09/11 18:21:55 $
+<td width="30%" align=right>$Date: 1997/09/11 20:17:57 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -31,6 +31,7 @@ mail it to fetchmail's maintainer, Eric S. Raymond, at
 <a href="#G4">G4. I have this idea for a neat feature. Will you add it?</a><br>
 <a href="#G5">G5. Is there a mailing list for exchanging tips?</a><br>
 <a href="#G6">G6. So, what's this I hear about a fetchmail paper?</a><br>
+<a href="#G7">G7. What is the best server to use with fetchmail?</a><br>
 
 <h1>Fetchmail configuration file grammar questions:</h1>
 
@@ -224,6 +225,26 @@ given at Atlanta Linux Expo.<p>
 
 If you're reading a non-HTML dump of this FAQ, you can find the paper 
 on the Web with a search for that title.<p>
+
+<hr>
+<h2><a name="G7">G7. What is the best server to use with fetchmail?</a></h2>
+
+Fetchmail will work with any POP, IMAP, or ESMTP/ETRN server that
+conforms to the relevant RFCs (this excludes oughtright broken ones
+like Microsoft Exchange, see <a href="#T5">T5</a>).  This doesn't mean
+it works equally well with all, however.  POP2 servers, and POP3
+servers without LAST, limit fetchmail's capabilities in various ways
+described on the manual page.<P>
+
+Most modern Unixes (and effectively all Linux/*BSD systems) come with
+POP3 support preconfigured.  An increasing minority also feature IMAP
+(you can detect IMAP support by running fetchmail in AUTO mode).<P>
+
+If you have the option, we recommend using or installing IMAP4; it has
+the best facilities for tracking message "seen" states.  You can find
+sources for IMAP software at <a href="http://www.imap.org">The IMAP
+Connection</a>; we like the freeware UW IMAP and Cyrus products. UW
+IMAP is the reference implementation of IMAP.<P>
 
 <hr>
 <h2><a name="F1">F1. Why does my old .fetchmailrc file no longer work?</a></h2>
@@ -933,8 +954,7 @@ message can lurk invisibly in your server mailbox forever.<p>
 
 Workaround: add the `<CODE>fetchall</CODE>' keyword to your POP3 fetch options.<p>
 
-Solution: switch to an <a
-href="http://www.washington.edu/imap">IMAP</a> server.<p>
+Solution: switch to an <a href="http://www.imap.org">IMAP</a> server.<p>
 
 <hr>
 <h2><a name="R6">R6. Fetchmail dumps core when I use a .netrc file but works otherwise.</a></h2>
@@ -1283,15 +1303,15 @@ doing an expunge (removing deleted messages) on a line hangup, as well
 as on processing a QUIT command.<P>
 
 The other (which we recommend) is to switch to <a
-href="http://www.washington.edu/imap">IMAP</a>.  IMAP has an explicit
-expunge command and fetchmail uses it to delete messages quickly after
-they are downloaded.<P>
+href="http://www.imap.org">IMAP</a>.  IMAP has an explicit expunge
+command and fetchmail uses it to delete messages quickly after they
+are downloaded.<P>
 
 <HR>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/09/11 18:21:55 $
+<td width="30%" align=right>$Date: 1997/09/11 20:17:57 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
