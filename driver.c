@@ -248,7 +248,7 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 
 			rhs = atsign + (strlen(atsign) - strlen(idp->id));
 			if ((rhs[-1] == '.' || rhs[-1] == '@')
-					&& strcmp(rhs, idp->id) == 0)
+					&& strcasecmp(rhs, idp->id) == 0)
 			{
 			    if (outlevel == O_VERBOSE)
 				error(0, 0, "passed through %s matching %s", 
