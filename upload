@@ -23,7 +23,7 @@ put design-notes.html
 #put funny.html
 #put fetchmail.png
 #put bighand.png
-put growth.gif
+put growth.png
 put timeseries
 put growthplot
 # The following things vary often
