@@ -1,7 +1,7 @@
 			Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-3.6 ()
+fetchmail-3.6 (Mon Feb 17 00:19:55 EST 1997)
 
 features --
 
@@ -18,6 +18,10 @@ features --
 bugs --
 
 * Yet another fix to the password-shrouding logic.
+
+* Fix bug that screwed up IMAP mail reception in -v mode *only*.
+
+There are 229 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-3.5 (Sat Feb 15 15:19:36 EST 1997)
