@@ -16,14 +16,14 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.3.5 ()
+fetchmail-4.3.5 (Mon Dec 15 06:07:08 EST 1997)
 * Added Kent Robotti's fetchsetup configuration script.
 * Corrected buggy  handling of `expunge 0'.
 * GSSAPI support from Brendan Cully <brendan@kublai.com>.
-* We no longer reveal the remotename in fetchmail's logname, as this
+* We no longer reveal the remotename in fetchmail's Received line, as this
   may be sensitive information.
 
-There are 264 people on fetchmail-friends and 105 on fetchmail-announce.
+There are 264 people on fetchmail-friends and 106 on fetchmail-announce.
 
 fetchmail-4.3.4 (Fri Dec  5 12:39:31 EST 1997)
 * Yet another attempt on the Compuserve RPA moving target.
