@@ -46,7 +46,7 @@ static char *netdevfmt;
 void interface_init(void)
 /* figure out which /roc/dev/net format to use */
 {
-    FILE *fp = fopen("/proc/sys/kernel/osrelease", "r");
+    FILE *fp = popen("uname -r", "r");	/* still wins if /proc is out */
 
     /* pre-linux-2.2 format -- transmit packet count in 8th field */
     netdevfmt = "%d %d %*d %*d %*d %d %*d %d %*d %*d %*d %*d %d";
