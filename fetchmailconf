@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.31"
+version = "1.32"
 
 from Tkinter import *
 from Dialog import *
@@ -235,6 +235,7 @@ class User:
 	    ('password',    'String'),
             # Leave out smtphunt
 	    ('smtpaddress', 'String'),
+	    ('smtpname', 'String'),
 	    ('preconnect',  'String'),
 	    ('postconnect', 'String'),
 	    ('mda',         'String'),
@@ -340,7 +341,7 @@ class User:
 	     for x in self.mailboxes:
 		res = res + " " + x
 	     res = res + "\n"
-        for fld in ('smtpaddress', 'preconnect', 'postconnect', 'mda', 'bsmtp', 'properties'):
+        for fld in ('smtpaddress', 'smtpname', 'preconnect', 'postconnect', 'mda', 'bsmtp', 'properties'):
             if getattr(self, fld):
                 res = res + " %s %s\n" % (fld, `getattr(self, fld)`)
 	if self.lmtp != UserDefaults.lmtp:
@@ -1498,6 +1499,8 @@ class UserEdit(Frame, MyWidget):
                      self.user.smtphunt, None, None, targwin, None)
             LabeledEntry(targwin, 'Append to MAIL FROM line:',
 		     self.smtpaddress, '26').pack(side=TOP, fill=X)
+            LabeledEntry(targwin, 'Set RCPT To address:',
+		     self.smtpname, '26').pack(side=TOP, fill=X)
             LabeledEntry(targwin, 'Connection setup command:',
 		     self.preconnect, '26').pack(side=TOP, fill=X)
             LabeledEntry(targwin, 'Connection wrapup command:',

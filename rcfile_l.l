@@ -97,6 +97,7 @@ pass(word)?	{SETSTATE(NAME); return PASSWORD; }
 folder(s)? 	{ return FOLDER; }
 smtp(host)?	{ return SMTPHOST; }
 smtpaddress	{ return SMTPADDRESS; }
+smtpname	{ return SMTPNAME; }
 antispam	{ return SPAMRESPONSE; }
 mda		{ return MDA; }
 bsmtp		{ return BSMTP; }

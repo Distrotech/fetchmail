@@ -360,6 +360,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	stringdump("properties", ctl->properties);
 	listdump("smtphunt", ctl->smtphunt);
 	stringdump("smtpaddress", ctl->smtpaddress);
+	stringdump("smtpname", ctl->smtpname);
 
 	indent('\0');
 	fprintf(stdout, "'antispam':'");

@@ -907,6 +907,7 @@ static int load_params(int argc, char **argv, int optind)
     memset(&def_opts, '\0', sizeof(struct query));
     def_opts.smtp_socket = -1;
     def_opts.smtpaddress = (char *)0;
+    def_opts.smtpname = (char *)0;
 #define ANTISPAM(n)	save_str(&def_opts.antispam, STRING_DUMMY, 0)->val.status.num = (n)
     ANTISPAM(571);	/* sendmail */
     ANTISPAM(550);	/* old exim */
@@ -1687,6 +1688,9 @@ static void dump_params (struct runctl *runp,
 	    if (ctl->smtpaddress)
 		printf(_("  Host part of MAIL FROM line will be %s\n"),
 		       ctl->smtpaddress);
+	    if (ctl->smtpname)
+		printf(_("  Address to be put in RCPT TO lines shipped to SMTP will be %s\n"),
+		       ctl->smtpname);
 	}
 	if (ctl->server.protocol != P_ETRN)
 	{
