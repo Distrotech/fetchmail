@@ -56,7 +56,7 @@ int imap_ok(int sock, char *argbuf)
 	    return(ok);
 
 	/* interpret untagged status responses */
-	if (strstr(buf, "CAPABILITIES"))
+	if (strstr(buf, "CAPABILITY"))
 	    strncpy(capabilities, buf + 12, sizeof(capabilities));
 	if (strstr(buf, "EXISTS"))
 	    count = atoi(buf+2);
