@@ -562,7 +562,202 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	    return(PS_BSMTP);
 	}
     }
-    else if (ctl->mda)		/* we have a declared MDA */
+
+    /* 
+     * Try to forward to an SMTP or LMTP listener.  If the attempt to 
+     * open a socket fails, fall through to attempt delivery via
+     * local MDA.
+     */
+    else if (!ctl->mda && smtp_open(ctl) != -1)
+    {
+	const char	*ap;
+	char		options[MSGBUFSIZE]; 
+	char		addr[HOSTLEN+USERNAMELEN+1];
+	char		**from_responses;
+	int		total_addresses;
+
+	/*
+	 * Compute ESMTP options.
+	 */
+	options[0] = '\0';
+	if (ctl->server.esmtp_options & ESMTP_8BITMIME) {
+             if (ctl->pass8bits || (ctl->mimemsg & MSG_IS_8BIT))
+		strcpy(options, " BODY=8BITMIME");
+             else if (ctl->mimemsg & MSG_IS_7BIT)
+		strcpy(options, " BODY=7BIT");
+        }
+
+	if ((ctl->server.esmtp_options & ESMTP_SIZE) && msg->reallen > 0)
+	    sprintf(options + strlen(options), " SIZE=%d", msg->reallen);
+
+	/*
+	 * Try to get the SMTP listener to take the Return-Path
+	 * address as MAIL FROM.  If it won't, fall back on the
+	 * remotename and mailserver host.  This won't affect replies,
+	 * which use the header From address anyway; the MAIL FROM
+	 * address is a place for the SMTP listener to send
+	 * bouncemail.  The point is to guarantee a FQDN in the MAIL
+	 * FROM line -- some SMTP listeners, like smail, become
+	 * unhappy otherwise.
+	 *
+	 * RFC 1123 requires that the domain name part of the
+	 * MAIL FROM address be "canonicalized", that is a
+	 * FQDN or MX but not a CNAME.  We'll assume the Return-Path
+	 * header is already in this form here (it certainly
+	 * is if rewrite is on).  RFC 1123 is silent on whether
+	 * a nonexistent hostname part is considered canonical.
+	 *
+	 * This is a potential problem if the MTAs further upstream
+	 * didn't pass canonicalized From/Return-Path lines, *and* the
+	 * local SMTP listener insists on them. 
+	 */
+	if (!msg->return_path[0])
+	{
+	    sprintf(addr, "%s@%s", ctl->remotename, ctl->server.truename);
+	    ap = addr;
+	}
+	else if (strchr(msg->return_path, '@'))
+	    ap = msg->return_path;
+	else		/* in case Return-Path existed but was local */
+	{
+	    sprintf(addr, "%s@%s", msg->return_path, ctl->server.truename);
+	    ap = addr;
+	}
+
+	if (SMTP_from(ctl->smtp_socket, ap, options) != SM_OK)
+	    return(handle_smtp_report(ctl, msg));
+
+	/*
+	 * Now list the recipient addressees
+	 */
+	total_addresses = 0;
+	for (idp = msg->recipients; idp; idp = idp->next)
+	    total_addresses++;
+	xalloca(from_responses, char **, sizeof(char *) * total_addresses);
+	for (idp = msg->recipients; idp; idp = idp->next)
+	    if (idp->val.status.mark == XMIT_ACCEPT)
+	    {
+		if (strchr(idp->id, '@'))
+		    strcpy(addr, idp->id);
+		else {
+		    if (ctl->smtpname) {
+#ifdef HAVE_SNPRINTF
+		        snprintf(addr, sizeof(addr)-1, "%s", ctl->smtpname);
+#else
+			sprintf(addr, "%s", ctl->smtpname);
+#endif /* HAVE_SNPRINTF */
+
+		    } else {
+#ifdef HAVE_SNPRINTF
+		      snprintf(addr, sizeof(addr)-1, "%s@%s", idp->id, ctl->destaddr);
+#else
+		      sprintf(addr, "%s@%s", idp->id, ctl->destaddr);
+#endif /* HAVE_SNPRINTF */
+		    }
+		}
+		if (SMTP_rcpt(ctl->smtp_socket, addr) == SM_OK)
+		    (*good_addresses)++;
+		else
+		{
+		    char	errbuf[POPBUFSIZE];
+		    int res;
+
+		    if ((res = handle_smtp_report(ctl, msg))==PS_REFUSED)
+			return(PS_REFUSED);
+
+		    strcpy(errbuf, idp->id);
+		    strcat(errbuf, ": ");
+		    strcat(errbuf, smtp_response);
+
+		    xalloca(from_responses[*bad_addresses], 
+			    char *, 
+			    strlen(errbuf)+1);
+		    strcpy(from_responses[*bad_addresses], errbuf);
+
+		    (*bad_addresses)++;
+		    idp->val.status.mark = XMIT_RCPTBAD;
+		    if (outlevel >= O_VERBOSE)
+			report(stderr, 
+			      _("%cMTP listener doesn't like recipient address `%s'\n"),
+			      ctl->listener, addr);
+		}
+	    }
+	if (*bad_addresses)
+	    send_bouncemail(ctl, msg, XMIT_RCPTBAD,
+                            "Some addresses were rejected by the MDA fetchmail forwards to.\r\n",
+                            *bad_addresses, from_responses);
+	/*
+	 * It's tempting to do local notification only if bouncemail was
+	 * insufficient -- that is, to add && total_addresses > *bad_addresses
+	 * to the test here.  The problem with this theory is that it would
+	 * make initial diagnosis of a broken multidrop configuration very
+	 * hard -- most single-recipient messages would just invisibly bounce.
+	 */
+	if (!(*good_addresses)) 
+	{
+	    if (strchr(run.postmaster, '@'))
+		strcpy(addr, run.postmaster);
+	    else
+	    {
+#ifdef HAVE_SNPRINTF
+		snprintf(addr, sizeof(addr)-1, "%s@%s", run.postmaster, ctl->destaddr);
+#else
+		sprintf(addr, "%s@%s", run.postmaster, ctl->destaddr);
+#endif /* HAVE_SNPRINTF */
+	    }
+
+	    if (SMTP_rcpt(ctl->smtp_socket, addr) != SM_OK)
+	    {
+		report(stderr, _("can't even send to %s!\n"), run.postmaster);
+		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
+		return(PS_SMTP);
+	    }
+
+	    if (outlevel >= O_VERBOSE)
+		report(stderr, _("no address matches; forwarding to %s.\n"), run.postmaster);
+	}
+
+	/* 
+	 * Tell the listener we're ready to send data.
+	 * Some listeners (like zmailer) may return antispam errors here.
+	 */
+	if (SMTP_data(ctl->smtp_socket) != SM_OK)
+	    return(handle_smtp_report(ctl, msg));
+    }
+
+    /*
+     * Awkward case.  User didn't specify an MDA.  Our attempt to get a
+     * listener socket failed.  Try to cope anyway -- initial configuration
+     * may have found procmail.
+     */
+    else if (!ctl->mda)
+    {
+	report(stderr, _("%cMTP connect to %s failed\n"),
+	       ctl->listener,
+	       ctl->smtphost ? ctl->smtphost : "localhost");
+
+#ifndef FALLBACK_MDA
+	/* No fallback MDA declared.  Bail out. */
+	return(PS_SMTP);
+#else
+	/*
+	 * If user had things set up to forward offsite, no way
+	 * we want to deliver locally!
+	 */
+	if (ctl->smtphost && strcmp(ctl->smtphost, "localhost"))
+	    return(PS_SMTP);
+
+	/* 
+	 * User was delivering locally.  We have a fallback MDA.
+	 * Latch it in place, logging the error, and fall through.
+	 */
+	ctl->mda = FALLBACK_MDA;
+
+	report(stderr, _("can't raise the listener; falling back to " FALLBACK_MDA));
+#endif
+    }
+
+    if (ctl->mda)		/* must deliver through an MDA */
     {
 	int	length = 0, fromlen = 0, nameslen = 0;
 	char	*names = NULL, *before, *after, *from = NULL;
@@ -714,171 +909,6 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	sa_new.sa_handler = SIG_DFL;
 	sigaction (SIGCHLD, &sa_new, &sa_old);
 #endif /* HAVE_SIGACTION */
-    }
-    else /* forward to an SMTP or LMTP listener */
-    {
-	const char	*ap;
-	char		options[MSGBUFSIZE]; 
-	char		addr[HOSTLEN+USERNAMELEN+1];
-	char		**from_responses;
-	int		total_addresses;
-
-	/* build a connection to the SMTP listener */
-	if ((smtp_open(ctl) == -1))
-	{
-	    report(stderr, _("%cMTP connect to %s failed\n"),
-		  ctl->listener,
-		  ctl->smtphost ? ctl->smtphost : "localhost");
-	    return(PS_SMTP);
-	}
-
-	/*
-	 * Compute ESMTP options.
-	 */
-	options[0] = '\0';
-	if (ctl->server.esmtp_options & ESMTP_8BITMIME) {
-             if (ctl->pass8bits || (ctl->mimemsg & MSG_IS_8BIT))
-		strcpy(options, " BODY=8BITMIME");
-             else if (ctl->mimemsg & MSG_IS_7BIT)
-		strcpy(options, " BODY=7BIT");
-        }
-
-	if ((ctl->server.esmtp_options & ESMTP_SIZE) && msg->reallen > 0)
-	    sprintf(options + strlen(options), " SIZE=%d", msg->reallen);
-
-	/*
-	 * Try to get the SMTP listener to take the Return-Path
-	 * address as MAIL FROM.  If it won't, fall back on the
-	 * remotename and mailserver host.  This won't affect replies,
-	 * which use the header From address anyway; the MAIL FROM
-	 * address is a place for the SMTP listener to send
-	 * bouncemail.  The point is to guarantee a FQDN in the MAIL
-	 * FROM line -- some SMTP listeners, like smail, become
-	 * unhappy otherwise.
-	 *
-	 * RFC 1123 requires that the domain name part of the
-	 * MAIL FROM address be "canonicalized", that is a
-	 * FQDN or MX but not a CNAME.  We'll assume the Return-Path
-	 * header is already in this form here (it certainly
-	 * is if rewrite is on).  RFC 1123 is silent on whether
-	 * a nonexistent hostname part is considered canonical.
-	 *
-	 * This is a potential problem if the MTAs further upstream
-	 * didn't pass canonicalized From/Return-Path lines, *and* the
-	 * local SMTP listener insists on them. 
-	 */
-	if (!msg->return_path[0])
-	{
-	    sprintf(addr, "%s@%s", ctl->remotename, ctl->server.truename);
-	    ap = addr;
-	}
-	else if (strchr(msg->return_path, '@'))
-	    ap = msg->return_path;
-	else		/* in case Return-Path existed but was local */
-	{
-	    sprintf(addr, "%s@%s", msg->return_path, ctl->server.truename);
-	    ap = addr;
-	}
-
-	if (SMTP_from(ctl->smtp_socket, ap, options) != SM_OK)
-	    return(handle_smtp_report(ctl, msg));
-
-	/*
-	 * Now list the recipient addressees
-	 */
-	total_addresses = 0;
-	for (idp = msg->recipients; idp; idp = idp->next)
-	    total_addresses++;
-	xalloca(from_responses, char **, sizeof(char *) * total_addresses);
-	for (idp = msg->recipients; idp; idp = idp->next)
-	    if (idp->val.status.mark == XMIT_ACCEPT)
-	    {
-		if (strchr(idp->id, '@'))
-		    strcpy(addr, idp->id);
-		else {
-		    if (ctl->smtpname) {
-#ifdef HAVE_SNPRINTF
-		        snprintf(addr, sizeof(addr)-1, "%s", ctl->smtpname);
-#else
-			sprintf(addr, "%s", ctl->smtpname);
-#endif /* HAVE_SNPRINTF */
-
-		    } else {
-#ifdef HAVE_SNPRINTF
-		      snprintf(addr, sizeof(addr)-1, "%s@%s", idp->id, ctl->destaddr);
-#else
-		      sprintf(addr, "%s@%s", idp->id, ctl->destaddr);
-#endif /* HAVE_SNPRINTF */
-		    }
-		}
-		if (SMTP_rcpt(ctl->smtp_socket, addr) == SM_OK)
-		    (*good_addresses)++;
-		else
-		{
-		    char	errbuf[POPBUFSIZE];
-		    int res;
-
-		    if ((res = handle_smtp_report(ctl, msg))==PS_REFUSED)
-			return(PS_REFUSED);
-
-		    strcpy(errbuf, idp->id);
-		    strcat(errbuf, ": ");
-		    strcat(errbuf, smtp_response);
-
-		    xalloca(from_responses[*bad_addresses], 
-			    char *, 
-			    strlen(errbuf)+1);
-		    strcpy(from_responses[*bad_addresses], errbuf);
-
-		    (*bad_addresses)++;
-		    idp->val.status.mark = XMIT_RCPTBAD;
-		    if (outlevel >= O_VERBOSE)
-			report(stderr, 
-			      _("%cMTP listener doesn't like recipient address `%s'\n"),
-			      ctl->listener, addr);
-		}
-	    }
-	if (*bad_addresses)
-	    send_bouncemail(ctl, msg, XMIT_RCPTBAD,
-                            "Some addresses were rejected by the MDA fetchmail forwards to.\r\n",
-                            *bad_addresses, from_responses);
-	/*
-	 * It's tempting to do local notification only if bouncemail was
-	 * insufficient -- that is, to add && total_addresses > *bad_addresses
-	 * to the test here.  The problem with this theory is that it would
-	 * make initial diagnosis of a broken multidrop configuration very
-	 * hard -- most single-recipient messages would just invisibly bounce.
-	 */
-	if (!(*good_addresses)) 
-	{
-	    if (strchr(run.postmaster, '@'))
-		strcpy(addr, run.postmaster);
-	    else
-	    {
-#ifdef HAVE_SNPRINTF
-		snprintf(addr, sizeof(addr)-1, "%s@%s", run.postmaster, ctl->destaddr);
-#else
-		sprintf(addr, "%s@%s", run.postmaster, ctl->destaddr);
-#endif /* HAVE_SNPRINTF */
-	    }
-
-	    if (SMTP_rcpt(ctl->smtp_socket, addr) != SM_OK)
-	    {
-		report(stderr, _("can't even send to %s!\n"), run.postmaster);
-		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
-		return(PS_SMTP);
-	    }
-
-	    if (outlevel >= O_VERBOSE)
-		report(stderr, _("no address matches; forwarding to %s.\n"), run.postmaster);
-	}
-
-	/* 
-	 * Tell the listener we're ready to send data.
-	 * Some listeners (like zmailer) may return antispam errors here.
-	 */
-	if (SMTP_data(ctl->smtp_socket) != SM_OK)
-	    return(handle_smtp_report(ctl, msg));
     }
 
     /*
