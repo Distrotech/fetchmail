@@ -1,6 +1,7 @@
 #!/usr/bin/python
 #
-# A GUI configurator for generating Fetchmail configuration files.
+# A GUI configurator for generating Fetchmail configuration files
+# by Eric S. Raymond, <esr@snark.thyrsus.com>.  Requires Python with Tkinter.
 
 from Tkinter import *
 from Dialog import *
@@ -481,71 +482,118 @@ To do this, find the site's label in the listbox and double-click it.
 This will take you to a site configuration dialogue.
 """}
 
-class ControlEdit(Frame):
-    def postControls(self):
+class ConfigurationEdit(Frame):
+    def __init__(self, configuration, mode, master=None):
+	Frame.__init__(self, master)
+	self.master.title('fetchmail " + mode + " configurator');
+	self.master.iconname('fetchmail " + mode + configurator');
+	self.configuration = configuration
+	Pack.config(self)
+        if mode == 'expert':
+            self.expertEdit()
+        elif mode == 'novice':
+            self.noviceEdit()
+        self.mode = mode
+
+    def expertEdit(self):
 	self.poll_interval = StringVar(self)
 	self.poll_interval.set(`self.configuration.poll_interval`)
 	self.syslog = BooleanVar(self)
 	self.syslog.set(self.configuration.syslog)
 	self.logfile = StringVar(self)
+
 	if self.configuration.logfile: self.logfile.set(self.configuration.logfile);
 	self.idfile = StringVar(self)
 	if self.configuration.idfile: self.idfile.set(self.configuration.idfile);
 	self.invisible = BooleanVar(self)
 	self.invisible.set(self.configuration.invisible)
+	dispose_window(self, 'Expert Configurator Controls', experthelp)
 
-    def expertEdit(self):
 	gf = Frame(self, relief=RAISED, bd = 5)
-
 	Label(gf,
 		text='Fetchmail Run Controls', 
 		bd=2).pack(side=TOP, pady=10)
-
 	df = Frame(gf, relief=RAISED, bd=2)
 
 	# Set the poll interval
 	de = LabeledEntry(df, '     Poll interval:', self.poll_interval, '14')
-	de.pack(side=RIGHT, anchor=E)
 
+	de.pack(side=RIGHT, anchor=E)
 	df.pack();
 
 	sf = Frame(gf, relief=RAISED, bd=2)
-
 	# Use syslog for logging?
 	Checkbutton(sf,
 		{'text':'Log to syslog?',
 		'variable':self.syslog,
 		'relief':GROOVE}).pack(side=LEFT, anchor=W)
-
 	# Set the logfile
 	log = LabeledEntry(sf, '     Logfile:', self.logfile, '14')
 	log.pack(side=RIGHT, anchor=E)
-
 	sf.pack(fill=X)
 
 	# Invisible mode?
 	Checkbutton(gf,
 		{'text':'Invisible mode?',
 		'variable':self.invisible,
-		'relief':GROOVE}).pack(side=LEFT, anchor=W)
-
+                 'relief':GROOVE}).pack(side=LEFT, anchor=W)
 	# Set the idfile
 	log = LabeledEntry(gf, '     Idfile:', self.idfile, '14')
 	log.pack(side=RIGHT, anchor=E)
-
 	gf.pack(fill=X)
 
-    def GatherControls(self):
-	self.configuration.poll_interval = self.poll_interval.get()
-	self.configuration.logfile = self.logfile.get()
-	self.configuration.idfile = self.idfile.get()
-	self.configuration.syslog = self.syslog.get()
-	self.configuration.invisible = self.invisible.get()
+        # Expert mode allows us to edit multiple sites
+	lf = Frame(self, relief=RAISED, bd=5)
+	Label(lf,
+	      text='Remote Mail Server Configurations', 
+	      bd=2).pack(side=TOP, pady=10)
+	ListEdit('New Server:', 
+		map(lambda x: x.pollname, self.configuration.servers),
+		self.editSite, lf, remotehelp)
+	lf.pack(fill=X)
 
-    # The nosave mathod has to be defined by subclasses
+    def editSite(self, site):
+	ServerEdit(site, self.configuration.servers, Toplevel())
+
+    #XXX This method doesn't work yet.
+    def noviceEdit(self):
+	self.novice_host = StringVar(self)
+	self.novice_host.set(`self.configuration.novice_host`)
+	self.novice_name = StringVar(self)
+	self.novice_name.set(`self.configuration.novice_name`)
+	self.novice_passwd = StringVar(self)
+	self.novice_passwd.set(`self.configuration.passwd`)
+	self.novice_interval = IntVar(self)
+	self.novice_interval.set(`self.configuration.novice_interval`)
+
+        dispose_window(self, 'Novice Configurator Controls', novicehelp)
+	novice = Frame(self, relief=RAISED, bd=5)
+	Label(novice,
+		text='Novice Configuration Window', 
+		bd=2).pack(side=TOP, pady=10)
+	LabeledEntry(novice, 'Remote host to query:',
+		      self.novice_host).pack(side=TOP, fill=X)
+	LabeledEntry(novice, 'Your login name on the remote host:',
+		      self.novice_name).pack(side=TOP, fill=X)
+	LabeledEntry(novice, 'Your password on the remote host:',
+		      self.novice_passwd).pack(side=TOP, fill=X)
+	ButtonBar(novice, '', self.novice_protocol, protolist, 2, None) 
+	LabeledEntry(novice, 'Seconds between background polls:',
+		      self.novice_interval).pack(side=TOP, fill=X)
+	novice.pack(side=TOP, fill=X);
+
+    def nosave(self):
+	if ConfirmQuit(self, self.mode + " configuration editor"):
+	    self.quit()
+
     # XXX Someday this must go to the actual config file location
     def save(self):
-	self.GatherControls()
+        if self.mode == 'expert':
+            self.configuration.poll_interval = self.poll_interval.get()
+            self.configuration.logfile = self.logfile.get()
+            self.configuration.idfile = self.idfile.get()
+            self.configuration.syslog = self.syslog.get()
+            self.configuration.invisible = self.invisible.get()
 	sys.stdout.write("# Configuration created %s\n" % time.ctime(time.time()))
 	sys.stdout.write(`self.configuration`)
 	self.quit()
@@ -800,20 +848,15 @@ class ServerEdit(Frame):
 	mdropwin.pack(fill=X)
 
 	secwin = Frame(rightwin, relief=RAISED, bd=5)
-
-	# Pushes the window depth past 480
-#	Label(secwin, text="Security").pack(side=TOP)
-
+	Label(secwin, text="Security").pack(side=TOP)
 	# Don't actually let users set this.  KPOP sets it implicitly
 #	ButtonBar(secwin, 'Authorization mode:',
 #		  self.auth, authlist, 1, None).pack(side=TOP)
-
 	if os.popen("uname").readlines()[0] == 'Linux\n':
 	    LabeledEntry(secwin, 'Interface to check before poll:',
 			 self.interface, leftwidth).pack(side=TOP, fill=X)
 	    LabeledEntry(secwin, 'IP range to monitor:',
 			 self.monitor, leftwidth).pack(side=TOP, fill=X)
-
 	Button(secwin, text='Help', fg='blue',
 	       command=lambda: helpwin(sechelp)).pack(side=RIGHT)
 	secwin.pack(fill=X)
@@ -990,70 +1033,6 @@ class UserEdit(Frame):
 
 
 #
-# ExpertConfigure drives the expert-mode configuration dialogue.  
-# It may call multiple instances of ServerEdit to do its job.
-#
-
-class ExpertConfigure(Frame, ControlEdit):
-    def __init__(self, configuration, master=None):
-	Frame.__init__(self, master)
-	self.master.title('fetchmail expert configurator');
-	self.master.iconname('fetchmail expert configurator');
-	self.configuration = configuration
-	Pack.config(self)
-	dispose_window(self, 'Expert Configurator Controls', experthelp)
-	self.postControls()
-	self.expertEdit()
-
-        # Expert mode allows us to edit multiple sites
-	lf = Frame(master, relief=RAISED, bd=5)
-	Label(lf,
-	      text='Remote Mail Server Configurations', 
-	      bd=2).pack(side=TOP, pady=10)
-	ListEdit('New Server:', 
-		map(lambda x: x.pollname, self.configuration.servers),
-		self.editSite, lf, remotehelp)
-	lf.pack(fill=X)
-
-    def editSite(self, site):
-	ServerEdit(site, self.configuration.servers, Toplevel())
-
-    def nosave(self):
-	if ConfirmQuit(self, "expert configuration editor"):
-	    self.quit()
-
-#
-# Here's the novice configurator code.  Takes one site, one name, one
-# protocol designation, and creates a simple .fetchmailrc
-#
-
-class NoviceConfigure(Frame, ControlEdit):
-    def __init__(self, configuration, master=None):
-	Frame.__init__(self, master)
-	self.master.title('fetchmail novice configurator');
-	self.master.iconname('fetchmail novice configurator');
-	self.configuration = configuration;
-	Pack.config(self)
-
-        dispose_window(self, 'Novice Configurator Controls', novicehelp)
-	novice = Frame(self, relief=RAISED, bd=5)
-	Label(novice,
-		text='Novice Configuration Window', 
-		bd=2).pack(side=TOP, pady=10)
-#XXX Must make these controls work -- see novice help above
-#	LabeledEntry(novice, 'Remote host to query:',
-#		      self.remote_host).pack(side=TOP, fill=X)
-#	LabeledEntry(novice, 'Your login name on the remote host:',
-#		      self.remote_name).pack(side=TOP, fill=X)
-#	LabeledEntry(novice, 'Your password on the remote host:',
-#		      self.remote_passwd).pack(side=TOP, fill=X)
-	novice.pack(side=TOP, fill=X);
-
-    def nosave(self):
-	if ConfirmQuit(self, "novice configuration editor"):
-	    self.quit()
-
-#
 # And this is the main sequence
 #
 
@@ -1089,11 +1068,11 @@ Or you can just select `Quit' to leave the configurator now.
 
     def novice(self):
 	self.destroy()
-	NoviceConfigure(Configuration)
+	ConfigurationEdit(Configuration, 'novice')
 
     def expert(self):
 	self.destroy()
-	ExpertConfigure(Configuration)
+	ConfigurationEdit(Configuration, 'expert')
 
     def leave(self):
 	if ConfirmQuit(self, "configuration editor"):
