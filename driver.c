@@ -25,15 +25,12 @@
 #include  "fetchmail.h"
 #include  "smtp.h"
 
+#define	SMTP_PORT	25	/* standard SMTP service port */
+
 static struct method *protocol;
 
 static int alarmed; /* A flag to indicate that SIGALRM happened */
-
-int timeout=300; /* Wake up from idle state */
-void alarm_handler();
-
-
-#define	SMTP_PORT	25	/* standard SMTP service port */
+int timeout = CLIENT_TIMEOUT;
 
 char tag[TAGLEN];
 static int tagnum;

@@ -142,5 +142,7 @@ void optmerge();
 
 #endif
 
+void alarm_handler();
+
 #define FALSE	0
 #define TRUE	1
