@@ -5,6 +5,9 @@
  * For license terms, see the file COPYING in this directory.
  */
 
+/* Modified 1998 by Dominique Unruh <dominique@unruh.de> (doesn't block any 
+   more, when message delimiter follows up directly to the headers) */
+
 #include  "config.h"
 #include  <stdio.h>
 #include  <setjmp.h>
@@ -2006,6 +2009,7 @@ const struct method *proto;	/* protocol method table */
 			    && (ctl->fetchall || force_retrieval || !(protocol->is_old && (protocol->is_old)(sock,ctl,num)));
 			flag suppress_delete = FALSE;
 			flag suppress_forward = FALSE;
+			flag suppress_readbody = FALSE;
 			flag retained = FALSE;
 
 			/*
@@ -2085,7 +2089,7 @@ const struct method *proto;	/* protocol method table */
 			    else if (ok == PS_REFUSED)
 				suppress_forward = TRUE;
 			    else if (ok == PS_TRUNCATED)
-				suppress_forward = TRUE;
+				suppress_readbody = TRUE;
 			    else if (ok)
 				goto cleanUp;
 			    set_timeout(ctl->server.timeout);
@@ -2098,7 +2102,7 @@ const struct method *proto;	/* protocol method table */
 			     * or other PS_REFUSED error response during
 			     * read_headers.
 			     */
-			    if (protocol->fetch_body) 
+			    if (protocol->fetch_body && !suppress_readbody) 
 			    {
 				if (outlevel == O_VERBOSE)
 				    fputc('\n', stderr);
@@ -2120,11 +2124,22 @@ const struct method *proto;	/* protocol method table */
 			    /* process the body now */
 			    if (len > 0)
 			    {
-				ok = readbody(sock,
-					      ctl,
-					      !suppress_forward,
-					      len);
-				if (ok == PS_TRANSIENT)
+			        if (suppress_readbody)
+				{
+				  /* When readheaders returns PS_TRUNCATED,
+				     the body (which has no content
+				     has already been read by readheaders,
+				     so we say readbody returned PS_SUCCESS */
+				  ok = PS_SUCCESS;
+				}
+				else
+				{
+				  ok = readbody(sock,
+					        ctl,
+					        !suppress_forward,
+					        len);
+				}
+			        if (ok == PS_TRANSIENT)
 				    suppress_delete = suppress_forward = TRUE;
 				else if (ok)
 				    goto cleanUp;
