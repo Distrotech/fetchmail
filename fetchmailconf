@@ -2,6 +2,9 @@
 #
 # A GUI configurator for generating Fetchmail configuration files
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.  Requires Python with Tkinter.
+#
+# TO DO: Arrange for save and quit buttons to clean up all frames dependent
+# on the current ones.
 
 from Tkinter import *
 from Dialog import *
@@ -596,12 +599,19 @@ class ConfigurationEdit(Frame, MyWidget):
 	if ConfirmQuit(self, self.mode + " configuration editor"):
 	    self.quit()
 
-    # XXX Someday this must go to the actual config file location
     def save(self):
         self.fetch(Configuration, 'configuration')
-	sys.stdout.write("# Configuration created %s\n" % time.ctime(time.time()))
-	sys.stdout.write(`self.configuration`)
-	self.quit()
+        fetchmailrc = os.environ["HOME"] + "/.fetchmailrc"
+        if not os.path.isfile(fetchmailrc) or Dialog(self, 
+		 title = 'Overwrite existing run control file?',
+		 text = 'Really overwrite existing run control file?',
+		 bitmap = 'question',
+		 strings = ('Yes', 'No'),
+		 default = 1).num == 0:
+            fm = open(fetchmailrc, 'w')
+            fm.write("# Configuration created %s by fetchmailconf\n" % time.ctime(time.time()))
+            fm.write(`self.configuration`)
+            self.quit()
 
 #
 # Server editing stuff.
