@@ -1,12 +1,6 @@
 /*
  * socket.c -- socket library functions
  *
- * These were designed and coded by Carl Harris <ceharris@mal.com>
- * and are essentially unchanged from the ancestral popclient.
- *
- * The file pointer arguments are currently misleading -- there
- * is only one shared internal buffer for all sockets.
- *
  * For license terms, see the file COPYING in this directory.
  */
 
@@ -19,8 +13,6 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#include <sys/time.h>
-#include <sys/ioctl.h>
 #if defined(STDC_HEADERS)
 #include <string.h>
 #include <stdlib.h>
@@ -35,12 +27,6 @@
 #endif
 #include <errno.h>
 #include "socket.h"
-
-/* Size of buffer for internal buffering read function 
-   don't increase beyond the maximum atomic read/write size for
-   your sockets, or you'll take a potentially huge performance hit */
-
-#define  INTERNAL_BUFSIZE	2048
 
 FILE *Socket(host, clientPort)
 char *host;
@@ -73,6 +59,51 @@ int clientPort;
         return (FILE *)NULL;
     return fdopen(sock, "r+");
 }
+
+
+#if defined(HAVE_STDARG_H)
+int SockPrintf(FILE *sockfp, char* format, ...)
+{
+#else
+int SockPrintf(sockfp,format,va_alist)
+FILE *sockfp;
+char *format;
+va_dcl {
+#endif
+
+    va_list ap;
+    char buf[8192];
+
+#if defined(HAVE_STDARG_H)
+    va_start(ap, format) ;
+#else
+    va_start(ap);
+#endif
+    vsprintf(buf, format, ap);
+    va_end(ap);
+    return SockWrite(buf, strlen(buf), sockfp);
+
+}
+
+/*
+ * If you think these functions are too slow and inefficient, you're
+ * absolutely right.  I wish I could figure out what to do about it.
+ * The ancestral popclient used static buffering here to cut down on the
+ * number of read(2) calls, but we can't do that because we can have
+ * two or more sockets open at a time.
+ *
+ * The right thing to do would be to use stdio for internal per-socket
+ * buffering here (which is why Socket() returns a file pointer) but 
+ * this causes mysterious lossage.  In case someone ever finds a way
+ * around this, a note on the original implementation said:
+ *
+ * Size of buffer for internal buffering read function 
+ * don't increase beyond the maximum atomic read/write size for
+ * your sockets, or you'll take a potentially huge performance hit
+ *
+ * #define  INTERNAL_BUFSIZE	2048
+ *
+ */
 
 int SockWrite(buf,len,sockfp)
 char *buf;
@@ -113,30 +144,6 @@ FILE *sockfp;
     }
     *buf = 0;
     return rdlen;
-}
-
-#if defined(HAVE_STDARG_H)
-int SockPrintf(FILE *sockfp, char* format, ...)
-{
-#else
-int SockPrintf(sockfp,format,va_alist)
-FILE *sockfp;
-char *format;
-va_dcl {
-#endif
-
-    va_list ap;
-    char buf[8192];
-
-#if defined(HAVE_STDARG_H)
-    va_start(ap, format) ;
-#else
-    va_start(ap);
-#endif
-    vsprintf(buf, format, ap);
-    va_end(ap);
-    return SockWrite(buf, strlen(buf), sockfp);
-
 }
 
 /* socket.c ends here */

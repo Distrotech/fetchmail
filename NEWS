@@ -1,5 +1,8 @@
 			Release Notes:
 
+pl 1.9.7 ():
+* We can handle responses longer than the socket atomic read length now.
+
 pl 1.9.6 (Thu Oct 31 00:07:23 EST 1996):
 * Make rewrite option handle multiple comma-separated local names correctly.
 * Fix yet another fatal error in MDA argument list construction.
