@@ -358,6 +358,15 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 	    error(0, 0, "Protocol identified as IMAP4 rev 0");
     }
 
+    /* eat the tail of the CAPABILITY response (if any) */
+    if ((peek_capable = (imap_version >= IMAP4)))
+    {
+	char	scratchbuf[POPBUFSIZE];	/* don't clobber capabilities buffer */
+
+	if ((ok = gen_recv(sock, scratchbuf, sizeof(scratchbuf))))
+	    return(ok);
+    }
+
 #ifdef KERBEROS_V4
     if (strstr(capabilities, "AUTH=KERBEROS_V4"))
     {
@@ -383,11 +392,6 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 	return(PS_AUTHFAIL);
     }
 #endif /* KERBEROS_V4 */
-
-    /* eat the tail of the CAPABILITY response (if any) */
-    if ((peek_capable = (imap_version >= IMAP4)))
-	if ((ok = gen_recv(sock, capabilities, sizeof(capabilities))))
-	    return(ok);
 
     /* try to get authorized in the ordinary (AUTH=LOGIN) way */
     ok = gen_transact(sock, "LOGIN %s \"%s\"", ctl->remotename, ctl->password);
