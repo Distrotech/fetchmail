@@ -1112,7 +1112,7 @@ static int load_params(int argc, char **argv, int optind)
 		ctl->server.truename = xstrdup(leadname);
 	    }
 #ifdef HAVE_GETHOSTBYNAME
-	    else if (ctl->active && !configdump)
+	    else if (ctl->active && ctl->server.dns && !configdump)
 	    {
 		if (ctl->server.authenticate==A_KERBEROS_V4 ||
 		      ctl->server.authenticate==A_KERBEROS_V5 ||
