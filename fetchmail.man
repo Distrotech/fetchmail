@@ -256,6 +256,44 @@ Causes a specified non-default mail folder on the mailserver (or
 comma-separated list of folders) to be retrieved.  The syntax of the
 folder name is server-dependent.  This option is not available under
 POP3 or ETRN.
+.TP
+.B \--ssl
+(Keyword: ssl)
+Causes the connection to the mail server to be encrypted via SSL.  Connect
+to the server using the specified base protocol over a connection secured
+by SSL.  SSL support must be present at the server.  If no port is
+specified, the connection is attempted to the well known port of the SSL
+version of the base protocol.  This is generally a different port than the
+port used by the base protocol.  For imap, this is port 143 for the clear
+protocol and port 993 for the SSL secured protocol.
+.TP
+.B \--sslcert <name>
+(Keyword: sslcert)
+Specifies the file name of the client side public SSL certificate.  Some
+SSL encrypted servers may require client side keys and certificates for
+authentication.  In most cases, this is optional.  This specifies
+the location of the public key certificate to be presented to the server
+at the time the SSL session is established.  It is not required (but may
+be provided) if the server does not require it.  Some servers may
+require it, some servers may request it but not require it, and some
+servers may not request it at all.  It may be the same file
+as the private key (combined key and certificate file) but this is not
+recommended.
+.TP
+.B \--sslkey <name>
+(Keyword: sslkey)
+Specifies the file name of the client side private SSL key.  Some SSL
+encrypted servers may require client side keys and certificates for
+authentication.  In most cases, this is optional.  This specifies
+the location of the private key used to sign transactions with the server
+at the time the SSL session is established.  It is not required (but may
+be provided) if the server does not require it.  Some servers may
+require it, some servers may request it but not require it, and some
+servers may not request it at all.  It may be the same file
+as the public key (combined key and certificate file) but this is not
+recommended.  If a password is required to unlock the key, it will be
+prompted for at the time just prior to establishing the session to the
+server.  This can cause some complications in daemon mode.
 .SS Delivery Control Options
 .TP
 .B \-S <hosts>, --smtphost <hosts>
@@ -669,6 +707,33 @@ initialized.  You can also do this using the `netsec' server option
 in the .fetchmailrc file.  In either case, the option value is a
 string in the format accepted by the net_security_strtorequest() 
 function of the inet6_apps library.
+.PP
+You can access SSL encrypted services by specifying the --ssl option.
+You can also do this using the "ssl" server option in the .fetchmailrc
+file.  With SSL encryption enabled, queries are initiated over a connection
+after negotiating an SSL session.  Some services, such as POP3 and IMAP,
+have different well known ports defined for the SSL encrypted services.
+The encrypted ports will be selected automatically when SSL is enabled and
+no explicit port is specified.
+.PP
+When connecting to an SSL encrypted server, the server presents a certificate
+to the client for validation.  The certificate is checked to verify that
+the common name in the certificate matches the name of the server being
+contacted and that the effective and expiration dates in the certificate
+indicate that it is currently valid.  If any of these checks fail, a warning
+message is printed, but the connection continues.  The server certificate
+does not need to be signed by any specific Certifying Authority and may
+be a "self-signed" certificate.
+.PP
+Some SSL encrypted servers may request a client side certificate.  A client
+side public SSL certificate and private SSL key may be specified.  If
+requested by the server, the client certificate is sent to the server for
+validation.  Some servers may require a valid client certificate and may
+refuse connections if a certificate is not provided or if the certificate
+is not valid.  Some servers may require client side certificates be signed
+by a recognized Certifying Authority.  The format for the key files and
+the certificate files is that required by the underlying SSL libraries
+(OpenSSL in the general case).
 
 .SH DAEMON MODE
 The 
@@ -1019,6 +1084,15 @@ POP2, POP3, IMAP, IMAP-K4, IMAP-GSS, APOP, KPOP
 T}
 port    	-P	T{
 Specify TCP/IP service port
+T}
+ssl    		T{
+Connect to server over the specified base protocol using SSL encryption
+T}
+sslcert    		T{
+Specify file for client side public SSL certificate
+T}
+sslkey    		T{
+Specify file for client side private SSL key
 T}
 auth[enticate]	-A	T{
 Set preauthentication type (default `password')

@@ -12,7 +12,7 @@ Internet: POP2, POP3 (including POP3 with RFC1938 one-time passwords),
 RPOP, APOP, KPOP, Compuserve's POP3 with RPA, Microsoft's NTLM, Demon
 Internet's SDPS, all flavors of IMAP (including IMAP4rev1 with RFC1731
 Kerberos v4 or GSSAPI authentication or CRAM-MD5 authentication), and
-ESMTP ETRN.
+ESMTP ETRN.  Fetchmail also supports end-to-end encryption with OpenSSL.
 
 The fetchmail code was developed under Linux, but has also been
 extensively tested under the BSD variants, AIX, HP-UX versions 9 and
