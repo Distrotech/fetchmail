@@ -30,18 +30,18 @@ every user entry in a multi-user poll declaration.
 
 ------------------------------------------------------------------------------
 
-pl 3.9.7 ():
-* Complain and die if user tries to start fetchmail with options while a
-  background fetchmail is running. 
+pl 3.9.7 (Mon Jun  9 18:40:04 EDT 1997):
+* Complain and exit if user tries to start fetchmail with options while a
+  background fetchmail is running.
 * Various installation headaches are gone, INSTALL edited accordingly.
 * Treat exim's 501 and (soon) 550 antispam responses as equivalent to 571.
-* Fess up to sometimes only counting header bytes in the progress messages.
+* Separate header and body byte counts in IMAP progress messages.
 * Man page updates, including removal of restriction on --syslog.
 * You can now set --syslog in the .fetchmailrc file.
 * Parse more different variants of IMAP "UNSEEN" message.
 * Handle zero-length messages correctly.
 
-There are 250 people on the fetchmail-friends list.
+There are 252 people on the fetchmail-friends list.
 
 pl 3.9.6 (Wed May 28 18:28:35 EDT 1997):
 * Fix the libc6 configuration stuff (thanks to Jesse Thilo).
