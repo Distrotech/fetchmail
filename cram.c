@@ -129,22 +129,13 @@ int do_cram_md5 (int sock, struct query *ctl)
 	report (stdout, "CRAM> %s\n", buf1);
     }
 
+    /* ship the authentication back, accept the server's responses */
     /* PMDF5.2 IMAP has a bug that requires this to be a single write */
-    strcat (buf1, "\r\n");
-    SockWrite (sock, buf1, strlen (buf1));
-
-    if ((result = gen_recv (sock, buf1, sizeof (buf1))))
-	return result;
-
-    /*
-     * Ugh.  This has to recognize all kinds of success lines.
-     * These two tests will catch IMAP and POP OK or SMTP-like
-     * protocols that use 2xx as a success indication.
-     */
-    if (buf1[0] = '2' || strstr(buf1, "OK"))
+    result = gen_transact(sock, buf1, sizeof(buf1));
+    if (result)
+	return(result);
+    else
 	return(PS_SUCCESS);
-    else 
-	return(PS_AUTHFAIL);
 }
 
 /* cram.c ends here */
