@@ -14,12 +14,11 @@ import string
 #
 class Controls:
     def __init__(self):
-	self.foreground = FALSE		# Run in background
-	self.daemon = 300		# Default to 5-minute timeout
+	self.poll_interval = 300	# Default to 5-minute timeout
 	self.syslog = FALSE		# Use syslogd for logging?
 	self.logfile = None		# No logfile, initially
 	self.idfile = None		# Default idfile, initially
-	self.invisible =  FALSE		# Suppress Received line & spoof?
+	self.invisible = FALSE		# Suppress Received line & spoof?
 
     def __repr__(self):
 	str = "";
@@ -29,8 +28,8 @@ class Controls:
 	    str = str + ("set logfile \"%s\"\n" % (self.logfile,));
 	if self.idfile:
 	    str = str + ("set idfile \"%s\"\n" % (self.idfile,));
-	if not self.foreground and self.daemon:
-	    str = str + ("set daemon %s\n" % (self.daemon,))
+	if self.poll_interval > 0:
+	    str = str + ("set daemon %s\n" % (self.poll_interval,))
 	return str + "\n"
 
     def __str__(self):
@@ -440,7 +439,7 @@ control how fetchmail runs:
 
 Poll interval
         Number of seconds to wait between polls in the background.
-        Ignored if the `Run in Foreground?' option is on.
+        If zero, fetchmail will run in foreground.
 
 Logfile
         If empty, emit progress and error messages to stderr.
@@ -473,20 +472,19 @@ This will take you to a site configuration dialogue.
 """}
 
 class ControlEdit(Frame):
-    def PostControls(self):
-	self.foreground = BooleanVar(self)
-	self.foreground.set(self.controls.foreground)
-	self.daemon = StringVar(self)
-	self.daemon.set(`self.controls.daemon`)
+    def postControls(self):
+	self.poll_interval = StringVar(self)
+	self.poll_interval.set(`self.controls.poll_interval`)
 	self.syslog = BooleanVar(self)
-	self.syslog.set(self.controls.syslog);
+	self.syslog.set(self.controls.syslog)
 	self.logfile = StringVar(self)
 	if self.controls.logfile: self.logfile.set(self.controls.logfile);
 	self.idfile = StringVar(self)
 	if self.controls.idfile: self.idfile.set(self.controls.idfile);
 	self.invisible = BooleanVar(self)
-	self.invisible.set(self.controls.invisible);
+	self.invisible.set(self.controls.invisible)
 
+    def expertEdit(self):
 	gf = Frame(self, relief=RAISED, bd = 5)
 
 	Label(gf,
@@ -495,14 +493,8 @@ class ControlEdit(Frame):
 
 	df = Frame(gf, relief=RAISED, bd=2)
 
-	# Run in foreground?
-	Checkbutton(df,
-		{'text':'Run in foreground?',
-		'variable':self.foreground,
-		'relief':GROOVE}).pack(side=LEFT,anchor=W)
-
 	# Set the poll interval
-	de = LabeledEntry(df, '     Poll interval:', self.daemon, '14')
+	de = LabeledEntry(df, '     Poll interval:', self.poll_interval, '14')
 	de.pack(side=RIGHT, anchor=E)
 
 	df.pack();
@@ -534,12 +526,22 @@ class ControlEdit(Frame):
 	gf.pack(fill=X)
 
     def GatherControls(self):
-	self.controls.daemon = self.daemon.get()
-	self.controls.foreground = self.foreground.get()
+	self.controls.poll_interval = self.poll_interval.get()
 	self.controls.logfile = self.logfile.get()
 	self.controls.idfile = self.idfile.get()
 	self.controls.syslog = self.syslog.get()
 	self.controls.invisible = self.invisible.get()
+
+    def save(self):
+	self.GatherControls()
+	sys.stdout.write("# Configuration created %s\n" % time.ctime(time.time()))
+	sys.stdout.write(`self.controls`)
+	for site in self.sites:
+	    sys.stdout.write(`site`)
+	    for user in site.userlist:
+		sys.stdout.write(`user`)
+		sys.stdout.write("\n")
+	self.quit()
 
 #
 # Server editing stuff.
@@ -714,7 +716,7 @@ class ServerEdit(Frame):
 	self.port.set(defaultports[proto])
 	if not proto in ("POP3", "APOP", "KPOP"): self.uidl = FALSE
 
-    def createWidgets(self, host):
+    def expertEdit(self, host):
 	topwin = Frame(self, relief=RAISED, bd=5)
 	# This pushes the window past a 480 depth.
 #	Label(topwin, text="Server options for " + host).pack(side=TOP,pady=10)
@@ -848,7 +850,7 @@ class UserEdit(Frame):
 	self.user.localnames = [user]
 	self.server = server
 	self.post()
-	self.createWidgets()
+	self.expertEdit()
 #	self.grab_set()
 #	self.focus_set()
 #	self.wait_window()
@@ -884,7 +886,7 @@ class UserEdit(Frame):
 	self.server.userlist.append(self.user) 
 	Widget.destroy(self.master)
 
-    def createWidgets(self):
+    def expertEdit(self):
 	topwin = Frame(self, relief=RAISED, bd=5)
 #	Label(topwin, 
 #	      text="User options for " + self.user.remote).pack(side=TOP,pady=10)
@@ -973,19 +975,20 @@ class UserEdit(Frame):
 #
 
 class ExpertConfigure(Frame, ControlEdit):
-    def __init__(self, master=None):
+    def __init__(self, controls, master=None):
 	Frame.__init__(self, master)
 	self.master.title('fetchmail expert configurator');
 	self.master.iconname('fetchmail expert configurator');
 	Pack.config(self)
-	self.MakeDispose()
-	self.controls = Controls()
-	self.PostControls()
-	self.MakeSitelist(master)
+	self.controls = controls
+	self.makeDispose()
+	self.postControls()
+	self.expertEdit()
+	self.makeSitelist(master)
 	self.sites = []
 	#XXX Must read existing configuration
 
-    def MakeDispose(self):
+    def makeDispose(self):
 	# Set the disposal of the given configuration
 	dispose = Frame(self, relief=RAISED, bd=5);
 	Label(dispose,
@@ -999,27 +1002,16 @@ class ExpertConfigure(Frame, ControlEdit):
 	       command=lambda: helpwin(experthelp)).pack(side=RIGHT)
 	dispose.pack(side=TOP, fill=X);
 
-    def MakeSitelist(self, master):
+    def makeSitelist(self, master):
 	lf = Frame(master, relief=RAISED, bd=5)
 	Label(lf,
 	      text='Remote Mail Server Configurations', 
 	      bd=2).pack(side=TOP, pady=10)
-	ListEdit('New Server:', None, self.editsite, lf, remotehelp)
+	ListEdit('New Server:', None, self.editSite, lf, remotehelp)
 	lf.pack(fill=X)
 
-    def editsite(self, site):
+    def editSite(self, site):
 	ServerEdit(site, self.sites, Toplevel())
-
-    def save(self):
-	self.GatherControls()
-	sys.stdout.write("# Configuration created %s\n" % time.ctime(time.time()))
-	sys.stdout.write(`self.controls`)
-	for site in self.sites:
-	    sys.stdout.write(`site`)
-	    for user in site.userlist:
-		sys.stdout.write(`user`)
-		sys.stdout.write("\n")
-	self.quit()
 
     def nosave(self):
 	if ConfirmQuit(self, "expert configuration editor"):
@@ -1030,11 +1022,12 @@ class ExpertConfigure(Frame, ControlEdit):
 # protocol designation, and creates a simple .fetchmailrc
 #
 
-class NoviceConfigure(Frame):
-    def __init__(self, master=None):
+class NoviceConfigure(Frame, ControlEdit):
+    def __init__(self, controls, master=None):
 	Frame.__init__(self, master)
 	self.master.title('fetchmail novice configurator');
 	self.master.iconname('fetchmail novice configurator');
+	self.controls = controls;
 	Pack.config(self)
 
 	#XXX Must read existing configuration
@@ -1108,19 +1101,49 @@ Or you can just select `Quit' to leave the configurator now.
 
     def novice(self):
 	self.destroy()
-	NoviceConfigure()
+	NoviceConfigure(Configuration)
 
     def expert(self):
 	self.destroy()
-	ExpertConfigure()
+	ExpertConfigure(Configuration)
 
     def leave(self):
 	if ConfirmQuit(self, "configuration editor"):
 	    self.quit()
 
+def copy_instance(toclass, fromdict):
+# Initialize a class object of given type from a conformant dictionary.
+    if tuple(toclass.__dict__.keys()) != tuple(fromdict.keys()):
+	print "Conformability error"
+	print "Class signature: " + `tuple(toclass.__dict__.keys())`
+	print "Dictionary keys: " + `tuple(fromdict.keys())`
+	sys.exit(1)
+    else:
+	for x in fromdict.keys():
+	    setattr(toclass, x, fromdict[x])
+
 if __name__ == '__main__': 
+
+    # Compute defaults
     ServerDefaults = Server()
     UserDefaults = User()
+
+    # Read the existing configuration
+    tmpfile = "/tmp/fetchmailconf." + `os.getpid()`
+    sys.stdout.write("Reading configuration...")
+    os.system("fetchmail --configdump >" + tmpfile)
+    execfile(tmpfile)
+    sys.stdout.write("Done.\n")
+    os.remove(tmpfile)
+
+    # This is the top-level 
+    Configuration = Controls()
+
+    # The tricky part -- initializing objects from the configuration global
+    copy_instance(Configuration, configuration['controls'])
+#    for server in configuration['servers']:
+
+    # OK, now run the configuration edit
     MainWindow().mainloop()
 
 # The following sets edit modes for GNU EMACS
