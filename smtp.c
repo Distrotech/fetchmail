@@ -27,7 +27,7 @@ int SMTP_helo(FILE *sockfp,char *host)
 
   SockPrintf(sockfp,"HELO %s\r\n", host);
   if (outlevel == O_VERBOSE)
-      fprintf(stderr, "SMTP> HELO %s\n", host);
+      error(0, 0, "SMTP> HELO %s\n", host);
   ok = SMTP_ok(sockfp);
   return ok;
 }
@@ -39,7 +39,7 @@ int SMTP_from(FILE *sockfp, char *from)
 
   SockPrintf(sockfp,"MAIL FROM:<%s>\r\n", from);
   if (outlevel == O_VERBOSE)
-      fprintf(stderr, "SMTP> MAIL FROM:<%s>\n", from);
+      error(0, 0, "SMTP> MAIL FROM:<%s>\n", from);
   ok = SMTP_ok(sockfp);
   return ok;
 }
@@ -51,7 +51,7 @@ int SMTP_rcpt(FILE *sockfp, char *to)
 
   SockPrintf(sockfp,"RCPT TO:<%s>\r\n", to);
   if (outlevel == O_VERBOSE)
-      fprintf(stderr, "SMTP> RCPT TO:<%s>\n", to);
+      error(0, 0, "SMTP> RCPT TO:<%s>\n", to);
   ok = SMTP_ok(sockfp);
   return ok;
 }
@@ -63,7 +63,7 @@ int SMTP_data(FILE *sockfp)
 
   SockPrintf(sockfp,"DATA\r\n");
   if (outlevel == O_VERBOSE)
-      fprintf(stderr, "SMTP> DATA\n");
+      error(0, 0, "SMTP> DATA\n");
   ok = SMTP_ok(sockfp);
   return ok;
 }
@@ -75,7 +75,7 @@ int SMTP_quit(FILE *sockfp)
 
   SockPrintf(sockfp,"QUIT\r\n");
   if (outlevel == O_VERBOSE)
-      fprintf(stderr, "SMTP> QUIT\n");
+      error(0, 0, "SMTP> QUIT\n");
   ok = SMTP_ok(sockfp);
   return ok;
 }
@@ -87,7 +87,7 @@ int SMTP_eom(FILE *sockfp)
 
   SockPrintf(sockfp,".\r\n");
   if (outlevel == O_VERBOSE)
-      fprintf(stderr, "SMTP>. (EOM)\n");
+      error(0, 0, "SMTP>. (EOM)\n");
   ok = SMTP_ok(sockfp);
   return ok;
 }
@@ -104,7 +104,7 @@ int SMTP_ok(FILE *sockfp)
 	    return SM_ERROR;
 	buf[n] = '\0';
 	if (outlevel == O_VERBOSE)
-	    fprintf(stderr, "SMTP< %s\n", buf);
+	    error(0, 0, "SMTP< %s\n", buf);
 	smtp_response = atoi(buf);
 	if ((buf[0] == '1' || buf[0] == '2' || buf[0] == '3') && buf[3] == ' ')
 	    return SM_OK;
