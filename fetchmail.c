@@ -155,11 +155,8 @@ int main (int argc, char **argv)
 	implicitmode = load_params(argc, argv, optind);
 
     /* set up to do lock protocol */
-    if ((tmpdir = getenv("TMPDIR")) == (char *)NULL)
-	tmpdir = "/tmp";
-    strcpy(tmpbuf, tmpdir);
-    strcat(tmpbuf, "/fetchmail-");
-    strcat(tmpbuf, user);
+    strcpy(tmpbuf, home);
+    strcat(tmpbuf, "/.fetchmail");
 
     /* perhaps we just want to check options? */
     if (versioninfo) {

@@ -20,6 +20,8 @@ bugs --
 
 * Replaced bug-prone setvbuf with setlinebuf.
 
+* Moved lock file to ~/.fetchmail to eliminate various /tmp problems.
+
 ------------------------------------------------------------------------------
 fetchmail-2.4 (Sat Dec 21 05:24:44 EST 1996)
 

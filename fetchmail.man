@@ -814,7 +814,7 @@ default location of file associating hosts with last message IDs seen
 (used only with newer RFC1725-compliant POP3 servers supporting the
 UIDL command).
 .TP 5
-${TMPDIR}/fetchmail-${USER}
+$~/.fetchmail
 lock file to help prevent concurrent runs.
 .SH ENVIRONMENT
 For correct initialization, 
