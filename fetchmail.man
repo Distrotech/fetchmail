@@ -1742,6 +1742,10 @@ temporarily discards any suid privileges it may have while running the
 MDA.  For maximum safety, however, don't use an mda command containing
 %F or %T when fetchmail is run from the root account itself.
 .PP
+LMTP support is untested.  Mail could be lost if some but not all 
+deliveries of a message addressed to multiple users fail; such
+deliveries are not retried.
+.PP
 Send comments, bug reports, gripes, and the like to the
 fetchmail-friends list <fetchmail-friends@ccil.org>.  An HTML FAQ is
 available at the fetchmail home page; surf to
