@@ -503,7 +503,7 @@ int main (int argc, char **argv)
 			 * Note:  this delay is important - don't remove!
 			 */
 			sleep(3);
-			interface_note_dactivity(&ctl->server);
+			interface_note_activity(&ctl->server);
 		    }
 #endif /* defined(linux) && !INET6 */
 	    }
