@@ -574,6 +574,7 @@ then
     for ac_dir in \
       /usr/local/ssl \
       /usr/ssl \
+      /usr \
       /local/ssl \
       /opt/ssl \
       ; \
