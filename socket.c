@@ -76,7 +76,12 @@ FILE *sockopen(char *host, int clientPort)
     fp = fdopen(sock, "r+");
 
 #ifdef FOO
-    /* for unknown reasons, this results in horrible lossage */
+    /*
+     * For unknown reasons, this results in horrible lossage.
+     * To see this, condition in this line, generate a test pattern
+     * of 8K, fetch it, and watch it garble the test pattern.
+     * I think there's a bug in stdio lurking here.
+     */
     setvbuf(fp, sbuf, _IOLBF, INTERNAL_BUFSIZE);
 #endif /* FOO */
 

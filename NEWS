@@ -10,7 +10,11 @@
 			Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-2.4 (Sat Dec 21 02:37:58 EST 1996)
+fetchmail-2.4 (Sat Dec 21 05:24:44 EST 1996)
+
+Note: a preliminary version of 2.4 was withdrawn after four hours of
+exposure due to horrible lossage apparently triggered by a bug in the
+Linux standard IO library.  See the comment in socket.c.
 
 features -- 
 
@@ -26,8 +30,10 @@ bugs --
 
 * Restored compile-time portability to Solaris.
 
-* Force line-buffering on socket streams (Linux apparently defaults to this).
-  This may fix some hang problems reported under Solaris.
+* Initial 2.4 said: "Force line-buffering on socket streams (Linux apparently
+  defaults to this). This may fix some hang problems reported under Solaris."
+  Unfortunately this "fix" triggers horrible lossage on long messages and had
+  to be removed.
 
 There are 166 people on the fetchmail-friends list.
 
