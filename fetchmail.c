@@ -1065,7 +1065,9 @@ static int load_params(int argc, char **argv, int optind)
 #undef DEFAULT
 
 	    /*
-	     * DNS support is required for some protocols.
+	     * DNS support is required for some protocols.  We used to
+	     * do this unconditionally, but it made fetchmail excessively
+	     * vulnerable to misconfigured DNS setups.
 	     *
 	     * If we're using ETRN, the smtp hunt list is the list of
 	     * systems we're polling on behalf of; these have to be 
