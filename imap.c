@@ -1155,8 +1155,8 @@ static int imap_delete(int sock, struct query *ctl, int number)
 static int imap_logout(int sock, struct query *ctl)
 /* send logout command */
 {
-    /* if expunges after deletion have been suppressed, ship one now */
-    if (NUM_SPECIFIED(expunge_period) && NUM_ZERO(expunge_period) && deletions)
+    /* if any un-expunged deletions remain, ship an expunge now */
+    if (deletions)
 	internal_expunge(sock);
 
     return(gen_transact(sock, "LOGOUT"));
