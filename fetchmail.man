@@ -296,7 +296,10 @@ This option changes the header
 .I fetchmail
 assumes will carry a copy of the mail's envelope address.  Normally
 this is `X-Envelope-To' but as this header is not standard, practice
-varies. See the discussion of multidrop address handling below.
+varies. See the discussion of multidrop address handling below.  Note:
+do \fInot\fR say `envelope "Received"'; this is not necessary as fetchmail
+will try to parse Received lines if `envelope' is not specified (unless
+you explicitly disable Received parsing with `no envelope').
 
 .SH USER AUTHENTICATION
 Every mode except ETRN requires authentication of the client.
