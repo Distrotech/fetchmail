@@ -51,6 +51,7 @@ noskip		{ yylval.flag = FLAG_FALSE; return SKIP; }
 with		{/* EMPTY */}
 and		{/* EMPTY */}
 has		{/* EMPTY */}
+wants		{/* EMPTY */}
 options		{/* EMPTY */}
 [;:,]		{/* EMPTY */}
 
