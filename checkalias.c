@@ -13,13 +13,6 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#if defined(HAVE_ALLOCA_H)
-#include <alloca.h>
-#else
-#ifdef _AIX
- #pragma alloca
-#endif
-#endif
 #include "mx.h"
 #include "fetchmail.h"
 
@@ -54,7 +47,7 @@ static int is_ip_alias(const char *name1,const char *name2)
     {
 	struct in_addr in;
 	(void) memcpy(&in.s_addr, *p, sizeof (in.s_addr));
-	host_a_addr = (address_e *)alloca(sizeof( address_e));
+	xalloca(host_a_addr, address_e *, sizeof (address_e));
 	memset (host_a_addr,0, sizeof (address_e));
 	host_a_addr->next = dummy_addr;
 	(void) memcpy(&host_a_addr->address, *p, sizeof (in.s_addr));
@@ -68,7 +61,7 @@ static int is_ip_alias(const char *name1,const char *name2)
     {
 	struct in_addr in;
 	(void) memcpy(&in.s_addr, *p, sizeof (in.s_addr));
-	host_b_addr = (address_e *)alloca(sizeof( address_e));
+	xalloca(host_b_addr, address_e *, sizeof (address_e));
 	memset (host_b_addr,0, sizeof (address_e));
 	host_b_addr->next = dummy_addr;
 	(void) memcpy(&host_b_addr->address, *p, sizeof (in.s_addr));

@@ -13,13 +13,6 @@
 #if defined(HAVE_UNISTD_H)
 #include <unistd.h>
 #endif
-#if defined(HAVE_ALLOCA_H)
-#include <alloca.h>
-#else
-#ifdef _AIX
- #pragma alloca
-#endif
-#endif
 #include <string.h>
 #include <signal.h>
 #if defined(HAVE_SYSLOG)
@@ -210,7 +203,7 @@ int main (int argc, char **argv)
 
     /* set up to do lock protocol */
 #define	FETCHMAIL_PIDFILE	"fetchmail.pid"
-    tmpbuf = alloca(strlen(home) + strlen(FETCHMAIL_PIDFILE) + 3);
+    xalloca(tmpbuf, char *, strlen(home) + strlen(FETCHMAIL_PIDFILE) + 3);
     if (!getuid())
 	sprintf(tmpbuf, "%s/%s", PID_DIR, FETCHMAIL_PIDFILE);
     else {
@@ -352,7 +345,7 @@ int main (int argc, char **argv)
     }
 
     /* parse the ~/.netrc file (if present) for future password lookups. */
-    netrc_file = (char *) alloca (strlen (home) + 8);
+    xalloca(netrc_file, char *, strlen (home) + 8);
     strcpy (netrc_file, home);
     strcat (netrc_file, "/.netrc");
     netrc_list = parse_netrc(netrc_file);
@@ -404,7 +397,7 @@ int main (int argc, char **argv)
                 && !ctl->password)
 	    {
 #define	PASSWORD_PROMPT	"Enter password for %s@%s: "
-		tmpbuf = alloca(strlen(PASSWORD_PROMPT) +
+		xalloca(tmpbuf, char *, strlen(PASSWORD_PROMPT) +
 					strlen(ctl->remotename) +
 					strlen(ctl->server.pollname) + 1);
 		(void) sprintf(tmpbuf, PASSWORD_PROMPT,
@@ -1494,6 +1487,10 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 		    for (idp = ctl->oldsaved; idp; idp = idp->next)
 			fprintf(stderr, "\t%s\n", idp->id);
 	    }
+
+	if (ctl->properties)
+	    printf("  Pass-through properties \"%s\".\n",
+		   visbuf(ctl->properties));
     }
 }
 

@@ -31,13 +31,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 #if defined(HAVE_SYSLOG)
 #include <syslog.h>
 #endif
-#if defined(HAVE_ALLOCA_H)
-#include <alloca.h>
-#else
-#ifdef _AIX
- #pragma alloca
-#endif
-#endif
 
 #if HAVE_VPRINTF || HAVE_DOPRNT || _LIBC || HAVE_STDARG_H
 # if HAVE_STDARG_H
@@ -159,7 +152,9 @@ error (status, errnum, message, va_alist)
 
       if (errnum > 0)
         {
-	  char *msg = alloca (strlen (message) + 5);
+	  char *msg;
+	  
+	  xalloca(msg, char *, strlen (message) + 5);
 
 	  strcpy (msg, message);
 	  strcat (msg, ": %m");

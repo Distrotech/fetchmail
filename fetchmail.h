@@ -397,6 +397,14 @@ int interface_approve(struct hostdata *);
 XMALLOCTYPE *xmalloc(int);
 XMALLOCTYPE *xrealloc(XMALLOCTYPE *, int);
 char *xstrdup(const char *);
+#if defined(HAVE_ALLOCA_H)
+#include <alloca.h>
+#else
+#ifdef _AIX
+ #pragma alloca
+#endif
+#endif
+#define	xalloca(ptr, t, n)	if (!(ptr = (t) alloca(n))) error(PS_UNDEFINED, 0, "alloca failed")
 
 /* protocol driver and methods */
 int do_protocol(struct query *, const struct method *);

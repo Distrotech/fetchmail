@@ -25,13 +25,6 @@
 #else
 #include  <varargs.h>
 #endif
-#if defined(HAVE_ALLOCA_H)
-#include <alloca.h>
-#else
-#ifdef _AIX
- #pragma alloca
-#endif
-#endif
 #if defined(HAVE_SYS_ITIMER_H)
 #include <sys/itimer.h>
 #endif
@@ -977,7 +970,7 @@ int num;		/* index of message */
 		if (idp->val.status.mark == XMIT_ANTISPAM)
 		    errlen += strlen(idp->id) + 2;
 
-	    errmsg = alloca(errlen+3);
+	    xalloca(errmsg, char *, errlen+3);
 	    (void) strcpy(errmsg, errhd);
 	    for (idp = xmit_names; idp; idp = idp->next)
 		if (idp->val.status.mark == XMIT_ANTISPAM)
@@ -1116,7 +1109,7 @@ const char *canonical;	/* server name */
     Key_schedule schedule;
     int rem;
   
-    ticket = ((KTEXT) (alloca (sizeof (KTEXT_ST))));
+    xalloca(ticket, KTEXT, sizeof (KTEXT_ST));
     rem = (krb_sendauth (0L, socket, ticket, "pop",
 			 canonical,
 			 ((char *) (krb_realmofhost (canonical))),
@@ -1552,7 +1545,7 @@ const struct method *proto;	/* protocol method table */
 		{
 		    int	i;
 
-		    msgsizes = (int *)alloca(sizeof(int) * count);
+		    xalloca(msgsizes, int *, sizeof(int) * count);
 		    for (i = 0; i < count; i++)
 			msgsizes[i] = -1;
 

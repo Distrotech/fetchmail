@@ -7,13 +7,6 @@
 #include "config.h"
 
 #include <stdio.h>
-#if defined(HAVE_ALLOCA_H)
-#include <alloca.h>
-#else
-#ifdef _AIX
- #pragma alloca
-#endif
-#endif
 #include <pwd.h>
 #include <string.h>
 #include <errno.h>
@@ -418,7 +411,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'r':
 	case LA_FOLDER:
-	    buf = alloca(strlen(optarg));
+	    xalloca(buf, char *, strlen(optarg));
 	    strcpy(buf, optarg);
 	    cp = strtok(buf, ",");
 	    do {
@@ -428,7 +421,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'S':
 	case LA_SMTPHOST:
-	    buf = alloca(strlen(optarg));
+	    xalloca(buf, char *, strlen(optarg));
 	    strcpy(buf, optarg);
 	    cp = strtok(buf, ",");
 	    do {
@@ -443,7 +436,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'Z':
 	case LA_ANTISPAM:
-	    buf = alloca(strlen(optarg));
+	    xalloca(buf, char *, strlen(optarg));
 	    strcpy(buf, optarg);
 	    cp = strtok(buf, ",");
 	    do {

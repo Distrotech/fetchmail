@@ -24,13 +24,6 @@
 #if defined(HAVE_UNISTD_H)
 #include <unistd.h>
 #endif
-#if defined(HAVE_ALLOCA_H)
-#include <alloca.h>
-#else
-#ifdef _AIX
- #pragma alloca
-#endif
-#endif
 
 #include  "fetchmail.h"
 #include  "socket.h"
@@ -96,12 +89,14 @@ static int smtp_open(struct query *ctl)
 	set_timeout(ctl->server.timeout);
 	for (idp = ctl->smtphunt; idp; idp = idp->next)
 	{
-	    char	*cp, *parsed_host = alloca(strlen(idp->id) + 1);
+	    char	*cp, *parsed_host;
 #ifdef INET6 
 	    char	*portnum = SMTP_PORT;
 #else
 	    int		portnum = SMTP_PORT;
 #endif /* INET6 */
+
+	    xalloca(parsed_host, char *, strlen(idp->id) + 1);
 
 	    ctl->smtphost = idp->id;  /* remember last host tried. */
 

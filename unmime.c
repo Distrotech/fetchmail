@@ -15,13 +15,6 @@
 #include "config.h"
 #include <string.h>
 #include <stdlib.h>
-#if defined(HAVE_ALLOCA_H)
-#include <alloca.h>
-#else
-#ifdef _AIX
- #pragma alloca
-#endif
-#endif
 #include <ctype.h>
 #include "fetchmail.h"
 
@@ -371,7 +364,7 @@ int MimeBodyType(unsigned char *hdrs, int WantDecode)
       XferEncOfs = NxtHdr;
       p = nxtaddr(NxtHdr);
       if (p != NULL) {
-	XferEnc = (char *)alloca(strlen(p) + 1);
+	xalloca(XferEnc, char *, strlen(p) + 1);
 	strcpy(XferEnc, p);
 	HdrsFound++;
       }
@@ -402,7 +395,7 @@ int MimeBodyType(unsigned char *hdrs, int WantDecode)
       } while ( (p != NULL) && ((*(p+1) == '\t') || (*(p+1) == ' ')) );
       if (p == NULL) p = NxtHdr + strlen(NxtHdr);
 
-      CntType = (char *)alloca(p-NxtHdr+2);
+      xalloca(CntType, char *, p-NxtHdr+2);
       strncpy(CntType, NxtHdr, (p-NxtHdr));
       *(CntType+(p-NxtHdr)) = '\0';
       HdrsFound++;
@@ -410,7 +403,7 @@ int MimeBodyType(unsigned char *hdrs, int WantDecode)
     else if (strncasecmp("MIME-Version:", NxtHdr, 13) == 0) {
       p = nxtaddr(NxtHdr);
       if (p != NULL) {
-	MimeVer = (char *)alloca(strlen(p) + 1);
+	xalloca(MimeVer, char *, strlen(p) + 1);
 	strcpy(MimeVer, p);
 	HdrsFound++;
       }
