@@ -1,10 +1,12 @@
 				Release Notes:
 
-fetchmail-4.5.4 ():
+fetchmail-4.5.5 ():
 * Brendan Cully's FAQ entry on GSSAPI.
 * Andrew Cagney's improvement to Received-line parsing.
+* Kent Robotti sent an updated version of fetchsetup.
+* Fixed the spam-block code that I broke in 4.5.3 :-(.
 
-There are 260 people on fetchmail-friends and 251 on fetchmail-announce.
+There are 260 people on fetchmail-friends and 252 on fetchmail-announce.
 
 fetchmail-4.5.4 (Sat Jul 25 10:25:14 EDT 1998):
 * Fixed processing of --antispam option.

@@ -1210,9 +1210,10 @@ int num;		/* index of message */
 		 * try to ship the message, and don't prevent it from
 		 * being deleted.  Typical values:
 		 *
-		 * 571 = sendmail's "unsolicited email refused"
 		 * 501 = exim's old antispam response
 		 * 550 = exim's new antispam response (temporary)
+		 * 553 = sendmail 8.8.7's generic REJECT 
+		 * 571 = sendmail's "unsolicited email refused"
 		 *
 		 * We don't send bouncemail on antispam failures because
 		 * we don't want the scumbags to know the address is even

@@ -741,9 +741,9 @@ static int load_params(int argc, char **argv, int optind)
     memset(&def_opts, '\0', sizeof(struct query));
     def_opts.smtp_socket = -1;
     def_opts.smtpaddress = (char *)0;
-    save_str(&def_opts.antispam, (char *)NULL, 0)->val.status.num = 571;
-    save_str(&def_opts.antispam, (char *)NULL, 0)->val.status.num = 550;
-    save_str(&def_opts.antispam, (char *)NULL, 0)->val.status.num = 501;
+    save_str(&def_opts.antispam, STRING_DUMMY, 0)->val.status.num = 571;
+    save_str(&def_opts.antispam, STRING_DUMMY, 0)->val.status.num = 550;
+    save_str(&def_opts.antispam, STRING_DUMMY, 0)->val.status.num = 501;
 
     def_opts.server.protocol = P_AUTO;
     def_opts.server.timeout = CLIENT_TIMEOUT;

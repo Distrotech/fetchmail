@@ -400,5 +400,6 @@ void itimerthread(void*);
 #endif
 
 #define STRING_DISABLED	(char *)-1
+#define STRING_DUMMY	""
 
 /* fetchmail.h ends here */

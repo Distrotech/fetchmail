@@ -261,16 +261,18 @@ smtp_list	: STRING		{save_str(&current.smtphunt, $1,TRUE);}
 		| smtp_list STRING	{save_str(&current.smtphunt, $2,TRUE);}
 		;
 
-num_list	: NUMBER		{
-					    struct idlist *id;
-		    			    id=save_str(&current.antispam,0,0);
-					    id->val.status.num = $1;
-					}
-		| num_list NUMBER	{
-					    struct idlist *id;
-					    id=save_str(&current.antispam,0,0);
-					    id->val.status.num = $2;
-					}
+num_list	: NUMBER
+			{
+			    struct idlist *id;
+			    id=save_str(&current.antispam,STRING_DUMMY,0);
+			    id->val.status.num = $1;
+			}
+		| num_list NUMBER
+			{
+			    struct idlist *id;
+			    id=save_str(&current.antispam,STRING_DUMMY,0);
+			    id->val.status.num = $2;
+			}
 		;
 
 user_option	: TO localnames HERE
