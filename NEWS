@@ -8,14 +8,14 @@
 
 				Release Notes:
 
-fetchmail-5.0.8 ():
+fetchmail-5.0.8 (Tue Sep 14 06:56:50 EDT 1999):
 * Todd Sabin's patch to accept spaces in CRAM-MD5 names.
 * Fix to CRAM endianness patch, by Dan Root via Lawrence Rogers.
 * Suppress duplicates by message ID in multidrop mode.
 * NTLM support for querying Microsoft Exchange servers, from Grant Edwards.
 * Lexer fix by Brian Boutel.
 
-There are 263 people on fetchmail-friends and 441 on fetchmail-announce.
+There are 264 people on fetchmail-friends and 441 on fetchmail-announce.
 
 fetchmail-5.0.7 (Sat Aug 21 04:26:13 EDT 1999):
 * RPA support works again.
