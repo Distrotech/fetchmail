@@ -501,10 +501,11 @@ static int stuffline(struct query *ctl, char *buf)
     return(n);
 }
 
-static int readheaders(sock, len, ctl, realname, num)
+static int readheaders(sock, fetchlen, reallen, ctl, realname, num)
 /* read message headers and ship to SMTP or MDA */
 int sock;		/* to which the server is connected */
-long len;		/* length of message */
+long fetchlen;		/* length of message according to fetch response */
+long reallen;		/* length of message according to getsizes */
 struct query *ctl;	/* query control record */
 char *realname;		/* real name of host */
 int num;		/* index of message */
@@ -537,7 +538,7 @@ int num;		/* index of message */
     oldlen = 0;
     msglen = 0;
 
-    for (remaining = len; remaining > 0 || protocol->delimited; remaining -= linelen)
+    for (remaining = fetchlen; remaining > 0 || protocol->delimited; remaining -= linelen)
     {
 	char *line;
 
@@ -927,8 +928,8 @@ int num;		/* index of message */
 		else if (!strcasecmp(ctt,"8BIT"))
 		    sprintf(options, " BODY=8BITMIME");
 	    }
-	if ((ctl->server.esmtp_options & ESMTP_SIZE))
-	    sprintf(options + strlen(options), " SIZE=%ld", len);
+	if ((ctl->server.esmtp_options & ESMTP_SIZE) && reallen > 0)
+	    sprintf(options + strlen(options), " SIZE=%ld", reallen);
 
 	/*
 	 * If there is a Return-Path address on the message, this was
@@ -1730,7 +1731,8 @@ const struct method *proto;	/* protocol method table */
 			     * Read the message headers and ship them to the
 			     * output sink.  
 			     */
-			    ok = readheaders(sock, len, ctl, realname, num);
+			    ok = readheaders(sock, len, msgsizes[num-1],
+					     ctl, realname, num);
 			    if (ok == PS_RETAINED)
 				suppress_forward = retained = TRUE;
 			    else if (ok == PS_TRANSIENT)
