@@ -121,6 +121,9 @@ troubleshooting help.<p>
 See the <a href="design-notes.html">Fetchmail Design Notes</a>
 for discussion of some of the design choices in fetchmail.<P>
 
+See the project's <a href="todo.html">To-Do list</a> for indications
+of known problems and requested features.<P>
+
 <H1>How to get fetchmail:</H1>
 
 You can get any of the following leading-edge resources here:
