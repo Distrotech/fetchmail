@@ -604,6 +604,8 @@ static int stuffline(struct query *ctl, char *buf)
     return(n);
 }
 
+#define EMPTYLINE(s)	((s)[0] == '\r' && (s)[1] == '\n' && (s)[2] == '\0')
+
 static int readheaders(sock, fetchlen, reallen, ctl, num)
 /* read message headers and ship to SMTP or MDA */
 int sock;		/* to which the server is connected */
@@ -632,10 +634,11 @@ int num;		/* index of message */
     struct idlist 	*idp, *xmit_names;
     flag		good_addresses, bad_addresses, has_nuls;
     flag		no_local_matches = FALSE;
+    flag		headers_ok;
     int			olderrs;
 
     sizeticker = 0;
-    has_nuls = FALSE;
+    has_nuls = headers_ok = FALSE;
     return_path[0] = '\0';
     olderrs = ctl->errcount;
 
@@ -680,8 +683,27 @@ int num;		/* index of message */
 	    line = (char *) realloc(line, strlen(line) + strlen(buf) +1);
 
 	    strcat(line, buf);
-	    if (line[0] == '\r' && line[1] == '\n')
-		break;
+
+	    /* check for end of headers */
+	    if (EMPTYLINE(line))
+	    {
+		headers_ok = TRUE;
+		has_nuls = (linelen != strlen(line));
+		free(line);
+		goto process_headers;
+	    }
+
+	    /*
+	     * Check for end of message immediately.  If one of your folders
+	     * has been mangled, the delimiter may occur directly after the
+	     * header.
+	     */
+	    if (protocol->delimited && line[0] == '.' && EMPTYLINE(line+1))
+	    {
+		free(line);
+		has_nuls = (linelen != strlen(line));
+		goto process_headers;
+	    }
 	} while
 	    /* we may need to grab RFC822 continuations */
 	    ((ch = SockPeek(sock)) == ' ' || ch == '\t');
@@ -697,16 +719,9 @@ int num;		/* index of message */
 	    }
 	}
 
-	if (linelen != strlen(line))
-	    has_nuls = TRUE;
+	/* we see an ordinary (non-header, non-message-delimiter line */
+	has_nuls = (linelen != strlen(line));
 
-	/* check for end of headers; don't save terminating line */
-	if (line[0] == '\r' && line[1] == '\n')
-	{
-	    free(line);
-	    break;
-	}
-     
 	/*
 	 * The University of Washington IMAP server (the reference
 	 * implementation of IMAP4 written by Mark Crispin) relies
@@ -909,6 +924,17 @@ int num;		/* index of message */
 		received_for = parse_received(ctl, line);
 	    }
 	}
+    }
+
+ process_headers:
+    /*
+     * We want to detect this early in case there are so few headers that the
+     * dispatch logic barfs.
+     */
+    if (!headers_ok)
+    {
+	if (outlevel > O_SILENT)
+	    error(0,0,"message delimiter found while scanning headers");
     }
 
     /*
@@ -1483,7 +1509,7 @@ int num;		/* index of message */
 
     free(headers);
     free_str_list(&xmit_names);
-    return(PS_SUCCESS);
+    return(headers_ok ? PS_SUCCESS : PS_TRUNCATED);
 }
 
 static int readbody(sock, ctl, forward, len)
@@ -2053,6 +2079,8 @@ const struct method *proto;	/* protocol method table */
 			    else if (ok == PS_TRANSIENT)
 				suppress_delete = suppress_forward = TRUE;
 			    else if (ok == PS_REFUSED)
+				suppress_forward = TRUE;
+			    else if (ok == PS_TRUNCATED)
 				suppress_forward = TRUE;
 			    else if (ok)
 				goto cleanUp;
