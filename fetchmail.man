@@ -357,7 +357,7 @@ real fix for this problem is to  switch to IMAP.
 The IMAP code uses the presence or absence of the server flag \eSeen
 to decide whether or not a message is new.  Under Unix, it counts on
 your IMAP server to notice the BSD-style Status flags set by mail user
-agents and set the \Seen flag from them when appropriate.  All Unix
+agents and set the \eSeen flag from them when appropriate.  All Unix
 IMAP servers we know of do this, though it's not specified by the IMAP
 RFCs.  If you ever trip over a server that doesn't, the symptom will
 be that messages you have already read on your host will look new to
@@ -366,7 +366,7 @@ the server.  In this (unlikely) case, only messages you fetched with
 .SH THE RUN CONTROL FILE
 The preferred way to set up fetchmail (and the only way if you want to
 avoid specifying passwords each time it runs) is to write a
-\fI.fetchmailrc\fR file in your home directory.  To protect the security
+\&\fI.fetchmailrc\fR file in your home directory.  To protect the security
 of your passwords, your \fI~/.fetchmailrc\fR may not have more than u+r,u+w
 permissions;
 .I fetchmail
