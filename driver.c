@@ -40,33 +40,12 @@
 #include "mx.h"
 #endif /* HAVE_RES_SEARCH */
 
+#include "kerberos.h"
 #ifdef KERBEROS_V4
-#ifdef KERBEROS_V5
-#include <kerberosIV/des.h>
-#include <kerberosIV/krb.h>
-#else
-#if defined (__bsdi__)
-#include <des.h> /* order of includes matters */
-#include <krb.h>
-#define krb_get_err_text(e) (krb_err_txt[e])
-#else
-#if defined(__NetBSD__) || defined(__FreeBSD__) || defined(__linux__)
-#define krb_get_err_text(e) (krb_err_txt[e])
-#include <krb.h>
-#include <des.h>
-#else
-#include <krb.h>
-#include <des.h>
-#endif /* ! defined (__FreeBSD__) */
-#endif /* ! defined (__bsdi__) */
-#endif /* KERBEROS_V5 */
 #include <netinet/in.h>
 #include <netdb.h>
 #endif /* KERBEROS_V4 */
-#ifdef KERBEROS_V5
-#include <krb5.h>
-#include <com_err.h>
-#endif /* KERBEROS_V5 */
+
 #include "i18n.h"
 
 #include "socket.h"

@@ -4,6 +4,9 @@
  * For license terms, see the file COPYING in this directory.
  */
 #include  "config.h"
+
+#ifdef KERBEROS_V4
+
 #include  <stdio.h>
 #include  <string.h>
 #include  <ctype.h>
@@ -12,28 +15,11 @@
 #endif
 #include  "fetchmail.h"
 #include  "socket.h"
+#include  "kerberos.h"
 
 #include <sys/types.h>
 #include <netinet/in.h>  /* for htonl/ntohl */
 
-#ifdef KERBEROS_V4
-
-#  ifdef KERBEROS_V5
-#    include <kerberosIV/des.h>
-#    include <kerberosIV/krb.h>
-#  else
-#    if defined (__bsdi__)
-#       include <des.h>
-#       define krb_get_err_text(e) (krb_err_txt[e])
-#    endif
-#    if defined(__NetBSD__) || (__FreeBSD__) || defined(__linux__)
-#       define krb_get_err_text(e) (krb_err_txt[e])
-#    endif
-#    include <krb.h>
-#  endif
-
-/* des.h might define _ for no good reason.  */
-#undef _
 #include  "i18n.h"
 
 #if SIZEOF_INT == 4

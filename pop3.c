@@ -211,10 +211,10 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 		if (strstr(buffer, "GSSAPI"))
 		    has_gssapi = TRUE;
 #endif /* defined(GSSAPI) */
-#if defined(KERBEROS_V4) || defined(KERBEROS_V5)
+#if defined(KERBEROS_V4)
 		if (strstr(buffer, "KERBEROS_V4"))
 		    has_kerberos = TRUE;
-#endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
+#endif /* defined(KERBEROS_V4)  */
 #ifdef OPIE_ENABLE
 		if (strstr(buffer, "X-OTP"))
 		    has_otp = TRUE;
@@ -227,7 +227,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	/*
 	 * OK, we have an authentication type now.
 	 */
-#if defined(KERBEROS_V4) || defined(KERBEROS_V5)
+#if defined(KERBEROS_V4)
 	/* 
 	 * Servers doing KPOP have to go through a dummy login sequence
 	 * rather than doing SASL.
