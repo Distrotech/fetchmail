@@ -899,8 +899,15 @@ int num;		/* index of message */
 	cp = (char *)NULL;
 	if (strstr(before, "%s") || (cp = strstr(before, "%T")))
 	{
+	    char	*sp;
+
 	    if (cp && cp[1] == 'T')
 		cp[1] = 's';
+
+	    /* \177 had better be out-of-band for MDA commands */
+	    for (sp = before; *sp; sp++)
+		if (*sp == '%' && sp[1] != 's' && sp[1] != 'T')
+		    *sp = '\177';
 
 	    /*
 	     * We go through this in order to be able to handle very
@@ -926,12 +933,22 @@ int num;		/* index of message */
 #endif /* SNPRINTF */
 	    free(before);
 	    before = after;
+
+	    for (sp = before; *sp; sp++)
+		if (*sp == '\177')
+		    *sp = '%';
 	}
 
 	/* substitute From address for %F */
 	if ((cp = strstr(before, "%F")))
 	{
 	    char *from = nxtaddr(headers + from_offs);
+	    char	*sp;
+
+	    /* \177 had better be out-of-band for MDA commands */
+	    for (sp = before; *sp; sp++)
+		if (*sp == '%' && sp[1] != 'F')
+		    *sp = '\177';
 
 	    length += strlen(from);
 	    after = alloca(length);
@@ -943,6 +960,10 @@ int num;		/* index of message */
 #endif /* SNPRINTF */
 	    free(before);
 	    before = after;
+
+	    for (sp = before; *sp; sp++)
+		if (*sp == '\177')
+		    *sp = '%';
 	}
 
 	if (outlevel == O_VERBOSE)
