@@ -24,6 +24,7 @@ fetchmail-4.0.4 (Mon Jul 28 23:38:20 EDT 1997)
 * The `no envelope' option now suppresses parsing of Received lines.
 * Added Al Youngwerth as a backup maintainer.
 
+This tries to fix the various yacc- and remote-build problems.
 There are 256 people on the fetchmail-friends list.
 
 fetchmail-4.0.3 (Mon Jul 28 16:39:17 EDT 1997)
