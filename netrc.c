@@ -239,9 +239,6 @@ parse_netrc (file)
 	    else
 	    {
 		/* Fetch the next token. */
-		if (!strcmp (tok, "account"))
-		    last_token = tok_account;
-
 		if (!strcmp (tok, "default"))
 		{
 		    maybe_add_to_list (&current, &retval);
@@ -260,6 +257,9 @@ parse_netrc (file)
 
 		else if (!strcmp (tok, "password"))
 		    last_token = tok_password;
+
+		else if (!strcmp (tok, "account"))
+		    last_token = tok_account;
 
 		else
 		{
