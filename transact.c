@@ -899,10 +899,7 @@ int readheaders(int sock,
      * get N copies.  This is bad when N > 1.
      *
      * Foil this by suppressing all but one copy of a message with a
-     * given set of headers.  The accept_count test ensures
-     * that multiple pieces of email with the same Message-ID, each
-     * with a *single* addressee (the N == 1 case), won't be
-     * suppressed.
+     * given set of headers.
      *
      * Note: This implementation only catches runs of successive
      * messages with the same ID, but that should be good
@@ -930,11 +927,10 @@ int readheaders(int sock,
 	     * If so there is a one in 18-quadrillion chance this 
 	     * code will incorrectly nuke the first message.
 	     */
-	    if (memcmp(ctl->lastdigest, ctl->digest, DIGESTLEN))
-		memcpy(ctl->lastdigest, ctl->digest, DIGESTLEN);
-	    else if (accept_count > 1)
+	    if (!memcmp(ctl->lastdigest, ctl->digest, DIGESTLEN))
 		return(PS_REFUSED);
 	}
+	memcpy(ctl->lastdigest, ctl->digest, DIGESTLEN);
     }
 
     /*
