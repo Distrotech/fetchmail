@@ -105,6 +105,28 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 	}
 	fclose(tmpfp);
     }
+
+    if (outlevel >= O_DEBUG)
+    {
+	struct idlist	*idp;
+
+	for (ctl = hostlist; ctl; ctl = ctl->next)
+	{
+	    report(stdout, "Old UID list from %s:", ctl->server.truename);
+	    for (idp = ctl->oldsaved; idp; idp = idp->next)
+		report(stdout, " %s", idp->id);
+	    if (!idp)
+		report(stdout, "<empty>");
+	    report(stdout, "\n");
+	}
+
+	report(stdout, "Scratch list of UIDs:");
+	for (idp = scratchlist; idp; idp = idp->next)
+	    report(stdout, " %s", idp->id);
+	if (!idp)
+	    report(stdout, "<empty>");
+	report(stdout, "\n");
+    }
 }
 #endif /* POP3_ENABLE */
 
@@ -306,6 +328,18 @@ void update_str_lists(struct query *ctl)
     free_str_list(&ctl->oldsaved);
     ctl->oldsaved = ctl->newsaved;
     ctl->newsaved = (struct idlist *) NULL;
+
+    if (outlevel >= O_DEBUG)
+    {
+	struct idlist *idp;
+
+	report(stdout, "New UID list from %s:", ctl->server.truename);
+	for (idp = ctl->oldsaved; idp; idp = idp->next)
+	    report(stdout, " %s = %d", idp->id, idp->val.status.mark);
+	if (!idp)
+	    report(stdout, "<empty>");
+	report(stdout, "\n");
+    }
 }
 
 void write_saved_lists(struct query *hostlist, const char *idfile)
@@ -325,7 +359,11 @@ void write_saved_lists(struct query *hostlist, const char *idfile)
 
     /* either nuke the file or write updated last-seen IDs */
     if (!idcount)
+    {
+	if (outlevel >= O_DEBUG)
+	    report(stdout, "Deleting fetchids file.");
 	unlink(idfile);
+    }
     else
 	if ((tmpfp = fopen(idfile, "w")) != (FILE *)NULL) {
 	    for (ctl = hostlist; ctl; ctl = ctl->next) {
