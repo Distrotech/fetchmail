@@ -18,7 +18,7 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.3.8 ():
+fetchmail-4.3.8 (Tue Feb 24 15:47:13 EST 1998):
 * Documentation cleanup.
 * -S is back to setting smtphost all the time; net-security option is now -T.
 * net-security option is now per-server, with a `netsec' keyword.
@@ -29,7 +29,7 @@ fetchmail-4.3.8 ():
 * Fix for core-dump bug in the new UID-marking code by timw@aracnet.com.
 * EMX changes support running fetchmail under OS/2.
 
-There are 274 people on fetchmail-friends and 138 on fetchmail-announce.
+There are 269 people on fetchmail-friends and 144 on fetchmail-announce.
 
 fetchmail-4.3.7 (Tue Feb 17 21:30:26 EST 1998)
 * Fixed a minor bug in the IMAP re-polling logic.
