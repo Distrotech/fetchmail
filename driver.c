@@ -138,7 +138,9 @@ static void map_name(const char *name, struct query *ctl, struct idlist **xmit_n
     }
 }
 
-void find_server_names(const char *hdr, struct query *ctl, struct idlist **xmit_names)
+static void find_server_names(const char *hdr,
+			      struct query *ctl,
+			      struct idlist **xmit_names)
 /* parse names out of a RFC822 header into an ID list */
 /*   hdr:		RFC822 header in question */
 /*   ctl:		list of permissible aliases */
@@ -379,7 +381,11 @@ static struct msgblk msgblk;
 
 #define EMPTYLINE(s)	((s)[0] == '\r' && (s)[1] == '\n' && (s)[2] == '\0')
 
-static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl, int num)
+static int readheaders(int sock,
+		       long fetchlen,
+		       long reallen,
+		       struct query *ctl,
+		       int num)
 /* read message headers and ship to SMTP or MDA */
 /*   sock:		to which the server is connected */
 /*   fetchlen:		length of message according to fetch response */
@@ -1167,8 +1173,7 @@ const char *canonical;	/* server name */
 #endif /* KERBEROS_V4 */
 
 #ifdef KERBEROS_V5
-int
-kerberos5_auth(socket, canonical)
+static int kerberos5_auth(socket, canonical)
 /* authenticate to the server host using Kerberos V5 */
 int socket;             /* socket to server host */
 const char *canonical;  /* server name */
