@@ -15,6 +15,15 @@ package will have two security verifications instead of one...
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.2.5 (Mon Jan 31 02:02:48 EST 2000), 18445 lines:
+
+* Fixed bugs in BSMTP generation reported by Jaap Lutz.
+* Make fetchmailconf better at handling backslashes in usernames
+  and passwords.
+* Jochen Hayeek's patch to handle spaces in UID usernames.
+
+There are 279 people on fetchmail-friends and 497 on fetchmail-announce.
+
 fetchmail-5.2.4 (Mon Jan 17 02:37:58 EST 2000), 18445 lines:
 
 * Fix bug introduced in 5.2.2 that stopped --syslog from working.

@@ -113,54 +113,59 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 
 	while (fgets(buf, POPBUFSIZE, tmpfp) != (char *)NULL)
 	{
-	  /*
-	   * At this point, we assume the bug has two fields -- a user@host 
-	   * part, and an ID part. Either field may contain spurious @ signs. 
-           * The previous version of this code presumed one could split at 
-           * the rightmost '@'.  This is not correct, as InterMail puts an 
-           * '@' in the UIDL.
-	   */
+	    /*
+	     * At this point, we assume the bug has two fields -- a user@host 
+	     * part, and an ID part. Either field may contain spurious @ signs.
+	     * The previous version of this code presumed one could split at 
+	     * the rightmost '@'.  This is not correct, as InterMail puts an 
+	     * '@' in the UIDL.
+	     */
 	  
-	  /* very first, skip leading spaces */
-	  user = buf + strspn(buf, " \t");
+	    /* first, skip leading spaces */
+	    user = buf + strspn(buf, " \t");
 
-	  /* First, we split the buf into a userhost part and an id part */
-	  if ( (delimp1 = strpbrk(user, " \t")) != NULL ) {
-		id = delimp1 + strspn(delimp1, " \t");	/* set pointer to id */
+	    /* First, we split the buf into a userhost part and an id part */
+	    if ((id = strchr(user, '<')) != NULL ) 	/* set pointer to id */
+	    {
+	        for (delimp1 = id; delimp1 >= user; delimp1--)
+		    if ((*delimp1 != ' ') && (*delimp1 != '\t'))
+			break;
+		delimp1++; /* but what if there is only white space ?!? */
 	  	saveddelim1 = *delimp1;	/* save char after token */
 		*delimp1 = '\0';		/* delimit token with \0 */
-		if (id != NULL) {
-			/* now remove trainling white space chars from id */
-	  		if ( (delimp2 = strpbrk(id, " \t\n")) != NULL ) {
-				saveddelim2 = *delimp2;
-				*delimp2 = '\0';
-			}
-	      		atsign = strrchr(user, '@');
-	      		if (atsign) {
-				*atsign = '\0';
-				host = atsign + 1;
+		if (id != NULL) 
+		{
+		    /* now remove trailing white space chars from id */
+		    if ((delimp2 = strpbrk(id, " \t\n")) != NULL ) {
+			saveddelim2 = *delimp2;
+			*delimp2 = '\0';
+		    }
+		    atsign = strrchr(user, '@');
+		    if (atsign) {
+			*atsign = '\0';
+			host = atsign + 1;
 
-			}
-			for (ctl = hostlist; ctl; ctl = ctl->next) {
-				if (ctl->server.truename &&
-			 	    strcasecmp(host, ctl->server.truename) == 0
-			 	    && strcasecmp(user, ctl->remotename) == 0) {
+		    }
+		    for (ctl = hostlist; ctl; ctl = ctl->next) {
+			if (ctl->server.truename &&
+			    strcasecmp(host, ctl->server.truename) == 0
+			    && strcasecmp(user, ctl->remotename) == 0) {
 	
-					save_str(&ctl->oldsaved, id, UID_SEEN);
-					break;
-				}
+			    save_str(&ctl->oldsaved, id, UID_SEEN);
+			    break;
 			}
-			/* if it's not in a host we're querying,
-			** save it anyway */
-			if (ctl == (struct query *)NULL) {
+		    }
+		    /* if it's not in a host we're querying,
+		    ** save it anyway */
+		    if (ctl == (struct query *)NULL) {
 				/* restore string */
-				*delimp1 = saveddelim1;
-				*atsign = '@';
-	  			if (delimp2 != NULL) {
-					*delimp2 = saveddelim2;
-				}
-				save_str(&scratchlist, buf, UID_SEEN);
+			*delimp1 = saveddelim1;
+			*atsign = '@';
+			if (delimp2 != NULL) {
+			    *delimp2 = saveddelim2;
 			}
+			save_str(&scratchlist, buf, UID_SEEN);
+		    }
 		}
 	    }
 	}
