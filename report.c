@@ -15,7 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* Written by David MacKenzie <djm@gnu.ai.mit.edu>.  */
+/* Written by David MacKenzie <djm@gnu.ai.mit.edu>.
+ * Heavily modified by Dave Bodenstab and ESR.
+ */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -69,6 +71,7 @@ void (*error_print_progname) (
 static unsigned int partial_message_size = 0;
 static unsigned int partial_message_size_used = 0;
 static char *partial_message;
+static unsigned use_stderr;
 
 /* This variable is incremented each time `error' is called.  */
 unsigned int error_message_count;
@@ -206,6 +209,17 @@ error (status, errnum, message, va_alist)
     exit (status);
 }
 
+/*
+ * Calling error_init(TRUE) causes error_build and error_complete to write
+ * to stderr without buffering.  This is needed for the ticker dots to
+ * work correctly.
+ */
+void error_init(foreground)
+int foreground;
+{
+    use_stderr = foreground;
+}
+
 /* Build an error message by appending MESSAGE, which is a printf-style
    format string with optional args, to the existing error message (which may
    be empty.)  The completed error message is finally printed (and reset to
@@ -290,6 +304,12 @@ error_build (message, va_alist)
     }
 #endif
 #endif
+
+  if (use_stderr && partial_message_size_used != 0)
+    {
+      partial_message_size_used = 0;
+      fputs(partial_message, stderr);
+    }
 }
 
 /* Complete an error message by appending MESSAGE, which is a printf-style
@@ -379,7 +399,19 @@ error_complete (status, errnum, message, va_alist)
   if (partial_message_size_used != 0)
     {
       partial_message_size_used = 0;
-      error (status, errnum, "%s", partial_message);
+      if (use_stderr)
+      {
+	  fputs(partial_message, stderr);
+	  if (errnum)
+	      fprintf (stderr, ": %s", strerror (errnum));
+	  putc ('\n', stderr);
+	  fflush (stderr);
+	  ++error_message_count;
+	  if (status)
+	      exit(status);
+      }
+      else
+	  error (status, errnum, "%s", partial_message);
     }
 }
 
