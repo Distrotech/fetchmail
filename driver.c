@@ -1123,7 +1123,7 @@ int num;		/* index of message */
      * synthetic Received line is before the From header.  Cope
      * with this...
      */
-    if ((rcv = strstr("Received:", headers)) == (char *)NULL)
+    if ((rcv = strstr(headers, "Received:")) == (char *)NULL)
 	rcv = headers;
     if (rcv > headers)
     {
