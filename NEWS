@@ -9,8 +9,10 @@
 fetchmail-4.7.6 ():
 * Henrik Storner's fix for mimedecode
 * ' now works as a string quote in. fetchmailrc syntax, just like ".
+* All bounce messages now use FQDN return paths.
+* Check for background nmode before generating oversized-message mail.  Duh!
 
-There are 255 people on fetchmail-friends and 331 on fetchmail-announce.
+There are 262 people on fetchmail-friends and 343 on fetchmail-announce.
 
 fetchmail-4.7.5 (Sat Jan  9 17:01:13 EST 1999):
 * Issue proper logout after running fetchmail -c

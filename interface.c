@@ -168,7 +168,7 @@ void interface_parse(char *buf, struct hostdata *hp)
 
 	/* find and isolate just the IP address */
 	if (!(cp1 = strchr(buf, '/')))
-		(void) report(stderr, PS_SYNTAX, 0, _("missing IP interface address"));
+		(void) report(stderr, PS_SYNTAX, _("missing IP interface address"));
 	*cp1++ = '\000';
 
 	/* find and isolate just the netmask */
@@ -180,9 +180,9 @@ void interface_parse(char *buf, struct hostdata *hp)
 	/* convert IP address and netmask */
 	hp->interface_pair = (struct interface_pair_s *)xmalloc(sizeof(struct interface_pair_s));
 	if (!inet_aton(cp1, &hp->interface_pair->interface_address))
-		(void) report(stderr, PS_SYNTAX, 0, _("invalid IP interface address"));
+		(void) report(stderr, PS_SYNTAX, _("invalid IP interface address"));
 	if (!inet_aton(cp2, &hp->interface_pair->interface_mask))
-		(void) report(stderr, PS_SYNTAX, 0, _("invalid IP interface mask"));
+		(void) report(stderr, PS_SYNTAX, _("invalid IP interface mask"));
 	/* apply the mask now to the IP address (range) required */
 	hp->interface_pair->interface_address.s_addr &=
 		hp->interface_pair->interface_mask.s_addr;

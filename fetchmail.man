@@ -284,16 +284,19 @@ be comma-separated.
 .B \-m, \--mda
 (Keyword: mda)
 You can force mail to be passed to an MDA directly (rather than
-forwarded to port 25) with the -mda or -m option.  If \fIfetchmail\fR
-is running as root, it sets its userid to that of the target user
-while delivering mail through an MDA.  Some possible MDAs are
-"/usr/sbin/sendmail -oem -f %F %T", "/usr/bin/procmail -d %T"
-and "/usr/bin/deliver".  Local delivery addresses
-will be inserted into the MDA command wherever you place a %T; the
-mail message's From address will be inserted where you place an %F.  Do
-\fInot\fR use an MDA invocation like
-"sendmail -oem -t" that dispatches on the contents of To/Cc/Bcc, it
-will create mail loops and bring the just wrath of many postmasters
+forwarded to port 25) with the -mda or -m option.  Be aware that this
+disables some valuable resource-exhaustion checks and error handling
+provided by SMTP listeners; it's not a good idea unless running an
+SMTP listener is impossible.  If \fIfetchmail\fR is running as root,
+it sets its userid to that of the target user while delivering mail
+through an MDA.  Some possible MDAs are "/usr/sbin/sendmail -oem -f %F
+%T", "/usr/bin/deliver" and "/usr/bin/procmail -d %T" (but the latter
+is usually redundant as).  it's what SMTP listeners usually forward
+to).  Local delivery addresses will be inserted into the MDA command
+wherever you place a %T; the mail message's From address will be
+inserted where you place an %F.  Do \fInot\fR use an MDA invocation
+like "sendmail -oem -t" that dispatches on the contents of To/Cc/Bcc,
+it will create mail loops and bring the just wrath of many postmasters
 down upon your head.
 .TP 
 .B \--lmtp
@@ -712,14 +715,14 @@ This option is intended for logging status and error messages which
 indicate the status of the daemon and the results while fetching mail
 from the server(s).
 Error messages for command line options and parsing the \fI.fetchmailrc\fR
-file are still written to stderr, or the specified log file if the
+file are still written to stderr, or to the specified log file.
 The
 .B --nosyslog
 option turns off use of 
 .IR syslog (3),
 assuming it's turned on in the 
 .I .fetchmailrc 
-file.
+file, or that the
 .B -L
 or
 .B --logfile

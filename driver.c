@@ -1226,10 +1226,10 @@ const char *canonical;  /* server name */
     if (retval) {
       if (err_ret && err_ret->text.length) {
           report(stderr, 0, _("krb5_sendauth: %s [server says '%*s'] "),
-            error_message(retval),
-            err_ret->text.length,
-            err_ret->text.data);
-          krb5_free_report(stderr, context, err_ret);
+		 error_message(retval),
+		 err_ret->text.length,
+		 err_ret->text.data);
+	  krb5_free_error(context, err_ret);
       } else
           report(stderr, 0, "krb5_sendauth: %s", error_message(retval));
       return(PS_ERROR);
@@ -1285,7 +1285,7 @@ static void send_size_warnings(struct query *ctl)
     int msg_to_send = FALSE;
     struct idlist *head=NULL, *current=NULL;
     int max_warning_poll_count;
-#define OVERHD	"Subject: Fetchmail oversized-messages warning.\r\n\r\nThe following oversized messages remain on the mail server:"
+#define OVERHD	"Subject: Fetchmail oversized-messages warning.\r\n\r\nThe following oversized messages remain on the mail server %s:"
 
     head = ctl->skipped;
     if (!head)
@@ -1305,7 +1305,7 @@ static void send_size_warnings(struct query *ctl)
      */
     if (open_warning_by_mail(ctl, (struct msgblk *)NULL))
 	return;
-    stuff_warning(ctl, OVERHD);
+    stuff_warning(ctl, OVERHD, ctl->server.pollname);
  
     if (run.poll_interval == 0)
 	max_warning_poll_count = 0;
@@ -1692,7 +1692,7 @@ const struct method *proto;	/* protocol method table */
 		{
 		    if (new == -1 || ctl->fetchall)
 			new = count;
-		    ok = ((new > 0) ? PS_SUCCESS : PS_NOMAIL);
+		    fetches = new;	/* set error status ccorrectly */
 		    goto no_error;
 		}
 		else if (count > 0)
@@ -2046,7 +2046,8 @@ const struct method *proto;	/* protocol method table */
 			}
 		    }
 
-		    if (!check_only && ctl->skipped)
+		    if (!check_only && ctl->skipped
+			&& run.poll_interval > 0 && !nodetach)
 		    {
 			clean_skipped_list(&ctl->skipped);
 			send_size_warnings(ctl);

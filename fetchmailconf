@@ -84,7 +84,6 @@ class Server:
 	    ('active',    'Boolean'),
 	    ('interval',  'Int'),
 	    ('protocol',  'String'),
-	    ('interval',  'Int'),
 	    ('port',      'Int'),
 	    ('uidl',      'Boolean'),
 	    ('auth',      'String'),
@@ -390,8 +389,7 @@ def helpwin(helpdict):
     textwin = Message(helpwin, text=helpdict['text'], width=600)
     textwin.pack()
     Button(helpwin, text='Done', 
-	   command=lambda x=helpwin: Widget.destroy(x),
-	   relief=SUNKEN, bd=2).pack()
+	   command=lambda x=helpwin: Widget.destroy(x), bd=2).pack()
 
 def make_icon_window(base, image):
     try:
@@ -696,7 +694,7 @@ class ConfigurationEdit(Frame, MyWidget):
     def destruct(self):
         for sitename in self.subwidgets.keys():
             self.subwidgets[sitename].destruct()        
-        self.quit()
+        self.master.destroy()
 
     def nosave(self):
 	if ConfirmQuit(self, self.mode + " configuration editor"):
@@ -1024,7 +1022,7 @@ class ServerEdit(Frame, MyWidget):
         # Note: this only handles case (1) near fetchmail.c:892
         # We're assuming people smart enough to set up ssh tunneling
         # won't need autoprobing.
-        if self.server.via != None:
+        if self.server.via:
             realhost = self.server.via
         else:
             realhost = self.server.pollname
@@ -1167,8 +1165,7 @@ Fetchmail doesn't know anything special about this server type.
         Label(confwin, text=title).pack()
         Message(confwin, text=confirm, width=600).pack()
         Button(confwin, text='Done', 
-                   command=lambda x=confwin: Widget.destroy(x),
-                   relief=SUNKEN, bd=2).pack()
+                   command=lambda x=confwin: Widget.destroy(x), bd=2).pack()
         
 #
 # User editing stuff
@@ -1397,8 +1394,8 @@ return to the main panel.
 	ConfigurationEdit(Fetchmailrc, self.outfile, Toplevel()).edit('expert')
 
     def leave(self):
+        self.master.destroy()
         self.parent.configuration_active = 0
-        Widget.destroy(self.master)
 
 # Run a command an a scrolling text widget, displaying its output
 
@@ -1492,7 +1489,7 @@ Or you can just select `Quit' to exit the launcher now.
             Configurator(self.outfile, Toplevel(), self)
 
     def test(self):
-    	RunWindow("fetchmail -d0 -v", Toplevel(), self)
+    	RunWindow("fetchmail -d0 -v --nosyslog", Toplevel(), self)
 
     def run(self):
     	RunWindow("fetchmail -d0", Toplevel(), self)
@@ -1636,9 +1633,9 @@ gUSiYASJpMEHhilJTEnhAlGoQqYAZQ1AiqEMZ0jDGtqQImhwwA13yMMevoQAGvGhEAWHGMOAAAA7
     # Read the existing configuration
     tmpfile = "/tmp/fetchmailconf." + `os.getpid()`
     if rcfile:
-        cmd = "fetchmail -f " + rcfile + " --configdump >" + tmpfile
+        cmd = "fetchmail -f " + rcfile + " --configdump --nosyslog >" + tmpfile
     else:
-        cmd = "fetchmail --configdump >" + tmpfile
+        cmd = "fetchmail --configdump --nosyslog >" + tmpfile
         
     try:
         s = os.system(cmd)

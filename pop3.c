@@ -567,7 +567,7 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
                 sprintf(sdps_envto,"To: <%s>",buf);
             }
 	} while
-	    (buf[0] !='.');
+	    (!(buf[0] == '.' && (buf[1] == '\r' || buf[1] == '\n' || buf[1] == '\0')));
     }
 #endif /* SDPS_ENABLE */
 

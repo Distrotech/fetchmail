@@ -61,7 +61,7 @@ através do servidor local SMTP (normalmente sendmail).
 Fetchmail es una utilidad gratis, completa, robusta y bien documentada
 para la recepción y reeenvío de correo pensada para ser usada en co-
 nexiones TCP/IP por demanda (como SLIP y PPP). Recibe el correo de
-servidores remotos y lo reenvía a el sistema de entrega local, siendo de
+servidores remotos y lo reenvía al sistema de entrega local, siendo de
 ese modo posible leerlo con programas como mutt, elm, pine, (x)emacs/gnus
 o mailx. Contiene un configurador GUI interactivo pensado para usuarios.
 
