@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/08/27 19:50:38 $
+<td width="30%" align=right>$Date: 2000/09/06 16:39:25 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1025,12 +1025,7 @@ in sendmail's configuration, you can leave the <code>rewrite</code>
 option off.<P>
 
 If your sendmail complains ``sendmail does not relay'',  make sure
-your sendmail,cf file says 
-
-<code>
-Cwlocalhost
-</code>
-
+your sendmail.cf file says <code>Cwlocalhost</code>
 so that sendmail recognizes `localhost' as a name of its host.<p>
 
 If you're mailing from another machine on your local network, also
@@ -1057,16 +1052,38 @@ mailserver's sendmail.cf file, it's a good idea to add this rule:<P>
 H?l?Delivered-To: $h
 </pre>
 
-and declare `<CODE>envelope "Delivered-To:"</CODE>'. This will cause the
-mailserver's sendmail to reliably write the appropriate envelope
-address into each message before fetchmail sees it, and tell fetchmail
-which header it is.  With this change, multidrop mode should work
-reliably even when the Received header omits the envelope address
-(which will typically be the case when the message has multiple
-recipients). <P>  
+This will cause the mailserver's sendmail to reliably write the 
+appropriate envelope address into each message before fetchmail sees 
+it, and tell fetchmail which header it is.&nbsp; With this change, 
+multidrop mode should work reliably even when the Received header 
+omits the envelope address (which will typically be the case when 
+the message has multiple recipients).&nbsp; However it will still not
+distinguish the recipients, your only advantage is that no bounce
+will be sent if a message is BCC addressed to multiple users at 
+your site.&nbsp; To fix even that problem, you might want to try the 
+following hack, which is however untested and quite experimental:<P>
 
-Martijn Lievart has a more detailed recipe in the contrib subdirectory
-of the fetchmail source distribution.
+<PRE>
+H?l?Delivered-To: $u
+
+Mmdrop,	P=/usr/bin/procmail, 
+	F=lsDFMqSPfhnu9, 
+	S=EnvFromSMTP/HdrFromSMTP, 
+	R=EnvToSMTP/HdrToSMTP,
+	T=DNS/RFC822/X-Unix,
+	A=procmail -Y -a $u -d $h
+</PRE>
+
+For both hacks, you have to declare `<CODE>envelope "Delivered-To:"</CODE>' on
+the fetchmail side, to put the virtual domain (e.g. `domain.com') 
+with RELAY permission into your access file and to add a line 
+reading `<CODE>domain.com local:local-pop-user</CODE>' for the first and 
+`<CODE>domain.com mdrop:local-pop-user</CODE>' for the second hack to your 
+mailertable.<P>
+    
+Feel free to try Martijn Lievaart's detailed recipe in the contrib 
+subdirectory of the fetchmail source distribution, it attempts
+to address this problem with an external script.<P>
 
 <hr>
 <h2><a name="T2">T2. How can I use fetchmail with qmail?</a></h2>
@@ -1675,8 +1692,7 @@ man page for several authentication methods.)<p>
 
 <pre>
 poll mailhost port 1234 via localhost with proto pop3:
-        preconnect "ssh -f -L 1234:mailhost:110 mailhost
-        &lt;/dev/null &gt;/dev/null; sleep 5";
+        preconnect "ssh -l username -f mailhost -L 1234:mailhost:110 sleep 5"
 </pre>
 
 The sleep is needed on slower machines to prevent fetchmail from
@@ -2892,7 +2908,7 @@ install Linux on your server...<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/08/27 19:50:38 $
+<td width="30%" align=right>$Date: 2000/09/06 16:39:25 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
