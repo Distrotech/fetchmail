@@ -27,6 +27,10 @@
 #endif
 #if defined(HAVE_ALLOCA_H)
 #include <alloca.h>
+#else
+#ifdef _AIX
+ #pragma alloca
+#endif
 #endif
 #if defined(HAVE_SYS_ITIMER_H)
 #include <sys/itimer.h>
@@ -870,7 +874,7 @@ int num;		/* index of message */
 	desthost = "localhost";
 
 	length = strlen(ctl->mda) + 1;
-	before = strdup(ctl->mda);
+	before = xstrdup(ctl->mda);
 
 	/* sub user addresses for %T (or %s for backward compatibility) */
 	cp = (char *)NULL;

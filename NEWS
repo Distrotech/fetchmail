@@ -11,6 +11,12 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.3.1 ()
+* Minor portation fixes for early AIX version and NextSTEP.
+
+There are 280 people on fetchmail-friends and 8 on fetchmail-announce.
+
+------------------------------------------------------------------------------
 fetchmail-4.3.0 (Mon Oct  6 16:44:38 EDT 1997)
 * Rearranged IMAP authentication so CAPABILITY is done first,
 * FAQ update, including a major new item on how to protect your password.

@@ -33,10 +33,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 #endif
 #if defined(HAVE_ALLOCA_H)
 #include <alloca.h>
+#else
+#ifdef _AIX
+ #pragma alloca
+#endif
 #endif
 
-#if HAVE_VPRINTF || HAVE_DOPRNT || _LIBC
-# if __STDC__
+#if HAVE_VPRINTF || HAVE_DOPRNT || _LIBC || HAVE_STDARG_H
+# if HAVE_STDARG_H
 #  include <stdarg.h>
 #  define VA_START(args, lastarg) va_start(args, lastarg)
 # else
@@ -118,7 +122,7 @@ private_strerror (errnum)
 /* VARARGS */
 
 void
-#if defined(VA_START) && __STDC__
+#ifdef HAVE_STDARG_H
 error (int status, int errnum, const char *message, ...)
 #else
 error (status, errnum, message, va_alist)
@@ -263,7 +267,7 @@ int foreground;
 /* VARARGS */
 
 void
-#if defined(VA_START) && __STDC__
+#ifdef HAVE_STDARG_H
 error_build (const char *message, ...)
 #else
 error_build (message, va_alist)
@@ -363,7 +367,7 @@ error_build (message, va_alist)
 /* VARARGS */
 
 void
-#if defined(VA_START) && __STDC__
+#ifdef HAVE_STDARG_H
 error_complete (int status, int errnum, const char *message, ...)
 #else
 error_complete (status, errnum, message, va_alist)
@@ -478,7 +482,7 @@ error_complete (status, errnum, message, va_alist)
 int error_one_per_line;
 
 void
-#if defined(VA_START) && __STDC__
+#ifdef HAVE_STDARG_H
 error_at_line (int status, int errnum, const char *file_name,
 	       unsigned int line_number, const char *message, ...)
 #else

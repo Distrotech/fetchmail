@@ -16,6 +16,10 @@
 #endif
 #if defined(HAVE_ALLOCA_H)
 #include <alloca.h>
+#else
+#ifdef _AIX
+ #pragma alloca
+#endif
 #endif
 #include <string.h>
 #include <signal.h>
