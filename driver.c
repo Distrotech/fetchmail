@@ -357,13 +357,13 @@ int rewrite;
 
 	    if (!strncmp(bufp,"From ",5))
 		unixfrom = bufp;
-	    else if (!strncmp("From: ", bufp, 6))
+	    else if (!strncasecmp("From: ", bufp, 6))
 		fromhdr = bufp;
-	    else if (!strncmp("To: ", bufp, 4))
+	    else if (!strncasecmp("To: ", bufp, 4))
 		tohdr = bufp;
-	    else if (!strncmp("Cc: ", bufp, 4))
+	    else if (!strncasecmp("Cc: ", bufp, 4))
 		cchdr = bufp;
-	    else if (!strncmp("Bcc: ", bufp, 5))
+	    else if (!strncasecmp("Bcc: ", bufp, 5))
 		bcchdr = bufp;
 
 	    goto skipwrite;
@@ -380,19 +380,19 @@ int rewrite;
 	     * a la sendmail -- crack all the destination headers
 	     * and send to every address we can reach via SMTP.
 	     */
-	    if ((cp = nxtaddr(tohdr)) != (char *)NULL)
+	    if (tohdr && (cp = nxtaddr(tohdr)) != (char *)NULL)
 		do {
 		    if (SMTP_rcpt(mboxfd, cp) == SM_UNRECOVERABLE)
 			return(PS_SMTP);
 		} while
 		    (cp = nxtaddr(NULL));
-	    if ((cp = nxtaddr(cchdr)) != (char *)NULL)
+	    if (cchdr && (cp = nxtaddr(cchdr)) != (char *)NULL)
 		do {
 		    if (SMTP_rcpt(mboxfd, cp) == SM_UNRECOVERABLE)
 			return(PS_SMTP);
 		} while
 		    (cp = nxtaddr(NULL));
-	    if ((cp = nxtaddr(bcchdr)) != (char *)NULL)
+	    if (bcchdr && (cp = nxtaddr(bcchdr)) != (char *)NULL)
 		do {
 		    if (SMTP_rcpt(mboxfd, cp) == SM_UNRECOVERABLE)
 			return(PS_SMTP);
