@@ -1078,7 +1078,9 @@ static int load_params(int argc, char **argv, int optind)
 	     * We're going to assume the via name is true unless it's
 	     * localhost.
 	     */
-	    if (ctl->server.via && strcmp(ctl->server.via, "localhost"))
+	    if ((ctl->server.via) && 
+		(!(ctl->localnames && ctl->localnames->next) || 
+		 strcmp(ctl->server.via, "localhost")))
 		ctl->server.queryname = xstrdup(ctl->server.via);
 	    else
 		ctl->server.queryname = xstrdup(ctl->server.pollname);
@@ -1146,7 +1148,7 @@ static int load_params(int argc, char **argv, int optind)
 			ctl->server.truename=xstrdup((char *)namerec->h_name);
 		}
 #endif /* HAVE_GETHOSTBYNAME */
-		else 
+		else if (ctl->active)
 		{
 #ifdef HAVE_GETHOSTBYNAME
 		    struct hostent	*namerec;

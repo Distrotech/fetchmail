@@ -2,16 +2,17 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
-* HH's patch fixing Debian bug #90966.
+* HH's patches fixing Debian bug #90966 and addressing Debian bug #92554.
 * GSSAPI portability patch by Peter Fales.
 * Updated cs.po by Jiri Pavlovsky.
 * Michael Kjorling's patch to add server ID to authantication success/failure 
   bugmail.
 * Kerberos build patch by HH.
+* Don't cough and die from failure to resolve a skipped host.
 
 fetchmail-5.8.1 (Tue Apr 10 09:32:04 EDT 2001), 20511 lines:
 
-* Nalin Dahyabai's password parse and authentication fixe.
+* Nalin Dahyabai's password parse and authentication fixes.
 * Vitezslav Samel's patch to Makefile.in to make parallel makes work.
 
 There are 314 people on fetchmail-friends and 569 on fetchmail-announce.
