@@ -1,5 +1,7 @@
-/* Dummy header for libintl.h */
-
+/* Dummy header for libintl.h
+ *
+ * For license terms, see the file COPYING in this directory.
+ */
 #undef _
 #ifdef ENABLE_NLS
 #undef __OPTIMIZE__
