@@ -104,6 +104,8 @@ static int smtp_open(struct query *ctl)
 	    xalloca(parsed_host, char *, strlen(idp->id) + 1);
 
 	    ctl->smtphost = idp->id;  /* remember last host tried. */
+	    if(ctl->smtphost[0]=='/')
+		ctl->listener = LMTP_MODE;
 
 	    strcpy(parsed_host, idp->id);
 	    if ((cp = strrchr(parsed_host, '/')))
@@ -116,6 +118,10 @@ static int smtp_open(struct query *ctl)
 #endif /* INET6_ENABLE */
 	    }
 
+	    if (ctl->smtphost[0]=='/'){
+		if((ctl->smtp_socket = UnixOpen(ctl->smtphost))==-1)
+		    continue;
+	    } else
 	    if ((ctl->smtp_socket = SockOpen(parsed_host,portnum,NULL,
 					     ctl->server.plugout)) == -1)
 		continue;
@@ -159,7 +165,7 @@ static int smtp_open(struct query *ctl)
      * enforce this.  Now that we have the actual hostname,
      * compute what we should canonicalize with.
      */
-    ctl->destaddr = ctl->smtpaddress ? ctl->smtpaddress : ( ctl->smtphost ? ctl->smtphost : "localhost");
+    ctl->destaddr = ctl->smtpaddress ? ctl->smtpaddress : ( ctl->smtphost && ctl->smtphost[0] != '/' ? ctl->smtphost : "localhost");
 
     if (outlevel >= O_DEBUG && ctl->smtp_socket != -1)
 	report(stdout, _("forwarding to %s\n"), ctl->smtphost);

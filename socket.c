@@ -18,6 +18,7 @@
 #else
 #include <net/socket.h>
 #endif
+#include <sys/un.h>
 #include <netinet/in.h>
 #ifdef HAVE_ARPA_INET_H
 #include <arpa/inet.h>
@@ -187,6 +188,31 @@ int SockCheckOpen(int fd)
     }
 }
 #endif /* __UNUSED__ */
+
+int UnixOpen(const char *path)
+{
+    int sock = -1;
+    struct sockaddr_un ad;
+    memset(&ad, 0, sizeof(ad));
+    ad.sun_family = AF_UNIX;
+    strncpy(ad.sun_path, path, sizeof(ad.sun_path)-1);
+
+    sock = socket( AF_UNIX, SOCK_STREAM, 0 );
+    if (sock < 0)
+    {
+	h_errno = 0;
+	return -1;
+    }
+    if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) < 0)
+    {
+	int olderr = errno;
+	fm_close(sock);	/* don't use SockClose, no traffic yet */
+	h_errno = 0;
+	errno = olderr;
+	return -1;
+    }
+    return sock;
+}
 
 #if INET6_ENABLE
 int SockOpen(const char *host, const char *service, const char *options,

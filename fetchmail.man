@@ -316,9 +316,11 @@ preauthentication, the FQDN of the machine running fetchmail is added to
 the end of the list as an invisible default. Each hostname may have a 
 port number following the host name.  The port number is separated from
 the host name by a slash; the default port is 25 (or ``smtp'' under IPv6).
-Example:
+If you specify an absolute pathname (beginning with a /), it will be
+interpreted as the name of a UNIX socket accepting LMTP connections
+(such as is supported by the Cyrus IMAP daemon) Example:
 
-	--smtphost server1,server2/2525,server3
+	--smtphost server1,server2/2525,server3,/var/imap/socket/lmtp
 
 .TP
 .B \-D <domain>, --smtpaddress <domain>

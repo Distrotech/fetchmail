@@ -4,11 +4,12 @@
 
 * More on ETRN in the FAQ.
 * Horst Klokow's patch to make interface check the remote IP address.
-* Roger Luethi's patc to write the UIDL file when you hit a fetchlimit.
+* Roger Luethi's patch to write the UIDL file when you hit a fetchlimit.
 * Don Beusee's patch to eliminate wedging on authentication failure.
   Instead, fetchmail will now notify the user on the third failure, then
   continue polling silently until service is restored (at which time the
   user will get a notification).
+* Samuel Leo's patch to add LMTP capability to the smtphost option.
 
 ------------------------------------------------------------------------------
 fetchmail-5.6.0 (Sun Nov 26 22:11:09 EST 2000), 19625 lines:
