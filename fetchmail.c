@@ -528,6 +528,11 @@ int main (int argc, char **argv)
 		    }
 #endif  /* POP3_ENABLE */
 		}
+		else if (querystatus == PS_AUTHFAIL) {
+		    /* have it logged with priority LOG_ALERT */
+		    error(querystatus, -1, "Authentication failed for %s@%s",
+				ctl->remotename, visbuf(ctl->server.pollname));
+		}
 		else if (!check_only && 
 			 ((querystatus!=PS_NOMAIL) || (outlevel==O_DEBUG)))
 		    error(0, 0, "Query status=%d", querystatus);

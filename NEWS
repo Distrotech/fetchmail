@@ -2,6 +2,9 @@
 
 fetchmail-4.6.3 ():
 * Introduced `debug' verbosity, invocable by -v -v.
+* Make authentication failures more visible by syslogging them.
+
+There are 252 people on fetchmail-friends and 295 on fetchmail-announce.
 
 fetchmail-4.6.2 (Fri Oct 16 12:49:30 EDT 1998):
 * Time out server open requests like we do reads.  This protects against
