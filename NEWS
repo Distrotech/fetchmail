@@ -10,11 +10,15 @@ features --
 * Automatic parsing of ~/.netrc for a mailserver password if necessary, thanks
   to Gordon Matzigkeit.
 
+* More FAQ material on how and when to use --interface.
+
 bugs --
 
 * Fixed a minor bug introduced into From handling by 2.6.
 
-There are 173 people on the fetchmail-friends list.
+* Fixed bug in SMTP forwarding of msg lines with leading dot.
+
+There are 176 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-2.6 (Fri Dec 27 12:42:56 EST 1996)
