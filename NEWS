@@ -1,7 +1,7 @@
 			Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-2.7 ()
+fetchmail-2.7 (Thu Jan  9 03:18:15 EST 1997)
 
 features -- 
 
@@ -12,7 +12,7 @@ features --
 
 * Added preconnect option for initializing ssh connections.
 
-* Added local-domains feature as requested by Pablo Saratxaga.
+* Added local-domains support for multidrop as requested by Pablo Saratxaga.
 
 * More FAQ material on how and when to use --interface.
 
@@ -25,7 +25,7 @@ bugs --
 * Fixed a bug that generated incorrect HELO for second and subsequent
   poll entries attached to the same SMTP host.
 
-There are 176 people on the fetchmail-friends list.
+There are 177 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-2.6 (Fri Dec 27 12:42:56 EST 1996)
