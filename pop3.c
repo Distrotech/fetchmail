@@ -613,6 +613,77 @@ static int pop3_gettopid( int sock, int num , char *id)
     return 0;
 }
 
+static int pop3_getuidl( int sock, int num , char *id)
+{
+    int ok;
+    char buf [POPBUFSIZE+1];
+    gen_send(sock, "UIDL %d", num);
+    if ((ok = pop3_ok(sock, buf)) != 0)
+	return(ok);
+    if (sscanf(buf, "%d %s", &num, id) != 2)
+	return(PS_PROTOCOL);
+    return(PS_SUCCESS);
+}
+
+static int pop3_fastuidl( int sock,  struct query *ctl, unsigned int count, int *newp)
+{
+    int ok;
+    unsigned int first_nr, last_nr, try_nr;
+    char id [IDLEN+1];
+
+    first_nr = 0;
+    last_nr = count + 1;
+    while (first_nr < last_nr - 1)
+    {
+	struct idlist	*new;
+
+	try_nr = (first_nr + last_nr) / 2;
+	if( (ok = pop3_getuidl( sock, try_nr, id )) != 0 )
+	    return ok;
+	if ((new = str_in_list(&ctl->oldsaved, id, FALSE)))
+	{
+	    flag mark = new->val.status.mark;
+	    if (mark == UID_DELETED || mark == UID_EXPUNGED)
+	    {
+		if (outlevel >= O_VERBOSE)
+		    report(stderr, GT_("id=%s (num=%d) was deleted, but is still present!\n"), id, try_nr);
+		/* just mark it as seen now! */
+		new->val.status.mark = mark = UID_SEEN;
+	    }
+
+	    /* narrow the search region! */
+	    if (mark == UID_UNSEEN)
+	    {
+		if (outlevel >= O_DEBUG)
+		    report(stdout, GT_("%u is unseen\n"), try_nr);
+		last_nr = try_nr;
+	    }
+	    else
+		first_nr = try_nr;
+
+	    /* save the number */
+	    new->val.status.num = try_nr;
+	}
+	else
+	{
+	    if (outlevel >= O_DEBUG)
+		report(stdout, GT_("%u is unseen\n"), try_nr);
+	    last_nr = try_nr;
+
+	    /* save it */
+	    new = save_str(&ctl->oldsaved, id, UID_UNSEEN);
+	    new->val.status.num = try_nr;
+	}
+    }
+    if (outlevel >= O_DEBUG && last_nr <= count)
+	report(stdout, GT_("%u is first unseen\n"), last_nr);
+
+    /* update last! */
+    *newp = count - first_nr;
+    last = first_nr;
+    return 0;
+}
+
 static int pop3_slowuidl( int sock,  struct query *ctl, int *countp, int *newp)
 {
     /* This approach tries to get the message headers from the
@@ -737,7 +808,22 @@ static int pop3_getrange(int sock,
     *newp = -1;
     if (*countp > 0 && !ctl->fetchall)
     {
+	int fastuidl;
 	char id [IDLEN+1];
+
+	/* should we do fast uidl this time? */
+	fastuidl = ctl->fastuidl;
+	if (*countp > 7 &&		/* linear search is better if there are few mails! */
+	    !ctl->flush &&		/* with flush, it is safer to disable fastuidl */
+	    NUM_NONZERO (fastuidl))
+	{
+	    if (fastuidl == 1)
+		dofastuidl = 1;
+	    else
+		dofastuidl = ctl->fastuidlcount != 0;
+	}
+	else
+	    dofastuidl = 0;
 
 	if (!ctl->server.uidl) {
 	    gen_send(sock, "LAST");
@@ -755,6 +841,8 @@ static int pop3_getrange(int sock,
 	}
  	else
  	{
+	    if (dofastuidl)
+		return(pop3_fastuidl( sock, ctl, *countp, newp));
 	    /* grab the mailbox's UID list */
 	    if ((ok = gen_transact(sock, "UIDL")) != 0)
 	    {
@@ -776,17 +864,41 @@ static int pop3_getrange(int sock,
  			break;
  		    else if (sscanf(buf, "%d %s", &num, id) == 2)
 		    {
- 			struct idlist	*new;
+ 			struct idlist	*old, *new;
 
 			new = save_str(&ctl->newsaved, id, UID_UNSEEN);
 			new->val.status.num = num;
 
-			if (str_in_list(&ctl->oldsaved, id, FALSE)) {
-			    new->val.status.mark = UID_SEEN;
-			    str_set_mark(&ctl->oldsaved, id, UID_SEEN);
+			if ((old = str_in_list(&ctl->oldsaved, id, FALSE)))
+			{
+			    flag mark = old->val.status.mark;
+			    if (mark == UID_DELETED || mark == UID_EXPUNGED)
+			    {
+				if (outlevel >= O_VERBOSE)
+				    report(stderr, GT_("id=%s (num=%d) was deleted, but is still present!\n"), id, num);
+				/* just mark it as seen now! */
+				old->val.status.mark = mark = UID_SEEN;
+			    }
+			    new->val.status.mark = mark;
+			    if (mark == UID_UNSEEN)
+			    {
+				(*newp)++;
+				if (outlevel >= O_DEBUG)
+				    report(stdout, GT_("%u is unseen\n"), num);
+			    }
 			}
 			else
+			{
 			    (*newp)++;
+			    if (outlevel >= O_DEBUG)
+				report(stdout, GT_("%u is unseen\n"), num);
+			    /* add it to oldsaved also! In case, we do not
+			     * swap the lists (say, due to socket error),
+			     * the same mail will not be downloaded again.
+			     */
+			    old = save_str(&ctl->oldsaved, id, UID_UNSEEN);
+			    old->val.status.num = num;
+			}
 		    }
  		}
  	    }
@@ -794,6 +906,32 @@ static int pop3_getrange(int sock,
     }
 
     return(PS_SUCCESS);
+}
+
+static int pop3_getpartialsizes(int sock, int first, int last, int *sizes)
+/* capture the size of message #first */
+{
+    int	ok;
+    char buf [POPBUFSIZE+1];
+    unsigned int num, size;
+
+    /* for POP3, we can get the size of one mail only! */
+    if (first != last)
+    {
+	report(stderr, "cannot get a range of message sizes (%d-%d).\n", first, last);
+	return(PS_PROTOCOL);
+    }
+    gen_send(sock, "LIST %d", first);
+    if ((ok = pop3_ok(sock, buf)) != 0)
+	return(ok);
+    if (sscanf(buf, "%u %u", &num, &size) == 2) {
+	if (num == first)
+	    sizes[0] = size;
+	else
+	    /* warn about possible attempt to induce buffer overrun */
+	    report(stderr, "Warning: ignoring bogus data for message sizes returned by server.\n");
+    }
+    return(ok);
 }
 
 static int pop3_getsizes(int sock, int count, int *sizes)
@@ -829,11 +967,42 @@ static int pop3_getsizes(int sock, int count, int *sizes)
 static int pop3_is_old(int sock, struct query *ctl, int num)
 /* is the given message old? */
 {
+    struct idlist *new;
     if (!ctl->oldsaved)
 	return (num <= last);
+    else if (dofastuidl)
+    {
+	char id [IDLEN+1];
+
+	if (num <= last)
+	    return(TRUE);
+
+	/* in fast uidl, we manipulate the old list only! */
+
+	if ((new = id_find(&ctl->oldsaved, num)))
+	{
+	    /* we already have the id! */
+	    return(new->val.status.mark != UID_UNSEEN);
+	}
+
+	/* get the uidl first! */
+	if (pop3_getuidl(sock, num, id) != PS_SUCCESS)
+	    return(TRUE);
+
+	if ((new = str_in_list(&ctl->oldsaved, id, FALSE))) {
+	    /* we already have the id! */
+	    new->val.status.num = num;
+	    return(new->val.status.mark != UID_UNSEEN);
+	}
+
+	/* save it */
+	new = save_str(&ctl->oldsaved, id, UID_UNSEEN);
+	new->val.status.num = num;
+	return(FALSE);
+    }
     else
-        return (str_in_list(&ctl->oldsaved,
-			    str_find(&ctl->newsaved, num), FALSE));
+        return ((new = id_find(&ctl->newsaved, num)) != NULL &&
+	    new->val.status.mark != UID_UNSEEN);
 }
 
 #ifdef UNUSED
@@ -944,17 +1113,16 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
 static void mark_uid_seen(struct query *ctl, int number)
 /* Tell the UID code we've seen this. */
 {
-    if (ctl->newsaved)
-    {
-	struct idlist	*sdp;
+    struct idlist	*sdp;
 
-	for (sdp = ctl->newsaved; sdp; sdp = sdp->next)
-	    if (sdp->val.status.num == number)
-	    {
-		sdp->val.status.mark = UID_SEEN;
-		save_str(&ctl->oldsaved, sdp->id,UID_SEEN);
-	    }
-    }
+    if ((sdp = id_find(&ctl->newsaved, number)))
+	sdp->val.status.mark = UID_SEEN;
+    /* mark it as seen in oldsaved also! In case, we do not swap the lists
+     * (say, due to socket error), the same mail will not be downloaded
+     * again.
+     */
+    if ((sdp = id_find(&ctl->oldsaved, number)))
+	sdp->val.status.mark = UID_SEEN;
 }
 
 static int pop3_delete(int sock, struct query *ctl, int number)
@@ -966,7 +1134,7 @@ static int pop3_delete(int sock, struct query *ctl, int number)
     ok = gen_transact(sock, "DELE %d", number);
     if (ok != PS_SUCCESS)
 	return(ok);
-    delete_str(&ctl->newsaved, number);
+    delete_str(dofastuidl ? &ctl->oldsaved : &ctl->newsaved, number);
     return(PS_SUCCESS);
 }
 
@@ -1023,6 +1191,7 @@ const static struct method pop3 =
     pop3_getauth,	/* get authorization */
     pop3_getrange,	/* query range of messages */
     pop3_getsizes,	/* we can get a list of sizes */
+    pop3_getpartialsizes,	/* we can get the size of 1 mail */
     pop3_is_old,	/* how do we tell a message is old? */
     pop3_fetch,		/* request given message */
     NULL,		/* no way to fetch body alone */

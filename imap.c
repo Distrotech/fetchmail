@@ -785,8 +785,8 @@ static int imap_getrange(int sock,
     return(PS_SUCCESS);
 }
 
-static int imap_getsizes(int sock, int count, int *sizes)
-/* capture the sizes of all messages */
+static int imap_getpartialsizes(int sock, int first, int last, int *sizes)
+/* capture the sizes of messages #first-#last */
 {
     char buf [MSGBUFSIZE+1];
 
@@ -824,14 +824,15 @@ static int imap_getsizes(int sock, int count, int *sizes)
      * on the fact that the sizes array has been preinitialized with a
      * known-bad size value.
      */
-    /* if fetchall is specified, startcount is 1;
-     * else if there is new mail, startcount is first unseen message;
-     * else startcount is greater than count.
-     */
-    if (count == startcount)
-	gen_send(sock, "FETCH %d RFC822.SIZE", count);
-    else if (count > startcount)
-	gen_send(sock, "FETCH %d:%d RFC822.SIZE", startcount, count);
+
+    /* expunges change the fetch numbers */
+    first -= expunged;
+    last -= expunged;
+
+    if (last == first)
+	gen_send(sock, "FETCH %d RFC822.SIZE", last);
+    else if (last > first)
+	gen_send(sock, "FETCH %d:%d RFC822.SIZE", first, last);
     else /* no unseen messages! */
 	return(PS_SUCCESS);
     for (;;)
@@ -852,14 +853,20 @@ static int imap_getsizes(int sock, int count, int *sizes)
 	    break;
 	else if (sscanf(buf, "* %u FETCH (RFC822.SIZE %u)", &num, &size) == 2) 
 	{
-	    if (num > 0 && num <= count)
-	        sizes[num - 1] = size;
+	    if (num >= first && num <= last)
+	        sizes[num - first] = size;
 	    else
 		report(stderr, "Warning: ignoring bogus data for message sizes returned by the server.\n");
 	}
     }
 
     return(PS_SUCCESS);
+}
+
+static int imap_getsizes(int sock, int count, int *sizes)
+/* capture the sizes of all messages */
+{
+    return imap_getpartialsizes(sock, 1, count, sizes);
 }
 
 static int imap_is_old(int sock, struct query *ctl, int number)
@@ -1119,6 +1126,7 @@ const static struct method imap =
     imap_getauth,	/* get authorization */
     imap_getrange,	/* query range of messages */
     imap_getsizes,	/* get sizes of messages (used for ESMTP SIZE option) */
+    imap_getpartialsizes,	/* get sizes of subset of messages (used for ESMTP SIZE option) */
     imap_is_old,	/* no UID check */
     imap_fetch_headers,	/* request given message headers */
     imap_fetch_body,	/* request given message body */

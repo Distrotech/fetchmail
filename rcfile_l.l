@@ -124,6 +124,8 @@ plugin		{ return PLUGIN; }
 plugout		{ return PLUGOUT; }
 batchlimit	{ return BATCHLIMIT; }
 fetchlimit	{ return FETCHLIMIT; }
+fetchsizelimit	{ return FETCHSIZELIMIT; }
+fastuidl	{ return FASTUIDL; }
 expunge		{ return EXPUNGE; }
 properties	{ return PROPERTIES; }
 

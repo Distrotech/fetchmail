@@ -135,6 +135,7 @@ const static struct method etrn =
     NULL,		/* no need to get authentication */
     etrn_getrange,	/* initialize message sending */
     NULL,		/* we cannot get a list of sizes */
+    NULL,		/* we cannot get a list of sizes of subsets */
     NULL,		/* how do we tell a message is old? */
     NULL,		/* no way to fetch headers */
     NULL,		/* no way to fetch body */

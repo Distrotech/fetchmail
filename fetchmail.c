@@ -641,13 +641,20 @@ int main(int argc, char **argv)
 			continue;
 #endif /* (defined(linux) && !INET6_ENABLE) || defined(__FreeBSD__) */
 
+		    dofastuidl = 0; /* this is reset in the driver if required */
+
 		    querystatus = query_host(ctl);
 
+		    if (NUM_NONZERO(ctl->fastuidl))
+			ctl->fastuidlcount = (ctl->fastuidlcount + 1) % ctl->fastuidl;
 #ifdef POP3_ENABLE
 		    /* leave the UIDL state alone if there have been any errors */
 		    if (!check_only &&
 				((querystatus==PS_SUCCESS) || (querystatus==PS_NOMAIL) || (querystatus==PS_MAXFETCH)))
 			uid_swap_lists(ctl);
+		    else
+			uid_discard_new_list(ctl);
+		    uid_reset_num(ctl);
 #endif  /* POP3_ENABLE */
 
 		    if (querystatus == PS_SUCCESS)
@@ -872,6 +879,8 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(limit);
     FLAG_MERGE(warnings);
     FLAG_MERGE(fetchlimit);
+    FLAG_MERGE(fetchsizelimit);
+    FLAG_MERGE(fastuidl);
     FLAG_MERGE(batchlimit);
 #ifdef	SSL_ENABLE
     FLAG_MERGE(use_ssl);
@@ -910,6 +919,8 @@ static int load_params(int argc, char **argv, int optind)
     def_opts.warnings = WARNING_INTERVAL;
     def_opts.remotename = user;
     def_opts.listener = SMTP_MODE;
+    def_opts.fetchsizelimit = 100;
+    def_opts.fastuidl = 10;
 
     /* get the location of rcfile */
     rcfiledir[0] = 0;
@@ -1632,6 +1643,20 @@ static void dump_params (struct runctl *runp,
 		       ctl->fetchlimit, ctl->fetchlimit);
 	    else if (outlevel >= O_VERBOSE)
 		printf(GT_("  No received-message limit (--fetchlimit 0).\n"));
+	    if (NUM_NONZERO(ctl->fetchsizelimit))
+		printf(GT_("  Fetch message size limit is %d (--fetchsizelimit %d).\n"),
+		       ctl->fetchsizelimit, ctl->fetchsizelimit);
+	    else if (outlevel >= O_VERBOSE)
+		printf(GT_("  No fetch message size limit (--fetchsizelimit 0).\n"));
+	    if (NUM_NONZERO(ctl->fastuidl) && MAILBOX_PROTOCOL(ctl))
+	    {
+		if (ctl->fastuidl == 1)
+		    printf(GT_("  Do binary search of UIDs during each poll (--fastuidl 1).\n"));
+		else
+		    printf(GT_("  Do binary search of UIDs during %d out of %d polls (--fastuidl %d).\n"), ctl->fastuidl - 1, ctl->fastuidl, ctl->fastuidl);
+	    }
+	    else if (outlevel >= O_VERBOSE)
+		printf(GT_("   Do linear search of UIDs during each poll (--fastuidl 0).\n"));
 	    if (NUM_NONZERO(ctl->batchlimit))
 		printf(GT_("  SMTP message batch limit is %d.\n"), ctl->batchlimit);
 	    else if (outlevel >= O_VERBOSE)

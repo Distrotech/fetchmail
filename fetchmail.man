@@ -487,6 +487,29 @@ poll.  By default there is no limit. An explicit --fetchlimit of 0
 overrides any limits set in your run control file.
 This option does not work with ETRN or ODMR.
 .TP
+.B \-\-fetchsizelimit <number>
+(Keyword: fetchsizelimit)
+Limit the number of sizes of messages accepted from a given server in
+a single transaction.  This option is useful in reducing the delay in
+downloading the first mail when there are too many mails in the
+mailbox.  By default, the limit is 100.  If set to 0, sizes of all
+messages are downloaded at the start.
+This option does not work with ETRN or ODMR.  For POP3, the only valid
+non-zero value is 1.
+.TP
+.B \-\-fastuidl <number>
+(Keyword: fastuidl)
+Do a binary instead of linear search for the first unseen UID. Binary
+search avoids downloading the UIDs of all mails. This saves time
+(especially in daemon mode) where downloading the same set of UIDs in
+each poll is a waste of bandwidth. The number `n' indicates how rarely
+a linear search should be done. In daemon mode, linear search is used
+once followed by binary searches in `n-1' polls if `n' is greater than
+1; binary search is always used if `n' is 1; linear search is always
+used if `n' is 0. In non-daemon mode, binary search is used if `n' is
+1; otherwise linear search is used.
+This option works with POP3 only.
+.TP
 .B \-e <count> | \-\-expunge <count>
 (keyword: expunge) 
 Arrange for deletions to be made final after a given number of
@@ -1478,6 +1501,12 @@ Max # messages to forward in single connect
 T}
 fetchlimit	-B	T{
 Max # messages to fetch in single connect
+T}
+fetchsizelimit	\&	T{
+Max # message sizes to fetch in single transaction
+T}
+fastuidl	\&	T{
+Use binary search for first unseen message (POP3 only)
 T}
 expunge 	-e	T{
 Perform an expunge on every #th message (IMAP and POP3 only)
