@@ -326,25 +326,26 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 			break;
 		    }
 		}
-		/* if we matched a local domain, idp != NULL */
-		if (idp) continue;
 
-		/*
-		 * Check to see if the right-hand part is an alias
-		 * or MX equivalent of the mailserver.  If it's
-		 * not, skip this name.  If it is, we'll keep
-		 * going and try to find a mapping to a client name.
-		 */
-		if (!is_host_alias(atsign+1, ctl))
+		/* if we matched a local domain, idp != NULL */
+		if (!idp)
 		{
-		    save_str(xmit_names, cp, XMIT_REJECT);
-		    reject_count++;
-		    continue;
+		    /*
+		     * Check to see if the right-hand part is an alias
+		     * or MX equivalent of the mailserver.  If it's
+		     * not, skip this name.  If it is, we'll keep
+		     * going and try to find a mapping to a client name.
+		     */
+		    if (!is_host_alias(atsign+1, ctl))
+		    {
+			save_str(xmit_names, cp, XMIT_REJECT);
+			reject_count++;
+			continue;
+		    }
 		}
 		atsign[0] = '\0';
+		map_name(cp, ctl, xmit_names);
 	    }
-
-	    map_name(cp, ctl, xmit_names);
 	}
     }
 }
