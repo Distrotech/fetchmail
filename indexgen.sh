@@ -231,7 +231,7 @@ These papers became quite popular and (to my continuing astonishment) may
 have actually helped change the world.  Chase the title link, above,
 for links to all three papers.<P>
 
-I have done some analysus on the information in the project NEWS file.
+I have done some analysis on the information in the project NEWS file.
 You can view a <a href="history.html">statistical history</a> showing
 levels of participation and release frequency over time.<p>
 
