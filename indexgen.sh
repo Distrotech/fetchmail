@@ -177,21 +177,6 @@ problem with Cyrus IMAP servers and enabled the code to work with the
 <a href="fetchmail-FAQ.html#T5">(extremely broken)</a> Microsoft
 Exchange POP3 server.  And we've added support for Compuserve RPA.<P>
 
-The present TO-DO list reads:<P>
-
-<UL>
-<LI>
-Generate bounce messages when delivery is refused.  See RFC1891, RFC1894.
-
-<LI>
-More log levels?
-
-<LI>
-Use the libmd functions for md5 under Free BSD?  (Low priority.)
-</UL>
-
-But these are frills.  I'm not seeing serious user demand for any of them.<P>
-
 Major changes or additions now seem unlikely until there are
 significant changes in or additions to the related protocol RFCs.<p>
 
