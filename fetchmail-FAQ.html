@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/05/12 06:13:45 $
+<td width="30%" align=right>$Date: 2001/05/21 17:13:04 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -2009,6 +2009,13 @@ option values that work:
   mru 552
 </pre>
 
+<p>Another circumstance that can trigger this is if you are polling a
+virtual-mail-server name that is round-robin connected to different
+actual servers, so you get different IP addresses on different poll
+cycles.  To work around this, change the poll name either to the real
+name of one of the servers in the ring or to a corresponding IP
+address.
+
 <hr>
 <h2><a name="R8">R8. Fetchmail running as root stopped working after an OS upgrade</a></h2>
 
@@ -2845,7 +2852,7 @@ switching to IMAP and using a short expunge interval.
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/05/12 06:13:45 $
+<td width="30%" align=right>$Date: 2001/05/21 17:13:04 $
 </table>
 
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
