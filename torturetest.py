@@ -5,9 +5,19 @@ import sys, getopt, os, smtplib, commands, time, gtk, gtk.glade
 class TestSite:
     temp = "/usr/tmp/torturestest-%d" % os.getpid()
 
-    def __init__(self, line):
+    def __init__(self, line=None):
         "Initialize site data from the external representation."
-        (self.host, self.mailaddr, self.username, self.password, \
+        self.site = ""
+        self.mailaddr = ""
+        self.username = ""
+        self.password = ""
+        self.protocol = ""
+        self.options = ""
+        self.capabilities = ""
+        self.recognition = ""
+        self.comment = ""
+        if line:
+            (self.host, self.mailaddr, self.username, self.password, \
                 self.protocol, self.options, self.capabilities, self.recognition, self.comment) = \
                 line.strip().split(":")
         if not self.mailaddr:
@@ -117,9 +127,10 @@ class TortureGUI:
         # Provide handlers for the widget tree's events
 	mydict = {}
 	for key in ('on_torturetest_destroy',
-                    'on_quitbutton_clicked',
+                    'on_updatebutton_clicked',
                     'on_newbutton_clicked',
                     'on_testbutton_clicked',
+                    'on_quitbutton_clicked',
                     'on_combo_entry1_activate'):
 	    mydict[key] = getattr(self, key)
 	self.wtree.signal_autoconnect(mydict)
@@ -133,10 +144,10 @@ class TortureGUI:
             widget = self.wtree.get_widget(widget)
         if type(widget) == gtk.Entry:
             return widget.get_text()
-        elif type(widget) == gtk.SpinButton:
-            return widget.get_value()
-        elif type(widget) == gtk.TextView:
-            return widget.get_buffer().get_text()
+        #elif type(widget) == gtk.SpinButton:
+        #    return widget.get_value()
+        #elif type(widget) == gtk.TextView:
+        #    return widget.get_buffer().get_text()
 
     def set_widget(self, name, exp):
         "Set the value of a widget by name."
@@ -155,15 +166,32 @@ class TortureGUI:
             self.set_widget(member + "_entry", getattr(site, member))
         for proto in ('POP3', 'APOP', 'IMAP'):
             self.wtree.get_widget(proto + "_radiobutton").set_active(site.protocol == proto)
+        self.combo.entry.set_text(self.site.comment)
+
+    def update(self, site):
+        for member in TortureGUI.field_map:
+            setattr(site, member, self.get_widget(member + "_entry"))
+            for proto in ('POP3', 'APOP', 'IMAP'):
+                if self.wtree.get_widget(proto + "_radiobutton").get_active():
+                    site.proto = proto
 
     # Housekeeping
     def on_torturetest_destroy(self, obj):
         gtk.mainquit()
+    def on_updatebutton_clicked(self, obj):
+        self.update()
+    def on_newbutton_clicked(self, obj):
+        global sitelist
+        sitelist = [TestSite()] + sitelist
+        self.site = sitelist[0]
+        self.display(self.site)
+        self.combo.entry.set_text("")
+    def on_testbutton_clicked(self, obj):
+        self.site.fetch()
+        print site.output
     def on_quitbutton_clicked(self, obj):
         gtk.mainquit()
-    def on_newbutton_clicked(self, obj):
-        print "New"
-
+    
     def on_combo_entry1_activate(self, obj):
         key = self.combo.entry.get_text()
         for site in sitelist:
@@ -171,9 +199,6 @@ class TortureGUI:
                 self.site = site
                 self.display(self.site)
                 break
-    def on_testbutton_clicked(self, obj):
-        self.site.fetch()
-        print site.output
 
 if __name__ == "__main__":
     # Start by reading in the sitelist
