@@ -645,7 +645,7 @@ daemon process from its control terminal.  This is primarily useful
 for debugging.  Note that this also causes the logfile option to be
 ignored (though perhaps it shouldn't).
 .PP
-Note that while running in daemon mode polling a POP2 or POP3 server,
+Note that while running in daemon mode polling a POP2 or IMAP2bis server,
 transient errors (such as DNS failures or sendmail delivery refusals)
 may force the fetchall option on for the duration of the next polling
 cycle.  This is a robustness feature.  It means that if a message is
