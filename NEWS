@@ -35,6 +35,7 @@ pl 3.9.7 ():
 * Man page updates, including removal of restriction on --syslog.
 * You can now set --syslog in the .fetchmailrc file.
 * Parse more different variants of IMAP "UNSEEN" message.
+* Handle zero-length messages correctly.
 
 There are 252 people on the fetchmail-friends list.
 
