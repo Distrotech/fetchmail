@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/10/17 15:10:42 $
+<td width="30%" align=right>$Date: 1998/10/17 16:24:27 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -388,14 +388,16 @@ to see these, or telnet direct to the server port (110 for POP3, 143 for
 IMAP).<P>
 
 The facility you are most likely to have available is APOP.  This is a
-POP3 feature supported by many servers.  If you see something in the
-greeting line that looks like an angle-bracket-enclosed Internet
-address with a numeric left-hand part, that's an APOP challenge (it
-will vary each time you log in).  You can register a secret on the
-host (using <code>popauth(8)</code> or some program like it).  Specify
-the secret as your password in your .fetchmailrc; it will be used to
-encrypt the current challenge, and the encrypted form will be sent
-back the the server for verification.<P>
+POP3 feature supported by many servers (fetchmailconf's autoprobe
+facility will detect it and tell you if you have it).  If you see
+something in the greeting line that looks like an
+angle-bracket-enclosed Internet address with a numeric left-hand part,
+that's an APOP challenge (it will vary each time you log in).  You can
+register a secret on the host (using <code>popauth(8)</code> or some
+program like it).  Specify the secret as your password in your
+.fetchmailrc; it will be used to encrypt the current challenge, and
+the encrypted form will be sent back the the server for
+verification.<P>
 
 Alternatively, you may have Kerberos available. This may require you
 to set up some magic files in your home directory on your client
@@ -423,7 +425,7 @@ OTP, you will specify a password but it will not be sent en clair.<P>
 Sadly, there is at present (July 1998) no OTP or APOP-like
 facility generally available on IMAP servers.  However, there do exist
 patches which will OTP-enable the University of Washington IMAP
-daemon, version 4.1-BETA.  And we have a report that the GSSAPI
+daemon, version 4.2-FINAL.  And we have a report that the GSSAPI
 support in fetchmail works with the GSSAPI support in the most recent
 version of UW IMAP.<P>
 
@@ -439,7 +441,7 @@ not currently a standard way to do this; fetchmail also uses this method, so
 the two will interoperate happily.  They better, because this is how Craig gets
 his mail ;-)<P>
 
-(One important win of OTP is that it's not subject to ITAR restrictions.)<P>
+(One important win of OTP is that it's not subject to EAR restrictions.)<P>
 
 <hr>
 <h2><a name="G9">G9. Is any special configuration needed to use a dynamic IP address?</a></h2>
@@ -2182,7 +2184,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/10/17 15:10:42 $
+<td width="30%" align=right>$Date: 1998/10/17 16:24:27 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

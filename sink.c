@@ -156,7 +156,7 @@ static int smtp_open(struct query *ctl)
      */
     ctl->destaddr = ctl->smtpaddress ? ctl->smtpaddress : ( ctl->smtphost ? ctl->smtphost : "localhost");
 
-    if (outlevel >= O_VERBOSE && ctl->smtp_socket != -1)
+    if (outlevel >= O_DEBUG && ctl->smtp_socket != -1)
 	error(0, 0, "forwarding to %s", ctl->smtphost);
 
     return(ctl->smtp_socket);
@@ -374,7 +374,7 @@ int open_sink(struct query *ctl,
 	}
 
 
-	if (outlevel >= O_VERBOSE)
+	if (outlevel >= O_DEBUG)
 	    error(0, 0, "about to deliver with: %s", before);
 
 #ifdef HAVE_SETEUID

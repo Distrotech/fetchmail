@@ -141,7 +141,7 @@ static int do_otp(int sock, struct query *ctl)
 
   to64frombits(buffer, ctl->remotename, strlen(ctl->remotename));
 
-  if (outlevel >= O_VERBOSE)
+  if (outlevel >= O_MONITOR)
      error(0, 0, "IMAP> %s", buffer);
   SockWrite(sock, buffer, strlen(buffer));
   SockWrite(sock, "\r\n", 2);
@@ -168,7 +168,7 @@ static int do_otp(int sock, struct query *ctl)
 
   to64frombits(buffer, response, strlen(response));
 
-  if (outlevel >= O_VERBOSE)
+  if (outlevel >= O_MONITOR)
      error(0, 0, "IMAP> %s", buffer);
   SockWrite(sock, buffer, strlen(buffer));
   SockWrite(sock, "\r\n", 2);
@@ -308,7 +308,7 @@ static int do_rfc1731(int sock, char *truename)
     }
 
     to64frombits(buf1, authenticator.dat, authenticator.length);
-    if (outlevel >= O_VERBOSE) {
+    if (outlevel >= O_MONITOR) {
 	error(0, 0, "IMAP> %s", buf1);
     }
     SockWrite(sock, buf1, strlen(buf1));
@@ -391,7 +391,7 @@ static int do_rfc1731(int sock, char *truename)
 	    &session, 1);
 
     to64frombits(buf1, authenticator.dat, authenticator.length);
-    if (outlevel >= O_VERBOSE) {
+    if (outlevel >= O_MONITOR) {
 	error(0, 0, "IMAP> %s", buf1);
     }
     SockWrite(sock, buf1, strlen(buf1));
@@ -438,7 +438,7 @@ static int do_gssauth(int sock, char *hostname, char *username)
         error(0, -1, "Couldn't get service name for [%s]", buf1);
         return PS_AUTHFAIL;
     }
-    else if (outlevel >= O_VERBOSE) {
+    else if (outlevel >= O_DEBUG) {
         maj_stat = gss_display_name(&min_stat, target_name, &request_buf,
             &mech_name);
         error(0, 0, "Using service name [%s]",request_buf.value);
@@ -475,7 +475,7 @@ static int do_gssauth(int sock, char *hostname, char *username)
         gss_release_buffer(&min_stat, &send_token);
         SockWrite(sock, buf1, strlen(buf1));
         SockWrite(sock, "\r\n", 2);
-        if (outlevel >= O_VERBOSE)
+        if (outlevel >= O_MONITOR)
             error(0,0,"IMAP> %s", buf1);
         if (maj_stat == GSS_S_CONTINUE_NEEDED) {
 	    if (result = gen_recv(sock, buf1, sizeof buf1)) {
@@ -503,7 +503,7 @@ static int do_gssauth(int sock, char *hostname, char *username)
         gss_release_buffer(&min_stat, &send_token);
         return PS_AUTHFAIL;
     }
-    if (outlevel >= O_VERBOSE)
+    if (outlevel >= O_DEBUG)
         error(0,0,"Credential exchange complete");
     /* first octet is security levels supported. We want none, for now */
     server_conf_flags = ((char *)send_token.value)[0];
@@ -516,7 +516,7 @@ static int do_gssauth(int sock, char *hostname, char *username)
     buf_size = ntohl(*((long *)send_token.value));
     /* we don't care about buffer size if we don't wrap data */
     gss_release_buffer(&min_stat, &send_token);
-    if (outlevel >= O_VERBOSE) {
+    if (outlevel >= O_DEBUG) {
         error(0,0,"Unwrapped security level flags: %s%s%s",
             server_conf_flags & GSSAUTH_P_NONE ? "N" : "-",
             server_conf_flags & GSSAUTH_P_INTEGRITY ? "I" : "-",
@@ -538,7 +538,7 @@ static int do_gssauth(int sock, char *hostname, char *username)
         return PS_AUTHFAIL;
     }
     to64frombits(buf1, send_token.value, send_token.length);
-    if (outlevel >= O_VERBOSE) {
+    if (outlevel >= O_DEBUG) {
         error(0,0,"Requesting authorisation as %s", username);
         error(0,0,"IMAP> %s",buf1);
     }
@@ -550,7 +550,7 @@ static int do_gssauth(int sock, char *hostname, char *username)
         return result;
     if (strstr(buf1, "OK")) {
         /* flush security context */
-        if (outlevel >= O_VERBOSE)
+        if (outlevel >= O_DEBUG)
             error(0, 0, "Releasing GSS credentials");
         maj_stat = gss_delete_sec_context(&min_stat, &context, &send_token);
         if (maj_stat != GSS_S_COMPLETE) {
@@ -600,20 +600,20 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 	if (strstr(capabilities, "IMAP4REV1"))
 	{
 	    imap_version = IMAP4rev1;
-	    if (outlevel >= O_VERBOSE)
+	    if (outlevel >= O_DEBUG)
 		error(0, 0, "Protocol identified as IMAP4 rev 1");
 	}
 	else
 	{
 	    imap_version = IMAP4;
-	    if (outlevel >= O_VERBOSE)
+	    if (outlevel >= O_DEBUG)
 		error(0, 0, "Protocol identified as IMAP4 rev 0");
 	}
     }
     else if (ok == PS_ERROR)
     {
 	imap_version = IMAP2;
-	if (outlevel >= O_VERBOSE)
+	if (outlevel >= O_DEBUG)
 	    error(0, 0, "Protocol identified as IMAP2 or IMAP2BIS");
     }
     else
@@ -624,7 +624,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 #if OPIE
     if ((ctl->server.protocol == P_IMAP) && strstr(capabilities, "AUTH=X-OTP"))
     {
-	if (outlevel >= O_VERBOSE)
+	if (outlevel >= O_DEBUG)
 	    error(0, 0, "OTP authentication is supported");
 	if (do_otp(sock, ctl) == PS_SUCCESS)
 	    return(PS_SUCCESS);
@@ -636,7 +636,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     {
         if (ctl->server.protocol == P_IMAP_GSS)
         {
-            if (outlevel >= O_VERBOSE)
+            if (outlevel >= O_DEBUG)
                 error(0, 0, "GSS authentication is supported");
             return do_gssauth(sock, ctl->server.truename, ctl->remotename);
         }
@@ -651,14 +651,14 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 #ifdef KERBEROS_V4
     if (strstr(capabilities, "AUTH=KERBEROS_V4"))
     {
-	if (outlevel >= O_VERBOSE)
+	if (outlevel >= O_DEBUG)
 	    error(0, 0, "KERBEROS_V4 authentication is supported");
 
 	if (ctl->server.protocol == P_IMAP_K4)
 	{
 	    if ((ok = do_rfc1731(sock, ctl->server.truename)))
 	    {
-		if (outlevel >= O_VERBOSE)
+		if (outlevel >= O_MONITOR)
 		    error(0, 0, "IMAP> *");
 		SockWrite(sock, "*\r\n", 3);
 	    }

@@ -38,7 +38,7 @@ int SMTP_helo(int sock,char *host)
   int ok;
 
   SockPrintf(sock,"HELO %s\r\n", host);
-  if (outlevel >= O_VERBOSE)
+  if (outlevel >= O_MONITOR)
       error(0, 0, "SMTP> HELO %s", host);
   ok = SMTP_ok(sock);
   return ok;
@@ -50,7 +50,7 @@ int SMTP_ehlo(int sock, char *host, int *opt)
   struct opt *hp;
 
   SockPrintf(sock,"EHLO %s\r\n", host);
-  if (outlevel >= O_VERBOSE)
+  if (outlevel >= O_MONITOR)
       error(0, 0, "SMTP> EHLO %s", host);
   
   *opt = 0;
@@ -65,7 +65,7 @@ int SMTP_ehlo(int sock, char *host, int *opt)
       if (n < 4)
 	  return SM_ERROR;
       smtp_response[n] = '\0';
-      if (outlevel >= O_VERBOSE)
+      if (outlevel >= O_MONITOR)
 	  error(0, 0, "SMTP< %s", smtp_response);
       for (hp = extensions; hp->name; hp++)
 	  if (!strncasecmp(hp->name, smtp_response+4, strlen(hp->name)))
@@ -91,7 +91,7 @@ int SMTP_from(int sock, char *from, char *opts)
     if (opts)
 	strcat(buf, opts);
     SockPrintf(sock,"%s\r\n", buf);
-    if (outlevel >= O_VERBOSE)
+    if (outlevel >= O_MONITOR)
 	error(0, 0, "SMTP> %s", buf);
     ok = SMTP_ok(sock);
     return ok;
@@ -103,7 +103,7 @@ int SMTP_rcpt(int sock, char *to)
   int ok;
 
   SockPrintf(sock,"RCPT TO:<%s>\r\n", to);
-  if (outlevel >= O_VERBOSE)
+  if (outlevel >= O_MONITOR)
       error(0, 0, "SMTP> RCPT TO:<%s>", to);
   ok = SMTP_ok(sock);
   return ok;
@@ -115,7 +115,7 @@ int SMTP_data(int sock)
   int ok;
 
   SockPrintf(sock,"DATA\r\n");
-  if (outlevel >= O_VERBOSE)
+  if (outlevel >= O_MONITOR)
       error(0, 0, "SMTP> DATA");
   ok = SMTP_ok(sock);
   return ok;
@@ -127,7 +127,7 @@ int SMTP_rset(int sock)
   int ok;
 
   SockPrintf(sock,"RSET\r\n");
-  if (outlevel >= O_VERBOSE)
+  if (outlevel >= O_MONITOR)
       error(0, 0, "SMTP> RSET");
   ok = SMTP_ok(sock);
   return ok;
@@ -139,7 +139,7 @@ int SMTP_quit(int sock)
   int ok;
 
   SockPrintf(sock,"QUIT\r\n");
-  if (outlevel >= O_VERBOSE)
+  if (outlevel >= O_MONITOR)
       error(0, 0, "SMTP> QUIT");
   ok = SMTP_ok(sock);
   return ok;
@@ -151,7 +151,7 @@ int SMTP_eom(int sock)
   int ok;
 
   SockPrintf(sock,".\r\n");
-  if (outlevel >= O_VERBOSE)
+  if (outlevel >= O_MONITOR)
       error(0, 0, "SMTP>. (EOM)");
   ok = SMTP_ok(sock);
   return ok;
@@ -171,7 +171,7 @@ int SMTP_ok(int sock)
 	if (n < 4)
 	    return SM_ERROR;
 	smtp_response[n] = '\0';
-	if (outlevel >= O_VERBOSE)
+	if (outlevel >= O_MONITOR)
 	    error(0, 0, "SMTP< %s", smtp_response);
 	if ((smtp_response[0] == '1' || smtp_response[0] == '2' || smtp_response[0] == '3') && smtp_response[3] == ' ')
 	    return SM_OK;

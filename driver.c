@@ -137,7 +137,7 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 
     if (lname != (char *)NULL)
     {
-	if (outlevel >= O_VERBOSE)
+	if (outlevel >= O_DEBUG)
 	    error(0, 0, "mapped %s to local %s", name, lname);
 	save_str(xmit_names, lname, XMIT_ACCEPT);
 	accept_count++;
@@ -192,7 +192,7 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 			(rhs[-1] == '.' || rhs[-1] == '@') &&
 			strcasecmp(rhs, idp->id) == 0)
 		    {
-			if (outlevel >= O_VERBOSE)
+			if (outlevel >= O_DEBUG)
 			    error(0, 0, "passed through %s matching %s", 
 				  cp, idp->id);
 			save_str(xmit_names, cp, XMIT_ACCEPT);
@@ -317,16 +317,16 @@ static char *parse_received(struct query *ctl, char *bufp)
 
     if (!ok)
     {
-	if (outlevel >= O_VERBOSE)
+	if (outlevel >= O_DEBUG)
 	    error(0, 0, "no Received address found");
 	return(NULL);
     }
     else
     {
-	if (outlevel >= O_VERBOSE) {
+	if (outlevel >= O_DEBUG) {
 	    char *lf = rbuf + strlen(rbuf)-1;
 	    *lf = '\0';
-	    if (outlevel >= O_VERBOSE)
+	    if (outlevel >= O_DEBUG)
 		error(0, 0, "found Received address `%s'", rbuf+2);
 	    *lf = '\n';
 	}
@@ -808,7 +808,7 @@ int num;		/* index of message */
 	{
 	    no_local_matches = TRUE;
 	    save_str(&xmit_names, run.postmaster, XMIT_ACCEPT);
-	    if (outlevel >= O_VERBOSE)
+	    if (outlevel >= O_DEBUG)
 		error(0, 0, 
 		      "no local matches, forwarding to %s",
 		      run.postmaster);
@@ -823,7 +823,7 @@ int num;		/* index of message */
      */
     if (ctl->errcount > olderrs)	/* there were DNS errors above */
     {
-	if (outlevel >= O_VERBOSE)
+	if (outlevel >= O_DEBUG)
 	    error(0,0, "forwarding and deletion suppressed due to DNS errors");
 	free(headers);
 	free_str_list(&xmit_names);
@@ -1438,7 +1438,7 @@ const struct method *proto;	/* protocol method table */
 #ifndef EHOSTUNREACH
 #define EHOSTUNREACH (-1)
 #endif
-	    if (outlevel >= O_VERBOSE || errno != EHOSTUNREACH)
+	    if (outlevel >= O_DEBUG || errno != EHOSTUNREACH)
 	    {
 		error_build("fetchmail: %s connection to %s failed: ", 
 			     protocol->name, ctl->server.pollname);
@@ -1530,7 +1530,7 @@ const struct method *proto;	/* protocol method table */
 		dispatches = 0;
 		++pass;
 
-		if (outlevel >= O_VERBOSE)
+		if (outlevel >= O_DEBUG)
 		    if (idp->id)
 			error(0, 0, "selecting or re-polling folder %s", idp->id);
 		    else
@@ -1865,7 +1865,7 @@ const struct method *proto;	/* protocol method table */
 			     */
 			    if (msgsizes && msglen != msgsizes[num-1])
 			    {
-				if (outlevel >= O_VERBOSE)
+				if (outlevel >= O_DEBUG)
 				    error(0, 0,
 					  "message %d was not the expected length (%d actual != %d expected)",
 					  num, msglen, msgsizes[num-1]);
@@ -2050,7 +2050,7 @@ va_dcl
     strcat(buf, "\r\n");
     SockWrite(sock, buf, strlen(buf));
 
-    if (outlevel >= O_VERBOSE)
+    if (outlevel >= O_MONITOR)
     {
 	char *cp;
 
@@ -2092,7 +2092,7 @@ int size;	/* length of buffer */
 	    buf[strlen(buf)-1] = '\0';
 	if (buf[strlen(buf)-1] == '\r')
 	    buf[strlen(buf)-1] = '\0';
-	if (outlevel >= O_VERBOSE)
+	if (outlevel >= O_MONITOR)
 	    error(0, 0, "%s< %s", protocol->name, buf);
 	phase = oldphase;
 	return(PS_SUCCESS);
@@ -2137,7 +2137,7 @@ va_dcl
     strcat(buf, "\r\n");
     SockWrite(sock, buf, strlen(buf));
 
-    if (outlevel >= O_VERBOSE)
+    if (outlevel >= O_MONITOR)
     {
 	char *cp;
 

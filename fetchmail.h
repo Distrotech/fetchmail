@@ -73,6 +73,7 @@
 #define		O_NORMAL	1	/* user-friendly */
 #define		O_VERBOSE	2	/* chatty */
 #define		O_DEBUG		3	/* prolix */
+#define		O_MONITOR	O_VERBOSE
 
 #define		SIZETICKER	1024	/* print 1 dot per this many bytes */
 
