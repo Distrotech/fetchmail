@@ -65,7 +65,8 @@
 #endif /* KERBEROS_V5 */
 
 #include "socket.h"
-#include  "fetchmail.h"
+#include "fetchmail.h"
+#include "tunable.h"
 
 #if INET6
 #define	SMTP_PORT	"smtp"	/* standard SMTP service port */
@@ -92,6 +93,7 @@ static int tagnum;
 
 static char shroud[PASSWORDLEN];	/* string to shroud in debug output */
 static int mytimeout;			/* value of nonreponse timeout */
+static int timeoutcount;		/* count consecutive timeouts */
 static int msglen;			/* actual message length */
 
 void set_timeout(int timeleft)
@@ -99,6 +101,9 @@ void set_timeout(int timeleft)
 {
 #ifndef __EMX__
     struct itimerval ntimeout;
+
+    if (timeleft == 0)
+	timeoutcount = 0;
 
     ntimeout.it_interval.tv_sec = ntimeout.it_interval.tv_usec = 0;
     ntimeout.it_value.tv_sec  = timeleft;
@@ -110,6 +115,7 @@ void set_timeout(int timeleft)
 static void timeout_handler (int signal)
 /* handle server-timeout SIGALRM signal */
 {
+    timeoutcount++;
     longjmp(restart, 1);
 }
 
@@ -1364,11 +1370,37 @@ const struct method *proto;	/* protocol method table */
 	    close(ctl->smtp_socket);
 	if (sock != -1)
 	    SockClose(sock);
+
+	/*
+	 * If we've exceeded our threshold for consecutive timeouts, 
+	 * try to notify the user, then mark the connection wedged.
+	 */
+	if (timeoutcount > MAX_TIMEOUTS && !open_warning_by_mail(ctl))
+	{
+	    stuff_warning(ctl,
+			  "Subject: fetchmail sees repeated timeouts\r\n");
+	    stuff_warning(ctl,
+			  "Fetchmail saw more than %d timouts while attempting to get mail from %s@%s.", 
+			  MAX_TIMEOUTS,
+			  ctl->remotename,
+			  ctl->server.truename);
+	    stuff_warning(ctl, 
+			  "This could mean that your mailserver is stuck, or that your SMTP listener");
+	    stuff_warning(ctl, 
+			  "is wedged, or that your mailbox file on the server has been corrupted by");
+	    stuff_warning(ctl, 
+			  "a server error.  You can run `fetchmail -v -v' to diagnose the problem.");
+	    stuff_warning(ctl,
+			  "Fetchmail won't poll this mailbox again until you restart it.");
+	    close_warning_by_mail(ctl);
+	    ctl->wedged = TRUE;
+	}
+
 	ok = PS_ERROR;
     }
     else
     {
-	char buf [POPBUFSIZE+1], *realhost;
+	char buf[POPBUFSIZE+1], *realhost;
 	int len, num, count, new, bytes, deletions = 0, *msgsizes = NULL;
 #if INET6
 	int fetches, dispatches;
@@ -1504,7 +1536,7 @@ const struct method *proto;	/* protocol method table */
 		     * failure the first time it happens.
 		     */
 		    if (run.poll_interval
-			&& !ctl->authfailcount && !open_warning_by_mail(ctl))
+			&& !ctl->wedged && !open_warning_by_mail(ctl))
 		    {
 			stuff_warning(ctl,
 			       "Subject: fetchmail authentication failed\r\n");
@@ -1517,7 +1549,7 @@ const struct method *proto;	/* protocol method table */
 			stuff_warning(ctl, 
 			       "This probably means your password is invalid.");
 			close_warning_by_mail(ctl);
-			ctl->authfailcount++;
+			ctl->wedged = TRUE;
 		    }
 		}
 		goto cleanUp;

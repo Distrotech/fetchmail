@@ -4,6 +4,7 @@ fetchmail-4.6.7 ():
 * Gerald Britton's patches to enable Hesiod support.
 * Postmaster option fix from Bill Metzenthen <billm@melbpc.org.au>.
 * Socks library support forom Guiseppe Guerini.
+* Notification mail is now sent to the user on 20 consecutive timeouts.
 
 There are 248 people on fetchmail-friends and 306 on fetchmail-announce.
 

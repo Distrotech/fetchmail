@@ -377,8 +377,6 @@ int main (int argc, char **argv)
     /* pick up interactively any passwords we need but don't have */ 
     for (ctl = querylist; ctl; ctl = ctl->next)
     {
-	ctl->authfailcount = 0;
-
 	if (ctl->active && !(implicitmode && ctl->server.skip)&&!ctl->password)
 	{
 	    if (ctl->server.preauthenticate == A_KERBEROS_V4 ||
@@ -505,10 +503,10 @@ int main (int argc, char **argv)
 	batchcount = 0;
 	for (ctl = querylist; ctl; ctl = ctl->next)
 	{
-	    if (ctl->authfailcount)
+	    if (ctl->wedged)
 	    {
 		error(0, -1, 
-		      "poll of %s skipped until authentication is unwedged",
+		      "poll of %s skipped (failed authentication or too many timeouts)",
 		      ctl->server.pollname);
 		continue;
 	    }
@@ -603,14 +601,14 @@ int main (int argc, char **argv)
 	     * should softly and silently vanish away, rather than
 	     * spinning uselessly.
 	     */
-	    int auth_ok = 0;
+	    int unwedged = 0;
 
 	    for (ctl = querylist; ctl; ctl = ctl->next)
-		if (!ctl->authfailcount)
-		    auth_ok++;
-	    if (!auth_ok)
+		if (!ctl->wedged)
+		    unwedged++;
+	    if (!unwedged)
 	    {
-		error(0, -1, "All authentications have failed.  Exiting.");
+		error(0, -1, "All connections are wedged.  Exiting.");
 		exit(PS_AUTHFAIL);
 	    }
 
@@ -896,6 +894,8 @@ static int load_params(int argc, char **argv, int optind)
     /* merge in wired defaults, do sanity checks and prepare internal fields */
     for (ctl = querylist; ctl; ctl = ctl->next)
     {
+	ctl->wedged = FALSE;
+
 	if (configdump || (ctl->active && !(implicitmode && ctl->server.skip)))
 	{
 	    /* merge in defaults */
