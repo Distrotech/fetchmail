@@ -115,9 +115,6 @@ Retrieve both old (seen) and new messages from the mailserver.  The
 default is to fetch only messages the server has not marked seen.
 Note that POP2 retrieval behaves as though --all is always on (see
 RETRIEVAL FAILURE MODES below) and this option does not work with ETRN.
-This option has the side effect or forcing POP3 retrieval to use RETR
-rather than TOP for retrieval, working around buggy implementations
-of the latter in some POP3 servers.
 .TP
 .B \-k, --keep
 (Keyword: keep)
