@@ -65,6 +65,7 @@
 #   pop2 (or POP2)
 #   pop3 (or POP3)
 #   imap (or IMAP)
+#   imap-k4 (or IMAP-K4)
 #   apop (or APOP)
 #   rpop (or RPOP)
 #   kpop (or KPOP)
