@@ -1148,11 +1148,16 @@ I see your server is running cucipop.  Better make sure the server box
 isn't a SunOS 4.1.4 machine; cucipop tickles a bug in SunOS realloc()
 under that version, and doesn't cope with the result gracefully.  Newer
 SunOS and Solaris machines run cucipop OK.
+
 """
             if string.find(greetline, "QPOP") > 0:
                 warnings = warnings + """
 This appears to be a version of Eudora qpopper.  That's good.  Fetchmail
-knows all about qpopper.
+knows all about qpopper.  However, be aware that the 2.53 version of
+qpopper does something odd that causes fetchmail to hang with a socket
+error on very large messages.  This is probably not a fetchmail bug, as
+it has been observed with fetchpop.  The fix is to upgrade to qpopper
+3.0beta or a more recent version.  Better yet, switch to IMAP.
 
 """
             closebrak = string.find(greetline, ">")
