@@ -1635,7 +1635,7 @@ const struct method *proto;	/* protocol method table */
 			stuff_warning(ctl,
 			       _("Subject: fetchmail authentication failed\r\n"));
 			stuff_warning(ctl,
-				_("Fetchmail could not get mail from %s@%s.\n"), 
+				_("Fetchmail could not get mail from %s@%s."), 
 				ctl->remotename,
 				ctl->server.truename);
 			stuff_warning(ctl, 

@@ -11,6 +11,7 @@
 fetchmail-5.0.1 ():
 * Try to discover user/home via getpwuid(getuid()) before using LOGNAME/HOME.
 * Mike Pearce's fix for buggy DEFAULT handling in .netrc.
+* Keep validation errors from generating message lines that qmail will reject.
 
 There are 255 people on fetchmail-friends and 369 on fetchmail-announce.
 
@@ -155,7 +156,7 @@ There are 244 people on fetchmail-friends and 315 on fetchmail-announce.
 fetchmail-4.6.8 (Sat Nov 28 21:07:46 EST 1998):
 * Added bounce-mail capability on SMTP/ESMTP error conditions.
 * Internationalization support via GNU gettext from Arnaldo Carvalho de Melo
-  <acme@conectiva.com.br> and Jorge Godoy <jorge@bestway.com.br>.  First
+  <acme@conectiva.com.br> and Jorge Godoy <godoy@conectiva.com.br>.  First
   supported language is Brazilo-Portuegese (LC_ALL=pt_BR).
 * Fixed Debian Bug#29913: -M on the command line causes SEGV in daemon mode.
 * Emit an informational message when fetchlimit is reached.
