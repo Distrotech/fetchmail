@@ -240,10 +240,11 @@ dist: Makefile.in
 	ls -l fetchmail-$(VERS).tar.gz
 	@echo "Don't forget to build RPMs from root!"
 
-# This requires my patch to tar-1.12, or a stock tar-1.13 (not yet released);
-# the version must implement the --name-prefix option.
 fetchmail-$(VERS).tar.gz: $(all)
-	tar --name-prefix='fetchmail-$(VERS)/' -czf fetchmail-$(VERS).tar.gz `cat MANIFEST`
+	(cd ..; ln -sf fetchmail fetchmail-$(VERS))
+	(cd ..; tar -czf fetchmail-$(VERS).tar.gz `sed <fetchmail-$(VERS)/MANIFEST s:^:fetchmail-$(VERS)/:`)
+	mv ../fetchmail-$(VERS).tar.gz .
+	rm ../fetchmail-$(VERS)
 
 # Make RPMs.  You need to be root to make this work
 RPMROOT=/usr/src/redhat
