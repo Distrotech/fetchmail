@@ -200,10 +200,10 @@ AC_CHECK_SIZEOF(long)
 
 if test "$USE_NLS" = "yes"
 then
-	echo "Enabling internationalization support..."
-	POMAKE="make -C po"
+	echo 'Enabling internationalization support...'
+	POMAKE='$(MAKE) -C po'
 else
-	echo "Disabling internationalization support..."
+	echo 'Disabling internationalization support...'
 	POMAKE="@echo '(NLS support disabled)'; #"
 fi
 
