@@ -972,6 +972,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(pass8bits);
     FLAG_MERGE(dropstatus);
     FLAG_MERGE(mimedecode);
+    FLAG_MERGE(idle);
     FLAG_MERGE(limit);
     FLAG_MERGE(warnings);
     FLAG_MERGE(fetchlimit);
@@ -1138,6 +1139,7 @@ static int load_params(int argc, char **argv, int optind)
 	    DEFAULT(ctl->pass8bits, FALSE);
 	    DEFAULT(ctl->dropstatus, FALSE);
 	    DEFAULT(ctl->mimedecode, FALSE);
+	    DEFAULT(ctl->idle, FALSE);
 	    DEFAULT(ctl->server.dns, TRUE);
 	    DEFAULT(ctl->server.uidl, FALSE);
 #ifdef	SSL_ENABLE
@@ -1673,6 +1675,9 @@ static void dump_params (struct runctl *runp,
 		printf(_("  MIME decoding is %s (mimedecode %s).\n"),
 		       ctl->mimedecode ? _("enabled") : _("disabled"),
 		       ctl->mimedecode ? "on" : "off");
+		printf(_("  Idle after poll is %s (idle %s).\n"),
+		       ctl->idle ? _("enabled") : _("disabled"),
+		       ctl->idle ? "on" : "off");
 		printf(_("  Nonempty Status lines will be %s (dropstatus %s)\n"),
 		       ctl->dropstatus ? _("discarded") : _("kept"),
 		       ctl->dropstatus ? "on" : "off");

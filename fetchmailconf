@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.22"
+version = "1.23"
 
 from Tkinter import *
 from Dialog import *
@@ -216,6 +216,7 @@ class User:
 	self.pass8bits = FALSE		# Force BODY=7BIT
 	self.mimedecode = FALSE		# Undo MIME armoring
 	self.dropstatus = FALSE		# Drop incoming Status lines
+	self.idle = FALSE		# IDLE after poll
 	self.limit = 0			# Message size limit
         self.warnings = 0		# Size warning interval
 	self.fetchlimit = 0		# Max messages fetched per batch
@@ -246,6 +247,7 @@ class User:
 	    ('pass8bits',   'Boolean'),
 	    ('mimedecode',  'Boolean'),
 	    ('dropstatus',  'Boolean'),
+	    ('idle',        'Boolean'),
 	    ('limit',       'Int'),
 	    ('warnings',    'Int'),
 	    ('fetchlimit',  'Int'),
@@ -274,7 +276,8 @@ class User:
 		or self.stripcr != UserDefaults.stripcr 
 		or self.pass8bits != UserDefaults.pass8bits
 		or self.mimedecode != UserDefaults.mimedecode
-		or self.dropstatus != UserDefaults.dropstatus):
+		or self.dropstatus != UserDefaults.dropstatus
+		or self.idle != UserDefaults.idle):
 	    res = res + " options"
 	if self.keep != UserDefaults.keep:
 	    res = res + flag2str(self.keep, 'keep')
@@ -294,6 +297,8 @@ class User:
 	    res = res + flag2str(self.mimedecode, 'mimedecode')
 	if self.dropstatus != UserDefaults.dropstatus:
 	    res = res + flag2str(self.dropstatus, 'dropstatus')
+	if self.idle != UserDefaults.idle:
+	    res = res + flag2str(self.idle, 'idle')
 	if self.limit != UserDefaults.limit:
 	    res = res + " limit " + `self.limit`
 	if self.warnings != UserDefaults.warnings:
@@ -1491,6 +1496,8 @@ class UserEdit(Frame, MyWidget):
             if self.parent.server.protocol in ('IMAP', 'IMAP-K4', 'IMAP-GSS'):
                 LabeledEntry(limwin, 'Interval between expunges (IMAP):',
                              self.expunge, '30').pack(side=TOP, fill=X)
+            Checkbutton(limwin, text="Idle after each poll (IMAP only)", 
+		    variable=self.idle).pack(side=TOP, anchor=W)
             limwin.pack(fill=X)
 
             if self.parent.server.protocol in ('IMAP', 'IMAP-K4', 'IMAP-GSS'):
@@ -1646,7 +1653,6 @@ Or you can just select `Quit' to exit the launcher now.
         Configurator(self.outfile, Toplevel(),
                      lambda self=self: self.configbutton.configure(state=NORMAL),
                      self)
-
     def test(self):
     	RunWindow("fetchmail -d0 -v --nosyslog", Toplevel(), self)
 

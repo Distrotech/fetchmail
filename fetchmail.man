@@ -1248,6 +1248,9 @@ T}
 mimedecode	\&	T{
 Convert quoted-printable to 8-bit in MIME messages
 T}
+idle     	\&	T{
+Idle waiting for new messages after each poll (IMAP only)
+T}
 no keep  	-K	T{
 Delete seen messages from server (default)
 T}
@@ -1274,6 +1277,9 @@ Don't drop Status headers (default)
 T}
 no mimedecode	\&	T{
 Don't convert quoted-printable to 8-bit in MIME messages (default)
+T}
+no idle     	\&	T{
+Don't idle waiting for new messages after each poll (IMAP only)
 T}
 limit   	-l	T{
 Set message size limit
@@ -1314,7 +1320,7 @@ the following: `via', `interval', `aka', `is', `to', `dns'/`no dns',
 `checkalias'/`no checkalias', `password', `preconnect', `postconnect',
 `localdomains', `stripcr'/`no stripcr', `forcecr'/`no forcecr',
 `pass8bits'/`no pass8bits' `dropstatus/no dropstatus', `mimedecode/no
-mimedecode', and `no envelope'.
+mimedecode', `idle/no idle', and `no envelope'.
 .PP
 The `via' option is for use with ssh, or if you want to have more
 than one configuration pointing at the same site.  If it is present,
@@ -1470,6 +1476,17 @@ then this option is not needed.  The mimedecode option is off by
 default, because doing RFC2047 conversion on headers throws away
 character-set information and can lead to bad results if the encoding
 of the headers differs from the body encoding.
+.PP
+The `idle' option is usable only with IMAP servers supporting the
+RFC2177 IDLE command extension.  If it is enabled, and fetchmail
+detects that IDLE is supported, an IDLE will be issued at the end
+of each poll.  This will tell the IMAP server to hold the connection
+open and notify the client when new mail is available.  If you need to
+poll a link frequently, IDLE can save bandwidth by eliminating TCP/IP
+connects and LOGIN/LOGOUT sequences. On the other hand, an IDLE 
+connection will eat almost akll of your fetchmail's time, because it
+will never drop the connection and allow other pools to occur unless
+the server times out the IDLE.
 .PP
 The `properties' option is an extension mechanism.  It takes a string
 argument, which is ignored by fetchmail itself.  The string argument may be
@@ -1978,7 +1995,7 @@ SMTP/ESMTP:
 RFC 821, RFC 1869, RFC 1652, RFC 1870, RFC1983, RFC 1985
 .TP 5
 mail:
-RFC 822, RFC 1892, RFC1894
+RFC 822, RFC 1892, RFC 1894
 .TP 5
 POP2:
 RFC 937
@@ -1996,7 +2013,7 @@ IMAP2/IMAP2BIS:
 RFC 1176, RFC 1732
 .TP 5
 IMAP4/IMAP4rev1:
-RFC 1730, RFC 1731, RFC 1732, RFC 2060, RFC 2061, RFC 2195
+RFC 1730, RFC 1731, RFC 1732, RFC 2060, RFC 2061, RFC 2195, RFC 2177
 .TP 5
 ETRN:
 RFC 1985

@@ -68,6 +68,7 @@
 #   pass8bits
 #   dropstatus
 #   mimedecode
+#   idle
 #   no keep
 #   no flush
 #   no fetchall
@@ -77,6 +78,7 @@
 #   no pass8bits
 #   no dropstatus
 #   no mimedecode
+#   no idle
 #   limit                     -- must be followed by numeric size limit
 #   warnings                  -- must be followed by numeric size limit
 #   fetchlimit                -- must be followed by numeric msg fetch limit

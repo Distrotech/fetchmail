@@ -130,7 +130,8 @@ noforcecr	|
 nostripcr	|
 nopass8(bits)?	|
 nodropstatus	|
-nomimedec(ode)?	{
+nomimedec(ode)? |
+noidle	        {
                    yyless(2);
                    return NO;
                 }
@@ -146,6 +147,7 @@ stripcr		{ return STRIPCR; }
 pass8(bits)?	{ return PASS8BITS; }
 dropstatus	{ return DROPSTATUS; }
 mimedec(ode)?   { return MIMEDECODE; }
+idle		{ return IDLE; }
 dns		{ return DNS; }
 uidl		{ return UIDL; }
 ssl		{ return SSL; }

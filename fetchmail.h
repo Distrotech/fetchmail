@@ -260,6 +260,7 @@ struct query
     flag pass8bits;		/* if TRUE, ignore Content-Transfer-Encoding */
     flag dropstatus;		/* if TRUE, drop Status lines in mail */
     flag mimedecode;		/* if TRUE, decode MIME-armored messages */
+    flag idle;			/* if TRUE, idle after each poll */
     int	limit;			/* limit size of retrieved messages */
     int warnings;		/* size warning interval */
     int	fetchlimit;		/* max # msgs to get in single poll */

@@ -64,6 +64,7 @@ extern char *strstr();	/* needed on sysV68 R3V7.1. */
 
 static int count, seen, recent, unseen, deletions, imap_version, preauth; 
 static int expunged, expunge_period;
+static flag do_idle, idling;
 static char capabilities[MSGBUFSIZE+1];
 
 int imap_ok(int sock, char *argbuf)
@@ -88,7 +89,21 @@ int imap_ok(int sock, char *argbuf)
 	if (strstr(buf, "* CAPABILITY"))
 	    strncpy(capabilities, buf + 12, sizeof(capabilities));
 	if (strstr(buf, "EXISTS"))
+	{
 	    count = atoi(buf+2);
+	    /*
+	     * Nasty kluge to handle RFC2177 IDLE.  If we know we're idling
+	     * we can't wait for the tag matching the IDLE; we have to tell the
+	     * server the IDLE is finished by shipping back a DONE when we
+	     * see an EXISTS.  Only after that will a tagged response be
+	     * shipped.  The idling flag also gets cleared on a timeout.
+	     */
+	    if (idling)
+	    {
+		gen_send(sock, "DONE");
+		idling = FALSE;
+	    }
+	}
 	if (strstr(buf, "RECENT"))
 	    recent = atoi(buf+2);
 	if (strstr(buf, "UNSEEN"))
@@ -901,6 +916,18 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     if (preauth || ctl->server.preauthenticate == A_SSH)
 	return(PS_SUCCESS);
 
+    /* 
+     * Handle idling.  We depend on coming through here on startup
+     * and after each timeout (including timeouts during idles).
+     */
+    idling = FALSE;
+    if (strstr(capabilities, "IDLE") && ctl->idle)
+    {
+	do_idle = TRUE;
+	if (outlevel >= O_VERBOSE)
+	    report(stdout, "will idle after poll\n");
+    }
+
 #if OPIE_ENABLE
     if ((ctl->server.protocol == P_IMAP) && strstr(capabilities, "AUTH=X-OTP"))
     {
@@ -1050,14 +1077,15 @@ static int imap_getrange(int sock,
 	 */
 	ok = 0;
 	if (deletions && expunge_period != 1)
-	    internal_expunge(sock);
+	    ok = internal_expunge(sock);
 	count = -1;
-	if (ok || gen_transact(sock, "NOOP"))
+	idling = do_idle;
+	if (ok || gen_transact(sock, do_idle ? "IDLE" : "NOOP"))
 	{
 	    report(stderr, _("re-poll failed\n"));
 	    return(ok);
 	}
-	else if (count == -1)	/* no EXISTS response to NOOP */
+	else if (count == -1)	/* no EXISTS response to NOOP/IDLE */
 	{
 	    count = recent = 0;
 	    unseen = -1;
