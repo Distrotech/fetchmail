@@ -244,8 +244,18 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	 * OK, we have an authentication type now.
 	 */
 #if defined(KERBEROS_V4) || defined(KERBEROS_V5)
-	if (ctl->server.authenticate == A_KERBEROS_V4
-	    	|| ctl->server.authenticate == A_KERBEROS_V5)
+	/* 
+	 * Servers doing KPOP have to go through a dummy login sequence
+	 * rather than doing SASL.
+	 */
+	if (
+#if INET6_ENABLE
+	    strcmp(ctl->server.service, KPOP_PORT)!=0
+#else /* INET6_ENABLE */
+	    ctl->server.port != KPOP_PORT
+#endif /* INET6_ENABLE */
+	    && (ctl->server.authenticate == A_KERBEROS_V4
+	     || ctl->server.authenticate == A_KERBEROS_V5))
 	    return(do_rfc1731(sock, "AUTH", ctl->server.truename));
 #endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
 #if defined(GSSAPI)
