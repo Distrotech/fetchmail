@@ -158,7 +158,7 @@ distclean: clean
 realclean: distclean
 	-rm -f FAQ FEATURES NOTES MANIFEST 
 	-rm -f config.cache config.log Makefile
-	-rm -f fetchmail-*.tar.gz fetchmail-*.rpm 
+	-rm -f fetchmail-*.tar.gz fetchmail-*.i386.rpm 
 
 mostlyclean: clean
 
