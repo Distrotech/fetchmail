@@ -152,7 +152,7 @@ struct method *proto;
 		ok = gen_readmsg(socket,mboxfd,len,protocol->delimited,
 				 queryctl->servername,
 				 queryctl->output, 
-				 queryctl->rewrite);
+				 !queryctl->norewrite);
 		if (protocol->trail)
 		    (*protocol->trail)(socket, queryctl, number);
 		if (ok != 0)
@@ -328,11 +328,9 @@ int output;
 int rewrite;
 { 
     char buf [MSGBUFSIZE]; 
-    char *bufp;
-    char savec;
     char fromBuf[MSGBUFSIZE];
-    int n;
-    int needFrom;
+    char *bufp, *headers, *unixfrom, *fromhdr, *tohdr, *cchdr, *bcchdr;
+    int n, oldlen;
     int inheaders;
     int lines,sizeticker;
     time_t now;
@@ -349,6 +347,7 @@ int rewrite;
 
     /* read the message content from the server */
     inheaders = 1;
+    headers = unixfrom = fromhdr = tohdr = cchdr = bcchdr = NULL;
     lines = 0;
     sizeticker = MSGBUFSIZE;
     while (delimited || len > 0) {
@@ -356,7 +355,7 @@ int rewrite;
 	    return(PS_SOCKET);
 	len -= n;
 	bufp = buf;
-	if (buf[0] == '\r' || buf[0] == '\n')
+	if (buf[0] == '\0' || buf[0] == '\r' || buf[0] == '\n')
 	    inheaders = 0;
 	if (*bufp == '.') {
 	    bufp++;
@@ -365,44 +364,96 @@ int rewrite;
 	}
 	strcat(bufp,"\n");
      
-	/* Check for Unix 'From' header, and add a bogus one if it's not
-	   present -- only if not using an MDA.
-	   XXX -- should probably parse real From: header and use its 
-	   address field instead of bogus 'POPmail' string. 
-	   */
-	if (output != TO_MDA && lines == 0) {
-	    if (strlen(bufp) >= strlen("From ")) {
-		savec = *(bufp + 5);
-		*(bufp + 5) = 0;
-		needFrom = strcmp(bufp,"From ") != 0;
-		*(bufp + 5) = savec;
+	if (inheaders)
+        {
+	    if (rewrite)
+		reply_hack(bufp, pophost);
+
+	    if (!lines)
+	    {
+		oldlen = strlen(bufp);
+		headers = malloc(oldlen + 1);
+		if (headers == NULL)
+		    return(PS_IOERR);
+		(void) strcpy(headers, bufp);
+		bufp = headers;
 	    }
 	    else
-		needFrom = 1;
-	    if (needFrom) {
-		now = time(NULL);
-		sprintf(fromBuf,"From POPmail %s",ctime(&now));
+	    {
+		int	newlen = oldlen + strlen(bufp);
+
+		headers = realloc(headers, newlen + 1);
+		if (headers == NULL)
+		    return(PS_IOERR);
+		strcpy(headers + oldlen, bufp);
+		bufp = headers + oldlen;
+		oldlen = newlen;
+	    }
+
+	    if (!strncmp(bufp,"From ",5))
+		unixfrom = bufp;
+	    else if (strncmp("From: ", bufp, 6))
+		tohdr = bufp;
+	    else if (strncmp("To: ", bufp, 4))
+		fromhdr = bufp;
+	    else if (strncmp("Cc: ", bufp, 4))
+		cchdr = bufp;
+	    else if (strncmp("Bcc: ", bufp, 5))
+		bcchdr = bufp;
+
+	    goto skipwrite;
+	}
+	else if (headers)
+	{
+	    switch (output)
+	    {
+	    case TO_SMTP:
+		SMTP_data(mboxfd);
+		break;
+
+	    case TO_FOLDER:
+	    case TO_STDOUT:
+		if (unixfrom)
+		    (void) strcpy(fromBuf, unixfrom);
+		else
+		{
+		    now = time(NULL);
+		    sprintf(fromBuf,"From POPmail %s",ctime(&now));
+		}
+
 		if (write(mboxfd,fromBuf,strlen(fromBuf)) < 0) {
 		    perror("gen_readmsg: write");
 		    return(PS_IOERR);
 		}
+		break;
+
+	    case TO_MDA:
+		break;
 	    }
+
+	    if (write(mboxfd,headers,oldlen) < 0)
+	    {
+		free(headers);
+		headers = NULL;
+		perror("gen_readmsg: write");
+		return(PS_IOERR);
+	    }
+	    free(headers);
+	    headers = NULL;
 	}
 
-	/*
-	 * Edit some headers so that replies will work properly.
-	 */
-	if (inheaders && rewrite)
-	    reply_hack(bufp, pophost);
-
 	/* write this line to the file */
-	if (write(mboxfd,bufp,strlen(bufp)) < 0) {
+	if (write(mboxfd,bufp,strlen(bufp)) < 0)
+	{
 	    perror("gen_readmsg: write");
 	    return(PS_IOERR);
 	}
 
+    skipwrite:;
+
 	sizeticker -= strlen(bufp);
-	if (sizeticker <= 0) {
+	if (sizeticker <= 0)
+	{
 	    if (outlevel > O_SILENT && outlevel < O_VERBOSE && mboxfd != 1)
 		fputc('.',stderr);
 	    sizeticker = MSGBUFSIZE;

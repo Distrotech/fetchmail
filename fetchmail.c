@@ -385,6 +385,10 @@ struct hostrec *queryctl;
     printf("  Old messages will%s be flushed before message retrieval (--flush %s).\n",
 	   queryctl->flush ? "" : " not",
 	   queryctl->flush ? "on" : "off");
+    printf("  Rewrite of host-local addresses is %sabled (--norewrite %s)\n",
+	   queryctl->norewrite ? "dis" : "en",
+	   queryctl->norewrite ? "on" : "off");
+
 
     switch(queryctl->output)
     {

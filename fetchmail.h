@@ -62,7 +62,7 @@ struct hostrec
   int protocol;
   int fetchall;
   int flush;
-  int rewrite;
+  int norewrite;
 
   /* state used for tracking UIDL ids */
   char lastid [IDLEN];

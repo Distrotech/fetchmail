@@ -235,7 +235,7 @@ struct hostrec *queryctl;
         break;
       case 'N':
       case LA_NOREWRITE:
-	queryctl->rewrite = 0;
+	queryctl->norewrite = 1;
 	break;
       case LA_YYDEBUG:
 	yydebug = 1;
@@ -318,7 +318,7 @@ struct hostrec *queryctl;
 #else
   queryctl->keep = 0;
 #endif
-  queryctl->rewrite = 1;
+  queryctl->norewrite = 0;
 
   strcpy(queryctl->localname,pw->pw_name);
   strcpy(queryctl->remotename,pw->pw_name);
