@@ -300,13 +300,12 @@ int main (int argc, char **argv)
 
     /* pick up interactively any passwords we need but don't have */ 
     for (ctl = querylist; ctl; ctl = ctl->next)
-	if (ctl->active && !(implicitmode && ctl->server.skip) && !ctl->password[0])
+	if (ctl->active && !(implicitmode && ctl->server.skip) && !ctl->password)
 	{
 	    if (ctl->server.authenticate == A_KERBEROS)
 		/* Server won't care what the password is, but there
 		   must be some non-null string here.  */
-		(void) strncpy(ctl->password, 
-			       ctl->remotename, PASSWORDLEN-1);
+		ctl->password = ctl->remotename;
 	    else
 	    {
 		/* Look up the host and account in the .netrc file. */
@@ -317,17 +316,15 @@ int main (int argc, char **argv)
 		if (p)
 		{
 		    /* We found the entry, so use the password. */
-		    (void) strncpy (ctl->password, p->password,
-				    PASSWORDLEN - 1);
+		    ctl->password = xstrdup(p->password);
 		}
 	    }
 
-	    if (!ctl->password[0])
+	    if (!ctl->password)
 	    {
 		(void) sprintf(tmpbuf, "Enter password for %s@%s: ",
 			       ctl->remotename, ctl->server.names->id);
-		(void) strncpy(ctl->password,
-			       (char *)getpassword(tmpbuf),PASSWORDLEN-1);
+		ctl->password = xstrdup((char *)getpassword(tmpbuf));
 	    }
 	}
 
@@ -531,8 +528,8 @@ static int load_params(int argc, char **argv, int optind)
 
     def_opts.server.protocol = P_AUTO;
     def_opts.server.timeout = CLIENT_TIMEOUT;
-    strcpy(def_opts.remotename, user);
-    strcpy(def_opts.smtphost, "localhost");
+    def_opts.remotename = user;
+    def_opts.smtphost = "localhost";
 
     /* this builds the host list */
     if (prc_parse_file(rcfile) != 0)
@@ -625,7 +622,7 @@ static int load_params(int argc, char **argv, int optind)
 	     * client machine) and thus just one SMTP leader (and one listener
 	     * process) through the entire poll cycle.
 	     */
-	    if (!ctl->mda[0])
+	    if (!ctl->mda)
 	    {
 		ctl->smtp_sockfp = (FILE *)NULL;
 		for (mp = querylist; mp && mp != ctl; mp = mp->next)
@@ -814,7 +811,7 @@ void dump_params (struct query *ctl)
     if (ctl->server.skip || outlevel == O_VERBOSE)
 	printf("  This host will%s be queried when no host is specified.\n",
 	       ctl->server.skip ? " not" : "");
-    if (ctl->password[0] == '\0')
+    if (!ctl->password)
 	printf("  Password will be prompted for.\n");
     else if (outlevel == O_VERBOSE)
 	if (ctl->server.protocol == P_APOP)
@@ -872,11 +869,11 @@ void dump_params (struct query *ctl)
 	       ctl->fetchlimit, ctl->fetchlimit);
     else if (outlevel == O_VERBOSE)
 	printf("  No received-message limit (--fetchlimit 0).\n");
-    if (ctl->mda[0])
+    if (ctl->mda)
 	printf("  Messages will be delivered with '%s.'\n", visbuf(ctl->mda));
     else
 	printf("  Messages will be SMTP-forwarded to '%s'.\n", visbuf(ctl->smtphost));
-    if (ctl->preconnect[0])
+    if (ctl->preconnect)
 	printf("  Server connection will be preinitialized with '%s.'\n", visbuf(ctl->preconnect));
     else if (outlevel == O_VERBOSE)
 	printf("  No preinitialization command.\n");

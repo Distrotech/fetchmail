@@ -100,7 +100,7 @@ static int imap_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
     recent = unseen = 0;
     ok = gen_transact(sockfp,
 		  "SELECT %s",
-		  ctl->mailbox[0] ? ctl->mailbox : "INBOX");
+		  ctl->mailbox ? ctl->mailbox : "INBOX");
     if (ok != 0)
 	return(ok);
 

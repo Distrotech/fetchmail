@@ -551,7 +551,7 @@ char *realname;		/* real name of host */
 		save_str(&xmit_names, -1, ctl->localnames->id);
 
 	    /* time to address the message */
-	    if (ctl->mda[0])	/* we have a declared MDA */
+	    if (ctl->mda)	/* we have a declared MDA */
 	    {
 		int	length = 0;
 		char	*names, *cmd;
@@ -604,7 +604,7 @@ char *realname;		/* real name of host */
 		char	*ap;
 
 		/* build a connection to the SMTP listener */
-		if (ctl->mda[0] == '\0'	&& ((sinkfp = smtp_open(ctl)) == NULL))
+		if (!ctl->mda && ((sinkfp = smtp_open(ctl)) == NULL))
 		{
 		    free_str_list(&xmit_names);
 		    error(0, 0, "SMTP connect failed");
@@ -668,7 +668,7 @@ char *realname;		/* real name of host */
 		    *cp = '\n';
 
 	    /* replace all LFs with CR-LF before sending to the SMTP server */
-	    if (!ctl->mda[0])
+	    if (!ctl->mda)
 	    {
 		char *newheaders = xmalloc(1 + oldlen * 2);
 
@@ -679,7 +679,7 @@ char *realname;		/* real name of host */
 
 	    /* write all the headers */
 	    n = 0;
-	    if (ctl->mda[0])
+	    if (ctl->mda)
 		n = fwrite(headers, 1, oldlen, sinkfp);
 	    else if (sinkfp)
 		n = SockWrite(headers, 1, oldlen, sinkfp);
@@ -689,7 +689,7 @@ char *realname;		/* real name of host */
 		free(headers);
 		headers = NULL;
 		error(0, errno, "writing RFC822 headers");
-		if (ctl->mda[0])
+		if (ctl->mda)
 		{
 		    pclose(sinkfp);
 		    signal(SIGCHLD, sigchld);
@@ -752,13 +752,13 @@ char *realname;		/* real name of host */
 
 	/* SMTP byte-stuffing */
 	if (*bufp == '.')
-	    if (ctl->mda[0])
+	    if (ctl->mda)
 		fputs(".", sinkfp);
 	    else if (sinkfp)
 		SockWrite(bufp, 1, 1, sinkfp);
 
 	/* replace all LFs with CR-LF  in the line */
-	if (!ctl->mda[0])
+	if (!ctl->mda)
 	{
 	    char *newbufp = xmalloc(1 + strlen(bufp) * 2);
 
@@ -768,17 +768,17 @@ char *realname;		/* real name of host */
 
 	/* ship out the text line */
 	n = 0;
-	if (ctl->mda[0])
+	if (ctl->mda)
 	    n = fwrite(bufp, 1, strlen(bufp), sinkfp);
 	else if (sinkfp)
 	    n = SockWrite(bufp, 1, strlen(bufp), sinkfp);
 
-	if (!ctl->mda[0])
+	if (!ctl->mda)
 	    free(bufp);
 	if (n < 0)
 	{
 	    error(0, errno, "writing message text");
-	    if (ctl->mda[0])
+	    if (ctl->mda)
 	    {
 		pclose(sinkfp);
 		signal(SIGCHLD, sigchld);
@@ -795,7 +795,7 @@ char *realname;		/* real name of host */
     if (outlevel == O_VERBOSE)
 	fputc('\n', stderr);
 
-    if (ctl->mda[0])
+    if (ctl->mda)
     {
 	int rc;
 
@@ -926,7 +926,7 @@ const struct method *proto;	/* protocol method table */
 	int *msgsizes, len, num, count, new, deletions = 0;
 	FILE *sockfp; 
 	/* execute pre-initialization command, if any */
-	if (ctl->preconnect[0] && (ok = system(ctl->preconnect)))
+	if (ctl->preconnect && (ok = system(ctl->preconnect)))
 	{
 	    sprintf(buf, "pre-connection command failed with status %d", ok);
 	    error(0, 0, buf);

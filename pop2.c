@@ -76,7 +76,7 @@ static int pop2_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
 	return(PS_ERROR);
 
     /* maybe the user wanted a non-default folder */
-    if (ctl->mailbox[0])
+    if (ctl->mailbox)
     {
 	int	ok = gen_transact(sockfp, "FOLD %s", ctl->mailbox);
 

@@ -216,7 +216,7 @@ struct query *ctl;	/* option record to be initialized */
 
 	case 'u':
 	case LA_USERNAME:
-	    strncpy(ctl->remotename,optarg,sizeof(ctl->remotename)-1);
+	    ctl->remotename = xstrdup(optarg);
 	    break;
 	case 'a':
 	case LA_ALL:
@@ -244,11 +244,11 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'r':
 	case LA_REMOTEFILE:
-	    strncpy(ctl->mailbox,optarg,sizeof(ctl->mailbox)-1);
+	    ctl->mailbox = xstrdup(optarg);
 	    break;
 	case 'S':
 	case LA_SMTPHOST:
-	    strncpy(ctl->smtphost,optarg,sizeof(ctl->smtphost)-1);
+	    ctl->smtphost = xstrdup(optarg);
 	    ocount++;
 	    break;
 	case 'b':
@@ -261,7 +261,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'm':
 	case LA_MDA:
-	    strncpy(ctl->mda,optarg,sizeof(ctl->mda));
+	    ctl->mda = xstrdup(optarg);
 	    ocount++;
 	    break;
 

@@ -135,9 +135,9 @@ explicits	: explicitdef		{prc_register(); prc_reset();}
 explicitdef	: userdef user0opts
 		;
 
-userdef		: USERNAME STRING	{strcpy(current.remotename, $2);}
+userdef		: USERNAME STRING	{current.remotename = xstrdup($2);}
 		| USERNAME mapping_list HERE
-		| USERNAME STRING THERE	{strcpy(current.remotename, $2);}
+		| USERNAME STRING THERE	{current.remotename = xstrdup($2);}
 		;
 
 user0opts	: /* EMPTY */
@@ -168,12 +168,12 @@ user_option	: TO localnames HERE
 		| IS localnames HERE
 		| IS localnames
 
-		| IS STRING THERE	{strcpy(current.remotename, $2);}
-		| PASSWORD STRING	{strcpy(current.password, $2);}
-		| FOLDER STRING 	{strcpy(current.mailbox, $2);}
-		| SMTPHOST STRING	{strcpy(current.smtphost, $2);}
-		| MDA STRING		{strcpy(current.mda, $2);}
-		| PRECONNECT STRING	{strcpy(current.preconnect, $2);}
+		| IS STRING THERE	{current.remotename = xstrdup($2);}
+		| PASSWORD STRING	{current.password = xstrdup($2);}
+		| FOLDER STRING 	{current.mailbox = xstrdup($2);}
+		| SMTPHOST STRING	{current.smtphost = xstrdup($2);}
+		| MDA STRING		{current.mda = xstrdup($2);}
+		| PRECONNECT STRING	{current.preconnect = xstrdup($2);}
 
 		| KEEP			{current.keep = ($1==FLAG_TRUE);}
 		| FLUSH			{current.flush = ($1==FLAG_TRUE);}
@@ -311,23 +311,20 @@ struct query *init;	/* pointer to block containing initial values */
 static void prc_register(void)
 /* register current parameters and append to the host list */
 {
-#define STR_FORCE(fld, len) if (cmd_opts.fld[0]) \
-    					strcpy(current.fld, cmd_opts.fld)
-    STR_FORCE(remotename, USERNAMELEN);
-    STR_FORCE(password, PASSWORDLEN);
-    STR_FORCE(mailbox, FOLDERLEN);
-    STR_FORCE(smtphost, HOSTLEN);
-    STR_FORCE(mda, MDALEN);
-    STR_FORCE(preconnect, CMDLEN);
-#undef STR_FORCE
-    
 #define FLAG_FORCE(fld) if (cmd_opts.fld) current.fld = cmd_opts.fld
     FLAG_FORCE(server.protocol);
     FLAG_FORCE(server.port);
     FLAG_FORCE(server.authenticate);
     FLAG_FORCE(server.timeout);
-    FLAG_FORCE(server.envelope);	/* yes, even though this is a string */
+    FLAG_FORCE(server.envelope);
     FLAG_FORCE(server.skip);
+
+    FLAG_FORCE(remotename);
+    FLAG_FORCE(password);
+    FLAG_FORCE(mailbox);
+    FLAG_FORCE(smtphost);
+    FLAG_FORCE(mda);
+    FLAG_FORCE(preconnect);
 
     FLAG_FORCE(keep);
     FLAG_FORCE(flush);
@@ -346,22 +343,20 @@ void optmerge(struct query *h2, struct query *h1)
     append_str_list(&h2->server.localdomains, &h1->server.localdomains);
     append_str_list(&h2->localnames, &h1->localnames);
 
-#define STR_MERGE(fld, len) if (*(h2->fld) == '\0') strcpy(h2->fld, h1->fld)
-    STR_MERGE(remotename, USERNAMELEN);
-    STR_MERGE(password, PASSWORDLEN);
-    STR_MERGE(mailbox, FOLDERLEN);
-    STR_MERGE(smtphost, HOSTLEN);
-    STR_MERGE(mda, MDALEN);
-    STR_MERGE(preconnect, CMDLEN);
-#undef STR_MERGE
-
 #define FLAG_MERGE(fld) if (!h2->fld) h2->fld = h1->fld
     FLAG_MERGE(server.protocol);
     FLAG_MERGE(server.port);
     FLAG_MERGE(server.authenticate);
     FLAG_MERGE(server.timeout);
-    FLAG_MERGE(server.envelope);	/* yes, even though this is a string */
+    FLAG_MERGE(server.envelope);
     FLAG_MERGE(server.skip);
+
+    FLAG_MERGE(remotename);
+    FLAG_MERGE(password);
+    FLAG_MERGE(mailbox);
+    FLAG_MERGE(smtphost);
+    FLAG_MERGE(mda);
+    FLAG_MERGE(preconnect);
 
     FLAG_MERGE(keep);
     FLAG_MERGE(flush);

@@ -21,11 +21,8 @@
 #define		HOSTLEN		128	/* max hostname length */
 #define		USERNAMELEN	32	/* max user-name length */
 #define		PASSWORDLEN	64	/* max password length */
-#define		FOLDERLEN	256     /* max folder name length */
 #define		DIGESTLEN	33	/* length of MD5 digest */
-#define		MDALEN		256	/* length of delivery agent command */
 #define		IDLEN		128	/* length of UIDL message ID */
-#define		CMDLEN		128	/* length of initialization command */
 
 /* exit code values */
 #define		PS_SUCCESS	0	/* successful receipt of messages */
@@ -46,7 +43,6 @@
 #define		O_VERBOSE	2	/* excessive */
 
 #define		SIZETICKER	1024	/* print 1 dot per this many bytes */
-#define		MDA_MAXARGS	32	/* max arguments per MDA call */
 
 struct idlist
 {
@@ -87,12 +83,12 @@ struct query
     /* per-user data */
     struct idlist *localnames;		/* including calling user's name */
     int wildcard;		/* should unmatched names be passed through */
-    char remotename [USERNAMELEN+1];
-    char password [PASSWORDLEN+1];
-    char mailbox [FOLDERLEN+1];
-    char smtphost[HOSTLEN+1];
-    char mda [MDALEN+1];
-    char preconnect [CMDLEN+1];
+    char *remotename;
+    char *password;
+    char *mailbox;
+    char *smtphost;
+    char *mda;
+    char *preconnect;
 
     /* per-user control flags */
     int keep;
