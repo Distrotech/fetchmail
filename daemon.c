@@ -210,9 +210,14 @@ flag isafile(int fd)
 {
     struct stat stbuf;
 
-    if (fstat(fd, &stbuf))
+    /*
+     * We'd like just to return 1 on (S_IFREG | S_IFBLK),
+     * but weirdly enough, Linux ptys seem to have S_IFBLK
+     * so this test would fail when run on an xterm.
+     */
+    if (isatty(fd) || fstat(fd, &stbuf))
 	return(0);
-    else if (stbuf.st_mode & (S_IFREG | S_IFBLK))
+    else if (stbuf.st_mode & (S_IFREG))
 	return(1);
     return(0);
 }
