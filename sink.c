@@ -282,7 +282,7 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
 
     sprintf(boundary, 
 	    "om-mani-padme-hum-%d-%d-%ld", 
-	    getpid(), getppid(), time((time_t *)NULL));
+	    (int)getpid(), (int)getppid(), time((time_t *)NULL));
 
     ts = rfc822timestamp();
 
