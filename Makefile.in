@@ -72,13 +72,13 @@ ETAGS = etags -tw
 CTAGS = ctags -tw
 
 popobjs = socket.o getpass.o pop2.o pop3.o imap.o fetchmail.o options.o	\
-       fetchrc_l.o fetchrc_y.o fetchrc.o daemon.o driver.o smtp.o xmalloc.o
+       rcfile_l.o rcfile_y.o rcfile.o daemon.o driver.o smtp.o xmalloc.o
 
 objs = $(popobjs) $(EXTRAOBJ) $(extras)
 
 srcs = $(srcdir)/socket.c $(srcdir)/getpass.c $(srcdir)/pop2.c 		\
        $(srcdir)/pop3.c $(srcdir)/imap.c $(srcdir)/fetchmail.c		\
-       $(srcdir)/options.c $(srcdir)/fetchrc.c $(srcdir)/daemon.c 	\
+       $(srcdir)/options.c $(srcdir)/rcfile.c $(srcdir)/daemon.c 	\
        $(srcdir)/driver.c $(srcdir)/smtp.c $(srcdir)/xmalloc.c $(EXTRASRC)
 
 .SUFFIXES:
@@ -88,7 +88,7 @@ all: fetchmail
 check: # No tests.
 depend:
 	test -f config.h || touch config.h
-	test -f fetchrc_y.h || touch fetchrc_y.h
+	test -f rcfile_y.h || touch rcfile_y.h
 	makedepend -fMakefile.in *.c
 
 # Some makes apparently use .PHONY as the default goal is it is before `all'.
@@ -96,7 +96,7 @@ depend:
 
 $(popobjs): fetchmail.h
 
-fetchmail: $(srcdir)/fetchrc_l.c $(srcdir)/fetchrc_y.c $(objs)
+fetchmail: $(srcdir)/rcfile_l.c $(srcdir)/rcfile_y.c $(objs)
 	$(CC) $(LDFLAGS) $(objs) $(LOADLIBS) -o fetchmail
 
 
@@ -125,7 +125,7 @@ MAKE = make
 
 FORCE:
 
-tagsrcs = $(srcs) $(srcdir)/fetchrc_l.c $(srcdir)/fetchrc_y.c
+tagsrcs = $(srcs) $(srcdir)/rcfile_l.c $(srcdir)/rcfile_y.c
 TAGS: $(tagsrcs)
 	$(ETAGS) $(tagsrcs)
 tags: $(tagsrcs)
@@ -165,7 +165,7 @@ $(mandir)/$(instname).$(manext): fetchmail.man
 .PHONY: clean realclean distclean mostlyclean
 clean: 
 	-rm -f fetchmail *.o core fetchmail.dvi \
-	       fetchrc_l.c fetchrc_y.h fetchrc_y.c fetchmail.tar fetchmail.tar.gz
+	       rcfile_l.c rcfile_y.h rcfile_y.c fetchmail.tar fetchmail.tar.gz
 
 distclean: clean 
 	-rm -f Makefile config.h
@@ -194,10 +194,10 @@ configure: configure.in
 
 
 # Special dependencies, not easily handled without explicit rules
-$(srcdir)/fetchrc_l.c: $(srcdir)/fetchrc_l.l
-$(srcdir)/fetchrc_y.c: $(srcdir)/fetchrc_y.y
+$(srcdir)/rcfile_l.c: $(srcdir)/rcfile_l.l
+$(srcdir)/rcfile_y.c: $(srcdir)/rcfile_y.y
 
-parser = $(srcdir)/fetchrc_l.l $(srcdir)/fetchrc_y.y
+parser = $(srcdir)/rcfile_l.l $(srcdir)/rcfile_y.y
 headers = $(srcdir)/fetchmail.h $(srcdir)/socket.h $(srcdir)/poproto.h \
 	$(srcdir)/smtp.h
 extra = $(srcdir)/alloca.c $(srcdir)/bzero.[ch] $(srcdir)/errorcodes \
@@ -205,7 +205,7 @@ extra = $(srcdir)/alloca.c $(srcdir)/bzero.[ch] $(srcdir)/errorcodes \
 	$(srcdir)/strcasecmp.c $(srcdir)/strdup.c
 docs = $(srcdir)/COPYING $(srcdir)/README $(srcdir)/INSTALL $(srcdir)/NEWS \
 	$(srcdir)/fetchmail.lsm $(srcdir)/RFC/*.txt \
-	$(srcdir)/*.man	$(srcdir)/sample.fetchrc
+	$(srcdir)/*.man	$(srcdir)/sample.rcfile
 config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/configure \
 	$(srcdir)/config.guess $(srcdir)/config.h.in $(srcdir)/config.sub
 scripts = $(srcdir)/install.sh $(srcdir)/mkinstalldirs

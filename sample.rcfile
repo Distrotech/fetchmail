@@ -1,4 +1,4 @@
-# .fetchrc sample
+# fetchmail control file sample
 #
 # This file (or one of your own creation, rather) should be located 
 # in your home directory with the name .fetchrc.  Permissions on this

@@ -16,7 +16,7 @@
 
 #include <config.h>
 #include "poproto.h"
-#include "fetchrc_y.h"
+#include "rcfile_y.h"
 
 int prc_lineno = 1;
 %}
