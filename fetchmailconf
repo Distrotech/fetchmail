@@ -1131,8 +1131,8 @@ Its response to RETR is normal, so use the `fetchall' option.
                 warnings = warnings + """
 The Mail Max POP3 server screws up on mail with attachments.  It reports
 the message size with attachments included, but doesn't download them on a
-RETR or TOP.  You should get rid of it -- and the brain-dead NT server
-it rode in on. 
+RETR or TOP (this violates the IMAP RFCs).  You should get rid of it --
+and the brain-dead NT server it rode in on. 
 
 """
 
@@ -1140,7 +1140,7 @@ it rode in on.
                 warnings = warnings + """
 The InterChange IMAP server screws up on mail with attachments.  It reports
 the message size with attachments included, but doesn't download them on a
-RETR or TOP.  You should get rid of it. 
+RETR or TOP (this violates the IMAP RFCs).  You should get rid of it. 
 
 """
 
