@@ -1,14 +1,12 @@
-			    To Do:
-
-* Add an `aka' option to allow users to declare mailserver aliases at start
-  of run, so DNS does less work.  During a run, cache host matches on the
-  aka list so no potential alias has to be DNS-checked more than once.
-
 			Release Notes:
 
 pl 2.0.1 ():
 * Include Nalin Dahyabhai's patch for MIT Kerberos support.
-* Deduce the envelope address from single-addressee mail through sendmail.
+* Deduce the envelope To address from single-addressee mail through sendmail.
+* Added an `aka' option to allow users to declare mailserver aliases at start
+  of run, so DNS does less work.  During a run, cache host matches on the
+  aka list so no potential alias has to be DNS-checked more than once.
+* Try to use envelope From.  If that fails, fall back on calling-user.
 
 fetchmail-2.0 (Mon Nov 18 00:32:17 EST 1996):
 
