@@ -260,14 +260,17 @@ int delimited;		/* does the protocol use a message delimiter? */
 struct query *ctl;	/* query control record */
 {
     char buf [MSGBUFSIZE+1]; 
-    char *bufp, *headers, *fromhdr, *tohdr, *cchdr, *bcchdr;
+    char *bufp, *headers, *fromhdr, *tohdr, *cchdr, *bcchdr, *received_for;
     int n, oldlen, mboxfd;
     int inheaders,lines,sizeticker;
     FILE *sinkfp;
+#ifdef HAVE_GETHOSTBYNAME
+    char rbuf[HOSTLEN + USERNAMELEN + 4]; 
+#endif /* HAVE_GETHOSTBYNAME */
 
     /* read the message content from the server */
     inheaders = 1;
-    headers = fromhdr = tohdr = cchdr = bcchdr = NULL;
+    headers = fromhdr = tohdr = cchdr = bcchdr = received_for = NULL;
     lines = 0;
     sizeticker = 0;
     oldlen = 0;
@@ -350,6 +353,44 @@ struct query *ctl;	/* query control record */
 		cchdr = bufp;
 	    else if (!strncasecmp("Bcc:", bufp, 4))
 		bcchdr = bufp;
+#ifdef HAVE_GETHOSTBYNAME
+	    else if (MULTIDROP(ctl) && !strncasecmp("Received:", bufp, 9))
+	    {
+		char *ok;
+
+		/*
+		 * Try to extract the real envelope addressee.  We look here
+		 * specifically for the mailserver's Received line.
+		 * Note: this will only work for sendmail, or an MTA that
+		 * shares sendmail's convention of embedding the envelope
+		 * address in the Received line.
+		 */
+		strcpy(rbuf, "by ");
+		strcat(rbuf, ctl->canonical_name);
+		if ((ok = strstr(bufp, rbuf)))
+		    ok = strstr(bufp, "for ");
+		if (ok)
+		{
+		    char	*sp, *tp;
+
+		    tp = rbuf;
+		    for (sp = ok + 4; *sp && *sp != ';'; sp++)
+			*tp++ = *sp;
+		    *tp = '\0';
+		    if (*sp != ';')
+			ok = (char *)NULL;
+		}
+
+		if (ok)
+		{
+		    received_for = rbuf;
+		    if (outlevel == O_VERBOSE)
+			fprintf(stderr, 
+				"fetchmail: found Received address `%s'\n",
+				received_for);
+		}
+	    }
+#endif /* HAVE_GETHOSTBYNAME */
 
 	    goto skipwrite;
 	}
@@ -369,10 +410,23 @@ struct query *ctl;	/* query control record */
 	    /* is this a multidrop box? */
 	    if (MULTIDROP(ctl))
 	    {
-		/* compute the local address list */
-		find_server_names(tohdr,  ctl, &xmit_names);
-		find_server_names(cchdr,  ctl, &xmit_names);
-		find_server_names(bcchdr, ctl, &xmit_names);
+		if (received_for)
+		    /*
+		     * We have the actual envelope addressee.  
+		     * It has to be a mailserver address, or we
+		     * wouldn't have got here.
+		     */
+		    save_uid(&xmit_names, -1, received_for);
+		else
+		{
+		    /*
+		     * We haven't extracted the envelope address.
+		     * So check all the header addresses.
+		     */
+		    find_server_names(tohdr,  ctl, &xmit_names);
+		    find_server_names(cchdr,  ctl, &xmit_names);
+		    find_server_names(bcchdr, ctl, &xmit_names);
+		}
 		if (!xmit_names)
 		{
 		    no_local_matches = TRUE;
