@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.5.1 (Sun Aug 20 23:43:03 EDT 2000), 19241 lines:
+
 * Fix a finger error in the dot-termination fix for 5.5.0.
 * Javier Kohen's update for es.po.
 * Jiri Pavlovsky's cs.po update.
@@ -9,6 +11,8 @@
 * Fixed a nasty typo in FAQ item T1 -- the old version disdn't generate 
   correct Delivered-To hacks.  Thanks to "Peter 'Rattacresh' Backes" 
   <rtc@helen.PLASMA.Xg8.DE> for spotting this.
+
+There are 291 people on fetchmail-friends and 537 on fetchmail-announce.
 
 ------------------------------------------------------------------------------
 fetchmail-5.5.0 (Sat Aug 12 12:47:21 EDT 2000), 19241 lines:
