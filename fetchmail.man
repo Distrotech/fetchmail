@@ -367,7 +367,7 @@ interpreted as the name of a UNIX socket accepting LMTP connections
 	--smtphost server1,server2/2525,server3,/var/imap/socket/lmtp
 
 This option can be used with ODMR, and will make fetchmail a relay
-between the ODMR server and and SMTP or LMTP receiver.
+between the ODMR server and SMTP or LMTP receiver.
 .TP 
 .B --fetchdomains <hosts>
 (Keyword: fetchdomains)
