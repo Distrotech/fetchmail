@@ -13,6 +13,12 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.2.3 (Thu Sep 18 16:19:10 EDT 1997)
+* Fix a bug in IMAP message-size retrieval.
+* Yet another try at getting the size-consistency check right.
+
+There are 286 people on the fetchmail-friends list.
+
 fetchmail-4.2.2 (Wed Sep 17 22:56:05 EDT 1997)
 * Re-enable --limit under IMAP (bug introduced in 4.2.0).
 * Autoconfigure root-mode PID-file directory to /etc if no /var/run.
