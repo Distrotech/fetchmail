@@ -3,6 +3,7 @@
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
 * Reject candidate headers for the MAIL FROM address that have \n in them.
+* Add capability to insert poll trace data in the Received line.
 
 fetchmail-5.8.5 (Tue May 29 20:01:39 EDT 2001), 20650 lines:
 

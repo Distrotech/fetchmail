@@ -849,6 +849,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
 #endif
     FLAG_MERGE(expunge);
 
+    FLAG_MERGE(tracepolls);
     FLAG_MERGE(properties);
 #undef FLAG_MERGE
 }
@@ -1816,6 +1817,11 @@ static void dump_params (struct runctl *runp,
 			printf("\t%s\n", idp->id);
 	    }
 	}
+
+        if (ctl->tracepolls)
+            printf(_("  Poll trace information will be added to the Received header.\n"));
+        else if (outlevel >= O_VERBOSE)
+            printf(_("  No poll trace information will be added to the Received header.\n.\n"));
 
 	if (ctl->properties)
 	    printf(_("  Pass-through properties \"%s\".\n"),

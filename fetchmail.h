@@ -291,6 +291,7 @@ struct query
     flag sslcertck;		/* Strictly check the server cert. */
     char *sslfingerprint;	/* Fingerprint to check against */
     char *properties;		/* passthrough properties for extensions */
+    flag tracepolls;		/* if TRUE, add poll trace info to Received */
 
     /* internal use -- per-poll state */
     flag active;		/* should we actually poll this server? */

@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.35"
+version = "1.36"
 
 from Tkinter import *
 from Dialog import *
@@ -94,6 +94,7 @@ class Server:
 	self.plugout = None		# Plugin command for going to listener
 	self.netsec = None		# IPV6 security options
         self.principal = None		# Kerberos principal
+        self.tracepolls = FALSE   # Add X-Fetchmail-Account header?
 	self.users = []			# List of user entries for site
 	Server.typemap = (
 	    ('pollname',  'String'),
@@ -116,7 +117,8 @@ class Server:
 	    ('plugin',   'String'),
 	    ('plugout',  'String'),
 	    ('netsec',   'String'),
-	    ('principal','String'))
+	    ('principal','String'),
+            ('tracepolls','String'))
 
     def dump(self, folded):
 	res = ""
@@ -165,6 +167,9 @@ class Server:
 		res = res + "\n    "
 	    else:
 		res = res + " "
+
+        if self.tracepolls:
+            res = res + "tracepolls\n"
 
 	if self.interface:
             res = res + "interface " + str(self.interface)

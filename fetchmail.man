@@ -268,6 +268,15 @@ comma-separated list of folders) to be retrieved.  The syntax of the
 folder name is server-dependent.  This option is not available under
 POP3, ETRN, or ODMR.
 .TP
+.B \--tracepolls
+(Keyword: tracepolls)
+Tell fetchail to poll trace information in the form `polling %s
+account %s' to the Received line it generates, where the %s parts are
+replaced by the user's remote name and the poll label (the Received
+header also normally inclodes the server's truename).  This can be
+used to facilate mail filtering based on the account it is being
+received from.
+.TP
 .B \--ssl
 (Keyword: ssl)
 Causes the connection to the mail server to be encrypted via SSL.  Connect
@@ -965,6 +974,20 @@ option (keyword: set showdots) forces fetchmail to show progress dots
 even if the current tty is not stdout (for example logfiles).
 Starting with fetchmail version 5.3.0, 
 progress dots are only shown on stdout by default.
+.PP
+By specifying the
+.B --tracepolls
+option, you can ask fetchmail to add information to the Received
+header on the form "polling {label} account {user}", where {label} is
+the account label (from the specified rcfile, normally ~/.fetchmailrc)
+and {user} is the username which is used to log on to the mail
+server. This header can be used to make filtering email where no
+useful header information is available and you want mail from
+different accounts sorted into different mailboxes (this could, for
+example, occur if you have an account on the same server running a
+mailing list, and are subscribed to the list using that account). The
+default is not adding any such header.  In
+.fetchmailrc, this is called `tracepolls'.
 
 .SH RETRIEVAL FAILURE MODES
 The protocols \fIfetchmail\fR uses to talk to mailservers are next to
@@ -1410,6 +1433,9 @@ Max # messages to fetch in single connect
 T}
 expunge 	-e	T{
 Perform an expunge on every #th message (IMAP and POP3 only)
+T}
+tracepolls	\&	T{
+Add poll tracing information to the Received header
 T}
 properties  	\&	T{
 String value is ignored by fetchmail (may be used by extension scripts)

@@ -1067,15 +1067,18 @@ static int readheaders(int sock,
 	    /*
 	     * This header is technically invalid under RFC822.
 	     * POP3, IMAP, etc. are not legal mail-parameter values.
-	     *
-	     * We used to include ctl->remotename in this log line,
-	     * but this can be secure information that would be bad
-	     * to reveal.
 	     */
-	    sprintf(buf, "\tby %s with %s (fetchmail-%s)\r\n",
+	    sprintf(buf, "\tby %s with %s (fetchmail-%s)",
 		    fetchmailhost,
 		    protocol->name,
 		    VERSION);
+	    if (ctl->tracepolls)
+	    {
+		sprintf(buf + strlen(buf), " polling %s account %s",
+			ctl->server.pollname, 
+			ctl->remotename);
+	    }
+	    strcat(buf, "\r\n");
 	    n = stuffline(ctl, buf);
 	    if (n != -1)
 	    {

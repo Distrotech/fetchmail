@@ -70,6 +70,7 @@ postmaster	{ return POSTMASTER; }
 bouncemail	{ return BOUNCEMAIL; }
 spambounce	{ return SPAMBOUNCE; }
 warnings	{ return WARNINGS; }
+tracepolls	{ return TRACEPOLLS; }
 
 defaults 	{ return DEFAULTS; }
 server 		{ return POLL; }

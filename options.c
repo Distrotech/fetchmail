@@ -85,6 +85,8 @@
 #define LA_SHOWDOTS	57
 #define LA_PRINCIPAL	58
 
+#define LA_TRACEPOLLS	59
+
 /* options still left: CDgGhHjJoORwWxXYz */
 static const char *shortoptions = 
 	"?Vcsvd:NqL:f:i:p:UP:A:t:E:Q:u:akKFnl:r:S:Z:b:B:e:m:T:I:M:yw:";
@@ -168,6 +170,8 @@ static const struct option longoptions[] = {
   {"configdump",no_argument,	   (int *) 0, LA_CONFIGDUMP  },
 
   {"yydebug",	no_argument,	   (int *) 0, LA_YYDEBUG     },
+
+  {"tracepolls",no_argument,       (int *) 0, LA_TRACEPOLLS  },
 
   {(char *) 0,  no_argument,       (int *) 0, 0              }
 };
@@ -615,6 +619,10 @@ struct query *ctl;	/* option record to be initialized */
 	    rctl->use_syslog = FLAG_FALSE;
 	    break;
 
+        case LA_TRACEPOLLS:
+            ctl->tracepolls = FLAG_TRUE;
+            break;
+
 	case '?':
 	case LA_HELP:
 	default:
@@ -664,6 +672,7 @@ struct query *ctl;	/* option record to be initialized */
 	P(_("  -E, --envelope    envelope address header\n"));
 	P(_("  -Q, --qvirtual    prefix to remove from local user id\n"));
 	P(_("      --principal   mail service principal\n"));
+        P(_("      --addaccthdr  add an X-Fetchmail-Account header (\"label <user@host>\")\n"));
 
 	P(_("  -u, --username    specify users's login on server\n"));
 	P(_("  -a, --all         retrieve old and new messages\n"));

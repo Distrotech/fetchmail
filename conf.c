@@ -384,6 +384,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	listdump("smtphunt", ctl->smtphunt);
 	stringdump("smtpaddress", ctl->smtpaddress);
 	stringdump("smtpname", ctl->smtpname);
+        booldump("tracepolls", ctl->tracepolls);
 
 	indent('\0');
 	fprintf(stdout, "'antispam':'");

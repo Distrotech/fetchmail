@@ -75,6 +75,7 @@ extern char * yytext;
 %token DNS SERVICE PORT UIDL INTERVAL MIMEDECODE IDLE CHECKALIAS 
 %token SSL SSLKEY SSLCERT SSLPROTO SSLCERTCK SSLCERTPATH SSLFINGERPRINT
 %token PRINCIPAL
+%token TRACEPOLLS
 
 %%
 
@@ -234,6 +235,8 @@ serv_option	: AKA alias_list
 		| DNS			{current.server.dns = FLAG_TRUE;}
 		| NO DNS		{current.server.dns = FLAG_FALSE;}
 		| NO ENVELOPE		{current.server.envelope = STRING_DISABLED;}
+		| TRACEPOLLS		{current.tracepolls = FLAG_TRUE;}
+		| NO TRACEPOLLS		{current.tracepolls = FLAG_FALSE;}
 		;
 
 userspecs	: user1opts		{record_current(); user_reset();}
