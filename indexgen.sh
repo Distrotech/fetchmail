@@ -144,11 +144,11 @@ Raymond drop permanently off the net for any reason.<P>
 
 Fetchmail entered full production status with the 2.0 version in
 November 1996 after about five months of evolution from the ancestral
-<IT>popclient</IT> utility. It has since come into extremely wide use in the
-Internet/Unix/Linux community.  The Red Hat and Debian Linux distributions
-include it.  A customized version is used at Whole Earth 'Lectronic
-Link. Several large ISPs are known to recommend it to Unix-using SLIP
-and PPP customers.<p>
+<IT>popclient</IT> utility. It has since come into extremely wide use
+in the Internet/Unix/Linux community.  The Red Hat, Debian and
+S.u.S.e. Linux distributions include it.  A customized version is used
+at Whole Earth 'Lectronic Link. Several large ISPs are known to
+recommend it to Unix-using SLIP and PPP customers.<p>
 
 Over five hundred people have participated on the fetchmail beta
 list.  While it's hard to count free software users, we can estimate
