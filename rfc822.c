@@ -46,6 +46,14 @@ const char *host;	/* server hostname */
     buf = (char *)xrealloc(buf, strlen(buf) + addresscount * strlen(host) + 1);
 #endif /* TESTMAIN */
 
+    /*
+     * This is going to foo up on some ill-formed addresses.  For example,
+     * "From: John Smith (Systems) <jsmith@domain>" will get rewritten as 
+     * "From: John Smith@my.pop.server (Systems) <jsmith@domain>" because
+     * the state machine can't look ahead to the <> part past the comment
+     * and instead treats `John Smith' as a bareword address.
+     */
+
     parendepth = state = 0;
     has_host_part = has_bare_name_part = FALSE;
     for (from = buf; *from; from++)

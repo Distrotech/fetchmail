@@ -5,9 +5,6 @@
 * More log levels?
 * Allow an explicit "append" option to specify what rewrite appends?  (For
   when user's pop3 host isn't the same as his SMTP host.)
-* Rewrite maps "From: John Smith (Systems) <jsmith@domain>" to 
-  "From: John Smith@my.pop.server (Systems) <jsmith@domain>".  Is this
-  just GIGO, or should we try to cope?
 
 				Other TO-DO items:
 
