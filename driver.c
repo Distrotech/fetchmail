@@ -459,6 +459,13 @@ static int readheaders(int sock,
 		}
 	    }
 
+	    /*
+	     * Decode MIME encoded headers. We MUST do this before
+	     * looking at the Content-Type / Content-Transfer-Encoding
+	     * headers (RFC 2046).
+	     */
+	    if (ctl->mimedecode)
+		UnMimeHeader(buf);
 
 	    line = (char *) realloc(line, strlen(line) + strlen(buf) +1);
 
@@ -764,13 +771,6 @@ static int readheaders(int sock,
      * In fact we have to, as this will tell us where to forward to.
      */
 
-    /* Decode MIME encoded headers. We MUST do this before
-     * looking at the Content-Type / Content-Transfer-Encoding
-     * headers (RFC 2046).
-     */
-    if (ctl->mimedecode) {
-	UnMimeHeader(msgblk.headers);
-    }
     /* Check for MIME headers indicating possible 8-bit data */
     ctl->mimemsg = MimeBodyType(msgblk.headers, ctl->mimedecode);
 

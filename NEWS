@@ -8,9 +8,11 @@
 
 				Release Notes:
 
-fetchmail-5.1.0 ():
+fetchmail-5.0.5 ():
 * Merged in official OpenBSD port patches.
 * Added Spanish and German descriptions to spec (thanks to Horst von Brand).
+* Moved MIME decoding earlier to avoid messing with header length after
+  offsets have been calculated.
 
 There are 261 people on fetchmail-friends and 408 on fetchmail-announce.
 
