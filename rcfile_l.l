@@ -110,7 +110,7 @@ remote(folder)? {
 [0-9]+		{ yylval.number = atoi(yytext); return NUMBER; }
 
 \"[^\"]*\"	{
-			char buf[POPBUFSIZE];
+			char buf[MSGBUFSIZE];
 
 			yytext[strlen(yytext)-1] = '\0';
 			escapes(yytext+1, buf);
@@ -118,7 +118,7 @@ remote(folder)? {
 			return STRING;
 		}
 [^=;:, \t\r\n]+	{
-			char buf[POPBUFSIZE];
+			char buf[MSGBUFSIZE];
 
 			escapes(yytext, buf);
 			yylval.sval = (char *) xstrdup(buf);

@@ -45,12 +45,12 @@ extern char *strstr();	/* needed on sysV68 R3V7.1. */
 #define IMAP4rev1	1	/* IMAP4 rev 1, RFC2060 */
 
 static int count, seen, recent, unseen, deletions,expunged, imap_version;
-static char capabilities[POPBUFSIZE+1];
+static char capabilities[MSGBUFSIZE+1];
 
 int imap_ok(int sock, char *argbuf)
 /* parse command response */
 {
-    char buf [POPBUFSIZE+1];
+    char buf [MSGBUFSIZE+1];
 
     seen = 0;
     do {
@@ -746,7 +746,7 @@ static int imap_getrange(int sock,
 static int imap_getsizes(int sock, int count, int *sizes)
 /* capture the sizes of all messages */
 {
-    char buf [POPBUFSIZE+1];
+    char buf [MSGBUFSIZE+1];
 
     /*
      * Some servers (as in, PMDF5.1-9.1 under OpenVMS 6.1)
@@ -789,7 +789,7 @@ static int imap_is_old(int sock, struct query *ctl, int number)
 static int imap_fetch_headers(int sock, struct query *ctl,int number,int *lenp)
 /* request headers of nth message */
 {
-    char buf [POPBUFSIZE+1];
+    char buf [MSGBUFSIZE+1];
     int	num;
 
     /* expunges change the fetch numbers */
@@ -819,7 +819,7 @@ static int imap_fetch_headers(int sock, struct query *ctl,int number,int *lenp)
 static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
 /* request body of nth message */
 {
-    char buf [POPBUFSIZE+1], *cp;
+    char buf [MSGBUFSIZE+1], *cp;
     int	num;
 
     /* expunges change the fetch numbers */
@@ -885,7 +885,7 @@ static int imap_trail(int sock, struct query *ctl, int number)
 
     for (;;)
     {
-	char buf[POPBUFSIZE+1];
+	char buf[MSGBUFSIZE+1];
 	int ok;
 
 	if ((ok = gen_recv(sock, buf, sizeof(buf))))

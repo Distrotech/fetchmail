@@ -134,7 +134,7 @@ int main (int argc, char **argv)
 	exit(PS_SYNTAX);
 
     /* this hint to stdio should help messages come out in the right order */
-    setvbuf(stdout, NULL, _IOLBF, POPBUFSIZE);
+    setvbuf(stdout, NULL, _IOLBF, MSGBUFSIZE);
 
     if (versioninfo)
     {

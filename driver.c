@@ -2234,7 +2234,7 @@ const char *fmt;	/* printf-style format */
 va_dcl
 #endif
 {
-    char buf [POPBUFSIZE+1];
+    char buf [MSGBUFSIZE+1];
     va_list ap;
 
     if (protocol->tagged)
@@ -2315,7 +2315,7 @@ va_dcl
 #endif
 {
     int ok;
-    char buf [POPBUFSIZE+1];
+    char buf [MSGBUFSIZE+1];
     va_list ap;
     int oldphase = phase;	/* we don't have to be re-entrant */
 

@@ -33,7 +33,7 @@ static int etrn_getrange(int sock, struct query *ctl, char *id, int *countp,
 /* send ETRN and interpret the response */
 {
     int ok, opts;
-    char buf [POPBUFSIZE+1];
+    char buf [MSGBUFSIZE+1];
     struct idlist *qnp;		/* pointer to Q names */
 
     if ((ok = SMTP_ehlo(sock, ctl->server.truename, &opts)))

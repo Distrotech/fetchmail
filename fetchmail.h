@@ -28,11 +28,11 @@
  * from IMAP RFCs up to 2060, so these are mostly from POP3.
  */
 #define		HOSTLEN		635	/* max hostname length (RFC1123) */
-#define		POPBUFSIZE	512	/* max length of respone (RFC1939) */
+#define		POPBUFSIZE	512	/* max length of response (RFC1939) */
 #define		USERNAMELEN	40	/* max POP3 arg length (RFC1939) */
 #define		IDLEN		128	/* max length of UID (RFC1939) */
 
-/* clear a netbsd kernel parameter out of the way */ 
+/* clear a netBSD kernel parameter out of the way */ 
 #undef		MSGBUFSIZE
 
 #define		MSGBUFSIZE	2048   	/* size of message read buffer */
