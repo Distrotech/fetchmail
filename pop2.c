@@ -131,6 +131,7 @@ const static struct method pop2 =
 int doPOP2 (struct query *ctl)
 /* retrieve messages using POP2 */
 {
+    peek_capable = FALSE;
     return(do_protocol(ctl, &pop2));
 }
 

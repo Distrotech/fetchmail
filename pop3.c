@@ -276,6 +276,7 @@ int doPOP3 (struct query *ctl)
 	fprintf(stderr,"Option --remote is not supported with POP3\n");
 	return(PS_SYNTAX);
     }
+    peek_capable = FALSE;
     return(do_protocol(ctl, &pop3));
 }
 

@@ -1,6 +1,16 @@
 			Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-2.3 ()
+
+features -- 
+
+* Full IMAP4 support -- we now probe for IMAP4 capabilities and use 
+  RFC822.PEEK when possible to avoid marking messages seen on the server
+  before they are deleted.  This improves recovery from sendmail and
+  dropped-connection errors.
+
+------------------------------------------------------------------------------
 fetchmail-2.2 (Mon Dec  9 00:15:01 EST 1996):
 
 features --

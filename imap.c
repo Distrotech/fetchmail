@@ -1,5 +1,5 @@
 /*
- * imap.c -- IMAP2bis protocol methods
+ * imap.c -- IMAP2bis/IMAP4 protocol methods
  *
  * Copyright 1996 by Eric S. Raymond
  * All rights reserved.
@@ -16,7 +16,7 @@
 #include  "socket.h"
 #include  "fetchmail.h"
 
-static int count, seen, recent, unseen;
+static int count, seen, recent, unseen, imap4;
 
 int imap_ok (FILE *sockfp,  char *argbuf)
 /* parse command response */
@@ -74,9 +74,17 @@ int imap_getauth(FILE *sockfp, struct query *ctl, char *buf)
 /* apply for connection authorization */
 {
     /* try to get authorized */
-    return(gen_transact(sockfp,
+    int ok = gen_transact(sockfp,
 		  "LOGIN %s \"%s\"",
-		  ctl->remotename, ctl->password));
+		  ctl->remotename, ctl->password);
+
+    if (ok)
+	return(ok);
+
+    /* probe to see if we're running IMAP4 and can use RFC822.PEEK */
+    imap4 = ((gen_transact(sockfp, "CAPABILITY")) == 0);
+
+    return(0);
 }
 
 static int imap_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
@@ -144,7 +152,16 @@ static int imap_fetch(FILE *sockfp, int number, int *lenp)
     char buf [POPBUFSIZE+1];
     int	num;
 
-    gen_send(sockfp, "FETCH %d RFC822", number);
+    /*
+     * If we're using IMAP4, we can fetch the message without setting its
+     * seen flag.  This is good!  It means that if the protocol exchange
+     * craps out during the message, it will still be marked `unseen' on
+     * the server 
+     */
+    if (imap4)
+	gen_send(sockfp, "FETCH %d RFC822.PEEK", number);
+    else
+	gen_send(sockfp, "FETCH %d RFC822", number);
 
     /* looking for FETCH response */
     do {
@@ -173,7 +190,12 @@ static int imap_trail(FILE *sockfp, struct query *ctl, int number)
 static int imap_delete(FILE *sockfp, struct query *ctl, int number)
 /* set delete flag for given message */
 {
-    return(gen_transact(sockfp, "STORE %d +FLAGS (\\Deleted)", number));
+    /* use SILENT if possible as a minor throughput optimization */
+    return(gen_transact(sockfp,
+			imap4 
+				? "STORE %d +FLAGS.SILENT (\\Deleted)"
+				: "STORE %d +FLAGS (\\Deleted)", 
+			number));
 }
 
 const static struct method imap =

@@ -47,6 +47,7 @@
 
 int batchlimit;		/* how often to tear down the delivery connection */
 int batchcount;		/* count of messages sent in current batch */
+int peek_capable;	/* can we peek for better error recovery? */
 
 static const struct method *protocol;
 static jmp_buf	restart;
@@ -935,16 +936,19 @@ const struct method *proto;	/* protocol method table */
 	else if (count > 0)
 	{    
 	    /*
-	     * What forces this code is that in POP3 you can't fetch a
-	     * message without having it marked `seen'.
+	     * What forces this code is that in POP3 and IMAP2BIS you can't
+	     * fetch a message without having it marked `seen'.  In IMAP4,
+	     * on the other hand, you can (peek_capable is set to convey
+	     * this).
 	     *
-	     * The result is that if there's any kind of transient error
-	     * (DNS lookup failure, or sendmail refusing delivery due to
-	     * process-table limits) the message will be marked "seen" on
-	     * the server without having been delivered.  This is not a
-	     * big problem if fetchmail is running in foreground, because
-	     * the user will see a "skipped" message when it next runs and
-	     * get clued in.
+	     * The result of being unable to peek is that if there's
+	     * any kind of transient error (DNS lookup failure, or
+	     * sendmail refusing delivery due to process-table limits)
+	     * the message will be marked "seen" on the server without
+	     * having been delivered.  This is not a big problem if
+	     * fetchmail is running in foreground, because the user
+	     * will see a "skipped" message when it next runs and get
+	     * clued in.
 	     *
 	     * But in daemon mode this leads to the message being silently
 	     * ignored forever.  This is not acceptable.
@@ -953,7 +957,7 @@ const struct method *proto;	/* protocol method table */
 	     * previous pass and forcing all messages to be considered new
 	     * if it's nonzero.
 	     */
-	    int	force_retrieval = (ctl->errcount > 0);
+	    int	force_retrieval = !peek_capable && (ctl->errcount > 0);
 
 	    ctl->errcount = 0;
 

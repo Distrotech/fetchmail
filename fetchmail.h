@@ -149,6 +149,7 @@ extern char *cmd_logfile;	/* if --logfile was set */
 /* these get computed */
 extern int batchlimit;		/* if --batchlimit was set */
 extern int batchcount;		/* count of messages sent in current batch */
+extern int peek_capable;	/* can we read msgs without setting seen? */
 
 /* miscellaneous global controls */
 extern char *rcfile;		/* path name of rc file */
