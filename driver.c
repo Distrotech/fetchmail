@@ -5,7 +5,7 @@
  * For license terms, see the file COPYING in this directory.
  */
 
-#include  <config.h>
+#include  "config.h"
 #include  <stdio.h>
 #include  <setjmp.h>
 #include  <errno.h>
@@ -46,7 +46,6 @@
 #include <netinet/in.h>
 #include <netdb.h>
 #endif /* KERBEROS_V4 */
-#include  "socket.h"
 #include  "fetchmail.h"
 #include  "socket.h"
 #include  "smtp.h"
