@@ -9,11 +9,9 @@
 <BODY>
 <H1>Frequently Asked Questions About Fetchmail</H1>
 
-$Id: fetchmail-FAQ.html,v 1.8 1997/04/17 15:14:34 esr Exp $<p>
+$Id: fetchmail-FAQ.html,v 1.9 1997/05/03 02:38:26 esr Exp $<p>
 
-(Added <a href="#B3">B3</a> on broken makes, <a href="http:#C6">C6</a>
-on working with qmail and <a href="http:#C7">C7</a> on managing
-fetchmail in the presence of multiple login sessions.)<p>
+(Added <a href="#O4">O3</a> on nonexistent logfiles.)<p>
 
 Before reporting any bug, please read <a href="#G3">G3</a> for advice
 on how to include diagnostic information that will get your bug fixed
@@ -84,6 +82,10 @@ when I may have multiple login sessions going?</a><br>
 <a href="#X2">X2. Spurious blank lines are appearing in the headers of fetched mail.</a><br>
 <a href="#X3">X3. My mail client can't see a Subject line.</a><br>
 <a href="#X4">X4. Messages containing "From" at start of line are being split.</a><br>
+
+<h1>Other Problems:</h1>
+
+<a href="#O4">O4. The --logfile option doesn't work if the logfile doesn't exist.</a><br>
 
 <h1>Answers:</h1>
 <hr>
@@ -889,7 +891,7 @@ X- headers correctly.  If this is your problem, all I can suggest is
 replacing IDA sendmail, because it's broken and not RFC822 conformant.<p>
 
 <hr>
-<h2>X4. Messages containing "From" at start of line are being split.</a></h2>
+<h2><a name="X4">X4. Messages containing "From" at start of line are being split.</a></h2>
 
 If you know the messages aren't split in your server mailbox, then this
 is a problem with your POP/IMAP server, your client-side SMTP listener or
@@ -924,6 +926,16 @@ describing your local delivery agent.  Try inserting the `E' option in the
 flags part (the F= string).  This will make sendmail turn each dangerous
 start-of-line From into a >From, preventing programs further downstream
 from acting up.<p>
+
+<hr>
+<h2><a name="O4">O4. The --logfile option doesn't work if the logfile doesn't exist.</a></h2>
+
+This is a feature, not a bug.  It's in line with normal practice for
+system daemons and allows you to suppress logging by removing the log,
+without hacking potentially fragile startup scripts.  To get around
+it, just touch(1) the logfile before you run fetchmail (this will have
+no effect on the contents of the logfile if it already exists).<P>
+
 <HR>
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
 </BODY>
