@@ -1714,7 +1714,7 @@ looks like:
 
 .nf
   poll pop.provider.net:
-        user maildrop with pass secret1 to golux hurkle=happy snark here
+        user maildrop with pass secret1 to golux 'hurkle'='happy' snark here
 .fi
 
 This says that the mailbox of account `maildrop' on the server is a
@@ -1728,7 +1728,7 @@ Here's an example of another kind of multidrop connection:
 
 .nf
   poll pop.provider.net localdomains loonytoons.org toons.org:
-        user maildrop with pass secret1 to esr * here
+        user maildrop with pass secret1 to 'esr' * here
 .fi
 
 This also says that the mailbox of account `maildrop' on the server is
@@ -1745,16 +1745,20 @@ preconnect command sets up the ssh.
 poll mailhost.net via localhost port 1234 with proto pop3:
         preconnect "ssh -f -L 1234:mailhost.net:110
 		mailhost.net sleep 20 </dev/null >/dev/null";
+	user esr is esr here
 .fi
 
 .PP
-Here's an another example configuration using ssh and the plugin option.
-The queries are made directly on the stdin and stdout of imapd via ssh.
-Note that in this setup, IMAP authentication can be skipped.
+Here's an example configuration using ssh and the plugin option (this
+method is better, as it doesn't require the IMAP port to be open on
+the server).  The queries are made directly on the stdin and stdout of
+imapd via ssh.  Note that in this setup, IMAP authentication can be
+skipped.
 
 .nf
 poll mailhost.net with proto imap and auth ssh:
         plugin "ssh %h /usr/sbin/imapd";
+	user esr is esr here
 .fi
 
 .SH THE USE AND ABUSE OF MULTIDROP MAILBOXES
