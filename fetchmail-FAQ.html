@@ -896,6 +896,15 @@ one of these and it flakes out on you a lot, try setting a small
 to the server but will mean it actually executes changes to the queue
 more often.<P>
 
+Qualcomm's qpopper, used at many BSD Unix sites, is better behaved.
+If its connection is dropped, it will first execute all DELE commands (as
+though you had issued an QUIT -- this is a technical violation of
+the RFCs, but a good idea in a world of flaky phone lines). Then it
+will re-queue any message that was being downloaded at hangup time.
+Still, qpopper may require a noticeable amount of time to do deletions
+and clean up its queue.  (Fetchmail waits a bit before retrying in
+order to avoid a `lock busy' error.)<P>
+
 <hr>
 <h2><a name="M1">M1. I've declared local names, but all my multidrop
 mail is going to root anyway.</a></h2>
@@ -903,13 +912,17 @@ mail is going to root anyway.</a></h2>
 Somehow your fetchmail is never matching the hostname part of
 recipient names to the name of the mailserver machine.  This probably
 means it is unable to recognize hostname parts as being DNS names of
-the mailserver, and may indicate some kind of DNS configuration
+the mailserver, and indicates some kind of DNS configuration
 problem either on the server or your client machine. <p>
 
 The easiest workaround is to write enough aka declarations to cover
 all of your mailserver's aliases, then say `no dns'.  This will take
 DNS out of the picture (though it means mail may be uncollected if
 it's sent to an alias of the server that you don't have listed). <p>
+
+It would be better to fix your DNS, however.  DNS problems can hurt
+you in lots of ways, for example by making your machines
+intermittently or permanently unreachable to the rest of the net.<P>
 
 <hr>
 <h2><a name="M2">M2. I can't seem to get fetchmail to route to a local domain properly.</a></h2>
@@ -1122,7 +1135,7 @@ biff n
 
 to solve the problem system-wide.<P>
 
-$Id: fetchmail-FAQ.html,v 1.43 1997/07/02 19:50:03 esr Exp $<p>
+$Id: fetchmail-FAQ.html,v 1.44 1997/07/08 03:23:25 esr Exp $<p>
 
 <HR>
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
