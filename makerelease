@@ -96,11 +96,12 @@ while (<NEWS>) {
 
 $oldrcs = $oldid;
 $oldrcs =~ tr/-/./;
-print REPORT <<EOF;
 
-By popular demand, diffs from the previous release have been omitted.
-EOF
-#Diffs from the previous ($oldrcs) release follow as a MIME attachment.
+if ($diffs) {
+	print REPORT "Diffs from the previous ($oldrcs) release follow as a MIME attachment."
+} else {
+        print REPORT "By popular demand, diffs from the previous release have been omitted."
+}
 
 close(NEWS);
 
@@ -114,15 +115,15 @@ if ($rcsid eq '<workfile>') {
 print "Diff size:";
 system("wc <DIFFS.$$");
 
-rename("PREAMBLE.$$", "RELEASE.NOTES");
+if ($diffs) {
+	system "metasend -b -D 'fetchmail-$rcsid announcement' -m 'text/plain' -e 7bit -f PREAMBLE.$$ -n -D 'diff -u between -$oldrcs $rcsid' -m 'text/plain' -e 7bit -f DIFFS.$$ -o RELEASE.NOTES";
+} else {
+	rename("PREAMBLE.$$", "RELEASE.NOTES");
+}
 system("chown esr RELEASE.NOTES");
 chmod(0700, "RELEASE.NOTES");
-# If we ever want to go back to enclosing diffs.
-if ($diffs) {
-	system "metasend -b -D 'fetchmail-$rcsid announcement' -m 'text/plain' -e 7bit -f PREAMBLE.$$ -n -D 'diff -u between -$oldrcs $rcsid' -m 'text/plain' -e 7bit -f DIFFS.$$ -o RELEASE_NOTES";
-}
 
-unlink("PREAMBLE.$$");
+#unlink("PREAMBLE.$$");
 unlink("DIFFS.$$");
 
 print "Building index page...\n";
