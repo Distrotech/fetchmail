@@ -147,7 +147,7 @@ int num;
     int ok;
 
     if ((ok = gen_transact(sockfp, "FETCH %d FLAGS", num)) != 0)
-	exit(PS_ERROR);
+	return(PS_ERROR);
 
     return(seen);
 }
