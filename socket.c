@@ -163,7 +163,7 @@ int SockOpen(const char *host, const char *service, const char *options,
     }
     if (connect(i, (struct sockaddr *) ai->ai_addr, ai->ai_addrlen) < 0) {
 	freeaddrinfo(ai);
-	SockClose(i);
+	close(i);	/* don't use SockClose, no traffic yet */
 	return -1;
     }
 #endif
@@ -226,7 +226,7 @@ int SockOpen(const char *host, int clientPort, const char *options,
         if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) < 0)
         {
             int olderr = errno;
-            SockClose(sock);
+            close(sock);	/* don't use SockClose, no traffic yet */
             h_errno = 0;
             errno = olderr;
             return -1;
@@ -272,14 +272,14 @@ int SockOpen(const char *host, int clientPort, const char *options,
 	    memcpy(&ad.sin_addr, *pptr, sizeof(struct in_addr));
 	    if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) == 0)
 		break; /* success */
-	    SockClose(sock);
+	    close(sock);	/* don't use SockClose, no traffic yet */
 	    memset(&ad, 0, sizeof(ad));
 	    ad.sin_family = AF_INET;
 	}
 	if(*pptr == NULL)
 	{
 	    int olderr = errno;
-	    SockClose(sock);
+	    close(sock);	/* don't use SockClose, no traffic yet */
 	    h_errno = 0;
 	    errno = olderr;
 	    return -1;
