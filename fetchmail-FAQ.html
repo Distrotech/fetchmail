@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2002/06/21 09:06:59 $
+<td width="30%" align=right>$Date: 2002/07/10 13:56:19 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -116,6 +116,7 @@ IP address?</a><br>
 messages but before deleting them</a><br>
 <a href="#R9">R9. Fetchmail is timing out during message fetches</a><br>
 <a href="#R10">R10. Fetchmail is dying with SIGPIPE.</a><br>
+<a href="#R11">R11. My server is hanging up or emitting errors on CAPA.</a><br>
 
 <h1>Hangs and lockups:</h1>
 
@@ -2163,6 +2164,12 @@ failures with a SIGPIPE as the sendmail instance dies.  The problem is
 messages with a single dot at start of a text line.</p>
 
 <hr>
+<a name="R11">R11. My server is hanging up or emitting errors on CAPA.</a></h2>
+
+<p>Your POP3 server is broken.  You can work around this with the
+declaration <tt>auth password</tt> in your .fetchmailrc.</p>
+
+<hr>
 <h2><a name="H1">H1. Fetchmail hangs when used with pppd.</a></h2>
 
 <p>Your problem may be with pppd's `demand' option.  We have a report that
@@ -3073,7 +3080,7 @@ the received date from the last Received header.</p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2002/06/21 09:06:59 $
+<td width="30%" align=right>$Date: 2002/07/10 13:56:19 $
 </table>
 
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@thyrsus.com&gt;</A></ADDRESS>

@@ -1255,7 +1255,7 @@ port    	-P	T{
 Specify TCP/IP service port
 T}
 auth[enticate]	\&	T{
-Set authentication type (default `password')
+Set authentication type (default `any')
 T}
 timeout  	-t	T{
 Server inactivity timeout in seconds (default 300)

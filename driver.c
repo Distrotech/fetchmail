@@ -1423,7 +1423,7 @@ is restored."));
 
     cleanUp:
 	/* we only get here on error */
-	if (err != 0 && err != PS_SOCKET)
+	if (err != 0 && err != PS_SOCKET && err != PS_REPOLL)
 	{
 	    stage = STAGE_LOGOUT;
 	    (ctl->server.base_protocol->logout_cmd)(mailserver_socket, ctl);

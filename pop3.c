@@ -70,7 +70,9 @@ static int pop3_ok (int sock, char *argbuf)
 	}
 	else if (strncmp(buf,"-ERR", 4) == 0)
 	{
-	    if (stage > STAGE_GETAUTH) 
+	    if (stage == STAGE_FETCH)
+		ok = PS_TRANSIENT;
+	    else if (stage > STAGE_GETAUTH)
 		ok = PS_PROTOCOL;
 	    /*
 	     * We're checking for "lock busy", "unable to lock", 
@@ -229,7 +231,13 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 		}
 	    }
 	    /* we are in STAGE_GETAUTH! */
-	    else if (ok == PS_AUTHFAIL)
+	    else if (ok == PS_AUTHFAIL ||
+		/* Some servers directly close the socket. However, if we
+		 * have already authenticated before, then a previous CAPA
+		 * must have succeeded. In that case, treat this as a
+		 * genuine socket error and do not change the auth method.
+		 */
+		(ok == PS_SOCKET && !ctl->wehaveauthed))
 	    {
 		ctl->server.authenticate = A_PASSWORD;
 		/* repoll immediately */

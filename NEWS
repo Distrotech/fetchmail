@@ -2,6 +2,11 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Workaround for the CAPA error problem is documented in the FAQ.
+* Updated Polish and Catalan translations.
+* Sunil Shetye's patch to improve CAPA error handling.
+* Sunil Shetye's patch to improve handling of unreadable boxes in POP3.
+
 fetchmail-5.9.13 (Sat Jun 22 17:53:00 EDT 2002), 21791 lines:
 
 * Cygwin port fixes for socket.c.
