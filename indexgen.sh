@@ -199,9 +199,8 @@ significant changes in or additions to the related protocol RFCs.<p>
 
 The fetchmail code was developed under Linux, but has also been
 extensively tested under 4.4BSD, Solaris, AIX, and NEXTSTEP.  It should be
-readily portable to other Unix variants (it uses GNU autoconf).  Early
-versions were also ported to QNX, but the status of that port is
-presently unknown.  It is reported to build and run correctly under AmigaOS.<p>
+readily portable to other Unix variants (it uses GNU autoconf).  It is
+reported to build and run correctly under AmigaOS and QNX as well.<p>
 
 <H1>Fetchmail's funniest fan letter:</H1>
 
