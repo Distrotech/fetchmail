@@ -72,7 +72,7 @@ struct optrec *options;
   int status = PS_UNDEFINED;
 
   /* check for unsupported options */
-  if (options->limit) {
+  if (linelimit) {
     fprintf(stderr,"Option --limit is not supported in POP2\n");
     return(PS_SYNTAX);
   }

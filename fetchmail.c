@@ -50,16 +50,19 @@ int dump_options (struct optrec *options);
 int query_host(struct optrec *options);
 #endif
 
-/* Controls the detail of status/progress messages written to stderr */
-int outlevel;		/* see the O_.* constants in popclient.h */
-int versioninfo;	/* emit only version info */
+/* controls the detail level of status/progress messages written to stderr */
+int outlevel;    	/* see the O_.* constants above */
+int yydebug;		/* enable parse debugging */
 
-/* Daemon-mode control */
-int poll_interval;	/* polling interval for daemon mode */
-char *logfile;		/* logfile to ship progress reports to */ 
-int quitmode;		/* if -quit was set */
+/* daemon mode control */
+int poll_interval;	/* poll interval in seconds */
+char *logfile;		/* log file for daemon mode */
+int quitmode;		/* if --quit was set */
 
+/* miscellaneous global controls */
 char *poprcfile;	/* path name of rc file */
+int linelimit;		/* limit # lines retrieved per site */
+int versioninfo;	/* emit only version info */
 
 /* args for the MDA, parsed out in the usual fashion by parseMDAargs() */
 char *mda_argv [32];
@@ -265,7 +268,7 @@ int showversioninfo()
 
   return value:  none.
   calls:         none.
-  globals:       none.
+  globals:       linelimit, outlimit.
 *********************************************************************/
 
 int dump_options (options)
@@ -316,11 +319,11 @@ struct optrec *options;
 	printf("  (MDA would have been '%s')\n", options->mda);
     }
 
-  if (options->limit == 0)
+  if (linelimit == 0)
     printf("  No limit on retrieved message length.\n");
   else
     printf("  Text retrieved per message will be at most %d bytes.\n",
-	   options->limit);
+	   linelimit);
 }
 
 /*********************************************************************

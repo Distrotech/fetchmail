@@ -157,8 +157,8 @@ struct optrec *options;
            
       if (options->flush && number < first && !options->fetchall) 
         ok = 0;  /* no command to send here, will delete message below */
-      else if (options->limit) 
-        ok = POP3_sendTOP(number,options->limit,socket);
+      else if (linelimit) 
+        ok = POP3_sendTOP(number,linelimit,socket);
       else 
         ok = POP3_sendRETR(number,socket);
       if (ok != 0)

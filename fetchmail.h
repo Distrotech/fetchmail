@@ -81,17 +81,19 @@ struct prc_server {
 };
 
 
-/* Controls the detail of status/progress messages written to stderr */
-extern int outlevel;    /* see the O_.* constants above */
-extern int yydebug;	/* enable parse debugging */
-extern int versioninfo;	/* emit only version info */
+/* controls the detail level of status/progress messages written to stderr */
+extern int outlevel;    	/* see the O_.* constants above */
+extern int yydebug;		/* enable parse debugging */
 
 /* daemon mode control */
 extern int poll_interval;	/* poll interval in seconds */
 extern char *logfile;		/* log file for daemon mode */
 extern int quitmode;		/* if --quit was set */
 
+/* miscellaneous global controls */
 extern char *poprcfile;		/* path name of rc file */
+extern int linelimit;		/* limit # lines retrieved per site */
+extern int versioninfo;		/* emit only version info */
 
 #ifdef HAVE_PROTOTYPES
 

@@ -85,7 +85,7 @@ static struct option longoptions[] = {
 	   	 syntax errors.
   calls:         none.  
   globals:       writes outlevel, versioninfo, yydebug, logfile, 
-		 poll_interval, quitmode, poprcfile.  
+		 poll_interval, quitmode, poprcfile, linelimit.  
  *********************************************************************/
 
 int parsecmdline (argc,argv,options)
@@ -152,8 +152,8 @@ struct optrec *options;
         break;
       case 'l':
       case LA_LIMIT:
-        options->limit = atoi(optarg);
-        if (options->limit < 0) {
+        linelimit = atoi(optarg);
+        if (linelimit < 0) {
           fprintf(stderr,"Line count limit must be non-negative");
           errflag++;
         }
@@ -254,7 +254,7 @@ struct optrec *options;
     return(-1);
   }
   else {
-    if (options->limit && !got_kill) 
+    if (linelimit && !got_kill) 
       options->keep = !0;
     else
       ;
