@@ -414,6 +414,11 @@ int gen_recv();
 int gen_transact ();
 #endif
 
+/* lock.c: concurrency locking */
+void lock_setup(void), lock_assert(void);
+void lock_or_die(void), lock_release(void);
+int lock_state(void);
+
 /* use these to track what was happening when the nonresponse timer fired */
 #define GENERAL_WAIT	0	/* unknown wait type */
 #define OPEN_WAIT	1	/* waiting from mailserver open */

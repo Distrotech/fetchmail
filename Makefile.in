@@ -96,7 +96,7 @@ protobjs = rcfile_y.o rcfile_l.o socket.o getpass.o pop2.o pop3.o imap.o \
        sink.o rfc822.o smtp.o xmalloc.o uid.o mxget.o md5ify.o cram.o \
        kerberos.o gssapi.o opie.o rpa.o interface.o netrc.o base64.o \
        error.o unmime.o conf.o checkalias.o smbdes.o smbencrypt.o smbmd4.o \
-       smbutil.o ipv6-connect.o
+       smbutil.o ipv6-connect.o lock.o
 
 objs = $(protobjs) $(extras) $(EXTRAOBJ)
 
@@ -112,7 +112,7 @@ srcs = $(srcdir)/socket.c $(srcdir)/getpass.c $(srcdir)/pop2.c 		\
        $(srcdir)/base64.c $(srcdir)/error.c $(srcdir)/unmime.c		\
        $(srcdir)/conf.c $(srcdir)/checkalias.c $(srcdir)/smbdes.c	\
        $(srcdir)/smbencrypt.c $(srcdir)/smbmd4.c $(srcdir)/smbutil.c	\
-       $(srcdir)/ipv6-connect.c
+       $(srcdir)/ipv6-connect.c $(srcdir)/lock.c
 
 .SUFFIXES:
 .SUFFIXES: .o .c .h .y .l .ps .dvi .info .texi

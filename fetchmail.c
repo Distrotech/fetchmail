@@ -80,8 +80,6 @@ void *request = NULL;
 int requestlen = 0;
 #endif /* NET_SECURITY */
 
-static char *lockfile;		/* name of lockfile */
-static int lock_acquired;	/* have we acquired a lock */
 static int querystatus;		/* status of query */
 static int successes;		/* count number of successful polls */
 static int activecount;		/* count number of active entries */
@@ -90,17 +88,6 @@ static time_t parsetime;	/* time of last parse */
 
 static void terminate_run(int);
 static void terminate_poll(int);
-
-#ifdef HAVE_ON_EXIT
-static void unlockit(int n, void *p)
-#else
-static void unlockit(void)
-#endif
-/* must-do actions for exit (but we can't count on being able to do malloc) */
-{
-    if (lockfile && lock_acquired)
-	unlink(lockfile);
-}
 
 #if defined(__FreeBSD__) && defined(__FreeBSD_USE_KVM)
 /* drop SGID kmem privileage until we need it */
@@ -145,7 +132,6 @@ int main(int argc, char **argv)
 {
     int st, bkgd = FALSE;
     int parsestatus, implicitmode = FALSE;
-    FILE	*lockfp;
     struct query *ctl;
     netrc_entry *netrc_list;
     char *netrc_file, *tmpbuf;
@@ -187,19 +173,14 @@ int main(int argc, char **argv)
     outlevel = O_NORMAL;
 
     /*
-     * We used to arrange for the lockfile to be removed on exit close
+     * We used to arrange for the lock to be removed on exit close
      * to where the lock was asserted.  Now we need to do it here, because
-     * we might have re-executed in background with an existing lockfile
+     * we might have re-executed in background with an existing lock
      * as the result of a changed rcfile (see the code near the execvp(3)
      * call near the beginning of the polling loop for details).  We want
-     * to be sure the lockfile gets nuked on any error exit, basically.
+     * to be sure the lock gets nuked on any error exit, basically.
      */
-#ifdef HAVE_ATEXIT
-    atexit(unlockit);
-#endif
-#ifdef HAVE_ON_EXIT
-    on_exit(unlockit, (char *)NULL);
-#endif
+    lock_dispose();
 
     if ((parsestatus = parsecmdline(argc,argv, &cmd_run, &cmd_opts)) < 0)
 	exit(PS_SYNTAX);
@@ -279,21 +260,8 @@ int main(int argc, char **argv)
 #endif
 	report_init((run.poll_interval == 0 || nodetach) && !run.logfile);
 
-    /* set up to do lock protocol */
-#define	FETCHMAIL_PIDFILE	"fetchmail.pid"
-    if (!getuid()) {
-	xalloca(tmpbuf, char *,
-		sizeof(PID_DIR) + sizeof(FETCHMAIL_PIDFILE));
-	sprintf(tmpbuf, "%s/%s", PID_DIR, FETCHMAIL_PIDFILE);
-    } else {
-	xalloca(tmpbuf, char *, strlen(fmhome) + sizeof(FETCHMAIL_PIDFILE) + 2);
-	strcpy(tmpbuf, fmhome);
-	strcat(tmpbuf, "/");
-        if (fmhome == home)
- 	   strcat(tmpbuf, ".");
-	strcat(tmpbuf, FETCHMAIL_PIDFILE);
-    }
-#undef FETCHMAIL_PIDFILE
+    /* construct the lockfile */
+    lock_setup();
 
 #ifdef HAVE_SETRLIMIT
     /*
@@ -360,9 +328,6 @@ int main(int argc, char **argv)
 				havercfile ? "" :  _(" and "),
 				havercfile ? "" : rcfile);
 
-	if (outlevel >= O_VERBOSE)
-	    printf(_("Lockfile at %s\n"), tmpbuf);
-
 	if (querylist == NULL)
 	    fprintf(stderr,
 		    _("No mailservers set up -- perhaps %s is missing?\n"),
@@ -380,29 +345,12 @@ int main(int argc, char **argv)
     }
 
     /* check for another fetchmail running concurrently */
-    pid = -1;
-    if ((lockfile = (char *) malloc(strlen(tmpbuf) + 1)) == NULL)
-    {
-	report(stderr,_("fetchmail: cannot allocate memory for lock name.\n"));
-	exit(PS_EXCLUDE);
-    }
-    else
-	(void) strcpy(lockfile, tmpbuf);
-    if ((lockfp = fopen(lockfile, "r")) != NULL )
-    {
-	bkgd = (fscanf(lockfp,"%d %d", &pid, &st) == 2);
-
-	if (kill(pid, 0) == -1) {
-	    fprintf(stderr,_("fetchmail: removing stale lockfile\n"));
-	    pid = -1;
-	    bkgd = FALSE;
-	    unlink(lockfile);
-	}
-	fclose(lockfp);	/* not checking should be safe, file mode was "r" */
-    }
+    pid = lock_state();
+    bkgd = (pid < 0);
+    pid = bkgd ? -pid : pid;
 
     /* if no mail servers listed and nothing in background, we're done */
-    if (!(quitmode && argc == 2) && pid == -1 && querylist == NULL) {
+    if (!(quitmode && argc == 2) && pid == 0 && querylist == NULL) {
 	(void)fputs(_("fetchmail: no mailservers have been specified.\n"),stderr);
 	exit(PS_SYNTAX);
     }
@@ -410,7 +358,7 @@ int main(int argc, char **argv)
     /* perhaps user asked us to kill the other fetchmail */
     if (quitmode)
     {
-	if (pid == -1) 
+	if (pid == 0) 
 	{
 	    fprintf(stderr,_("fetchmail: no other fetchmail is running\n"));
 	    if (argc == 2)
@@ -426,16 +374,16 @@ int main(int argc, char **argv)
 	{
 	    fprintf(stderr,_("fetchmail: %s fetchmail at %d killed.\n"),
 		    bkgd ? _("background") : _("foreground"), pid);
-	    unlink(lockfile);
+	    lock_release();
 	    if (argc == 2)
 		exit(0);
 	    else
-		pid = -1; 
+		pid = 0; 
 	}
     }
 
     /* another fetchmail is running -- wake it up or die */
-    if (pid != -1)
+    if (pid != 0)
     {
 	if (check_only)
 	{
@@ -461,7 +409,7 @@ int main(int argc, char **argv)
 	{
 	    /* this test enables re-execing on a changed rcfile */
 	    if (getpid() == pid)
-		lock_acquired = TRUE;
+		lock_assert();
 	    else
 	    {
 		fprintf(stderr,
@@ -566,29 +514,7 @@ int main(int argc, char **argv)
     signal(SIGQUIT, terminate_run);
 
     /* here's the exclusion lock */
-#ifndef O_SYNC
-#define O_SYNC	0	/* use it if we have it */
-#endif
-    if (!lock_acquired)
-    {
-      if ((st = open(lockfile, O_WRONLY|O_CREAT|O_EXCL|O_SYNC, 0666)) != -1)
-      {
-	  sprintf(tmpbuf,"%d", getpid());
-	  write(st, tmpbuf, strlen(tmpbuf));
-	  if (run.poll_interval)
-	  {
-	      sprintf(tmpbuf," %d", run.poll_interval);
-	      write(st, tmpbuf, strlen(tmpbuf));
-	  }
-	  close(st);	/* should be safe, fd was opened with O_SYNC */
-	  lock_acquired = TRUE;
-      }
-      else
-      {
-	  fprintf(stderr,	_("fetchmail: lock creation failed.\n"));
-	  return(PS_EXCLUDE);
-      }
-    }
+    lock_or_die();
 
     /*
      * Query all hosts. If there's only one, the error return will
@@ -1409,7 +1335,7 @@ static void terminate_run(int sig)
 	  memset(ctl->password, '\0', strlen(ctl->password));
 
 #if !defined(HAVE_ATEXIT) && !defined(HAVE_ON_EXIT)
-    unlockit();
+    lock_release();
 #endif
 
     if (activecount == 0)
