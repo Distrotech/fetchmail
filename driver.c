@@ -408,7 +408,7 @@ char *realname;		/* real name of host */
 {
     char buf [MSGBUFSIZE+1]; 
     char *bufp, *headers, *fromhdr,*tohdr,*cchdr,*bcchdr,*received_for,*envto;
-    char *fromptr, *toptr, *ctthdr, *line;
+    char *ctthdr, *line;
     int n, oldlen, ch;
     int sizeticker, delete_ok;
     FILE *sinkfp;
@@ -430,7 +430,8 @@ char *realname;		/* real name of host */
     headers = fromhdr = tohdr = cchdr = bcchdr = received_for = envto = ctthdr = NULL;
     oldlen = 0;
     line = (char *)NULL;
-    do {
+    for (;;)
+    {
 	if (line)
 	    free(line);
 	line = xmalloc(sizeof(buf));
@@ -460,11 +461,8 @@ char *realname;		/* real name of host */
 	len -= n;
 
 	bufp = line;
-	if (delimited && *bufp == '.')
-	{
-	    if (bufp[1] == '\r' && bufp[2] == '\n')
+	if (bufp[0] == '\r' && bufp[1] == '\n')
 		break;  /* end of message */
-	}
      
 	if (!ctl->no_rewrite)
 	    reply_hack(bufp, realname);
@@ -517,8 +515,7 @@ char *realname;		/* real name of host */
 	else if (MULTIDROP(ctl) && !strncasecmp("Received:", bufp, 9))
 	    received_for = parse_received(ctl, bufp);
 #endif /* HAVE_RES_SEARCH */
-    } while
-	(len > 0 && (bufp[0] != '\r' || bufp[1] != '\n'));
+    }
 
     if (line)
 	free(line);
