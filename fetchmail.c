@@ -66,8 +66,9 @@ char *user;		/* the name of the invoking user */
 static void termhook();
 static char *lockfile;
 static int popstatus;
+static int lastsig;
 
-RETSIGTYPE donothing(sig) int sig; {signal(sig, donothing);}
+RETSIGTYPE donothing(sig) int sig; {signal(sig, donothing); lastsig = sig;}
 
 int main (argc,argv)
 int argc;
@@ -357,10 +358,10 @@ char **argv;
 	    }
 
 	    /*
-	     * We can't use sleep(3) here, the alarm(2) call used to
-	     * implement server nonresponse timeout collides with it.
+	     * We can't use sleep(3) here because we need an alarm(3)
+	     * equivalent in order to implement server nonresponse timeout.
 	     * We'll just assume setitimer(2) is available since fetchmail
-	     * has to have the socket layer to work at all.
+	     * has to have a BSDoid socket layer to work at all.
 	     */
 	    {
 		struct itimerval ntimeout;
@@ -369,10 +370,11 @@ char **argv;
 		ntimeout.it_value.tv_sec  = poll_interval;
 		ntimeout.it_value.tv_usec = 0;
 
-		if (setitimer(ITIMER_REAL,&ntimeout,NULL)==-1 && errno==EINTR)
-		    (void) fputs("fetchmail: awakened by SIGHUP\n", stderr);
+		setitimer(ITIMER_REAL,&ntimeout,NULL);
 		signal(SIGALRM, donothing);
 		pause();
+		if (lastsig == SIGHUP)
+		    (void) fputs("fetchmail: awakened by SIGHUP\n", stderr);
 	    }
 
 	    if (outlevel == O_VERBOSE)
