@@ -32,6 +32,9 @@
 /* Define if you have GNU's getopt family of functions.  */
 #undef HAVE_GETOPTLONG
 
+/* Define if you have setlinebuf(3) */
+#undef HAVE_SETLINEBUF
+
 
 /* Leave that blank line there!!  Autoheader needs it.
    If you're adding to this file, keep in mind:

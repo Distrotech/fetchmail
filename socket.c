@@ -48,7 +48,6 @@ FILE *sockopen(char *host, int clientPort)
     struct sockaddr_in ad;
     struct hostent *hp;
     FILE *fp;
-    static char sbuf[INTERNAL_BUFSIZE];
 
     memset(&ad, 0, sizeof(ad));
     ad.sin_family = AF_INET;
@@ -75,17 +74,39 @@ FILE *sockopen(char *host, int clientPort)
     }
     fp = fdopen(sock, "r+");
 
-#ifdef FOO
+#ifdef __SETVBUF_WORKS_OK__
     /*
-     * For unknown reasons, this results in horrible lossage.
+     * For unknown reasons, this results in horrible lossage under Linux.
      * To see this, condition in this line, generate a test pattern
      * of 8K, fetch it, and watch it garble the test pattern.
-     * I think there's a bug in stdio lurking here.
+     * I think there's a bug in Linux stdio lurking here.
      */
-    setvbuf(fp, sbuf, _IOLBF, INTERNAL_BUFSIZE);
-#endif /* FOO */
+    {
+	static char sbuf[INTERNAL_BUFSIZE];
+	setvbuf(fp, sbuf, _IOLBF, INTERNAL_BUFSIZE);
+    }
+#endif /* __SETVBUF_WORKS_OK__ */
+
+#if !defined(__SETVBUF_WORKS_OK__) && defined(HAVE_SETLINEBUF)
+    /* this on the other hand works OK under Linux */
+    setlinebuf(fp);
+#endif
 
     return(fp);
 }
+
+#ifdef MAIN
+/*
+ * Use the chargen service to test buffering directly.
+ */
+main()
+{
+    FILE	*fp = sockopen("localhost", 19);
+    char	buf[80];
+
+    while (fgets(buf, sizeof(buf)-1, fp))
+	fputs(buf, stdout);
+}
+#endif /* MAIN */
 
 /* socket.c ends here */

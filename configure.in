@@ -77,7 +77,7 @@ AC_SUBST(EXTRASRC)
 AC_SUBST(EXTRAOBJ)
 
 AC_CHECK_FUNCS(tcsetattr stty setsid seteuid gethostbyname res_search herror \
-  strrchr strerror)
+  strrchr strerror setlinebuf)
 
 dnl AC_FUNC_SETVBUF_REVERSED
 
