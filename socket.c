@@ -898,10 +898,9 @@ static int SSL_ck_verify_callback( int ok_return, X509_STORE_CTX *ctx )
 int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char *certpath,
     char *fingerprint, char *servercname, char *label)
 {
-	SSL *ssl;
         struct stat randstat;
         int i;
-	
+
 	SSL_load_error_strings();
 	SSLeay_add_ssl_algorithms();
 	
@@ -1004,7 +1003,7 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char
 	if ((fingerprint != NULL || certck) && !_depth0ck) {
 		report(stderr, GT_("Certificate/fingerprint verification was somehow skipped!\n"));
 		
-		if( NULL != ( ssl = SSLGetContext( sock ) ) ) {
+		if( NULL != SSLGetContext( sock ) ) {
 			/* Clean up the SSL stack */
 			SSL_free( _ssl_context[sock] );
 			_ssl_context[sock] = NULL;
@@ -1020,9 +1019,7 @@ int SockClose(int sock)
 /* close a socket gracefully */
 {
 #ifdef	SSL_ENABLE
-    SSL *ssl;
-
-    if( NULL != ( ssl = SSLGetContext( sock ) ) ) {
+    if( NULL != SSLGetContext( sock ) ) {
         /* Clean up the SSL stack */
         SSL_free( _ssl_context[sock] );
         _ssl_context[sock] = NULL;

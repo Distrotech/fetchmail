@@ -379,7 +379,8 @@ int readheaders(int sock,
     int			env_offs;
     char		*received_for, *rcv, *cp;
     static char		*delivered_to = NULL;
-    int 		n, linelen, oldlen, ch, remaining, skipcount;
+    int 		n, oldlen, ch, remaining, skipcount;
+    size_t		linelen;
     struct idlist 	*idp;
     flag		no_local_matches = FALSE;
     flag		has_nuls;
