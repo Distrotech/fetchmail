@@ -880,7 +880,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 		if (good_addresses == 0)
 		{
 		    sprintf(buf+1, 
-			    "for <%s@%s> (by default); ",
+			    "for %s@%s (by default); ",
 			    user, ctl->destaddr);
 		}
 		else if (good_addresses == 1)
@@ -889,9 +889,9 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 			if (idp->val.status.mark == XMIT_ACCEPT)
 			    break;	/* only report first address */
 		    if (strchr(idp->id, '@'))
-			sprintf(buf+1, "for <%s>", idp->id);
+			sprintf(buf+1, "for %s", idp->id);
 		    else
-			sprintf(buf+1, "for <%s/%s>", idp->id, ctl->destaddr);
+			sprintf(buf+1, "for %s/%s", idp->id, ctl->destaddr);
 		    sprintf(buf+strlen(buf), " (%s); ",
 			    MULTIDROP(ctl) ? "multi-drop" : "single-drop");
 		}

@@ -9,6 +9,7 @@ fetchmail-4.6.8 ():
 * Added bounce-mail capability on SMTP/ESMTP error messages.
 * Documented fetchmail's actions on ESMTP errors.
 * Fix an undead-message hole in POP3 with fetchall on.
+* Fix a minor error in generation of fetchmail's trace headers.
 
 There are 247 people on fetchmail-friends and 309 on fetchmail-announce.
 
