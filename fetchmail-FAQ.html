@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/06/28 08:04:30 $
+<td width="30%" align=right>$Date: 2000/06/28 09:06:35 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -2826,6 +2826,17 @@ over and over?</h2>
 First, check to see that you haven't enabled the <cite>keep</cite>
 and <cite>fetchall</cite> option.  If you have, turn <cite>keep</cite> off.<p>
 
+There are various forms of lossage involving the POP3 UIDL feature
+that can lead to all your old messages being seen again after a line
+drop.  I have given up trying to fix these, as the UIDL code breaks
+worse every time I touch it.  The problem is fundamental; maintaining
+and garbage-collecting the right kind of client-side state is just
+hard.  Whoever put UIDLs in RFC1725 and removed LAST should be hung
+up by his thumbs and whipped with scorpions.  The right answers are
+either (a) live with the occasional breakage, (b) switch to IMAP4,
+or (c) fix the code yourself and send me a patch.  Unless you choose
+(c), I don't want to hear about it.<p>
+
 This can also happen when some other mail client is logged in to your
 mail server, if it uses a simple exclusive-locking scheme (and many,
 especially most POP3 servers, do exactly that).  Your fetchmail is
@@ -2867,7 +2878,7 @@ install Linux on your server...<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/06/28 08:04:30 $
+<td width="30%" align=right>$Date: 2000/06/28 09:06:35 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
