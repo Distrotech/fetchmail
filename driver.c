@@ -359,10 +359,19 @@ struct query *ctl;	/* query control record */
 
 	    /* if nothing supplied localnames, default appropriately */
 	    if (!xmit_names)
+	    {
+		char	*dflt;
+
 		if (getuid() == 0)
-		    save_uid(&xmit_names, -1, ctl->remotename);
+		    dflt = ctl->remotename;
 		else
-		    save_uid(&xmit_names, -1, user);
+		    dflt = user;
+		save_uid(&xmit_names, -1, dflt);
+		if (outlevel == O_VERBOSE)
+		    fprintf(stderr, 
+			    "fetchmail: no local matches, forwarding to %s\n",
+			    dflt);
+	    }
 
 	    /* time to address the message */
 	    if (ctl->mda[0])	/* we have a declared MDA */
@@ -774,13 +783,10 @@ const struct method *proto;	/* protocol method table */
 		    vtalarm(ctl->timeout);
 		    if (ok != 0)
 			goto cleanUp;
+		    delete_uid(&ctl->newsaved, num);
 		}
 		else if (outlevel > O_SILENT) 
-		{
-		    /* nuke it from the unseen-messages list */
-		    delete_uid(&ctl->newsaved, num);
 		    fprintf(stderr, " not flushed\n");
-		}
 	    }
 
 	    /* remove all messages flagged for deletion */
