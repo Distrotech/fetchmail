@@ -25,8 +25,6 @@
 
 #define PROTOCOL_ERROR	{error(0, 0, "protocol error"); return(PS_ERROR);}
 
-#define LOCKBUSY_ERROR	{error(0, 0, "lock busy!  Is another session active?"); return(PS_LOCKBUSY);}
-
 extern char *strstr();	/* needed on sysV68 R3V7.1. */
 
 static int last;
@@ -96,16 +94,36 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 /* apply for connection authorization */
 {
     int ok;
+    char *start,*end;
+    char *msg;
 #if HAVE_LIBOPIE
     char *challenge;
 #endif /* HAVE_LIBOPIE */
 
-    /* build MD5 digest from greeting timestamp + password */
-    if (ctl->server.protocol == P_APOP) 
-    {
-	char *start,*end;
-	char *msg;
+    switch (ctl->server.protocol) {
+    case P_POP3:
+	if ((gen_transact(sock, "USER %s", ctl->remotename)) != 0)
+	    PROTOCOL_ERROR
 
+#if defined(HAVE_LIBOPIE) && defined(OPIE_ENABLE)
+	/* see RFC1938: A One-Time Password System */
+	if (challenge = strstr(lastok, "otp-"))
+	{
+	    char response[OPIE_RESPONSE_MAX+1];
+
+	    if (opiegenerator(challenge, ctl->password, response))
+		 PROTOCOL_ERROR
+
+	    ok = gen_transact(sock, "PASS %s", response);
+	}
+	else
+#endif /* defined(HAVE_LIBOPIE) && defined(OPIE_ENABLE) */
+	    /* ordinary validation, no one-time password */ 
+	    ok = gen_transact(sock, "PASS %s", ctl->password);
+	break;
+
+    case P_APOP:
+	/* build MD5 digest from greeting timestamp + password */
 	/* find start of timestamp */
 	for (start = greeting;  *start != 0 && *start != '<';  start++)
 	    continue;
@@ -131,63 +149,41 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 
 	strcpy(ctl->digest, MD5Digest(msg));
 	free(msg);
-    }
 
-    switch (ctl->server.protocol) {
-    case P_POP3:
-	if ((gen_transact(sock, "USER %s", ctl->remotename)) != 0)
-	    PROTOCOL_ERROR
-
-#if defined(HAVE_LIBOPIE) && defined(OPIE_ENABLE)
-	/* see RFC1938: A One-Time Password System */
-	if (challenge = strstr(lastok, "otp-"))
-	{
-	    char response[OPIE_RESPONSE_MAX+1];
-
-	    if (opiegenerator(challenge, ctl->password, response))
-		 PROTOCOL_ERROR
-
-	    ok = gen_transact(sock, "PASS %s", response);
-	}
-	else
-#endif /* defined(HAVE_LIBOPIE) && defined(OPIE_ENABLE) */
-	    /* ordinary validation, no one-time password */ 
-	    ok = gen_transact(sock, "PASS %s", ctl->password);
-
-	if (ok != 0)
-	{
-	    if (ok == PS_LOCKBUSY)
-		LOCKBUSY_ERROR
-	    PROTOCOL_ERROR
-	}
-
-	/*
-	 * Empirical experience shows some server/OS combinations
-	 * may need a brief pause even after any lockfiles on the
-	 * server are released, to give the server time to finish
-	 * copying back very large mailfolders from the temp-file...
-	 * this is only ever an issue with extremely large mailboxes.
-	 */
-	sleep(3); /* to be _really_ safe, probably need sleep(5)! */
-	break;
-
-    case P_APOP:
-	if ((gen_transact(sock, "APOP %s %s",
-			  ctl->remotename, ctl->digest)) != 0)
-	    PROTOCOL_ERROR
+	ok = gen_transact(sock, "APOP %s %s", ctl->remotename, ctl->digest);
 	break;
 
     case P_RPOP:
 	if ((gen_transact(sock,"USER %s", ctl->remotename)) != 0)
 	    PROTOCOL_ERROR
 
-	if ((gen_transact(sock, "RPOP %s", ctl->password)) != 0)
-	    PROTOCOL_ERROR
+	ok = gen_transact(sock, "RPOP %s", ctl->password);
 	break;
 
     default:
 	error(0, 0, "Undefined protocol request in POP3_auth");
+	ok = PS_ERROR;
     }
+
+    /* maybe we detected a lock-busy condition? */
+    if (ok != 0)
+    {
+        if (ok == PS_LOCKBUSY)
+	{
+	    error(0, 0, "lock busy!  Is another session active?"); 
+	    return(PS_LOCKBUSY);
+	}
+	PROTOCOL_ERROR
+    }
+
+    /*
+     * Empirical experience shows some server/OS combinations
+     * may need a brief pause even after any lockfiles on the
+     * server are released, to give the server time to finish
+     * copying back very large mailfolders from the temp-file...
+     * this is only ever an issue with extremely large mailboxes.
+     */
+    sleep(3); /* to be _really_ safe, probably need sleep(5)! */
 
     /* we're approved */
     return(0);
