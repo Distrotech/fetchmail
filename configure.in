@@ -58,9 +58,7 @@ case $host in
 		AC_DEFINE(DEF_MDA,"/usr/bin/deliver %s")
 		mdacmd="/usr/bin/deliver \$u"
 	else
-		# default case assumes /bin/mail is an MDA -- may LOSE mail on
-		# systems where it is not an MDA.
-		AC_DEFINE(DEF_MDA,"/bin/mail %s")
+		AC_DEFINE(DEF_MDA,"/usr/lib/sendmail -oem -t %s")
 		mdacmd="/bin/mail \$u"
 	fi
 	;;
