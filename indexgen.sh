@@ -43,15 +43,16 @@ RPOP, APOP, KPOP, all flavors of IMAP, and ESMTP ETRN. It can even support
 IPv6 and IPSEC.<P>
 
 Fetchmail retrieves mail from remote mail servers and forwards it via
-SMTP, so it can then be be read by normal mail user agents such as
-elm(1) or Mail(1).  It allows all your system MTA's filtering,
-forwarding, and aliasing facilities to work just as they would on
-normal mail.<P>
+SMTP, so it can then be be read by normal mail user agents such as <a
+href="http://www.cs.hmc.edu/~me/mutt/">mutt</a>, elm(1) or BSD Mail.
+It allows all your system MTA's filtering, forwarding, and aliasing
+facilities to work just as they would on normal mail.<P>
 
 Fetchmail offers better security than any other Unix remote-mail
 client.  It supports APOP, KPOP, OTP, Compuserve RPA, and IMAP RFC1731
 encrypted authentication methods to avoid sending passwords en
-clair.<p>
+clair. It can be configured to support end-to-end encryption via
+tunneling with <a href="http://www.cs.hut.fi/ssh/">ssh, the Secure Shell</a><p>
 
 Fetchmail can be used as a POP/IMAP-to-SMTP gateway for an entire DNS
 domain, collecting mail from a single drop box on an ISP and
@@ -65,10 +66,8 @@ it is pretty hard for anyone to tell that the incoming mail link is
 not a full-time "push" connection.<p>
 
 Fetchmail is easy to configure, fast, and lightweight.  It packs all
-its features in less than 90K of core on a Pentium under Linux.<p>
-
-(Fetchmail is the successor of the old popclient utility, which is
-officially dead.)<P>
+its standard features (POP3, IMAP, and ETRN support) in less than 90K
+of core on a Pentium under Linux.<p>
 
 <H1>Where to find out more about fetchmail:</H1>
 
@@ -96,9 +95,9 @@ You can get any of the following here:
 	Source RPM of fetchmail $version</a>
 </UL>
 
-(Note that the RPMs don't have the POP2, OTP, IPv6 or Compuserve RPA
-support compiled in.  To get that you will have to build from
-sources.)<p>
+(Note that the RPMs don't have the POP2, OTP, IPv6, Kereberos, or
+Compuserve RPA support compiled in.  To get that you will have to
+build from sources.)<p>
 
 The latest version of fetchmail is also carried in the 
 <a href="http://sunsite.unc.edu/pub/Linux/system/mail/pop/!INDEX.html">
