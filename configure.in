@@ -500,6 +500,24 @@ then
     LIBS="-lsocks $LIBS"
 fi])
 
+###     use option --with-socks5=DIR to point at SOCKS library
+AC_ARG_WITH(socks5,
+        [  --with-socks5[=DIR]     add built-in SOCKS5 firewall access],
+[
+if test "$with_socks5" != no
+then
+    if test "$with_socks5" != yes
+    then
+        LDEFLAGS="$LDEFLAGS -L$with_socks5"
+    else
+        AC_CHECK_LIB(socks5, SOCKSconnect,,
+               AC_MSG_ERROR([could not find libsocks5 which is needed for built-in SOCKS5 support]))
+    fi
+    AC_DEFINE(HAVE_SOCKS)
+    CEFLAGS="$CEFLAGS -Dconnect=SOCKSconnect -Dgetsockname=SOCKSgetsockname -Dbind=SOCKSbind -Daccept=SOCKSaccept -Dlisten=SOCKSlisten -Dselect=SOCKSselect-Drecvfrom=SOCKSrecvfrom -Dsendto=SOCKSsendto -Drecv=SOCKSrecv -Dsend=SOCKSsend-Dread=SOCKSread -Dwrite=SOCKSwrite -Drresvport=SOCKSrresvport-Dshutdown=SOCKSshutdown -Dlisten=SOCKSlisten -Dclose=SOCKSclose -Ddup=SOCKSdup-Ddup2=SOCKSdup2 -Dfclose=SOCKSfclose -Dgethostbyname=SOCKSgethostbyname"
+    LIBS="-lsocks5 $LIBS"
+fi])
+
 ###	use option --with-hesiod=DIR to point at a HESIOD directory
 AC_ARG_WITH(hesiod,
 	[  --with-hesiod=DIR       point fetchmail compilation at a HESIOD directory])

@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/03/07 04:43:04 $
+<td width="30%" align=right>$Date: 2000/03/11 00:59:57 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1556,32 +1556,14 @@ RETR. <p>
 <hr>
 <h2><a name="K1">K1. How can I use fetchmail with SOCKS?</a></h2>
 
-Daniel Sobral &lt<a href="mailto:dcs@gns.com.br">dcs@gns.com.br</a>
-gave us the following recipe:<P>
-
-<OL>
-<LI> Install socks5. You don't need to have a socks server, you just
-     want the "runsocks" program.
-<LI> Set the environment variable SOCKS_SERVER to the server you'll be
-     using. Alternatively, you may set SOCKS4_SERVER and/or
-     SOCKS5_SERVER. E.g.: 
-<pre>
-	export SOCKS5_SERVER=socks.my.domain.com
-</pre>
-<LI> Set SOCKS5_USER and SOCKS5_PASSWD if needed.
-<LI> Run fetchmail through runsocks. Just like this:
-<pre>
-	runsocks fetchmail [parameters to fetchmail]
-</pre>
-</OL>
-
-It wasn't that hard, was it? :-)<P>
-
 Giuseppe Guerini added a --with-socks option that supports linking
 with socks library.  If you specify the value of this option as
 ``yes'', the configure script will try to find the Rconnect library
 and set the makefile up to link it.  You can also specify a directory
 containing the Rconnect library.<p>
+
+Alan Schmitt has added a similar --with-socks5 option that may work
+better if you have a recent version of the SOCKS library.
 
 <hr>
 <h2><a name="S7">S7. How can I use fetchmail with geocities POP3 servers?</a></h2>
@@ -2759,7 +2741,7 @@ terminate it.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/03/07 04:43:04 $
+<td width="30%" align=right>$Date: 2000/03/11 00:59:57 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
