@@ -4,8 +4,7 @@
  * Concept due to Harry Hochheiser.  Implementation by ESR.  Cleanup and
  * strict RFC821 compliance by Cameron MacPherson.
  *
- * Copyright 1996 Eric S. Raymond
- * All rights reserved.
+ * Copyright 1997 Eric S. Raymond
  * For license terms, see the file COPYING in this directory.
  */
 

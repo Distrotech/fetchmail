@@ -1,8 +1,7 @@
 /*
  * rfc822.c -- code for slicing and dicing RFC822 mail headers
  *
- * Copyright 1996 by Eric S. Raymond
- * All rights reserved.
+ * Copyright 1997 by Eric S. Raymond
  * For license terms, see the file COPYING in this directory.
  */
 

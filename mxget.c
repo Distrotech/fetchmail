@@ -1,8 +1,7 @@
 /*
  * mxget.c -- fetch MX records for given DNS name
  *
- * Copyright 1996 by Eric S. Raymond
- * All rights reserved.
+ * Copyright 1997 by Eric S. Raymond
  * For license terms, see the file COPYING in this directory.
  */
 
