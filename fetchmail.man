@@ -1291,7 +1291,7 @@ ssh connecting local port 1234 to port 110 on mailhost.net; the
 preconnect command sets up the ssh.
 
 .nf
-poll mailhost.net via localhost port 1234 with pop3:
+poll mailhost.net via localhost port 1234 with proto pop3:
         preconnect "ssh -f -L 1234:mailhost.net:110
 		mailhost.net sleep 20 </dev/null >/dev/null";
 .fi
