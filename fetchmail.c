@@ -645,19 +645,13 @@ static int load_params(int argc, char **argv, int optind)
 		exit(PS_SYNTAX);
 	    }
 
-	    /* make sure delivery will default to a real local user */
+	    /* if `user' doesn't name a real local user, try to run as root */
 	    if ((pw = getpwnam(user)) == (struct passwd *)NULL)
-	    {
-		fprintf(stderr,
-			"fetchmail: can't set up default delivery to %s\n", user);
-		exit(PS_SYNTAX);	/* has to be from bad rc file */
-	    }
-	    else
-	    {
+		ctl->uid = 0;
+            else
 		ctl->uid = pw->pw_uid;	/* for local delivery via MDA */
-		if (!ctl->localnames)	/* for local delivery via SMTP */
-		    save_str_pair(&ctl->localnames, user, NULL);
-	    }
+	    if (!ctl->localnames)	/* for local delivery via SMTP */
+		save_str_pair(&ctl->localnames, user, NULL);
 
 #if !defined(HAVE_GETHOSTBYNAME) || !defined(HAVE_RES_SEARCH)
 	    /* can't handle multidrop mailboxes unless we can do DNS lookups */
