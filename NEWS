@@ -1,3 +1,17 @@
+-----------------------------------------------------------------------------
+                        * * * WARNING * * *
+
+This release contains untested features!  It includes new code for Kerberos
+authentication and POP3 UID support, but my integration of these features
+required changes which have not yet been tested by the people who sent the
+enhancements.
+
+I'm issuing it to put paid to two minor but annoying bugs, in option
+processing and IMAP queries of multiple sites.  For other changes, see
+below.
+
+-----------------------------------------------------------------------------
+
 			Release Notes:
 
 fetchmail-1.8 (Wed Oct  9 16:00:15 EDT 1996):
@@ -32,6 +46,8 @@ features --
 bugs --
 
 * Fix buggy getopt specification of P and p options.
+
+* Fix uninitialized-variable bug that was hanging second IMAP queries.
 
 fetchmail-1.7 (Tue Oct  8 11:32:44 EDT 1996):
 
