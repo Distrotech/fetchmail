@@ -93,53 +93,6 @@ FILE *sockfp;
     return wrlen;
 }
 
-static int sbuflen = 0;
-
-static int SockInternalRead (socket,buf,len)
-int socket;
-char *buf;
-int len;
-{
-   static char sbuf [INTERNAL_BUFSIZE];
-   static char *bp;
-   
-   if (sbuflen <= 0) {
-     /* buffer is empty; refresh. */
-     if ((sbuflen = read(socket,sbuf,INTERNAL_BUFSIZE)) < 0) {
-       if (errno == EINTR)
-           return -1;
-       perror("SockInternalRead: read");
-       exit(9);
-     }
-     else
-       bp = sbuf;
-   }
-   else
-     ;  /* already some data in the buffer */
-
-   /* can't get more than we have right now. */ 
-   /* XXX -- should probably try to load any unused part of sbuf
-             so that as much of 'len' as possible can be satisfied */
-   if (len > sbuflen)
-     len = sbuflen;
-   else
-     ;  /* wants no more than we already have */
-
-   /* transfer to caller's buffer */
-   if (len == 1) {
-     /* special case:  if caller only wants one character, it probably
-        costs a lot more to call bcopy than to do it ourselves. */
-     *buf = *(bp++);
-     sbuflen--;
-   }
-   else {
-     bcopy(bp,buf,len);
-     sbuflen -= len;
-     bp += len;
-   }
-   return(len);
-}
-
 int SockGets(buf, len, sockfp)
 char *buf;
 int len;
@@ -149,7 +102,7 @@ FILE *sockfp;
 
     while (--len)
     {
-        if (SockInternalRead(fileno(sockfp), buf, 1) != 1)
+        if (read(fileno(sockfp), buf, 1) != 1)
             return -1;
         else
 	    rdlen++;
