@@ -96,8 +96,9 @@ You can get any of the following here:
 	Source RPM of fetchmail $version</a>
 </UL>
 
-(Note that the RPMs don't have the POP2 or Compuserve RPA support
-compiled in.  To get that you will have to build from sources.)<p>
+(Note that the RPMs don't have the POP2, OTP, IPv6 or Compuserve RPA
+support compiled in.  To get that you will have to build from
+sources.)<p>
 
 The latest version of fetchmail is also carried in the 
 <a href="http://sunsite.unc.edu/pub/Linux/system/mail/pop/!INDEX.html">
@@ -107,15 +108,15 @@ Sunsite remote mail tools directory</a>.
 
 There is a fetchmail-friends list for people who want to discuss fixes
 and improvements in fetchmail and help co-develop it.  It's at <a
-href="mailto:fetchmail-friends@thyrsus.com">fetchmail-friends@thyrsus.com</a>.
-There is also an announcements-only list, <em>fetchmail-announce@thyrsus.com</em>.<P>
+href="mailto:fetchmail-friends@ccil.org">fetchmail-friends@ccil.org</a>.
+There is also an announcements-only list, <em>fetchmail-announce@ccil.org</em>.<P>
 
 Both lists are SmartList reflectors; sign up in the usual way with a
 message containing the word "subscribe" in the subject line sent to
-<a href="mailto:fetchmail-friends-request@thyrsus.com?subject=subscribe">
-fetchmail-friends-request@thyrsus.com</a> or
-<a href="mailto:fetchmail-announce-request@thyrsus.com?subject=subscribe">
-fetchmail-announce-request@thyrsus.com</a>. (Similarly, "unsubscribe"
+<a href="mailto:fetchmail-friends-request@ccil.org?subject=subscribe">
+fetchmail-friends-request@ccil.org</a> or
+<a href="mailto:fetchmail-announce-request@ccil.org?subject=subscribe">
+fetchmail-announce-request@ccil.org</a>. (Similarly, "unsubscribe"
 in the Subject line unsubscribes you, and "help" returns general list help) <p>
 
 Note: before submitting a question to the list, <strong>please read
