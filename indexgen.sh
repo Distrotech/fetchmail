@@ -2,8 +2,8 @@
 #
 # indexgen.sh -- generate current version of fetchmail home page.
 #
-goldvers="4.5.0"
-goldname="4.5.0bis"
+goldvers="4.6.0"
+goldname="4.6.0"
 version=`sed -n <Makefile.in "/VERS=/s/VERS=\([^ 	]*\)/\1/p"`
 date=`date "+%d %b %Y"`
 
@@ -73,7 +73,7 @@ use the interactive GUI configurator supplied with the fetchmail
 distribution.<P>
 
 Fetchmail is fast and lightweight.  It packs all its standard
-features (POP3, IMAP, and ETRN support) in less than 96K of core on a
+features (POP3, IMAP, and ETRN support) in less than 97K of core on a
 Pentium under Linux.<p>
 
 Fetchmail is <a href="http://www.opensource.org">open-source</a>
@@ -88,7 +88,7 @@ about what fetchmail does.<p>
 See the <a href="fetchmail-FAQ.html">HTML Fetchmail FAQ</A> for
 troubleshooting help.<p>
 
-See the <a href="http:design-notes.html">Fetchmail Design Notes</a>
+See the <a href="design-notes.html">Fetchmail Design Notes</a>
 for discussion of some of the design choices in fetchmail.<P>
 
 <H1>How to get fetchmail:</H1>
