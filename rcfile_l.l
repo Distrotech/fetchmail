@@ -67,6 +67,8 @@ options		{/* EMPTY */}
 
 (#.*)?\\?\n	{ prc_lineno++;	}   /* newline is ignored */
 
+[0-9]+		{ yylval.number = atoi(yytext); return NUMBER; }
+
 \"[^\"]*\"	{
 			yytext[strlen(yytext)-1] = '\0';
 			yylval.sval = (char *) strdup(yytext+1);

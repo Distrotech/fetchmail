@@ -32,6 +32,7 @@ static int prc_errflag;
 %union {
   int proto;
   int flag;
+  int number;
   char *sval;
 }
 
@@ -39,6 +40,7 @@ static int prc_errflag;
 %token USERNAME PASSWORD FOLDER SMTPHOST MDA IS HERE THERE
 %token <proto> PROTO
 %token <sval>  STRING
+%token <number> NUMBER
 %token <flag>  KEEP FLUSH FETCHALL REWRITE PORT SKIP
 
 /* these are actually used by the lexer */
@@ -74,11 +76,11 @@ serv_option	: PROTOCOL PROTO	{current.protocol = $2;}
 		    			    current.authenticate = A_KERBEROS;
 					    current.port = KPOP_PORT;
 					}
-		| PORT STRING		{current.port = atoi($2);}
+		| PORT NUMBER		{current.port = $2;}
 		| SKIP			{current.skip = ($1==FLAG_TRUE);}
 		| AUTHENTICATE PASSWORD	{current.authenticate = A_PASSWORD;}
 		| AUTHENTICATE KERBEROS	{current.authenticate = A_KERBEROS;}
-		| TIMEOUT STRING	{current.timeout = atoi($2);}
+		| TIMEOUT NUMBER	{current.timeout = $2;}
 		;
 
 /* the first and only the first user spec may omit the USERNAME part */
