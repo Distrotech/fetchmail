@@ -20,6 +20,9 @@ fetchmail-4.4.0 ():
   under Red Hat 5.0.
 * Kerberos V support from Jon Dugan <jdugan@ncsa.uiuc.edu> and
   Von Welch <vwelch@ncsa.uiuc.edu>.
+* Ron Kaminsky <kam@Orbotech.Co.IL> sent a patch to RFC1730-encode passwords
+  sent to IMAP servers.  This allows them to contain doublequotes and
+  backslashes.
 
 There are 269 people on fetchmail-friends and 144 on fetchmail-announce.
 
