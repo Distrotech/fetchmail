@@ -168,7 +168,7 @@ int socket;
 struct hostrec *queryctl;
 int number;
 {
-    return(gen_transact(socket, "STORE %d +FLAGS (\\Deleted)", number));
+    return(gen_transact(socket, "STORE %d +FLAGS.SILENT (\\Deleted)", number));
 }
 
 const static struct method imap =
