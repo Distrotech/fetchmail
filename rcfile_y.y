@@ -104,6 +104,8 @@ serv_option	: AKA alias_list
 		    			    current.server.authenticate = A_KERBEROS;
 					    current.server.port = KPOP_PORT;
 					}
+		| UIDL			{current.server.uidl = FLAG_TRUE;}
+		| NO UIDL		{current.server.uidl  = FLAG_FALSE;}
 		| PORT NUMBER		{current.server.port = $2;}
 		| AUTHENTICATE PASSWORD	{current.server.authenticate = A_PASSWORD;}
 		| AUTHENTICATE KERBEROS	{current.server.authenticate = A_KERBEROS;}
@@ -198,14 +200,12 @@ user_option	: TO localnames HERE
 		| FETCHALL		{current.fetchall   = FLAG_TRUE;}
 		| REWRITE		{current.rewrite    = FLAG_TRUE;}
 		| STRIPCR		{current.stripcr    = FLAG_TRUE;}
-		| UIDL			{current.uidl	    = FLAG_TRUE;}
 
 		| NO KEEP		{current.keep       = FLAG_FALSE;}
 		| NO FLUSH		{current.flush      = FLAG_FALSE;}
 		| NO FETCHALL		{current.fetchall   = FLAG_FALSE;}
 		| NO REWRITE		{current.rewrite    = FLAG_FALSE;}
 		| NO STRIPCR		{current.stripcr    = FLAG_FALSE;}
-		| NO UIDL		{current.uidl	    = FLAG_FALSE;}
 
 		| LIMIT NUMBER		{current.limit      = $2;}
 		| FETCHLIMIT NUMBER	{current.fetchlimit = $2;}
