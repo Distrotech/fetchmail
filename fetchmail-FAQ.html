@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/11/08 16:53:52 $
+<td width="30%" align=right>$Date: 2001/12/14 03:32:11 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -238,7 +238,7 @@ bug report.
 
 <p>If your bug is something that used to work but stopped working when
 you upgraded, then you can help pin the bug down by trying <a
-href="ftp://ftp.ccil.org/pub/esr/fetchmail">intermediate versions of
+href="ftp://ftp.ccil.org/pub/esr/fetchmail/">intermediate versions of
 fetchmail</a> until you identify the revision that broke your
 feature.  The smart way to do this is by binary search on the version
 sequence.  First, try the version halfway between your last good one
@@ -1631,6 +1631,10 @@ headers.
 POP (or preferably IMAP) server that isn't brain-dead. OpenMail's
 project manager claims these bugs have been fixed in 6.0.
 
+<p>We've had a more recent report (December 2001) that the TOP command
+fails, returning only one line regrardless of its argument, on something
+identifying itself as "OpenMail POP3 interface".
+
 <hr>
 <h2><a name="S7">S7. How can I use fetchmail with geocities POP3 servers?</a></h2>
 
@@ -2366,8 +2370,8 @@ the server was processing multiple incoming mail streams.
 
 <p>I could eliminate this problem by keeping a list of all message-IDs 
 received during a poll so far and dropping any message that matches a 
-seen mail ID.  The touble is that this is an O(N**2) operation that 
-might significantly slow down the retriweval of large mail batches.
+seen mail ID.  The trouble is that this is an O(N**2) operation that 
+might significantly slow down the retrieval of large mail batches.
 
 <hr>
 <h2><a name="X1">X1. Spurious blank lines are appearing in the headers of fetched mail.</a></h2>
@@ -2925,7 +2929,7 @@ date from the last Received header.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/11/08 16:53:52 $
+<td width="30%" align=right>$Date: 2001/12/14 03:32:11 $
 </table>
 
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@thyrsus.com&gt;</A></ADDRESS>
