@@ -937,7 +937,10 @@ class UserEdit(Frame):
 			"User options for " + self.user.remote,
 			userhelp)
 
-	leftwin = Frame(self);
+        if mode != 'novice':
+            leftwin = Frame(self);
+        else:
+            leftwin = self
 
         secwin = Frame(leftwin, relief=RAISED, bd=5)
         Label(secwin, text="Authentication").pack(side=TOP)
@@ -968,8 +971,11 @@ class UserEdit(Frame):
 		     self.antispam, '26').pack(side=TOP, fill=X)
             targwin.pack(fill=X, anchor=N)
 
-	leftwin.pack(side=LEFT, fill=X, anchor=N)
-	rightwin = Frame(self)
+        if mode != 'novice':
+            leftwin.pack(side=LEFT, fill=X, anchor=N)
+            rightwin = Frame(self)
+        else:
+            rightwin = self
 
 	optwin = Frame(rightwin, relief=RAISED, bd=5)
 	Label(optwin, text="Processing Options").pack(side=TOP)
@@ -1012,7 +1018,10 @@ class UserEdit(Frame):
             ListEdit("New folder:", self.user.mailboxes, None, foldwin, None)
             foldwin.pack(fill=X, anchor=N)
 
-	rightwin.pack(side=LEFT)
+        if mode != 'novice':
+            rightwin.pack(side=LEFT)
+        else:
+            self.pack()
 
 
 #
