@@ -175,7 +175,7 @@ char **argv;
 
     /* don't allow a defaults record after the first */
     for (hostp = hostlist; hostp; hostp = hostp->next)
-	if (strcmp(hostlist->servername, "defaults") == 0)
+	if (strcmp(hostp->servername, "defaults") == 0)
 	    exit(PS_SYNTAX);
 
     /* merge in wired defaults, do sanity checks and prepare internal fields */
