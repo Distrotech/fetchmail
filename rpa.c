@@ -17,6 +17,7 @@
 #include  <stdio.h>
 #include  <unistd.h>
 #include  <ctype.h>
+#include  <string.h> 
 
 #include  "socket.h"
 #include  "fetchmail.h"

@@ -716,6 +716,8 @@ static int internal_expunge(int sock)
 #ifdef IMAP_UID	/* not used */
     expunge_uids(ctl);
 #endif /* IMAP_UID */
+
+    return(PS_SUCCESS);
 }
 
 static int imap_getrange(int sock, 
