@@ -52,7 +52,7 @@ open(REPORT, ">PREAMBLE.$$");
 
 print REPORT <<EOF;
 The $version release of fetchmail is now available at the usual locations,
-including http://www.ccil.org/~esr/fetchmail.  Here are the release notes:
+including http://$ENV{'WWWHOST'}/~esr/fetchmail.  Here are the release notes:
 
 EOF
 
