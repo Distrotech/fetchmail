@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/06/28 00:12:37 $
+<td width="30%" align=right>$Date: 2000/06/28 08:04:30 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -228,6 +228,15 @@ upgrade to the newest version of fetchmail, and then see if the
 problem reproduces.  So you'll probably save us both time if you
 upgrade and test with the latest version <em>before</em> sending in a
 bug report.<P>
+
+Another useful thing you can do, if you're using POP3, is to test for
+IMAP4 support on your mailserver using the autoprobe function of
+fetchmailconf.  If you have IMAP4, and fetchmailconf doesn't tell you
+it's broken, switch immediately.  POP3 is a weak, poorly-designed
+protocol with chronic problems, and the later versions after RFC1725
+actually get worse rather than better.  Changing over to IMAP4 may well
+make your problem go away -- and if your ISP doesn't have IMAP4
+support, bug them to supply it.<p>
 
 It is helpful if you include your .fetchmailrc file, but not necessary
 unless your symptom seems to involve an error in configuration
@@ -2858,7 +2867,7 @@ install Linux on your server...<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/06/28 00:12:37 $
+<td width="30%" align=right>$Date: 2000/06/28 08:04:30 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
