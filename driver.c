@@ -1619,6 +1619,23 @@ const struct method *proto;	/* protocol method table */
 		    flag suppress_forward = FALSE;
 		    flag retained = FALSE;
 
+		    /*
+		     * This check copes with Post Office/NT's annoying habit
+		     * of randomly prepending bogus LIST items of length -1.
+		     * Patrick Audley <paudley@pobox.com> tells us:
+		     * LIST shows a size of -1, RETR and TOP return
+		     * "-ERR System error - couldn't open message", and DELE
+		     * succeeds but doesn't actually delete the message.
+		     */
+		    if (msgsizes && msgsizes[num-1] == -1)
+		    {
+			if (outlevel >= O_VERBOSE)
+			    error(0, 0, 
+				  "Skipping message %d, length -1",
+				  num - 1);
+			continue;
+		    }
+
 		    /* we may want to reject this message if it's old */
 		    if (!fetch_it)
 		    {
