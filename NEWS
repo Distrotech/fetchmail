@@ -30,6 +30,8 @@ features --
 
 * Normal progress notifications now take only 1 line per message, not 2.
 
+* Linux packagers: building fetchmail now generates an RPM specfile for it.
+
 bugs --
 
 * Fix buggy getopt specification of P and p options.

@@ -86,7 +86,8 @@ srcs = $(srcdir)/socket.c $(srcdir)/getpass.c $(srcdir)/pop2.c 		\
 .SUFFIXES:
 .SUFFIXES: .o .c .h .y .l .ps .dvi .info .texi
 
-all: fetchmail
+all: fetchmail fetchmail.spec
+
 check: # No tests.
 depend:
 	test -f config.h || touch config.h
@@ -162,6 +163,8 @@ $(infodir)/fetchmail.info: fetchmail.info
 $(mandir)/$(instname).$(manext): fetchmail.man
 	$(INSTALL_DATA) $(srcdir)/fetchmail.man $@
 
+fetchmail.spec: Makefile.in
+	specgen.sh $(VERS) >fetchmail.spec
 
 .PHONY: clean realclean distclean mostlyclean
 clean: 
@@ -172,7 +175,7 @@ distclean: clean
 	-rm -f Makefile config.h
 	-rm -f config.cache config.status config.log stamp-config
 	-rm -f TAGS tags
-	-rm -f fetchmail.log fetchmail.toc fetchmail.*aux
+	-rm -f fetchmail.log fetchmail.toc fetchmail.*aux fetchmail.spec
 
 realclean: distclean # fetchmail.info*
 
@@ -208,7 +211,7 @@ docs = $(srcdir)/COPYING $(srcdir)/README $(srcdir)/INSTALL $(srcdir)/NEWS \
 	$(srcdir)/*.man	$(srcdir)/sample.rcfile
 config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/configure \
 	$(srcdir)/config.guess $(srcdir)/config.h.in $(srcdir)/config.sub
-scripts = $(srcdir)/install.sh $(srcdir)/mkinstalldirs
+scripts = $(srcdir)/install.sh $(srcdir)/mkinstalldirs $(srcdir)/specgen.sh
 all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) \
 	$(srcdir)/MANIFEST
 
