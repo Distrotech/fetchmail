@@ -726,14 +726,14 @@ static int readheaders(int sock,
 	    resent_sender_offs = (line - msgblk.headers);
 
 #ifdef __UNUSED__
- 	else if (!strncasecmp("Message-Id:", buf, 11))
+ 	else if (!strncasecmp("Message-Id:", line, 11))
 	{
 	    if (ctl->server.uidl)
  	    {
 	        char id[IDLEN+1];
 
-		buf[IDLEN+12] = 0;		/* prevent stack overflow */
- 		sscanf(buf+12, "%s", id);
+		line[IDLEN+12] = 0;		/* prevent stack overflow */
+ 		sscanf(line+12, "%s", id);
  	        if (!str_find( &ctl->newsaved, num))
 		{
  		    struct idlist *new = save_str(&ctl->newsaved,id,UID_SEEN);
