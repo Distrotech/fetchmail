@@ -1003,14 +1003,30 @@ static int load_params(int argc, char **argv, int optind)
     {
 	ctl->wedged = FALSE;
 
+	/* merge in defaults */
+	optmerge(ctl, &def_opts, FALSE);
+
+	/* force command-line options */
+	optmerge(ctl, &cmd_opts, TRUE);
+
+	/*
+	 * queryname has to be set up for inactive servers too.  
+	 * Otherwise the UIDL code core-dumps on startup.
+	 */
+	if (ctl->server.via) 
+	    ctl->server.queryname = xstrdup(ctl->server.via);
+	else
+	    ctl->server.queryname = xstrdup(ctl->server.pollname);
+
+	/*
+	 * We no longer do DNS lookups at startup.
+	 * This is a kluge.  It enables users to edit their
+	 * configurations when DNS isn't available.
+	 */
+	ctl->server.truename = xstrdup(ctl->server.queryname);
+
 	if (configdump || ctl->active )
 	{
-	    /* merge in defaults */
-	    optmerge(ctl, &def_opts, FALSE);
-
-	    /* force command-line options */
-	    optmerge(ctl, &cmd_opts, TRUE);
-
 	    /* this code enables flags to be turned off */
 #define DEFAULT(flag, dflt)	if (flag == FLAG_TRUE)\
 	    				flag = TRUE;\
@@ -1073,18 +1089,6 @@ static int load_params(int argc, char **argv, int optind)
 		report(stderr, GT_("fetchmail: warning: no DNS available to check multidrop fetches from %s\n"), ctl->server.pollname);
 	    }
 #endif /* !HAVE_GETHOSTBYNAME || !HAVE_RES_SEARCH */
-
-	    if (ctl->server.via) 
-		ctl->server.queryname = xstrdup(ctl->server.via);
-	    else
-		ctl->server.queryname = xstrdup(ctl->server.pollname);
-
-	    /*
-	     * We no longer do DNS lookups at startup.
-	     * This is a kluge.  It enables users to edit their
-	     * configurations when DNS isn't available.
-	     */
-	    ctl->server.truename = xstrdup(ctl->server.queryname);
 
 	    /* if no folders were specified, set up the null one as default */
 	    if (!ctl->mailboxes)

@@ -3,7 +3,7 @@
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
 * Changed the logging logic along lines suggested by Jan Klaverstijn,
-* fetchmauilconf looks first in the directory it's running from to find
+* fetchmailconf looks first in the directory it's running from to find
   fetchmail.
 * Make sure we vet a success status correctly from open_smtp_sink()
   and open_bsmtp_sink().
@@ -18,6 +18,8 @@
 * NextStep and OpenStep port patch from Eric Sunshine.
 * Block signals during SockConnect() so we don't get a socket descriptor 
   leak if we're hit by an alarm signal during connect(2).
+* Set queryname even when server is inactive; avoids a core-dump bug in
+  the fetchids code.
 
 fetchmail-5.9.4 (Wed Oct  3 07:47:45 EDT 2001), 21104 lines:
 
