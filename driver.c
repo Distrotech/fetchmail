@@ -83,7 +83,9 @@ static int tagnum;
 
 static char *shroud;	/* string to shroud in debug output, if  non-NULL */
 static int mytimeout;	/* value of nonreponse timeout */
+#ifdef MSGLEN
 static int msglen;	/* actual message length */
+#endif /* MSGLEN */
 
 static void set_timeout(int timeleft)
 /* reset the nonresponse-timeout */
@@ -528,7 +530,10 @@ int num;		/* index of message */
     /* read message headers */
     headers = received_for = NULL;
     from_offs = ctt_offs = env_offs = -1;
-    oldlen = msglen = 0;
+    oldlen = 0;
+#ifdef MSGLEN
+    msglen = 0;
+#endif /* MSGLEN */
     for (remaining = len; remaining > 0 || protocol->delimited; remaining -= linelen)
     {
 	char *line;
@@ -540,7 +545,9 @@ int num;		/* index of message */
 	    if ((n = SockRead(sock, buf, sizeof(buf)-1)) == -1)
 		return(PS_SOCKET);
 	    linelen += n;
+#ifdef MSGLEN
 	    msglen += n;
+#endif /* MSGLEN */
 
 	    /* lines may not be properly CRLF terminated; fix this for qmail */
 	    if (ctl->forcecr)
@@ -1182,7 +1189,9 @@ flag forward;		/* TRUE to forward */
 	    }
 	}
 	len -= linelen;
+#ifdef MSGLEN
 	msglen += linelen;
+#endif /* MSGLEN */
 
 	/* check for end of message */
 	if (protocol->delimited && *buf == '.')
@@ -1655,7 +1664,7 @@ const struct method *proto;	/* protocol method table */
 			    {
 				if ((ok=(protocol->fetch_body)(sock,ctl,num,&len)))
 				    goto cleanUp;
-				if (outlevel > O_SILENT && !msgsizes)
+				if (outlevel > O_SILENT && !wholesize)
 				    error_build(" (%d body bytes) ", len);
 				set_timeout(ctl->server.timeout);
 			    }
@@ -1684,9 +1693,11 @@ const struct method *proto;	/* protocol method table */
 			    }
 			}
 
+#ifdef MSGLEN
 			/* check to see if the numbers matched? */
 			if (msgsizes && msglen != msgsizes[num-1])
 			    error(0, 0, "size of message %d (%d) was not what was expected (%d)", num, msglen, msgsizes[num-1]);
+#endif /* MSGLEN */
 
 			/* end-of-message processing starts here */
 			if (outlevel == O_VERBOSE)
