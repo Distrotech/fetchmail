@@ -80,7 +80,7 @@ TODO: todo.html
 # man2html no longer chokes and dies on this man page,
 # but manServer.pl does a much better job. 
 fetchmail-man.html: fetchmail.man
-	$(srcdir)/dist-tools/manServer.pl fetchmail.man >$@ \
+	env - PATH=$$PATH $(srcdir)/dist-tools/manServer.pl fetchmail.man >$@ \
 	|| { rm -f $@ ; exit 1 ; }
 
 dist-hook:
