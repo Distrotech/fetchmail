@@ -49,6 +49,9 @@
 /* Define if you want POP2 support compiled in */
 #undef POP2_ENABLE
 
+/* Define if you want OPIE support compiled in */
+#undef OPIE_ENABLE
+
 
 /* Leave that blank line there!!  Autoheader needs it.
    If you're adding to this file, keep in mind:
