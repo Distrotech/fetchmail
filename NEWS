@@ -2,6 +2,10 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Corrected Rob Braun's remote-build change, it broke change the build
+  with NLS.
+
+
 fetchmail-5.8.13 (Tue Jul 10 17:00:50 EDT 2001), 21057 lines:
 
 * Correction for backslash-handling patch in rfc822.c.
@@ -10,7 +14,7 @@ fetchmail-5.8.13 (Tue Jul 10 17:00:50 EDT 2001), 21057 lines:
   overwriting.
 * Discard Return-Path headers consisting of a single @.
 * Make fetchmailconf dump plugin and plugout options properly.
-* Rob Brauns changes for building fetchmail outside its source directory
+* Rob Braun's changes for building fetchmail outside its source directory
 
 There are 357 people on fetchmail-friends and 607 on fetchmail-announce.
 
@@ -24,7 +28,7 @@ fetchmail-5.8.12 (Fri Jul  6 00:56:02 EDT 2001), 21052 lines:
   make it inactive.  Exit only if all lookups fail.
 * Restore code to deal with SMTP error responses at RCPT TO time, but
   without issuing an RSET.  This is intended to fix obscure bugs that
-  show up in recentb Postfix releases and sendmail configurations that
+  show up in recent Postfix releases and sendmail configurations that
   delay antispam checks on the MAIL FROM line until RCPT TO time.
 
 There are 353 people on fetchmail-friends and 608 on fetchmail-announce.
