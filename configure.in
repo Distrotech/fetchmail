@@ -35,6 +35,7 @@ AC_CHECK_LIB(nsl,inet_addr)
 AC_CHECK_LIB(socket,socket)
 AC_CHECK_LIB(inet,socket)
 AC_CHECK_LIB(opie,opiegenerator)
+AC_CHECK_LIB(cposix, strchr)	dnl Interactive UNIX System V/386 Release 3.2
 
 AC_CHECK_FUNC(strstr, AC_DEFINE(HAVE_STRSTR), 
               [EXTRASRC="$EXTRASRC \$(srcdir)/strstr.c"
