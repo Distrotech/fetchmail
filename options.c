@@ -32,23 +32,24 @@
 #define LA_PORT		14
 #define LA_AUTHENTICATE	15
 #define LA_TIMEOUT	16
-#define LA_USERNAME	17
-#define LA_ALL          18
-#define LA_KILL		19
-#define	LA_KEEP		20
-#define LA_FLUSH        21
-#define LA_NOREWRITE	22
-#define LA_LIMIT	23
-#define LA_REMOTEFILE	24
-#define LA_SMTPHOST	25
-#define LA_BATCHLIMIT	26
-#define LA_FETCHLIMIT	27
-#define LA_MDA		28
-#define LA_INTERFACE    29
-#define LA_MONITOR      30
-#define LA_YYDEBUG	31
+#define LA_ENVELOPE	17
+#define LA_USERNAME	18
+#define LA_ALL          19
+#define LA_KILL		20
+#define	LA_KEEP		21
+#define LA_FLUSH        22
+#define LA_NOREWRITE	23
+#define LA_LIMIT	24
+#define LA_REMOTEFILE	25
+#define LA_SMTPHOST	26
+#define LA_BATCHLIMIT	27
+#define LA_FETCHLIMIT	28
+#define LA_MDA		29
+#define LA_INTERFACE    30
+#define LA_MONITOR      31
+#define LA_YYDEBUG	32
 
-static char *shortoptions = "?Vcsvd:NqL:f:i:p:P:A:t:u:akKFnl:r:S:b:B:m:I:M:y";
+static char *shortoptions = "?Vcsvd:NqL:f:i:p:P:A:t:E:u:akKFnl:r:S:b:B:m:I:M:y";
 static struct option longoptions[] = {
   {"help",	no_argument,	   (int *) 0, LA_HELP        },
   {"version",   no_argument,       (int *) 0, LA_VERSION     },
@@ -72,6 +73,7 @@ static struct option longoptions[] = {
   {"port",	required_argument, (int *) 0, LA_PORT        },
   {"auth",	required_argument, (int *) 0, LA_AUTHENTICATE},
   {"timeout",	required_argument, (int *) 0, LA_TIMEOUT     },
+  {"envelope",	required_argument, (int *) 0, LA_ENVELOPE    },
 
   {"user",	required_argument, (int *) 0, LA_USERNAME    },
   {"username",  required_argument, (int *) 0, LA_USERNAME    },
@@ -204,13 +206,18 @@ struct query *ctl;	/* option record to be initialized */
 	    }
 	    break;
 	case 't':
+	case LA_TIMEOUT:
 	    ctl->timeout = atoi(optarg);
 	    break;
+	case 'E':
+	case LA_ENVELOPE:
+	    ctl->envelope = xstrdup(optarg);
+	    break;
+
 	case 'u':
 	case LA_USERNAME:
 	    strncpy(ctl->remotename,optarg,sizeof(ctl->remotename)-1);
 	    break;
-
 	case 'a':
 	case LA_ALL:
 	    ctl->fetchall = TRUE;
@@ -323,6 +330,7 @@ struct query *ctl;	/* option record to be initialized */
 	fputs("  -P, --port        TCP/IP service port to connect to\n",stderr);
 	fputs("  -A, --auth        authentication type (password or kerberos)\n",stderr);
 	fputs("  -t, --timeout     server nonresponse timeout\n",stderr);
+	fputs("  -E, --envelope    envelope address header\n",stderr);
 
 	fputs("  -u, --username    specify users's login on server\n", stderr);
 	fputs("  -a, --all         retrieve old and new messages\n", stderr);

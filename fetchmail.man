@@ -236,6 +236,13 @@ nonzero size will prevent these delays.
 Limit the number of messages accepted from a given server in a single
 poll.  By default there is no limit. 
 .TP
+.B -E, --envelope
+This option changes the header 
+.I fetchmail
+assumes will carry a copy of the mail's envelope address.  Normally
+this is `X-Envelope-To' but as this header is not standard, practice
+varies. See the discussion of multidrop address handling below.
+.TP
 .B \-V, --version
 Displays the version information for your copy of 
 .I fetchmail.
@@ -410,7 +417,7 @@ or --nodetach option suppresses detachment of the daemon process
 from its control terminal.  This is primarily useful for debugging.
 .PP
 Note that while running in daemon mode, transient errors (such as DNS
-failures or sendmail delivery refusals) effectively force the fetchall
+failures or sendmail delivery refusals) may force the fetchall
 option on for the duration of the next polling cycle.
 This is a robustness feature.  It means that if a message is fetched
 (and thus marked seen by the mailserver) but not delivered locally
@@ -544,7 +551,7 @@ Legal user options are
     syslog
 .PP
 All options correspond to the obvious command-line arguments except
-the following: `aka', `is', `to', `password', `envelope', and `preconnect'.
+the following: `aka', `is', `to', `password', and `preconnect'.
 .PP
 The `aka' option is for use with multidrop mailboxes.  It allows you
 to pre-declare a list of DNS aliases for a server.  This is an
@@ -553,12 +560,6 @@ optimization hack that allows you to trade space for speed.  When
 while processing a multidrop mailbox, grovels through message headers
 looking for names of the mailserver, pre-declaring common ones can
 save it from having to do DNS lookups.
-.PP
-The `envelope' option changes the header 
-.I fetchmail
-assumes will carry a copy of the mail's envelope address.  Normally
-this is `X-Envelope-To' but as this header is not standard practice
-varies. See the discussion of multidrop address handling below.
 .PP
 The `is' or `to' keywords associate the following local (client)
 name(s) (or server-name to client-name mappings separated by =) with
@@ -793,7 +794,7 @@ than one recipient.
 Alternatively, some SMTP listeners and/or mail servers insert a header
 in each message containing a copy of the envelope addresses.  This
 header (when it exists) is often `X-Envelope-To'.  Fetchmail's
-assumption about this can be changed with the `envelope' option.
+assumption about this can be changed with the -E or `envelope' option.
 .SH EXIT CODES
 To facilitate the use of 
 .I fetchmail
