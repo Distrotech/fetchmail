@@ -184,8 +184,8 @@ basically in maintainance mode.<p>
 Major changes or additions therefore seem unlikely until there are
 significant changes in or additions to the related protocol RFCs.  One
 development that would stimulate a new release almost instantly is the
-development of a lightweight encrypted authentication method for IMAP
-sessions.<p>
+development of a standard lightweight encrypted authentication method
+for IMAP sessions.<p>
 
 <H1>Where you can use fetchmail:</H1>
 
