@@ -313,6 +313,333 @@ static void send_size_warnings(struct query *ctl)
     close_warning_by_mail(ctl, (struct msgblk *)NULL);
 }
 
+static int lockstep_fetch(int mailserver_socket, struct query *ctl, 
+			  int count, int *msgsizes, 
+			  int new, int force, int maxfetch,
+			  int *fetches, int *dispatches, int *deletions)
+/* fetch messages in lockstep mode */
+{
+    int num, ok, len;
+    struct idlist *current=NULL, *tmp=NULL;
+
+    for (num = 1; num <= count; num++)
+    {
+	flag toolarge = NUM_NONZERO(ctl->limit)
+	    && msgsizes && (msgsizes[num-1] > ctl->limit);
+	flag oldmsg = (!new) || (ctl->server.base_protocol->is_old && (ctl->server.base_protocol->is_old)(mailserver_socket,ctl,num));
+	flag fetch_it = !toolarge 
+	    && (ctl->fetchall || force || !oldmsg);
+	flag suppress_delete = FALSE;
+	flag suppress_forward = FALSE;
+	flag suppress_readbody = FALSE;
+	flag retained = FALSE;
+
+	/*
+	 * This check copes with Post Office/NT's
+	 * annoying habit of randomly prepending bogus
+	 * LIST items of length -1.  Patrick Audley
+	 * <paudley@pobox.com> tells us: LIST shows a
+	 * size of -1, RETR and TOP return "-ERR
+	 * System error - couldn't open message", and
+	 * DELE succeeds but doesn't actually delete
+	 * the message.
+	 */
+	if (msgsizes && msgsizes[num-1] == -1)
+	{
+	    if (outlevel >= O_VERBOSE)
+		report(stdout, 
+		       _("Skipping message %d, length -1\n"),
+		       num);
+	    continue;
+	}
+
+	/*
+	 * We may want to reject this message if it's old
+	 * or oversized, and we're not forcing retrieval.
+	 */
+	if (!fetch_it)
+	{
+	    if (outlevel > O_SILENT)
+	    {
+		report_build(stdout, 
+			     _("skipping message %d (%d octets)"),
+			     num, msgsizes[num-1]);
+		if (toolarge && !check_only) 
+		{
+		    char size[32];
+		    int cnt;
+
+		    /* convert sz to string */
+		    sprintf(size, "%d", msgsizes[num-1]);
+
+		    /* build a list of skipped messages
+		     * val.id = size of msg (string cnvt)
+		     * val.status.num = warning_poll_count
+		     * val.status.mask = nbr of msg this size
+		     */
+
+		    current = ctl->skipped;
+
+		    /* initialise warning_poll_count to the
+		     * current value so that all new msg will
+		     * be included in the next mail
+		     */
+		    cnt = current ? current->val.status.num : 0;
+
+		    /* if entry exists, increment the count */
+		    if (current && 
+			str_in_list(&current, size, FALSE))
+		    {
+			for ( ; current; 
+			      current = current->next)
+			{
+			    if (strcmp(current->id, size) == 0)
+			    {
+				current->val.status.mark++;
+				break;
+			    }
+			}
+		    }
+		    /* otherwise, create a new entry */
+		    /* initialise with current poll count */
+		    else
+		    {
+			tmp = save_str(&ctl->skipped, size, 1);
+			tmp->val.status.num = cnt;
+		    }
+
+		    report_build(stdout, _(" (oversized, %d octets)"),
+				 msgsizes[num-1]);
+		}
+	    }
+	}
+	else
+	{
+	    flag wholesize = !ctl->server.base_protocol->fetch_body;
+
+	    /* request a message */
+	    ok = (ctl->server.base_protocol->fetch_headers)(mailserver_socket,ctl,num, &len);
+	    if (ok != 0)
+		return(FALSE);
+
+	    /* -1 means we didn't see a size in the response */
+	    if (len == -1 && msgsizes)
+	    {
+		len = msgsizes[num - 1];
+		wholesize = TRUE;
+	    }
+
+	    if (outlevel > O_SILENT)
+	    {
+		report_build(stdout, _("reading message %d of %d"),
+			     num,count);
+
+		if (len > 0)
+		    report_build(stdout, _(" (%d %soctets)"),
+				 len, wholesize ? "" : _("header "));
+		if (outlevel >= O_VERBOSE)
+		    report_complete(stdout, "\n");
+		else
+		    report_complete(stdout, " ");
+	    }
+
+	    /* 
+	     * Read the message headers and ship them to the
+	     * output sink.  
+	     */
+	    ok = readheaders(mailserver_socket, len, msgsizes[num-1],
+			     ctl, num);
+	    if (ok == PS_RETAINED)
+		suppress_forward = retained = TRUE;
+	    else if (ok == PS_TRANSIENT)
+		suppress_delete = suppress_forward = TRUE;
+	    else if (ok == PS_REFUSED)
+		suppress_forward = TRUE;
+	    else if (ok == PS_TRUNCATED)
+		suppress_readbody = TRUE;
+	    else if (ok)
+		return(FALSE);
+
+	    /* 
+	     * If we're using IMAP4 or something else that
+	     * can fetch headers separately from bodies,
+	     * it's time to request the body now.  This
+	     * fetch may be skipped if we got an anti-spam
+	     * or other PS_REFUSED error response during
+	     * readheaders.
+	     */
+	    if (ctl->server.base_protocol->fetch_body && !suppress_readbody) 
+	    {
+		if (outlevel >= O_VERBOSE && !isafile(1))
+		{
+		    fputc('\n', stdout);
+		    fflush(stdout);
+		}
+
+		if ((ok = (ctl->server.base_protocol->trail)(mailserver_socket, ctl, num)))
+		    return(FALSE);
+		len = 0;
+		if (!suppress_forward)
+		{
+		    if ((ok=(ctl->server.base_protocol->fetch_body)(mailserver_socket,ctl,num,&len)))
+			return(FALSE);
+		    /*
+		     * Work around a bug in Novell's
+		     * broken GroupWise IMAP server;
+		     * its body FETCH response is missing
+		     * the required length for the data
+		     * string.  This violates RFC2060.
+		     */
+		    if (len == -1)
+			len = msgsizes[num-1] - msgblk.msglen;
+		    if (outlevel > O_SILENT && !wholesize)
+			report_complete(stdout,
+					_(" (%d body octets) "), len);
+		}
+	    }
+
+	    /* process the body now */
+	    if (len > 0)
+	    {
+		if (suppress_readbody)
+		{
+		    /* When readheaders returns PS_TRUNCATED,
+		       the body (which has no content
+		       has already been read by readheaders,
+		       so we say readbody returned PS_SUCCESS */
+		    ok = PS_SUCCESS;
+		}
+		else
+		{
+		    ok = readbody(mailserver_socket,
+				  ctl,
+				  !suppress_forward,
+				  len);
+		}
+		if (ok == PS_TRANSIENT)
+		    suppress_delete = suppress_forward = TRUE;
+		else if (ok)
+		    return(FALSE);
+
+				/* tell server we got it OK and resynchronize */
+		if (ctl->server.base_protocol->trail)
+		{
+		    if (outlevel >= O_VERBOSE && !isafile(1))
+		    {
+			fputc('\n', stdout);
+			fflush(stdout);
+		    }
+
+		    ok = (ctl->server.base_protocol->trail)(mailserver_socket, ctl, num);
+		    if (ok != 0)
+			return(FALSE);
+		}
+	    }
+
+	    /* count # messages forwarded on this pass */
+	    if (!suppress_forward)
+		(*dispatches)++;
+
+	    /*
+	     * Check to see if the numbers matched?
+	     *
+	     * Yes, some servers foo this up horribly.
+	     * All IMAP servers seem to get it right, and
+	     * so does Eudora QPOP at least in 2.xx
+	     * versions.
+	     *
+	     * Microsoft Exchange gets it completely
+	     * wrong, reporting compressed rather than
+	     * actual sizes (so the actual length of
+	     * message is longer than the reported size).
+	     * Another fine example of Microsoft brain death!
+	     *
+	     * Some older POP servers, like the old UCB
+	     * POP server and the pre-QPOP QUALCOMM
+	     * versions, report a longer size in the LIST
+	     * response than actually gets shipped up.
+	     * It's unclear what is going on here, as the
+	     * QUALCOMM server (at least) seems to be
+	     * reporting the on-disk size correctly.
+	     */
+	    if (msgsizes && msgblk.msglen != msgsizes[num-1])
+	    {
+		if (outlevel >= O_DEBUG)
+		    report(stdout,
+			   _("message %d was not the expected length (%d actual != %d expected)\n"),
+			   num, msgblk.msglen, msgsizes[num-1]);
+	    }
+
+	    /* end-of-message processing starts here */
+	    if (!close_sink(ctl, &msgblk, !suppress_forward))
+	    {
+		ctl->errcount++;
+		suppress_delete = TRUE;
+	    }
+	    (*fetches)++;
+	}
+
+	/*
+	 * At this point in flow of control, either
+	 * we've bombed on a protocol error or had
+	 * delivery refused by the SMTP server
+	 * (unlikely -- I've never seen it) or we've
+	 * seen `accepted for delivery' and the
+	 * message is shipped.  It's safe to mark the
+	 * message seen and delete it on the server
+	 * now.
+	 */
+
+	/* tell the UID code we've seen this */
+	if (ctl->newsaved)
+	{
+	    struct idlist	*sdp;
+
+	    for (sdp = ctl->newsaved; sdp; sdp = sdp->next)
+		if ((sdp->val.status.num == num)
+		    && (!toolarge || oldmsg)) 
+		{
+		    sdp->val.status.mark = UID_SEEN;
+		    save_str(&ctl->oldsaved, sdp->id,UID_SEEN);
+		}
+	}
+
+	/* maybe we delete this message now? */
+	if (retained)
+	{
+	    if (outlevel > O_SILENT) 
+		report(stdout, _(" retained\n"));
+	}
+	else if (ctl->server.base_protocol->delete
+		 && !suppress_delete
+		 && (fetch_it ? !ctl->keep : ctl->flush))
+	{
+	    (*deletions)++;
+	    if (outlevel > O_SILENT) 
+		report_complete(stdout, _(" flushed\n"));
+	    ok = (ctl->server.base_protocol->delete)(mailserver_socket, ctl, num);
+	    if (ok != 0)
+		return(FALSE);
+#ifdef POP3_ENABLE
+	    delete_str(&ctl->newsaved, num);
+#endif /* POP3_ENABLE */
+	}
+	else if (outlevel > O_SILENT) 
+	    report_complete(stdout, _(" not flushed\n"));
+
+	/* perhaps this as many as we're ready to handle */
+	if (maxfetch && maxfetch <= *fetches && *fetches < count)
+	{
+	    report(stdout, _("fetchlimit %d reached; %d messages left on server\n"),
+		   maxfetch, count - *fetches);
+	    ok = PS_MAXFETCH;
+	    return(FALSE);
+	}
+    }
+
+    return(TRUE);
+}
+
 static int do_session(ctl, proto, maxfetch)
 /* retrieve messages from server using given protocol method table */
 struct query *ctl;		/* parsed options with merged-in defaults */
@@ -328,7 +655,6 @@ const int maxfetch;		/* maximum number of messages to fetch */
     const char *msg;
     void (*pipesave)(int);
     void (*alrmsave)(int);
-    struct idlist *current=NULL, *tmp=NULL;
 
     ctl->server.base_protocol = proto;
 
@@ -430,7 +756,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
     else
     {
 	char buf[MSGBUFSIZE+1], *realhost;
-	int len, num, count, new, bytes, deletions = 0, *msgsizes = NULL;
+	int count, new, bytes, deletions = 0, *msgsizes = NULL;
 #if INET6_ENABLE
 	int fetches, dispatches, oldphase;
 #else /* INET6_ENABLE */
@@ -848,320 +1174,13 @@ is restored."));
 
 		    /* read, forward, and delete messages */
 		    stage = STAGE_FETCH;
-		    for (num = 1; num <= count; num++)
-		    {
-			flag toolarge = NUM_NONZERO(ctl->limit)
-			    && msgsizes && (msgsizes[num-1] > ctl->limit);
-			flag oldmsg = (!new) || (ctl->server.base_protocol->is_old && (ctl->server.base_protocol->is_old)(mailserver_socket,ctl,num));
-			flag fetch_it = !toolarge 
-			    && (ctl->fetchall || force_retrieval || !oldmsg);
-			flag suppress_delete = FALSE;
-			flag suppress_forward = FALSE;
-			flag suppress_readbody = FALSE;
-			flag retained = FALSE;
 
-			/*
-			 * This check copes with Post Office/NT's
-			 * annoying habit of randomly prepending bogus
-			 * LIST items of length -1.  Patrick Audley
-			 * <paudley@pobox.com> tells us: LIST shows a
-			 * size of -1, RETR and TOP return "-ERR
-			 * System error - couldn't open message", and
-			 * DELE succeeds but doesn't actually delete
-			 * the message.
-			 */
-			if (msgsizes && msgsizes[num-1] == -1)
-			{
-			    if (outlevel >= O_VERBOSE)
-				report(stdout, 
-				      _("Skipping message %d, length -1\n"),
-				      num);
-			    continue;
-			}
-
-			/*
-			 * We may want to reject this message if it's old
-			 * or oversized, and we're not forcing retrieval.
-			 */
-			if (!fetch_it)
-			{
-			    if (outlevel > O_SILENT)
-			    {
-				report_build(stdout, 
-				     _("skipping message %d (%d octets)"),
-				     num, msgsizes[num-1]);
-				if (toolarge && !check_only) 
-				{
-				    char size[32];
-				    int cnt;
-
-				    /* convert sz to string */
-				    sprintf(size, "%d", msgsizes[num-1]);
-
-				    /* build a list of skipped messages
-				     * val.id = size of msg (string cnvt)
-				     * val.status.num = warning_poll_count
-				     * val.status.mask = nbr of msg this size
-				     */
-
-				    current = ctl->skipped;
-
-				    /* initialise warning_poll_count to the
-				     * current value so that all new msg will
-				     * be included in the next mail
-				     */
-				    cnt = current? current->val.status.num : 0;
-
-				    /* if entry exists, increment the count */
-				    if (current && 
-					str_in_list(&current, size, FALSE))
-				    {
-					for ( ; current; 
-						current = current->next)
-					{
-					    if (strcmp(current->id, size) == 0)
-					    {
-					        current->val.status.mark++;
-						break;
-					    }
-					}
-				    }
-				    /* otherwise, create a new entry */
-				    /* initialise with current poll count */
-				    else
-				    {
-					tmp = save_str(&ctl->skipped, size, 1);
-					tmp->val.status.num = cnt;
-				    }
-
-				    report_build(stdout, _(" (oversized, %d octets)"),
-						msgsizes[num-1]);
-				}
-			    }
-			}
-			else
-			{
-			    flag wholesize = !ctl->server.base_protocol->fetch_body;
-
-			    /* request a message */
-			    ok = (ctl->server.base_protocol->fetch_headers)(mailserver_socket,ctl,num, &len);
-			    if (ok != 0)
-				goto cleanUp;
-
-			    /* -1 means we didn't see a size in the response */
-			    if (len == -1 && msgsizes)
-			    {
-				len = msgsizes[num - 1];
-				wholesize = TRUE;
-			    }
-
-			    if (outlevel > O_SILENT)
-			    {
-				report_build(stdout, _("reading message %d of %d"),
-					    num,count);
-
-				if (len > 0)
-				    report_build(stdout, _(" (%d %soctets)"),
-					len, wholesize ? "" : _("header "));
-				if (outlevel >= O_VERBOSE)
-				    report_complete(stdout, "\n");
-				else
-				    report_complete(stdout, " ");
-			    }
-
-			    /* 
-			     * Read the message headers and ship them to the
-			     * output sink.  
-			     */
-			    ok = readheaders(mailserver_socket, len, msgsizes[num-1],
-					     ctl, num);
-			    if (ok == PS_RETAINED)
-				suppress_forward = retained = TRUE;
-			    else if (ok == PS_TRANSIENT)
-				suppress_delete = suppress_forward = TRUE;
-			    else if (ok == PS_REFUSED)
-				suppress_forward = TRUE;
-			    else if (ok == PS_TRUNCATED)
-				suppress_readbody = TRUE;
-			    else if (ok)
-				goto cleanUp;
-
-			    /* 
-			     * If we're using IMAP4 or something else that
-			     * can fetch headers separately from bodies,
-			     * it's time to request the body now.  This
-			     * fetch may be skipped if we got an anti-spam
-			     * or other PS_REFUSED error response during
-			     * readheaders.
-			     */
-			    if (ctl->server.base_protocol->fetch_body && !suppress_readbody) 
-			    {
-				if (outlevel >= O_VERBOSE && !isafile(1))
-				{
-				    fputc('\n', stdout);
-				    fflush(stdout);
-				}
-
-				if ((ok = (ctl->server.base_protocol->trail)(mailserver_socket, ctl, num)))
-				    goto cleanUp;
-				len = 0;
-				if (!suppress_forward)
-				{
-				    if ((ok=(ctl->server.base_protocol->fetch_body)(mailserver_socket,ctl,num,&len)))
-					goto cleanUp;
-                                    /*
-                                     * Work around a bug in Novell's
-				     * broken GroupWise IMAP server;
-                                     * its body FETCH response is missing
-				     * the required length for the data
-				     * string.  This violates RFC2060.
-                                     */
-                                    if (len == -1)
-                                       len = msgsizes[num-1] - msgblk.msglen;
-				    if (outlevel > O_SILENT && !wholesize)
-					report_complete(stdout,
-					       _(" (%d body octets) "), len);
-				}
-			    }
-
-			    /* process the body now */
-			    if (len > 0)
-			    {
-			        if (suppress_readbody)
-				{
-				  /* When readheaders returns PS_TRUNCATED,
-				     the body (which has no content
-				     has already been read by readheaders,
-				     so we say readbody returned PS_SUCCESS */
-				  ok = PS_SUCCESS;
-				}
-				else
-				{
-				  ok = readbody(mailserver_socket,
-					        ctl,
-					        !suppress_forward,
-					        len);
-				}
-			        if (ok == PS_TRANSIENT)
-				    suppress_delete = suppress_forward = TRUE;
-				else if (ok)
-				    goto cleanUp;
-
-				/* tell server we got it OK and resynchronize */
-				if (ctl->server.base_protocol->trail)
-				{
-				    if (outlevel >= O_VERBOSE && !isafile(1))
-				    {
-					fputc('\n', stdout);
-					fflush(stdout);
-				    }
-
-				    ok = (ctl->server.base_protocol->trail)(mailserver_socket, ctl, num);
-				    if (ok != 0)
-					goto cleanUp;
-				}
-			    }
-
-			    /* count # messages forwarded on this pass */
-			    if (!suppress_forward)
-				dispatches++;
-
-			    /*
-			     * Check to see if the numbers matched?
-			     *
-			     * Yes, some servers foo this up horribly.
-			     * All IMAP servers seem to get it right, and
-			     * so does Eudora QPOP at least in 2.xx
-			     * versions.
-			     *
-			     * Microsoft Exchange gets it completely
-			     * wrong, reporting compressed rather than
-			     * actual sizes (so the actual length of
-			     * message is longer than the reported size).
-			     * Another fine example of Microsoft brain death!
-			     *
-			     * Some older POP servers, like the old UCB
-			     * POP server and the pre-QPOP QUALCOMM
-			     * versions, report a longer size in the LIST
-			     * response than actually gets shipped up.
-			     * It's unclear what is going on here, as the
-			     * QUALCOMM server (at least) seems to be
-			     * reporting the on-disk size correctly.
-			     */
-			    if (msgsizes && msgblk.msglen != msgsizes[num-1])
-			    {
-				if (outlevel >= O_DEBUG)
-				    report(stdout,
-					  _("message %d was not the expected length (%d actual != %d expected)\n"),
-					  num, msgblk.msglen, msgsizes[num-1]);
-			    }
-
-			    /* end-of-message processing starts here */
-			    if (!close_sink(ctl, &msgblk, !suppress_forward))
-			    {
-				ctl->errcount++;
-				suppress_delete = TRUE;
-			    }
-			    fetches++;
-			}
-
-			/*
-			 * At this point in flow of control, either
-			 * we've bombed on a protocol error or had
-			 * delivery refused by the SMTP server
-			 * (unlikely -- I've never seen it) or we've
-			 * seen `accepted for delivery' and the
-			 * message is shipped.  It's safe to mark the
-			 * message seen and delete it on the server
-			 * now.
-			 */
-
-			/* tell the UID code we've seen this */
-			if (ctl->newsaved)
-			{
-			    struct idlist	*sdp;
-
-			    for (sdp = ctl->newsaved; sdp; sdp = sdp->next)
-				if ((sdp->val.status.num == num)
-						&& (!toolarge || oldmsg)) 
-				{
-				    sdp->val.status.mark = UID_SEEN;
-				    save_str(&ctl->oldsaved, sdp->id,UID_SEEN);
-				}
-			}
-
-			/* maybe we delete this message now? */
-			if (retained)
-			{
-			    if (outlevel > O_SILENT) 
-				report(stdout, _(" retained\n"));
-			}
-			else if (ctl->server.base_protocol->delete
-				 && !suppress_delete
-				 && (fetch_it ? !ctl->keep : ctl->flush))
-			{
-			    deletions++;
-			    if (outlevel > O_SILENT) 
-				report_complete(stdout, _(" flushed\n"));
-			    ok = (ctl->server.base_protocol->delete)(mailserver_socket, ctl, num);
-			    if (ok != 0)
-				goto cleanUp;
-#ifdef POP3_ENABLE
-			    delete_str(&ctl->newsaved, num);
-#endif /* POP3_ENABLE */
-			}
-			else if (outlevel > O_SILENT) 
-			    report_complete(stdout, _(" not flushed\n"));
-
-			/* perhaps this as many as we're ready to handle */
-			if (maxfetch && maxfetch <= fetches && fetches < count)
-			{
-			    report(stdout, _("fetchlimit %d reached; %d messages left on server\n"),
-				  maxfetch, count - fetches);
-			    ok = PS_MAXFETCH;
-			    goto cleanUp;
-			}
-		    }
+		    /* fetch in lockstep mode */
+		    if (!lockstep_fetch(mailserver_socket, ctl, 
+					count, msgsizes, 
+					new, force_retrieval, maxfetch,
+					&fetches, &dispatches, &deletions))
+			goto cleanUp;
 
 		    if (!check_only && ctl->skipped
 			&& run.poll_interval > 0 && !nodetach)
