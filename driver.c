@@ -2347,8 +2347,11 @@ is restored."));
 
 			    for (sdp = ctl->newsaved; sdp; sdp = sdp->next)
 				if ((sdp->val.status.num == num)
-						&& (!toolarge || oldmsg))
+						&& (!toolarge || oldmsg)) 
+				{
 				    sdp->val.status.mark = UID_SEEN;
+				    save_str(&ctl->oldsaved, sdp->id,UID_SEEN);
+				}
 			}
 
 			/* maybe we delete this message now? */
