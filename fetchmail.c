@@ -86,6 +86,7 @@ char **argv;
     struct hostrec def_opts;
     int parsestatus, implicitmode;
     char *servername, *user, *home, *tmpdir, tmpbuf[BUFSIZ]; 
+    struct passwd *pw;
     FILE	*lockfp;
     pid_t pid;
 
@@ -96,8 +97,6 @@ char **argv;
 
     if ((user == (char *)NULL) || (home = getenv("HOME")) == (char *)NULL)
     {
-	struct passwd *pw;
-
 	if ((pw = getpwuid(getuid())) != NULL)
 	{
 	    user = pw->pw_name;
@@ -194,7 +193,13 @@ char **argv;
 
 	    /* if rc file didn't supply a localname, default appropriately */
 	    if (!hostp->localname[0])
-		strcpy(hostp->localname, hostp->remotename);
+		strcpy(hostp->localname, user);
+
+	    /* check that delivery is going to a real local user */
+	    if ((pw = getpwnam(user)) == (struct passwd *)NULL)
+		exit(PS_SYNTAX);	/* has to be from bad rc file */
+	    else
+		hostp->uid = pw->pw_uid;
 
 	    /* sanity checks */
 	    if (hostp->port < 0)

@@ -93,6 +93,7 @@ struct hostrec
     /* internal use */
     int active;
     struct hostrec *next;	/* next host in chain */
+    int uid;			/* UID of user to deliver to */
     char digest [DIGESTLEN];
 };
 

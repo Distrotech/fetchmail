@@ -2,6 +2,8 @@
 
 fetchmail-1.9 ():
 
+features --
+
 * POP3 UID support really works now.  I make rude noises at the POP3 mavens
   who forced us to this with RFC1725, but thank Al Longyear <longyear@sii.com>
   for fixing and verifying my slightly buggy implemntation.
@@ -16,6 +18,14 @@ fetchmail-1.9 ():
 * Add option to set server nonresponse timeout.
 
 * Password is no longer displayed in verbose mode.
+
+* Program now tries to set itself to the ID of the local user before
+  running an MDA, and reset to root afterwards. 
+
+bugs --
+
+* Default user name to deliver to is now the calling user (was the remote
+  user ID).
 
 fetchmail-1.8 (Fri Oct 11 15:08:10 EDT 1996):
 

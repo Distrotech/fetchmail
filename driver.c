@@ -692,6 +692,8 @@ struct method *proto;
 	    /* we may want to reject this message if it's old */
 	    if (treat_as_new || queryctl->fetchall)
 	    {
+		int	saveduid = getuid();
+
 		/* request a message */
 		(protocol->fetch)(socket, num, &len);
 
@@ -708,8 +710,21 @@ struct method *proto;
 
 		/* open the delivery pipe now if we're using an MDA */
 		if (queryctl->mda[0])
+		{
+		    /* 
+		     * In case we're running as root, change our UID to
+		     * that of the local user being delivered to, so the MDA
+		     * will be able to modify that user's files.  This
+		     * code will fail quietly when run by non-root.
+		     */
+		    (void) setuid(queryctl->uid);
+
 		    if ((mboxfd = openmailpipe(queryctl)) < 0)
+		    {
+			(void) setuid(saveduid);	/* see below */
 			goto cleanUp;
+		    }
+		}
 
 		/* read the message and ship it to the output sink */
 		ok = gen_readmsg(socket, mboxfd,
@@ -719,8 +734,16 @@ struct method *proto;
 
 		/* close the delivery pipe, we'll reopen before next message */
 		if (queryctl->mda[0])
+		{
 		    if ((ok = closemailpipe(mboxfd)) != 0 || alarmed)
 			goto cleanUp;
+
+		    /* 
+		     * Now try to reset our UID to root.  This code will fail
+		     * quietly when run by non-root.
+		     */
+		    (void) setuid(saveduid);
+		}
 
 		/* tell the server we got it OK and resynchronize */
 		if (protocol->trail)
