@@ -17,6 +17,7 @@ fetchmail-4.4.9 (Thu Jun  4 00:01:06 EDT 1998):
 * Hajimu UMEMOTO <ume@calm.imasy.or.jp> patched the address-rewrite logic to
   deal with addresses of the form "John Smith (foo) <jsmith@bar.com>" better.
 * POP3 TOP argument reduced to 99999999, the most CompuServe will accept.
+* Brendan Cully's fixes for the GSS code.
 
 There are 278 people on fetchmail-friends and 217 on fetchmail-announce.
 

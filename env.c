@@ -97,7 +97,9 @@ char *showproto(int proto)
     case P_POP3: return("POP3"); break;
     case P_IMAP: return("IMAP"); break;
     case P_IMAP_K4: return("IMAP-K4"); break;
+#ifdef GSSAPI
     case P_IMAP_GSS: return("IMAP-GSS"); break;
+#endif /* GSSAPI */
     case P_APOP: return("APOP"); break;
     case P_RPOP: return("RPOP"); break;
     case P_ETRN: return("ETRN"); break;

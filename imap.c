@@ -561,6 +561,7 @@ static int do_gssauth(int sock, char *hostname, char *username)
          * credentials. RFC 1731 doesn't specify what to do, and since this
          * support is only for authentication, we'll assume the server
          * knows enough to flush its own credentials */
+        gss_release_buffer(&min_stat, &send_token);
         return PS_SUCCESS;
     }
 

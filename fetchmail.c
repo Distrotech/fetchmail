@@ -339,8 +339,10 @@ int main (int argc, char **argv)
 	{
 	    if (ctl->server.preauthenticate == A_KERBEROS_V4 ||
 		ctl->server.preauthenticate == A_KERBEROS_V5 ||
-		ctl->server.protocol == P_IMAP_K4 ||
-		ctl->server.protocol == P_IMAP_GSS)
+#ifdef GSSAPI
+		ctl->server.protocol == P_IMAP_GSS ||
+#endif /* GSSAPI */
+		ctl->server.protocol == P_IMAP_K4)
 		/* Server won't care what the password is, but there
 		   must be some non-null string here.  */
 		ctl->password = ctl->remotename;
@@ -356,7 +358,11 @@ int main (int argc, char **argv)
 		    ctl->password = xstrdup(p->password);
 	    }
 
-	    if (ctl->server.protocol != P_ETRN && ctl->server.protocol != P_IMAP_K4 && ctl->server.protocol != P_IMAP_GSS && !ctl->password)
+	    if (ctl->server.protocol != P_ETRN && ctl->server.protocol != P_IMAP_K4
+#ifdef GSSAPI
+                && ctl->server.protocol != P_IMAP_GSS
+#endif /* GSSAPI */
+                && !ctl->password)
 	    {
 		free(tmpbuf);
 #define	PASSWORD_PROMPT	"Enter password for %s@%s: "
@@ -1081,7 +1087,9 @@ static int query_host(struct query *ctl)
 	break;
     case P_IMAP:
     case P_IMAP_K4:
+#ifdef GSSAPI
     case P_IMAP_GSS:
+#endif /* GSSAPI */
 #ifdef IMAP_ENABLE
 	return(doIMAP(ctl));
 #else

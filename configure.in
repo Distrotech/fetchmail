@@ -219,32 +219,22 @@ AC_ARG_ENABLE(netsec,
   
 ###	use option --with-gssapi=DIR to compile in GSSAPI support
 AC_ARG_WITH(gssapi,
-	[  --with-gssapi[=DIR]  compile in GSSAPI support using libraries in DIR])
-if test "$with-gssapi" = "yes"
+	[  --with-gssapi[=DIR]  compile in GSSAPI support using libraries in DIR],
+[
+if test "$with_gssapi" != "no"
 then
-    GSSAPIDIR="/usr /usr/local /usr/athena"
-else
-    GSSAPIDIR="$with_gssapi"
-fi
-if test "$GSSAPIDIR" != "" -a "$GSSAPIDIR" != "no"
-then
-    AC_MSG_CHECKING([for gssapi])
-    for curgssapidir in $GSSAPIDIR
-    do
-        if test -f $curgssapidir/include/gssapi/gssapi.h
-        then
-            CEFLAGS="$CEFLAGS -DGSSAPI -I$curgssapidir/include"
-            LDEFLAGS="$LDEFLAGS -L$curgssapidir/lib"
-            LIBS="$LIBS -lgssapi_krb5 -lkrb5"
-            AC_MSG_RESULT([in $curgssapidir])
-            GSSAPIFOUND="yes"
-        fi
-    done
-    if test "$GSSAPIFOUND" != "yes"
-    then
-        AC_MSG_ERROR([not found])
-    fi
-fi
+  if test "$with_gssapi" != "yes" -a -n "$with_gssapi"
+  then
+    CFLAGS="$CEFLAGS -I$with_gssapi/include"
+    LDFLAGS="$LDEFLAGS -L$with_gssapi/lib"
+  fi
+  AC_CHECK_LIB(krb5, krb5_init_context,,
+               AC_MSG_ERROR([could not find libkrb5 which is needed for GSSAPI support]))
+  AC_CHECK_LIB(gssapi_krb5, gss_init_sec_context,,
+               AC_MSG_ERROR([could not find libgssapi_krb5 which is needed for GSSAPI support]), -lkrb5)
+  AC_DEFINE(GSSAPI)
+  LIBS="$LIBS -lgssapi_krb5 -lkrb5"
+fi])
 
 ###	use option --with-kerberos=DIR to point at a Kerberos directory
 AC_ARG_WITH(kerberos,

@@ -58,8 +58,8 @@ can compile it in with `configure --enable-RPA'.
 
 Support for authentication using RFC1731 GSSAPI is available
 but also not included by default.  You can compile it in with
-`configure --enable-RPA', which looks for GSSAPI support in standard
-locations (/usr, /usr/local, /usr/athena).  If you set --enable-GSSAPI=DIR
+`configure --with-gssapi', which looks for GSSAPI support in standard
+locations (/usr, /usr/local).  If you set --with-GSSAPI=DIR
 you can direct the build to look for GSSAPI support under DIR.
 
 If you want to build for debugging, 
