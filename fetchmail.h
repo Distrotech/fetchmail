@@ -18,13 +18,13 @@
 #define		P_IMAP_LOGIN	10
 #define		P_ETRN		11
 
-#if INET6
+#if INET6_ENABLE
 #define		SMTP_PORT	"smtp"
 #define		KPOP_PORT	"kpop"
-#else /* INET6 */
+#else /* INET6_ENABLE */
 #define		SMTP_PORT	25
 #define		KPOP_PORT	1109
-#endif /* INET6 */
+#endif /* INET6_ENABLE */
 
 #ifdef SSL_ENABLE
 #define		SIMAP_PORT	993
@@ -144,13 +144,13 @@ struct query;
 struct method		/* describe methods for protocol state machine */
 {
     const char *name;		/* protocol name */
-#if INET6
+#if INET6_ENABLE
     const char *service;
     const char *sslservice;
-#else /* INET6 */
+#else /* INET6_ENABLE */
     int	port;			/* service port */
     int	sslport;		/* service port for ssl */
-#endif /* INET6 */
+#endif /* INET6_ENABLE */
     flag tagged;		/* if true, generate & expect command tags */
     flag delimited;		/* if true, accept "." message delimiter */
     int (*parse_response)(int, char *);
@@ -186,12 +186,12 @@ struct hostdata		/* shared among all user connections to given server */
     struct idlist *akalist;		/* server name first, then akas */
     struct idlist *localdomains;	/* list of pass-through domains */
     int protocol;			/* protocol type */
-#if INET6
+#if INET6_ENABLE
     char *service;			/* IPv6 service name */
     void *netsec;			/* IPv6 security request */
-#else /* INET6 */
+#else /* INET6_ENABLE */
     int port;				/* TCP/IP service port number */
-#endif /* INET6 */
+#endif /* INET6_ENABLE */
     int interval;			/* # cycles to skip between polls */
     int preauthenticate;		/* preauthentication mode to try */
     int timeout;			/* inactivity timout in seconds */

@@ -104,10 +104,10 @@
 #undef SSL_ENABLE
 
 /* Define if you want OPIE support compiled in */
-#undef OPIE
+#undef OPIE_ENABLE
 
 /* Define if you want IPv6 support compiled in */
-#undef INET6
+#undef INET6_ENABLE
 
 /* Define if you want network security support compiled in */
 #undef NET_SECURITY

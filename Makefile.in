@@ -186,6 +186,8 @@ realclean: distclean
 mostlyclean: clean
 
 # These magic rules are copied from the autoconf documentation
+# except that Harry McGavran says the autoheader call in the third
+# one below is unnecessary and causes problems with cross-platform builds.
 
 ${srcdir}/configure: configure.in aclocal.m4
 	cd ${srcdir} && autoconf
@@ -194,7 +196,7 @@ ${srcdir}/configure: configure.in aclocal.m4
 ${srcdir}/config.h.in: stamp-h.in
 
 ${srcdir}/stamp-h.in: configure.in aclocal.m4 acconfig.h # config.h.top config.h.bot
-	cd ${srcdir} && autoheader
+	cd ${srcdir} # && autoheader
 	echo timestamp> ${srcdir}/stamp-h.in
      
 config.h: stamp-h

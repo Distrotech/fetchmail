@@ -138,11 +138,11 @@ serv_option	: AKA alias_list
 #else
 		    				current.server.preauthenticate = A_KERBEROS_V4;
 #endif /* KERBEROS_V5 */
-#if INET6
+#if INET6_ENABLE
 					    current.server.service = KPOP_PORT;
-#else /* INET6 */
+#else /* INET6_ENABLE */
 					    current.server.port = KPOP_PORT;
-#endif /* INET6 */
+#endif /* INET6_ENABLE */
 					}
 		| PROTOCOL SDPS		{
 #ifdef SDPS_ENABLE
@@ -157,14 +157,14 @@ serv_option	: AKA alias_list
 		| CHECKALIAS            {current.server.checkalias = FLAG_TRUE;}
 		| NO CHECKALIAS         {current.server.checkalias  = FLAG_FALSE;}
 		| SERVICE STRING	{
-#if INET6
+#if INET6_ENABLE
 					current.server.service = $2;
-#endif /* INET6 */
+#endif /* INET6_ENABLE */
 					}
 		| PORT NUMBER		{
-#if !INET6
+#if !INET6_ENABLE
 					current.server.port = $2;
-#endif /* !INET6 */
+#endif /* !INET6_ENABLE */
 					}
 		| INTERVAL NUMBER		{current.server.interval = $2;}
 		| PREAUTHENTICATE PASSWORD	{current.server.preauthenticate = A_PASSWORD;}
@@ -209,18 +209,18 @@ serv_option	: AKA alias_list
 #endif /* NET_SECURITY */
 					}
 		| INTERFACE STRING	{
-#if (defined(linux) && !defined(INET6)) || defined(__FreeBSD__)
+#if (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__)
 					interface_parse($2, &current.server);
-#else /* (defined(linux) && !defined(INET6)) || defined(__FreeBSD__) */
+#else /* (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__) */
 					fprintf(stderr, "fetchmail: interface option is only supported under Linux and FreeBSD\n");
-#endif /* (defined(linux) && !defined(INET6)) || defined(__FreeBSD__) */
+#endif /* (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__) */
 					}
 		| MONITOR STRING	{
-#if (defined(linux) && !defined(INET6)) || defined(__FreeBSD__)
+#if (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__)
 					current.server.monitor = xstrdup($2);
-#else /* (defined(linux) && !defined(INET6)) || defined(__FreeBSD__) */
+#else /* (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__) */
 					fprintf(stderr, "fetchmail: monitor option is only supported under Linux\n");
-#endif /* (defined(linux) && !defined(INET6) || defined(__FreeBSD__)) */
+#endif /* (defined(linux) && !defined(INET6_ENABLE) || defined(__FreeBSD__)) */
 					}
 		| PLUGIN STRING		{ current.server.plugin = xstrdup($2); }
 		| PLUGOUT STRING	{ current.server.plugout = xstrdup($2); }

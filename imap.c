@@ -49,9 +49,9 @@
 
 #include "md5.h"
 
-#if OPIE
+#if OPIE_ENABLE
 #include <opie.h>
-#endif /* OPIE */
+#endif /* OPIE_ENABLE */
 
 #ifndef strstr		/* glibc-2.1 declares this as a macro */
 extern char *strstr();	/* needed on sysV68 R3V7.1. */
@@ -148,7 +148,7 @@ int imap_ok(int sock, char *argbuf)
     }
 }
 
-#if OPIE
+#if OPIE_ENABLE
 static int do_otp(int sock, struct query *ctl)
 {
     int i, rval;
@@ -211,7 +211,7 @@ static int do_otp(int sock, struct query *ctl)
     else
 	return PS_AUTHFAIL;
 };
-#endif /* OPIE */
+#endif /* OPIE_ENABLE */
 
 #ifdef KERBEROS_V4
 #if SIZEOF_INT == 4
@@ -890,7 +890,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     if (preauth)
 	return(PS_SUCCESS);
 
-#if OPIE
+#if OPIE_ENABLE
     if ((ctl->server.protocol == P_IMAP) && strstr(capabilities, "AUTH=X-OTP"))
     {
 	if (outlevel >= O_DEBUG)
@@ -898,7 +898,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 	if (do_otp(sock, ctl) == PS_SUCCESS)
 	    return(PS_SUCCESS);
     };
-#endif /* OPIE */
+#endif /* OPIE_ENABLE */
 
 #ifdef GSSAPI
     if (strstr(capabilities, "AUTH=GSSAPI"))
@@ -1139,7 +1139,7 @@ static int imap_fetch_headers(int sock, struct query *ctl,int number,int *lenp)
     number -= expunged;
 
     /*
-     * This is blessed by RFC 1176, RFC1730, RFC2060.
+     * This is blessed by RFC1176, RFC1730, RFC2060.
      * According to the RFCs, it should *not* set the \Seen flag.
      */
     gen_send(sock, "FETCH %d RFC822.HEADER", number);
@@ -1176,7 +1176,8 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
      *
      * However...*don't* do this if we're using keep to suppress deletion!
      * In that case, marking the seen flag is the only way to prevent the
-     * message from being re-fetched on subsequent runs.
+     * message from being re-fetched on subsequent runs (and according
+     * to RFC2060 p.43 this fetch should set Seen as a side effect).
      */
     switch (imap_version)
     {
@@ -1244,12 +1245,14 @@ static int imap_trail(int sock, struct query *ctl, int number)
 
 #ifdef __UNUSED__
 	/*
-	 * We've had a report of one POP3 server (not yet identified) that 
-	 * fails to set SEEN on a message fetch.  This becomes an issue when
-	 * keep is on, because seen messages aren't deleted and get
-	 * refetched on each poll.  As a workaround, if keep is on
-	 * we could set the Seen flag explicitly.  This code isn't used yet
-	 * because we don't know of any IMAP servers broken in this way.
+	 * Any IMAP server that fails to set Seen on a BODY[TEXT]
+	 * fetch violates RFC2060 p.43 (top).  This becomes an issue
+	 * when keep is on, because seen messages aren't deleted and
+	 * get refetched on each poll.  As a workaround, if keep is on
+	 * we can set the Seen flag explicitly.
+	 *
+	 * This code isn't used yet because we don't know of any IMAP
+	 * servers broken in this way.
 	 */
 	if (ctl->keep)
 	    if ((ok = gen_transact(sock,
@@ -1316,13 +1319,13 @@ static int imap_logout(int sock, struct query *ctl)
 const static struct method imap =
 {
     "IMAP",		/* Internet Message Access Protocol */
-#if INET6
+#if INET6_ENABLE
     "imap",
     "imaps",
-#else /* INET6 */
+#else /* INET6_ENABLE */
     143,                /* standard IMAP2bis/IMAP4 port */
     993,                /* ssl IMAP2bis/IMAP4 port */
-#endif /* INET6 */
+#endif /* INET6_ENABLE */
     TRUE,		/* this is a tagged protocol */
     FALSE,		/* no message delimiter */
     imap_ok,		/* parse command response */

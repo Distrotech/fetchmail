@@ -223,12 +223,12 @@ int main(int argc, char **argv)
 #ifdef SSL_ENABLE
 	printf("+SSL");
 #endif
-#if OPIE
+#if OPIE_ENABLE
 	printf("+OPIE");
-#endif /* OPIE */
-#if INET6
+#endif /* OPIE_ENABLE */
+#if INET6_ENABLE
 	printf("+INET6");
-#endif /* INET6 */
+#endif /* INET6_ENABLE */
 #if NET_SECURITY
 	printf("+NETSEC");
 #endif /* NET_SECURITY */
@@ -594,11 +594,11 @@ int main(int argc, char **argv)
 		    }
 		}
 
-#if (defined(linux) && !INET6) || defined(__FreeBSD__)
+#if (defined(linux) && !INET6_ENABLE) || defined(__FreeBSD__)
 		/* interface_approve() does its own error logging */
 		if (!interface_approve(&ctl->server))
 		    continue;
-#endif /* (defined(linux) && !INET6) || defined(__FreeBSD__) */
+#endif /* (defined(linux) && !INET6_ENABLE) || defined(__FreeBSD__) */
 
 		querystatus = query_host(ctl);
 
@@ -623,7 +623,7 @@ int main(int argc, char **argv)
 			 ((querystatus!=PS_NOMAIL) || (outlevel==O_DEBUG)))
 		    report(stdout, _("Query status=%d\n"), querystatus);
 
-#if (defined(linux) && !INET6) || defined (__FreeBSD__)
+#if (defined(linux) && !INET6_ENABLE) || defined (__FreeBSD__)
 		if (ctl->server.monitor)
 		{
 		    /*
@@ -634,7 +634,7 @@ int main(int argc, char **argv)
 		    sleep(3);
 		    interface_note_activity(&ctl->server);
 		}
-#endif /* (defined(linux) && !INET6) || defined(__FreeBSD__) */
+#endif /* (defined(linux) && !INET6_ENABLE) || defined(__FreeBSD__) */
 	    }
 	}
 
@@ -834,12 +834,12 @@ static void optmerge(struct query *h2, struct query *h1, int force)
 #define FLAG_MERGE(fld) if (force ? !!h1->fld : !h2->fld) h2->fld = h1->fld
     FLAG_MERGE(server.via);
     FLAG_MERGE(server.protocol);
-#if INET6
+#if INET6_ENABLE
     FLAG_MERGE(server.service);
     FLAG_MERGE(server.netsec);
-#else /* INET6 */
+#else /* INET6_ENABLE */
     FLAG_MERGE(server.port);
-#endif /* INET6 */
+#endif /* INET6_ENABLE */
     FLAG_MERGE(server.interval);
     FLAG_MERGE(server.preauthenticate);
     FLAG_MERGE(server.timeout);
@@ -1151,7 +1151,7 @@ static int load_params(int argc, char **argv, int optind)
 	    if (ctl->server.timeout == -1)	
 		ctl->server.timeout = CLIENT_TIMEOUT;
 
-#if !INET6
+#if !INET6_ENABLE
 	    /* sanity checks */
 	    if (ctl->server.port < 0)
 	    {
@@ -1185,7 +1185,7 @@ static int load_params(int argc, char **argv, int optind)
 		    }
 		}
 	    }
-#endif /* !INET6 */
+#endif /* !INET6_ENABLE */
 
 	    /*
 	     * "I beg to you, have mercy on the week minds like myself."
@@ -1458,26 +1458,26 @@ static void dump_params (struct runctl *runp,
 	}
 
 	if (ctl->server.protocol == P_POP3 
-#if INET6
+#if INET6_ENABLE
 	    && !strcmp(ctl->server.service, KPOP_PORT)
-#else /* INET6 */
+#else /* INET6_ENABLE */
 	    && ctl->server.port == KPOP_PORT
-#endif /* INET6 */
+#endif /* INET6_ENABLE */
 	    && (ctl->server.preauthenticate == A_KERBEROS_V4 ||
 		ctl->server.preauthenticate == A_KERBEROS_V5))
 	    printf(_("  Protocol is KPOP with Kerberos %s authentication"),
 		   ctl->server.preauthenticate == A_KERBEROS_V5 ? "V" : "IV");
 	else
 	    printf(_("  Protocol is %s"), showproto(ctl->server.protocol));
-#if INET6
+#if INET6_ENABLE
 	if (ctl->server.service)
 	    printf(_(" (using service %s)"), ctl->server.service);
 	if (ctl->server.netsec)
 	    printf(_(" (using network security options %s)"), ctl->server.netsec);
-#else /* INET6 */
+#else /* INET6_ENABLE */
 	if (ctl->server.port)
 	    printf(_(" (using port %d)"), ctl->server.port);
-#endif /* INET6 */
+#endif /* INET6_ENABLE */
 	else if (outlevel >= O_VERBOSE)
 	    printf(_(" (using default port)"));
 	if (ctl->server.uidl && (ctl->server.protocol != P_ETRN))

@@ -16,7 +16,7 @@
 #include <sys/types.h>
 #include <sys/param.h>
 
-#if (defined(linux) && !defined(INET6)) || defined(__FreeBSD__)
+#if (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__)
 
 #include "config.h"
 #include <stdio.h>
@@ -505,4 +505,4 @@ int interface_approve(struct hostdata *hp)
 
 	return(TRUE);
 }
-#endif /* (defined(linux) && !defined(INET6)) || defined(__FreeBSD__) */
+#endif /* (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__) */

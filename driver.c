@@ -1535,11 +1535,11 @@ const int maxfetch;		/* maximum number of messages to fetch */
     {
 	char buf[POPBUFSIZE+1], *realhost;
 	int len, num, count, new, bytes, deletions = 0, *msgsizes = NULL;
-#if INET6
+#if INET6_ENABLE
 	int fetches, dispatches, oldphase;
-#else /* INET6 */
+#else /* INET6_ENABLE */
 	int port, fetches, dispatches, oldphase;
-#endif /* INET6 */
+#endif /* INET6_ENABLE */
 	struct idlist *idp;
 
 	/* execute pre-initialization command, if any */
@@ -1555,27 +1555,27 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	oldphase = phase;
 	phase = OPEN_WAIT;
 	set_timeout(mytimeout);
-#if !INET6
+#if !INET6_ENABLE
 #ifdef SSL_ENABLE
 	port = ctl->server.port ? ctl->server.port : ( ctl->use_ssl ? protocol->sslport : protocol->port );
 #else
 	port = ctl->server.port ? ctl->server.port : protocol->port;
 #endif
-#endif /* !INET6 */
+#endif /* !INET6_ENABLE */
 	realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;
 
 	/* allow time for the port to be set up if we have a plugin */
 	if (ctl->server.plugin)
 	    (void)sleep(1);
-#if INET6
+#if INET6_ENABLE
 	if ((mailserver_socket = SockOpen(realhost, 
 			     ctl->server.service ? ctl->server.service : protocol->service,
 			     ctl->server.netsec, ctl->server.plugin)) == -1)
-#else /* INET6 */
+#else /* INET6_ENABLE */
 	if ((mailserver_socket = SockOpen(realhost, port, NULL, ctl->server.plugin)) == -1)
-#endif /* INET6 */
+#endif /* INET6_ENABLE */
 	{
-#if !INET6
+#if !INET6_ENABLE
 	    int err_no = errno;
 #ifdef HAVE_RES_SEARCH
 	    if (err_no != 0 && h_errno != 0)
@@ -1610,7 +1610,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		report_complete(stderr, ": %s\n", strerror(err_no));
 
 	ehostunreach:
-#endif /* INET6 */
+#endif /* INET6_ENABLE */
 	    ok = PS_SOCKET;
 	    set_timeout(0);
 	    phase = oldphase;

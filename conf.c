@@ -172,12 +172,12 @@ void dump_config(struct runctl *runp, struct query *querylist)
 #ifdef SSL_ENABLE
     printf("'ssl',");
 #endif /* SSL_ENABLE */
-#if OPIE
+#if OPIE_ENABLE
     printf("'opie',");
-#endif /* OPIE */
-#if INET6
+#endif /* OPIE_ENABLE */
+#if INET6_ENABLE
     printf("'inet6',");
-#endif /* INET6 */
+#endif /* INET6_ENABLE */
 #if NET_SECURITY
     printf("'netsec',");
 #endif /* NET_SECURITY */
@@ -237,7 +237,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 
 	    using_kpop =
 		(ctl->server.protocol == P_POP3 &&
-#if !INET6
+#if !INET6_ENABLE
 		 ctl->server.port == KPOP_PORT &&
 #else
 		 0 == strcmp( ctl->server.service, KPOP_PORT ) &&
@@ -249,7 +249,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	    stringdump("via", ctl->server.via); 
 	    stringdump("protocol", 
 		       using_kpop ? "KPOP" : showproto(ctl->server.protocol));
-#if !INET6
+#if !INET6_ENABLE
 	    numdump("port",  ctl->server.port);
 #else
 	    stringdump("service", ctl->server.service); 
@@ -336,9 +336,9 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	else
 	    fputs("'lmtp':FALSE,\n", stdout);
 	    
-#ifdef INET6
+#ifdef INET6_ENABLE
 	stringdump("netsec", ctl->server.netsec);
-#endif /* INET6 */
+#endif /* INET6_ENABLE */
 	stringdump("preconnect", ctl->preconnect);
 	stringdump("postconnect", ctl->postconnect);
 	numdump("limit", ctl->limit);

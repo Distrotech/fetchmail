@@ -124,13 +124,13 @@ static int pop2_logout(int sock, struct query *ctl)
 const static struct method pop2 =
 {
     "POP2",				/* Post Office Protocol v2 */
-#if INET6
+#if INET6_ENABLE
     "pop2",				/* standard POP2 port */
     "pop2",				/* ssl POP2 port */
-#else /* INET6 */
+#else /* INET6_ENABLE */
     109,				/* standard POP2 port */
     109,				/* ssl POP2 port - not */
-#endif /* INET6 */
+#endif /* INET6_ENABLE */
     FALSE,				/* this is not a tagged protocol */
     FALSE,				/* does not use message delimiter */
     pop2_ok,				/* parse command response */

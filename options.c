@@ -132,9 +132,9 @@ static const struct option longoptions[] = {
   {"bsmtp",	required_argument, (int *) 0, LA_BSMTP       },
   {"lmtp",	no_argument,       (int *) 0, LA_LMTP        },
 
-#ifdef INET6
+#ifdef INET6_ENABLE
   {"netsec",	required_argument, (int *) 0, LA_NETSEC      },
-#endif /* INET6 */
+#endif /* INET6_ENABLE */
 
 #ifdef SSL_ENABLE
   {"ssl",       no_argument,       (int *) 0, LA_SSL        },
@@ -142,10 +142,10 @@ static const struct option longoptions[] = {
   {"sslcert",   required_argument, (int *) 0, LA_SSLCERT    },
 #endif
 
-#if (defined(linux) && !INET6) || defined(__FreeBSD__)
+#if (defined(linux) && !INET6_ENABLE) || defined(__FreeBSD__)
   {"interface",	required_argument, (int *) 0, LA_INTERFACE   },
   {"monitor",	required_argument, (int *) 0, LA_MONITOR     },
-#endif /* (defined(linux) && !INET6) || defined(__FreeBSD__) */
+#endif /* (defined(linux) && !INET6_ENABLE) || defined(__FreeBSD__) */
   {"plugin",	required_argument, (int *) 0, LA_PLUGIN      },
   {"plugout",	required_argument, (int *) 0, LA_PLUGOUT     },
 
@@ -337,11 +337,11 @@ struct query *ctl;	/* option record to be initialized */
 	    else if (strcasecmp(optarg,"kpop") == 0)
 	    {
 		ctl->server.protocol = P_POP3;
-#if INET6
+#if INET6_ENABLE
 		ctl->server.service = KPOP_PORT;
-#else /* INET6 */
+#else /* INET6_ENABLE */
 		ctl->server.port = KPOP_PORT;
-#endif /* INET6 */
+#endif /* INET6_ENABLE */
 #ifdef KERBEROS_V5
 		ctl->server.preauthenticate =  A_KERBEROS_V5;
 #else
@@ -375,11 +375,11 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'P':
 	case LA_PORT:
-#if INET6
+#if INET6_ENABLE
 	    ctl->server.service = optarg;
-#else /* INET6 */
+#else /* INET6_ENABLE */
 	    ctl->server.port = xatoi(optarg, &errflag);
-#endif /* INET6 */
+#endif /* INET6_ENABLE */
 	    break;
 	case LA_PREAUTH:
 	    if (strcmp(optarg, "password") == 0)
@@ -518,7 +518,7 @@ struct query *ctl;	/* option record to be initialized */
 #endif /* NET_SECURITY */
 	    break;
 
-#if (defined(linux) && !INET6) || defined(__FreeBSD__)
+#if (defined(linux) && !INET6_ENABLE) || defined(__FreeBSD__)
 	case 'I':
 	case LA_INTERFACE:
 	    interface_parse(optarg, &ctl->server);
@@ -527,7 +527,7 @@ struct query *ctl;	/* option record to be initialized */
 	case LA_MONITOR:
 	    ctl->server.monitor = xstrdup(optarg);
 	    break;
-#endif /* (defined(linux) && !INET6) || defined(__FreeBSD__) */
+#endif /* (defined(linux) && !INET6_ENABLE) || defined(__FreeBSD__) */
 	case LA_PLUGIN:
 	    ctl->server.plugin = xstrdup(optarg);
 	    break;
@@ -600,7 +600,7 @@ struct query *ctl;	/* option record to be initialized */
 	P(_("  -i, --idfile      specify alternate UIDs file\n"));
 	P(_("      --postmaster  specify recipient of last resort\n"));
 	P(_("      --nobounce    redirect bounces from user to postmaster.\n"));
-#if (defined(linux) && !INET6) || defined(__FreeBSD__)
+#if (defined(linux) && !INET6_ENABLE) || defined(__FreeBSD__)
 	P(_("  -I, --interface   interface required specification\n"));
 	P(_("  -M, --monitor     monitor interface for activity\n"));
 #endif

@@ -8,13 +8,13 @@
 #define SOCKET__
 
 /* Create a new client socket; returns (FILE *)NULL on error */
-#if INET6
+#if INET6_ENABLE
 int SockOpen(const char *host, const char *service, const char *options,
 	     const char *plugin);
-#else /* INET6 */
+#else /* INET6_ENABLE */
 int SockOpen(const char *host, int clientPort, const char *options,
 	     const char *plugin);
-#endif /* INET6 */
+#endif /* INET6_ENABLE */
 
 /* Returns 1 if this socket is OK, 0 if it isn't select()able
  * on - probably because it's been closed. You should

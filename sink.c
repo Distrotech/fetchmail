@@ -95,11 +95,11 @@ static int smtp_open(struct query *ctl)
 	for (idp = ctl->smtphunt; idp; idp = idp->next)
 	{
 	    char	*cp, *parsed_host;
-#ifdef INET6 
+#ifdef INET6_ENABLE 
 	    char	*portnum = SMTP_PORT;
 #else
 	    int		portnum = SMTP_PORT;
-#endif /* INET6 */
+#endif /* INET6_ENABLE */
 
 	    xalloca(parsed_host, char *, strlen(idp->id) + 1);
 
@@ -109,11 +109,11 @@ static int smtp_open(struct query *ctl)
 	    if ((cp = strrchr(parsed_host, '/')))
 	    {
 		*cp++ = 0;
-#ifdef INET6 
+#ifdef INET6_ENABLE 
 		portnum = cp;
 #else
 		portnum = atoi(cp);
-#endif /* INET6 */
+#endif /* INET6_ENABLE */
 	    }
 
 	    if ((ctl->smtp_socket = SockOpen(parsed_host,portnum,NULL,

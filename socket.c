@@ -117,7 +117,7 @@ int SockCheckOpen(int fd)
 }
 #endif /* __UNUSED__ */
 
-#if INET6
+#if INET6_ENABLE
 int SockOpen(const char *host, const char *service, const char *options,
 	     const char *plugin)
 {
@@ -159,7 +159,7 @@ int SockOpen(const char *host, const char *service, const char *options,
 
     return i;
 };
-#else /* INET6 */
+#else /* INET6_ENABLE */
 #ifndef HAVE_INET_ATON
 #ifndef  INADDR_NONE
 #ifdef   INADDR_BROADCAST
@@ -195,12 +195,34 @@ int SockOpen(const char *host, int clientPort, const char *options,
 #ifndef HAVE_INET_ATON
     inaddr = inet_addr(host);
     if (inaddr != INADDR_NONE)
-        memcpy(&ad.sin_addr, &inaddr, sizeof(inaddr));
-    else
-#else
-    if (!inet_aton(host, &ad.sin_addr))
-#endif /* HAVE_INET_ATON */
     {
+        memcpy(&ad.sin_addr, &inaddr, sizeof(inaddr));
+#else
+    if (inet_aton(host, &ad.sin_addr))
+    {
+#endif /* HAVE_INET_ATON */
+        ad.sin_port = htons(clientPort);
+
+        sock = socket(AF_INET, SOCK_STREAM, 0);
+        if (sock < 0)
+        {
+            h_errno = 0;
+            return -1;
+        }
+        if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) < 0)
+        {
+            int olderr = errno;
+            close(sock);
+            h_errno = 0;
+            errno = olderr;
+            return -1;
+        }
+#ifndef HAVE_INET_ATON
+    }
+#else
+    }
+#endif /* HAVE_INET_ATON */
+    else {
         hp = gethostbyname(host);
 
         if (hp == NULL)
@@ -248,27 +270,10 @@ int SockOpen(const char *host, int clientPort, const char *options,
 	    errno = olderr;
 	    return -1;
 	}
-    } else {
-        ad.sin_port = htons(clientPort);
-
-        sock = socket(AF_INET, SOCK_STREAM, 0);
-        if (sock < 0)
-        {
-            h_errno = 0;
-            return -1;
-        }
-        if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) < 0)
-        {
-            int olderr = errno;
-            close(sock);
-            h_errno = 0;
-            errno = olderr;
-            return -1;
-        }
     }
     return(sock);
 }
-#endif /* INET6 */
+#endif /* INET6_ENABLE */
 
 
 #if defined(HAVE_STDARG_H)

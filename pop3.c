@@ -21,9 +21,9 @@
 #include  "socket.h"
 #include  "i18n.h"
 
-#if OPIE
+#if OPIE_ENABLE
 #include <opie.h>
-#endif /* OPIE */
+#endif /* OPIE_ENABLE */
 
 #ifndef strstr		/* glibc-2.1 declares this as a macro */
 extern char *strstr();	/* needed on sysV68 R3V7.1. */
@@ -41,9 +41,9 @@ char *sdps_envfrom;
 char *sdps_envto;
 #endif /* SDPS_ENABLE */
 
-#if OPIE
+#if OPIE_ENABLE
 static char lastok[POPBUFSIZE+1];
-#endif /* OPIE */
+#endif /* OPIE_ENABLE */
 
 int pop3_ok (int sock, char *argbuf)
 /* parse command response */
@@ -68,9 +68,9 @@ int pop3_ok (int sock, char *argbuf)
 
 	if (strcmp(buf,"+OK") == 0)
 	{
-#if OPIE
+#if OPIE_ENABLE
 	    strcpy(lastok, bufp);
-#endif /* OPIE */
+#endif /* OPIE_ENABLE */
 	    ok = 0;
 	}
 	else if (strncmp(buf,"-ERR", 4) == 0)
@@ -122,9 +122,9 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
     int ok;
     char *start,*end;
     char *msg;
-#if OPIE
+#if OPIE_ENABLE
     char *challenge;
-#endif /* OPIE */
+#endif /* OPIE_ENABLE */
 
     pop3_phase = PHASE_GETAUTH;
 
@@ -168,7 +168,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 #endif /* RPA_ENABLE */
 	    ok = gen_transact(sock, "USER %s", ctl->remotename);
 
-#if OPIE
+#if OPIE_ENABLE
 	/* see RFC1938: A One-Time Password System */
 	if (challenge = strstr(lastok, "otp-")) {
 	  char response[OPIE_RESPONSE_MAX+1];
@@ -191,7 +191,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	  ok = gen_transact(sock, "PASS %s", response);
 	  break;
 	}
-#endif /* OPIE */
+#endif /* OPIE_ENABLE */
 
 	/* ordinary validation, no one-time password or RPA */ 
 	ok = gen_transact(sock, "PASS %s", ctl->password);
@@ -643,13 +643,13 @@ static int pop3_logout(int sock, struct query *ctl)
 const static struct method pop3 =
 {
     "POP3",		/* Post Office Protocol v3 */
-#if INET6
+#if INET6_ENABLE
     "pop3",		/* standard POP3 port */
     "pop3s",		/* ssl POP3 port */
-#else /* INET6 */
+#else /* INET6_ENABLE */
     110,		/* standard POP3 port */
     995,		/* ssl POP3 port */
-#endif /* INET6 */
+#endif /* INET6_ENABLE */
     FALSE,		/* this is not a tagged protocol */
     TRUE,		/* this uses a message delimiter */
     pop3_ok,		/* parse command response */
