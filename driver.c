@@ -45,6 +45,7 @@
 
 #ifdef HAVE_RES_SEARCH
 #include <netdb.h>
+#include "mx.h"
 #endif /* HAVE_RES_SEARCH */
 
 #ifdef KERBEROS_V4
@@ -68,7 +69,7 @@
 #ifdef KERBEROS_V5
 #include <krb5.h>
 #include <com_err.h>
-#endif /* KEREROS_V5 */
+#endif /* KERBEROS_V5 */
 
 #include  "fetchmail.h"
 #include  "socket.h"
