@@ -559,6 +559,13 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	 * This is a potential problem if the MTAs further upstream
 	 * didn't pass canonicalized From/Return-Path lines, *and* the
 	 * local SMTP listener insists on them.
+	 *
+	 * Note: send_bouncemail message strings are not made subject
+	 * to gettext translation because (a) they're going to be 
+	 * embedded in a text/plain 7bit part, and (b) they're
+	 * going to be associated with listener error-response
+	 * messages, which are probably in English (none of the
+	 * MTAs I know about are internationalized).
 	 */
 	ap = (msg->return_path[0]) ? msg->return_path : user;
 	if (SMTP_from(ctl->smtp_socket, ap, options) != SM_OK)
@@ -587,7 +594,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		 *
 		 */
 		send_bouncemail(msg, 
-				_("We do not accept mail from you.)\r\n"), 
+				"We do not accept mail from you.\r\n", 
 				1, responses);
 		return(PS_REFUSED);
 	    }
@@ -625,7 +632,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		 * and allow it to be deleted.
 		 */
 		send_bouncemail(msg, 
-				_("This message was too large.\r\n"), 
+				"This message was too large.\r\n", 
 				1, responses);
 		return(PS_REFUSED);
 
@@ -635,13 +642,13 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		 * cover his tracks.
 		 */
 		send_bouncemail(msg,
-				_("Invalid address.\r\n"), 
+				"Invalid address.\r\n", 
 				1, responses);
 		return(PS_REFUSED);
 
 	    default:	/* bounce the error back to the sender */
 		send_bouncemail(msg,
-				_("General SMTP/ESMTP error.\r\n"), 
+				"General SMTP/ESMTP error.\r\n", 
 				1, responses);
 		return(PS_REFUSED);
 	    }
@@ -829,7 +836,7 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
  		     * it won't be re-forwarded on subsequent poll cycles.
 		     */
 		    return(send_bouncemail(msg,
-				   _("LSMTP partial delivery failure.\r\n"),
+				   "LSMTP partial delivery failure.\r\n",
 				   errors, responses));
 	    }
     }
