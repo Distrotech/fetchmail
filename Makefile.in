@@ -105,13 +105,14 @@ srcs = $(srcdir)/socket.c $(srcdir)/getpass.c $(srcdir)/pop2.c 		\
 .SUFFIXES:
 .SUFFIXES: .o .c .h .y .l .ps .dvi .info .texi
 
-all: fetchmail po NOTES FAQ FEATURES
+all: fetchmail po
 
 # Some makes apparently use .PHONY as the default goal if it is before `all'.
 .PHONY: all
 
 fetchmail: $(objs)
 	$(CC) $(LDEFLAGS) $(LDFLAGS) $(objs) $(LOADLIBS) -o fetchmail
+
 
 po:	dummy
 	@POMAKE@
@@ -254,6 +255,8 @@ MANIFEST: $(srcdir) Makefile.in
 	@echo $(all) | tr "[ \t]" '\n' | sed -e '/^\.\//s///' | sort >MANIFEST
 	@wc -l MANIFEST
 
+distdocs: FAQ FEATURES NOTES fetchmail-man.html
+
 FAQ: fetchmail-FAQ.html
 	echo "   (This document was generated from fetchmail-FAQ.html)" >FAQ
 	lynx -dump -nolist fetchmail-FAQ.html >>FAQ
@@ -275,7 +278,7 @@ fetchmail-man.html: fetchmail.man
 # Make distribution, update LSM with proper size, remake distribution
 # (Making fetchmail-man.html is a kluge to ensure that it will be
 # available when I upload the distribution.)
-dist: Makefile.in fetchmail-man.html
+dist: Makefile.in distdocs
 	rm -f MANIFEST; make MANIFEST;
 	touch fetchmail.lsm
 	make fetchmail-$(VERSION).tar.gz 
