@@ -76,11 +76,13 @@ static char *lockfile;
 static int popstatus;
 static struct hostrec *hostp;
 
+RETSIGTYPE donothing(sig) int sig; {signal(sig, donothing);}
+
 main (argc,argv)
 int argc;
 char **argv;
 { 
-    int mboxfd, st;
+    int mboxfd, st, bkgd;
     struct hostrec def_opts;
     int parsestatus, implicitmode;
     char *servername, *user, *home, *tmpdir, tmpbuf[BUFSIZ]; 
@@ -278,10 +280,12 @@ char **argv;
 	(void) strcpy(lockfile, tmpbuf);
     if ((lockfp = fopen(lockfile, "r")) != NULL )
     {
-	fscanf(lockfp,"%d",&pid);
+	bkgd = (fscanf(lockfp,"%d %d", &pid, &st) == 2);
 
 	if (kill(pid, 0) == -1) {
 	    fprintf(stderr,"fetchmail: removing stale lockfile\n");
+	    pid = -1;
+	    bkgd = FALSE;
 	    remove(lockfile);
 	}
 	fclose(lockfp);
@@ -297,23 +301,50 @@ char **argv;
 	}
 	else if (kill(pid, SIGTERM) < 0)
 	{
-	    fprintf(stderr,"fetchmail: error killing fetchmail at %d.\n",pid);
+	    fprintf(stderr,"fetchmail: error killing %s fetchmail at %d.\n",
+		    bkgd ? "background" : "foreground", pid);
 	    exit(PS_EXCLUDE);
 	}
 	else
 	{
-	    fprintf(stderr,"fetchmail: fetchmail at %d killed.\n", pid);
+	    fprintf(stderr,"fetchmail: %s fetchmail at %d killed.\n",
+		    bkgd ? "background" : "foreground", pid);
 	    remove(lockfile);
 	    exit(0);
 	}
     }
 
-    /* otherwise die if another fetchmail is running */
+    /* another fetchmail is running -- wake it up or die */
     if (pid != -1)
     {
-	fprintf(stderr,
-		"fetchmail: another fetchmail is running at pid %d.\n", pid);
-	return(PS_EXCLUDE);
+	if (check_only)
+	    return(PS_EXCLUDE);
+	else if (!bkgd)
+	{
+	    fprintf(stderr,
+		 "fetchmail: another foreground fetchmail is running at %d.\n",
+		 pid);
+		return(PS_EXCLUDE);
+	}
+	else if (kill(pid, SIGHUP) == 0)
+	{
+	    fprintf(stderr,
+		    "fetchmail: background fetchmail at %d awakened.\n",
+		    pid);
+	    return(0);
+	}
+	else
+	{
+	    /*
+	     * Should never happen -- possible only if a background fetchmail
+	     * croaks after the first kill probe above but before the SIGHUP
+	     * transmission.
+	     */
+	    fprintf(stderr,
+		    "fetchmail: elder sibling at %d died mysteriously.\n",
+		    pid);
+	    return(PS_UNDEFINED);
+	}
     }
 
     /* pick up interactively any passwords we need but don't have */ 
@@ -346,11 +377,21 @@ char **argv;
     signal(SIGINT, termhook);
     signal(SIGTERM, termhook);
     signal(SIGALRM, termhook);
-    signal(SIGHUP, termhook);
     signal(SIGPIPE, termhook);
     signal(SIGQUIT, termhook);
+
+    /*
+     * With this simple hack, we make it possible for a foreground 
+     * fetchmail to wake up one in daemon mode.  What we want is the
+     * side effect of interrupting any sleep that may be going on,
+     * forcing fetchmail to re-poll its hosts.
+     */
+    signal(SIGHUP, donothing);
+
     if ( (lockfp = fopen(lockfile,"w")) != NULL ) {
 	fprintf(lockfp,"%d",getpid());
+	if (poll_interval)
+	    fprintf(lockfp," %d", poll_interval);
 	fclose(lockfp);
     }
 

@@ -280,7 +280,9 @@ Only one daemon process is permitted per user; in daemon mode,
 .I fetchmail
 makes a per-user lockfile to guarantee this.  The option
 .B --quit
-will kill a running daemon process.
+will kill a running daemon process.  Otherwise, calling fetchmail with
+a daemon in the background sends a wakeup signal to the daemon,
+forcing it to poll mailservers immediately.
 .PP
 The
 .B -L
