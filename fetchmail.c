@@ -26,10 +26,6 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 
-#ifdef NeXT
-#  define pid_t int
-#endif
-
 #ifdef HAVE_GETHOSTBYNAME
 #include <netdb.h>
 #endif /* HAVE_GETHOSTBYNAME */
