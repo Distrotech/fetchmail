@@ -16,6 +16,7 @@
 #include <unistd.h>
 #endif
 #include <fcntl.h>
+#include <signal.h>
 
 #include "fetchmail.h"
 #include "i18n.h"

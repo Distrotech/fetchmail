@@ -293,7 +293,11 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
 	return(FALSE);
 
     /* our first duty is to keep the sacred foo counters turning... */
-    sprintf(boundary, 
+#ifdef HAVE_SNPRINTF
+    snprintf(boundary, sizeof(boundary),
+#else
+    sprintf(boundary,
+#endif /* HAVE_SNPRINTF */
 	    "foo-mani-padme-hum-%d-%d-%ld", 
 	    (int)getpid(), (int)getppid(), time((time_t *)NULL));
 
@@ -613,14 +617,24 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	 */
 	if (!msg->return_path[0])
 	{
-	    sprintf(addr, "%s@%s", ctl->remotename, ctl->server.truename);
+#ifdef HAVE_SNPRINTF
+	    snprintf(addr, sizeof(addr),
+#else
+	    sprintf(addr,
+#endif /* HAVE_SNPRINTF */
+		  "%s@%s", ctl->remotename, ctl->server.truename);
 	    ap = addr;
 	}
 	else if (strchr(msg->return_path, '@'))
 	    ap = msg->return_path;
 	else		/* in case Return-Path existed but was local */
 	{
-	    sprintf(addr, "%s@%s", msg->return_path, ctl->server.truename);
+#ifdef HAVE_SNPRINTF
+	    snprintf(addr, sizeof(addr),
+#else
+	    sprintf(addr,
+#endif /* HAVE_SNPRINTF */
+		    "%s@%s", msg->return_path, ctl->server.truename);
 	    ap = addr;
 	}
 
@@ -660,7 +674,6 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		else
 		{
 		    char	errbuf[POPBUFSIZE];
-		    int res;
 
 #ifdef __UNUSED__
 		    /*
@@ -675,13 +688,14 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		     * also as the body is discarded after calling
 		     * RSET!
 		     */
+		    int res;
 		    if ((res = handle_smtp_report(ctl, msg))==PS_REFUSED)
 			return(PS_REFUSED);
 #endif /* __UNUSED__ */
 
-		    strcpy(errbuf, idp->id);
-		    strcat(errbuf, ": ");
-		    strcat(errbuf, smtp_response);
+		    strncpy(errbuf, idp->id, sizeof(errbuf));
+		    strncat(errbuf, ": ", sizeof(errbuf));
+		    strncat(errbuf, smtp_response, sizeof(errbuf));
 
 		    xalloca(from_responses[*bad_addresses], 
 			    char *, 
@@ -710,7 +724,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	if (!(*good_addresses)) 
 	{
 	    if (strchr(run.postmaster, '@'))
-		strcpy(addr, run.postmaster);
+		strncpy(addr, run.postmaster, sizeof(addr));
 	    else
 	    {
 #ifdef HAVE_SNPRINTF
@@ -1167,7 +1181,7 @@ va_dcl
 #endif
     va_end(ap);
 
-    strcat(buf, "\r\n");
+    strncat(buf, "\r\n", sizeof(buf));
 
     stuffline(ctl, buf);
 }

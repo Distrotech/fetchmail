@@ -130,7 +130,7 @@ static char *timestamp (void)
 
 int main(int argc, char **argv)
 {
-    int st, bkgd = FALSE;
+    int bkgd = FALSE;
     int parsestatus, implicitmode = FALSE;
     struct query *ctl;
     netrc_entry *netrc_list;

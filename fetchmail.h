@@ -431,6 +431,7 @@ extern struct msgblk msgblk;
 void lock_setup(void), lock_assert(void);
 void lock_or_die(void), lock_release(void);
 int lock_state(void);
+void lock_dispose(void);
 
 /* use these to track what was happening when the nonresponse timer fired */
 #define GENERAL_WAIT	0	/* unknown wait type */
@@ -551,6 +552,7 @@ int doPOP2 (struct query *);
 int doPOP3 (struct query *);
 int doIMAP (struct query *);
 int doETRN (struct query *);
+int doODMR (struct query *);
 
 /* authentication functions */
 int do_cram_md5(int sock, char *command, struct query *ctl);

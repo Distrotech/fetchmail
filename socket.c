@@ -325,7 +325,12 @@ int SockOpen(const char *host, int clientPort, const char *options,
 #ifdef HAVE_SOCKETPAIR
     if (plugin) {
       char buf[10];
-      sprintf(buf,"%d",clientPort);
+#ifdef HAVE_SNPRINTF
+      snprintf(buf, sizeof(buf),  /* Yeah, paranoic. So what? :P */
+#else
+      sprintf(buf,
+#endif /* HAVE_SNPRINTF */
+	      "%d",clientPort);
       return handle_plugin(host,buf,plugin);
     }
 #endif /* HAVE_SOCKETPAIR */

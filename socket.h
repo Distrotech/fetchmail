@@ -58,6 +58,11 @@ additional clean-up if necessary.
 */
 int SockClose(int sock);
 
+/*
+FIXME: document this
+*/
+int UnixOpen(const char *path);
+
 #if SSL_ENABLE
 int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char *certpath,
     char *fingerprint, char *servercname, char *label);

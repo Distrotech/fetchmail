@@ -376,7 +376,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 #ifdef NTLM_ENABLE
     if ((ctl->server.authenticate == A_ANY 
 	 || ctl->server.authenticate == A_NTLM) 
-	&& strstr (capabilities, "AUTH=NTLM"))
+	&& strstr (capabilities, "AUTH=NTLM")) {
 	if ((ok = do_imap_ntlm(sock, ctl)))
 	{
 	    /* SASL cancellation of authentication */
@@ -386,6 +386,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	}
 	else
 	    return(ok);
+    }
 #else
     if (ctl->server.authenticate == A_NTLM)
     {

@@ -40,6 +40,7 @@
 #endif /* KERBEROS_V4 */
 
 #include "i18n.h"
+#include "socket.h"
 
 #include "fetchmail.h"
 #include "tunable.h"
@@ -333,7 +334,12 @@ static void mark_oversized(int num, struct query *ctl, int *msgsizes)
     int cnt;
 
     /* convert sz to string */
-    sprintf(size, "%d", msgsizes[num-1]);
+#ifdef HAVE_SNPRINTF
+    snprintf(size, sizeof(size),
+#else
+    sprintf(size,
+#endif /* HAVE_SNPRINTF */
+      "%d", msgsizes[num-1]);
 
     /* build a list of skipped messages
      * val.id = size of msg (string cnvt)
@@ -831,7 +837,12 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		    else if (h_errno == TRY_AGAIN)
 			strcpy(errbuf, _("temporary name server error."));
 		    else
-			sprintf(errbuf, _("unknown DNS error %d."), h_errno);
+#ifdef HAVE_SNPRINTF
+			snprintf(errbuf, sizeof(errbuf),
+#else
+			sprintf(errbuf,
+#endif /* HAVE_SNPRINTF */
+			  _("unknown DNS error %d."), h_errno);
 		}
 		else
 #endif /* HAVE_RES_SEARCH */
@@ -1065,10 +1076,20 @@ is restored."));
 
 		/* show user how many messages we downloaded */
 		if (idp->id)
-		    (void) sprintf(buf, _("%s at %s (folder %s)"),
+#ifdef HAVE_SNPRINTF
+		    (void) snprintf(buf, sizeof(buf),
+#else
+		    (void) sprintf(buf,
+#endif /* HAVE_SNPRINTF */
+				   _("%s at %s (folder %s)"),
 				   ctl->remotename, ctl->server.truename, idp->id);
 		else
-		    (void) sprintf(buf, _("%s at %s"),
+#ifdef HAVE_SNPRINTF
+		    (void) snprintf(buf, sizeof(buf),
+#else
+		    (void) sprintf(buf,
+#endif /* HAVE_SNPRINTF */
+			       _("%s at %s"),
 				   ctl->remotename, ctl->server.truename);
 		if (outlevel > O_SILENT)
 		{

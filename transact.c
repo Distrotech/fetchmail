@@ -10,6 +10,7 @@
 #include  "config.h"
 #include  <stdio.h>
 #include  <string.h>
+#include  <ctype.h> /* isspace() */
 #ifdef HAVE_MEMORY_H
 #include  <memory.h>
 #endif /* HAVE_MEMORY_H */
@@ -1014,14 +1015,24 @@ int readheaders(int sock,
     {
 	/* utter any per-message Received information we need here */
         if (ctl->server.trueaddr) {
-	    sprintf(buf, "Received: from %s [%u.%u.%u.%u]\r\n", 
+#ifdef HAVE_SNPRINTF
+	    snprintf(buf, sizeof(buf),
+#else
+	    sprintf(buf, 
+#endif /* HAVE_SNPRINTF */
+		    "Received: from %s [%u.%u.%u.%u]\r\n", 
 		    ctl->server.truename,
 		    (unsigned char)ctl->server.trueaddr[0],
 		    (unsigned char)ctl->server.trueaddr[1],
 		    (unsigned char)ctl->server.trueaddr[2],
 		    (unsigned char)ctl->server.trueaddr[3]);
 	} else {
-	  sprintf(buf, "Received: from %s\r\n", ctl->server.truename);
+#ifdef HAVE_SNPRINTF
+	  snprintf(buf, sizeof(buf),
+#else                       
+	  sprintf(buf,
+#endif /* HAVE_SNPRINTF */
+		  "Received: from %s\r\n", ctl->server.truename);
 	}
 	n = stuffline(ctl, buf);
 	if (n != -1)
@@ -1030,7 +1041,12 @@ int readheaders(int sock,
 	     * This header is technically invalid under RFC822.
 	     * POP3, IMAP, etc. are not legal mail-parameter values.
 	     */
-	    sprintf(buf, "\tby %s with %s (fetchmail-%s",
+#ifdef HAVE_SNPRINTF
+	    snprintf(buf, sizeof(buf),
+#else
+	    sprintf(buf,
+#endif /* HAVE_SNPRINTF */
+		    "\tby %s with %s (fetchmail-%s",
 		    fetchmailhost,
 		    protocol->name,
 		    VERSION);
@@ -1040,14 +1056,18 @@ int readheaders(int sock,
 			ctl->server.pollname, 
 			ctl->remotename);
 	    }
-	    strcat(buf, ")\r\n");
+	    strncat(buf, ")\r\n", sizeof(buf));
 	    n = stuffline(ctl, buf);
 	    if (n != -1)
 	    {
 		buf[0] = '\t';
 		if (good_addresses == 0)
 		{
-		    sprintf(buf+1, 
+#ifdef HAVE_SNPRINTF
+		    snprintf(buf+1, sizeof(buf)-1,
+#else
+		    sprintf(buf+1,
+#endif /* HAVE_SNPRINTF */
 			    "for %s@%s (by default); ",
 			    user, ctl->destaddr);
 		}
@@ -1057,22 +1077,32 @@ int readheaders(int sock,
 			if (idp->val.status.mark == XMIT_ACCEPT)
 			    break;	/* only report first address */
 		    if (strchr(idp->id, '@'))
-			sprintf(buf+1, "for %s", idp->id);
+#ifdef HAVE_SNPRINTF
+		    snprintf(buf+1, sizeof(buf)-1,
+#else                       
+		    sprintf(buf+1,
+#endif /* HAVE_SNPRINTF */
+			    "for %s", idp->id);
 		    else
 			/*
 			 * This could be a bit misleading, as destaddr is
 			 * the forwarding host rather than the actual 
 			 * destination.  Most of the time they coincide.
 			 */
-			sprintf(buf+1, "for %s@%s", idp->id, ctl->destaddr);
+#ifdef HAVE_SNPRINTF
+		    	snprintf(buf+1, sizeof(buf)-1,
+#else                       
+			sprintf(buf+1,
+#endif /* HAVE_SNPRINTF */
+				"for %s@%s", idp->id, ctl->destaddr);
 		    sprintf(buf+strlen(buf), " (%s); ",
 			    MULTIDROP(ctl) ? "multi-drop" : "single-drop");
 		}
 		else
 		    buf[1] = '\0';
 
-		strcat(buf, rfc822timestamp());
-		strcat(buf, "\r\n");
+		strncat(buf, rfc822timestamp(), sizeof(buf));
+		strncat(buf, "\r\n", sizeof(buf));
 		n = stuffline(ctl, buf);
 	    }
 	}
@@ -1307,7 +1337,7 @@ va_dcl
 #endif
     va_end(ap);
 
-    strcat(buf, "\r\n");
+    strncat(buf, "\r\n", sizeof(buf));
     SockWrite(sock, buf, strlen(buf));
 
     if (outlevel >= O_MONITOR)
@@ -1393,7 +1423,7 @@ va_dcl
 #endif
     va_end(ap);
 
-    strcat(buf, "\r\n");
+    strncat(buf, "\r\n", sizeof(buf));
     SockWrite(sock, buf, strlen(buf));
 
     if (outlevel >= O_MONITOR)

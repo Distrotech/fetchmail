@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* HMH's snprintf/strncat cleanup patch.
+
 fetchmail-5.8.8 (Wed Jun 20 17:22:26 EDT 2001), 20782 lines:
 
 * Fix bug that prevented messages from being marked oversized unless -v was on.
