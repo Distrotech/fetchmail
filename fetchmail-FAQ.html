@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/09/23 21:16:09 $
+<td width="30%" align=right>$Date: 1997/09/25 16:22:15 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -64,14 +64,17 @@ when I may have multiple login sessions going?</a><br>
 
 <h1>Runtime fatal errors:</h1>
 
-<a href="#R1">R1. I think I've set up fetchmail correctly, but I'm not getting any mail.</a><br>
-<a href="#R2">R2. Fetchmail isn't working, and -v shows `SMTP connect failed' messages.</a><br>
-<a href="#R3">R3. When I try to configure an MDA, fetchmail doesn't work.</a><br>
-<a href="#R4">R4. Fetchmail dumps core in -V mode, but operates normally otherwise.</a><br>
-<a href="#R5">R5. Mail that was being fetched when I interrupted my fetchmail seems to have been vanished.</a></br>
-<a href="#R6">R6. Fetchmail dumps core when I use a .netrc file but works otherwise.</a><br>
-<a href="#R7">R7. All my mail seems to disappear after an interrupt.</a><br>
-<a href="#R8">R8. Running fetchmail in daemon mode doesn't work.</a><br>
+<a href="#R1">R1. Fetchmail isn't working, and -v shows `SMTP connect failed' messages.</a><br>
+<a href="#R2">R2. When I try to configure an MDA, fetchmail doesn't work.</a><br>
+<a href="#R3">R3. Fetchmail dumps core in -V mode, but operates normally otherwise.</a><br>
+<a href="#R4">R4. Fetchmail dumps core when I use a .netrc file but works otherwise.</a><br>
+<a href="#R5">R5. Running fetchmail in daemon mode doesn't work.</a><br>
+
+<h1>Disappearing mail</h1>
+
+<a href="#D1">D1. I think I've set up fetchmail correctly, but I'm not getting any mail.</a><br>
+<a href="#D2">D2. All my mail seems to disappear after an interrupt.</a><br>
+<a href="#D3">D3. Mail that was being fetched when I interrupted my fetchmail seems to have been vanished.</a></br>
 
 <h1>Multidrop-mode problems:</h1>
 
@@ -84,10 +87,10 @@ when I may have multiple login sessions going?</a><br>
 
 <h1>Mangled mail:</h1>
 
-<a href="#X1">X1. Why is fetched mail being logged with my name, not the real From address?</a><br>
-<a href="#X2">X2. Spurious blank lines are appearing in the headers of fetched mail.</a><br>
-<a href="#X3">X3. My mail client can't see a Subject line.</a><br>
-<a href="#X4">X4. Messages containing "From" at start of line are being split.</a><br>
+<a href="#X1">X1. Spurious blank lines are appearing in the headers of fetched mail.</a><br>
+<a href="#X2">X2. My mail client can't see a Subject line.</a><br>
+<a href="#X3">X3. Messages containing "From" at start of line are being split.</a><br>
+<a href="#X4">X4. My mail is being mangled in a new and different way.</a><br>
 
 <h1>Other Problems:</h1>
 
@@ -97,7 +100,7 @@ dumped to all my terminal sessions.</a><br>
 <a href="#O3">O3. Does fetchmail reread its rc file every poll cycle?</a><br>
 <a href="#O4">O4. Why do deleted messages show up again when I take
 a line hit while downloading?</a><br>
-<a href="#O5">O5. Why is my exclusion lock failing under Solaris</a><br>
+<a href="#O5">O5. Why is fetched mail being logged with my name, not the real From address?</a><br>
 
 <h1>Answers:</h1>
 <hr>
@@ -154,6 +157,15 @@ to go on.  When reporting bugs, please include the following:
 
 It is helpful if you include your .fetchmailrc, but not necessary
 unless your symptom seems to involve an error in configuration parsing.<p>
+
+If fetchmail seems to run and fetch mail, but the headers look mangled
+(that is headers are missing, or blank lines are inserted in the
+headers) then read the FAQ items in section <a href="#X1">X1</a>
+before submitting a bug report.  Pay special attention to the item on
+<a href="#generic_mangling">diagnosing mail mangling</a>.  There are
+lots of ways for other programs in the mail chain to screw up that
+look like fetchmail's fault, but you may be able to fix these by
+tweaking your configuration.<P>
 
 A transcript of the failed session with -v on is almost always useful.
 If the bug involves a core dump or hang, a gdb stack trace is good to have.
@@ -244,7 +256,7 @@ page.<P>
 
 Most modern Unixes (and effectively all Linux/*BSD systems) come with
 POP3 support preconfigured (but beware of the horribly broken POP3
-server mentioned in <a href="#R7">R7</a>).  An increasing minority
+server mentioned in <a href="#R4">R4</a>).  An increasing minority
 also feature IMAP (you can detect IMAP support by running fetchmail in
 AUTO mode).<P>
 
@@ -377,7 +389,7 @@ at version 3.0b6 or later, start with this<p>
 
 in order to migrate.  Be aware that some of popclient's unnecessary
 options have been removed (see the NOTES file in the distribution for
-explanation).  You can't deliver to a local mail file anymore or to
+explanation).  You can't deliver to a local mail file or to
 standard output any more, and using an MDA for delivery is
 discouraged.  If you throw those options away, fetchmail will now
 forward your mail into your system's normal Internet-mail delivery
@@ -400,12 +412,12 @@ If you used to use <CODE>-mda "procmail -d</CODE>
 your ~/.forward file.<p>
 
 As long as your new .fetchmailrc file does not use the removed
-`localfolder' option or `<CODE>limit</CODE>' (which now takes a maximum byte size
-rather than a line count), a straight move or copy of your .poprc will
-often work.  (The new run control file syntax also has to be a little
-stricter about the order of options than the old, in order to support
-multiple user descriptions per server; thus you may have to rearrange
-things a bit.)<p>
+`localfolder' option or `<CODE>limit</CODE>' (which now takes a
+maximum byte size rather than a line count), a straight move or copy
+of your .poprc will often work.  (The new run control file syntax also
+has to be a little stricter about the order of options than the old,
+in order to support multiple user descriptions per server; thus you
+may have to rearrange things a bit.)<p>
 
 Run control files in the minimal .poprc format (without the `username'
 token) will trigger a warning.  To eliminate this warning, add the
@@ -806,7 +818,8 @@ MAILER-DAEMON.<p>
 
 The right way to fix this is to enable the <CODE>rewrite</CODE> option and
 have fetchmail canonicalize From and Return-Path addresses with the
-mailserver hostname before exim sees them.<p>
+mailserver hostname before exim sees them.  This option is enabled by
+default, so it won't be off unless you turned it off.<p>
 
 If you must run with <CODE>rewrite</CODE> off, there is a switch in exim's
 configuration files that allows it to accept domainless MAIL FROM
@@ -871,23 +884,11 @@ ESMTP listener, assuming you're using one (this should not be a
 problem unless the actual size of the message is above the listener's
 configured length limit).<P>
 
-If you want these fixed, go bug the Evil Empire.<P>
+If you want these fixed, go bug the Evil Empire.  Or, better yet,
+install a real operating system on your server and run IMAP.<P>
 
 <hr>
-<h2><a name="R1">R1. I think I've set up fetchmail correctly, but I'm not getting any mail.</a></h2>
-
-Maybe you have a .forward or alias set up that you've forgotten about.  You
-should probably remove it.<p>
-
-Or maybe you're trying to run fetchmail in multidrop mode as root
-without a .fetchmailrc file.  This doesn't do what you think it
-should; see question <a href="#C1">C1</a>.<p>
-
-Or you may not be connecting to the SMTP listener.   Run fetchmail -v
-and see the next question.<p>
-
-<hr>
-<h2>R2. Fetchmail isn't working, and -v shows `SMTP connect failed' messages.</a></h2>
+<h2>R1. Fetchmail isn't working, and -v shows `SMTP connect failed' messages.</a></h2>
 
 Fetchmail itself is probably working, but your SMTP port 25 listener
 is down or inaccessible.<p>
@@ -923,7 +924,7 @@ address that your routing table maps to something other than the
 loopback device (he used ppp0).<p>
 
 We also have a report that this error can be caused by having an
-/etc/hosts fiule that associates your client host name with more than
+/etc/hosts file that associates your client host name with more than
 one IP address.
 
 We had another report from a Linux user of fetchmail 2.1 who solved his SMTP
@@ -936,13 +937,14 @@ linked only if it is actually needed.  So under Linux it won't be, and
 this particular cause should go away.<p>
 
 <hr>
-<h2><a name="R3">R3. When I try to configure an MDA, fetchmail doesn't work.</a></h2>
+<h2><a name="R2">R2. When I try to configure an MDA, fetchmail doesn't work.</a></h2>
 
-(I hear this one from people who have run into the blank-line problem in <a href="#X2">X2</a>.)<p>
+(I hear this one from people who have run into the blank-line problem in <a href="#X1">X1</a>.)<p>
 
 Try sending yourself test mail and retrieving it using the
 command-line options `<CODE>-k -m cat</CODE>'.  This will dump exactly what
-fetchmail retrieves to standard output. <p>
+fetchmail retrieves to standard output (plus the Received line
+fetchmail itself adds to the headers). <p>
 
 If the dump doesn't match what shows up in your mailbox when you
 configure an MDA, your MDA is mangling the message.  If it doesn't
@@ -950,7 +952,7 @@ match what you sent, then fetchmail or something on the server is
 broken.<p>
 
 <hr>
-<h2><a name="R4">R4. Fetchmail dumps core in -V mode, but operates normally otherwise.</a></h2>
+<h2><a name="R3">R3. Fetchmail dumps core in -V mode, but operates normally otherwise.</a></h2>
 
 We've had this reported to us under Linux using libc-5.4.17 and gcc-2.7.2.
 It does not occur with libc-5.3.12 or earlier versions.<p>
@@ -966,26 +968,7 @@ fetchmail code (they're all from within fclose, and not an fclose called
 by fetchmail, either).<p>
 
 <hr>
-<h2><a name="R5">R5. Mail that was being fetched when I interrupted my fetchmail seems to have been vanished.</a></h2>
-
-Fetchmail only sends a delete mail request to the server when either
-(a) it gets a positive delivery acknowledgement from the SMTP
-listener, or (b) it gets an error 571 (the spam-filter error) from the
-listener.  No interrupt can cause it to lose mail.<p>
-
-However, POP3 has a design problem in that its servers mark a message
-`seen' as soon as the fetch command to get it is sent down.  If for
-some reason the message isn't actually delivered (you take a line hit
-during the download, or your port 25 listener can't find enough free
-disk space, or you interrupt the delivery in mid-message) that `seen'
-message can lurk invisibly in your server mailbox forever.<p>
-
-Workaround: add the `<CODE>fetchall</CODE>' keyword to your POP3 fetch options.<p>
-
-Solution: switch to an <a href="http://www.imap.org">IMAP</a> server.<p>
-
-<hr>
-<h2><a name="R6">R6. Fetchmail dumps core when I use a .netrc file but works otherwise.</a></h2>
+<h2><a name="R4">R4. Fetchmail dumps core when I use a .netrc file but works otherwise.</a></h2>
 
 We have a report that under Solaris 2.5 using gcc-2.7.2, if fetchmail
 is compiled with -O or -O2, it segfaults on startup when reading a
@@ -999,7 +982,34 @@ corruption screw.  But the symptom doesn't reproduce under Linux with the
 same .fetchmailrc and .netrc.<p>
 
 <hr>
-<h2><a name="R7">R7. All my mail seems to disappear after an interrupt.</a></h2>
+<h2><a name="R5">R5. Running fetchmail in daemon mode doesn't work.</a><br></h2>
+
+We have one report from a Solaris 4.1.4 user that trying to run
+fetchmail in detached daemon mode doesn't work, but that using the
+same options with -N (nodetach) is OK.<P>
+
+If this happens, you have a specific portability problem with the code
+in daemon.c that detaches and backgrounds the daemon fetchmail. Tell
+me about it so I can try to fix it.  As a workaround, you can start
+fetchmail with -N and an ampersand to background it.<P>
+
+This should not happen under Linux or any truly POSIX-conformant Unix.<P>
+
+<hr>
+<h2><a name="D1">D1. I think I've set up fetchmail correctly, but I'm not getting any mail.</a></h2>
+
+Maybe you have a .forward or alias set up that you've forgotten about.  You
+should probably remove it.<p>
+
+Or maybe you're trying to run fetchmail in multidrop mode as root
+without a .fetchmailrc file.  This doesn't do what you think it
+should; see question <a href="#C1">C1</a>.<p>
+
+Or you may not be connecting to the SMTP listener.   Run fetchmail -v
+and see <a href="#R1">R1</a>.<p>
+
+<hr>
+<h2><a name="D2">D2. All my mail seems to disappear after an interrupt.</a></h2>
 
 One POP3 daemon used in the Berkeley Unix world that reports itself as
 POP3 version 1.004 actually throws the queue away. 1.005 fixed that.
@@ -1027,18 +1037,23 @@ and clean up its queue.  (Fetchmail waits a bit before retrying in
 order to avoid a `lock busy' error.)<P>
 
 <hr>
-<h2><a name="R8">R8. Running fetchmail in daemon mode doesn't work.</a><br></h2>
+<h2><a name="D3">D3. Mail that was being fetched when I interrupted my fetchmail seems to have been vanished.</a></h2>
 
-We have one report from a Solaris 4.1.4 user that trying to run
-fetchmail in detached daemon mode doesn't work, but that using the
-same options with -N (nodetach) is OK.<P>
+Fetchmail only sends a delete mail request to the server when either
+(a) it gets a positive delivery acknowledgement from the SMTP
+listener, or (b) it gets an error 571 (the spam-filter error) from the
+listener.  No interrupt can cause it to lose mail.<p>
 
-If this happens, you have a specific portability problem with the code
-in daemon.c that detaches and backgrounds the daemon fetchmail. Tell
-me about it so I can try to fix it.  As a workaround, you can start
-fetchmail with -N and an ampersand to background it.<P>
+However, POP3 has a design problem in that its servers mark a message
+`seen' as soon as the fetch command to get it is sent down.  If for
+some reason the message isn't actually delivered (you take a line hit
+during the download, or your port 25 listener can't find enough free
+disk space, or you interrupt the delivery in mid-message) that `seen'
+message can lurk invisibly in your server mailbox forever.<p>
 
-This should not happen under Linux or any truly POSIX-conformant Unix.<P>
+Workaround: add the `<CODE>fetchall</CODE>' keyword to your POP3 fetch options.<p>
+
+Solution: switch to an <a href="http://www.imap.org">IMAP</a> server.<p>
 
 <hr>
 <h2><a name="M1">M1. I've declared local names, but all my multidrop
@@ -1115,7 +1130,7 @@ If you use sendmail, you can check the list expansion with
 <h2><a name="M4">M4. My multidrop fetchmail seems to be having DNS problems.</a></h2>
 
 We have one report from a Linux user (not the same one as in <a
-href="#R2">R2</a>!) who solved this problem by removing the reference
+href="#R1">R1</a>!) who solved this problem by removing the reference
 to -lresolv from his link line and relinking.  Apparently in some
 recent Linux distributions the libc bind library version works
 better.<p>
@@ -1191,31 +1206,7 @@ inside pop3 server with fetchmail and sendmail 8.83<P>
 </BLOCKQUOTE>
 
 <hr>
-<h2><a name="X1">X1. Why is fetched mail being logged with my name, not the real From address?</a></h2>
-
-Because logging is done based on the address indicated by the sending
-SMTP's MAIL FROM, and some listeners are picky about that address.<p>
-
-Some SMTP listeners get upset if you try to hand them a MAIL FROM
-address naming a different host than the originating site for your
-connection.  This is a feature, not a bug -- it's supposed to help
-prevent people from forging mail with a bogus origin site.  (RFC 1123
-says you shouldn't do this exclusion...)<p>
-
-Since the originating site of a fetchmail delivery connection is
-localhost, this effectively means these picky listeners will barf on
-any MAIL FROM address fetchmail hands them with an @ in it!<p>
-
-In versions up to 1.9.9 this led to pesky errors at some sites.
-Because of this, I hacked 2.0 to just use the calling user ID
-as the MAIL FROM address.<p>
-
-Versions 2.1 and up try the header From address first and fall back to
-the calling-user ID.  So if your SMTP listener isn't picky, the log
-will look right.<p>
-
-<hr>
-<h2><a name="X2">X2. Spurious blank lines are appearing in the headers of fetched mail.</a></h2>
+<h2><a name="X1">X1. Spurious blank lines are appearing in the headers of fetched mail.</a></h2>
 
 What's probably happening is that the POP/IMAP daemon on your
 mailserver is inserting a non-RFC822 header (like X-POP3-Rcpt:) and
@@ -1231,9 +1222,9 @@ pick a different MDA (such as procmail) and declare it with the
 `<CODE>mda</CODE>' option.<p>
 
 <hr>
-<h2><a name="X3">X3. My mail client can't see a Subject line.</a></h2>
+<h2><a name="X2">X2. My mail client can't see a Subject line.</a></h2>
 
-First, see <a href="#X2">X2</a>.  This is quite probably the same
+First, see <a href="#X1">X1</a>.  This is quite probably the same
 problem (X-POP3-Rcpt header or something similar being inserted by
 the server and choked on by an old version of <em>deliver</em>).<p>
 
@@ -1242,7 +1233,7 @@ X- headers correctly.  If this is your problem, all I can suggest is
 replacing IDA sendmail, because it's broken and not RFC822 conformant.<p>
 
 <hr>
-<h2><a name="X4">X4. Messages containing "From" at start of line are being split.</a></h2>
+<h2><a name="X3">X3. Messages containing "From" at start of line are being split.</a></h2>
 
 If you know the messages aren't split in your server mailbox, then this
 is a problem with your POP/IMAP server, your client-side SMTP listener or
@@ -1277,6 +1268,79 @@ describing your local delivery agent.  Try inserting the `E' option in the
 flags part (the F= string).  This will make sendmail turn each dangerous
 start-of-line From into a >From, preventing programs further downstream
 from acting up.<p>
+
+<hr>
+<h2><a name="generic_mangling"><a name="X4">X4. My mail is being mangled in a new and different way</a></a></h2>
+
+The first thing you need to do is pin down what program is doing the
+mangling.  We don't like getting bug reports about fetchmail that are
+actually due to some other program's malfeasance, so please go through
+this diagnostic sequence before sending us a complaint.<P>
+
+There are five possible culprits to consider, listed here in the order
+they pass your mail:<P>
+
+<ol>
+<li> Programs upstream of your server mailbox.
+<li> The POP or IMAP server on your mailserver host.
+<li> The fetchmail program itself.
+<li> Your local sendmail.
+<li> Your LDA (local delivery agent), as called by sendmail or
+specified by <code>mda</CODE>. 
+</ol>
+
+The first thing to do is send yourself a test message, and retrieve it
+with a .fetchmailrc entry containing the following (or by running with
+the equivalent command-line options):<P>
+
+<pre>
+    mda "cat >MBOX" keep fetchall
+</pre>
+
+This will capture exactly what fetchmail gets from the server, except
+for (a) the extra Received header line fetchmail prepends, (b) header address
+changes due to <code>rewrite</code>, and (c) any changes due to the 
+<code>forcecr</code> and <code>stripcr</code> options.  MBOX will in fact
+contain what programs downstream of fetchmail see.<P>
+
+The most common causes of mangling are bugs and misconfigurations in
+those downstream programs.  If MBOX looks unmangled, you will know
+that is what is going on and that it is not fetchmail's problem.  Take
+a look at the other FAQ items in this section for possible clues about
+how to fix your problem.<P>
+
+If MBOX looks mangled, the next thing to do is compare it with your
+actual server mailbox (if possible).  That's why you specified 
+<code>keep</code>, so the server copy would not be deleted.  If your
+server mailbox looks mangled, programs upstream of your server mailbox
+are at fault.  Unfortunately there is probably little you can do about
+this aside from complaining to your site postmaster, and nothing at
+all fetchmail can do about it!<P>
+
+More likely you'll find that the server copy looks OK.  In that case
+either the POP/IMAP server or fetchmail is doing the mangling.  To
+determine which, you'll need to telnet to the server port and simulate
+a fetchmail session yourself.  This is not actually hard (both POP3
+and IMAP are simple, text-only, line-oriented protocols) but requires
+some attention to detail.  You should be able to use a fetchmail -v
+log as a model for a session, but remember that the "*" in your LOGIN
+or PASS command dump has to be replaced with your actual password.<P>
+
+The objective of manually simulating fetchmail is so you can see
+exactly what fetchmail sees.  If you see a mangled message, then your
+server is at fault, and you probably need to complain to your
+mailserver administrators.  However, we like to know what the broken
+servers are so we can warn people away from them.  So please send
+us a transcript of the session including the mangling <em>and the
+server's initial greeting line</em>.  Please tell us anything else
+you think might be useful about the server, like the server host's
+operating system.<P>
+
+If your manual fetchmail simulation shows an unmangled message,
+congratulations.  You've found an actual fetchmail bug.  Complain
+to us and we'll fix it.  Please include the session transcript of
+your manual fetchmail simulation along with the other things described
+in the FAQ entry on <a href="#G3">reporting bugs</a>.
 
 <hr>
 <h2><a name="O1">O1. The --logfile option doesn't work if the logfile doesn't exist.</a></h2>
@@ -1350,18 +1414,30 @@ command and fetchmail uses it to delete messages quickly after they
 are downloaded.<P>
 
 <hr>
-<h2><a name="O5">O5. Why is my exclusion lock failing under Solaris?</a></h2>
+<h2><a name="O5">O5. Why is fetched mail being logged with my name, not the real From address?</a></h2>
 
-Because root-mode fetchmail wants to put its pid file in /var/run,
-which doesn't normally exist on out-of-the-box Solaris machines.  This will be
-fixed in a future version; in the meantime, you can edit the file
-template string in fetchmail.c.
+Because logging is done based on the address indicated by the sending
+SMTP's MAIL FROM, and some listeners are picky about that address.<p>
+
+Some SMTP listeners get upset if you try to hand them a MAIL FROM
+address naming a different host than the originating site for your
+connection.  This is a feature, not a bug -- it's supposed to help
+prevent people from forging mail with a bogus origin site.  (RFC 1123
+says you shouldn't do this exclusion...)<p>
+
+Since the originating site of a fetchmail delivery connection is
+localhost, this effectively means these picky listeners will barf on
+any MAIL FROM address fetchmail hands them with an @ in it!<p>
+
+Versions 2.1 and up try the header From address first and fall back to
+the calling-user ID.  So if your SMTP listener isn't picky, the log
+will look right.<p>
 
 <HR>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/09/23 21:16:09 $
+<td width="30%" align=right>$Date: 1997/09/25 16:22:15 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
