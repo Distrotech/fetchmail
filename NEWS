@@ -1,13 +1,14 @@
 				Release Notes:
 
-fetchmail-4.5.8 ():
+fetchmail-4.5.8 (Tue Sep  8 12:06:26 EDT 1998):
 
-There are 249 people on fetchmail-friends and 273 on fetchmail-announce.
 * Prevent fetchmailconf from adding an additional layer of quotes on
   preconnect/postconnect/smtpaddress options.
 * Fix a --configdump bug affecting multidrop configurations.
 
-fetchmail-4.5.7 (Tue Aug 25 00:29:44 EDT 1998):
+There are 252 people on fetchmail-friends and 278 on fetchmail-announce.
+
+fetchmail-4.5.7 (Thu Aug 27 17:10:46 EDT 1998):
 * Fixed SDPS support (thanks to Chris Brooks).
 * One more fix for the snakebit postmaster option.
 * Compute FQDN from localhost when we're using Kerberos.
