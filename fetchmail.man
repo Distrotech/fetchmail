@@ -19,7 +19,7 @@ is a mail-retrieval and forwarding utility; it fetches
 mail from remote mailservers and forwards it to your local (client)
 machine's delivery system.  You can then handle the retrieved mail
 using normal mail user agents such as \fIelm\fR(1) or \fIMail\fR(1).
-The \fBfetchmail\fR utility can be run in a daemon mode to repeatedly
+The \fIfetchmail\fR utility can be run in a daemon mode to repeatedly
 poll one or more systems at a specified interval.
 .PP
 The
@@ -412,11 +412,9 @@ overrides any limits set in your run control file.  While
 after receiving the message terminator, some SMTP listeners are not so
 prompt.  MTAs like \fIqmail\fR(8) and \fIsmail\fR(8) may wait till the
 delivery socket is shut down to deliver.  This may produce annoying
-delays when
-.I fetchmail
-is processing very large batches.  Setting the batch limit to some
-nonzero size will prevent these delays.
-This option does not work with ETRN.
+delays when \fIfetchmail\fR is processing very large batches.  Setting
+the batch limit to some nonzero size will prevent these delays.  This
+option does not work with ETRN.
 .TP
 .B -B <number>, --fetchlimit <number>
 (Keyword: fetchlimit)
@@ -579,10 +577,11 @@ line.  The major reason for this is to prevent mail loops.  To set up
 qmail to batch mail for a disconnected site the ISP-mailhost will have
 normally put that site in its `Virtualhosts' control file so it will
 add a prefix to all mail addresses for this site. This results in mail
-sent to 'username@userhost.userdom.dom.com' having a
+.\" The \&@\& tries to stop HTML converters from making a mailto URL here.
+sent to 'username\&@\&userhost.userdom.dom.com' having a
 \&`Delivered-To:' line of the form:
 .sp
-Delivered-To: mbox-userstr-username@userhost.userdom.dom.com
+Delivered-To: mbox-userstr-username\&@\&userhost.userdom.dom.com
 .sp
 The ISP can make the 'mbox-userstr-' prefix anything they choose
 but a string matching the user host name is likely.
