@@ -10,11 +10,18 @@
   ssh for a secure passwordless connection.  Removed the FAQ entry
   on popclient.
 * Jun-ichiro itojun Hagino <itojun@iijlab.net> sent a fix for IPv6.
-* Fix Red Hat bug 9982: fetchmailconf now automatically pups up an edit panel
-  whenever a new user or site is created.
-* Deal gracefully with the possibility that we might be running as a
-  subprocess with stdin not attached to a tty, and thus unable to query
-  for a password.
+* Fix Red Hat 6.2beta bug 9982: fetchmailconf now automatically pups up
+  an edit panel whenever a new user or site is created.
+* Fix Red Hat 6.2beta bug 9988: Deal gracefully with the possibility that
+  we might be running as a subprocess with stdin not attached to a tty,
+  and thus unable to query for a password.
+* Resolved all current Debian bugs classed `important'; #43139, #44744, #44760,
+  #44774, #43140, #50990.
+* Resolved Debian ordinary bugs #17769, #34383, #38303, #39732, #51674,
+  #53386, #53732, #58553, 
+* Resolved Debian wishlist bug #26630.
+* Resolution of #59281 (still loops on Ctrl-C) involved a small change in
+  behavior; SIGPIPE now terminates the current poll cycle.
 
 fetchmail-5.3.0 (Tue Feb 22 08:53:31 PST 2000), 18618 lines:
 
