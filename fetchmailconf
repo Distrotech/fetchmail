@@ -94,7 +94,7 @@ class Server:
 	self.plugout = None		# Plugin command for going to listener
 	self.netsec = None		# IPV6 security options
         self.principal = None		# Kerberos principal
-        self.tracepolls = FALSE   # Add X-Fetchmail-Account header?
+        self.tracepolls = FALSE		# Add X-Fetchmail-Account header?
 	self.users = []			# List of user entries for site
 	Server.typemap = (
 	    ('pollname',  'String'),
@@ -114,11 +114,11 @@ class Server:
 	    # leave localdomains out
 	    ('interface', 'String'),
 	    ('monitor',   'String'),
-	    ('plugin',   'String'),
-	    ('plugout',  'String'),
-	    ('netsec',   'String'),
-	    ('principal','String'),
-            ('tracepolls','String'))
+	    ('plugin',    'String'),
+	    ('plugout',   'String'),
+	    ('netsec',    'String'),
+	    ('principal', 'String'),
+            ('tracepolls','Boolean'))
 
     def dump(self, folded):
 	res = ""
@@ -174,9 +174,9 @@ class Server:
 	if self.interface:
             res = res + "interface " + str(self.interface)
 	if self.monitor:
-            res = res + "monitor " + str(self.monitor)
+            res = res + " monitor " + str(self.monitor)
 	if self.netsec:
-            res = res + "netsec " + str(self.netsec)
+            res = res + " netsec " + str(self.netsec)
 	if self.principal:
 	    res = res + " principal " + `self.principal`
 	if self.interface or self.monitor or self.netsec or self.principal:
@@ -239,14 +239,14 @@ class User:
 	self.fetchlimit = 0		# Max messages fetched per batch
 	self.batchlimit = 0		# Max message forwarded per batch
 	self.expunge = 0		# Interval between expunges (IMAP)
-        self.ssl = 0			# Enable Seccure Socket Layer
-        self.sslkey = None		# SSL key filename
-        self.sslcert = None		# SSL certificate filename
-        self.sslproto = None		# Force SSL?
-        self.sslcertck = 0		# Enable strict SSL cert checking
+	self.ssl = 0			# Enable Seccure Socket Layer
+	self.sslkey = None		# SSL key filename
+	self.sslcert = None		# SSL certificate filename
+	self.sslproto = None		# Force SSL?
+	self.sslcertck = 0		# Enable strict SSL cert checking
 	self.sslcertpath = None		# Path to trusted certificates
 	self.sslfingerprint = None	# SSL key fingerprint to check
-        self.properties = None		# Extension properties
+	self.properties = None		# Extension properties
 	User.typemap = (
 	    ('remote',      'String'),
 	    # leave out mailboxes and localnames
