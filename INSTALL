@@ -75,7 +75,8 @@ Run
 
 	make
 
-This should compile fetchmail for your system.
+This should compile fetchmail for your system.  If fetchmail fails to build
+properly, see the FAQ section B on build-time problems.
 
 4. INSTALL
 
@@ -110,7 +111,7 @@ POP3 servers; also with the IMAP2bis and IMAP4 servers that are
 distributed with Pine from the University of Washington; also with the
 Cyrus IMAP server from CMU.  This covers all the servers normally
 hosted on Linux and *BSD systems.  It also works with Microsoft Exchange,
-despiite the fact that Microsoft Exchange is extremely broken (returns
+despite the fact that Microsoft Exchange is extremely broken (returns
 incorrect message lengths in LIST responses).
 
 7. REPORTING BUGS
