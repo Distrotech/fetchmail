@@ -329,12 +329,17 @@ int main (int argc, char **argv)
 		    namerec = gethostbyname(ctl->servername);
 		    if (namerec == (struct hostent *)NULL)
 		    {
-			if (errno)
-			    perror("fetchmail: initialization error");
-			else
-			    fprintf(stderr,
-				"fetchmail: skipping %s poll, nameserver isn't responding\n",
+			fprintf(stderr,
+				"fetchmail: skipping %s poll, ",
 				ctl->servername);
+			if (errno)
+			{
+			    perror("general error");
+			    if (errno == ENETUNREACH)
+				break;	/* go to sleep */
+			}
+			else
+			    herror("DNS error");
 			continue;
 		    }
 		    else
