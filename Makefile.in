@@ -147,8 +147,9 @@ distclean: clean
 	-rm -f fetchmail.log fetchmail.toc fetchmail.*aux
 
 realclean: distclean # fetchmail.info*
-	rm -f FAQ FEATURES NOTES \
-		MANIFEST config.cache config.log configure Makefile
+	-rm -f FAQ FEATURES NOTES MANIFEST 
+	-rm -f config.cache config.log configure Makefile
+	-rm -f fetchmail-*.tar.gz fetchmail-*.rpm 
 
 mostlyclean: clean
 
