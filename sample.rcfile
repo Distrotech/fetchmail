@@ -1,0 +1,81 @@
+# .poprc sample
+#
+#    $Log: sample.rcfile,v $
+#    Revision 1.1  1996/06/25 16:50:31  esr
+#    Initial revision
+#
+#    Revision 1.2  1995/08/10 00:32:46  ceharris
+#    Preparation for 3.0b3 beta release:
+#    -	added code for --kill/--keep, --limit, --protocol, --flush
+#    	options; --pop2 and --pop3 options now obsoleted by --protocol.
+#    - 	added support for APOP authentication, including --with-APOP
+#    	argument for configure.
+#    -	provisional and broken support for RPOP
+#    -	added buffering to SockGets and SockRead functions.
+#    -	fixed problem of command-line options not being correctly
+#    	carried into the merged options record.
+#
+#    Revision 1.1  1995/08/09 01:33:04  ceharris
+#    Version 3.0 beta 2 release.
+#    Added
+#    -	.poprc functionality
+#    -	GNU long options
+#    -	multiple servers on the command line.
+#    Fixed
+#    -	Passwords showing up in ps output.
+#
+#
+# This file (or one of your own creation, rather) should be located 
+# in your home directory with the name .poprc.  Permissions on this
+# file may be no greater than -rw-------, or popclient will refuse to
+# use it.
+#
+# I'd like to point out here that I do not, repeat DO NOT, endorse
+# the use of plaintext passwords in the .poprc file.  I include the
+# password option because SO MANY people asked me about having such
+# an option.  I don't use it myself.  And I recommend that you don't
+# use it.  
+#
+# I'd also like to point out that the syntax of this file is still
+# under development (during the 3.0 beta series of releases).  If you
+# would like to suggest revisions, please do.
+#
+# Comments begin with a '#' and extend through the end of the line.
+# Blank lines between server entries are ignored.
+# Keywords and identifiers are case sensitive.
+# When there is a conflict between the command-line arguments and the
+# arguments in this file, the command-line arguments take precedence.
+#
+# Legal keywords are
+#   server
+#   protocol (or proto)
+#   username (or user)
+#   password (or pass)
+#   remotefolder (or remote)
+#   localfolder (or local)
+#
+# Legal protocol identifiers are
+#   pop2 (or POP2)
+#   pop3 (or POP3)
+#   imap (or IMAP)
+#   apop (or APOP)
+#   rpop (or RPOP)
+#
+# Basic format is
+server SERVERNAME protocol PROTOCOL username NAME password PASSWORD 
+# Example
+server pop.provider.net protocol pop3 username jsmith password secret1
+# Or, using some abbreviations
+server pop.provider.net proto pop3 user jsmith password secret1
+
+# Multiple servers may be listed
+server pop.provider.net proto pop3 user jsmith password secret1
+server other.provider.net proto pop2 user John.Smith password My^Hat
+
+# Other possibilities (note use of \ to escape newline -- this is all 
+# one server definition.
+server pop.provider.net 	\
+	proto pop3		\
+	user jsmith		\
+	pass secret1		\
+	localfolder ~/mbox
