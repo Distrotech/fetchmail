@@ -826,8 +826,13 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 	/* write message terminator */
 	if (SMTP_eom(ctl->smtp_socket) != SM_OK)
 	{
-	    error(0, -1, _("SMTP listener refused delivery"));
-	    return(FALSE);
+	    if (handle_smtp_error(ctl, msg) != PS_REFUSED)
+		return(FALSE);
+	    else
+	    {
+		error(0, -1, _("SMTP listener refused delivery"));
+		return(TRUE);
+	    }
 	}
 
 	/*

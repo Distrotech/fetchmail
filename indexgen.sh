@@ -229,8 +229,9 @@ OS/2 port</a> is available from Jason F. McBrayer.<p>
 Jochen Hayek is developing a set of
 <a href="http://www.ACM.org/~Jochen_Hayek/JHimap_utils/">
 IMAP tools in Python</a> that read your .fetchmailrc file and are
-designed to work with fetchmail.   Jochen's tools can get subject listings
-or move incoming messages to named mailboxes.<p>
+designed to work with fetchmail.   Jochen's tools can report selected
+header lines, or move incoming messages to named mailboxes based on
+the contents of headers.<p>
 
 <H1>Fetchmail's funniest fan letter:</H1>
 

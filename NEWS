@@ -2,6 +2,10 @@
 
 fetchmail-4.7.3 ():
 * Added new FAQ item G11 and added material to R1.
+* Do a full antispam check on the EOM response in case the MTA does
+  content analysis.
+
+There are 246 people on fetchmail-friends and 329 on fetchmail-announce.
 
 fetchmail-4.7.2 (Fri Dec 25 01:01:54 EST 1998):
 * Don't append the destination address to a postmaster name containing @.
