@@ -11,6 +11,8 @@ fetchmail-4.5.0 ():
 * 1.0 version of fetchmailconf.
 * Jochen Hayek's changes to make RPA less verbose.
 * Harry McGavran's fix for subdirectory installation.
+* Marty Lee fixed a bug in activation of hosts named on the command-line.
+* The fetchall option forces RETR again.  We can cope with USA.NET now. 
 
 There are 279 people on fetchmail-friends and 217 on fetchmail-announce.
 

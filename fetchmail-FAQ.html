@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/06/05 06:08:35 $
+<td width="30%" align=right>$Date: 1998/06/05 17:23:28 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1184,11 +1184,11 @@ certainly a server bug.<P>
 The usa.net servers (at least in their 2.2 version, June 1998) don't
 handle the TOP command properly, either.  Regardless of the argument
 you give it, they retrieve only about 10 lines of the message.
-Because fetchmail uses TOP for message retrieval (in order to avoid
-marking messages seen), this is a problem.  The `<CODE>keep</CODE>'
-option causes fetchmail to use ordinary RETR, eliminating this
-problem -- however, it also doesn't delete read mail.  You may be able 
-to get around this by using the --keep and --flush options together.<P>
+Fetchmail normally uses TOP for message retrieval in order to avoid
+marking messages seen, but `<CODE>fetchall</CODE>' forces it to use
+RETR instead.<P>
+
+So, set the `<CODE>fetchall</CODE>' option.<P>
 
 <hr>
 <h2><a name="T10">T10. How can I use fetchmail with HP OpenMail?</a></h2>
@@ -1951,7 +1951,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/06/05 06:08:35 $
+<td width="30%" align=right>$Date: 1998/06/05 17:23:28 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

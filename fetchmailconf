@@ -961,16 +961,16 @@ It is strongly recommended that you find a better POP3 server.
 """
             if string.find(greetline, "usa.net") > 0:
                 warnings = warnings + """
-You appear to be using USA.NET's free mail service.  This is a problem;
-their POP3 servers, at least as of the 2.2 version in use mid-1998,
-are quite flaky.  They seem to require that fetchall be switched on
+You appear to be using USA.NET's free mail service.  Their POP3 servers
+(at least as of the 2.2 version in use mid-1998) are quite flaky, but
+fetchmail can compensate.  They seem to require that fetchall be switched on
 (otherwise you won't necessarily see all your mail, not even new mail).
-They botch the TOP command the fetchmail normally uses for retrieval
+They also botch the TOP command the fetchmail normally uses for retrieval
 (it only retrieves about 10 lines rather than the number specified).
+Turning on fetchall will disable the use of TOP.
 
-It is recommended that you turn on `fetchall' and `keep' on all user
-entries associated with this server.  Turning on keep will disable the
-use of TOP.
+Therefore, it is strongly recommended that you turn on `fetchall' on all
+user entries associated with this server.  
 
 """
             if string.find(greetline, "QPOP") > 0:

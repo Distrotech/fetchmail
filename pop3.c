@@ -234,8 +234,8 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
      */
     sleep(3); /* to be _really_ safe, probably need sleep(5)! */
 
-    /* we're peek-capable because the TOP command exists */
-    peek_capable = TRUE;
+    /* we're peek-capable if use of TOP is enabled */
+    peek_capable = !(ctl->fetchall || ctl->keep);
 
     /* we're approved */
     return(PS_SUCCESS);
@@ -534,6 +534,12 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
      * In that case, marking the seen flag is the only way to prevent the
      * message from being re-fetched on subsequent runs.
      *
+     * Also use RETR if fetchall is on.  This gives us a workaround
+     * for servers like usa.net's that bungle TOP.  It's pretty
+     * harmless because fetchall guarantees that any message dropped
+     * by an interrupted RETR will be picked up on the next poll of the
+     * site.
+     *
      * We take advantage here of the fact that, according to all the
      * POP RFCs, "if the number of lines requested by the POP3 client
      * is greater than than the number of lines in the body, then the
@@ -543,7 +549,7 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
      * accept; it's much lower than the natural value 2147483646 (the maximum
      * twos-complement signed 32-bit integer minus 1)
      */
-    if (ctl->keep)
+    if (ctl->keep || ctl->fetchall)
 	gen_send(sock, "RETR %d", number);
     else
 	gen_send(sock, "TOP %d 99999999", number);

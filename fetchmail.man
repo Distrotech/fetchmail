@@ -125,6 +125,7 @@ and the mailserver are echoed to stderr.  Overrides --silent.
 (Keyword: fetchall)
 Retrieve both old (seen) and new messages from the mailserver.  The
 default is to fetch only messages the server has not marked seen.
+Under POP3, this option also forces the use of RETR rather than TOP.
 Note that POP2 retrieval behaves as though --all is always on (see
 RETRIEVAL FAILURE MODES below) and this option does not work with ETRN.
 .TP
