@@ -64,3 +64,6 @@ echo "pause 9999" >>/tmp/growthimage$$
 gnuplot /tmp/growthimage$$
 
 rm -f /tmp/growth*
+
+# The gnuplot drivers for GIF and PNG are deficient.  To capture this image,
+# use the xv middle-button grab and save to PNG.
