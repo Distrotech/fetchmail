@@ -1,5 +1,5 @@
 /*
- * checkalias.c -- check to see if the IP addresses of two hosts are the same
+ * checkalias.c -- check to see if two hostnames or IP addresses are equivalent
  *
  * Copyright 1997 by Eric S. Raymond
  * For license terms, see the file COPYING in this directory.

@@ -43,9 +43,9 @@
 #include  <time.h>
 #endif
 
-#ifdef HAVE_GETHOSTBYNAME
+#ifdef HAVE_RES_SEARCH
 #include <netdb.h>
-#endif /* HAVE_GETHOSTBYNAME */
+#endif /* HAVE_RES_SEARCH */
 
 #ifdef KERBEROS_V4
 #if defined (__bsdi__)
