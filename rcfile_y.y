@@ -441,7 +441,10 @@ struct query *init;	/* pointer to block containing initial values */
     if (init)
 	memcpy(node, init, sizeof(struct query));
     else
+    {
 	memset(node, '\0', sizeof(struct query));
+	node->smtp_socket = -1;
+    }
 
     /* append to end of list */
     if (hosttail != (struct query *) 0)
