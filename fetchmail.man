@@ -1545,6 +1545,10 @@ in foreground while a background fetchmail is running will do
 whichever of these is appropriate to wake it up.
 
 .SH BUGS AND KNOWN PROBLEMS
+Enabling the `mimedecode' option (which defaults to off) may render
+invalid any PGP signatures attached to mail with quoted-printable headers.
+This bug will be fixed in a future version.
+.P
 The RFC822 address parser used in multidrop mode chokes on some
 @-addresses that are technically legal but bizarre.  Strange uses of
 quoting and embedded comments are likely to confuse it.
