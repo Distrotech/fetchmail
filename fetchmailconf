@@ -13,7 +13,7 @@ import string
 #
 # Define the data structures the GUIs will be tossing around
 #
-class Controls:
+class Configuration:
     def __init__(self):
 	self.poll_interval = 300	# Default to 5-minute timeout
 	self.syslog = FALSE		# Use syslogd for logging?
@@ -21,7 +21,7 @@ class Controls:
 	self.idfile = os.environ["HOME"] + "/.fetchids"		# Default idfile, initially
 	self.invisible = FALSE		# Suppress Received line & spoof?
 	self.servers = []		# List of included sites
-	Controls.typemap = (
+	Configuration.typemap = (
 	    ('poll_interval',	'String'),
 	    ('syslog',		'Boolean'),
 	    ('logfile',		'String'),
@@ -30,20 +30,20 @@ class Controls:
 
     def __repr__(self):
 	str = "";
-	if self.syslog != ControlDefaults.syslog:
+	if self.syslog != ConfigurationDefaults.syslog:
 	   str = str + ("set syslog\n")
 	elif self.logfile:
 	    str = str + ("set logfile \"%s\"\n" % (self.logfile,));
-	if self.idfile != ControlDefaults.idfile:
+	if self.idfile != ConfigurationDefaults.idfile:
 	    str = str + ("set idfile \"%s\"\n" % (self.idfile,));
-	if self.poll_interval != ControlDefaults.poll_interval:
+	if self.poll_interval != ConfigurationDefaults.poll_interval:
 	    str = str + ("set daemon %s\n" % (self.poll_interval,))
 	for site in self.servers:
 	    str = str + repr(site)
 	return str
 
     def __str__(self):
-	return "[Controls: " + repr(self) + "]"
+	return "[Configuration: " + repr(self) + "]"
 
 class Server:
     def __init__(self):
@@ -460,7 +460,7 @@ Press `Save' to save the new fetchmail configuration you have created.
 Press `Quit' to exit without saving.
 Press `Help' to bring up this help message.
 
-In the `Novice Configuration' panel, you will set up the basic data
+In the `Novice Configuration' panels, you will set up the basic data
 needed to create a simple fetchmail setup.  These include:
 
 1. The name of the remote site you want to query.
@@ -472,6 +472,9 @@ needed to create a simple fetchmail setup.  These include:
 4. A protocol to use (POP, IMAP, ETRN, etc.)
 
 5. A polling interval.
+
+6. Options to fetch old messages as well as new, uor to suppress
+   deletion of fetched message.
 
 The novice-configuration code will assume that you want to forward mail
 to a local sendmail listener with no special options.
@@ -539,7 +542,7 @@ class ConfigurationEdit(Frame, MyWidget):
 	self.master.title('fetchmail ' + self.mode + ' configurator');
 	self.master.iconname('fetchmail ' + self.mode + ' configurator');
 	Pack.config(self)
-        self.post(Controls, 'configuration')
+        self.post(Configuration, 'configuration')
 
 	dispose_window(self,
                        'Configurator ' + self.mode + ' Controls',
@@ -595,7 +598,7 @@ class ConfigurationEdit(Frame, MyWidget):
 
     # XXX Someday this must go to the actual config file location
     def save(self):
-        self.fetch(Controls, 'configuration')
+        self.fetch(Configuration, 'configuration')
 	sys.stdout.write("# Configuration created %s\n" % time.ctime(time.time()))
 	sys.stdout.write(`self.configuration`)
 	self.quit()
@@ -1035,11 +1038,11 @@ Or you can just select `Quit' to leave the configurator now.
 
     def novice(self):
 	self.destroy()
-	ConfigurationEdit(Configuration).edit('novice')
+	ConfigurationEdit(Fetchmailrc).edit('novice')
 
     def expert(self):
 	self.destroy()
-	ConfigurationEdit(Configuration).edit('expert')
+	ConfigurationEdit(Fetchmailrc).edit('expert')
 
     def leave(self):
         self.quit()
@@ -1085,7 +1088,7 @@ def copy_instance(toclass, fromdict):
 if __name__ == '__main__': 
 
     # Compute defaults
-    ControlDefaults = Controls()
+    ConfigurationDefaults = Configuration()
     ServerDefaults = Server()
     UserDefaults = User()
 
@@ -1097,13 +1100,13 @@ if __name__ == '__main__':
 
     # The tricky part -- initializing objects from the configuration global
     # `Configuration' is the top level of the object tree we're going to mung 
-    Configuration = Controls()
-    copy_instance(Configuration, configuration)
-    Configuration.servers = [];
+    Fetchmailrc = Configuration()
+    copy_instance(Fetchmailrc, configuration)
+    Fetchmailrc.servers = [];
     for server in configuration['servers']:
 	Newsite = Server()
 	copy_instance(Newsite, server)
-	Configuration.servers.append(Newsite)
+	Fetchmailrc.servers.append(Newsite)
 	Newsite.users = [];
 	for user in server['users']:
 	    Newuser = User()
@@ -1112,7 +1115,7 @@ if __name__ == '__main__':
 
     # We may want to display the configuration and quit
     if len(sys.argv) > 1 and sys.argv[1] == '-d':
-        print "This is a dump of the configuration we read:\n"+`Configuration`
+        print "This is a dump of the configuration we read:\n"+`Fetchmailrc`
         sys.exit(0)
 
     # OK, now run the configuration edit
