@@ -1703,7 +1703,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	    int err_no = errno;
 #ifdef HAVE_RES_SEARCH
 	    if (err_no != 0 && h_errno != 0)
-		report(stderr, _("fetchmail: internal inconsistency\n"));
+		report(stderr, _("internal inconsistency\n"));
 #endif
 	    /*
 	     * Avoid generating a bogus error every poll cycle when we're
@@ -1713,7 +1713,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	    if (!((err_no == EHOSTUNREACH || err_no == ENETUNREACH) 
 		  && run.poll_interval))
 	    {
-		report_build(stderr, _("fetchmail: %s connection to %s failed"), 
+		report_build(stderr, _("%s connection to %s failed"), 
 			     protocol->name, ctl->server.pollname);
 #ifdef HAVE_RES_SEARCH
 		if (h_errno != 0)
