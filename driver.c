@@ -479,6 +479,7 @@ static int readheaders(int sock,
 		set_timeout(0);
 		free(line);
 		free(msgblk.headers);
+		msgblk.headers = NULL;
 		return(PS_SOCKET);
 	    }
 	    set_timeout(0);
@@ -617,6 +618,7 @@ static int readheaders(int sock,
 	    if (num == 1 && !strncasecmp(line, "X-IMAP:", 7)) {
 		free(line);
 		free(msgblk.headers);
+		msgblk.headers = NULL;
 		return(PS_RETAINED);
 	    }
 
@@ -992,6 +994,7 @@ static int readheaders(int sock,
 	    report(stdout,
 		   _("forwarding and deletion suppressed due to DNS errors\n"));
 	free(msgblk.headers);
+	msgblk.headers = NULL;
 	free_str_list(&msgblk.recipients);
 	return(PS_TRANSIENT);
     }
@@ -1002,6 +1005,7 @@ static int readheaders(int sock,
 			   &good_addresses, &bad_addresses)) != PS_SUCCESS)
 	{
 	    free(msgblk.headers);
+	    msgblk.headers = NULL;
 	    free_str_list(&msgblk.recipients);
 	    return(n);
 	}
@@ -1099,6 +1103,7 @@ static int readheaders(int sock,
 	report(stdout, _("writing RFC822 msgblk.headers\n"));
 	release_sink(ctl);
 	free(msgblk.headers);
+	msgblk.headers = NULL;
 	free_str_list(&msgblk.recipients);
 	return(PS_IOERR);
     }
