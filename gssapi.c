@@ -106,10 +106,11 @@ int do_gssauth(int sock, char *command, char *hostname, char *username)
         }
         to64frombits(buf1, send_token.value, send_token.length);
         gss_release_buffer(&min_stat, &send_token);
-	strcat(buf1, "\r\n");
-        SockWrite(sock, buf1, strlen(buf1));
-        if (outlevel >= O_MONITOR)
-            report(stdout, "IMAP> %s\n", buf1);
+
+	suppress_tags = TRUE;
+	gen_send(sock, buf1, strlen(buf1));
+	suppress_tags = FALSE;
+
         if (maj_stat == GSS_S_CONTINUE_NEEDED) {
 	    if (result = gen_recv(sock, buf1, sizeof buf1)) {
 	        gss_release_name(&min_stat, &target_name);
@@ -119,18 +120,19 @@ int do_gssauth(int sock, char *command, char *hostname, char *username)
 	    request_buf.value = buf2;
 	    sec_token = &request_buf;
         }
-    } while (maj_stat == GSS_S_CONTINUE_NEEDED);
+    } while
+	(maj_stat == GSS_S_CONTINUE_NEEDED);
     gss_release_name(&min_stat, &target_name);
 
     /* get security flags and buffer size */
-    if (result = gen_recv(sock, buf1, sizeof buf1)) {
+    if (result = gen_recv(sock, buf1, sizeof buf1))
         return result;
-    }
+
     request_buf.length = from64tobits(buf2, buf1 + 2);
     request_buf.value = buf2;
 
-    maj_stat = gss_unwrap(&min_stat, context, &request_buf, &send_token,
-        &cflags, &quality);
+    maj_stat = gss_unwrap(&min_stat, context, 
+			  &request_buf, &send_token, &cflags, &quality);
     if (maj_stat != GSS_S_COMPLETE) {
         report(stderr, _("Couldn't unwrap security level data\n"));
         gss_release_buffer(&min_stat, &send_token);

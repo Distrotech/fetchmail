@@ -211,40 +211,54 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	if (strchr(greeting, '<') && gen_transact(sock, "AUTH") == 0)
 	{
 	    char buffer[10];
-	    flag has_cram = FALSE;
-#if defined(KERBEROS_IV)
+#if defined(GSSAPI)
+	    flag has_gssapi = FALSE;
+#endif /* defined(GSSAPI) */
+#if defined(KERBEROS_V4) || defined(KERBEROS_V5)
 	    flag has_kerberos = FALSE;
-#endif /* defined(KERBEROS_IV) */
+#endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
+	    flag has_cram = FALSE;
 #ifdef OPIE_ENABLE
 	    flag has_opie = FALSE;
 #endif /* OPIE_ENABLE */
 
+	    /* determine what authentication methods we have available */
 	    while ((ok = gen_recv(sock, buffer, sizeof(buffer))) == 0)
 	    {
 		if (DOTLINE(buffer))
 		    break;
-		if (strncasecmp(buffer, "CRAM-MD5", 8) == 0)
-		    has_cram = TRUE;
-#if defined(KERBEROS_IV)
+#if defined(GSSAPI)
+		if (strncasecmp(buffer, "GSSAPI", 8) == 0)
+		    has_gssapi = TRUE;
+#endif /* defined(GSSAPI) */
+#if defined(KERBEROS_V4) || defined(KERBEROS_V5)
 		if (strncasecmp(buffer, "KERBEROS_V4", 8) == 0)
 		    has_kerberos = TRUE;
-#endif /* defined(KERBEROS_IV) */
+#endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
+		if (strncasecmp(buffer, "CRAM-MD5", 8) == 0)
+		    has_cram = TRUE;
 #ifdef OPIE_ENABLE
 		if (strncasecmp(buffer, "X-OTP", 8) == 0)
 		    has_opie = TRUE;
 #endif /* OPIE_ENABLE */
 	    }
-#if defined(KERBEROS_IV)
+
+#if defined(GSSAPI)
+	    if (has_kerberos)
+		return(do_gssauth(sock, "AUTH", 
+				  ctl->server.truename, ctl->remotename));
+#endif /* defined(GSSAPI) */
+#if defined(KERBEROS_V4) || defined(KERBEROS_V5)
 	    if (has_kerberos)
 		return(do_rfc1731(sock, "AUTH", ctl->server.truename));
-#endif /* defined(KERBEROS_IV) */
-#ifdef OPIE_ENABLE
-	    if (has_opie)
-		do_otp(sock, ctl)
-#endif /* OPIE_ENABLE */
+#endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
 	    if (has_cram)
 		return(do_cram_md5(sock, "AUTH", ctl));
-	}
+#ifdef OPIE_ENABLE
+	    if (has_opie)
+		do_otp(sock, "AUTH", ctl)
+#endif /* OPIE_ENABLE */
+       }
 
 	/* ordinary validation, no one-time password or RPA */ 
 	ok = gen_transact(sock, "PASS %s", ctl->password);

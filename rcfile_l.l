@@ -83,6 +83,7 @@ service		{ return SERVICE; }
 port		{ return PORT; }
 interval	{ return INTERVAL; }
 preauth(enticate)?	{ SETSTATE(PREAUTH); return PREAUTHENTICATE; }
+any		{ SETSTATE(0); return ANY; }
 gssapi		{ SETSTATE(0); return GSSAPI; }
 kerberos(_v)?4	{ SETSTATE(0); return KERBEROS4; }
 kerberos(_v)?5	{ SETSTATE(0); return KERBEROS5; }

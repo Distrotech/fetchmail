@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.35"
+version = "1.36"
 
 from Tkinter import *
 from Dialog import *
@@ -80,7 +80,7 @@ class Server:
 	self.protocol = 'auto'		# Default to auto protocol
 	self.port = 0			# Port number to use
 	self.uidl = FALSE		# Don't use RFC1725 UIDLs by default
-	self.preauth = 'password'	# Default to password authentication
+	self.preauth = 'any'		# Default to password authentication
 	self.timeout = 300		# 5-minute timeout
 	self.envelope = 'Received'	# Envelope-address header
 	self.envskip = 0		# Number of envelope headers to skip
@@ -370,12 +370,10 @@ defaultports = {"auto":0,
                 "APOP":110,
                 "KPOP":1109,
                 "IMAP":143,
-		"IMAP-GSS":143,
-		"IMAP-K4":143,
 		"ETRN":25,
                 "ODMR":366}
 
-preauthlist = ("password", "kerberos", "ssh")
+preauthlist = ("any", "password", "gssapi", "kerberos", "ssh")
 
 listboxhelp = {
     'title' : 'List Selection Help',
@@ -1046,10 +1044,6 @@ class ServerEdit(Frame, MyWidget):
             protolist.append("SDPS")
         if 'imap' in feature_options:
             protolist.append("IMAP")
-        if 'imap-gss' in feature_options:
-            protolist.append("IMAP-GSS")
-        if 'imap-k4' in feature_options:
-            protolist.append("IMAP-K4")
         if 'etrn' in feature_options:
             protolist.append("ETRN")
         if 'odmr' in feature_options:
@@ -1104,7 +1098,7 @@ class ServerEdit(Frame, MyWidget):
 		 self.server.localdomains, None, None, mdropwin, multihelp)
             mdropwin.pack(fill=X)
 
-            if os_type == 'linux' or os_type == 'freebsd' or 'netsec' in feature_options or 'imap-k4' in feature_options:
+            if os_type in ('linux', 'freebsd') or 'netsec' in feature_options:
                 secwin = Frame(rightwin, relief=RAISED, bd=5)
                 Label(secwin, text="Security").pack(side=TOP)
                 # Don't actually let users set this.  KPOP sets it implicitly
@@ -1120,7 +1114,7 @@ class ServerEdit(Frame, MyWidget):
                     LabeledEntry(secwin, 'IPV6 security options:',
 			 self.netsec, leftwidth).pack(side=TOP, fill=X)
         	# Someday this should handle Kerberos 5 too
-        	if 'imap-k4' in feature_options:
+        	if 'kerberos' in feature_options:
                     LabeledEntry(secwin, 'Principal:',
                          self.principal, '12').pack(side=TOP, fill=X)
                 Button(secwin, text='Help', fg='blue',
@@ -1602,7 +1596,7 @@ class UserEdit(Frame, MyWidget):
 		    variable=self.idle).pack(side=TOP, anchor=W)
             limwin.pack(fill=X)
 
-            if self.parent.server.protocol in ('IMAP', 'IMAP-K4', 'IMAP-GSS'):
+            if self.parent.server.protocol == 'IMAP':
                 foldwin = Frame(rightwin, relief=RAISED, bd=5)
                 Label(foldwin, text="Remote folders (IMAP only)").pack(side=TOP)
                 ListEdit("New folder:", self.user.mailboxes,

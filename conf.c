@@ -155,11 +155,11 @@ void dump_config(struct runctl *runp, struct query *querylist)
     printf("'imap',");
 #endif /* IMAP_ENABLE */
 #ifdef GSSAPI
-    printf("'imap-gss',");
+    printf("'gssapi',");
 #endif /* GSSAPI */
-#if defined(IMAP4) && defined(KERBEROS_V4)
-    printf("'imap-k4',");
-#endif /* defined(IMAP4) && defined(KERBEROS_V4) */
+#if defined(KERBEROS_V4)
+    printf("'kerberos',");
+#endif /* defined(IMAP4) */
 #ifdef RPA_ENABLE
     printf("'rpa',");
 #endif /* RPA_ENABLE */
@@ -271,14 +271,18 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	    numdump("envskip", ctl->server.envskip);
 	    stringdump("qvirtual", ctl->server.qvirtual);
  
-	    if (ctl->server.preauthenticate == A_KERBEROS_V4)
+	    if (ctl->server.preauthenticate == A_ANY)
+		stringdump("preauth", "any");
+	    else if (ctl->server.preauthenticate == A_PASSWORD)
+		stringdump("preauth", "password");
+	    else if (ctl->server.preauthenticate == A_GSSAPI)
+		stringdump("preauth", "gssapi");
+	    else if (ctl->server.preauthenticate == A_KERBEROS_V4)
 		stringdump("preauth", "kerberos_v4");
 	    else if (ctl->server.preauthenticate == A_KERBEROS_V5)
 		stringdump("preauth", "kerberos_v5");
 	    else if (ctl->server.preauthenticate == A_SSH)
 		stringdump("preauth", "ssh");
-	    else
-		stringdump("preauth", "password");
 
 #if defined(HAVE_GETHOSTBYNAME) && defined(HAVE_RES_SEARCH)
 	    booldump("dns", ctl->server.dns);

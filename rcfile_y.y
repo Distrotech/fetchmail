@@ -58,7 +58,7 @@ extern char * yytext;
   char *sval;
 }
 
-%token DEFAULTS POLL SKIP VIA AKA LOCALDOMAINS PROTOCOL
+%token DEFAULTS POLL SKIP VIA AKA LOCALDOMAINS PROTOCOL ANY
 %token PREAUTHENTICATE TIMEOUT KPOP SDPS KERBEROS4 KERBEROS5 KERBEROS GSSAPI
 %token SSH ENVELOPE QVIRTUAL USERNAME PASSWORD FOLDER SMTPHOST MDA BSMTP LMTP
 %token SMTPADDRESS SMTPNAME SPAMRESPONSE PRECONNECT POSTCONNECT LIMIT WARNINGS
@@ -181,7 +181,9 @@ serv_option	: AKA alias_list
 #endif /* INET6_ENABLE */
 		}
 		| INTERVAL NUMBER		{current.server.interval = $2;}
+		| PREAUTHENTICATE ANY		{current.server.preauthenticate = A_ANY;}
 		| PREAUTHENTICATE PASSWORD	{current.server.preauthenticate = A_PASSWORD;}
+		| PREAUTHENTICATE GSSAPI	{current.server.preauthenticate = A_GSSAPI;}
 		| PREAUTHENTICATE KERBEROS4	{current.server.preauthenticate = A_KERBEROS_V4;}
                 | PREAUTHENTICATE KERBEROS5 	{current.server.preauthenticate = A_KERBEROS_V5;}
                 | PREAUTHENTICATE KERBEROS         {

@@ -323,7 +323,7 @@ int main(int argc, char **argv)
     {
 	if (ctl->active && !(implicitmode && ctl->server.skip)&&!ctl->password)
 	{
-	    if (ctl->server.preauthenticate != A_PASSWORD)
+	    if (ctl->server.preauthenticate > A_PASSWORD)
 		/* Server won't care what the password is, but there
 		   must be some non-null string here.  */
 		ctl->password = ctl->remotename;
@@ -493,7 +493,7 @@ int main(int argc, char **argv)
     for (ctl = querylist; ctl; ctl = ctl->next)
     {
 	if (ctl->active && !(implicitmode && ctl->server.skip)
-		&& ctl->server.preauthenticate == A_PASSWORD
+		&& ctl->server.preauthenticate <= A_PASSWORD
 		&& !ctl->password)
 	{
 	    if (!isatty(0))
@@ -1102,12 +1102,9 @@ static int load_params(int argc, char **argv, int optind)
 	     *
 	     * If we're using Kerberos for authentication, we need 
 	     * the FQDN in order to generate capability keys.  */
-	    if (ctl->server.protocol == P_ETRN
-#ifdef ODMR_ENABLE 
-			 || ctl->server.protocol == P_ODMR
-#endif /* ODMR_ENABLE */
-			 || ctl->server.preauthenticate == A_KERBEROS_V4
-			 || ctl->server.preauthenticate == A_KERBEROS_V5)
+	    if (ctl->server.protocol==P_ETRN || ctl->server.protocol==P_ODMR
+		|| ctl->server.preauthenticate == A_KERBEROS_V4
+		|| ctl->server.preauthenticate == A_KERBEROS_V5)
 		if (strcmp(fetchmailhost, "localhost") == 0)
 			fetchmailhost = host_fqdn();
 
@@ -1563,32 +1560,22 @@ static void dump_params (struct runctl *runp,
 	if (ctl->server.skip || outlevel >= O_VERBOSE)
 	    printf(_("  This host %s be queried when no host is specified.\n"),
 		   ctl->server.skip ? _("will not") : _("will"));
-	/*
-	 * Don't poll for password when there is one or when using the ETRN
-	 * or GSSAPI or KERBEROS protocol
-	 */
-	/* ETRN, IMAP_GSS, and IMAP_K4 do not need a password, so skip this */
-	if ( (ctl->server.protocol != P_ETRN)
-#ifdef GSSAPI
-			&& (ctl->server.preauthenticate != A_GSSAPI)
-#endif /* GSSAPI */
-       			&& (ctl->server.preauthenticate != A_KERBEROS_V4) 
-       			&& (ctl->server.preauthenticate != A_KERBEROS_V5)) 
+	if (ctl->server.preauthenticate <= A_PASSWORD)
 	{
-		if (!ctl->password)
-			printf(_("  Password will be prompted for.\n"));
-		else if (outlevel >= O_VERBOSE)
-		{
-			if (ctl->server.protocol == P_APOP)
-				printf(_("  APOP secret = \"%s\".\n"),
+	    if (!ctl->password)
+		printf(_("  Password will be prompted for.\n"));
+	    else if (outlevel >= O_VERBOSE)
+	    {
+		if (ctl->server.protocol == P_APOP)
+		    printf(_("  APOP secret = \"%s\".\n"),
+			   visbuf(ctl->password));
+		else if (ctl->server.protocol == P_RPOP)
+		    printf(_("  RPOP id = \"%s\".\n"),
+			   visbuf(ctl->password));
+		else
+		    printf(_("  Password = \"%s\".\n"),
 							visbuf(ctl->password));
-			else if (ctl->server.protocol == P_RPOP)
-				printf(_("  RPOP id = \"%s\".\n"),
-							visbuf(ctl->password));
-			else
-				printf(_("  Password = \"%s\".\n"),
-							visbuf(ctl->password));
-		}
+	    }
 	}
 
 	if (ctl->server.protocol == P_POP3 
@@ -1618,15 +1605,29 @@ static void dump_params (struct runctl *runp,
 	    printf(_(" (forcing UIDL use)"));
 	putchar('.');
 	putchar('\n');
-	if (ctl->server.preauthenticate == A_KERBEROS_V4)
-	    printf(_("  Kerberos V4 preauthentication enabled.\n"));
-	else if (ctl->server.preauthenticate == A_KERBEROS_V5)
-	    printf(_("  Kerberos V5 preauthentication enabled.\n"));
-	else if (ctl->server.preauthenticate == A_SSH)
+	switch (ctl->server.preauthenticate)
+	{
+	case A_ANY:
+	    printf(_("  All authentication methods will be described.\n"));
+	    break;
+	case A_PASSWORD:
+	    printf(_("  Password authentication will be forced.\n"));
+	    break;
+	case A_GSSAPI:
+	    printf(_("  GSSAPI preauthentication will be forced.\n"));
+	    break;
+	case A_KERBEROS_V4:
+	    printf(_("  Kerberos V4 preauthentication will be forced.\n"));
+	    break;
+	case A_KERBEROS_V5:
+	    printf(_("  Kerberos V5 preauthentication will be forced.\n"));
+	    break;
+	case A_SSH:
 	    printf(_("  End-to-end encryption assumed.\n"));
-	if (ctl->server.principal != (char *) NULL) {
-	    printf(_("  Mail service principal is: %s\n"), ctl->server.principal);
+	    break;
 	}
+	if (ctl->server.principal != (char *) NULL)
+	    printf(_("  Mail service principal is: %s\n"), ctl->server.principal);
 #ifdef	SSL_ENABLE
 	if (ctl->use_ssl)
 	    printf("  SSL encrypted sessions enabled.\n");

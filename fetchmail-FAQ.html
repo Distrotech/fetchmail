@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/02/11 23:26:07 $
+<td width="30%" align=right>$Date: 2001/02/12 01:14:27 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -681,6 +681,24 @@ once you have installed the `bind' package.<P>
 
 <hr>
 <h2><a name="F1">F1. Why does my old .fetchmailrc file no longer work?</a></h2>
+
+<h3>If your file predates 5.6.5</h3>
+
+The <tt>imap-gss</tt>, <tt>imap-k4</tt>, and <tt>imap-login</tt>
+protocol types are gone. This is a result of a major re-factoring
+of the authentication machinery; fetchmail can now use Kerberos V4
+and GSSAPI not just with IMAP but with POP3 servers that have RFC1734
+support for the AUTH command.<p>
+
+When trying to identify you to an IMAP or POP mailserver, fetchmail
+now first tries methods that don't require a password (GSSAPI,
+KERBEROS_IV); then it looks for methods that mask your password
+(CRAM-MD5, X-OTP); and only if it the server doesn't support any of
+those will it ship your password en clair.<p>
+
+Setting the <tt>preauth</tt> option to any value other than `password'
+will prevent from looking for a password in your <tt>.netrc</tt> file
+or querying for it at startup time.<p>  
 
 <h3>If your file predates 5.1.0</h3>
 
@@ -2963,7 +2981,7 @@ switching to IMAP and using a short expunge interval.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/02/11 23:26:07 $
+<td width="30%" align=right>$Date: 2001/02/12 01:14:27 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

@@ -277,46 +277,26 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     }
 
     /*
-     * OK, now try the protocol variants that don't require passwords first.
+     * Time to authenticate the user.
+     * Try the protocol variants that don't require passwords first.
      */
 #ifdef GSSAPI
-    if (strstr(capabilities, "AUTH=GSSAPI"))
-    {
-        if (ctl->server.preauthenticate == A_GSSAPI)
-        {
-            if (outlevel >= O_DEBUG)
-                report(stdout, _("GSS authentication is supported\n"));
-            return do_gssauth(sock, ctl->server.truename, ctl->remotename);
-        }
-    }
-    else if (ctl->server.preauthenticate == P_IMAP_GSS)
-    {
-        report(stderr, 
-	       _("Required GSS capability not supported by server\n"));
-        return(PS_AUTHFAIL);
-    }
+    if ((ctl->server.preauthenticate == A_ANY 
+	 || ctl->server.preauthenticate==A_GSSAPI)
+	&& strstr(capabilities, "AUTH=GSSAPI"))
+	return(do_gssauth(sock, ctl->server.truename, ctl->remotename));
 #endif /* GSSAPI */
 
 #ifdef KERBEROS_V4
-    if (strstr(capabilities, "AUTH=KERBEROS_V4"))
+    if ((ctl->server.preauthenticate == A_ANY 
+	 || ctl->server.preauthenticate==A_KERBEROS_V4
+	 || ctl->server.preauthenticate==A_KERBEROS_V5) 
+	&& strstr(capabilities, "AUTH=KERBEROS_V4"))
     {
-	if (outlevel >= O_DEBUG)
-	    report(stdout, _("KERBEROS_V4 authentication is supported\n"));
-
-	if (ctl->server.preauthenticate == A_KERBEROS_V4)
-	{
-	    if ((ok = do_rfc1731(sock, "AUTHENTICATE", ctl->server.truename)))
-		/* SASL cancellation of authentication */
-		gen_send(sock, "*");
-	    return(ok);
-	}
-	/* else fall through to ordinary AUTH=LOGIN case */
-    }
-    else if (ctl->server.preauthenticate == A_KERBEROS_V4)
-    {
-        report(stderr, 
-	       _("Required KERBEROS_V4 capability not supported by server\n"));
-        return(PS_AUTHFAIL);
+	if ((ok = do_rfc1731(sock, "AUTHENTICATE", ctl->server.truename)))
+	    /* SASL cancellation of authentication */
+	    gen_send(sock, "*");
+	return(ok);
     }
 #endif /* KERBEROS_V4 */
 
@@ -327,8 +307,6 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 
     if (strstr(capabilities, "AUTH=CRAM-MD5"))
     {
-        if (outlevel >= O_DEBUG)
-            report(stdout, _("CRAM-MD5 authentication is supported\n"));
 	if ((ok = do_cram_md5 (sock, "AUTHENTICATE", ctl)))
 	    /* SASL cancellation of authentication */
 	    gen_send(sock, "*");
@@ -337,30 +315,22 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 
 #if OPIE_ENABLE
     if (strstr(capabilities, "AUTH=X-OTP"))
-    {
-	if (outlevel >= O_DEBUG)
-	    report(stdout, _("OTP authentication is supported\n"));
-	if (do_otp(sock, ctl) == PS_SUCCESS)
-	    return(PS_SUCCESS);
-    };
+	return(do_otp(sock, ctl);
 #endif /* OPIE_ENABLE */
 
 #ifdef NTLM_ENABLE
     if (strstr (capabilities, "AUTH=NTLM"))
-    {
-        if (outlevel >= O_DEBUG)
-            report (stdout, _("NTLM authentication is supported\n"));
-        return do_imap_ntlm (sock, ctl);
-    }
+        return(do_imap_ntlm (sock, ctl));
 #endif /* NTLM_ENABLE */
 
 #ifdef __UNUSED__	/* The Cyrus IMAP4rev1 server chokes on this */
     /* this handles either AUTH=LOGIN or AUTH-LOGIN */
-    if ((imap_version >= IMAP4rev1) && (!strstr(capabilities, "LOGIN"))) {
-      report(stderr, 
-	     _("Required LOGIN capability not supported by server\n"));
-      return PS_AUTHFAIL;
-    };
+    if ((imap_version >= IMAP4rev1) && (!strstr(capabilities, "LOGIN")))
+    {
+	report(stderr, 
+	       _("Required LOGIN capability not supported by server\n"));
+	return PS_AUTHFAIL;
+    }
 #endif /* __UNUSED__ */
 
     /* we're stuck with sending the password en clair */
