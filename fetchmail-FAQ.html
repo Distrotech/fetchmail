@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/09/07 01:55:50 $
+<td width="30%" align=right>$Date: 1997/09/11 18:19:02 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -49,12 +49,13 @@ mail it to fetchmail's maintainer, Eric S. Raymond, at
 <a href="#C6">C6. How can I do automatic startup/shutdown of fetchmail
 when I may have multiple login sessions going?</a><br>
 
-<h1>Configuration tips for non-sendmail MTAs</h1>
+<h1>Configuration tips for non-sendmail MTAs and unusual servers.</h1>
 
 <a href="#T1">T1. How can I use fetchmail with qmail?</a><br>
 <a href="#T2">T2. How can I use fetchmail with exim?</a><br>
 <a href="#T3">T3. How can I use fetchmail with smail?</a><br>
 <a href="#T4">T4. How can I use fetchmail with Lotus Notes?</a><br>
+<a href="#T5">T5. How can I use fetchmail with Microsoft Exchange?</a><br>
 
 <h1>Runtime fatal errors:</h1>
 
@@ -800,6 +801,30 @@ The Lotus Notes SMTP gateway tries to deduce when it should convert \n
 to \r\n, but its rules are not intuitive.  Use `forcecr'.<P>
 
 <hr>
+<h2><a name="T5">T5. How can I use fetchmail with Microsoft Exchange?</a></h2><p>
+
+You can't.  Microft exchange is broken.  Guido Van Rooij explains:<P>
+
+We're having problems using fetchmail to etch mail from an Exchange server
+with POP3. The bug is actually in the Exchange site however it seems possible
+to have fetchmail work around it.<P>
+
+<blockquote>
+What happens is that a LIST command does not reveal the REAL sizes of mail
+in the pop mailbox, but the sizes of the compressed versions in the
+exchange mail database.<P>
+
+So when fetchmail tries to read the headers AND if the mail is too short,
+it fails and a newline is inserted within the headers.
+Usually this does not happen because even the compressed mailsize 
+exceeds the header size but if you send an empty mail to the Exchange
+address you can reproduce this.<P>
+</blockquote>
+
+Some future release of fetchmail may work around this bug, but don't
+hold your breath.<P>
+
+<hr>
 <h2><a name="R1">R1. I think I've set up fetchmail correctly, but I'm not getting any mail.</a></h2>
 
 Maybe you have a .forward or alias set up that you've forgotten about.  You
@@ -1266,7 +1291,7 @@ they are downloaded.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/09/07 01:55:50 $
+<td width="30%" align=right>$Date: 1997/09/11 18:19:02 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
