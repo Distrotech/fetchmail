@@ -96,9 +96,9 @@ CTAGS = ctags
 
 protobjs = rcfile_y.o rcfile_l.o socket.o getpass.o pop2.o pop3.o imap.o \
        etrn.o odmr.o fetchmail.o idle.o env.o options.o daemon.o driver.o \
-       sink.o rfc822.o smtp.o xmalloc.o uid.o mxget.o md5ify.o cram.o rpa.o \
-       interface.o netrc.o base64.o error.o unmime.o conf.o checkalias.o \
-       smbdes.o smbencrypt.o smbmd4.o smbutil.o ipv6-connect.o
+       sink.o rfc822.o smtp.o xmalloc.o uid.o mxget.o md5ify.o cram.o \
+       kerberos.o rpa.o interface.o netrc.o base64.o error.o unmime.o conf.o \
+       checkalias.o smbdes.o smbencrypt.o smbmd4.o smbutil.o ipv6-connect.o
 
 objs = $(protobjs) $(extras) $(EXTRAOBJ)
 
@@ -109,11 +109,11 @@ srcs = $(srcdir)/socket.c $(srcdir)/getpass.c $(srcdir)/pop2.c 		\
        $(srcdir)/driver.c $(srcdir)/sink.c $(srcdir)/rfc822.c 		\
        $(srcdir)/smtp.c $(srcdir)/xmalloc.c $(srcdir)/uid.c 		\
        $(srcdir)/mxget.c $(srcdir)/md5ify.c $(srcdir)/cram.c  		\
-       $(srcdir)/rpa.c $(srcdir)/interface.c $(srcdir)/netrc.c  	\
-       $(srcdir)/base64.c $(srcdir)/error.c $(srcdir)/unmime.c 		\
-       $(srcdir)/conf.c $(srcdir)/checkalias.c $(srcdir)/smbdes.c	\
-       $(srcdir)/smbencrypt.c $(srcdir)/smbmd4.c $(srcdir)/smbutil.c 	\
-       $(srcdir)/ipv6-connect.c
+       $(srcdir)/kerberos.c $(srcdir)/rpa.c $(srcdir)/interface.c	\
+       $(srcdir)/netrc.c $(srcdir)/base64.c $(srcdir)/error.c 		\
+       $(srcdir)/unmime.c $(srcdir)/conf.c $(srcdir)/checkalias.c 	\
+       $(srcdir)/smbdes.c $(srcdir)/smbencrypt.c $(srcdir)/smbmd4.c	\
+       $(srcdir)/smbutil.c $(srcdir)/ipv6-connect.c
 
 .SUFFIXES:
 .SUFFIXES: .o .c .h .y .l .ps .dvi .info .texi

@@ -518,6 +518,10 @@ int doPOP3 (struct query *);
 int doIMAP (struct query *);
 int doETRN (struct query *);
 
+/* authentication functions */
+int do_cram_md5(int sock, char *command, struct query *ctl);
+int do_rfc1731(int sock, char *command, char *truename);
+
 /* miscellanea */
 struct query *hostalloc(struct query *); 
 int parsecmdline (int, char **, struct runctl *, struct query *);
@@ -534,7 +538,6 @@ int is_host_alias(const char *, struct query *);
 char *host_fqdn(void);
 char *rfc822timestamp(void);
 flag isafile(int);
-int do_cram_md5 (int sock, char *command, struct query *ctl);
 
 void yyerror(const char *);
 int yylex(void);
