@@ -172,8 +172,7 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 
 		    }
 		    for (ctl = hostlist; ctl; ctl = ctl->next) {
-			if (ctl->server.truename &&
-			    strcasecmp(host, ctl->server.truename) == 0
+			if (strcasecmp(host, ctl->server.queryname) == 0
 			    && strcasecmp(user, ctl->remotename) == 0) {
 	
 			    save_str(&ctl->oldsaved, id, UID_SEEN);
@@ -519,7 +518,7 @@ void write_saved_lists(struct query *hostlist, const char *idfile)
 		    if (idp->val.status.mark == UID_SEEN
 				|| idp->val.status.mark == UID_DELETED)
 			fprintf(tmpfp, "%s@%s %s\n", 
-			    ctl->remotename, ctl->server.truename, idp->id);
+			    ctl->remotename, ctl->server.queryname, idp->id);
 	    }
 	    for (idp = scratchlist; idp; idp = idp->next)
 		fputs(idp->id, tmpfp);
