@@ -108,7 +108,7 @@ fetchmail-friends-request@thyrsus.com</a>. (Similarly, "unsubscribe"
 in the Subject line unsubscribes you, and "help" returns general list help) <p>
 
 Note: before submitting a question to the list, <strong>please read
-the <a href="fetchmail.FAQ.html">FAQ</a></strong>.  We tend to get the
+the <a href="fetchmail-FAQ.html">FAQ</a></strong>.  We tend to get the
 same three newbie questions over and over again.  The FAQ covers them
 like a blanket.  Actually, I'll answer the most common one right here:
 <em>If you've tried everything but can't get multidrop mode to work,
