@@ -221,6 +221,11 @@ char *visbuf(const char *buf)
 	    *tp++ = '\\'; *tp++ = '"';
 	    buf++;
 	}
+	else if (*buf == '\\')
+	{
+	    *tp++ = '\\'; *tp++ = '\\';
+	    buf++;
+	}
 	else if (isprint(*buf) || *buf == ' ')
 	    *tp++ = *buf++;
 	else if (*buf == '\n')
