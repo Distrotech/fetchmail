@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.3.2 (Mon Mar  6 21:41:23 EST 2000), 18695 lines:
+
 * Added experimental support for RFC2177 IDLE command extension of IMAP.
 * Updated fr.po.
 * Fixed a bug in fetchmailconf's handling of envelope skip prefixes.
@@ -10,7 +12,7 @@
 * Teach configure.in to link the RSA reference library if available.
 * Disable saving of Message-IDs into UIDL lists.
 
-There are 291 people on fetchmail-friends and 500 on fetchmail-announce.
+There are 290 people on fetchmail-friends and 500 on fetchmail-announce.
 
 fetchmail-5.3.1 (Sun Mar  5 23:02:42 EST 2000), 18648 lines:
 
