@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2002/04/01 07:49:49 $
+<td width="30%" align=right>$Date: 2002/04/08 23:46:55 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -2191,6 +2191,16 @@ should; see question <a href="#C1">C1</a>.
 <p>Or you may not be connecting to the SMTP listener.   Run fetchmail -v
 and see <a href="#R1">R1</a>.
 
+<p>Or you may have your local user set incorrectly.  In the following
+line
+
+<pre>
+        user 'remoteuser' there with password '*' is 'localuser' here
+</pre>
+
+make sure that 'localuser' does exist and can receive mail.
+
+
 <hr>
 <h2><a name="D2">D2. All my mail seems to disappear after a dropped connection.</a></h2>
 
@@ -3015,7 +3025,7 @@ date from the last Received header.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2002/04/01 07:49:49 $
+<td width="30%" align=right>$Date: 2002/04/08 23:46:55 $
 </table>
 
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@thyrsus.com&gt;</A></ADDRESS>
