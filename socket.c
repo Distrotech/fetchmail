@@ -102,12 +102,12 @@ char *const *parse_plugin(const char *plugin, const char *host, const char *serv
 
 	while (plugin_copy_offset < plugin_copy_len)
 	{	if ((plugin[plugin_offset] == '%') && (plugin[plugin_offset + 1] == 'h'))
-		{	strcat(plugin_copy + plugin_copy_offset, host);
+		{	strcpy(plugin_copy + plugin_copy_offset, host);
 			plugin_offset += 2;
 			plugin_copy_offset += host_len;
 		}
 		else if ((plugin[plugin_offset] == '%') && (plugin[plugin_offset + 1] == 'p'))
-		{	strcat(plugin_copy + plugin_copy_offset, service);
+		{	strcpy(plugin_copy + plugin_copy_offset, service);
 			plugin_offset += 2;
 			plugin_copy_offset += service_len;
 		}

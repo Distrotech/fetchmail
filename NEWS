@@ -3,6 +3,8 @@
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
 * `preauth' option changed back to `auth'
+* IMAP code now bails out if the server forces the mailbox read-only.
+* Fixed a core dump in Dave Zarzycki's new plugin code.
 
 fetchmail-5.6.7 (Mon Feb 19 12:31:03 EST 2001), 20082 lines:
 
