@@ -19,7 +19,6 @@
 
 #ifdef HAVE_PROTOTYPES
 /* prototypes for internal functions */
-int POP3_sendSTAT (int *msgcount, int socket);
 int POP3_sendUIDL (int num, int socket, char **cp);
 int POP3_BuildDigest (char *buf, struct hostrec *options);
 #endif
@@ -149,11 +148,15 @@ int *countp;
 int *firstp;
 {
   int ok;
+  char buf [POPBUFSIZE+1];
 
-  ok = POP3_sendSTAT(countp,socket);
-  if (ok != 0) {
+  /* get the total message count */
+  gen_send(socket, "STAT");
+  ok = pop3_ok(buf,socket);
+  if (ok == 0)
+    sscanf(buf,"%d %*d", countp);
+  else
     return(ok);
-  }
 
   /*
    * Ask for number of last message retrieved.  
@@ -165,7 +168,6 @@ int *firstp;
   *firstp = 1;
   use_uidl = 0;
   if (!queryctl->fetchall) {
-    char buf [POPBUFSIZE+1];
     char id [IDLEN+1];
     int num;
 
@@ -255,40 +257,6 @@ struct hostrec *queryctl;
     }
 
     return(do_protocol(queryctl, &pop3));
-}
-
-/*********************************************************************
-  function:      POP3_sendSTAT
-  description:   send the STAT command to the POP3 server to find
-                 out how many messages are waiting.
-  arguments:     
-    count        pointer to an integer to receive the message count.
-    socket       socket to which the POP3 server is connected.
-
-  return value:  return code from POP3_OK.
-  calls:         POP3_OK, SockPrintf
-  globals:       reads outlevel.
- *********************************************************************/
-
-int POP3_sendSTAT (msgcount,socket)
-int *msgcount;
-int socket;
-{
-  int ok;
-  char buf [POPBUFSIZE+1];
-  int totalsize;
-
-  SockPrintf(socket,"STAT\r\n");
-  if (outlevel == O_VERBOSE)
-    fprintf(stderr,"> STAT\n");
-  
-  ok = pop3_ok(buf,socket);
-  if (ok == 0)
-    sscanf(buf,"%d %d",msgcount,&totalsize);
-  else if (outlevel > O_SILENT && outlevel < O_VERBOSE)
-    fprintf(stderr,"%s\n",buf);
-
-  return(ok);
 }
 
 /******************************************************************
