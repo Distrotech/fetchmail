@@ -122,6 +122,7 @@ struct query *ctl;	/* option record to be initialized */
     cmd_daemon = -1;
 
     memset(ctl, '\0', sizeof(struct query));    /* start clean */
+    ctl->smtp_socket = -1;
 
     while (!errflag && 
 	   (c = getopt_long(argc,argv,shortoptions,

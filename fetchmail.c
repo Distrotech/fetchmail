@@ -533,6 +533,7 @@ static int load_params(int argc, char **argv, int optind)
     struct query def_opts, *ctl, *mp;
 
     memset(&def_opts, '\0', sizeof(struct query));
+    def_opts.smtp_socket = -1;
 
     def_opts.server.protocol = P_AUTO;
     def_opts.server.timeout = CLIENT_TIMEOUT;
