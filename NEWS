@@ -1,7 +1,7 @@
 			Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-3.5 ()
+fetchmail-3.5 (Sat Feb 15 15:19:36 EST 1997)
 
 Note: The .poprc compatibility hack that allows your first user declaration
 per server to omit the "username" show has been causing some confusion (see
