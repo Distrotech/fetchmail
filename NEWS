@@ -12,6 +12,7 @@ fetchmail-5.0.0 ():
 * Update for fetchsetup from Kent Robotti.
 * Eliminate a realloc error in fetchmail -v -v progress message generation.
 * Spanish-language update by Javier Kohen.
+* French-language update by Guy Brand.
 * Danish summary and description for specgen.sh.
 * Henrik Storner's fix for the PGP/mimedecode problem.
 * Fix netrc search code to be able to search >1 host entry per file.
