@@ -88,11 +88,6 @@ srcs = $(srcdir)/socket.c $(srcdir)/getpass.c $(srcdir)/pop2.c 		\
 
 all: fetchmail fetchmail.spec
 
-depend:
-	test -f config.h || touch config.h
-	test -f rcfile_y.h || touch rcfile_y.h
-	makedepend -fMakefile *.c
-
 # Some makes apparently use .PHONY as the default goal if it is before `all'.
 .PHONY: all check
 
@@ -182,6 +177,8 @@ mostlyclean: clean
 
 Makefile: config.status $(srcdir)/Makefile.in
 	$(SHELL) config.status
+	@echo "You can ignore any makedepend error messages"
+	-makedepend -fMakefile *.c
 
 config.h: stamp-config 
 
@@ -228,4 +225,5 @@ fetchmail-$(VERS).tar.gz: fetchmail-$(VERS).tar
 # ``#include "config.h"''.  So we add the explicit dependency to make sure.
 $(objs): config.h
 
-# Automatically generated dependencies will be put at the end of the file.
+# Automatically generated dependencies will be put at the end of the makefile.
+# DO NOT DELETE THIS LINE -- make depend depends on it.
