@@ -5,6 +5,7 @@
 * Updated Danish translation from Byrial Jensen.
 * Fixed bug in NTLM support.  Separately, "auth ntlm" now works.
 * Imail server added to test list.
+* Don't require Tkinter to read --configdump output.
 
 fetchmail-5.6.8 (Thu Feb 22 02:57:31 EST 2001), 20110 lines:
 

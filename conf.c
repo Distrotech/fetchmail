@@ -126,7 +126,12 @@ void dump_config(struct runctl *runp, struct query *querylist)
 
     indent_level = 0;
 
-    fputs("from Tkinter import TRUE, FALSE\n\n", stdout);
+    /*
+     * These had better match the values fetchmailconf is expecting!
+     * (We don't want to import them from Tkinter because the user
+     * might not have it installed.)
+     */
+    fputs("TRUE=1; FALSE=0\n\n", stdout);
 
     /*
      * We need this in order to know whether `interface' and `monitor'
