@@ -19,7 +19,7 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.3.3 ()
+fetchmail-4.3.3 (Sat Nov 22 01:51:41 EST 1997)
 * Robert Hardy <rhardy@webcon.net>'s patch to use IMAP EXAMINE in check mode. 
 * Alexander Kourakos's patch for cleaner handling of group addresses.
 * Fixed expansion of MDA %-escapes (thanks Wez Furlong <wjf103@york.ac.uk>).
