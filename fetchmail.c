@@ -586,10 +586,10 @@ static int load_params(int argc, char **argv, int optind)
 
 	    /*
 	     * Assign SMTP leaders.  We want to allow all query blocks
-	     * sharing the same SMTP host to use the same SMTP connection.
-	     * To accomplish this, we initialize each query block's leader
-	     * field to point to the first block in the list with a matching 
-	     * SMTP host.
+	     * sharing the same server/SMTP-host pair to use the same
+	     * SMTP connection.  To accomplish this, we initialize
+	     * each query block's leader field to point to the first
+	     * block in the list with a matching server/SMTP-host pair.
 	     *
 	     * In the typical case, there will be only one SMTP host (the
 	     * client machine) and thus just one SMTP leader (and one listener
@@ -599,7 +599,8 @@ static int load_params(int argc, char **argv, int optind)
 	    {
 		ctl->smtp_sockfp = (FILE *)NULL;
 		for (mp = querylist; mp && mp != ctl; mp = mp->next)
-		    if (strcmp(mp->smtphost, ctl->smtphost) == 0)
+		    if (!strcmp(mp->server.names->id, ctl->server.names->id)
+			&& !strcmp(mp->smtphost, ctl->smtphost))
 		    {
 			ctl->lead_smtp = mp->lead_smtp;
 			goto no_new_leader;
