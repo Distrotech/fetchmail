@@ -1415,7 +1415,7 @@ static void send_size_warnings(struct query *ctl)
 	    nbr = current->val.status.mark;
 	    size = atoi(current->id);
 	    stuff_warning(ctl, 
-		    _("\t%d msg %d octets long skipped by fetchmail.\n"),
+		    _("\t%d msg %d octets long skipped by fetchmail.\r\n"),
 		    nbr, size);
 	}
 	current->val.status.num++;
@@ -1597,7 +1597,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	     * in daemon mode but the connection to the outside world
 	     * is down.
 	     */
-	    if (!((err_no == EHOSTUNREACH || err_no == EHOSTUNREACH) 
+	    if (!((err_no == EHOSTUNREACH || err_no == ENETUNREACH) 
 		  && run.poll_interval))
 	    {
 		report_build(stderr, _("fetchmail: %s connection to %s failed"), 
