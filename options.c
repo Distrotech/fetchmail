@@ -222,7 +222,13 @@ struct hostrec *queryctl;
         break;
       case 'S':
       case LA_SMTPHOST:
-	strncpy(queryctl->smtphost,optarg,sizeof(queryctl->smtphost)-1);
+        if (fflag) 
+          errflag++;
+        else {
+          fflag++;
+          queryctl->output = TO_SMTP;
+          strncpy(queryctl->smtphost,optarg,sizeof(queryctl->smtphost)-1);
+        }
 	break;
       case 'L':
       case LA_LOGFILE:

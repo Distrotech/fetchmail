@@ -43,10 +43,10 @@
 #define		O_VERBOSE	2	/* excessive */
 
 /* output sink type */
-#define		TO_SMTP		0	/* use SMTP forwarding */
-#define		TO_FOLDER	1	/* use a mailbox */
-#define		TO_STDOUT	2	/* use stdout */
-#define		TO_MDA		3	/* use agent */
+#define		TO_SMTP		1	/* use SMTP forwarding */
+#define		TO_FOLDER	2	/* use a mailbox */
+#define		TO_STDOUT	3	/* use stdout */
+#define		TO_MDA		4	/* use agent */
 
 struct hostrec
 {
