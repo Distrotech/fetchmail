@@ -10,6 +10,7 @@
 
 fetchmail-5.1.0 ():
 * Merged in official OpenBSD port patches.
+* Added Spanish and German descriptions to spec (thanks to Horst von Brand).
 
 There are 261 people on fetchmail-friends and 408 on fetchmail-announce.
 
