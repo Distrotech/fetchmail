@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/03/11 00:59:57 $
+<td width="30%" align=right>$Date: 2000/03/13 16:44:57 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -2498,6 +2498,12 @@ prone to mangle attachments.  If you are running one of these,
 replacing your server with a Unix machine is probably the only
 effective solution.<p>
 
+We've also had a report that Lotus Notes sometimes trashes the
+MIME type of messages.  In particular, it seems to modify MIME
+headers introducing type application/pdf, mangling the type
+to application/octet-stream. It may corrupt other MIME types
+as well.<p>
+
 Rob Funk explains: Unfortunately there also remain many mail user
 agents that don't write correct MIME messages. One big offender is Sun
 MailTool attachments, which are formatted enough like MIME that some
@@ -2741,7 +2747,7 @@ terminate it.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/03/11 00:59:57 $
+<td width="30%" align=right>$Date: 2000/03/13 16:44:57 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

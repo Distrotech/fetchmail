@@ -873,6 +873,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 
     /* probe to see if we're running IMAP4 and can use RFC822.PEEK */
     capabilities[0] = '\0';
+    preauth = FALSE;
     if ((ok = gen_transact(sock, "CAPABILITY")) == PS_SUCCESS)
     {
 	/* UW-IMAP server 10.173 notifies in all caps */
