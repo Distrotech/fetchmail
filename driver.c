@@ -49,7 +49,8 @@ char tag[TAGLEN];
 static int tagnum;
 #define GENSYM	(sprintf(tag, "a%04d", ++tagnum), tag)
 
-static char *shroud;
+static int mboxfd;	/* desc to which retrieved message will be written */
+static char *shroud;	/* string to shroud in debug output, if  non-NULL */
 
 static int strcrlf(dst, src, count)
 /* replace LFs with CR-LF; return length of string with replacements */
@@ -448,10 +449,9 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 }
 #endif /* HAVE_GETHOSTBYNAME */
 
-static int gen_readmsg (socket, mboxfd, len, delimited, ctl)
+static int gen_readmsg (socket, len, delimited, ctl)
 /* read message content and ship to SMTP or MDA */
 int socket;	/* to which the server is connected */
-int mboxfd;	/* descriptor to which retrieved message will be written */
 long len;	/* length of message */
 int delimited;	/* does the protocol use a message delimiter? */
 struct query *ctl;	/* query control record */
@@ -615,6 +615,17 @@ struct query *ctl;	/* query control record */
 	    }
 	    else
 	    {
+		if (ctl->mda[0] == '\0')
+		    if ((mboxfd = Socket(ctl->smtphost, SMTP_PORT)) < 0
+			|| SMTP_ok(mboxfd, NULL) != SM_OK
+			|| SMTP_helo(mboxfd, ctl->servername) != SM_OK)
+		    {
+			close(mboxfd);
+			mboxfd = -1;
+			free_uid_list(&xmit_names);
+			return(PS_SMTP);
+		    }
+
 		if (SMTP_from(mboxfd, nxtaddr(fromhdr)) != SM_OK)
 		    return(PS_SMTP);
 
@@ -742,7 +753,7 @@ int do_protocol(ctl, proto)
 struct query *ctl;		/* parsed options with merged-in defaults */
 const struct method *proto;	/* protocol method table */
 {
-    int ok, mboxfd = -1;
+    int ok;
     void (*sigsave)();
 
 #ifndef KERBEROS_V4
@@ -782,6 +793,7 @@ const struct method *proto;	/* protocol method table */
     tagnum = 0;
     tag[0] = '\0';	/* nuke any tag hanging out from previous query */
     ok = 0;
+    mboxfd = -1;
 
     if (setjmp(restart) == 1)
 	fprintf(stderr,
@@ -867,18 +879,7 @@ const struct method *proto;	/* protocol method table */
 	    goto closeUp;
 	}
 	else if (count > 0)
-	{
-	    if (ctl->mda[0] == '\0')
-		if ((mboxfd = Socket(ctl->smtphost, SMTP_PORT)) < 0
-		    || SMTP_ok(mboxfd, NULL) != SM_OK
-		    || SMTP_helo(mboxfd, ctl->servername) != SM_OK)
-		{
-		    ok = PS_SMTP;
-		    close(mboxfd);
-		    mboxfd = -1;
-		    goto cleanUp;
-		}
-    
+	{    
 	    /* read, forward, and delete messages */
 	    for (num = 1; num <= count; num++)
 	    {
@@ -921,7 +922,7 @@ const struct method *proto;	/* protocol method table */
 		     */
 
 		    /* read the message and ship it to the output sink */
-		    ok = gen_readmsg(socket, mboxfd,
+		    ok = gen_readmsg(socket,
 				     len, 
 				     protocol->delimited,
 				     ctl);
