@@ -312,6 +312,8 @@ char **argv;
 		popstatus = query_host(ctl);
 
 		/*
+		 * FIXME: This is a crock.  There must be a better way...
+		 *
 		 * Under Linux, if fetchmail is run in daemon mode
 		 * with the network inaccessible, each poll leaves a
 		 * socket allocated but in CLOSE state (this is

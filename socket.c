@@ -86,6 +86,8 @@ va_dcl {
 }
 
 /*
+ * FIXME: This needs to be recoded to use stdio, if that's possible.
+ *
  * If you think these functions are too slow and inefficient, you're
  * absolutely right.  I wish I could figure out what to do about it.
  * The ancestral popclient used static buffering here to cut down on the
@@ -95,7 +97,7 @@ va_dcl {
  * The right thing to do would be to use stdio for internal per-socket
  * buffering here (which is why Socket() returns a file pointer) but 
  * this causes mysterious lossage.  In case someone ever finds a way
- * around this, a note on the original implementation said:
+ * around this, a note on Carl Harris's original implementation said:
  *
  * Size of buffer for internal buffering read function 
  * don't increase beyond the maximum atomic read/write size for
