@@ -15,6 +15,7 @@
 fetchmail-4.1.1 ()
 * Fix an obvious bug in some snprintf calls (non-Linux systems only)
 * No more hard limit on number of destination headers
+* Wolfgang Wander's support for faster new-message detection using UIDL.
 
 fetchmail-4.1.0 (Mon Aug 11 17:19:57 EDT 1997)
 * Make the RPM depend on `smtpdaemon', which the sendmail package provides.

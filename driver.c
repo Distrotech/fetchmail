@@ -702,6 +702,16 @@ int num;		/* index of message */
 	    from_offs = (line - headers);
 	else if (!strncasecmp("Content-Transfer-Encoding:", line, 26))
 	    ctt_offs = (line - headers);
+ 	else if (!strncasecmp("Message-Id:", buf, 11 ))
+	{
+	    if( ctl->server.uidl )
+ 	    {
+ 	        char id[IDLEN+1];
+ 		sscanf( buf+12, "%s", id);
+ 	        if( !str_in_list( &ctl->newsaved, id ) )
+ 		    save_str(&ctl->newsaved, num, id );
+ 	    }
+ 	}
 
 	else if (!MULTIDROP(ctl))
 	    continue;

@@ -82,7 +82,8 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 	    {
 		for (ctl = hostlist; ctl; ctl = ctl->next)
 		{
-		    if (strcasecmp(host, ctl->server.truename) == 0
+		    if (ctl->server.truename &&
+		        strcasecmp(host, ctl->server.truename) == 0
 				&& strcasecmp(user, ctl->remotename) == 0)
 		    {
 			save_str(&ctl->oldsaved, -1, id);
@@ -172,6 +173,38 @@ int str_in_list(struct idlist **idl, const char *str)
 	return(str_in_list(&(*idl)->next, str));
 }
 
+int str_nr_in_list( struct idlist **idl, const char *str )
+  /* return the position of str in idl */
+{
+    int nr;
+    struct idlist *walk;
+    if ( !str )
+        return -1;
+    for( walk = *idl, nr = 0; walk; nr ++, walk = walk->next )
+        if( strcasecmp( str, walk->id) == 0 )
+	    return nr;
+    return -1;
+}
+
+int count_list( struct idlist **idl )
+  /* count the number of elements in the list */
+{
+  if( !*idl )
+    return 0;
+  return 1 + count_list( &(*idl)->next );
+}
+
+char* str_from_nr_list( struct idlist **idl, int number )
+  /* return the number'th string in idl */
+{
+    if( !*idl  || number < 0)
+        return 0;
+    if( number == 0 )
+        return (*idl)->id;
+    return str_from_nr_list(&(*idl)->next, number-1);
+}
+
+    
 char *str_find(struct idlist **idl, int number)
 /* return the id of the given number in the given list. */
 {
