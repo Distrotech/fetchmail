@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Signal-processing fix for Debian bug #102711.
+
 fetchmail-5.8.10 (Mon Jun 25 17:04:08 EDT 2001), 20922 lines:
 
 * More fixes for the new message-marking code from Thomas Moestl.

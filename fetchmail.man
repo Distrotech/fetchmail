@@ -2107,6 +2107,13 @@ in foreground while a background fetchmail is running will do
 whichever of these is appropriate to wake it up.
 
 .SH BUGS AND KNOWN PROBLEMS
+The mda and plugin options interact badly.  In order to collect error
+status from the MDA, fetchmail has to change its normal signal
+handling so that dead plugin processes don't get reaped until the end
+of the poll cycle.  This can cause resource starvation if too many
+zombies accumulate.  So either don't deliver to a MDA using plugins or
+risk being overrun by an army of undead.
+.PP
 The RFC822 address parser used in multidrop mode chokes on some
 @-addresses that are technically legal but bizarre.  Strange uses of
 quoting and embedded comments are likely to confuse it.
