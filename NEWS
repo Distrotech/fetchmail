@@ -2,8 +2,13 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.8.16 (Fri Aug  3 18:55:54 EDT 2001), 21093 lines:
+
 * Handle ! in RFC2821 Return-Path addresses properly.
-* Backed out attempt to handle BAD and NO responses to FETCH, it's broken.
+* Better handling of BAD and NO responses to FETCH (thank Justin Guyett).
+* Fixed *yet another* build error due to breakage in the i18n code.
+
+There are 368 people on fetchmail-friends and 611 on fetchmail-announce.
 
 fetchmail-5.8.15 (Tue Jul 31 02:07:03 EDT 2001), 21075 lines:
 
