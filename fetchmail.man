@@ -1569,7 +1569,7 @@ quotes within the option, and (2) never use an mda command containing
 .PP
 Send comments, bug reports, gripes, and the like to Eric S. Raymond
 <esr@thyrsus.com>.  An HTML FAQ is available at the fetchmail home
-page; surf to http://www.ccil.org/~esr/fetchmail or do a WWW search
+page; surf to http://www.tuxedo.org/~esr/fetchmail or do a WWW search
 for pages with `fetchmail' in their titles.
 
 .SH SEE ALSO
