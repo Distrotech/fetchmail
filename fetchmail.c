@@ -40,6 +40,7 @@
 
 #ifdef HAVE_PROTOTYPES
 /* prototypes for internal functions */
+static void load_params(int, char **, int);
 static void dump_params (struct query *);
 static int query_host(struct query *);
 static char *visbuf(const char *);
@@ -73,14 +74,12 @@ int argc;
 char **argv;
 { 
     int st, lossage, bkgd = FALSE;
-    struct query def_opts, *ctl, *mp;
     int parsestatus, implicitmode;
     char *home, *tmpdir, tmpbuf[BUFSIZ]; 
     struct passwd *pw;
+    struct query *ctl;
     FILE	*lockfp;
     pid_t pid;
-
-    memset(&def_opts, '\0', sizeof(struct query));
 
     if ((user = getenv("USER")) == (char *)NULL)
         user = getenv("LOGNAME");
@@ -98,11 +97,6 @@ char **argv;
 	    exit(PS_UNDEFINED);
 	}
     }
-
-    def_opts.protocol = P_AUTO;
-    def_opts.timeout = CLIENT_TIMEOUT;
-    strcpy(def_opts.remotename, user);
-    strcpy(def_opts.smtphost, "localhost");
 
     /*
      * Backward-compatibility hack.  If we're called by the name of the
@@ -133,165 +127,7 @@ char **argv;
     if (versioninfo)
 	printf("This is fetchmail release %s pl %s\n", RELEASE_ID, PATCHLEVEL);
 
-    /* this builds the host list */
-    if (prc_parse_file(rcfile) != 0)
-	exit(PS_SYNTAX);
-
-    if ((implicitmode = (optind >= argc)))
-    {
-	for (ctl = querylist; ctl; ctl = ctl->next)
-	    ctl->active = TRUE;
-    }
-    else
-	for (; optind < argc; optind++) 
-	{
-	    /*
-	     * If hostname corresponds to a host known from the rc file,
-	     * simply declare it active.  Otherwise synthesize a host
-	     * record from command line and defaults
-	     */
-	    for (ctl = querylist; ctl; ctl = ctl->next)
-		if (strcmp(ctl->servername, argv[optind]) == 0)
-		    goto foundit;
-
-	    ctl = hostalloc(&cmd_opts);
-	    strcpy(ctl->servername, argv[optind]);
-
-	foundit:
-	    ctl->active = TRUE;
-	}
-
-    /* if there's a defaults record, merge it and lose it */ 
-    if (querylist && strcmp(querylist->servername, "defaults") == 0)
-    {
-	for (ctl = querylist; ctl; ctl = ctl->next)
-	    optmerge(ctl, querylist);
-	querylist = querylist->next;
-    }
-
-    /* don't allow a defaults record after the first */
-    for (ctl = querylist; ctl; ctl = ctl->next)
-	if (strcmp(ctl->servername, "defaults") == 0)
-	    exit(PS_SYNTAX);
-
-    /* merge in wired defaults, do sanity checks and prepare internal fields */
-    for (ctl = querylist; ctl; ctl = ctl->next)
-    {
-	if (ctl->active && !(implicitmode && ctl->skip))
-	{
-#ifdef HAVE_GETHOSTBYNAME
-	    struct hostent	*namerec;
-#endif /* HAVE_GETHOSTBYNAME */
-
-	    /* merge in defaults */
-	    optmerge(ctl, &def_opts);
-
-	    /* keep lusers from shooting themselves in the foot :-) */
-	    if (poll_interval && ctl->limit)
-	    {
-		fprintf(stderr,"fetchmail: you'd never see large messages!\n");
-		exit(PS_SYNTAX);
-	    }
-
-	    /* check that delivery is going to a real local user */
-	    if ((pw = getpwnam(user)) == (struct passwd *)NULL)
-	    {
-		fprintf(stderr,
-			"fetchmail: can't default delivery to %s\n", user);
-		exit(PS_SYNTAX);	/* has to be from bad rc file */
-	    }
-	    else
-		ctl->uid = pw->pw_uid;
-
-#ifdef HAVE_GETHOSTBYNAME
-	    /*
-	     * Don't do DNS lookup unless we need to because we're going
-	     * to use Kerberos or process a multidrop box.  Some sites
-	     * won't have DNS up at fetchmail initialization time but aren't
-	     * using these features -- avoid hosing them unnecessarily.
-	     */
-	    if (ctl->authenticate == A_KERBEROS || MULTIDROP(ctl))
-	    {
-		/* compute the canonical name of the host */
-		namerec = gethostbyname(ctl->servername);
-		if (namerec == (struct hostent *)NULL)
-		{
-		    fprintf(stderr,
-			    "fetchmail: can't get canonical name of host %s\n",
-			    ctl->servername);
-		    exit(PS_SYNTAX);
-		}
-		else
-		    ctl->canonical_name = xstrdup((char *)namerec->h_name);
-	    }
-#else
-	    /* can't handle multidrop mailboxes unless we can do DNS lookups */
-	    if (ctl->localnames && ctl->localnames->next)
-	    {
-		fputs("fetchmail: can't handle multidrop mailboxes without DNS\n",
-			stderr);
-		exit(PS_SYNTAX);
-	    }
-#endif /* HAVE_GETHOSTBYNAME */
-
-	    /*
-	     * Assign SMTP leaders.  We want to allow all query blocks
-	     * sharing the same SMTP host to use the same SMTP connection.
-	     * To accomplish this, we initialize each query block's leader
-	     * field to point to the first block in the list with a matching 
-	     * SMTP host.
-	     *
-	     * In the typical case, there will be only one SMTP host (the
-	     * client machine) and thus just one SMTP leader (and one listener
-	     * process) through the entire run.
-	     */
-	    if (!ctl->mda[0])
-	    {
-		for (mp = querylist; mp && mp != ctl; mp = mp->next)
-		    if (strcmp(mp->smtphost, ctl->smtphost) == 0)
-		    {
-			ctl->leader = mp->leader;
-			goto no_new_leader;
-		    }
-		ctl->leader = ctl;
-		ctl->smtp_socket = -1;
-	    no_new_leader:;
-	    }
-
-	    /* sanity checks */
-	    if (ctl->port < 0)
-	    {
-		(void) fprintf(stderr,
-			       "%s configuration invalid, port number cannot be negative",
-			       ctl->servername);
-		exit(PS_SYNTAX);
-	    }
-
-	    /* expand MDA commands */
-	    if (!check_only && ctl->mda[0])
-	    {
-		char *argp;
-
-		/* punch nulls into the delimiting whitespace in the args */
-		for (argp = ctl->mda, ctl->mda_argcount = 1; *argp != '\0'; ctl->mda_argcount++)
-		{
-		    ctl->mda_argv[ctl->mda_argcount] = argp;
-		    while (!(*argp == '\0' || isspace(*argp)))
-			argp++;
-		    if (*argp != '\0')
-			*(argp++) = '\0';  
-		}
-
-		ctl->mda_argv[ctl->mda_argcount] = (char *)NULL;
-
-		ctl->mda_argv[0] = ctl->mda_argv[1];
-		if ((argp = strrchr(ctl->mda_argv[1], '/')) != (char *)NULL)
-		    ctl->mda_argv[1] = argp + 1 ;
-	    }
-	}
-    }
-
-    
+    load_params(argc, argv, optind);
 
     /* set up to do lock protocol */
     if ((tmpdir = getenv("TMPDIR")) == (char *)NULL)
@@ -513,40 +349,42 @@ char **argv;
 	endhostent();		/* release TCP/IP connection to nameserver */
 #endif /* HAVE_GETHOSTBYNAME */
 
-	if (outlevel == O_VERBOSE)
+	if (poll_interval)
 	{
-	    time_t	now;
+	    if (outlevel == O_VERBOSE)
+	    {
+		time_t	now;
 
-	    time(&now);
-	    fprintf(stderr, "fetchmail: sleeping at %s", ctime(&now));
-	}
+		time(&now);
+		fprintf(stderr, "fetchmail: sleeping at %s", ctime(&now));
+	    }
 
-	/*
-	 * We can't use sleep(3) here, the alarm(2) call used to
-	 * implement server nonresponse timeout collides with it.
-	 * We'll just assume setitimer(2) is available since fetchmail
-	 * has to have the socket layer to work at all.
-	 */
-	{
-	    struct itimerval ntimeout;
+	    /*
+	     * We can't use sleep(3) here, the alarm(2) call used to
+	     * implement server nonresponse timeout collides with it.
+	     * We'll just assume setitimer(2) is available since fetchmail
+	     * has to have the socket layer to work at all.
+	     */
+	    {
+		struct itimerval ntimeout;
 
-	    ntimeout.it_interval.tv_sec = ntimeout.it_interval.tv_sec = 0;
-	    ntimeout.it_value.tv_sec  = poll_interval;
-	    ntimeout.it_value.tv_usec = 0;
+		ntimeout.it_interval.tv_sec = ntimeout.it_interval.tv_sec = 0;
+		ntimeout.it_value.tv_sec  = poll_interval;
+		ntimeout.it_value.tv_usec = 0;
 
-	    if (setitimer(ITIMER_REAL,&ntimeout,(struct itimerval *)NULL)==-1
-			&& errno == EINTR)
-		(void) fputs("fetchmail: awakened by SIGHUP\n", stderr);
-	    signal(SIGALRM, donothing);
-	    pause();
-	}
+		if (setitimer(ITIMER_REAL,&ntimeout,NULL)==-1 && errno==EINTR)
+		    (void) fputs("fetchmail: awakened by SIGHUP\n", stderr);
+		signal(SIGALRM, donothing);
+		pause();
+	    }
 
-	if (outlevel == O_VERBOSE)
-	{
-	    time_t	now;
+	    if (outlevel == O_VERBOSE)
+	    {
+		time_t	now;
 
-	    time(&now);
-	    fprintf(stderr, "fetchmail: awakened at %s", ctime(&now));
+		time(&now);
+		fprintf(stderr, "fetchmail: awakened at %s", ctime(&now));
+	    }
 	}
     } while
 	(poll_interval);
@@ -556,6 +394,181 @@ char **argv;
 
     termhook(0);
     exit(popstatus);
+}
+
+static void load_params(argc, argv, optind)
+int	argc;
+char	**argv;
+int	optind;
+{
+    int	implicitmode;
+    struct passwd *pw;
+    struct query def_opts, *ctl, *mp;
+
+    memset(&def_opts, '\0', sizeof(struct query));
+
+    def_opts.protocol = P_AUTO;
+    def_opts.timeout = CLIENT_TIMEOUT;
+    strcpy(def_opts.remotename, user);
+    strcpy(def_opts.smtphost, "localhost");
+
+    /* this builds the host list */
+    if (prc_parse_file(rcfile) != 0)
+	exit(PS_SYNTAX);
+
+    if ((implicitmode = (optind >= argc)))
+    {
+	for (ctl = querylist; ctl; ctl = ctl->next)
+	    ctl->active = TRUE;
+    }
+    else
+	for (; optind < argc; optind++) 
+	{
+	    /*
+	     * If hostname corresponds to a host known from the rc file,
+	     * simply declare it active.  Otherwise synthesize a host
+	     * record from command line and defaults
+	     */
+	    for (ctl = querylist; ctl; ctl = ctl->next)
+		if (strcmp(ctl->servername, argv[optind]) == 0)
+		    goto foundit;
+
+	    ctl = hostalloc(&cmd_opts);
+	    strcpy(ctl->servername, argv[optind]);
+
+	foundit:
+	    ctl->active = TRUE;
+	}
+
+    /* if there's a defaults record, merge it and lose it */ 
+    if (querylist && strcmp(querylist->servername, "defaults") == 0)
+    {
+	for (ctl = querylist; ctl; ctl = ctl->next)
+	    optmerge(ctl, querylist);
+	querylist = querylist->next;
+    }
+
+    /* don't allow a defaults record after the first */
+    for (ctl = querylist; ctl; ctl = ctl->next)
+	if (strcmp(ctl->servername, "defaults") == 0)
+	    exit(PS_SYNTAX);
+
+    /* merge in wired defaults, do sanity checks and prepare internal fields */
+    for (ctl = querylist; ctl; ctl = ctl->next)
+    {
+	if (ctl->active && !(implicitmode && ctl->skip))
+	{
+#ifdef HAVE_GETHOSTBYNAME
+	    struct hostent	*namerec;
+#endif /* HAVE_GETHOSTBYNAME */
+
+	    /* merge in defaults */
+	    optmerge(ctl, &def_opts);
+
+	    /* keep lusers from shooting themselves in the foot :-) */
+	    if (poll_interval && ctl->limit)
+	    {
+		fprintf(stderr,"fetchmail: you'd never see large messages!\n");
+		exit(PS_SYNTAX);
+	    }
+
+	    /* check that delivery is going to a real local user */
+	    if ((pw = getpwnam(user)) == (struct passwd *)NULL)
+	    {
+		fprintf(stderr,
+			"fetchmail: can't default delivery to %s\n", user);
+		exit(PS_SYNTAX);	/* has to be from bad rc file */
+	    }
+	    else
+		ctl->uid = pw->pw_uid;
+
+#ifdef HAVE_GETHOSTBYNAME
+	    /*
+	     * Don't do DNS lookup unless we need to because we're going
+	     * to use Kerberos or process a multidrop box.  Some sites
+	     * won't have DNS up at fetchmail initialization time but aren't
+	     * using these features -- avoid hosing them unnecessarily.
+	     */
+	    if (ctl->authenticate == A_KERBEROS || MULTIDROP(ctl))
+	    {
+		/* compute the canonical name of the host */
+		namerec = gethostbyname(ctl->servername);
+		if (namerec == (struct hostent *)NULL)
+		{
+		    fprintf(stderr,
+			    "fetchmail: can't get canonical name of host %s\n",
+			    ctl->servername);
+		    exit(PS_SYNTAX);
+		}
+		else
+		    ctl->canonical_name = xstrdup((char *)namerec->h_name);
+	    }
+#else
+	    /* can't handle multidrop mailboxes unless we can do DNS lookups */
+	    if (ctl->localnames && ctl->localnames->next)
+	    {
+		fputs("fetchmail: can't handle multidrop mailboxes without DNS\n",
+			stderr);
+		exit(PS_SYNTAX);
+	    }
+#endif /* HAVE_GETHOSTBYNAME */
+
+	    /*
+	     * Assign SMTP leaders.  We want to allow all query blocks
+	     * sharing the same SMTP host to use the same SMTP connection.
+	     * To accomplish this, we initialize each query block's leader
+	     * field to point to the first block in the list with a matching 
+	     * SMTP host.
+	     *
+	     * In the typical case, there will be only one SMTP host (the
+	     * client machine) and thus just one SMTP leader (and one listener
+	     * process) through the entire run.
+	     */
+	    if (!ctl->mda[0])
+	    {
+		for (mp = querylist; mp && mp != ctl; mp = mp->next)
+		    if (strcmp(mp->smtphost, ctl->smtphost) == 0)
+		    {
+			ctl->leader = mp->leader;
+			goto no_new_leader;
+		    }
+		ctl->leader = ctl;
+		ctl->smtp_socket = -1;
+	    no_new_leader:;
+	    }
+
+	    /* sanity checks */
+	    if (ctl->port < 0)
+	    {
+		(void) fprintf(stderr,
+			       "%s configuration invalid, port number cannot be negative",
+			       ctl->servername);
+		exit(PS_SYNTAX);
+	    }
+
+	    /* expand MDA commands */
+	    if (!check_only && ctl->mda[0])
+	    {
+		char *argp;
+
+		/* punch nulls into the delimiting whitespace in the args */
+		for (argp = ctl->mda, ctl->mda_argcount = 1; *argp != '\0'; ctl->mda_argcount++)
+		{
+		    ctl->mda_argv[ctl->mda_argcount] = argp;
+		    while (!(*argp == '\0' || isspace(*argp)))
+			argp++;
+		    if (*argp != '\0')
+			*(argp++) = '\0';  
+		}
+
+		ctl->mda_argv[ctl->mda_argcount] = (char *)NULL;
+
+		ctl->mda_argv[0] = ctl->mda_argv[1];
+		if ((argp = strrchr(ctl->mda_argv[1], '/')) != (char *)NULL)
+		    ctl->mda_argv[1] = argp + 1 ;
+	    }
+	}
+    }
 }
 
 void termhook(int sig)
