@@ -461,6 +461,7 @@ fetchmail-4.3.0 (Mon Oct  6 16:44:38 EDT 1997):
 * Created fetchmail-announce list.
 
 There are 281 people on fetchmail-friends and 8 on fetchmail-announce.
+% fetchmail-friends list split
 
 fetchmail-4.2.9 (Tue Sep 30 18:21:35 EDT 1997):
 * Don't byte-stuff when writing to an MDA.
@@ -613,6 +614,7 @@ fetchmail-4.1.0 (Mon Aug 11 17:19:57 EDT 1997):
 * Always pass FQDNs in RCPT TO addresses (avoids minor tsuris with exim).
 
 There are 263 people on the fetchmail-friends list.
+% web page existed by this point
 
 fetchmail-4.0.8 (Thu Aug  7 17:05:27 EDT 1997):
 * Fixed core dump bug in UID handling introduced by the 4.0.6 change.
@@ -795,7 +797,7 @@ fetchmail-3.9.1 (Thu Apr 17 11:37:14 EDT 1997):
 * Added `forcecr' to fix qmail problems by forcing CRLF termination.
 
 There are 222 people on the fetchmail-friends list.
-(many bad addresses were dropped after the switchover to SmartList)
+% bad addresses dropped after the switchover to SmartList
 
 ------------------------------------------------------------------------------
 fetchmail-3.9 (Wed Apr  2 13:36:22 EST 1997):
@@ -1287,6 +1289,7 @@ bugs --
   the same server won't get their UIDs confused.
 
 There are 138 people on the fetchmail-friends list.
+% FAQ file started
 
 ------------------------------------------------------------------------------
 fetchmail-2.0 (Mon Nov 18 00:32:17 EST 1996):
