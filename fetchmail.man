@@ -468,15 +468,6 @@ or
 .B --logfile
 option was used.
 .PP
-The \fI/etc/syslog.conf\fR file might contain the following to log
-all messages from \fIfetchmail\fR to a single file:
-.PP
-.RS
-!fetchmail
-.br
-*.*               /var/log/fetchmail
-.RE
-.PP
 The 
 .B \-N
 or --nodetach option suppresses detachment of the daemon process
@@ -545,19 +536,35 @@ instead, it asks the server's SMTP listener to start a queue flush
 to the client via SMTP.  Therefore it sends only undelivered messages.
 
 .SH SPAM FILTERING
-Newer versions of
+Many SMTP listeners allow administrators to set up `spam filters' that
+block unsolicited email from specified domains.  A MAIL FROM line that
+triggers this feature will elicit an SMTP response which
+(unfortunately) varies according to the listener.
+.PP
+Newer versions of 
 .I sendmail
-allow administrators to set up `spam filters' that block unsolicited email
-from specified domains.  A MAIL FROM line that triggers this feature
-will elicit an SMTP response with an error code of 571.  The
+return an error code of 571.  This return value
+is blessed by RFC1893 as "Delivery not authorized, message refused".
+.PP
+According to current drafts of the replacement for RFC821, the correct
+thing to return in this situation is 550 "Requested action not taken:
+mailbox unavailable" (the draft adds "[E.g., mailbox not found, no
+access, or command rejected for policy reasons].").
+.PP
+The
+.I exim
+MTA returns 501 "Syntax error in parameters or arguments" , but will
+move to 550 soon.
+.PP
+The
 .I fetchmail
-code recognizes this error and discards the message.  This is the
+code recognizes any of these error codes and discards the message.  This is the
 .I only
 circumstance under which fetchmail ever discards mail.
 .P
 If
 .I fetchmail
-is fetching from an IMAP server, the 571 response will be detected and
+is fetching from an IMAP server, the antispam response will be detected and
 the message rejected immediately after the headers have been fetched,
 without reading the message body.  Thus, you won't pay for downloading 
 spam message bodies.
@@ -1130,7 +1137,7 @@ elm(1), mail(1), sendmail(8), popd(8), imapd(8)
 .SH APPLICABLE STANDARDS
 .TP 5
 SMTP/ESMTP:
-RFC 821, RFC 1869, RFC 1652, RFC 1870, RFC 1985
+RFC 821, RFC 1869, RFC 1652, RFC 1870, RFC1983, RFC 1985
 .TP 5
 mail:
 RFC 822

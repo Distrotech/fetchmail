@@ -37,7 +37,7 @@ pl 3.9.7 ():
 * Parse more different variants of IMAP "UNSEEN" message.
 * Handle zero-length messages correctly.
 
-There are 252 people on the fetchmail-friends list.
+There are 250 people on the fetchmail-friends list.
 
 pl 3.9.6 (Wed May 28 18:28:35 EDT 1997):
 * Fix the libc6 configuration stuff (thanks to Jesse Thilo).
