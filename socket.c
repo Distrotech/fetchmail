@@ -38,7 +38,7 @@ int SockOpen(const char *host, const char *service, const char *options)
   int i;
   struct addrinfo *ai, req;
 #if NET_SECURITY
-  struct net_security_operation request[NET_SECURITY_OPERATION_MAX];
+  void *request = NULL;
   int requestlen;
 #endif /* NET_SECURITY */
 
@@ -54,10 +54,12 @@ int SockOpen(const char *host, const char *service, const char *options)
   if (!options)
     requestlen = 0;
   else
-    if (net_security_strtorequest((char *)options, request, &requestlen))
+    if (net_security_strtorequest((char *)options, &request, &requestlen))
       goto ret;
 
   i = inner_connect(ai, request, requestlen, NULL,NULL, "fetchmail", NULL);
+  if (request)
+    free(request);
 
 ret:
 #else /* NET_SECURITY */
