@@ -1,3 +1,4 @@
+'\" t
 .\" For license terms, see the file COPYING in this directory.
 .TH fetchmail 1
 .SH NAME
