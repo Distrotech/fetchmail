@@ -8,7 +8,7 @@
 
 				Release Notes:
 
-fetchmail-5.0.6 ():
+fetchmail-5.0.6 (Mon Aug  2 14:04:23 EDT 1999):
 * Czech internationalization support (thanks to Jiri Pavlovsky).
 * Russion internationalization support (but I couldn't read the contributor
   name in the headers!)
