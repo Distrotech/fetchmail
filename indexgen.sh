@@ -12,7 +12,7 @@ cat >index.html <<EOF
 <TITLE>Fetchmail Home Page</TITLE>
 <link rev=made href=mailto:esr@snark.thyrsus.com>
 <meta name="description" content="The fetchmail home page.">
-<meta name="keywords" content="fetchmail, POP, POP3, IMAP, IMAP2bis, IMAP4"> 
+<meta name="keywords" content="fetchmail, POP, POP3, IMAP, IMAP2bis, IMAP4, IMAP4rev1, ETRN, OTP, RPA"> 
 </HEAD>
 <BODY>
 <table width="100%" cellpadding=0><tr>
@@ -80,7 +80,7 @@ See the <a href="http:design-notes.html">Fetchmail Design Notes</a>
 for discussion of some of the design choices in fetchmail.<P>
 
 Finally, see the distribution <a href="NEWS">NEWS file</a> for a
-description of changes in recent versions.<P>
+description of changes in recent versions.<p>
 
 <H1>How to get fetchmail:</H1>
 
@@ -93,6 +93,9 @@ You can get any of the following here:
 <LI> <a href="fetchmail-$version-1.src.rpm">
 	Source RPM of fetchmail $version</a>
 </UL>
+
+(Note that the RPMs don't have the POP2 or Compuserve RPA support
+compiled in.  To get that you will have to build from sources.)<p>
 
 The latest version of fetchmail is also carried in the 
 <a href="http://sunsite.unc.edu/pub/Linux/system/mail/pop/!INDEX.html">
@@ -166,7 +169,7 @@ be not quite true, I've added some minor option switches since, mostly
 to deal with weird configuration situations.  We've also fixed a hang
 problem with Cyrus IMAP servers and enabled the code to work with the
 <a href="fetchmail.FAQ.html#T5">(extremely broken)</a> Microsoft
-Exchange POP3 server. <P>
+Exchange POP3 server.  And we've added support for Compuserve RPA.<P>
 
 The present TO-DO list reads:<P>
 
