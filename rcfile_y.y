@@ -25,7 +25,6 @@ int yydebug;	/* in case we didn't generate with -- debug */
 
 %union {
   int proto;
-  int auth;
   int flag;
   char *sval;
 }
@@ -33,7 +32,6 @@ int yydebug;	/* in case we didn't generate with -- debug */
 %token DEFAULTS SERVER PROTOCOL AUTHENTICATE KPOP KERBEROS
 %token USERNAME PASSWORD FOLDER SMTPHOST MDA IS HERE THERE
 %token <proto> PROTO
-%token <auth>  AUTHTYPE
 %token <sval>  STRING
 %token <flag>  KEEP FLUSH FETCHALL REWRITE PORT SKIP
 
