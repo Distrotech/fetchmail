@@ -7,6 +7,7 @@
 * Only emit progress dots when stdout is connected to a tty.
 * Fix for GNATS bug 16468, "INET6 breaks fetchmail preconnect"
   by Munechika SUMIKAWA <sumikawa@ebina.hitachi.co.jp>.
+* Lexical analyzer now understands that -?[0-9]*[a-zA-Z] is not a number.
 
 fetchmail-5.2.8 (Mon Feb 14 19:16:46 EST 2000), 18571 lines:
 

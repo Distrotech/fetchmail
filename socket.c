@@ -669,7 +669,7 @@ int SockClose(int sock)
      * This stops sends but allows receives (effectively, it sends a
      * TCP <FIN>).
      */
-    if (shutdown(sock, 1) == SUCCESS)
+    if (shutdown(sock, 1) == 0)
 	/* If there is any data still waiting in the queue, discard it.
 	 * Call recv() until either it returns 0 (meaning we received a FIN)
 	 * or any error occurs.  This makes sure all data sent by the other
