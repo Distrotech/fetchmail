@@ -448,6 +448,16 @@ static int readheaders(int sock,
 
     /* read message headers */
     msgblk.reallen = reallen;
+
+    /*
+     * We used to free the header block unconditionally at the end of 
+     * readheaders, but it turns out that if close_sink() hits an error
+     * condition the code for sending bouncemail will actually look
+     * at the freed storage and coredump...
+     */
+    if (msgblk.headers)
+       free(msgblk.headers);
+
     msgblk.headers = received_for = NULL;
     from_offs = reply_to_offs = resent_from_offs = app_from_offs = 
 	sender_offs = resent_sender_offs = env_offs = -1;
@@ -1151,7 +1161,7 @@ static int readheaders(int sock,
     *cp++ = '\0';
     stuffline(ctl, buf);
 
-    free(msgblk.headers);
+/*    free(msgblk.headers); */
     free_str_list(&msgblk.recipients);
     return(headers_ok ? PS_SUCCESS : PS_TRUNCATED);
 }
