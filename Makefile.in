@@ -124,7 +124,7 @@ tags: $(tagsrcs)
 
 .PHONY: install installdirs
 install: installdirs \
-	 $(bindir)/$(instname) $(infodir)/popclient.info \
+	 $(bindir)/$(instname) # $(infodir)/popclient.info \
 	 $(mandir)/$(instname).$(manext)
 
 installdirs:

@@ -70,8 +70,8 @@ struct hostrec *queryctl;
   int first,number,count;
 
 
-  /* open/lock the folder if we're using a mailbox */
-  if (queryctl->output == TO_FOLDER) 
+  /* open stdout or the mailbox, locking it if it is a folder */
+  if (queryctl->output == TO_FOLDER || queryctl->output == TO_STDOUT) 
     if ((mboxfd = openuserfolder(queryctl)) < 0) 
       return(PS_IOERR);
     

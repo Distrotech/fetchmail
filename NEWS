@@ -19,6 +19,10 @@ S/key for secure challenge-response.
 
 Implement IMAP support.
 
+3.03:
+
+* Minor bug fixes for password querying and redirection to stdout.
+
 3.02:
 
 * Correct buggy processing of nokeep/noflush/fetchall.
