@@ -198,8 +198,7 @@ $(srcdir)/rcfile_l.c: $(srcdir)/rcfile_l.l
 $(srcdir)/rcfile_y.c: $(srcdir)/rcfile_y.y
 
 parser = $(srcdir)/rcfile_l.l $(srcdir)/rcfile_y.y
-headers = $(srcdir)/fetchmail.h $(srcdir)/socket.h $(srcdir)/poproto.h \
-	$(srcdir)/smtp.h
+headers = $(srcdir)/fetchmail.h $(srcdir)/socket.h $(srcdir)/smtp.h
 extra = $(srcdir)/alloca.c $(srcdir)/bzero.[ch] $(srcdir)/errorcodes \
 	$(srcdir)/getopt.[ch] $(srcdir)/getopt1.c $(srcdir)/md5*.[ch] \
 	$(srcdir)/strcasecmp.c $(srcdir)/strdup.c

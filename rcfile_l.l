@@ -15,7 +15,7 @@
  ***********************************************************************/
 
 #include <config.h>
-#include "poproto.h"
+#include "fetchmail.h"
 #include "rcfile_y.h"
 
 int prc_lineno = 1;

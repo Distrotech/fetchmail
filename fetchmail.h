@@ -11,7 +11,13 @@
 
  ***********************************************************************/
 
-
+/* constants designating the various supported protocols */
+#define		P_AUTO	0
+#define		P_POP2	2
+#define		P_POP3	3
+#define		P_IMAP	4
+#define		P_APOP	5
+#define		P_RPOP	6
 
 /* definitions for buffer sizes -- somewhat arbitrary */
 #define		POPBUFSIZE	512	/* per RFC 937 */
