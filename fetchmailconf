@@ -539,18 +539,8 @@ class ConfigurationEdit(Frame, MyWidget):
 	self.master.title('fetchmail ' + self.mode + ' configurator');
 	self.master.iconname('fetchmail ' + self.mode + ' configurator');
 	Pack.config(self)
+        self.post(Controls, 'configuration')
 
-	self.poll_interval = StringVar(self)
-	self.poll_interval.set(`self.configuration.poll_interval`)
-	self.syslog = BooleanVar(self)
-	self.syslog.set(self.configuration.syslog)
-	self.logfile = StringVar(self)
-
-	if self.configuration.logfile: self.logfile.set(self.configuration.logfile);
-	self.idfile = StringVar(self)
-	if self.configuration.idfile: self.idfile.set(self.configuration.idfile);
-	self.invisible = BooleanVar(self)
-	self.invisible.set(self.configuration.invisible)
 	dispose_window(self,
                        'Configurator ' + self.mode + ' Controls',
                        ConfigurationEdit.mode_to_help[self.mode])
