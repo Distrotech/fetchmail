@@ -8,17 +8,17 @@
 
 				Release Notes:
 
-fetchmail-5.0.5 ():
+fetchmail-5.0.5 (Sat Jun 26 14:41:27 EDT 1999):
 * Merged in official OpenBSD port patches.
 * Added Spanish and German descriptions to spec (thanks to Horst von Brand).
 * Moved MIME decoding earlier to avoid messing with header length after
   offsets have been calculated.
 * Make the .fetchmail_pid lockfile with O_EXCL.  Duhh...
-* New FAQ item RH on startup failures under Red Hat 6.0.
+* New FAQ item R8 on startup failures under Red Hat 6.0 and Debian.
 * IMAP now skips the authorization step on a PREAUTH response.
 * Fix bug in defaulting of IMAP expunge period with non-LOGIN auth modes.
 
-There are 258 people on fetchmail-friends and 412 on fetchmail-announce.
+There are 260 people on fetchmail-friends and 414 on fetchmail-announce.
 
 fetchmail-5.0.4 (Fri Jun 11 18:32:58 EDT 1999):
 * Fixed compilation error on systems without vnsprintf.
