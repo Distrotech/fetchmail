@@ -240,7 +240,7 @@ FAQ covers them like a blanket.</p>
 
 <p>Fetchmail was written and is maintained by <a
 href="../index.html">Eric S. Raymond</a>.  There are some designated
-backup maintainers (<a href="mailto:funk+@osu.edu">Rob Funk</a>, <a
+backup maintainers (<a href="mailto:rfunk@funknet.net">Rob Funk</a>, <a
 href="http://www.dallas.net/~fox/">David DeSimone aka Fuzzy Fox</a>,
 <a href="mailto:imdave@mcs.net">Dave Bodenstab</a> and <a 
 href="mailto:shetye@bombay.retortsoft.com">Sunil Shetye</a>).  Other backup
@@ -342,6 +342,11 @@ href="http://linux.cudeso.be/linuxdoc/gotmail.php">gotmail</a> that
 can retrieve Hotmail. Another script, <a
 href="http://yosucker.sourceforge.net">yosucker</a>, can retrieve
 Yahoo webmail.</p>
+
+<p>There's a program called
+<http://mailfilter.sourceforge.net/'>mailfilter</a> which can be used
+to do span filtering, that works particularly well called from fetchmail's
+<code>preconnect</code> directive,</p>
 
 <p>A hacker identifying himself simply as \`Steines' has written a
 filter which rewrites the to-line with a line which only includes
