@@ -13,12 +13,13 @@
 #ifdef HAVE_CONFIG_H
 # include "config.h"
 #endif
-
 #include <stdio.h>
 #include <errno.h>
 #if defined(HAVE_SYSLOG)
 #include <syslog.h>
 #endif
+#include "i18n.h"
+#include "fetchmail.h"
 
 #if HAVE_VPRINTF || HAVE_DOPRNT || _LIBC || HAVE_STDARG_H
 # if HAVE_STDARG_H
@@ -33,16 +34,6 @@
 # define va_dcl char *a1, *a2, *a3, *a4, *a5, *a6, *a7, *a8;
 #endif
 
-#if STDC_HEADERS || _LIBC
-# include <stdlib.h>
-# include <string.h>
-#else
-void exit ();
-#endif
-
-#include "i18n.h"
-
-#include "fetchmail.h"
 #define MALLOC(n)	xmalloc(n)	
 #define REALLOC(n,s)	xrealloc(n,s)	
 
@@ -55,7 +46,8 @@ void (*report_print_progname) (
 #endif
 			      );
 
-/* Used by report_build() and report_complete() to accumulate partial messages.  */
+/* Used by report_build() and report_complete() to accumulate partial messages.
+ */
 static unsigned int partial_message_size = 0;
 static unsigned int partial_message_size_used = 0;
 static char *partial_message;
@@ -63,7 +55,7 @@ static unsigned use_stderr;
 static unsigned int use_syslog;
 
 /* This variable is incremented each time `report' is called.  */
-unsigned int report_message_count;
+static unsigned int report_message_count;
 
 #ifdef _LIBC
 /* In the GNU C library, there is a predefined variable for this.  */
@@ -178,7 +170,7 @@ report (FILE *errfp, message, va_alist)
 }
 
 /*
- * Calling report_init(1) causes error_build and error_complete to write
+ * Calling report_init(1) causes report_build and report_complete to write
  * to errfp without buffering.  This is needed for the ticker dots to
  * work correctly.
  */
@@ -310,7 +302,7 @@ report_build (FILE *errfp, message, va_alist)
     }
 }
 
-/* Complete an report message by appending MESSAGE, which is a printf-style
+/* Complete a report message by appending MESSAGE, which is a printf-style
    format string with optional args, to the existing report message (which may
    be empty.)  The completed report message is then printed (and reset to
    empty.) */
