@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/08/03 19:21:44 $
+<td width="30%" align=right>$Date: 1998/08/17 23:43:06 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -57,7 +57,7 @@ IP address?</a><br>
 <a href="#C3">C3. How do I know what interface and address to use with --interface?</a><br>
 <a href="#C4">C4. How can I set up support for sendmail's anti-spam features?</a><br>
 
-<h1>How to make fetchmail play nice with other software:</h1>
+<h1>How to make fetchmail play nice with various MTAs:</h1>
 
 <a href="#T1">T1. How can I use fetchmail with sendmail?</a><br>
 <a href="#T2">T2. How can I use fetchmail with qmail?</a><br>
@@ -65,15 +65,22 @@ IP address?</a><br>
 <a href="#T4">T4. How can I use fetchmail with smail?</a><br>
 <a href="#T5">T5. How can I use fetchmail with SCO's MMDF?</a><br>
 <a href="#T6">T6. How can I use fetchmail with Lotus Notes?</a><br>
-<a href="#T7">T7. How can I use fetchmail with Microsoft Exchange?</a><br>
-<a href="#T8">T8. How can I use fetchmail with Compuserve RPA?</a><br>
-<a href="#T9">T9. How can I use fetchmail with Demon Internet's SDPS?</a><br>
-<a href="#T10">T10. How can I use fetchmail with usa.net's servers?</a><br>
-<a href="#T11">T11. How can I use fetchmail with HP OpenMail?</a><br>
-<a href="#T12">T12. How can I use fetchmail with SOCKS?</a><br>
-<a href="#T13">T13. How can I use fetchmail with IPv6 and IPsec?</a><br>
-<a href="#T14">T14. How can I get fetchmail to work with ssh?</a><br>
-<a href="#T15">T15. What do I have to do to use the IMAP-GSS protocol?</a><br>
+
+<h1>How to make fetchmail work with nonstandard servers:</h1>
+
+<a href="#S1">S1. How can I use fetchmail with Microsoft Exchange?</a><br>
+<a href="#S2">S2. How can I use fetchmail with Compuserve RPA?</a><br>
+<a href="#S3">S3. How can I use fetchmail with Demon Internet's SDPS?</a><br>
+<a href="#S4">S4. How can I use fetchmail with usa.net's servers?</a><br>
+<a href="#S5">S5. How can I use fetchmail with HP OpenMail?</a><br>
+<a href="#S6">S6. How can I use fetchmail with geocities POP3 servers?</a><br>
+
+<h1>How to set up well-known security and authentication methods:</h1>
+
+<a href="#K1">K1. How can I use fetchmail with SOCKS?</a><br>
+<a href="#K2">K2. How can I use fetchmail with IPv6 and IPsec?</a><br>
+<a href="#K3">K3. How can I get fetchmail to work with ssh?</a><br>
+<a href="#K4">K4. What do I have to do to use the IMAP-GSS protocol?</a><br>
 
 <h1>Runtime fatal errors:</h1>
 
@@ -319,7 +326,7 @@ It also recovers from interrupted connections more gracefully than
 POP3, and enables some significant performance optimizations.<P>
 
 Don't be fooled by NT/Exchange propaganda.  M$ Exchange is just plain
-broken (see item <a href="#T7">T7</a>) and NT cannot handle the
+broken (see item <a href="#S1">S1</a>) and NT cannot handle the
 sustained load of a high-volume remote mail server.  Even Microsoft
 itself knows better than to try this; their own Hotmail service runs
 over Solaris!  For extended discussion, see John Kirch's excellent <a
@@ -364,7 +371,7 @@ alone will really address your security exposure.  If you think you
 might be snooped, it's better to use end-to-end encryption on your
 whole mail stream so none of it can be read.  One of the advantages of
 fetchmail over conventional SMTP-push delivery is that you may be able
-to arrange this by using ssh(1); see <a href="#T14">T14</a>.<P>
+to arrange this by using ssh(1); see <a href="#K3">K3</a>.<P>
 
 If ssh/sshd isn't available, or you find it too complicated for you to
 set up, password encryption will at least keep a malicious cracker
@@ -400,7 +407,7 @@ AUTH=KERBEROS_V4 in the CAPABILITY response.<P>
 
 If you are fetching mail from a CompuServe POP3 account, you can use
 their RPA authentication (which works much like APOP).  See <a
-href="#T8">T8</a> for details.<P>
+href="#S2">S2</a> for details.<P>
 
 Your POP3 server may have the RFC1938 OTP capability to use one-time
 passwords (if it doesn't, you can get OTP patches for the 2.2 version
@@ -500,7 +507,7 @@ the <a href="http://www.socks.nec.com/">SOCKS distribution
 site</a>.)<P>
 
 The specific recipe for using fetchmail with a firewall is at <a
-href="#T12">T12</a><P>
+href="#K1">K1</a><P>
 
 <hr>
 <h2><a name="B1">B1. Lex bombs out while building the fetchmail lexer.</a></h2>
@@ -1042,7 +1049,7 @@ to \r\n, but its rules are not the intuitive and correct-for-RFC822
 ones.  Use `forcecr'.<P>
 
 <hr>
-<h2><a name="T7">T7. How can I use fetchmail with Microsoft Exchange?</a></h2><p>
+<h2><a name="S1">S1. How can I use fetchmail with Microsoft Exchange?</a></h2><p>
 
 M$ Exchange violates the POP3 RFCs.  Its LIST command does not reveal
 the real sizes of mail in the pop mailbox, but the sizes of the
@@ -1112,7 +1119,7 @@ brain-dead Microsoft crap and install a real operating system on your
 mailserver.<P>
 
 <hr>
-<h2><a name="T8">T8. How can I use fetchmail with CompuServe RPA?</a></h2>
+<h2><a name="S2">S2. How can I use fetchmail with CompuServe RPA?</a></h2>
 
 First, make sure your fetchmail has the RPA support compiled in.
 Stock fetchmail binaries (such as you might get from an RPM) don't.
@@ -1150,7 +1157,7 @@ poll non-rpa.csi.com via "pop.site1.csi.com" with proto POP3 and options no dns
 </pre>
 
 <hr>
-<h2><a name="T9">T9. How can I use fetchmail with Demon Internet's SDPS?</a></h2>
+<h2><a name="S3">S3. How can I use fetchmail with Demon Internet's SDPS?</a></h2>
 
 Demon Internet's SDPS service is a slight extension of POP3.  You
 don't need to do anything special unless you want to retrieve in
@@ -1168,7 +1175,7 @@ extension to get envelope To addresses.<P>
 (Note: in stock 4.5.5, the SDPS code is present but untested.)<P>
 
 <hr>
-<h2><a name="T10">T10. How can I use fetchmail with usa.net's servers?</a></h2>
+<h2><a name="S4">S4. How can I use fetchmail with usa.net's servers?</a></h2>
 
 Enable `<CODE>fetchall</CODE>'.  A user reports that the 2.2 version
 of USA.NET's POP server reports that you must use the
@@ -1190,10 +1197,10 @@ They seem to be chronically flaky.  We recommend finding another
 provider.)<P>
 
 <hr>
-<h2><a name="T11">T11. How can I use fetchmail with HP OpenMail?</a></h2>
+<h2><a name="S5">S5. How can I use fetchmail with HP OpenMail?</a></h2>
 
 No special configuration is required, but OpenMail has an annoying bug
-similar to the big one in <a href="#T7">Microsoft Exchange</a>.
+similar to the big one in <a href="#S1">Microsoft Exchange</a>.
 The message sizes it gives in the LIST are rounded to the nearest 1024
 bytes.  It also has a nasty habit of discarding headers it doesn't 
 recognize, such as X- and Resent- headers.<P>
@@ -1202,7 +1209,7 @@ As with M$ Exchange, the only real fix for these problems is to get a
 POP (or preferably IMAP) server that isn't brain-dead.<P>
 
 <hr>
-<h2><a name="T12">T12. How can I use fetchmail with SOCKS?</a></h2>
+<h2><a name="K1">K1. How can I use fetchmail with SOCKS?</a></h2>
 
 Daniel Sobral &lt<a href="mailto:dcs@gns.com.br">dcs@gns.com.br</a>
 gave us the following recipe:<P>
@@ -1226,7 +1233,24 @@ gave us the following recipe:<P>
 It wasn't that hard, was it? :-)<P>
 
 <hr>
-<h2><a name="T13">T13. How can I use fetchmail with IPv6 and IPsec?</a></h2>
+<h2><a name="#S6">S6. How can I use fetchmail with geocities POP3 servers?</a></h2>
+
+Nathan Cutler reports that the the mail.geocities.com POP3 servers
+fail to include the first Received line of the message in the send to 
+fetchmail.  This can solve problems if your MUA interprets Received 
+continuations as body lines and doesn't parse any of the following
+headers.<P>
+
+Workaround: 
+<pre>
+mda "sed -e1,2D | formail | /usr/bin/procmail -d &lt;user&gt;
+</pre>
+
+Fix: Get an email provider that doesn't suck.  Geocities's pop-up adds
+are lame, you should boycott them anyway.<P>
+
+<hr>
+<h2><a name="K2">K2. How can I use fetchmail with IPv6 and IPsec?</a></h2>
 
 To use fetchmail with IPv6, you need a system that supports IPv6, the "Basic
 Socket Interface Extensions for IPv6" (RFC 2133), and the inet6-apps kit.
@@ -1264,7 +1288,7 @@ http://www.bieringer.de/linux/IPv6/IPv6-HOWTO/IPv6-HOWTO.html</a>
 </UL>
 
 <hr>
-<h2><a name="T14">T14. How can I get fetchmail to work with ssh?</a></h2>
+<h2><a name="K3">K3. How can I get fetchmail to work with ssh?</a></h2>
 
 We have two recipes for this.  The first is a little easier to set up,
 but only supports one user at a time.<P>
@@ -1360,7 +1384,7 @@ Send a HUP signal to your inetd.
 Now just use localhost:1234 to access your POP server.<P>
 
 <hr>
-<h2><a name="T15">T15. What do I have to do to use the IMAP-GSS protocol?</a></h2>
+<h2><a name="K4">K4. What do I have to do to use the IMAP-GSS protocol?</a></h2>
 
 Fetchmail can use RFC1731 GSSAPI authorization to safely identify you
 to your IMAP server, as long as you can share Kerberos V credentials
@@ -2075,7 +2099,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/08/03 19:21:44 $
+<td width="30%" align=right>$Date: 1998/08/17 23:43:06 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
