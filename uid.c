@@ -243,7 +243,6 @@ int delete_str(struct idlist **idl, int num)
     }
     else
 	return(delete_str(&(*idl)->next, num));
-    return(0);
 }
 
 void append_str_list(struct idlist **idl, struct idlist **nidl)
