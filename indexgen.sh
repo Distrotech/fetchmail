@@ -4,7 +4,7 @@
 #
 goldvers="4.6.0"
 goldname="4.6.0"
-version=`sed -n <Makefile.in "/VERS=/s/VERS=\([^ 	]*\)/\1/p"`
+version=`sed -n <Makefile.in "/VERSION *= */s/VERSION *= *\([^ 	]*\)/\1/p"`
 date=`date "+%d %b %Y"`
 
 set -- `timeseries | grep -v "%" | head -1`
