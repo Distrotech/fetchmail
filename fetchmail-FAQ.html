@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/01/29 20:01:01 $
+<td width="30%" align=right>$Date: 2000/01/31 04:07:30 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -124,6 +124,7 @@ messages but before deleting them</a><br>
 <a href="#M6">M6. How do I get multidrop mode to work with majordomo?</a><br>
 <a href="#M7">M7. Multidrop mode isn't parsing envelope addresses from
 my Received headers as it should.</a><br>
+<a href="#M8">M8. Users are getting multiple copies of messages.</a><br>
 
 <h1>Mangled mail:</h1>
 
@@ -2225,6 +2226,27 @@ check might fail if your DNS were misconfigured, or if you were using `no dns'
 and had failed to declare iserv.ttns.net as an alias of your server.<P>
 
 <hr>
+<h2><a name="M8">M8. Users are getting multiple copies of messages.</a></h2>
+
+It's a consequence of multidrop.  What's happening is that you have
+N users subscribed to the same list.  The list software sends N
+copies, not knowing they will end up in the same multidrop box.  Since
+they are both locally addressed to all N users, fetchmail delivers N
+copies to each user.<P>
+
+Fetchmail tries to eliminate adjacent duplicate messages in a
+multidrop mailbox.  However, this logic depends on the message-ID
+being identical in both copies.  It also depends on the two copies
+being adjacent in the server mailbox.  The former is usually the case,
+but the latter condition sometimes fails in a timing-dependent way if
+the server was processing multiple incoming mail streams.
+
+I could eliminate this problem by keeping a list of all message-IDs 
+received during a poll so far and dropping any message that matches a 
+seen mail ID.  The touble is that this is an O(N**2) operation that 
+might significantly slow down the retriweval of large mail batches.<P>
+
+<hr>
 <h2><a name="X1">X1. Spurious blank lines are appearing in the headers of fetched mail.</a></h2>
 
 What's probably happening is that the POP/IMAP daemon on your
@@ -2556,7 +2578,7 @@ terminate it.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/01/29 20:01:01 $
+<td width="30%" align=right>$Date: 2000/01/31 04:07:30 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
