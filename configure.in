@@ -11,6 +11,25 @@ dnl We want these before the checks, so the checks can modify their values.
 test -z "$CFLAGS" && CFLAGS="-O" AC_SUBST(CFLAGS)
 test -z "$LDFLAGS" && LDFLAGS=AC_SUBST(LDFLAGS)
 
+PACKAGE=`sed -n '/PACKAGE *= *\(.*\)/s//\1/p' <$srcdir/Makefile.in`
+VERSION=`sed -n '/VERSION *= *\(.*\)/s//\1/p' <$srcdir/Makefile.in`
+AM_INIT_AUTOMAKE("$PACKAGE", "$VERSION")
+
+dnl Map autoconf, autoheader and aclocal to (/bin/true) if they are
+dnl not available in the system, so as not to cause problems in
+dnl Makefile.in.  Be sure to fix this hack if we start supporting
+dnl automake (Makefile.am).
+
+if test -z "$AUTOCONF" ; then
+	AUTOCONF=true
+fi
+if test -z "$ACLOCAL" ; then
+	ACLOCAL=true
+fi
+if test -z "$AUTOHEADER" ; then
+	AUTOHEADER=true
+fi
+
 AC_CANONICAL_HOST
 AC_PROG_CC
 AC_PROG_INSTALL
@@ -35,14 +54,6 @@ AC_SUBST(CPFLAGS)
 AC_SUBST(CEFLAGS)
 AC_SUBST(LDEFLAGS)
 AC_SUBST(LIBOBJS)
-
-PACKAGE=`sed -n '/PACKAGE *= *\(.*\)/s//\1/p' <$srcdir/Makefile.in`
-AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
-AC_SUBST(PACKAGE)
-
-VERSION=`sed -n '/VERSION *= *\(.*\)/s//\1/p' <$srcdir/Makefile.in`
-AC_DEFINE_UNQUOTED(VERSION, "$VERSION")
-AC_SUBST(VERSION)
 
 # Check for LynxOS special case: -lbsd needed (at least on 2.3.0) and -s
 # not working.
