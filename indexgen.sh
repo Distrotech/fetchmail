@@ -112,9 +112,9 @@ Or you can get the last \`gold' version, $goldname:
 For differences between the leading-edge $version and gold $goldname versions,
 see the distribution <a href="NEWS">NEWS</a> file.<p>
 
-(Note that the RPMs don't have the POP2, OTP, IPv6, Kereberos, or
-Compuserve RPA support compiled in.  To get that you will have to
-build from sources.)<p>
+(Note that the RPMs don't have the POP2, OTP, IPv6, Kerberos, GSSAPI,
+or Compuserve RPA support compiled in.  To get any of these you will
+have to build from sources.)<p>
 
 The latest version of fetchmail is also carried in the 
 <a href="http://sunsite.unc.edu/pub/Linux/system/mail/pop/!INDEX.html">
@@ -160,13 +160,13 @@ S.u.S.e. Linux distributions include it.  A customized version is used
 at Whole Earth 'Lectronic Link. Several large ISPs are known to
 recommend it to Unix-using SLIP and PPP customers.<p>
 
-Over five hundred people have participated on the fetchmail beta
-list.  While it's hard to count free software users, we can estimate
-based on (a) population figures at the WELL and other known fetchmail
-sites, (b) the size of the Linux-using ISP customer base, and (c) the
-volume of fetchmail-related talk on USENET.  These estimates suggest
-that daily fetchmail users number well into the tens of thousands, and
-possibly over a hundred thousand.<p>
+Over five hundred people have participated on the fetchmail beta list.
+While it's hard to count the users of open-source software, we can
+estimate based on (a) population figures at the WELL and other known
+fetchmail sites, (b) the size of the Linux-using ISP customer base,
+and (c) the volume of fetchmail-related talk on USENET.  These
+estimates suggest that daily fetchmail users number well into the tens
+of thousands, and possibly over a hundred thousand.<p>
 
 <H1>The fetchmail paper:</H1>
 
@@ -176,8 +176,9 @@ Linux development model works.<P>
 
 I wrote a paper, <A HREF="../writings/cathedral-bazaar/">The Cathedral
 And The Bazaar</A>, about these theories and the project.  The paper
-became quite popular and may have actually helped change the world
-(!). Chase the title link, above, to its page. <P>
+became quite popular and (to my continuing astonishment) may have
+actually helped change the world.  Chase the title link, above, to its
+page. <P>
 
 <H1>Recent releases and where fetchmail is going:</H2>
 
@@ -189,7 +190,7 @@ basically in maintainance mode.<p>
 Major changes or additions therefore seem unlikely until there are
 significant changes in or additions to the related protocol RFCs.  One
 development that would stimulate a new release almost instantly is the
-development of a standard lightweight encrypted authentication method
+deployment of a standard lightweight encrypted authentication method
 for IMAP sessions.<p>
 
 <H1>Where you can use fetchmail:</H1>
