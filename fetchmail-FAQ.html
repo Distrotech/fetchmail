@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/02/26 03:16:53 $
+<td width="30%" align=right>$Date: 2000/02/26 04:34:10 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -61,6 +61,7 @@ IP address?</a><br>
 <a href="#C4">C4. How can I set up support for sendmail's anti-spam features?</a><br>
 <a href="#C5">C5. How can I poll some of my mailboxes more/less often than others?</a><br>
 <a href="#C6">C6. Fetchmail works OK started up manually, but not from an init script.</a><br>
+<a href="#C7">C7. How can I forward mail to another host?.</a><br>
 
 <h1>How to make fetchmail play nice with various MTAs:</h1>
 
@@ -830,9 +831,9 @@ ppp-down scripts of pppd.<p>
 <h2><a name="C3">C3. How do I know what interface and address to use with --interface?</a></h2>
 
 This depends a lot on your local networking configuration (and right
-now you can't use it at all except under Linux).  However, here are
-some important rules of thumb that can help.  If they don't work, ask
-your local sysop or your Internet provider.<p>
+now you can't use it at all except under Linux and the newer BSDs).  However,
+here are some important rules of thumb that can help.  If they don't
+work, ask your local sysop or your Internet provider.<p>
 
 First, you may not need to use --interface at all.  If your machine
 only ever does SLIP or PPP to one provider, it's almost certainly by a
@@ -970,6 +971,13 @@ the .fetchmailrc.<p>
 
 Pick a location (such as /etc/fetchmailrc) and use fetchmail's -f
 option to point fetchmail at it.  That should solve the problem.<p>
+
+<hr>
+<h2><a name="C7">C7. How can I forward mail to another host?</a></h2>
+
+To forward mail to a host other than the one you are running fetchmail
+on, use the <code>smtphost</code> option.  See the manual page for
+details.<p>
 
 <hr>
 <h2><a name="T1">T1. How can I use fetchmail with sendmail?</a></h2>
@@ -1707,7 +1715,7 @@ SSH authorized_keys file:
 command="socket localhost 110",no-port-forwarding 1024 ......
 </PRE>
 
-where "<code>1024</code> ......" is the content of noddy's identity.pub file.
+where "<code>1024 ......</code>" is the content of noddy's identity.pub file.
 <LI>
 Create a script /usr/local/bin/ssh.fm and make it executable:
 
@@ -2600,7 +2608,7 @@ terminate it.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/02/26 03:16:53 $
+<td width="30%" align=right>$Date: 2000/02/26 04:34:10 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
