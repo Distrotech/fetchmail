@@ -113,8 +113,7 @@ See the <a href="fetchmail-features.html">Fetchmail Feature List</a> for more
 about what fetchmail does.<p>
 
 See the on-line <a href="fetchmail-man.html">manual page</a> for
-basics. (Sorry about the flat presentation, but 
-the man2html shipped with RH6.0 chokes and dies on the fetchmail man page.<p>
+basics.<p>
 
 See the <a href="fetchmail-FAQ.html">HTML Fetchmail FAQ</A> for
 troubleshooting help.<p>
