@@ -4,11 +4,19 @@
 # Dumps a release notice and diffs as a MIME multipart message 
 # in RELEASE_NOTES
 #
-$timezone = "-0500";
+use POSIX qw(strftime);
+$timezone = strftime('%z', localtime) || "-0500";
+$tmp = $ENV{TMPDIR} || $ENV{TMP} || $ENV{TEMP} || "/tmp";
+
+$project = "fetchmail";
+$svnrepos = "svn://svn.berlios.de/$project";
+$website = "http://developer.berlios.de/projects/$project";
+$mailfrom = "<$project-devel-owner\@lists.berlios.de> (Fetchmail Development Team)";
 
 $diffs = 0;
 $verbose = 0;
 $null = ">/dev/null";
+$errnull = "2>/dev/null";
 while ($i = shift @ARGV)
 {
 	if ($i =~ /^(--diffs|-d)$/i)
@@ -31,38 +39,39 @@ while ($i = shift @ARGV)
 $version=`grep 'VERSION *=' Makefile.in`;
 $version =~ /VERSION *= *(.*)/;
 $version = $1;
-$rcsid = $version;
-$rcsid =~ tr/./-/;
+$tag = "RELEASE_$version";
+$tag =~ tr/./-/;
 
-open(ID, "rlog -h NEWS|");
+open(ID, "svn ls $svnrepos/tags|");
 while (<ID>) {
-    last if /^symbolic names/;
-}
-while (<ID>) {
-    if (/^\t(.*):/) {
-	push(@versions, $1);
+    if (m{^(RELEASE_.*)/}) {
+	unshift(@versions, $1);
     }
 }
 close(ID);
 
-if ($versions[0] eq $rcsid) {
-    $rcsid = $versions[0];
-    $oldid = $versions[1];
+if ($versions[0] eq $tag) {
+    $tag = $versions[0];
+    $oldtag = $versions[1];
 } else {
-    $rcsid = '<workfile>';
-    $oldid = $versions[0];
+    $tag = '<workfile>';
+    $oldtag = $versions[0];
 }
 
-#$ENV{'PATH'} = "~esr/bin:/bin:/usr/bin";
+$ENV{PATH} .= ":./dist-tools:./dist-tools/shipper:.";
 
-print "Building $version release, RCS ID $rcsid, previous RCS ID $oldid\n";
+print "Building $version release, tag $tag, previous tag $oldtag\n";
 
-if (system("./configure; make -C po update-po; make clean")) {
-	die("Failure in translation-file rebuild.")
+if (system("aclocal && autoconf")) {
+	die("Failure in regenerating autoconf files\n");
+}
+
+if (system("./configure && make clean && make -C po update-po && make clean")) {
+	die("Failure in translation-file rebuild\n");
 }
 
 print "### Test-building the software...\n";
-if (system("configure --disable-nls; make")) {
+if (system("./configure --disable-nls && make clean && make")) {
 	die("Compilation failure\n");
 }
 
@@ -72,23 +81,21 @@ if (system("make dist $null")) {
 }
 
 print "### Building the RPMs...\n";
-if (system("buildrpms fetchmail-${version}.tar.gz $null")) {
+if (system("buildrpms $project-${version}.tar.gz $null")) {
 	die("RPM-build failure\n");
 }
 
-open(REPORT, ">PREAMBLE.$$");
+open(REPORT, ">$tmp/$project.PREAMBLE.$$");
 
 print REPORT <<EOF;
-From: esr\@thyrsus.com (Eric S. Raymond)
-Reply-To: esr\@thyrsus.com (Eric S. Raymond)
-Subject: The $version release of fetchmail is available
-FCC: ~/postings/outmail
+From: $mailfrom
+Subject: The $version release of $project is available
 
-The $version release of fetchmail is now available at the usual locations,
-including <URL:http://$ENV{'WWWVIRTUAL'}/~esr/fetchmail>.
+The $version release of $project is now available at the usual locations,
+including <URL:$website>.
 
 The source archive is available at:
-<URL:http://$ENV{'WWWVIRTUAL'}/~esr/fetchmail/fetchmail-${version}.tar.gz>
+<URL:$website/$project-${version}.tar.gz>
 
 Here are the release notes:
 
@@ -97,23 +104,24 @@ EOF
 # Extract the current notes
 open(NEWS, "NEWS");
 while (<NEWS>) {
-    if (/^fetchmail/) {
+    if (/^$project/) {
 	print REPORT $_;
 	last;
     }
 }
 while (<NEWS>) {
-    if (/^fetchmail/) {
+    if (/^$project/) {
 	last;
     }
     print REPORT $_;
 }
 
-$oldrcs = $oldid;
-$oldrcs =~ tr/-/./;
+$oldver = $oldtag;
+$oldver =~ tr/-/./;
+$oldver =~ s/^RELEASE_//;
 
 if ($diffs) {
-	print REPORT "Diffs from the previous ($oldrcs) release follow as a MIME attachment."
+	print REPORT "Diffs from the previous ($oldver) release follow as a MIME attachment."
 } else {
         print REPORT "By popular demand, diffs from the previous release have been omitted."
 }
@@ -122,33 +130,38 @@ close(NEWS);
 
 close(REPORT);
 
-if ($rcsid eq '<workfile>') {
-    system("rcsdiff -u -r$oldid          RCS/* 2>/dev/null >DIFFS.$$");
+if ($tag eq '<workfile>') {
+    system("svn diff -r$oldtag        $errnull >$tmp/$project.DIFFS.$$");
 } else {
-    system("rcsdiff -u -r$oldid -r$rcsid RCS/* 2>/dev/null >DIFFS.$$");
+    system("svn diff -r$oldtag -r$tag $errnull >$tmp/$project.DIFFS.$$");
 }
 print "Diff size:";
-system("wc <DIFFS.$$");
+system("wc <$tmp/$project.DIFFS.$$");
 
 if ($diffs) {
-	system "metasend -b -D 'fetchmail-$rcsid announcement' -m 'text/plain' -e 7bit -f PREAMBLE.$$ -n -D 'diff -u between -$oldrcs $rcsid' -m 'text/plain' -e 7bit -f DIFFS.$$ -o ANNOUNCE.EMAIL";
+	system "metasend -b"
+	    ." -D '$project-$tag announcement' -m 'text/plain' -e 7bit -f $tmp/$project.PREAMBLE.$$"
+	    ." -n -D 'diff between $oldver and $version' -m 'text/plain' -e 7bit -f $tmp/$project.DIFFS.$$"
+	    ." -o ANNOUNCE.EMAIL";
 } else {
-	rename("PREAMBLE.$$", "ANNOUNCE.EMAIL");
+	rename("$tmp/$project.PREAMBLE.$$", "ANNOUNCE.EMAIL");
 }
-system("chown esr ANNOUNCE.EMAIL");
-chmod(0700, "ANNOUNCE.EMAIL");
+#system("chown esr ANNOUNCE.EMAIL");
+#chmod(0700, "ANNOUNCE.EMAIL");
 
-#unlink("PREAMBLE.$$");
-unlink("DIFFS.$$");
+#unlink("$tmp/$project.PREAMBLE.$$");
+unlink("$tmp/$project.DIFFS.$$");
 
 print "Building index page...\n";
 system("rm -f index.html; indexgen.sh");
 
-print "Building test server list...\n";
-system("rm -f testservers.html; testservers-gen.sh >testservers.html");
+if (-r "testsites") {
+	print "Building test server list...\n";
+	system("rm -f testservers.html; testservers-gen.sh >testservers.html");
+}
 
 print "Making activity graph...";
-growthplot;
+system "growthplot";
 
 print "Done\n";
 

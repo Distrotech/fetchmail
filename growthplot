@@ -3,20 +3,25 @@
 # growthplot -- plot the fetchmail project's growth as a function of time
 #
 
+PATH="$PATH:.:./dist-tools"; export PATH
+
+tmp=/tmp/fetchmail-growthplot.$$
+mkdir $tmp
+
 # Get data from the NEWS file
-timeseries >/tmp/growthplot$$
-grep "^[0-9]" /tmp/growthplot$$ >/tmp/growthnumbers$$
-grep "^[0-9.]*.[05].0	" /tmp/growthplot$$ >/tmp/growthmajors$$
-sed '/^4.2.9/,$d' </tmp/growthnumbers$$ >/tmp/growthannounce$$
+timeseries >$tmp/growthplot$$
+grep "^[0-9]" $tmp/growthplot$$ >$tmp/growthnumbers$$
+grep "^[0-9.]*.[05].0	" $tmp/growthplot$$ >$tmp/growthmajors$$
+sed '/^4.2.9/,$d' <$tmp/growthnumbers$$ >$tmp/growthannounce$$
 
 # gnuplot line styles.  These occasionally change (like beteween 3.5 and 3.7);
-# use "echo "set terminal png color; test" | gnuplot | display - to check.
+# use "echo 'set terminal png; test' | gnuplot | display -" to check.
 blue_boxes=3
 green_crosses=2
 cyan_diamonds=37	# Once purple triangles, but we can't do that anymore
 brown_triangles=23
 
-cat >/tmp/growthimage$$ <<EOF
+cat >$tmp/growthimage$$ <<EOF
 set title "Fetchmail project growth history"
 set xlabel 'Days since baseline'
 set ylabel 'Participants'
@@ -27,7 +32,7 @@ set tics out
 set autoscale y
 set y2range [5000:50000]
 set key bottom right box
-set terminal png color
+set terminal png
 
 EOF
 
@@ -72,7 +77,7 @@ EOF
 			lasttotal=$total
 		fi
 	done
-) </tmp/growthplot$$ >>/tmp/growthimage$$ 
+) <$tmp/growthplot$$ >>$tmp/growthimage$$ 
 
 # OK, now write the major-release labels
 (
@@ -81,22 +86,23 @@ EOF
 	    echo "set arrow from $days, $total - 55 to $days, $total - 15 head"
 	    echo "set label '$version' at $days - 5, $total - 65"
 	done
-) </tmp/growthmajors$$ >>/tmp/growthimage$$ 
+) <$tmp/growthmajors$$ >>$tmp/growthimage$$ 
 
-cat >>/tmp/growthimage$$ <<EOF
-plot [] [0:] '/tmp/growthnumbers$$' using 6:5 \
+cat >>$tmp/growthimage$$ <<EOF
+plot [] [0:] '$tmp/growthnumbers$$' using 6:5 \
 		title "Both lists" with points $blue_boxes, \
-     '/tmp/growthannounce$$' using 6:4 \
+     '$tmp/growthannounce$$' using 6:4 \
 		title "fetchmail-announce" with points $cyan_diamonds, \
-     '/tmp/growthannounce$$' using 6:3 \
+     '$tmp/growthannounce$$' using 6:3 \
 		title "fetchmail-friends" with points $green_crosses, \
-     '/tmp/growthnumbers$$' using 6:2 axes x1y2 \
+     '$tmp/growthnumbers$$' using 6:2 axes x1y2 \
 		title "Lines of code" with points $brown_triangles
 EOF
 
-gnuplot /tmp/growthimage$$ >growth.png
+gnuplot $tmp/growthimage$$ >growth.png
 
-rm -f /tmp/growth*
+rm -f $tmp/growth*
+rmdir $tmp
 
 # growthplot ends here
 

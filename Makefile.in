@@ -184,7 +184,7 @@ clean:
 	-cd intl; $(MAKE) clean
 	-rm -f $(top_builddir)/intl/libintl.h # work around GNU gettext brain-damage
 	-cd po; $(MAKE) clean
-	-rm -f fetchmail *.o core fetchmail.dvi \
+	-rm -f fetchmail *.o core *~ fetchmail.dvi \
 	       rcfile_l.c rcfile_y.h rcfile_y.c \
 	       fetchmail.tar fetchmail.tar.gz \
 	       netrc rfc822 unmime fetchmail-man.html
@@ -196,7 +196,8 @@ distclean: clean
 	-cd intl; $(MAKE) distclean
 	-cd po; $(MAKE) distclean
 	-rm -f TAGS tags config.h config.log \
-		config.cache stamp-h stamp-h.in # config.status Makefile
+		config.cache stamp-h stamp-h.in
+	-rm -f config.status Makefile
 
 realclean: distclean
 	-rm -f FAQ FEATURES NOTES MANIFEST 
@@ -276,7 +277,7 @@ all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) \
 	$(srcdir)/po/* $(srcdir)/intl $(srcdir)/beos/* ABOUT-NLS $(srcdir)/MANIFEST
 
 fetchmail.spec: Makefile.in
-	specgen.sh $(VERSION) >fetchmail.spec
+	$(srcdir)/specgen.sh $(VERSION) >fetchmail.spec
 
 MANIFEST: $(srcdir) Makefile.in
 	@echo $(all) | tr "[ \t]" '\n' | sed -e '/^\.\//s///' | sort >MANIFEST
@@ -303,20 +304,20 @@ TODO: todo.html
 # man2html no longer chokes and dies on this man page,
 # but manServer.pl does a much better job. 
 fetchmail-man.html: fetchmail.man
-	manServer.pl fetchmail.man >fetchmail-man.html
+	PATH=\${PATH}:$(srcdir)/dist-tools manServer.pl fetchmail.man >fetchmail-man.html
 
 # Make distribution.
-dist: distclean MANIFEST Makefile.in distdocs
-	touch fetchmail.lsm
-	make fetchmail-$(VERSION).tar.gz 
+dist: MANIFEST Makefile.in distdocs fetchmail-$(VERSION).tar.gz
+	#touch fetchmail.lsm
+	#make fetchmail-$(VERSION).tar.gz 
 	#-cd po; make update-po
 	ls -l fetchmail-$(VERSION).tar.gz
-	@echo "Don't forget to build RPMs from root!"
+	#@echo "Don't forget to build RPMs from root!"
 
 # Firewall against the lossage in autoconf that keeps breaking our build.
 EX = --exclude "fetchmail-$(VERSION)/intl/libintl.h"
 fetchmail-$(VERSION).tar.gz: $(all)
-	(cd ..; ln -sf fetchmail fetchmail-$(VERSION))
+	(cd ..; ln -sf $(shell basename \${PWD}) fetchmail-$(VERSION))
 	(cd ..; tar $(EX) -czf fetchmail-$(VERSION).tar.gz `sed <fetchmail-$(VERSION)/MANIFEST s:^:fetchmail-$(VERSION)/:`)
 	mv -f ../fetchmail-$(VERSION).tar.gz .
 	rm ../fetchmail-$(VERSION)
