@@ -17,23 +17,23 @@ class Controls:
 	self.poll_interval = 300	# Default to 5-minute timeout
 	self.syslog = FALSE		# Use syslogd for logging?
 	self.logfile = None		# No logfile, initially
-	self.idfile = None		# Default idfile, initially
+	self.idfile = os.environ["HOME"] + "/.fetchids"		# Default idfile, initially
 	self.invisible = FALSE		# Suppress Received line & spoof?
 	self.servers = []		# List of included sites
 
     def __repr__(self):
 	str = "";
-	if self.syslog:
+	if self.syslog != ControlDefaults.syslog:
 	   str = str + ("set syslog\n")
 	elif self.logfile:
 	    str = str + ("set logfile \"%s\"\n" % (self.logfile,));
-	if self.idfile:
+	if self.idfile != ControlDefaults.idfile:
 	    str = str + ("set idfile \"%s\"\n" % (self.idfile,));
-	if self.poll_interval > 0:
+	if self.poll_interval != ControlDefaults.poll_interval:
 	    str = str + ("set daemon %s\n" % (self.poll_interval,))
 	for site in self.servers:
 	    str = str + repr(site)
-	return str + "\n"
+	return str
 
     def __str__(self):
 	return "[Controls: " + repr(self) + "]"
@@ -51,13 +51,13 @@ class Server:
 	self.timeout = 300		# 5-minute timeout
 	self.envelope = 'Received'	# Envelope-address header
 	self.envskip = 0		# Number of envelope headers to skip
-	self.qvirtual = ''		# Name prefix to strip
+	self.qvirtual = None		# Name prefix to strip
 	self.aka = []			# List of DNS aka names
 	self.dns = TRUE			# Enable DNS lookup on multidrop
 	self.localdomains = []		# Domains to be considered local
 	self.interface = None		# IP address and range
 	self.monitor = None		# IP address and range
-	self.users = []		# List of user entries for site
+	self.users = []			# List of user entries for site
 	self.typemap = (
 	    ('pollname',  'String'),
 	    ('via',       'String'),
@@ -83,16 +83,16 @@ class Server:
 	if self.active:   str = str + "poll"
 	else:             str = str + "skip"
 	str = str + (" " + self.pollname)
-	if self.via != self.pollname:
+	if self.via:
 	    str = str + " via " + self.via
 	if self.protocol != ServerDefaults.protocol:
 	    str = str + " with proto " + self.protocol 
-	if self.port != defaultports[self.protocol]:
+	if self.port != defaultports[self.protocol] and self.port != 0:
 	    str = str + " port " + `self.port`
 	if self.timeout != ServerDefaults.timeout:
 	    str = str + " timeout " + `self.timeout`
 	if self.interval != ServerDefaults.interval: 
-	    str = str + " interval " + `self.interval` 
+	    str = str + " interval " + `self.interval`
 	if self.envelope != ServerDefaults.envelope or self.envskip != ServerDefaults.envskip:
 	    if self.envskip:
 		str = str + " envelope " + self.envskip + " " + self.envelope
@@ -108,7 +108,7 @@ class Server:
 	    str = str + flag2str(self.dns, 'dns')
 	if self.uidl != ServerDefaults.uidl:
 	    str = str + flag2str(self.uidl, 'uidl')
-	if folded:        str = str + "\n\t"
+	if folded:        str = str + "\n    "
 	else:             str = str + " "
 
 	if self.aka:
@@ -122,20 +122,21 @@ class Server:
 		str = str + " " + x
         if (self.aka or self.localdomains):
 	    if folded:
-		str = str + "\n\t"
+		str = str + "\n    "
 	    else:
 		str = str + " "
 
-	if self.interface: str = str + " interface " + self.interface
-	if self.monitor: str = str + " monitor " + self.monitor
+	if self.interface: str = str + "interface " + self.interface
+	if self.monitor: str = str + "monitor " + self.monitor
 	if (self.interface or self.monitor):
 	    if folded:
 		str = str + "\n"
 
-	if str[-1] == "\t": str = str[0:-1]
+	if str[-1] == " ": str = str[0:-1]
 
-	for user in site.users:
+	for user in self.users:
 	    str = str + repr(user)
+	str = str + "\n"
 	return str;
 
     def __repr__(self):
@@ -149,7 +150,7 @@ class User:
 	self.remote = ""		# Remote username
 	self.localnames = None		# Local names
 	self.password = ""		# Password for mail account access
-	self.folder = ""		# Remote folder to retrieve from
+	self.mailboxes = None		# Remote folders to retrieve from
 	self.smtphost = 'localhost'	# Host to forward to
 	self.smtpaddress = None;	# Append this to MAIL FROM line
 	self.preconnect = ""		# Connection setup
@@ -171,8 +172,7 @@ class User:
 	self.expunge = 1		# Interval between expunges (IMAP)
 	self.typemap = (
 	    ('remote',      'String'),
-	    ('folder',      'String'),
-	    # leave out localnames
+	    # leave out mailboxes and localnames
 	    ('password',    'String'),
 	    ('smtphost',    'String'),
 	    ('smtpaddress',  'String'),
@@ -239,6 +239,11 @@ class User:
 	    str = str + " batchlimit " + `self.batchlimit`
 	if self.expunge != UserDefaults.expunge:
 	    str = str + " expunge " + `self.expunge`
+	if self.mailboxes:
+	     str = str + "\n    folder"
+	     for x in self.mailboxes:
+		str = str + " " + x
+	     str = str + " here"
 	return str;
 
     def __str__(self):
@@ -334,9 +339,6 @@ class ListEdit(Frame):
 	listframe = Frame(master)
 	scroll = Scrollbar(listframe)
 	listwidget = Listbox(listframe, height=0, selectmode='browse')
-	if list:
-	    for dnsname in list:
-		listwidget.insert('end', dnsname)
 	listframe.pack(side=TOP, expand=YES, fill=BOTH)
 	listwidget.config(yscrollcommand=scroll.set, relief=SUNKEN)
 	listwidget.pack(side=LEFT, expand=YES, fill=BOTH)
@@ -913,8 +915,9 @@ class UserEdit(Frame):
 	Label(secwin, text="Authentication").pack(side=TOP)
 	LabeledEntry(secwin, 'Password:',
 		      self.password, '12').pack(side=TOP, fill=X)
-	LabeledEntry(secwin, 'Folder(s):',
-		     self.folder, '12').pack(side=TOP, fill=X)
+#XXX The mailboxes member is actually a list
+#	LabeledEntry(secwin, 'Folder(s):',
+#		     self.mailboxes, '12').pack(side=TOP, fill=X)
 	secwin.pack(fill=X, anchor=N)
 
 	names = Frame(leftwin, relief=RAISED, bd=5)
@@ -984,11 +987,11 @@ class UserEdit(Frame):
 #
 
 class ExpertConfigure(Frame, ControlEdit):
-    def __init__(self, controls, master=None):
+    def __init__(self, configuration, master=None):
 	Frame.__init__(self, master)
 	self.master.title('fetchmail expert configurator');
 	self.master.iconname('fetchmail expert configurator');
-	self.controls = controls
+	self.configuration = configuration
 	Pack.config(self)
 	dispose_window(self, 'Expert Configurator Controls', experthelp)
 	self.postControls()
@@ -1000,11 +1003,14 @@ class ExpertConfigure(Frame, ControlEdit):
 	Label(lf,
 	      text='Remote Mail Server Configurations', 
 	      bd=2).pack(side=TOP, pady=10)
-	ListEdit('New Server:', None, self.editSite, lf, remotehelp)
+	ListEdit('New Server:', 
+		map(lambda x: x.pollname, self.configuration.servers),
+		self.editSite, lf, remotehelp)
 	lf.pack(fill=X)
 
     def editSite(self, site):
-	ServerEdit(site, self.servers, Toplevel())
+	print "Editing " + site;
+	ServerEdit(site, self.configuration.servers, Toplevel())
 
     def nosave(self):
 	if ConfirmQuit(self, "expert configuration editor"):
@@ -1016,11 +1022,11 @@ class ExpertConfigure(Frame, ControlEdit):
 #
 
 class NoviceConfigure(Frame, ControlEdit):
-    def __init__(self, controls, master=None):
+    def __init__(self, configuration, master=None):
 	Frame.__init__(self, master)
 	self.master.title('fetchmail novice configurator');
 	self.master.iconname('fetchmail novice configurator');
-	self.controls = controls;
+	self.configuration = configuration;
 	Pack.config(self)
 
 	dispose = Frame(self, relief=RAISED, bd=5)
@@ -1102,16 +1108,35 @@ Or you can just select `Quit' to leave the configurator now.
 	if ConfirmQuit(self, "configuration editor"):
 	    self.quit()
 
+def intersect(list1, list2):
+# Compute set intersection of lists
+    res = []
+    for x in list1:
+	if x in list2:
+	    res.append(x)
+    return res
+
+def setdiff(list1, list2):
+# Compute set difference of lists
+    res = []
+    for x in list1:
+	if not x in list2:
+	    res.append(x)
+    return res
+
 def copy_instance(toclass, fromdict):
 # Initialize a class object of given type from a conformant dictionary.
-    class_signature = toclass.__dict__.keys(); class_signature.sort()
+    class_sig = toclass.__dict__.keys(); class_sig.sort()
     dict_keys = fromdict.keys(); dict_keys.sort()
-    if 'typemap' in class_signature: 
-	class_signature.remove('typemap')
-    if tuple(class_signature) != tuple(dict_keys):
+    common = intersect(class_sig, dict_keys)
+    if 'typemap' in class_sig: 
+	class_sig.remove('typemap')
+    if tuple(class_sig) != tuple(dict_keys):
 	print "Conformability error"
-	print "Class signature: " + `class_signature`
-	print "Dictionary keys: " + `dict_keys`
+#	print "Class signature: " + `class_sig`
+#	print "Dictionary keys: " + `dict_keys`
+	print "Not matched in class signature: " + `setdiff(class_sig, common)`
+	print "Not matched in dictionary keys: " + `setdiff(dict_keys, common)`
 	sys.exit(1)
     else:
 	for x in dict_keys:
@@ -1120,6 +1145,7 @@ def copy_instance(toclass, fromdict):
 if __name__ == '__main__': 
 
     # Compute defaults
+    ControlDefaults = Controls()
     ServerDefaults = Server()
     UserDefaults = User()
 
@@ -1131,16 +1157,24 @@ if __name__ == '__main__':
     sys.stdout.write("Done.\n")
     os.remove(tmpfile)
 
-    # This is the top level of the object we're going to mung 
-    Configuration = Controls()
-
     # The tricky part -- initializing objects from the configuration global
+    # `Configuration' is the top level of the object tree we're going to mung 
+    Configuration = Controls()
     copy_instance(Configuration, configuration)
     Configuration.servers = [];
     for server in configuration['servers']:
 	Newsite = Server()
 	copy_instance(Newsite, server)
 	Configuration.servers.append(Newsite)
+	Newsite.users = [];
+	for user in server['users']:
+	    Newuser = User()
+	    copy_instance(Newuser, user)
+	    Newsite.users.append(Newuser)
+
+    # Temporary for debugging:
+    print "This is a dump of the configuration we read:\n" + `Configuration`
+    sys.exit(0)
 
     # OK, now run the configuration edit
     MainWindow().mainloop()

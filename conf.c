@@ -186,7 +186,13 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	    numdump("port",  ctl->server.port);
 	    numdump("timeout",  ctl->server.timeout);
 	    numdump("interval", ctl->server.interval);
-	    stringdump("envelope", ctl->server.envelope); 
+
+	    if (ctl->server.envelope == STRING_DISABLED)
+		stringdump("envelope", NULL); 
+	    else if (ctl->server.envelope == NULL)
+		stringdump("envelope", "Received"); 		
+	    else
+		stringdump("envelope", ctl->server.envelope); 
 	    numdump("envskip", ctl->server.envskip);
 	    stringdump("qvirtual", ctl->server.qvirtual);
  
@@ -217,7 +223,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 
 	indent('{');
 
-	stringdump("user", ctl->remotename);
+	stringdump("remote", ctl->remotename);
 	stringdump("password", ctl->password);
 
 	indent('\0');
@@ -252,6 +258,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 #endif /* INET6 */
 	stringdump("preconnect", ctl->preconnect);
 	stringdump("postconnect", ctl->postconnect);
+	numdump("limit", ctl->limit);
 	numdump("fetchlimit", ctl->fetchlimit);
 	numdump("batchlimit", ctl->batchlimit);
 	numdump("expunge", ctl->expunge);
