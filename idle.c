@@ -38,8 +38,7 @@ static sig_atomic_t	alarm_latch = FALSE;
 static int		alarm_latch = FALSE;
 #endif
 
-RETSIGTYPE gotsigalrm(sig)
-int sig;
+RETSIGTYPE gotsigalrm(int sig)
 {
     signal(sig, gotsigalrm);
     lastsig = sig;
