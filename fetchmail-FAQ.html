@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/02/15 04:16:01 $
+<td width="30%" align=right>$Date: 1998/02/16 06:03:22 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -82,6 +82,7 @@ when I may have multiple login sessions going?</a><br>
 <a href="#R6">R6. Fetchmail dumps core when I use a .netrc file but works otherwise.</a><br>
 <a href="#R7">R7. Running fetchmail in daemon mode doesn't work.</a><br>
 <a href="#R8">R8. Fetchmail hangs when used with pppd.</a><br>
+<a href="#R9">R9. Fetchmail fails when used with a dynamic PPP link.</a><br>
 
 <h1>Disappearing mail</h1>
 
@@ -1266,6 +1267,43 @@ fetchmail doesn't play well with it, but works with pppd if `demand'
 is turned off.  We have no idea why this is.<p>
 
 <hr>
+<h2><a name="R9">R9. Fetchmail fails when used with a dynamic PPP link.</a></h2>
+
+The diagnostic of this problem is that your MTA, on the receiving end
+of an SMTP forward from fetchmail, refuses a RCPT TO delivery address
+with the complaint <code>551 ... we do not relay</code>.<P>
+
+In order to avoid giving indigestion to certain picky MTAs (notably <a
+href="#T3">exim</a>), fetchmail always makes the RCPT TO address it
+feeds the MTA a fully qualified one with a hostname part.  Normally it
+does this by appending @ and your client machine's hostname.<P>
+
+This, however, can creates problems when your MTA is running in daemon
+mode and outlasts the dynamic IP address assignment your client
+machine had when the MTA started up.  Since the new IP address (looked
+up at RCPT TO interpretation time) doesn't match the original, your
+MTA thinks it's seeing a relaying attempt and refuses.<P>
+
+The simplest way to fix this is to use the <code>smtpaddress</code>
+option to force the appended hostname to one with a (fixed) IP address 
+of 127.0.0.1 in your <code>/etc/hosts</code>.  (The name `localhost'
+will usually work).<P>
+
+If your MTA is sendmail, another fix is to restart each time you connect
+to your ISP:<P>
+
+<pre>
+        kill -HUP `head -1 /var/run/sendmail.pid`
+</pre>
+
+If this doesn't fix it, you might have to put your dynamic IP address
+in whatever your sendmail is using for a cw file (/etc/sendmail.cw).
+Ryan Murray reports "my ip-up script for PPP puts my fully qualified
+domain name at the bottom of /etc/hosts (building from a template),
+sends the name off to sendmail.cw, restarts sendmail, and then starts
+fetchmail."<P>
+
+<hr>
 <h2><a name="D1">D1. I think I've set up fetchmail correctly, but I'm not getting any mail.</a></h2>
 
 Maybe you have a .forward or alias set up that you've forgotten about.  You
@@ -1761,7 +1799,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/02/15 04:16:01 $
+<td width="30%" align=right>$Date: 1998/02/16 06:03:22 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
