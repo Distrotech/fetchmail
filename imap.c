@@ -171,8 +171,10 @@ static int do_otp(int sock, struct query *ctl)
 
     if (outlevel >= O_MONITOR)
 	report(stdout, "IMAP> %s\n", buffer);
+
+    /* best not to count on the challenge code handling multiple writes */
+    strcat(buffer, "\r\n");
     SockWrite(sock, buffer, strlen(buffer));
-    SockWrite(sock, "\r\n", 2);
 
     if (rval = gen_recv(sock, buffer, sizeof(buffer)))
 	return rval;
@@ -198,8 +200,8 @@ static int do_otp(int sock, struct query *ctl)
 
     if (outlevel >= O_MONITOR)
 	report(stdout, "IMAP> %s\n", buffer);
+    strcat(buffer, "\r\n");
     SockWrite(sock, buffer, strlen(buffer));
-    SockWrite(sock, "\r\n", 2);
 
     if (rval = gen_recv(sock, buffer, sizeof(buffer)))
 	return rval;
@@ -349,8 +351,8 @@ static int do_rfc1731(int sock, char *truename)
     if (outlevel >= O_MONITOR) {
 	report(stdout, "IMAP> %s\n", buf1);
     }
+    strcat(buf1, "\r\n");
     SockWrite(sock, buf1, strlen(buf1));
-    SockWrite(sock, "\r\n", 2);
 
     /* Upon decrypting and verifying the ticket and authenticator, the
      * server should verify that the contained checksum field equals
@@ -432,8 +434,9 @@ static int do_rfc1731(int sock, char *truename)
     if (outlevel >= O_MONITOR) {
 	report(stdout, "IMAP> %s\n", buf1);
     }
+
+    strcat(buf1, "\r\n");
     SockWrite(sock, buf1, strlen(buf1));
-    SockWrite(sock, "\r\n", 2);
 
     if (result = gen_recv(sock, buf1, sizeof buf1))
 	return result;
@@ -523,8 +526,8 @@ static int do_gssauth(int sock, char *hostname, char *username)
         }
         to64frombits(buf1, send_token.value, send_token.length);
         gss_release_buffer(&min_stat, &send_token);
+	strcat(buf1, "\r\n");
         SockWrite(sock, buf1, strlen(buf1));
-        SockWrite(sock, "\r\n", 2);
         if (outlevel >= O_MONITOR)
             report(stdout, "IMAP> %s\n", buf1);
         if (maj_stat == GSS_S_CONTINUE_NEEDED) {
@@ -592,8 +595,8 @@ static int do_gssauth(int sock, char *hostname, char *username)
         report(stdout, _("Requesting authorisation as %s\n"), username);
         report(stdout, "IMAP> %s\n",buf1);
     }
+    strcat(buf1, "\r\n");
     SockWrite(sock, buf1, strlen(buf1));
-    SockWrite(sock, "\r\n", 2);
 
     /* we should be done. Get status and finish up */
     if (result = gen_recv(sock, buf1, sizeof buf1))
@@ -731,8 +734,10 @@ static int do_cram_md5 (int sock, struct query *ctl)
     if (outlevel >= O_MONITOR) {
 	report (stdout, "IMAP> %s\n", buf1);
     }
+
+    /* PMDF5.2 IMAP has a bug that requires this to be a single write */
+    strcat (buf1, "\r\n");
     SockWrite (sock, buf1, strlen (buf1));
-    SockWrite (sock, "\r\n", 2);
 
     if (result = gen_recv (sock, buf1, sizeof (buf1)))
 	return result;
