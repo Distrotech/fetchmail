@@ -72,7 +72,7 @@ fi
 # Arnaldo Carvalho de Melo <acme@conectiva.com.br>
 # Sat Nov  7 15:39:03 EDT 1998
 
-ALL_LINGUAS="pt_BR es pl fr"
+ALL_LINGUAS="cs es fr pl pt_BR ru"
 
 AM_GNU_GETTEXT
 

@@ -8,6 +8,16 @@
 
 				Release Notes:
 
+fetchmail-5.0.6 ():
+* Czech internationalization support (thanks to Jiri Pavlovsky).
+* Russion internationalization support (but I couldn't read the contributor
+  name in the headers!)
+* Update of the French internationalization support by Guy Brand.
+* Fix for the `nokeep' problem by Robert de Bath.
+* Interface option fix from Bill Currie.
+
+There are 267 people on fetchmail-friends and 420 on fetchmail-announce.
+
 fetchmail-5.0.5 (Sat Jun 26 14:41:27 EDT 1999):
 * Merged in official OpenBSD port patches.
 * Added Spanish and German descriptions to spec (thanks to Horst von Brand).

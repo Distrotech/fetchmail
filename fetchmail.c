@@ -45,7 +45,6 @@
 #include "fetchmail.h"
 #include "tunable.h"
 #include "smtp.h"
-#include "getopt.h"
 #include "netrc.h"
 #include "i18n.h"
 
@@ -162,7 +161,7 @@ static void dropprivs(void)
 }
 #endif
 
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
     int st, bkgd = FALSE;
     int parsestatus, implicitmode = FALSE;

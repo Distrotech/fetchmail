@@ -78,7 +78,25 @@ to		{ return TO; }
 =		{ return MAP; }
 "*"		{ return WILDCARD; }
 
-no/[a-z \t].*	{ return NO;}
+nobouncemail	|
+nouidl		|
+nocheckalias	|
+nodns		|
+noenvelope	|
+nokeep		|
+noflush		|
+nofetchall	|
+norewrite	|
+noforcecr	|
+nostripcr	|
+nopass8(bits)?	|
+nodropstatus	|
+nomimedec(ode)?	{
+                   yyless(2);
+                   return NO;
+                }
+
+no		{return NO;}
 
 keep		{ return KEEP; }
 flush		{ return FLUSH; }
@@ -87,7 +105,7 @@ rewrite		{ return REWRITE; }
 forcecr		{ return FORCECR; }
 stripcr		{ return STRIPCR; }
 pass8(bits)?	{ return PASS8BITS; }
-dropstatus?	{ return DROPSTATUS; }
+dropstatus	{ return DROPSTATUS; }
 mimedec(ode)?   { return MIMEDECODE; }
 dns		{ return DNS; }
 uidl		{ return UIDL; }

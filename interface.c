@@ -43,6 +43,7 @@
 #include "config.h"
 #include "fetchmail.h"
 #include "i18n.h"
+#include "tunable.h"
 
 typedef struct {
 	struct in_addr addr, dstaddr, netmask;
@@ -57,6 +58,13 @@ struct interface_pair_s {
 static char *netdevfmt;
 
 #if defined(linux)
+
+/*
+ * Count of packets to see on an interface before monitor considers it up.
+ * Needed because when pppd shuts down the link, the packet counts go up
+ * by two (one rx and one tx?, maybe).  A value of 2 seems to do the trick.
+ */
+#define MONITOR_SLOP		2
 
 void interface_init(void)
 /* figure out which /proc/dev/net format to use */
@@ -77,7 +85,7 @@ void interface_init(void)
 
 	if (major >= 2 && minor >= 2)
 	    /* Linux 2.2 -- transmit packet count in 10th field */
-	    netdevfmt = "%d %d %*d %*d %*d %d %*d %*d %*d %*d %d %*d %d";
+	    netdevfmt = "%d %d %*d %*d %*d %d %*d %*d %*d %d %*d %*d %d";
     }
 }
 
@@ -461,8 +469,8 @@ int interface_approve(struct hostdata *hp)
 #endif
 	/* if monitoring, check link for activity if it is up */
 	if (get_ifinfo(hp->monitor, &ifinfo) &&
-			hp->monitor_io == ifinfo.rx_packets +
-				ifinfo.tx_packets) {
+			hp->monitor_io - (ifinfo.rx_packets +
+				ifinfo.tx_packets) >= -MONITOR_SLOP) {
 		(void) report(stdout, 
 			      _("skipping poll of %s, %s inactive\n"),
 			      hp->pollname, hp->monitor);
@@ -470,7 +478,7 @@ int interface_approve(struct hostdata *hp)
 	}
 
 #ifdef ACTIVITY_DEBUG
-       error(0, 0, _("activity on %s was %d, is %d"),
+       report(stdout _("activity on %s was %d, is %d"),
              hp->monitor, hp->monitor_io,
              ifinfo.rx_packets + ifinfo.tx_packets);
 #endif
