@@ -720,8 +720,14 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	    send_bouncemail(msg, 
                             "Some addresses were rejected by the MDA fetchmail forwards to.\r\n",
                             *bad_addresses, from_responses);
-	/* local notification only if bouncemail was insufficient */
-	if (!(*good_addresses) && total_addresses > *bad_addresses)
+	/*
+	 * It's tempting to do local notification only if bouncemail was
+	 * insufficient -- that is, to add && total_addresses > *bad_addresses
+	 * to the test here.  The problem with this theory is that it would
+	 * make initial diagnosis of a broken multidrop configuration very
+	 * hard -- most single-recipient messages would just invisibly bounce.
+	 */
+	if (!(*good_addresses)) 
 	{
 #ifdef HAVE_SNPRINTF
 	    snprintf(addr, sizeof(addr)-1, "%s@%s", run.postmaster, ctl->destaddr);
@@ -735,6 +741,9 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
 		return(PS_SMTP);
 	    }
+
+	    if (outlevel >= O_VERBOSE)
+		error(0, 0, _("no address matches; forwarding to %s."), run.postmaster);
 	}
 
 	/* 

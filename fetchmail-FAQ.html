@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/12/14 15:10:26 $
+<td width="30%" align=right>$Date: 1998/12/16 16:54:19 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -96,7 +96,7 @@ IP address?</a><br>
 <h1>Disappearing mail</h1>
 
 <a href="#D1">D1. I think I've set up fetchmail correctly, but I'm not getting any mail.</a><br>
-<a href="#D2">D2. All my mail seems to disappear after an interrupt.</a><br>
+<a href="#D2">D2. All my mail seems to disappear after a dropped connection.</a><br>
 <a href="#D3">D3. Mail that was being fetched when I interrupted my fetchmail seems to have been vanished.</a></br>
 
 <h1>Multidrop-mode problems:</h1>
@@ -199,7 +199,7 @@ It is helpful if you include your .fetchmailrc file, but not necessary
 unless your symptom seems to involve an error in configuration parsing.<p>
 
 If fetchmail seems to run and fetch mail, but the headers look mangled
-(that is headers are missing, or blank lines are inserted in the
+(that is, headers are missing or blank lines are inserted in the
 headers) then read the FAQ items in section <a href="#X1">X</a>
 before submitting a bug report.  Pay special attention to the item on
 <a href="#generic_mangling">diagnosing mail mangling</a>.  There are
@@ -284,9 +284,9 @@ in the Subject line unsubscribes you, and "help" returns general list help) <p>
 <hr>
 <h2><a name="G6">G6. So, what's this I hear about a fetchmail paper?</a></h2>
 
-Now it can be told!  The fetchmail development was also a sociological
-experiment, an extended test to see if my theory about the critical
-features of the Linux development model is correct.<p>
+The fetchmail development was also a sociological experiment, an
+extended test to see if my theory about the critical features of the
+Linux development model is correct.<p>
 
 The experiment was a success.  I wrote a paper about it titled <a
 href="http://www.tuxedo.org/~esr/writings/cathedral.html">The
@@ -449,10 +449,11 @@ his mail ;-)<P>
 Yes. In order to avoid giving indigestion to certain picky MTAs
 (notably <a href="#T3">exim</a>), fetchmail always makes the RCPT TO
 address it feeds the MTA a fully qualified one with a hostname part.
-Normally it does this by appending @ and your client machine's
-hostname.<P>
+Normally it does this by appending @ and "localhost", but when you are
+using Kerberos or ETRN mode it will append @ and your machine's
+fully-qualified domain name (FQDN).<P>
 
-This, however, can create problems when fetchmail is running in daemon
+Appending the FQDN can create problems when fetchmail is running in daemon
 mode and outlasts the dynamic IP address assignment your client
 machine had when it started up.<P>
 
@@ -1664,7 +1665,7 @@ Or you may not be connecting to the SMTP listener.   Run fetchmail -v
 and see <a href="#R1">R1</a>.<p>
 
 <hr>
-<h2><a name="D2">D2. All my mail seems to disappear after an interrupt.</a></h2>
+<h2><a name="D2">D2. All my mail seems to disappear after a dropped connection.</a></h2>
 
 One POP3 daemon used in the Berkeley Unix world that reports itself as
 POP3 version 1.004 actually throws the queue away. 1.005 fixed that.
@@ -1716,11 +1717,15 @@ Solution: switch to an <a href="http://www.imap.org">IMAP4</a> server.<p>
 <h2><a name="M1">M1. I've declared local names, but all my multidrop
 mail is going to root anyway.</a></h2>
 
-Somehow your fetchmail is never matching the hostname part of
-recipient names to the name of the mailserver machine.  This probably
-means it is unable to recognize hostname parts as being DNS names of
-the mailserver, and indicates some kind of DNS configuration
-problem either on the server or your client machine. <p>
+Somehow your fetchmail is never recognizing the hostname part of
+recipient names it parses out of To/Cc/envelope-header lines as
+matching the name of the mailserver machine. To check this, run
+fetchmail in foreground with -v -v on.  You will probably see a lot of
+messages with the format ``line rejected, %s is not an alias of the
+mailserver'' or ``no address matches; forwarding to %s.'' <p>
+
+These errors usually indicate some kind of DNS configuration problem
+either on the server or your client machine. <p>
 
 The easiest workaround is to add a `<CODE>via</CODE>' option (if
 necessary) and add enough aka declarations to cover all of your
@@ -2207,7 +2212,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/12/14 15:10:26 $
+<td width="30%" align=right>$Date: 1998/12/16 16:54:19 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
