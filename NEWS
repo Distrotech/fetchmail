@@ -13,21 +13,23 @@
 			Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-2.6 (Wed Dec 25 05:56:24 EST 1996)
+fetchmail-2.6 (Fri Dec 27 12:42:56 EST 1996)
 
 features -- 
 
-* --interface option format is now simpler.
+* IMAP4 code now sets the server "seen" flag on each message if "keep" is on.
+
+* New FAQ material on how to use --interface.
 
 bugs --
-
-* Fixed length-computation bug (apparently introduced in 2.3) that messed
-  up IMAP deletes.
 
 * Dropped back to separate SockGets/SockWrite code with no attempt at
   stdio buffering -- we hope this will fix the Solaris peoples' problems.
 
-There are 167 people on the fetchmail-friends list.
+* Fixed length-computation bug (apparently introduced in 2.3) that messed
+  up IMAP deletes.
+
+There are 169 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-2.5 (Mon Dec 23 04:18:54 EST 1996)
