@@ -146,7 +146,6 @@ static int is_host_alias(const char *name, struct query *ctl)
 		"nameserver failure while looking for `%s' during poll of %s.",
 		name, ctl->server.names->id);
 	    ctl->errcount++;
-	    longjmp(restart, 2);	/* try again next poll cycle */
 	    break;
 	}
 
@@ -172,7 +171,6 @@ static int is_host_alias(const char *name, struct query *ctl)
 		"nameserver failure while looking for `%s' during poll of %s.",
 		name, ctl->server.names->id);
 	    ctl->errcount++;
-	    longjmp(restart, 2);	/* try again next poll cycle */
 	    break;
 	}
     }
@@ -435,10 +433,12 @@ char *realname;		/* real name of host */
 #ifdef HAVE_RES_SEARCH
     int			no_local_matches = FALSE;
 #endif /* HAVE_RES_SEARCH */
+    int			olderrs;
 
     sizeticker = 0;
     delete_ok = TRUE;
     remaining = len;
+    olderrs = ctl->errcount;
 
     /* read message headers */
     headers = received_for = return_path = NULL;
@@ -627,8 +627,18 @@ char *realname;		/* real name of host */
 #endif /* HAVE_RES_SEARCH */
 	save_str(&xmit_names, -1, ctl->localnames->id);
 
-    /* time to address the message */
-    if (ctl->mda)	/* we have a declared MDA */
+
+    /*
+     * Time to either address the message or decide we can't deliver it yet.
+     */
+    if (ctl->errcount > olderrs)	/* there were DNS errors above */
+    {
+	delete_ok = FALSE;
+	sinkfp = (FILE *)NULL;
+	if (outlevel == O_VERBOSE)
+	    error(0,0, "forwarding and deletion suppressed due to DNS errors");
+    }
+    else if (ctl->mda)		/* we have a declared MDA */
     {
 	int	length = 0;
 	char	*names, *cmd;
@@ -1045,6 +1055,7 @@ char *realname;		/* real name of host */
 	if (SMTP_eom(sinkfp) != SM_OK)
 	{
 	    error(0, 0, "SMTP listener refused delivery");
+	    ctl->errcount++;
 	    return(PS_TRANSIENT);
 	}
     }
@@ -1144,11 +1155,6 @@ const struct method *proto;	/* protocol method table */
 	error(0, 0,
 		"timeout after %d seconds waiting for %s.",
 		ctl->server.timeout, ctl->server.names->id);
-	ok = PS_ERROR;
-    }
-    else if (js == 2)
-    {
-	/* error message printed at point of longjmp */
 	ok = PS_ERROR;
     }
     else
