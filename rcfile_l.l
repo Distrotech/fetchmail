@@ -17,8 +17,6 @@ int prc_lineno = 1;
 %o 5000
 %a 4000
 
-WS	[ \t]*
-
 %%
 
 set		{ return SET; }
@@ -55,21 +53,15 @@ to		{ return TO; }
 =		{ return MAP; }
 "*"		{ return WILDCARD; }
 
-keep		{ yylval.flag = FLAG_TRUE; return KEEP; }
-flush		{ yylval.flag = FLAG_TRUE; return FLUSH; }
-fetchall	{ yylval.flag = FLAG_TRUE; return FETCHALL; }
-rewrite		{ yylval.flag = FLAG_TRUE; return REWRITE; }
-stripcr		{ yylval.flag = FLAG_TRUE; return STRIPCR; }
-dns		{ yylval.flag = FLAG_TRUE; return DNS; }
-received	{ yylval.flag = FLAG_TRUE; return RECEIVED; }
+no/.*		{ return NO;}
 
-no{WS}keep	{ yylval.flag = FLAG_FALSE; return KEEP; }
-no{WS}flush	{ yylval.flag = FLAG_FALSE; return FLUSH; }
-no{WS}fetchall	{ yylval.flag = FLAG_FALSE; return FETCHALL; }
-no{WS}rewrite	{ yylval.flag = FLAG_FALSE; return REWRITE; }
-no{WS}stripcr	{ yylval.flag = FLAG_FALSE; return REWRITE; }
-no{WS}dns	{ yylval.flag = FLAG_FALSE; return DNS; }
-no{WS}received	{ yylval.flag = FLAG_FALSE; return RECEIVED; }
+keep		{ return KEEP; }
+flush		{ return FLUSH; }
+fetchall	{ return FETCHALL; }
+rewrite		{ return REWRITE; }
+stripcr		{ return STRIPCR; }
+dns		{ return DNS; }
+received	{ return RECEIVED; }
 
 limit		{ return LIMIT; }
 

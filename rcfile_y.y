@@ -36,7 +36,6 @@ static void user_reset();
 
 %union {
   int proto;
-  int flag;
   int number;
   char *sval;
 }
@@ -49,7 +48,7 @@ static void user_reset();
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
-%token <flag>  KEEP FLUSH FETCHALL REWRITE STRIPCR DNS PORT RECEIVED
+%token NO KEEP FLUSH FETCHALL REWRITE STRIPCR DNS PORT RECEIVED
 
 %%
 
@@ -123,8 +122,10 @@ serv_option	: AKA alias_list
 					fprintf(stderr, "fetchmail: monitor option is only supported under Linux\n");
 #endif /* linux */
 					}
-		| DNS			{current.server.dns = $1;}
-		| RECEIVED		{current.server.received = $1;}
+		| DNS			{current.server.dns = FLAG_TRUE;}
+		| RECEIVED		{current.server.received = FLAG_TRUE;}
+		| NO DNS		{current.server.dns = FLAG_FALSE;}
+		| NO RECEIVED		{current.server.received = FLAG_FALSE;}
 		;
 
 /*
@@ -188,11 +189,18 @@ user_option	: TO localnames HERE
 		| MDA STRING		{current.mda        = xstrdup($2);}
 		| PRECONNECT STRING	{current.preconnect = xstrdup($2);}
 
-		| KEEP			{current.keep       = $1;}
-		| FLUSH			{current.flush      = $1;}
-		| FETCHALL		{current.fetchall   = $1;}
-		| REWRITE		{current.rewrite    = $1;}
-		| STRIPCR		{current.stripcr    = $1;}
+		| KEEP			{current.keep       = FLAG_TRUE;}
+		| FLUSH			{current.flush      = FLAG_TRUE;}
+		| FETCHALL		{current.fetchall   = FLAG_TRUE;}
+		| REWRITE		{current.rewrite    = FLAG_TRUE;}
+		| STRIPCR		{current.stripcr    = FLAG_TRUE;}
+
+		| NO KEEP		{current.keep       = FLAG_FALSE;}
+		| NO FLUSH		{current.flush      = FLAG_FALSE;}
+		| NO FETCHALL		{current.fetchall   = FLAG_FALSE;}
+		| NO REWRITE		{current.rewrite    = FLAG_FALSE;}
+		| NO STRIPCR		{current.stripcr    = FLAG_FALSE;}
+
 		| LIMIT NUMBER		{current.limit      = $2;}
 		| FETCHLIMIT NUMBER	{current.fetchlimit = $2;}
 		| BATCHLIMIT NUMBER	{current.batchlimit = $2;}
