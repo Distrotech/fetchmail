@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2002/06/06 15:28:49 $
+<td width="30%" align=right>$Date: 2002/06/21 07:48:16 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -29,18 +29,19 @@ this FAQ list, mail it to fetchmail's maintainer, Eric S. Raymond, at
 <a href="#G2">G2. Where do I find the latest FAQ and fetchmail sources?</a><br>
 <a href="#G3">G3. I think I've found a bug.  Will you fix it?</a><br>
 <a href="#G4">G4. I have this idea for a neat feature. Will you add it?</a><br>
-<a href="#G5">G5. Is there a mailing list for exchanging tips?</a><br>
-<a href="#G6">G6. So, what's this I hear about a fetchmail paper?</a><br>
-<a href="#G7">G7. What is the best server to use with fetchmail?</a><br>
-<a href="#G8">G8. What is the best mail program to use with fetchmail?</a><br>
-<a href="#G9">G9. How can I avoid sending my password en clair?</a><br>
-<a href="#G10">G10. Is any special configuration needed to use a dynamic
+<a href="#G5">G5. I want to make fetchmail behave like Outlook Express.</a><br>
+<a href="#G6">G6. Is there a mailing list for exchanging tips?</a><br>
+<a href="#G7">G7. So, what's this I hear about a fetchmail paper?</a><br>
+<a href="#G8">G8. What is the best server to use with fetchmail?</a><br>
+<a href="#G9">G9. What is the best mail program to use with fetchmail?</a><br>
+<a href="#G10">G10. How can I avoid sending my password en clair?</a><br>
+<a href="#G11">G11. Is any special configuration needed to use a dynamic
 IP address?</a><br>
-<a href="#G11">G11. Is any special configuration needed to use firewalls?</a><br>
-<a href="#G12">G12. Is any special configuration needed to <em>send</em> mail?</a><br>
-<a href="#G13">G13. Is fetchmail Y2K-compliant?</a><br>
-<a href="#G14">G14. Is there a way in fetchmail to support disconnected IMAP mode?</a><br>
-<a href="#G15">G15. How will fetchmail perform under heavy loads?</a><br>
+<a href="#G12">G12. Is any special configuration needed to use firewalls?</a><br>
+<a href="#G13">G13. Is any special configuration needed to <em>send</em> mail?</a><br>
+<a href="#G14">G14. Is fetchmail Y2K-compliant?</a><br>
+<a href="#G15">G15. Is there a way in fetchmail to support disconnected IMAP mode?</a><br>
+<a href="#G16">G16. How will fetchmail perform under heavy loads?</a><br>
 
 <h1>Build-time problems:</h1>
 
@@ -348,7 +349,22 @@ problem that can't be handled anywhere but fetchmail, lay it on me.  I'm
 very accommodating about good ideas.</p>
 
 <hr>
-<h2><a name="G5">G5. Is there a mailing list for exchanging tips?</a></h2>
+<h2><a name="G5">G5. I want to make fetchmail behave like Outlook Express.</a></h2>
+
+<p>The second-most-requested feature for fetchmail, after
+content-based filtering, is the ability to have it remove messages
+from a maildrop after N days, typically to be used with the
+<code>keep</code> option as a sort of poor man's newsgroup facility.
+Microsoft's Outlook Express supports this.</p>
+
+<p>This feature won't be added either. Repeat after me: fetchmail's
+job is transport, not policy.  If you want this, write a Perl or
+Python script, to be run from a cron job, that deletes old messages
+off your maildrop.  Send it to me and I'll put it in the contrib
+directory.</p>
+
+<hr>
+<h2><a name="G6">G6. Is there a mailing list for exchanging tips?</a></h2>
 
 <p>There is a fetchmail-friends list
 (fetchmail-friends@lists.ccil.org) for people who want to discuss fixes
@@ -359,7 +375,7 @@ There is also an announcements-only list,
 fetchmail-announce@lists.ccil.org, which you can sign up for at <a href="http://lists.ccil.org/mailman/listinfo/fetchmail-announce">http://lists.ccil.org/mailman/listinfo/fetchmail-announce</a>.</p>
 
 <hr>
-<h2><a name="G6">G6. So, what's this I hear about a fetchmail paper?</a></h2>
+<h2><a name="G7">G7. So, what's this I hear about a fetchmail paper?</a></h2>
 
 <p>The fetchmail development was also a sociological experiment, an
 extended test to see if my theory about the critical features of the
@@ -380,7 +396,7 @@ away the source for Netscape Communicator</a>.</p>
 on the Web with a search for that title.</p>
 
 <hr>
-<h2><a name="G7">G7. What is the best server to use with fetchmail?</a></h2>
+<h2><a name="G8">G8. What is the best server to use with fetchmail?</a></h2>
 
 <p>The short answer: IMAP 2000 running over Unix.</p>
 
@@ -426,7 +442,7 @@ The 2.5.2 version appears to restore the open-source license of
 previous versions.</p>
 
 <hr>
-<h2><a name="G8">G8. What is the best mail program to use with fetchmail?</a></h2>
+<h2><a name="G9">G9. What is the best mail program to use with fetchmail?</a></h2>
 
 <p>Fetchmail will work with all popular <a href="#T1">mail transport
 programs</a>.  It also doesn't care which user agent you use, and user
@@ -446,7 +462,7 @@ won't need its built-in POP3 support, though; most of the mutt
 developers will cheerfully admit that fetchmail's is better :-).</p>
 
 <hr>
-<h2><a name="G9">G9. How can I avoid sending my password en clair?</a></h2>
+<h2><a name="G10">G10. How can I avoid sending my password en clair?</a></h2>
 
 <p>Depending on what your mail server you are talking to, this ranges
 from trivial to impossible.  It may even be next to useless.</p>
@@ -541,7 +557,7 @@ because this is how Craig gets his mail ;-)</p>
 end-to-end encryption if you have an SSL-enabled mailserver.</p>
 
 <hr>
-<h2><a name="G10">G10. Is any special configuration needed to use a dynamic IP address?</a></h2>
+<h2><a name="G11">G11. Is any special configuration needed to use a dynamic IP address?</a></h2>
 
 <p>Yes. In order to avoid giving indigestion to certain picky MTAs
 (notably <a href="#T3">exim</a>), fetchmail always makes the RCPT TO
@@ -614,7 +630,7 @@ See the <a href="http://www.lege.com/sendmail-FAQ.txt">sendmail
 FAQ</a> for more details.</p>
 
 <hr>
-<h2><a name="G11">G11. Is any special configuration needed to use firewalls?</a></h2>
+<h2><a name="G12">G12. Is any special configuration needed to use firewalls?</a></h2>
 
 <p>No.  You can use fetchmail with SOCKS, the standard tool for
 indirecting TCP/IP through a firewall.  You can find out about SOCKS,
@@ -626,7 +642,7 @@ site</a>.</p>
 href="#K1">K1</a></p>
 
 <hr>
-<h2><a name="G12">G12. Is any special configuration needed to <em>send</em> mail?</a></h2>
+<h2><a name="G13">G13. Is any special configuration needed to <em>send</em> mail?</a></h2>
 
 <p>A user asks: but how do we send mail out to the POP3 server? Do I need
 to implement another tool or will fetchmail do this too?</p>
@@ -644,7 +660,7 @@ automatically dial out when your kernel is called to open a TCP/IP
 connection, this will ensure that the mail gets out.</p>
 
 <hr>
-<h2><a name="G13">G13. Is fetchmail Y2K-compliant?</a></h2>
+<h2><a name="G14">G14. Is fetchmail Y2K-compliant?</a></h2>
 
 <p>Fetchmail is fully Y2K-compliant.</p> 
 
@@ -654,14 +670,14 @@ for anything but log entry generation.  Anyway, if you aren't running
 on a 64-bit machine by then, you'll deserve to lose.</p>
 
 <hr>
-<h2><a name="G14">G14. Is there a way in fetchmail to support disconnected IMAP mode?</a></H2>
+<h2><a name="G15">G15. Is there a way in fetchmail to support disconnected IMAP mode?</a></H2>
 
 <p>No. Fetchmail is a mail transport agent, best understood as a protocol
 gateway between POP3/IMAP servers and SMTP.  Disconnected operation
 requires an elaborate interactive client.  It's a very different problem.</p>
 
 <hr>
-<h2><a name="G15">G15. How will fetchmail perform under heavy loads?</a></h2>
+<h2><a name="G16">G16. How will fetchmail perform under heavy loads?</a></h2>
 
 <p>Fetchmail streams message bodies line-by-line; the most core it
 ever requires per message is enough memory to hold the RFC822 header, and
@@ -1378,7 +1394,7 @@ ones.  Use `forcecr'.</p>
 
 Qualcomm's qpopper is probably the best-of-breed among POP3 servers, and
 is very widely deployed.  Nevertheless, it has some problems which
-fetchmail exposes.  We recommend using <a href="#G7">IMAP</a> instead if at
+fetchmail exposes.  We recommend using <a href="#G8">IMAP</a> instead if at
 all possible.  If you must talk to qpopper, here are some problems to
 be aware of:</p>
 
@@ -3065,7 +3081,7 @@ the received date from the last Received header.</p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2002/06/06 15:28:49 $
+<td width="30%" align=right>$Date: 2002/06/21 07:48:16 $
 </table>
 
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@thyrsus.com&gt;</A></ADDRESS>
