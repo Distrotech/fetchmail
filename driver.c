@@ -493,6 +493,24 @@ struct method *proto;
 #endif /* HAVE_RRESVPORT_H */
     int num, count, deletions = 0;
 
+    /* lacking methods, there are some options that may fail */
+    if (!proto->is_old)
+    {
+	/* check for unsupported options */
+	if (queryctl->flush) {
+	    fprintf(stderr,
+		    "Option --flush is not supported with %s\n",
+		    proto->name);
+	    return(PS_SYNTAX);
+	}
+	else if (queryctl->fetchall) {
+	    fprintf(stderr,
+		    "Option --all is not supported with %s\n",
+		    proto->name);
+	    return(PS_SYNTAX);
+	}
+    }
+
     tagnum = 0;
     protocol = proto;
 

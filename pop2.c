@@ -145,15 +145,5 @@ const static struct method pop2 =
 int doPOP2 (queryctl)
 struct hostrec *queryctl;
 {
-    /* check for unsupported options */
-    if (queryctl->flush) {
-	fprintf(stderr,"Option --flush is not supported with POP2\n");
-	return(PS_SYNTAX);
-    }
-    else if (queryctl->fetchall) {
-	fprintf(stderr,"Option --all is not supported with POP2\n");
-	return(PS_SYNTAX);
-    }
-
     return(do_protocol(queryctl, &pop2));
 }
