@@ -169,6 +169,8 @@ const static struct method etrn =
 int doETRN (struct query *ctl)
 /* retrieve messages using ETRN */
 {
+    int status;
+
     if (ctl->keep) {
 	fprintf(stderr, "Option --keep is not supported with ETRN\n");
 	return(PS_SYNTAX);
@@ -186,7 +188,11 @@ int doETRN (struct query *ctl)
 	return(PS_SYNTAX);
     }
     peek_capable = FALSE;
-    return(do_protocol(ctl, &etrn));
+
+    status = do_protocol(ctl, &etrn);
+    if (status == PS_NOMAIL)
+	status = PS_SUCCESS;
+    return(status);
 }
 
 /* etrn.c ends here */
