@@ -193,7 +193,7 @@ for IMAP sessions.<p>
 <H1>Where you can use fetchmail:</H1>
 
 The fetchmail code was developed under Linux, but has also been
-extensively tested under 4.4BSD, Solaris, AIX, and NEXTSTEP.  It
+extensively tested under 4.4BSD, SunOS, Solaris, AIX, and NEXTSTEP.  It
 should be readily portable to other Unix variants (it requires only
 POSIX plus BSD sockets, and uses GNU autoconf).<P>
 
