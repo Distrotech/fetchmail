@@ -25,7 +25,7 @@ char *reply_hack(buf, host)
 char *buf;		/* header to be hacked */
 const char *host;	/* server hostname */
 {
-    char *from, *cp;
+    char *from, *cp, last_nws = '\0';
     int parendepth, state, has_bare_name_part, has_host_part;
     int addresscount = 1;
 
@@ -72,6 +72,8 @@ const char *host;	/* server hostname */
 		break;
 
 	    case 1:	/* we've seen the colon, we're looking for addresses */
+		if (!isspace(*from))
+		    last_nws = *from;
 		if (*from == '<')
 		    state = 3;
 		else if (*from == '@')
@@ -79,14 +81,14 @@ const char *host;	/* server hostname */
 		else if (*from == '"')
 		    state = 2;
 		/*
-		 * Not expanding on from[-1] == ';' deals with groupnames,
+		 * Not expanding on last non-WS == ';' deals with groupnames,
 		 * an obscure misfeature described in sections
 		 * 6.1, 6.2.6, and A.1.5 of the RFC822 standard.
 		 */
 		else if ((*from == ',' || HEADER_END(from) || from[1] == '(')
 			 && has_bare_name_part
 			 && !has_host_part
-			 && from[-1] != ';')
+			 && last_nws != ';')
 		{
 		    int hostlen;
 
