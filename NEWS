@@ -19,8 +19,9 @@ fetchmail-4.2.2 ()
 * ETRN mode no longer tries to flush queue for "localhost".
 * Introduced new DNS error return 11 to indicate DNS failure at startup.
 * More portation tweaks for unusual Unixes.
+* Make sure any X-Fetchmail-Error: line is properly terminated.
 
-There are 286 people on the fetchmail-friends list.
+There are 287 people on the fetchmail-friends list.
 
 fetchmail-4.2.1 (Sun Sep 14 16:31:58 EDT 1997)
 * Type and inclusion changes to eliminate warnings on weird Unixes.

@@ -447,7 +447,7 @@ static RETSIGTYPE (*sigchld)();
 static int sizeticker;
 
 static int stuffline(struct query *ctl, char *buf)
-/* ship a line to the given control block's SMTP server */
+/* ship a line to the given control block's output sink (SMTP server or MDA) */
 {
     int	n;
 
@@ -1126,6 +1126,8 @@ int num;		/* index of message */
 		}
 
 	}
+
+	strcat(errmsg, "\n");
 
 	/* ship out the error line */
 	if (sinkfp)
