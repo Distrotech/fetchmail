@@ -55,7 +55,7 @@ to		{ return TO; }
 =		{ return MAP; }
 "*"		{ return WILDCARD; }
 
-no/.*		{ return NO;}
+no/[kfrsdu ]	{ return NO;}
 
 keep		{ return KEEP; }
 flush		{ return FLUSH; }
