@@ -120,7 +120,7 @@ export CFLAGS LDFLAGS
 ./configure --prefix=/usr --mandir=%{_mandir} 
                          # Add  --enable-nls --without-included-gettext
                          # for internationalization. Also look below.
-make "LOADLIBS=-lkrb4 -ldes425 -lcrypt -lresolv -lkrb5 -lcom_err -lfl"
+make
 
 %install
 if [ -d \$RPM_BUILD_ROOT ]; then rm -rf \$RPM_BUILD_ROOT; fi
