@@ -1421,7 +1421,7 @@ int num;		/* index of message */
 	free_str_list(&xmit_names);
 	return(PS_IOERR);
     }
-    else if (outlevel == O_VERBOSE)
+    else if (!run.use_syslog && outlevel == O_VERBOSE)
 	fputs("#", stderr);
 
     /* write error notifications */
@@ -1528,7 +1528,7 @@ flag forward;		/* TRUE to forward */
 	    sizeticker += linelen;
 	    while (sizeticker >= SIZETICKER)
 	    {
-		if (outlevel > O_SILENT)
+		if (!run.use_syslog && outlevel > O_SILENT)
 		    error_build(".");
 		sizeticker -= SIZETICKER;
 	    }

@@ -9,6 +9,7 @@ fetchmail-4.5.3 ():
   checking or fetching Kerberos tickets.  This change eliminates many
   gethostbyname calls.
 * It's now possible to specify multiple spam-block responses as a list.
+* Download-progress dots are no longer generated when syslog is enabled.
 * 1.1 version of fetchmailconf.
 
 Note: the DNS-usage change might conceivably break your configuration
