@@ -38,9 +38,10 @@
  * There  are, in effect, two different implementations here.  One
  * uses read(2) and write(2) directly with no buffering, the other
  * uses stdio with line buffering (for better throughput).  Both
- * are known to work under Linux.
+ * are known to work under Linux.  You get the former by configuring
+ * with --disable-stdio, the latter by configuring with --enable-stdio
+ * or by default.
  */
-/* #define USE_STDIO */
 
 #ifdef USE_STDIO
 /*
@@ -162,12 +163,17 @@ char *SockGets(char *buf, int len, FILE *sockfp)
 
 int SockWrite(char *buf, int size, int len, FILE *sockfp)
 {
-    return(fwrite(buf, size, len, sockfp));
+    int n = fwrite(buf, size, len, sockfp);
+
+    fseek(sockfp, 0L, SEEK_CUR);	/* required by POSIX */
+
+    return(n);
 }
 
 char *SockGets(char *buf, int len, FILE *sockfp)
 {
     return(fgets(buf, len, sockfp));
+
 }
 
 #endif
