@@ -97,12 +97,13 @@ void envquery(int argc, char **argv)
      */
     rcfile = (char *)xmalloc(strlen(fmhome)+sizeof(RCFILE_NAME)+(fmhome==home)+1);
     /* avoid //.fetchmailrc */
-    if (strcmp(fmhome, "/") != 0) {
-    	strcat(rcfile, fmhome);
-    } else {
-    	*rcfile = '\0';
-    }
-    strcat(rcfile, "/");
+    if (strcmp(fmhome, "/") != 0)
+	strcpy(rcfile, fmhome);
+    else
+	*rcfile = '\0';
+
+    if (rcfile[strlen(rcfile) - 1] != '/')
+	strcat(rcfile, "/");
     if (fmhome==home)
 	strcat(rcfile, ".");
     strcat(rcfile, RCFILE_NAME);
