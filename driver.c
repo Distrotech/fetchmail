@@ -922,7 +922,9 @@ static int readheaders(int sock,
 	else if (from_offs >= 0 && (ap = nxtaddr(msgblk.headers + from_offs)));
 	else if (reply_to_offs >= 0 && (ap = nxtaddr(msgblk.headers + reply_to_offs)));
 	else if (app_from_offs >= 0 && (ap = nxtaddr(msgblk.headers + app_from_offs)));
-	if (ap) strcpy( msgblk.return_path, ap );
+	/* multi-line MAIL FROM addresses confuse SMTP terribly */
+	if (ap && !strchr(ap, '\n')) 
+	    strcpy(msgblk.return_path, ap);
     }
 
     /* cons up a list of local recipients */
