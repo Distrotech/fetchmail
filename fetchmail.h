@@ -432,8 +432,8 @@ void stuff_warning();
 void close_warning_by_mail(struct query *, struct msgblk *);
 
 /* rfc822.c: RFC822 header parsing */
-char *reply_hack(char *, const char *);
-char *nxtaddr(const char *);
+unsigned char *reply_hack(unsigned char *, const unsigned char *);
+unsigned char *nxtaddr(const unsigned char *);
 
 /* uid.c: UID support */
 void initialize_saved_lists(struct query *, const char *);

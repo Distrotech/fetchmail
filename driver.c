@@ -2229,7 +2229,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		  (dispatches && protocol->retry && !ctl->keep && !ctl->errcount);
 	}
 
-   no_error:
+    /* no_error: */
 	/* ordinary termination with no errors -- officially log out */
 	ok = (protocol->logout_cmd)(mailserver_socket, ctl);
 	/*

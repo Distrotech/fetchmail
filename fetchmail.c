@@ -44,6 +44,7 @@
 
 #include "getopt.h"
 #include "fetchmail.h"
+#include "socket.h"
 #include "tunable.h"
 #include "smtp.h"
 #include "netrc.h"
@@ -482,10 +483,11 @@ int main(int argc, char **argv)
 		&& ctl->server.protocol != P_IMAP_GSS
 #endif /* GSSAPI */
 		&& !ctl->password)
+	{
 	    if (!isatty(0))
 	    {
 		fprintf(stderr,
-			_("fetchmail: can't find a password for %s@s.\n"),
+			_("fetchmail: can't find a password for %s@%s.\n"),
 			ctl->remotename, ctl->server.pollname);
 		return(PS_AUTHFAIL);
 	    }
@@ -500,6 +502,7 @@ int main(int argc, char **argv)
 			       ctl->remotename, ctl->server.pollname);
 		ctl->password = xstrdup((char *)fm_getpassword(tmpbuf));
 	    }
+	}
     }
 
     /*

@@ -42,6 +42,7 @@
 #endif
 #include "config.h"
 #include "fetchmail.h"
+#include "socket.h"
 #include "i18n.h"
 #include "tunable.h"
 

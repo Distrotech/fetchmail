@@ -22,12 +22,12 @@ static int verbose;
 char *program_name = "rfc822";
 #endif /* TESTMAIN */
 
-char *reply_hack(buf, host)
+unsigned char *reply_hack(buf, host)
 /* hack message headers so replies will work properly */
-char *buf;		/* header to be hacked */
-const char *host;	/* server hostname */
+unsigned char *buf;		/* header to be hacked */
+const unsigned char *host;	/* server hostname */
 {
-    char *from, *cp, last_nws = '\0', *parens_from = NULL;
+    unsigned char *from, *cp, last_nws = '\0', *parens_from = NULL;
     int parendepth, state, has_bare_name_part, has_host_part;
 #ifndef TESTMAIN
     int addresscount = 1;
@@ -59,7 +59,7 @@ const char *host;	/* server hostname */
     for (cp = buf; *cp; cp++)
 	if (*cp == ',' || isspace(*cp))
 	    addresscount++;
-    buf = (char *)xrealloc(buf, strlen(buf) + addresscount * strlen(host) + 1);
+    buf = (unsigned char *)xrealloc(buf, strlen(buf) + addresscount * strlen(host) + 1);
 #endif /* TESTMAIN */
 
     /*
@@ -115,7 +115,7 @@ const char *host;	/* server hostname */
 			 && last_nws != ';')
 		{
 		    int hostlen;
-		    char *p;
+		    unsigned char *p;
 
 		    p = from;
 		    if (parens_from)
@@ -185,15 +185,15 @@ const char *host;	/* server hostname */
     return(buf);
 }
 
-char *nxtaddr(hdr)
+unsigned char *nxtaddr(hdr)
 /* parse addresses in succession out of a specified RFC822 header */
-const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
+const unsigned char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 {
-    static char *tp, address[POPBUFSIZE+1];
-    static const char *hp;
+    static unsigned char *tp, address[POPBUFSIZE+1];
+    static const unsigned char *hp;
     static int	state, oldstate;
 #ifdef TESTMAIN
-    static const char *orighdr;
+    static const unsigned char *orighdr;
 #endif /* TESTMAIN */
     int parendepth = 0;
 
@@ -236,14 +236,14 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 		    continue;
 		*++tp = '\0';
 	    }
-	    return(tp > address ? (tp = address) : (char *)NULL);
+	    return(tp > address ? (tp = address) : (unsigned char *)NULL);
 	}
 	else if (*hp == '\\')		/* handle RFC822 escaping */
 	{
 	    if (state != INSIDE_PARENS)
 	    {
 		*tp++ = *hp++;			/* take the escape */
-		*tp++ = *hp;			/* take following char */
+		*tp++ = *hp;			/* take following unsigned char */
 	    }
 	}
 	else switch (state)
@@ -348,9 +348,9 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 }
 
 #ifdef TESTMAIN
-static void parsebuf(char *longbuf, int reply)
+static void parsebuf(unsigned char *longbuf, int reply)
 {
-    char	*cp;
+    unsigned char	*cp;
 
     if (reply)
     {
@@ -358,19 +358,19 @@ static void parsebuf(char *longbuf, int reply)
 	printf("Rewritten buffer: %s", longbuf);
     }
     else
-	if ((cp = nxtaddr(longbuf)) != (char *)NULL)
+	if ((cp = nxtaddr(longbuf)) != (unsigned char *)NULL)
 	    do {
 		printf("\t-> \"%s\"\n", cp);
 	    } while
-		((cp = nxtaddr((char *)NULL)) != (char *)NULL);
+		((cp = nxtaddr((unsigned char *)NULL)) != (unsigned char *)NULL);
 }
 
 
 
 main(int argc, char *argv[])
 {
-    char	buf[MSGBUFSIZE], longbuf[BUFSIZ];
-    int		ch, reply;
+    unsigned char	buf[MSGBUFSIZE], longbuf[BUFSIZ];
+    int			ch, reply;
     
     verbose = reply = FALSE;
     while ((ch = getopt(argc, argv, "rv")) != EOF)
