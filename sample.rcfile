@@ -25,7 +25,6 @@
 #   password (or pass)
 #   remotefolder (or remote)
 #   localfolder (or local)
-#   mda
 #   smtphost (or smtp)
 #   keep
 #   flush

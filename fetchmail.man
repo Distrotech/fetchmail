@@ -288,7 +288,6 @@ Legal keywords are:
     username (or user)
     password (or pass)
     remotefolder (or remote)
-    mda
     smtphost (or smtp)
     keep
     flush
@@ -476,6 +475,8 @@ SunOS) follow it (you can verify this by invoking \fIfetchmail -v\fR
 and watching the response to LAST early in the query).  The fix is to
 install an older POP3 server with LAST or switch to an IMAP server.
 .PP
+Another potential POP3 problem might be servers that insert messages
+.PP
 The IMAP code uses the presence or absence of the server flag \eSeen
 to decide whether or not a message is new.  Under Unix, it counts on
 your IMAP server to notice the BSD-style Status flags set by mail user
@@ -491,12 +492,6 @@ the program send unencrypted passwords over the TCP/IP connection to
 the mail server.  This creates a risk that name/password pairs might
 be snaffled with a packet sniffer or more sophisticated monitoring
 software.
-.pp
-Running more than one concurrent instance of
-.I fetchmail
-in POP2 or POP3 mode pointed at the same mailbox may cause messages to
-be lost or remain unfetched. (This is a design problem of the POP2 and
-POP3 protocols; IMAP is less vulnerable.)
 .PP
 The RPOP support is not yet well tested.
 .PP
