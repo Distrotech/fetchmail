@@ -1,5 +1,6 @@
 			Release Notes:
 
+------------------------------------------------------------------------------
 fetchmail-2.2 (Fri Dec  6 18:45:42 EST 1996):
 
 features --
@@ -16,6 +17,9 @@ bugs --
 * Avoid using -lresolv when possible, some Linux versions are badly broken.
 * Fix error in MX record handling that was causing multidrop problems.
 
+153 people on the contact list.
+
+------------------------------------------------------------------------------
 fetchmail-2.1 (Thu Nov 28 11:07:48 EST 1996):
 
 features --
@@ -52,6 +56,9 @@ bugs --
 * Include remote name in saved UID mappings so multiple POP accounts on
   the same server won't get their UIDs confused.
 
+138 people on the contact list.
+
+------------------------------------------------------------------------------
 fetchmail-2.0 (Mon Nov 18 00:32:17 EST 1996):
 
 * Fix typo in setitimer call setup that caused obscure bugs under FreeBSD.
@@ -103,6 +110,9 @@ pl 1.9.2 (Sun Oct 27 01:10:30 EST 1996):
 * Fix initialization-time core dump when running as root
 * Fix fatal error in MDA argument-list construction.
 
+118 people on the contact list.
+
+------------------------------------------------------------------------------
 fetchmail-1.9 (Fri Oct 25 23:02:26 EDT 1996):
 
 We've hit the century mark -- exactly 100 people on the fetchmail-friends list.
@@ -189,6 +199,7 @@ bugs --
 * Don't try using FLAGS.SILENT, some allegedly IMAP2bis servers seem to
   choke on it.
 
+------------------------------------------------------------------------------
 fetchmail-1.8 (Fri Oct 11 15:08:10 EDT 1996):
 
 features --
@@ -224,6 +235,7 @@ bugs --
 
 * Fix uninitialized-variable bug that was hanging second IMAP queries.
 
+------------------------------------------------------------------------------
 fetchmail-1.7 (Tue Oct  8 11:32:44 EDT 1996):
 
 features --
@@ -252,6 +264,7 @@ bugs --
 * `norewrite' and `rewrite' in .fetchrc were the inverses of what they
   should have been (but the rewrite default was set correctly).
 
+------------------------------------------------------------------------------
 fetchmail-1.6 (Sun Oct  6 20:55:09 EDT 1996):
 
 features --
@@ -287,6 +300,7 @@ bug fixes --
 
 * Allow program to run with no .fetchmailrc file again.
 
+------------------------------------------------------------------------------
 fetchmail-1.5 (Thu Oct  3 04:35:15 EDT 1996):
 
 * Naturally, my decision to announce 1.4 on comp.os.linux.announce 
@@ -298,6 +312,7 @@ fetchmail-1.5 (Thu Oct  3 04:35:15 EDT 1996):
 
 * The --all and --flush flag validity checks move to driver.c.
 
+------------------------------------------------------------------------------
 fetchmail-1.4 (Wed Oct  2 09:22:37 1996):
 
 * More man page improvements.
@@ -305,6 +320,7 @@ fetchmail-1.4 (Wed Oct  2 09:22:37 1996):
 * Lexer changes to work around bison's "feature" of silently ignoring 0-value
   tokens (caused options nokeep, norewrite, nofetchall, noskip to be no-ops).
 
+------------------------------------------------------------------------------
 fetchmail-1.3 (Tue Oct  1 05:49:49 1996):
 
 * Significant man page improvements.
@@ -318,6 +334,7 @@ fetchmail-1.3 (Tue Oct  1 05:49:49 1996):
   interspersed with seen ones, and even if messages are appended to the
   mailbox during the run.
 
+------------------------------------------------------------------------------
 fetchmail-1.2 (Sat Sep 28 15:40:50 EDT 1996):
 
 * The great option massacre.  Remove --stdout, --limit, --local, --mda.
@@ -330,6 +347,7 @@ fetchmail-1.2 (Sat Sep 28 15:40:50 EDT 1996):
 
 * Fix embarrassing Makefile bug.
 
+------------------------------------------------------------------------------
 fetchmail-1.1 (Sat Sep 28 09:21:10 EDT 1996):
 
 * In POP3, don't send LAST if STAT shows count of waiting messages to be zero.
@@ -338,6 +356,7 @@ fetchmail-1.1 (Sat Sep 28 09:21:10 EDT 1996):
 
 * Lose the .fetchids file and give up on POP3 UIDs, they're a dead loss.
 
+------------------------------------------------------------------------------
 fetchmail-1.0 (Thu Sep 26 11:59:38 EDT 1996):
 
 * SMTP forwarding and header-rewrite features work with POP2 now.
@@ -353,6 +372,7 @@ fetchmail-1.0 (Thu Sep 26 11:59:38 EDT 1996):
 
 * Name change (it ain't just for POP any more).
 
+==============================================================================
 popclient-3.2 (Mon Sep 23 13:29:46 EDT 1996):
 
 * RPOP support (coded at a user's request but untested).
