@@ -874,6 +874,7 @@ const struct method *proto;	/* protocol method table */
     tagnum = 0;
     tag[0] = '\0';	/* nuke any tag hanging out from previous query */
     ok = 0;
+    error_init(poll_interval == 0 && !logfile);
 
     /* set up the server-nonresponse timeout */
     sigsave = signal(SIGVTALRM, vtalarm_handler);

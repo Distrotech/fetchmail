@@ -164,6 +164,7 @@ extern int smtp_response;	/* numeric value of SMTP response code */
 
 /* prototypes for globally callable functions */
 #if defined(HAVE_STDARG_H)
+void error_init(int foreground);
 void error (int status, int errnum, const char *format, ...);
 void error_build (const char *format, ...);
 void error_complete (int status, int errnum, const char *format, ...);

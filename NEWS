@@ -14,6 +14,10 @@ features --
 
 bugs --
 
+* Fixed a minor bug introduced into From handling by 2.6.
+
+There are 169 people on the fetchmail-friends list.
+
 ------------------------------------------------------------------------------
 fetchmail-2.6 (Fri Dec 27 12:42:56 EST 1996)
 

@@ -81,6 +81,10 @@ if test $opt_enable_stdio = unset; then
     *-*-*freebsd*)
       AC_DEFINE(USE_STDIO)
       ;;
+  case $host in
+    *-*-*linux*)
+      AC_DEFINE(USE_STDIO)
+      ;;
   esac
 elif test $opt_enable_stdio = yes; then
   AC_DEFINE(USE_STDIO)
