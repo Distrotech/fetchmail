@@ -7,7 +7,7 @@
 #
 # TO DO: Arrange for save and quit buttons to clean up all frames dependent
 # on the current ones.
-version = "1.9"
+version = "1.10"
 
 from Tkinter import *
 from Dialog import *
@@ -1037,6 +1037,32 @@ Turning on fetchall will disable the use of TOP.
 Therefore, it is strongly recommended that you turn on `fetchall' on all
 user entries associated with this server.  
 
+"""
+
+# Steve VanDevender <stevev@efn.org> writes:
+# The only system I have seen this happen with is cucipop-1.31
+# under SunOS 4.1.4.  cucipop-1.31 runs fine on at least Solaris
+# 2.x and probably quite a few other systems.  It appears to be a
+# bug or bad interaction with the SunOS realloc() -- it turns out
+# that internally cucipop does allocate a certain data structure in
+# multiples of 16, using realloc() to bump it up to the next
+# multiple if it needs more.
+# 
+# The distinctive symptom is that when there are 16 messages in the
+# inbox, you can RETR and DELE all 16 messages successfully, but on
+# QUIT cucipop returns something like "-ERR Error locking your
+# mailbox" and aborts without updating it.
+# 
+# The cucipop banner looks like:
+# 
+# +OK Cubic Circle's v1.31 1998/05/13 POP3 ready <6229000062f95036@wakko>
+#
+            if string.find(greetline, "Cubic Circle") > 0:
+                warnings = warnings + """
+I see your server is running cucipop.  Better make sure the server box
+isn't a SunOS 4.1.4 machine; cucipop tickles a bug in SunOS realloc()
+under that version, and doesn't cope with the result gracefully.  Newer
+SunOS and Solaris machines run cucipop OK.
 """
             if string.find(greetline, "QPOP") > 0:
                 warnings = warnings + """
