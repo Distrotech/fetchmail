@@ -580,6 +580,22 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     return(PS_SUCCESS);
 }
 
+static int internal_expunge(int sock)
+/* ship an expunge, resetting associated counters */
+{
+    int	ok;
+
+    if ((ok = gen_transact(sock, "EXPUNGE")))
+	return(ok);
+
+    expunged += deletions;
+    deletions = 0;
+
+#ifdef IMAP_UID	/* not used */
+    expunge_uids(ctl);
+#endif /* IMAP_UID */
+}
+
 static int imap_getrange(int sock, 
 			 struct query *ctl, 
 			 const char *folder, 
@@ -599,11 +615,7 @@ static int imap_getrange(int sock,
 	 */
 	ok = 0;
 	if (deletions && ctl->expunge > 1)
-	    ok = gen_transact(sock, "EXPUNGE");
-#ifdef IMAP_UID	/* not used */
-	if (!ok)
-	    expunge_uids(ctl);
-#endif /* IMAP_UID */
+	    internal_expunge(sock);
 	count = -1;
 	if (ok || gen_transact(sock, "NOOP"))
 	{
@@ -804,22 +816,6 @@ static int imap_trail(int sock, struct query *ctl, int number)
     }
 
     return(PS_SUCCESS);
-}
-
-static int internal_expunge(int sock)
-/* ship an expunge, resetting associated counters */
-{
-    int	ok;
-
-    if ((ok = gen_transact(sock, "EXPUNGE")))
-	return(ok);
-
-    expunged = deletions;
-    deletions = 0;
-
-#ifdef IMAP_UID	/* not used */
-    expunge_uids(ctl);
-#endif /* IMAP_UID */
 }
 
 static int imap_delete(int sock, struct query *ctl, int number)
