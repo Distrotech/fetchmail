@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.6\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2005-03-06 02:11+0100\n"
+"POT-Creation-Date: 2005-03-19 13:03+0100\n"
 "PO-Revision-Date: 2005-03-06 02:13+0100\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -2191,7 +2191,7 @@ msgstr ""
 
 #: rcfile_y.y:354
 msgid "SSL is not enabled"
-msgstr "SSL ist nicht ermöglicht"
+msgstr "SSL ist nicht aktiv"
 
 #: rcfile_y.y:402
 msgid "end of input"
@@ -2772,7 +2772,7 @@ msgstr "Nachrichtentext wird geschrieben\n"
 msgid "Old UID list from %s:"
 msgstr "Alte UID-Liste aus %s:"
 
-#: uid.c:253 uid.c:264 uid.c:517 uid.c:567
+#: uid.c:253 uid.c:264 uid.c:519 uid.c:569
 msgid " <empty>"
 msgstr " <leer>"
 
@@ -2780,53 +2780,53 @@ msgstr " <leer>"
 msgid "Scratch list of UIDs:"
 msgstr "Leere UID-Liste:"
 
-#: uid.c:511 uid.c:563
+#: uid.c:513 uid.c:565
 #, c-format
 msgid "Merged UID list from %s:"
 msgstr "Vereinigte UID-Liste aus %s:"
 
-#: uid.c:513
+#: uid.c:515
 #, c-format
 msgid "New UID list from %s:"
 msgstr "Neue UID-Liste aus %s:"
 
-#: uid.c:542
+#: uid.c:544
 msgid "swapping UID lists\n"
 msgstr "UID-Listen werden ausgetauscht\n"
 
-#: uid.c:550
+#: uid.c:552
 msgid "not swapping UID lists, no UIDs seen this query\n"
 msgstr ""
 "UID-Listen werden nicht ausgetauscht, in dieser Abfrage keine UIDs gesehen\n"
 
-#: uid.c:575
+#: uid.c:577
 msgid "discarding new UID list\n"
 msgstr "verwerfe neue UID-Liste\n"
 
-#: uid.c:610
+#: uid.c:612
 msgid "Deleting fetchids file.\n"
 msgstr "Datei fetchids wird gelöscht.\n"
 
-#: uid.c:612
+#: uid.c:614
 #, c-format
 msgid "Error deleting %s: %s\n"
 msgstr "Fehler beim Löschen von %s: %s\n"
 
-#: uid.c:618
+#: uid.c:620
 msgid "Writing fetchids file.\n"
 msgstr "Datei fetchids wird geschrieben.\n"
 
-#: uid.c:637
+#: uid.c:639
 #, c-format
 msgid "Error writing to fetchids file %s, old file left in place.\n"
 msgstr "Fehler beim Schreiben in die UID-Datei %s, alte Datei belassen.\n"
 
-#: uid.c:641
+#: uid.c:643
 #, c-format
 msgid "Cannot rename fetchids file %s to %s: %s\n"
 msgstr "Kann UID-Datei %s nicht in %s umbennen: %s\n"
 
-#: uid.c:645
+#: uid.c:647
 #, c-format
 msgid "Cannot open fetchids file %s for writing: %s\n"
 msgstr "Kann UID-Datei %s nicht zum Schreiben öffnen: %s\n"
