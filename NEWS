@@ -18,8 +18,7 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.3.7 ()
-* Corrected OTP support from Craig Metz.
+fetchmail-4.3.7 (Tue Feb 17 21:30:26 EST 1998)
 * Fixed a minor bug in the IMAP re-polling logic.
 * Thomas Pitre's extensive changes to multidrop:
 
@@ -50,7 +49,7 @@ fetchmail-4.3.7 ()
 * Doug Muth's runfetchmail version 1.1.
 * Minor port patches from Philippe De Muyter.
 * Patch by Chun-Chung Chen <cjj@u.washington.edu> to handle quotes in .netrc
-* IPv6 and IPSEC support patches from Craig Metz.
+* Corrected OTP support, IPv6 and IPSEC support patches from Craig Metz.
 * Fix bad interaction between UID handling and fetchmail.
 
 fetchmail-4.3.6 (Fri Jan 23 00:25:57 EST 1998)
