@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.4.4 (Sun Jul 23 15:56:16 EDT 2000), 19172 lines:
+
 * Guenther H. Leber's fix to show expunge parameters for POP3 in fetchmail -V.
 * Richard Gooch's fixes to use sigation(2) in sink.c and daemon.c
 * Petr Kristof's fix for sslcert configuration in fetchmailconf.
@@ -14,6 +16,8 @@
   manpages it finds. This gets messed up by the explicit symlink among
   manpages in the spec file, which rpm redoes and gets all wrong.
 * Added Antoine Beaupre's dropdelivered option.
+
+There are 292 people on fetchmail-friends and 544 on fetchmail-announce.
 
 fetchmail-5.4.3 (Sun Jul  2 14:24:28 EDT 2000), 19080 lines:
 
