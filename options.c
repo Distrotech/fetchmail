@@ -41,10 +41,11 @@
 #define LA_REMOTEFILE	23
 #define LA_SMTPHOST	24
 #define LA_BATCHLIMIT	25
-#define LA_MDA		26
-#define LA_YYDEBUG	27
+#define LA_FETCHLIMIT	26
+#define LA_MDA		27
+#define LA_YYDEBUG	28
 
-static char *shortoptions = "?Vcsvd:NqL:f:i:p:P:A:t:u:akKFnl:r:S:b:m:y";
+static char *shortoptions = "?Vcsvd:NqL:f:i:p:P:A:t:u:akKFnl:r:S:b:B:m:y";
 static struct option longoptions[] = {
   {"help",	no_argument,	   (int *) 0, LA_HELP        },
   {"version",   no_argument,       (int *) 0, LA_VERSION     },
@@ -77,6 +78,7 @@ static struct option longoptions[] = {
   {"remote",    required_argument, (int *) 0, LA_REMOTEFILE  },
   {"smtphost",	required_argument, (int *) 0, LA_SMTPHOST    },
   {"batchlimit",required_argument, (int *) 0, LA_BATCHLIMIT  },
+  {"fetchlimit",required_argument, (int *) 0, LA_FETCHLIMIT  },
   {"mda",	required_argument, (int *) 0, LA_MDA         },
 
   {"yydebug",	no_argument,	   (int *) 0, LA_YYDEBUG     },
@@ -235,6 +237,10 @@ struct query *ctl;	/* option record to be initialized */
 	case LA_BATCHLIMIT:
 	    cmd_batchlimit = atoi(optarg);
 	    break;
+	case 'B':
+	case LA_FETCHLIMIT:
+	    ctl->fetchlimit = atoi(optarg);
+	    break;
 	case 'm':
 	case LA_MDA:
 	    strncpy(ctl->mda,optarg,sizeof(ctl->mda));
@@ -290,6 +296,7 @@ struct query *ctl;	/* option record to be initialized */
 
 	fputs("  -S, --smtphost    set SMTP forwarding host\n", stderr);
 	fputs("  -b, --batchlimit  set batch limit for SMTP connections\n", stderr);
+	fputs("  -B, --fetchlimit  set fetch limit for server connections\n", stderr);
 	fputs("  -r, --remote      specify remote folder name\n", stderr);
 	return(-1);
     }

@@ -21,6 +21,7 @@ int prc_lineno = 1;
 
 set		{ return SET; }
 batchlimit	{ return BATCHLIMIT; }
+fetchlimit	{ return FETCHLIMIT; }
 logfile		{ return LOGFILE; }
 defaults 	{ return DEFAULTS; }
 server 		{ return POLL; }

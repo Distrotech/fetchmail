@@ -32,6 +32,9 @@ features --
 * Received line parsing for envelope addresses now matches MX as well as 
   canonical DNS addresses, making multidrop routing slightly more reliable.
 
+* Added --fetchlimit option to limit number of messages fetched in a
+  single poll.
+
 bugs --
 
 * Fixed a FreeBSD compilation glitch involving SIGCLD (thanks to

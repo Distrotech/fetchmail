@@ -84,6 +84,7 @@ struct query
     int flush;
     int norewrite;
     int limit;
+    int fetchlimit;
 
     /* unseen, previous state of mailbox (initially from .fetchids) */
     struct idlist *oldsaved, *newsaved;

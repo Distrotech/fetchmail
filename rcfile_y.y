@@ -44,7 +44,7 @@ static void prc_reset();
 %token DEFAULTS POLL SKIP AKA PROTOCOL AUTHENTICATE TIMEOUT KPOP KERBEROS
 %token ENVELOPE USERNAME PASSWORD FOLDER SMTPHOST MDA LIMIT
 %token IS HERE THERE TO MAP WILDCARD
-%token SET BATCHLIMIT LOGFILE
+%token SET BATCHLIMIT FETCHLIMIT LOGFILE
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
@@ -171,6 +171,7 @@ user_option	: TO localnames HERE
 		| FETCHALL		{current.fetchall = ($1==FLAG_TRUE);}
 		| REWRITE		{current.norewrite = ($1==FLAG_TRUE);}
 		| LIMIT NUMBER		{current.limit = $2;}
+		| FETCHLIMIT NUMBER	{current.fetchlimit = $2;}
 		;
 %%
 
@@ -329,6 +330,7 @@ static void prc_register(void)
     FLAG_FORCE(authenticate);
     FLAG_FORCE(timeout);
     FLAG_FORCE(limit);
+    FLAG_FORCE(fetchlimit);
 #undef FLAG_FORCE
 
     (void) hostalloc(&current);
@@ -358,6 +360,7 @@ void optmerge(struct query *h2, struct query *h1)
     FLAG_MERGE(authenticate);
     FLAG_MERGE(timeout);
     FLAG_MERGE(limit);
+    FLAG_MERGE(fetchlimit);
 #undef FLAG_MERGE
 }
 

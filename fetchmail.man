@@ -66,7 +66,7 @@ Takes a maximum octet size argument.  Messages larger than this size
 will not be fetched, not be marked seen, and will be left on the
 server (in foreground sessions, the progress messages will note that
 they are "oversized").  The --all option overrides this one.  This
-option is intended for those need to strictly control fetch time
+option is intended for those needing to strictly control fetch time
 in interactive mode.  It may not be used with daemon mode,
 as users would never receive a notification that messages were waiting.
 .TP
@@ -200,6 +200,10 @@ shut down to deliver.  This may produce annoying delays when
 .IR fetchmail (8)
 is processing very large batches.  Setting the batch limit to some
 nonzero size will prevent these delays.
+.TP
+.B -R, --fetchlimit
+Limit the number of messages accepted from a given server in a single
+poll.  By default there is no limit. 
 .TP
 .B \-V, --version
 Displays the version information for your copy of 
@@ -461,6 +465,8 @@ Legal user options are
     noflush
     nofetchall
     norewrite
+    limit
+    fetchlimit
 .PP
 All options correspond to the obvious command-line arguments except
 four: `aka', `is', `to', `password', and `envelope'.

@@ -42,6 +42,8 @@
 #   noflush
 #   nofetchall
 #   norewrite
+#   limit                     -- must be followed by numeric size limit
+#   fetchlimit                -- must be followed by numeric msg fetch limit
 #
 # Legal protocol identifiers are
 #   pop2 (or POP2)

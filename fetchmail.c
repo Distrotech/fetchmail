@@ -58,6 +58,7 @@ char *logfile;		/* log file for daemon mode */
 int quitmode;		/* if --quit was set */
 int check_only;		/* if --probe was set */
 int cmd_batchlimit;	/* if --batchlimit was set */
+int cmd_fetchlimit;	/* if --fetchlimit was set */
 char *cmd_logfile;	/* if --logfile was set */
 
 /* miscellaneous global controls */
@@ -756,9 +757,15 @@ void dump_params (struct query *ctl)
 	   ctl->norewrite ? "dis" : "en",
 	   ctl->norewrite ? "on" : "off");
     if (ctl->limit)
-	printf("  Message size limit is %d bytes\n", ctl->limit);
+	printf("  Message size limit is %d bytes (--limit %d).\n", 
+	       ctl->limit, ctl->limit);
     else if (outlevel == O_VERBOSE)
-	printf("  No message size limit\n");
+	printf("  No message size limit (--limit 0).\n");
+    if (ctl->fetchlimit)
+	printf("  Received-message limit is %d (--fetchlimit %d).\n",
+	       ctl->fetchlimit, ctl->fetchlimit);
+    else if (outlevel == O_VERBOSE)
+	printf("  No received-message limit (--fetchlimit 0).\n");
     if (ctl->mda[0])
 	printf("  Messages will be delivered with '%s.'\n", visbuf(ctl->mda));
     else

@@ -52,6 +52,7 @@
 #define	SMTP_PORT	25	/* standard SMTP service port */
 
 int batchlimit;		/* how often to tear down the delivery connection */
+int fetchlimit;		/* how often to tear down the server connection */
 int batchcount;		/* count of messages sent in current batch */
 int peek_capable;	/* can we peek for better error recovery? */
 
@@ -1085,6 +1086,10 @@ const struct method *proto;	/* protocol method table */
 		}
 		else if (outlevel > O_SILENT) 
 		    fprintf(stderr, " not flushed\n");
+
+		/* perhaps this as many as we're ready to handle */
+		if (ctl->fetchlimit && ctl->fetchlimit <= num)
+		    break;
 	    }
 
 	    /* remove all messages flagged for deletion */
