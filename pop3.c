@@ -21,6 +21,8 @@
 
 #define PROTOCOL_ERROR	{error(0, 0, "protocol error"); return(PS_ERROR);}
 
+extern char *strstr();	/* needed on sysV68 R3V7.1. */
+
 static int last;
 
 int pop3_ok (FILE *sockfp, char *argbuf)

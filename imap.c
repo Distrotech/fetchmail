@@ -16,6 +16,8 @@
 #include  "fetchmail.h"
 #include  "socket.h"
 
+extern char *strstr();	/* needed on sysV68 R3V7.1. */
+
 static int count, seen, recent, unseen, imap4, deletecount;
 
 int imap_ok (FILE *sockfp,  char *argbuf)

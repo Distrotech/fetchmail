@@ -52,6 +52,8 @@
 
 #define	SMTP_PORT	25	/* standard SMTP service port */
 
+extern char *strstr();	/* needed on sysV68 R3V7.1. */
+
 int batchlimit;		/* how often to tear down the delivery connection */
 int fetchlimit;		/* how often to tear down the server connection */
 int batchcount;		/* count of messages sent in current batch */
@@ -884,6 +886,9 @@ const struct method *proto;	/* protocol method table */
 	if (!(sockfp = SockOpen(ctl->server.names->id,
 		     ctl->server.port ? ctl->server.port : protocol->port)))
 	{
+#ifndef EHOSTUNREACH
+#define EHOSTUNREACH (-1)
+#endif
 	    if (errno != EHOSTUNREACH)
 		error(0, errno, "connecting to host");
 	    ok = PS_SOCKET;

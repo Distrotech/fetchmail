@@ -40,6 +40,10 @@ AC_CHECK_LIB(nsl,inet_addr)
 # library.  So don't add -lresolv to the link list unless it's necessary
 AC_CHECK_FUNC(res_search,, AC_CHECK_LIB(resolv,res_search))
 
+AC_CHECK_FUNC(strstr, AC_DEFINE(HAVE_STRSTR), 
+              [EXTRASRC="$EXTRASRC \$(srcdir)/strstr.c"
+               EXTRAOBJ="$EXTRAOBJ strstr.o"])
+
 AC_CHECK_FUNC(strcasecmp, AC_DEFINE(HAVE_STRCASECMP), 
               [EXTRASRC="$EXTRASRC \$(srcdir)/strcasecmp.c"
                EXTRAOBJ="$EXTRAOBJ strcasecmp.o"])

@@ -21,11 +21,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
-#ifdef HAVE_STRING_H
-#  include <string.h>
-#else
-#  include <strings.h>
-#endif
+#include <string.h>
 
 #include "config.h"
 #include "fetchmail.h"

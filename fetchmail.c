@@ -199,7 +199,7 @@ int main (int argc, char **argv)
 	    fprintf(stderr,"fetchmail: removing stale lockfile\n");
 	    pid = -1;
 	    bkgd = FALSE;
-	    remove(lockfile);
+	    unlink(lockfile);
 	}
 	fclose(lockfp);
     }
@@ -222,7 +222,7 @@ int main (int argc, char **argv)
 	{
 	    fprintf(stderr,"fetchmail: %s fetchmail at %d killed.\n",
 		    bkgd ? "background" : "foreground", pid);
-	    remove(lockfile);
+	    unlink(lockfile);
 	    exit(0);
 	}
     }

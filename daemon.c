@@ -32,7 +32,7 @@
 #endif
 
 /* BSD portability hack */
-#if !defined(SIGCHLD) && defined(SICHLD)
+#if !defined(SIGCHLD) && defined(SIGCLD)
 #define SIGCHLD	SIGCLD
 #endif
 
@@ -124,7 +124,7 @@ daemonize (const char *logfile, void (*termhook)(int))
   
   /* lose controlling tty */
   signal(SIGHUP, SIG_IGN);
-  if ((childpid = fork) < 0) {
+  if ((childpid = fork()) < 0) {
     error(0, errno, "fork");
     return(PS_IOERR);
   }
