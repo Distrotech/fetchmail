@@ -1123,6 +1123,10 @@ static int load_params(int argc, char **argv, int optind)
 #endif
 	    DEFAULT(ctl->server.checkalias, FALSE);
 #ifndef SSL_ENABLE
+	    /*
+	     * XXX FIXME: do we need this check or can we rely on the .y
+	     * parser handling this?
+	     */
 	    if (ctl->use_ssl) 
 	    {
 		report(stderr, GT_("SSL support is not compiled in.\n"));
