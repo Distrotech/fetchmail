@@ -23,6 +23,7 @@ fetchmail-4.1.2 ()
 * Al Youngwerth's fix to prevent segfaults when Return-Path has no address.
 * Phillippe De Muyter's port changes for sysV68 R3V7.1.
 * Port changes for Kerberos under FreeBSD, thanks to Benjamin Greenwald.
+* Don't use inet_addr() any more.
 
 There are 285 people on the fetchmail-friends list.
 

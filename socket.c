@@ -25,14 +25,6 @@
 #endif
 #include "socket.h"
 
-#ifndef  INADDR_NONE
-#ifdef   INADDR_BROADCAST
-#define  INADDR_NONE	INADDR_BROADCAST
-#else
-#define	 INADDR_NONE	-1
-#endif
-#endif
-
 #ifdef SUNOS
 #include <memory.h>
 #endif
@@ -40,17 +32,13 @@
 int SockOpen(char *host, int clientPort)
 {
     int sock;
-    unsigned long inaddr;
     struct sockaddr_in ad;
     struct hostent *hp;
 
     memset(&ad, 0, sizeof(ad));
     ad.sin_family = AF_INET;
 
-    inaddr = inet_addr(host);
-    if (inaddr != INADDR_NONE)
-        memcpy(&ad.sin_addr, &inaddr, sizeof(inaddr));
-    else
+    if (!inet_aton(host, &ad.sin_addr))	/* accept a quad address */
     {
         hp = gethostbyname(host);
 
