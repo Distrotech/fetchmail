@@ -19,6 +19,7 @@ fetchmail-4.2.4 (Thu Sep 18 16:19:10 EDT 1997)
 * Small compilation cleanups, thanks to Florian laRoche.
 * Removed the length consistency check, it mysteriously fails under POP3.
 * Added Alexander Kourakos's patch to improve address rewriting.
+* Added Wilfried Teiken's patch allowing the password to be piped in.
 
 fetchmail-4.2.3 (Thu Sep 18 16:19:10 EDT 1997)
 * Fix a bug in IMAP message-size retrieval.

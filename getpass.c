@@ -7,6 +7,8 @@
   project:      fetchmail
   programmer:   Carl Harris, ceharris@mal.com
   description: 	getpass() replacement which allows for long passwords.
+                This version hacked by Wilfred Teiken, allowing the
+                password to be piped to fetchmail.
 
  ***********************************************************************/
 
@@ -81,29 +83,39 @@ char *prompt;
   static char pbuf[INPUT_BUF_SIZE];
   RETSIGTYPE (*sig)();
   RETSIGTYPE sigint_handler();
-
+  int istty=tcgetpgrp(0)!=-1;
 
   /* get the file descriptor for the input device */
-  if ((fi = fdopen(open("/dev/tty", 2), "r")) == NULL)
-    fi = stdin;
+
+  if(istty)
+  {
+    if ((fi = fdopen(open("/dev/tty", 2), "r")) == NULL)
+      fi = stdin;
+    else
+      setbuf(fi, (char *)NULL);
+  }
   else
-    setbuf(fi, (char *)NULL);
+    fi=stdin;
 
   /* store descriptor for the tty */
   ttyfd = fileno(fi);
 
-  /* preserve tty state before turning off echo */
-  save_tty_state();
+  if(istty)
+  {
+    /* preserve tty state before turning off echo */
+    save_tty_state();
 
-  /* now that we have the current tty state, we can catch SIGINT and  
-     exit gracefully */
-  sig = signal(SIGINT, sigint_handler);
+    /* now that we have the current tty state, we can catch SIGINT and  
+       exit gracefully */
+    sig = signal(SIGINT, sigint_handler);
 
-  /* turn off echo on the tty */
-  disable_tty_echo();
+    /* turn off echo on the tty */
+    disable_tty_echo();
+  }
 
   /* display the prompt and get the input string */
-  fprintf(stderr, "%s", prompt); fflush(stderr);
+  if(istty)
+    fprintf(stderr, "%s", prompt); fflush(stderr);
   for (p=pbuf; (c = getc(fi))!='\n' && c!=EOF;) {
     if (p < &pbuf[INPUT_BUF_SIZE - 1])
       *p++ = c;
@@ -111,14 +123,18 @@ char *prompt;
   *p = '\0';
 
   /* write a newline so cursor won't appear to hang */
-  fprintf(stderr, "\n"); fflush(stderr);
+  if(fi!=stdin)
+  {
+    fprintf(stderr, "\n"); fflush(stderr);
+  }
+  if(istty)
+  {
+    /* restore previous state of the tty */
+    restore_tty_state();
 
-  /* restore previous state of the tty */
-  restore_tty_state();
-
-  /* restore previous state of SIGINT */
-  signal(SIGINT, sig);
-
+    /* restore previous state of SIGINT */
+    signal(SIGINT, sig);
+  }
   if (fi != stdin)
     fclose(fi);
 
