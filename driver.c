@@ -1079,8 +1079,12 @@ int delimited;		/* does the protocol use a message delimiter? */
 	{
 	    int	n;
 
-	    /* SMTP byte-stuffing */
-	    if (*buf == '.')
+	    /*
+	     * SMTP byte-stuffing.  We only do this if the protocol does *not*
+	     * use .<CR><LF> as EOM.  If it does, the server will already have
+	     * decorated any . lines it sends back up.
+	     */
+	    if (!delimited && *buf == '.')
 		if (sinkfp && ctl->mda)
 		    fputs(".", sinkfp);
 		else if (ctl->smtp_socket != -1)
