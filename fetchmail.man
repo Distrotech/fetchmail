@@ -174,6 +174,8 @@ Use POP3 with MD5 authentication.
 Use POP3 with RPOP authentication.
 .IP KPOP
 Use POP3 with Kerberos V4 authentication on port 1109.
+.IP SDPS
+Use POP3 with Demon Internet's SDPS extensions.
 .IP IMAP
 IMAP2bis, IMAP4, or IMAP4rev1 (\fIfetchmail\fR autodetects their capabilities).
 .IP IMAP-K4
