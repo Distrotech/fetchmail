@@ -133,6 +133,7 @@ int	*sizes;
 	else
 	    sizes[num - 1] = -1;
     }
+    fseek(sockfp, 0L, SEEK_CUR);
 
     return(0);
 }
@@ -168,6 +169,7 @@ int *lenp;
 	    return(PS_SOCKET);
     } while
 	    (sscanf(buf+2, "%d FETCH (RFC822 {%d}", &num, lenp) != 2);
+    fseek(sockfp, 0L, SEEK_CUR);
 
     if (num != number)
 	return(PS_ERROR);
@@ -186,7 +188,10 @@ int number;
     if (fgets(buf, sizeof(buf), sockfp) == (char *)NULL)
 	return(PS_SOCKET);
     else
+    {
+	fseek(sockfp, 0L, SEEK_CUR);
 	return(0);
+    }
 }
 
 static int imap_delete(sockfp, ctl, number)

@@ -789,6 +789,14 @@ struct query *ctl;	/* query control record */
 	lines++;
     }
 
+    /*
+     * Required by Standard C and the Linux stdio library,
+     * which wants a seek between read and write operations on a
+     * read/write stream.  Without this we got weird lossage
+     * trying to issue delete commands after reading a long message.
+     */
+    fseek(sockfp, 0L, SEEK_CUR);
+
     if (ctl->mda[0])
     {
 	/* close the delivery pipe, we'll reopen before next message */
@@ -1118,7 +1126,7 @@ va_dcl {
     va_end(ap);
 
     strcat(buf, "\r\n");
-    fputs(buf, sockfp);
+    fputs(buf, sockfp); fseek(sockfp, 0L, SEEK_CUR);
 
     if (outlevel == O_VERBOSE)
     {
@@ -1160,7 +1168,7 @@ va_dcl {
   va_end(ap);
 
   strcat(buf, "\r\n");
-  fputs(buf, sockfp);
+  fputs(buf, sockfp); fseek(sockfp, 0L, SEEK_CUR);
   if (outlevel == O_VERBOSE)
   {
       char *cp;

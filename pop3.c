@@ -182,6 +182,7 @@ int *countp, *newp;
 			if (!uid_in_list(&ctl->oldsaved, id))
 			    (*newp)++;
 		    }
+		    fseek(sockfp, 0L, SEEK_CUR);
  		}
  	    }
  	}
@@ -217,6 +218,7 @@ int	*sizes;
 	    else
 		sizes[num - 1] = -1;
 	}
+	fseek(sockfp, 0L, SEEK_CUR);
 
 	return(0);
     }
