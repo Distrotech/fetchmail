@@ -490,7 +490,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 
 #ifdef OPIE_ENABLE
 	/* see RFC1938: A One-Time Password System */
-	if (challenge = strstr(lastok, "otp-")) {
+	if ((challenge = strstr(lastok, "otp-"))) {
 	  char response[OPIE_RESPONSE_MAX+1];
 	  int i;
 

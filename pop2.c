@@ -12,6 +12,9 @@
 #if defined(STDC_HEADERS)
 #include <stdlib.h>
 #endif
+#ifdef HAVE_STRING_H
+#include <string.h>
+#endif
 #include  "fetchmail.h"
 #include  "socket.h"
 
@@ -61,6 +64,7 @@ static int pop2_getauth(int sock, struct query *ctl, char *buf)
 		  "HELO %s %s",
 		  ctl->remotename, ctl->password);
     shroud[0] = '\0';
+    return status;
 }
 
 static int pop2_getrange(int sock, struct query *ctl, const char *folder, 
@@ -125,7 +129,7 @@ static int pop2_logout(int sock, struct query *ctl)
     return(gen_transact(sock, "QUIT"));
 }
 
-const static struct method pop2 =
+static const struct method pop2 =
 {
     "POP2",				/* Post Office Protocol v2 */
 #if INET6_ENABLE

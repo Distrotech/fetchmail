@@ -17,9 +17,10 @@
 
 #if defined(POP3_ENABLE) && defined(RPA_ENABLE)
 #include  <stdio.h>
+#include  <stdlib.h>
 #include  <unistd.h>
 #include  <ctype.h>
-#include  <string.h> 
+#include  <string.h>
 
 #include  "socket.h"
 #include  "fetchmail.h"
@@ -281,11 +282,13 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     }
     if (status != 0)
     {
-	if (outlevel > O_SILENT)
-	    if (status < 4)
+	if (outlevel > O_SILENT) {
+	    if (status < 4) {
 		report(stderr, GT_("RPA rejects you: %s\n"),GT_(stdec[status]));
-	    else
+	    } else {
 		report(stderr, GT_("RPA rejects you, reason unknown\n"));
+	    }
+	}
 	return(PS_AUTHFAIL);
     }
     if (Aul != aulin)
@@ -625,12 +628,9 @@ int  len;
   globals:       reads outlevel;
  *********************************************************************/
 
-static void ToUnicode(pptr,delim,buf,plen,conv)
-unsigned char **pptr; /* input string  */
-unsigned char delim;
-unsigned char *buf;   /* output buffer */
-int  *plen;
-int conv;
+static void ToUnicode(unsigned char **pptr /* input string*/,
+	unsigned char delim, unsigned char *buf /* output buffer */,
+	int *plen, int conv)
 {
     unsigned char *p;
     int i;
@@ -676,8 +676,7 @@ int conv;
                  writes Ns Nsl Nr Nrl
  *********************************************************************/
 
-static int SetRealmService(bufp)
-unsigned char* bufp;
+static int SetRealmService(unsigned char *bufp)
 {
     /* For the moment we pick the first available realm. It would */
     /* make more sense to verify that the realm which the user    */
@@ -705,9 +704,7 @@ unsigned char* bufp;
                  reads /dev/random
  *********************************************************************/
 
-static void GenChallenge(buf,len)
-unsigned char *buf;
-int  len;
+static void GenChallenge(unsigned char *buf, int len)
 {
     int  i;
     FILE *devrandom;
@@ -756,10 +753,8 @@ int  len;
                  writes Pu.
  *********************************************************************/
 
-static int DigestPassphrase(passphrase,rbuf,unicodeit)
-unsigned char *passphrase;
-unsigned char *rbuf;
-int unicodeit;
+static int DigestPassphrase(unsigned char *passphrase,unsigned char *rbuf,
+	int unicodeit)
 {
     int   len;
     unsigned char  workarea[STRMAX];
@@ -795,7 +790,7 @@ int unicodeit;
                  writes Ru.
  *********************************************************************/
 
-static void CompUserResp()
+static void CompUserResp(void)
 {
     unsigned char  workarea[Pul+48+STRMAX*5+Tsl+Pul];
     unsigned char* p;
@@ -827,7 +822,7 @@ static void CompUserResp()
                  writes Ru.
  *********************************************************************/
 
-static int CheckUserAuth()
+static int CheckUserAuth(void)
 {
     unsigned char  workarea[Pul+48+STRMAX*7+Tsl+Pul];
     unsigned char* p;
@@ -878,10 +873,7 @@ static int CheckUserAuth()
   globals:       reads outlevel
  *********************************************************************/
 
-static void md5(in,len,out)
-unsigned char*    in;
-int      len;
-unsigned char*    out;
+static void md5(unsigned char *in,int len,unsigned char *out)
 {
     int      i;
     MD5_CTX  md5context;

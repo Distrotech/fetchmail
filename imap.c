@@ -443,16 +443,17 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 #ifdef OPIE_ENABLE
     if ((ctl->server.authenticate == A_ANY 
 	 || ctl->server.authenticate == A_OTP)
-	&& strstr(capabilities, "AUTH=X-OTP"))
+	&& strstr(capabilities, "AUTH=X-OTP")) {
 	if ((ok = do_otp(sock, "AUTHENTICATE", ctl)))
 	{
 	    /* SASL cancellation of authentication */
 	    gen_send(sock, "*");
 	    if(ctl->server.authenticate != A_ANY)
                 return ok;
-	}
-	else
+	} else {
 	    return ok;
+	}
+    }
 #else
     if (ctl->server.authenticate == A_OTP)
     {

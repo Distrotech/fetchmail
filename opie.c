@@ -30,7 +30,7 @@ int do_otp(int sock, char *command, struct query *ctl)
 
     gen_send(sock, "%s X-OTP", command);
 
-    if (rval = gen_recv(sock, buffer, sizeof(buffer)))
+    if ((rval = gen_recv(sock, buffer, sizeof(buffer))))
 	return rval;
 
 	if (strncmp(buffer, "+", 1)) {
@@ -43,7 +43,7 @@ int do_otp(int sock, char *command, struct query *ctl)
     gen_send(sock, buffer, sizeof(buffer));
 	suppress_tags = FALSE;
 
-    if (rval = gen_recv(sock, buffer, sizeof(buffer)))
+    if ((rval = gen_recv(sock, buffer, sizeof(buffer))))
 	return rval;
 
 	memset(challenge, '\0', sizeof(challenge));
@@ -70,7 +70,7 @@ int do_otp(int sock, char *command, struct query *ctl)
     gen_send(sock, buffer, strlen(buffer));
     suppress_tags = FALSE;
 
-    if (rval = gen_recv(sock, buffer, sizeof(buffer)))
+    if ((rval = gen_recv(sock, buffer, sizeof(buffer))))
 	return rval;
 
     if (result)
