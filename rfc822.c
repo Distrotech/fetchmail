@@ -35,6 +35,10 @@ const char *host;	/* server hostname */
     strcpy(mycopy, buf);
     for (from = mycopy; *from; from++)
     {
+#ifdef FOO
+	printf("state %d: %s", state, mycopy);
+	printf("%*s^\n", from - mycopy + 10, " ");
+#endif /* TESTMAIN */
 	switch (state)
 	{
 	case 0:   /* before header colon */
@@ -328,6 +332,7 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 main(int argc, char *argv[])
 {
     char	buf[POPBUFSIZE], *cp;
+    int		reply =  (argc > 1 && !strcmp(argv[1], "-r"));
 
     while (fgets(buf, sizeof(buf)-1, stdin))
     {
@@ -340,11 +345,17 @@ main(int argc, char *argv[])
 	else
 	{
 	    fputs(buf, stdout);
-	    if ((cp = nxtaddr(buf)) != (char *)NULL)
-		do {
-		    printf("\t%s\n", cp);
-		} while
-		    ((cp = nxtaddr((char *)NULL)) != (char *)NULL);
+	    if (reply)
+	    {
+		reply_hack(buf, "HOSTNAME.NET");
+		printf("Rewritten buffer: %s", buf);
+	    }
+	    else
+		if ((cp = nxtaddr(buf)) != (char *)NULL)
+		    do {
+			printf("\t%s\n", cp);
+		    } while
+			((cp = nxtaddr((char *)NULL)) != (char *)NULL);
 	}
 
     }
