@@ -777,10 +777,9 @@ can protect you from a passive eavesdropper it doesn't help against an
 active attacker. It's clearly an improvement over sending the
 passwords in clear but you should be aware that a man-in-the-middle
 attack is trivially possible (in particular with tools such as dsniff,
-http://www.monkey.org/~dugsong/dsniff/).  Therefore and if possible,
-the use of an appropriately ssh tunnel (see below for some examples)
-is preferable if you seriously care about the security of your
-mailbox.
+http://www.monkey.org/~dugsong/dsniff/).  Use of an ssh tunnel (see
+below for some examples) is preferable if you care seriously about the
+security of your mailbox.
 
 .SH DAEMON MODE
 The 
