@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Fix bug that prevented messages from being marked oversized unless -v was on.
+
 fetchmail-5.8.7 (Sun Jun 17 12:02:17 EDT 2001), 20749 lines:
 
 * Make fetchmailconf work properly again by fixing tracepolls mismatch.

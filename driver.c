@@ -319,6 +319,51 @@ static void send_size_warnings(struct query *ctl)
     close_warning_by_mail(ctl, (struct msgblk *)NULL);
 }
 
+static void mark_oversized(int num, struct query *ctl, int *msgsizes)
+/* mark a message oversized */
+{
+    struct idlist *current=NULL, *tmp=NULL;
+    char size[32];
+    int cnt;
+
+    /* convert sz to string */
+    sprintf(size, "%d", msgsizes[num-1]);
+
+    /* build a list of skipped messages
+     * val.id = size of msg (string cnvt)
+     * val.status.num = warning_poll_count
+     * val.status.mask = nbr of msg this size
+     */
+
+    current = ctl->skipped;
+
+    /* initialise warning_poll_count to the
+     * current value so that all new msg will
+     * be included in the next mail
+     */
+    cnt = current ? current->val.status.num : 0;
+
+    /* if entry exists, increment the count */
+    if (current && str_in_list(&current, size, FALSE))
+    {
+	for ( ; current; current = current->next)
+	{
+	    if (strcmp(current->id, size) == 0)
+	    {
+		current->val.status.mark++;
+		break;
+	    }
+	}
+    }
+    /* otherwise, create a new entry */
+    /* initialise with current poll count */
+    else
+    {
+	tmp = save_str(&ctl->skipped, size, 1);
+	tmp->val.status.num = cnt;
+    }
+}
+
 static int fetch_messages(int mailserver_socket, struct query *ctl, 
 			  int count, int *msgsizes, 
 			  int new, int force, int maxfetch,
@@ -326,7 +371,6 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 /* fetch messages in lockstep mode */
 {
     int num, ok, len;
-    struct idlist *current=NULL, *tmp=NULL;
 
     for (num = 1; num <= count; num++)
     {
@@ -359,64 +403,18 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	    continue;
 	}
 
-	/*
-	 * We may want to reject this message if it's old
-	 * or oversized, and we're not forcing retrieval.
-	 */
 	if (!fetch_it)
 	{
+	    if (toolarge && !check_only)
+		mark_oversized(num, ctl, msgsizes);
 	    if (outlevel > O_SILENT)
 	    {
 		report_build(stdout, 
 			     _("skipping message %d (%d octets)"),
 			     num, msgsizes[num-1]);
 		if (toolarge && !check_only) 
-		{
-		    char size[32];
-		    int cnt;
-
-		    /* convert sz to string */
-		    sprintf(size, "%d", msgsizes[num-1]);
-
-		    /* build a list of skipped messages
-		     * val.id = size of msg (string cnvt)
-		     * val.status.num = warning_poll_count
-		     * val.status.mask = nbr of msg this size
-		     */
-
-		    current = ctl->skipped;
-
-		    /* initialise warning_poll_count to the
-		     * current value so that all new msg will
-		     * be included in the next mail
-		     */
-		    cnt = current ? current->val.status.num : 0;
-
-		    /* if entry exists, increment the count */
-		    if (current && 
-			str_in_list(&current, size, FALSE))
-		    {
-			for ( ; current; 
-			      current = current->next)
-			{
-			    if (strcmp(current->id, size) == 0)
-			    {
-				current->val.status.mark++;
-				break;
-			    }
-			}
-		    }
-		    /* otherwise, create a new entry */
-		    /* initialise with current poll count */
-		    else
-		    {
-			tmp = save_str(&ctl->skipped, size, 1);
-			tmp->val.status.num = cnt;
-		    }
-
 		    report_build(stdout, _(" (oversized, %d octets)"),
 				 msgsizes[num-1]);
-		}
 	    }
 	}
 	else
