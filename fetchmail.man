@@ -1517,6 +1517,14 @@ snooping is still possible if (a) either host has a network device
 that can be opened in promiscuous mode, or (b) the intervening network
 link can be tapped.
 .PP
+Use of the %F or %T escapes in an mda option could open a security
+hole, because they pass text manipulable by an attacker to a shell
+command.  The hole is reduced by the fact that fetchmail temporarily
+discards any suid privileges it may have while running the MDA.  To
+avoid potential problems, (1) enclose the %F and %T options in single
+quotes, (2) never use an mda command containing %F or %T when
+fetchmail is run from the root account itself.
+.PP
 Send comments, bug reports, gripes, and the like to Eric S. Raymond
 <esr@thyrsus.com>.  An HTML FAQ is available at the fetchmail home
 page; surf to http://www.ccil.org/~esr/fetchmail or do a WWW search
