@@ -1025,7 +1025,7 @@ static int load_params(int argc, char **argv, int optind)
     {
 	ctl->wedged = FALSE;
 
-	if (configdump || (ctl->active && !(implicitmode && ctl->server.skip)))
+	if (configdump || ctl->active )
 	{
 	    /* merge in defaults */
 	    optmerge(ctl, &def_opts, FALSE);
