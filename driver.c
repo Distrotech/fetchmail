@@ -109,9 +109,10 @@ static int mimemsg;			/* bitmask indicating MIME body-type */
 
 /* use these to track what was happening when the nonresponse timer fired */
 #define GENERAL_WAIT	0	/* unknown wait type */
-#define SERVER_WAIT	1	/* waiting for mailserver response */
-#define LISTENER_WAIT	2	/* waiting for listener initialization */
-#define FORWARDING_WAIT	3	/* waiting for listener response */
+#define OPEN_WAIT	1	/* waiting from mailserver open */
+#define SERVER_WAIT	2	/* waiting for mailserver response */
+#define LISTENER_WAIT	3	/* waiting for listener initialization */
+#define FORWARDING_WAIT	4	/* waiting for listener response */
 static phase;
 
 static void set_timeout(int timeleft)
@@ -377,7 +378,7 @@ static int smtp_open(struct query *ctl)
 	oldphase = phase;
 	phase = LISTENER_WAIT;
 
-	set_timeout(ctl->server.timeout);
+	set_timeout(mytimeout);
 	for (idp = ctl->smtphunt; idp; idp = idp->next)
 	{
 	    char	*cp, *parsed_host = alloca(strlen(idp->id) + 1);
@@ -581,7 +582,7 @@ int num;		/* index of message */
 	linelen = 0;
 	line[0] = '\0';
 	do {
-	    set_timeout(ctl->server.timeout);
+	    set_timeout(mytimeout);
 	    if ((n = SockRead(sock, buf, sizeof(buf)-1)) == -1) {
 		set_timeout(0);
 		free(line);
@@ -1534,7 +1535,7 @@ flag forward;		/* TRUE to forward */
     /* pass through the text lines */
     while (protocol->delimited || len > 0)
     {
-	set_timeout(ctl->server.timeout);
+	set_timeout(mytimeout);
 	if ((linelen = SockRead(sock, inbufp, sizeof(buf)-4-(inbufp-buf)))==-1)
 	{
 	    set_timeout(0);
@@ -1786,7 +1787,11 @@ const struct method *proto;	/* protocol method table */
 
     if ((js = setjmp(restart)) == 1)
     {
-	if (phase == SERVER_WAIT)
+	if (phase == OPEN_WAIT)
+	    error(0, 0,
+		  "timeout after %d seconds waiting to connect to server %s.",
+		  ctl->server.timeout, ctl->server.pollname);
+	else if (phase == SERVER_WAIT)
 	    error(0, 0,
 		  "timeout after %d seconds waiting for server %s.",
 		  ctl->server.timeout, ctl->server.pollname);
@@ -1816,7 +1821,7 @@ const struct method *proto;	/* protocol method table */
 #if INET6
 	int fetches, dispatches;
 #else /* INET6 */
-	int port, fetches, dispatches;
+	int port, fetches, dispatches, oldphase;
 #endif /* INET6 */
 	struct idlist *idp;
 
@@ -1830,6 +1835,9 @@ const struct method *proto;	/* protocol method table */
 	}
 
 	/* open a socket to the mail server */
+	oldphase = phase;
+	phase = OPEN_WAIT;
+	set_timeout(mytimeout);
 #if !INET6
 	port = ctl->server.port ? ctl->server.port : protocol->port;
 #endif /* !INET6 */
@@ -1867,13 +1875,17 @@ const struct method *proto;	/* protocol method table */
 	    }
 #endif /* INET6 */
 	    ok = PS_SOCKET;
+	    set_timeout(0);
+	    phase = oldphase;
 	    goto closeUp;
 	}
+	set_timeout(0);
+	phase = oldphase;
 
 #ifdef KERBEROS_V4
 	if (ctl->server.preauthenticate == A_KERBEROS_V4)
 	{
-	    set_timeout(ctl->server.timeout);
+	    set_timeout(mytimeout);
 	    ok = kerberos_auth(sock, ctl->server.truename);
 	    set_timeout(0);
  	    if (ok != 0)
@@ -1884,7 +1896,7 @@ const struct method *proto;	/* protocol method table */
 #ifdef KERBEROS_V5
 	if (ctl->server.preauthenticate == A_KERBEROS_V5)
 	{
-	    set_timeout(ctl->server.timeout);
+	    set_timeout(mytimeout);
 	    ok = kerberos5_auth(sock, ctl->server.truename);
 	    set_timeout(0);
  	    if (ok != 0)

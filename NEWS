@@ -1,5 +1,11 @@
 				Release Notes:
 
+fetchmail-4.6.2 ():
+* Time out server open requests like we do reads.  This protects against
+  buggy TCP/IP configurations that hang forever on a bad open.
+
+There are 255 people on fetchmail-friends and 293 on fetchmail-announce.
+
 fetchmail-4.6.1 (Wed Oct 14 18:46:58 EDT 1998):
 * Fixed a minor memory leak in the IP-address-comparison code.
 * Mark Staveley's patch to suppress progress dots from non-detached daemon
