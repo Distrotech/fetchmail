@@ -131,7 +131,7 @@ char *prompt;
 	signal(SIGINT, sig);
     }
     if (fi != stdin)
-	fclose(fi);
+	fclose(fi);	/* not checking should be safe, file mode was "r" */
 
     return(pbuf);
 #endif /* !(defined(HAVE_TCSETATTR) || ... */

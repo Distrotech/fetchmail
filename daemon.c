@@ -135,7 +135,7 @@ daemonize (const char *logfile, void (*termhook)(int))
   /* lose controlling tty */
   if ((fd = open("/dev/tty", O_RDWR)) >= 0) {
     ioctl(fd, TIOCNOTTY, (char *) 0);
-    close(fd);
+    close(fd);	/* not checking should be safe, there were no writes */
   }
 #else					/* SVR3 and older */
   /* change process group */
@@ -165,7 +165,7 @@ nottyDetach:
   for (fd = 19;  fd >= 0;  fd--)
 #endif
   {
-    close(fd);
+    close(fd);	/* not checking this should be safe, no writes */
   }
 
   /* Reopen stdin descriptor on /dev/null */

@@ -413,7 +413,7 @@ int main(int argc, char **argv)
 	    bkgd = FALSE;
 	    unlink(lockfile);
 	}
-	fclose(lockfp);
+	fclose(lockfp);	/* not checking should be safe, file mode was "r" */
     }
 
     /* if no mail servers listed and nothing in background, we're done */
@@ -582,7 +582,7 @@ int main(int argc, char **argv)
 	    sprintf(tmpbuf," %d", run.poll_interval);
 	    write(st, tmpbuf, strlen(tmpbuf));
 	}
-	close(st);
+	close(st);	/* should be safe, previous write was atomic */
 	lock_acquired = TRUE;
     }
 

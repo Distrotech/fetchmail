@@ -164,7 +164,7 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 		}
 	    }
 	}
-	fclose(tmpfp);
+	fclose(tmpfp);	/* not checking should be safe, mode was "r" */
     }
 
     if (outlevel >= O_DEBUG)

@@ -174,9 +174,9 @@ static int get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
 		*sp = '/';
 	}
 	if (socket_fd >= 0)
-		close(socket_fd);
+	    close(socket_fd);	/* not checking should be safe, mode was "r" */
 	if (stats_file)
-		fclose(stats_file);
+	    fclose(stats_file);	/* not checking should be safe, mode was "r" */
 	return(result);
 }
 
