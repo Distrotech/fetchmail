@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/06/05 17:23:28 $
+<td width="30%" align=right>$Date: 1998/06/05 18:43:20 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -151,7 +151,7 @@ sources?</a></h2>
 The latest HTML FAQ is available alongside the latest fetchmail
 sources at the fetchmail home page:
 <a href="http://www.tuxedo.org/~esr/fetchmail">
-http://www.tuxedo.org/~esr/fetchmail</a>.  You can also find
+http://www.tuxedo.org/~esr/fetchmail</a>.  You can also usually find
 both in the <a
 href="http://sunsite.unc.edu/pub/Linux/system/mail/pop/!INDEX.html">POP
 mail tools directory on Sunsite</a>.<p>
@@ -181,7 +181,7 @@ upgrade to the newest version, and then see if the problem reproduces.
 So you'll probably save us both time if you upgrade and test with
 the latest version <em>before</em> sending in a bug report.<P>
 
-It is helpful if you include your .fetchmailrc, but not necessary
+It is helpful if you include your .fetchmailrc file, but not necessary
 unless your symptom seems to involve an error in configuration parsing.<p>
 
 If fetchmail seems to run and fetch mail, but the headers look mangled
@@ -195,7 +195,9 @@ tweaking your configuration.<P>
 
 A transcript of the failed session with -v on is almost always useful.
 It is very important that the transcript include your POP/IMAP server's
-greeting line, so I can identify it in case of server problems.<P>
+greeting line, so I can identify it in case of server problems.  Doing
+this will not reveal your passwords, which are specially masked
+out precisely so the transcript can be passed around.<P>
 
 If the bug involves a core dump or hang, a gdb stack trace is good to have.
 (Bear in mind that you can attach gdb to a running but hung process by
@@ -299,7 +301,8 @@ Most modern Unixes (and effectively all Linux/*BSD systems) come with
 POP3 support preconfigured (but beware of the horribly broken POP3
 server mentioned in <a href="#D2">D2</a>).  An increasing minority
 also feature IMAP (you can detect IMAP support by running fetchmail in
-AUTO mode).<P>
+AUTO mode, or by using the `Probe for a server' function in the
+fetchmailconf utility).<P>
 
 If you have the option, we recommend using or installing IMAP4rev1; it has
 the best facilities for tracking message `seen' states.  It also
@@ -1951,7 +1954,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/06/05 17:23:28 $
+<td width="30%" align=right>$Date: 1998/06/05 18:43:20 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
