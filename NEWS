@@ -21,9 +21,11 @@ fetchmail-4.3.0-alpha (Sun Oct  5 11:07:53 EDT 1997)
 * Fixed a bug in the code that was supposed to suppress expansion of RFC822 
   groupnames.  (Thanks to Santiago Vila Doncel for pointing this.)
 * It's now possible to explicitly configure out POP3, IMAP, or ETRN.
+* We no longer get the hostname for address rewrites and log messages from the
+  server greeting line, instead it's the server's canonical DNS name.
 * Created fetchmail-announce list.
 
-There are 283 people on fetchmail-friends and 6 on fetchmail-announce.
+There are 285 people on fetchmail-friends and 6 on fetchmail-announce.
 
 fetchmail-4.2.9 (Tue Sep 30 18:21:35 EDT 1997)
 * Don't byte-stuff when writing to an MDA.
