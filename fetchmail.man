@@ -902,7 +902,7 @@ The protocols \fIfetchmail\fR uses to talk to mailservers are next to
 bulletproof.  In normal operation forwarding to port 25, no message is
 ever deleted (or even marked for deletion) on the host until the SMTP
 listener on the client has acknowledged to \fIfetchmail\fR that the
-message has been accepted for delivery or rejected due to a apam
+message has been accepted for delivery or rejected due to a spam
 block.  When forwarding to an MDA, however, there is more possibility
 of error (because there's no way for fetchmail to get a reliable
 positive acknowledgement from the MDA).
@@ -1305,7 +1305,7 @@ fetchlimit	-B	T{
 Max # messages to fetch in single connect
 T}
 expunge 	-e	T{
-Perform an expunge on every #th message (IMAP only)
+Perform an expunge on every #th message (IMAP and POP3 only)
 T}
 properties  	\&	T{
 String value is ignored by fetchmail (may be used by extension scripts)
