@@ -442,7 +442,7 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
     if (smtperr >= 400)
 	report(stderr, _("%cMTP error: %s\n"), 
 	      ctl->listener,
-	      smtp_response);
+	      responses[0]);
 
     switch (smtperr)
     {

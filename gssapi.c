@@ -17,6 +17,7 @@
 #include  "i18n.h"
 #include "md5.h"
 
+#include <sys/types.h>
 #include <netinet/in.h>  /* for htonl/ntohl */
 
 #ifdef GSSAPI

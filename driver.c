@@ -1846,7 +1846,8 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		    {
 			ctl->wehavesentauthnote = 1;
 			stuff_warning(ctl,
-				      _("Subject: fetchmail authentication failed\r\n"));
+				      _("Subject: fetchmail authentication failed on %s@%s\r\n"),
+			    ctl->remotename, ctl->server.truename);
 			stuff_warning(ctl,
 				      _("Fetchmail could not get mail from %s@%s.\r\n"), 
 				      ctl->remotename,
@@ -1910,7 +1911,8 @@ is restored."));
 		    if (!open_warning_by_mail(ctl, (struct msgblk *)NULL))
 		    {
 			stuff_warning(ctl,
-			      _("Subject: fetchmail authentication OK\r\n"));
+			      _("Subject: fetchmail authentication OK on %s@%s\r\n"),
+				      ctl->remotename, ctl->server.truename);
 			stuff_warning(ctl,
 			      _("Fetchmail was able to log into %s@%s.\r\n"), 
 				      ctl->remotename,
