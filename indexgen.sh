@@ -174,7 +174,7 @@ there seems to be little more that needs doing."  This turned out to
 be not quite true, I've added some minor option switches since, mostly
 to deal with weird configuration situations.  We've also fixed a hang
 problem with Cyrus IMAP servers and enabled the code to work with the
-<a href="fetchmail.FAQ.html#T5">(extremely broken)</a> Microsoft
+<a href="fetchmail-FAQ.html#T5">(extremely broken)</a> Microsoft
 Exchange POP3 server.  And we've added support for Compuserve RPA.<P>
 
 The present TO-DO list reads:<P>
