@@ -140,7 +140,10 @@ void dump_config(struct runctl *runp, struct query *querylist)
     booldump("invisible", runp->invisible);
 
     if (!querylist)
+    {
+	fputs("    'servers': []\n", stdout);
 	goto alldone;
+    }
 
     indent(0);
     fputs("# List of server entries begins here\n", stdout);
