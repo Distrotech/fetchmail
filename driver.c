@@ -1820,32 +1820,58 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		    report(stderr, _("Lock-busy error on %s@%s\n"),
 			  ctl->remotename,
 			  ctl->server.truename);
-		else if (ok == PS_AUTHFAIL)
-		{
-		    report(stderr, _("Authorization failure on %s@%s\n"), 
+		else if (ok == PS_SERVBUSY)
+		    report(stderr, _("Server busy error on %s@%s\n"),
 			  ctl->remotename,
 			  ctl->server.truename);
+		else if (ok == PS_AUTHFAIL)
+		{
+		    report(stderr, _("Authorization failure on %s@%s%s\n"), 
+			   ctl->remotename,
+			   ctl->server.truename,
+			   (ctl->wehaveauthed ? " (previously authorized)" : " ")
+			);
 
 		    /*
 		     * If we're running in background, try to mail the
 		     * calling user a heads-up about the authentication 
 		     * failure once it looks like this isn't a fluke 
 		     * due to the server being temporarily inaccessible.
-		     * When we get third failure, we notify the user.  After
-		     * that, once we get authorization we let the user know
-		     * service is restored.
+		     * When we get third succesive failure, we notify the user
+		     * but only if we haven't already managed to get
+		     * authorization.  After that, once we get authorization
+		     * we let the user know service is restored.
 		     */
 		    if (run.poll_interval
-			&& ++ctl->authfailcount == 3
+			&& ctl->wehavesentauthnote
+			&& ((ctl->wehaveauthed && ++ctl->authfailcount == 10)
+			    || ++ctl->authfailcount == 3)
 			&& !open_warning_by_mail(ctl, (struct msgblk *)NULL))
 		    {
+			ctl->wehavesentauthnote = 1;
 			stuff_warning(ctl,
-			    _("Subject: fetchmail authentication failed\r\n"));
+				      _("Subject: fetchmail authentication failed\r\n"));
 			stuff_warning(ctl,
-			    _("Fetchmail could not get mail from %s@%s.\r\n"), 
-			    ctl->remotename,
-			    ctl->server.truename);
-			stuff_warning(ctl, _("\
+				      _("Fetchmail could not get mail from %s@%s.\r\n"), 
+				      ctl->remotename,
+				      ctl->server.truename);
+			if (ctl->wehaveauthed)
+			    stuff_warning(ctl, _("\
+The attempt to get authorization failed.\r\n\
+Since we have already succeeded in getting authorization for this\r\n\
+connection, this is probably another failure mode (such as busy server)\r\n\
+that fetchmail cannot distinguish because the server didn't send a useful\r\n\
+error message.\r\n\
+\r\n\
+However, if you HAVE changed you account details since starting the\r\n\
+fetchmail daemon, you need to stop the daemon, change your configuration\r\n\
+of fetchmail, and then restart the daemon.\r\n\
+\r\n\
+The fetchmail daemon will continue running and attempt to connect\r\n\
+at each cycle.  No future notifications will be sent until service\r\n\
+is restored."));
+			else
+			    stuff_warning(ctl, _("\
 The attempt to get authorization failed.\r\n\
 This probably means your password is invalid, but some servers have\r\n\
 other failure modes that fetchmail cannot distinguish from this\r\n\
@@ -1859,34 +1885,55 @@ is restored."));
 		}
 		else
 		    report(stderr, _("Unknown login or authentication error on %s@%s\n"),
-			  ctl->remotename,
-			  ctl->server.truename);
+			   ctl->remotename,
+			   ctl->server.truename);
 		    
 		goto cleanUp;
 	    }
 	    else
 	    {
-		if (ctl->authfailcount >= 3)
-		{
-		    report(stderr,
-			   _("Authorization OK on %s@%s\n"),
-			   ctl->remotename,
-			   ctl->server.truename);
-		    if (!open_warning_by_mail(ctl, (struct msgblk *)NULL))
-		    {
-			stuff_warning(ctl,
-			    _("Subject: fetchmail authentication OK\r\n"));
-			stuff_warning(ctl,
-			    _("Fetchmail was able to log into %s@%s.\r\n"), 
-			    ctl->remotename,
-			    ctl->server.truename);
-			stuff_warning(ctl, 
-			    _("Service has been restored.\r\n"));
-			close_warning_by_mail(ctl, (struct msgblk *)NULL);
+			/*
+			 * This connection has given us authorization
+			 * at least once.
+			 *
+			 * There are dodgy server (clubinternet.fr for
+			 * example) that give spurious authorization
+			 * failures on patently good account/password
+			 * details, then 5 minutes later let you in!
+			 *
+			 * This is meant to build in some tolerance of
+			 * such nasty bits of work
+			 */
+			ctl->wehaveauthed = 1;
+			/*if (ctl->authfailcount >= 3)*/
+			if (ctl->wehavesentauthnote)
+			{
+				ctl->wehavesentauthnote = 0;
+				report(stderr,
+				   _("Authorization OK on %s@%s\n"),
+				   ctl->remotename,
+				   ctl->server.truename);
+			    if (!open_warning_by_mail(ctl, (struct msgblk *)NULL))
+			    {
+					stuff_warning(ctl,
+					    _("Subject: fetchmail authentication OK\r\n"));
+					stuff_warning(ctl,
+					    _("Fetchmail was able to log into %s@%s.\r\n"), 
+					    ctl->remotename,
+					    ctl->server.truename);
+					stuff_warning(ctl, 
+					    _("Service has been restored.\r\n"));
+					close_warning_by_mail(ctl, (struct msgblk *)NULL);
 		    
-		    }
-		    ctl->authfailcount = 0;
-		}
+			    }
+			}
+			/*
+			 * Reporting only after the first three
+			 * consecutive failures, or ten consecutive
+			 * failures after we have managed to get
+			 * authorization.
+			 */
+		   	ctl->authfailcount = 0;
 	    }
 	}
 

@@ -2,6 +2,11 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Incorporate SA_LEN patch from Red Hat.
+* HMH's "no spambounce" patch for fetchmaiolconf.
+* John Bartlett's patch to make the driver code more  tolerant of flaky POP3 
+  servers.
+
 fetchmail-5.7.2 (Sun Mar  4 19:05:57 EST 2001), 20167 lines:
 
 * NLS build fixed under Linux -- thanks to Nicolás Lichtmaier.

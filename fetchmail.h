@@ -92,6 +92,7 @@
 #define		PS_DNS		11	/* fatal DNS error */
 #define		PS_BSMTP	12	/* output batch could not be opened */
 #define		PS_MAXFETCH	13	/* poll ended by fetch limit */
+#define		PS_SERVBUSY	14	/* server is busy */
 /* leave space for more codes */
 #define		PS_UNDEFINED	23	/* something I hadn't thought of */
 #define		PS_TRANSIENT	24	/* transient failure (internal use) */
@@ -297,6 +298,8 @@ struct query
     const char *destaddr;	/* destination host for this query */
     int errcount;		/* count transient errors in last pass */
     int authfailcount;		/* count of authorization failures */
+	int wehaveauthed;   /* We have managed to logon at least once! */
+	int wehavesentauthnote;   /* We have sent an authorization failure note */
     int wedged;			/* wedged by auth failures or timeouts? */
     char *smtphost;		/* actual SMTP host we connected to */
     int smtp_socket;		/* socket descriptor for SMTP connection */

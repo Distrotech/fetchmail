@@ -99,6 +99,10 @@ int pop3_ok (int sock, char *argbuf)
 		     /* these are blessed by RFC 2449 */
 		     || strstr(bufp,"[IN-USE]")||strstr(bufp,"[LOGIN-DELAY]"))
 		ok = PS_LOCKBUSY;
+	    else if ((strstr(bufp,"Service")
+		     || strstr(bufp,"service"))
+			 && (strstr(bufp,"unavailable")))
+		ok = PS_SERVBUSY;
 	    else
 		ok = PS_AUTHFAIL;
 	    /*
