@@ -13,8 +13,8 @@
 
 #include <config.h>
 #include <stdio.h>
-
 #include <pwd.h>
+
 #include "getopt.h"
 #include "fetchmail.h"
 
@@ -99,14 +99,10 @@ int argc;
 char **argv;
 struct hostrec *queryctl;
 {
-  int c,i;
-  int fflag = 0;     /* TRUE when -o or -c has been specified */
+  int c;
+  int ocount = 0;     /* count of destinations specified */
   int errflag = 0;   /* TRUE when a syntax error is detected */
   int option_index;
-  int got_kill = 0;  /* TRUE when --kill is specified */
-
-  extern int optind, opterr;     /* defined in getopt(2) */
-  extern char *optarg;          /* defined in getopt(2) */
 
   memset(queryctl, '\0', sizeof(struct hostrec));    /* start clean */
 
@@ -126,12 +122,10 @@ struct hostrec *queryctl;
       case 'K':
       case LA_KILL:
         queryctl->keep = 0;
-        got_kill = 1;
         break;
       case 'k':
       case LA_KEEP:
         queryctl->keep = !0;
-        got_kill = 0;
         break;
       case 'v':
       case LA_VERBOSE:
@@ -192,6 +186,7 @@ struct hostrec *queryctl;
       case 'm':
       case LA_MDA:
         strncpy(queryctl->mda,optarg,sizeof(queryctl->mda));
+	ocount++;
         break;
       case 'P':
       case LA_PORT:
@@ -210,12 +205,8 @@ struct hostrec *queryctl;
         break;
       case 'S':
       case LA_SMTPHOST:
-        if (fflag) 
-          errflag++;
-        else {
-          fflag++;
-          strncpy(queryctl->smtphost,optarg,sizeof(queryctl->smtphost)-1);
-        }
+        strncpy(queryctl->smtphost,optarg,sizeof(queryctl->smtphost)-1);
+	ocount++;
 	break;
       case 'L':
       case LA_LOGFILE:
@@ -243,7 +234,7 @@ struct hostrec *queryctl;
     }
   }
 
-  if (errflag) {
+  if (errflag || ocount > 1) {
     /* squawk if syntax errors were detected */
     fputs("usage:  fetchmail [options] [server ...]\n", stderr);
     fputs("  Options are as follows:\n",stderr);
