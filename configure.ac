@@ -74,7 +74,7 @@ then
 fi
  
 dnl i18n
-AM_GNU_GETTEXT(no-libtool)
+AM_GNU_GETTEXT(no-libtool, need-ngettext)
 AM_GNU_GETTEXT_VERSION(0.14.1)
 dnl end i18n
 
