@@ -45,7 +45,7 @@ EOF
 				to lastday, arrowhead \
 				head
 			echo "if (endy > lasttotal) set label '$legend' at lastday-10, endy+15"
-			echo "if (endy <= lasttotal) set label '$legend' at lastday-500, endy-15"
+			echo "if (endy <= lasttotal) set label '$legend' at lastday-475, endy-15"
 		else
 			lastday=$days
 			lasttotal=$total
