@@ -372,7 +372,7 @@ down upon your head.
 (Keyword: lmtp)
 Cause delivery via LMTP (Local Mail Transfer Protocol).  A service
 port \fImust\fR be explicitly specified (with a slash suffix) on each
-host in the smtphost hunt list) if this option is selected; the
+host in the smtphost hunt list if this option is selected; the
 default port 25 will (in accordance with RFC 2033) not be accepted.
 .TP
 .B \--bsmtp <filename>
