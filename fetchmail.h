@@ -267,3 +267,5 @@ char *xstrdup(const char *);
 #define TRUE	1
 
 #define STRING_DISABLED	(char *)-1
+
+/* fetchmail.h ends here */
