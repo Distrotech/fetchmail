@@ -408,8 +408,14 @@ static int imap_getrange(int sock,
 
     if (pass > 1)
     {
-	ok = gen_transact(sock, "NOOP");
-	if (ok != 0)
+	/* 
+	 * We have to have an expunge here, otherwise the re-poll will
+	 * infinite-loop picking up un-expunged message.
+	 */
+	ok = 0;
+	if (deletions && ctl->expunge > 1)
+	    ok = gen_transact(sock, "EXPUNGE");
+	if (ok || gen_transact(sock, "NOOP"))
 	{
 	    error(0, 0, "re-poll failed");
 	    return(ok);
@@ -625,7 +631,7 @@ static int imap_delete(int sock, struct query *ctl, int number)
 	if ((ok = gen_transact(sock, "EXPUNGE")))
 	    return(ok);
 
-	expunged = deletions;;
+	expunged = deletions;
     }
 
     return(PS_SUCCESS);
@@ -634,10 +640,8 @@ static int imap_delete(int sock, struct query *ctl, int number)
 static int imap_logout(int sock, struct query *ctl)
 /* send logout command */
 {
-
-
     /* if expunges after deletion have been suppressed, ship one now */
-    if (ctl->expunge <= 0 && deletions)
+    if (ctl->expunge == 0 && deletions)
     {
 	int	ok;
 
