@@ -781,9 +781,11 @@ int num;		/* index of message */
 		if (env_offs == -1 && !strncasecmp(ctl->server.envelope,
 						line,
 						strlen(ctl->server.envelope)))
+		{				
 		    if (skipcount++ != ctl->server.envskip)
 			continue;
 		    env_offs = (line - headers);
+		}    
 	    }
 #ifdef HAVE_RES_SEARCH
 	    else if (!received_for && !strncasecmp("Received:", line, 9))

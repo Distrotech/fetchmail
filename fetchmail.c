@@ -1061,6 +1061,11 @@ void dump_params (struct query *ctl)
 		if (ctl->server.envskip > 1 || outlevel >= O_VERBOSE)
 		    printf("  Number of envelope header to be parsed: %d\n",
 			   ctl->server.envskip);
+		if (ctl->server.qvirtual)
+		    printf("  Prefix %s will be removed from user id\n",
+			   ctl->server.qvirtual);
+		else if (outlevel >= O_VERBOSE) 
+		    printf("  No prefix stripping\n");
 	    }
 
 	    if (ctl->server.akalist)
