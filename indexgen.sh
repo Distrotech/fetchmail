@@ -224,6 +224,14 @@ However, it is reported to build and run correctly under AmigaOS and
 QNX as well. A <a href="http://studentweb.tulane.edu/%7Ejmcbray/os2">beta
 OS/2 port</a> is available from Jason F. McBrayer.<p>
 
+<H1>Related resources</H1>
+
+Jochen Hayek is developing a set of
+<a href="http://www.ACM.org/~Jochen_Hayek/JHimap_utils/">
+IMAP tools in Python</a> that read your .fetchmailrc file and are
+designed to work with fetchmail.   Jochen's tools can get subject listings
+or move incoming messages to named mailboxes.<p>
+
 <H1>Fetchmail's funniest fan letter:</H1>
 
 <A HREF="funny.html">This letter</A> still cracks me up whenever I reread it. 
