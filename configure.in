@@ -35,12 +35,12 @@ AC_SUBST(LDEFLAGS)
 AC_SUBST(LIBOBJS)
 AC_SUBST(POMAKE)
 
-pkg=`sed -n '/PACKAGE *= *\(.*\)/s//\1/p' <Makefile.in`
-AC_DEFINE_UNQUOTED(PACKAGE, "$pkg")
+PACKAGE=`sed -n '/PACKAGE *= *\(.*\)/s//\1/p' <Makefile.in`
+AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
 AC_SUBST(PACKAGE)
 
-vers=`sed -n '/VERSION *= *\(.*\)/s//\1/p' <Makefile.in`
-AC_DEFINE_UNQUOTED(VERSION, "$vers")
+VERSION=`sed -n '/VERSION *= *\(.*\)/s//\1/p' <Makefile.in`
+AC_DEFINE_UNQUOTED(VERSION, "$VERSION")
 AC_SUBST(VERSION)
 
 # Check for LynxOS special case: -lbsd needed (at least on 2.3.0) and -s
