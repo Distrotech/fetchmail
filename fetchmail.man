@@ -115,9 +115,10 @@ TCP/IP routes to the mailserver exist, your username and password may
 be vulnerable to snooping (especially when daemon mode automatically
 polls for mail, shipping a clear password over the net at predictable
 intervals).  The --interface option may be used to prevent this by
-specifying a connection IP address (or range) for the mailserver
-TCP/IP link.  When the specified link is not up or is not connected to
-a matching IP address, polling will be skipped.  The format is:
+specifying an interface device and connection IP address (or range)
+for the mailserver TCP/IP link.  When the specified link is not up or
+is not connected to a matching IP address, polling will be skipped.
+The format is:
 .sp
 	interface/iii.iii.iii.iii/mmm.mmm.mmm.mmm
 .sp
