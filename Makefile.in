@@ -35,6 +35,7 @@ DEFS = @DEFS@ @EXTRADEFS@
 defines =  -DRELEASE_ID=\"$(VERS)\" $(DEFS)
 
 # If your system needs extra libraries loaded in, define them here.
+# In particular, add -lresolv if you are running bind 4.9.5
 LOADLIBS = @LIBS@ @LEXLIB@
 # LOADLIBS = -lsocket3r -lunix3r	# QNX
 
