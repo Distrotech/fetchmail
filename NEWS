@@ -1,8 +1,8 @@
 			To-do list:
 
 At this point, the fetchmail code appears to be stable and free of
-known bugs.  It will probably undergo substantial change only if and
-when support for a new retrieval protocol is added.
+bugs affecting normal operation.  It will probably undergo substantial
+change only if and when support for a new retrieval protocol is added.
 
 Test RPOP feature against a Unix server that has it.  The protocol
 transactions are certainly OK, the question is whether the rresvport() 
@@ -14,6 +14,17 @@ standardized.
 Inflict severe pain on the person(s) responsible for removing LAST from POP3.
 
 			Release Notes:
+
+fetchmail-1.5 (Thu Oct  3 04:35:15 EDT 1996):
+
+* Naturally, my decision to announce 1.4 on comp.os.linux.announce 
+  immediately caused the code to manifest its first real bug --
+  a core dump when the "From:" header is spelled "from:" (all lower
+  case).  Fixed.
+
+* Update and expansion of NOTES.
+
+* The --all and --flush flag validity checks move to driver.c.
 
 fetchmail-1.4 (Wed Oct  2 09:22:37 1996):
 
