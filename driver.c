@@ -622,10 +622,9 @@ struct query *ctl;	/* query control record */
 	    }
 
 	    /* write all the headers */
-	    if (ctl->mda[0])
+	    n = 0;
+	    if (sinkfp)
 		n = fwrite(headers, 1, oldlen, sinkfp);
-	    else if (sinkfp)
-		n = SockWrite(headers, oldlen, sinkfp);
 
 	    if (n < 0)
 	    {
@@ -686,10 +685,8 @@ struct query *ctl;	/* query control record */
 
 		strcat(errmsg, "\n");
 
-		if (ctl->mda[0])
+		if (sinkfp)
 		    fputs(errmsg, sinkfp);
-		else if (sinkfp)
-		    SockWrite(errmsg, strlen(errmsg), sinkfp);
 	    }
 
 	    free_str_list(&xmit_names);
@@ -698,7 +695,7 @@ struct query *ctl;	/* query control record */
 	/* SMTP byte-stuffing */
 	if (*bufp == '.' && ctl->mda[0] == 0)
 	    if (sinkfp)
-		SockWrite(".", 1, sinkfp);
+		fputs(".", sinkfp);
 
 	/* replace all LFs with CR-LF  in the line */
 	if (!ctl->mda[0])
@@ -710,10 +707,9 @@ struct query *ctl;	/* query control record */
 	}
 
 	/* ship out the text line */
-	if (ctl->mda[0])
+	n = 0;
+	if (sinkfp)
 	    n = fwrite(bufp, 1, strlen(bufp), sinkfp);
-	else if (sinkfp)
-	    n = SockWrite(bufp, strlen(bufp), sinkfp);
 
 	if (!ctl->mda[0])
 	    free(bufp);
@@ -1151,7 +1147,7 @@ va_dcl {
     va_end(ap);
 
     strcat(buf, "\r\n");
-    SockWrite(buf, strlen(buf), sockfp);
+    fputs(buf, sockfp);
 
     if (outlevel == O_VERBOSE)
     {
@@ -1194,7 +1190,7 @@ va_dcl {
   va_end(ap);
 
   strcat(buf, "\r\n");
-  SockWrite(buf, strlen(buf), sockfp);
+  fputs(buf, sockfp);
   if (outlevel == O_VERBOSE)
   {
       char *cp;

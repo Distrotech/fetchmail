@@ -21,13 +21,4 @@ returns 0 for success.
 */
 int SockGets(char *buf, int len, FILE *sockfp);
 
-/* Ship a character array to the socket */
-#define SockWrite(buf, len, sockfp)	fwrite(buf, 1, len, sockfp)
-
-/* 
-Send formatted output to the socket, followed
-by a CR-LF.  Returns 0 for success.
-*/
-#define SockPrintf	fprintf
-
 #endif /* SOCKET__ */
