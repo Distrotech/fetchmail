@@ -435,10 +435,10 @@ int delimited;		/* does the protocol use a message delimiter? */
 struct query *ctl;	/* query control record */
 char *realname;		/* real name of host */
 {
-    char buf [MSGBUFSIZE+1]; 
+    char buf[MSGBUFSIZE+1], return_path[MSGBUFSIZE+1]; 
     int	from_offs, to_offs, cc_offs, bcc_offs, ctt_offs, env_offs;
-    char *headers, *received_for, *return_path;
-    int n, linelen, oldlen, ch, sizeticker, delete_ok, remaining;
+    char *headers, *received_for;
+    int n, linelen, oldlen, ch, sizeticker, delete_ok, forward_ok, remaining;
     FILE *sinkfp;
     RETSIGTYPE (*sigchld)();
     char		*cp;
@@ -450,13 +450,15 @@ char *realname;		/* real name of host */
     int			olderrs;
 
     sizeticker = 0;
+    forward_ok = TRUE;
     delete_ok = TRUE;
     has_nuls = FALSE;
+    return_path[0] = '\0';
     remaining = len;
     olderrs = ctl->errcount;
 
     /* read message headers */
-    headers = received_for = return_path = NULL;
+    headers = received_for = NULL;
     from_offs = to_offs = cc_offs = bcc_offs = ctt_offs = env_offs = -1;
     oldlen = 0;
     for (;;)
@@ -557,7 +559,7 @@ char *realname;		/* real name of host */
 	 */
 	if (!ctl->mda && !strncasecmp("Return-Path:", line, 12))
 	{
-	    return_path = xstrdup(nxtaddr(line));
+	    strcpy(return_path, nxtaddr(line));
 	    free(line);
 	    continue;
 	}
@@ -754,8 +756,6 @@ char *realname;		/* real name of host */
 	    free_str_list(&xmit_names);
 	    error(0, -1, "SMTP connect to %s failed",
 		  ctl->smtphost ? ctl->smtphost : "localhost");
-	    if (return_path)
-		free(return_path);
 	    return(PS_SMTP);
 	}
 
@@ -800,7 +800,7 @@ char *realname;		/* real name of host */
 	 * local SMTP listener insists on them.
 	 */
 	ap = (char *)NULL;
-	if (return_path)
+	if (return_path[0])
 	    ap = return_path;
 	else if (from_offs == -1 || !(ap = nxtaddr(headers + from_offs)))
 	    ap = user;
@@ -831,7 +831,7 @@ char *realname;		/* real name of host */
 		 * this.  Don't try to ship the message, and
 		 * don't prevent it from being deleted.
 		 */
-		sinkfp = (FILE *)NULL;
+		forward_ok = FALSE;
 		goto skiptext;
 
 	    case 452: /* insufficient system storage */
@@ -841,6 +841,7 @@ char *realname;		/* real name of host */
 		 * and suppress deletion so it can be retried on
 		 * a future retrieval cycle.
 		 */
+		forward_ok = FALSE;
 		delete_ok = FALSE;
 		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
 		goto skiptext;
@@ -851,6 +852,7 @@ char *realname;		/* real name of host */
 		 * ESMTP server.  Don't try to ship the message, 
 		 * and allow it to be deleted.
 		 */
+		forward_ok = FALSE;
 		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
 		goto skiptext;
 
@@ -858,8 +860,7 @@ char *realname;		/* real name of host */
 		if (SMTP_from(ctl->smtp_socket, user, options) != SM_OK)
 		{
 		    error(0, -1, "SMTP error: %s", smtp_response);
-		    if (return_path)
-			free(return_path);
+		    free(headers);
 		    return(PS_SMTP);	/* should never happen */
 		}
 	    }
@@ -890,17 +891,12 @@ char *realname;		/* real name of host */
 	{
 	    error(0, 0, 
 		  "can't even send to calling user!");
-	    if (return_path)
-		free(return_path);
+	    free(headers);
 	    return(PS_SMTP);
 	}
 
 	/* tell it we're ready to send data */
 	SMTP_data(ctl->smtp_socket);
-
-    skiptext:;
-	if (return_path)
-	    free(return_path);
     }
 
     /* we may need to strip carriage returns */
@@ -921,11 +917,10 @@ char *realname;		/* real name of host */
 	n = fwrite(headers, 1, strlen(headers), sinkfp);
     else if (ctl->smtp_socket != -1)
 	n = SockWrite(ctl->smtp_socket, headers, strlen(headers));
+    free(headers);
 
     if (n < 0)
     {
-	free(headers);
-	headers = NULL;
 	error(0, errno, "writing RFC822 headers");
 	if (ctl->mda)
 	{
@@ -936,8 +931,6 @@ char *realname;		/* real name of host */
     }
     else if (outlevel == O_VERBOSE)
 	fputs("#", stderr);
-    free(headers);
-    headers = NULL;
 
     /* write error notifications */
 #ifdef HAVE_RES_SEARCH
@@ -1038,6 +1031,7 @@ char *realname;		/* real name of host */
      *  Body processing starts here
      */
 
+skiptext:
     /* pass through the text lines */
     while (delimited || remaining > 0)
     {
@@ -1076,44 +1070,45 @@ char *realname;		/* real name of host */
 		break;
 
 	/* ship out the text line */
-
-	/* SMTP byte-stuffing */
-	if (*buf == '.')
-	    if (sinkfp && ctl->mda)
-		fputs(".", sinkfp);
-	    else if (ctl->smtp_socket != -1)
-		SockWrite(ctl->smtp_socket, buf, 1);
-
-	/* we may need to strip carriage returns */
-	if (ctl->stripcr)
+	if (forward_ok)
 	{
-	    char	*sp, *tp;
+	    /* SMTP byte-stuffing */
+	    if (*buf == '.')
+		if (sinkfp && ctl->mda)
+		    fputs(".", sinkfp);
+		else if (forward_ok && ctl->smtp_socket != -1)
+		    SockWrite(ctl->smtp_socket, buf, 1);
 
-	    for (sp = tp = buf; *sp; sp++)
-		if (*sp != '\r')
-		    *tp++ =  *sp;
-	    *tp = '\0';
-	}
-
-	/* ship the text line */
-	n = 0;
-	if (sinkfp && ctl->mda)
-	    n = fwrite(buf, 1, strlen(buf), sinkfp);
-	else if (ctl->smtp_socket != -1)
-	    n = SockWrite(ctl->smtp_socket, buf, strlen(buf));
-
-	if (n < 0)
-	{
-	    error(0, errno, "writing message text");
-	    if (ctl->mda)
+	    /* we may need to strip carriage returns */
+	    if (ctl->stripcr)
 	    {
-		pclose(sinkfp);
-		signal(SIGCHLD, sigchld);
+		char	*sp, *tp;
+
+		for (sp = tp = buf; *sp; sp++)
+		    if (*sp != '\r')
+			*tp++ =  *sp;
+		*tp = '\0';
 	    }
-	    return(PS_IOERR);
+
+	    n = 0;
+	    if (ctl->mda)
+		n = fwrite(buf, 1, strlen(buf), sinkfp);
+	    else if (ctl->smtp_socket != -1)
+		n = SockWrite(ctl->smtp_socket, buf, strlen(buf));
+
+	    if (n < 0)
+	    {
+		error(0, errno, "writing message text");
+		if (ctl->mda)
+		{
+		    pclose(sinkfp);
+		    signal(SIGCHLD, sigchld);
+		}
+		return(PS_IOERR);
+	    }
+	    else if (outlevel == O_VERBOSE)
+		fputc('*', stderr);
 	}
-	else if (outlevel == O_VERBOSE)
-	    fputc('*', stderr);
     }
 
     /*
