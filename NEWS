@@ -12,6 +12,11 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.2.9 ()
+* Don't byte-stuff when writing to an MDA.
+
+There are 285 people on the fetchmail-friends list.
+
 fetchmail-4.2.8 (Sun Sep 28 16:59:59 EDT 1997)
 * Fixed a bug in POP2 compilation introduced sometime after 4.0.8.
 * Only emit length-mismatch messages in verbose mode.

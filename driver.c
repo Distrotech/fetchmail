@@ -464,11 +464,8 @@ static int stuffline(struct query *ctl, char *buf)
      * use .<CR><LF> as EOM.  If it does, the server will already have
      * decorated any . lines it sends back up.
      */
-    if (!protocol->delimited && *buf == '.')
-	if (sinkfp && ctl->mda)
-	    fputs(".", sinkfp);
-	else if (ctl->smtp_socket != -1)
-	    SockWrite(ctl->smtp_socket, buf, 1);
+    if (!protocol->delimited && *buf == '.' && ctl->smtp_socket != -1)
+	SockWrite(ctl->smtp_socket, buf, 1);
 
     /* we may need to strip carriage returns */
     if (ctl->stripcr)
