@@ -84,7 +84,7 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 	    {
 		for (ctl = hostlist; ctl; ctl = ctl->next)
 		{
-		    if (strcmp(host, ctl->servernames->id) == 0
+		    if (strcmp(host, ctl->server.names->id) == 0
 				&& strcmp(user, ctl->remotename) == 0)
 		    {
 			save_str(&ctl->oldsaved, -1, id);
@@ -256,7 +256,7 @@ void write_saved_lists(struct query *hostlist, const char *idfile)
 	    for (ctl = hostlist; ctl; ctl = ctl->next) {
 		for (idp = ctl->oldsaved; idp; idp = idp->next)
 		    fprintf(tmpfp, "%s@%s %s\n", 
-			    ctl->remotename, ctl->servernames->id, idp->id);
+			    ctl->remotename, ctl->server.names->id, idp->id);
 	    }
 	    for (idp = scratchlist; idp; idp = idp->next)
 		fputs(idp->id, tmpfp);

@@ -172,18 +172,18 @@ struct query *ctl;	/* option record to be initialized */
 	case LA_PROTOCOL:
 	    /* XXX -- should probably use a table lookup here */
 	    if (strcasecmp(optarg,"pop2") == 0)
-		ctl->protocol = P_POP2;
+		ctl->server.protocol = P_POP2;
 	    else if (strcasecmp(optarg,"pop3") == 0)
-		ctl->protocol = P_POP3;
+		ctl->server.protocol = P_POP3;
 	    else if (strcasecmp(optarg,"imap") == 0)
-		ctl->protocol = P_IMAP;
+		ctl->server.protocol = P_IMAP;
 	    else if (strcasecmp(optarg,"apop") == 0)
-		ctl->protocol = P_APOP;
+		ctl->server.protocol = P_APOP;
 	    else if (strcasecmp(optarg,"kpop") == 0)
 	    {
-		ctl->protocol = P_POP3;
-		ctl->port = KPOP_PORT;
-		ctl->authenticate =  A_KERBEROS;
+		ctl->server.protocol = P_POP3;
+		ctl->server.port = KPOP_PORT;
+		ctl->server.authenticate =  A_KERBEROS;
 	    }
 	    else {
 		fprintf(stderr,"Invalid protocol `%s' specified.\n", optarg);
@@ -192,14 +192,14 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'P':
 	case LA_PORT:
-	    ctl->port = atoi(optarg);
+	    ctl->server.port = atoi(optarg);
 	    break;
 	case 'A':
 	case LA_AUTHENTICATE:
 	    if (strcmp(optarg, "password") == 0)
-		ctl->authenticate = A_PASSWORD;
+		ctl->server.authenticate = A_PASSWORD;
 	    else if (strcmp(optarg, "kerberos") == 0)
-		ctl->authenticate = A_KERBEROS;
+		ctl->server.authenticate = A_KERBEROS;
 	    else {
 		fprintf(stderr,"Invalid authentication `%s' specified.\n", optarg);
 		errflag++;
@@ -207,11 +207,11 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 't':
 	case LA_TIMEOUT:
-	    ctl->timeout = atoi(optarg);
+	    ctl->server.timeout = atoi(optarg);
 	    break;
 	case 'E':
 	case LA_ENVELOPE:
-	    ctl->envelope = xstrdup(optarg);
+	    ctl->server.envelope = xstrdup(optarg);
 	    break;
 
 	case 'u':

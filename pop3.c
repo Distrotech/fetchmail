@@ -68,7 +68,7 @@ int pop3_getauth(FILE *sockfp, struct query *ctl, char *greeting)
 /* apply for connection authorization */
 {
     /* build MD5 digest from greeting timestamp + password */
-    if (ctl->protocol == P_APOP) 
+    if (ctl->server.protocol == P_APOP) 
     {
 	char *start,*end;
 	char *msg;
@@ -100,7 +100,7 @@ int pop3_getauth(FILE *sockfp, struct query *ctl, char *greeting)
 	free(msg);
     }
 
-    switch (ctl->protocol) {
+    switch (ctl->server.protocol) {
     case P_POP3:
 	if ((gen_transact(sockfp,"USER %s", ctl->remotename)) != 0)
 	    PROTOCOL_ERROR

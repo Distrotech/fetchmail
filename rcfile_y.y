@@ -81,41 +81,41 @@ statement	: SET BATCHLIMIT MAP NUMBER	{batchlimit = $4;}
 		| define_server serverspecs userspecs
 		;
 
-define_server	: POLL STRING	{current.servernames = (struct idlist *)NULL;
-					save_str(&current.servernames, -1, $2);
-					current.skip = FALSE;}
-		| SKIP STRING	{current.servernames = (struct idlist *)NULL;
-					save_str(&current.servernames, -1, $2);
-					current.skip = TRUE;}
-		| DEFAULTS	{current.servernames = (struct idlist *)NULL;
-					save_str(&current.servernames, -1,"defaults");}
+define_server	: POLL STRING	{current.server.names = (struct idlist *)NULL;
+					save_str(&current.server.names, -1,$2);
+					current.server.skip = FALSE;}
+		| SKIP STRING	{current.server.names = (struct idlist *)NULL;
+					save_str(&current.server.names, -1,$2);
+					current.server.skip = TRUE;}
+		| DEFAULTS	{current.server.names = (struct idlist *)NULL;
+					save_str(&current.server.names, -1,"defaults");}
   		;
 
 serverspecs	: /* EMPTY */
 		| serverspecs serv_option
 		;
 
-alias_list	: STRING		{save_str(&current.servernames,-1,$1);}
-		| alias_list STRING	{save_str(&current.servernames,-1,$2);}
+alias_list	: STRING		{save_str(&current.server.names,-1,$1);}
+		| alias_list STRING	{save_str(&current.server.names,-1,$2);}
 		;
 
-domain_list	: STRING		{save_str(&current.localdomains,-1,$1);}
-		| domain_list STRING	{save_str(&current.localdomains,-1,$2);}
+domain_list	: STRING		{save_str(&current.server.localdomains,-1,$1);}
+		| domain_list STRING	{save_str(&current.server.localdomains,-1,$2);}
 		;
 
 serv_option	: AKA alias_list
 		| LOCALDOMAINS domain_list
-		| PROTOCOL PROTO	{current.protocol = $2;}
+		| PROTOCOL PROTO	{current.server.protocol = $2;}
 		| PROTOCOL KPOP		{
-					    current.protocol = P_POP3;
-		    			    current.authenticate = A_KERBEROS;
-					    current.port = KPOP_PORT;
+					    current.server.protocol = P_POP3;
+		    			    current.server.authenticate = A_KERBEROS;
+					    current.server.port = KPOP_PORT;
 					}
-		| PORT NUMBER		{current.port = $2;}
-		| AUTHENTICATE PASSWORD	{current.authenticate = A_PASSWORD;}
-		| AUTHENTICATE KERBEROS	{current.authenticate = A_KERBEROS;}
-		| TIMEOUT NUMBER	{current.timeout = $2;}
-		| ENVELOPE STRING	{current.envelope = xstrdup($2);}
+		| PORT NUMBER		{current.server.port = $2;}
+		| AUTHENTICATE PASSWORD	{current.server.authenticate = A_PASSWORD;}
+		| AUTHENTICATE KERBEROS	{current.server.authenticate = A_KERBEROS;}
+		| TIMEOUT NUMBER	{current.server.timeout = $2;}
+		| ENVELOPE STRING	{current.server.envelope = xstrdup($2);}
 		;
 
 /*
@@ -272,7 +272,7 @@ const char *pathname;		/* pathname for the configuration file */
 static void prc_reset(void)
 /* clear the global current record (server parameters) used by the parser */
 {
-    struct query save;
+    struct hostdata save;
 
     /*
      * Purpose of this code is to initialize the new server block, but
@@ -280,18 +280,11 @@ static void prc_reset(void)
      * preserve server options unless the command-line explicitly
      * overrides them.
      */
-    save = current;
+    save = current.server;
 
     memset(&current, '\0', sizeof(current));
 
-    current.servernames = save.servernames;
-    current.localdomains = save.localdomains;
-    current.protocol = save.protocol;
-    current.port = save.port;
-    current.authenticate = save.authenticate;
-    current.timeout = save.timeout;
-    current.envelope = save.envelope;
-    current.skip = save.skip;
+    current.server = save;
 }
 
 struct query *hostalloc(init)
@@ -329,12 +322,12 @@ static void prc_register(void)
 #undef STR_FORCE
     
 #define FLAG_FORCE(fld) if (cmd_opts.fld) current.fld = cmd_opts.fld
-    FLAG_FORCE(protocol);
-    FLAG_FORCE(port);
-    FLAG_FORCE(authenticate);
-    FLAG_FORCE(timeout);
-    FLAG_FORCE(envelope);	/* yes, even though this is a string */
-    FLAG_FORCE(skip);
+    FLAG_FORCE(server.protocol);
+    FLAG_FORCE(server.port);
+    FLAG_FORCE(server.authenticate);
+    FLAG_FORCE(server.timeout);
+    FLAG_FORCE(server.envelope);	/* yes, even though this is a string */
+    FLAG_FORCE(server.skip);
 
     FLAG_FORCE(keep);
     FLAG_FORCE(flush);
@@ -350,8 +343,8 @@ static void prc_register(void)
 void optmerge(struct query *h2, struct query *h1)
 /* merge two options records; empty fields in h2 are filled in from h1 */
 {
+    append_str_list(&h2->server.localdomains, &h1->server.localdomains);
     append_str_list(&h2->localnames, &h1->localnames);
-    append_str_list(&h2->localdomains, &h1->localdomains);
 
 #define STR_MERGE(fld, len) if (*(h2->fld) == '\0') strcpy(h2->fld, h1->fld)
     STR_MERGE(remotename, USERNAMELEN);
@@ -363,12 +356,12 @@ void optmerge(struct query *h2, struct query *h1)
 #undef STR_MERGE
 
 #define FLAG_MERGE(fld) if (!h2->fld) h2->fld = h1->fld
-    FLAG_MERGE(protocol);
-    FLAG_MERGE(port);
-    FLAG_MERGE(authenticate);
-    FLAG_MERGE(timeout);
-    FLAG_MERGE(envelope);	/* yes, even though this is a string */
-    FLAG_MERGE(skip);
+    FLAG_MERGE(server.protocol);
+    FLAG_MERGE(server.port);
+    FLAG_MERGE(server.authenticate);
+    FLAG_MERGE(server.timeout);
+    FLAG_MERGE(server.envelope);	/* yes, even though this is a string */
+    FLAG_MERGE(server.skip);
 
     FLAG_MERGE(keep);
     FLAG_MERGE(flush);

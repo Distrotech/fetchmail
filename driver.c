@@ -130,7 +130,7 @@ static int is_host_alias(const char *name, struct query *ctl)
      * name doesn't match either is it time to call the bind library.
      * If this happens odds are good we're looking at an MX name.
      */
-    if (str_in_list(&ctl->lead_server->servernames, name))
+    if (str_in_list(&ctl->lead_server->server.names, name))
 	return(TRUE);
     else if (strcmp(name, ctl->canonical_name) == 0)
 	return(TRUE);
@@ -162,7 +162,7 @@ static int is_host_alias(const char *name, struct query *ctl)
 		putchar('\n');	/* terminate the progress message */
 	    error(0, 0,
 		"nameserver failure while looking for `%s' during poll of %s.",
-		name, ctl->servernames->id);
+		name, ctl->server.names->id);
 	    ctl->errcount++;
 	    longjmp(restart, 2);	/* try again next poll cycle */
 	    break;
@@ -188,7 +188,7 @@ static int is_host_alias(const char *name, struct query *ctl)
 	default:
 	    error(0, 0,
 		"nameserver failure while looking for `%s' during poll of %s.",
-		name, ctl->servernames->id);
+		name, ctl->server.names->id);
 	    ctl->errcount++;
 	    longjmp(restart, 2);	/* try again next poll cycle */
 	    break;
@@ -204,7 +204,7 @@ static int is_host_alias(const char *name, struct query *ctl)
     }
 
     /* add this name to relevant server's `also known as' list */
-    save_str(&ctl->lead_server->servernames, -1, name);
+    save_str(&ctl->lead_server->server.names, -1, name);
     return(TRUE);
 }
 
@@ -253,7 +253,7 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 		     * on the localdomains list?  If so, save the whole name
 		     * and keep going.
 		     */
-		    for (idp = ctl->localdomains; idp; idp = idp->next)
+		    for (idp = ctl->server.localdomains; idp; idp = idp->next)
 		    {
 			char	*rhs;
 
@@ -308,7 +308,7 @@ static FILE *smtp_open(struct query *ctl)
 	if ((lead->smtp_sockfp = SockOpen(lead->smtphost, SMTP_PORT)) == (FILE *)NULL)
 	    return((FILE *)NULL);
 	else if (SMTP_ok(lead->smtp_sockfp) != SM_OK
-		 || SMTP_helo(lead->smtp_sockfp, ctl->servernames->id) != SM_OK)
+		 || SMTP_helo(lead->smtp_sockfp, ctl->server.names->id) != SM_OK)
 	{
 	    fclose(lead->smtp_sockfp);
 	    lead->smtp_sockfp = (FILE *)NULL;
@@ -348,7 +348,7 @@ char *realname;		/* real name of host */
 	if (!SockGets(buf,sizeof(buf),sockfp))
 	    return(PS_SOCKET);
 	n = strlen(buf);
-	vtalarm(ctl->timeout);
+	vtalarm(ctl->server.timeout);
 
 	/* squeeze out all carriage returns */
 	for (fromptr = toptr = buf; *fromptr; fromptr++)
@@ -425,7 +425,7 @@ char *realname;		/* real name of host */
 		tohdr = bufp;
 	    else if (!strncasecmp("Apparently-To:", bufp, 14))
 		envto = bufp;
-	    else if (!strncasecmp(ctl->envelope, bufp, 14))
+	    else if (!strncasecmp(ctl->server.envelope, bufp, 14))
 		envto = bufp;
 	    else if (!strncasecmp("Cc:", bufp, 3))
 		cchdr = bufp;
@@ -866,7 +866,7 @@ const struct method *proto;	/* protocol method table */
     void (*sigsave)();
 
 #ifndef KERBEROS_V4
-    if (ctl->authenticate == A_KERBEROS)
+    if (ctl->server.authenticate == A_KERBEROS)
     {
 	error(0, 0, "Kerberos support not linked.");
 	return(PS_ERROR);
@@ -906,13 +906,13 @@ const struct method *proto;	/* protocol method table */
 
     /* set up the server-nonresponse timeout */
     sigsave = signal(SIGVTALRM, vtalarm_handler);
-    vtalarm(mytimeout = ctl->timeout);
+    vtalarm(mytimeout = ctl->server.timeout);
 
     if ((js = setjmp(restart)) == 1)
     {
 	error(0, 0,
 		"timeout after %d seconds waiting for %s.",
-		ctl->timeout, ctl->servernames->id);
+		ctl->server.timeout, ctl->server.names->id);
 	ok = PS_ERROR;
     }
     else if (js == 2)
@@ -935,8 +935,8 @@ const struct method *proto;	/* protocol method table */
 	}
 
 	/* open a socket to the mail server */
-	if ((sockfp = SockOpen(ctl->servernames->id,
-			     ctl->port ? ctl->port : protocol->port)) == NULL)
+	if (!(sockfp = SockOpen(ctl->server.names->id,
+		     ctl->server.port ? ctl->server.port : protocol->port)))
 	{
 	    if (errno != EHOSTUNREACH)
 		error(0, errno, "connecting to host");
@@ -950,7 +950,7 @@ const struct method *proto;	/* protocol method table */
 	    ok = kerberos_auth(fileno(sockfp), ctl->canonical_name);
  	    if (ok != 0)
 		goto cleanUp;
-	    vtalarm(ctl->timeout);
+	    vtalarm(ctl->server.timeout);
 	}
 #endif /* KERBEROS_V4 */
 
@@ -958,7 +958,7 @@ const struct method *proto;	/* protocol method table */
 	ok = (protocol->parse_response)(sockfp, buf);
 	if (ok != 0)
 	    goto cleanUp;
-	vtalarm(ctl->timeout);
+	vtalarm(ctl->server.timeout);
 
 	/*
 	 * Try to parse the host's actual name out of the greeting
@@ -1033,7 +1033,7 @@ const struct method *proto;	/* protocol method table */
 	    *tp = '\0';
 	}
 	else
-	    strcpy(realname, ctl->servernames->id);
+	    strcpy(realname, ctl->server.names->id);
 
 	/* try to get authorized to fetch mail */
 	shroud = ctl->password;
@@ -1043,13 +1043,13 @@ const struct method *proto;	/* protocol method table */
 	    ok = PS_AUTHFAIL;
 	if (ok != 0)
 	    goto cleanUp;
-	vtalarm(ctl->timeout);
+	vtalarm(ctl->server.timeout);
 
 	/* compute number of messages and number of new messages waiting */
 	ok = (protocol->getrange)(sockfp, ctl, &count, &new);
 	if (ok != 0)
 	    goto cleanUp;
-	vtalarm(ctl->timeout);
+	vtalarm(ctl->server.timeout);
 
 	/* show user how many messages we downloaded */
 	if (outlevel > O_SILENT)
@@ -1079,7 +1079,7 @@ const struct method *proto;	/* protocol method table */
 	    ok = (proto->getsizes)(sockfp, count, msgsizes);
 	    if (ok != 0)
 		goto cleanUp;
-	    vtalarm(ctl->timeout);
+	    vtalarm(ctl->server.timeout);
 	}
 
 
@@ -1141,7 +1141,7 @@ const struct method *proto;	/* protocol method table */
 		    ok = (protocol->fetch)(sockfp, ctl, num, &len);
 		    if (ok != 0)
 			goto cleanUp;
-		    vtalarm(ctl->timeout);
+		    vtalarm(ctl->server.timeout);
 
 		    if (outlevel > O_SILENT)
 		    {
@@ -1162,7 +1162,7 @@ const struct method *proto;	/* protocol method table */
 				     realname);
 		    if (ok != 0)
 			goto cleanUp;
-		    vtalarm(ctl->timeout);
+		    vtalarm(ctl->server.timeout);
 
 		    /* tell the server we got it OK and resynchronize */
 		    if (protocol->trail)
@@ -1170,7 +1170,7 @@ const struct method *proto;	/* protocol method table */
 			ok = (protocol->trail)(sockfp, ctl, num);
 			if (ok != 0)
 			    goto cleanUp;
-			vtalarm(ctl->timeout);
+			vtalarm(ctl->server.timeout);
 		    }
 		}
 
@@ -1193,7 +1193,7 @@ const struct method *proto;	/* protocol method table */
 		    ok = (protocol->delete)(sockfp, ctl, num);
 		    if (ok != 0)
 			goto cleanUp;
-		    vtalarm(ctl->timeout);
+		    vtalarm(ctl->server.timeout);
 		    delete_str(&ctl->newsaved, num);
 		}
 		else if (outlevel > O_SILENT) 
@@ -1210,7 +1210,7 @@ const struct method *proto;	/* protocol method table */
 		ok = gen_transact(sockfp, protocol->expunge_cmd);
 		if (ok != 0)
 		    goto cleanUp;
-		vtalarm(ctl->timeout);
+		vtalarm(ctl->server.timeout);
 	    }
 
 	    ok = gen_transact(sockfp, protocol->exit_cmd);
@@ -1230,7 +1230,7 @@ const struct method *proto;	/* protocol method table */
 	}
 
     cleanUp:
-	vtalarm(ctl->timeout);
+	vtalarm(ctl->server.timeout);
 	if (ok != 0 && ok != PS_SOCKET)
 	    gen_transact(sockfp, protocol->exit_cmd);
 	vtalarm(0);
@@ -1266,7 +1266,7 @@ const struct method *proto;	/* protocol method table */
     }
     if (ok==PS_SOCKET || ok==PS_AUTHFAIL || ok==PS_SYNTAX || ok==PS_IOERR
 		|| ok==PS_ERROR || ok==PS_PROTOCOL || ok==PS_SMTP)
-	error(0, 0, "%s error while fetching from %s", msg, ctl->servernames->id);
+	error(0, 0, "%s error while fetching from %s", msg, ctl->server.names->id);
 
 closeUp:
     signal(SIGVTALRM, sigsave);

@@ -59,10 +59,10 @@ struct idlist
     struct idlist *next;
 };
 
-struct query
+
+struct hostdata		/* shared among all user connections to given server */
 {
-    /* per-host data */
-    struct idlist *servernames;		/* servername first, then akas */
+    struct idlist *names;		/* server name first, then akas */
     struct idlist *localdomains;	/* list of pass-through domains */
     int protocol;
     int port;
@@ -70,6 +70,12 @@ struct query
     int timeout;
     char *envelope;
     int skip;
+};
+
+struct query
+{
+    /* mailserver connection controls */
+    struct hostdata server;
 
     /* per-user data */
     struct idlist *localnames;		/* including calling user's name */
