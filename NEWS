@@ -29,6 +29,8 @@ bugs --
 * Force line-buffering on socket streams (Linux apparently defaults to this).
   This may fix some hang problems reported under Solaris.
 
+There are 166 people on the fetchmail-friends list.
+
 ------------------------------------------------------------------------------
 
 features -- 
