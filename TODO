@@ -1,0 +1,26 @@
+REGULAR RELEASE PREPARATIONS
+============================
+
+run regression tests
+
+have .po files updated by the translation project
+
+
+SERIOUS
+=======
+
+SSL trust model violation: (Brian Candler)
+http://lists.ccil.org/pipermail/fetchmail-friends/2004-April/008516.html
+
+
+NORMAL
+======
+
+POP3 hang when polling mail with NUL char that is rejected (David Greaves)
+https://lists.berlios.de/pipermail/fetchmail-devel/2004-October/000154.html
+
+
+COSMETIC
+========
+
+SSL validation prints CommonName mismatch more than once.
