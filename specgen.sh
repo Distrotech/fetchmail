@@ -18,7 +18,7 @@ make
 make install
 
 %files
-%doc README NEWS NOTES fetchmail.FAQ.html FAQ COPYING INSTALL sample.rcfile
+%doc README NEWS NOTES fetchmail-FAQ.html FAQ COPYING INSTALL sample.rcfile
 
 %ifarch i386
 %endif

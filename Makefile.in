@@ -195,7 +195,7 @@ docs = $(srcdir)/COPYING $(srcdir)/FEATURES $(srcdir)/fetchmail-features.html \
 	$(srcdir)/design-notes.html $(srcdir)/NOTES \
 	$(srcdir)/INSTALL $(srcdir)/NEWS  $(srcdir)/README \
 	$(srcdir)/fetchmail.lsm $(srcdir)/sample.rcfile \
-	$(srcdir)/*.man	$(srcdir)/FAQ $(srcdir)/fetchmail.FAQ.html
+	$(srcdir)/*.man	$(srcdir)/FAQ $(srcdir)/fetchmail-FAQ.html
 config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/configure \
 	$(srcdir)/config.guess $(srcdir)/config.h.in $(srcdir)/config.sub \
 	$(srcdir)/acconfig.h
@@ -208,9 +208,9 @@ MANIFEST: $(srcdir) Makefile.in
 	@echo $(all) | tr "[ \t]" '\n' | sed -e '/^\.\//s///' | sort >MANIFEST
 	@wc -l MANIFEST
 
-FAQ: fetchmail.FAQ.html
-	echo "   (This document was generated from fetchmail.FAQ.html)" >FAQ
-	lynx -dump -nolist fetchmail.FAQ.html >>FAQ
+FAQ: fetchmail-FAQ.html
+	echo "   (This document was generated from fetchmail-FAQ.html)" >FAQ
+	lynx -dump -nolist fetchmail-FAQ.html >>FAQ
 
 FEATURES: fetchmail-features.html
 	echo "   (This document was generated from fetchmail-features.html)" >FEATURES
