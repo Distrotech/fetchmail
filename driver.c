@@ -1883,7 +1883,7 @@ const struct method *proto;	/* protocol method table */
 		   * Only re-poll if we allowed deletions and had no errors.
 		   * Otherwise it is far too easy to get into infinite loops.
 		   */
-		  (protocol->retry && !ctl->keep && !ctl->errcount);
+		  (fetches && protocol->retry && !ctl->keep && !ctl->errcount);
 	}
 
    no_error:
