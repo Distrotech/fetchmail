@@ -680,15 +680,14 @@ struct query *ctl;	/* query control record */
 		SMTP_data(sinkfp);
 		if (outlevel == O_VERBOSE)
 		    fputs("SMTP> ", stderr);
-
-		mboxfd = fileno(sinkfp);
 	    }
 	    free_uid_list(&xmit_names);
 
 	    /* change continuation markers back to regular newlines */
-	    for (cp = headers; cp < headers +  oldlen; cp++)
+	    for (cp = headers; cp < headers + oldlen; cp++)
 		if (*cp == '\r')
 		    *cp = '\n';
+	    headers[oldlen++] = '\0';
 
 	    /* replace all LFs with CR-LF before sending to the SMTP server */
 	    if (!ctl->mda[0])
@@ -701,7 +700,14 @@ struct query *ctl;	/* query control record */
 		free(headers);
 		headers = newheaders;
 	    }
-	    if (write(mboxfd,headers,oldlen) < 0)
+
+	    /* write all the headers */
+	    if (ctl->mda[0])
+		n = write(mboxfd,headers,oldlen);
+	    else
+		n = SockPuts(headers, sinkfp);
+
+	    if (n < 0)
 	    {
 		free(headers);
 		headers = NULL;
@@ -716,9 +722,9 @@ struct query *ctl;	/* query control record */
 
 	/* SMTP byte-stuffing */
 	if (*bufp == '.' && ctl->mda[0] == 0)
-	    write(mboxfd, ".", 1);
+	    SockPuts(".", sinkfp);
 
-	/* write this line to the file after replacing all LFs with CR-LF */
+	/* replace all LFs with CR-LF  in the line */
 	if (!ctl->mda[0])
 	{
 	    char *newbufp = malloc(1 + strlen(bufp) * 2);
@@ -728,7 +734,13 @@ struct query *ctl;	/* query control record */
 	    strcrlf(newbufp, bufp, strlen(bufp));
 	    bufp = newbufp;
 	}
-	n = write(mboxfd,bufp,strlen(bufp));
+
+	/* ship out the text line */
+	if (ctl->mda[0])
+	    n = write(mboxfd,bufp,strlen(bufp));
+	else
+	    n = SockPuts(bufp, sinkfp);
+
 	if (!ctl->mda[0])
 	    free(bufp);
 	if (n < 0)
@@ -1074,6 +1086,7 @@ va_dcl {
     vsprintf(buf + strlen(buf), fmt, ap);
     va_end(ap);
 
+    strcat(buf, "\r\n");
     SockPuts(buf, sockfp);
 
     if (outlevel == O_VERBOSE)
@@ -1115,6 +1128,7 @@ va_dcl {
   vsprintf(buf + strlen(buf), fmt, ap);
   va_end(ap);
 
+  strcat(buf, "\r\n");
   SockPuts(buf, sockfp);
   if (outlevel == O_VERBOSE)
   {

@@ -78,11 +78,7 @@ int SockPuts(buf, sockfp)
 char *buf;
 FILE *sockfp;
 {
-    int rc;
-    
-    if ((rc = SockWrite(fileno(sockfp), buf, strlen(buf))) != 0)
-        return rc;
-    return SockWrite(fileno(sockfp), "\r\n", 2);
+    return(SockWrite(fileno(sockfp), buf, strlen(buf)));
 }
 
 int SockWrite(socket,buf,len)
@@ -90,7 +86,7 @@ int socket;
 char *buf;
 int len;
 {
-    int n;
+    int n, rdlen = 0;
     
     while (len)
     {
@@ -98,9 +94,10 @@ int len;
         if (n <= 0)
             return -1;
         len -= n;
-        buf += n;
+	rdlen += n;
+	buf += n;
     }
-    return 0;
+    return rdlen;
 }
 
 static int sbuflen = 0;
