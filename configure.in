@@ -606,7 +606,7 @@ then
   fi
 fi])
 
-AC_OUTPUT([Makefile intl/Makefile po/Makefile.in], [
+AC_OUTPUT([Makefile po/Makefile.in], [
 	# The reason for this odd makedepend line is that we want
 	# to have all dependencies evaluated relative to the source directory
 	# and let VPATH do all the dirty work when we build remotely
