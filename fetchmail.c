@@ -530,6 +530,7 @@ static int load_params(int argc, char **argv, int optind)
     def_opts.server.timeout = CLIENT_TIMEOUT;
     def_opts.remotename = user;
     save_str(&def_opts.smtphunt, -1, fetchmailhost);
+    save_str(&def_opts.smtphunt, -1, "localhost");
 
     /* this builds the host list */
     if (prc_parse_file(rcfile, !versioninfo) != 0)
