@@ -52,13 +52,13 @@ static int handle_plugin(const char *host,
     int fds[2];
     if (socketpair(AF_UNIX,SOCK_STREAM,0,fds))
     {
-	report(stderr, errno, _("fetchmail: socketpair failed"));
+	report(stderr, errno, _("fetchmail: socketpair failed\n"));
 	return -1;
     }
     switch (fork()) {
 	case -1:
 		/* error */
-		report(stderr, errno, _("fetchmail: fork failed"));
+		report(stderr, errno, _("fetchmail: fork failed\n"));
 		return -1;
 		break;
 	case 0:	/* child */
@@ -66,15 +66,15 @@ static int handle_plugin(const char *host,
 		** detection */
 		(void) close(fds[1]);
 		if ( (dup2(fds[0],0) == -1) || (dup2(fds[0],1) == -1) ) {
-			report(stderr, errno, _("dup2 failed"));
+			report(stderr, errno, _("dup2 failed\n"));
 			exit(1);
 		}
 		/* fds[0] is now connected to 0 and 1; close it */
 		(void) close(fds[0]);
 		if (outlevel >= O_VERBOSE)
-		    report(stderr, 0, _("running %s %s %s"), plugin, host, service);
+		    report(stderr, 0, _("running %s %s %s\n"), plugin, host, service);
 		execlp(plugin,plugin,host,service,0);
-		report(stderr, errno, _("execl(%s) failed"), plugin);
+		report(stderr, errno, _("execl(%s) failed\n"), plugin);
 		exit(0);
 		break;
 	default:	/* parent */
@@ -106,7 +106,7 @@ int SockOpen(const char *host, const char *service, const char *options,
     req.ai_socktype = SOCK_STREAM;
 
     if (i = getaddrinfo(host, service, &req, &ai)) {
-	report(stderr, i, _("fetchmail: getaddrinfo(%s.%s)"), host,service);
+	report(stderr, i, _("fetchmail: getaddrinfo(%s.%s)\n"), host,service);
 	return -1;
     };
 
@@ -186,7 +186,8 @@ int SockOpen(const char *host, int clientPort, const char *options,
 	if(hp->h_length != 4 && hp->h_length != 8)
 	{
 	    h_errno = errno = 0;
-	    report(stderr, 0, _("fetchmail: illegal address length received for host %s"),host);
+	    report(stderr, 0, 
+		   _("fetchmail: illegal address length received for host %s\n"),host);
 	    return -1;
 	}
 	/*

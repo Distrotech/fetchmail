@@ -225,7 +225,6 @@ report (FILE *errfp, errnum, message, va_alist)
 	  fprintf (errfp, _(": Error %d"), errnum);
 	}
       }
-      putc ('\n', errfp);
       fflush (errfp);
     }
   ++error_message_count;
@@ -468,7 +467,6 @@ report_complete (FILE *errfp, errnum, message, va_alist)
       if (errnum)
 	fprintf (errfp, ": %s", strerror (errnum));
 
-      putc ('\n', errfp);
       fflush (errfp);
 
       ++error_message_count;

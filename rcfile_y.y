@@ -375,7 +375,7 @@ int prc_filecheck(const char *pathname, const flag securecheck)
 	if (errno == ENOENT) 
 	    return(PS_SUCCESS);
 	else {
-	    report(stderr, errno, "lstat: %s", pathname);
+	    report(stderr, errno, "lstat: %s\n", pathname);
 	    return(PS_IOERR);
 	}
     }
@@ -423,7 +423,7 @@ int prc_parse_file (const char *pathname, const flag securecheck)
     if (strcmp(pathname, "-") == 0)
 	yyin = stdin;
     else if ((yyin = fopen(pathname,"r")) == (FILE *)NULL) {
-	report(stderr, errno, "open: %s", pathname);
+	report(stderr, errno, "open: %s\n", pathname);
 	return(PS_IOERR);
     }
 

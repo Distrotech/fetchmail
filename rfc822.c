@@ -178,7 +178,7 @@ const char *host;	/* server hostname */
 
 #ifndef TESTMAIN
     if (outlevel >= O_DEBUG)
-	report_complete(stdout, 0, "Rewritten version is %s", buf);
+	report_complete(stdout, 0, "Rewritten version is %s\n", buf);
 #endif /* TESTMAIN */
     return(buf);
 }

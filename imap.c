@@ -142,7 +142,7 @@ static int do_otp(int sock, struct query *ctl)
 	return rval;
 
     if ((i = from64tobits(challenge, buffer)) < 0) {
-	report(stderr, 0, _("Could not decode initial BASE64 challenge"));
+	report(stderr, 0, _("Could not decode initial BASE64 challenge\n"));
 	return PS_AUTHFAIL;
     };
 
@@ -150,7 +150,7 @@ static int do_otp(int sock, struct query *ctl)
     to64frombits(buffer, ctl->remotename, strlen(ctl->remotename));
 
     if (outlevel >= O_MONITOR)
-	report(stdout, 0, "IMAP> %s", buffer);
+	report(stdout, 0, "IMAP> %s\n", buffer);
     SockWrite(sock, buffer, strlen(buffer));
     SockWrite(sock, "\r\n", 2);
 
@@ -158,7 +158,7 @@ static int do_otp(int sock, struct query *ctl)
 	return rval;
 
     if ((i = from64tobits(challenge, buffer)) < 0) {
-	report(stderr, 0, _("Could not decode OTP challenge"));
+	report(stderr, 0, _("Could not decode OTP challenge\n"));
 	return PS_AUTHFAIL;
     };
 
@@ -177,7 +177,7 @@ static int do_otp(int sock, struct query *ctl)
     to64frombits(buffer, response, strlen(response));
 
     if (outlevel >= O_MONITOR)
-	report(stdout, 0, "IMAP> %s", buffer);
+	report(stdout, 0, "IMAP> %s\n", buffer);
     SockWrite(sock, buffer, strlen(buffer));
     SockWrite(sock, "\r\n", 2);
 
@@ -241,7 +241,7 @@ static int do_rfc1731(int sock, char *truename)
 
     len = from64tobits(challenge1.cstr, buf1);
     if (len < 0) {
-	report(stderr, 0, _("could not decode initial BASE64 challenge"));
+	report(stderr, 0, _("could not decode initial BASE64 challenge\n"));
 	return PS_AUTHFAIL;
     }
 
@@ -270,13 +270,13 @@ static int do_rfc1731(int sock, char *truename)
 
     result = krb_mk_req(&authenticator, "imap", srvinst, srvrealm, 0);
     if (result) {
-	report(stderr, 0, "krb_mq_req: %s", krb_get_err_text(result));
+	report(stderr, 0, "krb_mq_req: %s\n", krb_get_err_text(result));
 	return PS_AUTHFAIL;
     }
 
     result = krb_get_cred("imap", srvinst, srvrealm, &credentials);
     if (result) {
-	report(stderr, 0, "krb_get_cred: %s", krb_get_err_text(result));
+	report(stderr, 0, "krb_get_cred: %s\n", krb_get_err_text(result));
 	return PS_AUTHFAIL;
     }
 
@@ -286,18 +286,20 @@ static int do_rfc1731(int sock, char *truename)
 
     result = krb_get_tf_fullname(TKT_FILE, tktuser, tktinst, tktrealm);
     if (result) {
-	report(stderr, 0, "krb_get_tf_fullname: %s", krb_get_err_text(result));
+	report(stderr, 0, "krb_get_tf_fullname: %s\n", krb_get_err_text(result));
 	return PS_AUTHFAIL;
     }
 
     if (strcmp(tktuser, user) != 0) {
-	report(stderr, 0, _("principal %s in ticket does not match -u %s"), tktuser,
+	report(stderr, 0, 
+	       _("principal %s in ticket does not match -u %s\n"), tktuser,
 		user);
 	return PS_AUTHFAIL;
     }
 
     if (tktinst[0]) {
-	report(stderr, 0, _("non-null instance (%s) might cause strange behavior"),
+	report(stderr, 0, 
+	       _("non-null instance (%s) might cause strange behavior\n"),
 		tktinst);
 	strcat(tktuser, ".");
 	strcat(tktuser, tktinst);
@@ -311,13 +313,13 @@ static int do_rfc1731(int sock, char *truename)
     result = krb_mk_req(&authenticator, "imap", srvinst, srvrealm,
 	    challenge1.cint);
     if (result) {
-	report(stderr, 0, "krb_mq_req: %s", krb_get_err_text(result));
+	report(stderr, 0, "krb_mq_req: %s\n", krb_get_err_text(result));
 	return PS_AUTHFAIL;
     }
 
     to64frombits(buf1, authenticator.dat, authenticator.length);
     if (outlevel >= O_MONITOR) {
-	report(stdout, 0, "IMAP> %s", buf1);
+	report(stdout, 0, "IMAP> %s\n", buf1);
     }
     SockWrite(sock, buf1, strlen(buf1));
     SockWrite(sock, "\r\n", 2);
@@ -363,14 +365,14 @@ static int do_rfc1731(int sock, char *truename)
 
     len = from64tobits(buf2, buf1);
     if (len < 0) {
-	report(stderr, 0, _("could not decode BASE64 ready response"));
+	report(stderr, 0, _("could not decode BASE64 ready response\n"));
 	return PS_AUTHFAIL;
     }
 
     des_ecb_encrypt((des_cblock *)buf2, (des_cblock *)buf2, schedule, 0);
     memcpy(challenge2.cstr, buf2, 4);
     if (ntohl(challenge2.cint) != challenge1.cint + 1) {
-	report(stderr, 0, _("challenge mismatch"));
+	report(stderr, 0, _("challenge mismatch\n"));
 	return PS_AUTHFAIL;
     }	    
 
@@ -400,7 +402,7 @@ static int do_rfc1731(int sock, char *truename)
 
     to64frombits(buf1, authenticator.dat, authenticator.length);
     if (outlevel >= O_MONITOR) {
-	report(stdout, 0, "IMAP> %s", buf1);
+	report(stdout, 0, "IMAP> %s\n", buf1);
     }
     SockWrite(sock, buf1, strlen(buf1));
     SockWrite(sock, "\r\n", 2);
@@ -443,13 +445,13 @@ static int do_gssauth(int sock, char *hostname, char *username)
     maj_stat = gss_import_name(&min_stat, &request_buf, gss_nt_service_name,
         &target_name);
     if (maj_stat != GSS_S_COMPLETE) {
-        report(stderr, 0, _("Couldn't get service name for [%s]"), buf1);
+        report(stderr, 0, _("Couldn't get service name for [%s]\n"), buf1);
         return PS_AUTHFAIL;
     }
     else if (outlevel >= O_DEBUG) {
         maj_stat = gss_display_name(&min_stat, target_name, &request_buf,
             &mech_name);
-        report(stderr, 0, _("Using service name [%s]"),request_buf.value);
+        report(stderr, 0, _("Using service name [%s]\n"),request_buf.value);
         maj_stat = gss_release_buffer(&min_stat, &request_buf);
     }
 
@@ -465,13 +467,13 @@ static int do_gssauth(int sock, char *hostname, char *username)
     sec_token = GSS_C_NO_BUFFER;
     context = GSS_C_NO_CONTEXT;
     if (outlevel >= O_VERBOSE)
-        report(stdout, 0, _("Sending credentials"));
+        report(stdout, 0, _("Sending credentials\n"));
     do {
         maj_stat = gss_init_sec_context(&min_stat, GSS_C_NO_CREDENTIAL, 
             &context, target_name, NULL, 0, 0, NULL, sec_token, NULL,
 	    &send_token, &cflags, NULL);
         if (maj_stat!=GSS_S_COMPLETE && maj_stat!=GSS_S_CONTINUE_NEEDED) {
-            report(stderr, 0,_("Error exchanging credentials"));
+            report(stderr, 0,_("Error exchanging credentials\n"));
             gss_release_name(&min_stat, &target_name);
             /* wake up server and await NO response */
             SockWrite(sock, "\r\n", 2);
@@ -484,7 +486,7 @@ static int do_gssauth(int sock, char *hostname, char *username)
         SockWrite(sock, buf1, strlen(buf1));
         SockWrite(sock, "\r\n", 2);
         if (outlevel >= O_MONITOR)
-            report(stdout, 0, "IMAP> %s", buf1);
+            report(stdout, 0, "IMAP> %s\n", buf1);
         if (maj_stat == GSS_S_CONTINUE_NEEDED) {
 	    if (result = gen_recv(sock, buf1, sizeof buf1)) {
 	        gss_release_name(&min_stat, &target_name);
@@ -507,16 +509,16 @@ static int do_gssauth(int sock, char *hostname, char *username)
     maj_stat = gss_unwrap(&min_stat, context, &request_buf, &send_token,
         &cflags, &quality);
     if (maj_stat != GSS_S_COMPLETE) {
-        report(stderr, 0,_("Couldn't unwrap security level data"));
+        report(stderr, 0,_("Couldn't unwrap security level data\n"));
         gss_release_buffer(&min_stat, &send_token);
         return PS_AUTHFAIL;
     }
     if (outlevel >= O_DEBUG)
-        report(stdout, 0, _("Credential exchange complete"));
+        report(stdout, 0, _("Credential exchange complete\n"));
     /* first octet is security levels supported. We want none, for now */
     server_conf_flags = ((char *)send_token.value)[0];
     if ( !(((char *)send_token.value)[0] & GSSAUTH_P_NONE) ) {
-        report(stderr, 0,_("Server requires integrity and/or privacy"));
+        report(stderr, 0,_("Server requires integrity and/or privacy\n"));
         gss_release_buffer(&min_stat, &send_token);
         return PS_AUTHFAIL;
     }
@@ -525,11 +527,11 @@ static int do_gssauth(int sock, char *hostname, char *username)
     /* we don't care about buffer size if we don't wrap data */
     gss_release_buffer(&min_stat, &send_token);
     if (outlevel >= O_DEBUG) {
-        report(stdout, 0, _("Unwrapped security level flags: %s%s%s"),
+        report(stdout, 0, _("Unwrapped security level flags: %s%s%s\n"),
             server_conf_flags & GSSAUTH_P_NONE ? "N" : "-",
             server_conf_flags & GSSAUTH_P_INTEGRITY ? "I" : "-",
             server_conf_flags & GSSAUTH_P_PRIVACY ? "C" : "-");
-        report(stdout, 0, _("Maximum GSS token size is %ld"),buf_size);
+        report(stdout, 0, _("Maximum GSS token size is %ld\n"),buf_size);
     }
 
     /* now respond in kind (hack!!!) */
@@ -542,13 +544,13 @@ static int do_gssauth(int sock, char *hostname, char *username)
     maj_stat = gss_wrap(&min_stat, context, 0, GSS_C_QOP_DEFAULT, &request_buf,
         &cflags, &send_token);
     if (maj_stat != GSS_S_COMPLETE) {
-        report(stderr, 0,_("Error creating security level request"));
+        report(stderr, 0,_("Error creating security level request\n"));
         return PS_AUTHFAIL;
     }
     to64frombits(buf1, send_token.value, send_token.length);
     if (outlevel >= O_DEBUG) {
-        report(stdout, 0, _("Requesting authorisation as %s"), username);
-        report(stdout, 0, "IMAP> %s",buf1);
+        report(stdout, 0, _("Requesting authorisation as %s\n"), username);
+        report(stdout, 0, "IMAP> %s\n",buf1);
     }
     SockWrite(sock, buf1, strlen(buf1));
     SockWrite(sock, "\r\n", 2);
@@ -559,10 +561,10 @@ static int do_gssauth(int sock, char *hostname, char *username)
     if (strstr(buf1, "OK")) {
         /* flush security context */
         if (outlevel >= O_DEBUG)
-            report(stdout, 0, _("Releasing GSS credentials"));
+            report(stdout, 0, _("Releasing GSS credentials\n"));
         maj_stat = gss_delete_sec_context(&min_stat, &context, &send_token);
         if (maj_stat != GSS_S_COMPLETE) {
-            report(stderr, 0, _("Error releasing credentials"));
+            report(stderr, 0, _("Error releasing credentials\n"));
             return PS_AUTHFAIL;
         }
         /* send_token may contain a notification to the server to flush
@@ -609,20 +611,20 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 	{
 	    imap_version = IMAP4rev1;
 	    if (outlevel >= O_DEBUG)
-		report(stdout, 0, _("Protocol identified as IMAP4 rev 1"));
+		report(stdout, 0, _("Protocol identified as IMAP4 rev 1\n"));
 	}
 	else
 	{
 	    imap_version = IMAP4;
 	    if (outlevel >= O_DEBUG)
-		report(stdout, 0, _("Protocol identified as IMAP4 rev 0"));
+		report(stdout, 0, _("Protocol identified as IMAP4 rev 0\n"));
 	}
     }
     else if (ok == PS_ERROR)
     {
 	imap_version = IMAP2;
 	if (outlevel >= O_DEBUG)
-	    report(stdout, 0, _("Protocol identified as IMAP2 or IMAP2BIS"));
+	    report(stdout, 0, _("Protocol identified as IMAP2 or IMAP2BIS\n"));
     }
     else
 	return(ok);
@@ -633,7 +635,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     if ((ctl->server.protocol == P_IMAP) && strstr(capabilities, "AUTH=X-OTP"))
     {
 	if (outlevel >= O_DEBUG)
-	    report(stdout, 0, _("OTP authentication is supported"));
+	    report(stdout, 0, _("OTP authentication is supported\n"));
 	if (do_otp(sock, ctl) == PS_SUCCESS)
 	    return(PS_SUCCESS);
     };
@@ -645,13 +647,14 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
         if (ctl->server.protocol == P_IMAP_GSS)
         {
             if (outlevel >= O_DEBUG)
-                report(stdout, 0, _("GSS authentication is supported"));
+                report(stdout, 0, _("GSS authentication is supported\n"));
             return do_gssauth(sock, ctl->server.truename, ctl->remotename);
         }
     }
     else if (ctl->server.protocol == P_IMAP_GSS)
     {
-        report(stderr, 0, _("Required GSS capability not supported by server"));
+        report(stderr, 0, 
+	       _("Required GSS capability not supported by server\n"));
         return(PS_AUTHFAIL);
     }
 #endif /* GSSAPI */
@@ -660,14 +663,14 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     if (strstr(capabilities, "AUTH=KERBEROS_V4"))
     {
 	if (outlevel >= O_DEBUG)
-	    report(stdout, 0, _("KERBEROS_V4 authentication is supported"));
+	    report(stdout, 0, _("KERBEROS_V4 authentication is supported\n"));
 
 	if (ctl->server.protocol == P_IMAP_K4)
 	{
 	    if ((ok = do_rfc1731(sock, ctl->server.truename)))
 	    {
 		if (outlevel >= O_MONITOR)
-		    report(stdout, 0, "IMAP> *");
+		    report(stdout, 0, "IMAP> *\n");
 		SockWrite(sock, "*\r\n", 3);
 	    }
 	    
@@ -677,7 +680,8 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     }
     else if (ctl->server.protocol == P_IMAP_K4)
     {
-	report(stderr, 0, _("Required KERBEROS_V4 capability not supported by server"));
+	report(stderr, 0, 
+	       _("Required KERBEROS_V4 capability not supported by server\n"));
 	return(PS_AUTHFAIL);
     }
 #endif /* KERBEROS_V4 */
@@ -685,7 +689,8 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 #ifdef __UNUSED__	/* The Cyrus IMAP4rev1 server chokes on this */
     /* this handles either AUTH=LOGIN or AUTH-LOGIN */
     if ((imap_version >= IMAP4rev1) && (!strstr(capabilities, "LOGIN"))) {
-      report(stderr, 0, _("Required LOGIN capability not supported by server"));
+      report(stderr, 0, 
+	     _("Required LOGIN capability not supported by server\n"));
       return PS_AUTHFAIL;
     };
 #endif /* __UNUSED__ */
@@ -739,7 +744,7 @@ static int imap_getrange(int sock,
 	count = -1;
 	if (ok || gen_transact(sock, "NOOP"))
 	{
-	    report(stderr, 0, _("re-poll failed"));
+	    report(stderr, 0, _("re-poll failed\n"));
 	    return(ok);
 	}
 	else if (count == -1)	/* no EXISTS response to NOOP */
@@ -756,7 +761,7 @@ static int imap_getrange(int sock,
 	    ok = gen_transact(sock, "EXAMINE %s", folder ? folder : "INBOX");
 	if (ok != 0)
 	{
-	    report(stderr, 0, _("mailbox selection failed"));
+	    report(stderr, 0, _("mailbox selection failed\n"));
 	    return(ok);
 	}
     }

@@ -164,9 +164,6 @@ int main (int argc, char **argv)
     if ((parsestatus = parsecmdline(argc,argv, &cmd_run, &cmd_opts)) < 0)
 	exit(PS_SYNTAX);
 
-    /* this hint to stdio should help messages come out in the right order */
-    setvbuf(stdout, NULL, _IOLBF, MSGBUFSIZE);
-
     if (versioninfo)
     {
 	printf(_("This is fetchmail release %s"), VERSION);
@@ -467,7 +464,7 @@ int main (int argc, char **argv)
     {
 	if (!nodetach)
 	    daemonize(run.logfile, termhook);
-	report(stdout, 0, _("starting fetchmail %s daemon "), VERSION);
+	report(stdout, 0, _("starting fetchmail %s daemon \n"), VERSION);
 
 	/*
 	 * We'll set up a handler for these when we're sleeping,
@@ -533,7 +530,7 @@ int main (int argc, char **argv)
 		if (ctl->wedged)
 		{
 		    report(stderr, 0, 
-			  _("poll of %s skipped (failed authentication or too many timeouts)"),
+			  _("poll of %s skipped (failed authentication or too many timeouts)\n"),
 			  ctl->server.pollname);
 		    continue;
 		}
@@ -545,7 +542,7 @@ int main (int argc, char **argv)
 		    {
 			if (outlevel >= O_VERBOSE)
 			    report(stdout, 0,
-				    _("interval not reached, not querying %s"),
+				    _("interval not reached, not querying %s\n"),
 				    ctl->server.pollname);
 			continue;
 		    }
@@ -572,13 +569,13 @@ int main (int argc, char **argv)
 		    {
 			write_saved_lists(querylist, run.idfile);
 			if (outlevel >= O_DEBUG)
-			    report(stdout, 0, _("saved UID List"));
+			    report(stdout, 0, _("saved UID List\n"));
 		    }
 #endif  /* POP3_ENABLE */
 		}
 		else if (!check_only && 
 			 ((querystatus!=PS_NOMAIL) || (outlevel==O_DEBUG)))
-		    report(stdout, 0, _("Query status=%d"), querystatus);
+		    report(stdout, 0, _("Query status=%d\n"), querystatus);
 
 #if defined(linux) && !INET6
 		if (ctl->server.monitor)
@@ -635,12 +632,13 @@ int main (int argc, char **argv)
 			unwedged++;
 	    if (!unwedged)
 	    {
-		report(stderr, 0, _("All connections are wedged.  Exiting."));
+		report(stderr, 0, _("All connections are wedged.  Exiting.\n"));
 		exit(PS_AUTHFAIL);
 	    }
 
 	    if (outlevel >= O_VERBOSE)
-		report(stdout, 0, _("fetchmail: sleeping at %s"), rfc822timestamp());
+		report(stdout, 0, 
+		       _("fetchmail: sleeping at %s\n"), rfc822timestamp());
 
 	    /*
 	     * With this simple hack, we make it possible for a foreground 
@@ -735,9 +733,11 @@ int main (int argc, char **argv)
 			|| ((run.poll_interval && !getuid()) && lastsig == SIGHUP))
 		{
 #ifdef SYS_SIGLIST_DECLARED
-		    report(stdout, 0, _("awakened by %s"), sys_siglist[lastsig]);
+		    report(stdout, 0, 
+			   _("awakened by %s\n"), sys_siglist[lastsig]);
 #else
-		    report(stdout, 0, _("awakened by signal %d"), lastsig);
+		    report(stdout, 0, 
+			   _("awakened by signal %d\n"), lastsig);
 #endif
 		    /* received a wakeup - unwedge all servers in case */
 		    /* the problem has been manually repaired          */
@@ -752,13 +752,13 @@ int main (int argc, char **argv)
 		signal(SIGHUP, SIG_IGN);
 
 	    if (outlevel >= O_VERBOSE)
-		report(stdout, 0, _("awakened at %s"), rfc822timestamp());
+		report(stdout, 0, _("awakened at %s\n"), rfc822timestamp());
 	}
     } while
 	(run.poll_interval);
 
     if (outlevel >= O_VERBOSE)
-	report(stdout, 0, _("normal termination, status %d"),
+	report(stdout, 0, _("normal termination, status %d\n"),
 		successes ? PS_SUCCESS : querystatus);
 
     termhook(0);
@@ -1032,8 +1032,9 @@ static int load_params(int argc, char **argv, int optind)
                      free(ctl->server.via);
                  ctl->server.via = xstrdup(hes_p->po_host);
             } else {
-                 report(stderr, errno, _("couldn't find HESIOD pobox for %s"),
-                     ctl->remotename);
+                 report(stderr, errno, 
+			_("couldn't find HESIOD pobox for %s\n"),
+			ctl->remotename);
             }
         }
 #endif /* HESIOD */
@@ -1058,7 +1059,7 @@ static int load_params(int argc, char **argv, int optind)
 		if (namerec == (struct hostent *)NULL)
 		{
 		    report(stderr, errno,
-			  _("couldn't find canonical DNS name of %s"),
+			  _("couldn't find canonical DNS name of %s\n"),
 			  ctl->server.pollname);
 		    exit(PS_DNS);
 		}
@@ -1174,7 +1175,7 @@ static void termhook(int sig)
      */
 
     if (sig != 0)
-        report(stdout, 0, _("terminated with signal %d"), sig);
+        report(stdout, 0, _("terminated with signal %d\n"), sig);
     else
 	/* terminate all SMTP connections cleanly */
 	for (ctl = querylist; ctl; ctl = ctl->next)
@@ -1234,7 +1235,7 @@ static int query_host(struct query *ctl)
 	time_t now;
 
 	time(&now);
-	report(stdout, 0, _("%s querying %s (protocol %s) at %s"),
+	report(stdout, 0, _("%s querying %s (protocol %s) at %s\n"),
 	    VERSION,
 	    ctl->server.pollname, showproto(ctl->server.protocol), ctime(&now));
     }
@@ -1292,7 +1293,7 @@ static int query_host(struct query *ctl)
 #endif /* HAVE_GETHOSTBYNAME */
 #endif /* ETRN_ENABLE */
     default:
-	report(stderr, 0, _("unsupported protocol selected."));
+	report(stderr, 0, _("unsupported protocol selected.\n"));
 	return(PS_PROTOCOL);
     }
 }

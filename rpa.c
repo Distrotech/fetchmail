@@ -183,10 +183,10 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     bufp += Csl;
     if (outlevel >= O_DEBUG)
     {
-	report(stdout, 0, _("Service challenge (l=%d):"),Csl);
+	report(stdout, 0, _("Service challenge (l=%d):\n"),Csl);
 	for (i=0; i<Csl; i++)
 	    report_build(stdout, "%02X ",Cs[i]);
-	report_complete(stdout, 0, "");
+	report_complete(stdout, 0, "\n");
     }
     memcpy(Ts, bufp, Tsl);
     Ts[Tsl] = 0;
@@ -253,10 +253,10 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     aulin = *(bufp++);
     if (outlevel >= O_DEBUG)
     {
-	report(stdout, 0, _("User authentication (l=%d):"),aulin);
+	report(stdout, 0, _("User authentication (l=%d):\n"),aulin);
 	for (i=0; i<aulin; i++)
 	    report_build(stdout, "%02X ",bufp[i]);
-	report_complete(stdout, 0, "");
+	report_complete(stdout, 0, "\n");
     }
     if (aulin == Aul) memcpy(Au, bufp, Aul);
     bufp += aulin;
@@ -287,7 +287,8 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     }
     if (Aul != aulin)
     {
-	report(stderr, 0, _("RPA User Authentication length error: %d\n"),aulin);
+	report(stderr, 0, 
+	       _("RPA User Authentication length error: %d\n"),aulin);
 	return(PS_RPA);
     }
     if (Kusl != kuslin)
@@ -303,10 +304,10 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     }
     if (outlevel >= O_DEBUG)
     {
-	report(stdout, 0, _("Session key established:"));
+	report(stdout, 0, _("Session key established:\n"));
 	for (i=0; i<Kusl; i++)
 	    report_build(stdout, "%02X ",Kus[i]);
-	report_complete(stdout, 0, "");
+	report_complete(stdout, 0, "\n");
     }
 
     /* Assemble Token 5 in buf and send (not in ver 2 though)  */
@@ -455,7 +456,8 @@ int rxlen;
     save = *pptr;
     if (**pptr != HDR)
     {
-	if (outlevel > O_SILENT) report(stderr, 0, _("Hdr not 60\n"));
+	if (outlevel > O_SILENT)
+	    report(stderr, 0, _("Hdr not 60\n"));
 	return(0);
     }
     (*pptr)++;
@@ -544,7 +546,7 @@ unsigned char *bufp;
 	{
 	    report_build(stdout, "%02X ",bufp[i]);
 	    if (((i % 16)==15) || (i==(cnt-1)))
-		report_complete(stdout, 0, "");
+		report_complete(stdout, 0, "\n");
 	}
     }
     return(cnt);
@@ -582,7 +584,7 @@ int  len;
 	{
 	    report_build(stdout, "%02X ",bufp[i]);
 	    if (((i % 16)==15) || (i==(len-1)))
-		report_complete(stdout, 0, "");
+		report_complete(stdout, 0, "\n");
 	}
     }
     outp = bufp + (((len-1)/3)*4);
@@ -648,12 +650,12 @@ int conv;
     }
     if (outlevel >= O_DEBUG)
     {
-	report(stdout, 0, _("Unicode:"));
+	report(stdout, 0, _("Unicode:\n"));
 	for (i=0; i<(*plen); i++)
 	{
 	    report_build(stdout, "%02X ",buf[i]);
 	    if (((i % 16)==15) || (i==((*plen)-1)))
-		report_complete(stdout, 0, "");
+		report_complete(stdout, 0, "\n");
 	}
     }
 }
@@ -725,12 +727,12 @@ int  len;
 
     if (outlevel >= O_DEBUG)
     {
-	report(stdout, 0, _("User challenge:"));
+	report(stdout, 0, _("User challenge:\n"));
 	for (i=0; i<len; i++)
 	  {
 	  report_build(stdout, "%02X ",buf[i]);
 	  if (((i % 16)==15) || (i==(len-1)))
-	    report_complete(stdout, 0, "");
+	    report_complete(stdout, 0, "\n");
 	  }
     }
 }
@@ -888,7 +890,7 @@ unsigned char*    out;
 	{
 	    report_build(stdout, "%02X ",in[i]);
 	    if (((i % 16)==15) || (i==(len-1)))
-		report_complete(stdout, 0, "");
+		report_complete(stdout, 0, "\n");
 	}
     }
     MD5Init(   &md5context );
@@ -896,12 +898,12 @@ unsigned char*    out;
     MD5Final(  out, &md5context );
     if (outlevel >= O_DEBUG)
     {
-	report(stdout, 0, _("MD5 result is: "));
+	report(stdout, 0, _("MD5 result is: \n"));
 	for (i=0; i<16; i++)
 	{
 	    report_build(stdout, "%02X ",out[i]);
 	}
-	report_complete(stdout, 0, "");
+	report_complete(stdout, 0, "\n");
     }
 }
 #endif /* POP3_ENABLE && RPA_ENABLE */
