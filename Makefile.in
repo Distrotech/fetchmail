@@ -207,7 +207,8 @@ docs = $(srcdir)/COPYING $(srcdir)/README $(srcdir)/INSTALL $(srcdir)/NEWS \
 config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/configure \
 	$(srcdir)/config.guess $(srcdir)/config.h.in $(srcdir)/config.sub \
 	$(srcdir)/acconfig.h
-scripts = $(srcdir)/install.sh $(srcdir)/mkinstalldirs $(srcdir)/specgen.sh
+scripts = $(srcdir)/install.sh $(srcdir)/mkinstalldirs \
+	$(srcdir)/specgen.sh $(srcdir)/lsmgen.sh
 all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) \
 	$(srcdir)/contrib/* $(srcdir)/MANIFEST
 
@@ -217,8 +218,11 @@ MANIFEST: $(srcdir) Makefile.in
 FAQ: fetchmail.FAQ.html
 	lynx -dump -nolist fetchmail.FAQ.html >FAQ
 
-dist: fetchmail-$(VERS).tar.gz
-	ls -l fetchmail-$(VERS).tar.gz
+# Make distribution, update LSM with proper size, remake distribution
+dist: Makefile.in  
+	make fetchmail-$(VERS).tar.gz 
+	lsmgen.sh $(VERS) `wc -c fetchmail-$(VERS).tar.gz` >fetchmail.lsm
+	make fetchmail-$(VERS).tar.gz
 
 fetchmail-$(VERS).tar: $(all)
 	(cd ..; tar -cf fetchmail-$(VERS).tar `cat fetchmail-$(VERS)/MANIFEST`)
@@ -230,7 +234,7 @@ fetchmail-$(VERS).tar.gz: fetchmail-$(VERS).tar
 RPMROOT=/usr/src/redhat
 RPM = rpm
 RPMFLAGS = -ba
-rpm: fetchmail-$(VERS).tar.gz
+rpm: dist
 	cp fetchmail-$(VERS).tar.gz $(RPMROOT)/SOURCES;
 	$(srcdir)/specgen.sh $(VERS) >$(RPMROOT)/SPECS/fetchmail.spec
 	cd $(RPMROOT)/SPECS; $(RPM) $(RPMFLAGS) fetchmail.spec	
