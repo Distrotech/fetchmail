@@ -42,7 +42,8 @@ static void prc_reset();
 }
 
 %token DEFAULTS POLL SKIP AKA PROTOCOL AUTHENTICATE TIMEOUT KPOP KERBEROS
-%token USERNAME PASSWORD FOLDER SMTPHOST MDA IS HERE THERE TO MAP LIMIT
+%token USERNAME PASSWORD FOLDER SMTPHOST MDA LIMIT
+%token IS HERE THERE TO MAP WILDCARD
 %token SET BATCHLIMIT LOGFILE
 %token <proto> PROTO
 %token <sval>  STRING
@@ -65,7 +66,7 @@ statement_list	: statement
 
 /* future global options should also have the form SET <name> <value> */
 statement	: SET BATCHLIMIT MAP NUMBER	{batchlimit = $4;}
-		| SET LOGFILE STRING		{logfile = xstrdup($3);}
+		| SET LOGFILE MAP STRING	{logfile = xstrdup($4);}
 
 /* 
  * The way the next two productions are written depends on the fact that
@@ -134,6 +135,11 @@ user1opts	: user_option
 		| user1opts user_option
 		;
 
+localnames	: WILDCARD		{current.wildcard =  TRUE;}
+		| mapping_list		{current.wildcard =  FALSE;}
+		| mapping_list WILDCARD	{current.wildcard =  TRUE;}
+		;
+
 mapping_list	: mapping		
 		| mapping_list mapping
 		;
@@ -144,10 +150,10 @@ mapping		: STRING
 				{save_id_pair(&current.localnames, $1, $3);}
 		;
 
-user_option	: TO mapping_list HERE
-		| TO mapping_list
-		| IS mapping_list HERE
-		| IS mapping_list
+user_option	: TO localnames HERE
+		| TO localnames
+		| IS localnames HERE
+		| IS localnames
 
 		| IS STRING THERE	{strcpy(current.remotename, $2);}
 		| PASSWORD STRING	{strcpy(current.password, $2);}

@@ -771,11 +771,15 @@ void dump_params (struct query *ctl)
 	       count,
 	       (count == 1 && !strcmp(ctl->localnames->id, user)) ? " (by default)" : "");
 	if (outlevel == O_VERBOSE)
+	{
 	    for (idp = ctl->localnames; idp; idp = idp->next)
 		if (idp->val.id2)
 		    fprintf(stderr, "\t%s -> %s\n", idp->id, idp->val.id2);
 		else
 		    fprintf(stderr, "\t%s\n", idp->id);
+	    if (ctl->wildcard)
+		fputs("*\n", stderr);
+	}
     }
 
     if (ctl->protocol > P_POP2)

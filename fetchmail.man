@@ -464,7 +464,8 @@ save it from having to do DNS lookups.
 .PP
 The `is' or `to' keywords associate the following local (client)
 name(s) (or server-name to client-name mappings separated by =) with
-the mailserver user name in the entry.
+the mailserver user name in the entry.  If an is/to list has `*' as
+its last name, unrecognized names are simply passed through.
 .PP
 A single local name can be used to support redirecting your mail when
 your username on the client machine is different from your name on the

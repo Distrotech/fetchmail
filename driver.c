@@ -226,6 +226,9 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 		}
 
 		lname = idpair_find(&ctl->localnames, cp);
+		if (!lname && ctl->wildcard)
+		    lname = cp;
+
 		if (lname != (char *)NULL)
 		{
 		    if (outlevel == O_VERBOSE)

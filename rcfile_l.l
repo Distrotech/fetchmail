@@ -43,6 +43,7 @@ here		{ return HERE; }
 there		{ return THERE; }
 to		{ return TO; }
 =		{ return MAP; }
+"*"		{ return WILDCARD; }
 
 keep		{ yylval.flag = FLAG_TRUE;  return KEEP; }
 flush		{ yylval.flag = FLAG_TRUE;  return FLUSH; }

@@ -63,6 +63,7 @@ struct query
     /* per-host data */
     char servername [HOSTLEN+1];
     struct idlist *localnames;
+    int wildcard;	/* true if unmatched names should be passed through */
     int protocol;
     int port;
     int authenticate;
@@ -105,7 +106,8 @@ struct query
 #endif /* HAVE_GETHOSTBYNAME */
 };
 
-#define MULTIDROP(ctl)	((ctl)->localnames && (ctl)->localnames->next)
+#define MULTIDROP(ctl)	(ctl->wildcard || \
+				((ctl)->localnames && (ctl)->localnames->next))
 
 struct method
 {
