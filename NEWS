@@ -6,6 +6,7 @@ features --
 
 * If SMTP returns 571 (unsolicited mail refused) to a MAIL FROM, the
   address is excluded by the local sendmail's spam filter.  Drop the mail.
+  (This the only circumstance in which mail is thrown away.)
 
 bugs --
 
@@ -13,6 +14,7 @@ bugs --
 * Fixed a bug in non-implicit (poll specified host) mode also due to aka.
 * Various minor portability fixes for Suns.
 * Avoid using -lresolv when possible, some Linux versions are badly broken.
+* Fix error in MX record handling that was causing multidrop problems
 
 fetchmail-2.1 (Thu Nov 28 11:07:48 EST 1996):
 

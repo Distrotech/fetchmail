@@ -166,6 +166,7 @@ static int is_host_alias(const char *name, struct query *ctl)
      */
     h_errno = 0;
     if ((mxrecords = getmxrecords(name)) == (struct mxentry *)NULL)
+    {
 	switch (h_errno)
 	{
 	case HOST_NOT_FOUND:	/* specified host is unknown */
@@ -175,6 +176,7 @@ static int is_host_alias(const char *name, struct query *ctl)
 	    for (mxp = mxrecords; mxp->name; mxp++)
 		if (strcmp(name, mxp->name) == 0)
 		    goto match;
+	    return(FALSE);
 	    break;
 
 	case NO_RECOVERY:	/* non-recoverable name server error */
@@ -187,8 +189,7 @@ static int is_host_alias(const char *name, struct query *ctl)
 	    longjmp(restart, 2);	/* try again next poll cycle */
 	    break;
 	}
-
-    return(FALSE);
+    }
 
 match:
     /* add this name to relevant server's `also known as' list */
