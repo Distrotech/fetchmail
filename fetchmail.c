@@ -209,6 +209,15 @@ char **argv;
    */
   do {
       for (hostp = hostlist; hostp; hostp = hostp->next) {
+
+	  /*
+	   * This is a nasty kluge.  V8 sendmail doesn't like daemon mode, it
+	   * consistently bombs after the first delivery.
+	   */
+	  if (hostp->output == TO_MDA
+			&& strncmp("/usr/lib/sendmail", hostp->mda, 18) == 0)
+	      hostp->output = TO_FOLDER;
+
 	  popstatus = query_host(hostp);
       }
 

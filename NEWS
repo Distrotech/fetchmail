@@ -6,6 +6,11 @@ I want a --logfile option that redirects the daemon-mode output to a
 given file, but the code (in daemon.c near 200) unaccountably doesn't
 work (so I haven't documented it yet).
 
+Why doesn't sendmail delivery work in daemon mode?  In daemon mode
+(but not in normal run-to-completion mode) popclient croaks after
+its first delivery  (there's a kluge in options.c to deal with this). 
+We need the logfile option to debug this!
+
 Option to enable EMACS-like user folder versioning on each run.
 
 -p option to come back?
@@ -22,7 +27,9 @@ Implement IMAP support.
 
 * Added -N/--norewrite option.
 
-* Delivery via sendmail now works.
+* Delivery via sendmail now works in non-daemon mode.
+
+* Experimental code to support 
 
 3.01:
 

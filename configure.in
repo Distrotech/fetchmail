@@ -47,6 +47,12 @@ case $host in
 	mdacmd="/usr/bin/bellmail \$u"
 	;;
 
+   *-*-sco*)
+	AC_DEFINE(DEF_MDA,"/usr/mmdf/bin/deliver %s")
+	mdacmd="/usr/mmdf/bin/deliver \$u"
+	AC_DEFINE(BINMAIL_TERM, "\001\001\001\001\n")
+	;;
+
    *-*-hpux*)
 	AC_DEFINE(DEF_MDA,"/bin/rmail -d %s")
 	mdacmd="/bin/rmail -d \$u"
