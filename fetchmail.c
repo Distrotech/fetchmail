@@ -493,12 +493,15 @@ int main(int argc, char **argv)
 	if (run.poll_interval && !getuid())
 	    signal(SIGHUP, SIG_IGN);
     }
-    else if (run.logfile && access(run.logfile, F_OK) == 0)
+    else
     {
-	freopen(run.logfile, "a", stdout);
-	freopen(run.logfile, "a", stderr);
+	deal_with_sigchld();  /* or else we may accumulate too many zombies */
+	if (run.logfile && access(run.logfile, F_OK) == 0)
+    	{
+	    freopen(run.logfile, "a", stdout);
+	    freopen(run.logfile, "a", stderr);
+    	}
     }
-
 
 #ifdef linux
     interface_init();
