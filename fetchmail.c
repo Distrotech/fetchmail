@@ -307,6 +307,13 @@ char **argv;
     {
 	if (check_only)
 	    return(PS_EXCLUDE);
+	else if (!implicitmode)
+	{
+	    fprintf(stderr,
+		 "fetchmail: can't poll specified hosts with another fetchmail running at %d.\n",
+		 pid);
+		return(PS_EXCLUDE);
+	}
 	else if (!bkgd)
 	{
 	    fprintf(stderr,
