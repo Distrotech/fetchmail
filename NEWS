@@ -14,6 +14,7 @@ a Certifying Authority we recognize?).
 * Federico Schwindt's patch to fix broken SSL configuration.
 * Fixes to use fetchmail with IPv6 enabled on glibc without inet6-apps 
   installed; thanks to Arkadiusz Mi¶kiewicz.
+* Interpret IMAP PREAUTH tag correctly (from Joerg Dorchain).
 
 fetchmail-5.2.0 (Tue Nov 30 14:24:25 EST 1999), 18302 lines:
 * fetchmailconf now complains and exits gracefully when not run under X.

@@ -107,6 +107,8 @@ int imap_ok(int sock, char *argbuf)
 	}
 	if (strstr(buf, "FLAGS"))
 	    seen = (strstr(buf, "SEEN") != (char *)NULL);
+	if (strstr(buf, "PREAUTH"))
+	    preauth = TRUE;
     } while
 	(tag[0] != '\0' && strncmp(buf, tag, strlen(tag)));
 
