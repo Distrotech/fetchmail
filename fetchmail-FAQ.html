@@ -9,8 +9,9 @@
 <BODY>
 <H1>Frequently Asked Questions About Fetchmail</H1>
 
-The current version of fetchmail is 3.9.4.  New in the FAQ: improved
-version of <a href="#T2">T2</a> on using fetchmail with exim.<p>
+The current version of fetchmail is 3.9.5.  New in the FAQ:
+the B section (build-time problems) is gone, as these all appear
+to have been fixed now.<p>
 
 Before reporting any bug, please read <a href="#G3">G3</a> for advice
 on how to include diagnostic information that will get your bug fixed
@@ -33,12 +34,6 @@ fetchmail-friends-request@thyrsus.com</a>. <p>
 <a href="#G2">G2. Where do I find the latest FAQ and fetchmail sources?</a><br>
 <a href="#G3">G3. I think I've found a bug.  Will you fix it?</a><br>
 <a href="#G4">G4. I have this idea for a neat feature.  Will you add it?</a><br>
-
-<h1>Build-time problems:</h1>
-
-<a href="#B1">B1. My C compiler libraries don't seem to have atexit(3).</a><br>
-<a href="#B2">B2. Building fetchmail fails with compiler errors in error.c.</a><br>
-<a href="#B3">B3. Make doesn't know how to build rcfile_y.h or rcfile_l.h.</a><br>
 
 <h1>Fetchmail configuration file grammar questions:</h1>
 
@@ -186,45 +181,6 @@ One of my objectives is to keep fetchmail simple so it stays reliable.<p>
 All that said, if you have a feature idea that really is about a transport
 problem that can't be handled anywhere but fetchmail, lay it on me.  I'm
 very accommodating about good ideas.<p>
-
-<hr>
-<h2><a name="B1">B1. My C compiler libraries don't seem to have atexit(3).</a></h2>
-
-Your compiler libraries are deficient (this has been reported from a
-bunch of older Solaris and SCO boxes).  The <em>atexit(3)</em>
-function is part of the ANSI C standard and should be there.<p>
-
-You may be able to find a linkable object for <em>atexit(3)</em> in your C++
-library.  If not, I recommend installing the GNU C library and/or GCC
-itself.  You can find a copy of the GNU C library (which is fully
-ANSI-compliant and supplies ANSI-compliant headers as well) at <a
-href="ftp://prep.ai.mit.edu/pub/gnu/glibc-1.09.1.tar.gz">ftp://prep.ai.mit.edu/pub/gnu/glibc-1.09.1.tar.gz</a><p>
-
-If you are a SunOS user and cannot install glibc, Chris Cheyney &lt;<A
-HREF="mailto:cheyney@netcom.com">cheyney@netcom.com</A>&gt; has
-developed a <A
-HREF="http://www.cjnetworks.com/~cheyney/me/atexit.html"> patch</A>
-that adds <em>atexit</em> to the fetchmail code itself. <p>
-
-<hr>
-<h2><a name="B2">B2. Building fetchmail fails with compiler errors in error.c</a></h2>
-
-We've had reports of this from under SunOS, Solaris 2.5, HP-UX and
-NEXTSTEP 3.3.  All but the HP-UX problem seems to have abated after
-3.8.  You may have to turn off HAVE_VSYSLOG manually.<p>
-
-<hr>
-<h2><a name="B3">B3. Make doesn't know how to build rcfile_y.h or rcfile_l.h.</a></h2>
-
-You're probably using HP-UX or AIX.  There are in fact productions in
-the Makefile that describle how to make both (search for the string
-"Special dependencies"), but your make is not interpreting them
-correctly.  Several attempts to fix this have failed. It appears these
-makes are deficient or broken.<p>
-
-The solution: install GNU make.  Sources are available at the FSF archive
-site, <a href="ftp://prep.ai.mit.edu/pub/gnu">
-ftp://prep.ai.mit.edu/pub/gnu</a>.<p>
 
 <hr>
 <h2><a name="F1">F1. Why does my .fetchmailrc from 2.8 or earlier no longer work?</a></h2>
@@ -984,7 +940,7 @@ without hacking potentially fragile startup scripts.  To get around
 it, just touch(1) the logfile before you run fetchmail (this will have
 no effect on the contents of the logfile if it already exists).<P>
 
-$Id: fetchmail-FAQ.html,v 1.15 1997/05/14 16:43:16 esr Exp $<p>
+$Id: fetchmail-FAQ.html,v 1.16 1997/05/17 15:05:31 esr Exp $<p>
 
 <HR>
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
