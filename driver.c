@@ -54,7 +54,6 @@
 
 extern char *strstr();	/* needed on sysV68 R3V7.1. */
 
-int batchlimit;		/* how often to tear down the delivery connection */
 int fetchlimit;		/* how often to tear down the server connection */
 int batchcount;		/* count of messages sent in current batch */
 int peek_capable;	/* can we peek for better error recovery? */
@@ -347,7 +346,7 @@ static FILE *smtp_open(struct query *ctl)
     lead = ctl->lead_smtp; /* go to the SMTP leader for this query */
 
     /* maybe it's time to close the socket in order to force delivery */
-    if (batchlimit && lead->smtp_sockfp && batchcount++ == batchlimit)
+    if (ctl->batchlimit && lead->smtp_sockfp && batchcount++==ctl->batchlimit)
     {
 	fclose(lead->smtp_sockfp);
 	lead->smtp_sockfp = (FILE *)NULL;
