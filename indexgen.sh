@@ -48,7 +48,7 @@ forwarding, and aliasing facilities to work just as they would on
 normal mail.<P>
 
 Fetchmail offers better security than any other Unix remote-mail
-client.  It supports APOP, KPOP, OTP, Compuservs RPA, and IMAP RFC1731
+client.  It supports APOP, KPOP, OTP, Compuserve RPA, and IMAP RFC1731
 encrypted authentication methods to avoid sending passwords en
 clair.<p>
 
@@ -105,21 +105,26 @@ Sunsite remote mail tools directory</a>.
 <H1>Getting help with fetchmail</H1>
 
 There is a fetchmail-friends list for people who want to discuss fixes
-and improvements in fetchmail and help co-develop it.  It's at 
-<a href="mailto:fetchmail-friends@thyrsus.com">fetchmail-friends@thyrsus.com</a>
-and is a SmartList reflector; sign up in the usual way with a message
-containing the word "subscribe" in the subject line sent to
-to <a href="mailto:fetchmail-friends-request@thyrsus.com">
-fetchmail-friends-request@thyrsus.com</a>. (Similarly, "unsubscribe"
+and improvements in fetchmail and help co-develop it.  It's at <a
+href="mailto:fetchmail-friends@thyrsus.com">fetchmail-friends@thyrsus.com</a>.
+There is also an announcements-only list, <em>fetchmail-announce@thyrsus.com</em>.<P>
+
+Both lists are SmartList reflectors; sign up in the usual way with a
+message containing the word "subscribe" in the subject line sent to
+<a href="mailto:fetchmail-friends-request@thyrsus.com?subject=subscribe">
+fetchmail-friends-request@thyrsus.com</a> or
+<a href="mailto:fetchmail-announce-request@thyrsus.com?subject=subscribe">
+fetchmail-announce-request@thyrsus.com</a>. (Similarly, "unsubscribe"
 in the Subject line unsubscribes you, and "help" returns general list help) <p>
 
 Note: before submitting a question to the list, <strong>please read
-the <a href="fetchmail-FAQ.html">FAQ</a></strong>.  We tend to get the
-same three newbie questions over and over again.  The FAQ covers them
-like a blanket.  Actually, I'll answer the most common one right here:
-<em>If you've tried everything but can't get multidrop mode to work,
-it is almost certainly because your DNS service (or your provider's) is
-broken.</em><P>
+the <a href="fetchmail-FAQ.html">FAQ</a></strong> (especially item <a
+href="http:fetchmail-FAQ.html#G3">G3</a> on how to report bugs).  We
+tend to get the same three newbie questions over and over again.  The
+FAQ covers them like a blanket.  Actually, I'll answer the most common
+one right here: <em>If you've tried everything but can't get multidrop
+mode to work, it is almost certainly because your DNS service (or your
+provider's) is broken.</em><P>
 
 Fetchmail was written and is maintained by <a
 href="../index.html">Eric S. Raymond</a>.  <a
