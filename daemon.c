@@ -10,8 +10,6 @@
 #include <errno.h>
 #include <signal.h>
 #include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/file.h>
 #include <sys/wait.h>
 #include <sys/fcntl.h>	/* Solaris 2.5 requires this */
 
