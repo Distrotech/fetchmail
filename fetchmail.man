@@ -672,9 +672,9 @@ function of the inet6_apps library.
 
 .SH DAEMON MODE
 The 
-.B --daemon
+.B --daemon <nnn>
 or
-.B -d 
+.B -d <nnn>
 option runs 
 .I fetchmail
 in daemon mode.  You must specify a numeric argument which is a
@@ -728,7 +728,7 @@ options specify in combination with the rc file.
 The
 .B -L
 or
-.B --logfile
+.B --logfile <filename>
 option (keyword: set logfile) allows you to redirect status messages
 emitted while detached into a specified logfile (follow the
 option with the logfile name).  The logfile is opened for append, so
@@ -779,7 +779,7 @@ they're delivered, so this problem does not arise.)
 .SH ADMINISTRATIVE OPTIONS
 .PP
 The 
-.B --postmaster
+.B --postmaster <name>
 option (keyword: set postmaster) specifies the last-resort username to
 which multidrop mail is to be forwarded if no matching local recipient
 can be found.  Normally this is just the user who invoked fetchmail.
@@ -1873,7 +1873,7 @@ RFC 1081, RFC 1225
 IMAP2/IMAP2BIS:
 RFC 1176, RFC 1732
 .TP 5
-IMAP4:
+IMAP4/IMAP4rev1:
 RFC 1730, RFC 1731, RFC 1732, RFC 2060, RFC 2061, RFC 2195
 .TP 5
 ETRN:
