@@ -1180,6 +1180,7 @@ static int load_params(int argc, char **argv, int optind)
 			memcpy(ctl->server.trueaddr, 
 			       namerec->h_addr_list[0],
 			       namerec->h_length);
+			ctl->wedged = FALSE;
 		    }
 #else
 		    ctl->server.truename = xstrdup(ctl->server.queryname);
@@ -1274,15 +1275,18 @@ static int load_params(int argc, char **argv, int optind)
      * If all connections are wedged due to DNS errors, quit.  This is
      * important for the common case that you just have one connection.
      */
-    st = PS_DNS;
-    for (ctl = querylist; ctl; ctl = ctl->next)
-	if (!ctl->wedged)
-	    st = 0;
-    if (st == PS_DNS)
+    if (querylist)
     {
-	(void) fprintf(stderr,
-		       _("all mailserver name lookups failed, exiting\n"));
-	exit(PS_DNS);
+	st = PS_DNS;
+	for (ctl = querylist; ctl; ctl = ctl->next)
+	    if (!ctl->wedged)
+		st = 0;
+	if (st == PS_DNS)
+	{
+	    (void) fprintf(stderr,
+			   _("all mailserver name lookups failed, exiting\n"));
+	    exit(PS_DNS);
+	}
     }
 
     return(implicitmode);
