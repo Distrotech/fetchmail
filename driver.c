@@ -1398,13 +1398,11 @@ const struct method *proto;	/* protocol method table */
 
 	    /*
 	     * We may need to get sizes in order to check message
-	     * limits.  If we ever decide that always having accurate
-	     * whole-message (as opposed to header) lengths in the
-	     * progress messages is important, all we have to do is
-	     * remove the `&& ctl->limit' here.
+	     * limits.  Or it may be forced because the fetch methods
+	     * don't return reliable sizes.
 	     */
 	    msgsizes = (int *)NULL;
-	    if (proto->getsizes && ctl->limit > 0)
+	    if (proto->getsizes && (proto->force_getsizes || ctl->limit > 0))
 	    {
 		msgsizes = (int *)alloca(sizeof(int) * count);
 
@@ -1479,30 +1477,20 @@ const struct method *proto;	/* protocol method table */
 
 			if (outlevel > O_SILENT)
 			{
-			    bool havesizes;
-			    int mlen;
+			    bool wholesize = !protocol->fetch_body;
 
 			    error_build("reading message %d", num);
 
-			    if (!protocol->fetch_body)
+			    /* -1 means we didn't see a size in the response */
+			    if (len == -1 && msgsizes)
 			    {
-				havesizes = TRUE;
-				mlen = len;
-			    }
-			    else if (msgsizes)
-			    {
-				havesizes = TRUE;
-				mlen = msgsizes[num - 1];
-			    }
-			    else	/* no way to know body size yet */
-			    {
-				havesizes = FALSE;
-				mlen = len;
+				len = msgsizes[num - 1];
+				wholesize = TRUE;
 			    }
 
-			    if (mlen > 0)
+ 			    if (len > 0)
 				error_build(" (%d %sbytes)",
-					    mlen, havesizes ? "" : "header ");
+					    len, wholesize ? "" : "header ");
 			    if (outlevel == O_VERBOSE)
 				error_complete(0, 0, "");
 			    else

@@ -622,6 +622,7 @@ const static struct method imap =
     143,		/* standard IMAP2bis/IMAP4 port */
     TRUE,		/* this is a tagged protocol */
     FALSE,		/* no message delimiter */
+    FALSE,		/* fetch response size is reliable */ 
     imap_ok,		/* parse command response */
     imap_getauth,	/* get authorization */
     imap_getrange,	/* query range of messages */

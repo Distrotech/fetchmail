@@ -247,20 +247,11 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
 
     /* 
      * Look for "nnn octets" -- there may or may not be preceding cruft.
-     *
-     * Note, it is not guaranteed this will be set; the never-to-be-
-     * sufficiently-damned RFC1725 doesn't require it.  At least one
-     * actual POP3 daemon (MercuryP/NLM v1.31) actually fails to issue
-     * a length.
-     *
-     * To kluge around this, wedge a huge value into the message
-     * length if we don't get one back.  The only bad effect this will
-     * have is to make the progress messages look funny.  We'll
-     * document this as a bug instead of forcing every poll to do a
-     * LIST for sizes.
+     * It's OK to punt and return 0 as a failure indication here, as 
+     * long as the force_getsizes flag has forced sizes to be preloaded.
      */
     if ((cp = strstr(buf, " octets")) == (char *)NULL)
-	*lenp = 0xffffffff;
+	*lenp = -1;
     else
     {
 	while (--cp >= buf && isdigit(*cp))
@@ -282,6 +273,7 @@ const static struct method pop3 =
     110,		/* standard POP3 port */
     FALSE,		/* this is not a tagged protocol */
     TRUE,		/* this uses a message delimiter */
+    TRUE,		/* RFC 1725 doesn't require a size field in fetch */
     pop3_ok,		/* parse command response */
     pop3_getauth,	/* get authorization */
     pop3_getrange,	/* query range of messages */

@@ -145,6 +145,7 @@ struct method
     int	port;			/* service port */
     bool tagged;		/* if true, generate & expect command tags */
     bool delimited;		/* if true, accept "." message delimiter */
+    bool force_getsizes;	/* if true, fetch's size return unreliable */
     int (*parse_response)();	/* response_parsing function */
     int (*getauth)();		/* authorization fetcher */
     int (*getrange)();		/* get message range to fetch */
