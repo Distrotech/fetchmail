@@ -673,7 +673,7 @@ struct query *ctl;	/* query parameter block */
     if (ctl->timeout ==  CLIENT_TIMEOUT)
 	printf(" (default).\n");
     else
-	printf("\n.");
+	printf(".\n");
 
     printf("  %s messages will be retrieved (--all %s).\n",
 	   ctl->fetchall ? "All" : "Only new",
