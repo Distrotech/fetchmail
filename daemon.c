@@ -183,7 +183,7 @@ nottyDetach:
   }
 
   if (logfile)
-    open(logfile, O_CREAT|O_WRONLY, 0777);	/* stdout */
+    fd = open(logfile, O_CREAT|O_WRONLY, 0777);	/* stdout */
   else
     if (dup(fd) < 0) {				/* stdout */
       perror("dup");
