@@ -533,7 +533,7 @@ static int readheaders(int sock,
 	    sizeticker += linelen;
 	    while (sizeticker >= SIZETICKER)
 	    {
-		if (!run.use_syslog && isatty(1))
+		if (!run.use_syslog && !isafile(1))
 		{
 		    fputc('.', stdout);
 		    fflush(stdout);
@@ -1060,7 +1060,7 @@ static int readheaders(int sock,
 	free_str_list(&msgblk.recipients);
 	return(PS_IOERR);
     }
-    else if ((run.poll_interval == 0 || nodetach) && outlevel >= O_VERBOSE && isatty(2))
+    else if ((run.poll_interval == 0 || nodetach) && outlevel >= O_VERBOSE && !isafile(2))
 	fputs("#", stderr);
 
     /* write error notifications */
@@ -1170,7 +1170,7 @@ static int readbody(int sock, struct query *ctl, flag forward, int len)
 	    sizeticker += linelen;
 	    while (sizeticker >= SIZETICKER)
 	    {
-		if ((run.poll_interval == 0 || nodetach) && outlevel > O_SILENT && isatty(1))
+		if ((run.poll_interval == 0 || nodetach) && outlevel > O_SILENT && !isafile(1))
 		{
 		    fputc('.', stdout);
 		    fflush(stdout);
@@ -1228,7 +1228,7 @@ static int readbody(int sock, struct query *ctl, flag forward, int len)
 		release_sink(ctl);
 		return(PS_IOERR);
 	    }
-	    else if (outlevel >= O_VERBOSE && isatty(1))
+	    else if (outlevel >= O_VERBOSE && !isafile(1))
 	    {
 		fputc('*', stdout);
 		fflush(stdout);
@@ -2050,7 +2050,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 			     */
 			    if (protocol->fetch_body && !suppress_readbody) 
 			    {
-				if (outlevel >= O_VERBOSE && isatty(1))
+				if (outlevel >= O_VERBOSE && !isafile(1))
 				{
 				    fputc('\n', stdout);
 				    fflush(stdout);
@@ -2104,7 +2104,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 				/* tell server we got it OK and resynchronize */
 				if (protocol->trail)
 				{
-				    if (outlevel >= O_VERBOSE && isatty(1))
+				    if (outlevel >= O_VERBOSE && !isafile(1))
 				    {
 					fputc('\n', stdout);
 					fflush(stdout);

@@ -205,4 +205,16 @@ nottyDetach:
   return(0);
 }
 
+flag isafile(int fd)
+/* is the given fd attached to a file? (used to control logging) */
+{
+    struct stat stbuf;
+
+    if (fstat(fd, &stbuf))
+	return(0);
+    else if (stbuf.st_mode & (S_IFREG | S_IFBLK))
+	return(1);
+    return(0);
+}
+
 /* daemon.c ends here */

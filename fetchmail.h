@@ -518,6 +518,7 @@ void dump_config(struct runctl *runp, struct query *querylist);
 int is_host_alias(const char *, struct query *);
 char *host_fqdn(void);
 char *rfc822timestamp(void);
+flag isafile(int);
 
 void yyerror(const char *);
 int yylex(void);
