@@ -843,6 +843,9 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(sslkey);
     FLAG_MERGE(sslcert);
     FLAG_MERGE(sslproto);
+    FLAG_MERGE(sslcertck);
+    FLAG_MERGE(sslcertpath);
+    FLAG_MERGE(sslfingerprint);
 #endif
     FLAG_MERGE(expunge);
 
@@ -1035,6 +1038,7 @@ static int load_params(int argc, char **argv, int optind)
 	    DEFAULT(ctl->server.uidl, FALSE);
 #ifdef	SSL_ENABLE
 	    DEFAULT(ctl->use_ssl, FALSE);
+	    DEFAULT(ctl->sslcertck, FALSE);
 #endif
 	    DEFAULT(ctl->server.checkalias, FALSE);
 #undef DEFAULT
@@ -1559,7 +1563,14 @@ static void dump_params (struct runctl *runp,
 	    printf(_("  Mail service principal is: %s\n"), ctl->server.principal);
 #ifdef	SSL_ENABLE
 	if (ctl->use_ssl)
-	    printf("  SSL encrypted sessions enabled.\n");
+	    printf(_("  SSL encrypted sessions enabled.\n"));
+	if (ctl->sslcertck) {
+	    printf(_("  SSL server certificate checking enabled.\n"));
+	    if (ctl->sslcertpath != NULL)
+		printf(_("  SSL trusted certificate directory: %s\n"), ctl->sslcertpath);
+	}
+	if (ctl->sslfingerprint != NULL)
+		printf(_("  SSL key fingerprint (checked against the server key): %s\n"), ctl->sslfingerprint);
 #endif
 	if (ctl->server.timeout > 0)
 	    printf(_("  Server nonresponse timeout is %d seconds"), ctl->server.timeout);

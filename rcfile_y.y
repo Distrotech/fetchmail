@@ -73,7 +73,7 @@ extern char * yytext;
 %token NO KEEP FLUSH FETCHALL REWRITE FORCECR STRIPCR PASS8BITS 
 %token DROPSTATUS DROPDELIVERED
 %token DNS SERVICE PORT UIDL INTERVAL MIMEDECODE IDLE CHECKALIAS 
-%token SSL SSLKEY SSLCERT SSLPROTO
+%token SSL SSLKEY SSLCERT SSLPROTO SSLCERTCK SSLCERTPATH SSLFINGERPRINT
 %token PRINCIPAL
 
 %%
@@ -331,6 +331,9 @@ user_option	: TO localnames HERE
 		| SSLKEY STRING		{current.sslkey = xstrdup($2);}
 		| SSLCERT STRING	{current.sslcert = xstrdup($2);}
 		| SSLPROTO STRING	{current.sslproto = xstrdup($2);}
+		| SSLCERTCK             {current.sslcertck = FLAG_TRUE;}
+		| SSLCERTPATH STRING    {current.sslcertpath = xstrdup($2);}
+		| SSLFINGERPRINT STRING {current.sslfingerprint = xstrdup($2);}
 
 		| NO KEEP		{current.keep        = FLAG_FALSE;}
 		| NO FLUSH		{current.flush       = FLAG_FALSE;}

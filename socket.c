@@ -638,6 +638,10 @@ int SockPeek(int sock)
 #ifdef SSL_ENABLE
 
 static	char *_ssl_server_cname = NULL;
+static	int _check_fp;
+static	char *_check_digest;
+static 	char *_server_label;
+static	int _depth0ck;
 
 SSL *SSLGetContext( int sock )
 {
@@ -651,7 +655,7 @@ SSL *SSLGetContext( int sock )
 }
 
 
-int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx )
+int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 {
 	char buf[260];
 	char cbuf[260];
@@ -659,19 +663,24 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx )
 	char *str_ptr;
 	X509 *x509_cert;
 	int err, depth;
+	unsigned char digest[EVP_MAX_MD_SIZE];
+	char text[EVP_MAX_MD_SIZE * 3 + 1], *tp, *te;
+	EVP_MD *digest_tp;
+	unsigned int dsz, i, esz;
 
 	x509_cert = X509_STORE_CTX_get_current_cert(ctx);
 	err = X509_STORE_CTX_get_error(ctx);
 	depth = X509_STORE_CTX_get_error_depth(ctx);
 
-	X509_NAME_oneline(X509_get_subject_name(x509_cert), buf, 256);
-	X509_NAME_oneline(X509_get_issuer_name(x509_cert), ibuf, 256);
-
-	/* Just to be sure those buffers are terminated...  I think the
-		X509 libraries do, but... */
-	buf[256] = ibuf[256] = '\0';
-
 	if (depth == 0) {
+		_depth0ck = 1;
+		
+		X509_NAME_oneline(X509_get_subject_name(x509_cert), buf, 256);
+		X509_NAME_oneline(X509_get_issuer_name(x509_cert), ibuf, 256);
+
+		/* Just to be sure those buffers are terminated...  I think the
+		   X509 libraries do, but... */
+		buf[256] = ibuf[256] = '\0';
 		if( ( str_ptr = strstr( ibuf, "/O=" ) ) ) {
 			str_ptr += 3;
 			strcpy( cbuf, str_ptr );
@@ -705,57 +714,110 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx )
 			if (outlevel == O_VERBOSE)
 				report(stdout, _("Server CommonName: %s\n"), cbuf);
 
-                       if (_ssl_server_cname != NULL) 
-		       {
-                               char *p1 = cbuf;
-                               char *p2 = _ssl_server_cname;
-                               int n;
+			if (_ssl_server_cname != NULL) 
+			{
+				char *p1 = cbuf;
+				char *p2 = _ssl_server_cname;
+				int n;
 
-                               if (*p1 == '*') 
-			       {
-                                       ++p1;
-                                       n = strlen(p2) - strlen(p1);
-                                       if (n >= 0)
-                                               p2 += n;
-                               }
-                               if ( 0 != strcasecmp( p1, p2 ) )
-                                       report(stdout,
-                                              "Server CommonName mismatch: %s != %s\n",
-                                              cbuf, _ssl_server_cname );
+				if (*p1 == '*') 
+				{
+					++p1;
+					n = strlen(p2) - strlen(p1);
+					if (n >= 0)
+						p2 += n;
+				}
+				if ( 0 != strcasecmp( p1, p2 ) ) {
+					report(stderr,
+					    _("Server CommonName mismatch: %s != %s\n"),
+					    cbuf, _ssl_server_cname );
+					if (ok_return && strict)
+						return( 0 );
+				}
+			} else if (ok_return && strict) {
+				report(stderr, _("Canonical server name not set, could not verify certificate!\n"));
+				return( 0 );
 		       }
 		} else {
 			if (outlevel == O_VERBOSE)
 				report(stdout, _("Unknown Server CommonName\n"));
+			if (ok_return && strict) {
+				report(stderr, _("Server name not specified in certificate!\n"));
+				return( 0 );
+			}
+		}
+		/* Print the finger print. Note that on errors, we might print it more than once
+		 * normally; we kluge around that by using a global variable. */
+		if (_check_fp) {
+			_check_fp = 0;
+			digest_tp = EVP_md5();
+			if (digest_tp == NULL) {
+				report(stderr, _("EVP_md5() failed!\n"));
+				return( 0 );
+			}
+			if (!X509_digest(x509_cert, digest_tp, digest, &dsz)) {
+				report(stderr, _("out of memory!\n"));
+				return( 0 );
+			}
+			tp = text;
+			te = text + sizeof(text);
+			for (i = 0; i < dsz; i++) {
+				esz = snprintf(tp, te - tp, i > 0 ? ":%02X" : "%02X", digest[i]);
+				if (esz >= te - tp) {
+					report(stderr, _("Digest text buffer too small!\n"));
+					return( 0 );
+				}
+				tp += esz;
+			}
+			report(stdout, _("%s key fingerprint: %s\n"), _server_label, text);
+			if (_check_digest != NULL) {
+				if (strcmp(text, _check_digest) == 0)
+					report(stdout, _("%s fingerprints match.\n"), _server_label);
+				else {
+					report(stderr, _("%s fingerprints do not match!\n"), _server_label);
+					return( 0 );
+				}
+			}
 		}
 	}
 
-	switch (ctx->error) {
-	case X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT:
-		X509_NAME_oneline(X509_get_issuer_name(ctx->current_cert), buf, 256);
-		report(stdout, _("unknown issuer= %s"), buf);
-		break;
-	case X509_V_ERR_CERT_NOT_YET_VALID:
-	case X509_V_ERR_ERROR_IN_CERT_NOT_BEFORE_FIELD:
-		report(stderr, _("Server Certificate not yet valid"));
-		break;
-	case X509_V_ERR_CERT_HAS_EXPIRED:
-	case X509_V_ERR_ERROR_IN_CERT_NOT_AFTER_FIELD:
-		report(stderr, _("Server Certificate expired"));
-		break;
+	if (err != X509_V_OK && (strict || outlevel == O_VERBOSE)) {
+		report(strict ? stderr : stdout, _("Warning: server certificate verification: %s\n"), X509_verify_cert_error_string(err));
+		/* We gave the error code, but maybe we can add some more details for debugging */
+		switch (ctx->error) {
+		case X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT:
+			X509_NAME_oneline(X509_get_issuer_name(ctx->current_cert), buf, 256);
+			buf[256] = '\0';
+			report(stdout, _("unknown issuer= %s\n"), buf);
+			break;
+		}
 	}
 	/* We are not requiring or validating server or issuer id's as yet */
 	/* Always return OK from here */
-	ok_return = 1;
+	if (!strict)
+		ok_return = 1;
 	return( ok_return );
 }
 
+int SSL_nock_verify_callback( int ok_return, X509_STORE_CTX *ctx )
+{
+	return SSL_verify_callback(ok_return, ctx, 0);
+}
+
+int SSL_ck_verify_callback( int ok_return, X509_STORE_CTX *ctx )
+{
+	return SSL_verify_callback(ok_return, ctx, 1);
+}
 
 /* performs initial SSL handshake over the connected socket
  * uses SSL *ssl global variable, which is currently defined
  * in this file
  */
-int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, char *servercname )
+int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char *certpath,
+    char *fingerprint, char *servercname, char *label)
 {
+	SSL *ssl;
+	
 	SSL_load_error_strings();
 	SSLeay_add_ssl_algorithms();
 	
@@ -787,6 +849,16 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, char *servercnam
 			return(-1);
 		}
 	}
+
+	if (certck) {
+		SSL_CTX_set_verify(_ctx, SSL_VERIFY_PEER, SSL_ck_verify_callback);
+		if (certpath)
+			SSL_CTX_load_verify_locations(_ctx, NULL, certpath);
+	} else {
+		/* In this case, we do not fail if verification fails. However,
+		 *  we provide the callback for output and possible fingerprint checks. */
+		SSL_CTX_set_verify(_ctx, SSL_VERIFY_PEER, SSL_nock_verify_callback);
+	}
 	
 	_ssl_context[sock] = SSL_new(_ctx);
 	
@@ -797,8 +869,10 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, char *servercnam
 	
 	/* This static is for the verify callback */
 	_ssl_server_cname = servercname;
-
-        SSL_CTX_set_verify(_ctx, SSL_VERIFY_PEER, SSL_verify_callback);
+	_server_label = label;
+	_check_fp = 1;
+	_check_digest = fingerprint;
+	_depth0ck = 0;
 
 	if( mycert || mykey ) {
 
@@ -820,7 +894,19 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, char *servercnam
 		ERR_print_errors_fp(stderr);
 		return(-1);
 	}
-	
+
+	/* Paranoia: was the callback not called as we expected? */
+	if ((fingerprint != NULL || certck) && !_depth0ck) {
+		report(stderr, _("Certificate/fingerprint verification was somehow skipped!\n"));
+		
+		if( NULL != ( ssl = SSLGetContext( sock ) ) ) {
+			/* Clean up the SSL stack */
+			SSL_free( _ssl_context[sock] );
+			_ssl_context[sock] = NULL;
+		}
+		return(-1);
+	}
+
 	return(0);
 }
 #endif

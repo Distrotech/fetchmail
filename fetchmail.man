@@ -310,6 +310,34 @@ server.  This can cause some complications in daemon mode.
 (Keyword: sslproto)
 Forces an ssl protocol. Possible values are \&`\fBssl2\fR', `\fBssl3\fR' and
 `\fBtls1\fR'. Try this if the default handshake does not work for your server.
+.TP
+.B \--sslcertck
+(Keyword: sslcertck)
+Causes fetchmail to strictly check the server certificate against a set of
+local trusted certificates (see the \fBsslcertpath\fR option). If the server
+certificate is not signed by one of the trusted ones (directly or indirectly),
+the SSL connection will fail. This checking should prevent man-in-the-middle
+attacks against the SSL connection. Note that CRLs are seemingly not currently
+supported by OpenSSL in certificate verification! Your system clock should
+be reasonably accurate when using this option!
+.TP
+.B \--sslcertpath <directory>
+(Keyword: sslcertpath)
+Sets the directory fetchmail uses to look up local certificates. The default
+is your OpenSSL default one. The directory must be hashed as OpenSSL expects
+it - every time you add or modify a certificate in the directory, you need
+to use the \fBc_rehash\fR tool (which comes with OpenSSL in the tools/
+subdirectory).
+.TP
+.B \--sslfingerprint
+(Keyword: sslfingerprint)
+Specify the fingerprint of the server key (an MD5 hash of the key) in
+hexadecimal notation with colons separating groups of two digits. The letter
+hex digits must be in upper case. This is the default format OpenSSL uses,
+and the one fetchmail uses to report the fingerprint when an SSL connection
+is established. When this is specified, fetchmail will compare the server key
+fingerprint with the given one, and the connection will fail if they do not
+match. This can be used to prevent man-in-the-middle attacks.
 .SS Delivery Control Options
 .TP
 .B \-S <hosts>, --smtphost <hosts>

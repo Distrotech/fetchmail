@@ -77,10 +77,13 @@
 #define LA_SSLKEY	51
 #define LA_SSLCERT	52
 #define LA_SSLPROTO 53
+#define LA_SSLCERTCK	54
+#define LA_SSLCERTPATH	55
+#define LA_SSLFINGERPRINT	56
 #endif
 
-#define LA_SHOWDOTS	54
-#define LA_PRINCIPAL	55
+#define LA_SHOWDOTS	57
+#define LA_PRINCIPAL	58
 
 /* options still left: CDgGhHjJoORwWxXYz */
 static const char *shortoptions = 
@@ -148,6 +151,9 @@ static const struct option longoptions[] = {
   {"sslkey",    required_argument, (int *) 0, LA_SSLKEY     },
   {"sslcert",   required_argument, (int *) 0, LA_SSLCERT    },
   {"sslproto",   required_argument, (int *) 0, LA_SSLPROTO    },
+  {"sslcertck", no_argument,       (int *) 0, LA_SSLCERTCK  },
+  {"sslcertpath",   required_argument, (int *) 0, LA_SSLCERTPATH },
+  {"sslfingerprint",   required_argument, (int *) 0, LA_SSLFINGERPRINT },
 #endif
 
   {"principal", required_argument, (int *) 0, LA_PRINCIPAL },
@@ -567,6 +573,18 @@ struct query *ctl;	/* option record to be initialized */
 
 	case LA_SSLPROTO:
 	    ctl->sslproto = xstrdup(optarg);
+	    break;
+
+	case LA_SSLCERTCK:
+	    ctl->sslcertck = FLAG_TRUE;
+	    break;
+
+	case LA_SSLCERTPATH:
+	    ctl->sslcertpath = xstrdup(optarg);
+	    break;
+
+	case LA_SSLFINGERPRINT:
+	    ctl->sslfingerprint = xstrdup(optarg);
 	    break;
 #endif
 

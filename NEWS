@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* SSL certificate options from Thomas Moestl <tmoestl@gmx.net>.
+
 fetchmail-5.8.3 (Sat May 12 04:07:12 EDT 2001), 20502 lines:
 
 * The `localhost' special case of `via' is gone.  Use `plugin %h' for talking

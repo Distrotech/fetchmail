@@ -59,7 +59,8 @@ additional clean-up if necessary.
 int SockClose(int sock);
 
 #if SSL_ENABLE
-int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, char *servercname);
+int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char *certpath,
+    char *fingerprint, char *servercname, char *label);
 #endif /* SSL_ENABLE */
 
 #endif /* SOCKET__ */

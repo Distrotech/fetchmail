@@ -375,6 +375,9 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	stringdump("sslkey", ctl->sslkey);
 	stringdump("sslcert", ctl->sslcert);
 	stringdump("sslproto", ctl->sslproto);
+	booldump("sslcertck", ctl->sslcertck);
+	stringdump("sslcertpath", ctl->sslcertpath);
+	stringdump("sslfingerprint", ctl->sslfingerprint);
 #endif /* SSL_ENABLE */
 	numdump("expunge", ctl->expunge);
 	stringdump("properties", ctl->properties);

@@ -166,6 +166,9 @@ ssl		{ return SSL; }
 sslkey		{ return SSLKEY; }
 sslcert		{ return SSLCERT; }
 sslproto	{ return SSLPROTO; }
+sslcertck	{ return SSLCERTCK; }
+sslcertpath	{ return SSLCERTPATH; }
+sslfingerprint	{ return SSLFINGERPRINT; }
 checkalias	{ return CHECKALIAS; }
 
 limit		{ return LIMIT; }
