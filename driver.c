@@ -1350,11 +1350,16 @@ int num;		/* index of message */
      */
     if ((rcv = strstr(headers, "Received:")) == (char *)NULL)
 	rcv = headers;
+    /* handle ">Received:" lines too */
+    while (rcv > headers && rcv[-1] != '\n')
+	rcv--;
     if (rcv > headers)
     {
+	char	c = *rcv;
+
 	*rcv = '\0';
 	n = stuffline(ctl, headers);
-	*rcv = 'R';
+	*rcv = c;
     }
     if (!run.invisible && n != -1)
     {
