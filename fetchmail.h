@@ -409,6 +409,9 @@ extern int stage;
 #define XMIT_REJECT	2	/* rejected; no match */
 #define XMIT_RCPTBAD	3	/* SMTP listener rejected the name */ 
 
+/* idle.c */
+int idle(int interval);
+
 /* sink.c: forwarding */
 int stuffline(struct query *, char *);
 int open_sink(struct query*, struct msgblk *, int*, int*);
