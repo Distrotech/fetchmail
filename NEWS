@@ -7,6 +7,11 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.4.6 ()
+* Better workaround for TOP bounds-checking in qpopper 2.3+.
+
+There are 270 people on fetchmail-friends and 212 on fetchmail-announce.
+
 fetchmail-4.4.6 (Sat May 16 14:16:49 EDT 1998)
 * Fix a bug introduced by my 4.4.5 bug-fix release :-(
 * Make the internal line buffer eight times longer to cope with idiot

@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/05/14 01:35:48 $
+<td width="30%" align=right>$Date: 1998/05/16 19:17:42 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1774,10 +1774,15 @@ If your POP3 server fails to sanity-check TOP requests and clip them at
 the next end-of-message, it will fetch the entire tail of the mailbox
 starting with the current message.  The qpopper 2.41 beta 1 server is 
 known to have this bug (though the qpopper 2.2 found on many Unixes
-does not).<P>
+does not).  It's been reported to me that the logic changed in 2.3.<P>
 
 To work around it, set the <code>fetchall</code> option.  Under POP3
 only, this now has the side effect of forcing RETR use.<P>
+
+(It is possible this tip is no longer necessary.  At least one tester
+has claimed that the bounds check works but was fooled by an overflow
+condition in the TOP argument.  Decrementing the argument may have
+fixed this.)<P>
 
 <hr>
 <h2><a name="O2">O2. Every time I get a POP or IMAP message the header
@@ -1910,7 +1915,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/05/14 01:35:48 $
+<td width="30%" align=right>$Date: 1998/05/16 19:17:42 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

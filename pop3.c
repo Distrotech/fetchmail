@@ -531,7 +531,7 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
      * the server.
      *
      * The line count passed is the maximum value of a twos-complement
-     * signed integer (we take advantage of the fact that, according
+     * signed integer minus 1 (we take advantage of the fact that, according
      * to all the POP RFCs, "if the number of lines requested by the
      * POP3 client is greater than than the number of lines in the
      * body, then the POP3 server sends the entire message.").
@@ -542,14 +542,18 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
      *
      * Also suppress TOP if fetchall is on.  This is a kludge to get
      * around a really obnoxious bug in qpopper 2.41 beta 1 that must
-     * have been introduced sometime after the 2.2 I tested with.  The
-     * newer version doesn't bounds-check TOP requests to clip them
-     * at the next end of message.  Grrrrr...
+     * have been introduced sometime after the 2.2 I tested with (Erwan
+     * Mas claims it was in 2.3).  The newer version doesn't bounds-check TOP
+     * requests to clip them at the next end of message.  Grrrrr...
+     *
+     * (Erwan MAS <mas@nic.fr> thinks this was actually due to the TOP
+     * argument overflowing and recommended I decrement it.  Hmmm...
+     * maybe we can take out the fetchall kluge?)
      */
     if (ctl->keep || ctl->fetchall)
 	gen_send(sock, "RETR %d", number);
     else
-	gen_send(sock, "TOP %d 2147483647", number);
+	gen_send(sock, "TOP %d 2147483646", number);
     if ((ok = pop3_ok(sock, buf)) != 0)
 	return(ok);
 
