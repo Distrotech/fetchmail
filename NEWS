@@ -10,6 +10,7 @@
 * Updated French translation.
 * Yoshihiko SARUMARU's patch to keep Kanji out of Received headers.
 * Include aclocal.m4 in the tarball (solves some build problems).
+* Added HMH's patch to support configuring a specific fallback MUA.
 
 fetchmail-5.7.4 (Mon Mar 12 00:02:23 EST 2001), 20323 lines:
 

@@ -81,15 +81,13 @@ If you want to build for debugging,
 
 will do that.
 
-To enable multilingual support using GNU gettext, 
+To specify a fallback MUA in case local port 25 doesn't respond, do one of:
 
-	configure --enable-nls
+	configure --enable-fallback=procmail
+	configure --enable-fallback=sendmail
 
-Note: for this to work, you need gettext to be included in your libc
-and libintl.h to be in your system headers.  This is the case on
-Red Hat Linux 7.0 and up, Debian, and FreeBSD.  (The author will *not*
-accept patches to include a gettext build in the fetchmail tarball,
-as his experience with this path has been horrible.)
+A disadvantage of using procmail is that local alias expansion
+according to /etc/aliases won't get done if we fall back to it.
 
 Advanced configuration:
 

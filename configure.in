@@ -225,25 +225,56 @@ AC_DEFINE_UNQUOTED(PID_DIR, "$dir")
 # Sendmail without the -t option to use the message headers will work too,
 # not just for sendmail itself but for workalikes like exim.
 #
-# Note: it would be a very bad idea to use any MDA that doesn't return
+# Note1: A disadvantage of using procmail is that local alias expansion
+# according to /etc/aliases won't get done if we fall back.
+#
+# Note2: it would be a very bad idea to use any MDA that doesn't return
 # a refuse-to-deliver status on disk- or process-table-full
 # conditions; mail could get lost that way.  Both procmail and
 # sendmail (and all of the MDAs like exim that might be lurking under
 # a sendmail alias) do the right thing in this circumstance.
 #
 AC_PATH_PROG(procmail, procmail, "", $PATH:/usr/sbin)
-if test "$procmail"
-then
-	echo "Found procmail, will use it as a fallback MDA."
-	AC_DEFINE(FALLBACK_MDA, "$procmail -d %T")
-else
-	AC_PATH_PROG(sendmail, sendmail, "", $PATH:/usr/sbin)
-	if test "$sendmail"
-	then
-		echo "Found sendmail, will use it as a fallback MDA."
-		AC_DEFINE(FALLBACK_MDA, "$sendmail %T")
-	fi	
-fi
+AC_PATH_PROG(sendmail, sendmail, "", $PATH:/usr/sbin)
+
+###	use option --disable-fallback to disable fallback MDA
+###	use option --enable-fallback=procmail or 
+###		   --enable-fallback=sendmail to select
+AC_ARG_ENABLE(fallback,
+	[  --enable-fallback=procmail    enable procmail as fallback (default)
+  --enable-fallback=sendmail    enable /usr/sbin/sendmail as fallback
+  --enable-fallback=no          disable fallback],,[enable_fallback=auto])
+
+case "$enable_fallback" in
+	sendmail)	if test -z "$sendmail" ; then 
+				AC_ERROR([Sendmail selected as fallback, but not found])
+				#not reached
+			fi
+			AC_DEFINE(FALLBACK_MDA, "$sendmail %T")
+			echo "Will use $sendmail as fallback MDA."
+			;;
+	procmail)	if test -z "$procmail" ; then
+				AC_ERROR([procmail selected as fallback, but not found])
+				#not reached
+			fi
+			AC_DEFINE(FALLBACK_MDA, "$procmail -d %T")
+			echo "Will use $procmail as fallback MDA."
+			;;
+	no|unset)	echo "Will not use a fallback MDA"
+			;;
+	auto|yes|set)	if test -n "$procmail" ; then
+				AC_DEFINE(FALLBACK_MDA, "$procmail -d %T")
+				echo "Will use $procmail as fallback MDA."
+			elif test -n "$sendmail" ; then
+				AC_DEFINE(FALLBACK_MDA, "$sendmail %T")
+				echo "Will use $sendmail as fallback MDA."
+			else	echo "No fallback MDA available."
+			fi
+			;;
+	*)		AC_ERROR([unkown value for --enable-fallback given: $enable_fallback])
+			#notreached
+			;;
+esac
 
 AC_CHECK_SIZEOF(short)
 AC_CHECK_SIZEOF(int)

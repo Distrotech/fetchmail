@@ -46,10 +46,14 @@ delivery-control mechanisms (such as \fI.forward\fR files) normally
 available through your system MDA and local delivery agents will
 therefore work.
 .PP
-If no port 25 listener is available, but your fetchmail compilation detected
-or was told about a local MDA, it will use that MDA for local delivery
-instead.  At build time, fetchmail looks for executable procmail and
-sendmail binaries.
+If no port 25 listener is available, but your fetchmail compilation
+detected or was told about a reliable local MDA, it will use that MDA
+for local delivery instead.  At build time, fetchmail normally looks
+for executable 
+.IR procmail (1)
+and 
+.IR sendmail (1)
+binaries.
 .PP
 If the program
 .I fetchmailconf
@@ -313,16 +317,16 @@ Forces an ssl protocol. Possible values are \&`\fBssl2\fR', `\fBssl3\fR' and
 Specify a hunt list of hosts to forward mail to (one or more
 hostnames, comma-separated).  In ETRN mode, set the host that the
 mailserver is asked to ship mail to.  Hosts are tried in list order;
-the first one that is up becomes the forwarding target for the
-current run.  Normally, `localhost' is added to the end of the list as
-an invisible default.  However, when using ETRN mode or Kerberos
+the first one that is up becomes the forwarding target for the current
+run.  Normally, `localhost' is added to the end of the list as an
+invisible default.  However, when using ETRN or ODMR mode or Kerberos
 authentication, the FQDN of the machine running fetchmail is added to
-the end of the list as an invisible default. Each hostname may have a 
-port number following the host name.  The port number is separated from
-the host name by a slash; the default port is 25 (or ``smtp'' under IPv6).
-If you specify an absolute pathname (beginning with a /), it will be
-interpreted as the name of a UNIX socket accepting LMTP connections
-(such as is supported by the Cyrus IMAP daemon) Example:
+the end of the list as an invisible default. Each hostname may have a
+port number following the host name.  The port number is separated
+from the host name by a slash; the default port is 25 (or ``smtp''
+under IPv6).  If you specify an absolute pathname (beginning with a
+/), it will be interpreted as the name of a UNIX socket accepting LMTP
+connections (such as is supported by the Cyrus IMAP daemon) Example:
 
 	--smtphost server1,server2/2525,server3,/var/imap/socket/lmtp
 
@@ -359,7 +363,7 @@ prevents the message from being deleted off the server.  If
 target user while delivering mail through an MDA.  Some possible MDAs
 are "/usr/sbin/sendmail -oem -f %F %T", "/usr/bin/deliver" and
 "/usr/bin/procmail -d %T" (but the latter is usually redundant as it's
-what SMTP listeners usually forward to).  Local delivery addresses
+what SMTP listeners normally forward to).  Local delivery addresses
 will be inserted into the MDA command wherever you place a %T; the
 mail message's From address will be inserted where you place an %F.
 Do \fInot\fR use an MDA invocation like "sendmail -oem -t" that
@@ -939,11 +943,24 @@ progress dots are only shown on stdout by default.
 The protocols \fIfetchmail\fR uses to talk to mailservers are next to
 bulletproof.  In normal operation forwarding to port 25, no message is
 ever deleted (or even marked for deletion) on the host until the SMTP
-listener on the client has acknowledged to \fIfetchmail\fR that the
-message has been accepted for delivery or rejected due to a spam
-block.  When forwarding to an MDA, however, there is more possibility
-of error (because there's no way for fetchmail to get a reliable
-positive acknowledgement from the MDA).
+listener on the client side has acknowledged to \fIfetchmail\fR that
+the message has been either accepted for delivery or rejected due to a
+spam block.
+.PP
+When forwarding to an MDA, however, there is more possibility
+of error.  Some MDAs are `safe' and reliably return a nonzero status
+on any delivery error, even one due to temporary resource limits.
+The well-known
+.IR procmail (1)
+program is like this; so are most programs designed as mail transport
+agents, such as 
+.IR sendmail (1),
+and
+.IR exim (1).
+These programs give back a reliable positive acknowledgement and
+can be used with the mda option with no risk of mail loss.  Unsafe
+MDAs, though, may return 0 even on delivery failure.  If this
+happens, you will lose mail.
 .PP
 The normal mode of \fIfetchmail\fR is to try to download only `new'
 messages, leaving untouched (and undeleted) messages you have already
@@ -1036,11 +1053,12 @@ the message rejected immediately after the headers have been fetched,
 without reading the message body.  Thus, you won't pay for downloading 
 spam message bodies.
 .PP
-Mail that is spam-blocked triggers an RFC1892 bounce message informing
-the originator that we do not accept mail from it.
+If the \fIspambounce\fR option is on, mail that is spam-blocked
+triggers an RFC1892 bounce message informing the originator that we do
+not accept mail from it.
 
 .SH SMTP/ESMTP ERROR HANDLING
-Besides the spam-blocking described above,fetchmail takes special
+Besides the spam-blocking described above, fetchmail takes special
 actions on the following SMTP/ESMTP error responses
 .TP 5
 452 (insufficient system storage)
