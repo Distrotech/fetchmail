@@ -1,6 +1,6 @@
 				Release Notes:
 
-fetchmail-4.5.5 ():
+fetchmail-4.5.5 (Mon Aug  3 16:08:14 EDT 1998):
 * Brendan Cully's FAQ entry on GSSAPI.
 * Andrew Cagney's improvement to Received-line parsing.
 * Kent Robotti sent an updated version of fetchsetup.
