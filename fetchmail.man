@@ -1,7 +1,7 @@
 .\" For license terms, see the file COPYING in this directory.
 .TH fetchmail 1
 .SH NAME
-fetchmail \- fetch mail from a POP, IMAP, or ETRN-capable ESMTP server
+fetchmail \- fetch mail from a POP, IMAP, or ETRN-capable server
 
 .SH SYNOPSIS
 \fBfetchmail\fR [\fIoptions\fR] [\fImailserver...\fR]
@@ -32,11 +32,11 @@ agent for sites which refuse for security reasons to permit
 As each message is retrieved \fIfetchmail\fR normally delivers it via SMTP to
 port 25 on the machine it is running on (localhost), just as though it
 were being passed in over a normal TCP/IP link.  The mail will then be
-delivered locally via your system's MTA (Mail Delivery Agent, usually
+delivered locally via your system's MDA (Mail Delivery Agent, usually
 \fIsendmail\fR(8) but your system may use a different one such
 as \fIsmail\fR, \fImmdf\fR, or \fIqmail\fR).  All the delivery-control
 mechanisms (such as \fI.forward\fR files) normally available through
-your system MTA and local delivery agents will therefore work.
+your system MDA and local delivery agents will therefore work.
 .PP
 The behavior of
 .I fetchmail
@@ -1089,7 +1089,8 @@ preconnect command sets up the ssh.
 
 .nf
 poll mailhost.net via localhost port 1234 with pop3:
-        preconnect "ssh -f -L 1234:mailhost.net:110 mailhost.net sleep 20 </dev/null >/dev/null";
+        preconnect "ssh -f -L 1234:mailhost.net:110
+		mailhost.net sleep 20 </dev/null >/dev/null";
 .fi
 
 .SH THE USE AND ABUSE OF MULTIDROP MAILBOXES
