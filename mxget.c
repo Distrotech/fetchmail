@@ -40,10 +40,10 @@
 /* minimum possible size of MX record in packet */
 #define MIN_MX_SIZE	8	/* corresp to "a.com 0" w/ terminating space */
 
-struct mxentry *getmxrecords(const unsigned char *name)
+struct mxentry *getmxrecords(const char *name)
 /* get MX records for given host */
 {
-    unsigned char answer[PACKETSZ], *eom, *cp, *bp;
+    char answer[PACKETSZ], *eom, *cp, *bp;
     int n, ancount, qdcount, buflen, type, pref, ind;
     static struct mxentry pmx[(PACKETSZ - HFIXEDSZ) / MIN_MX_SIZE];
     static char MXHostBuf[PACKETSZ - HFIXEDSZ]; 
@@ -51,8 +51,7 @@ struct mxentry *getmxrecords(const unsigned char *name)
 
     pmx->name = (char *)NULL;
     pmx->pref = -1;
-    n = res_search((char *)name,
-		   C_IN,T_MX, (unsigned char*)&answer, sizeof(answer));
+    n = res_search(name, C_IN,T_MX, &answer, sizeof(answer));
     if (n == -1)
 	return((struct mxentry *)NULL);
 
