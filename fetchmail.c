@@ -134,7 +134,7 @@ static void unlockit(void)
 int itimerflag;
 void itimerthread(void* dummy) {
   if (outlevel >= O_VERBOSE)
-    fprintf(stderr, _("fetchmail: thread sleeping for %d sec.\n"), poll_interval);
+    report(stderr, _("fetchmail: thread sleeping for %d sec.\n"), poll_interval);
   while(1) {
     _sleep2(poll_interval*1000);
     kill((getpid()), SIGALRM);
@@ -183,6 +183,27 @@ int main(int argc, char **argv)
     textdomain(PACKAGE);
 #endif
 
+    /* logging must be set up early in case we were restarted from exec */
+#if defined(HAVE_SYSLOG)
+    if (run.use_syslog)
+    {
+    	openlog(program_name, LOG_PID, LOG_MAIL);
+	report_init(-1);
+    }
+    else
+#endif
+	report_init((run.poll_interval == 0 || nodetach) && !run.logfile);
+
+    if (outlevel >= O_VERBOSE)
+    {
+	int i;
+
+	report(stdout, "fetchmail: invoked with");
+	for (i = 0; i < argc; i++)
+	    report(stdout, " %s", argv[i]);
+	report(stdout, "\n");
+    }
+
 #define IDFILE_NAME	".fetchids"
     run.idfile = (char *) xmalloc(strlen(home)+sizeof(IDFILE_NAME)+1);
     strcpy(run.idfile, home);
@@ -211,48 +232,48 @@ int main(int argc, char **argv)
 
     if (versioninfo)
     {
-	printf(_("This is fetchmail release %s"), VERSION);
+	report(stdout, _("This is fetchmail release %s"), VERSION);
 #ifdef POP2_ENABLE
-	printf("+POP2");
+	report(stdout, "+POP2");
 #endif /* POP2_ENABLE */
 #ifndef POP3_ENABLE
-	printf("-POP3");
+	report(stdout, "-POP3");
 #endif /* POP3_ENABLE */
 #ifndef IMAP_ENABLE
-	printf("-IMAP");
+	report(stdout, "-IMAP");
 #endif /* IMAP_ENABLE */
 #ifdef GSSAPI
-	printf("+IMAP-GSS");
+	report(stdout, "+IMAP-GSS");
 #endif /* GSSAPI */
 #ifdef RPA_ENABLE
-	printf("+RPA");
+	report(stdout, "+RPA");
 #endif /* RPA_ENABLE */
 #ifdef NTLM_ENABLE
-	printf("+NTLM");
+	report(stdout, "+NTLM");
 #endif /* NTLM_ENABLE */
 #ifdef SDPS_ENABLE
-	printf("+SDPS");
+	report(stdout, "+SDPS");
 #endif /* SDPS_ENABLE */
 #ifndef ETRN_ENABLE
-	printf("-ETRN");
+	report(stdout, "-ETRN");
 #endif /* ETRN_ENABLE */
 #ifdef SSL_ENABLE
-	printf("+SSL");
+	report(stdout, "+SSL");
 #endif
 #if OPIE_ENABLE
-	printf("+OPIE");
+	report(stdout, "+OPIE");
 #endif /* OPIE_ENABLE */
 #if INET6_ENABLE
-	printf("+INET6");
+	report(stdout, "+INET6");
 #endif /* INET6_ENABLE */
 #if NET_SECURITY
-	printf("+NETSEC");
+	report(stdout, "+NETSEC");
 #endif /* NET_SECURITY */
 #ifdef HAVE_SOCKS
-	printf("+SOCKS");
+	report(stdout, "+SOCKS");
 #endif /* HAVE_SOCKS */
 #if ENABLE_NLS
-	printf("+NLS");
+	report(stdout, "+NLS");
 #endif /* ENABLE_NLS */
 	putchar('\n');
 
@@ -342,16 +363,16 @@ int main(int argc, char **argv)
     /* perhaps we just want to check options? */
     if (versioninfo)
     {
-	printf(_("Taking options from command line"));
+	report(stdout, _("Taking options from command line"));
 	if (access(rcfile, 0))
-	    printf("\n");
+	    report(stdout, "\n");
 	else
-	    printf(_(" and %s\n"), rcfile);
+	    report(stdout, _(" and %s\n"), rcfile);
 	if (outlevel >= O_VERBOSE)
-	    printf(_("Lockfile at %s\n"), tmpbuf);
+	    report(stdout, _("Lockfile at %s\n"), tmpbuf);
 
 	if (querylist == NULL)
-	    (void) fprintf(stderr,
+	    (void) report(stderr,
 		_("No mailservers set up -- perhaps %s is missing?\n"), rcfile);
 	else
 	    dump_params(&run, querylist, implicitmode);
@@ -369,7 +390,7 @@ int main(int argc, char **argv)
     pid = -1;
     if ((lockfile = (char *) malloc(strlen(tmpbuf) + 1)) == NULL)
     {
-	fprintf(stderr,_("fetchmail: cannot allocate memory for lock name.\n"));
+	report(stderr,_("fetchmail: cannot allocate memory for lock name.\n"));
 	exit(PS_EXCLUDE);
     }
     else
@@ -510,16 +531,6 @@ int main(int argc, char **argv)
     /*
      * Maybe time to go to demon mode...
      */
-#if defined(HAVE_SYSLOG)
-    if (run.use_syslog)
-    {
-    	openlog(program_name, LOG_PID, LOG_MAIL);
-	report_init(-1);
-    }
-    else
-#endif
-	report_init((run.poll_interval == 0 || nodetach) && !run.logfile);
-
     if (run.poll_interval)
     {
 	if (!nodetach)
@@ -576,10 +587,10 @@ int main(int argc, char **argv)
 	struct stat	rcstat;
 
 	if (stat(rcfile, &rcstat) == -1)
-	    report(stderr, _("couldn't time-check the run-control file\n"));
+	    report(stderr, _("couldn't time-check %s\n"), rcfile);
 	else if (rcstat.st_mtime > parsetime)
 	{
-	    report(stdout, _("restarting fetchmail (rc file changed)\n"));
+	    report(stdout, _("restarting fetchmail (%s changed)\n"), rcfile);
 	    execvp("fetchmail", argv);
 	    report(stderr, _("attempt to re-exec fetchmail failed\n"));
 	}
@@ -1075,7 +1086,7 @@ static int load_params(int argc, char **argv, int optind)
 	    if (ctl->localnames && ctl->localnames->next && ctl->server.dns)
 	    {
 		ctl->server.dns = FALSE;
-		fprintf(stderr, _("fetchmail: warning: no DNS available to check multidrop fetches from %s\n"), ctl->server.pollname);
+		report(stderr, _("fetchmail: warning: no DNS available to check multidrop fetches from %s\n"), ctl->server.pollname);
 	    }
 #endif /* !HAVE_GETHOSTBYNAME || !HAVE_RES_SEARCH */
 
