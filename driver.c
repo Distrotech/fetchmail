@@ -1003,8 +1003,8 @@ int num;		/* index of message */
      * sendmail.  This is the best thing to use for logging the
      * message origin (it sets up the right behavior for bounces and
      * mailing lists).  Otherwise, fall down to the next available 
-     * envelope address wich is the most probable real sender 
-     * respectively.  *** The order is important! ***
+     * envelope address (which is the most probable real sender).
+     * *** The order is important! ***
      * This is especially useful when receiving mailing list
      * messages in multidrop mode.  if a local address doesn't
      * exist, the bounce message won't be returned blindly to the 
@@ -1618,8 +1618,10 @@ flag forward;		/* TRUE to forward */
 
 	if (ctl->mimedecode && (mimemsg & MSG_NEEDS_DECODE)) {
 	    issoftline = UnMimeBodyline(&inbufp, (protocol->delimited && issoftline));
-	    if (issoftline && (sizeof(buf)-1-(inbufp-buf) < 200)) {
-		/* Soft linebreak, but less than 200 bytes left in
+	    if (issoftline && (sizeof(buf)-1-(inbufp-buf) < 200))
+	    {
+		/*
+		 * Soft linebreak, but less than 200 bytes left in
 		 * input buffer. Rather than doing a buffer overrun,
 		 * ignore the soft linebreak, NL-terminate data and
 		 * deliver what we have now.
