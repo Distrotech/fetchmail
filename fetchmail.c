@@ -302,9 +302,9 @@ int proto;
 }
 
 /*
- * Sequence of protocols to try when autoprobing
+ * Sequence of protocols to try when autoprobing, most capable to least.
  */
-static const int autoprobe[] = {P_POP3, P_IMAP, P_POP2};
+static const int autoprobe[] = {P_IMAP, P_POP3, P_POP2};
 
 int query_host(queryctl)
 /* perform fetch transaction with single host */
