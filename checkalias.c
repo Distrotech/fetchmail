@@ -29,7 +29,6 @@ static int is_ip_alias(const char *name1,const char *name2)
 /*
  * Given two hostnames as arguments, returns TRUE if they
  * have at least one IP address in common.
- * It is meant to be called by the is_host_alias() function in driver.c
  * No check is done on errors returned by gethostbyname,
  * the calling function does them.
  */
@@ -91,7 +90,7 @@ static int is_ip_alias(const char *name1,const char *name2)
 }
 
 int is_host_alias(const char *name, struct query *ctl)
-/* determine whether name is a DNS alias of the hostname */
+/* determine whether name is a DNS alias of the mailserver for this query */
 {
     struct hostent	*he,*he_st;
     struct mxentry	*mxp, *mxrecords;
