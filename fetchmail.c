@@ -574,22 +574,25 @@ int main(int argc, char **argv)
 #ifndef O_SYNC
 #define O_SYNC	0	/* use it if we have it */
 #endif
-    if ((st = open(lockfile, O_WRONLY|O_CREAT|O_EXCL|O_SYNC, 0666)) != -1)
+    if (!lock_acquired)
     {
-	sprintf(tmpbuf,"%d", getpid());
-	write(st, tmpbuf, strlen(tmpbuf));
-	if (run.poll_interval)
-	{
-	    sprintf(tmpbuf," %d", run.poll_interval);
-	    write(st, tmpbuf, strlen(tmpbuf));
-	}
-	close(st);	/* should be safe, fd was opened with O_SYNC */
-	lock_acquired = TRUE;
-    }
-    else
-    {
-	fprintf(stderr,	_("fetchmail: lock creation failed.\n"));
-	return(PS_EXCLUDE);
+      if ((st = open(lockfile, O_WRONLY|O_CREAT|O_EXCL|O_SYNC, 0666)) != -1)
+      {
+	  sprintf(tmpbuf,"%d", getpid());
+	  write(st, tmpbuf, strlen(tmpbuf));
+	  if (run.poll_interval)
+	  {
+	      sprintf(tmpbuf," %d", run.poll_interval);
+	      write(st, tmpbuf, strlen(tmpbuf));
+	  }
+	  close(st);	/* should be safe, fd was opened with O_SYNC */
+	  lock_acquired = TRUE;
+      }
+      else
+      {
+	  fprintf(stderr,	_("fetchmail: lock creation failed.\n"));
+	  return(PS_EXCLUDE);
+      }
     }
 
     /*
@@ -616,7 +619,30 @@ int main(int argc, char **argv)
 	else if (rcstat.st_mtime > parsetime)
 	{
 	    report(stdout, _("restarting fetchmail (%s changed)\n"), rcfile);
-	    execvp("fetchmail", argv);
+	    /*
+	     * Matthias Andree: Isn't this prone to introduction of
+	     * "false" programs by interfering with PATH? Those
+	     * path-searching execs might not be the best ideas for
+	     * this reason.
+	     *
+	     * Rob Funk: But is there any way for someone to modify
+	     * the PATH variable of a running fetchmail?  I don't know
+	     * of a way.
+	     *
+	     * Dave's change makes fetchmail restart itself in exactly
+	     * the way it was started from the shell (or shell script)
+	     * in the first place.  If you're concerned about PATH
+	     * contamination, call fetchmail initially with a full
+	     * path, and use Dave's patch.
+	     *
+	     * Not using a -p variant of exec means that the restart
+	     * will break if both (a) the user depended on PATH to
+	     * call fetchmail in the first place, and (b) the system
+	     * doesn't save the whole path in argv[0] if the whole
+	     * path wasn't used in the initial call.  (If I recall
+	     * correctly, Linux saves it but many other Unices don't.)
+	     */
+	    execvp(argv[0], argv);
 	    report(stderr, _("attempt to re-exec fetchmail failed\n"));
 	}
 
@@ -629,8 +655,7 @@ int main(int argc, char **argv)
 	 * filters out DNS queries over TCP/IP for reasons having to do
 	 * with some obscure kernel problem involving bootstrapping of
 	 * dynamically-addressed links.  I don't understand this mess
-	 * and don't want to, so it's "See ya!" to this hack.
-	 */
+	 * and don't want to, so it's "See ya!" to this hack.  */
 	sethostent(TRUE);	/* use TCP/IP for mailserver queries */
 #endif /* HAVE_RES_SEARCH */
 
