@@ -122,6 +122,7 @@ int SockOpen(const char *host, const char *service, const char *options,
 	     const char *plugin)
 {
     struct addrinfo *ai, req;
+    int i;
 #if NET_SECURITY
     void *request = NULL;
     int requestlen;
