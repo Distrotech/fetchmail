@@ -7,7 +7,7 @@ cat << EOF
 # file, that will be used by the program "fetchmail" to connect to 
 # your mail domain and retrieve your mail. 
 # This script is linux specific, so it may not work on another system.
-# Kent Robotti <krobotti@erols.com> (7-29-98)
+# Kent Robotti <krobot@erols.com> (3-9-99)
 
 EOF
 }
@@ -33,21 +33,21 @@ exit 0
 fi
 
 echo
-echo "Remote mail site?: foo.boo.com   <-Your service providers mail domain name.)"
+echo "Remote mail site?: pop.boo.com   <Your service providers mail domain name>"
 echo -n "Remote mail site?: "
 read SITE
 echo
-echo "Protocol?: pop3   <-My service provider uses the 'pop3' mail protocol.)"
-echo "Protocol?: auto   <-If not sure put: auto"
-echo "Choices: pop2 pop3 apop imap imap-k4 kpop rpop etrn auto" 
+echo "Protocol?: pop3   <My service provider uses the 'pop3' mail protocol>"
+echo "Protocol?: auto   <If not sure put: auto>"
+echo "Choices: apop auto etrn imap imap-gss imap-k4 kpop pop2 pop3 rpop sdps" 
 echo -n "Protocol?: "
 read PROTO
 echo
-echo "Remote username?: jerry   <-My username or login is jerry.)"
+echo "Remote username?: jerry   <My username or login is jerry>"
 echo -n "Remote username?: "
 read USR
 echo
-echo "Remote password?: ?       <-What's the password for?: $USR"
+echo "Remote password?: ?       <What's the password for?: $USR>"
 echo -n "Remote password?: "
 read PASS
 
@@ -61,20 +61,22 @@ echo
 exit 0
 fi
 
-if [ -s $HOME/.fetchmailrc ]; then
-mv $HOME/.fetchmailrc $HOME/.fetchmailrc.OLD
-fi
-
 echo 'poll "'$SITE'"' > $HOME/.fetchmailrc
 echo "protocol $PROTO" >> $HOME/.fetchmailrc
 echo 'username "'$USR'"' >> $HOME/.fetchmailrc
 echo 'password "'$PASS'"' >> $HOME/.fetchmailrc
 
-ps x >/tmp/grep.tmp 2>/dev/null
+ps ax >/tmp/grep.tmp 2>/dev/null
 
-if [ -s /tmp/grep.tmp ]; then
+if [ -s /etc/sendmail.cf ]; then
+CF=/etc/sendmail.cf
+elif [ -s /etc/mail/sendmail.cf ]; then
+CF=/etc/mail/sendmail.cf
+fi
+
+if [ -s /tmp/grep.tmp ] && [ ! "$CF" = "" ]; then
 if cat /tmp/grep.tmp | grep "sendmail: accepting" >/dev/null 2>&1 &&
-grep "A=procmail" /etc/sendmail.cf >/dev/null 2>&1 ; then
+grep "A=procmail" $CF >/dev/null 2>&1 ; then
 MDA="1"
 fi
 fi
@@ -118,8 +120,9 @@ echo
 cat $HOME/.fetchmailrc
 
 if [ ! "$MAIL" = "" ]; then
-echo "Fetchmail will retrieve your mail and put it in: $MAIL"
-if [ ! -s "$MAIL" ]; then
+echo "Fetchmail will retrieve your mail and put it in:"
+echo "$MAIL"
+if [ ! -f "$MAIL" ]; then
 touch $MAIL 2>/dev/null
 chmod 600 $MAIL 2>/dev/null
 fi
@@ -132,19 +135,19 @@ echo "as the (m)ail (d)elivery (a)gent for fetchmail."
 echo
 echo "WARNING: There's no way to know if sendmail is set up"
 echo "properly for local mail delivery, so the first time you"
-echo "run fetchmail, run it this way. -> ~# fetchmail -k"
+echo "run fetchmail run it this way: # fetchmail -k"
 echo
 echo "If the mail that fetchmail retrieves is not put in your mailbox," 
 echo "you'll know that sendmail is not set up properly in the" 
-echo "/etc/sendmail.cf file, for delivery of local mail."
+echo "$CF file for delivery of local mail."
 echo 
 elif [ "$MDA" = "2" ]; then
-echo "I put that (m)ail (d)elivery (a)gent in .fetchmailrc,"
+echo "I put that (m)ail (d)elivery (a)gent in .fetchmailrc"
 echo "because i found it on your system, this doesn't mean" 
 echo "it's correct or the one you want to use."
 echo
 echo "The first time you run fetchmail, you should run it"
-echo "this way. -> ~# fetchmail -k"
+echo "this way: # fetchmail -k"
 echo
 elif [ "$MDA" = "3" ]; then
 echo "I Don't know what (m)ail (d)elivery (a)gent you're going to use."
@@ -156,6 +159,6 @@ echo mda '"/usr/bin/procmail -d %s"'
 echo mda '"/bin/mail.local %s"'
 echo
 echo "The first time you run fetchmail, you should run it"
-echo "this way. -> ~# fetchmail -k"
+echo "this way: # fetchmail -k"
 echo
 fi
