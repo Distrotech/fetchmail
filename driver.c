@@ -1054,41 +1054,48 @@ int num;		/* index of message */
 	SMTP_data(ctl->smtp_socket);
     }
 
-    /* utter any per-message Received information we need here */
-    {
-	time_t	now;
 
-	/* write a line describing fetchmail's processing of the message */
-	sprintf(buf,
-	"Received: from %s\n\tby %s (fetchmail-%s %s run by %s)\n",
-		ctl->server.truename, 
+    /* utter any per-message Received information we need here */
+    n = 0;
+    sprintf(buf, "Received: from %s\n", ctl->server.truename);
+    if (stuffline(ctl, buf) != -1)
+    {
+	sprintf(buf, "\tby %s (fetchmail-%s %s run by %s)\n",
 		fetchmailhost, 
 		RELEASE_ID,
 		protocol->name,
-	        ctl->remotename);
-
-	if (!good_addresses)
-	    sprintf(buf + strlen(buf), 
-		    "\tfor <%s@%s> (by default); ",
-		    user, desthost);
-	if (good_addresses == 1)
+		ctl->remotename);
+	if (stuffline(ctl, buf) != -1)
 	{
-	    for (idp = xmit_names; idp; idp = idp->next)
-		if (idp->val.num == XMIT_ACCEPT)
-		{
-		    sprintf(buf + strlen(buf), "\tfor <%s@%s> (%s); ",
-			    idp->id, desthost,
-			    MULTIDROP(ctl) ? "multi-drop" : "single-drop");
-		    break;	/* only report first address */
-		}
+	    time_t	now;
+
+	    buf[0] = '\t';
+	    if (good_addresses == 0)
+	    {
+		sprintf(buf+1, 
+			"for <%s@%s> (by default); ",
+			user, desthost);
+	    }
+	    else if (good_addresses == 1)
+	    {
+		for (idp = xmit_names; idp; idp = idp->next)
+		    if (idp->val.num == XMIT_ACCEPT)
+			break;	/* only report first address */
+		sprintf(buf+1, "for <%s@%s> (%s); ",
+			idp->id, desthost,
+			MULTIDROP(ctl) ? "multi-drop" : "single-drop");
+	    }
+	    else
+		buf[1] = '\0';
+
+	    time(&now);
+	    strcat(buf, ctime(&now));
+	    n = stuffline(ctl, buf);
 	}
-	time(&now);
-	strcat(buf, ctime(&now));
-	strcpy(buf + strlen(buf) - 1, "\n");
     }
 
     /* ship out the synthetic Received line and the headers */
-    if (stuffline(ctl, buf) < 0 || stuffline(ctl, headers) < 0)
+    if (n == -1 || stuffline(ctl, headers) < 0)
     {
 	error(0, errno, "writing RFC822 headers");
 	if (ctl->mda)
