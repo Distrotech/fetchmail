@@ -110,28 +110,6 @@ rfc822: rfc822.c
 .c.o:
 	$(CC) $(defines) -c -I$(srcdir) $(CFLAGS) $< $(OUTPUT_OPTION)
 
-# lex rule
-.l.o:
-	$(LEX) $(LEXFLAGS) $<
-	mv lex.yy.c $*.c
-	$(CC) $(defines) -c -I$(srcdir) $(CFLAGS) $*.c $(OUTPUT_OPTION)
-
-.l.c:
-	$(LEX) $(LEXFLAGS) $<
-	mv lex.yy.c $*.c
-
-# yacc rule
-.y.o:
-	$(YACC) $(YACCFLAGS) $<
-	mv y.tab.c $*.c
-	mv -f y.tab.h $*.h
-	$(CC) $(defines) -c -I$(srcdir) $(CFLAGS) $*.c $(OUTPUT_OPTION)
-
-.y.c:
-	$(YACC) $(YACCFLAGS) $<
-	mv y.tab.c $*.c
-	mv -f y.tab.h $*.h
-
 # For some losing Unix makes.
 SHELL = /bin/sh
 MAKE = make
@@ -176,7 +154,7 @@ mostlyclean: clean
 Makefile: config.status $(srcdir)/Makefile.in
 	$(SHELL) config.status
 	@echo "You can ignore any makedepend error messages"
-	-makedepend -I$(srcdir) -fMakefile *.c
+	-makedepend -I$(srcdir) -I. -fMakefile *.c
 
 config.h: stamp-config 
 
@@ -194,8 +172,16 @@ config.h.in: acconfig.h configure.in
 .NOEXPORT:
 
 # Special dependencies, not easily handled without explicit rules
-rcfile_l.c rcfile_l.h: $(srcdir)/rcfile_l.l
-rcfile_y.c rcfile_y.h: $(srcdir)/rcfile_y.y
+rcfile_l.o rcfile_l.h: $(srcdir)/rcfile_l.l
+	$(LEX) $(LEXFLAGS) $<
+	mv lex.yy.c $*.c
+	$(CC) $(defines) -c -I$(srcdir) -I. $(CFLAGS) $*.c $(OUTPUT_OPTION)
+
+rcfile_y.o rcfile_y.h: $(srcdir)/rcfile_y.y
+	$(YACC) $(YACCFLAGS) $<
+	mv y.tab.c $*.c
+	mv -f y.tab.h $*.h
+	$(CC) $(defines) -c -I$(srcdir) -I. $(CFLAGS) $*.c $(OUTPUT_OPTION)
 
 parser = $(srcdir)/rcfile_l.l $(srcdir)/rcfile_y.y
 headers = $(srcdir)/fetchmail.h $(srcdir)/socket.h $(srcdir)/smtp.h \
