@@ -627,7 +627,9 @@ int open_sink(struct query *ctl, struct msgblk *msg,
     else /* forward to an SMTP or LMTP listener */
     {
 	const char	*ap;
-	char		options[MSGBUFSIZE], addr[128], **from_responses;
+	char		options[MSGBUFSIZE]; 
+	char		addr[HOSTLEN+USERNAMELEN+1];
+	char		**from_responses;
 	int		total_addresses;
 
 	/* build a connection to the SMTP listener */
@@ -729,11 +731,16 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	 */
 	if (!(*good_addresses)) 
 	{
+	    if (strchr(run.postmaster, '@'))
+		strcpy(addr, run.postmaster);
+	    else
+	    {
 #ifdef HAVE_SNPRINTF
-	    snprintf(addr, sizeof(addr)-1, "%s@%s", run.postmaster, ctl->destaddr);
+		snprintf(addr, sizeof(addr)-1, "%s@%s", run.postmaster, ctl->destaddr);
 #else
-	    sprintf(addr, "%s@%s", run.postmaster, ctl->destaddr);
+		sprintf(addr, "%s@%s", run.postmaster, ctl->destaddr);
 #endif /* HAVE_SNPRINTF */
+	    }
 
 	    if (SMTP_rcpt(ctl->smtp_socket, addr) != SM_OK)
 	    {

@@ -1,5 +1,10 @@
 				Release Notes:
 
+fetchmail-4.7.2 ():
+* Don't append the destination address to a postmaster name containing @.
+
+There are 246 people on fetchmail-friends and 329 on fetchmail-announce.
+
 fetchmail-4.7.1 (Fri Dec 18 03:02:22 EST 1998):
 * FEATURE FREEZE IS NOW IN EFFECT!  No new features until after 5.0.0.
 * Enable fetchmail to build correctly on systems without socketpair.
