@@ -2,9 +2,10 @@
 .TH fetchmail LOCAL
 .SH NAME
 fetchmail \- fetch mail from a POP or IMAP server
+
 .SH SYNOPSIS
-.B fetchmail
-[\fI options \fR] \fI [mailserver...]\fR
+\fBfetchmail\fR [\fIoptions\fR] [\fImailserver...\fR]
+
 .SH DESCRIPTION
 .I fetchmail
 is a mail-retrieval and forwarding utility; it fetches
@@ -46,14 +47,54 @@ options override
 .I ~/.fetchmailrc
 declarations.
 .PP
+Each server name that you specify following the options on the
+command line will be queried.  If you don't specify any servers
+on the command line, each server in your 
+.I ~/.fetchmailrc
+file will be queried.
+.PP
 To facilitate the use of
 .I fetchmail
 In scripts, pipelines, etc., it returns an appropriate exit code upon 
 termination -- see EXIT CODES below.
+
 .SH OPTIONS
 The following options modify the behavior of \fIfetchmail\fR.  It is
 seldom necessary to specify any of these once you have a
 working \fI.fetchmailrc\fR file set up.
+.PP
+Some special options are not covered here, but are documented insttead
+in sections on AUTHENTICATION and DAEMON MODE which follows.
+.SS General Options
+.TP
+.B \-V, --version
+Displays the version information for your copy of 
+.I fetchmail.
+No mail fetch is performed.
+Instead, for each server specified, all option information
+that would be computed if
+.I fetchmail.
+were connecting to that server is displayed.  Any non-printables in
+passwords or other string names are shown as backslashed C-like
+escape sequences.  This option is useful for verifying that your
+options are set the way you want them.
+.TP
+.B \-c, --check
+Return a status code to indicate whether there is mail waiting,
+without actually fetching or deleting mail (see EXIT CODES below).
+This option doesn't play well with queries to multiple sites, and
+is ignored in daemon mode.  It's also prone to false positives if
+you leave read but undeleted mail in your server mailbox.
+.TP
+.B \-s, --silent
+Silent mode.  Suppresses all progress/status messages that are normally
+echoed to standard error during a fetch.  The --verbose option
+overrides this.
+.TP
+.B \-v, --verbose
+Verbose mode.  All control messages passed between 
+.I fetchmail
+and the mailserver are echoed to stderr.  Overrides --silent.
 .TP
 .B \-a, --all
 Retrieve both old (seen) and new messages from the mailserver.  The
@@ -61,14 +102,55 @@ default is to fetch only messages the server has not marked seen.
 Note that POP2 retrieval behaves as though --all is always on (see
 RETRIEVAL FAILURE MODES below).
 .TP
-.B \-l, --limit
-Takes a maximum octet size argument.  Messages larger than this size
-will not be fetched, not be marked seen, and will be left on the
-server (in foreground sessions, the progress messages will note that
-they are "oversized").  The --all option overrides this one.  This
-option is intended for those needing to strictly control fetch time
-in interactive mode.  It may not be used with daemon mode,
-as users would never receive a notification that messages were waiting.
+.B \-k, --keep
+Keep retrieved messages on the remote mailserver.  Normally, messages 
+are deleted from the folder on the mailserver after they have been retrieved.
+Specifying the 
+.B keep 
+option causes retrieved messages to remain in your folder on the mailserver.
+.TP
+.B \-K, --kill
+Delete retrieved messages from the remote mailserver.  This
+option forces retrieved mail to be deleted.  It may be useful if
+you have specified a default of \fBnokill\fR in your \fI.fetchmailrc\fR.
+.TP
+.B \-F, --flush
+POP3/IMAP only.  Delete old (previously retrieved) messages from the mailserver
+before retrieving new messages.
+.SS Protocol and Query Options
+.TP
+.B \-p, \--protocol proto
+Specify the protocol to used when communicating with the remote 
+mailserver.  If no protocol is specified,
+.I fetchmail
+will try each of the supported protocols in turn, terminating after
+any successful attempt.
+.I proto 
+may be one of the following:
+.RS
+.IP IMAP
+IMAP2bis, a compatible subset of IMAP4.
+.IP POP2
+Post Office Protocol 2
+.IP POP3
+Post Office Protocol 3
+.IP APOP
+Use POP3 with MD5 authentication.
+.IP KPOP
+Use POP3 with Kerberos authentication on port 1109.
+.RE
+.TP
+.B \-P, --port
+The  option permits you to specify a TCP/IP port to connect on. 
+This option will seldom be necessary as all the supported protocols have
+well-established default port numbers.
+.TP
+.B \-r folder, --remote folder
+Causes a specified non-default mail folder on the mailserver to be retrieved.
+The syntax of the folder name is server dependent, as is the default
+behavior when no folder is specified.  This option is not available
+under POP3.
+.SS Delivery Control Options
 .TP
 .B \-S host, --smtphost host
 Specify a host to forward mail to (other than localhost).
@@ -85,26 +167,40 @@ will be inserted into the MDA command wherever you place a %s.  Do
 "sendmail -oem -t" that dispatches on the contents of To/Cc/Bcc, it
 will create mail loops and bring the just wrath of many postmasters
 down upon your head.
+.SS Resource Limit Control Options
 .TP
-.B \-F, --flush
-POP3/IMAP only.  Delete old (previously retrieved) messages from the mailserver
-before retrieving new messages.
+.B \-l, --limit
+Takes a maximum octet size argument.  Messages larger than this size
+will not be fetched, not be marked seen, and will be left on the
+server (in foreground sessions, the progress messages will note that
+they are "oversized").  The --all option overrides this one.  This
+option is intended for those needing to strictly control fetch time
+in interactive mode.  It may not be used with daemon mode,
+as users would never receive a notification that messages were waiting.
 .TP
-.B \-c, --check
-Return a status code to indicate whether there is mail waiting,
-without actually fetching or deleting mail (see EXIT CODES below).
-This option doesn't play well with queries to multiple sites, and
-is ignored in daemon mode.  It's also prone to false positives if
-you leave read but undeleted mail in your server mailbox.
+.B -b, --batchlimit
+Specify the maximum number of messages that will be shipped to an SMTP
+listener before the connection is deliberately torn down and rebuilt
+(defaults to 0, meaning no limit).  While \fBsendmail\fR(8) normally
+initiates delivery of a message immediately after receiving the
+message terminator, some SMTP listeners are not so prompt.  MTAs like
+\fIqmail\fR(8) and \fIsmail\fR(8) will wait till the delivery socket is
+shut down to deliver.  This may produce annoying delays when
+.IR fetchmail (8)
+is processing very large batches.  Setting the batch limit to some
+nonzero size will prevent these delays.
 .TP
-.B \-f pathname, --fetchmailrc pathname
-Specify a non-default name for the 
-.I .fetchmailrc
-run control file.
+.B -B, --fetchlimit
+Limit the number of messages accepted from a given server in a single
+poll.  By default there is no limit. 
+.SS Authentication Options
 .TP
-.B \-i pathname, --idfile pathname
-Specify an alternate name for the .fetchids file used to save POP3
-UIDs. 
+.B \-u name, --username name
+Specifies the user identification to be used when logging in to the mailserver.
+The appropriate user identification is both server and user-dependent.  
+The default is your login name on the client machine that is running 
+.I fetchmail.
+See USER AUTHENTICATION below for a complete description.
 .TP
 .B \-I specification, --interface specification
 Require that a specific interface device be up and have a specific local
@@ -137,44 +233,6 @@ monitored for activity.  After each poll interval, if the link is up and
 no other activity has occurred on the link then the poll will be
 skipped.  This option is currently only supported under Linux.
 .TP
-.B \-k, --keep
-Keep retrieved messages on the remote mailserver.  Normally, messages 
-are deleted from the folder on the mailserver after they have been retrieved.
-Specifying the 
-.B keep 
-option causes retrieved messages to remain in your folder on the mailserver.
-.TP
-.B \-K, --kill
-Delete retrieved messages from the remote mailserver.  This
-option forces retrieved mail to be deleted.  It may be useful if
-you have specified a default of \fBnokill\fR in your \fI.fetchmailrc\fR.
-.TP
-.B \-p, \--protocol proto
-Specify the protocol to used when communicating with the remote 
-mailserver.  If no protocol is specified,
-.I fetchmail
-will try each of the supported protocols in turn, terminating after
-any successful attempt.
-.I proto 
-may be one of the following:
-.RS
-.IP IMAP
-IMAP2bis, a compatible subset of IMAP4.
-.IP POP2
-Post Office Protocol 2
-.IP POP3
-Post Office Protocol 3
-.IP APOP
-Use POP3 with MD5 authentication.
-.IP KPOP
-Use POP3 with Kerberos authentication on port 1109.
-.RE
-.TP
-.B \-P, --port
-The  option permits you to specify a TCP/IP port to connect on. 
-This option will seldom be necessary as all the supported protocols have
-well-established default port numbers.
-.TP
 .B \-A, --auth
 This option permits you to specify an authentication type (see USER
 AUTHENTICATION below for details).  The possible values are
@@ -183,29 +241,16 @@ primarily for developers; choosing KPOP protocol automatically selects
 Kerberos authentication, and all other alternatives use ordinary
 password authentication (though APOP uses a generated one-time
 key as the password).
+.SS Miscellaneous Options
 .TP
-.B \-r folder, --remote folder
-Causes a specified non-default mail folder on the mailserver to be retrieved.
-The syntax of the folder name is server dependent, as is the default
-behavior when no folder is specified.  This option is not available
-under POP3.
+.B \-f pathname, --fetchmailrc pathname
+Specify a non-default name for the 
+.I .fetchmailrc
+run control file.
 .TP
-.B \-s, --silent
-Silent mode.  Suppresses all progress/status messages that are normally
-echoed to standard error during a fetch.  The --verbose option
-overrides this.
-.TP
-.B \-v, --verbose
-Verbose mode.  All control messages passed between 
-.I fetchmail
-and the mailserver are echoed to stderr.  Overrides --silent.
-.TP
-.B \-u name, --username name
-Specifies the user identification to be used when logging in to the mailserver.
-The appropriate user identification is both server and user-dependent.  
-The default is your login name on the client machine that is running 
-.I fetchmail.
-See USER AUTHENTICATION below for a complete description.
+.B \-i pathname, --idfile pathname
+Specify an alternate name for the .fetchids file used to save POP3
+UIDs. 
 .TP
 .B \-n, --norewrite
 Normally,
@@ -220,45 +265,13 @@ provided to pacify people who are paranoid about having an MTA edit
 mail headers and want to know they can prevent it, but it is generally
 not a good idea to actually turn off rewrite.)
 .TP
-.B -b, --batchlimit
-Specify the maximum number of messages that will be shipped to an SMTP
-listener before the connection is deliberately torn down and rebuilt
-(defaults to 0, meaning no limit).  While \fBsendmail\fR(8) normally
-initiates delivery of a message immediately after receiving the
-message terminator, some SMTP listeners are not so prompt.  MTAs like
-\fIqmail\fR(8) and \fIsmail\fR(8) will wait till the delivery socket is
-shut down to deliver.  This may produce annoying delays when
-.IR fetchmail (8)
-is processing very large batches.  Setting the batch limit to some
-nonzero size will prevent these delays.
-.TP
-.B -B, --fetchlimit
-Limit the number of messages accepted from a given server in a single
-poll.  By default there is no limit. 
-.TP
 .B -E, --envelope
 This option changes the header 
 .I fetchmail
 assumes will carry a copy of the mail's envelope address.  Normally
 this is `X-Envelope-To' but as this header is not standard, practice
 varies. See the discussion of multidrop address handling below.
-.TP
-.B \-V, --version
-Displays the version information for your copy of 
-.I fetchmail.
-No mail fetch is performed.
-Instead, for each server specified, all option information
-that would be computed if
-.I fetchmail.
-were connecting to that server is displayed.  Any non-printables in
-passwords or other string names are shown as backslashed C-like
-escape sequences.
-.PP
-Each server name that you specify following the options on the
-command line will be queried.  If you don't specify any servers
-on the command line, each server in your 
-.I ~/.fetchmailrc
-file will be queried.
+
 .SH USER AUTHENTICATION
 Normal user authentication in 
 .I fetchmail
@@ -332,6 +345,7 @@ If your \fIfetchmail\fR was built with Kerberos support and you specify
 Kerberos authentication (either with --auth or the \fI.fetchmailrc\fR
 option \fBauthenticate kerberos\fR) it will try to get a Kerberos
 ticket from the mailserver at the start of each query. 
+
 .SH DAEMON MODE
 The 
 .B --daemon
@@ -423,6 +437,7 @@ This is a robustness feature.  It means that if a message is fetched
 (and thus marked seen by the mailserver) but not delivered locally
 due to some transient error, it will be re-fetched during the next
 poll cycle.
+
 .SH RETRIEVAL FAILURE MODES
 The protocols \fIfetchmail\fR uses to talk to mailservers are next to
 bulletproof.  In normal operation forwarding to port 25, no message is
@@ -471,6 +486,7 @@ RFCs.  If you ever trip over a server that doesn't, the symptom will
 be that messages you have already read on your host will look new to
 the server.  In this (unlikely) case, only messages you fetched with
 \fIfetchmail --keep\fR will be both undeleted and marked old.
+
 .SH SPAM FILTERING
 Newer versions of
 .I sendmail
@@ -481,6 +497,7 @@ will elicit an SMTP response with an error code of 571.  The
 code recognizes this error and discards the message.  This is the
 .I only
 circumstance under which fetchmail ever discards mail.
+
 .SH THE RUN CONTROL FILE
 The preferred way to set up fetchmail (and the only way if you want to
 avoid specifying passwords each time it runs) is to write a
@@ -756,6 +773,7 @@ a multi-drop box.  It tells fetchmail that any address in the
 loonytoons.org domain (including subdomain addresses like
 `joe@daffy.loonytoons.org') should be passed through to the local SMTP
 listener without modification.  Be careful of mail loops if you do this!
+
 .SH THE USE AND ABUSE OF MULTIDROP MAILBOXES
 Use the multiple-local-recipients feature with caution -- it can bite.
 The fundamental problem is that by having your server toss several
@@ -815,6 +833,7 @@ Alternatively, some SMTP listeners and/or mail servers insert a header
 in each message containing a copy of the envelope addresses.  This
 header (when it exists) is often `X-Envelope-To'.  Fetchmail's
 assumption about this can be changed with the -E or `envelope' option.
+
 .SH EXIT CODES
 To facilitate the use of 
 .I fetchmail
@@ -861,8 +880,10 @@ When
 .I fetchmail
 queries more than one host, the returned status is that of the last
 host queried.
+
 .SH AUTHOR
 Eric S. Raymond <esr@snark.thyrsus.com>.  
+
 .SH BACKWARD COMPATIBILITY
 This program is descended from and replaces 
 .IR popclient , 
@@ -878,6 +899,7 @@ maximum byte size rather than a line count), this will often work.
 about the order of options than the old, in order to support multiple
 user desriptions per server; thus you may have to rearrange things a
 bit.)
+
 .SH FILES
 .TP 5
 ~/.fetchmailrc
@@ -897,12 +919,14 @@ lock file to help prevent concurrent runs (non-root mode).
 .TP 5
 /var/run/fetchmail.pid
 lock file to help prevent concurrent runs (root mode).
+
 .SH ENVIRONMENT
 For correct initialization, 
 .I fetchmail
 requires either that both the USER and HOME environment variables are
 correctly set, or that \fBgetpwuid\fR(3) be able to retrieve a password
 entry from your user ID.
+
 .SH BUGS AND KNOWN PROBLEMS
 Use of any of the supported protocols other than APOP or KPOP requires
 that the program send unencrypted passwords over the TCP/IP connection
@@ -916,6 +940,7 @@ or (b) the intervening network link can be tapped.
 .PP
 Send comments, bug reports, gripes, and the like to Eric S. Raymond
 <esr@thyrsus.com>.
+
 .SH SEE ALSO
 elm(1), mail(1), sendmail(8), popd(8), imapd(8);
 RFC 937, RFC 1081, RFC1176, RFC 1225, RFC 1460, RFC 1725, RFC1939.
