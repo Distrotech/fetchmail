@@ -2,6 +2,9 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Sunil Shetye's fix to force fetchsizelimit to 1 for APOP and RPOP.
+* PopDel.py removed from contrib at author's request.
+
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
 * Updated Spanish, Turkish, and German translation files.
