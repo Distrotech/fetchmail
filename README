@@ -1,6 +1,6 @@
 			 fetchmail README
 
-fetchmail is a full-featured, robust, well-documented POP2, POP3, RPOP,
+fetchmail is a free, full-featured, robust, well-documented POP2, POP3, RPOP,
 APOP, KPOP, and IMAP batch mail retrieval/forwarding utility intended to be
 used over on-demand TCP/IP links (such as SLIP or PPP connections).
 It retrieves mail from remote mail servers and forwards it to your
@@ -18,6 +18,8 @@ Here are fetchmail's main features.  Those unique to fetchmail
 pop-perl5-1.2, popc, popmail-1.6 and upop) are marked with **.
 
 Since 3.0:
+
+	** Support for a `hunt list' of SMTP hosts
 
 	** Support for ESMTP 8BITMIME and SIZE options.
 
