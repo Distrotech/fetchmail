@@ -39,10 +39,13 @@ EOF
 			endy=$((breakheight+50+count*50))
 			if ((endy>lasttotal))
 			then
+			    # Label over curve hanging right, arrow down
 			    arrowhead=$((lasttotal+50))
 			    echo "set label '$legend' at $lastday-10, $endy+15"
 			else
+			    # Label under curve hanging left, arrow up
 			    arrowhead=$((lasttotal-5))
+			    # This is a crock...
 			    lablen=475
 			    echo "set label '$legend' at $lastday-$lablen, $endy-15"
 			fi
