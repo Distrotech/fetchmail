@@ -22,7 +22,7 @@ EOF
 (
 	echo "count=0"
 	echo "breakheight=510"
-	while read version friends announce total days date
+	while read version size friends announce total days date
 	do
 		if [ "$version" = '%' ]
 		then
@@ -49,7 +49,7 @@ EOF
 
 # OK, now write the major-release labels
 (
-	while read version friends announce total days date
+	while read version size friends announce total days date
 	do
 	    echo "set arrow from $days, $total - 80 to $days, $total - 30 head"
 	    echo "set label '$version' at $days - 5, $total - 90"
@@ -57,17 +57,17 @@ EOF
 ) </tmp/growthmajors$$ >>/tmp/growthimage$$ 
 
 cat >>/tmp/growthimage$$ <<EOF
-plot [] [0:] '/tmp/growthnumbers$$' using 5:4 \
+plot [] [0:] '/tmp/growthnumbers$$' using 6:5 \
 		title "Both lists" with points 3, \
-     '/tmp/growthannounce$$' using 5:3 \
+     '/tmp/growthannounce$$' using 6:4 \
 		title "fetchmail-announce" with points 4, \
-     '/tmp/growthannounce$$' using 5:2 \
+     '/tmp/growthannounce$$' using 6:3 \
 		title "fetchmail-friends" with points 2
 EOF
 
 # The gnuplot driver for PNG doesn't do color
 gnuplot /tmp/growthimage$$ >growth.gif
-gif2png -s -d -qq growth.gif
+gif2png -s -d growth.gif
 
 rm -f /tmp/growth*
 
