@@ -417,8 +417,9 @@ const char *host;
 /*********************************************************************
   function:      nxtaddr
   description:   Parse addresses in succession out of a specified RFC822
-                 header.  Note: RFC822 escaping with \ is *not* handled.
-
+                 header.  Note 1: RFC822 escaping with \ is *not* handled.
+                 Note 2: it is important that this routine not stop on \r,
+                 since we use \r as a marker for RFC822 continuations below.
   arguments:     
     hdr          header line to be parsed, NUL to continue in previous hdr
 
@@ -615,8 +616,18 @@ int rewrite;
 	    }
 	    else
 	    {
-		int	newlen = oldlen + strlen(bufp);
+		int	newlen;
 
+		/*
+		 * We deal with RFC822 continuation lines here.
+		 * Replace previous '\n' with '\r' so nxtaddr 
+		 * and reply-hack will be able to see past it.
+		 * We'll undo this before writing the header.
+		 */
+		if (isspace(bufp[0]))
+		    headers[oldlen-1] = '\r';
+
+		newlen = oldlen + strlen(bufp);
 		headers = realloc(headers, newlen + 1);
 		if (headers == NULL)
 		    return(PS_IOERR);
@@ -708,6 +719,11 @@ int rewrite;
 	    case TO_MDA:
 		break;
 	    }
+
+	    /* change continuation markers back to regular newlines */
+	    for (cp = headers; cp < headers +  oldlen; cp++)
+		if (*cp == '\r')
+		    *cp = '\n';
 
 	    if (write(mboxfd,headers,oldlen) < 0)
 	    {
