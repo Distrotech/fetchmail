@@ -193,8 +193,7 @@ static int do_imap_ntlm(int sock, struct query *ctl)
     if (outlevel >= O_MONITOR)
 	report(stdout, "IMAP> %s\n", msgbuf);
       
-
-
+    strcat(msgbuf,"\r\n");
     SockWrite (sock, msgbuf, strlen (msgbuf));
   
     if ((result = gen_recv (sock, msgbuf, sizeof msgbuf)))
