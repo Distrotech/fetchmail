@@ -1,6 +1,6 @@
 			    Features To Consider
 
-* Generate bounce messages when delivery is refused.  See RFC1891, RFC1894.
+* Generate bounce messages when delivery is refused.  See RFC1891, RFC1892.
 * Use the libmd functions for md5 under Free BSD?  (Low priority.)
 * More log levels?
 
@@ -12,7 +12,7 @@
 
 ------------------------------------------------------------------------------
 fetchmail-4.3.1 ()
-* Minor portation fixes for early AIX version and NextSTEP.
+* Minor portation fixes for early AIX versions and NextSTEP.
 * Fixed a bad interaction between --limit and the repoll feature.
 * = is now optional in global options.
 * Code for parsing Received headers now strips out RFC822 routes.
