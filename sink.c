@@ -767,7 +767,8 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	 */
 	ctl->mda = FALLBACK_MDA;
 
-	report(stderr, _("can't raise the listener; falling back to " FALLBACK_MDA));
+	report(stderr, _("can't raise the listener; falling back to %s",
+			 FALLBACK_MDA));
 #endif
     }
 

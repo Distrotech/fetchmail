@@ -2131,10 +2131,8 @@ The RFC 2177 IDLE support is flaky.  It sort of works, but may generate
 spurious socket error messages or silently hang in the presence of
 various network or server errors.
 .PP
-The combination of using a remote name with embedded spaces and POP3
-UIDs will not work; the UIDL-handling code will core-dump while trying
-to read in what it sees as malformed .fetchids lines, typically
-on the second poll after startup.
+The -f - option (reading a configuration from stdin) is incompatible
+with the plugin option.
 .PP
 The UIDL code is generally flaky and tends to lose its state on errors
 and line drops (so that old messages are re-seen).  If this happens to

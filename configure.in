@@ -221,7 +221,7 @@ AC_DEFINE_UNQUOTED(PID_DIR, "$dir")
 # a sendmail alias) do the right thing in this circumstance.
 #
 AC_PATH_PROG(procmail, procmail, "", $PATH:/usr/sbin)
-AC_PATH_PROG(sendmail, sendmail, "", $PATH:/usr/sbin)
+AC_PATH_PROG(sendmail, sendmail, "", $PATH:/usr/sbin:/usr/lib)
 
 ###	use option --disable-fallback to disable fallback MDA
 ###	use option --enable-fallback=procmail or 
@@ -456,7 +456,7 @@ directory],
 if test "$with_kerberos" != "no"
 then
 # Check for a NetBSD/OpenBSD special case
-if test "$with_kerberos" = "yes" && ( test `uname` = "NetBSD" || test `uname`= "OpenBSD" )
+if test "$with_kerberos" = "yes" && ( test `uname` = "NetBSD" || test `uname` = "OpenBSD" )
 then
   AC_CHECKING([kerberosIV for `uname`])
   AC_DEFINE(KERBEROS_V4)

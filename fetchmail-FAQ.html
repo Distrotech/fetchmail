@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/05/21 17:13:04 $
+<td width="30%" align=right>$Date: 2001/05/29 22:48:04 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -156,6 +156,7 @@ a line hit while downloading?</a><br>
 <a href="#O8">O8. I'm using pppd.  Why isn't my monitor option working?</a><br>
 <a href="#O9">O9. Why does fetchmail keep retrieving the same messages
 over and over?</a><br>
+<a href="#O10">O10. Why is the received date on all my messages the same?</a><br>
 
 <h1>Answers:</h1>
 <hr>
@@ -2848,11 +2849,17 @@ terminated correctly.
 to behave on a line drop, according to the RFCs.  I recommend 
 switching to IMAP and using a short expunge interval.
 
+<hr>
+<h2><a name="O10">O10. Why is the received date on all my messages the same?</a></h2>
+
+This is a design choice in your MTA, not fetchmail.  It's taking the received
+date from the last Received header.<p>
+
 <HR>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/05/21 17:13:04 $
+<td width="30%" align=right>$Date: 2001/05/29 22:48:04 $
 </table>
 
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

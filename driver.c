@@ -1823,7 +1823,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		    report(stderr, _("Authorization failure on %s@%s%s\n"), 
 			   ctl->remotename,
 			   ctl->server.truename,
-			   (ctl->wehaveauthed ? " (previously authorized)" : " ")
+			   (ctl->wehaveauthed ? _(" (previously authorized)") : "")
 			);
 
 		    /*
@@ -2552,6 +2552,8 @@ const struct method *proto;	/* protocol method table */
 	int fetchlimit = NUM_VALUE_OUT(ctl->fetchlimit);
 
 	do {
+	    if (fetchlimit > 0 && (expunge == 0 || expunge > fetchlimit - totalcount))
+		expunge = fetchlimit - totalcount;
 	    ok = do_session(ctl, proto, expunge);
 	    totalcount += expunge;
 	    if (NUM_SPECIFIED(ctl->fetchlimit) && totalcount >= fetchlimit)
