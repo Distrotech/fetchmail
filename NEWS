@@ -29,7 +29,7 @@ fetchmail-4.0.0 ()
 * Fixes for minor compilation glitches.
 * Progress messages now show total count as well as message number.
 
-There are 248 people on the fetchmail-friends list.
+There are 252 people on the fetchmail-friends list.
 
 pl 3.9.9 (Wed Jun 25 11:01:51 EDT 1997):
 * We can now process multiple To headers a la Microsoft Exchange Server.

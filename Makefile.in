@@ -3,7 +3,7 @@
 # If you're running QNX, we can't assume a working autoconf.
 # So just uncomment all the lines marked QNX.
 
-VERS=3.9.9
+VERS=4.0.0
 
 # Ultrix 2.2 make doesn't expand the value of VPATH.
 srcdir = @srcdir@
@@ -217,6 +217,7 @@ all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) \
 
 MANIFEST: $(srcdir) Makefile.in
 	@echo $(all) | tr "[ \t]" '\n' | sort | sed "s/\\./fetchmail-$(VERS)/" >MANIFEST
+	@wc -l MANIFEST
 
 FAQ: fetchmail.FAQ.html
 	lynx -dump -nolist fetchmail.FAQ.html >FAQ
