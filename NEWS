@@ -20,6 +20,10 @@
 ------------------------------------------------------------------------------
 fetchmail-4.4.0 ():
 * Relax the LOGIN capability check in IMAP.
+* John Stracke <francis@netscape.com> sent a workaround for SIGALRM flakiness
+  under Red Hat 5.0.
+
+There are 269 people on fetchmail-friends and 144 on fetchmail-announce.
 
 fetchmail-4.3.8 (Tue Feb 24 15:47:13 EST 1998):
 * Documentation cleanup.

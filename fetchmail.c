@@ -556,6 +556,38 @@ int main (int argc, char **argv)
 	     */
 	    {
 #ifndef __EMX__
+#ifndef SLEEP_WITH_ALARM	/* not normally on */
+                struct timeval timeout;
+
+                timeout.tv_sec = poll_interval;
+                timeout.tv_usec = 0;
+                select(0,0,0,0, &timeout);
+#else
+		/* 
+		 * This code is flaky under Red Hat Linux 5.0, and possibly
+		 * elsewhere.  John Stracke <francis@netscape.com> writes:
+		 *
+		 * The problem seems to be that, after hitting the interval
+		 * timer while talking to the server, the process no longer
+		 * responds to SIGALRM.  I put in printf()s to see when it
+		 * reached the pause() for the poll interval, and I checked
+		 * the return from setitimer(), and everything seemed to be
+		 * working fine, except that the pause() just ignored SIGALRM.
+		 * I thought maybe the itimer wasn't being fired, so I hit
+		 * it with a SIGALRM from the command line, and it ignored
+		 * that, too.  SIGUSR1 woke it up just fine, and it proceeded
+		 * to repoll--but, when the dummy server didn't respond, it
+		 * never timed out, and SIGALRM wouldn't make it.
+		 *
+		 * So the workaround I used is to make it sleep by using
+		 * select() instead of setitimer()/pause().  select() is
+		 * perfectly happy being called with a timeout and
+		 * no file descriptors; it just sleeps until it hits the
+		 * timeout.  The only concern I had was that it might
+		 * implement its timeout with SIGALRM--there are some
+		 * Unices where this is done, because select() is a library
+		 * function--but apparently not.
+		 */
 		struct itimerval ntimeout;
 
 		ntimeout.it_interval.tv_sec = ntimeout.it_interval.tv_usec = 0;
@@ -566,6 +598,7 @@ int main (int argc, char **argv)
 		signal(SIGALRM, donothing);
 		pause();
 		signal(SIGALRM, SIG_IGN);
+#endif
 #else /* EMX */
 		signal(SIGALRM, donothing);
 		_beginthread(itimerthread, NULL, 32768, NULL);
