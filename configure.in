@@ -227,11 +227,6 @@ if test "$USE_NLS" = "yes"
 then
 	echo 'Enabling internationalization support...'
 	POMAKE='$(MAKE) -C po'
-  	if test "x$prefix" != xNONE; then
-		EXTRADEFS="$EXTRADEFS -DLOCALEDIR='\"$prefix/share/locale\"'"
-  	else
-		EXTRADEFS="$EXTRADEFS -DLOCALEDIR='\"$ac_default_prefix/share/locale\"'"
-	fi
 else
 	echo 'Disabling internationalization support...'
 	POMAKE="@echo '(NLS support disabled)'; #"
