@@ -234,7 +234,7 @@ your password in your
 .I ~/.fetchrc
 file.  This is convenient when using 
 .I fetchmail
-with automated scripts.
+in daemon mode or with scripts.
 .PP
 On mailservers that do not provide ordinary user accounts, your user-id and 
 password are usually assigned by the server administrator when you apply for 
@@ -560,11 +560,12 @@ created by the new SMTP forwarding default.
 .SH FILES
 .TP 5
 ~/.fetchrc
-default configuration file
+default run control file
 .TP 5
 ~/.fetchids
 default location of file associating hosts with last message IDs seen
-(used only with newer RFC1725-compliant servers supporting the UIDL command).
+(used only with newer RFC1725-compliant POP3 servers supporting the
+UIDL command).
 .TP 5
 ${TMPDIR}/fetchmail-${HOST}-${USER}
 lock file to help prevent concurrent runs.
@@ -574,15 +575,19 @@ For correct initialization,
 requires either that both the USER and HOME environment variables are
 correctly set, or that \fBgetpwuid\fR(3) be able to retrieve a password
 entry from your user ID.
-.SH BUGS
+.SH KNOWN PROBLEMS
+Use of any of the supported protocols other than APOP requires that
+the program send unencrypted passwords over the TCP/IP connection to
+the mail server.  This creates a risk that name/password pairs might
+be snaffled with a packet sniffer or more sophisticated monitoring
+software.
+.pp
 Running more than one concurrent instance of
 .I fetchmail
 on the same mailbox may cause messages to be lost or remain unfetched.
+(This is a design problem of the POP2, POP3 and IMAP2bis protocols.)
 .PP
-The --remotefolder option doesn't work with POP3, the protocol won't
-support it.
-.PP
-The RPOP support, and the UIDL support for RFC1725-compliant servers
+The RPOP support, and the UIDL support for RFC1725-compliant POP servers
 without LAST, are not yet well tested.
 .PP
 Send comments, bug reports, gripes, and the like to Eric S. Raymond
