@@ -179,6 +179,11 @@ int smtp_open(struct query *ctl)
 }
 
 /* these are shared by open_sink and stuffline */
+#ifndef HAVE_SIGACTION
+static RETSIGTYPE (*sigchld)(int);
+#else
+static struct sigaction sa_old;
+#endif /* HAVE_SIGACTION */
 static FILE *sinkfp;
 
 int stuffline(struct query *ctl, char *buf)
