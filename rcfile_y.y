@@ -5,14 +5,6 @@
  * For license terms, see the file COPYING in this directory.
  */
 
-/***********************************************************************
-  module:       rcfile_y.y
-  project:      fetchmail
-  programmer:   Eric S. Raymond <esr@thyrsus.com>
-  description:  fetchmail configuration file parser
-
- ***********************************************************************/
-
 #include <config.h>
 #include <stdio.h>
 #include <sys/types.h>
@@ -136,35 +128,17 @@ extern FILE *yyin;
 
 static struct hostrec *hosttail;	/* where to add new elements */
 
-/******************************************************************
-  function:	yyerror
-  description:	report a syntax error
-  arguments:
-    s           error string
-
-  ret. value:	none
-  globals:	none
- *****************************************************************/
-
-yyerror (s)
-char *s;
+int yyerror (s)
+/* report a syntax error */
+char *s;	/* error string */
 {
   fprintf(stderr,"%s line %d: %s at %s\n", rcfile, prc_lineno, s, yytext);
   prc_errflag++;
 }
 
-/******************************************************************
-  function:	prc_filecheck
-  description:	Check that a configuration file is secure
-  arguments:
-    pathname	pathname for the configuration file
-
-  ret. value:	error code.
-  globals:	none
- *****************************************************************/
-
 int prc_filecheck(pathname)
-char *pathname;
+/* check that a configuration file is secure */
+char *pathname;		/* pathname for the configuration file */
 {
     struct stat statbuf;
 
@@ -201,21 +175,9 @@ char *pathname;
     return(0);
 }
 
-/******************************************************************
-  function:	prc_parse_file
-  description:	Read the contents of the configuration file, storing 
-		each parsed record in a linked list.
-  arguments:
-    pathname	pathname for the configuration file
-
-  ret. value:	error code.
-  globals:	writes sp_head, writes hosttail, writes yyin,
-		writes rcfile, writes prc_errflag.
-  calls:	prc_reset, yyparse.
- *****************************************************************/
-
 prc_parse_file (pathname)
-char *pathname;
+/* digest the configuration into a linked list of host records */
+char *pathname;		/* pathname for the configuration file */
 {
     prc_errflag = 0;
     hostlist = hosttail = (struct hostrec *)NULL;
@@ -244,17 +206,8 @@ char *pathname;
 	return(0);
 }
 
-/******************************************************************
-  function:	prc_reset
-  description:	clear the global current record (server parameters)
-		used by the parser.
-  arguments:	none.
-  ret. value:	none.
-  globals:	writes current.
-  calls:	none.
- *****************************************************************/
-
 prc_reset()
+/* clear the global current record (server parameters) used by the parser */
 {
     char	savename[HOSTLEN+1];
     int		saveport, saveproto, saveauth;
@@ -277,17 +230,9 @@ prc_reset()
     current.authenticate = saveauth;
 }
 
-/******************************************************************
-  function:	hostalloc
-  description:	append a host record to the host list
-  arguments:
-    init	pointer to block containing initial values
-  ret. value:	new record.
-  calls:	none.
- *****************************************************************/
-
 struct hostrec *hostalloc(init)
-struct hostrec *init;
+/* append a host record to the host list */
+struct hostrec *init;	/* pointer to block containing initial values */
 {
     struct hostrec *node;
 
@@ -306,17 +251,8 @@ struct hostrec *init;
     return(node);
 }
 
-/******************************************************************
-  function:	hostalloc
-  description:	register the parsed server params by appending
-		them to a linked list of server param records.
-  arguments:    none
-  ret. value:	none
-  globals:	reads current.
-  calls:	hostalloc.
- *****************************************************************/
-
 int prc_register()
+/* register current parameters and append to the host list */
 {
 #define STR_FORCE(fld, len) if (cmd_opts.fld[0]) \
     					strcpy(current.fld, cmd_opts.fld)
@@ -343,20 +279,8 @@ int prc_register()
     (void) hostalloc(&current);
 }
 
-/******************************************************************
-  function:     optmerge
-  description:	Merge two options records.
-		Empty fields in h2 are filled in from h1.
-  arguments
-    h1 h2       the records 
-    
-  ret. value:	none.
-  globals:	reads current_head.
-  calls:	none.
-
- *****************************************************************/
-
 void optmerge(h2, h1)
+/* merge two options records; empty fields in h2 are filled in from h1 */
 struct hostrec *h1;
 struct hostrec *h2;
 {
