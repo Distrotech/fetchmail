@@ -85,8 +85,22 @@ static int lastsig;		/* last signal received */
 
 static void termhook();		/* forward declaration of exit hook */
 
+/*
+ * The function of this variable is to reduce the size of the window during
+ * which two SIGALRMS in rapid succession can hose the code.  This is a
+ * bit of a kluge; the real right thing would use sigprocmask(), sigsuspend()
+ * and close the window entirely.  But since the interval isn't normally
+ * going to be less than one second this is not a big issue.
+ */
+#if defined(__STDC__)
+static sig_atomic_t	alarm_latch = FALSE;
+#else
+/* assume int can be written in one atomic operation on non ANSI-C systems */
+static int		alarm_latch = FALSE;
+#endif
 
 RETSIGTYPE donothing(sig) int sig; {signal(sig, donothing); lastsig = sig;}
+RETSIGTYPE gotsigalrm(sig) int sig; {signal(sig, donothing); lastsig = sig; alarm_latch = TRUE;}
 
 #ifdef HAVE_ON_EXIT
 static void unlockit(int n, void *p)
@@ -118,7 +132,7 @@ int main (int argc, char **argv)
     struct query *ctl;
     FILE	*lockfp;
     netrc_entry *netrc_list;
-    char *netrc_file, tmpbuf[BUFSIZ];
+    char *netrc_file, *tmpbuf;
     pid_t pid;
 
     envquery(argc, argv);
@@ -175,12 +189,16 @@ int main (int argc, char **argv)
 	implicitmode = load_params(argc, argv, optind);
 
     /* set up to do lock protocol */
+#define	FETCHMAIL_PIDFILE	"fetchmail.pid"
+    tmpbuf = xmalloc(strlen(home) + strlen(FETCHMAIL_PIDFILE) + 3);
     if (!getuid())
-	sprintf(tmpbuf, "%s/fetchmail.pid", PID_DIR);
+	sprintf(tmpbuf, "%s/%s", PID_DIR, FETCHMAIL_PIDFILE);
     else {
 	strcpy(tmpbuf, home);
-	strcat(tmpbuf, "/.fetchmail.pid");
+	strcat(tmpbuf, "/.");
+	strcat(tmpbuf, FETCHMAIL_PIDFILE);
     }
+#undef FETCHMAIL_PIDFILE
 
     /* perhaps we just want to check options? */
     if (versioninfo) {
@@ -347,11 +365,20 @@ int main (int argc, char **argv)
 
 	    if (ctl->server.protocol != P_ETRN && ctl->server.protocol != P_IMAP_K4 && ctl->server.protocol != P_IMAP_GSS && !ctl->password)
 	    {
-		(void) sprintf(tmpbuf, "Enter password for %s@%s: ",
+		free(tmpbuf);
+#define	PASSWORD_PROMPT	"Enter password for %s@%s: "
+		tmpbuf = xmalloc(strlen(PASSWORD_PROMPT) +
+					strlen(ctl->remotename) +
+					strlen(ctl->server.pollname) + 1);
+		(void) sprintf(tmpbuf, PASSWORD_PROMPT,
 			       ctl->remotename, ctl->server.pollname);
 		ctl->password = xstrdup((char *)getpassword(tmpbuf));
+#undef	PASSWORD_PROMPT
 	    }
 	}
+
+    /* we don't need tmpbuf anymore */
+    free(tmpbuf);
 
     /*
      * Maybe time to go to demon mode...
@@ -590,10 +617,12 @@ int main (int argc, char **argv)
 		ntimeout.it_value.tv_usec = 0;
 
 		siginterrupt(SIGALRM, 1);
-		setitimer(ITIMER_REAL,&ntimeout,NULL);
-		/* there's a small window here */
-		signal(SIGALRM, donothing);
-		pause();
+		alarm_latch = FALSE;
+		signal(SIGALRM, gotsigalrm);	/* first trap signals */
+		setitimer(ITIMER_REAL,&ntimeout,NULL);	/* then start timer */
+		/* there is a very small window between the next two lines */
+		if (!alarm_latch)
+		    pause();
 		signal(SIGALRM, SIG_IGN);
 #else
 		/* 
@@ -614,9 +643,12 @@ int main (int argc, char **argv)
                 select(0,0,0,0, &timeout);
 #endif
 #else /* EMX */
-		signal(SIGALRM, donothing);
+		alarm_latch = FALSE;
+		signal(SIGALRM, gotsigalrm);
 		_beginthread(itimerthread, NULL, 32768, NULL);
-		pause();
+		/* see similar code above */
+		if (!alarm_latch)
+		    pause();
 		signal(SIGALRM, SIG_IGN);
 #endif /* ! EMX */
 		if (lastsig == SIGUSR1
