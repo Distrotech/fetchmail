@@ -31,20 +31,18 @@ int prc_lineno = 1;
 %%
 
 \"[^\"]*\"	{
-			char buf[MSGBUFSIZE];
-
 			yytext[strlen(yytext)-1] = '\0';
-			escapes(yytext+1, buf);
-			yylval.sval = (char *) xstrdup(buf);
+			escapes(yytext+1, yytext);
+			yyleng = strlen(yytext);
+			yylval.sval = yytext;
                         SETSTATE(0);
 			return STRING;
 		}
 \'[^\']*\'	{
-			char buf[MSGBUFSIZE];
-
 			yytext[strlen(yytext)-1] = '\0';
-			escapes(yytext+1, buf);
-			yylval.sval = (char *) xstrdup(buf);
+			escapes(yytext+1, yytext);
+			yyleng = strlen(yytext);
+			yylval.sval = yytext;
                         SETSTATE(0);
 			return STRING;
 		}
@@ -52,10 +50,9 @@ int prc_lineno = 1;
 "*"		{ BEGIN(0); return WILDCARD; }
 
 <NAME>[^=;:, \t\r\n]+	{
-			char buf[MSGBUFSIZE];
-
-			escapes(yytext, buf);
-			yylval.sval = (char *) xstrdup(buf);
+			escapes(yytext, yytext);
+			yyleng = strlen(yytext);
+			yylval.sval = yytext;
                         SETSTATE(0);
 			return STRING;
 		}
@@ -204,10 +201,9 @@ options		{/* EMPTY */}
 -?[0-9]+	{ yylval.number = atoi(yytext); return NUMBER; }
 
 [^=;:, \t\r\n]+	{
-			char buf[MSGBUFSIZE];
-
-			escapes(yytext, buf);
-			yylval.sval = (char *) xstrdup(buf);
+			escapes(yytext, yytext);
+			yyleng = strlen(yytext);
+			yylval.sval = yytext;
 			return STRING;
 		}
 
@@ -216,7 +212,9 @@ options		{/* EMPTY */}
 %%
 
 void escapes(cp, tp)
-/* process standard C-style escape sequences in a string */
+/* process standard C-style escape sequences in a string,
+ * this can never lengthen the output, so cp and tp may overlap as long
+ * as cp >= tp. */
 const char	*cp;	/* source string with escapes */
 char		*tp;	/* target buffer for digested string */
 {
@@ -259,4 +257,3 @@ char		*tp;	/* target buffer for digested string */
     }
     *tp = '\0';
 }
-
