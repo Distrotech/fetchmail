@@ -89,7 +89,7 @@ char *greeting;
 	}
 
 	/* copy timestamp and password into digestion buffer */
-	msg = (char *) malloc((end-start-1) + strlen(queryctl->password) + 1);
+	msg = (char *)xmalloc((end-start-1) + strlen(queryctl->password) + 1);
 	*(++end) = 0;
 	strcpy(msg,start);
 	strcat(msg,queryctl->password);
@@ -100,19 +100,17 @@ char *greeting;
 
     switch (queryctl->protocol) {
     case P_POP3:
-	gen_send(socket,"USER %s", queryctl->remotename);
-	if (pop3_ok(socket, buf) != 0)
-	    goto badAuth;
+	if ((gen_transact(socket,"USER %s", queryctl->remotename)) != 0)
+	    return(PS_ERROR);
 
-	gen_send(socket, "PASS %s", queryctl->password);
-	if (pop3_ok(socket, buf) != 0)
-	    goto badAuth;
+	if ((gen_transact(socket, "PASS %s", queryctl->password)) != 0)
+	    return(PS_ERROR);
 	break;
 
     case P_APOP:
-	gen_send(socket,"APOP %s %s", queryctl->remotename, queryctl->digest);
-	if (pop3_ok(socket, buf) != 0) 
-	    goto badAuth;
+	if ((gen_transact(socket, "APOP %s %s",
+			  queryctl->remotename, queryctl->digest)) != 0)
+	    return(PS_ERROR);
 	break;
 
     default:
@@ -121,13 +119,6 @@ char *greeting;
 
     /* we're approved */
     return(0);
-
-    /*NOTREACHED*/
-
-badAuth:
-    if (outlevel > O_SILENT && outlevel < O_VERBOSE)
-	fprintf(stderr,"%s\n",buf);
-    return(PS_ERROR);
 }
 
 static pop3_getrange(socket, queryctl, countp)
