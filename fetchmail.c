@@ -324,7 +324,7 @@ int main(int argc, char **argv)
     {
 	if (ctl->active && !(implicitmode && ctl->server.skip)&&!ctl->password)
 	{
-	    if (ctl->server.preauthenticate > A_PASSWORD)
+	    if (ctl->server.preauthenticate > A_PASSWORD || ctl->server.protocol < P_ETRN)
 		/* Server won't care what the password is, but there
 		   must be some non-null string here.  */
 		ctl->password = ctl->remotename;
@@ -495,6 +495,7 @@ int main(int argc, char **argv)
     {
 	if (ctl->active && !(implicitmode && ctl->server.skip)
 		&& ctl->server.preauthenticate <= A_PASSWORD
+	        && ctl->server.protocol < P_ETRN
 		&& !ctl->password)
 	{
 	    if (!isatty(0))
@@ -1559,7 +1560,7 @@ static void dump_params (struct runctl *runp,
 	if (ctl->server.skip || outlevel >= O_VERBOSE)
 	    printf(_("  This host %s be queried when no host is specified.\n"),
 		   ctl->server.skip ? _("will not") : _("will"));
-	if (ctl->server.preauthenticate <= A_PASSWORD)
+	if (ctl->server.preauthenticate <= A_PASSWORD && ctl->server.protocol < P_ETRN)
 	{
 	    if (!ctl->password)
 		printf(_("  Password will be prompted for.\n"));
