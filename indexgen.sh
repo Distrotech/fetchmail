@@ -105,6 +105,13 @@ You can get any of the following leading-edge resources here:
 <LI> <a href="fetchmail-$version-1.src.rpm">
 	Source RPM of fetchmail $version</a>
 </UL>
+
+EOF
+
+if [ $version = $goldvers ]
+then
+    cat >>index.html <<EOF
+
 Or you can get the last \`gold' version, $goldname:
 <UL>
 <LI> <a href="fetchmail-$goldvers.tar.gz">
@@ -118,7 +125,10 @@ Or you can get the last \`gold' version, $goldname:
 </UL>
 For differences between the leading-edge $version and gold $goldname versions,
 see the distribution <a href="NEWS">NEWS</a> file.<p>
+EOF
+fi
 
+cat >>index.html <<EOF
 (Note that the RPMs don't have the POP2, OTP, IPv6, Kerberos, GSSAPI,
 Compuserve RPA, or GNU gettext internationalization support compiled
 in.  To get any of these you will have to build from sources.)<p>
