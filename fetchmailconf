@@ -398,17 +398,44 @@ def ConfirmQuit(frame, context):
 # First, code to set the global fetchmail run controls.
 #
 
-confighelp = {
-    'title' : 'Fetchmail configurator help',
-    'banner': 'Configurator help',
+novicehelp = {
+    'title' : 'Fetchmail novice configurator help',
+    'banner': 'Novice configurator help',
     'text' : """
-In the `Configurator Controls' panel, you can:
+In the `Novice Configurator Controls' panel, you can:
 
 Press `Save' to save the new fetchmail configuration you have created.
 Press `Quit' to exit without saving.
 Press `Help' to bring up this help message.
 
-In the `Configurator Controls' panel, you can set the following options that
+In the `Novice Configuration' panel, you will set up the basic data
+needed to create a simple fetchmail setup.  These include:
+
+1. The name of the remote site you want to query.
+
+2. Your login name on that site.
+
+3. Your password on that site.
+
+4. A protocol to use (POP, IMAP, ETRN, etc.)
+
+5. A polling interval.
+
+The novice-configuration code will assume that you want to forward mail
+to a local sendmail listener with no special options.
+"""}
+
+experthelp = {
+    'title' : 'Fetchmail expert configurator help',
+    'banner': 'Expert configurator help',
+    'text' : """
+In the `Expert Configurator Controls' panel, you can:
+
+Press `Save' to save the new fetchmail configuration you have edited.
+Press `Quit' to exit without saving.
+Press `Help' to bring up this help message.
+
+In the `Run Controls' panel, you can set the following options that
 control how fetchmail runs:
 
 Poll interval
@@ -421,14 +448,14 @@ Logfile
         This field is ignored if the "Log to syslog?" option is on.
 
 Idfile
-	If empty, store seen-message IDs in .fetchids under user's home
-	directory.  If nonempty, use given file name.
+        If empty, store seen-message IDs in .fetchids under user's home
+        directory.  If nonempty, use given file name.
 
 Invisible:
         If false (the default) fetchmail generates a Received line into
-	each message and generates a HELO from the machine it is running on.
-	If true, fetchmail generates no Received line and HELOs as if it were
-	the remote site.
+        each message and generates a HELO from the machine it is running on.
+        If true, fetchmail generates no Received line and HELOs as if it were
+        the remote site.
 
 In the `Remote Mail Configurations' panel, you can:
 
@@ -941,34 +968,35 @@ class UserEdit(Frame):
 
 
 #
-# Configure drives the configuration dialogue.  It may call multiple
-# instances of ServerEdit to do its job.
+# ExpertConfigure drives the expert-mode configuration dialogue.  
+# It may call multiple instances of ServerEdit to do its job.
 #
 
-class Configure(Frame, ControlEdit):
+class ExpertConfigure(Frame, ControlEdit):
     def __init__(self, master=None):
 	Frame.__init__(self, master)
-	self.master.title('fetchmail configurator');
-	self.master.iconname('fetchmail configurator');
+	self.master.title('fetchmail expert configurator');
+	self.master.iconname('fetchmail expert configurator');
 	Pack.config(self)
 	self.MakeDispose()
 	self.controls = Controls()
 	self.PostControls()
 	self.MakeSitelist(master)
 	self.sites = []
+	#XXX Must read existing configuration
 
     def MakeDispose(self):
 	# Set the disposal of the given configuration
 	dispose = Frame(self, relief=RAISED, bd=5);
 	Label(dispose,
-		text='Configurator Controls', 
+		text='Expert Configurator Controls', 
 		bd=2).pack(side=TOP, pady=10)
 	Button(dispose, text='Save', fg='blue',
 		command=self.save).pack(side=LEFT)
 	Button(dispose, text='Quit', fg='blue',
 		command=self.nosave).pack(side=LEFT)
 	Button(dispose, text='Help', fg='blue',
-	       command=lambda: helpwin(confighelp)).pack(side=RIGHT)
+	       command=lambda: helpwin(experthelp)).pack(side=RIGHT)
 	dispose.pack(side=TOP, fill=X);
 
     def MakeSitelist(self, master):
@@ -994,13 +1022,106 @@ class Configure(Frame, ControlEdit):
 	self.quit()
 
     def nosave(self):
+	if ConfirmQuit(self, "expert configuration editor"):
+	    self.quit()
+
+#
+# Here's the novice configurator code.  Takes one site, one name, one
+# protocol designation, and creates a simple .fetchmailrc
+#
+
+class NoviceConfigure(Frame):
+    def __init__(self, master=None):
+	Frame.__init__(self, master)
+	self.master.title('fetchmail novice configurator');
+	self.master.iconname('fetchmail novice configurator');
+	Pack.config(self)
+
+	#XXX Must read existing configuration
+
+	dispose = Frame(self, relief=RAISED, bd=5)
+	Label(dispose,
+		text='Novice Configurator Controls', 
+		bd=2).pack(side=TOP, pady=10)
+	Button(dispose, text='Save', fg='blue',
+		command=self.save).pack(side=LEFT)
+	Button(dispose, text='Quit', fg='blue',
+		command=self.nosave).pack(side=LEFT)
+	Button(dispose, text='Help', fg='blue',
+	       command=lambda: helpwin(novicehelp)).pack(side=RIGHT)
+	dispose.pack(side=TOP, fill=X);
+
+	novice = Frame(self, relief=RAISED, bd=5)
+	Label(novice,
+		text='Novice Configuration Window', 
+		bd=2).pack(side=TOP, pady=10)
+#XXX Must make these controls work -- see novice help above
+#	LabeledEntry(novice, 'Remote host to query:',
+#		      self.remote_host).pack(side=TOP, fill=X)
+#	LabeledEntry(novice, 'Your login name on the remote host:',
+#		      self.remote_name).pack(side=TOP, fill=X)
+#	LabeledEntry(novice, 'Your password on the remote host:',
+#		      self.remote_passwd).pack(side=TOP, fill=X)
+	novice.pack(side=TOP, fill=X);
+
+    def save(self):
+	#XXX Save code must go here
+	self.quit()
+
+    def nosave(self):
+	if ConfirmQuit(self, "novice configuration editor"):
+	    self.quit()
+
+#
+# And this is the main sequence
+#
+
+class MainWindow(Frame):
+    def __init__(self, master=None):
+	Frame.__init__(self, master)
+	self.master.title('fetchmail configurator main');
+	self.master.iconname('fetchmail configurator main');
+	Pack.config(self)
+	Label(self,
+		text='Configurator Main Window', 
+		bd=2).pack(side=TOP, pady=10)
+
+	Message(self, text="""
+Use `Novice Configuration' for basic fetchmail setup;
+with this, you can easily set up a single-drop connection
+to one remote mail server.
+""", width=600).pack(side=TOP)
+	Button(self, text='Novice Configuration',
+				fg='blue', command=self.novice).pack()
+
+	Message(self, text="""
+Use `Expert Configuration' for advanced fetchmail setup,
+including multiple-site or multidrop connections.
+""", width=600).pack(side=TOP)
+	Button(self, text='Expert Configuration',
+				fg='blue', command=self.expert).pack()
+
+	Message(self, text="""
+Or you can just select `Quit' to leave the configurator now.
+""", width=600).pack(side=TOP)
+	Button(self, text='Quit', fg='blue', command=self.leave).pack()
+
+    def novice(self):
+	self.destroy()
+	NoviceConfigure()
+
+    def expert(self):
+	self.destroy()
+	ExpertConfigure()
+
+    def leave(self):
 	if ConfirmQuit(self, "configuration editor"):
 	    self.quit()
 
 if __name__ == '__main__': 
     ServerDefaults = Server()
     UserDefaults = User()
-    Configure().mainloop()
+    MainWindow().mainloop()
 
 # The following sets edit modes for GNU EMACS
 # Local Variables:
