@@ -1005,9 +1005,9 @@ int num;		/* index of message */
 	    if (idp->val.num == XMIT_ACCEPT)
 	    {
 #ifdef HAVE_SNPRINTF
-		snprintf(addr, sizeof(addr)-1, "%s@%s", idp->id,fetchmailhost);
+		snprintf(addr, sizeof(addr)-1, "%s@%s", idp->id,ctl->smtphost);
 #else
-		sprintf(addr, "%s@%s", idp->id, fetchmailhost);
+		sprintf(addr, "%s@%s", idp->id, ctl->smtphost);
 #endif /* HAVE_SNPRINTF */
 
 		if (SMTP_rcpt(ctl->smtp_socket, addr) == SM_OK)
@@ -1023,9 +1023,9 @@ int num;		/* index of message */
 	if (!good_addresses)
 	{
 #ifdef HAVE_SNPRINTF
-	    snprintf(addr, sizeof(addr)-1, "%s@%s", idp->id, fetchmailhost);
+	    snprintf(addr, sizeof(addr)-1, "%s@%s", idp->id, ctl->smtphost);
 #else
-	    sprintf(addr, "%s@%s", idp->id, fetchmailhost);
+	    sprintf(addr, "%s@%s", idp->id, ctl->smtphost);
 #endif /* HAVE_SNPRINTF */
 
 	    if (SMTP_rcpt(ctl->smtp_socket, user) != SM_OK)
