@@ -206,9 +206,20 @@ news drop for a group of users.
 .TP
 .B \-P, --port
 (Keyword: port)
-The  option permits you to specify a TCP/IP port to connect on. 
+The port option permits you to specify a TCP/IP port to connect on. 
 This option will seldom be necessary as all the supported protocols have
 well-established default port numbers.
+.TP 
+.B \-t, --timeout
+(Keyword: timeout)
+The timeout option allows you to set a server-nonresponse
+timeout in seconds.  If a mailserver does not send a greeting message
+or respond to commands for the given number of seconds,
+\fIfetchmail\fR will hang up on it.  Without such a timeout
+\fIfetchmail\fR might hang up indefinitely trying to fetch mail from a
+down host.  This would be particularly annoying for a \fIfetchmail\fR
+running in background.  There is a default timeout which fetchmail -V
+will report.
 .TP
 .B \-r folder, --folder folder
 (Keyword: folder[s])
@@ -613,19 +624,6 @@ that's all there is to it.
 The quit option may also be mixed with other command-line options; its
 effect is to kill any running daemon before doing what the other
 options specify in combination with the rc file.
-.PP
-The 
-.B -t
-or
-.B --timeout
-option (keyword: timeout) allows you to set a server-nonresponse
-timeout in seconds.  If a mailserver does not send a greeting message
-or respond to commands for the given number of seconds,
-\fIfetchmail\fR will hang up on it.  Without such a timeout
-\fIfetchmail\fR might hang up indefinitely trying to fetch mail from a
-down host.  This would be particularly annoying for a \fIfetchmail\fR
-running in background.  There is a default timeout which fetchmail -V
-will report.
 .PP
 The
 .B -L
