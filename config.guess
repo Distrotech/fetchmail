@@ -424,6 +424,9 @@ EOF
 		echo ns32k-sni-sysv
 	fi
 	exit 0 ;;
+    *:Rhapsody:*:*)
+	echo `arch`-apple-rhapsody${UNAME_RELEASE}
+	exit 0 ;;
 esac
 
 #echo '(No uname command or uname output not recognized.)' 1>&2

@@ -61,6 +61,13 @@ then
    LIBS="$LIBS -lkvm"
 fi
  
+# Check for Rhapsody special case: it doesn't like -s
+if test `uname` = "Rhapsody" 
+then
+   echo "Removing -s load flag"
+   LDFLAGS=`echo $LDFLAGS | sed "s/-s //"`
+fi
+ 
 # i18n
 # Arnaldo Carvalho de Melo <acme@conectiva.com.br>
 # Sat Nov  7 15:39:03 EDT 1998
