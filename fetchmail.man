@@ -554,7 +554,10 @@ Send comments, bug reports, gripes, and the like to Eric S. Raymond
 .SH NOTES
 This program used to be called `popclient' (the name was changed
 because it supports IMAP now and may well support more remote-fetch
-protocols such as DMSP in the future).
+protocols such as DMSP in the future).  If called through a link named
+popclient, it will look in ~/.poprc for its run control file.  As
+long as the file does not use the removed \fBlimit\fR or \fBlocalfolder\fR
+options, this should actually work.
 .PP
 The --stdout, --local, and --limit arguments of previous
 versions have been removed.  Those features did jobs that belonged to

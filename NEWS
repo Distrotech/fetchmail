@@ -31,6 +31,10 @@ features --
 * When delivering to an MDA, print error and die (before deleting the message!)
   if the MDA returns nonzero status.  Better safe than sorry.
 
+* If fetchmail is called through a link named `popclient' it will look in
+  ~/.poprc for a run control file.  Unless that file includes the deleted
+  options limit and localfolder this should actually work.
+
 bug fixes --
 
 * Makefile fixes for correct linking on Sparcs and avoiding duplication of
