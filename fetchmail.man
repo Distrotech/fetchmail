@@ -110,6 +110,12 @@ fetched mail to programs like procmail.  If the MDA string contains
 machine.  Some possible MDAs are "/usr/formail", "/usr/bin/deliver %s",
 "/usr/lib/sendmail -oem %s".
 .TP
+.B \-S host, --smtphost host
+Specify an SMTP forwarding host.  If you specify this option, fetched
+mail is delivered by SMTP over a socket connection to the specified
+host.  This simulates the way mail would be delivered to that host 
+by a normal Internet mail connection.  
+.TP
 .B \--protocol proto
 Specify the protocol to used when communicating with the remote 
 mailserver.  If no protocol is specified,
@@ -395,6 +401,7 @@ Legal keywords are:
     remotefolder (or remote)
     localfolder (or local)
     mda
+    smtphost (or smtp)
     keep
     flush
     fetchall
@@ -529,6 +536,10 @@ Exclusion error.  This means
 either found another copy of itself already running, or failed in such
 a way that it isn't sure whether another copy is running.
 .IP 9
+The 
+.I popclient.
+run failed while trying to do an SMTP port open or transaction.
+.IP 10
 Something totally undefined occured.  This is usually caused by a bug within
 .I popclient.
 Do let me know if this happens.
@@ -551,6 +562,10 @@ default configuration file
 default location of file associating hosts with last message IDs seen
 (used only with newer RFC1725-compliant servers supporting the UIDL command).
 .SH BUGS
+.PP
+The --smtphost option doesn't work with POP2.  This isn't a protocol problem,
+it's because the developers couldn't find a POP2 server to test the
+necessary code reorganization with.
 .PP
 The --remotefolder option doesn't work with POP3.
 .PP

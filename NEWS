@@ -9,10 +9,8 @@ Option to enable EMACS-like user folder versioning on each run.
 S/key for secure challenge-response.
 
 Recode POP2 to use the same driver/method strategy as POP3/IMAP, so 
-all three protocols will be able to forward messages through the
-generic driver.  (This requires that we find a POP2 server to test with.)
-
-Support SMTP forwarding.
+all three protocols will be able to forward messages through the generic
+driver to SMTP.  (This requires that we find a POP2 server to test with.)
 
 3.1:
 
@@ -25,6 +23,9 @@ Support SMTP forwarding.
 * Code now autoprobes for a POP3, IMAP, or POP2 server if no protocol is
   specified.
 
+* SMTP forwarding support.  Thanks to Harry Hochheiser <harry@tigger.jvnc.net>
+  for this simple but very clever idea.  
+ 
 3.05:
 
 * Experimental support for RFC1725-compliant POP servers with the UIDL

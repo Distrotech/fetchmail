@@ -31,6 +31,7 @@ user(name)?	{ return KW_USERNAME; }
 pass(word)?	{ return KW_PASSWORD; }
 remote(folder)? { return KW_REMOTEFOLDER; }
 local(folder)?	{ return KW_LOCALFOLDER; }
+smtp(host)?	{ return KW_SMTPHOST; }
 mda		{ return KW_MDA; }
 keep		{ yylval.flag = TRUE; return KW_KEEP; }
 flush		{ yylval.flag = TRUE; return KW_FLUSH; }

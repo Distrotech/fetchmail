@@ -38,10 +38,11 @@
 #define LA_REMOTEFILE	15
 #define	LA_LOCALFILE	16
 #define LA_MDA		17
-#define LA_LOGFILE	18
-#define LA_QUIT		19
-#define LA_NOREWRITE	20
-#define LA_YYDEBUG	21
+#define LA_SMTPHOST	18
+#define LA_LOGFILE	19
+#define LA_QUIT		20
+#define LA_NOREWRITE	21
+#define LA_YYDEBUG	22
  
 static char *shortoptions = "23VaKkvscl:Fd:f:u:r:o:m:L:qN";
 static struct option longoptions[] = {
@@ -63,6 +64,7 @@ static struct option longoptions[] = {
   {"remote",    required_argument, (int *) 0, LA_REMOTEFILE },
   {"local",     required_argument, (int *) 0, LA_LOCALFILE  },
   {"mda",	required_argument, (int *) 0, LA_MDA        },
+  {"smtphost",	required_argument, (int *) 0, LA_SMTPHOST   },
   {"logfile",	required_argument, (int *) 0, LA_LOGFILE    },
   {"idfile",	required_argument, (int *) 0, LA_IDFILE     },
   {"quit",	no_argument,	   (int *) 0, LA_QUIT       },
@@ -219,6 +221,10 @@ struct hostrec *queryctl;
       case LA_MDA:
         strncpy(queryctl->mda,optarg,sizeof(queryctl->mda)-1);
         break;
+      case 'S':
+      case LA_SMTPHOST:
+	strncpy(queryctl->smtphost,optarg,sizeof(queryctl->smtphost)-1);
+	break;
       case 'L':
       case LA_LOGFILE:
         logfile = optarg;
@@ -254,6 +260,7 @@ struct hostrec *queryctl;
     fputs("  -k, --keep       save new messages after retrieval\n", stderr);
     fputs("  -l, --limit      retrieve at most n message lines\n", stderr);
     fputs("  -m, --mda        set mail user agent to pass to\n", stderr);
+    fputs("  -S, --smtphost   set SMTP forwarding host\n", stderr);
     fputs("  -q, --quit       kill daemon process\n", stderr);
     fputs("  -s, --silent     work silently\n", stderr);
     fputs("  -v, --verbose    work noisily (diagnostic output)\n", stderr);

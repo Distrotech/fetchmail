@@ -25,15 +25,22 @@
 #include  <sys/time.h>
 #include  <ctype.h>
 #include  <errno.h>
+#include  <malloc.h>
 
 #include  "socket.h"
 #include  "popclient.h"
+#include  "smtp.h"
 
 static struct method *protocol;
+
+#define	SMTP_PORT	25	/* standard SMTP service port */
 
 char tag[TAGLEN];
 static int tagnum;
 #define GENSYM	(sprintf(tag, "a%04d", ++tagnum), tag)
+
+static int gen_readmsg (int socket, int mboxfd, long len, int delimited,
+       char *host, int topipe, int rewrite);
 
 /*********************************************************************
   function:      do_protocol
@@ -57,26 +64,37 @@ struct method *proto;
 {
     int ok, len;
     int mboxfd;
-    char buf [POPBUFSIZE];
+    char buf [POPBUFSIZE], host[HOSTLEN];
     int socket;
     int first,number,count;
 
     tagnum = 0;
     protocol = proto;
 
-    /* open stdout or the mailbox, locking it if it is a folder */
-    if (queryctl->output == TO_FOLDER || queryctl->output == TO_STDOUT) 
+    /* open the output sink, locking it if it is a folder */
+    if (queryctl->output == TO_FOLDER || queryctl->output == TO_STDOUT) {
 	if ((mboxfd = openuserfolder(queryctl)) < 0) 
 	    return(PS_IOERR);
+    } else if (queryctl->output == TO_SMTP) {
+	if ((mboxfd = Socket(queryctl->smtphost,SMTP_PORT)) < 0) 
+	    return(PS_SOCKET);
     
-    /* open the socket */
+	/* make it look like mail is coming from the server */
+	if (SMTP_helo(mboxfd,queryctl->servername) != SM_OK) {
+	    close(mboxfd);
+	    mboxfd = 0;
+	    return(PS_SMTP);
+	}
+    }
+
+    /* open a socket to the mail server */
     if ((socket = Socket(queryctl->servername,protocol->port)) < 0) {
 	perror("do_protocol: socket");
 	ok = PS_SOCKET;
 	goto closeUp;
     }
 
-    /* accept greeting message from server */
+    /* accept greeting message from mail server */
     ok = (protocol->parse_response)(buf, socket);
     if (ok != 0) {
 	if (ok != PS_SOCKET)
@@ -128,13 +146,13 @@ struct method *proto;
 		(*protocol->fetch)(socket, number, linelimit, &len);
 		if (outlevel == O_VERBOSE)
 		    if (protocol->delimited)
-		    fprintf(stderr,"fetching message %d (delimited)\n",number);
-		else
-		    fprintf(stderr,"fetching message %d (%d bytes)\n",number,len);
+			fprintf(stderr,"fetching message %d (delimited)\n",number);
+		    else
+			fprintf(stderr,"fetching message %d (%d bytes)\n",number,len);
 		ok = gen_readmsg(socket,mboxfd,len,protocol->delimited,
-				  queryctl->servername,
-				  queryctl->output == TO_MDA, 
-				  queryctl->rewrite);
+				 queryctl->servername,
+				 queryctl->output, 
+				 queryctl->rewrite);
 		if (protocol->trail)
 		    (*protocol->trail)(socket, queryctl, number);
 		if (ok != 0)
@@ -189,9 +207,13 @@ cleanUp:
 
 closeUp:
     if (queryctl->output == TO_FOLDER)
+    {
 	if (closeuserfolder(mboxfd) < 0 && ok == 0)
 	    ok = PS_IOERR;
-    
+    }
+    else if (queryctl->output == TO_SMTP && mboxfd  > 0)
+	close(mboxfd);
+
     if (ok == PS_IOERR || ok == PS_SOCKET) 
 	perror("do_protocol: cleanUp");
 
@@ -289,134 +311,144 @@ va_dcl {
                  be written.
     len          length of text 
     pophost      name of the POP host 
-    topipe       true if we're writing to the system mailbox pipe.
+    output       output mode
 
   return value:  zero if success else PS_* return code.
   calls:         SockGets.
   globals:       reads outlevel. 
  *********************************************************************/
 
-int gen_readmsg (socket,mboxfd,len,delimited,pophost,topipe,rewrite)
+int gen_readmsg (socket,mboxfd,len,delimited,pophost,output,rewrite)
 int socket;
 int mboxfd;
 long len;
 int delimited;
 char *pophost;
-int topipe;
+int output;
 int rewrite;
 { 
-  char buf [MSGBUFSIZE]; 
-  char *bufp;
-  char savec;
-  char fromBuf[MSGBUFSIZE];
-  int n;
-  int needFrom;
-  int inheaders;
-  int lines,sizeticker;
-  time_t now;
-  /* This keeps the retrieved message count for display purposes */
-  static int msgnum = 0;  
+    char buf [MSGBUFSIZE]; 
+    char *bufp;
+    char savec;
+    char fromBuf[MSGBUFSIZE];
+    int n;
+    int needFrom;
+    int inheaders;
+    int lines,sizeticker;
+    time_t now;
+    /* This keeps the retrieved message count for display purposes */
+    static int msgnum = 0;  
 
-  /* set up for status message if outlevel allows it */
-  if (outlevel > O_SILENT && outlevel < O_VERBOSE) {
-    fprintf(stderr,"reading message %d",++msgnum);
-    /* won't do the '...' if retrieved messages are being sent to stdout */
-    if (mboxfd == 1)
-      fputs(".\n",stderr);
-    else
-      ;
-  }
-  else
-    ;
-
-  /* read the message content from the server */
-  inheaders = 1;
-  lines = 0;
-  sizeticker = MSGBUFSIZE;
-  while (delimited || len > 0) {
-    if ((n = SockGets(socket,buf,sizeof(buf))) < 0)
-      return(PS_SOCKET);
-    len -= n;
-    bufp = buf;
-    if (buf[0] == '\r' || buf[0] == '\n')
-      inheaders = 0;
-    if (*bufp == '.') {
-      bufp++;
-      if (delimited && *bufp == 0)
-        break;  /* end of message */
+    /* set up for status message if outlevel allows it */
+    if (outlevel > O_SILENT && outlevel < O_VERBOSE) {
+	fprintf(stderr,"reading message %d",++msgnum);
+	/* won't do the '...' if retrieved messages are being sent to stdout */
+	if (mboxfd == 1)
+	    fputs(".\n",stderr);
     }
-    strcat(bufp,"\n");
+
+    /* read the message content from the server */
+    inheaders = 1;
+    lines = 0;
+    sizeticker = MSGBUFSIZE;
+    while (delimited || len > 0) {
+	if ((n = SockGets(socket,buf,sizeof(buf))) < 0)
+	    return(PS_SOCKET);
+	len -= n;
+	bufp = buf;
+	if (buf[0] == '\r' || buf[0] == '\n')
+	    inheaders = 0;
+	if (*bufp == '.') {
+	    bufp++;
+	    if (delimited && *bufp == 0)
+		break;  /* end of message */
+	}
+	strcat(bufp,"\n");
      
-    /* Check for Unix 'From' header, and add a bogus one if it's not
-       present -- only if not using an MDA.
-       XXX -- should probably parse real From: header and use its 
-              address field instead of bogus 'POPmail' string. 
-    */
-    if (!topipe && lines == 0) {
-      if (strlen(bufp) >= strlen("From ")) {
-        savec = *(bufp + 5);
-        *(bufp + 5) = 0;
-        needFrom = strcmp(bufp,"From ") != 0;
-        *(bufp + 5) = savec;
-      }
-      else
-        needFrom = 1;
-      if (needFrom) {
-        now = time(NULL);
-        sprintf(fromBuf,"From POPmail %s",ctime(&now));
-        if (write(mboxfd,fromBuf,strlen(fromBuf)) < 0) {
-          perror("gen_readmsg: write");
-          return(PS_IOERR);
-        }
-      }
+	/* Check for Unix 'From' header, and add a bogus one if it's not
+	   present -- only if not using an MDA.
+	   XXX -- should probably parse real From: header and use its 
+	   address field instead of bogus 'POPmail' string. 
+	   */
+	if (output != TO_MDA && lines == 0) {
+	    if (strlen(bufp) >= strlen("From ")) {
+		savec = *(bufp + 5);
+		*(bufp + 5) = 0;
+		needFrom = strcmp(bufp,"From ") != 0;
+		*(bufp + 5) = savec;
+	    }
+	    else
+		needFrom = 1;
+	    if (needFrom) {
+		now = time(NULL);
+		sprintf(fromBuf,"From POPmail %s",ctime(&now));
+		if (write(mboxfd,fromBuf,strlen(fromBuf)) < 0) {
+		    perror("gen_readmsg: write");
+		    return(PS_IOERR);
+		}
+	    }
+	}
+
+	/*
+	 * Edit some headers so that replies will work properly.
+	 */
+	if (inheaders && rewrite)
+	    reply_hack(bufp, pophost);
+
+	/* write this line to the file */
+	if (write(mboxfd,bufp,strlen(bufp)) < 0) {
+	    perror("gen_readmsg: write");
+	    return(PS_IOERR);
+	}
+
+	sizeticker -= strlen(bufp);
+	if (sizeticker <= 0) {
+	    if (outlevel > O_SILENT && outlevel < O_VERBOSE && mboxfd != 1)
+		fputc('.',stderr);
+	    sizeticker = MSGBUFSIZE;
+	}
+	lines++;
     }
 
-    /*
-     * Edit some headers so that replies will work properly.
-     */
-    if (inheaders && rewrite)
-      reply_hack(bufp, pophost);
+    /* write message terminator, if any */
+    switch (output)
+    {
+    case TO_SMTP:
+	if (write(mboxfd,".\r\n",3) < 0) {
+	    perror("gen_readmsg: write");
+	    return(PS_IOERR);
+	}
+	if (SMTP_ok(mboxfd, NULL) != SM_OK)
+	    return(PS_SMTP);
+	break;
 
-    /* write this line to the file */
-    if (write(mboxfd,bufp,strlen(bufp)) < 0) {
-      perror("gen_readmsg: write");
-      return(PS_IOERR);
-    }
+    case TO_FOLDER:
+    case TO_STDOUT:
+	/* The server may not write the extra newline required by the Unix
+	   mail folder format, so we write one here just in case */
+	if (write(mboxfd,"\n",1) < 0) {
+	    perror("gen_readmsg: write");
+	    return(PS_IOERR);
+	}
+	break;
 
-    sizeticker -= strlen(bufp);
-    if (sizeticker <= 0) {
-      if (outlevel > O_SILENT && outlevel < O_VERBOSE && mboxfd != 1)
-        fputc('.',stderr);
-      sizeticker = MSGBUFSIZE;
-    }
-    lines++;
-  }
-
-  if (!topipe) {
-    /* The server may not write the extra newline required by the Unix
-       mail folder format, so we write one here just in case */
-    if (write(mboxfd,"\n",1) < 0) {
-      perror("gen_readmsg: write");
-      return(PS_IOERR);
-    }
-  }
-  else {
-    /* The mail delivery agent may require a terminator.  Write it if
-       it has been defined */
+    case TO_MDA:
+	/* The mail delivery agent may require a terminator.  Write it if
+	   it has been defined */
 #ifdef BINMAIL_TERM
-    if (write(mboxfd,BINMAIL_TERM,strlen(BINMAIL_TERM)) < 0) {
-      perror("gen_readmsg: write");
-      return(PS_IOERR);
-    }
-#endif
+	if (write(mboxfd,BINMAIL_TERM,strlen(BINMAIL_TERM)) < 0) {
+	    perror("gen_readmsg: write");
+	    return(PS_IOERR);
+	}
+#endif /* BINMAIL_TERM */
     }
 
-  /* finish up display output */
-  if (outlevel == O_VERBOSE)
-    fprintf(stderr,"(%d lines of message content)\n",lines);
-  else if (outlevel > O_SILENT && mboxfd != 1) 
-    fputs(".\n",stderr);
-  else
-    ;
-  return(0);
+    /* finish up display output */
+    if (outlevel == O_VERBOSE)
+	fprintf(stderr,"(%d lines of message content)\n",lines);
+    else if (outlevel > O_SILENT && mboxfd != 1) 
+	fputs(".\n",stderr);
+    else
+	;
+    return(0);
 }

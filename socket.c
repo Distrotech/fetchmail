@@ -20,9 +20,7 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <sys/time.h>
-#ifdef SMTP_FORWARD
 #include <sys/ioctl.h>
-#endif /* SMTP_FORWARD */
 #if defined(STDC_HEADERS)
 #include <string.h>
 #endif
@@ -188,7 +186,6 @@ int len;
    return(len);
 }
 
-#ifdef SMTP_FORWARD
 /* SockClearHeader: call this procedure in order to kill off any
    forthcoming Header info from the socket that we no longer want.
    */
@@ -246,8 +243,6 @@ int  SockDataWaiting(int socket)
   fcntl(socket,F_SETFL,flags);
   return res;
 }
-#endif /* SMTP_FORWARD */
-
 
 int SockPrintf(socket,format,va_alist)
 int socket;

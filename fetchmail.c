@@ -234,10 +234,10 @@ char **argv;
 
 	sleep(poll_interval);
     } while
-						     (poll_interval);
+	(poll_interval);
 
     if (outlevel == O_VERBOSE)
-	fprintf(stderr, "normal termination\n");
+	fprintf(stderr, "normal termination, status %d\n", popstatus);
 
     termhook(0);
     exit(popstatus);

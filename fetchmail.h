@@ -34,7 +34,8 @@
 #define		PS_IOERR	6	/* local folder I/O woes */
 #define		PS_ERROR	7	/* some kind of POP3 error condition */
 #define		PS_EXCLUDE	8	/* exclusion error */
-#define		PS_UNDEFINED	9	/* something I hadn't thought of */
+#define         PS_SMTP         9       /* SMTP error */
+#define		PS_UNDEFINED	10	/* something I hadn't thought of */
 
 /* output noise level */
 #define         O_SILENT	0	/* mute, max squelch, etc. */
@@ -42,6 +43,7 @@
 #define		O_VERBOSE	2	/* excessive */
 
 /* output sink type */
+#define		TO_SMTP		0	/* use SMTP forwarding */
 #define		TO_FOLDER	1	/* use a mailbox */
 #define		TO_STDOUT	2	/* use stdout */
 #define		TO_MDA		3	/* use agent */
@@ -54,6 +56,7 @@ struct hostrec
   char password [PASSWORDLEN];
   char userfolder [FOLDERLEN];
   char remotefolder [FOLDERLEN];
+  char smtphost[HOSTLEN];
   char mda [MDALEN];
   int keep;
   int protocol;
@@ -113,8 +116,6 @@ extern int versioninfo;		/* emit only version info */
 int gen_ok (char *buf, int socket);
 void gen_send ();
 int gen_transact ();
-int gen_readmsg (int socket, int mboxfd, long len, int delimited,
-       char *host, int topipe, int rewrite);
 
 /* prototypes for globally callable functions */
 int doPOP2 (struct hostrec *); 

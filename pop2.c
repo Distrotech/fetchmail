@@ -84,10 +84,12 @@ struct hostrec *queryctl;
     fprintf(stderr,"Option --all is not supported with POP2\n");
     return(PS_SYNTAX);
   }
+#ifdef FOO
   else if (queryctl->smtphost[0]) {
     fprintf(stderr,"Option --smtphost is not supported with POP2\n");
     return(PS_SYNTAX);
   }
+#endif /* FOO */
   else
     ;
 
