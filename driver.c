@@ -915,13 +915,17 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 	if (n != -1)
 	{
 	    /*
+	     * This header is technically invalid under RFC822.
+	     * POP3, IMAP, etc. are not legal mail-parameter values.
+	     *
 	     * We used to include ctl->remotename in this log line,
 	     * but this can be secure information that would be bad
 	     * to reveal.
 	     */
-	    sprintf(buf, "\tby fetchmail-%s %s\r\n",
-		    RELEASE_ID,
-		    protocol->name);
+	    sprintf(buf, "\tby %s with %s (fetchmail-%s)\r\n",
+		    fetchmailhost,
+		    protocol->name,
+		    RELEASE_ID);
 	    n = stuffline(ctl, buf);
 	    if (n != -1)
 	    {
@@ -940,7 +944,12 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 		    if (strchr(idp->id, '@'))
 			sprintf(buf+1, "for %s", idp->id);
 		    else
-			sprintf(buf+1, "for %s/%s", idp->id, ctl->destaddr);
+			/*
+			 * This could be a bit misleading, as destaddr is
+			 * the forwarding host rather than the actual 
+			 * destination.  Most of the time they coincide.
+			 */
+			sprintf(buf+1, "for %s@%s", idp->id, ctl->destaddr);
 		    sprintf(buf+strlen(buf), " (%s); ",
 			    MULTIDROP(ctl) ? "multi-drop" : "single-drop");
 		}

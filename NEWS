@@ -1,5 +1,8 @@
 				Release Notes:
 
+fetchmail-4.6.9 ():
+* Better RFC822 conformance in fetchmail trace headers.
+
 fetchmail-4.6.8 (Sat Nov 28 21:07:46 EST 1998):
 * Added bounce-mail capability on SMTP/ESMTP error conditions.
 * Internationalization support via GNU gettext from Arnaldo Carvalho de Melo
