@@ -22,7 +22,7 @@ fetchmail-4.3.1 ()
   a Received header (the default) *or* spoof your listener into thinking
   fetchmail connected from the mailserver machine, *but not both*.
 
-There are 272 people on fetchmail-friends and 36 on fetchmail-announce.
+There are 271 people on fetchmail-friends and 37 on fetchmail-announce.
 
 ------------------------------------------------------------------------------
 fetchmail-4.3.0 (Mon Oct  6 16:44:38 EDT 1997)
