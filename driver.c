@@ -472,7 +472,7 @@ struct query *ctl;
     /* if no socket to this host is already set up, try to open one */
     if (ctl->smtp_sockfp == (FILE *)NULL)
     {
-	if ((ctl->smtp_sockfp = Socket(ctl->smtphost, SMTP_PORT)) == (FILE *)NULL)
+	if ((ctl->smtp_sockfp = sockopen(ctl->smtphost, SMTP_PORT)) == (FILE *)NULL)
 	    return((FILE *)NULL);
 	else if (SMTP_ok(ctl->smtp_sockfp, NULL) != SM_OK
 		 || SMTP_helo(ctl->smtp_sockfp, ctl->servername) != SM_OK)
@@ -897,7 +897,7 @@ const struct method *proto;	/* protocol method table */
 	FILE *sockfp;
 
 	/* open a socket to the mail server */
-	if ((sockfp = Socket(ctl->servername,
+	if ((sockfp = sockopen(ctl->servername,
 			     ctl->port ? ctl->port : protocol->port)) == (FILE *)NULL)
 	{
 	    perror("fetchmail, connecting to host");

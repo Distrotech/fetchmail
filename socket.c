@@ -28,7 +28,7 @@
 
 #define  INTERNAL_BUFSIZE	2048
 
-FILE *Socket(host, clientPort)
+FILE *sockopen(host, clientPort)
 char *host;
 int clientPort;
 {
