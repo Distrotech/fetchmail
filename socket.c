@@ -36,6 +36,7 @@
 #else
 #include <varargs.h>
 #endif
+#include <signal.h>
 #include "socket.h"
 #include "fetchmail.h"
 #include "i18n.h"
@@ -218,7 +219,11 @@ int SockCheckOpen(int fd)
 
 int UnixOpen(const char *path)
 {
-    int sock = -1;
+#ifdef HAVE_SIGPROCMASK
+    sigset_t	allsigs;
+#endif /* HAVE_SIGPROCMASK */
+
+    int stat, sock = -1;
     struct sockaddr_un ad;
     memset(&ad, 0, sizeof(ad));
     ad.sun_family = AF_UNIX;
@@ -230,14 +235,26 @@ int UnixOpen(const char *path)
 	h_errno = 0;
 	return -1;
     }
+
+#ifdef HAVE_SIGPROCMASK
+    /* avoid socket leak on alarm signal during connect(2) */
+    sigfillset(&allsigs);
+    sigprocmask(SIG_BLOCK, &allsigs, NULL);
+#endif /* HAVE_SIGPROCMASK */
+
     if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) < 0)
     {
 	int olderr = errno;
 	fm_close(sock);	/* don't use SockClose, no traffic yet */
 	h_errno = 0;
 	errno = olderr;
-	return -1;
+	sock = -1;
     }
+
+#ifdef HAVE_SIGPROCMASK
+    sigprocmask(SIG_UNBLOCK, &allsigs, NULL);
+#endif /* HAVE_SIGPROCMASK */
+
     return sock;
 }
 
@@ -245,6 +262,10 @@ int UnixOpen(const char *path)
 int SockOpen(const char *host, const char *service, const char *options,
 	     const char *plugin)
 {
+#ifdef HAVE_SIGPROCMASK
+    sigset_t	allsigs;
+#endif /* HAVE_SIGPROCMASK */
+
     struct addrinfo *ai, *ai0, req;
     int i;
 #if NET_SECURITY
@@ -282,6 +303,13 @@ int SockOpen(const char *host, const char *service, const char *options,
     if (i >= 0)
 	break;
 #else
+
+#ifdef HAVE_SIGPROCMASK
+    /* avoid socket leak on alarm signal during connect(2) */
+    sigfillset(&allsigs);
+    sigprocmask(SIG_BLOCK, &allsigs, NULL);
+#endif /* HAVE_SIGPROCMASK */
+
     i = -1;
     for (ai = ai0; ai; ai = ai->ai_next) {
 	i = socket(ai->ai_family, ai->ai_socktype, 0);
@@ -294,6 +322,11 @@ int SockOpen(const char *host, const char *service, const char *options,
 	}
 	break;
     }
+
+#ifdef HAVE_SIGPROCMASK
+    sigprocmask(SIG_UNBLOCK, &allsigs, NULL);
+#endif /* HAVE_SIGPROCMASK */
+
 #endif
 #endif /* NET_SECURITY */
 

@@ -16,6 +16,8 @@
   to (null) or crash when printing the error message. Patch by Matthias
   Andree.
 * NextStep and OpenStep port patch from Eric Sunshine.
+* Block signals during SockConnect() so we don't get a socket descriptor 
+  leak if we're hit by an alarm signal during connect(2).
 
 fetchmail-5.9.4 (Wed Oct  3 07:47:45 EDT 2001), 21104 lines:
 
