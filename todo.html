@@ -19,7 +19,7 @@ content="Known bugs and to-do items in fetchmail" />
 <tr>
 <td width="30%">Back to <a href="/~esr">Eric's Home Page</a></td>
 <td width="30%" align="center">Up to <a href="/~esr/sitemap.html">Site Map</a></td>
-<td width="30%" align="right">$Date: 2002/07/30 13:31:23 $</td>
+<td width="30%" align="right">$Date: 2002/09/17 09:36:00 $</td>
 </tr>
 </table>
 
@@ -31,31 +31,6 @@ fetchmail is now pretty mature and I have many other projects, so I
 don't personally chase obscure or marginal problems. Help with any
 of these will be cheerfully accepted.</p>
 
-<p>Matthias Andree writes: I believe fetchmail should not iterate
-over protocols when we have a DNS failure.</p>
-
-<pre>
-&gt; BTW, I found a bug in 5.9.7:
-&gt; ./fetchmail -Nvd0 jads.asdkjaldsf.com
-&gt; Enter password for emma@jads.asdkjaldsf.com: 
-&gt; fetchmail: 5.9.7 querying jads.asdkjaldsf.com (protocol auto) at Mit 20
-&gt; Feb 2002 06:35:07 CET: poll started
-&gt; fetchmail: 5.9.7 querying jads.asdkjaldsf.com (protocol IMAP) at Mit 20
-&gt; Feb 2002 06:35:07 CET: poll started
-&gt; fetchmail: couldn't find canonical DNS name of jads.asdkjaldsf.com
-&gt; fetchmail: 5.9.7 querying jads.asdkjaldsf.com (protocol IMAP) at Mit 20
-&gt; Feb 2002 06:35:08 CET: poll completed
-&gt; fetchmail: 5.9.7 querying jads.asdkjaldsf.com (protocol POP3) at Mit 20
-&gt; Feb 2002 06:35:08 CET: poll started
-&gt; fetchmail: couldn't find canonical DNS name of jads.asdkjaldsf.com
-&gt; fetchmail: 5.9.7 querying jads.asdkjaldsf.com (protocol POP3) at Mit 20
-&gt; Feb 2002 06:35:08 CET: poll completed
-&gt; fetchmail: 5.9.7 querying jads.asdkjaldsf.com (protocol auto) at Mit 20
-&gt; Feb 2002 06:35:08 CET: poll completed
-&gt; fetchmail: Query status=11 (DNS)
-&gt; fetchmail: normal termination, status 11
-</pre>
-
 <p>IDLE is not fully implemented. Fetchmail does not time out the
 idle connection every 30 minutes or less as required by RFC2177.
 Some servers (including UW IMAPD compiled without the
@@ -63,10 +38,6 @@ MICROSOFT_BRAIN_DAMAGE option, as is the default) will drop the
 connection after 30 minutes, resulting in a spurious socket error
 in your logs and no mail being picked up until the next poll
 cycle.</p>
-
-<p>The UIDL code seems rather broken. It's a nasty swamp. Somebody
-who actually uses it should fix it -- every time I try I seem to
-make things worse....</p>
 
 <p>POP3 can't presently distinguish a wedged or down server from an
 authentication failure. Possible fix: after issuing a PASS command.
@@ -108,7 +79,7 @@ reports.</p>
 <tr>
 <td width="30%">Back to <a href="/~esr">Eric's Home Page</a></td>
 <td width="30%" align="center">Up to <a href="/~esr/sitemap.html">Site Map</a></td>
-<td width="30%" align="right">$Date: 2002/07/30 13:31:23 $</td>
+<td width="30%" align="right">$Date: 2002/09/17 09:36:00 $</td>
 </tr>
 </table>
 

@@ -1327,8 +1327,9 @@ static int query_host(struct query *ctl)
 	    ctl->server.protocol = autoprobe[i];
 	    do {
 		st = query_host(ctl);
-	    } while (st == PS_REPOLL);
-	    if (st == PS_SUCCESS || st == PS_NOMAIL || st == PS_AUTHFAIL || st == PS_LOCKBUSY || st == PS_SMTP || st == PS_MAXFETCH)
+	    } while 
+		(st == PS_REPOLL);
+	    if (st == PS_SUCCESS || st == PS_NOMAIL || st == PS_AUTHFAIL || st == PS_LOCKBUSY || st == PS_SMTP || st == PS_MAXFETCH || st == PS_DNS)
 		break;
 	}
 	ctl->server.protocol = P_AUTO;
