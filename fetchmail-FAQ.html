@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/10/27 13:41:00 $
+<td width="30%" align=right>$Date: 1997/11/05 04:56:51 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -67,6 +67,7 @@ when I may have multiple login sessions going?</a><br>
 <a href="#T6">T6. How can I use fetchmail with Microsoft Exchange?</a><br>
 <a href="#T7">T7. How can I use fetchmail with Compuserve RPA?</a><br>
 <a href="#T8">T8. How can I use fetchmail with HP OpenMail?</a><br>
+<a href="#T9">T9. How can I use fetchmail with PMDF under VMS?</a><br>
 
 <h1>Runtime fatal errors:</h1>
 
@@ -1035,6 +1036,20 @@ As with M$ Exchange, the only real fix for these problems is to get a
 POP server that isn't brain-dead.<P>
 
 <hr>
+<h2><a name="#T9">T9. How can I use fetchmail with PMDF under VMS?</a></h2>
+
+You may not be able to.  PMDF5.1-9.1 under OpenVMS 6.1 barfs on perfectly
+innocuous FETCH sequences like 
+
+<pre>
+    fetchmail: IMAP> a0050 FETCH 1:11 RFC822.SIZE
+    fetchmail: IMAP< a0050 BAD Bogus sequence in FETCH
+</pre>
+
+We haven't figured out why yet, but strongly suspect that PMDF is just
+plain broken.  Maybe you should move your mail service to a Unix box?<p>
+
+<hr>
 <h2><a name="R1">R1. Fetchmail isn't working, and -v shows `SMTP connect failed' messages.</a></h2>
 
 Fetchmail itself is probably working, but your SMTP port 25 listener
@@ -1617,7 +1632,7 @@ will look right.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/10/27 13:41:00 $
+<td width="30%" align=right>$Date: 1997/11/05 04:56:51 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
