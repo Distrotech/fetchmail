@@ -117,11 +117,11 @@ struct hostrec *queryctl;
 	switch (c) {
 	case 'V':
 	case LA_VERSION:
-	    versioninfo = !0;
+	    versioninfo = TRUE;
 	    break;
 	case 'c':
 	case LA_CHECK:
-	    check_only = 1;
+	    check_only = TRUE;
 	    break;
 	case 's':
 	case LA_SILENT:
@@ -137,7 +137,7 @@ struct hostrec *queryctl;
 	    break;
 	case 'q':
 	case LA_QUIT:
-	    quitmode = 1;
+	    quitmode = TRUE;
 	    break;
 	case 'L':
 	case LA_LOGFILE:
@@ -197,23 +197,23 @@ struct hostrec *queryctl;
 
 	case 'a':
 	case LA_ALL:
-	    queryctl->fetchall = !0;
+	    queryctl->fetchall = TRUE;
 	    break;
 	case 'K':
 	case LA_KILL:
-	    queryctl->keep = 0;
+	    queryctl->keep = FALSE;
 	    break;
 	case 'k':
 	case LA_KEEP:
-	    queryctl->keep = !0;
+	    queryctl->keep = TRUE;
 	    break;
 	case 'F':
 	case LA_FLUSH:
-	    queryctl->flush = !0;
+	    queryctl->flush = TRUE;
 	    break;
 	case 'n':
 	case LA_NOREWRITE:
-	    queryctl->norewrite = 1;
+	    queryctl->norewrite = TRUE;
 	    break;
 	case 'r':
 	case LA_REMOTEFILE:
@@ -231,7 +231,7 @@ struct hostrec *queryctl;
 	    break;
 	case 'y':
 	case LA_YYDEBUG:
-	    yydebug = 1;
+	    yydebug = TRUE;
 	    break;
 
 	case '?':
