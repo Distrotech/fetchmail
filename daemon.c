@@ -206,7 +206,7 @@ nottyDetach:
 
   /* set up to catch child process termination signals */ 
   signal(SIGCLD, sigchld_handler); 
-#if defined(QNX)
+#if defined(SIGPWR)
   signal(SIGPWR, sigchld_handler); 
 #endif
 }

@@ -28,7 +28,7 @@ RANLIB = @RANLIB@
 # NeXT 1.0a uses an old version of GCC, which required -D__inline=inline.
 # See also `config.h'.
 DEFS = @DEFS@
-# DEFS = -DHAVE_CONFIG_H -DQNX -DHAVE_UNISTD_H -DSTDC_HEADERS	# QNX
+# DEFS = -DQNX -DHAVE_CONFIG_H -DHAVE_UNISTD_H -DHAVE_STDARG_H -DSTDC_HEADERS	# QNX
 defines =  -DRELEASE_ID=\"$(VERS)\" $(DEFS)
 
 # If your system needs extra libraries loaded in, define them here.
