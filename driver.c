@@ -1685,8 +1685,8 @@ const struct method *proto;	/* protocol method table */
 			}
 
 			/* check to see if the numbers matched? */
-			if (msgsizes && msglen != msgsizes[num])
-			    error(0, 0, "size of message %d (%d) was not what was expected (%d)", num, msglen, msgsizes[num]);
+			if (msgsizes && msglen != msgsizes[num-1])
+			    error(0, 0, "size of message %d (%d) was not what was expected (%d)", num, msglen, msgsizes[num-1]);
 
 			/* end-of-message processing starts here */
 			if (outlevel == O_VERBOSE)
