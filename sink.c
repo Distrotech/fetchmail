@@ -251,7 +251,7 @@ static void sanitize(char *s)
     	*cp = '_';
 }
 
-static int send_bouncemail(struct msgblk *msg, 
+static int send_bouncemail(struct msgblk *msg, int userclass,
 			   char *message, int nerrors, char *errors[])
 /* bounce back an error report a la RFC 1892 */
 {
@@ -303,40 +303,47 @@ static int send_bouncemail(struct msgblk *msg,
 
     if (nerrors)
     {
+	struct idlist	*idp;
+	int		nusers;
+	
 	/* RFC1892 part 2 -- machine-readable responses */
 	SockPrintf(sock, "--%s\r\n", boundary); 
 	SockPrintf(sock,"Content-Type: message/delivery-status\r\n");
 	SockPrintf(sock, "\r\n");
 	SockPrintf(sock, "Reporting-MTA: dns; %s\r\n", fetchmailhost);
-	for (i = 0; i < nerrors; i++)
-	{
-	    /* Minimum RFC1894 compliance + Diagnostic-Code field */
-	    SockPrintf(sock, "\r\n");
-	    if (msg->recipients && !msg->recipients->next)
-		SockPrintf(sock, "Final-Recipient: rfc822; %s\r\n",
-		       msg->recipients->id);
-	    else
-		/*
-		 * This is technically compliant with RFC1894,
-		 * because "multidrop;" is an RFC822 group
-		 * address.  It kind of evades the intent, though.
-		 * Unfortunately, it's just too hard to do the
-		 * right thing here when there are multiiple
-		 * multidrop recipients; we don't know how to
-		 * associate them with the list of errors passed in.
-		 */
-		SockPrintf(sock,"Final-Recipient: rfc822; multidrop; (see the message headers below)\r\n");
-	    SockPrintf(sock, "Action: failed\r\n");
-	    if (strlen(errors[i]) > 9 && isdigit(errors[i][4])
-			&& errors[i][5] == '.' && isdigit(errors[i][6])
-			&& errors[i][7] == '.' && isdigit(errors[i][8]))
-		/* Enhanced status code available, use it */
-		SockPrintf(sock, "Status: %5.5s\r\n", &(errors[i][4]));
-	    else
-		/* Enhanced status code not available, fake one */
-		SockPrintf(sock, "Status: %c.0.0\r\n", errors[i][0]);
-	    SockPrintf(sock, "Diagnostic-Code: %s\r\n", errors[i]);
-	}
+
+	nusers = 0;
+	for (idp = msg->recipients; idp; idp = idp->next)
+	    if (idp->val.status.mark == userclass)
+	    {
+		char	*error;
+		/* Minimum RFC1894 compliance + Diagnostic-Code field */
+		SockPrintf(sock, "\r\n");
+		SockPrintf(sock, "Final-Recipient: rfc822; %s\r\n", idp->id);
+		SockPrintf(sock, "Action: failed\r\n");
+
+		if (nerrors == 1)
+		    /* one error applies to all users */
+		    error = errors[0];
+		else if (nerrors > nusers)
+		{
+		    SockPrintf(sock, "Internal error: SMTP error count doesn't match number of recipients.\r\n");
+		    break;
+		}
+		else
+		    /* errors correspond 1-1 to selected users */
+		    error = errors[nusers++];
+		
+		if (strlen(error) > 9 && isdigit(error[4])
+			&& error[5] == '.' && isdigit(error[6])
+			&& error[7] == '.' && isdigit(error[8]))
+		    /* Enhanced status code available, use it */
+		    SockPrintf(sock, "Status: %5.5s\r\n", &(error[4]));
+		else
+		    /* Enhanced status code not available, fake one */
+		    SockPrintf(sock, "Status: %c.0.0\r\n", error[0]);
+		SockPrintf(sock, "Diagnostic-Code: %s\r\n", error);
+	    }
 	SockPrintf(sock, "\r\n");
     }
 
@@ -390,7 +397,7 @@ static int handle_smtp_error(struct query *ctl, struct msgblk *msg)
 	 * 571 = sendmail's "unsolicited email refused"
 	 *
 	 */
-	send_bouncemail(msg, 
+	send_bouncemail(msg, XMIT_ACCEPT,
 			"Our spam filter rejected this transaction.\r\n", 
 			1, responses);
 	return(PS_REFUSED);
@@ -428,7 +435,7 @@ static int handle_smtp_error(struct query *ctl, struct msgblk *msg)
 	 * ESMTP server.  Don't try to ship the message, 
 	 * and allow it to be deleted.
 	 */
-	send_bouncemail(msg, 
+	send_bouncemail(msg, XMIT_ACCEPT,
 			"This message was too large.\r\n", 
 			1, responses);
 	return(PS_REFUSED);
@@ -438,13 +445,13 @@ static int handle_smtp_error(struct query *ctl, struct msgblk *msg)
 	 * These latter days 553 usually means a spammer is trying to
 	 * cover his tracks.
 	 */
-	send_bouncemail(msg,
+	send_bouncemail(msg, XMIT_ACCEPT,
 			"Invalid address.\r\n", 
 			1, responses);
 	return(PS_REFUSED);
 
     default:	/* bounce the error back to the sender */
-	send_bouncemail(msg,
+	send_bouncemail(msg, XMIT_ACCEPT,
 			"General SMTP/ESMTP error.\r\n", 
 			1, responses);
 	return(PS_REFUSED);
@@ -748,7 +755,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		}
 	    }
 	if (*bad_addresses)
-	    send_bouncemail(msg, 
+	    send_bouncemail(msg, XMIT_RCPTBAD,
                             "Some addresses were rejected by the MDA fetchmail forwards to.\r\n",
                             *bad_addresses, from_responses);
 	/*
@@ -930,7 +937,7 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
  		     * return TRUE, deleting the message from the server so
  		     * it won't be re-forwarded on subsequent poll cycles.
 		     */
-		    return(send_bouncemail(msg,
+		    return(send_bouncemail(msg, XMIT_ACCEPT,
 				   "LSMTP partial delivery failure.\r\n",
 				   errors, responses));
 	    }
