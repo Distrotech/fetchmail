@@ -617,34 +617,9 @@ protocols such as DMSP in the future).  If called through a link named
 popclient, it will look in ~/.poprc for its run control file.  As
 long as the file does not use the removed \fBlimit\fR or \fBlocalfolder\fR
 options, this will often work.  (The new run control file syntax also has
-to be a bit stricter about the order of options than the old,
+to be a little stricter about the order of options than the old,
 in order to support multiple user desriptions per server; you may have
 to rearrange things a bit.)
-.PP
-The --stdout, --local, and --limit arguments of previous
-versions have been removed.  Those features did jobs that belonged to
-your local MDA and mail reader. The job of
-.I fetchmail
-is to forward local mail to your MDA, not to be one.  Saint-Exupery
-said, "Perfection [in design] is achieved not when there is nothing
-more to add, but rather when there is nothing more to take away."
-This program isn't perfect, but it's trying.
-.PP
-The --password option of previous (popclient) versions has been removed -- it
-encouraged people to expose passwords in scripts.  Passwords
-must now be specified either interactively or in your
-.I ~/.fetchmailrc
-file.  The short-form -p option now specifies the protocol to use.
-.PP
-The reason the password isn't stored encrypted is because this doesn't
-actually add protection.  Anyone who's acquired permissions to read your
-fetchmailrc file will be able to run 
-.I fetchmail
-as you anyway -- and if it's
-your password they're after, they'd be able to use the necessary decoder from
-.I fetchmail
-itself to get it.  All encryption would do in this context is give a
-false sense of security to people who don't think very hard.
 .SH SEE ALSO
 mail(1), binmail(1), sendmail(8), popd(8), imapd(8)
 RFC 937, RFC 1081, RFC 1082, RFC1176, RFC 1225, RFC 1460, RFC 1725, RFC1939.
