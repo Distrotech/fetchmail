@@ -460,7 +460,7 @@ static int load_params(int argc, char **argv, int optind)
 	     * record from command line and defaults
 	     */
 	    for (ctl = querylist; ctl; ctl = ctl->next)
-		if (str_in_list(&ctl->servernames, argv[optind]) == 0)
+		if (str_in_list(&ctl->servernames, argv[optind]))
 		    goto foundit;
 
 	    ctl = hostalloc(&cmd_opts);
