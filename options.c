@@ -50,6 +50,7 @@
 #define LA_MONITOR      32
 #define LA_YYDEBUG	33
 
+/* options still left: CDegGhHjJoOqQRTUwWxXYzZ */
 static const char *shortoptions = 
 	"?Vcsvd:NqL:f:i:p:UP:A:t:E:u:akKFnl:r:S:b:B:m:I:M:y";
 
@@ -86,7 +87,7 @@ static const struct option longoptions[] = {
   {"norewrite",	no_argument,	   (int *) 0, LA_NOREWRITE   },
   {"limit",	required_argument, (int *) 0, LA_LIMIT       },
 
-  {"folder",    required_argument, (int *) 0, LA_FOLDER  },
+  {"folder",    required_argument, (int *) 0, LA_FOLDER	     },
   {"smtphost",	required_argument, (int *) 0, LA_SMTPHOST    },
   {"batchlimit",required_argument, (int *) 0, LA_BATCHLIMIT  },
   {"fetchlimit",required_argument, (int *) 0, LA_FETCHLIMIT  },

@@ -20,7 +20,7 @@ The
 program can gather mail from servers supporting any of the common
 mail-retrieval protocols: POP2, POP3, IMAP2bis, and IMAP4.  It can
 also use the ESMTP ETRN extension.  (The RFCs describing all these
-protocols are listed at the end of this ducument.)
+protocols are listed at the end of this document.)
 .PP
 While
 .I fetchmail
@@ -100,6 +100,7 @@ overrides this.
 Verbose mode.  All control messages passed between 
 .I fetchmail
 and the mailserver are echoed to stderr.  Overrides --silent.
+.SS Disposal Options
 .TP
 .B \-a, --all
 (Keyword: fetchall)
@@ -613,8 +614,7 @@ without reading the message body.  Thus, you won't pay for downloading
 spam message bodies.
 
 .SH THE RUN CONTROL FILE
-The preferred way to set up fetchmail (and the only way if you want to
-avoid specifying passwords each time it runs) is to write a
+The preferred way to set up fetchmail is to write a
 \&\fI.fetchmailrc\fR file in your home directory.  When there is a
 conflict between the command-line arguments and the arguments in this
 file, the command-line arguments take precedence.
@@ -628,6 +628,7 @@ You may read the \fI.fetchmailrc\fR file as a list of commands to
 be executed when 
 .I fetchmail
 is called with no arguments.
+.SS Run Control Syntax
 .PP
 Comments begin with a '#' and extend through the end of the line.
 Otherwise the file consists of a series of server entries or global
@@ -649,6 +650,15 @@ Each server entry consists of one of the keywords `poll' or `skip',
 followed by a server name, followed by server options, followed by any
 number of user descriptions.
 .PP
+For backward compatibility, the word `server' is a synonym for `poll'.
+.PP
+You can use the noise keywords `and', `with',
+\&`has', `wants', and `options' anywhere in an entry to make
+it resemble English.  They're ignored, but but can make entries much
+easier to read at a glance.  The punctuation characters ':', ';' and
+\&',' are also ignored.
+.PP
+.SS Poll vs. Skip
 The `poll' verb tells fetchmail to query this host when it is run with
 no arguments.  The `skip' verb tells
 .I fetchmail 
@@ -656,58 +666,157 @@ not to poll this host unless it is explicitly named on the command
 line.  (The `skip' verb allows you to experiment with test entries
 safely, or easily disable entries for hosts that are temporarily down.)
 .PP
-Legal server options are:
+.SS Keyword/Option Summary
+Here are the legal server options.  Keyword suffixes enclosed in
+square brackets are optional.  Those corresponding to command-line
+options are followed by `-' and the appropriate option letter.
 
-    via
-    protocol (or proto)
-    port
-    authenticate (or auth)
-    timeout
-    envelope
-    aka
-    interface
-    monitor
-    dns
-    no dns
-    uidl
-    no uidl
+.TS
+l l lw34.
+Keyword  	Opt	Function
+_
+via      	\&	T{
+Specify DNS name of mailserver, overriding poll name
+T}
+proto[col]	-p	T{
+Specify protocol (case insensitive):
+POP2, POP3, IMAP, IMAP-K4, APOP, KPOP
+T}
+port    	-P	T{
+Specify TCP/IP service port
+T}
+auth[enticate]	-A	T{
+Set preauthentication type (default `password')
+T}
+timeout  	-t	T{
+Server inactivity timout in seconds (default 300)
+T}
+envelope	-E	T{
+Specify envelope-address header name
+T}
+no envelope	\&	T{
+Disable looking for envelope address
+T}
+aka      	\&	T{
+Specify alternate DNS names of mailserver
+T}
+interface	-I	T{
+specify IP interface(s) that must be up for server poll to take place
+T}
+monitor   	-M	T{
+Specify IP address to monitor for activity
+T}
+dns     	\&	T{
+Enable DNS lookup for multidrop (default)
+T}
+no dns   	\&	T{
+Disable DNS lookup for multidrop
+T}
+uidl    	-U	T{
+Force POP3 to use client-side UIDLs
+T}
+no uidl   	\&	T{
+Turn off POP3 use of client-side UIDLs (default)
+T}
+.TE
 
-Legal user options are
+Here are the legal user options:
 
-    username (or user)
-    is
-    to
-    password (or pass)
-    folder
-    smtphost (or smtp)
-    mda
-    preconnect
-    keep
-    flush
-    fetchall
-    rewrite
-    stripcr
-    forcecr
-    pass8bits
-    dropstatus
-    dns
-    no keep
-    no flush
-    no fetchall
-    no rewrite
-    no stripcr
-    no forcecr
-    no pass8bits
-    no dropstatus
-    no dns
-    no envelope
-    limit
-    batchlimit
-    fetchlimit
-    syslog
+.TS
+l l lw34.
+Keyword  	Opt	Function
+_
+user[name]	-u	T{
+Set remote user name 
+(local user name if name followed by `here') 
+T}
+is      	\&	T{
+Connect local and remote user names
+T}
+to      	\&	T{
+Connect local and remote user names
+T}
+pass[word]	\&	T{
+Specify remote account password
+T}
+folder  	-r	T{
+Specify remote folder to query
+T}
+smtphost	-S	T{
+Specify smtp host(s) to forward to
+T}
+mda     	-m	T{
+Specify MDA for local delivery
+T}
+preconnect	\&	T{
+Command to be executed before each connection
+T}
+keep     	-k	T{
+Don't delete seen messages from server
+T}
+flush   	-F	T{
+Flush all seen messages before querying
+T}
+fetchall	-a	T{
+Fetch all messages whether seen or not
+T}
+rewrite    	\&	T{
+Rewrite destination addresses for reply (default)
+T}
+stripcr  	\&	T{
+Strip carriage returns from ends of lines
+T}
+forcecr  	\&	T{
+Force carriage returns at ends of lines
+T}
+pass8bits	\&	T{
+Force BODY=8BITMIME to ESMTP listener
+T}
+dropstatus	\&	T{
+Strip Status lines out of incoming mail
+T}
+no keep  	\&	T{
+Delete seen messages from server (default)
+T}
+no flush	\&	T{
+Don't flush all seen messages before querying (default)
+T}
+no fetchall	\&	T{
+Retrieve only new messages (default)
+T}
+no rewrite	\&	T{
+Don't rewrite headers
+T}
+no stripcr	\&	T{
+Don't strip carriage returns (default)
+T}
+no forcecr	\&	T{
+Don't force carriage returns at EOL (default)
+T}
+no pass8bits	\&	T{
+Don't force BODY=8BITMIME to ESMTP listener (default)
+T}
+no dropstatus	\&	T{
+Don't drop Status headers (default)
+T}
+limit   	-l	T{
+Set message size limit
+T}
+batchlimit	-b	T{
+Max # messages to fetch in single connect
+T}
+fetchlimit	-B	T{
+Max # messages to forward in single connect
+T}
+syslog  	\&	T{
+Do error logging through syslog(3).
+T}
+.TE
+.SS Keywords Not Corresponding To Option Switches
 .PP
-The `folder' and `smtphost' options can take a space- or
-comma-separated list of names following them.
+The `folder' and `smtphost' options (unlike their command-line
+equivalents) can take a space- or comma-separated list of names
+following them.
 .PP
 All options correspond to the obvious command-line arguments, except
 the following: `via', `interval', `aka', `is', `to', `dns'/`no dns',
@@ -718,16 +827,10 @@ dropstatus', and `no envelope'.
 The `via' option is for use with ssh, or if you want to have more
 than one configuration pointing at the same site.  If it is present,
 the string argument will be taken as the actual DNS name of the 
-mailserver host to query.  So, for example, you can say:
-
-.nf
-poll mailhost.net via localhost port 1234 with pop3:
-        preconnect "ssh -f -L 1234:mailhost.net:110 mailhost.net sleep 20 </dev/null >/dev/null";
-.fi
-
-This will override the argument of poll, which can simply be a
-distinct label for the configuration.  The poll name will still be the
-one you would give on the command line to explicitly query this host.
+mailserver host to query.
+This will override the argument of poll, which can then simply be a
+distinct label for the configuration (e.g. what you would give on the
+command line to explicitly query this host).
 If the `via' name is `localhost', the poll name will also still be
 used as a possible match in multidrop mode; otherwise the `via' name
 will be used instead and the poll name will be purely a label.
@@ -836,7 +939,14 @@ which assume that anything with a Status line in it has been seen.
 (Note: the empty Status lines inserted by some buggy POP servers are
 unconditionally discarded.)
 .PP
-Legal protocol identifiers are
+.SS Miscellaneous Run Control Options
+The words `here' and `there' have useful English-like
+significance.  Normally `user eric is esr' would mean that 
+mail for the remote user `eric' is to be delivered to `esr',
+but you can make this clearer by saying `user eric there is esr here',
+or reverse it by saying `user esr here is eric there'
+.PP
+Legal protocol identifiers for use with the `protocol' keyword are:
 
     auto (or AUTO)
     pop2 (or POP2)
@@ -857,20 +967,6 @@ string as the password.
 Specifying `kpop' sets POP3 protocol over port 1109 with Kerberos V4
 preauthentication.  These defaults may be overridden by later options.
 .PP
-You can use the noise keywords `and', `with',
-\&`has', `wants', and `options' anywhere in an entry to make
-it resemble English.  They're ignored, but but can make entries much
-easier to read at a glance.  The punctuation characters ':', ';' and
-\&',' are also ignored.
-.PP
-The words `here' and `there' have useful English-like
-significance.  Normally `user eric is esr' would mean that 
-mail for the remote user `eric' is to be delivered to `esr',
-but you can make this clearer by saying `user eric there is esr here',
-or reverse it by saying `user esr here is eric there'
-.PP
-For backward compatibility, the word `server' is a synonym for `poll'.
-.PP
 There are currently three global option statements; `set logfile = '
 followed by a string sets the same global specified by --logfile.  A
 command-line --logfile option will override this.  Also, `set daemon'
@@ -878,7 +974,8 @@ sets the poll interval as --daemon does.  This can be overridden by
 a command-line --daemon option; in particular --daemon 0 can be used 
 to force foreground operation. Finally, `set syslog' sends log
 messages to syslogd(8).
-.PP
+
+.SH CONFIGURATION EXAMPLES
 Basic format is:
 
 .nf
@@ -982,6 +1079,15 @@ a multi-drop box.  It tells fetchmail that any address in the
 loonytoons.org domain (including subdomain addresses like
 `joe@daffy.loonytoons.org') should be passed through to the local SMTP
 listener without modification.  Be careful of mail loops if you do this!
+.PP
+Here's an example configuration using ssh.  The queries go through an
+ssh connecting local port 1234 to port 110 on mailhost.net; the
+preconnect command sets up the ssh.
+
+.nf
+poll mailhost.net via localhost port 1234 with pop3:
+        preconnect "ssh -f -L 1234:mailhost.net:110 mailhost.net sleep 20 </dev/null >/dev/null";
+.fi
 
 .SH THE USE AND ABUSE OF MULTIDROP MAILBOXES
 Use the multiple-local-recipients feature with caution -- it can bite.
