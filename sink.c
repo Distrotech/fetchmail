@@ -500,7 +500,8 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	else if (ctl->mimemsg & MSG_IS_7BIT)
 	    fputs(" BODY=7BIT", sinkfp);
 
-	fprintf(sinkfp, " SIZE=%d\r\n", msg->reallen);
+	/* exim's BSMTP processor does not handle SIZE */
+	/* fprintf(sinkfp, " SIZE=%d\r\n", msg->reallen); */
 
 	/*
 	 * RFC 1123 requires that the domain name part of the
@@ -866,7 +867,7 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
     else if (ctl->bsmtp)
     {
 	/* implicit disk-full check here... */
-	fputs("..\r\n", sinkfp);
+	fputs(".\r\n", sinkfp);
 	if (strcmp(ctl->bsmtp, "-"))
 	    fclose(sinkfp);
 	if (ferror(sinkfp))

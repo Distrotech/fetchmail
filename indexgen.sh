@@ -96,7 +96,8 @@ not a full-time "push" connection.<p>
 
 Fetchmail is easy to configure.  You can edit its dotfile directly, or
 use the interactive GUI configurator (fetchmailconf) supplied with the
-fetchmail distribution.<P>
+fetchmail distribution.  It is also directly supported in linuxconf
+versions 1.16r8 and later.<P>
 
 Fetchmail is fast and lightweight.  It packs all its standard
 features (POP3, IMAP, and ETRN support) in ${fetchmailsize}K of core on a
@@ -190,7 +191,7 @@ FAQ covers them like a blanket.<P>
 Fetchmail was written and is maintained by <a
 href="../index.html">Eric S. Raymond</a>.  There are some designated
 backup maintainers (<a href="mailto:funk+@osu.edu">Rob Funk</a>, <a
-href="mailto:alberty@apexxtech.com">Al Youngwerth</a>, <a
+href="mailto:alberty@allnix.com">Al Youngwerth</a>, <a
 href="mailto:imdave@mcs.net">Dave Bodenstab</a>).  Other backup
 maintainers may be added in the future, in order to ensure continued
 support should Eric S.  Raymond drop permanently off the net for any

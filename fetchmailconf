@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.18"
+version = "1.19"
 
 from Tkinter import *
 from Dialog import *
@@ -116,7 +116,7 @@ class Server:
 	else:             str = str + "skip"
 	str = str + (" " + self.pollname)
 	if self.via:
-	    str = str + (" via \"%s\"\n" % (self.via,));
+	    str = str + (" via " + str(self.via) + "\n");
 	if self.protocol != ServerDefaults.protocol:
 	    str = str + " with proto " + self.protocol 
 	if self.port != defaultports[self.protocol] and self.port != 0:
@@ -131,7 +131,7 @@ class Server:
 	    else:
 		str = str + " envelope " + self.envelope
 	if self.qvirtual:
-	    str = str + (" qvirtual \"%s\"\n" % (self.qvirtual,));
+	    str = str + (" qvirtual " + str(self.qvirtual) + "\n");
 	if self.preauth != ServerDefaults.preauth:
 	    str = str + " preauth " + self.preauth
 	if self.dns != ServerDefaults.dns or self.uidl != ServerDefaults.uidl:
@@ -159,11 +159,11 @@ class Server:
 		str = str + " "
 
 	if self.interface:
-            str = str + "interface \"" + self.interface + "\""
+            str = str + "interface " + str(self.interface)
 	if self.monitor:
-            str = str + "monitor \"" + self.monitor + "\""
+            str = str + "monitor " + str(self.monitor)
 	if self.netsec:
-            str = str + "netsec \"" + self.netsec + "\""
+            str = str + "netsec " + str(self.netsec)
 	if self.interface or self.monitor or self.netsec:
 	    if folded:
 		str = str + "\n"
@@ -257,15 +257,15 @@ class User:
             ('properties',  'String'))
 
     def __repr__(self):
-	str = "    "
-	str = str + "user \"" + self.remote + "\" there ";
+	res = "    "
+	res = res + "user " + str(self.remote) + " there ";
 	if self.password:
-            str = str + "with password \"" + self.password + '" '
+            res = res + "with password " + str(self.password) + " "
 	if self.localnames:
-            str = str + "is"
+            res = res + "is"
             for x in self.localnames:
-		str = str + " " + x
-            str = str + " here"
+		res = res + " " + x
+            res = res + " here"
 	if (self.keep != UserDefaults.keep
 		or self.flush != UserDefaults.flush
 		or self.fetchall != UserDefaults.fetchall
@@ -275,65 +275,65 @@ class User:
 		or self.pass8bits != UserDefaults.pass8bits
 		or self.mimedecode != UserDefaults.mimedecode
 		or self.dropstatus != UserDefaults.dropstatus):
-	    str = str + " options"
+	    res = res + " options"
 	if self.keep != UserDefaults.keep:
-	    str = str + flag2str(self.keep, 'keep')
+	    res = res + flag2str(self.keep, 'keep')
 	if self.flush != UserDefaults.flush:
-	    str = str + flag2str(self.flush, 'flush')
+	    res = res + flag2str(self.flush, 'flush')
 	if self.fetchall != UserDefaults.fetchall:
-	    str = str + flag2str(self.fetchall, 'fetchall')
+	    res = res + flag2str(self.fetchall, 'fetchall')
 	if self.rewrite != UserDefaults.rewrite:
-	    str = str + flag2str(self.rewrite, 'rewrite')
+	    res = res + flag2str(self.rewrite, 'rewrite')
 	if self.forcecr != UserDefaults.forcecr:
-	    str = str + flag2str(self.forcecr, 'forcecr')
+	    res = res + flag2str(self.forcecr, 'forcecr')
 	if self.stripcr != UserDefaults.stripcr:
-	    str = str + flag2str(self.stripcr, 'stripcr')
+	    res = res + flag2str(self.stripcr, 'stripcr')
 	if self.pass8bits != UserDefaults.pass8bits:
-	    str = str + flag2str(self.pass8bits, 'pass8bits')
+	    res = res + flag2str(self.pass8bits, 'pass8bits')
 	if self.mimedecode != UserDefaults.mimedecode:
-	    str = str + flag2str(self.mimedecode, 'mimedecode')
+	    res = res + flag2str(self.mimedecode, 'mimedecode')
 	if self.dropstatus != UserDefaults.dropstatus:
-	    str = str + flag2str(self.dropstatus, 'dropstatus')
+	    res = res + flag2str(self.dropstatus, 'dropstatus')
 	if self.limit != UserDefaults.limit:
-	    str = str + " limit " + `self.limit`
+	    res = res + " limit " + `self.limit`
 	if self.warnings != UserDefaults.warnings:
-	    str = str + " warnings " + `self.warnings`
+	    res = res + " warnings " + `self.warnings`
 	if self.fetchlimit != UserDefaults.fetchlimit:
-	    str = str + " fetchlimit " + `self.fetchlimit`
+	    res = res + " fetchlimit " + `self.fetchlimit`
 	if self.batchlimit != UserDefaults.batchlimit:
-	    str = str + " batchlimit " + `self.batchlimit`
+	    res = res + " batchlimit " + `self.batchlimit`
 	if self.ssl != UserDefaults.ssl:
-	    str = str + flag2str(self.ssl, 'ssl')
+	    res = res + flag2str(self.ssl, 'ssl')
 	if self.sslkey != UserDefaults.sslkey:
-	    str = str + " sslkey " + `self.sslkey`
+	    res = res + " sslkey " + `self.sslkey`
 	if self.sslcert != UserDefaults.sslcert:
-	    str = str + " ssl " + `self.sslcert`
+	    res = res + " ssl " + `self.sslcert`
 	if self.expunge != UserDefaults.expunge:
-	    str = str + " expunge " + `self.expunge`
-        str = str + "\n"
+	    res = res + " expunge " + `self.expunge`
+        res = res + "\n"
         trimmed = self.smtphunt;
         if trimmed != [] and trimmed[len(trimmed) - 1] == "localhost":
             trimmed = trimmed[0:len(trimmed) - 1]
         if trimmed != [] and trimmed[len(trimmed) - 1] == hostname:
             trimmed = trimmed[0:len(trimmed) - 1]
         if trimmed != []:
-            str = str + "    smtphost "
+            res = res + "    smtphost "
             for x in trimmed:
-                str = str + " " + x
-                str = str + "\n"
+                res = res + " " + x
+                res = res + "\n"
 	if self.mailboxes:
-	     str = str + "    folder"
+	     res = res + "    folder"
 	     for x in self.mailboxes:
-		str = str + " " + x
-	     str = str + "\n"
+		res = res + " " + x
+	     res = res + "\n"
         for fld in ('smtpaddress', 'preconnect', 'postconnect', 'mda', 'bsmtp', 'properties'):
             if getattr(self, fld):
-                str = str + " %s %s\n" % (fld, `getattr(self, fld)`)
+                res = res + " %s %s\n" % (fld, `getattr(self, fld)`)
 	if self.lmtp != UserDefaults.lmtp:
-	    str = str + flag2str(self.lmtp, 'lmtp')
+	    res = res + flag2str(self.lmtp, 'lmtp')
         if self.antispam != UserDefaults.antispam:
-            str = str + "    antispam " + self.antispam + "\n"
-	return str;
+            res = res + "    antispam " + self.antispam + "\n"
+	return res;
 
     def __str__(self):
 	return "[User: " + repr(self) + "]"
