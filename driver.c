@@ -851,6 +851,7 @@ static int do_session(
 
     if ((js = setjmp(restart)))
     {
+	/* exception caught */
 #ifdef HAVE_SIGPROCMASK
 	/*
 	 * Don't rely on setjmp() to restore the blocked-signal mask.
@@ -928,6 +929,7 @@ static int do_session(
     }
     else
     {
+	/* setjmp returned zero -> normal operation */
 	char buf[MSGBUFSIZE+1], *realhost;
 	int count, new, bytes;
 #ifdef INET6_ENABLE
