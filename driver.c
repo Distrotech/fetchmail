@@ -862,7 +862,7 @@ int num;		/* index of message */
     }
     else
     {
-	char	*ap, *ctt, options[MSGBUFSIZE];
+	char	*ap, *ctt, options[MSGBUFSIZE], addr[128];
 
 	/* build a connection to the SMTP listener */
 	if ((smtp_open(ctl) == -1))
@@ -984,14 +984,19 @@ int num;		/* index of message */
 	 *
 	 * RFC 1123 requires that the domain name part of the
 	 * RCPT TO address be "canonicalized", that is a FQDN
-	 * or MX but not a CNAME.  RFC1123 doesn't say whether
-	 * the FQDN part can be null (as it frequently will be
-	 * here), but it's hard to see how this could cause a
-	 * problem.
+	 * or MX but not a CNAME.  Some listeners (like exim)
+	 * enforce this.
 	 */
 	for (idp = xmit_names; idp; idp = idp->next)
 	    if (idp->val.num == XMIT_ACCEPT)
-		if (SMTP_rcpt(ctl->smtp_socket, idp->id) == SM_OK)
+	    {
+#ifdef HAVE_SNPRINTF
+		snprintf(addr, sizeof(addr)-1, "%s@%s", idp->id,fetchmailhost);
+#else
+		sprintf(addr, "%s@%s", idp->id, );
+#endif /* HAVE_SNPRINTF */
+
+		if (SMTP_rcpt(ctl->smtp_socket, addr) == SM_OK)
 		    good_addresses++;
 		else
 		{
@@ -1000,12 +1005,21 @@ int num;		/* index of message */
 		    error(0, 0, 
 			  "SMTP listener doesn't like recipient address `%s'", idp->id);
 		}
-	if (!good_addresses && SMTP_rcpt(ctl->smtp_socket, user) != SM_OK)
+	    }
+	if (!good_addresses)
 	{
-	    error(0, 0, 
-		  "can't even send to calling user!");
-	    free(headers);
-	    return(PS_SMTP);
+#ifdef HAVE_SNPRINTF
+	    snprintf(addr, sizeof(addr)-1, "%s@%s", idp->id, fetchmailhost);
+#else
+	    sprintf(addr, "%s@%s", idp->id, );
+#endif /* HAVE_SNPRINTF */
+
+	    if (SMTP_rcpt(ctl->smtp_socket, user) != SM_OK)
+	    {
+		error(0, 0, "can't even send to calling user!");
+		free(headers);
+		return(PS_SMTP);
+	    }
 	}
 
 	/* tell it we're ready to send data */

@@ -18,8 +18,9 @@ fetchmail-4.1.0 ()
 * Enable parser to detect and complain about the most common syntax error.
 * More warnings about things that can go wrong with multidrop.
 * Dave Bodenstab's fix for flaky phone lines.
+* Always pass FQDNs in RCPT TO addresses (avoids minor tsuris with exim).
 
-There are 262 people on the fetchmail-friends list.
+There are 263 people on the fetchmail-friends list.
 
 fetchmail-4.0.8 (Thu Aug  7 17:05:27 EDT 1997)
 * Fixed core dump bug in UID handling introduced by the 4.0.6 change.
