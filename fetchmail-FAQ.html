@@ -9,9 +9,8 @@
 <BODY>
 <H1>Frequently Asked Questions About Fetchmail</H1>
 
-The current version of fetchmail is 3.9.5.  New in the FAQ:
-the B section (build-time problems) is gone, as these all appear
-to have been fixed now.<p>
+The current version of fetchmail is 3.9.6.  New in the FAQ:
+a new <a href="F3">F3</a> on tokens with a `no' prefix.<p>
 
 Before reporting any bug, please read <a href="#G3">G3</a> for advice
 on how to include diagnostic information that will get your bug fixed
@@ -39,8 +38,9 @@ fetchmail-friends-request@thyrsus.com</a>. <p>
 
 <a href="#F1">F1. Why does my .fetchmailrc from 2.8 or earlier no longer work?</a><br>
 <a href="#F2">F2. The .fetchmailrc parser won't accept my all-numeric user name.</a><br>
-<a href="#F3">F3. What does "Warning: user entry with no `user' keyword" mean?</a><br>
-<a href="#F4">F4. I'm migrating from popclient.  How do I need to modify my .poprc?</a><br>
+<a href="#F3">F3. The .fetchmailrc parser won't accept my host or username beginning with `no'.</a><br>
+<a href="#F4">F4. What does "Warning: user entry with no `user' keyword" mean?</a><br>
+<a href="#F5">F5. I'm migrating from popclient.  How do I need to modify my .poprc?</a><br>
 
 <h1>Configuration questions:</h1>
 
@@ -213,7 +213,21 @@ number, which will confuse it when it's expecting a name.  String
 quoting forces the token's class.<p>
 
 <hr>
-<h2><a name="F3">F3. What does "Warning: user entry with no `user' keyword" mean?</a></h2>
+<a href="#F3">F3. The .fetchmailrc parser won't accept my host or username beginning with `no'.</a><br>
+
+You're caught in an unfortunate crack between the newer-style syntax
+for negated options (`no keep', `no rewrite' etc.) and the older style
+run-on syntax (`nokeep', `norewrite' etc.).<p>
+
+You can work around this easily.  Just put string quotes around your
+token.<p>
+
+I haven't fixed this because there is no good fix for it short of
+implementing a token pushback stack in the lexer.  That's more
+additional complexity than I'm willing to add to banish a very
+marginal bug with an easy workaround.<p>
+
+<h2><a name="F4">F4. What does "Warning: user entry with no `user' keyword" mean?</a></h2>
 
 This warning means that you're using a .fetchmailrc that's
 written in the old popclient syntax without an explicit `username'
@@ -236,7 +250,7 @@ a future version.  (It complicates the configuration file grammar and
 confuses users.)<p>
  
 <hr>
-<h2><a name="F4">F4. I'm migrating from popclient.  How do I need to modify my .poprc?</a></h2>
+<h2><a name="F5">F5. I'm migrating from popclient.  How do I need to modify my .poprc?</a></h2>
 
 If you have been using popclient (the ancestor of this program)
 at version 3.0b6 or later, start with this<p>
@@ -940,7 +954,7 @@ without hacking potentially fragile startup scripts.  To get around
 it, just touch(1) the logfile before you run fetchmail (this will have
 no effect on the contents of the logfile if it already exists).<P>
 
-$Id: fetchmail-FAQ.html,v 1.16 1997/05/17 15:05:31 esr Exp $<p>
+$Id: fetchmail-FAQ.html,v 1.17 1997/05/27 18:20:39 esr Exp $<p>
 
 <HR>
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
