@@ -121,12 +121,12 @@ int is_host_alias(const char *name, struct query *ctl)
 #else
     /*
      * The only code that calls the BIND library is here and in the
-     * start-of-query probe with gethostbyname(3).
+     * start-of-run probe with gethostbyname(3).
      *
-     * We know DNS service was up at the beginning of this poll cycle.
+     * We know DNS service was up at the beginning of the run.
      * If it's down, our nameserver has crashed.  We don't want to try
-     * delivering the current message or anything else from this
-     * mailbox until it's back up.
+     * delivering the current message or anything else from the
+     * current server until it's back up.
      */
     else if ((he = gethostbyname(name)) != (struct hostent *)NULL)
     {

@@ -478,45 +478,6 @@ int main (int argc, char **argv)
 		    continue;
 #endif /* defined(linux) && !INET6 */
 
-#ifdef HAVE_GETHOSTBYNAME
-		/*
-		 * This functions partly as a probe to make sure our
-		 * nameserver is still up.  The multidrop case
-		 * (especially) needs it.
-		 */
-		if (ctl->server.preauthenticate==A_KERBEROS_V4 ||
-		    ctl->server.preauthenticate==A_KERBEROS_V5 ||
-		    MULTIDROP(ctl))
-		{
-		    struct hostent	*namerec;
-
-		    /* compute the canonical name of the host */
-		    errno = 0;
-		    namerec = gethostbyname(ctl->server.queryname);
-		    if (namerec == (struct hostent *)NULL)
-		    {
-			error(0, errno,
-				"skipping %s poll, ",
-				ctl->server.pollname);
-			if (errno)
-			{
-			    if (errno == ENETUNREACH)
-				break;	/* go to sleep */
-			}
-#ifdef HAVE_HERROR		/* NEXTSTEP doesn't */
-			else
-			    herror("DNS error");
-#endif /* HAVE_HERROR */
-			continue;
-		    }
-		    else
-		    {
-			free(ctl->server.truename);
-			ctl->server.truename=xstrdup((char *)namerec->h_name);
-		    }
-		}
-#endif /* HAVE_GETHOSTBYNAME */
-
 		querystatus = query_host(ctl);
 
 		if (querystatus == PS_SUCCESS)
@@ -924,16 +885,42 @@ static int load_params(int argc, char **argv, int optind)
 	     *
 	     * We're going to assume the via name is true unless it's
 	     * localhost.
-	     *
-	     * Each poll cycle, if we've got DNS, we'll try to canonicalize
-	     * the name.  This will function as a probe to ensure the
-	     * host's nameserver is up.
 	     */
 	    if (ctl->server.via && strcmp(ctl->server.via, "localhost"))
 		ctl->server.queryname = xstrdup(ctl->server.via);
 	    else
 		ctl->server.queryname = xstrdup(ctl->server.pollname);
-	    ctl->server.truename = xstrdup(ctl->server.queryname);
+
+	    /*
+	     * We may have to canonicalize the server truename for later use.
+	     * Do this just once for each lead server, if necessary, in order
+	     * to minimize DNS round trips.
+	     */
+	    if (ctl->server.lead_server)
+		ctl->server.truename = xstrdup(ctl->server.lead_server->truename);
+#ifdef HAVE_GETHOSTBYNAME
+	    else if (ctl->server.preauthenticate==A_KERBEROS_V4 ||
+		ctl->server.preauthenticate==A_KERBEROS_V5 ||
+		(ctl->server.dns && MULTIDROP(ctl)))
+	    {
+		struct hostent	*namerec;
+
+		/* compute the canonical name of the host */
+		errno = 0;
+		namerec = gethostbyname(ctl->server.queryname);
+		if (namerec == (struct hostent *)NULL)
+		{
+		    error(0, errno,
+			  "couldn't find canonical DNS name of %s",
+			  ctl->server.pollname);
+		    exit(PS_DNS);
+		}
+		else
+		    ctl->server.truename=xstrdup((char *)namerec->h_name);
+	    }
+#endif /* HAVE_GETHOSTBYNAME */
+	    else
+		ctl->server.truename = xstrdup(ctl->server.queryname);
 
 	    /* if no folders were specified, set up the null one as default */
 	    if (!ctl->mailboxes)

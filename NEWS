@@ -2,7 +2,6 @@
 
 * Add an "ident" per-user option for debugging that produces an 
   "X-Fetchmail-ID" header in fetched messages for debugging.
-* Can the initial gethostname() be eliminated?
 
 				Release Notes:
 
@@ -11,6 +10,10 @@ fetchmail-4.5.3 ():
 * Minor fixes to the GSSAPI code.  Seems to work with stock UW IMAP now!
 * Fetchmail running as root now sends misaddressed multidrop mail to
   `postmaster', not root.  Added `postmaster' option to allow override.
+* DNS names of target servers are now canonicalized only once, at start
+  of run, and then only if they'll actually be needed later for multidrop
+  checking or ftching Kerberos tickets.  This eliminates many gethostbyname
+  calls.
 
 There are 267 people on fetchmail-friends and 249 on fetchmail-announce.
 
