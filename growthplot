@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# growthplot -- plot the fetchmail population's growth as a function of time
+# growthplot -- plot the fetchmail project's growth as a function of time
 #
 
 # Get data from the NEWS file
@@ -17,7 +17,7 @@ set y2label 'Lines of code'
 set ytics nomirror
 set y2tics
 set tics out
-set autoscale  y
+set autoscale y
 set y2range [5000:50000]
 set key bottom right box
 set terminal png color
