@@ -65,7 +65,11 @@ struct idlist
     struct idlist *next;
 };
 
+#ifndef TRUE
 typedef	int	bool;
+#define FALSE	0
+#define TRUE	1
+#endif /* TRUE */
 
 struct hostdata		/* shared among all user connections to given server */
 {
@@ -272,9 +276,6 @@ int from64tobits(char *, const char *);
 XMALLOCTYPE *xmalloc(int);
 XMALLOCTYPE *xrealloc(XMALLOCTYPE *, int);
 char *xstrdup(const char *);
-
-#define FALSE	0
-#define TRUE	1
 
 #define STRING_DISABLED	(char *)-1
 
