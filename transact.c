@@ -339,6 +339,14 @@ static int sizeticker;
 
 #define EMPTYLINE(s)	((s)[0] == '\r' && (s)[1] == '\n' && (s)[2] == '\0')
 
+static int end_of_header (const char *s)
+/* accept "\r*\n" as EOH in order to be bulletproof against broken survers */
+{
+    while (s[0] == '\r')
+	s++;
+    return (s[0] == '\n' && s[1] == '\0');
+}
+
 int readheaders(int sock,
 		       long fetchlen,
 		       long reallen,
@@ -476,7 +484,7 @@ int readheaders(int sock,
 		}
 
 	    /* check for end of headers */
-	    if (EMPTYLINE(line))
+	    if (end_of_header(line))
 	    {
 		headers_ok = TRUE;
 		has_nuls = (linelen != strlen(line));
@@ -506,10 +514,12 @@ int readheaders(int sock,
 	     */
 	    if (!isspace(line[0]) && !strchr(line, ':'))
 	    {
-		headers_ok = FALSE;
-		has_nuls = (linelen != strlen(line));
-		free(line);
-		goto process_headers;
+		/* the headers_ok flag cannot be set to FALSE here as the
+		 * delimiter has not occurred yet. */
+		if (outlevel > O_SILENT)
+		    report(stdout,
+			   GT_("incorrect header line found while scanning headers\n"));
+		retain_mail = 1;
 	    }
 
 	    /* check for RFC822 continuations */

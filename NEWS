@@ -7,6 +7,7 @@
 * Configure.in update for autoconf 2.5 (Art Haas). 
 * Be case-insensitive when looking for IMAP responses.
 * Fix logout-after-idle-delivery bug (Sunil Shetye).
+* Sunil Shetye's patch to bulletproof end-of-header detection.
 
 fetchmail-6.1.2 (Thu Oct 31 11:41:02 EST 2002), 22135 lines:
 
