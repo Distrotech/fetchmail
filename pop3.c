@@ -169,9 +169,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 
 	    return(PS_AUTHFAIL);
 	}
-	else /* not a CompuServe account */
 #endif /* RPA_ENABLE */
-	    ok = gen_transact(sock, "USER %s", ctl->remotename);
 
 #if OPIE_ENABLE
 	/* see RFC1938: A One-Time Password System */
@@ -261,6 +259,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
        }
 
 	/* ordinary validation, no one-time password or RPA */ 
+	gen_transact(sock, "USER %s", ctl->remotename);
 	ok = gen_transact(sock, "PASS %s", ctl->password);
 	break;
 
