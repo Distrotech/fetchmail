@@ -2,14 +2,21 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.8.2 (Tue May  8 17:07:53 EDT 2001), 20481 lines:
+
 * HH's patches fixing Debian bug #90966 and addressing Debian bug #92554.
 * GSSAPI portability patch by Peter Fales.
 * Updated cs.po by Jiri Pavlovsky.
-* Michael Kjorling's patch to add server ID to authantication success/failure 
+* Michael Kjorling's patch to add server ID to authentication success/failure 
   bugmail.
 * Kerberos build patch by HH.
-* Don't cough and die from failure to resolve a skipped host.
+* Don't cough and die from failure to resolve a skipped host.  Resolves 
+  Debian bug #92530
 * Do aka suffix match even if DNS checking is enabled (Johannes Stille's bug).
+* SIGCHLD handler now sets SA_RESTART explicitly in order to avoid zombies
+  from interrupted system calls.  Debian bug #95659.
+
+There are 333 people on fetchmail-friends and 582 on fetchmail-announce.
 
 fetchmail-5.8.1 (Tue Apr 10 09:32:04 EDT 2001), 20511 lines:
 
