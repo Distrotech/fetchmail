@@ -753,6 +753,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(mda);
     FLAG_MERGE(smtpaddress);
     FLAG_MERGE(preconnect);
+    FLAG_MERGE(postconnect);
 
     FLAG_MERGE(keep);
     FLAG_MERGE(flush);
