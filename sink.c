@@ -278,7 +278,7 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
     char boundary[BUFSIZ], *bounce_to;
     int sock;
 
-    /* don't bounce  in reply to undeliverable bounces */
+    /* don't bounce in reply to undeliverable bounces */
     if (!msg->return_path[0] || strcmp(msg->return_path, "<>") == 0)
 	return(FALSE);
 
@@ -402,10 +402,17 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
     xalloca(responses[0], char *, strlen(smtp_response)+1);
     strcpy(responses[0], smtp_response);
 
+#ifdef __UNUSED__
+    /*
+     * Don't do this!  It can really mess you up if, for example, you're
+     * reporting an error with a single RCPT TO address among several;
+     * RSET discards the message body and it doesn't get sent to the
+     * valid recipients.
+     */
     SMTP_rset(ctl->smtp_socket);    /* stay on the safe side */
-
     if (outlevel >= O_DEBUG)
 	report(stdout, _("Saved error is still %d\n"), smtperr);
+#endif /* __UNUSED */
 
     /*
      * Note: send_bouncemail message strings are not made subject
@@ -644,7 +651,10 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	}
 
 	if (SMTP_from(ctl->smtp_socket, ap, options) != SM_OK)
+	{
+	    SMTP_rset(ctl->smtp_socket);    /* stay on the safe side */
 	    return(handle_smtp_report(ctl, msg));
+	}
 
 	/*
 	 * Now list the recipient addressees
@@ -679,24 +689,10 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		else
 		{
 		    char	errbuf[POPBUFSIZE];
+		    int		res;
 
-#ifdef __UNUSED__
-		    /*
-		     * I don't remember how this got in here, but it doesn't
-		     * work.  The obvious symptom is that no bounce message
-		     * is sent for a nonexistent user.  Less obviously
-		     * forwarding to postmaster also does not work. The body is
-		     * discarded due to the RSET.
-		     *
-		     * If a mail is sent to one valid and one invalid
-		     * user, the mail does not go to the valid user
-		     * also as the body is discarded after handle_smtp_report 
-		     * calls RSET!
-		     */
-		    int res;
 		    if ((res = handle_smtp_report(ctl, msg))==PS_REFUSED)
 			return(PS_REFUSED);
-#endif /* __UNUSED__ */
 
 #ifdef HAVE_SNPRINTF
 		    snprintf(errbuf, sizeof(errbuf), "%s: %s",
@@ -767,7 +763,10 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	 * Some listeners (like zmailer) may return antispam errors here.
 	 */
 	if (SMTP_data(ctl->smtp_socket) != SM_OK)
+	{
+	    SMTP_rset(ctl->smtp_socket);    /* stay on the safe side */
 	    return(handle_smtp_report(ctl, msg));
+	}
     }
 
     /*
@@ -1041,6 +1040,7 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 	/* write message terminator */
 	if (SMTP_eom(ctl->smtp_socket) != SM_OK)
 	{
+	    SMTP_rset(ctl->smtp_socket);    /* stay on the safe side */
 	    if (handle_smtp_report(ctl, msg) != PS_REFUSED)
 		return(FALSE);
 	    else
