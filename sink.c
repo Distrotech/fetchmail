@@ -402,10 +402,11 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	 * ESMTP server.  Don't try to ship the message, 
 	 * and allow it to be deleted.
 	 */
-	send_bouncemail(ctl, msg, XMIT_ACCEPT,
+	if (run.bouncemail)
+	    send_bouncemail(ctl, msg, XMIT_ACCEPT,
 			"This message was too large (SMTP error 552).\r\n", 
 			1, responses);
-	return(run.bouncemail ? PS_REFUSED : PS_TRANSIENT);
+	return(PS_REFUSED);
   
     case 553: /* invalid sending domain */
 	/*
@@ -415,9 +416,12 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	 * (b) we wouldn't want spammers to get confirmation that
 	 * this address is live, anyway.
 	 */
-	send_bouncemail(ctl, msg, XMIT_ACCEPT,
+#ifdef __DONT_FEED_THE_SPAMMERS__
+	if (run.bouncemail)
+	    send_bouncemail(ctl, msg, XMIT_ACCEPT,
 			"Invalid address in MAIL FROM (SMTP error 553).\r\n", 
 			1, responses);
+#endif /* __DONT_FEED_THE_SPAMMERS__ */
 	return(PS_REFUSED);
 
     default:
