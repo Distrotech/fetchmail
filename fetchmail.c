@@ -748,7 +748,6 @@ void termhook(int sig)
     for (ctl = querylist; ctl; ctl = ctl->next)
 	if (ctl->password)
 	  memset(ctl->password, '\0', strlen(ctl->password));
-    }
 
 #if !defined(HAVE_ATEXIT) && !defined(HAVE_ON_EXIT)
     unlockit();
