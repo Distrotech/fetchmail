@@ -303,7 +303,7 @@ the fetchmail author's hand. <P>
 
 There is a FTP mirror of the fetchmail FTP directory (not this WWW
 home site, just the current sources and RPM) in Japan at
-<a href="ftp://ftp.win.or.jp/pub/network/mail/fetchmail">
+<a href="ftp://ftp.win.ne.jp/pub/network/mail/fetchmail">
 ftp://ftp.win.or.jp/pub/network/mail/fetchmail</a>.<P>
 
 <H1>Reviews and Awards</H1>
