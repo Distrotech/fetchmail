@@ -87,21 +87,21 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 		    if (strcmp(host, ctl->servernames->id) == 0
 				&& strcmp(user, ctl->remotename) == 0)
 		    {
-			save_uid(&ctl->oldsaved, -1, id);
+			save_str(&ctl->oldsaved, -1, id);
 			break;
 		    }
 		}
 
 		/* if it's not in a host we're querying, save it anyway */
 		if (ctl == (struct query *)NULL)
-		    save_uid(&scratchlist, -1, buf);
+		    save_str(&scratchlist, -1, buf);
 	    }
 	}
 	fclose(tmpfp);
     }
 }
 
-struct idlist *save_uid(struct idlist **idl, int num, const char *str)
+struct idlist *save_str(struct idlist **idl, int num, const char *str)
 /* save a number/UID pair on the given UID list */
 {
     struct idlist **end;
@@ -118,19 +118,19 @@ struct idlist *save_uid(struct idlist **idl, int num, const char *str)
     return(*end);
 }
 
-void free_uid_list(struct idlist **idl)
+void free_str_list(struct idlist **idl)
 /* free the given UID list */
 {
     if (*idl == (struct idlist *)NULL)
 	return;
 
-    free_uid_list(&(*idl)->next);
+    free_str_list(&(*idl)->next);
     free ((*idl)->id);
     free(*idl);
     *idl = (struct idlist *)NULL;
 }
 
-void save_id_pair(struct idlist **idl, const char *str1, const char *str2)
+void save_str_pair(struct idlist **idl, const char *str1, const char *str2)
 /* save an ID pair on the given list */
 {
     struct idlist **end;
@@ -148,7 +148,7 @@ void save_id_pair(struct idlist **idl, const char *str1, const char *str2)
 }
 
 #ifdef __UNUSED__
-void free_idpair_list(struct idlist **idl)
+void free_str_pair_list(struct idlist **idl)
 /* free the given ID pair list */
 {
     if (*idl == (struct idlist *)NULL)
@@ -162,7 +162,7 @@ void free_idpair_list(struct idlist **idl)
 }
 #endif
 
-int uid_in_list(struct idlist **idl, const char *str)
+int str_in_list(struct idlist **idl, const char *str)
 /* is a given ID in the given list? */
 {
     if (*idl == (struct idlist *)NULL || str == (char *) NULL)
@@ -170,10 +170,10 @@ int uid_in_list(struct idlist **idl, const char *str)
     else if (strcmp(str, (*idl)->id) == 0)
 	return(1);
     else
-	return(uid_in_list(&(*idl)->next, str));
+	return(str_in_list(&(*idl)->next, str));
 }
 
-char *uid_find(struct idlist **idl, int number)
+char *str_find(struct idlist **idl, int number)
 /* return the id of the given number in the given list. */
 {
     if (*idl == (struct idlist *) 0)
@@ -181,7 +181,7 @@ char *uid_find(struct idlist **idl, int number)
     else if (number == (*idl)->val.num)
 	return((*idl)->id);
     else
-	return(uid_find(&(*idl)->next, number));
+	return(str_find(&(*idl)->next, number));
 }
 
 char *idpair_find(struct idlist **idl, const char *id)
@@ -195,7 +195,7 @@ char *idpair_find(struct idlist **idl, const char *id)
 	return(idpair_find(&(*idl)->next, id));
 }
 
-int delete_uid(struct idlist **idl, int num)
+int delete_str(struct idlist **idl, int num)
 /* delete given message from given list */
 {
     if (*idl == (struct idlist *)NULL)
@@ -210,11 +210,11 @@ int delete_uid(struct idlist **idl, int num)
 	return(1);
     }
     else
-	return(delete_uid(&(*idl)->next, num));
+	return(delete_str(&(*idl)->next, num));
     return(0);
 }
 
-void append_uid_list(struct idlist **idl, struct idlist **nidl)
+void append_str_list(struct idlist **idl, struct idlist **nidl)
 /* append nidl to idl (does not copy *) */
 {
     if ((*idl) == (struct idlist *)NULL)
@@ -222,13 +222,13 @@ void append_uid_list(struct idlist **idl, struct idlist **nidl)
     else if ((*idl)->next == (struct idlist *)NULL)
 	(*idl)->next = *nidl;
     else
-	append_uid_list(&(*idl)->next, nidl);
+	append_str_list(&(*idl)->next, nidl);
 }
 
-void update_uid_lists(struct query *ctl)
+void update_str_lists(struct query *ctl)
 /* perform end-of-query actions on UID lists */
 {
-    free_uid_list(&ctl->oldsaved);
+    free_str_list(&ctl->oldsaved);
     ctl->oldsaved = ctl->newsaved;
     ctl->newsaved = (struct idlist *) NULL;
 }

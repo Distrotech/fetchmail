@@ -61,9 +61,9 @@ struct idlist
 struct query
 {
     /* per-host data */
-    struct idlist *servernames;		/* servername first, then akas*/
-    struct idlist *localnames;
-    int wildcard;	/* true if unmatched names should be passed through */
+    struct idlist *servernames;		/* servername first, then akas */
+    struct idlist *localnames;		/* including calling user's name */
+    int wildcard;		/* should unmatched names be passed through */
     int protocol;
     int port;
     int authenticate;
@@ -177,16 +177,16 @@ void reply_hack(char *, const char *);
 char *nxtaddr(const char *);
 
 void initialize_saved_lists(struct query *, const char *);
-struct idlist *save_uid(struct idlist **, int, const char *);
-void free_uid_list(struct idlist **);
-void save_id_pair(struct idlist **, const char *, const char *);
-void free_idpair_list(struct idlist **);
-int delete_uid(struct idlist **, int);
-int uid_in_list(struct idlist **, const char *);
-char *uid_find(struct idlist **, int);
+struct idlist *save_str(struct idlist **, int, const char *);
+void free_str_list(struct idlist **);
+void save_str_pair(struct idlist **, const char *, const char *);
+void free_str_pair_list(struct idlist **);
+int delete_str(struct idlist **, int);
+int str_in_list(struct idlist **, const char *);
+char *str_find(struct idlist **, int);
 char *idpair_find(struct idlist **, const char *);
-void append_uid_list(struct idlist **, struct idlist **);
-void update_uid_lists(struct query *);
+void append_str_list(struct idlist **, struct idlist **);
+void update_str_lists(struct query *);
 void write_saved_lists(struct query *, const char *);
 
 struct query *hostalloc(struct query *); 

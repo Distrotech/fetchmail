@@ -173,8 +173,8 @@ static int pop3_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
  			break;
  		    else if (sscanf(buf, "%d %s", &num, id) == 2)
 		    {
- 			save_uid(&ctl->newsaved, num, id);
-			if (!uid_in_list(&ctl->oldsaved, id))
+ 			save_str(&ctl->newsaved, num, id);
+			if (!str_in_list(&ctl->oldsaved, id))
 			    (*newp)++;
 		    }
  		}
@@ -220,8 +220,8 @@ static int pop3_is_old(FILE *sockfp, struct query *ctl, int num)
     if (!ctl->oldsaved)
 	return (num <= last);
     else
-        return (uid_in_list(&ctl->oldsaved,
-			    uid_find (&ctl->newsaved, num)));
+        return (str_in_list(&ctl->oldsaved,
+			    str_find (&ctl->newsaved, num)));
 }
 
 static int pop3_fetch(FILE *sockfp, int number, int *lenp)

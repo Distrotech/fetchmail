@@ -79,21 +79,21 @@ statement	: SET BATCHLIMIT MAP NUMBER	{batchlimit = $4;}
 		;
 
 define_server	: POLL STRING	{current.servernames = (struct idlist *)NULL;
-					save_uid(&current.servernames, -1, $2);
+					save_str(&current.servernames, -1, $2);
 					current.skip = FALSE;}
 		| SKIP STRING	{current.servernames = (struct idlist *)NULL;
-					save_uid(&current.servernames, -1, $2);
+					save_str(&current.servernames, -1, $2);
 					current.skip = TRUE;}
 		| DEFAULTS	{current.servernames = (struct idlist *)NULL;
-					save_uid(&current.servernames, -1,"defaults");}
+					save_str(&current.servernames, -1,"defaults");}
   		;
 
 serverspecs	: /* EMPTY */
 		| serverspecs serv_option
 		;
 
-alias_list	: STRING		{save_uid(&current.servernames, -1, $1);}
-		| alias_list STRING	{save_uid(&current.servernames, -1, $2);}
+alias_list	: STRING		{save_str(&current.servernames, -1, $1);}
+		| alias_list STRING	{save_str(&current.servernames, -1, $2);}
 		;
 
 serv_option	: AKA alias_list
@@ -149,9 +149,9 @@ mapping_list	: mapping
 		;
 
 mapping		: STRING	
-				{save_id_pair(&current.localnames, $1, NULL);}
+				{save_str_pair(&current.localnames, $1, NULL);}
 		| STRING MAP STRING
-				{save_id_pair(&current.localnames, $1, $3);}
+				{save_str_pair(&current.localnames, $1, $3);}
 		;
 
 user_option	: TO localnames HERE
@@ -336,7 +336,7 @@ static void prc_register(void)
 void optmerge(struct query *h2, struct query *h1)
 /* merge two options records; empty fields in h2 are filled in from h1 */
 {
-    append_uid_list(&h2->localnames, &h1->localnames);
+    append_str_list(&h2->localnames, &h1->localnames);
 
 #define STR_MERGE(fld, len) if (*(h2->fld) == '\0') strcpy(h2->fld, h1->fld)
     STR_MERGE(remotename, USERNAMELEN);

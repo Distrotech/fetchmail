@@ -118,7 +118,7 @@ static int is_host_alias(const char *name, struct query *ctl)
      * name doesn't match either is it time to call the bind library.
      * If this happens odds are good we're looking at an MX name.
      */
-    if (uid_in_list(&ctl->lead_server->servernames, name))
+    if (str_in_list(&ctl->lead_server->servernames, name))
 	return(TRUE);
     else if (strcmp(name, ctl->canonical_name) == 0)
 	return(TRUE);
@@ -189,7 +189,7 @@ static int is_host_alias(const char *name, struct query *ctl)
 
 match:
     /* add this name to relevant server's `also known as' list */
-    save_uid(&ctl->lead_server->servernames, -1, name);
+    save_str(&ctl->lead_server->servernames, -1, name);
     return(TRUE);
 }
 
@@ -211,7 +211,7 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 	    fprintf(stderr,
 		    "fetchmail: mapped %s to local %s\n",
 		    name, lname);
-	save_uid(xmit_names, -1, lname);
+	save_str(xmit_names, -1, lname);
     }
 }
 
@@ -473,7 +473,7 @@ struct query *ctl;	/* query control record */
 		if (!xmit_names)
 		{
 		    no_local_matches = TRUE;
-		    save_uid(&xmit_names, -1, user);
+		    save_str(&xmit_names, -1, user);
 		    if (outlevel == O_VERBOSE)
 			fprintf(stderr, 
 				"fetchmail: no local matches, forwarding to %s\n",
@@ -482,7 +482,7 @@ struct query *ctl;	/* query control record */
 	    }
 	    else	/* it's a single-drop box, use first localname */
 #endif /* HAVE_RES_SEARCH */
-		save_uid(&xmit_names, -1, ctl->localnames->id);
+		save_str(&xmit_names, -1, ctl->localnames->id);
 
 	    /* time to address the message */
 	    if (ctl->mda[0])	/* we have a declared MDA */
@@ -535,7 +535,7 @@ struct query *ctl;	/* query control record */
 		/* build a connection to the SMTP listener */
 		if (ctl->mda[0] == '\0'	&& ((sinkfp = smtp_open(ctl)) == NULL))
 		{
-		    free_uid_list(&xmit_names);
+		    free_str_list(&xmit_names);
 		    fprintf(stderr, "fetchmail: SMTP connect failed\n");
 		    return(PS_SMTP);
 		}
@@ -657,7 +657,7 @@ struct query *ctl;	/* query control record */
 		    SockWrite(errmsg, strlen(errmsg), sinkfp);
 	    }
 
-	    free_uid_list(&xmit_names);
+	    free_str_list(&xmit_names);
 	}
 
 	/* SMTP byte-stuffing */
@@ -983,7 +983,7 @@ const struct method *proto;	/* protocol method table */
 		    vtalarm(ctl->timeout);
 		    if (ok != 0)
 			goto cleanUp;
-		    delete_uid(&ctl->newsaved, num);
+		    delete_str(&ctl->newsaved, num);
 		}
 		else if (outlevel > O_SILENT) 
 		    fprintf(stderr, " not flushed\n");
