@@ -32,9 +32,6 @@
 /* Define if you have GNU's getopt family of functions.  */
 #undef HAVE_GETOPTLONG
 
-/* Define to enable use of stdio for socket I/O.  */
-#undef USE_STDIO
-
 
 /* Leave that blank line there!!  Autoheader needs it.
    If you're adding to this file, keep in mind:

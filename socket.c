@@ -34,33 +34,12 @@
 #endif
 #endif
 
-/*
- * There  are, in effect, two different implementations here.  One
- * uses read(2) and write(2) directly with no buffering, the other
- * uses stdio with line buffering (for better throughput).  Both
- * are known to work under Linux.  You get the former by configuring
- * with --disable-stdio, the latter by configuring with --enable-stdio
- * or by default.
- */
-
-#ifdef USE_STDIO
-/*
- * Size of buffer for internal buffering read function 
- * don't increase beyond the maximum atomic read/write size for
- * your sockets, or you'll take a potentially huge performance hit
- */
-#define  INTERNAL_BUFSIZE	2048
-#endif /* USE_STDIO */
-
 FILE *SockOpen(char *host, int clientPort)
 {
     int sock;
     unsigned long inaddr;
     struct sockaddr_in ad;
     struct hostent *hp;
-#ifdef USE_STDIO
-    FILE *fp;
-#endif /* USE_STDIO */
 
     memset(&ad, 0, sizeof(ad));
     ad.sin_family = AF_INET;
@@ -86,15 +65,7 @@ FILE *SockOpen(char *host, int clientPort)
         return (FILE *)NULL;
     }
 
-#ifndef USE_STDIO
     return fdopen(sock, "r+");
-#else
-    fp = fdopen(sock, "r+");
-
-    setvbuf(fp, NULL, _IOLBF, INTERNAL_BUFSIZE);
-
-    return(fp);
-#endif /* USE_STDIO */
 }
 
 
@@ -121,8 +92,6 @@ va_dcl {
     return SockWrite(buf, 1, strlen(buf), sockfp);
 
 }
-
-#ifndef USE_STDIO
 
 int SockWrite(char *buf, int size, int len, FILE *sockfp)
 {
@@ -166,34 +135,6 @@ char *SockGets(char *buf, int len, FILE *sockfp)
     *bp = '\0';
     return buf;
 }
-
-#else
-
-int SockWrite(char *buf, int size, int len, FILE *sockfp)
-{
-    int n = fwrite(buf, size, len, sockfp);
-
-    fseek(sockfp, 0L, SEEK_CUR);	/* required by POSIX */
-
-    return(n);
-}
-
-char *SockGets(char *buf, int len, FILE *sockfp)
-{
-    char *in = fgets(buf, len, sockfp);
-
-#ifndef linux
-    /*
-     * Weirdly, this actually wedges under Linux (2.0.27 with libc 5.3.12-8).
-     * It's apparently good under NEXTSTEP.
-     */
-    fseek(sockfp, 0L, SEEK_CUR);	/* required by POSIX */
-#endif /* linux */
-
-    return(in);
-}
-
-#endif
 
 #ifdef MAIN
 /*
