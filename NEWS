@@ -5,9 +5,17 @@ other words, does the certificate match the system we are trying to
 contact?).  Also, add authentication of Certifying Authority (Is this
 a Certifying Authority we recognize?).
 
+Jorge Godoy asked, about the MD5 sums: Are they on the RPMs? How about
+using GPG/PGP instead of MD5 to sign the packages? If people are
+worried with copies of it, GPG/PGP offers more security than MD5. I
+don't know exactly, but I think you can sign it both ways so that your
+package will have two security verifications instead of one...
+
 				Release Notes:
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
+
+* Javier Kohen's update for es.po.
 
 fetchmail-5.2.3 (Tue Jan  4 01:56:11 EST 2000), 18421 lines:
 * Ken Estes's patch to check for unreachable UIDL file due to bad NFS mount.

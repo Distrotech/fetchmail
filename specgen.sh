@@ -144,18 +144,16 @@ rm -rf \$RPM_BUILD_ROOT
 %defattr (644, root, root, 755)
 %doc README NEWS NOTES FAQ COPYING FEATURES sample.rcfile contrib
 %doc fetchmail-features.html fetchmail-FAQ.html design-notes.html
+%attr(644, root, man) /usr/man/man1/*.1.gz
+%attr(755, root, root) /usr/bin/fetchmail
+# Uncomment the following to support internationalization
+# attr(644,root,root) /usr/share/locale/*/LC_MESSAGES/fetchmail.mo
+# Uncomment the following to make split fetchmail and fetchmailconf packages
+# %files -n fetchmailconf
+%attr(644,root,root) /etc/X11/wmconfig/fetchmailconf
+%attr(755,root,root) /usr/bin/fetchmailconf
 /usr/lib/rhs/control-panel/fetchmailconf.xpm
 /usr/lib/rhs/control-panel/fetchmailconf.init
 /etc/X11/wmconfig/fetchmailconf
-%defattr (644, root, man)
-/usr/man/man1/*.1.gz
-%defattr (755, root, root)
-/usr/bin/fetchmail
-/usr/bin/fetchmailconf
 EOF
-
-# Add these for internationalization
-#for file in po/*.mo 
-#do
-#    echo "/usr/share/locale/*/LC_MESSAGES/fetchmail.mo"
-#done
+ls
