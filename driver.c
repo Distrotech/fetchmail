@@ -776,10 +776,10 @@ char *realname;		/* real name of host */
 		    *tp++ =  *sp;
 	    *tp = '\0';
 
-	    n = fwrite(headers, 1, oldlen, sinkfp);
+	    n = fwrite(headers, 1, strlen(headers), sinkfp);
 	}
 	else
-	    n = SockWrite(headers, 1, oldlen, sinkfp);
+	    n = SockWrite(headers, 1, strlen(headers), sinkfp);
 
 	if (n < 0)
 	{
