@@ -8,6 +8,8 @@ fetchmail-4.6.3 ():
   the choices in various panels.
 * Added `properties' option for extension scripts.
 * gcc -Wall cleanup
+* Removed ad-hock rewrite of Return-Path introduced in 4.6.1.  This was 
+  redundant with what reply_hack already does.
 
 There are 250 people on fetchmail-friends and 294 on fetchmail-announce.
 

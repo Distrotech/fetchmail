@@ -543,9 +543,9 @@ int num;		/* index of message */
 	 * mailserver's SMTP thought *it* was responsible for final
 	 * delivery.
 	 *
-	 * Stash away the contents of Return-Path for use in generating
-	 * MAIL FROM later on, then prevent the header from being saved
-	 * with the others.  In effect, we strip it off here.
+	 * Stash away the contents of Return-Path (as modified by reply_hack)
+	 * for use in generating MAIL FROM later on, then prevent the header
+	 * from being saved with the others.  In effect, we strip it off here.
 	 *
 	 * If the SMTP server conforms to the standards, and fetchmail gets the
 	 * envelope sender from the Return-Path, the new Return-Path should be
@@ -555,16 +555,11 @@ int num;		/* index of message */
 	 * be passed through as a way of indicating that a message should
 	 * not trigger bounces if delivery fails.  What we *do* need to do is
 	 * make sure we never try to rewrite such a blank Return-Path.  We
-	 * handle this with a check for <> in the rewrite logic.
-	 *
-	 * If the Return-Path header has no host part, tack on "@localhost"
-	 * in order to pacify sendmails that want to see an FQDN.
+	 * handle this with a check for <> in the rewrite logic above.
 	 */
 	if (!strncasecmp("Return-Path:", line, 12) && (cp = nxtaddr(line)))
 	{
 	    strcpy(return_path, cp);
-	    if (!strchr(return_path, '@'))
-		strcat(return_path, "@localhost");
 	    if (!ctl->mda) {
 		free(line);
 		continue;
