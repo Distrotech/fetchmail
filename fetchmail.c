@@ -72,6 +72,7 @@ char *home;		    /* invoking user's home directory */
 char *program_name;	    /* the name to prefix error messages with */
 flag configdump;	    /* dump control blocks for configurator */
 const char *fetchmailhost;  /* either `localhost' or the host's FQDN */
+volatile int lastsig;		/* last signal received */
 
 #if NET_SECURITY
 void *request = NULL;
@@ -81,7 +82,6 @@ int requestlen = 0;
 static char *lockfile;		/* name of lockfile */
 static int querystatus;		/* status of query */
 static int successes;		/* count number of successful polls */
-static int lastsig;		/* last signal received */
 static struct runctl cmd_run;	/* global options set from command line */
 
 static void termhook(int);		/* forward declaration of exit hook */
@@ -757,8 +757,10 @@ int main(int argc, char **argv)
 
                 timeout.tv_sec = run.poll_interval;
                 timeout.tv_usec = 0;
-		lastsig = 0;
-                select(0,0,0,0, &timeout);
+                do {
+                    lastsig = 0;
+                    select(0,0,0,0, &timeout);
+                } while (lastsig == SIGCHLD);
 #endif
 #else /* EMX */
 		alarm_latch = FALSE;

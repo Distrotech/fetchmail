@@ -56,6 +56,7 @@ RETSIGTYPE
 sigchld_handler (int sig)
 /* process SIGCHLD to obtain the exit code of the terminating process */
 {
+    extern volatile int lastsig;		/* last signal received */
     pid_t pid;
 
 #if 	defined(HAVE_WAITPID)				/* the POSIX way */
@@ -77,6 +78,7 @@ sigchld_handler (int sig)
 
     wait(&status);
 #endif
+    lastsig = SIGCHLD;
 }
 
 int

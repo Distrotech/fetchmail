@@ -8,6 +8,10 @@
 
 				Release Notes:
 
+fetchmail-5.0.8 ():
+* Todd Sabin's patch to accept spaces in CRAM-MD5 names.
+* Fix to endianness patch, by Dan Root via Lawrence Rogers.
+
 fetchmail-5.0.7 (Sat Aug 21 04:26:13 EDT 1999):
 * RPA support works again.
 * Added debian_rc startup/shutdown script to contrib/.
