@@ -1084,6 +1084,8 @@ static int imap_getrange(int sock,
 	{
 	    count = 0;
 	}
+	if (outlevel >= O_DEBUG)
+	    report(stdout, "%d messages waiting after re-poll\n", count);
     }
     else
     {
@@ -1095,57 +1097,61 @@ static int imap_getrange(int sock,
 	    report(stderr, _("mailbox selection failed\n"));
 	    return(ok);
 	}
+	else if (outlevel >= O_DEBUG)
+	    report(stdout, "%d messages waiting after first poll\n", count);
     }
 
     *countp = count;
 
     /* OK, now get a count of unseen messages and their indices */
+    if (!ctl->fetchall && count > 0)
+    {
+	if (unseen_messages)
+	    free(unseen_messages);
+	unseen_messages = xmalloc(count * sizeof(unsigned int));
+	memset(unseen_messages, 0, count * sizeof(unsigned int));
+	unseen = 0;
 
-    if (unseen_messages)
-	free(unseen_messages);
-    unseen_messages = xmalloc(count * sizeof(unsigned int));
-    memset(unseen_messages, 0, count * sizeof(unsigned int));
-    unseen = 0;
-
-    gen_send(sock, "SEARCH UNSEEN");
-    do {
-	ok = gen_recv(sock, buf, sizeof(buf));
-	if (ok != 0)
-	{
-	    report(stderr, _("search for unseen messages failed\n"));
-	    return(PS_PROTOCOL);
-	}
-	else if ((cp = strstr(buf, "* SEARCH")))
-	{
-	    char	*ep;
-
-	    cp += 8;	/* skip "* SEARCH" */
-
-	    while (*cp && unseen < count)
+	gen_send(sock, "SEARCH UNSEEN");
+	do {
+	    ok = gen_recv(sock, buf, sizeof(buf));
+	    if (ok != 0)
 	    {
-		/* skip whitespace */
-		while (*cp && isspace(*cp))
-		    cp++;
-		if (*cp) 
-		{
-		    /*
-		     * Message numbers are between 1 and 2^32 inclusive,
-		     * so unsigned int is large enough.
-		     */
-		    unseen_messages[unseen]=(unsigned int)strtol(cp,&ep,10);
+		report(stderr, _("search for unseen messages failed\n"));
+		return(PS_PROTOCOL);
+	    }
+	    else if ((cp = strstr(buf, "* SEARCH")))
+	    {
+		char	*ep;
 
-		    if (outlevel >= O_DEBUG)
-			report(stdout, 
-			       _("%u is unseen\n"), 
-			       unseen_messages[unseen]);
+		cp += 8;	/* skip "* SEARCH" */
+
+		while (*cp && unseen < count)
+		{
+		    /* skip whitespace */
+		    while (*cp && isspace(*cp))
+			cp++;
+		    if (*cp) 
+		    {
+			/*
+			 * Message numbers are between 1 and 2^32 inclusive,
+			 * so unsigned int is large enough.
+			 */
+			unseen_messages[unseen]=(unsigned int)strtol(cp,&ep,10);
+
+			if (outlevel >= O_DEBUG)
+			    report(stdout, 
+				   _("%u is unseen\n"), 
+				   unseen_messages[unseen]);
 		
-		    unseen++;
-		    cp = ep;
+			unseen++;
+			cp = ep;
+		    }
 		}
 	    }
-	}
-    } while
-	(tag[0] != '\0' && strncmp(buf, tag, strlen(tag)));
+	} while
+	    (tag[0] != '\0' && strncmp(buf, tag, strlen(tag)));
+    }
 
     *newp = unseen;
     expunged = 0;
