@@ -12,6 +12,7 @@ bugs --
 * Fixed a startup-time core dump introduced by 2.1's aka-list feature
 * Fixed a bug in non-implicit (poll specified host) mode also due to aka.
 * Various minor portability fixes for Suns.
+* Avoid using -lresolv when possible, some Linux versions are badly broken.
 
 fetchmail-2.1 (Thu Nov 28 11:07:48 EST 1996):
 
