@@ -447,7 +447,7 @@ static int imap_getsizes(int sock, int count, int *sizes)
     char buf [POPBUFSIZE+1];
 
     gen_send(sock, "FETCH 1:%d RFC822.SIZE", count);
-    while (SockRead(sock, buf, sizeof(buf)))
+    for (;;)
     {
 	int num, size, ok;
 
