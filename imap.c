@@ -55,9 +55,15 @@ int imap_ok(int sock, char *argbuf)
     seen = 0;
     do {
 	int	ok;
+	char	*cp;
 
 	if ((ok = gen_recv(sock, buf, sizeof(buf))))
 	    return(ok);
+
+	/* all tokens in responses are caseblind */
+	for (cp = buf; *cp; cp++)
+	    if (islower(*cp))
+		*cp = toupper(*cp);
 
 	/* interpret untagged status responses */
 	if (strstr(buf, "* CAPABILITY"))
@@ -81,7 +87,7 @@ int imap_ok(int sock, char *argbuf)
 	    unseen = atoi(cp);
 	}
 	if (strstr(buf, "FLAGS"))
-	    seen = (strstr(buf, "Seen") != (char *)NULL);
+	    seen = (strstr(buf, "SEEN") != (char *)NULL);
     } while
 	(tag[0] != '\0' && strncmp(buf, tag, strlen(tag)));
 
@@ -562,7 +568,7 @@ static int do_gssauth(int sock, char *hostname, char *username)
 }	
 #endif /* GSSAPI */
 
-static char *canonify_imap_password(char *passwd)
+static char *canonicalize_imap_password(char *passwd)
 /* encode an IMAP password as per RFC1730's quoting conventions */
 {
     char *result;
@@ -594,7 +600,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     if ((ok = gen_transact(sock, "CAPABILITY")) == PS_SUCCESS)
     {
 	/* UW-IMAP server 10.173 notifies in all caps */
-	if (strstr(capabilities, "IMAP4rev1") || strstr(capabilities, "IMAP4REV1"))
+	if (strstr(capabilities, "IMAP4REV1"))
 	{
 	    imap_version = IMAP4rev1;
 	    if (outlevel == O_VERBOSE)
@@ -678,7 +684,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 
     /* try to get authorized in the ordinary (AUTH=LOGIN) way */
     {
-       char *newpass = canonify_imap_password(ctl->password);
+       char *newpass = canonicalize_imap_password(ctl->password);
        
        if (!newpass)
           return(PS_AUTHFAIL); /* should report error better!!!! */

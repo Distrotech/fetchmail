@@ -103,7 +103,7 @@ static jmp_buf	restart;
 
 char tag[TAGLEN];
 static int tagnum;
-#define GENSYM	(sprintf(tag, "a%04d", ++tagnum % TAGMOD), tag)
+#define GENSYM	(sprintf(tag, "A%04d", ++tagnum % TAGMOD), tag)
 
 static char *shroud;	/* string to shroud in debug output, if  non-NULL */
 static int mytimeout;	/* value of nonreponse timeout */
