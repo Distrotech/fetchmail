@@ -841,6 +841,24 @@ is fetching from an IMAP server, the antispam response will be detected and
 the message rejected immediately after the headers have been fetched,
 without reading the message body.  Thus, you won't pay for downloading 
 spam message bodies.
+.P
+Mail that is spam-blocked triggers an RFC1892 bounce message informing
+the originator that we do not accept mail from it.
+
+.SH SMTP/ESMTP ERROR HANDLING
+Besides the spam-blocking described above,fetchmail takes special
+actions on the following SMTP/ESMTP error responses
+.TP 5
+452 (insufficient system storage)
+Leave the message in the server mailbox for later retrieval.
+.TP 5
+552 (message exceeds fixed maximum message size)
+Delete the message from the server.  Send bounce-mail to the originator.
+.TP 5
+553 (invalid sending domain)
+Delete the message from the server.  Send bounce-mail to the originator.
+.P
+Other errors trigger an attempt 
 
 .SH THE RUN CONTROL FILE
 The preferred way to set up fetchmail is to write a
@@ -1750,9 +1768,8 @@ temporarily discards any suid privileges it may have while running the
 MDA.  For maximum safety, however, don't use an mda command containing
 %F or %T when fetchmail is run from the root account itself.
 .PP
-LMTP support is untested.  Mail could be lost if some but not all 
-deliveries of a message addressed to multiple users fail; such
-deliveries are not retried.
+Fetchmail's method of sending bouncemail requires that port 25 of localhost
+be available for sending mail via SMTP.
 .PP
 Send comments, bug reports, gripes, and the like to the
 fetchmail-friends list <fetchmail-friends@ccil.org>.  An HTML FAQ is
@@ -1768,7 +1785,7 @@ SMTP/ESMTP:
 RFC 821, RFC 1869, RFC 1652, RFC 1870, RFC1983, RFC 1985
 .TP 5
 mail:
-RFC 822
+RFC 822, RFC 1892
 .TP 5
 POP2:
 RFC 937

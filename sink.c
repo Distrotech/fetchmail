@@ -273,7 +273,8 @@ static int send_bouncemail(struct msgblk *msg,
 		|| SMTP_data(sock) != SM_OK)
 	return(FALSE);
 
-    error(0, 0, "SMTP: (bounce-message body)");
+    if (outlevel >= O_VERBOSE)
+	error(0, 0, "SMTP: (bounce-message body)");
 
     /* bouncemail headers */
     SockPrintf(sock, "Return-Path: <>");
@@ -567,6 +568,9 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 
 	    responses[0] = smtp_response;
 
+	    /* required by RFC1870; sets us up to be able to send bouncemail */
+	    SMTP_rset(ctl->smtp_socket);
+
 	    if (str_find(&ctl->antispam, smtperr))
 	    {
 		/*
@@ -582,7 +586,6 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		 * 571 = sendmail's "unsolicited email refused"
 		 *
 		 */
-		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
 		send_bouncemail(msg, 
 				_("We do not accept mail from you.)\r\n"), 
 				1, responses);
@@ -613,7 +616,6 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		 * this is not an actual failure, we're very likely to be
 		 * able to recover on the next cycle.
 		 */
-		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
 		return(PS_TRANSIENT);
 
 	    case 552: /* message exceeds fixed maximum message size */
@@ -622,7 +624,6 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		 * ESMTP server.  Don't try to ship the message, 
 		 * and allow it to be deleted.
 		 */
-		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
 		send_bouncemail(msg, 
 				_("This message was too large.\r\n"), 
 				1, responses);
@@ -633,20 +634,16 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		 * These latter days 553 usually means a spammer is trying to
 		 * cover his tracks.
 		 */
-		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
 		send_bouncemail(msg,
 				_("Invalid address.\r\n"), 
 				1, responses);
 		return(PS_REFUSED);
 
-	    default:	/* retry with postmaster's address */
-		if (SMTP_from(ctl->smtp_socket,run.postmaster,options)!=SM_OK)
-		{
-		    error(0, -1, _("%cMTP error: %s"),
-			  ctl->listener,
-			  smtp_response);
-		    return(PS_SMTP);	/* should never happen */
-		}
+	    default:	/* bounce the error back to the sender */
+		send_bouncemail(msg,
+				_("General SMTP/ESMTP error.\r\n"), 
+				1, responses);
+		return(PS_REFUSED);
 	    }
 	}
 
@@ -825,18 +822,15 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 		if (errors == 0)
 		    return(TRUE);	/* all deliveries succeeded */
 		else
-		{
 		    /*
 		     * One or more deliveries failed.
 		     * If we can bounce a failures list back to the sender,
  		     * return TRUE, deleting the message from the server so
- 		     * it won't be re-forwarded on subsequent poll
- 		     * cycles.
+ 		     * it won't be re-forwarded on subsequent poll cycles.
 		     */
 		    return(send_bouncemail(msg,
-				   "LSMTP partial delivery failure.\r\n",
+				   _("LSMTP partial delivery failure.\r\n"),
 				   errors, responses));
-		}
 	    }
     }
 
