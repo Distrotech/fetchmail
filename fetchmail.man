@@ -1752,6 +1752,12 @@ The RFC822 address parser used in multidrop mode chokes on some
 @-addresses that are technically legal but bizarre.  Strange uses of
 quoting and embedded comments are likely to confuse it.
 .PP
+In a message with multiple envelope headers, only the last one
+processed will be visible to fetchmail.  To get around this, use a
+mailserver-side filter that consolidates the contents of all envelope
+headers into a single one (procmail, mailagent, or maildrop can be
+orogrammed to do this fairly easily).
+.PP
 Use of any of the supported protocols other than POP3 with OTP or RPA, APOP,
 KPOP, IMAP-K4, IMAP-GSS, or ETRN requires that the program send unencrypted
 passwords over the TCP/IP connection to the mailserver.  This creates
