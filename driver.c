@@ -819,5 +819,5 @@ void
 alarm_handler (int signal)
 {
     alarmed = 1;
-    fprintf(stderr,"Timeout after %d seconds.\n", timeout);
+    fprintf(stderr,"fetchmail: timeout after %d seconds.\n", timeout);
 }
