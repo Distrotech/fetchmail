@@ -1,0 +1,85 @@
+#!/usr/bin/perl
+#
+# Make a fetchmail release.  Must be run as root, to make RPMs.
+# Dumps a release notice and diffs in RELEASE_NOTES
+#
+$version=`grep VERS= Makefile.in`;
+$version =~ /VERS=(.*)/;
+$version = $1;
+$rcsid = $version;
+$rcsid =~ tr/./-/;
+
+open(ID, "rlog -h NEWS|");
+while (<ID>) {
+    last if /^symbolic names/;
+}
+while (<ID>) {
+    if (/^\t(.*):/) {
+	push(@versions, $1);
+    }
+}
+close(ID);
+
+if ($versions[0] eq $rcsid) {
+    $rcsid = $versions[0];
+    $oldid = $versions[1];
+} else {
+    $rcsid = '<workfile>';
+    $oldid = $versions[0];
+}
+
+#$ENV{'PATH'} = "~esr/bin:/bin:/usr/bin";
+
+print "Building $version release, RCS ID $rcsid, previous RCS ID $oldid\n";
+
+print "Test-building the software...\n";
+if (system("su -c 'make >/dev/null' esr")) {
+	die("Compilation failure\n");
+}
+
+print "Building the distribution...\n";
+if (system("su -c 'make dist >/dev/null' esr")) {
+	die("Distribution-build failure\n");
+}
+
+print "Building the RPMs...\n";
+if (system("make rpm >/dev/null 2>/dev/null && chown esr *.rpm")) {
+	die("RPM-build failure\n");
+}
+
+open(REPORT, ">RELEASE_NOTES");
+
+print REPORT <<EOF;
+The $version release of fetchmail is now available at the usual locations,
+including http://www.ccil.org/~esr/fetchmail.  Here are the release notes:
+
+EOF
+
+# Extract the current notes
+open(NEWS, "NEWS");
+while (<NEWS>) {
+    if (/^fetchmail/) {
+	print REPORT $_;
+	last;
+    }
+}
+while (<NEWS>) {
+    if (/^fetchmail/) {
+	last;
+    }
+    print REPORT $_;
+}
+
+print REPORT "\nDiffs from the previous ($oldid) release:\n\n";
+
+close(NEWS);
+
+close(REPORT);
+
+if ($rcsid eq '<workfile>') {
+    system("rcsdiff -u -r$oldid          RCS/* 2>/dev/null >>RELEASE_NOTES");
+} else {
+    system("rcsdiff -u -r$oldid -r$rcsid RCS/* 2>/dev/null >>RELEASE_NOTES");
+}
+
+# makerelease ends here
