@@ -60,7 +60,7 @@ while ($_ = <NEWS>)
     if (/^%/) {
 	print $_;
     }
-    elsif (/^fetchmail-([^ ]*) \(([^)]*)\):?/) {
+    elsif (/^fetchmail-([^ ]*) \(([^)]+)\):?/) {
 	$release = $1;
 	$date = $2;
 	$jdate = &day_offset($date);
