@@ -13,10 +13,7 @@
 			Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-2.6 ()
-
-features -- 
-
+fetchmail-2.6 (Wed Dec 25 05:56:24 EST 1996)
 
 bugs --
 
@@ -26,7 +23,7 @@ bugs --
 * Dropped back to separate SockGets/SockWrite code with no attempt at
   stdio buffering -- we hope this will fix the Solaris peoples' problems.
 
-There are 166 people on the fetchmail-friends list.
+There are 167 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-2.5 (Mon Dec 23 04:18:54 EST 1996)
