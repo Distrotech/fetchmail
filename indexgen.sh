@@ -120,8 +120,8 @@ For differences between the leading-edge $version and gold $goldname versions,
 see the distribution <a href="NEWS">NEWS</a> file.<p>
 
 (Note that the RPMs don't have the POP2, OTP, IPv6, Kerberos, GSSAPI,
-or Compuserve RPA support compiled in.  To get any of these you will
-have to build from sources.)<p>
+Compuserve RPA, or GNU gettext internationalization support compiled
+in.  To get any of these you will have to build from sources.)<p>
 
 The latest version of fetchmail is also carried in the 
 <a href="http://sunsite.unc.edu/pub/Linux/system/mail/pop/!INDEX.html">
