@@ -62,9 +62,10 @@ static char *netdevfmt;
 /*
  * Count of packets to see on an interface before monitor considers it up.
  * Needed because when pppd shuts down the link, the packet counts go up
- * by two (one rx and one tx?, maybe).  A value of 2 seems to do the trick.
+ * by two (one rx and one tx?, maybe).  A value of 2 seems to do the trick,
+ * but we'll give it some extra.
  */
-#define MONITOR_SLOP		2
+#define MONITOR_SLOP		5
 
 void interface_init(void)
 /* figure out which /proc/dev/net format to use */
@@ -468,13 +469,32 @@ int interface_approve(struct hostdata *hp)
 		      hp->monitor, hp->monitor_io);
 #endif
 	/* if monitoring, check link for activity if it is up */
-	if (get_ifinfo(hp->monitor, &ifinfo) &&
-			hp->monitor_io - (ifinfo.rx_packets +
-				ifinfo.tx_packets) >= -MONITOR_SLOP) {
+	if (get_ifinfo(hp->monitor, &ifinfo))
+	{
+	    int diff = (ifinfo.rx_packets + ifinfo.tx_packets)
+							- hp->monitor_io;
+
+	    /*
+	     * There are three cases here:
+	     *
+	     * (a) If the new packet count is less than the recorded one,
+	     * probably pppd was restarted while fetchmail was running.
+	     * Don't skip.
+	     *
+	     * (b) newpacket count is greater than the old packet count,
+	     * but the difference is small and may just reflect the overhead
+	     * of a link shutdown.  Skip.
+	     *
+	     * (c) newpacket count is greater than the old packet count,
+	     * and the difference is large. Connection is live.  Don't skip.
+	     */
+	    if (diff > 0 && diff <= MONITOR_SLOP)
+	    {
 		(void) report(stdout, 
 			      _("skipping poll of %s, %s inactive\n"),
 			      hp->pollname, hp->monitor);
 		return(FALSE);
+	    }
 	}
 
 #ifdef ACTIVITY_DEBUG
