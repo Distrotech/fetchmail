@@ -510,8 +510,13 @@ struct query *ctl;	/* query control record */
 char *realname;		/* real name of host */
 int num;		/* index of message */
 {
+    struct addrblk
+    {
+	int		offset;
+	struct addrblk	*next;
+    } *addrchain, **chainptr = &addrchain;
     char buf[MSGBUFSIZE+1], return_path[MSGBUFSIZE+1]; 
-    int	from_offs, ctt_offs, env_offs, addressoffs[128], next_address;
+    int	from_offs, ctt_offs, env_offs, next_address;
     char *headers, *received_for;
     int n, linelen, oldlen, ch, remaining;
     char		*cp;
@@ -695,31 +700,23 @@ int num;		/* index of message */
 	    from_offs = (line - headers);
 	else if (from_offs == -1 && !strncasecmp("Apparently-From:", line, 16))
 	    from_offs = (line - headers);
-	else if (!strncasecmp("To:", line, 3))
-	{
-	    if (next_address >= sizeof(addressoffs)/sizeof(addressoffs[0]))
-		error(PS_UNDEFINED, errno, "too many destination headers");
-	    addressoffs[next_address++] = (line - headers);
-	}
-
-	else if (!strncasecmp("Cc:", line, 3))
-	{
-	    if (next_address >= sizeof(addressoffs)/sizeof(addressoffs[0]))
-		error(PS_UNDEFINED, errno, "too many destination headers");
-	    addressoffs[next_address++] = (line - headers);
-	}
-
-	else if (!strncasecmp("Bcc:", line, 4))
-	{
-	    if (next_address >= sizeof(addressoffs)/sizeof(addressoffs[0]))
-		error(PS_UNDEFINED, errno, "too many destination headers");
-	    addressoffs[next_address++] = (line - headers);
-	}
-
 	else if (!strncasecmp("Content-Transfer-Encoding:", line, 26))
 	    ctt_offs = (line - headers);
 
-	else if (MULTIDROP(ctl) && ctl->server.envelope != STRING_DISABLED)
+	else if (!MULTIDROP(ctl))
+	    continue;
+
+	else if (!strncasecmp("To:", line, 3)
+			|| !strncasecmp("Cc:", line, 3)
+			|| !strncasecmp("Bcc:", line, 4))
+	{
+	    *chainptr = xmalloc(sizeof(struct addrblk));
+	    (*chainptr)->offset = (line - headers);
+	    chainptr = &(*chainptr)->next; 
+	    *chainptr = NULL;
+	}
+
+	else if (ctl->server.envelope != STRING_DISABLED)
 	{
 	    if (ctl->server.envelope 
 			&& strcasecmp(ctl->server.envelope, "received"))
@@ -782,8 +779,15 @@ int num;		/* index of message */
 	     * We haven't extracted the envelope address.
 	     * So check all the header addresses.
 	     */
-	    for (i = 0; i < next_address; i++)
-		find_server_names(headers + addressoffs[i],  ctl, &xmit_names);
+	    while (addrchain)
+	    {
+		register struct addrblk *nextptr;
+
+		find_server_names(headers+addrchain->offset, ctl, &xmit_names);
+		nextptr = addrchain->next;
+		free(addrchain);
+		addrchain = nextptr;
+	    }
 	}
 	if (!accept_count)
 	{
