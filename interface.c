@@ -45,9 +45,23 @@ static int _get_ifinfo_(int socket_fd, FILE *stats_file, const char *ifname,
 	int namelen = strlen(ifname);
 	struct ifreq request;
 	char *cp, buffer[256];
+	int found = 0;
 
 	/* initialize result */
 	memset((char *) ifinfo, 0, sizeof(ifinfo_t));
+
+	/* get the packet I/O counts */
+	while (fgets(buffer, sizeof(buffer) - 1, stats_file)) {
+		for (cp = buffer; *cp && *cp == ' '; ++cp);
+		if (!strncmp(cp, ifname, namelen) &&
+				cp[namelen] == ':') {
+			cp += namelen + 1;
+			sscanf(cp, "%d %*d %*d %*d %*d %d %*d %*d %*d %*d %*d",
+				&ifinfo->rx_packets, &ifinfo->tx_packets);
+                        found = 1;
+		}
+	}
+        if (!found) return (FALSE);
 
 	/* see if the interface is up */
 	strcpy(request.ifr_name, ifname);
@@ -70,21 +84,12 @@ static int _get_ifinfo_(int socket_fd, FILE *stats_file, const char *ifname,
 
 	/* get the netmask */
 	strcpy(request.ifr_name, ifname);
-	if (ioctl(socket_fd, SIOCGIFNETMASK, &request) >= 0)
-		ifinfo->netmask = ((struct sockaddr_in *)
-					(&request.ifr_netmask))->sin_addr;
+	if (ioctl(socket_fd, SIOCGIFNETMASK, &request) >= 0) {
+          ifinfo->netmask = ((struct sockaddr_in *)
+                             (&request.ifr_netmask))->sin_addr;
+          return (TRUE);
+        }
 
-	/* get the packet I/O counts */
-	while (fgets(buffer, sizeof(buffer) - 1, stats_file)) {
-		for (cp = buffer; *cp && *cp == ' '; ++cp);
-		if (!strncmp(cp, ifname, namelen) &&
-				cp[namelen] == ':') {
-			cp += namelen + 1;
-			sscanf(cp, "%d %*d %*d %*d %*d %d %*d %*d %*d %*d %*d",
-				&ifinfo->rx_packets, &ifinfo->tx_packets);
-			return(TRUE);
-		}
-	}
 	return(FALSE);
 }
 
