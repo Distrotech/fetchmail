@@ -110,9 +110,10 @@ static int mytimeout;	/* value of nonreponse timeout */
 static int msglen;	/* actual message length */
 
 /* use these to track what was happening when the nonresponse timer fired */
-#define GENERAL_WAIT	0
-#define SERVER_WAIT	1
-#define FORWARDING_WAIT	2
+#define GENERAL_WAIT	0	/* unknown wait type */
+#define SERVER_WAIT	1	/* waiting for mailserver response */
+#define LISTENER_WAIT	2	/* waiting for listener initialization */
+#define FORWARDING_WAIT	3	/* waiting for listener response */
 static phase;
 
 static void set_timeout(int timeleft)
@@ -466,6 +467,7 @@ static int smtp_open(struct query *ctl)
 	 */
 	struct idlist	*idp;
 	char *id_me = use_invisible ? ctl->server.truename : fetchmailhost;
+	int oldphase = phase;
 
 	errno = 0;
 
@@ -474,6 +476,10 @@ static int smtp_open(struct query *ctl)
 	 * Use both explicit hunt entries (value TRUE) and implicit 
 	 * (default) ones (value FALSE).
 	 */
+	oldphase = phase;
+	phase = LISTENER_WAIT;
+
+	set_timeout(ctl->server.timeout);
 	for (idp = ctl->smtphunt; idp; idp = idp->next)
 	{
 	    char	*cp, *parsed_host = alloca(strlen(idp->id) + 1);
@@ -523,6 +529,8 @@ static int smtp_open(struct query *ctl)
 	    close(ctl->smtp_socket);
 	    ctl->smtp_socket = -1;
 	}
+	set_timeout(0);
+	phase = oldphase;
     }
 
     if (outlevel >= O_VERBOSE && ctl->smtp_socket != -1)
@@ -661,11 +669,14 @@ int num;		/* index of message */
 	linelen = 0;
 	line[0] = '\0';
 	do {
+	    set_timeout(ctl->server.timeout);
 	    if ((n = SockRead(sock, buf, sizeof(buf)-1)) == -1) {
+		set_timeout(0);
 		free(line);
 		free(headers);
 		return(PS_SOCKET);
 	    }
+	    set_timeout(0);
 	    linelen += n;
 	    msglen += n;
 
@@ -681,7 +692,6 @@ int num;		/* index of message */
 		}
 	    }
 
-	    set_timeout(ctl->server.timeout);
 
 	    line = (char *) realloc(line, strlen(line) + strlen(buf) +1);
 
@@ -1532,8 +1542,10 @@ flag forward;		/* TRUE to forward */
     /* pass through the text lines */
     while (protocol->delimited || len > 0)
     {
+	set_timeout(ctl->server.timeout);
 	if ((linelen = SockRead(sock, buf, sizeof(buf)-1)) == -1)
 	{
+	    set_timeout(0);
 	    if (ctl->mda)
 	    {
 		if (sinkfp)
@@ -1542,7 +1554,7 @@ flag forward;		/* TRUE to forward */
 	    }
 	    return(PS_SOCKET);
 	}
-	set_timeout(ctl->server.timeout);
+	set_timeout(0);
 
 	/* write the message size dots */
 	if (linelen > 0)
@@ -1755,7 +1767,7 @@ const struct method *proto;	/* protocol method table */
 
     /* set up the server-nonresponse timeout */
     sigsave = signal(SIGALRM, timeout_handler);
-    set_timeout(mytimeout = ctl->server.timeout);
+    mytimeout = ctl->server.timeout;
 
     if ((js = setjmp(restart)) == 1)
     {
@@ -1768,6 +1780,9 @@ const struct method *proto;	/* protocol method table */
 		  "timeout after %d seconds waiting for %s.",
 		  ctl->server.timeout,
 		  ctl->mda ? "MDA" : "SMTP");
+	else if (phase == LISTENER_WAIT)
+	    error(0, 0,
+		  "timeout after %d seconds waiting for listener to respond.");
 	else
 	    error(0, 0, "timeout after %d seconds.", ctl->server.timeout);
 
@@ -1843,20 +1858,22 @@ const struct method *proto;	/* protocol method table */
 #ifdef KERBEROS_V4
 	if (ctl->server.preauthenticate == A_KERBEROS_V4)
 	{
+	    set_timeout(ctl->server.timeout);
 	    ok = kerberos_auth(sock, ctl->server.truename);
+	    set_timeout(0);
  	    if (ok != 0)
 		goto cleanUp;
-	    set_timeout(ctl->server.timeout);
 	}
 #endif /* KERBEROS_V4 */
 
 #ifdef KERBEROS_V5
 	if (ctl->server.preauthenticate == A_KERBEROS_V5)
 	{
+	    set_timeout(ctl->server.timeout);
 	    ok = kerberos5_auth(sock, ctl->server.truename);
+	    set_timeout(0);
  	    if (ok != 0)
 		goto cleanUp;
-	    set_timeout(ctl->server.timeout);
 	}
 #endif /* KERBEROS_V5 */
 
@@ -1864,7 +1881,6 @@ const struct method *proto;	/* protocol method table */
 	ok = (protocol->parse_response)(sock, buf);
 	if (ok != 0)
 	    goto cleanUp;
-	set_timeout(ctl->server.timeout);
 
 	/* try to get authorized to fetch mail */
 	if (protocol->getauth)
@@ -1888,7 +1904,6 @@ const struct method *proto;	/* protocol method table */
 		}
 		goto cleanUp;
 	    }
-	    set_timeout(ctl->server.timeout);
 	}
 
 	ctl->errcount = fetches = 0;
@@ -1911,7 +1926,6 @@ const struct method *proto;	/* protocol method table */
 		ok = (protocol->getrange)(sock, ctl, idp->id, &count, &new);
 		if (ok != 0)
 		    goto cleanUp;
-		set_timeout(ctl->server.timeout);
 
 		/* show user how many messages we downloaded */
 		if (idp->id)
@@ -1997,7 +2011,6 @@ const struct method *proto;	/* protocol method table */
 			ok = (proto->getsizes)(sock, count, msgsizes);
 			if (ok != 0)
 			    goto cleanUp;
-			set_timeout(ctl->server.timeout);
 		    }
 
 		    /* read, forward, and delete messages */
@@ -2050,7 +2063,6 @@ const struct method *proto;	/* protocol method table */
 			    ok = (protocol->fetch_headers)(sock,ctl,num, &len);
 			    if (ok != 0)
 				goto cleanUp;
-			    set_timeout(ctl->server.timeout);
 
 			    /* -1 means we didn't see a size in the response */
 			    if (len == -1 && msgsizes)
@@ -2092,7 +2104,6 @@ const struct method *proto;	/* protocol method table */
 				suppress_readbody = TRUE;
 			    else if (ok)
 				goto cleanUp;
-			    set_timeout(ctl->server.timeout);
 
 			    /* 
 			     * If we're using IMAP4 or something else that
@@ -2109,7 +2120,6 @@ const struct method *proto;	/* protocol method table */
 
 				if ((ok = (protocol->trail)(sock, ctl, num)))
 				    goto cleanUp;
-				set_timeout(ctl->server.timeout);
 				len = 0;
 				if (!suppress_forward)
 				{
@@ -2117,7 +2127,6 @@ const struct method *proto;	/* protocol method table */
 					goto cleanUp;
 				    if (outlevel > O_SILENT && !wholesize)
 					error_build(" (%d body bytes) ", len);
-				    set_timeout(ctl->server.timeout);
 				}
 			    }
 
@@ -2143,7 +2152,6 @@ const struct method *proto;	/* protocol method table */
 				    suppress_delete = suppress_forward = TRUE;
 				else if (ok)
 				    goto cleanUp;
-				set_timeout(ctl->server.timeout);
 
 				/* tell server we got it OK and resynchronize */
 				if (protocol->trail)
@@ -2154,7 +2162,6 @@ const struct method *proto;	/* protocol method table */
 				    ok = (protocol->trail)(sock, ctl, num);
 				    if (ok != 0)
 					goto cleanUp;
-				    set_timeout(ctl->server.timeout);
 				}
 			    }
 
@@ -2261,7 +2268,6 @@ const struct method *proto;	/* protocol method table */
 			    ok = (protocol->delete)(sock, ctl, num);
 			    if (ok != 0)
 				goto cleanUp;
-			    set_timeout(ctl->server.timeout);
 #ifdef POP3_ENABLE
 			    delete_str(&ctl->newsaved, num);
 #endif /* POP3_ENABLE */
@@ -2284,7 +2290,6 @@ const struct method *proto;	/* protocol method table */
 	}
 
    no_error:
-	set_timeout(ctl->server.timeout);
 	ok = (protocol->logout_cmd)(sock, ctl);
 	/*
 	 * Hmmmm...arguably this would be incorrect if we had fetches but
@@ -2292,15 +2297,12 @@ const struct method *proto;	/* protocol method table */
 	 */
 	if (ok == 0)
 	    ok = (fetches > 0) ? PS_SUCCESS : PS_NOMAIL;
-	set_timeout(0);
 	close(sock);
 	goto closeUp;
 
     cleanUp:
-	set_timeout(ctl->server.timeout);
 	if (ok != 0 && ok != PS_SOCKET)
 	    (protocol->logout_cmd)(sock, ctl);
-	set_timeout(0);
 	close(sock);
     }
 
@@ -2421,13 +2423,16 @@ int size;	/* length of buffer */
     int oldphase = phase;	/* we don't have to be re-entrant */
 
     phase = SERVER_WAIT;
+    set_timeout(mytimeout);
     if (SockRead(sock, buf, size) == -1)
     {
+	set_timeout(0);
 	phase = oldphase;
 	return(PS_SOCKET);
     }
     else
     {
+	set_timeout(0);
 	if (buf[strlen(buf)-1] == '\n')
 	    buf[strlen(buf)-1] = '\0';
 	if (buf[strlen(buf)-1] == '\r')
@@ -2497,7 +2502,6 @@ va_dcl
 
     /* we presume this does its own response echoing */
     ok = (protocol->parse_response)(sock, buf);
-    set_timeout(mytimeout);
 
     phase = oldphase;
     return(ok);

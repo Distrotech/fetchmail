@@ -11,6 +11,7 @@
 * Add an "ident" per-user option for debugging that produces an 
   "X-Fetchmail-ID" header in fetched messages for debugging.
 * Total byte count in status message?
+* -U/--userdefault option to specify postmaster overriding USER.
 
 				Release Notes:
 
@@ -18,8 +19,9 @@
 fetchmail-4.4.0 ():
 * Fix bug that prevented graceful exit from POP3 validation on wrong password.
 * Dominique Unruh's patch that copes gracefully with bodiless messages.
+* Fix timer-leak problem pointed ouit by Dave Bodenstab.
 
-There are 275 people on fetchmail-friends and 153 on fetchmail-announce.
+There are 268 people on fetchmail-friends and 160 on fetchmail-announce.
 
 fetchmail-4.3.9 (Fri Mar  6 10:45:32 EST 1998):
 * Relax the LOGIN capability check in IMAP.

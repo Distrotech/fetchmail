@@ -6,6 +6,9 @@
   compiler:     GCC 2.7.2
   environment:  RedHat 4.0 Linux 2.0.18
   description:  RPA authorisation code for POP3 client
+
+  The sole entry point is POP3_auth_rpa()
+
  ***********************************************************************/
 
 #include  "config.h"
@@ -29,19 +32,20 @@ extern int linecount;
 
 #ifndef NO_PROTO
   /* prototypes for internal functions */
-  int  POP3_rpa_resp(unsigned char* argbuf, int socket );
-  void LenAppend(unsigned char** pptr, int len);
-  int  LenSkip(unsigned char** pptr, int rxlen);
-  int  DecBase64(unsigned char* bufp);
-  void EncBase64(unsigned char* bufp, int len);
-  void ToUnicode(unsigned char** pptr, unsigned char delim,
-                 unsigned char* buf, int* plen, int conv);
-  int  SetRealmService(unsigned char* bufp);
-  void GenChallenge(unsigned char* buf, int len);
-  int  DigestPassphrase(unsigned char* passphrase,unsigned char* rbuf, int unicodeit);
-  void CompUserResp();
-  int  CheckUserAuth();
-  void md5(unsigned char* in, int len, unsigned char* out);
+  static int  POP3_rpa_resp(unsigned char* argbuf, int socket );
+  static void LenAppend(unsigned char** pptr, int len);
+  static int  LenSkip(unsigned char** pptr, int rxlen);
+  static int  DecBase64(unsigned char* bufp);
+  static void EncBase64(unsigned char* bufp, int len);
+  static void ToUnicode(unsigned char** pptr, unsigned char delim,
+			unsigned char* buf, int* plen, int conv);
+  static int  SetRealmService(unsigned char* bufp);
+  static void GenChallenge(unsigned char* buf, int len);
+  static int  DigestPassphrase(unsigned char* passphrase,
+			       unsigned char* rbuf, int unicodeit);
+  static void CompUserResp();
+  static int  CheckUserAuth();
+  static void md5(unsigned char* in, int len, unsigned char* out);
 #endif
 
 /* RPA protocol definitions */
@@ -345,7 +349,7 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
   globals:       reads outlevel.
  *********************************************************************/
 
-int POP3_rpa_resp (argbuf,socket)
+static int POP3_rpa_resp (argbuf,socket)
 unsigned char *argbuf;
 int socket;
 {
@@ -355,7 +359,7 @@ int socket;
   int sockrc;
   fprintf(stderr, "Get response\n");
 #ifndef TESTMODE
-  sockrc = SockRead(socket, buf, sizeof(buf));
+  sockrc = gen_recv(socket, buf, sizeof(buf));
 #else
   linecount++;
   if (linecount == 1) strcpy(buf,line1);
@@ -363,13 +367,9 @@ int socket;
   if (linecount == 3) strcpy(buf,line3);
 /*  fprintf(stderr,"--> "); fflush(stderr);  */
 /*  scanf("%s",&buf)                         */
-  sockrc = 0;
+  sockrc = PS_SUCCESS;
 #endif
-  if (sockrc > 0) {
-    buf[sockrc] = 0;
-    if (outlevel == O_VERBOSE)
-      fprintf(stderr,"%s\n",buf);
-
+  if (sockrc == PS_SUCCESS) {
     bufp = buf;
     if ((*buf) == '+')
       {
@@ -405,7 +405,7 @@ int socket;
   globals:       none
  *********************************************************************/
 
-void LenAppend(pptr,len)
+static void LenAppend(pptr,len)
 unsigned char **pptr;
 int  len;
 {
@@ -500,7 +500,7 @@ int rxlen;
   globals:       reads outlevel.
  *********************************************************************/
 
-int DecBase64(bufp)
+static int DecBase64(bufp)
 unsigned char *bufp;
 {
   unsigned int   new, bits=0, cnt=0, i, part=0;
@@ -559,7 +559,7 @@ unsigned char *bufp;
   globals:       reads outlevel;
  *********************************************************************/
 
-void EncBase64(bufp,len)
+static void EncBase64(bufp,len)
 unsigned char *bufp;
 int  len;
 {
@@ -613,7 +613,7 @@ int  len;
   globals:       reads outlevel;
  *********************************************************************/
 
-void ToUnicode(pptr,delim,buf,plen,conv)
+static void ToUnicode(pptr,delim,buf,plen,conv)
 unsigned char **pptr; /* input string  */
 unsigned char delim;
 unsigned char *buf;   /* output buffer */
@@ -660,7 +660,7 @@ int conv;
                  writes Ns Nsl Nr Nrl
  *********************************************************************/
 
-int SetRealmService(bufp)
+static int SetRealmService(bufp)
 unsigned char* bufp;
 {
   /* For the moment we pick the first available realm. It would */
@@ -689,7 +689,7 @@ unsigned char* bufp;
                  reads /dev/random
  *********************************************************************/
 
-void GenChallenge(buf,len)
+static void GenChallenge(buf,len)
 unsigned char *buf;
 int  len;
 {
@@ -732,7 +732,7 @@ int  len;
                  writes Pu.
  *********************************************************************/
 
-int DigestPassphrase(passphrase,rbuf,unicodeit)
+static int DigestPassphrase(passphrase,rbuf,unicodeit)
 unsigned char *passphrase;
 unsigned char *rbuf;
 int unicodeit;
@@ -771,7 +771,7 @@ int unicodeit;
                  writes Ru.
  *********************************************************************/
 
-void CompUserResp()
+static void CompUserResp()
 {
   unsigned char  workarea[Pul+48+STRMAX*5+Tsl+Pul];
   unsigned char* p;
@@ -803,7 +803,7 @@ void CompUserResp()
                  writes Ru.
  *********************************************************************/
 
-int CheckUserAuth()
+static int CheckUserAuth()
 {
   unsigned char  workarea[Pul+48+STRMAX*7+Tsl+Pul];
   unsigned char* p;
@@ -854,7 +854,7 @@ int CheckUserAuth()
   globals:       reads outlevel
  *********************************************************************/
 
-void md5(in,len,out)
+static void md5(in,len,out)
 unsigned char*    in;
 int      len;
 unsigned char*    out;
