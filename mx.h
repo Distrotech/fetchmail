@@ -8,4 +8,7 @@ struct mxentry
 
 extern struct mxentry * getmxrecords(const char *);
 
+/* some versions of FreeBSD should declare this but don't */
+extern int h_errno;
+
 /* mx.h ends here */
