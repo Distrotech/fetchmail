@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/09/16 15:18:30 $
+<td width="30%" align=right>$Date: 1997/09/16 21:02:32 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -66,6 +66,7 @@ when I may have multiple login sessions going?</a><br>
 <a href="#R5">R5. Mail that was being fetched when I interrupted my fetchmail seems to have been vanished.</a></br>
 <a href="#R6">R6. Fetchmail dumps core when I use a .netrc file but works otherwise.</a><br>
 <a href="#R7">R7. All my mail seems to disappear after an interrupt.</a><br>
+<a href="#R8">R8. Running fetchmail in daemon mode doesn't work.</a><br>
 
 <h1>Multidrop-mode problems:</h1>
 
@@ -993,6 +994,20 @@ and clean up its queue.  (Fetchmail waits a bit before retrying in
 order to avoid a `lock busy' error.)<P>
 
 <hr>
+<h2><a name="R8">R8. Running fetchmail in daemon mode doesn't work.</a><br></h2>
+
+We have one report from a Solaris 4.1.4 user that trying to run
+fetchmail in detached daemon mode doesn't work, but that using the
+same options with -N (nodetach) is OK.<P>
+
+If this happens, you have a specific portability problem with the code
+in daemon.c that detaches and backgrounds the daemon fetchmail. Tell
+me about it so I can try to fix it.  As a workaround, you can start
+fetchmail with -N and an ampersand to background it.<P>
+
+This should not happen under Linux or any truly POSIX-conformant Unix.<P>
+
+<hr>
 <h2><a name="M1">M1. I've declared local names, but all my multidrop
 mail is going to root anyway.</a></h2>
 
@@ -1313,7 +1328,7 @@ template string in fetchmail.c.
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/09/16 15:18:30 $
+<td width="30%" align=right>$Date: 1997/09/16 21:02:32 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
