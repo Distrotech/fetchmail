@@ -1021,7 +1021,7 @@ const struct method *proto;	/* protocol method table */
 		else
 		{
 		    /* request a message */
-		    ok = (protocol->fetch)(sockfp, num, &len);
+		    ok = (protocol->fetch)(sockfp, ctl, num, &len);
 		    if (ok != 0)
 			goto cleanUp;
 		    vtalarm(ctl->timeout);

@@ -154,7 +154,7 @@ static int imap_is_old(FILE *sockfp, struct query *ctl, int num)
     return(seen);
 }
 
-static int imap_fetch(FILE *sockfp, int number, int *lenp)
+static int imap_fetch(FILE *sockfp, struct query *ctl, int number, int *lenp)
 /* request nth message */
 {
     char buf [POPBUFSIZE+1];
@@ -165,8 +165,12 @@ static int imap_fetch(FILE *sockfp, int number, int *lenp)
      * seen flag.  This is good!  It means that if the protocol exchange
      * craps out during the message, it will still be marked `unseen' on
      * the server.
+     *
+     * However...*don't* do this if we're using keep to suppress deletion!
+     * In that case, marking the seen flag is the only way to prevent the
+     * message from being re-fetched on subsequent runs.
      */
-    if (imap4)
+    if (imap4 && !ctl->keep)
 	gen_send(sockfp, "FETCH %d RFC822.PEEK", number);
     else
 	gen_send(sockfp, "FETCH %d RFC822", number);

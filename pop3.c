@@ -239,7 +239,7 @@ static int pop3_is_old(FILE *sockfp, struct query *ctl, int num)
 			    str_find (&ctl->newsaved, num)));
 }
 
-static int pop3_fetch(FILE *sockfp, int number, int *lenp)
+static int pop3_fetch(FILE *sockfp, struct query *ctl, int number, int *lenp)
 /* request nth message */
 {
     int ok;

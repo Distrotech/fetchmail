@@ -92,7 +92,7 @@ static int pop2_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
     return(0);
 }
 
-static int pop2_fetch(FILE *sockfp, int number, int *lenp)
+static int pop2_fetch(FILE *sockfp, struct query *ctl, int number, int *lenp)
 /* request nth message */
 {
     int	ok;
