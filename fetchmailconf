@@ -805,7 +805,7 @@ class ServerEdit(Frame, MyWidget):
     def refreshPort(self):
 	proto = self.protocol.get()
 	self.port.set(defaultports[proto])
-	if not proto in ("POP3", "APOP", "KPOP"): self.uidl = FALSE
+	if not proto in ("POP3", "APOP", "KPOP"): self.uidl.state = DISABLED 
 
     def makeWidgets(self, host, mode):
 	topwin = dispose_window(self, "Server options for querying " + host, serverhelp)
@@ -835,6 +835,7 @@ class ServerEdit(Frame, MyWidget):
         if mode != 'novice':
             LabeledEntry(protwin, 'On server TCP/IP port:',
 		      self.port, leftwidth).pack(side=TOP, fill=X)
+            self.refreshPort()
             Checkbutton(protwin,
 		text="POP3: track `seen' with client-side UIDLs?",
 		variable=self.uidl).pack(side=TOP)   
