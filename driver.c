@@ -1060,7 +1060,7 @@ int num;		/* index of message */
 
 	/* write a line describing fetchmail's processing of the message */
 	sprintf(buf,
-	"Received: from %s\r\n\tby %s (fetchmail-%s %s run by %s)\r\n",
+	"Received: from %s\n\tby %s (fetchmail-%s %s run by %s)\n",
 		ctl->server.truename, 
 		fetchmailhost, 
 		RELEASE_ID,
@@ -1084,7 +1084,7 @@ int num;		/* index of message */
 	}
 	time(&now);
 	strcat(buf, ctime(&now));
-	strcpy(buf + strlen(buf) - 1, "\r\n");
+	strcpy(buf + strlen(buf) - 1, "\n");
     }
 
     /* ship out the synthetic Received line and the headers */
