@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/06/03 06:11:26 $
+<td width="30%" align=right>$Date: 1998/06/03 15:41:10 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -979,6 +979,21 @@ address in the MAIL FROM line.  These sendmails think this means
 they're seeing the result of a mail loop and suppress the mail.  You
 may be able to work around this by running in <code>--invisible</code> mode.<P>
 
+If you want to support multidrop mode, and you can get access to your 
+mailserver's sendmail.cf file, it's a good idea to add this rule:<P>
+
+<pre>
+H?l?Delivered-To: $u
+</pre>
+
+and declare `<CODE>envelope "Delivered-To:"<CODE>'. This will cause the
+mailserver's sendmail to reliably write the appropriate envelope
+address into each message before fetchmail sees it, and tell fetchmail
+which header it is.  With this change, multidrop mode should work
+reliably even when the Received header omits the envelope address
+(which will typically be the case when the message has multiple
+recipients). <P>  
+
 <hr>
 <h2><a name="T2">T2. How can I use fetchmail with qmail?</a></h2>
 
@@ -1160,10 +1175,11 @@ your pass-phrase in Unicode!<P>
 <hr>
 <h2><a name="T9">T9. How can I use fetchmail with usa.net's servers?</a></h2>
 
-Enable `fetchall'.  A user reports that the 2.2 version of USA.NET's
-POP server reports that you must use the `fetchall' option to make
-sure that all of the mail is retrieved, otherwise some may be left on
-the server.  This is almost certainly a server bug.<P>
+Enable `<CODE>fetchall</CODE>'.  A user reports that the 2.2 version
+of USA.NET's POP server reports that you must use the
+`<CODE>fetchall</CODE>' option to make sure that all of the mail is
+retrieved, otherwise some may be left on the server.  This is almost
+certainly a server bug.<P>
 
 <hr>
 <h2><a name="T10">T10. How can I use fetchmail with HP OpenMail?</a></h2>
@@ -1426,7 +1442,8 @@ and see <a href="#R1">R1</a>.<p>
 
 One POP3 daemon used in the Berkeley Unix world that reports itself as
 POP3 version 1.004 actually throws the queue away. 1.005 fixed that.
-If you're running this one, upgrade immediately.<P>
+If you're running this one, upgrade immediately.  (It also truncates
+long lines at column 1024)<P>
 
 Many POP servers, if an interruption occurs, will restore the whole
 mail queue after about 10 minutes.  Others will restore it right
@@ -1925,7 +1942,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/06/03 06:11:26 $
+<td width="30%" align=right>$Date: 1998/06/03 15:41:10 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
