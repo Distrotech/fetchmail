@@ -97,6 +97,22 @@ static void sigpipe_handler (int signal)
     longjmp(restart, THROW_SIGPIPE);
 }
 
+/* ignore SIGALRM signal indicating a timeout during cleanup */
+static void cleanup_timeout_handler (int signal) { }
+
+#define CLEANUP_TIMEOUT 60 /* maximum timeout during cleanup */
+
+static int cleanupSockClose (int fd)
+/* close sockets in maximum CLEANUP_TIMEOUT seconds during cleanup */
+{
+    void (*alrmsave)(int);
+    alrmsave = signal(SIGALRM, cleanup_timeout_handler);
+    set_timeout(CLEANUP_TIMEOUT);
+    SockClose(fd);
+    set_timeout(0);
+    signal(SIGALRM, alrmsave);
+}
+
 #ifdef KERBEROS_V4
 static int kerberos_auth(socket, canonical, principal) 
 /* authenticate to the server host using Kerberos V4 */
@@ -771,9 +787,9 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	/* try to clean up all streams */
 	release_sink(ctl);
 	if (ctl->smtp_socket != -1)
-	    SockClose(ctl->smtp_socket);
+	    cleanupSockClose(ctl->smtp_socket);
 	if (mailserver_socket != -1)
-	    SockClose(mailserver_socket);
+	    cleanupSockClose(mailserver_socket);
     }
     else
     {
@@ -1338,7 +1354,7 @@ is restored."));
 	 */
 	if (err == 0)
 	    err = (fetches > 0) ? PS_SUCCESS : PS_NOMAIL;
-	SockClose(mailserver_socket);
+	cleanupSockClose(mailserver_socket);
 	goto closeUp;
 
     cleanUp:
@@ -1348,7 +1364,7 @@ is restored."));
 	    stage = STAGE_LOGOUT;
 	    (ctl->server.base_protocol->logout_cmd)(mailserver_socket, ctl);
 	}
-	SockClose(mailserver_socket);
+	cleanupSockClose(mailserver_socket);
     }
 
     msg = (const char *)NULL;	/* sacrifice to -Wall */
