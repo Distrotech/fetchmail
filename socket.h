@@ -1,8 +1,6 @@
 /*
  * socket.h -- declarations for socket library functions
  *
- * Design and implementation by Carl Harris <ceharris@mal.com>
- *
  * For license terms, see the file COPYING in this directory.
  */
 
