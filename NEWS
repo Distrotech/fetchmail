@@ -15,7 +15,12 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail 4.0.2 ()
+fetchmail 4.0.3 ()
+* Replace vsprintf with vnsprintf to avoid buffer-overrun screws.
+
+There are 257 people on the fetchmail-friends list.
+
+fetchmail 4.0.2 (Mon Jul 17 20:54:30 EDT 1997)
 * Experimental RFC1938 one-time password support using OPIE library,
   courtesy of Craig Metz <cmetz@inner.net> (couthor of RFC1938).
 

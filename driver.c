@@ -1747,7 +1747,11 @@ va_dcl
 #else
     va_start(ap);
 #endif
+#ifdef HAVE_VSNPRINTF
+    vsnprintf(buf + strlen(buf), sizeof(buf), fmt, ap);
+#else
     vsprintf(buf + strlen(buf), fmt, ap);
+#endif
     va_end(ap);
 
     strcat(buf, "\r\n");
@@ -1817,7 +1821,11 @@ va_dcl
 #else
     va_start(ap);
 #endif
+#ifdef HAVE_VSNPRINTF
+    vsnprintf(buf + strlen(buf), sizeof(buf), fmt, ap);
+#else
     vsprintf(buf + strlen(buf), fmt, ap);
+#endif
     va_end(ap);
 
     strcat(buf, "\r\n");

@@ -90,7 +90,11 @@ va_dcl {
 #else
     va_start(ap);
 #endif
+#ifdef HAVE_VSNPRINTF
+    vsnprintf(buf, sizeof(buf), format, ap);
+#else
     vsprintf(buf, format, ap);
+#endif
     va_end(ap);
     return SockWrite(sock, buf, strlen(buf));
 
