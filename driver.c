@@ -1497,7 +1497,7 @@ const struct method *proto;	/* protocol method table */
 		(void) sprintf(buf, "%s@%s", ctl->remotename, realname);
 	    if (outlevel > O_SILENT)
 		if (count == -1)		/* only used for ETRN */
-		    error(0, 0, "Polling %s", buf);
+		    error(0, 0, "Polling %s", realname);
 		else if (count == 0)
 		{
 		    /* these are pointless in normal daemon mode */
