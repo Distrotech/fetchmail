@@ -1125,7 +1125,7 @@ const struct method *proto;	/* protocol method table */
 	}
 
 #ifdef KERBEROS_V4
-	if (ctl->authenticate == A_KERBEROS)
+	if (ctl->server.authenticate == A_KERBEROS)
 	{
 	    ok = kerberos_auth(fileno(sockfp), ctl->server.canonical_name);
  	    if (ok != 0)
