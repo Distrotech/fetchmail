@@ -652,6 +652,7 @@ static int load_params(int argc, char **argv, int optind)
 	    DEFAULT(ctl->rewrite, TRUE);
 	    DEFAULT(ctl->stripcr, (ctl->mda != (char *)NULL)); 
 	    DEFAULT(ctl->server.dns, TRUE);
+	    DEFAULT(ctl->server.received, TRUE);
 #undef DEFAULT
 
 	    /* plug in the semi-standard way of indicating a mail address */
@@ -905,6 +906,9 @@ void dump_params (struct query *ctl)
 	printf("  DNS lookup for multidrop addresses is %sabled.\n",
 	       ctl->server.dns ? "en" : "dis",
 	       ctl->server.dns ? "off" : "on");
+	printf("  Received-line parsing for envelope addresses is %sabled.\n",
+	       ctl->server.received ? "en" : "dis",
+	       ctl->server.received ? "off" : "on");
 
 	if (count > 1)
 	    printf("  Envelope header is assumed to be: %s\n", ctl->server.envelope);

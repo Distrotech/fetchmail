@@ -605,17 +605,25 @@ Legal user options are
     flush
     fetchall
     rewrite
+    stripcr
+    dns
+    received
     no keep
     no flush
     no fetchall
     no rewrite
+    no stripcr
+    no dns
+    no received
     limit
+    batchlimit
     fetchlimit
     syslog
 .PP
 All options correspond to the obvious command-line arguments except
 the following: `aka', `is', `to', `dns'/`no dns', `password',
-`preconnect', `localdomains', and `stripcr'.
+\&`preconnect', `localdomains', `stripcr'/`no stripcr' and
+\&`received/no received'.
 .PP
 The `is' or `to' keywords associate the following local (client)
 name(s) (or server-name to client-name mappings separated by =) with
@@ -661,6 +669,10 @@ address lines in multidrop modes, and a trailing segment of a host
 name matches a declared local doman, that address is passed through
 to the listener or MDA unaltered (local-name mappings are \fInot\fR
 applied).
+.PP
+If you are using `localdomains', you may also need to specify 
+\&`no received', which disables \fIfetchmail\fR's normal attempt
+to deduce an envelope address from the Received line.
 .PP
 The \fBpassword\fR option requires a string argument, which is the password
 to be used with the entry's server.

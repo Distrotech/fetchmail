@@ -61,6 +61,7 @@ fetchall	{ yylval.flag = FLAG_TRUE; return FETCHALL; }
 rewrite		{ yylval.flag = FLAG_TRUE; return REWRITE; }
 stripcr		{ yylval.flag = FLAG_TRUE; return STRIPCR; }
 dns		{ yylval.flag = FLAG_TRUE; return DNS; }
+received	{ yylval.flag = FLAG_TRUE; return RECEIVED; }
 
 no{WS}keep	{ yylval.flag = FLAG_FALSE; return KEEP; }
 no{WS}flush	{ yylval.flag = FLAG_FALSE; return FLUSH; }
@@ -68,6 +69,7 @@ no{WS}fetchall	{ yylval.flag = FLAG_FALSE; return FETCHALL; }
 no{WS}rewrite	{ yylval.flag = FLAG_FALSE; return REWRITE; }
 no{WS}stripcr	{ yylval.flag = FLAG_FALSE; return REWRITE; }
 no{WS}dns	{ yylval.flag = FLAG_FALSE; return DNS; }
+no{WS}received	{ yylval.flag = FLAG_FALSE; return RECEIVED; }
 
 limit		{ return LIMIT; }
 

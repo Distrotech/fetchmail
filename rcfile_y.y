@@ -49,7 +49,7 @@ static void user_reset();
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
-%token <flag>  KEEP FLUSH FETCHALL REWRITE STRIPCR DNS PORT
+%token <flag>  KEEP FLUSH FETCHALL REWRITE STRIPCR DNS PORT RECEIVED
 
 %%
 
@@ -124,6 +124,7 @@ serv_option	: AKA alias_list
 #endif /* linux */
 					}
 		| DNS			{current.server.dns = $1;}
+		| RECEIVED		{current.server.received = $1;}
 		;
 
 /*

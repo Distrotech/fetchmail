@@ -519,7 +519,7 @@ char *realname;		/* real name of host */
 	    ctt_offs = (line - headers);
 
 #ifdef HAVE_RES_SEARCH
-	else if (MULTIDROP(ctl) && !received_for && !strncasecmp("Received:", line, 9))
+	else if (ctl->server.received && MULTIDROP(ctl) && !received_for && !strncasecmp("Received:", line, 9))
 	    received_for = parse_received(ctl, line);
 #endif /* HAVE_RES_SEARCH */
     }

@@ -7,6 +7,9 @@ features --
 
 * The host that ETRN specifies is now set by the smtphost option.
 
+* It is now possible to suppress Received line parsing in multidrop mode
+  with a new `no received' per-server option.
+
 bugs --
 
 * The counter referred to by the batchlimit option used to count not only 

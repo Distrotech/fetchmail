@@ -1,7 +1,7 @@
 			 fetchmail README
 
-fetchmail is a full-featured, robust, well-documented POP2, POP3,
-APOP, and IMAP batch mail retrieval/forwarding utility intended to be
+fetchmail is a full-featured, robust, well-documented POP2, POP3, RPOP,
+APOP, KPOP, and IMAP batch mail retrieval/forwarding utility intended to be
 used over on-demand TCP/IP links (such as SLIP or PPP connections).
 It retrieves mail from remote mail servers and forwards it to your
 local (client) machine's delivery system, so it can then be be read by
@@ -44,7 +44,7 @@ Since 2.0:
 
 2.0 and earlier versions:
 
-	*  **POP2, POP3, **APOP, **RPOP, **IMAP2bis, **IMAP4 support.
+	**  Support POP2, APOP, RPOP, IMAP2, IMAP2bis, IMAP3, IMAP4, IMAP4rev1.
 
 	** Support for Kerberos user authentication (either MIT or Cygnus).
 
@@ -61,6 +61,8 @@ Since 2.0:
 
 	** Support for retrieving and forwarding from multi-drop mailboxes
 	   that is guaranteed not to cause mail loops.
+
+	* Support for POP3.
 
 	*  Easy control via command line or free-format run control file.
 
@@ -86,7 +88,7 @@ Since 2.0:
 	   versions.
 
 	*  Large user community -- fetchmail has a large user base (the
-	   author's beta list includes about two hundred people).  This 
+	   author's beta list includes well over two hundred people).  This 
 	   means feedback is rapid, bugs get found and fixed rapidly.
 
 The fetchmail code appears to be stable and free of bugs affecting
