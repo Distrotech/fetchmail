@@ -1642,7 +1642,11 @@ const struct method *proto;	/* protocol method table */
 		     */
 		    if (proto->getsizes)
 		    {
+			int	i;
+
 			msgsizes = (int *)alloca(sizeof(int) * count);
+			for (i = 0; i < count; i++)
+			    msgsizes[i] = -1;
 
 			ok = (proto->getsizes)(sock, count, msgsizes);
 			if (ok != 0)

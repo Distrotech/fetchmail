@@ -463,6 +463,7 @@ static int imap_getsizes(int sock, int count, int *sizes)
 /* capture the sizes of all messages */
 {
     char buf [POPBUFSIZE+1];
+    int i;
 
     gen_send(sock, "FETCH 1:%d RFC822.SIZE", count);
     for (;;)
@@ -475,8 +476,6 @@ static int imap_getsizes(int sock, int count, int *sizes)
 	    break;
 	else if (sscanf(buf, "* %d FETCH (RFC822.SIZE %d)", &num, &size) == 2)
 	    sizes[num - 1] = size;
-	else
-	    sizes[num - 1] = -1;
     }
 
     return(PS_SUCCESS);

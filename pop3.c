@@ -434,8 +434,6 @@ static int pop3_getsizes(int sock, int count, int *sizes)
 		break;
 	    else if (sscanf(buf, "%d %d", &num, &size) == 2)
 		sizes[num - 1] = size;
-	    else
-		sizes[num - 1] = -1;
 	}
 
 	return(ok);

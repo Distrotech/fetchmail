@@ -21,6 +21,7 @@ fetchmail-4.2.9 ()
   existing Received line and *after* any From headers shipped up by the
   server.  This fixes odd problems with some sensitive sendmails.
 * Compuserve RPA authentication support.
+* Fixed a bug that screwed up message size queries on some IMAP2bis servers.
 
 There are 285 people on the fetchmail-friends list.
 
