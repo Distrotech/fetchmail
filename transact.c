@@ -444,7 +444,7 @@ int readheaders(int sock,
 		/*
 		 * Smash out any NULs, they could wreak havoc later on.
 		 * Some network stacks seem to generate these at random,
-		 * especially (according to reports) at the beginning of the
+		 * espcially (according to reports) at the beginning of the
 		 * first read.  NULs are illegal in RFC822 format.
 		 */
 		for (sp = tp = buf; sp < buf + n; sp++)
