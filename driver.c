@@ -740,14 +740,16 @@ static int readheaders(int sock,
 	}
 	else
 	{
+	    char *newhdrs;
 	    int	newlen;
 
 	    newlen = oldlen + strlen(line);
-	    msgblk.headers = (char *) realloc(msgblk.headers, newlen + 1);
-	    if (msgblk.headers == NULL) {
+	    newhdrs = (char *) realloc(msgblk.headers, newlen + 1);
+	    if (newhdrs == NULL) {
 		free(line);
 		return(PS_IOERR);
 	    }
+	    msgblk.headers = newhdrs;
 	    strcpy(msgblk.headers + oldlen, line);
 	    free(line);
 	    line = msgblk.headers + oldlen;
