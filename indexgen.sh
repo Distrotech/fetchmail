@@ -48,7 +48,7 @@ cat >index.html <<EOF
 <meta name="description" content="Home page of the fetchmail project" />
 <meta name="keywords" content="" />
 <meta name="MSSmartTagsPreventParsing" content="TRUE" />
-<title>The fechmail home page</title>
+<title>The fetchmail home page</title>
 </head>
 <body>
 
