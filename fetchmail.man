@@ -530,8 +530,7 @@ normal inquiry for a password.  Specify \fIssh\fR when you are using
 an end-to-end secure connection such as an ssh tunnel; specify
 \fRgssapi\fR or \fBkerberos_v4\fR if you are using a protocol variant
 that employs GSSAPI or K4.  Choosing KPOP protocol automatically
-selects Kerberos authentication.  This option does not work with ETRN
-or ODMR.
+selects Kerberos authentication.  This option does not work with ETRN.
 .SS Miscellaneous Options
 .TP
 .B \-f <pathname>, --fetchmailrc <pathname>
@@ -620,7 +619,7 @@ editor like
 written in Python.
 
 .SH USER AUTHENTICATION AND ENCRYPTION
-All modes except ETRN and ODMR requires authentication of the client.
+All modes except ETRN require authentication of the client.
 Normal user authentication in 
 .I fetchmail
 is very much like the authentication mechanism of 

@@ -362,6 +362,8 @@ struct query *ctl;	/* option record to be initialized */
 		ctl->server.protocol = P_IMAP;
 	    else if (strcasecmp(optarg,"etrn") == 0)
 		ctl->server.protocol = P_ETRN;
+	    else if (strcasecmp(optarg,"odmr") == 0)
+		ctl->server.protocol = P_ODMR;
 	    else {
 		fprintf(stderr,_("Invalid protocol `%s' specified.\n"), optarg);
 		errflag++;

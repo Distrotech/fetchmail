@@ -2,15 +2,19 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.7.5 (Sat Mar 17 23:24:41 EST 2001), 20440 lines:
+
 * Nalin Dahyabhai's patch to make IPv6 build on older systems.
 * Restrict shrouding to just the password send so it won't leak info.
 * Move an #ifdef INET6_ENABLE to deal with libc5 headers.
 * Only DNS-probe entries that are active on this run.
 * Fix `nospambounce' recognition.
 * Updated French translation.
-* Yoshihiko SARUMARU's patch to keep Kanji out of Received headers.
+* Yoshihiko SARUMARU's patch to keep kanji out of Received headers.
 * Include aclocal.m4 in the tarball (solves some build problems).
 * Added HMH's patch to support configuring a specific fallback MUA.
+
+There are 301 people on fetchmail-friends and 564 on fetchmail-announce.
 
 fetchmail-5.7.4 (Mon Mar 12 00:02:23 EST 2001), 20323 lines:
 

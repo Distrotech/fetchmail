@@ -15,15 +15,6 @@
 #define		P_ETRN		7
 #define		P_ODMR		8
 
-/* 
- * We need to distinguish between mailbox and mailbag protocols.
- * Under a mailbox protocol wwe're pulling mail for a speecific user
- * and the transaction must be authenticated.  Under a mailbag protocol
- * we're fetching mail for an entire domain; the client and server
- * authenticate to each other but no per-user authentication is needed.
- */ 
-#define MAILBOX_PROTOCOL(ctl)	((ctl)->server.protocol < P_ETRN)
-
 #if INET6_ENABLE
 #define		SMTP_PORT	"smtp"
 #define		KPOP_PORT	"kpop"
@@ -49,7 +40,7 @@
 #define		A_SSH		8	/* authentication at session level */
 
 /* some protocols (KERBEROS, GSSAPI, SSH) don't require a password */
-#define NO_PASSWORD(ctl)	((ctl)->server.authenticate > A_OTP || !MAILBOX_PROTOCOL(ctl))
+#define NO_PASSWORD(ctl)	((ctl)->server.authenticate > A_OTP || (ctl)->server.protocol == P_ETRN)
 
 /*
  * Definitions for buffer sizes.  We get little help on setting maxima
