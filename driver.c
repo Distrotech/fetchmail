@@ -67,27 +67,6 @@ static int tagnum;
 static char *shroud;	/* string to shroud in debug output, if  non-NULL */
 static int mytimeout;	/* value of nonreponse timeout */
 
-static int strcrlf(dst, src, count)
-/* replace LFs with CR-LF; return length of string with replacements */
-char *dst;	/* new string with CR-LFs */
-char *src;	/* original string with LFs */
-int count;	/* length of src */
-{
-  int len = count;
-
-  while (count--)
-  {
-      if (*src == '\n')
-      {
-	  *dst++ = '\r';
-	  len++;
-      }
-      *dst++ = *src++;
-  }
-  *dst = '\0';
-  return len;
-}
-
 static void vtalarm(int timeleft)
 /* reset the nonresponse-timeout */
 {
@@ -357,12 +336,6 @@ char *realname;		/* real name of host */
 	/* compute length *before* squeezing out CRs */
 	n = strlen(buf);
 
-	/* squeeze out all carriage returns */
-	for (fromptr = toptr = buf; *fromptr; fromptr++)
-	    if (*fromptr != '\r' && *fromptr != '\n')
-		*toptr++ = *fromptr;
-	*toptr = '\0';
-
 	/* write the message size dots */
 	if (n > 0)
 	{
@@ -376,14 +349,13 @@ char *realname;		/* real name of host */
 	}
 	len -= n;
 	bufp = buf;
-	if (buf[0] == '\0' || buf[0] == '\r' || buf[0] == '\n')
+	if (buf[0] == '\r' && buf[1] == '\n')
 	    inheaders = 0;
 	if (delimited && *bufp == '.') {
 	    bufp++;
 	    if (*bufp == 0)
 		break;  /* end of message */
 	}
-	strcat(bufp, "\n");
      
 	if (inheaders)
         {
@@ -657,23 +629,7 @@ char *realname;		/* real name of host */
 	    skiptext:;
 	    }
 
-	    /* change continuation markers back to regular newlines */
-	    for (cp = headers; cp < headers + oldlen; cp++)
-		if (*cp == '\r')
-		    *cp = '\n';
-
-	    /* replace all LFs with CR-LF before sending to the SMTP server */
-	    if (!ctl->mda)
-	    {
-		char *newheaders = xmalloc(1 + oldlen * 2);
-
-		oldlen = strcrlf(newheaders, headers, oldlen);
-		free(headers);
-		headers = newheaders;
-	    }
-
 	    /* write all the headers */
-	    n = 0;
 	    if (ctl->mda)
 		n = fwrite(headers, 1, oldlen, sinkfp);
 	    else if (sinkfp)
@@ -752,24 +708,12 @@ char *realname;		/* real name of host */
 	    else if (sinkfp)
 		SockWrite(bufp, 1, 1, sinkfp);
 
-	/* replace all LFs with CR-LF  in the line */
-	if (!ctl->mda)
-	{
-	    char *newbufp = xmalloc(1 + strlen(bufp) * 2);
-
-	    strcrlf(newbufp, bufp, strlen(bufp));
-	    bufp = newbufp;
-	}
-
 	/* ship out the text line */
-	n = 0;
 	if (ctl->mda)
 	    n = fwrite(bufp, 1, strlen(bufp), sinkfp);
 	else if (sinkfp)
 	    n = SockWrite(bufp, 1, strlen(bufp), sinkfp);
 
-	if (!ctl->mda)
-	    free(bufp);
 	if (n < 0)
 	{
 	    error(0, errno, "writing message text");
