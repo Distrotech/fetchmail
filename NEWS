@@ -10,6 +10,24 @@
 fetchmail-4.4.8 ():
 * Removed fetchall side-effect kluge, now that we knowe how to make TOP work
   with qpopper 2.3+.
+* Several fixes for command-line processing from Gunther Leber:
+  - in fetchmail.c
+    * set tmpbuf to NULL after freeing the buffer (so this will hopefully
+      cause a coredump, when tmpbuf is used somewhere else)
+    * when makeing sure we have a nonempty host list to forward to, I
+      added "localhost" for non ETRN protocols.  This should relieve the
+      situation for people, who do neither have a static ip-address
+      (hostname) assigned and neither bother to set up a dummy-interface
+      for their hostname.  I think this feature was already in fetchmail
+      in an older version.  We lost this, when we changed the code that it
+      would work with ETRN.  My fix here works for both ETRN and non ETRN.
+  - fixed reversed dumping of mimedecode option
+  - in options.c
+    * changed char buf[...] to *buf + xmalloc to avoid buffer overuns and
+      possible resulting (and annoying) coredumps
+    * in parsecmdline(): replaced atoi by xatoi which uses strtol and
+      better validity checks for input numbers.  This fix only works on
+      ANSI-C systems; old systems still use atoi.  
 
 fetchmail-4.4.7 (Sat May 23 08:26:58 EDT 1998):
 * FEATURE FREEZE IS NOW IN EFFECT!  No new features until after 4.5.0.
@@ -116,29 +134,21 @@ There are 269 people on fetchmail-friends and 144 on fetchmail-announce.
 fetchmail-4.3.7 (Tue Feb 17 21:30:26 EST 1998)
 * Fixed a minor bug in the IMAP re-polling logic.
 * Nicholas Pitre's extensive changes to multidrop:
-
   - Seek for the true sender of a mail which is not necessarily in the
     From: header. (see comments in the code for more explicit details).
     This one is particularly important with list distributions...
-
   - Respect the Resent-To/-Cc/-Bcc precedence over the To/Cc/Bcc headers
     for recipient delivery.  So avoid resending a message to a person who
     just resent a mail to some other addresses.
-
   - Fix a bug in find_server_names() wich caused recipient addresses to
     figure twice in the recipient address list.
-
   - Modified parse_received()  to let full adress from the Received header to
     pass through so local domains can be used (now has same policy as in
     the find_server_names() function).
-
   - Fixed memory leaks from readheaders().
-
   - Made some strcmp() be strcasecmp() as it should be because it didn't
     work correctly in some cases.
-
   - Modified reply_hack() to meet the needs of above modifications.
-
   Thomas says these changes have been tested for two weeks in a production
   multidrop environment.  I tested them for another week in mine.
 * Doug Muth's runfetchmail version 1.1.

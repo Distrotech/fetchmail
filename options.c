@@ -9,8 +9,10 @@
 #include <stdio.h>
 #include <pwd.h>
 #include <string.h>
+#include <errno.h>
 #if defined(STDC_HEADERS)
 #include  <stdlib.h>
+#include  <limits.h>
 #endif
 
 #include "getopt.h"
@@ -122,6 +124,45 @@ static const struct option longoptions[] = {
   {(char *) 0,  no_argument,       (int *) 0, 0              }
 };
 
+static int xatoi(char *s, int *errflagptr)
+/* do safe conversion from string to number */
+{
+#if defined (__STDC__)
+    /* parse and convert numbers, but also check for invalid characters in
+     * numbers
+     */
+
+    char *endptr;
+    long value;
+
+    errno = 0;
+
+    value = strtol(s, &endptr, 0);
+
+    /* any invalid chars in string? */
+    if ( (endptr == s) || (*endptr != '\0') ) {
+    	(void) fprintf(stderr, "String '%s' is not a valid number string.\n", s);
+	(*errflagptr)++;
+	return 0;
+    }
+
+    /* is the range valid? */
+    if ( (((value == LONG_MAX) || (value == LONG_MIN)) && (errno == ERANGE)) ||
+				(value > INT_MAX) || (value < INT_MIN)) {
+
+    	(void) fprintf(stderr, "Value of string '%s' is %s than %d.\n", s,
+					(value < 0) ? "smaller": "larger",
+					(value < 0) ? INT_MIN : INT_MAX);
+	(*errflagptr)++;
+	return 0;
+    }
+
+    return (int) value;  /* shut up, I know what I'm doing */
+#else
+    return atoi(s);
+#endif
+}
+
 int parsecmdline (argc, argv, rctl, ctl)
 /* parse and validate the command line options */
 int argc;		/* argument count */
@@ -141,7 +182,7 @@ struct query *ctl;	/* option record to be initialized */
     int ocount = 0;     /* count of destinations specified */
     int errflag = 0;   /* TRUE when a syntax error is detected */
     int option_index;
-    char buf[BUFSIZ], *cp;
+    char *buf, *cp;
 
     rctl->poll_interval = -1;
 
@@ -171,7 +212,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'd':
 	case LA_DAEMON:
-	    rctl->poll_interval = atoi(optarg);
+	    rctl->poll_interval = xatoi(optarg, &errflag);
 	    break;
 	case 'N':
 	case LA_NODETACH:
@@ -245,7 +286,7 @@ struct query *ctl;	/* option record to be initialized */
 #if INET6
 	    ctl->server.service = optarg;
 #else /* INET6 */
-	    ctl->server.port = atoi(optarg);
+	    ctl->server.port = xatoi(optarg, &errflag);
 #endif /* INET6 */
 	    break;
 	case 'A':
@@ -269,7 +310,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 't':
 	case LA_TIMEOUT:
-	    ctl->server.timeout = atoi(optarg);
+	    ctl->server.timeout = xatoi(optarg, &errflag);
 	    if (ctl->server.timeout == 0)
 		ctl->server.timeout = -1;
 	    break;
@@ -308,20 +349,23 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'l':
 	case LA_LIMIT:
-	    c = atoi(optarg);
+	    c = xatoi(optarg, &errflag);
 	    ctl->limit = NUM_VALUE(c);
 	    break;
 	case 'r':
 	case LA_FOLDER:
+	    buf = xmalloc(strlen(optarg));
 	    strcpy(buf, optarg);
 	    cp = strtok(buf, ",");
 	    do {
 		save_str(&ctl->mailboxes, cp, 0);
 	    } while
 		((cp = strtok((char *)NULL, ",")));
+	    free(buf);
 	    break;
 	case 'S':
 	case LA_SMTPHOST:
+	    buf = xmalloc(strlen(optarg));
 	    strcpy(buf, optarg);
 	    cp = strtok(buf, ",");
 	    do {
@@ -329,6 +373,7 @@ struct query *ctl;	/* option record to be initialized */
 	    } while
 		((cp = strtok((char *)NULL, ",")));
 	    ocount++;
+	    free(buf);
 	    break;
 	case 'D':
 	case LA_SMTPADDR:
@@ -336,21 +381,21 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'Z':
 	case LA_ANTISPAM:
-	    c = atoi(optarg);
+	    c = xatoi(optarg, &errflag);
 	    ctl->antispam = NUM_VALUE(c);
 	case 'b':
 	case LA_BATCHLIMIT:
-	    c = atoi(optarg);
+	    c = xatoi(optarg, &errflag);
 	    ctl->batchlimit = NUM_VALUE(c);
 	    break;
 	case 'B':
 	case LA_FETCHLIMIT:
-	    c = atoi(optarg);
+	    c = xatoi(optarg, &errflag);
 	    ctl->fetchlimit = NUM_VALUE(c);
 	    break;
 	case 'e':
 	case LA_EXPUNGE:
-	    c = atoi(optarg);
+	    c = xatoi(optarg, &errflag);
 	    ctl->expunge = NUM_VALUE(c);
 	    break;
 	case 'm':

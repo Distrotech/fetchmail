@@ -373,6 +373,7 @@ int main (int argc, char **argv)
 
     /* we don't need tmpbuf anymore */
     free(tmpbuf);
+    tmpbuf = NULL;	/* firewall code */
 
     /*
      * Maybe time to go to demon mode...
@@ -755,7 +756,15 @@ static int load_params(int argc, char **argv, int optind)
 
 	    /* make sure we have a nonempty host list to forward to */
 	    if (!ctl->smtphunt)
+	    {
 		save_str(&ctl->smtphunt, fetchmailhost, FALSE);
+		/* for non ETRN try to deliver mails to localhost if
+		 * fetchmailhost fails
+		 */
+		if (ctl->server.protocol != P_ETRN) {
+		    save_str(&ctl->smtphunt, "localhost", FALSE);
+		}
+	    }
 
 	    /* keep lusers from shooting themselves in the foot :-) */
 	    if (run.poll_interval && ctl->limit)
@@ -1131,10 +1140,10 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 	       ctl->forcecr ? "en" : "dis",
 	       ctl->forcecr ? "on" : "off");
 	printf("  Interpretation of Content-Transfer-Encoding is %sabled (pass8bits %s).\n",
-	       ctl->pass8bits ? "dis" : "en",
+	       ctl->pass8bits ? "en" : "dis",
 	       ctl->pass8bits ? "on" : "off");
 	printf("  MIME decoding is %sabled (mimedecode %s).\n",
-	       ctl->mimedecode ? "dis" : "en",
+	       ctl->mimedecode ? "en" : "dis",
 	       ctl->mimedecode ? "on" : "off");
 	printf("  Nonempty Status lines will be %s (dropstatus %s)\n",
 	       ctl->dropstatus ? "discarded" : "kept",
@@ -1166,12 +1175,11 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 
 	    printf("  Messages will be SMTP-forwarded to:");
 	    for (idp = ctl->smtphunt; idp; idp = idp->next)
-		if (ctl->server.protocol != P_ETRN || idp->val.status.mark)
-		{
-		    printf(" %s", idp->id);
-		    if (!idp->val.status.mark)
-			printf(" (default)");
-		}
+	    {
+                printf(" %s", idp->id);
+		if (!idp->val.status.mark)
+		    printf(" (default)");
+	    }
 	    printf("\n");
 	    if (ctl->smtpaddress)
 		printf("  Host part of MAIL FROM line will be %s\n",
