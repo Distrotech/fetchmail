@@ -1043,7 +1043,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	set_timeout(0);
 	phase = oldphase;
 #ifdef KERBEROS_V4
-	if (ctl->server.authenticate == A_KERBEROS_V4)
+	if (ctl->server.authenticate == A_KERBEROS_V4 && (strcasecmp(proto->name,"IMAP") != 0))
 	{
 	    set_timeout(mytimeout);
 	    err = kerberos_auth(mailserver_socket, ctl->server.truename,

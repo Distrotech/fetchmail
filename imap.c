@@ -200,7 +200,7 @@ static int do_imap_ntlm(int sock, struct query *ctl)
     if ((gen_recv(sock, msgbuf, sizeof msgbuf)))
 	return result;
   
-    len = from64tobits ((unsigned char*)&challenge, msgbuf, sizeof(msgbuf));
+    len = from64tobits ((char*)&challenge, msgbuf, sizeof(challenge));
     
     if (outlevel >= O_DEBUG)
 	dumpSmbNtlmAuthChallenge(stdout, &challenge);
