@@ -527,13 +527,17 @@ char *realname;		/* real name of host */
     /*
      * Hack time.  If the first line of the message was blank, with no headers
      * (this happens occasionally due to bad gatewaying software) cons up
-     * a set of fake headers.
+     * a set of fake headers.  
+     *
+     * If you modify the fake header template below, be sure you don't
+     * make either From or To address @-less, otherwise the reply_hack
+     * logic will do bad things.
      */
     if (headers == (char *)NULL)
     {
 	sprintf(buf, 
-"From: FETCHMAIL-DAEMON\r\nTo: %s\r\nSubject: Headerless mail from %s@%s\r\n",
-		ctl->localnames->id, ctl->remotename, realname);
+	"From: <FETCHMAIL-DAEMON@%s>\r\nTo: %s@localhost\r\nSubject: Headerless mail from %s's mailbox on %s\r\n",
+		fetchmailhost, user, ctl->remotename, realname);
 	headers = xstrdup(buf);
     }
 
