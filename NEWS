@@ -5,9 +5,10 @@
 * Fix configuration error in handling of long options.
 * Thomas Moestl's patch to use querynames in UID files.
 * Timeout to deal with long socket closes (Sunil Shetye).
-* Move from RSA MD5 code to Colin Plumb's public-domain implemenrtaion (BSD
+* Move from RSA MD5 code to Colin Plumb's public-domain implementation (BSD
   classic license eliminated)
-* Rewrite strcasecmp() (BSD classic license eliminated)
+* Rewrite strcasecmp() (BSD classic license eliminated).
+* getopt_long is back for Solaris and HP-UX systems.
 
 fetchmail-5.9.2 (Wed Sep 26 12:47:00 EDT 2001), 21118 lines:
 

@@ -1,6 +1,8 @@
 /* 
  * scratch implementation of strcasecmp(), 
  * in case your C library doesn't have it 
+ *
+ * For license terms, see the file COPYING in this directory.
  */
 #include <ctype.h>
 
