@@ -8,9 +8,6 @@ if and when support for a new retrieval protocol is added.
 Support IMAP4 extensions for secure challenge-response, once they're actually
 standardized.
 
-The configuration file lexer handles punctuation adjacent to keywords poorly.
-Flex can be very mysterious at times.
-
 Inflict severe pain on the person(s) responsible for removing LAST from POP3.
 
 			Release Notes:
