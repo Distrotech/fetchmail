@@ -53,6 +53,13 @@ then
   EXTRAOBJ="$EXTRAOBJ alloca.o"
 fi
 
+if test -f "/usr/kerberos/include/krb.h"
+then
+  CFLAGS="$CFLAGS -DKERBEROS_V4 -I/usr/kerberos/include"
+  LDFLAGS="$LDFLAGS -L/usr/kerberos/lib"
+  LIBS="$LIBS -lkrb -ldes"
+fi
+
 dnl All AC_CHECK_FUNCs must precede the following AC_SUBSTs
 
 AC_SUBST(EXTRASRC)
