@@ -438,9 +438,13 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 		has_nuls = (linelen != strlen(line));
 		goto process_headers;
 	    }
+
+	    /* check for RFC822 continuations */
+	    set_timeout(mytimeout);
+	    ch = SockPeek(sock);
+	    set_timeout(0);
 	} while
-	    /* we may need to grab RFC822 continuations */
-	    ((ch = SockPeek(sock)) == ' ' || ch == '\t');
+	    (ch == ' ' || ch == '\t');	/* continuation to next line? */
 
 	/* write the message size dots */
 	if ((outlevel > O_SILENT && outlevel < O_VERBOSE) && linelen > 0)
