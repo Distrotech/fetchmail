@@ -15,7 +15,6 @@ fetchmail-6.2.2 (Fri Feb 28 21:34:26 EST 2003), 22345 lines:
 * Support ssh-style authentication in POP3
 * Fix for Debian bug #108977, clean up config file evaluation,
   by Benjamin Drieu.
-* Warning! Internationalization support is broken in this release,
 
 There are 554 people on fetchmail-friends and 727 on fetchmail-announce.
 
