@@ -532,7 +532,7 @@ int main (int argc, char **argv)
 		    }
 #endif  /* POP3_ENABLE */
 		}
-		else
+		else if (!check_only)
 		    error(0, 0, "Query status=%d", querystatus);
 
 #if defined(linux) && !INET6
