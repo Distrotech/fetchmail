@@ -29,8 +29,8 @@ int yydebug;	/* in case we didn't generate with -- debug */
   char *sval;
 }
 
-%token KW_SERVER KW_PROTOCOL KW_LOCALNAME KW_REMOTENAME KW_PASSWORD
-%token KW_MAILBOX KW_SMTPHOST KW_MDA KW_DEFAULTS
+%token KW_SERVER KW_PROTOCOL KW_LOCALNAME KW_USERNAME KW_PASSWORD
+%token KW_FOLDER KW_SMTPHOST KW_MDA KW_DEFAULTS
 %token <proto> KW_PROTO
 %token <sval>  PARAM_STRING
 %token <flag>  KW_KEEP KW_FLUSH KW_FETCHALL KW_REWRITE KW_PORT KW_SKIP
@@ -41,16 +41,19 @@ int yydebug;	/* in case we didn't generate with -- debug */
 
 %%
 
-rcfile:		rcline
-	|	rcfile rcline
-  ;
+rcfile:
+	/* empty */
+	| statement_list
+	;
 
-rcline:		statement
-  ;
+statement_list:
+	statement
+	| statement_list statement
+	;
 
 statement:
-	|	define_server			{prc_register(); prc_reset();}
-  ;
+	define_server			{prc_register(); prc_reset();}
+	;
 
 define_server:	KW_SERVER PARAM_STRING server_options 	{prc_setserver($2);}
 	|	KW_SERVER PARAM_STRING			{prc_setserver($2);}
@@ -64,9 +67,9 @@ server_options:	serv_option_clause
 serv_option_clause: 
 		KW_PROTOCOL KW_PROTO	     {prc_setproto($2);}
 	|	KW_LOCALNAME PARAM_STRING    {prc_setlocal($2);}
-	|	KW_REMOTENAME PARAM_STRING   {prc_setremote($2);}
+	|	KW_USERNAME PARAM_STRING     {prc_setremote($2);}
 	|	KW_PASSWORD PARAM_STRING     {prc_setpassword($2);}
-	|	KW_MAILBOX PARAM_STRING      {prc_setfolder($2);}
+	|	KW_FOLDER  PARAM_STRING      {prc_setfolder($2);}
 	|	KW_SMTPHOST PARAM_STRING     {prc_setsmtphost($2);}
 	|	KW_MDA PARAM_STRING          {prc_setmda($2);}
 	|	KW_KEEP			     {prc_setkeep($1==FLAG_TRUE);}

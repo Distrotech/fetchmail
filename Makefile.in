@@ -197,10 +197,6 @@ configure: configure.in
 # Special dependencies, not easily handled without explicit rules
 $(srcdir)/rcfile_l.c: $(srcdir)/rcfile_l.l
 $(srcdir)/rcfile_y.c: $(srcdir)/rcfile_y.y
-	echo "expect \"conflicts:  5 shift/reduce\""
-	$(YACC) $(YACCFLAGS) $<
-	mv y.tab.c $@
-	mv -f y.tab.h $*.h
 
 parser = $(srcdir)/rcfile_l.l $(srcdir)/rcfile_y.y
 headers = $(srcdir)/fetchmail.h $(srcdir)/socket.h $(srcdir)/smtp.h
