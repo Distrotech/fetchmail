@@ -1,6 +1,6 @@
 				Release Notes:
 
-fetchmail-4.6.3 ():
+fetchmail-4.6.3 (Tue Oct 20 12:37:25 EDT 1998):
 * Introduced `debug' verbosity, invocable by -v -v.
 * Make authentication failures more visible by syslogging them.
 * fetchmailconf now has access to information about which fetchmail
