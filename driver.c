@@ -1359,16 +1359,16 @@ is restored."));
 		    else if (count != 0)
 		    {
 			if (new != -1 && (count - new) > 0)
-			    report_build(stdout, GT_("%d %s (%d %s) for %s"),
-				  count, count > 1 ? GT_("messages") :
-				                     GT_("message"),
+			    report_build(stdout, ngettext("%d message (%d %s) for %s", "%d messages (%d %s) for %s", (unsigned long)count),
+				  count,
 				  count-new, 
-				  GT_("seen"),
+				  ngettext("seen", "seen", (unsigned long)count-new),
 				  buf);
 			else
-			    report_build(stdout, GT_("%d %s for %s"), 
-				  count, count > 1 ? GT_("messages") :
-				                     GT_("message"), buf);
+			    report_build(stdout, ngettext("%d message for %s",
+							  "%d messages for %s",
+							  count), 
+				  count, buf);
 			if (bytes == -1)
 			    report_complete(stdout, ".\n");
 			else
