@@ -572,12 +572,16 @@ static int pop3_getsizes(int sock, int count, int *sizes)
 
 	while ((ok = gen_recv(sock, buf, sizeof(buf))) == 0)
 	{
-	    int num, size;
+	    unsigned int num, size;
 
 	    if (DOTLINE(buf))
 		break;
-	    else if (sscanf(buf, "%d %d", &num, &size) == 2)
-		sizes[num - 1] = size;
+	    else if (sscanf(buf, "%u %u", &num, &size) == 2) {
+		if (num > 0 && num <= count)
+		    sizes[num - 1] = size;
+		/* else, strict: protocol error, flexible: nothing
+		 * I vote for flexible. */
+	    }
 	}
 
 	return(ok);

@@ -2,6 +2,15 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.8.17 (Sat Aug  4 19:02:47 EDT 2001), 21093 lines:
+
+* Fixed a security hole that is exploitable if fetchmail is running as root
+  and the attacker can either subvert the mailserver or redirect to a fake
+  one using DNS spoofing.  Bugtraq announcement to follow soon.  Thanks
+  to antirez@invece.org.
+
+There are  people on fetchmail-friends and  on fetchmail-announce.
+
 fetchmail-5.8.16 (Fri Aug  3 18:55:54 EDT 2001), 21093 lines:
 
 * Handle ! in RFC2821 Return-Path addresses properly.

@@ -620,14 +620,19 @@ static int imap_getsizes(int sock, int count, int *sizes)
 	gen_send(sock, "FETCH 1:%d RFC822.SIZE", count);
     for (;;)
     {
-	int num, size, ok;
+	unsigned int num, size;
+	int ok;
 
 	if ((ok = gen_recv(sock, buf, sizeof(buf))))
 	    return(ok);
 	else if (strstr(buf, "OK") || strstr(buf, "NO"))
 	    break;
-	else if (sscanf(buf, "* %d FETCH (RFC822.SIZE %d)", &num, &size) == 2)
-	    sizes[num - 1] = size;
+	else if (sscanf(buf, "* %u FETCH (RFC822.SIZE %u)", &num, &size) == 2) {
+	    if (num > 0 && num <= count)
+	        sizes[num - 1] = size;
+	    /* else, strict: protocol error, flexible: nothing
+	     * I vote for flexible. */
+	}
     }
 
     return(PS_SUCCESS);
