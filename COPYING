@@ -2,6 +2,9 @@ The code in the fetchmail distribution is Copyright 1997 by Eric S. Raymond.
 Portions are also copyrighted by Carl Harris, 1993 and 1995.  Copyright
 retained for the purpose of protecting free redistribution of source.
 
+The MD5 support is copyright by RSA Data Security, Inc.  See the header
+comment of the md5.c module for license terms.
+
 			NO-VIRUS CLAUSE
 
 The intent of this license is to protect free redistribution and reuse of the
