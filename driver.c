@@ -69,8 +69,8 @@ int batchcount;		/* count of messages sent in current batch */
 flag peek_capable;	/* can we peek for better error recovery? */
 int mailserver_socket_temp = -1;	/* socket to free if connect timeout */ 
 
-volatile static int timeoutcount = 0;	/* count consecutive timeouts */
-volatile static int idletimeout = 0;	/* timeout occured in idle stage? */
+static volatile int timeoutcount = 0;	/* count consecutive timeouts */
+static volatile int idletimeout = 0;	/* timeout occured in idle stage? */
 
 static jmp_buf	restart;
 

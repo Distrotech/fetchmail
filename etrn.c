@@ -119,7 +119,7 @@ static int etrn_logout(int sock, struct query *ctl)
     return(gen_transact(sock, "QUIT"));
 }
 
-const static struct method etrn =
+static const struct method etrn =
 {
     "ETRN",		/* ESMTP ETRN extension */
 #if INET6_ENABLE

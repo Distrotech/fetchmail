@@ -56,9 +56,9 @@ static int ttyfd;
 #endif
 #endif
 
-void static save_tty_state(void);
-void static disable_tty_echo(void);
-void static restore_tty_state(void);
+static void save_tty_state(void);
+static void disable_tty_echo(void);
+static void restore_tty_state(void);
 static RETSIGTYPE sigint_handler(int);
 
 char *fm_getpassword(prompt)

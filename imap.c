@@ -1110,7 +1110,7 @@ static int imap_logout(int sock, struct query *ctl)
     return(gen_transact(sock, "LOGOUT"));
 }
 
-const static struct method imap =
+static const struct method imap =
 {
     "IMAP",		/* Internet Message Access Protocol */
 #if INET6_ENABLE

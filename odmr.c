@@ -207,7 +207,7 @@ static int odmr_logout(int sock, struct query *ctl)
        return(PS_SUCCESS);
 }
 
-const static struct method odmr =
+static const struct method odmr =
 {
     "ODMR",		/* ODMR protocol */
 #if INET6_ENABLE

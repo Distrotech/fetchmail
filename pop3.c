@@ -219,7 +219,7 @@ static int pop3_ok (int sock, char *argbuf)
 
 
 
-static int capa_probe(sock)
+static int capa_probe(int sock)
 /* probe the capabilities of the remote server */
 {
     int	ok;
@@ -1179,7 +1179,7 @@ static int pop3_logout(int sock, struct query *ctl)
     return(ok);
 }
 
-const static struct method pop3 =
+static const struct method pop3 =
 {
     "POP3",		/* Post Office Protocol v3 */
 #if INET6_ENABLE
