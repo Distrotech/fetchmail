@@ -6,9 +6,16 @@ fetchmail-4.5.3 ():
   `postmaster', not root.  Added `postmaster' option to allow override.
 * DNS names of target servers are now canonicalized only once, at start
   of run, and then only if they'll actually be needed later for multidrop
-  checking or fetching Kerberos tickets.  This eliminates many gethostbyname
-  calls.
+  checking or fetching Kerberos tickets.  This change eliminates many
+  gethostbyname calls.
 * 1.1 version of fetchmailconf.
+
+Note: the DNS-usage change might conceivably break your configuration
+if (a) you're using `no dns' and multidrop and (b) you're not
+specifying either a `via' option or pollname that is the host's
+canonical name.  The thing to watch for will be an illegal domain name
+error from your listener.  If this happens, just add a `via' option with
+the cononical FQDN of the host as argument.
 
 There are 267 people on fetchmail-friends and 249 on fetchmail-announce.
 
