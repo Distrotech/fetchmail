@@ -624,8 +624,8 @@ struct method *proto;		/* protocol method table */
 	else
 	{
 	    fprintf(stderr, "%d message%s", count, count > 1 ? "s" : ""); 
-	    if (new != -1)
-		fprintf(stderr, " (%d new)", new);
+	    if (new != -1 && (count - new) > 0)
+		fprintf(stderr, " (%d seen)", count-new);
 	    fprintf(stderr,
 		    " from %s for %s@%s.\n",
 		    queryctl->remotename,

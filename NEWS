@@ -1,10 +1,13 @@
+			Known problems:
+
+
 			Release Notes:
 
 fetchmail-1.9 ():
 
 features --
 
-* The first message from a query now includes the number of new messages
+* The first message from a query now includes the number of old messages
   when this can be determined (that is not under POP2).
 
 * POP3 UID support really works now.  I make rude noises at the POP3 mavens
@@ -49,6 +52,14 @@ bugs --
 
 * Fixed various bugs in --check.  It now reports PS_SUCCESS only if
   there is new mail waiting.
+
+* Under Linux, if fetchmail is run in daemon mode with the network
+  inaccessible, each poll leaves a socket allocated but in CLOSE state
+  (this is visible in netstat(1)'s output).  These sockets aren't
+  garbage-collected until fetchmail exits.  When whatever kernel table
+  is involved fills up, fetchmail can no longer run even if the network is up.
+  To avoid this, fetchmail now commits seppuku after some number of
+  unsuccessful socket opens.
 
 fetchmail-1.8 (Fri Oct 11 15:08:10 EDT 1996):
 

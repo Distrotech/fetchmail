@@ -642,6 +642,16 @@ to the mailserver.  This creates a risk that name/password pairs
 might be snaffled with a packet sniffer or more sophisticated
 monitoring software.
 .PP
+Under Linux, if fetchmail is run in daemon mode with the network
+inaccessible, each poll leaves a socket allocated but in CLOSE state
+(this is visible in netstat(1)'s output).  For some reason, these
+sockets aren't garbage-collected until \fIfetchmail\fR exits.  When
+whatever kernel table is involved fills up, fetchmail can no longer
+run even if the network is up.  This appears \fInot\fR to be a socket
+leak in \fIfetchmail\fR, but rather some glitch or misfeature in the system
+network code.  To avoid this problem, fetchmail commits seppuku after
+too many unsuccessful socket opens.
+.PP
 Send comments, bug reports, gripes, and the like to Eric S. Raymond
 <esr@thyrsus.com>.
 .SH SEE ALSO

@@ -29,6 +29,8 @@
 #include "fetchmail.h"
 #include "getopt.h"
 
+#define DROPDEAD	6	/* maximum bad socjet opens */
+
 #ifdef HAVE_PROTOTYPES
 /* prototypes for internal functions */
 static int dump_options (struct hostrec *queryctl);
@@ -62,7 +64,7 @@ main (argc,argv)
 int argc;
 char **argv;
 { 
-    int mboxfd, st, bkgd;
+    int mboxfd, st, bkgd, lossage;
     struct hostrec def_opts;
     int parsestatus, implicitmode;
     char *servername, *user, *home, *tmpdir, tmpbuf[BUFSIZ]; 
@@ -394,12 +396,38 @@ char **argv;
      * Query all hosts. If there's only one, the error return will
      * reflect the status of that transaction.
      */
+    lossage = 0;
     do {
 	for (hostp = hostlist; hostp; hostp = hostp->next)
 	{
 	    if (hostp->active && !(implicitmode && hostp->skip))
 	    {
 		popstatus = query_host(hostp);
+
+		/*
+		 * Under Linux, if fetchmail is run in daemon mode
+		 * with the network inaccessible, each poll leaves a
+		 * socket allocated but in CLOSE state (this is
+		 * visible in netstat(1)'s output).  For some reason,
+		 * these sockets aren't garbage-collected until
+		 * fetchmail exits.  When whatever kernel table is
+		 * involved fills up, fetchmail can no longer run even
+		 * if the network is up.  This does not appear to be a
+		 * socket leak in fetchmail.  To avoid this
+		 * problem, fetchmail commits seppuku after five
+		 * unsuccessful socket opens.
+		 */
+		if (popstatus == PS_SOCKET)
+		    lossage++;
+		else
+		    lossage = 0;
+		if (lossage >= DROPDEAD)
+		{
+		    fputs("fetchmail: exiting, network appears to be down\n",
+			  stderr);
+		    termhook(0);
+		}
+
 		if (!check_only)
 		    update_uid_lists(hostp);
 	    }
