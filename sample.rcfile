@@ -43,11 +43,13 @@
 #   flush
 #   fetchall
 #   rewrite
+#   stripcr
 #   dns
 #   no keep
 #   no flush
 #   no fetchall
 #   no rewrite
+#   no stripcr
 #   no dns
 #   limit                     -- must be followed by numeric size limit
 #   fetchlimit                -- must be followed by numeric msg fetch limit
