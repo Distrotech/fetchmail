@@ -1125,6 +1125,15 @@ around this bug, turn on `fetchall' on all user entries associated with
 this server.  
 
 """
+            if string.find(greetline, "TEMS POP3") > 0:
+                warnings = warnings + """
+Your POP3 server has "TEMS" in its header line.  At least one such
+server does not process the "TOP" command correctly; the symptom is
+that fetchmail hangs when trying to retrieve mail.  To work around
+this bug, turn on `fetchall' on all user entries associated with this
+server.
+
+"""
             if string.find(greetline, "GroupWise") > 0:
                 warnings = warnings + """
 The Novell GroupWise IMAP server would be better named GroupFoolish;
@@ -1138,7 +1147,6 @@ with code as shoddy as GroupWise seems to be, you will probably pay
 for it with other problems.<p>
 
 """
-
             if string.find(greetline, "sprynet.com") > 0:
                 warnings = warnings + """
 You appear to be using a SpryNet server.  In mid-1999 it was reported that
