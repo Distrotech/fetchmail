@@ -178,8 +178,14 @@ int socket;
 int number;
 int *lenp; 
 {
-    *lenp = 0;
-    return(gen_transact(socket, "RETR %d", number));
+    int ok;
+    char buf [POPBUFSIZE+1];
+
+    gen_send(socket, "RETR %d", number);
+    if ((ok = pop3_ok(socket, buf)) != 0)
+	return(ok);
+    *lenp = atoi(buf);
+    return(0);
 }
 
 static pop3_delete(socket, queryctl, number)
