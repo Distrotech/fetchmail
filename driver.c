@@ -759,18 +759,21 @@ int num;		/* index of message */
 	 * unconditionally.  Nonempty ones get chucked if the user
 	 * turns on the dropstatus flag.
 	 */
-	if (!strncasecmp(line, "Status:", 7) 
-				|| !strncasecmp(line, "X-Mozilla-Status:", 7))
 	{
 	    char	*cp;
-
-	    for (cp = line + 7; *cp && isspace(*cp); cp++)
-		continue;
-
-	    if (!*cp || ctl->dropstatus)
-	    {
-		free(line);
-		continue;
+	    if (!strncasecmp(line, "Status:", 7))
+		cp = line + 7;
+	    else if (!strncasecmp(line, "X-Mozilla-Status:", 17))
+		cp = line + 17;
+	    else
+		cp = NULL;
+	    if (cp) {
+		while (*cp && isspace(*cp)) cp++;
+		if (!*cp || ctl->dropstatus)
+		{
+		    free(line);
+		    continue;
+		}
 	    }
 	}
 
@@ -1283,7 +1286,8 @@ int num;		/* index of message */
 		    bad_addresses++;
 		    idp->val.num = XMIT_ANTISPAM;
 		    error(0, 0, 
-			  "SMTP listener doesn't like recipient address `%s@%s'", idp->id, destaddr);
+			  "SMTP listener doesn't like recipient address `%s'",
+			  addr);
 		}
 	    }
 	if (!good_addresses)
@@ -1354,8 +1358,11 @@ int num;		/* index of message */
 		    for (idp = xmit_names; idp; idp = idp->next)
 			if (idp->val.num == XMIT_ACCEPT)
 			    break;	/* only report first address */
-		    sprintf(buf+1, "for <%s@%s> (%s); ",
-			    idp->id, destaddr,
+		    if (strchr(idp->id, '@'))
+			sprintf(buf+1, "for <%s>", idp->id);
+		    else
+			sprintf(buf+1, "for <%s/%s>", idp->id, destaddr);
+		    sprintf(buf+strlen(buf), " (%s); ",
 			    MULTIDROP(ctl) ? "multi-drop" : "single-drop");
 		}
 		else
