@@ -549,7 +549,7 @@ struct method *proto;
 #ifdef HAVE_RRESVPORT_H
     int privport = -1;
 #endif /* HAVE_RRESVPORT_H */
-    int first,number,count;
+    int first, num, count;
 
     tagnum = 0;
     protocol = proto;
@@ -596,7 +596,7 @@ struct method *proto;
     if ((*protocol->getrange)(socket, queryctl, &count, &first) != 0)
 	goto cleanUp;
 
-    /* show them how many messages we'll be downloading */
+    /* show user how many messages we'll be downloading */
     if (outlevel > O_SILENT && outlevel < O_VERBOSE)
 	if (count == 0)
 	    fprintf(stderr, "No mail from %s\n", queryctl->servername);
@@ -612,8 +612,8 @@ struct method *proto;
 		    count > 1 ? "s" : "", 
 		    queryctl->servername);
 
-    if (count > 0) {
-
+    if (count > 0)
+    {
 	/* 
 	 * We expect the open of the output sink to always succeed.
 	 * Therefore, defer it until here so the typical case (no
@@ -644,34 +644,54 @@ struct method *proto;
 	    }
 	}
 
-	for (number = queryctl->flush ? 1 : first;  number<=count; number++) {
-	    char *cp;
-
-	    /* open the mail pipe if we're using an MDA */
-	    if (queryctl->output == TO_MDA
-		&& (queryctl->fetchall || number >= first)) {
-		ok = (mboxfd = openmailpipe(queryctl)) < 0 ? -1 : 0;
-		if (ok != 0)
-		    goto cleanUp;
-	    }
-           
-	    if (queryctl->flush && number < first && !queryctl->fetchall) 
-		ok = 0;  /* no command to send here, will delete message below */
+	/* read, forward, and delete messages */
+	for (num = queryctl->flush ? 1 : first;  num <= count; num++)
+	{
+	    if (queryctl->flush && num < first && !queryctl->fetchall) 
+		ok = 0;  /* retrieval suppressed */
 	    else
 	    {
-		(*protocol->fetch)(socket, number, linelimit, &len);
+		/* request a message */
+		(*protocol->fetch)(socket, num, linelimit, &len);
 		if (outlevel == O_VERBOSE)
 		    if (protocol->delimited)
-			fprintf(stderr,"fetching message %d (delimited)\n",number);
+			fprintf(stderr,
+				"fetching message %d (delimited)\n",
+				num);
 		    else
-			fprintf(stderr,"fetching message %d (%d bytes)\n",number,len);
-		ok = gen_readmsg(socket,mboxfd,len,protocol->delimited,
+			fprintf(stderr,
+				"fetching message %d (%d bytes)\n",
+				num, len);
+
+		/* open the mail pipe now if we're using an MDA */
+		if (queryctl->output == TO_MDA)
+		{
+		    ok = (mboxfd = openmailpipe(queryctl)) < 0 ? -1 : 0;
+		    if (ok != 0)
+			goto cleanUp;
+		}
+
+		/* read the message and ship it to the output sink */
+		ok = gen_readmsg(socket,
+				 mboxfd,
+				 len,
+				 protocol->delimited,
 				 queryctl->localname,
 				 queryctl->servername,
 				 queryctl->output, 
 				 !queryctl->norewrite);
+
+		/* close the mail pipe, we'll reopen before next message */
+		if (queryctl->output == TO_MDA)
+		{
+		    ok = closemailpipe(mboxfd);
+		    if (ok != 0)
+			goto cleanUp;
+		}
+
+		/* tell the server we got it OK and resynchronize */
 		if (protocol->trail)
-		    (*protocol->trail)(socket, queryctl, number);
+		    (*protocol->trail)(socket, queryctl, num);
 		if (ok != 0)
 		    goto cleanUp;
 	    }
@@ -679,23 +699,13 @@ struct method *proto;
 	    /* maybe we delete this message now? */
 	    if (protocol->delete_cmd)
 	    {
-		if ((number < first && queryctl->flush) || !queryctl->keep) {
+		if ((num < first && queryctl->flush) || !queryctl->keep) {
 		    if (outlevel > O_SILENT && outlevel < O_VERBOSE) 
-			fprintf(stderr,"flushing message %d\n", number);
-		    else
-			;
-		    ok = gen_transact(socket, protocol->delete_cmd, number);
+			fprintf(stderr,"flushing message %d\n", num);
+		    ok = gen_transact(socket, protocol->delete_cmd, num);
 		    if (ok != 0)
 			goto cleanUp;
 		}
-	    }
-
-	    /* close the mail pipe, we'll reopen before next message */
-	    if (queryctl->output == TO_MDA
-		&& (queryctl->fetchall || number >= first)) {
-		ok = closemailpipe(mboxfd);
-		if (ok != 0)
-		    goto cleanUp;
 	    }
 	}
 
