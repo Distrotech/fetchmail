@@ -240,7 +240,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 #if !INET6_ENABLE
 		 ctl->server.port == KPOP_PORT &&
 #else
-		 0 == strcmp( ctl->server.service, KPOP_PORT ) &&
+		 ctl->server.service && !strcmp(ctl->server.service, KPOP_PORT ) &&
 #endif
 		 ctl->server.preauthenticate == A_KERBEROS_V4);
 
