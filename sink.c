@@ -281,7 +281,7 @@ static int send_bouncemail(struct msgblk *msg,
     SockPrintf(sock, "From: FETCHMAIL-DAEMON@%s\r\n", fetchmailhost);
     SockPrintf(sock, "To: %s\n", msg->return_path);
     SockPrintf(sock, "MIME-Version: 1.0\r\n");
-    SockPrintf(sock, "Content-Type: multipart/report report-type=text/plain boundary=\"om-mani-padme-hum\"\r\n");
+    SockPrintf(sock, "Content-Type: multipart/report; report-type=text/plain; boundary=\"om-mani-padme-hum\"\r\n");
     SockPrintf(sock, "Content-Transfer-Encoding: 7bit\r\n");
     SockPrintf(sock, "\r\n");
 
@@ -290,19 +290,25 @@ static int send_bouncemail(struct msgblk *msg,
     SockPrintf(sock,"Content-Type: text/plain\r\n");
     SockPrintf(sock, "\r\n");
     SockWrite(sock, message, strlen(message));
-
-    /* RFC1892 part 2 -- machine-readable responses */
-    SockPrintf(sock, "--om-mani-padme-hum\r\n"); 
-    SockPrintf(sock,"Content-Type: message/delivery-status\r\n");
     SockPrintf(sock, "\r\n");
-    for (i = 0; i < nerrors; i++)
-	SockPrintf(sock, errors[i]);
+
+    if (nerrors)
+    {
+	/* RFC1892 part 2 -- machine-readable responses */
+	SockPrintf(sock, "--om-mani-padme-hum\r\n"); 
+	SockPrintf(sock,"Content-Type: message/delivery-status\r\n");
+	SockPrintf(sock, "\r\n");
+	for (i = 0; i < nerrors; i++)
+	    SockPrintf(sock, errors[i]);
+	SockPrintf(sock, "\r\n");
+    }
 
     /* RFC1892 part 3 -- headers of undelivered message */
     SockPrintf(sock, "--om-mani-padme-hum\r\n"); 
     SockPrintf(sock, "Content-Type: text/rfc822-headers\r\n");
     SockPrintf(sock, "\r\n");
     SockWrite(sock, msg->headers, strlen(msg->headers));
+    SockPrintf(sock, "\r\n");
     SockPrintf(sock, "--om-mani-padme-hum--\r\n"); 
 
     if (SMTP_eom(sock) != SM_OK || SMTP_quit(sock))
