@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.20"
+version = "1.21"
 
 from Tkinter import *
 from Dialog import *
@@ -1123,7 +1123,7 @@ switch --enable-POP2.
             if string.find(greetline, "FTGate") > 0:
                 warnings = warnings + """
 This POP server has a weird bug; it says OK twice in response to TOP.
-Its response to RETR is normal, so use the `fetchall'.
+Its response to RETR is normal, so use the `fetchall' option.
 
 """
 
@@ -1262,11 +1262,15 @@ To work around this, it is recommended that you set the `fetchall'
 option on all user entries associated with this server, so any stuck
 mail will be retrieved next time around.
 
+To fix this bug, upgrade to an IMAP4 server.  The fetchmail FAQ includes
+a pointer to an open-source implementation.
+
 """
             if string.find(greetline, "POP3 Server Ready") > 0:
                 warnings = warnings + """
 Some server that uses this greeting line has been observed to choke on
 TOP %d 99999999.  Use the fetchall option. if necessary, to force RETR.
+
 """
 
             if string.find(greetline, "Netscape IMAP4rev1 Service 3.6") > 0:
@@ -1274,17 +1278,20 @@ TOP %d 99999999.  Use the fetchall option. if necessary, to force RETR.
 This server violates the RFC2060 requirement that a BODY[TEXT] fetch should
 set the messages's Seen flag.  As a result, if you use the keep option the
 same messages will be downloaded over and over.
-"""
 
+"""
+                
             if string.find(greetline, "IMAP4rev1") > 0:
                 warnings = warnings + """
 I see an IMAP4rev1 server.  Excellent.  This is (a) the best kind of
 remote-mail server, and (b) the one the fetchmail author uses.  Fetchmail
 has therefore been extremely well tested with this class of server.
+
 """
             if warnings == '':
                 warnings = warnings + """
 Fetchmail doesn't know anything special about this server type.
+
 """
 
             # Display success window with warnings
