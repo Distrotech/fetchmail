@@ -1406,22 +1406,6 @@ const struct method *proto;	/* protocol method table */
 			      count, count > 1 ? "s" : "", buf);
 		}
 
-	    /*
-	     * We may need to get sizes in order to check message
-	     * limits.  Or it may be forced because the fetch methods
-	     * don't return reliable sizes.
-	     */
-	    msgsizes = (int *)NULL;
-	    if (proto->getsizes && (proto->force_getsizes || ctl->limit > 0))
-	    {
-		msgsizes = (int *)alloca(sizeof(int) * count);
-
-		ok = (proto->getsizes)(sock, count, msgsizes);
-		if (ok != 0)
-		    goto cleanUp;
-		set_timeout(ctl->server.timeout);
-	    }
-
 	    if (check_only)
 	    {
 		if (new == -1 || ctl->fetchall)
@@ -1456,6 +1440,22 @@ const struct method *proto;	/* protocol method table */
 		 * if it's nonzero.
 		 */
 		force_retrieval = !peek_capable && (ctl->errcount > 0);
+
+		/*
+		 * We may need to get sizes in order to check message
+		 * limits.  Or it may be forced because the fetch methods
+		 * don't return reliable sizes.
+		 */
+		msgsizes = (int *)NULL;
+		if (proto->getsizes && (proto->force_getsizes || ctl->limit > 0))
+		{
+		    msgsizes = (int *)alloca(sizeof(int) * count);
+
+		    ok = (proto->getsizes)(sock, count, msgsizes);
+		    if (ok != 0)
+			goto cleanUp;
+		    set_timeout(ctl->server.timeout);
+		}
 
 		/* read, forward, and delete messages */
 		for (num = 1; num <= count; num++)
