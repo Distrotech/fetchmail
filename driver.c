@@ -454,14 +454,13 @@ char *realname;		/* real name of host */
     sizeticker = 0;
     has_nuls = FALSE;
     return_path[0] = '\0';
-    remaining = len;
     olderrs = ctl->errcount;
 
     /* read message headers */
     headers = received_for = NULL;
     from_offs = to_offs = cc_offs = bcc_offs = ctt_offs = env_offs = -1;
     oldlen = 0;
-    for (;;)
+    for (remaining = len; remaining > 0; remaining -= linelen)
     {
 	char *line;
 
@@ -508,8 +507,6 @@ char *realname;		/* real name of host */
 
 	if (linelen != strlen(line))
 	    has_nuls = TRUE;
-
-	remaining -= linelen;
 
 	/* check for end of headers; don't save terminating line */
 	if (line[0] == '\r' && line[1] == '\n')
