@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/04/12 15:06:44 $
+<td width="30%" align=right>$Date: 2000/05/13 21:59:36 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1506,12 +1506,9 @@ project manager claims these bugs have been fixed in 6.0.<P>
 <hr>
 <h2><a name="S8">S8. How can I use fetchmail with Hotmail?</a></h2>
 
-You can't, yet.  But Hugo Rabson has written a script called `hotmole'
-that can retrieve Hotmail mail via the web using Lynx.  The script
-was available on <a
-href="http://www.jin-sei-kai.demon.co.uk/hugo/linux.html">
-Hugo Rabson's Linux page</a>, but we're told that project is dead and
-the web page seems to be gone.<P>
+You can't, yet.  But <a
+href="http://www.ozemail.com.au/~peterhawkins/gotmail/">gotmail</a>
+might be what you need.<P>
 
 <hr>
 <h2><a name="S9">S9. How can I use fetchmail with MSN?</a></h2>
@@ -1548,7 +1545,13 @@ bug.<p>
 
 You can't.  At least not if you want to be able to see attachments.
 MailMax has a bug; it reports the message length with attachments 
-but doesn't download them on TOP or RETR. <p>
+but doesn't download them on TOP or RETR.<P>
+
+Also, we're told that TOP sometimes fails to retrieve the entire
+message even when enough lines have been specified. The MailMax
+developers have acknowledged this bug as of 4 May 2000, but there is
+no fix yet.  If you must use this server, force RETR with the
+<tt>fetchall</tt> option.<p>
 
 <hr>
 <h2><a name="S13">S13. How can I use fetchmail with Novell GroupWise?</a></h2>
@@ -1849,6 +1852,18 @@ Fetchmail binaries built this way support <code>ssl</code>,
 <code>sslkey</code>, and <code>sslcert</code> options that control
 SSL encryption.  You will need to have an SSL-enabled mailserver
 to use these options.  See the manual page for detals.<p>
+
+If your open OpenSSL session dies with a message that complains "PRNG
+not seeded", update or improve your operating system.  This means that
+the OpenSSL library on your machine has been unable to locate a source
+of random bits from which to seed its random-number generator;
+normally these come from the <tt>/dev/urandom</tt>, and this message 
+probably means your OS doesn't have that device.<P>.  
+
+An interactive program could seed the random number generator from 
+keystroke timings or some other form of user input.  Because fetchmail 
+is primarily designed to run forever as a background daemon, that option
+option is not available in this case.<P>
 
 <hr>
 <h2><a name="R1">R1. Fetchmail isn't working, and -v shows `SMTP connect failed' messages.</a></h2>
@@ -2783,7 +2798,7 @@ terminate it.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/04/12 15:06:44 $
+<td width="30%" align=right>$Date: 2000/05/13 21:59:36 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
