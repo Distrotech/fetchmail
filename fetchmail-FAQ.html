@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/07/31 21:41:50 $
+<td width="30%" align=right>$Date: 1999/08/01 04:01:40 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -39,7 +39,6 @@ IP address?</a><br>
 <a href="#G11">G11. Is any special configuration needed to <em>send</em> mail?</a><br>
 
 <a href="#G12">G12. Is fetchmail Y2K-compliant?</a><br>
-
 
 <h1>Build-time problems:</h1>
 
@@ -101,6 +100,8 @@ IP address?</a><br>
 <a href="#R6">R6. Fetchmail hangs when used with pppd.</a><br>
 <a href="#R7">R7. Fetchmail randomly dies with socket errors.</a><br>
 <a href="#R8">R8. Fetchmail running as root stopped working after an OS upgrade</a><br>
+<a href="#R9">R9. Fetchmail is timing out after fetching certain
+messages but before deleting them</a><br>
 
 <h1>Disappearing mail</h1>
 
@@ -1849,7 +1850,32 @@ option values that work:<P>
 In RH 6.0, the HOME value in the boot-time root environment changed
 from /root to / as the result of a change in init.  Move your
 .fetchmailrc or use a -f option to explicitly point at the file.
-(Oddly, a similar problem has been reported from Debian systems)<P>
+(Oddly, a similar problem has been reported from Debian systems.)<P>
+
+<hr>
+<h2><a name="#R9">R9. Fetchmail is timing out after fetching certain
+messages but before deleting them</a></h2>
+
+There's a TCP/IP stalling problem under Redhat 6.0 (and possibly other
+recent Linuxes) that can cause this symptom.  Brian Boutel writes:<p>
+
+<blockquote>
+TCP timestamps are turned on on my Linux boxes (I assume it's now the
+default). This uses 12 extra bytes per segment.
+When the tcp  connection starts, the other end agrees a MSS of 1460,
+and then fragments 1460 byte chunks into 1448 and 12, because
+is is not allowing for the timestamp.<p>
+
+Then, for reasons I can't explain, it waits a long time (typically 2
+minutes) after the ack is sent before sending the next (fragmented)
+packet.  Turning off tcp timestamps avoids the fragmentation and
+restores normal behaviour.  To do this, [execute]<p>
+
+echo 0 &gt; /proc/sys/net/ipv4/tcp_timestamps<p>
+
+I'm still unclear about the details of why this is happening. At least
+[now] I am now getting good performance and no queue blocking.
+</blockquote>
 
 <hr>
 <h2><a name="D1">D1. I think I've set up fetchmail correctly, but I'm not getting any mail.</a></h2>
@@ -2427,7 +2453,7 @@ inactivity timeout.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/07/31 21:41:50 $
+<td width="30%" align=right>$Date: 1999/08/01 04:01:40 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
