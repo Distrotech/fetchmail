@@ -8,6 +8,11 @@
   servers (better handling of timeout at session start).
 * Make `fetchmail --configdump' work when there's a defaults entry.
 * Incorporated HMH's build fixes.
+* Added FALLBACK_MDA; fetchmail now looks for procmail or sendmail at
+  build time and uses it if it can't open port 25 for local delivery.
+* Incorporated Red Hat fixes for GSSAPI, configure.in.
+* Bailing out on read-only messages breaks fetchmail -c.  To avoid this,
+  use EXAMINE rather than SELECT in that case.
 
 fetchmail-5.7.2 (Sun Mar  4 19:05:57 EST 2001), 20167 lines:
 
