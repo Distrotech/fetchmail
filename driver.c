@@ -673,7 +673,7 @@ struct query *ctl;	/* query control record */
 
 		if (ctl->mda[0])
 		    write(mboxfd, errmsg, strlen(errmsg));
-		else
+		else if (sinkfp)
 		    SockWrite(errmsg, strlen(errmsg), sinkfp);
 	    }
 
@@ -682,7 +682,8 @@ struct query *ctl;	/* query control record */
 
 	/* SMTP byte-stuffing */
 	if (*bufp == '.' && ctl->mda[0] == 0)
-	    SockWrite(".", 1, sinkfp);
+	    if (sinkfp)
+		SockWrite(".", 1, sinkfp);
 
 	/* replace all LFs with CR-LF  in the line */
 	if (!ctl->mda[0])
@@ -719,7 +720,7 @@ struct query *ctl;	/* query control record */
 	if (closemailpipe(mboxfd))
 	    return(PS_IOERR);
     }
-    else
+    else if (sinkfp)
     {
 	/* write message terminator */
 	if (SMTP_eom(sinkfp) != SM_OK)
