@@ -217,7 +217,8 @@ AC_DEFINE_UNQUOTED(PID_DIR, "$dir")
 # not just for sendmail itself but for workalikes like exim.
 #
 # Note1: A disadvantage of using procmail is that local alias expansion
-# according to /etc/aliases won't get done if we fall back.
+# according to /etc/aliases won't get done if we fall back.  This doesn't
+# matter in single-drop mode.
 #
 # Note2: it would be a very bad idea to use any MDA that doesn't return
 # a refuse-to-deliver status on disk- or process-table-full
