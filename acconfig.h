@@ -14,11 +14,26 @@
    Leave the following blank line there!!  Autoheader needs it.  */
 
 
-/* Define if you have res_search available in your bind library */
-#undef HAVE_RES_SEARCH
+/* Define to 1 if NLS is requested.  */
+#undef ENABLE_NLS
+
+/* Define as 1 if you have catgets and don't want to use GNU gettext.  */
+#undef HAVE_CATGETS
+
+/* Define as 1 if you have gettext and don't want to use GNU gettext.  */
+#undef HAVE_GETTEXT
 
 /* Define if you have herror available in your bind library */
 #undef HAVE_HERROR
+
+/* Define if your locale.h file contains LC_MESSAGES.  */
+#undef HAVE_LC_MESSAGES
+
+/* Define if you have res_search available in your bind library */
+#undef HAVE_RES_SEARCH
+
+/* Define as 1 if you have the stpcpy function.  */
+#undef HAVE_STPCPY
 
 /* Define if your C compiler allows void * as a function result */
 #undef HAVE_VOIDPOINTER
@@ -52,6 +67,9 @@
 
 /* Define if you have setrlimit */
 #undef HAVE_SETRLIMIT
+
+/* Define to the name of the distribution.  */
+#undef PACKAGE
 
 /* Compute an appropriate directory for PID lock files */
 #undef PID_DIR
@@ -93,6 +111,9 @@
 
 /* Define if you want built-in SOCKS support */
 #undef HAVE_SOCKS
+
+/* Define to the version of the distribution.  */
+#undef VERSION
 
 
 /* Leave that blank line there!!  Autoheader needs it.

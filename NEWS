@@ -1,5 +1,12 @@
 				Release Notes:
 
+fetchmail-4.6.8 ():
+* Internationalization support via GNU gettext from Arnaldo Carvalho de Melo
+  <acme@conectiva.com.br> and Jorge Godoy <jorge@bestway.com.br>.  First
+  supported language is Brazilo-Portuegese (LC_ALL=pt_BR).
+
+There are 247 people on fetchmail-friends and 309 on fetchmail-announce.
+
 fetchmail-4.6.7 (Sat Nov 21 13:59:47 EST 1998):
 * Gerald Britton's patches to enable Hesiod support.
 * Postmaster option fix from Bill Metzenthen <billm@melbpc.org.au>.

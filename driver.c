@@ -3,6 +3,8 @@
  *
  * Copyright 1997 by Eric S. Raymond
  * For license terms, see the file COPYING in this directory.
+ *
+ * i18n by Arnaldo Carvalho de Melo <acme@conectiva.com.br> 7-Nov-1998
  */
 
 #include  "config.h"
@@ -63,6 +65,7 @@
 #include <krb5.h>
 #include <com_err.h>
 #endif /* KERBEROS_V5 */
+#include "i18n.h"
 
 #include "socket.h"
 #include "fetchmail.h"
@@ -131,7 +134,7 @@ static void map_name(const char *name, struct query *ctl, struct idlist **xmit_n
     if (lname != (char *)NULL)
     {
 	if (outlevel >= O_DEBUG)
-	    error(0, 0, "mapped %s to local %s", name, lname);
+	    error(0, 0, _("mapped %s to local %s"), name, lname);
 	save_str(xmit_names, lname, XMIT_ACCEPT);
 	accept_count++;
     }
@@ -186,7 +189,7 @@ void find_server_names(const char *hdr, struct query *ctl, struct idlist **xmit_
 			strcasecmp(rhs, idp->id) == 0)
 		    {
 			if (outlevel >= O_DEBUG)
-			    error(0, 0, "passed through %s matching %s", 
+			    error(0, 0, _("passed through %s matching %s"), 
 				  cp, idp->id);
 			save_str(xmit_names, cp, XMIT_ACCEPT);
 			accept_count++;
@@ -232,7 +235,7 @@ static char *parse_received(struct query *ctl, char *bufp)
     static char rbuf[HOSTLEN + USERNAMELEN + 4]; 
 
     if (outlevel >= O_DEBUG)
-	error(0, 0, "analyzing Received line:\n%s", bufp);
+	error(0, 0, _("analyzing Received line:\n%s"), bufp);
     /*
      * Try to extract the real envelope addressee.  We look here
      * specifically for the mailserver's Received line.
@@ -262,13 +265,13 @@ static char *parse_received(struct query *ctl, char *bufp)
 	{
 	    if (outlevel >= O_DEBUG)
 		error(0, 0, 
-		      "line accepted, %s is an alias of the mailserver", rbuf);
+		      _("line accepted, %s is an alias of the mailserver"), rbuf);
 	}
 	else
 	{
 	    if (outlevel >= O_DEBUG)
 		error(0, 0, 
-		      "line rejected, %s is not an alias of the mailserver", 
+		      _("line rejected, %s is not an alias of the mailserver"), 
 		      rbuf);
 	    return(NULL);
 	}
@@ -313,7 +316,7 @@ static char *parse_received(struct query *ctl, char *bufp)
     if (!ok)
     {
 	if (outlevel >= O_DEBUG)
-	    error(0, 0, "no Received address found");
+	    error(0, 0, _("no Received address found"));
 	return(NULL);
     }
     else
@@ -322,7 +325,7 @@ static char *parse_received(struct query *ctl, char *bufp)
 	    char *lf = rbuf + strlen(rbuf)-1;
 	    *lf = '\0';
 	    if (outlevel >= O_DEBUG)
-		error(0, 0, "found Received address `%s'", rbuf+2);
+		error(0, 0, _("found Received address `%s'"), rbuf+2);
 	    *lf = '\n';
 	}
 	return(rbuf);
@@ -677,7 +680,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
     if (!headers_ok)
     {
 	if (outlevel > O_SILENT)
-	    error(0,0,"message delimiter found while scanning headers");
+	    error(0,0,_("message delimiter found while scanning headers"));
     }
 
     /*
@@ -801,7 +804,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 	    save_str(&msg.recipients, run.postmaster, XMIT_ACCEPT);
 	    if (outlevel >= O_DEBUG)
 		error(0, 0, 
-		      "no local matches, forwarding to %s",
+		      _("no local matches, forwarding to %s"),
 		      run.postmaster);
 	}
     }
@@ -815,7 +818,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
     if (ctl->errcount > olderrs)	/* there were DNS errors above */
     {
 	if (outlevel >= O_DEBUG)
-	    error(0,0, "forwarding and deletion suppressed due to DNS errors");
+	    error(0,0, _("forwarding and deletion suppressed due to DNS errors"));
 	free(msg.headers);
 	free_str_list(&msg.recipients);
 	return(PS_TRANSIENT);
@@ -903,7 +906,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 
     if (n == -1)
     {
-	error(0, errno, "writing RFC822 msg.headers");
+	error(0, errno, _("writing RFC822 msg.headers"));
 	release_sink(ctl);
 	free(msg.headers);
 	free_str_list(&msg.recipients);
@@ -923,13 +926,13 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 	if (no_local_matches)
 	{
 	    if (reject_count != 1)
-		strcat(errhd, "no recipient addresses matched declared local names");
+		strcat(errhd, _("no recipient addresses matched declared local names"));
 	    else
 	    {
 		for (idp = msg.recipients; idp; idp = idp->next)
 		    if (idp->val.status.mark == XMIT_REJECT)
 			break;
-		sprintf(errhd+strlen(errhd), "recipient address %s didn't match any local name", idp->id);
+		sprintf(errhd+strlen(errhd), _("recipient address %s didn't match any local name"), idp->id);
 	    }
 	}
 
@@ -937,14 +940,14 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 	{
 	    if (errhd[sizeof("X-Fetchmail-Warning: ")])
 		strcat(errhd, "; ");
-	    strcat(errhd, "message has embedded NULs");
+	    strcat(errhd, _("message has embedded NULs"));
 	}
 
 	if (bad_addresses)
 	{
 	    if (errhd[sizeof("X-Fetchmail-Warning: ")])
 		strcat(errhd, "; ");
-	    strcat(errhd, "SMTP listener rejected local recipient addresses: ");
+	    strcat(errhd, _("SMTP listener rejected local recipient addresses: "));
 	    errlen = strlen(errhd);
 	    for (idp = msg.recipients; idp; idp = idp->next)
 		if (idp->val.status.mark == XMIT_ANTISPAM)
@@ -1059,7 +1062,7 @@ static int readbody(int sock, struct query *ctl, flag forward, int len)
 
 	    if (n < 0)
 	    {
-		error(0, errno, "writing message text");
+		error(0, errno, _("writing message text"));
 		release_sink(ctl);
 		return(PS_IOERR);
 	    }
@@ -1102,7 +1105,7 @@ const char *canonical;	/* server name */
 			 "KPOPV0.1"));
     if (rem != KSUCCESS)
     {
-	error(0, -1, "kerberos error %s", (krb_get_err_text (rem)));
+	error(0, -1, _("kerberos error %s"), (krb_get_err_text (rem)));
 	return (PS_AUTHFAIL);
     }
     return (0);
@@ -1161,7 +1164,7 @@ const char *canonical;  /* server name */
 
     if (retval) {
       if (err_ret && err_ret->text.length) {
-          error(0, 0, "krb5_sendauth: %s [server says '%*s'] ",
+          error(0, 0, _("krb5_sendauth: %s [server says '%*s'] "),
             error_message(retval),
             err_ret->text.length,
             err_ret->text.data);
@@ -1256,7 +1259,7 @@ static void send_size_warnings(struct query *ctl)
 	    nbr = current->val.status.mark;
 	    size = atoi(current->id);
 	    stuff_warning(ctl, 
-		    "\t%d msg %d octets long skipped by fetchmail.",
+		    _("\t%d msg %d octets long skipped by fetchmail."),
 		    nbr, size);
 	}
 	current->val.status.num++;
@@ -1291,7 +1294,7 @@ const struct method *proto;	/* protocol method table */
 #ifndef KERBEROS_V4
     if (ctl->server.preauthenticate == A_KERBEROS_V4)
     {
-	error(0, -1, "Kerberos V4 support not linked.");
+	error(0, -1, _("Kerberos V4 support not linked."));
 	return(PS_ERROR);
     }
 #endif /* KERBEROS_V4 */
@@ -1299,7 +1302,7 @@ const struct method *proto;	/* protocol method table */
 #ifndef KERBEROS_V5
     if (ctl->server.preauthenticate == A_KERBEROS_V5)
     {
-	error(0, -1, "Kerberos V5 support not linked.");
+	error(0, -1, _("Kerberos V5 support not linked."));
 	return(PS_ERROR);
     }
 #endif /* KERBEROS_V5 */
@@ -1310,13 +1313,13 @@ const struct method *proto;	/* protocol method table */
 	/* check for unsupported options */
 	if (ctl->flush) {
 	    error(0, 0,
-		    "Option --flush is not supported with %s",
+		    _("Option --flush is not supported with %s"),
 		    proto->name);
 	    return(PS_SYNTAX);
 	}
 	else if (ctl->fetchall) {
 	    error(0, 0,
-		    "Option --all is not supported with %s",
+		    _("Option --all is not supported with %s"),
 		    proto->name);
 	    return(PS_SYNTAX);
 	}
@@ -1324,7 +1327,7 @@ const struct method *proto;	/* protocol method table */
     if (!proto->getsizes && NUM_SPECIFIED(ctl->limit))
     {
 	error(0, 0,
-		"Option --limit is not supported with %s",
+		_("Option --limit is not supported with %s"),
 		proto->name);
 	return(PS_SYNTAX);
     }
@@ -1342,22 +1345,22 @@ const struct method *proto;	/* protocol method table */
     {
 	if (phase == OPEN_WAIT)
 	    error(0, 0,
-		  "timeout after %d seconds waiting to connect to server %s.",
+		  _("timeout after %d seconds waiting to connect to server %s."),
 		  ctl->server.timeout, ctl->server.pollname);
 	else if (phase == SERVER_WAIT)
 	    error(0, 0,
-		  "timeout after %d seconds waiting for server %s.",
+		  _("timeout after %d seconds waiting for server %s."),
 		  ctl->server.timeout, ctl->server.pollname);
 	else if (phase == FORWARDING_WAIT)
 	    error(0, 0,
-		  "timeout after %d seconds waiting for %s.",
+		  _("timeout after %d seconds waiting for %s."),
 		  ctl->server.timeout,
 		  ctl->mda ? "MDA" : "SMTP");
 	else if (phase == LISTENER_WAIT)
 	    error(0, 0,
-		  "timeout after %d seconds waiting for listener to respond.");
+		  _("timeout after %d seconds waiting for listener to respond."));
 	else
-	    error(0, 0, "timeout after %d seconds.", ctl->server.timeout);
+	    error(0, 0, _("timeout after %d seconds."), ctl->server.timeout);
 
 	release_sink(ctl);
 	if (ctl->smtp_socket != -1)
@@ -1372,20 +1375,20 @@ const struct method *proto;	/* protocol method table */
 	if (timeoutcount > MAX_TIMEOUTS && !open_warning_by_mail(ctl))
 	{
 	    stuff_warning(ctl,
-			  "Subject: fetchmail sees repeated timeouts\r\n");
+			  _("Subject: fetchmail sees repeated timeouts\r\n"));
 	    stuff_warning(ctl,
-			  "Fetchmail saw more than %d timouts while attempting to get mail from %s@%s.", 
+			  _("Fetchmail saw more than %d timouts while attempting to get mail from %s@%s."), 
 			  MAX_TIMEOUTS,
 			  ctl->remotename,
 			  ctl->server.truename);
 	    stuff_warning(ctl, 
-			  "This could mean that your mailserver is stuck, or that your SMTP listener");
+			  _("This could mean that your mailserver is stuck, or that your SMTP listener"));
 	    stuff_warning(ctl, 
-			  "is wedged, or that your mailbox file on the server has been corrupted by");
+			  _("is wedged, or that your mailbox file on the server has been corrupted by"));
 	    stuff_warning(ctl, 
-			  "a server error.  You can run `fetchmail -v -v' to diagnose the problem.");
+			  _("a server error.  You can run `fetchmail -v -v' to diagnose the problem."));
 	    stuff_warning(ctl,
-			  "Fetchmail won't poll this mailbox again until you restart it.");
+			  _("Fetchmail won't poll this mailbox again until you restart it."));
 	    close_warning_by_mail(ctl);
 	    ctl->wedged = TRUE;
 	}
@@ -1406,7 +1409,7 @@ const struct method *proto;	/* protocol method table */
 	/* execute pre-initialization command, if any */
 	if (ctl->preconnect && (ok = system(ctl->preconnect)))
 	{
-	    sprintf(buf, "pre-connection command failed with status %d", ok);
+	    sprintf(buf, _("pre-connection command failed with status %d"), ok);
 	    error(0, 0, buf);
 	    ok = PS_SYNTAX;
 	    goto closeUp;
@@ -1433,7 +1436,7 @@ const struct method *proto;	/* protocol method table */
 	    int err_no = errno;
 #ifdef HAVE_RES_SEARCH
 	    if (err_no != 0 && h_errno != 0)
-		error(0, 0, "fetchmail: internal inconsistency");
+		error(0, 0, _("fetchmail: internal inconsistency"));
 #endif
 	    /*
 	     * Avoid generating a bogus error every poll cycle when we're
@@ -1443,21 +1446,21 @@ const struct method *proto;	/* protocol method table */
 	    if (err_no == EHOSTUNREACH && run.poll_interval)
 	        goto ehostunreach;
 
-	    error_build("fetchmail: %s connection to %s failed", 
+	    error_build(_("fetchmail: %s connection to %s failed"), 
 			 protocol->name, ctl->server.pollname);
 #ifdef HAVE_RES_SEARCH
 	    if (h_errno != 0)
 	    {
 		if (h_errno == HOST_NOT_FOUND)
-		    error_complete(0, 0, ": host is unknown");
+		    error_complete(0, 0, _(": host is unknown"));
 		else if (h_errno == NO_ADDRESS)
-		    error_complete(0, 0, ": name is valid but has no IP address");
+		    error_complete(0, 0, _(": name is valid but has no IP address"));
 		else if (h_errno == NO_RECOVERY)
-		    error_complete(0, 0, ": unrecoverable name server error");
+		    error_complete(0, 0, _(": unrecoverable name server error"));
 		else if (h_errno == TRY_AGAIN)
-		    error_complete(0, 0, ": temporary name server error");
+		    error_complete(0, 0, _(": temporary name server error"));
 		else
-		    error_complete(0, 0, ": unknown DNS error %d", h_errno);
+		    error_complete(0, 0, _(": unknown DNS error %d"), h_errno);
 	    }
 	    else
 #endif /* HAVE_RES_SEARCH */
@@ -1513,14 +1516,14 @@ const struct method *proto;	/* protocol method table */
 	    if (ok != 0)
 	    {
 		if (ok == PS_LOCKBUSY)
-		    error(0, -1, "Lock-busy error on %s@%s",
+		    error(0, -1, _("Lock-busy error on %s@%s"),
 			  ctl->remotename,
 			  ctl->server.truename);
 		else
 		{
 		    if (ok == PS_ERROR)
 			ok = PS_AUTHFAIL;
-		    error(0, -1, "Authorization failure on %s@%s", 
+		    error(0, -1, _("Authorization failure on %s@%s"), 
 			  ctl->remotename,
 			  ctl->server.truename);
 
@@ -1533,15 +1536,15 @@ const struct method *proto;	/* protocol method table */
 			&& !ctl->wedged && !open_warning_by_mail(ctl))
 		    {
 			stuff_warning(ctl,
-			       "Subject: fetchmail authentication failed\r\n");
+			       _("Subject: fetchmail authentication failed\r\n"));
 			stuff_warning(ctl,
-				"Fetchmail could not get mail from %s@%s.", 
+				_("Fetchmail could not get mail from %s@%s."), 
 				ctl->remotename,
 				ctl->server.truename);
 			stuff_warning(ctl, 
-			       "The attempt to get authorization failed.");
+			       _("The attempt to get authorization failed."));
 			stuff_warning(ctl, 
-			       "This probably means your password is invalid.");
+			       _("This probably means your password is invalid."));
 			close_warning_by_mail(ctl);
 			ctl->wedged = TRUE;
 		    }
@@ -1562,9 +1565,9 @@ const struct method *proto;	/* protocol method table */
 
 		if (outlevel >= O_DEBUG)
 		    if (idp->id)
-			error(0, 0, "selecting or re-polling folder %s", idp->id);
+			error(0, 0, _("selecting or re-polling folder %s"), idp->id);
 		    else
-			error(0, 0, "selecting or re-polling default folder");
+			error(0, 0, _("selecting or re-polling default folder"));
 
 		/* compute # of messages and number of new messages waiting */
 		ok = (protocol->getrange)(sock, ctl, idp->id, &count, &new, &bytes);
@@ -1600,32 +1603,35 @@ const struct method *proto;	/* protocol method table */
 
 		/* show user how many messages we downloaded */
 		if (idp->id)
-		    (void) sprintf(buf, "%s at %s (folder %s)",
+		    (void) sprintf(buf, _("%s at %s (folder %s)"),
 				   ctl->remotename, ctl->server.truename, idp->id);
 		else
-		    (void) sprintf(buf, "%s at %s",
+		    (void) sprintf(buf, _("%s at %s"),
 				   ctl->remotename, ctl->server.truename);
 		if (outlevel > O_SILENT)
 		    if (count == -1)		/* only used for ETRN */
-			error(0, 0, "Polling %s", ctl->server.truename);
+			error(0, 0, _("Polling %s"), ctl->server.truename);
 		    else if (count != 0)
 		    {
 			if (new != -1 && (count - new) > 0)
-			    error_build("%d message%s (%d seen) for %s",
-				  count, count > 1 ? "s" : "", count-new, buf);
+			    error_build(_("%d %s (%d seen) for %s"),
+				  count, count > 1 ? _("messages") :
+				                     _("message"),
+				  count-new, buf);
 			else
-			    error_build("%d message%s for %s", 
-				  count, count > 1 ? "s" : "", buf);
+			    error_build(_("%d %s for %s"), 
+				  count, count > 1 ? _("messages") :
+				                     _("message"), buf);
 			if (bytes == -1)
 			    error_complete(0, 0, ".");
 			else
-			    error_complete(0, 0, " (%d octets).", bytes);
+			    error_complete(0, 0, _(" (%d octets)."), bytes);
 		    }
 		    else
 		    {
 			/* these are pointless in normal daemon mode */
 			if (pass == 1 && (run.poll_interval == 0 || outlevel >= O_VERBOSE))
-			    error(0, 0, "No mail for %s", buf); 
+			    error(0, 0, _("No mail for %s"), buf); 
 		    }
 
 		/* very important, this is where we leave the do loop */ 
@@ -1698,7 +1704,7 @@ const struct method *proto;	/* protocol method table */
 			{
 			    if (outlevel >= O_VERBOSE)
 				error(0, 0, 
-				      "Skipping message %d, length -1",
+				      _("Skipping message %d, length -1"),
 				      num - 1);
 			    continue;
 			}
@@ -1708,7 +1714,7 @@ const struct method *proto;	/* protocol method table */
 			{
 			    if (outlevel > O_SILENT)
 			    {
-				error_build("skipping message %d", num);
+				error_build(_("skipping message %d"), num);
 				if (toolarge && !check_only) 
 				{
 				    char size[32];
@@ -1753,7 +1759,7 @@ const struct method *proto;	/* protocol method table */
 					tmp->val.status.num = cnt;
 				    }
 
-				    error_build(" (oversized, %d octets)",
+				    error_build(_(" (oversized, %d octets)"),
 						msgsizes[num-1]);
 				}
 			    }
@@ -1776,12 +1782,12 @@ const struct method *proto;	/* protocol method table */
 
 			    if (outlevel > O_SILENT)
 			    {
-				error_build("reading message %d of %d",
+				error_build(_("reading message %d of %d"),
 					    num,count);
 
 				if (len > 0)
-				    error_build(" (%d %soctets)",
-					len, wholesize ? "" : "header ");
+				    error_build(_(" (%d %soctets)"),
+					len, wholesize ? "" : _("header "));
 				if (outlevel >= O_VERBOSE)
 				    error_complete(0, 0, "");
 				else
@@ -1826,7 +1832,7 @@ const struct method *proto;	/* protocol method table */
 				    if ((ok=(protocol->fetch_body)(sock,ctl,num,&len)))
 					goto cleanUp;
 				    if (outlevel > O_SILENT && !wholesize)
-					error_build(" (%d body octets) ", len);
+					error_build(_(" (%d body octets) "), len);
 				}
 			    }
 
@@ -1895,7 +1901,7 @@ const struct method *proto;	/* protocol method table */
 			    {
 				if (outlevel >= O_DEBUG)
 				    error(0, 0,
-					  "message %d was not the expected length (%d actual != %d expected)",
+					  _("message %d was not the expected length (%d actual != %d expected)"),
 					  num, msglen, msgsizes[num-1]);
 			    }
 
@@ -1933,7 +1939,7 @@ const struct method *proto;	/* protocol method table */
 			if (retained)
 			{
 			    if (outlevel > O_SILENT) 
-				error_complete(0, 0, " retained");
+				error_complete(0, 0, _(" retained"));
 			}
 			else if (protocol->delete
 				 && !suppress_delete
@@ -1941,7 +1947,7 @@ const struct method *proto;	/* protocol method table */
 			{
 			    deletions++;
 			    if (outlevel > O_SILENT) 
-				error_complete(0, 0, " flushed");
+				error_complete(0, 0, _(" flushed"));
 			    ok = (protocol->delete)(sock, ctl, num);
 			    if (ok != 0)
 				goto cleanUp;
@@ -1950,7 +1956,7 @@ const struct method *proto;	/* protocol method table */
 #endif /* POP3_ENABLE */
 			}
 			else if (outlevel > O_SILENT) 
-			    error_complete(0, 0, " not flushed");
+			    error_complete(0, 0, _(" not flushed"));
 
 			/* perhaps this as many as we're ready to handle */
 			if (NUM_NONZERO(ctl->fetchlimit) && ctl->fetchlimit <= fetches)
@@ -1993,40 +1999,40 @@ const struct method *proto;	/* protocol method table */
     switch (ok)
     {
     case PS_SOCKET:
-	msg = "socket";
+	msg = _("socket");
 	break;
     case PS_AUTHFAIL:
-	msg = "authorization";
+	msg = _("authorization");
 	break;
     case PS_SYNTAX:
-	msg = "missing or bad RFC822 header";
+	msg = _("missing or bad RFC822 header");
 	break;
     case PS_IOERR:
-	msg = "MDA";
+	msg = _("MDA");
 	break;
     case PS_ERROR:
-	msg = "client/server synchronization";
+	msg = _("client/server synchronization");
 	break;
     case PS_PROTOCOL:
-	msg = "client/server protocol";
+	msg = _("client/server protocol");
 	break;
     case PS_LOCKBUSY:
-	msg = "lock busy on server";
+	msg = _("lock busy on server");
 	break;
     case PS_SMTP:
-	msg = "SMTP transaction";
+	msg = _("SMTP transaction");
 	break;
     case PS_DNS:
-	msg = "DNS lookup";
+	msg = _("DNS lookup");
 	break;
     case PS_UNDEFINED:
-	error(0, 0, "undefined");
+	error(0, 0, _("undefined"));
 	break;
     }
     if (ok==PS_SOCKET || ok==PS_AUTHFAIL || ok==PS_SYNTAX 
 		|| ok==PS_IOERR || ok==PS_ERROR || ok==PS_PROTOCOL 
 		|| ok==PS_LOCKBUSY || ok==PS_SMTP)
-	error(0,-1, "%s error while fetching from %s", msg, ctl->server.pollname);
+	error(0,-1, _("%s error while fetching from %s"), msg, ctl->server.pollname);
 
 closeUp:
     /* execute post-initialization command, if any */
@@ -2034,7 +2040,7 @@ closeUp:
     {
 	char buf[80];
 
-	sprintf(buf, "post-connection command failed with status %d", ok);
+	sprintf(buf, _("post-connection command failed with status %d"), ok);
 	error(0, 0, buf);
 	if (ok == PS_SUCCESS)
 	    ok = PS_SYNTAX;

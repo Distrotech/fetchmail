@@ -2,6 +2,8 @@
  * xmalloc.c -- allocate space or die 
  *
  * For license terms, see the file COPYING in this directory.
+ *
+ * i18n by Arnaldo Carvalho de Melo <acme@conectiva.com.br> 7-Nov-1998
  */
 
 #include "config.h"
@@ -12,6 +14,7 @@
 #include  <stdlib.h>
 #endif
 #include "fetchmail.h"
+#include "i18n.h"
 
 #if defined(HAVE_VOIDPOINTER)
 #define XMALLOCTYPE void
@@ -26,7 +29,7 @@ xmalloc (int n)
 
     p = (XMALLOCTYPE *) malloc(n);
     if (p == (XMALLOCTYPE *) 0)
-	error(PS_UNDEFINED, errno, "malloc failed");
+	error(PS_UNDEFINED, errno, _("malloc failed"));
     return(p);
 }
 
@@ -37,7 +40,7 @@ xrealloc (XMALLOCTYPE *p, int n)
 	return xmalloc (n);
     p = (XMALLOCTYPE *) realloc(p, n);
     if (p == (XMALLOCTYPE *) 0)
-	error(PS_UNDEFINED, errno, "realloc failed");
+	error(PS_UNDEFINED, errno, _("realloc failed"));
     return p;
 }
 

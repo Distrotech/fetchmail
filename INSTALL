@@ -68,6 +68,14 @@ If you want to build for debugging,
 
 will do that.
 
+To enable multilingual support using GNU gettext, 
+
+	configure --prefix=/usr --enable-NLS
+
+The prefix argument is needed to generate the makefiles in the po directory
+correctly; otherwise, they'll install the internationalization stuff in
+/usr/local where fetchmail can't see it.
+
 Advanced configuration:
 
 Specifying --with-kerberos=DIR or --with-kerberos5=DIR will tell the

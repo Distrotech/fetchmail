@@ -2,6 +2,8 @@
  * pop3.c -- POP3 protocol methods
  *
  * For license terms, see the file COPYING in this directory.
+ *
+ * i18n by Arnaldo Carvalho de Melo <acme@conectiva.com.br> 7-Nov-1998
  */
 
 #include  "config.h"
@@ -18,6 +20,7 @@
  
 #include  "fetchmail.h"
 #include  "socket.h"
+#include  "i18n.h"
 
 #if OPIE
 #include <opie.h>
@@ -177,7 +180,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	  i = opiegenerator(challenge, !strcmp(ctl->password, "opie") ? "" : ctl->password, response);
 	  if ((i == -2) && !run.poll_interval) {
 	    char secret[OPIE_SECRET_MAX+1];
-	    fprintf(stderr, "Secret pass phrase: ");
+	    fprintf(stderr, _("Secret pass phrase: "));
 	    if (opiereadpass(secret, sizeof(secret), 0))
 	      i = opiegenerator(challenge,  secret, response);
 	    memset(secret, 0, sizeof(secret));
@@ -203,7 +206,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	for (start = greeting;  *start != 0 && *start != '<';  start++)
 	    continue;
 	if (*start == 0) {
-	    error(0, -1, "Required APOP timestamp not found in greeting");
+	    error(0, -1, _("Required APOP timestamp not found in greeting"));
 	    return(PS_AUTHFAIL);
 	}
 
@@ -211,7 +214,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	for (end = start;  *end != 0  && *end != '>';  end++)
 	    continue;
 	if (*end == 0 || end == start + 1) {
-	    error(0, -1, "Timestamp syntax error in greeting");
+	    error(0, -1, _("Timestamp syntax error in greeting"));
 	    return(PS_AUTHFAIL);
 	}
 	else
@@ -233,7 +236,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	break;
 
     default:
-	error(0, 0, "Undefined protocol request in POP3_auth");
+	error(0, 0, _("Undefined protocol request in POP3_auth"));
 	ok = PS_ERROR;
     }
 
@@ -241,7 +244,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
     {
 	/* maybe we detected a lock-busy condition? */
         if (ok == PS_LOCKBUSY)
-	    error(0, 0, "lock busy!  Is another session active?"); 
+	    error(0, 0, _("lock busy!  Is another session active?")); 
 
 	return(ok);
     }
@@ -349,8 +352,8 @@ pop3_slowuidl( int sock,  struct query *ctl, int *countp, int *newp)
 		    try_id--;
 		}
 	    } else {
-		error(0,0,"Messages inserted into list on server. "
-		      "Cannot handle this.");
+		error(0,0,_("Messages inserted into list on server. "
+		      "Cannot handle this."));
 		return -1;
 	    }
 	} 
@@ -423,7 +426,7 @@ static int pop3_getrange(int sock,
 	{
 	    if (sscanf(buf, "%d", &last) == 0)
 	    {
-		error(0, 0, "protocol error");
+		error(0, 0, _("protocol error"));
 		return(PS_ERROR);
 	    }
 	    *newp = (*countp - last);
@@ -436,7 +439,7 @@ static int pop3_getrange(int sock,
 		/* don't worry, yet! do it the slow way */
 		if((ok = pop3_slowuidl( sock, ctl, countp, newp))!=0)
 		{
-		    error(0, 0, "protocol error while fetching UIDLs");
+		    error(0, 0, _("protocol error while fetching UIDLs"));
 		    return(PS_ERROR);
 		}
 	    }
@@ -660,7 +663,7 @@ int doPOP3 (struct query *ctl)
 {
 #ifndef MBOX
     if (ctl->mailboxes->id) {
-	fprintf(stderr,"Option --remote is not supported with POP3\n");
+	fprintf(stderr,_("Option --remote is not supported with POP3\n"));
 	return(PS_SYNTAX);
     }
 #endif /* MBOX */

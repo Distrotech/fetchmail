@@ -9,6 +9,8 @@
 
   The sole entry point is POP3_auth_rpa()
 
+  i18n by Arnaldo Carvalho de Melo <acme@conectiva.com.br> 7-Nov-1998
+
  ***********************************************************************/
 
 #include  "config.h"
@@ -22,6 +24,7 @@
 #include  "socket.h"
 #include  "fetchmail.h"
 #include  "md5.h"
+#include  "i18n.h"
 
 #ifdef TESTMODE
 extern unsigned char line1[];
@@ -110,10 +113,10 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     unsigned char buf [POPBUFSIZE];
     unsigned char *bufp;
     int      status,aulin,kuslin;
-    char* stdec[4] = { "Success" ,
-		       "Restricted user (something wrong with account)" ,
-		       "Invalid userid or passphrase" ,
-		       "Deity error" };
+    char* stdec[4] = { N_("Success") ,
+		       N_("Restricted user (something wrong with account)") ,
+		       N_("Invalid userid or passphrase") ,
+		       N_("Deity error") };
 
     /* Initiate RPA authorisation */
 
@@ -166,7 +169,7 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     if ((rxlen = DecBase64(buf)) == 0)
     {
 	if (outlevel > O_SILENT)
-	    error(0, 0, "RPA token 2: Base64 decode error\n");
+	    error(0, 0, _("RPA token 2: Base64 decode error\n"));
 	return(PS_RPA);
     }
     bufp = buf;
@@ -177,13 +180,13 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
 
     verh = *(bufp++); verl = *(bufp++);
     if (outlevel >= O_DEBUG)
-	error(0, 0, "Service chose RPA version %d.%d\n",verh,verl);
+	error(0, 0, _("Service chose RPA version %d.%d\n"),verh,verl);
     Csl  = *(bufp++);
     memcpy(Cs, bufp, Csl);
     bufp += Csl;
     if (outlevel >= O_DEBUG)
     {
-	error(0, 0, "Service challenge (l=%d):",Csl);
+	error(0, 0, _("Service challenge (l=%d):"),Csl);
 	for (i=0; i<Csl; i++)
 	    error_build("%02X ",Cs[i]);
 	error_complete(0, 0, "");
@@ -192,20 +195,20 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     Ts[Tsl] = 0;
     bufp += Tsl;
     if (outlevel >= O_DEBUG)
-	error(0, 0, "Service timestamp %s\n",Ts);
+	error(0, 0, _("Service timestamp %s\n"),Ts);
     rll = *(bufp++) << 8; rll = rll | *(bufp++);
     if ((bufp-buf+rll) != rxlen)
     {
 	if (outlevel > O_SILENT)
-	    error(0, 0, "RPA token 2 length error\n");
+	    error(0, 0, _("RPA token 2 length error\n"));
 	return(PS_RPA);
     }
     if (outlevel >= O_DEBUG)
-	error(0, 0, "Realm list: %s\n",bufp);
+	error(0, 0, _("Realm list: %s\n"),bufp);
     if (SetRealmService(bufp) != 0)
     {
 	if (outlevel > O_SILENT)
-	    error(0, 0, "RPA error in service@realm string\n");
+	    error(0, 0, _("RPA error in service@realm string\n"));
 	return(PS_RPA);
     }
 
@@ -242,7 +245,7 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     if ((rxlen = DecBase64(buf)) == 0)
     {
 	if (outlevel > O_SILENT)
-	    error(0, 0, "RPA token 4: Base64 decode error\n");
+	    error(0, 0, _("RPA token 4: Base64 decode error\n"));
 	return(PS_RPA);
     }
     bufp = buf;
@@ -253,7 +256,7 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     aulin = *(bufp++);
     if (outlevel >= O_DEBUG)
     {
-	error(0, 0, "User authentication (l=%d):",aulin);
+	error(0, 0, _("User authentication (l=%d):"),aulin);
 	for (i=0; i<aulin; i++)
 	    error_build("%02X ",bufp[i]);
 	error_complete(0, 0, "");
@@ -267,43 +270,43 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     {
 	status = *(bufp++);
 	if (outlevel >= O_DEBUG)
-	    error(0, 0, "RPA status: %02X\n",status);
+	    error(0, 0, _("RPA status: %02X\n"),status);
     }
     else status = 0;
     if ((bufp - buf) != rxlen)
     {
 	if (outlevel > O_SILENT)
-	    error(0, 0, "RPA token 4 length error\n");
+	    error(0, 0, _("RPA token 4 length error\n"));
 	return(PS_RPA);
     }
     if (status != 0)
     {
 	if (outlevel > O_SILENT)
 	    if (status < 4)
-		error(0, 0, "RPA rejects you: %s\n",stdec[status]);
+		error(0, 0, _("RPA rejects you: %s\n"),_(stdec[status]));
 	    else
-		error(0, 0, "RPA rejects you, reason unknown\n");
+		error(0, 0, _("RPA rejects you, reason unknown\n"));
 	return(PS_AUTHFAIL);
     }
     if (Aul != aulin)
     {
-	error(0, 0, "RPA User Authentication length error: %d\n",aulin);
+	error(0, 0, _("RPA User Authentication length error: %d\n"),aulin);
 	return(PS_RPA);
     }
     if (Kusl != kuslin)
     {
-	error(0, 0, "RPA Session key length error: %d\n",kuslin);
+	error(0, 0, _("RPA Session key length error: %d\n"),kuslin);
 	return(PS_RPA);
     }
     if (CheckUserAuth() != 0)
     {
 	if (outlevel > O_SILENT)
-	    error(0, 0, "RPA _service_ auth fail. Spoof server?\n");
+	    error(0, 0, _("RPA _service_ auth fail. Spoof server?\n"));
 	return(PS_AUTHFAIL);
     }
     if (outlevel >= O_DEBUG)
     {
-	error(0, 0, "Session key established:");
+	error(0, 0, _("Session key established:"));
 	for (i=0; i<Kusl; i++)
 	    error_build("%02X ",Kus[i]);
 	error_complete(0, 0, "");
@@ -334,7 +337,7 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     }
 
     if (outlevel > O_SILENT)
-	error(0, 0, "RPA authorisation complete\n");
+	error(0, 0, _("RPA authorisation complete\n"));
 
     return(PS_SUCCESS);
 }
@@ -363,7 +366,7 @@ int socket;
     int sockrc;
 
     if (outlevel >= O_DEBUG)
-	error(0, 0,  "Get response\n");
+	error(0, 0,  _("Get response\n"));
 #ifndef TESTMODE
     sockrc = gen_recv(socket, buf, sizeof(buf));
 #else
@@ -393,7 +396,7 @@ int socket;
     else
 	ok = PS_SOCKET;
     if (outlevel >= O_DEBUG)
-	error(0, 0,  "Get response return %d [%s]\n", ok, buf);
+	error(0, 0,  _("Get response return %d [%s]\n"), ok, buf);
     buf[sockrc] = 0;
     return(ok);
 }
@@ -455,7 +458,7 @@ int rxlen;
     save = *pptr;
     if (**pptr != HDR)
     {
-	if (outlevel > O_SILENT) error(0, 0, "Hdr not 60\n");
+	if (outlevel > O_SILENT) error(0, 0, _("Hdr not 60\n"));
 	return(0);
     }
     (*pptr)++;
@@ -476,18 +479,18 @@ int rxlen;
     if (len==0)
     {
 	if (outlevel>O_SILENT)
-	    error(0, 0, "Token length error\n");
+	    error(0, 0, _("Token length error\n"));
     }
     else if (((*pptr-save)+len) != rxlen)
     {
 	if (outlevel>O_SILENT)
-	    error(0, 0, "Token Length %d disagrees with rxlen %d\n",len,rxlen);
+	    error(0, 0, _("Token Length %d disagrees with rxlen %d\n"),len,rxlen);
 	len = 0;
     }
     else if (memcmp(*pptr,MECH,11))
     {
 	if (outlevel > O_SILENT)
-	    error(0, 0, "Mechanism field incorrect\n");
+	    error(0, 0, _("Mechanism field incorrect\n"));
 	len = 0;
     }
     else (*pptr) += 11;  /* Skip mechanism field */
@@ -524,7 +527,7 @@ unsigned char *bufp;
 	    else if ( ch=='+'                )   new = 62;
 	    else if ( ch=='/'                )   new = 63;
 	    else {
-		error(0, 0,  "dec64 error at char %d: %x\n", inp - bufp, ch);
+		error(0, 0,  _("dec64 error at char %d: %x\n"), inp - bufp, ch);
 		return(0);
 	    }
 	    part=((part & 0x3F)*64) + new;
@@ -539,7 +542,7 @@ unsigned char *bufp;
     }
     if (outlevel >= O_MONITOR)
     {
-	error(0, 0, "Inbound binary data:\n");
+	error(0, 0, _("Inbound binary data:\n"));
 	for (i=0; i<cnt; i++)
 	{
 	    error_build("%02X ",bufp[i]);
@@ -577,7 +580,7 @@ int  len;
 
     if (outlevel >= O_MONITOR)
     {
-	error(0, 0, "Outbound data:\n");
+	error(0, 0, _("Outbound data:\n"));
 	for (i=0; i<len; i++)
 	{
 	    error_build("%02X ",bufp[i]);
@@ -643,12 +646,12 @@ int conv;
     if ( ((**pptr)!=delim) && ((**pptr)!=0) && ((*plen)==STRMAX) )
     {
 	if (outlevel > O_SILENT)
-	    error(0, 0, "RPA String too long\n");
+	    error(0, 0, _("RPA String too long\n"));
 	*plen = 0;
     }
     if (outlevel >= O_DEBUG)
     {
-	error(0, 0, "Unicode:");
+	error(0, 0, _("Unicode:"));
 	for (i=0; i<(*plen); i++)
 	{
 	    error_build("%02X ",buf[i]);
@@ -710,11 +713,11 @@ int  len;
     devrandom = fopen("/dev/urandom","rb");
     if (devrandom == NULL && outlevel > O_SILENT)
     {
-	error(0, 0, "RPA Failed open of /dev/urandom. This shouldn't\n");
-	error(0, 0, "    prevent you logging in, but means you\n");
-	error(0, 0, "    cannot be sure you are talking to the\n");
-	error(0, 0, "    service that you think you are (replay\n");
-	error(0, 0, "    attacks by a dishonest service are possible.)\n");
+	error(0, 0, _("RPA Failed open of /dev/urandom. This shouldn't\n"));
+	error(0, 0, _("    prevent you logging in, but means you\n"));
+	error(0, 0, _("    cannot be sure you are talking to the\n"));
+	error(0, 0, _("    service that you think you are (replay\n"));
+	error(0, 0, _("    attacks by a dishonest service are possible.)\n"));
     }
 
     for(i=0; i<len; i++)
@@ -725,7 +728,7 @@ int  len;
 
     if (outlevel >= O_DEBUG)
     {
-	error(0, 0, "User challenge:");
+	error(0, 0, _("User challenge:"));
 	for (i=0; i<len; i++)
 	  {
 	  error_build("%02X ",buf[i]);
@@ -883,7 +886,7 @@ unsigned char*    out;
 
     if (outlevel >= O_DEBUG)
     {
-	error(0, 0, "MD5 being applied to data block:\n");
+	error(0, 0, _("MD5 being applied to data block:\n"));
 	for (i=0; i<len; i++)
 	{
 	    error_build("%02X ",in[i]);
@@ -896,7 +899,7 @@ unsigned char*    out;
     MD5Final(  out, &md5context );
     if (outlevel >= O_DEBUG)
     {
-	error(0, 0, "MD5 result is: ");
+	error(0, 0, _("MD5 result is: "));
 	for (i=0; i<16; i++)
 	{
 	    error_build("%02X ",out[i]);

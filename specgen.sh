@@ -11,6 +11,7 @@ Packager:	Eric S. Raymond <esr@thyrsus.com>
 URL:		http://www.tuxedo.org/~esr/fetchmail
 Source:         %{name}-%{version}.tar.gz
 Group:		Applications/Mail
+Group(pt_BR):   Aplicações/Correio Eletrônico
 Copyright:	GPL
 Icon:		fetchmail.gif
 Requires:	smtpdaemon
@@ -18,6 +19,7 @@ BuildRoot:	/var/tmp/%{name}-%{version}
 Summary:	Full-featured POP/IMAP mail retrieval daemon
 Summary(fr):    Collecteur (POP/IMAP) de courrier électronique
 Summary(de):    Program zum Abholen von E-Mail via POP/IMAP
+Summary(pt_BR): Busca mensagens de um servidor usando POP ou IMAP
 
 %description
 fetchmail is a free, full-featured, robust, and well-documented remote
@@ -45,6 +47,12 @@ der lokalen Client-Maschine weiter, damit sie dann von normalen MUAs
 ("mail user agents") wie mutt, elm, pine, (x)emacs/gnus oder mailx
 gelesen werden kann.  Ein interaktiver GUI-Konfigurator auch gut
 geeignet zum Gebrauch durch Endbenutzer wird mitgeliefert.
+
+%description -l pt_BR
+fetchmail é um programa que é usado para recuperar mensagens de um
+servidor de mail remoto. Ele pode usar Post Office Protocol (POP)
+ou IMAP (Internet Mail Access Protocol) para isso, e entrega o mail
+através do servidor local SMTP (normalmente sendmail).
 
 %prep
 %setup
@@ -76,6 +84,7 @@ rm -rf \$RPM_BUILD_ROOT
 /usr/lib/rhs/control-panel/fetchmailconf.xpm
 /usr/lib/rhs/control-panel/fetchmailconf.init
 /etc/X11/wmconfig/fetchmailconf
+/usr/share/locale/*/LC_MESSAGES/fetchmail.mo
 %defattr (644, root, man)
 /usr/man/man1/*.1.gz
 %defattr (755, root, root)

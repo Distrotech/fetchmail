@@ -2,6 +2,8 @@
  * socket.c -- socket library functions
  *
  * For license terms, see the file COPYING in this directory.
+ *
+ * i18n by Arnaldo Carvalho de Melo <acme@conectiva.com.br> 7-Nov-1998
  */
 
 #include "config.h"
@@ -29,6 +31,7 @@
 #endif
 #include "socket.h"
 #include "fetchmail.h"
+#include "i18n.h"
 
 #ifdef HAVE_RES_SEARCH
 /* some versions of FreeBSD should declare this but don't */
@@ -51,7 +54,7 @@ static int handle_plugin(const char *host,
 	int fds[2];
 	if (socketpair(AF_UNIX,SOCK_STREAM,0,fds))
 	{
-	    error(0, 0, "fetchmail: socketpair failed: %s(%d)",strerror(errno),errno);
+	    error(0, 0, _("fetchmail: socketpair failed: %s(%d)"),strerror(errno),errno);
 	    return -1;
 	}
 	if (!fork())
@@ -59,9 +62,9 @@ static int handle_plugin(const char *host,
 	    dup2(fds[0],0);
 	    dup2(fds[0],1);
 	    if (outlevel >= O_VERBOSE)
-		error(0, 0, "running %s %s %s", plugin, host, service);
+		error(0, 0, _("running %s %s %s"), plugin, host, service);
 	    execlp(plugin,plugin,host,service,0);
-	    error(0, 0, "execl(%s) failed: %s (%d)",
+	    error(0, 0, _("execl(%s) failed: %s (%d)"),
 		  plugin, strerror(errno), errno);
 	    exit(0);
 	}
@@ -86,7 +89,7 @@ int SockOpen(const char *host, const char *service, const char *options,
     req.ai_socktype = SOCK_STREAM;
 
     if (i = getaddrinfo(host, service, &req, &ai)) {
-	error(0, 0, "fetchmail: getaddrinfo(%s.%s): %s(%d)", host, service, gai_strerror(i), i);
+	error(0, 0, _("fetchmail: getaddrinfo(%s.%s): %s(%d)"), host, service, gai_strerror(i), i);
 	return -1;
     };
 
@@ -164,7 +167,7 @@ int SockOpen(const char *host, int clientPort, const char *options,
 	if(hp->h_length != 4 && hp->h_length != 8)
 	{
 	    h_errno = errno = 0;
-	    error(0, 0, "fetchmail: illegal address length received for host %s");
+	    error(0, 0, _("fetchmail: illegal address length received for host %s"));
 	    return -1;
 	}
 	/*

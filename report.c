@@ -20,6 +20,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
  * Bludgeoned into submission for SunOS 4.1.3 by
  *     Chris Cheyney <cheyney@netcom.com>.
  * Now it works even when the return from vprintf is unreliable.
+ *
+ * i18n by Arnaldo Carvalho de Melo <acme@conectiva.com.br> 7-Nov-1998
  */
 
 #ifdef HAVE_CONFIG_H
@@ -52,9 +54,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 void exit ();
 #endif
 
-#ifndef _
-# define _(String) String
-#endif
+#include "i18n.h"
 
 #include "fetchmail.h"
 #define MALLOC(n)	xmalloc(n)	
@@ -137,7 +137,7 @@ error (status, errnum, message, va_alist)
   if (partial_message_size_used != 0)
     {
       partial_message_size_used = 0;
-      error (0, 0, "%s (log message incomplete)", partial_message);
+      error (0, 0, _("%s (log message incomplete)"), partial_message);
     }
 
 #if defined(HAVE_SYSLOG)
@@ -233,7 +233,7 @@ error (status, errnum, message, va_alist)
 	  fprintf (stderr, ": %s", tmps);
 	}
 	else {
-	  fprintf (stderr, ": Error %d", errnum);
+	  fprintf (stderr, _(": Error %d"), errnum);
 	}
       }
       putc ('\n', stderr);
@@ -337,7 +337,7 @@ error_build (message, va_alist)
   if (partial_message_size_used >= partial_message_size)
     {
       partial_message_size_used = 0;
-      error (PS_UNDEFINED, 0, "partial error message buffer overflow");
+      error (PS_UNDEFINED, 0, _("partial error message buffer overflow"));
     }
 #endif
   va_end (args);
@@ -365,7 +365,7 @@ error_build (message, va_alist)
   if ((partial_message_size_used = strlen (partial_message)) >= partial_message_size)
     {
       partial_message_size_used = 0;
-      error (PS_UNDEFINED, 0, "partial error message buffer overflow");
+      error (PS_UNDEFINED, 0, _("partial error message buffer overflow"));
     }
 #endif
 #endif
@@ -439,7 +439,7 @@ error_complete (status, errnum, message, va_alist)
   if (partial_message_size_used >= partial_message_size)
     {
       partial_message_size_used = 0;
-      error (PS_UNDEFINED, 0, "partial error message buffer overflow");
+      error (PS_UNDEFINED, 0, _("partial error message buffer overflow"));
     }
 #endif
   va_end (args);
@@ -467,7 +467,7 @@ error_complete (status, errnum, message, va_alist)
   if ((partial_message_size_used = strlen (partial_message)) >= partial_message_size)
     {
       partial_message_size_used = 0;
-      error (PS_UNDEFINED, 0, "partial error message buffer overflow");
+      error (PS_UNDEFINED, 0, _("partial error message buffer overflow"));
     }
 #endif
 #endif

@@ -2,6 +2,8 @@
  * env.c -- small service routines
  *
  * For license terms, see the file COPYING in this directory.
+ *
+ * i18n by Arnaldo Carvalho de Melo <acme@conectiva.com.br> 7-Nov-1998
  */
 
 #include "config.h"
@@ -24,6 +26,8 @@
 #include  <time.h>
 #endif
 #include "fetchmail.h"
+
+#include "i18n.h"
 
 extern char *getenv();	/* needed on sysV68 R3V7.1. */
 
@@ -52,7 +56,7 @@ void envquery(int argc, char **argv)
 	else
 	{
 	    fprintf(stderr,
-		    "%s: can't find your name and home directory!\n",
+		    _("%s: can't find your name and home directory!\n"),
 		    program_name);
 	    exit(PS_UNDEFINED);
 	}
@@ -77,7 +81,7 @@ char *host_fqdn(void)
 
     if (gethostname(tmpbuf, sizeof(tmpbuf)))
     {
-	fprintf(stderr, "%s: can't determine your host!",
+	fprintf(stderr, _("%s: can't determine your host!"),
 		program_name);
 	exit(PS_DNS);
     }
@@ -93,7 +97,7 @@ char *host_fqdn(void)
 	{
 	    /* exit with error message */
 	    fprintf(stderr,
-		    "gethostbyname failed for %s\n", tmpbuf);
+		    _("gethostbyname failed for %s\n"), tmpbuf);
 	    exit(PS_DNS);
 	}
 	return(xstrdup(hp->h_name));

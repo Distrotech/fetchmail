@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="/~esr/index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/11/22 18:28:43 $
+<td width="30%" align=right>$Date: 1998/11/26 03:58:51 $
 </table>
 <HR>
 <H1 ALIGN=CENTER>Design Notes On Fetchmail</H1>
@@ -237,13 +237,13 @@ careful to preserve.<P>
    for the most common case can be much simpler and more robust.<P>
 
 <LI>
-   The multidrop handing does <EM>not</EM> rely on doing the equivalent of passing
-   the message to sendmail -oem -t.  Instead, it explicitly mines members
-   of a specified set of local usernames out of the header.<P>
+   The multidrop handing does <EM>not</EM> rely on doing the equivalent of
+   passing the message to sendmail -oem -t.  Instead, it explicitly mines
+   members of a specified set of local usernames out of the header.<P>
 
 <LI>
-   We do <EM>not</EM> attempt delivery to multidrop mailboxes in the presence of DNS
-   errors.  Before each multidrop poll we probe DNS to see if we have a
+   We do <EM>not</EM> attempt delivery to multidrop mailboxes in the presence
+   of DNS errors.  Before each multidrop poll we probe DNS to see if we have a
    nameserver handy.  If not, the poll is skipped. If DNS crashes during a
    poll, the error return from the next nameserver lookup aborts message
    delivery and ends the poll.  The daemon mode will then quietly spin until
@@ -298,6 +298,18 @@ connect work. This is a nonstandard function not likely to ever exist
 in a system's libc, but we can just include that source file if the
 day comes when we want to support IPv6 without the inet6-apps
 library. It just makes life easier.<P>
+
+<H1>Internationalization</H1>
+
+Internationalization is handled using GNU gettext (see the file
+ABOUT_NLS in the source distribution).  This places some
+minor constraints on the code.<P>
+
+Strings that must be subject to translation should be wrapped with _() 
+or N_() -- the former in functuib arguments, the latter in static
+initializers and other non-function-argument contexts.<p>
+
+To test the support
 
 <H1>Checklist for Adding Options</H1>
 
@@ -516,7 +528,7 @@ all shaped the design in one way or another.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/11/22 18:28:43 $
+<td width="30%" align=right>$Date: 1998/11/26 03:58:51 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

@@ -48,6 +48,23 @@ then
   fi
 fi
 
+# i18n
+# Arnaldo Carvalho de Melo <acme@conectiva.com.br>
+# Sat Nov  7 15:39:03 EDT 1998
+
+PACKAGE=fetchmail
+VERSION=4.6.7
+AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
+AC_DEFINE_UNQUOTED(VERSION, "$VERSION")
+AC_SUBST(PACKAGE)
+AC_SUBST(VERSION)
+
+ALL_LINGUAS="pt_BR"
+
+AM_GNU_GETTEXT
+
+# end i18n
+
 # Under sysV68, socket and friends are provided by the C library.
 # -linet does not provide socket, but causes multiple definition
 # errors at link-time.  It is thus better to only use the C library.
@@ -387,7 +404,7 @@ then
   LIBS="$LIBS -lgssapi_krb5 -lkrb5"
 fi])
 
-AC_OUTPUT(Makefile, [
+AC_OUTPUT([Makefile intl/Makefile po/Makefile.in], [
 	# The reason for this odd makedepend line is that we want
 	# to have all dependencies evaluated relative to the source directory
 	# and let VPATH do all the dirty work when we build remotely

@@ -9,6 +9,8 @@
   description: 	getpass() replacement which allows for long passwords.
                 This version hacked by Wilfred Teiken, allowing the
                 password to be piped to fetchmail.
+ 
+  i18n by Arnaldo Carvalho de Melo <acme@conectiva.com.br> 7-Nov-1998
 
  ***********************************************************************/
 
@@ -21,6 +23,7 @@
 #include <unistd.h>
 #endif
 #include "fetchmail.h"
+#include "i18n.h"
 
 #define INPUT_BUF_SIZE	PASSWORDLEN
 
@@ -67,7 +70,7 @@ char *prompt;
     char *getpass();
     return getpass(prompt);
 #else
-    fputs("ERROR: no support for getpassword() routine\n",stderr);
+    fputs(_("ERROR: no support for getpassword() routine\n"),stderr);
     exit(1);
 #endif
 #else
@@ -189,7 +192,7 @@ static void restore_tty_state(void)
 static RETSIGTYPE sigint_handler(int signum)
 {
     restore_tty_state();
-    error(1, 0, "\nCaught signal... bailing out.");
+    error(1, 0, _("\nCaught signal... bailing out."));
 }
 
 /* getpass.c ends here */

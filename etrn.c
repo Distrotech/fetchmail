@@ -2,6 +2,8 @@
  * etrn.c -- ETRN protocol methods
  *
  * For license terms, see the file COPYING in this directory.
+ *
+ * i18n by Arnaldo Carvalho de Melo <acme@conectiva.com.br> 7-Nov-1998
  */
 
 #include  "config.h"
@@ -12,6 +14,7 @@
 #include  <netdb.h>
 #include  <errno.h>
 #include  <unistd.h>
+#include  "i18n.h"
 #include  "fetchmail.h"
 #include  "smtp.h"
 #include  "socket.h"
@@ -38,13 +41,13 @@ static int etrn_getrange(int sock, struct query *ctl, const char *id,
 
     if ((ok = SMTP_ehlo(sock, ctl->server.truename, &opts)))
     {
-	error(0, 0, "%s's SMTP listener does not support ESMTP",
+	error(0, 0, _("%s's SMTP listener does not support ESMTP"),
 	      ctl->server.pollname);
 	return(ok);
     }
     else if (!(opts & ESMTP_ETRN))
     {
-	error(0, 0, "%s's SMTP listener does not support ETRN",
+	error(0, 0, _("%s's SMTP listener does not support ETRN"),
 	      ctl->server.pollname);
 	return(PS_PROTOCOL);
     }
@@ -67,36 +70,36 @@ static int etrn_getrange(int sock, struct query *ctl, const char *id,
 	switch(atoi(buf))
 	{
 	case 250:	/* OK, queuing for node <x> started */
-	    error(0, 0, "Queuing for %s started", qnp->id);
+	    error(0, 0, _("Queuing for %s started"), qnp->id);
 	    break;
 
 	case 251:	/* OK, no messages waiting for node <x> */
-	    error(0, 0, "No messages waiting for %s", qnp->id);
+	    error(0, 0, _("No messages waiting for %s"), qnp->id);
 	    return(PS_NOMAIL);
 
 	case 252:	/* OK, pending messages for node <x> started */
 	case 253:	/* OK, <n> pending messages for node <x> started */
-	    error(0, 0, "Pending messages for %s started", qnp->id);
+	    error(0, 0, _("Pending messages for %s started"), qnp->id);
 	    break;
 
 	case 458:	/* Unable to queue messages for node <x> */
-	    error(0, -1, "Unable to queue messages for node %s",qnp->id);
+	    error(0, -1, _("Unable to queue messages for node %s"),qnp->id);
 	    return(PS_PROTOCOL);
 
 	case 459:	/* Node <x> not allowed: <reason> */
-	    error(0, -1, "Node %s not allowed: %s", qnp->id, buf);
+	    error(0, -1, _("Node %s not allowed: %s"), qnp->id, buf);
 	    return(PS_AUTHFAIL);
 
 	case 500:	/* Syntax Error */
-	    error(0, -1, "ETRN syntax error");
+	    error(0, -1, _("ETRN syntax error"));
 	    return(PS_PROTOCOL);
 
 	case 501:	/* Syntax Error in Parameters */
-	    error(0, -1, "ETRN syntax error in parameters");
+	    error(0, -1, _("ETRN syntax error in parameters"));
 	    return(PS_PROTOCOL);
 
 	default:
-	    error(0, -1, "Unknown ETRN error %d", atoi(buf));
+	    error(0, -1, _("Unknown ETRN error %d"), atoi(buf));
 	    return(PS_PROTOCOL);
 	}
     }
@@ -140,19 +143,19 @@ int doETRN (struct query *ctl)
     int status;
 
     if (ctl->keep) {
-	fprintf(stderr, "Option --keep is not supported with ETRN\n");
+	fprintf(stderr, _("Option --keep is not supported with ETRN\n"));
 	return(PS_SYNTAX);
     }
     if (ctl->flush) {
-	fprintf(stderr, "Option --flush is not supported with ETRN\n");
+	fprintf(stderr, _("Option --flush is not supported with ETRN\n"));
 	return(PS_SYNTAX);
     }
     if (ctl->mailboxes->id) {
-	fprintf(stderr, "Option --remote is not supported with ETRN\n");
+	fprintf(stderr, _("Option --remote is not supported with ETRN\n"));
 	return(PS_SYNTAX);
     }
     if (check_only) {
-	fprintf(stderr, "Option --check is not supported with ETRN\n");
+	fprintf(stderr, _("Option --check is not supported with ETRN\n"));
 	return(PS_SYNTAX);
     }
     peek_capable = FALSE;

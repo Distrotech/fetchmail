@@ -3,6 +3,8 @@
  *
  * Copyright 1997 by Eric S. Raymond
  * For license terms, see the file COPYING in this directory.
+ *
+ * i18n by Arnaldo Carvalho de Melo <acme@conectiva.com.br> 7-Nov-1998
  */
 #include "config.h"
 #ifdef HAVE_GETHOSTBYNAME
@@ -14,6 +16,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include "i18n.h"
 #include "mx.h"
 #include "fetchmail.h"
 
@@ -136,15 +139,15 @@ int is_host_alias(const char *name, struct query *ctl)
         else if (((he_st = gethostbyname(ctl->server.truename)) != (struct hostent *)NULL) && ctl->server.checkalias)
 	{
 	    if (outlevel >= O_DEBUG)
-		error(0, 0, "Checking if %s is really the same node as %s",ctl->server.truename,name);
+		error(0, 0, _("Checking if %s is really the same node as %s"),ctl->server.truename,name);
 	    if (is_ip_alias(ctl->server.truename,name) == TRUE)
 	    {
 		if (outlevel >= O_DEBUG)
-		    error(0, 0, "Yes, their IP addresses match");
+		    error(0, 0, _("Yes, their IP addresses match"));
 		goto match;
 	    }
 	    if (outlevel >= O_DEBUG)
-		error(0, 0, "No, their IP addresses don't match");
+		error(0, 0, _("No, their IP addresses don't match"));
 	}
 	else
 	    return(FALSE);
@@ -162,7 +165,7 @@ int is_host_alias(const char *name, struct query *ctl)
 	    if (outlevel != O_SILENT)
 		putchar('\n');	/* terminate the progress message */
 	    error(0, 0,
-		"nameserver failure while looking for `%s' during poll of %s.",
+		_("nameserver failure while looking for `%s' during poll of %s."),
 		name, ctl->server.pollname);
 	    ctl->errcount++;
 	    break;
@@ -187,7 +190,7 @@ int is_host_alias(const char *name, struct query *ctl)
 	case TRY_AGAIN:		/* temporary error on authoritative server */
 	default:
 	    error(0, -1,
-		"nameserver failure while looking for `%s' during poll of %s.",
+		_("nameserver failure while looking for `%s' during poll of %s."),
 		name, ctl->server.pollname);
 	    ctl->errcount++;
 	    break;

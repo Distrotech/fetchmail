@@ -2,6 +2,8 @@
  * options.c -- command-line option processing
  *
  * For license terms, see the file COPYING in this directory.
+ *
+ * i18n by Arnaldo Carvalho de Melo <acme@conectiva.com.br> 7-Nov-1998
  */
 
 #include "config.h"
@@ -19,6 +21,7 @@
 
 #include "getopt.h"
 #include "fetchmail.h"
+#include "i18n.h"
 
 #define LA_HELP		1
 #define LA_VERSION	2 
@@ -157,7 +160,7 @@ static int xatoi(char *s, int *errflagptr)
 
     /* any invalid chars in string? */
     if ( (endptr == s) || (*endptr != '\0') ) {
-    	(void) fprintf(stderr, "String '%s' is not a valid number string.\n", s);
+    	(void) fprintf(stderr, _("String '%s' is not a valid number string.\n"), s);
 	(*errflagptr)++;
 	return 0;
     }
@@ -166,8 +169,8 @@ static int xatoi(char *s, int *errflagptr)
     if ( (((value == LONG_MAX) || (value == LONG_MIN)) && (errno == ERANGE)) ||
 				(value > INT_MAX) || (value < INT_MIN)) {
 
-    	(void) fprintf(stderr, "Value of string '%s' is %s than %d.\n", s,
-					(value < 0) ? "smaller": "larger",
+    	(void) fprintf(stderr, _("Value of string '%s' is %s than %d.\n"), s,
+					(value < 0) ? _("smaller"): _("larger"),
 					(value < 0) ? INT_MIN : INT_MAX);
 	(*errflagptr)++;
 	return 0;
@@ -201,7 +204,7 @@ static int xatoi(char *s, int *errflagptr)
 
     /* check for trailing garbage */
     if (i != len) {
-    	(void) fprintf(stderr, "String '%s' is not a valid number string.\n", s);
+    	(void) fprintf(stderr, _("String '%s' is not a valid number string.\n"), s);
     	(*errflagptr)++;
 	return 0;
     }
@@ -341,7 +344,7 @@ struct query *ctl;	/* option record to be initialized */
 	    else if (strcasecmp(optarg,"etrn") == 0)
 		ctl->server.protocol = P_ETRN;
 	    else {
-		fprintf(stderr,"Invalid protocol `%s' specified.\n", optarg);
+		fprintf(stderr,_("Invalid protocol `%s' specified.\n"), optarg);
 		errflag++;
 	    }
 	    break;
@@ -372,7 +375,7 @@ struct query *ctl;	/* option record to be initialized */
 	    else if (strcmp(optarg, "kerberos_v4") == 0)
 		ctl->server.preauthenticate = A_KERBEROS_V4;
 	    else {
-		fprintf(stderr,"Invalid preauthentication `%s' specified.\n", optarg);
+		fprintf(stderr,_("Invalid preauthentication `%s' specified.\n"), optarg);
 		errflag++;
 	    }
 	    break;
@@ -490,7 +493,7 @@ struct query *ctl;	/* option record to be initialized */
 #if NET_SECURITY
 	    ctl->server.netsec = (void *)optarg;
 #else
-	    fprintf(stderr, "fetchmail: network security support is disabled\n");
+	    fprintf(stderr, _("fetchmail: network security support is disabled\n"));
 	    errflag++;
 #endif /* NET_SECURITY */
 	    break;
@@ -545,60 +548,60 @@ struct query *ctl;	/* option record to be initialized */
     if (errflag || ocount > 1) {
 	/* squawk if syntax errors were detected */
 #define P(s)	fputs(s, stderr)
-	P("usage:  fetchmail [options] [server ...]\n");
-	P("  Options are as follows:\n");
-	P("  -?, --help        display this option help\n");
-	P("  -V, --version     display version info\n");
+	P(_("usage:  fetchmail [options] [server ...]\n"));
+	P(_("  Options are as follows:\n"));
+	P(_("  -?, --help        display this option help\n"));
+	P(_("  -V, --version     display version info\n"));
 
-	P("  -c, --check       check for messages without fetching\n");
-	P("  -s, --silent      work silently\n");
-	P("  -v, --verbose     work noisily (diagnostic output)\n");
-	P("  -d, --daemon      run as a daemon once per n seconds\n");
-	P("  -N, --nodetach    don't detach daemon process\n");
-	P("  -q, --quit        kill daemon process\n");
-	P("  -L, --logfile     specify logfile name\n");
-	P("      --syslog      use syslog(3) for most messages when running as a daemon\n");
-	P("      --invisible   don't write Received & enable host spoofing\n");
-	P("  -f, --fetchmailrc specify alternate run control file\n");
-	P("  -i, --idfile      specify alternate UIDs file\n");
-	P("      --postmaster  specify recipient of last resort\n");
+	P(_("  -c, --check       check for messages without fetching\n"));
+	P(_("  -s, --silent      work silently\n"));
+	P(_("  -v, --verbose     work noisily (diagnostic output)\n"));
+	P(_("  -d, --daemon      run as a daemon once per n seconds\n"));
+	P(_("  -N, --nodetach    don't detach daemon process\n"));
+	P(_("  -q, --quit        kill daemon process\n"));
+	P(_("  -L, --logfile     specify logfile name\n"));
+	P(_("      --syslog      use syslog(3) for most messages when running as a daemon\n"));
+	P(_("      --invisible   don't write Received & enable host spoofing\n"));
+	P(_("  -f, --fetchmailrc specify alternate run control file\n"));
+	P(_("  -i, --idfile      specify alternate UIDs file\n"));
+	P(_("      --postmaster  specify recipient of last resort\n"));
 #if defined(linux) && !INET6
-	P("  -I, --interface   interface required specification\n");
-	P("  -M, --monitor     monitor interface for activity\n");
+	P(_("  -I, --interface   interface required specification\n"));
+	P(_("  -M, --monitor     monitor interface for activity\n"));
 #endif
-	P("      --plugin      specify external command to open connection\n");
-	P("      --plugout     specify external command to open smtp connection\n");
+	P(_("      --plugin      specify external command to open connection\n"));
+	P(_("      --plugout     specify external command to open smtp connection\n"));
 
-	P("  -p, --protocol    specify retrieval protocol (see man page)\n");
-	P("  -U, --uidl        force the use of UIDLs (pop3 only)\n");
-	P("  -P, --port        TCP/IP service port to connect to\n");
-	P("  -A, --auth        authentication type (password or kerberos)\n");
-	P("  -t, --timeout     server nonresponse timeout\n");
-	P("  -E, --envelope    envelope address header\n");
-	P("  -Q, --qvirtual    prefix to remove from local user id\n");
+	P(_("  -p, --protocol    specify retrieval protocol (see man page)\n"));
+	P(_("  -U, --uidl        force the use of UIDLs (pop3 only)\n"));
+	P(_("  -P, --port        TCP/IP service port to connect to\n"));
+	P(_("  -A, --auth        authentication type (password or kerberos)\n"));
+	P(_("  -t, --timeout     server nonresponse timeout\n"));
+	P(_("  -E, --envelope    envelope address header\n"));
+	P(_("  -Q, --qvirtual    prefix to remove from local user id\n"));
 
-	P("  -u, --username    specify users's login on server\n");
-	P("  -a, --all         retrieve old and new messages\n");
-	P("  -K, --nokeep      delete new messages after retrieval\n");
-	P("  -k, --keep        save new messages after retrieval\n");
-	P("  -F, --flush       delete old messages from server\n");
-	P("  -n, --norewrite   don't rewrite header addresses\n");
-	P("  -l, --limit       don't fetch messages over given size\n");
-	P("  -w, --warnings   interval between warning mail notification\n");
+	P(_("  -u, --username    specify users's login on server\n"));
+	P(_("  -a, --all         retrieve old and new messages\n"));
+	P(_("  -K, --nokeep      delete new messages after retrieval\n"));
+	P(_("  -k, --keep        save new messages after retrieval\n"));
+	P(_("  -F, --flush       delete old messages from server\n"));
+	P(_("  -n, --norewrite   don't rewrite header addresses\n"));
+	P(_("  -l, --limit       don't fetch messages over given size\n"));
+	P(_("  -w, --warnings   interval between warning mail notification\n"));
 
 #if NET_SECURITY
-	P("  -T, --netsec      set IP security request\n");
+	P(_("  -T, --netsec      set IP security request\n"));
 #endif /* NET_SECURITY */
-	P("  -S, --smtphost    set SMTP forwarding host\n");
-	P("  -D, --smtpaddress set SMTP delivery domain to use\n");
-	P("  -Z, --antispam,   set antispam response values\n");
-	P("  -b, --batchlimit  set batch limit for SMTP connections\n");
-	P("  -B, --fetchlimit  set fetch limit for server connections\n");
-	P("  -e, --expunge     set max deletions between expunges\n");
-        P("      --mda         set MDA to use for forwarding\n");
-        P("      --bsmtp       set output BSMTP file\n");
-        P("      --lmtp        use LMTP (RFC2033) for delivery\n");
-	P("  -r, --folder      specify remote folder name\n");
+	P(_("  -S, --smtphost    set SMTP forwarding host\n"));
+	P(_("  -D, --smtpaddress set SMTP delivery domain to use\n"));
+	P(_("  -Z, --antispam,   set antispam response values\n"));
+	P(_("  -b, --batchlimit  set batch limit for SMTP connections\n"));
+	P(_("  -B, --fetchlimit  set fetch limit for server connections\n"));
+	P(_("  -e, --expunge     set max deletions between expunges\n"));
+        P(_("      --mda         set MDA to use for forwarding\n"));
+        P(_("      --bsmtp       set output BSMTP file\n"));
+        P(_("      --lmtp        use LMTP (RFC2033) for delivery\n"));
+	P(_("  -r, --folder      specify remote folder name\n"));
 #undef P
 	return(-1);
     }

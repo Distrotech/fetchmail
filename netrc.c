@@ -2,6 +2,8 @@
    Copyright (C) 1996, Free Software Foundation, Inc.
    Gordon Matzigkeit <gord@gnu.ai.mit.edu>, 1996
 
+   i18n by Arnaldo Carvalho de Melo <acme@conectiva.com.br> 7-Nov-1998
+
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
@@ -26,6 +28,7 @@
 #include "config.h"
 #include "fetchmail.h"
 #include "netrc.h"
+#include "i18n.h"
 
 #ifdef STANDALONE
 /* Normally defined in xstrdup.c. */
@@ -226,7 +229,7 @@ parse_netrc (file)
 			       premature_token);
 #else
 		fprintf (stderr,
-			 "%s:%d: warning: found \"%s\" before any host names\n",
+			 _("%s:%d: warning: found \"%s\" before any host names\n"),
 			 file, ln, premature_token);
 #endif
 		premature_token = NULL;
@@ -262,7 +265,7 @@ parse_netrc (file)
 
 		else
 		{
-		    fprintf (stderr, "%s:%d: warning: unknown token \"%s\"\n",
+		    fprintf (stderr, _("%s:%d: warning: unknown token \"%s\"\n"),
 			     file, ln, tok);
 		}
 	    }
