@@ -3,6 +3,8 @@
 # If you're running QNX, we can't assume a working autoconf.
 # So just uncomment all the lines marked QNX.
 
+VERS=3.2
+
 # Ultrix 2.2 make doesn't expand the value of VPATH.
 srcdir = @srcdir@
 VPATH = @srcdir@
@@ -207,15 +209,16 @@ docs = $(srcdir)/COPYING $(srcdir)/README $(srcdir)/INSTALL $(srcdir)/NEWS \
 config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/configure \
 	$(srcdir)/config.guess $(srcdir)/config.h.in $(srcdir)/config.sub
 scripts = $(srcdir)/install.sh $(srcdir)/mkinstalldirs
-all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts)
+all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) MANIFEST
 
-manifest:
-	@echo $(all) | tr "[ \t]" '\n' | sort
+manifest: $(all)
+	@echo $(all) | tr "[ \t]" '\n' | sort | sed "s/\\./popclient-$(VERS)/"
 
-popclient.tar: $(all)
-	tar -cf popclient.tar $(all)
-popclient.tar.gz: popclient.tar
-	gzip -f popclient.tar
+popclient-$(VERS).tar: $(all)
+	(cd ..; tar -cf popclient-$(VERS).tar `cat popclient-$(VERS)/MANIFEST`)
+	mv ../popclient-$(VERS).tar popclient-$(VERS).tar
+popclient-$(VERS).tar.gz: popclient-$(VERS).tar
+	gzip -f popclient-$(VERS).tar
 
 # The automatically generated dependencies below may omit config.h
 # because it is included with ``#include <config.h>'' rather than
