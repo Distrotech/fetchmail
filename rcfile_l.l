@@ -24,6 +24,7 @@ batchlimit	{ return BATCHLIMIT; }
 defaults 	{ return DEFAULTS; }
 server 		{ return POLL; }
 poll		{ return POLL; }
+skip		{ return SKIP; }
 proto(col)? 	{ return PROTOCOL; }
 port		{ return PORT; }
 auth(enticate)?	{ return AUTHENTICATE; }
@@ -45,12 +46,10 @@ keep		{ yylval.flag = FLAG_TRUE;  return KEEP; }
 flush		{ yylval.flag = FLAG_TRUE;  return FLUSH; }
 fetchall	{ yylval.flag = FLAG_TRUE;  return FETCHALL; }
 rewrite		{ yylval.flag = FLAG_FALSE; return REWRITE; }
-skip		{ yylval.flag = FLAG_TRUE;  return SKIP; }
 nokeep		{ yylval.flag = FLAG_FALSE; return KEEP; }
 noflush		{ yylval.flag = FLAG_FALSE; return FLUSH; }
 nofetchall	{ yylval.flag = FLAG_FALSE; return FETCHALL; }
 norewrite	{ yylval.flag = FLAG_TRUE;  return REWRITE; }
-noskip		{ yylval.flag = FLAG_FALSE; return SKIP; }
 limit		{ return LIMIT; }
 
 with		{/* EMPTY */}

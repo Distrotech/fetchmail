@@ -41,13 +41,13 @@ static void prc_reset();
   char *sval;
 }
 
-%token DEFAULTS POLL PROTOCOL AUTHENTICATE TIMEOUT KPOP KERBEROS
+%token DEFAULTS POLL SKIP PROTOCOL AUTHENTICATE TIMEOUT KPOP KERBEROS
 %token USERNAME PASSWORD FOLDER SMTPHOST MDA IS HERE THERE TO MAP LIMIT
 %token SET BATCHLIMIT 
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
-%token <flag>  KEEP FLUSH FETCHALL REWRITE PORT SKIP
+%token <flag>  KEEP FLUSH FETCHALL REWRITE PORT
 
 /* these are actually used by the lexer */
 %token FLAG_TRUE	2
@@ -70,7 +70,7 @@ statement	: define_server serverspecs userspecs
 
 define_server	: POLL STRING	{strcpy(current.servername, $2);}
 		| SKIP STRING	{strcpy(current.servername, $2);
-						current.skip=($1==FLAG_TRUE);}
+						current.skip = TRUE;}
 		| DEFAULTS	{strcpy(current.servername,"defaults");}
   		;
 
