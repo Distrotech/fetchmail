@@ -20,12 +20,14 @@ If you have a question or answer you think ought to be added to this FAQ list,
 mail it to fetchmail's maintainer, Eric S. Raymond, at
 <A HREF="mailto:esr@thyrsus.com">esr@snark.thyrsus.com</A>.<p>
 
-There is a fetchmail-friends reflector for people who want to discuss fixes
-and improvements in fetchmail.  It's at 
+There is a fetchmail-friends list for people who want to discuss fixes
+and improvements in fetchmail and help co-develop it.  It's at 
 <a href="mail:fetchmail-friends@thyrsus.com">fetchmail-friends@thyrsus.com</a>
 and is a SmartList reflector; sign up in the usual way with a message
+containing the word "subscribe" in the subject line sent to
 to <a href="mail:fetchmail-friends-request@thyrsus.com">
-fetchmail-friends-request@thyrsus.com</a>. <p>
+fetchmail-friends-request@thyrsus.com</a>. (Similarly, "unsubscribe"
+in the Subject line unsubscribes you, and "help" returns general list help) <p>
 
 <h1>General questions:</h1>
 
@@ -230,7 +232,7 @@ number, which will confuse it when it's expecting a name.  String
 quoting forces the token's class.<p>
 
 <hr>
-<a href="#F3">F3. The .fetchmailrc parser won't accept my host or username beginning with `no'.</a><br>
+<h2><a name="F3">F3. The .fetchmailrc parser won't accept my host or username beginning with `no'.</a></h2>
 
 You're caught in an unfortunate crack between the newer-style syntax
 for negated options (`no keep', `no rewrite' etc.) and the older style
@@ -983,7 +985,7 @@ without hacking potentially fragile startup scripts.  To get around
 it, just touch(1) the logfile before you run fetchmail (this will have
 no effect on the contents of the logfile if it already exists).<P>
 
-$Id: fetchmail-FAQ.html,v 1.21 1997/05/28 22:47:47 esr Exp $<p>
+$Id: fetchmail-FAQ.html,v 1.22 1997/05/29 15:26:09 esr Exp $<p>
 
 <HR>
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
