@@ -104,6 +104,7 @@ struct runctl
     char	*idfile;
     int		poll_interval;
     char	*postmaster;
+    flag	bouncemail;
     char	*properties;
     flag	use_syslog;
     flag	invisible;

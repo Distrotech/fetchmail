@@ -37,38 +37,39 @@
 #define LA_RCFILE	13
 #define LA_IDFILE	14
 #define LA_POSTMASTER	15
-#define LA_PROTOCOL	16
-#define LA_UIDL		17
-#define LA_PORT		18
-#define LA_AUTHENTICATE	19
-#define LA_TIMEOUT	20
-#define LA_ENVELOPE	21
-#define LA_QVIRTUAL     22
-#define LA_USERNAME	23
-#define LA_ALL          24
-#define LA_NOKEEP	25
-#define	LA_KEEP		26
-#define LA_FLUSH        27
-#define LA_NOREWRITE	28
-#define LA_LIMIT	29
-#define LA_WARNINGS	30
-#define LA_FOLDER	31
-#define LA_SMTPHOST	32
-#define LA_SMTPADDR     33
-#define LA_ANTISPAM	34
-#define LA_BATCHLIMIT	35
-#define LA_FETCHLIMIT	36
-#define LA_EXPUNGE	37
-#define LA_MDA		38
-#define LA_BSMTP	39
-#define LA_LMTP		40
-#define LA_PLUGIN	41
-#define LA_PLUGOUT	42
-#define LA_NETSEC	43
-#define LA_INTERFACE    44
-#define LA_MONITOR      45
-#define LA_CONFIGDUMP	46
-#define LA_YYDEBUG	47
+#define LA_NOBOUNCE	16
+#define LA_PROTOCOL	17
+#define LA_UIDL		18
+#define LA_PORT		19
+#define LA_AUTHENTICATE	20
+#define LA_TIMEOUT	21
+#define LA_ENVELOPE	22
+#define LA_QVIRTUAL     23
+#define LA_USERNAME	24
+#define LA_ALL          25
+#define LA_NOKEEP	26
+#define	LA_KEEP		27
+#define LA_FLUSH        28
+#define LA_NOREWRITE	29
+#define LA_LIMIT	30
+#define LA_WARNINGS	31
+#define LA_FOLDER	32
+#define LA_SMTPHOST	33
+#define LA_SMTPADDR     34
+#define LA_ANTISPAM	35
+#define LA_BATCHLIMIT	36
+#define LA_FETCHLIMIT	37
+#define LA_EXPUNGE	38
+#define LA_MDA		39
+#define LA_BSMTP	40
+#define LA_LMTP		41
+#define LA_PLUGIN	42
+#define LA_PLUGOUT	43
+#define LA_NETSEC	44
+#define LA_INTERFACE    45
+#define LA_MONITOR      46
+#define LA_CONFIGDUMP	47
+#define LA_YYDEBUG	48
 
 /* options still left: CDgGhHjJoORwWxXYz */
 static const char *shortoptions = 
@@ -91,6 +92,7 @@ static const struct option longoptions[] = {
   {"fetchmailrc",required_argument,(int *) 0, LA_RCFILE      },
   {"idfile",	required_argument, (int *) 0, LA_IDFILE      },
   {"postmaster",required_argument, (int *) 0, LA_POSTMASTER  },
+  {"nobounce",  no_argument,       (int *) 0, LA_NOBOUNCE    },
 
   {"protocol",	required_argument, (int *) 0, LA_PROTOCOL    },
   {"proto",	required_argument, (int *) 0, LA_PROTOCOL    },
@@ -296,6 +298,9 @@ struct query *ctl;	/* option record to be initialized */
 	case LA_POSTMASTER:
 	    rctl->postmaster = (char *) xmalloc(strlen(optarg)+1);
 	    strcpy(rctl->postmaster,optarg);
+	    break;
+	case LA_NOBOUNCE:
+	    run.bouncemail = FALSE;
 	    break;
 	case 'p':
 	case LA_PROTOCOL:
@@ -565,6 +570,7 @@ struct query *ctl;	/* option record to be initialized */
 	P(_("  -f, --fetchmailrc specify alternate run control file\n"));
 	P(_("  -i, --idfile      specify alternate UIDs file\n"));
 	P(_("      --postmaster  specify recipient of last resort\n"));
+	P(_("      --nobounce    redirect bounces from user to postmaster."));
 #if (defined(linux) && !INET6) || defined(__FreeBSD__)
 	P(_("  -I, --interface   interface required specification\n"));
 	P(_("  -M, --monitor     monitor interface for activity\n"));

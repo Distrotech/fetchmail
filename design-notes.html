@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="/~esr/index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/01/01 18:49:07 $
+<td width="30%" align=right>$Date: 1999/02/07 21:06:09 $
 </table>
 <HR>
 <H1 ALIGN=CENTER>Design Notes On Fetchmail</H1>
@@ -318,14 +318,14 @@ a lot of fiddly details in the process.  You'll need to do the
 following minimum steps.
 
 <UL>
-<LI>Add a field to represent the control in <code>struct query</code> or
-    <code>struct hostdata</code>.
-
-<LI>Pick a token to declare the option in the .fetchmailrc file.  Add
-    the token to <code>rcfile_l</code>.  
+<LI>Add a field to represent the control in <code>struct run</code>,
+    <code>struct query</code>, or <code>struct hostdata</code>.
 
 <LI>Go to <code>rcfile_y.y</code>.  Add the token to the grammar. Don't
     forget the <code>%token</code> declaration.  
+
+<LI>Pick an actual string to declare the option in the .fetchmailrc file.  Add
+    the token to <code>rcfile_l</code>.  
 
 <LI>Pick a long-form option name, and a one-letter short option if any
     are left.  Go to <code>options.c</code>.  Pick a new <code>LA_</code>
@@ -339,7 +339,8 @@ following minimum steps.
 <LI>Add code to dump the option value in <code>fetchmail.c:dump_params</code>.
 
 <LI>Add proper <code>FLAG_MERGE</code> actions in fetchmail.c's
-    optmerge() function.
+    optmerge() function.  (If it's a global option, add an override 
+    at the end of load_params.
 
 <LI>Document the option in fetchmail.man.  This will require at least
     two changes; one to the collected table of options, and one full
@@ -530,7 +531,7 @@ all shaped the design in one way or another.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/01/01 18:49:07 $
+<td width="30%" align=right>$Date: 1999/02/07 21:06:09 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

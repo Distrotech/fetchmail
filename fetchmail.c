@@ -874,6 +874,8 @@ static int load_params(int argc, char **argv, int optind)
     struct passwd *pw;
     struct query def_opts, *ctl;
 
+    run.bouncemail = TRUE;
+
     memset(&def_opts, '\0', sizeof(struct query));
     def_opts.smtp_socket = -1;
     def_opts.smtpaddress = (char *)0;
@@ -1161,6 +1163,8 @@ static int load_params(int argc, char **argv, int optind)
 	run.use_syslog = (cmd_run.use_syslog == FLAG_TRUE);
     if (cmd_run.postmaster)
 	run.postmaster = cmd_run.postmaster;
+    if (cmd_run.bouncemail)
+	run.bouncemail = cmd_run.bouncemail;
 
     /* check and daemon options are not compatible */
     if (check_only && run.poll_interval)
@@ -1350,6 +1354,11 @@ static void dump_params (struct runctl *runp,
     if (runp->postmaster)
 	printf(_("Fetchmail will forward misaddressed multidrop messages to %s.\n"),
 	       runp->postmaster);
+
+    if (!runp->bouncemail)
+	printf(_("Fetchmail will direct error mail to the postmaster.\n"));
+    else if (outlevel >= O_VERBOSE)
+	printf(_("Fetchmail will direct error mail to the sender.\n"));
 
     for (ctl = querylist; ctl; ctl = ctl->next)
     {

@@ -252,17 +252,20 @@ static void sanitize(char *s)
     	*cp = '_';
 }
 
-static int send_bouncemail(struct msgblk *msg, int userclass,
-			   char *message, int nerrors, char *errors[])
+static int send_bouncemail(struct query *ctl, struct msgblk *msg,
+			   int userclass, char *message,
+			   int nerrors, char *errors[])
 /* bounce back an error report a la RFC 1892 */
 {
     char daemon_name[18 + HOSTLEN] = "FETCHMAIL-DAEMON@";
-    char boundary[BUFSIZ], *ts;
+    char boundary[BUFSIZ], *ts, *bounce_to;
     int sock;
 
     /* don't bounce  in reply to undeliverable bounces */
     if (!msg->return_path[0] || strcmp(msg->return_path, "<>") == 0)
 	return(FALSE);
+
+    bounce_to = (run.bouncemail ? msg->return_path : run.postmaster);
 
     SMTP_setmode(SMTP_MODE);
 
@@ -273,7 +276,7 @@ static int send_bouncemail(struct msgblk *msg, int userclass,
     		|| SMTP_ok(sock) != SM_OK 
 		|| SMTP_helo(sock, "localhost") != SM_OK
 		|| SMTP_from(sock, daemon_name, (char *)NULL) != SM_OK
-		|| SMTP_rcpt(sock, msg->return_path) != SM_OK
+		|| SMTP_rcpt(sock, bounce_to) != SM_OK
 		|| SMTP_data(sock) != SM_OK)
 	return(FALSE);
 
@@ -289,7 +292,7 @@ static int send_bouncemail(struct msgblk *msg, int userclass,
     /* bouncemail headers */
     SockPrintf(sock, "Return-Path: <>\r\n");
     SockPrintf(sock, "From: %s\r\n", daemon_name);
-    SockPrintf(sock, "To: %s\r\n", msg->return_path);
+    SockPrintf(sock, "To: %s\r\n", bounce_to);
     SockPrintf(sock, "MIME-Version: 1.0\r\n");
     SockPrintf(sock, "Content-Type: multipart/report; report-type=delivery-status;\r\n\tboundary=\"%s\"\r\n", boundary);
     SockPrintf(sock, "\r\n");
@@ -367,6 +370,7 @@ static int send_bouncemail(struct msgblk *msg, int userclass,
 
 static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 /* handle SMTP errors based on the content of SMTP_response */
+/* Mail is deleted from the server if this function returns PS_REFUSED. */
 {
     int smtperr = atoi(smtp_response);
     char *responses[1];
@@ -399,7 +403,7 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	 * 571 = sendmail's "unsolicited email refused"
 	 *
 	 */
-	send_bouncemail(msg, XMIT_ACCEPT,
+	send_bouncemail(ctl, msg, XMIT_ACCEPT,
 			"Our spam filter rejected this transaction.\r\n", 
 			1, responses);
 	return(PS_REFUSED);
@@ -439,26 +443,26 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	 * ESMTP server.  Don't try to ship the message, 
 	 * and allow it to be deleted.
 	 */
-	send_bouncemail(msg, XMIT_ACCEPT,
+	send_bouncemail(ctl, msg, XMIT_ACCEPT,
 			"This message was too large.\r\n", 
 			1, responses);
-	return(PS_REFUSED);
-
+	return(run.bouncemail ? PS_REFUSED : PS_TRANSIENT);
+  
     case 553: /* invalid sending domain */
 	/*
 	 * These latter days 553 usually means a spammer is trying to
 	 * cover his tracks.
 	 */
-	send_bouncemail(msg, XMIT_ACCEPT,
+	send_bouncemail(ctl, msg, XMIT_ACCEPT,
 			"Invalid address.\r\n", 
 			1, responses);
 	return(PS_REFUSED);
 
     default:	/* bounce the error back to the sender */
-	if (send_bouncemail(msg, XMIT_ACCEPT,
+	if (send_bouncemail(ctl, msg, XMIT_ACCEPT,
 			"General SMTP/ESMTP error.\r\n", 
 			1, responses))
-	    return(PS_REFUSED);
+	    return(run.bouncemail ? PS_REFUSED : PS_TRANSIENT);
 	else
 	    return(PS_TRANSIENT);
     }
@@ -761,7 +765,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		}
 	    }
 	if (*bad_addresses)
-	    send_bouncemail(msg, XMIT_RCPTBAD,
+	    send_bouncemail(ctl, msg, XMIT_RCPTBAD,
                             "Some addresses were rejected by the MDA fetchmail forwards to.\r\n",
                             *bad_addresses, from_responses);
 	/*
@@ -941,13 +945,15 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 		else
 		    /*
 		     * One or more deliveries failed.
-		     * If we can bounce a failures list back to the sender,
- 		     * return TRUE, deleting the message from the server so
- 		     * it won't be re-forwarded on subsequent poll cycles.
+		     * If we can bounce a failures list back to the
+		     * sender, and the postmaster does not want to
+		     * deal with the bounces return TRUE, deleting the
+		     * message from the server so it won't be
+		     * re-forwarded on subsequent poll cycles.
 		     */
-		    return(send_bouncemail(msg, XMIT_ACCEPT,
-				   "LSMTP partial delivery failure.\r\n",
-				   errors, responses));
+ 		  return(send_bouncemail(ctl, msg, XMIT_ACCEPT,
+					 "LSMTP partial delivery failure.\r\n",
+					 errors, responses));
 	    }
     }
 

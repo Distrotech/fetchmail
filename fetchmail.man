@@ -765,6 +765,12 @@ can be found.  Normally this is just the user who invoked fetchmail.
 If the invoking user is root, then the default of this option is
 the user `postmaster'.
 .PP
+The
+.B --nobounce
+option suppresses the normal action of bouncing errors back to the 
+sender in an RFC1894-conformant error message.  If nobounce is on, the
+message will go to the postmaster instead.
+.PP
 The 
 .B --invisible
 option (keyword: set invisible) tries to make fetchmail invisible.
@@ -955,6 +961,9 @@ Set a background poll interval in seconds
 T}
 set postmaster  	\&	T{
 Give the name of the last-resort mail recipient
+T}
+set nobouncemail	\&	T{
+Direct error mail to postmaster rather than sender
 T}
 set logfile  	\&	T{
 Name of a file to dump error and status messages to
@@ -1216,10 +1225,10 @@ of `dns', `checkalias', `localdomains', and `aka' for details on how
 matching addresses are handled.
 .PP
 If \fIfetchmail\fR cannot match any mailserver usernames or
-localdomain addresses, the default recipient is the value of the
-`postmaster' global option if that has been set; otherwise it's the
-calling user (as set by the USER or LOGNAME variable in the
-environment).
+localdomain addresses, the mail will be bounced.
+Normally it will be bounced to the sender, but if `nobounce' is on
+it will go to the postmaster (which in turn defaults to being the
+calling user).
 .PP
 The `dns' option (normally on) controls the way addresses from
 multidrop mailboxes are checked.  On, it enables logic to check each

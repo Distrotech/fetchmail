@@ -10,6 +10,9 @@ fetchmail-4.7.8 ():
 * FreeBSD support for interface and monitor options by Andy Doran <ad@psn.ie>.
 * Fixed server-deletion bug in fetchmailconf.
 * Timestamps now generated into logfiles at start of poll cycle.
+* New `nobounce' debugging option (specifically exempted from feature freeze)
+  allows SMTP error bouncemail to be redirected from sender to local
+  postmaster.
 
 There are 257 people on fetchmail-friends and 348 on fetchmail-announce.
 

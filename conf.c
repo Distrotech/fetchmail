@@ -188,6 +188,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
     stringdump("logfile", runp->logfile);
     stringdump("idfile", runp->idfile);
     stringdump("postmaster", runp->postmaster);
+    booldump("bouncemail", runp->bouncemail);
     stringdump("properties", runp->properties);
     booldump("invisible", runp->invisible);
     booldump("syslog", runp->use_syslog);

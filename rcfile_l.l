@@ -28,6 +28,7 @@ daemon		{ return DAEMON; }
 syslog		{ return SYSLOG; }
 invisible	{ return INVISIBLE; }
 postmaster	{ return POSTMASTER; }
+bouncemail	{ return BOUNCEMAIL; }
 warnings	{ return WARNINGS; }
 
 defaults 	{ return DEFAULTS; }

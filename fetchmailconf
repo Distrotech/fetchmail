@@ -19,6 +19,7 @@ class Configuration:
 	self.logfile = None		# No logfile, initially
 	self.idfile = os.environ["HOME"] + "/.fetchids"		# Default idfile, initially
         self.postmaster = None		# No last-resort address, initially
+        self.bouncemail = TRUE		# Vounce errors to users
         self.properties = None		# No exiguous properties
 	self.invisible = FALSE		# Suppress Received line & spoof?
 	self.syslog = FALSE		# Use syslogd for logging?
@@ -28,6 +29,7 @@ class Configuration:
 	    ('logfile',		'String'),
 	    ('idfile',		'String'),
 	    ('postmaster',	'String'),
+	    ('bouncemail',	'Boolean'),
 	    ('properties',	'String'),
 	    ('syslog',		'Boolean'),
 	    ('invisible',	'Boolean'))
@@ -42,6 +44,10 @@ class Configuration:
 	    str = str + ("set idfile \"%s\"\n" % (self.idfile,));
 	if self.postmaster != ConfigurationDefaults.postmaster:
 	    str = str + ("set postmaster \"%s\"\n" % (self.postmaster,));
+        if self.bouncemail:
+            str = str + ("set bouncemail\n")
+        else:
+            str = str + ("set nobouncemail\n")
 	if self.properties != ConfigurationDefaults.properties:
 	    str = str + ("set properties \"%s\"\n" % (self.properties,));
 	if self.poll_interval > 0:
@@ -591,6 +597,10 @@ Postmaster
         invoking user as the address of last resort unless that user is
         root.  If that user is root, fetchmail sends to `postmaster'.
 
+Bounces to sender?
+	If this option is on (the default) error mail goes to the sender.
+        Otherwise it goes to the postmaster.
+
 Invisible
         If false (the default) fetchmail generates a Received line into
         each message and generates a HELO from the machine it is running on.
@@ -658,6 +668,7 @@ class ConfigurationEdit(Frame, MyWidget):
             # Set the postmaster
             log = LabeledEntry(ff, '     Postmaster:', self.postmaster, '14')
             log.pack(side=RIGHT, anchor=E)
+
         # Set the poll interval
         de = LabeledEntry(ff, '     Poll interval:', self.poll_interval, '14')
         de.pack(side=RIGHT, anchor=E)
@@ -666,6 +677,13 @@ class ConfigurationEdit(Frame, MyWidget):
         df.pack()
 
         if self.mode != 'novice':
+            pf = Frame(gf)
+            Checkbutton(pf,
+		{'text':'Bounces to sender?',
+		'variable':self.bouncemail,
+		'relief':GROOVE}).pack(side=LEFT, anchor=W)
+            pf.pack(fill=X)
+
             sf = Frame(gf)
             Checkbutton(sf,
 		{'text':'Log to syslog?',
