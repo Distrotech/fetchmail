@@ -1,12 +1,12 @@
 			Release Notes:
 
-pl 1.9.3:
+pl 1.9.3 (Sun Oct 27 22:35:33 EST 1996):
 * Handle nested parens in RFC822 comments.
 * More gcc -Wall cleanup.
 * Improved installation docs.
 * Don't query DNS on startup unless needed for Kerberos or multidrop mailboxes.
 
-pl 1.9.2: 
+pl 1.9.2 (Sun Oct 27 01:10:30 EST 1996): 
 * Fix initialization-time core dump when running as root
 * Fix fatal error in MDA argument-list construction.
 
