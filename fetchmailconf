@@ -4,10 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-#
-# TO DO: Arrange for save and quit buttons to clean up all frames dependent
-# on the current ones.
-version = "1.10"
+version = "1.11"
 
 from Tkinter import *
 from Dialog import *
@@ -599,12 +596,16 @@ This will take you to a site configuration dialogue.
 
 class ConfigurationEdit(Frame, MyWidget):
     def __init__(self, configuration, outfile, master=None):
+        self.subwidgets = {}
 	self.configuration = configuration
         self.outfile = outfile
         self.container = master
         ConfigurationEdit.mode_to_help = {
             'novice':configure_novice_help, 'expert':configure_expert_help
             }
+
+    def server_edit(self, sitename):
+         self.subwidgets[sitename] = ServerEdit(sitename, self).edit(self.mode, Toplevel())
 
     def edit(self, mode):
         self.mode = mode
@@ -666,16 +667,22 @@ class ConfigurationEdit(Frame, MyWidget):
 	      bd=2).pack(side=TOP, pady=10)
 	ListEdit('New Server:', 
 		map(lambda x: x.pollname, self.configuration.servers),
-		lambda site, m=self.mode, s=self.configuration.servers:
-                 ServerEdit(site, s).edit(m, Toplevel()),
+		lambda site, self=self: self.server_edit(site),
                 lf, remotehelp)
 	lf.pack(fill=X)
 
+    def destruct(self):
+        for sitename in self.subwidgets.keys():
+            self.subwidgets[sitename].destruct()        
+        self.quit()
+
     def nosave(self):
 	if ConfirmQuit(self, self.mode + " configuration editor"):
-	    self.quit()
+	    self.destruct()
 
     def save(self):
+        for sitename in self.subwidgets.keys():
+            self.subwidgets[sitename].save()
         self.fetch(Configuration, 'configuration')
         fm = None
         if not self.outfile:
@@ -694,7 +701,7 @@ class ConfigurationEdit(Frame, MyWidget):
                 fm.close()
             if fm != sys.stdout:
                 os.chmod(self.outfile, 0600)
-            self.quit()
+            self.destruct()
 
 #
 # Server editing stuff.
@@ -830,16 +837,18 @@ user's options on that site.
 """}
 
 class ServerEdit(Frame, MyWidget):
-    def __init__(self, host, servers):
+    def __init__(self, host, parent):
+        self.parent = parent
 	self.server = None
-	for site in servers:
+        self.subwidgets = {}
+	for site in parent.configuration.servers:
 	    if site.pollname == host:
 		self.server = site
 	if (self.server == None):
 		self.server = Server()
 		self.server.pollname = host
 		self.server.via = None
-		servers.append(self.server)
+		parent.configuration.servers.append(self.server)
 
     def edit(self, mode, master=None):
 	Frame.__init__(self, master)
@@ -853,19 +862,31 @@ class ServerEdit(Frame, MyWidget):
 #	self.grab_set()
 #	self.focus_set()
 #	self.wait_window()
+	return self
+
+    def destruct(self):
+        for username in self.subwidgets.keys():
+            self.subwidgets[username].destruct()        
+        del self.parent.subwidgets[self.server.pollname]
+        Widget.destroy(self.master)
 
     def nosave(self):
 	if ConfirmQuit(self, 'server option editing'):
-	    Widget.destroy(self.master)
+	    self.destruct()
 
     def save(self):
 	self.fetch(Server, 'server')
-	Widget.destroy(self.master)
+        for username in self.subwidgets.keys():
+            self.subwidgets[username].save()        
+	self.destruct()
 
     def refreshPort(self):
 	proto = self.protocol.get()
 	self.port.set(defaultports[proto])
 	if not proto in ("POP3", "APOP", "KPOP"): self.uidl.state = DISABLED 
+
+    def user_edit(self, username, mode):
+        self.subwidgets[username] = UserEdit(username, self).edit(mode, Toplevel())
 
     def makeWidgets(self, host, mode):
 	topwin = dispose_window(self, "Server options for querying " + host, serverhelp)
@@ -926,7 +947,7 @@ class ServerEdit(Frame, MyWidget):
 	Label(userwin, text="User entries for " + host).pack(side=TOP)
 	ListEdit("New user: ",
                  map(lambda x: x.remote, self.server.users),
-                 lambda u, m=mode, s=self.server: UserEdit(u,s).edit(m, Toplevel()),
+                 lambda u, m=mode, s=self: s.user_edit(u, m),
                  userwin, suserhelp)
 	userwin.pack(fill=X)
 
@@ -1160,8 +1181,8 @@ page section on multidrop mode.
 """}
 
 class UserEdit(Frame, MyWidget):
-    def __init__(self, username, server):
-        self.server = server
+    def __init__(self, username, parent):
+        self.parent = parent
 	self.user = None
 	for user in server.users:
 	    if user.remote == username:
@@ -1176,23 +1197,28 @@ class UserEdit(Frame, MyWidget):
 	Frame.__init__(self, master)
 	Pack.config(self)
 	self.master.title('Fetchmail user ' + self.user.remote
-                          + ' querying ' + self.server.pollname);
+                          + ' querying ' + parent.server.pollname);
 	self.master.iconname('Fetchmail user ' + self.user.remote);
 	self.post(User, 'user')
-	self.makeWidgets(mode, self.server.pollname)
+	self.makeWidgets(mode, parent.server.pollname)
         self.keepalive = []	# Use this to anchor the PhotoImage object
         make_icon_window(self, fetchmail_gif)
 #	self.grab_set()
 #	self.focus_set()
 #	self.wait_window()
+	return self
+
+    def destruct(self):
+        del self.parent.subwidgets[self.user.remote]
+        Widget.destroy(self.master)
 
     def nosave(self):
 	if ConfirmQuit(self, 'user option editing'):
-	    Widget.destroy(self.master)
+            self.destruct()
 
     def save(self):
 	self.fetch(User, 'user')
-	Widget.destroy(self.master)
+	self.destruct()
 
     def makeWidgets(self, mode, servername):
 	dispose_window(self,
@@ -1279,12 +1305,12 @@ class UserEdit(Frame, MyWidget):
 		      self.fetchlimit, '30').pack(side=TOP, fill=X)
             LabeledEntry(limwin, 'Max messages to forward per poll:',
 		      self.batchlimit, '30').pack(side=TOP, fill=X)
-            if self.server.protocol in ('IMAP', 'IMAP-K4', 'IMAP-GSS'):
+            if parent.server.protocol in ('IMAP', 'IMAP-K4', 'IMAP-GSS'):
                 LabeledEntry(limwin, 'Interval between expunges (IMAP):',
                              self.expunge, '30').pack(side=TOP, fill=X)
             limwin.pack(fill=X)
 
-            if self.server.protocol in ('IMAP', 'IMAP-K4', 'IMAP-GSS'):
+            if parent.server.protocol in ('IMAP', 'IMAP-K4', 'IMAP-GSS'):
                 foldwin = Frame(rightwin, relief=RAISED, bd=5)
                 Label(foldwin, text="Remote folders (IMAP only)").pack(side=TOP)
                 ListEdit("New folder:", self.user.mailboxes, None, foldwin, None)

@@ -11,6 +11,8 @@ fetchmail-4.7.4 ():
 * Added Argentine Spanish as supported language (LC_ALL=pt_BR) from a
   po file by Javier Cohen <jkohen@tough.com>.
 * Accept 'passwd' as a synonym for 'password' in .netrc files.
+* In fetchmailconf, Save or Quit in a frame first performs that action
+  on all detendent frames.
 
 There are 249 people on fetchmail-friends and 335 on fetchmail-announce.
 
