@@ -37,6 +37,10 @@
 #endif /* HAVE_RES_SEARCH */
 
 #ifdef KERBEROS_V4
+#ifdef KERBEROS_V5
+#include <kerberosIV/des.h>
+#include <kerberosIV/krb.h>
+#else
 #if defined (__bsdi__)
 #include <des.h> /* order of includes matters */
 #include <krb.h>
@@ -51,6 +55,7 @@
 #include <des.h>
 #endif /* ! defined (__FreeBSD__) */
 #endif /* ! defined (__bsdi__) */
+#endif /* KERBEROS_V5 */
 #include <netinet/in.h>
 #include <netdb.h>
 #endif /* KERBEROS_V4 */
@@ -596,7 +601,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 	    app_from_offs = (line - msg.headers);
 	else if (!strncasecmp("Sender:", line, 7))
 	    sender_offs = (line - msg.headers);
-	else if (!strncasecmp("Resent_Sender:", line, 14))
+	else if (!strncasecmp("Resent-Sender:", line, 14))
 	    resent_sender_offs = (line - msg.headers);
 
  	else if (!strncasecmp("Message-Id:", buf, 11))

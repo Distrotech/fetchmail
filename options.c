@@ -363,13 +363,13 @@ struct query *ctl;	/* option record to be initialized */
 	    else if (strcmp(optarg, "kerberos") == 0)
 #ifdef KERBEROS_V5
 		ctl->server.preauthenticate = A_KERBEROS_V5;
-	    else if (strcmp(optarg, "kerberos_v5") == 0)
-		ctl->server.preauthenticate = A_KERBEROS_V5;
 #else
 		ctl->server.preauthenticate = A_KERBEROS_V4;
+#endif /* KERBEROS_V5 */
+	    else if (strcmp(optarg, "kerberos_v5") == 0)
+		ctl->server.preauthenticate = A_KERBEROS_V5;
 	    else if (strcmp(optarg, "kerberos_v4") == 0)
 		ctl->server.preauthenticate = A_KERBEROS_V4;
-#endif /* KERBEROS_V5 */
 	    else {
 		fprintf(stderr,"Invalid preauthentication `%s' specified.\n", optarg);
 		errflag++;

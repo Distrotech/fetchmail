@@ -16,6 +16,10 @@
 #include  "socket.h"
 
 #ifdef KERBEROS_V4
+#ifdef KERBEROS_V5
+#include <kerberosIV/des.h>
+#include <kerberosIV/krb.h>
+#else
 #if defined (__bsdi__)
 #include <des.h>
 #define krb_get_err_text(e) (krb_err_txt[e])
@@ -24,6 +28,7 @@
 #define krb_get_err_text(e) (krb_err_txt[e])
 #endif
 #include <krb.h>
+#endif
 #endif /* KERBEROS_V4 */
 
 #ifdef GSSAPI

@@ -591,7 +591,9 @@ checking its authorization database.
 If your \fIfetchmail\fR was built with Kerberos support and you specify 
 Kerberos preauthentication (either with --auth or the \fI.fetchmailrc\fR
 option \fBauthenticate kerberos_v4\fR) it will try to get a Kerberos
-ticket from the mailserver at the start of each query. 
+ticket from the mailserver at the start of each query.  Note: if
+either the pollnane or via name is `hesiod', fetchmail will try to use
+Hesiod to look up the mailserver.
 .PP
 If you use IMAP-K4, \fIfetchmail\fR will expect the IMAP server to have
 RFC1731-conformant AUTHENTICATE KERBEROS_V4 capability, and will use it.
