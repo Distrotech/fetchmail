@@ -715,7 +715,7 @@ static int imap_getrange(int sock,
     int ok;
 
     /* find out how many messages are waiting */
-    *bytes, recent = unseen = -1;
+    *bytes = recent = unseen = -1;
 
     if (pass > 1)
     {
