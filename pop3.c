@@ -6,6 +6,7 @@
 
 #include  <config.h>
 #include  <stdio.h>
+#include  <string.h>
  
 #include  "socket.h"
 #include  "fetchmail.h"
@@ -191,12 +192,20 @@ int number;
 int *lenp; 
 {
     int ok;
-    char buf [POPBUFSIZE+1];
+    char buf [POPBUFSIZE+1], *cp;
 
     gen_send(socket, "RETR %d", number);
     if ((ok = pop3_ok(socket, buf)) != 0)
 	return(ok);
-    *lenp = atoi(buf);
+    /* look for "nnn octets" -- there may or may not be preceding cruft */
+    if ((cp = strstr(buf, " octets")) == (char *)NULL)
+	*lenp = 0;
+    else
+    {
+	while (isdigit(*--cp))
+	    continue;
+	*lenp = atoi(++cp);
+    }
     return(0);
 }
 

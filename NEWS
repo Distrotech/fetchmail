@@ -42,6 +42,8 @@ bugs --
 
 * Rewrite "To: jrh (J. Random Hacker)" correctly.
 
+* Find "nnn octets" anywhere on a POP3 server's RETR response line.
+
 fetchmail-1.8 (Fri Oct 11 15:08:10 EDT 1996):
 
 features --
