@@ -365,7 +365,8 @@ int readheaders(int sock,
     int			from_offs, reply_to_offs, resent_from_offs;
     int			app_from_offs, sender_offs, resent_sender_offs;
     int			env_offs;
-    char		*received_for, *rcv, *cp, *delivered_to;
+    char		*received_for, *rcv, *cp;
+    static char		*delivered_to = NULL;
     int 		n, linelen, oldlen, ch, remaining, skipcount;
     struct idlist 	*idp;
     flag		no_local_matches = FALSE;
@@ -390,6 +391,8 @@ int readheaders(int sock,
     if (msgblk.headers)
        free(msgblk.headers);
     free_str_list(&msgblk.recipients);
+    if (delivered_to)
+	free(delivered_to);
 
     /* initially, no message ID */
     if (ctl->thisid)
@@ -955,6 +958,7 @@ int readheaders(int sock,
    {
 	    find_server_names(delivered_to, ctl, &msgblk.recipients);
        free(delivered_to);
+       delivered_to = NULL;
    }
 	else if (received_for)
 	    /*

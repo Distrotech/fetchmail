@@ -1114,8 +1114,8 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		     */
 		    if (run.poll_interval
 			&& !ctl->wehavesentauthnote
-			&& ((ctl->wehaveauthed && ++ctl->authfailcount == 10)
-			    || ++ctl->authfailcount == 3)
+			&& ((ctl->wehaveauthed && ++ctl->authfailcount >= 10)
+			    || (!ctl->wehaveauthed && ++ctl->authfailcount >= 3))
 			&& !open_warning_by_mail(ctl, (struct msgblk *)NULL))
 		    {
 			ctl->wehavesentauthnote = 1;
@@ -1509,6 +1509,7 @@ closeUp:
 	    err = PS_SYNTAX;
     }
 
+    set_timeout(0); /* cancel any pending alarm */
     signal(SIGALRM, alrmsave);
     signal(SIGPIPE, pipesave);
     return(err);

@@ -263,6 +263,7 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
     char daemon_name[18 + HOSTLEN] = "FETCHMAIL-DAEMON@";
     char boundary[BUFSIZ], *bounce_to;
     int sock;
+    static char *fqdn_of_host = NULL;
 
     /* don't bounce in reply to undeliverable bounces */
     if (!msg->return_path[0] || strcmp(msg->return_path, "<>") == 0)
@@ -273,7 +274,9 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
     SMTP_setmode(SMTP_MODE);
 
     /* can't just use fetchmailhost here, it might be localhost */
-    strcat(daemon_name, host_fqdn());
+    if (fqdn_of_host == NULL)
+	fqdn_of_host = host_fqdn();
+    strcat(daemon_name, fqdn_of_host);
 
     /* we need only SMTP for this purpose */
     if ((sock = SockOpen("localhost", SMTP_PORT, NULL, NULL)) == -1)
@@ -584,7 +587,7 @@ int stuffline(struct query *ctl, char *buf)
     /* The line may contain NUL characters. Find the last char to use
      * -- the real line termination is the sequence "\n\0".
      */
-    last = buf;
+    last = buf + 1; /* last[-1] must be valid! */
     while ((last += strlen(last)) && (last[-1] != '\n'))
         last++;
 
