@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/09/22 22:36:47 $
+<td width="30%" align=right>$Date: 1997/09/23 16:13:02 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -32,6 +32,10 @@ mail it to fetchmail's maintainer, Eric S. Raymond, at
 <a href="#G5">G5. Is there a mailing list for exchanging tips?</a><br>
 <a href="#G6">G6. So, what's this I hear about a fetchmail paper?</a><br>
 <a href="#G7">G7. What is the best server to use with fetchmail?</a><br>
+
+<h1>Build-time problems:</h1>
+
+<a href="#B1">B1. I get link failures when I try to build fetchmail.</a><br>
 
 <h1>Fetchmail configuration file grammar questions:</h1>
 
@@ -249,6 +253,22 @@ the best facilities for tracking message "seen" states.  You can find
 sources for IMAP software at <a href="http://www.imap.org">The IMAP
 Connection</a>; we like the freeware UW IMAP and Cyrus products. UW
 IMAP is the reference implementation of IMAP.<P>
+
+<hr>
+<h2><a name="B1">B1. I get link failures when I try to build fetchmail.</a></h2>
+
+If you get errors resembling these<P>
+
+<pre>
+mxget.o(.text+0x35): undefined referenceto `__res_search' 
+mxget.o(.text+0x99): undefined reference to`__dn_skipname' 
+mxget.o(.text+0x11c): undefined reference to`__dn_expand' 
+mxget.o(.text+0x187): undefined reference to`__dn_expand' 
+make: *** [fetchmail] Error 1
+</pre>
+
+then you must add "-lresolv" to the LOADLIBS line in your Makefile 
+since you have installed the `bind' package.<P>
 
 <hr>
 <h2><a name="F1">F1. Why does my old .fetchmailrc file no longer work?</a></h2>
@@ -1338,7 +1358,7 @@ template string in fetchmail.c.
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/09/22 22:36:47 $
+<td width="30%" align=right>$Date: 1997/09/23 16:13:02 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
