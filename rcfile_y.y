@@ -26,6 +26,10 @@
 #include <net/security.h>
 #endif /* NET_SECURITY */
 
+#if defined(__CYGWIN__)
+#include <sys/cygwin.h>
+#endif /* __CYGWIN__ */
+
 #include "fetchmail.h"
 #include "i18n.h"
   
@@ -437,6 +441,9 @@ int prc_filecheck(const char *pathname, const flag securecheck)
     }
 
 #ifndef __BEOS__
+#ifdef __CYGWIN__
+    if (cygwin_internal(CW_CHECK_NTSEC, pathname))
+#endif /* __CYGWIN__ */
     if (statbuf.st_mode & (S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH | S_IXOTH))
     {
 	fprintf(stderr, GT_("File %s must have no more than -rwx--x--- (0710) permissions.\n"), 
