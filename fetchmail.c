@@ -269,7 +269,7 @@ int main (int argc, char **argv)
 	    else
 	    {
 		/* look up the host and account in the .netrc file. */
-		netrc_entry *p = search_netrc(netrc_list,ctl->server.names->id);
+		netrc_entry *p = search_netrc(netrc_list,ctl->server.pollname);
 		while (p && strcmp(p->account, ctl->remotename))
 		    p = search_netrc(p->next, ctl->remotename);
 
@@ -281,7 +281,7 @@ int main (int argc, char **argv)
 	    if (ctl->server.protocol != P_ETRN && ctl->server.protocol != P_IMAP_K4 && !ctl->password)
 	    {
 		(void) sprintf(tmpbuf, "Enter password for %s@%s: ",
-			       ctl->remotename, ctl->server.names->id);
+			       ctl->remotename, ctl->server.pollname);
 		ctl->password = xstrdup((char *)getpassword(tmpbuf));
 	    }
 	}
@@ -380,7 +380,7 @@ int main (int argc, char **argv)
 	    if (ctl->server.via && strcmp(ctl->server.via, "localhost"))
 		ctl->server.truename = xstrdup(ctl->server.via);
 	    else
-		ctl->server.truename = xstrdup(ctl->server.names->id);
+		ctl->server.truename = xstrdup(ctl->server.pollname);
 
 #ifdef HAVE_GETHOSTBYNAME
 		/*
@@ -399,7 +399,7 @@ int main (int argc, char **argv)
 		    {
 			error(0, errno,
 				"skipping %s poll, ",
-				ctl->server.names->id);
+				ctl->server.pollname);
 			if (errno)
 			{
 			    if (errno == ENETUNREACH)
@@ -552,18 +552,19 @@ static int load_params(int argc, char **argv, int optind)
 	     * record from command line and defaults
 	     */
 	    for (ctl = querylist; ctl; ctl = ctl->next)
-		if (str_in_list(&ctl->server.names, argv[optind]))
+		if (!strcmp(ctl->server.pollname, argv[optind])
+			|| str_in_list(&ctl->server.akalist, argv[optind]))
 		    goto foundit;
 
 	    ctl = hostalloc(&cmd_opts);
-	    save_str(&ctl->server.names, -1, argv[optind]);
+	    ctl->server.pollname = xstrdup(argv[optind]);
 
 	foundit:
 	    ctl->active = TRUE;
 	}
 
     /* if there's a defaults record, merge it and lose it */ 
-    if (querylist && strcmp(querylist->server.names->id, "defaults") == 0)
+    if (querylist && strcmp(querylist->server.pollname, "defaults") == 0)
     {
 	for (ctl = querylist->next; ctl; ctl = ctl->next)
 	    optmerge(ctl, querylist);
@@ -572,7 +573,7 @@ static int load_params(int argc, char **argv, int optind)
 
     /* don't allow a defaults record after the first */
     for (ctl = querylist; ctl; ctl = ctl->next)
-	if (ctl != querylist && strcmp(ctl->server.names->id, "defaults") == 0)
+	if (ctl != querylist && strcmp(ctl->server.pollname, "defaults") == 0)
 	    exit(PS_SYNTAX);
 
     /* merge in wired defaults, do sanity checks and prepare internal fields */
@@ -650,14 +651,14 @@ static int load_params(int argc, char **argv, int optind)
 	    {
 		(void) fprintf(stderr,
 			       "%s configuration invalid, port number cannot be negative",
-			       ctl->server.names->id);
+			       ctl->server.pollname);
 		exit(PS_SYNTAX);
 	    }
 	    if (ctl->server.protocol == P_RPOP && ctl->server.port >= 1024)
 	    {
 		(void) fprintf(stderr,
 			       "%s configuration invalid, RPOP requires a privileged port",
-			       ctl->server.names->id);
+			       ctl->server.pollname);
 		exit(PS_SYNTAX);
 	    }
 	}
@@ -749,7 +750,7 @@ static int query_host(struct query *ctl)
 	    if (outlevel == O_VERBOSE)
 		fprintf(stderr,
 		    "fetchmail: interval not reached, not querying %s\n",
-		    ctl->server.names->id);
+		    ctl->server.pollname);
 	    return PS_NOMAIL;
 	}
     }
@@ -761,7 +762,7 @@ static int query_host(struct query *ctl)
 	time(&now);
 	fprintf(stderr, "fetchmail: %s querying %s (protocol %s) at %s",
 	    RELEASE_ID,
-	    ctl->server.names->id, showproto(ctl->server.protocol), ctime(&now));
+	    ctl->server.pollname, showproto(ctl->server.protocol), ctime(&now));
     }
     switch (ctl->server.protocol) {
     case P_AUTO:
@@ -808,7 +809,7 @@ void dump_params (struct query *ctl)
 /* display query parameters in English */
 {
     printf("Options for retrieving from %s@%s:\n",
-	   ctl->remotename, visbuf(ctl->server.names->id));
+	   ctl->remotename, visbuf(ctl->server.pollname));
 
     if (ctl->server.via)
 	printf("  Mail will be retrieved via %s\n", ctl->server.via);
@@ -818,12 +819,12 @@ void dump_params (struct query *ctl)
 	       ctl->server.interval);
     if (ctl->server.truename)
 	printf("  True name of server is %s.\n", ctl->server.truename);
-    if (ctl->server.names->next)
+    if (ctl->server.akalist)
     {
 	struct idlist *idp;
 
 	printf("  Predeclared mailserver aliases:");
-	for (idp = ctl->server.names->next; idp; idp = idp->next)
+	for (idp = ctl->server.akalist; idp; idp = idp->next)
 	    printf(" %s", idp->id);
 	putchar('\n');
     }

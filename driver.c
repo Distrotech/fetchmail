@@ -117,17 +117,17 @@ static int is_host_alias(const char *name, struct query *ctl)
      * The first three checks are optimizations that will catch a good
      * many cases.
      *
-     * (1) check against the poll name the user specified.  Odds are
+     * (1) check against the poll label the user specified.  Odds are
      * good this will either be the mailserver's FQDN or a suffix of
      * it with the mailserver's domain's default host name omitted.
      *
-     * (2) Check the `via' or true host name if present, just in case
-     * the poll name is a label for one of a couple of different 
-     * configurations and the real server name is here.
-     *
-     * (3) Then check the rest of the `also known as'
+     * (2) Then check the rest of the `also known as'
      * cache accumulated by previous DNS checks.  This cache is primed
      * by the aka list option.
+     *
+     * (3) Check the `via' or true host name if present, just in case
+     * the poll name is a label for one of a couple of different 
+     * configurations and the real server name is here.
      *
      * (4) Finally check against the mailserver's FQDN, in case
      * it's not the same as the declared hostname.
@@ -136,7 +136,9 @@ static int is_host_alias(const char *name, struct query *ctl)
      * name doesn't match any is it time to call the bind library.
      * If this happens odds are good we're looking at an MX name.
      */
-    if (str_in_list(&lead_server->names, name))
+    if (strcmp(lead_server->pollname, name) == 0)
+	return(TRUE);
+    else if (str_in_list(&lead_server->akalist, name))
 	return(TRUE);
     else if (ctl->server.via && strcmp(name, ctl->server.via) == 0)
 	return(TRUE);
@@ -172,7 +174,7 @@ static int is_host_alias(const char *name, struct query *ctl)
 		putchar('\n');	/* terminate the progress message */
 	    error(0, 0,
 		"nameserver failure while looking for `%s' during poll of %s.",
-		name, ctl->server.names->id);
+		name, ctl->server.pollname);
 	    ctl->errcount++;
 	    break;
 	}
@@ -197,7 +199,7 @@ static int is_host_alias(const char *name, struct query *ctl)
 	default:
 	    error(0, 0,
 		"nameserver failure while looking for `%s' during poll of %s.",
-		name, ctl->server.names->id);
+		name, ctl->server.pollname);
 	    ctl->errcount++;
 	    break;
 	}
@@ -212,7 +214,7 @@ static int is_host_alias(const char *name, struct query *ctl)
     }
 
     /* add this name to relevant server's `also known as' list */
-    save_str(&lead_server->names, -1, name);
+    save_str(&lead_server->akalist, -1, name);
     return(TRUE);
 }
 
@@ -1280,7 +1282,7 @@ const struct method *proto;	/* protocol method table */
     {
 	error(0, 0,
 		"timeout after %d seconds waiting for %s.",
-		ctl->server.timeout, ctl->server.names->id);
+		ctl->server.timeout, ctl->server.pollname);
 	if (ctl->smtp_socket != -1)
 	    close(ctl->smtp_socket);
 	if (sock != -1)
@@ -1305,7 +1307,7 @@ const struct method *proto;	/* protocol method table */
 
 	/* open a socket to the mail server */
 	port = ctl->server.port ? ctl->server.port : protocol->port;
-	realhost = ctl->server.via ? ctl->server.via : ctl->server.names->id;
+	realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;
 	if ((sock = SockOpen(realhost, port)) == -1)
 	{
 #ifndef EHOSTUNREACH
@@ -1314,7 +1316,7 @@ const struct method *proto;	/* protocol method table */
 	    if (outlevel == O_VERBOSE || errno != EHOSTUNREACH)
 	    {
 		error_build("fetchmail: %s connection to %s failed: ", 
-			     protocol->name, ctl->server.names->id);
+			     protocol->name, ctl->server.pollname);
 		if (h_errno == HOST_NOT_FOUND)
 		    error_complete(0, 0, "host is unknown");
 		else if (h_errno == NO_ADDRESS)
@@ -1422,7 +1424,7 @@ const struct method *proto;	/* protocol method table */
 	    *tp = '\0';
 	}
 	else
-	    strcpy(realname, ctl->server.names->id);
+	    strcpy(realname, ctl->server.pollname);
 
 	/* try to get authorized to fetch mail */
 	if (protocol->getauth)
@@ -1764,7 +1766,7 @@ const struct method *proto;	/* protocol method table */
     if (ok==PS_SOCKET || ok==PS_AUTHFAIL || ok==PS_SYNTAX 
 		|| ok==PS_IOERR || ok==PS_ERROR || ok==PS_PROTOCOL 
 		|| ok==PS_LOCKBUSY || ok==PS_SMTP)
-	error(0, -1, "%s error while fetching from %s", msg, ctl->server.names->id);
+	error(0,-1, "%s error while fetching from %s", msg, ctl->server.pollname);
 
 closeUp:
     signal(SIGALRM, sigsave);

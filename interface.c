@@ -175,7 +175,7 @@ int interface_approve(struct hostdata *hp)
 		/* get interface info */
 		if (!get_ifinfo(hp->interface, &ifinfo)) {
 			(void) error(0, 0, "skipping poll of %s, %s down",
-				hp->names->id, hp->interface);
+				hp->pollname, hp->interface);
 			return(FALSE);
 		}
 		/* check the IP address (range) */
@@ -184,7 +184,7 @@ int interface_approve(struct hostdata *hp)
 				hp->interface_pair->interface_address.s_addr) {
 			(void) error(0, 0,
 				"skipping poll of %s, %s IP address excluded",
-				hp->names->id, hp->interface);
+				hp->pollname, hp->interface);
 			return(FALSE);
 		}
 	}
@@ -202,7 +202,7 @@ int interface_approve(struct hostdata *hp)
 			hp->monitor_io == ifinfo.rx_packets +
 				ifinfo.tx_packets) {
 		(void) error(0, 0, "skipping poll of %s, %s inactive",
-			hp->names->id, hp->monitor);
+			hp->pollname, hp->monitor);
 		return(FALSE);
 	}
 

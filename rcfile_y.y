@@ -117,8 +117,8 @@ serverspecs	: /* EMPTY */
 		| serverspecs serv_option
 		;
 
-alias_list	: STRING		{save_str(&current.server.names,-1,$1);}
-		| alias_list STRING	{save_str(&current.server.names,-1,$2);}
+alias_list	: STRING		{save_str(&current.server.akalist,-1,$1);}
+		| alias_list STRING	{save_str(&current.server.akalist,-1,$2);}
 		;
 
 domain_list	: STRING		{save_str(&current.server.localdomains,-1,$1);}
@@ -343,7 +343,7 @@ static int reset_server(char *name, int skip)
     trailer = FALSE;
     memset(&current,'\0',sizeof(current));
     current.smtp_socket = -1;
-    save_str(&current.server.names, -1, name);
+    current.server.pollname = xstrdup(name);
     current.server.skip = skip;
     return(TRUE);
 }

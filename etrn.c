@@ -37,16 +37,16 @@ static int etrn_getrange(int sock, struct query *ctl, char *id, int *countp,
     struct idlist *qnp;		/* pointer to Q names */
     struct hostent *hp;
 
-    if ((ok = SMTP_ehlo(sock, ctl->server.names->id, &opts)))
+    if ((ok = SMTP_ehlo(sock, ctl->server.truename, &opts)))
     {
 	error(0, 0, "%s's SMTP listener does not support ESMTP",
-	      ctl->server.names->id);
+	      ctl->server.pollname);
 	return(ok);
     }
     else if (!(opts & ESMTP_ETRN))
     {
 	error(0, 0, "%s's SMTP listener does not support ETRN",
-	      ctl->server.names->id);
+	      ctl->server.pollname);
 	return(PS_PROTOCOL);
     }
 
