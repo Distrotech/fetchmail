@@ -8,6 +8,9 @@
 
 #include  <config.h>
 #include  <stdio.h>
+#if defined(STDC_HEADERS)
+#include <stdlib.h>
+#endif
 #include  "socket.h"
 #include  "fetchmail.h"
 
@@ -63,7 +66,7 @@ char *buf;
 		  ctl->remotename, ctl->password));
 }
 
-static pop2_getrange(socket, ctl, countp, newp)
+static int pop2_getrange(socket, ctl, countp, newp)
 /* get range of messages to be fetched */
 int socket;
 struct query *ctl;
@@ -112,7 +115,7 @@ int *lenp;
     return(ok);
 }
 
-static pop2_trail(socket, ctl, number)
+static int pop2_trail(socket, ctl, number)
 /* send acknowledgement for message data */
 int socket;
 struct query *ctl;

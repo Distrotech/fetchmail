@@ -12,6 +12,14 @@
 #include <sys/wait.h>
 #include <sys/stat.h>
 #include <errno.h>
+#if defined(STDC_HEADERS)
+#include <stdlib.h>
+#endif
+#if defined(HAVE_UNISTD_H)
+#include <unistd.h>
+#endif
+#include <string.h>
+
 #include "fetchmail.h"
 
 struct query cmd_opts;	/* where to put command-line info */
@@ -139,9 +147,9 @@ extern FILE *yyin;
 
 static struct query *hosttail;	/* where to add new elements */
 
-int yyerror (s)
+void yyerror (s)
 /* report a syntax error */
-char *s;	/* error string */
+const char *s;	/* error string */
 {
   fprintf(stderr,"%s line %d: %s at %s\n", rcfile, prc_lineno, s, yytext);
   prc_errflag++;
@@ -149,7 +157,7 @@ char *s;	/* error string */
 
 int prc_filecheck(pathname)
 /* check that a configuration file is secure */
-char *pathname;		/* pathname for the configuration file */
+const char *pathname;		/* pathname for the configuration file */
 {
     struct stat statbuf;
 
@@ -186,9 +194,9 @@ char *pathname;		/* pathname for the configuration file */
     return(0);
 }
 
-prc_parse_file (pathname)
+int prc_parse_file (pathname)
 /* digest the configuration into a linked list of host records */
-char *pathname;		/* pathname for the configuration file */
+const char *pathname;		/* pathname for the configuration file */
 {
     prc_errflag = 0;
     querylist = hosttail = (struct query *)NULL;
@@ -217,7 +225,7 @@ char *pathname;		/* pathname for the configuration file */
 	return(0);
 }
 
-prc_reset()
+void prc_reset()
 /* clear the global current record (server parameters) used by the parser */
 {
     char	savename[HOSTLEN+1];
@@ -262,7 +270,7 @@ struct query *init;	/* pointer to block containing initial values */
     return(node);
 }
 
-int prc_register()
+void prc_register()
 /* register current parameters and append to the host list */
 {
 #define STR_FORCE(fld, len) if (cmd_opts.fld[0]) \
@@ -295,8 +303,6 @@ void optmerge(h2, h1)
 struct query *h1;
 struct query *h2;
 {
-    struct idlist *idp;
-
     append_uid_list(&h2->localnames, &h1->localnames);
 
 #define STR_MERGE(fld, len) if (*(h2->fld) == '\0') strcpy(h2->fld, h1->fld)

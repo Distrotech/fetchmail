@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <sys/file.h>
 #include <signal.h>
 #include <fcntl.h>
@@ -18,6 +19,10 @@
 
 #if defined(HAVE_UNISTD_H)
 #  include <unistd.h>
+#endif
+
+#if defined(STDC_HEADERS)
+#include <stdlib.h>
 #endif
 
 #if defined(QNX)
@@ -174,6 +179,8 @@ nottyDetach:
 #if defined(SIGPWR)
   signal(SIGPWR, sigchld_handler); 
 #endif
+
+  return(0);
 }
 
 /* daemon.c ends here */

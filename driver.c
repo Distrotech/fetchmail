@@ -9,9 +9,13 @@
 #include  <config.h>
 #include  <stdio.h>
 #include  <setjmp.h>
+#include  <ctype.h>
 #if defined(STDC_HEADERS)
 #include  <stdlib.h>
 #include  <string.h>
+#endif
+#if defined(HAVE_UNISTD_H)
+#include <unistd.h>
 #endif
 #if defined(HAVE_STDARG_H)
 #include  <stdarg.h>
@@ -38,7 +42,7 @@
 
 #define	SMTP_PORT	25	/* standard SMTP service port */
 
-static struct method *protocol;
+static const struct method *protocol;
 static jmp_buf	restart;
 
 char tag[TAGLEN];
@@ -334,7 +338,7 @@ const char *name;
 struct query	*ctl;
 {
     struct hostent	*he;
-    int			i, n;
+    int			i;
 
     /*
      * The first two checks are optimizations that will catch a good
@@ -369,7 +373,6 @@ struct query	*ctl;
     for (i = 0; i < MX_RETRIES; i++)
     {
 	struct mxentry *mxrecords, *mxp;
-	int j;
 
 	mxrecords = getmxrecords(name);
 
@@ -439,12 +442,9 @@ int delimited;	/* does the protocol use a message delimiter? */
 struct query *ctl;	/* query control record */
 { 
     char buf [MSGBUFSIZE+1]; 
-    char fromBuf[MSGBUFSIZE+1];
     char *bufp, *headers, *unixfrom, *fromhdr, *tohdr, *cchdr, *bcchdr;
     int n, oldlen;
     int inheaders,lines,sizeticker;
-    /* This keeps the retrieved message count for display purposes */
-    static int msgnum = 0;  
 
     /* read the message content from the server */
     inheaders = 1;
@@ -725,8 +725,8 @@ char *canonical;	/* server name */
 
 int do_protocol(ctl, proto)
 /* retrieve messages from server using given protocol method table */
-struct query *ctl;	/* parsed options with merged-in defaults */
-struct method *proto;		/* protocol method table */
+struct query *ctl;		/* parsed options with merged-in defaults */
+const struct method *proto;	/* protocol method table */
 {
     int ok, mboxfd = -1;
     void (*sigsave)();
@@ -775,7 +775,7 @@ struct method *proto;		/* protocol method table */
 		ctl->timeout, ctl->servername);
     else
     {
-	char buf [POPBUFSIZE+1], host[HOSTLEN+1];
+	char buf [POPBUFSIZE+1];
 	int *msgsizes, socket, len, num, count, new, deletions = 0;
 
 	/* set up the server-nonresponse timeout */
@@ -934,7 +934,7 @@ struct method *proto;		/* protocol method table */
 		{
 		    deletions++;
 		    if (outlevel > O_SILENT) 
-			fprintf(stderr, " flushed\n", num);
+			fprintf(stderr, " flushed\n");
 		    ok = (protocol->delete)(socket, ctl, num);
 		    if (ok != 0)
 			goto cleanUp;
@@ -943,7 +943,7 @@ struct method *proto;		/* protocol method table */
 		{
 		    /* nuke it from the unseen-messages list */
 		    delete_uid(&ctl->newsaved, num);
-		    fprintf(stderr, " not flushed\n", num);
+		    fprintf(stderr, " not flushed\n");
 		}
 	    }
 

@@ -9,6 +9,10 @@
 #include  <config.h>
 #include  <stdio.h>
 #include  <string.h>
+#include  <ctype.h>
+#if defined(STDC_HEADERS)
+#include  <stdlib.h>
+#endif
 #include  "socket.h"
 #include  "fetchmail.h"
 
@@ -19,10 +23,7 @@ int imap_ok (socket, argbuf)
 char *argbuf;
 int socket;
 {
-    int ok;
     char buf [POPBUFSIZE+1];
-    char *bufp;
-    int n;
 
     seen = 0;
     do {
@@ -83,7 +84,7 @@ char *buf;
 		  ctl->remotename, ctl->password));
 }
 
-static imap_getrange(socket, ctl, countp, newp)
+static int imap_getrange(socket, ctl, countp, newp)
 /* get range of messages to be fetched */
 int socket;
 struct query *ctl;
@@ -137,13 +138,12 @@ int	*sizes;
     return(0);
 }
 
-static imap_is_old(socket, ctl, num)
+static int imap_is_old(socket, ctl, num)
 /* is the given message old? */
 int socket;
 struct query *ctl;
 int num;
 {
-    char buf [POPBUFSIZE+1];
     int ok;
 
     if ((ok = gen_transact(socket, "FETCH %d FLAGS", num)) != 0)
@@ -176,7 +176,7 @@ int *lenp;
 	return(0);
 }
 
-static imap_trail(socket, ctl, number)
+static int imap_trail(socket, ctl, number)
 /* discard tail of FETCH response after reading message text */
 int socket;
 struct query *ctl;
@@ -190,7 +190,7 @@ int number;
 	return(0);
 }
 
-static imap_delete(socket, ctl, number)
+static int imap_delete(socket, ctl, number)
 /* set delete flag for given message */
 int socket;
 struct query *ctl;

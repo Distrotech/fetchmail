@@ -72,14 +72,14 @@ options		{/* EMPTY */}
 
 			yytext[strlen(yytext)-1] = '\0';
 			escapes(yytext+1, buf);
-			yylval.sval = (char *) strdup(buf);
+			yylval.sval = (char *) xstrdup(buf);
 			return STRING;
 		}
 [^;:, \t\r\n]+	{
 			char buf[POPBUFSIZE];
 
 			escapes(yytext, buf);
-			yylval.sval = (char *) strdup(buf);
+			yylval.sval = (char *) xstrdup(buf);
 			return STRING;
 		}
 

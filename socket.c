@@ -9,6 +9,7 @@
 
 #include <config.h>
 
+#include <stdio.h>
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -70,36 +71,13 @@ int clientPort;
     return sock;
 }
 
-int SockGets(socket,buf,len)
-int socket;
-char *buf;
-int len;
-{
-    int rdlen = 0;
-    RETSIGTYPE (*sigsave)();
-
-    while (--len)
-    {
-        if (SockInternalRead(socket, buf, 1) != 1)
-            return -1;
-        else
-	    rdlen++;
-        if (*buf == '\n')
-            break;
-        if (*buf != '\r') /* remove all CRs */
-            buf++;
-    }
-    *buf = 0;
-    return rdlen;
-}
-
 int SockPuts(socket,buf)
 int socket;
 char *buf;
 {
     int rc;
     
-    if (rc = SockWrite(socket, buf, strlen(buf)))
+    if ((rc = SockWrite(socket, buf, strlen(buf))) != 0)
         return rc;
     return SockWrite(socket, "\r\n", 2);
 }
@@ -122,28 +100,9 @@ int len;
     return 0;
 }
 
-int SockRead(socket,buf,len)
-int socket;
-char *buf;
-int len;
-{
-    int n;
-    
-    
-    while (len)
-    {
-        n = SockInternalRead(socket, buf, len);
-        if (n <= 0)
-            return -1;
-        len -= n;
-        buf += n;
-    }
-    return 0;
-}
-
 static int sbuflen = 0;
 
-int SockInternalRead (socket,buf,len)
+static int SockInternalRead (socket,buf,len)
 int socket;
 char *buf;
 int len;
@@ -154,7 +113,7 @@ int len;
    if (sbuflen <= 0) {
      /* buffer is empty; refresh. */
      if ((sbuflen = read(socket,sbuf,INTERNAL_BUFSIZE)) < 0) {
-       if (errno = EINTR)
+       if (errno == EINTR)
            return -1;
        perror("SockInternalRead: read");
        exit(9);
@@ -188,35 +147,46 @@ int len;
    return(len);
 }
 
-/* SockClearHeader: call this procedure in order to kill off any
-   forthcoming Header info from the socket that we no longer want.
-   */
-int SockClearHeader(socket)
+int SockRead(socket,buf,len)
 int socket;
+char *buf;
+int len;
 {
-   char *bufp;
-   static char sbuf[INTERNAL_BUFSIZE];
-   int nBytes;
-   int res;
-
-   if ((res = SockDataWaiting(socket))  <= 0)
-     return res;
-
-   while (1) 
-     {
-        if (SockGets(socket,sbuf,INTERNAL_BUFSIZE) < 0)
-	  return 0;
-	bufp = sbuf;
-	if (*bufp == '.') {
-	  bufp++;
-	  if (*bufp == 0)
-	    break;
-	}
-     }
-   sbuflen = 0;
-   return 0;
+    int n;
+    
+    
+    while (len)
+    {
+        n = SockInternalRead(socket, buf, len);
+        if (n <= 0)
+            return -1;
+        len -= n;
+        buf += n;
+    }
+    return 0;
 }
 
+int SockGets(socket,buf,len)
+int socket;
+char *buf;
+int len;
+{
+    int rdlen = 0;
+
+    while (--len)
+    {
+        if (SockInternalRead(socket, buf, 1) != 1)
+            return -1;
+        else
+	    rdlen++;
+        if (*buf == '\n')
+            break;
+        if (*buf != '\r') /* remove all CRs */
+            buf++;
+    }
+    *buf = 0;
+    return rdlen;
+}
 
 /* SockDataWaiting: Return a non-zero value if this socket is waiting
   for data.   */
@@ -245,6 +215,36 @@ int  SockDataWaiting(int socket)
   fcntl(socket,F_SETFL,flags);
   return res;
 }
+
+
+/* SockClearHeader: call this procedure in order to kill off any
+   forthcoming Header info from the socket that we no longer want.
+   */
+int SockClearHeader(socket)
+int socket;
+{
+   char *bufp;
+   static char sbuf[INTERNAL_BUFSIZE];
+   int res;
+
+   if ((res = SockDataWaiting(socket)) <= 0)
+     return res;
+
+   while (1) 
+     {
+        if (SockGets(socket,sbuf,INTERNAL_BUFSIZE) < 0)
+	  return 0;
+	bufp = sbuf;
+	if (*bufp == '.') {
+	  bufp++;
+	  if (*bufp == 0)
+	    break;
+	}
+     }
+   sbuflen = 0;
+   return 0;
+}
+
 #if defined(HAVE_STDARG_H)
 int SockPrintf(int socket, char* format, ...)
 {

@@ -6,6 +6,8 @@
 
 #include <config.h>
 #include <stdio.h>
+#include <ctype.h>
+#include <time.h>
 
 #if defined(STDC_HEADERS)
 #include <stdlib.h>
@@ -37,7 +39,7 @@
 
 #ifdef HAVE_PROTOTYPES
 /* prototypes for internal functions */
-static int dump_options (struct query *);
+static void dump_params (struct query *);
 static int query_host(struct query *);
 static char *visbuf(const char *);
 #endif
@@ -65,14 +67,14 @@ static struct query *ctl;
 
 RETSIGTYPE donothing(sig) int sig; {signal(sig, donothing);}
 
-main (argc,argv)
+int main (argc,argv)
 int argc;
 char **argv;
 { 
-    int mboxfd, st, bkgd, lossage;
+    int st, bkgd, lossage;
     struct query def_opts;
     int parsestatus, implicitmode;
-    char *servername, *user, *home, *tmpdir, tmpbuf[BUFSIZ]; 
+    char *user, *home, *tmpdir, tmpbuf[BUFSIZ]; 
     struct passwd *pw;
     FILE	*lockfp;
     pid_t pid;
@@ -134,7 +136,7 @@ char **argv;
     if (prc_parse_file(rcfile) != 0)
 	exit(PS_SYNTAX);
 
-    if (implicitmode = (optind >= argc))
+    if ((implicitmode = (optind >= argc)))
     {
 	for (ctl = querylist; ctl; ctl = ctl->next)
 	    ctl->active = TRUE;
@@ -565,7 +567,7 @@ struct query *ctl;
     }
 }
 
-int dump_params (ctl)
+void dump_params (ctl)
 /* display query parameters in English */
 struct query *ctl;	/* query parameter block */
 {

@@ -249,7 +249,7 @@ void write_saved_lists(hostlist, idfile)
 struct query *hostlist;
 char *idfile;
 {
-    int	st, idcount;
+    int		idcount;
     FILE	*tmpfp;
     struct query *hostp;
     struct idlist *idp;

@@ -155,6 +155,7 @@ int gen_transact ();
 void *xmalloc(int);
 char *xstrdup(char *);
 
+int do_protocol(struct query *, const struct method *);
 int doPOP2 (struct query *); 
 int doPOP3 (struct query *);
 int doIMAP (struct query *);
@@ -177,9 +178,20 @@ int parsecmdline (int, char **, struct query *);
 void optmerge(struct query *, struct query *);
 char *MD5Digest (char *);
 int openmailpipe (char **);
+int closemailpipe(int);
 int daemonize(const char *, void (*)(int));
 
+int prc_parse_file(const char *);
+int prc_filecheck(const char *);
+void prc_register();
+void prc_reset();
+
+char *getpassword(char *);
+
 void escapes(const char *, char *);
+
+void yyerror(const char *);
+int yylex();
 
 #else
 

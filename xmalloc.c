@@ -8,6 +8,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
+#if defined(STDC_HEADERS)
+#include  <stdlib.h>
+#endif
 #include "fetchmail.h"
 
 #if defined(HAVE_VOIDPOINTER)

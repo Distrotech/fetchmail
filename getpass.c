@@ -13,6 +13,10 @@
 #include <config.h>
 #include <stdio.h>
 #include <signal.h>
+#include <fcntl.h>
+#if defined(HAVE_UNISTD_H)
+#include <unistd.h>
+#endif
 
 extern int optind;
 

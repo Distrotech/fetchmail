@@ -7,6 +7,13 @@
 #include  <config.h>
 #include  <stdio.h>
 #include  <string.h>
+#include  <ctype.h>
+#if defined(HAVE_UNISTD_H)
+#include <unistd.h>
+#endif
+#if defined(STDC_HEADERS)
+#include  <stdlib.h>
+#endif
  
 #include  "socket.h"
 #include  "fetchmail.h"
@@ -60,8 +67,6 @@ int socket;
 struct query *ctl;
 char *greeting;
 {
-    char buf [POPBUFSIZE+1];
-
     /* build MD5 digest from greeting timestamp + password */
     if (ctl->protocol == P_APOP) 
     {
@@ -117,7 +122,7 @@ char *greeting;
     return(0);
 }
 
-static pop3_getrange(socket, ctl, countp, newp)
+static int pop3_getrange(socket, ctl, countp, newp)
 /* get range of messages to be fetched */
 int socket;
 struct query *ctl;
@@ -255,7 +260,7 @@ int *lenp;
     return(0);
 }
 
-static pop3_delete(socket, ctl, number)
+static int pop3_delete(socket, ctl, number)
 /* delete a given message */
 int socket;
 struct query *ctl;
