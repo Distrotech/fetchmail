@@ -23,6 +23,8 @@ bugs --
 
 * Fixed some address-parsing bugs in rfc822.c:nxtaddr().
 
+* 2.7 broke portability to Solaris.  Fix that.
+
 There are 184 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
