@@ -808,6 +808,22 @@ static int imap_trail(int sock, struct query *ctl, int number)
     return(PS_SUCCESS);
 }
 
+static int internal_expunge(int sock)
+/* ship an expunge, resetting associated counters */
+{
+    int	ok;
+
+    if ((ok = gen_transact(sock, "EXPUNGE")))
+	return(ok);
+
+    expunged = deletions;
+    deletions = 0;
+
+#ifdef IMAP_UID	/* not used */
+    expunge_uids(ctl);
+#endif /* IMAP_UID */
+}
+
 static int imap_delete(int sock, struct query *ctl, int number)
 /* set delete flag for given message */
 {
@@ -836,17 +852,7 @@ static int imap_delete(int sock, struct query *ctl, int number)
      * the next session.
      */
     if (NUM_NONZERO(ctl->expunge) && (deletions % ctl->expunge) == 0)
-    {
-	if ((ok = gen_transact(sock, "EXPUNGE")))
-	    return(ok);
-
-#ifdef IMAP_UID	/* not used */
-	expunge_uids(ctl);
-#endif /* IMAP_UID */
-
-	expunged = deletions;
-	deletions = 0;
-    }
+	internal_expunge(sock);
 
     return(PS_SUCCESS);
 }
@@ -856,19 +862,7 @@ static int imap_logout(int sock, struct query *ctl)
 {
     /* if expunges after deletion have been suppressed, ship one now */
     if (NUM_SPECIFIED(ctl->expunge) && NUM_ZERO(ctl->expunge) && deletions)
-    {
-	int	ok;
-
-	if ((ok = gen_transact(sock, "EXPUNGE")))
-	    return(ok);
-
-	expunged = deletions;
-	deletions = 0;
-
-#ifdef IMAP_UID	/* not used */
-	expunge_uids(ctl);
-#endif /* IMAP_UID */
-    }
+	internal_expunge(sock);
 
     return(gen_transact(sock, "LOGOUT"));
 }
