@@ -1035,7 +1035,6 @@ static int internal_expunge(int sock)
 	return(ok);
 
     expunged += deletions;
-    unseen -= deletions;
     deletions = 0;
 
 #ifdef IMAP_UID	/* not used */
