@@ -19,8 +19,6 @@
 #include "popclient.h"
 #include "bzero.h"
 
-/* XXX -- Would like to use 'enum' here, but it causes type mismatch 
-          problems many compilers */
 #define LA_VERSION	1 
 #define LA_ALL          2
 #define LA_KILL		3
@@ -44,7 +42,7 @@
 #define LA_NOREWRITE	21
 #define LA_YYDEBUG	22
  
-static char *shortoptions = "23VaKkvscl:Fd:f:u:r:o:m:L:qN";
+static char *shortoptions = "23PVaKkvS:scl:Fd:f:u:r:o:m:L:qN";
 static struct option longoptions[] = {
   {"version",   no_argument,       (int *) 0, LA_VERSION    },
   {"all",	no_argument,       (int *) 0, LA_ALL        },
@@ -168,6 +166,7 @@ struct hostrec *queryctl;
       case LA_FLUSH:
         queryctl->flush = !0;
         break;
+      case 'p':
       case LA_PROTOCOL:
         /* XXX -- should probably use a table lookup here */
         if (strcasecmp(optarg,"pop2") == 0)
@@ -251,7 +250,7 @@ struct hostrec *queryctl;
     fputs("  options\n",stderr);
     fputs("  -2               use POP2 protocol\n", stderr);
     fputs("  -3               use POP3 protocol\n", stderr);
-    fputs("      --protocol   specify pop2, pop3, imap, apop, or rpop\n",
+    fputs("  -p,  --protocol   specify pop2, pop3, imap, apop, or rpop\n",
           stderr);
     fputs("  -V, --version    display version info\n", stderr);
     fputs("  -a, --all        retrieve old and new messages\n", stderr);

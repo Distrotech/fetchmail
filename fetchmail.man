@@ -116,7 +116,7 @@ mail is delivered by SMTP over a socket connection to the specified
 host.  This simulates the way mail would be delivered to that host 
 by a normal Internet mail connection.  
 .TP
-.B \--protocol proto
+.B \-p, \--protocol proto
 Specify the protocol to used when communicating with the remote 
 mailserver.  If no protocol is specified,
 .I popclient

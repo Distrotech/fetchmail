@@ -4,8 +4,6 @@ To-do list:
 
 Option to enable EMACS-like user folder versioning on each run.
 
--p option to come back?
-
 S/key for secure challenge-response.
 
 Recode POP2 to use the same driver/method strategy as POP3/IMAP, so 

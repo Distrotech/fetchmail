@@ -392,6 +392,9 @@ struct hostrec *queryctl;
 
     switch(queryctl->output)
     {
+    case TO_SMTP:
+	printf("  Messages will be SMTP-forwarded to '%s'\n", queryctl->smtphost);
+	break;
     case TO_FOLDER:
 	printf("  Messages will be appended to '%s'\n", queryctl->userfolder);
 	break;
@@ -409,6 +412,8 @@ struct hostrec *queryctl;
     }
     if (outlevel == O_VERBOSE)
     {
+	if (queryctl->smtphost[0] != '\0' && queryctl->output != TO_SMTP)
+	    printf("  (SMTP host would have been '%s')\n", queryctl->smtphost);
 	if (queryctl->output != TO_FOLDER)
 	    printf("  (Mail folder would have been '%s')\n", queryctl->userfolder);
 	if (queryctl->output != TO_MDA)
