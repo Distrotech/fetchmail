@@ -48,6 +48,12 @@
 #define THROW_TIMEOUT	1		/* server timed out */
 #define THROW_SIGPIPE	2		/* SIGPIPE on stream socket */
 
+/* magic values for the message length array */
+#define MSGLEN_UNKNOWN	0		/* length unknown (0 is impossible) */
+#define MSGLEN_INVALID	-1		/* length passed back is invalid */
+#define MSGLEN_TOOLARGE	-2		/* message is too large */
+#define MSGLEN_OLD	-3		/* message is old */
+
 int pass;		/* how many times have we re-polled? */
 int stage;		/* where are we? */
 int phase;		/* where are we, for error-logging purposes? */
@@ -365,8 +371,7 @@ static void mark_oversized(int num, struct query *ctl, int *msgsizes)
 }
 
 static int fetch_messages(int mailserver_socket, struct query *ctl, 
-			  int count, int *msgsizes, 
-			  int new, int force, int maxfetch,
+			  int count, int *msgsizes, int maxfetch,
 			  int *fetches, int *dispatches, int *deletions)
 /* fetch messages in lockstep mode */
 {
@@ -374,47 +379,41 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 
     for (num = 1; num <= count; num++)
     {
-	flag toolarge = NUM_NONZERO(ctl->limit)
-	    && msgsizes && (msgsizes[num-1] > ctl->limit);
-	flag oldmsg = (!new) || (ctl->server.base_protocol->is_old && (ctl->server.base_protocol->is_old)(mailserver_socket,ctl,num));
-	flag fetch_it = !toolarge 
-	    && (ctl->fetchall || force || !oldmsg);
 	flag suppress_delete = FALSE;
 	flag suppress_forward = FALSE;
 	flag suppress_readbody = FALSE;
 	flag retained = FALSE;
 
-	/*
-	 * This check copes with Post Office/NT's
-	 * annoying habit of randomly prepending bogus
-	 * LIST items of length -1.  Patrick Audley
-	 * <paudley@pobox.com> tells us: LIST shows a
-	 * size of -1, RETR and TOP return "-ERR
-	 * System error - couldn't open message", and
-	 * DELE succeeds but doesn't actually delete
-	 * the message.
-	 */
-	if (msgsizes && msgsizes[num-1] == -1)
+	if (msgsizes[num-1] < 0)
 	{
-	    if (outlevel >= O_VERBOSE)
-		report(stdout, 
-		       _("Skipping message %d, length -1\n"),
-		       num);
-	    continue;
-	}
-
-	if (!fetch_it)
-	{
-	    if (toolarge && !check_only)
+	    if ((msgsizes[num-1] == MSGLEN_TOOLARGE) && !check_only)
 		mark_oversized(num, ctl, msgsizes);
 	    if (outlevel > O_SILENT)
 	    {
 		report_build(stdout, 
 			     _("skipping message %d (%d octets)"),
 			     num, msgsizes[num-1]);
-		if (toolarge && !check_only) 
-		    report_build(stdout, _(" (oversized, %d octets)"),
+		switch (msgsizes[num-1])
+		{
+		case MSGLEN_INVALID:
+		    /*
+		     * Invalid lengths are produced by Post Office/NT's
+		     * annoying habit of randomly prepending bogus
+		     * LIST items of length -1.  Patrick Audley
+		     * <paudley@pobox.com> tells us: LIST shows a
+		     * size of -1, RETR and TOP return "-ERR
+		     * System error - couldn't open message", and
+		     * DELE succeeds but doesn't actually delete
+		     * the message.
+		     */
+		    report_build(stdout, _(" (length -1)"));
+		    break;
+		case MSGLEN_TOOLARGE:
+		    report_build(stdout, 
+				 _(" (oversized, %d octets)"),
 				 msgsizes[num-1]);
+		    break;
+		}
 	    }
 	}
 	else
@@ -600,7 +599,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	    struct idlist	*sdp;
 
 	    for (sdp = ctl->newsaved; sdp; sdp = sdp->next)
-		if ((sdp->val.status.num == num) && (!toolarge || oldmsg)) 
+		if ((sdp->val.status.num == num) && (msgsizes[num-1] > 0)) 
 		{
 		    sdp->val.status.mark = UID_SEEN;
 		    save_str(&ctl->oldsaved, sdp->id,UID_SEEN);
@@ -615,7 +614,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	}
 	else if (ctl->server.base_protocol->delete
 		 && !suppress_delete
-		 && (fetch_it ? !ctl->keep : ctl->flush))
+		 && ((msgsizes[num-1] > 0) ? !ctl->keep : ctl->flush))
 	{
 	    (*deletions)++;
 	    if (outlevel > O_SILENT) 
@@ -1117,6 +1116,7 @@ is restored."));
 		else if (count > 0)
 		{    
 		    flag	force_retrieval;
+		    int		i, num;
 
 		    /*
 		     * What forces this code is that in POP2 and
@@ -1147,6 +1147,11 @@ is restored."));
 		     */
 		    force_retrieval = !peek_capable && (ctl->errcount > 0);
 
+		    /* OK, we're going to gather size info next */
+		    xalloca(msgsizes, int *, sizeof(int) * count);
+		    for (i = 0; i < count; i++)
+			msgsizes[i] = MSGLEN_UNKNOWN;
+
 		    /* 
 		     * We need the size of each message before it's
 		     * loaded in order to pass it to the ESMTP SIZE
@@ -1156,12 +1161,6 @@ is restored."));
 		     */
 		    if (proto->getsizes)
 		    {
-			int	i;
-
-			xalloca(msgsizes, int *, sizeof(int) * count);
-			for (i = 0; i < count; i++)
-			    msgsizes[i] = -1;
-
 			stage = STAGE_GETSIZES;
 			ok = (proto->getsizes)(mailserver_socket, count, msgsizes);
 			if (ok != 0)
@@ -1175,13 +1174,24 @@ is restored."));
 			}
 		    }
 
+		    /* mark some messages not to be retrieved */
+		    for (num = 1; num <= count; num++)
+		    {
+			if (NUM_NONZERO(ctl->limit) && (msgsizes[num-1] > ctl->limit))
+			    msgsizes[num-1] = MSGLEN_TOOLARGE;
+			else if (ctl->fetchall || force_retrieval)
+			    continue;
+			else if (ctl->server.base_protocol->is_old && (ctl->server.base_protocol->is_old)(mailserver_socket,ctl,num))
+			    msgsizes[num-1] = MSGLEN_OLD;
+		    }
+
 		    /* read, forward, and delete messages */
 		    stage = STAGE_FETCH;
 
 		    /* fetch in lockstep mode */
 		    if (!fetch_messages(mailserver_socket, ctl, 
 					count, msgsizes, 
-					new, force_retrieval, maxfetch,
+					maxfetch,
 					&fetches, &dispatches, &deletions))
 			goto cleanUp;
 
