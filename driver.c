@@ -349,32 +349,34 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 	return;
     else
     {
-	char	*cp = nxtaddr(hdr), *lname;
+	char	*cp, *lname;
 
-	do {
-	    char	*atsign = strchr(cp, '@');
+	if ((cp = nxtaddr(hdr)) != (char *)NULL)
+	    do {
+		char	*atsign = strchr(cp, '@');
 
-	    if (atsign)
-		if (queryctl->norewrite)
-		    continue;
-	        else
-	        {
-		    if (!is_host_alias(atsign+1, 
-				       queryctl->servername,
-				       queryctl->canonical_name))
+		if (atsign)
+		    if (queryctl->norewrite)
 			continue;
-		    atsign[0] = '\0';
+		    else
+		    {
+			if (!is_host_alias(atsign+1, 
+					   queryctl->servername,
+					   queryctl->canonical_name))
+			    continue;
+			atsign[0] = '\0';
+		    }
+		lname = idpair_find(&queryctl->localnames, cp);
+		if (lname != (char *)NULL)
+		{
+		    if (outlevel == O_VERBOSE)
+			fprintf(stderr,
+				"fetchmail: mapped %s to local %s\n",
+				cp, lname);
+		    save_uid(xmit_names, -1, lname);
 		}
-	    if ((lname = idpair_find(&queryctl->localnames, cp))!=(char *)NULL)
-	    {
-		if (outlevel == O_VERBOSE)
-		    fprintf(stderr,
-			    "fetchmail: mapped %s to local %s\n",
-			    cp, lname);
-		save_uid(xmit_names, -1, lname);
-	    }
-	} while
-	    ((cp = nxtaddr((char *)NULL)) != (char *)NULL);
+	    } while
+		((cp = nxtaddr((char *)NULL)) != (char *)NULL);
     }
 }
 #endif /* HAVE_GETHOSTBYNAME */

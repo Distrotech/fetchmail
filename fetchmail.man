@@ -683,14 +683,18 @@ to the mailserver.  This creates a risk that name/password pairs
 might be snaffled with a packet sniffer or more sophisticated
 monitoring software.
 .PP
-Retrieval and forwarding from multi-drop server mailboxes is only as
-reliable as your mail server host's DNS service.  Each host
+Retrieval and forwarding from multi-drop server mailboxes is at most
+as reliable as your mail server host's DNS service.  Each host
 address part in each message of a multi-drop mailbox is checked 
 with
 .BR gethostbyname (2)
 to see if it's an alias of the mail server.  If it is, but the
 lookup fails due to network congestion or a crashed server, forwarding
-will not get done correctly. 
+will not get done correctly.  Note: this check will \fInot\fR catch
+equivalences created by MX records!
+.PP
+The multi-drop mailbox code was hard to test thoroughly and may have obscure
+failure modes, especially in the presence of DNS flakiness.
 .PP
 Under Linux, if fetchmail is run in daemon mode with the network
 inaccessible, each poll leaves a socket allocated but in CLOSE state

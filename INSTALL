@@ -74,6 +74,9 @@ distributed with Pine from the University of Washington.  Other
 POP3 servers have been known to give it indigestion.  Test carefully!
 If you have problems, switch to imap.
 
+If you're going to use multi-drop mailboxes, test with particular care.
+This code was very difficult to test and should be considered experimental.
+
 6. USE IT
 
 Enjoy!
