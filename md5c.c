@@ -19,6 +19,9 @@
    abartlet@samba.org Jun 2001 */
 
 #include "md5.h"
+#ifdef HAVE_STRING_H
+#include <string.h>   /* memmove */
+#endif
 
 /*
  * Note: this code is harmless on little-endian machines.

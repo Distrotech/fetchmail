@@ -635,8 +635,8 @@ static int imap_getsizes(int sock, int count, int *sizes)
 	else if (sscanf(buf, "* %u FETCH (RFC822.SIZE %u)", &num, &size) == 2) {
 	    if (num > 0 && num <= count)
 	        sizes[num - 1] = size;
-	    /* else, strict: protocol error, flexible: nothing
-	     * I vote for flexible. */
+	    else
+		report(stderr, "Warning: ignoring bogus data for message sizes returned by the server.\n");
 	}
     }
 
