@@ -660,7 +660,8 @@ struct query *ctl;	/* query parameter block */
     printf("Options for retrieving from %s@%s:\n",
 	   ctl->remotename, visbuf(ctl->servername));
 #ifdef HAVE_GETHOSTBYNAME
-    printf("  Canonical DNS name of server is %s.\n", ctl->canonical_name);
+    if (ctl->canonical_name)
+	printf("  Canonical DNS name of server is %s.\n", ctl->canonical_name);
 #endif /* HAVE_GETHOSTBYNAME */
     if (ctl->skip || outlevel == O_VERBOSE)
 	printf("  This host will%s be queried when no host is specified.\n",
