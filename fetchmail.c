@@ -111,7 +111,7 @@ char **argv;
     }
 
     def_opts.protocol = P_AUTO;
-
+    def_opts.timeout = CLIENT_TIMEOUT;
     strcpy(def_opts.remotename, user);
     strcpy(def_opts.smtphost, "localhost");
 
@@ -544,6 +544,11 @@ struct hostrec *queryctl;
     putchar('\n');
     if (queryctl->authenticate == A_KERBEROS)
 	    printf("  Kerberos authentication enabled.\n");
+    printf("  Server nonresponse timeout is %d seconds", queryctl->timeout);
+    if (queryctl->timeout ==  CLIENT_TIMEOUT)
+	printf(" (default).\n");
+    else
+	printf("\n.");
 
     printf("  %s messages will be retrieved (--all %s).\n",
 	   queryctl->fetchall ? "All" : "Only new",

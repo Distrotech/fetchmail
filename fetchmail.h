@@ -74,6 +74,7 @@ struct hostrec
     int protocol;
     int port;
     int authenticate;
+    int timeout;
 
     /* MDA arguments */
     char *mda_argv[32];

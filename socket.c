@@ -12,7 +12,6 @@
 
 #include <config.h>
 
-#include <signal.h>
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -42,9 +41,6 @@
    your sockets, or you'll take a potentially huge performance hit */
 
 #define  INTERNAL_BUFSIZE	2048
-
-extern int timeout;
-extern void alarm_handler();
 
 int Socket(host, clientPort)
 char *host;
@@ -88,13 +84,6 @@ int len;
 
     while (--len)
     {
-        /* we have to push alarm in case we receive a large message */
-	sigsave = signal (SIGALRM, alarm_handler);
-        if (sigsave == alarm_handler)
-              alarm (timeout);
-        else
-              signal (SIGALRM, sigsave);
-
         if (SockInternalRead(socket, buf, 1) != 1)
             return -1;
         else

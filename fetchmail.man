@@ -284,6 +284,17 @@ will kill a running daemon process.  Otherwise, calling fetchmail with
 a daemon in the background sends a wakeup signal to the daemon,
 forcing it to poll mailservers immediately.
 .PP
+The 
+.B -t
+or
+.B --timeout
+option allows you to set a server-nonresponse timeout in seconds.  If
+a mailserver does not send a greeting message or respond to commands for
+the given number of seconds, \fIfetchmail\fR will hang up on it.
+Without such a timeout \fIfetchmail\fR might hang up indefinitely
+trying to fetch mail from a down host.  This would be particularly
+annoying for a server running in background.
+.PP
 The
 .B -L
 or
@@ -368,6 +379,7 @@ Legal server options are:
     skip
     noskip
     authenticate (or auth)
+    timeout
 
 Legal user options are
 

@@ -35,7 +35,7 @@ static int prc_errflag;
   char *sval;
 }
 
-%token DEFAULTS SERVER PROTOCOL AUTHENTICATE KPOP KERBEROS
+%token DEFAULTS SERVER PROTOCOL AUTHENTICATE TIMEOUT KPOP KERBEROS
 %token USERNAME PASSWORD FOLDER SMTPHOST MDA IS HERE THERE
 %token <proto> PROTO
 %token <sval>  STRING
@@ -78,6 +78,7 @@ serv_option	: PROTOCOL PROTO	{current.protocol = $2;}
 		| SKIP			{current.skip = ($1==FLAG_TRUE);}
 		| AUTHENTICATE PASSWORD	{current.authenticate = A_PASSWORD;}
 		| AUTHENTICATE KERBEROS	{current.authenticate = A_KERBEROS;}
+		| TIMEOUT STRING	{current.timeout = atoi($2);}
 		;
 
 /* the first and only the first user spec may omit the USERNAME part */
@@ -330,6 +331,7 @@ int prc_register()
     FLAG_FORCE(skip);
     FLAG_FORCE(port);
     FLAG_FORCE(authenticate);
+    FLAG_FORCE(timeout);
 #undef FLAG_FORCE
 
     (void) hostalloc(&current);
@@ -370,6 +372,7 @@ struct hostrec *h2;
     FLAG_MERGE(skip);
     FLAG_MERGE(port);
     FLAG_MERGE(authenticate);
+    FLAG_MERGE(timeout);
 #undef FLAG_MERGE
 }
 

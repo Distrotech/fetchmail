@@ -28,6 +28,7 @@ proto(col)? 	{ return PROTOCOL; }
 port		{ return PORT; }
 auth(enticate)?	{ return AUTHENTICATE; }
 kerberos	{ return KERBEROS; }
+timeout		{ return TIMEOUT;}
 
 user(name)?	{ return USERNAME; }
 pass(word)?	{ return PASSWORD; }

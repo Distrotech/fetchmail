@@ -32,8 +32,8 @@
 
 static struct method *protocol;
 
-static int alarmed; /* A flag to indicate that SIGALRM happened */
-int timeout = CLIENT_TIMEOUT;
+static int alarmed;	/* a flag to indicate that SIGALRM happened */
+static int mytimeout;	/* server-nonresponse timeout for current query */
 
 char tag[TAGLEN];
 static int tagnum;
@@ -476,7 +476,7 @@ struct hostrec *queryctl;
 	    sizeticker -= SIZETICKER;
 
 	    /* reset timeout so we don't choke on very long messages */
-	    alarm(timeout);
+	    alarm(queryctl->timeout);
 	}
 	lines++;
     }
@@ -581,7 +581,7 @@ struct method *proto;
 
     alarmed = 0;
     sigsave = signal(SIGALRM, alarm_handler);
-    alarm (timeout);
+    alarm (mytimeout = queryctl->timeout);
 
 #ifndef KERBEROS_V4
     if (queryctl->authenticate == A_KERBEROS)
@@ -924,5 +924,6 @@ void
 alarm_handler (int signal)
 {
     alarmed = 1;
-    fprintf(stderr,"fetchmail: timeout after %d seconds.\n", timeout);
+    fprintf(stderr,
+	    "fetchmail: timeout after %d seconds.\n", mytimeout);
 }

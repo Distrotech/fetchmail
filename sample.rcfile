@@ -23,6 +23,7 @@
 #   protocol (or proto) -- nuat be followed by a protocol ID
 #   port
 #   authenticate (or auth) -- must be followed by an authentication type
+#   timeout
 #
 #   username (or user)
 #   is

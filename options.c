@@ -30,18 +30,19 @@
 #define LA_PROTOCOL	11
 #define LA_PORT		12
 #define LA_AUTHENTICATE	13
-#define LA_USERNAME	14
-#define LA_ALL          15
-#define LA_KILL		16
-#define	LA_KEEP		17
-#define LA_FLUSH        18
-#define LA_NOREWRITE	19
-#define LA_REMOTEFILE	20
-#define LA_SMTPHOST	21
-#define LA_MDA		22
-#define LA_YYDEBUG	23
+#define LA_TIMEOUT	14
+#define LA_USERNAME	15
+#define LA_ALL          16
+#define LA_KILL		17
+#define	LA_KEEP		18
+#define LA_FLUSH        19
+#define LA_NOREWRITE	20
+#define LA_REMOTEFILE	21
+#define LA_SMTPHOST	22
+#define LA_MDA		23
+#define LA_YYDEBUG	24
 
-static char *shortoptions = "?Vcsvd:qL:f:i:p:P:A:u:akKFnr:S:m:y";
+static char *shortoptions = "?Vcsvd:qL:f:i:p:P:A:t:u:akKFnr:S:m:y";
 static struct option longoptions[] = {
   {"help",	no_argument,	   (int *) 0, LA_HELP        },
   {"version",   no_argument,       (int *) 0, LA_VERSION     },
@@ -58,6 +59,7 @@ static struct option longoptions[] = {
   {"proto",	required_argument, (int *) 0, LA_PROTOCOL    },
   {"port",	required_argument, (int *) 0, LA_PORT        },
   {"auth",	required_argument, (int *) 0, LA_AUTHENTICATE},
+  {"timeout",	required_argument, (int *) 0, LA_TIMEOUT     },
 
   {"user",	required_argument, (int *) 0, LA_USERNAME    },
   {"username",  required_argument, (int *) 0, LA_USERNAME    },
@@ -190,6 +192,9 @@ struct hostrec *queryctl;
 		errflag++;
 	    }
 	    break;
+	case 't':
+	    queryctl->timeout = atoi(optarg);
+	    break;
 	case 'u':
 	case LA_USERNAME:
 	    strncpy(queryctl->remotename,optarg,sizeof(queryctl->remotename)-1);
@@ -260,6 +265,7 @@ struct hostrec *queryctl;
 	fputs("  -p, --protocol    specify pop2, pop3, imap, apop, rpop, kpop\n", stderr);
 	fputs("  -P, --port        TCP/IP service port to connect to\n",stderr);
 	fputs("  -A, --auth        authentication type (password or kerberos)\n",stderr);
+	fputs("  -t, --timeout     server nonresponse timeout\n",stderr);
 
 	fputs("  -u, --username    specify users's login on server\n", stderr);
 	fputs("  -a, --all         retrieve old and new messages\n", stderr);
