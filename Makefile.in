@@ -111,6 +111,9 @@ rfc822: rfc822.c
 
 # lex rule
 .l.o:
+	$(LEX) $(LEXFLAGS) $<
+	mv lex.yy.c $*
+	$(CC) $(defines) -c -I. -I$(srcdir) $(CFLAGS) $*.c $(OUTPUT_OPTION)
 
 .l.c:
 	$(LEX) $(LEXFLAGS) $<
@@ -118,6 +121,10 @@ rfc822: rfc822.c
 
 # yacc rule
 .y.o:
+	$(YACC) $(YACCFLAGS) $<
+	mv y.tab.c $@
+	mv -f y.tab.h $*.h
+	$(CC) $(defines) -c -I. -I$(srcdir) $(CFLAGS) $*.c $(OUTPUT_OPTION)
 
 .y.c:
 	$(YACC) $(YACCFLAGS) $<
