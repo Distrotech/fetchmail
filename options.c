@@ -43,7 +43,7 @@
 #define LA_HELP		23
 #define LA_YYDEBUG	24
 
-static char *shortoptions = "P:p:VaKkvS:m:sFd:f:u:r:L:qN?";
+static char *shortoptions = "P:p:VaKkvS:m:sFd:f:i:u:r:L:qN?";
 static struct option longoptions[] = {
   {"version",   no_argument,       (int *) 0, LA_VERSION    },
   {"all",	no_argument,       (int *) 0, LA_ALL        },
@@ -249,6 +249,7 @@ struct hostrec *queryctl;
     fputs("  Options are as follows:\n",stderr);
     fputs("  -?, --help        display this option help\n", stderr);
     fputs("  -V, --version     display version info\n", stderr);
+    fputs("  -s, --silent      work silently\n", stderr);
     fputs("  -v, --verbose     work noisily (diagnostic output)\n", stderr);
     fputs("  -d, --daemon      run as a daemon once per n seconds\n", stderr);
     fputs("  -c, --check       check for messages without fetching\n", stderr);
@@ -267,7 +268,6 @@ struct hostrec *queryctl;
     fputs("  -K, --kill        delete new messages after retrieval\n", stderr);
     fputs("  -k, --keep        save new messages after retrieval\n", stderr);
     fputs("  -S, --smtphost    set SMTP forwarding host\n", stderr);
-    fputs("  -s, --silent      work silently\n", stderr);
     fputs("  -r, --remote      specify remote folder name\n", stderr);
     return(-1);
   }
