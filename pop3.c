@@ -100,12 +100,50 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 
     switch (ctl->server.protocol) {
     case P_POP3:
-	if ((ok = gen_transact(sock, "USER %s", ctl->remotename)) != 0)
-	    break;
+	 ok = gen_transact(sock, "USER %s", ctl->remotename);
+
+	 if (ok != 0)
+#ifdef RPA_ENABLE
+            /* if CompuServe rejected our userid, try RPA */
+            if (strstr(greeting, "csi.com"))
+            {
+                /* AUTH command should return a list of available mechanisms */
+                if (gen_transact(sock, "AUTH") == 0)
+                {
+                    char buffer[10];
+                    flag has_rpa = FALSE;
+                    flag authenticated = FALSE;
+
+                    while ((ok = gen_recv(sock, buffer, sizeof(buffer))) == 0)
+                    {
+
+                        if (buffer[0] == '.')
+                            break;
+                        if (strncasecmp(buffer, "rpa", 3) == 0)
+                            has_rpa = TRUE;
+                    }
+                    if(has_rpa) {
+                        if (POP3_auth_rpa(ctl->remotename,
+                                          ctl->password, sock) == PS_SUCCESS)
+                        {
+                            authenticated = TRUE;
+                            break;
+                        }
+                    }
+                    if (authenticated) {
+                        /* we could return(PS_SUCCESS) here */
+                        ok = PS_SUCCESS;
+                        break;
+                    }
+                }
+            }
+	    else	/* not a CompuServe host, fail in the ordinary way */
+#endif /* RPA_ENABLE */
+		break;
 
 #if defined(HAVE_LIBOPIE) && defined(OPIE_ENABLE)
 	/* see RFC1938: A One-Time Password System */
-	if (challenge = strstr(greeting, "otp-"))
+	if (challenge = strstr(lastok, "otp-"))
 	{
 	    char response[OPIE_RESPONSE_MAX+1];
 
@@ -119,37 +157,6 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	    break;
 	}
 #endif /* defined(HAVE_LIBOPIE) && defined(OPIE_ENABLE) */
-
-#ifdef ENABLE_RPA
-	/* if we're talking to CompuServe, try RPA */
-	if (strstr(greeting, "csi.com"))
-	{
-	    /* AUTH command should return a list of available mechanisms */
-	    if (gen_transact(sock, "AUTH") == 0)
-	    {
-		char buffer[10];
-		flag authenticated = FALSE;
-
-		while ((ok = gen_recv(sock, buffer, sizeof(buffer))) == 0)
-		{
-		    if (buffer[0] == '.')
-			break;
-		    if (strncasecmp(buffer, "rpa", 3) == 0)
-		    {
-			if (POP3_auth_rpa(ctl->remotename,
-					  ctl->password, sock) == PS_SUCCEED)
-			{
-			    authenticated = TRUE;
-			    break;
-			}
-		    }
-		}
-
-		if (authenticated)
-		    break;
-	    }
-	}
-#endif /* ENABLE_RPA */
 
 	/* ordinary validation, no one-time password or RPA */ 
 	ok = gen_transact(sock, "PASS %s", ctl->password);
@@ -216,7 +223,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
     sleep(3); /* to be _really_ safe, probably need sleep(5)! */
 
     /* we're approved */
-    return(0);
+    return(PS_SUCCESS);
 }
 
 static int
