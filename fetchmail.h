@@ -92,6 +92,7 @@ struct query
 
     /* internal use */
     int active;
+    int errcount;		/* count transient errors in last pass */
     struct query *next;		/* next query control block in chain */
     struct query *leader;	/* pointer to this query's SMTP leader */
     FILE *smtp_sockfp;		/* socket descriptor for SMTP connection */

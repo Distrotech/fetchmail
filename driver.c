@@ -141,8 +141,9 @@ static int is_host_alias(const char *name, struct query *ctl)
 	    if (outlevel != O_SILENT)
 		putchar('\n');	/* terminate the progress message */
 	    fprintf(stderr,
-		"fetchmail: nameserver evaporated while looking for `%s' during poll of %s.\n",
+		"fetchmail: nameserver failure while looking for `%s' during poll of %s.\n",
 		name, ctl->servername);
+	    ctl->errcount++;
 	    longjmp(restart, 2);	/* try again next poll cycle */
 	    break;
 	}
@@ -168,6 +169,10 @@ static int is_host_alias(const char *name, struct query *ctl)
 	case NO_RECOVERY:	/* non-recoverable name server error */
 	case TRY_AGAIN:		/* temporary error on authoritative server */
 	default:
+	    fprintf(stderr,
+		"fetchmail: nameserver failure while looking for `%s' during poll of %s.\n",
+		name, ctl->servername);
+	    ctl->errcount++;
 	    longjmp(restart, 2);	/* try again next poll cycle */
 	    break;
 	}
@@ -778,6 +783,7 @@ const struct method *proto;	/* protocol method table */
 		return(PS_ERROR);
 	}
 
+
 	if (check_only)
 	{
 	    if (new == -1 || ctl->fetchall)
@@ -787,12 +793,35 @@ const struct method *proto;	/* protocol method table */
 	}
 	else if (count > 0)
 	{    
+	    /*
+	     * What forces this code is that in POP3 you can't fetch a
+	     * message without having it marked `seen'.
+	     *
+	     * The result is that if there's any kind of transient error
+	     * (DNS lookup failure, or sendmail refusing delivery due to
+	     * process-table limits) the message will be marked "seen" on
+	     * the server without having been delivered.  This is not a
+	     * big problem if fetchmail is running in foreground, because
+	     * the user will see a "skipped" message when it next runs and
+	     * get clued in.
+	     *
+	     * But in daemon mode this leads to the message being silently
+	     * ignored forever.  This is not acceptable.
+	     *
+	     * We compensate for this by checking the error count from the 
+	     * previous pass and forcing all messages to be considered new
+	     * if it's nonzero.
+	     */
+	    int	force_retrieval = (ctl->errcount > 0);
+
+	    ctl->errcount = 0;
+
 	    /* read, forward, and delete messages */
 	    for (num = 1; num <= count; num++)
 	    {
-		int	toolarge = msgsizes && msgsizes[num-1]>ctl->limit;
+		int	toolarge = msgsizes && (msgsizes[num-1] > ctl->limit);
 		int	fetch_it = ctl->fetchall ||
-		    (!(protocol->is_old && (protocol->is_old)(sockfp,ctl,num)) && !toolarge);
+		    (!toolarge && (force_retrieval || !(protocol->is_old && (protocol->is_old)(sockfp,ctl,num)));
 
 		/* we may want to reject this message if it's old */
 		if (!fetch_it)

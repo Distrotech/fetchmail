@@ -332,7 +332,9 @@ The
 or --nodetach option suppresses detachment of the daemon process
 from its control terminal.  This is primarily useful for debugging.
 .PP
-Note that running fetchmail in daemon mode forces the --fetchall option on.
+Note that while running in daemon mode, transient errors (such as DNS
+failures or sendmail delivery refusals) effectively force the fetchall
+option on for the duration of the next polling cycle.
 This is a robustness feature.  It means that if a message is fetched
 (and thus marked seen by the mailserver) but not delivered locally
 due to some transient error, it will be re-fetched during the next
