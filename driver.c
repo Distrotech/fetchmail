@@ -394,7 +394,8 @@ struct query *ctl;	/* query control record */
 		{
 		    char	*sp, *tp;
 
-		    tp = rbuf;
+		    strcpy(rbuf, "For: ");	/* nxtaddr() fodder */
+		    tp = rbuf + 5;
 		    for (sp = ok + 5; *sp && *sp != '>' && *sp != '@'; sp++)
 			*tp++ = *sp;
 		    *tp = '\0';
