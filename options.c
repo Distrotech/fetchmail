@@ -294,7 +294,7 @@ struct query *ctl;	/* option record to be initialized */
 	    strcpy(buf, optarg);
 	    cp = strtok(buf, ",");
 	    do {
-		save_str(&ctl->smtphunt, -1, optarg);
+		save_str(&ctl->smtphunt, -1, cp);
 	    } while
 		((cp = strtok((char *)NULL, ",")));
 	    ocount++;
