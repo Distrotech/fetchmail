@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/02/17 20:20:19 $
+<td width="30%" align=right>$Date: 1998/02/18 22:05:12 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -59,7 +59,7 @@ IP address?</a><br>
 <a href="#C6">C6. How can I do automatic startup/shutdown of fetchmail
 when I may have multiple login sessions going?</a><br>
 
-<h1>How to make fetchmail play nice with other programs:</h1>
+<h1>How to make fetchmail play nice with other software:</h1>
 
 <a href="#T1">T1. How can I use fetchmail with sendmail?</a><br>
 <a href="#T2">T2. How can I use fetchmail with qmail?</a><br>
@@ -71,6 +71,7 @@ when I may have multiple login sessions going?</a><br>
 <a href="#T8">T8. How can I use fetchmail with Compuserve RPA?</a><br>
 <a href="#T9">T9. How can I use fetchmail with HP OpenMail?</a><br>
 <a href="#T10>T10. How can I use fetchmail with SOCKS?</a><br>
+<a href="#T11>T11. How can I use fetchmail with IPv6 and IPsec?</a><br>
 
 <h1>Runtime fatal errors:</h1>
 
@@ -1126,6 +1127,17 @@ gave us the following recipe:<P>
 It wasn't that hard, was it? :-)<P>
 
 <hr>
+<h2><a name="T11>T11. How can I use fetchmail with IPv6 and IPsec?</a></h2>
+
+Craig Metz tells us: The only currently released IPsec implementation
+fetchmai's  works with is the NRL IPv6+IPsec implementation (for BSD/OS and
+NetBSD), which is available from "http://web.mit.edu/network/isakmp".<P>
+
+You will also need the latest inet6-apps kit built with NETSEC_EMULATE
+enabled.  There will, of course, be a Linux implementation appearing
+someday that will support the standards-track IPv6 API.<P>
+
+<hr>
 <h2><a name="R1">R1. Fetchmail's initial gethostbyname call fails on my host.</a></h2>
 
 This is probably due to a DNS or NIS misconfiguration.  The first
@@ -1777,7 +1789,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/02/17 20:20:19 $
+<td width="30%" align=right>$Date: 1998/02/18 22:05:12 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
