@@ -685,13 +685,13 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		     * I don't remember how this got in here, but it doesn't
 		     * work.  The obvious symptom is that no bounce message
 		     * is sent for a nonexistent user.  Less obviously
-		     * Forwarding to postmaster also does not work. The body is
-		     * discarded.
+		     * forwarding to postmaster also does not work. The body is
+		     * discarded due to the RSET.
 		     *
 		     * If a mail is sent to one valid and one invalid
 		     * user, the mail does not go to the valid user
-		     * also as the body is discarded after calling
-		     * RSET!
+		     * also as the body is discarded after handle_smtp_report 
+		     * calls RSET!
 		     */
 		    int res;
 		    if ((res = handle_smtp_report(ctl, msg))==PS_REFUSED)
