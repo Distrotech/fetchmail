@@ -464,7 +464,7 @@ int main (int argc, char **argv)
     {
 	if (!nodetach)
 	    daemonize(run.logfile, termhook);
-	report(stdout, 0, _("starting fetchmail %s daemon \n"), VERSION);
+	report(stdout, _("starting fetchmail %s daemon \n"), VERSION);
 
 	/*
 	 * We'll set up a handler for these when we're sleeping,
@@ -529,7 +529,7 @@ int main (int argc, char **argv)
 	    {
 		if (ctl->wedged)
 		{
-		    report(stderr, 0, 
+		    report(stderr, 
 			  _("poll of %s skipped (failed authentication or too many timeouts)\n"),
 			  ctl->server.pollname);
 		    continue;
@@ -541,7 +541,7 @@ int main (int argc, char **argv)
 		    if (ctl->server.poll_count++ % ctl->server.interval) 
 		    {
 			if (outlevel >= O_VERBOSE)
-			    report(stdout, 0,
+			    report(stdout,
 				    _("interval not reached, not querying %s\n"),
 				    ctl->server.pollname);
 			continue;
@@ -569,13 +569,13 @@ int main (int argc, char **argv)
 		    {
 			write_saved_lists(querylist, run.idfile);
 			if (outlevel >= O_DEBUG)
-			    report(stdout, 0, _("saved UID List\n"));
+			    report(stdout, _("saved UID List\n"));
 		    }
 #endif  /* POP3_ENABLE */
 		}
 		else if (!check_only && 
 			 ((querystatus!=PS_NOMAIL) || (outlevel==O_DEBUG)))
-		    report(stdout, 0, _("Query status=%d\n"), querystatus);
+		    report(stdout, _("Query status=%d\n"), querystatus);
 
 #if defined(linux) && !INET6
 		if (ctl->server.monitor)
@@ -632,12 +632,12 @@ int main (int argc, char **argv)
 			unwedged++;
 	    if (!unwedged)
 	    {
-		report(stderr, 0, _("All connections are wedged.  Exiting.\n"));
+		report(stderr, _("All connections are wedged.  Exiting.\n"));
 		exit(PS_AUTHFAIL);
 	    }
 
 	    if (outlevel >= O_VERBOSE)
-		report(stdout, 0, 
+		report(stdout, 
 		       _("fetchmail: sleeping at %s\n"), rfc822timestamp());
 
 	    /*
@@ -733,10 +733,10 @@ int main (int argc, char **argv)
 			|| ((run.poll_interval && !getuid()) && lastsig == SIGHUP))
 		{
 #ifdef SYS_SIGLIST_DECLARED
-		    report(stdout, 0, 
+		    report(stdout, 
 			   _("awakened by %s\n"), sys_siglist[lastsig]);
 #else
-		    report(stdout, 0, 
+		    report(stdout, 
 			   _("awakened by signal %d\n"), lastsig);
 #endif
 		    /* received a wakeup - unwedge all servers in case */
@@ -752,13 +752,13 @@ int main (int argc, char **argv)
 		signal(SIGHUP, SIG_IGN);
 
 	    if (outlevel >= O_VERBOSE)
-		report(stdout, 0, _("awakened at %s\n"), rfc822timestamp());
+		report(stdout, _("awakened at %s\n"), rfc822timestamp());
 	}
     } while
 	(run.poll_interval);
 
     if (outlevel >= O_VERBOSE)
-	report(stdout, 0, _("normal termination, status %d\n"),
+	report(stdout, _("normal termination, status %d\n"),
 		successes ? PS_SUCCESS : querystatus);
 
     termhook(0);
@@ -1032,7 +1032,7 @@ static int load_params(int argc, char **argv, int optind)
                      free(ctl->server.via);
                  ctl->server.via = xstrdup(hes_p->po_host);
             } else {
-                 report(stderr, errno, 
+                 report(stderr,
 			_("couldn't find HESIOD pobox for %s\n"),
 			ctl->remotename);
             }
@@ -1058,7 +1058,7 @@ static int load_params(int argc, char **argv, int optind)
 		namerec = gethostbyname(ctl->server.queryname);
 		if (namerec == (struct hostent *)NULL)
 		{
-		    report(stderr, errno,
+		    report(stderr,
 			  _("couldn't find canonical DNS name of %s\n"),
 			  ctl->server.pollname);
 		    exit(PS_DNS);
@@ -1175,7 +1175,7 @@ static void termhook(int sig)
      */
 
     if (sig != 0)
-        report(stdout, 0, _("terminated with signal %d\n"), sig);
+        report(stdout, _("terminated with signal %d\n"), sig);
     else
 	/* terminate all SMTP connections cleanly */
 	for (ctl = querylist; ctl; ctl = ctl->next)
@@ -1235,7 +1235,7 @@ static int query_host(struct query *ctl)
 	time_t now;
 
 	time(&now);
-	report(stdout, 0, _("%s querying %s (protocol %s) at %s\n"),
+	report(stdout, _("%s querying %s (protocol %s) at %s\n"),
 	       VERSION,
 	       ctl->server.pollname,
 	       showproto(ctl->server.protocol),
@@ -1256,7 +1256,7 @@ static int query_host(struct query *ctl)
 #ifdef POP2_ENABLE
 	return(doPOP2(ctl));
 #else
-	report(stderr, 0, _("POP2 support is not configured.\n"));
+	report(stderr, _("POP2 support is not configured.\n"));
 	return(PS_PROTOCOL);
 #endif /* POP2_ENABLE */
 	break;
@@ -1266,7 +1266,7 @@ static int query_host(struct query *ctl)
 #ifdef POP3_ENABLE
 	return(doPOP3(ctl));
 #else
-	report(stderr, 0, _("POP3 support is not configured.\n"));
+	report(stderr, _("POP3 support is not configured.\n"));
 	return(PS_PROTOCOL);
 #endif /* POP3_ENABLE */
 	break;
@@ -1278,24 +1278,24 @@ static int query_host(struct query *ctl)
 #ifdef IMAP_ENABLE
 	return(doIMAP(ctl));
 #else
-	report(stderr, 0, _("IMAP support is not configured.\n"));
+	report(stderr, _("IMAP support is not configured.\n"));
 	return(PS_PROTOCOL);
 #endif /* IMAP_ENABLE */
 	break;
     case P_ETRN:
 #ifndef ETRN_ENABLE
-	report(stderr, 0, _("ETRN support is not configured.\n"));
+	report(stderr, _("ETRN support is not configured.\n"));
 	return(PS_PROTOCOL);
 #else
 #ifdef HAVE_GETHOSTBYNAME
 	return(doETRN(ctl));
 #else
-	report(stderr, 0, _("Cannot support ETRN without gethostbyname(2).\n"));
+	report(stderr, _("Cannot support ETRN without gethostbyname(2).\n"));
 	return(PS_PROTOCOL);
 #endif /* HAVE_GETHOSTBYNAME */
 #endif /* ETRN_ENABLE */
     default:
-	report(stderr, 0, _("unsupported protocol selected.\n"));
+	report(stderr, _("unsupported protocol selected.\n"));
 	return(PS_PROTOCOL);
     }
 }

@@ -92,7 +92,7 @@ int pop3_ok (int sock, char *argbuf)
 	    else
 		ok = PS_AUTHFAIL;
 	    if (*bufp)
-	      report(stderr, 0, "%s\n", bufp);
+	      report(stderr, "%s\n", bufp);
 	}
 	else
 	    ok = PS_PROTOCOL;
@@ -199,7 +199,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	for (start = greeting;  *start != 0 && *start != '<';  start++)
 	    continue;
 	if (*start == 0) {
-	    report(stderr, 0,
+	    report(stderr,
 		   _("Required APOP timestamp not found in greeting\n"));
 	    return(PS_AUTHFAIL);
 	}
@@ -208,7 +208,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	for (end = start;  *end != 0  && *end != '>';  end++)
 	    continue;
 	if (*end == 0 || end == start + 1) {
-	    report(stderr, 0, 
+	    report(stderr, 
 		   _("Timestamp syntax error in greeting\n"));
 	    return(PS_AUTHFAIL);
 	}
@@ -231,7 +231,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	break;
 
     default:
-	report(stderr, 0, _("Undefined protocol request in POP3_auth\n"));
+	report(stderr, _("Undefined protocol request in POP3_auth\n"));
 	ok = PS_ERROR;
     }
 
@@ -239,7 +239,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
     {
 	/* maybe we detected a lock-busy condition? */
         if (ok == PS_LOCKBUSY)
-	    report(stderr, 0, _("lock busy!  Is another session active?\n")); 
+	    report(stderr, _("lock busy!  Is another session active?\n")); 
 
 	return(ok);
     }
@@ -347,7 +347,7 @@ pop3_slowuidl( int sock,  struct query *ctl, int *countp, int *newp)
 		    try_id--;
 		}
 	    } else {
-		report(stderr, 0, 
+		report(stderr, 
 		       _("Messages inserted into list on server. Cannot handle this.\n"));
 		return -1;
 	    }
@@ -421,7 +421,7 @@ static int pop3_getrange(int sock,
 	{
 	    if (sscanf(buf, "%d", &last) == 0)
 	    {
-		report(stderr, 0, _("protocol error\n"));
+		report(stderr, _("protocol error\n"));
 		return(PS_ERROR);
 	    }
 	    *newp = (*countp - last);
@@ -434,7 +434,7 @@ static int pop3_getrange(int sock,
 		/* don't worry, yet! do it the slow way */
 		if((ok = pop3_slowuidl( sock, ctl, countp, newp))!=0)
 		{
-		    report(stderr, 0, _("protocol error while fetching UIDLs\n"));
+		    report(stderr, _("protocol error while fetching UIDLs\n"));
 		    return(PS_ERROR);
 		}
 	    }

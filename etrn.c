@@ -39,13 +39,13 @@ static int etrn_getrange(int sock, struct query *ctl, const char *id,
 
     if ((ok = SMTP_ehlo(sock, fetchmailhost, &opts)))
     {
-	report(stderr, 0, _("%s's SMTP listener does not support ESMTP\n"),
+	report(stderr, _("%s's SMTP listener does not support ESMTP\n"),
 	      ctl->server.pollname);
 	return(ok);
     }
     else if (!(opts & ESMTP_ETRN))
     {
-	report(stderr, 0, _("%s's SMTP listener does not support ETRN\n"),
+	report(stderr, _("%s's SMTP listener does not support ETRN\n"),
 	      ctl->server.pollname);
 	return(PS_PROTOCOL);
     }
@@ -69,38 +69,38 @@ static int etrn_getrange(int sock, struct query *ctl, const char *id,
 	{
 	case 250:	/* OK, queuing for node <x> started */
 	    if (outlevel >= O_SILENT)
-		report(stdout, 0, _("Queuing for %s started\n"), qnp->id);
+		report(stdout, _("Queuing for %s started\n"), qnp->id);
 	    break;
 
 	case 251:	/* OK, no messages waiting for node <x> */
 	    if (outlevel >= O_SILENT)
-		report(stdout, 0, _("No messages waiting for %s\n"), qnp->id);
+		report(stdout, _("No messages waiting for %s\n"), qnp->id);
 	    return(PS_NOMAIL);
 
 	case 252:	/* OK, pending messages for node <x> started */
 	case 253:	/* OK, <n> pending messages for node <x> started */
 	    if (outlevel >= O_SILENT)
-		report(stdout, 0, _("Pending messages for %s started\n"), qnp->id);
+		report(stdout, _("Pending messages for %s started\n"), qnp->id);
 	    break;
 
 	case 458:	/* Unable to queue messages for node <x> */
-	    report(stderr, 0, _("Unable to queue messages for node %s\n"),qnp->id);
+	    report(stderr, _("Unable to queue messages for node %s\n"),qnp->id);
 	    return(PS_PROTOCOL);
 
 	case 459:	/* Node <x> not allowed: <reason> */
-	    report(stderr, 0, _("Node %s not allowed: %s\n"), qnp->id, buf);
+	    report(stderr, _("Node %s not allowed: %s\n"), qnp->id, buf);
 	    return(PS_AUTHFAIL);
 
 	case 500:	/* Syntax Error */
-	    report(stderr, 0, _("ETRN syntax error\n"));
+	    report(stderr, _("ETRN syntax error\n"));
 	    return(PS_PROTOCOL);
 
 	case 501:	/* Syntax Error in Parameters */
-	    report(stderr, 0, _("ETRN syntax error in parameters\n"));
+	    report(stderr, _("ETRN syntax error in parameters\n"));
 	    return(PS_PROTOCOL);
 
 	default:
-	    report(stderr, 0, _("Unknown ETRN error %d\n"), atoi(buf));
+	    report(stderr, _("Unknown ETRN error %d\n"), atoi(buf));
 	    return(PS_PROTOCOL);
 	}
     }

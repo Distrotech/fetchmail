@@ -110,10 +110,9 @@ char *strerror (errnum)
 
 void
 #ifdef HAVE_STDARG_H
-report (FILE *errfp, int errnum, const char *message, ...)
+report (FILE *errfp, const char *message, ...)
 #else
-report (FILE *errfp, errnum, message, va_alist)
-     int errnum;
+report (FILE *errfp, message, va_alist)
      const char *message;
      va_dcl
 #endif
@@ -137,40 +136,12 @@ report (FILE *errfp, errnum, message, va_alist)
 #ifdef VA_START
       VA_START (args, message);
 #endif
-      priority = errnum ? LOG_ERR : LOG_INFO;
+      priority = (errfp == stderr) ? LOG_ERR : LOG_INFO;
 
-      if (errnum > 0)
-        {
-	  char *msg;
-	  
-	  xalloca(msg, char *, strlen (message) + 5);
-
-	  strcpy (msg, message);
-	  strcat (msg, ": %m");
-
-	  errno = errnum;
 #ifdef HAVE_VSYSLOG
-	  vsyslog (priority, msg, args);
+      vsyslog (priority, message, args);
 #else
-	  {
-	  char *a1 = va_arg(args, char *);
-	  char *a2 = va_arg(args, char *);
-	  char *a3 = va_arg(args, char *);
-	  char *a4 = va_arg(args, char *);
-	  char *a5 = va_arg(args, char *);
-	  char *a6 = va_arg(args, char *);
-	  char *a7 = va_arg(args, char *);
-	  char *a8 = va_arg(args, char *);
-	  syslog (priority, msg, a1, a2, a3, a4, a5, a6, a7, a8);
-	  }
-#endif
-	}
-      else
-        {
-#ifdef HAVE_VSYSLOG
-	  vsyslog (priority, message, args);
-#else
-	  {
+      {
 	  char *a1 = va_arg(args, char *);
 	  char *a2 = va_arg(args, char *);
 	  char *a3 = va_arg(args, char *);
@@ -180,9 +151,8 @@ report (FILE *errfp, errnum, message, va_alist)
 	  char *a7 = va_arg(args, char *);
 	  char *a8 = va_arg(args, char *);
 	  syslog (priority, message, a1, a2, a3, a4, a5, a6, a7, a8);
-	  }
+      }
 #endif
-	}
 
 #ifdef VA_START
       va_end(args);
@@ -215,16 +185,6 @@ report (FILE *errfp, errnum, message, va_alist)
 #else
       fprintf (errfp, message, a1, a2, a3, a4, a5, a6, a7, a8);
 #endif
-
-      if (errnum) {
-	char *tmps = strerror(errnum);
-	if (tmps) {
-	  fprintf (errfp, ": %s", tmps);
-	}
-	else {
-	  fprintf (errfp, _(": Error %d"), errnum);
-	}
-      }
       fflush (errfp);
     }
   ++error_message_count;
@@ -371,10 +331,9 @@ report_build (FILE *errfp, message, va_alist)
 
 void
 #ifdef HAVE_STDARG_H
-report_complete (FILE *errfp, int errnum, const char *message, ...)
+report_complete (FILE *errfp, const char *message, ...)
 #else
-report_complete (FILE *errfp, errnum, message, va_alist)
-     int errnum;
+report_complete (FILE *errfp, message, va_alist)
      const char *message;
      va_dcl
 #endif
@@ -463,16 +422,12 @@ report_complete (FILE *errfp, errnum, message, va_alist)
   if (use_stderr)
     {
       fputs(partial_message, errfp);
-
-      if (errnum)
-	fprintf (errfp, ": %s", strerror (errnum));
-
       fflush (errfp);
 
       ++error_message_count;
     }
   else
-    report (errfp, errnum, "%s", partial_message);
+    report(errfp, "%s", partial_message);
 }
 
 /* Sometimes we want to have at most one error per line.  This

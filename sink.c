@@ -162,7 +162,7 @@ static int smtp_open(struct query *ctl)
     ctl->destaddr = ctl->smtpaddress ? ctl->smtpaddress : ( ctl->smtphost ? ctl->smtphost : "localhost");
 
     if (outlevel >= O_DEBUG && ctl->smtp_socket != -1)
-	report(stdout, 0, _("forwarding to %s\n"), ctl->smtphost);
+	report(stdout, _("forwarding to %s\n"), ctl->smtphost);
 
     return(ctl->smtp_socket);
 }
@@ -284,7 +284,7 @@ static int send_bouncemail(struct msgblk *msg, int userclass,
     ts = rfc822timestamp();
 
     if (outlevel >= O_VERBOSE)
-	report(stdout, 0, "SMTP: (bounce-message body)\n");
+	report(stdout, "SMTP: (bounce-message body)\n");
 
     /* bouncemail headers */
     SockPrintf(sock, "Return-Path: <>\r\n");
@@ -411,7 +411,7 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
      * an error when the return code is less specific.
      */
     if (smtperr >= 400)
-	report(stderr, 0, _("%cMTP error: %s\n"), 
+	report(stderr, _("%cMTP error: %s\n"), 
 	      ctl->listener,
 	      smtp_response);
 
@@ -516,7 +516,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 
 	if (ferror(sinkfp))
 	{
-	    report(stderr, 0, _("BSMTP file open or preamble write failed\n"));
+	    report(stderr, _("BSMTP file open or preamble write failed\n"));
 	    return(PS_BSMTP);
 	}
     }
@@ -637,7 +637,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 
 
 	if (outlevel >= O_DEBUG)
-	    report(stdout, 0, _("about to deliver with: %s\n"), before);
+	    report(stdout, _("about to deliver with: %s\n"), before);
 
 #ifdef HAVE_SETEUID
 	/*
@@ -660,7 +660,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 
 	if (!sinkfp)
 	{
-	    report(stderr, 0, _("MDA open failed\n"));
+	    report(stderr, _("MDA open failed\n"));
 	    return(PS_IOERR);
 	}
 
@@ -677,7 +677,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	/* build a connection to the SMTP listener */
 	if ((smtp_open(ctl) == -1))
 	{
-	    report(stderr, errno, _("%cMTP connect to %s failed\n"),
+	    report(stderr, _("%cMTP connect to %s failed\n"),
 		  ctl->listener,
 		  ctl->smtphost ? ctl->smtphost : "localhost");
 	    return(PS_SMTP);
@@ -755,7 +755,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		    (*bad_addresses)++;
 		    idp->val.status.mark = XMIT_RCPTBAD;
 		    if (outlevel >= O_VERBOSE)
-			report(stderr, 0, 
+			report(stderr, 
 			      _("%cMTP listener doesn't like recipient address `%s'\n"),
 			      ctl->listener, addr);
 		}
@@ -786,13 +786,13 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 
 	    if (SMTP_rcpt(ctl->smtp_socket, addr) != SM_OK)
 	    {
-		report(stderr, 0, _("can't even send to %s!\n"), run.postmaster);
+		report(stderr, _("can't even send to %s!\n"), run.postmaster);
 		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
 		return(PS_SMTP);
 	    }
 
 	    if (outlevel >= O_VERBOSE)
-		report(stderr, 0, _("no address matches; forwarding to %s.\n"), run.postmaster);
+		report(stderr, _("no address matches; forwarding to %s.\n"), run.postmaster);
 	}
 
 	/* 
@@ -846,7 +846,7 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 	signal(SIGCHLD, sigchld);
 	if (rc)
 	{
-	    report(stderr, 0, 
+	    report(stderr, 
 		   _("MDA exited abnormally or returned nonzero status\n"));
 	    return(FALSE);
 	}
@@ -859,7 +859,7 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 	    fclose(sinkfp);
 	if (ferror(sinkfp))
 	{
-	    report(stderr, 0, 
+	    report(stderr, 
 		   _("Message termination or close of BSMTP file failed\n"));
 	    return(FALSE);
 	}
@@ -873,7 +873,7 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 		return(FALSE);
 	    else
 	    {
-		report(stderr, 0, _("SMTP listener refused delivery\n"));
+		report(stderr, _("SMTP listener refused delivery\n"));
 		return(TRUE);
 	    }
 	}
@@ -901,9 +901,9 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 		 * comply.
 		 */
 		if (atoi(smtp_response) == 503)
-		    report(stderr, 0, _("LMTP delivery error on EOM\n"));
+		    report(stderr, _("LMTP delivery error on EOM\n"));
 		else
-		    report(stderr, 0,
+		    report(stderr,
 			  _("Unexpected non-503 response to LMTP EOM: %s\n"),
 			  smtp_response);
 

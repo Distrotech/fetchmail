@@ -343,9 +343,9 @@ extern char *sdps_envto;
 /* error.c: Error reporting */
 #if defined(HAVE_STDARG_H)
 void report_init(int foreground);
-void report (FILE *fp, int errnum, const char *format, ...);
+void report (FILE *fp, const char *format, ...);
 void report_build (FILE *fp, const char *format, ...);
-void report_complete (FILE *fp, int errnum, const char *format, ...);
+void report_complete (FILE *fp, const char *format, ...);
 void report_at_line (FILE *fp, int, const char *, unsigned int, const char *, ...);
 #else
 void report ();
@@ -455,7 +455,7 @@ char *xstrdup(const char *);
  #pragma alloca
 #endif
 #endif
-#define	xalloca(ptr, t, n)	if (!(ptr = (t) alloca(n))) report(stderr, PS_UNDEFINED, 0, "alloca failed")
+#define	xalloca(ptr, t, n)	if (!(ptr = (t) alloca(n))) {report(stderr, "alloca failed"); exit(PS_UNDEFINED);}
 
 /* protocol driver and methods */
 int do_protocol(struct query *, const struct method *);

@@ -193,8 +193,11 @@ void interface_parse(char *buf, struct hostdata *hp)
 
 	/* find and isolate just the IP address */
 	if (!(cp1 = strchr(buf, '/')))
-		(void) report(stderr, PS_SYNTAX, 
+	{
+		(void) report(stderr,
 			      _("missing IP interface address\n"));
+		exit(PS_SYNTAX);
+	}
 	*cp1++ = '\000';
 
 	/* find and isolate just the netmask */
@@ -206,11 +209,17 @@ void interface_parse(char *buf, struct hostdata *hp)
 	/* convert IP address and netmask */
 	hp->interface_pair = (struct interface_pair_s *)xmalloc(sizeof(struct interface_pair_s));
 	if (!inet_aton(cp1, &hp->interface_pair->interface_address))
-		(void) report(stderr, PS_SYNTAX, 
+	{
+		(void) report(stderr,
 			      _("invalid IP interface address\n"));
+		exit(PS_SYNTAX);
+	}
 	if (!inet_aton(cp2, &hp->interface_pair->interface_mask))
-		(void) report(stderr, PS_SYNTAX,
+	{
+		(void) report(stderr,
 			      _("invalid IP interface mask\n"));
+		exit(PS_SYNTAX);
+	}
 	/* apply the mask now to the IP address (range) required */
 	hp->interface_pair->interface_address.s_addr &=
 		hp->interface_pair->interface_mask.s_addr;
@@ -246,7 +255,7 @@ void interface_note_activity(struct hostdata *hp)
 		}
 
 #ifdef	ACTIVITY_DEBUG
-	(void) report(stdout, 0, 
+	(void) report(stdout, 
 		      _("activity on %s -noted- as %d\n"), 
 		      hp->monitor, hp->monitor_io);
 #endif
@@ -261,7 +270,7 @@ int interface_approve(struct hostdata *hp)
 	if (hp->interface) {
 		/* get interface info */
 		if (!get_ifinfo(hp->interface, &ifinfo)) {
-			(void) report(stdout, 0, 
+			(void) report(stdout, 
 				      _("skipping poll of %s, %s down\n"),
 				      hp->pollname, hp->interface);
 			return(FALSE);
@@ -270,7 +279,7 @@ int interface_approve(struct hostdata *hp)
 		if ((ifinfo.addr.s_addr &
 				hp->interface_pair->interface_mask.s_addr) !=
 				hp->interface_pair->interface_address.s_addr) {
-			(void) report(stdout, 0,
+			(void) report(stdout,
 				_("skipping poll of %s, %s IP address excluded\n"),
 				hp->pollname, hp->interface);
 			return(FALSE);
@@ -282,7 +291,7 @@ int interface_approve(struct hostdata *hp)
 		return(TRUE);
 
 #ifdef	ACTIVITY_DEBUG
-	(void) report(stdout, 0, 
+	(void) report(stdout, 
 		      _("activity on %s checked as %d\n"), 
 		      hp->monitor, hp->monitor_io);
 #endif
@@ -290,7 +299,7 @@ int interface_approve(struct hostdata *hp)
 	if (get_ifinfo(hp->monitor, &ifinfo) &&
 			hp->monitor_io == ifinfo.rx_packets +
 				ifinfo.tx_packets) {
-		(void) report(stdout, 0, 
+		(void) report(stdout, 
 			      _("skipping poll of %s, %s inactive\n"),
 			      hp->pollname, hp->monitor);
 		return(FALSE);
