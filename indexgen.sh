@@ -9,6 +9,10 @@ date=`date "+%d %b %Y"`
 
 set -- `timeseries | grep -v "%" | head -1`
 subscribers=$4
+set -- `ls -ks fetchmail`
+fetchmailsize=$1
+
+rm -f index.html
 
 cat >index.html <<EOF
 <!doctype HTML public "-//W3O//DTD W3 HTML 3.2//EN">
@@ -76,7 +80,7 @@ use the interactive GUI configurator (fetchmailconf) supplied with the
 fetchmail distribution.<P>
 
 Fetchmail is fast and lightweight.  It packs all its standard
-features (POP3, IMAP, and ETRN support) in less than 97K of core on a
+features (POP3, IMAP, and ETRN support) in ${fetchmailsize}K of core on a
 Pentium under Linux.<p>
 
 Fetchmail is <a href="http://www.opensource.org">open-source</a>
