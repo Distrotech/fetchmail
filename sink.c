@@ -626,8 +626,13 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	 * This is a potential problem if the MTAs further upstream
 	 * didn't pass canonicalized From/Return-Path lines, *and* the
 	 * local SMTP listener insists on them. 
+         *
+         * Handle the case where an upstream MTA is setting a return
+         * path equal to "@".  Ghod knows why anyone does this, but 
+	 * it's been reported to happen in mail from Amazon.com and
+	 * Motorola.
 	 */
-	if (!msg->return_path[0])
+	if (!msg->return_path[0] || (0 == strcmp(msg->return_path, "@")))
 	{
 #ifdef HAVE_SNPRINTF
 	    snprintf(addr, sizeof(addr),

@@ -6,6 +6,7 @@
 * Fix for Debian bug Bug#1038222: fetchmail conf fails to write file 
   after configuration; move .fetchmailrc to .fetchmailrc.bak before
   overwriting.
+* Discard Return-Path headers consisting of a single @.
 
 fetchmail-5.8.12 (Fri Jul  6 00:56:02 EDT 2001), 21052 lines:
 
