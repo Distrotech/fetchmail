@@ -507,9 +507,10 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 		if (suppress_readbody)
 		{
 		    /* When readheaders returns PS_TRUNCATED,
-		       the body (which has no content
-		       has already been read by readheaders,
-		       so we say readbody returned PS_SUCCESS */
+		     * the body (which has no content)
+		     * has already been read by readheaders,
+		     * so we say readbody returned PS_SUCCESS
+		     */
 		    ok = PS_SUCCESS;
 		}
 		else
