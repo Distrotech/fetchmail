@@ -474,7 +474,9 @@ after a period of inactivity (e.g. PPP links) to remain up
 indefinitely.  This option identifies a system TCP/IP interface to be
 monitored for activity.  After each poll interval, if the link is up but
 no other activity has occurred on the link, then the poll will be
-skipped.  This option is currently only supported under Linux and FreeBSD.
+skipped.  However, when fetchmail is woken up by a signal, the
+monitor check is skipped and the poll goes through unconditionally.
+This option is currently only supported under Linux and FreeBSD.
 For the 
 .B monitor 
 and 
