@@ -57,7 +57,7 @@ int do_gssauth(int sock, char *command, char *service, char *hostname, char *use
     int result;
 
     /* first things first: get an imap ticket for host */
-    sprintf(buf1, "%s@%s", service, hostname);
+    snprintf(buf1, sizeof(buf1), "%s@%s", service, hostname);
     request_buf.value = buf1;
     request_buf.length = strlen(buf1) + 1;
     maj_stat = gss_import_name(&min_stat, &request_buf, GSS_C_NT_HOSTBASED_SERVICE,

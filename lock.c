@@ -32,7 +32,9 @@ void lock_setup(void)
     if (getuid() == ROOT_UID) {
 	lockfile = (char *)xmalloc(
 		sizeof(PID_DIR) + sizeof(FETCHMAIL_PIDFILE) + 1);
-	sprintf(lockfile, "%s/%s", PID_DIR, FETCHMAIL_PIDFILE);
+	strcpy(lockfile, PID_DIR);
+	strcat(lockfile, "/");
+	strcat(lockfile, FETCHMAIL_PIDFILE);
     } else {
 	lockfile = (char *)xmalloc(strlen(fmhome)+sizeof(FETCHMAIL_PIDFILE)+2);
 	strcpy(lockfile, fmhome);
@@ -98,7 +100,7 @@ void lock_or_die(void)
 /* get a lock on a given host or exit */
 {
     int fd;
-    char	tmpbuf[20];
+    char	tmpbuf[50];
 
 #ifndef O_SYNC
 #define O_SYNC	0	/* use it if we have it */
@@ -107,11 +109,11 @@ void lock_or_die(void)
     {
       if ((fd = open(lockfile, O_WRONLY|O_CREAT|O_EXCL|O_SYNC, 0666)) != -1)
       {
-	  sprintf(tmpbuf,"%d", getpid());
+	  snprintf(tmpbuf, sizeof(tmpbuf), "%ld", (long)getpid());
 	  write(fd, tmpbuf, strlen(tmpbuf));
 	  if (run.poll_interval)
 	  {
-	      sprintf(tmpbuf," %d", run.poll_interval);
+	      snprintf(tmpbuf, sizeof(tmpbuf), " %d", run.poll_interval);
 	      write(fd, tmpbuf, strlen(tmpbuf));
 	  }
 	  close(fd);	/* should be safe, fd was opened with O_SYNC */

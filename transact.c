@@ -1148,8 +1148,9 @@ int readheaders(int sock,
 		    VERSION);
 	    if (ctl->tracepolls)
 	    {
-		sprintf(buf + strlen(buf), " polling %s account %s",
-			ctl->server.pollname, 
+		snprintf(buf + strlen(buf), sizeof(buf) - strlen(buf),
+			" polling %s account %s",
+			ctl->server.pollname,
 			ctl->remotename);
 	    }
 	    snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), ")\r\n");

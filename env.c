@@ -190,7 +190,8 @@ static char *tzoffset(time_t *now)
     }
     if (off >= 24 * 60)			/* should be impossible */
 	off = 23 * 60 + 59;		/* if not, insert silly value */
-    sprintf(offset_string, "%c%02d%02d", sign, off / 60, off % 60);
+    snprintf(offset_string, sizeof(offset_string),
+	    "%c%02d%02d", sign, off / 60, off % 60);
     return (offset_string);
 }
 

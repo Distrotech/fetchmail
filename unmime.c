@@ -669,9 +669,9 @@ int main(int argc, char *argv[])
   char fnam[100];
 
   pid = getpid();
-  sprintf(fnam, "/tmp/i_unmime.%x", pid);
+  sprintf(fnam, "/tmp/i_unmime.%lx", (long)pid);
   fd_orig = fopen(fnam, "w");
-  sprintf(fnam, "/tmp/o_unmime.%x", pid);
+  sprintf(fnam, "/tmp/o_unmime.%lx", (long)pid);
   fd_conv = fopen(fnam, "w");
 #endif
 
