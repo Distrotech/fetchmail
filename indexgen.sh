@@ -2,8 +2,8 @@
 #
 # indexgen.sh -- generate current version of fetchmail home page.
 #
-goldvers="5.4.0"
-goldname="5.4.0"
+goldvers="5.5.0"
+goldname="5.5.0"
 version=`sed -n <Makefile.in "/VERSION *= */s/VERSION *= *\([^ 	]*\)/\1/p"`
 date=`date "+%d %b %Y"`
 

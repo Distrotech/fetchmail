@@ -2,7 +2,12 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+------------------------------------------------------------------------------
+fetchmail-5.5.0 (Sat Aug 12 12:47:21 EDT 2000), 19241 lines:
+
 * Fix pop3.c to avoid trouble with spurious dot terminations.
+
+There are 293 people on fetchmail-friends and 541 on fetchmail-announce.
 
 fetchmail-5.4.5 (Mon Aug  7 03:25:23 EDT 2000), 19238 lines:
 
@@ -70,6 +75,7 @@ fetchmail-5.4.1 (Tue Jun  6 23:24:22 EDT 2000), 19051 lines:
 
 There are 290 people on fetchmail-friends and 526 on fetchmail-announce.
 
+------------------------------------------------------------------------------
 fetchmail-5.4.0 (Sat May 13 18:24:21 EDT 2000), 18977 lines:
 
 * Matthias Scheler's fix for SSL under IPV6
@@ -182,6 +188,7 @@ fetchmail-5.3.1 (Sun Mar  5 23:02:42 EST 2000), 18648 lines:
 
 There are 289 people on fetchmail-friends and 502 on fetchmail-announce.
 
+------------------------------------------------------------------------------
 fetchmail-5.3.0 (Tue Feb 22 08:53:31 PST 2000), 18618 lines:
 
 * Horst von Brand's improvements to the specfile generator.
@@ -284,6 +291,7 @@ fetchmail-5.2.1 (Sun Dec 19 23:08:53 EST 1999), 18330 lines:
 
 There are 282 people on fetchmail-friends and 479 on fetchmail-announce.
 
+------------------------------------------------------------------------------
 fetchmail-5.2.0 (Tue Nov 30 14:24:25 EST 1999), 18302 lines:
 * fetchmailconf now complains and exits gracefully when not run under X.
 * configure.in port patch for OpenBSD from Federico G. Schwindt.
