@@ -153,9 +153,9 @@ I wrote a paper, <A HREF="../writings/cathedral.html">The Cathedral
 And The Bazaar</A>, about these theories and the project. It was well
 received at <A HREF="http://www.linux-kongress.de"> Linux Kongress
 '97</A> and the <A HREF="http://www.ale.org/showcase"> Atlanta Linux
-Expo</A> two weeks later.  I'll be giving it at Tim O'Reilly's
+Expo</A> two weeks later.  I also presented it at Tim O'Reilly's
 <A HREF="http://www.ora.com/perlconference">Perl Conference</A>
-August 19th-21st.  A lot of people like it.<P>
+August 19th-21st 1997.  A lot of people like it.<P>
 
 <H1>Recent releases and where fetchmail is going:</H2>
 
