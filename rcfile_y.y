@@ -52,26 +52,29 @@ statement_list	: statement
 statement	: define_server serverspecs userspecs      
 		;
 
-define_server	: SERVER STRING	{prc_setserver($2);}
-		| DEFAULTS			{prc_setserver("defaults");}
+define_server	: SERVER STRING		{prc_setserver($2);}
+		| SKIP SERVER STRING	{prc_setserver($3);
+						prc_setskip($1==FLAG_TRUE);}
+		| DEFAULTS		{prc_setserver("defaults");}
   		;
 
 serverspecs	: /* EMPTY */
 		| serverspecs serv_option
 		;
 
-serv_option	: PROTOCOL PROTO		{prc_setproto($2);}
+serv_option	: PROTOCOL PROTO	{prc_setproto($2);}
 		| PORT STRING		{prc_setport($2);}
+		| SKIP			{prc_setskip($1==FLAG_TRUE);}
 		;
 
 /* the first and only the first user spec may omit the USERNAME part */
-userspecs	: user1opts			{prc_register(); prc_reset();}
-		| user1opts explicits		{prc_register(); prc_reset();}
+userspecs	: user1opts		{prc_register(); prc_reset();}
+		| user1opts explicits	{prc_register(); prc_reset();}
 		| explicits
 		;
 
-explicits	: explicitdef			{prc_register(); prc_reset();}
-		| explicits explicitdef		{prc_register(); prc_reset();}
+explicits	: explicitdef		{prc_register(); prc_reset();}
+		| explicits explicitdef	{prc_register(); prc_reset();}
 		;
 
 explicitdef	: userdef user0opts
@@ -98,11 +101,10 @@ user_option	: IS STRING		{prc_setlocal($2);}
 		| SMTPHOST STRING	{prc_setsmtphost($2);}
 		| MDA STRING		{prc_setmda($2);}
 
-		| KEEP		{prc_setkeep($1==FLAG_TRUE);}
-		| FLUSH		{prc_setflush($1==FLAG_TRUE);}
+		| KEEP			{prc_setkeep($1==FLAG_TRUE);}
+		| FLUSH			{prc_setflush($1==FLAG_TRUE);}
 		| FETCHALL		{prc_setfetchall($1==FLAG_TRUE);}
 		| REWRITE		{prc_setrewrite($1==FLAG_TRUE);}
-		| SKIP		{prc_setskip($1==FLAG_TRUE);}
 		;
 %%
 
