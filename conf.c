@@ -94,7 +94,7 @@ static void listdump(const char *name, struct idlist *list)
     fprintf(stdout, "\"%s\":", name);
 
     if (!list)
-	fputs("None,\n", stdout);
+	fputs("[],\n", stdout);
     else
     {
 	struct idlist *idp;

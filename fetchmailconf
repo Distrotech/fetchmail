@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #       posix, posixpath, socket
-version = "1.37"
+version = "1.38"
 
 from Tkinter import *
 from Dialog import *
@@ -364,7 +364,8 @@ class User:
             for x in trimmed:
                 res = res + " " + x
                 res = res + "\n"
-        trimmed = self.fetchdomains;
+        trimmed = self.fetchdomains
+        print "FOO!", `trimmed`
         if trimmed != [] and trimmed[len(trimmed) - 1] == hostname:
             trimmed = trimmed[0:len(trimmed) - 1]
         if trimmed != []:
@@ -833,6 +834,10 @@ class ConfigurationEdit(Frame, MyWidget):
                  bitmap = 'question',
                  strings = ('Yes', 'No'),
                  default = 1).num == 0:
+            try:
+                os.rename(self.outfile, self.outfile + "~")
+            except OSError:
+                pass
             fm = open(self.outfile, 'w')
         if fm:
             fm.write("# Configuration created %s by fetchmailconf\n" % time.ctime(time.time()))
