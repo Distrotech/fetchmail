@@ -2,9 +2,15 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.8.4 (Mon May 21 15:08:03 EDT 2001), 20636 lines:
+
 * SSL certificate options from Thomas Moestl <tmoestl@gmx.net>.
 * Frantisek Brabec's patch for better UIDL error recovery.
 * Another zombie-leak patch from HMH.
+* Jorg de Jong's patch attempts to handle spaces in the ID part of UIDLs.
+* Eliminate use of -C in Makefile.
+
+There are 334 people on fetchmail-friends and 583 on fetchmail-announce.
 
 fetchmail-5.8.3 (Sat May 12 04:07:12 EDT 2001), 20502 lines:
 
