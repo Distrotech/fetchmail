@@ -2,8 +2,13 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.3.8 (Sat May 13 18:24:21 EDT 2000), 18977 lines:
+
 * Matthias Scheler's fix for SSL under IPV6
 * Added FAQ material on SSL's "RPNG not seeded" message and on ssh tunnelling.
+* Resolved Debian bug  #63667.
+
+There are 287 people on fetchmail-friends and 516 on fetchmail-announce.
 
 fetchmail-5.3.8 (Fri Apr 21 03:47:14 EDT 2000), 18977 lines:
 
