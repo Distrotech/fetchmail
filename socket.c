@@ -151,7 +151,7 @@ int len;
    static char sbuf [INTERNAL_BUFSIZE];
    static char *bp;
    
-   if (sbuflen == 0) {
+   if (sbuflen <= 0) {
      /* buffer is empty; refresh. */
      if ((sbuflen = read(socket,sbuf,INTERNAL_BUFSIZE)) < 0) {
        if (errno = EINTR)
