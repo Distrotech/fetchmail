@@ -330,7 +330,7 @@ AC_ARG_WITH(kerberos5,
 
 # The "then" arm (nonempty $with_kerberos5) is kind of a crock.  It works for
 # configuring the BSD/OS Kerberos IV support, though. 
-if test -n "$with_kerberos5"
+if test -n "$with_kerberos5" -a "$with_kerberos5" != "no"
 then
     # Path given
     CEFLAGS="$CEFLAGS -DKERBEROS_V5 -I$with_kerberos5/include"
@@ -342,8 +342,7 @@ then
     else
        LIBS="$LIBS -lkrb5 -lcrypto -lcom_err"
     fi
-else
-  if test "$with_kerberos5" != "no" ; then
+elif test "$with_kerberos" != "no"; then
     for dir in /usr/kerberos /usr/local/krb5 /usr/athena
     do
       if test -f "$dir/include/krb5.h"
@@ -361,7 +360,6 @@ else
         break
       fi
     done
-  fi
 fi
 
 ###	use option --with-ssl to compile in the SSL support
@@ -420,6 +418,7 @@ then
     fi
     LDEFLAGS="$LDEFLAGS -L$with_ssl/lib"
     LIBS="$LIBS -lssl -lcrypto"
+    AC_DEFINE(SSL_ENABLE)
 else
     echo 'Disabling SSL support...'
 fi
@@ -437,7 +436,7 @@ then
   echo "Configuring kerberosIV for `uname`"
   CEFLAGS="$CEFLAGS -DKERBEROS_V4 -I/usr/include/kerberosIV"
   LIBS="$LIBS -lkrb -ldes"
-elif test -n "$with_kerberos" -a -n "$with_kerberos5"
+elif test -n "$with_kerberos" -a -n "$with_kerberos5" -a "$with_kerberos" != "no"
 then
     CEFLAGS="$CEFLAGS -DKERBEROS_V4 -I$with_kerberos/include"
     LDEFLAGS="$LDEFLAGS -L$with_kerberos/lib"
@@ -448,7 +447,7 @@ then
     else
        LIBS="-lkrb4 -ldes425 $LIBS"
     fi
-elif test -n "$with_kerberos5"
+elif test -n "$with_kerberos5" -a "$with_kerberos" != "no"
 then
     for dir in /usr/kerberos /usr/kerberosIV /usr/athena
     do

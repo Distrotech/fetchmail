@@ -16,8 +16,10 @@ package will have two security verifications instead of one...
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
 * Fix bug introduced in 5.2.2 that stopped --syslog from working.
-* Javier Kohen's update for es.po.
-* Guy Brand's update for fr.po.
+* Update for es.po, fr.po, cs.po.
+* Message-string macros eliminated from driver.c so gettext can see them.
+* Various useful to version reporting & configure.in fixes by Chip Salzenberg.
+* Bernhard Rosenkraenzer's fix for broken Kerberos V configuration.
 
 fetchmail-5.2.3 (Tue Jan  4 01:56:11 EST 2000), 18421 lines:
 * Ken Estes's patch to check for unreachable UIDL file due to bad NFS mount.

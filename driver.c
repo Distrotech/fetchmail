@@ -897,7 +897,7 @@ static int readheaders(int sock,
 	     * We haven't extracted the envelope address.
 	     * So check all the "Resent-To" header addresses if 
 	     * they exist.  If and only if they don't, consider
-	     * the "To" adresses.
+	     * the "To" addresses.
 	     */
 	    register struct addrblk *nextptr;
 	    if (resent_to_addrchain) {
@@ -1510,12 +1510,6 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	    if (timeoutcount > MAX_TIMEOUTS 
 		&& !open_warning_by_mail(ctl, (struct msgblk *)NULL))
 	    {
-#define TIMEOUT_WARNING \
-    "This could mean that your mailserver is stuck, or that your SMTP\r\n" \
-    "server is wedged, or that your mailbox file on the server has been\r\n" \
-    "corrupted by a server error.  You can run `fetchmail -v -v' to\r\n" \
-    "diagnose the problem.\r\n\r\n" \
-    "Fetchmail won't poll this mailbox again until you restart it.\r\n"
 		stuff_warning(ctl,
 			      _("Subject: fetchmail sees repeated timeouts\r\n"));
 		stuff_warning(ctl,
@@ -1523,10 +1517,14 @@ const int maxfetch;		/* maximum number of messages to fetch */
 			      MAX_TIMEOUTS,
 			      ctl->remotename,
 			      ctl->server.truename);
-		stuff_warning(ctl, _(TIMEOUT_WARNING));
+		stuff_warning(ctl, 
+    _("This could mean that your mailserver is stuck, or that your SMTP\r\n" \
+    "server is wedged, or that your mailbox file on the server has been\r\n" \
+    "corrupted by a server error.  You can run `fetchmail -v -v' to\r\n" \
+    "diagnose the problem.\r\n\r\n" \
+    "Fetchmail won't poll this mailbox again until you restart it.\r\n"));
 		close_warning_by_mail(ctl, (struct msgblk *)NULL);
 		ctl->wedged = TRUE;
-#undef TIMEOUT_WARNING
 	    }
 
 	    ok = PS_ERROR;
@@ -1698,21 +1696,19 @@ const int maxfetch;		/* maximum number of messages to fetch */
 			&& ctl->authfailcount++ > MAX_AUTHFAILS 
 			&& !open_warning_by_mail(ctl, (struct msgblk *)NULL))
 		    {
-#define LOGIN_ERROR	\
-    "The attempt to get authorization failed.\r\n" \
-    "This probably means your password is invalid, but POP3 servers have\r\n" \
-    "other failure modes that fetchmail cannot distinguish from this\r\n" \
-    "because they don't send useful error messages on login failure.\r\n"
 			stuff_warning(ctl,
 			    _("Subject: fetchmail authentication failed\r\n"));
 			stuff_warning(ctl,
 			    _("Fetchmail could not get mail from %s@%s.\r\n"), 
 			    ctl->remotename,
 			    ctl->server.truename);
-			stuff_warning(ctl, _(LOGIN_ERROR));
+			stuff_warning(ctl, 
+    _("The attempt to get authorization failed.\r\n" \
+    "This probably means your password is invalid, but POP3 servers have\r\n" \
+    "other failure modes that fetchmail cannot distinguish from this\r\n" \
+    "because they don't send useful error messages on login failure.\r\n"));
 			close_warning_by_mail(ctl, (struct msgblk *)NULL);
 			ctl->wedged = TRUE;
-#undef LOGIN_ERROR
 		    }
 		}
 		goto cleanUp;

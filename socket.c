@@ -530,10 +530,10 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx )
 				*str_ptr = '\0';
 			}
 			if (outlevel == O_VERBOSE)
-				report(stdout, "Issuer Organization: %s", cbuf );
+				report(stdout, "Issuer Organization: %s\n", cbuf );
 		} else {
 			if (outlevel == O_VERBOSE)
-				report(stdout, "Unknown Organization", cbuf );
+				report(stdout, "Unknown Organization\n", cbuf );
 		}
 		if( ( str_ptr = strstr( ibuf, "/CN=" ) ) ) {
 			str_ptr += 4;
@@ -542,10 +542,10 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx )
 				*str_ptr = '\0';
 			}
 			if (outlevel == O_VERBOSE)
-				report(stdout, "Issuer CommonName: %s", cbuf );
+				report(stdout, "Issuer CommonName: %s\n", cbuf );
 		} else {
 			if (outlevel == O_VERBOSE)
-				report(stdout, "Unknown Issuer CommonName", cbuf );
+				report(stdout, "Unknown Issuer CommonName\n", cbuf );
 		}
 		if( ( str_ptr = strstr( buf, "/CN=" ) ) ) {
 			str_ptr += 4;
@@ -554,14 +554,17 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx )
 				*str_ptr = '\0';
 			}
 			if (outlevel == O_VERBOSE)
-				report(stdout, "Server CommonName: %s", cbuf );
+				report(stdout, "Server CommonName: %s\n", cbuf );
 			/* Should we have some wildcarding here? */
-			if ( NULL != _ssl_server_cname && 0 != strcmp( cbuf, _ssl_server_cname ) ) {
-				report(stdout, "Server CommonName mismatch: %s != %s", cbuf, _ssl_server_cname );
+			if ( NULL != _ssl_server_cname
+			     && 0 != strcmp( cbuf, _ssl_server_cname ) ) {
+				report(stdout,
+				       "Server CommonName mismatch: %s != %s\n",
+				       cbuf, _ssl_server_cname );
 			}
 		} else {
 			if (outlevel == O_VERBOSE)
-				report(stdout, "Unknown Server CommonName", cbuf );
+				report(stdout, "Unknown Server CommonName\n", cbuf );
 		}
 	}
 
