@@ -1226,6 +1226,15 @@ this bug, turn on `fetchall' on all user entries associated with this
 server.
 
 """
+            if string.find(greetline, " spray.se") > 0:
+                warnings = warnings + """
+Your POP3 server has "spray.se" in its header line.  In May 2000 at
+least one such server did not process the "TOP" command correctly; the
+symptom is that messages are treated as headerless.  To work around
+this bug, turn on `fetchall' on all user entries associated with this
+server.
+
+"""
             if string.find(greetline, " usa.net") > 0:
                 warnings = warnings + """
 You appear to be using USA.NET's free mail service.  Their POP3 servers
