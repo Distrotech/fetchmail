@@ -249,8 +249,8 @@ AC_ARG_WITH(kerberos,
 # configuring the BSD/OS Kerberos IV support, though. 
 if test -n "$with_kerberos"
 then
-    CEFLAGS="$CEFLAGS -DKERBEROS_V4 -I$with_kerberos"
-    LDEFLAGS="$LDEFLAGS -L$dir/lib"
+    CEFLAGS="$CEFLAGS -DKERBEROS_V4 -I$with_kerberos/include"
+    LDEFLAGS="$LDEFLAGS -L$with_kerberos/lib"
     LIBS="$LIBS -lkrb -ldes"
 else
     for dir in /usr/kerberos /usr/kerberosIV /usr/athena
