@@ -258,6 +258,11 @@ int doPOP3bis (queryctl)
 /* retrieve messages using POP3 */
 struct hostrec *queryctl;
 {
+    if (queryctl->remotefolder[0]) {
+	fprintf(stderr,"Option --remote is not supported with POP3\n");
+	return(PS_SYNTAX);
+    }
+
     return(do_protocol(queryctl, &pop3));
 }
 

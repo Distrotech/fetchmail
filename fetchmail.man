@@ -558,7 +558,8 @@ are not rewritten to enable replies as described under --norewrite.
 This isn't a protocol problem, it's because the developer couldn't
 find a POP2 server to test the necessary code reorganization with.
 .PP
-The --remotefolder option doesn't work with POP3.
+The --remotefolder option doesn't work with POP3, the protocol won't
+support it.
 .PP
 The UIDL support for RFC1725-compliant servers without LAST is not yet
 very well tested.
