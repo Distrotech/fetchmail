@@ -32,6 +32,9 @@
 #include "fetchmail.h"
 #include "i18n.h"
 
+/* We need to define h_errno only if it is not already */
+#ifndef h_errno
+
 #ifdef HAVE_RES_SEARCH
 /* some versions of FreeBSD should declare this but don't */
 extern int h_errno;
@@ -39,6 +42,8 @@ extern int h_errno;
 /* pretend we have h_errno to avoid some #ifdef's later */
 static int h_errno;
 #endif
+
+#endif /* ndef h_errno */
 
 #if NET_SECURITY
 #include <net/security.h>
