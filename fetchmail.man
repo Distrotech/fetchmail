@@ -1435,29 +1435,29 @@ Basic format is:
 Example:
 
 .nf
-  poll pop.provider.net protocol pop3 username jsmith password secret1
+  poll pop.provider.net protocol pop3 username "jsmith" password "secret1"
 .fi
 .PP
 Or, using some abbreviations:
 
 .nf
-  poll pop.provider.net proto pop3 user jsmith password secret1
+  poll pop.provider.net proto pop3 user "jsmith" password "secret1"
 .fi
 .PP
 Multiple servers may be listed:
 
 .nf
-  poll pop.provider.net proto pop3 user jsmith pass secret1
-  poll other.provider.net proto pop2 user John.Smith pass My^Hat
+  poll pop.provider.net proto pop3 user "jsmith" pass "secret1"
+  poll other.provider.net proto pop2 user "John.Smith" pass "My^Hat"
 .fi
 
 Here's a version of those two with more whitespace and some noise words: 
 
 .nf
   poll pop.provider.net proto pop3
-      user jsmith, with password secret1, is jsmith here;
+      user "jsmith", with password secret1, is "jsmith" here;
   poll other.provider.net proto pop2:
-      user John.Smith, with password My^Hat, is John.Smith here;
+      user "John.Smith", with password "My^Hat", is "John.Smith" here;
 .fi
 
 This version is much easier to read and doesn't cost significantly
@@ -1469,7 +1469,7 @@ string in double quotes.  Thus:
 
 .nf
   poll mail.provider.net with proto pop3:
-        user jsmith there has password "u can't krak this"
+        user "jsmith" there has password "u can't krak this"
                     is jws here and wants mda "/bin/mail"
 .fi
 
@@ -1480,11 +1480,11 @@ by individual server descriptions.  So, you could write:
 
 .nf
   defaults proto pop3
-        user jsmith
+        user "jsmith"
   poll pop.provider.net
-        pass secret1
+        pass "secret1"
   poll mail.provider.net
-        user jjsmith there has password secret2
+        user "jjsmith" there has password "secret2"
 .fi
 
 It's possible to specify more than one user per server (this is only
@@ -1494,8 +1494,8 @@ in a multi-user entry must include it.  Here's an example:
 
 .nf
   poll pop.provider.net proto pop3 port 3111
-        user jsmith with pass secret1 is smith here
-        user jones with pass secret2 is jjones here
+        user "jsmith" with pass "secret1" is "smith" here
+        user jones with pass "secret2" is "jjones" here
 .fi
 
 This associates the local username `smith' with the pop.provider.net
