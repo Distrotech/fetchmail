@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.26"
+version = "1.27"
 
 from Tkinter import *
 from Dialog import *
@@ -312,7 +312,7 @@ class User:
 	if self.sslkey and self.sslkey != UserDefaults.sslkey:
 	    res = res + " sslkey " + `self.sslkey`
 	if self.sslcert and self.sslcert != UserDefaults.sslcert:
-	    res = res + " ssl " + `self.sslcert`
+	    res = res + " sslcert " + `self.sslcert`
 	if self.expunge != UserDefaults.expunge:
 	    res = res + " expunge " + `self.expunge`
         res = res + "\n"
