@@ -559,6 +559,9 @@ default configuration file
 default location of file associating hosts with last message IDs seen
 (used only with newer RFC1725-compliant servers supporting the UIDL command).
 .SH BUGS
+Running more than one concurrent instance of
+.I popclient
+on the same mailbox may cause messages to be lost or remain unfetched.
 .PP
 When using POP2, the --smtphost option doesn't work, and mail headers
 are not rewritten to enable replies as described under --norewrite. 
