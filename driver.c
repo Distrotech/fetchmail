@@ -502,12 +502,13 @@ static int stuffline(struct query *ctl, char *buf, flag delimited)
     return(n);
 }
 
-static int readheaders(sock, len, ctl, realname)
+static int readheaders(sock, len, ctl, realname, num)
 /* read message headers and ship to SMTP or MDA */
 int sock;		/* to which the server is connected */
 long len;		/* length of message */
 struct query *ctl;	/* query control record */
 char *realname;		/* real name of host */
+int num;		/* index of message */
 {
     char buf[MSGBUFSIZE+1], return_path[MSGBUFSIZE+1]; 
     int	from_offs, ctt_offs, env_offs, addressoffs[128], next_address;
@@ -585,6 +586,10 @@ char *realname;		/* real name of host */
 	    break;
 	}
      
+	/* maybe this is a special message that holds mailbox annotations? */ 
+	if (protocol->retain_hdr && protocol->retain_hdr(num, line))
+	    return(PS_RETAINED);
+
 	/*
 	 * This code prevents fetchmail from becoming an accessory after
 	 * the fact to upstream sendmails with the `E' option on.  This
@@ -1536,6 +1541,7 @@ const struct method *proto;	/* protocol method table */
 			&& (ctl->fetchall || force_retrieval || !(protocol->is_old && (protocol->is_old)(sock,ctl,num)));
 		    flag suppress_delete = FALSE;
 		    flag suppress_forward = FALSE;
+		    flag retained = FALSE;
 
 		    /* we may want to reject this message if it's old */
 		    if (!fetch_it)
@@ -1581,8 +1587,10 @@ const struct method *proto;	/* protocol method table */
 			 * Read the message headers and ship them to the
 			 * output sink.  
 			 */
-			ok = readheaders(sock, len, ctl, realname);
-			if (ok == PS_TRANSIENT)
+			ok = readheaders(sock, len, ctl, realname, num);
+			if (ok == PS_RETAINED)
+			    suppress_forward = retained = TRUE;
+			else if (ok == PS_TRANSIENT)
 			    suppress_delete = suppress_forward = TRUE;
 			else if (ok == PS_REFUSED)
 			    suppress_forward = TRUE;
@@ -1679,7 +1687,12 @@ const struct method *proto;	/* protocol method table */
 		     */
 
 		    /* maybe we delete this message now? */
-		    if (protocol->delete
+		    if (retained)
+		    {
+			if (outlevel > O_SILENT) 
+			    error_complete(0, 0, " retained");
+		    }
+		    else if (protocol->delete
 			&& !suppress_delete
 			&& (fetch_it ? !ctl->keep : ctl->flush))
 		    {

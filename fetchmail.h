@@ -42,6 +42,7 @@
 #define		PS_UNDEFINED	11	/* something I hadn't thought of */
 #define		PS_TRANSIENT	12	/* transient failure (internal use) */
 #define		PS_REFUSED	13	/* mail refused (internal use) */
+#define		PS_RETAINED	24	/* message retained (internal use) */
 
 /* output noise level */
 #define         O_SILENT	0	/* mute, max squelch, etc. */
@@ -168,6 +169,7 @@ struct method
     int (*fetch_body)();	/* fetch a given message */
     int (*trail)();		/* eat trailer of a message */
     int (*delete)();		/* delete method */
+    flag (*retain_hdr)();	/* if this returns TRUE, retain message */
     char *exit_cmd;		/* exit command */
 };
 
