@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Fix pop3.c to avoid trouble with spurious dot terminations.
+
 fetchmail-5.4.5 (Mon Aug  7 03:25:23 EDT 2000), 19238 lines:
 
 * Dave Zarzycki's patch to enhance plugins, adding %h and %p.

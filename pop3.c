@@ -39,6 +39,8 @@ char *sdps_envto;
 static char lastok[POPBUFSIZE+1];
 #endif /* OPIE_ENABLE */
 
+#define DOTLINE(s)	(s[0] == '.' && (s[1]=='\r'||s[1]=='\n'||s[1]=='\0'))
+
 int pop3_ok (int sock, char *argbuf)
 /* parse command response */
 {
@@ -155,7 +157,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 
 		while ((ok = gen_recv(sock, buffer, sizeof(buffer))) == 0)
 		{
-		    if (buffer[0] == '.')
+		    if (DOTLINE([0]))
 			break;
 		    if (strncasecmp(buffer, "rpa", 3) == 0)
 			has_rpa = TRUE;
@@ -274,13 +276,14 @@ pop3_gettopid( int sock, int num , char *id)
     int got_it;
     char buf [POPBUFSIZE+1];
     sprintf( buf, "TOP %d 1", num );
-    if( (ok = gen_transact(sock, buf ) ) != 0 )
+    if ((ok = gen_transact(sock, buf )) != 0)
        return ok; 
     got_it = 0;
-    while((ok = gen_recv(sock, buf, sizeof(buf))) == 0) {
-	if( buf[0] == '.' )
+    while ((ok = gen_recv(sock, buf, sizeof(buf))) == 0) 
+    {
+	if (DOTLINE(buf))
 	    break;
-	if( ! got_it && ! strncasecmp("Message-Id:", buf, 11 )) {
+	if ( ! got_it && ! strncasecmp("Message-Id:", buf, 11 )) {
 	    got_it = 1;
 	    /* prevent stack overflows */
 	    buf[IDLEN+12] = 0;
@@ -450,7 +453,7 @@ static int pop3_getrange(int sock,
 		*newp = 0;
  		while ((ok = gen_recv(sock, buf, sizeof(buf))) == 0)
 		{
- 		    if (buf[0] == '.')
+ 		    if (DOTLINE(buf))
  			break;
  		    else if (sscanf(buf, "%d %s", &num, id) == 2)
 		    {
@@ -489,7 +492,7 @@ static int pop3_getsizes(int sock, int count, int *sizes)
 	{
 	    int num, size;
 
-	    if (buf[0] == '.')
+	    if (DOTLINE(buf))
 		break;
 	    else if (sscanf(buf, "%d %d", &num, &size) == 2)
 		sizes[num - 1] = size;
