@@ -143,7 +143,7 @@ int is_host_alias(const char *name, struct query *ctl)
 	    continue;
 	ep = (char *)name + (namelen - strlen(idl->id));
 	/* a suffix led by . must match */
-	if (ep[-1] == '.' && !strcmp(ep, idl->id))
+	if (ep[-1] == '.' && !strcasecmp(ep, idl->id))
 	    return(TRUE);
     }
 
