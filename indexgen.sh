@@ -100,10 +100,10 @@ Sunsite remote mail tools directory</a>.
 
 There is a fetchmail-friends list for people who want to discuss fixes
 and improvements in fetchmail and help co-develop it.  It's at 
-<a href="mail:fetchmail-friends@thyrsus.com">fetchmail-friends@thyrsus.com</a>
+<a href="mailto:fetchmail-friends@thyrsus.com">fetchmail-friends@thyrsus.com</a>
 and is a SmartList reflector; sign up in the usual way with a message
 containing the word "subscribe" in the subject line sent to
-to <a href="mail:fetchmail-friends-request@thyrsus.com">
+to <a href="mailto:fetchmail-friends-request@thyrsus.com">
 fetchmail-friends-request@thyrsus.com</a>. (Similarly, "unsubscribe"
 in the Subject line unsubscribes you, and "help" returns general list help) <p>
 
