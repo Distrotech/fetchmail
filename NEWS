@@ -2,6 +2,9 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Don't issue AUTH between USER and PASS, some servers choke on this.
+* Resolved Debian bug #85772 re Kerberos compilation.
+
 fetchmail-5.6.5 (Mon Feb 12 04:33:39 EST 2001), 20062 lines:
 
 * CRAM-MD5 authentication of IMAP and POP3 is working.  Tested against 
