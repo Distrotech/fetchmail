@@ -5,6 +5,9 @@
 /* We need this for HAVE_STDARG_H, etc */
 #include "config.h"
 
+/* We need this for size_t */
+#include <sys/types.h>
+
 /* constants designating the various supported protocols */
 #define		P_AUTO		1
 #define		P_POP2		2
@@ -549,8 +552,8 @@ int interface_approve(struct hostdata *, flag domonitor);
 #else
 #define XMALLOCTYPE char
 #endif
-XMALLOCTYPE *xmalloc(int);
-XMALLOCTYPE *xrealloc(XMALLOCTYPE *, int);
+XMALLOCTYPE *xmalloc(size_t);
+XMALLOCTYPE *xrealloc(/*@null@*/ XMALLOCTYPE *, size_t);
 char *xstrdup(const char *);
 #if defined(HAVE_ALLOCA_H)
 #include <alloca.h>
