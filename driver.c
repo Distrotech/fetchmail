@@ -1335,7 +1335,7 @@ const struct method *proto;	/* protocol method table */
 #ifdef KERBEROS_V4
 	if (ctl->server.preauthenticate == A_KERBEROS_V4)
 	{
-	    ok = kerberos_auth(sock, ctl->server.canonical_name);
+	    ok = kerberos_auth(sock, ctl->server.truename);
  	    if (ok != 0)
 		goto cleanUp;
 	    set_timeout(ctl->server.timeout);
