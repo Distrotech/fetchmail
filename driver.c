@@ -381,8 +381,7 @@ struct query *ctl;	/* query control record */
 
 		/*
 		 * We go through this in order to be able to handle very
-		 * long lists of users and (re
-)implement %s.
+		 * long lists of users and (re)implement %s.
 		 */
 		for (idp = xmit_names; idp; idp = idp->next)
 		    nlocals++;
