@@ -12,7 +12,7 @@ sub rfc822date
     @months = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Nov", "Dec");
 
     my($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = gmtime(time());
-    "$wdays[$wday] $months[$mon] " . substr("0$mday", -2) . " " . substr("0$hour", -2) . ":" . substr("0$min", -2) . ":" . substr("0$sec", -2) . " $timezone " . (1900+$year);
+    "$wdays[$wday], $months[$mon] " . substr("0$mday", -2) . " " . substr("0$hour", -2) . ":" . substr("0$min", -2) . ":" . substr("0$sec", -2) . " $timezone " . (1900+$year);
 }
 
 
@@ -61,8 +61,9 @@ if ($version eq $logvers) {
 } else {
     $date = &rfc822date();
     print "Updating the Debian logfile ($logvers -> $version)...\n";
-    open(DEBLOG, ">>debian/changelog");
-    print DEBLOG <<EOF;
+    open(DEBLOG, "<debian/changelog");
+    open(TMP, ">mkr$$.tmp") || die("Error opening temp file\n");
+    print TMP <<EOF;
 fetchmail (${version}-1) unstable; urgency=low
 
   * new upstream version
@@ -70,7 +71,12 @@ fetchmail (${version}-1) unstable; urgency=low
 -- Eric S. Raymond <esr\@thyrsus.com>  ${date}
   
 EOF
+    while (<DEBLOG>) {
+	print TMP $_;
+    }
+    close(TMP);
     close(DEBLOG);
+    system("mv mkr$$.tmp debian/changelog");
 }
 
 print "Building the distribution...\n";
