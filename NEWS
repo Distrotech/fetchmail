@@ -33,6 +33,10 @@ fetchmail-1.6 ():
 
 * Allow program to generate correct lockfiles under zsh.
 
+* You can now have multiple entries for the same server but different
+  users, and the right thing will happen (each user's mailbox will
+  be queried).
+
 fetchmail-1.5 (Thu Oct  3 04:35:15 EDT 1996):
 
 * Naturally, my decision to announce 1.4 on comp.os.linux.announce 

@@ -74,16 +74,16 @@ int versioninfo;	/* emit only version info */
 static void termhook();
 static char *lockfile;
 static int popstatus;
-static struct hostrec *hostp, *hostlist = (struct hostrec *)NULL;
+static struct hostrec *hostp;
 
 main (argc,argv)
 int argc;
 char **argv;
 { 
-    int mboxfd, st, sargc;
-    struct hostrec cmd_opts, def_opts;
+    int mboxfd, st;
+    struct hostrec def_opts;
     int parsestatus, implicitmode;
-    char *servername, *user, *home, *tmpdir, tmpbuf[BUFSIZ], *sargv[64]; 
+    char *servername, *user, *home, *tmpdir, tmpbuf[BUFSIZ]; 
     FILE	*tmpfp;
     pid_t pid;
 
@@ -121,40 +121,91 @@ char **argv;
 
     outlevel = O_NORMAL;
 
-    if (argc > sizeof(sargv))
-	exit(PS_SYNTAX);
-    for (sargc = 0; sargc < argc; sargc++)
-	sargv[sargc] = argv[sargc];
-
-    if ((parsestatus = parsecmdline(sargc,sargv,&cmd_opts)) < 0)
+    if ((parsestatus = parsecmdline(argc,argv,&cmd_opts)) < 0)
 	exit(PS_SYNTAX);
 
     if (versioninfo)
 	showversioninfo();
 
+    /* this builds the host list */
     if (prc_parse_file(rcfile) != 0)
 	exit(PS_SYNTAX);
 
-    if (implicitmode = (optind >= sargc))
-	append_server_names(&sargc, sargv, sizeof(sargv));
-
-    /* build in-core data list on all hosts */
-    while ((servername = getnextserver(sargc,sargv,&parsestatus)) != (char *)0)
+    if (implicitmode = (optind >= argc))
     {
-	if (strcmp(servername, "defaults") == 0)
-	    continue;
+	for (hostp = hostlist; hostp; hostp = hostp->next)
+	    hostp->active = 1;
+    }
+    else
+	for (; optind < argc; optind++) 
+	{
+	    int found;
 
-	hostp = (struct hostrec *)xmalloc(sizeof(struct hostrec));
+	    /*
+	     * If hostname corresponds to a host known from the rc file,
+	     * simply declare it active.  Otherwise synthesize a host
+	     * record from command line and defaults
+	     */
+	    found = FALSE;
+	    for (hostp = hostlist; hostp; hostp = hostp->next)
+		if (strcmp(hostp->servername, argv[optind]) == 0)
+		{
+		    found = TRUE;
+		    break;
+		}
 
-	prc_mergeoptions(servername, &cmd_opts, &def_opts, hostp);
-	strcpy(hostp->servername, servername);
+	    if (found)
+		hostp->active = TRUE;
+	    else
+	    {
+		hostp = (struct hostrec *)xmalloc(sizeof(struct hostrec));
 
-	hostp->next = hostlist;
-	hostlist = hostp;
+		memcpy(hostp, &cmd_opts, sizeof(struct hostrec));
+		strcpy(hostp->servername, argv[optind]);
+		hostp->active = TRUE;
+
+		/* append to end of list */
+		if (hosttail != (struct hostrec *) 0)
+		    hosttail->next = hostp;
+		else
+		    hostlist = hostp;
+		hosttail = hostp;
+	    }
+	}
+
+    /* merge in defaults for empty fields, then lose defaults record */ 
+    if (strcmp(hostlist->servername, "defaults") == 0)
+    {
+	optmerge(hostlist, &def_opts);
+	for (hostp = hostlist; hostp; hostp = hostp->next)
+	    optmerge(hostp, hostlist);
+	hostlist = hostlist->next;
     }
 
-    /* expand MDA commands */
+    /* do sanity checks and prepare internal fields */
     for (hostp = hostlist; hostp; hostp = hostp->next)
+    {
+	/* if rc file didn't supply a localname, default appropriately */
+	if (!hostp->localname[0])
+	    strcpy(hostp->localname, hostp->remotename);
+
+	/* sanity checks */
+	if (hostp->port < 0)
+	{
+	    (void) fprintf(stderr,
+			   "%s configuration invalid, port number cannot be negative",
+			   hostp->servername);
+	    exit(PS_SYNTAX);
+	}
+	if (hostp->protocol == P_RPOP && hostp->port >= 1024) 
+	{
+	    (void) fprintf(stderr,
+			   "%s configuration invalid, can't do RPOP to an unprivileged port\n",
+			   hostp->servername);
+	    exit(PS_SYNTAX);
+	}
+
+	/* expand MDA commands */
 	if (hostp->mda[0])
 	{
 	    int argi;
@@ -179,6 +230,7 @@ char **argv;
 	    if ((argp = strrchr(hostp->mda_argv[1], '/')) != (char *)NULL)
 		hostp->mda_argv[1] = argp + 1 ;
 	}
+    }
 
     /* set up to do lock protocol */
     if ((tmpdir = getenv("TMPDIR")) == (char *)NULL)
@@ -199,7 +251,8 @@ char **argv;
 	    if (outlevel == O_VERBOSE)
 		printf("Lockfile at %s\n", tmpbuf);
 	for (hostp = hostlist; hostp; hostp = hostp->next) {
-	    dump_params(hostp);
+	    if (hostp->active && !(implicitmode && hostp->skip))
+		dump_params(hostp);
 	}
 	if (hostlist == NULL)
 	    (void) fprintf(stderr,
@@ -254,7 +307,7 @@ char **argv;
 
     /* pick up interactively any passwords we need but don't have */ 
     for (hostp = hostlist; hostp; hostp = hostp->next)
-	if (!(implicitmode && hostp->skip) && !hostp->password[0])
+	if (hostp->active && !(implicitmode && hostp->skip) && !hostp->password[0])
 	{
 	    (void) sprintf(tmpbuf, "Enter password for %s@%s: ",
 			   hostp->remotename, hostp->servername);
@@ -287,7 +340,7 @@ char **argv;
      */
     do {
 	for (hostp = hostlist; hostp; hostp = hostp->next) {
-	    if (!implicitmode || !hostp->skip)
+	    if (hostp->active && !(implicitmode && hostp->skip))
 		popstatus = query_host(hostp);
 	}
 

@@ -75,6 +75,7 @@ struct hostrec
     int skip;
 
     /* internal use */
+    int active;
     struct hostrec *next;	/* next host in chain */
     char digest [DIGESTLEN];
 };
@@ -98,6 +99,9 @@ struct method
 
 #define TAGLEN	6
 extern char tag[TAGLEN];
+
+/* list of hosts assembled from run control file and command line */
+extern struct hostrec cmd_opts, *hostlist, *hosttail;
 
 /* controls the detail level of status/progress messages written to stderr */
 extern int outlevel;    	/* see the O_.* constants above */
@@ -124,18 +128,17 @@ int doPOP3 (struct hostrec *);
 int doIMAP (struct hostrec *);
 
 int parsecmdline (int, char **, struct hostrec *);
-char *getnextserver (int argc, char **, int *);
+void optmerge(struct hostrec *, struct hostrec *);
 char *MD5Digest (char *);
 int openmailpipe (struct hostrec *);
-void append_server_names(int *, char **, int);
 int daemonize(const char *, void (*)(int));
 
 #else
 
-char *getnextserver();
 char *MD5Digest ();
-void append_server_names ();
-int daemonize ();
+void optmerge();
 
 #endif
 
+#define FALSE	0
+#define TRUE	1

@@ -239,28 +239,3 @@ struct hostrec *queryctl;
   return(optind);
 }
 
-/******************************************************************
-  function:	getnextserver
-  description:	read next server name from the command line.
-  arguments:	
-    argc	from main()
-    argv	from main()
-    optind	as returned by parsecmdline and this function.
-
-  ret. value:	next server name from command line or NULL if all
-	        server names have been retrieved.
-  globals:	none.
-  calls:	none.
- *****************************************************************/
-char *getnextserver (argc,argv,optind)
-int argc;
-char **argv;
-int *optind;
-{
-   if (*optind >= argc) {
-     /* no more servers */
-     return((char *) 0);
-   }
-   else
-     return(argv[(*optind)++]);
-}
