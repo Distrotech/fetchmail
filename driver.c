@@ -8,6 +8,7 @@
 
 #include  <config.h>
 #include  <stdio.h>
+#include  <setjmp.h>
 #if defined(STDC_HEADERS)
 #include  <stdlib.h>
 #include  <string.h>
@@ -38,10 +39,7 @@
 #define	SMTP_PORT	25	/* standard SMTP service port */
 
 static struct method *protocol;
-
-static int alarmed;	/* a flag to indicate that SIGALRM happened */
-static int mytimeout;	/* server-nonresponse timeout for current query */
-static char *srvname;	/* current server name for timeout message */
+static jmp_buf	restart;
 
 char tag[TAGLEN];
 static int tagnum;
@@ -647,9 +645,6 @@ struct hostrec *queryctl;	/* query control record */
 	lines++;
     }
 
-    if (alarmed)
-       return (0);
-
     if (queryctl->mda[0])
     {
 	/* close the delivery pipe, we'll reopen before next message */
@@ -706,17 +701,8 @@ int do_protocol(queryctl, proto)
 struct hostrec *queryctl;	/* parsed options with merged-in defaults */
 struct method *proto;		/* protocol method table */
 {
-    int ok, len;
-    int mboxfd = -1;
-    char buf [POPBUFSIZE+1], host[HOSTLEN+1];
-    int socket;
-    void (*sigsave)();
-    int num, count, new, deletions = 0;
-
-    srvname = queryctl->servername;
-    alarmed = 0;
-    sigsave = signal(SIGALRM, alarm_handler);
-    alarm (mytimeout = queryctl->timeout);
+    int ok, mboxfd = -1;
+    void (*sigsave)() = signal(SIGALRM, alarm_handler);
 
 #ifndef KERBEROS_V4
     if (queryctl->authenticate == A_KERBEROS)
@@ -734,201 +720,215 @@ struct method *proto;		/* protocol method table */
 	    fprintf(stderr,
 		    "Option --flush is not supported with %s\n",
 		    proto->name);
-            alarm(0);
-            signal(SIGALRM, sigsave);
+	    alarm(0);
+	    signal(SIGALRM, sigsave);
 	    return(PS_SYNTAX);
 	}
 	else if (queryctl->fetchall) {
 	    fprintf(stderr,
 		    "Option --all is not supported with %s\n",
 		    proto->name);
-            alarm(0);
-            signal(SIGALRM, sigsave);
+	    alarm(0);
+	    signal(SIGALRM, sigsave);
 	    return(PS_SYNTAX);
 	}
     }
 
+    protocol = proto;
     tagnum = 0;
     tag[0] = '\0';	/* nuke any tag hanging out from previous query */
-    protocol = proto;
+    ok = 0;
 
-    /* open a socket to the mail server */
-    if ((socket = Socket(queryctl->servername,
-			 queryctl->port ? queryctl->port : protocol->port))<0 
-         || alarmed)
+    if (setjmp(restart) == 1)
+	fprintf(stderr,
+		"fetchmail: timeout after %d seconds waiting for %s.\n",
+		queryctl->timeout, queryctl->servername);
+    else
     {
-	perror("fetchmail, connecting to host");
-	ok = PS_SOCKET;
-	goto closeUp;
-    }
+	char buf [POPBUFSIZE+1], host[HOSTLEN+1];
+	int socket, len, num, count, new, deletions = 0;
 
-#ifdef KERBEROS_V4
-    if (queryctl->authenticate == A_KERBEROS)
-    {
-	ok = (kerberos_auth (socket, queryctl->canonical_name));
-	if (ok != 0)
-	    goto cleanUp;
-    }
-#endif /* KERBEROS_V4 */
+	alarm(queryctl->timeout);
 
-    /* accept greeting message from mail server */
-    ok = (protocol->parse_response)(socket, buf);
-    if (alarmed || ok != 0)
-	goto cleanUp;
-
-    /* try to get authorized to fetch mail */
-    shroud = queryctl->password;
-    ok = (protocol->getauth)(socket, queryctl, buf);
-    shroud = (char *)NULL;
-    if (alarmed || ok == PS_ERROR)
-	ok = PS_AUTHFAIL;
-    if (alarmed || ok != 0)
-	goto cleanUp;
-
-    /* compute number of messages and number of new messages waiting */
-    if ((protocol->getrange)(socket, queryctl, &count, &new) != 0 || alarmed)
-	goto cleanUp;
-
-    /* show user how many messages we downloaded */
-    if (outlevel > O_SILENT && outlevel < O_VERBOSE)
-	if (count == 0)
-	    fprintf(stderr, "No mail from %s@%s\n", 
-		    queryctl->remotename,
-		    queryctl->servername);
-	else
+	/* open a socket to the mail server */
+	if ((socket = Socket(queryctl->servername,
+			     queryctl->port ? queryctl->port : protocol->port))<0)
 	{
-	    fprintf(stderr, "%d message%s", count, count > 1 ? "s" : ""); 
-	    if (new != -1 && (count - new) > 0)
-		fprintf(stderr, " (%d seen)", count-new);
-	    fprintf(stderr,
-		    " from %s@%s.\n",
-		    queryctl->remotename,
-		    queryctl->servername);
+	    perror("fetchmail, connecting to host");
+	    ok = PS_SOCKET;
+	    goto closeUp;
 	}
 
-    if (check_only)
-    {
-	if (new == -1 || queryctl->fetchall)
-	    new = count;
-	ok = ((new > 0) ? PS_SUCCESS : PS_NOMAIL);
-	goto closeUp;
-    }
-    else if (count > 0)
-    {
-	if (queryctl->mda[0] == '\0')
-	    if ((mboxfd = Socket(queryctl->smtphost, SMTP_PORT)) < 0
-		|| SMTP_ok(mboxfd, NULL) != SM_OK
-		|| SMTP_helo(mboxfd, queryctl->servername) != SM_OK 
-                || alarmed)
-	    {
-		ok = PS_SMTP;
-		close(mboxfd);
-		mboxfd = -1;
-		goto cleanUp;
-	    }
-    
-	/* read, forward, and delete messages */
-	for (num = 1; num <= count; num++)
+#ifdef KERBEROS_V4
+	if (queryctl->authenticate == A_KERBEROS)
 	{
-	    int	fetch_it = queryctl->fetchall ||
-		!(protocol->is_old && (protocol->is_old)(socket,queryctl,num));
+	    ok = (kerberos_auth (socket, queryctl->canonical_name));
+	    if (ok != 0)
+		goto cleanUp;
+	}
+#endif /* KERBEROS_V4 */
 
-	    /* we may want to reject this message if it's old */
-	    if (!fetch_it)
-		fprintf(stderr, "skipping message %d ", num);
+	/* accept greeting message from mail server */
+	ok = (protocol->parse_response)(socket, buf);
+	if (ok != 0)
+	    goto cleanUp;
+
+	/* try to get authorized to fetch mail */
+	shroud = queryctl->password;
+	ok = (protocol->getauth)(socket, queryctl, buf);
+	shroud = (char *)NULL;
+	if (ok == PS_ERROR)
+	    ok = PS_AUTHFAIL;
+	if (ok != 0)
+	    goto cleanUp;
+
+	/* compute number of messages and number of new messages waiting */
+	if ((protocol->getrange)(socket, queryctl, &count, &new) != 0)
+	    goto cleanUp;
+
+	/* show user how many messages we downloaded */
+	if (outlevel > O_SILENT && outlevel < O_VERBOSE)
+	    if (count == 0)
+		fprintf(stderr, "No mail from %s@%s\n", 
+			queryctl->remotename,
+			queryctl->servername);
 	    else
 	    {
-		/* request a message */
-		(protocol->fetch)(socket, num, &len);
+		fprintf(stderr, "%d message%s", count, count > 1 ? "s" : ""); 
+		if (new != -1 && (count - new) > 0)
+		    fprintf(stderr, " (%d seen)", count-new);
+		fprintf(stderr,
+			" from %s@%s.\n",
+			queryctl->remotename,
+			queryctl->servername);
+	    }
 
-		if (outlevel > O_SILENT)
+	if (check_only)
+	{
+	    if (new == -1 || queryctl->fetchall)
+		new = count;
+	    ok = ((new > 0) ? PS_SUCCESS : PS_NOMAIL);
+	    goto closeUp;
+	}
+	else if (count > 0)
+	{
+	    if (queryctl->mda[0] == '\0')
+		if ((mboxfd = Socket(queryctl->smtphost, SMTP_PORT)) < 0
+		    || SMTP_ok(mboxfd, NULL) != SM_OK
+		    || SMTP_helo(mboxfd, queryctl->servername) != SM_OK)
 		{
-		    fprintf(stderr, "reading message %d", num);
-		    if (len > 0)
-			fprintf(stderr, " (%d bytes)", len);
-		    if (outlevel == O_VERBOSE)
-			fputc('\n', stderr);
-		    else
-			fputc(' ', stderr);
+		    ok = PS_SMTP;
+		    close(mboxfd);
+		    mboxfd = -1;
+		    goto cleanUp;
+		}
+    
+	    /* read, forward, and delete messages */
+	    for (num = 1; num <= count; num++)
+	    {
+		int	fetch_it = queryctl->fetchall ||
+		    !(protocol->is_old && (protocol->is_old)(socket,queryctl,num));
+
+		/* we may want to reject this message if it's old */
+		if (!fetch_it)
+		    fprintf(stderr, "skipping message %d ", num);
+		else
+		{
+		    /* request a message */
+		    (protocol->fetch)(socket, num, &len);
+
+		    if (outlevel > O_SILENT)
+		    {
+			fprintf(stderr, "reading message %d", num);
+			if (len > 0)
+			    fprintf(stderr, " (%d bytes)", len);
+			if (outlevel == O_VERBOSE)
+			    fputc('\n', stderr);
+			else
+			    fputc(' ', stderr);
+		    }
+
+		    /*
+		     * If we're forwarding via SMTP, mboxfd is initialized
+		     * at this point (it was set at start of retrieval). 
+		     * If we're using an MDA it's not set -- gen_readmsg()
+		     * may have to parse message headers to know what
+		     * delivery addresses should be passed to the MDA
+		     */
+
+		    /* read the message and ship it to the output sink */
+		    ok = gen_readmsg(socket, mboxfd,
+				     len, 
+				     protocol->delimited,
+				     queryctl);
+
+		    /* tell the server we got it OK and resynchronize */
+		    if (protocol->trail)
+			(protocol->trail)(socket, queryctl, num);
+		    if (ok != 0)
+			goto cleanUp;
 		}
 
 		/*
-		 * If we're forwarding via SMTP, mboxfd is initialized
-		 * at this point (it was set at start of retrieval). 
-		 * If we're using an MDA it's not set -- gen_readmsg()
-		 * may have to parse message headers to know what
-		 * delivery addresses should be passed to the MDA
+		 * At this point in flow of control, either we've bombed
+		 * on a protocol error or had delivery refused by the SMTP
+		 * server (unlikely -- I've never seen it) or we've seen
+		 * `accepted for delivery' and the message is shipped.
+		 * It's safe to mark the message seen and delete it on the
+		 * server now.
 		 */
 
-		/* read the message and ship it to the output sink */
-		ok = gen_readmsg(socket, mboxfd,
-				 len, 
-				 protocol->delimited,
-				 queryctl);
+		/* maybe we delete this message now? */
+		if (protocol->delete
+		    && (fetch_it ? !queryctl->keep : queryctl->flush))
+		{
+		    deletions++;
+		    if (outlevel > O_SILENT && outlevel < O_VERBOSE) 
+			fprintf(stderr, " flushed\n", num);
+		    ok = (protocol->delete)(socket, queryctl, num);
+		    if (ok != 0)
+			goto cleanUp;
+		}
+		else if (outlevel > O_SILENT && outlevel < O_VERBOSE) 
+		{
+		    /* nuke it from the unseen-messages list */
+		    delete_uid(&queryctl->newsaved, num);
+		    fprintf(stderr, " not flushed\n", num);
+		}
+	    }
 
-		/* tell the server we got it OK and resynchronize */
-		if (protocol->trail)
-		    (protocol->trail)(socket, queryctl, num);
-		if (alarmed || ok != 0)
+	    /* remove all messages flagged for deletion */
+	    if (protocol->expunge_cmd && deletions > 0)
+	    {
+		ok = gen_transact(socket, protocol->expunge_cmd);
+		if (ok != 0)
 		    goto cleanUp;
 	    }
 
-	    /*
-	     * At this point in flow of control, either we've bombed
-	     * on a protocol error or had delivery refused by the SMTP
-	     * server (unlikely -- I've never seen it) or we've seen
-	     * `accepted for delivery' and the message is shipped.
-	     * It's safe to mark the message seen and delete it on the
-	     * server now.
-	     */
-
-	    /* maybe we delete this message now? */
-	    if (protocol->delete
-		&& (fetch_it ? !queryctl->keep : queryctl->flush))
-	    {
-		deletions++;
-		if (outlevel > O_SILENT && outlevel < O_VERBOSE) 
-		    fprintf(stderr, " flushed\n", num);
-		ok = (protocol->delete)(socket, queryctl, num);
-		if (alarmed || ok != 0)
-		    goto cleanUp;
-	    }
-	    else if (outlevel > O_SILENT && outlevel < O_VERBOSE) 
-	    {
-		/* nuke it from the unseen-messages list */
-		delete_uid(&queryctl->newsaved, num);
-		fprintf(stderr, " not flushed\n", num);
-	    }
+	    ok = gen_transact(socket, protocol->exit_cmd);
+	    if (ok == 0)
+		ok = PS_SUCCESS;
+	    close(socket);
+	    goto closeUp;
+	}
+	else {
+	    ok = gen_transact(socket, protocol->exit_cmd);
+	    if (ok == 0)
+		ok = PS_NOMAIL;
+	    close(socket);
+	    goto closeUp;
 	}
 
-	/* remove all messages flagged for deletion */
-        if (protocol->expunge_cmd && deletions > 0)
+    cleanUp:
+	if (ok != 0 && ok != PS_SOCKET)
 	{
-	    ok = gen_transact(socket, protocol->expunge_cmd);
-	    if (alarmed || ok != 0)
-		goto cleanUp;
-        }
-
-	ok = gen_transact(socket, protocol->exit_cmd);
-	if (alarmed || ok == 0)
-	    ok = PS_SUCCESS;
-	close(socket);
-	goto closeUp;
-    }
-    else {
-	ok = gen_transact(socket, protocol->exit_cmd);
-	if (ok == 0)
-	    ok = PS_NOMAIL;
-	close(socket);
-	goto closeUp;
+	    gen_transact(socket, protocol->exit_cmd);
+	    close(socket);
+	}
     }
 
-cleanUp:
-    if (ok != 0 && ok != PS_SOCKET)
-    {
-	gen_transact(socket, protocol->exit_cmd);
-	close(socket);
-    }
+    alarm(0);
+    signal(SIGALRM, sigsave);
 
 closeUp:
     if (mboxfd != -1)
@@ -937,8 +937,7 @@ closeUp:
 	    SMTP_quit(mboxfd);
 	close(mboxfd);
     }
-    alarm(0);
-    signal(SIGALRM, sigsave);
+
     return(ok);
 }
 
@@ -1052,10 +1051,7 @@ void
 alarm_handler (int signal)
 /* handle server-timeout signal */
 {
-    alarmed = 1;
-    fprintf(stderr,
-	    "fetchmail: timeout after %d seconds waiting for %s.\n",
-	    mytimeout, srvname);
+    longjmp(restart, 1);
 }
 
 /* driver.c ends here */
