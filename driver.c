@@ -621,15 +621,18 @@ struct query *ctl;	/* query control record */
 
 		/*
 		 * We go through this in order to be able to handle very
-		 * long lists of users.
+		 * long lists of users and (re
+)implement %s.
 		 */
 		for (idp = xmit_names; idp; idp = idp->next)
 		    nlocals++;
 		sp = sargv = (char **)alloca(sizeof(char **) * ctl->mda_argcount+nlocals+2);
 		for (i = 0; i < ctl->mda_argcount; i++)
-		    *sp++ = ctl->mda_argv[i];
-		for (idp = xmit_names; idp; idp = idp->next)
-		    *sp++ = idp->id;
+		    if (strcmp("%s", ctl->mda_argv[i]))
+			*sp++ = ctl->mda_argv[i];
+		    else
+			for (idp = xmit_names; idp; idp = idp->next)
+			    *sp++ = idp->id;
 		*sp =  (char *)NULL;
 
 #ifdef HAVE_SETEUID

@@ -1,6 +1,7 @@
 			Release Notes:
 
 pl 1.9.7 ():
+* %s is back.  Seems some popular MDAs actually choke on name arguments.
 * We can handle responses longer than the socket atomic read length now.
 
 pl 1.9.6 (Thu Oct 31 00:07:23 EST 1996):
