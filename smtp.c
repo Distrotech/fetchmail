@@ -104,7 +104,7 @@ static int SMTP_check(int socket,char *argbuf)
   int  ok;  
   char buf[SMTPBUFSIZE];
   
-  if ((ok = SMTP_Gets(socket, buf, sizeof(buf)-1)) > 0) {
+  if ((ok = read(socket, buf, sizeof(buf)-1)) > 0) {
     buf[ok] = '\0';
     if (outlevel == O_VERBOSE)
 	fprintf(stderr, "SMTP< %s", buf);
@@ -147,12 +147,6 @@ int SMTP_ok(int socket,char *argbuf)
                                      /* in bad shape                  */ 
     }
   return ok;
-}
-
-int SMTP_Gets(int socket,char *buf,int sz)
-/* gets a line from the SMTP connection, returns bytes read */
-{
-  return read(socket,buf,sz);
 }
 
 /* smtp.c ends here */
