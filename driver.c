@@ -1164,7 +1164,7 @@ int num;		/* index of message */
 	n = stuffline(ctl, buf);
 	if (n != -1)
 	{
-	    sprintf(buf, "\tby %s (fetchmail-%s %s run by %s)\n",
+	    sprintf(buf, "\tby %s (fetchmail-%s %s run for %s)\n",
 		    fetchmailhost, 
 		    RELEASE_ID,
 		    protocol->name,
@@ -1448,10 +1448,6 @@ const struct method *proto;	/* protocol method table */
     tagnum = 0;
     tag[0] = '\0';	/* nuke any tag hanging out from previous query */
     ok = 0;
-    if (errors_to_syslog)
-	error_init(-1);
-    else
-	error_init(poll_interval == 0 && !logfile);
 
     /* set up the server-nonresponse timeout */
     sigsave = signal(SIGALRM, timeout_handler);

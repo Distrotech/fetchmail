@@ -322,8 +322,13 @@ int main (int argc, char **argv)
      */
 #if defined(HAVE_SYSLOG)
     if (errors_to_syslog)
+    {
     	openlog(program_name, LOG_PID, LOG_MAIL);
+	error_init(-1);
+    }
+    else
 #endif
+	error_init(poll_interval == 0 && !logfile);
 
     if (poll_interval)
     {

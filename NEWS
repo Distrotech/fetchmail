@@ -14,6 +14,9 @@
 ------------------------------------------------------------------------------
 fetchmail-4.3.3 ()
 * Robert Hardy <rhardy@webcon.net>'s patch to use IMAP EXAMINE in check mode. 
+* Accommodate the PMDF IMAP server's pickiness about set syntax.
+
+There are 263 people on fetchmail-friends and 68 on fetchmail-announce.
 
 fetchmail-4.3.2 (Wed Oct 22 20:30:14 EDT 1997)
 * More slow-UIDL patches from Wolfgang Wander.

@@ -470,7 +470,15 @@ static int imap_getsizes(int sock, int count, int *sizes)
 {
     char buf [POPBUFSIZE+1];
 
-    gen_send(sock, "FETCH 1:%d RFC822.SIZE", count);
+    /*
+     * Some servers (as in, PMDF5.1-9.1 under OpenVMS 6.1)
+     * won't accept 1:1 as valid set syntax.  Some implementors
+     * should be taken out and shot for excessive anality.
+     */
+    if (count == 1)
+	gen_send(sock, "FETCH 1 RFC822.SIZE", count);
+    else
+	gen_send(sock, "FETCH 1:%d RFC822.SIZE", count);
     for (;;)
     {
 	int num, size, ok;
