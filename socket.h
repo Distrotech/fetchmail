@@ -8,7 +8,11 @@
 #define SOCKET__
 
 /* Create a new client socket; returns (FILE *)NULL on error */
+#if INET6
+int SockOpen(const char *host, const char *service);
+#else /* INET6 */
 int SockOpen(const char *host, int clientPort);
+#endif /* INET6 */
 
 /* 
 Get a string terminated by an '\n' (matches interface of fgets).

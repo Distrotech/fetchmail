@@ -68,7 +68,7 @@ extern char * yytext;
 %token <sval>  STRING
 %token <number> NUMBER
 %token NO KEEP FLUSH FETCHALL REWRITE FORCECR STRIPCR PASS8BITS DROPSTATUS
-%token DNS PORT UIDL INTERVAL
+%token DNS SERVICE PORT UIDL INTERVAL
 
 %%
 
@@ -126,11 +126,24 @@ serv_option	: AKA alias_list
 		| PROTOCOL KPOP		{
 					    current.server.protocol = P_POP3;
 		    			    current.server.preauthenticate = A_KERBEROS_V4;
+#if INET6
+					    current.server.service = KPOP_PORT;
+#else /* INET6 */
 					    current.server.port = KPOP_PORT;
+#endif /* INET6 */
 					}
 		| UIDL			{current.server.uidl = FLAG_TRUE;}
 		| NO UIDL		{current.server.uidl  = FLAG_FALSE;}
-		| PORT NUMBER		{current.server.port = $2;}
+		| SERVICE STRING	{
+#if INET6
+					current.server.service = $2;
+#endif /* INET6 */
+					}
+		| PORT NUMBER		{
+#if !INET6
+					current.server.port = $2;
+#endif /* !INET6 */
+					}
 		| INTERVAL NUMBER		{current.server.interval = $2;}
 		| AUTHENTICATE PASSWORD	{current.server.preauthenticate = A_PASSWORD;}
 		| AUTHENTICATE KERBEROS4	{current.server.preauthenticate = A_KERBEROS_V4;}
@@ -151,18 +164,18 @@ serv_option	: AKA alias_list
 
 		| QVIRTUAL STRING	{current.server.qvirtual = xstrdup($2);}
 		| INTERFACE STRING	{
-#ifdef linux
+#if defined(linux) && !defined(INET6)
 					interface_parse($2, &current.server);
-#else
+#else /* defined(linux) && !defined(INET6) */
 					fprintf(stderr, "fetchmail: interface option is only supported under Linux\n");
-#endif /* linux */
+#endif /* defined(linux) && !defined(INET6) */
 					}
 		| MONITOR STRING	{
-#ifdef linux
+#if defined(linux) && !defined(INET6)
 					current.server.monitor = xstrdup($2);
-#else
+#else /* defined(linux) && !defined(INET6) */
 					fprintf(stderr, "fetchmail: monitor option is only supported under Linux\n");
-#endif /* linux */
+#endif /* defined(linux) && !defined(INET6) */
 					}
 		| DNS			{current.server.dns = FLAG_TRUE;}
 		| NO DNS		{current.server.dns = FLAG_FALSE;}
@@ -412,7 +425,11 @@ static void record_current(void)
 #define FLAG_FORCE(fld) if (cmd_opts.fld) current.fld = cmd_opts.fld
     FLAG_FORCE(server.via);
     FLAG_FORCE(server.protocol);
+#if INET6
+    FLAG_FORCE(server.service);
+#else /* INET6 */
     FLAG_FORCE(server.port);
+#endif /* INET6 */
     FLAG_FORCE(server.interval);
     FLAG_FORCE(server.preauthenticate);
     FLAG_FORCE(server.timeout);
@@ -471,7 +488,11 @@ void optmerge(struct query *h2, struct query *h1)
 #define FLAG_MERGE(fld) if (!h2->fld) h2->fld = h1->fld
     FLAG_MERGE(server.via);
     FLAG_MERGE(server.protocol);
+#if INET6
+    FLAG_MERGE(server.service);
+#else /* INET6 */
     FLAG_MERGE(server.port);
+#endif /* INET6 */
     FLAG_MERGE(server.interval);
     FLAG_MERGE(server.preauthenticate);
     FLAG_MERGE(server.timeout);

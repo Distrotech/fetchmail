@@ -13,7 +13,11 @@
 #define		P_ETRN		8
 #define		P_IMAP_GSS	9
 
+#if INET6
+#define		KPOP_PORT	"kpop"
+#else /* INET6 */
 #define		KPOP_PORT	1109
+#endif /* INET6 */
 
 /* preauthentication types */
 #define		A_PASSWORD	0	/* password or inline authentication */
@@ -93,7 +97,11 @@ struct hostdata		/* shared among all user connections to given server */
     struct idlist *akalist;		/* server name first, then akas */
     struct idlist *localdomains;	/* list of pass-through domains */
     int protocol;			/* protocol type */
+#if INET6
+    char *service;
+#else /* INET6 */
     int port;				/* TCP/IP service port number */
+#endif /* INET6 */
     int interval;			/* # cycles to skip between polls */
     int preauthenticate;		/* preauthentication mode to try */
     int timeout;			/* inactivity timout in seconds */
@@ -181,7 +189,11 @@ struct query
 struct method
 {
     char *name;			/* protocol name */
+#if INET6
+    char *service;
+#else /* INET6 */
     int	port;			/* service port */
+#endif /* INET6 */
     flag tagged;		/* if true, generate & expect command tags */
     flag delimited;		/* if true, accept "." message delimiter */
     int (*parse_response)();	/* response_parsing function */
@@ -242,6 +254,11 @@ extern char *user;		/* name of invoking user */
 extern char *home;		/* home directory of invoking user */
 extern char *fetchmailhost;	/* the name of the host running fetchmail */
 extern int pass;		/* number of re-polling pass */
+
+#if NETSEC
+extern void *request;
+extern int requestlen;
+#endif /* NETSEC */
 
 /* prototypes for globally callable functions */
 

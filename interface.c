@@ -11,7 +11,7 @@
  * Software Foundation; version 2, or (at your option) any later version.
  */
 
-#ifdef linux
+#if defined(linux) && !defined(INET6)
 
 #include "config.h"
 #include <stdio.h>
@@ -253,4 +253,4 @@ int interface_approve(struct hostdata *hp)
 
 	return(TRUE);
 }
-#endif /* linux */
+#endif /* defined(linux) && !defined(INET6) */

@@ -75,7 +75,11 @@
 #define SIGCHLD	SIGCLD
 #endif
 
+#if INET6
+#define	SMTP_PORT	"smtp"	/* standard SMTP service port */
+#else /* INET6 */
 #define	SMTP_PORT	25	/* standard SMTP service port */
+#endif /* INET6 */
 
 #ifndef strstr		/* glibc-2.1 declares this as a macro */
 extern char *strstr();	/* needed on sysV68 R3V7.1. */
@@ -1639,7 +1643,11 @@ const struct method *proto;	/* protocol method table */
     {
 	char buf [POPBUFSIZE+1], *realhost;
 	int *msgsizes, len, num, count, new, deletions = 0;
+#if INET6
+	int fetches, dispatches;
+#else /* INET6 */
 	int port, fetches, dispatches;
+#endif /* INET6 */
 	struct idlist *idp;
 
 	/* execute pre-initialization command, if any */
@@ -1652,10 +1660,17 @@ const struct method *proto;	/* protocol method table */
 	}
 
 	/* open a socket to the mail server */
+#if !INET6
 	port = ctl->server.port ? ctl->server.port : protocol->port;
+#endif /* !INET6 */
 	realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;
+#if INET6
+	if ((sock = SockOpen(realhost, ctl->server.service ? ctl->server.service : protocol->service)) == -1)
+#else /* INET6 */
 	if ((sock = SockOpen(realhost, port)) == -1)
+#endif /* INET6 */
 	{
+#if !INET6
 #ifndef EHOSTUNREACH
 #define EHOSTUNREACH (-1)
 #endif
@@ -1678,6 +1693,7 @@ const struct method *proto;	/* protocol method table */
 #endif /* HAVE_RES_SEARCH */
 		    error_complete(0, errno, "local error");
 	    }
+#endif /* INET6 */
 	    ok = PS_SOCKET;
 	    goto closeUp;
 	}

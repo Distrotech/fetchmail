@@ -8,6 +8,7 @@
 * Allow -c -F to work to flush messages without retrieval.
 * Read from /etc/fetchmailrc before ~/.fetchmailrc?
 * Do is_host_alias checks by comparing IP addresses rather than names?
+* Make the antispam response configurable.
 
 				Other TO-DO items:
 

@@ -102,10 +102,10 @@ static const struct option longoptions[] = {
   {"expunge",   required_argument, (int *) 0, LA_EXPUNGE     },
   {"mda",	required_argument, (int *) 0, LA_MDA         },
 
-#ifdef	linux
+#if defined(linux) && !INET6
   {"interface",	required_argument, (int *) 0, LA_INTERFACE   },
   {"monitor",	required_argument, (int *) 0, LA_MONITOR     },
-#endif
+#endif /* defined(linux) && !INET6 */
 
   {"yydebug",	no_argument,	   (int *) 0, LA_YYDEBUG     },
 
@@ -201,7 +201,11 @@ struct query *ctl;	/* option record to be initialized */
 	    else if (strcasecmp(optarg,"kpop") == 0)
 	    {
 		ctl->server.protocol = P_POP3;
+#if INET6
+		ctl->server.service = KPOP_PORT;
+#else /* INET6 */
 		ctl->server.port = KPOP_PORT;
+#endif /* INET6 */
 		ctl->server.preauthenticate =  A_KERBEROS_V4;
 	    }
 	    else if (strcasecmp(optarg,"imap") == 0)
@@ -223,7 +227,11 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'P':
 	case LA_PORT:
+#if INET6
+	    ctl->server.service = optarg;
+#else /* INET6 */
 	    ctl->server.port = atoi(optarg);
+#endif /* INET6 */
 	    break;
 	case 'A':
 	case LA_AUTHENTICATE:
@@ -292,6 +300,13 @@ struct query *ctl;	/* option record to be initialized */
 		((cp = strtok((char *)NULL, ",")));
 	    break;
 	case 'S':
+#if NETSEC
+	    if (net_security_strtorequest(optarg, request, &requestlen)) {
+	      fprintf(stderr, "fetchmail: net_security_strtorequest(%s, ...) failed!\n", optarg);
+	      errflag++;
+	    };
+	    break;
+#endif /* NETSEC */
 	case LA_SMTPHOST:
 	    strcpy(buf, optarg);
 	    cp = strtok(buf, ",");
@@ -326,7 +341,7 @@ struct query *ctl;	/* option record to be initialized */
 	    ocount++;
 	    break;
 
-#ifdef	linux
+#if defined(linux) && !INET6
 	case 'I':
 	case LA_INTERFACE:
 	    interface_parse(optarg, &ctl->server);
@@ -335,7 +350,7 @@ struct query *ctl;	/* option record to be initialized */
 	case LA_MONITOR:
 	    ctl->server.monitor = xstrdup(optarg);
 	    break;
-#endif
+#endif /* defined(linux) && !INET6 */
 
 	case 'y':
 	case LA_YYDEBUG:
@@ -371,7 +386,7 @@ struct query *ctl;	/* option record to be initialized */
 	fputs("      --invisible   suppress Received line & enable host spoofing\n", stderr);
 	fputs("  -f, --fetchmailrc specify alternate run control file\n", stderr);
 	fputs("  -i, --idfile      specify alternate UIDs file\n", stderr);
-#ifdef	linux
+#if defined(linux) && !INET6
 	fputs("  -I, --interface   interface required specification\n",stderr);
 	fputs("  -M, --monitor     monitor interface for activity\n",stderr);
 #endif
@@ -396,7 +411,12 @@ struct query *ctl;	/* option record to be initialized */
 	fputs("  -n, --norewrite   don't rewrite header addresses\n", stderr);
 	fputs("  -l, --limit       don't fetch messages over given size\n", stderr);
 
+#if NETSEC
+	fputs("  -S                set security request\n", stderr);
+	fputs("      --smtphost    set SMTP forwarding host\n", stderr);
+#else /* NETSEC */
 	fputs("  -S, --smtphost    set SMTP forwarding host\n", stderr);
+#endif /* NETSEC */
 	fputs("  -D, --smtpaddress set SMTP delivery domain to use\n", stderr);
 	fputs("  -b, --batchlimit  set batch limit for SMTP connections\n", stderr);
 	fputs("  -B, --fetchlimit  set fetch limit for server connections\n", stderr);

@@ -28,6 +28,40 @@
 #endif
 #include "socket.h"
 
+#if NETSEC
+#if MAIN
+void *request = NULL;
+int requestlen = 0;
+#else /* MAIN */
+extern void *request;
+extern int requestlen;
+#endif /* MAIN */
+#endif /* NETSEC */
+
+#if INET6
+int SockOpen(const char *host, const char *service)
+{
+  int i;
+  struct addrinfo *ai, req;
+
+  memset(&req, 0, sizeof(struct addrinfo));
+  req.ai_socktype = SOCK_STREAM;
+
+  if (i = getaddrinfo(host, service, &req, &ai)) {
+    fprintf(stderr, "fetchmail: getaddrinfo(%s.%s): %s(%d)\n", host, service, gai_strerror(i), i);
+    return -1;
+  };
+
+#if NETSEC
+  i = inner_connect(ai, request, requestlen, NULL, NULL, "fetchmail", NULL);
+#else /* NETSEC */
+  i = inner_connect(ai, NULL, 0, NULL, NULL, "fetchmail", NULL);
+#endif /* NETSEC */
+  freeaddrinfo(ai);
+
+  return i;
+};
+#else /* INET6 */
 #ifndef INET_ATON
 #ifndef  INADDR_NONE
 #ifdef   INADDR_BROADCAST
@@ -84,6 +118,7 @@ int SockOpen(const char *host, int clientPort)
 
     return(sock);
 }
+#endif /* INET6 */
 
 
 #if defined(HAVE_STDARG_H)

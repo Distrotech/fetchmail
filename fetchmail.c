@@ -72,6 +72,11 @@ char *home;
 char *fetchmailhost;	/* the name of the host running fetchmail */
 char *program_name;	/* the name to prefix error messages with */
 
+#if NETSEC
+void *request = NULL;
+int requestlen = 0;
+#endif /* NETSEC */
+
 static char *lockfile;		/* name of lockfile */
 static int querystatus;		/* status of query */
 static int successes;		/* count number of successful polls */
@@ -135,6 +140,15 @@ int main (int argc, char **argv)
 #ifndef ETRN_ENABLE
 	printf("-ETRN");
 #endif /* ETRN_ENABLE */
+#if OPIE
+	printf("+OPIE");
+#endif /* OPIE */
+#if INET6
+	printf("+INET6");
+#endif /* INET6 */
+#if NETSEC
+	printf("+NETSEC");
+#endif /* NETSEC */
 	putchar('\n');
 
 	/* this is an attempt to help remote debugging */
@@ -410,11 +424,11 @@ int main (int argc, char **argv)
 		    }
 		}
 
-#ifdef linux
+#if defined(linux) && !INET6
 		/* interface_approve() does its own error logging */
 		if (!interface_approve(&ctl->server))
 		    continue;
-#endif /* linux */
+#endif /* defined(linux) && !INET6 */
 
 #ifdef HAVE_GETHOSTBYNAME
 		/*
@@ -462,7 +476,7 @@ int main (int argc, char **argv)
 		      update_str_lists(ctl);
 #endif  /* POP3_ENABLE */
 		}
-#ifdef	linux
+#if defined(linux) && !INET6
 		if (ctl->server.monitor)
 		    {
 			/* Allow some time for the link to quiesce.  One
@@ -472,7 +486,7 @@ int main (int argc, char **argv)
 			sleep(3);
 			interface_note_activity(&ctl->server);
 		    }
-#endif
+#endif /* defined(linux) && !INET6 */
 	    }
 	}
 
@@ -718,6 +732,7 @@ static int load_params(int argc, char **argv, int optind)
 	    if (ctl->server.timeout == -1)	
 		ctl->server.timeout = CLIENT_TIMEOUT;
 
+#if !INET6
 	    /* sanity checks */
 	    if (ctl->server.port < 0)
 	    {
@@ -733,6 +748,7 @@ static int load_params(int argc, char **argv, int optind)
 			       ctl->server.pollname);
 		exit(PS_SYNTAX);
 	    }
+#endif /* !INET6 */
 	}
     }
 
@@ -923,13 +939,22 @@ void dump_params (struct query *ctl)
         else
 	    printf("  Password = '%s'.\n", visbuf(ctl->password));
     if (ctl->server.protocol == P_POP3 
+#if INET6
+		&& !strcmp(ctl->server.service, KPOP_PORT)
+#else /* INET6 */
 		&& ctl->server.port == KPOP_PORT
+#endif /* INET6 */
 		&& ctl->server.preauthenticate == A_KERBEROS_V4)
 	printf("  Protocol is KPOP");
     else
 	printf("  Protocol is %s", showproto(ctl->server.protocol));
+#if INET6
+    if (ctl->server.service)
+	printf(" (using service %s)", ctl->server.service);
+#else /* INET6 */
     if (ctl->server.port)
 	printf(" (using port %d)", ctl->server.port);
+#endif /* INET6 */
     else if (outlevel == O_VERBOSE)
 	printf(" (using default port)");
     if (ctl->server.uidl)
