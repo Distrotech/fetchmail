@@ -211,7 +211,7 @@ void interface_note_activity(struct hostdata *hp)
 		   count has now changed and they need to be re-updated)
 		*/
 		for (ctl = querylist; ctl; ctl = ctl->next) {
-			if (!strcmp(hp->monitor, ctl->server.monitor))
+			if (ctl->server.monitor && !strcmp(hp->monitor, ctl->server.monitor))
 				ctl->server.monitor_io =
 					ifinfo.rx_packets + ifinfo.tx_packets;
 			/* do NOT update host entries following this one */
