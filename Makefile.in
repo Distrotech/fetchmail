@@ -174,7 +174,7 @@ install:
 	cd $(DESTDIR)$(mandir) && ln -s fetchmail.$(manext) fetchmailconf.$(manext)
 	@echo "Installing language catalogs..."
 	-cd intl; $(MAKE) install
-	cd po; $(MAKE) update-po install
+	cd po; $(MAKE) install
 
 uninstall:
 	rm -f $(DESTDIR)$(bindir)/fetchmail $(DESTDIR)$(bindir)/fetchmailconf
@@ -312,7 +312,7 @@ dist: distclean MANIFEST Makefile.in distdocs
 	make fetchmail-$(VERSION).tar.gz 
 	lsmgen.sh $(VERSION) `wc -c fetchmail-$(VERSION).tar.gz` >fetchmail.lsm
 	make fetchmail-$(VERSION).tar.gz
-	-cd po; make update-po
+	#-cd po; make update-po
 	ls -l fetchmail-$(VERSION).tar.gz
 	@echo "Don't forget to build RPMs from root!"
 
