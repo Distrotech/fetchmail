@@ -355,6 +355,7 @@ static void prc_register(void)
     FLAG_FORCE(flush);
     FLAG_FORCE(fetchall);
     FLAG_FORCE(no_rewrite);
+    FLAG_FORCE(stripcr);
     FLAG_FORCE(limit);
     FLAG_FORCE(fetchlimit);
     FLAG_FORCE(batchlimit);
@@ -396,6 +397,7 @@ void optmerge(struct query *h2, struct query *h1)
     FLAG_MERGE(flush);
     FLAG_MERGE(fetchall);
     FLAG_MERGE(no_rewrite);
+    FLAG_MERGE(stripcr);
     FLAG_MERGE(limit);
     FLAG_MERGE(fetchlimit);
     FLAG_MERGE(batchlimit);

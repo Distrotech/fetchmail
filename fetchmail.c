@@ -632,7 +632,7 @@ static int load_params(int argc, char **argv, int optind)
 
 	    /* if stripcr hasn't been set, default it asccording to MDA */
 	    if (ctl->stripcr == -1)
-		ctl->stripcr = !ctl->mda;
+		ctl->stripcr = (ctl->mda != (char *)NULL); 
 
 	    /* plug in the semi-standard way of indicating a mail address */
 	    if (ctl->server.envelope == (char *)NULL)

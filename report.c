@@ -436,10 +436,7 @@ error_complete (status, errnum, message, va_alist)
 	      exit(status);
       }
       else
-	  if (partial_message_size_used != 0)
-	      error (status, errnum, "%s", partial_message);
-	  else
-	      error (status, errnum, "");
+	  error (status, errnum, "%s", partial_message);
     }
 }
 

@@ -1,6 +1,12 @@
 			Release Notes:
 
 ------------------------------------------------------------------------------
+
+pl 3.3.1 (Sun Feb  2 02:17:07 EST 1997):
+* Fix incorrect stripcr processing
+* Unapply a patch that broke error logging to files.
+
+------------------------------------------------------------------------------\
 fetchmail-3.3 (Sat Feb  1 15:15:13 EST 1997)
 
 features --
