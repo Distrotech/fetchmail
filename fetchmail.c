@@ -696,8 +696,8 @@ static int load_params(int argc, char **argv, int optind)
 	     * we'll do that with the optmerge call later on.
 	     */
 	    ctl = hostalloc((struct query *)NULL);
-
-	    ctl->server.pollname = xstrdup(argv[optind]);
+	    ctl->server.via =
+		ctl->server.pollname = xstrdup(argv[optind]);
 
 	foundit:
 	    ctl->active = TRUE;
