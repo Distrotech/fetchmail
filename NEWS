@@ -15,6 +15,7 @@ fetchmail-5.1.0 ():
 * There is now a documented return code 13 for termination on fetchlimit.
 * Added qpopper 2.53 warning to the FAQ and fetchmailconf.
 * Fix fetchmailconf to handle window-manager destroy notifications.
+* Todd <tastas@home.com> Sabin's RFC2195 support for AUTH=CRAM-MD5 under IMAP.
 
 There are 260 people on fetchmail-friends and 387 on fetchmail-announce.
 
