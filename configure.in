@@ -243,7 +243,7 @@ case "$enable_fallback" in
 				AC_ERROR([Sendmail selected as fallback, but not found])
 				#not reached
 			fi
-			AC_DEFINE_UNQUOTED(FALLBACK_MDA, "$sendmail %T")
+			AC_DEFINE_UNQUOTED(FALLBACK_MDA, "$sendmail -i %T")
 			echo "Will use $sendmail as fallback MDA."
 			;;
 	procmail)	if test -z "$procmail" ; then
@@ -262,13 +262,12 @@ case "$enable_fallback" in
 			;;
 	no|unset)	echo "Will not use a fallback MDA"
 			;;
-	auto|yes|set)	if test -n "$procmail" ; then
-				AC_DEFINE_UNQUOTED(FALLBACK_MDA,"$procmail -d %T")
-				echo "Will use $procmail as fallback MDA."
-			elif test -n "$sendmail" ; then
-				AC_DEFINE_UNQUOTED(FALLBACK_MDA,"$sendmail %T")
+	auto|yes|set)	if test -n "$sendmail" ; then
+				AC_DEFINE_UNQUOTED(FALLBACK_MDA,"$sendmail -i %T")
 				echo "Will use $sendmail as fallback MDA."
-			else	echo "No fallback MDA available."
+			else
+				echo "No fallback MDA available. procmail and maildrop are not eligible"
+				echo "for automatic fallback MDA configuration for reliability reasons."
 			fi
 			;;
 	*)		AC_ERROR([unkown value for --enable-fallback given: $enable_fallback])

@@ -223,6 +223,13 @@ int main(int argc, char **argv)
 	printf("+NLS");
 #endif /* ENABLE_NLS */
 	putchar('\n');
+	fputs("Fallback MDA: ", stdout);
+#ifdef FALLBACK_MDA
+	fputs(FALLBACK_MDA, stdout);
+#else
+	fputs("(none)", stdout);
+#endif
+	putchar('\n');
 	fflush(stdout);
 
 	/* this is an attempt to help remote debugging */
