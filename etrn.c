@@ -53,11 +53,11 @@ static int etrn_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
     switch(atoi(buf))
     {
     case 250:	/* OK, queuing for node <x> started */
-	error(0, 0, "Queuing for %s started", ctl->server.names->id);
+	error(0, 0, "Queuing for %s started", ctl->smtphost);
 	break;
 
     case 251:	/* OK, no messages waiting for node <x> */
-	error(0, 0, "No messages waiting for %s", ctl->server.names->id);
+	error(0, 0, "No messages waiting for %s", ctl->smtphost);
 	return(PS_NOMAIL);
 
     case 252:	/* OK, pending messages for node <x> started */
@@ -66,12 +66,11 @@ static int etrn_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
 	break;
 
     case 458:	/* Unable to queue messages for node <x> */
-	error(0, 0, "Unable to queue messages for node %s",
-	      ctl->server.names->id);
+	error(0, 0, "Unable to queue messages for node %s", ctl->smtphost);
 	return(PS_PROTOCOL);
 
     case 459:	/* Node <x> not allowed: <reason> */
-	error(0, 0, "Node %s not allowed: %s", ctl->server.names->id, buf);
+	error(0, 0, "Node %s not allowed: %s", ctl->smtphost, buf);
 	return(PS_AUTHFAIL);
 
     case 500:	/* Syntax Error */
