@@ -114,6 +114,9 @@ unlink("DIFFS.$$");
 print "Building index page...\n";
 system("rm -f index.html; indexgen.sh");
 
+print "Building test server list...\n";
+system("rm -f testservers.html; testservers-gen.sh >testservers.html");
+
 print "Making activity graph...";
 growthplot;
 
