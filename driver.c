@@ -473,7 +473,7 @@ struct query *ctl;
     /* if no socket to this host is already set up, try to open one */
     if (ctl->smtp_sockfp == (FILE *)NULL)
     {
-	if ((ctl->smtp_sockfp = fdopen(Socket(ctl->smtphost, SMTP_PORT), "r+")) == (FILE *)NULL)
+	if ((ctl->smtp_sockfp = Socket(ctl->smtphost, SMTP_PORT)) == (FILE *)NULL)
 	    return((FILE *)NULL);
 	else if (SMTP_ok(ctl->smtp_sockfp, NULL) != SM_OK
 		 || SMTP_helo(ctl->smtp_sockfp, ctl->servername) != SM_OK)
@@ -854,11 +854,11 @@ const struct method *proto;	/* protocol method table */
     else
     {
 	char buf [POPBUFSIZE+1];
-	int *msgsizes, socket, len, num, count, new, deletions = 0;
+	int *msgsizes, len, num, count, new, deletions = 0;
 	FILE *sockfp;
 
 	/* open a socket to the mail server */
-	if ((socket = Socket(ctl->servername,
+	if ((sockfp = Socket(ctl->servername,
 			     ctl->port ? ctl->port : protocol->port))<0)
 	{
 	    perror("fetchmail, connecting to host");
@@ -866,12 +866,10 @@ const struct method *proto;	/* protocol method table */
 	    goto closeUp;
 	}
 
-	sockfp = fdopen(socket, "r+");
-
 #ifdef KERBEROS_V4
 	if (ctl->authenticate == A_KERBEROS)
 	{
-	    ok = (kerberos_auth (socket, ctl->canonical_name));
+	    ok = (kerberos_auth (fileno(sockfp), ctl->canonical_name));
 	    vtalarm(ctl->timeout);
  	    if (ok != 0)
 		goto cleanUp;

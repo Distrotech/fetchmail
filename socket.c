@@ -4,11 +4,8 @@
  * These were designed and coded by Carl Harris <ceharris@mal.com>
  * and are essentially unchanged from the ancestral popclient.
  *
- * Actually, this library shouldn't exist.  We ought to be using
- * stdio to buffer the socket descriptors.  If that worked, we
- * could have separate buffers for the mailserver and SMTP sockets,
- * and we'd be able to handle responses longer than the socket
- * atomic read size.
+ * The file pointer arguments are currently misleading -- there
+ * is only one shared internal buffer for all sockets.
  *
  * For license terms, see the file COPYING in this directory.
  */
@@ -45,7 +42,7 @@
 
 #define  INTERNAL_BUFSIZE	2048
 
-int Socket(host, clientPort)
+FILE *Socket(host, clientPort)
 char *host;
 int clientPort;
 {
@@ -64,17 +61,17 @@ int clientPort;
     {
         hp = gethostbyname(host);
         if (hp == NULL)
-            return -1;
+            return (FILE *)NULL;
         memcpy(&ad.sin_addr, hp->h_addr, hp->h_length);
     }
     ad.sin_port = htons(clientPort);
     
     sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0)
-        return sock;
+        return (FILE *)NULL;
     if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) < 0)
-        return -1;
-    return sock;
+        return (FILE *)NULL;
+    return fdopen(sock, "r+");
 }
 
 int SockPuts(buf, sockfp)
