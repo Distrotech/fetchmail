@@ -212,6 +212,13 @@ AC_DEFINE_UNQUOTED(PID_DIR, "$dir")
 # it won't try delivering through local SMTP and cause a mail loop.
 # Sendmail without the -t option to use the message headers will work too,
 # not just for sendmail itself but for workalikes like exim.
+#
+# Note: it would be a very bad idea to use any MDA that doesn't return
+# a refuse-to-deliver status on disk- or process-table-full
+# conditions; mail could get lost that way.  Both procmail and
+# sendmail (and all of the MDAs like exim that might be lurking under
+# a sendmail alias) do the right thing in this circumstance.
+#
 AC_PATH_PROG(procmail, procmail, "", $PATH:/usr/sbin)
 if test "$procmail"
 then
