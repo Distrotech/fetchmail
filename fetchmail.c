@@ -7,6 +7,7 @@
 #include <config.h>
 
 #include <stdio.h>
+#include <ctype.h>
 #if defined(STDC_HEADERS)
 #include <stdlib.h>
 #endif
@@ -17,12 +18,16 @@
 #include <signal.h>
 #include <pwd.h>
 #include <sys/time.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/wait.h>
 
 #ifdef HAVE_GETHOSTBYNAME
 #include <netdb.h>
 #endif /* HAVE_GETHOSTBYNAME */
 
 #include "fetchmail.h"
+#include "smtp.h"
 #include "getopt.h"
 
 #define DROPDEAD	6	/* maximum bad socket opens */
