@@ -48,6 +48,7 @@ AC_CHECK_HEADERS(arpa/inet.h arpa/nameser.h resolv.h net/socket.h sys/select.h)
 
 AC_C_CONST			dnl getopt needs this.
 
+dnl do NOT use AM_PROG_LEX, builds without LEX are not supported properly
 AC_PROG_LEX
 AC_PROG_MAKE_SET
 AC_PROG_YACC
