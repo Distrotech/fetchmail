@@ -402,7 +402,7 @@ struct hostrec *queryctl;	/* query control record */
 		 * Since we're really only fetching mail for one user
 		 * per host query, we can be simpler
 		 */
-		if (SMTP_rcpt(mboxfd, queryctl->localname) == SM_UNRECOVERABLE)
+		if (SMTP_rcpt(mboxfd, queryctl->localname) != SM_OK)
 		    return(PS_SMTP);
 #endif /* SMTP_RESEND */
 		SMTP_data(mboxfd);
