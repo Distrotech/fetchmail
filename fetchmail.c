@@ -1252,6 +1252,12 @@ static int load_params(int argc, char **argv, int optind)
 #endif /* HAVE_GETHOSTBYNAME */
 		}
 	    }
+	    else
+		/*
+		 * This is a kluge.  It enables users to edit their
+		 * configurations when DNS isn't available.
+		 */
+		ctl->server.truename = xstrdup(ctl->server.queryname);
 
 	    /* if no folders were specified, set up the null one as default */
 	    if (!ctl->mailboxes)
