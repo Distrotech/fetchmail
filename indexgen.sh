@@ -326,7 +326,7 @@ that assists you in installing sendmail and fetchmail together/
 href="http://www.hawkins.emu.id.au/gotmail/">gotmail</a>
 that can retrieve Hotmail. 
 
-<P>A hacker identifying himself simply as `Steines' has written a
+<P>A hacker identifying himself simply as \`Steines' has written a
 filter which rewrites the to-line with a line which only includes
 receipients for a given domain and renames the old to-line. It also
 rewrites the domainpart of addresses if the offical domain is
