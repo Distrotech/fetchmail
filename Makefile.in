@@ -49,7 +49,7 @@ extras = @LIBOBJS@
 
 # Extra sources/objects for library functions not provided on the host system.
 EXTRASRC = @EXTRASRC@
-# EXTRASRC = $(srcdir)/strcasecmp.c $(srcdir)/getopt.c $(srcdir)/getopt1.c $(srcdir)/alloca.c	# QNX
+# EXTRASRC = $(srcdir)/strcasecmp.c $(srcdir)/alloca.c	# QNX
 EXTRAOBJ = @EXTRAOBJ@ @INTLOBJS@
 # EXTRAOBJ = strcasecmp.o getopt.o getopt1.o alloca.o
 
