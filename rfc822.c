@@ -129,15 +129,30 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 
     for (; *hp; hp++)
     {
-	switch (state)
+#ifdef TESTMAIN
+	printf("state %d: %s", state, hdr);
+	printf("%*s^\n", hp - hdr + 10, " ");
+#endif /* TESTMAIN */
+
+	if (state == ENDIT_ALL)		/* after last address */
+	    return(NULL);
+	else if (HEADER_END(hp))
+	{
+	    state = ENDIT_ALL;
+	    while (isspace(*--tp))
+		continue;
+	    *++tp = '\0';
+	    return(tp > address ? (tp = address) : (char *)NULL);
+	}
+	else if (*hp == '\\')		/* handle RFC822 escaping */
+	{
+	    *tp++ = *hp++;			/* take the escape */
+	    *tp++ = *hp;			/* take following char */
+	}
+	else switch (state)
 	{
 	case START_HDR:   /* before header colon */
-	    if (HEADER_END(hp))
-	    {
-		state = ENDIT_ALL;
-		return(NULL);
-	    }
-	    else if (*hp == ':')
+	    if (*hp == ':')
 	    {
 		state = SKIP_JUNK;
 		tp = address;
@@ -145,17 +160,7 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	    break;
 
 	case SKIP_JUNK:		/* looking for address start */
-	    if (HEADER_END(hp))		/* no more addresses */
-	    {
-		state = ENDIT_ALL;
-		return(NULL);
-	    }
-	    else if (*hp == '\\')	/* handle RFC822 escaping */
-	    {
-	        *tp++ = *hp++;			/* take the escape */
-	        *tp++ = *hp;			/* take following char */
-	    }
-	    else if (*hp == '"')	/* quoted string */
+	    if (*hp == '"')	/* quoted string */
 	    {
 		oldstate = SKIP_JUNK;
 	        state = INSIDE_DQUOTE;
@@ -179,23 +184,7 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	    break;
 
 	case BARE_ADDRESS:   	/* collecting address without delimiters */
-	    if (HEADER_END(hp))		/* end of bare address */
-	    {
-		if (tp > address)
-		{
-		    while (isspace(*--tp))
-			continue;
-		    *++tp = '\0';
-		    state = ENDIT_ALL;
-		    return(tp = address);
-		}
-	    }
-	    else if (*hp == '\\')	/* handle RFC822 escaping */
-	    {
-	        *tp++ = *hp++;			/* take the escape */
-	        *tp++ = *hp;			/* take following char */
-	    }
-	    else if (*hp == ',')  	/* end of address */
+	    if (*hp == ',')  	/* end of address */
 	    {
 		if (tp > address)
 		{
@@ -204,27 +193,22 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 		    return(tp = address);
 		}
 	    }
+	    else if (*hp == '(')  	/* beginning of comment */
+	    {
+		parendepth = 1;
+		state = INSIDE_PARENS;    
+	    }
 	    else if (*hp == '<')  	/* beginning of real address */
 	    {
 		state = INSIDE_BRACKETS;
 		tp = address;
 	    }
-	    else   		/* just take it */
+	    else if (!isspace(*hp)) 	/* just take it, ignoring whitespace */
 		*tp++ = *hp;
 	    break;
 
 	case INSIDE_DQUOTE:	/* we're in a quoted string, copy verbatim */
-	    if (HEADER_END(hp))		/* premature end of string */
-	    {
-		state = ENDIT_ALL;
-		return(NULL);
-	    }
-	    else if (*hp == '\\')	/* handle RFC822 escaping */
-	    {
-	        *tp++ = *hp++;			/* take the escape */
-	        *tp++ = *hp;			/* take following char */
-	    }
-	    else if (*hp != '"')
+	    if (*hp != '"')
 	        *tp++ = *hp;
 	    else
 	    {
@@ -234,17 +218,7 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	    break;
 
 	case INSIDE_PARENS:	/* we're in a parenthesized comment, ignore */
-	    if (HEADER_END(hp))		/* end of line, just bomb out */
-	    {
-		state = ENDIT_ALL;
-		return(NULL);
-	    }
-	    else if (*hp == '\\')	/* handle RFC822 escaping */
-	    {
-	        *tp++ = *hp++;			/* take the escape */
-	        *tp++ = *hp;			/* take following char */
-	    }
-	    else if (*hp == '(')
+	    if (*hp == '(')
 		++parendepth;
 	    else if (*hp == ')')
 		--parendepth;
@@ -253,17 +227,7 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	    break;
 
 	case INSIDE_BRACKETS:	/* possible <>-enclosed address */
-	    if (HEADER_END(hp))		/* end of line, just bomb out */
-	    {
-		state = ENDIT_ALL;
-		return(NULL);
-	    }
-	    else if (*hp == '\\')	/* handle RFC822 escaping */
-	    {
-	        *tp++ = *hp++;			/* take the escape */
-	        *tp++ = *hp;			/* take following char */
-	    }
-	    else if (*hp == '>')	/* end of address */
+	    if (*hp == '>')	/* end of address */
 	    {
 		*tp++ = '\0';
 		state = SKIP_JUNK;
@@ -280,10 +244,6 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	    }
 	    else			/* just copy address */
 		*tp++ = *hp;
-	    break;
-
-	case ENDIT_ALL:		/* after last address */
-	    return(NULL);
 	    break;
 	}
     }
@@ -316,7 +276,7 @@ main(int argc, char *argv[])
 	    else
 		if ((cp = nxtaddr(buf)) != (char *)NULL)
 		    do {
-			printf("\t%s\n", cp);
+			printf("\t\"%s\"\n", cp);
 		    } while
 			((cp = nxtaddr((char *)NULL)) != (char *)NULL);
 	}
