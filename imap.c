@@ -1297,7 +1297,7 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
      * The server is InterChange, and the fool who implemented this
      * misfeature ought to be strung up by his thumbs.  
      *
-     * When I tried working around this by disable use of the 4rev1 form,
+     * When I tried working around this by disabling use of the 4rev1 form,
      * I found that doing this breaks operation with M$ Exchange.
      * Annoyingly enough, Exchange's refusal to cope is technically legal
      * under RFC2062.  Trust Microsoft, the Great Enemy of interoperability
