@@ -374,7 +374,7 @@ or
 option allows you to redirect status messages emitted while in daemon
 mode into a specified logfile (follow the option with the logfile name).
 This is primarily useful for debugging configurations.
-.SH THE FETCHRC FILE
+.SH THE RUN CONTROL FILE
 The preferred way to set up fetchmail (and the only way if you want to
 specify a password) is to write a .fetchrc file in your home directory.
 To protect the security of your passwords, your ~/.fetchrc may not have
@@ -404,11 +404,26 @@ Legal keywords are:
     flush
     fetchall
     rewrite
+    explicit
     nokeep
     noflush
     nofetchall
     norewrite
+    noexplicit
     port
+.PP
+All these correspond to the obvuious command-line arguments except
+two: \fBpassword\fR and \fBexplicit\fR.
+.PP
+The \fBpassword\fR option requires a string argument, which is the password
+to be used with the entry's server.
+.PP
+The \fBexplicit\fR option tells
+.I fetchmail 
+not to query this host unless it is explicitly named on the command
+line.  A host entry with this flag will be skipped when
+.I fetchmail
+called with no arguments steps through all hosts in the run control file.
 .PP
 Legal protocol identifiers are
 

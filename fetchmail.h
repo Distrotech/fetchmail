@@ -70,6 +70,7 @@ struct hostrec
   int fetchall;
   int flush;
   int norewrite;
+  int explicit;
   int port;
 
   /* state used for tracking UIDL ids */
@@ -79,8 +80,8 @@ struct hostrec
   int output;
   struct hostrec *next;
 
-#if defined(HAVE_APOP_SUPPORT)
   /* internal use only */ 
+#if defined(HAVE_APOP_SUPPORT)
   char digest [DIGESTLEN];
 #endif
 };

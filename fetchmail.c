@@ -118,7 +118,7 @@ char **argv;
 	append_server_names(&sargc, sargv, sizeof(sargv));
 
     /* build in-core data list on all hosts */
-    while ((servername = getnextserver(sargc, sargv, &parsestatus)) != (char *)0)
+    while ((servername = getnextserver(sargc,sargv,&parsestatus)) != (char *)0)
     {
 	if (strcmp(servername, "defaults") == 0)
 	    continue;
@@ -391,10 +391,13 @@ struct hostrec *queryctl;
 {
     char *cp;
 
+    if (queryctl->explicit || outlevel == O_VERBOSE)
+	printf("  This host will%s be queried when no host is specified.\n",
+	       queryctl->explicit ? " not" : "");
     printf("  Username = '%s'\n", queryctl->remotename);
     if (queryctl->password && outlevel == O_VERBOSE)
 	printf("  Password = '%s'\n", queryctl->password);
-    if (queryctl->rpopid)
+    if (queryctl->rpopid[0])
 	printf("  RPOP id = '%s'\n", queryctl->rpopid);
     printf("  Protocol is %s", showproto(queryctl->protocol));
     if (queryctl->port)
@@ -412,7 +415,7 @@ struct hostrec *queryctl;
     printf("  Old messages will%s be flushed before message retrieval (--flush %s).\n",
 	   queryctl->flush ? "" : " not",
 	   queryctl->flush ? "on" : "off");
-    printf("  Rewrite of host-local addresses is %sabled (--norewrite %s)\n",
+    printf("  Rewrite of server-local addresses is %sabled (--norewrite %s)\n",
 	   queryctl->norewrite ? "dis" : "en",
 	   queryctl->norewrite ? "on" : "off");
 
