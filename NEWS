@@ -19,10 +19,12 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.0.4 ()
+fetchmail-4.0.4 (Mon Jul 28 23:38:20 EDT 1997)
 * Overhauled the build machinery.
 * The `no envelope' option now suppresses parsing of Received lines.
 * Added Al Youngwerth as a backup maintainer.
+
+There are 256 people on the fetchmail-friends list.
 
 fetchmail-4.0.3 (Mon Jul 28 16:39:17 EDT 1997)
 * Replace vsprintf with vnsprintf to avoid buffer-overrun screws.
