@@ -99,6 +99,8 @@ if ($rcsid eq '<workfile>') {
 } else {
     system("rcsdiff -u -r$oldid -r$rcsid RCS/* 2>/dev/null >DIFFS.$$");
 }
+print "Diff size:";
+system("wc <DIFFS.$$");
 
 rename("PREAMBLE.$$", "RELEASE.NOTES");
 system("chown esr RELEASE.NOTES");
