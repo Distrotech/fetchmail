@@ -505,7 +505,7 @@ int num;		/* index of message */
     } *addrchain = NULL, **chainptr = &addrchain;
     char buf[MSGBUFSIZE+1], return_path[MSGBUFSIZE+1]; 
     int	from_offs, ctt_offs, env_offs, next_address;
-    char *headers, *received_for;
+    char *headers, *received_for, *desthost;
     int n, linelen, oldlen, ch, remaining;
     char		*cp;
     struct idlist 	*idp, *xmit_names;
@@ -839,13 +839,18 @@ int num;		/* index of message */
 	int	length = 0;
 	char	*names, *cmd;
 
+	desthost = "localhost";
+
 	/*
 	 * We go through this in order to be able to handle very
 	 * long lists of users and (re)implement %s.
 	 */
 	for (idp = xmit_names; idp; idp = idp->next)
 	    if (idp->val.num == XMIT_ACCEPT)
+	    {
 		length += (strlen(idp->id) + 1);
+		good_addresses++;
+	    }
 	names = (char *)alloca(length);
 	names[0] = '\0';
 	for (idp = xmit_names; idp; idp = idp->next)
@@ -886,7 +891,7 @@ int num;		/* index of message */
     }
     else
     {
-	char	*ap, *ctt, options[MSGBUFSIZE], addr[128], *desthost;
+	char	*ap, *ctt, options[MSGBUFSIZE], addr[128];
 
 	/* build a connection to the SMTP listener */
 	if ((smtp_open(ctl) == -1))
@@ -1050,39 +1055,40 @@ int num;		/* index of message */
 	    }
 	}
 
-	/* utter any per-message Received information we need here */
-	{
-	    time_t	now;
-
-	    /* write a line describing fetchmail's processing of the message */
-	    sprintf(buf,
-    "Received: from %s\r\n\tby %s (fetchmail-%s/%s) running as %s\r\n",
-		    ctl->server.truename, 
-		    fetchmailhost, 
-		    RELEASE_ID,
-		    protocol->name,
-		    ctl->remotename);
-	    if (!good_addresses)
-		sprintf(buf + strlen(buf), 
-			"\tfor <%s@%s> (by default); ",
-			user, desthost);
-	    if (good_addresses == 1)
-	    {
-		for (idp = xmit_names; idp; idp = idp->next)
-		    if (idp->val.num == XMIT_ACCEPT)
-		    {
-			sprintf(buf + strlen(buf),
-				"\tfor <%s@%s>; ", idp->id, desthost);
-			break;
-		    }
-	    }
-	    time(&now);
-	    strcat(buf, ctime(&now));
-	    strcpy(buf + strlen(buf) - 1, "\r\n");
-	}
-
 	/* tell it we're ready to send data */
 	SMTP_data(ctl->smtp_socket);
+    }
+
+    /* utter any per-message Received information we need here */
+    {
+	time_t	now;
+
+	/* write a line describing fetchmail's processing of the message */
+	sprintf(buf,
+	"Received: from %s\r\n\tby %s (fetchmail-%s %s) with remote id %s\r\n",
+		ctl->server.truename, 
+		fetchmailhost, 
+		RELEASE_ID,
+		protocol->name,
+	        ctl->remotename);
+
+	if (!good_addresses)
+	    sprintf(buf + strlen(buf), 
+		    "\tfor <%s@%s> (by default); ",
+		    user, desthost);
+	if (good_addresses == 1)
+	{
+	    for (idp = xmit_names; idp; idp = idp->next)
+		if (idp->val.num == XMIT_ACCEPT)
+		{
+		    sprintf(buf + strlen(buf),
+			    "\tfor <%s@%s>; ", idp->id, desthost);
+		    break;	/* only report first address */
+		}
+	}
+	time(&now);
+	strcat(buf, ctime(&now));
+	strcpy(buf + strlen(buf) - 1, "\r\n");
     }
 
     /* ship out the synthetic Received line and the headers */
