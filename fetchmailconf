@@ -1622,6 +1622,11 @@ class MainWindow(Frame):
         make_icon_window(self, fetchmail_icon)
         self.debug = 0
 
+        ## Test icon display with the following:
+        # icon_image = PhotoImage(data=fetchmail_icon)
+        # Label(self, image=icon_image).pack(side=TOP, pady=10)
+        # self.keepalive.append(icon_image)
+
 	Message(self, text="""
 Use `Configure fetchmail' to tell fetchmail about the remote
 servers it should poll (the host name, your username there,
