@@ -4,8 +4,9 @@ dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl
 
-AC_INIT(fetchmail.h)		dnl A distinctive file to look for in srcdir. 
-AM_CONFIG_HEADER(config.h)
+AC_INIT([fetchmail], [6.1.2])
+AC_CONFIG_SRCDIR([fetchmail.h])
+AC_CONFIG_HEADERS([config.h])
 
 dnl We want these before the checks, so the checks can modify their values.
 test -z "$CFLAGS" && CFLAGS="-O" AC_SUBST(CFLAGS)
@@ -67,7 +68,7 @@ then
 fi
  
 dnl i18n
-ALL_LINGUAS="ca cs da de es fr gl ja pl pt_BR tr"
+ALL_LINGUAS="ca cs da de es fr gl ja pl pt_BR tr sk"
 AM_GNU_GETTEXT
 dnl end i18n
 
@@ -720,7 +721,8 @@ then
   fi
 fi])
 
-AC_OUTPUT([Makefile intl/Makefile po/Makefile.in], [
+AC_CONFIG_FILES([Makefile intl/Makefile po/Makefile.in])
+AC_CONFIG_COMMANDS([default],[
 	# The reason for this odd makedepend line is that we want
 	# to have all dependencies evaluated relative to the source directory
 	# and let VPATH do all the dirty work when we build remotely
@@ -728,6 +730,7 @@ AC_OUTPUT([Makefile intl/Makefile po/Makefile.in], [
 	echo timestamp > stamp-h;
 	(cd $srcdir; makedepend -f - *.c) >>Makefile])
 
+AC_OUTPUT
 dnl Local Variables:
 dnl comment-start: "dnl "
 dnl comment-end: ""
