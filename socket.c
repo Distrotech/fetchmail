@@ -20,6 +20,9 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <sys/time.h>
+#ifdef SMTP_FORWARD
+#include <sys/ioctl.h>
+#endif /* SMTP_FORWARD */
 #if defined(STDC_HEADERS)
 #include <string.h>
 #endif
@@ -28,7 +31,7 @@
 #endif
 #include <stdlib.h>
 #include <varargs.h>
-
+#include <errno.h>
 #include "bzero.h"
 #include "socket.h"
 
@@ -140,12 +143,13 @@ int len;
     return 0;
 }
 
+static int sbuflen = 0;
+
 int SockInternalRead (socket,buf,len)
 int socket;
 char *buf;
 int len;
 {
-   static int sbuflen = 0;
    static char sbuf [INTERNAL_BUFSIZE];
    static char *bp;
    
@@ -183,6 +187,66 @@ int len;
    }
    return(len);
 }
+
+#ifdef SMTP_FORWARD
+/* SockClearHeader: call this procedure in order to kill off any
+   forthcoming Header info from the socket that we no longer want.
+   */
+int SockClearHeader(socket)
+int socket;
+{
+   char *bufp;
+   static char sbuf[INTERNAL_BUFSIZE];
+   int nBytes;
+   int res;
+
+   if ((res = SockDataWaiting(socket))  <= 0)
+     return res;
+
+   while (1) 
+     {
+        if (SockGets(socket,sbuf,INTERNAL_BUFSIZE) < 0)
+	  return 0;
+	bufp = sbuf;
+	if (*bufp == '.') {
+	  bufp++;
+	  if (*bufp == 0)
+	    break;
+	}
+     }
+   sbuflen = 0;
+   return 0;
+}
+
+
+/* SockDataWaiting: Return a non-zero value if this socket is waiting
+  for data.   */
+int  SockDataWaiting(int socket)
+{
+  int flags;
+  char sbuf[INTERNAL_BUFSIZE];
+  int n;
+  int res;
+  flags = fcntl(socket,F_GETFL,0);
+  
+  /* set it to non-block */
+  if (fcntl(socket,F_SETFL,flags | O_NONBLOCK) == -1)
+    return -1;
+
+  if ((n = recv(socket,sbuf,INTERNAL_BUFSIZE,MSG_PEEK)) == -1)
+    { 
+      /* No data to read. */
+      if (errno == EWOULDBLOCK)
+	res = 0;
+    }
+  else
+    res = n;
+
+  /* reset it to block (or, whatever it was). */
+  fcntl(socket,F_SETFL,flags);
+  return res;
+}
+#endif /* SMTP_FORWARD */
 
 
 int SockPrintf(socket,format,va_alist)
