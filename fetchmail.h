@@ -282,7 +282,6 @@ struct query
     unsigned int uid;		/* UID of user to deliver to */
     struct idlist *skipped;	/* messages skipped on the mail server */
     struct idlist *oldsaved, *newsaved;
-    flag have_uids;		/* have we seen UIDs during this query? */
     char *lastid;		/* last Message-ID seen on this connection */
 
     /* internal use -- per-message state */
