@@ -6,6 +6,7 @@ fetchmail-4.7.5 ():
 * Fix prefix problem with internationalized version.
 * Attempted fix for Harry McGavran's VPATH bug.
 * Progress messages now go to stdout.  Errors still go to stderr
+* Fetchmailconf can now launch fetchmail with a point-and-click interface.
 
 There are 249 people on fetchmail-friends and 334 on fetchmail-announce.
 
