@@ -1264,7 +1264,22 @@ const struct method *proto;	/* protocol method table */
 #define EHOSTUNREACH (-1)
 #endif
 	    if (outlevel == O_VERBOSE || errno != EHOSTUNREACH)
-		error(0, errno, "connecting to host");
+	    {
+		error_build("fetchmail: %s connection to %s failed: ", 
+			     protocol->name, ctl->server.names->id);
+		if (h_errno == HOST_NOT_FOUND)
+		    error_complete(0, 0, "host is unknown");
+		else if (h_errno == NO_ADDRESS)
+		    error_complete(0, 0, "name is valid but has no IP address");
+		else if (h_errno == NO_RECOVERY)
+		    error_complete(0, 0, "unrecoverable name server error");
+		else if (h_errno == TRY_AGAIN)
+		    error_complete(0, 0, "temporary name server error");
+		else if (h_errno)
+		    error_complete(0, 0, "unknown DNS error %d", h_errno);
+		else
+		    error_complete(0, errno, "local error");
+	    }
 	    ok = PS_SOCKET;
 	    goto closeUp;
 	}
