@@ -245,6 +245,9 @@ parse_netrc (file)
 		else if (!strcmp (tok, "password"))
 		    last_token = tok_password;
 
+		else if (!strcmp (tok, "passwd"))
+		    last_token = tok_password;
+
 		else if (!strcmp (tok, "account"))
 		    last_token = tok_account;
 
