@@ -461,24 +461,20 @@ def dispose_window(master, legend, help):
 
 class MyWidget:
 # Common methods for Tkinter widgets -- deals with Tkinter declaration
-    def post(self, template, field):
-	for x in template.typemap:
-	    source = "self." + field + "." + x[0]
+    def post(self, widgetclass, field):
+	for x in widgetclass.typemap:
 	    if x[1] == 'Boolean':
 		setattr(self, x[0], BooleanVar(self))
-		if eval(source):
-		    exec "self." + x[0] + ".set(" + source + ")"
 	    elif x[1] == 'String':
 		setattr(self, x[0], StringVar(self))
-		if eval(source):
-		    exec "self." + x[0] + ".set(" + source + ")"
 	    elif x[1] == 'Int':
 		setattr(self, x[0], IntVar(self))
-		if eval(source):
-		    exec "self." + x[0] + ".set(" + source + ")"
+	    source = getattr(getattr(self, field), x[0])
+            if source:
+                getattr(self, x[0]).set(source)
 
-    def fetch(self, template, field):
-	for x in template.typemap:
+    def fetch(self, widgetclass, field):
+	for x in widgetclass.typemap:
 	    setattr(getattr(self, field), x[0], getattr(self, x[0]).get())
 
 #
