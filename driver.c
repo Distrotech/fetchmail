@@ -606,7 +606,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	    struct idlist	*sdp;
 
 	    for (sdp = ctl->newsaved; sdp; sdp = sdp->next)
-		if ((sdp->val.status.num == num) && (msgcodes[num-1] > 0))
+		if ((sdp->val.status.num == num) && (msgcodes[num-1] >= 0))
 		{
 		    sdp->val.status.mark = UID_SEEN;
 		    save_str(&ctl->oldsaved, sdp->id,UID_SEEN);
@@ -621,7 +621,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	}
 	else if (ctl->server.base_protocol->delete
 		 && !suppress_delete
-		 && ((msgcodes[num-1] > 0) ? !ctl->keep : ctl->flush))
+		 && ((msgcodes[num-1] >= 0) ? !ctl->keep : ctl->flush))
 	{
 	    (*deletions)++;
 	    if (outlevel > O_SILENT) 
@@ -1174,7 +1174,7 @@ is restored."));
 		    xalloca(msgsizes, int *, sizeof(int) * count);
 		    xalloca(msgcodes, int *, sizeof(int) * count);
 		    for (i = 0; i < count; i++)
-			msgcodes[num - 1] = MSGLEN_UNKNOWN;
+			msgcodes[i] = MSGLEN_UNKNOWN;
 
 		    /* 
 		     * We need the size of each message before it's

@@ -286,8 +286,8 @@ smtp_list	: STRING		{save_str(&current.smtphunt, $1,TRUE);}
 		| smtp_list STRING	{save_str(&current.smtphunt, $2,TRUE);}
 		;
 
-domain_list	: STRING		{save_str(&current.domainlist, $1,TRUE);}
-		| domain_list STRING	{save_str(&current.domainlist, $2,TRUE);}
+fetch_list	: STRING		{save_str(&current.domainlist, $1,TRUE);}
+		| fetch_list STRING	{save_str(&current.domainlist, $2,TRUE);}
 		;
 
 num_list	: NUMBER
@@ -313,7 +313,7 @@ user_option	: TO localnames HERE
 		| PASSWORD STRING	{current.password    = xstrdup($2);}
 		| FOLDER folder_list
 		| SMTPHOST smtp_list
-		| FETCHDOMAINS domain_list
+		| FETCHDOMAINS fetch_list
 		| SMTPADDRESS STRING	{current.smtpaddress = xstrdup($2);}
 		| SMTPNAME STRING	{current.smtpname = xstrdup($2);}
 		| SPAMRESPONSE num_list

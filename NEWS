@@ -2,6 +2,13 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.8.10 (Mon Jun 25 17:04:08 EDT 2001), 20922 lines:
+
+* More fixes for the new message-marking code from Thomas Moestl.
+* Fixes for ODMR code from Matt Armstrong.
+
+There are 355 people on fetchmail-friends and  on fetchmail-announce.
+
 fetchmail-5.8.9 (Sun Jun 24 20:30:49 EDT 2001), 20922 lines:
 
 * HMH's snprintf/strncat cleanup patch.
