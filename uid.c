@@ -170,8 +170,12 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 			    break;
 			}
 		    }
-		    /* if it's not in a host we're querying,
-		    ** save it anyway */
+		    /* 
+		     * If it's not in a host we're querying,
+		     * save it anyway.  Otherwise we'd lose UIDL
+		     * information any time we queried an explicit
+		     * subset of hosts.
+		     */
 		    if (ctl == (struct query *)NULL) {
 				/* restore string */
 			*delimp1 = saveddelim1;
@@ -446,6 +450,17 @@ void uid_swap_lists(struct query *ctl)
      * Don't swap UID lists unless we've actually seen UIDLs.
      * This is necessary in order to keep UIDL information
      * from being heedlessly deleted later on.
+     *
+     * Older versions of fetchmail did
+     *
+     *     free_str_list(&scratchlist);
+     *
+     * after swap.  This was wrong; we need to preserve the UIDL information
+     * from unqueried hosts.  Unfortunately, not doing this means that
+     * under some circumstances UIDLs can end up being stored forever --
+     * specifically, if a user description is removed from .fetchmailrc
+     * with UIDLs from that account in .fetchids, there is no way for
+     * them to ever get garbage-collected.
      */
     if (ctl->newsaved)
     {
@@ -453,7 +468,6 @@ void uid_swap_lists(struct query *ctl)
 	if (outlevel >= O_DEBUG)
 	    report(stdout, _("swapping UID lists\n"));
 	free_str_list(&ctl->oldsaved);
-	free_str_list(&scratchlist);
 	ctl->oldsaved = ctl->newsaved;
 	ctl->newsaved = (struct idlist *) NULL;
     }

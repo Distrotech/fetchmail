@@ -275,7 +275,9 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 
 	/* ordinary validation, no one-time password or RPA */ 
 	gen_transact(sock, "USER %s", ctl->remotename);
+	strcpy(shroud, ctl->password);
 	ok = gen_transact(sock, "PASS %s", ctl->password);
+	shroud[0] = '\0';
 	break;
 
     case P_APOP:

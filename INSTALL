@@ -70,10 +70,7 @@ you can direct the build to look for GSSAPI support under DIR.
 
 Hooks for the OpenSSL library (see http://www.openssl.org/) are
 included in the distribution.  To enable these, configure with
---with-ssl; they are not included in the standard build.  Note that
-due to U.S. crypto export regulations (which we hope will soon be
-overturned on Constitutional grounds), no actual cryptography code is
-included in the distribution.
+--with-ssl; they are not included in the standard build.
 
 If you want to build for debugging, 
 

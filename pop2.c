@@ -56,7 +56,7 @@ static int pop2_getauth(int sock, struct query *ctl, char *buf)
 {
     int status;
 
-    strcpy(shroud, ctl->password)
+    strcpy(shroud, ctl->password);
     status = gen_transact(sock,
 		  "HELO %s %s",
 		  ctl->remotename, ctl->password);

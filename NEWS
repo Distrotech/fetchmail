@@ -2,6 +2,9 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Fix POP2 and POP3 password shrouding.
+* Don't remove UIDL scratchlist on query completion (Frantisek Brabec's bug).
+
 fetchmail-5.7.5 (Sat Mar 17 23:24:41 EST 2001), 20440 lines:
 
 * Nalin Dahyabhai's patch to make IPv6 build on older systems.
