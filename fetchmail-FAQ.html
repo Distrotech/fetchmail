@@ -9,7 +9,7 @@
 <BODY>
 <H1>Frequently Asked Questions About Fetchmail</H1>
 
-$Id: fetchmail-FAQ.html,v 1.4 1997/04/17 07:56:59 esr Exp $<p>
+$Id: fetchmail-FAQ.html,v 1.5 1997/04/17 08:06:04 esr Exp $<p>
 
 (Added <a href="http:#C6">C6</a> on working with qmail and 
 <a href="http:#C7">C7</a> on managing fetchmail in the presence of
@@ -144,7 +144,16 @@ If the bug involves a core dump or hang, a gdb stack trace is good to have.
 (Bear in mind that you can attach gdb to a running but hung process by
 giving the process ID as a second argument.)<p>
 
-Best of all is a mail file which, when fetched, will reproduce the bug.<p>
+Best of all is a mail file which, when fetched, will reproduce the
+bug.<p>
+
+Any bug I can reproduce will usually get fixed very quickly, often
+within 48 hours.  Bugs I can't reproduce are a crapshoot.  If the
+solution isn't obvious when I first look, it may evade me for a long
+time (or to put it another way, fetchmail is well enough tested that the
+easy bugs have long since been found).  So if you want your bug fixed
+rapidly, it is not just sufficient but nearly <em>necessary</em> that
+you give me a way to reproduce it.<p>
 
 <hr>
 <h2><a name="G4">G4.  I have this idea for a neat feature.  Will you add it?</a></h2>
