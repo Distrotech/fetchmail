@@ -3,8 +3,7 @@
 Test RPOP feature against a server that has it.
 
 Support IMAP4 extensions for secure challenge-response, once they're actually
-standardized.  Also, use the CAPABILITY command to detect when we're talking
-to a true IMAP4 server and use SEARCH UNSEEN.
+standardized.
 
 Inflict pain on the person(s) responsible for removing LAST from POP3.
 
@@ -17,6 +16,11 @@ fetchmail-1.3 (Sun Sep 29 01:22:21 EDT 1996):
 * Escapes for newlines in .fetchmailrc are now optional.
 
 * Kill off -2 and -3 options, redundant popclient remnants.
+
+* IMAP code simplification and robustification.  Use FETCH FLAGS to find
+  seen messages.  Code should now work even if unseen messages are 
+  interspersed with seen ones, and even if messages are appended to the
+  mailbox during the run.
 
 fetchmail-1.2 (Sat Sep 28 15:40:50 EDT 1996):
 
