@@ -247,7 +247,7 @@ void error_at_line ();
 
 /* driver.c: transaction support */
 #if defined(HAVE_STDARG_H)
-void gen_send (int sock, char *, ... );
+void gen_send (int sock, const char *, ... );
 int gen_recv(int sock, char *buf, int size);
 int gen_transact (int sock, char *, ... );
 #else

@@ -11,14 +11,14 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.3.2 ()
+fetchmail-4.3.2 (Wed Oct 22 20:30:14 EDT 1997)
 * More slow-UIDL patches from Wolfgang Wander.
 * Yet another attempt to fix IMAP-K4.  This one, my beta-testers say, works.
 * Only re-poll on actual dispatches (not just fetches).
 * kwrohrer's patch for interface option on newer Linux kernels.
 * Handle repolling multiple folders correctly.
 
-There are 262 people on fetchmail-friends and 54 on fetchmail-announce.
+There are 261 people on fetchmail-friends and 64 on fetchmail-announce.
 
 fetchmail-4.3.1 (Mon Oct 13 17:12:40 EDT 1997)
 * Minor portation fixes for early AIX versions and NextSTEP.

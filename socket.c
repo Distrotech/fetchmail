@@ -38,7 +38,7 @@
 #endif
 #endif /* INET_ATON */
 
-int SockOpen(char *host, int clientPort)
+int SockOpen(const char *host, int clientPort)
 {
     int sock;
 #ifndef INET_ATON

@@ -1993,7 +1993,7 @@ closeUp:
 }
 
 #if defined(HAVE_STDARG_H)
-void gen_send(int sock, char *fmt, ... )
+void gen_send(int sock, const char *fmt, ... )
 /* assemble command in printf(3) style and send to the server */
 #else
 void gen_send(sock, fmt, va_alist)
