@@ -3,7 +3,7 @@
 # If you're running QNX, we can't assume a working autoconf.
 # So just uncomment all the lines marked QNX.
 
-VERS=4.6.8
+VERS=4.6.9
 
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@ 
