@@ -771,13 +771,16 @@ char *realname;		/* real name of host */
 	 * desired tokenizing effect.
 	 */
 	options[0] = '\0';
-	if ((ctl->server.esmtp_options & ESMTP_8BITMIME)
-	    && (ctt_offs >= 0)
-	    && (ctt = nxtaddr(headers + ctt_offs)))
-	    if (!strcasecmp(ctt,"7BIT"))
-		sprintf(options, " BODY=7BIT");
-	    else if (!strcasecmp(ctt,"8BIT"))
+	if (ctl->server.esmtp_options & ESMTP_8BITMIME)
+	    if (ctl->pass8bits)
 		sprintf(options, " BODY=8BITMIME");
+	    else if ((ctt_offs >= 0) && (ctt = nxtaddr(headers + ctt_offs)))
+	    {
+		if (!strcasecmp(ctt,"7BIT"))
+		    sprintf(options, " BODY=7BIT");
+		else if (!strcasecmp(ctt,"8BIT"))
+		    sprintf(options, " BODY=8BITMIME");
+	    }
 	if ((ctl->server.esmtp_options & ESMTP_SIZE))
 	    sprintf(options + strlen(options), " SIZE=%ld", len);
 

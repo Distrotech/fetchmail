@@ -46,7 +46,7 @@ pass(word)?	{ return PASSWORD; }
 folder(s)? 	{ return FOLDER; }
 smtp(host)?	{ return SMTPHOST; }
 mda		{ return MDA; }
-pre(connect)	{ return PRECONNECT; }
+pre(connect)?	{ return PRECONNECT; }
 interface	{ return INTERFACE; }
 monitor		{ return MONITOR; }
 
@@ -65,6 +65,7 @@ fetchall	{ return FETCHALL; }
 rewrite		{ return REWRITE; }
 forcecr		{ return FORCECR; }
 stripcr		{ return STRIPCR; }
+pass8(bits)?	{ return PASS8BITS; }
 dns		{ return DNS; }
 uidl		{ return UIDL; }
 

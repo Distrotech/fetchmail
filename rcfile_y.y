@@ -53,7 +53,8 @@ extern char * yytext;
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
-%token NO KEEP FLUSH FETCHALL REWRITE FORCECR STRIPCR DNS PORT UIDL INTERVAL
+%token NO KEEP FLUSH FETCHALL REWRITE FORCECR STRIPCR PASS8BITS 
+%token DNS PORT UIDL INTERVAL
 
 %%
 
@@ -215,6 +216,7 @@ user_option	: TO localnames HERE
 		| REWRITE		{current.rewrite    = FLAG_TRUE;}
 		| FORCECR		{current.forcecr    = FLAG_TRUE;}
 		| STRIPCR		{current.stripcr    = FLAG_TRUE;}
+		| PASS8BITS		{current.pass8bits  = FLAG_TRUE;}
 
 		| NO KEEP		{current.keep       = FLAG_FALSE;}
 		| NO FLUSH		{current.flush      = FLAG_FALSE;}
@@ -411,6 +413,7 @@ static void record_current(void)
     FLAG_FORCE(rewrite);
     FLAG_FORCE(forcecr);
     FLAG_FORCE(stripcr);
+    FLAG_FORCE(pass8bits);
     FLAG_FORCE(limit);
     FLAG_FORCE(fetchlimit);
     FLAG_FORCE(batchlimit);
@@ -455,6 +458,7 @@ void optmerge(struct query *h2, struct query *h1)
     FLAG_MERGE(rewrite);
     FLAG_MERGE(forcecr);
     FLAG_MERGE(stripcr);
+    FLAG_MERGE(pass8bits);
     FLAG_MERGE(limit);
     FLAG_MERGE(fetchlimit);
     FLAG_MERGE(batchlimit);

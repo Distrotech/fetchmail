@@ -120,6 +120,7 @@ struct query
     bool rewrite;		/* if TRUE, canonicalize recipient addresses */
     bool stripcr;		/* if TRUE, strip CRs in text */
     bool forcecr;		/* if TRUE, force CRs before LFs in text */
+    bool pass8bits;		/* if TRUE, ignore Content-Transfer-Encoding */
     int	limit;			/* limit size of retrieved messages */
     int	fetchlimit;		/* max # msgs to get in single poll */
     int	batchlimit;		/* max # msgs to pass in single SMTP session */

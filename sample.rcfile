@@ -47,6 +47,7 @@
 #   rewrite
 #   forcecr
 #   stripcr
+#   pass8bits
 #   dns
 #   no keep
 #   no flush

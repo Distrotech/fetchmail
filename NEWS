@@ -23,7 +23,8 @@ pl 3.9.9 ():
 * We can now process multiple To headers a la Microsoft Exchange Server.
 * Avoid sending LIST and getting an error when no messages are waiting.
 * Allow `fetchmail' to do wakeup even when no .fetchmailrc.
-* Fix Paul Sutvliffe's headerless-mail bug.
+* Fixed Paul Sutcliffe's headerless-mail bug.
+* Added `pass8bits' to help prevent internationalization lossage.
 
 pl 3.9.8 (Sat Jun 14 14:19:32 EDT 1997):
 * Fetchmail is now normally built with optimization.

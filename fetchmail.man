@@ -645,6 +645,7 @@ Legal user options are
     rewrite
     stripcr
     forcecr
+    pass8bits
     dns
     no keep
     no flush
@@ -652,6 +653,7 @@ Legal user options are
     no rewrite
     no stripcr
     no forcecr
+    no pass8bits
     no dns
     no envelope
     limit
@@ -665,7 +667,7 @@ comma-separated list of names following them.
 All options correspond to the obvious command-line arguments, except
 the following: `interval', `aka', `is', `to', `dns'/`no dns', `password',
 \&`preconnect', `localdomains', `stripcr'/`no stripcr' ,
-\&`forcecr'/`no forcecr' and `no received'.
+\&`forcecr'/`no forcecr', `pass8bits'/`no pass8bits' and `no received'.
 .PP
 The `interval' option (which takes a numeric argument) allows you to poll a
 server less frequently than the basic poll interval.  If you say
@@ -746,6 +748,19 @@ necessary to set this, because it defaults to `on' (CR stripping
 enabled) when there is an MDA declared but `off' (CR stripping
 disabled) when forwarding is via SMTP.  If `stripcr' and `forcecr' are
 both on, `stripcr' will override.
+.PP
+The `pass8bits' option exists to cope with Microsoft mail programs that
+stupidly slap a "Content-Transfer-Encoding: 7bit" on everything.  With
+this option off (the default) and such a header present, 
+.I fetchmail
+declares BODY=7BIT to an ESMTP-capable listener; this causes problems for
+messages actually using 8-bit ISO or KOI-8 character sets, which will
+be garbled by having the high bits of all characters stripped.  If
+\&`pass8bits' is on, 
+.I fetchmail
+is forced to declare BODY=8BITMIME to any ESMTP-capable listener.  If
+the listener is 8-bit-clean (as all the major ones now are) the right
+thing will probably result.
 .PP
 Legal protocol identifiers are
 
