@@ -319,9 +319,10 @@ void yyerror (const char *s)
     prc_errflag++;
 }
 
-int prc_filecheck(pathname)
+int prc_filecheck(pathname, securecheck)
 /* check that a configuration file is secure */
 const char *pathname;		/* pathname for the configuration file */
+const flag securecheck;
 {
 #ifndef __EMX__
     struct stat statbuf;
@@ -344,6 +345,8 @@ const char *pathname;		/* pathname for the configuration file */
 	    return(PS_IOERR);
 	}
     }
+
+    if (!securecheck)	return 0;
 
     if ((statbuf.st_mode & S_IFLNK) == S_IFLNK) {
 	fprintf(stderr, "File %s must not be a symbolic link.\n", pathname);
@@ -373,7 +376,7 @@ int prc_parse_file (const char *pathname, const flag securecheck)
     errno = 0;
 
     /* Check that the file is secure */
-    if (securecheck && (prc_errflag = prc_filecheck(pathname)) != 0)
+    if ( (prc_errflag = prc_filecheck(pathname, securecheck)) != 0 )
 	return(prc_errflag);
 
     if (errno == ENOENT)

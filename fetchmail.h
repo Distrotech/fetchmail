@@ -329,7 +329,7 @@ void write_saved_lists(struct query *, const char *);
 
 /* rcfile_y.y */
 int prc_parse_file(const char *, const flag);
-int prc_filecheck(const char *);
+int prc_filecheck(const char *, const flag);
 
 /* base64.c */
 void to64frombits(unsigned char *, const unsigned char *, int);

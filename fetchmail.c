@@ -828,7 +828,7 @@ static int load_params(int argc, char **argv, int optind)
     }
 
     /* initialize UID handling */
-    if (!versioninfo && (st = prc_filecheck(idfile)) != 0)
+    if (!versioninfo && (st = prc_filecheck(idfile, !versioninfo)) != 0)
 	exit(st);
 #ifdef POP3_ENABLE
     else
