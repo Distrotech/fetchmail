@@ -1589,7 +1589,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	    (void)sleep(1);
 #if INET6_ENABLE
 	if ((mailserver_socket = SockOpen(realhost, 
-			     ctl->server.service ? ctl->server.service : protocol->service,
+			     ctl->server.service ? ctl->server.service : ( ctl->use_ssl ? protocol->sslservice : protocol->service ),
 			     ctl->server.netsec, ctl->server.plugin)) == -1)
 #else /* INET6_ENABLE */
 	if ((mailserver_socket = SockOpen(realhost, port, NULL, ctl->server.plugin)) == -1)
