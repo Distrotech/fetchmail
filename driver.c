@@ -427,11 +427,12 @@ int smtp_open(struct query *ctl)
     return(ctl->smtp_socket);
 }
 
-static int gen_readmsg(sock, len, delimited, ctl, realname)
+static int gen_readmsg(sock, len, delimited, num, ctl, realname)
 /* read message content and ship to SMTP or MDA */
 int sock;		/* to which the server is connected */
 long len;		/* length of message */
 int delimited;		/* does the protocol use a message delimiter? */
+int num;		/* message number we're fetching */
 struct query *ctl;	/* query control record */
 char *realname;		/* real name of host */
 {
@@ -1027,6 +1028,19 @@ char *realname;		/* real name of host */
 	    SockWrite(ctl->smtp_socket, "\r\n", 2);
     }
 
+
+    /*
+     * If we're using IMAP4 or something else that can fetch headers
+     * separately from bodies, it's time to grab the body now.  This
+     * fetch may be skipped if we got an anti-spam or other error
+     * response from SMTP above.
+     */
+    if (protocol->fetch_body)
+    {
+	(protocol->trail)(sock, ctl, -1);
+	(protocol->fetch_body)(sock, ctl, num, &remaining);
+    }
+
     /*
      *  Body processing starts here
      */
@@ -1483,7 +1497,7 @@ const struct method *proto;	/* protocol method table */
 		    else
 		    {
 			/* request a message */
-			ok = (protocol->fetch)(sock, ctl, num, &len);
+			ok = (protocol->fetch_headers)(sock, ctl, num, &len);
 			if (ok != 0)
 			    goto cleanUp;
 			set_timeout(ctl->server.timeout);
@@ -1503,6 +1517,7 @@ const struct method *proto;	/* protocol method table */
 			ok = gen_readmsg(sock,
 					 len, 
 					 protocol->delimited,
+					 num,
 					 ctl,
 					 realname);
 			if (ok == PS_TRANSIENT)

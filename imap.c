@@ -185,7 +185,42 @@ static int imap_is_old(int sock, struct query *ctl, int number)
     return(seen);
 }
 
-static int imap_fetch(int sock, struct query *ctl, int number, int *lenp)
+static int imap_fetch_headers(int sock, struct query *ctl, int number, int *lenp)
+/* request nth message */
+{
+    char buf [POPBUFSIZE+1];
+    int	num;
+
+    /* expunges change the fetch numbers */
+    number -= deletecount;
+
+    switch (imap_version)
+    {
+    case IMAP4rev1:	/* RFC 2060 */
+	gen_send(sock, "FETCH %d BODY[HEADER]", number);
+	break;
+
+    default:		/* RFC 1176 */
+	gen_send(sock, "FETCH %d RFC822.HEADER", number);
+	break;
+    }
+
+    /* looking for FETCH response */
+    do {
+	int	ok;
+
+	if ((ok = gen_recv(sock, buf, sizeof(buf))))
+	    return(ok);
+    } while
+	(sscanf(buf+2, "%d FETCH (%*s {%d}", &num, lenp) != 2);
+
+    if (num != number)
+	return(PS_ERROR);
+    else
+	return(PS_SUCCESS);
+}
+
+static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
 /* request nth message */
 {
     char buf [POPBUFSIZE+1];
@@ -208,20 +243,20 @@ static int imap_fetch(int sock, struct query *ctl, int number, int *lenp)
     {
     case IMAP4rev1:	/* RFC 2060 */
 	if (!ctl->keep)
-	    gen_send(sock, "FETCH %d BODY.PEEK[]", number);
+	    gen_send(sock, "FETCH %d BODY.PEEK[TEXT]", number);
 	else
-	    gen_send(sock, "FETCH %d BODY", number);
+	    gen_send(sock, "FETCH %d BODY[TEXT]", number);
 	break;
 
     case IMAP4:		/* RFC 1730 */
 	if (!ctl->keep)
-	    gen_send(sock, "FETCH %d RFC822.PEEK", number);
+	    gen_send(sock, "FETCH %d RFC822.TEXT.PEEK", number);
 	else
-	    gen_send(sock, "FETCH %d RFC822", number);
+	    gen_send(sock, "FETCH %d RFC822.TEXT", number);
 	break;
 
     default:		/* RFC 1176 */
-	gen_send(sock, "FETCH %d RFC822", number);
+	gen_send(sock, "FETCH %d RFC822.TEXT", number);
 	break;
     }
 
@@ -295,7 +330,8 @@ const static struct method imap =
     imap_getrange,	/* query range of messages */
     imap_getsizes,	/* grab message sizes */
     imap_is_old,	/* no UID check */
-    imap_fetch,		/* request given message */
+    imap_fetch_headers,	/* request given message headers */
+    imap_fetch_body,	/* request given message body */
     imap_trail,		/* eat message trailer */
     imap_delete,	/* delete the message */
     "LOGOUT",		/* the IMAP exit command */

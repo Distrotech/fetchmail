@@ -145,7 +145,8 @@ struct method
     int (*getrange)();		/* get message range to fetch */
     int (*getsizes)();		/* get sizes of messages */
     int (*is_old)();		/* check for old message */
-    int (*fetch)();		/* fetch a given message */
+    int (*fetch_headers)();	/* fetch FROM headera given message */
+    int (*fetch_body)();	/* fetch a given message */
     int (*trail)();		/* eat trailer of a message */
     int (*delete)();		/* delete method */
     char *exit_cmd;		/* exit command */

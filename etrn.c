@@ -100,7 +100,8 @@ const static struct method etrn =
     etrn_getrange,	/* initialize message sending */
     NULL,		/* we cannot get a list of sizes */
     NULL,		/* how do we tell a message is old? */
-    NULL,		/* request given message */
+    NULL,		/* no way to fetch headers */
+    NULL,		/* no way to fetch body */
     NULL,		/* no message trailer */
     NULL,		/* how to delete a message */
     "QUIT",		/* the ETRN exit command */

@@ -274,6 +274,7 @@ const static struct method pop3 =
     pop3_getsizes,	/* we can get a list of sizes */
     pop3_is_old,	/* how do we tell a message is old? */
     pop3_fetch,		/* request given message */
+    NULL,		/* no way to fetch body alone */
     NULL,		/* no message trailer */
     pop3_delete,	/* how to delete a message */
     "QUIT",		/* the POP3 exit command */

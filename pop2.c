@@ -125,6 +125,7 @@ const static struct method pop2 =
     NULL,				/* no way to get sizes */
     NULL,				/* messages are always new */
     pop2_fetch,				/* request given message */
+    NULL,				/* no way to fetch body alone */
     pop2_trail,				/* eat message trailer */
     NULL,				/* no POP2 delete method */
     "QUIT",				/* the POP2 exit command */
