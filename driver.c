@@ -182,7 +182,7 @@ static int is_host_alias(const char *name, struct query *ctl)
 void find_server_names(hdr, ctl, xmit_names)
 /* parse names out of a RFC822 header into an ID list */
 const char *hdr;		/* RFC822 header in question */
-struct query *ctl;	/* list of permissible aliases */
+struct query *ctl;		/* list of permissible aliases */
 struct idlist **xmit_names;	/* list of recipient names parsed out */
 {
     if (hdr == (char *)NULL)
@@ -419,7 +419,7 @@ struct query *ctl;	/* query control record */
 		     * It has to be a mailserver address, or we
 		     * wouldn't have got here.
 		     */
-		    save_uid(&xmit_names, -1, received_for);
+		    find_server_names(received_for, ctl, &xmit_names);
 		else
 		{
 		    /*
