@@ -12,6 +12,22 @@ portable to other Unix variants (it uses GNU autoconf).  It has also
 been ported to QNX; to build under QNX, see the header comments in the
 Makefile.
 
+For those of you already familiar with previous versions, here are the
+major new features since 2.0:
+
+	** Support for secure use with ssh.
+
+	** Mailserver passwords can be parsed out of your .netrc file.
+
+	** When forwarding mail via SMTP, fetchmail respects the 571
+           "spam filter" response and discards any mail that triggers it.
+
+	** Transaction and error logging may optionally be done via syslog.
+
+There have also been numerous improvements in multidrop mailbox handling.
+Under many circumstances fetchmail can now determine a mail message's
+envelope address from its headers, making multidrop forwarding more reliable.
+
 Here are fetchmail's main features.  Those unique to fetchmail
 (relative to fetchpop1.9, PopTart-0.9.3, get-mail, gwpop, pimp-1.0,
 pop-perl5-1.2, popc, popmail-1.6 and upop) are marked with **.
@@ -59,15 +75,16 @@ pop-perl5-1.2, popc, popmail-1.6 and upop) are marked with **.
 	   versions.
 
 	*  Large user community -- fetchmail has a large user base (the
-	   author's beta list includes over a hundred people).  This means
-	   feedback is rapid, bugs get found and fixed rapidly.
+	   author's beta list includes over a hundred fifty people).  This 
+	   means feedback is rapid, bugs get found and fixed rapidly.
 
 The fetchmail code appears to be stable and free of bugs affecting
 normal operation (that is, retrieving from POP3 or IMAP in single-drop
 mode and forwarding via SMTP to sendmail).  It will probably undergo
 substantial change only if and when support for a new retrieval
-protocol or authentication is added.  See the distribution files NEWS
-for detailed information on recent changes and NOTES for design notes.
+protocol or authentication mode is added.  See the distribution files
+NEWS for detailed information on recent changes and NOTES for design
+notes.
 
 You can easily fetch the latest version of fetchmail  via FTP from the
 following FTP directory:
