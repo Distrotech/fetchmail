@@ -2,10 +2,15 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-6.2.1 (Tue Jan 14 08:17:19 EST 2003), 22219 lines:
+
 * Updated German, Turkish, Spanish, and Danish translation files.
 * Integrated Sunil Shetye's patch to make mark_seen an explicit method.
 * Removed FAQ warning about GMX and associated fetchmailconf check, 
   we have a report that its servers are conformant now.
+* Another Sunil patch to fix a minor bug in bouncemail generation.
+
+There are 536 people on fetchmail-friends and 716 on fetchmail-announce.
 
 fetchmail-6.2.0 (Fri Dec 13 00:10:07 EST 2002), 22235 lines:
 
