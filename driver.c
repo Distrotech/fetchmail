@@ -1597,7 +1597,7 @@ const struct method *proto;	/* protocol method table */
 			 */
 			ok = readheaders(sock, len, ctl, realname);
 			if (ok == PS_TRANSIENT)
-			    suppress_delete = TRUE;
+			    suppress_delete = suppress_forward = TRUE;
 			else if (ok == PS_REFUSED)
 			    suppress_forward = TRUE;
 			else if (ok)
