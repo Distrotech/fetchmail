@@ -1677,7 +1677,7 @@ const struct method *proto;	/* protocol method table */
 				{
 				    char size[32];
 				    int cnt, bytesz = msgsizes[num-1];
-#ifdef POP3_ENABLE
+
 				    /* convert sz to string */
 				    sprintf(size, "%d", msgsizes[num-1]);
 
@@ -1716,8 +1716,6 @@ const struct method *proto;	/* protocol method table */
 					tmp = save_str(&ctl->skipped, size, 1);
 					tmp->val.status.num = cnt;
 				    }
-
-#endif /* POP3_ENABLE */
 
 				    error_build(" (oversized, %d octets)",
 						msgsizes[num-1]);
