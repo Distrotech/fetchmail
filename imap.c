@@ -31,6 +31,10 @@
 #include <gssapi/gssapi_generic.h>
 #endif
 
+#if OPIE
+#include <opie.h>
+#endif /* OPIE */
+
 #ifndef strstr		/* glibc-2.1 declares this as a macro */
 extern char *strstr();	/* needed on sysV68 R3V7.1. */
 #endif /* strstr */
@@ -109,6 +113,69 @@ int imap_ok(int sock, char *argbuf)
 	    return(PS_PROTOCOL);
     }
 }
+
+#if OPIE
+static int do_otp(int sock, struct query *ctl)
+{
+  int i, rval;
+  char buffer[128];
+  char challenge[OPIE_CHALLENGE_MAX+1];
+  char response[OPIE_RESPONSE_MAX+1];
+
+  gen_send(sock, "AUTHENTICATE OTP");
+
+  if (rval = gen_recv(sock, buffer, sizeof(buffer)))
+    return rval;
+
+  if ((i = from64tobits(challenge, buffer)) < 0) {
+    error(0, -1, "Could not decode initial BASE64 challenge");
+    return PS_AUTHFAIL;
+  };
+
+
+  to64frombits(buffer, ctl->remotename, strlen(ctl->remotename));
+
+  if (outlevel == O_VERBOSE)
+     error(0, 0, "IMAP> %s", buffer);
+  SockWrite(sock, buffer, strlen(buffer));
+  SockWrite(sock, "\r\n", 2);
+
+  if (rval = gen_recv(sock, buffer, sizeof(buffer)))
+    return rval;
+
+  if ((i = from64tobits(challenge, buffer)) < 0) {
+    error(0, -1, "Could not decode OTP challenge");
+    return PS_AUTHFAIL;
+  };
+
+  rval = opiegenerator(challenge, !strcmp(ctl->password, "opie") ? "" : ctl->password, response);
+  if ((rval == -2) && (cmd_daemon == -1)) {
+    char secret[OPIE_SECRET_MAX+1];
+    fprintf(stderr, "Secret pass phrase: ");
+    if (opiereadpass(secret, sizeof(secret), 0))
+      rval = opiegenerator(challenge, secret, response);
+    memset(secret, 0, sizeof(secret));
+  };
+
+  if (rval)
+   return PS_AUTHFAIL;
+
+  to64frombits(buffer, response, strlen(response));
+
+  if (outlevel == O_VERBOSE)
+     error(0, 0, "IMAP> %s", buffer);
+  SockWrite(sock, buffer, strlen(buffer));
+  SockWrite(sock, "\r\n", 2);
+
+  if (rval = gen_recv(sock, buffer, sizeof(buffer)))
+    return rval;
+
+  if (strstr(buffer, "OK"))
+    return PS_SUCCESS;
+  else
+    return PS_AUTHFAIL;
+};
+#endif /* OPIE */
 
 #ifdef KERBEROS_V4
 #if SIZEOF_INT == 4
@@ -528,6 +595,14 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 	return(ok);
 
     peek_capable = (imap_version >= IMAP4);
+
+#if OPIE
+    if ((ctl->server.protocol == P_IMAP) && strstr(capabilities, "AUTH=OTP")) {
+      if (outlevel == O_VERBOSE)
+        error(0, 0, "OTP authentication is supported");
+      return do_otp(sock, ctl);
+    };
+#endif /* OPIE */
 
 #ifdef GSSAPI
     if (strstr(capabilities, "AUTH=GSSAPI"))
