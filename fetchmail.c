@@ -894,13 +894,6 @@ static int load_params(int argc, char **argv, int optind)
     def_opts.smtp_socket = -1;
     def_opts.smtpaddress = (char *)0;
     def_opts.smtpname = (char *)0;
-#define ANTISPAM(n)	save_str(&def_opts.antispam, STRING_DUMMY, 0)->val.status.num = (n)
-    ANTISPAM(571);	/* sendmail */
-    ANTISPAM(550);	/* RFC2821 */
-    ANTISPAM(501);	/* old exim */
-    ANTISPAM(554);	/* Postfix */
-#undef ANTISPAM
-
     def_opts.server.protocol = P_AUTO;
     def_opts.server.timeout = CLIENT_TIMEOUT;
     def_opts.server.esmtp_name = user;

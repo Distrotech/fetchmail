@@ -1107,11 +1107,10 @@ The
 .I postfix
 MTA runs 554 as an antispam response.
 .PP
-The
+Return codes which 
 .I fetchmail
-code recognizes and discards the message on any of a list of responses
-that defaults to [571, 550, 501, 554] but can be set with the `antispam'
-option.  This is one of the
+treats as antispam responses and discards
+the message can be set with the `antispam' option.  This is one of the
 .I only
 three circumstance under which fetchmail ever discards mail (the others
 are the 552 and 553 errors described below, and the suppression of
@@ -1123,6 +1122,8 @@ is fetching from an IMAP server, the antispam response will be detected and
 the message rejected immediately after the headers have been fetched,
 without reading the message body.  Thus, you won't pay for downloading 
 spam message bodies.
+.PP
+By default, the list of antispam responses is empty.
 .PP
 If the \fIspambounce\fR option is on, mail that is spam-blocked
 triggers an RFC1892 bounce message informing the originator that we do

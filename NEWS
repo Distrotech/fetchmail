@@ -4,6 +4,7 @@
 
 * Nerijus Baliunas's patch to support STARTTLS over IMAP.
 * More cleanups and minor bugfixes from Sunil Shetye.
+* Default antispam-response list is now empty.
 
 fetchmail-5.9.14 (Fri Sep  6 05:03:25 EDT 2002), 21932 lines:
 
