@@ -648,7 +648,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     }
 #endif /* KERBEROS_V4 */
 
-    if ((imap_version >= IMAP4) && (!strstr(capabilities, "AUTH=LOGIN"))) {
+    if ((imap_version >= IMAP4rev1) && (!strstr(capabilities, "AUTH=LOGIN"))) {
       error(0,-1, "Required LOGIN capability not supported by server");
       return PS_AUTHFAIL;
     };
