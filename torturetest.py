@@ -42,7 +42,7 @@ class TestSite:
     def entryprint(self):
         "Print a .fetchmailrc entry corresponding to a site entry."
         return "poll %s-%s via %s with proto %s %s\n" \
-               "   user %s there with password %s is esr here\n\n" \
+               "   user %s there with password '%s' is esr here\n\n" \
                % (self.host,self.proto,self.host,self.proto,self.options,self.userid,self.password)
 
     def tableprint(self):
