@@ -225,8 +225,8 @@ if test "$with_gssapi" != "no"
 then
   if test "$with_gssapi" != "yes" -a -n "$with_gssapi"
   then
-    CFLAGS="$CEFLAGS -I$with_gssapi/include"
-    LDFLAGS="$LDEFLAGS -L$with_gssapi/lib"
+    CFLAGS="$CFLAGS -I$with_gssapi/include"
+    LDFLAGS="$LDFLAGS -L$with_gssapi/lib"
   fi
   AC_CHECK_LIB(krb5, krb5_init_context,,
                AC_MSG_ERROR([could not find libkrb5 which is needed for GSSAPI support]))
