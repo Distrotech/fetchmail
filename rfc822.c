@@ -22,9 +22,8 @@ void reply_hack(buf, host)
 char *buf;		/* header to be hacked */
 const char *host;	/* server hostname */
 {
-    const char *from;
+    char *from, *cp;
     int parendepth, state, has_host_part;
-    char mycopy[MSGBUFSIZE+1];
 
     if (strncmp("From: ", buf, 6)
 	&& strncmp("To: ", buf, 4)
@@ -34,10 +33,9 @@ const char *host;	/* server hostname */
 	return;
     }
 
-    strcpy(mycopy, buf);
     parendepth = state = 0;
     has_host_part = FALSE;
-    for (from = mycopy; *from; from++)
+    for (from = buf; *from; from++)
     {
 #ifdef TESTMAIN
 	printf("state %d: %s", state, mycopy);
@@ -66,15 +64,17 @@ const char *host;	/* server hostname */
 		    state = 2;
 		else if ((*from == ',' || HEADER_END(from)) && !has_host_part)
 		{
+		    int hostlen;
+
 		    while (isspace(*from))
 			--from;
 		    from++;
-		    while (isspace(*buf))
-			--buf;
-		    buf++;
-		    strcpy(buf, "@");
-		    strcat(buf, host);
-		    buf += strlen(buf);
+		    hostlen = strlen(host);
+		    for (cp = from + strlen(from); cp >= from; --cp)
+			cp[hostlen+1] = *cp;
+		    *from++ = '@';
+		    memcpy(from, host, hostlen);
+		    from += strlen(from);
 		    has_host_part = TRUE;
 		}
 		break;
@@ -89,19 +89,19 @@ const char *host;	/* server hostname */
 		    has_host_part = TRUE;
 		else if (*from == '>' && !has_host_part)
 		{
-		    strcpy(buf, "@");
-		    strcat(buf, host);
-		    buf += strlen(buf);
+		    int hostlen;
+
+		    hostlen = strlen(host);
+		    for (cp = from + strlen(from); cp >= from; --cp)
+			cp[hostlen+1] = *cp;
+		    *from++ = '@';
+		    memcpy(from, host, hostlen);
+		    from += strlen(from);
 		    has_host_part = TRUE;
 		}
 		break;
 	    }
-
-	/* all characters from the old buffer get copied to the new one */
-	*buf++ = *from;
     }
-
-    *buf = '\0';
 }
 
 char *nxtaddr(hdr)
