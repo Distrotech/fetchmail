@@ -1547,7 +1547,7 @@ static void dump_params (struct runctl *runp,
 	printf(_("Options for retrieving from %s@%s:\n"),
 	       ctl->remotename, visbuf(ctl->server.pollname));
 
-	if (ctl->server.via && (ctl->server.protocol < P_ETRN))
+	if (ctl->server.via && MAILBOX_PROTOCOL(ctl))
 	    printf(_("  Mail will be retrieved via %s\n"), ctl->server.via);
 
 	if (ctl->server.interval)
@@ -1599,7 +1599,7 @@ static void dump_params (struct runctl *runp,
 #endif /* INET6_ENABLE */
 	else if (outlevel >= O_VERBOSE)
 	    printf(_(" (using default port)"));
-	if (ctl->server.uidl && (ctl->server.protocol < P_ETRN))
+	if (ctl->server.uidl && MAILBOX_PROTOCOL(ctl))
 	    printf(_(" (forcing UIDL use)"));
 	putchar('.');
 	putchar('\n');
@@ -1637,7 +1637,7 @@ static void dump_params (struct runctl *runp,
 	else
 	    printf(".\n");
 
-	if (ctl->server.protocol < P_ETRN) {
+	if (MAILBOX_PROTOCOL(ctl)) {
 		if (!ctl->mailboxes->id)
 		    printf(_("  Default mailbox selected.\n"));
 		else
@@ -1704,7 +1704,7 @@ static void dump_params (struct runctl *runp,
 		    printf(_("  SMTP message batch limit is %d.\n"), ctl->batchlimit);
 		else if (outlevel >= O_VERBOSE)
 		    printf(_("  No SMTP message batch limit (--batchlimit 0).\n"));
-		if (ctl->server.protocol < P_ETRN)
+		if (MAILBOX_PROTOCOL(ctl))
 		{
 		    if (NUM_NONZERO(ctl->expunge))
 			printf(_("  Deletion interval between expunges forced to %d (--expunge %d).\n"), ctl->expunge, ctl->expunge);
@@ -1714,7 +1714,7 @@ static void dump_params (struct runctl *runp,
 	}
 	if (ctl->bsmtp)
 	    printf(_("  Messages will be appended to %s as BSMTP\n"), visbuf(ctl->bsmtp));
-	else if (ctl->mda && (ctl->server.protocol < P_ETRN))
+	else if (ctl->mda && MAILBOX_PROTOCOL(ctl))
 	    printf(_("  Messages will be delivered with \"%s\".\n"), visbuf(ctl->mda));
 	else
 	{
@@ -1735,7 +1735,7 @@ static void dump_params (struct runctl *runp,
 		printf(_("  Address to be put in RCPT TO lines shipped to SMTP will be %s\n"),
 		       ctl->smtpname);
 	}
-	if (ctl->server.protocol < P_ETRN)
+	if (MAILBOX_PROTOCOL(ctl))
 	{
 		if (ctl->antispam != (struct idlist *)NULL)
 		{
@@ -1759,7 +1759,7 @@ static void dump_params (struct runctl *runp,
 		   visbuf(ctl->postconnect));
 	else if (outlevel >= O_VERBOSE)
 	    printf(_("  No post-connection command.\n"));
-	if (ctl->server.protocol < P_ETRN) {
+	if (MAILBOX_PROTOCOL(ctl)) {
 		if (!ctl->localnames)
 		    printf(_("  No localnames declared for this host.\n"));
 		else
@@ -1856,7 +1856,7 @@ static void dump_params (struct runctl *runp,
 	else if (outlevel >= O_VERBOSE)
 	    printf(_("  No plugout command specified.\n"));
 
-	if (ctl->server.protocol > P_POP2 && (ctl->server.protocol < P_ETRN))
+	if (ctl->server.protocol > P_POP2 && MAILBOX_PROTOCOL(ctl))
 	{
 	    if (!ctl->oldsaved)
 		printf(_("  No UIDs saved from this host.\n"));
