@@ -19,7 +19,15 @@ The Debian bug-tracking page for fetchmail is:
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
-fetchmail-5.2.5 (Sat Feb  5 00:01:53 EST 2000), 18517 lines:
+fetchmail-5.2.7 (Sun Feb  6 20:45:41 EST 2000), 18517 lines:
+* Updated FAQ.
+* Updated es.po.
+* Disable mail notification on server unreachable.  This turned out to
+  be a very bad idea.
+
+There are 276 people on fetchmail-friends and 493 on fetchmail-announce.
+
+fetchmail-5.2.6 (Sat Feb  5 00:01:53 EST 2000), 18517 lines:
 * Close down sockets using shutdown(2) and discarding read data until we
   get a TCP FIN.  With any luck this will squash our socket leak.
 * Open the lockfile with O_SYNC, so we know the file has been written

@@ -1620,6 +1620,13 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		    strcpy(errbuf, strerror(err_no));
 		report_complete(stderr, ": %s\n", errbuf);
 
+#ifdef __UNUSED
+		/* 
+		 * Don't use this.  It was an attempt to address Debian bug
+		 * #47143 (Notify user by mail when pop server nonexistent).
+		 * Trouble is, that doesn't work; you trip over the case 
+		 * where your SLIP or PPP link is down...
+		 */
 		/* warn the system administrator */
 		if (open_warning_by_mail(ctl, (struct msgblk *)NULL) == 0)
 		{
@@ -1627,8 +1634,9 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		    stuff_warning(ctl, OPENFAIL, ctl->server.pollname);
 		    stuff_warning(ctl, errbuf, ctl->server.pollname);
 		    close_warning_by_mail(ctl, (struct msgblk *)NULL);
-		}
 #undef OPENFAIL
+		}
+#endif
 	    }
 #endif /* INET6_ENABLE */
 	    ok = PS_SOCKET;
