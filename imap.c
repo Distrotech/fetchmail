@@ -47,7 +47,19 @@ int imap_ok (int sock,  char *argbuf)
 	if (strstr(buf, "RECENT"))
 	    recent = atoi(buf+2);
 	if (strstr(buf, "UNSEEN"))
-	    unseen = atoi(buf+2);
+	{
+	    char	*cp;
+
+	    /*
+	     * Handle both "* 42 UNSEEN" and "* OK [UNSEEN 42] 42".
+	     */
+	    unseen = 0;
+	    for (cp = buf; *cp && !isdigit(*cp); cp++)
+	    {
+		unseen = atoi(cp);
+		break;
+	    }
+	}
 	if (strstr(buf, "FLAGS"))
 	    seen = (strstr(buf, "Seen") != (char *)NULL);
     } while
