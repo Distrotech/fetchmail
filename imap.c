@@ -16,6 +16,10 @@
 #include  "socket.h"
 
 #ifdef KERBEROS_V4
+#if defined (__bsdi__)
+#include <des.h>
+#define krb_get_err_text(e) (krb_err_txt[e])
+#endif
 #include <krb.h>
 #endif /* KERBEROS_V4 */
 

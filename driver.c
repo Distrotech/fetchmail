@@ -41,8 +41,14 @@
 #endif
 
 #ifdef KERBEROS_V4
+#if defined (__bsdi__)
+#include <des.h> /* order of includes matters */
+#include <krb.h>
+#define krb_get_err_text(e) (krb_err_txt[e])
+#else
 #include <krb.h>
 #include <des.h>
+#endif /* ! defined (__bsdi__) */
 #include <netinet/in.h>
 #include <netdb.h>
 #endif /* KERBEROS_V4 */

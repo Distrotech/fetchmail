@@ -128,7 +128,7 @@ test "$with_POP2" = "yes" && AC_DEFINE(POP2_ENABLE)
 AC_ARG_WITH(kerberos,
 	[  --with-kerberos=DIR  point fetchmail compilation at a Kerberos directory])
 
-for dir in $with_kerberos /usr/kerberos /usr/athena
+for dir in $with_kerberos /usr/kerberos /usr/kerberosIV /usr/athena
 do
   if test -f "$dir/include/krb.h"
   then
