@@ -1119,37 +1119,6 @@ int delimited;		/* does the protocol use a message delimiter? */
 	}
     }
 
-    /*
-     * End-of-message processing starts here
-     */
-
-    if (outlevel == O_VERBOSE)
-	fputc('\n', stderr);
-
-    if (ctl->mda)
-    {
-	int rc;
-
-	/* close the delivery pipe, we'll reopen before next message */
-	rc = pclose(sinkfp);
-	signal(SIGCHLD, sigchld);
-	if (rc)
-	{
-	    error(0, -1, "MDA exited abnormally or returned nonzero status");
-	    return(PS_IOERR);
-	}
-    }
-    else if (forward)
-    {
-	/* write message terminator */
-	if (SMTP_eom(ctl->smtp_socket) != SM_OK)
-	{
-	    error(0, -1, "SMTP listener refused delivery");
-	    ctl->errcount++;
-	    return(PS_TRANSIENT);
-	}
-    }
-
     return(PS_SUCCESS);
 }
 
@@ -1590,6 +1559,34 @@ const struct method *proto;	/* protocol method table */
 				if (ok != 0)
 				    goto cleanUp;
 				set_timeout(ctl->server.timeout);
+			    }
+			}
+
+			/* end-of-message processing starts here */
+			if (outlevel == O_VERBOSE)
+			    fputc('\n', stderr);
+
+			if (ctl->mda)
+			{
+			    int rc;
+
+			    /* close the delivery pipe, we'll reopen before next message */
+			    rc = pclose(sinkfp);
+			    signal(SIGCHLD, sigchld);
+			    if (rc)
+			    {
+				error(0, -1, "MDA exited abnormally or returned nonzero status");
+				goto cleanUp;
+			    }
+			}
+			else if (!suppress_forward)
+			{
+			    /* write message terminator */
+			    if (SMTP_eom(ctl->smtp_socket) != SM_OK)
+			    {
+				error(0, -1, "SMTP listener refused delivery");
+				ctl->errcount++;
+				suppress_delete = TRUE;
 			    }
 			}
 
