@@ -78,6 +78,18 @@ int imap_ok(int sock, char *argbuf)
 	}
 	else if (strstr(buf, "PREAUTH"))
 	    preauth = TRUE;
+	/*
+	 * The server may decide to make the mailbox read-only, 
+	 * which causes fetchmail to go into a endless loop
+	 * fetching the same message over and over again. 
+	 * 
+	 * This checks for the condition and aborts if 
+	 * the mailbox is read-only. 
+	 *
+	 * See RFC 2060 section 6.3.1 (SELECT).
+	 */ 
+	else if (strstr(buf, "[READ-ONLY]"))
+	    return(PS_LOCKBUSY);
     } while
 	(tag[0] != '\0' && strncmp(buf, tag, strlen(tag)));
 
@@ -181,7 +193,7 @@ static int do_imap_ntlm(int sock, struct query *ctl)
     if (outlevel >= O_MONITOR)
 	report(stdout, "IMAP> %s\n", msgbuf);
       
-    strcat(msgbuf,"\r\n");
+
 
     SockWrite (sock, msgbuf, strlen (msgbuf));
   
