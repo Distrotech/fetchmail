@@ -1585,6 +1585,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	if ((mailserver_socket = SockOpen(realhost, port, NULL, ctl->server.plugin)) == -1)
 #endif /* INET6_ENABLE */
 	{
+	    char	errbuf[BUFSIZ];
 #if !INET6_ENABLE
 	    int err_no = errno;
 #ifdef HAVE_RES_SEARCH
@@ -1604,25 +1605,30 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		if (h_errno != 0)
 		{
 		    if (h_errno == HOST_NOT_FOUND)
-			report_complete(stderr,
-				_(": host is unknown\n"));
+			strcpy(errbuf, _("host is unknown."));
 		    else if (h_errno == NO_ADDRESS)
-			report_complete(stderr, 
-				_(": name is valid but has no IP address\n"));
+			strcpy(errbuf, _("name is valid but has no IP address."));
 		    else if (h_errno == NO_RECOVERY)
-			report_complete(stderr,
-				_(": unrecoverable name server error\n"));
+			strcpy(errbuf, _("unrecoverable name server error."));
 		    else if (h_errno == TRY_AGAIN)
-			report_complete(stderr,
-				_(": temporary name server error\n"));
+			strcpy(errbuf, _("temporary name server error."));
 		    else
-			report_complete(stderr,
-				_(": unknown DNS error %d\n"), h_errno);
+			sprintf(errbuf, _("unknown DNS error %d."), h_errno);
 		}
 		else
 #endif /* HAVE_RES_SEARCH */
-		    report_complete(stderr, ": %s\n", strerror(err_no));
+		    strcpy(errbuf, strerror(err_no));
+		report_complete(stderr, ": %s\n", errbuf);
 
+		/* warn the system administrator */
+		if (open_warning_by_mail(ctl, (struct msgblk *)NULL) == 0)
+		{
+#define OPENFAIL	"Subject: Fetchmail unreachable-server warning.\r\n\r\nFetchmail could not reach the mail server %s:"
+		    stuff_warning(ctl, OPENFAIL, ctl->server.pollname);
+		    stuff_warning(ctl, errbuf, ctl->server.pollname);
+		    close_warning_by_mail(ctl, (struct msgblk *)NULL);
+		}
+#undef OPENFAIL
 	    }
 #endif /* INET6_ENABLE */
 	    ok = PS_SOCKET;

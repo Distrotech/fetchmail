@@ -1,7 +1,5 @@
 				Things to do:
 
-Notify user by mail when pop server nonexistent (Debian wishlist #47143).
-
 In the SSL support, we need to add server certificate validation (In
 other words, does the certificate match the system we are trying to
 contact?).  Also, add authentication of Certifying Authority (Is this
@@ -32,6 +30,7 @@ The Debian bug-tracking page for fetchmail is:
 * Support for RFC2449 extended POP3 responses [IN-USE] and [LOGIN-DELAY].
 * Log bounced messages via syslog (Debian bug #50184).
 * Add scrollbars on fetchmailconf help windows (Debian bug #51770). 
+* Notify user by mail when pop server nonexistent (Debian bug #47143).
 * Debian buglist cleanup.
 
 fetchmail-5.2.5 (Mon Jan 31 02:02:48 EST 2000), 18445 lines:
