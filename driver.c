@@ -66,6 +66,11 @@
 #include <netinet/in.h>
 #include <netdb.h>
 #endif /* KERBEROS_V4 */
+#ifdef KERBEROS_V5
+#include <krb5.h>
+#include <com_err.h>
+#endif /* KEREROS_V5 */
+
 #include  "fetchmail.h"
 #include  "socket.h"
 #include  "smtp.h"
@@ -1593,6 +1598,72 @@ const char *canonical;	/* server name */
 }
 #endif /* KERBEROS_V4 */
 
+#ifdef KERBEROS_V5
+int
+kerberos5_auth(socket, canonical)
+/* authernticate to the server host using Kerberos V5 */
+int socket;             /* socket to server host */
+const char *canonical;  /* server name */
+{
+    krb5_error_code retval;
+    krb5_context context;
+    krb5_ccache ccdef;
+    krb5_principal client = NULL, server = NULL;
+    krb5_error *err_ret = NULL;
+
+    krb5_auth_context auth_context = NULL;
+
+    krb5_init_context(&context);
+    krb5_init_ets(context);
+    krb5_auth_con_init(context, &auth_context);
+
+    if (retval = krb5_cc_default(context, &ccdef)) {
+        error(0, 0, "krb5_cc_default: %s", error_message(retval));
+        return(PS_ERROR);
+    }
+
+    if (retval = krb5_cc_get_principal(context, ccdef, &client)) {
+        error(0, 0, "krb5_cc_get_principal: %s", error_message(retval));
+        return(PS_ERROR);
+    }
+
+    if (retval = krb5_sname_to_principal(context, canonical, "pop",
+           KRB5_NT_UNKNOWN,
+           &server)) {
+        error(0, 0, "krb5_sname_to_principal: %s", error_message(retval));
+        return(PS_ERROR);
+    }
+
+    retval = krb5_sendauth(context, &auth_context, (krb5_pointer) &socket,
+         "KPOPV1.0", client, server,
+         AP_OPTS_MUTUAL_REQUIRED,
+         NULL,  /* no data to checksum */
+         0,   /* no creds, use ccache instead */
+         ccdef,
+         &err_ret, 0,
+
+         NULL); /* don't need reply */
+
+    krb5_free_principal(context, server);
+    krb5_free_principal(context, client);
+    krb5_auth_con_free(context, auth_context);
+
+    if (retval) {
+      if (err_ret && err_ret->text.length) {
+          error(0, 0, "krb5_sendauth: %s [server says '%*s'] ",
+            error_message(retval),
+            err_ret->text.length,
+            err_ret->text.data);
+          krb5_free_error(context, err_ret);
+      } else
+          error(0, 0, "krb5_sendauth: %s", error_message(retval));
+      return(PS_ERROR);
+    }
+
+    return 0;
+}
+#endif /* KERBEROS_V5 */
+
 int do_protocol(ctl, proto)
 /* retrieve messages from server using given protocol method table */
 struct query *ctl;		/* parsed options with merged-in defaults */
@@ -1609,6 +1680,14 @@ const struct method *proto;	/* protocol method table */
 	return(PS_ERROR);
     }
 #endif /* KERBEROS_V4 */
+
+#ifndef KERBEROS_V5
+    if (ctl->server.preauthenticate == A_KERBEROS_V5)
+    {
+	error(0, -1, "Kerberos V5 support not linked.");
+	return(PS_ERROR);
+    }
+#endif /* KERBEROS_V5 */
 
     /* lacking methods, there are some options that may fail */
     if (!proto->is_old)
@@ -1737,6 +1816,16 @@ const struct method *proto;	/* protocol method table */
 	    set_timeout(ctl->server.timeout);
 	}
 #endif /* KERBEROS_V4 */
+
+#ifdef KERBEROS_V5
+	if (ctl->server.preauthenticate == A_KERBEROS_V5)
+	{
+	    ok = kerberos5_auth(sock, ctl->server.truename);
+ 	    if (ok != 0)
+		goto cleanUp;
+	    set_timeout(ctl->server.timeout);
+	}
+#endif /* KERBEROS_V5 */
 
 	/* accept greeting message from mail server */
 	ok = (protocol->parse_response)(sock, buf);

@@ -40,7 +40,8 @@ port		{ return PORT; }
 interval	{ return INTERVAL; }
 auth(enticate)?	{ return AUTHENTICATE; }
 kerberos_v4	{ return KERBEROS4; }
-kerberos	{ return KERBEROS4; }
+kerberos	{ return KERBEROS; }
+kerberos_v5     { return KERBEROS5; }
 timeout		{ return TIMEOUT;}
 envelope	{ return ENVELOPE; }
 qvirtual	{ return QVIRTUAL; }

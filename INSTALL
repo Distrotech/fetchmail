@@ -70,10 +70,10 @@ will do that.
 
 Advanced configuration:
 
-Specifying --with-kerberos=DIR will tell the fetchmail build process to
-look in DIR for Kerberos support.  Configure normally looks in /usr/kerberos
-and /usr/athena; if you specify this option with an argument it will look
-in DIR first. 
+Specifying --with-kerberos=DIR or --with-kerberos5=DIR will tell the
+fetchmail build process to look in DIR for Kerberos support.
+Configure normally looks in /usr/kerberos and /usr/athena; if you
+specify this option with an argument it will look in DIR first.
 
 Unfortunately, there doesn't seem to be good standardization of where
 Kerberos lives.  If your configuration doesn't match one of the four

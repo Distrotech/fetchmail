@@ -265,6 +265,31 @@ else
     done
 fi
 
+###	use option --with-kerberos5=DIR to point at a Kerberos 5 directory
+AC_ARG_WITH(kerberos5,
+	[  --with-kerberos5=DIR  point fetchmail compilation at a Kerberos 5 directory])
+
+# The "then" arm (nonempty $with_kerberos5) is kind of a crock.  It works for
+# configuring the BSD/OS Kerberos IV support, though. 
+if test "$with_kerberos5" != "yes"
+then
+    # Path given
+    CEFLAGS="$CEFLAGS -DKERBEROS_V5 -I$with_kerberos5/include"
+    LDEFLAGS="$LDEFLAGS -L$with_kerberos5/lib"
+    LIBS="$LIBS -lkrb5 -lcrypto -lcom_err"
+else
+    for dir in /usr/kerberos /usr/local/krb5 /usr/athena
+    do
+      if test -f "$dir/include/krb5.h"
+      then
+        CEFLAGS="$CEFLAGS -DKERBEROS_V5 -I$dir/include"
+        LDEFLAGS="$LDEFLAGS -L$dir/lib"
+        LIBS="$LIBS -lkrb5 -lcrypto -lcom_err"
+        break
+      fi
+    done
+fi
+
 AC_OUTPUT(Makefile, [
 	# The reason for this odd makedepend line is that we want
 	# to have all dependencies evaluated relative to the source directory

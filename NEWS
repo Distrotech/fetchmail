@@ -11,10 +11,6 @@
 * Make the antispam response configurable.
 * Handle multi-homed hosts correctly.
 
-				Other TO-DO items:
-
-* Get with Craig Metz to write a draft RFC on RFC1938 support in IMAP.
-
 				Release Notes:
 
 ------------------------------------------------------------------------------
@@ -22,6 +18,8 @@ fetchmail-4.4.0 ():
 * Relax the LOGIN capability check in IMAP.
 * John Stracke <francis@netscape.com> sent a workaround for SIGALRM flakiness
   under Red Hat 5.0.
+* Kerberos V support from Jon Dugan <jdugan@ncsa.uiuc.edu> and
+  Von Welch <vwelch@ncsa.uiuc.edu>.
 
 There are 269 people on fetchmail-friends and 144 on fetchmail-announce.
 

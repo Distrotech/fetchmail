@@ -325,7 +325,10 @@ int main (int argc, char **argv)
     for (ctl = querylist; ctl; ctl = ctl->next)
 	if (ctl->active && !(implicitmode && ctl->server.skip)&&!ctl->password)
 	{
-	    if (ctl->server.preauthenticate == A_KERBEROS_V4 || ctl->server.protocol == P_IMAP_K4 || ctl->server.protocol == P_IMAP_GSS)
+	    if (ctl->server.preauthenticate == A_KERBEROS_V4 ||
+		ctl->server.preauthenticate == A_KERBEROS_V5 ||
+		ctl->server.protocol == P_IMAP_K4 ||
+		ctl->server.protocol == P_IMAP_GSS)
 		/* Server won't care what the password is, but there
 		   must be some non-null string here.  */
 		ctl->password = ctl->remotename;
@@ -450,7 +453,9 @@ int main (int argc, char **argv)
 		 * nameserver is still up.  The multidrop case
 		 * (especially) needs it.
 		 */
-		if (ctl->server.preauthenticate==A_KERBEROS_V4 || MULTIDROP(ctl))
+		if (ctl->server.preauthenticate==A_KERBEROS_V4 ||
+		    ctl->server.preauthenticate==A_KERBEROS_V5 ||
+		    MULTIDROP(ctl))
 		{
 		    struct hostent	*namerec;
 
@@ -997,7 +1002,8 @@ void dump_params (struct query *ctl)
 #else /* INET6 */
 		&& ctl->server.port == KPOP_PORT
 #endif /* INET6 */
-		&& ctl->server.preauthenticate == A_KERBEROS_V4)
+		&& (ctl->server.preauthenticate == A_KERBEROS_V4 ||
+		    ctl->server.preauthenticate == A_KERBEROS_V5))
 	printf("  Protocol is KPOP");
     else
 	printf("  Protocol is %s", showproto(ctl->server.protocol));
@@ -1018,6 +1024,8 @@ void dump_params (struct query *ctl)
     putchar('\n');
     if (ctl->server.preauthenticate == A_KERBEROS_V4)
 	    printf("  Kerberos V4 preauthentication enabled.\n");
+    if (ctl->server.preauthenticate == A_KERBEROS_V5)
+	    printf("  Kerberos V5 preauthentication enabled.\n");
     if (ctl->server.timeout > 0)
 	printf("  Server nonresponse timeout is %d seconds", ctl->server.timeout);
     if (ctl->server.timeout ==  CLIENT_TIMEOUT)

@@ -211,7 +211,11 @@ struct query *ctl;	/* option record to be initialized */
 #else /* INET6 */
 		ctl->server.port = KPOP_PORT;
 #endif /* INET6 */
+#ifdef KERBEROS_V5
+		ctl->server.preauthenticate =  A_KERBEROS_V5;
+#else
 		ctl->server.preauthenticate =  A_KERBEROS_V4;
+#endif /* KERBEROS_V5 */
 	    }
 	    else if (strcasecmp(optarg,"imap") == 0)
 		ctl->server.protocol = P_IMAP;
@@ -243,9 +247,15 @@ struct query *ctl;	/* option record to be initialized */
 	    if (strcmp(optarg, "password") == 0)
 		ctl->server.preauthenticate = A_PASSWORD;
 	    else if (strcmp(optarg, "kerberos") == 0)
+#ifdef KERBEROS_V5
+		ctl->server.preauthenticate = A_KERBEROS_V5;
+	    else if (strcmp(optarg, "kerberos_v5") == 0)
+		ctl->server.preauthenticate = A_KERBEROS_V5;
+#else
 		ctl->server.preauthenticate = A_KERBEROS_V4;
 	    else if (strcmp(optarg, "kerberos_v4") == 0)
 		ctl->server.preauthenticate = A_KERBEROS_V4;
+#endif /* KERBEROS_V5 */
 	    else {
 		fprintf(stderr,"Invalid preauthentication `%s' specified.\n", optarg);
 		errflag++;

@@ -62,7 +62,7 @@ extern char * yytext;
 }
 
 %token DEFAULTS POLL SKIP VIA AKA LOCALDOMAINS PROTOCOL
-%token AUTHENTICATE TIMEOUT KPOP KERBEROS4
+%token AUTHENTICATE TIMEOUT KPOP KERBEROS4 KERBEROS5 KERBEROS
 %token ENVELOPE QVIRTUAL USERNAME PASSWORD FOLDER SMTPHOST MDA SMTPADDRESS
 %token PRECONNECT POSTCONNECT LIMIT
 %token IS HERE THERE TO MAP WILDCARD
@@ -129,7 +129,11 @@ serv_option	: AKA alias_list
 		| PROTOCOL PROTO	{current.server.protocol = $2;}
 		| PROTOCOL KPOP		{
 					    current.server.protocol = P_POP3;
+#ifdef KERBEROS_V5
+		    			    current.server.preauthenticate = A_KERBEROS_V5;
+#else
 		    			    current.server.preauthenticate = A_KERBEROS_V4;
+#endif /* KERBEROS_V5 */
 #if INET6
 					    current.server.service = KPOP_PORT;
 #else /* INET6 */
@@ -151,6 +155,14 @@ serv_option	: AKA alias_list
 		| INTERVAL NUMBER		{current.server.interval = $2;}
 		| AUTHENTICATE PASSWORD	{current.server.preauthenticate = A_PASSWORD;}
 		| AUTHENTICATE KERBEROS4	{current.server.preauthenticate = A_KERBEROS_V4;}
+                | AUTHENTICATE KERBEROS5 	{current.server.preauthenticate = A_KERBEROS_V5;}
+                | AUTHENTICATE KERBEROS         {
+#ifdef KERBEROS_V5
+		    current.server.preauthenticate = A_KERBEROS_V5;
+#else
+		    current.server.preauthenticate = A_KERBEROS_V4;
+#endif /* KERBEROS_V5 */
+		}
 		| TIMEOUT NUMBER	{current.server.timeout = $2;}
 
 		| ENVELOPE NUMBER STRING 

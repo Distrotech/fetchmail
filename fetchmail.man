@@ -328,16 +328,16 @@ no other activity has occurred on the link, then the poll will be
 skipped.  This option is currently only supported under Linux.
 .TP
 .B \-A, --auth
-(Keyword: auth[enticate])
+(Keyword: auth[enticate]) 
 This option permits you to specify a preauthentication type (see USER
 AUTHENTICATION below for details).  The possible values are
-\&`\fBpassword\fR' and `\fBkerberos\fR' (or, for excruciating
-exactness, `\fBkerberos_v4\fR').  This option is provided
+\&`\fBpassword\fR', `\fBkerberos_v5\fR' and `\fBkerberos\fR' (or, for
+excruciating exactness, `\fBkerberos_v4\fR').  This option is provided
 primarily for developers; choosing KPOP protocol automatically selects
-Kerberos preauthentication, and all other alternatives use
-password authentication (though APOP uses a generated one-time
-key as the password and IMAP-K4 uses RFC1731 Kerberos v4 authentication).
-This option does not work with ETRN.
+Kerberos preauthentication, and all other alternatives use password
+authentication (though APOP uses a generated one-time key as the
+password and IMAP-K4 uses RFC1731 Kerberos v4 authentication).  This
+option does not work with ETRN.
 .SS Miscellaneous Options
 .TP
 .B \-f pathname, --fetchmailrc pathname

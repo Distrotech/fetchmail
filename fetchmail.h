@@ -22,6 +22,7 @@
 /* preauthentication types */
 #define		A_PASSWORD	0	/* password or inline authentication */
 #define		A_KERBEROS_V4	1	/* preauthenticate w/ Kerberos V4 */
+#define		A_KERBEROS_V5	2	/* preauthenticate w/ Kerberos V5 */
 
 /*
  * Definitions for buffer sizes.  We get little help on setting maxima
