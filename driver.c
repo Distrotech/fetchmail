@@ -138,6 +138,11 @@ static int is_host_alias(const char *name, struct query *ctl)
 	case NO_RECOVERY:	/* non-recoverable name server error */
 	case TRY_AGAIN:		/* temporary error on authoritative server */
 	default:
+	    if (outlevel != O_SILENT)
+		putchar('\n');	/* terminate the progress message */
+	    fprintf(stderr,
+		"fetchmail: nameserver evaporated while looking for `%s' during poll of %s.\n",
+		name, ctl->servername);
 	    longjmp(restart, 2);	/* try again next poll cycle */
 	    break;
 	}
@@ -697,9 +702,7 @@ const struct method *proto;	/* protocol method table */
     }
     else if (js == 2)
     {
-	fprintf(stderr,
-		"fetchmail: nameserver evaporated during poll of %s.\n",
-		ctl->servername);
+	/* error message printed at point of longjmp */
 	ok = PS_ERROR;
     }
     else
