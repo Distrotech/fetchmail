@@ -73,8 +73,8 @@ MAKEINFO = makeinfo
 TEXI2DVI = texi2dvi
 
 # Programs to make tags files.
-ETAGS = etags -tw
-CTAGS = ctags -tw
+ETAGS = etags
+CTAGS = ctags
 
 protobjs = rcfile_y.o rcfile_l.o socket.o getpass.o pop2.o pop3.o imap.o \
        etrn.o fetchmail.o env.o options.o daemon.o driver.o rfc822.o smtp.o \
