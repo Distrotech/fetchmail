@@ -22,8 +22,6 @@
 #endif
 #include "fetchmail.h"
 
-extern int optind;
-
 #define INPUT_BUF_SIZE	PASSWORDLEN
 
 #if defined(HAVE_TERMIOS_H) && defined(HAVE_TCSETATTR)
@@ -60,86 +58,83 @@ void save_tty_state();
 void disable_tty_echo();
 void restore_tty_state();
 
-char *
-getpassword(prompt)
+char *getpassword(prompt)
 char *prompt;
 {
-
 #if !(defined(HAVE_TCSETATTR) || defined(HAVE_TERMIO_H) || defined(HAVE_STTY))
 
 #if defined(HAVE_GETPASS) 
-  char *getpass();
-  return getpass(prompt);
+    char *getpass();
+    return getpass(prompt);
 #else
-  fputs("ERROR: no support for getpassword() routine\n",stderr);
-  exit(1);
+    fputs("ERROR: no support for getpassword() routine\n",stderr);
+    exit(1);
 #endif
 
 #endif /* !(defined(HAVE_TCSETATTR) || ... */
 
-  register char *p;
-  register c;
-  FILE *fi;
-  static char pbuf[INPUT_BUF_SIZE];
-  RETSIGTYPE (*sig)();
-  RETSIGTYPE sigint_handler();
-  int istty=tcgetpgrp(0)!=-1;
+    register char *p;
+    register c;
+    FILE *fi;
+    static char pbuf[INPUT_BUF_SIZE];
+    RETSIGTYPE (*sig)();
+    RETSIGTYPE sigint_handler();
+    int istty = (tcgetpgrp(0) != -1);
 
-  /* get the file descriptor for the input device */
+    /* get the file descriptor for the input device */
 
-  if(istty)
-  {
-    if ((fi = fdopen(open("/dev/tty", 2), "r")) == NULL)
-      fi = stdin;
+    if (istty)
+    {
+	if ((fi = fdopen(open("/dev/tty", 2), "r")) == NULL)
+	    fi = stdin;
+	else
+	    setbuf(fi, (char *)NULL);
+    }
     else
-      setbuf(fi, (char *)NULL);
-  }
-  else
-    fi=stdin;
+	fi = stdin;
 
-  /* store descriptor for the tty */
-  ttyfd = fileno(fi);
+    /* store descriptor for the tty */
+    ttyfd = fileno(fi);
 
-  if(istty)
-  {
-    /* preserve tty state before turning off echo */
-    save_tty_state();
+    if (istty)
+    {
+	/* preserve tty state before turning off echo */
+	save_tty_state();
 
-    /* now that we have the current tty state, we can catch SIGINT and  
-       exit gracefully */
-    sig = signal(SIGINT, sigint_handler);
+	/* now that we have the current tty state, we can catch SIGINT and  
+	   exit gracefully */
+	sig = signal(SIGINT, sigint_handler);
 
-    /* turn off echo on the tty */
-    disable_tty_echo();
-  }
+	/* turn off echo on the tty */
+	disable_tty_echo();
 
-  /* display the prompt and get the input string */
-  if(istty)
-    fprintf(stderr, "%s", prompt); fflush(stderr);
-  for (p=pbuf; (c = getc(fi))!='\n' && c!=EOF;) {
-    if (p < &pbuf[INPUT_BUF_SIZE - 1])
-      *p++ = c;
-  }
-  *p = '\0';
+	/* display the prompt and get the input string */
+	fprintf(stderr, "%s", prompt);
+    }
 
-  /* write a newline so cursor won't appear to hang */
-  if(fi!=stdin)
-  {
-    fprintf(stderr, "\n"); fflush(stderr);
-  }
-  if(istty)
-  {
-    /* restore previous state of the tty */
-    restore_tty_state();
+    for (p = pbuf; (c = getc(fi))!='\n' && c!=EOF;)
+    {
+	if (p < &pbuf[INPUT_BUF_SIZE - 1])
+	    *p++ = c;
+    }
+    *p = '\0';
 
-    /* restore previous state of SIGINT */
-    signal(SIGINT, sig);
-  }
-  if (fi != stdin)
-    fclose(fi);
+    /* write a newline so cursor won't appear to hang */
+    if (fi != stdin)
+	fprintf(stderr, "\n");
 
-  return(pbuf);
+    if (istty)
+    {
+	/* restore previous state of the tty */
+	restore_tty_state();
 
+	/* restore previous state of SIGINT */
+	signal(SIGINT, sig);
+    }
+    if (fi != stdin)
+	fclose(fi);
+
+    return(pbuf);
 }
 
 
@@ -147,15 +142,15 @@ void
 save_tty_state ()
 {
 #if defined(HAVE_TCSETATTR)
-  tcgetattr(ttyfd, &termb);
-  flags = termb.c_lflag;
+    tcgetattr(ttyfd, &termb);
+    flags = termb.c_lflag;
 #else
 #if defined(HAVE_TERMIO_H)
-  ioctl(ttyfd, TCGETA, (char *) &termb);
-  flags = termb.c_lflag;
+    ioctl(ttyfd, TCGETA, (char *) &termb);
+    flags = termb.c_lflag;
 #else  /* we HAVE_STTY */
-  gtty(ttyfd, &ttyb);
-  flags = ttyb.sg_flags;
+    gtty(ttyfd, &ttyb);
+    flags = ttyb.sg_flags;
 #endif
 #endif
 }
@@ -164,17 +159,17 @@ save_tty_state ()
 void
 disable_tty_echo() 
 {
-  /* turn off echo on the tty */
+    /* turn off echo on the tty */
 #if defined(HAVE_TCSETATTR)
-  termb.c_lflag &= ~ECHO;
-  tcsetattr(ttyfd, TCSAFLUSH, &termb);
+    termb.c_lflag &= ~ECHO;
+    tcsetattr(ttyfd, TCSAFLUSH, &termb);
 #else
 #if defined(HAVE_TERMIO_H)
-  termb.c_lflag &= ~ECHO;
-  ioctl(ttyfd, TCSETA, (char *) &termb);
+    termb.c_lflag &= ~ECHO;
+    ioctl(ttyfd, TCSETA, (char *) &termb);
 #else  /* we HAVE_STTY */
-  ttyb.sg_flags &= ~ECHO;
-  stty(ttyfd, &ttyb);
+    ttyb.sg_flags &= ~ECHO;
+    stty(ttyfd, &ttyb);
 #endif
 #endif
 }
@@ -184,24 +179,24 @@ disable_tty_echo()
 void
 restore_tty_state()
 {
-  /* restore previous tty echo state */
+    /* restore previous tty echo state */
 #if defined(HAVE_TCSETATTR)
-  termb.c_lflag = flags;
-  tcsetattr(ttyfd, TCSAFLUSH, &termb);
+    termb.c_lflag = flags;
+    tcsetattr(ttyfd, TCSAFLUSH, &termb);
 #else
 #if defined(HAVE_TERMIO_H)
-  termb.c_lflag = flags;
-  ioctl(ttyfd, TCSETA, (char *) &termb);
+    termb.c_lflag = flags;
+    ioctl(ttyfd, TCSETA, (char *) &termb);
 #else  /* we HAVE_STTY */
-  ttyb.sg_flags = flags;
-  stty(ttyfd, &ttyb);
+    ttyb.sg_flags = flags;
+    stty(ttyfd, &ttyb);
 #endif
 #endif
 }
 
 
-RETSIGTYPE sigint_handler ()
+RETSIGTYPE sigint_handler()
 {
-  restore_tty_state();
-  error(1, 0, "\nCaught signal... bailing out.");
+    restore_tty_state();
+    error(1, 0, "\nCaught signal... bailing out.");
 }
