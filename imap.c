@@ -35,7 +35,7 @@ extern char *strstr();	/* needed on sysV68 R3V7.1. */
 
 static int count, seen, recent, unseen, deletecount, imap_version;
 
-int imap_ok (int sock,  char *argbuf)
+int imap_ok(int sock, char *argbuf)
 /* parse command response */
 {
     char buf [POPBUFSIZE+1];
@@ -73,7 +73,8 @@ int imap_ok (int sock,  char *argbuf)
 
     if (tag[0] == '\0')
     {
-	strcpy(argbuf, buf);
+	if (argbuf)
+	    strcpy(argbuf, buf);
 	return(PS_SUCCESS); 
     }
     else
@@ -88,7 +89,8 @@ int imap_ok (int sock,  char *argbuf)
 
 	if (strncmp(cp, "OK", 2) == 0)
 	{
-	    strcpy(argbuf, cp);
+	    if (argbuf)
+		strcpy(argbuf, cp);
 	    return(PS_SUCCESS);
 	}
 	else if (strncmp(cp, "BAD", 2) == 0)
@@ -365,7 +367,10 @@ int imap_getauth(int sock, struct query *ctl, char *buf)
 	     error(0, 0, "Protocol identified as IMAP4 rev 0");
      }
 
-     peek_capable = (imap_version >= IMAP4);
+     /* eat the tail of the CAPABILITY response (if any) */
+     if ((peek_capable = (imap_version >= IMAP4)))
+	 if ((ok = imap_ok(sock, (char *)NULL)))
+	     return(ok);
 
 #ifdef KERBEROS_V4
      if (strstr(rbuf, "AUTH=KERBEROS_V4"))
