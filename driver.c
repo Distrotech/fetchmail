@@ -261,16 +261,17 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
     int sl;
     int off = 0;
     
-	/* 
-	 * If the name of the user begins with a 
-	 * qmail virtual domain prefix, remove
-	 * the prefix
-	 */
-	if (ctl->server.qvirtual)
-	{
-	   sl=strlen(ctl->server.qvirtual);
-	   if (!strncasecmp(name,ctl->server.qvirtual,sl)) off=sl; 
-	}
+    /* 
+     * If the name of the user begins with a 
+     * qmail virtual domain prefix, remove
+     * the prefix.
+     */
+    if (ctl->server.qvirtual)
+    {
+	sl = strlen(ctl->server.qvirtual);
+	if (!strncasecmp(name,ctl->server.qvirtual,sl))
+	    off = sl; 
+    }
 
     lname = idpair_find(&ctl->localnames, name+off);
     if (!lname && ctl->wildcard)
