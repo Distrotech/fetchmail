@@ -31,6 +31,7 @@ pl 3.9.7 ():
 * Treat exim's 501 antispam response as equivalent to 571.  Note: this
   is temporary.  The right thing is to get exim to return 571; I'm 
   working on it.
+* Fess up to sometimes only counting header bytes in the progress messages.
 
 There are 257 people on the fetchmail-friends list.
 
