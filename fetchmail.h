@@ -314,6 +314,7 @@ struct query
     unsigned int uid;		/* UID of user to deliver to */
     struct idlist *skipped;	/* messages skipped on the mail server */
     struct idlist *oldsaved, *newsaved;
+    struct idlist **oldsavedend;
     char *lastid;		/* last Message-ID seen on this connection */
     char *thisid;		/* Message-ID of current message */
 
@@ -515,14 +516,14 @@ void free_str_list(struct idlist **);
 struct idlist *copy_str_list(struct idlist *idl);
 void save_str_pair(struct idlist **, const char *, const char *);
 void free_str_pair_list(struct idlist **);
-int delete_str(struct idlist **, int);
+int delete_str(struct idlist **, long);
 int str_in_list(struct idlist **, const char *, const flag);
 int str_nr_in_list(struct idlist **, const char *);
 int str_nr_last_in_list(struct idlist **, const char *);
 void str_set_mark( struct idlist **, const char *, const flag);
 int count_list( struct idlist **idl );
-char *str_from_nr_list( struct idlist **idl, int number );
-char *str_find(struct idlist **, int);
+char *str_from_nr_list( struct idlist **idl, long number );
+char *str_find(struct idlist **, long);
 char *idpair_find(struct idlist **, const char *);
 void append_str_list(struct idlist **, struct idlist **);
 void expunge_uids(struct query *);

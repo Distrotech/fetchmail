@@ -23,8 +23,8 @@
 
 /*
  * Machinery for handling UID lists live here.  This is mainly to support
- * RFC1725-conformant POP3 servers without a LAST command, but may also be
- * useful for making the IMAP4 querying logic UID-oriented, if a future
+ * RFC1725/RFC1939-conformant POP3 servers without a LAST command, but may also
+ * be useful for making the IMAP4 querying logic UID-oriented, if a future
  * revision of IMAP forces me to.
  *
  * These functions are also used by the rest of the code to maintain
@@ -39,7 +39,7 @@
  * This list is initially set up by initialize_saved_list() from the
  * .fetchids file.
  *
- * Early in the query, during the execution of the protocol-specific 
+ * Early in the query, during the execution of the protocol-specific
  * getrange code, the driver expects that the host's `newsaved' member
  * will be filled with a list of UIDs and message numbers representing
  * the mailbox state.  If this list is empty, the server did
@@ -63,7 +63,7 @@
  * be picked up by the next run.  If there are no un-expunged
  * messages, the file is deleted.
  *
- * Note: some comparisons (those used for DNS address lists) are caseblind!  
+ * Note: some comparisons (those used for DNS address lists) are caseblind!
  */
 
 /* UIDs associated with un-queried hosts */
@@ -78,8 +78,12 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
     struct query *ctl;
 
     /* make sure lists are initially empty */
-    for (ctl = hostlist; ctl; ctl = ctl->next)
-	ctl->skipped = ctl->oldsaved = ctl->newsaved = (struct idlist *)NULL;
+    for (ctl = hostlist; ctl; ctl = ctl->next) {
+	ctl->skipped = (struct idlist *)NULL;
+	ctl->oldsaved = (struct idlist *)NULL;
+	ctl->newsaved = (struct idlist *)NULL;
+	ctl->oldsavedend = &ctl->oldsaved;
+    }
 
     errno = 0;
 
@@ -91,13 +95,13 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
      * that all implementations of lstat() will return ENOTDIR
      * rather than plain ENOENT in this case...
      */
-   if (lstat(idfile, &statbuf) < 0) {
-     if (errno == ENOTDIR) 
-    {
-      report(stderr, GT_("lstat: %s: %s\n"), idfile, strerror(errno));
-      exit(PS_IOERR);
+    if (lstat(idfile, &statbuf) < 0) {
+	if (errno == ENOTDIR)
+	{
+	    report(stderr, GT_("lstat: %s: %s\n"), idfile, strerror(errno));
+	    exit(PS_IOERR);
+	}
     }
-   }
 
     /* let's get stored message UIDs from previous queries */
     if ((tmpfp = fopen(idfile, "r")) != (FILE *)NULL)
@@ -231,7 +235,11 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 }
 #endif /* POP3_ENABLE */
 
-struct idlist *save_str(struct idlist **idl, const char *str, flag status)
+/* return a pointer to the last element of the list to help the quick,
+ * constant-time addition to the list, NOTE: this function does not dup
+ * the string, the caller must do that. */
+/*@shared@*/ struct idlist **save_str_quick(/*@shared@*/ struct idlist **idl,
+			       /*@only@*/ char *str, flag status)
 /* save a number/UID pair on the given UID list */
 {
     struct idlist **end;
@@ -242,10 +250,17 @@ struct idlist *save_str(struct idlist **idl, const char *str, flag status)
 
     *end = (struct idlist *)xmalloc(sizeof(struct idlist));
     (*end)->val.status.mark = status;
-    (*end)->id = str ? xstrdup(str) : (char *)NULL;
+    (*end)->id = (unsigned char *)str;
     (*end)->next = NULL;
 
-    return(*end);
+    return end;
+}
+
+/* return the end list element for direct modification */
+struct idlist *save_str(struct idlist **idl, const char *str, flag st)
+{
+    return *save_str_quick(idl, str ? xstrdup(str) : NULL,
+			   st);
 }
 
 void free_str_list(struct idlist **idl)
@@ -296,14 +311,17 @@ void free_str_pair_list(struct idlist **idl)
 int str_in_list(struct idlist **idl, const char *str, const flag caseblind)
 /* is a given ID in the given list? (comparison may be caseblind) */
 {
-    if (*idl == (struct idlist *)NULL || str == (char *) NULL)
-	return(0);
-    else if (!caseblind && strcmp(str, (*idl)->id) == 0)
-	return(1);
-    else if (caseblind && strcasecmp(str, (*idl)->id) == 0)
-	return(1);
-    else
-	return(str_in_list(&(*idl)->next, str, caseblind));
+    struct idlist *walk;
+    if (caseblind) {
+	for( walk = *idl; walk; walk = walk->next )
+	    if( strcasecmp( str, (char *)walk->id) == 0 )
+		return 1;
+    } else {
+	for( walk = *idl; walk; walk = walk->next )
+	    if( strcmp( str, (char *)walk->id) == 0 )
+		return 1;
+    }
+    return 0;
 }
 
 int str_nr_in_list( struct idlist **idl, const char *str )
@@ -352,7 +370,7 @@ int count_list( struct idlist **idl)
   return 1 + count_list( &(*idl)->next );
 }
 
-char *str_from_nr_list(struct idlist **idl, int number)
+/*@null@*/ char *str_from_nr_list(struct idlist **idl, long number)
 /* return the number'th string in idl */
 {
     if( !*idl  || number < 0)
@@ -362,8 +380,8 @@ char *str_from_nr_list(struct idlist **idl, int number)
     return str_from_nr_list(&(*idl)->next, number-1);
 }
 
-    
-char *str_find(struct idlist **idl, int number)
+
+char *str_find(struct idlist **idl, long number)
 /* return the id of the given number in the given list. */
 {
     if (*idl == (struct idlist *) 0)
@@ -385,7 +403,7 @@ char *idpair_find(struct idlist **idl, const char *id)
 	return(idpair_find(&(*idl)->next, id));
 }
 
-int delete_str(struct idlist **idl, int num)
+int delete_str(struct idlist **idl, long num)
 /* delete given message from given list */
 {
     struct idlist	*idp;
@@ -487,7 +505,7 @@ void uid_swap_lists(struct query *ctl)
 void write_saved_lists(struct query *hostlist, const char *idfile)
 /* perform end-of-run write of seen-messages list */
 {
-    int		idcount;
+    long	idcount;
     FILE	*tmpfp;
     struct query *ctl;
     struct idlist *idp;
@@ -495,10 +513,10 @@ void write_saved_lists(struct query *hostlist, const char *idfile)
     /* if all lists are empty, nuke the file */
     idcount = 0;
     for (ctl = hostlist; ctl; ctl = ctl->next) {
-        for (idp = ctl->oldsaved; idp; idp = idp->next)
-            if (idp->val.status.mark == UID_SEEN
-	    			|| idp->val.status.mark == UID_DELETED)
-                idcount++;
+	for (idp = ctl->oldsaved; idp; idp = idp->next)
+	    if (idp->val.status.mark == UID_SEEN
+		    || idp->val.status.mark == UID_DELETED)
+		idcount++;
     }
 
     /* either nuke the file or write updated last-seen IDs */
@@ -512,6 +530,7 @@ void write_saved_lists(struct query *hostlist, const char *idfile)
     {
 	if (outlevel >= O_DEBUG)
 	    report(stdout, GT_("Writing fetchids file.\n"));
+	/* FIXME: do not overwrite the old idfile */
 	if ((tmpfp = fopen(idfile, "w")) != (FILE *)NULL) {
 	    for (ctl = hostlist; ctl; ctl = ctl->next) {
 		for (idp = ctl->oldsaved; idp; idp = idp->next)

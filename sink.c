@@ -1468,7 +1468,8 @@ va_dcl
 #endif
 /* format and ship a warning message line by mail */
 {
-    char	buf[MSGBUFSIZE+4];
+    /* make huge -- i18n can bulk up error messages a lot */
+    char	buf[2*MSGBUFSIZE+4];
     va_list ap;
 
     /*
