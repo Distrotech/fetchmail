@@ -14,10 +14,11 @@ import string
 #
 class Controls:
     def __init__(self):
-	self.foreground = FALSE;	# Run in background
+	self.foreground = FALSE		# Run in background
 	self.daemon = 300		# Default to 5-minute timeout
 	self.syslog = FALSE		# Use syslogd for logging?
 	self.logfile = None		# No logfile, initially
+	self.invisible =  FALSE		# Suppress Received line & spoof?
 
     def __repr__(self):
 	str = "";
@@ -44,6 +45,7 @@ class Server:
 	self.auth = "password"		# Default to password authentication
 	self.timeout = 300		# 5-minute timeout
 	self.envelope = "Received"	# Envelope-address header
+	self.qvirtual = None		# Name prefix to strip
 	self.aka = []			# List of DNS aka names
 	self.dns = TRUE			# Enable DNS lookup on multidrop
 	self.localdomains = []		# Domains to be considered local
@@ -62,6 +64,7 @@ class Server:
 	    ('auth',      'String'),
 	    ('timeout',   'Int'),
 	    ('envelope',  'String'),
+	    ('qvirtual',  'String'),
 	    # leave aka out
 	    ('dns',       'Boolean'),
 	    # leave localdomains out
@@ -85,6 +88,8 @@ class Server:
 	    str = str + " interval " + `self.interval` 
 	if self.envelope != ServerDefaults.envelope:
 	    str = str + " envelope " + self.envelope
+	if self.qvirtual != ServerDefaults.qvirtual:
+	    str = str + " qvirtual " + self.qvirtual
 	if self.auth != ServerDefaults.auth:
 	    str = str + " auth " + self.auth
 	if self.dns != ServerDefaults.dns or self.uidl != ServerDefaults.uidl:
@@ -390,6 +395,12 @@ Logfile
         Otherwise this gives the name of the files to write to.
         This field is ignored if the "Log to syslog?" option is on.
 
+Invisible:
+        If false (the default) fetchmail generates a Received line into
+	each message and generates a HELO from the machine it is running on.
+	If true, fetchmail generates no Received line and HELOs as if it were
+	the remote site.
+
 In the `Remote Mail Configurations' panel, you can:
 
 1. Enter the name of a new remote mail server you want fetchmail to query.
@@ -415,6 +426,8 @@ class ControlEdit(Frame):
 	self.syslog.set(self.controls.syslog);
 	self.logfile = StringVar(self)
 	if self.controls.logfile: self.logfile.set(self.controls.logfile);
+	self.invisible = BooleanVar(self)
+	self.invisible.set(self.controls.invisible);
 
 	gf = Frame(self, relief=RAISED, bd = 5)
 
@@ -449,6 +462,13 @@ class ControlEdit(Frame):
 	log.pack(side=RIGHT, anchor=E)
 
 	sf.pack(fill=X)
+
+	# Invisible mode?
+	Checkbutton(gf,
+		{'text':'Invisible mode?',
+		'variable':self.invisible,
+		'relief':GROOVE}).pack(side=LEFT, anchor=W)
+
 	gf.pack(fill=X)
 
     def GatherControls(self):
@@ -456,6 +476,7 @@ class ControlEdit(Frame):
 	self.controls.foreground = self.foreground.get()
 	self.controls.logfile = self.logfile.get()
 	self.controls.syslog = self.syslog.get()
+	self.controls.invisible = self.invisible.get()
 
 #
 # Server editing stuff.
@@ -685,6 +706,8 @@ class ServerEdit(Frame):
 	Label(mdropwin, text="Multidrop options").pack(side=TOP)
 	LabeledEntry(mdropwin, 'Envelope address header:',
 		      self.envelope, '24').pack(side=TOP, fill=X)
+	LabeledEntry(mdropwin, 'Name prefix to strip:',
+		      self.qvirtual, '24').pack(side=TOP, fill=X)
 	Checkbutton(mdropwin, text="Enable multidrop DNS lookup?",
 		    variable=self.dns).pack(side=TOP)
 	Label(mdropwin, text="DNS aliases").pack(side=TOP)
