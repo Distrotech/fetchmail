@@ -60,7 +60,7 @@
  * be picked up by the next run.  If there are no un-expunged
  * messages, the file is deleted.
  *
- * Note: all comparisons are caseblind!
+ * Note: some comparisons (those used for DNS address lists) are caseblind!  
  */
 
 /* UIDs associated with un-queried hosts */
@@ -170,15 +170,17 @@ void free_str_pair_list(struct idlist **idl)
 }
 #endif
 
-int str_in_list(struct idlist **idl, const char *str)
-/* is a given ID in the given list? (comparison is caseblind) */
+int str_in_list(struct idlist **idl, const char *str, const flag caseblind)
+/* is a given ID in the given list? (comparison may be caseblind) */
 {
     if (*idl == (struct idlist *)NULL || str == (char *) NULL)
 	return(0);
-    else if (strcasecmp(str, (*idl)->id) == 0)
+    else if (!caseblind && strcmp(str, (*idl)->id) == 0)
+	return(1);
+    else if (caseblind && strcasecmp(str, (*idl)->id) == 0)
 	return(1);
     else
-	return(str_in_list(&(*idl)->next, str));
+	return(str_in_list(&(*idl)->next, str, caseblind));
 }
 
 int str_nr_in_list( struct idlist **idl, const char *str )
@@ -189,7 +191,7 @@ int str_nr_in_list( struct idlist **idl, const char *str )
     if ( !str )
         return -1;
     for( walk = *idl, nr = 0; walk; nr ++, walk = walk->next )
-        if( strcasecmp( str, walk->id) == 0 )
+        if( strcmp( str, walk->id) == 0 )
 	    return nr;
     return -1;
 }
@@ -202,7 +204,7 @@ int str_nr_last_in_list( struct idlist **idl, const char *str)
     if ( !str )
         return -1;
     for( walk = *idl, nr = 0; walk; nr ++, walk = walk->next )
-        if( strcasecmp( str, walk->id) == 0 )
+        if( strcmp( str, walk->id) == 0 )
 	    ret = nr;
     return ret;
 }
@@ -215,7 +217,7 @@ void str_set_mark( struct idlist **idl, const char *str, const flag val)
     if (!str)
         return;
     for(walk = *idl, nr = 0; walk; nr ++, walk = walk->next)
-        if (strcasecmp(str, walk->id) == 0)
+        if (strcmp(str, walk->id) == 0)
 	    walk->val.status.mark = val;
 }
 
