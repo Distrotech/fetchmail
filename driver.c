@@ -619,6 +619,19 @@ static int stuffline(struct query *ctl, char *buf)
     return(n);
 }
 
+
+static void sanitize(s)
+/* replace unsafe shellchars by an _ */
+char *s;
+{
+    static char *ok_chars = " 1234567890!@%-_=+:,./abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    char *cp;
+
+    for (cp = s; *(cp += strspn(cp, ok_chars)); /* NO INCREMENT */)
+    	*cp = '_';
+}
+
+
 #define EMPTYLINE(s)	((s)[0] == '\r' && (s)[1] == '\n' && (s)[2] == '\0')
 
 static int readheaders(sock, fetchlen, reallen, ctl, num)
@@ -1096,8 +1109,8 @@ int num;		/* index of message */
     }
     else if (ctl->mda)		/* we have a declared MDA */
     {
-	int	length = 0;
-	char	*names, *before, *after;
+	int	length = 0, fromlen = 0, nameslen = 0;
+	char	*names = NULL, *before, *after, *from = NULL;
 
 	for (idp = xmit_names; idp; idp = idp->next)
 	    if (idp->val.status.mark == XMIT_ACCEPT)
@@ -1105,32 +1118,22 @@ int num;		/* index of message */
 
 	destaddr = "localhost";
 
-	length = strlen(ctl->mda) + 1;
+	length = strlen(ctl->mda);
 	before = xstrdup(ctl->mda);
 
-	/* sub user addresses for %T (or %s for backward compatibility) */
-	cp = (char *)NULL;
-	if (strstr(before, "%s") || (cp = strstr(before, "%T")))
+	/* get user addresses for %T (or %s for backward compatibility) */
+	if (strstr(before, "%s") || strstr(before, "%T"))
 	{
-	    char	*sp;
-
-	    if (cp && cp[1] == 'T')
-		cp[1] = 's';
-
-	    /* \177 had better be out-of-band for MDA commands */
-	    for (sp = before; *sp; sp++)
-		if (*sp == '%' && sp[1] != 's' && sp[1] != 'T')
-		    *sp = '\177';
-
 	    /*
 	     * We go through this in order to be able to handle very
 	     * long lists of users and (re)implement %s.
 	     */
+	    nameslen = 0;
 	    for (idp = xmit_names; idp; idp = idp->next)
 		if (idp->val.status.mark == XMIT_ACCEPT)
-		    length += (strlen(idp->id) + 1);
+		    nameslen += (strlen(idp->id) + 1);	/* string + ' ' */
 
-	    names = (char *)xmalloc(++length);
+	    names = (char *)xmalloc(nameslen + 1);	/* account for '\0' */
 	    names[0] = '\0';
 	    for (idp = xmit_names; idp; idp = idp->next)
 		if (idp->val.status.mark == XMIT_ACCEPT)
@@ -1138,47 +1141,81 @@ int num;		/* index of message */
 		    strcat(names, idp->id);
 		    strcat(names, " ");
 		}
-	    after = (char *)xmalloc(length);
-#ifdef SNPRINTF
-	    snprintf(after, length, before, names);
-#else
-	    sprintf(after, before, names);
-#endif /* SNPRINTF */
-	    free(names);
-	    free(before);
-	    before = after;
+	    names[--nameslen] = '\0';	/* chop trailing space */
 
-	    for (sp = before; *sp; sp++)
-		if (*sp == '\177')
-		    *sp = '%';
+	    /* sanitize names in order to contain *only* harmless shell chars */
+	    sanitize(names);
 	}
 
-	/* substitute From address for %F */
-	if ((cp = strstr(before, "%F")))
+	/* get From address for %F */
+	if (strstr(before, "%F"))
 	{
-	    char *from = return_path;
-	    char	*sp;
+	    from = xstrdup(return_path);
 
-	    /* \177 had better be out-of-band for MDA commands */
-	    for (sp = before; *sp; sp++)
-		if (*sp == '%' && sp[1] != 'F')
-		    *sp = '\177';
+	    /* sanitize from in order to contain *only* harmless shell chars */
+	    sanitize(from);
 
-	    length += strlen(from);
-	    after = (char *)xmalloc(length);
-	    cp[1] = 's';
-#ifdef SNPRINTF
-	    snprintf(after, length, before, from);
-#else
-	    sprintf(after, before, from);
-#endif /* SNPRINTF */
-	    free(before);
-	    before = after;
-
-	    for (sp = before; *sp; sp++)
-		if (*sp == '\177')
-		    *sp = '%';
+	    fromlen = strlen(from);
 	}
+
+	/* do we have to build an mda string? */
+	if (names || from) {
+		
+		char	*sp, *dp;
+
+
+		/* find length of resulting mda string */
+		sp = before;
+		while (sp = strstr(sp, "%s")) {
+			length += nameslen - 2;	/* subtract %s */
+			sp += 2;
+		}
+		sp = before;
+		while (sp = strstr(sp, "%T")) {
+			length += nameslen - 2;	/* subtract %T */
+			sp += 2;
+		}
+		sp = before;
+		while (sp = strstr(sp, "%F")) {
+			length += fromlen - 2;	/* subtract %F */
+			sp += 2;
+		}
+		
+		after = xmalloc(length + 1);
+
+		/* copy mda source string to after, while expanding %[sTF] */
+		for (dp = after, sp = before; *dp = *sp; dp++, sp++) {
+			if (sp[0] != '%')	continue;
+
+			/* need to expand? BTW, no here overflow, because in
+			** the worst case (end of string) sp[1] == '\0' */
+			if (sp[1] == 's' || sp[1] == 'T') {
+				strcpy(dp, names);
+				dp += nameslen;
+				sp++;	/* position sp over [sT] */
+				dp--;	/* adjust dp */
+			} else if (sp[1] == 'F') {
+				strcpy(dp, from);
+				dp += fromlen;
+				sp++;	/* position sp over F */
+				dp--;	/* adjust dp */
+			}
+		}
+
+		if (names) {
+			free(names);
+			names = NULL;
+		}
+		if (from) {
+			free(from);
+			from = NULL;
+		}
+
+		free(before);
+
+		before = after;
+	}
+
 
 	if (outlevel == O_VERBOSE)
 	    error(0, 0, "about to deliver with: %s", before);
@@ -1195,6 +1232,7 @@ int num;		/* index of message */
 
 	sinkfp = popen(before, "w");
 	free(before);
+	before = NULL;
 
 #ifdef HAVE_SETEUID
 	/* this will fail quietly if we didn't start as root */

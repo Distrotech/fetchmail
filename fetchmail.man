@@ -1588,10 +1588,10 @@ link can be tapped.
 .PP
 Use of the %F or %T escapes in an mda option could open a security
 hole, because they pass text manipulable by an attacker to a shell
-command.  The hole is reduced by the fact that fetchmail temporarily
-discards any suid privileges it may have while running the MDA.  To
-avoid potential problems, (1) enclose the %F and %T escapes in single
-quotes within the option, and (2) never use an mda command containing
+command.  Potential shell characters are replaced by `_' before
+execution.  The hole is further reduced by the fact that fetchmail
+temporarily discards any suid privileges it may have while running the
+MDA.  For maximum safety, however, don't use an mda command containing
 %F or %T when fetchmail is run from the root account itself.
 .PP
 Send comments, bug reports, gripes, and the like to Eric S. Raymond

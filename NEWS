@@ -19,6 +19,8 @@ in addition to the current leading-edge one, until the next gold version.
 * Marty Lee fixed a bug in activation of hosts named on the command-line.
 * The fetchall option forces RETR again.  We can cope with USA.NET now. 
 * Gunther Leber's patch to make fetchmail -V less chatty when mode is ETRN.
+* Gunther Leber's code to sanitize %T and %F expansion in the MDA string.
+* Jonathan Marten's fix for list option handling.
 
 There are 281 people on fetchmail-friends and 222 on fetchmail-announce.
 

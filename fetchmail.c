@@ -708,13 +708,13 @@ static void optmerge(struct query *h2, struct query *h1, int force)
      * is nonempty (treat h1 as an override).  
      */
 
-    if (!force)
-    {
-	append_str_list(&h2->server.localdomains, &h1->server.localdomains);
-	append_str_list(&h2->localnames, &h1->localnames);
-	append_str_list(&h2->mailboxes, &h1->mailboxes);
-	append_str_list(&h2->smtphunt, &h1->smtphunt);
-    }
+#define LIST_MERGE(fld) if (force ? !!h1->fld : !h2->fld) \
+					append_str_list(&h2->fld, &h1->fld)
+    LIST_MERGE(server.localdomains);
+    LIST_MERGE(localnames);
+    LIST_MERGE(mailboxes);
+    LIST_MERGE(smtphunt);
+#undef LIST_MERGE
 
 #define FLAG_MERGE(fld) if (force ? !!h1->fld : !h2->fld) h2->fld = h1->fld
     FLAG_MERGE(server.via);
