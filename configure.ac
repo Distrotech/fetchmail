@@ -29,7 +29,7 @@ AC_TYPE_SIGNAL
 AC_CHECK_HEADERS([unistd.h termios.h termio.h sgtty.h stdarg.h \
 	alloca.h sys/itimer.h fcntl.h sys/fcntl.h memory.h sys/wait.h \
 	sys/shm.h arpa/inet.h arpa/nameser.h netinet/in.h net/socket.h \
-	sys/select.h sys/time.h])
+	sys/select.h sys/time.h langinfo.h])
 AC_CHECK_HEADERS([resolv.h],,,[
 #include <sys/types.h>
 #ifdef HAVE_NETINET_IN_H
