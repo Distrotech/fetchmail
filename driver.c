@@ -5,9 +5,6 @@
  * For license terms, see the file COPYING in this directory.
  */
 
-/* Modified 1998 by Dominique Unruh <dominique@unruh.de> (doesn't block any 
-   more, when message delimiter follows up directly to the headers) */
-
 #include  "config.h"
 #include  <stdio.h>
 #include  <setjmp.h>
