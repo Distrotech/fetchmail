@@ -184,8 +184,9 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     if (outlevel == O_VERBOSE)
     {
 	error(0, 0, "Service challenge (l=%d):",Csl);
-	for (i=0; i<Csl; i++) error(0, 0, " %02X",Cs[i]);
-	error(0, 0, "\n");
+	for (i=0; i<Csl; i++)
+	    error_build("%02X ",Cs[i]);
+	error_complete(0, 0, "");
     }
     memcpy(Ts, bufp, Tsl);
     Ts[Tsl] = 0;
@@ -253,8 +254,9 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
   if (outlevel == O_VERBOSE)
     {
     error(0, 0, "User authentication (l=%d):",aulin);
-    for (i=0; i<aulin; i++) error(0, 0, " %02X",bufp[i]);
-    error(0, 0, "\n");
+    for (i=0; i<aulin; i++)
+	error_build("%02X ",bufp[i]);
+    error_complete(0, 0, "");
     }
   if (aulin == Aul) memcpy(Au, bufp, Aul);
   bufp += aulin;
@@ -302,8 +304,9 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
   if (outlevel == O_VERBOSE)
     {
     error(0, 0, "Session key established:");
-    for (i=0; i<Kusl; i++) error(0, 0, " %02X",Kus[i]);
-    error(0, 0, "\n");
+    for (i=0; i<Kusl; i++)
+	error_build("%02X ",Kus[i]);
+    error_complete(0, 0, "");
     }
 
   /* Assemble Token 5 in buf and send (not in ver 2 though)  */
@@ -539,9 +542,9 @@ unsigned char *bufp;
     error(0, 0, "Inbound binary data:\n");
     for (i=0; i<cnt; i++)
       {
-      error(0, 0, " %02X",bufp[i]);
+      error_build("%02X ",bufp[i]);
       if (((i % 16)==15) || (i==(cnt-1)))
-        error(0, 0, "\n");
+        error_complete(0, 0, "");
       }
     }
   return(cnt);
@@ -697,26 +700,30 @@ static void GenChallenge(buf,len)
 unsigned char *buf;
 int  len;
 {
-  int  i;
-  FILE *devrandom;
-  devrandom = fopen("/dev/urandom","rb");
-  if (devrandom == NULL)
+    int  i;
+    FILE *devrandom;
+
+    devrandom = fopen("/dev/urandom","rb");
+    if (devrandom == NULL && outlevel > O_SILENT)
     {
-    if (outlevel > O_SILENT)
-      error(0, 0, "RPA Failed open of /dev/random. This shouldn't\n");
-      error(0, 0, "    prevent you logging in, but means you\n");
-      error(0, 0, "    cannot be sure you are talking to the\n");
-      error(0, 0, "    service that you think you are (replay\n");
-      error(0, 0, "    attacks by a dishonest service are possible.)\n");
+	error(0, 0, "RPA Failed open of /dev/urandom. This shouldn't\n");
+	error(0, 0, "    prevent you logging in, but means you\n");
+	error(0, 0, "    cannot be sure you are talking to the\n");
+	error(0, 0, "    service that you think you are (replay\n");
+	error(0, 0, "    attacks by a dishonest service are possible.)\n");
     }
-  for (i=0; i<len; i++) buf[i] = fgetc(devrandom);
-//  for (i=0; i<len; i++) buf[i] = random();
-  fclose(devrandom);
-  if (outlevel == O_VERBOSE)
+
+    for(i=0; i<len; i++)
+	buf[i] = devrandom ? fgetc(devrandom) : random();
+
+    if (devrandom)
+	fclose(devrandom);
+
+    if (outlevel == O_VERBOSE)
     {
-    error(0, 0, "User challenge:");
-    for (i=0; i<len; i++) error(0, 0, " %02X",buf[i]);
-    error(0, 0, "\n");
+	error(0, 0, "User challenge:");
+	for (i=0; i<len; i++) error(0, 0, " %02X",buf[i]);
+	error(0, 0, "\n");
     }
 }
 

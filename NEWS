@@ -9,8 +9,9 @@
 ------------------------------------------------------------------------------
 fetchmail-4.4.9 ():
 * Make fetchmail 64-bit clean (thanks to John Franklin <john@iptimaging.com>).
-* Fix man-page installation (thanks to Kevin Hawkins <khawkins@ncsa.uiuc.edu>)
+* Fix man-page installation (thanks to Kevin Hawkins <khawkins@ncsa.uiuc.edu>).
 * Should build on SunOS again (__STDC__ conditions changed to STDC_HEADERS).
+* CompuServe RPA fixes from Rich Beerman <rbeerman@pobox.com>.
 
 fetchmail-4.4.8 (Tue May 26 12:30:58 EDT 1998):
 * Added 0.90 beta version of fetchmailconf.
