@@ -706,14 +706,14 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
 	    else {
 		if (ctl->smtpname) {
 #ifdef HAVE_SNPRINTF
-		    snprintf(addr, sizeof(addr)-1, "%s", ctl->smtpname);
+		    snprintf(addr, sizeof(addr), "%s", ctl->smtpname);
 #else
 		    sprintf(addr, "%s", ctl->smtpname);
 #endif /* HAVE_SNPRINTF */
 
 		} else {
 #ifdef HAVE_SNPRINTF
-		  snprintf(addr, sizeof(addr)-1, "%s@%s", idp->id, ctl->destaddr);
+		  snprintf(addr, sizeof(addr), "%s@%s", idp->id, ctl->destaddr);
 #else
 		  sprintf(addr, "%s@%s", idp->id, ctl->destaddr);
 #endif /* HAVE_SNPRINTF */
@@ -785,7 +785,7 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
 	else
 	{
 #ifdef HAVE_SNPRINTF
-	    snprintf(addr, sizeof(addr)-1, "%s@%s", run.postmaster, ctl->destaddr);
+	    snprintf(addr, sizeof(addr), "%s@%s", run.postmaster, ctl->destaddr);
 #else
 	    sprintf(addr, "%s@%s", run.postmaster, ctl->destaddr);
 #endif /* HAVE_SNPRINTF */

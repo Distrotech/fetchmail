@@ -495,10 +495,23 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 		suppress_delete = suppress_forward = TRUE;
 	    else if (err == PS_REFUSED)
 		suppress_forward = TRUE;
+#if 0
+	    /* 
+	     * readheaders does not read the body when it
+	     * hits a non-header. It has been recently
+	     * fixed to return PS_TRUNCATED (properly) when
+	     * that happens, but apparently fixing that bug
+	     * opened this one here (which looks like an 
+	     * inproper fix from some ancient thinko)
+	     */
 	    else if (err == PS_TRUNCATED)
 		suppress_readbody = TRUE;
 	    else if (err)
 		return(err);
+#else
+	    else if (err && err != PS_TRUNCATED)
+		return(err);
+#endif
 
 	    /* 
 	     * If we're using IMAP4 or something else that
@@ -635,7 +648,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	/*
 	 * Tell the UID code we've seen this.
 	 * Matthias Andree: only register the UID if we could actually
-	 * forward this mail. If we omit this !suppress_forward check,
+	 * forward this mail. If we omit this !suppress_delete check,
 	 * fetchmail will never retry mail that the local listener
 	 * refused temporarily.
 	 */

@@ -269,7 +269,7 @@ get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
 		kvm_read(kvmfd, ifnet_addr, &ifnet, sizeof(ifnet));
 		kvm_read(kvmfd, (unsigned long) ifnet.if_name, tname, sizeof tname);
 #ifdef HAVE_SNPRINTF
-		snprintf(tname, sizeof tname - 1,
+		snprintf(tname, sizeof tname,
 #else
         	sprintf(tname,
 #endif

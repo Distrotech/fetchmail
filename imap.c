@@ -535,8 +535,14 @@ static int imap_getrange(int sock,
 	    report(stdout, GT_("%d messages waiting after first poll\n"), count);
 
 	/* no messages?  then we may need to idle until we get some */
-	if (count == 0 && do_idle)
-	    imap_idle(sock);
+	while (count == 0 && do_idle) {
+	    ok = imap_idle(sock);
+	    if (ok)
+	    {
+		report(stderr, GT_("re-poll failed\n"));
+		return(ok);
+	    }
+	}
 
 	/*
 	 * We should have an expunge here to

@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #       posix, posixpath, socket
-version = "1.40"
+version = "1.41"
 
 from Tkinter import *
 from Dialog import *
@@ -1363,6 +1363,14 @@ user entries associated with this server.
 Your mailserver is running Novonyx POP3.  This server, at least as of
 version 2.17, seems to have problems handling and reporting seen bits.
 You may have to use the fetchall option.
+
+"""
+	    if string.find(greetline, " IMS POP3") > 0:
+		warnings = warnings + """
+Some servers issuing the greeting line 'IMS POP3' have been known to
+do byte-stuffing correctly.  This means that if a message you receive
+has a . (period) at start of line, fetchmail will become confused and
+probably wedge itself.  (This bug was recorded on IMS POP3 0.86.)
 
 """
 

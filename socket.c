@@ -563,13 +563,14 @@ int SockRead(int sock, char *buf, int len)
 			later change the behavior of SSL_peek
 			to "fix" this problem...  :-(	*/
 		if ((n = SSL_peek(ssl, bp, len)) < 0) {
+			(void)SSL_get_error(ssl, n);
 			return(-1);
 		}
 		if( 0 == n ) {
 			/* SSL_peek says no data...  Does he mean no data
 			or did the connection blow up?  If we got an error
 			then bail! */
-			if( 0 != ( n = ERR_get_error() ) ) {
+			if( 0 != ( n = SSL_get_error(ssl, n) ) ) {
 				return -1;
 			}
 			/* We didn't get an error so read at least one
@@ -581,8 +582,13 @@ int SockRead(int sock, char *buf, int len)
 			newline = NULL;
 		} else if ((newline = memchr(bp, '\n', n)) != NULL)
 			n = newline - bp + 1;
-		if ((n = SSL_read(ssl, bp, n)) == -1) {
-			return(-1);
+		/* Matthias Andree: SSL_read can return 0, in that case
+		 * we must cal SSL_get_error to figure if there was
+		 * an error or just a "no data" condition */
+		if ((n = SSL_read(ssl, bp, n)) <= 0) {
+			if ((n = SSL_get_error(ssl, n))) {
+				return(-1);
+			}
 		}
 		/* Check for case where our single character turned out to
 		 * be a newline...  (It wasn't going to get caught by
@@ -635,16 +641,20 @@ int SockPeek(int sock)
 #ifdef	SSL_ENABLE
 	if( NULL != ( ssl = SSLGetContext( sock ) ) ) {
 		n = SSL_peek(ssl, &ch, 1);
+		if (n < 0) {
+			(void)SSL_get_error(ssl, n);
+			return -1;
+		}
 		if( 0 == n ) {
 			/* This code really needs to implement a "hold back"
 			 * to simulate a functioning SSL_peek()...  sigh...
 			 * Has to be coordinated with the read code above.
 			 * Next on the list todo...	*/
 
-			/* SSL_peek says no data...  Does he mean no data
+			/* SSL_peek says 0...  Does that mean no data
 			or did the connection blow up?  If we got an error
 			then bail! */
-			if( 0 != ( n = ERR_get_error() ) ) {
+			if( 0 != ( n = SSL_get_error(ssl, n) ) ) {
 				return -1;
 			}
 

@@ -1355,7 +1355,7 @@ va_dcl
     va_start(ap);
 #endif
 #ifdef HAVE_VSNPRINTF
-    vsnprintf(buf + strlen(buf), sizeof(buf), fmt, ap);
+    vsnprintf(buf + strlen(buf), sizeof(buf)-strlen(buf), fmt, ap);
 #else
     vsprintf(buf + strlen(buf), fmt, ap);
 #endif
@@ -1445,7 +1445,7 @@ va_dcl
     va_start(ap);
 #endif
 #ifdef HAVE_VSNPRINTF
-    vsnprintf(buf + strlen(buf), sizeof(buf), fmt, ap);
+    vsnprintf(buf + strlen(buf), sizeof(buf)-strlen(buf), fmt, ap);
 #else
     vsprintf(buf + strlen(buf), fmt, ap);
 #endif

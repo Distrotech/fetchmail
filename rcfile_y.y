@@ -342,7 +342,7 @@ user_option	: TO localnames HERE
 #ifdef SSL_ENABLE
 		    current.use_ssl = FLAG_TRUE;
 #else
-		    yyerror(GT_("SSL is not enabled"))
+		    yyerror(GT_("SSL is not enabled"));
 #endif 
 		}
 		| SSLKEY STRING		{current.sslkey = xstrdup($2);}

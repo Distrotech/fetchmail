@@ -70,8 +70,7 @@ void envquery(int argc, char **argv)
     {
 	fprintf(stderr,
 		GT_("%s: The NULLMAILER_FLAGS environment variable is set.\n"
-		    "This is dangerous as it can make nullmailer-inject
-or nullmailer's\n" 
+		    "This is dangerous as it can make nullmailer-inject or nullmailer's\n" 
 		    "sendmail wrapper tamper with your From:, Message-ID: or Return-Path: headers.\n"
 		    "Try \"env NULLMAILER_FLAGS= %s YOUR ARGUMENTS HERE\"\n"
 		    "%s: Abort.\n"), 

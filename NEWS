@@ -2,6 +2,14 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Added de translation catalog; updated da and tr catalogs.
+* vsprintf underflow fixes by Sunil Shetye.
+* Added warning about UIMS POP3 server.
+* Fix yacc syntax bug when building with SSL.
+* Sunil Shetye's patch for idle timeout during poll.
+* Applied HMH's fix for the 'message delimiter found in headers' code path
+  (Debian bug #128672).
+
 fetchmail-5.9.7 (Sat Feb  2 00:33:40 EST 2002), 21330 lines:
 
 * Minor fixes by HMH.

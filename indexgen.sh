@@ -68,6 +68,10 @@ cat >index.html <<EOF
 <H1>The fetchmail Home Page</H1>
 </center><P>
 
+<p><b>Note: if you are a stranded fetchmail.com user, we're sorry but
+we have nothing to do with that site and cannot help you.  It's just an
+unfortunate coincidence of names.</b>
+
 <H1>What fetchmail does:</H1>
 
 <P>Fetchmail is a full-featured, robust, well-documented
