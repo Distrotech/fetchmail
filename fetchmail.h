@@ -39,14 +39,16 @@
 
 /* authentication types */
 #define		A_ANY		0	/* use the first method that works */
-#define		A_PASSWORD	1	/* password or inline authentication */
-#define		A_KERBEROS_V4	2	/* authenticate w/ Kerberos V4 */
-#define		A_KERBEROS_V5	3	/* authenticate w/ Kerberos V5 */
-#define 	A_GSSAPI	4	/* authenticate with GSSAPI */
-#define		A_SSH		5	/* authentication at session level */
+#define		A_PASSWORD	1	/* password authentication */
+#define		A_CRAM_MD5	2	/* CRAM-MD5 shrouding (RFC2195) */
+#define		A_OTP		3	/* One-time password (RFC1508) */
+#define		A_KERBEROS_V4	4	/* authenticate w/ Kerberos V4 */
+#define		A_KERBEROS_V5	5	/* authenticate w/ Kerberos V5 */
+#define 	A_GSSAPI	6	/* authenticate with GSSAPI */
+#define		A_SSH		7	/* authentication at session level */
 
 /* some protocols (KERBEROS, GSSAPI, SSH) don't require a password */
-#define NO_PASSWORD(ctl)	((ctl)->server.authenticate > A_PASSWORD || !MAILBOX_PROTOCOL(ctl))
+#define NO_PASSWORD(ctl)	((ctl)->server.authenticate > A_OTP || !MAILBOX_PROTOCOL(ctl))
 
 /*
  * Definitions for buffer sizes.  We get little help on setting maxima

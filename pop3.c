@@ -167,35 +167,12 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	}
 #endif /* RPA_ENABLE */
 
-#if OPIE_ENABLE
-	/* see RFC1938: A One-Time Password System */
-	if (challenge = strstr(lastok, "otp-")) {
-	  char response[OPIE_RESPONSE_MAX+1];
-	  int i;
-
-	  i = opiegenerator(challenge, !strcmp(ctl->password, "opie") ? "" : ctl->password, response);
-	  if ((i == -2) && !run.poll_interval) {
-	    char secret[OPIE_SECRET_MAX+1];
-	    fprintf(stderr, _("Secret pass phrase: "));
-	    if (opiereadpass(secret, sizeof(secret), 0))
-	      i = opiegenerator(challenge,  secret, response);
-	    memset(secret, 0, sizeof(secret));
-	  };
-
-	  if (i) {
-	    ok = PS_ERROR;
-	    break;
-	  };
-
-	  ok = gen_transact(sock, "PASS %s", response);
-	  break;
-	}
-#endif /* OPIE_ENABLE */
-
 	/*
-	 * CAPA command may return a list of available mechanisms.
-	 * if it doesn't, no harm done, we just fall back to a 
-	 * plain login.
+	 * CAPA command may return a list including available
+	 * authentication mechanisms.  if it doesn't, no harm done, we
+	 * just fall back to a plain login.  Note that this code 
+	 * latches the server's authentication type, so that in daemon mode
+	 * the CAPA check only needs to be done once at start of run.
 	 *
 	 * APOP was introduced in RFC 1450, and CAPA not until
 	 * RFC2449. So the < check is an easy way to prevent CAPA from
@@ -204,7 +181,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	 * it.  This certainly catches IMAP-2000's POP3 gateway.
 	 * 
 	 * These authentication methods are blessed by RFC1734,
-	 * describing the POP3 AUTHentication command. 
+	 * describing the POP3 AUTHentication command.
 	 */
 	if (ctl->server.authenticate == A_ANY 
 	    && strchr(greeting, '<') 
@@ -235,35 +212,53 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 		if (strstr(buffer, "KERBEROS_V4"))
 		    has_kerberos = TRUE;
 #endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
-		if (strstr(buffer, "CRAM-MD5"))
-		    has_cram = TRUE;
 #ifdef OPIE_ENABLE
 		if (strstr(buffer, "X-OTP"))
-		    has_opie = TRUE;
+		    has_otp = TRUE;
 #endif /* OPIE_ENABLE */
+		if (strstr(buffer, "CRAM-MD5"))
+		    has_cram = TRUE;
 	    }
 
-#if defined(GSSAPI)
-	    if ((ctl->server.authenticate == A_ANY 
-		 || ctl->server.authenticate==A_GSSAPI)
-		&& has_gssapi)
-		return(do_gssauth(sock, "AUTH", 
-				  ctl->server.truename, ctl->remotename));
-#endif /* defined(GSSAPI) */
-#if defined(KERBEROS_V4) || defined(KERBEROS_V5)
-	    if ((ctl->server.authenticate == A_ANY 
-		 || ctl->server.authenticate==A_KERBEROS_V4
-		 || ctl->server.authenticate==A_KERBEROS_V5)
-		&& has_kerberos)
-		return(do_rfc1731(sock, "AUTH", ctl->server.truename));
-#endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
+	    /*
+	     * Here's where we set priorities.  Note that we must do tests
+	     * in *reverse* order of desirability.
+	     */
 	    if (has_cram)
-		return(do_cram_md5(sock, "AUTH", ctl));
+		ctl->server.authenticate = A_CRAM_MD5;
 #ifdef OPIE_ENABLE
 	    if (has_opie)
-		do_otp(sock, "AUTH", ctl)
+		ctl->server.authenticate = A_OTP;
 #endif /* OPIE_ENABLE */
-       }
+#if defined(GSSAPI)
+	    if (has_gssapi)
+		ctl->server.authenticate = A_GSSAPI;
+#endif /* defined(GSSAPI) */
+#if defined(KERBEROS_V4) || defined(KERBEROS_V5)
+	    if (has_kerberos)
+		ctl->server.authenticate = A_KERBEROS_V4;
+#endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
+	}
+
+	/*
+	 * OK, we have an authentication type now.
+	 */
+#if defined(KERBEROS_V4) || defined(KERBEROS_V5)
+	if (ctl->server.authenticate == A_KERBEROS_V4
+	    	|| ctl->server.authenticate == A_KERBEROS_V5)
+	    return(do_rfc1731(sock, "AUTH", ctl->server.truename));
+#endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
+#if defined(GSSAPI)
+	if (ctl->server.authenticate==A_GSSAPI))
+	    return(do_gssauth(sock, "AUTH", 
+			      ctl->server.truename, ctl->remotename));
+#endif /* defined(GSSAPI) */
+#ifdef OPIE_ENABLE
+	if (ctl->server.authenticate == A_OTP)
+	    do_otp(sock, "AUTH", ctl)
+#endif /* OPIE_ENABLE */
+	if (ctl->server.authenticate == A_CRAM_MD5)
+	    return(do_cram_md5(sock, "AUTH", ctl));
 
 	/* ordinary validation, no one-time password or RPA */ 
 	gen_transact(sock, "USER %s", ctl->remotename);
