@@ -22,6 +22,9 @@
   description:	command-line option processing
   
   $Log: options.c,v $
+  Revision 1.3  1996/06/27 19:22:32  esr
+  Sent to ceharris.
+
   Revision 1.2  1996/06/26 19:08:57  esr
   This is what I sent Harris.
 
@@ -87,7 +90,8 @@
 #define	LA_LOCALFILE	15
 #define LA_MDA		16
 #define LA_LOGFILE	17
-#define LA_YYDEBUG	18
+#define LA_QUIT		18
+#define LA_YYDEBUG	19
  
 static char *shortoptions = "23VaKkvscl:Fd:f:u:r:o:m:";
 static struct option longoptions[] = {
@@ -110,6 +114,7 @@ static struct option longoptions[] = {
   {"local",     required_argument, (int *) 0, LA_LOCALFILE  },
   {"mda",	required_argument, (int *) 0, LA_MDA        },
   {"logfile",	required_argument, (int *) 0, LA_LOGFILE    },
+  {"quit",	no_argument,	   (int *) 0, LA_QUIT       },
   {"yydebug",	no_argument,	   (int *) 0, LA_YYDEBUG    },
   {(char *) 0,  no_argument,       (int *) 0, 0             }
 };
@@ -260,6 +265,10 @@ struct optrec *options;
       case LA_LOGFILE:
         logfile = optarg;
         break;
+      case 'q':
+      case LA_QUIT:
+        quitmode = 1;
+        break;
       case LA_YYDEBUG:
 	yydebug = 1;
         break;
@@ -283,6 +292,7 @@ struct optrec *options;
     fputs("  -k, --keep       save new messages after retrieval\n", stderr);
     fputs("  -l, --limit      retrieve at most n message lines\n", stderr);
     fputs("  -m, --mda        set mail user agent to pass to\n", stderr);
+    fputs("  -q, --quit       kill daemon process\n", stderr);
     fputs("  -s, --silent     work silently\n", stderr);
     fputs("  -v, --verbose    work noisily (diagnostic output)\n", stderr);
     fputs("  -d, --daemon     run as a daemon once per n seconds\n", stderr);

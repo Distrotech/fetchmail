@@ -25,6 +25,9 @@
 		BSD systems.
 
   $Log: daemon.c,v $
+  Revision 1.3  1996/06/27 19:22:31  esr
+  Sent to ceharris.
+
   Revision 1.2  1996/06/26 19:08:57  esr
   This is what I sent Harris.
 
@@ -57,6 +60,7 @@
 
 #include "popclient.h"
 
+static void (*my_termhook)(void);
 
 /******************************************************************
   function:	sigchld_handler
@@ -79,6 +83,9 @@ sigchld_handler ()
 #else
   int status;
 #endif
+
+  if (my_termhook)
+      (*my_termhook)();
 
 #if 	defined(HAVE_WAIT3)
   while ((pid = wait3(&status, WNOHANG, (struct rusage *) 0)) > 0)
@@ -109,8 +116,9 @@ sigchld_handler ()
  *****************************************************************/
 
 int
-daemonize (logfile)
+daemonize (logfile, termhook)
 const char *logfile;
+void (*termhook)(void);
 {
   int fd;
   pid_t childpid;
@@ -118,6 +126,8 @@ const char *logfile;
 
   /* if we are started by init (process 1) via /etc/inittab we needn't 
      bother to detach from our process group context */
+
+  my_termhook = termhook;
 
   if (getppid() == 1) 
     goto nottyDetach;

@@ -23,6 +23,9 @@
   description:  global constant, type, and variable definitions.
 
   $Log: fetchmail.h,v $
+  Revision 1.3  1996/06/27 19:22:33  esr
+  Sent to ceharris.
+
   Revision 1.2  1996/06/26 19:08:59  esr
   This is what I sent Harris.
 
@@ -85,6 +88,7 @@
 #define		PS_SYNTAX	5	/* command-line syntax error */
 #define		PS_IOERR	6	/* local folder I/O woes */
 #define		PS_ERROR	7	/* some kind of POP3 error condition */
+#define		PS_EXCLUDE	8	/* exclusion error */
 #define		PS_UNDEFINED	9	/* something I hadn't thought of */
 
 /* output noise level */
@@ -143,6 +147,7 @@ extern int yydebug;	/* enable parse debugging */
 /* daemon mode control */
 extern int poll_interval;	/* poll interval in seconds */
 extern char *logfile;		/* log file for daemon mode */
+extern int quitmode;		/* if --quit was set */
 
 extern char *prc_pathname;	/* path name of rc file */
 
@@ -163,7 +168,7 @@ char *MD5Digest (char *);
 char *prc_getpathname (struct optrec *cmd_opts, struct optrec *def_opts);
 void reply_hack(char *buf, const char *host);
 void append_server_names(int *pargc, char **argv);
-int daemonize(const char *logfile);
+int daemonize(const char *logfile, void (*)(void));
 
 #else
 

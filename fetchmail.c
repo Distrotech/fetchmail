@@ -22,6 +22,9 @@
   description:	main driver module for popclient
 
   $Log: fetchmail.c,v $
+  Revision 1.3  1996/06/27 19:22:32  esr
+  Sent to ceharris.
+
   Revision 1.2  1996/06/26 19:08:59  esr
   This is what I sent Harris.
 
@@ -113,6 +116,7 @@ int outlevel;		/* see the O_.* constants in popclient.h */
 /* Daemon-mode control */
 int poll_interval;	/* polling interval for daemon mode */
 char *logfile;		/* logfile to ship progress reports to */ 
+int quitmode;		/* if -quit was set */
 
 /* args for the MDA, parsed out in the usual fashion by parseMDAargs() */
 char *mda_argv [32];
@@ -130,6 +134,9 @@ char *mda_argv [32];
   globals:       none.
  *********************************************************************/
 
+static void termhook();
+static char *lockfile;
+
 main (argc,argv)
 int argc;
 char **argv;
@@ -140,6 +147,8 @@ char **argv;
   int parsestatus;
   char *servername; 
   struct hostrec *hostp, *hostlist = (struct hostrec *)NULL;
+  FILE	*tmpfp;
+  pid_t pid;
 
   if ((parsestatus = parsecmdline(argc,argv,&cmd_opts)) < 0)
     exit(PS_SYNTAX);
@@ -190,11 +199,66 @@ char **argv;
     exit(PS_SYNTAX);
   }
 
+  /* beyond here we don't want more than one popclient running per user */
+  umask(0077);
+  if ((lockfile = (char *) malloc( strlen(getenv("HOME")) + strlen("/.lockfetch-") + HOSTLEN)) == NULL) {
+    fprintf(stderr,"popclient: cannot allocate memory for .lockfetch, exiting.\n");
+    exit(PS_EXCLUDE);
+  }
+  strcpy(lockfile, getenv("HOME"));
+  strcat(lockfile,"/.lockfetch-");
+  gethostname(lockfile+strlen(lockfile),HOSTLEN);
+
+  /* check the lock, maybe remove it */
+  if (!quitmode)
+    {
+      /* check the lock */
+      if ( (tmpfp = fopen(lockfile, "r")) != NULL ) {
+	fscanf(tmpfp,"%d",&pid);
+	fprintf(stderr,"Another session appears to be running at pid %d.\nIf you are sure that this is incorrect, remove %s file.\n",pid,lockfile);
+	fclose(tmpfp);
+	return(PS_EXCLUDE);
+      }
+
+      /* if not locked, assert a lock */
+      else if ( (tmpfp = fopen(lockfile,"w")) != NULL ) {
+	signal(SIGABRT, termhook);
+	signal(SIGINT, termhook);
+	signal(SIGTERM, termhook);
+	signal(SIGALRM, termhook);
+	signal(SIGHUP, termhook);
+	signal(SIGPIPE, termhook);
+	signal(SIGQUIT, termhook);
+	fprintf(tmpfp,"%d",getpid());
+	fclose(tmpfp);
+      }
+    }
+  else
+    {
+      FILE* fp;
+
+      if ( (fp = fopen(lockfile, "r")) == NULL ) {
+	fprintf(stderr,"popclient: no other popclient is running\n");
+	return(PS_EXCLUDE);
+      }
+  
+      fscanf(fp,"%d",&pid);
+      fprintf(stderr,"popclient: killing popclient at PID %d\n",pid);
+      if ( kill(pid,SIGKILL) < 0 )
+	fprintf(stderr,"popclient: error killing the process %d\n.",pid);
+      else
+	fprintf(stderr,"popclient: popclient at %d is dead.\n", pid);
+  
+      fclose(fp);
+      remove(lockfile);
+      exit(0);
+    }
+
   /*
    * Maybe time to go to demon mode...
    */
   if (poll_interval)
-      daemonize(logfile);
+    daemonize(logfile, termhook);
 
   /*
    * Query all hosts. If there's only one, the error return will
@@ -209,7 +273,13 @@ char **argv;
   } while
       (poll_interval);
 
+  termhook();
   exit(popstatus);
+}
+
+void termhook()
+{
+    unlink(lockfile);
 }
 
 int query_host(servername, options)

@@ -16,6 +16,9 @@
 \.  */
 \.
 \. $Log: fetchmail.man,v $
+\. Revision 1.3  1996/06/27 19:22:33  esr
+\. Sent to ceharris.
+\.
 \. Revision 1.2  1996/06/26 19:09:00  esr
 \. This is what I sent Harris.
 \.
@@ -371,6 +374,12 @@ popmail -d 900
 will, therefore, poll the hosts described in your 
 .I ~/.poprc
 file once every fifteen minutes.
+.PP
+Only one daemon process is permitted per user; in daemon mode,
+.I popclient
+makes a per-user lockfile to guarantee this.  The option
+.B --quit
+will kill a running daemon process.
 .SH THE POPRC FILE
 The preferred way to set up popclient (and the only way if you want to
 specify a password) is to write a .poprc file in your home directory.
@@ -520,6 +529,11 @@ There was a syntax error in the arguments to
 Some kind of I/O woes occurred when writing to the local folder.
 .IP 7
 There was an error condition reported by the server (POP3 only).
+.IP 8
+Exclusion error.  This means 
+.I popclient
+either found another copy of itself already running, or failed in such
+a way that it isn't sure whether another copy is running.
 .IP 9
 Something totally undefined occured.  This is usually caused by a bug within
 .I popclient.
