@@ -1901,48 +1901,46 @@ is restored."));
 	    }
 	    else
 	    {
-			/*
-			 * This connection has given us authorization
-			 * at least once.
-			 *
-			 * There are dodgy server (clubinternet.fr for
-			 * example) that give spurious authorization
-			 * failures on patently good account/password
-			 * details, then 5 minutes later let you in!
-			 *
-			 * This is meant to build in some tolerance of
-			 * such nasty bits of work
-			 */
-			ctl->wehaveauthed = 1;
-			/*if (ctl->authfailcount >= 3)*/
-			if (ctl->wehavesentauthnote)
-			{
-				ctl->wehavesentauthnote = 0;
-				report(stderr,
-				   _("Authorization OK on %s@%s\n"),
-				   ctl->remotename,
-				   ctl->server.truename);
-			    if (!open_warning_by_mail(ctl, (struct msgblk *)NULL))
-			    {
-					stuff_warning(ctl,
-					    _("Subject: fetchmail authentication OK\r\n"));
-					stuff_warning(ctl,
-					    _("Fetchmail was able to log into %s@%s.\r\n"), 
-					    ctl->remotename,
-					    ctl->server.truename);
-					stuff_warning(ctl, 
-					    _("Service has been restored.\r\n"));
-					close_warning_by_mail(ctl, (struct msgblk *)NULL);
+		/*
+		 * This connection has given us authorization at least once.
+		 *
+		 * There are dodgy server (clubinternet.fr for example) that
+		 * give spurious authorization failures on patently good
+		 * account/password details, then 5 minutes later let you in!
+		 *
+		 * This is meant to build in some tolerance of such nasty bits
+		 * of work.
+		 */
+		ctl->wehaveauthed = 1;
+		/*if (ctl->authfailcount >= 3)*/
+		if (ctl->wehavesentauthnote)
+		{
+		    ctl->wehavesentauthnote = 0;
+		    report(stderr,
+			   _("Authorization OK on %s@%s\n"),
+			   ctl->remotename,
+			   ctl->server.truename);
+		    if (!open_warning_by_mail(ctl, (struct msgblk *)NULL))
+		    {
+			stuff_warning(ctl,
+			      _("Subject: fetchmail authentication OK\r\n"));
+			stuff_warning(ctl,
+			      _("Fetchmail was able to log into %s@%s.\r\n"), 
+				      ctl->remotename,
+				      ctl->server.truename);
+			stuff_warning(ctl, 
+				      _("Service has been restored.\r\n"));
+			close_warning_by_mail(ctl, (struct msgblk *)NULL);
 		    
-			    }
-			}
-			/*
-			 * Reporting only after the first three
-			 * consecutive failures, or ten consecutive
-			 * failures after we have managed to get
-			 * authorization.
-			 */
-		   	ctl->authfailcount = 0;
+		    }
+		}
+		/*
+		 * Reporting only after the first three
+		 * consecutive failures, or ten consecutive
+		 * failures after we have managed to get
+		 * authorization.
+		 */
+		ctl->authfailcount = 0;
 	    }
 	}
 
