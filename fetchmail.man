@@ -179,17 +179,17 @@ Use POP3 with MD5 authentication.
 .IP RPOP
 Use POP3 with RPOP authentication.
 .IP KPOP
-Use POP3 with Kerberos V4 authentication on port 1109.
+Use POP3 with Kerberos V4 preauthentication on port 1109.
 .IP SDPS
 Use POP3 with Demon Internet's SDPS extensions.
 .IP IMAP
 IMAP2bis, IMAP4, or IMAP4rev1 (\fIfetchmail\fR autodetects their capabilities).
 .IP IMAP-K4
 IMAP4, or IMAP4rev1 (\fIfetchmail\fR autodetects their capabilities)
-with RFC 1731 Kerberos v4 authentication.
+with RFC 1731 Kerberos v4 preauthentication.
 .IP IMAP-GSS
 IMAP4, or IMAP4rev1 (\fIfetchmail\fR autodetects their capabilities)
-with RFC 1731 GSSAPI authentication.
+with RFC 1731 GSSAPI preauthentication.
 .IP ETRN
 Use the ESMTP ETRN option.
 .RE
@@ -259,7 +259,7 @@ mailserver is asked to ship mail to.  Hosts are tried in list order;
 the first one that is up becomes the forwarding or ETRN target for the
 current run.  Normally, `localhost' is added to the end of the list as
 an invisible default.  However, when using ETRN mode or Kerberos
-authentication, the FQDN of the machine running fetchmail is added to
+preauthentication, the FQDN of the machine running fetchmail is added to
 the end of the list as an invisible default. Each hostname may have a 
 port number following the host name.  The port number is separated from
 the host name by a slash; the default port is 25 (or ``smtp'' under IPv6).
@@ -440,8 +440,8 @@ fetchmail runs with the effective GID set to that of the kmem group
 .I only
 when interface data is being collected.
 .TP
-.B \-A, --auth
-(Keyword: auth[enticate]) 
+.B \-A, --preauth
+(Keyword: preauth[enticate]) 
 This option permits you to specify a preauthentication type (see USER
 AUTHENTICATION below for details).  The possible values are
 \&`\fBpassword\fR', `\fBkerberos_v5\fR' and `\fBkerberos\fR' (or, for

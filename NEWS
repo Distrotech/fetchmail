@@ -13,6 +13,7 @@ fetchmail-5.0.8 (Tue Sep 14 06:56:50 EDT 1999):
   probably fail (the RFCs don't support quoting) but it's better than nothing
   and works with at least one server.
 * Federico G. Schwindt's fix for NetBSD/OpenBSD --with-kerberos.
+* auth keyword and option changed to preauth.
 
 There are 264 people on fetchmail-friends and 441 on fetchmail-announce.
 

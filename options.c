@@ -41,7 +41,7 @@
 #define LA_PROTOCOL	17
 #define LA_UIDL		18
 #define LA_PORT		19
-#define LA_AUTHENTICATE	20
+#define LA_PREAUTH	20
 #define LA_TIMEOUT	21
 #define LA_ENVELOPE	22
 #define LA_QVIRTUAL     23
@@ -98,7 +98,7 @@ static const struct option longoptions[] = {
   {"proto",	required_argument, (int *) 0, LA_PROTOCOL    },
   {"uidl",	no_argument,	   (int *) 0, LA_UIDL	     },
   {"port",	required_argument, (int *) 0, LA_PORT        },
-  {"auth",	required_argument, (int *) 0, LA_AUTHENTICATE},
+  {"preauth",	required_argument, (int *) 0, LA_PREAUTH},
   {"timeout",	required_argument, (int *) 0, LA_TIMEOUT     },
   {"envelope",	required_argument, (int *) 0, LA_ENVELOPE    },
   {"qvirtual",	required_argument, (int *) 0, LA_QVIRTUAL    },
@@ -366,7 +366,7 @@ struct query *ctl;	/* option record to be initialized */
 #endif /* INET6 */
 	    break;
 	case 'A':
-	case LA_AUTHENTICATE:
+	case LA_PREAUTH:
 	    if (strcmp(optarg, "password") == 0)
 		ctl->server.preauthenticate = A_PASSWORD;
 	    else if (strcmp(optarg, "kerberos") == 0)
@@ -581,7 +581,7 @@ struct query *ctl;	/* option record to be initialized */
 	P(_("  -p, --protocol    specify retrieval protocol (see man page)\n"));
 	P(_("  -U, --uidl        force the use of UIDLs (pop3 only)\n"));
 	P(_("  -P, --port        TCP/IP service port to connect to\n"));
-	P(_("  -A, --auth        authentication type (password or kerberos)\n"));
+	P(_("  -A, --preauth     preauthentication type (password or kerberos)\n"));
 	P(_("  -t, --timeout     server nonresponse timeout\n"));
 	P(_("  -E, --envelope    envelope address header\n"));
 	P(_("  -Q, --qvirtual    prefix to remove from local user id\n"));
