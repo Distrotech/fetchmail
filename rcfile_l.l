@@ -5,6 +5,7 @@
  *
  * For license terms, see the file COPYING in this directory.
  */
+#include <string.h>
 
 #include "config.h"
 #include "fetchmail.h"
@@ -119,7 +120,6 @@ remote(folder)? {
 [ \t\r]+	;	/* whitespace */
 
 %%
-#include <string.h>
 
 void escapes(cp, tp)
 /* process standard C-style escape sequences in a string */
