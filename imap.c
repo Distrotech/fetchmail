@@ -71,22 +71,22 @@ int socket;
     }
 }
 
-int imap_getauth(socket, queryctl, buf)
+int imap_getauth(socket, ctl, buf)
 /* apply for connection authorization */
 int socket;
-struct hostrec *queryctl;
+struct query *ctl;
 char *buf;
 {
     /* try to get authorized */
     return(gen_transact(socket,
 		  "LOGIN %s \"%s\"",
-		  queryctl->remotename, queryctl->password));
+		  ctl->remotename, ctl->password));
 }
 
-static imap_getrange(socket, queryctl, countp, newp)
+static imap_getrange(socket, ctl, countp, newp)
 /* get range of messages to be fetched */
 int socket;
-struct hostrec *queryctl;
+struct query *ctl;
 int *countp, *newp;
 {
     int ok;
@@ -95,7 +95,7 @@ int *countp, *newp;
     recent = unseen = 0;
     ok = gen_transact(socket,
 		  "SELECT %s",
-		  queryctl->mailbox[0] ? queryctl->mailbox : "INBOX");
+		  ctl->mailbox[0] ? ctl->mailbox : "INBOX");
     if (ok != 0)
 	return(ok);
 
@@ -143,9 +143,9 @@ int	count;
     }
 }
 
-static imap_is_old(socket, queryctl, num)
+static imap_is_old(socket, ctl, num)
 int socket;
-struct hostrec *queryctl;
+struct query *ctl;
 int num;
 {
     char buf [POPBUFSIZE+1];
@@ -181,10 +181,10 @@ int *lenp;
 	return(0);
 }
 
-static imap_trail(socket, queryctl, number)
+static imap_trail(socket, ctl, number)
 /* discard tail of FETCH response */
 int socket;
-struct hostrec *queryctl;
+struct query *ctl;
 int number;
 {
     char buf [POPBUFSIZE+1];
@@ -195,10 +195,10 @@ int number;
 	return(0);
 }
 
-static imap_delete(socket, queryctl, number)
+static imap_delete(socket, ctl, number)
 /* set delete flag for given message */
 int socket;
-struct hostrec *queryctl;
+struct query *ctl;
 int number;
 {
     return(gen_transact(socket, "STORE %d +FLAGS (\\Deleted)", number));
@@ -222,11 +222,11 @@ const static struct method imap =
     "LOGOUT",		/* the IMAP exit command */
 };
 
-int doIMAP (queryctl)
+int doIMAP(ctl)
 /* retrieve messages using IMAP Version 2bis or Version 4 */
-struct hostrec *queryctl;
+struct query *ctl;
 {
-    return(do_protocol(queryctl, &imap));
+    return(do_protocol(ctl, &imap));
 }
 
 /* imap.c ends here */

@@ -75,11 +75,11 @@ static struct option longoptions[] = {
   {(char *) 0,  no_argument,       (int *) 0, 0              }
 };
 
-int parsecmdline (argc,argv,queryctl)
+int parsecmdline (argc,argv,ctl)
 /* parse and validate the command line options */
 int argc;			/* argument count */
 char **argv;			/* argument strings */
-struct hostrec *queryctl;	/* option record to be initialized */
+struct query *ctl;	/* option record to be initialized */
 {
     /*
      * return value: if positive, argv index of last parsed option + 1
@@ -94,7 +94,7 @@ struct hostrec *queryctl;	/* option record to be initialized */
     int errflag = 0;   /* TRUE when a syntax error is detected */
     int option_index;
 
-    memset(queryctl, '\0', sizeof(struct hostrec));    /* start clean */
+    memset(ctl, '\0', sizeof(struct query));    /* start clean */
 
     while (!errflag && 
 	   (c = getopt_long(argc,argv,shortoptions,
@@ -143,18 +143,18 @@ struct hostrec *queryctl;	/* option record to be initialized */
 	case LA_PROTOCOL:
 	    /* XXX -- should probably use a table lookup here */
 	    if (strcasecmp(optarg,"pop2") == 0)
-		queryctl->protocol = P_POP2;
+		ctl->protocol = P_POP2;
 	    else if (strcasecmp(optarg,"pop3") == 0)
-		queryctl->protocol = P_POP3;
+		ctl->protocol = P_POP3;
 	    else if (strcasecmp(optarg,"imap") == 0)
-		queryctl->protocol = P_IMAP;
+		ctl->protocol = P_IMAP;
 	    else if (strcasecmp(optarg,"apop") == 0)
-		queryctl->protocol = P_APOP;
+		ctl->protocol = P_APOP;
 	    else if (strcasecmp(optarg,"kpop") == 0)
 	    {
-		queryctl->protocol = P_POP3;
-		queryctl->port = KPOP_PORT;
-		queryctl->authenticate =  A_KERBEROS;
+		ctl->protocol = P_POP3;
+		ctl->port = KPOP_PORT;
+		ctl->authenticate =  A_KERBEROS;
 	    }
 	    else {
 		fprintf(stderr,"Invalid protocol `%s' specified.\n", optarg);
@@ -163,63 +163,63 @@ struct hostrec *queryctl;	/* option record to be initialized */
 	    break;
 	case 'P':
 	case LA_PORT:
-	    queryctl->port = atoi(optarg);
+	    ctl->port = atoi(optarg);
 	    break;
 	case 'A':
 	case LA_AUTHENTICATE:
 	    if (strcmp(optarg, "password") == 0)
-		queryctl->authenticate = A_PASSWORD;
+		ctl->authenticate = A_PASSWORD;
 	    else if (strcmp(optarg, "kerberos") == 0)
-		queryctl->authenticate = A_KERBEROS;
+		ctl->authenticate = A_KERBEROS;
 	    else {
 		fprintf(stderr,"Invalid authentication `%s' specified.\n", optarg);
 		errflag++;
 	    }
 	    break;
 	case 't':
-	    queryctl->timeout = atoi(optarg);
+	    ctl->timeout = atoi(optarg);
 	    break;
 	case 'u':
 	case LA_USERNAME:
-	    strncpy(queryctl->remotename,optarg,sizeof(queryctl->remotename)-1);
+	    strncpy(ctl->remotename,optarg,sizeof(ctl->remotename)-1);
 	    break;
 
 	case 'a':
 	case LA_ALL:
-	    queryctl->fetchall = TRUE;
+	    ctl->fetchall = TRUE;
 	    break;
 	case 'K':
 	case LA_KILL:
-	    queryctl->keep = FALSE;
+	    ctl->keep = FALSE;
 	    break;
 	case 'k':
 	case LA_KEEP:
-	    queryctl->keep = TRUE;
+	    ctl->keep = TRUE;
 	    break;
 	case 'F':
 	case LA_FLUSH:
-	    queryctl->flush = TRUE;
+	    ctl->flush = TRUE;
 	    break;
 	case 'n':
 	case LA_NOREWRITE:
-	    queryctl->norewrite = TRUE;
+	    ctl->norewrite = TRUE;
 	    break;
 	case 'l':
 	case LA_LIMIT:
-	    queryctl->limit = atoi(optarg);
+	    ctl->limit = atoi(optarg);
 	    break;
 	case 'r':
 	case LA_REMOTEFILE:
-	    strncpy(queryctl->mailbox,optarg,sizeof(queryctl->mailbox)-1);
+	    strncpy(ctl->mailbox,optarg,sizeof(ctl->mailbox)-1);
 	    break;
 	case 'S':
 	case LA_SMTPHOST:
-	    strncpy(queryctl->smtphost,optarg,sizeof(queryctl->smtphost)-1);
+	    strncpy(ctl->smtphost,optarg,sizeof(ctl->smtphost)-1);
 	    ocount++;
 	    break;
 	case 'm':
 	case LA_MDA:
-	    strncpy(queryctl->mda,optarg,sizeof(queryctl->mda));
+	    strncpy(ctl->mda,optarg,sizeof(ctl->mda));
 	    ocount++;
 	    break;
 	case 'y':

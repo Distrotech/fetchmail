@@ -37,8 +37,8 @@
 
 #ifdef HAVE_PROTOTYPES
 /* prototypes for internal functions */
-static int dump_options (struct hostrec *queryctl);
-static int query_host(struct hostrec *queryctl);
+static int dump_options (struct query *);
+static int query_host(struct query *);
 static char *visbuf(const char *);
 #endif
 
@@ -61,7 +61,7 @@ char *dfltuser;		/* invoking user */
 static void termhook();
 static char *lockfile;
 static int popstatus;
-static struct hostrec *hostp;
+static struct query *ctl;
 
 RETSIGTYPE donothing(sig) int sig; {signal(sig, donothing);}
 
@@ -70,14 +70,14 @@ int argc;
 char **argv;
 { 
     int mboxfd, st, bkgd, lossage;
-    struct hostrec def_opts;
+    struct query def_opts;
     int parsestatus, implicitmode;
     char *servername, *user, *home, *tmpdir, tmpbuf[BUFSIZ]; 
     struct passwd *pw;
     FILE	*lockfp;
     pid_t pid;
 
-    memset(&def_opts, '\0', sizeof(struct hostrec));
+    memset(&def_opts, '\0', sizeof(struct query));
 
     if ((user = getenv("USER")) == (char *)NULL)
         user = getenv("LOGNAME");
@@ -136,8 +136,8 @@ char **argv;
 
     if (implicitmode = (optind >= argc))
     {
-	for (hostp = hostlist; hostp; hostp = hostp->next)
-	    hostp->active = TRUE;
+	for (ctl = querylist; ctl; ctl = ctl->next)
+	    ctl->active = TRUE;
     }
     else
 	for (; optind < argc; optind++) 
@@ -147,49 +147,49 @@ char **argv;
 	     * simply declare it active.  Otherwise synthesize a host
 	     * record from command line and defaults
 	     */
-	    for (hostp = hostlist; hostp; hostp = hostp->next)
-		if (strcmp(hostp->servername, argv[optind]) == 0)
+	    for (ctl = querylist; ctl; ctl = ctl->next)
+		if (strcmp(ctl->servername, argv[optind]) == 0)
 		    goto foundit;
 
-	    hostp = hostalloc(&cmd_opts);
-	    strcpy(hostp->servername, argv[optind]);
+	    ctl = hostalloc(&cmd_opts);
+	    strcpy(ctl->servername, argv[optind]);
 
 	foundit:
-	    hostp->active = TRUE;
+	    ctl->active = TRUE;
 	}
 
     /* if there's a defaults record, merge it and lose it */ 
-    if (hostlist && strcmp(hostlist->servername, "defaults") == 0)
+    if (querylist && strcmp(querylist->servername, "defaults") == 0)
     {
-	for (hostp = hostlist; hostp; hostp = hostp->next)
-	    optmerge(hostp, hostlist);
-	hostlist = hostlist->next;
+	for (ctl = querylist; ctl; ctl = ctl->next)
+	    optmerge(ctl, querylist);
+	querylist = querylist->next;
     }
 
     /* don't allow a defaults record after the first */
-    for (hostp = hostlist; hostp; hostp = hostp->next)
-	if (strcmp(hostp->servername, "defaults") == 0)
+    for (ctl = querylist; ctl; ctl = ctl->next)
+	if (strcmp(ctl->servername, "defaults") == 0)
 	    exit(PS_SYNTAX);
 
     /* figure out who the default recipient should be */
     if (getuid() == 0)
-	dfltuser = hostp->remotename;
+	dfltuser = ctl->remotename;
     else
 	dfltuser = user;
 
     /* merge in wired defaults, do sanity checks and prepare internal fields */
-    for (hostp = hostlist; hostp; hostp = hostp->next)
-	if (hostp->active && !(implicitmode && hostp->skip))
+    for (ctl = querylist; ctl; ctl = ctl->next)
+	if (ctl->active && !(implicitmode && ctl->skip))
 	{
 #ifdef HAVE_GETHOSTBYNAME
 	    struct hostent	*namerec;
 #endif /* HAVE_GETHOSTBYNAME */
 
 	    /* merge in defaults */
-	    optmerge(hostp, &def_opts);
+	    optmerge(ctl, &def_opts);
 
 	    /* keep lusers from shooting themselves in the foot :-) */
-	    if (poll_interval && hostp->limit)
+	    if (poll_interval && ctl->limit)
 	    {
 		fprintf(stderr,"fetchmail: you'd never see large messages!\n");
 		exit(PS_SYNTAX);
@@ -203,23 +203,23 @@ char **argv;
 		exit(PS_SYNTAX);	/* has to be from bad rc file */
 	    }
 	    else
-		hostp->uid = pw->pw_uid;
+		ctl->uid = pw->pw_uid;
 
 #ifdef HAVE_GETHOSTBYNAME
 	    /* compute the canonical name of the host */
-	    namerec = gethostbyname(hostp->servername);
+	    namerec = gethostbyname(ctl->servername);
 	    if (namerec == (struct hostent *)NULL)
 	    {
 		fprintf(stderr,
 			"fetchmail: can't get canonical name of host %s\n",
-			hostp->servername);
+			ctl->servername);
 		exit(PS_SYNTAX);
 	    }
 	    else
-		hostp->canonical_name = xstrdup((char *)namerec->h_name);
+		ctl->canonical_name = xstrdup((char *)namerec->h_name);
 #else
 	    /* can't handle multidrop mailboxes unless we can do DNS lookups */
-	    if (hostp->localnames && hostp->localnames->next)
+	    if (ctl->localnames && ctl->localnames->next)
 	    {
 		fputs("fetchmail: can't handle multidrop mailboxes without DNS\n",
 			stderr);
@@ -228,34 +228,34 @@ char **argv;
 #endif /* HAVE_GETHOSTBYNAME */
 
 	    /* sanity checks */
-	    if (hostp->port < 0)
+	    if (ctl->port < 0)
 	    {
 		(void) fprintf(stderr,
 			       "%s configuration invalid, port number cannot be negative",
-			       hostp->servername);
+			       ctl->servername);
 		exit(PS_SYNTAX);
 	    }
 
 	    /* expand MDA commands */
-	    if (!check_only && hostp->mda[0])
+	    if (!check_only && ctl->mda[0])
 	    {
 		char *argp;
 
 		/* punch nulls into the delimiting whitespace in the args */
-		for (argp = hostp->mda, hostp->mda_argcount = 1; *argp != '\0'; hostp->mda_argcount++)
+		for (argp = ctl->mda, ctl->mda_argcount = 1; *argp != '\0'; ctl->mda_argcount++)
 		{
-		    hostp->mda_argv[hostp->mda_argcount] = argp;
+		    ctl->mda_argv[ctl->mda_argcount] = argp;
 		    while (!(*argp == '\0' || isspace(*argp)))
 			argp++;
 		    if (*argp != '\0')
 			*(argp++) = '\0';  
 		}
 
-		hostp->mda_argv[hostp->mda_argcount] = (char *)NULL;
+		ctl->mda_argv[ctl->mda_argcount] = (char *)NULL;
 
-		hostp->mda_argv[0] = hostp->mda_argv[1];
-		if ((argp = strrchr(hostp->mda_argv[1], '/')) != (char *)NULL)
-		    hostp->mda_argv[1] = argp + 1 ;
+		ctl->mda_argv[0] = ctl->mda_argv[1];
+		if ((argp = strrchr(ctl->mda_argv[1], '/')) != (char *)NULL)
+		    ctl->mda_argv[1] = argp + 1 ;
 	    }
 	}
 
@@ -270,7 +270,7 @@ char **argv;
     if ((st = prc_filecheck(idfile)) != 0)
 	exit(st);
     else
-	initialize_saved_lists(hostlist, idfile);
+	initialize_saved_lists(querylist, idfile);
 
     /* perhaps we just want to check options? */
     if (versioninfo) {
@@ -281,17 +281,17 @@ char **argv;
 		printf(" and %s\n", rcfile);
 	    if (outlevel == O_VERBOSE)
 		printf("Lockfile at %s\n", tmpbuf);
-	for (hostp = hostlist; hostp; hostp = hostp->next) {
-	    if (hostp->active && !(implicitmode && hostp->skip))
-		dump_params(hostp);
+	for (ctl = querylist; ctl; ctl = ctl->next) {
+	    if (ctl->active && !(implicitmode && ctl->skip))
+		dump_params(ctl);
 	}
-	if (hostlist == NULL)
+	if (querylist == NULL)
 	    (void) fprintf(stderr,
 		"No mailservers set up -- perhaps %s is missing?\n",
 			  rcfile);
 	exit(0);
     }
-    else if (hostlist == NULL) {
+    else if (querylist == NULL) {
 	(void) fputs("fetchmail: no mailservers have been specified.\n", stderr);
 	exit(PS_SYNTAX);
     }
@@ -382,19 +382,19 @@ char **argv;
     }
 
     /* pick up interactively any passwords we need but don't have */ 
-    for (hostp = hostlist; hostp; hostp = hostp->next)
-	if (hostp->active && !(implicitmode && hostp->skip) && !hostp->password[0])
+    for (ctl = querylist; ctl; ctl = ctl->next)
+	if (ctl->active && !(implicitmode && ctl->skip) && !ctl->password[0])
 	{
-	    if (hostp->authenticate == A_KERBEROS)
+	    if (ctl->authenticate == A_KERBEROS)
 	      /* Server won't care what the password is, but there
 		 must be some non-null string here.  */
-	      (void) strncpy(hostp->password, 
-			     hostp->remotename, PASSWORDLEN-1);
+	      (void) strncpy(ctl->password, 
+			     ctl->remotename, PASSWORDLEN-1);
 	    else
 	      {
 		(void) sprintf(tmpbuf, "Enter password for %s@%s: ",
-			       hostp->remotename, hostp->servername);
-		(void) strncpy(hostp->password,
+			       ctl->remotename, ctl->servername);
+		(void) strncpy(ctl->password,
 			       (char *)getpassword(tmpbuf),PASSWORDLEN-1);
 	      }
 	}
@@ -440,11 +440,11 @@ char **argv;
 	sethostent(TRUE);	/* use TCP/IP for mailserver queries */
 #endif /* HAVE_GETHOSTBYNAME */
 
-	for (hostp = hostlist; hostp; hostp = hostp->next)
+	for (ctl = querylist; ctl; ctl = ctl->next)
 	{
-	    if (hostp->active && !(implicitmode && hostp->skip))
+	    if (ctl->active && !(implicitmode && ctl->skip))
 	    {
-		popstatus = query_host(hostp);
+		popstatus = query_host(ctl);
 
 		/*
 		 * Under Linux, if fetchmail is run in daemon mode
@@ -471,7 +471,7 @@ char **argv;
 		}
 
 		if (!check_only)
-		    update_uid_lists(hostp);
+		    update_uid_lists(ctl);
 	    }
 	}
 
@@ -498,7 +498,7 @@ void termhook(int sig)
 	fprintf(stderr, "terminated with signal %d\n", sig);
 
     if (!check_only)
-	write_saved_lists(hostlist, idfile);
+	write_saved_lists(querylist, idfile);
 
     unlink(lockfile);
     exit(popstatus);
@@ -524,9 +524,9 @@ int proto;
  */
 static const int autoprobe[] = {P_IMAP, P_POP3, P_POP2};
 
-static int query_host(queryctl)
+static int query_host(ctl)
 /* perform fetch transaction with single host */
-struct hostrec *queryctl;
+struct query *ctl;
 {
     int i, st;
 
@@ -536,28 +536,28 @@ struct hostrec *queryctl;
 
 	time(&now);
 	fprintf(stderr, "Querying %s (protocol %s) at %s",
-	    queryctl->servername, showproto(queryctl->protocol), ctime(&now));
+	    ctl->servername, showproto(ctl->protocol), ctime(&now));
     }
-    switch (queryctl->protocol) {
+    switch (ctl->protocol) {
     case P_AUTO:
 	for (i = 0; i < sizeof(autoprobe)/sizeof(autoprobe[0]); i++)
 	{
-	    queryctl->protocol = autoprobe[i];
-	    if ((st = query_host(queryctl)) == PS_SUCCESS || st == PS_NOMAIL || st == PS_AUTHFAIL)
+	    ctl->protocol = autoprobe[i];
+	    if ((st = query_host(ctl)) == PS_SUCCESS || st == PS_NOMAIL || st == PS_AUTHFAIL)
 		break;
 	}
-	queryctl->protocol = P_AUTO;
+	ctl->protocol = P_AUTO;
 	return(st);
 	break;
     case P_POP2:
-	return(doPOP2(queryctl));
+	return(doPOP2(ctl));
 	break;
     case P_POP3:
     case P_APOP:
-	return(doPOP3(queryctl));
+	return(doPOP3(ctl));
 	break;
     case P_IMAP:
-	return(doIMAP(queryctl));
+	return(doIMAP(ctl));
 	break;
     default:
 	fprintf(stderr,"fetchmail: unsupported protocol selected.\n");
@@ -565,110 +565,110 @@ struct hostrec *queryctl;
     }
 }
 
-int dump_params (queryctl)
+int dump_params (ctl)
 /* display query parameters in English */
-struct hostrec *queryctl;	/* query parameter block */
+struct query *ctl;	/* query parameter block */
 {
     printf("Options for retrieving from %s@%s:\n",
-	   hostp->remotename, visbuf(hostp->servername));
+	   ctl->remotename, visbuf(ctl->servername));
 #ifdef HAVE_GETHOSTBYNAME
-    printf("  Canonical DNS name of server is %s.\n", hostp->canonical_name);
+    printf("  Canonical DNS name of server is %s.\n", ctl->canonical_name);
 #endif /* HAVE_GETHOSTBYNAME */
-    if (queryctl->skip || outlevel == O_VERBOSE)
+    if (ctl->skip || outlevel == O_VERBOSE)
 	printf("  This host will%s be queried when no host is specified.\n",
-	       queryctl->skip ? " not" : "");
-    if (queryctl->password[0] == '\0')
+	       ctl->skip ? " not" : "");
+    if (ctl->password[0] == '\0')
 	printf("  Password will be prompted for.\n");
     else if (outlevel == O_VERBOSE)
-	if (queryctl->protocol == P_APOP)
-	    printf("  APOP secret = '%s'.\n", visbuf(queryctl->password));
+	if (ctl->protocol == P_APOP)
+	    printf("  APOP secret = '%s'.\n", visbuf(ctl->password));
         else
-	    printf("  Password = '%s'.\n", visbuf(queryctl->password));
-    if (queryctl->protocol == P_POP3 
-		&& queryctl->port == KPOP_PORT
-		&& queryctl->authenticate == A_KERBEROS)
+	    printf("  Password = '%s'.\n", visbuf(ctl->password));
+    if (ctl->protocol == P_POP3 
+		&& ctl->port == KPOP_PORT
+		&& ctl->authenticate == A_KERBEROS)
 	printf("  Protocol is KPOP");
     else
     {
-	printf("  Protocol is %s", showproto(queryctl->protocol));
+	printf("  Protocol is %s", showproto(ctl->protocol));
     }
-    if (queryctl->port)
-	printf(" (using port %d)", queryctl->port);
+    if (ctl->port)
+	printf(" (using port %d)", ctl->port);
     else if (outlevel == O_VERBOSE)
 	printf(" (using default port)");
     putchar('.');
     putchar('\n');
-    if (queryctl->authenticate == A_KERBEROS)
+    if (ctl->authenticate == A_KERBEROS)
 	    printf("  Kerberos authentication enabled.\n");
-    printf("  Server nonresponse timeout is %d seconds", queryctl->timeout);
-    if (queryctl->timeout ==  CLIENT_TIMEOUT)
+    printf("  Server nonresponse timeout is %d seconds", ctl->timeout);
+    if (ctl->timeout ==  CLIENT_TIMEOUT)
 	printf(" (default).\n");
     else
 	printf("\n.");
 
     printf("  %s messages will be retrieved (--all %s).\n",
-	   queryctl->fetchall ? "All" : "Only new",
-	   queryctl->fetchall ? "on" : "off");
+	   ctl->fetchall ? "All" : "Only new",
+	   ctl->fetchall ? "on" : "off");
     printf("  Fetched messages will%s be kept on the server (--keep %s).\n",
-	   queryctl->keep ? "" : " not",
-	   queryctl->keep ? "on" : "off");
+	   ctl->keep ? "" : " not",
+	   ctl->keep ? "on" : "off");
     printf("  Old messages will%s be flushed before message retrieval (--flush %s).\n",
-	   queryctl->flush ? "" : " not",
-	   queryctl->flush ? "on" : "off");
+	   ctl->flush ? "" : " not",
+	   ctl->flush ? "on" : "off");
     printf("  Rewrite of server-local addresses is %sabled (--norewrite %s).\n",
-	   queryctl->norewrite ? "dis" : "en",
-	   queryctl->norewrite ? "on" : "off");
-    if (queryctl->limit)
-	printf("  Message size limit is %d bytes\n", queryctl->limit);
+	   ctl->norewrite ? "dis" : "en",
+	   ctl->norewrite ? "on" : "off");
+    if (ctl->limit)
+	printf("  Message size limit is %d bytes\n", ctl->limit);
     else if (outlevel == O_VERBOSE)
 	printf("  No message size limit\n");
-    if (queryctl->mda[0])
+    if (ctl->mda[0])
     {
 	char **cp;
 
 	printf("  Messages will be delivered with %s, args:",
-	       visbuf(queryctl->mda_argv[0]));
-	for (cp = queryctl->mda_argv+1; *cp; cp++)
+	       visbuf(ctl->mda_argv[0]));
+	for (cp = ctl->mda_argv+1; *cp; cp++)
 	    printf(" %s", visbuf(*cp));
 	putchar('\n');
     }
     else
 	printf("  Messages will be SMTP-forwarded to '%s'.\n",
-	       visbuf(queryctl->smtphost));
-    if (!queryctl->localnames)
+	       visbuf(ctl->smtphost));
+    if (!ctl->localnames)
 	printf("  No localnames declared for this host.\n");
     else
     {
 	struct idlist *idp;
 	int count = 0;
 
-	for (idp = hostp->localnames; idp; idp = idp->next)
+	for (idp = ctl->localnames; idp; idp = idp->next)
 	    ++count;
 
 	printf("  %d local names recognized.\n", count);
 	if (outlevel == O_VERBOSE)
-	    for (idp = hostp->localnames; idp; idp = idp->next)
+	    for (idp = ctl->localnames; idp; idp = idp->next)
 		if (idp->val.id2)
 		    fprintf(stderr, "\t%s -> %s\n", idp->id, idp->val.id2);
 		else
 		    fprintf(stderr, "\t%s\n", idp->id);
     }
 
-    if (queryctl->protocol > P_POP2)
-	if (!queryctl->oldsaved)
+    if (ctl->protocol > P_POP2)
+	if (!ctl->oldsaved)
 	    printf("  No UIDs saved from this host.\n");
 	else
 	{
 	    struct idlist *idp;
 	    int count = 0;
 
-	    for (idp = hostp->oldsaved; idp; idp = idp->next)
+	    for (idp = ctl->oldsaved; idp; idp = idp->next)
 		++count;
 
 	    printf("  %d UIDs saved.\n", count);
 	    if (outlevel == O_VERBOSE)
-		for (idp = hostp->oldsaved; idp; idp = idp->next)
-		    fprintf(stderr, "\t%s %s\n", hostp->servername, idp->id);
+		for (idp = ctl->oldsaved; idp; idp = idp->next)
+		    fprintf(stderr, "\t%s %s\n", ctl->servername, idp->id);
 	}
 }
 

@@ -52,21 +52,21 @@ char *argbuf;
     return(ok);
 }
 
-int pop2_getauth(socket, queryctl, buf)
+int pop2_getauth(socket, ctl, buf)
 /* apply for connection authorization */
 int socket;
-struct hostrec *queryctl;
+struct query *ctl;
 char *buf;
 {
     return(gen_transact(socket,
 		  "HELO %s %s",
-		  queryctl->remotename, queryctl->password));
+		  ctl->remotename, ctl->password));
 }
 
-static pop2_getrange(socket, queryctl, countp, newp)
+static pop2_getrange(socket, ctl, countp, newp)
 /* get range of messages to be fetched */
 int socket;
-struct hostrec *queryctl;
+struct query *ctl;
 int *countp, *newp;
 {
     /*
@@ -77,9 +77,9 @@ int *countp, *newp;
 	return(PS_ERROR);
 
     /* maybe the user wanted a non-default folder */
-    if (queryctl->mailbox[0])
+    if (ctl->mailbox[0])
     {
-	int	ok = gen_transact(socket, "FOLD %s", queryctl->mailbox);
+	int	ok = gen_transact(socket, "FOLD %s", ctl->mailbox);
 
 	if (ok != 0)
 	    return(ok);
@@ -112,13 +112,13 @@ int *lenp;
     return(ok);
 }
 
-static pop2_trail(socket, queryctl, number)
+static pop2_trail(socket, ctl, number)
 /* send acknowledgement for message data */
 int socket;
-struct hostrec *queryctl;
+struct query *ctl;
 int number;
 {
-    return(gen_transact(socket, queryctl->keep ? "ACKS" : "ACKD"));
+    return(gen_transact(socket, ctl->keep ? "ACKS" : "ACKD"));
 }
 
 const static struct method pop2 =
@@ -139,11 +139,11 @@ const static struct method pop2 =
     "QUIT",				/* the POP2 exit command */
 };
 
-int doPOP2 (queryctl)
+int doPOP2 (ctl)
 /* retrieve messages using POP2 */
-struct hostrec *queryctl;
+struct query *ctl;
 {
-    return(do_protocol(queryctl, &pop2));
+    return(do_protocol(ctl, &pop2));
 }
 
 /* pop2.c ends here */

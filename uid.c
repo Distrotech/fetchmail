@@ -64,12 +64,12 @@ static struct idlist *scratchlist;
 
 void initialize_saved_lists(hostlist, idfile)
 /* read file of saved IDs and attach to each host */
-struct hostrec *hostlist;
+struct query *hostlist;
 char *idfile;
 {
     int	st;
     FILE	*tmpfp;
-    struct hostrec *hostp;
+    struct query *hostp;
 
     /* make sure lists are initially empty */
     for (hostp = hostlist; hostp; hostp = hostp->next)
@@ -93,7 +93,7 @@ char *idfile;
 		}
 
 		/* if it's not in a host we're querying, save it anyway */
-		if (hostp == (struct hostrec *)NULL)
+		if (hostp == (struct query *)NULL)
 		    save_uid(&scratchlist, -1, buf);
 	    }
 	}
@@ -237,7 +237,7 @@ struct idlist **nidl;
 
 void update_uid_lists(hostp)
 /* perform end-of-query actions on UID lists */
-struct hostrec *hostp;
+struct query *hostp;
 {
     free_uid_list(&hostp->oldsaved);
     hostp->oldsaved = hostp->newsaved;
@@ -246,12 +246,12 @@ struct hostrec *hostp;
 
 void write_saved_lists(hostlist, idfile)
 /* perform end-of-run write of seen-messages list */
-struct hostrec *hostlist;
+struct query *hostlist;
 char *idfile;
 {
     int	st, idcount;
     FILE	*tmpfp;
-    struct hostrec *hostp;
+    struct query *hostp;
     struct idlist *idp;
 
     /* if all lists are empty, nuke the file */

@@ -54,16 +54,16 @@ char *argbuf;
   return(ok);
 }
 
-int pop3_getauth(socket, queryctl, greeting)
+int pop3_getauth(socket, ctl, greeting)
 /* apply for connection authorization */
 int socket;
-struct hostrec *queryctl;
+struct query *ctl;
 char *greeting;
 {
     char buf [POPBUFSIZE+1];
 
     /* build MD5 digest from greeting timestamp + password */
-    if (queryctl->protocol == P_APOP) 
+    if (ctl->protocol == P_APOP) 
     {
 	char *start,*end;
 	char *msg;
@@ -85,27 +85,27 @@ char *greeting;
 	}
 
 	/* copy timestamp and password into digestion buffer */
-	msg = (char *)xmalloc((end-start-1) + strlen(queryctl->password) + 1);
+	msg = (char *)xmalloc((end-start-1) + strlen(ctl->password) + 1);
 	*(++end) = 0;
 	strcpy(msg,start);
-	strcat(msg,queryctl->password);
+	strcat(msg,ctl->password);
 
-	strcpy(queryctl->digest, MD5Digest(msg));
+	strcpy(ctl->digest, MD5Digest(msg));
 	free(msg);
     }
 
-    switch (queryctl->protocol) {
+    switch (ctl->protocol) {
     case P_POP3:
-	if ((gen_transact(socket,"USER %s", queryctl->remotename)) != 0)
+	if ((gen_transact(socket,"USER %s", ctl->remotename)) != 0)
 	    PROTOCOL_ERROR
 
-	if ((gen_transact(socket, "PASS %s", queryctl->password)) != 0)
+	if ((gen_transact(socket, "PASS %s", ctl->password)) != 0)
 	    PROTOCOL_ERROR
 	break;
 
     case P_APOP:
 	if ((gen_transact(socket, "APOP %s %s",
-			  queryctl->remotename, queryctl->digest)) != 0)
+			  ctl->remotename, ctl->digest)) != 0)
 	    PROTOCOL_ERROR
 	break;
 
@@ -117,17 +117,17 @@ char *greeting;
     return(0);
 }
 
-static pop3_getrange(socket, queryctl, countp, newp)
+static pop3_getrange(socket, ctl, countp, newp)
 /* get range of messages to be fetched */
 int socket;
-struct hostrec *queryctl;
+struct query *ctl;
 int *countp, *newp;
 {
     int ok;
     char buf [POPBUFSIZE+1];
 
     /* Ensure that the new list is properly empty */
-    queryctl->newsaved = (struct idlist *)NULL;
+    ctl->newsaved = (struct idlist *)NULL;
 
     /* get the total message count */
     gen_send(socket, "STAT");
@@ -144,7 +144,7 @@ int *countp, *newp;
      */
     last = 0;
     *newp = -1;
-    if (*countp > 0 && !queryctl->fetchall)
+    if (*countp > 0 && !ctl->fetchall)
     {
 	char id [IDLEN+1];
 
@@ -174,8 +174,8 @@ int *countp, *newp;
  			break;
  		    else if (sscanf(buf, "%d %s", &num, id) == 2)
 		    {
- 			save_uid(&queryctl->newsaved, num, id);
-			if (!uid_in_list(&queryctl->oldsaved, id))
+ 			save_uid(&ctl->newsaved, num, id);
+			if (!uid_in_list(&ctl->oldsaved, id))
 			    (*newp)++;
 		    }
  		}
@@ -219,17 +219,17 @@ int	count;
     }
 }
 
-static int pop3_is_old(socket, queryctl, num)
+static int pop3_is_old(socket, ctl, num)
 /* is the goiven message old? */
 int socket;
-struct hostrec *queryctl;
+struct query *ctl;
 int num;
 {
-    if (!queryctl->oldsaved)
+    if (!ctl->oldsaved)
 	return (num <= last);
     else
-        return (uid_in_list(&queryctl->oldsaved,
-			    uid_find (&queryctl->newsaved, num)));
+        return (uid_in_list(&ctl->oldsaved,
+			    uid_find (&ctl->newsaved, num)));
 }
 
 static int pop3_fetch(socket, number, lenp)
@@ -256,10 +256,10 @@ int *lenp;
     return(0);
 }
 
-static pop3_delete(socket, queryctl, number)
+static pop3_delete(socket, ctl, number)
 /* delete a given message */
 int socket;
-struct hostrec *queryctl;
+struct query *ctl;
 int number;
 {
     return(gen_transact(socket, "DELE %d", number));
@@ -283,15 +283,15 @@ const static struct method pop3 =
     "QUIT",		/* the POP3 exit command */
 };
 
-int doPOP3 (queryctl)
+int doPOP3 (ctl)
 /* retrieve messages using POP3 */
-struct hostrec *queryctl;
+struct query *ctl;
 {
-    if (queryctl->mailbox[0]) {
+    if (ctl->mailbox[0]) {
 	fprintf(stderr,"Option --remote is not supported with POP3\n");
 	return(PS_SYNTAX);
     }
-    return(do_protocol(queryctl, &pop3));
+    return(do_protocol(ctl, &pop3));
 }
 
 /* pop3.c ends here */

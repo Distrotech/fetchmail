@@ -58,39 +58,41 @@ struct idlist
     struct idlist *next;
 };
 
-struct hostrec
+struct query
 {
     /* per-host data */
     char servername [HOSTLEN+1];
-    char remotename [USERNAMELEN+1];
-    char password [PASSWORDLEN+1];
-    char mailbox [FOLDERLEN];
-    char smtphost[HOSTLEN+1];
-    char mda [MDALEN+1];
     struct idlist *localnames;
     int protocol;
     int port;
     int authenticate;
     int timeout;
-    int limit;
+    int skip;
 
-    /* MDA arguments */
+    /* per-user data */
+    char remotename [USERNAMELEN+1];
+    char password [PASSWORDLEN+1];
+    char mailbox [FOLDERLEN];
+    char smtphost[HOSTLEN+1];
+    char mda [MDALEN+1];
+
+    /* per-user MDA arguments */
     int mda_argcount;
     char *mda_argv[MDA_MAXARGS];
 
-    /* control flags */
+    /* per-user control flags */
     int keep;
     int fetchall;
     int flush;
     int norewrite;
-    int skip;
+    int limit;
 
     /* unseen, previous state of mailbox (initially from .fetchids) */
     struct idlist *oldsaved, *newsaved;
 
     /* internal use */
     int active;
-    struct hostrec *next;	/* next host in chain */
+    struct query *next;	/* next host in chain */
     unsigned int uid;		/* UID of user to deliver to */
     char digest [DIGESTLEN];
 #ifdef HAVE_GETHOSTBYNAME
@@ -120,7 +122,7 @@ struct method
 extern char tag[TAGLEN];
 
 /* list of hosts assembled from run control file and command line */
-extern struct hostrec cmd_opts, *hostlist;
+extern struct query cmd_opts, *querylist;
 
 /* controls the detail level of status/progress messages written to stderr */
 extern int outlevel;    	/* see the O_.* constants above */
@@ -143,8 +145,8 @@ extern char *dfltuser;		/* invoking user */
 
 /* prototypes for globally callable functions */
 #if defined(HAVE_STDARG_H)
-void gen_send (int socket, char *fmt, ... );
-int gen_transact (int socket, char *fmt, ... );
+void gen_send (int socket, char *, ... );
+int gen_transact (int socket, char *, ... );
 #else
 void gen_send ();
 int gen_transact ();
@@ -153,11 +155,11 @@ int gen_transact ();
 void *xmalloc(int);
 char *xstrdup(char *);
 
-int doPOP2 (struct hostrec *); 
-int doPOP3 (struct hostrec *);
-int doIMAP (struct hostrec *);
+int doPOP2 (struct query *); 
+int doPOP3 (struct query *);
+int doIMAP (struct query *);
 
-void initialize_saved_lists(struct hostrec *, char *);
+void initialize_saved_lists(struct query *, char *);
 void save_uid(struct idlist **, int, char *);
 void free_uid_list(struct idlist **);
 void save_id_pair(struct idlist **, char *, char *);
@@ -167,12 +169,12 @@ int uid_in_list(struct idlist **, char *);
 char *uid_find(struct idlist **, int);
 char *idpair_find(struct idlist **, char *);
 void append_uid_list(struct idlist **, struct idlist **);
-void update_uid_lists(struct hostrec *);
-void write_saved_lists(struct hostrec *, char *);
+void update_uid_lists(struct query *);
+void write_saved_lists(struct query *, char *);
 
-struct hostrec *hostalloc(struct hostrec *); 
-int parsecmdline (int, char **, struct hostrec *);
-void optmerge(struct hostrec *, struct hostrec *);
+struct query *hostalloc(struct query *); 
+int parsecmdline (int, char **, struct query *);
+void optmerge(struct query *, struct query *);
 char *MD5Digest (char *);
 int openmailpipe (char **);
 int daemonize(const char *, void (*)(int));
@@ -181,7 +183,7 @@ void escapes(const char *, char *);
 
 #else
 
-struct hostrec *hostinit(); 
+struct query *hostinit(); 
 char *MD5Digest ();
 void optmerge();
 

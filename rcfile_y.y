@@ -14,12 +14,12 @@
 #include <errno.h>
 #include "fetchmail.h"
 
-struct hostrec cmd_opts;	/* where to put command-line info */
-struct hostrec *hostlist;	/* head of server list (globally visible) */
+struct query cmd_opts;	/* where to put command-line info */
+struct query *querylist;	/* head of server list (globally visible) */
 
 int yydebug;	/* in case we didn't generate with -- debug */
 
-static struct hostrec current;		/* current server record */
+static struct query current;		/* current server record */
 static int prc_errflag;
 %}
 
@@ -137,7 +137,7 @@ extern int prc_lineno;
 extern char *yytext;
 extern FILE *yyin;
 
-static struct hostrec *hosttail;	/* where to add new elements */
+static struct query *hosttail;	/* where to add new elements */
 
 int yyerror (s)
 /* report a syntax error */
@@ -191,7 +191,7 @@ prc_parse_file (pathname)
 char *pathname;		/* pathname for the configuration file */
 {
     prc_errflag = 0;
-    hostlist = hosttail = (struct hostrec *)NULL;
+    querylist = hosttail = (struct query *)NULL;
     prc_reset();
 
     /* Check that the file is secure */
@@ -241,23 +241,23 @@ prc_reset()
     current.authenticate = saveauth;
 }
 
-struct hostrec *hostalloc(init)
+struct query *hostalloc(init)
 /* append a host record to the host list */
-struct hostrec *init;	/* pointer to block containing initial values */
+struct query *init;	/* pointer to block containing initial values */
 {
-    struct hostrec *node;
+    struct query *node;
 
     /* allocate new node */
-    node = (struct hostrec *) xmalloc(sizeof(struct hostrec));
+    node = (struct query *) xmalloc(sizeof(struct query));
 
     /* initialize it */
-    memcpy(node, init, sizeof(struct hostrec));
+    memcpy(node, init, sizeof(struct query));
 
     /* append to end of list */
-    if (hosttail != (struct hostrec *) 0)
+    if (hosttail != (struct query *) 0)
 	hosttail->next = node;	/* list contains at least one element */
     else
-	hostlist = node;	/* list is empty */
+	querylist = node;	/* list is empty */
     hosttail = node;
     return(node);
 }
@@ -292,8 +292,8 @@ int prc_register()
 
 void optmerge(h2, h1)
 /* merge two options records; empty fields in h2 are filled in from h1 */
-struct hostrec *h1;
-struct hostrec *h2;
+struct query *h1;
+struct query *h2;
 {
     struct idlist *idp;
 

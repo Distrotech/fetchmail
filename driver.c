@@ -328,10 +328,10 @@ char *hdr;	/* header line to be parsed, NUL to continue in previous hdr */
 #ifdef HAVE_GETHOSTBYNAME
 #define MX_RETRIES	3
 
-static int is_host_alias(name, queryctl)
+static int is_host_alias(name, ctl)
 /* determine whether name is a DNS alias of the hostname */
 const char *name;
-struct hostrec	*queryctl;
+struct query	*ctl;
 {
     struct hostent	*he;
     int			i, n;
@@ -348,9 +348,9 @@ struct hostrec	*queryctl;
      * name doesn't match either is it time to call the bind library.
      * If this happens odds are good we're looking at an MX name.
      */
-    if (strcmp(name, queryctl->servername) == 0)
+    if (strcmp(name, ctl->servername) == 0)
 	return(TRUE);
-    else if (strcmp(name, queryctl->canonical_name) == 0)
+    else if (strcmp(name, ctl->canonical_name) == 0)
 	return(TRUE);
 
     /*
@@ -359,7 +359,7 @@ struct hostrec	*queryctl;
      * to respond quickly and reliably.  Ergo if we get failure,
      * the name isn't a mailserver alias.
      */
-    else if ((he = gethostbyname(name)) && strcmp(queryctl->canonical_name, he->h_name) == 0)
+    else if ((he = gethostbyname(name)) && strcmp(ctl->canonical_name, he->h_name) == 0)
 	return(TRUE);
 
     /*
@@ -390,10 +390,10 @@ struct hostrec	*queryctl;
     return(FALSE);
 }
 
-void find_server_names(hdr, queryctl, xmit_names)
+void find_server_names(hdr, ctl, xmit_names)
 /* parse names out of a RFC822 header into an ID list */
 const char *hdr;		/* RFC822 header in question */
-struct hostrec *queryctl;	/* list of permissible aliases */
+struct query *ctl;	/* list of permissible aliases */
 struct idlist **xmit_names;	/* list of recipient names parsed out */
 {
     if (hdr == (char *)NULL)
@@ -407,15 +407,15 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 		char	*atsign = strchr(cp, '@');
 
 		if (atsign)
-		    if (queryctl->norewrite)
+		    if (ctl->norewrite)
 			continue;
 		    else
 		    {
-			if (!is_host_alias(atsign+1, queryctl))
+			if (!is_host_alias(atsign+1, ctl))
 			    continue;
 			atsign[0] = '\0';
 		    }
-		lname = idpair_find(&queryctl->localnames, cp);
+		lname = idpair_find(&ctl->localnames, cp);
 		if (lname != (char *)NULL)
 		{
 		    if (outlevel == O_VERBOSE)
@@ -430,13 +430,13 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 }
 #endif /* HAVE_GETHOSTBYNAME */
 
-static int gen_readmsg (socket, mboxfd, len, delimited, queryctl)
+static int gen_readmsg (socket, mboxfd, len, delimited, ctl)
 /* read message content and ship to SMTP or MDA */
 int socket;	/* to which the server is connected */
 int mboxfd;	/* descriptor to which retrieved message will be written */
 long len;	/* length of message */
 int delimited;	/* does the protocol use a message delimiter? */
-struct hostrec *queryctl;	/* query control record */
+struct query *ctl;	/* query control record */
 { 
     char buf [MSGBUFSIZE+1]; 
     char fromBuf[MSGBUFSIZE+1];
@@ -480,8 +480,8 @@ struct hostrec *queryctl;	/* query control record */
      
 	if (inheaders)
         {
-	    if (!queryctl->norewrite)
-		reply_hack(bufp, queryctl->servername);
+	    if (!ctl->norewrite)
+		reply_hack(bufp, ctl->servername);
 
 	    if (!lines)
 	    {
@@ -539,13 +539,13 @@ struct hostrec *queryctl;	/* query control record */
 	    xmit_names = (struct idlist *)NULL;
 #ifdef HAVE_GETHOSTBYNAME
 	    /* is this a multidrop box? */
-	    if (queryctl->localnames != (struct idlist *)NULL
-		&& queryctl->localnames->next != (struct idlist *)NULL)
+	    if (ctl->localnames != (struct idlist *)NULL
+		&& ctl->localnames->next != (struct idlist *)NULL)
 	    {
 		/* compute the local address list */
-		find_server_names(tohdr,  queryctl, &xmit_names);
-		find_server_names(cchdr,  queryctl, &xmit_names);
-		find_server_names(bcchdr, queryctl, &xmit_names);
+		find_server_names(tohdr,  ctl, &xmit_names);
+		find_server_names(cchdr,  ctl, &xmit_names);
+		find_server_names(bcchdr, ctl, &xmit_names);
 
 		/* if nothing supplied localnames, default appropriately */
 		if (!xmit_names)
@@ -554,14 +554,14 @@ struct hostrec *queryctl;	/* query control record */
 	    else	/* it's a single-drop box, use first localname */
 #endif /* HAVE_GETHOSTBYNAME */
 	    {
-		if (queryctl->localnames)
-		    save_uid(&xmit_names, -1, queryctl->localnames->id);
+		if (ctl->localnames)
+		    save_uid(&xmit_names, -1, ctl->localnames->id);
 		else
 		    save_uid(&xmit_names, -1, dfltuser);
 	    }
 
 	    /* time to address the message */
-	    if (queryctl->mda[0])	/* we have a declared MDA */
+	    if (ctl->mda[0])	/* we have a declared MDA */
 	    {
 		int	i, nlocals = 0;
 		char	**sargv, **sp;
@@ -572,9 +572,9 @@ struct hostrec *queryctl;	/* query control record */
 		 */
 		for (idp = xmit_names; idp; idp = idp->next)
 		    nlocals++;
-		sp = sargv = (char **)alloca(queryctl->mda_argcount+nlocals+2);
-		for (i = 0; i <= queryctl->mda_argcount; i++)
-		    *sp++ = queryctl->mda_argv[i];
+		sp = sargv = (char **)alloca(ctl->mda_argcount+nlocals+2);
+		for (i = 0; i <= ctl->mda_argcount; i++)
+		    *sp++ = ctl->mda_argv[i];
 		for (idp = xmit_names; idp; idp = idp->next)
 		    *sp++ = idp->id;
 		*sp =  (char *)NULL;
@@ -586,7 +586,7 @@ struct hostrec *queryctl;	/* query control record */
 		 * MDA creates properly.  (The seteuid call is available
 		 * under all BSDs and Linux)
 		 */
-		seteuid(queryctl->uid);
+		seteuid(ctl->uid);
 #endif /* HAVE_SETEUID */
 
 		mboxfd = openmailpipe(sargv);
@@ -620,7 +620,7 @@ struct hostrec *queryctl;	/* query control record */
 		    *cp = '\n';
 
 	    /* replace all LFs with CR-LF before sending to the SMTP server */
-	    if (!queryctl->mda[0])
+	    if (!ctl->mda[0])
 	    {
 		char *newheaders = malloc(1 + oldlen * 2);
 
@@ -644,11 +644,11 @@ struct hostrec *queryctl;	/* query control record */
 	}
 
 	/* SMTP byte-stuffing */
-	if (*bufp == '.' && queryctl->mda[0] == 0)
+	if (*bufp == '.' && ctl->mda[0] == 0)
 	    write(mboxfd, ".", 1);
 
 	/* write this line to the file after replacing all LFs with CR-LF */
-	if (!queryctl->mda[0])
+	if (!ctl->mda[0])
 	{
 	    char *newbufp = malloc(1 + strlen(bufp) * 2);
 
@@ -658,7 +658,7 @@ struct hostrec *queryctl;	/* query control record */
 	    bufp = newbufp;
 	}
 	n = write(mboxfd,bufp,strlen(bufp));
-	if (!queryctl->mda[0])
+	if (!ctl->mda[0])
 	    free(bufp);
 	if (n < 0)
 	{
@@ -672,7 +672,7 @@ struct hostrec *queryctl;	/* query control record */
 	lines++;
     }
 
-    if (queryctl->mda[0])
+    if (ctl->mda[0])
     {
 	/* close the delivery pipe, we'll reopen before next message */
 	if (closemailpipe(mboxfd))
@@ -723,16 +723,16 @@ char *canonical;	/* server name */
 }
 #endif /* KERBEROS_V4 */
 
-int do_protocol(queryctl, proto)
+int do_protocol(ctl, proto)
 /* retrieve messages from server using given protocol method table */
-struct hostrec *queryctl;	/* parsed options with merged-in defaults */
+struct query *ctl;	/* parsed options with merged-in defaults */
 struct method *proto;		/* protocol method table */
 {
     int ok, mboxfd = -1;
     void (*sigsave)() = signal(SIGALRM, alarm_handler);
 
 #ifndef KERBEROS_V4
-    if (queryctl->authenticate == A_KERBEROS)
+    if (ctl->authenticate == A_KERBEROS)
     {
 	fputs("fetchmail: Kerberos support not linked.\n", stderr);
 	return(PS_ERROR);
@@ -743,7 +743,7 @@ struct method *proto;		/* protocol method table */
     if (!proto->is_old)
     {
 	/* check for unsupported options */
-	if (queryctl->flush) {
+	if (ctl->flush) {
 	    fprintf(stderr,
 		    "Option --flush is not supported with %s\n",
 		    proto->name);
@@ -751,7 +751,7 @@ struct method *proto;		/* protocol method table */
 	    signal(SIGALRM, sigsave);
 	    return(PS_SYNTAX);
 	}
-	else if (queryctl->fetchall) {
+	else if (ctl->fetchall) {
 	    fprintf(stderr,
 		    "Option --all is not supported with %s\n",
 		    proto->name);
@@ -760,7 +760,7 @@ struct method *proto;		/* protocol method table */
 	    return(PS_SYNTAX);
 	}
     }
-    if (!proto->getsizes && queryctl->limit)
+    if (!proto->getsizes && ctl->limit)
     {
 	fprintf(stderr,
 		"Option --limit is not supported with %s\n",
@@ -778,17 +778,17 @@ struct method *proto;		/* protocol method table */
     if (setjmp(restart) == 1)
 	fprintf(stderr,
 		"fetchmail: timeout after %d seconds waiting for %s.\n",
-		queryctl->timeout, queryctl->servername);
+		ctl->timeout, ctl->servername);
     else
     {
 	char buf [POPBUFSIZE+1], host[HOSTLEN+1];
 	int *msgsizes, socket, len, num, count, new, deletions = 0;
 
-	alarm(queryctl->timeout);
+	alarm(ctl->timeout);
 
 	/* open a socket to the mail server */
-	if ((socket = Socket(queryctl->servername,
-			     queryctl->port ? queryctl->port : protocol->port))<0)
+	if ((socket = Socket(ctl->servername,
+			     ctl->port ? ctl->port : protocol->port))<0)
 	{
 	    perror("fetchmail, connecting to host");
 	    ok = PS_SOCKET;
@@ -796,9 +796,9 @@ struct method *proto;		/* protocol method table */
 	}
 
 #ifdef KERBEROS_V4
-	if (queryctl->authenticate == A_KERBEROS)
+	if (ctl->authenticate == A_KERBEROS)
 	{
-	    ok = (kerberos_auth (socket, queryctl->canonical_name));
+	    ok = (kerberos_auth (socket, ctl->canonical_name));
 	    if (ok != 0)
 		goto cleanUp;
 	}
@@ -810,8 +810,8 @@ struct method *proto;		/* protocol method table */
 	    goto cleanUp;
 
 	/* try to get authorized to fetch mail */
-	shroud = queryctl->password;
-	ok = (protocol->getauth)(socket, queryctl, buf);
+	shroud = ctl->password;
+	ok = (protocol->getauth)(socket, ctl, buf);
 	shroud = (char *)NULL;
 	if (ok == PS_ERROR)
 	    ok = PS_AUTHFAIL;
@@ -819,15 +819,15 @@ struct method *proto;		/* protocol method table */
 	    goto cleanUp;
 
 	/* compute number of messages and number of new messages waiting */
-	if ((protocol->getrange)(socket, queryctl, &count, &new) != 0)
+	if ((protocol->getrange)(socket, ctl, &count, &new) != 0)
 	    goto cleanUp;
 
 	/* show user how many messages we downloaded */
 	if (outlevel > O_SILENT && outlevel < O_VERBOSE)
 	    if (count == 0)
 		fprintf(stderr, "No mail from %s@%s\n", 
-			queryctl->remotename,
-			queryctl->servername);
+			ctl->remotename,
+			ctl->servername);
 	    else
 	    {
 		fprintf(stderr, "%d message%s", count, count > 1 ? "s" : ""); 
@@ -835,29 +835,29 @@ struct method *proto;		/* protocol method table */
 		    fprintf(stderr, " (%d seen)", count-new);
 		fprintf(stderr,
 			" from %s@%s.\n",
-			queryctl->remotename,
-			queryctl->servername);
+			ctl->remotename,
+			ctl->servername);
 	    }
 
 	/* we may need to get sizes in order to check message limits */
 	msgsizes = (int *)NULL;
-	if (!queryctl->fetchall && proto->getsizes && queryctl->limit)
+	if (!ctl->fetchall && proto->getsizes && ctl->limit)
 	    if ((msgsizes = (proto->getsizes)(socket, count)) == (int *)NULL)
 		return(PS_ERROR);
 
 	if (check_only)
 	{
-	    if (new == -1 || queryctl->fetchall)
+	    if (new == -1 || ctl->fetchall)
 		new = count;
 	    ok = ((new > 0) ? PS_SUCCESS : PS_NOMAIL);
 	    goto closeUp;
 	}
 	else if (count > 0)
 	{
-	    if (queryctl->mda[0] == '\0')
-		if ((mboxfd = Socket(queryctl->smtphost, SMTP_PORT)) < 0
+	    if (ctl->mda[0] == '\0')
+		if ((mboxfd = Socket(ctl->smtphost, SMTP_PORT)) < 0
 		    || SMTP_ok(mboxfd, NULL) != SM_OK
-		    || SMTP_helo(mboxfd, queryctl->servername) != SM_OK)
+		    || SMTP_helo(mboxfd, ctl->servername) != SM_OK)
 		{
 		    ok = PS_SMTP;
 		    close(mboxfd);
@@ -868,9 +868,9 @@ struct method *proto;		/* protocol method table */
 	    /* read, forward, and delete messages */
 	    for (num = 1; num <= count; num++)
 	    {
-		int	toolarge = msgsizes && msgsizes[num-1]>queryctl->limit;
-		int	fetch_it = queryctl->fetchall ||
-		    (!(protocol->is_old && (protocol->is_old)(socket,queryctl,num)) && !toolarge);
+		int	toolarge = msgsizes && msgsizes[num-1]>ctl->limit;
+		int	fetch_it = ctl->fetchall ||
+		    (!(protocol->is_old && (protocol->is_old)(socket,ctl,num)) && !toolarge);
 
 		/* we may want to reject this message if it's old */
 		if (!fetch_it)
@@ -910,11 +910,11 @@ struct method *proto;		/* protocol method table */
 		    ok = gen_readmsg(socket, mboxfd,
 				     len, 
 				     protocol->delimited,
-				     queryctl);
+				     ctl);
 
 		    /* tell the server we got it OK and resynchronize */
 		    if (protocol->trail)
-			(protocol->trail)(socket, queryctl, num);
+			(protocol->trail)(socket, ctl, num);
 		    if (ok != 0)
 			goto cleanUp;
 		}
@@ -930,19 +930,19 @@ struct method *proto;		/* protocol method table */
 
 		/* maybe we delete this message now? */
 		if (protocol->delete
-		    && (fetch_it ? !queryctl->keep : queryctl->flush))
+		    && (fetch_it ? !ctl->keep : ctl->flush))
 		{
 		    deletions++;
 		    if (outlevel > O_SILENT) 
 			fprintf(stderr, " flushed\n", num);
-		    ok = (protocol->delete)(socket, queryctl, num);
+		    ok = (protocol->delete)(socket, ctl, num);
 		    if (ok != 0)
 			goto cleanUp;
 		}
 		else if (outlevel > O_SILENT) 
 		{
 		    /* nuke it from the unseen-messages list */
-		    delete_uid(&queryctl->newsaved, num);
+		    delete_uid(&ctl->newsaved, num);
 		    fprintf(stderr, " not flushed\n", num);
 		}
 	    }
@@ -983,7 +983,7 @@ struct method *proto;		/* protocol method table */
 closeUp:
     if (mboxfd != -1)
     {
-        if (!queryctl->mda[0])
+        if (!ctl->mda[0])
 	    SMTP_quit(mboxfd);
 	close(mboxfd);
     }
