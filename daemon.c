@@ -106,7 +106,7 @@ void deal_with_sigchld(void)
 #if defined(SIGPWR)
   sigaction (SIGPWR, &sa_new, NULL);
 #endif
-#else
+#else /* HAVE_SIGACTION */
   signal(SIGCHLD, sigchld_handler); 
 #if defined(SIGPWR)
   signal(SIGPWR, sigchld_handler); 
