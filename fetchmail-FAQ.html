@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/09/18 17:17:05 $
+<td width="30%" align=right>$Date: 1998/10/12 16:01:54 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1167,22 +1167,55 @@ poll non-rpa.csi.com via "pop.site1.csi.com" with proto POP3 and options no dns
 <hr>
 <h2><a name="S3">S3. How can I use fetchmail with Demon Internet's SDPS?</a></h2>
 
-Demon Internet's SDPS service is a slight extension of POP3.  You
-don't need to do anything special unless you want to retrieve in
-multidrop mode.<P>
+Demon Internet's SDPS service is an implementation of POP3. All messages
+have a Received: header added when they enter the maildrop, like this:
 
-If you do want multidrop, make sure your fetchmail has SDPS enabled
-(if so, the first line of the fetchmail -V response will include the
-string "+SDPS").  If it dioesn't, rebuild from source the
---enable-SDPS option.<P>
+<pre>
+   Received: from punt-1.mail.demon.net by mailstore for fred@xyz.demon.co.uk
+             id 899963657:10:27896:0; Thu, 09 Jul 98 05:54:17 GMT
+</pre>
 
-Once you have SDPS enabled, fetchmail in POP3 mode will automatically
-detect when it's talking to a Demon Internet host in multidrop mode,
-and use the *ENV extension to get envelope To addresses.<P>
+To enable multi-drop mode you need to tell fetchmail that 'mailstore' is
+the name of the host which accepted the mail, and let it know the
+hostname part(s) of your E-mail address. The following example assumes
+that your hostname is xyz.demon.co.uk, and that you have also bought
+"mail forwarding" for the domain my-company.co.uk (in which case your
+MTA must also be configured to accept mail sent to user@my-company.co.uk)
+
+<pre>
+     poll pop3.demon.co.uk proto pop3 aka mailstore no dns:
+       localdomains xyz.demon.co.uk my-company.co.uk
+       user xyz is * fetchall
+</pre>
+
+The `fetchall' command ensures that all mail is downloaded. If you
+want to leave mail on the server use `uidl' and `keep'; Demon does not
+implement the obsolete `top' command, because SDPS combines messages
+residing on two separate punt clusters into a single POP3 maildrop.
+Note that Demon may delete mail on the server which is more than 30
+days old; see their <a
+href="http://www.demon.net/services/mail/pop3.html">POP3 page</a> for
+details.<P>
+
+<h3>The SDPS extension</h3>
+
+There's a different way to solve this problem.  It's not necessary on
+Demon Internet, since fetchmail can parse Received addresses, but the
+person who implemented this didn't know that. It may be useful if 
+Demon Internet ever changes mail transports.<P>
+
+SDPS includes a non-standard extension for retrieving the envelope of a
+message (*ENV), which fetchmail optionally supports if compiled with the
+--enable-SDPS option. If you have it, the first line of the fetchmail -V
+response will include the string "+SDPS".<P>
+
+Once you have SDPS compiled in, fetchmail in POP3 mode will
+automatically detect when it's talking to a Demon Internet host in
+multidrop mode, and use the *ENV extension to get an envelope To address.<P>
 
 The autodetection works by looking at the hostname in the POP3
-greeting line; if you're accessing Demon Internet through a proxy
-it may fail.  To force SDPS mode, pick "sdps" is your protocol.<P>
+greeting line; if you're accessing Demon Internet through a proxy it
+may fail. To force SDPS mode, pick "sdps" as your protocol.<P>
 
 <hr>
 <h2><a name="S4">S4. How can I use fetchmail with usa.net's servers?</a></h2>
@@ -2109,7 +2142,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/09/18 17:17:05 $
+<td width="30%" align=right>$Date: 1998/10/12 16:01:54 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
