@@ -9,7 +9,6 @@
 * Handle multi-homed hosts correctly.
 * Add an "ident" per-user option for debugging that produces an 
   "X-Fetchmail-ID" header in fetched messages for debugging.
-* Total byte count in status message?
 * -U/--userdefault option to specify postmaster overriding USER.
 
 				Release Notes:
@@ -19,6 +18,7 @@ fetchmail-4.4.1 ():
 * We now properly shroud IMAP passwords containing ", \, and SP.
 * Checked for Y2K safety.  No 2-digit dates anywhere, so we're safe.
 * Added mimedecode option by Henrik Storner.
+* Display a total byte count in the mail count message.
 
 There are 274 people on fetchmail-friends and 164 on fetchmail-announce.
 

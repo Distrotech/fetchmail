@@ -1959,6 +1959,33 @@ const struct method *proto;	/* protocol method table */
 		if (ok != 0)
 		    goto cleanUp;
 
+		/* 
+		 * We need the size of each message before it's
+		 * loaded in order to pass via the ESMTP SIZE
+		 * option.  If the protocol has a getsizes method,
+		 * we presume this means it doesn't get reliable
+		 * sizes from message fetch responses.
+		 */
+		if (count > 0 && proto->getsizes)
+		{
+		    int	i;
+
+		    msgsizes = (int *)alloca(sizeof(int) * count);
+		    for (i = 0; i < count; i++)
+			msgsizes[i] = -1;
+
+		    ok = (proto->getsizes)(sock, count, msgsizes);
+		    if (ok != 0)
+			goto cleanUp;
+
+		    if (bytes == -1)
+		    {
+			bytes = 0;
+			for (i = 0; i < count; i++)
+			    bytes += msgsizes[i];
+		    }
+		}
+
 		/* show user how many messages we downloaded */
 		if (idp->id)
 		    (void) sprintf(buf, "%s at %s (folder %s)",
@@ -2029,26 +2056,6 @@ const struct method *proto;	/* protocol method table */
 		     * messages to be considered new if it's nonzero.
 		     */
 		    force_retrieval = !peek_capable && (ctl->errcount > 0);
-
-		    /* 
-		     * We need the size of each message before it's
-		     * loaded in order to pass via the ESMTP SIZE
-		     * option.  If the protocol has a getsizes method,
-		     * we presume this means it doesn't get reliable
-		     * sizes from message fetch responses.
-		     */
-		    if (proto->getsizes)
-		    {
-			int	i;
-
-			msgsizes = (int *)alloca(sizeof(int) * count);
-			for (i = 0; i < count; i++)
-			    msgsizes[i] = -1;
-
-			ok = (proto->getsizes)(sock, count, msgsizes);
-			if (ok != 0)
-			    goto cleanUp;
-		    }
 
 		    /* read, forward, and delete messages */
 		    for (num = 1; num <= count; num++)
