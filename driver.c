@@ -1217,7 +1217,9 @@ int num;		/* index of message */
 #ifdef HAVE_STRFTIME
 		/*
 		 * Conform to RFC822.  This is typically going to emit
-		 * a three-letter timezone for 
+		 * a three-letter timezone for %Z, which is going to
+		 * be marked "obsolete syntax" in 822bis.  Note that we
+		 * generate a 4-digit year here.
 		 */
 		strftime(buf + strlen(buf), sizeof(buf) - strlen(buf), 
 			 "%a, %d %b %Y %H:%M:%S %Z\n", localtime(&now));
