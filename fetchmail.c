@@ -86,19 +86,15 @@ static struct runctl cmd_run;	/* global options set from command line */
 
 static void termhook(int);		/* forward declaration of exit hook */
 
-#if 0
-#define SLEEP_WITH_ALARM
-#endif
-
 #ifdef SLEEP_WITH_ALARM
 /*
  * The function of this variable is to remove the window during which a
  * SIGALRM can hose the code (ALARM is triggered *before* pause() is called).
  * This is a bit of a kluge; the real right thing would use sigprocmask(),
- * sigsuspend().
- * This work around lets the interval timer trigger the first alarm after the
- * required interval and will then generate alarms all 5 seconds, until it
- * is certain, that the critical section (ie., the window) is left.
+ * sigsuspend().  This workaround lets the interval timer trigger the first
+ * alarm after the required interval and will then generate alarms all 5
+ * seconds, until it is certain, that the critical section (ie., the window)
+ * is left.
  */
 #if defined(STDC_HEADERS)
 static sig_atomic_t	alarm_latch = FALSE;
