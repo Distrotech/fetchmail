@@ -6,10 +6,11 @@ fetchmail-5.9.8 (Thu Feb 14 23:47:31 EST 2002), 21358 lines:
 
 * Added de translation catalog; updated da and tr catalogs.
 * vsprintf underflow fixes by Sunil Shetye.
-* Added warning about UIMS POP3 server.
+* Added warning about IMS POP3 server.
+* Mattyhias Andree's fix for a longstanding SSL hang bug.
 * Fix yacc syntax bug when building with SSL.
 * Sunil Shetye's patch for idle timeout during poll.
-* Applied HMH's fix for the 'message delimiter found in headers' code path
+* Applied HMH's fix for the "message delimiter found in headers" code path
   (Debian bug #128672).
 
 There are 459 people on fetchmail-friends and 641 on fetchmail-announce.
