@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/01/18 00:16:10 $
+<td width="30%" align=right>$Date: 1998/01/18 03:58:08 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -112,6 +112,7 @@ dumped to all my terminal sessions.</a><br>
 a line hit while downloading?</a><br>
 <a href="#O5">O5. Why is fetched mail being logged with my name, not the real From address?</a><br>
 <a href="#O6">O6. I'm seeing long sendmail delays at start of each poll cycle.</a><br>
+<a href="#O7">O7. Why doesn't fetchmail deliver mail in date-sorted order?</a><br>
 
 <h1>Answers:</h1>
 <hr>
@@ -1673,11 +1674,28 @@ Configuring your bind library to cache DNS lookups locally may help,
 and is a good idea for speeding up other services as well.  Switching to
 a faster MTA like qmail or exim might help. <p>
 
+<hr>
+<h2><a name="O7">O7. Why doesn't fetchmail deliver mail in date-sorted order?</a></h2>
+
+Because that's not the order the server hands it to fetchmail in.<P>
+
+Fetchmail getting mail from a POP server delivers mail in the order
+that your server delivers mail.  Fetchmail can't do anything about
+this; it's a limitation of the underlying POP protocol.<P>
+
+In theory it might be possible for fetchmail in IMAP mode to sort
+messages by date, but this would be in violation of two basics of
+fetchmail's design philosophy: (a) to be as simple and transparent a
+pipe as possible, and (b) to <em>hide</em>, rather than emphasize, the
+differences between the remote-fetch protocols it uses.<P>
+
+Re-ordering messages is a user-agent function, anyway.<P>
+
 <HR>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/01/18 00:16:10 $
+<td width="30%" align=right>$Date: 1998/01/18 03:58:08 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
