@@ -1,29 +1,63 @@
-			To Do:
+		Complaints and Suspected Bugs:
 
-George Sipe reports that --monitor is broken.
+Reports from from Klee Dienes <klee@mit.edu> on the Debian bug list and from
+fetchmail-friend Dirk Eddelbuettel <edd@rosebud.sps.queensu.ca>:
 
-This needs to be fixed.  --interface seems to work OK, so the error is
-evidently something pretty specific to the --monitor code.
+[KD1] If the local SMTP server disconnects while fetchmail is initializing
+the connection (for example, because inetd answers the connection but
+can't find the appropriate binary), fetchmail will wait forever for a
+response from the server.
+
+(Hm.  Possibly this is the same bug as DE2 below.  It appears the server
+timeout feature may be broken, but I have not been able to reproduce this yet.
+It's hard to test without a customized server or a very overloaded or flaky
+one.  The one I use is too fast.  :-))
+
+[KD2] Also, fetchmail seems to be using a polling loop to wait for responses
+from the server.  This should probably be changed to a select()-based
+mechanism.
+
+(Perhaps.  This is a design change I'm not ready to do quickly.)
+
+[DE1] After starting 
+
+	fetchmail --syslog --monitor ppp0 --daemon 300 --timeout 30
+
+I said 'fetchmail --quit' but that isn't logged.
+
+(I haven't been able to reproduce this.  I ran `fetchmail -d 2 -N -v'
+in one window and then did `fetchmail -q' in another, and the log
+message "fetchmail: terminated with signal 15" did show up.  What 
+happens when you try that?)
+
+[DE2] I had requested a timeout of 30 secs, but it didn't time out in almot
+      fifteen minutes
+
+(But fetchmail -V reports the timeout option set correctly.  Are server
+timeouts really broken?  We must find a way to test this.)
 
 			Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-3.8 ()
+fetchmail-3.8 (Fri Mar  7 17:34:02 EST 1997)
 
 features --
 
 * More FAQ material on using `localdomains'.
 
-* compilation hacks for ISC 4.0 (thanks, Larry Jones!)
+* compilation hacks for ISC 4.0 (thanks, Larry Jones!).
 
 bugs --
 
-* enabled ETRN and RPOP command-line option
+* enabled ETRN and RPOP command-line options.
 
 * yet another attempt to fix the error.c compilation problems under
   Solaris and NEXTSTEP.
 
-* handle \( and \) correctly in RFC822 comments.
+* handle \( and \) correctly in RFC822 comments, thanks to Gareth McCaughan.
+
+* Fixed off-by-one error fingered by Brian Jones that prevented
+  `localdomains' from working.
 
 ------------------------------------------------------------------------------
 fetchmail-3.7 (Fri Feb 21 17:38:40 EST 1997)

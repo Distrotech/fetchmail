@@ -247,8 +247,8 @@ under Linux.
 Daemon mode can cause transient links which are automatically taken down
 after a period of inactivity (e.g. PPP links) to remain up
 indefinitely.  This option identifies a system TCP/IP interface to be
-monitored for activity.  After each poll interval, if the link is up and
-no other activity has occurred on the link then the poll will be
+monitored for activity.  After each poll interval, if the link is up but
+no other activity has occurred on the link, then the poll will be
 skipped.  This option is currently only supported under Linux.
 .TP
 .B \-A, --auth
