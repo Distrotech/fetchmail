@@ -26,14 +26,16 @@ have to do is uncomment them.
 
 2. MAKE 
 
-Next run
+You may find you need flex at version 2.5.3 or greater to build
+fetchmail.  The stock lex distributed with Linux does not work -- it
+yields a parser which core-dumps on syntax errors.  The stock Solaris
+lex also fails fetchmail.
+
+Run
 
 	make
 
-This will compile fetchmail for your system.  Note that in order to
-build it, you may find you need flex at version 2.5.3 or greater.  The
-stock lex distributed with Linux does not work -- it yields a parser
-which core-dumps on syntax errors.
+This will compile fetchmail for your system.
 
 3. INSTALL
 
