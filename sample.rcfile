@@ -30,6 +30,7 @@
 #   authenticate (or auth)    -- must be followed by an authentication type
 #   timeout                   -- must be followed by a numeric timeout value
 #   envelope                  -- must be followed by an envelope header name
+#   qvirtual                  -- must be followed by a name prefix
 #   no envelope
 #   aka                       -- must be followed by one or more server aliases
 #   localdomains              -- must be followed by one or more domain names

@@ -17,6 +17,7 @@ fetchmail-4.3.0 ()
 * FAQ update, including a major new item on how to protect your password.
 * Added code to have %F in an MDA string expand to the From address
 * Added code to prevent buffer spamming via the MDA %T/%s escape.
+* Luca Olivetti's --qvirtual option patch for qmail users.  
 
 There are 286 people on the fetchmail-friends list.
 
