@@ -38,9 +38,6 @@
 
 #include "fetchmail.h"
 
-/* release info */
-#define         RELEASE_TAG	"1.0"
-
 #ifdef HAVE_PROTOTYPES
 /* prototypes for internal functions */
 int showoptions (struct hostrec *queryctl);
@@ -341,7 +338,7 @@ struct hostrec *queryctl;
 
 int showversioninfo()
 {
-    printf("This is fetchmail release %s\n",RELEASE_TAG);
+    printf("This is fetchmail release %s\n",RELEASE_ID);
 }
 
 /*********************************************************************
