@@ -135,6 +135,10 @@ you have specified a default of \fBkeep\fR in your
 .B \-F, --flush
 POP3/IMAP only.  Delete old (previously retrieved) messages from the mailserver
 before retrieving new messages. This option does not work with ETRN.
+Warning: if your local MTA hangs and fetchmail is aborted, the next
+time you run fetchmail, it will delete mail that was never delivered to you.
+What you probably want is the default setting: if you don't specify `-k', then
+fetchmail will automatically delete messages after successful delivery.
 .SS Protocol and Query Options
 .TP
 .B \-p, \--protocol proto

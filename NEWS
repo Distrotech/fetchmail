@@ -12,16 +12,6 @@
   "From: John Smith@my.pop.server (Systems) <jsmith@domain>".  Is this
   just GIGO, or should we try to cope?
 
-Greg Stark <gsstark@mit.edu> writes:
-
-Hm, the --expunge N option only works for IMAP? I suggested back when you
-proposed this that it should work for POP as well by closing and reopening the
-POP connection. That's exactly what I do currently using a shell script
-``while fetchmail --limit 10 ; do : ; done'' But it would be nice if --expunge
-just worked. That would eliminate the race condition with the lock file and it
-would just be all-around pleasing aesthetically.
-
-
 				Other TO-DO items:
 
 * Get with Craig Metz to write a draft RFC on RFC1938 support in IMAP.
@@ -34,6 +24,7 @@ fetchmail-4.3.4 (Sat Nov 22 01:51:41 EST 1997)
 * Fix ETRN code to poll for the fetchmail host if there's no -S option.
 * Allow `--quit' to be given with other options to shut down a running daemon
   before anything else gets done (suggested by Greg Stark).
+* Added Gordon Matzigkeit's warning about -F to the man page.
 
 There are 277 people on fetchmail-friends and 92 on fetchmail-announce.
 
