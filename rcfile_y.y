@@ -357,8 +357,12 @@ int prc_filecheck(const char *pathname, const flag securecheck)
 
     errno = 0;
 
-    /* special cases useful for debugging purposes */
+    /* special case useful for debugging purposes */
     if (strcmp("/dev/null", pathname) == 0)
+	return(PS_SUCCESS);
+
+    /* pass through the special name for stdin */
+    if (strcmp("-", pathname) == 0)
 	return(PS_SUCCESS);
 
     /* the run control file must have the same uid as the REAL uid of this 
@@ -413,8 +417,10 @@ int prc_parse_file (const char *pathname, const flag securecheck)
     if (errno == ENOENT)
 	return(PS_SUCCESS);
 
-    /* Open the configuration and feed it to the lexer. */
-    if ((yyin = fopen(pathname,"r")) == (FILE *)NULL) {
+    /* Open the configuration file and feed it to the lexer. */
+    if (strcmp(pathname, "-") == 0)
+	yyin = stdin;
+    else if ((yyin = fopen(pathname,"r")) == (FILE *)NULL) {
 	error(0, errno, "open: %s", pathname);
 	return(PS_IOERR);
     }

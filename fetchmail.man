@@ -420,8 +420,11 @@ option does not work with ETRN.
 .B \-f pathname, --fetchmailrc pathname
 Specify a non-default name for the 
 .I .fetchmailrc
-run control file.  Unless the --version option is also on, the file must have
-permissions no more open than  0600 (u=rw,g=,o=) or else be /dev/null.
+run control file.  The pathname argument must be either "-" (a single
+dash, meaning to read the configuration from standard input) or a
+filename.  Unless the --version option is also on, a named file
+argument must have permissions no more open than 0600 (u=rw,g=,o=) or
+else be /dev/null.
 .TP
 .B \-i pathname, --idfile pathname
 (Keyword: idfile)
