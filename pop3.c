@@ -198,6 +198,29 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	}
 #endif /* OPIE_ENABLE */
 
+	/*
+	 * AUTH command may return a list of available mechanisms.
+	 * if it doesn't, no harm done.  Efficiency hack: most servers
+	 * don't implement this, so don't do it at all unless the
+	 * server advertises APOP with <> in the greeting line.  This
+	 * certainly catches IMAP-2000's POP3 gateway.
+	 */
+	if (strchr(greeting, '<') && gen_transact(sock, "AUTH") == 0)
+	{
+	    char buffer[10];
+	    flag has_cram = FALSE;
+
+	    while ((ok = gen_recv(sock, buffer, sizeof(buffer))) == 0)
+	    {
+		if (DOTLINE(buffer))
+		    break;
+		if (strncasecmp(buffer, "CRAM-MD5", 8) == 0)
+		    has_cram = TRUE;
+	    }
+	    if (has_cram && !do_cram_md5(sock, "AUTH", ctl))
+		return(PS_SUCCESS);
+	}
+
 	/* ordinary validation, no one-time password or RPA */ 
 	ok = gen_transact(sock, "PASS %s", ctl->password);
 	break;
