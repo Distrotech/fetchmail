@@ -40,10 +40,6 @@
 # define xrealloc realloc
 #endif
 
-/* fetchmail is not consistent with the xmalloc functions. */
-# define xrealloc realloc
-# define xstrdup strdup
-
 /* Maybe add NEWENTRY to the account information list, LIST.  NEWENTRY is
    set to a ready-to-use netrc_entry, in any event. */
 static void
