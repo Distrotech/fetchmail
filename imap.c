@@ -11,6 +11,7 @@
 #include  <ctype.h>
 #if defined(STDC_HEADERS)
 #include  <stdlib.h>
+#include  <limits.h>
 #endif
 #include  "fetchmail.h"
 #include  "socket.h"
@@ -59,6 +60,19 @@ static int imap_ok(int sock, char *argbuf)
 	else if (strstr(buf, "EXISTS"))
 	{
 	    count = atoi(buf+2);
+	    /*
+	     * Don't trust the message count passed by the server.
+	     * Without this check, it might be possible to do a
+	     * DNS-spoofing attack that would pass back a ridiculous 
+	     * count, and allocate a malloc area that would overlap
+	     * a portion of the stack.
+	     */
+	    if (count > INT_MAX/sizeof(int))
+	    {
+		report(stderr, "bogus message count!");
+		return(PS_PROTOCOL);
+	    }
+
 	    /*
 	     * Nasty kluge to handle RFC2177 IDLE.  If we know we're idling
 	     * we can't wait for the tag matching the IDLE; we have to tell the
