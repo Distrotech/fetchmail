@@ -19,9 +19,10 @@ pl 3.9.1 (Sat Apr  5 14:22:16 EST 1997):
 * --check now turns off --daemon.
 * --syslog is now independent of --daemon.
 * Multiple-error X- headers are improved.
+* Added `forcecr' to fix qmail problems by forcing CRLF termination.
 
-There are 246 people on the fetchmail-friends list.
-(24 bad addresses were dropped)
+There are 225 people on the fetchmail-friends list.
+(many bad addresses were dropped after the switchover to SmartList)
 
 ------------------------------------------------------------------------------
 fetchmail-3.9 (Wed Apr  2 13:36:22 EST 1997)

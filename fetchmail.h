@@ -114,6 +114,7 @@ struct query
     int flush;
     int rewrite;
     int stripcr;
+    int forcecr;
     int limit;
     int fetchlimit;
     int batchlimit;

@@ -25,8 +25,8 @@ Since 3.0:
 
 	** Support for ESMTP ETRN command.
 
-	** The stripcr option to explicitly control carriage-return
-	   stripping before mail forwarding.
+	** The stripcr and forcecr option to explicitly control carriage-return
+	   stripping and LF->CRLF mapping before mail forwarding.
 
 Since 2.0:
 

@@ -466,6 +466,19 @@ char *realname;		/* real name of host */
 	do {
 	    if (!SockGets(buf, sizeof(buf)-1, sockfp))
 		return(PS_SOCKET);
+
+	    /* lines may not be properly CRLF terminated; fix this for qmail */
+	    if (ctl->forcecr)
+	    {
+		cp = buf + strlen(buf) - 1;
+		if (cp > buf && *cp == '\n' && cp[-1] != '\r')
+		{
+		    *cp++ = '\r';
+		    *cp++ = '\n';
+		    *cp++ = '\0';
+		}
+	    }
+
 	    set_timeout(ctl->server.timeout);
 	    /* leave extra room for reply_hack to play with */
 	    line = realloc(line, strlen(line) + strlen(buf) + HOSTLEN + 1);
@@ -1007,6 +1020,18 @@ char *realname;		/* real name of host */
 	    }
 	}
 	remaining -= n;
+
+	/* fix messages that have only \n line-termination (for qmail) */
+	if (ctl->forcecr)
+	{
+	    cp = buf + strlen(buf) - 1;
+	    if (cp > buf && *cp == '\n' && cp[-1] != '\r')
+	    {
+		*cp++ = '\r';
+		*cp++ = '\n';
+		*cp++ = '\0';
+	    }
+	}
 
 	/* check for end of message */
 	if (delimited && *buf == '.')

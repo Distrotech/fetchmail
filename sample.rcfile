@@ -44,12 +44,14 @@
 #   flush
 #   fetchall
 #   rewrite
+#   forcecr
 #   stripcr
 #   dns
 #   no keep
 #   no flush
 #   no fetchall
 #   no rewrite
+#   no forcecr
 #   no stripcr
 #   no dns
 #   no envelope

@@ -60,6 +60,7 @@ keep		{ return KEEP; }
 flush		{ return FLUSH; }
 fetchall	{ return FETCHALL; }
 rewrite		{ return REWRITE; }
+forcecr		{ return FORCECR; }
 stripcr		{ return STRIPCR; }
 dns		{ return DNS; }
 uidl		{ return UIDL; }

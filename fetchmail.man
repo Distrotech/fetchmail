@@ -618,12 +618,14 @@ Legal user options are
     fetchall
     rewrite
     stripcr
+    forcecr
     dns
     no keep
     no flush
     no fetchall
     no rewrite
     no stripcr
+    no forcecr
     no dns
     no envelope
     limit
@@ -633,8 +635,8 @@ Legal user options are
 .PP
 All options correspond to the obvious command-line arguments except
 the following: `aka', `is', `to', `dns'/`no dns', `password',
-\&`preconnect', `localdomains', `stripcr'/`no stripcr' and
-\&`no received'.
+\&`preconnect', `localdomains', `stripcr'/`no stripcr' ,
+\&`forcecr'/`no forcecr' and `no received'.
 .PP
 The `is' or `to' keywords associate the following local (client)
 name(s) (or server-name to client-name mappings separated by =) with
@@ -698,11 +700,18 @@ establishes a mailserver connection.  This may be useful if you are
 attempting to set up secure POP connections with the aid of
 .IR ssh (1).
 .PP
+The `forcecr' option controls whether lines terminated by LF only are
+given CRLF termination before forwarding.  Strictly speaking RFC821
+requires this, but few MTAs enforce the requirement it so this option
+is normally off (only one such MTA, qmail, is in significant use at
+time of writing).  
+.PP
 The `stripcr' option controls whether carriage returns are stripped
 out of retrieved mail before it is forwarded.  It is normally not
 necessary to set this, because it defaults to `on' (CR stripping
 enabled) when there is an MDA declared but `off' (CR stripping
-disabled) when forwarding is via SMTP.
+disabled) when forwarding is via SMTP.  If `stripcr' and `forcecr' are
+both on, `stripcr' will override.
 .PP
 Legal protocol identifiers are
 

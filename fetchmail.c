@@ -631,6 +631,7 @@ static int load_params(int argc, char **argv, int optind)
 	    DEFAULT(ctl->fetchall, FALSE);
 	    DEFAULT(ctl->rewrite, TRUE);
 	    DEFAULT(ctl->stripcr, (ctl->mda != (char *)NULL)); 
+	    DEFAULT(ctl->forcecr, FALSE);
 	    DEFAULT(ctl->server.dns, TRUE);
 	    DEFAULT(ctl->server.uidl, FALSE);
 #undef DEFAULT
@@ -853,6 +854,9 @@ void dump_params (struct query *ctl)
     printf("  Carriage-return stripping is %sabled (--stripcr %s).\n",
 	   ctl->stripcr ? "en" : "dis",
 	   ctl->stripcr ? "on" : "off");
+    printf("  Carriage-return forcing is %sabled (--forcecr %s).\n",
+	   ctl->forcecr ? "en" : "dis",
+	   ctl->forcecr ? "on" : "off");
     if (ctl->limit)
 	printf("  Message size limit is %d bytes (--limit %d).\n", 
 	       ctl->limit, ctl->limit);

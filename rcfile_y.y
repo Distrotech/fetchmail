@@ -48,7 +48,7 @@ static void user_reset();
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
-%token NO KEEP FLUSH FETCHALL REWRITE STRIPCR DNS PORT UIDL
+%token NO KEEP FLUSH FETCHALL REWRITE FORCECR STRIPCR DNS PORT UIDL
 
 %%
 
@@ -199,12 +199,14 @@ user_option	: TO localnames HERE
 		| FLUSH			{current.flush      = FLAG_TRUE;}
 		| FETCHALL		{current.fetchall   = FLAG_TRUE;}
 		| REWRITE		{current.rewrite    = FLAG_TRUE;}
+		| FORCECR		{current.forcecr    = FLAG_TRUE;}
 		| STRIPCR		{current.stripcr    = FLAG_TRUE;}
 
 		| NO KEEP		{current.keep       = FLAG_FALSE;}
 		| NO FLUSH		{current.flush      = FLAG_FALSE;}
 		| NO FETCHALL		{current.fetchall   = FLAG_FALSE;}
 		| NO REWRITE		{current.rewrite    = FLAG_FALSE;}
+		| NO FORCECR		{current.forcecr    = FLAG_FALSE;}
 		| NO STRIPCR		{current.stripcr    = FLAG_FALSE;}
 
 		| LIMIT NUMBER		{current.limit      = $2;}
@@ -366,6 +368,7 @@ static void record_current(void)
     FLAG_FORCE(flush);
     FLAG_FORCE(fetchall);
     FLAG_FORCE(rewrite);
+    FLAG_FORCE(forcecr);
     FLAG_FORCE(stripcr);
     FLAG_FORCE(limit);
     FLAG_FORCE(fetchlimit);
@@ -408,6 +411,7 @@ void optmerge(struct query *h2, struct query *h1)
     FLAG_MERGE(flush);
     FLAG_MERGE(fetchall);
     FLAG_MERGE(rewrite);
+    FLAG_MERGE(forcecr);
     FLAG_MERGE(stripcr);
     FLAG_MERGE(limit);
     FLAG_MERGE(fetchlimit);
