@@ -563,9 +563,10 @@ int main (int argc, char **argv)
 #ifndef __EMX__
 #ifdef SLEEP_WITH_ALARM		/* not normally on */
 		/* 
-		 * This code stops working under glibc-2, apparently due
-		 * to the change in signal(2) semantics.  John Stracke
-		 * <francis@netscape.com> writes:
+		 * This code stopped working under glibc-2, apparently due
+		 * to the change in signal(2) semantics.  (The siginterrupt
+		 * line, added later, should fix this problem.) John Stracke
+		 * <francis@netscape.com> wrote:
 		 *
 		 * The problem seems to be that, after hitting the interval
 		 * timer while talking to the server, the process no longer
@@ -587,6 +588,7 @@ int main (int argc, char **argv)
 		ntimeout.it_value.tv_sec  = poll_interval;
 		ntimeout.it_value.tv_usec = 0;
 
+		siginterrupt(SIGALRM, 1);
 		setitimer(ITIMER_REAL,&ntimeout,NULL);
 		/* there's a small window here */
 		signal(SIGALRM, donothing);
