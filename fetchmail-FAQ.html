@@ -781,10 +781,11 @@ by fetchmail, either).<p>
 <hr>
 <h2><a name="R5">R5. Fetchmail dumps core when I use a .netrc file but works otherwise.</a></h2>
 
-We have a report that under Solaris 2.5, if fetchmail is compiled with -O2 
-or -O3, it segfaults on startup when reading a .netrc.<p>
+We have a report that under Solaris 2.5 using gcc-2.7.2, if fetchmail
+is compiled with -O or -O2, it segfaults on startup when reading a
+.netrc.<p>
 
-You can work around this by dropping back to -O.<p>
+You can work around this by disabling optimization.<p>
 
 There may be an actual bug here that the optimizer exposes; the stack
 trace says the segfault is in free() and has all the earmarks of a heap-
@@ -993,7 +994,7 @@ without hacking potentially fragile startup scripts.  To get around
 it, just touch(1) the logfile before you run fetchmail (this will have
 no effect on the contents of the logfile if it already exists).<P>
 
-$Id: fetchmail-FAQ.html,v 1.24 1997/06/04 12:56:07 esr Exp $<p>
+$Id: fetchmail-FAQ.html,v 1.25 1997/06/05 15:04:53 esr Exp $<p>
 
 <HR>
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
