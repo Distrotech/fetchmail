@@ -2,8 +2,15 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.7.6 (Thu Mar 22 16:22:48 EST 2001), 20456 lines:
+
 * Fix POP2 and POP3 password shrouding.
 * Don't remove UIDL scratchlist on query completion (Frantisek Brabec's bug).
+* IMAP: don't just quit if GSSAPI or Kerberos IV fail, but try other methods.
+* Document the fact the IDLE and multiple folders don't play well together.
+  Closes Debian bug#89908.
+
+There are 305 people on fetchmail-friends and 564 on fetchmail-announce.
 
 fetchmail-5.7.5 (Sat Mar 17 23:24:41 EST 2001), 20440 lines:
 
