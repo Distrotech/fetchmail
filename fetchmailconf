@@ -839,7 +839,8 @@ class ConfigurationEdit(Frame, MyWidget):
                  default = 1).num == 0:
             try:
                 os.rename(self.outfile, self.outfile + "~")
-            except OSError:
+            # Pre-1.5.2 compatibility...
+            except os.error:
                 pass
             fm = open(self.outfile, 'w')
         if fm:
