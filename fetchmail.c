@@ -134,43 +134,25 @@ char **argv;
     if (implicitmode = (optind >= argc))
     {
 	for (hostp = hostlist; hostp; hostp = hostp->next)
-	    hostp->active = 1;
+	    hostp->active = TRUE;
     }
     else
 	for (; optind < argc; optind++) 
 	{
-	    int found;
-
 	    /*
 	     * If hostname corresponds to a host known from the rc file,
 	     * simply declare it active.  Otherwise synthesize a host
 	     * record from command line and defaults
 	     */
-	    found = FALSE;
 	    for (hostp = hostlist; hostp; hostp = hostp->next)
 		if (strcmp(hostp->servername, argv[optind]) == 0)
-		{
-		    found = TRUE;
-		    break;
-		}
+		    goto foundit;
 
-	    if (found)
-		hostp->active = TRUE;
-	    else
-	    {
-		hostp = (struct hostrec *)xmalloc(sizeof(struct hostrec));
+	    hostp = hostalloc(&cmd_opts);
+	    strcpy(hostp->servername, argv[optind]);
 
-		memcpy(hostp, &cmd_opts, sizeof(struct hostrec));
-		strcpy(hostp->servername, argv[optind]);
-		hostp->active = TRUE;
-
-		/* append to end of list */
-		if (hosttail != (struct hostrec *) 0)
-		    hosttail->next = hostp;
-		else
-		    hostlist = hostp;
-		hosttail = hostp;
-	    }
+	foundit:
+	    hostp->active = TRUE;
 	}
 
     /* merge in defaults for empty fields, then lose defaults record */ 

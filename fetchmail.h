@@ -127,6 +127,7 @@ int doPOP2 (struct hostrec *);
 int doPOP3 (struct hostrec *);
 int doIMAP (struct hostrec *);
 
+struct hostrec *hostalloc(struct hostrec *); 
 int parsecmdline (int, char **, struct hostrec *);
 void optmerge(struct hostrec *, struct hostrec *);
 char *MD5Digest (char *);
@@ -135,6 +136,7 @@ int daemonize(const char *, void (*)(int));
 
 #else
 
+struct hostrec *hostinit(); 
 char *MD5Digest ();
 void optmerge();
 
