@@ -381,19 +381,19 @@ struct hostrec *queryctl;	/* query control record */
 		 */
 		if (tohdr && (cp = nxtaddr(tohdr)) != (char *)NULL)
 		    do {
-			if (SMTP_rcpt(mboxfd, cp) == SM_UNRECOVERABLE)
+			if (SMTP_rcpt(mboxfd, cp) != SM_OK)
 			    return(PS_SMTP);
 		    } while
 			(cp = nxtaddr(NULL));
 		if (cchdr && (cp = nxtaddr(cchdr)) != (char *)NULL)
 		    do {
-			if (SMTP_rcpt(mboxfd, cp) == SM_UNRECOVERABLE)
+			if (SMTP_rcpt(mboxfd, cp) != SM_OK)
 			    return(PS_SMTP);
 		    } while
 			(cp = nxtaddr(NULL));
 		if (bcchdr && (cp = nxtaddr(bcchdr)) != (char *)NULL)
 		    do {
-			if (SMTP_rcpt(mboxfd, cp) == SM_UNRECOVERABLE)
+			if (SMTP_rcpt(mboxfd, cp) != SM_OK)
 			    return(PS_SMTP);
 		    } while
 			(cp = nxtaddr(NULL));
