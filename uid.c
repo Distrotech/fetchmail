@@ -67,31 +67,33 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 {
     int	st;
     FILE	*tmpfp;
-    struct query *hostp;
+    struct query *ctl;
 
     /* make sure lists are initially empty */
-    for (hostp = hostlist; hostp; hostp = hostp->next)
-	hostp->oldsaved = hostp->newsaved = (struct idlist *)NULL;
+    for (ctl = hostlist; ctl; ctl = ctl->next)
+	ctl->oldsaved = ctl->newsaved = (struct idlist *)NULL;
 
     /* let's get stored message UIDs from previous queries */
     if ((tmpfp = fopen(idfile, "r")) != (FILE *)NULL) {
-	char buf[POPBUFSIZE+1], host[HOSTLEN+1], id[IDLEN+1];
+	char buf[POPBUFSIZE+1],host[HOSTLEN+1],user[USERNAMELEN+1],id[IDLEN+1];
 
 	while (fgets(buf, POPBUFSIZE, tmpfp) != (char *)NULL)
 	{
-	    if ((st = sscanf(buf, "%s %s\n", host, id)) == 2)
+	    /* possible lossage here with very old versions of sscanf(3)... */
+	    if ((st = sscanf(buf, "%[^@]@%s %s\n", host, user, id)) == 3)
 	    {
-		for (hostp = hostlist; hostp; hostp = hostp->next)
+		for (ctl = hostlist; ctl; ctl = ctl->next)
 		{
-		    if (strcmp(host, hostp->servername) == 0)
+		    if (strcmp(host, ctl->servername) == 0
+				&& strcmp(user, ctl->remotename) == 0)
 		    {
-			save_uid(&hostp->oldsaved, -1, id);
+			save_uid(&ctl->oldsaved, -1, id);
 			break;
 		    }
 		}
 
 		/* if it's not in a host we're querying, save it anyway */
-		if (hostp == (struct query *)NULL)
+		if (ctl == (struct query *)NULL)
 		    save_uid(&scratchlist, -1, buf);
 	    }
 	}
@@ -218,12 +220,12 @@ void append_uid_list(struct idlist **idl, struct idlist **nidl)
 	append_uid_list(&(*idl)->next, nidl);
 }
 
-void update_uid_lists(struct query *hostp)
+void update_uid_lists(struct query *ctl)
 /* perform end-of-query actions on UID lists */
 {
-    free_uid_list(&hostp->oldsaved);
-    hostp->oldsaved = hostp->newsaved;
-    hostp->newsaved = (struct idlist *) NULL;
+    free_uid_list(&ctl->oldsaved);
+    ctl->oldsaved = ctl->newsaved;
+    ctl->newsaved = (struct idlist *) NULL;
 }
 
 void write_saved_lists(struct query *hostlist, const char *idfile)
@@ -231,13 +233,13 @@ void write_saved_lists(struct query *hostlist, const char *idfile)
 {
     int		idcount;
     FILE	*tmpfp;
-    struct query *hostp;
+    struct query *ctl;
     struct idlist *idp;
 
     /* if all lists are empty, nuke the file */
     idcount = 0;
-    for (hostp = hostlist; hostp; hostp = hostp->next) {
-	if (hostp->oldsaved)
+    for (ctl = hostlist; ctl; ctl = ctl->next) {
+	if (ctl->oldsaved)
 	    idcount++;
     }
 
@@ -246,9 +248,10 @@ void write_saved_lists(struct query *hostlist, const char *idfile)
 	unlink(idfile);
     else
 	if ((tmpfp = fopen(idfile, "w")) != (FILE *)NULL) {
-	    for (hostp = hostlist; hostp; hostp = hostp->next) {
-		for (idp = hostp->oldsaved; idp; idp = idp->next)
-		    fprintf(tmpfp, "%s %s\n", hostp->servername, idp->id);
+	    for (ctl = hostlist; ctl; ctl = ctl->next) {
+		for (idp = ctl->oldsaved; idp; idp = idp->next)
+		    fprintf(tmpfp, "%s@%s %s\n", 
+			    ctl->remotename, ctl->servername, idp->id);
 	    }
 	    for (idp = scratchlist; idp; idp = idp->next)
 		fputs(idp->id, tmpfp);

@@ -796,7 +796,7 @@ void dump_params (struct query *ctl)
 	    printf("  %d UIDs saved.\n", count);
 	    if (outlevel == O_VERBOSE)
 		for (idp = ctl->oldsaved; idp; idp = idp->next)
-		    fprintf(stderr, "\t%s %s\n", ctl->servername, idp->id);
+		    fprintf(stderr, "\t%s\n", idp->id);
 	}
 }
 
