@@ -195,11 +195,11 @@ FILE *sockfp;
 }
 
 #if defined(HAVE_STDARG_H)
-int SockPrintf(int socket, char* format, ...)
+int SockPrintf(FILE *sockfp, char* format, ...)
 {
 #else
-int SockPrintf(socket,format,va_alist)
-int socket;
+int SockPrintf(sockfp,format,va_alist)
+FILE *sockfp;
 char *format;
 va_dcl {
 #endif
@@ -214,7 +214,7 @@ va_dcl {
 #endif
     vsprintf(buf, format, ap);
     va_end(ap);
-    return SockWrite(socket, buf, strlen(buf));
+    return SockWrite(fileno(sockfp), buf, strlen(buf));
 
 }
 
