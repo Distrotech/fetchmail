@@ -672,7 +672,7 @@ struct query *ctl;	/* option record to be initialized */
 	P(_("  -E, --envelope    envelope address header\n"));
 	P(_("  -Q, --qvirtual    prefix to remove from local user id\n"));
 	P(_("      --principal   mail service principal\n"));
-        P(_("      --addaccthdr  add an X-Fetchmail-Account header (\"label <user@host>\")\n"));
+        P(_("      --tracepolls  add poll-tracing information to Received header\n"));
 
 	P(_("  -u, --username    specify users's login on server\n"));
 	P(_("  -a, --all         retrieve old and new messages\n"));

@@ -387,6 +387,7 @@ int readheaders(int sock,
     for (remaining = fetchlen; remaining > 0 || protocol->delimited; remaining -= linelen)
     {
 	char *line;
+	int overlong = FALSE;
 
 	line = xmalloc(sizeof(buf));
 	linelen = 0;
@@ -404,6 +405,19 @@ int readheaders(int sock,
 	    linelen += n;
 	    msgblk.msglen += n;
 
+		/*
+		 * Try to gracefully handle the case, where the length of a
+		 * line exceeds MSGBUFSIZE.
+		 */
+		if ( n && buf[n-1] != '\n' ) {
+			unsigned int llen = strlen(line);
+			overlong = TRUE;
+			line = realloc(line, llen + n + 1);
+			strcpy(line + llen, buf);
+			ch = ' '; /* So the next iteration starts */
+			continue;
+		}
+
 	    /* lines may not be properly CRLF terminated; fix this for qmail */
 	    if (ctl->forcecr)
 	    {
@@ -416,17 +430,27 @@ int readheaders(int sock,
 		}
 	    }
 
-	    /*
-	     * Decode MIME encoded headers. We MUST do this before
-	     * looking at the Content-Type / Content-Transfer-Encoding
-	     * headers (RFC 2046).
-	     */
-	    if (ctl->mimedecode)
-		UnMimeHeader(buf);
+		/*
+		 * Decode MIME encoded headers. We MUST do this before
+		 * looking at the Content-Type / Content-Transfer-Encoding
+		 * headers (RFC 2046).
+		 */
+		if ( ctl->mimedecode && overlong ) {
+			/*
+			 * If we received an overlong line, we have to decode the
+			 * whole line at once.
+			 */
+			line = (char *) realloc(line, strlen(line) + strlen(buf) +1);
+			strcat(line, buf);
+			UnMimeHeader(line);
+		}
+		else {
+			if ( ctl->mimedecode )
+				UnMimeHeader(buf);
 
-	    line = (char *) realloc(line, strlen(line) + strlen(buf) +1);
-
-	    strcat(line, buf);
+			line = (char *) realloc(line, strlen(line) + strlen(buf) +1);
+			strcat(line, buf);
+		}
 
 	    /* check for end of headers */
 	    if (EMPTYLINE(line))
@@ -444,8 +468,8 @@ int readheaders(int sock,
 	     */
 	    if (protocol->delimited && line[0] == '.' && EMPTYLINE(line+1))
 	    {
-		free(line);
 		has_nuls = (linelen != strlen(line));
+		free(line);
 		goto process_headers;
 	    }
 
@@ -1006,7 +1030,7 @@ int readheaders(int sock,
 	     * This header is technically invalid under RFC822.
 	     * POP3, IMAP, etc. are not legal mail-parameter values.
 	     */
-	    sprintf(buf, "\tby %s with %s (fetchmail-%s)",
+	    sprintf(buf, "\tby %s with %s (fetchmail-%s",
 		    fetchmailhost,
 		    protocol->name,
 		    VERSION);
@@ -1016,7 +1040,7 @@ int readheaders(int sock,
 			ctl->server.pollname, 
 			ctl->remotename);
 	    }
-	    strcat(buf, "\r\n");
+	    strcat(buf, ")\r\n");
 	    n = stuffline(ctl, buf);
 	    if (n != -1)
 	    {

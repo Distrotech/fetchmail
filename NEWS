@@ -5,6 +5,10 @@
 * Fix bug that prevented messages from being marked oversized unless -v was on.
 * Byrial Jensen made the tracepoll information RFC822-conformant.
 * Reorder code to avoid accessing line buffers after they have been freed.
+* Steven Krings's patch to deal with over-long header lines.
+* Fix for Debian bug #101500.
+* Updated Danish translation by Byrial Jensen.
+* Chris Maio's patch for POP3 with BSMTP.
 
 fetchmail-5.8.7 (Sun Jun 17 12:02:17 EDT 2001), 20749 lines:
 

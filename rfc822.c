@@ -16,7 +16,7 @@
 #include "fetchmail.h"
 #include "i18n.h"
 
-#define HEADER_END(p)	((p)[0] == '\n' && ((p)[1] != ' ' && (p)[1] != '\t' && (p)[1] != '\0'))
+#define HEADER_END(p)	((p)[0] == '\n' && ((p)[1] != ' ' && (p)[1] != '\t'))
 
 #ifdef TESTMAIN
 static int verbose;

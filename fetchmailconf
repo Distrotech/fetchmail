@@ -94,7 +94,7 @@ class Server:
 	self.plugout = None		# Plugin command for going to listener
 	self.netsec = None		# IPV6 security options
         self.principal = None		# Kerberos principal
-        self.tracepolls = FALSE		# Add X-Fetchmail-Account header?
+        self.tracepolls = FALSE		# Add trace-poll info to headers
 	self.users = []			# List of user entries for site
 	Server.typemap = (
 	    ('pollname',  'String'),
@@ -104,7 +104,7 @@ class Server:
 	    ('protocol',  'String'),
 	    ('port',      'Int'),
 	    ('uidl',      'Boolean'),
-	    ('auth',   'String'),
+	    ('auth',      'String'),
 	    ('timeout',   'Int'),
 	    ('envelope',  'String'),
 	    ('envskip',   'Int'),
@@ -168,8 +168,8 @@ class Server:
 	    else:
 		res = res + " "
 
-        if self.tracepolls:
-            res = res + "tracepolls\n"
+	if self.tracepolls:
+	   res = res + "tracepolls\n"
 
 	if self.interface:
             res = res + "interface " + str(self.interface)
@@ -292,7 +292,7 @@ class User:
 	if self.localnames:
             res = res + "is"
             for x in self.localnames:
-		res = res + " " + x
+		res = res + " " + `x`
             res = res + " here"
 	if (self.keep != UserDefaults.keep
 		or self.flush != UserDefaults.flush

@@ -938,7 +938,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 void release_sink(struct query *ctl)
 /* release the per-message output sink, whether it's a pipe or SMTP socket */
 {
-    if (ctl->bsmtp)
+    if (ctl->bsmtp && sinkfp)
 	fclose(sinkfp);
     else if (ctl->mda)
     {
@@ -984,7 +984,7 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 	    return(FALSE);
 	}
     }
-    else if (ctl->bsmtp)
+    else if (ctl->bsmtp && sinkfp)
     {
 	int error;
 
