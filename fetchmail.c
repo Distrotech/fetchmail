@@ -626,23 +626,22 @@ int main(int argc, char **argv)
 
 		querystatus = query_host(ctl);
 
-		if (querystatus == PS_SUCCESS)
-		{
-		    successes++;
 #ifdef POP3_ENABLE
-		    if (!check_only)
-			update_str_lists(ctl);
-
-		   /* Save UID list to prevent re-fetch in case fetchmail 
+		/* Save UID list to prevent re-fetch in cases fetchmail 
 		      recover from crash */
-		    if (!check_only)
+		if (!check_only)
+		    if ((querystatus==PS_SUCCESS)||(querystatus==PS_MAXFETCH))
 		    {
+			update_str_lists(ctl);
+			  
 			write_saved_lists(querylist, run.idfile);
 			if (outlevel >= O_DEBUG)
 			    report(stdout, _("saved UID List\n"));
 		    }
 #endif  /* POP3_ENABLE */
-		}
+
+		if (querystatus == PS_SUCCESS)
+		    successes++;
 		else if (!check_only && 
 			 ((querystatus!=PS_NOMAIL) || (outlevel==O_DEBUG)))
 		    report(stdout, _("Query status=%d\n"), querystatus);

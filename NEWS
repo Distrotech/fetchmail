@@ -11,6 +11,7 @@ a Certifying Authority we recognize?).
 
 * Arrange for fetchmail to restart itself quietly when the rc file is touched.
 * Improvements to IPv6 code from Jun-ichiro itojun Hagino <itojun@iijlab.net>.
+* Patch to update UIDL lists on a MAXFETCH return, from Ken Estes.
 
 fetchmail-5.2.1 (Sun Dec 19 23:08:53 EST 1999), 18330 lines:
 * Added FAQ item R10 on timeouts during messages.
