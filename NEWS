@@ -1,8 +1,23 @@
 			Release Notes:
 
+pl 1.9.3:
+* Handle nested parens in RFC822 comments.
+* More gcc -Wall cleanup.
+* Improved installation docs.
+* Don't query DNS on startup unless needed for Kerberos or multidrop mailboxes.
+
+pl 1.9.2: 
+* Fix initialization-time core dump when running as root
+* Fix fatal error in MDA argument-list construction.
+
 fetchmail-1.9 (Fri Oct 25 23:02:26 EDT 1996):
 
+We've hit the century mark -- exactly 100 people on the fetchmail-friends list.
+
 features --
+
+* FEATURE FREEZE IS NOW IN EFFECT!  No new features until after 2.0.  Thanks
+  to everybody who contributed ideas and criticism.
 
 * It is now possible to specify multiple local recipients by giving a list
   of names following "to" or "is".  Each local recipient is checked for in the

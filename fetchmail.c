@@ -130,7 +130,7 @@ char **argv;
 	exit(PS_SYNTAX);
 
     if (versioninfo)
-	printf("This is fetchmail release %s\n", RELEASE_ID);
+	printf("This is fetchmail release %s pl %s\n", RELEASE_ID, PATCHLEVEL);
 
     /* this builds the host list */
     if (prc_parse_file(rcfile) != 0)
