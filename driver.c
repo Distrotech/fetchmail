@@ -360,7 +360,7 @@ int smtp_open(struct query *ctl)
     struct idlist	*idp;
 
     /* maybe it's time to close the socket in order to force delivery */
-    if (ctl->batchlimit && (ctl->smtp_socket != -1) && batchcount++ == ctl->batchlimit)
+    if (ctl->batchlimit > 0 && (ctl->smtp_socket != -1) && batchcount++ == ctl->batchlimit)
     {
 	close(ctl->smtp_socket);
 	ctl->smtp_socket = -1;
@@ -1401,7 +1401,7 @@ const struct method *proto;	/* protocol method table */
 	     * remove the `&& ctl->limit' here.
 	     */
 	    msgsizes = (int *)NULL;
-	    if (!ctl->fetchall && proto->getsizes && ctl->limit)
+	    if (proto->getsizes && ctl->limit > 0)
 	    {
 		msgsizes = (int *)alloca(sizeof(int) * count);
 
@@ -1449,9 +1449,10 @@ const struct method *proto;	/* protocol method table */
 		/* read, forward, and delete messages */
 		for (num = 1; num <= count; num++)
 		{
-		    bool toolarge = msgsizes && (msgsizes[num-1] > ctl->limit);
-		    bool fetch_it = ctl->fetchall ||
-			(!toolarge && (force_retrieval || !(protocol->is_old && (protocol->is_old)(sock,ctl,num))));
+		    bool toolarge = (ctl->limit > 0)
+			&& msgsizes && (msgsizes[num-1] > ctl->limit);
+		    bool fetch_it = !toolarge 
+			&& (ctl->fetchall || force_retrieval || !(protocol->is_old && (protocol->is_old)(sock,ctl,num)));
 		    bool suppress_delete = FALSE;
 		    bool suppress_forward = FALSE;
 
@@ -1624,7 +1625,7 @@ const struct method *proto;	/* protocol method table */
 			error_complete(0, 0, " not flushed");
 
 		    /* perhaps this as many as we're ready to handle */
-		    if (ctl->fetchlimit && ctl->fetchlimit <= fetches)
+		    if (ctl->fetchlimit > 0 && ctl->fetchlimit <= fetches)
 			goto no_error;
 		}
 	    }

@@ -6,11 +6,6 @@
 
 			    Features To Consider
 
-* Dave Holland <dave@zenda.demon.co.uk> thinks it's a misfeature that
-  --fetchall overrides --limit.  He may have a point.   Perhaps I should
-  re-code this so --limit is still operative with --fetchall on, but you
-  can turn off the size limit with --limit 0.
-
 * Generate bounce messages when delivery is refused.  See RFC1891, RFC1894.
 
 * More log levels?
@@ -24,11 +19,14 @@ fetchmail-4.0 ():
 * Fetchmail is now normally built with optimization.
 * POP2 support is no longer compiled by default, but you can configure
   it in with `configure --enable-POP2'.
-* Architecture-independent RPM building.
 * If a .fetchmailrc entry has multiple user parts, the opening `username'
   keyword is now required for all.
+* Fetchall no longer overrides --limit.  
+* Values of --limit, --fetchlimit, and --batchlimit in .fetchmailrc can now
+  be overridden from the command line by specifying an explicit option of 0.
+* Architecture-independent RPM building.
 
-There are 256 people on the fetchmail-friends list.
+There are 257 people on the fetchmail-friends list.
 
 pl 3.9.7 (Mon Jun  9 18:40:04 EDT 1997):
 * Complain and exit if user tries to start fetchmail with options while a

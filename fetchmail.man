@@ -199,20 +199,22 @@ down upon your head.
 Takes a maximum octet size argument.  Messages larger than this size
 will not be fetched, not be marked seen, and will be left on the
 server (in foreground sessions, the progress messages will note that
-they are "oversized").  The --all option overrides this one.  This
-option is intended for those needing to strictly control fetch time
-in interactive mode.  It may not be used with daemon mode,
-as users would never receive a notification that messages were waiting.
-This option does not work with ETRN.
+they are "oversized").  An explicit --limit of 0 overrides any limits set
+in your run control file. This option is intended for those needing to
+strictly control fetch time in interactive mode.  It may not be used
+with daemon mode, as users would never receive a notification that
+messages were waiting.  This option does not work with ETRN.
 .TP
 .B -b, --batchlimit
 Specify the maximum number of messages that will be shipped to an SMTP
 listener before the connection is deliberately torn down and rebuilt
-(defaults to 0, meaning no limit).  While \fBsendmail\fR(8) normally
-initiates delivery of a message immediately after receiving the
-message terminator, some SMTP listeners are not so prompt.  MTAs like
-\fIqmail\fR(8) and \fIsmail\fR(8) may wait till the delivery socket is
-shut down to deliver.  This may produce annoying delays when
+(defaults to 0, meaning no limit).  An explicit --batchlimit of 0
+overrides any limits set in your run control file.  While
+\fBsendmail\fR(8) normally initiates delivery of a message immediately
+after receiving the message terminator, some SMTP listeners are not so
+prompt.  MTAs like \fIqmail\fR(8) and \fIsmail\fR(8) may wait till the
+delivery socket is shut down to deliver.  This may produce annoying
+delays when
 .IR fetchmail (8)
 is processing very large batches.  Setting the batch limit to some
 nonzero size will prevent these delays.
@@ -220,7 +222,8 @@ This option does not work with ETRN.
 .TP
 .B -B, --fetchlimit
 Limit the number of messages accepted from a given server in a single
-poll.  By default there is no limit. 
+poll.  By default there is no limit. An explicit --fetchlimit of 0
+overrides any limits set in your run control file.
 .SS Authentication Options
 .TP
 .B \-u name, --username name

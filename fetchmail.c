@@ -661,6 +661,10 @@ static int load_params(int argc, char **argv, int optind)
 	    if (!ctl->mailboxes)
 		save_str(&ctl->mailboxes, -1, (char *)NULL);
 
+	    /* maybe user overrode timeout on command line? */
+	    if (ctl->server.timeout == -1)	
+		ctl->server.timeout = CLIENT_TIMEOUT;
+
 	    /* sanity checks */
 	    if (ctl->server.port < 0)
 	    {
@@ -873,7 +877,8 @@ void dump_params (struct query *ctl)
     putchar('\n');
     if (ctl->server.preauthenticate == A_KERBEROS_V4)
 	    printf("  Kerberos V4 preauthentication enabled.\n");
-    printf("  Server nonresponse timeout is %d seconds", ctl->server.timeout);
+    if (ctl->server.timeout > 0)
+	printf("  Server nonresponse timeout is %d seconds", ctl->server.timeout);
     if (ctl->server.timeout ==  CLIENT_TIMEOUT)
 	printf(" (default).\n");
     else

@@ -225,6 +225,8 @@ struct query *ctl;	/* option record to be initialized */
 	case 't':
 	case LA_TIMEOUT:
 	    ctl->server.timeout = atoi(optarg);
+	    if (ctl->server.timeout == 0)
+		ctl->server.timeout = -1;
 	    break;
 	case 'E':
 	case LA_ENVELOPE:
@@ -258,6 +260,8 @@ struct query *ctl;	/* option record to be initialized */
 	case 'l':
 	case LA_LIMIT:
 	    ctl->limit = atoi(optarg);
+	    if (ctl->limit == 0)
+		ctl->limit = -1;
 	    break;
 	case 'r':
 	case LA_FOLDER:
@@ -281,10 +285,14 @@ struct query *ctl;	/* option record to be initialized */
 	case 'b':
 	case LA_BATCHLIMIT:
 	    ctl->batchlimit = atoi(optarg);
+	    if (ctl->batchlimit == 0)
+		ctl->batchlimit = -1;
 	    break;
 	case 'B':
 	case LA_FETCHLIMIT:
 	    ctl->fetchlimit = atoi(optarg);
+	    if (ctl->fetchlimit == 0)
+		ctl->fetchlimit = -1;
 	    break;
 	case 'm':
 	case LA_MDA:
