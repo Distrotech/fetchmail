@@ -407,7 +407,7 @@ struct query *ctl;	/* query control record */
 char *realname;		/* real name of host */
 {
     char buf [MSGBUFSIZE+1]; 
-    int	fromhdr, tohdr, cchdr, bcchdr, ctthdr, envto;
+    int	from_offs, to_offs, cc_offs, bcc_offs, ctt_offs, env_offs;
     char *headers, *received_for, *line;
     int n, oldlen, ch;
     int sizeticker, delete_ok;
@@ -428,7 +428,7 @@ char *realname;		/* real name of host */
 
     /* read message headers */
     headers = received_for = NULL;
-    fromhdr = tohdr = cchdr = bcchdr = ctthdr = envto = -1;
+    from_offs = to_offs = cc_offs = bcc_offs = ctt_offs = env_offs = -1;
     oldlen = 0;
     line = (char *)NULL;
     for (;;)
@@ -490,29 +490,29 @@ char *realname;		/* real name of host */
 	    oldlen = newlen;
 	}
 
-	if (!fromhdr && !strncasecmp("From:", bufp, 5))
-	    fromhdr = (bufp - headers);
-	else if (!fromhdr && !strncasecmp("Resent-From:", bufp, 12))
-	    fromhdr = (bufp - headers);
-	else if (!fromhdr && !strncasecmp("Apparently-From:", bufp, 16))
-	    fromhdr = (bufp - headers);
+	if (from_offs == -1 && !strncasecmp("From:", bufp, 5))
+	    from_offs = (bufp - headers);
+	else if (from_offs == -1 && !strncasecmp("Resent-From:", bufp, 12))
+	    from_offs = (bufp - headers);
+	else if (from_offs == -1 && !strncasecmp("Apparently-From:", bufp, 16))
+	    from_offs = (bufp - headers);
 
 	else if (!strncasecmp("To:", bufp, 3))
-	    tohdr = (bufp - headers);
+	    to_offs = (bufp - headers);
 
-	else if (!envto && !strncasecmp("Apparently-To:", bufp, 14))
-	    envto = (bufp - headers);
-	else if (!envto && !strncasecmp(ctl->server.envelope, bufp, 14))
-	    envto = (bufp - headers);
+	else if (env_offs == -1 && !strncasecmp("Apparently-To:", bufp, 14))
+	    env_offs = (bufp - headers);
+	else if (env_offs == -1 && !strncasecmp(ctl->server.envelope, bufp, 14))
+	    env_offs = (bufp - headers);
 
 	else if (!strncasecmp("Cc:", bufp, 3))
-	    cchdr = (bufp - headers);
+	    cc_offs = (bufp - headers);
 
 	else if (!strncasecmp("Bcc:", bufp, 4))
-	    bcchdr = (bufp - headers);
+	    bcc_offs = (bufp - headers);
 
 	else if (!strncasecmp("Content-Transfer-Encoding:", bufp, 26))
-	    ctthdr = (bufp - headers);
+	    ctt_offs = (bufp - headers);
 
 #ifdef HAVE_RES_SEARCH
 	else if (MULTIDROP(ctl) && !strncasecmp("Received:", bufp, 9))
@@ -535,8 +535,8 @@ char *realname;		/* real name of host */
     /* is this a multidrop box? */
     if (MULTIDROP(ctl))
     {
-	if (envto > -1)	    /* We have the actual envelope addressee */
-	    find_server_names(headers + envto, ctl, &xmit_names);
+	if (env_offs > -1)	    /* We have the actual envelope addressee */
+	    find_server_names(headers + env_offs, ctl, &xmit_names);
 	else if (received_for)
 	    /*
 	     * We have the Received for addressee.  
@@ -550,12 +550,12 @@ char *realname;		/* real name of host */
 	     * We haven't extracted the envelope address.
 	     * So check all the header addresses.
 	     */
-	    if (tohdr > -1)
-		find_server_names(headers + tohdr,  ctl, &xmit_names);
-	    if (cchdr > -1)
-		find_server_names(headers + cchdr,  ctl, &xmit_names);
-	    if (bcchdr > -1)
-		find_server_names(headers + bcchdr, ctl, &xmit_names);
+	    if (to_offs > -1)
+		find_server_names(headers + to_offs,  ctl, &xmit_names);
+	    if (cc_offs > -1)
+		find_server_names(headers + cc_offs,  ctl, &xmit_names);
+	    if (bcc_offs > -1)
+		find_server_names(headers + bcc_offs, ctl, &xmit_names);
 	}
 	if (!xmit_names)
 	{
@@ -641,8 +641,8 @@ char *realname;		/* real name of host */
 	 */
 	options[0] = '\0';
 	if ((ctl->server.esmtp_options & ESMTP_8BITMIME)
-	    && (ctthdr >= 0)
-	    && (ctt = nxtaddr(headers + ctthdr)))
+	    && (ctt_offs >= 0)
+	    && (ctt = nxtaddr(headers + ctt_offs)))
 	    if (!strcasecmp(ctt,"7BIT"))
 		sprintf(options, " BODY=7BIT", ctt);
 	    else if (!strcasecmp(ctt,"8BIT"))
@@ -668,7 +668,7 @@ char *realname;		/* real name of host */
 	 * upstream didn't pass canonicalized From lines, *and*
 	 * the local SMTP listener insists on them.
 	 */
-	if (fromhdr == -1 || !(ap = nxtaddr(headers + fromhdr)))
+	if (from_offs == -1 || !(ap = nxtaddr(headers + from_offs)))
 	    ap = user;
 	if (SMTP_from(sinkfp, ap, options) != SM_OK)
 	{
