@@ -1094,15 +1094,14 @@ Newer versions of
 return an error code of 571.  This return value
 is blessed by RFC1893 as "Delivery not authorized, message refused".
 .PP
-According to current drafts of the replacement for RFC821, the correct
-thing to return in this situation is 550 "Requested action not taken:
-mailbox unavailable" (the draft adds "[E.g., mailbox not found, no
-access, or command rejected for policy reasons].").
+According to RFC2821, the correct thing to return in this situation is
+550 "Requested action not taken: mailbox unavailable" (the draft adds
+"[E.g., mailbox not found, no access, or command rejected for policy
+reasons].").
 .PP
-The
+Older versions of the
 .I exim
-MTA returns 501 "Syntax error in parameters or arguments", but will
-move to 550 soon.
+MTA return 501 "Syntax error in parameters or arguments".
 .PP
 The
 .I postfix
