@@ -81,7 +81,7 @@ static void vtalarm(int timeleft)
 {
     struct itimerval ntimeout;
 
-    ntimeout.it_interval.tv_sec = ntimeout.it_interval.tv_sec = 0;
+    ntimeout.it_interval.tv_sec = ntimeout.it_interval.tv_usec = 0;
     ntimeout.it_value.tv_sec  = timeleft;
     ntimeout.it_value.tv_usec = 0;
     setitimer(ITIMER_VIRTUAL, &ntimeout, (struct itimerval *)NULL);
