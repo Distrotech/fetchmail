@@ -735,7 +735,7 @@ int fd;
      * Try to pass up an error if the MDA returned nonzero status,
      * on the assumption that this means it was reporting failure.
      */
-    if (WIFEXITED(status) == 0 || WEXITSTATUS(status) != 0)
+    if (WIFEXITED(status) == 0 && WEXITSTATUS(status) != 0)
     {
 	perror("fetchmail: MDA exited abnormally or returned nonzero status");
 	err = -1;

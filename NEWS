@@ -1,5 +1,8 @@
 			Release Notes:
 
+pl 1.9.4 ():
+* Correct status interpretation in closemailpipe() (thanks to Neil Harkins).
+
 pl 1.9.3 (Sun Oct 27 22:35:33 EST 1996):
 * Handle nested parens in RFC822 comments.
 * More gcc -Wall cleanup.
