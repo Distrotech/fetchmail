@@ -9,6 +9,8 @@ features --
 
 * Treat unexpected EOF as a protocol error.
 
+* -v output now includes the version/pl numbers (help for harried maintainer!).
+
 bugs --
 
 * Fix password-shrouding logic so it doesn't crap out on a zero-length

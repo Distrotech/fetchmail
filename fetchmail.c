@@ -728,7 +728,8 @@ static int query_host(struct query *ctl)
 	time_t now;
 
 	time(&now);
-	fprintf(stderr, "Querying %s (protocol %s) at %s",
+	fprintf(stderr, "fetchmail: %s.%s querying %s (protocol %s) at %s",
+	    RELEASE_ID, PATCHLEVEL,
 	    ctl->server.names->id, showproto(ctl->server.protocol), ctime(&now));
     }
     switch (ctl->server.protocol) {
