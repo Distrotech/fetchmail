@@ -519,6 +519,28 @@ char *realname;		/* real name of host */
 	    break;
 	}
      
+	/*
+	 * This code prevents fetchmail from becoming an accessory after
+	 * the fact to upstream sendmails with the `E' option on.  This
+	 * can result in an escaped Unix From_ line at the beginning of
+	 * the headers.  If fetchmail just passes it through, the client
+	 * listener may think the message has *no* headers (since the first)
+	 * line it sees doesn't look RFC822-conformant) and fake up a set.
+	 *
+	 * What the user would see in this case is bogus (synthesized)
+	 * headers, followed by a blank line, followed by the >From, 
+	 * followed by the real headers, followed by a blank line,
+	 * followed by text.
+	 *
+	 * We forestall this lossage by tossing anything that looks
+	 * like an escaped From_ line in headers.  These aren't RFC822
+	 * so our conscience is clear...
+	 */
+	if (!strncasecmp(line, ">From ", 6))
+	{
+	    free(line);
+	    continue;
+	}
 
 	/*
 	 * OK, this is messy.  If we're forwarding by SMTP, it's the
@@ -539,6 +561,7 @@ char *realname;		/* real name of host */
 	if (!ctl->mda && !strncasecmp("Return-Path:", line, 12))
 	{
 	    return_path = xstrdup(nxtaddr(line));
+	    free(line);
 	    continue;
 	}
 
