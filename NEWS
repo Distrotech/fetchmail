@@ -2,11 +2,15 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.9.2 (Wed Sep 26 12:47:00 EDT 2001), 21118 lines:
+
 * Enable code to build on Solaris again (long options won't work).
 * Move Hesiod lookups to just before DNS lookups.
 * Make sure the SICHLD handler is called when we run detached.
 * Make kerberos5 in OpenBSD (Federico Schwindt <fgsch@olimpo.com.br>).
 * Added FAQ item X8 on why mail sometimes gets an extra ) appended.
+
+There are 407 people on fetchmail-friends and 624 on fetchmail-announce.
 
 fetchmail-5.9.1 (Mon Sep 24 19:01:57 EDT 2001), 21120 lines:
 
