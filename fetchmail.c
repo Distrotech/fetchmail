@@ -909,9 +909,7 @@ void dump_params (struct query *ctl)
 	for (idp = ctl->localnames; idp; idp = idp->next)
 	    ++count;
 
-	printf("  %d local name(s) recognized%s.\n",
-	       count,
-	       (count == 1 && !strcmp(ctl->localnames->id, user)) ? " (by default)" : "");
+	printf("  %d local name(s) recognized.\n", count);
 	if (outlevel == O_VERBOSE)
 	{
 	    for (idp = ctl->localnames; idp; idp = idp->next)
