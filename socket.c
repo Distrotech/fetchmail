@@ -103,6 +103,12 @@ int SockOpen(const char *host, int clientPort)
         if (hp == NULL || (hp->h_length != 4 && hp->h_length != 8))
             return -1;
 
+	/*
+	 * FIXME: make this work for multihomed hosts.
+	 * We're toast if we get back multiple addresses and h_addrs[0]
+	 * (aka h_addr) is not one we can actually connect to; this happens
+	 * with multi-homed boxen.
+	 */
         memcpy(&ad.sin_addr, hp->h_addr, hp->h_length);
     }
     ad.sin_port = htons(clientPort);
