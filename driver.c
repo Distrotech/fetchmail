@@ -1694,20 +1694,23 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		     * failure once it looks like this isn't a fluke 
 		     * due to the server being temporarily inaccessible.
 		     */
+#define LOGIN_ERROR	\
+    "The attempt to get authorization failed.\r\n" \
+    "This probably means your password is invalid, but POP3 servers have\r\n" \
+    "other failure modes that fetchmail cannot distinguish from this\r\n" \
+    "because they don't send useful error messages on login failure.\r\n"
+
 		    if (run.poll_interval
 			&& ctl->authfailcount++ > MAX_AUTHFAILS 
 			&& !open_warning_by_mail(ctl, (struct msgblk *)NULL))
 		    {
 			stuff_warning(ctl,
-			       _("Subject: fetchmail authentication failed\r\n"));
+			    _("Subject: fetchmail authentication failed\r\n"));
 			stuff_warning(ctl,
-				_("Fetchmail could not get mail from %s@%s."), 
-				ctl->remotename,
-				ctl->server.truename);
-			stuff_warning(ctl, 
-			       _("The attempt to get authorization failed."));
-			stuff_warning(ctl, 
-			       _("This probably means your password is invalid."));
+			    _("Fetchmail could not get mail from %s@%s.\r\n"), 
+			    ctl->remotename,
+			    ctl->server.truename);
+			stuff_warning(ctl, _(LOGIN_ERROR));
 			close_warning_by_mail(ctl, (struct msgblk *)NULL);
 			ctl->wedged = TRUE;
 		    }
