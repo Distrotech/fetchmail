@@ -11,20 +11,17 @@ fetchmail supports standard all mail-retrieval protocols in use on the
 Internet: POP2, POP3 (including POP3 with RFC1938 one-time passwords),
 RPOP, APOP, KPOP, Compuserve's POP3 with RPA, Demon Internet's SDPS, 
 all flavors of IMAP (including IMAP4rev1 with RFC1731 Kerberos v4  or
-GSSAPI authentication), and ESMTP ETRN.
+GSSAPI authentication or CRAM-MD5 authentication), and ESMTP ETRN.
 
 The fetchmail code was developed under Linux, but has also been
 extensively tested under 4.4BSD, AIX, HP-UX versions 9 and 10, 
-SunOS, Solaris, NEXTSTEP, and OSF 3.2.  
+SunOS, Solaris, NEXTSTEP, OSF 3.2\, and Rhapsody.  
 
 It should be readily portable to other Unix variants (it uses GNU
 autoconf).  It has been ported to LynxOS and will build there without
 special action.  It has also been ported to QNX; to build under QNX,
 see the header comments in the Makefile.  It is reported to build and
 run under AmigaOS.
-
-A beta OS/2 port of fetchmail is available from Jason F. McBrayer at 
-http://studentweb.tulane.edu/%7Ejmcbray/os2.
 
 Fetchmail is Y2K safe.
 
