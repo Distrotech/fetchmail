@@ -19,7 +19,7 @@ content="Known bugs and to-do items in fetchmail" />
 <tr>
 <td width="30%">Back to <a href="/~esr">Eric's Home Page</a></td>
 <td width="30%" align="center">Up to <a href="/~esr/sitemap.html">Site Map</a></td>
-<td width="30%" align="right">$Date: 2003/02/28 11:02:51 $</td>
+<td width="30%" align="right">$Date: 2003/02/28 21:57:59 $</td>
 </tr>
 </table>
 
@@ -30,6 +30,15 @@ content="Known bugs and to-do items in fetchmail" />
 fetchmail is now pretty mature and I have many other projects, so I
 don't personally chase obscure or marginal problems. Help with any
 of these will be cheerfully accepted.</p>
+
+<p>Feature request from "Ralf G. R. Bergs" <rabe@RWTH-Aachen.DE> "When
+fetchmail downloads mail and Exim+SpamAssassin detecs an incoming
+message as spam, fetchmail tries to bounce it. Unfortunately it uses
+an incorrect hostname as part of the sender address (I've an internal
+LAN with private hostnames, plus an official IP address and hostname,
+and fetchmail picks the internal name of my host.) So I'd like to have
+a config statement that allows me to explicitly set a senderaddress
+for bounce messages."
 
 <p>POP3 can't presently distinguish a wedged or down server from an
 authentication failure. Possible fix: after issuing a PASS command.
@@ -71,7 +80,7 @@ reports.</p>
 <tr>
 <td width="30%">Back to <a href="/~esr">Eric's Home Page</a></td>
 <td width="30%" align="center">Up to <a href="/~esr/sitemap.html">Site Map</a></td>
-<td width="30%" align="right">$Date: 2003/02/28 11:02:51 $</td>
+<td width="30%" align="right">$Date: 2003/02/28 21:57:59 $</td>
 </tr>
 </table>
 
