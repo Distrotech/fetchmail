@@ -93,7 +93,7 @@ char **argv;
     int mboxfd, st;
     struct hostrec cmd_opts, def_opts;
     int parsestatus;
-    char *servername; 
+    char *servername, *user, *tmpdir, tmpbuf[256]; 
     FILE	*tmpfp;
     pid_t pid;
 
@@ -129,12 +129,26 @@ char **argv;
 	hostlist = hostp;
     }
 
+    /* set up to do lock protocol */
+    if ((tmpdir = getenv("TMPDIR")) == (char *)NULL)
+	tmpdir = "/tmp";
+    strcpy(tmpbuf, tmpdir);
+    strcat(tmpbuf, "/poplock-");
+    gethostname(tmpbuf + strlen(tmpbuf), HOSTLEN);
+    if ((user = getenv("USER")) != (char *)NULL)
+    {
+	strcat(tmpbuf, "-");
+	strcat(tmpbuf, user);
+    }
+
     /* perhaps we just want to check options? */
     if (versioninfo) {
 	printf("Taking options from command line and %s\n", poprcfile);
 	for (hostp = hostlist; hostp; hostp = hostp->next) {
 	    printf("Options for host %s:\n", hostp->servername);
 	    dump_params(hostp);
+	    if (outlevel == O_VERBOSE)
+		printf("  Lockfile at %s\n", tmpbuf);
 	}
 	if (hostlist == NULL)
 	    (void) printf("No mailservers set up -- perhaps %s is missing?\n",
@@ -146,15 +160,13 @@ char **argv;
 	exit(PS_SYNTAX);
     }
 
-    /* set up to do lock protocol */
-    umask(0077);
-    if ((lockfile = (char *) malloc( strlen(getenv("HOME")) + strlen("/.lockfetch-") + HOSTLEN)) == NULL) {
-	fprintf(stderr,"popclient: cannot allocate memory for .lockfetch, exiting.\n");
+    if ((lockfile = (char *) malloc(strlen(tmpbuf) + 1)) == NULL)
+    {
+	fprintf(stderr,"popclient: cannot allocate memory for lock name.\n");
 	exit(PS_EXCLUDE);
     }
-    strcpy(lockfile, getenv("HOME"));
-    strcat(lockfile,"/.lockfetch-");
-    gethostname(lockfile+strlen(lockfile),HOSTLEN);
+    else
+	(void) strcpy(lockfile, tmpbuf);
 
     /* perhaps user asked us to remove a lock */
     if (quitmode)
@@ -180,6 +192,7 @@ char **argv;
 
 
     /* beyond here we don't want more than one popclient running per user */
+    umask(0077);
     if ( (tmpfp = fopen(lockfile, "r")) != NULL ) {
 	fscanf(tmpfp,"%d",&pid);
 	fprintf(stderr,"Another session appears to be running at pid %d.\nIf you are sure that this is incorrect, remove %s file.\n",pid,lockfile);

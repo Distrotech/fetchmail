@@ -255,6 +255,11 @@ file specifies an RPOP id and a connection port in the privileged
 range (1..1024),
 .I popclient will
 ship the id with an RPOP command rather than sending a password.
+(Note: you'll need to be running popclient setuid root for RPOP to
+work --
+.I popclient
+has to bind to a privileged port locally in order for the mail 
+server to believe it's allowed to bind to a privileged remote port.)
 .PP
 .SH OUTPUT OPTIONS
 The default behavior of 
@@ -555,9 +560,13 @@ by Eric S. Raymond <esr@snark.thyrsus.com> and is now maintained by esr.
 .TP 5
 ~/.poprc
 default configuration file
+.TP 5
 ~/.popids
 default location of file associating hosts with last message IDs seen
 (used only with newer RFC1725-compliant servers supporting the UIDL command).
+.TP 5
+${TMPDIR}/poplock-${HOST}-${USER}
+lock file to help prevent concurrent runs.
 .SH BUGS
 Running more than one concurrent instance of
 .I popclient
@@ -572,7 +581,7 @@ The --remotefolder option doesn't work with POP3, the protocol won't
 support it.
 .PP
 The RPOP support, and the UIDL support for RFC1725-compliant servers
-without LAST, are not yet very well tested.
+without LAST, are not yet well tested.
 .PP
 Send comments, bug reports, gripes, and the like to Eric S. Raymond
 <esr@thyrsus.com>.

@@ -57,6 +57,8 @@ driver to SMTP.  (This requires that we find a POP2 server to test with.)
 
 * Add Michael Scwendt's code for improved sizeticker.
 
+* Move the per-user lockfile to /tmp so it gets cleared at reboot time.
+
 * Warn users that running concurrent instances of popclient is a bad idea.
 
 3.1:
