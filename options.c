@@ -33,14 +33,15 @@
 #define LA_PROTOCOL	10
 #define LA_DAEMON	11
 #define LA_POPRC	12
-#define LA_USERNAME	13
-#define LA_REMOTEFILE	14
-#define	LA_LOCALFILE	15
-#define LA_MDA		16
-#define LA_LOGFILE	17
-#define LA_QUIT		18
-#define LA_NOREWRITE	19
-#define LA_YYDEBUG	20
+#define	LA_IDFILE	13
+#define LA_USERNAME	14
+#define LA_REMOTEFILE	15
+#define	LA_LOCALFILE	16
+#define LA_MDA		17
+#define LA_LOGFILE	18
+#define LA_QUIT		19
+#define LA_NOREWRITE	20
+#define LA_YYDEBUG	21
  
 static char *shortoptions = "23VaKkvscl:Fd:f:u:r:o:m:L:qN";
 static struct option longoptions[] = {
@@ -63,6 +64,7 @@ static struct option longoptions[] = {
   {"local",     required_argument, (int *) 0, LA_LOCALFILE  },
   {"mda",	required_argument, (int *) 0, LA_MDA        },
   {"logfile",	required_argument, (int *) 0, LA_LOGFILE    },
+  {"idfile",	required_argument, (int *) 0, LA_IDFILE     },
   {"quit",	no_argument,	   (int *) 0, LA_QUIT       },
   {"norewrite",	no_argument,	   (int *) 0, LA_NOREWRITE  },
   {"yydebug",	no_argument,	   (int *) 0, LA_YYDEBUG    },
@@ -87,7 +89,7 @@ static struct option longoptions[] = {
 	   	 syntax errors.
   calls:         none.  
   globals:       writes outlevel, versioninfo, yydebug, logfile, 
-		 poll_interval, quitmode, poprcfile, linelimit.  
+		 poll_interval, quitmode, poprcfile, idfile, linelimit.  
  *********************************************************************/
 
 int parsecmdline (argc,argv,queryctl)
@@ -190,6 +192,11 @@ struct hostrec *queryctl;
         poprcfile = (char *) xmalloc(strlen(optarg)+1);
         strcpy(poprcfile,optarg);
         break;
+      case 'i':
+      case LA_IDFILE:
+        idfile = (char *) xmalloc(strlen(optarg)+1);
+        strcpy(idfile,optarg);
+        break;
       case 'u':
       case LA_USERNAME:
         strncpy(queryctl->remotename,optarg,sizeof(queryctl->remotename)-1);
@@ -252,6 +259,7 @@ struct hostrec *queryctl;
     fputs("  -v, --verbose    work noisily (diagnostic output)\n", stderr);
     fputs("  -d, --daemon     run as a daemon once per n seconds\n", stderr);
     fputs("  -f, --poprc      specify alternate config file\n", stderr);
+    fputs("  -i, --idfile     specify alternate ID database\n", stderr);
     fputs("  -u, --username   specify server user ID\n", stderr);
     fputs("  -c, --stdout     write received mail to stdout\n", stderr);
     fputs("  -o, --local      specify filename for received mail\n", stderr);
@@ -279,7 +287,7 @@ struct hostrec *queryctl;
   return value:  zero if defaults were successfully set, else non-zero
                  (indicates a problem reading /etc/passwd).
   calls:         none.
-  globals:       writes outlevel, poprcfile.
+  globals:       writes outlevel, poprcfile, idfile.
  *********************************************************************/
 
 int setdefaults (queryctl)
@@ -317,6 +325,13 @@ struct hostrec *queryctl;
   strcpy(poprcfile, pw->pw_dir);
   strcat(poprcfile, "/");
   strcat(poprcfile, POPRC_NAME);
+
+  idfile = 
+      (char *) xmalloc(strlen(pw->pw_dir)+strlen(IDFILE_NAME)+2);
+
+  strcpy(idfile, pw->pw_dir);
+  strcat(idfile, "/");
+  strcat(idfile, IDFILE_NAME);
 
   outlevel = O_NORMAL;
 

@@ -71,6 +71,9 @@ before retrieving new messages.
 .B \-f pathname, --poprc pathname
 Specify an alternate name for the .poprc file.
 .TP
+.B \-i pathname, --idfile pathname
+Specify an alternate name for the .popids file.
+.TP
 .B \-k, --keep
 Keep retrieved messages in folder on remote mailserver.  Normally, messages 
 are deleted from the folder on the mailserver after they have been retrieved
@@ -530,6 +533,13 @@ was written by Carl Harris at Virginia Polytechnic Institute and State
 University (a.k.a. Virginia Tech).  Version 3.0 was extensively improved
 by Eric S. Raymond <esr@snark.thyrsus.com> and is now maintained by esr..
 .PP
+.SH FILES
+.TP 5
+~/.poprc
+default configuration file
+~/.popids
+default location of file associating hosts with last message IDs seen
+(used only with newer RFC1725-compliant servers supporting the UIDL command).
 .SH BUGS
 .PP
 The --version option doesn't display MDA arguments.
@@ -542,6 +552,8 @@ dies after the first delivery.  To cope with this, in daemon mode the
 delivery mode is automatically switched to append-and-lock if sendmail
 is the selected delivery agent.  This needs to be fixed.
 .PP
+The UIDL support for RFC1725-compliant servers is not yet well tested.
+.PP
 No IMAP or RPOP support yet.
 .PP
 Send comments, bug reports, gripes, and the like to Eric S. Raymond
@@ -553,4 +565,5 @@ must now be specified either manually or in your
 .I ~/.poprc
 file.
 .SH SEE ALSO
-mail(1), binmail(1), sendmail(8), popd(8), RFC 937, RFC 1225.
+mail(1), binmail(1), sendmail(8), popd(8),
+RFC 937, RFC 1081, RFC 1082, RFC 1225, RFC 1460, RFC 1725.

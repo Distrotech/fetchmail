@@ -22,6 +22,7 @@
 #define		FOLDERLEN	256     /* max folder name length */
 #define		DIGESTLEN	33	/* length of MD5 digest */
 #define		MDALEN		256	/* length of delivery agent command */
+#define		IDLEN		128	/* length of UIDL message ID */
 
 /* exit code values */
 #define		PS_SUCCESS	0	/* successful receipt of messages */
@@ -59,6 +60,9 @@ struct hostrec {
   int flush;
   int rewrite;
 
+  /* state used for tracking UIDL ids */
+  char lastid [IDLEN];
+
   /* dependent on the above members */
   int output;
   struct hostrec *next;
@@ -80,6 +84,7 @@ extern int quitmode;		/* if --quit was set */
 
 /* miscellaneous global controls */
 extern char *poprcfile;		/* path name of rc file */
+extern char *idfile;		/* path name of id file */
 extern int linelimit;		/* limit # lines retrieved per site */
 extern int versioninfo;		/* emit only version info */
 

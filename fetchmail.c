@@ -39,7 +39,7 @@
 #include "popclient.h"
 
 /* release info */
-#define         RELEASE_TAG	"3.04"
+#define         RELEASE_TAG	"3.05"
 
 #ifdef HAVE_PROTOTYPES
 /* prototypes for internal functions */
@@ -61,6 +61,7 @@ int quitmode;		/* if --quit was set */
 
 /* miscellaneous global controls */
 char *poprcfile;	/* path name of rc file */
+char *idfile;		/* path name of id file */
 int linelimit;		/* limit # lines retrieved per site */
 int versioninfo;	/* emit only version info */
 
@@ -83,16 +84,16 @@ char *mda_argv [32];
 static void termhook();
 static char *lockfile;
 static int popstatus;
+static struct hostrec *hostp, *hostlist = (struct hostrec *)NULL;
 
 main (argc,argv)
 int argc;
 char **argv;
 { 
-  int mboxfd;
+  int mboxfd, st;
   struct hostrec cmd_opts, def_opts;
   int parsestatus;
   char *servername; 
-  struct hostrec *hostp, *hostlist = (struct hostrec *)NULL;
   FILE	*tmpfp;
   pid_t pid;
 
@@ -121,6 +122,7 @@ char **argv;
     prc_mergeoptions(servername, &cmd_opts, &def_opts, hostp);
     strcpy(hostp->servername, servername);
     parseMDAargs(hostp);
+    hostp->lastid[0] = '\0';
 
     hostp->next = hostlist;
     hostlist = hostp;
@@ -165,7 +167,7 @@ char **argv;
   
       fscanf(fp,"%d",&pid);
       fprintf(stderr,"popclient: killing popclient at PID %d\n",pid);
-      if ( kill(pid,SIGKILL) < 0 )
+      if ( kill(pid,SIGTERM) < 0 )
 	fprintf(stderr,"popclient: error killing the process %d.\n",pid);
       else
 	fprintf(stderr,"popclient: popclient at %d is dead.\n", pid);
@@ -182,6 +184,23 @@ char **argv;
     fprintf(stderr,"Another session appears to be running at pid %d.\nIf you are sure that this is incorrect, remove %s file.\n",pid,lockfile);
     fclose(tmpfp);
     return(PS_EXCLUDE);
+  }
+
+  /* let's get stored message IDs from previous transactions */
+  if ((st = prc_filecheck(idfile)) != 0) {
+      return (st);
+  } else if ((tmpfp = fopen(idfile, "r")) != (FILE *)NULL) {
+     char buf[POPBUFSIZE+1], host[HOSTLEN+1], id[IDLEN+1];
+
+     while (fgets(buf, POPBUFSIZE, tmpfp) != (char *)NULL) {
+       if ((st = sscanf(buf, "%s %s\n", host, id)) == 2) {
+         for (hostp = hostlist; hostp; hostp = hostp->next) {
+           if (strcmp(host, hostp->servername) == 0)
+	       strcpy(hostp->lastid, id);
+         }
+       }
+     }
+     fclose(tmpfp);
   }
 
   /*
@@ -231,8 +250,27 @@ char **argv;
 
 void termhook()
 {
-    unlink(lockfile);
-    exit(popstatus);
+  FILE *tmpfp;
+  int idcount = 0;
+
+  for (hostp = hostlist; hostp; hostp = hostp->next) {
+    if (hostp->lastid[0])
+	idcount++;
+  }
+
+  /* write updated last-seen IDs */
+  if (!idcount)
+     unlink(idfile);
+  else if ((tmpfp = fopen(idfile, "w")) != (FILE *)NULL) {
+    for (hostp = hostlist; hostp; hostp = hostp->next) {
+      if (hostp->lastid[0])
+        fprintf(tmpfp, "%s %s\n", hostp->servername, hostp->lastid);
+    }
+    fclose(tmpfp);
+  }
+
+  unlink(lockfile);
+  exit(popstatus);
 }
 
 int query_host(queryctl)
@@ -339,6 +377,8 @@ struct hostrec *queryctl;
   else
     printf("  Text retrieved per message will be at most %d bytes.\n",
 	   linelimit);
+  if (queryctl->lastid[0])
+    printf("  ID of last message retrieved %s\n", queryctl->lastid);
 }
 
 /*********************************************************************

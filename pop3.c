@@ -40,6 +40,7 @@ int POP3_sendSTAT (int *msgcount, int socket);
 int POP3_sendRETR (int msgnum, int socket);
 int POP3_sendDELE (int msgnum, int socket);
 int POP3_sendLAST (int *last, int socket);
+int POP3_sendUIDL (int num, int socket, char **cp);
 int POP3_readmsg (int socket, int mboxfd, char *host, int topipe, int rewrite);
 int POP3_BuildDigest (char *buf, struct hostrec *options);
 #endif
@@ -63,7 +64,7 @@ int POP3_BuildDigest (char *buf, struct hostrec *options);
 int doPOP3 (queryctl)
 struct hostrec *queryctl;
 {
-  int ok;
+  int ok, use_uidl;
   int mboxfd;
   char buf [POPBUFSIZE];
   int socket;
@@ -124,11 +125,39 @@ struct hostrec *queryctl;
   /*
    * Ask for number of last message retrieved.  
    * Newer, RFC-1760-conformant POP servers may not have the LAST command.
-   * Therefore we don't croak if we get a nonzero return.
+   * Therefore we don't croak if we get a nonzero return.  Instead, send
+   * UIDL and try to find the last received ID stored for this host in
+   * the list we get back.
    */
   first = 1;
+  use_uidl = 0;
   if (!queryctl->fetchall) {
+    char buf [POPBUFSIZE];
+    char id [IDLEN];
+    int num;
+
+    /* try LAST first */
     ok = POP3_sendLAST(&first, socket);
+    use_uidl = (ok != 0); 
+
+    /* otherwise, if we have a stored last ID for this host,
+     * send UIDL and search the returned list for it
+     */ 
+    if (use_uidl && queryctl->lastid[0]) {
+      if ((ok = POP3_sendUIDL(-1, socket, 0)) == 0) {
+          while (SockGets(socket, buf, sizeof(buf)) == 0) {
+	    if (outlevel == O_VERBOSE)
+	      fprintf(stderr,"%s\n",buf);
+	    if (strcmp(buf, ".\n") == 0) {
+              break;
+	    }
+            if (sscanf(buf, "%d %s\n", &num, id) == 2)
+		if (strcmp(id, queryctl->lastid) == 0)
+		    first = num;
+          }
+       }
+    }
+
     if (ok == 0)
       first++;
   }
@@ -145,6 +174,8 @@ struct hostrec *queryctl;
 
   if (count > 0) { 
     for (number = queryctl->flush ? 1 : first;  number <= count;  number++) {
+
+      char *cp;
 
       /* open the mail pipe if we're using an MDA */
       if (queryctl->output == TO_MDA
@@ -173,6 +204,11 @@ struct hostrec *queryctl;
       if (ok != 0)
         goto cleanUp;
 
+      /* update the last-seen field for this host */
+      if (use_uidl && (ok = POP3_sendUIDL(number, socket, &cp)) == 0)
+	  (void) strcpy(queryctl->lastid, cp);
+
+      /* maybe we delete this message now? */
       if ((number < first && queryctl->flush) || !queryctl->keep) {
         if (outlevel > O_SILENT && outlevel < O_VERBOSE) 
           fprintf(stderr,"flushing message %d\n", number);
@@ -671,7 +707,7 @@ int rewrite;
   arguments:
     last	integer buffer to receive last message# 
 
-  ret. value:	non-zero on success, else zero.
+  ret. value:	zero if success, else status code.
   globals:	SockPrintf, POP3_OK.
   calls:	reads outlevel.
  *****************************************************************/
@@ -694,6 +730,46 @@ int socket;
   if (ok != 0 && outlevel > O_SILENT) 
     fprintf(stderr,"Server says '%s' to LAST command.\n",buf);
 
+  return(ok);
+}
+
+/******************************************************************
+  function:	POP3_sendUIDL
+  description:	send the UIDL command to the server, 
+
+  arguments:
+    num 	number of message to query (may be -1)
+
+  ret. value:	zero if success, else status code.
+  globals:	SockPrintf, POP3_OK.
+  calls:	reads outlevel.
+ *****************************************************************/
+
+int POP3_sendUIDL (num, socket, cp)
+int num;
+int socket;
+char **cp;
+{
+  int ok;
+  char buf [POPBUFSIZE];
+  static char id[IDLEN];
+
+  (void) strcpy(buf, "UIDL\r\n");
+  if (num > -1)
+    (void) sprintf(buf, "UIDL %d\r\n", num);
+ 
+  SockPrintf(socket, buf);
+  if (outlevel == O_VERBOSE)
+    fprintf(stderr,"> %s", buf);
+
+  ok = POP3_OK(buf,socket);
+  if (ok != 0 && outlevel > O_SILENT) 
+    fprintf(stderr,"Server says '%s' to UIDL command.\n",buf);
+
+  if (cp) {
+    sscanf(buf, "%*d %s\n", id);
+    *cp = id;
+  }
   return(ok);
 }
 
