@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/04/19 04:13:01 $
+<td width="30%" align=right>$Date: 1998/04/19 22:21:37 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -107,6 +107,7 @@ when I may have multiple login sessions going?</a><br>
 <a href="#X2">X2. My mail client can't see a Subject line.</a><br>
 <a href="#X3">X3. Messages containing "From" at start of line are being split.</a><br>
 <a href="#X4">X4. My mail is being mangled in a new and different way.</a><br>
+<a href="#X5">X5. Using POP3, retrievals seems to be fetching too much!</a><br>
 
 <h1>Other Problems:</h1>
 
@@ -1762,6 +1763,23 @@ it, just touch(1) the logfile before you run fetchmail (this will have
 no effect on the contents of the logfile if it already exists).<P>
 
 <hr>
+<h2><a name="X5">X5. Using POP3, retrievals seems to be fetching too much!</a></h2>
+
+This may happen in versions of fetchmail after 4.4.1, which use POP3's
+TOP command rather than RETR in order to avoid marking the message
+seen (leaving it unseen is helpful for later recovery if you lose your
+connection in the middle of a retrieval).<P>
+
+If your POP3 server fails to sanity-check TOP requests and clip them at
+the next end-of-message, it will fetch the entire tail of the mailbox
+starting with the current message.  The qpopper 2.41 beta 1 server is 
+known to have this bug (though the qpopper 2.2 found on many Unixes
+does not).<P>
+
+To work around it, set the <code>fetchall</code> option.  Under POP3
+only, this now has the side effect of forcing RETR use.<P>
+
+<hr>
 <h2><a name="O2">O2. Every time I get a POP or IMAP message the header
 is dumped to all my terminal sessions.</a></h2>
 
@@ -1892,7 +1910,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/04/19 04:13:01 $
+<td width="30%" align=right>$Date: 1998/04/19 22:21:37 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
