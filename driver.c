@@ -1133,6 +1133,7 @@ is restored."));
 		}
 		else if (err == PS_REPOLL)
 		{
+		  if (outlevel >= O_VERBOSE)
 		    report(stderr, GT_("Repoll immediately on %s@%s\n"),
 			   ctl->remotename,
 			   ctl->server.truename);
