@@ -13,10 +13,11 @@
 
 #include  <config.h>
 #include  <stdio.h>
-#include  <malloc.h>
+#include  <stdlib.h>
 #include  <varargs.h>
 #include  <sys/time.h>
 #include  <signal.h>
+#include  <string.h>
 
 #ifdef KERBEROS_V4
 #include <krb.h>
@@ -38,6 +39,8 @@ static int mytimeout;	/* server-nonresponse timeout for current query */
 char tag[TAGLEN];
 static int tagnum;
 #define GENSYM	(sprintf(tag, "a%04d", ++tagnum), tag)
+
+static char *shroud;
 
 /*********************************************************************
   function:      
@@ -642,7 +645,9 @@ struct method *proto;
 	goto cleanUp;
 
     /* try to get authorized to fetch mail */
+    shroud = queryctl->password;
     ok = (protocol->getauth)(socket, queryctl, buf);
+    shroud = (char *)NULL;
     if (alarmed || ok == PS_ERROR)
 	ok = PS_AUTHFAIL;
     if (alarmed || ok != 0)
@@ -655,7 +660,8 @@ struct method *proto;
     /* show user how many messages we downloaded */
     if (outlevel > O_SILENT && outlevel < O_VERBOSE)
 	if (count == 0)
-	    fprintf(stderr, "No mail from %s\n", queryctl->servername);
+	    fprintf(stderr, "No mail from %s@%s\n", 
+		    queryctl->remotename, queryctl->servername);
 	else
 	    fprintf(stderr,
 		    "%d message%s from %s.\n",
@@ -814,22 +820,28 @@ int socket;
 const char *fmt;
 va_dcl {
 
-  char buf [POPBUFSIZE+1];
-  va_list ap;
+    char buf [POPBUFSIZE+1];
+    va_list ap;
 
-  if (protocol->tagged)
-      (void) sprintf(buf, "%s ", GENSYM);
-  else
-      buf[0] = '\0';
+    if (protocol->tagged)
+	(void) sprintf(buf, "%s ", GENSYM);
+    else
+	buf[0] = '\0';
 
-  va_start(ap);
-  vsprintf(buf + strlen(buf), fmt, ap);
-  va_end(ap);
+    va_start(ap);
+    vsprintf(buf + strlen(buf), fmt, ap);
+    va_end(ap);
 
-  SockPuts(socket, buf);
+    SockPuts(socket, buf);
 
-  if (outlevel == O_VERBOSE)
-    fprintf(stderr,"> %s\n", buf);
+    if (outlevel == O_VERBOSE)
+    {
+	char *cp;
+
+	if (shroud && (cp = strstr(buf, shroud)))
+	    memset(cp, '*', strlen(shroud));
+	fprintf(stderr,"> %s\n", buf);
+    }
 }
 
 /*********************************************************************
@@ -866,7 +878,13 @@ va_dcl {
 
   SockPuts(socket, buf);
   if (outlevel == O_VERBOSE)
-    fprintf(stderr,"> %s\n", buf);
+  {
+      char *cp;
+
+      if (shroud && (cp = strstr(buf, shroud)))
+	  memset(cp, '*', strlen(shroud));
+      fprintf(stderr,"> %s\n", buf);
+  }
 
   /* we presume this does its own response echoing */
   ok = (protocol->parse_response)(socket, buf);
