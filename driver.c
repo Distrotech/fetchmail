@@ -18,6 +18,12 @@
 #include  <sys/time.h>
 #include  <signal.h>
 
+#ifdef KERBEROS_V4
+#include <krb.h>
+#include <des.h>
+#include <netinet/in.h>		/* must be included before "socket.h".*/
+#include <netdb.h>
+#endif
 #include  "socket.h"
 #include  "fetchmail.h"
 #include  "smtp.h"
@@ -469,6 +475,68 @@ struct hostrec *queryctl;
     return(0);
 }
 
+#ifdef KERBEROS_V4
+/*********************************************************************
+  function:      kerberos_auth
+  description:   Authenticate to the server host using Kerberos V4
+
+  arguments:     
+    socket       socket to server
+    servername   server name
+
+  return value:  exit code from the set of PS_.* constants defined in 
+                 fetchmail.h
+  calls:
+  globals:       reads outlevel.
+ *********************************************************************/
+
+int
+kerberos_auth (socket, servername) 
+     int socket;
+     char *servername;
+{
+    char * host_primary;
+    KTEXT ticket;
+    MSG_DAT msg_data;
+    CREDENTIALS cred;
+    Key_schedule schedule;
+    int rem;
+  
+    /* Get the primary name of the host.  */
+    {
+	struct hostent * hp = (gethostbyname (servername));
+	if (hp == 0)
+	{
+	    fprintf (stderr, "MAILHOST unknown: %s\n", servername);
+	    return (PS_ERROR);
+	}
+	host_primary = ((char *) (malloc ((strlen (hp -> h_name)) + 1)));
+	strcpy (host_primary, (hp -> h_name));
+    }
+  
+    ticket = ((KTEXT) (malloc (sizeof (KTEXT_ST))));
+    rem
+	= (krb_sendauth (0L, socket, ticket, "pop",
+			 host_primary,
+			 ((char *) (krb_realmofhost (host_primary))),
+			 ((unsigned long) 0),
+			 (&msg_data),
+			 (&cred),
+			 (schedule),
+			 ((struct sockaddr_in *) 0),
+			 ((struct sockaddr_in *) 0),
+			 "KPOPV0.1"));
+    free (ticket);
+    free (host_primary);
+    if (rem != KSUCCESS)
+    {
+	fprintf (stderr, "kerberos error: %s\n", (krb_get_err_text (rem)));
+	return (PS_ERROR);
+    }
+    return (0);
+}
+#endif /* KERBEROS_V4 */
+
 /*********************************************************************
   function:      do_protocol
   description:   retrieve messages from the specified mail server
@@ -499,6 +567,7 @@ struct method *proto;
     alarmed = 0;
     sigsave = signal(SIGALRM, alarm_handler);
     alarm (timeout);
+
     /* lacking methods, there are some options that may fail */
     if (!proto->is_old)
     {
@@ -536,11 +605,11 @@ struct method *proto;
 
 #ifdef KERBEROS_V4
     if (queryctl->protocol == P_KPOP)
-      {
-	ok = (pop3_kerberos_auth (socket, queryctl));
+    {
+	ok = (kerberos_auth (socket, queryctl->servername));
 	if (ok != 0)
-	  goto cleanUp;
-      }
+	    goto cleanUp;
+    }
 #endif
 
     /* accept greeting message from mail server */

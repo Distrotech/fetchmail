@@ -15,14 +15,6 @@
 #include  <config.h>
 #include  <stdio.h>
  
-#ifdef KERBEROS_V4
-#include <krb.h>
-#include <des.h>
-/* <netinet/in.h> must be included before "socket.h".  */
-#include <netinet/in.h>
-#include <netdb.h>
-#endif
-
 #include  "socket.h"
 #include  "fetchmail.h"
 
@@ -113,6 +105,7 @@ char *greeting;
 	strcat (buf, "KPOP support not compiled into this executable.\n");
 	return(PS_ERROR);
 #endif
+	/* fall through */
 
     case P_POP3:
 	if ((gen_transact(socket,"USER %s", queryctl->remotename)) != 0)
@@ -135,54 +128,6 @@ char *greeting;
     /* we're approved */
     return(0);
 }
-
-#ifdef KERBEROS_V4
-int
-pop3_kerberos_auth (socket, queryctl) 
-     int socket;
-     struct hostrec * queryctl;
-{
-  char * host_primary;
-  KTEXT ticket;
-  MSG_DAT msg_data;
-  CREDENTIALS cred;
-  Key_schedule schedule;
-  int rem;
-  
-  /* Get the primary name of the host.  */
-  {
-    struct hostent * hp = (gethostbyname (queryctl->servername));
-    if (hp == 0)
-      {
-	fprintf (stderr, "MAILHOST unknown: %s\n", queryctl->servername);
-	return (PS_ERROR);
-      }
-    host_primary = ((char *) (malloc ((strlen (hp -> h_name)) + 1)));
-    strcpy (host_primary, (hp -> h_name));
-  }
-  
-  ticket = ((KTEXT) (malloc (sizeof (KTEXT_ST))));
-  rem
-    = (krb_sendauth (0L, socket, ticket, "pop",
-		     host_primary,
-		     ((char *) (krb_realmofhost (host_primary))),
-		     ((unsigned long) 0),
-		     (&msg_data),
-		     (&cred),
-		     (schedule),
-		     ((struct sockaddr_in *) 0),
-		     ((struct sockaddr_in *) 0),
-		     "KPOPV0.1"));
-  free (ticket);
-  free (host_primary);
-  if (rem != KSUCCESS)
-    {
-      fprintf (stderr, "kerberos error: %s\n", (krb_get_err_text (rem)));
-      return (PS_ERROR);
-    }
-  return (0);
-}
-#endif /* KERBEROS_V4 */
 
 static pop3_getrange(socket, queryctl, countp)
 /* get range of messages to be fetched */
