@@ -831,6 +831,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 	    {
 		if (outlevel >= O_MONITOR)
 		    report(stdout, "IMAP> *\n");
+		/* SASL cancellation of authentication */
 		SockWrite(sock, "*\r\n", 3);
 	    }
 	    
@@ -856,6 +857,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
             {
                 if (outlevel >= O_MONITOR)
                     report (stdout, "IMAP> *\n");
+		/* SASL cancellation of authentication */
                 SockWrite (sock, "*\r\n", 3);
             }
             return ok;
