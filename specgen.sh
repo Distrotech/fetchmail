@@ -140,7 +140,7 @@ rm -rf \$RPM_BUILD_ROOT
 %defattr (644, root, root, 755)
 %doc README NEWS NOTES FAQ COPYING FEATURES sample.rcfile contrib
 %doc fetchmail-features.html fetchmail-FAQ.html design-notes.html
-%attr(644, root, man) /usr/man/man1/*.1
+%attr(644, root, man) /usr/man/man1/*.1*
 %attr(755, root, root) /usr/bin/fetchmail
 # Uncomment the following to support internationalization
 # %attr(644,root,root) /usr/share/locale/*/LC_MESSAGES/fetchmail.mo
