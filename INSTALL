@@ -13,8 +13,9 @@ running fetchmail.
 1. USEFUL THINGS TO INSTALL FIRST
 
 If you want support for RFC1938-compliant one-time passwords, you'll
-need to install Craig Metz's OPIE libraries first.  The fetchmail
-build process will detect them and configure appropriately.
+need to install Craig Metz's OPIE libraries first.  Then configure
+with --enable-OPIE, and fetchmail build process will detect them and
+compile appropriately.
 
 Note: there is no point in doing this unless your server is
 OTP-enabled.  To test this, telnet to the server port and give it
