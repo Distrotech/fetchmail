@@ -433,8 +433,10 @@ static int pop3_getrange(int sock,
 			new->val.status.num = num;
 
 			/* note: ID comparison is caseblind */
-			if (str_in_list(&ctl->oldsaved, id))
+			if (str_in_list(&ctl->oldsaved, id)) {
 			    new->val.status.mark = UID_SEEN;
+			    str_set_mark(&ctl->oldsaved, id, UID_SEEN);
+			}
 			else
 			    (*newp)++;
 		    }

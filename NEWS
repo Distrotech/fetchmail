@@ -16,7 +16,7 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.4.0 (Fri Mar 13 15:48:27 EST 1998):
+fetchmail-4.4.0 (Mon Mar 16 14:57:38 EST 1998):
 * Fix bug that prevented graceful exit from POP3 validation on wrong password.
 * Dominique Unruh's patch that copes gracefully with bodiless messages.
 * Fix timer-leak problem with the SIGALRM fix, pointed out by Dave Bodenstab.
@@ -25,7 +25,7 @@ fetchmail-4.4.0 (Fri Mar 13 15:48:27 EST 1998):
 * Handle empty Return-Path (thank Dmitry Yaitskov <dyaitskov@insystems.com>).
 * Improvements in UID handling; should be a cleaner fix for Dick van den Burg.
 
-There are 270 people on fetchmail-friends and 160 on fetchmail-announce.
+There are 272 people on fetchmail-friends and 160 on fetchmail-announce.
 
 fetchmail-4.3.9 (Fri Mar  6 10:45:32 EST 1998):
 * Relax the LOGIN capability check in IMAP.

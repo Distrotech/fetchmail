@@ -307,6 +307,7 @@ int delete_str(struct idlist **, int);
 int str_in_list(struct idlist **, const char *);
 int str_nr_in_list(struct idlist **, const char *);
 int str_nr_last_in_list(struct idlist **, const char *);
+void str_set_mark( struct idlist **, const char *, const flag);
 int count_list( struct idlist **idl );
 char *str_from_nr_list( struct idlist **idl, int number );
 char *str_find(struct idlist **, int);

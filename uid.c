@@ -93,7 +93,7 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 		        strcasecmp(host, ctl->server.truename) == 0
 				&& strcasecmp(user, ctl->remotename) == 0)
 		    {
-			save_str(&ctl->oldsaved, id, UID_SEEN);
+			save_str(&ctl->oldsaved, id, UID_UNSEEN);
 			break;
 		    }
 		}
@@ -205,6 +205,18 @@ int str_nr_last_in_list( struct idlist **idl, const char *str)
         if( strcasecmp( str, walk->id) == 0 )
 	    ret = nr;
     return ret;
+}
+
+void str_set_mark( struct idlist **idl, const char *str, const flag val)
+/* update the mark on an of an id to given value */
+{
+    int nr;
+    struct idlist *walk;
+    if (!str)
+        return;
+    for(walk = *idl, nr = 0; walk; nr ++, walk = walk->next)
+        if (strcasecmp(str, walk->id) == 0)
+	    walk->val.status.mark = val;
 }
 
 int count_list( struct idlist **idl)
