@@ -160,7 +160,17 @@ error (status, errnum, message, va_alist)
 #ifdef HAVE_VSYSLOG
 	  vsyslog (priority, msg, args);
 #else
+	  {
+	  char *a1 = va_arg(args, char *);
+	  char *a2 = va_arg(args, char *);
+	  char *a3 = va_arg(args, char *);
+	  char *a4 = va_arg(args, char *);
+	  char *a5 = va_arg(args, char *);
+	  char *a6 = va_arg(args, char *);
+	  char *a7 = va_arg(args, char *);
+	  char *a8 = va_arg(args, char *);
 	  syslog (priority, msg, a1, a2, a3, a4, a5, a6, a7, a8);
+	  }
 #endif
 	}
       else
@@ -168,7 +178,17 @@ error (status, errnum, message, va_alist)
 #ifdef HAVE_VSYSLOG
 	  vsyslog (priority, message, args);
 #else
+	  {
+	  char *a1 = va_arg(args, char *);
+	  char *a2 = va_arg(args, char *);
+	  char *a3 = va_arg(args, char *);
+	  char *a4 = va_arg(args, char *);
+	  char *a5 = va_arg(args, char *);
+	  char *a6 = va_arg(args, char *);
+	  char *a7 = va_arg(args, char *);
+	  char *a8 = va_arg(args, char *);
 	  syslog (priority, message, a1, a2, a3, a4, a5, a6, a7, a8);
+	  }
 #endif
 	}
 
