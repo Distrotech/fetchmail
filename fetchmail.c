@@ -1094,7 +1094,19 @@ static int load_params(int argc, char **argv, int optind)
 	     * to minimize DNS round trips.
 	     */
 	    if (ctl->server.lead_server)
-		ctl->server.truename = xstrdup(ctl->server.lead_server->truename);
+	    {
+		char	*leadname = ctl->server.lead_server->truename;
+
+		/* prevent core dump from ill-formed or duplicate entry */
+		if (!leadname)
+		{
+		    report(stderr, 
+			   _("Lead server has no name."));
+		    exit(PS_SYNTAX);
+		}
+
+		ctl->server.truename = xstrdup(leadname);
+	    }
 #ifdef HAVE_GETHOSTBYNAME
 	    else if (ctl->server.preauthenticate==A_KERBEROS_V4 ||
 		ctl->server.preauthenticate==A_KERBEROS_V5 ||
