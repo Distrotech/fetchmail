@@ -229,8 +229,9 @@ struct query *ctl;	/* option record to be initialized */
      */
 
     int c;
-    int ocount = 0;     /* count of destinations specified */
-    int errflag = 0;   /* TRUE when a syntax error is detected */
+    int ocount = 0;	/* count of destinations specified */
+    int errflag = 0;	/* TRUE when a syntax error is detected */
+    int helpflag = 0;	/* TRUE when option help was explicitly requested */
     int option_index;
     char *buf, *cp;
 
@@ -540,13 +541,13 @@ struct query *ctl;	/* option record to be initialized */
 	case '?':
 	case LA_HELP:
 	default:
-	    errflag++;
+	    helpflag++;
 	}
     }
 
-    if (errflag || ocount > 1) {
+    if (errflag || ocount > 1 || helpflag) {
 	/* squawk if syntax errors were detected */
-#define P(s)	fputs(s, stderr)
+#define P(s)	fputs(s, helpflag ? stdout : stderr)
 	P(_("usage:  fetchmail [options] [server ...]\n"));
 	P(_("  Options are as follows:\n"));
 	P(_("  -?, --help        display this option help\n"));

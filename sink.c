@@ -287,11 +287,11 @@ static int send_bouncemail(struct msgblk *msg, int userclass,
 	report(stdout, 0, "SMTP: (bounce-message body)");
 
     /* bouncemail headers */
-    SockPrintf(sock, "Return-Path: <>");
-    SockPrintf(sock, "From: FETCHMAIL-DAEMON@%s\r\n", fetchmailhost);
-    SockPrintf(sock, "To: %s\n", msg->return_path);
+    SockPrintf(sock, "Return-Path: <>\r\n");
+    SockPrintf(sock, "From: %s\r\n", daemon_name);
+    SockPrintf(sock, "To: %s\r\n", msg->return_path);
     SockPrintf(sock, "MIME-Version: 1.0\r\n");
-    SockPrintf(sock, "Content-Type: multipart/report; report-type=delivery-status; boundary=\"%s\"\r\n", boundary);
+    SockPrintf(sock, "Content-Type: multipart/report; report-type=delivery-status;\r\n\tboundary=\"%s\"\r\n", boundary);
     SockPrintf(sock, "\r\n");
     SockPrintf(sock, "Content-Transfer-Encoding: 7bit\r\n");
     SockPrintf(sock, "\r\n");
