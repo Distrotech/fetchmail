@@ -148,7 +148,7 @@ netrc: netrc.c xmalloc.o error.o
 	$(CC) -DSTANDALONE -DHAVE_CONFIG_H -I. -g -o $@ $^
 
 .c.o:
-	$(CC) $(defines) -c $(CPFLAGS) -I$(srcdir) -I. $(CEFLAGS) $(CFLAGS) $<
+	$(CC) $(defines) -c $(CPFLAGS) -I$(srcdir) $(CEFLAGS) $(CFLAGS) $<
 
 # For some losing Unix makes.
 SHELL = /bin/sh
