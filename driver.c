@@ -1095,7 +1095,7 @@ va_dcl {
 
 	if (shroud && (cp = strstr(buf, shroud)))
 	    memset(cp, '*', strlen(shroud));
-	fprintf(stderr,"> %s\n", buf);
+	fprintf(stderr,"> %s", buf);
     }
 }
 
@@ -1136,7 +1136,7 @@ va_dcl {
 
       if (shroud && (cp = strstr(buf, shroud)))
 	  memset(cp, '*', strlen(shroud));
-      fprintf(stderr,"> %s\n", buf);
+      fprintf(stderr,"> %s", buf);
   }
 
   /* we presume this does its own response echoing */
