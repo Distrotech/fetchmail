@@ -282,7 +282,6 @@ struct hostrec *queryctl;
     queryctl->keep = 0;
     queryctl->norewrite = 0;
 
-    strcpy(queryctl->localname, user);
     strcpy(queryctl->remotename, user);
     strcpy(queryctl->smtphost, "localhost");
 
