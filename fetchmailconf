@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.38"
+version = "1.39"
 
 from Tkinter import *
 from Dialog import *
@@ -1448,6 +1448,11 @@ local name, messages will be retrieved
 in multidrop mode.  This complicates
 the configuration issues; see the manual
 page section on multidrop mode.
+
+Warning: Be careful with local names
+such as foo@bar.com, as that can cause
+the mail to be sent to foo@bar.com instead
+of sending it to your local system.
 """}
 
 class UserEdit(Frame, MyWidget):
@@ -1489,8 +1494,19 @@ class UserEdit(Frame, MyWidget):
             self.destruct()
 
     def save(self):
-	self.fetch(User, 'user')
-	self.destruct()
+    	ok = 0
+    	for x in self.user.localnames: ok = ok + (string.find(x, '@') != -1)
+	if ok == 0 or  Dialog(self, 
+	    title = "Really accept an embedded '@' ?",
+            text = "Local names with an embedded '@', such as in foo@bar " 
+		   "might result in your mail being sent to foo@bar.com "
+		   "instead of your local system.\n Are you sure you want "
+		   "a local user name with an '@' in it?",
+            bitmap = 'question',
+            strings = ('Yes', 'No'),
+            default = 1).num == 0:
+		self.fetch(User, 'user')
+		self.destruct()
 
     def makeWidgets(self, mode, servername):
 	dispose_window(self,
