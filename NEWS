@@ -18,12 +18,22 @@
 ------------------------------------------------------------------------------
 fetchmail-4.3.6 ()
 * Improved RPM packaging with correct grouping and an icon.
+* Fixed another minor bug in handling of `expunge 0'.
+* Kent Robotti sent a new version of fetchsetup.
+* Scott Burson's tweak to allow USER=postmaster to work.
+* Byrial Jensen's fix to handle NULs in mail correctly.
+* Vojtech Pavlik's fix for simultaneous %F and %T.
+* IMAP code can now deal with untagged responses during CAPABILITY
+  (at least one server issues the motd in a bunch of "* OK {ALERT]" lines
+  in response to the first command after connecting.)
+* New --smtpaddress option from Henning P. Schmiedehausen allows you
+  to force the hostname used in MAIL FROM lines.
 
-There are 262 people on fetchmail-friends and 102 on fetchmail-announce.
+There are 281 people on fetchmail-friends and 118 on fetchmail-announce.
 
 fetchmail-4.3.5 (Mon Dec 15 06:07:08 EST 1997)
 * Added Kent Robotti's fetchsetup configuration script.
-* Corrected buggy  handling of `expunge 0'.
+* Corrected buggy handling of `expunge 0'.
 * RFC 1731 GSSAPI support from Brendan Cully <brendan@kublai.com>.
 * We no longer reveal the remotename in fetchmail's Received line, as this
   may be sensitive information.

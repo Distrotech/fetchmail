@@ -554,7 +554,7 @@ int num;		/* index of message */
     } *addrchain = NULL, **chainptr = &addrchain;
     char buf[MSGBUFSIZE+1], return_path[MSGBUFSIZE+1]; 
     int	from_offs, ctt_offs, env_offs, next_address;
-    char *headers, *received_for, *desthost, *rcv;
+    char *headers, *received_for, *destaddr, *rcv;
     int n, linelen, oldlen, ch, remaining, skipcount;
     char		*cp;
     struct idlist 	*idp, *xmit_names;
@@ -896,7 +896,7 @@ int num;		/* index of message */
 	    if (idp->val.num == XMIT_ACCEPT)
 		good_addresses++;
 
-	desthost = "localhost";
+	destaddr = "localhost";
 
 	length = strlen(ctl->mda) + 1;
 	before = xstrdup(ctl->mda);
@@ -1129,7 +1129,8 @@ int num;		/* index of message */
 	 * or MX but not a CNAME.  Some listeners (like exim)
 	 * enforce this.
 	 */
-	desthost = ctl->smtphost ? ctl->smtphost : "localhost";
+	destaddr = ctl->smtpaddress ? ctl->smtpaddress : ( ctl->smtphost ? ctl->smtphost : "localhost");
+	
 	for (idp = xmit_names; idp; idp = idp->next)
 	    if (idp->val.num == XMIT_ACCEPT)
 	    {
@@ -1137,9 +1138,9 @@ int num;		/* index of message */
 		    strcpy(addr, idp->id);
 		else
 #ifdef HAVE_SNPRINTF
-		    snprintf(addr, sizeof(addr)-1, "%s@%s", idp->id, desthost);
+		    snprintf(addr, sizeof(addr)-1, "%s@%s", idp->id, destaddr);
 #else
-		    sprintf(addr, "%s@%s", idp->id, desthost);
+		    sprintf(addr, "%s@%s", idp->id, destaddr);
 #endif /* HAVE_SNPRINTF */
 
 		if (SMTP_rcpt(ctl->smtp_socket, addr) == SM_OK)
@@ -1149,15 +1150,15 @@ int num;		/* index of message */
 		    bad_addresses++;
 		    idp->val.num = XMIT_ANTISPAM;
 		    error(0, 0, 
-			  "SMTP listener doesn't like recipient address `%s'", idp->id);
+			  "SMTP listener doesn't like recipient address `%s@%s'", idp->id, destaddr);
 		}
 	    }
 	if (!good_addresses)
 	{
 #ifdef HAVE_SNPRINTF
-	    snprintf(addr, sizeof(addr)-1, "%s@%s", user,  desthost);
+	    snprintf(addr, sizeof(addr)-1, "%s@%s", user, destaddr);
 #else
-	    sprintf(addr, "%s@%s", user, desthost);
+	    sprintf(addr, "%s@%s", user, destaddr);
 #endif /* HAVE_SNPRINTF */
 
 	    if (SMTP_rcpt(ctl->smtp_socket, addr) != SM_OK)
@@ -1212,7 +1213,7 @@ int num;		/* index of message */
 		{
 		    sprintf(buf+1, 
 			    "for <%s@%s> (by default); ",
-			    user, desthost);
+			    user, destaddr);
 		}
 		else if (good_addresses == 1)
 		{
@@ -1220,7 +1221,7 @@ int num;		/* index of message */
 			if (idp->val.num == XMIT_ACCEPT)
 			    break;	/* only report first address */
 		    sprintf(buf+1, "for <%s@%s> (%s); ",
-			    idp->id, desthost,
+			    idp->id, destaddr,
 			    MULTIDROP(ctl) ? "multi-drop" : "single-drop");
 		}
 		else

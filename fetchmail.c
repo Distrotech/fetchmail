@@ -578,6 +578,7 @@ static int load_params(int argc, char **argv, int optind)
 
     memset(&def_opts, '\0', sizeof(struct query));
     def_opts.smtp_socket = -1;
+    def_opts.smtpaddress = (char *)0;
 
     def_opts.server.protocol = P_AUTO;
     def_opts.server.timeout = CLIENT_TIMEOUT;
@@ -1012,6 +1013,9 @@ void dump_params (struct query *ctl)
 	    	    printf(" (default)");
 	    }
 	printf("\n");
+	if (ctl->smtpaddress)
+	    printf("  Host part of MAIL FROM line will be %s\n",
+		   ctl->smtpaddress);
     }
     if (ctl->preconnect)
 	printf("  Server connection will be brought up with '%s.'\n",

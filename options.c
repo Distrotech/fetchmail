@@ -44,16 +44,17 @@
 #define LA_LIMIT	26
 #define LA_FOLDER	27
 #define LA_SMTPHOST	28
-#define LA_BATCHLIMIT	29
-#define LA_FETCHLIMIT	30
-#define LA_EXPUNGE	31
-#define LA_MDA		32
-#define LA_INTERFACE    33
-#define LA_MONITOR      34
-#define LA_YYDEBUG	35
-#define LA_QVIRTUAL     36
+#define LA_SMTPADDR     29
+#define LA_BATCHLIMIT	30
+#define LA_FETCHLIMIT	31
+#define LA_EXPUNGE	32
+#define LA_MDA		33
+#define LA_INTERFACE    34
+#define LA_MONITOR      35
+#define LA_YYDEBUG	36
+#define LA_QVIRTUAL     37
 
-/* options still left: CDgGhHjJoORTUwWxXYzZ */
+/* options still left: CgGhHjJoORTUwWxXYzZ */
 static const char *shortoptions = 
 	"?Vcsvd:NqL:f:i:p:UP:A:t:E:Q:u:akKFnl:r:S:b:B:e:m:I:M:y";
 
@@ -94,6 +95,8 @@ static const struct option longoptions[] = {
 
   {"folder",    required_argument, (int *) 0, LA_FOLDER	     },
   {"smtphost",	required_argument, (int *) 0, LA_SMTPHOST    },
+  {"smtpaddress", required_argument, (int *) 0, LA_SMTPADDR    },
+  
   {"batchlimit",required_argument, (int *) 0, LA_BATCHLIMIT  },
   {"fetchlimit",required_argument, (int *) 0, LA_FETCHLIMIT  },
   {"expunge",   required_argument, (int *) 0, LA_EXPUNGE     },
@@ -298,6 +301,10 @@ struct query *ctl;	/* option record to be initialized */
 		((cp = strtok((char *)NULL, ",")));
 	    ocount++;
 	    break;
+    case 'D':
+	case LA_SMTPADDR:
+	  ctl->smtpaddress = xstrdup(optarg);
+	  break;
 	case 'b':
 	case LA_BATCHLIMIT:
 	    c = atoi(optarg);
@@ -390,6 +397,7 @@ struct query *ctl;	/* option record to be initialized */
 	fputs("  -l, --limit       don't fetch messages over given size\n", stderr);
 
 	fputs("  -S, --smtphost    set SMTP forwarding host\n", stderr);
+	fputs("  -D, --smtpaddress set SMTP delivery domain to use\n", stderr);
 	fputs("  -b, --batchlimit  set batch limit for SMTP connections\n", stderr);
 	fputs("  -B, --fetchlimit  set fetch limit for server connections\n", stderr);
 	fputs("  -e, --expunge     set max deletions between expunges\n", stderr);

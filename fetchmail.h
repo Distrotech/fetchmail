@@ -129,6 +129,7 @@ struct query
     struct idlist *mailboxes;	/* list of mailboxes to check */
     struct idlist *smtphunt;	/* list of SMTP hosts to try forwarding to */
     char *smtphost;		/* actual SMTP host to point to */
+    char *smtpaddress;		/* address we want to force in the delivery messages */ 
     char *mda;			/* local MDA to pass mail to */
     char *preconnect;		/* pre-connection command to execute */
     char *postconnect;		/* post-connection command to execute */

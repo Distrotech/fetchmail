@@ -209,6 +209,12 @@ mailserver is asked to ship mail to.  Hosts are tried in list order;
 the first one that is up becomes the forwarding or ETRN target for the
 current run.
 .TP
+.B \-D domain, --smtpaddress domain
+(Keyword: smtpaddress) 
+Specify the domain to be put in MAIL FROM lines shipped to SMTP. The
+name of the SMTP server (as specified by --smtphost, or defaulted to
+"localhost") is used when this is not specified.
+.TP
 .B \-m, \--mda
 (Keyword: mda)
 You can force mail to be passed to an MDA directly (rather than

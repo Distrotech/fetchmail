@@ -57,7 +57,7 @@ extern char * yytext;
 
 %token DEFAULTS POLL SKIP VIA AKA LOCALDOMAINS PROTOCOL
 %token AUTHENTICATE TIMEOUT KPOP KERBEROS4
-%token ENVELOPE QVIRTUAL USERNAME PASSWORD FOLDER SMTPHOST MDA
+%token ENVELOPE QVIRTUAL USERNAME PASSWORD FOLDER SMTPHOST MDA SMTPADDRESS
 %token PRECONNECT POSTCONNECT LIMIT
 %token IS HERE THERE TO MAP WILDCARD
 %token BATCHLIMIT FETCHLIMIT EXPUNGE
@@ -223,6 +223,7 @@ user_option	: TO localnames HERE
 		| PASSWORD STRING	{current.password   = xstrdup($2);}
 		| FOLDER folder_list
 		| SMTPHOST smtp_list
+		| SMTPADDRESS STRING	{current.smtpaddress = xstrdup($2);}
 		| MDA STRING		{current.mda        = xstrdup($2);}
 		| PRECONNECT STRING	{current.preconnect = xstrdup($2);}
 		| POSTCONNECT STRING	{current.postconnect = xstrdup($2);}
@@ -433,6 +434,7 @@ static void record_current(void)
     if (cmd_opts.smtphunt)
 	current.smtphunt = cmd_opts.smtphunt;
     FLAG_FORCE(mda);
+	FLAG_FORCE(smtpaddress);
     FLAG_FORCE(preconnect);
     FLAG_FORCE(postconnect);
 
@@ -487,6 +489,7 @@ void optmerge(struct query *h2, struct query *h1)
     FLAG_MERGE(remotename);
     FLAG_MERGE(password);
     FLAG_MERGE(mda);
+    FLAG_MERGE(smtpaddress);
     FLAG_MERGE(preconnect);
 
     FLAG_MERGE(keep);
