@@ -43,6 +43,7 @@ int nodetach;		/* if TRUE, don't detach daemon process */
 char *logfile;		/* log file for daemon mode */
 int quitmode;		/* if --quit was set */
 int check_only;		/* if --probe was set */
+int cmd_batchlimit;	/* if --batchlimit was set */
 
 /* miscellaneous global controls */
 char *rcfile;		/* path name of rc file */
@@ -558,6 +559,10 @@ static int load_params(int argc, char **argv, int optind)
 	exit(st);
     else
 	initialize_saved_lists(querylist, idfile);
+
+    /* if cmd_batchlimit was explicitly set, use it to override batchlimit */
+    if (cmd_batchlimit > -1)
+	batchlimit = cmd_batchlimit;
 
     return(implicitmode);
 }

@@ -138,6 +138,9 @@ extern int nodetach;		/* if TRUE, don't detach daemon process */
 extern char *logfile;		/* log file for daemon mode */
 extern int quitmode;		/* if --quit was set */
 extern int check_only;		/* if --check was set */
+extern int cmd_batchlimit;	/* if --batchlimit was set */
+
+/* these get computed */
 extern int batchlimit;		/* if --batchlimit was set */
 extern int batchcount;		/* count of messages sent in current batch */
 

@@ -40,10 +40,11 @@
 #define LA_LIMIT	22
 #define LA_REMOTEFILE	23
 #define LA_SMTPHOST	24
-#define LA_MDA		25
-#define LA_YYDEBUG	26
+#define LA_BATCHLIMIT	25
+#define LA_MDA		26
+#define LA_YYDEBUG	27
 
-static char *shortoptions = "?Vcsvd:NqL:f:i:p:P:A:t:u:akKFnl:r:S:m:y";
+static char *shortoptions = "?Vcsvd:NqL:f:i:p:P:A:t:u:akKFnl:r:S:b:m:y";
 static struct option longoptions[] = {
   {"help",	no_argument,	   (int *) 0, LA_HELP        },
   {"version",   no_argument,       (int *) 0, LA_VERSION     },
@@ -75,6 +76,7 @@ static struct option longoptions[] = {
 
   {"remote",    required_argument, (int *) 0, LA_REMOTEFILE  },
   {"smtphost",	required_argument, (int *) 0, LA_SMTPHOST    },
+  {"batchlimit",required_argument, (int *) 0, LA_BATCHLIMIT  },
   {"mda",	required_argument, (int *) 0, LA_MDA         },
 
   {"yydebug",	no_argument,	   (int *) 0, LA_YYDEBUG     },
@@ -82,7 +84,7 @@ static struct option longoptions[] = {
   {(char *) 0,  no_argument,       (int *) 0, 0              }
 };
 
-int parsecmdline (argc, argv,ctl)
+int parsecmdline (argc, argv, ctl)
 /* parse and validate the command line options */
 int argc;			/* argument count */
 char **argv;			/* argument strings */
@@ -102,6 +104,7 @@ struct query *ctl;	/* option record to be initialized */
     int option_index;
 
     memset(ctl, '\0', sizeof(struct query));    /* start clean */
+    cmd_batchlimit = -1;
 
     while (!errflag && 
 	   (c = getopt_long(argc,argv,shortoptions,
@@ -229,6 +232,10 @@ struct query *ctl;	/* option record to be initialized */
 	    strncpy(ctl->smtphost,optarg,sizeof(ctl->smtphost)-1);
 	    ocount++;
 	    break;
+	case 'b':
+	case LA_BATCHLIMIT:
+	    cmd_batchlimit = atoi(optarg);
+	    break;
 	case 'm':
 	case LA_MDA:
 	    strncpy(ctl->mda,optarg,sizeof(ctl->mda));
@@ -283,6 +290,7 @@ struct query *ctl;	/* option record to be initialized */
 	fputs("  -l, --limit       don't fetch messages over given size\n", stderr);
 
 	fputs("  -S, --smtphost    set SMTP forwarding host\n", stderr);
+	fputs("  -b, --batchlimit  set batch limit for SMTP connections\n", stderr);
 	fputs("  -r, --remote      specify remote folder name\n", stderr);
 	return(-1);
     }
