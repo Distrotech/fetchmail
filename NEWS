@@ -13,6 +13,7 @@ fetchmail-5.0.8 ():
 * Fix to CRAM endianness patch, by Dan Root via Lawrence Rogers.
 * Suppress duplicates by message ID in multidrop mode.
 * NTLM support for querying Microsoft Exchange servers, from Grant Edwards.
+* Lexer fix by Brian Boutel.
 
 There are 263 people on fetchmail-friends and 441 on fetchmail-announce.
 

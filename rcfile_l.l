@@ -19,7 +19,7 @@ int prc_lineno = 1;
 %a 4000
 %p 3000
 
-%s NAME
+%s NAME AUTHKIND
 
 %%
 
@@ -74,10 +74,11 @@ proto(col)? 	{ return PROTOCOL; }
 service		{ return SERVICE; }
 port		{ return PORT; }
 interval	{ return INTERVAL; }
-auth(enticate)?	{ return AUTHENTICATE; }
-kerberos(_v)?4	{ return KERBEROS4; }
-kerberos(_v)?5	{ return KERBEROS5; }
-kerberos	{ return KERBEROS; }
+auth(enticate)?	{ BEGIN(AUTHKIND); return AUTHENTICATE; }
+kerberos(_v)?4	{ BEGIN(0); return KERBEROS4; }
+kerberos(_v)?5	{ BEGIN(0); return KERBEROS5; }
+kerberos	{ BEGIN(0); return KERBEROS; }
+<AUTHKIND>password { BEGIN(0); return PASSWORD; }
 timeout		{ return TIMEOUT;}
 envelope	{ return ENVELOPE; }
 qvirtual	{ return QVIRTUAL; }
