@@ -3,6 +3,9 @@
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
 * Horst Von Brand's security and specfile patches.
+* Major changes to FAQ item T1.
+* Minor correction to FAQ item K3 by Malte Kiesel.
+* Added to FAQ R1, on enabling sendmail in RH 6.9.
 
 fetchmail-5.5.1 (Sun Aug 20 23:43:03 EDT 2000), 19241 lines:
 
