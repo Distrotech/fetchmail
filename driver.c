@@ -2223,7 +2223,7 @@ const struct method *proto;	/* protocol method table */
 			    {
 				if (outlevel >= O_VERBOSE)
 				    error(0, 0,
-					  "message %d was not the expected length (%d != %d)",
+					  "message %d was not the expected length (%d actual != %d expected)",
 					  num, msglen, msgsizes[num-1]);
 			    }
 
