@@ -84,6 +84,9 @@ FCC: ~/postings/outmail
 The $version release of fetchmail is now available at the usual locations,
 including <URL:http://$ENV{'WWWVIRTUAL'}/~esr/fetchmail>.
 
+The source archive is available at:
+<URL:http://$ENV{'WWWVIRTUAL'}/~esr/fetchmail/fetchmail-${version}.tar.gz>
+
 Here are the release notes:
 
 EOF
