@@ -3,7 +3,7 @@
 # If you're running QNX, we can't assume a working autoconf.
 # So just uncomment all the lines marked QNX.
 
-VERS=4.0.3
+VERS=4.0.4
 
 # Ultrix 2.2 make doesn't expand the value of VPATH.
 srcdir = @srcdir@
@@ -166,7 +166,7 @@ configure: configure.in
 	autoconf $(ACFLAGS)
 
 config.h.in: acconfig.h configure.in
-	autoheader $(ACFLAGS)
+	autoheader $(ACFLAGS); touch config.h.in
 
 # This tells versions [3.59,3.63) of GNU make not to export all variables.
 .NOEXPORT:
