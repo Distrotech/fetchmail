@@ -1,17 +1,36 @@
-/*
- * rfc822.c -- code for slicing and dicing RFC822 mail headers
- *
- * Copyright 1997 by Eric S. Raymond
- * For license terms, see the file COPYING in this directory.
- */
+/*****************************************************************************
 
+NAME:
+   rfc822.c -- code for slicing and dicing RFC822 mail headers
+
+ENTRY POINTS:
+   nextaddr() -- parse the next address out of an RFC822 header
+   reply_hack() -- append hostname to local header addresses 
+
+THEORY:
+   How to parse RFC822 headers in C. This is not a fully conformant
+implementation of RFC822 or RFC2822, but it has been in production use
+in a widely-deployed MTA (fetcmail) since 1996 without complaints.
+Really perverse combinations of quoting and commenting could break it.
+
+AUTHOR:
+   Eric S. Raymond <esr@thyrsus.com>, 1997.  This source code example
+is part of fetchmail and the Unix Cookbook, and are released under the
+MIT license.  Compile with -DMAIN to build the demonstrator.
+
+******************************************************************************/
 #include  <stdio.h>
 #include  <ctype.h>
 #include  <string.h>
 #include  <stdlib.h>
 
+#ifndef MAIN
 #include "fetchmail.h"
 #include "i18n.h"
+#else
+static int verbose;
+char *program_name = "rfc822";
+#endif /* MAIN */
 
 #ifndef TRUE
 #define TRUE 1
@@ -19,11 +38,6 @@
 #endif
 
 #define HEADER_END(p)	((p)[0] == '\n' && ((p)[1] != ' ' && (p)[1] != '\t'))
-
-#ifdef MAIN
-static int verbose;
-char *program_name = "rfc822";
-#endif /* MAIN */
 
 unsigned char *reply_hack(buf, host)
 /* hack message headers so replies will work properly */
@@ -201,7 +215,7 @@ unsigned char *nxtaddr(hdr)
 /* parse addresses in succession out of a specified RFC822 header */
 const unsigned char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 {
-    static unsigned char address[POPBUFSIZE+1];
+    static unsigned char address[BUFSIZ];
     static int tp;
     static const unsigned char *hp;
     static int	state, oldstate;
@@ -394,7 +408,7 @@ static void parsebuf(unsigned char *longbuf, int reply)
 
 main(int argc, char *argv[])
 {
-    unsigned char	buf[MSGBUFSIZE], longbuf[BUFSIZ];
+    unsigned char	buf[BUFSIZ], longbuf[BUFSIZ];
     int			ch, reply;
     
     verbose = reply = FALSE;
