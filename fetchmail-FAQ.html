@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/04/02 19:17:15 $
+<td width="30%" align=right>$Date: 2001/04/10 12:43:58 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -2062,14 +2062,17 @@ directly by fetchmail, either).
 
 We have one report from a SunOS 4.1.4 user that trying to run
 fetchmail in detached daemon mode doesn't work, but that using the
-same options with -N (nodetach) is OK.
+same options with -N (nodetach) is OK.  We have another report of
+similar behavior from one Linux user, but many other Linux users
+reportt no problem.
 
 <p>If this happens, you have a specific portability problem with the code
-in daemon.c that detaches and backgrounds the daemon fetchmail. Tell
-me about it so I can try to fix it.  As a workaround, you can start
-fetchmail with -N and an ampersand to background it.  A Sun user
-recommends
-this:
+in daemon.c that detaches and backgrounds the daemon fetchmail.  The isolated
+Linux case has been chased down to a failure in dup(2) that may reflect a
+glibc bug.
+
+<p>As a workaround, you can start fetchmail with -N and an ampersand
+to background it.  A Sun user recommends this:
 
 <p><pre>
 (fetchmail --nodetach &lt;other params&gt; &amp;)
@@ -2081,8 +2084,6 @@ immediately, detaching fetchmail and making it child of PID 1).  This is
 important when you start fetchmail interactively and than quit
 interactive shell.  The line above makes sure fetchmail lives after
 that!
-
-<p>This should not happen under Linux or any truly POSIX-conformant Unix.
 
 <hr>
 <h2><a name="R6">R6. Fetchmail hangs when used with pppd.</a></h2>
@@ -2940,7 +2941,7 @@ switching to IMAP and using a short expunge interval.
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/04/02 19:17:15 $
+<td width="30%" align=right>$Date: 2001/04/10 12:43:58 $
 </table>
 
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
