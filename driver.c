@@ -16,6 +16,7 @@
 #include  <malloc.h>
 #include  <varargs.h>
 #include  <sys/time.h>
+#include  <signal.h>
 #ifdef HAVE_RRESVPORT_H
 #include  <netinet/in.h>
 #endif /* HAVE_RRESVPORT_H */
@@ -25,6 +26,12 @@
 #include  "smtp.h"
 
 static struct method *protocol;
+
+static int alarmed; /* A flag to indicate that SIGALRM happened */
+
+int timeout=300; /* Wake up from idle state */
+void alarm_handler();
+
 
 #define	SMTP_PORT	25	/* standard SMTP service port */
 
@@ -467,6 +474,8 @@ struct hostrec *queryctl;
     else if (outlevel > O_SILENT) 
 	fputs("\n", stderr);
 
+    if (alarmed)
+       return (0);
     /* write message terminator */
     if (!queryctl->mda[0])
 	if (SMTP_eom(mboxfd) != SM_OK)
@@ -498,11 +507,16 @@ struct method *proto;
     int mboxfd = -1;
     char buf [POPBUFSIZE+1], host[HOSTLEN+1];
     int socket;
+    void (*sigsave)();
+
 #ifdef HAVE_RRESVPORT_H
     int privport = -1;
 #endif /* HAVE_RRESVPORT_H */
     int num, count, deletions = 0;
 
+    alarmed = 0;
+    sigsave = signal(SIGALRM, alarm_handler);
+    alarm (timeout);
     /* lacking methods, there are some options that may fail */
     if (!proto->is_old)
     {
@@ -511,12 +525,16 @@ struct method *proto;
 	    fprintf(stderr,
 		    "Option --flush is not supported with %s\n",
 		    proto->name);
+            alarm(0);
+            signal(SIGALRM, sigsave);
 	    return(PS_SYNTAX);
 	}
 	else if (queryctl->fetchall) {
 	    fprintf(stderr,
 		    "Option --all is not supported with %s\n",
 		    proto->name);
+            alarm(0);
+            signal(SIGALRM, sigsave);
 	    return(PS_SYNTAX);
 	}
     }
@@ -533,9 +551,11 @@ struct method *proto;
     if (queryctl->port < IPPORT_RESERVED)
     {
 	ok = IPPORT_RESERVED - 1;
-	if ((privport = rresvport(&ok)) == -1)
+	if ((privport = rresvport(&ok)) == -1 || alarmed)
 	{
 	    perror("fetchmail, binding to reserved port");
+            alarm(0);
+            signal(SIGALRM, sigsave);
 	    return(PS_SOCKET);
 	}
     }
@@ -543,7 +563,8 @@ struct method *proto;
 
     /* open a socket to the mail server */
     if ((socket = Socket(queryctl->servername,
-			 queryctl->port ? queryctl->port : protocol->port))<0)
+			 queryctl->port ? queryctl->port : protocol->port))<0 
+         || alarmed)
     {
 	perror("fetchmail, connecting to host");
 	ok = PS_SOCKET;
@@ -552,18 +573,18 @@ struct method *proto;
 
     /* accept greeting message from mail server */
     ok = (protocol->parse_response)(socket, buf);
-    if (ok != 0)
+    if (alarmed || ok != 0)
 	goto cleanUp;
 
     /* try to get authorized to fetch mail */
     ok = (protocol->getauth)(socket, queryctl, buf);
-    if (ok == PS_ERROR)
+    if (alarmed || ok == PS_ERROR)
 	ok = PS_AUTHFAIL;
-    if (ok != 0)
+    if (alarmed || ok != 0)
 	goto cleanUp;
 
     /* compute count, and get UID list if possible */
-    if ((protocol->getrange)(socket, queryctl, &count) != 0)
+    if ((protocol->getrange)(socket, queryctl, &count) != 0 || alarmed)
 	goto cleanUp;
 
     /* show user how many messages we downloaded */
@@ -581,7 +602,8 @@ struct method *proto;
 	if (queryctl->mda[0] == '\0')
 	    if ((mboxfd = Socket(queryctl->smtphost, SMTP_PORT)) < 0
 		|| SMTP_ok(mboxfd, NULL) != SM_OK
-		|| SMTP_helo(mboxfd, queryctl->servername) != SM_OK)
+		|| SMTP_helo(mboxfd, queryctl->servername) != SM_OK 
+                || alarmed)
 	    {
 		ok = PS_SMTP;
 		close(mboxfd);
@@ -624,13 +646,13 @@ struct method *proto;
 
 		/* close the delivery pipe, we'll reopen before next message */
 		if (queryctl->mda[0])
-		    if ((ok = closemailpipe(mboxfd)) != 0)
+		    if ((ok = closemailpipe(mboxfd)) != 0 || alarmed)
 			goto cleanUp;
 
 		/* tell the server we got it OK and resynchronize */
 		if (protocol->trail)
 		    (protocol->trail)(socket, queryctl, num);
-		if (ok != 0)
+		if (alarmed || ok != 0)
 		    goto cleanUp;
 	    }
 
@@ -651,7 +673,7 @@ struct method *proto;
 		if (outlevel > O_SILENT && outlevel < O_VERBOSE) 
 		    fprintf(stderr,"flushing message %d\n", num);
 		ok = (protocol->delete)(socket, queryctl, num);
-		if (ok != 0)
+		if (alarmed || ok != 0)
 		    goto cleanUp;
 	    }
 	}
@@ -660,12 +682,12 @@ struct method *proto;
         if (protocol->expunge_cmd && deletions > 0)
 	{
 	    ok = gen_transact(socket, protocol->expunge_cmd);
-	    if (ok != 0)
+	    if (alarmed || ok != 0)
 		goto cleanUp;
         }
 
 	ok = gen_transact(socket, protocol->exit_cmd);
-	if (ok == 0)
+	if (alarmed || ok == 0)
 	    ok = PS_SUCCESS;
 	close(socket);
 	goto closeUp;
@@ -696,6 +718,8 @@ closeUp:
 	SMTP_quit(mboxfd);
 	close(mboxfd);
     }
+    alarm(0);
+    signal(SIGALRM, sigsave);
     return(ok);
 }
 
@@ -778,3 +802,22 @@ va_dcl {
 }
 
 
+/*********************************************************************
+  function:      alarm_handler
+  description:   In real life process can get stuck waiting for 
+                 something. This deadlock is avoided here by this 
+                 sending  SIGALRM
+
+  arguments:     
+    signal       hopefully SIGALRM
+
+  return value:  none.
+  calls:         none
+  globals:       sets alarmed to 1
+ *********************************************************************/
+void 
+alarm_handler (int signal)
+{
+    alarmed = 1;
+    fprintf(stderr,"Timeout after %d seconds.\n", timeout);
+}

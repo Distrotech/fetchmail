@@ -13,6 +13,7 @@
 
 #include <config.h>
 
+#include <signal.h>
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -43,6 +44,8 @@
 
 #define  INTERNAL_BUFSIZE	2048
 
+extern int timeout;
+extern void alarm_handler();
 
 int Socket(host, clientPort)
 char *host;
@@ -82,9 +85,17 @@ char *buf;
 int len;
 {
     int rdlen = 0;
+    RETSIGTYPE (*sigsave)();
 
     while (--len)
     {
+        /* we have to push alarm in case we receive a large message */
+	sigsave = signal (SIGALRM, alarm_handler);
+        if (sigsave == alarm_handler)
+              alarm (timeout);
+        else
+              signal (SIGALRM, sigsave);
+
         if (SockInternalRead(socket, buf, 1) != 1)
             return -1;
         else
@@ -134,6 +145,7 @@ int len;
 {
     int n;
     
+    
     while (len)
     {
         n = SockInternalRead(socket, buf, len);
@@ -158,6 +170,8 @@ int len;
    if (sbuflen == 0) {
      /* buffer is empty; refresh. */
      if ((sbuflen = read(socket,sbuf,INTERNAL_BUFSIZE)) < 0) {
+       if (errno = EINTR)
+           return -1;
        perror("SockInternalRead: read");
        exit(9);
      }
