@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/12/03 05:47:01 $
+<td width="30%" align=right>$Date: 1997/12/03 15:54:06 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1635,18 +1635,24 @@ will look right.<p>
 <hr>
 <h2><a name="O6">O6. I'm seeing long sendmail delays at start of each poll cycle.</a></h2>
 
-Sendmail does a hostname lookup when it gets a HELO. Your resolver
-configuration may be causing that to fail and time out.  Check
-<code>/etc/resolv.conf</code> and <code>/etc/hosts</code> file. Make
-sure your hostname and FQDN are both in <code>/etc/hosts</code>, and
-that hosts is looked at before DNS is queried.  You probably also want
-your remote mail server to be in the hosts file.<p>
+Sendmail does a hostname lookup when it first starts up, and also each
+time it gets a HELO in listener mode.<p>
+
+Your resolver configuration may be causing one of these lookups to
+fail and time out.  Check <code>/etc/resolv.conf</code> and
+<code>/etc/hosts</code> file. Make sure your hostname and FQDN are
+both in <code>/etc/hosts</code>, and that hosts is looked at before
+DNS is queried.  You probably also want your remote mail server(s) to
+be in the hosts file.<p>
+
+You can suppress the startup-time lookup if need to by reconfiguring
+with <code>FEATURE(nodns)</code>.<p>
 
 <HR>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/12/03 05:47:01 $
+<td width="30%" align=right>$Date: 1997/12/03 15:54:06 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
