@@ -88,6 +88,7 @@ statement	: SET LOGFILE optmap STRING	{run.logfile = xstrdup($4);}
 		| SET IDFILE optmap STRING	{run.idfile = xstrdup($4);}
 		| SET DAEMON optmap NUMBER	{run.poll_interval = $4;}
 		| SET POSTMASTER optmap STRING	{run.postmaster = xstrdup($4);}
+		| SET PROPERTIES optmap STRING	{run.properties =xstrdup($4);}
 		| SET SYSLOG			{run.use_syslog = TRUE;}
 		| SET INVISIBLE			{run.invisible = TRUE;}
 

@@ -957,6 +957,9 @@ T}
 set nosyslog  	\&	T{
 Turn off error logging through syslog(3).
 T}
+set properties 	\&	T{
+String value is ignored by fetchmail (may be used by extension scripts)
+T}
 .TE
 
 Here are the legal server options:

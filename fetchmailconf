@@ -16,18 +16,20 @@ import sys, time, os, string, socket, getopt
 class Configuration:
     def __init__(self):
 	self.poll_interval = 0		# Normally, run in foreground
-	self.syslog = FALSE		# Use syslogd for logging?
 	self.logfile = None		# No logfile, initially
 	self.idfile = os.environ["HOME"] + "/.fetchids"		# Default idfile, initially
         self.postmaster = None		# No last-resort address, initially
+        self.properties = None		# No exiguous properties
 	self.invisible = FALSE		# Suppress Received line & spoof?
+	self.syslog = FALSE		# Use syslogd for logging?
 	self.servers = []		# List of included sites
 	Configuration.typemap = (
 	    ('poll_interval',	'Int'),
-	    ('syslog',		'Boolean'),
 	    ('logfile',		'String'),
 	    ('idfile',		'String'),
 	    ('postmaster',	'String'),
+	    ('properties',	'String'),
+	    ('syslog',		'Boolean'),
 	    ('invisible',	'Boolean'))
 
     def __repr__(self):
@@ -40,6 +42,8 @@ class Configuration:
 	    str = str + ("set idfile \"%s\"\n" % (self.idfile,));
 	if self.postmaster != ConfigurationDefaults.postmaster:
 	    str = str + ("set postmaster \"%s\"\n" % (self.postmaster,));
+	if self.properties != ConfigurationDefaults.properties:
+	    str = str + ("set properties \"%s\"\n" % (self.properties,));
 	if self.poll_interval > 0:
 	    str = str + "set daemon " + `self.poll_interval` + "\n"
 	for site in self.servers:

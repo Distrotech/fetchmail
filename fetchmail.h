@@ -103,9 +103,10 @@ struct runctl
     char	*logfile;
     char	*idfile;
     int		poll_interval;
+    char	*postmaster;
+    char	*properties;
     flag	use_syslog;
     flag	invisible;
-    char	*postmaster;
 };
 
 struct idlist

@@ -183,11 +183,12 @@ void dump_config(struct runctl *runp, struct query *querylist)
     indent('{');
 
     numdump("poll_interval", runp->poll_interval);
-    booldump("syslog", runp->use_syslog);
     stringdump("logfile", runp->logfile);
     stringdump("idfile", runp->idfile);
     stringdump("postmaster", runp->postmaster);
+    stringdump("properties", runp->properties);
     booldump("invisible", runp->invisible);
+    booldump("syslog", runp->use_syslog);
 
     if (!querylist)
     {
