@@ -1122,7 +1122,10 @@ actions on the following SMTP/ESMTP error responses
 Leave the message in the server mailbox for later retrieval.
 .TP 5
 552 (message exceeds fixed maximum message size)
-Delete the message from the server.  Send bounce-mail to the originator.
+Delete the message from the server.  Send bounce-mail to the
+originator, unless the nobounce option is on in which case a
+transient error is returned to the server (and the messgage is
+retained there).
 .TP 5
 553 (invalid sending domain)
 Delete the message from the server.  Send bounce-mail to the originator.
