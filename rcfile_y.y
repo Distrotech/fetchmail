@@ -33,6 +33,10 @@ static int prc_errflag;
 static void record_current();
 static void user_reset();
 static int reset_server(char *name, int skip);
+
+/* using Bison, this arranges that yydebug messages will show actual tokens */
+extern char * yytext;
+#define YYPRINT(fp, type, val)	fprintf(fp, " = \"%s\"", yytext)
 %}
 
 %union {
@@ -198,8 +202,8 @@ folder_list	: STRING		{save_str(&current.mailboxes,-1,$1);}
 		| folder_list STRING	{save_str(&current.mailboxes,-1,$2);}
 		;
 
-smtphunt	: STRING		{save_str(&current.smtphunt, -1, $1);}
-		| smtphunt STRING	{save_str(&current.smtphunt, -1, $2);}
+smtp_list	: STRING		{save_str(&current.smtphunt, -1, $1);}
+		| smtp_list STRING	{save_str(&current.smtphunt, -1, $2);}
 		;
 
 user_option	: TO localnames HERE
@@ -210,7 +214,7 @@ user_option	: TO localnames HERE
 		| IS STRING THERE	{current.remotename = xstrdup($2);}
 		| PASSWORD STRING	{current.password   = xstrdup($2);}
 		| FOLDER folder_list
-		| SMTPHOST smtphunt
+		| SMTPHOST smtp_list
 		| MDA STRING		{current.mda        = xstrdup($2);}
 		| PRECONNECT STRING	{current.preconnect = xstrdup($2);}
 
