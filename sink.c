@@ -216,6 +216,37 @@ static void sanitize(char *s)
     	*cp = '_';
 }
 
+char *rcpt_address(struct query *ctl, const char *id,
+			  int usesmtpname)
+{
+    static char addr[HOSTLEN+USERNAMELEN+1];
+    if (strchr(id, '@'))
+    {
+#ifdef HAVE_SNPRINTF
+	snprintf(addr, sizeof (addr), "%s", id);
+#else
+	sprintf(addr, "%s", id);
+#endif /* HAVE_SNPRINTF */
+    }
+    else if (usesmtpname && ctl->smtpname)
+    {
+#ifdef HAVE_SNPRINTF
+	snprintf(addr, sizeof (addr), "%s", ctl->smtpname);
+#else
+	sprintf(addr, "%s", ctl->smtpname);
+#endif /* HAVE_SNPRINTF */
+    }
+    else
+    {
+#ifdef HAVE_SNPRINTF
+	snprintf(addr, sizeof (addr), "%s@%s", id, ctl->destaddr);
+#else
+	sprintf(addr, "%s@%s", id, ctl->destaddr);
+#endif /* HAVE_SNPRINTF */
+    }
+    return addr;
+}
+
 static int send_bouncemail(struct query *ctl, struct msgblk *msg,
 			   int userclass, char *message,
 			   int nerrors, char *errors[])
@@ -306,8 +337,8 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
 		char	*error;
 		/* Minimum RFC1894 compliance + Diagnostic-Code field */
 		SockPrintf(sock, "\r\n");
-		SockPrintf(sock, "Final-Recipient: rfc822; %s@%s\r\n", 
-			   idp->id, fetchmailhost);
+		SockPrintf(sock, "Final-Recipient: rfc822; %s\r\n", 
+			   rcpt_address (ctl, idp->id, 1));
 		SockPrintf(sock, "Last-Attempt-Date: %s\r\n", rfc822timestamp());
 		SockPrintf(sock, "Action: failed\r\n");
 
@@ -458,7 +489,7 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 #ifdef __DONT_FEED_THE_SPAMMERS__
 	if (run.bouncemail)
 	    send_bouncemail(ctl, msg, XMIT_ACCEPT,
-			"Invalid address in MAIL FROM/RCPT TO (SMTP error 553).\r\n", 
+			"Invalid address in MAIL FROM (SMTP error 553).\r\n", 
 			1, responses);
 #endif /* __DONT_FEED_THE_SPAMMERS__ */
 	return(PS_REFUSED);
@@ -647,15 +678,9 @@ static int open_bsmtp_sink(struct query *ctl, struct msgblk *msg,
     for (idp = msg->recipients; idp; idp = idp->next)
 	if (idp->val.status.mark == XMIT_ACCEPT)
 	{
-	    if (ctl->smtpname)
-		fprintf(sinkfp, "RCPT TO: %s\r\n", ctl->smtpname);
-	    else if (strchr(idp->id, '@'))
-		fprintf(sinkfp,
-			"RCPT TO: %s\r\n", idp->id);
-	    else
-		fprintf(sinkfp,
-			"RCPT TO: %s@%s\r\n", idp->id, ctl->destaddr);
-	    *good_addresses = 0;
+	    fprintf(sinkfp, "RCPT TO: %s\r\n",
+		rcpt_address (ctl, idp->id, 1));
+	    (*good_addresses)++;
 	}
 
     fputs("DATA\r\n", sinkfp);
@@ -845,25 +870,9 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
     for (idp = msg->recipients; idp; idp = idp->next)
 	if (idp->val.status.mark == XMIT_ACCEPT)
 	{
-	    if (strchr(idp->id, '@'))
-		strcpy(addr, idp->id);
-	    else {
-		if (ctl->smtpname) {
-#ifdef HAVE_SNPRINTF
-		    snprintf(addr, sizeof(addr), "%s", ctl->smtpname);
-#else
-		    sprintf(addr, "%s", ctl->smtpname);
-#endif /* HAVE_SNPRINTF */
-
-		} else {
-#ifdef HAVE_SNPRINTF
-		  snprintf(addr, sizeof(addr), "%s@%s", idp->id, ctl->destaddr);
-#else
-		  sprintf(addr, "%s@%s", idp->id, ctl->destaddr);
-#endif /* HAVE_SNPRINTF */
-		}
-	    }
-	    if (SMTP_rcpt(ctl->smtp_socket, addr) == SM_OK)
+	    const char *address;
+	    address = rcpt_address (ctl, idp->id, 1);
+	    if (SMTP_rcpt(ctl->smtp_socket, address) == SM_OK)
 		(*good_addresses)++;
 	    else
 	    {
@@ -886,14 +895,14 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
 		    if (outlevel >= O_VERBOSE)
 			report(stderr,
 			      GT_("%cMTP listener doesn't like recipient address `%s'\n"),
-			      ctl->listener, addr);
+			      ctl->listener, address);
 		    break;
 
 		    case PS_REFUSED:
 		    if (outlevel >= O_VERBOSE)
 			report(stderr,
 			      GT_("%cMTP listener doesn't really like recipient address `%s'\n"),
-			      ctl->listener, addr);
+			      ctl->listener, address);
 		    break;
 		}
 	    }
@@ -934,18 +943,8 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
 	    SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
 	    return(PS_REFUSED);
 	}
-	if (strchr(run.postmaster, '@'))
-	    strncpy(addr, run.postmaster, sizeof(addr));
-	else
-	{
-#ifdef HAVE_SNPRINTF
-	    snprintf(addr, sizeof(addr), "%s@%s", run.postmaster, ctl->destaddr);
-#else
-	    sprintf(addr, "%s@%s", run.postmaster, ctl->destaddr);
-#endif /* HAVE_SNPRINTF */
-	}
-
-	if (SMTP_rcpt(ctl->smtp_socket, addr) != SM_OK)
+	if (SMTP_rcpt(ctl->smtp_socket,
+		rcpt_address (ctl, run.postmaster, 0)) != SM_OK)
 	{
 	    report(stderr, GT_("can't even send to %s!\n"), run.postmaster);
 	    SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
@@ -962,8 +961,9 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
      */
     if (SMTP_data(ctl->smtp_socket) != SM_OK)
     {
+	int err = handle_smtp_report(ctl, msg);
 	SMTP_rset(ctl->smtp_socket);    /* stay on the safe side */
-	return(handle_smtp_report(ctl, msg));
+	return(err);
     }
 
     /*

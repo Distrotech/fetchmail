@@ -485,6 +485,7 @@ int interruptible_idle(int interval);
 /* sink.c: forwarding */
 void smtp_close(struct query *, int);
 int smtp_open(struct query *);
+char *rcpt_address(struct query *, const char *, int);
 int stuffline(struct query *, char *);
 int open_sink(struct query*, struct msgblk *, int*, int*);
 void release_sink(struct query *);

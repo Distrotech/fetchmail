@@ -1097,33 +1097,20 @@ int readheaders(int sock,
 #else
 		    sprintf(buf+1,
 #endif /* HAVE_SNPRINTF */
-			    "for %s@%s (by default); ",
-			    user, ctl->destaddr);
+			    "for %s (by default); ",
+			    rcpt_address (ctl, run.postmaster, 0));
 		}
 		else if (good_addresses == 1)
 		{
 		    for (idp = msgblk.recipients; idp; idp = idp->next)
 			if (idp->val.status.mark == XMIT_ACCEPT)
 			    break;	/* only report first address */
-		    if (strchr(idp->id, '@'))
 #ifdef HAVE_SNPRINTF
 		    snprintf(buf+1, sizeof(buf)-1,
 #else                       
 		    sprintf(buf+1,
 #endif /* HAVE_SNPRINTF */
-			    "for %s", idp->id);
-		    else
-			/*
-			 * This could be a bit misleading, as destaddr is
-			 * the forwarding host rather than the actual 
-			 * destination.  Most of the time they coincide.
-			 */
-#ifdef HAVE_SNPRINTF
-		    	snprintf(buf+1, sizeof(buf)-1,
-#else                       
-			sprintf(buf+1,
-#endif /* HAVE_SNPRINTF */
-				"for %s@%s", idp->id, ctl->destaddr);
+			    "for %s", rcpt_address (ctl, idp->id, 1));
 		    sprintf(buf+strlen(buf), " (%s); ",
 			    MULTIDROP(ctl) ? "multi-drop" : "single-drop");
 		}
