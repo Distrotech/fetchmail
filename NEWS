@@ -2,7 +2,6 @@
 
 * Generate bounce messages when delivery is refused.  See RFC1891, RFC1894.
 * Use the libmd functions for md5 under Free BSD?  (Low priority.)
-* Send notification mail on messages skipped due to --limit?
 * More log levels?
 
 				Other TO-DO items:
@@ -12,21 +11,21 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.3.0-alpha (Sun Oct  5 11:07:53 EDT 1997)
+fetchmail-4.3.0 (Mon Oct  6 16:44:38 EDT 1997)
 * Rearranged IMAP authentication so CAPABILITY is done first,
 * FAQ update, including a major new item on how to protect your password.
 * Added code to have %F in an MDA string expand to the From address
 * Added code to prevent buffer spamming via the MDA %T/%s escape.
 * Luca Olivetti's --qvirtual option patch for qmail users.  
 * Fixed a bug in the code that was supposed to suppress expansion of RFC822 
-  groupnames.  (Thanks to Santiago Vila Doncel for pointing this.)
+  groupnames.  (Thanks to Santiago Vila Doncel for pointing this out)
 * It's now possible to explicitly configure out POP3, IMAP, or ETRN.
 * We no longer get the hostname for address rewrites and log messages from the
   server greeting line, instead it's the server's canonical DNS name.
 * Improved UID handling for RFC1725 POP3 servers coping with a line hit.
 * Created fetchmail-announce list.
 
-There are 285 people on fetchmail-friends and 6 on fetchmail-announce.
+There are 281 people on fetchmail-friends and 8 on fetchmail-announce.
 
 fetchmail-4.2.9 (Tue Sep 30 18:21:35 EDT 1997)
 * Don't byte-stuff when writing to an MDA.

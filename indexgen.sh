@@ -188,9 +188,6 @@ More log levels?
 
 <LI>
 Use the libmd functions for md5 under Free BSD?  (Low priority.)
-
-<LI>
-Send notification mail on messages skipped due to --limit?
 </UL>
 
 But these are frills.  I'm not seeing serious user demand for any of them.<P>

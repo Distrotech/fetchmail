@@ -75,8 +75,9 @@ $oldrcs = $oldid;
 $oldrcs =~ tr/-/./;
 print REPORT <<EOF;
 
-Diffs from the previous ($oldrcs) release follow as a MIME attachment.
+By popular demand, diffs from the previous release have been omitted.
 EOF
+#Diffs from the previous ($oldrcs) release follow as a MIME attachment.
 
 close(NEWS);
 
@@ -88,7 +89,9 @@ if ($rcsid eq '<workfile>') {
     system("rcsdiff -u -r$oldid -r$rcsid RCS/* 2>/dev/null >DIFFS.$$");
 }
 
-system "metasend -b -D 'fetchmail-$rcsid announcement' -m 'text/plain' -e 7bit -f PREAMBLE.$$ -n -D 'diff -u between -$oldrcs $rcsid' -m 'text/plain' -e 7bit -f DIFFS.$$ -o RELEASE_NOTES";
+mv PREAMBLE.$$ RELEASE.NOTES
+# If we ever want to go back to enclosing diffs.
+#system "metasend -b -D 'fetchmail-$rcsid announcement' -m 'text/plain' -e 7bit -f PREAMBLE.$$ -n -D 'diff -u between -$oldrcs $rcsid' -m 'text/plain' -e 7bit -f DIFFS.$$ -o RELEASE_NOTES";
 
 unlink("PREAMBLE.$$");
 unlink("DIFFS.$$");
