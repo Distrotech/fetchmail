@@ -1,5 +1,10 @@
 				Release Notes:
 
+fetchmail-4.7.0 ()):
+* Minor correction to make i18n subdirectory builds work better.
+* Rob Funk's old-message-check optimization.
+* Fix an error in the logic for detecting when all connections are wedged.
+
 fetchmail-4.6.9 (Tue Dec  1 14:46:19 EST 1998):
 * Better RFC822 conformance in fetchmail trace headers.
 * Corrected MIME generation of bounce mail.

@@ -513,15 +513,16 @@ int main (int argc, char **argv)
 	batchcount = 0;
 	for (ctl = querylist; ctl; ctl = ctl->next)
 	{
-	    if (ctl->wedged)
-	    {
-		error(0, -1, 
-		      _("poll of %s skipped (failed authentication or too many timeouts)"),
-		      ctl->server.pollname);
-		continue;
-	    }
 	    if (ctl->active && !(implicitmode && ctl->server.skip))
 	    {
+		if (ctl->wedged)
+		{
+		    error(0, -1, 
+			  _("poll of %s skipped (failed authentication or too many timeouts)"),
+			  ctl->server.pollname);
+		    continue;
+		}
+
 		/* check skip interval first so that it counts all polls */
 		if (run.poll_interval && ctl->server.interval) 
 		{
@@ -614,8 +615,9 @@ int main (int argc, char **argv)
 	    int unwedged = 0;
 
 	    for (ctl = querylist; ctl; ctl = ctl->next)
-		if (!ctl->wedged)
-		    unwedged++;
+		if (ctl->active && !(implicitmode && ctl->server.skip))
+		    if (!ctl->wedged)
+			unwedged++;
 	    if (!unwedged)
 	    {
 		error(0, -1, _("All connections are wedged.  Exiting."));
