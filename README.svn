@@ -15,11 +15,21 @@ The prerequisite packages are:
 
 If you have these installed, type:
 
-$ rm -r -f autom4te.cache
-$ autoreconf -i -s
+$ ./autogen.sh
 
 This will take a while and may print a lot of messages containing
 "warning: unquoted definition of..." which are harmless.
+
+If that fails, for instance because your files are named differently,
+you can override the program names by setting the environment variables
+AUTORECONF, AUTOCONF, AUTOHEADER (these match your autoconf version)
+ACLOCAL, AUTOMAKE (to match your automake version) and finally
+AUTOPOINT (to match your gettext version). 
+
+Example for FreeBSD 5-CURRENT:
+
+env AUTOCONF=autoconf259 AUTOHEADER=autoheader259 AUTORECONF=autoreconf259 \
+    ACLOCAL=aclocal18 AUTOMAKE=automake18 ./autogen.sh
 
 After that, build as usual, with
 
@@ -28,4 +38,4 @@ $ make
 (become root)
 # make install-strip
 
--- Matthias Andree, 2004-06-18
+-- Matthias Andree, 2004-06-20
