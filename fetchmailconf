@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.27"
+version = "1.28"
 
 from Tkinter import *
 from Dialog import *
@@ -262,9 +262,9 @@ class User:
 
     def __repr__(self):
 	res = "    "
-	res = res + "user '" + `self.remote` + "' there ";
+	res = res + "user " + `self.remote` + " there ";
 	if self.password:
-            res = res + "with password '" + `self.password` + "' "
+            res = res + "with password " + `self.password` + " "
 	if self.localnames:
             res = res + "is"
             for x in self.localnames:
