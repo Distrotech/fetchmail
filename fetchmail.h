@@ -298,8 +298,8 @@ struct query
     const char *destaddr;	/* destination host for this query */
     int errcount;		/* count transient errors in last pass */
     int authfailcount;		/* count of authorization failures */
-	int wehaveauthed;   /* We have managed to logon at least once! */
-	int wehavesentauthnote;   /* We have sent an authorization failure note */
+    int wehaveauthed;		/* We've managed to logon at least once! */
+    int wehavesentauthnote;	/* We've sent an authorization failure note */
     int wedged;			/* wedged by auth failures or timeouts? */
     char *smtphost;		/* actual SMTP host we connected to */
     int smtp_socket;		/* socket descriptor for SMTP connection */

@@ -521,7 +521,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 		else if (ok)
 		    return(FALSE);
 
-				/* tell server we got it OK and resynchronize */
+		/* tell server we got it OK and resynchronize */
 		if (ctl->server.base_protocol->trail)
 		{
 		    if (outlevel >= O_VERBOSE && !isafile(1))
