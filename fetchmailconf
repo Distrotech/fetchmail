@@ -921,9 +921,6 @@ class UserEdit(Frame):
 	Label(secwin, text="Authentication").pack(side=TOP)
 	LabeledEntry(secwin, 'Password:',
 		      self.password, '12').pack(side=TOP, fill=X)
-#XXX The mailboxes member is actually a list
-#	LabeledEntry(secwin, 'Folder(s):',
-#		     self.mailboxes, '12').pack(side=TOP, fill=X)
 	secwin.pack(fill=X, anchor=N)
 
 	names = Frame(leftwin, relief=RAISED, bd=5)
@@ -934,8 +931,7 @@ class UserEdit(Frame):
 	targwin = Frame(leftwin, relief=RAISED, bd=5)
 	Label(targwin, text="Forwarding Options").pack(side=TOP)
         Label(targwin, text="Listeners to forward to").pack(side=TOP)
-#XXX This needs to be made work
-#        ListEdit("New listener:", self.smtphunt, None, targwin, None)
+        ListEdit("New listener:", self.user.smtphunt, None, targwin, None)
 	LabeledEntry(targwin, 'Append to MAIL FROM line:',
 		     self.smtpaddress, '26').pack(side=TOP, fill=X)
 	LabeledEntry(targwin, 'Connection setup command:',
@@ -984,6 +980,11 @@ class UserEdit(Frame):
 	LabeledEntry(limwin, 'Interval between expunges (IMAP):',
 		      self.expunge, '30').pack(side=TOP, fill=X)
 	limwin.pack(fill=X)
+
+	foldwin = Frame(rightwin, relief=RAISED, bd=5)
+	Label(foldwin, text="Remote folders (IMAP only)").pack(side=TOP)
+	ListEdit("New folder:", self.user.mailboxes, None, foldwin, None)
+	foldwin.pack(fill=X, anchor=N)
 
 	rightwin.pack(side=LEFT)
 
