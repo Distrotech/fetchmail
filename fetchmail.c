@@ -1035,11 +1035,13 @@ static int load_params(int argc, char **argv, int optind)
 	    DEFAULT(ctl->sslcertck, FALSE);
 #endif
 	    DEFAULT(ctl->server.checkalias, FALSE);
+#ifndef SSL_ENABLE
 	    if (ctl->use_ssl) 
 	    {
 		report(stderr, GT_("SSL support is not compiled in.\n"));
 		exit(PS_SYNTAX);
 	    }
+#endif /* SSL_ENABLE */
 #undef DEFAULT
 
 	    /*
