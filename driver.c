@@ -486,9 +486,9 @@ struct query *ctl;
     return(ctl->smtp_socket);
 }
 
-static int gen_readmsg (socket, len, delimited, ctl)
+static int gen_readmsg (sockfp, len, delimited, ctl)
 /* read message content and ship to SMTP or MDA */
-int socket;	/* to which the server is connected */
+FILE *sockfp;	/* to which the server is connected */
 long len;	/* length of message */
 int delimited;	/* does the protocol use a message delimiter? */
 struct query *ctl;	/* query control record */
@@ -506,7 +506,7 @@ struct query *ctl;	/* query control record */
     oldlen = 0;
     while (delimited || len > 0)
     {
-	if ((n = SockGets(socket,buf,sizeof(buf))) < 0)
+	if ((n = SockGets(fileno(sockfp),buf,sizeof(buf))) < 0)
 	    return(PS_SOCKET);
 	vtalarm(ctl->timeout);
 
@@ -967,7 +967,7 @@ const struct method *proto;	/* protocol method table */
 		    }
 
 		    /* read the message and ship it to the output sink */
-		    ok = gen_readmsg(fileno(sockfp),
+		    ok = gen_readmsg(sockfp,
 				     len, 
 				     protocol->delimited,
 				     ctl);
