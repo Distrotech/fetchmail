@@ -140,22 +140,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	{
 	    char response[OPIE_RESPONSE_MAX+1];
 
-	    /*
-	     * Special case in case we're running Craig Metz's
-	     * OPIE daemon.  Code in opiegenerator() will detect this.
-	     */
-	    if (strcmp(ctl->password, "opie") == 0)
-	    {
-		if (ok = opiegenerator(challenge, "", response))
-		    if (ok != 2)
-		  	PROTOCOL_ERROR
-	    }
-
-	    /*
-	     * Otherwise, generate a challenge from whatever secret we
-	     * have previously collected.
-	     */
-	    else if (opiegenerator(challenge, ctl->password, response))
+	    if (opiegenerator(challenge, ctl->password, response))
 		 PROTOCOL_ERROR
 
 	    ok = gen_transact(sock, "PASS %s", response);
