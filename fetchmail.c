@@ -1106,6 +1106,8 @@ static int load_params(int argc, char **argv, int optind)
 		exit(PS_SYNTAX);
 	    }
 #endif /* SSL_ENABLE */
+	    /* one global gets treated specially */
+	    DEFAULT(run.showdots, run.poll_interval==0 || nodetach);
 #undef DEFAULT
 
 	    /*

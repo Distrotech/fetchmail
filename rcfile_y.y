@@ -106,8 +106,8 @@ statement	: SET LOGFILE optmap STRING	{run.logfile = prependdir ($4, rcfiledir);
 		| SET NO SYSLOG			{run.use_syslog = FALSE;}
 		| SET INVISIBLE			{run.invisible = TRUE;}
 		| SET NO INVISIBLE		{run.invisible = FALSE;}
-		| SET SHOWDOTS			{run.showdots = TRUE;}
-		| SET NO SHOWDOTS		{run.showdots = FALSE;}
+		| SET SHOWDOTS			{run.showdots = FLAG_TRUE;}
+		| SET NO SHOWDOTS		{run.showdots = FLAG_FALSE;}
 
 /* 
  * The way the next two productions are written depends on the fact that

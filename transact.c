@@ -448,7 +448,7 @@ int readheaders(int sock,
 		 */
 		if ( n && buf[n-1] != '\n' ) {
 			overlong = TRUE;
-			rline = (char *) realloc(line, linelen);
+			rline = (char *) realloc(line, linelen + 1);
 			if (rline == NULL)
 			{
 			    free (line);
@@ -456,6 +456,7 @@ int readheaders(int sock,
 			}
 			line = rline;
 			memcpy(line + linelen - n, buf, n);
+			line[linelen] = '\0';
 			ch = ' '; /* So the next iteration starts */
 			continue;
 		}
@@ -551,7 +552,7 @@ int readheaders(int sock,
 	    sizeticker += linelen;
 	    while (sizeticker >= SIZETICKER)
 	    {
-		if ((!run.use_syslog && !isafile(1)) || run.showdots)
+		if (outlevel > O_SILENT && run.showdots)
 		{
 		    fputc('.', stdout);
 		    fflush(stdout);
@@ -693,7 +694,7 @@ int readheaders(int sock,
 	}
 
 	if (ctl->rewrite)
-	    line = reply_hack(line, ctl->server.truename);
+	    line = reply_hack(line, ctl->server.truename, &linelen);
 
 	/*
 	 * OK, this is messy.  If we're forwarding by SMTP, it's the
@@ -1337,7 +1338,7 @@ int readbody(int sock, struct query *ctl, flag forward, int len)
 	    sizeticker += linelen;
 	    while (sizeticker >= SIZETICKER)
 	    {
-		if (outlevel > O_SILENT && (((run.poll_interval == 0 || nodetach) && !isafile(1)) || run.showdots))
+		if (outlevel > O_SILENT && run.showdots)
 		{
 		    fputc('.', stdout);
 		    fflush(stdout);
