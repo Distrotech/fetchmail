@@ -725,6 +725,7 @@ static int readheaders(int sock,
 	else if (!strncasecmp("Resent-Sender:", line, 14))
 	    resent_sender_offs = (line - msgblk.headers);
 
+#ifdef __UNUSED__
  	else if (!strncasecmp("Message-Id:", buf, 11))
 	{
 	    if (ctl->server.uidl)
@@ -740,6 +741,7 @@ static int readheaders(int sock,
 		}
  	    }
  	}
+#endif /* __UNUSED__ */
 
 	else if (!MULTIDROP(ctl))
 	    continue;

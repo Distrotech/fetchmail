@@ -429,7 +429,7 @@ void uid_end_query(struct query *ctl)
      * This is necessary in order to keep UIDL information
      * from being heedlessly deleted later on.
      */
-    if (ctl->have_uids)
+    if (ctl->newsaved)
     {
 	/* old state of mailbox may now be irrelevant */
 	if (outlevel >= O_DEBUG)
@@ -438,7 +438,6 @@ void uid_end_query(struct query *ctl)
 	free_str_list(&scratchlist);
 	ctl->oldsaved = ctl->newsaved;
 	ctl->newsaved = (struct idlist *) NULL;
-	ctl->have_uids = FALSE;
     }
     else if (outlevel >= O_DEBUG)
 	report(stdout, "not swapping UID lists, no UIDs seen this query\n");
