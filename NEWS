@@ -27,7 +27,16 @@ bugs --
 * Arrange an EXPUNGE after each delete when using IMAP, so deletions get done
   OK even if there's a socket error before termination.
 
-There are 188 people on the fetchmail-friends list.
+* Simpler and better header-rewrite code, fixing some weird cases where 
+  it failed.  Thanks to Masafumi NAKANE <max@wide.ad.jp> and
+  Carey Evans <c.evans@student.canterbury.ac.nz> for pointing out these
+  problems.
+
+Note: the RFC subdirectory is no longer included with the distribution
+(this cut its size in half!)  Instead, applicable RFCs are listed on the
+manual page.
+
+There are 192 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-2.8 (Sat Jan 11 15:48:33 EST 1997)
