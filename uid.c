@@ -29,8 +29,10 @@
 /*
  * Machinery for handling UID lists live here.  This is mainly to support
  * RFC1725-conformant POP3 servers without a LAST command, but may also be
- * useful for making the IMAP4 querying logic UID-oriented, if I feel
- * sufficiently motivated at some point.
+ * useful for making the IMAP4 querying logic UID-oriented, if a future
+ * revision of IMAP forces me to.  (This would be bad.  Server-side 
+ * seen bits are better than UIDs, because they track messages seen by
+ * *all* clients.)
  *
  * Here's the theory:
  *
@@ -74,7 +76,7 @@ char *idfile;
 
     /* make sure lists are initially empty */
     for (hostp = hostlist; hostp; hostp = hostp->next)
-	hostp->saved = hostp->mailbox = (struct idlist *)NULL;
+	hostp->saved = hostp->current = (struct idlist *)NULL;
 
     /* let's get stored message UIDs from previous queries */
     if ((tmpfp = fopen(idfile, "r")) != (FILE *)NULL) {
@@ -169,10 +171,10 @@ void update_uid_lists(hostp)
 struct hostrec *hostp;
 {
     /*
-     * Replace `saved' list with `mailbox' list as modified by deletions.
+     * Replace `saved' list with `current' list as modified by deletions.
      */
     free_uid_list(&hostp->saved);
-    hostp->saved = hostp->mailbox;
+    hostp->saved = hostp->current;
 }
 
 void write_saved_lists(hostlist, idfile)
