@@ -433,7 +433,7 @@ char *realname;		/* real name of host */
     oldlen = 0;
     for (;;)
     {
-	char *bufp, *line;
+	char *line;
 
 	line = xmalloc(sizeof(buf));
 	line[0] = '\0';
@@ -473,55 +473,55 @@ char *realname;		/* real name of host */
 	if (!ctl->no_rewrite)
 	    reply_hack(line, realname);
 
-	bufp = line;
 	if (!headers)
 	{
-	    oldlen = strlen(bufp);
+	    oldlen = strlen(line);
 	    headers = xmalloc(oldlen + 1);
-	    (void) strcpy(headers, bufp);
-	    bufp = headers;
+	    (void) strcpy(headers, line);
+	    free(line);
+	    line = headers;
 	}
 	else
 	{
 	    int	newlen;
 
-	    newlen = oldlen + strlen(bufp);
+	    newlen = oldlen + strlen(line);
 	    headers = realloc(headers, newlen + 1);
 	    if (headers == NULL)
 		return(PS_IOERR);
-	    strcpy(headers + oldlen, bufp);
-	    bufp = headers + oldlen;
+	    strcpy(headers + oldlen, line);
+	    free(line);
+	    line = headers + oldlen;
 	    oldlen = newlen;
 	}
-	free(line);
 
-	if (from_offs == -1 && !strncasecmp("From:", bufp, 5))
-	    from_offs = (bufp - headers);
-	else if (from_offs == -1 && !strncasecmp("Resent-From:", bufp, 12))
-	    from_offs = (bufp - headers);
-	else if (from_offs == -1 && !strncasecmp("Apparently-From:", bufp, 16))
-	    from_offs = (bufp - headers);
+	if (from_offs == -1 && !strncasecmp("From:", line, 5))
+	    from_offs = (line - headers);
+	else if (from_offs == -1 && !strncasecmp("Resent-From:", line, 12))
+	    from_offs = (line - headers);
+	else if (from_offs == -1 && !strncasecmp("Apparently-From:", line, 16))
+	    from_offs = (line - headers);
 
-	else if (!strncasecmp("To:", bufp, 3))
-	    to_offs = (bufp - headers);
+	else if (!strncasecmp("To:", line, 3))
+	    to_offs = (line - headers);
 
 	else if (env_offs == -1 && !strncasecmp(ctl->server.envelope,
-						bufp,
+						line,
 						strlen(ctl->server.envelope)))
-	    env_offs = (bufp - headers);
+	    env_offs = (line - headers);
 
-	else if (!strncasecmp("Cc:", bufp, 3))
-	    cc_offs = (bufp - headers);
+	else if (!strncasecmp("Cc:", line, 3))
+	    cc_offs = (line - headers);
 
-	else if (!strncasecmp("Bcc:", bufp, 4))
-	    bcc_offs = (bufp - headers);
+	else if (!strncasecmp("Bcc:", line, 4))
+	    bcc_offs = (line - headers);
 
-	else if (!strncasecmp("Content-Transfer-Encoding:", bufp, 26))
-	    ctt_offs = (bufp - headers);
+	else if (!strncasecmp("Content-Transfer-Encoding:", line, 26))
+	    ctt_offs = (line - headers);
 
 #ifdef HAVE_RES_SEARCH
-	else if (MULTIDROP(ctl) && !received_for && !strncasecmp("Received:", bufp, 9))
-	    received_for = parse_received(ctl, bufp);
+	else if (MULTIDROP(ctl) && !received_for && !strncasecmp("Received:", line, 9))
+	    received_for = parse_received(ctl, line);
 #endif /* HAVE_RES_SEARCH */
     }
 
