@@ -1,5 +1,8 @@
 			Release Notes:
 
+pl 1.9.8 (Fri Nov  1 13:24:21 EST 1996):
+* No more committing seppuku -- connect(2) was buggy, we have a workaround!
+
 pl 1.9.7 (Fri Nov  1 10:02:34 EST 1996):
 * %s is back.  Seems some popular MDAs actually choke on name arguments.
 * We can handle responses longer than the socket atomic read length now.
