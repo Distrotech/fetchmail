@@ -42,10 +42,10 @@ class Server:
 	self.protocol = 'auto'		# Default to auto protocol
 	self.port = 0			# Port number to use
 	self.uidl = FALSE		# Don't use RFC1725 UIDLs by default
-	self.auth = "password"		# Default to password authentication
+	self.auth = 'password'		# Default to password authentication
 	self.timeout = 300		# 5-minute timeout
-	self.envelope = "Received"	# Envelope-address header
-	self.qvirtual = None		# Name prefix to strip
+	self.envelope = 'Received'	# Envelope-address header
+	self.qvirtual = ''		# Name prefix to strip
 	self.aka = []			# List of DNS aka names
 	self.dns = TRUE			# Enable DNS lookup on multidrop
 	self.localdomains = []		# Domains to be considered local
@@ -133,7 +133,7 @@ class Server:
 
 class User:
     def __init__(self):
-	self.username = ""		# Remote username
+	self.remote = ""		# Remote username
 	self.localnames = None		# Local names
 	self.password = ""		# Password for mail account access
 	self.folder = ""		# Remote folder to retrieve from
@@ -154,7 +154,7 @@ class User:
 	self.batchlimit = 0		# Max message forwarded per batch
 	self.expunge = 1		# Interval between expunges (IMAP)
 	self.typemap = (
-	    ('username',    'String'),
+	    ('remote',      'String'),
 	    ('folder',      'String'),
 	    # leave out localnames
 	    ('password',    'String'),
@@ -176,15 +176,22 @@ class User:
 	    ('expunge',     'Int'))
 
     def __repr__(self):
-	str = ""
-	str = str + "user " + self.user;
-	if self.password: str = str + "with password " + self.password
+	str = "    "
+	str = str + "user " + self.remote + " there ";
+	if self.password: str = str + "with password " + self.password + ' '
 	if self.localnames:
-	     str = str + "localnames"
+	     str = str + "is"
 	     for x in self.localnames:
 		str = str + " " + x
-	if (self.keep or self.flush or self.fetchall or self.rewrite or
-          self.forcecr or self.stripcr or self.pass8bits or self.dropstatus):
+	     str = str + " here"
+	if (self.keep != UserDefaults.keep
+		or self.flush != UserDefaults.flush
+		or self.fetchall != UserDefaults.fetchall
+		or self.rewrite != UserDefaults.rewrite 
+		or self.forcecr != UserDefaults.forcecr 
+		or self.stripcr != UserDefaults.stripcr 
+		or self.pass8bits != UserDefaults.pass8bits
+		or self.dropstatus != UserDefaults.dropstatus):
 	    str = str + " options"
 	if self.keep != UserDefaults.keep:
 	    str = str + flag2str(self.keep, 'keep')
@@ -210,10 +217,11 @@ class User:
 	    str = str + " batchlimit " + `self.batchlimit`
 	if self.expunge != UserDefaults.expunge:
 	    str = str + " expunge " + `self.expunge`
+	return str;
 
     def __str__(self):
 	return "[User: " + repr(self) + "]"
-    
+
 #
 # Helper code
 #
@@ -293,14 +301,14 @@ class ListEdit(Frame):
 	self.editor = editor
 	self.list = list
 
-	# Set up a widget to accept new sites
+	# Set up a widget to accept new elements
 	self.newval = StringVar(master)
 	newwin = LabeledEntry(master, newlegend, self.newval, '12')
 	newwin.bind('<Double-1>', self.handleNew)
 	newwin.bind('<Return>', self.handleNew)
 	newwin.pack(side=TOP, fill=X, anchor=E)
 
-	# Create the sitelist for site-configuration selection
+	# Edit the existing list
 	listframe = Frame(master)
 	scroll = Scrollbar(listframe)
 	listwidget = Listbox(listframe, height=0, selectmode='browse')
@@ -944,8 +952,9 @@ class Configure(Frame, ControlEdit):
 	sys.stdout.write(`self.controls`)
 	for site in self.sites:
 	    sys.stdout.write(`site`)
-	    for user in self.sites.userlist:
+	    for user in site.userlist:
 		sys.stdout.write(`user`)
+		sys.stdout.write("\n")
 	self.quit()
 
     def nosave(self):
