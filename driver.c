@@ -554,14 +554,14 @@ int rewrite;
 	fprintf(stderr,"reading message %d",++msgnum);
 	/* won't do the '...' if retrieved messages are being sent to stdout */
 	if (mboxfd == 1)
-	    fputs(".\n",stderr);
+	    fputs("\n",stderr);
     }
 
     /* read the message content from the server */
     inheaders = 1;
     headers = unixfrom = fromhdr = tohdr = cchdr = bcchdr = NULL;
     lines = 0;
-    sizeticker = MSGBUFSIZE;
+    sizeticker = 0;
     while (delimited || len > 0) {
 	if ((n = SockGets(socket,buf,sizeof(buf))) < 0)
 	    return(PS_SOCKET);
@@ -710,12 +710,12 @@ int rewrite;
 
     skipwrite:;
 
-	sizeticker -= strlen(bufp);
-	if (sizeticker <= 0)
+	sizeticker += strlen(bufp);
+	while (sizeticker >= MSGBUFSIZE)
 	{
 	    if (outlevel > O_SILENT && outlevel < O_VERBOSE && mboxfd != 1)
 		fputc('.',stderr);
-	    sizeticker = MSGBUFSIZE;
+	    sizeticker -= MSGBUFSIZE;
 	}
 	lines++;
     }
@@ -756,7 +756,7 @@ int rewrite;
     if (outlevel == O_VERBOSE)
 	fprintf(stderr,"(%d lines of message content)\n",lines);
     else if (outlevel > O_SILENT && mboxfd != 1) 
-	fputs(".\n",stderr);
+	fputs("\n",stderr);
     else
 	;
     return(0);
