@@ -60,6 +60,10 @@ int check_only;		/* if --probe was set */
 int cmd_batchlimit;	/* if --batchlimit was set */
 int cmd_fetchlimit;	/* if --fetchlimit was set */
 char *cmd_logfile;	/* if --logfile was set */
+char *interface;	/* interface required specification */
+char *cmd_interface;	/* if --interface was set */
+char *monitor;		/* monitored interface for activity */
+char *cmd_monitor;	/* if --monitor was set */
 
 /* miscellaneous global controls */
 char *rcfile;		/* path name of rc file */
@@ -417,6 +421,10 @@ int main (int argc, char **argv)
 	     * We'll just assume setitimer(2) is available since fetchmail
 	     * has to have a BSDoid socket layer to work at all.
 	     */
+#ifdef	linux
+	    do {
+		interface_note_activity();
+#endif
 	    {
 		struct itimerval ntimeout;
 
@@ -430,6 +438,9 @@ int main (int argc, char **argv)
 		if (lastsig == SIGUSR1)
 		    (void) error(0, 0, "awakened by SIGUSR1");
 	    }
+#ifdef	linux
+	    } while (!interface_approve());
+#endif
 
 	    if (outlevel == O_VERBOSE)
 	    {
@@ -604,6 +615,31 @@ static int load_params(int argc, char **argv, int optind)
     /* if cmd_logfile was explicitly set, use it to override logfile */
     if (cmd_logfile)
 	logfile = cmd_logfile;
+
+    /* if cmd_interface was explicitly set, use it to override interface */
+    if (cmd_interface)
+	interface = cmd_interface;
+
+    /* if cmd_monitor was explicitly set, use it to override monitor */
+    if (cmd_monitor)
+	monitor = cmd_monitor;
+
+    if (interface)
+#ifdef	linux
+	interface_parse();
+#else
+	{
+	    (void) fprintf(stderr,
+	    		"interface specification supported only on Linux\n");
+	    exit(PS_SYNTAX);
+	}
+    if (monitor)
+	{
+	    (void) fprintf(stderr,
+	    		"monitor supported only on Linux\n");
+	    exit(PS_SYNTAX);
+	}
+#endif
 
     return(implicitmode);
 }

@@ -43,9 +43,11 @@
 #define LA_BATCHLIMIT	25
 #define LA_FETCHLIMIT	26
 #define LA_MDA		27
-#define LA_YYDEBUG	28
+#define LA_INTERFACE    28
+#define LA_MONITOR      29
+#define LA_YYDEBUG	30
 
-static char *shortoptions = "?Vcsvd:NqL:f:i:p:P:A:t:u:akKFnl:r:S:b:B:m:y";
+static char *shortoptions = "?Vcsvd:NqL:f:i:p:P:A:t:u:akKFnl:r:S:b:B:m:I:M:y";
 static struct option longoptions[] = {
   {"help",	no_argument,	   (int *) 0, LA_HELP        },
   {"version",   no_argument,       (int *) 0, LA_VERSION     },
@@ -58,6 +60,10 @@ static struct option longoptions[] = {
   {"logfile",	required_argument, (int *) 0, LA_LOGFILE     },
   {"fetchmailrc",required_argument,(int *) 0, LA_RCFILE      },
   {"idfile",	required_argument, (int *) 0, LA_IDFILE      },
+#ifdef	linux
+  {"interface",	required_argument, (int *) 0, LA_INTERFACE   },
+  {"monitor",	required_argument, (int *) 0, LA_MONITOR     },
+#endif
 
   {"protocol",	required_argument, (int *) 0, LA_PROTOCOL    },
   {"proto",	required_argument, (int *) 0, LA_PROTOCOL    },
@@ -80,6 +86,9 @@ static struct option longoptions[] = {
   {"batchlimit",required_argument, (int *) 0, LA_BATCHLIMIT  },
   {"fetchlimit",required_argument, (int *) 0, LA_FETCHLIMIT  },
   {"mda",	required_argument, (int *) 0, LA_MDA         },
+
+  {"interface", required_argument, (int *) 0, LA_INTERFACE   },
+  {"monitor",   required_argument, (int *) 0, LA_MONITOR     },
 
   {"yydebug",	no_argument,	   (int *) 0, LA_YYDEBUG     },
 
@@ -246,6 +255,18 @@ struct query *ctl;	/* option record to be initialized */
 	    strncpy(ctl->mda,optarg,sizeof(ctl->mda));
 	    ocount++;
 	    break;
+
+#ifdef	linux
+	case 'I':
+	case LA_INTERFACE:
+	    cmd_interface = optarg;
+	    break;
+	case 'M':
+	case LA_MONITOR:
+	    cmd_monitor = optarg;
+	    break;
+#endif
+
 	case 'y':
 	case LA_YYDEBUG:
 	    yydebug = TRUE;
@@ -280,6 +301,10 @@ struct query *ctl;	/* option record to be initialized */
 	fputs("  -L, --logfile     specify logfile name\n", stderr);
 	fputs("  -f, --fetchmailrc specify alternate run control file\n", stderr);
 	fputs("  -i, --idfile      specify alternate UIDs file\n", stderr);
+#ifdef	linux
+	fputs("  -I, --interface   interface required specification\n",stderr);
+	fputs("  -M, --monitor     monitor interface for activity\n",stderr);
+#endif
 
 	fputs("  -p, --protocol    specify pop2, pop3, imap, apop, rpop, kpop\n", stderr);
 	fputs("  -P, --port        TCP/IP service port to connect to\n",stderr);

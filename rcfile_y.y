@@ -44,7 +44,7 @@ static void prc_reset();
 %token DEFAULTS POLL SKIP AKA PROTOCOL AUTHENTICATE TIMEOUT KPOP KERBEROS
 %token ENVELOPE USERNAME PASSWORD FOLDER SMTPHOST MDA LIMIT
 %token IS HERE THERE TO MAP WILDCARD
-%token SET BATCHLIMIT FETCHLIMIT LOGFILE
+%token SET BATCHLIMIT FETCHLIMIT LOGFILE INTERFACE MONITOR
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
@@ -67,6 +67,8 @@ statement_list	: statement
 /* future global options should also have the form SET <name> <value> */
 statement	: SET BATCHLIMIT MAP NUMBER	{batchlimit = $4;}
 		| SET LOGFILE MAP STRING	{logfile = xstrdup($4);}
+		| SET INTERFACE MAP STRING	{interface = xstrdup($4);}
+		| SET MONITOR MAP STRING	{monitor = xstrdup($4);}
 
 /* 
  * The way the next two productions are written depends on the fact that

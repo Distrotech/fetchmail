@@ -10,6 +10,17 @@
 			Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-2.5 ()
+
+features -- 
+
+* --interface and --monitor options courtesy for George Sipe.
+
+bugs --
+
+* Replaced bug-prone setvbuf with setlinebuf.
+
+------------------------------------------------------------------------------
 fetchmail-2.4 (Sat Dec 21 05:24:44 EST 1996)
 
 Note: a preliminary version of 2.4 was withdrawn after four hours of

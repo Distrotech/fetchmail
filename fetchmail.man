@@ -106,6 +106,36 @@ run control file.
 Specify an alternate name for the .fetchids file used to save POP3
 UIDs. 
 .TP
+.B \-I specification, --interface specification
+.I fetchmail
+relies on the underlying TCP/IP protocol to reach the server host.
+Transient links are commonly established directly to a mail host and are
+relatively secure channels to communicate.  When other routes exist, or
+when a transient link is established to a different remote host, your
+username and password may be vulnerable to snooping when daemon mode
+automatically polls for mail.
+.sp
+This option may be used to specify a connection IP address (or range)
+for a system TCP/IP interface.  When the link is not up or is connected
+to a different host, polling will be skipped.  The format is:
+.sp
+	interface/iii.iii.iii.iii/mmm.mmm.mmm.mmm
+.sp
+The field after the first slash is the acceptable IP address and the
+field after the second slash is a mask which specifies a range of IP
+addresses to accept.  If no mask is present 255.255.255.255 is assumed
+(i.e. an exact match).
+.sp
+This option is currently only supported under Linux.
+.TP
+.B \-M interface, --monitor interface
+Daemon mode can cause transient links which are automatically taken down
+after a period of inactivity (e.g. PPP links) to remain up
+indefinitely.  This option identifies a system TCP/IP interface to be
+monitored for activity.  After each poll interval, if the link is up and
+no other activity has occurred on the link then the poll will be
+skipped.  This option is currently only supported under Linux.
+.TP
 .B \-k, --keep
 Keep retrieved messages on the remote mailserver.  Normally, messages 
 are deleted from the folder on the mailserver after they have been retrieved.
@@ -201,7 +231,7 @@ shut down to deliver.  This may produce annoying delays when
 is processing very large batches.  Setting the batch limit to some
 nonzero size will prevent these delays.
 .TP
-.B -R, --fetchlimit
+.B -B, --fetchlimit
 Limit the number of messages accepted from a given server in a single
 poll.  By default there is no limit. 
 .TP
@@ -543,11 +573,13 @@ or reverse it by saying `user esr here is eric there'
 .PP
 For backward compatibility, the word `server' is a synonym for `poll'.
 .PP
-There are currently two valid global option statements; 
+There are currently four valid global option statements; 
 \&`set batchlimit = ' followed by a number and sets the same global
-specified by the --batchlimit option, and `set logfile = ' followed 
-by a string sets the same global specified by --logfile.  In both
-cases, a command-line option will override.
+specified by the --batchlimit option, `set logfile = ' followed by a
+string sets the same global specified by --logfile, `set interface = '
+followed by a string sets the same global specified by --interface, and
+`set monitor = ' followed by a string sets the same global specified by
+--monitor.  In all cases, a command-line option will override.
 .PP
 Basic format is:
 
