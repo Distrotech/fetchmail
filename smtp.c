@@ -9,9 +9,8 @@
  * For license terms, see the file COPYING in this directory.
  */
 
-#include <stdio.h>
 #include <config.h>
-#include <sys/types.h>
+#include <stdio.h>
 #include <unistd.h>
 #include <string.h>
 #include "socket.h"

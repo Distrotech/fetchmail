@@ -5,29 +5,18 @@
  */
 
 #include <config.h>
-#include <stdio.h>
-#include <ctype.h>
-#include <time.h>
 
+#include <stdio.h>
 #if defined(STDC_HEADERS)
 #include <stdlib.h>
-#include <string.h>
 #endif
-
 #if defined(HAVE_UNISTD_H)
 #include <unistd.h>
 #endif
-
+#include <string.h>
 #include <signal.h>
 #include <pwd.h>
-#include <errno.h>
-
-#include <sys/types.h>
-#include <sys/file.h>
-#include <sys/wait.h>
-#include <sys/stat.h>
 #include <sys/time.h>
-#include <fcntl.h>
 
 #ifdef HAVE_GETHOSTBYNAME
 #include <netdb.h>

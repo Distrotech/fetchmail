@@ -5,7 +5,7 @@
  */
 
 #include <config.h>
-#include <stdio.h>
+
 #include <pwd.h>
 #include <string.h>
 #if defined(STDC_HEADERS)

@@ -86,8 +86,8 @@ AC_TRY_COMPILE([],
  [AC_DEFINE(HAVE_PROTOTYPES) AC_MSG_RESULT(yes)],
  AC_MSG_RESULT(no))
                 
-dnl Check out the wait reality.
-AC_CHECK_HEADERS(sys/wait.h) AC_CHECK_FUNCS(waitpid wait3)
+dnl Check out the wait reality.  We have to assume sys/wait.h is present.
+AC_CHECK_FUNCS(waitpid wait3)
 AC_MSG_CHECKING(for union wait);
 AC_TRY_LINK([#include <sys/types.h>
 #include <sys/wait.h>],

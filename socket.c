@@ -7,14 +7,11 @@
 #include <config.h>
 
 #include <stdio.h>
-#include <fcntl.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
 #if defined(STDC_HEADERS)
-#include <string.h>
 #include <stdlib.h>
 #endif
 #if defined(HAVE_UNISTD_H)
@@ -25,7 +22,6 @@
 #else
 #include <varargs.h>
 #endif
-#include <errno.h>
 #include "socket.h"
 
 FILE *Socket(host, clientPort)

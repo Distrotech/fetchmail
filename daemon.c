@@ -7,18 +7,14 @@
 #include <config.h>
 
 #include <stdio.h>
+#include <signal.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/file.h>
-#include <signal.h>
-#include <fcntl.h>
-
-#if defined(HAVE_SYS_WAIT_H)
-#  include <sys/wait.h>
-#endif
+#include <sys/wait.h>
 
 #if defined(HAVE_UNISTD_H)
-#  include <unistd.h>
+#include <unistd.h>
 #endif
 
 #if defined(STDC_HEADERS)
@@ -26,7 +22,7 @@
 #endif
 
 #if defined(QNX)
-#  include <unix.h>
+#include <unix.h>
 #endif
 
 /* BSD portability hack */
