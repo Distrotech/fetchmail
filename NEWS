@@ -2,8 +2,12 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.9.0 (Sun Aug 12 23:52:16 EDT 2001), 21062 lines:
+
 * Blush...# characters now go to stdout, same place as the dots.
 * Matthias Andree's patch to correct parsing of spaces in quoted usernames.
+
+There are 371 people on fetchmail-friends and 610 on fetchmail-announce.
 
 fetchmail-5.8.17 (Tue Aug  7 20:05:36 EDT 2001), 21056 lines:
 
