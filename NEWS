@@ -21,6 +21,8 @@ bugs --
 
 * Various error-logging fixes by Dave Bodenstab.
 
+* Fix parsing bug that broke UIDL-processing code.
+
 ------------------------------------------------------------------------------
 fetchmail-3.6 (Mon Feb 17 00:19:55 EST 1997)
 
