@@ -6,7 +6,8 @@
 * Update for cs.po from Jiri Pavlovsky.
 * Prevent spurious hostname matches in fetchmailconf.
 * Ultrix 4.5 port patches from Simon Burge <simonb@thistledown.com.au>.
-* Add bug warnubng to FAQ about Lotus Domino.
+* Add bug warning to FAQ about Lotus Domino.
+* Suppress monitor check just after being woken by signal.
 
 fetchmail-5.3.4 (Wed Mar 22 15:55:51 EST 2000), 18819 lines:
 

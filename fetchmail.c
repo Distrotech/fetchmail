@@ -125,6 +125,7 @@ int main(int argc, char **argv)
     netrc_entry *netrc_list;
     char *netrc_file, *tmpbuf;
     pid_t pid;
+    int lastsig = 0;
 
 #ifdef __FreeBSD__
     dropprivs();
@@ -626,8 +627,11 @@ int main(int argc, char **argv)
 		}
 
 #if (defined(linux) && !INET6_ENABLE) || defined(__FreeBSD__)
-		/* interface_approve() does its own error logging */
-		if (!interface_approve(&ctl->server))
+		/*
+		 * Don't do monitoring if we were woken by a signal.
+		 * Note that interface_approve() does its own error logging.
+		 */
+		if (!interface_approve(&ctl->server, !lastsig))
 		    continue;
 #endif /* (defined(linux) && !INET6_ENABLE) || defined(__FreeBSD__) */
 
@@ -703,8 +707,6 @@ int main(int argc, char **argv)
 	 */
 	if (run.poll_interval)
 	{
-	    int lastsig;
-
 	    /* 
 	     * Because passwords can expire, it may happen that *all*
 	     * hosts are now out of the loop due to authfail
@@ -731,7 +733,7 @@ int main(int argc, char **argv)
 
 	    /*
 	     * OK, now pause util it's time for the next poll cycle.
-	     * A TRUE return indicates we received a wakeup signal;
+	     * A nonzero return indicates we received a wakeup signal;
 	     * unwedge all servers in case the problem has been
 	     * manually repaired.
 	     */

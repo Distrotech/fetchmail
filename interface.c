@@ -434,7 +434,7 @@ void interface_note_activity(struct hostdata *hp)
 #endif
 }
 
-int interface_approve(struct hostdata *hp)
+int interface_approve(struct hostdata *hp, flag domonitor)
 /* return TRUE if OK to poll, FALSE otherwise */
 {
 	ifinfo_t ifinfo;
@@ -460,7 +460,7 @@ int interface_approve(struct hostdata *hp)
 	}
 
 	/* if not monitoring link, all done */
-	if (!hp->monitor)
+	if (!domonitor || !hp->monitor)
 		return(TRUE);
 
 #ifdef	ACTIVITY_DEBUG

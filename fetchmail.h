@@ -473,7 +473,7 @@ extern int  UnMimeBodyline(unsigned char **buf, flag delimited, flag issoftline)
 void interface_init(void);
 void interface_parse(char *, struct hostdata *);
 void interface_note_activity(struct hostdata *);
-int interface_approve(struct hostdata *);
+int interface_approve(struct hostdata *, flag domonitor);
 
 /* xmalloc.c */
 #if defined(HAVE_VOIDPOINTER)
