@@ -1214,8 +1214,8 @@ SunOS and Solaris machines run cucipop OK.
 """
 	    if string.find(greetline, "David POP3 Server") > 0:
                 warnings = warnings + """
-This POP3 serrver is badly broken.  You should get rid of it -- and the
-brain-dead NT operating system it rode in on.
+This POP3 server is badly broken.  You should get rid of it -- and the
+brain-dead Microsoft operating system it rode in on.
 
 """
 # The greeting line on the server known to be buggy is:
@@ -1234,6 +1234,14 @@ OpenMail do not process the "TOP" command correctly; the symptom is that
 only the header and first line of each message is retrieved.  To work
 around this bug, turn on `fetchall' on all user entries associated with
 this server.  
+
+"""
+            if string.find(greetline, "Escape character is") > 0:
+                warnings = warnings + """
+Your greeting line looks like it was written by a fetid pile of
+camel dung identified to me as `popa3d written by Solar Designer'.
+Beware!  The UIDL support in this thing is known to be completely broken,
+and other things probably are too.
 
 """
 	    if string.find(greetline, "POP-Max") > 0:
