@@ -341,62 +341,75 @@ char *parse_received(struct query *ctl, char *bufp)
 static FILE *smtp_open(struct query *ctl)
 /* try to open a socket to the appropriate SMTP server for this query */ 
 {
-    struct query *lead;
-
-    lead = ctl->lead_smtp; /* go to the SMTP leader for this query */
+    struct idlist	*idp;
 
     /* maybe it's time to close the socket in order to force delivery */
-    if (ctl->batchlimit && lead->smtp_sockfp && batchcount++==ctl->batchlimit)
+    if (ctl->batchlimit && ctl->smtp_sockfp && batchcount++ == ctl->batchlimit)
     {
-	fclose(lead->smtp_sockfp);
-	lead->smtp_sockfp = (FILE *)NULL;
+	fclose(ctl->smtp_sockfp);
+	ctl->smtp_sockfp = (FILE *)NULL;
 	batchcount = 0;
     }
 
-    /* 
-     * RFC 1123 requires that the domain name in HELO address is a
-     * "valid principal domain name" for the client host.  We
-     * violate this with malice aforethought in order to make the
-     * Received headers and logging look right.
-     *
-     * In fact this code relies on the RFC1123 requirement that the
-     * SMTP listener must accept messages even if verification of the
-     * HELO name fails (RFC1123 section 5.2.5, paragraph 2).
-     */
-
-    /* if no socket to this host is already set up, try to open ESMTP */
-    if (lead->smtp_sockfp == (FILE *)NULL)
+    /* run down the SMTP hunt list looking for a server that's up */
+    for (idp = ctl->smtphunt; idp; idp = idp->next)
     {
-	if ((lead->smtp_sockfp = SockOpen(lead->smtphost, SMTP_PORT)) == (FILE *)NULL)
-	    return((FILE *)NULL);
-	else if (SMTP_ok(lead->smtp_sockfp) != SM_OK
-		 || SMTP_ehlo(lead->smtp_sockfp, 
-			      ctl->server.names->id,
-			      &lead->server.esmtp_options) != SM_OK)
+
+	/* 
+	 * RFC 1123 requires that the domain name in HELO address is a
+	 * "valid principal domain name" for the client host.  We
+	 * violate this with malice aforethought in order to make the
+	 * Received headers and logging look right.
+	 *
+	 * In fact this code relies on the RFC1123 requirement that the
+	 * SMTP listener must accept messages even if verification of the
+	 * HELO name fails (RFC1123 section 5.2.5, paragraph 2).
+	 */
+
+	/* if no socket to this host is already set up, try to open ESMTP */
+	if (ctl->smtp_sockfp == (FILE *)NULL)
 	{
-	    /*
-	     * RFC 1869 warns that some listeners hang up on a failed EHLO,
-	     * so it's safest not to assume the socket will still be good.
-	     */
-	    fclose(lead->smtp_sockfp);
-	    lead->smtp_sockfp = (FILE *)NULL;
+	    if ((ctl->smtp_sockfp = SockOpen(idp->id,SMTP_PORT))==(FILE *)NULL)
+		return((FILE *)NULL);
+	    else if (SMTP_ok(ctl->smtp_sockfp) != SM_OK
+		     || SMTP_ehlo(ctl->smtp_sockfp, 
+				  ctl->server.names->id,
+				  &ctl->server.esmtp_options) != SM_OK)
+	    {
+		/*
+		 * RFC 1869 warns that some listeners hang up on a failed EHLO,
+		 * so it's safest not to assume the socket will still be good.
+		 */
+		fclose(ctl->smtp_sockfp);
+		ctl->smtp_sockfp = (FILE *)NULL;
+	    }
+	    else
+	    {
+		ctl->smtphost = idp->id;
+		break;
+	    }
+	}
+
+	/* if opening for ESMTP failed, try SMTP */
+	if (ctl->smtp_sockfp == (FILE *)NULL)
+	{
+	    if ((ctl->smtp_sockfp = SockOpen(idp->id,SMTP_PORT))==(FILE *)NULL)
+		return((FILE *)NULL);
+	    else if (SMTP_ok(ctl->smtp_sockfp) != SM_OK
+		     || SMTP_helo(ctl->smtp_sockfp, ctl->server.names->id) != SM_OK)
+	    {
+		fclose(ctl->smtp_sockfp);
+		ctl->smtp_sockfp = (FILE *)NULL;
+	    }
+	    else
+	    {
+		ctl->smtphost = idp->id;
+		break;
+	    }
 	}
     }
 
-    /* if opening for ESMTP failed, try SMTP */
-    if (lead->smtp_sockfp == (FILE *)NULL)
-    {
-	if ((lead->smtp_sockfp = SockOpen(lead->smtphost, SMTP_PORT)) == (FILE *)NULL)
-	    return((FILE *)NULL);
-	else if (SMTP_ok(lead->smtp_sockfp) != SM_OK
-		 || SMTP_helo(lead->smtp_sockfp, ctl->server.names->id) != SM_OK)
-	{
-	    fclose(lead->smtp_sockfp);
-	    lead->smtp_sockfp = (FILE *)NULL;
-	}
-    }
-
-    return(lead->smtp_sockfp);
+    return(ctl->smtp_sockfp);
 }
 
 static int gen_readmsg(sockfp, len, delimited, ctl, realname)
@@ -672,7 +685,7 @@ char *realname;		/* real name of host */
 	if (!ctl->mda && ((sinkfp = smtp_open(ctl)) == NULL))
 	{
 	    free_str_list(&xmit_names);
-	    error(0, 0, "SMTP connect failed");
+	    error(0, 0, "SMTP connect to %s failed", ctl->smtphost);
 	    if (return_path)
 		free(return_path);
 	    return(PS_SMTP);

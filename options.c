@@ -247,7 +247,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'S':
 	case LA_SMTPHOST:
-	    ctl->smtphost = xstrdup(optarg);
+	    save_str(&ctl->smtphunt, -1, optarg);
 	    ocount++;
 	    break;
 	case 'b':

@@ -102,6 +102,7 @@ struct query
     char *remotename;
     char *password;
     char *mailbox;
+    struct idlist *smtphunt;
     char *smtphost;
     char *mda;
     char *preconnect;
@@ -123,7 +124,6 @@ struct query
     int active;
     int errcount;		/* count transient errors in last pass */
     struct query *next;		/* next query control block in chain */
-    struct query *lead_smtp;	/* pointer to this query's SMTP leader */
     FILE *smtp_sockfp;		/* socket descriptor for SMTP connection */
     unsigned int uid;		/* UID of user to deliver to */
     char digest [DIGESTLEN];	/* md5 digest buffer */

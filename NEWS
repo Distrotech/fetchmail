@@ -5,6 +5,8 @@ fetchmail-3.7 ()
 
 features --
 
+* You can now specify a hunt list of SMTP forwarding hosts.
+
 * Treat unexpected EOF as a protocol error.
 
 bugs --

@@ -526,7 +526,7 @@ static int load_params(int argc, char **argv, int optind)
     def_opts.server.protocol = P_AUTO;
     def_opts.server.timeout = CLIENT_TIMEOUT;
     def_opts.remotename = user;
-    def_opts.smtphost = fetchmailhost;
+    save_str(&def_opts.smtphunt, -1, fetchmailhost);
 
     /* this builds the host list */
     if (prc_parse_file(rcfile) != 0)
@@ -608,32 +608,7 @@ static int load_params(int argc, char **argv, int optind)
 	    }
 #endif /* !HAVE_GETHOSTBYNAME || !HAVE_RES_SEARCH */
 
-	    /*
-	     * Assign SMTP leaders.  We want to allow all query blocks
-	     * sharing the same server/SMTP-host pair to use the same
-	     * SMTP connection.  To accomplish this, we initialize
-	     * each query block's leader field to point to the first
-	     * block in the list with a matching server/SMTP-host pair.
-	     *
-	     * In the typical case, there will be only one SMTP host (the
-	     * client machine) and thus just one SMTP leader (and one listener
-	     * process) through the entire poll cycle.
-	     */
-	    if (!ctl->mda)
-	    {
-		ctl->smtp_sockfp = (FILE *)NULL;
-		for (mp = querylist; mp && mp != ctl; mp = mp->next)
-		    if (!strcmp(mp->server.names->id, ctl->server.names->id)
-			&& !strcmp(mp->smtphost, ctl->smtphost))
-		    {
-			ctl->lead_smtp = mp->lead_smtp;
-			goto no_new_leader;
-		    }
-		ctl->lead_smtp = ctl;
-	    no_new_leader:;
-	    }
-
-	    /* similarly, compute server leaders for queries */
+	    /* compute server leaders for queries */
 	    for (mp = querylist; mp && mp != ctl; mp = mp->next)
 		if (strcmp(mp->server.names->id, ctl->server.names->id) == 0)
 		{
@@ -713,7 +688,7 @@ void termhook(int sig)
     else
 	/* terminate all SMTP connections cleanly */
 	for (ctl = querylist; ctl; ctl = ctl->next)
-	    if (ctl->lead_smtp == ctl && ctl->smtp_sockfp != (FILE *)NULL)
+	    if (ctl->smtp_sockfp != (FILE *)NULL)
 		SMTP_quit(ctl->smtp_sockfp);
 
     if (!check_only)
@@ -877,7 +852,14 @@ void dump_params (struct query *ctl)
     if (ctl->mda)
 	printf("  Messages will be delivered with '%s.'\n", visbuf(ctl->mda));
     else
-	printf("  Messages will be SMTP-forwarded to '%s'.\n", visbuf(ctl->smtphost));
+    {
+	struct idlist *idp;
+
+	printf("  Messages will be SMTP-forwarded to:");
+	for (idp = ctl->smtphunt; idp; idp = idp->next)
+	    printf(" %s", idp->id);
+	printf("\n");
+    }
     if (ctl->preconnect)
 	printf("  Server connection will be preinitialized with '%s.'\n", visbuf(ctl->preconnect));
     else if (outlevel == O_VERBOSE)
