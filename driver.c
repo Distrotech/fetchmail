@@ -205,7 +205,13 @@ char *hdr;	/* header line to be parsed, NUL to continue in previous hdr */
 	    break;
 
 	case 1:   /* we've seen the colon, now grab the address */
-	    if ((*hp == '\n') || (*hp == ','))  /* end of address list */
+	    if (*hp == '\n')	/* end of address list */
+	    {
+	        *tp++ = '\0';
+		state = 6;
+		return(address);
+	    }
+	    else if (*hp == ',')  /* end of address */
 	    {
 	        *tp++ = '\0';
 		return(address);
@@ -278,6 +284,10 @@ char *hdr;	/* header line to be parsed, NUL to continue in previous hdr */
 	        *tp++ = *hp;
 		state = 4;
 	    }
+	    break;
+
+	case 6:
+	    return(NULL);
 	    break;
 	}
     }
@@ -394,38 +404,8 @@ struct hostrec *queryctl;	/* query control record */
 	    {
 		if (SMTP_from(mboxfd, nxtaddr(fromhdr)) != SM_OK)
 		    return(PS_SMTP);
-#ifdef SMTP_RESEND
-		/*
-		 * This is what we'd do if fetchmail were a real MDA
-		 * a la sendmail -- crack all the destination headers
-		 * and send to every address we can reach via SMTP.
-		 */
-		if (tohdr && (cp = nxtaddr(tohdr)) != (char *)NULL)
-		    do {
-			if (SMTP_rcpt(mboxfd, cp) != SM_OK)
-			    return(PS_SMTP);
-		    } while
-			(cp = nxtaddr(NULL));
-		if (cchdr && (cp = nxtaddr(cchdr)) != (char *)NULL)
-		    do {
-			if (SMTP_rcpt(mboxfd, cp) != SM_OK)
-			    return(PS_SMTP);
-		    } while
-			(cp = nxtaddr(NULL));
-		if (bcchdr && (cp = nxtaddr(bcchdr)) != (char *)NULL)
-		    do {
-			if (SMTP_rcpt(mboxfd, cp) != SM_OK)
-			    return(PS_SMTP);
-		    } while
-			(cp = nxtaddr(NULL));
-#else
-		/*
-		 * Since we're really only fetching mail for one user
-		 * per host query, we can be simpler
-		 */
 		if (SMTP_rcpt(mboxfd, queryctl->localname) != SM_OK)
 		    return(PS_SMTP);
-#endif /* SMTP_RESEND */
 		SMTP_data(mboxfd);
 		if (outlevel == O_VERBOSE)
 		    fputs("SMTP> ", stderr);
