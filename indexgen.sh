@@ -7,6 +7,9 @@ goldname="4.6.0"
 version=`sed -n <Makefile.in "/VERS=/s/VERS=\([^ 	]*\)/\1/p"`
 date=`date "+%d %b %Y"`
 
+set -- `timeseries | grep -v "%" | head -1`
+subscribers=$4
+
 cat >index.html <<EOF
 <!doctype HTML public "-//W3O//DTD W3 HTML 3.2//EN">
 <HTML>
@@ -164,13 +167,14 @@ S.u.S.e. Linux distributions include it.  A customized version is used
 at Whole Earth 'Lectronic Link. Several large ISPs are known to
 recommend it to Unix-using SLIP and PPP customers.<p>
 
-Over seven hundred people have participated on the fetchmail beta list.
-While it's hard to count the users of open-source software, we can
-estimate based on (a) population figures at the WELL and other known
-fetchmail sites, (b) the size of the Linux-using ISP customer base,
-and (c) the volume of fetchmail-related talk on USENET.  These
-estimates suggest that daily fetchmail users number well into the tens
-of thousands, and possibly over a hundred thousand.<p>
+Over seven hundred people have participated on the fetchmail beta list
+(at time of current release there were $subscribers on the friends and
+announce lists).  While it's hard to count the users of open-source
+software, we can estimate based on (a) population figures at the WELL
+and other known fetchmail sites, (b) the size of the Linux-using ISP
+customer base, and (c) the volume of fetchmail-related talk on USENET.
+These estimates suggest that daily fetchmail users number well into
+the tens of thousands, and possibly over a hundred thousand.<p>
 
 <H1>The fetchmail paper:</H1>
 
