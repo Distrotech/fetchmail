@@ -18,93 +18,93 @@
 #include "fetchmail.h"
 #include "smtp.h"
 
-int SMTP_helo(int socket,char *host)
+int SMTP_helo(FILE *sockfp,char *host)
 /* send a "HELO" message to the SMTP listener */
 {
   int ok;
 
-  SockPrintf(socket,"HELO %s\r\n", host);
+  SockPrintf(fileno(sockfp),"HELO %s\r\n", host);
   if (outlevel == O_VERBOSE)
       fprintf(stderr, "SMTP> HELO %s\n", host);
-  ok = SMTP_ok(socket,NULL);
+  ok = SMTP_ok(sockfp,NULL);
   return ok;
 }
 
-int SMTP_from(int socket, char *from)
+int SMTP_from(FILE *sockfp, char *from)
 /* send a "MAIL FROM:" message to the SMTP listener */
 {
   int ok;
 
-  SockPrintf(socket,"MAIL FROM:<%s>\r\n", from);
+  SockPrintf(fileno(sockfp),"MAIL FROM:<%s>\r\n", from);
   if (outlevel == O_VERBOSE)
       fprintf(stderr, "SMTP> MAIL FROM:<%s>\n", from);
-  ok = SMTP_ok(socket,NULL);
+  ok = SMTP_ok(sockfp,NULL);
   return ok;
 }
 
-int SMTP_rcpt(int socket, char *to)
+int SMTP_rcpt(FILE *sockfp, char *to)
 /* send a "RCPT TO:" message to the SMTP listener */
 {
   int ok;
 
-  SockPrintf(socket,"RCPT TO:<%s>\r\n", to);
+  SockPrintf(fileno(sockfp),"RCPT TO:<%s>\r\n", to);
   if (outlevel == O_VERBOSE)
       fprintf(stderr, "SMTP> RCPT TO:<%s>\n", to);
-  ok = SMTP_ok(socket,NULL);
+  ok = SMTP_ok(sockfp,NULL);
   return ok;
 }
 
-int SMTP_data(int socket)
+int SMTP_data(FILE *sockfp)
 /* send a "DATA" message to the SMTP listener */
 {
   int ok;
 
-  SockPrintf(socket,"DATA\r\n");
+  SockPrintf(fileno(sockfp),"DATA\r\n");
   if (outlevel == O_VERBOSE)
       fprintf(stderr, "SMTP> DATA\n");
-  ok = SMTP_ok(socket,NULL);
+  ok = SMTP_ok(sockfp,NULL);
   return ok;
 }
 
-int SMTP_quit(int socket)
+int SMTP_quit(FILE *sockfp)
 /* send a "QUIT" message to the SMTP listener */
 {
   int ok;
 
-  SockPrintf(socket,"QUIT\r\n");
+  SockPrintf(fileno(sockfp),"QUIT\r\n");
   if (outlevel == O_VERBOSE)
       fprintf(stderr, "SMTP> QUIT\n");
-  ok = SMTP_ok(socket,NULL);
+  ok = SMTP_ok(sockfp,NULL);
   return ok;
 }
 
-int SMTP_eom(int socket)
+int SMTP_eom(FILE *sockfp)
 /* send a message data terminator to the SMTP listener */
 {
   int ok;
 
-  SockPrintf(socket,".\r\n");
+  SockPrintf(fileno(sockfp),".\r\n");
   if (outlevel == O_VERBOSE)
       fprintf(stderr, "SMTP>. (EOM)\n");
-  ok = SMTP_ok(socket,NULL);
+  ok = SMTP_ok(sockfp,NULL);
   return ok;
 }
 
-void SMTP_rset(int socket)
+void SMTP_rset(FILE *sockfp)
 /* send a "RSET" message to the SMTP listener */
 {
-  SockPrintf(socket,"RSET\r\n");
+  SockPrintf(fileno(sockfp),"RSET\r\n");
   if (outlevel == O_VERBOSE)
       fprintf(stderr, "SMTP> RSET\n");
 }
 
-static int SMTP_check(int socket,char *argbuf)
+static int SMTP_check(FILE *sockfp,char *argbuf)
 /* returns status of SMTP connection */
 {
   int  ok;  
   char buf[SMTPBUFSIZE];
   
-  if ((ok = read(socket, buf, sizeof(buf)-1)) > 0) {
+  if ((ok = read(fileno(sockfp), buf, sizeof(buf)-1)) > 0) {
     buf[ok] = '\0';
     if (outlevel == O_VERBOSE)
 	fprintf(stderr, "SMTP< %s", buf);
@@ -120,7 +120,7 @@ static int SMTP_check(int socket,char *argbuf)
   return (ok);
 }
 
-int SMTP_ok(int socket,char *argbuf)
+int SMTP_ok(FILE *sockfp,char *argbuf)
 /* accepts SMTP response, returns status of SMTP connection */
 {
   int  ok;  
@@ -134,11 +134,11 @@ int SMTP_ok(int socket,char *argbuf)
 
     */
 
-  ok = SMTP_check(socket,argbuf);
+  ok = SMTP_check(sockfp,argbuf);
   if (ok == SM_ERROR) /* if we got an error, */
     {
-      SMTP_rset(socket);
-      ok = SMTP_check(socket,argbuf);  /* how does it look now ? */
+      SMTP_rset(sockfp);
+      ok = SMTP_check(sockfp,argbuf);  /* how does it look now ? */
       if (ok == SM_OK)  
 	ok = SM_ERROR;                /* It's just a simple error, for*/
 				      /*	 the current message  */

@@ -15,14 +15,14 @@
 #define         SM_UNRECOVERABLE   129
 
 #ifdef HAVE_PROTOTYPES
-int SMTP_helo(int socket,char *host);
-int SMTP_from(int socket,char *from);
-int SMTP_rcpt(int socket,char *to);
-int SMTP_data(int socket);
-int SMTP_eom(int socket);
-int SMTP_quit(int socket);
-int SMTP_ok(int socket,char *argbuf);
-void SMTP_rset(int socket);
+int SMTP_helo(FILE *sockfp,char *host);
+int SMTP_from(FILE *sockfp,char *from);
+int SMTP_rcpt(FILE *sockfp,char *to);
+int SMTP_data(FILE *sockfp);
+int SMTP_eom(FILE *sockfp);
+int SMTP_quit(FILE *sockfp);
+int SMTP_ok(FILE *sockfp,char *argbuf);
+void SMTP_rset(FILE *sockfp);
 #endif /* HAVE_PROTOTYPES */
 
 #endif

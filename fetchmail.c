@@ -528,7 +528,7 @@ int	optind;
 			goto no_new_leader;
 		    }
 		ctl->leader = ctl;
-		ctl->smtp_socket = -1;
+		ctl->smtp_sockfp = (FILE *)NULL;
 	    no_new_leader:;
 	    }
 
@@ -582,8 +582,8 @@ void termhook(int sig)
 
     /* terminate all SMTP connections cleanly */
     for (ctl = querylist; ctl; ctl = ctl->next)
-	if (ctl->leader == ctl && ctl->smtp_socket != -1)
-	    SMTP_quit(ctl->smtp_socket);
+	if (ctl->leader == ctl && ctl->smtp_sockfp != (FILE *)NULL)
+	    SMTP_quit(ctl->smtp_sockfp);
 
     if (!check_only)
 	write_saved_lists(querylist, idfile);

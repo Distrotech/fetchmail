@@ -464,26 +464,26 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 }
 #endif /* HAVE_GETHOSTBYNAME */
 
-static int smtp_open(ctl)
+static FILE *smtp_open(ctl)
 /* try to open a socket to the appropriate SMTP server for this query */ 
 struct query *ctl;
 {
     ctl = ctl->leader; /* go to the SMTP leader for this query */
 
     /* if no socket to this host is already set up, try to open one */
-    if (ctl->smtp_socket == -1)
+    if (ctl->smtp_sockfp == (FILE *)NULL)
     {
-	if ((ctl->smtp_socket = Socket(ctl->smtphost, SMTP_PORT)) == -1)
-	    return(-1);
-	else if (SMTP_ok(ctl->smtp_socket, NULL) != SM_OK
-		 || SMTP_helo(ctl->smtp_socket, ctl->servername) != SM_OK)
+	if ((ctl->smtp_sockfp = fdopen(Socket(ctl->smtphost, SMTP_PORT), "r+")) == (FILE *)NULL)
+	    return((FILE *)NULL);
+	else if (SMTP_ok(ctl->smtp_sockfp, NULL) != SM_OK
+		 || SMTP_helo(ctl->smtp_sockfp, ctl->servername) != SM_OK)
 	{
-	    close(ctl->smtp_socket);
-	    ctl->smtp_socket = -1;
+	    fclose(ctl->smtp_sockfp);
+	    ctl->smtp_sockfp = (FILE *)NULL;
 	}
     }
 
-    return(ctl->smtp_socket);
+    return(ctl->smtp_sockfp);
 }
 
 static int gen_readmsg (sockfp, len, delimited, ctl)
@@ -497,6 +497,7 @@ struct query *ctl;	/* query control record */
     char *bufp, *headers, *fromhdr, *tohdr, *cchdr, *bcchdr;
     int n, oldlen, mboxfd;
     int inheaders,lines,sizeticker;
+    FILE *sinkfp;
 
     /* read the message content from the server */
     inheaders = 1;
@@ -656,29 +657,31 @@ struct query *ctl;	/* query control record */
 	    }
 	    else
 	    {
-		if (ctl->mda[0] == '\0'	&& ((mboxfd = smtp_open(ctl)) < 0))
+		if (ctl->mda[0] == '\0'	&& ((sinkfp = smtp_open(ctl)) < 0))
 		{
 		    free_uid_list(&xmit_names);
 		    fprintf(stderr, "fetchmail: SMTP connect failed\n");
 		    return(PS_SMTP);
 		}
 
-		if (SMTP_from(mboxfd, nxtaddr(fromhdr)) != SM_OK)
+		if (SMTP_from(sinkfp, nxtaddr(fromhdr)) != SM_OK)
 		{
 		    fprintf(stderr, "fetchmail: SMTP listener is confused\n");
 		    return(PS_SMTP);
 		}
 
 		for (idp = xmit_names; idp; idp = idp->next)
-		    if (SMTP_rcpt(mboxfd, idp->id) != SM_OK)
+		    if (SMTP_rcpt(sinkfp, idp->id) != SM_OK)
 		    {
 			fprintf(stderr, "fetchmail: SMTP listener is upset\n");
 			return(PS_SMTP);
 		    }
 
-		SMTP_data(mboxfd);
+		SMTP_data(sinkfp);
 		if (outlevel == O_VERBOSE)
 		    fputs("SMTP> ", stderr);
+
+		mboxfd = fileno(sinkfp);
 	    }
 	    free_uid_list(&xmit_names);
 
@@ -749,7 +752,7 @@ struct query *ctl;	/* query control record */
     else
     {
 	/* write message terminator */
-	if (SMTP_eom(mboxfd) != SM_OK)
+	if (SMTP_eom(sinkfp) != SM_OK)
 	{
 	    fputs("fetchmail: SMTP listener refused delivery\n", stderr);
 	    return(PS_SMTP);
