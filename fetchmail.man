@@ -2175,6 +2175,9 @@ If you modify a
 while a background instance is running and break the syntax, the
 background instance will die silently.  Unfortunately, it can't 
 die noisily because we don't yet know whether syslog should be enabled.
+On some systems, fetchmail dies quietly even if there is no syntax
+error; this seems to have something to do with buggy terminal ioctl
+code in the kernel.
 .PP
 The -f - option (reading a configuration from stdin) is incompatible
 with the plugin option.
@@ -2206,43 +2209,43 @@ mutt(1), elm(1), mail(1), sendmail(8), popd(8), imapd(8), netrc(5)
 .TP 5
 SMTP/ESMTP:
 RFC 821, RFC2821, RFC 1869, RFC 1652, RFC 1870, RFC 1983, RFC 1985,
-RFC 2554
+RFC 2554.
 .TP 5
 mail:
-RFC 822, RFC2822, RFC 1123, RFC 1892, RFC 1894
+RFC 822, RFC2822, RFC 1123, RFC 1892, RFC 1894.
 .TP 5
 POP2:
 RFC 937
 .TP 5
 POP3:
 RFC 1081, RFC 1225, RFC 1460, RFC 1725, RFC1734, RFC 1939, RFC 1957,
-RFC2195, RFC 2449
+RFC2195, RFC 2449.
 .TP 5
 APOP:
-RFC 1460, RFC 1725, RFC 1939
+RFC 1460, RFC 1725, RFC 1939.
 .TP 5
 RPOP:
-RFC 1081, RFC 1225
+RFC 1081, RFC 1225.
 .TP 5
 IMAP2/IMAP2BIS:
-RFC 1176, RFC 1732
+RFC 1176, RFC 1732.
 .TP 5
 IMAP4/IMAP4rev1:
 RFC 1730, RFC 1731, RFC 1732, RFC 2060, RFC 2061, RFC 2195, RFC 2177,
-RFC 2683
+RFC 2683.
 .TP 5
 ETRN:
-RFC 1985
+RFC 1985.
 .TP 5
 ODMR/ATRN:
-RFC 2645
+RFC 2645.
 .TP 5
 OTP:
-RFC 1938
+RFC 1938.
 .TP 5
 LMTP:
-RFC 2033
+RFC 2033.
 .TP 5
 GSSAPI:
-RFC 1508
+RFC 1508.
 
