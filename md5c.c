@@ -15,9 +15,7 @@
  * will fill a supplied 16-byte array with the digest.
  */
 
-/* This code slightly modified to fit into Samba by 
-   abartlet@samba.org Jun 2001 */
-
+#include "config.h"
 #include "md5.h"
 #ifdef HAVE_STRING_H
 #include <string.h>   /* memmove */
