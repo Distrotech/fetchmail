@@ -280,7 +280,7 @@ fetchmail -d 900
 .PP
 will, therefore, poll all the hosts described in your 
 .I ~/.fetchmailrc
-file (except those explicitly excluded with the `skip' option) once
+file (except those explicitly excluded with the `skip' verb) once
 every fifteen minutes.
 .PP
 Only one daemon process is permitted per user; in daemon mode,
@@ -372,6 +372,11 @@ permissions;
 .I fetchmail
 will complain and exit otherwise.
 .PP
+You may read the \fI.fetchmailrc\fR file as a list of commands to 
+be executed when 
+.I fetchmail
+is called with no arguments.
+.PP
 Comments begin with a '#' and extend through the end of the line.
 Otherwise the file consists of a series of free-format server entries.
 Any amount of whitespace separates keywords, tokens, or strings in
@@ -383,17 +388,21 @@ characters or string delimiters in strings.  When there is a conflict
 between the command-line arguments and the arguments in this file, the
 command-line arguments take precedence.
 .PP
-Each server entry consists of the keyword `server', followed by a
-server name, followed by server options, followed by any number of
-user descriptions.
+Each server entry consists of one of the keywords `poll' or `skip',
+followed by a server name, followed by server options, followed by any
+number of user descriptions.
+.PP
+The `poll' verb tells fetchmail to query this host when it is run with
+no arguments.  The `skip' verb tells
+.I fetchmail 
+not to poll this host unless it is explicitly named on the command
+line.  (The `skip' verb allows you to experiment with test entries
+safely, or easily disable entries for hosts that are temporarily down.)
 .PP
 Legal server options are:
 
-    server
     protocol (or proto)
     port
-    skip
-    noskip
     authenticate (or auth)
     timeout
 
@@ -416,7 +425,7 @@ Legal user options are
     norewrite
 .PP
 All options correspond to the obvious command-line arguments except
-five: `is', `to', `password', and `skip'.
+three: `is', `to', and `password'
 .PP
 The `is' or `to' keywords associate the following local (client)
 name(s) (or server-name to client-name mappings separated by =) with
@@ -441,15 +450,6 @@ to be used with the entry's server.
 The \fBaliases\fR option declares names that are recognized as OK for
 local delivery.  Your local name is automatically one of these; the
 aliases directive can be used to declare others.   
-.PP
-The `skip' option tells
-.I fetchmail 
-not to query this host unless it is explicitly named on the command
-line.  A host entry with this flag will be skipped when
-.I fetchmail
-called with no arguments steps through all hosts in the run control file.
-(This option allows you to experiment with test entries safely, or easily
-disable entries for hosts that are temporarily down.)
 .PP
 Legal protocol identifiers are
 
@@ -483,40 +483,39 @@ mail for the remote user `eric' is to be delivered to `esr',
 but you can make this clearer by saying `user eric there is esr here',
 or reverse it by saying `user esr here is eric there'
 .PP
-Finally, instead of saying `server fubar.com skip ...' you can say
-\&`skip server fubar.com ...'
+For backward compatibility, the word `server' is a syninym for `poll'.
 .PP
 Basic format is:
 
 .nf
-  server SERVERNAME protocol PROTOCOL username NAME password PASSWORD 
+  poll SERVERNAME protocol PROTOCOL username NAME password PASSWORD 
 .fi
 .PP
 Example:
 
 .nf
-  server pop.provider.net protocol pop3 username jsmith password secret1
+  poll pop.provider.net protocol pop3 username jsmith password secret1
 .fi
 .PP
 Or, using some abbreviations:
 
 .nf
-  server pop.provider.net proto pop3 user jsmith password secret1
+  poll pop.provider.net proto pop3 user jsmith password secret1
 .fi
 .PP
 Multiple servers may be listed:
 
 .nf
-  server pop.provider.net proto pop3 user jsmith pass secret1
-  server other.provider.net proto pop2 user John.Smith pass My^Hat
+  poll pop.provider.net proto pop3 user jsmith pass secret1
+  poll other.provider.net proto pop2 user John.Smith pass My^Hat
 .fi
 
 Here's a version of those two with more whitespace and some noise words: 
 
 .nf
-  server pop.provider.net proto pop3
+  poll pop.provider.net proto pop3
       user jsmith, with password secret1, is jsmith here;
-  server other.provider.net proto pop2:
+  poll other.provider.net proto pop2:
       user John.Smith with password My^Hat, is John.Smith here;
 .fi
 
@@ -528,22 +527,22 @@ If you need to include whitespace in a parameter string, enclose the
 string in double quotes.  Thus:
 
 .nf
-  server mail.provider.net with proto pop3:
+  poll mail.provider.net with proto pop3:
         user jsmith there has password "u can't krak this"
                     is jws here and wants mda "/bin/mail"
 .fi
 
 You may have an initial server description headed by the keyword
-`defaults' instead of `server' followed by a name.  Such a record
+`defaults' instead of `poll' followed by a name.  Such a record
 is interpreted as defaults for all queries to use. It may be overwritten
 by individual server descriptions.  So, you could write:
 
 .nf
   defaults proto pop3
         user jsmith
-  server pop.provider.net
+  poll pop.provider.net
         pass secret1
-  server mail.provider.net
+  poll mail.provider.net
         user jjsmith there has password secret2
 .fi
 
@@ -555,7 +554,7 @@ first description lacks the `user' keyword, the name of the
 invoking user is used.) Here's a contrived example:
 
 .nf
-  server pop.provider.net proto pop3 port 3111
+  poll pop.provider.net proto pop3 port 3111
         pass gumshoe
         user jsmith with pass secret1 is smith here
         user jones with pass secret2 is jjones here
@@ -578,7 +577,7 @@ Here's what a simple retrieval configuration for a multi-drop mailbox
 looks like:
 
 .nf
-  server pop.provider.net:
+  poll pop.provider.net:
         user maildrop with pass secret1 to golux hurkle=happy snark here
 .fi
 
@@ -700,12 +699,6 @@ server, forwarding will not get done correctly.
 .PP
 The multi-drop mailbox code was hard to test thoroughly and may have obscure
 failure modes, especially in the presence of DNS flakiness.
-.PP
-The configuration file grammar is ugly and tricky.  This is an
-unfortunate result of trying to stay compatible with the old popclient
-syntax.  The way it is most likely to bite is if you try to declare
-a `defaults' entry with no user options.  This should work, but does
-not.  To work around this problem, add a redundant `user' declaration.
 .PP
 Under Linux, if fetchmail is run in daemon mode with the network
 inaccessible, each poll leaves a socket allocated but in CLOSE state

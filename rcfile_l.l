@@ -18,7 +18,8 @@ int prc_lineno = 1;
 %%
 
 defaults 	{ return DEFAULTS; }
-server 		{ return SERVER; }
+server 		{ return POLL; }
+poll		{ return POLL; }
 proto(col)? 	{ return PROTOCOL; }
 port		{ return PORT; }
 auth(enticate)?	{ return AUTHENTICATE; }

@@ -35,12 +35,10 @@
 #   flush
 #   fetchall
 #   rewrite
-#   skip
 #   nokeep
 #   noflush
 #   nofetchall
 #   norewrite
-#   noskip
 #
 # Legal protocol identifiers are
 #   pop2 (or POP2)
@@ -54,23 +52,22 @@
 #   kerberos
 #
 # Basic format is
-# server SERVERNAME protocol PROTOCOL username NAME password PASSWORD 
+# poll SERVERNAME protocol PROTOCOL username NAME password PASSWORD 
 # Example:
 #
-server pop.provider.net protocol pop3 username jsmith password secret1
+poll pop.provider.net protocol pop3 username jsmith password secret1
 
 # Or, using some abbreviations:
 #
-server pop.provider.net proto pop3 user jsmith password secret1
+poll pop.provider.net proto pop3 user jsmith password secret1
 
 # Multiple servers may be listed
 #
-server pop.provider.net proto pop3 user jsmith password secret1
-server other.provider.net proto pop2 user John.Smith password My^Hat
+poll pop.provider.net proto pop3 user jsmith password secret1
+poll other.provider.net proto pop2 user John.Smith password My^Hat
 
-# Other possibilities (note optional use of \ to escape newline -- this is all 
-# one server definition.
-server pop.provider.net 	\
-	proto pop3		\
-	user jsmith		\
+# Other possibilities
+poll pop.provider.net
+	proto pop3
+	user jsmith
 	pass secret1

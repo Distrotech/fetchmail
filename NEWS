@@ -4,6 +4,7 @@ pl 1.9.5 ():
 * Added -N, --nodetach option for debugging purposes.
 * Use interval timers for poll-interval sleep and nonresponse timeout.
 * fetchmail -q no longer parses the configuration file.
+* Configuration file grammar is slightly cleaned up and improved.
 
 pl 1.9.4 (Mon Oct 28 20:58:48 EST 1994):
 * Correct status interpretation in closemailpipe() (thanks to Neil Harkins).

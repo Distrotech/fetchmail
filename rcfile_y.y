@@ -41,7 +41,7 @@ static void prc_reset();
   char *sval;
 }
 
-%token DEFAULTS SERVER PROTOCOL AUTHENTICATE TIMEOUT KPOP KERBEROS
+%token DEFAULTS POLL PROTOCOL AUTHENTICATE TIMEOUT KPOP KERBEROS
 %token USERNAME PASSWORD FOLDER SMTPHOST MDA IS HERE THERE TO MAP LIMIT
 %token <proto> PROTO
 %token <sval>  STRING
@@ -65,8 +65,8 @@ statement_list	: statement
 statement	: define_server serverspecs userspecs      
 		;
 
-define_server	: SERVER STRING		{strcpy(current.servername, $2);}
-		| SKIP SERVER STRING	{strcpy(current.servername, $3);
+define_server	: POLL STRING	{strcpy(current.servername, $2);}
+		| SKIP STRING	{strcpy(current.servername, $2);
 						current.skip=($1==FLAG_TRUE);}
 		| DEFAULTS	{strcpy(current.servername,"defaults");}
   		;
@@ -82,14 +82,14 @@ serv_option	: PROTOCOL PROTO	{current.protocol = $2;}
 					    current.port = KPOP_PORT;
 					}
 		| PORT NUMBER		{current.port = $2;}
-		| SKIP			{current.skip = ($1==FLAG_TRUE);}
 		| AUTHENTICATE PASSWORD	{current.authenticate = A_PASSWORD;}
 		| AUTHENTICATE KERBEROS	{current.authenticate = A_KERBEROS;}
 		| TIMEOUT NUMBER	{current.timeout = $2;}
 		;
 
 /* the first and only the first user spec may omit the USERNAME part */
-userspecs	: user1opts		{prc_register(); prc_reset();}
+userspecs	: /* EMPTY */
+		| user1opts		{prc_register(); prc_reset();}
 		| user1opts explicits	{prc_register(); prc_reset();}
 		| explicits
 		;
@@ -232,24 +232,26 @@ static void prc_reset()
 /* clear the global current record (server parameters) used by the parser */
 {
     char	savename[HOSTLEN+1];
-    int		saveport, saveproto, saveauth;
+    int		saveport, saveproto, saveauth, saveskip;
 
     /*
-     * Purpose of this code is to initialize the new server block with
-     * the command-line data, but preserve whatever server name was
-     * previously set.  Also preserve server options unless the
-     * command-line explicitly overrides them.
+     * Purpose of this code is to initialize the new server block, but
+     * preserve whatever server name was previously set.  Also
+     * preserve server options unless the command-line explicitly
+     * overrides them.
      */
     (void) strcpy(savename, current.servername);
     saveport = current.port;
     saveproto = current.protocol;
     saveauth = current.authenticate;
+    saveskip = current.skip;
 
     memset(&current, '\0', sizeof(current));
 
     (void) strcpy(current.servername, savename);
     current.protocol = saveproto;
     current.authenticate = saveauth;
+    current.skip = saveskip;
 }
 
 struct query *hostalloc(init)
