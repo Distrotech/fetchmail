@@ -792,9 +792,10 @@ by individual server descriptions.  So, you could write:
 It's possible to specify more than one user per server (this is only
 likely to be useful when running fetchmail in daemon mode as root).
 The `user' keyword leads off a user description, and every user
-description except optionally the first one must include it.  (If the
-first description lacks the `user' keyword, the name of the
-invoking user is used.) Here's a contrived example:
+description except optionally the first one must include it.  If the
+first description lacks the `user' keyword, the name of the invoking
+user is used (in a future version, the option to omit the `user'
+keyword may be removed). Here's a contrived example:
 
 .nf
   poll pop.provider.net proto pop3 port 3111
@@ -804,17 +805,18 @@ invoking user is used.) Here's a contrived example:
 .fi
 
 This says that the user invoking \fIfetchmail\fR has the same username
-on pop.provider.net, and password `gumshoe' there.
-It also associates the local username `smith' with the pop.provider.net
-username `jsmith' and the local username `jjones' with the pop.provider.net
-username `jones'.
+on pop.provider.net, and password `gumshoe' there.  It also associates
+the local username `smith' with the pop.provider.net username `jsmith'
+and the local username `jjones' with the pop.provider.net username
+`jones'.
 .PP
 This example is contrived because, in practice, you are very unlikely
 to be specifying multiple users per server unless running it as root
 (thus the `pass gumshoe' would try to fetch root's mail on
-pop-provider.net, which is probably not what you want).
-In any case, we strongly recommend always having an explicit
-\&`user' clause when specifying multiple users per mailserver.
+pop-provider.net, which is probably not what you want).  In any case,
+we strongly recommend always having an explicit \&`user' clause when
+specifying multiple users per mailserver.  In a future version, the
+option not to explicitly declare the username may be removed.
 .PP
 Here's what a simple retrieval configuration for a multi-drop mailbox
 looks like:
@@ -999,8 +1001,14 @@ use the removed `localfolder' option or `limit' (which now takes a
 maximum byte size rather than a line count), this will often work.
 (The new run control file syntax also has to be a little stricter
 about the order of options than the old, in order to support multiple
-user desriptions per server; thus you may have to rearrange things a
+user descriptions per server; thus you may have to rearrange things a
 bit.)
+.PP
+Run control files in the .poprc format will trigger a warning.  To
+eliminate this warning, add the `username' keyword before your first user
+entry per server (it is already required before second and subsequent
+user entries per server.  In some future version the `username' keyword
+will be required.
 
 .SH FILES
 .TP 5
@@ -1073,3 +1081,4 @@ RFC 1730, RFC 1731, RFC 1732, RFC 2060
 .TP 5
 ETRN:
 RFC 1985
+

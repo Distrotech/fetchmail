@@ -133,7 +133,11 @@ serv_option	: AKA alias_list
  * to keep working.
  */
 userspecs	: user1opts		{record_current(); user_reset();}
-		| user1opts explicits	{record_current(); user_reset();}
+		| user1opts explicits	
+					{
+						record_current(); user_reset();
+	fprintf(stderr, "Warning: user entry with no `user' keyword\n");
+					}
 		| explicits
 		;
 
