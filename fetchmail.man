@@ -962,6 +962,10 @@ MTA returns 501 "Syntax error in parameters or arguments", but will
 move to 550 soon.
 .PP
 The
+.I postfix
+MTA runs 554 as an antispam response.
+.PP
+The
 .I fetchmail
 code recognizes and discards the message on any of a list of responses
 that defaults to [571, 550, 501, 554] but can be set with the `antispam'
