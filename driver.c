@@ -2146,7 +2146,6 @@ const int maxfetch;		/* maximum number of messages to fetch */
 			{
 			    report(stdout, _("fetchlimit %d reached; %d messages left on server\n"),
 				  maxfetch, count - fetches);
-			    uid_expunge(ctl);
 			    ok = PS_MAXFETCH;
 			    goto cleanUp;
 			}

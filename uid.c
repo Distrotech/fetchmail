@@ -368,14 +368,21 @@ void expunge_uids(struct query *ctl)
 	    idl->val.status.mark = UID_EXPUNGED;
 }
 
-void update_str_lists(struct query *ctl)
-/* perform end-of-query actions on UID lists */
+void write_saved_lists(struct query *hostlist, const char *idfile)
+/* perform end-of-run write of seen-messages list */
 {
+    int		idcount;
+    FILE	*tmpfp;
+    struct query *ctl;
+    struct idlist *idp;
+
+    /* old state of mailbox is now irrelevant */
     free_str_list(&ctl->oldsaved);
     free_str_list(&scratchlist);
     ctl->oldsaved = ctl->newsaved;
     ctl->newsaved = (struct idlist *) NULL;
 
+    /* debugging code */
     if (ctl->server.uidl && outlevel >= O_DEBUG)
     {
 	struct idlist *idp;
@@ -387,27 +394,6 @@ void update_str_lists(struct query *ctl)
 	    report_build(stdout, " <empty>");
 	report_complete(stdout, "\n");
     }
-}
-
-void uid_expunge(struct query *ctl)
-/* transfer seen UIDs from newsaved to oldsaved
-   to simulate writing anad rereading .fetchids */
-{
-    struct idlist *i;
-
-    for (i = ctl->newsaved; i; i = i->next)
-	if (i->val.status.mark == UID_SEEN &&
-	    !str_in_list(&ctl->oldsaved, i->id, FALSE))
-	    save_str(&ctl->oldsaved, i->id, UID_SEEN);
-}
-
-void write_saved_lists(struct query *hostlist, const char *idfile)
-/* perform end-of-run write of seen-messages list */
-{
-    int		idcount;
-    FILE	*tmpfp;
-    struct query *ctl;
-    struct idlist *idp;
 
     /* if all lists are empty, nuke the file */
     idcount = 0;
