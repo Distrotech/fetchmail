@@ -13,6 +13,9 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.2.4 (Thu Sep 18 16:19:10 EDT 1997)
+* Small compilation cleanups, thanks to Florian laRoche.
+
 fetchmail-4.2.3 (Thu Sep 18 16:19:10 EDT 1997)
 * Fix a bug in IMAP message-size retrieval.
 * Yet another try at getting the size-consistency check right.

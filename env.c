@@ -7,6 +7,7 @@
 #include "config.h"
 #include "fetchmail.h"
 #include <stdio.h>
+#include <ctype.h>
 #if defined(STDC_HEADERS)
 #include <stdlib.h>
 #endif
@@ -22,16 +23,13 @@
 
 extern char *getenv();	/* needed on sysV68 R3V7.1. */
 
-char *user, *home, *fetchmailhost;
-
 extern char *program_name;
 
 void envquery(int argc, char **argv)
 /* set up basic stuff from the environment (including the rc file name) */
 {
-    char *tmpdir, tmpbuf[BUFSIZ]; 
+    char tmpbuf[BUFSIZ]; 
     struct passwd *pw;
-    struct query *ctl;
 
     if ((program_name = strrchr(argv[0], '/')) != NULL)
 	++program_name;

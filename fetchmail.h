@@ -181,7 +181,6 @@ extern struct query cmd_opts, *querylist;
 
 /* what's returned by envquery */
 extern void envquery(int, char **);
-char *user, *home, *fetchmailhost;
 
 /* controls the detail level of status/progress messages written to stderr */
 extern int outlevel;    	/* see the O_.* constants above */
@@ -207,6 +206,7 @@ extern char *idfile;		/* path name of UID file */
 extern int linelimit;		/* limit # lines retrieved per site */
 extern flag versioninfo;	/* emit only version info */
 extern char *user;		/* name of invoking user */
+extern char *home;		/* home directory of invoking user */
 extern char *fetchmailhost;	/* the name of the host running fetchmail */
 
 /* prototypes for globally callable functions */

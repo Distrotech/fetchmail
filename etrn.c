@@ -10,6 +10,7 @@
 #include  <assert.h>
 #include  <netdb.h>
 #include  <errno.h>
+#include  <unistd.h>
 #include  "fetchmail.h"
 #include  "smtp.h"
 #include  "socket.h"

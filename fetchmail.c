@@ -64,6 +64,7 @@ int cmd_daemon; 	/* if --daemon was set */
 char *idfile;		/* UID list file */
 flag versioninfo;	/* emit only version info */
 char *user;		/* the name of the invoking user */
+char *home;
 char *fetchmailhost;	/* the name of the host running fetchmail */
 char *program_name;	/* the name to prefix error messages with */
 
@@ -90,7 +91,6 @@ int main (int argc, char **argv)
 {
     int st, bkgd = FALSE;
     int parsestatus, implicitmode = FALSE;
-    struct passwd *pw;
     struct query *ctl;
     FILE	*lockfp;
     netrc_entry *netrc_list;
@@ -517,7 +517,7 @@ static int load_params(int argc, char **argv, int optind)
 {
     int	implicitmode, st;
     struct passwd *pw;
-    struct query def_opts, *ctl, *mp;
+    struct query def_opts, *ctl;
 
     memset(&def_opts, '\0', sizeof(struct query));
     def_opts.smtp_socket = -1;
