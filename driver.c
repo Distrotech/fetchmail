@@ -452,7 +452,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 
 	    if (outlevel > O_SILENT)
 	    {
-		report_build(stdout, GT_("reading message %s@%s:d of %d"),
+		report_build(stdout, GT_("reading message %s@%s:%d of %d"),
 			     ctl->remotename, ctl->server.truename,
 			     num, count);
 
@@ -1224,7 +1224,7 @@ is restored."));
 		    fetches = new;	/* set error status correctly */
 		    /*
 		     * There used to be a `goto noerror' here, but this
-		     * prevneted checking of multiple folders.  This
+		     * prevented checking of multiple folders.  This
 		     * comment is a reminder in case I introduced some
 		     * subtle bug by removing it...
 		     */
