@@ -46,6 +46,12 @@ class Configuration:
 	    str = str + repr(site)
 	return str
 
+    def __delitem__(self, name):
+        for si in range(len(self.servers)):
+            if self.servers[si].pollname == name:
+                del self.servers[si]
+                break
+
     def __str__(self):
 	return "[Configuration: " + repr(self) + "]"
 
@@ -159,6 +165,12 @@ class Server:
 	    str = str + repr(user)
 	str = str + "\n"
 	return str;
+
+    def __delitem__(self, name):
+        for ui in range(len(self.users)):
+            if self.users[ui].pollname == name:
+                del self.users[ui]
+                break
 
     def __repr__(self):
 	return self.dump(TRUE)
@@ -397,8 +409,9 @@ def make_icon_window(base, image):
 
 class ListEdit(Frame):
 # edit a list of values (duplicates not allowed) with a supplied editor hook 
-    def __init__(self, newlegend, list, editor, master, helptxt):
+    def __init__(self, newlegend, list, editor, deletor, master, helptxt):
 	self.editor = editor
+	self.deletor = deletor
 	self.list = list
 
 	# Set up a widget to accept new elements
@@ -464,8 +477,12 @@ class ListEdit(Frame):
 	    helpwin(listboxhelp)
 	else:
             index = string.atoi(select[0])
+            label = self.listwidget.get(index);
             self.listwidget.delete(index)
-            if self.list != None: del self.list[index]
+            if self.list != None:
+                del self.list[index]
+            if self.deletor != None:
+                apply(self.deletor, (label,))
 
 def ConfirmQuit(frame, context):
     ans = Dialog(frame, 
@@ -476,10 +493,10 @@ def ConfirmQuit(frame, context):
 		 default = 1)
     return ans.num == 0
 
-def dispose_window(master, legend, help):
+def dispose_window(master, legend, help, savelegend='OK'):
     dispose = Frame(master, relief=RAISED, bd=5)
     Label(dispose, text=legend).pack(side=TOP,pady=10)
-    Button(dispose, text='Save', fg='blue',
+    Button(dispose, text=savelegend, fg='blue',
            command=master.save).pack(side=LEFT)
     Button(dispose, text='Quit', fg='blue',
            command=master.nosave).pack(side=LEFT)
@@ -605,7 +622,10 @@ class ConfigurationEdit(Frame, MyWidget):
             }
 
     def server_edit(self, sitename):
-         self.subwidgets[sitename] = ServerEdit(sitename, self).edit(self.mode, Toplevel())
+	self.subwidgets[sitename] = ServerEdit(sitename, self).edit(self.mode, Toplevel())
+
+    def server_delete(self, sitename):
+        del self.configuration[sitename]
 
     def edit(self, mode):
         self.mode = mode
@@ -619,7 +639,8 @@ class ConfigurationEdit(Frame, MyWidget):
 
 	dispose_window(self,
                        'Configurator ' + self.mode + ' Controls',
-                       ConfigurationEdit.mode_to_help[self.mode])
+                       ConfigurationEdit.mode_to_help[self.mode],
+                       'Save')
 
 	gf = Frame(self, relief=RAISED, bd = 5)
 	Label(gf,
@@ -668,6 +689,7 @@ class ConfigurationEdit(Frame, MyWidget):
 	ListEdit('New Server:', 
 		map(lambda x: x.pollname, self.configuration.servers),
 		lambda site, self=self: self.server_edit(site),
+		lambda site, self=self: self.server_delete(site),
                 lf, remotehelp)
 	lf.pack(fill=X)
 
@@ -729,7 +751,7 @@ The server options screen controls fetchmail
 options that apply to one of your mailservers.
 
 Once you have a mailserver configuration set
-up as you like it, you can select `Save' to
+up as you like it, you can select `OK' to
 store it in the server list maintained in
 the main configuration window.
 
@@ -888,6 +910,9 @@ class ServerEdit(Frame, MyWidget):
     def user_edit(self, username, mode):
         self.subwidgets[username] = UserEdit(username, self).edit(mode, Toplevel())
 
+    def user_delete(self, username):
+        del self.subwidgets[username]
+
     def makeWidgets(self, host, mode):
 	topwin = dispose_window(self, "Server options for querying " + host, serverhelp)
 
@@ -948,6 +973,7 @@ class ServerEdit(Frame, MyWidget):
 	ListEdit("New user: ",
                  map(lambda x: x.remote, self.server.users),
                  lambda u, m=mode, s=self: s.user_edit(u, m),
+                 lambda u, s=self: s.user_delete(u),
                  userwin, suserhelp)
 	userwin.pack(fill=X)
 
@@ -967,10 +993,10 @@ class ServerEdit(Frame, MyWidget):
             Checkbutton(mdropwin, text="Enable multidrop DNS lookup?",
 		    variable=self.dns).pack(side=TOP)
             Label(mdropwin, text="DNS aliases").pack(side=TOP)
-            ListEdit("New alias: ", self.server.aka, None, mdropwin, None)
+            ListEdit("New alias: ", self.server.aka, None, None, mdropwin, None)
             Label(mdropwin, text="Domains to be considered local").pack(side=TOP)
             ListEdit("New domain: ",
-		 self.server.localdomains, None, mdropwin, multihelp)
+		 self.server.localdomains, None, None, mdropwin, multihelp)
             mdropwin.pack(fill=X)
 
             if os_type == 'linux' or 'netsec' in feature_options:
@@ -1157,9 +1183,9 @@ that may differ between individual
 users on your site.
 
 Once you have a user configuration set
-up as you like it, you can select `Save' to
-store it in the server list maintained in
-the main configuration window.
+up as you like it, you can select `OK' to
+store it in the user list maintained in
+the site configuration window.
 
 If you wish to discard the changes you have
 made to user options, select `Quit'.
@@ -1239,14 +1265,15 @@ class UserEdit(Frame, MyWidget):
         names = Frame(leftwin, relief=RAISED, bd=5)
         Label(names, text="Local names").pack(side=TOP)
         ListEdit("New name: ",
-                     self.user.localnames, None, names, localhelp)
+                     self.user.localnames, None, None, names, localhelp)
         names.pack(fill=X, anchor=N)
 
         if mode != 'novice':
             targwin = Frame(leftwin, relief=RAISED, bd=5)
             Label(targwin, text="Forwarding Options").pack(side=TOP)
             Label(targwin, text="Listeners to forward to").pack(side=TOP)
-            ListEdit("New listener:", self.user.smtphunt, None, targwin, None)
+            ListEdit("New listener:",
+                     self.user.smtphunt, None, None, targwin, None)
             LabeledEntry(targwin, 'Append to MAIL FROM line:',
 		     self.smtpaddress, '26').pack(side=TOP, fill=X)
             LabeledEntry(targwin, 'Connection setup command:',
@@ -1313,7 +1340,8 @@ class UserEdit(Frame, MyWidget):
             if self.parent.server.protocol in ('IMAP', 'IMAP-K4', 'IMAP-GSS'):
                 foldwin = Frame(rightwin, relief=RAISED, bd=5)
                 Label(foldwin, text="Remote folders (IMAP only)").pack(side=TOP)
-                ListEdit("New folder:", self.user.mailboxes, None, foldwin, None)
+                ListEdit("New folder:", self.user.mailboxes,
+                         None, None, foldwin, None)
                 foldwin.pack(fill=X, anchor=N)
 
         if mode != 'novice':
@@ -1454,8 +1482,7 @@ Progress  messages will be shown, but not debug messages.
 				fg='blue', command=self.run).pack()
 
 	Message(self, text="""
-Or you can just select `Quit' to leave the launcher now and
-return to the main panel.
+Or you can just select `Quit' to exit the launcher now.
 """, width=600).pack(side=TOP)
 	Button(self, text='Quit', fg='blue', command=self.leave).pack()
 
