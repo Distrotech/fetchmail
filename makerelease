@@ -60,8 +60,7 @@ Subject: The $version release of fetchmail is available
 FCC: ~/postings/outmail
 
 The $version release of fetchmail is now available at the usual locations,
-including <URL:http://$ENV{'WWWVIRTUAL'}/~esr/fetchmail> and 
-<URL:ftp://ftp.ccil.org/pub/esr/fetchmail>.
+including <URL:http://$ENV{'WWWVIRTUAL'}/~esr/fetchmail>.
 
 Here are the release notes:
 
