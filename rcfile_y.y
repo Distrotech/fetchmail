@@ -49,7 +49,7 @@ static void prc_reset();
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
-%token <flag>  KEEP FLUSH FETCHALL REWRITE PORT
+%token <flag>  KEEP FLUSH FETCHALL REWRITE DNS PORT
 
 /* these are actually used by the lexer */
 %token FLAG_TRUE	2
@@ -128,6 +128,7 @@ serv_option	: AKA alias_list
 					fprintf(stderr, "fetchmail: monitor option is only supported under Linux\n");
 #endif /* linux */
 					}
+		| DNS			{current.server.no_dns = ($1==FLAG_FALSE);}
 		;
 
 /*
@@ -190,7 +191,7 @@ user_option	: TO localnames HERE
 		| KEEP			{current.keep = ($1==FLAG_TRUE);}
 		| FLUSH			{current.flush = ($1==FLAG_TRUE);}
 		| FETCHALL		{current.fetchall = ($1==FLAG_TRUE);}
-		| REWRITE		{current.norewrite = ($1==FLAG_TRUE);}
+		| REWRITE		{current.no_rewrite =($1==FLAG_FALSE);}
 		| LIMIT NUMBER		{current.limit = $2;}
 		| FETCHLIMIT NUMBER	{current.fetchlimit = $2;}
 		| BATCHLIMIT NUMBER	{current.batchlimit = $2;}
@@ -331,6 +332,12 @@ static void prc_register(void)
     FLAG_FORCE(server.timeout);
     FLAG_FORCE(server.envelope);
     FLAG_FORCE(server.skip);
+    FLAG_FORCE(server.no_dns);
+
+#ifdef HAVE_RES_SEARCH
+    FLAG_FORCE(server.interface);
+    FLAG_FORCE(server.monitor);
+#endif /* HAVE_RES_SEARCH */
 
     FLAG_FORCE(remotename);
     FLAG_FORCE(password);
@@ -342,10 +349,11 @@ static void prc_register(void)
     FLAG_FORCE(keep);
     FLAG_FORCE(flush);
     FLAG_FORCE(fetchall);
-    FLAG_FORCE(norewrite);
+    FLAG_FORCE(no_rewrite);
     FLAG_FORCE(limit);
     FLAG_FORCE(fetchlimit);
     FLAG_FORCE(batchlimit);
+
 #undef FLAG_FORCE
 
     (void) hostalloc(&current);
@@ -364,6 +372,12 @@ void optmerge(struct query *h2, struct query *h1)
     FLAG_MERGE(server.timeout);
     FLAG_MERGE(server.envelope);
     FLAG_MERGE(server.skip);
+    FLAG_MERGE(server.no_dns);
+
+#ifdef HAVE_RES_SEARCH
+    FLAG_MERGE(server.interface);
+    FLAG_MERGE(server.monitor);
+#endif /* HAVE_RES_SEARCH */
 
     FLAG_MERGE(remotename);
     FLAG_MERGE(password);
@@ -375,7 +389,7 @@ void optmerge(struct query *h2, struct query *h1)
     FLAG_MERGE(keep);
     FLAG_MERGE(flush);
     FLAG_MERGE(fetchall);
-    FLAG_MERGE(norewrite);
+    FLAG_MERGE(no_rewrite);
     FLAG_MERGE(limit);
     FLAG_MERGE(fetchlimit);
     FLAG_MERGE(batchlimit);

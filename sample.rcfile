@@ -43,10 +43,12 @@
 #   flush
 #   fetchall
 #   rewrite
-#   nokeep
-#   noflush
-#   nofetchall
-#   norewrite
+#   dns
+#   no keep
+#   no flush
+#   no fetchall
+#   no rewrite
+#   no dns
 #   limit                     -- must be followed by numeric size limit
 #   fetchlimit                -- must be followed by numeric msg fetch limit
 #   batchlimit                -- must be followed by numeric SMTP batch limit

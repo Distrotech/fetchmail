@@ -115,6 +115,8 @@ static int is_host_alias(const char *name, struct query *ctl)
 	return(TRUE);
     else if (strcmp(name, ctl->server.canonical_name) == 0)
 	return(TRUE);
+    else if (ctl->server.no_dns)
+	return(FALSE);
 
     /*
      * We know DNS service was up at the beginning of this poll cycle.
@@ -423,7 +425,7 @@ char *realname;		/* real name of host */
      
 	if (inheaders)
         {
-	    if (!ctl->norewrite)
+	    if (!ctl->no_rewrite)
 		reply_hack(bufp, realname);
 
 	    if (!headers)

@@ -235,7 +235,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'n':
 	case LA_NOREWRITE:
-	    ctl->norewrite = TRUE;
+	    ctl->no_rewrite = TRUE;
 	    break;
 	case 'l':
 	case LA_LIMIT:

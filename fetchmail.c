@@ -807,8 +807,8 @@ void dump_params (struct query *ctl)
 	   ctl->flush ? "" : " not",
 	   ctl->flush ? "on" : "off");
     printf("  Rewrite of server-local addresses is %sabled (--norewrite %s).\n",
-	   ctl->norewrite ? "dis" : "en",
-	   ctl->norewrite ? "on" : "off");
+	   ctl->no_rewrite ? "dis" : "en",
+	   ctl->no_rewrite ? "on" : "off");
     if (ctl->limit)
 	printf("  Message size limit is %d bytes (--limit %d).\n", 
 	       ctl->limit, ctl->limit);
@@ -855,18 +855,22 @@ void dump_params (struct query *ctl)
 		fputs("*\n", stdout);
 	}
 
+	printf("  DNS lookup for multidrop addresses is %sabled.\n",
+	       ctl->server.no_dns ? "dis" : "en",
+	       ctl->server.no_dns ? "on" : "off");
+
 	if (count > 1)
 	    printf("  Envelope header is assumed to be: %s\n", ctl->server.envelope);
     }
 #ifdef	linux
     if (ctl->server.interface)
-	printf("TCP/IP interface requirements for %s.\n", ctl->server.interface);
+	printf("  Connection must be through interface %s.\n", ctl->server.interface);
     else if (outlevel == O_VERBOSE)
-	printf("No TCP/IP interface requirements specified.\n");
+	printf("  No interface requirement specified.\n");
     if (ctl->server.monitor)
-	printf("Polling loop will monitor %s.\n", ctl->server.monitor);
+	printf("  Polling loop will monitor %s.\n", ctl->server.monitor);
     else if (outlevel == O_VERBOSE)
-	printf("No monitor interface specified.\n");
+	printf("  No monitor interrface specified.\n");
 #endif
 
     if (ctl->server.protocol > P_POP2)

@@ -17,6 +17,8 @@ int prc_lineno = 1;
 %o 5000
 %a 3000
 
+WS	[ \t]*
+
 %%
 
 set		{ return SET; }
@@ -53,14 +55,24 @@ to		{ return TO; }
 =		{ return MAP; }
 "*"		{ return WILDCARD; }
 
-keep		{ yylval.flag = FLAG_TRUE;  return KEEP; }
-flush		{ yylval.flag = FLAG_TRUE;  return FLUSH; }
-fetchall	{ yylval.flag = FLAG_TRUE;  return FETCHALL; }
-rewrite		{ yylval.flag = FLAG_FALSE; return REWRITE; }
+keep		{ yylval.flag = FLAG_TRUE; return KEEP; }
+flush		{ yylval.flag = FLAG_TRUE; return FLUSH; }
+fetchall	{ yylval.flag = FLAG_TRUE; return FETCHALL; }
+rewrite		{ yylval.flag = FLAG_TRUE; return REWRITE; }
+dns		{ yylval.flag = FLAG_TRUE; return DNS; }
+
 nokeep		{ yylval.flag = FLAG_FALSE; return KEEP; }
 noflush		{ yylval.flag = FLAG_FALSE; return FLUSH; }
 nofetchall	{ yylval.flag = FLAG_FALSE; return FETCHALL; }
-norewrite	{ yylval.flag = FLAG_TRUE;  return REWRITE; }
+norewrite	{ yylval.flag = FLAG_FALSE; return REWRITE; }
+nodns		{ yylval.flag = FLAG_FALSE; return DNS; }
+
+no{WS}keep	{ yylval.flag = FLAG_FALSE; return KEEP; }
+no{WS}flush	{ yylval.flag = FLAG_FALSE; return FLUSH; }
+no{WS}fetchall	{ yylval.flag = FLAG_FALSE; return FETCHALL; }
+no{WS}rewrite	{ yylval.flag = FLAG_FALSE; return REWRITE; }
+no{WS}dns	{ yylval.flag = FLAG_FALSE; return DNS; }
+
 limit		{ return LIMIT; }
 
 with		{/* EMPTY */}

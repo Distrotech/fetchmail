@@ -11,6 +11,12 @@ features --
 
 * RFC822 header continuation for long address lists is is now handled properly.
 
+* There is now a `nodns' option to suppress DNS checking of address hostname
+  parts in multidrop mode (make sure your aka list is complete before you use
+  this!).
+
+* Options such as `nokeep' can now be written `no keep'.
+
 Note: The first two changes mean that older .fetchmailrc files using
 the `set' syntax for these options will cause fetchmail to die with a
 parse error at initialization time.  Conversion is trivial -- for

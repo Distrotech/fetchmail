@@ -67,6 +67,7 @@ struct hostdata		/* shared among all user connections to given server */
     int timeout;
     char *envelope;
     int skip;
+    int no_dns;
 
 #ifdef linux
     char		*interface;
@@ -101,7 +102,7 @@ struct query
     int keep;
     int fetchall;
     int flush;
-    int norewrite;
+    int no_rewrite;
     int limit;
     int fetchlimit;
     int batchlimit;

@@ -546,6 +546,8 @@ Legal server options are:
     aka
     interface
     monitor
+    dns
+    no dns
 
 Legal user options are
 
@@ -561,25 +563,17 @@ Legal user options are
     flush
     fetchall
     rewrite
-    nokeep
-    noflush
-    nofetchall
-    norewrite
+    no keep
+    no flush
+    no fetchall
+    no rewrite
     limit
     fetchlimit
     syslog
 .PP
 All options correspond to the obvious command-line arguments except
-the following: `aka', `is', `to', `password', `preconnect', and
-`localdomains'.
-.PP
-The `aka' option is for use with multidrop mailboxes.  It allows you
-to pre-declare a list of DNS aliases for a server.  This is an
-optimization hack that allows you to trade space for speed.  When
-.IR fetchmail ,
-while processing a multidrop mailbox, grovels through message headers
-looking for names of the mailserver, pre-declaring common ones can
-save it from having to do DNS lookups.
+the following: `aka', `is', `to', `dns'/`no dns', `password',
+`preconnect', and `localdomains'.
 .PP
 The `is' or `to' keywords associate the following local (client)
 name(s) (or server-name to client-name mappings separated by =) with
@@ -589,21 +583,45 @@ its last name, unrecognized names are simply passed through.
 A single local name can be used to support redirecting your mail when
 your username on the client machine is different from your name on the
 mailserver.  When there is only a single local name, mail is forwarded
-to that local username regardless of the message's To, Cc, and Bcc headers.
+to that local username regardless of the message's Received, To, Cc,
+and Bcc headers.  In this case 
+.I fetchmail
+never does DNS lookups.
 .PP
 When there is more than one local name (or name mapping) the
-\fIfetchmail\fR code does look at the To, Cc, and Bcc headers of
-retrieved mail. When a declared mailserver username is recognized, its
-local mapping is added to the list of local recipients.  If
-\fIfetchmail\fR cannot recognize any mailserver usernames, the default
-recipient is the calling user.
+\fIfetchmail\fR code does look at the Received, To, Cc, and Bcc
+headers of retrieved mail (this is `multidrop mode').  It looks for
+addresses with hostname parts that match your `aka' or `localdomains'
+options, and usually also for hostname parts which DNS tells it are
+aliases of the mailserver.  See the discussion of `dns',
+`localdomains', and `aka' for details on how matching addresses are
+handled.  If \fIfetchmail\fR cannot match any mailserver usernames or
+localdomain addresses, the default recipient is the calling user.
+.PP
+The `dns' option (normally on) controls the way addresses from
+multidrop mailboxes are checked.  On, it enables logic to check each
+host address that doesn't match an `aka' or `localdomains' declaration
+by looking it up with DNS.  When a mailserver username is recognized
+attached to a matching hostname part, its local mapping is added to
+the list of local recipients.
+.PP
+The `aka' option is for use with multidrop mailboxes.  It allows you
+to pre-declare a list of DNS aliases for a server.  This is an
+optimization hack that allows you to trade space for speed.  When
+.IR fetchmail ,
+while processing a multidrop mailbox, grovels through message headers
+looking for names of the mailserver, pre-declaring common ones can
+save it from having to do DNS lookups.
+.PP
+The `localdomains' option allows you to declare a list of domains
+which fetchmail should consider local.  When fetchmail is parsing
+address lines in multidrop modes, and a trailing segment of a host
+name matches a declared local doman, that address is passed through
+to the listener or MDA unaltered (local-name mappings are \fInot\fR
+applied).
 .PP
 The \fBpassword\fR option requires a string argument, which is the password
 to be used with the entry's server.
-.PP
-The \fBaka\fR option declares names that are recognized as OK for
-local delivery.  Your local name is automatically one of these; the
-aka directive can be used to declare others.   
 .PP
 The `preconnect' keyword allows you to specify a shell command to be
 executed just before each time
@@ -611,12 +629,6 @@ executed just before each time
 establishes a mailserver connection.  This may be useful if you are 
 attempting to set up secure POP connections with the aid of
 .IR ssh (1).
-.PP
-The `localdomains' option allows you to declare a list of domains
-which fetchmail should consider local.  When fetchmail is parsing
-address lines in multidrop modes, and a trailing segment of a host
-name matches a declared local doman, that address is passed through
-to the listener or MDA unaltered.
 .PP
 Legal protocol identifiers are
 
