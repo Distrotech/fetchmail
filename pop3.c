@@ -101,7 +101,12 @@ int pop3_ok (int sock, char *argbuf)
 		ok = PS_LOCKBUSY;
 	    else
 		ok = PS_AUTHFAIL;
-	    if (*bufp)
+	    /*
+	     * We always want to pass the user lock-busy messages, because
+	     * they're red flags.  Other stuff (like AUTH failures on non-
+	     * RFC1734 servers) only if we're debugging.
+	     */
+	    if (*bufp && (ok == PS_LOCKBUSY || outlevel >= O_MONITOR))
 	      report(stderr, "%s\n", bufp);
 	}
 	else
