@@ -114,7 +114,15 @@ static int get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
 	if (socket_fd < 0 || !stats_file)
 		result = FALSE;
 	else
-		result = _get_ifinfo_(socket_fd, stats_file, ifname, ifinfo);
+	{
+	    char	*sp = strchr(ifname, '/');
+
+	    if (sp)
+		*sp = '\0';
+	    result = _get_ifinfo_(socket_fd, stats_file, ifname, ifinfo);
+	    if (sp)
+		*sp = '/';
+	}
 	if (socket_fd >= 0)
 		close(socket_fd);
 	if (stats_file)
@@ -155,11 +163,12 @@ void interface_parse(char *buf, struct hostdata *hp)
 {
 	char *cp1, *cp2;
 
+	hp->interface = xstrdup(buf);
+
 	/* find and isolate just the IP address */
 	if (!(cp1 = strchr(buf, '/')))
 		(void) error(PS_SYNTAX, 0, "missing IP interface address");
 	*cp1++ = '\000';
-	hp->interface = xstrdup(buf);
 
 	/* find and isolate just the netmask */
 	if (!(cp2 = strchr(cp1, '/')))
@@ -176,6 +185,9 @@ void interface_parse(char *buf, struct hostdata *hp)
 	/* apply the mask now to the IP address (range) required */
 	hp->interface_pair->interface_address.s_addr &=
 		hp->interface_pair->interface_mask.s_addr;
+
+	/* restore original interface string (for configuration dumper) */
+	*--cp1 = '/';
 	return;
 }
 
