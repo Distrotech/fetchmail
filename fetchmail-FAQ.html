@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/02/12 06:02:32 $
+<td width="30%" align=right>$Date: 2000/02/15 02:13:55 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -32,13 +32,14 @@ mail it to fetchmail's maintainer, Eric S. Raymond, at
 <a href="#G5">G5. Is there a mailing list for exchanging tips?</a><br>
 <a href="#G6">G6. So, what's this I hear about a fetchmail paper?</a><br>
 <a href="#G7">G7. What is the best server to use with fetchmail?</a><br>
-<a href="#G8">G8. How can I avoid sending my password en clair?</a><br>
-<a href="#G9">G9. Is any special configuration needed to use a dynamic
+<a href="#G8">G8. What is the best mail program to use with fetchmail?</a><br>
+<a href="#G9">G9. How can I avoid sending my password en clair?</a><br>
+<a href="#G10">G10. Is any special configuration needed to use a dynamic
 IP address?</a><br>
-<a href="#G10">G10. Is any special configuration needed to use firewalls?</a><br>
-<a href="#G11">G11. Is any special configuration needed to <em>send</em> mail?</a><br>
-<a href="#G12">G12. Is fetchmail Y2K-compliant?</a><br>
-<a href="#G13">G13. Is there a way in fetchmail to support disconnected IMAP mode?</a><br>
+<a href="#G11">G11. Is any special configuration needed to use firewalls?</a><br>
+<a href="#G12">G12. Is any special configuration needed to <em>send</em> mail?</a><br>
+<a href="#G13">G13. Is fetchmail Y2K-compliant?</a><br>
+<a href="#G14">G14. Is there a way in fetchmail to support disconnected IMAP mode?</a><br>
 
 <h1>Build-time problems:</h1>
 
@@ -387,7 +388,24 @@ The 2.5.2 version appears to restore the open-source license of
 previous versions.<P>
 
 <hr>
-<h2><a name="G8">G8. How can I avoid sending my password en clair?</a></h2>
+<h2><a name="G8">G8. What is the best mail program to use with fetchmail?</a></h2>
+
+Fetchmail will work with all popular <a href="#T1">mail transport programs</a>.
+It also doesn't care which user agent you use, and user agents are as a
+rule almost equally indifferent to how mail is delivered into your system
+mailbox.  So any of the popular Unix mail agents -- elm, pine, mh, or
+mutt -- will work fine with fetchmail.<p>
+
+All this having been said, I can't resist putting in a discreet plug
+for <a href="http://www.mutt.org">mutt</a>.  My own personal mail
+setup is sendmail plus fetchmail plus mutt.  Mutt's interface is only
+a little different from that of its now-moribund ancestor elm, but its
+excellent handling of MIME and PGP put it in a class by itself.  You
+won't need its built-in POP3 support, though; most of the mutt
+developers will cheerfully admit that fetchmail's is better :-).<p>
+
+<hr>
+<h2><a name="G9">G9. How can I avoid sending my password en clair?</a></h2>
 
 Depending on what your mail server you are talking to, this ranges
 from trivial to impossible.  It may even be next to useless.<P>
@@ -479,7 +497,7 @@ because this is how Craig gets his mail ;-)<P>
 restrictions.)<P>
 
 <hr>
-<h2><a name="G9">G9. Is any special configuration needed to use a dynamic IP address?</a></h2>
+<h2><a name="G10">G10. Is any special configuration needed to use a dynamic IP address?</a></h2>
 
 Yes. In order to avoid giving indigestion to certain picky MTAs
 (notably <a href="#T3">exim</a>), fetchmail always makes the RCPT TO
@@ -539,7 +557,7 @@ See the <a href="http://www.lege.com/sendmail-FAQ.txt">sendmail
 FAQ</a> for more details.<P>
 
 <hr>
-<h2><a name="G10">G10. Is any special configuration needed to use firewalls?</a></h2>
+<h2><a name="G11">G11. Is any special configuration needed to use firewalls?</a></h2>
 
 No.  You can use fetchmail with SOCKS, the standard tool for
 indirecting TCP/IP through a firewall.  You can find out about SOCKS,
@@ -562,7 +580,7 @@ will be happier.''<P>
 I couldn't have put it better myself, and ain't going to try now.<P>
 
 <hr>
-<h2><a name="G11">G11. Is any special configuration needed to <em>send</em> mail?</a></h2>
+<h2><a name="G12">G12. Is any special configuration needed to <em>send</em> mail?</a></h2>
 
 A user asks: but how do we send mail out to the POP3 server? Do I need
 to implement another tool or will fetchmail do this too?<p>
@@ -580,7 +598,7 @@ automatically dial out when your kernel is called to open a TCP/IP
 connection, this will ensure that the mail gets out.<P>
 
 <hr>
-<h2><a name="G12">G12. Is fetchmail Y2K-compliant?</a></h2>
+<h2><a name="G13">G13. Is fetchmail Y2K-compliant?</a></h2>
 
 Fetchmail is fully Y2K-compliant.<P> 
 
@@ -590,7 +608,7 @@ for anything but log entry generation.  Anyway, if you aren't running
 on a 64-bit machine by then, you deserve to lose.<P>
 
 <hr>
-<h2><a name="G13">G13. Is there a way in fetchmail to support disconnected IMAP mode?</a></H2>
+<h2><a name="G14">G14. Is there a way in fetchmail to support disconnected IMAP mode?</a></H2>
 
 No. Fetchmail is a mail transport agent, best understood as a protocol
 gateway between POP3/IMAP servers and SMTP.  Disconnected operation
@@ -2591,7 +2609,7 @@ terminate it.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/02/12 06:02:32 $
+<td width="30%" align=right>$Date: 2000/02/15 02:13:55 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
