@@ -23,9 +23,9 @@ Here are the server types on my regression-test list:<p>
 
 <table border=1 with=80% align=center>
 <tr>
-<td><bold>Protocol & Version</bold></td>
-<td><bold>Special Options:</bold></td>
-<td><bold>Name:</bold></td>
+<td><strong>Protocol & Version</strong></td>
+<td><strong>Special Options:</strong></td>
+<td><strong>Name:</strong></td>
 </tr>
 EOF
 torturetest.py -t
