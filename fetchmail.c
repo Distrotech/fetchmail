@@ -231,7 +231,7 @@ char **argv;
 	    char prompt[BUFSIZ];
 
 	    (void) sprintf(prompt, "Enter password for %s@%s: ",
-			   hostp->remotename, servername);
+			   hostp->remotename, hostp->servername);
 	    (void) strncpy(hostp->password,
 			   (char *)getpassword(prompt),PASSWORDLEN-1);
 	}
