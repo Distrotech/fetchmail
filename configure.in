@@ -161,7 +161,7 @@ AC_ARG_ENABLE(opie,
 	[with_opie=no])
 if test "$with_opie" = "yes";
 then
-    AC_CHECK_HEADER(opie,, 
+    AC_CHECK_HEADER(opie.h,, 
 	[echo 'configure: cannot find <opie.h>, which is required for OPIE support.'; exit 1])
     AC_CHECK_LIB(opie,opiegenerator,, 
 	[echo 'configure: cannot find libopie, which is required for OPIE support.'; exit 1])
