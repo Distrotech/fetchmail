@@ -12,6 +12,14 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.1.8 (Thu Sep 11 16:20:15 EDT 1997)
+* Fix nasty single-char-adddress bug in multidrop mode.
+* Fixed cosmetic bug in ETRN mode -v output!
+* Added warning about broken Microsoft Exchange server to FAQ. 
+* Will Renkel supplied an implementation of inet_aton().
+
+There are 286 people on the fetchmail-friends list.
+
 fetchmail-4.1.7 (Tue Sep  9 16:55:04 EDT 1997)
 * Now works with Cyrus IMAP server.
 * Will build OK even if local environment lacks strstr(3).
