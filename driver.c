@@ -23,7 +23,7 @@
 #include <des.h>
 #include <netinet/in.h>		/* must be included before "socket.h".*/
 #include <netdb.h>
-#endif
+#endif /* KERBEROS_V4 */
 #include  "socket.h"
 #include  "fetchmail.h"
 #include  "smtp.h"
@@ -507,7 +507,7 @@ kerberos_auth (socket, servername)
 	struct hostent * hp = (gethostbyname (servername));
 	if (hp == 0)
 	{
-	    fprintf (stderr, "MAILHOST unknown: %s\n", servername);
+	    fprintf (stderr, "fetchmail: server %s unknown: n", servername);
 	    return (PS_ERROR);
 	}
 	host_primary = ((char *) (malloc ((strlen (hp -> h_name)) + 1)));
@@ -530,7 +530,7 @@ kerberos_auth (socket, servername)
     free (host_primary);
     if (rem != KSUCCESS)
     {
-	fprintf (stderr, "kerberos error: %s\n", (krb_get_err_text (rem)));
+	fprintf (stderr, "fetchmail: kerberos error %s\n", (krb_get_err_text (rem)));
 	return (PS_ERROR);
     }
     return (0);
@@ -568,6 +568,14 @@ struct method *proto;
     sigsave = signal(SIGALRM, alarm_handler);
     alarm (timeout);
 
+#ifndef KERBEROS_V4
+    if (queryctl->authenticate == A_KERBEROS)
+    {
+	fputs("fetchmail: Kerberos support not linked.\n", stderr);
+	return(PS_ERROR);
+    }
+#endif /* KERBEROS_V4 */
+
     /* lacking methods, there are some options that may fail */
     if (!proto->is_old)
     {
@@ -604,13 +612,13 @@ struct method *proto;
     }
 
 #ifdef KERBEROS_V4
-    if (queryctl->protocol == P_KPOP)
+    if (queryctl->authentication == A_KERBEROS)
     {
 	ok = (kerberos_auth (socket, queryctl->servername));
 	if (ok != 0)
 	    goto cleanUp;
     }
-#endif
+#endif /* KERBEROS_V4 */
 
     /* accept greeting message from mail server */
     ok = (protocol->parse_response)(socket, buf);
