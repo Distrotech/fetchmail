@@ -1369,27 +1369,24 @@ const struct method *proto;	/* protocol method table */
 	set_timeout(ctl->server.timeout);
 
 	/* show user how many messages we downloaded */
+	if (ctl->mailbox)
+	    (void) sprintf(buf, "%s@%s:%s",
+			   ctl->remotename, realname, ctl->mailbox);
+	else
+	    (void) sprintf(buf, "%s@%s", ctl->remotename, realname);
 	if (outlevel > O_SILENT)
 	    if (count == -1)			/* only used for ETRN */
-		error(0, 0, "Polling %s@%s", 
-			ctl->remotename,
-			realname);
+		error(0, 0, "Polling %s", buf);
 	    else if (count == 0)
-		error(0, 0, "No mail at %s@%s", 
-			ctl->remotename,
-			realname);
+		error(0, 0, "No mail at %s", buf); 
 	    else
 	    {
 		if (new != -1 && (count - new) > 0)
-		    error(0, 0, "%d message%s (%d seen) at %s@%s.",
-		    		count, count > 1 ? "s" : "", count-new,
-				ctl->remotename,
-				realname);
+		    error(0, 0, "%d message%s (%d seen) at %s.",
+		    		count, count > 1 ? "s" : "", count-new, buf);
 		else
-		    error(0, 0, "%d message%s at %s@%s.", 
-				count, count > 1 ? "s" : "",
-				ctl->remotename,
-				realname);
+		    error(0, 0, "%d message%s at %s.", 
+				count, count > 1 ? "s" : "", buf);
 	    }
 
 	/* we may need to get sizes in order to check message limits */
