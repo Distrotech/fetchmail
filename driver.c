@@ -597,7 +597,7 @@ int num;		/* index of message */
 	 * forward it to the user so he or she will have some clue
 	 * that things have gone awry.
 	 */
-	if (protocol != pop2)
+	if (protocol->port != 109)
 #endif /* POP2_ENABLE */
 	    if (num == 1 && !strncasecmp(line, "X-IMAP:", 7))
 		return(PS_RETAINED);

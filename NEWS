@@ -12,6 +12,11 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.2.8 ()
+* Fixed a bug in POP2 compilation introduced sometime after 4.0.8.
+
+There are 284 people on the fetchmail-friends list.
+
 fetchmail-4.2.7 (Fri Sep 26 11:21:15 EDT 1997)
 * Full OTP support with Craig Metz's libopie 2.32 or higher.
 * Major upgrade of FAQ with a procedure for diagnosing mangled-mail problems.
