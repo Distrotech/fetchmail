@@ -11,7 +11,8 @@
 fetchmail-5.1.0 ():
 * Fixed compilation error on systems without vnsprintf.
 * No more GIFs!  RPM is now patent-encumbrance-free.
-* Fix yet nother annoying qmail \n bug (thanks to Paul Gilmore).
+* Fix yet another annoying qmail \n bug (thanks to Paul Gilmore).
+* There is now a documented return code 13 for termination on fetchlimit.
 
 There are 260 people on fetchmail-friends and 387 on fetchmail-announce.
 

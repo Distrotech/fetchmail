@@ -1717,6 +1717,8 @@ Fatal DNS error.  Fetchmail encountered an error while performing
 a DNS lookup at startup and could not proceed.
 .IP 12
 BSMTP batch file could not be opened.
+.IP 13
+Poll terminated by a fetch limit (see the --fetchlimit option).
 .IP 23
 Internal error.  You should see a message on standard error with
 details.

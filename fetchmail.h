@@ -68,13 +68,13 @@
 #define		PS_SMTP         10      /* SMTP error */
 #define		PS_DNS		11	/* fatal DNS error */
 #define		PS_BSMTP	12	/* output batch could not be opened */
+#define		PS_MAXFETCH	13	/* poll ended by fetch limit */
 /* leave space for more codes */
 #define		PS_UNDEFINED	23	/* something I hadn't thought of */
 #define		PS_TRANSIENT	24	/* transient failure (internal use) */
 #define		PS_REFUSED	25	/* mail refused (internal use) */
 #define		PS_RETAINED	26	/* message retained (internal use) */
 #define		PS_TRUNCATED	27	/* headers incomplete (internal use) */
-#define		PS_MAXFETCH	28	/* poll ended by fetch limit */
 
 /* output noise level */
 #define         O_SILENT	0	/* mute, max squelch, etc. */
