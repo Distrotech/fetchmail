@@ -897,7 +897,7 @@ void dump_params (struct query *ctl)
     if (ctl->server.monitor)
 	printf("  Polling loop will monitor %s.\n", ctl->server.monitor);
     else if (outlevel == O_VERBOSE)
-	printf("  No monitor interrface specified.\n");
+	printf("  No monitor interface specified.\n");
 #endif
 
     if (ctl->server.protocol > P_POP2)
