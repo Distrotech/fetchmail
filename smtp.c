@@ -103,10 +103,17 @@ static int SMTP_check(FILE *sockfp,char *argbuf)
   int  ok;  
   char buf[SMTPBUFSIZE];
   
-  if ((ok = SockGets(buf, sizeof(buf)-1, sockfp)) > 0) {
-    buf[ok] = '\0';
+  if (fgets(buf, sizeof(buf)-1, sockfp) != (char *)NULL) {
     if (outlevel == O_VERBOSE)
-	fprintf(stderr, "SMTP< %s\n", buf);
+    {
+	char	*sp, *tp;
+
+	for (tp = sp = buf; *sp; sp++)
+	    if (*sp != '\r')
+		*tp++ = *sp;
+	*tp++ = '\0';
+	fprintf(stderr, "SMTP< %s", buf);
+    }
     if (argbuf)
       strcpy(argbuf,buf);
     if (buf[0] == '1' || buf[0] == '2' || buf[0] == '3')

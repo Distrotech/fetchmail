@@ -31,9 +31,9 @@ char *argbuf;
   char buf [POPBUFSIZE+1];
   char *bufp;
 
-  if (SockGets(buf, sizeof(buf), sockfp) >= 0) {
+  if (fgets(buf, sizeof(buf), sockfp) != (char *)NULL) {
     if (outlevel == O_VERBOSE)
-      fprintf(stderr,"%s\n",buf);
+      fprintf(stderr,"%s",buf);
 
     bufp = buf;
     if (*bufp == '+' || *bufp == '-')
@@ -171,7 +171,7 @@ int *countp, *newp;
 		int	num;
 
 		*newp = 0;
- 		while (SockGets(buf, sizeof(buf), sockfp) >= 0)
+ 		while (fgets(buf, sizeof(buf), sockfp) != (char *)NULL)
 		{
  		    if (outlevel == O_VERBOSE)
  			fprintf(stderr,"%s\n",buf);
@@ -205,7 +205,7 @@ int	*sizes;
     {
 	char buf [POPBUFSIZE+1];
 
-	while (SockGets(buf, sizeof(buf), sockfp) >= 0)
+	while (fgets(buf, sizeof(buf), sockfp) != (char *)NULL)
 	{
 	    int num, size;
 
