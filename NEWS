@@ -2,8 +2,12 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Fixed locale setting; this should make i18n actually work.
 * Don't issue AUTH between USER and PASS, some servers choke on this.
 * Resolved Debian bug #85772 re Kerberos compilation.
+* Resolved Debian bug ##85961: Wrong error message when local connection fails.
+* Serious pre-release regression testing begins.  This version tested
+  against 18 different POP3 and IMAP server tests.
 
 fetchmail-5.6.5 (Mon Feb 12 04:33:39 EST 2001), 20062 lines:
 

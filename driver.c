@@ -2416,7 +2416,15 @@ is restored."));
     if (ok==PS_SOCKET || ok==PS_SYNTAX
 		|| ok==PS_IOERR || ok==PS_ERROR || ok==PS_PROTOCOL 
 		|| ok==PS_LOCKBUSY || ok==PS_SMTP || ok==PS_DNS)
-	report(stderr, _("%s error while fetching from %s\n"), msg, ctl->server.pollname);
+    {
+	char	*stem;
+
+	if (phase == FORWARDING_WAIT || phase == LISTENER_WAIT)
+	    stem = _("%s error while fetching from %s\n");
+	else
+	    stem = _("%s error while delivering to SMTP host %s\n");
+	report(stderr, stem, msg, ctl->server.pollname);
+    }
 
 closeUp:
     /* execute post-initialization command, if any */
