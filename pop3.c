@@ -80,14 +80,15 @@ int pop3_getauth(FILE *sockfp, struct query *ctl, char *greeting)
 	/* find end of timestamp */
 	for (end = start;  *end != 0  && *end != '>';  end++)
 	    continue;
-	if (*end == 0 || (end - start - 1) == 1) {
+	if (*end == 0 || end == start + 1) {
 	    fprintf(stderr,"Timestamp syntax error in greeting\n");
 	    return(PS_AUTHFAIL);
 	}
+	else
+	    *++end = '\0';
 
 	/* copy timestamp and password into digestion buffer */
-	msg = (char *)xmalloc((end-start-1) + strlen(ctl->password) + 1);
-	*(++end) = 0;
+	msg = (char *)xmalloc((end-start+1) + strlen(ctl->password) + 1);
 	strcpy(msg,start);
 	strcat(msg,ctl->password);
 
