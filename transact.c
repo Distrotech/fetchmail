@@ -37,11 +37,6 @@
 extern char *strstr();	/* needed on sysV68 R3V7.1. */
 #endif /* strstr */
 
-int batchcount;		/* count of messages sent in current batch */
-flag peek_capable;	/* can we peek for better error recovery? */
-int pass;		/* how many times have we re-polled? */
-int stage;		/* where are we? */
-int phase;		/* where are we, for error-logging purposes? */
 int mytimeout;		/* value of nonreponse timeout */
 int suppress_tags;	/* emit tags? */
 char shroud[PASSWORDLEN];	/* string to shroud in debug output */

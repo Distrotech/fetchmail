@@ -48,6 +48,12 @@
 #define THROW_TIMEOUT	1		/* server timed out */
 #define THROW_SIGPIPE	2		/* SIGPIPE on stream socket */
 
+int pass;		/* how many times have we re-polled? */
+int stage;		/* where are we? */
+int phase;		/* where are we, for error-logging purposes? */
+int batchcount;		/* count of messages sent in current batch */
+flag peek_capable;	/* can we peek for better error recovery? */
+
 static int timeoutcount;		/* count consecutive timeouts */
 
 static jmp_buf	restart;
