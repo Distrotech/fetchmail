@@ -53,7 +53,7 @@ statement:
 	|	define_server			{prc_register(); prc_reset();}
   ;
 
-define_server:	KW_SERVER PARAM_STRING server_options 	{prc_setserver($2);}	
+define_server:	KW_SERVER PARAM_STRING server_options 	{prc_setserver($2);}
 	|	KW_SERVER PARAM_STRING			{prc_setserver($2);}
 	|	KW_DEFAULTS server_options	{prc_setserver("defaults");}
   ;
