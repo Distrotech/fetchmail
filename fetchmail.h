@@ -128,7 +128,7 @@ int gen_transact ();
 /* prototypes for globally callable functions */
 int doPOP2 (struct hostrec *); 
 int doPOP3 (struct hostrec *);
-
+int doIMAP (struct hostrec *);
 int parsecmdline (int, char **, struct hostrec *);
 int setdefaults (struct hostrec *);
 char *getnextserver (int argc, char **, int *);
