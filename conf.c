@@ -325,9 +325,9 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	stringdump("bsmtp", ctl->bsmtp);
 	indent('\0');
 	if (ctl->listener == LMTP_MODE)
-	    fputs("'lmtp':TRUE,", stdout);
+	    fputs("'lmtp':TRUE,\n", stdout);
 	else
-	    fputs("'lmtp':FALSE,", stdout);
+	    fputs("'lmtp':FALSE,\n", stdout);
 	    
 #ifdef INET6
 	stringdump("netsec", ctl->server.netsec);
