@@ -11,6 +11,9 @@
 #include  <errno.h>
 #include  <ctype.h>
 #include  <string.h>
+#ifdef HAVE_MEMORY_H
+#include  <memory.h>
+#endif /* HAVE_MEMORY_H */
 #if defined(STDC_HEADERS)
 #include  <stdlib.h>
 #endif
@@ -35,10 +38,6 @@
 #include <netdb.h>
 #include "mx.h"
 #endif /* HAVE_GETHOSTBYNAME */
-
-#ifdef SUNOS
-#include <memory.h>
-#endif
 
 #ifdef KERBEROS_V4
 #if defined (__bsdi__)

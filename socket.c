@@ -7,6 +7,9 @@
 #include "config.h"
 #include <stdio.h>
 #include <string.h>
+#ifdef HAVE_MEMORY_H
+#include <memory.h>
+#endif /* HAVE_MEMORY_H */
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -34,10 +37,6 @@
 #endif
 #endif
 #endif /* INET_ATON */
-
-#ifdef SUNOS
-#include <memory.h>
-#endif
 
 int SockOpen(char *host, int clientPort)
 {

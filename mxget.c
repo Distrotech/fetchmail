@@ -51,7 +51,8 @@ struct mxentry *getmxrecords(const unsigned char *name)
 
     pmx->name = (char *)NULL;
     pmx->pref = -1;
-    n = res_search(name,C_IN,T_MX,(unsigned char*)&answer, sizeof(answer));
+    n = res_search((char *)name,
+		   C_IN,T_MX, (unsigned char*)&answer, sizeof(answer));
     if (n == -1)
 	return((struct mxentry *)NULL);
 
@@ -88,7 +89,7 @@ struct mxentry *getmxrecords(const unsigned char *name)
 	pmx[ind].pref = pref;
 	++ind;
 
-	n = strlen(bp);
+	n = strlen((const char *)bp);
 	bp += n;
 	*bp++ = '\0';
 
