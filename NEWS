@@ -14,6 +14,12 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.4.3 (Sun Apr 19 17:35:56 EDT 1998):
+* Back out one of the changes to the null Return-Path handling, as it caused
+  invalid rewrites leading to protocol sync errors under some configurations.
+
+There are 276 people on fetchmail-friends and 186 on fetchmail-announce.
+
 fetchmail-4.4.2 (Sun Apr 19 00:13:42 EDT 1998):
 * Use TOP for POP3 retrieval to avoid marking messages seen.  Duh!
 * Another fix for command-line --smtphost option.
