@@ -17,6 +17,9 @@ fetchmail-4.2.9 ()
 * IMAP mode now does smart re-polling, eliminating connection/authentication
   overhead when messages are being delivered to the server mailbox while
   the poll is in progress.
+* Fetchmail's synthetic Received line is now inserted just before the first
+  existing Received line and *after* any From headers shipped up by the
+  server.  This fixes odd problems with some sensitive sendmails.
 
 There are 285 people on the fetchmail-friends list.
 

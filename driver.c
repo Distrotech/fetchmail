@@ -516,7 +516,7 @@ int num;		/* index of message */
     } *addrchain = NULL, **chainptr = &addrchain;
     char buf[MSGBUFSIZE+1], return_path[MSGBUFSIZE+1]; 
     int	from_offs, ctt_offs, env_offs, next_address;
-    char *headers, *received_for, *desthost;
+    char *headers, *received_for, *desthost, *rcv;
     int n, linelen, oldlen, ch, remaining;
     char		*cp;
     struct idlist 	*idp, *xmit_names;
@@ -1067,48 +1067,66 @@ int num;		/* index of message */
 	SMTP_data(ctl->smtp_socket);
     }
 
-
-    /* utter any per-message Received information we need here */
     n = 0;
-    sprintf(buf, "Received: from %s\n", ctl->server.truename);
-    if (stuffline(ctl, buf) != -1)
+    /*
+     * Some server/sendmail combinations cause problems when our
+     * synthetic Received line is before the From header.  Cope
+     * with this...
+     */
+    if ((rcv = strstr("Received:", headers)) == (char *)NULL)
+	rcv = headers;
+    if (rcv > headers)
     {
-	sprintf(buf, "\tby %s (fetchmail-%s %s run by %s)\n",
-		fetchmailhost, 
-		RELEASE_ID,
-		protocol->name,
-		ctl->remotename);
-	if (stuffline(ctl, buf) != -1)
+	*rcv = '\0';
+	n = stuffline(ctl, headers);
+	*rcv = 'R';
+    }
+    if (n != -1)
+    {
+	/* utter any per-message Received information we need here */
+	sprintf(buf, "Received: from %s\n", ctl->server.truename);
+	n = stuffline(ctl, buf);
+	if (n != -1)
 	{
-	    time_t	now;
-
-	    buf[0] = '\t';
-	    if (good_addresses == 0)
-	    {
-		sprintf(buf+1, 
-			"for <%s@%s> (by default); ",
-			user, desthost);
-	    }
-	    else if (good_addresses == 1)
-	    {
-		for (idp = xmit_names; idp; idp = idp->next)
-		    if (idp->val.num == XMIT_ACCEPT)
-			break;	/* only report first address */
-		sprintf(buf+1, "for <%s@%s> (%s); ",
-			idp->id, desthost,
-			MULTIDROP(ctl) ? "multi-drop" : "single-drop");
-	    }
-	    else
-		buf[1] = '\0';
-
-	    time(&now);
-	    strcat(buf, ctime(&now));
+	    sprintf(buf, "\tby %s (fetchmail-%s %s run by %s)\n",
+		    fetchmailhost, 
+		    RELEASE_ID,
+		    protocol->name,
+		    ctl->remotename);
 	    n = stuffline(ctl, buf);
+	    if (n != -1)
+	    {
+		time_t	now;
+
+		buf[0] = '\t';
+		if (good_addresses == 0)
+		{
+		    sprintf(buf+1, 
+			    "for <%s@%s> (by default); ",
+			    user, desthost);
+		}
+		else if (good_addresses == 1)
+		{
+		    for (idp = xmit_names; idp; idp = idp->next)
+			if (idp->val.num == XMIT_ACCEPT)
+			    break;	/* only report first address */
+		    sprintf(buf+1, "for <%s@%s> (%s); ",
+			    idp->id, desthost,
+			    MULTIDROP(ctl) ? "multi-drop" : "single-drop");
+		}
+		else
+		    buf[1] = '\0';
+
+		time(&now);
+		strcat(buf, ctime(&now));
+		n = stuffline(ctl, buf);
+		if (n != -1)
+		    n = stuffline(ctl, rcv);	/* ship out rest of headers */
+	    }
 	}
     }
 
-    /* ship out the synthetic Received line and the headers */
-    if (n == -1 || stuffline(ctl, headers) < 0)
+    if (n == -1)
     {
 	error(0, errno, "writing RFC822 headers");
 	if (ctl->mda)
