@@ -31,12 +31,13 @@
 #define	LA_KEEP		18
 #define LA_FLUSH        19
 #define LA_NOREWRITE	20
-#define LA_REMOTEFILE	21
-#define LA_SMTPHOST	22
-#define LA_MDA		23
-#define LA_YYDEBUG	24
+#define LA_LIMIT	21
+#define LA_REMOTEFILE	22
+#define LA_SMTPHOST	23
+#define LA_MDA		24
+#define LA_YYDEBUG	25
 
-static char *shortoptions = "?Vcsvd:qL:f:i:p:P:A:t:u:akKFnr:S:m:y";
+static char *shortoptions = "?Vcsvd:qL:f:i:p:P:A:t:u:akKFnl:r:S:m:y";
 static struct option longoptions[] = {
   {"help",	no_argument,	   (int *) 0, LA_HELP        },
   {"version",   no_argument,       (int *) 0, LA_VERSION     },
@@ -63,6 +64,7 @@ static struct option longoptions[] = {
   {"keep",      no_argument,       (int *) 0, LA_KEEP        },
   {"flush",	no_argument,	   (int *) 0, LA_FLUSH       },
   {"norewrite",	no_argument,	   (int *) 0, LA_NOREWRITE   },
+  {"limit",	required_argument, (int *) 0, LA_LIMIT       },
 
   {"remote",    required_argument, (int *) 0, LA_REMOTEFILE  },
   {"smtphost",	required_argument, (int *) 0, LA_SMTPHOST    },
@@ -202,6 +204,10 @@ struct hostrec *queryctl;	/* option record to be initialized */
 	case LA_NOREWRITE:
 	    queryctl->norewrite = TRUE;
 	    break;
+	case 'l':
+	case LA_LIMIT:
+	    queryctl->limit = atoi(optarg);
+	    break;
 	case 'r':
 	case LA_REMOTEFILE:
 	    strncpy(queryctl->mailbox,optarg,sizeof(queryctl->mailbox)-1);
@@ -260,7 +266,8 @@ struct hostrec *queryctl;	/* option record to be initialized */
 	fputs("  -K, --kill        delete new messages after retrieval\n", stderr);
 	fputs("  -k, --keep        save new messages after retrieval\n", stderr);
 	fputs("  -F, --flush       delete old messages from server\n", stderr);
-	fputs("  -n, --norewrite    don't rewrite header addresses\n", stderr);
+	fputs("  -n, --norewrite   don't rewrite header addresses\n", stderr);
+	fputs("  -l, --limit       don't fetch messages over given size\n", stderr);
 
 	fputs("  -S, --smtphost    set SMTP forwarding host\n", stderr);
 	fputs("  -r, --remote      specify remote folder name\n", stderr);

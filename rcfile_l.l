@@ -46,6 +46,7 @@ noflush		{ yylval.flag = FLAG_FALSE; return FLUSH; }
 nofetchall	{ yylval.flag = FLAG_FALSE; return FETCHALL; }
 norewrite	{ yylval.flag = FLAG_TRUE;  return REWRITE; }
 noskip		{ yylval.flag = FLAG_FALSE; return SKIP; }
+limit		{ return LIMIT; }
 
 with		{/* EMPTY */}
 and		{/* EMPTY */}

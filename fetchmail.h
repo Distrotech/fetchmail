@@ -72,6 +72,7 @@ struct hostrec
     int port;
     int authenticate;
     int timeout;
+    int limit;
 
     /* MDA arguments */
     int mda_argcount;
@@ -106,6 +107,7 @@ struct method
     int (*parse_response)();	/* response_parsing function */
     int (*getauth)();		/* authorization fetcher */
     int (*getrange)();		/* get message range to fetch */
+    int *(*getsizes)();		/* get sizes of messages */
     int (*is_old)();		/* check for old message */
     int (*fetch)();		/* fetch a given message */
     int (*trail)();		/* eat trailer of a message */

@@ -11,6 +11,14 @@ features --
   lists and multidrop mailboxes.  See the man page for details (and note
   the caveat in the BUGS AND KNOWN PROBLEMS section).
 
+* It is possible to specify a size limit for retrieved messages.  I resisted
+  doing this because I don't want fetchmail to be in the filtering game, but
+  too many Europeans begged for it because their telecomms monopolies are
+  price-gouging them on per-second phone charges.  I will ignore, or be
+  extremely rude to, anyone who takes this feature as a license to beg me
+  for kill files or any other form of content-based filtering.  Use 
+  procmail on your server if you want that.
+
 * If you use an MDA, the internal changes to support multi-drop mailboxes
   require that you *remove* the %s at the end of your MDA string.  Local 
   delivery addresses will be appended to the end of the command in the

@@ -130,6 +130,7 @@ const static struct method pop2 =
     pop2_ok,				/* parse command response */
     pop2_getauth,			/* get authorization */
     pop2_getrange,			/* query range of messages */
+    NULL,				/* no way to get sizes */
     NULL,				/* messages are always new */
     pop2_fetch,				/* request given message */
     pop2_trail,				/* eat message trailer */

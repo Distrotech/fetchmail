@@ -62,6 +62,15 @@ Note that POP2 retrieval, and POP3 retrieval on servers without the
 LAST command, behaves as though --all is always on (see RETRIEVAL
 FAILURE MODES below).
 .TP
+.B \-l, --limit
+Takes a maximum octet size argument.  Messages larger than this size
+will not be fetched, not be marked seen, and will be left on the
+server (in foreground sessions, the progress messages will note that
+they are "oversized").  The --all option overrides this one.  This
+option is intended for those need to strictly control fetch time
+in interactive mode.  It may not be used with daemon mode,
+as users would never receive a notification that messages were waiting.
+.TP
 .B \-S host, --smtphost host
 Specify an host to forward mail to (other than localhost).
 .TP

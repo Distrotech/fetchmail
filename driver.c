@@ -760,6 +760,15 @@ struct method *proto;		/* protocol method table */
 	    return(PS_SYNTAX);
 	}
     }
+    if (!proto->getsizes && queryctl->limit)
+    {
+	fprintf(stderr,
+		"Option --limit is not supported with %s\n",
+		proto->name);
+	alarm(0);
+	signal(SIGALRM, sigsave);
+	return(PS_SYNTAX);
+    }
 
     protocol = proto;
     tagnum = 0;
@@ -773,7 +782,7 @@ struct method *proto;		/* protocol method table */
     else
     {
 	char buf [POPBUFSIZE+1], host[HOSTLEN+1];
-	int socket, len, num, count, new, deletions = 0;
+	int *msgsizes, socket, len, num, count, new, deletions = 0;
 
 	alarm(queryctl->timeout);
 
@@ -830,6 +839,12 @@ struct method *proto;		/* protocol method table */
 			queryctl->servername);
 	    }
 
+	/* we may need to get sizes in order to check message limits */
+	msgsizes = (int *)NULL;
+	if (!queryctl->fetchall && proto->getsizes && queryctl->limit)
+	    if ((msgsizes = (proto->getsizes)(socket, count)) == (int *)NULL)
+		return(PS_ERROR);
+
 	if (check_only)
 	{
 	    if (new == -1 || queryctl->fetchall)
@@ -853,12 +868,20 @@ struct method *proto;		/* protocol method table */
 	    /* read, forward, and delete messages */
 	    for (num = 1; num <= count; num++)
 	    {
+		int	toolarge = msgsizes && msgsizes[num-1]>queryctl->limit;
 		int	fetch_it = queryctl->fetchall ||
-		    !(protocol->is_old && (protocol->is_old)(socket,queryctl,num));
+		    (!(protocol->is_old && (protocol->is_old)(socket,queryctl,num)) && !toolarge);
 
 		/* we may want to reject this message if it's old */
 		if (!fetch_it)
-		    fprintf(stderr, "skipping message %d ", num);
+		{
+		    if (outlevel > O_SILENT)
+		    {
+			fprintf(stderr, "skipping message %d", num);
+			if (toolarge)
+			    fprintf(stderr, " (oversized, %d bytes)", msgsizes[num-1]);
+		    }
+		}
 		else
 		{
 		    /* request a message */
@@ -910,13 +933,13 @@ struct method *proto;		/* protocol method table */
 		    && (fetch_it ? !queryctl->keep : queryctl->flush))
 		{
 		    deletions++;
-		    if (outlevel > O_SILENT && outlevel < O_VERBOSE) 
+		    if (outlevel > O_SILENT) 
 			fprintf(stderr, " flushed\n", num);
 		    ok = (protocol->delete)(socket, queryctl, num);
 		    if (ok != 0)
 			goto cleanUp;
 		}
-		else if (outlevel > O_SILENT && outlevel < O_VERBOSE) 
+		else if (outlevel > O_SILENT) 
 		{
 		    /* nuke it from the unseen-messages list */
 		    delete_uid(&queryctl->newsaved, num);

@@ -111,6 +111,38 @@ int *countp, *newp;
     return(0);
 }
 
+static int *imap_getsizes(socket, count)
+/* capture the sizes of all messages */
+int	socket;
+int	count;
+{
+    int	ok, *sizes;
+
+    if ((sizes = (int *)malloc(sizeof(int) * count)) == (int *)NULL)
+	return((int *)NULL);
+    else
+    {
+	char buf [POPBUFSIZE+1];
+
+	gen_send(socket, "FETCH 1:%d RFC822.SIZE", count);
+	while (SockGets(socket, buf, sizeof(buf)) >= 0)
+	{
+	    int num, size;
+
+	    if (outlevel == O_VERBOSE)
+		fprintf(stderr,"%s\n",buf);
+	    if (strstr(buf, "OK"))
+		break;
+	    else if (sscanf(buf, "* %d FETCH (RFC822.SIZE %d)", &num, &size) == 2)
+		sizes[num - 1] = size;
+	    else
+		sizes[num - 1] = -1;
+	}
+
+	return(sizes);
+    }
+}
+
 static imap_is_old(socket, queryctl, num)
 int socket;
 struct hostrec *queryctl;
@@ -181,6 +213,7 @@ const static struct method imap =
     imap_ok,		/* parse command response */
     imap_getauth,	/* get authorization */
     imap_getrange,	/* query range of messages */
+    imap_getsizes,	/* grab message sizes */
     imap_is_old,	/* no UID check */
     imap_fetch,		/* request given message */
     imap_trail,		/* eat message trailer */

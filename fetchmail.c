@@ -188,9 +188,20 @@ char **argv;
 	    /* merge in defaults */
 	    optmerge(hostp, &def_opts);
 
+	    /* keep lusers from shooting themselves in the foot :-) */
+	    if (poll_interval && hostp->limit)
+	    {
+		fprintf(stderr,"fetchmail: you'd never see large messages!\n");
+		exit(PS_SYNTAX);
+	    }
+
 	    /* check that delivery is going to a real local user */
 	    if ((pw = getpwnam(user)) == (struct passwd *)NULL)
+	    {
+		fprintf(stderr,
+			"fetchmail: can't default delivery to %s\n", user);
 		exit(PS_SYNTAX);	/* has to be from bad rc file */
+	    }
 	    else
 		hostp->uid = pw->pw_uid;
 
@@ -607,6 +618,10 @@ struct hostrec *queryctl;	/* query parameter block */
     printf("  Rewrite of server-local addresses is %sabled (--norewrite %s).\n",
 	   queryctl->norewrite ? "dis" : "en",
 	   queryctl->norewrite ? "on" : "off");
+    if (queryctl->limit)
+	printf("  Message size limit is %d bytes\n", queryctl->limit);
+    else if (outlevel == O_VERBOSE)
+	printf("  No message size limit\n");
     if (queryctl->mda[0])
     {
 	char **cp;

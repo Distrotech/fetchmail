@@ -31,7 +31,7 @@ static int prc_errflag;
 }
 
 %token DEFAULTS SERVER PROTOCOL AUTHENTICATE TIMEOUT KPOP KERBEROS
-%token USERNAME PASSWORD FOLDER SMTPHOST MDA IS HERE THERE TO MAP
+%token USERNAME PASSWORD FOLDER SMTPHOST MDA IS HERE THERE TO MAP LIMIT
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
@@ -127,6 +127,7 @@ user_option	: TO mapping_list HERE
 		| FLUSH			{current.flush = ($1==FLAG_TRUE);}
 		| FETCHALL		{current.fetchall = ($1==FLAG_TRUE);}
 		| REWRITE		{current.norewrite = ($1==FLAG_TRUE);}
+		| LIMIT NUMBER		{current.limit = $2;}
 		;
 %%
 
@@ -283,6 +284,7 @@ int prc_register()
     FLAG_FORCE(port);
     FLAG_FORCE(authenticate);
     FLAG_FORCE(timeout);
+    FLAG_FORCE(limit);
 #undef FLAG_FORCE
 
     (void) hostalloc(&current);
@@ -315,6 +317,7 @@ struct hostrec *h2;
     FLAG_MERGE(port);
     FLAG_MERGE(authenticate);
     FLAG_MERGE(timeout);
+    FLAG_MERGE(limit);
 #undef FLAG_MERGE
 
 }

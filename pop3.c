@@ -186,7 +186,41 @@ int *countp, *newp;
     return(0);
 }
 
+static int *pop3_getsizes(socket, count)
+/* capture the sizes of all messages */
+int	socket;
+int	count;
+{
+    int	ok, *sizes;
+
+    if ((ok = gen_transact(socket, "LIST")) != 0)
+	return((int *)NULL);
+    else if ((sizes = (int *)malloc(sizeof(int) * count)) == (int *)NULL)
+	return((int *)NULL);
+    else
+    {
+	char buf [POPBUFSIZE+1];
+
+	while (SockGets(socket, buf, sizeof(buf)) >= 0)
+	{
+	    int num, size;
+
+	    if (outlevel == O_VERBOSE)
+		fprintf(stderr,"%s\n",buf);
+	    if (buf[0] == '.')
+		break;
+	    else if (sscanf(buf, "%d %d", &num, &size) == 2)
+		sizes[num - 1] = size;
+	    else
+		sizes[num - 1] = -1;
+	}
+
+	return(sizes);
+    }
+}
+
 static int pop3_is_old(socket, queryctl, num)
+/* is the goiven message old? */
 int socket;
 struct hostrec *queryctl;
 int num;
@@ -240,6 +274,7 @@ const static struct method pop3 =
     pop3_ok,		/* parse command response */
     pop3_getauth,	/* get authorization */
     pop3_getrange,	/* query range of messages */
+    pop3_getsizes,	/* we can get a list of sizes */
     pop3_is_old,	/* how do we tell a message is old? */
     pop3_fetch,		/* request given message */
     NULL,		/* no message trailer */
