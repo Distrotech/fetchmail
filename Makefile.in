@@ -157,7 +157,7 @@ config.status: configure
 	$(srcdir)/configure
 
 config.h: config.status config.h.in
-	sh config.status
+	sh config.status; touch config.h
 
 Makefile: config.status Makefile.in
 	sh config.status
