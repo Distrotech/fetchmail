@@ -619,9 +619,16 @@ class ConfigurationEdit(Frame, MyWidget):
 
         df = Frame(gf)
 
+        ff = Frame(df)
+        if self.mode != 'novice':
+            # Set the postmaster
+            log = LabeledEntry(ff, '     Postmaster:', self.postmaster, '14')
+            log.pack(side=RIGHT, anchor=E)
         # Set the poll interval
-        de = LabeledEntry(df, '     Poll interval:', self.poll_interval, '14')
+        de = LabeledEntry(ff, '     Poll interval:', self.poll_interval, '14')
         de.pack(side=RIGHT, anchor=E)
+        ff.pack()
+
         df.pack()
 
         if self.mode != 'novice':
@@ -640,9 +647,6 @@ class ConfigurationEdit(Frame, MyWidget):
                  'relief':GROOVE}).pack(side=LEFT, anchor=W)
             # Set the idfile
             log = LabeledEntry(gf, '     Idfile:', self.idfile, '14')
-            log.pack(side=RIGHT, anchor=E)
-            # Set the postmaster
-            log = LabeledEntry(gf, '     Postmaster:', self.postmaster, '14')
             log.pack(side=RIGHT, anchor=E)
 
 	gf.pack(fill=X)
