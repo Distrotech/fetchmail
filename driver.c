@@ -726,8 +726,10 @@ struct query *ctl;	/* query control record */
 
 	/* SMTP byte-stuffing */
 	if (*bufp == '.' && ctl->mda[0] == 0)
-	    if (sinkfp)
+	    if (ctl->mda[0])
 		fputs(".", sinkfp);
+	    else if (sinkfp)
+		SockWrite(bufp, 1, 1, sinkfp);
 
 	/* replace all LFs with CR-LF  in the line */
 	if (!ctl->mda[0])
