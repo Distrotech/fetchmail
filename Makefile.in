@@ -3,7 +3,7 @@
 # If you're running QNX, we can't assume a working autoconf.
 # So just uncomment all the lines marked QNX.
 
-VERS=4.0.2
+VERS=4.0.3
 
 # Ultrix 2.2 make doesn't expand the value of VPATH.
 srcdir = @srcdir@
@@ -202,7 +202,7 @@ config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/configure \
 scripts = $(srcdir)/install.sh $(srcdir)/mkinstalldirs \
 	$(srcdir)/specgen.sh $(srcdir)/lsmgen.sh
 all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) \
-	$(srcdir)/contrib/* $(srcdir)/MANIFEST
+	$(srcdir)/contrib/* $(srcdir)/MANIFEST $(srcdir)/LIBOPIE.PATCH
 
 MANIFEST: $(srcdir) Makefile.in
 	@echo $(all) | tr "[ \t]" '\n' | sort | sed "s/\\./fetchmail-$(VERS)/" >MANIFEST

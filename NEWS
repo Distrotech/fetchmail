@@ -12,16 +12,23 @@
 
 * Use the libmd functions for md5 under Free BSD?  (Low priority.)
 
+				Other TO-DO items:
+
+* Get with Craig Metz to write a draft RFC on RFC1938 support in IMAP.
+
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail 4.0.3 ()
+fetchmail 4.0.3 (Mon Jul 28 16:39:17 EDT 1997)
 * Replace vsprintf with vnsprintf to avoid buffer-overrun screws.
 * Added via option to make ssh configuration cleaner.
-* Added dropstatus option to cope with xbuffy.
+* Added dropstatus option.
 * Allow either `login' or `user' in .netrc files.
 
-There are 257 people on the fetchmail-friends list.
+Interim release, mainly because I inadvertently messed up the web page.
+Note: RFC1938 support is tentative, untested, and requires a patch to the
+LIBOPIE library.  See the file LIBOPIE.PATCH for the sad details.
+There are 258 people on the fetchmail-friends list.
 
 fetchmail 4.0.2 (Mon Jul 17 20:54:30 EDT 1997)
 * Experimental RFC1938 one-time password support using OPIE library,
