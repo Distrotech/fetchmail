@@ -8,7 +8,7 @@
   set when it should not have been (several reports).
 * FAQ change: mailing lists have moved to MailMan.
 * Deal with brain-dead netmind mail missing the RFC822 delimiter line.
-* ODMR (RFC 2645) support -- untested!
+* ODMR (RFC 2645) support -- untested and probably buggy!
 
 fetchmail-5.6.2 (Fri Jan  5 16:45:47 EST 2001), 19744 lines:
 
