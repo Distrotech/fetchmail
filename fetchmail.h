@@ -141,6 +141,8 @@ struct hostdata		/* shared among all user connections to given server */
     flag skip;				/* suppress poll in implicit mode? */
     flag dns;				/* do DNS lookup on multidrop? */
     flag uidl;				/* use RFC1725 UIDLs? */
+    flag checkalias;                  /* try to resolve aliases by comparing IPs ?*/
+
 
 #ifdef linux
     char *interface;

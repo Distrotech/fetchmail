@@ -140,10 +140,12 @@ static int accept_count, reject_count;
 
 #define MX_RETRIES	3
 
+extern int is_ip_alias();
+
 static int is_host_alias(const char *name, struct query *ctl)
 /* determine whether name is a DNS alias of the hostname */
 {
-    struct hostent	*he;
+    struct hostent	*he,*he_st;
     struct mxentry	*mxp, *mxrecords;
 
     struct hostdata *lead_server = 
@@ -189,6 +191,19 @@ static int is_host_alias(const char *name, struct query *ctl)
     {
 	if (strcasecmp(ctl->server.truename, he->h_name) == 0)
 	    goto match;
+        else if (((he_st = gethostbyname(ctl->server.truename)) != (struct hostent *)NULL) && ctl->server.checkalias)
+			{
+				if (outlevel == O_VERBOSE)
+					error(0, 0, "Checking if %s is really the same node as %s",ctl->server.truename,name);
+				if (is_ip_alias(ctl->server.truename,name) == TRUE)
+					{
+					if (outlevel == O_VERBOSE)
+					error(0, 0, "Yes, their IP addresses match");
+					goto match;
+					}
+				if (outlevel == O_VERBOSE)
+					error(0, 0, "No, their IP addresses don't match");
+			}
 	else
 	    return(FALSE);
     }

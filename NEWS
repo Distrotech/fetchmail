@@ -8,6 +8,9 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.5.1 ():
+* Checkalias option from Enrico Musio <enrico.musio@spaziozerouno.it>.
+
 fetchmail-4.5.0bis (Sat Jun 20 10:55:52 EDT 1998):
 
 One-line fix for an embarrassing bug in the `gold' version; command-line

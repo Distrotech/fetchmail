@@ -72,7 +72,7 @@ extern char * yytext;
 %token <sval>  STRING
 %token <number> NUMBER
 %token NO KEEP FLUSH FETCHALL REWRITE FORCECR STRIPCR PASS8BITS DROPSTATUS
-%token DNS SERVICE PORT UIDL INTERVAL MIMEDECODE
+%token DNS SERVICE PORT UIDL INTERVAL MIMEDECODE CHECKALIAS
 
 %%
 
@@ -143,6 +143,8 @@ serv_option	: AKA alias_list
 					}
 		| UIDL			{current.server.uidl = FLAG_TRUE;}
 		| NO UIDL		{current.server.uidl  = FLAG_FALSE;}
+		| CHECKALIAS            {current.server.checkalias = FLAG_TRUE;}
+		| NO CHECKALIAS         {current.server.checkalias  = FLAG_FALSE;}
 		| SERVICE STRING	{
 #if INET6
 					current.server.service = $2;

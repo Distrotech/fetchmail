@@ -867,6 +867,12 @@ T}
 no dns   	\&	T{
 Disable DNS lookup for multidrop
 T}
+checkalias	\&	T{
+Do comparison by IP address for multidrop
+T}
+no checkalias	\&	T{
+Do comparison by name for multidrop (default)
+T}
 uidl    	-U	T{
 Force POP3 to use client-side UIDLs
 T}
@@ -1002,6 +1008,7 @@ following them.
 .PP
 All options correspond to the obvious command-line arguments, except
 the following: `via', `interval', `aka', `is', `to', `dns'/`no dns',
+`checkalias'/`no checkalias', 
 \&`password', \&`preconnect', \&`postconnect', `localdomains',
 \&`stripcr'/`no stripcr', \&`forcecr'/`no forcecr', `pass8bits'/`no
 pass8bits' `dropstatus/no dropstatus', `mimedecode/no mimedecode',
@@ -1042,7 +1049,7 @@ headers of retrieved mail (this is `multidrop mode').  It looks for
 addresses with hostname parts that match your poll name or your `via',
 `aka' or `localdomains' options, and usually also for hostname parts
 which DNS tells it are aliases of the mailserver.  See the discussion
-of `dns', `localdomains', and `aka' for details on how matching
+of `dns', `checkalias', `localdomains', and `aka' for details on how matching
 addresses are handled.  If \fIfetchmail\fR cannot match any mailserver
 usernames or localdomain addresses, the default recipient is the
 calling user (as set by the USER or LOGNAME variable in the
@@ -1054,6 +1061,24 @@ host address that doesn't match an `aka' or `localdomains' declaration
 by looking it up with DNS.  When a mailserver username is recognized
 attached to a matching hostname part, its local mapping is added to
 the list of local recipients.
+.PP
+The `checkalias' option (normally off) extends the lookups performed
+by the `dns' keyword in multidrop mode, providing a way to cope with
+remote MTAs that identify themselves using their canonical name, while
+they're polled using an alias.
+When such a server is polled, checks to extract the envelope address
+fail, and
+.IR fetchmail 
+reverts to delivery using the To/Cc/Bcc headers (See below 
+`Header vs. Envelope addresses'). 
+Specifying this option instructs
+.IR fetchmail 
+to retrieve all the IP addresses associated with both the poll name
+and the name used by the remote MTA and to do a comparison of the IP
+addresses.  This comes in handy in situations where the remote server
+undergoes frequent canonical name changes, that would otherwise
+require modifications to the rcfile.  `checkalias' has no effect if
+`no dns' is specified in the rcfile.
 .PP
 The `aka' option is for use with multidrop mailboxes.  It allows you
 to pre-declare a list of DNS aliases for a server.  This is an

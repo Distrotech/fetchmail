@@ -70,7 +70,7 @@ to		{ return TO; }
 =		{ return MAP; }
 "*"		{ return WILDCARD; }
 
-no/[kfrsdu \t].*	{ return NO;}
+no/[kfrsduc \t].*	{ return NO;}
 
 keep		{ return KEEP; }
 flush		{ return FLUSH; }
@@ -83,6 +83,7 @@ dropstatus?	{ return DROPSTATUS; }
 mimedec(ode)?   { return MIMEDECODE; }
 dns		{ return DNS; }
 uidl		{ return UIDL; }
+checkalias	{ return CHECKALIAS; }
 
 limit		{ return LIMIT; }
 

@@ -733,6 +733,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(server.qvirtual);
     FLAG_MERGE(server.skip);
     FLAG_MERGE(server.dns);
+    FLAG_MERGE(server.checkalias);
     FLAG_MERGE(server.uidl);
 
 #ifdef linux
@@ -893,6 +894,7 @@ static int load_params(int argc, char **argv, int optind)
 	    DEFAULT(ctl->mimedecode, FALSE);
 	    DEFAULT(ctl->server.dns, TRUE);
 	    DEFAULT(ctl->server.uidl, FALSE);
+	    DEFAULT(ctl->server.checkalias, FALSE);
 #undef DEFAULT
 
 #if !defined(HAVE_GETHOSTBYNAME) || !defined(HAVE_RES_SEARCH)
@@ -1335,7 +1337,14 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 		    {
 			printf("  DNS lookup for multidrop addresses is %sabled.\n",
 			       ctl->server.dns ? "en" : "dis");
-
+			if (ctl->server.dns)
+			{
+			    printf("  Server aliases will be compared with multidrop addresses by ");
+	       		    if (ctl->server.checkalias)
+				printf("IP address.");
+			    else
+				printf("name.");
+			}
 			if (ctl->server.envelope == STRING_DISABLED)
 			    printf("  Envelope-address routing is disabled\n");
 			else
