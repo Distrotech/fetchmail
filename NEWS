@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.4.1 (Tue Jun  6 23:24:22 EDT 2000), 19051 lines:
+
 * Julian Haight added support for arbitrary SMTP RCPT TO: control using:
   --smtpname user@host.  Should be useful for sites running multiple virtual
   domains without local users, such as a cyrus IMAP installation.
@@ -11,6 +13,8 @@
   Red Hat 6.2.  We can live with a socket leak (assuming it comes back) nmore
   easily than we can live with fetchmail getting wedged in place.
 * Werner Almesberger <almesber@lrc.epfl.ch> sent minor bug fixes for BSMTP.
+
+There are 290 people on fetchmail-friends and 526 on fetchmail-announce.
 
 fetchmail-5.4.0 (Sat May 13 18:24:21 EDT 2000), 18977 lines:
 
