@@ -186,7 +186,7 @@ char *rfc822timestamp(void)
      * Y2K hassles.  Max length of this timestamp in an English locale
      * should be 29 chars.  The only things that should vary by locale
      * are the day and month abbreviations.  The set_locale calls prevent
-     * weird multibyte i18n characters (such as kanji) for showing up
+     * weird multibyte i18n characters (such as kanji) from showing up
      * in your Received headers.
      */
 #if defined(HAVE_SETLOCALE) && defined(ENABLE_NLS) && defined(HAVE_STRFTIME)

@@ -1139,20 +1139,20 @@ int open_warning_by_mail(struct query *ctl, struct msgblk *msg)
      * it's worth to compute.
      */
     struct msgblk reply = {NULL, NULL, "FETCHMAIL-DAEMON@", 0};
+    int status;
 
     strcat(reply.return_path, fetchmailhost);
 
     if (!MULTIDROP(ctl))		/* send to calling user */
     {
-	int status;
-
 	save_str(&reply.recipients, ctl->localnames->id, XMIT_ACCEPT);
 	status = open_sink(ctl, &reply, &good, &bad);
 	free_str_list(&reply.recipients);
-	return(status);
     }
     else				/* send to postmaster  */
-	return(open_sink(ctl, &reply, &good, &bad));
+	status = open_sink(ctl, &reply, &good, &bad);
+    stuff_warning(ctl, "Date: %s", rfc822timestamp());
+    return(status);
 }
 
 #if defined(HAVE_STDARG_H)

@@ -741,9 +741,9 @@ int readheaders(int sock,
 	 * (RFC2822 says the condents of Sender must be a valid mailbox
 	 * address, which is also what RFC822 4.4.4 implies.)
 	 */
-	else if (!strncasecmp("Sender:", line, 7) && strchr(line, '@'))
+	else if (!strncasecmp("Sender:", line, 7) && (strchr(line, '@') || strchr(line, '!')))
 	    sender_offs = (line - msgblk.headers);
-	else if (!strncasecmp("Resent-Sender:", line, 14) && strchr(line, '@'))
+	else if (!strncasecmp("Resent-Sender:", line, 14) && (strchr(line, '@') || strchr(line, '!')))
 	    resent_sender_offs = (line - msgblk.headers);
 
 #ifdef __UNUSED__

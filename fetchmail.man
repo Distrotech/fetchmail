@@ -1699,8 +1699,8 @@ When trying to determine the originating address of a message,
 fetchmail looks through headers in the following order: 
 
         Return-Path:
-        Resent-Sender: (ignored if it doesn't contain an @)
-        Sender: (ignored if it doesn't contain an @)
+        Resent-Sender: (ignored if it doesn't contain an @ or !)
+        Sender: (ignored if it doesn't contain an @ or !)
         Resent-From:
         From:
         Reply-To:
