@@ -317,7 +317,7 @@ the fetchmail author's hand. <P>
 
 There is a FTP mirror of the current sources and RPMs in Japan at
 <a href="ftp://ftp.win.ne.jp/pub/network/mail/fetchmail">
-ftp://ftp.win.or.jp/pub/network/mail/fetchmail</a>.<P>
+ftp://ftp.win.ne.jp/pub/network/mail/fetchmail</a>.<P>
 
 <H1>Reviews and Awards</H1>
 
