@@ -673,7 +673,7 @@ int rewrite;
 		}
 
 		if (write(mboxfd,fromBuf,strlen(fromBuf)) < 0) {
-		    perror("gen_readmsg: write");
+		    perror("gen_readmsg: writing From header");
 		    return(PS_IOERR);
 		}
 		break;
@@ -686,7 +686,7 @@ int rewrite;
 	    {
 		free(headers);
 		headers = NULL;
-		perror("gen_readmsg: write");
+		perror("gen_readmsg: writing RFC822 headers");
 		return(PS_IOERR);
 	    }
 	    free(headers);
@@ -696,7 +696,7 @@ int rewrite;
 	/* write this line to the file */
 	if (write(mboxfd,bufp,strlen(bufp)) < 0)
 	{
-	    perror("gen_readmsg: write");
+	    perror("gen_readmsg: writing message text");
 	    return(PS_IOERR);
 	}
 
@@ -725,7 +725,7 @@ int rewrite;
 	/* The server may not write the extra newline required by the Unix
 	   mail folder format, so we write one here just in case */
 	if (write(mboxfd,"\n",1) < 0) {
-	    perror("gen_readmsg: write");
+	    perror("gen_readmsg: writing terminator");
 	    return(PS_IOERR);
 	}
 	break;
@@ -735,7 +735,7 @@ int rewrite;
 	   it has been defined */
 #ifdef BINMAIL_TERM
 	if (write(mboxfd,BINMAIL_TERM,strlen(BINMAIL_TERM)) < 0) {
-	    perror("gen_readmsg: write");
+	    perror("gen_readmsg: writing terminator");
 	    return(PS_IOERR);
 	}
 #endif /* BINMAIL_TERM */
