@@ -175,6 +175,8 @@ char *SockGets(char *buf, int len, FILE *sockfp)
 #ifdef MAIN
 /*
  * Use the chargen service to test buffering directly.
+ * You may have to uncomment the `chargen' service description in your
+ * inetd.conf (and then SIGHUP inetd) for this to work. 
  */
 main()
 {
