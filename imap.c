@@ -628,19 +628,6 @@ static int imap_delete(int sock, struct query *ctl, int number)
     return(PS_SUCCESS);
 }
 
-static flag imap_retain_check(int num, char *buf)
-/* is this a special message that should be retained? */
-{
-    /*
-     * The University of Washington IMAP server (the reference
-     * implementation of IMAP4 written by Mark Crispin) relies
-     * on being able to keep base-UID information in a special
-     * message at the head of the mailbox.  This message should
-     * neither be deleted nor forwarded.
-     */
-    return (num == 1 && !strncasecmp(buf, "X-IMAP:", 7));
-}
-
 const static struct method imap =
 {
     "IMAP",		/* Internet Message Access Protocol */
@@ -656,7 +643,6 @@ const static struct method imap =
     imap_fetch_body,	/* request given message body */
     imap_trail,		/* eat message trailer */
     imap_delete,	/* delete the message */
-    imap_retain_check,	/* leave this message alone? */
     "LOGOUT",		/* the IMAP exit command */
 };
 

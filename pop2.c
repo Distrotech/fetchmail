@@ -129,7 +129,6 @@ const static struct method pop2 =
     NULL,				/* no way to fetch body alone */
     pop2_trail,				/* eat message trailer */
     NULL,				/* no POP2 delete method */
-    NULL,				/* no retained-header check */
     "QUIT",				/* the POP2 exit command */
 };
 

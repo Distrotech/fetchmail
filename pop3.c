@@ -449,19 +449,6 @@ static int pop3_delete(int sock, struct query *ctl, int number)
     return(gen_transact(sock, "DELE %d", number));
 }
 
-static flag pop3_retain_check(int num, char *buf)
-/* is this a special message that should be retained? */
-{
-    /*
-     * The University of Washington IMAP server (the reference
-     * implementation of IMAP4 written by Mark Crispin) relies
-     * on being able to keep base-UID information in a special
-     * message at the head of the mailbox.  This message should
-     * neither be deleted nor forwarded.
-     */
-    return (num == 1 && !strncasecmp(buf, "X-IMAP:", 7));
-}
-
 const static struct method pop3 =
 {
     "POP3",		/* Post Office Protocol v3 */
@@ -477,7 +464,6 @@ const static struct method pop3 =
     NULL,		/* no way to fetch body alone */
     NULL,		/* no message trailer */
     pop3_delete,	/* how to delete a message */
-    pop3_retain_check,	/* try not to nuke an IMAP4rev header message */
     "QUIT",		/* the POP3 exit command */
 };
 
