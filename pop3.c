@@ -206,7 +206,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	 * These authentication methods are blessed by RFC1734,
 	 * describing the POP3 AUTHentication command. 
 	 */
-	if (ctl->server.preauthenticate == A_ANY 
+	if (ctl->server.authenticate == A_ANY 
 	    && strchr(greeting, '<') 
 	    && gen_transact(sock, "CAPA") == 0)
 	{
@@ -244,16 +244,16 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	    }
 
 #if defined(GSSAPI)
-	    if ((ctl->server.preauthenticate == A_ANY 
-		 || ctl->server.preauthenticate==A_GSSAPI)
+	    if ((ctl->server.authenticate == A_ANY 
+		 || ctl->server.authenticate==A_GSSAPI)
 		&& has_gssapi)
 		return(do_gssauth(sock, "AUTH", 
 				  ctl->server.truename, ctl->remotename));
 #endif /* defined(GSSAPI) */
 #if defined(KERBEROS_V4) || defined(KERBEROS_V5)
-	    if ((ctl->server.preauthenticate == A_ANY 
-		 || ctl->server.preauthenticate==A_KERBEROS_V4
-		 || ctl->server.preauthenticate==A_KERBEROS_V5)
+	    if ((ctl->server.authenticate == A_ANY 
+		 || ctl->server.authenticate==A_KERBEROS_V4
+		 || ctl->server.authenticate==A_KERBEROS_V5)
 		&& has_kerberos)
 		return(do_rfc1731(sock, "AUTH", ctl->server.truename));
 #endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */

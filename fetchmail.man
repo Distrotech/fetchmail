@@ -181,7 +181,7 @@ Use POP3 with old-fashioned MD5-challenge authentication.
 .IP RPOP
 Use POP3 with RPOP authentication.
 .IP KPOP
-Use POP3 with Kerberos V4 preauthentication on port 1109.
+Use POP3 with Kerberos V4 authentication on port 1109.
 .IP SDPS
 Use POP3 with Demon Internet's SDPS extensions.
 .IP IMAP
@@ -306,7 +306,7 @@ mailserver is asked to ship mail to.  Hosts are tried in list order;
 the first one that is up becomes the forwarding target for the
 current run.  Normally, `localhost' is added to the end of the list as
 an invisible default.  However, when using ETRN mode or Kerberos
-preauthentication, the FQDN of the machine running fetchmail is added to
+authentication, the FQDN of the machine running fetchmail is added to
 the end of the list as an invisible default. Each hostname may have a 
 port number following the host name.  The port number is separated from
 the host name by a slash; the default port is 25 (or ``smtp'' under IPv6).
@@ -497,8 +497,8 @@ fetchmail runs with the effective GID set to that of the kmem group
 .I only
 when interface data is being collected.
 .TP
-.B --preauth <type>
-(Keyword: preauth[enticate])
+.B --auth <type>
+(Keyword: auth[enticate])
 This option permits you to specify an authentication type (see USER
 AUTHENTICATION below for details).  The possible values are \fBany\fR,
 \&`\fBpassword\fR', `\fBkerberos_v5\fR' and `\fBkerberos\fR' (or, for
@@ -514,7 +514,7 @@ a password.  Specify \fBssh\fR when you are using an end-to-end secure
 connection such as an ssh tunnel; specify \fRgssapi\fR or
 \fBkerberos_v4\fR if you are using a protocol variant that employs
 GSSAPI or K4.  Choosing KPOP protocol automatically selects Kerberos
-preauthentication.  This option does not work with ETRN or ODMR.
+authentication.  This option does not work with ETRN or ODMR.
 .SS Miscellaneous Options
 .TP
 .B \-f <pathname>, --fetchmailrc <pathname>
@@ -687,13 +687,13 @@ the server greeting time to the server, which can verify it by
 checking its authorization database. 
 .PP
 If your \fIfetchmail\fR was built with Kerberos support and you specify 
-Kerberos preauthentication (either with --preauth or the \fI.fetchmailrc\fR
+Kerberos authentication (either with --auth or the \fI.fetchmailrc\fR
 option \fBauthenticate kerberos_v4\fR) it will try to get a Kerberos
 ticket from the mailserver at the start of each query.  Note: if
 either the pollnane or via name is `hesiod', fetchmail will try to use
 Hesiod to look up the mailserver.
 .PP
-If you use POP3 or IMAP with GSSAPI preauthentication, \fIfetchmail\fR will
+If you use POP3 or IMAP with GSSAPI authentication, \fIfetchmail\fR will
 expect the server to have RFC1731- or RFC1734-conformant GSSAPI
 capability, and will use it.  Currently this has only been tested over
 Kerberos V, so you're expected to already have a ticket-granting
@@ -704,7 +704,7 @@ option \fBuser\fR.
 If your IMAP daemon returns the PREAUTH response in its greeting line, 
 fetchmail will notice this and skip the normal authentication step.
 This could be useful, e.g. if you start imapd explicitly using ssh.
-In this case you can declare the preauthentication value `ssh' on that
+In this case you can declare the authentication value `ssh' on that
 site entry to stop \fI.fetchmail\fR from asking you for a password
 when it starts up.
 .PP
@@ -1155,8 +1155,8 @@ T}
 port    	-P	T{
 Specify TCP/IP service port
 T}
-preauth[enticate]	-A	T{
-Set preauthentication type (default `password')
+auth[enticate]	-A	T{
+Set authentication type (default `password')
 T}
 timeout  	-t	T{
 Server inactivity timeout in seconds (default 300)
@@ -1586,7 +1586,7 @@ query instead, and send an arbitrary string as the password; and
 `gssapi' tells fetchmail to use GSSAPI authentication.
 .PP
 Specifying `kpop' sets POP3 protocol over port 1109 with Kerberos V4
-preauthentication.  These defaults may be overridden by later options.
+authentication.  These defaults may be overridden by later options.
 .PP
 There are currently four global option statements; `set logfile'
 followed by a string sets the same global specified by --logfile.  A
@@ -1751,7 +1751,7 @@ The queries are made directly on the stdin and stdout of imapd via ssh.
 Note that in this setup, IMAP authentication can be skipped.
 
 .nf
-poll mailhost.net with proto imap and preauth ssh:
+poll mailhost.net with proto imap and auth ssh:
         plugin "ssh %h /usr/sbin/imapd";
 .fi
 

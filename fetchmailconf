@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.36"
+version = "1.37"
 
 from Tkinter import *
 from Dialog import *
@@ -80,7 +80,7 @@ class Server:
 	self.protocol = 'auto'		# Default to auto protocol
 	self.port = 0			# Port number to use
 	self.uidl = FALSE		# Don't use RFC1725 UIDLs by default
-	self.preauth = 'any'		# Default to password authentication
+	self.auth = 'any'		# Default to password authentication
 	self.timeout = 300		# 5-minute timeout
 	self.envelope = 'Received'	# Envelope-address header
 	self.envskip = 0		# Number of envelope headers to skip
@@ -103,7 +103,7 @@ class Server:
 	    ('protocol',  'String'),
 	    ('port',      'Int'),
 	    ('uidl',      'Boolean'),
-	    ('preauth',   'String'),
+	    ('auth',   'String'),
 	    ('timeout',   'Int'),
 	    ('envelope',  'String'),
 	    ('envskip',   'Int'),
@@ -140,8 +140,8 @@ class Server:
 		res = res + " envelope " + self.envelope
 	if self.qvirtual:
 	    res = res + (" qvirtual " + str(self.qvirtual) + "\n");
-	if self.preauth != ServerDefaults.preauth:
-	    res = res + " preauth " + self.preauth
+	if self.auth != ServerDefaults.auth:
+	    res = res + " auth " + self.auth
 	if self.dns != ServerDefaults.dns or self.uidl != ServerDefaults.uidl:
 	    res = res + " and options"
 	if self.dns != ServerDefaults.dns:
@@ -373,7 +373,7 @@ defaultports = {"auto":0,
 		"ETRN":25,
                 "ODMR":366}
 
-preauthlist = ("any", "password", "gssapi", "kerberos", "ssh")
+authlist = ("any", "password", "gssapi", "kerberos", "ssh")
 
 listboxhelp = {
     'title' : 'List Selection Help',
@@ -1102,8 +1102,8 @@ class ServerEdit(Frame, MyWidget):
                 secwin = Frame(rightwin, relief=RAISED, bd=5)
                 Label(secwin, text="Security").pack(side=TOP)
                 # Don't actually let users set this.  KPOP sets it implicitly
-                #	ButtonBar(secwin, 'Preauthorization mode:',
-                #		  self.preauth, preauthlist, 1, None).pack(side=TOP)
+                #	ButtonBar(secwin, 'Authorization mode:',
+                #		  self.auth, authlist, 1, None).pack(side=TOP)
                 if os_type == 'linux' or os_type == 'freebsd'  or 'interface' in dictmembers:
                     LabeledEntry(secwin, 'IP range to check before poll:',
 			 self.interface, leftwidth).pack(side=TOP, fill=X)

@@ -270,7 +270,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
      * If either (a) we saw a PREAUTH token in the greeting, or
      * (b) the user specified ssh preauthentication, then we're done.
      */
-    if (preauth || ctl->server.preauthenticate == A_SSH)
+    if (preauth || ctl->server.authenticate == A_SSH)
     {
         preauth = FALSE;  /* reset for the next session */
         return(PS_SUCCESS);
@@ -281,16 +281,16 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
      * Try the protocol variants that don't require passwords first.
      */
 #ifdef GSSAPI
-    if ((ctl->server.preauthenticate == A_ANY 
-	 || ctl->server.preauthenticate==A_GSSAPI)
+    if ((ctl->server.authenticate == A_ANY 
+	 || ctl->server.authenticate==A_GSSAPI)
 	&& strstr(capabilities, "AUTH=GSSAPI"))
 	return(do_gssauth(sock, ctl->server.truename, ctl->remotename));
 #endif /* GSSAPI */
 
 #ifdef KERBEROS_V4
-    if ((ctl->server.preauthenticate == A_ANY 
-	 || ctl->server.preauthenticate==A_KERBEROS_V4
-	 || ctl->server.preauthenticate==A_KERBEROS_V5) 
+    if ((ctl->server.authenticate == A_ANY 
+	 || ctl->server.authenticate==A_KERBEROS_V4
+	 || ctl->server.authenticate==A_KERBEROS_V5) 
 	&& strstr(capabilities, "AUTH=KERBEROS_V4"))
     {
 	if ((ok = do_rfc1731(sock, "AUTHENTICATE", ctl->server.truename)))

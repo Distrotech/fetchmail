@@ -247,7 +247,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 #else
 		 ctl->server.service && !strcmp(ctl->server.service, KPOP_PORT ) &&
 #endif
-		 ctl->server.preauthenticate == A_KERBEROS_V4);
+		 ctl->server.authenticate == A_KERBEROS_V4);
 
 	    stringdump("pollname", ctl->server.pollname); 
 	    booldump("active", !ctl->server.skip); 
@@ -271,18 +271,18 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	    numdump("envskip", ctl->server.envskip);
 	    stringdump("qvirtual", ctl->server.qvirtual);
  
-	    if (ctl->server.preauthenticate == A_ANY)
-		stringdump("preauth", "any");
-	    else if (ctl->server.preauthenticate == A_PASSWORD)
-		stringdump("preauth", "password");
-	    else if (ctl->server.preauthenticate == A_GSSAPI)
-		stringdump("preauth", "gssapi");
-	    else if (ctl->server.preauthenticate == A_KERBEROS_V4)
-		stringdump("preauth", "kerberos_v4");
-	    else if (ctl->server.preauthenticate == A_KERBEROS_V5)
-		stringdump("preauth", "kerberos_v5");
-	    else if (ctl->server.preauthenticate == A_SSH)
-		stringdump("preauth", "ssh");
+	    if (ctl->server.authenticate == A_ANY)
+		stringdump("auth", "any");
+	    else if (ctl->server.authenticate == A_PASSWORD)
+		stringdump("auth", "password");
+	    else if (ctl->server.authenticate == A_GSSAPI)
+		stringdump("auth", "gssapi");
+	    else if (ctl->server.authenticate == A_KERBEROS_V4)
+		stringdump("auth", "kerberos_v4");
+	    else if (ctl->server.authenticate == A_KERBEROS_V5)
+		stringdump("auth", "kerberos_v5");
+	    else if (ctl->server.authenticate == A_SSH)
+		stringdump("auth", "ssh");
 
 #if defined(HAVE_GETHOSTBYNAME) && defined(HAVE_RES_SEARCH)
 	    booldump("dns", ctl->server.dns);

@@ -25,7 +25,7 @@ int prc_lineno = 1;
 %a 4000
 %p 3000
 
-%s NAME PREAUTH
+%s NAME AUTH
 
 %%
 
@@ -82,14 +82,15 @@ proto(col)? 	{ return PROTOCOL; }
 service		{ return SERVICE; }
 port		{ return PORT; }
 interval	{ return INTERVAL; }
-preauth(enticate)?	{ SETSTATE(PREAUTH); return PREAUTHENTICATE; }
+preauth(enticate)?	{ SETSTATE(AUTH); return AUTHENTICATE; }
+auth(enticate)?	{ SETSTATE(AUTH); return AUTHENTICATE; }
 any		{ SETSTATE(0); return ANY; }
 gssapi		{ SETSTATE(0); return GSSAPI; }
 kerberos(_v)?4	{ SETSTATE(0); return KERBEROS4; }
 kerberos(_v)?5	{ SETSTATE(0); return KERBEROS5; }
 kerberos	{ SETSTATE(0); return KERBEROS; }
 ssh		{ SETSTATE(0); return SSH; }
-<PREAUTH>password { SETSTATE(0); return PASSWORD; }
+<AUTH>password { SETSTATE(0); return PASSWORD; }
 timeout		{ return TIMEOUT;}
 envelope	{ return ENVELOPE; }
 qvirtual	{ return QVIRTUAL; }

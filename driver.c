@@ -1777,7 +1777,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 #endif
 
 #ifdef KERBEROS_V4
-	if (ctl->server.preauthenticate == A_KERBEROS_V4)
+	if (ctl->server.authenticate == A_KERBEROS_V4)
 	{
 	    set_timeout(mytimeout);
 	    ok = kerberos_auth(mailserver_socket, ctl->server.truename,
@@ -1789,7 +1789,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 #endif /* KERBEROS_V4 */
 
 #ifdef KERBEROS_V5
-	if (ctl->server.preauthenticate == A_KERBEROS_V5)
+	if (ctl->server.authenticate == A_KERBEROS_V5)
 	{
 	    set_timeout(mytimeout);
 	    ok = kerberos5_auth(mailserver_socket, ctl->server.truename);
@@ -2448,7 +2448,7 @@ const struct method *proto;	/* protocol method table */
     int	ok;
 
 #ifndef KERBEROS_V4
-    if (ctl->server.preauthenticate == A_KERBEROS_V4)
+    if (ctl->server.authenticate == A_KERBEROS_V4)
     {
 	report(stderr, _("Kerberos V4 support not linked.\n"));
 	return(PS_ERROR);
@@ -2456,7 +2456,7 @@ const struct method *proto;	/* protocol method table */
 #endif /* KERBEROS_V4 */
 
 #ifndef KERBEROS_V5
-    if (ctl->server.preauthenticate == A_KERBEROS_V5)
+    if (ctl->server.authenticate == A_KERBEROS_V5)
     {
 	report(stderr, _("Kerberos V5 support not linked.\n"));
 	return(PS_ERROR);

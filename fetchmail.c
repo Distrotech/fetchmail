@@ -324,7 +324,7 @@ int main(int argc, char **argv)
     {
 	if (ctl->active && !(implicitmode && ctl->server.skip)&&!ctl->password)
 	{
-	    if (ctl->server.preauthenticate > A_PASSWORD || ctl->server.protocol >= P_ETRN)
+	    if (ctl->server.authenticate > A_PASSWORD || ctl->server.protocol >= P_ETRN)
 		/* Server won't care what the password is, but there
 		   must be some non-null string here.  */
 		ctl->password = ctl->remotename;
@@ -494,7 +494,7 @@ int main(int argc, char **argv)
     for (ctl = querylist; ctl; ctl = ctl->next)
     {
 	if (ctl->active && !(implicitmode && ctl->server.skip)
-		&& ctl->server.preauthenticate <= A_PASSWORD
+		&& ctl->server.authenticate <= A_PASSWORD
 	        && ctl->server.protocol < P_ETRN
 		&& !ctl->password)
 	{
@@ -868,7 +868,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(server.port);
 #endif /* INET6_ENABLE */
     FLAG_MERGE(server.interval);
-    FLAG_MERGE(server.preauthenticate);
+    FLAG_MERGE(server.authenticate);
     FLAG_MERGE(server.timeout);
     FLAG_MERGE(server.envelope);
     FLAG_MERGE(server.envskip);
@@ -1103,8 +1103,8 @@ static int load_params(int argc, char **argv, int optind)
 	     * If we're using Kerberos for authentication, we need 
 	     * the FQDN in order to generate capability keys.  */
 	    if (ctl->server.protocol==P_ETRN || ctl->server.protocol==P_ODMR
-		|| ctl->server.preauthenticate == A_KERBEROS_V4
-		|| ctl->server.preauthenticate == A_KERBEROS_V5)
+		|| ctl->server.authenticate == A_KERBEROS_V4
+		|| ctl->server.authenticate == A_KERBEROS_V5)
 		if (strcmp(fetchmailhost, "localhost") == 0)
 			fetchmailhost = host_fqdn();
 
@@ -1194,8 +1194,8 @@ static int load_params(int argc, char **argv, int optind)
 #ifdef HAVE_GETHOSTBYNAME
 	    else if (!configdump)
 	    {
-		if (ctl->server.preauthenticate==A_KERBEROS_V4 ||
-		      ctl->server.preauthenticate==A_KERBEROS_V5 ||
+		if (ctl->server.authenticate==A_KERBEROS_V4 ||
+		      ctl->server.authenticate==A_KERBEROS_V5 ||
 		    (ctl->server.dns && MULTIDROP(ctl)))
 		{
 		    struct hostent	*namerec;
@@ -1560,7 +1560,7 @@ static void dump_params (struct runctl *runp,
 	if (ctl->server.skip || outlevel >= O_VERBOSE)
 	    printf(_("  This host %s be queried when no host is specified.\n"),
 		   ctl->server.skip ? _("will not") : _("will"));
-	if (ctl->server.preauthenticate <= A_PASSWORD && ctl->server.protocol < P_ETRN)
+	if (ctl->server.authenticate <= A_PASSWORD && ctl->server.protocol < P_ETRN)
 	{
 	    if (!ctl->password)
 		printf(_("  Password will be prompted for.\n"));
@@ -1584,10 +1584,10 @@ static void dump_params (struct runctl *runp,
 #else /* INET6_ENABLE */
 	    && ctl->server.port == KPOP_PORT
 #endif /* INET6_ENABLE */
-	    && (ctl->server.preauthenticate == A_KERBEROS_V4 ||
-		ctl->server.preauthenticate == A_KERBEROS_V5))
+	    && (ctl->server.authenticate == A_KERBEROS_V4 ||
+		ctl->server.authenticate == A_KERBEROS_V5))
 	    printf(_("  Protocol is KPOP with Kerberos %s authentication"),
-		   ctl->server.preauthenticate == A_KERBEROS_V5 ? "V" : "IV");
+		   ctl->server.authenticate == A_KERBEROS_V5 ? "V" : "IV");
 	else
 	    printf(_("  Protocol is %s"), showproto(ctl->server.protocol));
 #if INET6_ENABLE
@@ -1605,7 +1605,7 @@ static void dump_params (struct runctl *runp,
 	    printf(_(" (forcing UIDL use)"));
 	putchar('.');
 	putchar('\n');
-	switch (ctl->server.preauthenticate)
+	switch (ctl->server.authenticate)
 	{
 	case A_ANY:
 	    printf(_("  All authentication methods will be described.\n"));
@@ -1614,13 +1614,13 @@ static void dump_params (struct runctl *runp,
 	    printf(_("  Password authentication will be forced.\n"));
 	    break;
 	case A_GSSAPI:
-	    printf(_("  GSSAPI preauthentication will be forced.\n"));
+	    printf(_("  GSSAPI authentication will be forced.\n"));
 	    break;
 	case A_KERBEROS_V4:
-	    printf(_("  Kerberos V4 preauthentication will be forced.\n"));
+	    printf(_("  Kerberos V4 authentication will be forced.\n"));
 	    break;
 	case A_KERBEROS_V5:
-	    printf(_("  Kerberos V5 preauthentication will be forced.\n"));
+	    printf(_("  Kerberos V5 authentication will be forced.\n"));
 	    break;
 	case A_SSH:
 	    printf(_("  End-to-end encryption assumed.\n"));

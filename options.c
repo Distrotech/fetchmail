@@ -41,7 +41,7 @@
 #define LA_PROTOCOL	17
 #define LA_UIDL		18
 #define LA_PORT		19
-#define LA_PREAUTH	20
+#define LA_AUTH	20
 #define LA_TIMEOUT	21
 #define LA_ENVELOPE	22
 #define LA_QVIRTUAL     23
@@ -109,7 +109,7 @@ static const struct option longoptions[] = {
   {"proto",	required_argument, (int *) 0, LA_PROTOCOL    },
   {"uidl",	no_argument,	   (int *) 0, LA_UIDL	     },
   {"port",	required_argument, (int *) 0, LA_PORT        },
-  {"preauth",	required_argument, (int *) 0, LA_PREAUTH},
+  {"auth",	required_argument, (int *) 0, LA_AUTH},
   {"timeout",	required_argument, (int *) 0, LA_TIMEOUT     },
   {"envelope",	required_argument, (int *) 0, LA_ENVELOPE    },
   {"qvirtual",	required_argument, (int *) 0, LA_QVIRTUAL    },
@@ -351,9 +351,9 @@ struct query *ctl;	/* option record to be initialized */
 		ctl->server.port = KPOP_PORT;
 #endif /* INET6_ENABLE */
 #ifdef KERBEROS_V5
-		ctl->server.preauthenticate =  A_KERBEROS_V5;
+		ctl->server.authenticate =  A_KERBEROS_V5;
 #else
-		ctl->server.preauthenticate =  A_KERBEROS_V4;
+		ctl->server.authenticate =  A_KERBEROS_V4;
 #endif /* KERBEROS_V5 */
 	    }
 	    else if (strcasecmp(optarg,"imap") == 0)
@@ -377,23 +377,23 @@ struct query *ctl;	/* option record to be initialized */
 	    ctl->server.port = xatoi(optarg, &errflag);
 #endif /* INET6_ENABLE */
 	    break;
-	case LA_PREAUTH:
+	case LA_AUTH:
 	    if (strcmp(optarg, "password") == 0)
-		ctl->server.preauthenticate = A_PASSWORD;
+		ctl->server.authenticate = A_PASSWORD;
 	    else if (strcmp(optarg, "kerberos") == 0)
 #ifdef KERBEROS_V5
-		ctl->server.preauthenticate = A_KERBEROS_V5;
+		ctl->server.authenticate = A_KERBEROS_V5;
 #else
-		ctl->server.preauthenticate = A_KERBEROS_V4;
+		ctl->server.authenticate = A_KERBEROS_V4;
 #endif /* KERBEROS_V5 */
 	    else if (strcmp(optarg, "kerberos_v5") == 0)
-		ctl->server.preauthenticate = A_KERBEROS_V5;
+		ctl->server.authenticate = A_KERBEROS_V5;
 	    else if (strcmp(optarg, "kerberos_v4") == 0)
-		ctl->server.preauthenticate = A_KERBEROS_V4;
+		ctl->server.authenticate = A_KERBEROS_V4;
 	    else if (strcmp(optarg, "ssh") == 0)
-		ctl->server.preauthenticate = A_SSH;
+		ctl->server.authenticate = A_SSH;
 	    else {
-		fprintf(stderr,_("Invalid preauthentication `%s' specified.\n"), optarg);
+		fprintf(stderr,_("Invalid authentication `%s' specified.\n"), optarg);
 		errflag++;
 	    }
 	    break;
@@ -620,7 +620,7 @@ struct query *ctl;	/* option record to be initialized */
 	P(_("  -p, --protocol    specify retrieval protocol (see man page)\n"));
 	P(_("  -U, --uidl        force the use of UIDLs (pop3 only)\n"));
 	P(_("  -P, --port        TCP/IP service port to connect to\n"));
-	P(_("      --preauth     preauthentication type (password/kerberos/ssh)\n"));
+	P(_("      --auth        authentication type (password/kerberos/ssh)\n"));
 	P(_("  -t, --timeout     server nonresponse timeout\n"));
 	P(_("  -E, --envelope    envelope address header\n"));
 	P(_("  -Q, --qvirtual    prefix to remove from local user id\n"));

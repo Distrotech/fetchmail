@@ -28,13 +28,13 @@
 #define		SPOP3_PORT	995
 #endif
 
-/* preauthentication types */
+/* authentication types */
 #define		A_ANY		0	/* use the first method that works */
 #define		A_PASSWORD	1	/* password or inline authentication */
-#define		A_KERBEROS_V4	2	/* preauthenticate w/ Kerberos V4 */
-#define		A_KERBEROS_V5	3	/* preauthenticate w/ Kerberos V5 */
-#define 	A_GSSAPI	4	/* preauthenticate with GSSAPI */
-#define		A_SSH		5	/* preauthentication at session level */
+#define		A_KERBEROS_V4	2	/* authenticate w/ Kerberos V4 */
+#define		A_KERBEROS_V5	3	/* authenticate w/ Kerberos V5 */
+#define 	A_GSSAPI	4	/* authenticate with GSSAPI */
+#define		A_SSH		5	/* authentication at session level */
 
 /*
  * Definitions for buffer sizes.  We get little help on setting maxima
@@ -195,7 +195,7 @@ struct hostdata		/* shared among all user connections to given server */
     int port;				/* TCP/IP service port number */
 #endif /* INET6_ENABLE */
     int interval;			/* # cycles to skip between polls */
-    int preauthenticate;		/* preauthentication mode to try */
+    int authenticate;			/* authentication mode to try */
     int timeout;			/* inactivity timout in seconds */
     char *envelope;			/* envelope address list header */
     int envskip;			/* skip to numbered envelope header */
