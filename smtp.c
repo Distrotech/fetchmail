@@ -81,17 +81,20 @@ int SMTP_ehlo(int sock, char *host, int *opt)
 int SMTP_from(int sock, char *from, char *opts)
 /* send a "MAIL FROM:" message to the SMTP listener */
 {
-  int ok;
-  char buf[MSGBUFSIZE];
+    int ok;
+    char buf[MSGBUFSIZE];
 
-  sprintf(buf, "MAIL FROM:<%s>", from);
-  if (opts)
-      strcat(buf, opts);
-  SockPrintf(sock,"%s\r\n", buf);
-  if (outlevel == O_VERBOSE)
-      error(0, 0, "SMTP> %s", buf);
-  ok = SMTP_ok(sock);
-  return ok;
+    if (strchr(from, '<'))
+	sprintf(buf, "MAIL FROM: %s", from);
+    else
+	sprintf(buf, "MAIL FROM:<%s>", from);
+    if (opts)
+	strcat(buf, opts);
+    SockPrintf(sock,"%s\r\n", buf);
+    if (outlevel == O_VERBOSE)
+	error(0, 0, "SMTP> %s", buf);
+    ok = SMTP_ok(sock);
+    return ok;
 }
 
 int SMTP_rcpt(int sock, char *to)
