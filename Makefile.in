@@ -132,7 +132,7 @@ install:
 	@echo "Creating installation directories..." 
 	$(SHELL) ${srcdir}/mkinstalldirs $(bindir) $(mandir)
 	@echo "Installing fetchmail binary..."
-	$(INSTALL_PROGRAM) ${srcdir}/fetchmail $(bindir)/fetchmail
+	$(INSTALL_PROGRAM) ./fetchmail $(bindir)/fetchmail
 	@echo "Installing fetchmail configurator..."
 	$(INSTALL_PROGRAM) ${srcdir}/fetchmailconf $(bindir)/fetchmailconf
 	@echo "Installing manual page..."
