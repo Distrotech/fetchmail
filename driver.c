@@ -493,11 +493,25 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	    err = readheaders(mailserver_socket, len, msgsizes[num-1],
 			     ctl, num);
 	    if (err == PS_RETAINED)
-		suppress_readbody = suppress_forward = suppress_delete = retained = TRUE;
+	    {
+		suppress_forward = suppress_delete = retained = TRUE;
+		/* do not read the body only if the underlying protocol
+		 * allows the body to be fetched separately */
+		if (ctl->server.base_protocol->fetch_body)
+		    suppress_readbody = TRUE;
+	    }
 	    else if (err == PS_TRANSIENT)
+	    {
 		suppress_delete = suppress_forward = TRUE;
+		if (ctl->server.base_protocol->fetch_body)
+		    suppress_readbody = TRUE;
+	    }
 	    else if (err == PS_REFUSED)
+	    {
 		suppress_forward = TRUE;
+		if (ctl->server.base_protocol->fetch_body)
+		    suppress_readbody = TRUE;
+	    }
 #if 0
 	    /* 
 	     * readheaders does not read the body when it
