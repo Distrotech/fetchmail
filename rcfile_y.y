@@ -41,7 +41,7 @@ static flag trailer;
 
 static void record_current();
 static void user_reset();
-static int reset_server(char *name, int skip);
+static void reset_server(char *name, int skip);
 
 /* using Bison, this arranges that yydebug messages will show actual tokens */
 extern char * yytext;
@@ -91,27 +91,9 @@ statement	: SET LOGFILE MAP STRING	{logfile = xstrdup($4);}
 		| define_server serverspecs userspecs
 		;
 
-define_server	: POLL STRING	{
-    				    if (!reset_server($2, FALSE))
-				    {
-					yyerror("duplicate entry name not allowed");
-					YYERROR;
-				    }
-				}
-		| SKIP STRING	{
-    				    if (!reset_server($2, TRUE))
-				    {
-					yyerror("duplicate entry name not allowed");
-					YYERROR;
-				    }
-				}
-		| DEFAULTS	{
-    				    if (!reset_server("defaults", FALSE))
-				    {
-					yyerror("can't have two default entries");
-					YYERROR;
-				    }
-				}
+define_server	: POLL STRING		{reset_server($2, FALSE);}
+		| SKIP STRING		{reset_server($2, TRUE);}
+		| DEFAULTS		{reset_server("defaults", FALSE);}
   		;
 
 serverspecs	: /* EMPTY */
@@ -339,7 +321,7 @@ const flag securecheck;		/* check for a secure rc file? */
 	return(0);
 }
 
-static int reset_server(char *name, int skip)
+static void reset_server(char *name, int skip)
 /* clear the entire global record and initialize it with a new name */
 {
     trailer = FALSE;
@@ -347,7 +329,6 @@ static int reset_server(char *name, int skip)
     current.smtp_socket = -1;
     current.server.pollname = xstrdup(name);
     current.server.skip = skip;
-    return(TRUE);
 }
 
 
