@@ -14,6 +14,7 @@
 #
 # TO DO: Arrange for save and quit buttons to clean up all frames dependent
 # on the current ones.
+version = "0.95 beta";
 
 from Tkinter import *
 from Dialog import *
@@ -1189,7 +1190,7 @@ class MainWindow(Frame):
 	self.master.iconname('fetchmail configurator main');
 	Pack.config(self)
 	Label(self,
-		text='Configurator Main Window', 
+		text='Fetchmailconf ' + version, 
 		bd=2).pack(side=TOP, pady=10)
 
 	Message(self, text="""
