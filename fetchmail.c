@@ -325,10 +325,14 @@ int main (int argc, char **argv)
 		    struct hostent	*namerec;
 
 		    /* compute the canonical name of the host */
+		    errno = 0;
 		    namerec = gethostbyname(ctl->servername);
 		    if (namerec == (struct hostent *)NULL)
 		    {
-			fprintf(stderr,
+			if (errno)
+			    perror("fetchmail: initialization error");
+			else
+			    fprintf(stderr,
 				"fetchmail: skipping %s poll, nameserver isn't responding\n",
 				ctl->servername);
 			continue;
