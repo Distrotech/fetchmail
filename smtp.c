@@ -7,6 +7,7 @@
   module:       smtp.c
   project:      fetchmail
   programmer:   Harry Hochheiser
+                cleaned up and made rfc821 compliant by Cameron MacPherson
   description:  Handling of SMTP connections, and processing of mail 
                  to be forwarded via SMTP connections.
 
@@ -34,16 +35,13 @@
 int SMTP_helo(int socket,char *host)
 {
   int ok;
-  char buf[SMTPBUFSIZE+1];
 
-  sprintf(buf,"HELO %s",host);
-  SockPuts(socket, buf);
+  SockPrintf(socket,"HELO %s\r\n", host);
   if (outlevel == O_VERBOSE)
-      fprintf(stderr, "SMTP> %s\n", buf);
-  ok = SMTP_ok(socket,buf);
+      fprintf(stderr, "SMTP> HELO %s\n", host);
+  ok = SMTP_ok(socket,NULL);
   return ok;
 }
-
 
 /*********************************************************************
   function:      SMTP_from
@@ -61,16 +59,14 @@ int SMTP_helo(int socket,char *host)
  *********************************************************************/
 int SMTP_from(int socket, char *from)
 {
-  char buf[SMTPBUFSIZE+1];  /* it's as good as size as any... */
   int ok;
-  SockPrintf(socket, "MAIL FROM: %s\n", from);
-  if (outlevel == O_VERBOSE)
-      fprintf(stderr, "SMTP> MAIL FROM: %s\n", from);
-  ok = SMTP_ok(socket,buf);
 
+  SockPrintf(socket,"MAIL FROM:<%s>\r\n", from);
+  if (outlevel == O_VERBOSE)
+      fprintf(stderr, "SMTP> MAIL FROM:<%s>\n", from);
+  ok = SMTP_ok(socket,NULL);
   return ok;
 }
-
 
 /*********************************************************************
   function:      SMTP_rcpt
@@ -86,17 +82,14 @@ int SMTP_from(int socket, char *from)
  *********************************************************************/
 int SMTP_rcpt(int socket,char *to)
 {
-  char buf[SMTPBUFSIZE+1];  /* it's as good as size as any... */
   int ok;
 
-  SockPrintf(socket, "RCPT TO: %s\n", to);
+  SockPrintf(socket,"RCPT TO:<%s>\r\n", to);
   if (outlevel == O_VERBOSE)
-      fprintf(stderr, "SMTP> RCPT TO: %s\n", to);
-  ok = SMTP_ok(socket,buf);
-  
+      fprintf(stderr, "SMTP> RCPT TO:<%s>\n", to);
+  ok = SMTP_ok(socket,NULL);
   return ok;
 }
-
 
 /*********************************************************************
   function:      SMTP_data
@@ -110,11 +103,31 @@ int SMTP_data(int socket)
 {
   int ok;
 
-  SockPrintf(socket,"DATA\n");
+  SockPrintf(socket,"DATA\r\n");
   if (outlevel == O_VERBOSE)
       fprintf(stderr, "SMTP> DATA\n");
-  ok = SMTP_ok(socket, NULL);
-  
+  ok = SMTP_ok(socket,NULL);
+  return ok;
+}
+
+/*********************************************************************
+  function:      SMTP_quit
+  description:   Send a "QUIT" message to the SMTP server.
+
+  arguments:     
+    socket       TCP/IP socket for connection to SMTP
+
+  return value:  Result of SMTP_OK: based on codes in fetchmail.h.
+
+ *********************************************************************/
+int SMTP_quit(int socket)
+{
+  int ok;
+
+  SockPrintf(socket,"QUIT\r\n");
+  if (outlevel == O_VERBOSE)
+      fprintf(stderr, "SMTP> QUIT\n");
+  ok = SMTP_ok(socket,NULL);
   return ok;
 }
 
@@ -132,7 +145,7 @@ int SMTP_eom(int socket)
 {
   int ok;
 
-  SockPuts(socket,".");
+  SockPrintf(socket,".\r\n");
   if (outlevel == O_VERBOSE)
       fprintf(stderr, "SMTP> (EOM)\n");
   ok = SMTP_ok(socket,NULL);
@@ -141,7 +154,7 @@ int SMTP_eom(int socket)
 
 /*********************************************************************
   function:      SMTP_rset
-  description:   Send an "RSET" message to the SMTP server.
+  description:   Send a "RSET" message to the SMTP server.
 
   arguments:     
     socket       TCP/IP socket for connection to SMTP
@@ -149,7 +162,7 @@ int SMTP_eom(int socket)
  *********************************************************************/
 void SMTP_rset(int socket)
 {
-  SockPrintf(socket,"RSET\n");
+  SockPrintf(socket,"RSET\r\n");
   if (outlevel == O_VERBOSE)
       fprintf(stderr, "SMTP> RSET\n");
 }
@@ -193,7 +206,6 @@ static int SMTP_check(int socket,char *argbuf)
 int SMTP_ok(int socket,char *argbuf)
 {
   int  ok;  
-  char buf[SMTPBUFSIZE+1];
 
   /* I can tell that the SMTP server connection is ok if I can read a
      status message that starts with "1xx" ,"2xx" or "3xx".
@@ -230,4 +242,3 @@ int SMTP_Gets(int socket,char *buf,int sz)
 {
   return read(socket,buf,sz);
 }
-

@@ -26,6 +26,7 @@ int SMTP_from(int socket,char *from);
 int SMTP_rcpt(int socket,char *to);
 int SMTP_data(int socket);
 int SMTP_eom(int socket);
+int SMTP_quit(int socket);
 int SMTP_ok(int socket,char *argbuf);
 int SMTP_Gets(int socket,char *buf,int sz);
 void SMTP_rset(int socket);

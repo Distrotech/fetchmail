@@ -223,8 +223,10 @@ closeUp:
 	if (closeuserfolder(mboxfd) < 0 && ok == 0)
 	    ok = PS_IOERR;
     }
-    else if (queryctl->output == TO_SMTP && mboxfd  > 0)
+    else if (queryctl->output == TO_SMTP && mboxfd > 0) {
+	SMTP_quit(mboxfd);
 	close(mboxfd);
+    }
 
     if (ok == PS_IOERR || ok == PS_SOCKET) 
 	perror("do_protocol: cleanUp");
@@ -598,7 +600,7 @@ int rewrite;
 	    if (delimited && *bufp == 0)
 		break;  /* end of message */
 	}
-	strcat(bufp,"\n");
+	strcat(bufp, output == TO_SMTP && !inheaders ? "\r\n" : "\n");
      
 	if (inheaders)
         {

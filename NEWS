@@ -53,6 +53,9 @@ fetchmail-1.0 (Mon Sep 23 19:54:01 EDT 1996):
 
 * Name change (it ain't just for POP3 any more).
 
+* Stricter RFC822 conformance, so SMTP to qmail works.  Thanks to
+  Cameron MacPherson <unsound@oz.net> for these changes.
+
 popclient-3.2 (Mon Sep 23 13:29:46 EDT 1996):
 
 * RPOP support (coded at a user's request but untested).
