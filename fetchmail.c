@@ -1101,7 +1101,7 @@ static int load_params(int argc, char **argv, int optind)
 		if (!leadname)
 		{
 		    report(stderr, 
-			   _("Lead server has no name."));
+			   _("Lead server has no name.\n"));
 		    exit(PS_SYNTAX);
 		}
 
