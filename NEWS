@@ -1,7 +1,7 @@
 			Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-2.2 (Sun Dec  8 23:17:01 EST 1996):
+fetchmail-2.2 (Mon Dec  9 00:10:34 EST 1996):
 
 features --
 
@@ -30,7 +30,7 @@ bugs --
 * Disable daemon SIGCLD handler while an MDA is running, to avoid snafus.
   Thanks to Dave Bodenstab <imdave@synet.net> for spotting this obscure bug.
 
-153 people on the contact list.
+156 people on the contact list.
 
 ------------------------------------------------------------------------------
 fetchmail-2.1 (Thu Nov 28 11:07:48 EST 1996):
