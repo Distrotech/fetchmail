@@ -575,6 +575,9 @@ int main(int argc, char **argv)
     signal(SIGQUIT, terminate_run);
 
     /* here's the exclusion lock */
+#ifndef O_SYNC
+#define O_SYNC	0	/* use it if we have it */
+#endif
     if ((st = open(lockfile, O_WRONLY|O_CREAT|O_EXCL|O_SYNC, 0666)) != -1)
     {
 	sprintf(tmpbuf,"%d", getpid());
