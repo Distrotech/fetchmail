@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.9.8 (Thu Feb 14 23:47:31 EST 2002), 21358 lines:
+
 * Added de translation catalog; updated da and tr catalogs.
 * vsprintf underflow fixes by Sunil Shetye.
 * Added warning about UIMS POP3 server.
@@ -9,6 +11,8 @@
 * Sunil Shetye's patch for idle timeout during poll.
 * Applied HMH's fix for the 'message delimiter found in headers' code path
   (Debian bug #128672).
+
+There are 459 people on fetchmail-friends and 641 on fetchmail-announce.
 
 fetchmail-5.9.7 (Sat Feb  2 00:33:40 EST 2002), 21330 lines:
 
