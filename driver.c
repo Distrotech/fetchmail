@@ -1800,6 +1800,9 @@ const struct method *proto;	/* protocol method table */
     case PS_SMTP:
 	msg = "SMTP transaction";
 	break;
+    case PS_DNS:
+	msg = "DNS lookup";
+	break;
     case PS_UNDEFINED:
 	error(0, 0, "undefined");
 	break;

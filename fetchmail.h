@@ -39,10 +39,11 @@
 #define		PS_EXCLUDE	8	/* client-side exclusion error */
 #define		PS_LOCKBUSY	9	/* server responded lock busy */
 #define		PS_SMTP         10      /* SMTP error */
-#define		PS_UNDEFINED	11	/* something I hadn't thought of */
-#define		PS_TRANSIENT	12	/* transient failure (internal use) */
-#define		PS_REFUSED	13	/* mail refused (internal use) */
-#define		PS_RETAINED	24	/* message retained (internal use) */
+#define		PS_DNS		11	/* fatal DNS error */	
+#define		PS_UNDEFINED	12	/* something I hadn't thought of */
+#define		PS_TRANSIENT	13	/* transient failure (internal use) */
+#define		PS_REFUSED	14	/* mail refused (internal use) */
+#define		PS_RETAINED	15	/* message retained (internal use) */
 
 /* output noise level */
 #define         O_SILENT	0	/* mute, max squelch, etc. */

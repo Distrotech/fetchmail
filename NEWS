@@ -16,6 +16,7 @@
 fetchmail-4.2.2 ()
 * Re-enable --limit under IMAP (bug introduced in 4.2.0).
 * Autoconfigure root-mode PID-file directory to /etc if no /var/run.
+* ETRN mode no longer tries to flush queue for "localhost".
 
 There are 285 people on the fetchmail-friends list.
 

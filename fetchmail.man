@@ -1278,6 +1278,9 @@ The
 .I fetchmail.
 run failed while trying to do an SMTP port open or transaction.
 .IP 11
+Fatal DNS error.  Fetchmail encountered an error while performing
+a DNS lookup at startup and could not proceed.
+.IP 11
 Internal error.  You should see a message on standard error with
 details.
 .PP

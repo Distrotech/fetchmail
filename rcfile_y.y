@@ -191,8 +191,8 @@ folder_list	: STRING		{save_str(&current.mailboxes,-1,$1);}
 		| folder_list STRING	{save_str(&current.mailboxes,-1,$2);}
 		;
 
-smtp_list	: STRING		{save_str(&current.smtphunt, -1, $1);}
-		| smtp_list STRING	{save_str(&current.smtphunt, -1, $2);}
+smtp_list	: STRING		{save_str(&current.smtphunt, TRUE,$1);}
+		| smtp_list STRING	{save_str(&current.smtphunt, TRUE,$2);}
 		;
 
 user_option	: TO localnames HERE

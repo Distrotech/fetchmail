@@ -16,6 +16,9 @@
 #include <pwd.h>
 #include <string.h>
 #include <ctype.h>
+#ifdef HAVE_GETHOSTBYNAME
+#include <netdb.h>
+#endif /* HAVE_GETHOSTBYNAME */
 
 extern char *getenv();	/* needed on sysV68 R3V7.1. */
 
@@ -60,6 +63,21 @@ void envquery(int argc, char **argv)
 	fprintf(stderr, "%s: can't determine your host!", program_name);
 	exit(PS_IOERR);
     }
+#ifdef HAVE_GETHOSTBYNAME
+    {
+	struct hostent *hp;
+
+	/* in case we got a basename (as we do in Linux) make a FQDN of it */
+	hp = gethostbyname(tmpbuf);
+	if (hp == (struct hostent *) NULL)
+	{
+	    /* exit with error message */
+	    fprintf(stderr, "gethostbyname failed for %s", tmpbuf);
+	    exit(PS_DNS);
+	}
+	strcpy(tmpbuf, hp->h_name);
+    }
+#endif /* HAVE_GETHOSTBYNAME */
     fetchmailhost = xstrdup(tmpbuf);
 
 #define RCFILE_NAME	".fetchmailrc"
