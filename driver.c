@@ -1192,6 +1192,7 @@ va_dcl
 
     strcat(buf, "\r\n");
     fputs(buf, sockfp);
+    fflush(sockfp);	/* sockfp should be linebuffered, but let's be sure */
 
     if (outlevel == O_VERBOSE)
     {
@@ -1234,6 +1235,8 @@ va_dcl
 
     strcat(buf, "\r\n");
     fputs(buf, sockfp);
+    fflush(sockfp);	/* sockfp should be linebuffered, but let's be sure */
+
     if (outlevel == O_VERBOSE)
     {
 	char *cp;
