@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-6.2.4 (Wed Aug 13 04:27:35 EDT 2003), 22625 lines:
+
 * Updated German, Spanish, Catalan, and Turkish translations.
 * IDLE is now supported using no-ops even if the server doesn't support
   the IMAP IDLE extension.
@@ -10,6 +12,8 @@
 * Introduce a translation item for the word "seen".
 * Back out the hack to deal with lack of byte stuffing on some POP3 servers.
 * Thomas Steudten's patch to improve SMTP handling of 550 errors.
+
+There are 585 people on fetchmail-friends and 745 on fetchmail-announce.
 
 fetchmail-6.2.3 (Thu Jul 17 14:53:00 EDT 2003), 22490 lines:
 
