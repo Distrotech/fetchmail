@@ -9,6 +9,8 @@ a Certifying Authority we recognize?).
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Arrange for fetchmail to restart itself quietly when the rc file is touched.
+
 fetchmail-5.2.1 (Sun Dec 19 23:08:53 EST 1999), 18330 lines:
 * Added FAQ item R10 on timeouts during messages.
 * Fixed indentation problem in fetchmailconf.

@@ -83,6 +83,7 @@ static char *lockfile;		/* name of lockfile */
 static int querystatus;		/* status of query */
 static int successes;		/* count number of successful polls */
 static struct runctl cmd_run;	/* global options set from command line */
+static time_t parsetime;	/* time of last parse */
 
 static void termhook(int);		/* forward declaration of exit hook */
 
@@ -229,9 +230,7 @@ int main(int argc, char **argv)
 	printf("+NETSEC");
 #endif /* NET_SECURITY */
 #ifdef HAVE_SOCKS
-  #if HAVE_SOCKS
 	printf("+SOCKS");
-  #endif
 #endif /* HAVE_SOCKS */
 #if ENABLE_NLS
 	printf("+NLS");
@@ -427,9 +426,13 @@ int main(int argc, char **argv)
 	}
 	else if (argc > 1)
 	{
-	    fprintf(stderr,
-		    _("fetchmail: can't accept options while a background fetchmail is running.\n"));
-	    return(PS_EXCLUDE);
+	    /* this test enables re-execing on a changed rcfile */
+	    if (getpid() != pid)
+	    {
+		fprintf(stderr,
+			_("fetchmail: can't accept options while a background fetchmail is running.\n"));
+		return(PS_EXCLUDE);
+	    }
 	}
 	else if (kill(pid, SIGUSR1) == 0)
 	{
@@ -474,15 +477,13 @@ int main(int argc, char **argv)
 	}
     }
 
-/* Time to initiate the SOCKS library (this is not mandatory: it just
- registers the correct application name for logging purpose. If you
- have some problem, comment these lines). */
+    /*
+     * Time to initiate the SOCKS library (this is not mandatory: it just
+     * registers the correct application name for logging purpose. If you
+     * have some problem, comment out these lines).
+     */
 #ifdef HAVE_SOCKS
-  #if HAVE_SOCKS
-/* Mmmh... I don't like hardcoded application names,
- but "fetchmail" is everywhere... */
     SOCKSinit("fetchmail");
-  #endif
 #endif /* HAVE_SOCKS */
 
     /*
@@ -550,6 +551,24 @@ int main(int argc, char **argv)
      * reflect the status of that transaction.
      */
     do {
+	/* 
+	 * Check to see if the rcfile has been touched.  If so,
+	 * re-exec so the file will be reread.  Doing it this way
+	 * avoids all the complications of trying to deallocate the
+	 * in-core control structures -- and the potential memory
+	 * leaks...
+	 */
+	struct stat	rcstat;
+
+	if (stat(rcfile, &rcstat) == -1)
+	    report(stderr, _("couldn't time-check the run-control file\n"));
+	else if (rcstat.st_mtime > parsetime)
+	{
+	    report(stdout, _("restarting fetchmail (rc file changed)\n"));
+	    execvp("fetchmail", argv);
+	    report(stderr, _("attempt to re-exec fetchmail failed\n"));
+	}
+
 #if defined(HAVE_RES_SEARCH) && defined(USE_TCPIP_FOR_DNS)
 	/*
 	 * This was an efficiency hack that backfired.  The theory
@@ -895,6 +914,7 @@ static int load_params(int argc, char **argv, int optind)
     int	implicitmode, st;
     struct passwd *pw;
     struct query def_opts, *ctl;
+    struct stat rcstat;
 
     run.bouncemail = TRUE;
 
@@ -913,6 +933,12 @@ static int load_params(int argc, char **argv, int optind)
     def_opts.warnings = WARNING_INTERVAL;
     def_opts.remotename = user;
     def_opts.listener = SMTP_MODE;
+
+    /* note the parse time, so we can pick up on modifications */
+    if (stat(rcfile, &rcstat) == -1)
+	report(stderr, _("couldn't time-check the run-control file\n"));
+    else
+	parsetime = rcstat.st_mtime;
 
     /* this builds the host list */
     if ((st = prc_parse_file(rcfile, !versioninfo)) != 0)

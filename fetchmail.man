@@ -842,6 +842,18 @@ fetched (and thus marked seen by the mailserver) but not delivered
 locally due to some transient error, it will be re-fetched during the
 next poll cycle.  (The IMAP logic doesn't delete messages until
 they're delivered, so this problem does not arise.)
+.PP
+If you touch or change the 
+.I .fetchmailrc 
+file while fetchmail is running in daemon mode, this will be detected 
+at the beginning of the next poll cycle.  When a changed
+.I .fetchmailrc 
+is detected, fetchmail rereads it and restarts from scratch (using
+exec(2); no state information is retained in the new instance).  Note also
+that if you break the
+.I .fetchmailrc 
+file's syntax, the new instance will softly and silently vanish away
+on startup.
 
 .SH ADMINISTRATIVE OPTIONS
 .PP
@@ -908,6 +920,11 @@ rumored to do this).  The \fIfetchmail\fR code assumes that new
 messages are appended to the end of the mailbox; when this is not true
 it may treat some old messages as new and vice versa.  The only 
 real fix for this problem is to  switch to IMAP.
+.PP
+Yet another POP3 problem is that if they can't make tempfiles in the
+user's home directory, some POP3 servers will hand back an
+undocumented response that causes fetchmail to spuriously report "No
+mail".
 .PP
 The IMAP code uses the presence or absence of the server flag \eSeen
 to decide whether or not a message is new.  Under Unix, it counts on
