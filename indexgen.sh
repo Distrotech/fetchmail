@@ -42,7 +42,7 @@ cat >index.html <<EOF
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to
 <a href="http://$WWWVIRTUAL/~esr/software.html">Software</a>
-<td width="30%" align=center>Up to <a href="/~esr/sitemap.html">Site Map</a>
+<td width="30%" align=center>Up to <a href="http://$WWWVIRTUAL/~esr/sitemap.html">Site Map</a>
 <td width="30%" align=right>$date
 </table>
 <HR>
@@ -285,7 +285,7 @@ ftp://ftp.win.or.jp/pub/network/mail/fetchmail</a>.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to 
 <a href="http://$WWWVIRTUAL/~esr/software.html">Software</a>
-<td width="30%" align=center>Up to <a href="/~esr/sitemap.html">Site Map</a>
+<td width="30%" align=center>Up to <a href="http://$WWWVIRTUAL/~esr/sitemap.html">Site Map</a>
 <td width="30%" align=right>$date
 </table>
 
