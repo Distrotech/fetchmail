@@ -19,6 +19,7 @@ put fetchmail-features.html
 put NEWS
 put fetchmail-man.html
 put design-notes.html
+put bugs.html
 # The following things vary seldom
 #put funny.html
 #put fetchmail.png
