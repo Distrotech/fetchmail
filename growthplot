@@ -38,11 +38,14 @@ EOF
 			echo "lastday = $lastday - 5"
 			echo "lasttotal = $lasttotal"
 			echo "endy = breakheight + 50 + count * 50"
+			echo "if (endy > lasttotal) arrowhead = lasttotal+50"
+			echo "if (endy <= lasttotal) arrowhead = lasttotal-5"
 			echo set arrow \
 				from lastday, endy \
-				to lastday, lasttotal+50 \
+				to lastday, arrowhead \
 				head
-			echo "set label '$legend' at lastday-10, endy+15"
+			echo "if (endy > lasttotal) set label '$legend' at lastday-10, endy+15"
+			echo "if (endy <= lasttotal) set label '$legend' at lastday-500, endy-15"
 		else
 			lastday=$days
 			lasttotal=$total
@@ -75,3 +78,10 @@ gnuplot /tmp/growthimage$$ >growth.png
 rm -f /tmp/growth*
 
 # growthplot ends here
+
+
+
+
+
+
+
