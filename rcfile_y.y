@@ -22,6 +22,10 @@
 #endif
 #include <string.h>
 
+#if NET_SECURITY
+#include <net/security.h>
+#endif /* NET_SECURITY */
+
 #include "fetchmail.h"
 
 /* parser reads these */
@@ -41,6 +45,10 @@ static struct query current;	/* current server record */
 static int prc_errflag;
 static struct hostdata *leadentry;
 static flag trailer;
+#if NET_SECURITY
+static net_security_operation	request[NET_SECURITY_OPERATION_MAX];
+static int requestlen = NET_SECURITY_OPERATION_MAX;
+#endif /* NET_SECURITY */
 
 static void record_current();
 static void user_reset();
@@ -165,10 +173,13 @@ serv_option	: AKA alias_list
 		| QVIRTUAL STRING	{current.server.qvirtual=xstrdup($2);}
 		| NETSEC STRING		{
 #ifdef NET_SECURITY
-					    current.server.netsec = 
-						xstrdup($2);
+		    			    if (net_security_strtorequest(options, request, &requestlen))
+						yyerror("invalid security request");
+					    else
+						current.server.netsec = 
+						    xstrdup($2);
 #else
-					    yyerror("Network-security support disabled")
+					    yyerror("network-security support disabled")
 #endif /* NET_SECURITY */
 					}
 		| INTERFACE STRING	{
