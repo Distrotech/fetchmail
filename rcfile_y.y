@@ -140,8 +140,12 @@ serv_option	: AKA alias_list
 #endif /* INET6 */
 					}
 		| SDPS			{
+#ifdef ENABLE_SDPS
 					    current.server.protocol = P_POP3;
 					    current.server.sdps = TRUE;
+#else
+					    yyerror("SDPS not enabled.");
+#endif /* ENABLE_SDPS */
 					}
 		| UIDL			{current.server.uidl = FLAG_TRUE;}
 		| NO UIDL		{current.server.uidl  = FLAG_FALSE;}
