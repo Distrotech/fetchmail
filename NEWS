@@ -14,6 +14,9 @@
 ------------------------------------------------------------------------------
 fetchmail-4.2.8 ()
 * Fixed a bug in POP2 compilation introduced sometime after 4.0.8.
+* Only emit length-mismatch messages in verbose mode.
+* POP3 lock busy error is now treated as authorization failure (Greg Stark)
+* Kerberos error is now treated as authorization failure (Greg Stark)
 
 There are 284 people on the fetchmail-friends list.
 

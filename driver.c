@@ -1289,7 +1289,7 @@ const char *canonical;	/* server name */
     if (rem != KSUCCESS)
     {
 	error(0, -1, "kerberos error %s", (krb_get_err_text (rem)));
-	return (PS_ERROR);
+	return (PS_AUTHFAIL);
     }
     return (0);
 }

@@ -224,7 +224,7 @@ error (status, errnum, message, va_alist)
       fprintf (stderr, message, a1, a2, a3, a4, a5, a6, a7, a8);
 #endif
 
-      if (errnum) {
+      if (errnum && errnum != -1) {
 	char *tmps = strerror(errnum);
 	if (tmps) {
 	  fprintf (stderr, ": %s", tmps);

@@ -52,7 +52,9 @@ int pop3_ok (int sock, char *argbuf)
 
 	while (isalpha(*bufp))
 	    bufp++;
-	*(bufp++) = '\0';
+
+	if (*bufp)
+	  *(bufp++) = '\0';
 
 	if (strcmp(buf,"+OK") == 0)
 	{
@@ -76,7 +78,9 @@ int pop3_ok (int sock, char *argbuf)
 	    if (strstr(bufp,"lock")||strstr(bufp,"Lock")||strstr(bufp,"LOCK"))
 		ok = PS_LOCKBUSY;
 	    else
-		ok = PS_ERROR;
+		ok = PS_AUTHFAIL;
+	    if (*bufp)
+	      error(0,0,bufp);
 	}
 	else
 	    ok = PS_PROTOCOL;
