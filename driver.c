@@ -318,12 +318,13 @@ static FILE *smtp_open(struct query *ctl)
     return(lead->smtp_sockfp);
 }
 
-static int gen_readmsg (sockfp, len, delimited, ctl)
+static int gen_readmsg(sockfp, len, delimited, ctl, realname)
 /* read message content and ship to SMTP or MDA */
 FILE *sockfp;		/* to which the server is connected */
 long len;		/* length of message */
 int delimited;		/* does the protocol use a message delimiter? */
 struct query *ctl;	/* query control record */
+char *realname;		/* real name of host */
 {
     char buf [MSGBUFSIZE+1]; 
     char *bufp, *headers, *fromhdr,*tohdr,*cchdr,*bcchdr,*received_for,*envto;
@@ -380,7 +381,7 @@ struct query *ctl;	/* query control record */
 	if (inheaders)
         {
 	    if (!ctl->norewrite)
-		reply_hack(bufp, ctl->servernames->id);
+		reply_hack(bufp, realname);
 
 	    if (!lines)
 	    {
@@ -960,18 +961,18 @@ const struct method *proto;	/* protocol method table */
 	vtalarm(ctl->timeout);
 
 	/*
-	 * Try to parse the host's actual name out of the greeting message.
-	 * We do this so that the progress messages will make sense even
-	 * if the connection is indirected through ssh --- *don't* use
-	 * this for error logging as the names in that should correlate
-	 * directly back to rc file entries.
+	 * Try to parse the host's actual name out of the greeting
+	 * message.  We do this so that the progress messages will
+	 * make sense even if the connection is indirected through
+	 * ssh. *Do* use this for hacking reply headers, but *don't*
+	 * use it for error logging, as the names in the log should
+	 * correlate directly back to rc file entries.
 	 *
 	 * This assumes that the first space-delimited token found
 	 * that contains at least two dots (with the characters on
 	 * each side of the dot alphanumeric to exclude version
 	 * numbers) is the hostname.  If no such token is found, fall
-	 * back on the .fetchmailrc id.
-	 */
+	 * back on the .fetchmailrc id.  */
 	pst = 0;
 	for (cp = buf; *cp; cp++)
 	{
@@ -1143,7 +1144,8 @@ const struct method *proto;	/* protocol method table */
 		    ok = gen_readmsg(sockfp,
 				     len, 
 				     protocol->delimited,
-				     ctl);
+				     ctl,
+				     realname);
 		    if (ok != 0)
 			goto cleanUp;
 		    vtalarm(ctl->timeout);
