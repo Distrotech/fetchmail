@@ -46,6 +46,9 @@ wish to change these defaults, edit the Makefile AFTER you run
 a prefix other than /usr/local, or you can choose completely different
 directories for each item.
 
+NOTE: If you are using exim, you must configure it to accept local
+addresses as valid RCPT TO lines.
+
 4. SET UP A RUN CONTROL FILE
 
 See the man page or the file sample.rcfile for a description of how to
