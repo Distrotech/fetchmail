@@ -19,13 +19,17 @@
  * This ought to be in the bind library.  It's adapted from sendmail.
  */
 
+/* minimum possible size of MX record in packet */
+#define MIN_MX_SIZE	8	/* corresp to "a.com 0" w/ terminating space */
+
 struct mxentry *getmxrecords(name)
 /* get MX records for given host */
 const char *name;
 {
-    unsigned char answer[PACKETSZ], MXHostBuf[PACKETSZ], *eom, *cp, *bp;
+    unsigned char answer[PACKETSZ], *eom, *cp, *bp;
     int n, ancount, qdcount, buflen, type, pref, ind;
-    static struct mxentry pmx[(PACKETSZ - HFIXEDSZ) / sizeof(struct mxentry)];
+    static struct mxentry pmx[(PACKETSZ - HFIXEDSZ) / MIN_MX_SIZE];
+    static char MXHostBuf[PACKETSZ - HFIXEDSZ]; 
     HEADER *hp;
 
     n = res_search(name,C_IN,T_MX,(unsigned char*)&answer, sizeof(answer));
