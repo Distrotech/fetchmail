@@ -59,11 +59,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 void exit ();
 #endif
 
-#include "fetchmail.h"
-
 #ifndef _
 # define _(String) String
 #endif
+
+#include "fetchmail.h"
+#define MALLOC(n)	xmalloc(n)	
+#define REALLOC(n,s)	xrealloc(n,s)	
 
 /* If NULL, error will flush stdout, then print on stderr the program
    name, a colon and a space.  Otherwise, error will call this
@@ -79,9 +81,11 @@ static unsigned int partial_message_size = 0;
 static unsigned int partial_message_size_used = 0;
 static char *partial_message;
 static unsigned use_stderr;
+static unsigned int use_syslog;
 
 /* This variable is incremented each time `error' is called.  */
 unsigned int error_message_count;
+
 
 #ifdef _LIBC
 /* In the GNU C library, there is a predefined variable for this.  */
@@ -246,14 +250,32 @@ error (status, errnum, message, va_alist)
 }
 
 /*
- * Calling error_init(TRUE) causes error_build and error_complete to write
+ * Calling error_init(1) causes error_build and error_complete to write
  * to stderr without buffering.  This is needed for the ticker dots to
  * work correctly.
  */
-void error_init(foreground)
-int foreground;
+void error_init(int mode)
 {
-    use_stderr = foreground;
+    switch(mode)
+    {
+    case 0:			/* stderr, buffered */
+    default:
+	use_stderr = 0;
+	use_syslog = 0;
+	break;
+
+    case 1:			/* stderr, unbuffered */
+	use_stderr = 1;
+	use_syslog = 0;
+	break;
+
+#ifdef HAVE_SYSLOG
+    case -1:			/* syslogd */
+	use_stderr = 0;
+	use_syslog = 1;
+	break;
+#endif /* HAVE_SYSLOG */
+    }
 }
 
 /* Build an error message by appending MESSAGE, which is a printf-style
@@ -285,13 +307,13 @@ error_build (message, va_alist)
     {
       partial_message_size_used = 0;
       partial_message_size = 2048;
-      partial_message = xmalloc (partial_message_size);
+      partial_message = MALLOC (partial_message_size);
     }
   else
     if (partial_message_size - partial_message_size_used < 1024)
       {
         partial_message_size += 2048;
-        partial_message = xrealloc (partial_message, partial_message_size);
+        partial_message = REALLOC (partial_message, partial_message_size);
       }
 
 #if defined(VA_START)
@@ -310,7 +332,7 @@ error_build (message, va_alist)
 	}
 
       partial_message_size += 2048;
-      partial_message = xrealloc (partial_message, partial_message_size);
+      partial_message = REALLOC (partial_message, partial_message_size);
     }
 #else
   vsprintf (partial_message + partial_message_size_used, message, args);
@@ -339,7 +361,7 @@ error_build (message, va_alist)
 	}
 
       partial_message_size += 2048;
-      partial_message = xrealloc (partial_message, partial_message_size);
+      partial_message = REALLOC (partial_message, partial_message_size);
     }
 #else
   sprintf (partial_message + partial_message_size_used, message, a1, a2, a3, a4, a5, a6, a7, a8);
@@ -387,13 +409,13 @@ error_complete (status, errnum, message, va_alist)
     {
       partial_message_size_used = 0;
       partial_message_size = 2048;
-      partial_message = xmalloc (partial_message_size);
+      partial_message = MALLOC (partial_message_size);
     }
   else
     if (partial_message_size - partial_message_size_used < 1024)
       {
         partial_message_size += 2048;
-        partial_message = xrealloc (partial_message, partial_message_size);
+        partial_message = REALLOC (partial_message, partial_message_size);
       }
 
 #if defined(VA_START)
@@ -412,7 +434,7 @@ error_complete (status, errnum, message, va_alist)
 	}
 
       partial_message_size += 2048;
-      partial_message = xrealloc (partial_message, partial_message_size);
+      partial_message = REALLOC (partial_message, partial_message_size);
     }
 #else
   vsprintf (partial_message + partial_message_size_used, message, args);
@@ -441,7 +463,7 @@ error_complete (status, errnum, message, va_alist)
 	}
 
       partial_message_size += 2048;
-      partial_message = xrealloc (partial_message, partial_message_size);
+      partial_message = REALLOC (partial_message, partial_message_size);
     }
 #else
   sprintf (partial_message + partial_message_size_used, message, a1, a2, a3, a4, a5, a6, a7, a8);

@@ -167,7 +167,7 @@ int main (int argc, char **argv)
 	if (logfile)
 	    printf("Logfile is %s\n", logfile);
 #if defined(HAVE_SYSLOG)
-	if (use_syslog)
+	if (errors_to_syslog)
 	    printf("Progress messages will be logged via syslog\n");
 #endif
 	if (use_invisible)
@@ -321,7 +321,7 @@ int main (int argc, char **argv)
      * Maybe time to go to demon mode...
      */
 #if defined(HAVE_SYSLOG)
-    if (use_syslog)
+    if (errors_to_syslog)
     	openlog(program_name, LOG_PID, LOG_MAIL);
 #endif
 

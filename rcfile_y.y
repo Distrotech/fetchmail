@@ -29,7 +29,7 @@ struct query cmd_opts;		/* where to put command-line info */
 /* parser sets these */
 int poll_interval;		/* poll interval in seconds */
 char *logfile;			/* log file for daemon mode */
-flag use_syslog;		/* if syslog was set */
+flag errors_to_syslog;		/* if syslog was set */
 flag use_invisible;		/* if invisible was set */
 struct query *querylist;	/* head of server list (globally visible) */
 
@@ -83,7 +83,7 @@ optmap		: MAP | /* EMPTY */;
 /* future global options should also have the form SET <name> optmap <value> */
 statement	: SET LOGFILE optmap STRING	{logfile = xstrdup($4);}
 		| SET DAEMON optmap NUMBER	{poll_interval = $4;}
-		| SET SYSLOG			{use_syslog = TRUE;}
+		| SET SYSLOG			{errors_to_syslog = TRUE;}
 		| SET INVISIBLE			{use_invisible = TRUE;}
 
 /* 

@@ -340,7 +340,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 
 	case LA_SYSLOG:
-	    use_syslog = TRUE;
+	    errors_to_syslog = TRUE;
 	    break;
 
 	case '?':
