@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Fixed reporting of listener timeouts.
+
 fetchmail-5.3.2 (Mon Mar  6 21:41:23 EST 2000), 18695 lines:
 
 * Added experimental support for RFC2177 IDLE command extension of IMAP.
