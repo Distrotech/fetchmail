@@ -28,8 +28,9 @@ fetchmail-4.3.6 ()
   in response to the first command after connecting.)
 * New --smtpaddress option from Henning P. Schmiedehausen allows you
   to force the hostname used in MAIL FROM lines.
+* If link can't find the bind library, force `no dns' on all connections.
 
-There are 281 people on fetchmail-friends and 118 on fetchmail-announce.
+There are 279 people on fetchmail-friends and 119 on fetchmail-announce.
 
 fetchmail-4.3.5 (Mon Dec 15 06:07:08 EST 1997)
 * Added Kent Robotti's fetchsetup configuration script.

@@ -1539,6 +1539,7 @@ const struct method *proto;	/* protocol method table */
 	    {
 		error_build("fetchmail: %s connection to %s failed: ", 
 			     protocol->name, ctl->server.pollname);
+#ifdef HAVE_RES_SEARCH
 		if (h_errno == HOST_NOT_FOUND)
 		    error_complete(0, 0, "host is unknown");
 		else if (h_errno == NO_ADDRESS)
@@ -1550,6 +1551,7 @@ const struct method *proto;	/* protocol method table */
 		else if (h_errno)
 		    error_complete(0, 0, "unknown DNS error %d", h_errno);
 		else
+#endif /* HAVE_RES_SEARCH */
 		    error_complete(0, errno, "local error");
 	    }
 	    ok = PS_SOCKET;

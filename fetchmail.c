@@ -654,16 +654,6 @@ static int load_params(int argc, char **argv, int optind)
 	    if (!ctl->localnames)	/* for local delivery via SMTP */
 		save_str_pair(&ctl->localnames, user, NULL);
 
-#if !defined(HAVE_GETHOSTBYNAME) || !defined(HAVE_RES_SEARCH)
-	    /* can't handle multidrop mailboxes unless we can do DNS lookups */
-	    if (ctl->localnames && ctl->localnames->next && ctl->server.dns)
-	    {
-		fputs("fetchmail: can't handle multidrop mailboxes without DNS\n",
-			stderr);
-		exit(PS_SYNTAX);
-	    }
-#endif /* !HAVE_GETHOSTBYNAME || !HAVE_RES_SEARCH */
-
 	    /* this code enables flags to be turned off */
 #define DEFAULT(flag, dflt)	if (flag == FLAG_TRUE)\
 	    				flag = TRUE;\
@@ -682,6 +672,15 @@ static int load_params(int argc, char **argv, int optind)
 	    DEFAULT(ctl->server.dns, TRUE);
 	    DEFAULT(ctl->server.uidl, FALSE);
 #undef DEFAULT
+
+#if !defined(HAVE_GETHOSTBYNAME) || !defined(HAVE_RES_SEARCH)
+	    /* can't handle multidrop mailboxes unless we can do DNS lookups */
+	    if (ctl->localnames && ctl->localnames->next && ctl->server.dns)
+	    {
+		ctl->server.dns = FALSE;
+		fprintf(stderr, "fetchmail: warning: no DNS available to check multidrop fetches from %s\n", ctl->server.pollname);
+	    }
+#endif /* !HAVE_GETHOSTBYNAME || !HAVE_RES_SEARCH */
 
 	    /*
 	     *
