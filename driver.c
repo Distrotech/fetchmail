@@ -2186,6 +2186,7 @@ const struct method *proto;	/* protocol method table */
     else
     {
 	int totalcount = 0; 
+	int lockouts   = 0;
 	int expunge    = NUM_VALUE_OUT(ctl->expunge);
 	int fetchlimit = NUM_VALUE_OUT(ctl->fetchlimit);
 
@@ -2194,14 +2195,17 @@ const struct method *proto;	/* protocol method table */
 	    totalcount += expunge;
 	    if (NUM_SPECIFIED(ctl->fetchlimit) && totalcount >= fetchlimit)
 		break;
+	    if (ok != PS_LOCKBUSY)
+		lockouts = 0;
 
 	    /*
 	     * Allow time for the server lock to release.  if we don't
 	     * do this, we'll often hit a locked-mailbox condition and fail.
 	     */
-	    sleep(3); /* to be _really_ safe, probably need sleep(5)! */
+	    sleep(3);
 	} while
-	    (ok == PS_MAXFETCH);
+	    (ok == PS_MAXFETCH
+		|| (ok == PS_LOCKBUSY && lockouts++ < MAX_LOCKOUTS));
 
 	return(ok);
     }

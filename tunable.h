@@ -13,5 +13,8 @@
 /* maximum consecutive timeouts to accept */
 #define MAX_TIMEOUTS		20
 
+/* maximum consecutive lock-busy errors to accept */
+#define MAX_LOCKOUTS		5
+
 /* default skipped message warning interval in seconds */
 #define WARNING_INTERVAL	3600
