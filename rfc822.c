@@ -13,7 +13,7 @@
 #include  <stdlib.h>
 #endif
 
-#include  "fetchmail.h"
+#include "fetchmail.h"
 
 void reply_hack(buf, host)
 /* hack message headers so replies will work properly */
@@ -21,7 +21,7 @@ char *buf;		/* header to be hacked */
 const char *host;	/* server hostname */
 {
     const char *from;
-    int parendepth, oldstate, state = 0, has_host_part = FALSE;
+    int parendepth, state, has_host_part;
     char mycopy[MSGBUFSIZE+1];
 
     if (strncmp("From: ", buf, 6)
@@ -33,14 +33,14 @@ const char *host;	/* server hostname */
     }
 
     strcpy(mycopy, buf);
+    parendepth = state = 0;
+    has_host_part = FALSE;
     for (from = mycopy; *from; from++)
     {
-#define INSERT_HOSTNAME	\
-		strcpy(buf, "@"); \
-		strcat(buf, host); \
-		buf += strlen(buf); \
-		has_host_part = TRUE;
-
+#ifdef TESTMAIN
+	printf("state %d: %s", state, mycopy);
+	printf("%*s^\n", from - mycopy + 10, " ");
+#endif /* TESTMAIN */
 	if (*from == '(')
 	    ++parendepth;
 	else if (*from == ')')
@@ -61,7 +61,9 @@ const char *host;	/* server hostname */
 		    has_host_part = TRUE;
 		else if ((*from == ',' || *from == '\n') && !has_host_part)
 		{
-		    INSERT_HOSTNAME
+		    strcpy(buf, "@");
+		    strcat(buf, host);
+		    buf += strlen(buf);
 		}
 		break;
 
@@ -70,14 +72,16 @@ const char *host;	/* server hostname */
 		    has_host_part = TRUE;
 		else if (*from == '>' && !has_host_part)
 		{
-		    INSERT_HOSTNAME
+		    strcpy(buf, "@");
+		    strcat(buf, host);
+		    buf += strlen(buf);
+		    has_host_part = TRUE;
 		}
 		break;
 	    }
 
 	/* all characters from the old buffer get copied to the new one */
 	*buf++ = *from;
-#undef INSERT_HOSTNAME
     }
 
     *buf = '\0';
@@ -267,7 +271,7 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 #ifdef TESTMAIN
 main(int argc, char *argv[])
 {
-    char	buf[POPBUFSIZE], *cp;
+    char	buf[MSGBUFSIZE], *cp;
     int		reply =  (argc > 1 && !strcmp(argv[1], "-r"));
 
     while (fgets(buf, sizeof(buf)-1, stdin))
