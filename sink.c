@@ -307,45 +307,35 @@ static int send_bouncemail(struct msgblk *msg,
 	SockPrintf(sock, "--%s\r\n", boundary); 
 	SockPrintf(sock,"Content-Type: message/delivery-status\r\n");
 	SockPrintf(sock, "\r\n");
-#ifdef RFC1894
-	SockPrintf(sock, "Reporting-MTA: DNS; %s\r\n", fetchmailhost);
-#endif /* RFC1894 */
+	SockPrintf(sock, "Reporting-MTA: dns; %s\r\n", fetchmailhost);
 	for (i = 0; i < nerrors; i++)
 	{
-#ifndef RFC1894
-	    SockPrintf(sock, "%s\r\n", errors[i]);
-#else
 	    /* Minimum RFC1894 compliance + Diagnostic-Code field */
 	    SockPrintf(sock, "\r\n");
-	    /*
-	     * And here's the real reason RFC1984-style DSNs don't
-	     * work; we can't generate Final-Recipient properly.
-	     * First, fetchmailhost is probably going to be just
-	     * `localhost'.  Secondly, we're only sure of the final
-	     * recipient in the single-drop case; in the multidrop
-	     * case, we don't have any idea how to get that
-	     * information (it's not guaranteed that errors even
-	     * correspond one-to-one with recipients).
-	     */
-	    SockPrintf(sock, "Final-Recipient: RFC822; %s@%s\r\n",
-		       msg->recipients->id,
-		       fetchmailhost);
+	    if (msg->recipients && !msg->recipients->next)
+		SockPrintf(sock, "Final-Recipient: rfc822; %s\r\n",
+		       msg->recipients->id);
+	    else
+		/*
+		 * This is technically compliant with RFC1894,
+		 * because "multidrop;" is an RFC822 group
+		 * address.  It kind of evades the intent, though.
+		 * Unfortunately, it's just too hard to do the
+		 * right thing here when there are multiiple
+		 * multidrop recipients; we don't know how to
+		 * associate them with the list of errors passed in.
+		 */
+		SockPrintf(sock,"Final-Recipient: rfc822; multidrop; (see the message headers below)\r\n");
 	    SockPrintf(sock, "Action: failed\r\n");
 	    if (strlen(errors[i]) > 9 && isdigit(errors[i][4])
-		&& errors[i][5] == '.' && isdigit(errors[i][6])
-		&& errors[i][7] == '.' && isdigit(errors[i][8]))
-	    {
+			&& errors[i][5] == '.' && isdigit(errors[i][6])
+			&& errors[i][7] == '.' && isdigit(errors[i][8]))
 		/* Enhanced status code available, use it */
 		SockPrintf(sock, "Status: %5.5s\r\n", &(errors[i][4]));
-		SockPrintf(sock, "Diagnostic-Code: smtp; %3.3s%s\r\n", errors[i], &(errors[i][9]));
-	    } 
 	    else
-	    {
 		/* Enhanced status code not available, fake one */
 		SockPrintf(sock, "Status: %c.0.0\r\n", errors[i][0]);
-		SockPrintf(sock, "Diagnostic-Code: smtp; %s\r\n", errors[i]);
-	    }
-#endif /* RFC1894 */
+	    SockPrintf(sock, "Diagnostic-Code: %s\r\n", errors[i]);
 	}
 	SockPrintf(sock, "\r\n");
     }
