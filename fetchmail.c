@@ -39,7 +39,7 @@
 #include "popclient.h"
 
 /* release info */
-#define         RELEASE_TAG	"3.0b6"
+#define         RELEASE_TAG	"3.03"
 
 #ifdef HAVE_PROTOTYPES
 /* prototypes for internal functions */
@@ -166,7 +166,7 @@ char **argv;
       fscanf(fp,"%d",&pid);
       fprintf(stderr,"popclient: killing popclient at PID %d\n",pid);
       if ( kill(pid,SIGKILL) < 0 )
-	fprintf(stderr,"popclient: error killing the process %d\n.",pid);
+	fprintf(stderr,"popclient: error killing the process %d.\n",pid);
       else
 	fprintf(stderr,"popclient: popclient at %d is dead.\n", pid);
   
