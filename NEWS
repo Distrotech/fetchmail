@@ -11,7 +11,7 @@ bugs --
 
 * Stop netrc parser from complaining about blank lines.
 
-* Add ssh recipe connection.
+* Add ssh recipe correction.
 
 There are 180 people on the fetchmail-friends list.
 
