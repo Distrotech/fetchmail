@@ -127,6 +127,10 @@ AC_TRY_LINK([#include <signal.h>
   [AC_DEFINE(SYS_SIGLIST_DECLARED) AC_MSG_RESULT(yes)],
   AC_MSG_RESULT(no))
 
+AC_CHECK_SIZEOF(short)
+AC_CHECK_SIZEOF(int)
+AC_CHECK_SIZEOF(long)
+
 AC_OUTPUT(Makefile, [
 # Makefile uses this timestamp file to know when to remake Makefile,
 # build.sh, and glob/Makefile.

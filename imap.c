@@ -95,7 +95,15 @@ int imap_ok (int sock,  char *argbuf)
 }
 
 #ifdef KERBEROS_V4
-#include <sys/types.h>
+#if SIZEOF_INT = 4
+typedef	int32	int;
+#elif SIZEOF_SHORT = 4
+typedef	int32	short;
+#elif SIZEOF_LONG = 4
+typedef	int32	long;
+#else
+#error Cannot deduce a 32-bit-type
+#endif
 
 static int do_rfc1731(int sock, struct query *ctl, char *buf)
 /* authenticate as per RFC1731 -- note 32-bit integer requirement here */
@@ -103,7 +111,7 @@ static int do_rfc1731(int sock, struct query *ctl, char *buf)
     int result = 0, len;
     char buf1[4096], buf2[4096];
     union {
-      u_int32_t cint;
+      int32 cint;
       char cstr[4];
     } challenge1, challenge2;
     char srvinst[INST_SZ];

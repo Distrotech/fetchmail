@@ -41,6 +41,11 @@
 /* Define if you have atexit */
 #undef HAVE_ATEXIT
 
+/* Define to help us deduce a 32-bit type (required for Kerberos) */
+#undef SIZEOF_INT
+#undef SIZEOF_SHORT
+#undef SIZEOF_LONG
+
 
 /* Leave that blank line there!!  Autoheader needs it.
    If you're adding to this file, keep in mind:
