@@ -175,8 +175,16 @@ struct method
     flag retry;			/* can getrange poll for new messages? */
 };
 
-#define TAGLEN	6
+/*
+ * Note: tags are generated with an a%04d format from a 1-origin
+ * integer sequence number.  Length 4 permits transaction numbers
+ * up to 9999, so we force rollover with % 10000.  There's no special
+ * reason for this format other than to look like the exmples in the
+ * IMAP RFCs.
+ */
+#define TAGLEN	6		/* 'a' + 4 digits + NUL */
 extern char tag[TAGLEN];
+#define TAGMOD	10000
 
 /* list of hosts assembled from run control file and command line */
 extern struct query cmd_opts, *querylist;

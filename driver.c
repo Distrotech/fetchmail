@@ -80,7 +80,7 @@ static jmp_buf	restart;
 
 char tag[TAGLEN];
 static int tagnum;
-#define GENSYM	(sprintf(tag, "a%04d", ++tagnum), tag)
+#define GENSYM	(sprintf(tag, "a%04d", ++tagnum % TAGMOD), tag)
 
 static char *shroud;	/* string to shroud in debug output, if  non-NULL */
 static int mytimeout;	/* value of nonreponse timeout */
@@ -785,7 +785,11 @@ int num;		/* index of message */
      */
     if (headers == (char *)NULL)
     {
+#ifdef HAVE_SNPRINTF
+	snprintf(buf, sizeof(buf),
+#else
 	sprintf(buf, 
+#endif /* HAVE_SNPRINTF */
 	"From: <FETCHMAIL-DAEMON@%s>\r\nTo: %s@localhost\r\nSubject: Headerless mail from %s's mailbox on %s\r\n",
 		fetchmailhost, user, ctl->remotename, realname);
 	headers = xstrdup(buf);
@@ -969,13 +973,13 @@ int num;		/* index of message */
 	options[0] = '\0';
 	if (ctl->server.esmtp_options & ESMTP_8BITMIME)
 	    if (ctl->pass8bits)
-		sprintf(options, " BODY=8BITMIME");
+		strcpy(options, " BODY=8BITMIME");
 	    else if ((ctt_offs >= 0) && (ctt = nxtaddr(headers + ctt_offs)))
 	    {
 		if (!strcasecmp(ctt,"7BIT"))
-		    sprintf(options, " BODY=7BIT");
+		    strcpy(options, " BODY=7BIT");
 		else if (!strcasecmp(ctt,"8BIT"))
-		    sprintf(options, " BODY=8BITMIME");
+		    strcpy(options, " BODY=8BITMIME");
 	    }
 	if ((ctl->server.esmtp_options & ESMTP_SIZE) && reallen > 0)
 	    sprintf(options + strlen(options), " SIZE=%ld", reallen);
