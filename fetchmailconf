@@ -463,20 +463,19 @@ class MyWidget:
 # Common methods for Tkinter widgets -- deals with Tkinter declaration
     def post(self, template, field):
 	for x in template.typemap:
-	    target = "self." + x[0]
 	    source = "self." + field + "." + x[0]
 	    if x[1] == 'Boolean':
-		exec target + " = BooleanVar(self)"
+		setattr(self, x[0], BooleanVar(self))
 		if eval(source):
-		    exec target + ".set(" + source + ")"
+		    exec "self." + x[0] + ".set(" + source + ")"
 	    elif x[1] == 'String':
-		exec target + " = StringVar(self)"
+		setattr(self, x[0], StringVar(self))
 		if eval(source):
-		    exec target + ".set(" + source + ")"
+		    exec "self." + x[0] + ".set(" + source + ")"
 	    elif x[1] == 'Int':
-		exec target + " = IntVar(self)"
+		setattr(self, x[0], IntVar(self))
 		if eval(source):
-		    exec target + ".set(" + source + ")"
+		    exec "self." + x[0] + ".set(" + source + ")"
 
     def fetch(self, template, field):
 	for x in template.typemap:
