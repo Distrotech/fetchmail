@@ -29,7 +29,7 @@ struct query cmd_opts;		/* where to put command-line info */
 /* parser sets these */
 int poll_interval;		/* poll interval in seconds */
 char *logfile;			/* log file for daemon mode */
-bool use_syslog;		/* if syslog was set */
+flag use_syslog;		/* if syslog was set */
 struct query *querylist;	/* head of server list (globally visible) */
 
 int yydebug;			/* in case we didn't generate with -- debug */
@@ -37,7 +37,7 @@ int yydebug;			/* in case we didn't generate with -- debug */
 static struct query current;	/* current server record */
 static int prc_errflag;
 static struct hostdata *leadentry;
-static bool trailer;
+static flag trailer;
 
 static void record_current();
 static void user_reset();
@@ -303,7 +303,7 @@ const char *pathname;		/* pathname for the configuration file */
 int prc_parse_file (pathname, securecheck)
 /* digest the configuration into a linked list of host records */
 const char *pathname;		/* pathname for the configuration file */
-const bool securecheck;		/* check for a secure rc file? */
+const flag securecheck;		/* check for a secure rc file? */
 {
     prc_errflag = 0;
     querylist = hosttail = (struct query *)NULL;

@@ -67,7 +67,7 @@ extern char *strstr();	/* needed on sysV68 R3V7.1. */
 
 int fetchlimit;		/* how often to tear down the server connection */
 int batchcount;		/* count of messages sent in current batch */
-bool peek_capable;	/* can we peek for better error recovery? */
+flag peek_capable;	/* can we peek for better error recovery? */
 
 static const struct method *protocol;
 static jmp_buf	restart;
@@ -452,9 +452,9 @@ char *realname;		/* real name of host */
     int n, linelen, oldlen, ch, remaining;
     char		*cp;
     struct idlist 	*idp, *xmit_names;
-    bool			good_addresses, bad_addresses, has_nuls;
+    flag			good_addresses, bad_addresses, has_nuls;
 #ifdef HAVE_RES_SEARCH
-    bool		no_local_matches = FALSE;
+    flag		no_local_matches = FALSE;
 #endif /* HAVE_RES_SEARCH */
     int			olderrs;
 
@@ -1048,8 +1048,8 @@ static int readbody(sock, ctl, forward, len, delimited)
 struct query *ctl;	/* query control record */
 int sock;		/* to which the server is connected */
 int len;		/* length of message */
-bool forward;		/* TRUE to forward */
-bool delimited;		/* does the protocol use a message delimiter? */
+flag forward;		/* TRUE to forward */
+flag delimited;		/* does the protocol use a message delimiter? */
 {
     int	linelen;
     char buf[MSGBUFSIZE+1], *cp;
@@ -1448,7 +1448,7 @@ const struct method *proto;	/* protocol method table */
 	    }
 	    else if (count > 0)
 	    {    
-		bool	force_retrieval;
+		flag	force_retrieval;
 
 		/*
 		 * What forces this code is that in POP3 and IMAP2BIS you can't
@@ -1493,12 +1493,12 @@ const struct method *proto;	/* protocol method table */
 		/* read, forward, and delete messages */
 		for (num = 1; num <= count; num++)
 		{
-		    bool toolarge = (ctl->limit > 0)
+		    flag toolarge = (ctl->limit > 0)
 			&& msgsizes && (msgsizes[num-1] > ctl->limit);
-		    bool fetch_it = !toolarge 
+		    flag fetch_it = !toolarge 
 			&& (ctl->fetchall || force_retrieval || !(protocol->is_old && (protocol->is_old)(sock,ctl,num)));
-		    bool suppress_delete = FALSE;
-		    bool suppress_forward = FALSE;
+		    flag suppress_delete = FALSE;
+		    flag suppress_forward = FALSE;
 
 		    /* we may want to reject this message if it's old */
 		    if (!fetch_it)
@@ -1512,7 +1512,7 @@ const struct method *proto;	/* protocol method table */
 		    }
 		    else
 		    {
-			bool wholesize = !protocol->fetch_body;
+			flag wholesize = !protocol->fetch_body;
 
 			/* request a message */
 			ok = (protocol->fetch_headers)(sock, ctl, num, &len);

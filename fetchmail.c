@@ -54,15 +54,15 @@ static int query_host(struct query *);
 int outlevel;    	/* see the O_.* constants above */
 
 /* daemon mode control */
-bool nodetach;		/* if TRUE, don't detach daemon process */
-bool quitmode;		/* if --quit was set */
-bool check_only;	/* if --probe was set */
+flag nodetach;		/* if TRUE, don't detach daemon process */
+flag quitmode;		/* if --quit was set */
+flag check_only;	/* if --probe was set */
 char *cmd_logfile;	/* if --logfile was set */
 int cmd_daemon; 	/* if --daemon was set */
 
 /* miscellaneous global controls */
 char *idfile;		/* UID list file */
-bool versioninfo;	/* emit only version info */
+flag versioninfo;	/* emit only version info */
 char *user;		/* the name of the invoking user */
 char *fetchmailhost;	/* the name of the host running fetchmail */
 char *program_name;	/* the name to prefix error messages with */

@@ -15,6 +15,12 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.1.0 ()
+
+* Improvements in failed-connection error messages.
+* Compilation cleanup for DEC Unix 4.0 and AIX.
+
+------------------------------------------------------------------------------
 fetchmail-4.0.0 (Wed Jul  9 10:30:16 EDT 1997)
 
 This is a "gold" version.  Bug cleanup was finished (I hope...) in 3.9.9.

@@ -65,11 +65,15 @@ struct idlist
     struct idlist *next;
 };
 
+/*
+ * We #ifdef this and use flag rather than bool
+ * to avoid a type clash with curses.h
+ */
 #ifndef TRUE
-typedef	char	bool;	/* to be compatible with curses.h */
 #define FALSE	0
 #define TRUE	1
 #endif /* TRUE */
+typedef	char	flag;
 
 struct hostdata		/* shared among all user connections to given server */
 {
@@ -82,9 +86,9 @@ struct hostdata		/* shared among all user connections to given server */
     int preauthenticate;		/* preauthentication mode to try */
     int timeout;			/* inactivity timout in seconds */
     char *envelope;			/* envelope address list header */
-    bool skip;				/* suppress poll in implicit mode? */
-    bool dns;				/* do DNS lookup on multidrop? */
-    bool uidl;				/* use RFC1725 UIDLs? */
+    flag skip;				/* suppress poll in implicit mode? */
+    flag dns;				/* do DNS lookup on multidrop? */
+    flag uidl;				/* use RFC1725 UIDLs? */
 
 #ifdef linux
     char *interface;
@@ -119,13 +123,13 @@ struct query
     char *preconnect;		/* pre-connection command to execute */
 
     /* per-user control flags */
-    bool keep;			/* if TRUE, leave messages undeleted */
-    bool fetchall;		/* if TRUE, fetch all (not just unseen) */
-    bool flush;			/* if TRUE, delete messages already seen */
-    bool rewrite;		/* if TRUE, canonicalize recipient addresses */
-    bool stripcr;		/* if TRUE, strip CRs in text */
-    bool forcecr;		/* if TRUE, force CRs before LFs in text */
-    bool pass8bits;		/* if TRUE, ignore Content-Transfer-Encoding */
+    flag keep;			/* if TRUE, leave messages undeleted */
+    flag fetchall;		/* if TRUE, fetch all (not just unseen) */
+    flag flush;			/* if TRUE, delete messages already seen */
+    flag rewrite;		/* if TRUE, canonicalize recipient addresses */
+    flag stripcr;		/* if TRUE, strip CRs in text */
+    flag forcecr;		/* if TRUE, force CRs before LFs in text */
+    flag pass8bits;		/* if TRUE, ignore Content-Transfer-Encoding */
     int	limit;			/* limit size of retrieved messages */
     int	fetchlimit;		/* max # msgs to get in single poll */
     int	batchlimit;		/* max # msgs to pass in single SMTP session */
@@ -134,7 +138,7 @@ struct query
     struct idlist *oldsaved, *newsaved;
 
     /* internal use */
-    bool active;		/* should we actually poll this server? */
+    flag active;		/* should we actually poll this server? */
     int errcount;		/* count transient errors in last pass */
     int smtp_socket;		/* socket descriptor for SMTP connection */
     unsigned int uid;		/* UID of user to deliver to */
@@ -149,9 +153,9 @@ struct method
 {
     char *name;			/* protocol name */
     int	port;			/* service port */
-    bool tagged;		/* if true, generate & expect command tags */
-    bool delimited;		/* if true, accept "." message delimiter */
-    bool force_getsizes;	/* if true, fetch's size return unreliable */
+    flag tagged;		/* if true, generate & expect command tags */
+    flag delimited;		/* if true, accept "." message delimiter */
+    flag force_getsizes;	/* if true, fetch's size return unreliable */
     int (*parse_response)();	/* response_parsing function */
     int (*getauth)();		/* authorization fetcher */
     int (*getrange)();		/* get message range to fetch */
@@ -180,23 +184,23 @@ extern int yydebug;		/* enable parse debugging */
 
 /* daemon mode control */
 extern int poll_interval;	/* poll interval in seconds */
-extern bool nodetach;		/* if TRUE, don't detach daemon process */
+extern flag nodetach;		/* if TRUE, don't detach daemon process */
 extern char *logfile;		/* log file for daemon mode */
-extern bool use_syslog;		/* if --syslog was set */
-extern bool quitmode;		/* if --quit was set */
-extern bool check_only;		/* if --check was set */
+extern flag use_syslog;		/* if --syslog was set */
+extern flag quitmode;		/* if --quit was set */
+extern flag check_only;		/* if --check was set */
 extern char *cmd_logfile;	/* if --logfile was set */
 extern int cmd_daemon;		/* if --daemon was set */
 
 /* these get computed */
 extern int batchcount;		/* count of messages sent in current batch */
-extern bool peek_capable;	/* can we read msgs without setting seen? */
+extern flag peek_capable;	/* can we read msgs without setting seen? */
 
 /* miscellaneous global controls */
 extern char *rcfile;		/* path name of rc file */
 extern char *idfile;		/* path name of UID file */
 extern int linelimit;		/* limit # lines retrieved per site */
-extern bool versioninfo;	/* emit only version info */
+extern flag versioninfo;	/* emit only version info */
 extern char *user;		/* name of invoking user */
 extern char *fetchmailhost;	/* the name of the host running fetchmail */
 
@@ -248,7 +252,7 @@ void optmerge(struct query *, struct query *);
 char *MD5Digest (char *);
 int daemonize(const char *, void (*)(int));
 
-int prc_parse_file(const char *, bool);
+int prc_parse_file(const char *, flag);
 int prc_filecheck(const char *);
 
 void interface_parse(char *, struct hostdata *);
