@@ -66,7 +66,7 @@ struct idlist
 };
 
 #ifndef TRUE
-typedef	int	bool;
+typedef	char	bool;	/* to be compatible with curses.h */
 #define FALSE	0
 #define TRUE	1
 #endif /* TRUE */
