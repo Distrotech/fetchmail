@@ -1482,8 +1482,9 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	if (js == THROW_SIGPIPE)
 	{
 	    report(stdout,
-		   _("SIGPIPE thrown from an MDA or a stream socket error"));
+		   _("SIGPIPE thrown from an MDA or a stream socket error\n"));
 	    ok = PS_SOCKET;
+	    goto cleanUp;
 	}
 	else if (js == THROW_TIMEOUT)
 	{
