@@ -137,7 +137,7 @@ char *rfc822timestamp(void)
 /* return a timestamp in RFC822 form */
 {
     time_t	now;
-    static char buf[40];
+    static char buf[50];
 
     time(&now);
 #ifdef HAVE_STRFTIME
