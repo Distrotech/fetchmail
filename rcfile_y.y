@@ -338,7 +338,13 @@ user_option	: TO localnames HERE
 		| MIMEDECODE		{current.mimedecode  = FLAG_TRUE;}
 		| IDLE			{current.idle        = FLAG_TRUE;}
 
-		| SSL 	                {current.use_ssl = FLAG_TRUE;}
+		| SSL 	                {
+#ifdef SSL_ENABLE
+		    current.use_ssl = FLAG_TRUE;
+#else
+		    yyerror(GT_("SSL is not enabled"))
+#endif 
+		}
 		| SSLKEY STRING		{current.sslkey = xstrdup($2);}
 		| SSLCERT STRING	{current.sslcert = xstrdup($2);}
 		| SSLPROTO STRING	{current.sslproto = xstrdup($2);}
@@ -358,7 +364,13 @@ user_option	: TO localnames HERE
 		| NO MIMEDECODE		{current.mimedecode  = FLAG_FALSE;}
 		| NO IDLE		{current.idle        = FLAG_FALSE;}
 
-		| NO SSL 	        {current.use_ssl = FLAG_FALSE;}
+		| NO SSL 	        {
+#ifdef SSL_ENABLE
+		    current.use_ssl = FLAG_FALSE;
+#else
+		    yyerror(GT_("SSL is not enabled"))
+#endif 
+		}
 
 		| LIMIT NUMBER		{current.limit       = NUM_VALUE_IN($2);}
 		| WARNINGS NUMBER	{current.warnings    = NUM_VALUE_IN($2);}

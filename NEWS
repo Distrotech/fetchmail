@@ -9,6 +9,7 @@
 * Fixes for some odd IMAP and SMTP edge cases by Sunil Shetye.
 * UIDL bug fix by Matthias Andree.
 * Use smtpaddress, if present, to set the return path on warning mail.
+* Tell parser to object when SSL keyboard is used with SSL not compiled.
 
 fetchmail-5.9.6 (Fri Dec 14 04:03:50 EST 2001), 21247 lines:
 
