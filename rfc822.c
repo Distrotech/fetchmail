@@ -70,7 +70,12 @@ const char *host;	/* server hostname */
 		    has_host_part = TRUE;
 		else if (*from == '"')
 		    state = 2;
-		else if ((*from == ',' || HEADER_END(from)) && has_bare_name_part && !has_host_part)
+		/*
+		 * Not expanding on from[-1] == ';' deals with groupnames,
+		 * an obscure misfeature described in sections
+		 * 6.1, 6.2.6, and A.1.5 of the RFC822 standard.
+		 */
+		else if ((*from == ',' || HEADER_END(from)) && has_bare_name_part && !has_host_part && from[-1] != ';')
 		{
 		    int hostlen;
 
