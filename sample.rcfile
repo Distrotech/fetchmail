@@ -21,9 +21,9 @@
 # Legal keywords are
 #   server
 #   protocol (or proto)
-#   localname (or local)
 #   username (or user)
-#   remotename (or remote)
+#   is
+#   remotefolder (or remote)
 #   password (or pass)
 #   mailbox
 #   smtphost (or smtp)

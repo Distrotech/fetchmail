@@ -63,10 +63,10 @@ server_options:	serv_option_clause
 
 serv_option_clause: 
 		KW_PROTOCOL KW_PROTO	     {prc_setproto($2);}
-	|	KW_LOCALNAME PARAM_STRING    {prc_localname($2);}
-	|	KW_REMOTENAME PARAM_STRING   {prc_remotename($2);}
+	|	KW_LOCALNAME PARAM_STRING    {prc_setlocal($2);}
+	|	KW_REMOTENAME PARAM_STRING   {prc_setremote($2);}
 	|	KW_PASSWORD PARAM_STRING     {prc_setpassword($2);}
-	|	KW_MAILBOX PARAM_STRING      {prc_setmailbox($2);}
+	|	KW_MAILBOX PARAM_STRING      {prc_setfolder($2);}
 	|	KW_SMTPHOST PARAM_STRING     {prc_setsmtphost($2);}
 	|	KW_MDA PARAM_STRING          {prc_setmda($2);}
 	|	KW_KEEP			     {prc_setkeep($1==FLAG_TRUE);}

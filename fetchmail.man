@@ -296,12 +296,10 @@ Legal keywords are:
 
     server
     protocol (or proto)
-    localname (or local)
     username (or user)
-    remotename (or remote)
-    username (or user)
+    is
     password (or pass)
-    mailbox
+    remotefolder (or remote)
     smtphost (or smtp)
     mda
     keep
@@ -317,7 +315,14 @@ Legal keywords are:
     port
 .PP
 All these correspond to the obvious command-line arguments except
-two: \fBpassword\fR and \fBskip\fR.
+three: \fBis\fR, \fBpassword\fR and \fBskip\fR.
+.PP
+The \fBis\fR keyword associates a following local username with the
+mailserver usename in the entry.  It is intended to be used in 
+configurations where \fIfetchmail\fR runs as root and retrieves
+mail for multiple local users.  If no \fBis\fR clause is present,
+the default local username is the same as the argument of the
+\fBuser\fR keyword.
 .PP
 The \fBpassword\fR option requires a string argument, which is the password
 to be used with the entry's server.
@@ -368,12 +373,14 @@ Other possibilities (note use of \ to escape newline -- this is now
 optional, not required as in older versions):
 
 .nf
-  server pop.provider.net       \e
-        proto pop3              \e
-        port 3111               \e
-        user jsmith             \e
-        pass secret1
+  server pop.provider.net proto pop3 port 3111  \e
+        user jsmith pass secret1 is smith
 .fi
+
+This associates the local username `smith' with the server username `jsmith'
+The local username controls who mail is delivered to; it defaults to the 
+same as the remote username.
+.PP
 If you need to include whitespace in a parameter string, enclose the
 string in double quotes.  Thus:
 
