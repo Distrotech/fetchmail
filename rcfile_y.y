@@ -30,8 +30,8 @@ int yydebug;	/* in case we didn't generate with -- debug */
 static struct query current;		/* current server record */
 static int prc_errflag;
 
-static void prc_register();
-static void prc_reset();
+static void record_current();
+static void user_reset();
 %}
 
 %union {
@@ -74,21 +74,20 @@ statement	: SET LOGFILE MAP STRING	{logfile = xstrdup($4);}
  * up a load of defaults and then have poll statements following with no
  * user options at all. 
  */
-		| define_server serverspecs	{prc_register(); prc_reset();}
+		| define_server serverspecs		{record_current();}
 		| define_server serverspecs userspecs
-				{
-					memset(&current,'\0',sizeof(current));
-					current.stripcr = -1;
-				}
 		;
 
-define_server	: POLL STRING	{current.server.names = (struct idlist *)NULL;
+define_server	: POLL STRING	{memset(&current,'\0',sizeof(current));
+					current.stripcr = -1;
 					save_str(&current.server.names, -1,$2);
 					current.server.skip = FALSE;}
-		| SKIP STRING	{current.server.names = (struct idlist *)NULL;
+		| SKIP STRING	{memset(&current,'\0',sizeof(current));
+					current.stripcr = -1;
 					save_str(&current.server.names, -1,$2);
 					current.server.skip = TRUE;}
-		| DEFAULTS	{current.server.names = (struct idlist *)NULL;
+		| DEFAULTS	{memset(&current,'\0',sizeof(current));
+					current.stripcr = -1;
 					save_str(&current.server.names, -1,"defaults");}
   		;
 
@@ -139,13 +138,13 @@ serv_option	: AKA alias_list
  * This is a backward-compatibility kluge to allow old popclient files
  * to keep working.
  */
-userspecs	: user1opts		{prc_register(); prc_reset();}
-		| user1opts explicits	{prc_register(); prc_reset();}
+userspecs	: user1opts		{record_current(); user_reset();}
+		| user1opts explicits	{record_current(); user_reset();}
 		| explicits
 		;
 
-explicits	: explicitdef		{prc_register(); prc_reset();}
-		| explicits explicitdef	{prc_register(); prc_reset();}
+explicits	: explicitdef		{record_current(); user_reset();}
+		| explicits explicitdef	{record_current(); user_reset();}
 		;
 
 explicitdef	: userdef user0opts
@@ -262,7 +261,6 @@ const char *pathname;		/* pathname for the configuration file */
 {
     prc_errflag = 0;
     querylist = hosttail = (struct query *)NULL;
-    prc_reset();
 
     /* Check that the file is secure */
     if ((prc_errflag = prc_filecheck(pathname)) != 0)
@@ -287,7 +285,7 @@ const char *pathname;		/* pathname for the configuration file */
 	return(0);
 }
 
-static void prc_reset(void)
+static void user_reset(void)
 /* clear the global current record (server parameters) used by the parser */
 {
     struct hostdata save;
@@ -327,7 +325,7 @@ struct query *init;	/* pointer to block containing initial values */
     return(node);
 }
 
-static void prc_register(void)
+static void record_current(void)
 /* register current parameters and append to the host list */
 {
 #define FLAG_FORCE(fld) if (cmd_opts.fld) current.fld = cmd_opts.fld
