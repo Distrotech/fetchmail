@@ -82,9 +82,9 @@ int *countp;
 	return(PS_ERROR);
 
     /* maybe the user wanted a non-default folder */
-    if (queryctl->remotefolder[0])
+    if (queryctl->mailbox[0])
     {
-	int	ok = gen_transact(socket, "FOLD %s", queryctl->remotefolder);
+	int	ok = gen_transact(socket, "FOLD %s", queryctl->mailbox);
 
 	if (ok != 0)
 	    return(ok);

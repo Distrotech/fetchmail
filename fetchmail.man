@@ -296,9 +296,12 @@ Legal keywords are:
 
     server
     protocol (or proto)
+    localname (or local)
+    username (or user)
+    remotename (or remote)
     username (or user)
     password (or pass)
-    remotefolder (or remote)
+    mailbox
     smtphost (or smtp)
     mda
     keep

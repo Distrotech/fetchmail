@@ -21,10 +21,11 @@
 # Legal keywords are
 #   server
 #   protocol (or proto)
+#   localname (or local)
 #   username (or user)
+#   remotename (or remote)
 #   password (or pass)
-#   remotefolder (or remote)
-#   localfolder (or local)
+#   mailbox
 #   smtphost (or smtp)
 #   mda
 #   keep
@@ -66,5 +67,4 @@ server other.provider.net proto pop2 user John.Smith password My^Hat
 server pop.provider.net 	\
 	proto pop3		\
 	user jsmith		\
-	pass secret1		\
-	localfolder ~/mbox
+	pass secret1

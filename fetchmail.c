@@ -167,7 +167,6 @@ char **argv;
 	else
 	    printf(" and %s\n", rcfile);
 	for (hostp = hostlist; hostp; hostp = hostp->next) {
-	    printf("Options for host %s:\n", hostp->servername);
 	    dump_params(hostp);
 	    if (outlevel == O_VERBOSE)
 		printf("  Lockfile at %s\n", tmpbuf);
@@ -383,6 +382,8 @@ static int showversioninfo()
 int dump_params (queryctl)
 struct hostrec *queryctl;
 {
+    printf("Options for %s retrieving from %s:\n",
+	   hostp->localname, hostp->servername);
     if (queryctl->skip || outlevel == O_VERBOSE)
 	printf("  This host will%s be queried when no host is specified.\n",
 	       queryctl->skip ? " not" : "");

@@ -57,7 +57,7 @@ struct hostrec
     char localname [USERNAMELEN+1];
     char remotename [USERNAMELEN+1];
     char password [PASSWORDLEN+1];
-    char remotefolder [FOLDERLEN];
+    char mailbox [FOLDERLEN];
     char smtphost[HOSTLEN+1];
     char mda [MDALEN+1];
     int protocol;

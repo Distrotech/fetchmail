@@ -26,9 +26,11 @@ int prc_lineno = 1;
 defaults 	{ return KW_DEFAULTS; }
 server 		{ return KW_SERVER; }
 proto(col)? 	{ return KW_PROTOCOL; }
-user(name)?	{ return KW_USERNAME; }
+local(name)?	{ return KW_LOCALNAME; }
+user(name)?	{ return KW_REMOTENAME; }
+remote(name)?	{ return KW_REMOTENAME; }
 pass(word)?	{ return KW_PASSWORD; }
-remote(folder)? { return KW_REMOTEFOLDER; }
+mailbox 	{ return KW_MAILBOX; }
 smtp(host)?	{ return KW_SMTPHOST; }
 mda		{ return KW_MDA; }
 keep		{ yylval.flag = FLAG_TRUE; return KW_KEEP; }

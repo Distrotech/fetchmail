@@ -172,7 +172,7 @@ struct hostrec *queryctl;
         break;
       case 'r':
       case LA_REMOTEFILE:
-        strncpy(queryctl->remotefolder,optarg,sizeof(queryctl->remotefolder)-1);
+        strncpy(queryctl->mailbox,optarg,sizeof(queryctl->mailbox)-1);
         break;
       case 'm':
       case LA_MDA:

@@ -101,7 +101,7 @@ int *countp;
     /* find out how many messages are waiting */
     ok = gen_transact(socket,
 		  "SELECT %s",
-		  queryctl->remotefolder[0] ? queryctl->remotefolder : "INBOX");
+		  queryctl->mailbox[0] ? queryctl->mailbox : "INBOX");
     if (ok != 0)
 	return(ok);
 

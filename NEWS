@@ -29,6 +29,13 @@ fetchmail-1.6 ():
 
 * Fix bug that prevented SMTP from being specified on the defaults line.
 
+* Changes in .fetchmailrc syntax:  The token `remotefolder' no longer
+  exists; it has been replaced by `mailbox'.  The token `remote' no
+  longer stands for `remotefolder' but for `remotename', a synonym for
+  `username'.  The purpose of these changes (which should only affect
+  IMAP and POP2 users setting up for non-default mailboxes) is to prepare
+  for syntax supporting multiple user queries per host.
+
 * Allow program to run with no .fetchmailrc file again.
 
 fetchmail-1.5 (Thu Oct  3 04:35:15 EDT 1996):

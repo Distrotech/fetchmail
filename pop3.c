@@ -222,7 +222,7 @@ int doPOP3 (queryctl)
 /* retrieve messages using POP3 */
 struct hostrec *queryctl;
 {
-    if (queryctl->remotefolder[0]) {
+    if (queryctl->mailbox[0]) {
 	fprintf(stderr,"Option --remote is not supported with POP3\n");
 	return(PS_SYNTAX);
     }
