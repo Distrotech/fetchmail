@@ -1,19 +1,19 @@
 			 fetchmail README
 
-fetchmail is a free, full-featured, robust, well-documented remote
+Fetchmail is a free, full-featured, robust, well-documented remote
 mail retrieval and forwarding utility intended to be used over
 on-demand TCP/IP links (such as SLIP or PPP connections).  It
 retrieves mail from remote mail servers and forwards it to your local
 (client) machine's delivery system, so it can then be be read by
 normal mail user agents such as elm(1) or Mail(1).
 
-fetchmail supports all standard mail-retrieval protocols in use on the
-Internet: POP2, POP3 (including POP3 with RFC1938 one-time passwords),
-RPOP, APOP, KPOP, Compuserve's POP3 with RPA, Microsoft's NTLM, Demon
-Internet's SDPS, all flavors of IMAP (including IMAP4rev1 with RFC1731
-Kerberos v4 or GSSAPI authentication or CRAM-MD5 authentication),
-ESMTP ETRN, and ODMR.  Fetchmail also supports end-to-end encryption with
-OpenSSL.
+Fetchmail supports all standard mail-retrieval protocols in use on the
+Internet: POP2, POP3, RPOP, APOP, KPOP, IMAP2bis, IMAP4, IMAP4rev1
+ESMTP ETRN, and ODMR.  Fetchmail also fully supports authentication
+via GSSAPI, Kerberos 4 and 5, RFC1938 one-time passwords, Compuserve's
+POP3 with RPA, Microsoft's NTLM, Demon Internet's SDPS, or CRAM-MD5
+authentication a la RFC2195.  Fetchmail also supports end-to-end
+encryption with OpenSSL.
 
 The fetchmail code was developed under Linux, but has also been
 extensively tested under the BSD variants, AIX, HP-UX versions 9 and
