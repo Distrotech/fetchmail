@@ -8,6 +8,7 @@
 # Version 0.90 beta: Tue May 26 12:00:49 EDT 1998
 # Version 0.91 beta: Tue Jun  2 12:23:42 EDT 1998
 # Version 0.92 beta: Wed Jun  3 14:17:03 EDT 1998
+# Version 0.93 beta: Wed Jun  3 19:46:06 EDT 1998
 #
 # TO DO: Arrange for save and quit buttons to clean up all frames dependent
 # on the current ones.
@@ -74,6 +75,7 @@ class Server:
 	self.localdomains = []		# Domains to be considered local
 	self.interface = None		# IP address and range
 	self.monitor = None		# IP address and range
+	self.netsec = None		# IPV6 security options
 	self.users = []			# List of user entries for site
 	Server.typemap = (
 	    ('pollname',  'String'),
@@ -93,7 +95,8 @@ class Server:
 	    ('dns',       'Boolean'),
 	    # leave localdomains out
 	    ('interface', 'String'),
-	    ('monitor',   'String'))
+	    ('monitor',   'String'),
+	    ('netsec',   'String'))
 
     def dump(self, folded):
 	str = ""
@@ -147,7 +150,9 @@ class Server:
             str = str + "interface " + self.interface
 	if self.monitor:
             str = str + "monitor " + self.monitor
-	if self.interface or self.monitor:
+	if self.netsec:
+            str = str + "netsec " + self.netsec
+	if self.interface or self.monitor or self.netsec:
 	    if folded:
 		str = str + "\n"
 
@@ -746,6 +751,10 @@ is not already active.
 The `interface' and `monitor' options are available
 only for Linux systems.  See the fetchmail manual page
 for details on these.
+
+The `netsec' option will be configurable only if fetchmail
+was compiled with IPV6 support.  If you need to use it,
+you probably know what to do.
 """}
 
 multihelp = {
@@ -875,19 +884,24 @@ class ServerEdit(Frame, MyWidget):
 		 self.server.localdomains, None, mdropwin, multihelp)
             mdropwin.pack(fill=X)
 
-            secwin = Frame(rightwin, relief=RAISED, bd=5)
-            Label(secwin, text="Security").pack(side=TOP)
-            # Don't actually let users set this.  KPOP sets it implicitly
-            #	ButtonBar(secwin, 'Authorization mode:',
-            #		  self.auth, authlist, 1, None).pack(side=TOP)
-            if os.popen("uname").readlines()[0] == 'Linux\n':
-                LabeledEntry(secwin, 'Interface to check before poll:',
+            if 'interface' in dictmembers or 'monitor' in dictmembers or 'netsec' in dictmembers:
+                secwin = Frame(rightwin, relief=RAISED, bd=5)
+                Label(secwin, text="Security").pack(side=TOP)
+                # Don't actually let users set this.  KPOP sets it implicitly
+                #	ButtonBar(secwin, 'Authorization mode:',
+                #		  self.auth, authlist, 1, None).pack(side=TOP)
+                if 'interface' in dictmembers:
+                    LabeledEntry(secwin, 'Interface to check before poll:',
 			 self.interface, leftwidth).pack(side=TOP, fill=X)
-                LabeledEntry(secwin, 'IP range to monitor:',
+                if 'monitor' in dictmembers:
+                    LabeledEntry(secwin, 'IP range to monitor:',
 			 self.monitor, leftwidth).pack(side=TOP, fill=X)
-            Button(secwin, text='Help', fg='blue',
-	       command=lambda: helpwin(sechelp)).pack(side=RIGHT)
-            secwin.pack(fill=X)
+                if 'netsec' in dictmembers:
+                    LabeledEntry(secwin, 'IPV6 security options:',
+			 self.netsec, leftwidth).pack(side=TOP, fill=X)
+                    Button(secwin, text='Help', fg='blue',
+                           command=lambda: helpwin(sechelp)).pack(side=RIGHT)
+                secwin.pack(fill=X)
 
             rightwin.pack(side=LEFT, anchor=N);
 
@@ -1170,8 +1184,17 @@ def setdiff(list1, list2):
 
 def copy_instance(toclass, fromdict):
 # Initialize a class object of given type from a conformant dictionary.
-    class_sig = toclass.__dict__.keys(); class_sig.sort()
-    dict_keys = fromdict.keys(); dict_keys.sort()
+    for fld in fromdict.keys():
+        if not fld in dictmembers:
+            dictmembers.append(fld)
+# The `optional' fields are the ones we can ignore for purposes of
+# conformability checking; they'll still get copied if they are
+# present in the dictionary.
+    optional = ('interface', 'monitor', 'netsec');
+    class_sig = setdiff(toclass.__dict__.keys(), optional)
+    class_sig.sort()
+    dict_keys = setdiff(fromdict.keys(), optional)
+    dict_keys.sort()
     common = intersect(class_sig, dict_keys)
     if 'typemap' in class_sig: 
 	class_sig.remove('typemap')
@@ -1216,7 +1239,11 @@ if __name__ == '__main__':
         os.remove(tmpfile)
 
     # The tricky part -- initializing objects from the configuration global
-    # `Configuration' is the top level of the object tree we're going to mung 
+    # `Configuration' is the top level of the object tree we're going to mung.
+    # The dictmembers list is used to track the set of fields the dictionary
+    # contains; in particular, we can use it to tell whether things like the
+    # monitor, interface, and netsec fields are present.
+    dictmembers = []
     Fetchmailrc = Configuration()
     copy_instance(Fetchmailrc, fetchmailrc)
     Fetchmailrc.servers = [];
