@@ -662,14 +662,16 @@ char *realname;		/* real name of host */
 	 * long lists of users and (re)implement %s.
 	 */
 	for (idp = xmit_names; idp; idp = idp->next)
-	    length += (strlen(idp->id) + 1);
+	    if (idp->val.num == XMIT_ACCEPT)
+		length += (strlen(idp->id) + 1);
 	names = (char *)alloca(length);
 	names[0] = '\0';
 	for (idp = xmit_names; idp; idp = idp->next)
-	{
-	    strcat(names, idp->id);
-	    strcat(names, " ");
-	}
+	    if (idp->val.num == XMIT_ACCEPT)
+	    {
+		strcat(names, idp->id);
+		strcat(names, " ");
+	    }
 	cmd = (char *)alloca(strlen(ctl->mda) + length);
 	sprintf(cmd, ctl->mda, names);
 	if (outlevel == O_VERBOSE)
@@ -834,15 +836,16 @@ char *realname;		/* real name of host */
 	 * problem.
 	 */
 	for (idp = xmit_names; idp; idp = idp->next)
-	    if (SMTP_rcpt(sinkfp, idp->id) == SM_OK)
-		good_addresses++;
-	    else
-	    {
-		bad_addresses++;
-		idp->val.num = XMIT_ANTISPAM;
-		error(0, 0, 
-		      "SMTP listener doesn't like recipient address `%s'", idp->id);
-	    }
+	    if (idp->val.num == XMIT_ACCEPT)
+		if (SMTP_rcpt(sinkfp, idp->id) == SM_OK)
+		    good_addresses++;
+		else
+		{
+		    bad_addresses++;
+		    idp->val.num = XMIT_ANTISPAM;
+		    error(0, 0, 
+			  "SMTP listener doesn't like recipient address `%s'", idp->id);
+		}
 	if (!good_addresses && SMTP_rcpt(sinkfp, user) != SM_OK)
 	{
 	    error(0, 0, 
