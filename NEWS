@@ -7,14 +7,20 @@ generates a warning to standard error.  In a future release, probably 4.0,
 this hack will be removed and the leading `username' token required for
 every user entry in a multi-user poll declaration.
 
-			Release Notes:
+				Release Notes:
 
 ------------------------------------------------------------------------------
 
-pl 3.9.1 (Fri Apr  4 17:24:14 EST 1997):
+pl 3.9.1 (Sat Apr  5 14:22:16 EST 1997):
 * Hypertext FAQ added to distribution manifest.
 * RPM builder production fixed.
-* Minor additions to man page.
+* Minor additions and corrections to man page.
+* Delivery failures are now syslogged as LOG_ERR, not LOG_INFO.
+* --check now turns off --daemon.
+* --syslog is now independent of --daemon.
+
+There are 246 people on the fetchmail-friends list.
+(24 bad addresses were dropped)
 
 ------------------------------------------------------------------------------
 fetchmail-3.9 (Wed Apr  2 13:36:22 EST 1997)

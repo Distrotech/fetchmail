@@ -301,18 +301,6 @@ struct query *ctl;	/* option record to be initialized */
 	}
     }
 
-    if (check_only && poll_interval)
-    {
-	fputs("The --check and --daemon options aren't compatible.\n", stderr);
-	return(-1);
-    }
-
-    if ((poll_interval == 0 || nodetach) && use_syslog)
-    {
-	fputs("The --syslog option is only valid when running detached.\n", stderr);
-	return(-1);
-    }
-
     if (errflag || ocount > 1) {
 	/* squawk if syntax errors were detected */
 	fputs("usage:  fetchmail [options] [server ...]\n", stderr);

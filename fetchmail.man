@@ -81,10 +81,10 @@ options are set the way you want them.
 .B \-c, --check
 Return a status code to indicate whether there is mail waiting,
 without actually fetching or deleting mail (see EXIT CODES below).
-This option doesn't play well with queries to multiple sites, doen't
-work with ETRN, and is ignored in daemon mode.  It's also prone to
-false positives if you leave read but undeleted mail in your server
-mailbox.
+This option turns off daemon mode (in which it would be useless).  It
+doesn't play well with queries to multiple sites, and doesn't work
+with ETRN.  It's also prone to false positives if you leave read but
+undeleted mail in your server mailbox.
 .TP
 .B \-s, --silent
 Silent mode.  Suppresses all progress/status messages that are normally

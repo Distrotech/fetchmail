@@ -671,6 +671,10 @@ static int load_params(int argc, char **argv, int optind)
     if (cmd_daemon >= 0)
 	poll_interval = cmd_daemon;
 
+    /* check and daemon options are not compatible */
+    if (check_only && poll_interval)
+	poll_interval = 0;
+
     return(implicitmode);
 }
 
