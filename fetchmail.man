@@ -21,7 +21,7 @@ The
 .I fetchmail
 program can gather mail from servers supporting any of the common
 mail-retrieval protocols: POP2 (as specified in RFC 937), POP3 (RFC
-1725), IMAP2bis (as implemented by the 4.4BSD imapd program), and
+1939), IMAP2bis (as implemented by the 4.4BSD imapd program), and
 IMAP4 (as specified by RFC1730).  It can use (but does not require)
 LAST facility removed from later POP3 versions.
 .PP
@@ -601,4 +601,4 @@ itself to get it.  All encryption would do in this context is give a
 false sense of security to people who don't think very hard.
 .SH SEE ALSO
 mail(1), binmail(1), sendmail(8), popd(8), imapd(8)
-RFC 937, RFC 1081, RFC 1082, RFC1176, RFC 1225, RFC 1460, RFC 1725.
+RFC 937, RFC 1081, RFC 1082, RFC1176, RFC 1225, RFC 1460, RFC 1725, RFC1939.
