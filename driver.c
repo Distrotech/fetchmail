@@ -303,7 +303,7 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 static char *parse_received(struct query *ctl, char *bufp)
 /* try to extract real addressee from the Received line */
 {
-    char *ok;
+    char *ok = (char *)NULL;
     static char rbuf[HOSTLEN + USERNAMELEN + 4]; 
 
     /*
@@ -314,9 +314,7 @@ static char *parse_received(struct query *ctl, char *bufp)
      * address in the Received line.  Sendmail itself only
      * does this when the mail has a single recipient.
      */
-    if ((ok = strstr(bufp, "by ")) == (char *)NULL)
-	ok = (char *)NULL;
-    else
+    if ((ok = strstr(bufp, "by ")) && isspace(ok[-1]))
     {
 	char	*sp, *tp;
 
@@ -335,10 +333,8 @@ static char *parse_received(struct query *ctl, char *bufp)
 	 */
 	if (!is_host_alias(rbuf, ctl))
 	    ok = (char *)NULL;
-	else if ((ok = strstr(sp, "for ")) != 0)
+	else if ((ok = strstr(sp, "for ")) && isspace(ok[-1]))
 	{
-	    char	*sp, *tp;
-
 	    tp = rbuf;
 	    sp = ok + 4;
 	    if (*sp == '<')
