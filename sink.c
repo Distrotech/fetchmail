@@ -435,7 +435,7 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	 * and allow it to be deleted.
 	 */
 	send_bouncemail(ctl, msg, XMIT_ACCEPT,
-			"This message was too large.\r\n", 
+			"This message was too large (SMTP error 552).\r\n", 
 			1, responses);
 	return(run.bouncemail ? PS_REFUSED : PS_TRANSIENT);
   
@@ -448,7 +448,7 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	 * this address is live, anyway.
 	 */
 	send_bouncemail(ctl, msg, XMIT_ACCEPT,
-			"Invalid address.\r\n", 
+			"Invalid address in MAIL FROM (SMTP error 553).\r\n", 
 			1, responses);
 	return(PS_REFUSED);
 
@@ -735,13 +735,19 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	 * didn't pass canonicalized From/Return-Path lines, *and* the
 	 * local SMTP listener insists on them. 
 	 */
-	if (msg->return_path[0])
-	    ap = msg->return_path;
-	else
+	if (!msg->return_path[0])
 	{
 	    sprintf(addr, "%s@%s", ctl->remotename, ctl->server.truename);
 	    ap = addr;
 	}
+	else if (strchr(msg->return_path, '@'))
+	    ap = msg->return_path;
+	else		/* in case Return-Path existed but was local */
+	{
+	    sprintf(addr, "%s@%s", msg->return_path, ctl->server.truename);
+	    ap = addr;
+	}
+
 	if (SMTP_from(ctl->smtp_socket, ap, options) != SM_OK)
 	    return(handle_smtp_report(ctl, msg));
 
