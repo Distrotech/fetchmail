@@ -36,7 +36,6 @@
 #include <netinet/in.h>		/* must be included before "socket.h".*/
 #include <netdb.h>
 #endif /* KERBEROS_V4 */
-#include  "socket.h"
 #include  "fetchmail.h"
 #include  "smtp.h"
 
@@ -486,6 +485,27 @@ struct query *ctl;
     return(ctl->smtp_sockfp);
 }
 
+static int strip_gets(buf, len, sockfp)
+/* get a line of input, stripping out \r and \n */
+char *buf;
+int len;
+FILE *sockfp;
+{
+    if (fgets(buf, len, sockfp) == (char *)NULL)
+	return(-1);
+    else
+    {
+	char	*sp, *tp;
+
+	for (tp = sp = buf; *sp; sp++)
+	    if (*sp != '\r' && *sp != '\n')
+		*tp++ = *sp;
+	*tp++ = '\0';
+
+	return(strlen(buf));
+    }
+}
+
 static int gen_readmsg (sockfp, len, delimited, ctl)
 /* read message content and ship to SMTP or MDA */
 FILE *sockfp;	/* to which the server is connected */
@@ -507,7 +527,7 @@ struct query *ctl;	/* query control record */
     oldlen = 0;
     while (delimited || len > 0)
     {
-	if ((n = SockGets(buf,sizeof(buf),sockfp)) < 0)
+	if ((n = strip_gets(buf,sizeof(buf),sockfp)) < 0)
 	    return(PS_SOCKET);
 	vtalarm(ctl->timeout);
 

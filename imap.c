@@ -13,7 +13,6 @@
 #if defined(STDC_HEADERS)
 #include  <stdlib.h>
 #endif
-#include  "socket.h"
 #include  "fetchmail.h"
 
 static int count, seen, recent, unseen;

@@ -13,7 +13,6 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
-#include "socket.h"
 #include "fetchmail.h"
 #include "smtp.h"
 

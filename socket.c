@@ -17,12 +17,14 @@
 #if defined(HAVE_UNISTD_H)
 #include <unistd.h>
 #endif
-#if defined(HAVE_STDARG_H)
-#include <stdarg.h>
+
+#ifndef  INADDR_NONE
+#ifdef   INADDR_BROADCAST
+#define  INADDR_NONE	INADDR_BROADCAST
 #else
-#include <varargs.h>
+#define	 INADDR_NONE	-1
 #endif
-#include "socket.h"
+#endif
 
 #define  INTERNAL_BUFSIZE	2048
 
@@ -64,26 +66,6 @@ int clientPort;
     sockfp = fdopen(sock, "r+");
     setvbuf(sockfp, NULL, _IOLBF, INTERNAL_BUFSIZE);
     return sockfp;
-}
-
-int SockGets(buf, len, sockfp)
-char *buf;
-int len;
-FILE *sockfp;
-{
-    if (fgets(buf, len, sockfp) == (char *)NULL)
-	return(-1);
-    else
-    {
-	char	*sp, *tp;
-
-	for (tp = sp = buf; *sp; sp++)
-	    if (*sp != '\r' && *sp != '\n')
-		*tp++ = *sp;
-	*tp++ = '\0';
-
-	return(strlen(buf));
-    }
 }
 
 /* socket.c ends here */
