@@ -3,6 +3,13 @@
 ------------------------------------------------------------------------------
 fetchmail-3.5 ()
 
+Note: The .poprc compatibility hack that allows your first user declaration
+per server to omit the "username" show has been causing some confusion (see
+question F3 in the FAQ for details).  Use of the feature now generates a 
+warning to standard error.  In a future release, probably 4.0, this hack
+will be removed and the leading `username' token required for every user
+entry.
+
 features --
 
 * The host that ETRN specifies is now set by the smtphost option.
