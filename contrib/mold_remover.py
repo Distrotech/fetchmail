@@ -1,8 +1,24 @@
 # Mold Remover
+#
 # A short python script to remove old read mail from a pop3 mailserver.
+# Distributed under the GNU GPL (http://www.gnu.org/copyleft/gpl.html)
 # Dovetails with fetchmail with keep option.
-# Run it as a cron job...
-# Version 0.1 by James Stone (stone1@btinternet.com)
+# Run it as a cron job... Remember to stop fetchmail in the cron job
+# before calling mold_remover, and to restart fetchmail after mold_remover
+# e.g.: 
+#
+#	/etc/init.d/fetchmail stop >> /var/log/messages
+#	/usr/bin/python /usr/local/bin/mold_remover.py >> /var/log/messages
+#	/etc/init.d/fetchmail start >> /var/log/messages
+#
+# Version 0.3 by James Stone (jmstone@dsl.pipex.com)
+# 15th March 2004
+# 
+# Changes:
+# 0.1 25th September 2003 Original version
+# 0.2 6th March 2004 Info added regarding use, and explicit mention of GPL made.
+# 0.3 15th March 2004 days changed to list, 1 day changed from 24 to 23 hours.
+# 
 # please submit bug reports and code optimisations as you see fit!
 
 import string
@@ -10,12 +26,14 @@ import poplib
 import time
 
 #user editable section
+
 mailserver=["mail.server1","mail.server2"] #list of mailservers
 login=["login1","login2"] #list of logins for corresponding mailserver
 password=["pass1","pass2"] #list of passwords (note: chmod 700 for this script)
-days=2 #number of days to keep on server.
+days=[2,3] #number of days to keep on server.
 localuidlcache="/var/mail/.fetchmail-UIDL-cache" #fetchmail's UIDL cache
 localuidldate="/var/mail/.UIDLDate" #mold remover's UIDL datefile
+
 #end of user editable section
 
 readfile=open(localuidlcache, 'r')
@@ -41,7 +59,7 @@ for a in range(len(mailserver)):
         for uidldate in datefile:
             uidldatesplit=uidldate.split(' ')
             if(connectedto==int(uidldatesplit[2])):
-                if (time.time()-float(uidldatesplit[1]))>(86400*days):
+                if (time.time()-float(uidldatesplit[1]))>(86400*days[a]-3600):
                     try:
                         recheckuidl=connect.uidl(mesnum+1)
                         recheckuidlsplit=recheckuidl.split(' ')
@@ -63,7 +81,7 @@ for a in range(len(mailserver)):
 datefile.seek(0)
 for uidldate in datefile:
     uidldatesplit=uidldate.split(' ')
-    if not(time.time()-float(uidldatesplit[1]))>(86400*days):
+    if not(time.time()-float(uidldatesplit[1]))>(86400*days[int(uidldatesplit[2])]):
         tempfile.write(uidldate)
 datefile.close()
 datefile=open(localuidldate,'w+')
