@@ -16,7 +16,7 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.4.0 ()
+fetchmail-4.3.6 ()
 * Improved RPM packaging with correct grouping and an icon.
 * Fixed another minor bug in handling of `expunge 0'.
 * Kent Robotti sent a new version of fetchsetup.
@@ -34,6 +34,7 @@ fetchmail-4.4.0 ()
 * Close pipe to MDA when we get a nonresponse timeout.  This should 
   prevent MDA zombies from piling up when we have errors.
 * Treat Netscape's "X-Mozilla-Status" lines like "Status:" lines.
+* More informative error messages on timeout.
 
 There are 269 people on fetchmail-friends and 123 on fetchmail-announce.
 

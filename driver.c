@@ -92,6 +92,12 @@ static char *shroud;	/* string to shroud in debug output, if  non-NULL */
 static int mytimeout;	/* value of nonreponse timeout */
 static int msglen;	/* actual message length */
 
+/* use these to track what was happening when the nonresponse timer fired */
+#define GENERAL_WAIT	0
+#define SERVER_WAIT	1
+#define FORWARDING_WAIT	2
+static phase;
+
 static void set_timeout(int timeleft)
 /* reset the nonresponse-timeout */
 {
@@ -476,7 +482,7 @@ static int sizeticker;
 static int stuffline(struct query *ctl, char *buf)
 /* ship a line to the given control block's output sink (SMTP server or MDA) */
 {
-    int	n;
+    int	n, oldphase;
     char *last;
 
     /* The line may contain NUL characters. Find the last char to use
@@ -496,6 +502,9 @@ static int stuffline(struct query *ctl, char *buf)
 	    *last    = '\0';
 	}
     }
+
+    oldphase = phase;
+    phase = FORWARDING_WAIT;
 
     /*
      * SMTP byte-stuffing.  We only do this if the protocol does *not*
@@ -535,6 +544,8 @@ static int stuffline(struct query *ctl, char *buf)
 	n = fwrite(buf, 1, last - buf, sinkfp);
     else if (ctl->smtp_socket != -1)
 	n = SockWrite(ctl->smtp_socket, buf, last - buf);
+
+    phase = oldphase;
 
     return(n);
 }
@@ -1503,9 +1514,18 @@ const struct method *proto;	/* protocol method table */
 
     if ((js = setjmp(restart)) == 1)
     {
-	error(0, 0,
-		"timeout after %d seconds waiting for %s.",
-		ctl->server.timeout, ctl->server.pollname);
+	if (phase == SERVER_WAIT)
+	    error(0, 0,
+		  "timeout after %d seconds waiting for server %s.",
+		  ctl->server.timeout, ctl->server.pollname);
+	else if (phase == FORWARDING_WAIT)
+	    error(0, 0,
+		  "timeout after %d seconds waiting for %s.",
+		  ctl->server.timeout,
+		  ctl->mda ? "MDA" : "SMTP");
+	else
+	    error(0, 0, "timeout after %d seconds.", ctl->server.timeout);
+
 	if (ctl->smtp_socket != -1)
 	    close(ctl->smtp_socket);
 	if (sock != -1)
@@ -2105,8 +2125,14 @@ int sock;	/* socket to which server is connected */
 char *buf;	/* buffer to receive input */
 int size;	/* length of buffer */
 {
+    int oldphase = phase;	/* we don't have to be re-entrant */
+
+    phase = SERVER_WAIT;
     if (SockRead(sock, buf, size) == -1)
+    {
+	phase = oldphase;
 	return(PS_SOCKET);
+    }
     else
     {
 	if (buf[strlen(buf)-1] == '\n')
@@ -2115,6 +2141,7 @@ int size;	/* length of buffer */
 	    buf[strlen(buf)-1] = '\r';
 	if (outlevel == O_VERBOSE)
 	    error(0, 0, "%s< %s", protocol->name, buf);
+	phase = oldphase;
 	return(PS_SUCCESS);
     }
 }
@@ -2133,6 +2160,9 @@ va_dcl
     int ok;
     char buf [POPBUFSIZE+1];
     va_list ap;
+    int oldphase = phase;	/* we don't have to be re-entrant */
+
+    phase = SERVER_WAIT;
 
     if (protocol->tagged)
 	(void) sprintf(buf, "%s ", GENSYM);
@@ -2176,6 +2206,7 @@ va_dcl
     ok = (protocol->parse_response)(sock, buf);
     set_timeout(mytimeout);
 
+    phase = oldphase;
     return(ok);
 }
 
