@@ -41,6 +41,7 @@ noflush		{ yylval.flag = FALSE; return KW_FLUSH; }
 nofetchall	{ yylval.flag = FALSE; return KW_FETCHALL; }
 norewrite	{ yylval.flag = FALSE; return KW_REWRITE; }
 
+(auto)|(AUTO)	{ yylval.proto = P_AUTO;  return PROTO_AUTO; }
 (pop2)|(POP2)	{ yylval.proto = P_POP2;  return PROTO_POP2; }
 (pop3)|(POP3)	{ yylval.proto = P_POP3;  return PROTO_POP3; }
 (imap)|(IMAP)	{ yylval.proto = P_IMAP;  return PROTO_IMAP; }

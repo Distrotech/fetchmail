@@ -98,7 +98,7 @@ struct hostrec *queryctl;
 
     /* print the greeting */
     if (outlevel > O_SILENT && outlevel < O_VERBOSE) 
-	fprintf(stderr,"%s\n",buf);
+	fprintf(stderr,"IMAP greeting: %s\n",buf);
 
     /* try to get authorized */
     ok = IMAP_cmd(socket,

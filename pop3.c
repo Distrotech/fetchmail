@@ -93,7 +93,7 @@ struct hostrec *queryctl;
 
   /* print the greeting */
   if (outlevel > O_SILENT && outlevel < O_VERBOSE) 
-    fprintf(stderr,"%s\n",buf);
+    fprintf(stderr,"pop3 greeting: %s\n",buf);
   else 
     ;
 

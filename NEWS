@@ -16,6 +16,9 @@ S/key for secure challenge-response.
 
 * We have IMAP2bis/IMAP4 suppport.
 
+* Code now autoprobes for a POP3, IMAP, or POP2 server if no protocol is
+  specified.
+
 3.05:
 
 * Experimental support for RFC1725-compliant POP servers with the UIDL

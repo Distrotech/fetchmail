@@ -10,7 +10,8 @@ You can find the latest version of popclient from Eric's home page
 
 Features of POP include:
 
-	* POP2, POP3, APOP and IMAP support
+	* POP2, POP3, APOP and IMAP support with auto-probing for a server
+	  on the host if no protocol is specified.
 
 	* Easy configuration via command line or free-format .poprc file.
 

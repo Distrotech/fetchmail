@@ -312,7 +312,7 @@ int socket;
 
     /* echo the server's greeting to the user */
     if (outlevel > O_SILENT)
-      fprintf(stderr,"%s\n",buf);
+      fprintf(stderr,"POP2 greeting: %s\n",buf);
     else
       ;
     /* is the greeting in the correct format? */

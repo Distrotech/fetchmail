@@ -112,7 +112,10 @@ machine.  Some possible MDAs are "/usr/formail", "/usr/bin/deliver %s",
 .TP
 .B \--protocol proto
 Specify the protocol to used when communicating with the remote 
-mailserver.  
+mailserver.  If no protocol is specified,
+.I popclient
+will try each of the supported protocols in turn, terminating after
+any successful attempt.
 .I proto 
 may be one of the following:
 .RS
@@ -403,6 +406,7 @@ Legal keywords are:
 .PP
 Legal protocol identifiers are
 
+    auto (or AUTO)
     pop2 (or POP2)
     pop3 (or POP3)
     imap (or IMAP)
