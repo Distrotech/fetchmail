@@ -923,7 +923,7 @@ int num;		/* index of message */
 		if (idp->val.num == XMIT_ACCEPT)
 		    length += (strlen(idp->id) + 1);
 
-	    names = (char *)alloca(++length);
+	    names = (char *)xmalloc(++length);
 	    names[0] = '\0';
 	    for (idp = xmit_names; idp; idp = idp->next)
 		if (idp->val.num == XMIT_ACCEPT)
@@ -931,12 +931,13 @@ int num;		/* index of message */
 		    strcat(names, idp->id);
 		    strcat(names, " ");
 		}
-	    after = (char *)alloca(length);
+	    after = (char *)xmalloc(length);
 #ifdef SNPRINTF
 	    snprintf(after, length, before, names);
 #else
 	    sprintf(after, before, names);
 #endif /* SNPRINTF */
+	    free(names);
 	    free(before);
 	    before = after;
 
@@ -957,7 +958,7 @@ int num;		/* index of message */
 		    *sp = '\177';
 
 	    length += strlen(from);
-	    after = alloca(length);
+	    after = (char *)xmalloc(length);
 	    cp[1] = 's';
 #ifdef SNPRINTF
 	    snprintf(after, length, before, from);
@@ -986,6 +987,7 @@ int num;		/* index of message */
 #endif /* HAVE_SETEUID */
 
 	sinkfp = popen(before, "w");
+	free(before);
 
 #ifdef HAVE_SETEUID
 	/* this will fail quietly if we didn't start as root */
