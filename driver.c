@@ -298,7 +298,7 @@ struct query *ctl;	/* query control record */
 {
     char buf [MSGBUFSIZE+1]; 
     char *bufp, *headers, *fromhdr,*tohdr,*cchdr,*bcchdr,*received_for,*envto;
-    int n, oldlen, mboxfd;
+    int n, oldlen;
     int inheaders,lines,sizeticker;
     FILE *sinkfp;
     RETSIGTYPE (*sigchld)();
@@ -497,23 +497,26 @@ struct query *ctl;	/* query control record */
 	    /* time to address the message */
 	    if (ctl->mda[0])	/* we have a declared MDA */
 	    {
-		int	i, nlocals = 0;
-		char	**sargv, **sp;
+		int	length = 0;
+		char	*names, *cmd;
 
 		/*
 		 * We go through this in order to be able to handle very
 		 * long lists of users and (re)implement %s.
 		 */
 		for (idp = xmit_names; idp; idp = idp->next)
-		    nlocals++;
-		sp = sargv = (char **)alloca(sizeof(char **) * ctl->mda_argcount+nlocals+2);
-		for (i = 0; i < ctl->mda_argcount; i++)
-		    if (strcmp("%s", ctl->mda_argv[i]))
-			*sp++ = ctl->mda_argv[i];
-		    else
-			for (idp = xmit_names; idp; idp = idp->next)
-			    *sp++ = idp->id;
-		*sp =  (char *)NULL;
+		    length += (strlen(idp->id) + 1);
+		names = (char *)alloca(length);
+		names[0] = '\0';
+		for (idp = xmit_names; idp; idp = idp->next)
+		{
+		    strcat(names, idp->id);
+		    strcat(names, " ");
+		}
+		cmd = (char *)alloca(strlen(ctl->mda) + length);
+		sprintf(cmd, ctl->mda, names);
+		if (outlevel == O_VERBOSE)
+		    error(0, 0, "about to deliver with: %s", cmd);
 
 #ifdef HAVE_SETEUID
 		/*
@@ -525,14 +528,14 @@ struct query *ctl;	/* query control record */
 		seteuid(ctl->uid);
 #endif /* HAVE_SETEUID */
 
-		mboxfd = openmailpipe(sargv);
+		sinkfp = popen(cmd, "w");
 
 #ifdef HAVE_SETEUID
 		/* this will fail quietly if we didn't start as root */
 		seteuid(0);
 #endif /* HAVE_SETEUID */
 
-		if (mboxfd < 0)
+		if (!sinkfp)
 		{
 		    error(0, 0, "MDA open failed");
 		    return(PS_IOERR);
@@ -620,7 +623,7 @@ struct query *ctl;	/* query control record */
 
 	    /* write all the headers */
 	    if (ctl->mda[0])
-		n = write(mboxfd,headers,oldlen);
+		n = fwrite(headers, 1, oldlen, sinkfp);
 	    else if (sinkfp)
 		n = SockWrite(headers, oldlen, sinkfp);
 
@@ -631,7 +634,7 @@ struct query *ctl;	/* query control record */
 		error(0, errno, "writing RFC822 headers");
 		if (ctl->mda[0])
 		{
-		    closemailpipe(mboxfd);
+		    pclose(sinkfp);
 		    signal(SIGCHLD, sigchld);
 		}
 		return(PS_IOERR);
@@ -684,7 +687,7 @@ struct query *ctl;	/* query control record */
 		strcat(errmsg, "\n");
 
 		if (ctl->mda[0])
-		    write(mboxfd, errmsg, strlen(errmsg));
+		    fputs(errmsg, sinkfp);
 		else if (sinkfp)
 		    SockWrite(errmsg, strlen(errmsg), sinkfp);
 	    }
@@ -708,7 +711,7 @@ struct query *ctl;	/* query control record */
 
 	/* ship out the text line */
 	if (ctl->mda[0])
-	    n = write(mboxfd,bufp,strlen(bufp));
+	    n = fwrite(bufp, 1, strlen(bufp), sinkfp);
 	else if (sinkfp)
 	    n = SockWrite(bufp, strlen(bufp), sinkfp);
 
@@ -719,7 +722,7 @@ struct query *ctl;	/* query control record */
 	    error(0, errno, "writing message text");
 	    if (ctl->mda[0])
 	    {
-		closemailpipe(mboxfd);
+		pclose(sinkfp);
 		signal(SIGCHLD, sigchld);
 	    }
 	    return(PS_IOERR);
@@ -736,11 +739,14 @@ struct query *ctl;	/* query control record */
 	int rc;
 
 	/* close the delivery pipe, we'll reopen before next message */
-	rc = closemailpipe(mboxfd);
+	rc = pclose(sinkfp);
 	signal(SIGCHLD, sigchld);
 	if (rc)
+	{
+	    error(0, 0, "MDA exited abnormally or returned nonzero status");
 	    return(PS_IOERR);
-    }
+	}
+   }
     else if (sinkfp)
     {
 	/* write message terminator */

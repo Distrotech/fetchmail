@@ -78,10 +78,6 @@ struct query
     char smtphost[HOSTLEN+1];
     char mda [MDALEN+1];
 
-    /* per-user MDA arguments */
-    int mda_argcount;
-    char *mda_argv[MDA_MAXARGS];
-
     /* per-user control flags */
     int keep;
     int fetchall;
@@ -199,8 +195,6 @@ struct query *hostalloc(struct query *);
 int parsecmdline (int, char **, struct query *);
 void optmerge(struct query *, struct query *);
 char *MD5Digest (char *);
-int openmailpipe (char **);
-int closemailpipe(int);
 int daemonize(const char *, void (*)(int));
 
 int prc_parse_file(const char *);

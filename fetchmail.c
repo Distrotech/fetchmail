@@ -587,28 +587,6 @@ static int load_params(int argc, char **argv, int optind)
 			       ctl->servernames->id);
 		exit(PS_SYNTAX);
 	    }
-
-	    /* expand MDA commands */
-	    if (!check_only && ctl->mda[0])
-	    {
-		char *argp;
-
-		/* punch nulls into the delimiting whitespace in the args */
-		for (argp = ctl->mda, ctl->mda_argcount = 1; *argp != '\0'; ctl->mda_argcount++)
-		{
-		    ctl->mda_argv[ctl->mda_argcount] = argp;
-		    while (!(*argp == '\0' || isspace(*argp)))
-			argp++;
-		    if (*argp != '\0')
-			*(argp++) = '\0';  
-		}
-
-		ctl->mda_argv[ctl->mda_argcount] = (char *)NULL;
-
-		ctl->mda_argv[0] = ctl->mda_argv[1];
-		if ((argp = strrchr(ctl->mda_argv[1], '/')) != (char *)NULL)
-		    ctl->mda_argv[1] = argp + 1 ;
-	    }
 	}
     }
 
@@ -782,18 +760,9 @@ void dump_params (struct query *ctl)
     else if (outlevel == O_VERBOSE)
 	printf("  No message size limit\n");
     if (ctl->mda[0])
-    {
-	char **cp;
-
-	printf("  Messages will be delivered with %s, args:",
-	       visbuf(ctl->mda_argv[0]));
-	for (cp = ctl->mda_argv+1; *cp; cp++)
-	    printf(" %s", visbuf(*cp));
-	putchar('\n');
-    }
+	printf("  Messages will be delivered with '%s.'\n", visbuf(ctl->mda));
     else
-	printf("  Messages will be SMTP-forwarded to '%s'.\n",
-	       visbuf(ctl->smtphost));
+	printf("  Messages will be SMTP-forwarded to '%s'.\n", visbuf(ctl->smtphost));
     if (!ctl->localnames)
 	printf("  No localnames declared for this host.\n");
     else
@@ -838,81 +807,6 @@ void dump_params (struct query *ctl)
 		for (idp = ctl->oldsaved; idp; idp = idp->next)
 		    fprintf(stderr, "\t%s\n", idp->id);
 	}
-}
-
-int openmailpipe (char **argv)
-/* open a one-way pipe to a mail delivery agent */
-{
-    int pipefd [2];
-    int childpid;
-
-    if (outlevel == O_VERBOSE)
-    {
-	char **cp;
-
-	printf("fetchmail: about to deliver via MDA %s, args:",
-	       visbuf(argv[0]));
-	for (cp = argv+1; *cp; cp++)
-	    printf(" %s", visbuf(*cp));
-	putchar('\n');
-    }
-
-    if (pipe(pipefd) < 0) {
-	error(0, errno, "openmailpipe: pipe");
-	return(-1);
-    }
-    if ((childpid = fork()) < 0) {
-	error(0, errno, "openmailpipe: fork");
-	return(-1);
-    }
-    else if (childpid == 0) {
-
-	/* in child process space */
-	close(pipefd[1]);  /* close the 'write' end of the pipe */
-	close(0);          /* get rid of inherited stdin */
-	if (dup(pipefd[0]) != 0) {
-	    error(0, errno, "openmailpipe: dup");
-	    _exit(1);
-	}
-
-	execv(argv[0], argv + 1);
-
-	/* if we got here, an error occurred */
-	error(0, errno, "openmailpipe: exec");
-	_exit(PS_SYNTAX);
-
-    }
-
-    /* in the parent process space */
-    close(pipefd[0]);  /* close the 'read' end of the pipe */
-    return(pipefd[1]);
-}
-
-int closemailpipe (fd)
-/* close the pipe to the mail delivery agent */
-int fd;
-{
-    int err, status;
-    int childpid;
-
-    if ((err = close(fd)) != 0)
-	error(0, errno, "closemailpipe: close");
-
-    childpid = wait(&status);
-
-#if defined(WIFEXITED) && defined(WEXITSTATUS)
-    /*
-     * Try to pass up an error if the MDA returned nonzero status,
-     * on the assumption that this means it was reporting failure.
-     */
-    if (WIFEXITED(status) == 0 || WEXITSTATUS(status) != 0)
-    {
-	error(0, errno, "MDA exited abnormally or returned nonzero status");
-	err = -1;
-    }
-#endif
-
-    return(err);
 }
 
 /* helper functions for string interpretation and display */
