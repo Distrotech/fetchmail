@@ -1,6 +1,6 @@
 				Release Notes:
 
-fetchmail-4.7.3 ():
+fetchmail-4.7.3 (Thu Dec 31 11:54:01 EST 1998):
 * Added new FAQ item G11 and added material to R1.
 * Do a full antispam check on the EOM response in case the local MTA does
   content analysis of the message body.
