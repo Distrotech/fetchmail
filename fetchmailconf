@@ -1117,34 +1117,9 @@ switch --enable-POP2.
 
 """
 
-# The greeting line on the server known to be buggy is:
-# +OK POP3 server ready (running FTGate V2, 2, 1, 0 Jun 21 1999 09:55:01)
-#
-            if string.find(greetline, "FTGate") > 0:
-                warnings = warnings + """
-This POP server has a weird bug; it says OK twice in response to TOP.
-Its response to RETR is normal, so use the `fetchall' option.
+### POP3 servers start here
 
-"""
-
-            if string.find(greetline, "POP-Max") > 0:
-                warnings = warnings + """
-The Mail Max POP3 server screws up on mail with attachments.  It reports
-the message size with attachments included, but doesn't download them on a
-RETR or TOP (this violates the IMAP RFCs).  You should get rid of it --
-and the brain-dead NT server it rode in on. 
-
-"""
-
-            if string.find(greetline, "InterChange") > 0:
-                warnings = warnings + """
-The InterChange IMAP server screws up on mail with attachments.  It reports
-the message size with attachments included, but doesn't download them on a
-RETR or TOP (this violates the IMAP RFCs).  You should get rid of it. 
-
-"""
-
-            if string.find(greetline, "1.003") > 0 or string.find(greetline, "1.004") > 0:
+	    if string.find(greetline, "1.003") > 0 or string.find(greetline, "1.004") > 0:
                 warnings = warnings + """
 This appears to be an old version of the UC Davis POP server.  These are
 dangerously unreliable (among other problems, they may drop your mailbox
@@ -1154,60 +1129,6 @@ It is strongly recommended that you find a better POP3 server.  The fetchmail
 FAQ includes pointers to good ones.
 
 """
-            if string.find(greetline, "usa.net") > 0:
-                warnings = warnings + """
-You appear to be using USA.NET's free mail service.  Their POP3 servers
-(at least as of the 2.2 version in use mid-1998) are quite flaky, but
-fetchmail can compensate.  They seem to require that fetchall be switched on
-(otherwise you won't necessarily see all your mail, not even new mail).
-They also botch the TOP command the fetchmail normally uses for retrieval
-(it only retrieves about 10 lines rather than the number specified).
-Turning on fetchall will disable the use of TOP.
-
-Therefore, it is strongly recommended that you turn on `fetchall' on all
-user entries associated with this server.  
-
-"""
-            if string.find(greetline, "OpenMail") > 0:
-                warnings = warnings + """
-You appear to be using some version of HP OpenMail.  Many versions of
-OpenMail do not process the "TOP" command correctly; the symptom is that
-only the header and first line of each message is retrieved.  To work
-around this bug, turn on `fetchall' on all user entries associated with
-this server.  
-
-"""
-            if string.find(greetline, "TEMS POP3") > 0:
-                warnings = warnings + """
-Your POP3 server has "TEMS" in its header line.  At least one such
-server does not process the "TOP" command correctly; the symptom is
-that fetchmail hangs when trying to retrieve mail.  To work around
-this bug, turn on `fetchall' on all user entries associated with this
-server.
-
-"""
-            if string.find(greetline, "GroupWise") > 0:
-                warnings = warnings + """
-The Novell GroupWise IMAP server would be better named GroupFoolish;
-it is (according to the designer of IMAP) unusably broken.  Among
-other things, it doesn't include a required content length in its
-BODY[TEXT] response.<p>
-
-Fetchmail works around this problem, but we strongly recommend voting
-with your dollars for a server that isn't brain-dead.  If you stick
-with code as shoddy as GroupWise seems to be, you will probably pay
-for it with other problems.<p>
-
-"""
-            if string.find(greetline, "sprynet.com") > 0:
-                warnings = warnings + """
-You appear to be using a SpryNet server.  In mid-1999 it was reported that
-the SpryNet TOP command marks messages seen.  Therefore, for proper error
-recovery in the event of a line drop, it is strongly recommended that you
-turn on `fetchall' on all user entries associated with this server.  
-
-"""
-
 # Steve VanDevender <stevev@efn.org> writes:
 # The only system I have seen this happen with is cucipop-1.31
 # under SunOS 4.1.4.  cucipop-1.31 runs fine on at least Solaris
@@ -1226,7 +1147,7 @@ turn on `fetchall' on all user entries associated with this server.
 # 
 # +OK Cubic Circle's v1.31 1998/05/13 POP3 ready <6229000062f95036@wakko>
 #
-            if string.find(greetline, "Cubic Circle") > 0:
+	    if string.find(greetline, "Cubic Circle") > 0:
                 warnings = warnings + """
 I see your server is running cucipop.  Better make sure the server box
 isn't a SunOS 4.1.4 machine; cucipop tickles a bug in SunOS realloc()
@@ -1234,7 +1155,39 @@ under that version, and doesn't cope with the result gracefully.  Newer
 SunOS and Solaris machines run cucipop OK.
 
 """
-            if string.find(greetline, "QPOP") > 0:
+# The greeting line on the server known to be buggy is:
+# +OK POP3 server ready (running FTGate V2, 2, 1, 0 Jun 21 1999 09:55:01)
+#
+	    if string.find(greetline, "FTGate") > 0:
+                warnings = warnings + """
+This POP server has a weird bug; it says OK twice in response to TOP.
+Its response to RETR is normal, so use the `fetchall' option.
+
+"""
+            if string.find(greetline, "OpenMail") > 0:
+                warnings = warnings + """
+You appear to be using some version of HP OpenMail.  Many versions of
+OpenMail do not process the "TOP" command correctly; the symptom is that
+only the header and first line of each message is retrieved.  To work
+around this bug, turn on `fetchall' on all user entries associated with
+this server.  
+
+"""
+	    if string.find(greetline, "POP-Max") > 0:
+                warnings = warnings + """
+The Mail Max POP3 server screws up on mail with attachments.  It reports
+the message size with attachments included, but doesn't download them on a
+RETR or TOP (this violates the IMAP RFCs).  You should get rid of it --
+and the brain-dead NT server it rode in on. 
+
+"""
+            if string.find(greetline, "POP3 Server Ready") > 0:
+                warnings = warnings + """
+Some server that uses this greeting line has been observed to choke on
+TOP %d 99999999.  Use the fetchall option. if necessary, to force RETR.
+
+"""
+	    if string.find(greetline, "QPOP") > 0:
                 warnings = warnings + """
 This appears to be a version of Eudora qpopper.  That's good.  Fetchmail
 knows all about qpopper.  However, be aware that the 2.53 version of
@@ -1242,6 +1195,67 @@ qpopper does something odd that causes fetchmail to hang with a socket
 error on very large messages.  This is probably not a fetchmail bug, as
 it has been observed with fetchpop.  The fix is to upgrade to qpopper
 3.0beta or a more recent version.  Better yet, switch to IMAP.
+
+"""
+            if string.find(greetline, "sprynet.com") > 0:
+                warnings = warnings + """
+You appear to be using a SpryNet server.  In mid-1999 it was reported that
+the SpryNet TOP command marks messages seen.  Therefore, for proper error
+recovery in the event of a line drop, it is strongly recommended that you
+turn on `fetchall' on all user entries associated with this server.  
+
+"""
+            if string.find(greetline, "TEMS POP3") > 0:
+                warnings = warnings + """
+Your POP3 server has "TEMS" in its header line.  At least one such
+server does not process the "TOP" command correctly; the symptom is
+that fetchmail hangs when trying to retrieve mail.  To work around
+this bug, turn on `fetchall' on all user entries associated with this
+server.
+
+"""
+            if string.find(greetline, "usa.net") > 0:
+                warnings = warnings + """
+You appear to be using USA.NET's free mail service.  Their POP3 servers
+(at least as of the 2.2 version in use mid-1998) are quite flaky, but
+fetchmail can compensate.  They seem to require that fetchall be switched on
+(otherwise you won't necessarily see all your mail, not even new mail).
+They also botch the TOP command the fetchmail normally uses for retrieval
+(it only retrieves about 10 lines rather than the number specified).
+Turning on fetchall will disable the use of TOP.
+
+Therefore, it is strongly recommended that you turn on `fetchall' on all
+user entries associated with this server.  
+
+"""
+
+### IMAP servers start here
+
+            if string.find(greetline, "GroupWise") > 0:
+                warnings = warnings + """
+The Novell GroupWise IMAP server would be better named GroupFoolish;
+it is (according to the designer of IMAP) unusably broken.  Among
+other things, it doesn't include a required content length in its
+BODY[TEXT] response.<p>
+
+Fetchmail works around this problem, but we strongly recommend voting
+with your dollars for a server that isn't brain-dead.  If you stick
+with code as shoddy as GroupWise seems to be, you will probably pay
+for it with other problems.<p>
+
+"""
+            if string.find(greetline, "Netscape IMAP4rev1 Service 3.6") > 0:
+                warnings = warnings + """
+This server violates the RFC2060 requirement that a BODY[TEXT] fetch should
+set the messages's Seen flag.  As a result, if you use the keep option the
+same messages will be downloaded over and over.
+
+"""
+            if string.find(greetline, "InterChange") > 0:
+                warnings = warnings + """
+The InterChange IMAP server screws up on mail with attachments.  It reports
+the message size with attachments included, but doesn't download them on a
+RETR or TOP (this violates the IMAP RFCs).  You should get rid of it. 
 
 """
             if string.find(greetline, "Imail") > 0:
@@ -1252,6 +1266,9 @@ attachments; the effect is to drop the attachments on the floor.  We
 recommend you upgrade to a non-broken IMAP server.
 
 """
+
+### Checks for protocol variants start here
+
             closebrak = string.find(greetline, ">")
             if  closebrak > 0 and greetline[closebrak+1] == "\r":
                 warnings = warnings + """
@@ -1274,21 +1291,6 @@ To fix this bug, upgrade to an IMAP4 server.  The fetchmail FAQ includes
 a pointer to an open-source implementation.
 
 """
-            if string.find(greetline, "POP3 Server Ready") > 0:
-                warnings = warnings + """
-Some server that uses this greeting line has been observed to choke on
-TOP %d 99999999.  Use the fetchall option. if necessary, to force RETR.
-
-"""
-
-            if string.find(greetline, "Netscape IMAP4rev1 Service 3.6") > 0:
-                warnings = warnings + """
-This server violates the RFC2060 requirement that a BODY[TEXT] fetch should
-set the messages's Seen flag.  As a result, if you use the keep option the
-same messages will be downloaded over and over.
-
-"""
-                
             if string.find(greetline, "IMAP4rev1") > 0:
                 warnings = warnings + """
 I see an IMAP4rev1 server.  Excellent.  This is (a) the best kind of
