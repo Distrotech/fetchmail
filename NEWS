@@ -2,9 +2,14 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.5.3 (Tue Sep 26 17:56:32 EDT 2000), 19278 lines:
+
 * Added skip size reporting as suggested by Franck Pommereau.
 * Don't terminate on failed DNS lookup of host, go to next entry.
-* Danish localizationb support, courtesy of Byrial Jensen.
+* Danish localization support, courtesy of Byrial Jensen.
+* Fix reference to freed message header block (thanks to Andrew Morton)
+
+There are 280 people on fetchmail-friends and 557 on fetchmail-announce.
 
 fetchmail-5.5.2 (Thu Sep  7 23:00:24 EDT 2000), 19243 lines:
 
