@@ -17,6 +17,7 @@ fetchmail-4.1.0 ()
 * Clean up the Interactive UNIX System V/386 Release 3.2 port.
 * Enable parser to detect and complain about the most common syntax error.
 * More warnings about things that can go wrong with multidrop.
+* Dave Bodenstab's fix for flaky phone lines.
 
 There are 262 people on the fetchmail-friends list.
 

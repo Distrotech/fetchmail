@@ -1133,7 +1133,14 @@ flag delimited;		/* does the protocol use a message delimiter? */
     while (delimited || len > 0)
     {
 	if ((linelen = SockRead(sock, buf, sizeof(buf)-1)) == -1)
+	{
+	    if (ctl->mda)
+	    {
+		pclose(sinkfp);
+		signal(SIGCHLD, sigchld);
+	    }
 	    return(PS_SOCKET);
+	}
 	set_timeout(ctl->server.timeout);
 
 	/* write the message size dots */
