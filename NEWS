@@ -38,7 +38,7 @@ features --
 * Treat unexpected EOF as a protocol error.
 
 * DNS errors no longer abort an entire poll.  Instead they just cause 
-  forwarding and deletion of the current message.  
+  forwarding and deletion of the current message to be suppressed.  
 
 * -v output now includes the version/pl numbers (help for harried maintainer!).
 
