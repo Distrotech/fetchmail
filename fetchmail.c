@@ -568,6 +568,7 @@ static int load_params(int argc, char **argv, int optind)
     save_str(&def_opts.smtphunt, FALSE, fetchmailhost);
     save_str(&def_opts.smtphunt, FALSE, "localhost");
     def_opts.expunge = 1;
+    def_opts.server.envskip = 0;
 
     /* this builds the host list */
     if (prc_parse_file(rcfile, !versioninfo) != 0)
@@ -1044,8 +1045,13 @@ void dump_params (struct query *ctl)
 	    if (ctl->server.envelope == STRING_DISABLED)
 		printf("  Envelope-address routing is disabled\n");
 	    else
+	    {
 		printf("  Envelope header is assumed to be: %s\n",
 		       ctl->server.envelope ? ctl->server.envelope:"Received");
+		if (ctl->server.envskip > 1 || outlevel >= O_VERBOSE)
+		    printf("  Number of envelope header to be parsed: %d\n",
+			   ctl->server.envskip);
+	    }
 
 	    if (ctl->server.akalist)
 	    {

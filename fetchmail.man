@@ -899,6 +899,13 @@ T}
 .TE
 .PP
 Remember that all user options must \fIfollow\fR all server options.
+.PP
+In the .fetchmailrc file, the `envelope' string argument may be
+preceded by a whitespace-separated number.  This number, if specified,
+is the number of such headers to skip (that is, an argument of 1
+selects the second header of the given type).  This is sometime useful
+for ignoring bogus Received headers created by an ISP's local delivery
+agent.
 .SS Keywords Not Corresponding To Option Switches
 .PP
 The `folder' and `smtphost' options (unlike their command-line

@@ -90,6 +90,7 @@ struct hostdata		/* shared among all user connections to given server */
     int preauthenticate;		/* preauthentication mode to try */
     int timeout;			/* inactivity timout in seconds */
     char *envelope;			/* envelope address list header */
+    int envskip;			/* skip to numbered envelope header */
     char *qvirtual;			/* prefix removed from local user id */
     flag skip;				/* suppress poll in implicit mode? */
     flag dns;				/* do DNS lookup on multidrop? */

@@ -543,7 +543,7 @@ int num;		/* index of message */
     char buf[MSGBUFSIZE+1], return_path[MSGBUFSIZE+1]; 
     int	from_offs, ctt_offs, env_offs, next_address;
     char *headers, *received_for, *desthost, *rcv;
-    int n, linelen, oldlen, ch, remaining;
+    int n, linelen, oldlen, ch, remaining, skipcount;
     char		*cp;
     struct idlist 	*idp, *xmit_names;
     flag			good_addresses, bad_addresses, has_nuls;
@@ -562,6 +562,7 @@ int num;		/* index of message */
     from_offs = ctt_offs = env_offs = -1;
     oldlen = 0;
     msglen = 0;
+    skipcount = 0;
 
     for (remaining = fetchlen; remaining > 0 || protocol->delimited; remaining -= linelen)
     {
@@ -778,11 +779,17 @@ int num;		/* index of message */
 		if (env_offs == -1 && !strncasecmp(ctl->server.envelope,
 						line,
 						strlen(ctl->server.envelope)))
+		    if (skipcount++ != ctl->server.envskip)
+			continue;
 		    env_offs = (line - headers);
 	    }
 #ifdef HAVE_RES_SEARCH
 	    else if (!received_for && !strncasecmp("Received:", line, 9))
+	    {
+		if (skipcount++ != ctl->server.envskip)
+		    continue;
 		received_for = parse_received(ctl, line);
+	    }
 #endif /* HAVE_RES_SEARCH */
 	}
     }

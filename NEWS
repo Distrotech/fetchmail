@@ -18,11 +18,12 @@ fetchmail-4.3.1 ()
 * Code for parsing Received headers now strips out RFC822 routes.
 * Fixed processing of -S/-r arguments so giving a comma-separated list works. 
 * Don't query for the fetchmail host machine by default in ETRN mode.
+* Added skip prefix clause on `envelope' option
 * Added --invisible option.  Note: you can now either make fetchmail generate
   a Received header (the default) *or* spoof your listener into thinking
   fetchmail connected from the mailserver machine, *but not both*.
 
-There are 271 people on fetchmail-friends and 37 on fetchmail-announce.
+There are 270 people on fetchmail-friends and 37 on fetchmail-announce.
 
 ------------------------------------------------------------------------------
 fetchmail-4.3.0 (Mon Oct  6 16:44:38 EDT 1997)

@@ -133,7 +133,20 @@ serv_option	: AKA alias_list
 		| AUTHENTICATE PASSWORD	{current.server.preauthenticate = A_PASSWORD;}
 		| AUTHENTICATE KERBEROS4	{current.server.preauthenticate = A_KERBEROS_V4;}
 		| TIMEOUT NUMBER	{current.server.timeout = $2;}
-		| ENVELOPE STRING	{current.server.envelope = xstrdup($2);}
+
+		| ENVELOPE NUMBER STRING 
+					{
+					    current.server.envelope = 
+						xstrdup($3);
+					    current.server.envskip = $2;
+					}
+		| ENVELOPE STRING
+					{
+					    current.server.envelope = 
+						xstrdup($2);
+					    current.server.envskip = 0;
+					}
+
 		| QVIRTUAL STRING	{current.server.qvirtual = xstrdup($2);}
 		| INTERFACE STRING	{
 #ifdef linux
@@ -401,6 +414,7 @@ static void record_current(void)
     FLAG_FORCE(server.preauthenticate);
     FLAG_FORCE(server.timeout);
     FLAG_FORCE(server.envelope);
+    FLAG_FORCE(server.envskip);
     FLAG_FORCE(server.qvirtual);
     FLAG_FORCE(server.skip);
     FLAG_FORCE(server.dns);
@@ -458,6 +472,7 @@ void optmerge(struct query *h2, struct query *h1)
     FLAG_MERGE(server.preauthenticate);
     FLAG_MERGE(server.timeout);
     FLAG_MERGE(server.envelope);
+    FLAG_MERGE(server.envskip);
     FLAG_MERGE(server.qvirtual);
     FLAG_MERGE(server.skip);
     FLAG_MERGE(server.dns);
