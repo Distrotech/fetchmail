@@ -185,8 +185,8 @@ static int imap_is_old(int sock, struct query *ctl, int number)
     return(seen);
 }
 
-static int imap_fetch_headers(int sock, struct query *ctl, int number, int *lenp)
-/* request nth message */
+static int imap_fetch_headers(int sock, struct query *ctl,int number,int *lenp)
+/* request headers of nth message */
 {
     char buf [POPBUFSIZE+1];
     int	num;
@@ -196,7 +196,7 @@ static int imap_fetch_headers(int sock, struct query *ctl, int number, int *lenp
 
     /*
      * This is blessed by RFC 1176, RFC1730, RFC2060.
-     * it should *not* set the \Seen flag.
+     * According to the RFCs, it should *not* set the \Seen flag.
      */
     gen_send(sock, "FETCH %d RFC822.HEADER", number);
 
@@ -216,7 +216,7 @@ static int imap_fetch_headers(int sock, struct query *ctl, int number, int *lenp
 }
 
 static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
-/* request headers of nth message */
+/* request body of nth message */
 {
     char buf [POPBUFSIZE+1];
     int	num;
