@@ -68,6 +68,7 @@ struct query
     int port;
     int authenticate;
     int timeout;
+    char *envelope;
     int skip;
 
     /* per-user data */

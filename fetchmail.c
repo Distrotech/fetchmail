@@ -565,6 +565,10 @@ static int load_params(int argc, char **argv, int optind)
 	    ctl->lead_server = ctl;
 	no_new_server:;
 
+	    /* plug in the semi-standard way of indicating a mail address */
+	    if (ctl->envelope == (char *)NULL)
+		ctl->envelope = "X-Envelope-To:";
+
 	    /* sanity checks */
 	    if (ctl->port < 0)
 	    {
@@ -605,7 +609,7 @@ static int load_params(int argc, char **argv, int optind)
 	initialize_saved_lists(querylist, idfile);
 
     /* if cmd_batchlimit was explicitly set, use it to override batchlimit */
-    if (cmd_batchlimit > -1)
+   if (cmd_batchlimit > -1)
 	batchlimit = cmd_batchlimit;
 
     /* if cmd_logfile was explicitly set, use it to override logfile */
@@ -787,12 +791,15 @@ void dump_params (struct query *ctl)
 	{
 	    for (idp = ctl->localnames; idp; idp = idp->next)
 		if (idp->val.id2)
-		    fprintf(stderr, "\t%s -> %s\n", idp->id, idp->val.id2);
+		    printf("\t%s -> %s\n", idp->id, idp->val.id2);
 		else
-		    fprintf(stderr, "\t%s\n", idp->id);
+		    printf("\t%s\n", idp->id);
 	    if (ctl->wildcard)
-		fputs("*\n", stderr);
+		fputs("*\n", stdout);
 	}
+
+	if (count > 1)
+	    printf("  Envelope header is assumed to be: %s\n", ctl->envelope);
     }
 
     if (ctl->protocol > P_POP2)

@@ -32,6 +32,7 @@ port		{ return PORT; }
 auth(enticate)?	{ return AUTHENTICATE; }
 kerberos	{ return KERBEROS; }
 timeout		{ return TIMEOUT;}
+envelope	{ return ENVELOPE; }
 
 user(name)?	{ return USERNAME; }
 pass(word)?	{ return PASSWORD; }

@@ -441,6 +441,7 @@ Legal server options are:
     port
     authenticate (or auth)
     timeout
+    envelope
     aka
 
 Legal user options are
@@ -462,7 +463,7 @@ Legal user options are
     norewrite
 .PP
 All options correspond to the obvious command-line arguments except
-four: `aka', `is', `to', and `password'.
+four: `aka', `is', `to', `password', and `envelope'.
 .PP
 The `aka' option is for use with multidrop mailboxes.  It allows you
 to pre-declare a list of DNS aliases for a server.  This is an
@@ -471,6 +472,12 @@ optimization hack that allows you to trade space for speed.  When
 while processing a multidrop mailbox, grovels through message headers
 looking for names of the mailserver, pre-declaring common ones can
 save it from having to do DNS lookups.
+.PP
+The `envelope' option changes the header 
+.I fetchmail
+assumes will carry a copy of the mail's envelope address.  Normally
+this is `X-Envelope-To' but as this header is not standard practice
+varies. See the discussion of multidrop address handling below.
 .PP
 The `is' or `to' keywords associate the following local (client)
 name(s) (or server-name to client-name mappings separated by =) with
@@ -690,6 +697,11 @@ and the item of mail had just one recipient, the MTA will have written
 a `for' clause that gives the envelope addressee into its Received
 header. But this doesn't work for other MTAs, nor if there is more
 than one recipient.
+.PP
+Alternatively, some SMTP listeners and/or mail servers insert a header
+in each message containing a copy of the envelope addresses.  This
+header (when it exists) is often `X-Envelope-To'.  Fetchmail's
+assumption about this can be changed with the `envelope' option.
 .SH EXIT CODES
 To facilitate the use of 
 .I fetchmail

@@ -382,7 +382,7 @@ struct query *ctl;	/* query control record */
 		tohdr = bufp;
 	    else if (!strncasecmp("Apparently-To:", bufp, 14))
 		envto = bufp;
-	    else if (!strncasecmp("X-Envelope-To:", bufp, 14))
+	    else if (!strncasecmp(ctl->envelope, bufp, 14))
 		envto = bufp;
 	    else if (!strncasecmp("Cc:", bufp, 3))
 		cchdr = bufp;

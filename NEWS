@@ -1,13 +1,18 @@
 			Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-2.2 (Fri Dec  6 18:45:42 EST 1996):
+fetchmail-2.2 (Sun Dec  8 23:17:01 EST 1996):
 
 features --
 
 * If SMTP returns 571 (unsolicited mail refused) to a MAIL FROM, the
   address is excluded by the local sendmail's spam filter.  Drop the mail.
   (This is the only circumstance in which mail is thrown away.)
+
+* The header your mailserver uses to convey envelope addresses is no longer
+  wired to `X-Envelope-Header'.  You can now specify it with the `envelope'
+  option in .fetchmailrc.  (This header is not RFC822 standard, and we have a
+  report of and ISP using X-Frontier-To).
 
 bugs --
 

@@ -42,7 +42,7 @@ static void prc_reset();
 }
 
 %token DEFAULTS POLL SKIP AKA PROTOCOL AUTHENTICATE TIMEOUT KPOP KERBEROS
-%token USERNAME PASSWORD FOLDER SMTPHOST MDA LIMIT
+%token ENVELOPE USERNAME PASSWORD FOLDER SMTPHOST MDA LIMIT
 %token IS HERE THERE TO MAP WILDCARD
 %token SET BATCHLIMIT LOGFILE
 %token <proto> PROTO
@@ -107,6 +107,7 @@ serv_option	: AKA alias_list
 		| AUTHENTICATE PASSWORD	{current.authenticate = A_PASSWORD;}
 		| AUTHENTICATE KERBEROS	{current.authenticate = A_KERBEROS;}
 		| TIMEOUT NUMBER	{current.timeout = $2;}
+		| ENVELOPE STRING	{current.envelope = xstrdup($2);}
 		;
 
 /*
