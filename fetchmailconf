@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.29"
+version = "1.30"
 
 from Tkinter import *
 from Dialog import *
@@ -1747,7 +1747,10 @@ def copy_instance(toclass, fromdict):
 # The `optional' fields are the ones we can ignore for purposes of
 # conformability checking; they'll still get copied if they are
 # present in the dictionary.
-    optional = ('interface', 'monitor', 'netsec', 'ssl', 'sslkey', 'sslcert')
+    optional = ('interface', 'monitor',
+                'netsec',
+                'ssl', 'sslkey', 'sslcert',
+                'showdots')
     class_sig = setdiff(toclass.__dict__.keys(), optional)
     class_sig.sort()
     dict_keys = setdiff(fromdict.keys(), optional)

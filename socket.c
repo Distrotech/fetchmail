@@ -650,14 +650,26 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx )
 				*str_ptr = '\0';
 			}
 			if (outlevel == O_VERBOSE)
-				report(stdout, _("Server CommonName: %s\n"), cbuf );
-			/* Should we have some wildcarding here? */
-			if ( NULL != _ssl_server_cname
-			     && 0 != strcasecmp( cbuf, _ssl_server_cname ) ) {
-				report(stdout,
-				       _("Server CommonName mismatch: %s != %s\n"),
-				       cbuf, _ssl_server_cname );
-			}
+				report(stdout, _("Server CommonName: %s\n"), cbuf);
+
+                       if (_ssl_server_cname != NULL) 
+		       {
+                               char *p1 = cbuf;
+                               char *p2 = _ssl_server_cname;
+                               int n;
+
+                               if (*p1 == '*') 
+			       {
+                                       ++p1;
+                                       n = strlen(p2) - strlen(p1);
+                                       if (n >= 0)
+                                               p2 += n;
+                               }
+                               if ( 0 != strcasecmp( p1, p2 ) )
+                                       report(stdout,
+                                              "Server CommonName mismatch: %s != %s\n",
+                                              cbuf, _ssl_server_cname );
+		       }
 		} else {
 			if (outlevel == O_VERBOSE)
 				report(stdout, _("Unknown Server CommonName\n"), cbuf );

@@ -78,6 +78,8 @@
 #define LA_SSLCERT	52
 #endif
 
+#define LA_SHOWDOTS	53
+
 /* options still left: CDgGhHjJoORwWxXYz */
 static const char *shortoptions = 
 	"?Vcsvd:NqL:f:i:p:UP:A:t:E:Q:u:akKFnl:r:S:Z:b:B:e:m:T:I:M:yw:";
@@ -94,6 +96,7 @@ static const struct option longoptions[] = {
   {"quit",	no_argument,	   (int *) 0, LA_QUIT        },
   {"logfile",	required_argument, (int *) 0, LA_LOGFILE     },
   {"invisible",	no_argument,	   (int *) 0, LA_INVISIBLE   },
+  {"showdots",	no_argument,	   (int *) 0, LA_SHOWDOTS    },
   {"syslog",	no_argument,	   (int *) 0, LA_SYSLOG      },
   {"nosyslog",	no_argument,	   (int *) 0, LA_NOSYSLOG    },
   {"fetchmailrc",required_argument,(int *) 0, LA_RCFILE      },
@@ -298,6 +301,9 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case LA_INVISIBLE:
 	    rctl->invisible = TRUE;
+	    break;
+	case LA_SHOWDOTS:
+	    rctl->showdots = TRUE;
 	    break;
 	case 'f':
 	case LA_RCFILE:
@@ -647,6 +653,7 @@ struct query *ctl;	/* option record to be initialized */
         P(_("      --bsmtp       set output BSMTP file\n"));
         P(_("      --lmtp        use LMTP (RFC2033) for delivery\n"));
 	P(_("  -r, --folder      specify remote folder name\n"));
+	P(_("      --showdots    show progress dots even in logfiles\n"));
 #undef P
 
 	if (helpflag)

@@ -1153,61 +1153,64 @@ static int load_params(int argc, char **argv, int optind)
 		ctl->server.truename = xstrdup(leadname);
 	    }
 #ifdef HAVE_GETHOSTBYNAME
-	    else if (!configdump && (ctl->server.preauthenticate==A_KERBEROS_V4 ||
-		ctl->server.preauthenticate==A_KERBEROS_V5 ||
-		      (ctl->server.dns && MULTIDROP(ctl))))
+	    else if (!configdump)
 	    {
-		struct hostent	*namerec;
-
-		/* compute the canonical name of the host */
-		errno = 0;
-		namerec = gethostbyname(ctl->server.queryname);
-		if (namerec == (struct hostent *)NULL)
+		if (ctl->server.preauthenticate==A_KERBEROS_V4 ||
+		      ctl->server.preauthenticate==A_KERBEROS_V5 ||
+		    (ctl->server.dns && MULTIDROP(ctl)))
 		{
-		    report(stderr,
-			  _("couldn't find canonical DNS name of %s\n"),
-			  ctl->server.pollname);
-		    ctl->server.truename = xstrdup(ctl->server.queryname);
-		    ctl->server.trueaddr = NULL;
+		    struct hostent	*namerec;
+
+		    /* compute the canonical name of the host */
+		    errno = 0;
+		    namerec = gethostbyname(ctl->server.queryname);
+		    if (namerec == (struct hostent *)NULL)
+		    {
+			report(stderr,
+			       _("couldn't find canonical DNS name of %s\n"),
+			       ctl->server.pollname);
+			ctl->server.truename = xstrdup(ctl->server.queryname);
+			ctl->server.trueaddr = NULL;
+		    }
+		    else
+			ctl->server.truename=xstrdup((char *)namerec->h_name);
 		}
-		else
-		    ctl->server.truename=xstrdup((char *)namerec->h_name);
-	    }
 #endif /* HAVE_GETHOSTBYNAME */
-	    else {
+		else {
 #ifdef HAVE_GETHOSTBYNAME
-	      struct hostent	*namerec;
+		    struct hostent	*namerec;
+		    
+		    /* <fetchmail@mail.julianhaight.com>
+		       Get the host's IP, so we can report it like this:
 
-	      /* <fetchmail@mail.julianhaight.com>
-		 Get the host's IP, so we can report it like this:
+		       Received: from hostname [10.0.0.1]
 
-		 Received: from hostname [10.0.0.1]
-
-		 do we actually need to gethostbyname to find the IP?
-		 it seems like it would be faster to do this later, when
-		 we are actually resolving the hostname for a connection,
-		 but I ain't that smart, so I don't know where to make
-		 the change later..
-	      */
-	      errno = 0;
-	      namerec = gethostbyname(ctl->server.queryname);
-	      if (namerec == (struct hostent *)NULL)
-		{
-		  report(stderr,
-			 _("couldn't find canonical DNS name of %s\n"),
-			 ctl->server.pollname);
-		  exit(PS_DNS);
-		}
-	      else {
-		ctl->server.truename=xstrdup((char *)namerec->h_name);
-		ctl->server.trueaddr=xmalloc(namerec->h_length);
-		memcpy(ctl->server.trueaddr, 
-		       namerec->h_addr_list[0],
-		       namerec->h_length);
-	      }
+		       do we actually need to gethostbyname to find the IP?
+		       it seems like it would be faster to do this later, when
+		       we are actually resolving the hostname for a connection,
+		       but I ain't that smart, so I don't know where to make
+		       the change later..
+		    */
+		    errno = 0;
+		    namerec = gethostbyname(ctl->server.queryname);
+		    if (namerec == (struct hostent *)NULL)
+		    {
+			report(stderr,
+			       _("couldn't find canonical DNS name of %s\n"),
+			       ctl->server.pollname);
+			exit(PS_DNS);
+		    }
+		    else {
+			ctl->server.truename=xstrdup((char *)namerec->h_name);
+			ctl->server.trueaddr=xmalloc(namerec->h_length);
+			memcpy(ctl->server.trueaddr, 
+			       namerec->h_addr_list[0],
+			       namerec->h_length);
+		    }
 #else
-	      ctl->server.truename = xstrdup(ctl->server.queryname);
+		    ctl->server.truename = xstrdup(ctl->server.queryname);
 #endif /* HAVE_GETHOSTBYNAME */
+		}
 	    }
 
 	    /* if no folders were specified, set up the null one as default */
@@ -1479,6 +1482,8 @@ static void dump_params (struct runctl *runp,
 #endif
     if (runp->invisible)
 	printf(_("Fetchmail will masquerade and will not generate Received\n"));
+    if (runp->showdots)
+	printf(_("Fetchmail will show progress dots even in logfiles\n"));
     if (runp->postmaster)
 	printf(_("Fetchmail will forward misaddressed multidrop messages to %s.\n"),
 	       runp->postmaster);

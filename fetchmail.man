@@ -242,7 +242,7 @@ to use socks, SSL, ssh, or need some special firewalling setup.  The
 program will be looked up in $PATH and can optionally be passed the
 hostname and port as arguments using "%h" and "%p" respectively (note
 that the interpolation logic is rather promitive, and these token must
-be bounded by whitespace or beginning of string or end of stribg).
+be bounded by whitespace or beginning of string or end of string).
 Fetchmail will write to the plugin's stdin and read from the plugin's
 stdout.
 .TP
@@ -899,6 +899,13 @@ the machine fetchmail itself is running on.  If the invisible option
 is on, the Received header is suppressed and fetchmail tries to spoof
 the MTA it forwards to into thinking it came directly from the
 mailserver host.
+.PP
+The 
+.B --showdots
+option (keyword: set showdots) forces fetchmail to show progress dots
+even if the current tty is not stdout (for example logfiles).
+Starting with fetchmail version 5.3.0, 
+progress dots are only shown on stdout by default.
 
 .SH RETRIEVAL FAILURE MODES
 The protocols \fIfetchmail\fR uses to talk to mailservers are next to

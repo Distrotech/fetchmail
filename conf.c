@@ -194,6 +194,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
     booldump("bouncemail", runp->bouncemail);
     stringdump("properties", runp->properties);
     booldump("invisible", runp->invisible);
+    booldump("showdots", runp->showdots);
     booldump("syslog", runp->use_syslog);
 
     if (!querylist)

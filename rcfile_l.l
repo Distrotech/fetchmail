@@ -65,6 +65,7 @@ idfile		{ return IDFILE; }
 daemon		{ return DAEMON; }
 syslog		{ return SYSLOG; }
 invisible	{ return INVISIBLE; }
+showdots	{ return SHOWDOTS; }
 postmaster	{ return POSTMASTER; }
 bouncemail	{ return BOUNCEMAIL; }
 warnings	{ return WARNINGS; }

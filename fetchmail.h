@@ -118,6 +118,7 @@ struct runctl
     char	*properties;
     flag	use_syslog;
     flag	invisible;
+    flag	showdots;
 };
 
 struct idlist
