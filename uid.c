@@ -197,6 +197,19 @@ int str_nr_in_list( struct idlist **idl, const char *str )
     return -1;
 }
 
+int str_nr_last_in_list( struct idlist **idl, const char *str )
+  /* return the last position of str in idl */
+{
+    int nr, ret = -1;
+    struct idlist *walk;
+    if ( !str )
+        return -1;
+    for( walk = *idl, nr = 0; walk; nr ++, walk = walk->next )
+        if( strcasecmp( str, walk->id) == 0 )
+	    ret = nr;
+    return ret;
+}
+
 int count_list( struct idlist **idl )
   /* count the number of elements in the list */
 {

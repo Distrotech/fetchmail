@@ -243,6 +243,8 @@ pop3_gettopid( int sock, int num , char *id)
 	    break;
 	if( ! got_it && ! strncasecmp("Message-Id:", buf, 11 )) {
 	    got_it = 1;
+	    /* prevent stack overflows */
+	    buf[IDLEN+12] = 0;
 	    sscanf( buf+12, "%s", id);
 	}
     }
@@ -284,7 +286,7 @@ pop3_slowuidl( int sock,  struct query *ctl, int *countp, int *newp)
 	    if( (ok = pop3_gettopid( sock, try_id, id )) != 0 )
 		return ok;
     
-	    try_nr = str_nr_in_list(&ctl->oldsaved, id);
+	    try_nr = str_nr_last_in_list(&ctl->oldsaved, id);
 	} else {
 	    try_id = *countp+1;
 	    try_nr = -1;

@@ -49,7 +49,7 @@
 #include <krb.h>
 #define krb_get_err_text(e) (krb_err_txt[e])
 #else
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) || defined(__linux__)
 #define krb_get_err_text(e) (krb_err_txt[e])
 #include <krb.h>
 #include <des.h>
@@ -751,9 +751,11 @@ int num;		/* index of message */
 	{
 	    if( ctl->server.uidl )
  	    {
- 	        char id[IDLEN+1];
+	        char id[IDLEN+1];
+	        /* prevent stack overflows */
+		buf[IDLEN+12] = 0;
  		sscanf( buf+12, "%s", id);
- 	        if( !str_in_list( &ctl->newsaved, id ) )
+ 	        if( !str_find( &ctl->newsaved, num ) )
  		    save_str(&ctl->newsaved, num, id );
  	    }
  	}
