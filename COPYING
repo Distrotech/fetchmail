@@ -18,6 +18,9 @@ The following files are explicitly GPL-licensed: getopt1.c, getopt.c, getopt.h.
 All other code in the distribution incorporates the copy of GPL version 2 
 below by reference.
 
+Specific permission is granted for the GPLed code in this distribition to
+be linked to OpenSSL without invoking GPL clause 2(b).
+
 -------------------------------------------------------------------------------
 		    GNU GENERAL PUBLIC LICENSE
 		       Version 2, June 1991
