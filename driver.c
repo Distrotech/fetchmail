@@ -327,7 +327,7 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 				  cp, idp->id);
 			save_str(xmit_names, cp, XMIT_ACCEPT);
 			accept_count++;
-			break;
+			goto nomap;
 		    }
 		}
 
@@ -349,6 +349,7 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 		}
 		atsign[0] = '\0';
 		map_name(cp, ctl, xmit_names);
+	    nomap:;
 	    }
 	}
     }
