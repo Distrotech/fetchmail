@@ -232,7 +232,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	}
 
 #ifdef SSL_ENABLE
-       if (has_ssl &&
+       if (has_ssl && !ctl->use_ssl &&
 #if INET6_ENABLE
            ctl->server.service && (strcmp(ctl->server.service, "pop3s"))
 #else /* INET6_ENABLE */
