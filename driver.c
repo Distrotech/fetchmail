@@ -531,6 +531,21 @@ static int readheaders(int sock,
 		goto process_headers;
 	    }
 
+	    /*
+	     * At least one brain-dead website (netmind.com) is known to
+	     * send out robotmail that's missing the RFC822 delimiter blank
+	     * line before the body! Without this check fetchmail segfaults.
+	     * With it, we treat such messages as though they had the missing
+	     * blank line.
+	     */
+	    if (!isspace(line[0]) && !strchr(line, ":"))
+	    {
+		headers_ok = TRUE;
+		free(line);
+		has_nuls = (linelen != strlen(line));
+		goto process_headers;
+	    }
+
 	    /* check for RFC822 continuations */
 	    set_timeout(mytimeout);
 	    ch = SockPeek(sock);
