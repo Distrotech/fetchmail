@@ -2,6 +2,9 @@
 #
 # Extract information on the fetchmail project size from the NEWS file
 #
+# Note: this only works if you have a news file from 5.1.1 or later --
+# I didn't patch the code sizes into NEWS until then.
+#
 # Output other than pass-through % lines is tab-separated fields.
 # Field 1: release ID
 # Field 2: count of source lines under version control 
