@@ -647,7 +647,7 @@ static int imap_getrange(int sock,
     else
 	*newp = -1;		/* should never happen, RECENT is mandatory */ 
 
-    expunged = deletions = 0;
+    expunged = 0;
 
     return(PS_SUCCESS);
 }
@@ -826,6 +826,8 @@ static int imap_delete(int sock, struct query *ctl, int number)
 				: "STORE %d +FLAGS (\\Deleted)", 
 			number)))
 	return(ok);
+    else
+	deletions++;
 
     /*
      * We do an expunge after ctl->expunge messages, rather than
@@ -833,7 +835,7 @@ static int imap_delete(int sock, struct query *ctl, int number)
      * won't result in lots of messages being fetched again during
      * the next session.
      */
-    if (NUM_NONZERO(ctl->expunge) && (++deletions % ctl->expunge) == 0)
+    if (NUM_NONZERO(ctl->expunge) && (deletions % ctl->expunge) == 0)
     {
 	if ((ok = gen_transact(sock, "EXPUNGE")))
 	    return(ok);
@@ -843,6 +845,7 @@ static int imap_delete(int sock, struct query *ctl, int number)
 #endif /* IMAP_UID */
 
 	expunged = deletions;
+	deletions = 0;
     }
 
     return(PS_SUCCESS);
@@ -858,6 +861,9 @@ static int imap_logout(int sock, struct query *ctl)
 
 	if ((ok = gen_transact(sock, "EXPUNGE")))
 	    return(ok);
+
+	expunged = deletions;
+	deletions = 0;
 
 #ifdef IMAP_UID	/* not used */
 	expunge_uids(ctl);
