@@ -156,4 +156,3 @@ rm -rf \$RPM_BUILD_ROOT
 /usr/lib/rhs/control-panel/fetchmailconf.init
 /etc/X11/wmconfig/fetchmailconf
 EOF
-ls
