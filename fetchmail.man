@@ -697,8 +697,10 @@ catch equivalences created by MX records).  If it is an alias of the
 server, but the lookup fails due to network congestion or a crashed
 server, forwarding will not get done correctly.
 .PP
-The multi-drop mailbox code was hard to test thoroughly and may have obscure
-failure modes, especially in the presence of DNS flakiness.
+Presently, 
+.I fetchmail
+cannot handle a response longer than your machine's atomic read size
+for sockets.
 .PP
 Under Linux, if fetchmail is run in daemon mode with the network
 inaccessible, each poll leaves a socket allocated but in CLOSE state

@@ -4,6 +4,12 @@
  * These were designed and coded by Carl Harris <ceharris@mal.com>
  * and are essentially unchanged from the ancestral popclient.
  *
+ * Actually, this library shouldn't exist.  We ought to be using
+ * stdio to buffer the socket descriptors.  If that worked, we
+ * could have separate buffers for the mailserver and SMTP sockets,
+ * and we'd be able to handle responses longer than the socket
+ * atomic read size.
+ *
  * For license terms, see the file COPYING in this directory.
  */
 
