@@ -23,6 +23,8 @@ fetchmail-4.3.5 ()
 * We no longer reveal the remotename in fetchmail's logname, as this
   may be sensitive information.
 
+There are 264 people on fetchmail-friends and 105 on fetchmail-announce.
+
 fetchmail-4.3.4 (Fri Dec  5 12:39:31 EST 1997)
 * Yet another attempt on the Compuserve RPA moving target.
 * Fix ETRN code to poll for the fetchmail host if there's no -S option.
