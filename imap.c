@@ -828,12 +828,8 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 	if (ctl->server.protocol == P_IMAP_K4)
 	{
 	    if ((ok = do_rfc1731(sock, ctl->server.truename)))
-	    {
-		if (outlevel >= O_MONITOR)
-		    report(stdout, "IMAP> *\n");
 		/* SASL cancellation of authentication */
-		SockWrite(sock, "*\r\n", 3);
-	    }
+		gen_send(sock, "*");
 	    
 	    return(ok);
 	}
@@ -854,13 +850,10 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
         if (ctl->server.protocol != P_IMAP_LOGIN)
         {
             if ((ok = do_cram_md5 (sock, ctl)))
-            {
-                if (outlevel >= O_MONITOR)
-                    report (stdout, "IMAP> *\n");
 		/* SASL cancellation of authentication */
-                SockWrite (sock, "*\r\n", 3);
-            }
-            return ok;
+		gen_send(sock, "*");
+
+            return(ok);
         }
     }
     else if (ctl->server.protocol == P_IMAP_CRAM_MD5)
