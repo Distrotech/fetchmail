@@ -195,7 +195,7 @@ struct hostdata		/* shared among all user connections to given server */
     flag checkalias;                  	/* resolve aliases by comparing IPs? */
 
 
-#ifdef linux
+#if defined(linux) || defined(__FreeBSD__)
     char *interface;
     char *monitor;
     int  monitor_io;

@@ -832,8 +832,8 @@ fetchmail from triggering an expensive dial-out if the
 interface is not already active.
 
 The `interface' and `monitor' options are available
-only for Linux systems.  See the fetchmail manual page
-for details on these.
+only for Linux and freeBSD systems.  See the fetchmail
+manual page for details on these.
 
 The `netsec' option will be configurable only if fetchmail
 was compiled with IPV6 support.  If you need to use it,
@@ -1006,16 +1006,16 @@ class ServerEdit(Frame, MyWidget):
 		 self.server.localdomains, None, None, mdropwin, multihelp)
             mdropwin.pack(fill=X)
 
-            if os_type == 'linux' or 'netsec' in feature_options:
+            if os_type == 'linux' or os_type == 'freebsd' or 'netsec' in feature_options:
                 secwin = Frame(rightwin, relief=RAISED, bd=5)
                 Label(secwin, text="Security").pack(side=TOP)
                 # Don't actually let users set this.  KPOP sets it implicitly
                 #	ButtonBar(secwin, 'Authorization mode:',
                 #		  self.auth, authlist, 1, None).pack(side=TOP)
-                if os_type == 'linux' or 'interface' in dictmembers:
+                if os_type == 'linux' or os_type == 'freebsd'  or 'interface' in dictmembers:
                     LabeledEntry(secwin, 'IP range to check before poll:',
 			 self.interface, leftwidth).pack(side=TOP, fill=X)
-                if os_type == 'linux' or 'monitor' in dictmembers:
+                if os_type == 'linux' or os_type == 'freebsd' or 'monitor' in dictmembers:
                     LabeledEntry(secwin, 'Interface to monitor:',
 			 self.monitor, leftwidth).pack(side=TOP, fill=X)
                 if 'netsec' in feature_options or 'netsec' in dictmembers:

@@ -413,7 +413,9 @@ etc.).  The field before the second slash is the acceptable IP address.
 The field after the second slash is a mask which specifies a range of
 IP addresses to accept.  If no mask is present 255.255.255.255 is
 assumed (i.e. an exact match).  This option is currently only supported
-under Linux.
+under Linux and FreeBSD. Please see the 
+.B monitor 
+section for below for FreeBSD specific information.
 .TP
 .B \-M interface, --monitor interface
 (Keyword: monitor)
@@ -422,7 +424,16 @@ after a period of inactivity (e.g. PPP links) to remain up
 indefinitely.  This option identifies a system TCP/IP interface to be
 monitored for activity.  After each poll interval, if the link is up but
 no other activity has occurred on the link, then the poll will be
-skipped.  This option is currently only supported under Linux.
+skipped.  This option is currently only supported under Linux and FreeBSD.
+For the 
+.B monitor 
+and 
+.B interface
+options to work for non root users under FreeBSD, the fetchmail binary
+must be installed SGID kmem. This would be a security hole, but
+fetchmail runs with the effective GID set to that of the kmem group
+.I only
+when interface data is being collected.
 .TP
 .B \-A, --auth
 (Keyword: auth[enticate]) 
@@ -1702,7 +1713,8 @@ successfully retrieved mail. Otherwise the returned error status is
 that of the last host queried.
 
 .SH AUTHOR
-Eric S. Raymond <esr@snark.thyrsus.com>.  
+Eric S. Raymond <esr@snark.thyrsus.com>.  Too many other people to
+name here have contributed code and patches. 
 This program is descended from and replaces 
 .IR popclient , 
 by Carl Harris <ceharris@mal.com>; the internals have become quite different, 
@@ -1767,16 +1779,16 @@ mailserver-side filter that consolidates the contents of all envelope
 headers into a single one (procmail, mailagent, or maildrop can be
 orogrammed to do this fairly easily).
 .PP
-Use of any of the supported protocols other than POP3 with OTP or RPA, APOP,
-KPOP, IMAP-K4, IMAP-GSS, or ETRN requires that the program send unencrypted
-passwords over the TCP/IP connection to the mailserver.  This creates
-a risk that name/password pairs might be snaffled with a packet
-sniffer or more sophisticated monitoring software.  Under Linux, the
---interface option can be used to restrict polling to availability of
-a specific interface device with a specific local IP address, but
-snooping is still possible if (a) either host has a network device
-that can be opened in promiscuous mode, or (b) the intervening network
-link can be tapped.
+Use of any of the supported protocols other than POP3 with OTP or RPA,
+APOP, KPOP, IMAP-K4, IMAP-GSS, or ETRN requires that the program send
+unencrypted passwords over the TCP/IP connection to the mailserver.
+This creates a risk that name/password pairs might be snaffled with a
+packet sniffer or more sophisticated monitoring software.  Under Linux
+and FreeBSD, the --interface option can be used to restrict polling to
+availability of a specific interface device with a specific local IP
+address, but snooping is still possible if (a) either host has a
+network device that can be opened in promiscuous mode, or (b) the
+intervening network link can be tapped.
 .PP
 Use of the %F or %T escapes in an mda option could open a security
 hole, because they pass text manipulable by an attacker to a shell

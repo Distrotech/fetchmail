@@ -19,6 +19,9 @@
 #include <syslog.h>
 #endif
 #include <pwd.h>
+#ifdef __FreeBSD__
+#include <grp.h>
+#endif
 #include <errno.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -137,6 +140,27 @@ void itimerthread(void* dummy) {
 }
 #endif
 
+#ifdef __FreeBSD__
+/* drop SGID kmem privileage until we need it */
+static void dropprivs(void)
+{
+    struct group *gr;
+    gid_t        egid;
+    gid_t        rgid;
+    
+    egid = getegid();
+    rgid = getgid();
+    gr = getgrgid(egid);
+    
+    if (gr && !strcmp(gr->gr_name, "kmem"))
+    {
+    	extern void interface_set_gids(gid_t egid, gid_t rgid);
+    	interface_set_gids(egid, rgid);
+    	setegid(rgid);
+    }
+}
+#endif
+
 int main (int argc, char **argv)
 {
     int st, bkgd = FALSE;
@@ -146,6 +170,10 @@ int main (int argc, char **argv)
     netrc_entry *netrc_list;
     char *netrc_file, *tmpbuf;
     pid_t pid;
+
+#ifdef __FreeBSD__
+    dropprivs();
+#endif
 
     envquery(argc, argv);
 #ifdef ENABLE_NLS
@@ -548,11 +576,11 @@ int main (int argc, char **argv)
 		    }
 		}
 
-#if defined(linux) && !INET6
+#if (defined(linux) && !INET6) || defined(__FreeBSD__)
 		/* interface_approve() does its own error logging */
 		if (!interface_approve(&ctl->server))
 		    continue;
-#endif /* defined(linux) && !INET6 */
+#endif /* (defined(linux) && !INET6) || defined(__FreeBSD__) */
 
 		querystatus = query_host(ctl);
 
@@ -577,7 +605,7 @@ int main (int argc, char **argv)
 			 ((querystatus!=PS_NOMAIL) || (outlevel==O_DEBUG)))
 		    report(stdout, _("Query status=%d\n"), querystatus);
 
-#if defined(linux) && !INET6
+#if (defined(linux) && !INET6) || defined (__FreeBSD__)
 		if (ctl->server.monitor)
 		{
 		    /*
@@ -588,7 +616,7 @@ int main (int argc, char **argv)
 		    sleep(3);
 		    interface_note_activity(&ctl->server);
 		}
-#endif /* defined(linux) && !INET6 */
+#endif /* (defined(linux) && !INET6) || defined(__FreeBSD__) */
 	    }
 	}
 
@@ -803,11 +831,11 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(server.checkalias);
     FLAG_MERGE(server.uidl);
 
-#ifdef linux
+#if defined(linux) || defined(__FreeBSD__)
     FLAG_MERGE(server.interface);
     FLAG_MERGE(server.monitor);
     FLAG_MERGE(server.interface_pair);
-#endif /* linux */
+#endif /* linux || defined(__FreeBSD__) */
 
     FLAG_MERGE(server.plugin);
     FLAG_MERGE(server.plugout);
@@ -1584,7 +1612,7 @@ static void dump_params (struct runctl *runp,
 		    }
 		}
 	}
-#ifdef	linux
+#if defined(linux) || defined(__FreeBSD__)
 	if (ctl->server.interface)
 	    printf(_("  Connection must be through interface %s.\n"), ctl->server.interface);
 	else if (outlevel >= O_VERBOSE)

@@ -4,14 +4,19 @@
  * This module was implemented by George M. Sipe <gsipe@mindspring.com>
  * or <gsipe@acm.org> and is:
  *
- *	Copyright (c) 1996,1997 by George M. Sipe - ALL RIGHTS RESERVED
+ *	Copyright (c) 1996,1997 by George M. Sipe
+ *
+ *      FreeBSD specific portions written by and Copyright (c) 1999 
+ *      Andy Doran <ad@psn.ie>.
  *
  * This is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free
  * Software Foundation; version 2, or (at your option) any later version.
  */
+#include <sys/types.h>
+#include <sys/param.h>
 
-#if defined(linux) && !defined(INET6)
+#if (defined(linux) && !defined(INET6)) || defined(__FreeBSD__)
 
 #include "config.h"
 #include <stdio.h>
@@ -27,6 +32,14 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <net/if.h>
+#if defined(__FreeBSD__)
+#if __FreeBSD_version >= 300001
+#include <net/if_var.h>
+#endif
+#include <kvm.h>
+#include <nlist.h>
+#include <sys/fcntl.h>
+#endif
 #include "config.h"
 #include "fetchmail.h"
 #include "i18n.h"
@@ -65,6 +78,9 @@ void interface_init(void)
 	    netdevfmt = "%d %d %*d %*d %*d %d %*d %*d %*d %*d %d %*d %d";
     }
 }
+
+
+#if defined(linux)
 
 static int _get_ifinfo_(int socket_fd, FILE *stats_file, const char *ifname,
 		ifinfo_t *ifinfo)
@@ -155,6 +171,155 @@ static int get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
 		fclose(stats_file);
 	return(result);
 }
+
+#elif defined __FreeBSD__
+
+static kvm_t *kvmfd;
+static struct nlist symbols[] = 
+{
+	{"_ifnet"},
+	{NULL}
+};
+static u_long	ifnet_savedaddr;
+static gid_t	if_rgid;
+static gid_t	if_egid;
+
+void 
+interface_set_gids(gid_t egid, gid_t rgid)
+{
+	if_rgid = rgid;
+	if_egid = egid;
+}
+
+static int 
+openkvm(void)
+{
+	if ((kvmfd = kvm_open(NULL, NULL, NULL, O_RDONLY, NULL)) == NULL)
+		return FALSE;
+	
+	if (kvm_nlist(kvmfd, symbols) < 0)
+		return FALSE;
+	   
+	if (kvm_read(kvmfd, (unsigned long) symbols[0].n_value, &ifnet_savedaddr, sizeof(unsigned long)) == -1)
+		return FALSE;
+		
+	return TRUE;
+}
+
+static int 
+get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
+{
+	char            	tname[16];
+	char			iname[16];
+	struct ifnet   	        ifnet;
+	unsigned long   	ifnet_addr = ifnet_savedaddr;
+#if __FreeBSD_version >= 300001
+	struct ifnethead	ifnethead;
+	struct ifaddrhead	ifaddrhead;
+#endif
+	struct ifaddr		ifaddr;
+	unsigned long		ifaddr_addr;
+	struct sockaddr		sa;
+	unsigned long		sa_addr;
+	uint			i;
+	
+	if (if_egid)
+		setegid(if_egid);
+	
+	for (i = 0; ifname[i] && ifname[i] != '/'; i++)
+		iname[i] = ifname[i];
+		
+	iname[i] = '\0';
+	
+	if (!kvmfd)
+	{
+		if (!openkvm())
+		{
+			report(stderr, 0, _("Unable to open kvm interface. Make sure fetchmail is SGID kmem."));
+			if (if_egid)
+				setegid(if_rgid);
+			exit(1);
+		}
+	}
+
+#if __FreeBSD_version >= 300001
+	kvm_read(kvmfd, ifnet_savedaddr, (char *) &ifnethead, sizeof ifnethead);
+	ifnet_addr = (u_long) ifnethead.tqh_first;
+#else
+	ifnet_addr = ifnet_savedaddr;
+#endif
+
+	while (ifnet_addr)
+	{
+		kvm_read(kvmfd, ifnet_addr, &ifnet, sizeof(ifnet));
+		kvm_read(kvmfd, (unsigned long) ifnet.if_name, tname, sizeof tname);
+		snprintf(tname, sizeof tname - 1, "%s%d", tname, ifnet.if_unit);
+
+		if (!strcmp(tname, iname))
+		{
+			if (!(ifnet.if_flags & IFF_UP))
+			{
+				if (if_egid)
+					setegid(if_rgid);
+				return 0;
+			}
+				
+			ifinfo->rx_packets = ifnet.if_ipackets;
+			ifinfo->tx_packets = ifnet.if_opackets;
+
+#if __FreeBSD_version >= 300001
+			ifaddr_addr = (u_long) ifnet.if_addrhead.tqh_first;
+#else
+			ifaddr_addr = (u_long) ifnet.if_addrlist;
+#endif
+			
+			while(ifaddr_addr)
+			{
+				kvm_read(kvmfd, ifaddr_addr, &ifaddr, sizeof(ifaddr));
+				kvm_read(kvmfd, (u_long)ifaddr.ifa_addr, &sa, sizeof(sa));
+				
+				if (sa.sa_family != AF_INET)
+				{
+#if __FreeBSD_version >= 300001
+					ifaddr_addr = (u_long) ifaddr.ifa_link.tqe_next;
+#else
+					ifaddr_addr = (u_long) ifaddr.ifa_next;
+#endif
+					continue;
+				}
+			
+				ifinfo->addr.s_addr = *(u_long *)(sa.sa_data + 2);
+				kvm_read(kvmfd, (u_long)ifaddr.ifa_dstaddr, &sa, sizeof(sa));
+				ifinfo->dstaddr.s_addr = *(u_long *)(sa.sa_data + 2);
+				kvm_read(kvmfd, (u_long)ifaddr.ifa_netmask, &sa, sizeof(sa));
+				ifinfo->netmask.s_addr = *(u_long *)(sa.sa_data + 2);
+
+				if (if_egid)
+					setegid(if_rgid);
+
+				return 1;
+			}
+			
+			if (if_egid)
+				setegid(if_rgid);
+			
+			return 0;
+		}
+
+#if __FreeBSD_version >= 300001
+		ifnet_addr = (u_long) ifnet.if_link.tqe_next;
+#else
+		ifnet_addr = (unsigned long) ifnet.if_next;
+#endif
+	}
+
+	if (if_egid)
+		setegid(if_rgid);
+	
+	return 0;
+}
+#endif /* defined __FreeBSD__ */
+
 
 #ifndef HAVE_INET_ATON
 /*
@@ -313,4 +478,4 @@ int interface_approve(struct hostdata *hp)
 
 	return(TRUE);
 }
-#endif /* defined(linux) && !defined(INET6) */
+#endif /* (defined(linux) && !defined(INET6)) || defined(__FreeBSD__) */

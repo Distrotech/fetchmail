@@ -57,6 +57,13 @@ then
   fi
 fi
 
+# Check for FreeBSD special case: -lkvm needed
+if test `uname` = "FreeBSD" 
+then
+   echo "Adding -lkvm to standard libraries"
+   LIBS="$LIBS -lkvm"
+fi
+ 
 # i18n
 # Arnaldo Carvalho de Melo <acme@conectiva.com.br>
 # Sat Nov  7 15:39:03 EDT 1998

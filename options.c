@@ -128,10 +128,10 @@ static const struct option longoptions[] = {
   {"netsec",	required_argument, (int *) 0, LA_NETSEC      },
 #endif /* INET6 */
 
-#if defined(linux) && !INET6
+#if (defined(linux) && !INET6) || defined(__FreeBSD__)
   {"interface",	required_argument, (int *) 0, LA_INTERFACE   },
   {"monitor",	required_argument, (int *) 0, LA_MONITOR     },
-#endif /* defined(linux) && !INET6 */
+#endif /* (defined(linux) && !INET6) || defined(__FreeBSD__) */
   {"plugin",	required_argument, (int *) 0, LA_PLUGIN      },
   {"plugout",	required_argument, (int *) 0, LA_PLUGOUT     },
 
@@ -498,7 +498,7 @@ struct query *ctl;	/* option record to be initialized */
 #endif /* NET_SECURITY */
 	    break;
 
-#if defined(linux) && !INET6
+#if (defined(linux) && !INET6) || defined(__FreeBSD__)
 	case 'I':
 	case LA_INTERFACE:
 	    interface_parse(optarg, &ctl->server);
@@ -507,7 +507,7 @@ struct query *ctl;	/* option record to be initialized */
 	case LA_MONITOR:
 	    ctl->server.monitor = xstrdup(optarg);
 	    break;
-#endif /* defined(linux) && !INET6 */
+#endif /* (defined(linux) && !INET6) || defined(__FreeBSD__) */
 	case LA_PLUGIN:
 	    ctl->server.plugin = xstrdup(optarg);
 	    break;
@@ -565,7 +565,7 @@ struct query *ctl;	/* option record to be initialized */
 	P(_("  -f, --fetchmailrc specify alternate run control file\n"));
 	P(_("  -i, --idfile      specify alternate UIDs file\n"));
 	P(_("      --postmaster  specify recipient of last resort\n"));
-#if defined(linux) && !INET6
+#if (defined(linux) && !INET6) || defined(__FreeBSD__)
 	P(_("  -I, --interface   interface required specification\n"));
 	P(_("  -M, --monitor     monitor interface for activity\n"));
 #endif

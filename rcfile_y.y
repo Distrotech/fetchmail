@@ -207,18 +207,18 @@ serv_option	: AKA alias_list
 #endif /* NET_SECURITY */
 					}
 		| INTERFACE STRING	{
-#if defined(linux) && !defined(INET6)
+#if (defined(linux) && !defined(INET6)) || defined(__FreeBSD__)
 					interface_parse($2, &current.server);
-#else /* defined(linux) && !defined(INET6) */
-					fprintf(stderr, "fetchmail: interface option is only supported under Linux\n");
-#endif /* defined(linux) && !defined(INET6) */
+#else /* (defined(linux) && !defined(INET6)) || defined(__FreeBSD__) */
+					fprintf(stderr, "fetchmail: interface option is only supported under Linux and FreeBSD\n");
+#endif /* (defined(linux) && !defined(INET6)) || defined(__FreeBSD__) */
 					}
 		| MONITOR STRING	{
-#if defined(linux) && !defined(INET6)
+#if (defined(linux) && !defined(INET6)) || defined(__FreeBSD__)
 					current.server.monitor = xstrdup($2);
-#else /* defined(linux) && !defined(INET6) */
+#else /* (defined(linux) && !defined(INET6)) || defined(__FreeBSD__) */
 					fprintf(stderr, "fetchmail: monitor option is only supported under Linux\n");
-#endif /* defined(linux) && !defined(INET6) */
+#endif /* (defined(linux) && !defined(INET6) || defined(__FreeBSD__)) */
 					}
 		| PLUGIN STRING		{ current.server.plugin = xstrdup($2); }
 		| PLUGOUT STRING	{ current.server.plugout = xstrdup($2); }

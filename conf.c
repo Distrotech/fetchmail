@@ -132,8 +132,10 @@ void dump_config(struct runctl *runp, struct query *querylist)
      * We need this in order to know whether `interface' and `monitor'
      * are valid options or not.
      */
-#ifdef linux
+#if defined(linux)
     fputs("os_type = 'linux'\n", stdout);
+#elif defined(__FreeBSD__)
+    fputs("os_type = 'freebsd'\n", stdout);
 #else
     fputs("os_type = 'generic'\n", stdout);
 #endif
@@ -275,10 +277,10 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	    listdump("aka", ctl->server.akalist);
 	    listdump("localdomains", ctl->server.localdomains);
 
-#ifdef linux
+#if defined(linux) || defined(__FreeBSD__)
 	    stringdump("interface", ctl->server.interface);
 	    stringdump("monitor", ctl->server.monitor);
-#endif /* linux */
+#endif /* linux || __FreeBSD__ */
 
 	    stringdump("plugin", ctl->server.plugin);
 	    stringdump("plugout", ctl->server.plugout);

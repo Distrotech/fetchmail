@@ -6,6 +6,9 @@
 
 				Release Notes:
 
+fetchmail-4.7.8 ():
+* FreeBSD support for interface and monitor options by Andy Doran <ad@psn.ie>.
+
 fetchmail-4.7.7 (Tue Feb  2 18:57:04 EST 1999):
 * Fixed off-by-one error in batchlimit logic (thanks to Brian Warner).
 * Added MD5 checksums to web page.
