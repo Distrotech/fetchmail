@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/11/30 19:26:15 $
+<td width="30%" align=right>$Date: 1999/11/30 20:01:32 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -539,17 +539,6 @@ The specific recipe for using fetchmail with a firewall is at <a
 href="#K1">K1</a><P>
 
 <hr>
-<h2><a name="B1">B1. Lex bombs out while building the fetchmail lexer.</a></h2>
-
-In the immortal words of Alan Cox the last time this came up: ``Take
-the Solaris lex and stick it up the backside of a passing Sun
-salesman, then install <a
-href="ftp://prep.ai.mit.edu/ftp/pub/gnu">flex</a> and use that.  All
-will be happier.''<P>
-
-I couldn't have put it better myself, and ain't going to try now.<P>
-
-<hr>
 <h2><a name="G11">G11. Is any special configuration needed to <em>send</em> mail?</a></h2>
 
 A user asks: but how do we send mail out to the POP3 server? Do I need
@@ -583,6 +572,17 @@ on a 64-bit machine by then, you deserve to lose.<P>
 No. Fetchmail is a mail transport agent, best understood as a protocol
 gateway between POP3/IMAP servers and SMTP.  Disconnected operation
 requires an elaborate interactive client.  It's a very different problem.<p>
+
+<hr>
+<h2><a name="B1">B1. Lex bombs out while building the fetchmail lexer.</a></h2>
+
+In the immortal words of Alan Cox the last time this came up: ``Take
+the Solaris lex and stick it up the backside of a passing Sun
+salesman, then install <a
+href="ftp://prep.ai.mit.edu/ftp/pub/gnu">flex</a> and use that.  All
+will be happier.''<P>
+
+I couldn't have put it better myself, and ain't going to try now.<P>
 
 <hr>
 <h2><a name="B2">B2. I get link failures when I try to build fetchmail.</a></h2>
@@ -696,7 +696,7 @@ all-numeric token as a number, which confused it when it was
 expecting a name.  String quoting forces the token's class.<p>
 
 The lexical analyzer in 5.0.6 and beyond is smarter and assumes
-any token following "username" or "password" is a string.
+any token following "username" or "password" is a string.<p>
 
 <hr>
 <h2><a name="F3">F3. The .fetchmailrc parser won't accept my host or username beginning with `no'.</a></h2>
@@ -1193,7 +1193,7 @@ banished by <a
 href="http://www.eudora.com/freeware/qpop.html">upgrading to qpopper
 3.0b1</a>.<p>
 
-<h3>Bad interaction with fetchmail 4.4.2 to 4,4.7</h3>
+<h3>Bad interaction with fetchmail 4.4.2 to 4.4.7</h3>
 
 Versions of fetchmail from 4.4.2 through 4.4.7 had a bad interaction 
 with Eudora qpopper versions 2.3 and later.  See <a href="#X5">X5</a>
@@ -1465,6 +1465,10 @@ bug.<p>
 You can't.  At least not if you want to be able to see attachments.
 MailMax has a bug; it reports the message length with attachments 
 but doesn't download them on TOP or RETR. <p>
+
+We recommend ditching MailMax for a server that actually works.  While
+you're at it, you should consider ditching the NT it runs over for an operating
+system that actually works (see <a href="#G7">G7</a>).<p>
 
 <hr>
 <h2><a name="S10">S10. How can I use fetchmail with Novell GroupWise?</a></h2>
@@ -1890,7 +1894,7 @@ option values that work:<P>
 </pre>
 
 <hr>
-<a name="R8">R8. Fetchmail running as root stopped working after an OS upgrade</a></h2>
+<h2><a name="R8">R8. Fetchmail running as root stopped working after an OS upgrade</a></h2>
 
 In RH 6.0, the HOME value in the boot-time root environment changed
 from /root to / as the result of a change in init.  Move your
@@ -2498,7 +2502,7 @@ inactivity timeout.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/11/30 19:26:15 $
+<td width="30%" align=right>$Date: 1999/11/30 20:01:32 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
