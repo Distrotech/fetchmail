@@ -284,16 +284,23 @@ static char *parse_received(struct query *ctl, char *bufp)
 	    (ok = strstr(sp, "for ")) && 
 	    isspace(ok[-1]))
 	{
+	    flag	want_gt = FALSE;
+
 	    tp = rbuf;
 	    sp = ok + 4;
-	    *tp++ = ':';	/* Here is the hack.  This is to be friend */
+	    *tp++ = ':';	/* Here is the hack.  This is to be friends */
 	    *tp++ = ' ';	/* with nxtaddr()... */
 	    if (*sp == '<')
+	    {
+		want_gt = TRUE;
 		sp++;
+	    }
 	    while (*sp == '@')		/* skip routes */
 		while (*sp && *sp++ != ':')
 		    continue;
-	    while (*sp && *sp != '>' && *sp != ';')
+            while (*sp
+                   && (want_gt ? (*sp != '>') : !isspace(*sp))
+                   && *sp != ';')
 		if (!isspace(*sp))
 		    *tp++ = *sp++;
 		else
