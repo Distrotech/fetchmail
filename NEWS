@@ -2,6 +2,9 @@
 
 fetchmail-4.6.7 ():
 * Gerald Britton's patches to enable Hesiod support.
+* Postmater option fix from Bill Metzenthen <billm@melbpc.org.au>.
+
+There are 248 people on fetchmail-friends and 306 on fetchmail-announce.
 
 fetchmail-4.6.6 (Sat Nov  7 17:27:04 EST 1998):
 * Fixed a core-dump bug in reply_hack with -v -v on.

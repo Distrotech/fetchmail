@@ -1067,6 +1067,8 @@ static int load_params(int argc, char **argv, int optind)
 	run.invisible = cmd_run.invisible;
     if (cmd_run.use_syslog)
 	run.use_syslog = (cmd_run.use_syslog == FLAG_TRUE);
+    if (cmd_run.postmaster)
+	run.postmaster = cmd_run.postmaster;
 
     /* check and daemon options are not compatible */
     if (check_only && run.poll_interval)

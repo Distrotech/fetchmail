@@ -292,6 +292,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case LA_POSTMASTER:
 	    rctl->postmaster = (char *) xmalloc(strlen(optarg)+1);
+	    strcpy(rctl->postmaster,optarg);
 	    break;
 	case 'p':
 	case LA_PROTOCOL:
