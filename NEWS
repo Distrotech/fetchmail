@@ -4,6 +4,8 @@
 
 * Nalin Dahyabhai's patch to make IPv6 build on older systems.
 * Restrict shrouding to just the password send so it won't leak info.
+* Move an #ifdef INET6_ENABLE to deal with libc5 headers.
+* Only DNS-probe entries that are active on this run.
 
 fetchmail-5.7.4 (Mon Mar 12 00:02:23 EST 2001), 20323 lines:
 

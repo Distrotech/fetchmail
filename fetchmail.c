@@ -976,6 +976,30 @@ static int load_params(int argc, char **argv, int optind)
     if (check_only && run.poll_interval)
 	run.poll_interval = 0;
 
+    /*
+     * DNS support is required for some protocols.  We used to
+     * do this unconditionally, but it made fetchmail excessively
+     * vulnerable to misconfigured DNS setups.
+     *
+     * If we're using ETRN or ODMR, the smtp hunt list is the
+     * list of systems we're polling on behalf of; these have
+     * to be fully-qualified domain names.  The default for
+     * this list should be the FQDN of localhost.
+     *
+     * If we're using Kerberos for authentication, we need 
+     * the FQDN in order to generate capability keys.
+     */
+    if (strcmp(fetchmailhost, "localhost") == 0)
+	for (ctl = querylist; ctl; ctl = ctl->next)
+	    if (ctl->active && 
+		(ctl->server.protocol==P_ETRN || ctl->server.protocol==P_ODMR
+		 || ctl->server.authenticate == A_KERBEROS_V4
+		 || ctl->server.authenticate == A_KERBEROS_V5))
+	    {
+		fetchmailhost = host_fqdn();
+		break;
+	    }
+
     /* merge in wired defaults, do sanity checks and prepare internal fields */
     for (ctl = querylist; ctl; ctl = ctl->next)
     {
@@ -1014,24 +1038,6 @@ static int load_params(int argc, char **argv, int optind)
 #endif
 	    DEFAULT(ctl->server.checkalias, FALSE);
 #undef DEFAULT
-
-	    /*
-	     * DNS support is required for some protocols.  We used to
-	     * do this unconditionally, but it made fetchmail excessively
-	     * vulnerable to misconfigured DNS setups.
-	     *
-	     * If we're using ETRN or ODMR, the smtp hunt list is the
-	     * list of systems we're polling on behalf of; these have
-	     * to be fully-qualified domain names.  The default for
-	     * this list should be the FQDN of localhost.
-	     *
-	     * If we're using Kerberos for authentication, we need 
-	     * the FQDN in order to generate capability keys.  */
-	    if (ctl->server.protocol==P_ETRN || ctl->server.protocol==P_ODMR
-		|| ctl->server.authenticate == A_KERBEROS_V4
-		|| ctl->server.authenticate == A_KERBEROS_V5)
-		if (strcmp(fetchmailhost, "localhost") == 0)
-			fetchmailhost = host_fqdn();
 
 	    /*
 	     * Make sure we have a nonempty host list to forward to.
@@ -1117,7 +1123,7 @@ static int load_params(int argc, char **argv, int optind)
 		ctl->server.truename = xstrdup(leadname);
 	    }
 #ifdef HAVE_GETHOSTBYNAME
-	    else if (!configdump)
+	    else if (ctl->active && !configdump)
 	    {
 		if (ctl->server.authenticate==A_KERBEROS_V4 ||
 		      ctl->server.authenticate==A_KERBEROS_V5 ||
