@@ -676,7 +676,49 @@ int main(int argc, char **argv)
 		    successes++;
 		else if (!check_only && 
 			 ((querystatus!=PS_NOMAIL) || (outlevel==O_DEBUG)))
-		    report(stdout, _("Query status=%d\n"), querystatus);
+		switch(querystatus)
+		{
+		case PS_SUCCESS:
+		    report(stdout, "Query status=SUCCESS\n"); break ;
+		case PS_NOMAIL: 
+		    report(stdout, "Query status=NOMAIL\n"); break ;
+		case PS_SOCKET:
+		    report(stdout, "Query status=SOCKET\n"); break ;
+		case PS_AUTHFAIL:
+		    report(stdout, "Query status=AUTHFAIL\n"); break ;
+		case PS_PROTOCOL:
+		    report(stdout, "Query status=PROTOCOL\n"); break ;
+		case PS_SYNTAX:
+		    report(stdout, "Query status=SYNTAX\n"); break ;
+		case PS_IOERR:
+		    report(stdout, "Query status=IOERR\n"); break ;
+		case PS_ERROR:
+		    report(stdout, "Query status=ERROR\n"); break ;
+		case PS_EXCLUDE:
+		    report(stdout, "Query status=EXCLUDE\n"); break ;
+		case PS_LOCKBUSY:
+		    report(stdout, "Query status=LOCKBUSY\n"); break ;
+		case PS_SMTP:
+		    report(stdout, "Query status=SMTP\n"); break ;
+		case PS_DNS:
+		    report(stdout, "Query status=DNS\n"); break ;
+		case PS_BSMTP:
+		    report(stdout, "Query status=BSMTP\n"); break ;
+		case PS_MAXFETCH:
+		    report(stdout, "Query status=MAXFETCH\n"); break ;
+		case PS_UNDEFINED:
+		    report(stdout, "Query status=UNDEFINED\n"); break ;
+		case PS_TRANSIENT:
+		    report(stdout, "Query status=TRANSIENT\n"); break ;
+		case PS_REFUSED:
+		    report(stdout, "Query status=REFUSED\n"); break ;
+		case PS_RETAINED:
+		    report(stdout, "Query status=RETAINED\n"); break ;
+		case PS_TRUNCATED:
+		    report(stdout, "Query status=TRUNCATED\n"); break ;
+		default:
+		    report(stdout, _("Query status=%d\n"), querystatus); break;
+		}
 
 #if (defined(linux) && !INET6_ENABLE) || defined (__FreeBSD__)
 		if (ctl->server.monitor)

@@ -162,10 +162,15 @@ serv_option	: AKA alias_list
 #endif /* INET6_ENABLE */
 					}
 		| PORT NUMBER		{
-#if !INET6_ENABLE
+#if INET6_ENABLE
+					int port = $2;
+					char buf[10];
+					sprintf(buf, "%d", port);
+					current.server.service = xstrdup(buf);
+#else
 					current.server.port = $2;
-#endif /* !INET6_ENABLE */
-					}
+#endif /* INET6_ENABLE */
+		}
 		| INTERVAL NUMBER		{current.server.interval = $2;}
 		| PREAUTHENTICATE PASSWORD	{current.server.preauthenticate = A_PASSWORD;}
 		| PREAUTHENTICATE KERBEROS4	{current.server.preauthenticate = A_KERBEROS_V4;}

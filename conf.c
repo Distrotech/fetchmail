@@ -249,10 +249,9 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	    stringdump("via", ctl->server.via); 
 	    stringdump("protocol", 
 		       using_kpop ? "KPOP" : showproto(ctl->server.protocol));
-#if !INET6_ENABLE
 	    numdump("port",  ctl->server.port);
-#else
-	    stringdump("service", ctl->server.service); 
+#if INET6_ENABLE
+	    stringdump("service", ctl->server.service);
 #endif
 	    numdump("timeout",  ctl->server.timeout);
 	    numdump("interval", ctl->server.interval);

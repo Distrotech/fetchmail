@@ -529,7 +529,7 @@ static int readheaders(int sock,
 	    sizeticker += linelen;
 	    while (sizeticker >= SIZETICKER)
 	    {
-		if (!run.use_syslog)
+		if (!run.use_syslog && isatty(1))
 		{
 		    fputc('.', stdout);
 		    fflush(stdout);
@@ -1045,7 +1045,7 @@ static int readheaders(int sock,
 	free_str_list(&msgblk.recipients);
 	return(PS_IOERR);
     }
-    else if ((run.poll_interval == 0 || nodetach) && outlevel >= O_VERBOSE)
+    else if ((run.poll_interval == 0 || nodetach) && outlevel >= O_VERBOSE && isatty(2))
 	fputs("#", stderr);
 
     /* write error notifications */
@@ -1155,7 +1155,7 @@ static int readbody(int sock, struct query *ctl, flag forward, int len)
 	    sizeticker += linelen;
 	    while (sizeticker >= SIZETICKER)
 	    {
-		if ((run.poll_interval == 0 || nodetach) && outlevel > O_SILENT)
+		if ((run.poll_interval == 0 || nodetach) && outlevel > O_SILENT && isatty(1))
 		{
 		    fputc('.', stdout);
 		    fflush(stdout);
@@ -1213,7 +1213,7 @@ static int readbody(int sock, struct query *ctl, flag forward, int len)
 		release_sink(ctl);
 		return(PS_IOERR);
 	    }
-	    else if (outlevel >= O_VERBOSE)
+	    else if (outlevel >= O_VERBOSE && isatty(1))
 	    {
 		fputc('*', stdout);
 		fflush(stdout);
@@ -1597,7 +1597,8 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	     * in daemon mode but the connection to the outside world
 	     * is down.
 	     */
-	    if (!(err_no == EHOSTUNREACH && run.poll_interval))
+	    if (!((err_no == EHOSTUNREACH || err_no == EHOSTUNREACH) 
+		  && run.poll_interval))
 	    {
 		report_build(stderr, _("fetchmail: %s connection to %s failed"), 
 			     protocol->name, ctl->server.pollname);
@@ -2020,7 +2021,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 			     */
 			    if (protocol->fetch_body && !suppress_readbody) 
 			    {
-				if (outlevel >= O_VERBOSE)
+				if (outlevel >= O_VERBOSE && isatty(1))
 				{
 				    fputc('\n', stdout);
 				    fflush(stdout);
@@ -2074,7 +2075,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 				/* tell server we got it OK and resynchronize */
 				if (protocol->trail)
 				{
-				    if (outlevel >= O_VERBOSE)
+				    if (outlevel >= O_VERBOSE && isatty(1))
 				    {
 					fputc('\n', stdout);
 					fflush(stdout);
