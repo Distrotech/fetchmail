@@ -180,12 +180,18 @@ serv_option	: AKA alias_list
 					current.server.port = $2;
 #endif /* INET6_ENABLE */
 		}
-		| INTERVAL NUMBER		{current.server.interval = $2;}
-		| PREAUTHENTICATE ANY		{current.server.preauthenticate = A_ANY;}
-		| PREAUTHENTICATE PASSWORD	{current.server.preauthenticate = A_PASSWORD;}
-		| PREAUTHENTICATE GSSAPI	{current.server.preauthenticate = A_GSSAPI;}
-		| PREAUTHENTICATE KERBEROS4	{current.server.preauthenticate = A_KERBEROS_V4;}
-                | PREAUTHENTICATE KERBEROS5 	{current.server.preauthenticate = A_KERBEROS_V5;}
+		| INTERVAL NUMBER
+			{current.server.interval = $2;}
+		| PREAUTHENTICATE ANY
+			{current.server.preauthenticate = A_ANY;}
+		| PREAUTHENTICATE PASSWORD
+			{current.server.preauthenticate = A_PASSWORD;}
+		| PREAUTHENTICATE GSSAPI
+			{current.server.preauthenticate = A_GSSAPI;}
+		| PREAUTHENTICATE KERBEROS4
+			{current.server.preauthenticate = A_KERBEROS_V4;}
+                | PREAUTHENTICATE KERBEROS5
+		 	{current.server.preauthenticate = A_KERBEROS_V5;}
                 | PREAUTHENTICATE KERBEROS         {
 #ifdef KERBEROS_V5
 		    current.server.preauthenticate = A_KERBEROS_V5;
@@ -193,12 +199,10 @@ serv_option	: AKA alias_list
 		    current.server.preauthenticate = A_KERBEROS_V4;
 #endif /* KERBEROS_V5 */
 		}
-                | PREAUTHENTICATE GSSAPI         {
-		    current.server.preauthenticate = A_GSSAPI;
-		}
-                | PREAUTHENTICATE SSH 	{current.server.preauthenticate = A_SSH;}
-		| TIMEOUT NUMBER	{current.server.timeout = $2;}
-
+                | PREAUTHENTICATE SSH
+		 	{current.server.preauthenticate = A_SSH;}
+		| TIMEOUT NUMBER
+			{current.server.timeout = $2;}
 		| ENVELOPE NUMBER STRING 
 					{
 					    current.server.envelope = 
