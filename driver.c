@@ -1637,7 +1637,7 @@ const struct method *proto;	/* protocol method table */
 					  len,
 					  protocol->delimited);
 			    if (ok == PS_TRANSIENT)
-				suppress_delete = TRUE;
+				suppress_delete = suppress_forward = TRUE;
 			    else if (ok)
 				goto cleanUp;
 			    set_timeout(ctl->server.timeout);
