@@ -221,15 +221,15 @@ MANIFEST: $(srcdir) Makefile.in
 	@wc -l MANIFEST
 
 FAQ: fetchmail.FAQ.html
-	echo "(This document was generated from fetchmail.FAQ.html)" >FAQ
+	echo "   (This document was generated from fetchmail.FAQ.html)" >FAQ
 	lynx -dump -nolist fetchmail.FAQ.html >>FAQ
 
 FEATURES: fetchmail-features.html
-	echo "(This document was generated from fetchmail-features.html)" >FEATURES
+	echo "   (This document was generated from fetchmail-features.html)" >FEATURES
 	lynx -dump -nolist fetchmail-features.html | grep -v "Back to " >>FEATURES
 
 NOTES: design-notes.html
-	echo "(This document was generated from design-notes.html)" >NOTES
+	echo "   (This document was generated from design-notes.html)" >NOTES
 	lynx -dump -nolist design-notes.html | grep -v "Back to " >NOTES
 
 # Make distribution, update LSM with proper size, remake distribution
