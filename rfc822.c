@@ -43,24 +43,27 @@ const char *host;	/* server hostname */
 	printf("state %d: %s", state, mycopy);
 	printf("%*s^\n", from - mycopy + 10, " ");
 #endif /* TESTMAIN */
-	if (*from == '(')
-	    ++parendepth;
-	else if (*from == ')')
-	    --parendepth;
+	if (state != 2)
+	    if (*from == '(')
+		++parendepth;
+	    else if (*from == ')')
+		--parendepth;
 
 	if (!parendepth && !has_host_part)
 	    switch (state)
 	    {
-	    case 0:   /* before header colon */
+	    case 0:	/* before header colon */
 		if (*from == ':')
 		    state = 1;
 		break;
 
-	    case 1:   /* we've seen the colon, we're looking for addresses */
+	    case 1:	/* we've seen the colon, we're looking for addresses */
 		if (*from == '<')
-		    state = 2;
+		    state = 3;
 		else if (*from == '@')
 		    has_host_part = TRUE;
+		else if (*from == '"')
+		    state = 2;
 		else if ((*from == ',' || HEADER_END(from)) && !has_host_part)
 		{
 		    while (isspace(*from))
@@ -76,7 +79,12 @@ const char *host;	/* server hostname */
 		}
 		break;
 
-	    case 2:   /* we're in a <>-enclosed address */
+	    case 2:	/* we're in a string */
+		if (*from == '"')
+		    state = 1;
+		break;
+
+	    case 3:	/* we're in a <>-enclosed address */
 		if (*from == '@')
 		    has_host_part = TRUE;
 		else if (*from == '>' && !has_host_part)
