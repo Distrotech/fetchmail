@@ -11,6 +11,8 @@
 #include  "socket.h"
 #include  "fetchmail.h"
 
+#define PROTOCOL_ERROR	{fputs("fetchmail: protocol error\n", stderr); return(PS_ERROR);}
+
 static int last;
 
 int pop3_ok (socket, argbuf)
@@ -95,16 +97,16 @@ char *greeting;
     switch (queryctl->protocol) {
     case P_POP3:
 	if ((gen_transact(socket,"USER %s", queryctl->remotename)) != 0)
-	    return(PS_ERROR);
+	    PROTOCOL_ERROR
 
 	if ((gen_transact(socket, "PASS %s", queryctl->password)) != 0)
-	    return(PS_ERROR);
+	    PROTOCOL_ERROR
 	break;
 
     case P_APOP:
 	if ((gen_transact(socket, "APOP %s %s",
 			  queryctl->remotename, queryctl->digest)) != 0)
-	    return(PS_ERROR);
+	    PROTOCOL_ERROR
 	break;
 
     default:
@@ -151,7 +153,7 @@ int *countp, *newp;
 	if (ok == 0)
 	{
 	    if (sscanf(buf, "%d", &last) == 0)
-		return(PS_ERROR);
+		PROTOCOL_ERROR
 	    *newp = (*countp - last);
 	}
  	else
@@ -163,7 +165,7 @@ int *countp, *newp;
 	    *newp = 0;
  	    gen_send(socket, "UIDL");
  	    if ((ok = pop3_ok(socket, buf)) != 0)
-		return(PS_ERROR);
+		PROTOCOL_ERROR
 	    else
 	    {
  		while (SockGets(socket, buf, sizeof(buf)) >= 0)
