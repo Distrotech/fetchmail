@@ -2,8 +2,8 @@
 #
 # indexgen.sh -- generate current version of fetchmail home page.
 #
-goldvers="5.7.0"
-goldname="5.7.0"
+goldvers="5.8.0"
+goldname="5.8.0"
 version=`sed -n <Makefile.in "/VERSION *= */s/VERSION *= *\([^ 	]*\)/\1/p"`
 date=`date "+%d %b %Y"`
 
@@ -295,7 +295,7 @@ Donncha O Caoihm has written a Perl script called
 that assists you in installing sendmail and fetchmail together/<p>
 
 Peter Hawkins has written a script called <a
-href="http://hawkins.emu.id.au/gotmail/">gotmail</a>
+href="http://www.hawkins.emu.id.au/gotmail/">gotmail</a>
 that can retrieve Hotmail. <P>
 
 <H1>Fetchmail's funniest fan letter:</H1>
