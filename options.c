@@ -116,7 +116,7 @@ struct optrec *options;
         break;
       case 'V':
       case LA_VERSION:
-        options->versioninfo = !0;
+        versioninfo = !0;
         break;
       case 'a':
       case LA_ALL:

@@ -46,7 +46,6 @@
 #define		TO_MDA		3	/* use agent */
 
 struct optrec {
-  int versioninfo;
   int keep;
   int protocol;
   int limit;
@@ -84,7 +83,8 @@ struct prc_server {
 
 /* Controls the detail of status/progress messages written to stderr */
 extern int outlevel;    /* see the O_.* constants above */
-extern int yydebug;	/* enable parse debugging */ 
+extern int yydebug;	/* enable parse debugging */
+extern int versioninfo;	/* emit only version info */
 
 /* daemon mode control */
 extern int poll_interval;	/* poll interval in seconds */

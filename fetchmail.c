@@ -52,6 +52,7 @@ int query_host(struct optrec *options);
 
 /* Controls the detail of status/progress messages written to stderr */
 int outlevel;		/* see the O_.* constants in popclient.h */
+int versioninfo;	/* emit only version info */
 
 /* Daemon-mode control */
 int poll_interval;	/* polling interval for daemon mode */
@@ -98,7 +99,7 @@ char **argv;
   if ((parsestatus = parsecmdline(argc,argv,&cmd_opts)) < 0)
     exit(PS_SYNTAX);
 
-  if (cmd_opts.versioninfo)
+  if (versioninfo)
     showversioninfo();
 
   if (prc_parse_file(poprcfile) != 0)
@@ -123,7 +124,7 @@ char **argv;
   }
 
   /* perhaps we just want to check options? */
-  if (cmd_opts.versioninfo) {
+  if (versioninfo) {
     printf("Taking options from command line and %s\n", poprcfile);
     for (hostp = hostlist; hostp; hostp = hostp->next) {
       printf("Options for host %s:\n", hostp->servername);
