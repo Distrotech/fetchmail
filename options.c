@@ -594,7 +594,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 
 	case LA_SSLCERTPATH:
-	    ctl->sslcertpath = xstrdup(optarg);
+	    ctl->sslcertpath = prependdir(optarg, currentwd);
 	    break;
 
 	case LA_SSLFINGERPRINT:

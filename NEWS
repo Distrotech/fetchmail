@@ -3,6 +3,7 @@
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
 * Nerijus Baliunas's patch to support STARTTLS over IMAP.
+* More cleanups and minor bugfixes from Sunil Shetye.
 
 fetchmail-5.9.14 (Fri Sep  6 05:03:25 EDT 2002), 21932 lines:
 
@@ -49,7 +50,7 @@ fetchmail-5.9.12 (Tue Jun  4 14:57:47 EDT 2002), 21669 lines:
 * Cygwin port patch from Jason Tishler.
 * Sunil Shetye's fix for password shrouding.
 * Various Debian fixes from HMH.
-* Arun A Tharuvai's patch to avoid speaking KPOP to an IMAP server.
+* Arun A. Tharuvai's patch to avoid speaking KPOP to an IMAP server.
 * Added Richard Harris's PopDel.py utility to the contrib directory.
 
 There are 505 people on fetchmail-friends and 670 on fetchmail-announce.

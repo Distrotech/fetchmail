@@ -354,7 +354,7 @@ user_option	: TO localnames HERE
 		| SSLCERT STRING	{current.sslcert = prependdir ($2, rcfiledir);}
 		| SSLPROTO STRING	{current.sslproto = xstrdup($2);}
 		| SSLCERTCK             {current.sslcertck = FLAG_TRUE;}
-		| SSLCERTPATH STRING    {current.sslcertpath = xstrdup($2);}
+		| SSLCERTPATH STRING    {current.sslcertpath = prependdir($2, rcfiledir);}
 		| SSLFINGERPRINT STRING {current.sslfingerprint = xstrdup($2);}
 
 		| NO KEEP		{current.keep        = FLAG_FALSE;}
@@ -579,6 +579,7 @@ char *prependdir (const char *file, const char *dir)
     char *newfile;
     if (!file[0] ||			/* null path */
 	file[0] == '/' ||		/* absolute path */
+	strcmp(file, "-") == 0 ||	/* stdin/stdout */
 	!dir[0])			/* we don't HAVE_GETCWD */
 	return xstrdup (file);
     newfile = xmalloc (strlen (dir) + 1 + strlen (file) + 1);

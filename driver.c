@@ -67,7 +67,7 @@ int stage;		/* where are we? */
 int phase;		/* where are we, for error-logging purposes? */
 int batchcount;		/* count of messages sent in current batch */
 flag peek_capable;	/* can we peek for better error recovery? */
-int mailserver_socket_temp;	/* socket to free if connect timeout */ 
+int mailserver_socket_temp = -1;	/* socket to free if connect timeout */ 
 
 static int timeoutcount;		/* count consecutive timeouts */
 
@@ -442,9 +442,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 		    report_build(stdout, GT_(" (length -1)"));
 		    break;
 		case MSGLEN_TOOLARGE:
-		    report_build(stdout, 
-				 GT_(" (oversized, %d octets)"),
-				 msgsizes[num-1]);
+		    report_build(stdout, GT_(" (oversized)"));
 		    break;
 		}
 	    }
@@ -457,8 +455,8 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	    err = (ctl->server.base_protocol->fetch_headers)(mailserver_socket,ctl,num, &len);
 	    if (err == PS_TRANSIENT)    /* server is probably Exchange */
 	    {
-		report_build(stdout,
-			     GT_("couldn't fetch headers, message %s@%s:%d (%d octets)"),
+		report(stdout,
+			     GT_("couldn't fetch headers, message %s@%s:%d (%d octets)\n"),
 			     ctl->remotename, ctl->server.truename, num,
 			     msgsizes[num-1]);
 		continue;
@@ -747,19 +745,12 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	sigprocmask(SIG_UNBLOCK, &allsigs, NULL);
 #endif /* HAVE_SIGPROCMASK */
 	
-	/* If there was a connect timeout, the socket should be closed.
-	 * mailserver_socket_temp contains the socket to close.
-	 */
-	mailserver_socket = mailserver_socket_temp;
-	
 	if (js == THROW_SIGPIPE)
 	{
 	    signal(SIGPIPE, SIG_IGN);
 	    report(stdout,
 		   GT_("SIGPIPE thrown from an MDA or a stream socket error\n"));
 	    wait(0);
-	    err = PS_SOCKET;
-	    goto cleanUp;
 	}
 	else if (js == THROW_TIMEOUT)
 	{
@@ -808,17 +799,10 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		close_warning_by_mail(ctl, (struct msgblk *)NULL);
 		ctl->wedged = TRUE;
 	    }
-
-	    err = PS_ERROR;
 	}
 
-	/* try to clean up all streams */
-	release_sink(ctl);
-	smtp_close(ctl, 0);
-	if (mailserver_socket != -1) {
-	    cleanupSockClose(mailserver_socket);
-	    mailserver_socket = -1;
-	}
+	err = PS_SOCKET;
+	goto cleanUp;
     }
     else
     {
@@ -1344,8 +1328,10 @@ is restored."));
 		    /* OK, we're going to gather size info next */
 		    xalloca(msgsizes, int *, sizeof(int) * count);
 		    xalloca(msgcodes, int *, sizeof(int) * count);
-		    for (i = 0; i < count; i++)
+		    for (i = 0; i < count; i++) {
+			msgsizes[i] = 0;
 			msgcodes[i] = MSGLEN_UNKNOWN;
+		    }
 
 		    /* 
 		     * We need the size of each message before it's
@@ -1428,7 +1414,21 @@ is restored."));
 	    stage = STAGE_LOGOUT;
 	    (ctl->server.base_protocol->logout_cmd)(mailserver_socket, ctl);
 	}
-	cleanupSockClose(mailserver_socket);
+
+	/* try to clean up all streams */
+	release_sink(ctl);
+	smtp_close(ctl, 0);
+	if (mailserver_socket != -1) {
+	    cleanupSockClose(mailserver_socket);
+	    mailserver_socket = -1;
+	}
+	/* If there was a connect timeout, the socket should be closed.
+	 * mailserver_socket_temp contains the socket to close.
+	 */
+	if (mailserver_socket_temp != -1) {
+	    cleanupSockClose(mailserver_socket_temp);
+	    mailserver_socket_temp = -1;
+	}
     }
 
     msg = (const char *)NULL;	/* sacrifice to -Wall */

@@ -712,6 +712,9 @@ static int imap_getsizes(int sock, int count, int *sizes)
 
 	if ((ok = gen_recv(sock, buf, sizeof(buf))))
 	    return(ok);
+	/* an untagged NO means that a message was not readable */
+	else if (strstr(buf, "* NO"))
+	    ;
 	else if (strstr(buf, "OK") || strstr(buf, "NO"))
 	    break;
 	else if (sscanf(buf, "* %u FETCH (RFC822.SIZE %u)", &num, &size) == 2) {
@@ -784,9 +787,19 @@ static int imap_fetch_headers(int sock, struct query *ctl,int number,int *lenp)
   	    break;
 	/* try to recover from chronically fucked-up M$ Exchange servers */
  	else if (!strncmp(ptr, "NO", 2))
+	{
+	    /* wait for a tagged response */
+	    if (strstr (buf, "* NO"))
+		imap_ok (sock, 0);
  	    return(PS_TRANSIENT);
+	}
  	else if (!strncmp(ptr, "BAD", 3))
+	{
+	    /* wait for a tagged response */
+	    if (strstr (buf, "* BAD"))
+		imap_ok (sock, 0);
  	    return(PS_TRANSIENT);
+	}
     }
 
     if (num != number)

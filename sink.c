@@ -694,6 +694,7 @@ static const char *is_quad(const char *q)
     return NULL;
   /* Make sure quad is < 255 */
   if ( (r-q) == 3)
+  {
     if (*q > '2')
       return NULL;
     else if (*q == '2')
@@ -706,6 +707,7 @@ static const char *is_quad(const char *q)
           return NULL;
       }
     }
+  }
   return r;
 }
 
@@ -1206,7 +1208,13 @@ void release_sink(struct query *ctl)
 /* release the per-message output sink, whether it's a pipe or SMTP socket */
 {
     if (ctl->bsmtp && sinkfp)
-	fclose(sinkfp);
+    {
+	if (strcmp(ctl->bsmtp, "-"))
+	{
+	    fclose(sinkfp);
+	    sinkfp = (FILE *)NULL;
+	}
+    }
     else if (ctl->mda)
     {
 	if (sinkfp)
@@ -1251,7 +1259,10 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 	fputs(".\r\n", sinkfp);
 	error = ferror(sinkfp);
 	if (strcmp(ctl->bsmtp, "-"))
+	{
 	    if (fclose(sinkfp) == EOF) error = 1;
+	    sinkfp = (FILE *)NULL;
+	}
 	if (error)
 	{
 	    report(stderr, 
