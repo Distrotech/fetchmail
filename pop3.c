@@ -158,16 +158,14 @@ int *countp, *newp;
 	}
  	else
  	{
-	    int	num;
-	    struct idlist *idp;
-
  	    /* grab the mailbox's UID list */
-	    *newp = 0;
- 	    gen_send(socket, "UIDL");
- 	    if ((ok = pop3_ok(socket, buf)) != 0)
+ 	    if ((ok = gen_transact(socket, "UIDL")) != 0)
 		PROTOCOL_ERROR
 	    else
 	    {
+		int	num;
+
+		*newp = 0;
  		while (SockGets(socket, buf, sizeof(buf)) >= 0)
 		{
  		    if (outlevel == O_VERBOSE)
