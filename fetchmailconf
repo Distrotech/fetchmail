@@ -938,6 +938,17 @@ or just that your Internet connection is down.
             warnings = ''
             # OK, now try to recognize potential problems
 
+            if protocol == "POP2":
+                warnings = warnings + """
+It appears you have somehow found a mailserver running only POP2.
+Congratulations.  Have you considered a career in archaeology?
+
+Unfortunately, stock fetchmail binaries don't include POP2 support anymore.
+Unless the first line of your fetchmail -V output includes the string "POP2",
+you'll have to build it from sources yourself with the configure
+switch --enable-POP2.
+
+"""
             if string.find(greetline, "1.003") > 0 or string.find(greetline, "1.003") > 0:
                 warnings = warnings + """
 This appears to be an old version of the UC Davis POP server.  These are
@@ -956,9 +967,24 @@ are quite flaky.  They seem to require that fetchall be switched on
 They botch the TOP command the fetchmail normally uses for retrieval
 (it only retrieves about 10 lines rather than the number specified).
 
-It is recommended that you turn on fetchall and keep.  Turning on keep
-will disable the use of TOP.
+It is recommended that you turn on `fetchall' and `keep' on all user
+entries associated with this server.  Turning on keep will disable the
+use of TOP.
 
+"""
+            if string.find(greetline, "QPOP") > 0:
+                warnings = warnings + """
+This appears to be a version of Eudora qpopper.  That's good.  Fetchmail
+knows all about qpopper.
+
+"""
+            if string.find(greetline, "csi.com") > 0:
+                warnings = warnings + """
+It appears you're talking to CompuServe.  You can use their special RPA
+service for authentication, but only if your fetchmail -V output's first
+line contains the string "RPA".  This is not included in stock fetchmail
+binsries; to compile it in, rebuild from sources with the configure
+option --enable-RPA.
 """
             if string.find(greetline, "IMAP2bis") > 0:
                 warnings = warnings + """
@@ -966,8 +992,14 @@ IMAP2bis servers have a minor problem; they can't peek at messages without
 marking them seen.  If you take a line hit during the retrieval, the 
 interrupted message may get left on the server, marked seen.
 
-To work around this, it is recommended that you set the `fetchall' option,
-so any stuck mail will be retrieved next time around.
+To work around this, it is recommended that you set the `fetchall'
+option on all user entries associated with this server, so any stuck
+mail will be retrieved next time around.
+
+"""
+            if warnings == '':
+                warnings = warnings + """
+Fetchmail doesn't know anything special about this server type.
 """
 
             # Display success window with warnings
