@@ -27,7 +27,7 @@ char *buf;		/* header to be hacked */
 const char *host;	/* server hostname */
 {
     char *from, *cp;
-    int parendepth, state, has_host_part;
+    int parendepth, state, has_bare_name_part, has_host_part;
 
     if (strncmp("From: ", buf, 6)
 	&& strncmp("To: ", buf, 4)
@@ -38,7 +38,7 @@ const char *host;	/* server hostname */
     }
 
     parendepth = state = 0;
-    has_host_part = FALSE;
+    has_host_part = has_bare_name_part = FALSE;
     for (from = buf; *from; from++)
     {
 #ifdef TESTMAIN
@@ -69,7 +69,7 @@ const char *host;	/* server hostname */
 		    has_host_part = TRUE;
 		else if (*from == '"')
 		    state = 2;
-		else if ((*from == ',' || HEADER_END(from)) && !has_host_part)
+		else if ((*from == ',' || HEADER_END(from)) && has_bare_name_part && !has_host_part)
 		{
 		    int hostlen;
 
@@ -83,7 +83,9 @@ const char *host;	/* server hostname */
 		    memcpy(from, host, hostlen);
 		    from += strlen(from);
 		    has_host_part = TRUE;
-		}
+		} 
+		else if (!isspace(*from))
+		    has_bare_name_part = TRUE;
 		break;
 
 	    case 2:	/* we're in a string */
