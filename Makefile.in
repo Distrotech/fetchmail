@@ -133,7 +133,7 @@ tags: $(tagsrcs)
 
 .PHONY: install installdirs
 install: installdirs \
-	 $(bindir)/$(instname) # $(infodir)/fetchmail.info \
+	 # $(bindir)/$(instname) $(infodir)/fetchmail.info \
 	 $(mandir)/$(instname).$(manext)
 
 installdirs:
