@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.13"
+version = "1.14"
 
 from Tkinter import *
 from Dialog import *
@@ -628,7 +628,7 @@ class ConfigurationEdit(Frame, MyWidget):
 	self.subwidgets[sitename] = ServerEdit(sitename, self).edit(self.mode, Toplevel())
 
     def server_delete(self, sitename):
-        if self.configuration.has_keys(sitename):
+        if self.subwidgets.has_key(sitename):
             del self.configuration[sitename]
 
     def edit(self, mode):
