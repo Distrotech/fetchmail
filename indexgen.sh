@@ -50,7 +50,7 @@ cat >index.html <<EOF
 <table border="10">
 <tr>
 <td>
-<center><img src="bighand.gif"></center>
+<center><img src="bighand.png"></center>
 </td>
 </tr>
 </table>
@@ -268,7 +268,7 @@ Rabson's Linux page</a>.<P>
 If you use fetchmail and like it, here's a nifty fetchmail button you
 can put on your web page:<P>
 
-<center><img src="fetchmail.gif"></center><P>
+<center><img src="fetchmail.png"></center><P>
 
 Thanks to <a href="http://www.gl.umbc.edu/~smatus1/">Steve
 Matuszek</a> for the graphic design.  The hand in the button (and the

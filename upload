@@ -19,8 +19,8 @@ put fetchmail-features.html
 put NEWS
 put design-notes.html
 #put funny.html
-#put fetchmail.gif
-#put bighand.gif
+#put fetchmail.png
+#put bighand.png
 put checksums
 put index.html
 close
