@@ -68,7 +68,7 @@ serv_option	: PROTOCOL PROTO	{prc_setproto($2);}
 		    				prc_setauth(A_KERBEROS);
 						prc_setport(KPOP_PORT);
 					}
-		| PORT STRING		{prc_setport($2);}
+		| PORT STRING		{prc_setport(atoi($2));}
 		| SKIP			{prc_setskip($1==FLAG_TRUE);}
 		| AUTHENTICATE PASSWORD	{prc_setauth(A_PASSWORD);}
 		| AUTHENTICATE KERBEROS	{prc_setauth(A_KERBEROS);}

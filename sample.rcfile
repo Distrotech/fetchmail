@@ -28,7 +28,6 @@
 #   is
 #   remotefolder (or remote)
 #   password (or pass)
-#   mailbox
 #   smtphost (or smtp)
 #   mda
 #   keep

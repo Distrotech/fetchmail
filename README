@@ -1,19 +1,5 @@
 			 fetchmail README
 
------------------------------------------------------------------------------
-                        * * * WARNING * * *
-
-This release contains untested features!  It includes new code for Kerberos
-authentication and POP3 UID support, but my integration of these features
-required changes which have not yet been tested by the people who sent the
-enhancements.
-
-I'm issuing it to put paid to two minor but annoying bugs, in option
-processing and IMAP queries of multiple sites.  For other changes, see
-the release notes in the NEWS file.
-
------------------------------------------------------------------------------
-
 fetchmail is a full-featured, robust, well-documented POP2, POP3,
 APOP, and IMAP batch mail retrieval/forwarding utility intended to be
 used over on-demand TCP/IP links (such as SLIP or PPP connections).
@@ -79,7 +65,7 @@ with **.
 	   You could use fetchmail to test and debug server implementatations.
 
 	*  Carefully written, comprehensive and up-to-date man page describing
-	   not only modes of operation but also (**) how to interpret the most
+	   not only modes of operation but also (**) how to diagnose the most
 	   common kinds of problems and what to do about deficient servers
 
 	*  Rugged, simple, and well-tested code -- the author relies on it
@@ -90,7 +76,11 @@ with **.
 	   user base from Carl Harris's popclient community.   This means
 	   feedback is rapid, bugs get found and fixed rapidly.
 
-You can easily find the latest version of fetchmail from Eric's home page:
+You can easily fetch the latest version of fetchmail  via FTP from:
+
+	ftp://ftp.ccil.org/pub/esr/fetchmail-1.9.tar.gz
+
+Or you can get it from Eric's home page:
 
 	http://www.ccil.org/~esr
 

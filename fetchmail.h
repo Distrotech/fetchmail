@@ -149,6 +149,7 @@ void save_uid(struct idlist **, int, char *);
 void free_uid_list(struct idlist **);
 int delete_uid(struct idlist **, int);
 int uid_in_list(struct idlist **, char *);
+char *uid_find(struct idlist **, int);
 void update_uid_lists(struct hostrec *);
 void write_saved_lists(struct hostrec *, char *);
 

@@ -628,7 +628,7 @@ struct method *proto;
     }
 
 #ifdef KERBEROS_V4
-    if (queryctl->authentication == A_KERBEROS)
+    if (queryctl->authenticate == A_KERBEROS)
     {
 	ok = (kerberos_auth (socket, queryctl->servername));
 	if (ok != 0)

@@ -129,6 +129,9 @@ int *countp;
     int ok;
     char buf [POPBUFSIZE+1];
 
+    /* Ensure that the new list is properly empty */
+    queryctl->newsaved = (struct idlist *)NULL;
+
     /* get the total message count */
     gen_send(socket, "STAT");
     ok = pop3_ok(socket, buf);
@@ -158,14 +161,14 @@ int *countp;
 
  	    /* grab the mailbox's UID list */
  	    gen_send(socket, "UIDL");
- 	    if ((ok = pop3_ok(buf, socket)) == 0) {
+ 	    if ((ok = pop3_ok(socket, buf)) == 0) {
  		while (SockGets(socket, buf, sizeof(buf)) >= 0) {
  		    if (outlevel == O_VERBOSE)
  			fprintf(stderr,"%s\n",buf);
- 		    if (strcmp(buf, ".\n") == 0) {
+ 		    if (strcmp(buf, ".") == 0) {
  			break;
  		    }
- 		    if (sscanf(buf, "%d %s\n", &num, id) == 2)
+ 		    if (sscanf(buf, "%d %s", &num, id) == 2)
  			save_uid(&queryctl->newsaved, num, id);
  		}
  	    }
@@ -183,23 +186,8 @@ int num;
     if (!queryctl->oldsaved)
 	return (num <= last);
     else
-    {
-	char buf [POPBUFSIZE+1];
-	int ok;
-
-	gen_send(socket, "UIDL %d", num);
-	if ((ok = pop3_ok(socket, buf)) != 0)
-	    return(ok);
-	else
-	{
-	    char	id[IDLEN+1];
-
-	    if (sscanf(buf, "%*d %s", id) == 2)
-		return(uid_in_list(&queryctl->oldsaved, id));
-	    else
-		return(0);
-	}
-    }
+        return (uid_in_list(&queryctl->oldsaved,
+			    uid_find (&queryctl->newsaved, num)));
 }
 
 static int pop3_fetch(socket, number, lenp)

@@ -140,12 +140,25 @@ int uid_in_list(idl, str)
 struct idlist **idl;
 char *str;
 {
-    if (*idl == (struct idlist *)NULL)
+    if (*idl == (struct idlist *)NULL || str == (char *) NULL)
 	return(0);
     else if (strcmp(str, (*idl)->id) == 0)
 	return(1);
     else
 	return(uid_in_list(&(*idl)->next, str));
+}
+
+char *uid_find(idl, number)
+/* return the id of the given number in the given list. */
+struct idlist **idl;
+int number;
+{
+    if (*idl == (struct idlist *) 0)
+	return((char *) 0);
+    else if (number == (*idl)->num)
+	return((*idl)->id);
+    else
+	return(uid_find(&(*idl)->next, number));
 }
 
 int delete_uid(idl, num)
@@ -175,6 +188,7 @@ struct hostrec *hostp;
 {
     free_uid_list(&hostp->oldsaved);
     hostp->oldsaved = hostp->newsaved;
+    hostp->newsaved = (struct idlist *) NULL;
 }
 
 void write_saved_lists(hostlist, idfile)
