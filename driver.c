@@ -241,7 +241,7 @@ static void find_server_names(const char *hdr,
  * are not uncommon.  So now we just check that the following token is
  * not itself an email address.
  */
-#define VALID_ADDRESS(a)	!strchr(rbuf, '@')
+#define VALID_ADDRESS(a)	!strchr(a, '@')
 
 static char *parse_received(struct query *ctl, char *bufp)
 /* try to extract real address from the Received line */
@@ -542,16 +542,20 @@ static int readheaders(int sock,
 
 	/*
 	 * When mail delivered to a multidrop mailbox on the server is
-	 * addressed to multiple people, there will be one copy left
-	 * in the box for each recipient.  Thus, if the mail is addressed
-	 * to N people, each recipient would get N copies.
+	 * addressed to multiple people on the client machine, there
+	 * will be one copy left in the box for each recipient.  Thus,
+	 * if the mail is addressed to N people, each recipient will
+	 * get N copies.
 	 *
 	 * Foil this by suppressing all but one copy of a message with
 	 * a given Message-ID.  Note: This implementation only catches
 	 * runs of successive identical messages, but that should be
-	 * good enough.
+	 * good enough. 
+	 * 
+	 * The accept_count test ensures that multiple pieces of identical 
+	 * email, each with a *single* addressee, won't be suppressed.
 	 */
-	if (MULTIDROP(ctl) && !strncasecmp(line, "Message-ID:", 11))
+	if (MULTIDROP(ctl) && accept_count > 1 && !strncasecmp(line, "Message-ID:", 11))
 	{
 	    if (ctl->lastid && !strcasecmp(ctl->lastid, line))
 		return(PS_REFUSED);

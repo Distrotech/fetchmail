@@ -13,6 +13,7 @@ a Certifying Authority we recognize?).
 * Mike Pearce's patch to fix a compile-time error recently introduced into
   the socket code when HAVE_INET_ATON is off.
 * Added warning to fetchmailconf autoprobe about a flaky Netscape IMAP server.
+* Disable duplicate suppression when there is only one recognized recipient.
 
 fetchmail-5.1.3 (Sun Oct 31 12:19:52 EST 1999), 18290 lines:
 * Grant Edwards's patch to correct NTLM behavior.
