@@ -599,6 +599,7 @@ struct method *proto;
     }
 
     tagnum = 0;
+    tag[0] = '\0';	/* nuke any tag hanging out from previous query */
     protocol = proto;
 
     /* open a socket to the mail server */
