@@ -1206,63 +1206,6 @@ static void clean_skipped_list(struct idlist **skipped_list)
     *skipped_list = head;
 }
 
-static open_warning_by_mail(struct query *ctl)
-/* set up output sink for a mailed warning to calling user */
-{
-    int	good, bad;
-
-    /*
-     * We give a null address list as arg 3 because we actually *want*
-     * this message to go to run.postmaster.  The zero length arg 4 means
-     * we won't pass a SIZE option to ESMTP; the message length would
-     * be more trouble than it's worth to compute.
-     */
-    return(open_sink(ctl, "FETCHMAIL-DAEMON", NULL, 0, &good, &bad));
-}
-
-#if defined(HAVE_STDARG_H)
-void stuff_warning_line(struct query *ctl, const char *fmt, ... )
-#else
-void stuff_warning_line(struct query *ctl, fmt, va_alist)
-struct query *ctl;
-const char *fmt;	/* printf-style format */
-va_dcl
-#endif
-/* format and ship a warning message line by mail */
-{
-    char	buf[POPBUFSIZE];
-    va_list ap;
-
-    /*
-     * stuffline() requires its input to be writeable (for CR stripping),
-     * so we needed to copy the message to a writeable buffer anyway in
-     * case it was a string constant.  We make a virtue of that necessity
-     * here by supporting stdargs/varargs.
-     */
-#if defined(HAVE_STDARG_H)
-    va_start(ap, fmt) ;
-#else
-    va_start(ap);
-#endif
-#ifdef HAVE_VSNPRINTF
-    vsnprintf(buf, sizeof(buf), fmt, ap);
-#else
-    vsprintf(buf, fmt, ap);
-#endif
-    va_end(ap);
-
-    strcat(buf, "\r\n");
-
-    stuffline(ctl, buf);
-}
-
-static close_warning_by_mail(struct query *ctl)
-/* sign and send mailed warnings */
-{
-    stuff_warning_line(ctl, "--\r\n\t\t\t\tThe Fetchmail Daemon\r\n");
-    close_sink(ctl, TRUE);
-}
-
 static void send_size_warnings(struct query *ctl)
 /* send warning mail with skipped msg; reset msg count when user notified */
 {

@@ -364,6 +364,13 @@ int stuffline(struct query *, char *);
 int open_sink(struct query*, const char*, struct idlist*, long reallen, int*, int*);
 void release_sink(struct query *);
 int close_sink(struct query *, flag);
+int open_warning_by_mail(struct query *);
+#if defined(HAVE_STDARG_H)
+void stuff_warning_line(struct query *, const char *, ... );
+#else
+void stuff_warning_line();
+#endif
+void close_warning_by_mail(struct query *);
 
 /* rfc822.c: RFC822 header parsing */
 char *reply_hack(char *, const char *);
