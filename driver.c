@@ -219,9 +219,7 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
     if (lname != (char *)NULL)
     {
 	if (outlevel == O_VERBOSE)
-	    fprintf(stderr,
-		    "fetchmail: mapped %s to local %s\n",
-		    name, lname);
+	    error(0, 0, "mapped %s to local %s", name, lname);
 	save_str(xmit_names, -1, lname);
     }
 }
@@ -438,8 +436,8 @@ struct query *ctl;	/* query control record */
 		    received_for = alloca(strlen(rbuf)+1);
 		    strcpy(received_for, rbuf);
 		    if (outlevel == O_VERBOSE)
-			fprintf(stderr, 
-				"fetchmail: found Received address `%s'\n",
+			error(0, 0, 
+				"found Received address `%s'",
 				received_for);
 		}
 	    }
@@ -487,8 +485,8 @@ struct query *ctl;	/* query control record */
 		    no_local_matches = TRUE;
 		    save_str(&xmit_names, -1, user);
 		    if (outlevel == O_VERBOSE)
-			fprintf(stderr, 
-				"fetchmail: no local matches, forwarding to %s\n",
+			error(0, 0, 
+				"no local matches, forwarding to %s",
 				user);
 		}
 	    }
@@ -601,8 +599,6 @@ struct query *ctl;	/* query control record */
 
 		/* tell it we're ready to send data */
 		SMTP_data(sinkfp);
-		if (outlevel == O_VERBOSE)
-		    fputs("SMTP> ", stderr);
 
 	    skiptext:;
 	    }
@@ -805,7 +801,7 @@ const struct method *proto;	/* protocol method table */
 #ifndef KERBEROS_V4
     if (ctl->authenticate == A_KERBEROS)
     {
-	fputs("fetchmail: Kerberos support not linked.\n", stderr);
+	error(0, 0, "Kerberos support not linked.");
 	return(PS_ERROR);
     }
 #endif /* KERBEROS_V4 */
@@ -815,22 +811,22 @@ const struct method *proto;	/* protocol method table */
     {
 	/* check for unsupported options */
 	if (ctl->flush) {
-	    fprintf(stderr,
-		    "Option --flush is not supported with %s\n",
+	    error(0, 0,
+		    "Option --flush is not supported with %s",
 		    proto->name);
 	    return(PS_SYNTAX);
 	}
 	else if (ctl->fetchall) {
-	    fprintf(stderr,
-		    "Option --all is not supported with %s\n",
+	    error(0, 0,
+		    "Option --all is not supported with %s",
 		    proto->name);
 	    return(PS_SYNTAX);
 	}
     }
     if (!proto->getsizes && ctl->limit)
     {
-	fprintf(stderr,
-		"Option --limit is not supported with %s\n",
+	error(0, 0,
+		"Option --limit is not supported with %s",
 		proto->name);
 	return(PS_SYNTAX);
     }
@@ -1157,7 +1153,8 @@ va_dcl {
 
 	if (shroud && (cp = strstr(buf, shroud)))
 	    memset(cp, '*', strlen(shroud));
-	fprintf(stderr,"> %s", buf);
+	buf[strlen(buf)-1] = '\0';
+	error(0, 0, "> %s", buf);
     }
 }
 
@@ -1198,7 +1195,8 @@ va_dcl {
 
       if (shroud && (cp = strstr(buf, shroud)))
 	  memset(cp, '*', strlen(shroud));
-      fprintf(stderr,"> %s", buf);
+      buf[strlen(buf)-1] = '\0';
+      error(0, 0, "> %s", buf);
   }
 
   /* we presume this does its own response echoing */
