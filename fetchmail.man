@@ -508,16 +508,20 @@ host queried.
 .SH AUTHOR
 .I popclient
 was written by Carl Harris at Virginia Polytechnic Institute and State   
-University (a.k.a. Virginia Tech).  Version 3.0 was extensively hacked
-by Eric S. Raymond <esr@snark.thyrsus.com>.
+University (a.k.a. Virginia Tech).  Version 3.0 was extensively improved
+by Eric S. Raymond <esr@snark.thyrsus.com> and is now maintained by esr..
 .PP
 .SH BUGS
 .PP
 The --version option doesn't display MDA arguments.
 .PP
+The (undocumented) --logfile option doesn't work, due to some weirdness
+in the daemon code.  Fixes cheerfully accepted.
+.PP
 No IMAP or RPOP support yet.
 .PP
-Send comments, bug reports, gripes, and the like to ceharris@mal.com.
+Send comments, bug reports, gripes, and the like to Eric S. Raymond
+<esr@thyrsus.com>.
 .SH NOTE
 The -p (--password) option of previous versions has been removed -- it
 encouraged people to expose passwords in scripts.  Passwords
