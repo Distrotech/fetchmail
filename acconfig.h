@@ -29,6 +29,9 @@
 /* Define if you have the strcasecmp function.  */
 #undef HAVE_STRCASECMP
 
+/* Define if you have the memmove function.  */
+#undef HAVE_MEMMOVE
+
 /* Define if you have GNU's getopt family of functions.  */
 #undef HAVE_GETOPTLONG
 

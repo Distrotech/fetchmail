@@ -60,6 +60,10 @@ AC_CHECK_FUNC(strcasecmp, AC_DEFINE(HAVE_STRCASECMP),
               [EXTRASRC="$EXTRASRC \$(srcdir)/strcasecmp.c"
                EXTRAOBJ="$EXTRAOBJ strcasecmp.o"])
              
+AC_CHECK_FUNC(memmove, AC_DEFINE(HAVE_MEMMOVE), 
+              [EXTRASRC="$EXTRASRC \$(srcdir)/memmove.c"
+               EXTRAOBJ="$EXTRAOBJ memmove.o"])
+             
 AC_CHECK_FUNC(getopt_long, AC_DEFINE(HAVE_GETOPTLONG),
               [EXTRASRC="$EXTRASRC \$(srcdir)/getopt.c \$(srcdir)/getopt1.c"
                EXTRAOBJ="$EXTRAOBJ getopt.o getopt1.o"])
@@ -72,7 +76,8 @@ then
   EXTRAOBJ="$EXTRAOBJ alloca.o"
 fi
 
-dnl All AC_CHECK_FUNCs must precede the following AC_SUBSTs
+dnl AC_CHECK_FUNC calls that might hack the Makefile must precede
+dnl the following AC_SUBSTs
 
 AC_SUBST(EXTRADEFS)
 AC_SUBST(EXTRASRC)

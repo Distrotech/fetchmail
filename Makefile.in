@@ -113,8 +113,8 @@ rfc822: rfc822.c
 	gcc -DTESTMAIN -g rfc822.c -o rfc822
 
 # Stand-alone MIME decoder
-unmime: unmime.c base64.c rfc822.c xmalloc.c error.c
-	$(CC) -DSTANDALONE -g -o $@ $^
+unmime: unmime.c base64.c rfc822.c xmalloc.c error.c memmove.c
+	$(CC) -DSTANDALONE -g -o $@ $^ 
 
 .c.o:
 	$(CC) $(defines) -c -I$(srcdir) -I. $(CEFLAGS) $(CFLAGS) $<
@@ -202,7 +202,7 @@ headers = $(srcdir)/fetchmail.h $(srcdir)/socket.h $(srcdir)/smtp.h \
 	$(srcdir)/mx.h $(srcdir)/md5.h $(srcdir)/md5global.h \
 	$(srcdir)/netrc.h $(srcdir)/tunable.h
 extra = $(srcdir)/alloca.c $(srcdir)/getopt.[ch] $(srcdir)/getopt1.c \
-	$(srcdir)/strcasecmp.c $(srcdir)/strstr.c
+	$(srcdir)/strcasecmp.c $(srcdir)/strstr.c $(srcdir)/memmove.c
 docs = $(srcdir)/COPYING $(srcdir)/FEATURES $(srcdir)/fetchmail-features.html \
 	$(srcdir)/design-notes.html $(srcdir)/NOTES \
 	$(srcdir)/INSTALL $(srcdir)/NEWS  $(srcdir)/README \
