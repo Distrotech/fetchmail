@@ -693,9 +693,14 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 			return(PS_REFUSED);
 #endif /* __UNUSED__ */
 
+#ifdef HAVE_SNPRINTF
+		    snprintf(errbuf, sizeof(errbuf), "%s: %s",
+				    idp->id, smtp_response);
+#else
 		    strncpy(errbuf, idp->id, sizeof(errbuf));
-		    strncat(errbuf, ": ", sizeof(errbuf));
-		    strncat(errbuf, smtp_response, sizeof(errbuf));
+		    strcat(errbuf, ": ");
+		    strcat(errbuf, smtp_response);
+#endif /* HAVE_SNPRINTF */
 
 		    xalloca(from_responses[*bad_addresses], 
 			    char *, 
@@ -1181,7 +1186,11 @@ va_dcl
 #endif
     va_end(ap);
 
-    strncat(buf, "\r\n", sizeof(buf));
+#ifdef HAVE_SNPRINTF
+    snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), "\r\n");
+#else
+    strcat(buf, "\r\n");
+#endif /* HAVE_SNPRINTF */
 
     stuffline(ctl, buf);
 }

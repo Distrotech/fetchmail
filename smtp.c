@@ -111,7 +111,11 @@ int SMTP_from(int sock, const char *from, const char *opts)
 #endif /* HAVE_SNPRINTF */
 	    "MAIL FROM:<%s>", from);
     if (opts)
-	strncat(buf, opts, sizeof(buf));
+#ifdef HAVE_SNPRINTF
+	snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), "%s", opts);
+#else
+	strcat(buf, opts);
+#endif /* HAVE_SNPRINTF */
     SockPrintf(sock,"%s\r\n", buf);
     if (outlevel >= O_MONITOR)
 	report(stdout, "%cMTP> %s\n", smtp_mode, buf);

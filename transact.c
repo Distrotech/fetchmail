@@ -1056,7 +1056,11 @@ int readheaders(int sock,
 			ctl->server.pollname, 
 			ctl->remotename);
 	    }
-	    strncat(buf, ")\r\n", sizeof(buf));
+#ifdef HAVE_SNPRINTF
+	    snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), ")\r\n");
+#else
+	    strcat(buf, ")\r\n");
+#endif /* HAVE_SNPRINTF */
 	    n = stuffline(ctl, buf);
 	    if (n != -1)
 	    {
@@ -1101,8 +1105,13 @@ int readheaders(int sock,
 		else
 		    buf[1] = '\0';
 
-		strncat(buf, rfc822timestamp(), sizeof(buf));
-		strncat(buf, "\r\n", sizeof(buf));
+#ifdef HAVE_SNPRINTF
+		snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), "%s\r\n",
+			rfc822timestamp());
+#else
+		strcat(buf, rfc822timestamp());
+		strcat(buf, "\r\n");
+#endif /* HAVE_SNPRINTF */
 		n = stuffline(ctl, buf);
 	    }
 	}
@@ -1337,7 +1346,11 @@ va_dcl
 #endif
     va_end(ap);
 
-    strncat(buf, "\r\n", sizeof(buf));
+#ifdef HAVE_SNPRINTF
+    snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), "\r\n");
+#else
+    strcat(buf, "\r\n");
+#endif /* HAVE_SNPRINTF */
     SockWrite(sock, buf, strlen(buf));
 
     if (outlevel >= O_MONITOR)
@@ -1423,7 +1436,11 @@ va_dcl
 #endif
     va_end(ap);
 
-    strncat(buf, "\r\n", sizeof(buf));
+#ifdef HAVE_SNPRINTF
+    snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), "\r\n");
+#else
+    strcat(buf, "\r\n");
+#endif /* HAVE_SNPRINTF */
     SockWrite(sock, buf, strlen(buf));
 
     if (outlevel >= O_MONITOR)
