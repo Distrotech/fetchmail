@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.3.1 (Sun Mar  5 23:02:42 EST 2000), 18648 lines:
+
 * Use remotename@hostname for MAIL FROM if we have not been able to deduce
   a Return-Path.
 * Fix the attempted fix for Joop Susan's ENOTCONN bug.
@@ -22,6 +24,8 @@
 * Resolved Debian wishlist bug #26630.
 * Resolution of #59281 (still loops on Ctrl-C) involved a small change in
   behavior; SIGPIPE now terminates the current poll cycle.
+
+There are 289 people on fetchmail-friends and 502 on fetchmail-announce.
 
 fetchmail-5.3.0 (Tue Feb 22 08:53:31 PST 2000), 18618 lines:
 
