@@ -112,8 +112,8 @@ unlink("DIFFS.$$");
 print "Building index page...\n";
 system("rm -f index.html; indexgen.sh");
 
-print "Making activity graph..."
-growthplot
+print "Making activity graph...";
+growthplot;
 
 print "Done\n";
 
