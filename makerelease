@@ -97,4 +97,9 @@ system("chown esr RELEASE.NOTES");
 unlink("PREAMBLE.$$");
 unlink("DIFFS.$$");
 
+print "Building index page...\n"
+system "indexgen.sh $version"
+
+print "Done\n";
+
 # makerelease ends here
