@@ -34,4 +34,11 @@ or you can choose completely different directories for each item.
 See the man page or the file sample.rcfile for a description of how to
 configure your individual preferences.
 
+Note: if you have been using popclient (the ancestor of this program)
+at version 3.0b6 or later, do this
+
+(cd ~; mv ~/.poprc ~/.fetchmailrc)
+
+in order to migrate.
+
 Enjoy!

@@ -18,13 +18,14 @@ Features of fetchmail include:
 	* POP2, POP3, APOP, RPOP and IMAP support with auto-probing for a
 	  server on the host if no protocol is specified.
 
-	* Easy control via command line or free-format configuration file.
+	* Easy control via command line or free-format run control file.
 
 	* Daemon mode -- fetchmail can be run in background to poll
 	  one or more hosts at a specified interval.
 
-	* Delivery via either file-append with mandatory locking or an
-	  MDA you specify, or via SMTP to the client machine's port 25.
+	* Delivery via via SMTP to the client machine's port 25 (or
+	  optionally via either file-append with mandatory locking or an
+	  MDA you specify). 
 
 	* From:, To:, Cc:, and Reply-To: headers are rewritten so that 
 	  usernames relative to the fetchmail host become fully-qualified
