@@ -1,12 +1,12 @@
 				Release Notes:
 
-fetchmail-4.6.7 ():
+fetchmail-4.6.7 (Sat Nov 21 13:59:47 EST 1998):
 * Gerald Britton's patches to enable Hesiod support.
 * Postmaster option fix from Bill Metzenthen <billm@melbpc.org.au>.
 * Socks library support forom Guiseppe Guerini.
 * Notification mail is now sent to the user on 20 consecutive timeouts.
 
-There are 248 people on fetchmail-friends and 306 on fetchmail-announce.
+There are 247 people on fetchmail-friends and 308 on fetchmail-announce.
 
 fetchmail-4.6.6 (Sat Nov  7 17:27:04 EST 1998):
 * Fixed a core-dump bug in reply_hack with -v -v on.
