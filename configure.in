@@ -151,7 +151,7 @@ fi
 
 AC_OUTPUT(Makefile, [
 	echo "You can ignore any makedepend error messages";
-	makedepend -I$srcdir -I. -fMakefile *.c])
+	makedepend -I$srcdir -I. -fMakefile ${srcdir}/*.c])
 
 dnl Local Variables:
 dnl comment-start: "dnl "
