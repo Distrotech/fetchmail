@@ -76,14 +76,14 @@ class TestSite:
 
     def failed(self):
         "Did we have a test failure here?"
-        return os.WIFEXITED(self.status) or os.WEXITSTATUS(self.status) > 1
+        return os.WIFEXITED(self.status) and os.WEXITSTATUS(self.status) > 1
 
     def explain(self):
         "Explain the status of the last test."
         if not os.WIFEXITED(self.status):
             return self.id() + ": abnormal termination\n"
         elif os.WEXITSTATUS(self.status) > 1:
-            return self.id() + ": %d\n" % os.WEXITSTATUS(status) + self.output
+            return self.id() + ": %d\n" % os.WEXITSTATUS(self.status) + self.output
         else:
             return self.id() + ": succeeded\n"
 
@@ -115,7 +115,7 @@ if __name__ == "__main__":
             # Probe a single site
             selected = []
             for site in sitelist:
-                if site.id().find(value) > -1:
+                if `site`.find(value) > -1:
                     selected.append(site)
             sitelist = selected
             # Fall through
@@ -161,11 +161,8 @@ if __name__ == "__main__":
             print "Bad status was returned on the following sites:"
             for site in sitelist:
                 if site.failed():
-                    sys.stdout.write(self.explain)
+                    sys.stdout.write(site.explain())
     except KeyboardInterrupt:
         print "Interrupted."
 
 # end
-
-
-
