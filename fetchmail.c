@@ -1558,7 +1558,7 @@ static void dump_params (struct runctl *runp,
 	if (ctl->server.skip || outlevel >= O_VERBOSE)
 	    printf(_("  This host %s be queried when no host is specified.\n"),
 		   ctl->server.skip ? _("will not") : _("will"));
-	if (ctl->server.authenticate <= A_PASSWORD && ctl->server.protocol < P_ETRN)
+	if (!NO_PASSWORD(ctl))
 	{
 	    if (!ctl->password)
 		printf(_("  Password will be prompted for.\n"));
