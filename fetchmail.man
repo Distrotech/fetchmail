@@ -188,7 +188,9 @@ No POP connection is made.
 Instead, for each server specified, all option information
 that would be computed if
 .I fetchmail.
-were connecting to that server is displayed.
+were connecting to that server is displayed.  Any non-printables in
+passwords or other string names are shown as backslashed C-like
+escape sequences.
 .PP
 Each server name that you specify following the options on the
 command line will be queried.  If you don't specify any servers
@@ -365,6 +367,8 @@ Any amount of whitespace separates keywords, tokens, or strings
 in server entries but is otherwise ignored (but whitespace enclosed
 in double quotes is treated as part of the string).
 Keywords and identifiers are case sensitive.
+You may use standard C-style escapes (\en, \et, \eb, octal, and hex)
+to embed non-printable characters or string delimiters in strings.
 When there is a conflict between the command-line arguments and the
 arguments in this file, the command-line arguments take precedence.
 .PP

@@ -19,6 +19,9 @@ features --
 
 * Password is no longer displayed in verbose mode.
 
+* You may use C-like escapes to embed non-printables in passwords and other
+  strings.  Fetchmail -V will display them in a printable form.
+
 bugs --
 
 * Default user name to deliver to is now the calling user, unless

@@ -41,6 +41,7 @@
 /* prototypes for internal functions */
 static int dump_options (struct hostrec *queryctl);
 static int query_host(struct hostrec *queryctl);
+static char *visbuf(const char *);
 #endif
 
 /* controls the detail level of status/progress messages written to stderr */
@@ -526,18 +527,18 @@ int dump_params (queryctl)
 struct hostrec *queryctl;
 {
     printf("Options for %s retrieving from %s:\n",
-	   hostp->localname, hostp->servername);
+	   hostp->localname, visbuf(hostp->servername));
     if (queryctl->skip || outlevel == O_VERBOSE)
 	printf("  This host will%s be queried when no host is specified.\n",
 	       queryctl->skip ? " not" : "");
-    printf("  Username = '%s'.\n", queryctl->remotename);
+    printf("  Username = '%s'.\n", visbuf(queryctl->remotename));
     if (queryctl->password[0] == '\0')
 	printf("  Password will be prompted for.\n");
     else if (outlevel == O_VERBOSE)
 	if (queryctl->protocol == P_APOP)
-	    printf("  APOP secret = '%s'.\n", queryctl->password);
+	    printf("  APOP secret = '%s'.\n", visbuf(queryctl->password));
         else
-	    printf("  Password = '%s'.\n", queryctl->password);
+	    printf("  Password = '%s'.\n", visbuf(queryctl->password));
     if (queryctl->protocol == P_POP3 
 		&& queryctl->port == KPOP_PORT
 		&& queryctl->authenticate == A_KERBEROS)
@@ -577,14 +578,14 @@ struct hostrec *queryctl;
 	char **cp;
 
 	printf("  Messages will be delivered with %s, args:",
-	       queryctl->mda_argv[0]);
+	       visbuf(queryctl->mda_argv[0]));
 	for (cp = queryctl->mda_argv+1; *cp; cp++)
-	    printf(" %s", *cp);
+	    printf(" %s", visbuf(*cp));
 	putchar('\n');
     }
     else
 	printf("  Messages will be SMTP-forwarded to '%s'.\n",
-	       queryctl->smtphost);
+	       visbuf(queryctl->smtphost));
     if (queryctl->protocol > P_POP2)
 	if (!queryctl->oldsaved)
 	    printf("  No UIDs saved from this host.\n");
@@ -603,7 +604,7 @@ struct hostrec *queryctl;
 	}
 }
 
-/*********************************************************************
+ /*********************************************************************
   function:      openmailpipe
   description:   open a one-way pipe to the mail delivery agent.
   arguments:     
@@ -693,4 +694,98 @@ int fd;
 	fprintf(stderr, "closed pipe %d\n", fd);
   
     return(err);
+}
+
+/* helper functions for string interpretation and display */
+
+#define CTRL(x)	((x) & 0x1f)
+
+void escapes(cp, tp)
+/* process standard C-style escape sequences in a string */
+const char	*cp;
+char		*tp;
+{
+    while (*cp)
+    {
+	int	cval = 0;
+
+	if (*cp == '\\' && strchr("0123456789xX", cp[1]))
+	{
+	    char *dp, *hex = "00112233445566778899aAbBcCdDeEfF";
+	    int dcount = 0;
+
+	    if (*++cp == 'x' || *cp == 'X')
+		for (++cp; (dp = strchr(hex, *cp)) && (dcount++ < 2); cp++)
+		    cval = (cval * 16) + (dp - hex) / 2;
+	    else if (*cp == '0')
+		while (strchr("01234567",*cp) != (char*)NULL && (dcount++ < 3))
+		    cval = (cval * 8) + (*cp++ - '0');
+	    else
+		while ((strchr("0123456789",*cp)!=(char*)NULL)&&(dcount++ < 3))
+		    cval = (cval * 10) + (*cp++ - '0');
+	}
+	else if (*cp == '\\')		/* C-style character escapes */
+	{
+	    switch (*++cp)
+	    {
+	    case '\\': cval = '\\'; break;
+	    case 'n': cval = '\n'; break;
+	    case 't': cval = '\t'; break;
+	    case 'b': cval = '\b'; break;
+	    case 'r': cval = '\r'; break;
+	    default: cval = *cp;
+	    }
+	    cp++;
+	}
+	else if (*cp == '^')		/* expand control-character syntax */
+	{
+	    cval = CTRL(*++cp);
+	    cp++;
+	}
+	else
+	    cval = *cp++;
+	*tp++ = cval;
+    }
+    *tp = '\0';
+}
+
+static char *visbuf(buf)
+/* visibilize a given string */
+const char *buf;
+{
+    static char vbuf[BUFSIZ];
+    char *tp = vbuf;
+
+    while (*buf)
+    {
+	if (isprint(*buf) || *buf == ' ')
+	    *tp++ = *buf++;
+	else if (*buf == '\n')
+	{
+	    *tp++ = '\\'; *tp++ = 'n';
+	    buf++;
+	}
+	else if (*buf == '\r')
+	{
+	    *tp++ = '\\'; *tp++ = 'r';
+	    buf++;
+	}
+	else if (*buf == '\b')
+	{
+	    *tp++ = '\\'; *tp++ = 'b';
+	    buf++;
+	}
+	else if (*buf < ' ')
+	{
+	    *tp++ = '\\'; *tp++ = '^'; *tp++ = '@' + *buf;
+	    buf++;
+	}
+	else
+	{
+	    (void) sprintf(tp, "\\0x%02x", *buf++);
+	    tp += strlen(tp);
+	}
+    }
+    *tp++ = '\0';
+    return(vbuf);
 }

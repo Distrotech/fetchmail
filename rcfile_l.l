@@ -71,11 +71,20 @@ options		{/* EMPTY */}
 [0-9]+		{ yylval.number = atoi(yytext); return NUMBER; }
 
 \"[^\"]*\"	{
+			char buf[POPBUFSIZE];
+
 			yytext[strlen(yytext)-1] = '\0';
-			yylval.sval = (char *) strdup(yytext+1);
+			escapes(yytext+1, buf);
+			yylval.sval = (char *) strdup(buf);
 			return STRING;
 		}
-[^;:, \t\r\n]+	{ yylval.sval = (char *) strdup(yytext); return STRING; }
+[^;:, \t\r\n]+	{
+			char buf[POPBUFSIZE];
+
+			escapes(yytext, buf);
+			yylval.sval = (char *) strdup(buf);
+			return STRING;
+		}
 
 [ \t\r]+	;	/* whitespace */
 

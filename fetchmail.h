@@ -170,6 +170,8 @@ char *MD5Digest (char *);
 int openmailpipe (struct hostrec *);
 int daemonize(const char *, void (*)(int));
 
+void escapes(const char *, char *);
+
 #else
 
 struct hostrec *hostinit(); 
