@@ -5,7 +5,7 @@ Version:	$1
 Release:	1
 Vendor:		Eric Conspiracy Secret Labs
 Packager:	Eric S. Raymond <esr@thyrsus.com>
-URL:		http://www.tuxedo.org/~esr/fetchmail/
+URL:		http://www.catb.org/~esr/fetchmail/
 Source:         %{name}-%{version}.tar.gz
 Group:		Applications/Mail
 Group(pt_BR):   Aplicações/Correio Eletrônico
