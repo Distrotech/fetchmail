@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/09/25 19:13:44 $
+<td width="30%" align=right>$Date: 1997/09/25 19:45:11 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1289,6 +1289,12 @@ they pass your mail:<P>
 specified by <code>mda</CODE>. 
 </ol>
 
+Often it happens that fetchmail itself is OK, but using it exposes
+pre-existing bugs in your downstream software, or your downstream
+software has a bad interaction with POP/IMAP.  You need to pin down
+exactly where the message is being garbled in order to deduce what is
+actually going on.<P>
+
 The first thing to do is send yourself a test message, and retrieve it
 with a .fetchmailrc entry containing the following (or by running with
 the equivalent command-line options):<P>
@@ -1437,7 +1443,7 @@ will look right.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/09/25 19:13:44 $
+<td width="30%" align=right>$Date: 1997/09/25 19:45:11 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
