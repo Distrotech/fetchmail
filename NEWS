@@ -1,5 +1,8 @@
 				Release Notes:
 
+fetchmail-4.7.1 ():
+* Enable fetchmail to build correctly on systems without socketpair.
+
 fetchmail-4.7.0 (Mon Dec 14 12:05:27 EST 1998):
 * Minor correction to make i18n subdirectory builds work better.
 * Rob Funk's old-message-check optimization.

@@ -44,6 +44,7 @@ static int h_errno;
 #include <net/security.h>
 #endif /* NET_SECURITY */
 
+#ifdef HAVE_SOCKETPAIR
 static int handle_plugin(const char *host,
 			 const char *service, const char *plugin)
 /* get a socket mediated through a given external command */
@@ -70,6 +71,7 @@ static int handle_plugin(const char *host,
 	return fds[1];
     }
 }
+#endif /* HAVE_SOCKETPAIR */
 
 #if INET6
 int SockOpen(const char *host, const char *service, const char *options,
@@ -82,8 +84,10 @@ int SockOpen(const char *host, const char *service, const char *options,
     int requestlen;
 #endif /* NET_SECURITY */
 
+#ifdef HAVE_SOCKETPAIR
     if (plugin)
 	return handle_plugin(host,service,plugin);
+#endif /* HAVE_SOCKETPAIR */
     memset(&req, 0, sizeof(struct addrinfo));
     req.ai_socktype = SOCK_STREAM;
 
@@ -133,11 +137,13 @@ int SockOpen(const char *host, int clientPort, const char *options,
     struct sockaddr_in ad;
     struct hostent *hp;
 
+#ifdef HAVE_SOCKETPAIR
     if (plugin) {
       char buf[10];
       sprintf(buf,"%d",clientPort);
       return handle_plugin(host,buf,plugin);
     }
+#endif /* HAVE_SOCKETPAIR */
 
     memset(&ad, 0, sizeof(ad));
     ad.sin_family = AF_INET;
