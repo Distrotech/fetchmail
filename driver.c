@@ -712,8 +712,12 @@ struct method *proto;
 	     * on a protocol error or had delivery refused by the SMTP
 	     * server (unlikely -- I've never seen it) or we've seen
 	     * `accepted for delivery' and the message is shipped.
-	     * It's safe to delete the message on the server now.
+	     * It's safe to mark the message seen and delete it on the
+	     * server now.
 	     */
+
+	    /* nuke it from the unseen-messages list */
+	    delete_uid(&queryctl->unseen, num);
 
 	    /* maybe we delete this message now? */
 	    if (protocol->delete

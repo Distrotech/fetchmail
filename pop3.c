@@ -149,8 +149,29 @@ int *countp;
 
 	gen_send(socket,"LAST");
 	ok = pop3_ok(socket, buf);
-	if (ok == 0 && sscanf(buf, "%d", &last) == 0)
-	    return(PS_ERROR);
+	if (ok == 0)
+	{
+	    if (sscanf(buf, "%d", &last) == 0)
+		return(PS_ERROR);
+	}
+ 	else
+ 	{
+	    int	num;
+
+ 	    /* grab the mailbox's UID list */
+ 	    gen_send(socket, "UIDL");
+ 	    if ((ok = pop3_ok(buf, socket)) == 0) {
+ 		while (SockGets(socket, buf, sizeof(buf)) >= 0) {
+ 		    if (outlevel == O_VERBOSE)
+ 			fprintf(stderr,"%s\n",buf);
+ 		    if (strcmp(buf, ".\n") == 0) {
+ 			break;
+ 		    }
+ 		    if (sscanf(buf, "%d %s\n", &num, id) == 2)
+ 			save_uid(&queryctl->unseen, num, id);
+ 		}
+ 	    }
+ 	}
     }
 
     return(0);
@@ -161,7 +182,26 @@ int socket;
 struct hostrec *queryctl;
 int num;
 {
-    return (num <= last);
+    if (!queryctl->saved)
+	return (num <= last);
+    else
+    {
+	char buf [POPBUFSIZE+1];
+	int ok;
+
+	gen_send(socket, "UIDL %d", num);
+	if ((ok = pop3_ok(socket, buf)) != 0)
+	    return(ok);
+	else
+	{
+	    char	id[IDLEN+1];
+
+	    if (sscanf(buf, "%*d %s", id) == 2)
+		return(uid_in_list(&queryctl->saved, id));
+	    else
+		return(0);
+	}
+    }
 }
 
 static int pop3_fetch(socket, number, lenp)

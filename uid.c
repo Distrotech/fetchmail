@@ -44,9 +44,9 @@
  * file and hangs off the host's `saved' member.
  *
  * Early in the query, during the execution of the protocol-specific 
- * getrange code, the driver expects that the host's `listed' member
+ * getrange code, the driver expects that the host's `unseen' member
  * will be filled with a list of UIDs and message numbers representing
- * the current mailbox state.  If this list is empty, the server did
+ * the unseen mailbox state.  If this list is empty, the server did
  * not respond to the request for a UID listing.
  *
  * Each time a message is fetched, we can check its UID against the
@@ -54,10 +54,10 @@
  * (and possibly deleted).  It should be downloaded anyway if --all
  * is on.  It should not be deleted if --keep is on.
  *
- * Each time a message is deleted, we remove its id from the `listed'
+ * Each time a message is read, we remove its id from the `unseen'
  * member.
  *
- * At the end of the query, whatever remains in the `listed' member
+ * At the end of the query, whatever remains in the `unseen' member
  * (because it was not deleted) becomes the `saved' list.  The old
  * `saved' list is freed.
  */
@@ -76,7 +76,7 @@ char *idfile;
 
     /* make sure lists are initially empty */
     for (hostp = hostlist; hostp; hostp = hostp->next)
-	hostp->saved = hostp->current = (struct idlist *)NULL;
+	hostp->saved = hostp->unseen = (struct idlist *)NULL;
 
     /* let's get stored message UIDs from previous queries */
     if ((tmpfp = fopen(idfile, "r")) != (FILE *)NULL) {
@@ -145,14 +145,14 @@ char *str;
 	return(uid_in_list(&(*idl)->next, str));
 }
 
-int delete_uid(idl, str)
-/* delete given UID from given list */
+int delete_uid(idl, num)
+/* delete given message from given list */
 struct idlist **idl;
-char *str;
+int num;
 {
     if (*idl == (struct idlist *)NULL)
 	return(0);
-    else if (strcmp((*idl)->id, str) == 0)
+    else if ((*idl)->num == num)
     {
 	struct idlist	*next = (*idl)->next;
 
@@ -162,7 +162,7 @@ char *str;
 	return(1);
     }
     else
-	return(delete_uid(&(*idl)->next, str));
+	return(delete_uid(&(*idl)->next, num));
     return(0);
 }
 
@@ -171,10 +171,10 @@ void update_uid_lists(hostp)
 struct hostrec *hostp;
 {
     /*
-     * Replace `saved' list with `current' list as modified by deletions.
+     * Replace `saved' list with `unseen' list as modified by deletions.
      */
     free_uid_list(&hostp->saved);
-    hostp->saved = hostp->current;
+    hostp->saved = hostp->unseen;
 }
 
 void write_saved_lists(hostlist, idfile)
