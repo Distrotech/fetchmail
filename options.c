@@ -307,14 +307,8 @@ struct hostrec *queryctl;
 
   strcpy(queryctl->localname,pw->pw_name);
   strcpy(queryctl->remotename,pw->pw_name);
-
-#if defined(USERFOLDER) && defined(HAVE_FLOCK) 
-  queryctl->output = TO_FOLDER;
   sprintf(queryctl->userfolder, USERFOLDER, pw->pw_name);
-#else
   queryctl->output = TO_MDA;
-#endif
-
   (void) sprintf(queryctl->mda, DEF_MDA, queryctl->localname);
 
   poprcfile = 
