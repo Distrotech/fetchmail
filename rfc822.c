@@ -162,35 +162,42 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
      * important that this routine not stop on \r, since we use \r as
      * a marker for RFC822 continuations elsewhere.
      */
+#define START_HDR	0	/* before header colon */
+#define BARE_ADDRESS	1	/* collecting address without delimiters */
+#define INSIDE_DQUOTE	2	/* inside double quotes */
+#define INSIDE_PARENS	3	/* inside parentheses */
+#define INSIDE_BRACKETS	4	/* inside bracketed address */
+#define STR_INSIDE_BR	5	/* copying string within bracketed address */
+#define ENDIT_ALL	6	/* after last address */
 
     if (hdr)
     {
 	hp = hdr;
-	state = 0;
+	state = START_HDR;
     }
 
     for (; *hp; hp++)
     {
 	switch (state)
 	{
-	case 0:   /* before header colon */
+	case START_HDR:   /* before header colon */
 	    if (*hp == '\n')
 	    {
-		state = 6;
+		state = ENDIT_ALL;
 		return(NULL);
 	    }
 	    else if (*hp == ':')
 	    {
-		state = 1;
+		state = BARE_ADDRESS;
 		tp = address;
 	    }
 	    break;
 
-	case 1:   /* we've seen the colon, now grab the address */
+	case BARE_ADDRESS:   /* collecting address without delimiters */
 	    if (*hp == '\n')	/* end of address list */
 	    {
 	        *tp++ = '\0';
-		state = 6;
+		state = ENDIT_ALL;
 		return(tp = address);
 	    }
 	    else if (*hp == ',')  /* end of address */
@@ -204,44 +211,44 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	    }
 	    else if (*hp == '"') /* quoted string */
 	    {
-	        state = 2;
+	        state = INSIDE_DQUOTE;
 		*tp++ = *hp;
 	    }
 	    else if (*hp == '(') /* address comment -- ignore */
 	    {
 		parendepth = 1;
-		state = 3;    
+		state = INSIDE_PARENS;    
 	    }
 	    else if (*hp == '<') /* begin <address> */
 	    {
-		state = 4;
+		state = INSIDE_BRACKETS;
 		tp = address;
 	    }
 	    else if (isspace(*hp)) /* ignore space */
-	        state = 1;
+	        state = BARE_ADDRESS;
 	    else   /* just take it */
 	    {
-		state = 1;
+		state = BARE_ADDRESS;
 		*tp++ = *hp;
 	    }
 	    break;
 
-	case 2:   /* we're in a quoted string, copy verbatim */
+	case INSIDE_DQUOTE:   /* we're in a quoted string, copy verbatim */
 	    if (*hp == '\n')
 	    {
-		state = 6;
+		state = ENDIT_ALL;
 		return(NULL);
 	    }
 	    if (*hp != '"')
 	        *tp++ = *hp;
-	    else if (*hp == '"')
+	    else
 	    {
 	        *tp++ = *hp;
-		state = 1;
+		state = BARE_ADDRESS;
 	    }
 	    break;
 
-	case 3:   /* we're in a parenthesized comment, ignore */
+	case INSIDE_PARENS:   /* we're in a parenthesized comment, ignore */
 	    if (*hp == '\n')
 		return(NULL);
 	    else if (*hp == '(')
@@ -249,14 +256,14 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	    else if (*hp == ')')
 		--parendepth;
 	    if (parendepth == 0)
-		state = 1;
+		state = BARE_ADDRESS;
 	    break;
 
-	case 4:   /* possible <>-enclosed address */
+	case INSIDE_BRACKETS:   /* possible <>-enclosed address */
 	    if (*hp == '>') /* end of address */
 	    {
 		*tp++ = '\0';
-		state = 1;
+		state = BARE_ADDRESS;
 		++hp;
 		return(tp = address);
 	    }
@@ -265,16 +272,16 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	    else if (*hp == '"') /* quoted address */
 	    {
 	        *tp++ = *hp;
-		state = 5;
+		state = STR_INSIDE_BR;
 	    }
 	    else  /* just copy address */
 		*tp++ = *hp;
 	    break;
 
-	case 5:   /* we're in a quoted address, copy verbatim */
+	case STR_INSIDE_BR:   /* we're in a quoted address, copy verbatim */
 	    if (*hp == '\n')  /* mismatched quotes */
 	    {
-		state = 6;
+		state = ENDIT_ALL;
 		return(NULL);
 	    }
 	    if (*hp != '"')  /* just copy it if it isn't a quote */
@@ -282,11 +289,11 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	    else if (*hp == '"')  /* end of quoted string */
 	    {
 	        *tp++ = *hp;
-		state = 4;
+		state = INSIDE_BRACKETS;
 	    }
 	    break;
 
-	case 6:	/* after last address */
+	case ENDIT_ALL:	/* after last address */
 	    return(NULL);
 	    break;
 	}
@@ -309,11 +316,14 @@ main(int argc, char *argv[])
 		    && strncmp("Bcc: ", buf, 5))
 	    continue;
 	else
+	{
+	    fputs(buf, stdout);
 	    if ((cp = nxtaddr(buf)) != (char *)NULL)
 		do {
-		    printf("Address: %s\n", cp);
+		    printf("%s\n", cp);
 		} while
 		    ((cp = nxtaddr((char *)NULL)) != (char *)NULL);
+	}
 
     }
 }
