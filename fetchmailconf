@@ -773,19 +773,18 @@ sechelp = {
     'title' : 'Security option help',
     'banner': 'Security',
     'text' : """
-The `interface' option, if given, specifies the only
-device through which fetchmail is permitted to connect
-to servers.  Specifying this may protect you from a 
-spoofing attack if your client machine has more than
-one IP gateway address and some of the gateways are
-to insecure nets.
-
-The `monitor' option allows you to specify a range
+The `interface' option allows you to specify a range
 of IP addresses to monitor for activity.  If these
 addresses are not active, fetchmail will not poll.
-This option may be used to prevent fetchmail from
-triggering an expensive dial-out if the interface
-is not already active.
+Specifying this may protect you from a spoofing attack
+if your client machine has more than one IP gateway
+address and some of the gateways are to insecure nets.
+
+The `monitor' option, if given, specifies the only
+device through which fetchmail is permitted to connect
+to servers.  This option may be used to prevent
+fetchmail from triggering an expensive dial-out if the
+interface is not already active.
 
 The `interface' and `monitor' options are available
 only for Linux systems.  See the fetchmail manual page
@@ -948,17 +947,17 @@ class ServerEdit(Frame, MyWidget):
                 # Don't actually let users set this.  KPOP sets it implicitly
                 #	ButtonBar(secwin, 'Authorization mode:',
                 #		  self.auth, authlist, 1, None).pack(side=TOP)
-                if 'interface' in dictmembers:
-                    LabeledEntry(secwin, 'Interface to check before poll:',
+                if os_type == 'linux' or 'interface' in dictmembers:
+                    LabeledEntry(secwin, 'IP range to check before poll:',
 			 self.interface, leftwidth).pack(side=TOP, fill=X)
-                if 'monitor' in dictmembers:
-                    LabeledEntry(secwin, 'IP range to monitor:',
+                if os_type == 'linux' or 'monitor' in dictmembers:
+                    LabeledEntry(secwin, 'Interface to monitor:',
 			 self.monitor, leftwidth).pack(side=TOP, fill=X)
-                if 'netsec' in dictmembers:
+                if 'netsec' in feature_options or 'netsec' in dictmembers:
                     LabeledEntry(secwin, 'IPV6 security options:',
 			 self.netsec, leftwidth).pack(side=TOP, fill=X)
-                    Button(secwin, text='Help', fg='blue',
-                           command=lambda: helpwin(sechelp)).pack(side=RIGHT)
+                Button(secwin, text='Help', fg='blue',
+                       command=lambda: helpwin(sechelp)).pack(side=RIGHT)
                 secwin.pack(fill=X)
 
             rightwin.pack(side=LEFT, anchor=N);
@@ -1220,7 +1219,7 @@ class UserEdit(Frame, MyWidget):
 		    variable=self.rewrite).pack(side=TOP, anchor=W)
             Checkbutton(optwin, text="Force CR/LF at end of each line",
 		    variable=self.forcecr).pack(side=TOP, anchor=W)
-            Checkbutton(optwin, text="Strip CR from end of eacgh line",
+            Checkbutton(optwin, text="Strip CR from end of each line",
 		    variable=self.stripcr).pack(side=TOP, anchor=W)
             Checkbutton(optwin, text="Pass 8 bits even though SMTP says 7BIT",
 		    variable=self.pass8bits).pack(side=TOP, anchor=W)
