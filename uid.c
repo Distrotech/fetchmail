@@ -6,6 +6,8 @@
 
 #include "config.h"
 
+#include <sys/stat.h>
+#include <errno.h>
 #include <stdio.h>
 #include <limits.h>
 #if defined(STDC_HEADERS)
@@ -70,12 +72,31 @@ static struct idlist *scratchlist;
 void initialize_saved_lists(struct query *hostlist, const char *idfile)
 /* read file of saved IDs and attach to each host */
 {
+    struct stat statbuf;
     FILE	*tmpfp;
     struct query *ctl;
 
     /* make sure lists are initially empty */
     for (ctl = hostlist; ctl; ctl = ctl->next)
 	ctl->skipped = ctl->oldsaved = ctl->newsaved = (struct idlist *)NULL;
+
+    errno = 0;
+
+    /*
+     * Croak if the uidl directory does not exist.
+     * This probably means an NFS mount failed and we can't
+     * see a uidl file that ought to be there.
+     * Question: is this a portable check? It's not clear
+     * that all implementations of lstat() will return ENOTDIR
+     * rather than plain ENOENT in this case...
+     */
+   if (lstat(idfile, &statbuf) < 0) {
+     if (errno == ENOTDIR) 
+    {
+      report(stderr, "lstat: %s: %s\n", idfile, strerror(errno));
+      exit(PS_IOERR);
+    }
+   }
 
     /* let's get stored message UIDs from previous queries */
     if ((tmpfp = fopen(idfile, "r")) != (FILE *)NULL)
