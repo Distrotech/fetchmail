@@ -552,11 +552,10 @@ class ConfigurationEdit(Frame):
 	      bd=2).pack(side=TOP, pady=10)
 	ListEdit('New Server:', 
 		map(lambda x: x.pollname, self.configuration.servers),
-		self.editSite, lf, remotehelp)
+		lambda site, m=self.mode, s=self.configuration.servers:
+                 ServerEdit(m, site, s, Toplevel()),
+                lf, remotehelp)
 	lf.pack(fill=X)
-
-    def editSite(self, site):
-	ServerEdit(self.mode, site, self.configuration.servers, Toplevel())
 
     def nosave(self):
 	if ConfirmQuit(self, self.mode + " configuration editor"):
