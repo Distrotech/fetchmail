@@ -222,7 +222,7 @@ NOTES: design-notes.html
 
 # Make distribution, update LSM with proper size, remake distribution
 dist: Makefile.in  
-	rm MANIFEST; make MANIFEST;
+	rm -f MANIFEST; make MANIFEST;
 	make fetchmail-$(VERS).tar.gz 
 	lsmgen.sh $(VERS) `wc -c fetchmail-$(VERS).tar.gz` >fetchmail.lsm
 	make fetchmail-$(VERS).tar.gz
