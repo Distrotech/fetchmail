@@ -1203,7 +1203,7 @@ it has been observed with fetchpop.  The fix is to upgrade to qpopper
 3.0beta or a more recent version.  Better yet, switch to IMAP.
 
 """
-            if string.find(greetline, "sprynet.com") > 0:
+            if string.find(greetline, " sprynet.com") > 0:
                 warnings = warnings + """
 You appear to be using a SpryNet server.  In mid-1999 it was reported that
 the SpryNet TOP command marks messages seen.  Therefore, for proper error
@@ -1220,7 +1220,7 @@ this bug, turn on `fetchall' on all user entries associated with this
 server.
 
 """
-            if string.find(greetline, "usa.net") > 0:
+            if string.find(greetline, " usa.net") > 0:
                 warnings = warnings + """
 You appear to be using USA.NET's free mail service.  Their POP3 servers
 (at least as of the 2.2 version in use mid-1998) are quite flaky, but
