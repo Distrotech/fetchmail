@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/05/16 16:59:45 $
+<td width="30%" align=right>$Date: 1999/05/16 20:20:41 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -67,17 +67,18 @@ IP address?</a><br>
 <a href="#T5">T5. How can I use fetchmail with SCO's MMDF?</a><br>
 <a href="#T6">T6. How can I use fetchmail with Lotus Notes?</a><br>
 
-<h1>How to make fetchmail work with nonstandard servers:</h1>
+<h1>How to make fetchmail work with various servers:</h1>
 
-<a href="#S1">S1. How can I use fetchmail with Microsoft Exchange?</a><br>
-<a href="#S2">S2. How can I use fetchmail with Compuserve RPA?</a><br>
-<a href="#S3">S3. How can I use fetchmail with Demon Internet's SDPS?</a><br>
-<a href="#S4">S4. How can I use fetchmail with usa.net's servers?</a><br>
-<a href="#S5">S5. How can I use fetchmail with HP OpenMail?</a><br>
-<a href="#S6">S6. How can I use fetchmail with geocities POP3 servers?</a><br>
-<a href="#S7">S7. How can I use fetchmail with Hotmail?</a><br>
-<a href="#S8">S8. How can I use fetchmail with MSN?</a><br>
-<a href="#S9">S9. How can I use fetchmail with SpryNet?</a><br>
+<a href="#S1">S1. How can I use fetchmail with qpopper?</a><br>
+<a href="#S2">S2. How can I use fetchmail with Microsoft Exchange?</a><br>
+<a href="#S3">S3. How can I use fetchmail with Compuserve RPA?</a><br>
+<a href="#S4">S4. How can I use fetchmail with Demon Internet's SDPS?</a><br>
+<a href="#S5">S5. How can I use fetchmail with usa.net's servers?</a><br>
+<a href="#S6">S6. How can I use fetchmail with HP OpenMail?</a><br>
+<a href="#S7">S7. How can I use fetchmail with geocities POP3 servers?</a><br>
+<a href="#S8">S8. How can I use fetchmail with Hotmail?</a><br>
+<a href="#S9">S9. How can I use fetchmail with MSN?</a><br>
+<a href="#S10">S10. How can I use fetchmail with SpryNet?</a><br>
 
 <h1>How to set up well-known security and authentication methods:</h1>
 
@@ -319,7 +320,7 @@ Here's a longer answer: <P>
 
 Fetchmail will work with any POP, IMAP, or ESMTP/ETRN server that
 conforms to the relevant RFCs (and even some outright broken ones like
-<a href="#S1">Microsoft Exchange</a>).  This doesn't mean it works
+<a href="#S2">Microsoft Exchange</a>).  This doesn't mean it works
 equally well with all, however.  POP2 servers, and POP3 servers
 without LAST, limit fetchmail's capabilities in various ways described
 on the manual page.<P>
@@ -337,7 +338,7 @@ It also recovers from interrupted connections more gracefully than
 POP3, and enables some significant performance optimizations.<P>
 
 Don't be fooled by NT/Exchange propaganda.  M$ Exchange is just plain
-broken (see item <a href="#S1">S1</a>) and NT cannot handle the
+broken (see item <a href="#S2">S2</a>) and NT cannot handle the
 sustained load of a high-volume remote mail server.  Even Microsoft
 itself knows better than to try this; their own Hotmail service runs
 over Solaris!  For extended discussion, see John Kirch's excellent <a
@@ -420,7 +421,7 @@ AUTH=KERBEROS_V4 in the CAPABILITY response.<P>
 
 If you are fetching mail from a CompuServe POP3 account, you can use
 their RPA authentication (which works much like APOP).  See <a
-href="#S2">S2</a> for details.<P>
+href="#S3">S3</a> for details.<P>
 
 Your POP3 server may have the RFC1938 OTP capability to use one-time
 passwords (if it doesn't, you can get OTP patches for the 2.2 version
@@ -1116,7 +1117,38 @@ to \r\n, but its rules are not the intuitive and correct-for-RFC822
 ones.  Use `forcecr'.<P>
 
 <hr>
-<h2><a name="S1">S1. How can I use fetchmail with Microsoft Exchange?</a></h2><p>
+<h2><a name="S1">S1. How can I use fetchmail with qpopper?</a></h2>
+
+Qualcomm's qpopper is probably the best-of-breed among POP3 servers, and
+is very widely deployed.  Nevertheless, it has some problems which
+fetchmail exposes.  We recommend using <a href="#G7">IMAP</a> instead if at
+all possible.  If you must talk to qpopper, here are some problems to
+be aware of:<p>
+
+<h3>Problems with retrieving large messages from qpopper 2.53</h3>
+
+Tony Tang <a href="mailto:tyw@atnhk.com">&lt;tyw@atnhk.com&gt;</a>
+reports that there is a bad intercation between fetchmail and qpopper
+2.5.3 under Red Hat Linux versions 5.0 to 5.2, kernels 2.0.34 to
+2.0.35.  When fetching very large messages (over 700K) from 2.5.3,
+fetchmail will hang with a socket error.<p>
+
+This is probably not a fetchmail bug, but rather a symptom of some
+problem in the networking stack that qpopper's transmission pattern is
+tickling, as fetchpop (another Linux POP client) also displays the hang
+but Netscape running under Win95 does not.  The problem can also be
+banished by <a
+href="http://www.eudora.com/freeware/qpop.html">upgrading to qpopper
+3.0b1</a>.<p>
+
+<h3>Bad interaction with fetchmail 4.4.2 to 4,4.7</h3>
+
+Versions of fetchmail from 4.4.2 through 4.4.7 had a bad interaction 
+with Eudora qpopper versions 2.3 and later.  See <a href="#X5">X5</a>
+for details.  The solution is to upgrade your fetchmail.<p>
+
+<hr>
+<h2><a name="S2">S2. How can I use fetchmail with Microsoft Exchange?</a></h2>
 
 M$ Exchange violates the POP3 RFCs.  Its LIST command does not reveal
 the real sizes of mail in the pop mailbox, but the sizes of the
@@ -1186,7 +1218,7 @@ brain-dead Microsoft crap and install a real operating system on your
 mailserver.<P>
 
 <hr>
-<h2><a name="S2">S2. How can I use fetchmail with CompuServe RPA?</a></h2>
+<h2><a name="S3">S3. How can I use fetchmail with CompuServe RPA?</a></h2>
 
 First, make sure your fetchmail has the RPA support compiled in.
 Stock fetchmail binaries (such as you might get from an RPM) don't.
@@ -1224,7 +1256,7 @@ poll non-rpa.csi.com via "pop.site1.csi.com" with proto POP3 and options no dns
 </pre>
 
 <hr>
-<h2><a name="S3">S3. How can I use fetchmail with Demon Internet's SDPS?</a></h2>
+<h2><a name="S4">S4. How can I use fetchmail with Demon Internet's SDPS?</a></h2>
 
 Demon Internet's SDPS service is an implementation of POP3. All messages
 have a Received: header added when they enter the maildrop, like this:
@@ -1281,7 +1313,7 @@ greeting line; if you're accessing Demon Internet through a proxy it
 may fail. To force SDPS mode, pick "sdps" as your protocol.<P>
 
 <hr>
-<h2><a name="S4">S4. How can I use fetchmail with usa.net's servers?</a></h2>
+<h2><a name="S5">S5. How can I use fetchmail with usa.net's servers?</a></h2>
 
 Enable `<CODE>fetchall</CODE>'.  A user reports that the 2.2 version
 of USA.NET's POP server reports that you must use the
@@ -1301,10 +1333,10 @@ They seem to be chronically flaky.  We recommend finding another
 provider.)<P>
 
 <hr>
-<h2><a name="S5">S5. How can I use fetchmail with HP OpenMail?</a></h2>
+<h2><a name="S6">S6. How can I use fetchmail with HP OpenMail?</a></h2>
 
 No special configuration is required, but OpenMail has an annoying bug
-similar to the big one in <a href="#S1">Microsoft Exchange</a>.
+similar to the big one in <a href="#S2">Microsoft Exchange</a>.
 The message sizes it gives in the LIST are rounded to the nearest 1024
 bytes.  It also has a nasty habit of discarding headers it doesn't 
 recognize, such as X- and Resent- headers.<P>
@@ -1313,7 +1345,7 @@ As with M$ Exchange, the only real fix for these problems is to get a
 POP (or preferably IMAP) server that isn't brain-dead.<P>
 
 <hr>
-<h2><a name="S7">S7. How can I use fetchmail with Hotmail?</a></h2>
+<h2><a name="S8">S8. How can I use fetchmail with Hotmail?</a></h2>
 
 You can't, yet.  But Hugo Rabson has written a script called `hotmole'
 that can retrieve Hotmail mail via the web using Lynx.  The script
@@ -1322,7 +1354,7 @@ href="http://www.jin-sei-kai.demon.co.uk/hugo/linux.html">
 Hugo Rabson's Linux page</a>.<P>
 
 <hr>
-<h2><a name="S8">S8. How can I use fetchmail with MSN?</a></h2>
+<h2><a name="S9">S9. How can I use fetchmail with MSN?</a></h2>
 
 You can't.  MSN uses something that looks like POP3, except the
 authentication part is nonstandard.  And of course they don't 
@@ -1332,7 +1364,7 @@ This is a customer lock-in tactic; we recommend boycotting MSN as the
 only appropriate response.<p>
 
 <hr>
-<h2><a name="S9">S9. How can I use fetchmail with SpryNet?</a></h2>
+<h2><a name="S10">S10. How can I use fetchmail with SpryNet?</a></h2>
 
 The SpryNet POP3 servers mark a message queried with TOP as seen.
 This means that if your connection drops in mid-message, it may end
@@ -1370,7 +1402,7 @@ and set the makefile up to link it.  You can also specify a directory
 containing the Rconnect library.<p>
 
 <hr>
-<h2><a name="S6">S6. How can I use fetchmail with geocities POP3 servers?</a></h2>
+<h2><a name="S7">S7. How can I use fetchmail with geocities POP3 servers?</a></h2>
 
 Nathan Cutler reports that the the mail.geocities.com POP3 servers
 fail to include the first Received line of the message in the send to 
@@ -1400,7 +1432,7 @@ the NRL IPv6+IPsec software distribution or a Linux system with the latest
 experimental kernel and net-tools. It should not be hard to build fetchmail on
 other IPv6 implementations if you can port the inet6-apps kit.<P>
 
-To use fetchmail with network security (read: IPsec), you need a system that
+To use fetchmail with networking security (read: IPsec), you need a system that
 supports IPsec, the API described in the "Network Security API for Sockets"
 (draft-metz-net-security-api-01.txt), and the inet6-apps kit. This currently
 means that you need to have a BSD/OS or NetBSD system with the NRL IPv6+IPsec
@@ -2341,7 +2373,7 @@ inactivity timeout.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/05/16 16:59:45 $
+<td width="30%" align=right>$Date: 1999/05/16 20:20:41 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
