@@ -61,30 +61,7 @@ addresses as valid RCPT TO lines.
 See the man page or the file sample.rcfile for a description of how to
 configure your individual preferences.
 
-Note: if you have been using popclient (the ancestor of this program)
-at version 3.0b6 or later, do this
-
-(cd ~; mv ~/.poprc ~/.fetchmailrc)
-
-in order to migrate.  Be aware that some of popclient's unnecessary
-options have been removed (see the NOTES file for explanation).  You
-can't deliver to a local mail file anymore or to standard output any
-more, and using an MDA for delivery is discouraged.  If you throw
-those options away, fetchmail will now forward your mail into your
-system's normal Internet-mail delivery path.
-
-Actually, using an MDA is now almost always the wrong thing; the MDA
-facility has been retained only for people who can't or won't run a
-sendmail-like SMTP listener on port 25. The default, SMTP forwarding
-to port 25, is better for at least two major reasons.  One: it feeds
-retrieved POP and IMAP mail into your system's normal delivery path
-along with local mail and normal Internet mail.  Two: because the port
-25 listener returns a positive acknowledge, fetchmail can be sure
-you're not going to lose mail to a disk-full or some other
-resource-exhaustion problem.
-
-If you used to use -mda "procmail -d <you>" or something similar, forward
-to port 25 and do "| procmail -d <you>" in your ~/.forward file.
+If you're upgrading from popclient, see question F4 in the FAQ file.
 
 5. TEST
 
@@ -104,7 +81,7 @@ fetchmail core dumps (especially near startup) try recompiling without
 
 6. REPORTING BUGS
 
-You should read the FAQ file before reporting a bug.
+You should read the FAQ file question G1 before reporting a bug.
 
 7. USE IT
 
