@@ -405,7 +405,7 @@ struct query *ctl;	/* query control record */
 		    ok = strstr(ok, "for <");
 		else
 		    ok = (char *)NULL;
-		if (ok)
+		if (ok != 0)
 		{
 		    char	*sp, *tp;
 
@@ -425,7 +425,7 @@ struct query *ctl;	/* query control record */
 		    *tp = '\0';
 		}
 
-		if (ok)
+		if (ok != 0)
 		{
 		    received_for = alloca(strlen(rbuf)+1);
 		    strcpy(received_for, rbuf);
@@ -849,31 +849,32 @@ const struct method *proto;	/* protocol method table */
 #ifdef KERBEROS_V4
 	if (ctl->authenticate == A_KERBEROS)
 	{
-	    ok = (kerberos_auth (fileno(sockfp), ctl->canonical_name));
-	    vtalarm(ctl->timeout);
+	    ok = kerberos_auth(fileno(sockfp), ctl->canonical_name);
  	    if (ok != 0)
 		goto cleanUp;
+	    vtalarm(ctl->timeout);
 	}
 #endif /* KERBEROS_V4 */
 
 	/* accept greeting message from mail server */
 	ok = (protocol->parse_response)(sockfp, buf);
-	vtalarm(ctl->timeout);
 	if (ok != 0)
 	    goto cleanUp;
+	vtalarm(ctl->timeout);
 
 	/* try to get authorized to fetch mail */
 	shroud = ctl->password;
 	ok = (protocol->getauth)(sockfp, ctl, buf);
-	vtalarm(ctl->timeout);
 	shroud = (char *)NULL;
 	if (ok == PS_ERROR)
 	    ok = PS_AUTHFAIL;
 	if (ok != 0)
 	    goto cleanUp;
+	vtalarm(ctl->timeout);
 
 	/* compute number of messages and number of new messages waiting */
-	if ((protocol->getrange)(sockfp, ctl, &count, &new) != 0)
+	ok = (protocol->getrange)(sockfp, ctl, &count, &new);
+	if (ok != 0)
 	    goto cleanUp;
 	vtalarm(ctl->timeout);
 
@@ -900,8 +901,10 @@ const struct method *proto;	/* protocol method table */
 	{
 	    msgsizes = (int *)alloca(sizeof(int) * count);
 
-	    if ((ok = (proto->getsizes)(sockfp, count, msgsizes)) != 0)
-		return(PS_ERROR);
+	    ok = (proto->getsizes)(sockfp, count, msgsizes);
+	    if (ok != 0)
+		goto cleanUp;
+	    vtalarm(ctl->timeout);
 	}
 
 
@@ -910,7 +913,7 @@ const struct method *proto;	/* protocol method table */
 	    if (new == -1 || ctl->fetchall)
 		new = count;
 	    ok = ((new > 0) ? PS_SUCCESS : PS_NOMAIL);
-	    goto closeUp;
+	    goto cleanUp;
 	}
 	else if (count > 0)
 	{    
@@ -957,7 +960,9 @@ const struct method *proto;	/* protocol method table */
 		else
 		{
 		    /* request a message */
-		    (protocol->fetch)(sockfp, num, &len);
+		    ok = (protocol->fetch)(sockfp, num, &len);
+		    if (ok != 0)
+			goto cleanUp;
 		    vtalarm(ctl->timeout);
 
 		    if (outlevel > O_SILENT)
@@ -976,13 +981,18 @@ const struct method *proto;	/* protocol method table */
 				     len, 
 				     protocol->delimited,
 				     ctl);
-		    vtalarm(ctl->timeout);
 		    if (ok != 0)
 			goto cleanUp;
+		    vtalarm(ctl->timeout);
 
 		    /* tell the server we got it OK and resynchronize */
 		    if (protocol->trail)
-			(protocol->trail)(sockfp, ctl, num);
+		    {
+			ok = (protocol->trail)(sockfp, ctl, num);
+			if (ok != 0)
+			    goto cleanUp;
+			vtalarm(ctl->timeout);
+		    }
 		}
 
 		/*
@@ -1002,9 +1012,9 @@ const struct method *proto;	/* protocol method table */
 		    if (outlevel > O_SILENT) 
 			fprintf(stderr, " flushed\n");
 		    ok = (protocol->delete)(sockfp, ctl, num);
-		    vtalarm(ctl->timeout);
 		    if (ok != 0)
 			goto cleanUp;
+		    vtalarm(ctl->timeout);
 		    delete_str(&ctl->newsaved, num);
 		}
 		else if (outlevel > O_SILENT) 
@@ -1017,11 +1027,13 @@ const struct method *proto;	/* protocol method table */
 		ok = gen_transact(sockfp, protocol->expunge_cmd);
 		if (ok != 0)
 		    goto cleanUp;
+		vtalarm(ctl->timeout);
 	    }
 
 	    ok = gen_transact(sockfp, protocol->exit_cmd);
 	    if (ok == 0)
 		ok = PS_SUCCESS;
+	    vtalarm(0);
 	    fclose(sockfp);
 	    goto closeUp;
 	}
@@ -1029,16 +1041,17 @@ const struct method *proto;	/* protocol method table */
 	    ok = gen_transact(sockfp, protocol->exit_cmd);
 	    if (ok == 0)
 		ok = PS_NOMAIL;
+	    vtalarm(0);
 	    fclose(sockfp);
 	    goto closeUp;
 	}
 
     cleanUp:
+	vtalarm(ctl->timeout);
 	if (ok != 0 && ok != PS_SOCKET)
-	{
 	    gen_transact(sockfp, protocol->exit_cmd);
-	    fclose(sockfp);
-	}
+	vtalarm(0);
+	fclose(sockfp);
     }
 
     switch (ok)
