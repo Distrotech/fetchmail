@@ -882,7 +882,7 @@ the configuration issues; see the manual
 page section on multidrop mode.
 """}
 
-class UserEdit(Frame):
+class UserEdit(Frame, MyWidget):
     def __init__(self, username, server):
         self.server = server
 	self.user = None
@@ -901,40 +901,18 @@ class UserEdit(Frame):
 	self.master.title('Fetchmail user ' + self.user.remote
                           + ' querying ' + self.server.pollname);
 	self.master.iconname('Fetchmail user ' + self.user.remote);
-	self.post()
+	self.post(User, 'user')
 	self.makeWidgets(mode, self.server.pollname)
 #	self.grab_set()
 #	self.focus_set()
 #	self.wait_window()
-
-    def post(self):
-	# we can't abstract this away, execs would happen in the wrong scope
-	for x in User.typemap:
-	    target = "self." + x[0]
-	    source = "self.user." + x[0]
-	    if x[1] == 'Boolean':
-		exec target + " = BooleanVar(self)"
-		if eval(source):
-		    exec target + ".set(" + source + ")"
-	    elif x[1] == 'String':
-		exec target + " = StringVar(self)"
-		if eval(source):
-		    exec target + ".set(" + source + ")"
-	    elif x[1] == 'Int':
-		exec target + " = IntVar(self)"
-		if eval(source):
-		    exec target + ".set(" + source + ")"
-
-    def gather(self):
-	for x in User.typemap:
-	    setattr(self.user, x[0], getattr(self, x[0]).get())
 
     def nosave(self):
 	if ConfirmQuit(self, 'user option editing'):
 	    Widget.destroy(self.master)
 
     def save(self):
-	self.gather()
+	self.gather(User, 'user')
 	Widget.destroy(self.master)
 
     def makeWidgets(self, mode, servername):
