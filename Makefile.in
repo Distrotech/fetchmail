@@ -286,11 +286,10 @@ NOTES: design-notes.html
 	echo "   (This document was generated from design-notes.html)" >NOTES
 	lynx -dump -nolist design-notes.html | grep -v "Back to " >NOTES
 
-# man2html chokes and dies on this man page
+# man2html no longer chokes and dies on this man page,
+# but manServer.pl does a much better job. 
 fetchmail-man.html: fetchmail.man
-	echo "<pre>"                                  >fetchmail-man.html
-	groff -t -man -Tascii -P-b -P-u fetchmail.man >>fetchmail-man.html
-	echo "</pre>"                                 >>fetchmail-man.html
+	man2Server.pl fetchmail.man >fetchmail-man.html
 
 # Make distribution, update LSM with proper size, remake distribution
 # (Making fetchmail-man.html is a kluge to ensure that it will be
