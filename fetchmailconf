@@ -307,6 +307,7 @@ defaultports = {"auto":0,
                 "APOP":110,
                 "KPOP":1109,
                 "IMAP":143,
+		"IMAP-GSS":143,
 		"IMAP-K4":143,
 		"ETRN":25}
 
@@ -879,6 +880,8 @@ class ServerEdit(Frame, MyWidget):
         if 'imap' in feature_options:
             protolist.append("IMAP")
         if 'imap-gss' in feature_options:
+            protolist.append("IMAP-GSS")
+        if 'imap-k4' in feature_options:
             protolist.append("IMAP-K4")
         if 'etrn' in feature_options:
             protolist.append("ETRN")
