@@ -489,13 +489,10 @@ class ConfigurationEdit(Frame):
 	self.master.iconname('fetchmail " + mode + configurator');
 	self.configuration = configuration
 	Pack.config(self)
-        if mode == 'expert':
-            self.expertEdit()
-        elif mode == 'novice':
-            self.noviceEdit()
+        self.makeWidgets()
         self.mode = mode
 
-    def expertEdit(self):
+    def makeWidgets(self):
 	self.poll_interval = StringVar(self)
 	self.poll_interval.set(`self.configuration.poll_interval`)
 	self.syslog = BooleanVar(self)
@@ -515,22 +512,21 @@ class ConfigurationEdit(Frame):
 		bd=2).pack(side=TOP, pady=10)
 	df = Frame(gf, relief=RAISED, bd=2)
 
-	# Set the poll interval
-	de = LabeledEntry(df, '     Poll interval:', self.poll_interval, '14')
-
-	de.pack(side=RIGHT, anchor=E)
+        # Set the poll interval
+        de = LabeledEntry(df, '     Poll interval:', self.poll_interval, '14')
+        de.pack(side=RIGHT, anchor=E)
 	df.pack();
 
-	sf = Frame(gf, relief=RAISED, bd=2)
-	# Use syslog for logging?
-	Checkbutton(sf,
+        sf = Frame(gf, relief=RAISED, bd=2)
+        # Use syslog for logging?
+        Checkbutton(sf,
 		{'text':'Log to syslog?',
 		'variable':self.syslog,
 		'relief':GROOVE}).pack(side=LEFT, anchor=W)
-	# Set the logfile
-	log = LabeledEntry(sf, '     Logfile:', self.logfile, '14')
-	log.pack(side=RIGHT, anchor=E)
-	sf.pack(fill=X)
+        # Set the logfile
+        log = LabeledEntry(sf, '     Logfile:', self.logfile, '14')
+        log.pack(side=RIGHT, anchor=E)
+        sf.pack(fill=X)
 
 	# Invisible mode?
 	Checkbutton(gf,
@@ -554,33 +550,6 @@ class ConfigurationEdit(Frame):
 
     def editSite(self, site):
 	ServerEdit(site, self.configuration.servers, Toplevel())
-
-    #XXX This method doesn't work yet.
-    def noviceEdit(self):
-	self.novice_host = StringVar(self)
-	self.novice_host.set(`self.configuration.novice_host`)
-	self.novice_name = StringVar(self)
-	self.novice_name.set(`self.configuration.novice_name`)
-	self.novice_passwd = StringVar(self)
-	self.novice_passwd.set(`self.configuration.passwd`)
-	self.novice_interval = IntVar(self)
-	self.novice_interval.set(`self.configuration.novice_interval`)
-
-        dispose_window(self, 'Novice Configurator Controls', novicehelp)
-	novice = Frame(self, relief=RAISED, bd=5)
-	Label(novice,
-		text='Novice Configuration Window', 
-		bd=2).pack(side=TOP, pady=10)
-	LabeledEntry(novice, 'Remote host to query:',
-		      self.novice_host).pack(side=TOP, fill=X)
-	LabeledEntry(novice, 'Your login name on the remote host:',
-		      self.novice_name).pack(side=TOP, fill=X)
-	LabeledEntry(novice, 'Your password on the remote host:',
-		      self.novice_passwd).pack(side=TOP, fill=X)
-	ButtonBar(novice, '', self.novice_protocol, protolist, 2, None) 
-	LabeledEntry(novice, 'Seconds between background polls:',
-		      self.novice_interval).pack(side=TOP, fill=X)
-	novice.pack(side=TOP, fill=X);
 
     def nosave(self):
 	if ConfirmQuit(self, self.mode + " configuration editor"):
@@ -749,7 +718,7 @@ class ServerEdit(Frame):
 		servers.append(self.server)
 
 	self.post()
-	self.expertEdit(host)
+	self.makeWidgets(host)
 #	self.grab_set()
 #	self.focus_set()
 #	self.wait_window()
@@ -789,7 +758,7 @@ class ServerEdit(Frame):
 	self.port.set(defaultports[proto])
 	if not proto in ("POP3", "APOP", "KPOP"): self.uidl = FALSE
 
-    def expertEdit(self, host):
+    def makeWidgets(self, host):
 	topwin = dispose_window(self, "Server options for " + host, serverhelp)
 
 	leftwin = Frame(self);
@@ -918,7 +887,7 @@ class UserEdit(Frame):
 	    server.users.append(self.user)
 
 	self.post()
-	self.expertEdit()
+	self.makeWidgets()
 #	self.grab_set()
 #	self.focus_set()
 #	self.wait_window()
@@ -953,7 +922,7 @@ class UserEdit(Frame):
 	self.gather()
 	Widget.destroy(self.master)
 
-    def expertEdit(self):
+    def makeWidgets(self):
 	dispose_window(self,
 			"User options for " + self.user.remote,
 			userhelp)
