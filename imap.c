@@ -86,7 +86,7 @@ char *buf;
 {
     /* try to get authorized */
     return(gen_transact(socket,
-		  "LOGIN %s %s",
+		  "LOGIN %s \"%s\"",
 		  queryctl->remotename, queryctl->password));
 }
 

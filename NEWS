@@ -39,6 +39,8 @@ features --
 
 * UID support is back by popular demand.  Bletch.
 
+* Permit spaces in IMAP passwords (ship them as quoted strings).
+
 bugs --
 
 * Fix buggy getopt specification of P and p options.
