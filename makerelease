@@ -54,7 +54,7 @@ fetchmail (${version}-1) unstable; urgency=low
 
   * new upstream version
   
--- Eric S. Raymond <esr\@ccil.org>  ${date}
+-- Eric S. Raymond <esr\@thyrsus.com>  ${date}
   
 EOF
     close(DEBLOG);
