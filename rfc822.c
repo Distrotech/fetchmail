@@ -24,10 +24,12 @@ MIT license.  Compile with -DMAIN to build the demonstrator.
 #include  <string.h>
 #include  <stdlib.h>
 
-#ifndef MAIN
 #include "fetchmail.h"
+
+#ifndef MAIN
 #include "i18n.h"
 #else
+#include  <unistd.h>
 static int verbose;
 char *program_name = "rfc822";
 #endif /* MAIN */
@@ -39,11 +41,11 @@ char *program_name = "rfc822";
 
 #define HEADER_END(p)	((p)[0] == '\n' && ((p)[1] != ' ' && (p)[1] != '\t'))
 
-unsigned char *reply_hack(buf, host, length)
+unsigned char *reply_hack(
+	unsigned char *buf		/* header to be hacked */,
+	const unsigned char *host	/* server hostname */,
+        int *length)
 /* hack message headers so replies will work properly */
-unsigned char *buf;		/* header to be hacked */
-const unsigned char *host;	/* server hostname */
-int *length;
 {
     unsigned char *from, *cp, last_nws = '\0', *parens_from = NULL;
     int parendepth, state, has_bare_name_part, has_host_part;
@@ -213,9 +215,8 @@ int *length;
     return(buf);
 }
 
-unsigned char *nxtaddr(hdr)
+unsigned char *nxtaddr(const unsigned char *hdr /* header to be parsed, NUL to continue previous hdr */)
 /* parse addresses in succession out of a specified RFC822 header */
-const unsigned char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 {
     static unsigned char address[BUFSIZ];
     static int tp;
@@ -392,10 +393,11 @@ const unsigned char *hdr;	/* header to be parsed, NUL to continue previous hdr *
 static void parsebuf(unsigned char *longbuf, int reply)
 {
     unsigned char	*cp;
+    int			dummy;
 
     if (reply)
     {
-	reply_hack(longbuf, "HOSTNAME.NET");
+	reply_hack(longbuf, "HOSTNAME.NET", &dummy);
 	printf("Rewritten buffer: %s", longbuf);
     }
     else
@@ -408,7 +410,7 @@ static void parsebuf(unsigned char *longbuf, int reply)
 
 
 
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     unsigned char	buf[BUFSIZ], longbuf[BUFSIZ];
     int			ch, reply;
@@ -450,6 +452,7 @@ main(int argc, char *argv[])
 	    fputs(longbuf, stdout);
 	parsebuf(longbuf, reply);
     }
+    exit(0);
 }
 #endif /* MAIN */
 

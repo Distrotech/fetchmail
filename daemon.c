@@ -53,7 +53,7 @@
 #include "fetchmail.h"
 #include "tunable.h"
 
-RETSIGTYPE
+static RETSIGTYPE
 sigchld_handler (int sig)
 /* process SIGCHLD to obtain the exit code of the terminating process */
 {

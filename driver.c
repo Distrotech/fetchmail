@@ -815,24 +815,25 @@ flagthemail:
     return(PS_SUCCESS);
 }
 
-static int do_session(ctl, proto, maxfetch)
 /* retrieve messages from server using given protocol method table */
-struct query *ctl;		/* parsed options with merged-in defaults */
-const struct method *proto;	/* protocol method table */
-const int maxfetch;		/* maximum number of messages to fetch */
+static int do_session(
+	/* parsed options with merged-in defaults */
+	struct query *ctl,
+	/* protocol method table */
+	const struct method *proto,
+	/* maximum number of messages to fetch */
+	const int maxfetch)
 {
-    int js;
-#ifdef HAVE_VOLATILE
+    static int *msgsizes;
     volatile int err, mailserver_socket = -1;	/* pacifies -Wall */
-#else
-    int err, mailserver_socket = -1;
-#endif /* HAVE_VOLATILE */
+    int deletions = 0, js;
     const char *msg;
     SIGHANDLERTYPE pipesave;
     SIGHANDLERTYPE alrmsave;
 
     ctl->server.base_protocol = proto;
 
+    msgsizes = NULL;
     pass = 0;
     err = 0;
     init_transact(proto);
@@ -924,8 +925,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
     else
     {
 	char buf[MSGBUFSIZE+1], *realhost;
-	int count, new, bytes, deletions = 0;
-	int *msgsizes = (int *)NULL;
+	int count, new, bytes;
 #if INET6_ENABLE
 	int fetches, dispatches, oldphase;
 #else /* INET6_ENABLE */

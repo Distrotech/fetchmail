@@ -30,7 +30,7 @@
 #include <locale.h>
 #endif
 
-extern char *getenv();	/* needed on sysV68 R3V7.1. */
+extern char *getenv(const char *);	/* needed on sysV68 R3V7.1. */
 
 extern char *program_name;
 

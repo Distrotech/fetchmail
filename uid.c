@@ -271,7 +271,7 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 /* return a pointer to the last element of the list to help the quick,
  * constant-time addition to the list, NOTE: this function does not dup
  * the string, the caller must do that. */
-/*@shared@*/ struct idlist **save_str_quick(/*@shared@*/ struct idlist **idl,
+/*@shared@*/ static struct idlist **save_str_quick(/*@shared@*/ struct idlist **idl,
 			       /*@only@*/ char *str, flag status)
 /* save a number/UID pair on the given UID list */
 {

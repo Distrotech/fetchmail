@@ -36,7 +36,7 @@
 #include "fetchmail.h"
 
 #ifndef strstr		/* glibc-2.1 declares this as a macro */
-extern char *strstr();	/* needed on sysV68 R3V7.1. */
+extern char *strstr(const char *, const char *);	/* needed on sysV68 R3V7.1. */
 #endif /* strstr */
 
 int mytimeout;		/* value of nonreponse timeout */
@@ -87,7 +87,7 @@ static void find_server_names(const char *hdr,
     {
 	char	*cp;
 
-	for (cp = nxtaddr(hdr);
+	for (cp = nxtaddr((const unsigned char *)hdr);
 	     cp != NULL;
 	     cp = nxtaddr(NULL))
 	{
@@ -110,11 +110,11 @@ static void find_server_names(const char *hdr,
 	    {
 		int sl = strlen(ctl->server.qvirtual);
  
-		if (!strncasecmp(cp, ctl->server.qvirtual, sl))
+		if (!strncasecmp((char *)cp, ctl->server.qvirtual, sl))
 		    cp += sl;
 	    }
 
-	    if ((atsign = strchr(cp, '@'))) {
+	    if ((atsign = strchr((char *)cp, '@'))) {
 		struct idlist	*idp;
 
 		/*
@@ -125,15 +125,15 @@ static void find_server_names(const char *hdr,
 		for (idp = ctl->server.localdomains; idp; idp = idp->next) {
 		    char	*rhs;
 
-		    rhs = atsign + (strlen(atsign) - strlen(idp->id));
+		    rhs = atsign + (strlen(atsign) - strlen((char *)idp->id));
 		    if (rhs > atsign &&
 			(rhs[-1] == '.' || rhs[-1] == '@') &&
-			strcasecmp(rhs, idp->id) == 0)
+			strcasecmp(rhs, (char *)idp->id) == 0)
 		    {
 			if (outlevel >= O_DEBUG)
 			    report(stdout, GT_("passed through %s matching %s\n"), 
 				  cp, idp->id);
-			save_str(xmit_names, cp, XMIT_ACCEPT);
+			save_str(xmit_names, (const char *)cp, XMIT_ACCEPT);
 			accept_count++;
 			goto nomap;
 		    }

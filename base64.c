@@ -8,6 +8,7 @@
  * scheme used here.
  */
 #include "config.h"
+#include "fetchmail.h"
 #include <ctype.h>
 
 static const char base64digits[] =

@@ -320,10 +320,7 @@ search_netrc (list, host, login)
 
 #include <errno.h>
 
-int
-main (argc, argv)
-     int argc;
-     char **argv;
+int main (int argc, char **argv)
 {
     struct stat sb;
     char *program_name, *file, *host, *login;

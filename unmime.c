@@ -327,7 +327,7 @@ static char *GetBoundary(char *CntType)
 }
 
 
-int CheckContentType(char *CntType)
+static int CheckContentType(char *CntType)
 {
   /*
    * Static array of Content-Type's for which we will do

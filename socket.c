@@ -80,7 +80,7 @@ extern int mailserver_socket_temp;	/* Socket to close if connect timeout */
 #endif /* NET_SECURITY */
 
 #ifdef HAVE_SOCKETPAIR
-char *const *parse_plugin(const char *plugin, const char *host, const char *service)
+static char *const *parse_plugin(const char *plugin, const char *host, const char *service)
 {	const char **argvec;
 	const char *c, *p;
 	char *cp, *plugin_copy;
@@ -752,7 +752,7 @@ SSL *SSLGetContext( int sock )
 }
 
 
-int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
+static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 {
 	char buf[257];
 	X509 *x509_cert;
@@ -884,12 +884,12 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 	return (ok_return);
 }
 
-int SSL_nock_verify_callback( int ok_return, X509_STORE_CTX *ctx )
+static int SSL_nock_verify_callback( int ok_return, X509_STORE_CTX *ctx )
 {
 	return SSL_verify_callback(ok_return, ctx, 0);
 }
 
-int SSL_ck_verify_callback( int ok_return, X509_STORE_CTX *ctx )
+static int SSL_ck_verify_callback( int ok_return, X509_STORE_CTX *ctx )
 {
 	return SSL_verify_callback(ok_return, ctx, 1);
 }

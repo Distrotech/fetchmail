@@ -23,7 +23,7 @@
 #endif /* OPIE_ENABLE */
 
 #ifndef strstr		/* glibc-2.1 declares this as a macro */
-extern char *strstr();	/* needed on sysV68 R3V7.1. */
+extern char *strstr(const char *, const char *);	/* needed on sysV68 R3V7.1. */
 #endif /* strstr */
 
 /* imap_version values */
