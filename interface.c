@@ -57,8 +57,6 @@ struct interface_pair_s {
 
 static char *netdevfmt;
 
-#if defined(linux)
-
 /*
  * Count of packets to see on an interface before monitor considers it up.
  * Needed because when pppd shuts down the link, the packet counts go up
@@ -66,6 +64,8 @@ static char *netdevfmt;
  * but we'll give it some extra.
  */
 #define MONITOR_SLOP		5
+
+#if defined(linux)
 
 void interface_init(void)
 /* figure out which /proc/dev/net format to use */
