@@ -11,12 +11,11 @@
 # Version 0.93 beta: Wed Jun  3 19:46:06 EDT 1998
 # Version 0.94 beta: Thu Jun  4 12:09:06 EDT 1998
 # Version 0.95 beta: Fri Jun  5 11:47:07 EDT 1998
-#
-# Version 1.0: 
+# Version 0.96 beta: Sun Jun  7 18:25:09 EDT 1998
 #
 # TO DO: Arrange for save and quit buttons to clean up all frames dependent
 # on the current ones.
-version = "1.0"
+version = "0.96"
 
 from Tkinter import *
 from Dialog import *
@@ -267,9 +266,9 @@ class User:
 	    str = str + " expunge " + `self.expunge`
         str = str + "\n"
         trimmed = self.smtphunt;
-        if trimmed[len(trimmed) - 1] == "localhost":
+        if trimmed != [] and trimmed[len(trimmed) - 1] == "localhost":
             trimmed = trimmed[0:len(trimmed) - 1]
-        if trimmed[len(trimmed) - 1] == hostname:
+        if trimmed != [] and trimmed[len(trimmed) - 1] == hostname:
             trimmed = trimmed[0:len(trimmed) - 1]
         if trimmed != []:
             str = str + "    smtphost "
@@ -645,6 +644,7 @@ class ConfigurationEdit(Frame, MyWidget):
         if fm:
             fm.write("# Configuration created %s by fetchmailconf\n" % time.ctime(time.time()))
             fm.write(`self.configuration`)
+            os.chmod(self.outfile, 0600)
             self.quit()
 
 #
@@ -1266,11 +1266,15 @@ def copy_instance(toclass, fromdict):
     if 'typemap' in class_sig: 
 	class_sig.remove('typemap')
     if tuple(class_sig) != tuple(dict_keys):
-	print "Conformability error"
+	print "Fields don't match what fetchmailconf expected:"
 #	print "Class signature: " + `class_sig`
 #	print "Dictionary keys: " + `dict_keys`
-	print "Not matched in class `" + toclass.__class__.__name__ + "' signature: " + `setdiff(class_sig, common)`
-	print "Not matched in dictionary keys: " + `setdiff(dict_keys, common)`
+	diff = setdiff(class_sig, common)
+        if diff:
+            print "Not matched in class `" + toclass.__class__.__name__ + "' signature: " + `diff`
+        diff = setdiff(dict_keys, common)
+        if diff:
+            print "Not matched in dictionary keys: " + `diff`
 	sys.exit(1)
     else:
 	for x in dict_keys:
