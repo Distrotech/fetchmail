@@ -84,7 +84,7 @@ char *buf;		/* header to be hacked */
 const char *host;	/* server hostname */
 {
     const char *from;
-    int state = 0, tokencount = 0;
+    int parendepth, state = 0, tokencount = 0;
     char mycopy[POPBUFSIZE+1];
 
     if (strncmp("From: ", buf, 6)
@@ -109,7 +109,10 @@ const char *host;	/* server hostname */
 	    if (*from == '"')
 		state = 3;
 	    else if (*from == '(')
+	    {
+		parendepth = 1;
 		state = 4;    
+	    }
 	    else if (*from == '<' || isalnum(*from))
 		state = 5;
 	    else if (isspace(*from))
@@ -133,7 +136,11 @@ const char *host;	/* server hostname */
 	    break;
 
 	case 4:   /* we're in a parenthesized human name, copy and ignore */
-	    if (*from == ')')
+	    if (*from == '(')
+		++parendepth;
+	    else if (*from == ')')
+		--parendepth;
+	    if (parendepth == 0)
 		state = 1;
 	    break;
 
@@ -210,7 +217,8 @@ static char *nxtaddr(hdr)
 char *hdr;	/* header line to be parsed, NUL to continue in previous hdr */
 {
     static char	*hp, *tp, address[POPBUFSIZE+1];
-    static	state;
+    static int	state;
+    int parendepth;
 
     /*
      * Note 1: RFC822 escaping with \ is *not* handled.  Note 2: it is
@@ -256,7 +264,10 @@ char *hdr;	/* header line to be parsed, NUL to continue in previous hdr */
 		*tp++ = *hp;
 	    }
 	    else if (*hp == '(') /* address comment -- ignore */
+	    {
+		parendepth = 1;
 		state = 3;    
+	    }
 	    else if (*hp == '<') /* begin <address> */
 	    {
 		state = 4;
@@ -286,7 +297,11 @@ char *hdr;	/* header line to be parsed, NUL to continue in previous hdr */
 	case 3:   /* we're in a parenthesized comment, ignore */
 	    if (*hp == '\n')
 		return(NULL);
+	    else if (*hp == '(')
+		++parendepth;
 	    else if (*hp == ')')
+		--parendepth;
+	    if (parendepth == 0)
 		state = 1;
 	    break;
 
