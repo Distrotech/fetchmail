@@ -905,7 +905,7 @@ static int load_params(int argc, char **argv, int optind)
     if ((implicitmode = (optind >= argc)))
     {
 	for (ctl = querylist; ctl; ctl = ctl->next)
-	    ctl->active = TRUE;
+	    ctl->active = !ctl->server.skip;
     }
     else
 	for (; optind < argc; optind++) 
@@ -1121,71 +1121,48 @@ static int load_params(int argc, char **argv, int optind)
 
 		ctl->server.truename = xstrdup(leadname);
 	    }
-#ifdef HAVE_GETHOSTBYNAME
 	    else if (ctl->active && ctl->server.dns && !configdump)
 	    {
-		if (ctl->server.authenticate==A_KERBEROS_V4 ||
-		      ctl->server.authenticate==A_KERBEROS_V5 ||
-		    (ctl->server.dns && MULTIDROP(ctl)))
-		{
-		    struct hostent	*namerec;
-
-		    /* compute the canonical name of the host */
-		    errno = 0;
-		    namerec = gethostbyname(ctl->server.queryname);
-		    if (namerec == (struct hostent *)NULL)
-		    {
-			report(stderr,
-			       _("couldn't find canonical DNS name of %s\n"),
-			       ctl->server.pollname);
-			ctl->server.truename = xstrdup(ctl->server.queryname);
-			ctl->server.trueaddr = NULL;
-		    }
-		    else
-			ctl->server.truename=xstrdup((char *)namerec->h_name);
-		}
-#endif /* HAVE_GETHOSTBYNAME */
-		else if (ctl->active)
-		{
-#ifdef HAVE_GETHOSTBYNAME
-		    struct hostent	*namerec;
-		    
-		    /* 
-		     * Get the host's IP, so we can report it like this:
-		     *
-		     * Received: from hostname [10.0.0.1]
-		     *
-		     * For ultra-efficiency, we should find the IP later, when
-		     * we are actually resolving the hostname for a connection.
-		     * Problem is this would have to be done inside SockOpen
-		     * and there's no way to do that that wouldn't both (a)
-		     * be horribly complicated, and (b) blow a couple of
-		     * layers of modularity all to hell.
-		     */
-		    errno = 0;
-		    namerec = gethostbyname(ctl->server.queryname);
-		    if (namerec == (struct hostent *)NULL)
-		    {
-			report(stderr,
-			       _("couldn't find canonical DNS name of %s\n"),
-			       ctl->server.pollname);
-			ctl->server.truename = xstrdup(ctl->server.queryname);
-			ctl->active = FALSE;
-			/* use this initially to flag DNS errors */
-			ctl->wedged = TRUE;
-		    }
-		    else {
-			ctl->server.truename=xstrdup((char *)namerec->h_name);
-			ctl->server.trueaddr=xmalloc(namerec->h_length);
-			memcpy(ctl->server.trueaddr, 
-			       namerec->h_addr_list[0],
-			       namerec->h_length);
-			ctl->wedged = FALSE;
-		    }
+#ifndef HAVE_GETHOSTBYNAME
+		ctl->server.truename = xstrdup(ctl->server.queryname);
+		ctl->server.trueaddr = NULL;
 #else
+		struct hostent	*namerec;
+		    
+		/* 
+		 * Get the host's IP, so we can report it like this:
+		 *
+		 * Received: from hostname [10.0.0.1]
+		 *
+		 * For ultra-efficiency, we should find the IP later, when
+		 * we are actually resolving the hostname for a connection.
+		 * Problem is this would have to be done inside SockOpen
+		 * and there's no way to do that that wouldn't both (a)
+		 * be horribly complicated, and (b) blow a couple of
+		 * layers of modularity all to hell.
+		 */
+		errno = 0;
+		namerec = gethostbyname(ctl->server.queryname);
+		if (namerec == (struct hostent *)NULL)
+		{
+		    report(stderr,
+			   _("couldn't find canonical DNS name of %s\n"),
+			   ctl->server.pollname);
 		    ctl->server.truename = xstrdup(ctl->server.queryname);
-#endif /* HAVE_GETHOSTBYNAME */
+		    ctl->server.trueaddr = NULL;
+		    ctl->active = FALSE;
+		    /* use this initially to flag DNS errors */
+		    ctl->wedged = TRUE;
 		}
+		else {
+		    ctl->server.truename=xstrdup((char *)namerec->h_name);
+		    ctl->server.trueaddr=xmalloc(namerec->h_length);
+		    memcpy(ctl->server.trueaddr, 
+			   namerec->h_addr_list[0],
+			   namerec->h_length);
+		    ctl->wedged = FALSE;
+		}
+#endif /* HAVE_GETHOSTBYNAME */
 	    }
 	    else
 		/*
