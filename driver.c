@@ -1184,11 +1184,15 @@ int num;		/* index of message */
 	n = stuffline(ctl, buf);
 	if (n != -1)
 	{
-	    sprintf(buf, "\tby %s (fetchmail-%s %s run for %s)\n",
+	    /*
+	     * We used to include ctl->remotename in this log line,
+	     * but this can be secure information that would be bad
+	     * to reveal.
+	     */
+	    sprintf(buf, "\tby %s (fetchmail-%s %s)\n",
 		    fetchmailhost, 
 		    RELEASE_ID,
-		    protocol->name,
-		    ctl->remotename);
+		    protocol->name);
 	    n = stuffline(ctl, buf);
 	    if (n != -1)
 	    {
