@@ -74,43 +74,54 @@ int imap_ok (argbuf,socket)
 char *argbuf;
 int socket;
 {
-  int ok;
-  char buf [POPBUFSIZE+1];
-  char *bufp;
-  int n;
+    int ok;
+    char buf [POPBUFSIZE+1];
+    char *bufp;
+    int n;
 
-  do {
-    if (SockGets(socket, buf, sizeof(buf)) < 0)
-      return(PS_SOCKET);
+    do {
+	if (SockGets(socket, buf, sizeof(buf)) < 0)
+	    return(PS_SOCKET);
 
-    if (outlevel == O_VERBOSE)
-      fprintf(stderr,"%s\n",buf);
+	if (outlevel == O_VERBOSE)
+	    fprintf(stderr,"%s\n",buf);
 
-    /* interpret untagged status responses */
-    if (strstr(buf, "EXISTS"))
-	exists = atoi(buf+2);
-    if (strstr(buf, "RECENT"))
-	recent = atoi(buf+2);
-    if (sscanf(buf + 2, "OK [UNSEEN %d]", &n) == 1)
-	unseen = n;
+	/* interpret untagged status responses */
+	if (strstr(buf, "EXISTS"))
+	    exists = atoi(buf+2);
+	if (strstr(buf, "RECENT"))
+	    recent = atoi(buf+2);
+	if (sscanf(buf + 2, "OK [UNSEEN %d]", &n) == 1)
+	    unseen = n;
 
-  } while
-      (tag[0] != '\0' && strncmp(buf, tag, strlen(tag)));
+    } while
+	(tag[0] != '\0' && strncmp(buf, tag, strlen(tag)));
 
-  if (tag[0] == '\0') {
-    strcpy(argbuf, buf);
-    return(0); 
-  }
-  else {
-    if (strncmp(buf + TAGLEN + 1, "OK", 2) == 0) {
-      strcpy(argbuf, buf + TAGLEN);
-      return(0);
+    if (tag[0] == '\0')
+    {
+	strcpy(argbuf, buf);
+	return(0); 
     }
-    else if (strncmp(buf + TAGLEN + 1, "BAD", 2) == 0)
-      return(PS_ERROR);
     else
-      return(PS_PROTOCOL);
-  }
+    {
+	char	*cp;
+
+	/* skip the tag */
+	for (cp = buf; !isspace(*cp); cp++)
+	    continue;
+	while (isspace(*cp))
+	    cp++;
+
+	if (strncmp(cp, "OK", 2) == 0)
+	{
+	    strcpy(argbuf, cp);
+	    return(0);
+	}
+	else if (strncmp(cp, "BAD", 2) == 0)
+	    return(PS_ERROR);
+	else
+	    return(PS_PROTOCOL);
+    }
 }
 
 int imap_getauth(socket, queryctl, buf)
