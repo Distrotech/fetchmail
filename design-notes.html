@@ -5,12 +5,13 @@
 <link rev=made href=mailto:esr@snark.thyrsus.com>
 <meta name="description" content="Design notes on fetchmail.">
 <meta name="keywords" content="fetchmail, POP, POP2, POP3, IMAP, remote mail"> 
+<base href="http://info.internet.isi.edu:80/in-notes/rfc/files/">
 </HEAD>
 <BODY>
 <table width="100%" cellpadding=0><tr>
-<td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
-<td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/07/20 06:19:12 $
+<td width="30%">Back to <a href="//localhost/~esr/index.html">Fetchmail Home Page</a>
+<td width="30%" align=center>To <a href="//localhost/~esr/sitemap.html">Site Map</a>
+<td width="30%" align=right>$Date: 1998/08/11 21:10:33 $
 </table>
 <HR>
 <H1 ALIGN=CENTER>Design Notes On Fetchmail</H1>
@@ -414,7 +415,7 @@ a gift from the gods, and this is my expression of gratitude.<P>
 
 The beta testers didn't know it at the time, but they were also the
 subjects of a sociological experiment.  The results are described in
-my paper, <A HREF="../writings/cathedral-bazaar/">The Cathedral
+my paper, <A HREF="//localhost/~esr/writings/cathedral-bazaar/">The Cathedral
 And The Bazaar</A>.
 
 <H1>Credits</H1>
@@ -440,46 +441,79 @@ Not all of these describe standards explicitly used in fetchmail, but they
 all shaped the design in one way or another.<P>
 
 <DL>
-<DT>RFC821<DD>  SMTP protocol
-<DT>RFC822<DD>  Mail header format
-<DT>RFC937<DD>  Post Office Protocol - Version 2
-<DT>RFC974<DD>  MX routing
-<DT>RFC976<DD>  UUCP mail format
-<DT>RFC1081<DD> Post Office Protocol - Version 3
-<DT>RFC1123<DD> Host requirements (modifies 821, 822, and 974)
-<DT>RFC1176<DD> Interactive Mail Access Protocol - Version 2
-<DT>RFC1203<DD> Interactive Mail Access Protocol - Version 3
-<DT>RFC1225<DD> Post Office Protocol - Version 3
-<DT>RFC1344<DD> Implications of MIME for Internet Mail Gateways
-<DT>RFC1413<DD> Identification server
-<DT>RFC1428<DD> Transition of Internet Mail from Just-Send-8 to 8-bit SMTP/MIME
-<DT>RFC1460<DD> Post Office Protocol - Version 3
-<DT>RFC1521<DD> MIME: Multipurpose Internet Mail Extensions
-<DT>RFC1869<DD> SMTP Service Extensions (ESMTP spec)
-<DT>RFC1652<DD> SMTP Service Extension for 8bit-MIMEtransport
-<DT>RFC1725<DD> Post Office Protocol - Version 3
-<DT>RFC1730<DD> Interactive Mail Access Protocol - Version 4
-<DT>RFC1731<DD> IMAP4 Authentication Mechanisms
-<DT>RFC1732<DD> IMAP4 Compatibility With IMAP2 And IMAP2bis
-<DT>RFC1734<DD> POP3 AUTHentication command
-<DT>RFC1870<DD> SMTP Service Extension for Message Size Declaration
-<DT>RFC1891<DD> SMTP Service Extension for Delivery Status Notifications
-<DT>RFC1892<DD> The Multipart/Report Content Type for the Reporting of Mail System Administrative Messages
-<DT>RFC1893<DD> Enhanced Mail System Status Codes
-<DT>RFC1894<DD> An Extensible Message Format for Delivery Status Notifications
-<DT>RFC1938<DD> A One-Time Password System
-<DT>RFC1939<DD> Post Office Protocol - Version 3
-<DT>RFC1985<DD> SMTP Service Extension for Remote Message Queue Starting
-<DT>RFC2060<DD> Internet Message Access Protocol - Version 4rev1
-<DT>RFC2061<DD> IMAP4 Compatibility With IMAP2bis
-<DT>RFC2062<DD> Internet Message Access Protocol - Obsolete Syntax
+<DT><A HREF="rfc821.txt">RFC821</A>
+<DD>  SMTP protocol
+<DT><A HREF="rfc822.txt">RFC822</A>
+<DD>  Mail header format
+<DT><A HREF="rfc937.txt">RFC937</A>
+<DD>  Post Office Protocol - Version 2
+<DT><A HREF="rfc974.txt">RFC974</A>
+<DD>  MX routing
+<DT><A HREF="rfc976.txt">RFC976</A>
+<DD>  UUCP mail format
+<DT><A HREF="rfc1081.txt">RFC1081</A>
+<DD> Post Office Protocol - Version 3
+<DT><A HREF="rfc1123.txt">RFC1123</A>
+<DD> Host requirements (modifies 821, 822, and 974)
+<DT><A HREF="rfc1176.txt">RFC1176</A>
+<DD> Interactive Mail Access Protocol - Version 2
+<DT><A HREF="rfc1203.txt">RFC1203</A>
+<DD> Interactive Mail Access Protocol - Version 3
+<DT><A HREF="rfc1225.txt">RFC1225</A>
+<DD> Post Office Protocol - Version 3
+<DT><A HREF="rfc1344.txt">RFC1344</A>
+<DD> Implications of MIME for Internet Mail Gateways
+<DT><A HREF="rfc1413.txt">RFC1413</A>
+<DD> Identification server
+<DT><A HREF="rfc1428.txt">RFC1428</A>
+<DD> Transition of Internet Mail from Just-Send-8 to 8-bit SMTP/MIME
+<DT><A HREF="rfc1460.txt">RFC1460</A>
+<DD> Post Office Protocol - Version 3
+<DT><A HREF="rfc1521.txt">RFC1521</A>
+<DD> MIME: Multipurpose Internet Mail Extensions
+<DT><A HREF="rfc1869.txt">RFC1869</A>
+<DD> SMTP Service Extensions (ESMTP spec)
+<DT><A HREF="rfc1652.txt">RFC1652</A>
+<DD> SMTP Service Extension for 8bit-MIMEtransport
+<DT><A HREF="rfc1725.txt">RFC1725</A>
+<DD> Post Office Protocol - Version 3
+<DT><A HREF="rfc1730.txt">RFC1730</A>
+<DD> Interactive Mail Access Protocol - Version 4
+<DT><A HREF="rfc1731.txt">RFC1731</A>
+<DD> IMAP4 Authentication Mechanisms
+<DT><A HREF="rfc1732.txt">RFC1732</A>
+<DD> IMAP4 Compatibility With IMAP2 And IMAP2bis
+<DT><A HREF="rfc1734.txt">RFC1734</A>
+<DD> POP3 AUTHentication command
+<DT><A HREF="rfc1870.txt">RFC1870</A>
+<DD> SMTP Service Extension for Message Size Declaration
+<DT><A HREF="rfc1891.txt">RFC1891</A>
+<DD> SMTP Service Extension for Delivery Status Notifications
+<DT><A HREF="rfc1892.txt">RFC1892</A>
+<DD> The Multipart/Report Content Type for the Reporting of Mail System Administrative Messages
+<DT><A HREF="rfc1893.txt">RFC1893</A>
+<DD> Enhanced Mail System Status Codes
+<DT><A HREF="rfc1894.txt">RFC1894</A>
+<DD> An Extensible Message Format for Delivery Status Notifications
+<DT><A HREF="rfc1938.txt">RFC1938</A>
+<DD> A One-Time Password System
+<DT><A HREF="rfc1939.txt">RFC1939</A>
+<DD> Post Office Protocol - Version 3
+<DT><A HREF="rfc1985.txt">RFC1985</A>
+<DD> SMTP Service Extension for Remote Message Queue Starting
+<DT><A HREF="rfc2060.txt">RFC2060</A>
+<DD> Internet Message Access Protocol - Version 4rev1
+<DT><A HREF="rfc2061.txt">RFC2061</A>
+<DD> IMAP4 Compatibility With IMAP2bis
+<DT><A HREF="rfc2062.txt">RFC2062</A>
+<DD> Internet Message Access Protocol - Obsolete Syntax
 </DL>
 
 <HR>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/07/20 06:19:12 $
+<td width="30%" align=right>$Date: 1998/08/11 21:10:33 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
