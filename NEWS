@@ -7,6 +7,7 @@ fetchmail-4.7.0 ():
 * Unwedge connections on wakeup.
 * Fix Ken Estes's LMTP coredump error.
 * Bounce mail with addresses rejected by the listener back to the sender.
+* Search .netrc on via name as well as poll name (thanks to Rob Funk).
 
 There are 243 people on fetchmail-friends and 322 on fetchmail-announce.
 

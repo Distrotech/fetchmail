@@ -2046,6 +2046,7 @@ const struct method *proto;	/* protocol method table */
 	}
 
    no_error:
+	/* ordinary termination with no errors -- officially log out */
 	ok = (protocol->logout_cmd)(sock, ctl);
 	/*
 	 * Hmmmm...arguably this would be incorrect if we had fetches but
@@ -2057,6 +2058,7 @@ const struct method *proto;	/* protocol method table */
 	goto closeUp;
 
     cleanUp:
+	/* we only get here on error */
 	if (ok != 0 && ok != PS_SOCKET)
 	    (protocol->logout_cmd)(sock, ctl);
 	SockClose(sock);

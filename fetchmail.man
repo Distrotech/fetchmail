@@ -562,7 +562,8 @@ file, it will look for a
 .I .netrc
 file in your home directory before requesting one interactively; if an
 entry matching the mailserver is found in that file, the password will
-be used.  See the
+be used.  Fetchmail first looks for a match on poll name; if it finds none,
+it checks for a match on via name.  See the
 .IR ftp (1)
 man page for details of the syntax of the
 .I .netrc
