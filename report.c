@@ -117,19 +117,26 @@ private_strerror (errnum)
    Exit with status STATUS if it is nonzero.  */
 /* VARARGS */
 
-#if !defined(HAVE_VSYSLOG) && !defined(VA_START)
+#if !defined(HAVE_VSYSLOG)
+#if defined(VA_START) && __STDC__
+int vsyslog(int priority, char *message, ...)
+#else
 int vsyslog(priority, message, va_alist)
 int priority;
 char *message;
 va_dcl
+#endif
 {
+#ifdef VA_START
     va_list args;
+#endif
   
     char *string;
   
     string = (char *)malloc(LINELEN);
  
-    va_start(args);
+    VA_START (ap, fmt) ;
+
     vsprintf(string, message, args);
     va_end(args);
  
