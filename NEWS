@@ -15,14 +15,19 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail 4.0.2 ()
+* Experimental RFC1938 one-time password support using OPIE library,
+  courtesy of Craig Metz <cmetz@inner.net> (couthor of RFC1938).
+
+Private release to Craig Metz only for OPIE testing.
+There are 251 people on the fetchmail-friends list.
+
 fetchmail-4.0.1 (Wed Jul 16 14:32:08 EDT 1997)
-
-(Minor cleanup release for non-Linux systems.)
-
 * Compilation cleanup for DEC Unix 4.0 and AIX.
 * Corrected the machinery for remote builds.
 * Minor improvements in failed-connection error messages.
 
+A minor cleanup release for non-Linux systems.
 There are 254 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------

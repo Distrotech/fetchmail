@@ -1,6 +1,6 @@
 		INSTALL Instructions for fetchmail
 
-If you have installed binaries (e.g. from an RPM) you can skip to step 4.
+If you have installed binaries (e.g. from an RPM) you can skip to step 5.
 
 If you are a Linux system packager, be aware that the build process generates
 an RPM spec file at fetchmail.spec, and you can "make rpm" to generate an
@@ -10,7 +10,20 @@ The Frequently Asked Questions list, included as the file FAQ in this
 distributions, answers the most common questions about configuring and 
 running fetchmail.
 
-1. CONFIGURE
+1. USEFUL THINGS TO INSTALL FIRST
+
+If you want support for RFC1938-compliant one-time passwords, you'll
+need to install Craig Metz's OPIE libraries first.  The fetchmail
+build process will detect them and configure appropriately.
+
+Note: there is no point in doing this unless your server is
+OTP-enabled.  To test this, telnet to the server port and give it
+a valid USER id.  If the OK response includes the string "otp-",
+you should install OPIE.
+
+The OPIE library sources are available at ftp://ftp.inner.net/pub/opie.
+
+2. CONFIGURE
 
 Installing fetchmail is easy.  From within this directory, type:
 
@@ -50,7 +63,7 @@ If you're running QNX, edit the distributed Makefile directly.  The
 QNX values for various macros are there but commented out; all you
 have to do is uncomment them.
 
-2. MAKE 
+3. MAKE 
 
 You may find you need flex at version 2.5.3 or greater to build
 fetchmail.  The stock lex distributed with some versions of Linux does
@@ -63,7 +76,7 @@ Run
 
 This should compile fetchmail for your system.
 
-3. INSTALL
+4. INSTALL
 
 Lastly, become root and run
 
@@ -77,14 +90,14 @@ NOTE: If you are using an MTA other than sendmail (such as qmail,
 exim, or smail), see the FAQ (section T) for discussion of any special
 configuration steps that may be necessary.
 
-4. SET UP A RUN CONTROL FILE
+5. SET UP A RUN CONTROL FILE
 
 See the man page and the file sample.rcfile for a description of how to
 configure your individual preferences.
 
 If you're upgrading from popclient, see question F4 in the FAQ file.
 
-5. TEST
+6. TEST
 
 I strongly recommend that your first fetchmail run use the -v and -k
 options, in case there is something not quite right with your server,
@@ -96,11 +109,11 @@ freeware POP3 servers; also with the IMAP2bis and IMAP4 servers that are
 distributed with Pine from the University of Washington.  This covers
 all the servers normally hosted on Linux and *BSD systems.
 
-6. REPORTING BUGS
+7. REPORTING BUGS
 
 You should read the FAQ file question G3 before reporting a bug.
 
-7. USE IT
+8. USE IT
 
 Once you've verified your configuration, you can start fetchmail to
 run in background and forget about it.  Enjoy!

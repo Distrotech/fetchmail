@@ -34,6 +34,7 @@ AC_SUBST(LIBOBJS)
 AC_CHECK_LIB(nsl,inet_addr)
 AC_CHECK_LIB(socket,socket)
 AC_CHECK_LIB(inet,socket)
+AC_CHECK_LIB(opie,opiegenerator)
 
 AC_CHECK_FUNC(strstr, AC_DEFINE(HAVE_STRSTR), 
               [EXTRASRC="$EXTRASRC \$(srcdir)/strstr.c"

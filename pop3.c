@@ -19,6 +19,10 @@
 #include  "fetchmail.h"
 #include  "socket.h"
 
+#if HAVE_LIBOPIE
+#include  <opie.h>
+#endif /* HAVE_LIBOPIE */
+
 #define PROTOCOL_ERROR	{error(0, 0, "protocol error"); return(PS_ERROR);}
 
 #define LOCKBUSY_ERROR	{error(0, 0, "lock busy!  Is another session active?"); return(PS_LOCKBUSY);}
@@ -26,6 +30,10 @@
 extern char *strstr();	/* needed on sysV68 R3V7.1. */
 
 static int last;
+
+#if HAVE_LIBOPIE
+static char lastok[POPBUFSIZE+1];
+#endif /* HAVE_LIBOPIE */
 
 int pop3_ok (int sock, char *argbuf)
 /* parse command response */
@@ -47,7 +55,12 @@ int pop3_ok (int sock, char *argbuf)
 	*(bufp++) = '\0';
 
 	if (strcmp(buf,"+OK") == 0)
+	{
+#if HAVE_LIBOPIE
+	    strcpy(lastok, bufp);
+#endif /* HAVE_LIBOPIE */
 	    ok = 0;
+	}
 	else if (strcmp(buf,"-ERR") == 0)
 	{
 	    /*
@@ -79,6 +92,9 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 /* apply for connection authorization */
 {
     int ok;
+#if HAVE_LIBOPIE
+    char *challenge;
+#endif /* HAVE_LIBOPIE */
 
     /* build MD5 digest from greeting timestamp + password */
     if (ctl->server.protocol == P_APOP) 
@@ -118,7 +134,30 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	if ((gen_transact(sock, "USER %s", ctl->remotename)) != 0)
 	    PROTOCOL_ERROR
 
-	if ((ok = gen_transact(sock, "PASS %s", ctl->password)) != 0)
+#ifdef HAVE_LIBOPIE
+	/* see RFC1938: A One-Time Password System */
+	if (challenge = strstr(lastok, "otp-"))
+	{
+	    char response[OPIE_RESPONSE_MAX+1];
+
+	    if (ctl->password && !strcmp(ctl->password, "opie"))
+	    {
+		if (ok = opiegenerator(challenge, "", response))
+		    if (ok != 2)
+		  	PROTOCOL_ERROR
+	    }
+	    else if (opiegenerator(challenge, ctl->password, response))
+		 PROTOCOL_ERROR
+
+	    ok = gen_transact(sock, "PASS %s", response);
+	}
+	else
+#else
+	    /* ordinary validation, no one-time password */ 
+	    ok = gen_transact(sock, "PASS %s", ctl->password);
+#endif /* HAVE_LIBOPIE */
+
+	if (ok != 0)
 	{
 	    if (ok == PS_LOCKBUSY)
 		LOCKBUSY_ERROR

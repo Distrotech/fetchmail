@@ -421,8 +421,13 @@ Kerberos preauthentication (either with --auth or the \fI.fetchmailrc\fR
 option \fBauthenticate kerberos_v4\fR) it will try to get a Kerberos
 ticket from the mailserver at the start of each query. 
 .PP
-If you use IMAP-K4 the code will expect the IMAP server to have
-RFC1731-conformant AUTHENTICATE KERBEROS_V4 capability.
+If you use IMAP-K4, \fIfetchmail\fR will expect the IMAP server to have
+RFC1731-conformant AUTHENTICATE KERBEROS_V4 capability, and will use it.
+.PP
+If you are using POP3, and the server issues a one-time-password
+challenge conforming to RFC1938, \fIfetchmail\fR will use your
+password as a pass phrase to generate the required response. This
+avoids sending secrets over the net unencrypted.
 
 .SH DAEMON MODE
 The 
@@ -1162,16 +1167,16 @@ The RFC822 parser used in multidrop mode chokes on some @-addresses that
 are technically legal but bizarre.  Strange uses of quoting and
 embedded comments are likely to confuse it.
 .PP
-Use of any of the supported protocols other than APOP, KPOP, IMAP-K4,
-or ETRN requires that the program send unencrypted passwords over the
-TCP/IP connection to the mailserver.  This creates a risk that
-name/password pairs might be snaffled with a packet sniffer or more
-sophisticated monitoring software.  Under Linux, the --interface
-option can be used to restrict polling to availability of a specific
-interface device with a specific local IP address, but snooping is
-still possible if (a) either host has a network device that can be
-opened in promiscuous mode, or (b) the intervening network link can be
-tapped.
+Use of any of the supported protocols other than POP3 with OTP, APOP,
+KPOP, IMAP-K4, or ETRN requires that the program send unencrypted
+passwords over the TCP/IP connection to the mailserver.  This creates
+a risk that name/password pairs might be snaffled with a packet
+sniffer or more sophisticated monitoring software.  Under Linux, the
+--interface option can be used to restrict polling to availability of
+a specific interface device with a specific local IP address, but
+snooping is still possible if (a) either host has a network device
+that can be opened in promiscuous mode, or (b) the intervening network
+link can be tapped.
 .PP
 Send comments, bug reports, gripes, and the like to Eric S. Raymond
 <esr@thyrsus.com>.  An HTML FAQ is available at the fetchmail home
@@ -1208,3 +1213,6 @@ RFC 1730, RFC 1731, RFC 1732, RFC 2060, RFC 2061
 .TP 5
 ETRN:
 RFC 1985
+.TP 5
+OTP:
+RFC 1938
