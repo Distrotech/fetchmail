@@ -49,7 +49,7 @@ cp %{builddir}/rh-config/*.{xpm,init} \$RPM_BUILD_ROOT/usr/lib/rhs/control-panel
 cp %{builddir}/fetchmail.man \$RPM_BUILD_ROOT/usr/man/man1/fetchmail.1
 gzip -9f \$RPM_BUILD_ROOT/usr/man/man1/fetchmail.1
 cd \$RPM_BUILD_ROOT/usr/man/man1
-ln -s fetchmail.1.gz fetchmailconf.1.gz
+ln -sf fetchmail.1.gz fetchmailconf.1.gz
 chmod 644 %{builddir}/contrib/*
 cp %{builddir}/rh-config/fetchmailconf.wmconfig \$RPM_BUILD_ROOT/etc/X11/wmconfig/fetchmailconf
 
