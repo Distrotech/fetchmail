@@ -1,1 +1,4 @@
-ca cs da de el es fr gl ja pl pt_BR tr sk
+# available languages
+ca da de el es fr ja pl tr
+# these are just too incomplete (lack more than 50 translations)
+# cs gl pt_BR sk
