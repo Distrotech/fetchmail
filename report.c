@@ -264,10 +264,10 @@ void error_init(int mode)
    format string with optional args, to the existing error message (which may
    be empty.)  The completed error message is finally printed (and reset to
    empty) by calling error_complete().
-   If an intervening call to error() occurs when a partially constructed
+   If an intervening call to report() occurs when a partially constructed
    message exists, then, in an attempt to keep the messages in their proper
    sequence, the partial message will be printed as-is (with a trailing 
-   newline) before error() prints its message. */
+   newline) before report() prints its message. */
 /* VARARGS */
 
 void
