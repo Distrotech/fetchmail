@@ -563,7 +563,8 @@ int open_sink(struct query *ctl,
 	    if (SMTP_rcpt(ctl->smtp_socket, addr) != SM_OK)
 	    {
 		error(0, 0, "can't even send to %s!", run.postmaster);
-		return(PS_SMTP);
+		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
+		return(PS_REFUSED);
 	    }
 	}
 
