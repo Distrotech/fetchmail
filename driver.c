@@ -1106,7 +1106,16 @@ static int readbody(int sock, struct query *ctl, flag forward, int len)
     unsigned char *inbufp = buf;
     flag issoftline = FALSE;
 
-    /* pass through the text lines */
+    /*
+     * Pass through the text lines in the body.
+     *
+     * Yes, this wants to be ||, not &&.  The problem is that in the most
+     * important delimited protocol, POP3, the length is not reliable.
+     * As usual, the problem is Microsoft brain damage; see FAQ item S2.
+     * So, for delimited protocols we need to ignore the length here and
+     * instead drop out of the loop with a break statement when we see
+     * the message delimiter.
+     */
     while (protocol->delimited || len > 0)
     {
 	set_timeout(mytimeout);
