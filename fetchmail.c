@@ -933,9 +933,9 @@ void dump_params (struct query *ctl)
 	printf("  No SMTP message batch limit (--batchlimit 0).\n");
     if (ctl->server.protocol == P_IMAP)
 	if (ctl->expunge > 0)
-	    printf("  Max deletions between expunges is %d (--expunge %d).\n", ctl->expunge, ctl->expunge);
+	    printf("  Deletion interval between expunges is %d (--expunge %d).\n", ctl->expunge, ctl->expunge);
 	else if (outlevel == O_VERBOSE)
-	    printf("  No deletion limit between expunges (--expunge 0).\n");
+	    printf("  No expunges (--expunge 0).\n");
     if (ctl->mda)
 	printf("  Messages will be delivered with '%s.'\n", visbuf(ctl->mda));
     else
@@ -967,7 +967,12 @@ void dump_params (struct query *ctl)
 	for (idp = ctl->localnames; idp; idp = idp->next)
 	    ++count;
 
-	printf("  %d local name(s) recognized.\n", count);
+	if (count > 1 || ctl->wildcard)
+	    printf("  Multi-drop mode: ");
+	else
+	    printf("  Single-drop mode: ");
+
+	printf("%d local name(s) recognized.\n", count);
 	if (outlevel == O_VERBOSE)
 	{
 	    for (idp = ctl->localnames; idp; idp = idp->next)
