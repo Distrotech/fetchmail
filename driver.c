@@ -1509,6 +1509,8 @@ const struct method *proto;	/* protocol method table */
 	    close(ctl->smtp_socket);
 	if (sock != -1)
 	    close(sock);
+	if (sinkfp)
+	    pclose(sinkfp);
 	ok = PS_ERROR;
     }
     else
