@@ -6,7 +6,15 @@
 
 * --all option that forces poll of skipped entries?
 
+* Support for `folder' keywird in fetchmailconf (Debian bug #35925).
+
 				Release Notes:
+
+fetchmail-5.0.7 ():
+* RPA support works again.
+* Added debian_rc startup/shutdown script to contrib/.
+
+There are 263 people on fetchmail-friends and 421 on fetchmail-announce.
 
 fetchmail-5.0.6 (Mon Aug  2 14:04:23 EDT 1999):
 * Czech internationalization support (thanks to Jiri Pavlovsky).

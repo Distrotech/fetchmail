@@ -140,41 +140,33 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 
     switch (ctl->server.protocol) {
     case P_POP3:
-	 ok = gen_transact(sock, "USER %s", ctl->remotename);
-
 #ifdef RPA_ENABLE
-	 /*
-	  * CompuServe has changed its RPA behavior.  Used to be they didn't
-	  * accept PASS, but I'm told this changed in mid-November 1997.
-	  */
-	 if (strstr(greeting, "csi.com")
-	     && (start = strchr(ctl->remotename, '@'))
-	     && !strcmp("@compuserve.com", start))
-	 {
-             /* temporary fix to get back out of cleartext authentication */
-             gen_transact(sock, "PASS %s", "dummypass");
-  
-	     /* AUTH command should return a list of available mechanisms */
-	     if (gen_transact(sock, "AUTH") == 0)
-	     {
-		 char buffer[10];
-		 flag has_rpa = FALSE;
+	/* CompuServe POP3 Servers as of 990730 want AUTH first for RPA */
+	if (strstr(ctl->remotename, "@compuserve.com"))
+	{
+	    /* AUTH command should return a list of available mechanisms */
+	    if (gen_transact(sock, "AUTH") == 0)
+	    {
+		char buffer[10];
+		flag has_rpa = FALSE;
 
-		 while ((ok = gen_recv(sock, buffer, sizeof(buffer))) == 0)
-		 {
-		     if (buffer[0] == '.')
-			 break;
-		     if (strncasecmp(buffer, "rpa", 3) == 0)
-			 has_rpa = TRUE;
-		 }
-		 if (has_rpa && !POP3_auth_rpa(ctl->remotename, 
-					       ctl->password, sock))
-		     return(PS_SUCCESS);
-	     }
+		while ((ok = gen_recv(sock, buffer, sizeof(buffer))) == 0)
+		{
+		    if (buffer[0] == '.')
+			break;
+		    if (strncasecmp(buffer, "rpa", 3) == 0)
+			has_rpa = TRUE;
+		}
+		if (has_rpa && !POP3_auth_rpa(ctl->remotename, 
+					      ctl->password, sock))
+		    return(PS_SUCCESS);
+	    }
 
-	     return(PS_AUTHFAIL);
-	 }
+	    return(PS_AUTHFAIL);
+	}
+	else /* not a CompuServe account */
 #endif /* RPA_ENABLE */
+	    ok = gen_transact(sock, "USER %s", ctl->remotename);
 
 #if OPIE
 	/* see RFC1938: A One-Time Password System */

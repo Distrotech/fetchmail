@@ -180,8 +180,6 @@ Use POP3 with MD5 authentication.
 Use POP3 with RPOP authentication.
 .IP KPOP
 Use POP3 with Kerberos V4 authentication on port 1109.
-.IP RPA
-Tries CompuServe's Remote Password Authentication.
 .IP SDPS
 Use POP3 with Demon Internet's SDPS extensions.
 .IP IMAP
@@ -647,9 +645,10 @@ challenge conforming to RFC1938, \fIfetchmail\fR will use your
 password as a pass phrase to generate the required response. This
 avoids sending secrets over the net unencrypted.
 .PP
-Compuserve's RPA authentication (similar to APOP) is supported.  If
-you specify it, \fIfetchmail\fR will try to perform an RPA pass-phrase
-authentication instead of sending over the password en clair.
+Compuserve's RPA authentication (similar to APOP) is supported. If you
+compile in the support, \fIfetchmail\fR will try to perform an RPA pass-phrase
+authentication instead of sending over the password en clair if it
+detects "@compuserve.com" in the hostname.
 .PP
 If you are using IPsec, the -T (--netsec) option can be used to pass
 an IP security request to be used when outgoing IP connections are
@@ -1822,9 +1821,6 @@ MDA.  For maximum safety, however, don't use an mda command containing
 .PP
 Fetchmail's method of sending bouncemail requires that port 25 of localhost
 be available for sending mail via SMTP.
-.PP
-Due to an incompatible change in CompuServe's RPA on July 31 1999, 
-the RPA support is currently broken.
 .PP
 Send comments, bug reports, gripes, and the like to the
 fetchmail-friends list <fetchmail-friends@ccil.org>.  An HTML FAQ is
