@@ -14,13 +14,15 @@ fetchmail-2.5 (Mon Dec 23 04:18:54 EST 1996)
 
 features -- 
 
-* --interface and --monitor options courtesy for George Sipe.
+* New --interface and --monitor options courtesy of George Sipe.
 
 bugs --
 
 * Replaced bug-prone setvbuf with setlinebuf.
 
 * Moved lock file to ~/.fetchmail to eliminate various /tmp problems.
+
+There are 165 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-2.4 (Sat Dec 21 05:24:44 EST 1996)
