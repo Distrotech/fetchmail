@@ -1,10 +1,10 @@
 cat <<EOF
-Description: Remote mail fetcher for POP2, POP3, APOP, IMAP
+Description: Remote mail fetch daemon for POP2, POP3, APOP, IMAP
 Name: fetchmail
 Version: ${1}
 Release: ${2}
 Source: locke.ccil.org:/pub/esr/fetchmail/fetchmail-${1}.tar.gz
-Copyright: distributable
+Copyright: freely redistributable
 Group: Mail
 
 %prep
@@ -18,7 +18,7 @@ make
 make install
 
 %files
-%doc README NEWS NOTES FAQ COPYING INSTALL sample.rcfile
+%doc README NEWS NOTES fetchmail.FAQ.html FAQ COPYING INSTALL sample.rcfile
 
 %ifarch i386
 %endif

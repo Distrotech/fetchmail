@@ -1,13 +1,20 @@
 				Heads-up!
 
-The .poprc compatibility hack that allows your first user declaration
-per server to omit the "username" keyword. has been causing some
-confusion (see question F3 in the FAQ for details).  Use of the
-feature now generates a warning to standard error.  In a future
-release, probably 4.0, this hack will be removed and the leading
-`username' token required for every user entry.
+The .poprc compatibility hack that allows the first user declaration of
+more than one in a server entry to omit the "username" keyword has been
+causing some confusion (see question F3 in the FAQ for details). This now
+generates a warning to standard error.  In a future release, probably 4.0,
+this hack will be removed and the leading `username' token required for
+every user entry in a multi-user poll declaration.
 
 			Release Notes:
+
+------------------------------------------------------------------------------
+
+pl 3.9.1 (Fri Apr  4 17:24:14 EST 1997):
+* Hypertext FAQ added to distribution manifest.
+* RPM builder production fixed.
+* Minor additions to man page.
 
 ------------------------------------------------------------------------------
 fetchmail-3.9 (Wed Apr  2 13:36:22 EST 1997)

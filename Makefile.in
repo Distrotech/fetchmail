@@ -4,7 +4,7 @@
 # So just uncomment all the lines marked QNX.
 
 VERS=3.9
-PL=0
+PL=1
 
 # Ultrix 2.2 make doesn't expand the value of VPATH.
 srcdir = @srcdir@
@@ -197,7 +197,7 @@ extra = $(srcdir)/alloca.c $(srcdir)/getopt.[ch] $(srcdir)/getopt1.c \
 	$(srcdir)/strcasecmp.c
 docs = $(srcdir)/COPYING $(srcdir)/README $(srcdir)/INSTALL $(srcdir)/NEWS \
 	$(srcdir)/NOTES $(srcdir)/fetchmail.lsm $(srcdir)/sample.rcfile \
-	$(srcdir)/*.man	$(srcdir)/FAQ $(srcdir)/fetchmail-FAQ.html
+	$(srcdir)/*.man	$(srcdir)/FAQ $(srcdir)/fetchmail.FAQ.html
 config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/configure \
 	$(srcdir)/config.guess $(srcdir)/config.h.in $(srcdir)/config.sub \
 	$(srcdir)/acconfig.h
@@ -208,8 +208,8 @@ all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) \
 MANIFEST: $(srcdir)
 	@echo $(all) | tr "[ \t]" '\n' | sort | sed "s/\\./fetchmail-$(VERS)/" >MANIFEST
 
-FAQ: fetchmail-FAQ.html
-	lynx -dump -nolist fetchmail-FAQ.html >FAQ
+FAQ: fetchmail.FAQ.html
+	lynx -dump -nolist fetchmail.FAQ.html >FAQ
 
 dist: fetchmail-$(VERS).tar.gz
 	ls -l fetchmail-$(VERS).tar.gz
@@ -220,6 +220,7 @@ fetchmail-$(VERS).tar: $(all)
 fetchmail-$(VERS).tar.gz: fetchmail-$(VERS).tar
 	gzip -f fetchmail-$(VERS).tar
 
+# You need to be root to make this work
 RPMROOT=/usr/src/redhat
 RPM = rpm
 RPMFLAGS = -ba
@@ -227,6 +228,8 @@ rpm: fetchmail-$(VERS).tar.gz
 	cp fetchmail-$(VERS).tar.gz $(RPMROOT)/SOURCES;
 	$(srcdir)/specgen.sh $(VERS) $(PL) >$(RPMROOT)/SPECS/fetchmail.spec
 	cd $(RPMROOT)/SPECS; $(RPM) $(RPMFLAGS) fetchmail.spec	
+	cp $(RPMROOT)/RPMS/i386/fetchmail-$(VERS)*.rpm $(srcdir)
+	cp $(RPMROOT)/SRPMS/fetchmail-$(VERS)*.src.rpm $(srcdir)
 
 # The automatically generated dependencies below may omit config.h
 # because it is included with ``#include <config.h>'' rather than
