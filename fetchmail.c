@@ -62,7 +62,7 @@ char *program_name;	    /* the name to prefix error messages with */
 flag configdump;	    /* dump control blocks for configurator */
 char *fetchmailhost;	    /* either `localhost' or the host's FQDN */
 
-#if NET_SECURITY
+#ifdef NET_SECURITY
 void *request = NULL;
 int requestlen = 0;
 #endif /* NET_SECURITY */
@@ -216,19 +216,19 @@ int main(int argc, char **argv)
 #ifdef SSL_ENABLE
 	printf("+SSL");
 #endif
-#if OPIE_ENABLE
+#ifdef OPIE_ENABLE
 	printf("+OPIE");
 #endif /* OPIE_ENABLE */
-#if INET6_ENABLE
+#ifdef INET6_ENABLE
 	printf("+INET6");
 #endif /* INET6_ENABLE */
-#if NET_SECURITY
+#ifdef NET_SECURITY
 	printf("+NETSEC");
 #endif /* NET_SECURITY */
 #ifdef HAVE_SOCKS
 	printf("+SOCKS");
 #endif /* HAVE_SOCKS */
-#if ENABLE_NLS
+#ifdef ENABLE_NLS
 	printf("+NLS");
 #endif /* ENABLE_NLS */
 	putchar('\n');
@@ -630,7 +630,7 @@ int main(int argc, char **argv)
 			}
 		    }
 
-#if (defined(linux) && !INET6_ENABLE) || defined(__FreeBSD__)
+#if (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__)
 		    /*
 		     * Don't do monitoring if we were woken by a signal.
 		     * Note that interface_approve() does its own error logging.
@@ -694,7 +694,7 @@ int main(int argc, char **argv)
 			    break;
 			}
 
-#if (defined(linux) && !INET6_ENABLE) || defined (__FreeBSD__)
+#if (defined(linux) && !defined(INET6_ENABLE)) || defined (__FreeBSD__)
 		    if (ctl->server.monitor)
 		    {
 			/*
@@ -825,7 +825,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
 #define FLAG_MERGE(fld) if (force ? !!h1->fld : !h2->fld) h2->fld = h1->fld
     FLAG_MERGE(server.via);
     FLAG_MERGE(server.protocol);
-#if INET6_ENABLE
+#ifdef INET6_ENABLE
     FLAG_MERGE(server.service);
     FLAG_MERGE(server.netsec);
 #else /* INET6_ENABLE */
@@ -1156,7 +1156,7 @@ static int load_params(int argc, char **argv, int optind)
 	    if (ctl->server.timeout == -1)	
 		ctl->server.timeout = CLIENT_TIMEOUT;
 
-#if !INET6_ENABLE
+#ifndef INET6_ENABLE
 	    /* sanity checks */
 	    if (ctl->server.port < 0)
 	    {
@@ -1499,7 +1499,7 @@ static void dump_params (struct runctl *runp,
 	}
 
 	if (ctl->server.protocol == P_POP3 
-#if INET6_ENABLE
+#ifdef INET6_ENABLE
 	    && ctl->server.service && !strcmp(ctl->server.service, KPOP_PORT)
 #else /* INET6_ENABLE */
 	    && ctl->server.port == KPOP_PORT
@@ -1510,7 +1510,7 @@ static void dump_params (struct runctl *runp,
 		   ctl->server.authenticate == A_KERBEROS_V5 ? "V" : "IV");
 	else
 	    printf(GT_("  Protocol is %s"), showproto(ctl->server.protocol));
-#if INET6_ENABLE
+#ifdef INET6_ENABLE
 	if (ctl->server.service)
 	    printf(GT_(" (using service %s)"), ctl->server.service);
 	if (ctl->server.netsec)
@@ -1587,7 +1587,7 @@ static void dump_params (struct runctl *runp,
 
 		printf(GT_("  Selected mailboxes are:"));
 		for (idp = ctl->mailboxes; idp; idp = idp->next)
-		    printf(" %s", idp->id);
+		    printf(" %s", (char *)idp->id);
 		printf("\n");
 	    }
 	    printf(GT_("  %s messages will be retrieved (--all %s).\n"),
@@ -1674,7 +1674,7 @@ static void dump_params (struct runctl *runp,
 	    printf(GT_("  Domains for which mail will be fetched are:"));
 	    for (idp = ctl->domainlist; idp; idp = idp->next)
 	    {
-		printf(" %s", idp->id);
+		printf(" %s", (char *)idp->id);
 		if (!idp->val.status.mark)
 		    printf(GT_(" (default)"));
 	    }
@@ -1694,7 +1694,7 @@ static void dump_params (struct runctl *runp,
 		       ctl->listener);
 		for (idp = ctl->smtphunt; idp; idp = idp->next)
 		{
-		    printf(" %s", idp->id);
+		    printf(" %s", (char *)idp->id);
 		    if (!idp->val.status.mark)
 			printf(GT_(" (default)"));
 		}
@@ -1752,9 +1752,9 @@ static void dump_params (struct runctl *runp,
 		    {
 			for (idp = ctl->localnames; idp; idp = idp->next)
 			    if (idp->val.id2)
-				printf("\t%s -> %s\n", idp->id, idp->val.id2);
+				printf("\t%s -> %s\n", (char *)idp->id, (char *)idp->val.id2);
 			    else
-				printf("\t%s\n", idp->id);
+				printf("\t%s\n", (char *)idp->id);
 			if (ctl->wildcard)
 			    fputs("\t*\n", stdout);
 		    }
@@ -1793,7 +1793,7 @@ static void dump_params (struct runctl *runp,
 
 			    printf(GT_("  Predeclared mailserver aliases:"));
 			    for (idp = ctl->server.akalist; idp; idp = idp->next)
-				printf(" %s", idp->id);
+				printf(" %s", (char *)idp->id);
 			    putchar('\n');
 			}
 			if (ctl->server.localdomains)
@@ -1802,7 +1802,7 @@ static void dump_params (struct runctl *runp,
 
 			    printf(GT_("  Local domains:"));
 			    for (idp = ctl->server.localdomains; idp; idp = idp->next)
-				printf(" %s", idp->id);
+				printf(" %s", (char *)idp->id);
 			    putchar('\n');
 			}
 		    }
@@ -1843,7 +1843,7 @@ static void dump_params (struct runctl *runp,
 		printf(GT_("  %d UIDs saved.\n"), count);
 		if (outlevel >= O_VERBOSE)
 		    for (idp = ctl->oldsaved; idp; idp = idp->next)
-			printf("\t%s\n", idp->id);
+			printf("\t%s\n", (char *)idp->id);
 	    }
 	}
 

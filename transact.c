@@ -1135,10 +1135,10 @@ int readheaders(int sock,
 #endif /* HAVE_SNPRINTF */
 		    "Received: from %s [%u.%u.%u.%u]\r\n", 
 		    ctl->server.truename,
-		    (unsigned char)ctl->server.trueaddr[0],
-		    (unsigned char)ctl->server.trueaddr[1],
-		    (unsigned char)ctl->server.trueaddr[2],
-		    (unsigned char)ctl->server.trueaddr[3]);
+		    (unsigned int)(unsigned char)ctl->server.trueaddr[0],
+		    (unsigned int)(unsigned char)ctl->server.trueaddr[1],
+		    (unsigned int)(unsigned char)ctl->server.trueaddr[2],
+		    (unsigned int)(unsigned char)ctl->server.trueaddr[3]);
 	} else {
 #ifdef HAVE_SNPRINTF
 	  snprintf(buf, sizeof(buf),

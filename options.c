@@ -165,7 +165,7 @@ static const struct option longoptions[] = {
 
   {"principal", required_argument, (int *) 0, LA_PRINCIPAL },
 
-#if (defined(linux) && !INET6_ENABLE) || defined(__FreeBSD__)
+#if (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__)
   {"interface",	required_argument, (int *) 0, LA_INTERFACE   },
   {"monitor",	required_argument, (int *) 0, LA_MONITOR     },
 #endif /* (defined(linux) && !INET6_ENABLE) || defined(__FreeBSD__) */
@@ -362,7 +362,7 @@ struct query *ctl;	/* option record to be initialized */
 	    else if (strcasecmp(optarg,"kpop") == 0)
 	    {
 		ctl->server.protocol = P_POP3;
-#if INET6_ENABLE
+#ifdef INET6_ENABLE
 		ctl->server.service = KPOP_PORT;
 #else /* INET6_ENABLE */
 		ctl->server.port = KPOP_PORT;
@@ -390,7 +390,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'P':
 	case LA_PORT:
-#if INET6_ENABLE
+#ifdef INET6_ENABLE
 	    ctl->server.service = optarg;
 #else /* INET6_ENABLE */
 	    ctl->server.port = xatoi(optarg, &errflag);
@@ -561,7 +561,7 @@ struct query *ctl;	/* option record to be initialized */
 
 	case 'T':
 	case LA_NETSEC:
-#if NET_SECURITY
+#ifdef NET_SECURITY
 	    ctl->server.netsec = (void *)optarg;
 #else
 	    fprintf(stderr, GT_("fetchmail: network security support is disabled\n"));
@@ -569,7 +569,7 @@ struct query *ctl;	/* option record to be initialized */
 #endif /* NET_SECURITY */
 	    break;
 
-#if (defined(linux) && !INET6_ENABLE) || defined(__FreeBSD__)
+#if (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__)
 	case 'I':
 	case LA_INTERFACE:
 	    interface_parse(optarg, &ctl->server);
@@ -675,7 +675,7 @@ struct query *ctl;	/* option record to be initialized */
 	P(GT_("  -i, --idfile      specify alternate UIDs file\n"));
 	P(GT_("      --postmaster  specify recipient of last resort\n"));
 	P(GT_("      --nobounce    redirect bounces from user to postmaster.\n"));
-#if (defined(linux) && !INET6_ENABLE) || defined(__FreeBSD__)
+#if (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__)
 	P(GT_("  -I, --interface   interface required specification\n"));
 	P(GT_("  -M, --monitor     monitor interface for activity\n"));
 #endif
@@ -707,7 +707,7 @@ struct query *ctl;	/* option record to be initialized */
 	P(GT_("  -l, --limit       don't fetch messages over given size\n"));
 	P(GT_("  -w, --warnings    interval between warning mail notification\n"));
 
-#if NET_SECURITY
+#ifdef NET_SECURITY
 	P(GT_("  -T, --netsec      set IP security request\n"));
 #endif /* NET_SECURITY */
 	P(GT_("  -S, --smtphost    set SMTP forwarding host\n"));

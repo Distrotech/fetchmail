@@ -926,7 +926,7 @@ static int do_session(
     {
 	char buf[MSGBUFSIZE+1], *realhost;
 	int count, new, bytes;
-#if INET6_ENABLE
+#ifdef INET6_ENABLE
 	int fetches, dispatches, oldphase;
 #else /* INET6_ENABLE */
 	int port, fetches, dispatches, oldphase;
@@ -946,7 +946,7 @@ static int do_session(
 	oldphase = phase;
 	phase = OPEN_WAIT;
 	set_timeout(mytimeout);
-#if !INET6_ENABLE
+#ifndef INET6_ENABLE
 #ifdef SSL_ENABLE
 	port = ctl->server.port ? ctl->server.port : ( ctl->use_ssl ? ctl->server.base_protocol->sslport : ctl->server.base_protocol->port );
 #else
@@ -1037,7 +1037,7 @@ static int do_session(
 	/* allow time for the port to be set up if we have a plugin */
 	if (ctl->server.plugin)
 	    (void)sleep(1);
-#if INET6_ENABLE
+#ifdef INET6_ENABLE
 	if ((mailserver_socket = SockOpen(realhost, 
 			     ctl->server.service ? ctl->server.service : ( ctl->use_ssl ? ctl->server.base_protocol->sslservice : ctl->server.base_protocol->service ),
 			     ctl->server.netsec, ctl->server.plugin)) == -1)
@@ -1046,7 +1046,7 @@ static int do_session(
 #endif /* INET6_ENABLE */
 	{
 	    char	errbuf[BUFSIZ];
-#if !INET6_ENABLE
+#ifndef INET6_ENABLE
 	    int err_no = errno;
 #ifdef HAVE_RES_SEARCH
 	    if (err_no != 0 && h_errno != 0)

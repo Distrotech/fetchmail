@@ -73,9 +73,7 @@ static int h_errno;
 
 #endif /* ndef h_errno */
 
-extern int mailserver_socket_temp;	/* Socket to close if connect timeout */
-
-#if NET_SECURITY
+#ifdef NET_SECURITY
 #include <net/security.h>
 #endif /* NET_SECURITY */
 
@@ -171,7 +169,6 @@ static int handle_plugin(const char *host,
 		/* error */
 		report(stderr, GT_("fetchmail: fork failed\n"));
 		return -1;
-		break;
 	case 0:	/* child */
 		/* fds[1] is the parent's end; close it for proper EOF
 		** detection */
@@ -258,13 +255,13 @@ int UnixOpen(const char *path)
     return sock;
 }
 
-#if INET6_ENABLE
+#ifdef INET6_ENABLE
 int SockOpen(const char *host, const char *service, const char *options,
 	     const char *plugin)
 {
     struct addrinfo *ai, *ai0, req;
     int i;
-#if NET_SECURITY
+#ifdef NET_SECURITY
     void *request = NULL;
     int requestlen;
 #endif /* NET_SECURITY */

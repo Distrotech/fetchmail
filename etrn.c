@@ -65,7 +65,7 @@ static int etrn_getrange(int sock, struct query *ctl, const char *id,
     for (qnp = ctl->domainlist; qnp; qnp = qnp->next)
     {
 	/* ship the actual poll and get the response */
-	gen_send(sock, "ETRN %s", qnp->id);
+	gen_send(sock, "ETRN %s", (char *)qnp->id);
 	if ((ok = gen_recv(sock, buf, sizeof(buf))))
 	    return(ok);
 
@@ -122,7 +122,7 @@ static int etrn_logout(int sock, struct query *ctl)
 static const struct method etrn =
 {
     "ETRN",		/* ESMTP ETRN extension */
-#if INET6_ENABLE
+#ifdef INET6_ENABLE
     "smtp",		/* standard SMTP port */
     "smtps",		/* ssl SMTP port */
 #else /* INET6_ENABLE */

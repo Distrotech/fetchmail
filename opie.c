@@ -17,7 +17,7 @@
 #include  "i18n.h"
 #include "md5.h"
 
-#if OPIE_ENABLE
+#ifdef OPIE_ENABLE
 #include <opie.h>
 
 int do_otp(int sock, char *command, struct query *ctl)

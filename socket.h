@@ -8,7 +8,7 @@
 #define SOCKET__
 
 /* Create a new client socket; returns (FILE *)NULL on error */
-#if INET6_ENABLE
+#ifdef INET6_ENABLE
 int SockOpen(const char *host, const char *service, const char *options,
 	     const char *plugin);
 #else /* INET6_ENABLE */
@@ -63,7 +63,7 @@ FIXME: document this
 */
 int UnixOpen(const char *path);
 
-#if SSL_ENABLE
+#ifdef SSL_ENABLE
 int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char *certpath,
     char *fingerprint, char *servercname, char *label);
 #endif /* SSL_ENABLE */

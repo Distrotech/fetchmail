@@ -22,7 +22,7 @@
 #include "i18n.h"
 #include "fetchmail.h"
 
-#if HAVE_VPRINTF || HAVE_DOPRNT || _LIBC || HAVE_STDARG_H
+#if defined(HAVE_VPRINTF) || defined(HAVE_DOPRNT) || defined(_LIBC) || defined(HAVE_STDARG_H)
 # if HAVE_STDARG_H
 #  include <stdarg.h>
 #  define VA_START(args, lastarg) va_start(args, lastarg)
@@ -65,10 +65,6 @@ static unsigned int report_message_count;
 # include <errno.h>
 
 #else
-
-/* The calling program should define program_name and set it to the
-   name of the executing program.  */
-extern char *program_name;
 
 # if !HAVE_STRERROR && !defined(strerror)
 char *strerror (int errnum)
@@ -156,7 +152,7 @@ report (FILE *errfp, message, va_alist)
 
 #ifdef VA_START
 	VA_START (args, message);
-# if HAVE_VPRINTF || _LIBC
+# if defined(HAVE_VPRINTF) || defined(_LIBC)
 	vfprintf (errfp, message, args);
 # else
 	_doprnt (message, args, errfp);
@@ -239,7 +235,7 @@ report_build (FILE *errfp, message, va_alist)
 
 #if defined(VA_START)
     VA_START (args, message);
-#if HAVE_VSNPRINTF || _LIBC
+#if defined(HAVE_VSNPRINTF) || defined(_LIBC)
     for ( ; ; )
     {
 	n = vsnprintf (partial_message + partial_message_size_used,
@@ -339,7 +335,7 @@ report_complete (FILE *errfp, message, va_alist)
 
 #if defined(VA_START)
     VA_START (args, message);
-#if HAVE_VSNPRINTF || _LIBC
+#if defined(HAVE_VSNPRINTF) || defined(_LIBC)
     for ( ; ; )
     {
 	n = vsnprintf (partial_message + partial_message_size_used,
@@ -412,7 +408,7 @@ report_complete (FILE *errfp, message, va_alist)
 
 /* Sometimes we want to have at most one error per line.  This
    variable controls whether this mode is selected or not.  */
-int error_one_per_line;
+static int error_one_per_line;
 
 void
 #ifdef HAVE_STDARG_H
@@ -459,11 +455,11 @@ report_at_line (FILE *errfp, errnum, file_name, line_number, message, va_alist)
     }
 
     if (file_name != NULL)
-	fprintf (errfp, "%s:%d: ", file_name, line_number);
+	fprintf (errfp, "%s:%u: ", file_name, line_number);
 
 #ifdef VA_START
     VA_START (args, message);
-# if HAVE_VPRINTF || _LIBC
+# if defined(HAVE_VPRINTF) || defined(_LIBC)
     vfprintf (errfp, message, args);
 # else
     _doprnt (message, args, errfp);

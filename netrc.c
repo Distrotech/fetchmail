@@ -347,7 +347,7 @@ int main (int argc, char **argv)
 
     if (host && login)
     {
-	int i, status;
+	int status;
 	status = 0;
 
 	printf("Host: %s, Login: %s\n", host, login);

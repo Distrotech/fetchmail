@@ -248,7 +248,7 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 		report_build(stdout, GT_("Old UID list from %s:"), 
 			     ctl->server.pollname);
 		for (idp = ctl->oldsaved; idp; idp = idp->next)
-		    report_build(stdout, " %s", idp->id);
+		    report_build(stdout, " %s", (char *)idp->id);
 		if (!idp)
 		    report_build(stdout, GT_(" <empty>"));
 		report_complete(stdout, "\n");
@@ -259,7 +259,7 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 	{
 	    report_build(stdout, GT_("Scratch list of UIDs:"));
 	    for (idp = scratchlist; idp; idp = idp->next)
-		report_build(stdout, " %s", idp->id);
+		report_build(stdout, " %s", (char *)idp->id);
 	    if (!idp)
 		report_build(stdout, GT_(" <empty>"));
 	    report_complete(stdout, "\n");
@@ -513,7 +513,7 @@ void uid_swap_lists(struct query *ctl)
 	else
 	    report_build(stdout, GT_("New UID list from %s:"), ctl->server.pollname);
 	for (idp = dofastuidl ? ctl->oldsaved : ctl->newsaved; idp; idp = idp->next)
-	    report_build(stdout, " %s = %d", idp->id, idp->val.status.mark);
+	    report_build(stdout, " %s = %d", (char *)idp->id, idp->val.status.mark);
 	if (!idp)
 	    report_build(stdout, GT_(" <empty>"));
 	report_complete(stdout, "\n");
@@ -562,7 +562,7 @@ void uid_discard_new_list(struct query *ctl)
 	 * poll are marked here. */
 	report_build(stdout, GT_("Merged UID list from %s:"), ctl->server.pollname);
 	for (idp = ctl->oldsaved; idp; idp = idp->next)
-	    report_build(stdout, " %s = %d", idp->id, idp->val.status.mark);
+	    report_build(stdout, " %s = %d", (char *)idp->id, idp->val.status.mark);
 	if (!idp)
 	    report_build(stdout, GT_(" <empty>"));
 	report_complete(stdout, "\n");
@@ -621,7 +621,7 @@ void write_saved_lists(struct query *hostlist, const char *idfile)
 		    if (idp->val.status.mark == UID_SEEN
 				|| idp->val.status.mark == UID_DELETED)
 			fprintf(tmpfp, "%s@%s %s\n", 
-			    ctl->remotename, ctl->server.queryname, idp->id);
+			    ctl->remotename, ctl->server.queryname, (char *)idp->id);
 	    }
 	    for (idp = scratchlist; idp; idp = idp->next)
 		fputs(idp->id, tmpfp);

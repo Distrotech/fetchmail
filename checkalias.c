@@ -216,7 +216,6 @@ int is_host_alias(const char *name, struct query *ctl)
 #ifndef __BEOS__
 	case NO_ADDRESS:	/* valid, but does not have an IP address */
 	    return(FALSE);
-	    break;
 #endif
 	case NO_RECOVERY:	/* non-recoverable name server error */
 	case TRY_AGAIN:		/* temporary error on authoritative server */

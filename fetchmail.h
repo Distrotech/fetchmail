@@ -32,7 +32,7 @@
 #define		P_ETRN		7
 #define		P_ODMR		8
 
-#if INET6_ENABLE
+#ifdef INET6_ENABLE
 #define		SMTP_PORT	"smtp"
 #define		KPOP_PORT	"kpop"
 #else /* INET6_ENABLE */
@@ -179,7 +179,7 @@ struct query;
 struct method		/* describe methods for protocol state machine */
 {
     const char *name;		/* protocol name */
-#if INET6_ENABLE
+#ifdef INET6_ENABLE
     const char *service;
     const char *sslservice;
 #else /* INET6_ENABLE */
@@ -223,7 +223,7 @@ struct hostdata		/* shared among all user connections to given server */
     struct idlist *akalist;		/* server name first, then akas */
     struct idlist *localdomains;	/* list of pass-through domains */
     int protocol;			/* protocol type */
-#if INET6_ENABLE
+#ifdef INET6_ENABLE
     char *service;			/* IPv6 service name */
     void *netsec;			/* IPv6 security request */
 #else /* INET6_ENABLE */
@@ -691,5 +691,8 @@ char *strerror (int);
 #else /* !__CYGWIN__ */
 #define ROOT_UID 0
 #endif /* __CYGWIN__ */
+
+extern int mailserver_socket_temp;
+extern char *program_name;
 
 /* fetchmail.h ends here */

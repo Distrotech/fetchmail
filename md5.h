@@ -5,6 +5,8 @@
 #define HEADER_MD5_H 
 #endif
 
+#include "config.h"
+
 #if SIZEOF_INT == 4
 typedef unsigned int uint32;
 #else

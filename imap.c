@@ -19,7 +19,7 @@
 
 #include  "i18n.h"
 
-#if OPIE_ENABLE
+#ifdef OPIE_ENABLE
 #endif /* OPIE_ENABLE */
 
 #ifndef strstr		/* glibc-2.1 declares this as a macro */
@@ -162,7 +162,7 @@ static int imap_ok(int sock, char *argbuf)
     }
 }
 
-#if NTLM_ENABLE
+#ifdef NTLM_ENABLE
 #include "ntlm.h"
 
 static tSmbNtlmAuthRequest   request;		   
@@ -440,7 +440,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	    return ok;
     }
 
-#if OPIE_ENABLE
+#ifdef OPIE_ENABLE
     if ((ctl->server.authenticate == A_ANY 
 	 || ctl->server.authenticate == A_OTP)
 	&& strstr(capabilities, "AUTH=X-OTP"))
@@ -1113,7 +1113,7 @@ static int imap_logout(int sock, struct query *ctl)
 static const struct method imap =
 {
     "IMAP",		/* Internet Message Access Protocol */
-#if INET6_ENABLE
+#ifdef INET6_ENABLE
     "imap",
     "imaps",
 #else /* INET6_ENABLE */

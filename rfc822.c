@@ -95,7 +95,7 @@ unsigned char *reply_hack(
 #ifdef MAIN
 	if (verbose)
 	{
-	    printf("state %d: %s", state, buf);
+	    printf("state %d: %s", state, (char *)buf);
 	    printf("%*s^\n", from - buf + 10, " ");
 	}
 #endif /* MAIN */
@@ -252,7 +252,7 @@ unsigned char *nxtaddr(const unsigned char *hdr /* header to be parsed, NUL to c
 #ifdef MAIN
 	if (verbose)
 	{
-	    printf("state %d: %s", state, orighdr);
+	    printf("state %d: %s", state, (char *)orighdr);
 	    printf("%*s^\n", hp - orighdr + 10, " ");
 	}
 #endif /* MAIN */
@@ -398,12 +398,12 @@ static void parsebuf(unsigned char *longbuf, int reply)
     if (reply)
     {
 	reply_hack(longbuf, "HOSTNAME.NET", &dummy);
-	printf("Rewritten buffer: %s", longbuf);
+	printf("Rewritten buffer: %s", (char *)longbuf);
     }
     else
 	if ((cp = nxtaddr(longbuf)) != (unsigned char *)NULL)
 	    do {
-		printf("\t-> \"%s\"\n", cp);
+		printf("\t-> \"%s\"\n", (char *)cp);
 	    } while
 		((cp = nxtaddr((unsigned char *)NULL)) != (unsigned char *)NULL);
 }

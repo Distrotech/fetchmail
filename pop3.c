@@ -21,7 +21,7 @@
 #include  "socket.h"
 #include  "i18n.h"
 
-#if OPIE_ENABLE
+#ifdef OPIE_ENABLE
 #include <opie.h>
 #endif /* OPIE_ENABLE */
 
@@ -35,7 +35,7 @@ char *sdps_envfrom;
 char *sdps_envto;
 #endif /* SDPS_ENABLE */
 
-#if OPIE_ENABLE
+#ifdef OPIE_ENABLE
 static char lastok[POPBUFSIZE+1];
 #endif /* OPIE_ENABLE */
 
@@ -54,7 +54,7 @@ static char lastok[POPBUFSIZE+1];
     flag has_ssl = FALSE;
 #endif /* SSL_ENABLE */
 
-#if NTLM_ENABLE
+#ifdef NTLM_ENABLE
 #include "ntlm.h"
 
 static tSmbNtlmAuthRequest   request;		   
@@ -156,7 +156,7 @@ static int pop3_ok (int sock, char *argbuf)
 
 	if (strcmp(buf,"+OK") == 0)
 	{
-#if OPIE_ENABLE
+#ifdef OPIE_ENABLE
 	    strcpy(lastok, bufp);
 #endif /* OPIE_ENABLE */
 	    ok = 0;
@@ -274,7 +274,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
     int ok;
     char *start,*end;
     char *msg;
-#if OPIE_ENABLE
+#ifdef OPIE_ENABLE
     char *challenge;
 #endif /* OPIE_ENABLE */
 #ifdef SSL_ENABLE
@@ -440,7 +440,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	 * rather than doing SASL.
 	 */
 	if (has_kerberos &&
-#if INET6_ENABLE
+#ifdef INET6_ENABLE
 	    ctl->server.service && (strcmp(ctl->server.service, KPOP_PORT)!=0)
 #else /* INET6_ENABLE */
 	    ctl->server.port != KPOP_PORT
@@ -488,7 +488,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	/* ordinary validation, no one-time password or RPA */ 
 	gen_transact(sock, "USER %s", ctl->remotename);
 
-#if OPIE_ENABLE
+#ifdef OPIE_ENABLE
 	/* see RFC1938: A One-Time Password System */
 	if (challenge = strstr(lastok, "otp-")) {
 	  char response[OPIE_RESPONSE_MAX+1];
@@ -1182,7 +1182,7 @@ static int pop3_logout(int sock, struct query *ctl)
 static const struct method pop3 =
 {
     "POP3",		/* Post Office Protocol v3 */
-#if INET6_ENABLE
+#ifdef INET6_ENABLE
     "pop3",		/* standard POP3 port */
     "pop3s",		/* ssl POP3 port */
 #else /* INET6_ENABLE */

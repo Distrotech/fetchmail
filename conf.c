@@ -180,13 +180,13 @@ void dump_config(struct runctl *runp, struct query *querylist)
 #ifdef SSL_ENABLE
     printf("'ssl',");
 #endif /* SSL_ENABLE */
-#if OPIE_ENABLE
+#ifdef OPIE_ENABLE
     printf("'opie',");
 #endif /* OPIE_ENABLE */
-#if INET6_ENABLE
+#ifdef INET6_ENABLE
     printf("'inet6',");
 #endif /* INET6_ENABLE */
-#if NET_SECURITY
+#ifdef NET_SECURITY
     printf("'netsec',");
 #endif /* NET_SECURITY */
     printf(")\n");
@@ -247,7 +247,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 
 	    using_kpop =
 		(ctl->server.protocol == P_POP3 &&
-#if !INET6_ENABLE
+#ifndef INET6_ENABLE
 		 ctl->server.port == KPOP_PORT &&
 #else
 		 ctl->server.service && !strcmp(ctl->server.service, KPOP_PORT ) &&
