@@ -916,6 +916,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(use_ssl);
     FLAG_MERGE(sslkey);
     FLAG_MERGE(sslcert);
+    FLAG_MERGE(sslproto);
 #endif
     FLAG_MERGE(expunge);
 

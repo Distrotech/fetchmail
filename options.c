@@ -76,10 +76,11 @@
 #define LA_SSL		50
 #define LA_SSLKEY	51
 #define LA_SSLCERT	52
+#define LA_SSLPROTO 53
 #endif
 
-#define LA_SHOWDOTS	53
-#define LA_PRINCIPAL	54
+#define LA_SHOWDOTS	54
+#define LA_PRINCIPAL	55
 
 /* options still left: CDgGhHjJoORwWxXYz */
 static const char *shortoptions = 
@@ -146,6 +147,7 @@ static const struct option longoptions[] = {
   {"ssl",       no_argument,       (int *) 0, LA_SSL        },
   {"sslkey",    required_argument, (int *) 0, LA_SSLKEY     },
   {"sslcert",   required_argument, (int *) 0, LA_SSLCERT    },
+  {"sslproto",   required_argument, (int *) 0, LA_SSLPROTO    },
 #endif
 
   {"principal", required_argument, (int *) 0, LA_PRINCIPAL },
@@ -548,6 +550,10 @@ struct query *ctl;	/* option record to be initialized */
 	case LA_SSLCERT:
 	    ctl->sslcert = xstrdup(optarg);
 	    break;
+
+	case LA_SSLPROTO:
+	    ctl->sslproto = xstrdup(optarg);
+	    break;
 #endif
 
 	case LA_PRINCIPAL:
@@ -613,6 +619,7 @@ struct query *ctl;	/* option record to be initialized */
 	P(_("      --ssl         enable ssl encrypted session\n"));
 	P(_("      --sslkey      ssl private key file\n"));
 	P(_("      --sslcert     ssl client certificate\n"));
+	P(_("      --sslproto    force ssl protocol (ssl2/ssl3/tls1)\n"));
 #endif
 	P(_("      --plugin      specify external command to open connection\n"));
 	P(_("      --plugout     specify external command to open smtp connection\n"));

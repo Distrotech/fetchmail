@@ -1769,7 +1769,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	/* perform initial SSL handshake on open connection */
 	/* Note:  We pass the realhost name over for certificate
 		verification.  We may want to make this configurable */
-	if (ctl->use_ssl && SSLOpen(mailserver_socket,ctl->sslkey,ctl->sslcert,realhost) == -1) 
+	if (ctl->use_ssl && SSLOpen(mailserver_socket,ctl->sslkey,ctl->sslcert,ctl->sslproto,realhost) == -1) 
 	{
 	    report(stderr, _("SSL connection failed.\n"));
 	    goto closeUp;

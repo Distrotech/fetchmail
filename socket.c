@@ -753,7 +753,7 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx )
  * uses SSL *ssl global variable, which is currently defined
  * in this file
  */
-int SSLOpen(int sock, char *mycert, char *mykey, char *servercname )
+int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, char *servercname )
 {
 	SSL_load_error_strings();
 	SSLeay_add_ssl_algorithms();
@@ -766,7 +766,21 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *servercname )
 	if( ! _ctx ) {
 		/* Be picky and make sure the memory is cleared */
 		memset( _ssl_context, 0, sizeof( _ssl_context ) );
-		_ctx = SSL_CTX_new(SSLv23_client_method());
+		if(myproto) {
+			if(!strcmp("ssl2",myproto)) {
+				_ctx = SSL_CTX_new(SSLv2_client_method());
+			} else if(!strcmp("ssl3",myproto)) {
+				_ctx = SSL_CTX_new(SSLv3_client_method());
+			} else if(!strcmp("tls1",myproto)) {
+				_ctx = SSL_CTX_new(TLSv1_client_method());
+			} else {
+				fprintf(stderr,_("Invalid SSL protocol '%s' specified, using default (SSLv23).\n"), myproto);
+				myproto = NULL;
+			}
+		}
+		if(!myproto) {
+			_ctx = SSL_CTX_new(SSLv23_client_method());
+		}
 		if(_ctx == NULL) {
 			ERR_print_errors_fp(stderr);
 			return(-1);

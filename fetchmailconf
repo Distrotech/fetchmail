@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.37"
+version = "1.38"
 
 from Tkinter import *
 from Dialog import *
@@ -237,6 +237,7 @@ class User:
         self.ssl = 0			# Enable Seccure Socket Layer
         self.sslkey = None		# SSL key filename
         self.sslcert = None		# SSL certificate filename
+        self.sslproto = None		# Force SSL?
         self.properties = None		# Extension properties
 	User.typemap = (
 	    ('remote',      'String'),
@@ -330,6 +331,8 @@ class User:
 	    res = res + " sslkey " + `self.sslkey`
 	if self.sslcert and self.sslcert != UserDefaults.sslcert:
 	    res = res + " sslcert " + `self.sslcert`
+        if self.sslproto and self.sslcert != UserDefaults.sslproto:
+            res = res + " sslproto " + `self.sslcert`
 	if self.expunge != UserDefaults.expunge:
 	    res = res + " expunge " + `self.expunge`
         res = res + "\n"
@@ -1791,7 +1794,7 @@ def copy_instance(toclass, fromdict):
 # present in the dictionary.
     optional = ('interface', 'monitor',
                 'netsec',
-                'ssl', 'sslkey', 'sslcert',
+                'ssl', 'sslkey', 'sslcert', 'sslproto',
                 'showdots')
     class_sig = setdiff(toclass.__dict__.keys(), optional)
     class_sig.sort()

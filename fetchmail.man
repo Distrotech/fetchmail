@@ -296,6 +296,11 @@ as the public key (combined key and certificate file) but this is not
 recommended.  If a password is required to unlock the key, it will be
 prompted for at the time just prior to establishing the session to the
 server.  This can cause some complications in daemon mode.
+.TP
+.B \--sslproto <name>
+(Keyword: sslproto)
+Forces an ssl protocol. Possible values are \&`\fBssl2\fR', `\fBssl3\fR' and
+`\fBtls1\fR'. Try this if the default handshake does not work for your server.
 .SS Delivery Control Options
 .TP
 .B \-S <hosts>, --smtphost <hosts>
@@ -1243,6 +1248,9 @@ Specify file for client side public SSL certificate
 T}
 sslkey    		T{
 Specify file for client side private SSL key
+T}
+sslproto   		T{
+Force ssl protocol for connection
 T}
 folder  	-r	T{
 Specify remote folder to query

@@ -289,6 +289,7 @@ struct query
     flag use_ssl;		/* use SSL encrypted session */
     char *sslkey;		/* optional SSL private key file */
     char *sslcert;		/* optional SSL certificate file */
+	char *sslproto;		/* force usage of protocol (ssl2|ssl3|tls1) - defaults to ssl23 */
     char *properties;		/* passthrough properties for extensions */
 
     /* internal use -- per-poll state */

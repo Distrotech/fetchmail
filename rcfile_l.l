@@ -164,6 +164,7 @@ uidl		{ return UIDL; }
 ssl		{ return SSL; }
 sslkey		{ return SSLKEY; }
 sslcert		{ return SSLCERT; }
+sslproto	{ return SSLPROTO; }
 checkalias	{ return CHECKALIAS; }
 
 limit		{ return LIMIT; }
