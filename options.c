@@ -603,7 +603,11 @@ struct query *ctl;	/* option record to be initialized */
         P(_("      --lmtp        use LMTP (RFC2033) for delivery\n"));
 	P(_("  -r, --folder      specify remote folder name\n"));
 #undef P
-	return(-1);
+
+	if (helpflag)
+	    exit(PS_SUCCESS);
+	else
+	    exit(PS_SYNTAX);
     }
 
     return(optind);
