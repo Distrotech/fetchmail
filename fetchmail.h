@@ -275,7 +275,7 @@ struct query
 struct msgblk			/* message header parsed for open_sink() */
 {
     char   		*headers;	/* raw message headers */
-    struct idlist	*xmit_names;	/* addressees */
+    struct idlist	*recipients;	/* addressees */
     char		return_path[HOSTLEN + USERNAMELEN + 4]; 
     int			reallen;
 };

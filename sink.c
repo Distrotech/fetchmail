@@ -285,7 +285,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	ctl->destaddr = ctl->smtpaddress ? ctl->smtpaddress : "localhost";
 
 	*bad_addresses = 0;
-	for (idp = msg->xmit_names; idp; idp = idp->next)
+	for (idp = msg->recipients; idp; idp = idp->next)
 	    if (idp->val.status.mark == XMIT_ACCEPT)
 	    {
 		if (strchr(idp->id, '@'))
@@ -312,7 +312,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 
 	ctl->destaddr = "localhost";
 
-	for (idp = msg->xmit_names; idp; idp = idp->next)
+	for (idp = msg->recipients; idp; idp = idp->next)
 	    if (idp->val.status.mark == XMIT_ACCEPT)
 		(*good_addresses)++;
 
@@ -327,7 +327,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	     * long lists of users and (re)implement %s.
 	     */
 	    nameslen = 0;
-	    for (idp = msg->xmit_names; idp; idp = idp->next)
+	    for (idp = msg->recipients; idp; idp = idp->next)
 		if ((idp->val.status.mark == XMIT_ACCEPT))
 		    nameslen += (strlen(idp->id) + 1);	/* string + ' ' */
 	    if ((*good_addresses == 0))
@@ -339,7 +339,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	    else
 	    {
 		names[0] = '\0';
-		for (idp = msg->xmit_names; idp; idp = idp->next)
+		for (idp = msg->recipients; idp; idp = idp->next)
 		    if (idp->val.status.mark == XMIT_ACCEPT)
 		    {
 			strcat(names, idp->id);
@@ -588,7 +588,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	/*
 	 * Now list the recipient addressees
 	 */
-	for (idp = msg->xmit_names; idp; idp = idp->next)
+	for (idp = msg->recipients; idp; idp = idp->next)
 	    if (idp->val.status.mark == XMIT_ACCEPT)
 	    {
 		if (strchr(idp->id, '@'))
@@ -835,14 +835,15 @@ int open_warning_by_mail(struct query *ctl)
 /* set up output sink for a mailed warning to calling user */
 {
     int	good, bad;
-    static struct msgblk msg = {NULL, NULL, "FETCHMAIL-DAEMON", 0};
 
     /*
-     * We give a null address list as arg 4 because we actually *want*
-     * this message to go to run.postmaster.  The zero length arg 5 means
-     * we won't pass a SIZE option to ESMTP; the message length would
-     * be more trouble than it's worth to compute.
+     * We give a null address list as the recipients member because we
+     * actually *want* this message to go to run.postmaster.  The zero
+     * length arg 5 means we won't pass a SIZE option to ESMTP; the
+     * message length would be more trouble than it's worth to compute.
      */
+    static struct msgblk msg = {NULL, NULL, "FETCHMAIL-DAEMON", 0};
+
     return(open_sink(ctl, &msg, &good, &bad));
 }
 

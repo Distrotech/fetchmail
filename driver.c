@@ -743,13 +743,13 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
     }
 
     /* cons up a list of local recipients */
-    msg.xmit_names = (struct idlist *)NULL;
+    msg.recipients = (struct idlist *)NULL;
     accept_count = reject_count = 0;
     /* is this a multidrop box? */
     if (MULTIDROP(ctl))
     {
 	if (env_offs > -1)	    /* We have the actual envelope addressee */
-	    find_server_names(msg.headers + env_offs, ctl, &msg.xmit_names);
+	    find_server_names(msg.headers + env_offs, ctl, &msg.recipients);
 	else if (received_for)
 	    /*
 	     * We have the Received for addressee.  
@@ -758,11 +758,11 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 	     * We use find_server_names() to let local 
 	     * hostnames go through.
 	     */
-	    find_server_names(received_for, ctl, &msg.xmit_names);
+	    find_server_names(received_for, ctl, &msg.recipients);
 #ifdef SDPS_ENABLE
 	else if (sdps_envto)
 	{
-	    find_server_names(sdps_envto, ctl, &msg.xmit_names);
+	    find_server_names(sdps_envto, ctl, &msg.recipients);
 	    free(sdps_envto);
 	}
 #endif /* SDPS_ENABLE */ 
@@ -789,7 +789,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 	    }
 	    /* now look for remaining adresses */
 	    while (to_addrchain) {
-		find_server_names(msg.headers+to_addrchain->offset, ctl, &msg.xmit_names);
+		find_server_names(msg.headers+to_addrchain->offset, ctl, &msg.recipients);
 		nextptr = to_addrchain->next;
 		free(to_addrchain);
 		to_addrchain = nextptr;
@@ -798,7 +798,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 	if (!accept_count)
 	{
 	    no_local_matches = TRUE;
-	    save_str(&msg.xmit_names, run.postmaster, XMIT_ACCEPT);
+	    save_str(&msg.recipients, run.postmaster, XMIT_ACCEPT);
 	    if (outlevel >= O_DEBUG)
 		error(0, 0, 
 		      "no local matches, forwarding to %s",
@@ -806,7 +806,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 	}
     }
     else	/* it's a single-drop box, use first localname */
-	save_str(&msg.xmit_names, ctl->localnames->id, XMIT_ACCEPT);
+	save_str(&msg.recipients, ctl->localnames->id, XMIT_ACCEPT);
 
 
     /*
@@ -817,7 +817,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 	if (outlevel >= O_DEBUG)
 	    error(0,0, "forwarding and deletion suppressed due to DNS errors");
 	free(msg.headers);
-	free_str_list(&msg.xmit_names);
+	free_str_list(&msg.recipients);
 	return(PS_TRANSIENT);
     }
     else
@@ -827,7 +827,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 			   &good_addresses, &bad_addresses)) != PS_SUCCESS)
 	{
 	    free(msg.headers);
-	    free_str_list(&msg.xmit_names);
+	    free_str_list(&msg.recipients);
 	    return(n);
 	}
     }
@@ -878,7 +878,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 		}
 		else if (good_addresses == 1)
 		{
-		    for (idp = msg.xmit_names; idp; idp = idp->next)
+		    for (idp = msg.recipients; idp; idp = idp->next)
 			if (idp->val.status.mark == XMIT_ACCEPT)
 			    break;	/* only report first address */
 		    if (strchr(idp->id, '@'))
@@ -906,7 +906,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 	error(0, errno, "writing RFC822 msg.headers");
 	release_sink(ctl);
 	free(msg.headers);
-	free_str_list(&msg.xmit_names);
+	free_str_list(&msg.recipients);
 	return(PS_IOERR);
     }
     else if (!run.use_syslog && outlevel >= O_VERBOSE)
@@ -926,7 +926,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 		strcat(errhd, "no recipient addresses matched declared local names");
 	    else
 	    {
-		for (idp = msg.xmit_names; idp; idp = idp->next)
+		for (idp = msg.recipients; idp; idp = idp->next)
 		    if (idp->val.status.mark == XMIT_REJECT)
 			break;
 		sprintf(errhd+strlen(errhd), "recipient address %s didn't match any local name", idp->id);
@@ -946,13 +946,13 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 		strcat(errhd, "; ");
 	    strcat(errhd, "SMTP listener rejected local recipient addresses: ");
 	    errlen = strlen(errhd);
-	    for (idp = msg.xmit_names; idp; idp = idp->next)
+	    for (idp = msg.recipients; idp; idp = idp->next)
 		if (idp->val.status.mark == XMIT_ANTISPAM)
 		    errlen += strlen(idp->id) + 2;
 
 	    xalloca(errmsg, char *, errlen+3);
 	    (void) strcpy(errmsg, errhd);
-	    for (idp = msg.xmit_names; idp; idp = idp->next)
+	    for (idp = msg.recipients; idp; idp = idp->next)
 		if (idp->val.status.mark == XMIT_ANTISPAM)
 		{
 		    strcat(errmsg, idp->id);
@@ -976,7 +976,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
     stuffline(ctl, buf);
 
     free(msg.headers);
-    free_str_list(&msg.xmit_names);
+    free_str_list(&msg.recipients);
     return(headers_ok ? PS_SUCCESS : PS_TRUNCATED);
 }
 
