@@ -246,11 +246,34 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 
 		if ((atsign = strchr(cp, '@')))
 		{
+		    struct idlist	*idp;
+
 		    /*
-		     * Address has an @. Check to see if the right-hand part
-		     * is an alias or MX equivalent of the mailserver.  If it's
-		     * not, skip this name.  If it is, we'll keep going and try
-		     * to find a mapping to a client name.
+		     * Does a trailing segment of the hostname match something
+		     * on the localdomains list?  If so, save the whole name
+		     * and keep going.
+		     */
+		    for (idp = ctl->localdomains; idp; idp = idp->next)
+		    {
+			char	*rhs;
+
+			rhs = atsign + 1 + (strlen(atsign) - strlen(idp->id));
+			if ((rhs[-1] == '.' || rhs[-1] == '@')
+					&& strcmp(rhs, idp->id) == 0)
+			{
+			    if (outlevel == O_VERBOSE)
+				error(0, 0, "passed through %s matching %s", 
+				      cp, idp->id);
+			    save_str(xmit_names, -1, cp);
+			    continue;
+			}
+		    }
+
+		    /*
+		     * Check to see if the right-hand part is an alias
+		     * or MX equivalent of the mailserver.  If it's
+		     * not, skip this name.  If it is, we'll keep
+		     * going and try to find a mapping to a client name.
 		     */
 		    if (!is_host_alias(atsign+1, ctl))
 			continue;

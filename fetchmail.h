@@ -64,6 +64,7 @@ struct query
     /* per-host data */
     struct idlist *servernames;		/* servername first, then akas */
     struct idlist *localnames;		/* including calling user's name */
+    struct idlist *localdomains;	/* list of pass-through domains */
     int wildcard;		/* should unmatched names be passed through */
     int protocol;
     int port;

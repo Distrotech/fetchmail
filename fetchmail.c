@@ -834,6 +834,15 @@ void dump_params (struct query *ctl)
 	printf(" (default).\n");
     else
 	printf(".\n");
+    if (ctl->localdomains)
+    {
+	struct idlist *idp;
+
+	printf("  Local domains:");
+	for (idp = ctl->localdomains; idp; idp = idp->next)
+	    printf(" %s", idp->id);
+	putchar('\n');
+    }
 
     printf("  %s messages will be retrieved (--all %s).\n",
 	   ctl->fetchall ? "All" : "Only new",

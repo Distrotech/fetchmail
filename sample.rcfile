@@ -27,6 +27,7 @@
 #   timeout                   -- must be followed by a numeric timeout value
 #   envelope                  -- must be followed by an envelope header name
 #   aka                       -- must be followed by one or more server aliases
+#   localdomains              -- must be followed by one or more domain names
 #
 #   username (or user)        -- must be followed by a name
 #   is                        -- must be followed by one or more names

@@ -41,7 +41,8 @@ static void prc_reset();
   char *sval;
 }
 
-%token DEFAULTS POLL SKIP AKA PROTOCOL AUTHENTICATE TIMEOUT KPOP KERBEROS
+%token DEFAULTS POLL SKIP AKA LOCALDOMAINS PROTOCOL
+%token AUTHENTICATE TIMEOUT KPOP KERBEROS
 %token ENVELOPE USERNAME PASSWORD FOLDER SMTPHOST MDA PRECONNECT LIMIT
 %token IS HERE THERE TO MAP WILDCARD
 %token SET BATCHLIMIT FETCHLIMIT LOGFILE INTERFACE MONITOR
@@ -94,11 +95,16 @@ serverspecs	: /* EMPTY */
 		| serverspecs serv_option
 		;
 
-alias_list	: STRING		{save_str(&current.servernames, -1, $1);}
-		| alias_list STRING	{save_str(&current.servernames, -1, $2);}
+alias_list	: STRING		{save_str(&current.servernames,-1,$1);}
+		| alias_list STRING	{save_str(&current.servernames,-1,$2);}
+		;
+
+domain_list	: STRING		{save_str(&current.localdomains,-1,$1);}
+		| domain_list STRING	{save_str(&current.localdomains,-1,$2);}
 		;
 
 serv_option	: AKA alias_list
+		| LOCALDOMAINS domain_list
 		| PROTOCOL PROTO	{current.protocol = $2;}
 		| PROTOCOL KPOP		{
 					    current.protocol = P_POP3;

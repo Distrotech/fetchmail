@@ -551,7 +551,8 @@ Legal user options are
     syslog
 .PP
 All options correspond to the obvious command-line arguments except
-the following: `aka', `is', `to', `password', and `preconnect'.
+the following: `aka', `is', `to', `password', `preconnect', and
+`localdomains'.
 .PP
 The `aka' option is for use with multidrop mailboxes.  It allows you
 to pre-declare a list of DNS aliases for a server.  This is an
@@ -591,6 +592,12 @@ executed just before each time
 establishes a mailserver connection.  This may be useful if you are 
 attempting to set up secure POP connections with the aid of
 .IR ssh (1).
+.PP
+The `localdomains' option allows you to declare a list of domains
+which fetchmail should consider local.  When fetchmail is parsing
+address lines in multidrop modes, and a trailing segment of a host
+name matches a declared local doman, that address is passed through
+to the listener or MDA unaltered.
 .PP
 Legal protocol identifiers are
 
@@ -736,6 +743,19 @@ server user names `golux', `hurkle', and `snark'.  It further
 specifies that `golux' and `snark' have the same name on the
 client as on the server, but mail for server user `hurkle' should be
 delivered to client user `happy'.
+.PP
+Here's an example of another kind of multidrop connection:
+
+.nf
+  poll pop.provider.net localdomains loonytoons.org:
+        user maildrop with pass secret1 to esr * here
+.fi
+
+This also says that the mailbox of account `maildrop' on the server is
+a multi-drop box.  It tells fetchmail that any address in the
+loonytoons.org domain (including subdomain addresses like
+`joe@daffy.loonytoons.org') should be passed through to the local SMTP
+listener without modification.  Be careful of mail loops if you do this!
 .SH THE USE AND ABUSE OF MULTIDROP MAILBOXES
 Use the multiple-local-recipients feature with caution -- it can bite.
 The fundamental problem is that by having your server toss several

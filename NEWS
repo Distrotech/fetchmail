@@ -12,6 +12,8 @@ features --
 
 * Added preconnect option for initializing ssh connections.
 
+* Added local-domains feature as requested by Pablo Saratxaga.
+
 * More FAQ material on how and when to use --interface.
 
 bugs --

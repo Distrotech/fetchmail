@@ -31,6 +31,7 @@ server 		{ return POLL; }
 poll		{ return POLL; }
 skip		{ return SKIP; }
 aka		{ return AKA; }
+local(domains)	{ return LOCALDOMAINS; }
 proto(col)? 	{ return PROTOCOL; }
 port		{ return PORT; }
 auth(enticate)?	{ return AUTHENTICATE; }
