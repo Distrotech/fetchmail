@@ -760,9 +760,27 @@ static int readheaders(int sock,
 	    resent_from_offs = (line - msgblk.headers);
 	else if (!strncasecmp("Apparently-From:", line, 16))
 	    app_from_offs = (line - msgblk.headers);
-	else if (!strncasecmp("Sender:", line, 7))
+	/*
+	 * Netscape 4.7 puts "Sender: zap" in mail headers.  Perverse...
+	 *
+	 * But a literal reading of RFC822 sec. 4.4.2 supports the idea
+	 * that Sender: *doesn't* have to be a working email address.
+	 *
+	 * The definition of the Sender header in RFC822 says, in
+	 * part, "The Sender mailbox specification includes a word
+	 * sequence which must correspond to a specific agent (i.e., a
+	 * human user or a computer program) rather than a standard
+	 * address."  That implies that the contents of the Sender
+	 * field don't need to be a legal email address at all So
+	 * ignore any Sender or Resent-Semnder lines unless they
+	 * contain @.
+	 *
+	 * (RFC2822 says the condents of Sender must be a valid mailbox
+	 * address, which is also what RFC822 4.4.4 implies.)
+	 */
+	else if (!strncasecmp("Sender:", line, 7) && strchr(line, '@'))
 	    sender_offs = (line - msgblk.headers);
-	else if (!strncasecmp("Resent-Sender:", line, 14))
+	else if (!strncasecmp("Resent-Sender:", line, 14) && strchr(line, '@'))
 	    resent_sender_offs = (line - msgblk.headers);
 
 #ifdef __UNUSED__
