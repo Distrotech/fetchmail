@@ -537,12 +537,12 @@ void uid_swap_lists(struct query *ctl)
     if (ctl->newsaved)
     {
 	/* old state of mailbox may now be irrelevant */
-	struct idlist **temp = &ctl->oldsaved;
+	struct idlist *temp = ctl->oldsaved;
 	if (outlevel >= O_DEBUG)
 	    report(stdout, GT_("swapping UID lists\n"));
 	ctl->oldsaved = ctl->newsaved;
 	ctl->newsaved = (struct idlist *) NULL;
-	free_str_list(temp);
+	free_str_list(&temp);
     }
     /* in fast uidl, there is no need to swap lists: the old state of
      * mailbox cannot be discarded! */
