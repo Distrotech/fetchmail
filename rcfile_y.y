@@ -50,7 +50,6 @@ statement_list	: statement
 		;
 
 statement	: define_server serverspecs userspecs      
-						{prc_register(); prc_reset();}
 		;
 
 define_server	: KW_SERVER PARAM_STRING	{prc_setserver($2);}
@@ -65,12 +64,28 @@ serv_option	: KW_PROTOCOL KW_PROTO		{prc_setproto($2);}
 		| KW_PORT PARAM_STRING		{prc_setport($2);}
 		;
 
-userspecs	: /* EMPTY */
-		| userspecs user_option
+/* the first and only the first user spec may omit the KW_USERNAME part */
+userspecs	: user1opts			{prc_register(); prc_reset();}
+		| user1opts explicits		{prc_register(); prc_reset();}
+		| explicits
+		;
+
+explicits	: userdef			{prc_register(); prc_reset();}
+		| explicits userdef		{prc_register(); prc_reset();}
+		;
+
+userdef		: KW_USERNAME PARAM_STRING user0opts	{prc_setremote($2);}
+		;
+
+user0opts	: /* EMPTY */
+		| user0opts user_option
+		;
+
+user1opts	: user_option
+		| user1opts user_option
 		;
 
 user_option	: KW_LOCALNAME PARAM_STRING	{prc_setlocal($2);}
-		| KW_USERNAME PARAM_STRING	{prc_setremote($2);}
 		| KW_PASSWORD PARAM_STRING	{prc_setpassword($2);}
 		| KW_FOLDER  PARAM_STRING 	{prc_setfolder($2);}
 		| KW_SMTPHOST PARAM_STRING	{prc_setsmtphost($2);}

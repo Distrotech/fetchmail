@@ -279,15 +279,18 @@ mode into a specified logfile (follow the option with the logfile name).
 This is primarily useful for debugging configurations.
 .SH THE RUN CONTROL FILE
 The preferred way to set up fetchmail (and the only way if you want to
-specify a password) is to write a .fetchmailrc file in your home directory.
-To protect the security of your passwords, your ~/.fetchmailrc may not have
-more than u+r,u+w permissions; 
+avoid specifying passwords each time it runs) is to write a
+\fI.fetchmailrc\fR file in your home directory.  To protect the security
+of your passwords, your \fI~/.fetchmailrc\fR may not have more than u+r,u+w
+permissions;
 .I fetchmail
 will complain and exit otherwise.
 .PP
 Comments begin with a '#' and extend through the end of the line.
 Otherwise the file consists of a series of server entries.
-Blank lines between server entries are ignored.
+Any amount of whitespace separates keywords, tokens, or strings 
+in server entries but is otherwise ignored (but whitespace enclosed
+in double quotes is treated as part of the string).
 Keywords and identifiers are case sensitive.
 When there is a conflict between the command-line arguments and the
 arguments in this file, the command-line arguments take precedence.
@@ -368,18 +371,7 @@ Multiple servers may be listed:
   server pop.provider.net proto pop3 user jsmith pass secret1
   server other.provider.net proto pop2 user John.Smith pass My^Hat
 .fi
-.PP
-Other possibilities (note use of \ to escape newline -- this is now
-optional, not required as in older versions):
 
-.nf
-  server pop.provider.net proto pop3 port 3111  \e
-        user jsmith pass secret1 is smith
-.fi
-
-This associates the local username `smith' with the server username `jsmith'
-The local username controls who mail is delivered to; it defaults to the 
-same as the remote username.
 .PP
 If you need to include whitespace in a parameter string, enclose the
 string in double quotes.  Thus:
@@ -392,21 +384,47 @@ string in double quotes.  Thus:
         mda "/bin/mail %s"
 .fi
 
-Finally, you may have an initial server description headed by the keyword
+You may have an initial server description headed by the keyword
 `defaults' instead of `server' followed by a name.  Such a record
 is interpreted as defaults for all queries to use. It may be overwritten
 by individual server descriptions.  So, you could write:
 
 .nf
-  defaults                      \e
-        proto pop3              \e
-        user jsmith             \e
-  server pop.provider.net       \e
-        pass secret1            \e
-  server mail.provider.net      \e
-        pass secret2
+  defaults
+        proto pop3
+        user jsmith
+  server pop.provider.net
+        pass secret1
+  server mail.provider.net
+        user jjsmith pass secret2
 .fi
 
+It's possible to specify more than one user per server (this is only
+likely to be useful when running fetchmail in daemon mode as root).
+The \fBuser\fR keyword leads off a user description, and every user
+description except optionally the first one must include it.  (If the
+first description lacks the \fBuser\fR keyword, the name of the
+invoking user is used .) Here's a contrived example:
+
+.nf
+  server pop.provider.net proto pop3 port 3111
+        pass gumshoe
+        user jsmith pass secret1 is smith
+        user jones pass secret2 is jjones
+.fi
+
+This says that the user invoking \fIfetchmail\fR has the same username
+on pop.provider.net, and password `gumshoe' there.
+It also associates the local username `smith' with the pop.provider.net
+username `jsmith' and the local username `jones' with the pop.provider.net
+username `jjones'.
+.PP
+This example is contrived because, in practice, you are very unlikely
+to be specifying multiple users per server unless running it as root
+(thus the \fBpass gumshoe\fR would try to fetch root's mail on
+pop-provider.net, which is probably not what you want).
+In any case, we strongly recommend always having an explicit
+\fBuser\fR clause when specifying nultiple users for server.
 .SH EXIT CODES
 To facilitate the use of 
 .I fetchmail
