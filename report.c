@@ -154,7 +154,7 @@ error (status, errnum, message, va_alist)
   if (partial_message_size_used != 0)
     {
       partial_message_size_used = 0;
-      error (0, 0, "%s (message incomplete)", partial_message);
+      error (0, 0, "%s (log message incomplete)", partial_message);
     }
 
 #if defined(HAVE_SYSLOG)
