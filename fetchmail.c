@@ -887,7 +887,7 @@ static int load_params(int argc, char **argv, int optind)
     if (cmd_run.logfile)
 	run.logfile = cmd_run.logfile;
     if (cmd_run.idfile)
-	run.logfile = cmd_run.idfile;
+	run.idfile = cmd_run.idfile;
     if (cmd_run.poll_interval >= 0)
 	run.poll_interval = cmd_run.poll_interval;
     if (cmd_run.invisible)

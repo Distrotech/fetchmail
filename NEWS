@@ -11,6 +11,7 @@ fetchmail-4.4.8 ():
 * Removed fetchall side-effect kluge, now that we knowe how to make TOP work
   with qpopper 2.3+.
 * Patch by Kok Seng to prevent loss of UID info when a query fails.
+* Pascal Grudler <pg@dtx466.ledl.com> sent a fix for the idfile option.
 * Several fixes for command-line processing from Gunther Leber:
   - in fetchmail.c
     * set tmpbuf to NULL after freeing the buffer (so this will hopefully
