@@ -229,9 +229,8 @@ Makefile: Makefile.in config.status
 config.status: configure
 	./config.status --recheck
 
-# I had to disable this.  The new version of aclocal breaks the build
-#$(srcdir)/aclocal.m4: configure.in
-#	cd $(srcdir) && aclocal -I m4
+$(srcdir)/aclocal.m4: configure.in
+	cd $(srcdir) && aclocal -I m4
 
 # This tells versions [3.59,3.63) of GNU make not to export all variables.
 .NOEXPORT:
@@ -255,7 +254,7 @@ parser = $(srcdir)/rcfile_l.l $(srcdir)/rcfile_y.y
 headers = $(srcdir)/fetchmail.h $(srcdir)/socket.h $(srcdir)/smtp.h \
 	$(srcdir)/mx.h $(srcdir)/md5.h $(srcdir)/md5global.h \
 	$(srcdir)/netrc.h $(srcdir)/tunable.h $(srcdir)/i18n.h \
-	$(srcdir)/aclocal.m4 $(srcdir)/ntlm.h $(srcdir)/smb.h \
+	$(srcdir)/ntlm.h $(srcdir)/smb.h \
 	$(srcdir)/smbbyteorder.h $(srcdir)/smbdes.h $(srcdir)/smbencrypt.h \
 	$(srcdir)/smbmd4.h
 extra = $(srcdir)/alloca.c $(srcdir)/getopt.[ch] $(srcdir)/getopt1.c \
@@ -274,8 +273,7 @@ scripts = $(srcdir)/install.sh $(srcdir)/mkinstalldirs \
 	$(srcdir)/specgen.sh $(srcdir)/lsmgen.sh $(srcdir)/fetchmailconf
 all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) \
 	$(srcdir)/rh-config/* $(srcdir)/contrib/*[A-Za-uw-z] \
-	$(srcdir)/intl/* $(srcdir)/po/* $(srcdir)/beos/* ABOUT-NLS \
-	$(srcdir)/MANIFEST
+	$(srcdir)/po/* $(srcdir)/beos/* ABOUT-NLS $(srcdir)/MANIFEST
 
 MANIFEST: $(srcdir) Makefile.in
 	@echo $(all) | tr "[ \t]" '\n' | sed -e '/^\.\//s///' | sort >MANIFEST

@@ -2,6 +2,11 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* NLS build fixed under Linux -- thanks to Nicolás Lichtmaier.
+  Now builds with NLS by default, unavoidable side effect of fix.
+* Various cleanups and minor bugfixes in OTP support.
+* Corrected header error in SSL support.
+
 fetchmail-5.7.1 (Sun Mar  4 00:30:04 EST 2001), 20167 lines:
 
 * Note: NLS build ability is broken!
