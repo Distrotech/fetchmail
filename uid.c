@@ -454,6 +454,9 @@ void write_saved_lists(struct query *hostlist, const char *idfile)
 	unlink(idfile);
     }
     else
+    {
+	if (outlevel >= O_DEBUG)
+	    report(stdout, "Writing fetchids file.\n");
 	if ((tmpfp = fopen(idfile, "w")) != (FILE *)NULL) {
 	    for (ctl = hostlist; ctl; ctl = ctl->next) {
 		for (idp = ctl->oldsaved; idp; idp = idp->next)
@@ -466,6 +469,7 @@ void write_saved_lists(struct query *hostlist, const char *idfile)
 		fputs(idp->id, tmpfp);
 	    fclose(tmpfp);
 	}
+    }
 }
 #endif /* POP3_ENABLE */
 
