@@ -1333,6 +1333,23 @@ void init_transact(const struct method *proto)
     protocol = (struct method *)proto;
 }
 
+static void enshroud(char *buf)
+/* shroud a password in the given buffer */
+{
+    char *cp;
+
+    if (shroud[0] && (cp = strstr(buf, shroud)))
+    {
+       char    *sp;
+
+       sp = cp + strlen(shroud);
+       *cp = '*';
+       while (*sp)
+           *cp++ = *sp++;
+       *cp = '\0';
+    }
+}
+
 #if defined(HAVE_STDARG_H)
 void gen_send(int sock, const char *fmt, ... )
 #else
@@ -1372,18 +1389,7 @@ va_dcl
 
     if (outlevel >= O_MONITOR)
     {
-	char *cp;
-
-	if (shroud[0] && (cp = strstr(buf, shroud)))
-	{
-	    char	*sp;
-
-	    sp = cp + strlen(shroud);
-	    *cp++ = '*';
-	    while (*sp)
-		*cp++ = *sp++;
-	    *cp = '\0';
-	}
+	enshroud(buf);
 	buf[strlen(buf)-2] = '\0';
 	report(stdout, "%s> %s\n", protocol->name, buf);
     }
@@ -1462,19 +1468,8 @@ va_dcl
 
     if (outlevel >= O_MONITOR)
     {
-	char *cp;
-
-	if (shroud && shroud[0] && (cp = strstr(buf, shroud)))
-	{
-	    char	*sp;
-
-	    sp = cp + strlen(shroud);
-	    *cp++ = '*';
-	    while (*sp)
-		*cp++ = *sp++;
-	    *cp = '\0';
-	}
-	buf[strlen(buf)-1] = '\0';
+	enshroud(buf);
+	buf[strlen(buf)-2] = '\0';
 	report(stdout, "%s> %s\n", protocol->name, buf);
     }
 
