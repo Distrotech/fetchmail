@@ -192,6 +192,10 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
     flag did_stls = FALSE;
 #endif /* SSL_ENABLE */
 
+    if (ctl->server.authenticate == A_SSH) {
+        return PS_SUCCESS;
+    }
+
 #ifdef SDPS_ENABLE
     /*
      * This needs to catch both demon.co.uk and demon.net.
