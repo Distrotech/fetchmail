@@ -2,12 +2,19 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.2.8 (Mon Feb 14 19:16:46 EST 2000), 18571 lines:
+
 * Attempted fix for Joop Susan's ENOTCONN bug.
 * Fix for NO response during SIZE fetches for M$ Exchange IMAP server.
 * Thomas Zajic <zlatko@gmx.at> sent a change that copes with GMX X-UIDLs.
 * Fix fetchmailconf's handling of ssl attributes when SSL is not configured.
 * Handle IMAP folder names with embedded spaces.
 * cs.po update from Jiri Pavlovsky.
+* Make -d0 -v work when -a and -k are on.
+* UID handling has been broken since 5.2.5.  This version should work.
+  Thanks to Bruce Hauge <bruce_hauge@agilent.com> for testing.
+
+There are 287 people on fetchmail-friends and 504 on fetchmail-announce.
 
 fetchmail-5.2.7 (Sun Feb  6 20:45:41 EST 2000), 18517 lines:
 * Updated FAQ.
