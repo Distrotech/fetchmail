@@ -506,7 +506,7 @@ int prc_filecheck(const char *, const flag);
 
 /* base64.c */
 void to64frombits(unsigned char *, const unsigned char *, int);
-int from64tobits(char *, const char *, int len);
+int from64tobits(char *, const char *, int maxlen);
 
 /* unmime.c */
 /* Bit-mask returned by MimeBodyType */

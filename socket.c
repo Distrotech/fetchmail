@@ -223,7 +223,7 @@ int UnixOpen(const char *path)
     sigset_t	allsigs;
 #endif /* HAVE_SIGPROCMASK */
 
-    int stat, sock = -1;
+    int sock = -1;
     struct sockaddr_un ad;
     memset(&ad, 0, sizeof(ad));
     ad.sun_family = AF_UNIX;

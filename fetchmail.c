@@ -487,8 +487,10 @@ int main(int argc, char **argv)
     {
 	if (run.logfile && access(run.logfile, F_OK) == 0)
     	{
-	    freopen(run.logfile, "a", stdout);
-	    freopen(run.logfile, "a", stderr);
+	    if (!freopen(run.logfile, "a", stdout))
+		    report(stderr, GT_("could not open %s to append logs to \n"), run.logfile);
+	    if (!freopen(run.logfile, "a", stderr))
+		    report(stdout, GT_("could not open %s to append logs to \n"), run.logfile);
     	}
     }
 
