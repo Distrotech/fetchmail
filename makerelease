@@ -4,7 +4,7 @@
 # Dumps a release notice and diffs as a MIME multipart message 
 # in RELEASE_NOTES
 #
-$timezone = "EDT";
+$timezone = "-0500";
 
 sub rfc822date
 {
@@ -12,7 +12,7 @@ sub rfc822date
     @months = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Nov", "Dec");
 
     my($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = gmtime(time());
-    "$wdays[$wday], $months[$mon] " . substr("0$mday", -2) . " " . substr("0$hour", -2) . ":" . substr("0$min", -2) . ":" . substr("0$sec", -2) . " $timezone " . (1900+$year);
+    "$wdays[$wday], substr("0$mday", -2) . $months[$mon] " . " $timezone " . substr("0$hour", -2) . ":" . substr("0$min", -2) . ":" . substr("0$sec", -2) . " " . (1900+$year);
 }
 
 
@@ -68,7 +68,7 @@ fetchmail (${version}-1) unstable; urgency=low
 
   * new upstream version
   
--- Eric S. Raymond <esr\@thyrsus.com>  ${date}
+ -- Eric S. Raymond <esr\@thyrsus.com>  ${date}
   
 EOF
     while (<DEBLOG>) {
