@@ -40,7 +40,7 @@
 #define LA_HELP		20
 #define LA_YYDEBUG	21
 
-static char *shortoptions = "PpVaKkvS:m:sFd:f:u:r:L:qN?";
+static char *shortoptions = "P:p:VaKkvS:m:sFd:f:u:r:L:qN?";
 static struct option longoptions[] = {
   {"version",   no_argument,       (int *) 0, LA_VERSION    },
   {"all",	no_argument,       (int *) 0, LA_ALL        },
