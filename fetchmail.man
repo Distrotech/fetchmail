@@ -74,7 +74,8 @@ Some possible MDAs are "/usr/sbin/sendmail -oem %s",
 "/usr/lib/sendmail -oem %s",
 "/usr/bin/formail", and "/usr/bin/deliver %s" (if the MDA command contains
 %s, that escape will be expanded into your username on the client
-machine).
+machine). If \fIfetchmail\fR is running as root, it sets its userid to
+that of the target user while delivering mail through an MDA.
 .TP
 .B \-F, --flush
 POP3/IMAP only.  Delete old (previously retrieved) messages from the mailserver

@@ -652,8 +652,25 @@ struct method *proto;		/* protocol method table */
 
 		/* open the delivery pipe now if we're using an MDA */
 		if (queryctl->mda[0])
-		    if ((mboxfd = openmailpipe(queryctl)) < 0)
+		{
+#ifdef HAVE_SETEUID
+		    /*
+		     * Arrange to run with user's permissions if we're root.
+		     * This will initialize the ownership of any files the
+		     * MDA creates properly.  (The seteuid call is available
+		     * under all BSDs and Linux)
+		     */
+		    seteuid(queryctl->uid);
+#endif /* HAVE_SETEUID */
+		    mboxfd = openmailpipe(queryctl);
+#ifdef HAVE_SETEUID
+		    /* this will fail quietly if we didn't start as root */
+		    seteuid(0);
+#endif /* HAVE_SETEUID */
+
+		    if (mboxfd < 0)
 			goto cleanUp;
+		}
 
 		/* read the message and ship it to the output sink */
 		ok = gen_readmsg(socket, mboxfd,
