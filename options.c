@@ -299,17 +299,14 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'f':
 	case LA_RCFILE:
-	    rcfile = (char *) xmalloc(strlen(optarg)+1);
-	    strcpy(rcfile,optarg);
+	    rcfile = (char *) xstrdup(optarg);
 	    break;
 	case 'i':
 	case LA_IDFILE:
-	    rctl->idfile = (char *) xmalloc(strlen(optarg)+1);
-	    strcpy(rctl->idfile,optarg);
+	    rctl->idfile = (char *) xstrdup(optarg);
 	    break;
 	case LA_POSTMASTER:
-	    rctl->postmaster = (char *) xmalloc(strlen(optarg)+1);
-	    strcpy(rctl->postmaster,optarg);
+	    rctl->postmaster = (char *) xstrdup(optarg);
 	    break;
 	case LA_NOBOUNCE:
 	    run.bouncemail = FALSE;
@@ -476,7 +473,7 @@ struct query *ctl;	/* option record to be initialized */
 	    do {
 		struct idlist	*idp = save_str(&ctl->antispam, NULL, 0);;
 
-		idp->val.status.num = atoi(cp);
+		idp->val.status.num = xatoi(cp, &errflag);
 	    } while
 		((cp = strtok((char *)NULL, ",")));
 	    break;

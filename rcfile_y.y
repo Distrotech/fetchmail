@@ -388,7 +388,7 @@ int prc_filecheck(const char *pathname, const flag securecheck)
 	}
     }
 
-    if (!securecheck)	return 0;
+    if (!securecheck)	return PS_SUCCESS;
 
     if ((statbuf.st_mode & S_IFLNK) == S_IFLNK)
     {
