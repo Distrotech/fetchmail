@@ -108,17 +108,20 @@ class TortureGUI:
     def __init__(self):
         # Build the widget tree from the glade XML file.
         self.wtree = gtk.glade.XML("torturetest.glade")
+        # File in initial values
         self.combo = self.wtree.get_widget("combo1")
-        self.site = sitelist[0]
-
         self.combo.set_popdown_strings(map(lambda x: x.comment, sitelist))
+        self.site = sitelist[0]
         self.display(self.site)
 
         # Provide handlers for the widget tree's events
-	dict = {}
-	for key in dir(self.__class__):
-	    dict[key] = getattr(self, key)
-	self.wtree.signal_autoconnect(dict)
+	mydict = {}
+	for key in ('on_torturetest_destroy',
+                    'on_quitbutton_clicked',
+                    'on_savebutton_clicked',
+                    'on_combo_entry1_activate'):
+	    mydict[key] = getattr(self, key)
+	self.wtree.signal_autoconnect(mydict)
 
         gtk.mainloop()
         print `self.site`
@@ -155,25 +158,18 @@ class TortureGUI:
     # Housekeeping
     def on_torturetest_destroy(self, obj):
         gtk.mainquit()
-        print "Destroy"
-    def on_quitbutton_activate(self, obj):
+    def on_quitbutton_clicked(self, obj):
         gtk.mainquit()
-        print "Mainquit"
-    def on_savebutton_activate(self, obj):
-        gtk.mainquit()
+    def on_savebutton_clicked(self, obj):
         print "Save"
     def on_deletebutton_activate(self, obj):
-        gtk.mainquit()
         print "Delete"
-        gtk.mainquit()
     def on_new1_activate(self, obj):
-        gtk.mainquit()
         print "New"
     def on_open1_activate(self, obj):
         print "Open"
 
     def on_combo_entry1_activate(self, obj):
-        print "I see you!"
         key = self.combo.entry.get_text()
         for site in sitelist:
             if site.comment.find(key) > -1:
