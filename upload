@@ -17,6 +17,7 @@ put fetchmail-${version}-1.i386.rpm
 put fetchmail-${version}-1.src.rpm
 put fetchmail-features.html
 put NEWS
+put fetchmail-man.html
 put design-notes.html
 #put funny.html
 #put fetchmail.png
