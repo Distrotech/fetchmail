@@ -30,6 +30,10 @@ and there don't seem to be any live servers for it anymore.  You can
 configure it back in if you want with `configure --enable-POP2', but
 leaving it out cuts the executable's size slightly.
 
+Specifying --with-kerberos=DIR will tell the fetchmail build process to
+look in DIR for Kerberos support.  Configure normally looks in /usr/kerberos
+and /usr/athena; if you specify this option it will look in DIR first. 
+
 If you want to build for debugging, 
 
 	CFLAGS=-g LDFLAGS=" " ./configure
