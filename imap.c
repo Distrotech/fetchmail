@@ -259,9 +259,12 @@ static int imap_delete(FILE *sockfp, struct query *ctl, int number)
     /* expunges change the fetch numbers */
     number -= deletecount;
 
-    /* use SILENT if possible as a minor throughput optimization */
+    /*
+     * Use SILENT if possible as a minor throughput optimization.
+     * Note: this has been dropped from IMAP4rev1.
+     */
     if ((ok = gen_transact(sockfp,
-			imap_version >= IMAP4 
+			imap_version == IMAP4 
 				? "STORE %d +FLAGS.SILENT (\\Deleted)"
 				: "STORE %d +FLAGS (\\Deleted)", 
 			number)))
