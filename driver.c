@@ -49,7 +49,6 @@ char tag[TAGLEN];
 static int tagnum;
 #define GENSYM	(sprintf(tag, "a%04d", ++tagnum), tag)
 
-static int mboxfd;	/* desc to which retrieved message will be written */
 static char *shroud;	/* string to shroud in debug output, if  non-NULL */
 
 static int strcrlf(dst, src, count)
@@ -449,29 +448,26 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 }
 #endif /* HAVE_GETHOSTBYNAME */
 
-int smtp_open(host)
-/* try to open a socket to given host's SMTP server */ 
-char *host;
+static int smtp_open(ctl)
+/* try to open a socket to the appropriate SMTP server for this query */ 
+struct query *ctl;
 {
-    if ((mboxfd = Socket(host, SMTP_PORT)) < 0
-	|| SMTP_ok(mboxfd, NULL) != SM_OK
-	|| SMTP_helo(mboxfd, "localhost") != SM_OK)
+    ctl = ctl->leader; /* go to the SMTP leader for this query */
+
+    /* if no socket to this host is already set up, try to open one */
+    if (ctl->smtp_socket == -1)
     {
-	close(mboxfd);
-	mboxfd = -1;
+	if ((ctl->smtp_socket = Socket(ctl->smtphost, SMTP_PORT)) == -1)
+	    return(-1);
+	else if (SMTP_ok(ctl->smtp_socket, NULL) != SM_OK
+		 || SMTP_helo(ctl->smtp_socket, ctl->servername) != SM_OK)
+	{
+	    close(ctl->smtp_socket);
+	    ctl->smtp_socket = -1;
+	}
     }
 
-    return(mboxfd);
-}
-
-void smtp_close()
-/* close the current SMTP connection */
-{
-    if (mboxfd != -1)
-    {
-	SMTP_quit(mboxfd);
-	close(mboxfd);
-    }
+    return(ctl->smtp_socket);
 }
 
 static int gen_readmsg (socket, len, delimited, ctl)
@@ -483,7 +479,7 @@ struct query *ctl;	/* query control record */
 {
     char buf [MSGBUFSIZE+1]; 
     char *bufp, *headers, *fromhdr, *tohdr, *cchdr, *bcchdr;
-    int n, oldlen;
+    int n, oldlen, mboxfd;
     int inheaders,lines,sizeticker;
 
     /* read the message content from the server */
@@ -643,7 +639,7 @@ struct query *ctl;	/* query control record */
 	    }
 	    else
 	    {
-		if (ctl->mda[0] == '\0' && (smtp_open(ctl->smtphost) < 0))
+		if (ctl->mda[0] == '\0'	&& ((mboxfd = smtp_open(ctl)) < 0))
 		{
 		    free_uid_list(&xmit_names);
 		    fprintf(stderr, "fetchmail: SMTP connect failed\n");
@@ -826,7 +822,6 @@ const struct method *proto;	/* protocol method table */
     tagnum = 0;
     tag[0] = '\0';	/* nuke any tag hanging out from previous query */
     ok = 0;
-    mboxfd = -1;
 
     if (setjmp(restart) == 1)
 	fprintf(stderr,
@@ -946,14 +941,6 @@ const struct method *proto;	/* protocol method table */
 			    fputc(' ', stderr);
 		    }
 
-		    /*
-		     * If we're forwarding via SMTP, mboxfd is initialized
-		     * at this point (it was set at start of retrieval). 
-		     * If we're using an MDA it's not set -- gen_readmsg()
-		     * may have to parse message headers to know what
-		     * delivery addresses should be passed to the MDA
-		     */
-
 		    /* read the message and ship it to the output sink */
 		    ok = gen_readmsg(socket,
 				     len, 
@@ -1029,11 +1016,18 @@ const struct method *proto;	/* protocol method table */
     signal(SIGALRM, sigsave);
 
 closeUp:
-    if (!ctl->mda[0])
-	smtp_close();
     return(ok);
 }
 
+void smtp_close(mboxfd)
+/* close the current SMTP connection */
+int	mboxfd;
+{
+    if (mboxfd != -1)
+    {
+	close(mboxfd);
+    }
+}
 #if defined(HAVE_STDARG_H)
 void gen_send(int socket, char *fmt, ... )
 /* assemble command in printf(3) style and send to the server */

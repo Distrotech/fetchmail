@@ -2,6 +2,7 @@
 
 pl 1.9.4 ():
 * Correct status interpretation in closemailpipe() (thanks to Neil Harkins).
+* Tweak SMTP forwarding to only open one listener per SMTP host in daemon mode.
 
 pl 1.9.3 (Sun Oct 27 22:35:33 EST 1996):
 * Handle nested parens in RFC822 comments.

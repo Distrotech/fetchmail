@@ -63,7 +63,6 @@ char *user;		/* the name of the invoking user */
 static void termhook();
 static char *lockfile;
 static int popstatus;
-static struct query *ctl;
 
 RETSIGTYPE donothing(sig) int sig; {signal(sig, donothing);}
 
@@ -72,7 +71,7 @@ int argc;
 char **argv;
 { 
     int st, lossage, bkgd = FALSE;
-    struct query def_opts;
+    struct query def_opts, *ctl, *mp;
     int parsestatus, implicitmode;
     char *home, *tmpdir, tmpbuf[BUFSIZ]; 
     struct passwd *pw;
@@ -175,6 +174,7 @@ char **argv;
 
     /* merge in wired defaults, do sanity checks and prepare internal fields */
     for (ctl = querylist; ctl; ctl = ctl->next)
+    {
 	if (ctl->active && !(implicitmode && ctl->skip))
 	{
 #ifdef HAVE_GETHOSTBYNAME
@@ -232,6 +232,30 @@ char **argv;
 	    }
 #endif /* HAVE_GETHOSTBYNAME */
 
+	    /*
+	     * Assign SMTP leaders.  We want to allow all query blocks
+	     * sharing the same SMTP host to use the same SMTP connection.
+	     * To accomplish this, we initialize each query block's leader
+	     * field to point to the first block in the list with a matching 
+	     * SMTP host.
+	     *
+	     * In the typical case, there will be only one SMTP host (the
+	     * client machine) and thus just one SMTP leader (and one listener
+	     * process) through the entire run.
+	     */
+	    if (!ctl->mda[0])
+	    {
+		for (mp = querylist; mp && mp != ctl; mp = mp->next)
+		    if (strcmp(mp->smtphost, ctl->smtphost) == 0)
+		    {
+			ctl->leader = mp->leader;
+			goto no_new_leader;
+		    }
+		ctl->leader = ctl;
+		ctl->smtp_socket = -1;
+	    no_new_leader:;
+	    }
+
 	    /* sanity checks */
 	    if (ctl->port < 0)
 	    {
@@ -263,6 +287,9 @@ char **argv;
 		    ctl->mda_argv[1] = argp + 1 ;
 	    }
 	}
+    }
+
+    
 
     /* set up to do lock protocol */
     if ((tmpdir = getenv("TMPDIR")) == (char *)NULL)
@@ -499,8 +526,15 @@ char **argv;
 void termhook(int sig)
 /* to be executed on normal or signal-induced termination */
 {
+    struct query	*ctl;
+
     if (sig != 0)
 	fprintf(stderr, "terminated with signal %d\n", sig);
+
+    /* terminate all SMTP connections cleanly */
+    for (ctl = querylist; ctl; ctl = ctl->next)
+	if (ctl->leader == ctl && ctl->smtp_socket != -1)
+	    SMTP_quit(ctl->smtp_socket);
 
     if (!check_only)
 	write_saved_lists(querylist, idfile);

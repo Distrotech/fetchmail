@@ -92,9 +92,11 @@ struct query
 
     /* internal use */
     int active;
-    struct query *next;	/* next host in chain */
+    struct query *next;		/* next query control block in chain */
+    struct query *leader;	/* pointer to this query's SMTP leader */
+    int smtp_socket;		/* socket descriptor for SMTP connection */
     unsigned int uid;		/* UID of user to deliver to */
-    char digest [DIGESTLEN];
+    char digest [DIGESTLEN];	/* md5 digest buffer */
 #ifdef HAVE_GETHOSTBYNAME
     char *canonical_name;	/* DNS canonical name of server host */
 #endif /* HAVE_GETHOSTBYNAME */
