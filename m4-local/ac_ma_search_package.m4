@@ -83,6 +83,11 @@ dnl	fixed
 		ifelse([$6], , , [$6])
 		AC_DEFINE(HAVE_PKG_$1,1,[Define to 1 if you have the '$1' package.])
 		break
+	else
+		LIBS=$OLD_LIBS
+		LDFLAGS=$OLD_LDFLAGS
+		CPPFLAGS=$OLD_CPPFLAGS
+		CFLAGS=$OLD_CFLAGS
 	fi
     done
     if test "$success" = no ; then
