@@ -1085,15 +1085,6 @@ T}
 port    	-P	T{
 Specify TCP/IP service port
 T}
-ssl    		T{
-Connect to server over the specified base protocol using SSL encryption
-T}
-sslcert    		T{
-Specify file for client side public SSL certificate
-T}
-sslkey    		T{
-Specify file for client side private SSL key
-T}
 auth[enticate]	-A	T{
 Set preauthentication type (default `password')
 T}
@@ -1162,6 +1153,15 @@ Connect local and remote user names
 T}
 pass[word]	\&	T{
 Specify remote account password
+T}
+ssl    		T{
+Connect to server over the specified base protocol using SSL encryption
+T}
+sslcert    		T{
+Specify file for client side public SSL certificate
+T}
+sslkey    		T{
+Specify file for client side private SSL key
 T}
 folder  	-r	T{
 Specify remote folder to query
