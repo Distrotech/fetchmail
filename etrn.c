@@ -10,26 +10,26 @@
 #include  "smtp.h"
 #include  "socket.h"
 
-static int etrn_ok (FILE *sockfp, char *argbuf)
+static int etrn_ok (int sock, char *argbuf)
 /* parse command response */
 {
     int ok;
     char buf [POPBUFSIZE+1];
 
-    ok = SMTP_ok(sockfp);
+    ok = SMTP_ok(sock);
     if (ok == SM_UNRECOVERABLE)
 	return(PS_PROTOCOL);
     else
 	return(ok);
 }
 
-static int etrn_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
+static int etrn_getrange(int sock, struct query *ctl, int*countp, int*newp)
 /* send ETRN and interpret the response */
 {
     int ok, opts;
     char buf [POPBUFSIZE+1];
 
-    if ((ok = SMTP_ehlo(sockfp, ctl->server.names->id, &opts)))
+    if ((ok = SMTP_ehlo(sock, ctl->server.names->id, &opts)))
     {
 	error(0, 0, "%s's SMTP listener does not support ESMTP",
 	      ctl->server.names->id);
@@ -45,8 +45,8 @@ static int etrn_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
     *countp = *newp = -1;	/* make sure we don't enter the fetch loop */
 
     /* ship the actual poll and get the response */
-    gen_send(sockfp, "ETRN %s", ctl->smtphost);
-    if (ok = gen_recv(sockfp, buf, sizeof(buf)))
+    gen_send(sock, "ETRN %s", ctl->smtphost);
+    if (ok = gen_recv(sock, buf, sizeof(buf)))
 	return(ok);
 
     /* this switch includes all the response codes described in RFC1985 */

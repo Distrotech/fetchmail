@@ -463,11 +463,11 @@ int main (int argc, char **argv)
 	 * deliver it until the input socket is closed. 
 	 */
 	for (ctl = querylist; ctl; ctl = ctl->next)
-	    if (ctl->smtp_sockfp)
+	    if (ctl->smtp_socket != -1)
 	    {
-		SMTP_quit(ctl->smtp_sockfp);
-		fclose(ctl->smtp_sockfp);
-		ctl->smtp_sockfp = (FILE *)NULL;
+		SMTP_quit(ctl->smtp_socket);
+		close(ctl->smtp_socket);
+		ctl->smtp_socket = -1;
 	    }
 
 	/*
@@ -712,8 +712,8 @@ void termhook(int sig)
     else
 	/* terminate all SMTP connections cleanly */
 	for (ctl = querylist; ctl; ctl = ctl->next)
-	    if (ctl->smtp_sockfp != (FILE *)NULL)
-		SMTP_quit(ctl->smtp_sockfp);
+	    if (ctl->smtp_socket != -1)
+		SMTP_quit(ctl->smtp_socket);
 
     if (!check_only)
 	write_saved_lists(querylist, idfile);

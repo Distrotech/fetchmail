@@ -33,33 +33,32 @@ static struct opt extensions[] =
 
 char smtp_response[MSGBUFSIZE];
 
-int SMTP_helo(FILE *sockfp,char *host)
+int SMTP_helo(int sock,char *host)
 /* send a "HELO" message to the SMTP listener */
 {
   int ok;
 
-  SockPrintf(sockfp,"HELO %s\r\n", host);
+  SockPrintf(sock,"HELO %s\r\n", host);
   if (outlevel == O_VERBOSE)
       error(0, 0, "SMTP> HELO %s", host);
-  ok = SMTP_ok(sockfp);
+  ok = SMTP_ok(sock);
   return ok;
 }
 
-int SMTP_ehlo(FILE *sockfp, char *host, int *opt)
+int SMTP_ehlo(int sock, char *host, int *opt)
 /* send a "EHLO" message to the SMTP listener, return extension status bits */
 {
   int ok;
-  char *ip;
   struct opt *hp;
 
-  SockPrintf(sockfp,"EHLO %s\r\n", host);
+  SockPrintf(sock,"EHLO %s\r\n", host);
   if (outlevel == O_VERBOSE)
       error(0, 0, "SMTP> EHLO %s", host);
   
   *opt = 0;
-  while ((ip = SockGets(smtp_response, sizeof(smtp_response)-1, sockfp)))
+  while ((SockRead(sock, smtp_response, sizeof(smtp_response)-1)) != -1)
   {
-      int  n = strlen(ip);
+      int  n = strlen(smtp_response);
 
       if (smtp_response[strlen(smtp_response)-1] == '\n')
 	  smtp_response[strlen(smtp_response)-1] = '\0';
@@ -81,7 +80,7 @@ int SMTP_ehlo(FILE *sockfp, char *host, int *opt)
   return SM_UNRECOVERABLE;
 }
 
-int SMTP_from(FILE *sockfp, char *from, char *opts)
+int SMTP_from(int sock, char *from, char *opts)
 /* send a "MAIL FROM:" message to the SMTP listener */
 {
   int ok;
@@ -91,81 +90,79 @@ int SMTP_from(FILE *sockfp, char *from, char *opts)
   sprintf(buf, "MAIL FROM:<%s>", from);
   if (opts)
       strcat(buf, opts);
-  SockPrintf(sockfp,"%s\r\n", buf);
+  SockPrintf(sock,"%s\r\n", buf);
   if (outlevel == O_VERBOSE)
       error(0, 0, "SMTP> %s", buf);
-  ok = SMTP_ok(sockfp);
+  ok = SMTP_ok(sock);
   return ok;
 }
 
-int SMTP_rcpt(FILE *sockfp, char *to)
+int SMTP_rcpt(int sock, char *to)
 /* send a "RCPT TO:" message to the SMTP listener */
 {
   int ok;
 
-  SockPrintf(sockfp,"RCPT TO:<%s>\r\n", to);
+  SockPrintf(sock,"RCPT TO:<%s>\r\n", to);
   if (outlevel == O_VERBOSE)
       error(0, 0, "SMTP> RCPT TO:<%s>", to);
-  ok = SMTP_ok(sockfp);
+  ok = SMTP_ok(sock);
   return ok;
 }
 
-int SMTP_data(FILE *sockfp)
+int SMTP_data(int sock)
 /* send a "DATA" message to the SMTP listener */
 {
   int ok;
 
-  SockPrintf(sockfp,"DATA\r\n");
+  SockPrintf(sock,"DATA\r\n");
   if (outlevel == O_VERBOSE)
       error(0, 0, "SMTP> DATA");
-  ok = SMTP_ok(sockfp);
+  ok = SMTP_ok(sock);
   return ok;
 }
 
-int SMTP_rset(FILE *sockfp)
+int SMTP_rset(int sock)
 /* send a "RSET" message to the SMTP listener */
 {
   int ok;
 
-  SockPrintf(sockfp,"RSET\r\n");
+  SockPrintf(sock,"RSET\r\n");
   if (outlevel == O_VERBOSE)
       error(0, 0, "SMTP> RSET");
-  ok = SMTP_ok(sockfp);
+  ok = SMTP_ok(sock);
   return ok;
 }
 
-int SMTP_quit(FILE *sockfp)
+int SMTP_quit(int sock)
 /* send a "QUIT" message to the SMTP listener */
 {
   int ok;
 
-  SockPrintf(sockfp,"QUIT\r\n");
+  SockPrintf(sock,"QUIT\r\n");
   if (outlevel == O_VERBOSE)
       error(0, 0, "SMTP> QUIT");
-  ok = SMTP_ok(sockfp);
+  ok = SMTP_ok(sock);
   return ok;
 }
 
-int SMTP_eom(FILE *sockfp)
+int SMTP_eom(int sock)
 /* send a message data terminator to the SMTP listener */
 {
   int ok;
 
-  SockPrintf(sockfp,".\r\n");
+  SockPrintf(sock,".\r\n");
   if (outlevel == O_VERBOSE)
       error(0, 0, "SMTP>. (EOM)");
-  ok = SMTP_ok(sockfp);
+  ok = SMTP_ok(sock);
   return ok;
 }
 
-int SMTP_ok(FILE *sockfp)
+int SMTP_ok(int sock)
 /* returns status of SMTP connection */
 {
-    char *ip;
-  
-    while ((ip = SockGets(smtp_response, sizeof(smtp_response)-1, sockfp)))
+    while ((SockRead(sock, smtp_response, sizeof(smtp_response)-1)) != -1)
     {
-	int  n = strlen(ip);
+	int  n = strlen(smtp_response);
 
 	if (smtp_response[strlen(smtp_response)-1] == '\n')
 	    smtp_response[strlen(smtp_response)-1] = '\0';

@@ -19,15 +19,15 @@
 #define ESMTP_SIZE	0x02
 #define ESMTP_ETRN	0x04
 
-int SMTP_helo(FILE *sockfp,char *host);
-int SMTP_ehlo(FILE *sockfp,char *host,int *opt);
-int SMTP_from(FILE *sockfp,char *from,char *opts);
-int SMTP_rcpt(FILE *sockfp,char *to);
-int SMTP_data(FILE *sockfp);
-int SMTP_eom(FILE *sockfp);
-int SMTP_rset(FILE *sockfp);
-int SMTP_quit(FILE *sockfp);
-int SMTP_ok(FILE *sockfp);
+int SMTP_helo(int socket,char *host);
+int SMTP_ehlo(int socket,char *host,int *opt);
+int SMTP_from(int socket,char *from,char *opts);
+int SMTP_rcpt(int socket,char *to);
+int SMTP_data(int socket);
+int SMTP_eom(int socket);
+int SMTP_rset(int socket);
+int SMTP_quit(int socket);
+int SMTP_ok(int socket);
 
 extern char smtp_response[MSGBUFSIZE];
 

@@ -330,6 +330,7 @@ static int reset_server(char *name, int skip)
 	    return(FALSE);
 
     memset(&current,'\0',sizeof(current));
+    current.smtp_socket = -1;
     save_str(&current.server.names, -1, name);
     current.server.skip = skip;
     return(TRUE);
@@ -350,6 +351,7 @@ static void user_reset(void)
     save = current.server;
 
     memset(&current, '\0', sizeof(current));
+    current.smtp_socket = -1;
 
     current.server = save;
 }

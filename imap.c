@@ -25,7 +25,7 @@ extern char *strstr();	/* needed on sysV68 R3V7.1. */
 
 static int count, seen, recent, unseen, deletecount, imap_version;
 
-int imap_ok (FILE *sockfp,  char *argbuf)
+int imap_ok (int sock,  char *argbuf)
 /* parse command response */
 {
     char buf [POPBUFSIZE+1];
@@ -34,7 +34,7 @@ int imap_ok (FILE *sockfp,  char *argbuf)
     do {
 	int	ok;
 
-	if (ok = gen_recv(sockfp, buf, sizeof(buf)))
+	if (ok = gen_recv(sock, buf, sizeof(buf)))
 	    return(ok);
 
 	/* interpret untagged status responses */
@@ -76,13 +76,13 @@ int imap_ok (FILE *sockfp,  char *argbuf)
     }
 }
 
-int imap_getauth(FILE *sockfp, struct query *ctl, char *buf)
+int imap_getauth(int sock, struct query *ctl, char *buf)
 /* apply for connection authorization */
 {
     char rbuf [POPBUFSIZE+1];
 
     /* try to get authorized */
-    int ok = gen_transact(sockfp,
+    int ok = gen_transact(sock,
 		  "LOGIN %s \"%s\"",
 		  ctl->remotename, ctl->password);
 
@@ -90,8 +90,8 @@ int imap_getauth(FILE *sockfp, struct query *ctl, char *buf)
 	return(ok);
 
     /* probe to see if we're running IMAP4 and can use RFC822.PEEK */
-    gen_send(sockfp, "CAPABILITY");
-    if (ok = gen_recv(sockfp, rbuf, sizeof(rbuf)))
+    gen_send(sock, "CAPABILITY");
+    if (ok = gen_recv(sock, rbuf, sizeof(rbuf)))
 	return(ok);
     if (strstr(rbuf, "BAD"))
     {
@@ -117,14 +117,14 @@ int imap_getauth(FILE *sockfp, struct query *ctl, char *buf)
     return(PS_SUCCESS);
 }
 
-static int imap_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
+static int imap_getrange(int sock, struct query *ctl, int*countp, int*newp)
 /* get range of messages to be fetched */
 {
     int ok;
 
     /* find out how many messages are waiting */
     recent = unseen = 0;
-    ok = gen_transact(sockfp,
+    ok = gen_transact(sock,
 		  "SELECT %s",
 		  ctl->mailbox ? ctl->mailbox : "INBOX");
     if (ok != 0)
@@ -147,17 +147,17 @@ static int imap_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
     return(PS_SUCCESS);
 }
 
-static int imap_getsizes(FILE *sockfp, int count, int *sizes)
+static int imap_getsizes(int sock, int count, int *sizes)
 /* capture the sizes of all messages */
 {
     char buf [POPBUFSIZE+1];
 
-    gen_send(sockfp, "FETCH 1:%d RFC822.SIZE", count);
-    while (SockGets(buf, sizeof(buf), sockfp))
+    gen_send(sock, "FETCH 1:%d RFC822.SIZE", count);
+    while (SockRead(sock, buf, sizeof(buf)))
     {
 	int num, size, ok;
 
-	if (ok = gen_recv(sockfp, buf, sizeof(buf)))
+	if (ok = gen_recv(sock, buf, sizeof(buf)))
 	    return(ok);
 	if (strstr(buf, "OK"))
 	    break;
@@ -170,7 +170,7 @@ static int imap_getsizes(FILE *sockfp, int count, int *sizes)
     return(PS_SUCCESS);
 }
 
-static int imap_is_old(FILE *sockfp, struct query *ctl, int number)
+static int imap_is_old(int sock, struct query *ctl, int number)
 /* is the given message old? */
 {
     int ok;
@@ -178,13 +178,13 @@ static int imap_is_old(FILE *sockfp, struct query *ctl, int number)
     /* expunges change the fetch numbers */
     number -= deletecount;
 
-    if ((ok = gen_transact(sockfp, "FETCH %d FLAGS", number)) != 0)
+    if ((ok = gen_transact(sock, "FETCH %d FLAGS", number)) != 0)
 	return(PS_ERROR);
 
     return(seen);
 }
 
-static int imap_fetch(FILE *sockfp, struct query *ctl, int number, int *lenp)
+static int imap_fetch(int sock, struct query *ctl, int number, int *lenp)
 /* request nth message */
 {
     char buf [POPBUFSIZE+1], *fetch;
@@ -207,20 +207,20 @@ static int imap_fetch(FILE *sockfp, struct query *ctl, int number, int *lenp)
     {
     case IMAP4rev1:	/* RFC 2060 */
 	if (!ctl->keep)
-	    gen_send(sockfp, "FETCH %d BODY.PEEK[]", number);
+	    gen_send(sock, "FETCH %d BODY.PEEK[]", number);
 	else
-	    gen_send(sockfp, "FETCH %d BODY", number);
+	    gen_send(sock, "FETCH %d BODY", number);
 	break;
 
     case IMAP4:		/* RFC 1730 */
 	if (!ctl->keep)
-	    gen_send(sockfp, "FETCH %d RFC822.PEEK", number);
+	    gen_send(sock, "FETCH %d RFC822.PEEK", number);
 	else
-	    gen_send(sockfp, "FETCH %d RFC822", number);
+	    gen_send(sock, "FETCH %d RFC822", number);
 	break;
 
     default:		/* RFC 1176 */
-	gen_send(sockfp, "FETCH %d RFC822", number);
+	gen_send(sock, "FETCH %d RFC822", number);
 	break;
     }
 
@@ -228,7 +228,7 @@ static int imap_fetch(FILE *sockfp, struct query *ctl, int number, int *lenp)
     do {
 	int	ok;
 
-	if (ok = gen_recv(sockfp, buf, sizeof(buf)))
+	if (ok = gen_recv(sock, buf, sizeof(buf)))
 	    return(ok);
     } while
 	/* third token can be "RFC822" or "BODY[]" */
@@ -240,7 +240,7 @@ static int imap_fetch(FILE *sockfp, struct query *ctl, int number, int *lenp)
 	return(PS_SUCCESS);
 }
 
-static int imap_trail(FILE *sockfp, struct query *ctl, int number)
+static int imap_trail(int sock, struct query *ctl, int number)
 /* discard tail of FETCH response after reading message text */
 {
     char buf [POPBUFSIZE+1];
@@ -248,10 +248,10 @@ static int imap_trail(FILE *sockfp, struct query *ctl, int number)
     /* expunges change the fetch numbers */
     /* number -= deletecount; */
 
-    return(gen_recv(sockfp, buf, sizeof(buf)));
+    return(gen_recv(sock, buf, sizeof(buf)));
 }
 
-static int imap_delete(FILE *sockfp, struct query *ctl, int number)
+static int imap_delete(int sock, struct query *ctl, int number)
 /* set delete flag for given message */
 {
     int	ok;
@@ -263,7 +263,7 @@ static int imap_delete(FILE *sockfp, struct query *ctl, int number)
      * Use SILENT if possible as a minor throughput optimization.
      * Note: this has been dropped from IMAP4rev1.
      */
-    if ((ok = gen_transact(sockfp,
+    if ((ok = gen_transact(sock,
 			imap_version == IMAP4 
 				? "STORE %d +FLAGS.SILENT (\\Deleted)"
 				: "STORE %d +FLAGS (\\Deleted)", 
@@ -275,7 +275,7 @@ static int imap_delete(FILE *sockfp, struct query *ctl, int number)
      * so that a line hit during a long session won't result in lots of
      * messages being fetched again during the next session.
      */
-    if ((ok = gen_transact(sockfp, "EXPUNGE")))
+    if ((ok = gen_transact(sock, "EXPUNGE")))
 	return(ok);
 
     deletecount++;

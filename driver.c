@@ -354,16 +354,16 @@ char *parse_received(struct query *ctl, char *bufp)
 }
 #endif /* HAVE_RES_SEARCH */
 
-static FILE *smtp_open(struct query *ctl)
+int smtp_open(struct query *ctl)
 /* try to open a socket to the appropriate SMTP server for this query */ 
 {
     struct idlist	*idp;
 
     /* maybe it's time to close the socket in order to force delivery */
-    if (ctl->batchlimit && ctl->smtp_sockfp && batchcount++ == ctl->batchlimit)
+    if (ctl->batchlimit && (ctl->smtp_socket != -1) && batchcount++ == ctl->batchlimit)
     {
-	fclose(ctl->smtp_sockfp);
-	ctl->smtp_sockfp = (FILE *)NULL;
+	close(ctl->smtp_socket);
+	ctl->smtp_socket = -1;
 	batchcount = 0;
     }
 
@@ -382,12 +382,12 @@ static FILE *smtp_open(struct query *ctl)
 	 */
 
 	/* if no socket to this host is already set up, try to open ESMTP */
-	if (ctl->smtp_sockfp == (FILE *)NULL)
+	if (ctl->smtp_socket == -1)
 	{
-	    if ((ctl->smtp_sockfp = SockOpen(idp->id,SMTP_PORT))==(FILE *)NULL)
+	    if ((ctl->smtp_socket = SockOpen(idp->id,SMTP_PORT)) == -1)
 		continue;
-	    else if (SMTP_ok(ctl->smtp_sockfp) != SM_OK
-		     || SMTP_ehlo(ctl->smtp_sockfp, 
+	    else if (SMTP_ok(ctl->smtp_socket) != SM_OK
+		     || SMTP_ehlo(ctl->smtp_socket, 
 				  ctl->server.names->id,
 				  &ctl->server.esmtp_options) != SM_OK)
 	    {
@@ -395,8 +395,8 @@ static FILE *smtp_open(struct query *ctl)
 		 * RFC 1869 warns that some listeners hang up on a failed EHLO,
 		 * so it's safest not to assume the socket will still be good.
 		 */
-		fclose(ctl->smtp_sockfp);
-		ctl->smtp_sockfp = (FILE *)NULL;
+		close(ctl->smtp_socket);
+		ctl->smtp_socket = -1;
 	    }
 	    else
 	    {
@@ -406,15 +406,15 @@ static FILE *smtp_open(struct query *ctl)
 	}
 
 	/* if opening for ESMTP failed, try SMTP */
-	if (ctl->smtp_sockfp == (FILE *)NULL)
+	if (ctl->smtp_socket == -1)
 	{
-	    if ((ctl->smtp_sockfp = SockOpen(idp->id,SMTP_PORT))==(FILE *)NULL)
+	    if ((ctl->smtp_socket = SockOpen(idp->id,SMTP_PORT)) == -1)
 		continue;
-	    else if (SMTP_ok(ctl->smtp_sockfp) != SM_OK
-		     || SMTP_helo(ctl->smtp_sockfp, ctl->server.names->id) != SM_OK)
+	    else if (SMTP_ok(ctl->smtp_socket) != SM_OK
+		     || SMTP_helo(ctl->smtp_socket, ctl->server.names->id) != SM_OK)
 	    {
-		fclose(ctl->smtp_sockfp);
-		ctl->smtp_sockfp = (FILE *)NULL;
+		close(ctl->smtp_socket);
+		ctl->smtp_socket = -1;
 	    }
 	    else
 	    {
@@ -424,12 +424,12 @@ static FILE *smtp_open(struct query *ctl)
 	}
     }
 
-    return(ctl->smtp_sockfp);
+    return(ctl->smtp_socket);
 }
 
-static int gen_readmsg(sockfp, len, delimited, ctl, realname)
+static int gen_readmsg(sock, len, delimited, ctl, realname)
 /* read message content and ship to SMTP or MDA */
-FILE *sockfp;		/* to which the server is connected */
+int sock;		/* to which the server is connected */
 long len;		/* length of message */
 int delimited;		/* does the protocol use a message delimiter? */
 struct query *ctl;	/* query control record */
@@ -468,7 +468,7 @@ char *realname;		/* real name of host */
 	line = xmalloc(sizeof(buf));
 	line[0] = '\0';
 	do {
-	    if (!SockGets(buf, sizeof(buf)-1, sockfp))
+	    if (SockRead(sock, buf, sizeof(buf)-1) == -1)
 		return(PS_SOCKET);
 
 	    /* lines may not be properly CRLF terminated; fix this for qmail */
@@ -491,7 +491,7 @@ char *realname;		/* real name of host */
 		break;
 	} while
 	    /* we may need to grab RFC822 continuations */
-	    ((ch = SockPeek(sockfp)) == ' ' || ch == '\t');
+	    ((ch = SockPeek(sock)) == ' ' || ch == '\t');
 
 	/* write the message size dots */
 	n = strlen(line);
@@ -724,7 +724,7 @@ char *realname;		/* real name of host */
 	int	smtperr;
 
 	/* build a connection to the SMTP listener */
-	if (!ctl->mda && ((sinkfp = smtp_open(ctl)) == NULL))
+	if (!ctl->mda && (smtp_open(ctl) == -1))
 	{
 	    free_str_list(&xmit_names);
 	    error(0, -1, "SMTP connect to %s failed",
@@ -779,7 +779,7 @@ char *realname;		/* real name of host */
 	    ap = return_path;
 	else if (from_offs == -1 || !(ap = nxtaddr(headers + from_offs)))
 	    ap = user;
-	if (SMTP_from(sinkfp, ap, options) != SM_OK)
+	if (SMTP_from(ctl->smtp_socket, ap, options) != SM_OK)
 	{
 	    int smtperr = atoi(smtp_response);
 
@@ -817,8 +817,7 @@ char *realname;		/* real name of host */
 		 * a future retrieval cycle.
 		 */
 		delete_ok = FALSE;
-		sinkfp = (FILE *)NULL;
-		SMTP_rset(sockfp);	/* required by RFC1870 */
+		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
 		goto skiptext;
 
 	    case 552: /* message exceeds fixed maximum message size */
@@ -827,12 +826,11 @@ char *realname;		/* real name of host */
 		 * ESMTP server.  Don't try to ship the message, 
 		 * and allow it to be deleted.
 		 */
-		sinkfp = (FILE *)NULL;
-		SMTP_rset(sockfp);	/* required by RFC1870 */
+		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
 		goto skiptext;
 
 	    default:	/* retry with invoking user's address */
-		if (SMTP_from(sinkfp, user, options) != SM_OK)
+		if (SMTP_from(ctl->smtp_socket, user, options) != SM_OK)
 		{
 		    error(0, -1, "SMTP error: %s", smtp_response);
 		    if (return_path)
@@ -854,7 +852,7 @@ char *realname;		/* real name of host */
 	 */
 	for (idp = xmit_names; idp; idp = idp->next)
 	    if (idp->val.num == XMIT_ACCEPT)
-		if (SMTP_rcpt(sinkfp, idp->id) == SM_OK)
+		if (SMTP_rcpt(ctl->smtp_socket, idp->id) == SM_OK)
 		    good_addresses++;
 		else
 		{
@@ -863,7 +861,7 @@ char *realname;		/* real name of host */
 		    error(0, 0, 
 			  "SMTP listener doesn't like recipient address `%s'", idp->id);
 		}
-	if (!good_addresses && SMTP_rcpt(sinkfp, user) != SM_OK)
+	if (!good_addresses && SMTP_rcpt(ctl->smtp_socket, user) != SM_OK)
 	{
 	    error(0, 0, 
 		  "can't even send to calling user!");
@@ -873,7 +871,7 @@ char *realname;		/* real name of host */
 	}
 
 	/* tell it we're ready to send data */
-	SMTP_data(sinkfp);
+	SMTP_data(ctl->smtp_socket);
 
     skiptext:;
 	if (return_path)
@@ -898,7 +896,7 @@ char *realname;		/* real name of host */
 	if (ctl->mda)
 	    n = fwrite(headers, 1, strlen(headers), sinkfp);
 	else
-	    n = SockWrite(headers, 1, strlen(headers), sinkfp);
+	    n = SockWrite(ctl->smtp_socket, headers, strlen(headers));
 
 	if (n < 0)
 	{
@@ -989,21 +987,21 @@ char *realname;		/* real name of host */
 	    if (ctl->mda)
 		fwrite(errmsg, sizeof(char), strlen(errmsg), sinkfp);
 	    else
-		SockWrite(errmsg, sizeof(char), strlen(errmsg), sinkfp);
+		SockWrite(ctl->smtp_socket, errmsg, strlen(errmsg));
 	}
     }
 
     free_str_list(&xmit_names);
 
     /* issue the delimiter line */
-    if (sinkfp)
+    if (sinkfp && ctl->mda)
+	fputc('\n', sinkfp);
+    else if (ctl->smtp_socket != -1)
     {
-	if (ctl->mda)
-	    fputc('\n', sinkfp);
-	else if (ctl->stripcr)
-	    SockWrite("\n", sizeof(char), 1, sinkfp);
+	if (ctl->stripcr)
+	    SockWrite(ctl->smtp_socket, "\n", 1);
 	else
-	    SockWrite("\r\n", sizeof(char), 2, sinkfp);
+	    SockWrite(ctl->smtp_socket, "\r\n", 2);
     }
 
     /*
@@ -1013,7 +1011,7 @@ char *realname;		/* real name of host */
     /* pass through the text lines */
     while (delimited || remaining > 0)
     {
-	if (!SockGets(buf, sizeof(buf)-1, sockfp))
+	if (SockRead(sock, buf, sizeof(buf)-1) == -1)
 	    return(PS_SOCKET);
 	set_timeout(ctl->server.timeout);
 
@@ -1048,45 +1046,44 @@ char *realname;		/* real name of host */
 		break;
 
 	/* ship out the text line */
-	if (sinkfp)
+
+	/* SMTP byte-stuffing */
+	if (*buf == '.')
+	    if (sinkfp && ctl->mda)
+		fputs(".", sinkfp);
+	    else if (ctl->smtp_socket != -1)
+		SockWrite(ctl->smtp_socket, buf, 1);
+
+	/* we may need to strip carriage returns */
+	if (ctl->stripcr)
 	{
-	    /* SMTP byte-stuffing */
-	    if (*buf == '.')
-		if (ctl->mda)
-		    fputs(".", sinkfp);
-		else
-		    SockWrite(buf, 1, 1, sinkfp);
+	    char	*sp, *tp;
 
-	    /* we may need to strip carriage returns */
-	    if (ctl->stripcr)
-	    {
-		char	*sp, *tp;
-
-		for (sp = tp = buf; *sp; sp++)
-		    if (*sp != '\r')
-			*tp++ =  *sp;
-		*tp = '\0';
-	    }
-
-	    /* ship the text line */
-	    if (ctl->mda)
-		n = fwrite(buf, 1, strlen(buf), sinkfp);
-	    else if (sinkfp)
-		n = SockWrite(buf, 1, strlen(buf), sinkfp);
-
-	    if (n < 0)
-	    {
-		error(0, errno, "writing message text");
-		if (ctl->mda)
-		{
-		    pclose(sinkfp);
-		    signal(SIGCHLD, sigchld);
-		}
-		return(PS_IOERR);
-	    }
-	    else if (outlevel == O_VERBOSE)
-		fputc('*', stderr);
+	    for (sp = tp = buf; *sp; sp++)
+		if (*sp != '\r')
+		    *tp++ =  *sp;
+	    *tp = '\0';
 	}
+
+	/* ship the text line */
+	n = 0;
+	if (sinkfp && ctl->mda)
+	    n = fwrite(buf, 1, strlen(buf), sinkfp);
+	else if (ctl->smtp_socket != -1)
+	    n = SockWrite(ctl->smtp_socket, buf, strlen(buf));
+
+	if (n < 0)
+	{
+	    error(0, errno, "writing message text");
+	    if (ctl->mda)
+	    {
+		pclose(sinkfp);
+		signal(SIGCHLD, sigchld);
+	    }
+	    return(PS_IOERR);
+	}
+	else if (outlevel == O_VERBOSE)
+	    fputc('*', stderr);
     }
 
     /*
@@ -1109,10 +1106,10 @@ char *realname;		/* real name of host */
 	    return(PS_IOERR);
 	}
     }
-    else if (sinkfp)
+    else if (ctl->smtp_socket != -1)
     {
 	/* write message terminator */
-	if (SMTP_eom(sinkfp) != SM_OK)
+	if (SMTP_eom(ctl->smtp_socket) != SM_OK)
 	{
 	    error(0, -1, "SMTP listener refused delivery");
 	    ctl->errcount++;
@@ -1221,7 +1218,8 @@ const struct method *proto;	/* protocol method table */
     {
 	char buf [POPBUFSIZE+1];
 	int *msgsizes, len, num, count, new, deletions = 0;
-	FILE *sockfp; 
+	int sock, port;
+ 
 	/* execute pre-initialization command, if any */
 	if (ctl->preconnect && (ok = system(ctl->preconnect)))
 	{
@@ -1232,8 +1230,8 @@ const struct method *proto;	/* protocol method table */
 	}
 
 	/* open a socket to the mail server */
-	if (!(sockfp = SockOpen(ctl->server.names->id,
-		     ctl->server.port ? ctl->server.port : protocol->port)))
+	port = ctl->server.port ? ctl->server.port : protocol->port;
+	if ((sock = SockOpen(ctl->server.names->id, port)) == -1)
 	{
 #ifndef EHOSTUNREACH
 #define EHOSTUNREACH (-1)
@@ -1247,7 +1245,7 @@ const struct method *proto;	/* protocol method table */
 #ifdef KERBEROS_V4
 	if (ctl->server.authenticate == A_KERBEROS_V4)
 	{
-	    ok = kerberos_auth(fileno(sockfp), ctl->server.canonical_name);
+	    ok = kerberos_auth(sock, ctl->server.canonical_name);
  	    if (ok != 0)
 		goto cleanUp;
 	    set_timeout(ctl->server.timeout);
@@ -1255,7 +1253,7 @@ const struct method *proto;	/* protocol method table */
 #endif /* KERBEROS_V4 */
 
 	/* accept greeting message from mail server */
-	ok = (protocol->parse_response)(sockfp, buf);
+	ok = (protocol->parse_response)(sock, buf);
 	if (ok != 0)
 	    goto cleanUp;
 	set_timeout(ctl->server.timeout);
@@ -1339,7 +1337,7 @@ const struct method *proto;	/* protocol method table */
 	if (protocol->getauth)
 	{
 	    shroud = ctl->password;
-	    ok = (protocol->getauth)(sockfp, ctl, buf);
+	    ok = (protocol->getauth)(sock, ctl, buf);
 	    shroud = (char *)NULL;
 	    if (ok == PS_ERROR)
 		ok = PS_AUTHFAIL;
@@ -1354,7 +1352,7 @@ const struct method *proto;	/* protocol method table */
 	}
 
 	/* compute number of messages and number of new messages waiting */
-	ok = (protocol->getrange)(sockfp, ctl, &count, &new);
+	ok = (protocol->getrange)(sock, ctl, &count, &new);
 	if (ok != 0)
 	    goto cleanUp;
 	set_timeout(ctl->server.timeout);
@@ -1389,7 +1387,7 @@ const struct method *proto;	/* protocol method table */
 	{
 	    msgsizes = (int *)alloca(sizeof(int) * count);
 
-	    ok = (proto->getsizes)(sockfp, count, msgsizes);
+	    ok = (proto->getsizes)(sock, count, msgsizes);
 	    if (ok != 0)
 		goto cleanUp;
 	    set_timeout(ctl->server.timeout);
@@ -1437,7 +1435,7 @@ const struct method *proto;	/* protocol method table */
 	    {
 		int	toolarge = msgsizes && (msgsizes[num-1] > ctl->limit);
 		int	fetch_it = ctl->fetchall ||
-		    (!toolarge && (force_retrieval || !(protocol->is_old && (protocol->is_old)(sockfp,ctl,num))));
+		    (!toolarge && (force_retrieval || !(protocol->is_old && (protocol->is_old)(sock,ctl,num))));
 		int	suppress_delete = FALSE;
 
 		/* we may want to reject this message if it's old */
@@ -1453,7 +1451,7 @@ const struct method *proto;	/* protocol method table */
 		else
 		{
 		    /* request a message */
-		    ok = (protocol->fetch)(sockfp, ctl, num, &len);
+		    ok = (protocol->fetch)(sock, ctl, num, &len);
 		    if (ok != 0)
 			goto cleanUp;
 		    set_timeout(ctl->server.timeout);
@@ -1470,7 +1468,7 @@ const struct method *proto;	/* protocol method table */
 		    }
 
 		    /* read the message and ship it to the output sink */
-		    ok = gen_readmsg(sockfp,
+		    ok = gen_readmsg(sock,
 				     len, 
 				     protocol->delimited,
 				     ctl,
@@ -1484,7 +1482,7 @@ const struct method *proto;	/* protocol method table */
 		    /* tell the server we got it OK and resynchronize */
 		    if (protocol->trail)
 		    {
-			ok = (protocol->trail)(sockfp, ctl, num);
+			ok = (protocol->trail)(sock, ctl, num);
 			if (ok != 0)
 			    goto cleanUp;
 			set_timeout(ctl->server.timeout);
@@ -1510,7 +1508,7 @@ const struct method *proto;	/* protocol method table */
 		    deletions++;
 		    if (outlevel > O_SILENT) 
 			error_complete(0, 0, " flushed");
-		    ok = (protocol->delete)(sockfp, ctl, num);
+		    ok = (protocol->delete)(sock, ctl, num);
 		    if (ok != 0)
 			goto cleanUp;
 		    set_timeout(ctl->server.timeout);
@@ -1524,28 +1522,28 @@ const struct method *proto;	/* protocol method table */
 		    break;
 	    }
 
-	    ok = gen_transact(sockfp, protocol->exit_cmd);
+	    ok = gen_transact(sock, protocol->exit_cmd);
 	    if (ok == 0)
 		ok = (fetches > 0) ? PS_SUCCESS : PS_NOMAIL;
 	    set_timeout(0);
-	    fclose(sockfp);
+	    close(sock);
 	    goto closeUp;
 	}
 	else {
-	    ok = gen_transact(sockfp, protocol->exit_cmd);
+	    ok = gen_transact(sock, protocol->exit_cmd);
 	    if (ok == 0)
 		ok = PS_NOMAIL;
 	    set_timeout(0);
-	    fclose(sockfp);
+	    close(sock);
 	    goto closeUp;
 	}
 
     cleanUp:
 	set_timeout(ctl->server.timeout);
 	if (ok != 0 && ok != PS_SOCKET)
-	    gen_transact(sockfp, protocol->exit_cmd);
+	    gen_transact(sock, protocol->exit_cmd);
 	set_timeout(0);
-	fclose(sockfp);
+	close(sock);
     }
 
     switch (ok)
@@ -1585,12 +1583,12 @@ closeUp:
 }
 
 #if defined(HAVE_STDARG_H)
-void gen_send(FILE *sockfp, char *fmt, ... )
+void gen_send(int sock, char *fmt, ... )
 /* assemble command in printf(3) style and send to the server */
 #else
-void gen_send(sockfp, fmt, va_alist)
+void gen_send(sock, fmt, va_alist)
 /* assemble command in printf(3) style and send to the server */
-FILE *sockfp;		/* socket to which server is connected */
+int sock;		/* socket to which server is connected */
 const char *fmt;	/* printf-style format */
 va_dcl
 #endif
@@ -1612,7 +1610,7 @@ va_dcl
     va_end(ap);
 
     strcat(buf, "\r\n");
-    SockWrite(buf, 1, strlen(buf), sockfp);
+    SockWrite(sock, buf, strlen(buf));
 
     if (outlevel == O_VERBOSE)
     {
@@ -1633,13 +1631,13 @@ va_dcl
     }
 }
 
-int gen_recv(sockfp, buf, size)
+int gen_recv(sock, buf, size)
 /* get one line of input from the server */
-FILE *sockfp;	/* socket to which server is connected */
+int sock;	/* socket to which server is connected */
 char *buf;	/* buffer to receive input */
 int size;	/* length of buffer */
 {
-    if (!SockGets(buf, size, sockfp))
+    if (SockRead(sock, buf, size) == -1)
 	return(PS_SOCKET);
     else
     {
@@ -1654,12 +1652,12 @@ int size;	/* length of buffer */
 }
 
 #if defined(HAVE_STDARG_H)
-int gen_transact(FILE *sockfp, char *fmt, ... )
+int gen_transact(int sock, char *fmt, ... )
 /* assemble command in printf(3) style, send to server, accept a response */
 #else
-int gen_transact(sockfp, fmt, va_alist)
+int gen_transact(int sock, fmt, va_alist)
 /* assemble command in printf(3) style, send to server, accept a response */
-FILE *sockfp;		/* socket to which server is connected */
+int sock;		/* socket to which server is connected */
 const char *fmt;	/* printf-style format */
 va_dcl
 #endif
@@ -1682,7 +1680,7 @@ va_dcl
     va_end(ap);
 
     strcat(buf, "\r\n");
-    SockWrite(buf, 1, strlen(buf), sockfp);
+    SockWrite(sock, buf, strlen(buf));
 
     if (outlevel == O_VERBOSE)
     {
@@ -1703,7 +1701,7 @@ va_dcl
     }
 
     /* we presume this does its own response echoing */
-    ok = (protocol->parse_response)(sockfp, buf);
+    ok = (protocol->parse_response)(sock, buf);
     set_timeout(mytimeout);
 
     return(ok);

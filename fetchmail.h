@@ -126,7 +126,7 @@ struct query
     int active;
     int errcount;		/* count transient errors in last pass */
     struct query *next;		/* next query control block in chain */
-    FILE *smtp_sockfp;		/* socket descriptor for SMTP connection */
+    int smtp_socket;		/* socket descriptor for SMTP connection */
     unsigned int uid;		/* UID of user to deliver to */
     char digest [DIGESTLEN];	/* md5 digest buffer */
 };
@@ -189,9 +189,9 @@ void error_init(int foreground);
 void error (int status, int errnum, const char *format, ...);
 void error_build (const char *format, ...);
 void error_complete (int status, int errnum, const char *format, ...);
-void gen_send (FILE *sockfp, char *, ... );
-int gen_recv(FILE *sockfp, char *buf, int size);
-int gen_transact (FILE *sockfp, char *, ... );
+void gen_send (int sock, char *, ... );
+int gen_recv(int sock, char *buf, int size);
+int gen_transact (int sock, char *, ... );
 #else
 void error ();
 void error_build ();

@@ -25,14 +25,14 @@ extern char *strstr();	/* needed on sysV68 R3V7.1. */
 
 static int last;
 
-int pop3_ok (FILE *sockfp, char *argbuf)
+int pop3_ok (int sock, char *argbuf)
 /* parse command response */
 {
     int ok;
     char buf [POPBUFSIZE+1];
     char *bufp;
 
-    if ((ok = gen_recv(sockfp, buf, sizeof(buf))) == 0)
+    if ((ok = gen_recv(sock, buf, sizeof(buf))) == 0)
     {
 	bufp = buf;
 	if (*bufp == '+' || *bufp == '-')
@@ -58,7 +58,7 @@ int pop3_ok (FILE *sockfp, char *argbuf)
     return(ok);
 }
 
-int pop3_getauth(FILE *sockfp, struct query *ctl, char *greeting)
+int pop3_getauth(int sock, struct query *ctl, char *greeting)
 /* apply for connection authorization */
 {
     /* build MD5 digest from greeting timestamp + password */
@@ -96,24 +96,24 @@ int pop3_getauth(FILE *sockfp, struct query *ctl, char *greeting)
 
     switch (ctl->server.protocol) {
     case P_POP3:
-	if ((gen_transact(sockfp, "USER %s", ctl->remotename)) != 0)
+	if ((gen_transact(sock, "USER %s", ctl->remotename)) != 0)
 	    PROTOCOL_ERROR
 
-	if ((gen_transact(sockfp, "PASS %s", ctl->password)) != 0)
+	if ((gen_transact(sock, "PASS %s", ctl->password)) != 0)
 	    PROTOCOL_ERROR
 	break;
 
     case P_APOP:
-	if ((gen_transact(sockfp, "APOP %s %s",
+	if ((gen_transact(sock, "APOP %s %s",
 			  ctl->remotename, ctl->digest)) != 0)
 	    PROTOCOL_ERROR
 	break;
 
     case P_RPOP:
-	if ((gen_transact(sockfp,"USER %s", ctl->remotename)) != 0)
+	if ((gen_transact(sock,"USER %s", ctl->remotename)) != 0)
 	    PROTOCOL_ERROR
 
-	if ((gen_transact(sockfp, "RPOP %s", ctl->password)) != 0)
+	if ((gen_transact(sock, "RPOP %s", ctl->password)) != 0)
 	    PROTOCOL_ERROR
 	break;
 
@@ -125,7 +125,7 @@ int pop3_getauth(FILE *sockfp, struct query *ctl, char *greeting)
     return(0);
 }
 
-static int pop3_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
+static int pop3_getrange(int sock, struct query *ctl, int*countp, int*newp)
 /* get range of messages to be fetched */
 {
     int ok;
@@ -135,8 +135,8 @@ static int pop3_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
     ctl->newsaved = (struct idlist *)NULL;
 
     /* get the total message count */
-    gen_send(sockfp, "STAT");
-    ok = pop3_ok(sockfp, buf);
+    gen_send(sock, "STAT");
+    ok = pop3_ok(sock, buf);
     if (ok == 0)
 	sscanf(buf,"%d %*d", countp);
     else
@@ -154,8 +154,8 @@ static int pop3_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
 	char id [IDLEN+1];
 
 	if (!ctl->server.uidl) {
-	    gen_send(sockfp,"LAST");
-	    ok = pop3_ok(sockfp, buf);
+	    gen_send(sock, "LAST");
+	    ok = pop3_ok(sock, buf);
 	} else
 	    ok = 1;
 	if (ok == 0)
@@ -167,14 +167,14 @@ static int pop3_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
  	else
  	{
  	    /* grab the mailbox's UID list */
- 	    if ((ok = gen_transact(sockfp, "UIDL")) != 0)
+ 	    if ((ok = gen_transact(sock, "UIDL")) != 0)
 		PROTOCOL_ERROR
 	    else
 	    {
 		int	num;
 
 		*newp = 0;
- 		while ((ok = gen_recv(sockfp, buf, sizeof(buf))) == 0)
+ 		while ((ok = gen_recv(sock, buf, sizeof(buf))) == 0)
 		{
  		    if (buf[0] == '.')
  			break;
@@ -194,18 +194,18 @@ static int pop3_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
     return(0);
 }
 
-static int pop3_getsizes(FILE *sockfp, int count, int *sizes)
+static int pop3_getsizes(int sock, int count, int *sizes)
 /* capture the sizes of all messages */
 {
     int	ok;
 
-    if ((ok = gen_transact(sockfp, "LIST")) != 0)
+    if ((ok = gen_transact(sock, "LIST")) != 0)
 	return(ok);
     else
     {
 	char buf [POPBUFSIZE+1];
 
-	while ((ok = gen_recv(sockfp, buf, sizeof(buf))) == 0)
+	while ((ok = gen_recv(sock, buf, sizeof(buf))) == 0)
 	{
 	    int num, size;
 
@@ -221,7 +221,7 @@ static int pop3_getsizes(FILE *sockfp, int count, int *sizes)
     }
 }
 
-static int pop3_is_old(FILE *sockfp, struct query *ctl, int num)
+static int pop3_is_old(int sock, struct query *ctl, int num)
 /* is the given message old? */
 {
     if (!ctl->oldsaved)
@@ -232,14 +232,14 @@ static int pop3_is_old(FILE *sockfp, struct query *ctl, int num)
 			    str_find (&ctl->newsaved, num)));
 }
 
-static int pop3_fetch(FILE *sockfp, struct query *ctl, int number, int *lenp)
+static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
 /* request nth message */
 {
     int ok;
     char buf [POPBUFSIZE+1], *cp;
 
-    gen_send(sockfp, "RETR %d", number);
-    if ((ok = pop3_ok(sockfp, buf)) != 0)
+    gen_send(sock, "RETR %d", number);
+    if ((ok = pop3_ok(sock, buf)) != 0)
 	return(ok);
     /* look for "nnn octets" -- there may or may not be preceding cruft */
     if ((cp = strstr(buf, " octets")) == (char *)NULL)
@@ -253,10 +253,10 @@ static int pop3_fetch(FILE *sockfp, struct query *ctl, int number, int *lenp)
     return(0);
 }
 
-static int pop3_delete(FILE *sockfp, struct query *ctl, int number)
+static int pop3_delete(int sock, struct query *ctl, int number)
 /* delete a given message */
 {
-    return(gen_transact(sockfp, "DELE %d", number));
+    return(gen_transact(sock, "DELE %d", number));
 }
 
 const static struct method pop3 =

@@ -38,7 +38,7 @@
 #include <memory.h>
 #endif
 
-FILE *SockOpen(char *host, int clientPort)
+int SockOpen(char *host, int clientPort)
 {
     int sock;
     unsigned long inaddr;
@@ -55,30 +55,30 @@ FILE *SockOpen(char *host, int clientPort)
     {
         hp = gethostbyname(host);
         if (hp == NULL)
-            return (FILE *)NULL;
+            return -1;
         memcpy(&ad.sin_addr, hp->h_addr, hp->h_length);
     }
     ad.sin_port = htons(clientPort);
     
     sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0)
-        return (FILE *)NULL;
+        return -1;
     if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) < 0)
     {
 	close(sock);
-        return (FILE *)NULL;
+        return -1;
     }
 
-    return fdopen(sock, "r+");
+    return(sock);
 }
 
 
 #if defined(HAVE_STDARG_H)
-int SockPrintf(FILE *sockfp, char* format, ...)
+int SockPrintf(int sock, char* format, ...)
 {
 #else
-int SockPrintf(sockfp,format,va_alist)
-FILE *sockfp;
+int SockPrintf(sock,format,va_alist)
+int sock;
 char *format;
 va_dcl {
 #endif
@@ -93,18 +93,17 @@ va_dcl {
 #endif
     vsprintf(buf, format, ap);
     va_end(ap);
-    return SockWrite(buf, 1, strlen(buf), sockfp);
+    return SockWrite(sock, buf, strlen(buf));
 
 }
 
-int SockWrite(char *buf, int size, int len, FILE *sockfp)
+int SockWrite(int sock, char *buf, int len)
 {
     int n, wrlen = 0;
 
-    len *= size;
     while (len)
     {
-        n = write(fileno(sockfp), buf, len);
+        n = write(sock, buf, len);
         if (n <= 0)
             return -1;
         len -= n;
@@ -114,40 +113,41 @@ int SockWrite(char *buf, int size, int len, FILE *sockfp)
     return wrlen;
 }
 
-char *SockGets(char *buf, int len, FILE *sockfp)
+int SockRead(int sock, char *buf, int len)
 {
     char *p, *bp = buf;
     int n;
 
     if (--len < 1)
-	return NULL;
+	return(-1);
     do {
 	/* return value of 0 is EOF, < 0 is error */
-	if ((n = recv(fileno(sockfp), bp, len, MSG_PEEK)) <= 0)
-	    return NULL;
+	if ((n = recv(sock, bp, len, MSG_PEEK)) <= 0)
+	    return(-1);
 	if ((p = memchr(bp, '\n', n)) != NULL)
 	{
-	    if (read(fileno(sockfp), bp, ++p - bp) == -1)
-		return NULL;
+	    if (read(sock, bp, ++p - bp) == -1)
+		return(-1);
 	    *p = '\0';
-	    return buf;
+	    return strlen(buf);
 	}
-	if ((n = read(fileno(sockfp), bp, n)) == -1)
-	    return NULL;
+	if ((n = read(sock, bp, n)) == -1)
+	    return(-1);
 	bp += n;
 	len -= n;
-    } while (len);
+    } while 
+	    (len);
     *bp = '\0';
-    return buf;
+    return strlen(buf);
 }
 
-int SockPeek(FILE *sockfp)
+int SockPeek(int sock)
 /* peek at the next socket character without actually reading it */
 {
     int n;
     char ch;
 
-    if ((n = recv(fileno(sockfp), &ch, 1, MSG_PEEK)) == -1)
+    if ((n = recv(sock, &ch, 1, MSG_PEEK)) == -1)
 	return -1;
     else
 	return(ch);
@@ -161,11 +161,11 @@ int SockPeek(FILE *sockfp)
  */
 main()
 {
-    FILE	*fp = SockOpen("localhost", 19);
+    int	 	sock = SockOpen("localhost", 19);
     char	buf[80];
 
-    while (SockGets(buf, sizeof(buf)-1, fp))
-	SockWrite(buf, 1, strlen(buf), stdout);
+    while (SockRead(sock, buf, sizeof(buf)-1))
+	SockWrite(1, buf, strlen(buf));
 }
 #endif /* MAIN */
 
