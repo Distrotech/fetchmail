@@ -1,14 +1,23 @@
 			Release Notes:
 
+fetchmail-1.9 ():
+
+* POP3 UID support really works now.  I make rude noises at the POP3 mavens
+  who forced us to this with RFC1725, but thank Al Longyear <longyear@sii.com>
+  for fixing and verifying my slightly buggy implemntation.
+
+* Kerberos support ditto.  Thanks to Chris Hanson <cph@martigny.mit.edu>
+  for this feature.
+
 fetchmail-1.8 (Fri Oct 11 15:08:10 EDT 1996):
 
 features --
 
 * Use kill(0, pid) to make lock handling a bit smarter (thanks to Johann
-  Vromans for the suggestion).
+  Vromans <JVromans@squirrel.nl> for the suggestion).
 
 * Arrange for timeout of client after 5 minutes if connection to server is 
-  dropped (thanks to Gaspar Sinai).
+  dropped (thanks to Gaspar Sinai <gsinai@gol.com>).
 
 * All pretensions to RPOP support have been dropped.  Yes, this is a feature,
   RPOP is very vulnerable to spoofing!  Use APOP instead.
@@ -88,7 +97,8 @@ bug fixes --
   the md5 files (leading to harmless install-time error messages).
 
 * Fix a bonehead coding error in pop3_delete() that was masked by the
-  Intel register architecture.  *blush*  Thanks to Jay Anderson.
+  Intel register architecture.  *blush*  Thanks to Jay Anderson
+  <anderson@optical.bms.com>.
 
 * Fix bug that prevented SMTP from being specified on the defaults line.
 
@@ -169,7 +179,8 @@ popclient-3.2 (Mon Sep 23 13:29:46 EDT 1996):
 
 * Ported to QNX (see the Makefile).
 
-* Add Michael Schwendt's code for improved sizeticker.
+* Add code by Michael Schwendt <3schwend@informatik.uni-hamburg.de> for
+  improved sizeticker.
 
 * Improved RFC822 parsing (thanks to Rob Funk).
 

@@ -9,7 +9,7 @@ fetchmail \- deliver mail fetched from a POP or IMAP server
 .I fetchmail
 is a batch mail-retrieval/forwarding utility intended to be used over
 on-demand TCP/IP links (such as SLIP or PPP connections).  It fetches
-mail from remote mail servers and forwards it to your local (client)
+mail from remote mailservers and forwards it to your local (client)
 machine's delivery system.  You can then handle the retrieved mail
 using normal mail user agents such as \fIelm\fR(1) or \fIMail\fR(1).
 The \fBfetchmail\fR utility can be run in a daemon mode to repeatedly
@@ -170,7 +170,7 @@ Normally,
 .I fetchmail
 edits RFC-822 address headers (To, From, Cc, Bcc, and Reply-To) in
 fetched mail so that any mail IDs local to the server are expanded to
-full addresses (@ and the mail server hostname are appended).  This enables 
+full addresses (@ and the mailserver hostname are appended).  This enables 
 replies on the client to get addressed correctly (otherwise your
 mailer might think they should be addressed to local users on the
 client machine).  This option disables the rewrite.
@@ -285,7 +285,7 @@ mode into a specified logfile (follow the option with the logfile name).
 The logfile is opened for append, so previous messages aren't deleted.
 This is primarily useful for debugging configurations.
 .SH RETRIEVAL FAILURE MODES
-The protocols \fIfetchmail\fR uses to talk to mail servers are next to
+The protocols \fIfetchmail\fR uses to talk to mailservers are next to
 bulletproof.  In normal operation forwarding to port 25, no message is
 ever deleted (or even marked for deletion) on the host until the SMTP
 listener on the client has acknowledged to \fIfetchmail\fRthat the
@@ -306,12 +306,12 @@ must treat all messages as new all the time.  POP2 is obsolete.
 .PP
 Under POP3, blame RFC1725.  That version of the POP3 protocol
 specification removed the LAST command, and some POP servers follow it
-(you can verify this by invoking \fIfetchmail -v\fR to the mail server
+(you can verify this by invoking \fIfetchmail -v\fR to the mailserver
 and watching the response to LAST early in the query).  The
 \fIfetchmail\fR code tries to compensate by using POP3's UID feature,
 storing the identifiers of messages seen in each session until the
 next session,in the \fI.fetchids\fR file.  But this doesn't track
-messages seen with other clients or read but not deleted directly with
+messages seen with other clients, or read but not deleted directly with
 a mailer on the host.  A better solution would be to switch to IMAP.
 .PP
 Another potential POP3 problem might be servers that insert messages
@@ -580,7 +580,14 @@ then changed to
 .I fetchmail
 to reflect both the presence of IMAP support and the symmetry with sendmail
 created by the new SMTP forwarding default.
-.PP
+.SH BACKWARD COMPATIBILITY
+If called through a link named `popclient', \fIfetchmail\fR will
+look in ~/.poprc for its run control file.  As long as the file does
+not use the removed \fBlimit\fR or \fBlocalfolder\fR options, this
+will often work.  (The new run control file syntax also has to be a
+little stricter about the order of options than the old, in order to
+support multiple user desriptions per server; thus you may have to
+rearrange things a bit.)
 .SH FILES
 .TP 5
 ~/.fetchmailrc
@@ -602,22 +609,12 @@ entry from your user ID.
 .SH BUGS AND KNOWN PROBLEMS
 Use of any of the supported protocols other than APOP or KPOP requires
 that the program send unencrypted passwords over the TCP/IP connection
-to the mail server.  This creates a risk that name/password pairs
+to the mailserver.  This creates a risk that name/password pairs
 might be snaffled with a packet sniffer or more sophisticated
 monitoring software.
 .PP
 Send comments, bug reports, gripes, and the like to Eric S. Raymond
 <esr@thyrsus.com>.
-.SH BACKWARD COMPATIBILITY
-This program used to be called `popclient' (the name was changed
-because it supports IMAP now and may well support more remote-fetch
-protocols such as DMSP in the future).  If called through a link named
-popclient, it will look in ~/.poprc for its run control file.  As
-long as the file does not use the removed \fBlimit\fR or \fBlocalfolder\fR
-options, this will often work.  (The new run control file syntax also has
-to be a little stricter about the order of options than the old,
-in order to support multiple user desriptions per server; you may have
-to rearrange things a bit.)
 .SH SEE ALSO
 elm(1), mail(1), sendmail(8), popd(8), imapd(8)
-RFC 937, RFC 1081, RFC 1082, RFC1176, RFC 1225, RFC 1460, RFC 1725, RFC1939.
+RFC 937, RFC 1081, RFC1176, RFC 1225, RFC 1460, RFC 1725, RFC1939.
