@@ -2,6 +2,10 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Julian Haight added support for arbitrary SMTP RCPT TO: control using:
+  --smtpname user@host.  Should be useful for sites running multiple virtual
+  domains without local users, such as a cyrus IMAP installation.
+* Julian Haight added hostaddr reporting in the "Received: from" clause.
 * NT material added to FAQ item O9.
 * Commented out the socket-shutdown code that was causing mystery hangs under
   Red Hat 6.2.  We can live with a socket leak (assuming it comes back) nmore

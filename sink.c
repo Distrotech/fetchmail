@@ -525,12 +525,14 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	for (idp = msg->recipients; idp; idp = idp->next)
 	    if (idp->val.status.mark == XMIT_ACCEPT)
 	    {
-		if (strchr(idp->id, '@'))
-		    fprintf(sinkfp,
-				"RCPT TO: %s\r\n", idp->id);
+	        if (ctl->smtpname)
+ 		    fprintf(sinkfp, "RCPT TO: %s\r\n", ctl->smtpname);
+		else if (strchr(idp->id, '@'))
+  		    fprintf(sinkfp,
+			    "RCPT TO: %s\r\n", idp->id);
 		else
 		    fprintf(sinkfp,
-				"RCPT TO: %s@%s\r\n", idp->id, ctl->destaddr);
+			    "RCPT TO: %s@%s\r\n", idp->id, ctl->destaddr);
 		*good_addresses = 0;
 	    }
 
@@ -768,13 +770,22 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	    {
 		if (strchr(idp->id, '@'))
 		    strcpy(addr, idp->id);
-		else
+		else {
+		    if (ctl->smtpname) {
 #ifdef HAVE_SNPRINTF
-		    snprintf(addr, sizeof(addr)-1, "%s@%s", idp->id, ctl->destaddr);
+		        snprintf(addr, sizeof(addr)-1, "%s", ctl->smtpname);
 #else
-		    sprintf(addr, "%s@%s", idp->id, ctl->destaddr);
+			sprintf(addr, "%s", ctl->smtpname);
 #endif /* HAVE_SNPRINTF */
 
+		    } else {
+#ifdef HAVE_SNPRINTF
+		      snprintf(addr, sizeof(addr)-1, "%s@%s", idp->id, ctl->destaddr);
+#else
+		      sprintf(addr, "%s@%s", idp->id, ctl->destaddr);
+#endif /* HAVE_SNPRINTF */
+		    }
+		}
 		if (SMTP_rcpt(ctl->smtp_socket, addr) == SM_OK)
 		    (*good_addresses)++;
 		else

@@ -319,6 +319,11 @@ Specify the domain to be put in RCPT TO lines shipped to SMTP. The
 name of the SMTP server (as specified by --smtphost, or defaulted to
 "localhost") is used when this is not specified.
 .TP
+.B --smtpname <user@domain>
+(Keyword: smtpname) 
+Specify the domain and user to be put in RCPT TO lines shipped to SMTP.
+The default user is the current local user.
+.TP
 .B \-Z <nnn>, --antispam <nnn[, nnn]...>
 (Keyword: antispam) 
 Specifies the list of numeric SMTP errors that are to be interpreted
@@ -1208,6 +1213,9 @@ Specify smtp host(s) to forward to
 T}
 smtpaddress	-D	T{
 Specify the domain to be put in RCPT TO lines
+T}
+smtpname		T{
+Specify the user and domain to be put in RCPT TO lines
 T}
 antispam	-Z	T{
 Specify what SMTP returns are interpreted as spam-policy blocks

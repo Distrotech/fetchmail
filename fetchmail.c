@@ -831,6 +831,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(bsmtp);
     FLAG_MERGE(listener);
     FLAG_MERGE(smtpaddress);
+    FLAG_MERGE(smtpname);
     FLAG_MERGE(preconnect);
     FLAG_MERGE(postconnect);
 
@@ -1143,8 +1144,40 @@ static int load_params(int argc, char **argv, int optind)
 		    ctl->server.truename=xstrdup((char *)namerec->h_name);
 	    }
 #endif /* HAVE_GETHOSTBYNAME */
-	    else
-		ctl->server.truename = xstrdup(ctl->server.queryname);
+	    else {
+#ifdef HAVE_GETHOSTBYNAME
+	      struct hostent	*namerec;
+
+	      /* <fetchmail@mail.julianhaight.com>
+		 Get the host's IP, so we can report it like this:
+
+		 Received: from hostname [10.0.0.1]
+
+		 do we actually need to gethostbyname to find the IP?
+		 it seems like it would be faster to do this later, when
+		 we are actually resolving the hostname for a connection,
+		 but I ain't that smart, so I don't know where to make
+		 the change later..
+	      */
+	      errno = 0;
+	      namerec = gethostbyname(ctl->server.queryname);
+	      if (namerec == (struct hostent *)NULL)
+		{
+		  report(stderr,
+			 _("couldn't find canonical DNS name of %s\n"),
+			 ctl->server.pollname);
+		  exit(PS_DNS);
+		}
+	      else {
+		ctl->server.truename=xstrdup((char *)namerec->h_name);
+		ctl->server.trueaddr=xmalloc(namerec->h_length);
+		memcpy(ctl->server.trueaddr, 
+		       namerec->h_addr_list[0],
+		       namerec->h_length);
+	      }
+#endif /* HAVE_GETHOSTBYNAME */
+	      ctl->server.truename = xstrdup(ctl->server.queryname);
+	    }
 
 	    /* if no folders were specified, set up the null one as default */
 	    if (!ctl->mailboxes)

@@ -987,7 +987,16 @@ static int readheaders(int sock,
     if (!run.invisible && n != -1)
     {
 	/* utter any per-message Received information we need here */
-	sprintf(buf, "Received: from %s\r\n", ctl->server.truename);
+        if (ctl->server.trueaddr) {
+	    sprintf(buf, "Received: from %s [%u.%u.%u.%u]\r\n", 
+		    ctl->server.truename,
+		    (unsigned char)ctl->server.trueaddr[0],
+		    (unsigned char)ctl->server.trueaddr[1],
+		    (unsigned char)ctl->server.trueaddr[2],
+		    (unsigned char)ctl->server.trueaddr[3]);
+	} else {
+	  sprintf(buf, "Received: from %s\r\n", ctl->server.truename);
+	}
 	n = stuffline(ctl, buf);
 	if (n != -1)
 	{

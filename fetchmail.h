@@ -222,6 +222,7 @@ struct hostdata		/* shared among all user connections to given server */
     int poll_count;			/* count of polls so far */
     char *queryname;			/* name to attempt DNS lookup on */
     char *truename;			/* "true name" of server host */
+    char *trueaddr;                     /* IP address of truename, as char */
     struct hostdata *lead_server;	/* ptr to lead query for this server */
     int esmtp_options;
 };
@@ -241,6 +242,7 @@ struct query
     /* per-forwarding-target data */
     struct idlist *smtphunt;	/* list of SMTP hosts to try forwarding to */
     char *smtpaddress;		/* address to force in RCPT TO */ 
+    char *smtpname;             /* full RCPT TO name, including domain */
     struct idlist *antispam;	/* list of listener's antispam response */
     char *mda;			/* local MDA to pass mail to */
     char *bsmtp;		/* BSMTP output file */

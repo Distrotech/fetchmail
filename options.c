@@ -70,11 +70,12 @@
 #define LA_MONITOR      46
 #define LA_CONFIGDUMP	47
 #define LA_YYDEBUG	48
+#define LA_SMTPNAME     49
 
 #ifdef SSL_ENABLE
-#define LA_SSL		49
-#define LA_SSLKEY	50
-#define LA_SSLCERT	51
+#define LA_SSL		50
+#define LA_SSLKEY	51
+#define LA_SSLCERT	52
 #endif
 
 /* options still left: CDgGhHjJoORwWxXYz */
@@ -123,6 +124,7 @@ static const struct option longoptions[] = {
   {"folder",	required_argument, (int *) 0, LA_FOLDER	     },
   {"smtphost",	required_argument, (int *) 0, LA_SMTPHOST    },
   {"smtpaddress", required_argument, (int *) 0, LA_SMTPADDR  },
+  {"smtpname",  required_argument, (int *) 0, LA_SMTPNAME    },
   {"antispam",	required_argument, (int *) 0, LA_ANTISPAM    },
   
   {"batchlimit",required_argument, (int *) 0, LA_BATCHLIMIT  },
@@ -467,6 +469,9 @@ struct query *ctl;	/* option record to be initialized */
 	case LA_SMTPADDR:
 	    ctl->smtpaddress = xstrdup(optarg);
 	    break;
+	case LA_SMTPNAME:
+	  ctl->smtpname = xstrdup(optarg);
+	  break;
 	case 'Z':
 	case LA_ANTISPAM:
 	    xalloca(buf, char *, strlen(optarg) + 1);
@@ -633,6 +638,7 @@ struct query *ctl;	/* option record to be initialized */
 #endif /* NET_SECURITY */
 	P(_("  -S, --smtphost    set SMTP forwarding host\n"));
 	P(_("  -D, --smtpaddress set SMTP delivery domain to use\n"));
+	P(_("      --smtpname    set SMTP full name username@domain\n"));
 	P(_("  -Z, --antispam,   set antispam response values\n"));
 	P(_("  -b, --batchlimit  set batch limit for SMTP connections\n"));
 	P(_("  -B, --fetchlimit  set fetch limit for server connections\n"));
