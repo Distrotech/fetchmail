@@ -3,7 +3,7 @@
 # If you're running QNX, we can't assume a working autoconf.
 # So just uncomment all the lines marked QNX.
 
-VERS=2.4
+VERS=2.5
 PL=0
 
 # Ultrix 2.2 make doesn't expand the value of VPATH.

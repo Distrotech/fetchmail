@@ -23,6 +23,8 @@ set		{ return SET; }
 batchlimit	{ return BATCHLIMIT; }
 fetchlimit	{ return FETCHLIMIT; }
 logfile		{ return LOGFILE; }
+interface	{ return INTERFACE; }
+monitor		{ return MONITOR; }
 defaults 	{ return DEFAULTS; }
 server 		{ return POLL; }
 poll		{ return POLL; }
