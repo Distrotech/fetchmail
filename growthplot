@@ -13,6 +13,12 @@ cat >/tmp/growthimage$$ <<EOF
 set title "Fetchmail project growth history"
 set xlabel 'Days since baseline'
 set ylabel 'Participants'
+set y2label 'Lines of code'
+set ytics nomirror
+set y2tics
+set tics out
+set autoscale  y
+set y2range [5000:50000]
 set key bottom right box
 set terminal gif
 
@@ -51,8 +57,8 @@ EOF
 (
 	while read version size friends announce total days date
 	do
-	    echo "set arrow from $days, $total - 80 to $days, $total - 30 head"
-	    echo "set label '$version' at $days - 5, $total - 90"
+	    echo "set arrow from $days, $total - 55 to $days, $total - 15 head"
+	    echo "set label '$version' at $days - 5, $total - 65"
 	done
 ) </tmp/growthmajors$$ >>/tmp/growthimage$$ 
 
@@ -62,7 +68,9 @@ plot [] [0:] '/tmp/growthnumbers$$' using 6:5 \
      '/tmp/growthannounce$$' using 6:4 \
 		title "fetchmail-announce" with points 4, \
      '/tmp/growthannounce$$' using 6:3 \
-		title "fetchmail-friends" with points 2
+		title "fetchmail-friends" with points 2, \
+     '/tmp/growthnumbers$$' using 6:2 axes x1y2 \
+		title "Lines of code" with points 6
 EOF
 
 # The gnuplot driver for PNG doesn't do color
