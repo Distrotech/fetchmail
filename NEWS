@@ -18,7 +18,7 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-3.9.8 ():
+pl 3.9.8 (Sat Jun 14 14:19:32 EDT 1997):
 * Fetchmail is now normally built with optimization.
 * POP2 support is no longer compiled by default, but you can configure
   it in with `configure --enable-POP2'.
