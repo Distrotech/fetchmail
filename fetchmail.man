@@ -2146,7 +2146,7 @@ temporarily discards any suid privileges it may have while running the
 MDA.  For maximum safety, however, don't use an mda command containing
 %F or %T when fetchmail is run from the root account itself.
 .PP
-Fetchmail's method of sending bouncemail and spambounce requires that
+Fetchmail's method of sending bouncemail and spam bounces requires that
 port 25 of localhost be available for sending mail via SMTP.
 .PP
 If you modify a
@@ -2154,10 +2154,6 @@ If you modify a
 while a background instance is running and break the syntax, the
 background instance will die silently.  Unfortunately, it can't 
 die noisily because we don't yet know whether syslog should be enabled.
-.PP
-The RFC 2177 IDLE support is flaky.  It sort of works, but may generate
-spurious socket error messages or silently hang in the presence of
-various network or server errors.
 .PP
 The -f - option (reading a configuration from stdin) is incompatible
 with the plugin option.
