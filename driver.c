@@ -110,6 +110,9 @@ static int is_host_alias(const char *name, struct query *ctl)
     struct hostent	*he;
     struct mxentry	*mxp, *mxrecords;
 
+    struct hostdata *lead_server = 
+	ctl->server.lead_server ? ctl->server.lead_server : &ctl->server;
+
     /*
      * The first two checks are optimizations that will catch a good
      * many cases.  (1) check against the hostname the user
@@ -126,7 +129,7 @@ static int is_host_alias(const char *name, struct query *ctl)
      * name doesn't match either is it time to call the bind library.
      * If this happens odds are good we're looking at an MX name.
      */
-    if (str_in_list(&ctl->server.lead_server->names, name))
+    if (str_in_list(&lead_server->names, name))
 	return(TRUE);
     else if (strcmp(name, ctl->server.canonical_name) == 0)
 	return(TRUE);
@@ -200,7 +203,7 @@ static int is_host_alias(const char *name, struct query *ctl)
     }
 
     /* add this name to relevant server's `also known as' list */
-    save_str(&ctl->server.lead_server->names, -1, name);
+    save_str(&lead_server->names, -1, name);
     return(TRUE);
 }
 
