@@ -189,7 +189,7 @@ The paper became quite popular and (to my continuing astonishment) may
 have actually helped change the world.  Chase the title link, above,
 to its page.<P>
 
-<H1>Recent releases and where fetchmail is going:</H2>
+<H1>Recent releases and where fetchmail is going:</H1>
 
 Fetchmail is now sufficiently stable and effective that I'm getting
 very little pressure to fix things or add features.  Development has
