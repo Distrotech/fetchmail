@@ -43,6 +43,8 @@
   unreadable. Use Trio where [v]snprintf is/are missing. Matthias Andree.
 * Default to Linux 2.2 /proc/net/dev format, and use uname(2) to determine the
   kernel version instead of calling uname(1). Thanks to Paul Slootman.
+* Be more careful when swapping UID lists or writing the .fetchids file,
+  requested by Manfred Weihs.
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
