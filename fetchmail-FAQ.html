@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/10/06 20:34:27 $
+<td width="30%" align=right>$Date: 1997/10/16 14:51:46 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -33,6 +33,8 @@ mail it to fetchmail's maintainer, Eric S. Raymond, at
 <a href="#G6">G6. So, what's this I hear about a fetchmail paper?</a><br>
 <a href="#G7">G7. What is the best server to use with fetchmail?</a><br>
 <a href="#G8">G8. How can I avoid sending my password en clair?</a><br>
+<a href="#G9">G9. Is any special configuration needed to use a dynamic
+IP address?</a><br>
 
 <h1>Build-time problems:</h1>
 
@@ -352,6 +354,27 @@ will not be sent en clair.<P>
 
 Sadly, there is at present (October 1997) no OTP or APOP-like facility
 generally available on IMAP servers.<P>
+
+<hr>
+<h2><a name="G9">G9. Is any special configuration needed to use a dynamic IP address?</a><h2>
+
+No.  Fetchmail itself doesn't care whether the IP address you use is
+static (fixed) or dynamic (varying, allocated at connection time by
+your ISP from an address pool).  In fact, fetchmail normally doesn't
+use your address explicitly at all; it only cares that you have a
+working gateway.<P>
+
+Only one fetchmail option interacts with your IP address at all,
+`<code>interface</code>'.  This option can be used to set the gateway
+device and restrict the IP address range fetchmail will use. Such a
+restriction is sometimes useful for security reasons, especially on
+multihomed sites.  See <a href="http:#C3">C3</a>.<P>
+
+I recommend against trying to set up the <code>interface</code> option
+when initially developing your poll configuration -- it's never
+necessary to do this just to get a link working.  Get the link working
+first, observe the actual address range you see on connections, and
+add an <code>interface</code> option (if you need one) later.<P>
 
 <hr>
 <h2><a name="B1">B1. I get link failures when I try to build fetchmail.</a></h2>
@@ -1589,7 +1612,7 @@ will look right.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/10/06 20:34:27 $
+<td width="30%" align=right>$Date: 1997/10/16 14:51:46 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
