@@ -12,6 +12,9 @@ bugs --
 
 * Correction to length-extraction code for servers that return (nnn octets).
 
+* Correction to RF822 continuation code so it doesn't eat leading blank-led
+  lines in the text.
+
 There are 211 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------

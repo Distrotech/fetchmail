@@ -444,6 +444,8 @@ char *realname;		/* real name of host */
 	    /* leave extra room for reply_hack to play with */
 	    line = realloc(line, strlen(line) + strlen(buf) + HOSTLEN + 1);
 	    strcat(line, buf);
+	    if (line[0] == '\r' && line[1] == '\n')
+		break;
 	} while
 	    /* we may need to grab RFC822 continuations */
 	    ((ch = SockPeek(sockfp)) == ' ' || ch == '\t');
