@@ -32,6 +32,10 @@ would just be all-around pleasing aesthetically.
 fetchmail-4.3.4 (Sat Nov 22 01:51:41 EST 1997)
 * Yet another attempt on the Compuserve RPA moving target.
 * Fix ETRN code to poll for the fetchmail host if there's no -S option.
+* Allow `--quit' to be given with other options to shut down a running daemon
+  before anything else gets done (suggested by Greg Stark).
+
+There are 277 people on fetchmail-friends and 92 on fetchmail-announce.
 
 fetchmail-4.3.3 (Sat Nov 22 01:51:41 EST 1997)
 * Robert Hardy <rhardy@webcon.net>'s patch to use IMAP EXAMINE in check mode. 

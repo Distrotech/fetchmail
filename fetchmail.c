@@ -142,7 +142,7 @@ int main (int argc, char **argv)
     }
 
     /* avoid parsing the config file if all we're doing is killing a daemon */ 
-    if (!quitmode)
+    if (!quitmode && argc == 2)
 	implicitmode = load_params(argc, argv, optind);
 
     /* set up to do lock protocol */
@@ -205,7 +205,7 @@ int main (int argc, char **argv)
     }
 
     /* if no mail servers listed and nothing in background, we're done */
-    if (!quitmode && pid == -1 && querylist == NULL) {
+    if (!(quitmode && argc == 2) && pid == -1 && querylist == NULL) {
 	(void)fputs("fetchmail: no mailservers have been specified.\n",stderr);
 	exit(PS_SYNTAX);
     }
@@ -216,11 +216,12 @@ int main (int argc, char **argv)
 	if (pid == -1) 
 	{
 	    fprintf(stderr,"fetchmail: no other fetchmail is running\n");
-	    exit(PS_EXCLUDE);
+	    if (argc == 2)
+		exit(PS_EXCLUDE);
 	}
 	else if (kill(pid, SIGTERM) < 0)
 	{
-	    fprintf(stderr,"fetchmail: error killing %s fetchmail at %d.\n",
+	    fprintf(stderr,"fetchmail: error killing %s fetchmail at %d; bailing out.\n",
 		    bkgd ? "background" : "foreground", pid);
 	    exit(PS_EXCLUDE);
 	}
@@ -229,7 +230,10 @@ int main (int argc, char **argv)
 	    fprintf(stderr,"fetchmail: %s fetchmail at %d killed.\n",
 		    bkgd ? "background" : "foreground", pid);
 	    unlink(lockfile);
-	    exit(0);
+	    if (argc == 2)
+		exit(0);
+	    else
+		pid = -1; 
 	}
     }
 

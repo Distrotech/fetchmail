@@ -528,24 +528,37 @@ option --daemon 0 or -d0.
 .PP
 Only one daemon process is permitted per user; in daemon mode,
 .I fetchmail
-makes a per-user lockfile to guarantee this.  The option
+makes a per-user lockfile to guarantee this.
+.PP
+Normally, calling fetchmail with a daemon in the background sends a
+wakeup signal to the daemon, forcing it to poll mailservers
+immediately.  (The wakeup signal is SIGHUP if fetchmail is running as
+root, SIGUSR1 otherwise.)
+.PP
+The option
 .B --quit
-will kill a running daemon process.  Otherwise, calling fetchmail with
-a daemon in the background sends a wakeup signal to the daemon,
-forcing it to poll mailservers immediately.  (The wakeup signal is
-SIGHUP if fetchmail is running as root, SIGUSR1 otherwise.)
+will kill a running daemon process instead of waking it up (if there
+is no such option, 
+.I fetchmail
+notifies you).  If the --quit option is the only command-line option,
+that's all there is to it.
+.PP
+The quit option may also be mixed with other command-line options; its
+effect is to kill any running daemon before doing what the other
+options specify in combination with the rc file.
 .PP
 The 
 .B -t
 or
 .B --timeout
-option (keyword: timeout)allows you to set a server-nonresponse
+option (keyword: timeout) allows you to set a server-nonresponse
 timeout in seconds.  If a mailserver does not send a greeting message
 or respond to commands for the given number of seconds,
 \fIfetchmail\fR will hang up on it.  Without such a timeout
 \fIfetchmail\fR might hang up indefinitely trying to fetch mail from a
 down host.  This would be particularly annoying for a \fIfetchmail\fR
-running in background.
+running in background.  There is a default timeout which fetchmail -V
+will report.
 .PP
 The
 .B -L
