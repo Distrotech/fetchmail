@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/02/18 03:49:20 $
+<td width="30%" align=right>$Date: 2000/02/24 05:57:57 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1340,9 +1340,41 @@ in KB Q168109)
 The Microsoft pod-person who revealed this information to me admitted
 that he couldn't find it anywhere in their public knowledge base.<P>
 
-You can mess with these bits.  Or, better yet, you can lose that
-brain-dead Microsoft crap and install a real operating system on your
-mailserver.<P>
+Another specific problem we have seen with Exchange servers has as its
+symptom a response to LOGIN that says "NO Ambiguous Alias".  Grant
+Edwards writes:
+
+This means that Exchange Server is too f*&#ing stupid to figure
+out which mailbox belongs to you.  Instead of actually keeping
+track of which inbox belongs to which user, it uses some
+half-witted, guess-o-matic heuristic to try to guess your
+mailbox name from your username.<p>
+
+In your case it doesn't work because your username maps to more
+than one mailbox.  For some people it doesn't work because
+their username maps to zero mailboxes.  This is yet another
+inept, lame, almost criminally negligent design decision from
+our friends in Redmond.<p>
+
+You've got several options:
+
+<ul>
+<li>
+Try giving fetchmail a username of "/NTDomain/NTUsername/MailboxName".
+<li>
+Get your administrator to configure the server so that
+usernames and mailbox names are the same.
+<li>
+Get your administrator to add an alias that maps your
+username explicitly to your mailbox name.
+</ul>
+
+But, the best option involves a tactical nuclear weapon (an old
+ASROC will do), pissing off a lot people who live downwind from
+Redmond, and your choice of any Linux, NetBSD, FreeBSD, or
+Solaris CD.<p>
+
+I'll provide the CD.
 
 <hr>
 <h2><a name="S3">S3. How can I use fetchmail with CompuServe RPA?</a></h2>
@@ -1665,7 +1697,7 @@ man page for several authentication methods.)<p>
 
 <pre>
 poll mailhost port 1234 via localhost with proto pop3:
-        preconnect "ssh -f -L 1234:mailhost:110 mailhost sleep 20
+        preconnect "ssh -f -L 1234:mailhost:110 mailhost
         &lt;/dev/null &gt;/dev/null; sleep 5";
 </pre>
 
@@ -2622,7 +2654,7 @@ terminate it.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/02/18 03:49:20 $
+<td width="30%" align=right>$Date: 2000/02/24 05:57:57 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
