@@ -48,7 +48,7 @@ const char *host;	/* server hostname */
 	else if (*from == ')')
 	    --parendepth;
 
-	if (!parendepth)
+	if (!parendepth && !has_host_part)
 	    switch (state)
 	    {
 	    case 0:   /* before header colon */
@@ -65,8 +65,10 @@ const char *host;	/* server hostname */
 		{
 		    while (isspace(*from))
 			--from;
+		    from++;
 		    while (isspace(*buf))
 			--buf;
+		    buf++;
 		    strcpy(buf, "@");
 		    strcat(buf, host);
 		    buf += strlen(buf);
