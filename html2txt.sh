@@ -40,7 +40,7 @@ tmp="html2txt.$$.html"
 trap "rm -f \"$tmp\"" 0 1 2 3 15
 ${AWK:=awk} '/<table .*summary="Canned/ { i=1; }
      /<\/table>/ { i=0; }
-     { if (i == 0) print $0; }' "$inp" >"$tmp" <&-
+     { if (i == 0) print $0; }' "$inp" >"$tmp"
 
 # and go!
 echo "  (This file was generated from $inp)"
