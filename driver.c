@@ -438,7 +438,7 @@ char *realname;		/* real name of host */
     char buf [MSGBUFSIZE+1]; 
     int	from_offs, to_offs, cc_offs, bcc_offs, ctt_offs, env_offs;
     char *headers, *received_for, *return_path;
-    int n, oldlen, ch, sizeticker, delete_ok, remaining;
+    int n, linelen, oldlen, ch, sizeticker, delete_ok, remaining;
     FILE *sinkfp;
     RETSIGTYPE (*sigchld)();
 #ifdef HAVE_GETHOSTBYNAME
@@ -466,10 +466,12 @@ char *realname;		/* real name of host */
 	char *line;
 
 	line = xmalloc(sizeof(buf));
+	linelen = 0;
 	line[0] = '\0';
 	do {
-	    if (SockRead(sock, buf, sizeof(buf)-1) == -1)
+	    if ((n = SockRead(sock, buf, sizeof(buf)-1)) == -1)
 		return(PS_SOCKET);
+	    linelen += n;
 
 	    /* lines may not be properly CRLF terminated; fix this for qmail */
 	    if (ctl->forcecr)
@@ -494,17 +496,17 @@ char *realname;		/* real name of host */
 	    ((ch = SockPeek(sock)) == ' ' || ch == '\t');
 
 	/* write the message size dots */
-	n = strlen(line);
-	if ((outlevel > O_SILENT && outlevel < O_VERBOSE) && n > 0)
+	if ((outlevel > O_SILENT && outlevel < O_VERBOSE) && linelen > 0)
 	{
-	    sizeticker += n;
+	    sizeticker += linelen;
 	    while (sizeticker >= SIZETICKER)
 	    {
 		error_build(".");
 		sizeticker -= SIZETICKER;
 	    }
 	}
-	remaining -= n;
+
+	remaining -= linelen;
 
 	/* check for end of headers; don't save terminating line */
 	if (line[0] == '\r' && line[1] == '\n')
@@ -1009,14 +1011,14 @@ char *realname;		/* real name of host */
     /* pass through the text lines */
     while (delimited || remaining > 0)
     {
-	if (SockRead(sock, buf, sizeof(buf)-1) == -1)
+	if ((linelen = SockRead(sock, buf, sizeof(buf)-1)) == -1)
 	    return(PS_SOCKET);
 	set_timeout(ctl->server.timeout);
 
 	/* write the message size dots */
-	if ((n = strlen(buf)) > 0)
+	if (linelen > 0)
 	{
-	    sizeticker += n;
+	    sizeticker += linelen;
 	    while (sizeticker >= SIZETICKER)
 	    {
 		if (outlevel > O_SILENT)
@@ -1024,7 +1026,7 @@ char *realname;		/* real name of host */
 		sizeticker -= SIZETICKER;
 	    }
 	}
-	remaining -= n;
+	remaining -= linelen;
 
 	/* fix messages that have only \n line-termination (for qmail) */
 	if (ctl->forcecr)
