@@ -448,10 +448,59 @@ int smtp_open(struct query *ctl)
     return(ctl->smtp_socket);
 }
 
-/* these are shared by readheaders and readbody */
+/* these are shared by stuffline, readheaders and readbody */
 static FILE *sinkfp;
 static RETSIGTYPE (*sigchld)();
 static int sizeticker;
+
+static int stuffline(struct query *ctl, char *buf, flag delimited)
+/* ship a line to the given control block's SMTP server */
+{
+    int	n;
+
+    /* fix message lines that have only \n termination (for qmail) */
+    if (ctl->forcecr)
+    {
+	char	*cp = buf + strlen(buf) - 1;
+
+	if (*cp == '\n' && (cp == buf || cp[-1] != '\r'))
+	{
+	    *cp++ = '\r';
+	    *cp++ = '\n';
+	    *cp++ = '\0';
+	}
+    }
+
+    /*
+     * SMTP byte-stuffing.  We only do this if the protocol does *not*
+     * use .<CR><LF> as EOM.  If it does, the server will already have
+     * decorated any . lines it sends back up.
+     */
+    if (!delimited && *buf == '.')
+	if (sinkfp && ctl->mda)
+	    fputs(".", sinkfp);
+	else if (ctl->smtp_socket != -1)
+	    SockWrite(ctl->smtp_socket, buf, 1);
+
+    /* we may need to strip carriage returns */
+    if (ctl->stripcr)
+    {
+	char	*sp, *tp;
+
+	for (sp = tp = buf; *sp; sp++)
+	    if (*sp != '\r')
+		*tp++ =  *sp;
+	*tp = '\0';
+    }
+
+    n = 0;
+    if (ctl->mda)
+	n = fwrite(buf, 1, strlen(buf), sinkfp);
+    else if (ctl->smtp_socket != -1)
+	n = SockWrite(ctl->smtp_socket, buf, strlen(buf));
+
+    return(n);
+}
 
 static int readheaders(sock, len, ctl, realname)
 /* read message headers and ship to SMTP or MDA */
@@ -1047,44 +1096,19 @@ char *realname;		/* real name of host */
 
 	}
 
-	if (ctl->mda && !ctl->forcecr)
-	    strcat(errmsg, "\n");
-	else
-	    strcat(errmsg, "\r\n");
-
-	/* we may need to strip carriage returns */
-	if (ctl->stripcr)
-	{
-	    char	*sp, *tp;
-
-	    for (sp = tp = errmsg; *sp; sp++)
-		if (*sp != '\r')
-		    *tp++ =  *sp;
-	    *tp = '\0';
-	}
-
 	/* ship out the error line */
 	if (sinkfp)
-	{
-	    if (ctl->mda)
-		fwrite(errmsg, sizeof(char), strlen(errmsg), sinkfp);
-	    else
-		SockWrite(ctl->smtp_socket, errmsg, strlen(errmsg));
-	}
+	    stuffline(ctl, errmsg, protocol->delimited);
     }
 
     free_str_list(&xmit_names);
 
     /* issue the delimiter line */
-    if (sinkfp && ctl->mda)
-	fputc('\n', sinkfp);
-    else if (ctl->smtp_socket != -1)
-    {
-	if (ctl->stripcr)
-	    SockWrite(ctl->smtp_socket, "\n", 1);
-	else
-	    SockWrite(ctl->smtp_socket, "\r\n", 2);
-    }
+    cp = buf;
+    *cp++ = '\r';
+    *cp++ = '\n';
+    *cp++ = '\0';
+    stuffline(ctl, buf, protocol->delimited);
 
     return(PS_SUCCESS);
 }
@@ -1120,55 +1144,17 @@ flag delimited;		/* does the protocol use a message delimiter? */
 	}
 	len -= linelen;
 
-	/* fix messages that have only \n line-termination (for qmail) */
-	if (ctl->forcecr)
-	{
-	    cp = buf + strlen(buf) - 1;
-	    if (*cp == '\n' && (cp == buf || cp[-1] != '\r'))
-	    {
-		*cp++ = '\r';
-		*cp++ = '\n';
-		*cp++ = '\0';
-	    }
-	}
-
 	/* check for end of message */
 	if (delimited && *buf == '.')
-	    if (buf[1] == '\r' && buf[2] == '\n')
+	    if (buf[1] == '\r' && buf[2] == '\n' && buf[3] == '\0')
+		break;
+	    else if (buf[1] == '\n' && buf[2] == '\0')
 		break;
 
 	/* ship out the text line */
 	if (forward)
 	{
-	    int	n;
-
-	    /*
-	     * SMTP byte-stuffing.  We only do this if the protocol does *not*
-	     * use .<CR><LF> as EOM.  If it does, the server will already have
-	     * decorated any . lines it sends back up.
-	     */
-	    if (!delimited && *buf == '.')
-		if (sinkfp && ctl->mda)
-		    fputs(".", sinkfp);
-		else if (ctl->smtp_socket != -1)
-		    SockWrite(ctl->smtp_socket, buf, 1);
-
-	    /* we may need to strip carriage returns */
-	    if (ctl->stripcr)
-	    {
-		char	*sp, *tp;
-
-		for (sp = tp = buf; *sp; sp++)
-		    if (*sp != '\r')
-			*tp++ =  *sp;
-		*tp = '\0';
-	    }
-
-	    n = 0;
-	    if (ctl->mda)
-		n = fwrite(buf, 1, strlen(buf), sinkfp);
-	    else if (ctl->smtp_socket != -1)
-		n = SockWrite(ctl->smtp_socket, buf, strlen(buf));
+	    int	n = stuffline(ctl, buf, delimited);
 
 	    if (n < 0)
 	    {
