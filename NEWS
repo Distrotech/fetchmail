@@ -1,5 +1,12 @@
 				Release Notes:
 
+4.7.0 ():
+* Peter Hamlen's fix for bounce-message generation.
+
+Feature freeze is in effect!
+
+There are 247 people on fetchmail-friends and 309 on fetchmail-announce.
+
 fetchmail-4.6.9 ():
 * Better RFC822 conformance in fetchmail trace headers.
 * Corrected MIME generation of bounce mail.
