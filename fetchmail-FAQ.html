@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/10/26 18:18:05 $
+<td width="30%" align=right>$Date: 1999/10/31 17:17:42 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -444,9 +444,10 @@ OTP, you will specify a password but it will not be sent en clair.<P>
 Sadly, there is at present (September 1999) no OTP or APOP-like
 facility generally available on IMAP servers.  However, there do exist
 patches which will OTP-enable the University of Washington IMAP
-daemon, version 4.2-FINAL.  And we have a report that the GSSAPI
-support in fetchmail works with the GSSAPI support in the most recent
-version of UW IMAP.<P>
+daemon, version 4.2-FINAL.  We have a report that the GSSAPI support
+in fetchmail works with the GSSAPI support in the most recent version
+of UW IMAP.  Or you can use <a href="#K5">SSL</a> for complete
+end-to-end encryption if you have an SSL-enabled mailserver.<P>
 
 You can get both POP3 and IMAP OTP patches from <a name="cmetz">Craig
 Metz</A>, over FTP via either
@@ -1692,51 +1693,17 @@ your .fetchmailrc, or across the network.<p>
 <hr>
 <h2><a name="K5">K5. How can I use fetchmail with SSL?</a></h2>
 
-The U.S. government's never-to-be-sufficiently-damned EAR regulations
-prevent me from including SSL library hooks in the distribution.
-However, the First Amendment of the U.S. Constitution hasn't been
-eviscerated (not yet, anyway -- our would-be totalitarians are
-working on trashing the Second Amendment first).<P>
+You'll need to have the <a href="http://www.openssl.org/">OpenSSL</a>
+libraries installed.  Configure with --with-ssl.  If you have the
+OpenSSL libraries installed in the default location (/usr/local/ssl)
+this will suffice.  If you have them installed in a non-default
+location, you'll need to specify it as an argument to --with-ssl after
+an equal sign.<p>
 
-<h3>Option 1:</h3>
-
-I can therefore safely <em>tell</em> you, in documentation, that there
-appears to be a way to set up an SSL command chain using the `plugin'
-option (originally designed for handling proxy connections across
-firewalls).<P>
-
-Get your hands on the <a
-href="http://www.psy.uq.edu.au:8080/~ftp/Crypto/">SSLeay</a> code.
-Now make yourself a script called `ssl_connect' that calls the SSLeay
-utility `s_client' as follows:<P>
-
-<pre>
-/usr/local/ssl/bin/s_client -quiet -ssl2 -connect $1:$2
-</pre>
-
-Now add `plugin ssl_connect' to the server options for your connection.<P>
-
-<h3>Option 2:</h3>
-
-For those in the U.S., there is a set of SSL patches for fetchmail
-available from the <a href="http://www.cryptography.org">North
-American Cryptographic Archives</a>, in the SSL directory.  You have
-to answer three questions about your qualification to access the
-archive, before you are allowed in.  You can enter through the main
-page for the server and browse the archive, or you can go <a
-href="http://www.cryptography.org/cgi-bin/crypto.cgi/SSL">straight to
-the SSL directory</a>.  There you will find patch files against the
-fetchmail release sources as well as patched source tarballs.<P>
-
-While we cannot make the SSL sources available to anyone outside of the
-U.S. at this time, if the patches do leak out of the U.S. through no
-fault of our own, and someone informs us of their location, we can
-provide the URL pointing to archive sites outside of the U.S.<P>
-
-Newer versions of the SSL patches make appear in the `new' directory
-and stay there a while until they can be processed and moved to the SSL
-directory.  Check for patches in `new' if you do not find patches
-for the latest fetchmail release.<P>
+Fetchmail binaries built this way support <code>ssl</code>,
+<code>sslkey</code>, and <code>sslcert</code> options that control
+SSL encryption.  You will need to have an SSL-enabled mailserver
+to use these options.  See the manual page for detals.<p>
 
 <hr>
 <h2><a name="R1">R1. Fetchmail isn't working, and -v shows `SMTP connect failed' messages.</a></h2>
@@ -2514,7 +2481,7 @@ inactivity timeout.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/10/26 18:18:05 $
+<td width="30%" align=right>$Date: 1999/10/31 17:17:42 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

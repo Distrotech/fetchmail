@@ -348,20 +348,54 @@ fi
 
 ###	use option --with-ssl to compile in the SSL support
 AC_ARG_WITH(ssl,
-	[  --with-ssl[=DIR]       enable SSL and point its top directory])
+	[  --with-ssl[=DIR]        compile in SSL support using libraries in DIR])
 
-if test -n "$with_ssl"
+if test -z "$with_ssl" -o "$with_ssl" = "yes"
 then
+#	He didn't specify an SSL location.  Let's look at some common
+#	directories where SSL has been found in the past and try and auto
+#	configure for SSL.  OpenSSL determination will be made later.
+#	This will screw up if an OpenSSL install is located in a later
+#	directory than an older SSLeay install, but the user should fix that
+#	anyways and he can override on the configure line.
+
+    for ac_dir in \
+      /usr/local/ssl \
+      /usr/ssl \
+      /local/ssl \
+      /opt/ssl \
+      ; \
+    do
+        if test -d "$ac_dir" ; then
+            with_ssl=$ac_dir
+            break;
+        fi
+    done
+fi
+
+if test -n "$with_ssl" -a "$with_ssl" != "no"
+then
+    # With the autoconfigure above, the only time this is going to be
+    # true is going to be when we could not find the headers.  If they
+    # are not in system standard locations, we are going to be broken.
     if test "$with_ssl" = "yes"
     then
-	# Let's just define the standard location for the SSLeay root
+# Let's just define the standard location for the SSLeay root
         with_ssl="/usr/local/ssl"
     fi
-    includedir=$with_ssl/include
-    AC_DEFINE(SSL_ENABLE)
-    CEFLAGS="$CPPFLAGS -I$includedir"
+    if test -r $with_ssl/include/openssl/ssl.h
+    then
+###	ssl.h found under openssl.  Use openssl configuration preferentially
+        echo "Enabling OpenSSL support in $with_ssl"
+        CEFLAGS="$CEFLAGS -DSSL_ENABLE -I$with_ssl/include -I$with_ssl/include/openssl"
+    else
+        echo "Enabling SSLeay support in $with_ssl"
+        CEFLAGS="$CEFLAGS -DSSL_ENABLE -I$with_ssl/include"
+    fi
     LDEFLAGS="$LDEFLAGS -L$with_ssl/lib"
     LIBS="$LIBS -lssl -lcrypto"
+else
+    echo 'SSL support disabled'
 fi
 
 ###	use option --with-kerberos=DIR to point at a Kerberos directory

@@ -300,10 +300,10 @@ va_dcl {
 }
 
 #ifdef SSL_ENABLE
-#include "openssl/ssl.h"
-#include "openssl/err.h"
-#include "openssl/pem.h"
-#include "openssl/x509.h"
+#include "ssl.h"
+#include "err.h"
+#include "pem.h"
+#include "x509.h"
 
 static	SSL_CTX *_ctx = NULL;
 static	SSL *_ssl_context[FD_SETSIZE];
