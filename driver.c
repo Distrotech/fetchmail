@@ -1126,9 +1126,9 @@ is restored."));
 		{
 		    if (new == -1 || ctl->fetchall)
 			new = count;
-		    fetches = new;	/* set error status ccorrectly */
+		    fetches = new;	/* set error status correctly */
 		    /*
-		     * There used to be a `got noerror' here, but this
+		     * There used to be a `goto noerror' here, but this
 		     * prevneted checking of multiple folders.  This
 		     * comment is a reminder in case I introduced some
 		     * subtle bug by removing it...
