@@ -1238,11 +1238,11 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 	    printf("  Password will be prompted for.\n");
 	else if (outlevel == O_VERBOSE)
 	    if (ctl->server.protocol == P_APOP)
-		printf("  APOP secret = '%s'.\n", visbuf(ctl->password));
+		printf("  APOP secret = \"%s\".\n", visbuf(ctl->password));
 	    else if (ctl->server.protocol == P_RPOP)
-		printf("  RPOP id = '%s'.\n", visbuf(ctl->password));
+		printf("  RPOP id = \"%s\".\n", visbuf(ctl->password));
 	    else
-		printf("  Password = '%s'.\n", visbuf(ctl->password));
+		printf("  Password = \"%s\".\n", visbuf(ctl->password));
 	if (ctl->server.protocol == P_POP3 
 #if INET6
 	    && !strcmp(ctl->server.service, KPOP_PORT)
@@ -1340,7 +1340,7 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 			printf("  No expunges (--expunge 0).\n");
 	}
 	if (ctl->mda && (ctl->server.protocol != P_ETRN))
-	    printf("  Messages will be delivered with '%s.'\n", visbuf(ctl->mda));
+	    printf("  Messages will be delivered with \"%s\".\n", visbuf(ctl->mda));
 	else
 	{
 	    struct idlist *idp;
@@ -1373,12 +1373,12 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 		    printf("  Spam-blocking disabled\n");
 	}
 	if (ctl->preconnect)
-	    printf("  Server connection will be brought up with '%s.'\n",
+	    printf("  Server connection will be brought up with \"%s\".\n",
 		   visbuf(ctl->preconnect));
 	else if (outlevel == O_VERBOSE)
 	    printf("  No pre-connection command.\n");
 	if (ctl->postconnect)
-	    printf("  Server connection will be taken down with '%s.'\n",
+	    printf("  Server connection will be taken down with \"%s\".\n",
 		   visbuf(ctl->postconnect));
 	else if (outlevel == O_VERBOSE)
 	    printf("  No post-connection command.\n");
