@@ -10,7 +10,7 @@ release, probably 4.0, this hack will be removed and the leading
 			Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-3.9 ()
+fetchmail-3.9 (Wed Apr  2 13:36:22 EST 1997)
 
 features --
 
@@ -22,12 +22,12 @@ bugs --
 
 * Server-response timeouts were broken.  Various symptoms of this problem
   were reported by Klee Dienes <klee@mit.edu>, Dirk Eddelbuettel
-  <edd@rosebud.sps.queensu.ca>, Robert V. Schipper" <rvs@gol.com>,
+  <edd@rosebud.sps.queensu.ca>, Robert V. Schipper <rvs@gol.com>,
   and Steven Brown <swbrown@ucsd.edu>.
 
 * George Sipe sent a fix for the --monitor code.
 
-* --nowrewrite was a no-op.  Fixed.
+* --norewrite was a no-op.  Fixed.
 
 * Fetchmail was aborting with "partial message buffer overflow" on Suns
   due to unreliable vsprintf return.  This has been fixed with changes
