@@ -36,6 +36,8 @@ int yydebug;			/* in case we didn't generate with -- debug */
 
 static struct query current;	/* current server record */
 static int prc_errflag;
+static struct hostdata *leadentry;
+static bool trailer;
 
 static void record_current();
 static void user_reset();
@@ -334,13 +336,7 @@ const bool securecheck;		/* check for a secure rc file? */
 static int reset_server(char *name, int skip)
 /* clear the entire global record and initialize it with a new name */
 {
-    struct query *ctl;
-
-    /* don't allow name collisions, this screws up the data structures */
-    for (ctl = querylist; ctl; ctl = ctl->next)
-	if (strcmp(name, ctl->server.names->id) == 0)
-	    return(FALSE);
-
+    trailer = FALSE;
     memset(&current,'\0',sizeof(current));
     current.smtp_socket = -1;
     save_str(&current.server.names, -1, name);
@@ -350,7 +346,7 @@ static int reset_server(char *name, int skip)
 
 
 static void user_reset(void)
-/* clear the global current record (server parameters) used by the parser */
+/* clear the global current record (user parameters) used by the parser */
 {
     struct hostdata save;
 
@@ -386,6 +382,15 @@ struct query *init;	/* pointer to block containing initial values */
     else
 	querylist = node;	/* list is empty */
     hosttail = node;
+
+    if (trailer)
+	node->server.lead_server = leadentry;
+    else
+    {
+	node->server.lead_server = NULL;
+	leadentry = &node->server;
+    }
+
     return(node);
 }
 
@@ -431,6 +436,8 @@ static void record_current(void)
 #undef FLAG_FORCE
 
     (void) hostalloc(&current);
+
+    trailer = TRUE;
 }
 
 void optmerge(struct query *h2, struct query *h1)

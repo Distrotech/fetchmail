@@ -10,11 +10,6 @@
   return a zero exit status if *any* host had mail, not just the last one
   checked.
 
-* Remove restriction that no two poll entries can have identical hostnames?
-  The problem is with a skip entry following a poll entry for the same host.
-  This corrupts a data structure leading to core dump, but I'm not sure
-  exactly how.
-
 * Generate bounce messages when delivery is refused.  See RFC1891, RFC1894.
 
 * More log levels?
@@ -34,6 +29,7 @@ And about time, too, I've been hacking on this code for a year now!
 * Removed the popclient backward-compatibility hacks.
 * Leif Erlingsson <leif@lege.com> sent a patch to avoid colliding with 
   the busy-lock after authentication failure on a POP3 server.
+* Allow duplicate server hostnames again.
 
 There are 252 people on the fetchmail-friends list.
 

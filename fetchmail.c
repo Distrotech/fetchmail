@@ -49,7 +49,6 @@
 static int load_params(int, char **, int);
 static void dump_params (struct query *);
 static int query_host(struct query *);
-static char *visbuf(const char *);
 
 /* controls the detail level of status/progress messages written to stderr */
 int outlevel;    	/* see the O_.* constants above */
@@ -579,16 +578,6 @@ static int load_params(int argc, char **argv, int optind)
 	    }
 #endif /* !HAVE_GETHOSTBYNAME || !HAVE_RES_SEARCH */
 
-	    /* compute server leaders for queries */
-	    for (mp = querylist; mp && mp != ctl; mp = mp->next)
-		if (strcmp(mp->server.names->id, ctl->server.names->id) == 0)
-		{
-		    ctl->server.lead_server = mp->server.lead_server;
-		    goto no_new_server;
-		}
-	    ctl->server.lead_server = &(ctl->server);
-	no_new_server:;
-
 	    /* this code enables flags to be turned off */
 #define DEFAULT(flag, dflt)	if (flag == FLAG_TRUE)\
 	    				flag = TRUE;\
@@ -597,8 +586,8 @@ static int load_params(int argc, char **argv, int optind)
 				else\
 					flag = (dflt)
 	    DEFAULT(ctl->keep, FALSE);
-	    DEFAULT(ctl->flush, FALSE);
 	    DEFAULT(ctl->fetchall, FALSE);
+	    DEFAULT(ctl->flush, FALSE);
 	    DEFAULT(ctl->rewrite, TRUE);
 	    DEFAULT(ctl->stripcr, (ctl->mda != (char *)NULL)); 
 	    DEFAULT(ctl->forcecr, FALSE);
@@ -952,46 +941,6 @@ void dump_params (struct query *ctl)
 		for (idp = ctl->oldsaved; idp; idp = idp->next)
 		    fprintf(stderr, "\t%s\n", idp->id);
 	}
-}
-
-static char *visbuf(const char *buf)
-/* visibilize a given string */
-{
-    static char vbuf[BUFSIZ];
-    char *tp = vbuf;
-
-    while (*buf)
-    {
-	if (isprint(*buf) || *buf == ' ')
-	    *tp++ = *buf++;
-	else if (*buf == '\n')
-	{
-	    *tp++ = '\\'; *tp++ = 'n';
-	    buf++;
-	}
-	else if (*buf == '\r')
-	{
-	    *tp++ = '\\'; *tp++ = 'r';
-	    buf++;
-	}
-	else if (*buf == '\b')
-	{
-	    *tp++ = '\\'; *tp++ = 'b';
-	    buf++;
-	}
-	else if (*buf < ' ')
-	{
-	    *tp++ = '\\'; *tp++ = '^'; *tp++ = '@' + *buf;
-	    buf++;
-	}
-	else
-	{
-	    (void) sprintf(tp, "\\0x%02x", *buf++);
-	    tp += strlen(tp);
-	}
-    }
-    *tp++ = '\0';
-    return(vbuf);
 }
 
 /* fetchmail.c ends here */
