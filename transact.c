@@ -40,7 +40,7 @@ extern char *strstr();	/* needed on sysV68 R3V7.1. */
 
 int mytimeout;		/* value of nonreponse timeout */
 int suppress_tags;	/* emit tags? */
-char shroud[PASSWORDLEN];	/* string to shroud in debug output */
+char shroud[PASSWORDLEN*2+1];	/* string to shroud in debug output */
 struct msgblk msgblk;
 
 char tag[TAGLEN];

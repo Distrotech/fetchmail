@@ -383,7 +383,7 @@ extern int pass;		/* number of re-polling pass */
 extern flag configdump;		/* dump control blocks as Python dictionary */
 extern char *fetchmailhost;	/* either "localhost" or an FQDN */
 extern int suppress_tags;	/* suppress tags in tagged protocols? */
-extern char shroud[PASSWORDLEN];	/* string to shroud in debug output */
+extern char shroud[PASSWORDLEN*2+1];	/* string to shroud in debug output */
 #ifdef SDPS_ENABLE
 extern char *sdps_envfrom;
 extern char *sdps_envto;
