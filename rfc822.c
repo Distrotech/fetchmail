@@ -53,7 +53,7 @@ const char *host;	/* server hostname */
 
 #ifndef TESTMAIN
     if (outlevel >= O_DEBUG)
-	error_build(0, 0, "About to rewrite %s", buf);
+	error_build("About to rewrite %s", buf);
 
     /* make room to hack the address; buf must be malloced */
     for (cp = buf; *cp; cp++)
