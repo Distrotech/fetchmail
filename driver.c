@@ -1215,15 +1215,20 @@ int num;		/* index of message */
 
 		time(&now);
 #ifdef HAVE_STRFTIME
-		/* conform to RFC822 */
-		strftime(buf, sizeof(buf), "%a, %d b %Y %H:%M:%S %Z\n", localtime(&now));
+		/*
+		 * Conform to RFC822.  This is typically going to emit
+		 * a three-letter timezone for 
+		 */
+		strftime(buf + strlen(buf), sizeof(buf) - strlen(buf), 
+			 "%a, %d %b %Y %H:%M:%S %Z\n", localtime(&now));
 #else
 		/*
-		 * This is really just a fallback, as the date format ctime(3)
-		 * emits is not RFC822 conformant.
+		 * This is really just a portability fallback, as the
+		 * date format ctime(3) emits is not RFC822
+		 * conformant.
 		 */
 		strcat(buf, ctime(&now));
-#endif /* STRFTIME */
+#endif /* HAVE_STRFTIME */
 		n = stuffline(ctl, buf);
 	    }
 	}
