@@ -476,7 +476,7 @@ def helpwin(helpdict):
     scroll.pack(side=RIGHT, fill=BOTH)
     helpwin.textwidget.insert(END, helpdict['text']);
     Button(helpwin, text='Done', 
-	   command=lambda x=helpwin: Widget.destroy(x), bd=2).pack()
+	   command=lambda x=helpwin: x.destroy(), bd=2).pack()
     textframe.pack(side=TOP)
 
 def make_icon_window(base, image):
@@ -1025,7 +1025,7 @@ class ServerEdit(Frame, MyWidget):
 	for username in self.subwidgets.keys():
 	    self.subwidgets[username].destruct()	
 	del self.parent.subwidgets[self.server.pollname]
-	Widget.destroy(self.master)
+	self.master.destroy()
 
     def nosave(self):
 	if ConfirmQuit(self, 'server option editing'):
@@ -1464,7 +1464,7 @@ Fetchmail doesn't know anything special about this server type.
 	Label(confwin, text=title).pack()
 	Message(confwin, text=confirm, width=600).pack()
 	Button(confwin, text='Done', 
-		   command=lambda x=confwin: Widget.destroy(x), bd=2).pack()
+		   command=lambda x=confwin: x.destroy(), bd=2).pack()
 	
 #
 # User editing stuff
@@ -1539,7 +1539,7 @@ class UserEdit(Frame, MyWidget):
 	# Yes, this test can fail -- if you delete the parent window.
 	if self.parent.subwidgets.has_key(self.user.remote):
 	    del self.parent.subwidgets[self.user.remote]
-	Widget.destroy(self.master)
+	self.master.destroy()
 
     def nosave(self):
 	if ConfirmQuit(self, 'user option editing'):
@@ -1784,7 +1784,7 @@ class RunWindow(Frame):
 	self.textwidget.see(END);
 
     def leave(self):
-	Widget.destroy(self.master)
+	self.master.destroy()
 
 # Here's where we choose either configuration or launching
 
