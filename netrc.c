@@ -51,38 +51,38 @@ maybe_add_to_list (newentry, list)
      netrc_entry **newentry;
      netrc_entry **list;
 {
-  netrc_entry *a, *l;
-  a = *newentry;
-  l = *list;
+    netrc_entry *a, *l;
+    a = *newentry;
+    l = *list;
 
-  /* We need an account name in order to add the entry to the list. */
-  if (a && ! a->account)
+    /* We need an account name in order to add the entry to the list. */
+    if (a && ! a->account)
     {
-      /* Free any allocated space. */
-      free (a->host);
-      free (a->account);
-      free (a->password);
+	/* Free any allocated space. */
+	free (a->host);
+	free (a->account);
+	free (a->password);
     }
-  else
+    else
     {
-      if (a)
+	if (a)
 	{
-	  /* Add the current machine into our list. */
-	  a->next = l;
-	  l = a;
+	    /* Add the current machine into our list. */
+	    a->next = l;
+	    l = a;
 	}
 
-      /* Allocate a new netrc_entry structure. */
-      a = (netrc_entry *) xmalloc (sizeof (netrc_entry));
+	/* Allocate a new netrc_entry structure. */
+	a = (netrc_entry *) xmalloc (sizeof (netrc_entry));
     }
 
-  /* Zero the structure, so that it is ready to use. */
-  memset (a, 0, sizeof(*a));
+    /* Zero the structure, so that it is ready to use. */
+    memset (a, 0, sizeof(*a));
 
-  /* Return the new pointers. */
-  *newentry = a;
-  *list = l;
-  return;
+    /* Return the new pointers. */
+    *newentry = a;
+    *list = l;
+    return;
 }
 
 
@@ -93,174 +93,181 @@ netrc_entry *
 parse_netrc (file)
      char *file;
 {
-  FILE *fp;
-  char buf[POPBUFSIZE+1], *p, *tok, *premature_token;
-  netrc_entry *current, *retval;
-  int ln;
+    FILE *fp;
+    char buf[POPBUFSIZE+1], *p, *tok, *premature_token;
+    netrc_entry *current, *retval;
+    int ln;
 
-  /* The latest token we've seen in the file. */
-  enum
-  {
-    tok_nothing, tok_account, tok_login, tok_macdef, tok_machine, tok_password
-  } last_token = tok_nothing;
-
-  current = retval = NULL;
-
-  fp = fopen (file, "r");
-  if (!fp)
+    /* The latest token we've seen in the file. */
+    enum
     {
-      /* Just return NULL if we can't open the file. */
-      return NULL;
+	tok_nothing, tok_account, tok_login, tok_macdef, tok_machine, tok_password
+    } last_token = tok_nothing;
+
+    current = retval = NULL;
+
+    fp = fopen (file, "r");
+    if (!fp)
+    {
+	/* Just return NULL if we can't open the file. */
+	return NULL;
     }
 
-  /* Initialize the file data. */
-  ln = 0;
-  premature_token = NULL;
+    /* Initialize the file data. */
+    ln = 0;
+    premature_token = NULL;
 
-  /* While there are lines in the file... */
-  while (fgets(buf, POPBUFSIZE, fp))
+    /* While there are lines in the file... */
+    while (fgets(buf, POPBUFSIZE, fp))
     {
-      ln ++;
+	ln ++;
 
-      /* Parse the line. */
-      p = buf;
+	/* Strip trailing CRLF */
+	p = buf + strlen(buf) - 1;
+	while (*p && isspace(*p))
+	    *p-- = '\0';
 
-      /* If the line is empty, then end any macro definition. */
-      if (last_token == tok_macdef && !*p)
-	/* End of macro if the line is empty. */
-	last_token = tok_nothing;
+	/* Parse the line. */
+	p = buf;
 
-      /* If we are defining macros, then skip parsing the line. */
-      while (*p && last_token != tok_macdef)
+	/* If the line is empty... */
+	if (!*p)
+	    if (last_token == tok_macdef)	/* end of macro */
+		last_token = tok_nothing;
+	    else
+		continue;			/* otherwise ignore it */
+
+	/* If we are defining macros, then skip parsing the line. */
+	while (*p && last_token != tok_macdef)
 	{
-	  /* Skip any whitespace. */
-	  while (*p && isspace (*p))
-	    p ++;
+	    /* Skip any whitespace. */
+	    while (*p && isspace (*p))
+		p++;
 
-	  /* Discard end-of-line comments. */
-	  if (*p == '#')
-	    break;
+	    /* Discard end-of-line comments. */
+	    if (*p == '#')
+		break;
 
-	  tok = p;
+	    tok = p;
 
-	  /* Find the end of the token. */
-	  while (*p && !isspace (*p))
-	    p ++;
+	    /* Find the end of the token. */
+	    while (*p && !isspace (*p))
+		p ++;
 
-	  /* Null-terminate the token, if it isn't already. */
-	  if (*p)
-	    *p ++ = '\0';
+	    /* Null-terminate the token, if it isn't already. */
+	    if (*p)
+		*p ++ = '\0';
 
-	  switch (last_token)
+	    switch (last_token)
 	    {
 	    case tok_login:
-	      if (current)
-		current->account = (char *) xstrdup (tok);
-	      else
-		premature_token = "login";
-	      break;
+		if (current)
+		    current->account = (char *) xstrdup (tok);
+		else
+		    premature_token = "login";
+		break;
 
 	    case tok_machine:
-	      /* Start a new machine entry. */
-	      maybe_add_to_list (&current, &retval);
-	      current->host = (char *) xstrdup (tok);
-	      break;
+		/* Start a new machine entry. */
+		maybe_add_to_list (&current, &retval);
+		current->host = (char *) xstrdup (tok);
+		break;
 
 	    case tok_password:
-	      if (current)
-		current->password = (char *) xstrdup (tok);
-	      else
-		premature_token = "password";
-	      break;
+		if (current)
+		    current->password = (char *) xstrdup (tok);
+		else
+		    premature_token = "password";
+		break;
 
-	      /* We handle most of tok_macdef above. */
+		/* We handle most of tok_macdef above. */
 	    case tok_macdef:
-	      if (!current)
-		premature_token = "macdef";
-	      break;
+		if (!current)
+		    premature_token = "macdef";
+		break;
 
-	      /* We don't handle the account keyword at all. */
+		/* We don't handle the account keyword at all. */
 	    case tok_account:
-	      if (!current)
-		premature_token = "account";
-	      break;
+		if (!current)
+		    premature_token = "account";
+		break;
 
-	      /* We handle tok_nothing below this switch. */
+		/* We handle tok_nothing below this switch. */
 	    case tok_nothing:
-	      break;
+		break;
 	    }
 
-	  if (premature_token)
+	    if (premature_token)
 	    {
 #ifdef HAVE_ERROR
-	      error_at_line (0, 0, file, ln,
-			     _("warning: found \"%s\" before any host names"),
-			     premature_token);
+		error_at_line (0, 0, file, ln,
+			       _("warning: found \"%s\" before any host names"),
+			       premature_token);
 #else
-	      fprintf (stderr,
-		       "%s:%d: warning: found \"%s\" before any host names\n",
-		       file, ln, premature_token);
+		fprintf (stderr,
+			 "%s:%d: warning: found \"%s\" before any host names\n",
+			 file, ln, premature_token);
 #endif
-	      premature_token = NULL;
+		premature_token = NULL;
 	    }
 
-	  if (last_token != tok_nothing)
-	    /* We got a value, so reset the token state. */
-	    last_token = tok_nothing;
-	  else
+	    if (last_token != tok_nothing)
+		/* We got a value, so reset the token state. */
+		last_token = tok_nothing;
+	    else
 	    {
-	      /* Fetch the next token. */
-	      if (!strcmp (tok, "account"))
-		last_token = tok_account;
+		/* Fetch the next token. */
+		if (!strcmp (tok, "account"))
+		    last_token = tok_account;
 
-	      if (!strcmp (tok, "default"))
+		if (!strcmp (tok, "default"))
 		{
-		  maybe_add_to_list (&current, &retval);
+		    maybe_add_to_list (&current, &retval);
 		}
-	      else if (!strcmp (tok, "login"))
-		last_token = tok_login;
+		else if (!strcmp (tok, "login"))
+		    last_token = tok_login;
 
-	      else if (!strcmp (tok, "macdef"))
-		last_token = tok_macdef;
+		else if (!strcmp (tok, "macdef"))
+		    last_token = tok_macdef;
 
-	      else if (!strcmp (tok, "machine"))
-		last_token = tok_machine;
+		else if (!strcmp (tok, "machine"))
+		    last_token = tok_machine;
 
-	      else if (!strcmp (tok, "password"))
-		last_token = tok_password;
+		else if (!strcmp (tok, "password"))
+		    last_token = tok_password;
 
-	      else
+		else
 		{
-		  fprintf (stderr, "%s:%d: warning: unknown token \"%s\"\n",
-			   file, ln, tok);
+		    fprintf (stderr, "%s:%d: warning: unknown token \"%s\"\n",
+			     file, ln, tok);
 		}
 	    }
 	}
     }
 
-  fclose (fp);
+    fclose (fp);
 
-  /* Finalize the last machine entry we found. */
-  maybe_add_to_list (&current, &retval);
-  free (current);
+    /* Finalize the last machine entry we found. */
+    maybe_add_to_list (&current, &retval);
+    free (current);
 
-  /* Reverse the order of the list so that it appears in file order. */
-  current = retval;
-  retval = NULL;
-  while (current)
+    /* Reverse the order of the list so that it appears in file order. */
+    current = retval;
+    retval = NULL;
+    while (current)
     {
-      netrc_entry *saved_reference;
+	netrc_entry *saved_reference;
 
-      /* Change the direction of the pointers. */
-      saved_reference = current->next;
-      current->next = retval;
+	/* Change the direction of the pointers. */
+	saved_reference = current->next;
+	current->next = retval;
 
-      /* Advance to the next node. */
-      retval = current;
-      current = saved_reference;
+	/* Advance to the next node. */
+	retval = current;
+	current = saved_reference;
     }
 
-  return retval;
+    return retval;
 }
 
 
@@ -271,22 +278,22 @@ search_netrc (list, host)
      netrc_entry *list;
      char *host;
 {
-  /* Look for the HOST in LIST. */
-  while (list)
+    /* Look for the HOST in LIST. */
+    while (list)
     {
-      if (!list->host)
-	/* We hit the default entry. */
-	break;
+	if (!list->host)
+	    /* We hit the default entry. */
+	    break;
 
-      else if (!strcmp (list->host, host))
-	/* We found a matching entry. */
-	break;
+	else if (!strcmp (list->host, host))
+	    /* We found a matching entry. */
+	    break;
 
-      list = list->next;
+	list = list->next;
     }
 
-  /* Return the matching entry, or NULL. */
-  return list;
+    /* Return the matching entry, or NULL. */
+    return list;
 }
 
 
@@ -301,89 +308,89 @@ main (argc, argv)
      int argc;
      char **argv;
 {
-  struct stat sb;
-  char *program_name, *file, *target;
-  netrc_entry *head, *a;
+    struct stat sb;
+    char *program_name, *file, *target;
+    netrc_entry *head, *a;
 
-  if (argc < 2)
+    if (argc < 2)
     {
-      fprintf (stderr, "Usage: %s NETRC [HOSTNAME]...\n", argv[0]);
-      exit (1);
+	fprintf (stderr, "Usage: %s NETRC [HOSTNAME]...\n", argv[0]);
+	exit (1);
     }
 
-  program_name = argv[0];
-  file = argv[1];
-  target = argv[2];
+    program_name = argv[0];
+    file = argv[1];
+    target = argv[2];
 
-  if (stat (file, &sb))
+    if (stat (file, &sb))
     {
-      fprintf (stderr, "%s: cannot stat %s: %s\n", argv[0], file,
-	       strerror (errno));
-      exit (1);
+	fprintf (stderr, "%s: cannot stat %s: %s\n", argv[0], file,
+		 strerror (errno));
+	exit (1);
     }
 
-  head = parse_netrc (file);
-  if (!head)
+    head = parse_netrc (file);
+    if (!head)
     {
-      fprintf (stderr, "%s: no entries found in %s\n", argv[0], file);
-      exit (1);
+	fprintf (stderr, "%s: no entries found in %s\n", argv[0], file);
+	exit (1);
     }
 
-  if (argc > 2)
+    if (argc > 2)
     {
-      int i, status;
-      status = 0;
-      for (i = 2; i < argc; i++)
+	int i, status;
+	status = 0;
+	for (i = 2; i < argc; i++)
 	{
-	  /* Print out the host that we are checking for. */
-	  fputs (argv[i], stdout);
+	    /* Print out the host that we are checking for. */
+	    fputs (argv[i], stdout);
 
-	  a = search_netrc (head, argv[i]);
-	  if (a)
+	    a = search_netrc (head, argv[i]);
+	    if (a)
 	    {
-	      /* Print out the account and password (if any). */
-	      fputc (' ', stdout);
-	      fputs (a->account, stdout);
-	      if (a->password)
+		/* Print out the account and password (if any). */
+		fputc (' ', stdout);
+		fputs (a->account, stdout);
+		if (a->password)
 		{
-		  fputc (' ', stdout);
-		  fputs (a->password, stdout);
+		    fputc (' ', stdout);
+		    fputs (a->password, stdout);
 		}
 	    }
-	  else
-	    status = 1;
+	    else
+		status = 1;
 
-	  fputc ('\n', stdout);
+	    fputc ('\n', stdout);
 	}
-      exit (status);
+	exit (status);
     }
 
-  /* Print out the entire contents of the netrc. */
-  a = head;
-  while (a)
+    /* Print out the entire contents of the netrc. */
+    a = head;
+    while (a)
     {
-      /* Print the host name. */
-      if (a->host)
-	fputs (a->host, stdout);
-      else
-	fputs ("DEFAULT", stdout);
+	/* Print the host name. */
+	if (a->host)
+	    fputs (a->host, stdout);
+	else
+	    fputs ("DEFAULT", stdout);
 
-      fputc (' ', stdout);
+	fputc (' ', stdout);
 
-      /* Print the account name. */
-      fputs (a->account, stdout);
+	/* Print the account name. */
+	fputs (a->account, stdout);
 
-      if (a->password)
+	if (a->password)
 	{
-	  /* Print the password, if there is any. */
-	  fputc (' ', stdout);
-	  fputs (a->password, stdout);
+	    /* Print the password, if there is any. */
+	    fputc (' ', stdout);
+	    fputs (a->password, stdout);
 	}
 
-      fputc ('\n', stdout);
-      a = a->next;
+	fputc ('\n', stdout);
+	a = a->next;
     }
 
-  exit (0);
+    exit (0);
 }
 #endif /* STANDALONE */

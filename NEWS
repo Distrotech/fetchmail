@@ -1,6 +1,19 @@
 			Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-2.8 ()
+
+features -- 
+
+* Reorganized and improved man page.
+
+bugs --
+
+* Stop netrc parser from complaining about blank lines.
+
+There are 180 people on the fetchmail-friends list.
+
+------------------------------------------------------------------------------
 fetchmail-2.7 (Thu Jan  9 03:18:15 EST 1997)
 
 features -- 
