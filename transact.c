@@ -388,6 +388,7 @@ int readheaders(int sock,
      */
     if (msgblk.headers)
        free(msgblk.headers);
+    free_str_list(&msgblk.recipients);
 
     /* initially, no message ID */
     if (ctl->thisid)
@@ -1232,8 +1233,6 @@ int readheaders(int sock,
     *cp++ = '\0';
     stuffline(ctl, buf);
 
-/*    free(msgblk.headers); */
-    free_str_list(&msgblk.recipients);
     return(headers_ok ? PS_SUCCESS : PS_TRUNCATED);
 }
 
