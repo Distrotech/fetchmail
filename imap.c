@@ -568,8 +568,6 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
 static int imap_trail(int sock, struct query *ctl, int number)
 /* discard tail of FETCH response after reading message text */
 {
-    int	num;
-
     /* expunges change the fetch numbers */
     /* number -= deletecount; */
 

@@ -1163,7 +1163,7 @@ struct query *ctl;		/* parsed options with merged-in defaults */
 const struct method *proto;	/* protocol method table */
 {
     int ok, js, pst;
-    char *msg, *sp, *cp, realname[HOSTLEN];
+    char *msg, *cp, realname[HOSTLEN];
     void (*sigsave)();
 
 #ifndef KERBEROS_V4
@@ -1218,7 +1218,7 @@ const struct method *proto;	/* protocol method table */
     }
     else
     {
-	char buf [POPBUFSIZE+1];
+	char buf [POPBUFSIZE+1], *sp;
 	int *msgsizes, len, num, count, new, deletions = 0;
 	int sock, port, fetches;
 	struct idlist *idp;
@@ -1278,6 +1278,7 @@ const struct method *proto;	/* protocol method table */
 	 * the .fetchmailrc id.
 	 */
 	pst = 0;
+	sp = (char *)NULL;	/* sacrifice to -Wall */
 	for (cp = buf; *cp; cp++)
 	{
 	    switch (pst)
@@ -1644,6 +1645,7 @@ const struct method *proto;	/* protocol method table */
 	close(sock);
     }
 
+    msg = (char *)NULL;		/* sacrifice to -Wall */
     switch (ok)
     {
     case PS_SOCKET:

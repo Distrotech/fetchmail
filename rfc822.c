@@ -129,7 +129,7 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 #ifdef TESTMAIN
     static const char *orighdr;
 #endif /* TESTMAIN */
-    int parendepth;
+    int parendepth = 0;
 
 #define START_HDR	0	/* before header colon */
 #define SKIP_JUNK	1	/* skip whitespace, \n, and junk */

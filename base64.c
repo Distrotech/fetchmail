@@ -55,7 +55,7 @@ int from64tobits(char *out, const char *in)
 /* base 64 to raw bytes in quasi-big-endian order, returning count of bytes */
 {
     int len = 0;
-    register char digit1, digit2, digit3, digit4;
+    register unsigned char digit1, digit2, digit3, digit4;
 
     if (in[0] == '+' && in[1] == ' ')
 	in += 2;

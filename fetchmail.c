@@ -94,7 +94,7 @@ static void unlockit(int n, void *p)
 int main (int argc, char **argv)
 {
     int st, bkgd = FALSE;
-    int parsestatus, implicitmode;
+    int parsestatus, implicitmode = FALSE;
     char *home, *tmpdir, tmpbuf[BUFSIZ]; 
     struct passwd *pw;
     struct query *ctl;
@@ -271,8 +271,7 @@ int main (int argc, char **argv)
 	else if (argc > 1)
 	{
 	    fprintf(stderr,
-		    "fetchmail: can't accept options while a background fetchmail is running.\n",
-		    pid);
+		    "fetchmail: can't accept options while a background fetchmail is running.\n");
 	    return(PS_EXCLUDE);
 	}
 	else if (kill(pid, SIGUSR1) == 0)
