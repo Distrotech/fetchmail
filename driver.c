@@ -302,6 +302,7 @@ struct query *ctl;	/* query control record */
 {
     char buf [MSGBUFSIZE+1]; 
     char *bufp, *headers, *fromhdr,*tohdr,*cchdr,*bcchdr,*received_for,*envto;
+    char *fromptr, *toptr;
     int n, oldlen;
     int inheaders,lines,sizeticker;
     FILE *sinkfp;
@@ -324,10 +325,10 @@ struct query *ctl;	/* query control record */
 	vtalarm(ctl->timeout);
 
 	/* squeeze out all carriage returns */
-	for (fromhdr = tohdr = buf; *fromhdr; fromhdr++)
-	    if (*fromhdr != '\r' && *fromhdr != '\n')
-		*tohdr++ = *fromhdr;
-	*tohdr = '\0';
+	for (fromptr = toptr = buf; *fromptr; fromptr++)
+	    if (*fromptr != '\r' && *fromptr != '\n')
+		*toptr++ = *fromptr;
+	*toptr = '\0';
 
 	/* write the message size dots */
 	if (n > 0)
