@@ -460,14 +460,14 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 			1, responses);
 	return(PS_REFUSED);
 
-    default:	/* bounce the error back to the sender */
+    default:	/* bounce non-transient errors back to the sender */
 	SMTP_rset(ctl->smtp_socket);    /* stay on the safe side */
-	if (send_bouncemail(ctl, msg, XMIT_ACCEPT,
-			"General SMTP/ESMTP error.\r\n", 
-			1, responses))
-	    return(run.bouncemail ? PS_REFUSED : PS_TRANSIENT);
-	else
-	    return(PS_TRANSIENT);
+	if (smtperr >= 500 && smtperr <= 599)
+	    if (send_bouncemail(ctl, msg, XMIT_ACCEPT,
+				"General SMTP/ESMTP error.\r\n", 
+				1, responses))
+		return(run.bouncemail ? PS_REFUSED : PS_TRANSIENT);
+	return(PS_TRANSIENT);
     }
 }
 

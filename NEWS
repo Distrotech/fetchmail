@@ -17,6 +17,7 @@ fetchmail-5.0.7 ():
 * Variouas small option-processing fixes.
 * Teach fetchmailconf about HP OpenMail.
 * SunOS compilation fixes.
+* Steve Dodd's fix to not send bouncemail on transient errors.
 
 There are 263 people on fetchmail-friends and 421 on fetchmail-announce.
 
