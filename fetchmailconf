@@ -358,6 +358,20 @@ def helpwin(helpdict):
 	   command=lambda x=helpwin: Widget.destroy(x),
 	   relief=SUNKEN, bd=2).pack()
 
+def make_icon_window(base, image):
+    try:
+        # Some older pythons will error out on this
+        icon_image = PhotoImage(data=image)
+        icon_window = Toplevel()
+        Label(icon_window, image=icon_image, bg='black').pack()
+        base.master.iconwindow(icon_window)
+	# Avoid TkInter brain death. PhotoImage objects go out of
+        # scope when the enclosing function returns.  Therefore
+        # we have to explicitly link them to something.
+        base.keepalive.append(icon_image)
+    except:
+        pass
+
 class ListEdit(Frame):
 # edit a list of values (duplicates not allowed) with a supplied editor hook 
     def __init__(self, newlegend, list, editor, master, helptxt):
@@ -566,6 +580,8 @@ class ConfigurationEdit(Frame, MyWidget):
 	Frame.__init__(self, self.container)
 	self.master.title('fetchmail ' + self.mode + ' configurator');
 	self.master.iconname('fetchmail ' + self.mode + ' configurator');
+        self.keepalive = []	# Use this to anchor the PhotoImage object
+        make_icon_window(self, fetchmail_gif)
 	Pack.config(self)
         self.post(Configuration, 'configuration')
 
@@ -792,6 +808,8 @@ class ServerEdit(Frame, MyWidget):
 	self.master.iconname('Fetchmail host ' + self.server.pollname);
 	self.post(Server, 'server')
 	self.makeWidgets(self.server.pollname, mode)
+        self.keepalive = []	# Use this to anchor the PhotoImage object
+        make_icon_window(self, fetchmail_gif)
 #	self.grab_set()
 #	self.focus_set()
 #	self.wait_window()
@@ -1072,6 +1090,8 @@ class UserEdit(Frame, MyWidget):
 	self.master.iconname('Fetchmail user ' + self.user.remote);
 	self.post(User, 'user')
 	self.makeWidgets(mode, self.server.pollname)
+        self.keepalive = []	# Use this to anchor the PhotoImage object
+        make_icon_window(self, fetchmail_gif)
 #	self.grab_set()
 #	self.focus_set()
 #	self.wait_window()
@@ -1191,6 +1211,8 @@ class MainWindow(Frame):
 	Label(self,
 		text='Fetchmailconf ' + version, 
 		bd=2).pack(side=TOP, pady=10)
+        self.keepalive = []	# Use this to anchor the PhotoImage object
+        make_icon_window(self, fetchmail_gif)
 
 	Message(self, text="""
 Use `Novice Configuration' for basic fetchmail setup;
@@ -1373,14 +1395,6 @@ if __name__ == '__main__':
 
     # OK, now run the configuration edit
     root = MainWindow(rcfile)
-    try:
-        # Some older pythons will error out on this
-        icon_image = PhotoImage(data=fetchmail_gif)
-        icon_window = Toplevel()
-        Label(icon_window, image=icon_image, bg='black').pack()
-        root.master.iconwindow(icon_window)
-    except:
-        pass
     root.mainloop()
 
 # The following sets edit modes for GNU EMACS
