@@ -13,6 +13,8 @@ bugs --
 
 * Add ssh recipe correction.
 
+* Eliminate infinite-loop bug in defaults handling.
+
 There are 180 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------

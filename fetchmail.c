@@ -559,7 +559,7 @@ static int load_params(int argc, char **argv, int optind)
     /* if there's a defaults record, merge it and lose it */ 
     if (querylist && strcmp(querylist->servernames->id, "defaults") == 0)
     {
-	for (ctl = querylist; ctl; ctl = ctl->next)
+	for (ctl = querylist->next; ctl; ctl = ctl->next)
 	    optmerge(ctl, querylist);
 	querylist = querylist->next;
     }
