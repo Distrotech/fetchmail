@@ -169,7 +169,11 @@ static int smtp_open(struct query *ctl)
 
 /* these are shared by open_sink and stuffline */
 static FILE *sinkfp;
+#ifndef HAVE_SIGACTION
 static RETSIGTYPE (*sigchld)(int);
+#else
+static struct sigaction sa_old;
+#endif /* HAVE_SIGACTION */
 
 int stuffline(struct query *ctl, char *buf)
 /* ship a line to the given control block's output sink (SMTP server or MDA) */
@@ -488,6 +492,9 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 /* set up sinkfp to be an input sink we can ship a message to */
 {
     struct	idlist *idp;
+#ifdef HAVE_SIGACTION
+    struct      sigaction sa_new;
+#endif /* HAVE_SIGACTION */
 
     *bad_addresses = *good_addresses = 0;
 
@@ -688,7 +695,14 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	    return(PS_IOERR);
 	}
 
+#ifndef HAVE_SIGACTION
 	sigchld = signal(SIGCHLD, SIG_DFL);
+#else
+	memset (&sa_new, 0, sizeof sa_new);
+	sigemptyset (&sa_new.sa_mask);
+	sa_new.sa_handler = SIG_DFL;
+	sigaction (SIGCHLD, &sa_new, &sa_old);
+#endif /* HAVE_SIGACTION */
     }
     else /* forward to an SMTP or LMTP listener */
     {
@@ -873,7 +887,11 @@ void release_sink(struct query *ctl)
 	    pclose(sinkfp);
 	    sinkfp = (FILE *)NULL;
 	}
+#ifndef HAVE_SIGACTION
 	signal(SIGCHLD, sigchld);
+#else
+	sigaction (SIGCHLD, &sa_old, NULL);
+#endif /* HAVE_SIGACTION */
     }
 }
 
@@ -892,7 +910,11 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 	}
 	else
 	    rc = 0;
+#ifndef HAVE_SIGACTION
 	signal(SIGCHLD, sigchld);
+#else
+	sigaction (SIGCHLD, &sa_old, NULL);
+#endif /* HAVE_SIGACTION */
 	if (rc)
 	{
 	    report(stderr, 

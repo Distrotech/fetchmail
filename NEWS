@@ -2,7 +2,10 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
-fetchmail-5.4.2 (Sun Jul  2 14:24:28 EDT 2000), 19080 lines:
+* Guenther H. Leber's fix to show expunge parameters for POP3 in fetchmail -V.
+* Richard Gooch's fixes to use sigation(2) in sink.c and daemon.c
+
+fetchmail-5.4.3 (Sun Jul  2 14:24:28 EDT 2000), 19080 lines:
 
 * Fixed Debian bug #63667, fetchmailconf: doesn't write .fetchmailrc properly.
 * RFC2177 IDLE should now be done even when there are no messages.

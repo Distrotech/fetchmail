@@ -4,7 +4,7 @@
 # So just uncomment all the lines marked QNX.
 
 PACKAGE = fetchmail
-VERSION = 5.4.3
+VERSION = 5.4.4
 
 SUBDIRS = @INTLSUB@ @POSUB@  
 
@@ -18,7 +18,7 @@ CC = @CC@
 CFLAGS = @CFLAGS@
 # CFLAGS =  -g2 -5	# QNX
 LDFLAGS = @LDFLAGS@
-# LDFLAGS =  -g2 -5	# QNX
+# LDFLAGS =  -g2 -5 -N64k	# QNX
 LEX = @LEX@
 LEXFLAGS=
 YACC = @YACC@

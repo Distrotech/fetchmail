@@ -88,6 +88,9 @@ daemonize (const char *logfile, void (*termhook)(int))
   int fd;
   pid_t childpid;
   RETSIGTYPE sigchld_handler(int);
+#ifdef HAVE_SIGACTION
+  struct sigaction sa_new;
+#endif /* HAVE_SIGACTION */
 
   /* if we are started by init (process 1) via /etc/inittab we needn't 
      bother to detach from our process group context */
@@ -96,14 +99,31 @@ daemonize (const char *logfile, void (*termhook)(int))
     goto nottyDetach;
 
   /* Ignore BSD terminal stop signals */
+#ifdef HAVE_SIGACTION
+  memset (&sa_new, 0, sizeof sa_new);
+  sigemptyset (&sa_new.sa_mask);
+  sa_new.sa_handler = SIG_IGN;
+#endif /* HAVE_SIGACTION */
 #ifdef 	SIGTTOU
+#ifndef HAVE_SIGACTION
   signal(SIGTTOU, SIG_IGN);
+#else
+  sigaction (SIGTTOU, &sa_new, NULL);
+#endif /* HAVE_SIGACTION */
 #endif
 #ifdef	SIGTTIN
+#ifndef HAVE_SIGACTION
   signal(SIGTTIN, SIG_IGN);
+#else
+  sigaction (SIGTTIN, &sa_new, NULL);
+#endif /* HAVE_SIGACTION */
 #endif
 #ifdef	SIGTSTP
+#ifndef HAVE_SIGACTION
   signal(SIGTSTP, SIG_IGN);
+#else
+  sigaction (SIGTSTP, &sa_new, NULL);
+#endif /* HAVE_SIGACTION */
 #endif
 
   /* In case we were not started in the background, fork and let
@@ -144,7 +164,11 @@ daemonize (const char *logfile, void (*termhook)(int))
 #endif
   
   /* lose controlling tty */
+#ifndef HAVE_SIGACTION
   signal(SIGHUP, SIG_IGN);
+#else
+  sigaction (SIGHUP, &sa_new, NULL);
+#endif /* HAVE_SIGACTION */
   if ((childpid = fork()) < 0) {
     report(stderr, "fork (%)\n", strerror(errno));
     return(PS_IOERR);
@@ -197,9 +221,18 @@ nottyDetach:
 #endif
 
   /* set up to catch child process termination signals */ 
+#ifndef HAVE_SIGACTION
   signal(SIGCHLD, sigchld_handler); 
+#else
+  sa_new.sa_handler = sigchld_handler;
+  sigaction (SIGCHLD, &sa_new, NULL);
+#endif /* HAVE_SIGACTION */
 #if defined(SIGPWR)
+#ifndef HAVE_SIGACTION
   signal(SIGPWR, sigchld_handler); 
+#else
+  sigaction (SIGPWR, &sa_new, NULL);
+#endif /* HAVE_SIGACTION */
 #endif
 
   return(0);

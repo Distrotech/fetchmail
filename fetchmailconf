@@ -1522,8 +1522,8 @@ class UserEdit(Frame, MyWidget):
 		      self.fetchlimit, '30').pack(side=TOP, fill=X)
             LabeledEntry(limwin, 'Max messages to forward per poll:',
 		      self.batchlimit, '30').pack(side=TOP, fill=X)
-            if self.parent.server.protocol in ('IMAP', 'IMAP-K4', 'IMAP-GSS'):
-                LabeledEntry(limwin, 'Interval between expunges (IMAP):',
+            if self.parent.server.protocol != 'ETRN':
+                LabeledEntry(limwin, 'Interval between expunges:',
                              self.expunge, '30').pack(side=TOP, fill=X)
             Checkbutton(limwin, text="Idle after each poll (IMAP only)", 
 		    variable=self.idle).pack(side=TOP, anchor=W)

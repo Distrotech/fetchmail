@@ -1612,7 +1612,7 @@ static void dump_params (struct runctl *runp,
 		    printf(_("  SMTP message batch limit is %d.\n"), ctl->batchlimit);
 		else if (outlevel >= O_VERBOSE)
 		    printf(_("  No SMTP message batch limit (--batchlimit 0).\n"));
-		if (ctl->server.protocol == P_IMAP)
+		if (ctl->server.protocol != P_ETRN)
 		{
 		    if (NUM_NONZERO(ctl->expunge))
 			printf(_("  Deletion interval between expunges forced to %d (--expunge %d).\n"), ctl->expunge, ctl->expunge);
