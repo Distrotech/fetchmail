@@ -20,6 +20,7 @@ Summary:	Full-featured POP/IMAP mail retrieval daemon
 Summary(fr):    Collecteur (POP/IMAP) de courrier électronique
 Summary(de):    Program zum Abholen von E-Mail via POP/IMAP
 Summary(pt_BR): Busca mensagens de um servidor usando POP ou IMAP
+Summary(es_AR): Recolector de correo via POP/IMAP
 
 %description
 fetchmail is a free, full-featured, robust, and well-documented remote
@@ -53,6 +54,14 @@ fetchmail é um programa que é usado para recuperar mensagens de um
 servidor de mail remoto. Ele pode usar Post Office Protocol (POP)
 ou IMAP (Internet Mail Access Protocol) para isso, e entrega o mail
 através do servidor local SMTP (normalmente sendmail).
+
+%description -l es_AR
+fetchmail es una utilidad gratis, completa, robusta y bien documentada
+para la recepción y reeenvío de correo pensada para ser usada en co-
+nexiones TCP/IP por demanda (como SLIP y PPP). Recibe el correo de
+servidores remotos y lo reenvía a el sistema de entrega local, siendo de
+ese modo posible leerlo con programas como mutt, elm, pine, (x)emacs/gnus
+o mailx. Contiene un configurador GUI interactivo pensado para usuarios.
 
 %prep
 %setup
