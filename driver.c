@@ -1808,14 +1808,19 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	stage = STAGE_GETAUTH;
 	if (protocol->getauth)
 	{
-	    if (protocol->password_canonify)
-		(protocol->password_canonify)(shroud, ctl->password, PASSWORDLEN);
-	    else
-		strcpy(shroud, ctl->password);
+	    /* 
+	     * We want to restrict shrouding as much as possible -- it 
+	     * might actually leak information by splatting out revealing
+	     * pieces of a message.
+	     */
+	    if (ctl->server.authenticate == A_PASSWORD)
+		if (protocol->password_canonify)
+		    (protocol->password_canonify)(shroud, ctl->password, PASSWORDLEN);
+		else
+		    strcpy(shroud, ctl->password);
 
 	    ok = (protocol->getauth)(mailserver_socket, ctl, buf);
 
-	    /* prevent shrouding later on -- it might backfire */
 	    shroud[0] = '\0';
 
 	    if (ok != 0)
