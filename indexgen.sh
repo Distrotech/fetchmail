@@ -182,13 +182,13 @@ tend to get the same three newbie questions over and over again.  The
 FAQ covers them like a blanket.<P>
 
 Fetchmail was written and is maintained by <a
-href="../index.html">Eric S. Raymond</a>.  <a
-href="mailto:funk+@osu.edu">Rob Funk</a>, <a
-href="mailto:alberty@apexxtech.com">Al Youngwerth</a> and <a
-href="mailto:imdave@mcs.net">Dave Bodenstab</a> are fetchmail's
-designated backup maintainers.  Other backup maintainers may be added
-in the future, in order to ensure continued support should Eric S.
-Raymond drop permanently off the net for any reason.<P>
+href="../index.html">Eric S. Raymond</a>.  There are some designated
+backup maintainers (<a href="mailto:funk+@osu.edu">Rob Funk</a>, <a
+href="mailto:alberty@apexxtech.com">Al Youngwerth</a>, <a
+href="mailto:imdave@mcs.net">Dave Bodenstab</a>.  Other backup
+maintainers may be added in the future, in order to ensure continued
+support should Eric S.  Raymond drop permanently off the net for any
+reason.<P>
 
 <H1>Who uses fetchmail:</H1>
 
@@ -283,6 +283,11 @@ There is a FTP mirror of the fetchmail FTP directory (not this WWW
 home site, just the current sources and RPM) in Japan at
 <a href="ftp://ftp.win.or.jp/pub/network/mail/fetchmail">
 ftp://ftp.win.or.jp/pub/network/mail/fetchmail</a>.<P>
+
+<H1>Reviews and Awards</H1>
+
+Fetchmail was DaveCentral's Best Of Linux winner for
+<a href="http://linux.davecentral.com/bol_19990630.html">June 30 1999</a>.
 
 <HR>
 <table width="100%" cellpadding=0><tr>
