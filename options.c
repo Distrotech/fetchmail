@@ -74,7 +74,7 @@ static struct option longoptions[] = {
   arguments:
     argc         argument count.
     argv         argument strings.
-    options      pointer to a struct hostrec to receive the parsed 
+    queryctl     pointer to a struct hostrec to receive the parsed 
                  options.
 
   return value:  if positive, argv index of last parsed option + 1
@@ -276,39 +276,39 @@ struct hostrec *options;
   globals:       writes outlevel, poprcfile.
  *********************************************************************/
 
-int setdefaults (options)
-struct hostrec *options;
+int setdefaults (queryctl)
+struct hostrec *queryctl;
 {
   int uid;
   struct passwd *pw;
   char *mailvar;
 
-  bzero(options,sizeof(*options));
+  bzero(queryctl,sizeof(*queryctl));
 
   if ((pw = getpwuid(uid = getuid())) == NULL) {
     fprintf(stderr,"No passwd entry for uid %d\n",uid);
     return(-1);
   }
 
-  options->protocol = DEF_PROTOCOL;
+  queryctl->protocol = DEF_PROTOCOL;
 
 #if defined(KEEP_IS_DEFAULT)
-  options->keep = 1;
+  queryctl->keep = 1;
 #else
-  options->keep = 0;
+  queryctl->keep = 0;
 #endif
 
-  strcpy(options->localname,pw->pw_name);
-  strcpy(options->remotename,pw->pw_name);
+  strcpy(queryctl->localname,pw->pw_name);
+  strcpy(queryctl->remotename,pw->pw_name);
 
 #if defined(USERFOLDER) && defined(HAVE_FLOCK) 
-  options->output = TO_FOLDER;
-  sprintf(options->userfolder, USERFOLDER, pw->pw_name);
+  queryctl->output = TO_FOLDER;
+  sprintf(queryctl->userfolder, USERFOLDER, pw->pw_name);
 #else
-  options->output = TO_MDA;
+  queryctl->output = TO_MDA;
 #endif
 
-  (void) sprintf(options->mda, DEF_MDA, options->localname);
+  (void) sprintf(queryctl->mda, DEF_MDA, queryctl->localname);
 
   poprcfile = 
       (char *) xmalloc(strlen(pw->pw_dir)+strlen(POPRC_NAME)+2);

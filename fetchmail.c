@@ -43,11 +43,11 @@
 
 #ifdef HAVE_PROTOTYPES
 /* prototypes for internal functions */
-int showoptions (struct hostrec *options);
-int parseMDAargs (struct hostrec *options);
+int showoptions (struct hostrec *queryctl);
+int parseMDAargs (struct hostrec *queryctl);
 int showversioninfo (void);
-int dump_options (struct hostrec *options);
-int query_host(struct hostrec *options);
+int dump_options (struct hostrec *queryctl);
+int query_host(struct hostrec *queryctl);
 #endif
 
 /* controls the detail level of status/progress messages written to stderr */
@@ -226,19 +226,19 @@ void termhook()
     exit(popstatus);
 }
 
-int query_host(options)
+int query_host(queryctl)
 /* perform fetch transaction with single host */
-struct hostrec *options;
+struct hostrec *queryctl;
 {
   if (outlevel != O_SILENT)
-    fprintf(stderr, "popclient: querying %s\n", options->servername);
-  switch (options->protocol) {
+    fprintf(stderr, "popclient: querying %s\n", queryctl->servername);
+  switch (queryctl->protocol) {
   case P_POP2:
-    return(doPOP2(options));
+    return(doPOP2(queryctl));
     break;
   case P_POP3:
   case P_APOP:
-    return(doPOP3(options));
+    return(doPOP3(queryctl));
     break;
   default:
     fprintf(stderr,"popclient: unsupported protocol selected.\n");
@@ -264,21 +264,21 @@ int showversioninfo()
   function:      dump_options
   description:   display program options in English
   arguments:
-    options      merged options
+    queryctl      merged options
 
   return value:  none.
   calls:         none.
   globals:       linelimit, outlimit.
 *********************************************************************/
 
-int dump_options (options)
-struct hostrec *options;
+int dump_options (queryctl)
+struct hostrec *queryctl;
 {
-  printf("  Username = '%s'\n", options->remotename);
-  printf("  Password = '%s'\n", options->password);
+  printf("  Username = '%s'\n", queryctl->remotename);
+  printf("  Password = '%s'\n", queryctl->password);
 
   printf("  Protocol is ");
-  switch (options->protocol)
+  switch (queryctl->protocol)
   {
   case P_POP2: printf("POP2\n"); break;
   case P_POP3: printf("POP3\n"); break;
@@ -289,22 +289,22 @@ struct hostrec *options;
   }
 
   printf("  Fetched messages will%s be kept on the server (--keep %s).\n",
-	 options->keep ? "" : " not",
-	 options->keep ? "on" : "off");
+	 queryctl->keep ? "" : " not",
+	 queryctl->keep ? "on" : "off");
   printf("  %s messages will be retrieved (--all %s).\n",
-	 options->fetchall ? "All" : "Only new",
-         options->fetchall ? "on" : "off");
+	 queryctl->fetchall ? "All" : "Only new",
+         queryctl->fetchall ? "on" : "off");
   printf("  Old messages will%s be flushed before message retrieval (--flush %s).\n",
-	 options->flush ? "" : " not",
-         options->flush ? "on" : "off");
+	 queryctl->flush ? "" : " not",
+         queryctl->flush ? "on" : "off");
 
-  switch(options->output)
+  switch(queryctl->output)
   {
   case TO_FOLDER:
-    printf("  Messages will be appended to '%s'\n", options->userfolder);
+    printf("  Messages will be appended to '%s'\n", queryctl->userfolder);
     break;
   case TO_MDA:
-    printf("  Messages will be delivered with %s\n", options->mda);
+    printf("  Messages will be delivered with %s\n", queryctl->mda);
     break;
   case TO_STDOUT:
     printf("  Messages will be dumped to standard output\n");
@@ -313,10 +313,10 @@ struct hostrec *options;
   }
   if (outlevel == O_VERBOSE)
     {
-      if (options->output != TO_FOLDER)
-	printf("  (Mail folder would have been '%s')\n", options->userfolder);
-      if (options->output != TO_MDA)
-	printf("  (MDA would have been '%s')\n", options->mda);
+      if (queryctl->output != TO_FOLDER)
+	printf("  (Mail folder would have been '%s')\n", queryctl->userfolder);
+      if (queryctl->output != TO_MDA)
+	printf("  (MDA would have been '%s')\n", queryctl->mda);
     }
 
   if (linelimit == 0)
@@ -332,7 +332,7 @@ struct hostrec *options;
                  be appended.  Write-lock the folder if possible.
 
   arguments:     
-    options      fully-determined options (i.e. parsed, defaults invoked,
+    queryctl     fully-determined options (i.e. parsed, defaults invoked,
                  etc).
 
   return value:  file descriptor for the open file, else -1.
@@ -340,15 +340,15 @@ struct hostrec *options;
   globals:       none.
  *********************************************************************/
 
-int openuserfolder (options)
-struct hostrec *options;
+int openuserfolder (queryctl)
+struct hostrec *queryctl;
 {
   int fd;
 
-  if (options->output == TO_STDOUT)
+  if (queryctl->output == TO_STDOUT)
     return(1);
-  else    /* options->output == TO_FOLDER */
-    if ((fd = open(options->userfolder,O_CREAT|O_WRONLY|O_APPEND,0600)) >= 0) {
+  else    /* queryctl->output == TO_FOLDER */
+    if ((fd = open(queryctl->userfolder,O_CREAT|O_WRONLY|O_APPEND,0600)) >= 0) {
 #ifdef HAVE_FLOCK
       if (flock(fd, LOCK_EX) == -1)
 	{
@@ -371,7 +371,7 @@ struct hostrec *options;
   function:      openmailpipe
   description:   open a one-way pipe to the mail delivery agent.
   arguments:     
-    options      fully-determined options (i.e. parsed, defaults invoked,
+    queryctl     fully-determined options (i.e. parsed, defaults invoked,
                  etc).
 
   return value:  open file descriptor for the pipe or -1.
@@ -379,8 +379,8 @@ struct hostrec *options;
   globals:       reads mda_argv.
  *********************************************************************/
 
-int openmailpipe (options)
-struct hostrec *options;
+int openmailpipe (queryctl)
+struct hostrec *queryctl;
 {
   int pipefd [2];
   int childpid;
@@ -404,7 +404,7 @@ struct hostrec *options;
       exit(1);
     }
 
-    execv(options->mda,mda_argv);
+    execv(queryctl->mda,mda_argv);
 
     /* if we got here, an error occurred */
     perror("popclient: openmailpipe: exec");
@@ -453,7 +453,7 @@ int fd;
   function:      closemailpipe
   description:   close pipe to the mail delivery agent.
   arguments:     
-    options      fully-determined options record
+    queryctl     fully-determined options record
     fd           pipe descriptor.
 
   return value:  0 if success, else -1.
@@ -486,24 +486,24 @@ int fd;
   description:   parse the argument string given in agent option into
                  a regular *argv[] array.
   arguments:
-    options      fully-determined options record pointer.
+    queryctl     fully-determined options record pointer.
 
   return value:  none.
   calls:         none.
   globals:       writes mda_argv.
  *********************************************************************/
 
-int parseMDAargs (options)
-struct hostrec *options;
+int parseMDAargs (queryctl)
+struct hostrec *queryctl;
 {
   int argi;
   char *argp;
 
   /* first put the last segment of the MDA pathname in argv[0] */
-  argp = strrchr(options->mda, '/');
-  mda_argv[0] = argp ? (argp + 1) : options->mda;
+  argp = strrchr(queryctl->mda, '/');
+  mda_argv[0] = argp ? (argp + 1) : queryctl->mda;
   
-  argp = options->mda;
+  argp = queryctl->mda;
   while (*argp != '\0' && isspace(*argp))	/* skip null first arg */
     argp++;					
 

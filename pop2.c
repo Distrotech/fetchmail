@@ -51,7 +51,7 @@ int POP2_stateXFER (int msgsize, int socket, int mboxfd, int topipe);
                  using Post Office Protocol 2.
 
   arguments:     
-    options      fully-specified options (i.e. parsed, defaults invoked,
+    queryctl     fully-specified options (i.e. parsed, defaults invoked,
                  etc).
 
   return value:  exit code from the set of PS_.* constants defined in 
@@ -63,8 +63,8 @@ int POP2_stateXFER (int msgsize, int socket, int mboxfd, int topipe);
   globals:       reads outlevel.
  *********************************************************************/
 
-int doPOP2 (options)
-struct hostrec *options;
+int doPOP2 (queryctl)
+struct hostrec *queryctl;
 {
   int mboxfd;
   int socket;
@@ -76,11 +76,11 @@ struct hostrec *options;
     fprintf(stderr,"Option --limit is not supported in POP2\n");
     return(PS_SYNTAX);
   }
-  else if (options->flush) {
+  else if (queryctl->flush) {
     fprintf(stderr,"Option --flush is not supported in POP2\n");
     return(PS_SYNTAX);
   }
-  else if (options->fetchall) {
+  else if (queryctl->fetchall) {
     fprintf(stderr,"Option --all is not supported in POP2\n");
     return(PS_SYNTAX);
   }
@@ -88,14 +88,14 @@ struct hostrec *options;
     ;
 
   /* open the socket to the POP server */
-  if ((socket = Socket(options->servername,POP2_PORT)) < 0) {
+  if ((socket = Socket(queryctl->servername,POP2_PORT)) < 0) {
     perror("doPOP2: socket");
     return(PS_SOCKET);
   }
     
   /* open/lock the folder if it is a user folder or stdout */
-  if (options->output == TO_FOLDER)
-    if ((mboxfd = openuserfolder(options)) < 0) 
+  if (queryctl->output == TO_FOLDER)
+    if ((mboxfd = openuserfolder(queryctl)) < 0) 
       return(PS_IOERR);
  
   /* wait for the POP2 greeting */
@@ -106,7 +106,7 @@ struct hostrec *options;
   }
 
   /* log the user onto the server */
-  POP2_sendHELO(options->remotename,options->password,socket);
+  POP2_sendHELO(queryctl->remotename,queryctl->password,socket);
   if ((number = POP2_stateNMBR(socket)) < 0) {
     POP2_quit(socket);
     status = PS_AUTHFAIL;
@@ -114,8 +114,8 @@ struct hostrec *options;
   }
 
   /* set the remote folder if selected */
-  if (*options->remotefolder != 0) {
-    POP2_sendFOLD(options->remotefolder,socket);
+  if (*queryctl->remotefolder != 0) {
+    POP2_sendFOLD(queryctl->remotefolder,socket);
     if ((number = POP2_stateNMBR(socket)) < 0) {
       POP2_quit(socket);
       status = PS_PROTOCOL;
@@ -125,7 +125,7 @@ struct hostrec *options;
 
   /* tell 'em how many messages are waiting */
   if (outlevel > O_SILENT && outlevel < O_VERBOSE)
-    fprintf(stderr,"%d messages in folder %s\n",number,options->remotefolder);
+    fprintf(stderr,"%d messages in folder %s\n",number,queryctl->remotefolder);
   else
     ;
 
@@ -137,17 +137,17 @@ struct hostrec *options;
     while (msgsize > 0) {
 
       /* open the pipe */
-      if (options->output == TO_MDA)
-        if ((mboxfd = openmailpipe(options)) < 0) {   
+      if (queryctl->output == TO_MDA)
+        if ((mboxfd = openmailpipe(queryctl)) < 0) {   
           POP2_quit(socket);
           return(PS_IOERR);
         }
 
       POP2_sendcmd("RETR",socket);
       actsize = POP2_stateXFER(msgsize,socket,mboxfd,
-                               options->output == TO_MDA);
+                               queryctl->output == TO_MDA);
       if (actsize == msgsize) 
-        if (options->keep)
+        if (queryctl->keep)
           POP2_sendcmd("ACKS",socket);
         else
           POP2_sendcmd("ACKD",socket);
@@ -160,7 +160,7 @@ struct hostrec *options;
       }
 
       /* close the pipe */
-      if (options->output == TO_MDA)
+      if (queryctl->output == TO_MDA)
         if (closemailpipe(mboxfd) < 0) {
           POP2_quit(socket);
           status = PS_IOERR;
@@ -178,7 +178,7 @@ struct hostrec *options;
   }
 
 closeUp:
-  if (options->output == TO_FOLDER)
+  if (queryctl->output == TO_FOLDER)
     closeuserfolder(mboxfd);
 
   return(status);

@@ -51,7 +51,7 @@ int POP3_BuildDigest (char *buf, struct hostrec *options);
                  using Post Office Protocol 3.
 
   arguments:     
-    options      fully-specified options (i.e. parsed, defaults invoked,
+    queryctl     fully-specified options (i.e. parsed, defaults invoked,
                  etc).
 
   return value:  exit code from the set of PS_.* constants defined in 
@@ -60,8 +60,8 @@ int POP3_BuildDigest (char *buf, struct hostrec *options);
   globals:       reads outlevel.
  *********************************************************************/
 
-int doPOP3 (options)
-struct hostrec *options;
+int doPOP3 (queryctl)
+struct hostrec *queryctl;
 {
   int ok;
   int mboxfd;
@@ -71,12 +71,12 @@ struct hostrec *options;
 
 
   /* open/lock the folder if we're using a mailbox */
-  if (options->output == TO_FOLDER) 
-    if ((mboxfd = openuserfolder(options)) < 0) 
+  if (queryctl->output == TO_FOLDER) 
+    if ((mboxfd = openuserfolder(queryctl)) < 0) 
       return(PS_IOERR);
     
   /* open the socket and get the greeting */
-  if ((socket = Socket(options->servername,POP3_PORT)) < 0) {
+  if ((socket = Socket(queryctl->servername,POP3_PORT)) < 0) {
     perror("doPOP3: socket");
     ok = PS_SOCKET;
     goto closeUp;
@@ -98,8 +98,8 @@ struct hostrec *options;
 
 #if defined(HAVE_APOP_SUPPORT)
   /* build MD5 digest from greeting timestamp + password */
-  if (options->whichpop == P_APOP) 
-    if (POP3_BuildDigest(buf,options) != 0) {
+  if (queryctl->whichpop == P_APOP) 
+    if (POP3_BuildDigest(buf,queryctl) != 0) {
       ok = PS_AUTHFAIL;
       goto closeUp;
     } else
@@ -109,7 +109,7 @@ struct hostrec *options;
 #endif
 
   /* try to get authorized */
-  ok = POP3_auth(options,socket);
+  ok = POP3_auth(queryctl,socket);
   if (ok == PS_ERROR)
     ok = PS_AUTHFAIL;
   if (ok != 0)
@@ -122,7 +122,7 @@ struct hostrec *options;
   }
 
   /* Ask for number of last message retrieved */
-  if (options->fetchall) 
+  if (queryctl->fetchall) 
     first = 1;
   else {
     ok = POP3_sendLAST(&first, socket);
@@ -143,19 +143,19 @@ struct hostrec *options;
     ;
 
   if (count > 0) { 
-    for (number = (options->flush || options->fetchall)? 1 : first;  
+    for (number = (queryctl->flush || queryctl->fetchall)? 1 : first;  
                    number <= count;  
                    number++) {
 
       /* open the mail pipe if we're using an MDA */
-      if (options->output == TO_MDA
-           && (options->fetchall || number >= first)) {
-        ok = (mboxfd = openmailpipe(options)) < 0 ? -1 : 0;
+      if (queryctl->output == TO_MDA
+           && (queryctl->fetchall || number >= first)) {
+        ok = (mboxfd = openmailpipe(queryctl)) < 0 ? -1 : 0;
         if (ok != 0)
           goto cleanUp;
       }
            
-      if (options->flush && number < first && !options->fetchall) 
+      if (queryctl->flush && number < first && !queryctl->fetchall) 
         ok = 0;  /* no command to send here, will delete message below */
       else if (linelimit) 
         ok = POP3_sendTOP(number,linelimit,socket);
@@ -164,14 +164,14 @@ struct hostrec *options;
       if (ok != 0)
         goto cleanUp;
       
-      if (number >= first || options->fetchall)
-        ok = POP3_readmsg(socket,mboxfd,options->servername,options->output == TO_MDA);
+      if (number >= first || queryctl->fetchall)
+        ok = POP3_readmsg(socket,mboxfd,queryctl->servername,queryctl->output == TO_MDA);
       else
         ok = 0;
       if (ok != 0)
         goto cleanUp;
 
-      if ((number < first && options->flush) || !options->keep) {
+      if ((number < first && queryctl->flush) || !queryctl->keep) {
         if (outlevel > O_SILENT && outlevel < O_VERBOSE) 
           fprintf(stderr,"flushing message %d\n", number);
         else
@@ -184,8 +184,8 @@ struct hostrec *options;
         ; /* message is kept */
 
       /* close the mail pipe if we're using the system mailbox */
-      if (options->output == TO_MDA
-           && (options->fetchall || number >= first)) {
+      if (queryctl->output == TO_MDA
+           && (queryctl->fetchall || number >= first)) {
         ok = closemailpipe(mboxfd);
         if (ok != 0)
           goto cleanUp;
@@ -211,7 +211,7 @@ cleanUp:
     POP3_sendQUIT(socket);
 
 closeUp:
-  if (options->output == TO_FOLDER)
+  if (queryctl->output == TO_FOLDER)
     if (closeuserfolder(mboxfd) < 0 && ok == 0)
       ok = PS_IOERR;
     
@@ -281,7 +281,7 @@ int socket;
   description:   send the USER and PASS commands to the server, and
                  get the server's response.
   arguments:     
-    options	 merged options record.
+    queryctl	 merged options record.
     socket       socket to which the server is connected.
 
   return value:  zero if success, else status code.
@@ -289,21 +289,21 @@ int socket;
   globals:       read outlevel.
  *********************************************************************/
 
-int POP3_auth (options,socket) 
-struct hostrec *options;
+int POP3_auth (queryctl,socket) 
+struct hostrec *queryctl;
 int socket;
 {
   char buf [POPBUFSIZE];
 
-  switch (options->protocol) {
+  switch (queryctl->protocol) {
     case P_POP3:
-      SockPrintf(socket,"USER %s\r\n",options->remotename);
+      SockPrintf(socket,"USER %s\r\n",queryctl->remotename);
       if (outlevel == O_VERBOSE)
-        fprintf(stderr,"> USER %s\n",options->remotename);
+        fprintf(stderr,"> USER %s\n",queryctl->remotename);
       if (POP3_OK(buf,socket) != 0)
         goto badAuth;
 
-      SockPrintf(socket,"PASS %s\r\n",options->password);
+      SockPrintf(socket,"PASS %s\r\n",queryctl->password);
       if (outlevel == O_VERBOSE)
         fprintf(stderr,"> PASS password\n");
       if (POP3_OK(buf,socket) != 0)
@@ -314,9 +314,9 @@ int socket;
 #if defined(HAVE_APOP_SUPPORT)
     case P_APOP:
       SockPrintf(socket,"APOP %s %s\r\n", 
-                 options->remotename, options->digest);
+                 queryctl->remotename, queryctl->digest);
       if (outlevel == O_VERBOSE)
-        fprintf(stderr,"> APOP %s %s\n",options->remotename, options->digest);
+        fprintf(stderr,"> APOP %s %s\n",queryctl->remotename, queryctl->digest);
       if (POP3_OK(buf,socket) != 0) 
         goto badAuth;
       break;
@@ -324,11 +324,11 @@ int socket;
 
 #if defined(HAVE_RPOP_SUPPORT)
     case P_RPOP:
-      SockPrintf(socket, "RPOP %s\r\n", options->remotename);
+      SockPrintf(socket, "RPOP %s\r\n", queryctl->remotename);
       if (POP3_OK(buf,socket) != 0)
          goto badAuth;
       if (outlevel == O_VERBOSE)
-        fprintf(stderr,"> RPOP %s %s\n",options->remotename);
+        fprintf(stderr,"> RPOP %s %s\n",queryctl->remotename);
       break;
 #endif  /* HAVE_RPOP_SUPPORT */
 
@@ -702,7 +702,7 @@ int socket;
                 stamp in the POP3 greeting.
   arguments:
     buf		greeting string
-    options	merged options record.
+    queryctl	merged options record.
 
   ret. value:	zero on success, nonzero if no timestamp found in
 	        greeting.
@@ -711,9 +711,9 @@ int socket;
  *****************************************************************/
 
 #if defined(HAVE_APOP_SUPPORT)
-POP3_BuildDigest (buf,options)
+POP3_BuildDigest (buf,queryctl)
 char *buf;
-struct hostrec *options;
+struct hostrec *queryctl;
 {
   char *start,*end;
   char *msg;
@@ -735,12 +735,12 @@ struct hostrec *options;
   }
 
   /* copy timestamp and password into digestion buffer */
-  msg = (char *) malloc((end-start-1) + strlen(options->password) + 1);
+  msg = (char *) malloc((end-start-1) + strlen(queryctl->password) + 1);
   *(++end) = 0;
   strcpy(msg,start);
-  strcat(msg,options->password);
+  strcat(msg,queryctl->password);
 
-  strcpy(options->digest, MD5Digest(msg));
+  strcpy(queryctl->digest, MD5Digest(msg));
   free(msg);
   return(0);
 }
