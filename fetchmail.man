@@ -770,6 +770,17 @@ is not valid.  Some servers may require client side certificates be signed
 by a recognized Certifying Authority.  The format for the key files and
 the certificate files is that required by the underlying SSL libraries
 (OpenSSL in the general case).
+.PP
+Finally, a word of care about the use of SSL: While above mentioned
+setup with self-signed server certificates retrieved over the wires
+can protect you from a passive eavesdropper it doesn't help against an
+active attacker. It's clearly an improvement over sending the
+passwords in clear but you should be aware that a man-in-the-middle
+attack is trivially possible (in particular with tools such as dsniff,
+http://www.monkey.org/~dugsong/dsniff/).  Therefore and if possible,
+the use of an appropriately ssh tunnel (see below for some examples)
+is preferable if you seriously care about the security of your
+mailbox.
 
 .SH DAEMON MODE
 The 
