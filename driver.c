@@ -895,7 +895,8 @@ cleanUp:
 closeUp:
     if (mboxfd != -1)
     {
-	SMTP_quit(mboxfd);
+        if (!queryctl->mda[0])
+	    SMTP_quit(mboxfd);
 	close(mboxfd);
     }
     alarm(0);
