@@ -328,7 +328,9 @@ that assists you in installing sendmail and fetchmail together/
 
 <P>Peter Hawkins has written a script called <a
 href="http://www.hawkins.emu.id.au/gotmail/">gotmail</a>
-that can retrieve Hotmail. 
+that can retrieve Hotmail. Another script, 
+<a href="http://yosucker.sourceforge.net">yosucker</a>, can retrieve
+Yahoo webmail.
 
 <P>A hacker identifying himself simply as \`Steines' has written a
 filter which rewrites the to-line with a line which only includes
