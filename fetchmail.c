@@ -31,10 +31,6 @@
 #endif /* HAVE_SETRLIMIT */
 #include <sys/utsname.h>
 
-#ifdef HAVE_NET_SOCKET_H
-#include <net/socket.h>
-#endif
-
 #include "getopt.h"
 #include "fetchmail.h"
 #include "socket.h"
