@@ -53,7 +53,6 @@ static char *visbuf(const char *);
 
 /* controls the detail level of status/progress messages written to stderr */
 int outlevel;    	/* see the O_.* constants above */
-int yydebug;		/* enable parse debugging */
 
 /* daemon mode control */
 int poll_interval;	/* poll interval in seconds */
