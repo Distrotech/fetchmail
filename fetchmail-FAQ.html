@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/12/01 09:47:52 $
+<td width="30%" align=right>$Date: 2000/12/12 03:53:25 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -112,6 +112,7 @@ IP address?</a><br>
 <a href="#R9">R9. Fetchmail is timing out after fetching certain
 messages but before deleting them</a><br>
 <a href="#R10">R10. Fetchmail is timing out during message fetches</a><br>
+<a href="#R11">R11. Fetchmail is dying with SIGPIPE.</a><br>
 
 <h1>Disappearing mail</h1>
 
@@ -2199,6 +2200,13 @@ Or you may not be connecting to the SMTP listener.   Run fetchmail -v
 and see <a href="#R1">R1</a>.<p>
 
 <hr>
+<h2><a name="R11">R11. Fetchmail is dying with SIGPIPE.</a></h2>
+
+This probably means you have an <code>mda</code> option.  Your MDA is
+croaking while being passed a message.  Best fix is to remove the
+<code>mda</code> option and pass mail to your port 25 SMTP listener.<p>
+
+<hr>
 <h2><a name="D2">D2. All my mail seems to disappear after a dropped connection.</a></h2>
 
 One POP3 daemon used in the Berkeley Unix world that reports itself as
@@ -2971,7 +2979,7 @@ install Linux on your server...<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/12/01 09:47:52 $
+<td width="30%" align=right>$Date: 2000/12/12 03:53:25 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
