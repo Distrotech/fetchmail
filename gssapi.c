@@ -177,7 +177,7 @@ int do_gssauth(int sock, char *command, char *hostname, char *username)
     to64frombits(buf1, send_token.value, send_token.length);
 
     suppress_tags = TRUE;
-    result = gen_transact(sock, buf1, strlen(buf));
+    result = gen_transact(sock, buf1, strlen(buf1));
     suppress_tags = FALSE;
 
     /* flush security context */

@@ -134,6 +134,8 @@
 /* Define to the version of the distribution.  */
 #undef VERSION
 
+/* Define if you have a fallback MDA installed */
+#undef FALLBACK_MDA
 
 
 /* Leave that blank line there!!  Autoheader needs it.

@@ -46,6 +46,11 @@ delivery-control mechanisms (such as \fI.forward\fR files) normally
 available through your system MDA and local delivery agents will
 therefore work.
 .PP
+If no port 25 listener is available, but your fetchmail compilation detected
+or was told about a local MDA, it will use that MDA for local delivery
+instead.  At build time, fetchmail looks for executable procmail and
+sendmail binaries.
+.PP
 If the program
 .I fetchmailconf
 is available, it will assist you in setting up and editing a
