@@ -409,8 +409,8 @@ struct query *ctl;	/* query control record */
 char *realname;		/* real name of host */
 {
     char buf [MSGBUFSIZE+1]; 
-    int	from_offs, to_offs, cc_offs, bcc_offs, ctt_offs, env_offs, rtp_offs;
-    char *headers, *received_for;
+    int	from_offs, to_offs, cc_offs, bcc_offs, ctt_offs, env_offs;
+    char *headers, *received_for, *return_path;
     int n, oldlen, ch, sizeticker, delete_ok, remaining;
     FILE *sinkfp;
     RETSIGTYPE (*sigchld)();
@@ -429,8 +429,8 @@ char *realname;		/* real name of host */
     remaining = len;
 
     /* read message headers */
-    headers = received_for = NULL;
-    from_offs = to_offs = cc_offs = bcc_offs = ctt_offs = env_offs = rtp_offs = -1;
+    headers = received_for = return_path = NULL;
+    from_offs = to_offs = cc_offs = bcc_offs = ctt_offs = env_offs = -1;
     oldlen = 0;
     for (;;)
     {
@@ -471,6 +471,29 @@ char *realname;		/* real name of host */
 	    break;
 	}
      
+
+	/*
+	 * OK, this is messy.  If we're forwarding by SMTP, it's the
+	 * SMTP-receiver's job (according to RFC821, page 22, section
+	 * 4.1.1) to generate a Return-Path line on final delivery.
+	 * The trouble is, we've already got one because the
+	 * mailserver's SMTP thought *it* was responsible for final
+	 * delivery.
+	 *
+	 * Stash away the contents of Return-Path for use in generating
+	 * MAIL FROM later on, then prevent the header from being saved
+	 * with the others.  In effect, we strip it off here.
+	 *
+	 * If the SMTP server conforms to the standards, and fetchmail gets the
+	 * envelope sender from the Return-Path, the new Return-Path should be
+	 * exactly the same as the original one.
+	 */
+	if (!ctl->mda && !strncasecmp("Return-Path:", line, 12))
+	{
+	    return_path = xstrdup(nxtaddr(line));
+	    continue;
+	}
+
 	if (ctl->rewrite)
 	    reply_hack(line, realname);
 
@@ -502,9 +525,6 @@ char *realname;		/* real name of host */
 	    from_offs = (line - headers);
 	else if (from_offs == -1 && !strncasecmp("Apparently-From:", line, 16))
 	    from_offs = (line - headers);
-
-	else if (rtp_offs == -1 && !strncasecmp("Return-Path:", line, 12))
-	    rtp_offs = (line - headers);
 
 	else if (!strncasecmp("To:", line, 3))
 	    to_offs = (line - headers);
@@ -654,6 +674,8 @@ char *realname;		/* real name of host */
 	{
 	    free_str_list(&xmit_names);
 	    error(0, 0, "SMTP connect failed");
+	    if (return_path)
+		free(return_path);
 	    return(PS_SMTP);
 	}
 
@@ -677,7 +699,7 @@ char *realname;		/* real name of host */
 	/*
 	 * If there is a Return-Path address on the message, this was
 	 * almost certainly the MAIL FROM address given the originating
-	 * sendmail.  This is the best things to use for logging the
+	 * sendmail.  This is the best thing to use for logging the
 	 * message origin (it sets up the right behavior for bounces and
 	 * mailing lists).  Otherwise, take the From address.
 	 *
@@ -695,12 +717,12 @@ char *realname;		/* real name of host */
 	 *
 	 * This is a potential problem if the MTAs further upstream
 	 * didn't pass canonicalized From/Return-Path lines, *and* the
-	 * local SMTP listener insists on them.  */
+	 * local SMTP listener insists on them.
+	 */
 	ap = (char *)NULL;
-	if (rtp_offs == -1 || !(ap = nxtaddr(headers + rtp_offs)))
-	    if (from_offs == -1 || !(ap = nxtaddr(headers + from_offs)))
-		/* empty */;
-	if (ap == (char *)NULL)
+	if (return_path)
+	    ap = return_path;
+	else if (from_offs == -1 || !(ap = nxtaddr(headers + from_offs)))
 	    ap = user;
 	if (SMTP_from(sinkfp, ap, options) != SM_OK)
 	{
@@ -710,7 +732,7 @@ char *realname;		/* real name of host */
 		error(0, 0, "SMTP error: %s", smtp_response);
 
 	    /*
-	     * There'a one problem with this flow of control;
+	     * There's one problem with this flow of control;
 	     * there's no way to avoid reading the whole message
 	     * off the server, even if the MAIL FROM response 
 	     * tells us that it's just to be discarded.  We could
@@ -758,6 +780,8 @@ char *realname;		/* real name of host */
 		if (SMTP_from(sinkfp, user, options) != SM_OK)
 		{
 		    error(0,0,"SMTP error: %s", smtp_response);
+		    if (return_path)
+			free(return_path);
 		    return(PS_SMTP);	/* should never happen */
 		}
 	    }
@@ -787,6 +811,8 @@ char *realname;		/* real name of host */
 	{
 	    error(0, 0, 
 		  "can't even send to calling user!");
+	    if (return_path)
+		free(return_path);
 	    return(PS_SMTP);
 	}
 
@@ -794,6 +820,8 @@ char *realname;		/* real name of host */
 	SMTP_data(sinkfp);
 
     skiptext:;
+	if (return_path)
+	    free(return_path);
     }
 
     /* we may need to strip carriage returns */
