@@ -194,16 +194,11 @@ static int imap_fetch_headers(int sock, struct query *ctl, int number, int *lenp
     /* expunges change the fetch numbers */
     number -= deletecount;
 
-    switch (imap_version)
-    {
-    case IMAP4rev1:	/* RFC 2060 */
-	gen_send(sock, "FETCH %d BODY[HEADER]", number);
-	break;
-
-    default:		/* RFC 1176 */
-	gen_send(sock, "FETCH %d RFC822.HEADER", number);
-	break;
-    }
+    /*
+     * This is blessed by RFC 1176, RFC1730, RFC2060.
+     * it should *not* set the \Seen flag.
+     */
+    gen_send(sock, "FETCH %d RFC822.HEADER", number);
 
     /* looking for FETCH response */
     do {
@@ -221,7 +216,7 @@ static int imap_fetch_headers(int sock, struct query *ctl, int number, int *lenp
 }
 
 static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
-/* request nth message */
+/* request headers of nth message */
 {
     char buf [POPBUFSIZE+1];
     int	num;

@@ -1028,17 +1028,24 @@ char *realname;		/* real name of host */
 	    SockWrite(ctl->smtp_socket, "\r\n", 2);
     }
 
-
     /*
      * If we're using IMAP4 or something else that can fetch headers
      * separately from bodies, it's time to grab the body now.  This
      * fetch may be skipped if we got an anti-spam or other error
      * response from SMTP above.
+     *
+     * The protocol methods should never fail here.  Just in case...
+     * we return PS_TRANSIENT because failure could not be due 
+     * to desynchronization or permanent request failure.
      */
     if (protocol->fetch_body)
     {
-	(protocol->trail)(sock, ctl, -1);
-	(protocol->fetch_body)(sock, ctl, num, &remaining);
+	int	ok;
+
+	if ((ok = (protocol->trail)(sock, ctl, num)))
+	    return(PS_TRANSIENT);
+	if ((ok = (protocol->fetch_body)(sock, ctl, num, &remaining)))
+	    return(PS_TRANSIENT);
     }
 
     /*
