@@ -45,6 +45,10 @@ and there don't seem to be any live servers for it anymore.  You can
 configure it back in if you want with `configure --enable-POP2', but
 leaving it out cuts the executable's size slightly.
 
+Support for CompuServe's RPA authentication method (rather similar to
+APOP) is available but also not included in the standard build.  You
+can compile it in with `configure --enable-RPA'.
+
 Specifying --with-kerberos=DIR will tell the fetchmail build process to
 look in DIR for Kerberos support.  Configure normally looks in /usr/kerberos
 and /usr/athena; if you specify this option with an argument it will look

@@ -12,6 +12,11 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.3.0 ()
+* FAQ update.
+
+There are 286 people on the fetchmail-friends list.
+
 fetchmail-4.2.9 (Tue Sep 30 18:21:35 EDT 1997)
 * Don't byte-stuff when writing to an MDA.
 * IMAP mode now does smart re-polling, eliminating connection/authentication

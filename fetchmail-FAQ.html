@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/09/30 18:38:09 $
+<td width="30%" align=right>$Date: 1997/10/01 04:00:27 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -61,6 +61,8 @@ when I may have multiple login sessions going?</a><br>
 <a href="#T3">T3. How can I use fetchmail with smail?</a><br>
 <a href="#T4">T4. How can I use fetchmail with SCO's MMDF?</a><br>
 <a href="#T5">T5. How can I use fetchmail with Lotus Notes?</a><br>
+<a href="#T6">T6. How can I use fetchmail with Microsoft Exchange?</a><br>
+<a href="#T7">T7. How can I use fetchmail with Compuserve RPA?</a><br>
 
 <h1>Runtime fatal errors:</h1>
 
@@ -388,7 +390,7 @@ If you have been using popclient (the ancestor of this program)
 at version 3.0b6 or later, start with this<p>
 
 <pre>
-(cd ~; mv ~/.poprc ~/.fetchmailrc)
+(cd; mv .poprc .fetchmailrc)
 </pre>
 
 in order to migrate.  Be aware that some of popclient's unnecessary
@@ -873,7 +875,7 @@ The Lotus Notes SMTP gateway tries to deduce when it should convert \n
 to \r\n, but its rules are not intuitive.  Use `forcecr'.<P>
 
 <hr>
-<h2><a name="T5">T5. How can I use fetchmail with Microsoft Exchange?</a></h2><p>
+<h2><a name="T6">T6. How can I use fetchmail with Microsoft Exchange?</a></h2><p>
 
 M$ Exchange violates the POP3 RFCs.  Its LIST command does not reveal
 the real sizes of mail in the pop mailbox, but the sizes of the
@@ -892,7 +894,23 @@ If you want these fixed, go bug the Evil Empire.  Or, better yet,
 install a real operating system on your server and run IMAP.<P>
 
 <hr>
-<h2>R1. Fetchmail isn't working, and -v shows `SMTP connect failed' messages.</a></h2>
+<h2><a name="T7">T7. How can I use fetchmail with CompuServe RPA?</a></h2>
+
+First, make sure your fetchmail has the RPA support compiled in.
+Stock fetchmail binaries (such as you might get from an RPM) don't.
+You can check this by looking at the output of <code>fetchmail -V</code>;
+if you see the string "+RPA" after the version ID you're good to go,
+otherwise you'll have to build your own from sources (see the INSTALL
+file in the source distribution for directions).<P>  
+
+Give your RPA pass-phrase as your password.  An RPA-enabled fetchmail
+will automatically check for csi.com in the POP server's greeting
+line.  If that's found, it will query the server to see if it is
+RPA-capable, and if so do an RPA transaction rather than a plain-text
+password handshake.<P>
+
+<hr>
+<h2><a name="R1">R1. Fetchmail isn't working, and -v shows `SMTP connect failed' messages.</a></h2>
 
 Fetchmail itself is probably working, but your SMTP port 25 listener
 is down or inaccessible.<p>
@@ -1447,7 +1465,7 @@ will look right.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/09/30 18:38:09 $
+<td width="30%" align=right>$Date: 1997/10/01 04:00:27 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
