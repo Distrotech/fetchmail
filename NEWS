@@ -12,10 +12,15 @@
 ------------------------------------------------------------------------------
 fetchmail-2.4 ()
 
+features -- 
+
+* Add FAQ material on troubleshooting and working around SMTP connection
+  failures.
+
 bugs --
 
 * Fixed a core-dump bug in MX processing that's been lurking there for ghods
-  know how long.
+  know how long.  It could never have been more than rare.
 
 * Fixed a minor bug in Received processing.
 
