@@ -606,6 +606,14 @@ struct method *proto;
 		    goto cleanUp;
 	    }
 
+	    /*
+	     * At this point in flow of control, either we've bombed
+	     * on a protocol error or had delivery refused by the SMTP
+	     * server (unlikely -- I've never seen it) or we've seen
+	     * `accepted for delivery' and the message is shipped.
+	     * It's safe to delete the message on the server now.
+	     */
+
 	    /* maybe we delete this message now? */
 	    if (protocol->delete
 		&& !queryctl->keep
