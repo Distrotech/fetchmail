@@ -370,14 +370,15 @@ MAILBOXES below apply.
 .B \-l <maxbytes>, --limit <maxbytes>
 (Keyword: limit)
 Takes a maximum octet size argument.  Messages larger than this size
-will not be fetched, not be marked seen, and will be left on the
-server (in foreground sessions, the progress messages will note that
-they are "oversized").  An explicit --limit of 0 overrides any limits
-set in your run control file. This option is intended for those
-needing to strictly control fetch time due to expensive and variable
-phone rates.  In daemon mode, oversize notifications are mailed to the
-calling user (see the --warnings option).  This option does not work
-with ETRN.
+will not be fetched and will be left on the server (in foreground
+sessions, the progress messages will note that they are "oversized").
+If the fetch protocol permits (in particular, under IMAP or POP3
+without the fetchall option) the message will not be marked seen An
+explicit --limit of 0 overrides any limits set in your run control
+file. This option is intended for those needing to strictly control
+fetch time due to expensive and variable phone rates.  In daemon mode,
+oversize notifications are mailed to the calling user (see the
+--warnings option).  This option does not work with ETRN.
 .TP
 .B \-w <interval>, --warnings <interval>
 (Keyword: warnings)

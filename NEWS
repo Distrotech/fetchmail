@@ -2,10 +2,16 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Vitezslav Samel's patch to fix a Y2K bug in lsmgen.sh.
+* Fixed a fatal typo in fetchmailconf.
+* Resolved Debian bug #67559. It was a misdiagnosis.
+* Resolved Debian bugs #62115, #61983.
+* Return PS_NOMAIL when no server entries are active.
+
 fetchmail-5.4.4 (Sun Jul 23 15:56:16 EDT 2000), 19172 lines:
 
 * Guenther H. Leber's fix to show expunge parameters for POP3 in fetchmail -V.
-* Richard Gooch's fixes to use sigation(2) in sink.c and daemon.c
+* Richard Gooch's fixes to use sigaction(2) in sink.c and daemon.c
 * Petr Kristof's fix for sslcert configuration in fetchmailconf.
 * Jiri Pavolvsky's updated cs.po.
 * Cyrille Lefevre <clefevre@citeweb.net>'s patch for IPV6, 

@@ -84,6 +84,7 @@ static char *lockfile;		/* name of lockfile */
 static int lock_acquired;	/* have we acquired a lock */
 static int querystatus;		/* status of query */
 static int successes;		/* count number of successful polls */
+static int activecount;		/* count number of active entries */
 static struct runctl cmd_run;	/* global options set from command line */
 static time_t parsetime;	/* time of last parse */
 
@@ -610,101 +611,105 @@ int main(int argc, char **argv)
 	sethostent(TRUE);	/* use TCP/IP for mailserver queries */
 #endif /* HAVE_RES_SEARCH */
 
+	activecount = 0;
 	batchcount = 0;
 	for (ctl = querylist; ctl; ctl = ctl->next)
-	{
-	    if (ctl->active && !(implicitmode && ctl->server.skip))
+	    if (ctl->active)
 	    {
-		if (ctl->wedged)
+		activecount++;
+		if (!(implicitmode && ctl->server.skip))
 		{
-		    report(stderr, 
-			  _("poll of %s skipped (failed authentication or too many timeouts)\n"),
-			  ctl->server.pollname);
-		    continue;
-		}
-
-		/* check skip interval first so that it counts all polls */
-		if (run.poll_interval && ctl->server.interval) 
-		{
-		    if (ctl->server.poll_count++ % ctl->server.interval) 
+		    if (ctl->wedged)
 		    {
-			if (outlevel >= O_VERBOSE)
-			    report(stdout,
-				    _("interval not reached, not querying %s\n"),
-				    ctl->server.pollname);
+			report(stderr, 
+			       _("poll of %s skipped (failed authentication or too many timeouts)\n"),
+			       ctl->server.pollname);
 			continue;
 		    }
-		}
+
+		    /* check skip interval first so that it counts all polls */
+		    if (run.poll_interval && ctl->server.interval) 
+		    {
+			if (ctl->server.poll_count++ % ctl->server.interval) 
+			{
+			    if (outlevel >= O_VERBOSE)
+				report(stdout,
+				       _("interval not reached, not querying %s\n"),
+				       ctl->server.pollname);
+			    continue;
+			}
+		    }
 
 #if (defined(linux) && !INET6_ENABLE) || defined(__FreeBSD__)
-		/*
-		 * Don't do monitoring if we were woken by a signal.
-		 * Note that interface_approve() does its own error logging.
-		 */
-		if (!interface_approve(&ctl->server, !lastsig))
-		    continue;
+		    /*
+		     * Don't do monitoring if we were woken by a signal.
+		     * Note that interface_approve() does its own error logging.
+		     */
+		    if (!interface_approve(&ctl->server, !lastsig))
+			continue;
 #endif /* (defined(linux) && !INET6_ENABLE) || defined(__FreeBSD__) */
 
-		querystatus = query_host(ctl);
+		    querystatus = query_host(ctl);
 
 #ifdef POP3_ENABLE
-		/* leave the UIDL state alone if there have been any errors */
-		if (!check_only && !querystatus)
-		    uid_swap_lists(ctl);
+		    /* leave the UIDL state alone if there have been any errors */
+		    if (!check_only && !querystatus)
+			uid_swap_lists(ctl);
 #endif  /* POP3_ENABLE */
 
-		if (querystatus == PS_SUCCESS)
-		    successes++;
-		else if (!check_only && 
-			 ((querystatus!=PS_NOMAIL) || (outlevel==O_DEBUG)))
-		switch(querystatus)
-		{
-		case PS_SUCCESS:
-		    report(stdout, "Query status=0 (SUCCESS)\n"); break ;
-		case PS_NOMAIL: 
-		    report(stdout, "Query status=1 (NOMAIL)\n"); break ;
-		case PS_SOCKET:
-		    report(stdout, "Query status=2 (SOCKET)\n"); break ;
-		case PS_AUTHFAIL:
-		    report(stdout, "Query status=3 (AUTHFAIL)\n"); break ;
-		case PS_PROTOCOL:
-		    report(stdout, "Query status=4 (PROTOCOL)\n"); break ;
-		case PS_SYNTAX:
-		    report(stdout, "Query status=5 (SYNTAX)\n"); break ;
-		case PS_IOERR:
-		    report(stdout, "Query status=6 (IOERR)\n"); break ;
-		case PS_ERROR:
-		    report(stdout, "Query status=7 (ERROR)\n"); break ;
-		case PS_EXCLUDE:
-		    report(stdout, "Query status=8 (EXCLUDE)\n"); break ;
-		case PS_LOCKBUSY:
-		    report(stdout, "Query status=9 (LOCKBUSY)\n"); break ;
-		case PS_SMTP:
-		    report(stdout, "Query status=10 (SMTP)\n"); break ;
-		case PS_DNS:
-		    report(stdout, "Query status=11 (DNS)\n"); break ;
-		case PS_BSMTP:
-		    report(stdout, "Query status=12 (BSMTP)\n"); break ;
-		case PS_MAXFETCH:
-		    report(stdout, "Query status=13 (MAXFETCH)\n"); break ;
-		default:
-		    report(stdout, _("Query status=%d\n"), querystatus); break;
-		}
+		    if (querystatus == PS_SUCCESS)
+			successes++;
+		    else if (!check_only && 
+			     ((querystatus!=PS_NOMAIL) || (outlevel==O_DEBUG)))
+			switch(querystatus)
+			{
+			case PS_SUCCESS:
+			    report(stdout,"Query status=0 (SUCCESS)\n");break;
+			case PS_NOMAIL: 
+			    report(stdout,"Query status=1 (NOMAIL)\n"); break;
+			case PS_SOCKET:
+			    report(stdout,"Query status=2 (SOCKET)\n"); break;
+			case PS_AUTHFAIL:
+			    report(stdout,"Query status=3 (AUTHFAIL)\n");break;
+			case PS_PROTOCOL:
+			    report(stdout,"Query status=4 (PROTOCOL)\n");break;
+			case PS_SYNTAX:
+			    report(stdout,"Query status=5 (SYNTAX)\n"); break;
+			case PS_IOERR:
+			    report(stdout,"Query status=6 (IOERR)\n");  break;
+			case PS_ERROR:
+			    report(stdout,"Query status=7 (ERROR)\n");  break;
+			case PS_EXCLUDE:
+			    report(stdout,"Query status=8 (EXCLUDE)\n"); break;
+			case PS_LOCKBUSY:
+			    report(stdout,"Query status=9 (LOCKBUSY)\n");break;
+			case PS_SMTP:
+			    report(stdout,"Query status=10 (SMTP)\n"); break;
+			case PS_DNS:
+			    report(stdout,"Query status=11 (DNS)\n"); break;
+			case PS_BSMTP:
+			    report(stdout,"Query status=12 (BSMTP)\n"); break;
+			case PS_MAXFETCH:
+			    report(stdout,"Query status=13 (MAXFETCH)\n");break;
+			default:
+			    report(stdout,_("Query status=%d\n"),querystatus);
+			    break;
+			}
 
 #if (defined(linux) && !INET6_ENABLE) || defined (__FreeBSD__)
-		if (ctl->server.monitor)
-		{
-		    /*
-		     * Allow some time for the link to quiesce.  One
-		     * second is usually sufficient, three is safe.
-		     * Note:  this delay is important - don't remove!
-		     */
-		    sleep(3);
-		    interface_note_activity(&ctl->server);
-		}
+		    if (ctl->server.monitor)
+		    {
+			/*
+			 * Allow some time for the link to quiesce.  One
+			 * second is usually sufficient, three is safe.
+			 * Note:  this delay is important - don't remove!
+			 */
+			sleep(3);
+			interface_note_activity(&ctl->server);
+		    }
 #endif /* (defined(linux) && !INET6_ENABLE) || defined(__FreeBSD__) */
+		}
 	    }
-	}
 
 #if defined(HAVE_RES_SEARCH) && defined(USE_TCPIP_FOR_DNS)
 	endhostent();		/* release TCP/IP connection to nameserver */
@@ -1339,7 +1344,10 @@ static void terminate_run(int sig)
     unlockit();
 #endif
 
-    exit(successes ? PS_SUCCESS : querystatus);
+    if (activecount == 0)
+	exit(PS_NOMAIL);
+    else
+	exit(successes ? PS_SUCCESS : querystatus);
 }
 
 /*
