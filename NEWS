@@ -16,12 +16,12 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.1.3 ()
+fetchmail-4.1.3 (Thu Sep  4 15:41:05 EDT 1997)
 * Autoconfigure correctly for systems that lack inet_aton().
 * Better failure reporting on SMTP connect failures.
 * Autoconfigure the MD5 support for 64-bit machines.
 
-There are 285 people on the fetchmail-friends list.
+There are 286 people on the fetchmail-friends list.
 
 fetchmail-4.1.2 (Wed Sep  3 18:44:58 EDT 1997)
 * Fixed a bonehead bug in RCPT TO name generation introduced in 4.1.1.
