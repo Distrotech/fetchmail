@@ -8,7 +8,7 @@
 
 				Release Notes:
 
-fetchmail-5.0.9 ():
+fetchmail-5.0.9 (Wed Sep 22 01:27:42 EDT 1999):
 * CRAM-MD5 code now doublequotes usernames with embedded spaces.  This will
   probably fail (the RFCs don't support quoting) but it's better than nothing
   and works with at least one server.
@@ -16,10 +16,11 @@ fetchmail-5.0.9 ():
 * auth keyword and option changed to preauth.
 * Correct the exit value when .fetchmailrc permissions are wrong.
 * getmail/gotmail scripts by Thomas Nesges added to contrib.
-* Guenther H. Leber's fix for a ptential uid.c buffer overflow.
-* Todd Sabin's option to force IMAP authentication type.
+* Guenther H. Leber's fix for a potential uid.c buffer overflow.
+* Todd Sabin's option to force IMAP authentication type; enables working
+  around some broken servers.
 
-There are 264 people on fetchmail-friends and 441 on fetchmail-announce.
+There are 266 people on fetchmail-friends and 444 on fetchmail-announce.
 
 fetchmail-5.0.8 (Tue Sep 14 06:56:50 EDT 1999):
 * Todd Sabin's patch to accept spaces in CRAM-MD5 names.
