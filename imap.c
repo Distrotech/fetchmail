@@ -160,7 +160,7 @@ static int do_rfc1731(int sock, struct query *ctl, char *buf)
      * 32-bit number in network byte order.
      */
 
-    strncpy(srvinst, ctl->server.names->id, (sizeof srvinst)-1);
+    strncpy(srvinst, ctl->server.truename, (sizeof srvinst)-1);
     srvinst[(sizeof srvinst)-1] = '\0';
     for (p = srvinst; *p; p++) {
       if (isupper(*p)) {
