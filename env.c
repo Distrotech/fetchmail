@@ -62,6 +62,8 @@ void envquery(int argc, char **argv)
 	exit(PS_IOERR);
     }
 #ifdef HAVE_GETHOSTBYNAME
+    /* if we got a . in the hostname assume it is a FQDN */
+    if (strchr(tmpbuf, '.') == NULL)
     {
 	struct hostent *hp;
 
@@ -73,14 +75,20 @@ void envquery(int argc, char **argv)
 	    fprintf(stderr, "gethostbyname failed for %s\n", tmpbuf);
 	    exit(PS_DNS);
 	}
-	strcpy(tmpbuf, hp->h_name);
+	fetchmailhost = xstrdup(hp->h_name);
     }
+    else
 #endif /* HAVE_GETHOSTBYNAME */
-    fetchmailhost = xstrdup(tmpbuf);
+	fetchmailhost = xstrdup(tmpbuf);
 
 #define RCFILE_NAME	".fetchmailrc"
     rcfile = (char *) xmalloc(strlen(home)+strlen(RCFILE_NAME)+2);
-    strcpy(rcfile, home);
+    /* avoid //.fetchmailrc */
+    if (strcmp(home, "/") != 0) {
+    	strcpy(rcfile, home);
+    } else {
+    	*rcfile = '\0';
+    }
     strcat(rcfile, "/");
     strcat(rcfile, RCFILE_NAME);
 }
