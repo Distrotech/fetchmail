@@ -310,7 +310,7 @@ struct hostrec *queryctl;
 	    if (delimited && *bufp == 0)
 		break;  /* end of message */
 	}
-	strcat(bufp, inheaders ? "\n" : "\r\n");
+	strcat(bufp, "\n");
      
 	if (inheaders)
         {
@@ -334,6 +334,9 @@ struct hostrec *queryctl;
 		 * We deal with RFC822 continuation lines here.
 		 * Replace previous '\n' with '\r' so nxtaddr 
 		 * and reply_hack will be able to see past it.
+		 * (We know this safe because SocketGets stripped
+		 * out all carriage returns in the read loop above
+		 * and we haven't reintroduced any since then.)
 		 * We'll undo this before writing the header.
 		 */
 		if (isspace(bufp[0]))
@@ -411,6 +414,13 @@ struct hostrec *queryctl;
 		if (*cp == '\r')
 		    *cp = '\n';
 
+	    /*
+	     * Strictly speaking, we ought to replace all LFs
+	     * with CR-LF before shipping to an SMTP listener.
+	     * Since most SMTP listeners built since the mid-1980s
+	     * (and *all* Unix listeners) accept lone LF as equivalent
+	     * to CR-LF, we'll skip this particular contortion.
+	     */
 	    if (write(mboxfd,headers,oldlen) < 0)
 	    {
 		free(headers);
@@ -428,7 +438,7 @@ struct hostrec *queryctl;
 	if (*bufp == '.' && queryctl->mda[0] == 0)
 	    write(mboxfd, ".", 1);
 
-	/* write this line to the file */
+	/* write this line to the file -- comment about CR-LF vs. LF applies */
 	if (write(mboxfd,bufp,strlen(bufp)) < 0)
 	{
 	    perror("gen_readmsg: writing message text");
