@@ -18,9 +18,14 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.4.0 ():
+* Documentation cleanup.
+
+There are 272 people on fetchmail-friends and 136 on fetchmail-announce.
+
 fetchmail-4.3.7 (Tue Feb 17 21:30:26 EST 1998)
 * Fixed a minor bug in the IMAP re-polling logic.
-* Thomas Pitre's extensive changes to multidrop:
+* Nicholas Pitre's extensive changes to multidrop:
 
   - Seek for the true sender of a mail which is not necessarily in the
     From: header. (see comments in the code for more explicit details).
@@ -45,12 +50,14 @@ fetchmail-4.3.7 (Tue Feb 17 21:30:26 EST 1998)
   - Modified reply_hack() to meet the needs of above modifications.
 
   Thomas says these changes have been tested for two weeks in a production
-  multidrop environment.
+  multidrop environment.  I tested them for another week in mine.
 * Doug Muth's runfetchmail version 1.1.
 * Minor port patches from Philippe De Muyter.
 * Patch by Chun-Chung Chen <cjj@u.washington.edu> to handle quotes in .netrc
 * Corrected OTP support, IPv6 and IPSEC support patches from Craig Metz.
-* Fix bad interaction between UID handling and fetchmail.
+* Fix bad interaction between UID handling and fetchlimit.
+
+There are 272 people on fetchmail-friends and 136 on fetchmail-announce.
 
 fetchmail-4.3.6 (Fri Jan 23 00:25:57 EST 1998)
 * Improved RPM packaging with correct grouping and an icon.
