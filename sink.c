@@ -395,12 +395,12 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	 * coming from this address, probably due to an
 	 * anti-spam domain exclusion.  Respect this.  Don't
 	 * try to ship the message, and don't prevent it from
-	 * being deleted.  Typical values:
+	 * being deleted.  Default values:
 	 *
-	 * 501 = exim's old antispam response
-	 * 550 = exim's new antispam response (temporary)
-	 * 553 = sendmail 8.8.7's generic REJECT 
 	 * 571 = sendmail's "unsolicited email refused"
+	 * 550 = exim's new antispam response (temporary)
+	 * 501 = exim's old antispam response
+	 * 554 = Postfix antispam response.
 	 *
 	 */
 	SMTP_rset(ctl->smtp_socket);    /* stay on the safe site */
@@ -454,7 +454,10 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
     case 553: /* invalid sending domain */
 	/*
 	 * These latter days 553 usually means a spammer is trying to
-	 * cover his tracks.
+	 * cover his tracks.  We never bouncemail on these, because 
+	 * (a) the return address is invalid by definition, and 
+	 * (b) we wouldn't want spammers to get confirmation that
+	 * this address is live, anyway.
 	 */
 	SMTP_rset(ctl->smtp_socket);    /* stay on the safe side */
 	send_bouncemail(ctl, msg, XMIT_ACCEPT,
