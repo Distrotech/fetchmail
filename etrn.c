@@ -84,7 +84,8 @@ static int etrn_getrange(int sock, struct query *ctl, char *id, int *countp,
 	    if (gethostname(hname, sizeof hname) != 0)
 	    {
 		/* exit with error message */
-	        error(5, errno, "gethostname");
+	        error(0, errno, "gethostname failed: ");
+		return PS_UNDEFINED;
 	    }
 	    /* in case we got a host basename (as we do in Linux),
 	       make a FQDN of it				*/
@@ -92,7 +93,8 @@ static int etrn_getrange(int sock, struct query *ctl, char *id, int *countp,
 	    if (hp == (struct hostent *) NULL)
 	    {
 		/* exit with error message */
-	        error(5, 0, "gethostbyname");
+	        error(0, 0, "gethostbyname failed for %s", hname);
+		return PS_TRANSIENT;
 	    }
 	    /* here it is */
 	    qname = hp->h_name;
