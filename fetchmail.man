@@ -765,13 +765,14 @@ access, or command rejected for policy reasons].").
 .PP
 The
 .I exim
-MTA returns 501 "Syntax error in parameters or arguments" , but will
+MTA returns 501 "Syntax error in parameters or arguments", but will
 move to 550 soon.
 .PP
 The
 .I fetchmail
-code recognizes and discards the message on a code that defaults to
-sendmail's 571 but can be set with the `antispam' option.  This is the
+code recognizes and discards the message on any of a list of responses
+that defaults to [571, 550, 501] but can be set with the `antispam'
+option.  This is the
 .I only
 circumstance under which fetchmail ever discards mail.
 .P
