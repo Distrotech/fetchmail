@@ -318,7 +318,7 @@ search_netrc (list, host, login)
 #include <sys/types.h>
 #include <sys/stat.h>
 
-extern int errno;
+#include <errno.h>
 
 int
 main (argc, argv)
