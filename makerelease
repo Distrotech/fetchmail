@@ -52,8 +52,8 @@ open(REPORT, ">PREAMBLE.$$");
 
 print REPORT <<EOF;
 #!/usr/lib/sendmail -t -oem
-From: esr@thyrsus.com (Eric S. Raymond)
-To: fetchmail-announce@ccil.org
+From: esr\@thyrsus.com (Eric S. Raymond)
+To: fetchmail-announce\@ccil.org
 
 The $version release of fetchmail is now available at the usual locations,
 including http://$ENV{'WWWHOST'}/~esr/fetchmail.  Here are the release notes:
