@@ -216,7 +216,7 @@ report (FILE *errfp, errnum, message, va_alist)
       fprintf (errfp, message, a1, a2, a3, a4, a5, a6, a7, a8);
 #endif
 
-      if (errnum && errnum != -1) {
+      if (errnum) {
 	char *tmps = strerror(errnum);
 	if (tmps) {
 	  fprintf (errfp, ": %s", tmps);

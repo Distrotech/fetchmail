@@ -1167,7 +1167,7 @@ const char *canonical;	/* server name */
 			 "KPOPV0.1"));
     if (rem != KSUCCESS)
     {
-	report(stderr, -1, _("kerberos error %s"), (krb_get_err_text (rem)));
+	report(stderr, 0, _("kerberos error %s"), (krb_get_err_text (rem)));
 	return (PS_AUTHFAIL);
     }
     return (0);
@@ -1355,7 +1355,7 @@ const struct method *proto;	/* protocol method table */
 #ifndef KERBEROS_V4
     if (ctl->server.preauthenticate == A_KERBEROS_V4)
     {
-	report(stderr, -1, _("Kerberos V4 support not linked."));
+	report(stderr, 0, _("Kerberos V4 support not linked."));
 	return(PS_ERROR);
     }
 #endif /* KERBEROS_V4 */
@@ -1363,7 +1363,7 @@ const struct method *proto;	/* protocol method table */
 #ifndef KERBEROS_V5
     if (ctl->server.preauthenticate == A_KERBEROS_V5)
     {
-	report(stderr, -1, _("Kerberos V5 support not linked."));
+	report(stderr, 0, _("Kerberos V5 support not linked."));
 	return(PS_ERROR);
     }
 #endif /* KERBEROS_V5 */
@@ -1592,14 +1592,14 @@ const struct method *proto;	/* protocol method table */
 	    if (ok != 0)
 	    {
 		if (ok == PS_LOCKBUSY)
-		    report(stderr, -1, _("Lock-busy error on %s@%s"),
+		    report(stderr, 0, _("Lock-busy error on %s@%s"),
 			  ctl->remotename,
 			  ctl->server.truename);
 		else
 		{
 		    if (ok == PS_ERROR)
 			ok = PS_AUTHFAIL;
-		    report(stderr, -1, _("Authorization failure on %s@%s"), 
+		    report(stderr, 0, _("Authorization failure on %s@%s"), 
 			  ctl->remotename,
 			  ctl->server.truename);
 
@@ -2117,7 +2117,7 @@ const struct method *proto;	/* protocol method table */
     if (ok==PS_SOCKET || ok==PS_AUTHFAIL || ok==PS_SYNTAX 
 		|| ok==PS_IOERR || ok==PS_ERROR || ok==PS_PROTOCOL 
 		|| ok==PS_LOCKBUSY || ok==PS_SMTP)
-	report(stderr,-1, _("%s error while fetching from %s"), msg, ctl->server.pollname);
+	report(stderr,0, _("%s error while fetching from %s"), msg, ctl->server.pollname);
 
 closeUp:
     /* execute post-initialization command, if any */

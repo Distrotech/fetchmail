@@ -142,7 +142,7 @@ static int do_otp(int sock, struct query *ctl)
 	return rval;
 
     if ((i = from64tobits(challenge, buffer)) < 0) {
-	report(stderr, -1, _("Could not decode initial BASE64 challenge"));
+	report(stderr, 0, _("Could not decode initial BASE64 challenge"));
 	return PS_AUTHFAIL;
     };
 
@@ -158,7 +158,7 @@ static int do_otp(int sock, struct query *ctl)
 	return rval;
 
     if ((i = from64tobits(challenge, buffer)) < 0) {
-	report(stderr, -1, _("Could not decode OTP challenge"));
+	report(stderr, 0, _("Could not decode OTP challenge"));
 	return PS_AUTHFAIL;
     };
 
@@ -241,7 +241,7 @@ static int do_rfc1731(int sock, char *truename)
 
     len = from64tobits(challenge1.cstr, buf1);
     if (len < 0) {
-	report(stderr, -1, _("could not decode initial BASE64 challenge"));
+	report(stderr, 0, _("could not decode initial BASE64 challenge"));
 	return PS_AUTHFAIL;
     }
 
@@ -270,13 +270,13 @@ static int do_rfc1731(int sock, char *truename)
 
     result = krb_mk_req(&authenticator, "imap", srvinst, srvrealm, 0);
     if (result) {
-	report(stderr, -1, "krb_mq_req: %s", krb_get_err_text(result));
+	report(stderr, 0, "krb_mq_req: %s", krb_get_err_text(result));
 	return PS_AUTHFAIL;
     }
 
     result = krb_get_cred("imap", srvinst, srvrealm, &credentials);
     if (result) {
-	report(stderr, -1, "krb_get_cred: %s", krb_get_err_text(result));
+	report(stderr, 0, "krb_get_cred: %s", krb_get_err_text(result));
 	return PS_AUTHFAIL;
     }
 
@@ -286,12 +286,12 @@ static int do_rfc1731(int sock, char *truename)
 
     result = krb_get_tf_fullname(TKT_FILE, tktuser, tktinst, tktrealm);
     if (result) {
-	report(stderr, -1, "krb_get_tf_fullname: %s", krb_get_err_text(result));
+	report(stderr, 0, "krb_get_tf_fullname: %s", krb_get_err_text(result));
 	return PS_AUTHFAIL;
     }
 
     if (strcmp(tktuser, user) != 0) {
-	report(stderr, -1, _("principal %s in ticket does not match -u %s"), tktuser,
+	report(stderr, 0, _("principal %s in ticket does not match -u %s"), tktuser,
 		user);
 	return PS_AUTHFAIL;
     }
@@ -311,7 +311,7 @@ static int do_rfc1731(int sock, char *truename)
     result = krb_mk_req(&authenticator, "imap", srvinst, srvrealm,
 	    challenge1.cint);
     if (result) {
-	report(stderr, -1, "krb_mq_req: %s", krb_get_err_text(result));
+	report(stderr, 0, "krb_mq_req: %s", krb_get_err_text(result));
 	return PS_AUTHFAIL;
     }
 
@@ -363,14 +363,14 @@ static int do_rfc1731(int sock, char *truename)
 
     len = from64tobits(buf2, buf1);
     if (len < 0) {
-	report(stderr, -1, _("could not decode BASE64 ready response"));
+	report(stderr, 0, _("could not decode BASE64 ready response"));
 	return PS_AUTHFAIL;
     }
 
     des_ecb_encrypt((des_cblock *)buf2, (des_cblock *)buf2, schedule, 0);
     memcpy(challenge2.cstr, buf2, 4);
     if (ntohl(challenge2.cint) != challenge1.cint + 1) {
-	report(stderr, -1, _("challenge mismatch"));
+	report(stderr, 0, _("challenge mismatch"));
 	return PS_AUTHFAIL;
     }	    
 
@@ -443,7 +443,7 @@ static int do_gssauth(int sock, char *hostname, char *username)
     maj_stat = gss_import_name(&min_stat, &request_buf, gss_nt_service_name,
         &target_name);
     if (maj_stat != GSS_S_COMPLETE) {
-        report(stderr, -1, _("Couldn't get service name for [%s]"), buf1);
+        report(stderr, 0, _("Couldn't get service name for [%s]"), buf1);
         return PS_AUTHFAIL;
     }
     else if (outlevel >= O_DEBUG) {
@@ -471,7 +471,7 @@ static int do_gssauth(int sock, char *hostname, char *username)
             &context, target_name, NULL, 0, 0, NULL, sec_token, NULL,
 	    &send_token, &cflags, NULL);
         if (maj_stat!=GSS_S_COMPLETE && maj_stat!=GSS_S_CONTINUE_NEEDED) {
-            report(stderr, -1,_("Error exchanging credentials"));
+            report(stderr, 0,_("Error exchanging credentials"));
             gss_release_name(&min_stat, &target_name);
             /* wake up server and await NO response */
             SockWrite(sock, "\r\n", 2);
@@ -507,7 +507,7 @@ static int do_gssauth(int sock, char *hostname, char *username)
     maj_stat = gss_unwrap(&min_stat, context, &request_buf, &send_token,
         &cflags, &quality);
     if (maj_stat != GSS_S_COMPLETE) {
-        report(stderr, 0,-1,_("Couldn't unwrap security level data"));
+        report(stderr, 0,_("Couldn't unwrap security level data"));
         gss_release_buffer(&min_stat, &send_token);
         return PS_AUTHFAIL;
     }
@@ -516,7 +516,7 @@ static int do_gssauth(int sock, char *hostname, char *username)
     /* first octet is security levels supported. We want none, for now */
     server_conf_flags = ((char *)send_token.value)[0];
     if ( !(((char *)send_token.value)[0] & GSSAUTH_P_NONE) ) {
-        report(stderr, 0,-1,_("Server requires integrity and/or privacy"));
+        report(stderr, 0,_("Server requires integrity and/or privacy"));
         gss_release_buffer(&min_stat, &send_token);
         return PS_AUTHFAIL;
     }
@@ -542,7 +542,7 @@ static int do_gssauth(int sock, char *hostname, char *username)
     maj_stat = gss_wrap(&min_stat, context, 0, GSS_C_QOP_DEFAULT, &request_buf,
         &cflags, &send_token);
     if (maj_stat != GSS_S_COMPLETE) {
-        report(stderr, 0,-1,_("Error creating security level request"));
+        report(stderr, 0,_("Error creating security level request"));
         return PS_AUTHFAIL;
     }
     to64frombits(buf1, send_token.value, send_token.length);
@@ -562,7 +562,7 @@ static int do_gssauth(int sock, char *hostname, char *username)
             report(stdout, 0, _("Releasing GSS credentials"));
         maj_stat = gss_delete_sec_context(&min_stat, &context, &send_token);
         if (maj_stat != GSS_S_COMPLETE) {
-            report(stderr, -1, _("Error releasing credentials"));
+            report(stderr, 0, _("Error releasing credentials"));
             return PS_AUTHFAIL;
         }
         /* send_token may contain a notification to the server to flush
@@ -651,7 +651,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     }
     else if (ctl->server.protocol == P_IMAP_GSS)
     {
-        report(stderr, 0,-1, _("Required GSS capability not supported by server"));
+        report(stderr, 0, _("Required GSS capability not supported by server"));
         return(PS_AUTHFAIL);
     }
 #endif /* GSSAPI */
@@ -677,7 +677,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     }
     else if (ctl->server.protocol == P_IMAP_K4)
     {
-	report(stderr, 0,-1, _("Required KERBEROS_V4 capability not supported by server"));
+	report(stderr, 0, _("Required KERBEROS_V4 capability not supported by server"));
 	return(PS_AUTHFAIL);
     }
 #endif /* KERBEROS_V4 */
@@ -685,7 +685,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 #ifdef __UNUSED__	/* The Cyrus IMAP4rev1 server chokes on this */
     /* this handles either AUTH=LOGIN or AUTH-LOGIN */
     if ((imap_version >= IMAP4rev1) && (!strstr(capabilities, "LOGIN"))) {
-      report(stderr, 0,-1, _("Required LOGIN capability not supported by server"));
+      report(stderr, 0, _("Required LOGIN capability not supported by server"));
       return PS_AUTHFAIL;
     };
 #endif /* __UNUSED__ */

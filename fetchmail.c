@@ -525,7 +525,7 @@ int main (int argc, char **argv)
 	    {
 		if (ctl->wedged)
 		{
-		    report(stderr, -1, 
+		    report(stderr, 0, 
 			  _("poll of %s skipped (failed authentication or too many timeouts)"),
 			  ctl->server.pollname);
 		    continue;
@@ -537,7 +537,7 @@ int main (int argc, char **argv)
 		    if (ctl->server.poll_count++ % ctl->server.interval) 
 		    {
 			if (outlevel >= O_VERBOSE)
-			    report(stdout, -1,
+			    report(stdout, 0,
 				    _("interval not reached, not querying %s"),
 				    ctl->server.pollname);
 			continue;
@@ -628,12 +628,12 @@ int main (int argc, char **argv)
 			unwedged++;
 	    if (!unwedged)
 	    {
-		report(stderr, -1, _("All connections are wedged.  Exiting."));
+		report(stderr, 0, _("All connections are wedged.  Exiting."));
 		exit(PS_AUTHFAIL);
 	    }
 
 	    if (outlevel >= O_VERBOSE)
-		report(stdout, -1, _("fetchmail: sleeping at %s"), rfc822timestamp());
+		report(stdout, 0, _("fetchmail: sleeping at %s"), rfc822timestamp());
 
 	    /*
 	     * With this simple hack, we make it possible for a foreground 
@@ -745,13 +745,13 @@ int main (int argc, char **argv)
 		signal(SIGHUP, SIG_IGN);
 
 	    if (outlevel >= O_VERBOSE)
-		report(stdout, -1, _("awakened at %s"), rfc822timestamp());
+		report(stdout, 0, _("awakened at %s"), rfc822timestamp());
 	}
     } while
 	(run.poll_interval);
 
     if (outlevel >= O_VERBOSE)
-	report(stdout, -1, _("normal termination, status %d"),
+	report(stdout, 0, _("normal termination, status %d"),
 		successes ? PS_SUCCESS : querystatus);
 
     termhook(0);
@@ -1227,7 +1227,7 @@ static int query_host(struct query *ctl)
 	time_t now;
 
 	time(&now);
-	report(stdout, -1, _("%s querying %s (protocol %s) at %s"),
+	report(stdout, 0, _("%s querying %s (protocol %s) at %s"),
 	    VERSION,
 	    ctl->server.pollname, showproto(ctl->server.protocol), ctime(&now));
     }
@@ -1246,7 +1246,7 @@ static int query_host(struct query *ctl)
 #ifdef POP2_ENABLE
 	return(doPOP2(ctl));
 #else
-	report(stderr, -1, _("POP2 support is not configured.\n"));
+	report(stderr, 0, _("POP2 support is not configured.\n"));
 	return(PS_PROTOCOL);
 #endif /* POP2_ENABLE */
 	break;
@@ -1256,7 +1256,7 @@ static int query_host(struct query *ctl)
 #ifdef POP3_ENABLE
 	return(doPOP3(ctl));
 #else
-	report(stderr, -1, _("POP3 support is not configured.\n"));
+	report(stderr, 0, _("POP3 support is not configured.\n"));
 	return(PS_PROTOCOL);
 #endif /* POP3_ENABLE */
 	break;
@@ -1268,19 +1268,19 @@ static int query_host(struct query *ctl)
 #ifdef IMAP_ENABLE
 	return(doIMAP(ctl));
 #else
-	report(stderr, -1, _("IMAP support is not configured.\n"));
+	report(stderr, 0, _("IMAP support is not configured.\n"));
 	return(PS_PROTOCOL);
 #endif /* IMAP_ENABLE */
 	break;
     case P_ETRN:
 #ifndef ETRN_ENABLE
-	report(stderr, -1, _("ETRN support is not configured.\n"));
+	report(stderr, 0, _("ETRN support is not configured.\n"));
 	return(PS_PROTOCOL);
 #else
 #ifdef HAVE_GETHOSTBYNAME
 	return(doETRN(ctl));
 #else
-	report(stderr, -1, _("Cannot support ETRN without gethostbyname(2).\n"));
+	report(stderr, 0, _("Cannot support ETRN without gethostbyname(2).\n"));
 	return(PS_PROTOCOL);
 #endif /* HAVE_GETHOSTBYNAME */
 #endif /* ETRN_ENABLE */

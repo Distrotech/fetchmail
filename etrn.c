@@ -84,23 +84,23 @@ static int etrn_getrange(int sock, struct query *ctl, const char *id,
 	    break;
 
 	case 458:	/* Unable to queue messages for node <x> */
-	    report(stderr, -1, _("Unable to queue messages for node %s"),qnp->id);
+	    report(stderr, 0, _("Unable to queue messages for node %s"),qnp->id);
 	    return(PS_PROTOCOL);
 
 	case 459:	/* Node <x> not allowed: <reason> */
-	    report(stderr, -1, _("Node %s not allowed: %s"), qnp->id, buf);
+	    report(stderr, 0, _("Node %s not allowed: %s"), qnp->id, buf);
 	    return(PS_AUTHFAIL);
 
 	case 500:	/* Syntax Error */
-	    report(stderr, -1, _("ETRN syntax error"));
+	    report(stderr, 0, _("ETRN syntax error"));
 	    return(PS_PROTOCOL);
 
 	case 501:	/* Syntax Error in Parameters */
-	    report(stderr, -1, _("ETRN syntax error in parameters"));
+	    report(stderr, 0, _("ETRN syntax error in parameters"));
 	    return(PS_PROTOCOL);
 
 	default:
-	    report(stderr, -1, _("Unknown ETRN error %d"), atoi(buf));
+	    report(stderr, 0, _("Unknown ETRN error %d"), atoi(buf));
 	    return(PS_PROTOCOL);
 	}
     }

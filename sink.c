@@ -413,7 +413,7 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
      * an error when the return code is less specific.
      */
     if (smtperr >= 400)
-	report(stderr, -1, _("%cMTP error: %s"), 
+	report(stderr, 0, _("%cMTP error: %s"), 
 	      ctl->listener,
 	      smtp_response);
 
@@ -516,7 +516,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 
 	if (ferror(sinkfp))
 	{
-	    report(stderr, -1, _("BSMTP file open or preamble write failed"));
+	    report(stderr, 0, _("BSMTP file open or preamble write failed"));
 	    return(PS_BSMTP);
 	}
     }
@@ -846,7 +846,7 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 	signal(SIGCHLD, sigchld);
 	if (rc)
 	{
-	    report(stderr, -1, _("MDA exited abnormally or returned nonzero status"));
+	    report(stderr, 0, _("MDA exited abnormally or returned nonzero status"));
 	    return(FALSE);
 	}
     }
@@ -858,7 +858,7 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 	    fclose(sinkfp);
 	if (ferror(sinkfp))
 	{
-	    report(stderr, -1, _("Message termination or close of BSMTP file failed"));
+	    report(stderr, 0, _("Message termination or close of BSMTP file failed"));
 	    return(FALSE);
 	}
     }
@@ -871,7 +871,7 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 		return(FALSE);
 	    else
 	    {
-		report(stderr, -1, _("SMTP listener refused delivery"));
+		report(stderr, 0, _("SMTP listener refused delivery"));
 		return(TRUE);
 	    }
 	}
@@ -899,9 +899,9 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 		 * comply.
 		 */
 		if (atoi(smtp_response) == 503)
-		    report(stderr, -1, _("LMTP delivery error on EOM"));
+		    report(stderr, 0, _("LMTP delivery error on EOM"));
 		else
-		    report(stderr, -1,
+		    report(stderr, 0,
 			  _("Unexpected non-503 response to LMTP EOM: %s"),
 			  smtp_response);
 

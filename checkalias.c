@@ -187,7 +187,7 @@ int is_host_alias(const char *name, struct query *ctl)
 	case NO_RECOVERY:	/* non-recoverable name server error */
 	case TRY_AGAIN:		/* temporary error on authoritative server */
 	default:
-	    report(stderr, -1,
+	    report(stderr, 0,
 		_("nameserver failure while looking for `%s' during poll of %s."),
 		name, ctl->server.pollname);
 	    ctl->errcount++;
