@@ -87,7 +87,7 @@ int do_cram_md5 (int sock, char *command, struct query *ctl, char *strip)
 
     /* caller may specify a response prefix we should strip if present */
     respdata = buf1;
-    if (strncmp(buf1, strip, strlen(strip)) == 0)
+    if (strip && strncmp(buf1, strip, strlen(strip)) == 0)
 	respdata += strlen(strip);
     len = from64tobits (msg_id, respdata);
 
