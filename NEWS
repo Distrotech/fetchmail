@@ -1,11 +1,11 @@
 				Release Notes:
 
-fetchmail-4.6.6 ():
+fetchmail-4.6.6 (Fri Oct 30 11:34:20 EST 1998):
 * Fixed a core-dump bug in reply_hack with -v -v on.
 * Fix fetchmailconf to be able to edit properties.
 * Send calling user mail when password authentication fails in daemon mode.
 
-There are 249 people on fetchmail-friends and 309 on fetchmail-announce.
+There are 247 people on fetchmail-friends and 308 on fetchmail-announce.
 
 fetchmail-4.6.5 (Wed Oct 28 18:28:01 EST 1998):
 * Fixed a bug in reply_hack that could occasionally cause malloc smashes.
@@ -330,7 +330,7 @@ fetchmail-4.3.8 (Tue Feb 24 15:47:13 EST 1998):
 
 There are 269 people on fetchmail-friends and 144 on fetchmail-announce.
 
-fetchmail-4.3.7 (Tue Feb 17 21:30:26 EST 1998)
+fetchmail-4.3.7 (Tue Feb 17 21:30:26 EST 1998):
 * Fixed a minor bug in the IMAP re-polling logic.
 * Nicholas Pitre's extensive changes to multidrop:
   - Seek for the true sender of a mail which is not necessarily in the
@@ -358,7 +358,7 @@ fetchmail-4.3.7 (Tue Feb 17 21:30:26 EST 1998)
 
 There are 272 people on fetchmail-friends and 136 on fetchmail-announce.
 
-fetchmail-4.3.6 (Fri Jan 23 00:25:57 EST 1998)
+fetchmail-4.3.6 (Fri Jan 23 00:25:57 EST 1998):
 * Improved RPM packaging with correct grouping and an icon.
 * Fixed another minor bug in handling of `expunge 0'.
 * Kent Robotti sent a new version of fetchsetup.
@@ -380,7 +380,7 @@ fetchmail-4.3.6 (Fri Jan 23 00:25:57 EST 1998)
 
 There are 269 people on fetchmail-friends and 123 on fetchmail-announce.
 
-fetchmail-4.3.5 (Mon Dec 15 06:07:08 EST 1997)
+fetchmail-4.3.5 (Mon Dec 15 06:07:08 EST 1997):
 * Added Kent Robotti's fetchsetup configuration script.
 * Corrected buggy handling of `expunge 0'.
 * RFC 1731 GSSAPI support from Brendan Cully <brendan@kublai.com>.
@@ -389,7 +389,7 @@ fetchmail-4.3.5 (Mon Dec 15 06:07:08 EST 1997)
 
 There are 264 people on fetchmail-friends and 106 on fetchmail-announce.
 
-fetchmail-4.3.4 (Fri Dec  5 12:39:31 EST 1997)
+fetchmail-4.3.4 (Fri Dec  5 12:39:31 EST 1997):
 * Yet another attempt on the Compuserve RPA moving target.
 * Fix ETRN code to poll for the fetchmail host if there's no -S option.
 * Allow `--quit' to be given with other options to shut down a running daemon
@@ -403,7 +403,7 @@ fetchmail-4.3.4 (Fri Dec  5 12:39:31 EST 1997)
 
 There are 272 people on fetchmail-friends and 96 on fetchmail-announce.
 
-fetchmail-4.3.3 (Sat Nov 22 01:51:41 EST 1997)
+fetchmail-4.3.3 (Sat Nov 22 01:51:41 EST 1997):
 * Robert Hardy <rhardy@webcon.net>'s patch to use IMAP EXAMINE in check mode. 
 * Alexander Kourakos's patch for cleaner handling of group addresses.
 * Fixed expansion of MDA %-escapes (thanks Wez Furlong <wjf103@york.ac.uk>).
@@ -419,7 +419,7 @@ fetchmail-4.3.3 (Sat Nov 22 01:51:41 EST 1997)
 
 There are 281 people on fetchmail-friends and 83 on fetchmail-announce.
 
-fetchmail-4.3.2 (Wed Oct 22 20:30:14 EDT 1997)
+fetchmail-4.3.2 (Wed Oct 22 20:30:14 EDT 1997):
 * More slow-UIDL patches from Wolfgang Wander.
 * Yet another attempt to fix IMAP-K4.  This one, my beta-testers say, works.
 * Only re-poll on actual dispatches (not just fetches).
@@ -428,7 +428,7 @@ fetchmail-4.3.2 (Wed Oct 22 20:30:14 EDT 1997)
 
 There are 261 people on fetchmail-friends and 64 on fetchmail-announce.
 
-fetchmail-4.3.1 (Mon Oct 13 17:12:40 EDT 1997)
+fetchmail-4.3.1 (Mon Oct 13 17:12:40 EDT 1997):
 * Minor portation fixes for early AIX versions and NextSTEP.
 * Fixed a bad interaction between --limit and the repoll feature.
 * = is now optional in global options.
@@ -446,7 +446,7 @@ fetchmail-4.3.1 (Mon Oct 13 17:12:40 EDT 1997)
 There are 269 people on fetchmail-friends and 40 on fetchmail-announce.
 
 ------------------------------------------------------------------------------
-fetchmail-4.3.0 (Mon Oct  6 16:44:38 EDT 1997)
+fetchmail-4.3.0 (Mon Oct  6 16:44:38 EDT 1997):
 * Rearranged IMAP authentication so CAPABILITY is done first,
 * FAQ update, including a major new item on how to protect your password.
 * Added code to have %F in an MDA string expand to the From address
@@ -462,7 +462,7 @@ fetchmail-4.3.0 (Mon Oct  6 16:44:38 EDT 1997)
 
 There are 281 people on fetchmail-friends and 8 on fetchmail-announce.
 
-fetchmail-4.2.9 (Tue Sep 30 18:21:35 EDT 1997)
+fetchmail-4.2.9 (Tue Sep 30 18:21:35 EDT 1997):
 * Don't byte-stuff when writing to an MDA.
 * IMAP mode now does smart re-polling, eliminating connection/authentication
   overhead when messages are being delivered to the server mailbox while
@@ -475,7 +475,7 @@ fetchmail-4.2.9 (Tue Sep 30 18:21:35 EDT 1997)
 
 There are 285 people on the fetchmail-friends list.
 
-fetchmail-4.2.8 (Sun Sep 28 16:59:59 EDT 1997)
+fetchmail-4.2.8 (Sun Sep 28 16:59:59 EDT 1997):
 * Fixed a bug in POP2 compilation introduced sometime after 4.0.8.
 * Only emit length-mismatch messages in verbose mode.
 * POP3 lock busy error is now treated as authorization failure (Greg Stark)
@@ -484,14 +484,14 @@ fetchmail-4.2.8 (Sun Sep 28 16:59:59 EDT 1997)
 
 There are 285 people on the fetchmail-friends list.
 
-fetchmail-4.2.7 (Fri Sep 26 11:21:15 EDT 1997)
+fetchmail-4.2.7 (Fri Sep 26 11:21:15 EDT 1997):
 * Full OTP support with Craig Metz's libopie 2.32 or higher.
 * Major upgrade of FAQ with a procedure for diagnosing mangled-mail problems.
 * Emit fetchmail's Received with stuffline so stripcr/forcecr are implemented.
 
 There are 284 people on the fetchmail-friends list.
 
-fetchmail-4.2.6 (Wed Sep 24 17:37:13 EDT 1997)
+fetchmail-4.2.6 (Wed Sep 24 17:37:13 EDT 1997):
 * Prevent bad matches on Received line due to hostnames ending "for" and "by".
 * Improved bug-tracking header, now also emitted when using an MDA.
 * Cope with Post Office/NT's brain-dead habit of prepending bogus LIST items
@@ -500,7 +500,7 @@ fetchmail-4.2.6 (Wed Sep 24 17:37:13 EDT 1997)
 
 There are 283 people on the fetchmail-friends list.
 
-fetchmail-4.2.5 (Mon Sep 22 23:38:46 EDT 1997)
+fetchmail-4.2.5 (Mon Sep 22 23:38:46 EDT 1997):
 * Greg Stark's patch for better autoconfiguration on mixed libc5/libc6 systems.
 * We no longer mess with CFLAGS/LDFLAGS to get Kerberos support linked.
 * fetchmail now generates its own Received header for bug-tracking.
@@ -509,7 +509,7 @@ fetchmail-4.2.5 (Mon Sep 22 23:38:46 EDT 1997)
 
 There are 284 people on the fetchmail-friends list.
 
-fetchmail-4.2.4 (Fri Sep 19 19:48:50 EDT 1997)
+fetchmail-4.2.4 (Fri Sep 19 19:48:50 EDT 1997):
 * Small compilation cleanups, thanks to Florian laRoche.
 * Removed the length consistency check, it mysteriously fails under POP3.
 * Added Alexander Kourakos's patch to improve address rewriting.
@@ -517,13 +517,13 @@ fetchmail-4.2.4 (Fri Sep 19 19:48:50 EDT 1997)
 
 There are 287 people on the fetchmail-friends list.
 
-fetchmail-4.2.3 (Thu Sep 18 16:19:10 EDT 1997)
+fetchmail-4.2.3 (Thu Sep 18 16:19:10 EDT 1997):
 * Fix a bug in IMAP message-size retrieval.
 * Yet another try at getting the size-consistency check right.
 
 There are 286 people on the fetchmail-friends list.
 
-fetchmail-4.2.2 (Wed Sep 17 22:56:05 EDT 1997)
+fetchmail-4.2.2 (Wed Sep 17 22:56:05 EDT 1997):
 * Re-enable --limit under IMAP (bug introduced in 4.2.0).
 * Autoconfigure root-mode PID-file directory to /etc if no /var/run.
 * ETRN mode no longer tries to flush queue for "localhost".
@@ -533,20 +533,20 @@ fetchmail-4.2.2 (Wed Sep 17 22:56:05 EDT 1997)
 
 There are 289 people on the fetchmail-friends list.
 
-fetchmail-4.2.1 (Tue Sep 16 12:26:57 EDT 1997)
+fetchmail-4.2.1 (Tue Sep 16 12:26:57 EDT 1997):
 * Type and inclusion changes to eliminate warnings on weird Unixes.
 * Detect and warn about servers like M$ Exchange that get lengths wrong.
 
 There are 285 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
-fetchmail-4.2.0 (Sun Sep 14 16:31:58 EDT 1997)
+fetchmail-4.2.0 (Sun Sep 14 16:31:58 EDT 1997):
 * Driver code changed so delimited protocols don't rely on message lengths
   being correct (this means #@!%^# brain-dead Microsoft Exchange will work).
 
 There are 285 people on the fetchmail-friends list.
 
-fetchmail-4.1.8 (Thu Sep 11 16:20:15 EDT 1997)
+fetchmail-4.1.8 (Thu Sep 11 16:20:15 EDT 1997):
 * Fix nasty single-char-adddress bug in multidrop mode.
 * Fixed cosmetic bug in ETRN mode -v output!
 * Added warning about broken Microsoft Exchange server to FAQ. 
@@ -554,20 +554,20 @@ fetchmail-4.1.8 (Thu Sep 11 16:20:15 EDT 1997)
 
 There are 286 people on the fetchmail-friends list.
 
-fetchmail-4.1.7 (Tue Sep  9 16:55:04 EDT 1997)
+fetchmail-4.1.7 (Tue Sep  9 16:55:04 EDT 1997):
 * Now works with Cyrus IMAP server.
 * Will build OK even if local environment lacks strstr(3).
 
 There are 283 people on the fetchmail-friends list.
 
-fetchmail-4.1.6 (Sat Sep  6 13:11:59 EDT 1997)
+fetchmail-4.1.6 (Sat Sep  6 13:11:59 EDT 1997):
 * Correct autoconfiguration machinery for Amiga (thanks to Steffen Opel).
 * Append hostname to fallback address in multidrop mode correctly.
 * Suppress append of smtphost name to RCPT TO address when it has a @ already.
 
 There are 285 people on the fetchmail-friends list.
 
-fetchmail-4.1.5 (Fri Sep  5 15:06:13 EDT 1997)
+fetchmail-4.1.5 (Fri Sep  5 15:06:13 EDT 1997):
 * Prevent core dumps on messages with no destination lines.
 * Decorate RCPT TO names with smtphost.
 * Have AUTO mode croak on SMTP error.
@@ -576,7 +576,7 @@ fetchmail-4.1.5 (Fri Sep  5 15:06:13 EDT 1997)
 
 There are 286 people on the fetchmail-friends list.
 
-fetchmail-4.1.4 (Thu Sep  4 15:41:05 EDT 1997)
+fetchmail-4.1.4 (Thu Sep  4 15:41:05 EDT 1997):
 * Autoconfigure correctly for systems that lack inet_aton().
 * Better failure reporting on SMTP connect failures.
 * Autoconfigure the MD5 support for 64-bit machines.
@@ -584,7 +584,7 @@ fetchmail-4.1.4 (Thu Sep  4 15:41:05 EDT 1997)
 Due to pilot error, there was no release actually numbered 4.1.3.
 There are 286 people on the fetchmail-friends list.
 
-fetchmail-4.1.2 (Wed Sep  3 18:44:58 EDT 1997)
+fetchmail-4.1.2 (Wed Sep  3 18:44:58 EDT 1997):
 * Fixed a bonehead bug in RCPT TO name generation introduced in 4.1.1.
 * Added James Steven's ip-up wrapper to the contrib directory.
 * Prevent buffer spamming in SockOpen by a broken DNS.
@@ -596,7 +596,7 @@ fetchmail-4.1.2 (Wed Sep  3 18:44:58 EDT 1997)
 First release after my two-week vacation.
 There are 285 people on the fetchmail-friends list.
 
-fetchmail-4.1.1 (Fri Aug 15 21:02:50 EDT 1997)
+fetchmail-4.1.1 (Fri Aug 15 21:02:50 EDT 1997):
 * Fix an obvious bug in some snprintf calls (non-Linux systems only)
 * No more hard limit on number of destination headers
 * Wolfgang Wander's support for faster new-message detection using UIDL.
@@ -604,7 +604,7 @@ fetchmail-4.1.1 (Fri Aug 15 21:02:50 EDT 1997)
 
 There are 269 people on the fetchmail-friends list.
 
-fetchmail-4.1.0 (Mon Aug 11 17:19:57 EDT 1997)
+fetchmail-4.1.0 (Mon Aug 11 17:19:57 EDT 1997):
 * Make the RPM depend on `smtpdaemon', which the sendmail package provides.
 * Clean up the Interactive UNIX System V/386 Release 3.2 port.
 * Enable parser to detect and complain about the most common syntax error.
@@ -614,7 +614,7 @@ fetchmail-4.1.0 (Mon Aug 11 17:19:57 EDT 1997)
 
 There are 263 people on the fetchmail-friends list.
 
-fetchmail-4.0.8 (Thu Aug  7 17:05:27 EDT 1997)
+fetchmail-4.0.8 (Thu Aug  7 17:05:27 EDT 1997):
 * Fixed core dump bug in UID handling introduced by the 4.0.6 change.
 * Retrieval code for POP3 & older IMAP versions now skips X-IMAP message
   used by UW IMAP4rev1 server to store UIDs.
@@ -622,7 +622,7 @@ fetchmail-4.0.8 (Thu Aug  7 17:05:27 EDT 1997)
 
 There are 263 people on the fetchmail-friends list.
 
-fetchmail-4.0.7 (Tue Aug  5 22:47:11 EDT 1997)
+fetchmail-4.0.7 (Tue Aug  5 22:47:11 EDT 1997):
 * Fixed a minor bug in handling of DNS errors in multidrop mode.
 * Added a `postconnect' analogous to `preconnect'.
 * Make `interval' count polls skipped because of interface or monitor option.
@@ -630,7 +630,7 @@ fetchmail-4.0.7 (Tue Aug  5 22:47:11 EDT 1997)
 
 There are 258 people on the fetchmail-friends list.
 
-fetchmail-4.0.6 (Fri Aug  1 11:14:31 EDT 1997)
+fetchmail-4.0.6 (Fri Aug  1 11:14:31 EDT 1997):
 * Changed semantics of `via' and `poll <name>' to be more orthogonal.
 * Substantially improved option coverage on the man page.
 * Yet another try at getting the remote-build right for Harry McGavran.
@@ -641,14 +641,14 @@ fetchmail-4.0.6 (Fri Aug  1 11:14:31 EDT 1997)
 WARNING: If you are running multidrop, (RE)READ FAQ ITEM F1 NOW!
 There are 258 people on the fetchmail-friends list.
 
-fetchmail-4.0.5 (Wed Jul 30 10:27:25 EDT 1997)
+fetchmail-4.0.5 (Wed Jul 30 10:27:25 EDT 1997):
 * Increased %o in the Lex source to cope with Ultrix lex.
 * RPMs are now built with --without-OPIE to avoid validation problems.
 * Channge in computation of true name to avoid HELO (null) bug.
 
 There are 255 people on the fetchmail-friends list.
 
-fetchmail-4.0.4 (Mon Jul 28 23:38:20 EDT 1997)
+fetchmail-4.0.4 (Mon Jul 28 23:38:20 EDT 1997):
 * Overhauled the build machinery.
 * The `no envelope' option now suppresses parsing of Received lines.
 * Added Al Youngwerth as a backup maintainer.
@@ -656,7 +656,7 @@ fetchmail-4.0.4 (Mon Jul 28 23:38:20 EDT 1997)
 This tries to fix the various yacc- and remote-build problems.
 There are 256 people on the fetchmail-friends list.
 
-fetchmail-4.0.3 (Mon Jul 28 16:39:17 EDT 1997)
+fetchmail-4.0.3 (Mon Jul 28 16:39:17 EDT 1997):
 * Replace vsprintf with vnsprintf to avoid buffer-overrun screws.
 * Added via option to make ssh configuration cleaner.
 * Added dropstatus option.
@@ -667,14 +667,14 @@ Note: RFC1938 support is tentative, untested, and requires a patch to the
 LIBOPIE library.  See the file LIBOPIE.PATCH for the sad details.
 There are 258 people on the fetchmail-friends list.
 
-fetchmail-4.0.2 (Mon Jul 17 20:54:30 EDT 1997)
+fetchmail-4.0.2 (Mon Jul 17 20:54:30 EDT 1997):
 * Experimental RFC1938 one-time password support using OPIE library,
   courtesy of Craig Metz <cmetz@inner.net> (couthor of RFC1938).
 
 Private release to Craig Metz only for OPIE testing.
 There are 251 people on the fetchmail-friends list.
 
-fetchmail-4.0.1 (Wed Jul 16 14:32:08 EDT 1997)
+fetchmail-4.0.1 (Wed Jul 16 14:32:08 EDT 1997):
 * Compilation cleanup for DEC Unix 4.0 and AIX.
 * Corrected the machinery for remote builds.
 * Minor improvements in failed-connection error messages.
@@ -683,7 +683,7 @@ A minor cleanup release for non-Linux systems.
 There are 254 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
-fetchmail-4.0.0 (Wed Jul  9 10:30:16 EDT 1997)
+fetchmail-4.0.0 (Wed Jul  9 10:30:16 EDT 1997):
 
 This is a "gold" version.  Bug cleanup was finished (I hope...) in 3.9.9.
 And about time, too, I've been hacking on this code for a year now!
@@ -798,7 +798,7 @@ There are 222 people on the fetchmail-friends list.
 (many bad addresses were dropped after the switchover to SmartList)
 
 ------------------------------------------------------------------------------
-fetchmail-3.9 (Wed Apr  2 13:36:22 EST 1997)
+fetchmail-3.9 (Wed Apr  2 13:36:22 EST 1997):
 
 features --
 
@@ -824,7 +824,7 @@ bugs --
 There are 268 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
-fetchmail-3.8 (Fri Mar  7 17:34:02 EST 1997)
+fetchmail-3.8 (Fri Mar  7 17:34:02 EST 1997):
 
 features --
 
@@ -847,7 +847,7 @@ bugs --
 There are 248 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
-fetchmail-3.7 (Fri Feb 21 17:38:40 EST 1997)
+fetchmail-3.7 (Fri Feb 21 17:38:40 EST 1997):
 
 features --
 
@@ -872,7 +872,7 @@ bugs --
 There are 233 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
-fetchmail-3.6 (Mon Feb 17 00:19:55 EST 1997)
+fetchmail-3.6 (Mon Feb 17 00:19:55 EST 1997):
 
 features --
 
@@ -895,7 +895,7 @@ bugs --
 There are 229 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
-fetchmail-3.5 (Sat Feb 15 15:19:36 EST 1997)
+fetchmail-3.5 (Sat Feb 15 15:19:36 EST 1997):
 
 features --
 
@@ -918,7 +918,7 @@ bugs --
 There are 230 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
-fetchmail-3.4 (Wed Feb 12 19:23:06 EST 1997)
+fetchmail-3.4 (Wed Feb 12 19:23:06 EST 1997):
 
 features --
 
@@ -955,7 +955,7 @@ fetchmail-3.3.1 (Sun Feb  2 02:17:07 EST 1997):
 * Unapply a patch that broke error logging to files.
 
 ------------------------------------------------------------------------------\
-fetchmail-3.3 (Sat Feb  1 15:15:13 EST 1997)
+fetchmail-3.3 (Sat Feb  1 15:15:13 EST 1997):
 
 features --
 
@@ -974,7 +974,7 @@ bugs --
 There are 215 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
-fetchmail-3.2 (Mon Jan 27 02:51:10 EST 1997)
+fetchmail-3.2 (Mon Jan 27 02:51:10 EST 1997):
 
 features --
 
@@ -993,7 +993,7 @@ bugs --
 There are 207 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
-fetchmail-3.1 (Fri Jan 24 12:45:18 EST 1997)
+fetchmail-3.1 (Fri Jan 24 12:45:18 EST 1997):
 
 features --
 
@@ -1017,7 +1017,7 @@ bugs --
 There are 205 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
-fetchmail-3.0 (Tue Jan 21 16:44:56 EST 1997)
+fetchmail-3.0 (Tue Jan 21 16:44:56 EST 1997):
 
 features --
 
@@ -1067,7 +1067,7 @@ manual page.
 There are 201 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
-fetchmail-2.8 (Sat Jan 11 15:48:33 EST 1997)
+fetchmail-2.8 (Sat Jan 11 15:48:33 EST 1997):
 
 features -- 
 
@@ -1094,7 +1094,7 @@ bugs --
 There are 184 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
-fetchmail-2.7 (Thu Jan  9 03:18:15 EST 1997)
+fetchmail-2.7 (Thu Jan  9 03:18:15 EST 1997):
 
 features -- 
 
@@ -1121,7 +1121,7 @@ bugs --
 There are 177 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
-fetchmail-2.6 (Fri Dec 27 12:42:56 EST 1996)
+fetchmail-2.6 (Fri Dec 27 12:42:56 EST 1996):
 
 features -- 
 
@@ -1140,7 +1140,7 @@ bugs --
 There are 169 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
-fetchmail-2.5 (Mon Dec 23 04:18:54 EST 1996)
+fetchmail-2.5 (Mon Dec 23 04:18:54 EST 1996):
 
 features -- 
 
@@ -1155,7 +1155,7 @@ bugs --
 There are 165 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
-fetchmail-2.4 (Sat Dec 21 05:24:44 EST 1996)
+fetchmail-2.4 (Sat Dec 21 05:24:44 EST 1996):
 
 features -- 
 
@@ -1179,6 +1179,7 @@ bugs --
 There are 166 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
+fetchmail-2.3 (Sat Dec 12 14:31:00 EST 1996):
 
 features -- 
 
@@ -1246,7 +1247,7 @@ bugs --
 * Disable daemon SIGCHLD handler while an MDA is running, to avoid snafus.
   Thanks to Dave Bodenstab <imdave@synet.net> for spotting this obscure bug.
 
-156 people on the contact list.
+There are 156 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-2.1 (Thu Nov 28 11:07:48 EST 1996):
@@ -1285,7 +1286,7 @@ bugs --
 * Include remote name in saved UID mappings so multiple POP accounts on
   the same server won't get their UIDs confused.
 
-138 people on the contact list.
+There are 138 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-2.0 (Mon Nov 18 00:32:17 EST 1996):
@@ -1338,12 +1339,10 @@ fetchmail-1.9.2 (Sun Oct 27 01:10:30 EST 1996):
 * Fix initialization-time core dump when running as root
 * Fix fatal error in MDA argument-list construction.
 
-118 people on the contact list.
+There are 118 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-1.9 (Fri Oct 25 23:02:26 EDT 1996):
-
-We've hit the century mark -- exactly 100 people on the fetchmail-friends list.
 
 features --
 
@@ -1426,6 +1425,8 @@ bugs --
 
 * Don't try using FLAGS.SILENT, some allegedly IMAP2bis servers seem to
   choke on it.
+
+There are 100 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-1.8 (Fri Oct 11 15:08:10 EDT 1996):
