@@ -53,8 +53,14 @@ int SockOpen(char *host, int clientPort)
     else
     {
         hp = gethostbyname(host);
-        if (hp == NULL)
+
+	/*
+	 * Add a check to make sure the address has a valid IPv4 or IPv6
+	 * length.  This prevents buffer spamming by a broken DNS.
+	 */
+        if (hp == NULL || (hp->h_length != 4 && hp->h_length != 8))
             return -1;
+
         memcpy(&ad.sin_addr, hp->h_addr, hp->h_length);
     }
     ad.sin_port = htons(clientPort);
