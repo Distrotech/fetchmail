@@ -15,6 +15,17 @@
 ------------------------------------------------------------------------------
 fetchmail-2.6 ()
 
+features -- 
+
+
+bugs --
+
+* Fixed length-computation bug (apparently introduced in 2.3) that messed
+  up IMAP deletes.
+
+* Dropped back to separate SockGets/SockWrite code with no attempt at
+  stdio buffering -- we hope this will fix the Solaris peoples' problems.
+
 There are 166 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------

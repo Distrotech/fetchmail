@@ -34,6 +34,12 @@
 #endif
 #endif
 
+/*
+ * There  are, in effect, two different implementations here.  One
+ * uses read(2) and write(2) directly with no buffering, the other
+ * uses stdio with line buffering (for better throughput).  Both
+ * are known to work under Linux.
+ */
 /* #define USE_STDIO */
 
 #ifdef USE_STDIO
@@ -116,19 +122,6 @@ va_dcl {
 }
 
 #ifndef USE_STDIO
-/*
- * FIXME: This needs to be recoded to use stdio, if that's possible.
- *
- * If you think these functions are too slow and inefficient, you're
- * absolutely right.  I wish I could figure out what to do about it.
- * The ancestral popclient used static buffering here to cut down on the
- * number of read(2) calls, but we can't do that because we can have
- * two or more sockets open at a time.
- *
- * The right thing to do would be to use stdio for internal per-socket
- * buffering here (which is why SockOpen() returns a file pointer) but 
- * this causes mysterious lossage.
- */
 
 int SockWrite(char *buf, int size, int len, FILE *sockfp)
 {
@@ -164,6 +157,7 @@ char *SockGets(char *buf, int len, FILE *sockfp)
     *cp = 0;
     return buf;
 }
+
 #else
 
 int SockWrite(char *buf, int size, int len, FILE *sockfp)
@@ -177,5 +171,19 @@ char *SockGets(char *buf, int len, FILE *sockfp)
 }
 
 #endif
+
+#ifdef MAIN
+/*
+ * Use the chargen service to test buffering directly.
+ */
+main()
+{
+    FILE	*fp = SockOpen("localhost", 19);
+    char	buf[80];
+
+    while (SockGets(buf, sizeof(buf)-1, fp))
+	SockWrite(buf, 1, strlen(buf), stdout);
+}
+#endif /* MAIN */
 
 /* socket.c ends here */
