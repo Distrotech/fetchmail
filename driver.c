@@ -50,6 +50,7 @@ static int tagnum;
 #define GENSYM	(sprintf(tag, "a%04d", ++tagnum), tag)
 
 static char *shroud;	/* string to shroud in debug output, if  non-NULL */
+static int mytimeout;	/* value of nonreponse timeout */
 
 static int strcrlf(dst, src, count)
 /* replace LFs with CR-LF; return length of string with replacements */
@@ -70,6 +71,18 @@ int count;	/* length of src */
   }
   *dst = '\0';
   return len;
+}
+
+static void vtalarm(timeleft)
+/* reset the nonresponse-timeout */
+int	timeleft;
+{
+    struct itimerval ntimeout;
+
+    ntimeout.it_interval.tv_sec = ntimeout.it_interval.tv_sec = 0;
+    ntimeout.it_value.tv_sec  = timeleft;
+    ntimeout.it_value.tv_usec = 0;
+    setitimer(ITIMER_VIRTUAL, &ntimeout, (struct itimerval *)NULL);
 }
 
 static void vtalarm_handler (int signal)
@@ -421,17 +434,21 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 
 	if ((cp = nxtaddr(hdr)) != (char *)NULL)
 	    do {
-		char	*atsign = strchr(cp, '@');
+		char	*atsign;
 
-		if (atsign)
-		    if (ctl->norewrite)
+		if ((atsign = strchr(cp, '@')))
+		{
+		    /*
+		     * Address has an @. Check to see if the right-hand part
+		     * is an alias or MX equivalent of the mailserver.  If it's
+		     * not, skip this name.  If it is, we'll keep going and try
+		     * to find a mapping to a client name.
+		     */
+		    if (!is_host_alias(atsign+1, ctl))
 			continue;
-		    else
-		    {
-			if (!is_host_alias(atsign+1, ctl))
-			    continue;
-			atsign[0] = '\0';
-		    }
+		    atsign[0] = '\0';
+		}
+
 		lname = idpair_find(&ctl->localnames, cp);
 		if (lname != (char *)NULL)
 		{
@@ -491,6 +508,7 @@ struct query *ctl;	/* query control record */
     {
 	if ((n = SockGets(socket,buf,sizeof(buf))) < 0)
 	    return(PS_SOCKET);
+	vtalarm(ctl->timeout);
 
 	/* write the message size dots */
 	if (n > 0)
@@ -783,7 +801,6 @@ const struct method *proto;	/* protocol method table */
 {
     int ok;
     void (*sigsave)();
-    struct itimerval ntimeout;
 
 #ifndef KERBEROS_V4
     if (ctl->authenticate == A_KERBEROS)
@@ -825,10 +842,7 @@ const struct method *proto;	/* protocol method table */
 
     /* set up the server-nonresponse timeout */
     sigsave = signal(SIGVTALRM, vtalarm_handler);
-    ntimeout.it_interval.tv_sec = ntimeout.it_interval.tv_sec = 0;
-    ntimeout.it_value.tv_sec  = ctl->timeout;
-    ntimeout.it_value.tv_usec = 0;
-    setitimer(ITIMER_VIRTUAL, &ntimeout, (struct itimerval *)NULL);
+    vtalarm(mytimeout = ctl->timeout);
 
     if (setjmp(restart) == 1)
 	fprintf(stderr,
@@ -852,19 +866,22 @@ const struct method *proto;	/* protocol method table */
 	if (ctl->authenticate == A_KERBEROS)
 	{
 	    ok = (kerberos_auth (socket, ctl->canonical_name));
-	    if (ok != 0)
+	    vtalarm(ctl->timeout);
+ 	    if (ok != 0)
 		goto cleanUp;
 	}
 #endif /* KERBEROS_V4 */
 
 	/* accept greeting message from mail server */
 	ok = (protocol->parse_response)(socket, buf);
+	vtalarm(ctl->timeout);
 	if (ok != 0)
 	    goto cleanUp;
 
 	/* try to get authorized to fetch mail */
 	shroud = ctl->password;
 	ok = (protocol->getauth)(socket, ctl, buf);
+	vtalarm(ctl->timeout);
 	shroud = (char *)NULL;
 	if (ok == PS_ERROR)
 	    ok = PS_AUTHFAIL;
@@ -874,6 +891,7 @@ const struct method *proto;	/* protocol method table */
 	/* compute number of messages and number of new messages waiting */
 	if ((protocol->getrange)(socket, ctl, &count, &new) != 0)
 	    goto cleanUp;
+	vtalarm(ctl->timeout);
 
 	/* show user how many messages we downloaded */
 	if (outlevel > O_SILENT)
@@ -932,6 +950,7 @@ const struct method *proto;	/* protocol method table */
 		{
 		    /* request a message */
 		    (protocol->fetch)(socket, num, &len);
+		    vtalarm(ctl->timeout);
 
 		    if (outlevel > O_SILENT)
 		    {
@@ -949,6 +968,7 @@ const struct method *proto;	/* protocol method table */
 				     len, 
 				     protocol->delimited,
 				     ctl);
+		    vtalarm(ctl->timeout);
 		    if (ok != 0)
 			goto cleanUp;
 
@@ -974,6 +994,7 @@ const struct method *proto;	/* protocol method table */
 		    if (outlevel > O_SILENT) 
 			fprintf(stderr, " flushed\n");
 		    ok = (protocol->delete)(socket, ctl, num);
+		    vtalarm(ctl->timeout);
 		    if (ok != 0)
 			goto cleanUp;
 		}
@@ -1102,6 +1123,7 @@ va_dcl {
 
   /* we presume this does its own response echoing */
   ok = (protocol->parse_response)(socket, buf);
+  vtalarm(mytimeout);
 
   return(ok);
 }

@@ -3,6 +3,13 @@
 pl 1.9.6 ():
 * Make rewrite option handle multiple comma-separated local names correctly.
 * Fix yet another fatal error in MDA argument list construction.
+* Reset timeout every time input is received.
+* Correct localname detection when --norewrite is on.
+
+pl 1.9.6 ():
+* Make rewrite option handle multiple comma-separated local names correctly.
+* Fix yet another fatal error in MDA argument list construction.
+* Allow SMTP code to handle responses longer than the atomic-read size.
 
 pl 1.9.5 (Tue Oct 29 20:07:41 EST 1996):
 * Added -N, --nodetach option for debugging purposes.
