@@ -705,7 +705,7 @@ struct query *ctl;	/* query control record */
 	    if (ctl->mda[0])
 		n = write(mboxfd,headers,oldlen);
 	    else
-		n = SockPuts(headers, sinkfp);
+		n = SockWrite(headers, oldlen, sinkfp);
 
 	    if (n < 0)
 	    {
@@ -722,7 +722,7 @@ struct query *ctl;	/* query control record */
 
 	/* SMTP byte-stuffing */
 	if (*bufp == '.' && ctl->mda[0] == 0)
-	    SockPuts(".", sinkfp);
+	    SockWrite(".", 1, sinkfp);
 
 	/* replace all LFs with CR-LF  in the line */
 	if (!ctl->mda[0])
@@ -739,7 +739,7 @@ struct query *ctl;	/* query control record */
 	if (ctl->mda[0])
 	    n = write(mboxfd,bufp,strlen(bufp));
 	else
-	    n = SockPuts(bufp, sinkfp);
+	    n = SockWrite(bufp, strlen(bufp), sinkfp);
 
 	if (!ctl->mda[0])
 	    free(bufp);
@@ -1087,7 +1087,7 @@ va_dcl {
     va_end(ap);
 
     strcat(buf, "\r\n");
-    SockPuts(buf, sockfp);
+    SockWrite(buf, strlen(buf), sockfp);
 
     if (outlevel == O_VERBOSE)
     {
@@ -1129,7 +1129,7 @@ va_dcl {
   va_end(ap);
 
   strcat(buf, "\r\n");
-  SockPuts(buf, sockfp);
+  SockWrite(buf, strlen(buf), sockfp);
   if (outlevel == O_VERBOSE)
   {
       char *cp;

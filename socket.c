@@ -74,30 +74,23 @@ int clientPort;
     return fdopen(sock, "r+");
 }
 
-int SockPuts(buf, sockfp)
-char *buf;
-FILE *sockfp;
-{
-    return(SockWrite(fileno(sockfp), buf, strlen(buf)));
-}
-
-int SockWrite(socket,buf,len)
-int socket;
+int SockWrite(buf,len,sockfp)
 char *buf;
 int len;
+FILE *sockfp;
 {
-    int n, rdlen = 0;
+    int n, wrlen = 0;
     
     while (len)
     {
-        n = write(socket, buf, len);
+        n = write(fileno(sockfp), buf, len);
         if (n <= 0)
             return -1;
         len -= n;
-	rdlen += n;
+	wrlen += n;
 	buf += n;
     }
-    return rdlen;
+    return wrlen;
 }
 
 static int sbuflen = 0;
@@ -147,25 +140,6 @@ int len;
    return(len);
 }
 
-int SockRead(socket,buf,len)
-int socket;
-char *buf;
-int len;
-{
-    int n;
-    
-    
-    while (len)
-    {
-        n = SockInternalRead(socket, buf, len);
-        if (n <= 0)
-            return -1;
-        len -= n;
-        buf += n;
-    }
-    return 0;
-}
-
 int SockGets(buf, len, sockfp)
 char *buf;
 int len;
@@ -208,7 +182,7 @@ va_dcl {
 #endif
     vsprintf(buf, format, ap);
     va_end(ap);
-    return SockWrite(fileno(sockfp), buf, strlen(buf));
+    return SockWrite(buf, strlen(buf), sockfp);
 
 }
 
