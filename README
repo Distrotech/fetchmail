@@ -41,6 +41,8 @@ with **.
 	   means the retrieved mail automatically goes to the system
 	   default MDA as if it were normal sender-initiated SMTP mail.
 
+	** Timeout if server connection is dropped.
+
 	*  Easy control via command line or free-format run control file.
 
 	*  Daemon mode -- fetchmail can be run in background to poll
@@ -74,7 +76,7 @@ You can easily find the latest version of fetchmail from Eric's home page:
 
 	http://www.ccil.org/~esr
 
-Just chase the link to the freeware collection.  Besides fetchmail, it
+Just chase the link to Eric's Freeware Collection.  Besides fetchmail, it
 includes a tasty selection of Web authoring tools, programmer's aids,
 graphics libraries, compilers for bizarre languages, games, and 
 miscellaneous interesting hacks.  Enjoy!
