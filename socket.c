@@ -22,6 +22,7 @@
 #include <sys/ioctl.h>
 #if defined(STDC_HEADERS)
 #include <string.h>
+#include <stdlib.h>
 #endif
 #if defined(HAVE_UNISTD_H)
 #include <unistd.h>
@@ -31,7 +32,6 @@
 #else
 #include <varargs.h>
 #endif
-#include <stdlib.h>
 #include <errno.h>
 #include "socket.h"
 

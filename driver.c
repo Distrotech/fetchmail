@@ -13,7 +13,10 @@
 
 #include  <config.h>
 #include  <stdio.h>
+#if defined(STDC_HEADERS)
 #include  <stdlib.h>
+#include  <string.h>
+#endif
 #if defined(HAVE_STDARG_H)
 #include  <stdarg.h>
 #else
@@ -21,7 +24,6 @@
 #endif
 #include  <sys/time.h>
 #include  <signal.h>
-#include  <string.h>
 
 #ifdef KERBEROS_V4
 #include <krb.h>
