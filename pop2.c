@@ -16,12 +16,6 @@
 #include  "socket.h"
 #include  "fetchmail.h"
 
-/*********************************************************************
-
- Method declarations for POP2
-
- *********************************************************************/
-
 static int pound_arg, equal_arg;
 
 int pop2_ok (argbuf,socket)
