@@ -1,7 +1,7 @@
 /*
  * interface.c -- implements fetchmail 'interface' and 'monitor' commands
  *
- * This module was implemented by George M. Sipe <gsipe@mindspring.com>
+ * This module was implemented by George M. Sipe <gsipe@pobox.com>
  * or <gsipe@acm.org> and is:
  *
  *	Copyright (c) 1996,1997 by George M. Sipe
