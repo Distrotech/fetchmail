@@ -263,7 +263,7 @@ pop3_slowuidl( int sock,  struct query *ctl, int *countp, int *newp)
      *  + Otherwise run a binary search to determine the last known message
      */
     int ok, nolinear = 0;
-    int first_nr, list_len, try_id, try_nr, hop_id, add_id;
+    int first_nr, list_len, try_id, try_nr, add_id;
     int num;
     char id [IDLEN+1];
     
@@ -464,7 +464,7 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
 /* request nth message */
 {
     int ok;
-    char buf [POPBUFSIZE+1], *cp;
+    char buf [POPBUFSIZE+1];
 
     gen_send(sock, "RETR %d", number);
     if ((ok = pop3_ok(sock, buf)) != 0)

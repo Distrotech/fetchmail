@@ -495,7 +495,7 @@ static int stuffline(struct query *ctl, char *buf)
 	    else
 		/* writing to SMTP, leave the byte-stuffing in place */;
 	}
-        else /* if (!protocol->delimited)	/* not byte-stuffed already */
+        else /* if (!protocol->delimited)	-- not byte-stuffed already */
 	{
 	    if (!ctl->mda)
 		SockWrite(ctl->smtp_socket, buf, 1);	/* byte-stuff it */
@@ -827,8 +827,6 @@ int num;		/* index of message */
 	    map_name(received_for, ctl, &xmit_names);
 	else
 	{
-	    int	i;
-
 	    /*
 	     * We haven't extracted the envelope address.
 	     * So check all the header addresses.
@@ -1286,7 +1284,7 @@ int len;		/* length of message */
 flag forward;		/* TRUE to forward */
 {
     int	linelen;
-    char buf[MSGBUFSIZE+1], *cp;
+    char buf[MSGBUFSIZE+1];
 
     /* pass through the text lines */
     while (protocol->delimited || len > 0)
@@ -1393,8 +1391,8 @@ int do_protocol(ctl, proto)
 struct query *ctl;		/* parsed options with merged-in defaults */
 const struct method *proto;	/* protocol method table */
 {
-    int ok, js, pst, sock = -1;
-    char *msg, *cp;
+    int ok, js, sock = -1;
+    char *msg;
     void (*sigsave)();
 
 #ifndef KERBEROS_V4
@@ -1454,7 +1452,7 @@ const struct method *proto;	/* protocol method table */
     }
     else
     {
-	char buf [POPBUFSIZE+1], *sp, *realhost;
+	char buf [POPBUFSIZE+1], *realhost;
 	int *msgsizes, len, num, count, new, deletions = 0;
 	int port, fetches;
 	struct idlist *idp;

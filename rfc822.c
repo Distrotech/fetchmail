@@ -43,7 +43,7 @@ const char *host;	/* server hostname */
     for (cp = buf; *cp; cp++)
 	if (*cp == ',' || isspace(*cp))
 	    addresscount++;
-    buf = (char *)realloc(buf, strlen(buf) + addresscount * strlen(host) + 1);
+    buf = (char *)xrealloc(buf, strlen(buf) + addresscount * strlen(host) + 1);
 #endif /* TESTMAIN */
 
     parendepth = state = 0;
