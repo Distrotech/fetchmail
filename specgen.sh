@@ -9,7 +9,7 @@ URL:		http://www.tuxedo.org/~esr/fetchmail
 Source:         %{name}-%{version}.tar.gz
 Group:		Applications/Mail
 Group(pt_BR):   Aplicações/Correio Eletrônico
-Copyright:	GPL
+License:	GPL
 Icon:		fetchmail.xpm
 Requires:	smtpdaemon
 BuildRoot:	/var/tmp/%{name}-%{version}
@@ -115,7 +115,7 @@ GUI konfigurator do fetchmaila napisany w pythonie.
 %setup -q
 
 %build
-CFLAGS="\$RPM_OPT_FLAGS" LDFLAGS="-s"
+LDFLAGS="-s"
 export CFLAGS LDFLAGS
 ./configure --prefix=/usr --disable-nls --without-kerberos --mandir=%{_mandir} 
                          # Remove --disable-nls, add --without-included-gettext
