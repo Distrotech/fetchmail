@@ -278,6 +278,9 @@ struct msgblk			/* message header parsed for open_sink() */
     struct idlist	*recipients;	/* addressees */
     char		return_path[HOSTLEN + USERNAMELEN + 4]; 
     int			reallen;
+
+    /* this is written by open_sink */
+    int			lmtp_responses;	/* count of LMTP responses expected  */
 };
 
 
@@ -378,14 +381,14 @@ extern int phase;
 int stuffline(struct query *, char *);
 int open_sink(struct query*, struct msgblk *, int*, int*);
 void release_sink(struct query *);
-int close_sink(struct query *, flag);
-int open_warning_by_mail(struct query *);
+int close_sink(struct query *, struct msgblk *, flag);
+int open_warning_by_mail(struct query *, struct msgblk *);
 #if defined(HAVE_STDARG_H)
 void stuff_warning(struct query *, const char *, ... );
 #else
 void stuff_warning();
 #endif
-void close_warning_by_mail(struct query *);
+void close_warning_by_mail(struct query *, struct msgblk *);
 
 /* rfc822.c: RFC822 header parsing */
 char *reply_hack(char *, const char *);

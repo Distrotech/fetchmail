@@ -334,6 +334,7 @@ static char *parse_received(struct query *ctl, char *bufp)
 
 /* shared by readheaders and readbody */
 static int sizeticker;
+static struct msgblk msgblk;
 
 #define EMPTYLINE(s)	((s)[0] == '\r' && (s)[1] == '\n' && (s)[2] == '\0')
 
@@ -365,16 +366,15 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
     flag		no_local_matches = FALSE;
     flag		headers_ok, has_nuls;
     int			olderrs, good_addresses, bad_addresses;
-    struct msgblk	msg;
 
     sizeticker = 0;
     has_nuls = headers_ok = FALSE;
-    msg.return_path[0] = '\0';
+    msgblk.return_path[0] = '\0';
     olderrs = ctl->errcount;
 
     /* read message headers */
-    msg.reallen = reallen;
-    msg.headers = received_for = NULL;
+    msgblk.reallen = reallen;
+    msgblk.headers = received_for = NULL;
     from_offs = reply_to_offs = resent_from_offs = app_from_offs = 
 	sender_offs = resent_sender_offs = env_offs = -1;
     oldlen = 0;
@@ -394,7 +394,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 	    if ((n = SockRead(sock, buf, sizeof(buf)-1)) == -1) {
 		set_timeout(0);
 		free(line);
-		free(msg.headers);
+		free(msgblk.headers);
 		return(PS_SOCKET);
 	    }
 	    set_timeout(0);
@@ -478,7 +478,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 #endif /* POP2_ENABLE */
 	    if (num == 1 && !strncasecmp(line, "X-IMAP:", 7)) {
 		free(line);
-		free(msg.headers);
+		free(msgblk.headers);
 		return(PS_RETAINED);
 	    }
 
@@ -569,49 +569,49 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 	 */
 	if (!strncasecmp("Return-Path:", line, 12) && (cp = nxtaddr(line)))
 	{
-	    strcpy(msg.return_path, cp);
+	    strcpy(msgblk.return_path, cp);
 	    if (!ctl->mda) {
 		free(line);
 		continue;
 	    }
 	}
 
-	if (!msg.headers)
+	if (!msgblk.headers)
 	{
 	    oldlen = strlen(line);
-	    msg.headers = xmalloc(oldlen + 1);
-	    (void) strcpy(msg.headers, line);
+	    msgblk.headers = xmalloc(oldlen + 1);
+	    (void) strcpy(msgblk.headers, line);
 	    free(line);
-	    line = msg.headers;
+	    line = msgblk.headers;
 	}
 	else
 	{
 	    int	newlen;
 
 	    newlen = oldlen + strlen(line);
-	    msg.headers = (char *) realloc(msg.headers, newlen + 1);
-	    if (msg.headers == NULL) {
+	    msgblk.headers = (char *) realloc(msgblk.headers, newlen + 1);
+	    if (msgblk.headers == NULL) {
 		free(line);
 		return(PS_IOERR);
 	    }
-	    strcpy(msg.headers + oldlen, line);
+	    strcpy(msgblk.headers + oldlen, line);
 	    free(line);
-	    line = msg.headers + oldlen;
+	    line = msgblk.headers + oldlen;
 	    oldlen = newlen;
 	}
 
 	if (!strncasecmp("From:", line, 5))
-	    from_offs = (line - msg.headers);
+	    from_offs = (line - msgblk.headers);
 	else if (!strncasecmp("Reply-To:", line, 9))
-	    reply_to_offs = (line - msg.headers);
+	    reply_to_offs = (line - msgblk.headers);
 	else if (!strncasecmp("Resent-From:", line, 12))
-	    resent_from_offs = (line - msg.headers);
+	    resent_from_offs = (line - msgblk.headers);
 	else if (!strncasecmp("Apparently-From:", line, 16))
-	    app_from_offs = (line - msg.headers);
+	    app_from_offs = (line - msgblk.headers);
 	else if (!strncasecmp("Sender:", line, 7))
-	    sender_offs = (line - msg.headers);
+	    sender_offs = (line - msgblk.headers);
 	else if (!strncasecmp("Resent-Sender:", line, 14))
-	    resent_sender_offs = (line - msg.headers);
+	    resent_sender_offs = (line - msgblk.headers);
 
  	else if (!strncasecmp("Message-Id:", buf, 11))
 	{
@@ -638,7 +638,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 			|| !strncasecmp("Apparently-To:", line, 14))
 	{
 	    *to_chainptr = xmalloc(sizeof(struct addrblk));
-	    (*to_chainptr)->offset = (line - msg.headers);
+	    (*to_chainptr)->offset = (line - msgblk.headers);
 	    to_chainptr = &(*to_chainptr)->next; 
 	    *to_chainptr = NULL;
 	}
@@ -648,7 +648,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 			|| !strncasecmp("Resent-Bcc:", line, 11))
 	{
 	    *resent_to_chainptr = xmalloc(sizeof(struct addrblk));
-	    (*resent_to_chainptr)->offset = (line - msg.headers);
+	    (*resent_to_chainptr)->offset = (line - msgblk.headers);
 	    resent_to_chainptr = &(*resent_to_chainptr)->next; 
 	    *resent_to_chainptr = NULL;
 	}
@@ -664,7 +664,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 		{				
 		    if (skipcount++ != ctl->server.envskip)
 			continue;
-		    env_offs = (line - msg.headers);
+		    env_offs = (line - msgblk.headers);
 		}    
 	    }
 	    else if (!received_for && !strncasecmp("Received:", line, 9))
@@ -696,7 +696,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
      * make either From or To address @-less, otherwise the reply_hack
      * logic will do bad things.
      */
-    if (msg.headers == (char *)NULL)
+    if (msgblk.headers == (char *)NULL)
     {
 #ifdef HAVE_SNPRINTF
 	snprintf(buf, sizeof(buf),
@@ -705,7 +705,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 #endif /* HAVE_SNPRINTF */
 	"From: FETCHMAIL-DAEMON\r\nTo: %s@%s\r\nSubject: Headerless mail from %s's mailbox on %s\r\n",
 		user, fetchmailhost, ctl->remotename, ctl->server.truename);
-	msg.headers = xstrdup(buf);
+	msgblk.headers = xstrdup(buf);
     }
 
     /*
@@ -718,10 +718,10 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
      * headers (RFC 2046).
      */
     if (ctl->mimedecode) {
-	UnMimeHeader(msg.headers);
+	UnMimeHeader(msgblk.headers);
     }
     /* Check for MIME headers indicating possible 8-bit data */
-    ctl->mimemsg = MimeBodyType(msg.headers, ctl->mimedecode);
+    ctl->mimemsg = MimeBodyType(msgblk.headers, ctl->mimedecode);
 
     /*
      * If there is a Return-Path address on the message, this was
@@ -738,25 +738,25 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
      * (ex: specified by "Sender:") which is much less annoying.  This 
      * is true for most mailing list packages.
      */
-    if( !msg.return_path[0] ){
+    if( !msgblk.return_path[0] ){
 	char *ap = NULL;
-	if (resent_sender_offs >= 0 && (ap = nxtaddr(msg.headers + resent_sender_offs)));
-	else if (sender_offs >= 0 && (ap = nxtaddr(msg.headers + sender_offs)));
-	else if (resent_from_offs >= 0 && (ap = nxtaddr(msg.headers + resent_from_offs)));
-	else if (from_offs >= 0 && (ap = nxtaddr(msg.headers + from_offs)));
-	else if (reply_to_offs >= 0 && (ap = nxtaddr(msg.headers + reply_to_offs)));
-	else if (app_from_offs >= 0 && (ap = nxtaddr(msg.headers + app_from_offs)));
-	if (ap) strcpy( msg.return_path, ap );
+	if (resent_sender_offs >= 0 && (ap = nxtaddr(msgblk.headers + resent_sender_offs)));
+	else if (sender_offs >= 0 && (ap = nxtaddr(msgblk.headers + sender_offs)));
+	else if (resent_from_offs >= 0 && (ap = nxtaddr(msgblk.headers + resent_from_offs)));
+	else if (from_offs >= 0 && (ap = nxtaddr(msgblk.headers + from_offs)));
+	else if (reply_to_offs >= 0 && (ap = nxtaddr(msgblk.headers + reply_to_offs)));
+	else if (app_from_offs >= 0 && (ap = nxtaddr(msgblk.headers + app_from_offs)));
+	if (ap) strcpy( msgblk.return_path, ap );
     }
 
     /* cons up a list of local recipients */
-    msg.recipients = (struct idlist *)NULL;
+    msgblk.recipients = (struct idlist *)NULL;
     accept_count = reject_count = 0;
     /* is this a multidrop box? */
     if (MULTIDROP(ctl))
     {
 	if (env_offs > -1)	    /* We have the actual envelope addressee */
-	    find_server_names(msg.headers + env_offs, ctl, &msg.recipients);
+	    find_server_names(msgblk.headers + env_offs, ctl, &msgblk.recipients);
 	else if (received_for)
 	    /*
 	     * We have the Received for addressee.  
@@ -765,11 +765,11 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 	     * We use find_server_names() to let local 
 	     * hostnames go through.
 	     */
-	    find_server_names(received_for, ctl, &msg.recipients);
+	    find_server_names(received_for, ctl, &msgblk.recipients);
 #ifdef SDPS_ENABLE
 	else if (sdps_envto)
 	{
-	    find_server_names(sdps_envto, ctl, &msg.recipients);
+	    find_server_names(sdps_envto, ctl, &msgblk.recipients);
 	    free(sdps_envto);
 	}
 #endif /* SDPS_ENABLE */ 
@@ -796,7 +796,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 	    }
 	    /* now look for remaining adresses */
 	    while (to_addrchain) {
-		find_server_names(msg.headers+to_addrchain->offset, ctl, &msg.recipients);
+		find_server_names(msgblk.headers+to_addrchain->offset, ctl, &msgblk.recipients);
 		nextptr = to_addrchain->next;
 		free(to_addrchain);
 		to_addrchain = nextptr;
@@ -805,7 +805,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 	if (!accept_count)
 	{
 	    no_local_matches = TRUE;
-	    save_str(&msg.recipients, run.postmaster, XMIT_ACCEPT);
+	    save_str(&msgblk.recipients, run.postmaster, XMIT_ACCEPT);
 	    if (outlevel >= O_DEBUG)
 		error(0, 0, 
 		      _("no local matches, forwarding to %s"),
@@ -813,7 +813,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 	}
     }
     else	/* it's a single-drop box, use first localname */
-	save_str(&msg.recipients, ctl->localnames->id, XMIT_ACCEPT);
+	save_str(&msgblk.recipients, ctl->localnames->id, XMIT_ACCEPT);
 
 
     /*
@@ -823,18 +823,18 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
     {
 	if (outlevel >= O_DEBUG)
 	    error(0,0, _("forwarding and deletion suppressed due to DNS errors"));
-	free(msg.headers);
-	free_str_list(&msg.recipients);
+	free(msgblk.headers);
+	free_str_list(&msgblk.recipients);
 	return(PS_TRANSIENT);
     }
     else
     {
 	/* set up stuffline() so we can deliver the message body through it */ 
-	if ((n = open_sink(ctl, &msg,
+	if ((n = open_sink(ctl, &msgblk,
 			   &good_addresses, &bad_addresses)) != PS_SUCCESS)
 	{
-	    free(msg.headers);
-	    free_str_list(&msg.recipients);
+	    free(msgblk.headers);
+	    free_str_list(&msgblk.recipients);
 	    return(n);
 	}
     }
@@ -845,17 +845,17 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
      * synthetic Received line is before the From header.  Cope
      * with this...
      */
-    if ((rcv = strstr(msg.headers, "Received:")) == (char *)NULL)
-	rcv = msg.headers;
+    if ((rcv = strstr(msgblk.headers, "Received:")) == (char *)NULL)
+	rcv = msgblk.headers;
     /* handle ">Received:" lines too */
-    while (rcv > msg.headers && rcv[-1] != '\n')
+    while (rcv > msgblk.headers && rcv[-1] != '\n')
 	rcv--;
-    if (rcv > msg.headers)
+    if (rcv > msgblk.headers)
     {
 	char	c = *rcv;
 
 	*rcv = '\0';
-	n = stuffline(ctl, msg.headers);
+	n = stuffline(ctl, msgblk.headers);
 	*rcv = c;
     }
     if (!run.invisible && n != -1)
@@ -885,7 +885,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 		}
 		else if (good_addresses == 1)
 		{
-		    for (idp = msg.recipients; idp; idp = idp->next)
+		    for (idp = msgblk.recipients; idp; idp = idp->next)
 			if (idp->val.status.mark == XMIT_ACCEPT)
 			    break;	/* only report first address */
 		    if (strchr(idp->id, '@'))
@@ -906,14 +906,14 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
     }
 
     if (n != -1)
-	n = stuffline(ctl, rcv);	/* ship out rest of msg.headers */
+	n = stuffline(ctl, rcv);	/* ship out rest of msgblk.headers */
 
     if (n == -1)
     {
-	error(0, errno, _("writing RFC822 msg.headers"));
+	error(0, errno, _("writing RFC822 msgblk.headers"));
 	release_sink(ctl);
-	free(msg.headers);
-	free_str_list(&msg.recipients);
+	free(msgblk.headers);
+	free_str_list(&msgblk.recipients);
 	return(PS_IOERR);
     }
     else if (!run.use_syslog && outlevel >= O_VERBOSE)
@@ -933,7 +933,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 		strcat(errhd, _("no recipient addresses matched declared local names"));
 	    else
 	    {
-		for (idp = msg.recipients; idp; idp = idp->next)
+		for (idp = msgblk.recipients; idp; idp = idp->next)
 		    if (idp->val.status.mark == XMIT_REJECT)
 			break;
 		sprintf(errhd+strlen(errhd), _("recipient address %s didn't match any local name"), idp->id);
@@ -953,13 +953,13 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 		strcat(errhd, "; ");
 	    strcat(errhd, _("SMTP listener rejected local recipient addresses: "));
 	    errlen = strlen(errhd);
-	    for (idp = msg.recipients; idp; idp = idp->next)
+	    for (idp = msgblk.recipients; idp; idp = idp->next)
 		if (idp->val.status.mark == XMIT_ANTISPAM)
 		    errlen += strlen(idp->id) + 2;
 
 	    xalloca(errmsg, char *, errlen+3);
 	    (void) strcpy(errmsg, errhd);
-	    for (idp = msg.recipients; idp; idp = idp->next)
+	    for (idp = msgblk.recipients; idp; idp = idp->next)
 		if (idp->val.status.mark == XMIT_ANTISPAM)
 		{
 		    strcat(errmsg, idp->id);
@@ -982,8 +982,8 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
     *cp++ = '\0';
     stuffline(ctl, buf);
 
-    free(msg.headers);
-    free_str_list(&msg.recipients);
+    free(msgblk.headers);
+    free_str_list(&msgblk.recipients);
     return(headers_ok ? PS_SUCCESS : PS_TRUNCATED);
 }
 
@@ -1246,7 +1246,7 @@ static void send_size_warnings(struct query *ctl)
      * but it's not a disaster, either, since the skipped mail will not
      * be deleted.
      */
-    if (open_warning_by_mail(ctl))
+    if (open_warning_by_mail(ctl, (struct msgblk *)NULL))
 	return;
     stuff_warning(ctl, OVERHD);
  
@@ -1273,7 +1273,7 @@ static void send_size_warnings(struct query *ctl)
 	    current->val.status.num = 0;
     }
 
-    close_warning_by_mail(ctl);
+    close_warning_by_mail(ctl, (struct msgblk *)NULL);
 #undef OVERHD
 }
 
@@ -1376,7 +1376,8 @@ const struct method *proto;	/* protocol method table */
 	 * If we've exceeded our threshold for consecutive timeouts, 
 	 * try to notify the user, then mark the connection wedged.
 	 */
-	if (timeoutcount > MAX_TIMEOUTS && !open_warning_by_mail(ctl))
+	if (timeoutcount > MAX_TIMEOUTS 
+			&& !open_warning_by_mail(ctl, (struct msgblk *)NULL))
 	{
 	    stuff_warning(ctl,
 			  _("Subject: fetchmail sees repeated timeouts\r\n"));
@@ -1393,7 +1394,7 @@ const struct method *proto;	/* protocol method table */
 			  _("a server error.  You can run `fetchmail -v -v' to diagnose the problem."));
 	    stuff_warning(ctl,
 			  _("Fetchmail won't poll this mailbox again until you restart it."));
-	    close_warning_by_mail(ctl);
+	    close_warning_by_mail(ctl, (struct msgblk *)NULL);
 	    ctl->wedged = TRUE;
 	}
 
@@ -1537,7 +1538,8 @@ const struct method *proto;	/* protocol method table */
 		     * failure the first time it happens.
 		     */
 		    if (run.poll_interval
-			&& !ctl->wedged && !open_warning_by_mail(ctl))
+			&& !ctl->wedged 
+			&& !open_warning_by_mail(ctl, (struct msgblk *)NULL))
 		    {
 			stuff_warning(ctl,
 			       _("Subject: fetchmail authentication failed\r\n"));
@@ -1549,7 +1551,7 @@ const struct method *proto;	/* protocol method table */
 			       _("The attempt to get authorization failed."));
 			stuff_warning(ctl, 
 			       _("This probably means your password is invalid."));
-			close_warning_by_mail(ctl);
+			close_warning_by_mail(ctl, (struct msgblk *)NULL);
 			ctl->wedged = TRUE;
 		    }
 		}
@@ -1821,7 +1823,7 @@ const struct method *proto;	/* protocol method table */
 			     * it's time to request the body now.  This
 			     * fetch may be skipped if we got an anti-spam
 			     * or other PS_REFUSED error response during
-			     * read_headers.
+			     * readheaders.
 			     */
 			    if (protocol->fetch_body && !suppress_readbody) 
 			    {
@@ -1910,7 +1912,7 @@ const struct method *proto;	/* protocol method table */
 			    }
 
 			    /* end-of-message processing starts here */
-			    if (!close_sink(ctl, !suppress_forward))
+			    if (!close_sink(ctl, &msgblk, !suppress_forward))
 			    {
 				ctl->errcount++;
 				suppress_delete = TRUE;

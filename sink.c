@@ -42,9 +42,6 @@
 #define SIGCHLD	SIGCLD
 #endif
 
-static int lmtp_responses;	/* how many should we expect? */
-static struct msgblk msgcopy;	/* copies of various message internals */
-
 static int smtp_open(struct query *ctl)
 /* try to open a socket to the appropriate SMTP server for this query */ 
 {
@@ -252,6 +249,46 @@ static void sanitize(char *s)
     	*cp = '_';
 }
 
+static int send_bouncemail(struct query *ctl, struct msgblk *msgcopy, 
+		int nerrors, char *errors[])
+{
+    char buf[MSGBUFSIZE];
+    int i;
+
+    if (open_warning_by_mail(ctl, msgcopy))
+	return(FALSE);
+
+    /* generate an error report a la RFC 1892 */
+    stuff_warning(ctl, "MIME-Version: 1.0");
+    stuff_warning(ctl, "Content-Type: multipart/report report-type=text/plain boundary=\"om-mani-padme-hum\"");
+    stuff_warning(ctl, "Content-Transfer-Encoding: 7bit");
+    stuff_warning(ctl, "");
+
+
+    /* RFC1892 part 1 -- human-readable message */
+    stuff_warning(ctl, "-- om-mani-padme-hum"); 
+    stuff_warning(ctl, "");
+
+    /* RFC1892 part 2 -- machine-readable responses */
+    stuff_warning(ctl, "-- om-mani-padme-hum"); 
+    stuff_warning(ctl,"Content-Type: message/delivery-status");
+    stuff_warning(ctl, "");
+    for (i = 0; i < nerrors; i++)
+	stuff_warning(ctl, errors[i]);
+
+    /* RFC1892 part 3 -- headers of undelivered message */
+    stuff_warning(ctl, "-- om-mani-padme-hum"); 
+    stuff_warning(ctl, "Content-Type: text/rfc822-headers");
+    stuff_warning(ctl, "");
+    stuffline(ctl, msgcopy->headers);
+
+    stuff_warning(ctl, "-- om-mani-padme-hum --"); 
+
+    close_warning_by_mail(ctl, msgcopy);
+
+    return(TRUE);
+}
+
 int open_sink(struct query *ctl, struct msgblk *msg,
 	      int *good_addresses, int *bad_addresses)
 /* set up sinkfp to be an input sink we can ship a message to */
@@ -454,7 +491,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 
 	sigchld = signal(SIGCHLD, SIG_DFL);
     }
-    else /* forward to an SMTP listener */
+    else /* forward to an SMTP or LMTP listener */
     {
 	const char	*ap;
 	char	options[MSGBUFSIZE], addr[128];
@@ -467,12 +504,6 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		  ctl->smtphost ? ctl->smtphost : "localhost");
 	    return(PS_SMTP);
 	}
-
-	/*
-	 * Stash a copy of the parsed message block 
-	 * for use by close_sink().
-	 */
-	memcpy(&msgcopy, msg, sizeof(struct msgblk));
 
 	/*
 	 * Compute ESMTP options.
@@ -638,7 +669,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
      * We need to stash this away in order to know how many
      * response lines to expect after the LMTP end-of-message.
      */
-    lmtp_responses = *good_addresses;
+    msg->lmtp_responses = *good_addresses;
 
     return(PS_SUCCESS);
 }
@@ -659,7 +690,7 @@ void release_sink(struct query *ctl)
     }
 }
 
-int close_sink(struct query *ctl, flag forward)
+int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 /* perform end-of-message actions on the current output sink */
 {
     if (ctl->mda)
@@ -713,7 +744,7 @@ int close_sink(struct query *ctl, flag forward)
 	 * to people who got it the first time.
 	 */
 	if (ctl->listener == LMTP_MODE)
-	    if (lmtp_responses == 0)
+	    if (msg->lmtp_responses == 0)
 	    {
 		SMTP_ok(ctl->smtp_socket); 
 
@@ -745,8 +776,8 @@ int close_sink(struct query *ctl, flag forward)
 		char	**responses;
 
 		/* eat the RFC2033-required responses, saving errors */ 
-		xalloca(responses, char **, sizeof(char *) * lmtp_responses);
-		for (errors = i = 0; i < lmtp_responses; i++)
+		xalloca(responses, char **, sizeof(char *) * msg->lmtp_responses);
+		for (errors = i = 0; i < msg->lmtp_responses; i++)
 		{
 		    if (SMTP_ok(ctl->smtp_socket) == SM_OK)
 			responses[i] = (char *)NULL;
@@ -762,7 +793,7 @@ int close_sink(struct query *ctl, flag forward)
 
 		if (errors == 0)
 		    return(TRUE);	/* all deliveries succeeded */
-		else if (errors == lmtp_responses)
+		else if (errors == msg->lmtp_responses)
 		    return(FALSE);	/* all deliveries failed */
 		else
 		{
@@ -772,47 +803,18 @@ int close_sink(struct query *ctl, flag forward)
 		     *
 		     * What we'd really like to do is bounce a
 		     * failures list back to the sender and return
-		     * TRUE, deleting the message from the server so
-		     * it won't be re-forwarded on subsequent poll
-		     * cycles.
+ 		     * TRUE, deleting the message from the server so
+ 		     * it won't be re-forwarded on subsequent poll
+ 		     * cycles.
 		     *
 		     * We can't do that yet, so instead we report 
 		     * failures to the calling-user/postmaster.  If we can't,
 		     * there's a transient error in local delivery; leave
 		     * the message on the server.
 		     */
-		    char buf[MSGBUFSIZE];
-
-		    if (open_warning_by_mail(ctl))
-			return(FALSE);
-
-		    /* generate an error report a la RFC 1892 */
-		    stuff_warning(ctl, "MIME-Version: 1.0");
-		    stuff_warning(ctl, "Content-Type: multipart/report report-type=text/plain boundary=\"om-mani-padme-hum\"");
-		    stuff_warning(ctl, "Content-Transfer-Encoding: 7bit");
-		    stuff_warning(ctl, "");
-
-
-		    /* RFC1892 part 1 -- human-readable message */
-		    stuff_warning(ctl, "-- om-mani-padme-hum"); 
-		    stuff_warning(ctl, "");
-
-		    /* RFC1892 part 2 -- machine-readable responses */
-		    stuff_warning(ctl, "-- om-mani-padme-hum"); 
-		    stuff_warning(ctl,"Content-Type: message/delivery-status");
-		    stuff_warning(ctl, "");
-		    for (i = 0; i < errors; i++)
-			stuff_warning(ctl, responses[i]);
-
-		    /* RFC1892 part 3 -- headers of undelivered message */
-		    stuff_warning(ctl, "-- om-mani-padme-hum"); 
-		    stuff_warning(ctl, "Content-Type: text/rfc822-headers");
-		    stuff_warning(ctl, "");
-		    stuffline(ctl, msgcopy.headers);
-
-		    stuff_warning(ctl, "-- om-mani-padme-hum --"); 
-
-		    close_warning_by_mail(ctl);
+		    send_bouncemail(ctl,
+				    (struct msgblk *)NULL,
+				    errors, responses);
 
 		    /*
 		     * It's not completely clear what to do here,
@@ -834,45 +836,56 @@ int close_sink(struct query *ctl, flag forward)
     return(TRUE);
 }
 
-int open_warning_by_mail(struct query *ctl)
+int open_warning_by_mail(struct query *ctl, struct msgblk *msg)
 /* set up output sink for a mailed warning to calling user */
 {
     int	good, bad;
 
     /*
      * Dispatching warning email is a little complicated.  The problem is
-     * that we have to deal with three distinct cases:
-     * 
-     * 1. Single-drop running from user account.  Warning mail should
+     * that we have to deal with four distinct cases:
+     *
+     * 1. Non-null msg argument.  We're trying to generate bouncemail
+     * about the given message.  Address using the Return-Path member.
+     *
+     * 2. Single-drop running from user account.  Warning mail should
      * go to the local name for which we're collecting (coincides
      * with calling user).
      *
-     * 2. Single-drop running from root or other privileged ID, with rc
+     * 3. Single-drop running from root or other privileged ID, with rc
      * file generated on the fly (Ken Estes's weird setup...)  Mail
      * should go to the local name for which we're collecting (does not 
      * coincide with calling user).
      * 
-     * 3. Multidrop.  Mail must go to postmaster.  We leave the recipients
+     * 4. Multidrop.  Mail must go to postmaster.  We leave the recipients
      * member null so this message will fall through to run.postmaster.
      *
      * The zero in the reallen element means we won't pass a SIZE
      * option to ESMTP; the message length would be more trouble than
      * it's worth to compute.
      */
-    struct msgblk msg = {NULL, NULL, "FETCHMAIL-DAEMON", 0};
+    struct msgblk reply = {NULL, NULL, "FETCHMAIL-DAEMON", 0};
+    int status;
 
-    if (!MULTIDROP(ctl))
+    if (msg)				/* send bouncemail (not used yet) */
     {
-	msg.recipients = ctl->localnames;
-
-	/*
-	 * Ick. This could get us in trouble someday, but
-	 * it's necessary in order to fool open_sink().
-	 */
-	msg.recipients->val.status.mark = XMIT_ACCEPT;
+	if (!msg->return_path[0])
+	    return(PS_REFUSED);
+	
+	save_str(&reply.recipients, msg->return_path, XMIT_ACCEPT);
+	status = open_sink(ctl, &reply, &good, &bad);
+	free_str_list(&reply.recipients);
+	return(status);
     }
-
-    return(open_sink(ctl, &msg, &good, &bad));
+    else if (!MULTIDROP(ctl))		/* send to calling user */
+    {
+	save_str(&reply.recipients, ctl->localnames->id, XMIT_ACCEPT);
+	status = open_sink(ctl, &reply, &good, &bad);
+	free_str_list(&reply.recipients);
+	return(status);
+    }
+    else				/* send to postmaster  */
+	return(open_sink(ctl, &reply, &good, &bad));
 }
 
 #if defined(HAVE_STDARG_H)
@@ -911,11 +924,11 @@ va_dcl
     stuffline(ctl, buf);
 }
 
-void close_warning_by_mail(struct query *ctl)
+void close_warning_by_mail(struct query *ctl, struct msgblk *msg)
 /* sign and send mailed warnings */
 {
     stuff_warning(ctl, "--\r\n\t\t\t\tThe Fetchmail Daemon\r\n");
-    close_sink(ctl, TRUE);
+    close_sink(ctl, msg, TRUE);
 }
 
 /* sink.c ends here */
