@@ -183,6 +183,17 @@ AC_TRY_LINK([#include <signal.h>
   [AC_DEFINE(SYS_SIGLIST_DECLARED) AC_MSG_RESULT(yes)],
   AC_MSG_RESULT(no))
 
+dnl Figure out whether we're using a 2.2 kernel (assuming this is Linux)
+AC_MSG_CHECKING(OS kernel major version)
+set -- `uname -r | tr '.' ' '`
+release="${1}.${2}"
+AC_MSG_RESULT($release)
+if expr "$release" '>=' '2.2' >/dev/null
+then
+	AC_DEFINE(HAVE_NEWPROCNETDEV)
+	AC_MSG_RESULT("assuming new /proc/dev/net format")
+fi
+
 # Find the right directory to put the root-mode PID file in
 for dir in "/var/run" "/etc"
 do

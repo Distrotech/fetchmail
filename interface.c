@@ -41,7 +41,7 @@ struct interface_pair_s {
 	struct in_addr interface_mask;
 } *interface_pair;
 
-#ifdef linux22
+#ifdef HAVE_NEWPROCNETDEV
 /* Linux 2.2 /proc/net/dev format -- transmit packet count in 10th field */
 #define PROCNETDEV	"%d %d %*d %*d %*d %d %*d %*d %*d %*d %d %*d %d"
 #else
