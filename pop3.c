@@ -538,7 +538,8 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
      *
      * However...*don't* do this if we're using keep to suppress deletion!
      * In that case, marking the seen flag is the only way to prevent the
-     * message from being re-fetched on subsequent runs.  */
+     * message from being re-fetched on subsequent runs.
+     */
     if (ctl->keep)
 	gen_send(sock, "RETR %d", number);
     else
