@@ -1770,10 +1770,10 @@ class RunWindow(Frame):
 
 	self.update()   # Draw widget before executing fetchmail
 
-	# Always look for a runnable command in the current directory first.
-	# This avoids some obscure version-skew errors that can occur if you 
-	# pick up an old fetchmail from the standard system locations.
-	os.environ["PATH"] = ".:" + os.environ["PATH"]
+	# Always look for a runnable command in the directory we're running in
+        # first. This avoids some obscure version-skew errors that can occur
+	# if you pick up an old fetchmail from the standard system locations.
+	os.environ["PATH"] = os.path.dirname(sys.argv[0]) + ":" + os.environ["PATH"]
 	child_stdout = os.popen(command + " 2>&1", "r")
 	while 1:
 	    ch = child_stdout.read(1)

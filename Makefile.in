@@ -185,20 +185,20 @@ uninstall:
 .PHONY: clean realclean distclean mostlyclean
 clean: 
 	-cd intl; $(MAKE) clean
-	#work around braindamage in GNU gettext
-	-rm -f $(top_builddir)/intl/libintl.h
+	-rm -f $(top_builddir)/intl/libintl.h # work around GNU gettext brain-damage
 	-cd po; $(MAKE) clean
 	-rm -f fetchmail *.o core fetchmail.dvi \
 	       rcfile_l.c rcfile_y.h rcfile_y.c \
 	       fetchmail.tar fetchmail.tar.gz \
 	       netrc rfc822 unmime fetchmail-man.html
 
+# This target would also normally invoke the following line, but doing so
+# messes up the RPM build, so the line was disabled.
+# -rm -f config.h config.cache config.status config.log stamp-config
 distclean: clean 
 	-cd intl; $(MAKE) distclean
 	-cd po; $(MAKE) distclean
 	-rm -f TAGS tags
-	# Can't do these, it messes up RPM build
-	#-rm -f config.h config.cache config.status config.log stamp-config
 
 realclean: distclean
 	-rm -f FAQ FEATURES NOTES MANIFEST 

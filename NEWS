@@ -3,6 +3,19 @@
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
 * Changed the logging logic along lines suggested by Jan Klaverstijn,
+* fetchmauilconf looks first in the directory it's running from to find
+  fetchmail.
+* Make sure we vet a success status correctly from open_smtp_sink()
+  and open_bsmtp_sink().
+* Matthias Andree's env.c patch to refuse service when QMAILINJECT is defined.
+* Immediately abort if a non-empty QMAILINJECT environment variable is
+  found. If it is set and contains f or i, qmail-inject or qmail's
+  sendmail `compatibility' wrapper will rewrite From: or Message-ID:
+  headers, respectively. En passant, fix the bug that program_name was
+  not filled in before used when the user's ID had no PW entry, leading
+  to (null) or crash when printing the error message. Patch by Matthias
+  Andree.
+* NextStep and OpenStep port patch from Eric Sunshine.
 
 fetchmail-5.9.4 (Wed Oct  3 07:47:45 EDT 2001), 21104 lines:
 

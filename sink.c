@@ -793,6 +793,8 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
 	SMTP_rset(ctl->smtp_socket);    /* stay on the safe side */
 	return(handle_smtp_report(ctl, msg));
     }
+
+    return(PS_SUCCESS);
 }
 
 static int open_mda_sink(struct query *ctl, struct msgblk *msg,
@@ -951,13 +953,15 @@ static int open_mda_sink(struct query *ctl, struct msgblk *msg,
      * error status instead of 0 for successful completion.
      */
 #ifndef HAVE_SIGACTION
-    sigchld = signal(SIGCHLD, SIG_DFL);
+    signal(SIGCHLD, SIG_DFL);
 #else
     memset (&sa_new, 0, sizeof sa_new);
     sigemptyset (&sa_new.sa_mask);
     sa_new.sa_handler = SIG_DFL;
     sigaction (SIGCHLD, &sa_new, NULL);
 #endif /* HAVE_SIGACTION */
+
+    return(PS_SUCCESS);
 }
 
 int open_sink(struct query *ctl, struct msgblk *msg,

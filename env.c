@@ -49,6 +49,23 @@ void envquery(int argc, char **argv)
 	}
     }
 
+    if ((program_name = strrchr(argv[0], '/')) != NULL)
+	++program_name;
+    else
+	program_name = argv[0];
+
+    if (getenv("QMAILINJECT") && strcmp(getenv("QMAILINJECT"), ""))
+    {
+	fprintf(stderr,
+		GT_("%s: The QMAILINJECT environment variable is set.\n"
+		    "This is dangerous as it can make qmail-inject or qmail's sendmail wrapper\n"  
+		    "tamper with your From: or Message-ID: headers.\n"
+		    "Try \"env QMAILINJECT= %s YOUR ARGUMENTS HERE\"\n"
+		    "%s: Abort.\n"), 
+		program_name, program_name, program_name);
+	exit(PS_UNDEFINED);
+    }
+
     if (!(pwp = getpwuid(getuid())))
     {
 	fprintf(stderr,
@@ -84,11 +101,6 @@ void envquery(int argc, char **argv)
     /* compute fetchmail's home directory */
     if (!(fmhome = getenv("FETCHMAILHOME")))
 	fmhome = home;
-
-    if ((program_name = strrchr(argv[0], '/')) != NULL)
-	++program_name;
-    else
-	program_name = argv[0];
 
 #define RCFILE_NAME	"fetchmailrc"
     /*

@@ -340,7 +340,7 @@ int SockOpen(const char *host, int clientPort, const char *options,
 
     /* we'll accept a quad address */
 #ifndef HAVE_INET_ATON
-    inaddr = inet_addr(host);
+    inaddr = inet_addr((char*)host);
     if (inaddr != INADDR_NONE)
     {
         memcpy(&ad.sin_addr, &inaddr, sizeof(inaddr));
@@ -370,7 +370,7 @@ int SockOpen(const char *host, int clientPort, const char *options,
     }
 #endif /* HAVE_INET_ATON */
     else {
-        hp = gethostbyname(host);
+        hp = gethostbyname((char*)host);
 
         if (hp == NULL)
 	{

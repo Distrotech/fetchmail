@@ -540,7 +540,7 @@ char *xstrdup(const char *);
 #endif
 #define	xalloca(ptr, t, n)	if (!(ptr = (t) alloca(n)))\
        {report(stderr, GT_("alloca failed")); exit(PS_UNDEFINED);}
-#if FALSE
+#if 0
 /*
  * This is a hack to help xgettext which cannot find strings in
  * macro definitions like the one for xalloca above.

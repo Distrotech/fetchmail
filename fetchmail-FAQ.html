@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/10/13 04:51:50 $
+<td width="30%" align=right>$Date: 2001/11/08 16:53:52 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1609,6 +1609,10 @@ Fetchmail normally uses TOP for message retrieval in order to avoid
 marking messages seen, but `<CODE>fetchall</CODE>' forces it to use
 RETR instead.
 
+<p>Also, we're told USA.NET adds a ton of hops to your messages.  You may
+need to raise the MaxHopCount parameter in your sendmail.cf to avoid having
+fetched mail rejected.
+
 <p>(Note: Other failure modes have been reported on usa.net's servers.
 They seem to be chronically flaky.  We recommend finding another
 provider.)
@@ -2921,7 +2925,7 @@ date from the last Received header.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/10/13 04:51:50 $
+<td width="30%" align=right>$Date: 2001/11/08 16:53:52 $
 </table>
 
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@thyrsus.com&gt;</A></ADDRESS>

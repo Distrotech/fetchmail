@@ -549,7 +549,7 @@ int readheaders(int sock,
 	    {
 		if (ctl->lastid)
 		    free(ctl->lastid);
-		ctl->lastid = strdup(line);
+		ctl->lastid = xstrdup(line);
 	    }
 	}
 

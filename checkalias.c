@@ -48,7 +48,7 @@ static int is_ip_alias(const char *name1,const char *name2)
     struct hostent *hp;
     char **p;
  
-    hp = gethostbyname(name1);
+    hp = gethostbyname((char*)name1);
  
     dummy_addr = (address_e *)NULL;
 
@@ -63,7 +63,7 @@ static int is_ip_alias(const char *name1,const char *name2)
 	dummy_addr = host_a_addr;
     }
 
-    hp = gethostbyname(name2);
+    hp = gethostbyname((char*)name2);
 
     dummy_addr = (address_e *)NULL;
     for (i=0,p = hp->h_addr_list; *p != 0; i++,p++)
@@ -161,7 +161,7 @@ int is_host_alias(const char *name, struct query *ctl)
      * delivering the current message or anything else from the
      * current server until it's back up.
      */
-    if ((he = gethostbyname(name)) != (struct hostent *)NULL)
+    if ((he = gethostbyname((char*)name)) != (struct hostent *)NULL)
     {
 	if (strcasecmp(ctl->server.truename, he->h_name) == 0)
 	    goto match;

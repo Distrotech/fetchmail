@@ -41,7 +41,7 @@ int n;
     p = (XALLOCATYPE *) alloca(n);
     if (p == (XALLOCATYPE *) 0)
     {
-	report(stderr, "alloca failed\n");
+	report(stderr, GT_("alloca failed\n"));
 	exit(PS_UNDEFINED);
     }
     return(p);

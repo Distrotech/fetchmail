@@ -208,7 +208,7 @@ int do_rfc1731(int sock, char *command, char *truename)
      * process is complete.
      */
 
-    len = from64tobits(buf2, buf1, sizeof(buf2x));
+    len = from64tobits(buf2, buf1, sizeof(buf2));
     if (len < 0) {
 	report(stderr, GT_("could not decode BASE64 ready response\n"));
 	return PS_AUTHFAIL;
