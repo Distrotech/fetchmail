@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.9.13 (Sat Jun 22 17:53:00 EDT 2002), 21791 lines:
+
 * Cygwin port fixes for socket.c.
 * Matthias Andree's patches to: 
   (a) clean up xmalloc types,
@@ -14,6 +16,8 @@
 * Sunil Shetye's patches to send CAPA during POP3 sessions and improve
   the PS_RETAINED behavior slightly.
 * Yann Droneaud's fix to eliminate a socket leak on error.
+
+There are 506 people on fetchmail-friends and 669 on fetchmail-announce.
 
 fetchmail-5.9.12 (Tue Jun  4 14:57:47 EDT 2002), 21669 lines:
 
