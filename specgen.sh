@@ -57,6 +57,7 @@ Fetchmail é um programa que é usado para recuperar mensagens de um
 servidor de mail remoto. Ele pode usar Post Office Protocol (POP)
 ou IMAP (Internet Mail Access Protocol) para isso, e entrega o mail
 através do servidor local SMTP (normalmente sendmail).
+Vem com uma interface gráfica para sua configuração. 
 
 %description -l es
 Fetchmail es una utilidad gratis, completa, robusta y bien documentada
@@ -72,11 +73,11 @@ pocztowych. Do ¶ci±gania poczty mo¿e on uzywaæ protoko³ów POP (Post Office
 Protocol) lub IMAP (Internet Mail Access Protocol). ¦ci±gniêt± pocztê
 dostarcza do koñcowych odbiorców poprzez lokalny serwer SMTP.
 
-description -l tr
+%description -l tr
 fetchmail yazýlýmý, POP veya IMAP desteði veren bir sunucuda yer alan
 mektuplarýnýzý alýr.
 
-description -l da
+%description -l da
 Fetchmail er et gratis, robust, alsidigt og vel-dokumenteret værktøj 
 til afhentning og videresending af elektronisk post via TCP/IP
 baserede opkalds-forbindelser (såsom SLIP eller PPP forbindelser).   
@@ -91,12 +92,18 @@ Summary:        A GUI configurator for generating fetchmail configuration files
 Summary(pl):    GUI konfigurator do fetchmaila
 Summary(fr):	GUI configurateur pour fetchmail
 Summary(es):	Configurador GUI interactivo para fetchmail
+Summary(pt):	Um configurador gráfico para o fetchmail
 Group:          Utilities/System
+Group(pt):		Utilitários/Sistema
 Requires:       %{name} = %{version}, python
 
 %description -n fetchmailconf
 A GUI configurator for generating fetchmail configuration file written in
 python
+
+%description -n fetchmailconf -l pt
+Um configurador gráfico para a geração de arquivos de configuração do
+fetchmail. Feito em python.
 
 %description -n fetchmailconf -l es
 Configurador gráfico para fetchmail escrito en python
