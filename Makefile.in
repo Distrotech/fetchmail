@@ -204,6 +204,9 @@ all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) \
 MANIFEST: $(srcdir)
 	@echo $(all) | tr "[ \t]" '\n' | sort | sed "s/\\./fetchmail-$(VERS)/" >MANIFEST
 
+dist: fetchmail-$(VERS).tar.gz
+	ls -l fetchmail-$(VERS).tar.gz
+
 fetchmail-$(VERS).tar: $(all)
 	(cd ..; tar -cf fetchmail-$(VERS).tar `cat fetchmail-$(VERS)/MANIFEST`)
 	mv ../fetchmail-$(VERS).tar fetchmail-$(VERS).tar
