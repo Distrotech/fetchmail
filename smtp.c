@@ -26,7 +26,7 @@ int SMTP_helo(FILE *sockfp,char *host)
   SockPrintf(sockfp,"HELO %s\r\n", host);
   if (outlevel == O_VERBOSE)
       fprintf(stderr, "SMTP> HELO %s\n", host);
-  ok = SMTP_ok(sockfp,NULL);
+  ok = SMTP_ok(sockfp);
   return ok;
 }
 
@@ -38,7 +38,7 @@ int SMTP_from(FILE *sockfp, char *from)
   SockPrintf(sockfp,"MAIL FROM:<%s>\r\n", from);
   if (outlevel == O_VERBOSE)
       fprintf(stderr, "SMTP> MAIL FROM:<%s>\n", from);
-  ok = SMTP_ok(sockfp,NULL);
+  ok = SMTP_ok(sockfp);
   return ok;
 }
 
@@ -50,7 +50,7 @@ int SMTP_rcpt(FILE *sockfp, char *to)
   SockPrintf(sockfp,"RCPT TO:<%s>\r\n", to);
   if (outlevel == O_VERBOSE)
       fprintf(stderr, "SMTP> RCPT TO:<%s>\n", to);
-  ok = SMTP_ok(sockfp,NULL);
+  ok = SMTP_ok(sockfp);
   return ok;
 }
 
@@ -62,7 +62,7 @@ int SMTP_data(FILE *sockfp)
   SockPrintf(sockfp,"DATA\r\n");
   if (outlevel == O_VERBOSE)
       fprintf(stderr, "SMTP> DATA\n");
-  ok = SMTP_ok(sockfp,NULL);
+  ok = SMTP_ok(sockfp);
   return ok;
 }
 
@@ -74,7 +74,7 @@ int SMTP_quit(FILE *sockfp)
   SockPrintf(sockfp,"QUIT\r\n");
   if (outlevel == O_VERBOSE)
       fprintf(stderr, "SMTP> QUIT\n");
-  ok = SMTP_ok(sockfp,NULL);
+  ok = SMTP_ok(sockfp);
   return ok;
 }
 
@@ -86,7 +86,7 @@ int SMTP_eom(FILE *sockfp)
   SockPrintf(sockfp,".\r\n");
   if (outlevel == O_VERBOSE)
       fprintf(stderr, "SMTP>. (EOM)\n");
-  ok = SMTP_ok(sockfp,NULL);
+  ok = SMTP_ok(sockfp);
   return ok;
 }
 
@@ -98,33 +98,29 @@ void SMTP_rset(FILE *sockfp)
       fprintf(stderr, "SMTP> RSET\n");
 }
 
-static int SMTP_check(FILE *sockfp,char *argbuf)
+
+static int SMTP_check(FILE *sockfp)
 /* returns status of SMTP connection */
 {
-  int  ok;  
-  char buf[SMTPBUFSIZE];
+    int  n;
+    char buf[SMTPBUFSIZE];
   
-  if ((ok = SockGets(buf, sizeof(buf)-1, sockfp)) > 0) {
-    buf[ok] = '\0';
-    if (outlevel == O_VERBOSE)
-	fprintf(stderr, "SMTP< %s\n", buf);
-    if (argbuf)
-      strcpy(argbuf,buf);
-    if (buf[0] == '1' || buf[0] == '2' || buf[0] == '3')
-      ok = SM_OK;
-    else 
-      ok = SM_ERROR;
-  }
-  else
-  {
-    if (outlevel == O_VERBOSE)
-	fprintf(stderr, "SMTP< (read failed)\n");
-    ok = SM_UNRECOVERABLE;
-  }
-  return (ok);
+    while ((n = SockGets(buf, sizeof(buf)-1, sockfp)) > 0)
+    {
+	if (n < 4)
+	    return SM_ERROR;
+	buf[n] = '\0';
+	if (outlevel == O_VERBOSE)
+	    fprintf(stderr, "SMTP< %s\n", buf);
+	if ((buf[0] == '1' || buf[0] == '2' || buf[0] == '3') && buf[3] == ' ')
+	    return SM_OK;
+	else if (buf[3] != '-')
+	    return SM_ERROR;
+    }
+    return SM_UNRECOVERABLE;
 }
 
-int SMTP_ok(FILE *sockfp,char *argbuf)
+int SMTP_ok(FILE *sockfp)
 /* accepts SMTP response, returns status of SMTP connection */
 {
   int  ok;  
@@ -138,11 +134,11 @@ int SMTP_ok(FILE *sockfp,char *argbuf)
 
     */
 
-  ok = SMTP_check(sockfp,argbuf);
+  ok = SMTP_check(sockfp);
   if (ok == SM_ERROR) /* if we got an error, */
     {
       SMTP_rset(sockfp);
-      ok = SMTP_check(sockfp,argbuf);  /* how does it look now ? */
+      ok = SMTP_check(sockfp);  /* how does it look now ? */
       if (ok == SM_OK)  
 	ok = SM_ERROR;                /* It's just a simple error, for*/
 				      /*	 the current message  */

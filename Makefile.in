@@ -3,8 +3,8 @@
 # If you're running QNX, we can't assume a working autoconf.
 # So just uncomment all the lines marked QNX.
 
-VERS=1.9
-PL=9
+VERS=2.0
+PL=0
 
 # Ultrix 2.2 make doesn't expand the value of VPATH.
 srcdir = @srcdir@

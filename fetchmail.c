@@ -357,6 +357,7 @@ int main (int argc, char **argv)
 	for (ctl = querylist; ctl; ctl = ctl->next)
 	    if (ctl->smtp_sockfp)
 	    {
+		SMTP_quit(ctl->smtp_sockfp);
 		fclose(ctl->smtp_sockfp);
 		ctl->smtp_sockfp = (FILE *)NULL;
 	    }

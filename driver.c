@@ -242,7 +242,7 @@ static FILE *smtp_open(struct query *ctl)
     {
 	if ((ctl->smtp_sockfp = Socket(ctl->smtphost, SMTP_PORT)) == (FILE *)NULL)
 	    return((FILE *)NULL);
-	else if (SMTP_ok(ctl->smtp_sockfp, NULL) != SM_OK
+	else if (SMTP_ok(ctl->smtp_sockfp) != SM_OK
 		 || SMTP_helo(ctl->smtp_sockfp, ctl->servername) != SM_OK)
 	{
 	    fclose(ctl->smtp_sockfp);
@@ -436,7 +436,7 @@ struct query *ctl;	/* query control record */
 	    {
 		char	*ap;
 
-		if (ctl->mda[0] == '\0'	&& ((sinkfp = smtp_open(ctl)) < 0))
+		if (ctl->mda[0] == '\0'	&& ((sinkfp = smtp_open(ctl)) == NULL))
 		{
 		    free_uid_list(&xmit_names);
 		    fprintf(stderr, "fetchmail: SMTP connect failed\n");
