@@ -10,6 +10,6 @@ tmp="/usr/tmp/listsize.$$"
 curl -s -D $tmp $admin/fetchmail-${list}?adminpw=mypaswrd >/dev/null
 # Second gets the actual stat
 curl -s -b $tmp $admin/fetchmail-${list}/members \
-	| sed -n '/.*(\([0-9][0-9]*\).*/s//\1/p'
+	| sed -n '/.*>\([0-9][0-9]*\) members total.*/s//\1/p'
 # end
 
