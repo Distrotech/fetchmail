@@ -449,6 +449,31 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 }
 #endif /* HAVE_GETHOSTBYNAME */
 
+int smtp_open(host)
+/* try to open a socket to given host's SMTP server */ 
+char *host;
+{
+    if ((mboxfd = Socket(host, SMTP_PORT)) < 0
+	|| SMTP_ok(mboxfd, NULL) != SM_OK
+	|| SMTP_helo(mboxfd, "localhost") != SM_OK)
+    {
+	close(mboxfd);
+	mboxfd = -1;
+    }
+
+    return(mboxfd);
+}
+
+void smtp_close()
+/* close the current SMTP connection */
+{
+    if (mboxfd != -1)
+    {
+	SMTP_quit(mboxfd);
+	close(mboxfd);
+    }
+}
+
 static int gen_readmsg (socket, len, delimited, ctl)
 /* read message content and ship to SMTP or MDA */
 int socket;	/* to which the server is connected */
@@ -516,7 +541,7 @@ struct query *ctl;	/* query control record */
 		 * We deal with RFC822 continuation lines here.
 		 * Replace previous '\n' with '\r' so nxtaddr 
 		 * and reply_hack will be able to see past it.
-		 * (We know this safe because SocketGets stripped
+		 * (We know this is safe because SocketGets stripped
 		 * out all carriage returns in the read loop above
 		 * and we haven't reintroduced any since then.)
 		 * We'll undo this before writing the header.
@@ -618,17 +643,12 @@ struct query *ctl;	/* query control record */
 	    }
 	    else
 	    {
-		if (ctl->mda[0] == '\0')
-		    if ((mboxfd = Socket(ctl->smtphost, SMTP_PORT)) < 0
-			|| SMTP_ok(mboxfd, NULL) != SM_OK
-			|| SMTP_helo(mboxfd, ctl->servername) != SM_OK)
-		    {
-			close(mboxfd);
-			mboxfd = -1;
-			free_uid_list(&xmit_names);
-			fprintf(stderr, "fetchmail: SMTP connect failed\n");
-			return(PS_SMTP);
-		    }
+		if (ctl->mda[0] == '\0' && (smtp_open(ctl->smtphost) < 0))
+		{
+		    free_uid_list(&xmit_names);
+		    fprintf(stderr, "fetchmail: SMTP connect failed\n");
+		    return(PS_SMTP);
+		}
 
 		if (SMTP_from(mboxfd, nxtaddr(fromhdr)) != SM_OK)
 		{
@@ -1009,13 +1029,8 @@ const struct method *proto;	/* protocol method table */
     signal(SIGALRM, sigsave);
 
 closeUp:
-    if (mboxfd != -1)
-    {
-        if (!ctl->mda[0])
-	    SMTP_quit(mboxfd);
-	close(mboxfd);
-    }
-
+    if (!ctl->mda[0])
+	smtp_close();
     return(ok);
 }
 
