@@ -161,7 +161,7 @@ clean:
 	-rm -f fetchmail *.o core fetchmail.dvi \
 	       rcfile_l.c rcfile_y.h rcfile_y.c \
 	       fetchmail.tar fetchmail.tar.gz \
-	       rfc822 FAQ
+	       rfc822 
 
 distclean: clean 
 	-rm -f Makefile config.h TAGS tags
@@ -169,6 +169,7 @@ distclean: clean
 	-rm -f fetchmail.log fetchmail.toc fetchmail.*aux
 
 realclean: distclean # fetchmail.info*
+	rm -f FAQ
 
 mostlyclean: clean
 
@@ -240,7 +241,7 @@ rpm: dist
 	cp fetchmail-$(VERS).tar.gz $(RPMROOT)/SOURCES;
 	$(srcdir)/specgen.sh $(VERS) >$(RPMROOT)/SPECS/fetchmail.spec
 	cd $(RPMROOT)/SPECS; $(RPM) $(RPMFLAGS) fetchmail.spec	
-	cp $(RPMROOT)/RPMS/i386/fetchmail-$(VERS)*.rpm $(srcdir)
+	cp $(RPMROOT)/RPMS/`arch|sed 's/i[4-9]86/i386/'`/fetchmail-$(VERS)*.rpm $(srcdir)
 	cp $(RPMROOT)/SRPMS/fetchmail-$(VERS)*.src.rpm $(srcdir)
 
 # The automatically generated dependencies below may omit config.h

@@ -1,12 +1,3 @@
-				Heads-up!
-
-The .poprc compatibility hack that allows the first user declaration of
-more than one in a server entry to omit the "username" keyword has been
-causing some confusion (see question F3 in the FAQ for details). This now
-generates a warning to standard error.  In a future release, probably 4.0,
-this hack will be removed and the leading `username' token required for
-every user entry in a multi-user poll declaration.
-
 			   Known But Unresolved Bugs:
 
 * In multidrop mode without an applicable localdomain, addresses of the
@@ -29,6 +20,13 @@ every user entry in a multi-user poll declaration.
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.0 ():
+* The netrc core dump is fixed!
+* Architecture-independent RPM building.
+* If a .fetchmailrc entry has multiple user parts, the opening `username'
+  keyword is now required for all.
+
+There are 256 people on the fetchmail-friends list.
 
 pl 3.9.7 (Mon Jun  9 18:40:04 EDT 1997):
 * Complain and exit if user tries to start fetchmail with options while a

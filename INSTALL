@@ -32,7 +32,8 @@ have to do is uncomment them.
 
 You may find you need flex at version 2.5.3 or greater to build
 fetchmail.  The stock lex distributed with Linux does not work -- it
-yields a parser which core-dumps on syntax errors.
+yields a parser which core-dumps on syntax errors.  You can get flex
+at the GNU ftp site, ftp://prep.ai.mit.edu/pub/gnu.
 
 Run
 

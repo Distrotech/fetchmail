@@ -150,17 +150,7 @@ serv_option	: AKA alias_list
 		| NO ENVELOPE		{current.server.envelope = STRING_DISABLED;}
 		;
 
-/*
- * The first and only the first user spec may omit the USERNAME part.
- * This is a backward-compatibility kluge to allow old popclient files
- * to keep working.
- */
 userspecs	: user1opts		{record_current(); user_reset();}
-		| user1opts explicits	
-					{
-						record_current(); user_reset();
-	fprintf(stderr, "Warning: user entry with no `user' keyword\n");
-					}
 		| explicits
 		;
 

@@ -51,9 +51,10 @@ maybe_add_to_list (newentry, list)
     if (a && ! a->account)
     {
 	/* Free any allocated space. */
-	free (a->host);
-	free (a->account);
-	free (a->password);
+	if (a->host)
+	    free (a->host);
+	if (a->password)
+	    free (a->password);
     }
     else
     {
