@@ -1,9 +1,8 @@
 /*
  * pop3.c -- POP3 protocol methods
  *
+ * Copyright 1998 by Eric S. Raymond.
  * For license terms, see the file COPYING in this directory.
- *
- * i18n by Arnaldo Carvalho de Melo <acme@conectiva.com.br> 7-Nov-1998
  */
 
 #include  "config.h"

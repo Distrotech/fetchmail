@@ -8,9 +8,6 @@
   description:  RPA authorisation code for POP3 client
 
   The sole entry point is POP3_auth_rpa()
-
-  i18n by Arnaldo Carvalho de Melo <acme@conectiva.com.br> 7-Nov-1998
-
  ***********************************************************************/
 
 #include  "config.h"

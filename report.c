@@ -20,8 +20,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
  * Bludgeoned into submission for SunOS 4.1.3 by
  *     Chris Cheyney <cheyney@netcom.com>.
  * Now it works even when the return from vprintf is unreliable.
- *
- * i18n by Arnaldo Carvalho de Melo <acme@conectiva.com.br> 7-Nov-1998
  */
 
 #ifdef HAVE_CONFIG_H

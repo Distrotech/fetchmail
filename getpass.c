@@ -10,8 +10,6 @@
                 This version hacked by Wilfred Teiken, allowing the
                 password to be piped to fetchmail.
  
-  i18n by Arnaldo Carvalho de Melo <acme@conectiva.com.br> 7-Nov-1998
-
  ***********************************************************************/
 
 #include "config.h"
