@@ -26,6 +26,14 @@
 #include <unix.h>
 #endif
 
+#if defined(HAVE_SGTTY_H)
+#  include <sgtty.h>		/* for TIOCNOTTY under NEXTSTEP */
+#endif
+
+#ifdef NeXT
+#  define pid_t int
+#endif
+
 /* BSD portability hack */
 #if !defined(SIGCLD) && defined(SIGCHLD)
 #define SIGCLD	SIGCHLD

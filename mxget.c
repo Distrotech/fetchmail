@@ -8,6 +8,7 @@
 
 #include "config.h"
 #ifdef HAVE_RES_SEARCH
+#include <stdio.h>
 #include <netdb.h>
 #include <sys/types.h>
 #include <netinet/in.h>
