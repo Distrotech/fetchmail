@@ -7,14 +7,27 @@
   messages would wind up as separate syslog calls (probably not the desired
   result).
 
+* Bob Friesenhahn reports that under Solaris the configure.in test looking
+  for res_search fails to detect that res_search is in libresolv.  But I can't
+  find an error in the configure macros, not if the autoconf docs are 
+  correct.  It will take an autoconf expert on a Solaris box to fix this.
+
+* Chris LewisMoss reports that he gets a parse error when the last line of
+  his .fetchmailrc is a comment.
+
 			Release Notes:
+
+------------------------------------------------------------------------------
+fetchmail-2.6 ()
+
+There are 166 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-2.5 (Mon Dec 23 04:18:54 EST 1996)
 
 features -- 
 
-* New --interface and --monitor options courtesy of George Sipe.
+* New --interface and --monitor options for Linux courtesy of George Sipe.
 
 bugs --
 
@@ -26,10 +39,6 @@ There are 165 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-2.4 (Sat Dec 21 05:24:44 EST 1996)
-
-Note: a preliminary version of 2.4 was withdrawn after four hours of
-exposure due to horrible lossage apparently triggered by a bug in the
-Linux standard IO library.  See the comment in socket.c.
 
 features -- 
 
