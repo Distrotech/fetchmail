@@ -1807,7 +1807,10 @@ const struct method *proto;	/* protocol method table */
 			    continue;
 			}
 
-			/* we may want to reject this message if it's old */
+			/*
+			 * We may want to reject this message if it's old
+			 * or oversized, and we're not forcing retrieval.
+			 */
 			if (!fetch_it)
 			{
 			    if (outlevel > O_SILENT)
