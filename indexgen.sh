@@ -183,8 +183,10 @@ then
 <li> <a href="fetchmail-$goldvers-1.src.rpm">
 	Source RPM of fetchmail $goldname</a>
 </ul>
-<p>The <a href="fetchmail-$goldvers.tar.gz.asc">detached GPG signature</a> for the
-binary tarball can be used to check it for correctness, with the command</p>
+
+<p>The <a href="fetchmail-$goldvers.tar.gz.asc">detached GPG
+signature</a> for the binary tarball can be used to check it for
+correctness, with the command</p>
 
 <pre>
 gpg --verify fetchmail-$goldvers.tar.gz.asc fetchmail-$goldvers.tar.gz
@@ -207,13 +209,13 @@ Metalab remote mail tools directory</a>.</p>
 
 <h1>Getting help with fetchmail:</h1>
 
-<p>There is a fetchmail-friends list for people who want to discuss fixes
-and improvements in fetchmail and help co-develop it.  It's a MailMan
-list, which you can sign up for at
-<a href="http://lists.ccil.org/mailman/listinfo/fetchmail-friends">
-fetchmail-friends@ccil.org</a>.
-There is also an announcements-only list, 
-<a href="http://lists.ccil.org/mailman/listinfo/fetchmail-announce">
+<p>There is a fetchmail-friends list for people who want to discuss
+fixes and improvements in fetchmail and help co-develop it.  It's a
+MailMan list, which you can sign up for at <a
+href="http://lists.ccil.org/mailman/listinfo/fetchmail-friends">
+fetchmail-friends@ccil.org</a>.  There is also an announcements-only
+list, <a
+href="http://lists.ccil.org/mailman/listinfo/fetchmail-announce">
 fetchmail-announce@lists.ccil.org</a>.</p>
 
 <p>Note: before submitting a question to the list, <strong>please read
@@ -294,10 +296,7 @@ slowed way down, release frequency has dropped off, and we're
 basically in maintainance mode.</p>
 
 <p>Major changes or additions therefore seem unlikely until there are
-significant changes in or additions to the related protocol RFCs.  One
-development that would stimulate a new release almost instantly is the
-deployment of a standard lightweight encrypted authentication method
-for IMAP sessions.</p>
+significant changes in or additions to the related protocol RFCs.</p>
 
 <h1>Where you can use fetchmail:</h1>
 
@@ -308,7 +307,7 @@ POSIX plus BSD sockets, and uses GNU autoconf).</p>
 
 <p>Fetchmail is supported only for Unix by its official maintainers.
 However, it is reported to build and run correctly under BeOS,
-AmigaOS, Rhapsody, and QNX as well.</p>
+AmigaOS, Rhapsody, and QNX as well.  There is a CygWin port.</p>
 
 <h1>Related resources:</h1>
 
@@ -318,11 +317,6 @@ IMAP tools in Python</a> that read your .fetchmailrc file and are
 designed to work with fetchmail.   Jochen's tools can report selected
 header lines, or move incoming messages to named mailboxes based on
 the contents of headers.</p>
-
-<p>Scott Bronson has written a fetchmail plugin (actually, a specialist
-MDA) called <a
-href="http://www.trestle.com/linux/trestlemail/">trestlemail</a> that
-helps redirect multidrop mail.</p>
 
 <p>Donncha O Caoihm has written a Perl script called 
 <a href="http://cork.linux.ie/projects/install-sendmail/">install-sendmail</a>
