@@ -2,6 +2,10 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Fix insecure tempfile creation bug in fetchmailconf, thanks 
+  to Colin Phipps <cph@cph.demon.co.uk>
+* Documentation refresh.
+
 fetchmail-5.7.3 (Sun Mar 11 17:01:56 EST 2001), 20323 lines:
 
 * Incorporate SA_LEN patch from Red Hat.

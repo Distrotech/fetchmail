@@ -4,11 +4,11 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.34"
+version = "1.35"
 
 from Tkinter import *
 from Dialog import *
-import sys, time, os, string, socket, getopt
+import sys, time, os, string, socket, getopt, tempfile
 
 #
 # Define the data structures the GUIs will be tossing around
@@ -1923,7 +1923,7 @@ gUSiYASJpMEHhilJTEnhAlGoQqYAZQ1AiqEMZ0jDGtqQImhwwA13yMMevoQAGvGhEAWHGMOAAAA7
     # Read the existing configuration.  We set the umask to 077 to make sure
     # that group & other read/write permissions are shut off -- we wouldn't
     # want crackers to snoop password information out of the tempfile.
-    tmpfile = "/tmp/fetchmailconf." + `os.getpid()`
+    tmpfile = tempfile.mktemp()
     if rcfile:
         cmd = "umask 077; fetchmail -f " + rcfile + " --configdump --nosyslog >" + tmpfile
     else:
