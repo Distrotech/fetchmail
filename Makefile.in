@@ -209,7 +209,7 @@ config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/configure \
 	$(srcdir)/acconfig.h
 scripts = $(srcdir)/install.sh $(srcdir)/mkinstalldirs $(srcdir)/specgen.sh
 all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) \
-	$(srcdir)/MANIFEST
+	$(srcdir)/MANIFEST contrib
 
 MANIFEST: $(srcdir)
 	@echo $(all) | tr "[ \t]" '\n' | sort | sed "s/\\./fetchmail-$(VERS)/" >MANIFEST
