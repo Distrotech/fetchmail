@@ -16,7 +16,7 @@ content="Frequently asked questions about fetchmail."/>
 Page</a></td>
 <td width="30%" align="center">To <a href="/~esr/sitemap.html">Site
 Map</a></td>
-<td width="30%" align="right">$Date: 2004/01/13 07:00:14 $</td>
+<td width="30%" align="right">$Date: 2004/01/13 08:46:00 $</td>
 </tr>
 </table>
 
@@ -110,7 +110,7 @@ host?.</a><br/>
 <a href="#I2">I2. How can I use fetchmail with Demon Internet's SDPS?</a><br/>
 <a href="#I3">I3. How can I use fetchmail with usa.net's servers?</a><br/>
 <a href="#I4">I4. How can I use fetchmail with geocities POP3 servers?</a><br/>
-<a href="#I5">I5. How can I use fetchmail with Hotmail?</a><br/>
+<a href="#I5">I5. How can I use fetchmail with Hotmail or Lycos Webmail?</a><br/>
 <a href="#I6">I6. How can I use fetchmail with MSN?</a><br/>
 <a href="#I7">I7. How can I use fetchmail with SpryNet?</a><br/>
 <a href="#I8">I8. How can I use fetchmail with comcast.net?</a><br/>
@@ -1971,12 +1971,24 @@ already been read.</p>
 Geocities are lame, you should boycott them anyway.</p>
 
 <hr/>
-<h2><a id="I5" name="I5">I5. How can I use fetchmail with Hotmail?</a></h2>
+<h2><a id="I5" name="I5">I5. How can I use fetchmail with Hotmail or Lycos Webmail?</a></h2>
 
-<p>You can't, yet. But <a
-href="http://linux.cudeso.be/linuxdoc/gotmail.php">gotmail</a> or 
-<a href='http://people.freenet.de/courierdave/'>HotWayDaemon</a> might
-be what you need.</p>
+<p>You can't directly. But you can use fetchmail with hotmail or lycos
+webmail with the help of the <a
+href='http://people.freenet.de/courierdave/'>HotWayDaemon</a>
+daemon. You don't even need to install hotwayd as a daemon in
+<filename>inetd.conf</filename> but can use it as a plugin. Your
+configuration should look like this:<p>
+
+<pre>
+poll localhost protocol pop3 tracepolls
+   plugin "/usr/local/sbin/hotwayd -l 0 -p yourproxy:yourproxyport"
+   username "youremail@hotmail.com" password "yourpassword"
+   fetchall
+</pre>
+
+<p>As a second option you may consider using <a
+href="http://linux.cudeso.be/linuxdoc/gotmail.php">gotmail</a>.</p>
 
 <hr/>
 <h2><a id="I6" name="I6">I6. How can I use fetchmail with MSN?</a></h2>
@@ -3480,7 +3492,7 @@ does something like "date >> $HOME/Procmail/fetchmail.log".</p>
 Page</a></td>
 <td width="30%" align="center">To <a href="/~esr/sitemap.html">Site
 Map</a></td>
-<td width="30%" align="right">$Date: 2004/01/13 07:00:14 $</td>
+<td width="30%" align="right">$Date: 2004/01/13 08:46:00 $</td>
 </tr>
 </table>
 
