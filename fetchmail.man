@@ -184,7 +184,10 @@ fetched mail so that any mail IDs local to the server are expanded to
 full addresses (@ and the mailserver hostname are appended).  This enables 
 replies on the client to get addressed correctly (otherwise your
 mailer might think they should be addressed to local users on the
-client machine).  This option disables the rewrite.
+client machine!).  This option disables the rewrite.  (This option is
+provided to pacify people who are paranoid about having an MTA edit
+mail headers and want to know they can prevent it, but it is generally
+not a good idea to actually turn off rewrite.)
 .TP
 .B \-V, --version
 Displays the version information for your copy of 
@@ -572,7 +575,7 @@ to be specifying multiple users per server unless running it as root
 (thus the `pass gumshoe' would try to fetch root's mail on
 pop-provider.net, which is probably not what you want).
 In any case, we strongly recommend always having an explicit
-\&`user' clause when specifying multiple users for server.
+\&`user' clause when specifying multiple users per mailserver.
 .PP
 Here's what a simple retrieval configuration for a multi-drop mailbox
 looks like:
