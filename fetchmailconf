@@ -19,7 +19,7 @@ class Configuration:
 	self.logfile = None		# No logfile, initially
 	self.idfile = os.environ["HOME"] + "/.fetchids"		# Default idfile, initially
         self.postmaster = None		# No last-resort address, initially
-        self.bouncemail = TRUE		# Vounce errors to users
+        self.bouncemail = TRUE		# Bounce errors to users
         self.properties = None		# No exiguous properties
 	self.invisible = FALSE		# Suppress Received line & spoof?
 	self.syslog = FALSE		# Use syslogd for logging?
