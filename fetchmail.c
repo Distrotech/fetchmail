@@ -1428,7 +1428,7 @@ static void dump_params (struct runctl *runp,
 		if (NUM_NONZERO(ctl->limit))
 		{
 		    if (NUM_NONZERO(ctl->limit))
-			printf(_("  Message size limit is %d bytes (--limit %d).\n"), 
+			printf(_("  Message size limit is %d octets (--limit %d).\n"), 
 			       ctl->limit, ctl->limit);
 		    else if (outlevel >= O_VERBOSE)
 			printf(_("  No message size limit (--limit 0).\n"));
