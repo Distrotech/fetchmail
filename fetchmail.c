@@ -149,8 +149,8 @@ int main (int argc, char **argv)
 
     envquery(argc, argv);
 #ifdef ENABLE_NLS
-    bindtextdomain("fetchmail", "/usr/share/locale");
-    textdomain("fetchmail");
+    bindtextdomain(PACKAGE, LOCALEDIR);
+    textdomain(PACKAGE);
 #endif
 
 #define IDFILE_NAME	".fetchids"
