@@ -52,7 +52,7 @@ GMOFILES = @GMOFILES@
 DISTFILES = ChangeLog Makefile.in.in POTFILES.in $(PACKAGE).pot \
 stamp-cat-id $(POFILES) $(GMOFILES) $(SOURCES)
 
-POTFILES = $(top_builddir)/rcfile_y.c \
+POTFILES = $(top_builddir)/rcfile_y.y \
 
 CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
