@@ -133,20 +133,11 @@ int main (int argc, char **argv)
     }
     fetchmailhost = xstrdup(tmpbuf);
 
-    /*
-     * Backward-compatibility hack.  If we're called by the name of the
-     * ancestral popclient, look for .poprc.  This will actually work 
-     * for popclient files that don't use the removed keywords.
-     */
-    if (strcmp("popclient", argv[0]) == 0)
-	tmpdir = ".poprc";
-    else
-	tmpdir = ".fetchmailrc";
-
-    rcfile = (char *) xmalloc(strlen(home)+strlen(tmpdir)+2);
+#define RCFILE_NAME	".fetchmailrc"
+    rcfile = (char *) xmalloc(strlen(home)+strlen(RCFILE_NAME)+2);
     strcpy(rcfile, home);
     strcat(rcfile, "/");
-    strcat(rcfile, tmpdir);
+    strcat(rcfile, RCFILE_NAME);
 
 #define IDFILE_NAME	".fetchids"
     idfile = (char *) xmalloc(strlen(home)+strlen(IDFILE_NAME)+2);
