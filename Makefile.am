@@ -3,7 +3,7 @@
 SUBDIRS=		intl m4 m4-local po
 
 AM_CFLAGS=		@CEFLAGS@
-AM_CPPFLAGS=		@CPFLAGS@ -I$(top_srcdir)/intl
+AM_CPPFLAGS=		@CPFLAGS@ -I$(top_srcdir)/intl -I$(top_builddir)/intl
 AM_LDFLAGS=		@LDEFLAGS@
 ACLOCAL_AMFLAGS=	-I m4 -I m4-local
 AM_YFLAGS=		-d
