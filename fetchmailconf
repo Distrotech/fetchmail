@@ -408,7 +408,7 @@ def ConfirmQuit(frame, context):
 # First, code to set the global fetchmail run controls.
 #
 
-novicehelp = {
+configure_novice_help = {
     'title' : 'Fetchmail novice configurator help',
     'banner': 'Novice configurator help',
     'text' : """
@@ -435,7 +435,7 @@ The novice-configuration code will assume that you want to forward mail
 to a local sendmail listener with no special options.
 """}
 
-experthelp = {
+configure_expert_help = {
     'title' : 'Fetchmail expert configurator help',
     'banner': 'Expert configurator help',
     'text' : """
@@ -482,7 +482,6 @@ To do this, find the site's label in the listbox and double-click it.
 This will take you to a site configuration dialogue.
 """}
 
-mode_to_help = {'novice':novicehelp, 'expert':experthelp}
 
 class ConfigurationEdit(Frame):
     def __init__(self, configuration, mode, master=None):
@@ -492,6 +491,8 @@ class ConfigurationEdit(Frame):
 	self.configuration = configuration
 	Pack.config(self)
         self.mode = mode
+        self.mode_to_help = {'novice':configure_novice_help,
+                             'expert':configure_expert_help}
         self.makeWidgets()
 
     def makeWidgets(self):
@@ -508,38 +509,38 @@ class ConfigurationEdit(Frame):
 	self.invisible.set(self.configuration.invisible)
 	dispose_window(self,
                        'Configurator ' + self.mode + ' Controls',
-                       mode_to_help[self.mode])
+                       self.mode_to_help[self.mode])
 
 	gf = Frame(self, relief=RAISED, bd = 5)
 	Label(gf,
 		text='Fetchmail Run Controls', 
 		bd=2).pack(side=TOP, pady=10)
-	df = Frame(gf, relief=RAISED, bd=2)
+
+        df = Frame(gf, relief=RAISED, bd=2)
 
         # Set the poll interval
         de = LabeledEntry(df, '     Poll interval:', self.poll_interval, '14')
         de.pack(side=RIGHT, anchor=E)
-	df.pack();
+        df.pack()
 
-        sf = Frame(gf, relief=RAISED, bd=2)
-        # Use syslog for logging?
-        Checkbutton(sf,
+        if self.mode != 'novice':
+            sf = Frame(gf, relief=RAISED, bd=2)
+            Checkbutton(sf,
 		{'text':'Log to syslog?',
 		'variable':self.syslog,
 		'relief':GROOVE}).pack(side=LEFT, anchor=W)
-        # Set the logfile
-        log = LabeledEntry(sf, '     Logfile:', self.logfile, '14')
-        log.pack(side=RIGHT, anchor=E)
-        sf.pack(fill=X)
+            log = LabeledEntry(sf, '     Logfile:', self.logfile, '14')
+            log.pack(side=RIGHT, anchor=E)
+            sf.pack(fill=X)
 
-	# Invisible mode?
-	Checkbutton(gf,
+            Checkbutton(gf,
 		{'text':'Invisible mode?',
 		'variable':self.invisible,
                  'relief':GROOVE}).pack(side=LEFT, anchor=W)
-	# Set the idfile
-	log = LabeledEntry(gf, '     Idfile:', self.idfile, '14')
-	log.pack(side=RIGHT, anchor=E)
+            # Set the idfile
+            log = LabeledEntry(gf, '     Idfile:', self.idfile, '14')
+            log.pack(side=RIGHT, anchor=E)
+
 	gf.pack(fill=X)
 
         # Expert mode allows us to edit multiple sites
