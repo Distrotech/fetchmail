@@ -206,6 +206,15 @@ done
 AC_MSG_RESULT(root-mode pid file will go in $dir)
 AC_DEFINE_UNQUOTED(PID_DIR, "$dir")
 
+# We may have a fallback MDA available in case the socket open to the 
+# local SMTP listener fails...
+AC_PATH_PROG(procmail, procmail, "", $PATH:/usr/sbin)
+if test "$procmail"
+then
+	echo "Found procmail, will use it as a fallback MDA."
+	AC_DEFINE(FALLBACK_MDA, "$procmail -d %T")
+fi
+
 AC_CHECK_SIZEOF(short)
 AC_CHECK_SIZEOF(int)
 AC_CHECK_SIZEOF(long)
