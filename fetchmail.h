@@ -47,6 +47,10 @@
 
 #define		SIZETICKER	1024	/* print 1 dot per this many bytes */
 
+/* we need to use zero as a flag-uninitialized value */
+#define FLAG_TRUE	2
+#define FLAG_FALSE	1
+
 struct idlist
 {
     char *id;
@@ -70,7 +74,7 @@ struct hostdata		/* shared among all user connections to given server */
     int timeout;
     char *envelope;
     int skip;
-    int no_dns;
+    int dns;
 
 #ifdef linux
     char *interface;
@@ -106,7 +110,7 @@ struct query
     int keep;
     int fetchall;
     int flush;
-    int no_rewrite;
+    int rewrite;
     int stripcr;
     int limit;
     int fetchlimit;

@@ -51,10 +51,6 @@ static void user_reset();
 %token <number> NUMBER
 %token <flag>  KEEP FLUSH FETCHALL REWRITE STRIPCR DNS PORT
 
-/* these are actually used by the lexer */
-%token FLAG_TRUE	2
-%token FLAG_FALSE	1
-
 %%
 
 rcfile		: /* empty */
@@ -79,15 +75,12 @@ statement	: SET LOGFILE MAP STRING	{logfile = xstrdup($4);}
 		;
 
 define_server	: POLL STRING	{memset(&current,'\0',sizeof(current));
-					current.stripcr = -1;
 					save_str(&current.server.names, -1,$2);
 					current.server.skip = FALSE;}
 		| SKIP STRING	{memset(&current,'\0',sizeof(current));
-					current.stripcr = -1;
 					save_str(&current.server.names, -1,$2);
 					current.server.skip = TRUE;}
 		| DEFAULTS	{memset(&current,'\0',sizeof(current));
-					current.stripcr = -1;
 					save_str(&current.server.names, -1,"defaults");}
   		;
 
@@ -130,7 +123,7 @@ serv_option	: AKA alias_list
 					fprintf(stderr, "fetchmail: monitor option is only supported under Linux\n");
 #endif /* linux */
 					}
-		| DNS			{current.server.no_dns = ($1==FLAG_FALSE);}
+		| DNS			{current.server.dns = $1;}
 		;
 
 /*
@@ -184,18 +177,18 @@ user_option	: TO localnames HERE
 		| IS localnames
 
 		| IS STRING THERE	{current.remotename = xstrdup($2);}
-		| PASSWORD STRING	{current.password = xstrdup($2);}
-		| FOLDER STRING 	{current.mailbox = xstrdup($2);}
-		| SMTPHOST STRING	{current.smtphost = xstrdup($2);}
-		| MDA STRING		{current.mda = xstrdup($2);}
+		| PASSWORD STRING	{current.password   = xstrdup($2);}
+		| FOLDER STRING 	{current.mailbox    = xstrdup($2);}
+		| SMTPHOST STRING	{current.smtphost   = xstrdup($2);}
+		| MDA STRING		{current.mda        = xstrdup($2);}
 		| PRECONNECT STRING	{current.preconnect = xstrdup($2);}
 
-		| KEEP			{current.keep = ($1==FLAG_TRUE);}
-		| FLUSH			{current.flush = ($1==FLAG_TRUE);}
-		| FETCHALL		{current.fetchall = ($1==FLAG_TRUE);}
-		| REWRITE		{current.no_rewrite =($1==FLAG_FALSE);}
-		| STRIPCR		{current.stripcr = ($1==FLAG_TRUE);}
-		| LIMIT NUMBER		{current.limit = $2;}
+		| KEEP			{current.keep       = $1;}
+		| FLUSH			{current.flush      = $1;}
+		| FETCHALL		{current.fetchall   = $1;}
+		| REWRITE		{current.rewrite    = $1;}
+		| STRIPCR		{current.stripcr    = $1;}
+		| LIMIT NUMBER		{current.limit      = $2;}
 		| FETCHLIMIT NUMBER	{current.fetchlimit = $2;}
 		| BATCHLIMIT NUMBER	{current.batchlimit = $2;}
 		;
@@ -299,7 +292,6 @@ static void user_reset(void)
     save = current.server;
 
     memset(&current, '\0', sizeof(current));
-    current.stripcr = -1;
 
     current.server = save;
 }
@@ -335,7 +327,7 @@ static void record_current(void)
     FLAG_FORCE(server.timeout);
     FLAG_FORCE(server.envelope);
     FLAG_FORCE(server.skip);
-    FLAG_FORCE(server.no_dns);
+    FLAG_FORCE(server.dns);
 
 #ifdef linux
     FLAG_FORCE(server.interface);
@@ -353,7 +345,7 @@ static void record_current(void)
     FLAG_FORCE(keep);
     FLAG_FORCE(flush);
     FLAG_FORCE(fetchall);
-    FLAG_FORCE(no_rewrite);
+    FLAG_FORCE(rewrite);
     FLAG_FORCE(stripcr);
     FLAG_FORCE(limit);
     FLAG_FORCE(fetchlimit);
@@ -377,7 +369,7 @@ void optmerge(struct query *h2, struct query *h1)
     FLAG_MERGE(server.timeout);
     FLAG_MERGE(server.envelope);
     FLAG_MERGE(server.skip);
-    FLAG_MERGE(server.no_dns);
+    FLAG_MERGE(server.dns);
 
 #ifdef linux
     FLAG_MERGE(server.interface);
@@ -395,7 +387,7 @@ void optmerge(struct query *h2, struct query *h1)
     FLAG_MERGE(keep);
     FLAG_MERGE(flush);
     FLAG_MERGE(fetchall);
-    FLAG_MERGE(no_rewrite);
+    FLAG_MERGE(rewrite);
     FLAG_MERGE(stripcr);
     FLAG_MERGE(limit);
     FLAG_MERGE(fetchlimit);

@@ -115,7 +115,7 @@ static int is_host_alias(const char *name, struct query *ctl)
 	return(TRUE);
     else if (strcmp(name, ctl->server.canonical_name) == 0)
 	return(TRUE);
-    else if (ctl->server.no_dns)
+    else if (!ctl->server.dns)
 	return(FALSE);
 
     /*
@@ -469,7 +469,7 @@ char *realname;		/* real name of host */
 	    break;
 	}
      
-	if (!ctl->no_rewrite)
+	if (ctl->rewrite)
 	    reply_hack(line, realname);
 
 	if (!headers)

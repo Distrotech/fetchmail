@@ -219,23 +219,23 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'a':
 	case LA_ALL:
-	    ctl->fetchall = TRUE;
+	    ctl->fetchall = FLAG_TRUE;
 	    break;
 	case 'K':
 	case LA_KILL:
-	    ctl->keep = FALSE;
+	    ctl->keep = FLAG_FALSE;
 	    break;
 	case 'k':
 	case LA_KEEP:
-	    ctl->keep = TRUE;
+	    ctl->keep = FLAG_TRUE;
 	    break;
 	case 'F':
 	case LA_FLUSH:
-	    ctl->flush = TRUE;
+	    ctl->flush = FLAG_TRUE;
 	    break;
 	case 'n':
 	case LA_NOREWRITE:
-	    ctl->no_rewrite = TRUE;
+	    ctl->rewrite = FLAG_TRUE;
 	    break;
 	case 'l':
 	case LA_LIMIT:

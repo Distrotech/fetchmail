@@ -7,6 +7,9 @@ features --
 
 * Support for ESMTP ETRN extension.
 
+* It is now possible to turn off option flags in individual server entries
+  that had been turned on in a `defaults' entry.
+
 bugs --
 
 * The bug that displayed incorrect sizes for POP3 connections has been fixed.

@@ -630,9 +630,20 @@ static int load_params(int argc, char **argv, int optind)
 	    ctl->server.lead_server = &(ctl->server);
 	no_new_server:;
 
-	    /* if stripcr hasn't been set, default it asccording to MDA */
-	    if (ctl->stripcr == -1)
-		ctl->stripcr = (ctl->mda != (char *)NULL); 
+	    /* this code enables flags to be turned off */
+#define DEFAULT(flag, dflt)	if (flag == FLAG_TRUE)\
+	    				flag = TRUE;\
+				else if (flag == FLAG_FALSE)\
+					flag = FALSE;\
+				else\
+					flag = (dflt)
+	    DEFAULT(ctl->keep, FALSE);
+	    DEFAULT(ctl->flush, FALSE);
+	    DEFAULT(ctl->fetchall, FALSE);
+	    DEFAULT(ctl->rewrite, TRUE);
+	    DEFAULT(ctl->stripcr, (ctl->mda != (char *)NULL)); 
+	    DEFAULT(ctl->server.dns, TRUE);
+#undef DEFAULT
 
 	    /* plug in the semi-standard way of indicating a mail address */
 	    if (ctl->server.envelope == (char *)NULL)
@@ -831,8 +842,8 @@ void dump_params (struct query *ctl)
 	   ctl->flush ? "" : " not",
 	   ctl->flush ? "on" : "off");
     printf("  Rewrite of server-local addresses is %sabled (--norewrite %s).\n",
-	   ctl->no_rewrite ? "dis" : "en",
-	   ctl->no_rewrite ? "on" : "off");
+	   ctl->rewrite ? "en" : "dis",
+	   ctl->rewrite ? "off" : "on");
     printf("  Carriage-return stripping is %sabled (--stripcr %s).\n",
 	   ctl->stripcr ? "en" : "dis",
 	   ctl->stripcr ? "on" : "off");
@@ -883,8 +894,8 @@ void dump_params (struct query *ctl)
 	}
 
 	printf("  DNS lookup for multidrop addresses is %sabled.\n",
-	       ctl->server.no_dns ? "dis" : "en",
-	       ctl->server.no_dns ? "on" : "off");
+	       ctl->server.dns ? "en" : "dis",
+	       ctl->server.dns ? "off" : "on");
 
 	if (count > 1)
 	    printf("  Envelope header is assumed to be: %s\n", ctl->server.envelope);
