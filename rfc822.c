@@ -61,6 +61,9 @@ const char *host;	/* server hostname */
      * "From: John Smith@my.pop.server (Systems) <jsmith@domain>" because
      * the state machine can't look ahead to the <> part past the comment
      * and instead treats `John Smith' as a bareword address.
+     *
+     * Also note that we don't rewrite the fake address <> in order to
+     * avoid screwing up bounce suppression with a null Return-Path.
      */
 
     parendepth = state = 0;
@@ -132,7 +135,7 @@ const char *host;	/* server hostname */
 	    case 3:	/* we're in a <>-enclosed address */
 		if (*from == '@')
 		    has_host_part = TRUE;
-		else if (*from == '>')
+		else if (*from == '>' && from[-1] != '<')
 		{
 		    state = 1;
 		    if (!has_host_part)

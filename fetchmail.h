@@ -306,7 +306,7 @@ void free_str_list(struct idlist **);
 void save_str_pair(struct idlist **, const char *, const char *);
 void free_str_pair_list(struct idlist **);
 int delete_str(struct idlist **, int);
-int str_in_list(struct idlist **, const char *);
+int str_in_list(struct idlist **, const char *, const flag);
 int str_nr_in_list(struct idlist **, const char *);
 int str_nr_last_in_list(struct idlist **, const char *);
 void str_set_mark( struct idlist **, const char *, const flag);

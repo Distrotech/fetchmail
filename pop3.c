@@ -435,8 +435,7 @@ static int pop3_getrange(int sock,
 			new = save_str(&ctl->newsaved, id, UID_UNSEEN);
 			new->val.status.num = num;
 
-			/* note: ID comparison is caseblind */
-			if (str_in_list(&ctl->oldsaved, id)) {
+			if (str_in_list(&ctl->oldsaved, id, FALSE)) {
 			    new->val.status.mark = UID_SEEN;
 			    str_set_mark(&ctl->oldsaved, id, UID_SEEN);
 			}
@@ -484,9 +483,8 @@ static int pop3_is_old(int sock, struct query *ctl, int num)
     if (!ctl->oldsaved)
 	return (num <= last);
     else
-	/* note: ID comparison is caseblind */
         return (str_in_list(&ctl->oldsaved,
-			    str_find (&ctl->newsaved, num)));
+			    str_find(&ctl->newsaved, num), FALSE));
 }
 
 #ifdef UNUSED

@@ -168,7 +168,7 @@ static int is_host_alias(const char *name, struct query *ctl)
      */
     if (strcasecmp(lead_server->truename, name) == 0)
 	return(TRUE);
-    else if (str_in_list(&lead_server->akalist, name))
+    else if (str_in_list(&lead_server->akalist, name, TRUE))
 	return(TRUE);
     else if (!ctl->server.dns)
 	return(FALSE);
@@ -830,12 +830,15 @@ int num;		/* index of message */
 	 * envelope sender from the Return-Path, the new Return-Path should be
 	 * exactly the same as the original one.
 	 *
-	 * Empty Return-Path headers will be ignored.
+	 * We do *not* want to ignore empty Return-Path headers.  These should
+	 * be passed through as a way of indicating that a message should
+	 * not trigger bounces if delivery fails.  What we *do* need to do is
+	 * make sure we never try to rewrite such a blank Return-Path.
 	 *
 	 */
-	if (!strncasecmp("Return-Path:", line, 12) && (cp = nxtaddr(line)))
+	if (!strncasecmp("Return-Path:", line, 12))
 	{
-	    strcpy(return_path, cp);
+	    strcpy(return_path, line);
 	    if (!ctl->mda) {
 		free(line);
 		continue;

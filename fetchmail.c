@@ -503,7 +503,7 @@ int main (int argc, char **argv)
 			 * Note:  this delay is important - don't remove!
 			 */
 			sleep(3);
-			interface_note_activity(&ctl->server);
+			interface_note_dactivity(&ctl->server);
 		    }
 #endif /* defined(linux) && !INET6 */
 	    }
@@ -688,7 +688,7 @@ static int load_params(int argc, char **argv, int optind)
 	     */
 	    for (ctl = querylist; ctl; ctl = ctl->next)
 		if (!strcmp(ctl->server.pollname, argv[optind])
-			|| str_in_list(&ctl->server.akalist, argv[optind]))
+			|| str_in_list(&ctl->server.akalist, argv[optind], TRUE))
 		    goto foundit;
 
 	    /*
