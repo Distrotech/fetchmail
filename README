@@ -16,8 +16,8 @@ The fetchmail program was originally authored (under the name
 popclient) by Carl Harris <ceharris@mal.com>. I, Eric S. Raymond,
 <esr@thyrsus.com> took over development in June 1996.  I subsequently
 renamed the program `fetchmail' to reflect the addition of IMAP
-support.  See the distribution file NEWS for detailed information on
-recent changes.
+support.  See the distribution files NEWS for detailed information on
+recent changes and NOTES for design notes.
 
 Before accepting responsibility for the popclient sources from Carl, I
 had investigated and used and tinkered with every other UNIX
@@ -30,7 +30,7 @@ in its class.
 Here are fetchmail's main features.  Those unique to fetchmail are marked
 with **.
 
-	*  POP2, POP3, **APOP, **RPOP and **IMAP support.
+	*  **POP2, POP3, **APOP, **RPOP and **IMAP support.
 
 	** Host is auto-probed for a working server if no protocol is
 	   specified for the connection.  Thus you don't need to know
