@@ -7,7 +7,7 @@
 #
 # TO DO: Arrange for save and quit buttons to clean up all frames dependent
 # on the current ones.
-version = "1.6"
+version = "1.7"
 
 from Tkinter import *
 from Dialog import *
@@ -273,7 +273,7 @@ class User:
 	    str = str + " batchlimit " + `self.batchlimit`
 	if self.expunge != UserDefaults.expunge:
 	    str = str + " expunge " + `self.expunge`
-	if self.properties != UserDefaults.properties:
+	if self.properties:
 	    str = str + " properties " + `self.properties`
         str = str + "\n"
         trimmed = self.smtphunt;
