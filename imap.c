@@ -1252,12 +1252,14 @@ static int imap_trail(int sock, struct query *ctl, int number)
 	if (strstr(buf, "OK"))
 	    break;
 
+#ifdef __UNUSED__
 	/*
-	 * We've had a report of one server (not yet identified) that 
-	 * fails to set SEEN on a body fetch.  This becomes an issue when
+	 * We've had a report of one POP3 server (not yet identified) that 
+	 * fails to set SEEN on a message fetch.  This becomes an issue when
 	 * keep is on, because seen messages aren't deleted and get
 	 * refetched on each poll.  As a workaround, if keep is on
-	 * we set the Seen flag explicitly.
+	 * we could set the Seen flag explicitly.  This code isn't used yet
+	 * because we don't know of any IMAP servers broken in this way.
 	 */
 	if (ctl->keep)
 	    if ((ok = gen_transact(sock,
@@ -1267,6 +1269,7 @@ static int imap_trail(int sock, struct query *ctl, int number)
 			number)))
 		return(ok);
     }
+#endif /* __UNUSED__ */
 
     return(PS_SUCCESS);
 }

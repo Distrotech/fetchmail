@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/09/23 20:54:37 $
+<td width="30%" align=right>$Date: 1999/10/26 18:18:05 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1567,13 +1567,18 @@ man page for several authentication methods.)<p>
 
 <pre>
 poll mailhost port 1234 via localhost with proto pop3:
-        preconnect "ssh -f -L 1234:mailhost:110 mailhost sleep 20 &lt;/dev/null &gt;/dev/null";
+        preconnect "ssh -f -L 1234:mailhost:110 mailhost sleep 20
+        &lt;/dev/null &gt;/dev/null; sleep 5";
 </pre>
+
+The sleep is needed on slower machines to prevent fetchmail from
+trying to open the socket before ssh actually makes it ready.  Faster
+machines may not need it.<p>
 
 (Note that 1234 can be an arbitrary port number.  Privileged ports can
 be specified only by root.)  The effect of this ssh command is to
 forward connections made to localhost port 1234 (in above example) to
-mailhost's 110.<p>
+mailhost's 110. <p>
 
 This configuration will enable secure mail transfer.  All the
 conversation between fetchmail and remote pop server will be
@@ -1863,7 +1868,20 @@ same options with -N (nodetach) is OK.<P>
 If this happens, you have a specific portability problem with the code
 in daemon.c that detaches and backgrounds the daemon fetchmail. Tell
 me about it so I can try to fix it.  As a workaround, you can start
-fetchmail with -N and an ampersand to background it.<P>
+fetchmail with -N and an ampersand to background it.  A Sun user
+recommends
+this:<P>
+
+<listing>
+(fetchmail --nodetach &lt;other params&gt; &amp;)
+</listing>
+
+The extra pair of parens is significant --- it makes sure that the process
+detaches from the initial shell (one more shell is started and dies
+immediately, detaching fetchmail and making it child of PID 1).  This is
+important when you start fetchmail interactively and than quit
+interactive shell.  The line above makes sure fetchmail lives after
+that!<p>
 
 This should not happen under Linux or any truly POSIX-conformant Unix.<P>
 
@@ -2496,7 +2514,7 @@ inactivity timeout.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/09/23 20:54:37 $
+<td width="30%" align=right>$Date: 1999/10/26 18:18:05 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
