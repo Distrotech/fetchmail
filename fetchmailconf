@@ -1125,6 +1125,15 @@ around this bug, turn on `fetchall' on all user entries associated with
 this server.  
 
 """
+            if string.find(greetline, "GroupWise") > 0:
+                warnings = warnings + """
+You appear to be using the Novell GroupWise IMAP server.  This server would
+be better named GroupFoolish; it is unusably broken.  The specific problem
+is that it doesn't include a content length in its BODY[TEXT] response, so
+fetchmail can't know how much content to fetch.
+
+"""
+
             if string.find(greetline, "sprynet.com") > 0:
                 warnings = warnings + """
 You appear to be using a SpryNet server.  In mid-1999 it was reported that
