@@ -20,7 +20,7 @@
 #include <des.h>
 #define krb_get_err_text(e) (krb_err_txt[e])
 #endif
-#if defined (__FreeBSD__) || defined(__linux__)
+#if defined #if defined(__NetBSD__) || (__FreeBSD__) || defined(__linux__)
 #define krb_get_err_text(e) (krb_err_txt[e])
 #endif
 #include <krb.h>

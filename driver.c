@@ -54,7 +54,7 @@
 #include <krb.h>
 #define krb_get_err_text(e) (krb_err_txt[e])
 #else
-#if defined(__FreeBSD__) || defined(__linux__)
+#if #if defined(__NetBSD__) || defined(__FreeBSD__) || defined(__linux__)
 #define krb_get_err_text(e) (krb_err_txt[e])
 #include <krb.h>
 #include <des.h>
