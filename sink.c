@@ -39,12 +39,6 @@
 #define SIGCHLD	SIGCLD
 #endif
 
-#if INET6
-#define	SMTP_PORT	"smtp"	/* standard SMTP service port */
-#else /* INET6 */
-#define	SMTP_PORT	25	/* standard SMTP service port */
-#endif /* INET6 */
-
 static int lmtp_responses;	/* how many should we expect? */
 static struct msgblk msgcopy;	/* copies of various message internals */
 

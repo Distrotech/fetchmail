@@ -68,12 +68,6 @@
 #include "fetchmail.h"
 #include "tunable.h"
 
-#if INET6
-#define	SMTP_PORT	"smtp"	/* standard SMTP service port */
-#else /* INET6 */
-#define	SMTP_PORT	25	/* standard SMTP service port */
-#endif /* INET6 */
-
 #ifndef strstr		/* glibc-2.1 declares this as a macro */
 extern char *strstr();	/* needed on sysV68 R3V7.1. */
 #endif /* strstr */
