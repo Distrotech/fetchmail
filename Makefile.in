@@ -243,7 +243,7 @@ dist: Makefile.in
 fetchmail-$(VERS).tar.gz: $(all)
 	(cd ..; ln -sf fetchmail fetchmail-$(VERS))
 	(cd ..; tar -czf fetchmail-$(VERS).tar.gz `sed <fetchmail-$(VERS)/MANIFEST s:^:fetchmail-$(VERS)/:`)
-	mv ../fetchmail-$(VERS).tar.gz .
+	mv -f ../fetchmail-$(VERS).tar.gz .
 	rm ../fetchmail-$(VERS)
 
 # Make RPMs.  You need to be root to make this work
