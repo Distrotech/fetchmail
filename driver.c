@@ -105,12 +105,14 @@ static void cleanup_timeout_handler (int signal) { }
 static int cleanupSockClose (int fd)
 /* close sockets in maximum CLEANUP_TIMEOUT seconds during cleanup */
 {
+    int scerror;
     void (*alrmsave)(int);
     alrmsave = signal(SIGALRM, cleanup_timeout_handler);
     set_timeout(CLEANUP_TIMEOUT);
-    SockClose(fd);
+    scerror = SockClose(fd);
     set_timeout(0);
     signal(SIGALRM, alrmsave);
+    return (scerror);
 }
 
 #ifdef KERBEROS_V4
