@@ -8,6 +8,9 @@ fetchmail-5.8.17 (Sat Aug  4 19:02:47 EDT 2001), 21093 lines:
   and the attacker can either subvert the mailserver or redirect to a fake
   one using DNS spoofing.  Bugtraq announcement to follow soon.  Thanks
   to antirez@invece.org.
+* Eliminated second bounce on failed RCPT TO address.
+* Always use fetchmail host's FQDN to identify the daemon when
+  sending bounce messages.
 
 There are  people on fetchmail-friends and  on fetchmail-announce.
 

@@ -281,12 +281,13 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
 
     SMTP_setmode(SMTP_MODE);
 
-    strcat(daemon_name, fetchmailhost);
+    /* can't just use fetchmailhost here, it might be localhost */
+    strcat(daemon_name, host_fqdn());
 
     /* we need only SMTP for this purpose */
     if ((sock = SockOpen("localhost", SMTP_PORT, NULL, NULL)) == -1
     		|| SMTP_ok(sock) != SM_OK 
-		|| SMTP_helo(sock, "localhost") != SM_OK
+		|| SMTP_helo(sock, fetchmailhost) != SM_OK
 		|| SMTP_from(sock, daemon_name, (char *)NULL) != SM_OK
 		|| SMTP_rcpt(sock, bounce_to) != SM_OK
 		|| SMTP_data(sock) != SM_OK)
@@ -342,7 +343,8 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
 		char	*error;
 		/* Minimum RFC1894 compliance + Diagnostic-Code field */
 		SockPrintf(sock, "\r\n");
-		SockPrintf(sock, "Final-Recipient: rfc822; %s\r\n", idp->id);
+		SockPrintf(sock, "Final-Recipient: rfc822; %s@%s\r\n", 
+			   idp->id, fetchmailhost);
 		SockPrintf(sock, "Last-Attempt-Date: %s\r\n", rfc822timestamp());
 		SockPrintf(sock, "Action: failed\r\n");
 
@@ -584,7 +586,6 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	const char	*ap;
 	char		options[MSGBUFSIZE]; 
 	char		addr[HOSTLEN+USERNAMELEN+1];
-	char		**from_responses;
 	int		total_addresses;
 
 	/*
@@ -664,7 +665,6 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	total_addresses = 0;
 	for (idp = msg->recipients; idp; idp = idp->next)
 	    total_addresses++;
-	xalloca(from_responses, char **, sizeof(char *) * total_addresses);
 	for (idp = msg->recipients; idp; idp = idp->next)
 	    if (idp->val.status.mark == XMIT_ACCEPT)
 	    {
@@ -692,26 +692,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		{
 		    char	errbuf[POPBUFSIZE];
 
-		    /*
-		     * Do *not* interpret a PS_REFUSED here as a directive
-		     * to break out of the address loop.  We want to go through
-		     * and process the rest of the RCPT TO addresses.
-		     */
 		    handle_smtp_report(ctl, msg);
-
-#ifdef HAVE_SNPRINTF
-		    snprintf(errbuf, sizeof(errbuf), "%s: %s",
-				    idp->id, smtp_response);
-#else
-		    strncpy(errbuf, idp->id, sizeof(errbuf));
-		    strcat(errbuf, ": ");
-		    strcat(errbuf, smtp_response);
-#endif /* HAVE_SNPRINTF */
-
-		    xalloca(from_responses[*bad_addresses], 
-			    char *, 
-			    strlen(errbuf)+1);
-		    strcpy(from_responses[*bad_addresses], errbuf);
 
 		    (*bad_addresses)++;
 		    idp->val.status.mark = XMIT_RCPTBAD;
@@ -721,10 +702,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 			      ctl->listener, addr);
 		}
 	    }
-	if (*bad_addresses)
-	    send_bouncemail(ctl, msg, XMIT_RCPTBAD,
-                            "Some addresses were rejected by the MDA fetchmail forwards to.\r\n",
-                            *bad_addresses, from_responses);
+
 	/*
 	 * It's tempting to do local notification only if bouncemail was
 	 * insufficient -- that is, to add && total_addresses > *bad_addresses

@@ -380,8 +380,7 @@ extern char *home;		/* home directory of invoking user */
 extern char *fmhome;		/* fetchmail home directory */
 extern int pass;		/* number of re-polling pass */
 extern flag configdump;		/* dump control blocks as Python dictionary */
-extern const char *fetchmailhost;
-				/* either "localhost" or an FQDN */
+extern char *fetchmailhost;	/* either "localhost" or an FQDN */
 extern int suppress_tags;	/* suppress tags in tagged protocols? */
 extern char shroud[PASSWORDLEN];	/* string to shroud in debug output */
 #ifdef SDPS_ENABLE

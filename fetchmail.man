@@ -6,7 +6,7 @@
 .\" For license terms, see the file COPYING in this directory.
 .TH fetchmail 1
 .SH NAME
-fetchmail \- fetch mail from a POP, IMAP, or ETRN-capable server
+fetchmail \- fetch mail from a POP, IMAP, ETRN, or ODMR-capable server
 
 .SH SYNOPSIS
 \fBfetchmail\fR [\fIoption...\fR] [\fImailserver...\fR]
@@ -131,7 +131,7 @@ suppress actual error messages).  The --verbose option overrides this.
 .B \-v, --verbose
 Verbose mode.  All control messages passed between 
 .I fetchmail
-and the mailserver are echoed to stderr.  Overrides --silent.
+and the mailserver are echoed to stdout.  Overrides --silent.
 Doubling this option (-v -v) causes extra diagnostic information
 to be printed. 
 .SS Disposal Options
