@@ -260,9 +260,9 @@ class User:
 
     def __repr__(self):
 	res = "    "
-	res = res + "user " + str(self.remote) + " there ";
+	res = res + "user " + `self.remote` + " there ";
 	if self.password:
-            res = res + "with password " + str(self.password) + " "
+            res = res + "with password " + `self.password` + " "
 	if self.localnames:
             res = res + "is"
             for x in self.localnames:
