@@ -30,7 +30,7 @@ static unsigned char unhex(unsigned char c)
   else if ((c >= 'a') && (c <= 'f'))
     return (c - 'a' + 10);
   else
-    return c;
+      return 16;	/* invalid hex character */
 }
 
 static int qp_char(unsigned char c1, unsigned char c2, unsigned char *c_out)
