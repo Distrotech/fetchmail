@@ -868,8 +868,13 @@ int num;		/* index of message */
 		strcat(names, idp->id);
 		strcat(names, " ");
 	    }
-	cmd = (char *)alloca(strlen(ctl->mda) + length);
+	length += strlen(ctl->mda);
+	cmd = (char *)alloca(length);
+#ifdef SNPRINTF
+	snprintf(cmd, length, ctl->mda, names);
+#else
 	sprintf(cmd, ctl->mda, names);
+#endif /* SNPRINTF */
 	if (outlevel == O_VERBOSE)
 	    error(0, 0, "about to deliver with: %s", cmd);
 
