@@ -1068,28 +1068,11 @@ host queried.
 
 .SH AUTHOR
 Eric S. Raymond <esr@snark.thyrsus.com>.  
-
-.SH BACKWARD COMPATIBILITY
 This program is descended from and replaces 
 .IR popclient , 
 by Carl Harris <ceharris@mal.com>; the internals are quite different, 
 but some of its interface design is directly traceable to that
-ancestral program.  Some effort has been made to preserve compatibility.
-.PP
-If called through a link named `popclient', \fIfetchmail\fR will look
-in ~/.poprc for its run control file.  As long as the file does not
-use the removed `localfolder' option or `limit' (which now takes a
-maximum byte size rather than a line count), this will often work.
-(The new run control file syntax also has to be a little stricter
-about the order of options than the old, in order to support multiple
-user descriptions per server; thus you may have to rearrange things a
-bit.)
-.PP
-Run control files in the .poprc format will trigger a warning.  To
-eliminate this warning, add the `username' keyword before your first user
-entry per server (it is already required before second and subsequent
-user entries per server).  In some future version the `username' keyword
-will always be required in server entries declaring multiple users.
+ancestral program.
 
 .SH FILES
 .TP 5

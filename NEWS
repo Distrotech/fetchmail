@@ -28,6 +28,7 @@ fetchmail-4.0.0 ()
 
 * Fixes for minor compilation glitches.
 * Progress messages now show total count as well as message number.
+* Removed the popclient backward-compatibility hacks.
 
 There are 252 people on the fetchmail-friends list.
 
