@@ -144,8 +144,6 @@ void interface_note_activity(void)
 {
 	ifinfo_t ifinfo;
 
-	sleep(3);	/* allow some time for the link to quiesce */
-
 	/* get the current I/O stats for the monitored link */
 	if (monitor && get_ifinfo(monitor, &ifinfo))
 		monitor_io = ifinfo.rx_packets + ifinfo.tx_packets;

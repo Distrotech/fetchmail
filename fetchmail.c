@@ -335,6 +335,13 @@ int main (int argc, char **argv)
      * reflect the status of that transaction.
      */
     do {
+#ifdef	linux
+	if (poll_interval && monitor)
+	    sleep(3);	/* allow some time for the link to quiesce */
+
+	interface_note_activity();
+#endif
+
 	if (poll_interval)
 	{
 	    if (outlevel == O_VERBOSE)
@@ -351,10 +358,6 @@ int main (int argc, char **argv)
 	     * We'll just assume setitimer(2) is available since fetchmail
 	     * has to have a BSDoid socket layer to work at all.
 	     */
-#ifdef	linux
-	    do {
-		interface_note_activity();
-#endif
 	    {
 		struct itimerval ntimeout;
 
@@ -370,9 +373,6 @@ int main (int argc, char **argv)
 		    (void) error(0, 0, "awakened by SIGUSR1");
 		}
 	    }
-#ifdef	linux
-	    } while (!interface_approve());
-#endif
 
 	    if (outlevel == O_VERBOSE)
 	    {
@@ -382,6 +382,12 @@ int main (int argc, char **argv)
 		fprintf(stderr, "fetchmail: awakened at %s", ctime(&now));
 	    }
 	}
+
+
+#ifdef	linux
+	if (!interface_approve())
+	    continue;
+#endif
 
 #ifdef HAVE_RES_SEARCH
 	sethostent(TRUE);	/* use TCP/IP for mailserver queries */
