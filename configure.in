@@ -395,35 +395,35 @@ then
   LIBS="$LIBS -lkrb -ldes"
 elif test -n "$with_kerberos" -a -n "$with_kerberos5" -a "$with_kerberos" != "no" -a "$with_kerberos5" != "no"
 then
-    AC_DEFINE(KERBEROS_V4)
-    CEFLAGS="$CEFLAGS -I$with_kerberos/include"
-    LDEFLAGS="$LDEFLAGS -L$with_kerberos/lib"
-    if test -f "$with_kerberos5/roken.h"
-    then
-       AC_DEFINE(HEIMDAL)
-       LIBS="-lkrb4 -l45 $LIBS" 
-    else
-       LIBS="-lkrb4 -ldes425 $LIBS"
-    fi
+  AC_DEFINE(KERBEROS_V4)
+  CEFLAGS="$CEFLAGS -I$with_kerberos/include"
+  LDEFLAGS="$LDEFLAGS -L$with_kerberos/lib"
+  if test -f "$with_kerberos5/roken.h"
+  then
+     AC_DEFINE(HEIMDAL)
+     LIBS="-lkrb4 -l45 $LIBS" 
+  else
+     LIBS="-lkrb4 -ldes425 $LIBS"
+  fi
 elif test -n "$with_kerberos5" -a "$with_kerberos" != "no" -a "$with_kerberos5" != "no"
 then
-    for dir in /usr/kerberos /usr/kerberosIV /usr/athena
-    do
-      if test -f "$dir/include/kerberosIV/krb.h"
-      then
-        AC_DEFINE(KERBEROS_V4)
-        CEFLAGS="$CEFLAGS -I$dir/include"
-        LDEFLAGS="$LDEFLAGS -L$dir/lib"
-	LIBS="-lkrb4 -ldes425 $LIBS"
-        break
-      fi
-    done
+  for dir in /usr/kerberos /usr/kerberosIV /usr/athena
+  do
+    if test -f "$dir/include/kerberosIV/krb.h"
+    then
+      AC_DEFINE(KERBEROS_V4)
+      CEFLAGS="$CEFLAGS -I$dir/include"
+      LDEFLAGS="$LDEFLAGS -L$dir/lib"
+      LIBS="-lkrb4 -ldes425 $LIBS"
+      break
+    fi
+  done
 elif test -n "$with_kerberos" -a "$with_kerberos" != "no"
 then
-    AC_DEFINE(KERBEROS_V4)
-    CEFLAGS="$CEFLAGS -I$with_kerberos/include"
-    LDEFLAGS="$LDEFLAGS -L$with_kerberos/lib"
-    LIBS="$LIBS -lkrb -ldes"
+  AC_DEFINE(KERBEROS_V4)
+  CEFLAGS="$CEFLAGS -I$with_kerberos/include"
+  LDEFLAGS="$LDEFLAGS -L$with_kerberos/lib"
+  LIBS="$LIBS -lkrb -ldes"
 else
   if test "$with_kerberos" != "no"
   then
@@ -438,6 +438,7 @@ else
         break
       fi
     done
+  fi
 fi
 
 ###	use option --with-ssl to compile in the SSL support
@@ -445,17 +446,16 @@ AC_ARG_WITH(ssl,
 	[  --with-ssl=[DIR]        enable SSL support using libraries in DIR],
 	[with_ssl=$withval],
 	[with_ssl=no])
-test "$with_ssl" = "yes" && AC_DEFINE(SSL_ENABLE)
+test "$with_ssl" != "no" && AC_DEFINE(SSL_ENABLE)
 
 if test "$with_ssl" = "yes"
 then
-#	He didn't specify an SSL location.  Let's look at some common
-#	directories where SSL has been found in the past and try and auto
-#	configure for SSL.  OpenSSL determination will be made later.
-#	This will screw up if an OpenSSL install is located in a later
-#	directory than an older SSLeay install, but the user should fix that
-#	anyways and he can override on the configure line.
-
+    #	He didn't specify an SSL location.  Let's look at some common
+    #	directories where SSL has been found in the past and try and auto
+    #	configure for SSL.  OpenSSL determination will be made later.
+    #	This will screw up if an OpenSSL install is located in a later
+    #	directory than an older SSLeay install, but the user should fix that
+    #	anyways and he can override on the configure line.
     for ac_dir in \
       /usr/local/ssl \
       /usr/ssl \
@@ -472,33 +472,33 @@ fi
 
 if test -n "$with_ssl" -a "$with_ssl" != "no"
 then
-    # With the autoconfigure above, the only time this is going to be
-    # true is going to be when we could not find the headers.  If they
-    # are not in system standard locations, we are going to be broken.
-    if test "$with_ssl" = "yes"
-    then
-# Let's just define the standard location for the SSLeay root
-        with_ssl="/usr/local/ssl"
-    fi
-    if test -r $with_ssl/include/openssl/ssl.h
-    then
-###	ssl.h found under openssl.  Use openssl configuration preferentially
-        echo "Enabling OpenSSL support in $with_ssl"
-        CEFLAGS="$CEFLAGS -I$with_ssl/include -I$with_ssl/include/openssl"
-###	OpenBSD comes with ssl headers
-    elif test -r /usr/include/ssl/ssl.h
-    then
-        echo "Enabling SSLeay support in $with_ssl"
-        CEFLAGS="$CEFLAGS -I/usr/include/ssl"
-    else
-        echo "Enabling SSLeay support in $with_ssl"
-        CEFLAGS="$CEFLAGS -I$with_ssl/include"
-    fi
-    LDEFLAGS="$LDEFLAGS -L$with_ssl/lib"
-    LIBS="$LIBS -lssl -lcrypto"
-    AC_DEFINE(SSL_ENABLE)
+  # With the autoconfigure above, the only time this is going to be
+  # true is going to be when we could not find the headers.  If they
+  # are not in system standard locations, we are going to be broken.
+  if test "$with_ssl" = "yes"
+  then
+    # Let's just define the standard location for the SSLeay root
+    with_ssl="/usr/local/ssl"
+  fi
+  if test -r $with_ssl/include/openssl/ssl.h
+  then
+    ###	ssl.h found under openssl.  Use openssl configuration preferentially
+    echo "Enabling OpenSSL support in $with_ssl"
+    CEFLAGS="$CEFLAGS -I$with_ssl/include -I$with_ssl/include/openssl"
+    ###	OpenBSD comes with ssl headers
+  elif test -r /usr/include/ssl/ssl.h
+  then
+    echo "Enabling SSLeay support in $with_ssl"
+    CEFLAGS="$CEFLAGS -I/usr/include/ssl"
+  else
+    echo "Enabling SSLeay support in $with_ssl"
+    CEFLAGS="$CEFLAGS -I$with_ssl/include"
+  fi
+  LDEFLAGS="$LDEFLAGS -L$with_ssl/lib"
+  LIBS="$LIBS -lssl -lcrypto"
+  AC_DEFINE(SSL_ENABLE)
 else
-    echo 'Disabling SSL support...'
+  echo 'Disabling SSL support...'
 fi
 
 ###	use option --with-socks=DIR to point at SOCKS library
@@ -525,18 +525,18 @@ AC_ARG_WITH(socks5,
 [
 if test "$with_socks5" != no
 then
-    if test "$with_socks5" != yes
-    then
-        LDEFLAGS="$LDEFLAGS -L$with_socks5"
-    fi
-    ac_savedLDFLAGS="$LDFLAGS"
-    LDFLAGS="$LDEFLAGS $LDFLAGS"
-    AC_CHECK_LIB(socks5, SOCKSconnect,,
-       AC_MSG_ERROR([could not find libsocks5 which is needed for built-in SOCKS5 support]))
-    AC_DEFINE(HAVE_SOCKS)
-    CEFLAGS="$CEFLAGS -Dconnect=SOCKSconnect -Dgetsockname=SOCKSgetsockname -Dbind=SOCKSbind -Daccept=SOCKSaccept -Dlisten=SOCKSlisten -Dselect=SOCKSselect -Drecvfrom=SOCKSrecvfrom -Dsendto=SOCKSsendto -Drecv=SOCKSrecv -Dsend=SOCKSsend -Dread=SOCKSread -Dwrite=SOCKSwrite -Drresvport=SOCKSrresvport -Dshutdown=SOCKSshutdown -Dlisten=SOCKSlisten -Dclose=SOCKSclose -Ddup=SOCKSdup -Ddup2=SOCKSdup2 -Dgethostbyname=SOCKSgethostbyname"
-    AC_CHECK_FUNC(SOCKSfclose, [CFLAGS="$CFLAGS -Dfclose=SOCKSfclose"])
-    LDFLAGS="$ac_savedLDFLAGS"
+  if test "$with_socks5" != yes
+  then
+    LDEFLAGS="$LDEFLAGS -L$with_socks5"
+  fi
+  ac_savedLDFLAGS="$LDFLAGS"
+  LDFLAGS="$LDEFLAGS $LDFLAGS"
+  AC_CHECK_LIB(socks5, SOCKSconnect,,
+  	AC_MSG_ERROR([could not find libsocks5 which is needed for built-in SOCKS5 support]))
+  AC_DEFINE(HAVE_SOCKS)
+  CEFLAGS="$CEFLAGS -Dconnect=SOCKSconnect -Dgetsockname=SOCKSgetsockname -Dbind=SOCKSbind -Daccept=SOCKSaccept -Dlisten=SOCKSlisten -Dselect=SOCKSselect -Drecvfrom=SOCKSrecvfrom -Dsendto=SOCKSsendto -Drecv=SOCKSrecv -Dsend=SOCKSsend -Dread=SOCKSread -Dwrite=SOCKSwrite -Drresvport=SOCKSrresvport -Dshutdown=SOCKSshutdown -Dlisten=SOCKSlisten -Dclose=SOCKSclose -Ddup=SOCKSdup -Ddup2=SOCKSdup2 -Dgethostbyname=SOCKSgethostbyname"
+  AC_CHECK_FUNC(SOCKSfclose, [CFLAGS="$CFLAGS -Dfclose=SOCKSfclose"])
+  LDFLAGS="$ac_savedLDFLAGS"
 fi])
 
 ###	use option --with-hesiod=DIR to point at a HESIOD directory
@@ -565,8 +565,7 @@ x)
     LDEFLAGS="$LDEFLAGS -L$with_hesiod/lib"
     LIBS="$LIBS -lhesiod"
     ;;
-  esac
-fi
+esac
 
 ###	use option --with-gssapi=DIR to compile in GSSAPI support
 AC_ARG_WITH(gssapi,
