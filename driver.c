@@ -657,10 +657,13 @@ static int readheaders(int sock,
 	 * 
 	 * Should be controlled by an option
 	 */
-	if (ctl->dropdelivered && !strncasecmp(line, "Delivered-To:", 13)) {
-      if (delivered_to) free(line);
-      else delivered_to = line;
-	  continue;
+	if (ctl->dropdelivered && !strncasecmp(line, "Delivered-To:", 13)) 
+	{
+	    if (delivered_to)
+		free(line);
+	    else 
+		delivered_to = line;
+	    continue;
 	}
 
 	/*
