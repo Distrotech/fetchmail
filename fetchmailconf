@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #       posix, posixpath, socket
-version = "1.38"
+version = "1.39"
 
 from Tkinter import *
 from Dialog import *
@@ -175,9 +175,9 @@ class Server:
             res = res + " interface " + str(self.interface)
         if self.monitor:
             res = res + " monitor " + str(self.monitor)
-        if self.plugin != ServerDefaults.plugin:
+        if self.plugin:
             res = res + " plugin " + `self.plugin`
-        if self.plugout != ServerDefaults.plugout:
+        if self.plugout:
             res = res + " plugout " + `self.plugout`
         if self.netsec:
             res = res + " netsec " + str(self.netsec)
@@ -227,7 +227,7 @@ class User:
         self.mda = None                 # Mail Delivery Agent
         self.bsmtp = None               # BSMTP output file
         self.lmtp = FALSE               # Use LMTP rather than SMTP?
-        self.antispam = "571 550 501"   # Listener's spam-block code
+        self.antispam = "571 550 501 554"	# Listener's spam-block code
         self.keep = FALSE               # Keep messages
         self.flush = FALSE              # Flush messages
         self.fetchall = FALSE           # Fetch old messages
@@ -240,7 +240,7 @@ class User:
         self.dropdelivered = FALSE      # Drop incoming Delivered-To lines
         self.idle = FALSE               # IDLE after poll
         self.limit = 0                  # Message size limit
-        self.warnings = 0               # Size warning interval
+        self.warnings = 3600            # Size warning interval (see tunable.h)
         self.fetchlimit = 0             # Max messages fetched per batch
         self.batchlimit = 0             # Max message forwarded per batch
         self.expunge = 0                # Interval between expunges (IMAP)
