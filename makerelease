@@ -6,6 +6,19 @@
 #
 $timezone = "-0500";
 
+$diffs = 0;
+while ($i = shift @ARGV)
+{
+	if ($i =~ /^(--diffs|-d)$/i)
+	{
+		$diffs = 1;
+		next;
+	}
+
+	die "Error: Unknown option: $i\n";
+}
+
+
 $version=`grep 'VERSION *=' Makefile.in`;
 $version =~ /VERSION *= *(.*)/;
 $version = $1;
@@ -105,7 +118,9 @@ rename("PREAMBLE.$$", "RELEASE.NOTES");
 system("chown esr RELEASE.NOTES");
 chmod(0700, "RELEASE.NOTES");
 # If we ever want to go back to enclosing diffs.
-#system "metasend -b -D 'fetchmail-$rcsid announcement' -m 'text/plain' -e 7bit -f PREAMBLE.$$ -n -D 'diff -u between -$oldrcs $rcsid' -m 'text/plain' -e 7bit -f DIFFS.$$ -o RELEASE_NOTES";
+if ($diffs) {
+	system "metasend -b -D 'fetchmail-$rcsid announcement' -m 'text/plain' -e 7bit -f PREAMBLE.$$ -n -D 'diff -u between -$oldrcs $rcsid' -m 'text/plain' -e 7bit -f DIFFS.$$ -o RELEASE_NOTES";
+}
 
 unlink("PREAMBLE.$$");
 unlink("DIFFS.$$");
