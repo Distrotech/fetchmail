@@ -34,6 +34,18 @@
 #endif
 #endif
 
+/*
+ * In case we ever optimize this further,
+ * a note on Carl Harris's original implementation said:
+ *
+ * Size of buffer for internal buffering read function 
+ * don't increase beyond the maximum atomic read/write size for
+ * your sockets, or you'll take a potentially huge performance hit
+ *
+ * #define  INTERNAL_BUFSIZE	2048
+ *
+ */
+
 FILE *Socket(char *host, int clientPort)
 {
     int sock;
@@ -67,51 +79,6 @@ FILE *Socket(char *host, int clientPort)
     return fdopen(sock, "r+");
 }
 
-
-#if defined(HAVE_STDARG_H)
-int SockPrintf(FILE *sockfp, char* format, ...)
-{
-#else
-int SockPrintf(sockfp,format,va_alist)
-FILE *sockfp;
-char *format;
-va_dcl {
-#endif
-
-    va_list ap;
-    char buf[8192];
-
-#if defined(HAVE_STDARG_H)
-    va_start(ap, format) ;
-#else
-    va_start(ap);
-#endif
-    vsprintf(buf, format, ap);
-    va_end(ap);
-    return SockWrite(buf, strlen(buf), sockfp);
-
-}
-
-/*
- * In case we ever optimize this further,
- * a note on Carl Harris's original implementation said:
- *
- * Size of buffer for internal buffering read function 
- * don't increase beyond the maximum atomic read/write size for
- * your sockets, or you'll take a potentially huge performance hit
- *
- * #define  INTERNAL_BUFSIZE	2048
- *
- */
-
-int SockWrite(char *buf, int len, FILE *sockfp)
-{
-    int n;
-    
-    if ((n = fwrite(buf, 1, len, sockfp)) < 1)
-	return -1;
-    return n;
-}
 
 int SockGets(char *buf, int len, FILE *sockfp)
 {
