@@ -577,7 +577,7 @@ selects Kerberos authentication.  This option does not work with ETRN.
 .TP
 .B \-f <pathname>, --fetchmailrc <pathname>
 Specify a non-default name for the 
-.I .fetchmailrc
+.I ~/.fetchmailrc
 run control file.  The pathname argument must be either "-" (a single
 dash, meaning to read the configuration from standard input) or a
 filename.  Unless the --version option is also on, a named file
@@ -702,16 +702,16 @@ in daemon mode or with scripts.
 If you do not specify a password, and
 .I fetchmail
 cannot extract one from your
-.I .fetchmailrc
+.I ~/.fetchmailrc
 file, it will look for a 
-.I .netrc
+.I ~/.netrc
 file in your home directory before requesting one interactively; if an
 entry matching the mailserver is found in that file, the password will
 be used.  Fetchmail first looks for a match on poll name; if it finds none,
 it checks for a match on via name.  See the
 .IR ftp (1)
 man page for details of the syntax of the
-.I .netrc
+.I ~/.netrc
 file.  (This feature may allow you to avoid duplicating password
 information in more than one file.)
 .PP
@@ -737,7 +737,7 @@ RFC1460 introduced APOP authentication.  In this variant of POP3,
 you register an APOP password on your server host (the program
 to do this with on the server is probably called \fIpopauth\fR(8)).  You
 put the same password in your 
-.I .fetchmailrc
+.I ~/.fetchmailrc
 file.  Each time 
 .I fetchmail
 logs in, it sends a cryptographically secure hash of your password and
@@ -911,7 +911,7 @@ The
 option turns off use of 
 .IR syslog (3),
 assuming it's turned on in the 
-.I .fetchmailrc 
+.I ~/.fetchmailrc 
 file, or that the
 .B -L
 or
@@ -935,14 +935,14 @@ next poll cycle.  (The IMAP logic doesn't delete messages until
 they're delivered, so this problem does not arise.)
 .PP
 If you touch or change the 
-.I .fetchmailrc 
+.I ~/.fetchmailrc 
 file while fetchmail is running in daemon mode, this will be detected 
 at the beginning of the next poll cycle.  When a changed
-.I .fetchmailrc 
+.I ~/.fetchmailrc 
 is detected, fetchmail rereads it and restarts from scratch (using
 exec(2); no state information is retained in the new instance).  Note also
 that if you break the
-.I .fetchmailrc 
+.I ~/.fetchmailrc 
 file's syntax, the new instance will softly and silently vanish away
 on startup.
 
@@ -2154,7 +2154,7 @@ Fetchmail's method of sending bouncemail and spam bounces requires that
 port 25 of localhost be available for sending mail via SMTP.
 .PP
 If you modify a
-.I .fetchmailrc
+.I ~/.fetchmailrc
 while a background instance is running and break the syntax, the
 background instance will die silently.  Unfortunately, it can't 
 die noisily because we don't yet know whether syslog should be enabled.
