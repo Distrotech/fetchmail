@@ -35,6 +35,7 @@ smtp(host)?	{ return SMTPHOST; }
 mda		{ return MDA; }
 is		{ return IS; }
 here		{ return HERE; }
+there		{ return THERE; }
 
 keep		{ yylval.flag = FLAG_TRUE;  return KEEP; }
 flush		{ yylval.flag = FLAG_TRUE;  return FLUSH; }
@@ -49,7 +50,9 @@ noskip		{ yylval.flag = FLAG_FALSE; return SKIP; }
 
 with		{/* EMPTY */}
 and		{/* EMPTY */}
+has		{/* EMPTY */}
 options		{/* EMPTY */}
+[;:,]		{/* EMPTY */}
 
 (auto)|(AUTO)	{ yylval.proto = P_AUTO;  return PROTO; }
 (pop2)|(POP2)	{ yylval.proto = P_POP2;  return PROTO; }

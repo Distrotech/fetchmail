@@ -12,6 +12,9 @@ authentication stuff does what's needed.
 Support IMAP4 extensions for secure challenge-response, once they're actually
 standardized.
 
+The configuration file lexer handles punctuation adjacent to keywords poorly.
+Flex can be very mysterious at times.
+
 Inflict severe pain on the person(s) responsible for removing LAST from POP3.
 
 			Release Notes:
@@ -19,6 +22,8 @@ Inflict severe pain on the person(s) responsible for removing LAST from POP3.
 fetchmail-1.7 (Tue Oct  8 01:00:08 EDT 1996):
 
 features --
+
+* Noise words for rcfile syntax make English-like syntax possible.
 
 * Make configure more GNUish; it understands --prefix and other standard
   autoconf options now (see INSTALL for details)

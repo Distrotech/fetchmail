@@ -397,6 +397,18 @@ Legal protocol identifiers are
     apop (or APOP)
     rpop (or RPOP)
 .PP
+You can also use the `noise' keywords \fBand\fR, \fBwith\fR,
+\fBhas\fR, \fBwants\fR, and \fBoptions\fR anywhere in an entry to make
+it resemble English.  They're ignored, but but can make entries much
+easier to read at a glance.  The punctuation characters ':', ';' and
+',' are also ignored.
+.PP
+The words \fBhere\fR and \fBthere\fR also have useful English-like
+significance.  Normally `\fBuser eric is esr\fR' would mean that 
+mail for the remote user \fBeric\fR is to be delivered to \fBesr\fR,
+but you can make this clearer by saying `\fBuser eric there is esr here\fR',
+or reverse it by saying `\fBuser esr here is eric there\fR'
+.PP
 Basic format is:
 
 .nf
@@ -422,13 +434,26 @@ Multiple servers may be listed:
   server other.provider.net proto pop2 user John.Smith pass My^Hat
 .fi
 
+Here's a version of those two with more whitespace and some noise words: 
+
+.nf
+  server pop.provider.net proto pop3
+      user jsmith, with password secret1, is jsmith here;
+  server other.provider.net proto pop2:
+      user John.Smith with password My^Hat, is John.Smith here;
+.fi
+
+This version is much easier to read and doesn't cost significantly
+more (parsing is done only once, at startup time).
+
 .PP
 If you need to include whitespace in a parameter string, enclose the
 string in double quotes.  Thus:
 
 .nf
   server mail.provider.net proto pop3
-        user jsmith pass "u can't krak this" mda "/bin/mail %s"
+        user jsmith has password "u can't krak this"
+                    and wants mda "/bin/mail %s"
 .fi
 
 You may have an initial server description headed by the keyword
@@ -442,7 +467,7 @@ by individual server descriptions.  So, you could write:
   server pop.provider.net
         pass secret1
   server mail.provider.net
-        user jjsmith pass secret2
+        user jjsmith has password secret2
 .fi
 
 It's possible to specify more than one user per server (this is only
@@ -455,8 +480,8 @@ invoking user is used .) Here's a contrived example:
 .nf
   server pop.provider.net proto pop3 port 3111
         pass gumshoe
-        user jsmith pass secret1 is smith
-        user jones pass secret2 is jjones
+        user jsmith with pass secret1 is smith here
+        user jones with pass secret2 is jjones here
 .fi
 
 This says that the user invoking \fIfetchmail\fR has the same username
@@ -551,6 +576,9 @@ be snaffled with a packet sniffer or more sophisticated monitoring
 software.
 .PP
 The RPOP support is not yet well tested.
+.PP
+The configuration file lexer handles punctuation adjacent to keywords poorly.
+Flex can be very mysterious at times.
 .PP
 Send comments, bug reports, gripes, and the like to Eric S. Raymond
 <esr@thyrsus.com>.

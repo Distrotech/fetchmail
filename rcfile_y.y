@@ -29,7 +29,8 @@ int yydebug;	/* in case we didn't generate with -- debug */
   char *sval;
 }
 
-%token SERVER PROTOCOL USERNAME PASSWORD FOLDER SMTPHOST MDA DEFAULTS IS HERE
+%token DEFAULTS SERVER PROTOCOL 
+%token USERNAME PASSWORD FOLDER SMTPHOST MDA IS HERE THERE
 %token <proto> PROTO
 %token <sval>  STRING
 %token <flag>  KEEP FLUSH FETCHALL REWRITE PORT SKIP
@@ -69,11 +70,16 @@ userspecs	: user1opts			{prc_register(); prc_reset();}
 		| explicits
 		;
 
-explicits	: userdef			{prc_register(); prc_reset();}
-		| explicits userdef		{prc_register(); prc_reset();}
+explicits	: explicitdef			{prc_register(); prc_reset();}
+		| explicits explicitdef		{prc_register(); prc_reset();}
 		;
 
-userdef		: USERNAME STRING user0opts	{prc_setremote($2);}
+explicitdef	: userdef user0opts
+		;
+
+userdef		: USERNAME STRING	{prc_setremote($2);}
+		| USERNAME STRING HERE	{prc_setlocal($2);}
+		| USERNAME STRING THERE	{prc_setremote($2);}
 		;
 
 user0opts	: /* EMPTY */
@@ -86,6 +92,7 @@ user1opts	: user_option
 
 user_option	: IS STRING		{prc_setlocal($2);}
 		| IS STRING HERE	{prc_setlocal($2);}
+		| IS STRING THERE	{prc_setremote($2);}
 		| PASSWORD STRING	{prc_setpassword($2);}
 		| FOLDER  STRING 	{prc_setfolder($2);}
 		| SMTPHOST STRING	{prc_setsmtphost($2);}
