@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/05/16 19:17:42 $
+<td width="30%" align=right>$Date: 1998/05/23 05:06:13 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -271,12 +271,13 @@ experiment, an extended test to see if my theory about the critical
 features of the Linux development model is correct.<p>
 
 The experiment was a success.  I wrote a paper about it titled <a
-href="http://www.tuxedo.org/~esr/writings/cathedral.html">The Cathedral
-and the Bazaar</a> which was first presented at Linux Kongress '97 in
-Bavaria and very well received there. It was also given at Atlanta
-Linux Expo, Linux Pro '97 in Warsaw, and the first Perl Conference,
-and will be an invited presentation at Usenix and UniForum '98.  The
-folks at Netscape tell me it helped them decide to <a
+href="http://www.tuxedo.org/~esr/writings/cathedral.html">The
+Cathedral and the Bazaar</a> which was first presented at Linux
+Kongress '97 in Bavaria and very well received there. It was also
+given at Atlanta Linux Expo, Linux Pro '97 in Warsaw, and the first
+Perl Conference, at UniForum '98, and will be the basis of an invited
+presentation at Usenix '98.  The folks at Netscape tell me it helped
+them decide to <a
 href="http://www.netscape.com/newsref/pr/newsrelease558.html"> give
 away the source for Netscape Communicator</a>).<p>
 
@@ -299,8 +300,8 @@ server mentioned in <a href="#D2">D2</a>).  An increasing minority
 also feature IMAP (you can detect IMAP support by running fetchmail in
 AUTO mode).<P>
 
-If you have the option, we recommend using or installing IMAP4; it has
-the best facilities for tracking message "seen" states.  It also
+If you have the option, we recommend using or installing IMAP4rev1; it has
+the best facilities for tracking message `seen' states.  It also
 recovers from interrupted connections more gracefully than POP3, and
 enables some significant performance optimizations.<P>
 
@@ -379,7 +380,7 @@ and your fetchmail was built with OPIE support compiled in (see the
 distribution INSTALL file), fetchmail will detect it also.  When using
 OTP, you will specify a password but it will not be sent en clair.<P>
 
-Sadly, there is at present (February 1998) no OTP or APOP-like
+Sadly, there is at present (May 1998) no OTP or APOP-like
 facility generally available on IMAP servers.  However, there do exist
 patches which will OTP-enable the University of Washington IMAP
 daemon, version 4.1-BETA.<P>
@@ -1089,7 +1090,7 @@ We have one report that when processing multiple messages from a
 single fetchmail session, smail sometimes delivers them in an
 order other than received-date order.  This can be annoying because it
 scrambles conversational threads.  This is not fetchmail's problem,
-it is an smail "feature" and has been reported to the maintainers
+it is an smail `feature' and has been reported to the maintainers
 as a bug.<P>
 
 Very recent smail versions require an <code>-smtp_hello_verify</code>
@@ -1111,7 +1112,8 @@ using sendmail instead.<P>
 <h2><a name="T6">T6. How can I use fetchmail with Lotus Notes?</a></h2><p>
 
 The Lotus Notes SMTP gateway tries to deduce when it should convert \n
-to \r\n, but its rules are not intuitive.  Use `forcecr'.<P>
+to \r\n, but its rules are not the intuitive and correct-for-RFC822
+ones.  Use `forcecr'.<P>
 
 <hr>
 <h2><a name="T7">T7. How can I use fetchmail with Microsoft Exchange?</a></h2><p>
@@ -1426,7 +1428,7 @@ Some servers (such as Microsoft's NTMail) are mis-designed to restore
 the entire queue, including messages you have deleted.  If you have
 one of these and it flakes out on you a lot, try setting a small
 <code>--fetchlimit</code> value.  This will result in more IP connects
-to the server but will mean it actually executes changes to the queue
+to the server, but will mean it actually executes changes to the queue
 more often.<P>
 
 Qualcomm's qpopper, used at many BSD Unix sites, is better behaved.
@@ -1446,14 +1448,15 @@ Fetchmail only sends a delete mail request to the server when either
 listener, or (b) it gets an error 571 (the spam-filter error) from the
 listener.  No interrupt can cause it to lose mail.<p>
 
-However, POP3 has a design problem in that its servers mark a message
-`seen' as soon as the fetch command to get it is sent down.  If for
-some reason the message isn't actually delivered (you take a line hit
-during the download, or your port 25 listener can't find enough free
-disk space, or you interrupt the delivery in mid-message) that `seen'
-message can lurk invisibly in your server mailbox forever.<p>
+However, IMAP2bis has a design problem in that its normal fetch
+command marks a message `seen' as soon as the fetch command to get it
+is sent down.  If for some reason the message isn't actually delivered
+(you take a line hit during the download, or your port 25 listener
+can't find enough free disk space, or you interrupt the delivery in
+mid-message) that `seen' message can lurk invisibly in your server
+mailbox forever.<p>
 
-Workaround: add the `<CODE>fetchall</CODE>' keyword to your POP3 fetch options.<p>
+Workaround: add the `<CODE>fetchall</CODE>' keyword to your fetch options.<p>
 
 Solution: switch to an <a href="http://www.imap.org">IMAP</a> server.<p>
 
@@ -1781,8 +1784,8 @@ only, this now has the side effect of forcing RETR use.<P>
 
 (It is possible this tip is no longer necessary.  At least one tester
 has claimed that the bounds check works but was fooled by an overflow
-condition in the TOP argument.  Decrementing the argument may have
-fixed this.)<P>
+condition in the TOP argument.  Decrementing the argument in 4.4.7 may have
+fixed this, in which case this FAQ item will soon go away.)<P>
 
 <hr>
 <h2><a name="O2">O2. Every time I get a POP or IMAP message the header
@@ -1836,8 +1839,8 @@ with a long expunge interval.<P>
 
 According to the POP3 RFCs, deletes aren't actually performed until
 you issue the end-of-session QUIT command.  Fetchmail cannot fix this,
-it takes cooperation from the.  server. There are two possible
-remedies:<P>
+because doing it right takes cooperation from the server. There are
+two possible remedies:<P>
 
 One is to switch to qpopper (the free POP3 server from Qualcomm,
 the Eudora people).  The qpopper software violates the POP3 RFCs by
@@ -1915,7 +1918,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/05/16 19:17:42 $
+<td width="30%" align=right>$Date: 1998/05/23 05:06:13 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
