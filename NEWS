@@ -17,6 +17,10 @@ bugs --
 
 * Added some port patches for NEXTSTEP.
 
+* SIGCHLD used everywhere now, not SIGCLD (this was strictly a cosmetic bug).
+
+* Prevent occasional hangs when fetchmail was terminated by signal.
+
 ------------------------------------------------------------------------------
 fetchmail-2.2 (Mon Dec  9 00:15:01 EST 1996):
 
@@ -44,7 +48,7 @@ bugs --
 
 * Fix error in MX record handling that was causing multidrop problems.
 
-* Disable daemon SIGCLD handler while an MDA is running, to avoid snafus.
+* Disable daemon SIGCHLD handler while an MDA is running, to avoid snafus.
   Thanks to Dave Bodenstab <imdave@synet.net> for spotting this obscure bug.
 
 156 people on the contact list.

@@ -628,13 +628,23 @@ void termhook(int sig)
 {
     struct query	*ctl;
 
+    /*
+     * Sending SMTP QUIT on signal is theoretically nice, but led to a 
+     * subtle bug.  If fetchmail was terminated by signal while it was 
+     * shipping message text, it would hang forever waiting for a
+     * command acknowledge.  In theory we could disable the QUIT
+     * only outside of the message send.  In practice, we don't
+     * care.  All mailservers hang up on a dropped TCP/IP connection
+     * anyway.
+     */
+
     if (sig != 0)
 	fprintf(stderr, "terminated with signal %d\n", sig);
-
-    /* terminate all SMTP connections cleanly */
-    for (ctl = querylist; ctl; ctl = ctl->next)
-	if (ctl->lead_smtp == ctl && ctl->smtp_sockfp != (FILE *)NULL)
-	    SMTP_quit(ctl->smtp_sockfp);
+    else
+	/* terminate all SMTP connections cleanly */
+	for (ctl = querylist; ctl; ctl = ctl->next)
+	    if (ctl->lead_smtp == ctl && ctl->smtp_sockfp != (FILE *)NULL)
+		SMTP_quit(ctl->smtp_sockfp);
 
     if (!check_only)
 	write_saved_lists(querylist, idfile);
