@@ -5,11 +5,11 @@
  */
 
 /***********************************************************************
-  module:       poprc_y.y
+  module:       rcfile_y.y
   project:      fetchmail
   programmer:   Carl Harris, ceharris@mal.com
 		Extensively hacked and fixed by esr.
-  description:  .poprc parser
+  description:  configuration file parser
 
  ***********************************************************************/
 

@@ -18,7 +18,7 @@ Features of fetchmail include:
 	* POP2, POP3, APOP, RPOP and IMAP support with auto-probing for a
 	  server on the host if no protocol is specified.
 
-	* Easy configuration via command line or free-format .poprc file.
+	* Easy control via command line or free-format configuration file.
 
 	* Daemon mode -- fetchmail can be run in background to poll
 	  one or more hosts at a specified interval.
@@ -30,7 +30,7 @@ Features of fetchmail include:
 	  usernames relative to the fetchmail host become fully-qualified
 	  Internet addresses.  This enables replies to work correctly.
 
-There is a man page at fetchmail.man.  A sample rc file is at sample.fetchrc.
+There is a man page at fetchmail.man.  A sample rc file is at sample.rcfile.
 For a release history, see the file NEWS.
 							-- esr
 

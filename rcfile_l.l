@@ -6,11 +6,11 @@
  */
 
 /***********************************************************************
-  module:       poprc_l.l
+  module:       rcfile_l.l
   project:      fetchmail
   programmer:   Carl Harris, ceharris@mal.com
 		Extensively hacked by esr.
-  description:  .poprc lexer
+  description:  configuration lexer
 
  ***********************************************************************/
 

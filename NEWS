@@ -142,12 +142,12 @@ CONFIGURATION AND BUILDING
 
 OPTIONS AND COMMAND LINE
 
-* I have removed the -p command-line option. Given that there's a .poprc
+* I have removed the -p command-line option. Given that there's a run control
   facility there is no excuse for encouraging users to put plaintext passwords
   in scripts which might be readable.
 
 * Calling popclient with no arguments now causes it to query or operate
-  on every host in the .poprc file.
+  on every host in the run control file.
 
 * I have made --version more useful by having it dump the computed
   connection options for each server specified.
@@ -157,18 +157,20 @@ OPTIONS AND COMMAND LINE
 
 POPRC FILE SYNTAX
 
-* The .poprc lexer now supports "-enclosed strings which may contain
-  whitespace.
+* The run control file lexer now supports "-enclosed strings which may 
+  contain whitespace.
 
-* I added a --yydebug option to enable .poprc parser debugging at runtime
-  if the parser was generated with --debug.  It's not documented.
+* I added a --yydebug option to enable run control parser debugging at 
+  runtime if the parser was generated with --debug.  It's not documented.
 
-* You may now have a `defaults' entry in .poprc which sets overrideable
-  values for other entries.  See the man page for details.
+* You may now have a `defaults' entry in the run control file which sets 
+  overrideable values for other entries.  See the man page for details.
 
-* It is now possible to set keep, flush and fetchall in your .poprc file.
+* It is now possible to set keep, flush and fetchall in your run control
+  file.
 
-* Fixed incorrect numbering of source lines in .poprc parse error messages.
+* Fixed incorrect numbering of source lines in run control file parse error
+  messages.
 
 * The configure.in specification no longer uses the obsolete AC_TRY_COMPILE
   macro (it uses AC_TRY_LINK instead).
@@ -204,8 +206,8 @@ DOCUMENTATION
 * All changes and feature additions have been tested in actual use and are
   documented on the man page.
 
-* I have turned the comments in the sample.poprc into a new manual
-  section documenting the .poprc format.
+* I have turned the comments in the sample run control file into a new manual
+  section documenting the file format.
 
 MISCELLANEOUS BUG FIXES
 

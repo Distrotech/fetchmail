@@ -31,7 +31,7 @@ edit the Makefile AFTER you run "configure" but BEFORE you run
 "make install."  You can easily choose a prefix other than /usr/local,
 or you can choose completely different directories for each item.
 
-See the file sample.poprc for a description of configuring your 
+See the file sample.rcfile for a description of configuring your 
 individual preferences.
 
 Enjoy!
