@@ -416,9 +416,9 @@ class ListEdit(Frame):
             for x in self.list:
                 self.listwidget.insert(END, x)
 	listframe.pack(side=TOP, expand=YES, fill=BOTH)
-	self.listwidget.config(yscrollcommand=scroll.set, relief=SUNKEN)
+	self.listwidget.config(yscrollcommand=scroll.set)
 	self.listwidget.pack(side=LEFT, expand=YES, fill=BOTH)
-	scroll.config(command=self.listwidget.yview, relief=SUNKEN)
+	scroll.config(command=self.listwidget.yview)
 	scroll.pack(side=RIGHT, fill=BOTH)
 	self.listwidget.config(selectmode=SINGLE, setgrid=TRUE)
 	self.listwidget.bind('<Double-1>', self.handleList);
@@ -1184,7 +1184,7 @@ class UserEdit(Frame, MyWidget):
     def __init__(self, username, parent):
         self.parent = parent
 	self.user = None
-	for user in server.users:
+	for user in parent.server.users:
 	    if user.remote == username:
 		self.user = user
 	if self.user == None:
@@ -1197,10 +1197,10 @@ class UserEdit(Frame, MyWidget):
 	Frame.__init__(self, master)
 	Pack.config(self)
 	self.master.title('Fetchmail user ' + self.user.remote
-                          + ' querying ' + parent.server.pollname);
+                          + ' querying ' + self.parent.server.pollname);
 	self.master.iconname('Fetchmail user ' + self.user.remote);
 	self.post(User, 'user')
-	self.makeWidgets(mode, parent.server.pollname)
+	self.makeWidgets(mode, self.parent.server.pollname)
         self.keepalive = []	# Use this to anchor the PhotoImage object
         make_icon_window(self, fetchmail_gif)
 #	self.grab_set()
@@ -1362,11 +1362,11 @@ return to the main panel.
 
     def novice(self):
 	self.destroy()
-	ConfigurationEdit(Fetchmailrc, self.outfile).edit('novice')
+	ConfigurationEdit(Fetchmailrc, self.outfile, Toplevel()).edit('novice')
 
     def expert(self):
 	self.destroy()
-	ConfigurationEdit(Fetchmailrc, self.outfile).edit('expert')
+	ConfigurationEdit(Fetchmailrc, self.outfile, Toplevel()).edit('expert')
 
     def leave(self):
         self.parent.configuration_active = 0
@@ -1392,9 +1392,9 @@ class RunWindow(Frame):
 	scroll = Scrollbar(textframe)
 	self.textwidget = Text(textframe, setgrid=TRUE)
 	textframe.pack(side=TOP, expand=YES, fill=BOTH)
-	self.textwidget.config(yscrollcommand=scroll.set, relief=SUNKEN)
+	self.textwidget.config(yscrollcommand=scroll.set)
 	self.textwidget.pack(side=LEFT, expand=YES, fill=BOTH)
-	scroll.config(command=self.textwidget.yview, relief=SUNKEN)
+	scroll.config(command=self.textwidget.yview)
 	scroll.pack(side=RIGHT, fill=BOTH)
         textframe.pack(side=TOP)
 
