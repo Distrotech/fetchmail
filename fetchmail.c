@@ -324,7 +324,7 @@ int main(int argc, char **argv)
     {
 	if (ctl->active && !(implicitmode && ctl->server.skip)&&!ctl->password)
 	{
-	    if (ctl->server.preauthenticate > A_PASSWORD || ctl->server.protocol < P_ETRN)
+	    if (ctl->server.preauthenticate > A_PASSWORD || ctl->server.protocol >= P_ETRN)
 		/* Server won't care what the password is, but there
 		   must be some non-null string here.  */
 		ctl->password = ctl->remotename;
