@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.4\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2004-10-20 14:41+0200\n"
+"POT-Creation-Date: 2004-10-20 15:06+0200\n"
 "PO-Revision-Date: 2003-08-15 01:25-0300\n"
 "Last-Translator: Javier Kohen <jkohen@users.sourceforge.net>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -2841,10 +2841,6 @@ msgstr "Borrando el archivo fetchids.\n"
 msgid "Writing fetchids file.\n"
 msgstr "Escribiendo el archivo fetchids.\n"
 
-#: xalloca.c:44
-msgid "alloca failed\n"
-msgstr "alloca falló\n"
-
 #: xmalloc.c:33
 msgid "malloc failed\n"
 msgstr "malloc falló\n"
@@ -2852,6 +2848,9 @@ msgstr "malloc falló\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "realloc falló\n"
+
+#~ msgid "alloca failed\n"
+#~ msgstr "alloca falló\n"
 
 #~ msgid "messages"
 #~ msgstr "mensajes"
