@@ -45,9 +45,9 @@ EOF
 			else
 			    # Label under curve hanging left, arrow up
 			    arrowhead=$((lasttotal-5))
-			    # This is a crock...
-			    lablen=475
-			    echo "set label '$legend' at $lastday-$lablen, $endy-15"
+			    strlen=`python -c "print len('$legend')"`
+			    lablen=$((strlen*22))
+			    echo "set label '$legend' at $lastday-$lablen+10, $endy-15"
 			fi
 			echo set arrow \
 				from $lastday, $endy \
