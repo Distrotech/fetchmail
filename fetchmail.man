@@ -516,9 +516,12 @@ circumstance under which fetchmail ever discards mail.
 .SH THE RUN CONTROL FILE
 The preferred way to set up fetchmail (and the only way if you want to
 avoid specifying passwords each time it runs) is to write a
-\&\fI.fetchmailrc\fR file in your home directory.  To protect the security
-of your passwords, your \fI~/.fetchmailrc\fR may not have more than
-600 (u=rw,g=,o=) permissions;
+\&\fI.fetchmailrc\fR file in your home directory.  When there is a
+conflict between the command-line arguments and the arguments in this
+file, the command-line arguments take precedence.
+.PP
+To protect the security of your passwords, your \fI~/.fetchmailrc\fR
+may not have more than 600 (u=rw,g=,o=) permissions;
 .I fetchmail
 will complain and exit otherwise.
 .PP
@@ -528,17 +531,20 @@ be executed when
 is called with no arguments.
 .PP
 Comments begin with a '#' and extend through the end of the line.
-Otherwise the file consists of a series of free-format server entries
-or global option statement.
+Otherwise the file consists of a series of server entries or global
+option statements in a free-format, token-oriented syntax.
 .PP
-Any amount of whitespace separates keywords, tokens, or strings in
-server entries, but is otherwise ignored (except that whitespace
-enclosed in double quotes is treated as part of the string).  Keywords
-and identifiers are case sensitive.  You may use standard C-style
-escapes (\en, \et, \eb, octal, and hex) to embed non-printable
-characters or string delimiters in strings.  When there is a conflict
-between the command-line arguments and the arguments in this file, the
-command-line arguments take precedence.
+There are four kinds of tokens: grammar keywords, numbers
+(i.e. decimal digit sequences), unquoted strings, and quoted strings.
+A quoted string is bounded by double quotes and may contain
+whitespace (and quoted digits are treated as a string).  An unquoted
+string is any whitespace-delimited token that is neither numeric, string
+quoted nor contains the special characters `,', `;', `:', or `='.
+.PP
+Any amount of whitespace separates tokens in server entries, but is
+otherwise ignored. You may use standard C-style escapes (\en, \et,
+\eb, octal, and hex) to embed non-printable characters or string
+delimiters in strings.
 .PP
 Each server entry consists of one of the keywords `poll' or `skip',
 followed by a server name, followed by server options, followed by any
