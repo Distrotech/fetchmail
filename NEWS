@@ -14,6 +14,7 @@ fetchmail-5.1.0 ():
 * Fix yet another annoying qmail \n bug (thanks to Paul Gilmore).
 * There is now a documented return code 13 for termination on fetchlimit.
 * Added qpopper 2.53 warning to the FAQ and fetchmailconf.
+* Fix fetchmailconf to handle window-manager destroy notifications.
 
 There are 260 people on fetchmail-friends and 387 on fetchmail-announce.
 

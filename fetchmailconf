@@ -647,6 +647,7 @@ class ConfigurationEdit(Frame, MyWidget):
 	Frame.__init__(self, self.container)
 	self.master.title('fetchmail ' + self.mode + ' configurator');
 	self.master.iconname('fetchmail ' + self.mode + ' configurator');
+        self.master.protocol('WM_DELETE_WINDOW', self.nosave)
         self.keepalive = []	# Use this to anchor the PhotoImage object
         make_icon_window(self, fetchmail_gif)
 	Pack.config(self)
@@ -1431,8 +1432,6 @@ Or you can just select `Quit' to leave the configurator now and
 return to the main panel.
 """, width=600).pack(side=TOP)
 	Button(self, text='Quit', fg='blue', command=self.leave).pack()
-
-        # FIXME: This should intercept window-destruction requests.
         master.protocol("WM_DELETE_WINDOW", self.leave)
 
     def novice(self):
