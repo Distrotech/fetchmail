@@ -2197,15 +2197,20 @@ const struct method *proto;	/* protocol method table */
 		break;
 	    if (ok != PS_LOCKBUSY)
 		lockouts = 0;
-
-	    /*
-	     * Allow time for the server lock to release.  if we don't
-	     * do this, we'll often hit a locked-mailbox condition and fail.
-	     */
-	    sleep(3);
+	    else if (lockouts >= MAX_LOCKOUTS)
+		break;
+	    else /* ok == PS_LOCKBUSY */
+	    {
+		/*
+		 * Allow time for the server lock to release.  if we
+		 * don't do this, we'll often hit a locked-mailbox
+		 * condition and fail.
+		 */
+		lockouts++;
+		sleep(3);
+	    }
 	} while
-	    (ok == PS_MAXFETCH
-		|| (ok == PS_LOCKBUSY && lockouts++ < MAX_LOCKOUTS));
+	    (ok == PS_MAXFETCH || ok == PS_LOCKBUSY);
 
 	return(ok);
     }
