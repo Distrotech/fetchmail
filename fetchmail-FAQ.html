@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/09/30 00:04:01 $
+<td width="30%" align=right>$Date: 2000/10/08 14:34:19 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1066,12 +1066,10 @@ your site.&nbsp; To fix even that problem, you might want to try the
 following hack, which is however untested and quite experimental:<P>
 
 <PRE>
-H?l?Delivered-To: $u
+H?J?Delivered-To: $u
 
-Mmdrop,	P=/usr/bin/procmail, 
-	F=lsDFMqSPfhnu9, 
-	S=EnvFromSMTP/HdrFromSMTP, 
-	R=EnvToSMTP/HdrToSMTP,
+Mmdrop,	P=/usr/bin/procmail, F=lsDFMqSPfhnu9J, 
+	S=EnvFromSMTP/HdrFromSMTP, R=EnvToSMTP/HdrToSMTP,
 	T=DNS/RFC822/X-Unix,
 	A=procmail -Y -a $u -d $h
 </PRE>
@@ -1082,10 +1080,17 @@ with RELAY permission into your access file and to add a line
 reading `<CODE>domain.com local:local-pop-user</CODE>' for the first and 
 `<CODE>domain.com mdrop:local-pop-user</CODE>' for the second hack to your 
 mailertable.<P>
-    
+
+You will notice that if the mail already has a Delivered-To header, 
+sendmail will not add another.&nbsp; Further, editing sendmail.cf 
+directly is not very comfortable.&nbsp; Solutions for both problems
+can be found in Peter `Rattacresh' Backes' `hybrid' patch against 
+sendmail.&nbsp; Have a look at it, you can find it in the contrib 
+subdirectory.<P>
+
 Feel free to try Martijn Lievaart's detailed recipe in the contrib 
 subdirectory of the fetchmail source distribution, it attempts
-to address this problem with an external script.<P>
+to realize multidrop mailboxes with an external script.<P>
 
 <hr>
 <h2><a name="T2">T2. How can I use fetchmail with qmail?</a></h2>
@@ -2914,7 +2919,7 @@ install Linux on your server...<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/09/30 00:04:01 $
+<td width="30%" align=right>$Date: 2000/10/08 14:34:19 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

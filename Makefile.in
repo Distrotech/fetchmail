@@ -52,6 +52,8 @@ EXTRASRC = @EXTRASRC@
 EXTRAOBJ = @EXTRAOBJ@
 # EXTRAOBJ = strcasecmp.o getopt.o getopt1.o alloca.o
 
+DESTDIR = 
+
 # Common prefix for machine-independent installed files.
 prefix = @prefix@
 # Common prefix for machine-dependent installed files.
@@ -148,21 +150,21 @@ tags: $(tagsrcs)
 .PHONY: install uninstall
 install:
 	@echo "Creating installation directories..." 
-	$(SHELL) ${srcdir}/mkinstalldirs $(bindir) $(mandir)
+	$(SHELL) ${srcdir}/mkinstalldirs $(DESTDIR)$(bindir) $(DESTDIR)$(mandir)
 	@echo "Installing fetchmail binary..."
-	$(INSTALL_PROGRAM) ./fetchmail $(bindir)/fetchmail
+	$(INSTALL_PROGRAM) ./fetchmail $(DESTDIR)$(bindir)/fetchmail
 	@echo "Installing fetchmail configurator..."
-	$(INSTALL_PROGRAM) ${srcdir}/fetchmailconf $(bindir)/fetchmailconf
+	$(INSTALL_PROGRAM) ${srcdir}/fetchmailconf $(DESTDIR)$(bindir)/fetchmailconf
 	@echo "Installing manual page..."
-	$(INSTALL_DATA) $(srcdir)/fetchmail.man $(mandir)/fetchmail.$(manext)
-	rm -f $(mandir)/fetchmailconf.$(manext)
-	ln -s $(mandir)/fetchmail.$(manext) $(mandir)/fetchmailconf.$(manext)
+	$(INSTALL_DATA) $(srcdir)/fetchmail.man $(DESTDIR)$(mandir)/fetchmail.$(manext)
+	rm -f $(DESTDIR)$(mandir)/fetchmailconf.$(manext)
+	cd $(DESTDIR)$(mandir) && ln -s fetchmail.$(manext) fetchmailconf.$(manext)
 	@echo "Installing language catalogs..."
 	@POMAKE@ install
 
 uninstall:
-	rm -f $(bindir)/fetchmail $(bindir)/fetchmailconf
-	rm -f $(mandir)/fetchmail.$(manext) $(mandir)/fetchmailconf.$(manext)
+	rm -f $(DESTDIR)$(bindir)/fetchmail $(DESTDIR)$(bindir)/fetchmailconf
+	rm -f $(DESTDIR)$(mandir)/fetchmail.$(manext) $(DESTDIR)$(mandir)/fetchmailconf.$(manext)
 	@POMAKE@ uninstall
 
 .PHONY: clean realclean distclean mostlyclean

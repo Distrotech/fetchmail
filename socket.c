@@ -119,6 +119,12 @@ static int handle_plugin(const char *host,
 {
     int fds[2];
     char *const *argvec;
+
+    /*
+     * The author of this code, Felix von Leitner <felix@convergence.de>, says:
+     * he chose socketpair() instead of pipe() because socketpair creates 
+     * bidirectional sockets while allegedly some pipe() implementations don't.
+     */
     if (socketpair(AF_UNIX,SOCK_STREAM,0,fds))
     {
 	report(stderr, _("fetchmail: socketpair failed\n"));
@@ -141,7 +147,7 @@ static int handle_plugin(const char *host,
 		/* fds[0] is now connected to 0 and 1; close it */
 		(void) close(fds[0]);
 		if (outlevel >= O_VERBOSE)
-		    report(stderr, _("running %s %s %s\n"), plugin, host, service);
+		    report(stderr, _("running %s (host %s service %s)\n"), plugin, host, service);
 		argvec = (char *const *)parse_plugin(plugin,host,service);
 		execvp(*argvec, argvec);
 		report(stderr, _("execvp(%s) failed\n"), *argvec);
@@ -620,10 +626,10 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx )
 				*str_ptr = '\0';
 			}
 			if (outlevel == O_VERBOSE)
-				report(stdout, "Issuer Organization: %s\n", cbuf );
+				report(stdout, _("Issuer Organization: %s\n"), cbuf );
 		} else {
 			if (outlevel == O_VERBOSE)
-				report(stdout, "Unknown Organization\n", cbuf );
+				report(stdout, _("Unknown Organization\n"), cbuf );
 		}
 		if( ( str_ptr = strstr( ibuf, "/CN=" ) ) ) {
 			str_ptr += 4;
@@ -632,10 +638,10 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx )
 				*str_ptr = '\0';
 			}
 			if (outlevel == O_VERBOSE)
-				report(stdout, "Issuer CommonName: %s\n", cbuf );
+				report(stdout, _("Issuer CommonName: %s\n"), cbuf );
 		} else {
 			if (outlevel == O_VERBOSE)
-				report(stdout, "Unknown Issuer CommonName\n", cbuf );
+				report(stdout, _("Unknown Issuer CommonName\n"), cbuf );
 		}
 		if( ( str_ptr = strstr( buf, "/CN=" ) ) ) {
 			str_ptr += 4;
@@ -644,17 +650,17 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx )
 				*str_ptr = '\0';
 			}
 			if (outlevel == O_VERBOSE)
-				report(stdout, "Server CommonName: %s\n", cbuf );
+				report(stdout, _("Server CommonName: %s\n"), cbuf );
 			/* Should we have some wildcarding here? */
 			if ( NULL != _ssl_server_cname
 			     && 0 != strcasecmp( cbuf, _ssl_server_cname ) ) {
 				report(stdout,
-				       "Server CommonName mismatch: %s != %s\n",
+				       _("Server CommonName mismatch: %s != %s\n"),
 				       cbuf, _ssl_server_cname );
 			}
 		} else {
 			if (outlevel == O_VERBOSE)
-				report(stdout, "Unknown Server CommonName\n", cbuf );
+				report(stdout, _("Unknown Server CommonName\n"), cbuf );
 		}
 	}
 
@@ -689,7 +695,7 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *servercname )
 	SSLeay_add_ssl_algorithms();
 	
 	if( sock < 0 || sock > FD_SETSIZE ) {
-		report(stderr, "File descriptor out of range for SSL" );
+		report(stderr, _("File descriptor out of range for SSL") );
 		return( -1 );
 	}
 

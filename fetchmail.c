@@ -102,7 +102,7 @@ static void unlockit(void)
 	unlink(lockfile);
 }
 
-#ifdef __FreeBSD__
+#if defined(__FreeBSD__) && defined(__FreeBSD_USE_KVM)
 /* drop SGID kmem privileage until we need it */
 static void dropprivs(void)
 {
@@ -152,7 +152,7 @@ int main(int argc, char **argv)
     pid_t pid;
     int lastsig = 0;
 
-#ifdef __FreeBSD__
+#if defined(__FreeBSD__) && defined(__FreeBSD_USE_KVM)
     dropprivs();
 #endif
 
@@ -1146,8 +1146,7 @@ static int load_params(int argc, char **argv, int optind)
 		/* prevent core dump from ill-formed or duplicate entry */
 		if (!leadname)
 		{
-		    report(stderr, 
-			   _("Lead server has no name.\n"));
+		    report(stderr, _("Lead server has no name.\n"));
 		    exit(PS_SYNTAX);
 		}
 
@@ -1168,7 +1167,8 @@ static int load_params(int argc, char **argv, int optind)
 		    report(stderr,
 			  _("couldn't find canonical DNS name of %s\n"),
 			  ctl->server.pollname);
-		    ctl->active = FALSE;
+		    ctl->server.truename = xstrdup(ctl->server.queryname);
+		    ctl->server.trueaddr = NULL;
 		}
 		else
 		    ctl->server.truename=xstrdup((char *)namerec->h_name);

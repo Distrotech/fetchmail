@@ -33,12 +33,18 @@
 #include <arpa/inet.h>
 #include <net/if.h>
 #if defined(__FreeBSD__)
-#if __FreeBSD_version >= 300001
-#include <net/if_var.h>
+#if defined __FreeBSD_USE_KVM
+    #if __FreeBSD_version >= 300001
+	#include <net/if_var.h>
+    #endif
+    #include <kvm.h>
+    #include <nlist.h>
+    #include <sys/fcntl.h>
+#else
+    #include <sys/sysctl.h>
+    #include <net/route.h>
+    #include <net/if_dl.h>
 #endif
-#include <kvm.h>
-#include <nlist.h>
-#include <sys/fcntl.h>
 #endif
 #include "config.h"
 #include "fetchmail.h"
@@ -181,6 +187,8 @@ static int get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
 }
 
 #elif defined __FreeBSD__
+
+#if defined __FreeBSD_USE_KVM
 
 static kvm_t *kvmfd;
 static struct nlist symbols[] = 
@@ -326,6 +334,215 @@ get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
 	
 	return 0;
 }
+
+#else /* Do not use KVM on FreeBSD */
+
+/*
+ * Expand the compacted form of addresses as returned via the
+ * configuration read via sysctl().
+ */
+
+static void
+rt_xaddrs(caddr_t cp, caddr_t cplim, struct rt_addrinfo *rtinfo)
+{
+    struct sockaddr *sa;
+    int i;
+
+#define ROUNDUP(a) \
+	((a) > 0 ? (1 + (((a) - 1) | (sizeof(long) - 1))) : sizeof(long))
+#define ADVANCE(x, n) (x += ROUNDUP((n)->sa_len))
+
+    memset(rtinfo->rti_info, 0, sizeof(rtinfo->rti_info));
+    for (i = 0; (i < RTAX_MAX) && (cp < cplim); i++) {
+	if ((rtinfo->rti_addrs & (1 << i)) == 0)
+	    continue;
+	rtinfo->rti_info[i] = sa = (struct sockaddr *)cp;
+	ADVANCE(cp, sa);
+    }
+
+#undef ROUNDUP
+#undef ADVANCE
+}
+
+static int
+get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
+{
+    uint		i;
+    int			rc = 0;
+    int			ifindex = -1;
+    size_t		needed;
+    char		*buf = NULL;
+    char		*lim = NULL;
+    char		*next = NULL;
+    struct if_msghdr 	*ifm;
+    struct ifa_msghdr 	*ifam;
+    struct sockaddr_in 	*sin;
+    struct sockaddr_dl 	*sdl;
+    struct rt_addrinfo 	info;
+    char		iname[16];
+    int			mib[6];
+
+    memset(ifinfo, 0, sizeof(ifinfo));
+
+    /* trim interface name */
+
+    for (i = 0; i < sizeof(iname) && ifname[i] && ifname[i] != '/'; i++)
+	iname[i] = ifname[i];
+	
+    if (i == 0 || i == sizeof(iname))
+    {
+	report(stderr, _("Unable to parse interface name from %s"), ifname);
+	return 0;
+    }
+
+    iname[i] = 0;
+
+
+    /* get list of existing interfaces */
+
+    mib[0] = CTL_NET;
+    mib[1] = PF_ROUTE;
+    mib[2] = 0;
+    mib[3] = AF_INET;		/* Only IP addresses please. */
+    mib[4] = NET_RT_IFLIST;
+    mib[5] = 0;			/* List all interfaces. */
+
+
+    /* Get interface data. */
+
+    if (sysctl(mib, 6, NULL, &needed, NULL, 0) == -1)
+    {
+ 	report(stderr, 
+	    _("get_ifinfo: sysctl (iflist estimate) failed"));
+	exit(1);
+    }
+    if ((buf = malloc(needed)) == NULL)
+    {
+ 	report(stderr, 
+	    _("get_ifinfo: malloc failed"));
+	exit(1);
+    }
+    if (sysctl(mib, 6, buf, &needed, NULL, 0) == -1)
+    {
+ 	report(stderr, 
+	    _("get_ifinfo: sysctl (iflist) failed"));
+	exit(1);
+    }
+
+    lim = buf+needed;
+
+
+    /* first look for the interface information */
+
+    next = buf;
+    while (next < lim)
+    {
+	ifm = (struct if_msghdr *)next;
+	next += ifm->ifm_msglen;
+
+	if (ifm->ifm_version != RTM_VERSION) 
+	{
+ 	    report(stderr, 
+		_("Routing message version %d not understood."),
+		ifm->ifm_version);
+	    exit(1);
+	}
+
+	if (ifm->ifm_type == RTM_IFINFO)
+	{
+	    sdl = (struct sockaddr_dl *)(ifm + 1);
+
+	    if (!(strlen(iname) == sdl->sdl_nlen 
+		&& strncmp(iname, sdl->sdl_data, sdl->sdl_nlen) == 0))
+	    {
+		continue;
+	    }
+
+	    if ( !(ifm->ifm_flags & IFF_UP) )
+	    {
+		/* the interface is down */
+		goto get_ifinfo_end;
+	    }
+
+	    ifindex = ifm->ifm_index;
+	    ifinfo->rx_packets = ifm->ifm_data.ifi_ipackets;
+	    ifinfo->tx_packets = ifm->ifm_data.ifi_opackets;
+
+	    break;
+	}
+    }
+
+    if (ifindex < 0)
+    {
+	/* we did not find an interface with a matching name */
+	report(stderr, _("No interface found with name %s"), iname);
+	goto get_ifinfo_end;
+    }
+
+    /* now look for the interface's IP address */
+
+    next = buf;
+    while (next < lim)
+    {
+	ifam = (struct ifa_msghdr *)next;
+	next += ifam->ifam_msglen;
+
+	if (ifindex > 0
+	    && ifam->ifam_type == RTM_NEWADDR
+	    && ifam->ifam_index == ifindex)
+	{
+	    /* Expand the compacted addresses */
+	    info.rti_addrs = ifam->ifam_addrs;
+	    rt_xaddrs((char *)(ifam + 1), 
+			ifam->ifam_msglen + (char *)ifam,
+	  		&info);
+
+	    /* Check for IPv4 address information only */
+	    if (info.rti_info[RTAX_IFA]->sa_family != AF_INET)
+	    {
+		continue;
+	    }
+
+	    rc = 1;
+
+	    sin = (struct sockaddr_in *)info.rti_info[RTAX_IFA];
+	    if (sin)
+	    {
+		ifinfo->addr = sin->sin_addr;
+	    }
+
+	    sin = (struct sockaddr_in *)info.rti_info[RTAX_NETMASK];
+	    if (!sin)
+	    {
+		ifinfo->netmask = sin->sin_addr;
+	    }
+
+	    /* note: RTAX_BRD contains the address at the other
+	     * end of a point-to-point link or the broadcast address
+	     * of non point-to-point link
+	     */
+	    sin = (struct sockaddr_in *)info.rti_info[RTAX_BRD];
+	    if (!sin)
+	    {
+		ifinfo->dstaddr = sin->sin_addr;
+	    }
+
+	    break;
+	}
+    }
+
+    if (rc == 0)
+    {
+	report(stderr, _("No IP address found for %s"), iname);
+    }
+
+get_ifinfo_end:
+    free(buf);
+    return rc;
+}
+
+#endif /* __FREEBSD_USE_SYSCTL_GET_IFFINFO */
+
 #endif /* defined __FreeBSD__ */
 
 

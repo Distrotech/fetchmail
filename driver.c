@@ -434,7 +434,7 @@ static int readheaders(int sock,
     int			from_offs, reply_to_offs, resent_from_offs;
     int			app_from_offs, sender_offs, resent_sender_offs;
     int			env_offs;
-    char		*received_for, *rcv, *cp;
+    char		*received_for, *rcv, *cp, *delivered_to;
     int 		n, linelen, oldlen, ch, remaining, skipcount;
     struct idlist 	*idp;
     flag		no_local_matches = FALSE;
@@ -458,7 +458,7 @@ static int readheaders(int sock,
     if (msgblk.headers)
        free(msgblk.headers);
 
-    msgblk.headers = received_for = NULL;
+    msgblk.headers = received_for = delivered_to = NULL;
     from_offs = reply_to_offs = resent_from_offs = app_from_offs = 
 	sender_offs = resent_sender_offs = env_offs = -1;
     oldlen = 0;
@@ -656,7 +656,8 @@ static int readheaders(int sock,
 	 * Should be controlled by an option
 	 */
 	if (ctl->dropdelivered && !strncasecmp(line, "Delivered-To:", 13)) {
-	  free(line);
+      if (delivered_to) free(line);
+      else delivered_to = line;
 	  continue;
 	}
 
@@ -924,6 +925,12 @@ static int readheaders(int sock,
 #endif /* SDPS_ENABLE */ 
 	if (env_offs > -1)	    /* We have the actual envelope addressee */
 	    find_server_names(msgblk.headers + env_offs, ctl, &msgblk.recipients);
+	else if (delivered_to && ctl->server.envelope != STRING_DISABLED &&
+      ctl->server.envelope && !strcasecmp(ctl->server.envelope, "Delivered-To"))
+   {
+	    find_server_names(delivered_to, ctl, &msgblk.recipients);
+       free(delivered_to);
+   }
 	else if (received_for)
 	    /*
 	     * We have the Received for addressee.  

@@ -2,6 +2,17 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Fall back on the computed queryname if we need the DNS name of a a host
+  and can't get it. Resolves Debian bug #69199.
+* Andrej Borsenkow's fix for configuration with new SOCKS.
+* Pavel Roskin's fix to build the RPM without libcrypto (Red Hat changed
+  the library name to libk5crypto in 6.2).
+* Peter Backes's sm-hybrid patch added to contrib; more FAQ item T1 changes. 
+* Emiliano's patch to make dropdelivered and envelope interact properly.
+* In fetchmailconf, always reset the port number when changing protocols.
+* Patrick Bihan-Faou's changes to use sysctl() for interface checking
+  so fetchmail doesn't have to be suid kmem.
+
 fetchmail-5.5.3 (Tue Sep 26 17:56:32 EDT 2000), 19278 lines:
 
 * Added skip size reporting as suggested by Franck Pommereau.
@@ -13,7 +24,7 @@ There are 280 people on fetchmail-friends and 557 on fetchmail-announce.
 
 fetchmail-5.5.2 (Thu Sep  7 23:00:24 EDT 2000), 19243 lines:
 
-* Horst Von Brand's security and specfile patches.
+* Horst von Brand's security and specfile patches.
 * Major changes to FAQ item T1.
 * Minor correction to FAQ item K3 by Malte Kiesel.
 * Added to FAQ R1, on enabling sendmail in RH 6.9.

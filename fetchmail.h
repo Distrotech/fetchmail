@@ -496,7 +496,15 @@ char *xstrdup(const char *);
  #pragma alloca
 #endif
 #endif
-#define	xalloca(ptr, t, n)	if (!(ptr = (t) alloca(n))) {report(stderr, "alloca failed"); exit(PS_UNDEFINED);}
+#define	xalloca(ptr, t, n)	if (!(ptr = (t) alloca(n)))\
+       {report(stderr, _("alloca failed")); exit(PS_UNDEFINED);}
+#if FALSE
+/*
+ * This is a hack to help xgettext which cannot find strings in
+ * macro definitions like the one for xalloca above.
+ */
+static char *dummy = gettext_noop("alloca failed");
+#endif
 
 /* protocol driver and methods */
 int do_protocol(struct query *, const struct method *);

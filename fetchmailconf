@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.28"
+version = "1.29"
 
 from Tkinter import *
 from Dialog import *
@@ -969,8 +969,13 @@ class ServerEdit(Frame, MyWidget):
 
     def refreshPort(self):
 	proto = self.protocol.get()
-        if self.port.get() == 0:
-            self.port.set(defaultports[proto])
+        # We used to only reset the port if it had a default (zero) value.
+        # This turns out to be a bad idea especially in Novice mode -- if
+        # you set POP3 and then set IMAP, the port invisibly remained 110.
+        # Now we reset unconditionally on the theory that if you're setting
+        # a custom port number you should be in expert mode and playing
+        # close enough attention to notice this...
+        self.port.set(defaultports[proto])
 	if not proto in ("POP3", "APOP", "KPOP"): self.uidl.state = DISABLED 
 
     def user_edit(self, username, mode):

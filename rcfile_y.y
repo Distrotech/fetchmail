@@ -27,7 +27,8 @@
 #endif /* NET_SECURITY */
 
 #include "fetchmail.h"
-
+#include "i18n.h"
+  
 /* parser reads these */
 char *rcfile;			/* path name of rc file */
 struct query cmd_opts;		/* where to put command-line info */
@@ -107,7 +108,7 @@ statement	: SET LOGFILE optmap STRING	{run.logfile = xstrdup($4);}
 
 /* detect and complain about the most common user error */
 		| define_server serverspecs userspecs serv_option
-			{yyerror("server option after user options");}
+			{yyerror(_("server option after user options"));}
 		;
 
 define_server	: POLL STRING		{reset_server($2, FALSE);}
@@ -151,7 +152,7 @@ serv_option	: AKA alias_list
 					    current.server.protocol = P_POP3;
 					    current.server.sdps = TRUE;
 #else
-					    yyerror("SDPS not enabled.");
+					    yyerror(_("SDPS not enabled."));
 #endif /* SDPS_ENABLE */
 					}
 		| UIDL			{current.server.uidl = FLAG_TRUE;}
@@ -207,27 +208,27 @@ serv_option	: AKA alias_list
 					    int requestlen;
 
 		    			    if (net_security_strtorequest($2, &request, &requestlen))
-						yyerror("invalid security request");
+						yyerror(_("invalid security request"));
 					    else {
 						current.server.netsec = xstrdup($2);
 					        free(request);
 					    }
 #else
-					    yyerror("network-security support disabled");
+					    yyerror(_("network-security support disabled"));
 #endif /* NET_SECURITY */
 					}
 		| INTERFACE STRING	{
 #if (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__)
 					interface_parse($2, &current.server);
 #else /* (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__) */
-					fprintf(stderr, "fetchmail: interface option is only supported under Linux and FreeBSD\n");
+					fprintf(stderr, _("fetchmail: interface option is only supported under Linux and FreeBSD\n"));
 #endif /* (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__) */
 					}
 		| MONITOR STRING	{
 #if (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__)
 					current.server.monitor = xstrdup($2);
 #else /* (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__) */
-					fprintf(stderr, "fetchmail: monitor option is only supported under Linux\n");
+					fprintf(stderr, _("fetchmail: monitor option is only supported under Linux\n"));
 #endif /* (defined(linux) && !defined(INET6_ENABLE) || defined(__FreeBSD__)) */
 					}
 		| PLUGIN STRING		{ current.server.plugin = xstrdup($2); }
@@ -366,8 +367,8 @@ static struct query *hosttail;	/* where to add new elements */
 void yyerror (const char *s)
 /* report a syntax error */
 {
-    report_at_line(stderr, 0, rcfile, prc_lineno, "%s at %s", s, 
-		   (yytext && yytext[0]) ? yytext : "end of input");
+    report_at_line(stderr, 0, rcfile, prc_lineno, _("%s at %s"), s, 
+		   (yytext && yytext[0]) ? yytext : _("end of input"));
     prc_errflag++;
 }
 
@@ -404,14 +405,14 @@ int prc_filecheck(const char *pathname, const flag securecheck)
 
     if ((statbuf.st_mode & S_IFLNK) == S_IFLNK)
     {
-	fprintf(stderr, "File %s must not be a symbolic link.\n", pathname);
+	fprintf(stderr, _("File %s must not be a symbolic link.\n"), pathname);
 	return(PS_IOERR);
     }
 
 #ifndef __BEOS__
     if (statbuf.st_mode & ~(S_IFREG | S_IREAD | S_IWRITE | S_IEXEC | S_IXGRP))
     {
-	fprintf(stderr, "File %s must have no more than -rwx--x--- (0710) permissions.\n", 
+	fprintf(stderr, _("File %s must have no more than -rwx--x--- (0710) permissions.\n"), 
 		pathname);
 	return(PS_IOERR);
     }
@@ -423,7 +424,7 @@ int prc_filecheck(const char *pathname, const flag securecheck)
     if (statbuf.st_uid != getuid())
 #endif /* HAVE_GETEUID */
     {
-	fprintf(stderr, "File %s must be owned by you.\n", pathname);
+	fprintf(stderr, _("File %s must be owned by you.\n"), pathname);
 	return(PS_IOERR);
     }
 #endif

@@ -507,13 +507,15 @@ then
     if test "$with_socks5" != yes
     then
         LDEFLAGS="$LDEFLAGS -L$with_socks5"
-    else
-        AC_CHECK_LIB(socks5, SOCKSconnect,,
-               AC_MSG_ERROR([could not find libsocks5 which is needed for built-in SOCKS5 support]))
     fi
+    ac_savedLDFLAGS="$LDFLAGS"
+    LDFLAGS="$LDEFLAGS $LDFLAGS"
+    AC_CHECK_LIB(socks5, SOCKSconnect,,
+       AC_MSG_ERROR([could not find libsocks5 which is needed for built-in SOCKS5 support]))
     AC_DEFINE(HAVE_SOCKS)
-    CEFLAGS="$CEFLAGS -Dconnect=SOCKSconnect -Dgetsockname=SOCKSgetsockname -Dbind=SOCKSbind -Daccept=SOCKSaccept -Dlisten=SOCKSlisten -Dselect=SOCKSselect -Drecvfrom=SOCKSrecvfrom -Dsendto=SOCKSsendto -Drecv=SOCKSrecv -Dsend=SOCKSsend -Dread=SOCKSread -Dwrite=SOCKSwrite -Drresvport=SOCKSrresvport -Dshutdown=SOCKSshutdown -Dlisten=SOCKSlisten -Dclose=SOCKSclose -Ddup=SOCKSdup -Ddup2=SOCKSdup2 -Dfclose=SOCKSfclose -Dgethostbyname=SOCKSgethostbyname"
-    LIBS="-lsocks5 $LIBS"
+    CEFLAGS="$CEFLAGS -Dconnect=SOCKSconnect -Dgetsockname=SOCKSgetsockname -Dbind=SOCKSbind -Daccept=SOCKSaccept -Dlisten=SOCKSlisten -Dselect=SOCKSselect -Drecvfrom=SOCKSrecvfrom -Dsendto=SOCKSsendto -Drecv=SOCKSrecv -Dsend=SOCKSsend -Dread=SOCKSread -Dwrite=SOCKSwrite -Drresvport=SOCKSrresvport -Dshutdown=SOCKSshutdown -Dlisten=SOCKSlisten -Dclose=SOCKSclose -Ddup=SOCKSdup -Ddup2=SOCKSdup2 -Dgethostbyname=SOCKSgethostbyname"
+    AC_CHECK_FUNC(SOCKSfclose, [CFLAGS="$CFLAGS -Dfclose=SOCKSfclose"])
+    LDFLAGS="$ac_savedLDFLAGS"
 fi])
 
 ###	use option --with-hesiod=DIR to point at a HESIOD directory
