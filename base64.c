@@ -90,7 +90,7 @@ int from64tobits(char *out, const char *in)
 	    }
 	}
     } while 
-	(*in != '\r' && digit4 != '=');
+	(*in && *in != '\r' && digit4 != '=');
 
     return (len);
 }
