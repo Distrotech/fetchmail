@@ -1214,7 +1214,10 @@ static int readbody(int sock, struct query *ctl, flag forward, int len)
 		return(PS_IOERR);
 	    }
 	    else if (outlevel >= O_VERBOSE)
-		fputc('*', stderr);
+	    {
+		fputc('*', stdout);
+		fflush(stdout);
+	    }
 	}
     }
 

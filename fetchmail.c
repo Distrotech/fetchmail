@@ -553,6 +553,12 @@ int main(int argc, char **argv)
 	if (run.poll_interval && !getuid())
 	    signal(SIGHUP, SIG_IGN);
     }
+    else if (run.logfile)
+    {
+	freopen(run.logfile, "a", stdout);
+	freopen(run.logfile, "a", stderr);
+    }
+
 
 #ifdef linux
     interface_init();
