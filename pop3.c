@@ -5,7 +5,7 @@
  */
 
 #include  "config.h"
-
+#ifdef POP3_ENABLE
 #include  <stdio.h>
 #include  <string.h>
 #include  <ctype.h>
@@ -517,5 +517,6 @@ int doPOP3 (struct query *ctl)
     peek_capable = FALSE;
     return(do_protocol(ctl, &pop3));
 }
+#endif /* POP3_ENABLE */
 
 /* pop3.c ends here */

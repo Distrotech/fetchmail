@@ -59,6 +59,11 @@ Kerberos lives.  If your configuration doesn't match one of the four
 that fetchmail's configure.in knows about, you may find you have to
 hand-hack the Makefile a bit.
 
+It is also possible to explicitly condition out the support for
+POP3, IMAP, and ETRN (with configure arguments of --disable-POP3,
+--disable-IMAP, and --disable-ETRN respectively).  However, none
+of these wins back more that 3 to 4K on an Intel box.
+
 If you want to build for debugging, 
 
 	CFLAGS=-g LDFLAGS=" " ./configure

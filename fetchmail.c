@@ -119,9 +119,18 @@ int main (int argc, char **argv)
 #ifdef POP2_ENABLE
 	printf("+POP2");
 #endif /* POP2_ENABLE */
+#ifndef POP3_ENABLE
+	printf("-POP3");
+#endif /* POP3_ENABLE */
+#ifndef IMAP_ENABLE
+	printf("-IMAP");
+#endif /* IMAP_ENABLE */
 #ifdef RPA_ENABLE
 	printf("+RPA");
 #endif /* RPA_ENABLE */
+#ifndef ETRN_ENABLE
+	printf("-ETRN");
+#endif /* ETRN_ENABLE */
 	putchar('\n');
 
 	/* this is an attempt to help remote debugging */
@@ -423,8 +432,10 @@ int main (int argc, char **argv)
 
 		if (querystatus == PS_SUCCESS) {
 		    successes++;
+#ifdef POP3_ENABLE
 		    if (!check_only)
 		      update_str_lists(ctl);
+#endif  /* POP3_ENABLE */
 		}
 #ifdef	linux
 		if (ctl->server.monitor)
@@ -707,8 +718,10 @@ static int load_params(int argc, char **argv, int optind)
     /* initialize UID handling */
     if (!versioninfo && (st = prc_filecheck(idfile)) != 0)
 	exit(st);
+#ifdef POP3_ENABLE
     else
 	initialize_saved_lists(querylist, idfile);
+#endif /* POP3_ENABLE */
 
     /* if cmd_logfile was explicitly set, use it to override logfile */
     if (cmd_logfile)
@@ -748,8 +761,10 @@ void termhook(int sig)
 	    if (ctl->smtp_socket != -1)
 		SMTP_quit(ctl->smtp_socket);
 
+#ifdef POP3_ENABLE
     if (!check_only)
 	write_saved_lists(querylist, idfile);
+#endif /* POP3_ENABLE */
 
     /* 
      * Craig Metz, the RFC1938 one-time-password guy, points out:
@@ -776,11 +791,18 @@ void termhook(int sig)
 /*
  * Sequence of protocols to try when autoprobing, most capable to least.
  */
+static const int autoprobe[] = 
+{
+#ifdef IMAP_ENABLE
+    P_IMAP,
+#endif /* IMAP_ENABLE */
+#ifdef POP3_ENABLE
+    P_POP3,
+#endif /* POP3_ENABLE */
 #ifdef POP2_ENABLE
-static const int autoprobe[] = {P_IMAP, P_POP3, P_POP2};
-#else
-static const int autoprobe[] = {P_IMAP, P_POP3};
+    P_POP2
 #endif /* POP2_ENABLE */
+};
 
 static int query_host(struct query *ctl)
 /* perform fetch transaction with single host */
@@ -818,19 +840,34 @@ static int query_host(struct query *ctl)
     case P_POP3:
     case P_APOP:
     case P_RPOP:
+#ifdef POP3_ENABLE
 	return(doPOP3(ctl));
+#else
+	fprintf(stderr, "POP3 support is not configured.\n");
+	return(PS_PROTOCOL);
+#endif /* POP3_ENABLE */
 	break;
     case P_IMAP:
     case P_IMAP_K4:
+#ifdef IMAP_ENABLE
 	return(doIMAP(ctl));
+#else
+	fprintf(stderr, "IMAP support is not configured.\n");
+	return(PS_PROTOCOL);
+#endif /* IMAP_ENABLE */
 	break;
     case P_ETRN:
+#ifndef ETRN_ENABLE
+	fprintf(stderr, "ETRN support is not configured.\n");
+	return(PS_PROTOCOL);
+#else
 #ifdef HAVE_GETHOSTBYNAME
 	return(doETRN(ctl));
 #else
 	fprintf(stderr, "Cannot support ETRN without gethostbyname(2).\n");
 	return(PS_PROTOCOL);
 #endif /* HAVE_GETHOSTBYNAME */
+#endif /* ETRN_ENABLE */
     default:
 	error(0, 0, "unsupported protocol selected.");
 	return(PS_PROTOCOL);

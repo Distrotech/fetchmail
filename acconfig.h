@@ -55,6 +55,15 @@
 /* Define if you want POP2 support compiled in */
 #undef POP2_ENABLE
 
+/* Define if you want POP3 support compiled in */
+#undef POP3_ENABLE
+
+/* Define if you want IMAP support compiled in */
+#undef IMAP_ENABLE
+
+/* Define if you want ETRN support compiled in */
+#undef ETRN_ENABLE
+
 /* Define if you want RPA support compiled in */
 #undef RPA_ENABLE
 

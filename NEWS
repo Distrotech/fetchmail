@@ -20,6 +20,7 @@ fetchmail-4.3.0 ()
 * Luca Olivetti's --qvirtual option patch for qmail users.  
 * Fixed a bug in the code that was supposed to suppress expansion of RFC822 
   groupnames.  (Thanks to Santiago Vila Doncel for pointing this.)
+* It's now possible to explicitly configure out POP3, IMAP, or ETRN
 
 There are 286 people on the fetchmail-friends list.
 

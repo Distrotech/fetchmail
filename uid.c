@@ -23,6 +23,9 @@
  * useful for making the IMAP4 querying logic UID-oriented, if a future
  * revision of IMAP forces me to.
  *
+ * These functions are also used by the rest of the code to maintain
+ * string lists.
+ *
  * Here's the theory:
  *
  * At start of a query, we have a (possibly empty) list of UIDs to be
@@ -60,6 +63,7 @@
 /* UIDs associated with un-queried hosts */
 static struct idlist *scratchlist;
 
+#ifdef POP3_ENABLE
 void initialize_saved_lists(struct query *hostlist, const char *idfile)
 /* read file of saved IDs and attach to each host */
 {
@@ -99,6 +103,7 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 	fclose(tmpfp);
     }
 }
+#endif /* POP3_ENABLE */
 
 struct idlist *save_str(struct idlist **idl, int num, const char *str)
 /* save a number/UID pair on the given UID list */
@@ -256,6 +261,7 @@ void append_str_list(struct idlist **idl, struct idlist **nidl)
 	append_str_list(&(*idl)->next, nidl);
 }
 
+#ifdef POP3_ENABLE
 void update_str_lists(struct query *ctl)
 /* perform end-of-query actions on UID lists */
 {
@@ -294,5 +300,6 @@ void write_saved_lists(struct query *hostlist, const char *idfile)
 	    fclose(tmpfp);
 	}
 }
+#endif /* POP3_ENABLE */
 
 /* uid.c ends here */

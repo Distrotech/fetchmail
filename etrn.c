@@ -5,6 +5,7 @@
  */
 
 #include  "config.h"
+#ifdef ETRN_ENABLE
 #include  <stdio.h>
 #include  <stdlib.h>
 #include  <assert.h>
@@ -158,5 +159,6 @@ int doETRN (struct query *ctl)
 	status = PS_SUCCESS;
     return(status);
 }
+#endif /* ETRN_ENABLE */
 
 /* etrn.c ends here */

@@ -10,7 +10,7 @@
 
 #include  "config.h"
 
-#ifdef RPA_ENABLE
+#if defined(POP3_ENABLE) && defined(RPA_ENABLE)
 #include  <stdio.h>
 #include  <unistd.h>
 #include  <ctype.h>
@@ -881,6 +881,6 @@ unsigned char*    out;
     fprintf(stderr,"\n");
     }
 }
-#endif /* RPA_ENABLE */
+#endif /* POP3_ENABLE && RPA_ENABLE */
 
 /* rpa.c ends here */

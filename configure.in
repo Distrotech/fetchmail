@@ -154,6 +154,27 @@ AC_ARG_ENABLE(POP2,
 	[with_POP2=no])
 test "$with_POP2" = "yes" && AC_DEFINE(POP2_ENABLE)
 
+###	use option --disable-POP3 to omit the POP3 support
+AC_ARG_ENABLE(POP3,
+	[  --disable-POP3       don't compile in POP3 protocol support],
+	[with_POP3=$enableval],
+	[with_POP3=yes])
+test "$with_POP3" = "yes" && AC_DEFINE(POP3_ENABLE)
+
+###	use option --disable-IMAP to omit the IMAP support
+AC_ARG_ENABLE(IMAP,
+	[  --disable-IMAP       don't compile in IMAP protocol support],
+	[with_IMAP=$enableval],
+	[with_IMAP=yes])
+test "$with_IMAP" = "yes" && AC_DEFINE(IMAP_ENABLE)
+
+###	use option --disable-ETRN to omit the ETRN support
+AC_ARG_ENABLE(ETRN,
+	[  --disable-ETRN       don't compile in ETRN protocol support],
+	[with_ETRN=$enableval],
+	[with_ETRN=yes])
+test "$with_ETRN" = "yes" && AC_DEFINE(ETRN_ENABLE)
+
 ###	use option --enable-RPA to compile in the RPA support
 AC_ARG_ENABLE(RPA,
 	[  --enable-RPA         compile in RPA protocol support],
