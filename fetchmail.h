@@ -38,7 +38,14 @@
 /* clear a netBSD kernel parameter out of the way */ 
 #undef		MSGBUFSIZE
 
-#define		MSGBUFSIZE	998   	/* RFC822 limit on message line size */
+/*
+ * The RFC822 limit on message line size is just 998.  But
+ * make this *way* oversized; idiot DOS-world mailers that
+ * don't line-wrap properly often ship entire paragraphs as
+ * lines.
+ */
+#define		MSGBUFSIZE	8192
+
 #define		PASSWORDLEN	64	/* max password length */
 #define		DIGESTLEN	33	/* length of MD5 digest */
 
