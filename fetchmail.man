@@ -273,7 +273,8 @@ This option does not work with ETRN.
 .B \-f pathname, --fetchmailrc pathname
 Specify a non-default name for the 
 .I .fetchmailrc
-run control file.
+run control file.  Unless the --version option is also on, the file must have
+permissions no more open than  0600 (u=rw,g=,o=) or else be /dev/null.
 .TP
 .B \-i pathname, --idfile pathname
 Specify an alternate name for the .fetchids file used to save POP3
@@ -547,6 +548,13 @@ will elicit an SMTP response with an error code of 571.  The
 code recognizes this error and discards the message.  This is the
 .I only
 circumstance under which fetchmail ever discards mail.
+.P
+If
+.I fetchmail
+is fetching from an IMAP server, the 571 response will be detected and
+the message rejected immediately after the headers have been fetched,
+without reading the message body.  Thus, you won't pay for downloading 
+spam message bodies.
 
 .SH THE RUN CONTROL FILE
 The preferred way to set up fetchmail (and the only way if you want to
@@ -555,8 +563,8 @@ avoid specifying passwords each time it runs) is to write a
 conflict between the command-line arguments and the arguments in this
 file, the command-line arguments take precedence.
 .PP
-To protect the security of your passwords, your \fI~/.fetchmailrc\fR
-may not have more than 600 (u=rw,g=,o=) permissions;
+To protect the security of your passwords, when --version is not on
+your \fI~/.fetchmailrc\fR may not have more than 0600 (u=rw,g=,o=) permissions;
 .I fetchmail
 will complain and exit otherwise.
 .PP
