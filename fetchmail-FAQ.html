@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/02/15 02:25:46 $
+<td width="30%" align=right>$Date: 2000/02/18 03:49:20 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -87,6 +87,7 @@ IP address?</a><br>
 <a href="#S11">S11. How can I use fetchmail with FTGate?</a><br>
 <a href="#S12">S12. How can I use fetchmail with MailMax?</a><br>
 <a href="#S13">S13. How can I use fetchmail with Novell GroupWise?</a><br>
+<a href="#S14">S14. How can I use fetchmail with InterChange?</a><br>
 
 <h1>How to set up well-known security and authentication methods:</h1>
 
@@ -1551,6 +1552,14 @@ with code as shoddy as GroupWise seems to be, you will probably pay
 for it with other problems.<p>
 
 <hr>
+<h2><a name="S14">S14. How can I use fetchmail with InterChange?</a></h2>
+
+You can't.  At least not if you want to be able to see attachments.
+InterChange has a bug similar to the MailMax server; it reports the
+message length with attachments but doesn't download them on TOP or
+RETR. <p>
+
+<hr>
 <h2><a name="K1">K1. How can I use fetchmail with SOCKS?</a></h2>
 
 Daniel Sobral &lt<a href="mailto:dcs@gns.com.br">dcs@gns.com.br</a>
@@ -2613,7 +2622,7 @@ terminate it.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/02/15 02:25:46 $
+<td width="30%" align=right>$Date: 2000/02/18 03:49:20 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
