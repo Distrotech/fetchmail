@@ -54,6 +54,7 @@ int yydebug;		/* enable parse debugging */
 int poll_interval;	/* poll interval in seconds */
 char *logfile;		/* log file for daemon mode */
 int quitmode;		/* if --quit was set */
+int check_only;		/* if --probe was set */
 
 /* miscellaneous global controls */
 char *rcfile;		/* path name of rc file */
@@ -309,10 +310,18 @@ char **argv;
     for (hostp = hostlist; hostp; hostp = hostp->next)
 	if (hostp->active && !(implicitmode && hostp->skip) && !hostp->password[0])
 	{
-	    (void) sprintf(tmpbuf, "Enter password for %s@%s: ",
-			   hostp->remotename, hostp->servername);
-	    (void) strncpy(hostp->password,
-			   (char *)getpassword(tmpbuf),PASSWORDLEN-1);
+	    if (hostp->protocol == P_KPOP)
+	      /* Server doesn't care what the password is, but there
+		 must be some non-null string here.  */
+	      (void) strncpy(hostp->password, 
+			     hostp->remotename, PASSWORDLEN-1);
+	    else
+	      {
+		(void) sprintf(tmpbuf, "Enter password for %s@%s: ",
+			       hostp->remotename, hostp->servername);
+		(void) strncpy(hostp->password,
+			       (char *)getpassword(tmpbuf),PASSWORDLEN-1);
+	      }
 	}
 
     /*
@@ -386,6 +395,7 @@ int proto;
     case P_POP3: return("POP3"); break;
     case P_IMAP: return("IMAP"); break;
     case P_APOP: return("APOP"); break;
+    case P_KPOP: return("KPOP"); break;
     default: return("unknown?!?"); break;
     }
 }
@@ -425,6 +435,7 @@ struct hostrec *queryctl;
 	break;
     case P_POP3:
     case P_APOP:
+    case P_KPOP:
 	return(doPOP3(queryctl));
 	break;
     case P_IMAP:

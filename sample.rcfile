@@ -45,6 +45,7 @@
 #   pop3 (or POP3)
 #   imap (or IMAP)
 #   apop (or APOP)
+#   kpop (or KPOP)
 #
 # Basic format is
 # server SERVERNAME protocol PROTOCOL username NAME password PASSWORD 

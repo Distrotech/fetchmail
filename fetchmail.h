@@ -17,6 +17,7 @@
 #define		P_POP3	3
 #define		P_IMAP	4
 #define		P_APOP	5
+#define		P_KPOP	6
 
 /* definitions for buffer sizes -- somewhat arbitrary */
 #define		POPBUFSIZE	512	/* per RFC 937 */
@@ -110,6 +111,7 @@ extern int yydebug;		/* enable parse debugging */
 extern int poll_interval;	/* poll interval in seconds */
 extern char *logfile;		/* log file for daemon mode */
 extern int quitmode;		/* if --quit was set */
+extern int check_only;		/* if --check was set */
 
 /* miscellaneous global controls */
 extern char *rcfile;		/* path name of rc file */

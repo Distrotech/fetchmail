@@ -37,8 +37,9 @@
 #define LA_LOGFILE	17
 #define LA_QUIT		18
 #define LA_NOREWRITE	19
-#define LA_HELP		20
-#define LA_YYDEBUG	21
+#define LA_CHECK	20
+#define LA_HELP		21
+#define LA_YYDEBUG	22
 
 static char *shortoptions = "P:p:VaKkvS:m:sFd:f:u:r:L:qN?";
 static struct option longoptions[] = {
@@ -62,6 +63,7 @@ static struct option longoptions[] = {
   {"logfile",	required_argument, (int *) 0, LA_LOGFILE    },
   {"quit",	no_argument,	   (int *) 0, LA_QUIT       },
   {"norewrite",	no_argument,	   (int *) 0, LA_NOREWRITE  },
+  {"check",	no_argument,	   (int *) 0, LA_CHECK      },
   {"help",	no_argument,	   (int *) 0, LA_HELP       },
   {"yydebug",	no_argument,	   (int *) 0, LA_YYDEBUG    },
   {(char *) 0,  no_argument,       (int *) 0, 0             }
@@ -150,6 +152,8 @@ struct hostrec *queryctl;
           queryctl->protocol = P_IMAP;
         else if (strcasecmp(optarg,"apop") == 0)
           queryctl->protocol = P_APOP;
+	else if (strcasecmp(optarg,"kpop") == 0)
+	    queryctl->protocol = P_KPOP;
         else {
           fprintf(stderr,"Invalid protocol '%s'\n specified.\n", optarg);
           errflag++;
@@ -201,6 +205,10 @@ struct hostrec *queryctl;
       case LA_NOREWRITE:
 	queryctl->norewrite = 1;
 	break;
+      case 'c':
+      case LA_CHECK:
+	check_only = 1;
+	break;
       case LA_YYDEBUG:
 	yydebug = 1;
         break;
@@ -216,7 +224,7 @@ struct hostrec *queryctl;
     fputs("usage:  fetchmail [options] [server ...]\n", stderr);
     fputs("  Options are as follows:\n",stderr);
     fputs("  -?, --help        display this option help\n", stderr);
-    fputs("  -p, --protocol    specify pop2, pop3, imap, apop\n", stderr);
+    fputs("  -p, --protocol    specify pop2, pop3, imap, apop, rpop, kpop\n", stderr);
     fputs("  -V, --version     display version info\n", stderr);
     fputs("  -a, --all         retrieve old and new messages\n", stderr);
     fputs("  -F, --flush       delete old messages from server\n", stderr);
@@ -231,6 +239,7 @@ struct hostrec *queryctl;
     fputs("  -u, --username    specify users's login on server\n", stderr);
     fputs("  -r, --remote      specify remote folder name\n", stderr);
     fputs("  -L, --logfile     specify logfile name\n", stderr);
+    fputs("  -c, --check       check for messages without retrieving\n", stderr);
     return(-1);
   }
 

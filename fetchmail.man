@@ -76,6 +76,10 @@ machine).
 POP3/IMAP only.  Delete old (previously retrieved) messages from the mailserver
 before retrieving new messages.
 .TP
+.B \-c, --check
+Return a status code to indicate whether there is mail waiting,
+without actually fetching or deleting mail (see EXIT CODES below).
+.TP
 .B \-f pathname, --fetchmailrc pathname
 Specify a non-default name for the 
 .I .fetchmailrc
@@ -110,6 +114,8 @@ Post Office Protocol 2
 Post Office Protocol 3
 .IP APOP
 Use POP3 with MD5 authentication.
+.IP KPOP
+POP3 with Kerberos authentication.
 .RE
 .TP
 .B \-P, --port
@@ -124,7 +130,7 @@ behavior when no folder is specified.
 .TP
 .B \-s, --silent
 Silent mode.  Suppresses all progress/status messages that are normally
-echoed to stderr during a fetch.  If both the 
+echoed to standard error during a fetch.  If both the 
 .B silent
 and
 .B verbose
@@ -380,6 +386,7 @@ Legal protocol identifiers are
     pop3 (or POP3)
     imap (or IMAP)
     apop (or APOP)
+    kpop (or APOP)
 .PP
 You can use the `noise' keywords \fBand\fR, \fBwith\fR,
 \fBhas\fR, \fBwants\fR, and \fBoptions\fR anywhere in an entry to make

@@ -60,6 +60,7 @@ options		{/* EMPTY */}
 (pop3)|(POP3)	{ yylval.proto = P_POP3;  return PROTO; }
 (imap)|(IMAP)	{ yylval.proto = P_IMAP;  return PROTO; }
 (apop)|(APOP)   { yylval.proto = P_APOP;  return PROTO; }
+(kpop)|(KPOP)   { yylval.proto = P_KPOP;  return PROTO; }
 
 (#.*)?\\?\n	{ prc_lineno++;	}   /* newline is ignored */
 

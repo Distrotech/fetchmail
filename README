@@ -32,6 +32,8 @@ with **.
 
 	*  **POP2, POP3, **APOP, **IMAP support.
 
+	** Support for Kerberos user authentication.
+
 	** Host is auto-probed for a working server if no protocol is
 	   specified for the connection.  Thus you don't need to know
 	   what servers are running on your mail host in advance; the

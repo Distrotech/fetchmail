@@ -32,6 +32,11 @@ features --
 
 * Linux packagers: building fetchmail now generates an RPM specfile for it.
 
+* Kerberos support via KPOP protocol (thanks to Chris Hanson).
+
+* New --check option for asking server whether there is mail without
+  actually retrieving or deleting it.
+
 bugs --
 
 * Fix buggy getopt specification of P and p options.

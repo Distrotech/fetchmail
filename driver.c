@@ -534,6 +534,15 @@ struct method *proto;
 	goto closeUp;
     }
 
+#ifdef KERBEROS_V4
+    if (queryctl->protocol == P_KPOP)
+      {
+	ok = (pop3_kerberos_auth (socket, queryctl));
+	if (ok != 0)
+	  goto cleanUp;
+      }
+#endif
+
     /* accept greeting message from mail server */
     ok = (protocol->parse_response)(socket, buf);
     if (alarmed || ok != 0)
@@ -560,7 +569,7 @@ struct method *proto;
 		    count, count > 1 ? "s" : "", 
 		    queryctl->servername);
 
-    if (count > 0)
+    if ((count > 0) && (!check_only))
     {
 	if (queryctl->mda[0] == '\0')
 	    if ((mboxfd = Socket(queryctl->smtphost, SMTP_PORT)) < 0
@@ -658,6 +667,10 @@ struct method *proto;
 	    ok = PS_SUCCESS;
 	close(socket);
 	goto closeUp;
+    }
+    else if (check_only) {
+      ok = ((count > 0) ? PS_SUCCESS : PS_NOMAIL);
+      goto closeUp;
     }
     else {
 	ok = gen_transact(socket, protocol->exit_cmd);
