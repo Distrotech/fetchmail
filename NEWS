@@ -1,5 +1,10 @@
 				Release Notes:
 
+fetchmail-4.5.4 ():
+* Fixed processing of --antispam option.
+
+There are 265 people on fetchmail-friends and 249 on fetchmail-announce.
+
 fetchmail-4.5.3 (Mon Jul 20 15:02:08 EDT 1998):
 * Minor fixes to the GSSAPI code.  Seems to work with stock UW IMAP now.
 * Fetchmail running as root now sends misaddressed multidrop mail to

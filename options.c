@@ -426,6 +426,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'Z':
 	case LA_ANTISPAM:
+	    buf = xmalloc(strlen(optarg));
 	    strcpy(buf, optarg);
 	    cp = strtok(buf, ",");
 	    do {
