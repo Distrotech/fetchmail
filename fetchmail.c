@@ -93,7 +93,7 @@ char **argv;
     int mboxfd, st, sargc;
     struct hostrec cmd_opts, def_opts;
     int parsestatus, implicitmode;
-    char *servername, *user, *tmpdir, tmpbuf[256], *sargv[64]; 
+    char *servername, *user, *tmpdir, tmpbuf[BUFSIZ], *sargv[64]; 
     FILE	*tmpfp;
     pid_t pid;
 
@@ -228,12 +228,10 @@ char **argv;
 	if (!(implicitmode && hostp->skip)
 	    && !hostp->password[0] && !hostp->rpopid[0])
 	{
-	    char prompt[BUFSIZ];
-
-	    (void) sprintf(prompt, "Enter password for %s@%s: ",
+	    (void) sprintf(tmpbuf, "Enter password for %s@%s: ",
 			   hostp->remotename, hostp->servername);
 	    (void) strncpy(hostp->password,
-			   (char *)getpassword(prompt),PASSWORDLEN-1);
+			   (char *)getpassword(tmpbuf),PASSWORDLEN-1);
 	}
 
     /*
