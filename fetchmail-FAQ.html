@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/10/17 16:24:27 $
+<td width="30%" align=right>$Date: 1998/10/20 07:45:09 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -118,7 +118,7 @@ my Received headers as it should.</a>
 <a href="#X4">X4. My mail is being mangled in a new and different way.</a><br>
 <a href="#X5">X5. Using POP3, retrievals seems to be fetching too much!</a><br>
 
-<h1>Other Problems:</h1>
+<h1>Other problems:</h1>
 
 <a href="#O1">O1. The --logfile option doesn't work if the logfile doesn't exist.</a><br>
 <a href="#O2">O2. Every time I get a POP or IMAP message the header is
@@ -1151,7 +1151,7 @@ greeting line.  If that's found, and your user ID ends with
 is RPA-capable, and if so do an RPA transaction rather than a
 plain-text password handshake.<P>
 
-<strong>Warning:</strong> the verbose output of fetchmail will show
+<strong>Warning:</strong> the debug (-v -v) output of fetchmail will show
 your pass-phrase in Unicode!<P>
 
 These two .fetchmailrc entries show the difference between an RPA and
@@ -1237,8 +1237,6 @@ you give it, they retrieve only about 10 lines of the message.
 Fetchmail normally uses TOP for message retrieval in order to avoid
 marking messages seen, but `<CODE>fetchall</CODE>' forces it to use
 RETR instead.<P>
-
-So, set the `<CODE>fetchall</CODE>' option.<P>
 
 (Note: Other failure modes have been reported on usa.net's servers.
 They seem to be chronically flaky.  We recommend finding another
@@ -1449,7 +1447,7 @@ it requires libraries from the Kerberos V distribution (available via FTP at
 but mind the export restrictions). If you have these, compiling in GSS support
 is simple: add a <pre>--with-gssapi=[/path/to/krb5/root]</pre> option to
 configure. For instance, I have all of my kerberos V libraries installed under
-/usr/krb5 so I run <pre>configure --with-gssapi=/usr/krb5</pre>.<p>
+/usr/krb5 so I run <pre>configure --with-gssapi=/usr/krb5</pre><p>
 
 Setting up Kerberos V authentication is beyond the scope of this FAQ
 (you may find Jim Rome's paper <a
@@ -1663,8 +1661,8 @@ to the server, but will mean it actually executes changes to the queue
 more often.<P>
 
 Qualcomm's qpopper, used at many BSD Unix sites, is better behaved.
-If its connection is dropped, it will first execute all DELE commands (as
-though you had issued a QUIT -- this is a technical violation of
+If its connection is dropped, it will first execute all DELE commands as
+though you had issued a QUIT (this is a technical violation of
 the POP3 RFCs, but a good idea in a world of flaky phone lines). Then it
 will re-queue any message that was being downloaded at hangup time.
 Still, qpopper may require a noticeable amount of time to do deletions
@@ -1689,7 +1687,7 @@ mailbox forever.<p>
 
 Workaround: add the `<CODE>fetchall</CODE>' keyword to your fetch options.<p>
 
-Solution: switch to an <a href="http://www.imap.org">IMAP</a> server.<p>
+Solution: switch to an <a href="http://www.imap.org">IMAP4</a> server.<p>
 
 <hr>
 <h2><a name="M1">M1. I've declared local names, but all my multidrop
@@ -1845,7 +1843,7 @@ inside pop3 server with fetchmail and sendmail 8.83<P>
 </BLOCKQUOTE>
 
 <hr>
-<h2><a href="M7">M7. Multidrop mode isn't parsing envelope addresses from
+<h2><a name="M7">M7. Multidrop mode isn't parsing envelope addresses from
 my Received headers as it should.</a></h2>
 
 It may happen that you're getting what appear to be well-formed
@@ -2184,7 +2182,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/10/17 16:24:27 $
+<td width="30%" align=right>$Date: 1998/10/20 07:45:09 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
