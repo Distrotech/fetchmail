@@ -431,6 +431,7 @@ Legal server options are:
     port
     authenticate (or auth)
     timeout
+    aka
 
 Legal user options are
 
@@ -451,7 +452,15 @@ Legal user options are
     norewrite
 .PP
 All options correspond to the obvious command-line arguments except
-three: `is', `to', and `password'
+four: `aka', `is', `to', and `password'.
+.PP
+The `aka' option is for use with multidrop mailboxes.  It allows you
+to pre-declare a list of DNS aliases for a server.  This is an
+optimization hack that allows you to trade space for speed.  When
+.IR fetchmail ,
+while processing a multidrop mailbox, grovels through message headers
+looking for names of the mailserver, pre-declaring common ones can
+save it from having to do DNS lookups.
 .PP
 The `is' or `to' keywords associate the following local (client)
 name(s) (or server-name to client-name mappings separated by =) with

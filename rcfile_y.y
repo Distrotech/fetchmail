@@ -41,7 +41,7 @@ static void prc_reset();
   char *sval;
 }
 
-%token DEFAULTS POLL SKIP PROTOCOL AUTHENTICATE TIMEOUT KPOP KERBEROS
+%token DEFAULTS POLL SKIP AKA PROTOCOL AUTHENTICATE TIMEOUT KPOP KERBEROS
 %token USERNAME PASSWORD FOLDER SMTPHOST MDA IS HERE THERE TO MAP LIMIT
 %token SET BATCHLIMIT 
 %token <proto> PROTO
@@ -86,7 +86,12 @@ serverspecs	: /* EMPTY */
 		| serverspecs serv_option
 		;
 
-serv_option	: PROTOCOL PROTO	{current.protocol = $2;}
+alias_list	: STRING		{save_uid(&current.aka, -1, $1);}
+		| alias_list STRING	{save_uid(&current.aka, -1, $2);}
+		;
+
+serv_option	: AKA alias_list
+		| PROTOCOL PROTO	{current.protocol = $2;}
 		| PROTOCOL KPOP		{
 					    current.protocol = P_POP3;
 		    			    current.authenticate = A_KERBEROS;
@@ -247,6 +252,7 @@ static void prc_reset(void)
 {
     char	savename[HOSTLEN+1];
     int		saveport, saveproto, saveauth, saveskip;
+    struct idlist *saveaka;
 
     /*
      * Purpose of this code is to initialize the new server block, but
@@ -259,6 +265,7 @@ static void prc_reset(void)
     saveproto = current.protocol;
     saveauth = current.authenticate;
     saveskip = current.skip;
+    saveaka = current.aka;
 
     memset(&current, '\0', sizeof(current));
 
@@ -266,6 +273,7 @@ static void prc_reset(void)
     current.protocol = saveproto;
     current.authenticate = saveauth;
     current.skip = saveskip;
+    current.aka = saveaka;
 }
 
 struct query *hostalloc(init)
@@ -342,7 +350,6 @@ void optmerge(struct query *h2, struct query *h1)
     FLAG_MERGE(timeout);
     FLAG_MERGE(limit);
 #undef FLAG_MERGE
-
 }
 
 /* easier to do this than cope with variations in where the library lives */

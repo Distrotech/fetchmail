@@ -25,6 +25,7 @@ defaults 	{ return DEFAULTS; }
 server 		{ return POLL; }
 poll		{ return POLL; }
 skip		{ return SKIP; }
+aka		{ return AKA; }
 proto(col)? 	{ return PROTOCOL; }
 port		{ return PORT; }
 auth(enticate)?	{ return AUTHENTICATE; }

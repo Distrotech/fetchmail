@@ -25,6 +25,7 @@
 #   port                      -- must be followed by a TCP/IP port number
 #   authenticate (or auth)    -- must be followed by an authentication type
 #   timeout                   -- must be followed by a numeric timeout value
+#   aka                       -- must be followed by one or more server aliases
 #
 #   username (or user)        -- must be followed by a name
 #   is                        -- must be followed by one or more names
