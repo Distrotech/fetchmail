@@ -109,8 +109,9 @@ This software is known to work with the qpop/popper series of freeware
 POP3 servers; also with the IMAP2bis and IMAP4 servers that are
 distributed with Pine from the University of Washington; also with the
 Cyrus IMAP server from CMU.  This covers all the servers normally
-hosted on Linux and *BSD systems.  Note that this software does *not*
-work with Microsoft Exchange, because Microsoft Exchange is broken.
+hosted on Linux and *BSD systems.  It also works with Microsoft Exchange,
+despiite the fact that Microsoft Exchange is extremely broken (returns
+incorrect message lengths in LIST responses).
 
 7. REPORTING BUGS
 

@@ -12,6 +12,10 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.2 ()
+* Driver code changed so delimited protocols don't rely on message lengths
+  being correct (this means #@!%^# brain-dead Microsoft Exchange will work).
+
 fetchmail-4.1.8 (Thu Sep 11 16:20:15 EDT 1997)
 * Fix nasty single-char-adddress bug in multidrop mode.
 * Fixed cosmetic bug in ETRN mode -v output!

@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/09/11 20:17:57 $
+<td width="30%" align=right>$Date: 1997/09/14 19:28:00 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -56,7 +56,6 @@ when I may have multiple login sessions going?</a><br>
 <a href="#T2">T2. How can I use fetchmail with exim?</a><br>
 <a href="#T3">T3. How can I use fetchmail with smail?</a><br>
 <a href="#T4">T4. How can I use fetchmail with Lotus Notes?</a><br>
-<a href="#T5">T5. How can I use fetchmail with Microsoft Exchange?</a><br>
 
 <h1>Runtime fatal errors:</h1>
 
@@ -230,11 +229,11 @@ on the Web with a search for that title.<p>
 <h2><a name="G7">G7. What is the best server to use with fetchmail?</a></h2>
 
 Fetchmail will work with any POP, IMAP, or ESMTP/ETRN server that
-conforms to the relevant RFCs (this excludes oughtright broken ones
-like Microsoft Exchange, see <a href="#T5">T5</a>).  This doesn't mean
-it works equally well with all, however.  POP2 servers, and POP3
-servers without LAST, limit fetchmail's capabilities in various ways
-described on the manual page.<P>
+conforms to the relevant RFCs (and even some oughtright broken ones
+like Microsoft Exchange).  This doesn't mean it works equally well
+with all, however.  POP2 servers, and POP3 servers without LAST, limit
+fetchmail's capabilities in various ways described on the manual
+page.<P>
 
 Most modern Unixes (and effectively all Linux/*BSD systems) come with
 POP3 support preconfigured.  An increasing minority also feature IMAP
@@ -824,7 +823,9 @@ to \r\n, but its rules are not intuitive.  Use `forcecr'.<P>
 <hr>
 <h2><a name="T5">T5. How can I use fetchmail with Microsoft Exchange?</a></h2><p>
 
-You can't.  Microft exchange is broken.  Guido Van Rooij explains:<P>
+Fetchmail works with M$ Exchange, despite the latter's braindamage.
+Guido Van Rooij explains a bug found by his colleague Arjan de Vet (we
+reprintthis as a public service):<P>
 
 We're having problems using fetchmail to etch mail from an Exchange server
 with POP3. The bug is actually in the Exchange site however it seems possible
@@ -1311,7 +1312,7 @@ are downloaded.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/09/11 20:17:57 $
+<td width="30%" align=right>$Date: 1997/09/14 19:28:00 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

@@ -430,6 +430,7 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
     if ((ok = pop3_ok(sock, buf)) != 0)
 	return(ok);
 
+#ifdef __UNUSED__ 
     /* 
      * Look for "nnn octets" -- there may or may not be preceding cruft.
      * It's OK to punt and pass back -1 as a failure indication here, as 
@@ -443,6 +444,9 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
 	    continue;
 	*lenp = atoi(++cp);
     }
+#endif /* __UNUSED__ */
+
+    *lenp = -1;		/* POP3 is delimited, we don't care about lengths */
 
     return(0);
 }

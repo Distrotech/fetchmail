@@ -435,6 +435,9 @@ static int smtp_open(struct query *ctl)
 	}
     }
 
+    if (outlevel >= O_VERBOSE && ctl->smtp_socket != -1)
+	error(0, 0, "forwarding to SMTP port on %s", ctl->smtphost);
+
     return(ctl->smtp_socket);
 }
 
@@ -526,7 +529,7 @@ int num;		/* index of message */
     headers = received_for = NULL;
     from_offs = ctt_offs = env_offs = -1;
     oldlen = 0;
-    for (remaining = len; remaining > 0; remaining -= linelen)
+    for (remaining = len; remaining > 0 || protocol->delimited; remaining -= linelen)
     {
 	char *line;
 
