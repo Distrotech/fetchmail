@@ -221,10 +221,33 @@ AC_DEFINE_UNQUOTED(PID_DIR, "$dir")
 #
 # Note2: it would be a very bad idea to use any MDA that doesn't return
 # a refuse-to-deliver status on disk- or process-table-full
-# conditions; mail could get lost that way.  Both procmail and
-# sendmail (and all of the MDAs like exim that might be lurking under
-# a sendmail alias) do the right thing in this circumstance.
+# conditions; mail could get lost that way.  Sendmail and all of the MDAs
+# like exim that might be lurking under a sendmail alias) do the right 
+# thing in this circumstance.  Matthias Andree warns that procmail does
+# not.  
 #
+# Note3: Defalt value of fallback is now off.  Matthias writes:
+#
+# 1. there is no way to predict when the fallback is used. With some MTAs
+#    (such as those limiting load average), outer circumstances can cause
+#    the fallback to kick in.
+# 
+# 2. the fallback changes fetchmail behaviour in unpredictable ways. It's
+#    not only about alias expansion, .forwards to special filters won't
+#    work, mail may end up in a different place (users claim "mail loss"
+#    for that).
+# 
+# 3. The claim procmail did the right thing with its exit codes is plain
+#    wrong. I've seen procmail exit with code 1 when it should have exited
+#    with code 75, like, configuration errors. Procmail is a dangerous
+#    beast and is best replaced by maildrop.
+# 
+# 4. if multiple choices exist (like procmail and maildrop), fetchmail
+#    cannot tell which one it should choose. Say, your MTA is configured
+#    to use maildrop to deliver to user's mailboxes, if fetchmail then
+#    chooses procmail, this is plain wrong.
+#
+
 AC_PATH_PROG(procmail, procmail, "", $PATH:/usr/sbin)
 AC_PATH_PROG(sendmail, sendmail, "", $PATH:/usr/sbin:/usr/lib)
 AC_PATH_PROG(maildrop, maildrop, "", $PATH:/usr/local/bin)
@@ -236,7 +259,7 @@ AC_ARG_ENABLE(fallback,
 	[  --enable-fallback=procmail    enable procmail as fallback (default)
   --enable-fallback=sendmail    enable /usr/sbin/sendmail as fallback
   --enable-fallback=maildrop    enable maildrop as fallback
-  --enable-fallback=no          disable fallback],,[enable_fallback=auto])
+  --enable-fallback=no          disable fallback],,[enable_fallback=no])
 
 case "$enable_fallback" in
 	sendmail)	if test -z "$sendmail" ; then 
