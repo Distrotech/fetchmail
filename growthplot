@@ -9,6 +9,13 @@ grep "^[0-9]" /tmp/growthplot$$ >/tmp/growthnumbers$$
 grep "^[0-9.]*.[05].0	" /tmp/growthplot$$ >/tmp/growthmajors$$
 sed '/^4.2.9/,$d' </tmp/growthnumbers$$ >/tmp/growthannounce$$
 
+# gnuplot line styles.  These occasionally change (like beteween 3.5 and 3.7);
+# use "echo "set terminal png color; test" | gnuplot | display - to check.
+blue_boxes=3
+green_crosses=2
+cyan_diamonds=37	# Once purple triangles, but we can't do that anymore
+brown_triangles=23
+
 cat >/tmp/growthimage$$ <<EOF
 set title "Fetchmail project growth history"
 set xlabel 'Days since baseline'
@@ -78,13 +85,13 @@ EOF
 
 cat >>/tmp/growthimage$$ <<EOF
 plot [] [0:] '/tmp/growthnumbers$$' using 6:5 \
-		title "Both lists" with points 3, \
+		title "Both lists" with points $blue_boxes, \
      '/tmp/growthannounce$$' using 6:4 \
-		title "fetchmail-announce" with points 5, \
+		title "fetchmail-announce" with points $cyan_diamonds, \
      '/tmp/growthannounce$$' using 6:3 \
-		title "fetchmail-friends" with points 2, \
+		title "fetchmail-friends" with points $green_crosses, \
      '/tmp/growthnumbers$$' using 6:2 axes x1y2 \
-		title "Lines of code" with points 7
+		title "Lines of code" with points $brown_triangles
 EOF
 
 gnuplot /tmp/growthimage$$ >growth.png
