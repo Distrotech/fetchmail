@@ -6,6 +6,8 @@
 * More cleanups and minor bugfixes from Sunil Shetye.
 * Default antispam-response list is now empty.
 
+% 6.0.0 release
+
 fetchmail-5.9.14 (Fri Sep  6 05:03:25 EDT 2002), 21932 lines:
 
 * Sunil Shetye's patch to eliminate multiple bounces.
