@@ -63,9 +63,9 @@ static void stringdump(const char *name, const char *member)
     static char	buf[BUFSIZ];
 
     indent('\0');
-    fprintf(stdout, "'%s':", name);
+    fprintf(stdout, "\"%s\":", name);
     if (member)
-	fprintf(stdout, "'%s'", visbuf(member));
+	fprintf(stdout, "\"%s\"", visbuf(member));
     else
 	fputs("None", stdout);
     fputs(",\n", stdout);
@@ -92,7 +92,7 @@ static void listdump(const char *name, struct idlist *list)
 /* dump a string list member with current indent */
 {
     indent('\0');
-    fprintf(stdout, "'%s':", name);
+    fprintf(stdout, "\"%s\":", name);
 
     if (!list)
 	fputs("None,\n", stdout);
@@ -104,7 +104,7 @@ static void listdump(const char *name, struct idlist *list)
 	for (idp = list; idp; idp = idp->next)
 	    if (idp->id)
 	    {
-		fprintf(stdout, "'%s'", visbuf(idp->id));
+		fprintf(stdout, "\"%s\"", visbuf(idp->id));
 		if (idp->next)
 		    fputs(", ", stdout);
 	    }
@@ -237,10 +237,10 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	for (idp = ctl->localnames; idp; idp = idp->next)
 	{
 	    if (idp->val.id2)
-		fprintf(stdout, "('%s', %s)", 
+		fprintf(stdout, "(\"%s\", %s)", 
 			visbuf(idp->id), visbuf(idp->val.id2));
 	    else
-		fprintf(stdout, "'%s'", visbuf(idp->id));
+		fprintf(stdout, "\"%s\"", visbuf(idp->id));
 	    if (idp->next)
 		fputs(", ", stdout);
 	}
