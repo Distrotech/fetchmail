@@ -18,6 +18,7 @@ on-demand TCP/IP links (such as SLIP or PPP connections).  It
 retrieves mail from remote mail servers and forwards it to your local
 (client) machine's delivery system, so it can then be be read by
 normal mail user agents such as mutt, elm, pine, or mailx.
+Comes with an interactive GUI configurator suitable for end-users.
 
 %prep
 %setup

@@ -58,6 +58,7 @@
 #   stripcr
 #   pass8bits
 #   dropstatus
+#   mimedecode
 #   no keep
 #   no flush
 #   no fetchall
@@ -66,6 +67,7 @@
 #   no stripcr
 #   no pass8bits
 #   no dropstatus
+#   no mimedecode
 #   limit                     -- must be followed by numeric size limit
 #   fetchlimit                -- must be followed by numeric msg fetch limit
 #   batchlimit                -- must be followed by numeric SMTP batch limit
@@ -88,7 +90,8 @@
 #
 # Legal global option statements are
 #
-#   set logfile =		-- must be followed by a string
+#   set logfile			-- must be followed by a string
+#   set idfile			-- must be followed by a string
 #   set daemon			-- must be followed by a number   
 #   set syslog
 #   set invisible
