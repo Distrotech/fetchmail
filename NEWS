@@ -8,6 +8,8 @@ features --
 * Whether or not carriage returns will be stripped on output is explicitly
   controllable with stripcr.
 
+* fetchmail -v messages no longer reveal password lengths.
+
 bugs --
 
 * Correction to length-extraction code for servers that return (nnn octets).
@@ -15,7 +17,7 @@ bugs --
 * Correction to RF822 continuation code so it doesn't eat leading blank-led
   lines in the text.
 
-There are 211 people on the fetchmail-friends list.
+There are 212 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-3.2 (Mon Jan 27 02:51:10 EST 1997)

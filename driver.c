@@ -1468,12 +1468,17 @@ va_dcl
 
     if (outlevel == O_VERBOSE)
     {
-	if (shroud)
-	{
-	    char *cp;
+	char *cp;
 
-	    if ((cp = strstr(buf, shroud)))
-		memset(cp, '*', strlen(shroud));
+	if (shroud && (cp = strstr(buf, shroud)))
+	{
+	    char	*sp;
+
+	    sp = cp + strlen(shroud);
+	    *cp++ = '*';
+	    while (*sp)
+		*cp++ = *sp++;
+	    *sp = '\0';
 	}
 	buf[strlen(buf)-2] = '\0';
 	error(0, 0, "%s> %s", protocol->name, buf);
@@ -1533,12 +1538,17 @@ va_dcl
 
     if (outlevel == O_VERBOSE)
     {
-	if (shroud)
-	{
-	    char *cp;
+	char *cp;
 
-	    if ((cp = strstr(buf, shroud)))
-		memset(cp, '*', strlen(shroud));
+	if (shroud && (cp = strstr(buf, shroud)))
+	{
+	    char	*sp;
+
+	    sp = cp + strlen(shroud);
+	    *cp++ = '*';
+	    while (*sp)
+		*cp++ = *sp++;
+	    *sp = '\0';
 	}
 	buf[strlen(buf)-1] = '\0';
 	error(0, 0, "%s> %s", protocol->name, buf);
