@@ -82,6 +82,7 @@ struct hostdata		/* shared among all user connections to given server */
     char *canonical_name;		/* DNS canonical name of server host */
 #endif /* HAVE_GETHOSTBYNAME */
     struct hostdata *lead_server;	/* ptr to lead query for this server */
+    int esmtp_options;
 };
 
 struct query

@@ -352,7 +352,22 @@ static FILE *smtp_open(struct query *ctl)
 	batchcount = 0;
     }
 
-    /* if no socket to this host is already set up, try to open one */
+    /* if no socket to this host is already set up, try to open ESMTP */
+    if (lead->smtp_sockfp == (FILE *)NULL)
+    {
+	if ((lead->smtp_sockfp = SockOpen(lead->smtphost, SMTP_PORT)) == (FILE *)NULL)
+	    return((FILE *)NULL);
+	else if (SMTP_ok(lead->smtp_sockfp) != SM_OK
+		 || SMTP_ehlo(lead->smtp_sockfp, 
+			      ctl->server.names->id,
+			      &lead->server.esmtp_options) != SM_OK)
+	{
+	    fclose(lead->smtp_sockfp);
+	    lead->smtp_sockfp = (FILE *)NULL;
+	}
+    }
+
+    /* if opening for ESMTP failed, try SMTP */
     if (lead->smtp_sockfp == (FILE *)NULL)
     {
 	if ((lead->smtp_sockfp = SockOpen(lead->smtphost, SMTP_PORT)) == (FILE *)NULL)
@@ -378,7 +393,7 @@ char *realname;		/* real name of host */
 {
     char buf [MSGBUFSIZE+1]; 
     char *bufp, *headers, *fromhdr,*tohdr,*cchdr,*bcchdr,*received_for,*envto;
-    char *fromptr, *toptr;
+    char *fromptr, *toptr, *ctthdr;
     int n, oldlen, ch;
     int inheaders, sizeticker;
     FILE *sinkfp;
@@ -389,7 +404,7 @@ char *realname;		/* real name of host */
 
     /* read the message content from the server */
     inheaders = 1;
-    headers = fromhdr = tohdr = cchdr = bcchdr = received_for = envto = NULL;
+    headers = fromhdr = tohdr = cchdr = bcchdr = received_for = envto = ctthdr = NULL;
     sizeticker = 0;
     oldlen = 0;
     while (delimited || len > 0)
@@ -468,6 +483,9 @@ char *realname;		/* real name of host */
 
 	    else if (!strncasecmp("Bcc:", bufp, 4))
 		bcchdr = bufp;
+
+	    else if (!strncasecmp("Content-Transfer-Encoding:", bufp, 26))
+		ctthdr = bufp;
 
 #ifdef HAVE_RES_SEARCH
 	    else if (MULTIDROP(ctl) && !strncasecmp("Received:", bufp, 9))
@@ -578,7 +596,7 @@ char *realname;		/* real name of host */
 	    }
 	    else
 	    {
-		char	*ap;
+		char	*ap, *ctt, options[MSGBUFSIZE];
 
 		/* build a connection to the SMTP listener */
 		if (!ctl->mda && ((sinkfp = smtp_open(ctl)) == NULL))
@@ -589,6 +607,20 @@ char *realname;		/* real name of host */
 		}
 
 		/*
+		 * Compute ESMTP options.  It's a kluge to use nxtaddr()
+		 * here because the contents of the Content-Transfer-Encoding
+		 * headers isn't semantically an address.  But it has the
+		 * desired tokenizing effect.
+		 */
+		if ((ctl->server.esmtp_options & ESMTP_8BITMIME)
+			&& ctthdr
+			&& (ctt = nxtaddr(ctthdr))
+			&& (!strcasecmp(ctt,"7BIT")||!strcasecmp(ctt,"8BIT")))
+		    sprintf(options, " BODY=%s", ctt);
+		else
+		    options[0] = '\0';
+
+		/*
 		 * Try to get the SMTP listener to take the header
 		 * From address as MAIL FROM (this makes the logging
 		 * nicer).  If it won't, fall back on the calling-user
@@ -597,13 +629,13 @@ char *realname;		/* real name of host */
 		 */
 		if (!fromhdr || !(ap = nxtaddr(fromhdr)))
 		{
-		    if (SMTP_from(sinkfp, user) != SM_OK)
+		    if (SMTP_from(sinkfp, user, options)!=SM_OK)
 		    {
 			error(0, 0, "%s not accepted as From address?", user);
 			return(PS_SMTP);	/* should never happen */
 		    }
 		}
-		else if (SMTP_from(sinkfp, ap) != SM_OK)
+		else if (SMTP_from(sinkfp, ap, options)!=SM_OK)
 		    if (smtp_response == 571)
 		    {
 			/*
@@ -615,7 +647,7 @@ char *realname;		/* real name of host */
 			sinkfp = (FILE *)NULL;
 			goto skiptext;
 		    }
-		    else if (SMTP_from(sinkfp, user) != SM_OK)
+		    else if (SMTP_from(sinkfp, user, options) != SM_OK)
 			return(PS_SMTP);	/* should never happen */
 
 		/* now list the recipient addressees */

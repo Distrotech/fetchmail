@@ -1,6 +1,21 @@
 			Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-3.1 ()
+
+features --
+
+* Forwarding is now done via ESMTP where possible.
+
+* ESMTP 8BITMIME option is supported; when 8BITMIME is supported and the
+  Content-Transfer-Encoding header is 7BIT or 8BIT, it is appended to the
+  MAIL FROM command as a BODY option.
+
+bugs --
+
+* Compilation fixes for non-Linux machines.
+
+------------------------------------------------------------------------------
 fetchmail-3.0 (Tue Jan 21 16:44:56 EST 1997)
 
 features --

@@ -17,6 +17,18 @@
 #include "socket.h"
 #include "smtp.h"
 
+struct opt
+{
+    char *name;
+    int value;
+};
+
+static struct opt extensions[] =
+{
+    {"8BITMIME", ESMTP_8BITMIME},
+    {(char *)NULL, 0},
+};
+
 int smtp_response;	/* numeric value of SMTP response code */
 
 int SMTP_helo(FILE *sockfp,char *host)
@@ -31,14 +43,56 @@ int SMTP_helo(FILE *sockfp,char *host)
   return ok;
 }
 
-int SMTP_from(FILE *sockfp, char *from)
+int SMTP_ehlo(FILE *sockfp, char *host, int *opt)
+/* send a "EHLO" message to the SMTP listener, return extension status bits */
+{
+  int ok;
+  char buf[SMTPBUFSIZE], *ip;
+  struct opt *hp;
+
+  SockPrintf(sockfp,"EHLO %s\r\n", host);
+  if (outlevel == O_VERBOSE)
+      error(0, 0, "SMTP> EHLO %s", host);
+  
+  *opt = 0;
+  while ((ip = SockGets(buf, sizeof(buf)-1, sockfp)))
+  {
+      int  n = strlen(ip);
+
+      if (buf[strlen(buf)-1] == '\n')
+	  buf[strlen(buf)-1] = '\0';
+      if (buf[strlen(buf)-1] == '\r')
+	  buf[strlen(buf)-1] = '\r';
+      if (n < 4)
+	  return SM_ERROR;
+      buf[n] = '\0';
+      if (outlevel == O_VERBOSE)
+	  error(0, 0, "SMTP< %s", buf);
+      for (hp = extensions; hp->name; hp++)
+	  if (!strncasecmp(hp->name, buf+4, strlen(hp->name)))
+	      *opt |= hp->value;
+      smtp_response = atoi(buf);
+      if ((buf[0] == '1' || buf[0] == '2' || buf[0] == '3') && buf[3] == ' ')
+	  return SM_OK;
+      else if (buf[3] != '-')
+	  return SM_ERROR;
+  }
+  return SM_UNRECOVERABLE;
+}
+
+int SMTP_from(FILE *sockfp, char *from, char *opts)
 /* send a "MAIL FROM:" message to the SMTP listener */
 {
   int ok;
+  struct opt *hp;
+  char buf[MSGBUFSIZE];
 
-  SockPrintf(sockfp,"MAIL FROM:<%s>\r\n", from);
+  sprintf(buf, "MAIL FROM:<%s>", from);
+  if (opts)
+      strcat(buf, opts);
+  SockPrintf(sockfp,"%s\r\n", buf);
   if (outlevel == O_VERBOSE)
-      error(0, 0, "SMTP> MAIL FROM:<%s>", from);
+      error(0, 0, "SMTP> %s", buf);
   ok = SMTP_ok(sockfp);
   return ok;
 }

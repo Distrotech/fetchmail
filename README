@@ -69,6 +69,8 @@ pop-perl5-1.2, popc, popmail-1.6 and upop) are marked with **.
 	*  Strict conformance to relevant RFCs and good debugging options.
 	   You could use fetchmail to test and debug server implementatations.
 
+	*  Message and header processing are 8-bit clean.
+
 	*  Carefully written, comprehensive and up-to-date man page describing
 	   not only modes of operation but also (**) how to diagnose the most
 	   common kinds of problems and what to do about deficient servers
