@@ -7,6 +7,7 @@
 #include "config.h"
 
 #include <stdio.h>
+#include <limits.h>
 #if defined(STDC_HEADERS)
 #include <stdlib.h>
 #include <string.h>
@@ -44,6 +45,8 @@
  * Each time a message is fetched, we can check its UID against the
  * `oldsaved' list to see if it is old.
  *
+ * Each time a message-id is seen, we mark it with MARK_SEEN.
+ *
  * Each time a message is deleted, we mark its id UID_DELETED in the
  * `newsaved' member.  When we want to assert that an expunge has been
  * done on the server, we call expunge_uid() to register that all
@@ -52,13 +55,9 @@
  * At the end of the query, the `newsaved' member becomes the
  * `oldsaved' list.  The old `oldsaved' list is freed.
  *
- * At the end of the fetchmail run, non-EXPUNGED members of all
+ * At the end of the fetchmail run, seen and non-EXPUNGED members of all
  * current `oldsaved' lists are flushed out to the .fetchids file to
- * be picked up by the next run.  (The UID_EXPUNGED test means that a
- * message marked UID_DELETED may still have its ID go to disk if
- * there has been no intervening expunge operation.  This typically
- * comes up if the query was aborted by a line hit before a quit or
- * expunge was sent to the server.)  If there are no un-expunged
+ * be picked up by the next run.  If there are no un-expunged
  * messages, the file is deleted.
  *
  * Note: all comparisons are caseblind!
@@ -195,8 +194,8 @@ int str_nr_in_list( struct idlist **idl, const char *str )
     return -1;
 }
 
-int str_nr_last_in_list( struct idlist **idl, const char *str )
-  /* return the last position of str in idl */
+int str_nr_last_in_list( struct idlist **idl, const char *str)
+/* return the last position of str in idl */
 {
     int nr, ret = -1;
     struct idlist *walk;
@@ -208,16 +207,16 @@ int str_nr_last_in_list( struct idlist **idl, const char *str )
     return ret;
 }
 
-int count_list( struct idlist **idl )
-  /* count the number of elements in the list */
+int count_list( struct idlist **idl)
+/* count the number of elements in the list */
 {
   if( !*idl )
     return 0;
   return 1 + count_list( &(*idl)->next );
 }
 
-char* str_from_nr_list( struct idlist **idl, int number )
-  /* return the number'th string in idl */
+char *str_from_nr_list(struct idlist **idl, int number)
+/* return the number'th string in idl */
 {
     if( !*idl  || number < 0)
         return 0;
@@ -331,7 +330,7 @@ void write_saved_lists(struct query *hostlist, const char *idfile)
 	if ((tmpfp = fopen(idfile, "w")) != (FILE *)NULL) {
 	    for (ctl = hostlist; ctl; ctl = ctl->next) {
 		for (idp = ctl->oldsaved; idp; idp = idp->next)
-		    if (idp->val.num != UID_EXPUNGED)
+		    if (SAVE_UID(idp->val.num))
 			fprintf(tmpfp, "%s@%s %s\n", 
 			    ctl->remotename, ctl->server.truename, idp->id);
 	    }

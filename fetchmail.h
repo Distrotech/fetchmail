@@ -159,10 +159,6 @@ struct query
     int	batchlimit;		/* max # msgs to pass in single SMTP session */
     int	expunge;		/* max # msgs to pass between expunges */
 
-    /* unseen, previous state of mailbox (initially from .fetchids) */
-#define UID_KEPT	0	/* this was remembered from a previous run */
-#define UID_DELETED	-1	/* this message has been deleted */
-#define UID_EXPUNGED	-2	/* this message has been expunged */ 
     struct idlist *oldsaved, *newsaved;
 
     /* internal use */
@@ -173,6 +169,17 @@ struct query
     char digest [DIGESTLEN];	/* md5 digest buffer */
     struct query *next;		/* next query control block in chain */
 };
+
+/*
+ * UID-index information.  If the sign bit is on, this means the 
+ * message UID has been seen or expunged and should be written
+ * out to .fetchids at end of run.
+ */
+#define UID_KEPT	0		/* remembered from a previous run */
+#define UID_DELETED	INT_MIN		/* this message has been deleted */
+#define UID_EXPUNGED	INT_MAX		/* this message has been expunged */ 
+#define SAVE_UID(n)	((n) < 0)	/* must this UID be saved? */
+#define MARK_SEEN(n)	n *= -1		/* mark a UID seen */
 
 /*
  * Numeric option handling.  Numeric option value of zero actually means

@@ -2069,6 +2069,12 @@ const struct method *proto;	/* protocol method table */
 			 * now.
 			 */
 
+			/* tell the UID code we've seen this */
+			if (ctl->newsaved)
+			    for (idp = ctl->newsaved; idp; idp = idp->next)
+				if (idp->val.num == num)
+				    MARK_SEEN(idp->val.num);
+
 			/* maybe we delete this message now? */
 			if (retained)
 			{
