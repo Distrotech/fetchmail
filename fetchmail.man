@@ -1155,7 +1155,7 @@ T}
 port    	-P	T{
 Specify TCP/IP service port
 T}
-auth[enticate]	-A	T{
+preauth[enticate]	-A	T{
 Set preauthentication type (default `password')
 T}
 timeout  	-t	T{
