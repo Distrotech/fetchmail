@@ -1214,7 +1214,16 @@ int num;		/* index of message */
 		    buf[1] = '\0';
 
 		time(&now);
+#ifdef STRFTIME
+		/* conform to RFC822 */
+		strftime(buf, sizeof(buf), "%a, %d b %Y %H:%M:%S %Z\n", localtime(&now));
+#else
+		/*
+		 * This is really just a fallback, as the date format ctime(3)
+		 * emits is not RFC822 conformant.
+		 */
 		strcat(buf, ctime(&now));
+#endif /* STRFTIME */
 		n = stuffline(ctl, buf);
 	    }
 	}

@@ -22,8 +22,10 @@ fetchmail-4.3.4 ()
 * Improved POP3 protocol-synchronization error messages.
 * Allow fetchmail to proceed even if DNS is down or unavailable, if all
   multidrop entries have `no dns'.
+* Added Robert de Bath's "fetchspool" script to contrib.
+* Use strftime(3) to gen a proper RFC822 date into fetchmail's Received header.
 
-There are 274 people on fetchmail-friends and 95 on fetchmail-announce.
+There are 272 people on fetchmail-friends and 96 on fetchmail-announce.
 
 fetchmail-4.3.3 (Sat Nov 22 01:51:41 EST 1997)
 * Robert Hardy <rhardy@webcon.net>'s patch to use IMAP EXAMINE in check mode. 
