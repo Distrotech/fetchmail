@@ -115,7 +115,14 @@ int main (int argc, char **argv)
 
     if (versioninfo)
     {
-	printf("This is fetchmail release %s\n", RELEASE_ID);
+	printf("This is fetchmail release %s", RELEASE_ID);
+#ifdef POP2_ENABLE
+	printf("+POP2");
+#endif /* POP2_ENABLE */
+#ifdef RPA_ENABLE
+	printf("+RPA");
+#endif /* RPA_ENABLE */
+	putchar('\n');
 
 	/* this is an attempt to help remote debugging */
 	system("uname -a");
