@@ -311,7 +311,7 @@ int socket;
 int POP2_stateGREET (socket)
 int socket;
 {
-  char buf [POPBUFSIZE];
+  char buf [POPBUFSIZE+1];
  
   /* read the greeting from the server */
   if (SockGets(socket, buf, sizeof(buf)) >= 0) {
@@ -356,7 +356,7 @@ int POP2_stateNMBR (socket)
 int socket;
 {
   int number;
-  char buf [POPBUFSIZE];
+  char buf [POPBUFSIZE+1];
 
   /* read the NMBR (#ccc) message from the server */
   if (SockGets(socket, buf, sizeof(buf)) >= 0) {
@@ -405,7 +405,7 @@ int POP2_stateSIZE (socket)
 int socket;
 {
   int msgsize;
-  char buf [POPBUFSIZE];
+  char buf [POPBUFSIZE+1];
 
   /* read the SIZE message (=ccc) from the server */
   if (SockGets(socket, buf, sizeof(buf)) >= 0) 
@@ -463,8 +463,8 @@ int mboxfd;
 int topipe;
 {
   int i,buflen,actsize;
-  char buf [MSGBUFSIZE]; 
-  char frombuf [MSGBUFSIZE];
+  char buf [MSGBUFSIZE+1]; 
+  char frombuf [MSGBUFSIZE+1];
   char savec;
   int msgTop;
   int needFrom;

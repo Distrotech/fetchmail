@@ -139,7 +139,7 @@ char **argv;
 	tmpdir = "/tmp";
     strcpy(tmpbuf, tmpdir);
     strcat(tmpbuf, "/poplock-");
-    gethostname(tmpbuf + strlen(tmpbuf), HOSTLEN);
+    gethostname(tmpbuf + strlen(tmpbuf), HOSTLEN+1);
     if ((user = getenv("USER")) != (char *)NULL)
     {
 	strcat(tmpbuf, "-");
@@ -339,7 +339,7 @@ struct hostrec *queryctl;
 	for (i = 0; i < sizeof(autoprobe)/sizeof(autoprobe[0]); i++)
 	{
 	    queryctl->protocol = autoprobe[i];
-	    if ((st = query_host(queryctl)) == PS_SUCCESS || st == PS_NOMAIL)
+	    if ((st = query_host(queryctl)) == PS_SUCCESS || st == PS_NOMAIL || st == PS_AUTHFAIL)
 		break;
 	}
 	queryctl->protocol = P_AUTO;

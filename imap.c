@@ -42,7 +42,7 @@ char *argbuf;
 int socket;
 {
   int ok;
-  char buf [POPBUFSIZE];
+  char buf [POPBUFSIZE+1];
   char *bufp;
   int n;
 
@@ -134,7 +134,7 @@ int number;
 int limit;
 int *lenp; 
 {
-    char buf [POPBUFSIZE];
+    char buf [POPBUFSIZE+1];
     int	num;
 
     if (limit) 
@@ -165,7 +165,7 @@ int socket;
 struct hostrec *queryctl;
 int number;
 {
-    char buf [POPBUFSIZE];
+    char buf [POPBUFSIZE+1];
 
     if (SockGets(socket, buf,sizeof(buf)) < 0)
 	return(PS_SOCKET);

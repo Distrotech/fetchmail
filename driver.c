@@ -66,7 +66,7 @@ struct method *proto;
 {
     int ok, len;
     int mboxfd;
-    char buf [POPBUFSIZE], host[HOSTLEN];
+    char buf [POPBUFSIZE+1], host[HOSTLEN+1];
     int socket;
     int first,number,count;
 
@@ -250,7 +250,7 @@ int socket;
 const char *fmt;
 va_dcl {
 
-  char buf [POPBUFSIZE];
+  char buf [POPBUFSIZE+1];
   va_list ap;
 
   if (protocol->tagged)
@@ -288,7 +288,7 @@ const char *fmt;
 va_dcl {
 
   int ok;
-  char buf [POPBUFSIZE];
+  char buf [POPBUFSIZE+1];
   va_list ap;
 
   if (protocol->tagged)
@@ -332,7 +332,7 @@ const char *host;
 {
     const char *from;
     int state = 0;
-    char mycopy[POPBUFSIZE];
+    char mycopy[POPBUFSIZE+1];
 
     if (strncmp("From: ", buf, 6)
 	&& strncmp("To: ", buf, 4)
@@ -429,7 +429,7 @@ const char *host;
 static char *nxtaddr(hdr)
 char *hdr;
 {
-    static char	*hp, *tp, address[POPBUFSIZE];
+    static char	*hp, *tp, address[POPBUFSIZE+1];
     static	state;
 
     if (hdr)
@@ -562,8 +562,8 @@ char *pophost;
 int output;
 int rewrite;
 { 
-    char buf [MSGBUFSIZE]; 
-    char fromBuf[MSGBUFSIZE];
+    char buf [MSGBUFSIZE+1]; 
+    char fromBuf[MSGBUFSIZE+1];
     char *bufp, *headers, *unixfrom, *fromhdr, *tohdr, *cchdr, *bcchdr;
     int n, oldlen;
     int inheaders;

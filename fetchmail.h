@@ -50,15 +50,15 @@
 
 struct hostrec
 {
-  char servername [HOSTLEN];
-  char localname [USERNAMELEN];
-  char remotename [USERNAMELEN];
-  char password [PASSWORDLEN];
-  char rpopid [PASSWORDLEN];
-  char userfolder [FOLDERLEN];
+  char servername [HOSTLEN+1];
+  char localname [USERNAMELEN+1];
+  char remotename [USERNAMELEN+1];
+  char password [PASSWORDLEN+1];
+  char rpopid [PASSWORDLEN+1];
+  char userfolder [FOLDERLEN+1];
   char remotefolder [FOLDERLEN];
-  char smtphost[HOSTLEN];
-  char mda [MDALEN];
+  char smtphost[HOSTLEN+1];
+  char mda [MDALEN+1];
   int keep;
   int protocol;
   int fetchall;

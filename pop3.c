@@ -47,7 +47,7 @@ char *argbuf;
 int socket;
 {
   int ok;
-  char buf [POPBUFSIZE];
+  char buf [POPBUFSIZE+1];
   char *bufp;
 
   if (SockGets(socket, buf, sizeof(buf)) >= 0) {
@@ -86,7 +86,7 @@ int socket;
 struct hostrec *queryctl;
 char *greeting;
 {
-    char buf [POPBUFSIZE];
+    char buf [POPBUFSIZE+1];
 
 #if defined(HAVE_APOP_SUPPORT)
     /* build MD5 digest from greeting timestamp + password */
@@ -175,8 +175,8 @@ int *firstp;
   *firstp = 1;
   use_uidl = 0;
   if (!queryctl->fetchall) {
-    char buf [POPBUFSIZE];
-    char id [IDLEN];
+    char buf [POPBUFSIZE+1];
+    char id [IDLEN+1];
     int num;
 
     /* try LAST first */
@@ -282,7 +282,7 @@ int *msgcount;
 int socket;
 {
   int ok;
-  char buf [POPBUFSIZE];
+  char buf [POPBUFSIZE+1];
   int totalsize;
 
   SockPrintf(socket,"STAT\r\n");
