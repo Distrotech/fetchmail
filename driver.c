@@ -264,6 +264,73 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 		((cp = nxtaddr((char *)NULL)) != (char *)NULL);
     }
 }
+
+char *parse_received(struct query *ctl, char *bufp)
+/* try to extract */
+{
+    char *ok;
+    static char rbuf[HOSTLEN + USERNAMELEN + 4]; 
+
+    /*
+     * Try to extract the real envelope addressee.  We look here
+     * specifically for the mailserver's Received line.
+     * Note: this will only work for sendmail, or an MTA that
+     * shares sendmail's convention for embedding the envelope
+     * address in the Received line.  Sendmail itself only
+     * does this when the mail has a single recipient.
+     */
+    if ((ok = strstr(bufp, "by ")) == (char *)NULL)
+	ok = (char *)NULL;
+    else
+    {
+	char	*sp, *tp;
+
+	/* extract space-delimited token after "by " */
+	tp = rbuf;
+	for (sp = ok + 3; !isspace(*sp); sp++)
+	    *tp++ = *sp;
+	*tp = '\0';
+
+	/*
+	 * If it's a DNS name of the mail server, look for the
+	 * recipient name after a following "for".  Otherwise
+	 * punt.
+	 */
+	if (is_host_alias(rbuf, ctl))
+	    ok = strstr(sp, "for ");
+	else
+	    ok = (char *)NULL;
+    }
+
+    if (ok != 0)
+    {
+	char	*sp, *tp;
+
+	tp = rbuf;
+	sp = ok + 4;
+	if (*sp == '<')
+	    sp++;
+	while (*sp && *sp != '>' && *sp != '@' && *sp != ';')
+	    if (!isspace(*sp))
+		*tp++ = *sp++;
+	    else
+	    {
+		/* uh oh -- whitespace here can't be right! */
+		ok = (char *)NULL;
+		break;
+	    }
+	*tp = '\0';
+    }
+
+    if (!ok)
+	return(NULL);
+    else
+    {
+	if (outlevel == O_VERBOSE)
+	    error(0, 0, "found Received address `%s'", rbuf);
+	return(rbuf);
+    }
+}
 #endif /* HAVE_RES_SEARCH */
 
 static FILE *smtp_open(struct query *ctl)
@@ -332,11 +399,8 @@ char *realname;		/* real name of host */
 	    /* we may need to grab RFC822 continuations */
 	    (inheaders && (ch = SockPeek(sockfp)) == ' ' || ch == '\t');
 
-	/* compute length *before* squeezing out CRs */
-	n = strlen(buf);
-
 	/* write the message size dots */
-	if (n > 0)
+	if ((n = strlen(buf)) > 0)
 	{
 	    sizeticker += n;
 	    while (sizeticker >= SIZETICKER)
@@ -381,88 +445,30 @@ char *realname;		/* real name of host */
 		oldlen = newlen;
 	    }
 
-	    if (!strncasecmp("From:", bufp, 5))
+	    if (!fromhdr && !strncasecmp("From:", bufp, 5))
 		fromhdr = bufp;
 	    else if (!fromhdr && !strncasecmp("Resent-From:", bufp, 12))
 		fromhdr = bufp;
 	    else if (!fromhdr && !strncasecmp("Apparently-From:", bufp, 16))
 		fromhdr = bufp;
+
 	    else if (!strncasecmp("To:", bufp, 3))
 		tohdr = bufp;
-	    else if (!strncasecmp("Apparently-To:", bufp, 14))
+
+	    else if (!envto && !strncasecmp("Apparently-To:", bufp, 14))
 		envto = bufp;
-	    else if (!strncasecmp(ctl->server.envelope, bufp, 14))
+	    else if (!envto && !strncasecmp(ctl->server.envelope, bufp, 14))
 		envto = bufp;
+
 	    else if (!strncasecmp("Cc:", bufp, 3))
 		cchdr = bufp;
+
 	    else if (!strncasecmp("Bcc:", bufp, 4))
 		bcchdr = bufp;
+
 #ifdef HAVE_RES_SEARCH
 	    else if (MULTIDROP(ctl) && !strncasecmp("Received:", bufp, 9))
-	    {
-		char *ok;
-
-		/*
-		 * Try to extract the real envelope addressee.  We look here
-		 * specifically for the mailserver's Received line.
-		 * Note: this will only work for sendmail, or an MTA that
-		 * shares sendmail's convention for embedding the envelope
-		 * address in the Received line.  Sendmail itself only
-		 * does this when the mail has a single recipient.
-		 */
-		if ((ok = strstr(bufp, "by ")) == (char *)NULL)
-		    ok = (char *)NULL;
-		else
-		{
-		    char	*sp, *tp;
-
-		    /* extract space-delimited token after "by " */
-		    tp = rbuf;
-		    for (sp = ok + 3; !isspace(*sp); sp++)
-			*tp++ = *sp;
-		    *tp = '\0';
-
-		    /*
-		     * If it's a DNS name of the mail server, look for the
-		     * recipient name after a following "for".  Otherwise
-		     * punt.
-		     */
-		    if (is_host_alias(rbuf, ctl))
-			ok = strstr(sp, "for ");
-		    else
-			ok = (char *)NULL;
-		}
-
-		if (ok != 0)
-		{
-		    char	*sp, *tp;
-
-		    tp = rbuf;
-		    sp = ok + 4;
-		    if (*sp == '<')
-			sp++;
-		    while (*sp && *sp != '>' && *sp != '@' && *sp != ';')
-			if (!isspace(*sp))
-			    *tp++ = *sp++;
-			else
-			{
-			    /* uh oh -- whitespace here can't be right! */
-			    ok = (char *)NULL;
-			    break;
-			}
-		    *tp = '\0';
-		}
-
-		if (ok != 0)
-		{
-		    received_for = alloca(strlen(rbuf)+1);
-		    strcpy(received_for, rbuf);
-		    if (outlevel == O_VERBOSE)
-			error(0, 0, 
-				"found Received address `%s'",
-				received_for);
-		}
-	    }
+		received_for = parse_received(ctl, bufp);
 #endif /* HAVE_RES_SEARCH */
 
 	    continue;
@@ -587,7 +593,10 @@ char *realname;		/* real name of host */
 		if (!fromhdr || !(ap = nxtaddr(fromhdr)))
 		{
 		    if (SMTP_from(sinkfp, user) != SM_OK)
+		    {
+			error(0, 0, "%s not accepted as From address?", user);
 			return(PS_SMTP);	/* should never happen */
+		    }
 		}
 		else if (SMTP_from(sinkfp, ap) != SM_OK)
 		    if (smtp_response == 571)
@@ -699,6 +708,8 @@ char *realname;		/* real name of host */
 
 	    free_str_list(&xmit_names);
 	}
+
+	/* following code is executed on non-header lines only */
 
 	/* SMTP byte-stuffing */
 	if (*bufp == '.')
