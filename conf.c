@@ -272,7 +272,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	stringdump("smtpaddress", ctl->smtpaddress);
 
 	indent('\0');
-	fprintf(stdout, "'antispam:'");
+	fprintf(stdout, "'antispam':'");
 	if (!ctl->antispam)
 	    fputs("'\n", stdout);
 	else
