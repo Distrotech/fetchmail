@@ -1222,7 +1222,8 @@ int open_warning_by_mail(struct query *ctl, struct msgblk *msg)
     struct msgblk reply = {NULL, NULL, "FETCHMAIL-DAEMON@", 0};
     int status;
 
-    strcat(reply.return_path, fetchmailhost);
+    strcat(reply.return_path, ctl->smtpaddress ? ctl->smtpaddress :
+	    fetchmailhost);
 
     if (!MULTIDROP(ctl))		/* send to calling user */
     {
