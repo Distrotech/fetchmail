@@ -3,6 +3,9 @@
 fetchmail-4.6.3 ():
 * Introduced `debug' verbosity, invocable by -v -v.
 * Make authentication failures more visible by syslogging them.
+* fetchmailconf now has access to information about which fetchmail
+  compile-time options have been enabled, and uses it to control
+  the choices in various panels.
 
 There are 252 people on fetchmail-friends and 295 on fetchmail-announce.
 

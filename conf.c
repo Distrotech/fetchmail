@@ -129,7 +129,54 @@ void dump_config(struct runctl *runp, struct query *querylist)
 
     fputs("from Tkinter import TRUE, FALSE\n\n", stdout);
 
-    fputs("# Start of initializer\n", stdout);
+    /*
+     * We need this in order to know whether `interface' and `monitor'
+     * are valid options or not.
+     */
+#ifdef linux
+    fputs("os_type = 'linux'\n", stdout);
+#else
+    fputs("os_type = 'generic'\n", stdout);
+#endif
+
+    /* 
+     * This should be approximately in sync with the -V option dumping 
+     * in fetchmail.c.
+     */
+    printf("feature_options = (");
+#ifdef POP2_ENABLE
+    printf("'pop2',");
+#endif /* POP2_ENABLE */
+#ifdef POP3_ENABLE
+    printf("'pop3',");
+#endif /* POP3_ENABLE */
+#ifdef IMAP_ENABLE
+    printf("'imap',");
+#endif /* IMAP_ENABLE */
+#ifdef GSSAPI
+    printf("'imap-gss',");
+#endif /* GSSAPI */
+#ifdef RPA_ENABLE
+    printf("'rpa',");
+#endif /* RPA_ENABLE */
+#ifdef SDPS_ENABLE
+    printf("'sdps',");
+#endif /* SDPS_ENABLE */
+#ifdef ETRN_ENABLE
+    printf("'etrn',");
+#endif /* ETRN_ENABLE */
+#if OPIE
+    printf("'opie',");
+#endif /* OPIE */
+#if INET6
+    printf("'inet6',");
+#endif /* INET6 */
+#if NET_SECURITY
+    printf("'netsec',");
+#endif /* NET_SECURITY */
+    printf(")\n");
+
+    fputs("# Start of configuration initializer\n", stdout);
     fputs("fetchmailrc = ", stdout);
     indent('{');
 

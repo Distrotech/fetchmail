@@ -7,7 +7,7 @@
 #
 # TO DO: Arrange for save and quit buttons to clean up all frames dependent
 # on the current ones.
-version = "1.5"
+version = "1.6"
 
 from Tkinter import *
 from Dialog import *
@@ -309,8 +309,6 @@ defaultports = {"auto":0,
                 "IMAP":143,
 		"IMAP-K4":143,
 		"ETRN":25}
-
-protolist = ("auto", "POP2", "POP3", "APOP", "KPOP", "IMAP", "IMAP-K4", "ETRN")
 
 authlist = ("password", "kerberos")
 
@@ -870,6 +868,21 @@ class ServerEdit(Frame, MyWidget):
 	       command=lambda: helpwin(controlhelp)).pack(side=RIGHT)
             ctlwin.pack(fill=X)
 
+        # Compute the available protocols from the compile-time options
+        protolist = ['auto']
+        if 'pop2' in feature_options:
+            protolist.append("POP2")
+        if 'pop3' in feature_options:
+            protolist = protolist + ["POP3", "APOP", "KPOP"]
+        if 'sdps' in feature_options:
+            protolist.append("SDPS")
+        if 'imap' in feature_options:
+            protolist.append("IMAP")
+        if 'imap-gss' in feature_options:
+            protolist.append("IMAP-K4")
+        if 'etrn' in feature_options:
+            protolist.append("ETRN")
+
 	protwin = Frame(leftwin, relief=RAISED, bd=5)
 	Label(protwin, text="Protocol").pack(side=TOP)
 	ButtonBar(protwin, '',
@@ -918,7 +931,7 @@ class ServerEdit(Frame, MyWidget):
 		 self.server.localdomains, None, mdropwin, multihelp)
             mdropwin.pack(fill=X)
 
-            if 'interface' in dictmembers or 'monitor' in dictmembers or 'netsec' in dictmembers:
+            if os_type == 'linux' or 'netsec' in feature_options:
                 secwin = Frame(rightwin, relief=RAISED, bd=5)
                 Label(secwin, text="Security").pack(side=TOP)
                 # Don't actually let users set this.  KPOP sets it implicitly
