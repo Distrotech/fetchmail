@@ -38,8 +38,8 @@
 #   monitor                   -- must be followed by device
 #   dns
 #   no dns
-#   checkalias                -- do multidrop address compaison by IP address
-#   no checkalias             -- do multidrop address compaison by name
+#   checkalias                -- do multidrop address comparison by IP address
+#   no checkalias             -- do multidrop address comparison by name
 #
 #   username (or user)        -- must be followed by a name
 #   is                        -- must be followed by one or more names

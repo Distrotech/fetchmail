@@ -644,6 +644,13 @@ indicate the status of the daemon and the results while fetching mail
 from the server(s).
 Error messages for command line options and parsing the \fI.fetchmailrc\fR
 file are still written to stderr, or the specified log file if the
+The
+.B --nosyslog
+option turns off use of 
+.IR syslog (3),
+assuming it's turned on in the 
+.I .fetchmailrc 
+file.
 .B -L
 or
 .B --logfile
@@ -989,6 +996,9 @@ Perform an expunge on every #th message (IMAP only)
 T}
 syslog  	\&	T{
 Do error logging through syslog(3).
+T}
+nosyslog  	\&	T{
+Turn off error logging through syslog(3).
 T}
 .TE
 .PP

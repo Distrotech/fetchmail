@@ -11,6 +11,8 @@
 fetchmail-4.5.2 ():
 * German-language internationalization in the RPM, thanks to Jochen Hayek.
 * .fetchmailrc files are now permitted to be executable by user and group.
+* Eric Daniel's guard code against very long lines.
+* Added --nosyslog option.
 
 fetchmail-4.5.1 (Wed Jul  1 19:27:56 EDT 1998):
 * Checkalias option from Enrico Musio <enrico.musio@spaziozerouno.it>.

@@ -1630,7 +1630,7 @@ int len;		/* length of message */
 flag forward;		/* TRUE to forward */
 {
     int	linelen;
-    unsigned char buf[MSGBUFSIZE+1];
+    unsigned char buf[MSGBUFSIZE+4];
     unsigned char *inbufp = buf;
     flag issoftline = FALSE;
 
@@ -1638,7 +1638,7 @@ flag forward;		/* TRUE to forward */
     while (protocol->delimited || len > 0)
     {
 	set_timeout(ctl->server.timeout);
-	if ((linelen = SockRead(sock, inbufp, sizeof(buf)-1-(inbufp-buf)))==-1)
+	if ((linelen = SockRead(sock, inbufp, sizeof(buf)-4-(inbufp-buf)))==-1)
 	{
 	    set_timeout(0);
 	    if (ctl->mda)
@@ -1694,8 +1694,15 @@ flag forward;		/* TRUE to forward */
 	/* ship out the text line */
 	if (forward && (!issoftline))
 	{
-	    int	n = stuffline(ctl, buf);
+	    int	n;
 	    inbufp = buf;
+
+	    /* guard against very long lines */
+	    buf[MSGBUFSIZE+1] = '\r';
+	    buf[MSGBUFSIZE+2] = '\n';
+	    buf[MSGBUFSIZE+3] = '\0';
+
+	    n = stuffline(ctl, buf);
 
 	    if (n < 0)
 	    {

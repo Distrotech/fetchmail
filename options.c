@@ -31,35 +31,36 @@
 #define LA_LOGFILE	9
 #define LA_INVISIBLE	10
 #define LA_SYSLOG	11
-#define LA_RCFILE	12
-#define LA_IDFILE	13
-#define LA_PROTOCOL	14
-#define LA_UIDL		15
-#define LA_PORT		16
-#define LA_AUTHENTICATE	17
-#define LA_TIMEOUT	18
-#define LA_ENVELOPE	19
-#define LA_QVIRTUAL     20
-#define LA_USERNAME	21
-#define LA_ALL          22
-#define LA_NOKEEP	23
-#define	LA_KEEP		24
-#define LA_FLUSH        25
-#define LA_NOREWRITE	26
-#define LA_LIMIT	27
-#define LA_FOLDER	28
-#define LA_SMTPHOST	29
-#define LA_SMTPADDR     30
-#define LA_ANTISPAM	31
-#define LA_BATCHLIMIT	32
-#define LA_FETCHLIMIT	33
-#define LA_EXPUNGE	34
-#define LA_MDA		35
-#define LA_NETSEC	36
-#define LA_INTERFACE    37
-#define LA_MONITOR      38
-#define LA_CONFIGDUMP	39
-#define LA_YYDEBUG	40
+#define LA_NOSYSLOG	12
+#define LA_RCFILE	13
+#define LA_IDFILE	14
+#define LA_PROTOCOL	15
+#define LA_UIDL		16
+#define LA_PORT		17
+#define LA_AUTHENTICATE	18
+#define LA_TIMEOUT	19
+#define LA_ENVELOPE	20
+#define LA_QVIRTUAL     21
+#define LA_USERNAME	22
+#define LA_ALL          23
+#define LA_NOKEEP	24
+#define	LA_KEEP		25
+#define LA_FLUSH        26
+#define LA_NOREWRITE	27
+#define LA_LIMIT	28
+#define LA_FOLDER	29
+#define LA_SMTPHOST	30
+#define LA_SMTPADDR     31
+#define LA_ANTISPAM	32
+#define LA_BATCHLIMIT	33
+#define LA_FETCHLIMIT	34
+#define LA_EXPUNGE	35
+#define LA_MDA		36
+#define LA_NETSEC	37
+#define LA_INTERFACE    38
+#define LA_MONITOR      39
+#define LA_CONFIGDUMP	40
+#define LA_YYDEBUG	41
 
 /* options still left: CgGhHjJoORUwWxXYz */
 static const char *shortoptions = 
@@ -78,6 +79,7 @@ static const struct option longoptions[] = {
   {"logfile",	required_argument, (int *) 0, LA_LOGFILE     },
   {"invisible",	no_argument,	   (int *) 0, LA_INVISIBLE   },
   {"syslog",	no_argument,	   (int *) 0, LA_SYSLOG      },
+  {"nosyslog",	no_argument,	   (int *) 0, LA_NOSYSLOG    },
   {"fetchmailrc",required_argument,(int *) 0, LA_RCFILE      },
   {"idfile",	required_argument, (int *) 0, LA_IDFILE      },
 
@@ -469,7 +471,11 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 
 	case LA_SYSLOG:
-	    rctl->use_syslog = TRUE;
+	    rctl->use_syslog = FLAG_TRUE;
+	    break;
+
+	case LA_NOSYSLOG:
+	    rctl->use_syslog = FLAG_FALSE;
 	    break;
 
 	case '?':
