@@ -1,9 +1,6 @@
-			Known problems:
-
-
 			Release Notes:
 
-fetchmail-1.9 ():
+fetchmail-1.9 (Mon Oct 21 13:42:07 EDT 1996):
 
 features --
 
@@ -60,6 +57,9 @@ bugs --
   is involved fills up, fetchmail can no longer run even if the network is up.
   To avoid this, fetchmail now commits seppuku after some number of
   unsuccessful socket opens.
+
+* Don't try using FLAGS.SILENT, some allegedly IMAP2bis servers seem to
+  choke on it.
 
 fetchmail-1.8 (Fri Oct 11 15:08:10 EDT 1996):
 
