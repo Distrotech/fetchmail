@@ -568,7 +568,7 @@ int readheaders(int sock,
 	    sizeticker += linelen;
 	    while (sizeticker >= SIZETICKER)
 	    {
-		if (outlevel > O_SILENT && run.showdots)
+		if (outlevel > O_SILENT && run.showdots && !run.use_syslog)
 		{
 		    fputc('.', stdout);
 		    fflush(stdout);
@@ -1354,7 +1354,7 @@ int readbody(int sock, struct query *ctl, flag forward, int len)
 	    sizeticker += linelen;
 	    while (sizeticker >= SIZETICKER)
 	    {
-		if (outlevel > O_SILENT && run.showdots)
+		if (outlevel > O_SILENT && run.showdots && !run.use_syslog)
 		{
 		    fputc('.', stdout);
 		    fflush(stdout);
