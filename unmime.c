@@ -45,7 +45,6 @@ static int qp_char(unsigned char c1, unsigned char c2, unsigned char *c_out)
 }
 
 
-
 /*
  * Routines to decode MIME QP-encoded headers, as per RFC 2047.
  */
@@ -457,7 +456,7 @@ int MimeBodyType(unsigned char *hdrs, int WantDecode)
 
     /* Check Content-Type to see if this is a multipart message */
     if ( (CntType != NULL) &&
-         ((strncasecmp(CntType, "multipart/", 10) == 0) ||
+         ((strncasecmp(CntType, "multipart/mixed", 16) == 0) ||
 	  (strncasecmp(CntType, "message/", 8) == 0)) ) {
 
       char *p1 = GetBoundary(CntType);

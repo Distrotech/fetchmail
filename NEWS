@@ -13,6 +13,7 @@ fetchmail-5.0.0 ():
 * Eliminate a realloc error in fetchmail -v -v progress message generation.
 * Spanish-language update by Javier Kohen.
 * Danish summary and description for specgen.sh.
+* Henrik Storner's fix for the PGP/mimedecode problem.
 
 There are 263 people on fetchmail-friends and 361 on fetchmail-announce.
 
