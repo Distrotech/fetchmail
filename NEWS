@@ -4,8 +4,9 @@ fetchmail-4.5.4 ():
 * Fixed processing of --antispam option.
 * Antispam default value is now the list [571, 550, 501] corresponding
   to the sendmail, old exim, and new exim spam-block responses.
+* Fetchmailconf 1.2 has been fixed to handle list values of antispam.
 
-There are 265 people on fetchmail-friends and 249 on fetchmail-announce.
+There are 263 people on fetchmail-friends and 248 on fetchmail-announce.
 
 fetchmail-4.5.3 (Mon Jul 20 15:02:08 EDT 1998):
 * Minor fixes to the GSSAPI code.  Seems to work with stock UW IMAP now.
