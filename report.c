@@ -232,11 +232,11 @@ report (FILE *errfp, errnum, message, va_alist)
 }
 
 /*
- * Calling error_init(1) causes error_build and error_complete to write
+ * Calling report_init(1) causes error_build and error_complete to write
  * to errfp without buffering.  This is needed for the ticker dots to
  * work correctly.
  */
-void error_init(int mode)
+void report_init(int mode)
 {
     switch(mode)
     {

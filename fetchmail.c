@@ -454,11 +454,11 @@ int main (int argc, char **argv)
     if (run.use_syslog)
     {
     	openlog(program_name, LOG_PID, LOG_MAIL);
-	error_init(-1);
+	report_init(-1);
     }
     else
 #endif
-	error_init((run.poll_interval == 0 || nodetach) && !run.logfile);
+	report_init((run.poll_interval == 0 || nodetach) && !run.logfile);
 
     if (run.poll_interval)
     {

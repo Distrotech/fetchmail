@@ -337,7 +337,7 @@ extern const char *fetchmailhost;
 
 /* error.c: Error reporting */
 #if defined(HAVE_STDARG_H)
-void report_init(FILE *fp, int foreground);
+void report_init(int foreground);
 void report (FILE *fp, int errnum, const char *format, ...);
 void report_build (FILE *fp, const char *format, ...);
 void report_complete (FILE *fp, int errnum, const char *format, ...);
