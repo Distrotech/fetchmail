@@ -1539,7 +1539,7 @@ int open_warning_by_mail(struct query *ctl, struct msgblk *msg)
 	stuff_warning(NULL, ctl, "Date: %s", rfc822timestamp());
 	stuff_warning(NULL, ctl, "MIME-Version: 1.0");
 	stuff_warning(NULL, ctl, "Content-Transfer-Encoding: 8bit");
-	stuff_warning(NULL, ctl, "Content-Type: text/plain; charset=\"%s\"", nl_langinfo(CODESET));
+	stuff_warning(NULL, ctl, "Content-Type: text/plain; charset=\"%s\"", iana_charset);
     }
     return(status);
 }

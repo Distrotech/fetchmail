@@ -333,7 +333,7 @@ static void send_size_warnings(struct query *ctl)
      */
     if (open_warning_by_mail(ctl, (struct msgblk *)NULL))
 	return;
-    stuff_warning(nl_langinfo(CODESET), ctl,
+    stuff_warning(iana_charset, ctl,
 	   GT_("Subject: Fetchmail oversized-messages warning"));
     stuff_warning(NULL, ctl, "");
     stuff_warning(NULL, ctl,
@@ -910,7 +910,7 @@ static int do_session(
 	    if (timeoutcount > MAX_TIMEOUTS 
 		&& !open_warning_by_mail(ctl, (struct msgblk *)NULL))
 	    {
-		stuff_warning(nl_langinfo(CODESET), ctl,
+		stuff_warning(iana_charset, ctl,
 			      GT_("Subject: fetchmail sees repeated timeouts"));
 		stuff_warning(NULL, ctl, "");
 		stuff_warning(NULL, ctl,
@@ -1111,7 +1111,7 @@ static int do_session(
 		/* warn the system administrator */
 		if (open_warning_by_mail(ctl, (struct msgblk *)NULL) == 0)
 		{
-		    stuff_warning(nl_langinfo(CODESET), ctl,
+		    stuff_warning(iana_charset, ctl,
 			 GT_("Subject: Fetchmail unreachable-server warning."));
 		    stuff_warning(NULL, ctl, "");
 		    stuff_warning(NULL, ctl, GT_("Fetchmail could not reach the mail server %s:"),
@@ -1226,7 +1226,7 @@ static int do_session(
 			&& !open_warning_by_mail(ctl, (struct msgblk *)NULL))
 		    {
 			ctl->wehavesentauthnote = 1;
-			stuff_warning(nl_langinfo(CODESET), ctl,
+			stuff_warning(iana_charset, ctl,
 				      GT_("Subject: fetchmail authentication failed on %s@%s"),
 			    ctl->remotename, ctl->server.truename);
 			stuff_warning(NULL, ctl, "");
@@ -1299,7 +1299,7 @@ is restored."));
 			   ctl->server.truename);
 		    if (!open_warning_by_mail(ctl, (struct msgblk *)NULL))
 		    {
-			stuff_warning(nl_langinfo(CODESET), ctl,
+			stuff_warning(iana_charset, ctl,
 			      GT_("Subject: fetchmail authentication OK on %s@%s"), 
 				      ctl->remotename, ctl->server.truename);
 			stuff_warning(NULL, ctl, "");
