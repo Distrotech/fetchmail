@@ -1,7 +1,35 @@
+			To Do:
+
+1. George Sipe reports that --monitor is broken.
+
+This needs to be fixed.  --interface seems to work OK, so the error is
+evidently something pretty specific to the --monitor code.
+
+2. Rethink the handling of DNS errors in multidrop mode.
+
+The present behavior is to suppress forwarding and deletion of the
+individual message that each occurs in, leaving it queued on the server
+for retrieval on a subsequent poll.  The assumption is that DNS
+errors are transient, due to temporary server outages.
+
+Unfortunately this means that if a DNS error is permanent a message
+can be perpetually stuck in the server mailbox.  We've had a couple
+bug reports of this kind due to subtle RFC822 parsing errors in the fetchmail
+code that resulted in impossible things getting passed to the DNS lookup
+routines.
+
+Alternative ways to handle the problem: ignore DNS errors (treating
+them as a non-match on the mailserver domain), or forward messages
+with errors to fetchmail's invoking user in addition to any other
+recipients.  These would fit an assummption that DNS lookup errors are
+likely to be permanent problems associated with an address.
+
+I'm not sure which is long-term appropriate.  
+
 			Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-3.7 ()
+fetchmail-3.7 (Fri Feb 21 17:38:40 EST 1997)
 
 features --
 
@@ -22,6 +50,8 @@ bugs --
 * Various error-logging fixes by Dave Bodenstab.
 
 * Fix parsing bug that broke UIDL-processing code.
+
+There are 233 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-3.6 (Mon Feb 17 00:19:55 EST 1997)
