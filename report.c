@@ -311,7 +311,7 @@ report_build (FILE *errfp, message, va_alist)
   if ((partial_message_size_used = strlen (partial_message)) >= partial_message_size)
     {
       partial_message_size_used = 0;
-      report (PS_UNDEFINED, 0, _("partial error message buffer overflow"));
+      report (stderr, _("partial error message buffer overflow"));
     }
 #endif
 #endif
@@ -383,7 +383,7 @@ report_complete (FILE *errfp, message, va_alist)
   if (partial_message_size_used >= partial_message_size)
     {
       partial_message_size_used = 0;
-      report (PS_UNDEFINED, 0, _("partial error message buffer overflow"));
+      report (stderr, _("partial error message buffer overflow"));
     }
 #endif
   va_end (args);
@@ -411,7 +411,7 @@ report_complete (FILE *errfp, message, va_alist)
   if ((partial_message_size_used = strlen (partial_message)) >= partial_message_size)
     {
       partial_message_size_used = 0;
-      report (PS_UNDEFINED, 0, _("partial error message buffer overflow"));
+      report (stderr, _("partial error message buffer overflow"));
     }
 #endif
 #endif
