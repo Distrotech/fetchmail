@@ -298,7 +298,7 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
     }
 }
 
-char *parse_received(struct query *ctl, char *bufp)
+static char *parse_received(struct query *ctl, char *bufp)
 /* try to extract real addressee from the Received line */
 {
     char *ok;
@@ -368,7 +368,7 @@ char *parse_received(struct query *ctl, char *bufp)
 }
 #endif /* HAVE_RES_SEARCH */
 
-int smtp_open(struct query *ctl)
+static int smtp_open(struct query *ctl)
 /* try to open a socket to the appropriate SMTP server for this query */ 
 {
     /* maybe it's time to close the socket in order to force delivery */

@@ -210,34 +210,37 @@ extern char *user;		/* name of invoking user */
 extern char *fetchmailhost;	/* the name of the host running fetchmail */
 
 /* prototypes for globally callable functions */
+
+/* error.c: Error reporting */
 #if defined(HAVE_STDARG_H)
 void error_init(int foreground);
 void error (int status, int errnum, const char *format, ...);
 void error_build (const char *format, ...);
 void error_complete (int status, int errnum, const char *format, ...);
 void error_at_line (int, int, const char *, unsigned int, const char *, ...);
-void gen_send (int sock, char *, ... );
-int gen_recv(int sock, char *buf, int size);
-int gen_transact (int sock, char *, ... );
 #else
 void error ();
 void error_build ();
 void error_complete ();
 void error_at_line ();
+#endif
+
+/* driver.c: transaction support */
+#if defined(HAVE_STDARG_H)
+void gen_send (int sock, char *, ... );
+int gen_recv(int sock, char *buf, int size);
+int gen_transact (int sock, char *, ... );
+#else
 void gen_send ();
+int gen_recv();
 int gen_transact ();
 #endif
 
-int do_protocol(struct query *, const struct method *);
-int doPOP2 (struct query *); 
-int doPOP3 (struct query *);
-int doIMAP (struct query *);
-int doETRN (struct query *);
-
+/* rfc822.c: RFC822 header parsing */
 void reply_hack(char *, const char *);
 char *nxtaddr(const char *);
 
-/* UID support */
+/* uid.c: UID support */
 void initialize_saved_lists(struct query *, const char *);
 struct idlist *save_str(struct idlist **, int, const char *);
 void free_str_list(struct idlist **);
@@ -254,40 +257,49 @@ void append_str_list(struct idlist **, struct idlist **);
 void update_str_lists(struct query *);
 void write_saved_lists(struct query *, const char *);
 
+/* rcfile_y.y */
+int prc_parse_file(const char *, flag);
+int prc_filecheck(const char *);
+
+/* base64.c */
+void to64frombits(unsigned char *, const unsigned char *, int);
+int from64tobits(char *, const char *);
+
+/* interface.c */
+void interface_parse(char *, struct hostdata *);
+void interface_note_activity(struct hostdata *);
+int interface_approve(struct hostdata *);
+
+/* xmalloc.c */
+#if defined(HAVE_VOIDPOINTER)
+#define XMALLOCTYPE void
+#else
+#define XMALLOCTYPE char
+#endif
+XMALLOCTYPE *xmalloc(int);
+XMALLOCTYPE *xrealloc(XMALLOCTYPE *, int);
+char *xstrdup(const char *);
+
+/* protocol driver and methods */
+int do_protocol(struct query *, const struct method *);
+int doPOP2 (struct query *); 
+int doPOP3 (struct query *);
+int doIMAP (struct query *);
+int doETRN (struct query *);
+
+/* miscellanea */
 struct query *hostalloc(struct query *); 
 int parsecmdline (int, char **, struct query *);
 void optmerge(struct query *, struct query *);
 char *MD5Digest (char *);
 int daemonize(const char *, void (*)(int));
-
-int prc_parse_file(const char *, flag);
-int prc_filecheck(const char *);
-
-void interface_parse(char *, struct hostdata *);
-void interface_note_activity(struct hostdata *);
-int interface_approve(struct hostdata *);
-
 char *getpassword(char *);
-
 void escapes(const char *, char *);
 char *visbuf(const char *);
 char *showproto(int);
 
 void yyerror(const char *);
 int yylex(void);
-
-void to64frombits(unsigned char *, const unsigned char *, int);
-int from64tobits(char *, const char *);
-
-#if defined(HAVE_VOIDPOINTER)
-#define XMALLOCTYPE void
-#else
-#define XMALLOCTYPE char
-#endif
-
-XMALLOCTYPE *xmalloc(int);
-XMALLOCTYPE *xrealloc(XMALLOCTYPE *, int);
-char *xstrdup(const char *);
 
 #define STRING_DISABLED	(char *)-1
 
