@@ -599,9 +599,11 @@ then
   fi
   if test -r $with_ssl/include/openssl/ssl.h
   then
-    ###	ssl.h found under openssl.  Use openssl configuration preferentially
+    ###	ssl.h found under openssl.  Use openssl configuration preferentially,
+    ### In Red Hat 9, this file includes a reference to <krb5.h>, so we
+    ### force the Kerberos direcory onto the include path so it will build.
     echo "Enabling OpenSSL support in $with_ssl"
-    CEFLAGS="$CEFLAGS -I$with_ssl/include/openssl"
+    CEFLAGS="$CEFLAGS -I$with_ssl/include/openssl -I/usr/kerberos/include"
     ###	OpenBSD comes with ssl headers
   elif test -r /usr/include/ssl/ssl.h
   then
