@@ -512,7 +512,7 @@ else
        AC_CHECK_LIB(45, krb_mk_req)
      fi
      LDFLAGS="-L$dir/lib $ac_saveLDFLAGS"
-     AC_SEARCH_LIBS(des_string_to_key, [des425 des], [], continue)
+     AC_SEARCH_LIBS(des_string_to_key, [des425 des crypto], [], continue)
      AC_SEARCH_LIBS(krb_realmofhost, [krb4 krb], [], continue)
      with_kerberos="$dir"
      if test -f "$dir/include/kerberosIV/krb.h" ; then
