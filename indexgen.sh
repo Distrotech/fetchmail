@@ -37,7 +37,7 @@ cat >index.html <<EOF
 
 <H1>What fetchmail does:</H1>
 
-Fetchmail is a free, full-featured, robust, well-documented
+Fetchmail is a full-featured, robust, well-documented
 remote-mail retrieval and forwarding utility intended to be used over
 on-demand TCP/IP links (such as SLIP or PPP connections). It supports
 every remote-mail protocol now in use on the Internet: POP2, POP3,
@@ -75,6 +75,10 @@ distribution.<P>
 Fetchmail is fast and lightweight.  It packs all its standard
 features (POP3, IMAP, and ETRN support) in less than 96K of core on a
 Pentium under Linux.<p>
+
+Fetchmail is <a href="http://www.opensource.org">open-source</a>
+software.  The openness of the sources is your strongest possible
+assurance of quality and reliability.<P>
 
 <H1>Where to find out more about fetchmail:</H1>
 
@@ -174,11 +178,12 @@ The fetchmail development project was a sociological experiment as well
 as a technical effort.  I ran it as a test of some theories about why the
 Linux development model works.<P>
 
-I wrote a paper, <A HREF="../writings/cathedral-bazaar/">The Cathedral
-And The Bazaar</A>, about these theories and the project.  The paper
-became quite popular and (to my continuing astonishment) may have
-actually helped change the world.  Chase the title link, above, to its
-page. <P>
+I wrote a paper, <A
+HREF="http://www.tuxedo.org/~esr/writings/cathedral-bazaar/">The
+Cathedral And The Bazaar</A>, about these theories and the project.
+The paper became quite popular and (to my continuing astonishment) may
+have actually helped change the world.  Chase the title link, above,
+to its page.<P>
 
 <H1>Recent releases and where fetchmail is going:</H2>
 
