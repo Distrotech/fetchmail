@@ -391,8 +391,8 @@ the server.  In this (unlikely) case, only messages you fetched with
 The preferred way to set up fetchmail (and the only way if you want to
 avoid specifying passwords each time it runs) is to write a
 \&\fI.fetchmailrc\fR file in your home directory.  To protect the security
-of your passwords, your \fI~/.fetchmailrc\fR may not have more than u+r,u+w
-permissions;
+of your passwords, your \fI~/.fetchmailrc\fR may not have more than
+600 (u=rw,g=,o=) permissions;
 .I fetchmail
 will complain and exit otherwise.
 .PP
