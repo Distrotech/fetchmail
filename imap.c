@@ -607,7 +607,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 	{
 	    imap_version = IMAP4;
 	    if (outlevel == O_VERBOSE)
-	    error(0, 0, "Protocol identified as IMAP4 rev 0");
+		error(0, 0, "Protocol identified as IMAP4 rev 0");
 	}
     }
     else if (ok == PS_ERROR)
@@ -622,11 +622,12 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     peek_capable = (imap_version >= IMAP4);
 
 #if OPIE
-    if ((ctl->server.protocol == P_IMAP) && strstr(capabilities, "AUTH=X-OTP")) {
-      if (outlevel == O_VERBOSE)
-        error(0, 0, "OTP authentication is supported");
-      if (do_otp(sock, ctl) == PS_SUCCESS)
-        return PS_SUCCESS;
+    if ((ctl->server.protocol == P_IMAP) && strstr(capabilities, "AUTH=X-OTP"))
+    {
+	if (outlevel == O_VERBOSE)
+	    error(0, 0, "OTP authentication is supported");
+	if (do_otp(sock, ctl) == PS_SUCCESS)
+	    return(PS_SUCCESS);
     };
 #endif /* OPIE */
 

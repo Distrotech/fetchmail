@@ -406,7 +406,7 @@ static int smtp_open(struct query *ctl)
 	     * RFC 1869 warns that some listeners hang up on a failed EHLO,
 	     * so it's safest not to assume the socket will still be good.
 	     */
-	    close(ctl->smtp_socket);
+	    SockClose(ctl->smtp_socket);
 	    ctl->smtp_socket = -1;
 
 	    /* if opening for ESMTP failed, try SMTP */
@@ -417,7 +417,7 @@ static int smtp_open(struct query *ctl)
 		    SMTP_helo(ctl->smtp_socket, id_me) == SM_OK)
 		break;  /* success */
 
-	    close(ctl->smtp_socket);
+	    SockClose(ctl->smtp_socket);
 	    ctl->smtp_socket = -1;
 	}
 	set_timeout(0);
@@ -1780,7 +1780,7 @@ const struct method *proto;	/* protocol method table */
 	if (ctl->smtp_socket != -1)
 	    close(ctl->smtp_socket);
 	if (sock != -1)
-	    close(sock);
+	    SockClose(sock);
 	if (sinkfp)
 	    pclose(sinkfp);
 	ok = PS_ERROR;
@@ -2305,13 +2305,13 @@ const struct method *proto;	/* protocol method table */
 	 */
 	if (ok == 0)
 	    ok = (fetches > 0) ? PS_SUCCESS : PS_NOMAIL;
-	close(sock);
+	SockClose(sock);
 	goto closeUp;
 
     cleanUp:
 	if (ok != 0 && ok != PS_SOCKET)
 	    (protocol->logout_cmd)(sock, ctl);
-	close(sock);
+	SockClose(sock);
     }
 
     msg = (char *)NULL;		/* sacrifice to -Wall */

@@ -43,4 +43,10 @@ int SockPrintf(int sock, char *format, ...) ;
 int SockPrintf();
 #endif
  
+/*
+Close a socket previously opened by SockOpen.  This allows for some
+additional clean-up if necessary.
+*/
+int SockClose(int sock);
+
 #endif /* SOCKET__ */

@@ -220,6 +220,12 @@ int SockPeek(int sock)
 	return(ch);
 }
 
+int SockClose(int sock)
+/* close a socket (someday we may do other cleanup here) */
+{
+    return(close(sock));
+}
+
 #ifdef MAIN
 /*
  * Use the chargen service to test input beuffering directly.
@@ -233,6 +239,7 @@ main()
 
     while (SockRead(sock, buf, sizeof(buf)-1))
 	SockWrite(1, buf, strlen(buf));
+    SockClose(sock);
 }
 #endif /* MAIN */
 
