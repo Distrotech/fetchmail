@@ -21,6 +21,8 @@ Summary(es):    Recolector de correo via POP/IMAP
 Summary(pl):    Zdalny demon pocztowy do protoko³ów POP2, POP3, APOP, IMAP
 Summary(tr):    POP2, POP3, APOP, IMAP protokolleri ile uzaktan mektup alma yazýlýmý
 Summary(da):    Alsidig POP/IMAP post-afhentnings dæmon
+BuildRoot: %{_tmppath}/%{name}-root
+#Keywords: mail, client, POP, POP2, POP3, APOP, RPOP, KPOP, IMAP, ETRN, ODMR, SMTP, ESMTP, GSSAPI, RPA, NTLM, CRAM-MD5, SASL
 
 %description
 Fetchmail is a free, full-featured, robust, and well-documented remote
@@ -150,4 +152,8 @@ rm -rf \$RPM_BUILD_ROOT
 %attr(755,root,root) /usr/bin/fetchmailconf
 /usr/lib/rhs/control-panel/fetchmailconf.xpm
 /usr/lib/rhs/control-panel/fetchmailconf.init
+
+%changelog
+* `date '+%a %b %d %Y'` <esr@thyrsus.com> ${version}
+- See the project news file for recent changes.
 EOF
