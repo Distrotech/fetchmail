@@ -983,22 +983,22 @@ void dump_params (struct query *ctl)
     printf("  Nonempty Status lines will be %s (dropstatus %s)\n",
 	   ctl->dropstatus ? "discarded" : "kept",
 	   ctl->dropstatus ? "on" : "off");
-    if (ctl->limit > 0)
+    if (NUM_NONZERO(ctl->limit))
 	printf("  Message size limit is %d bytes (--limit %d).\n", 
 	       ctl->limit, ctl->limit);
     else if (outlevel == O_VERBOSE)
 	printf("  No message size limit (--limit 0).\n");
-    if (ctl->fetchlimit > 0)
+    if (NUM_NONZERO(ctl->fetchlimit))
 	printf("  Received-message limit is %d (--fetchlimit %d).\n",
 	       ctl->fetchlimit, ctl->fetchlimit);
     else if (outlevel == O_VERBOSE)
 	printf("  No received-message limit (--fetchlimit 0).\n");
-    if (ctl->batchlimit > 0)
+    if (NUM_NONZERO(ctl->batchlimit))
 	printf("  SMTP message batch limit is %d.\n", ctl->batchlimit);
     else if (outlevel == O_VERBOSE)
 	printf("  No SMTP message batch limit (--batchlimit 0).\n");
     if (ctl->server.protocol == P_IMAP)
-	if (ctl->expunge > 0)
+	if (NUM_NONZERO(ctl->expunge))
 	    printf("  Deletion interval between expunges is %d (--expunge %d).\n", ctl->expunge, ctl->expunge);
 	else if (outlevel == O_VERBOSE)
 	    printf("  No expunges (--expunge 0).\n");

@@ -276,9 +276,8 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'l':
 	case LA_LIMIT:
-	    ctl->limit = atoi(optarg);
-	    if (ctl->limit == 0)
-		ctl->limit = -1;
+	    c = atoi(optarg);
+	    ctl->limit = NUM_VALUE(c);
 	    break;
 	case 'r':
 	case LA_FOLDER:
@@ -301,21 +300,18 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'b':
 	case LA_BATCHLIMIT:
-	    ctl->batchlimit = atoi(optarg);
-	    if (ctl->batchlimit == 0)
-		ctl->batchlimit = -1;
+	    c = atoi(optarg);
+	    ctl->batchlimit = NUM_VALUE(c);
 	    break;
 	case 'B':
 	case LA_FETCHLIMIT:
-	    ctl->fetchlimit = atoi(optarg);
-	    if (ctl->fetchlimit == 0)
-		ctl->fetchlimit = -1;
+	    c = atoi(optarg);
+	    ctl->fetchlimit = NUM_VALUE(c);
 	    break;
 	case 'e':
 	case LA_EXPUNGE:
-	    ctl->expunge = atoi(optarg);
-	    if (ctl->expunge == 0)
-		ctl->expunge = -1;
+	    c = atoi(optarg);
+	    ctl->expunge = NUM_VALUE(c);
 	    break;
 	case 'm':
 	case LA_MDA:

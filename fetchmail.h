@@ -161,6 +161,15 @@ struct query
     struct query *next;		/* next query control block in chain */
 };
 
+/*
+ * Numeric option handling.  Numeric option value of zero actually means
+ * it's unspecified.  Value less than zero is zero.
+ */
+#define NUM_VALUE(n)		(((n) == 0) ? -1 : (n))
+#define NUM_NONZERO(n)		((n) > 0)
+#define NUM_ZERO(n)		((n) < 0)
+#define NUM_SPECIFIED(n)	((n) != 0)
+
 #define MULTIDROP(ctl)	(ctl->wildcard || \
 				((ctl)->localnames && (ctl)->localnames->next))
 

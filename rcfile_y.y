@@ -245,10 +245,10 @@ user_option	: TO localnames HERE
 		| NO PASS8BITS		{current.pass8bits  = FLAG_FALSE;}
 		| NO DROPSTATUS		{current.dropstatus = FLAG_FALSE;}
 
-		| LIMIT NUMBER		{current.limit      = $2;}
-		| FETCHLIMIT NUMBER	{current.fetchlimit = $2;}
-		| BATCHLIMIT NUMBER	{current.batchlimit = $2;}
-		| EXPUNGE NUMBER	{current.expunge    = $2;}
+		| LIMIT NUMBER		{current.limit      = NUM_VALUE($2);}
+		| FETCHLIMIT NUMBER	{current.fetchlimit = NUM_VALUE($2);}
+		| BATCHLIMIT NUMBER	{current.batchlimit = NUM_VALUE($2);}
+		| EXPUNGE NUMBER	{current.expunge    = NUM_VALUE($2);}
 		;
 %%
 

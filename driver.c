@@ -392,7 +392,7 @@ static int smtp_open(struct query *ctl)
 /* try to open a socket to the appropriate SMTP server for this query */ 
 {
     /* maybe it's time to close the socket in order to force delivery */
-    if (ctl->batchlimit > 0 && (ctl->smtp_socket != -1) && batchcount++ == ctl->batchlimit)
+    if (NUM_NONZERO(ctl->batchlimit) && (ctl->smtp_socket != -1) && batchcount++ == ctl->batchlimit)
     {
 	close(ctl->smtp_socket);
 	ctl->smtp_socket = -1;
@@ -1465,7 +1465,7 @@ const struct method *proto;	/* protocol method table */
 	    return(PS_SYNTAX);
 	}
     }
-    if (!proto->getsizes && ctl->limit)
+    if (!proto->getsizes && NUM_SPECIFIED(ctl->limit))
     {
 	error(0, 0,
 		"Option --limit is not supported with %s",
@@ -1692,7 +1692,7 @@ const struct method *proto;	/* protocol method table */
 		    /* read, forward, and delete messages */
 		    for (num = 1; num <= count; num++)
 		    {
-			flag toolarge = (ctl->limit > 0)
+			flag toolarge = NUM_NONZERO(ctl->limit)
 			    && msgsizes && (msgsizes[num-1] > ctl->limit);
 			flag fetch_it = !toolarge 
 			    && (ctl->fetchall || force_retrieval || !(protocol->is_old && (protocol->is_old)(sock,ctl,num)));
@@ -1929,7 +1929,7 @@ const struct method *proto;	/* protocol method table */
 			    error_complete(0, 0, " not flushed");
 
 			/* perhaps this as many as we're ready to handle */
-			if (ctl->fetchlimit > 0 && ctl->fetchlimit <= fetches)
+			if (NUM_NONZERO(ctl->fetchlimit) && ctl->fetchlimit <= fetches)
 			    goto no_error;
 		    }
 		}

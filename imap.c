@@ -652,7 +652,7 @@ static int imap_delete(int sock, struct query *ctl, int number)
      * won't result in lots of messages being fetched again during
      * the next session.
      */
-    if (ctl->expunge > 0 && (++deletions % ctl->expunge) == 0)
+    if (NUM_NONZERO(ctl->expunge) && (++deletions % ctl->expunge) == 0)
     {
 	if ((ok = gen_transact(sock, "EXPUNGE")))
 	    return(ok);
@@ -671,7 +671,7 @@ static int imap_logout(int sock, struct query *ctl)
 /* send logout command */
 {
     /* if expunges after deletion have been suppressed, ship one now */
-    if (ctl->expunge == 0 && deletions)
+    if (NUM_SPECIFIED(ctl->expunge) && NUM_ZERO(ctl->expunge) && deletions)
     {
 	int	ok;
 
