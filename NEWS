@@ -2,7 +2,11 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
-* More configure fixes -- include missing.h stub script in the distribution.
+fetchmail-5.7.7 (Wed Mar 28 20:24:48 EST 2001), 20459 lines:
+
+* More configure fixes -- include missing stub script in the distribution.
+
+There are 312 people on fetchmail-friends and 566 on fetchmail-announce.
 
 fetchmail-5.7.6 (Thu Mar 22 16:22:48 EST 2001), 20456 lines:
 
