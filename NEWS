@@ -7,7 +7,7 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.4.7 (Sat May 23 08:26:58 EDT 1998)
+fetchmail-4.4.7 (Sat May 23 08:26:58 EDT 1998):
 * FEATURE FREEZE IS NOW IN EFFECT!  No new features until after 4.5.0.
 * Better workaround for TOP bounds-checking in qpopper 2.3+.
 * Several fixes for option-parsing and elsewhere by Gunther Leber.
@@ -19,7 +19,7 @@ fetchmail-4.4.7 (Sat May 23 08:26:58 EDT 1998)
 
 There are 270 people on fetchmail-friends and 216 on fetchmail-announce.
 
-fetchmail-4.4.6 (Sat May 16 14:16:49 EDT 1998)
+fetchmail-4.4.6 (Sat May 16 14:16:49 EDT 1998):
 * Fix a bug introduced by my 4.4.5 bug-fix release :-(
 * Make the internal line buffer eight times longer to cope with idiot
   DOS-world editors.
@@ -486,7 +486,7 @@ And about time, too, I've been hacking on this code for a year now!
 There are 251 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
-pl 3.9.9 (Wed Jun 25 11:01:51 EDT 1997):
+fetchmail-3.9.9 (Wed Jun 25 11:01:51 EDT 1997):
 * We can now process multiple To headers a la Microsoft Exchange Server.
 * Avoid sending LIST and getting an error when no messages are waiting.
 * Allow `fetchmail' to do wakeup even when no .fetchmailrc.
@@ -496,7 +496,7 @@ pl 3.9.9 (Wed Jun 25 11:01:51 EDT 1997):
 
 There are 248 people on the fetchmail-friends list.
 
-pl 3.9.8 (Sat Jun 14 14:19:32 EDT 1997):
+fetchmail-3.9.8 (Sat Jun 14 14:19:32 EDT 1997):
 * Fetchmail is now normally built with optimization.
 * POP2 support is no longer compiled by default, but you can configure
   it in with `configure --enable-POP2'.
@@ -511,7 +511,7 @@ pl 3.9.8 (Sat Jun 14 14:19:32 EDT 1997):
 
 There are 261 people on the fetchmail-friends list.
 
-pl 3.9.7 (Mon Jun  9 18:40:04 EDT 1997):
+fetchmail-3.9.7 (Mon Jun  9 18:40:04 EDT 1997):
 * Complain and exit if user tries to start fetchmail with options while a
   background fetchmail is running.
 * Various installation headaches are gone, INSTALL edited accordingly.
@@ -524,7 +524,7 @@ pl 3.9.7 (Mon Jun  9 18:40:04 EDT 1997):
 
 There are 252 people on the fetchmail-friends list.
 
-pl 3.9.6 (Wed May 28 18:28:35 EDT 1997):
+fetchmail-3.9.6 (Wed May 28 18:28:35 EDT 1997):
 * Fix the libc6 configuration stuff (thanks to Jesse Thilo).
 * Support for Kerberos-v4-authenticated IMAP (thanks to Rudolph Maceyko).
 * Don't choke on RFC822 group names.
@@ -533,7 +533,7 @@ pl 3.9.6 (Wed May 28 18:28:35 EDT 1997):
 
 There are 257 people on the fetchmail-friends list.
 
-pl 3.9.5 (Sun May 18 01:05:13 EDT 1997):
+fetchmail-3.9.5 (Sun May 18 01:05:13 EDT 1997):
 * Add an error notification when an incoming message has embedded NULs.
 * Throw out >From lines in headers to prevent getting hosed by upstream
   sendmails with the 'E' option on.
@@ -545,7 +545,7 @@ pl 3.9.5 (Sun May 18 01:05:13 EDT 1997):
 
 There are 249 people on the fetchmail-friends list.
 
-pl 3.9.4 (Wed May 14 12:27:22 EDT 1997):
+fetchmail-3.9.4 (Wed May 14 12:27:22 EDT 1997):
 * Fixed a compilation glitch for systems like SunOS & others without atexit(3).
 * Fixed a compilation glitch in daemonize for HP-UX.
 * Changes to compile correctly on systems that have on_exit() but not atexit().
@@ -556,7 +556,7 @@ pl 3.9.4 (Wed May 14 12:27:22 EDT 1997):
 
 There are 248 people on the fetchmail-friends list.
 
-pl 3.9.3 (Wed May  7 11:40:47 EDT 1997):
+fetchmail-3.9.3 (Wed May  7 11:40:47 EDT 1997):
 * Fix for -I option from George Sipe.
 * Finally got error.c to compile under AIX, thanks to Dave Vinish.
 * Prevent header rewrite logic from appending mailserver name to blank To.
@@ -564,14 +564,14 @@ pl 3.9.3 (Wed May  7 11:40:47 EDT 1997):
 
 There are 240 people on the fetchmail-friends list.
 
-pl 3.9.2 (Wed Apr 23 14:07:03 EDT 1997):
+fetchmail-3.9.2 (Wed Apr 23 14:07:03 EDT 1997):
 * Fixed a glitch in the Makefile yacc and lex productions
 * Add logic for X-Fetchmail-Warning emission of \r\n to pacify qmail.
 * Yet another try at getting error.c to play nice with AIX.
 
 There are 224 people on the fetchmail-friends list.
 
-pl 3.9.1 (Thu Apr 17 11:37:14 EDT 1997):
+fetchmail-3.9.1 (Thu Apr 17 11:37:14 EDT 1997):
 * Hypertext FAQ added to distribution manifest.
 * RPM builder production fixed.
 * Minor additions and corrections to man page.
@@ -734,10 +734,10 @@ There are 223 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------\
 
-pl 3.3.2 (Mon Feb  3 12:59:33 EST 1997):
+fetchmail-3.3.2 (Mon Feb  3 12:59:33 EST 1997):
 * Minor fixes to stripcr and password-shrouding logic.
 
-pl 3.3.1 (Sun Feb  2 02:17:07 EST 1997):
+fetchmail-3.3.1 (Sun Feb  2 02:17:07 EST 1997):
 * Fix incorrect stripcr processing
 * Unapply a patch that broke error logging to files.
 
@@ -1076,13 +1076,12 @@ bugs --
 
 ------------------------------------------------------------------------------
 fetchmail-2.0 (Mon Nov 18 00:32:17 EST 1996):
-
 * Fix typo in setitimer call setup that caused obscure bugs under FreeBSD.
 * Accept Apparently-To if there is no To header.
 * Include Cameron McPherson's patch for handling multi-line SMTP responses.
 * Don't try to feed listener the header From any more.
 
-pl 1.9.9 (Mon Nov 11 10:40:14 EST 1996):
+fetchmail-1.9.9 (Mon Nov 11 10:40:14 EST 1996):
 * Accept Resent-From & Apparently-From a la RFC822.
 * Include file fixes for Solaris 2.5 and FreeBSD 2.2.
 * Improved error notification on SMTP and no-matching-local-address errors.
@@ -1090,39 +1089,39 @@ pl 1.9.9 (Mon Nov 11 10:40:14 EST 1996):
 * Batch limit option prevents long delivery delays on smail/qmail.
 * Configuration now handles -lresolv and non-Linux bind libraries correctly.
 
-pl 1.9.8 (Wed Nov  6 16:40:34 EST 1996):
+fetchmail-1.9.8 (Wed Nov  6 16:40:34 EST 1996):
 * Don't append spurious NUL to the headers, qmail actually notices it.
 * Fatal bug in multidrop code fixed.
 * Fail cleanly, instead of core-dumping, on mail lacking an RFC822 From line.
 * Don't try to keep the SMTP socket open across poll cycles.
 
-pl 1.9.7 (Fri Nov  1 10:02:34 EST 1996):
+fetchmail-1.9.7 (Fri Nov  1 10:02:34 EST 1996):
 * %s is back.  Seems some popular MDAs actually choke on name arguments.
 * We can handle responses longer than the socket atomic read length now.
 
-pl 1.9.6 (Thu Oct 31 00:07:23 EST 1996):
+fetchmail-1.9.6 (Thu Oct 31 00:07:23 EST 1996):
 * Make rewrite option handle multiple comma-separated local names correctly.
 * Fix yet another fatal error in MDA argument list construction.
 * Reset timeout every time input is received.
 * Correct localname detection when --norewrite is on.
 
-pl 1.9.5 (Tue Oct 29 20:07:41 EST 1996):
+fetchmail-1.9.5 (Tue Oct 29 20:07:41 EST 1996):
 * Added -N, --nodetach option for debugging purposes.
 * Use interval timers for poll-interval sleep and nonresponse timeout.
 * fetchmail -q no longer parses the configuration file.
 * Configuration file grammar is slightly cleaned up and improved.
 
-pl 1.9.4 (Mon Oct 28 20:58:48 EST 1994):
+fetchmail-1.9.4 (Mon Oct 28 20:58:48 EST 1994):
 * Correct status interpretation in closemailpipe() (thanks to Neil Harkins).
 * Tweak SMTP forwarding to only open one listener per SMTP host in daemon mode.
 
-pl 1.9.3 (Sun Oct 27 22:35:33 EST 1996):
+fetchmail-1.9.3 (Sun Oct 27 22:35:33 EST 1996):
 * Handle nested parens in RFC822 comments.
 * More gcc -Wall cleanup.
 * Improved installation docs.
 * Don't query DNS on startup unless needed for Kerberos or multidrop mailboxes.
 
-pl 1.9.2 (Sun Oct 27 01:10:30 EST 1996): 
+fetchmail-1.9.2 (Sun Oct 27 01:10:30 EST 1996): 
 * Fix initialization-time core dump when running as root
 * Fix fatal error in MDA argument-list construction.
 
@@ -1318,33 +1317,24 @@ bug fixes --
 
 ------------------------------------------------------------------------------
 fetchmail-1.5 (Thu Oct  3 04:35:15 EDT 1996):
-
 * Naturally, my decision to announce 1.4 on comp.os.linux.announce 
   immediately caused the code to manifest its first real bug --
   a core dump when the "From:" header is spelled "from:" (all lower
   case).  Fixed.
-
 * Update and expansion of NOTES.
-
 * The --all and --flush flag validity checks move to driver.c.
 
 ------------------------------------------------------------------------------
 fetchmail-1.4 (Wed Oct  2 09:22:37 1996):
-
 * More man page improvements.
-
 * Lexer changes to work around bison's "feature" of silently ignoring 0-value
   tokens (caused options nokeep, norewrite, nofetchall, noskip to be no-ops).
 
 ------------------------------------------------------------------------------
 fetchmail-1.3 (Tue Oct  1 05:49:49 1996):
-
 * Significant man page improvements.
-
 * Escapes for newlines in .fetchmailrc are now optional.
-
 * Kill off -2 and -3 options, redundant popclient remnants.
-
 * IMAP code simplification and robustification.  Use FETCH FLAGS to find
   seen messages.  Code should now work even if unseen messages are 
   interspersed with seen ones, and even if messages are appended to the
@@ -1352,109 +1342,74 @@ fetchmail-1.3 (Tue Oct  1 05:49:49 1996):
 
 ------------------------------------------------------------------------------
 fetchmail-1.2 (Sat Sep 28 15:40:50 EDT 1996):
-
 * The great option massacre.  Remove --stdout, --limit, --local, --mda.
   We get a significant code and complexity shrinkage this way (a lot of the
   configuration machinery goes away too).  These things are your MDA's job.
   (This also kills off the lose-mail-on-disk-full bug, which I've never 
   seen but two users reported.)
-
 * Link APOP support by default.
-
 * Fix embarrassing Makefile bug.
 
 ------------------------------------------------------------------------------
 fetchmail-1.1 (Sat Sep 28 09:21:10 EDT 1996):
-
 * In POP3, don't send LAST if STAT shows count of waiting messages to be zero.
-
 * Document APOP better, we know it works now.
-
 * Lose the .fetchids file and give up on POP3 UIDs, they're a dead loss.
 
 ------------------------------------------------------------------------------
 fetchmail-1.0 (Thu Sep 26 11:59:38 EDT 1996):
-
 * SMTP forwarding and header-rewrite features work with POP2 now.
-
 * Stricter RFC822 conformance, so SMTP to qmail works.  Thanks to
   Cameron MacPherson <unsound@oz.net> for these changes.
-
 * The program is quieter but more informative now (suppress printing of
   server greeting message; add the server host being queried to the
   message count information line).
-
 * Add `skip' option to make it easier to set up test entries.
-
 * Name change (it ain't just for POP any more).
 
 ==============================================================================
 popclient-3.2 (Mon Sep 23 13:29:46 EDT 1996):
-
 * RPOP support (coded at a user's request but untested).
-
 * Ported to QNX (see the Makefile).
-
 * Add code by Michael Schwendt <3schwend@informatik.uni-hamburg.de> for
   improved sizeticker.
-
 * Improved RFC822 parsing (thanks to Rob Funk).
-
 * Move the per-user lockfile to /tmp so it gets cleared at reboot time.
-
 * Warn users that running concurrent instances of popclient is a bad idea.
-
 * Try USER and HOME to set defaults before going to the password file.
   This should work better in Sun NIS environments.
 
 popclient-3.1 (Thu Sep 12 15:45:25 EDT 1996):
-
 * MDA arguments are now dumped when using the -V option.
-
 * Sendmail delivery from background seems to work now.
-
 * We have IMAP2bis/IMAP4 support.
-
 * Code now autoprobes for a POP3, IMAP, or POP2 server if no protocol is
   specified.
-
 * SMTP forwarding support.  Thanks to Harry Hochheiser <harry@tigger.jvnc.net>
   for this simple but clever idea.  It's now the default delivery mode.
-
 * If no UNIX From line is found, popclient will now synthesize a correct
   line from the RFC822 From line.
-
 * It is now possible to specify the host TCP/IP port number to connect to.
 
 popclient-3.05 (Thu Aug 22 22:59:04 EDT 1996):
-
 * Experimental support for RFC1725-compliant POP servers with the UIDL
   command and without LAST.
 
 popclient-3.04 (Wed Aug 21 00:22:44 EDT 1996):
-
 * Logfile option works.
 
 popclient-3.03:
-
 * Minor bug fixes for password querying and redirection to stdout.
 
 popclient-3.02 (Fri Jul 19 11:37:56 EDT 1996):
-
 * Correct buggy processing of nokeep/noflush/fetchall.
-
 * Fix buggy -mda option processing.
-
 * Added -N/--norewrite option.
-
 * Delivery via sendmail now works in non-daemon mode.
 
 popclient-3.01 (Mon Jul  1 13:33:51 EDT 1996):
-
 * Fixed a lexical analyzer bug in quoted-string processing.
-
 * Fixed a bug in dump_options that caused username to be displayed incorrectly.
-
 * The lock assertion code was in the wrong place relative to the daemonize()
   call.  
 
