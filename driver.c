@@ -665,7 +665,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	    delete_str(&ctl->newsaved, num);
 #endif /* POP3_ENABLE */
 	}
-	else if (outlevel > O_SILENT) 
+	else if (outlevel > O_SILENT)
 	    report_complete(stdout, GT_(" not flushed\n"));
 
 	/* perhaps this as many as we're ready to handle */
@@ -788,10 +788,14 @@ const int maxfetch;		/* maximum number of messages to fetch */
 
 	/* try to clean up all streams */
 	release_sink(ctl);
-	if (ctl->smtp_socket != -1)
+	if (ctl->smtp_socket != -1) {
 	    cleanupSockClose(ctl->smtp_socket);
-	if (mailserver_socket != -1)
+	    ctl->smtp_socket = -1;
+	}
+	if (mailserver_socket != -1) {
 	    cleanupSockClose(mailserver_socket);
+	    mailserver_socket = -1;
+	}
     }
     else
     {
