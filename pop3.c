@@ -134,7 +134,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	if ((gen_transact(sock, "USER %s", ctl->remotename)) != 0)
 	    PROTOCOL_ERROR
 
-#ifdef HAVE_LIBOPIE
+#if defined(HAVE_LIBOPIE) && defined(OPIE_ENABLE)
 	/* see RFC1938: A One-Time Password System */
 	if (challenge = strstr(lastok, "otp-"))
 	{
@@ -156,10 +156,9 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	    ok = gen_transact(sock, "PASS %s", response);
 	}
 	else
-#else
+#endif /* defined(HAVE_LIBOPIE) && defined(OPIE_ENABLE) */
 	    /* ordinary validation, no one-time password */ 
 	    ok = gen_transact(sock, "PASS %s", ctl->password);
-#endif /* HAVE_LIBOPIE */
 
 	if (ok != 0)
 	{
