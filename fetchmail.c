@@ -127,7 +127,9 @@ char **argv;
     if (versioninfo)
 	printf("This is fetchmail release %s pl %s\n", RELEASE_ID, PATCHLEVEL);
 
-    load_params(argc, argv, optind);
+    /* avoid parsing the config file if all we're doing is killing a daemon */ 
+    if (!quitmode)
+	load_params(argc, argv, optind);
 
     /* set up to do lock protocol */
     if ((tmpdir = getenv("TMPDIR")) == (char *)NULL)
@@ -135,12 +137,6 @@ char **argv;
     strcpy(tmpbuf, tmpdir);
     strcat(tmpbuf, "/fetchmail-");
     strcat(tmpbuf, user);
-
-    /* initialize UID handling */
-    if ((st = prc_filecheck(idfile)) != 0)
-	exit(st);
-    else
-	initialize_saved_lists(querylist, idfile);
 
     /* perhaps we just want to check options? */
     if (versioninfo) {
@@ -305,7 +301,6 @@ char **argv;
      */
     lossage = 0;
     do {
-
 #ifdef HAVE_GETHOSTBYNAME
 	sethostent(TRUE);	/* use TCP/IP for mailserver queries */
 #endif /* HAVE_GETHOSTBYNAME */
@@ -401,7 +396,7 @@ int	argc;
 char	**argv;
 int	optind;
 {
-    int	implicitmode;
+    int	implicitmode, st;
     struct passwd *pw;
     struct query def_opts, *ctl, *mp;
 
@@ -569,6 +564,12 @@ int	optind;
 	    }
 	}
     }
+
+    /* initialize UID handling */
+    if ((st = prc_filecheck(idfile)) != 0)
+	exit(st);
+    else
+	initialize_saved_lists(querylist, idfile);
 }
 
 void termhook(int sig)
