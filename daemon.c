@@ -31,7 +31,7 @@
 #include <unix.h>
 #endif
 
-#if defined(HAVE_SGTTY_H)
+#if !defined(TIOCNOTTY) && defined(HAVE_SGTTY_H)
 #  include <sgtty.h>		/* for TIOCNOTTY under NEXTSTEP */
 #endif
 

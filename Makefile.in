@@ -114,7 +114,7 @@ rfc822: rfc822.c
 .l.o:
 	$(LEX) $(LEXFLAGS) $<
 	mv lex.yy.c $*.c
-	$(CC) $(defines) -c -I. -I$(srcdir) $(CFLAGS) $*.c $(OUTPUT_OPTION)
+	$(CC) $(defines) -c -I$(srcdir) $(CFLAGS) $*.c $(OUTPUT_OPTION)
 
 .l.c:
 	$(LEX) $(LEXFLAGS) $<
@@ -125,7 +125,7 @@ rfc822: rfc822.c
 	$(YACC) $(YACCFLAGS) $<
 	mv y.tab.c $*.c
 	mv -f y.tab.h $*.h
-	$(CC) $(defines) -c -I. -I$(srcdir) $(CFLAGS) $*.c $(OUTPUT_OPTION)
+	$(CC) $(defines) -c -I$(srcdir) $(CFLAGS) $*.c $(OUTPUT_OPTION)
 
 .y.c:
 	$(YACC) $(YACCFLAGS) $<
@@ -176,7 +176,7 @@ mostlyclean: clean
 Makefile: config.status $(srcdir)/Makefile.in
 	$(SHELL) config.status
 	@echo "You can ignore any makedepend error messages"
-	-makedepend -I. -fMakefile *.c
+	-makedepend -I$(srcdir) -fMakefile *.c
 
 config.h: stamp-config 
 
