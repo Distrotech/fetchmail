@@ -358,7 +358,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 
     /* eat the tail of the CAPABILITY response (if any) */
     if ((peek_capable = (imap_version >= IMAP4)))
-	if ((ok = imap_ok(sock, (char *)NULL)))
+	if ((ok = gen_recv(sock, capabilities, sizeof(capabilities))))
 	    return(ok);
 
 #ifdef KERBEROS_V4
