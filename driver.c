@@ -230,6 +230,19 @@ static void find_server_names(const char *hdr,
     }
 }
 
+/*
+ * Return zero on a syntactically invalid address, nz on a valid one.
+ *
+ * This used to be strchr(a, '.'), but it turns out that lines like this
+ *
+ * Received: from punt-1.mail.demon.net by mailstore for markb@ordern.com
+ *          id 938765929:10:27223:2; Fri, 01 Oct 99 08:18:49 GMT
+ *
+ * are not uncommon.  So now we just check that the following token is
+ * not itself an email address.
+ */
+#define VALID_ADDRESS(a)	!strchr(rbuf, '@')
+
 static char *parse_received(struct query *ctl, char *bufp)
 /* try to extract real address from the Received line */
 /* If a valid Received: line is found, we return the full address in
@@ -254,7 +267,7 @@ static char *parse_received(struct query *ctl, char *bufp)
     if (outlevel >= O_DEBUG)
 	report(stdout, _("analyzing Received line:\n%s"), bufp);
 
-    /* search for whitepace-surrounded "by" followed by xxxx.yyyy */
+    /* search for whitepace-surrounded "by" followed by valid address */
     for (base = bufp;  ; base = ok + 2)
     {
 	if (!(ok = strstr(base, "by")))
@@ -273,8 +286,8 @@ static char *parse_received(struct query *ctl, char *bufp)
 		*tp++ = *sp;
 	    *tp = '\0';
 
-	    /* look for embedded periods */
-	    if (strchr(rbuf, '.'))
+	    /* look for valid address */
+	    if (VALID_ADDRESS(rbuf))
 		break;
 	    else
 		ok = sp - 1;	/* arrange to skip this token */
