@@ -181,6 +181,7 @@ options		{/* EMPTY */}
 (imap)|(IMAP)	{ yylval.proto = P_IMAP;  return PROTO; }
 (apop)|(APOP)   { yylval.proto = P_APOP;  return PROTO; }
 (etrn)|(ETRN)   { yylval.proto = P_ETRN;  return PROTO; }
+(odmr)|(ODMR)   { yylval.proto = P_ODMR;  return PROTO; }
 (kpop)|(KPOP)	{ return KPOP; }
 
 (#.*)?\\?\n	{ prc_lineno++;	}   /* newline is ignored */

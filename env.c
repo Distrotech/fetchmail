@@ -215,6 +215,9 @@ const char *showproto(int proto)
     case P_APOP: return("APOP");
     case P_RPOP: return("RPOP");
     case P_ETRN: return("ETRN");
+#ifdef ODMR_ENABLE
+    case P_ODMR: return("ODMR");
+#endif /* ODMR_ENABLE */
     default: return("unknown?!?");
     }
 }

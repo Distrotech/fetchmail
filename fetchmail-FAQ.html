@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/02/07 04:10:02 $
+<td width="30%" align=right>$Date: 2001/02/07 08:01:08 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -357,7 +357,7 @@ The short answer: IMAP4rev1 running over Unix.<P>
 
 Here's a longer answer: <P>
 
-Fetchmail will work with any POP, IMAP, or ESMTP/ETRN server that
+Fetchmail will work with any POP, IMAP, ETRN, or ODMR server that
 conforms to the relevant RFCs (and even some outright broken ones like
 <a href="#S2">Microsoft Exchange</a> and <a href="#S12">Novell
 GroupWise</a>).  This doesn't mean it works equally well with all,
@@ -560,6 +560,11 @@ registered for that domain.  The server needs to be configured to
 accept mail for your domain but then queue it to forward to your
 machine.  ETRN just tells to server to flush its queue for your
 domain.  Fetchmail doesn't actually get the mail in that case.<p>
+
+You can use On-Demand Mail Relay (ODMR) with a dynamic IP address;
+that's what it was designed for, and it provides capabilities very
+similar to ETRN.  Unfortunately ODMR servers are not yet widely 
+deployed, as of early 2001.<p>
 
 If you're using a dynamic-IP configuration, one other (non-fetchmail)
 problem you may run into with outgoing mail is that some sites will
@@ -2298,7 +2303,7 @@ server mailbox and then routing based on what's in the To/Cc/Bcc lines.<p>
 
 In general, this is not really a good idea.  It would be smarter to
 just let the mail sit in the mailserver's queue and use fetchmail's
-ETRN mode to trigger SMTP sends periodically (of course, this means
+ETRN or ODMR modes to trigger SMTP sends periodically (of course, this means
 you have to poll more frequently than the mailserver's expiration period).
 If you can't arrange this, try setting up a UUCP feed.<P>
 
@@ -2986,7 +2991,7 @@ switching to IMAP and using a short expunge interval.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/02/07 04:10:02 $
+<td width="30%" align=right>$Date: 2001/02/07 08:01:08 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

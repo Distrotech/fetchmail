@@ -230,6 +230,9 @@ int main(int argc, char **argv)
 #ifndef ETRN_ENABLE
 	printf("-ETRN");
 #endif /* ETRN_ENABLE */
+#ifndef ODMR_ENABLE
+	printf("-ODMR");
+#endif /* ODMR_ENABLE */
 #ifdef SSL_ENABLE
 	printf("+SSL");
 #endif
@@ -496,7 +499,7 @@ int main(int argc, char **argv)
     for (ctl = querylist; ctl; ctl = ctl->next)
     {
 	if (ctl->active && !(implicitmode && ctl->server.skip)
-		&& ctl->server.protocol != P_ETRN 
+		&& ctl->server.protocol != P_ETRN
 		&& ctl->server.protocol != P_IMAP_K4
 #ifdef GSSAPI
 		&& ctl->server.protocol != P_IMAP_GSS
@@ -1091,15 +1094,17 @@ static int load_params(int argc, char **argv, int optind)
 	     * do this unconditionally, but it made fetchmail excessively
 	     * vulnerable to misconfigured DNS setups.
 	     *
-	     * If we're using ETRN, the smtp hunt list is the list of
-	     * systems we're polling on behalf of; these have to be 
-	     * fully-qualified domain names.  The default for this list
-	     * should be the FQDN of localhost.
+	     * If we're using ETRN or ODMR, the smtp hunt list is the
+	     * list of systems we're polling on behalf of; these have
+	     * to be fully-qualified domain names.  The default for
+	     * this list should be the FQDN of localhost.
 	     *
 	     * If we're using Kerberos for authentication, we need 
-	     * the FQDN in order to generate capability keys.
-	     */
+	     * the FQDN in order to generate capability keys.  */
 	    if (ctl->server.protocol == P_ETRN
+#ifdef ODMR_ENABLE 
+			 || ctl->server.protocol == P_ODMR
+#endif /* ODMR_ENABLE */
 			 || ctl->server.preauthenticate == A_KERBEROS_V4
 			 || ctl->server.preauthenticate == A_KERBEROS_V5)
 		if (strcmp(fetchmailhost, "localhost") == 0)
@@ -1494,6 +1499,18 @@ static int query_host(struct query *ctl)
 	return(PS_PROTOCOL);
 #endif /* HAVE_GETHOSTBYNAME */
 #endif /* ETRN_ENABLE */
+    case P_ODMR:
+#ifndef ODMR_ENABLE
+	report(stderr, _("ODMR support is not configured.\n"));
+	return(PS_PROTOCOL);
+#else
+#ifdef HAVE_GETHOSTBYNAME
+	return(doODMR(ctl));
+#else
+	report(stderr, _("Cannot support ODMR without gethostbyname(2).\n"));
+	return(PS_PROTOCOL);
+#endif /* HAVE_GETHOSTBYNAME */
+#endif /* ODMR_ENABLE */
     default:
 	report(stderr, _("unsupported protocol selected.\n"));
 	return(PS_PROTOCOL);
@@ -1537,7 +1554,7 @@ static void dump_params (struct runctl *runp,
 	printf(_("Options for retrieving from %s@%s:\n"),
 	       ctl->remotename, visbuf(ctl->server.pollname));
 
-	if (ctl->server.via && (ctl->server.protocol != P_ETRN))
+	if (ctl->server.via && (ctl->server.protocol < P_ETRN))
 	    printf(_("  Mail will be retrieved via %s\n"), ctl->server.via);
 
 	if (ctl->server.interval)
@@ -1597,7 +1614,7 @@ static void dump_params (struct runctl *runp,
 #endif /* INET6_ENABLE */
 	else if (outlevel >= O_VERBOSE)
 	    printf(_(" (using default port)"));
-	if (ctl->server.uidl && (ctl->server.protocol != P_ETRN))
+	if (ctl->server.uidl && (ctl->server.protocol < P_ETRN))
 	    printf(_(" (forcing UIDL use)"));
 	putchar('.');
 	putchar('\n');
@@ -1621,7 +1638,7 @@ static void dump_params (struct runctl *runp,
 	else
 	    printf(".\n");
 
-	if (ctl->server.protocol != P_ETRN) {
+	if (ctl->server.protocol < P_ETRN) {
 		if (!ctl->mailboxes->id)
 		    printf(_("  Default mailbox selected.\n"));
 		else
@@ -1688,7 +1705,7 @@ static void dump_params (struct runctl *runp,
 		    printf(_("  SMTP message batch limit is %d.\n"), ctl->batchlimit);
 		else if (outlevel >= O_VERBOSE)
 		    printf(_("  No SMTP message batch limit (--batchlimit 0).\n"));
-		if (ctl->server.protocol != P_ETRN)
+		if (ctl->server.protocol < P_ETRN)
 		{
 		    if (NUM_NONZERO(ctl->expunge))
 			printf(_("  Deletion interval between expunges forced to %d (--expunge %d).\n"), ctl->expunge, ctl->expunge);
@@ -1698,7 +1715,7 @@ static void dump_params (struct runctl *runp,
 	}
 	if (ctl->bsmtp)
 	    printf(_("  Messages will be appended to %s as BSMTP\n"), visbuf(ctl->bsmtp));
-	else if (ctl->mda && (ctl->server.protocol != P_ETRN))
+	else if (ctl->mda && (ctl->server.protocol < P_ETRN))
 	    printf(_("  Messages will be delivered with \"%s\".\n"), visbuf(ctl->mda));
 	else
 	{
@@ -1719,7 +1736,7 @@ static void dump_params (struct runctl *runp,
 		printf(_("  Address to be put in RCPT TO lines shipped to SMTP will be %s\n"),
 		       ctl->smtpname);
 	}
-	if (ctl->server.protocol != P_ETRN)
+	if (ctl->server.protocol < P_ETRN)
 	{
 		if (ctl->antispam != (struct idlist *)NULL)
 		{
@@ -1743,7 +1760,7 @@ static void dump_params (struct runctl *runp,
 		   visbuf(ctl->postconnect));
 	else if (outlevel >= O_VERBOSE)
 	    printf(_("  No post-connection command.\n"));
-	if (ctl->server.protocol != P_ETRN) {
+	if (ctl->server.protocol < P_ETRN) {
 		if (!ctl->localnames)
 		    printf(_("  No localnames declared for this host.\n"));
 		else
@@ -1840,7 +1857,7 @@ static void dump_params (struct runctl *runp,
 	else if (outlevel >= O_VERBOSE)
 	    printf(_("  No plugout command specified.\n"));
 
-	if (ctl->server.protocol > P_POP2 && (ctl->server.protocol != P_ETRN))
+	if (ctl->server.protocol > P_POP2 && (ctl->server.protocol < P_ETRN))
 	{
 	    if (!ctl->oldsaved)
 		printf(_("  No UIDs saved from this host.\n"));

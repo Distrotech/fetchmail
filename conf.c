@@ -169,6 +169,9 @@ void dump_config(struct runctl *runp, struct query *querylist)
 #ifdef ETRN_ENABLE
     printf("'etrn',");
 #endif /* ETRN_ENABLE */
+#ifdef ODMR_ENABLE
+    printf("'odmr',");
+#endif /* ODMR_ENABLE */
 #ifdef SSL_ENABLE
     printf("'ssl',");
 #endif /* SSL_ENABLE */

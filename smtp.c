@@ -27,6 +27,9 @@ static struct opt extensions[] =
     {"8BITMIME",	ESMTP_8BITMIME},
     {"SIZE",    	ESMTP_SIZE},
     {"ETRN",		ESMTP_ETRN},
+#ifdef ODMR_ENABLE
+    {"ATRN",		ESMTP_ATRN},
+#endif /* ODMR_ENABLE */
     {(char *)NULL, 0},
 };
 

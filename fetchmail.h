@@ -17,6 +17,7 @@
 #define		P_IMAP_CRAM_MD5	9
 #define		P_IMAP_LOGIN	10
 #define		P_ETRN		11
+#define		P_ODMR		12
 
 #if INET6_ENABLE
 #define		SMTP_PORT	"smtp"
@@ -531,6 +532,7 @@ int is_host_alias(const char *, struct query *);
 char *host_fqdn(void);
 char *rfc822timestamp(void);
 flag isafile(int);
+int do_cram_md5 (int sock, struct query *ctl);
 
 void yyerror(const char *);
 int yylex(void);

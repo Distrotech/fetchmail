@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.34"
+version = "1.35"
 
 from Tkinter import *
 from Dialog import *
@@ -372,7 +372,8 @@ defaultports = {"auto":0,
                 "IMAP":143,
 		"IMAP-GSS":143,
 		"IMAP-K4":143,
-		"ETRN":25}
+		"ETRN":25,
+                "ODMR":366}
 
 preauthlist = ("password", "kerberos", "ssh")
 
@@ -408,17 +409,22 @@ class LabeledEntry(Frame):
 def ButtonBar(frame, legend, ref, alternatives, depth, command):
 # array of radio buttons, caption to left, picking from a string list
     bar = Frame(frame)
-    width = len(alternatives) / depth;
+    width = (len(alternatives)+1) / depth;
     Label(bar, text=legend).pack(side=LEFT)
     for column in range(width):
 	subframe = Frame(bar)
 	for row in range(depth):
 	    ind = width * row + column
-	    Radiobutton(subframe,
+            if ind < len(alternatives):
+                Radiobutton(subframe,
 			{'text':alternatives[ind], 
 			 'variable':ref,
 			 'value':alternatives[ind],
 			 'command':command}).pack(side=TOP, anchor=W)
+            else:
+                # This is just a spacer
+                Radiobutton(subframe,
+			{'text':" ",'state':DISABLED}).pack(side=TOP, anchor=W)
 	subframe.pack(side=LEFT)
     bar.pack(side=TOP);
     return bar
@@ -1046,6 +1052,8 @@ class ServerEdit(Frame, MyWidget):
             protolist.append("IMAP-K4")
         if 'etrn' in feature_options:
             protolist.append("ETRN")
+        if 'odmr' in feature_options:
+            protolist.append("ODMR")
 
 	protwin = Frame(leftwin, relief=RAISED, bd=5)
 	Label(protwin, text="Protocol").pack(side=TOP)
@@ -1579,7 +1587,7 @@ class UserEdit(Frame, MyWidget):
 		      self.fetchlimit, '30').pack(side=TOP, fill=X)
             LabeledEntry(limwin, 'Max messages to forward per poll:',
 		      self.batchlimit, '30').pack(side=TOP, fill=X)
-            if self.parent.server.protocol != 'ETRN':
+            if self.parent.server.protocol not in ('ETRN', 'ODMR'):
                 LabeledEntry(limwin, 'Interval between expunges:',
                              self.expunge, '30').pack(side=TOP, fill=X)
             Checkbutton(limwin, text="Idle after each poll (IMAP only)", 

@@ -26,7 +26,7 @@ The
 .I fetchmail
 program can gather mail from servers supporting any of the common
 mail-retrieval protocols: POP2, POP3, IMAP2bis, IMAP4, and IMAPrev1.
-It can also use the ESMTP ETRN extension.  (The RFCs describing all
+It can also use the ESMTP ETRN extension and ODMR.  (The RFCs describing all
 these protocols are listed at the end of this manual page.)
 .PP
 While
@@ -109,7 +109,7 @@ Return a status code to indicate whether there is mail waiting,
 without actually fetching or deleting mail (see EXIT CODES below).
 This option turns off daemon mode (in which it would be useless).  It
 doesn't play well with queries to multiple sites, and doesn't work
-with ETRN.  It will return a false positive if you leave read but
+with ETRN or ODMR.  It will return a false positive if you leave read but
 undeleted mail in your server mailbox and your fetch protocol can't
 tell kept messages from new ones.  This means it will work with IMAP,
 not work with POP2, and may occasionally flake out under POP3.
@@ -133,7 +133,8 @@ Retrieve both old (seen) and new messages from the mailserver.  The
 default is to fetch only messages the server has not marked seen.
 Under POP3, this option also forces the use of RETR rather than TOP.
 Note that POP2 retrieval behaves as though --all is always on (see
-RETRIEVAL FAILURE MODES below) and this option does not work with ETRN.
+RETRIEVAL FAILURE MODES below) and this option does not work with ETRN
+or ODMR.
 .TP
 .B \-k, --keep
 (Keyword: keep)
@@ -142,18 +143,19 @@ are deleted from the folder on the mailserver after they have been retrieved.
 Specifying the 
 .B keep 
 option causes retrieved messages to remain in your folder on the
-mailserver.  This option does not work with ETRN.
+mailserver.  This option does not work with ETRN or ODMR.
 .TP
 .B \-K, --nokeep
 (Keyword: nokeep)
 Delete retrieved messages from the remote mailserver.  This
 option forces retrieved mail to be deleted.  It may be useful if
 you have specified a default of \fBkeep\fR in your
-\&\fI.fetchmailrc\fR.  This option is forced on with ETRN.
+\&\fI.fetchmailrc\fR.  This option is forced on with ETRN and ODMR.
 .TP
 .B \-F, --flush
 POP3/IMAP only.  Delete old (previously retrieved) messages from the mailserver
-before retrieving new messages. This option does not work with ETRN.
+before retrieving new messages. This option does not work with ETRN or
+ODMR.
 Warning: if your local MTA hangs and fetchmail is aborted, the next
 time you run fetchmail, it will delete mail that was never delivered to you.
 What you probably want is the default setting: if you don't specify `-k', then
@@ -199,15 +201,20 @@ with plain LOGIN authentication only, even if the server supports
 better methods.
 .IP ETRN
 Use the ESMTP ETRN option.
+.IP ODMR
+Use the the On-Demand Mail Relay ESMTP profile.
 .RE
 .P
 All these alternatives work in basically the same way (communicating
 with standard server daemons to fetch mail already delivered to a
-mailbox on the server) except ETRN.  The ETRN mode allows you to ask a
-compliant ESMTP server (such as BSD sendmail at release 8.8.0 or
-higher) to immediately open a sender-SMTP connection to your
-client machine and begin forwarding any items addressed to your client
-machine in the server's queue of undelivered mail.
+mailbox on the server) except ETRN and ODMR.  The ETRN mode
+allows you to ask a compliant ESMTP server (such as BSD sendmail at
+release 8.8.0 or higher) to immediately open a sender-SMTP connection
+to your client machine and begin forwarding any items addressed to
+your client machine in the server's queue of undelivered mail.   The
+ODMR mode requires an ODMR-capable server and works similarly to
+ETRN, except that it does not require the client machine to have
+a static DNS.
 .TP
 .B \-U, --uidl
 (Keyword: uidl)
@@ -263,7 +270,7 @@ from plugin).
 Causes a specified non-default mail folder on the mailserver (or
 comma-separated list of folders) to be retrieved.  The syntax of the
 folder name is server-dependent.  This option is not available under
-POP3 or ETRN.
+POP3, ETRN, or ODMR.
 .TP
 .B \--ssl
 (Keyword: ssl)
@@ -309,7 +316,7 @@ server.  This can cause some complications in daemon mode.
 Specify a hunt list of hosts to forward mail to (one or more
 hostnames, comma-separated).  In ETRN mode, set the host that the
 mailserver is asked to ship mail to.  Hosts are tried in list order;
-the first one that is up becomes the forwarding or ETRN target for the
+the first one that is up becomes the forwarding target for the
 current run.  Normally, `localhost' is added to the end of the list as
 an invisible default.  However, when using ETRN mode or Kerberos
 preauthentication, the FQDN of the machine running fetchmail is added to
@@ -322,6 +329,8 @@ interpreted as the name of a UNIX socket accepting LMTP connections
 
 	--smtphost server1,server2/2525,server3,/var/imap/socket/lmtp
 
+In ODMR mode, this option specifies the list of domains the ODMR
+server should ship mail for once the connection is turned around.
 .TP
 .B \-D <domain>, --smtpaddress <domain>
 (Keyword: smtpaddress) 
@@ -388,7 +397,7 @@ explicit --limit of 0 overrides any limits set in your run control
 file. This option is intended for those needing to strictly control
 fetch time due to expensive and variable phone rates.  In daemon mode,
 oversize notifications are mailed to the calling user (see the
---warnings option).  This option does not work with ETRN.
+--warnings option).  This option does not work with ETRN or ODMR.
 .TP
 .B \-w <interval>, --warnings <interval>
 (Keyword: warnings)
@@ -414,14 +423,14 @@ prompt.  MTAs like \fIqmail\fR(8) and \fIsmail\fR(8) may wait till the
 delivery socket is shut down to deliver.  This may produce annoying
 delays when \fIfetchmail\fR is processing very large batches.  Setting
 the batch limit to some nonzero size will prevent these delays.  This
-option does not work with ETRN.
+option does not work with ETRN or ODMR.
 .TP
 .B -B <number>, --fetchlimit <number>
 (Keyword: fetchlimit)
 Limit the number of messages accepted from a given server in a single
 poll.  By default there is no limit. An explicit --fetchlimit of 0
 overrides any limits set in your run control file.
-This option does not work with ETRN.
+This option does not work with ETRN or ODMR.
 .TP
 .B -e <count>, --expunge <count>
 (keyword: expunge) 
@@ -444,7 +453,7 @@ it tells
 .I fetchmail
 to only issue expunges on every Nth delete.  An argument of zero
 suppresses expunges entirely (so no expunges at all will be done until
-the end of run).  This option does not work with ETRN.
+the end of run).  This option does not work with ETRN or ODMR.
 .SS Authentication Options
 .TP
 .B \-u <name>, --username <name>
@@ -514,7 +523,7 @@ choosing KPOP protocol automatically selects Kerberos
 preauthentication, and all other alternatives use password
 authentication (though APOP uses a generated one-time key as the
 password and IMAP-K4 uses RFC1731 Kerberos v4 authentication).  This
-option does not work with ETRN.
+option does not work with ETRN or ODMR.
 .SS Miscellaneous Options
 .TP
 .B \-f <pathname>, --fetchmailrc <pathname>
@@ -544,7 +553,7 @@ client machine!).  This option disables the rewrite.  (This option is
 provided to pacify people who are paranoid about having an MTA edit
 mail headers and want to know they can prevent it, but it is generally
 not a good idea to actually turn off rewrite.)
-When using ETRN, the rewrite option is ineffective.
+When using ETRN or ODMR, the rewrite option is ineffective.
 .TP
 .B -E <line>, --envelope <line>
 (Keyword: envelope)
@@ -969,7 +978,7 @@ be that messages you have already read on your host will look new to
 the server.  In this (unlikely) case, only messages you fetched with
 \fIfetchmail --keep\fR will be both undeleted and marked old.
 .PP
-In ETRN mode, \fIfetchmail\fR does not actually retrieve messages;
+In ETRN and ODMR modes, \fIfetchmail\fR does not actually retrieve messages;
 instead, it asks the server's SMTP listener to start a queue flush
 to the client via SMTP.  Therefore it sends only undelivered messages.
 
@@ -1752,7 +1761,7 @@ poll mailhost.net with proto imap and preauth ssh:
 
 .SH THE USE AND ABUSE OF MULTIDROP MAILBOXES
 Use the multiple-local-recipients feature with caution -- it can bite.
-Also note that all multidrop features are ineffective in ETRN mode.
+All multidrop features are ineffective in ETRN and ODMR modes.
 
 Also, note that in multidrop mode duplicate mails are suppressed.  A
 piece of mail is considered duplicate if it has the same message-ID as
@@ -1856,10 +1865,10 @@ If you're tempted to use
 to retrieve mail for multiple users from a single mail drop via POP or
 IMAP, think again (and reread the section on header and envelope
 addresses above).  It would be smarter to just let the mail sit in the
-mailserver's queue and use fetchmail's ETRN mode to trigger SMTP sends
-periodically (of course, this means you have to poll more frequently
-than the mailserver's expiry period).  If you can't arrange this, try
-setting up a UUCP feed.
+mailserver's queue and use fetchmail's ETRN or ODMR modes to trigger
+SMTP sends periodically (of course, this means you have to poll more
+frequently than the mailserver's expiry period).  If you can't arrange
+this, try setting up a UUCP feed.
 .PP
 If you absolutely \fImust\fR use multidrop for this purpose, make sure
 your mailserver writes an envelope-address header that fetchmail can
@@ -1867,7 +1876,7 @@ see.  Otherwise you \fIwill\fR lose mail and it \fIwill\fR come back
 to haunt you.
 
 .SS Speeding Up Multidrop Checking
-Normally, when multiple user are declared 
+Normally, when multiple users are declared 
 .I fetchmail
 extracts recipient addresses as described above and checks each host
 part with DNS to see if it's an alias of the mailserver.  If so, the
@@ -2071,6 +2080,8 @@ The UIDL code is generally flaky and tends to lose its state on errors
 and line drops (so that old messages are re-seen).  If this happens to
 you, switch to IMAP4.
 .PP
+The ODMR code is untested.
+.PP
 The `principal' option only handles Kerberos IV, not V.
 .PP
 Send comments, bug reports, gripes, and the like to the
@@ -2110,6 +2121,9 @@ RFC 2683
 .TP 5
 ETRN:
 RFC 1985
+.TP 5
+ODMR:
+2645
 .TP 5
 OTP:
 RFC 1938

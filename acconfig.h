@@ -95,6 +95,9 @@
 /* Define if you want ETRN support compiled in */
 #undef ETRN_ENABLE
 
+/* Define if you want ODMR support compiled in */
+#undef ODMR_ENABLE
+
 /* Define if you want RPA support compiled in */
 #undef RPA_ENABLE
 
