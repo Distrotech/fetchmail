@@ -281,6 +281,7 @@ extern char *user;		/* name of invoking user */
 extern char *home;		/* home directory of invoking user */
 extern int pass;		/* number of re-polling pass */
 extern flag configdump;		/* dump control blocks as Python dictionary */
+extern char *fetchmailhost;	/* either "localhost" or an FQDN */
 
 /* prototypes for globally callable functions */
 
@@ -384,6 +385,7 @@ char *visbuf(const char *);
 char *showproto(int);
 void dump_config(struct runctl *runp, struct query *querylist);
 int is_host_alias(const char *, struct query *);
+char *host_fqdn(void);
 #ifdef SDPS_ENABLE
 char *sdps_envto;
 #endif /* SDPS_ENABLE */

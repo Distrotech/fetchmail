@@ -69,6 +69,7 @@ char *user;		/* the name of the invoking user */
 char *home;		/* invoking user's home directory */
 char *program_name;	/* the name to prefix error messages with */
 flag configdump;	/* dump control blocks for configurator */
+char *fetchmailhost;	/* either `localhost' or the host FQDN */
 
 #if NET_SECURITY
 void *request = NULL;
@@ -849,6 +850,9 @@ static int load_params(int argc, char **argv, int optind)
 	if (ctl != querylist && strcmp(ctl->server.pollname, "defaults") == 0)
 	    exit(PS_SYNTAX);
 
+    /* use localhost if we never fetch the FQDN of this host */
+    fetchmailhost = "localhost";
+
     /* merge in wired defaults, do sanity checks and prepare internal fields */
     for (ctl = querylist; ctl; ctl = ctl->next)
     {
@@ -860,52 +864,37 @@ static int load_params(int argc, char **argv, int optind)
 	    /* force command-line options */
 	    optmerge(ctl, &cmd_opts, TRUE);
 
-	    /* make sure we have a nonempty host list to forward to */
-	    if (!ctl->smtphunt)
-	    {
-		char	tmpbuf[HOSTLEN+1];
-		/*
-		 * If we're using ETRN, the smtp hunt list is the list of
-		 * systems we're polling on behalf of; these have to be 
-		 * fully-qualified domain names.  The default for this list
-		 * should be the FQDN of localhost.
-		 */
-		if (ctl->server.protocol == P_ETRN)
+	    /*
+	     * DNS support is required for some protocols.
+	     *
+	     * If we're using ETRN, the smtp hunt list is the list of
+	     * systems we're polling on behalf of; these have to be 
+	     * fully-qualified domain names.  The default for this list
+	     * should be the FQDN of localhost.
+	     *
+	     * If we're using Kerberos for authentication, we need 
+	     * the FQDN in order to generate capability keys.
+	     */
+	    if ((ctl->server.protocol == P_ETRN
+			 || ctl->server.preauthenticate == A_KERBEROS_V4
+			 || ctl->server.preauthenticate == A_KERBEROS_V5))
+		if (ctl->server.dns)
 		{
-		    char *fetchmailhost;
-
-		    if (gethostname(tmpbuf, sizeof(tmpbuf)))
-		    {
-			fprintf(stderr, "%s: can't determine your host!",
-				program_name);
-			exit(PS_DNS);
-		    }
-#ifdef HAVE_GETHOSTBYNAME
-		    /* if we got a . in the hostname assume it is a FQDN */
-		    if (strchr(tmpbuf, '.') == NULL)
-		    {
-			struct hostent *hp;
-
-			/* if we got a basename (as we do in Linux) make a FQDN of it */
-			hp = gethostbyname(tmpbuf);
-			if (hp == (struct hostent *) NULL)
-			{
-			    /* exit with error message */
-			    fprintf(stderr,
-				    "gethostbyname failed for %s\n", tmpbuf);
-			    exit(PS_DNS);
-			}
-			fetchmailhost = xstrdup(hp->h_name);
-		    }
-		    else
-#endif /* HAVE_GETHOSTBYNAME */
-			fetchmailhost = xstrdup(tmpbuf);
-
-		    save_str(&ctl->smtphunt, fetchmailhost, FALSE);
+		    if (strcmp(fetchmailhost, "localhost") == 0)
+			fetchmailhost = host_fqdn();
 		}
 		else
-		    save_str(&ctl->smtphunt, "localhost", FALSE);
-	    }
+		{
+		    fprintf(stderr, "DNS is required for %s protocol",
+			    showproto(ctl->server.protocol));
+		    exit(PS_DNS);
+		}
+
+	    /*
+	     * Make sure we have a nonempty host list to forward to.
+	     */
+	    if (!ctl->smtphunt)
+		save_str(&ctl->smtphunt, fetchmailhost, FALSE);
 
 	    /* keep lusers from shooting themselves in the foot :-) */
 	    if (run.poll_interval && ctl->limit)

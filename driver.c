@@ -364,7 +364,7 @@ static int smtp_open(struct query *ctl)
 	 * What it will affect is the listener's logging.
 	 */
 	struct idlist	*idp;
-	char *id_me = run.invisible ? ctl->server.truename : "localhost";
+	char *id_me = run.invisible ? ctl->server.truename : fetchmailhost;
 	int oldphase = phase;
 
 	errno = 0;
@@ -890,8 +890,8 @@ int num;		/* index of message */
 #else
 	sprintf(buf, 
 #endif /* HAVE_SNPRINTF */
-	"From: FETCHMAIL-DAEMON\r\nTo: %s@localhost\r\nSubject: Headerless mail from %s's mailbox on %s\r\n",
-		user, ctl->remotename, ctl->server.truename);
+	"From: FETCHMAIL-DAEMON\r\nTo: %s@%s\r\nSubject: Headerless mail from %s's mailbox on %s\r\n",
+		user, fetchmailhost, ctl->remotename, ctl->server.truename);
 	headers = xstrdup(buf);
     }
 

@@ -67,6 +67,40 @@ void envquery(int argc, char **argv)
     strcat(rcfile, RCFILE_NAME);
 }
 
+char *host_fqdn(void)
+/* get the FQDN of the machine we're running */
+{
+    char	tmpbuf[HOSTLEN+1];
+
+    if (gethostname(tmpbuf, sizeof(tmpbuf)))
+    {
+	fprintf(stderr, "%s: can't determine your host!",
+		program_name);
+	exit(PS_DNS);
+    }
+#ifdef HAVE_GETHOSTBYNAME
+    /* if we got a . in the hostname assume it is a FQDN */
+    if (strchr(tmpbuf, '.') == NULL)
+    {
+	struct hostent *hp;
+
+	/* if we got a basename (as we do in Linux) make a FQDN of it */
+	hp = gethostbyname(tmpbuf);
+	if (hp == (struct hostent *) NULL)
+	{
+	    /* exit with error message */
+	    fprintf(stderr,
+		    "gethostbyname failed for %s\n", tmpbuf);
+	    exit(PS_DNS);
+	}
+	return(xstrdup(hp->h_name));
+    }
+    else
+#endif /* HAVE_GETHOSTBYNAME */
+	return(xstrdup(tmpbuf));
+}
+
+
 char *showproto(int proto)
 /* protocol index to protocol name mapping */
 {
