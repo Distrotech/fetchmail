@@ -118,7 +118,12 @@ int main (int argc, char **argv)
     setvbuf(stdout, NULL, _IOLBF, POPBUFSIZE);
 
     if (versioninfo)
+    {
 	printf("This is fetchmail release %s\n", RELEASE_ID);
+
+	/* this is an attempt to help remote debugging */
+	system("uname -a");
+    }
 
     /* avoid parsing the config file if all we're doing is killing a daemon */ 
     if (!quitmode)
