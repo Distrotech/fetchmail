@@ -630,6 +630,10 @@ static int load_params(int argc, char **argv, int optind)
 	    ctl->server.lead_server = &(ctl->server);
 	no_new_server:;
 
+	    /* if stripcr hasn't been set, default it asccording to MDA */
+	    if (ctl->stripcr == -1)
+		ctl->stripcr = !ctl->mda;
+
 	    /* plug in the semi-standard way of indicating a mail address */
 	    if (ctl->server.envelope == (char *)NULL)
 		ctl->server.envelope = "X-Envelope-To:";
@@ -826,6 +830,9 @@ void dump_params (struct query *ctl)
     printf("  Rewrite of server-local addresses is %sabled (--norewrite %s).\n",
 	   ctl->no_rewrite ? "dis" : "en",
 	   ctl->no_rewrite ? "on" : "off");
+    printf("  Carriage-return stripping is %sabled (--stripcr %s).\n",
+	   ctl->stripcr ? "en" : "dis",
+	   ctl->stripcr ? "on" : "off");
     if (ctl->limit)
 	printf("  Message size limit is %d bytes (--limit %d).\n", 
 	       ctl->limit, ctl->limit);

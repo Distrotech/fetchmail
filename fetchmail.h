@@ -106,6 +106,7 @@ struct query
     int fetchall;
     int flush;
     int no_rewrite;
+    int stripcr;
     int limit;
     int fetchlimit;
     int batchlimit;

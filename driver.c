@@ -765,19 +765,22 @@ char *realname;		/* real name of host */
     }
 
     /* write all the headers */
+    if (ctl->stripcr)
+    {
+	char	*sp, *tp;
+
+	for (sp = tp = headers; *sp; sp++)
+	    if (*sp != '\r')
+		*tp++ =  *sp;
+	*tp = '\0';
+
+    }
+
+    /* write all the headers */
     if (sinkfp)
     {
 	if (ctl->mda)
-	{
-	    char	*sp, *tp;
-
-	    for (sp = tp = headers; *sp; sp++)
-		if (*sp != '\r')
-		    *tp++ =  *sp;
-	    *tp = '\0';
-
 	    n = fwrite(headers, 1, strlen(headers), sinkfp);
-	}
 	else
 	    n = SockWrite(headers, 1, strlen(headers), sinkfp);
 
@@ -842,18 +845,20 @@ char *realname;		/* real name of host */
 	strcat(errmsg, "\n");
 
 	/* ship out the error line */
+	if (ctl->stripcr)
+	{
+	    char	*sp, *tp;
+
+	    for (sp = tp = errmsg; *sp; sp++)
+		if (*sp != '\r')
+		    *tp++ =  *sp;
+	    *tp = '\0';
+	}
+
 	if (sinkfp)
 	{
 	    if (ctl->mda)
-	    {
-		char	*sp, *tp;
-
-		for (sp = tp = errmsg; *sp; sp++)
-		    if (*sp != '\r')
-			*tp++ =  *sp;
-		*tp = '\0';
 		fwrite(errmsg, 1, strlen(errmsg), sinkfp);
-	    }
 	    else
 		SockWrite(errmsg, 1, strlen(errmsg), sinkfp);
 	}
@@ -909,7 +914,7 @@ char *realname;		/* real name of host */
 		else
 		    SockWrite(buf, 1, 1, sinkfp);
 
-	    if (ctl->mda)
+	    if (ctl->stripcr)
 	    {
 		char	*sp, *tp;
 
@@ -917,9 +922,10 @@ char *realname;		/* real name of host */
 		    if (*sp != '\r')
 			*tp++ =  *sp;
 		*tp = '\0';
-
-		n = fwrite(buf, 1, strlen(buf), sinkfp);
 	    }
+
+	    if (ctl->mda)
+		n = fwrite(buf, 1, strlen(buf), sinkfp);
 	    else if (sinkfp)
 		n = SockWrite(buf, 1, strlen(buf), sinkfp);
 

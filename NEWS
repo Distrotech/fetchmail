@@ -5,6 +5,9 @@ fetchmail-3.3 ()
 
 features --
 
+* Whether or not carriage returns will be stripped on output is explicitly
+  controllable with stripcr.
+
 bugs --
 
 * Correction to length-extraction code for servers that return (nnn octets).

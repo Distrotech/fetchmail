@@ -49,7 +49,7 @@ static void prc_reset();
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
-%token <flag>  KEEP FLUSH FETCHALL REWRITE DNS PORT
+%token <flag>  KEEP FLUSH FETCHALL REWRITE STRIPCR DNS PORT
 
 /* these are actually used by the lexer */
 %token FLAG_TRUE	2
@@ -76,7 +76,10 @@ statement	: SET LOGFILE MAP STRING	{logfile = xstrdup($4);}
  */
 		| define_server serverspecs	{prc_register(); prc_reset();}
 		| define_server serverspecs userspecs
-				{memset(&current,'\0',sizeof(current));}
+				{
+					memset(&current,'\0',sizeof(current));
+					current.stripcr = -1;
+				}
 		;
 
 define_server	: POLL STRING	{current.server.names = (struct idlist *)NULL;
@@ -192,6 +195,7 @@ user_option	: TO localnames HERE
 		| FLUSH			{current.flush = ($1==FLAG_TRUE);}
 		| FETCHALL		{current.fetchall = ($1==FLAG_TRUE);}
 		| REWRITE		{current.no_rewrite =($1==FLAG_FALSE);}
+		| STRIPCR		{current.stripcr = ($1==FLAG_TRUE);}
 		| LIMIT NUMBER		{current.limit = $2;}
 		| FETCHLIMIT NUMBER	{current.fetchlimit = $2;}
 		| BATCHLIMIT NUMBER	{current.batchlimit = $2;}

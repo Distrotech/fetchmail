@@ -21,6 +21,9 @@ Since 3.0:
 
 	** Support for ESMTP 8BITMIME and SIZE options.
 
+	** The stripcr option to explicitly control carriage-return
+	   stripping before mail forwarding.
+
 Since 2.0:
 
 	** Support for secure use with ssh.
