@@ -2,14 +2,18 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
-* Fixed a security hole that is exploitable if fetchmail is running as root
-  and the attacker can either subvert the mailserver or redirect to a fake
-  one using DNS spoofing.  Bugtraq announcement to follow soon.  Thanks
-  to antirez@invece.org.
+fetchmail-5.8.17 (Tue Aug  7 20:05:36 EDT 2001), 21056 lines:
+
+* SECURITY FIX: Fixed a security hole that is exploitable if fetchmail is
+  running as root and the attacker can either subvert the mailserver or
+  redirect to a fake one using DNS spoofing.  Bugtraq announcement to follow
+  soon.  Thanks to Salvatore Sanfilippo <antirez@invece.org>.
 * Eliminated second bounce on failed RCPT TO address.
 * Always use fetchmail host's FQDN to identify the daemon when
   sending bounce messages.
 * Embarrassing bug of the month -- somehow, `skip' wasn't being interpreted!
+
+There are 367 people on fetchmail-friends and 608 on fetchmail-announce.
 
 fetchmail-5.8.16 (Fri Aug  3 18:55:54 EDT 2001), 21093 lines:
 
