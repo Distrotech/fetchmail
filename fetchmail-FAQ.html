@@ -9,9 +9,11 @@
 <BODY>
 <H1>Frequently Asked Questions About Fetchmail</H1>
 
-$Id: fetchmail-FAQ.html,v 1.2 1997/04/16 20:09:34 esr Exp $<p>
+$Id: fetchmail-FAQ.html,v 1.3 1997/04/16 20:29:43 esr Exp $<p>
 
-(Added <a href="http:#C6">C6</a> on working with qmail)<p>
+(Added <a href="http:#C6">C6</a> on working with qmail and 
+<a href="http:#C7">C7</a> on managing fetchmail in the presence of
+multiple login sessions.)<p>
 
 Before reporting any bug, please read <a href="#G3">G3</a> for advice
 on how to include diagnostic information that will get your bug fixed
@@ -53,6 +55,8 @@ and is a SmartList reflector; sign up in the usual way. <p>
 <a href="#C4">C4. How can I get fetchmail to work with ssh?</a><br>
 <a href="#C5">C5. How can I set up support for sendmail's anti-spam 571 response?</a><br>
 <a href="#C6">C6. How can I use fetchmail multidrop mode with qmail?</a><br>
+<a href="#C7">C7. How can I do automatic startup/shutdown of fetchmail
+when I may have multiple login sessions going?</a><br>
 
 <h1>Runtime fatal errors:</h1>
 
@@ -614,6 +618,15 @@ should; see question <a href="#C1">C1</a>.<p>
 
 Or you may not be connecting to the SMTP listener.   Run fetchmail -v
 and see the next question.<p>
+
+<hr>
+<h2><a name="C7">C7. How can I do automatic startup/shutdown of fetchmail
+when I may have multiple login sessions going?</h2>
+
+In the contrib subdirectory of the fetchmail distribution there is
+some shell code you can add yo your .bash_login and .bash_logout
+profiles that will accomplish this.  Thank James Laferriere
+&lt;babydr@nwrain.net&gt; for it.<p>
 
 <hr>
 <h2>R2. Fetchmail isn't working, and -v shows `SMTP connect failed' messages.</a></h2>
