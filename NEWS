@@ -22,6 +22,9 @@ features --
 * Arrange for timeout of client after 5 minutes if connection to server is 
   dropped (thanks to Gaspar Sinai).
 
+* All pretensions to RPOP support have been dropped.  Yes, this is a feature,
+  RPOP is very vulnerable to spoofing!  Use APOP instead.
+
 bugs --
 
 * Fix buggy getopt specification of P and p options.
