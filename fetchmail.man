@@ -3,41 +3,37 @@
 .\" For license terms, see the file COPYING in this directory.
 .TH fetchmail LOCAL
 .SH NAME
-fetchmail \- retrieve mail from a mailserver using POP or IMAP
+fetchmail \- retrieve mail from a mailserver using POP2, POP3, APOP, or IMAP
 .SH SYNOPSIS
 .B fetchmail
 [\fI options \fR] \fI [server-host...]\fR
 .SH DESCRIPTION
 .I fetchmail
-is a mail retrieval client which supports 
-POP2 (as specified in RFC 937), POP3 (RFC 1725), IMAP2bis (as
-implemented by the 4.4BSD imapd program), and IMAP4 (RFC1730).
-It can use (but does not require) the RPOP and LAST facilities
-removed from later POP3 versions.
+is a batch mail retrieval utility intended to be used over on-demand
+TCP/IP links (such as SLIP or PPP connections).  It fetches mail from
+remote mail servers and forwards it to your local (client) machine's
+delivery system, where it can then be be read by normal mail user
+agents such as \fIelm\fR(1) or \fIMail\fR(1).
 .PP
-The,
+The
 .I fetchmail
-program may be used to download mail in batch from the remote
-mailserver specified by
-.I host
-to a mail folder on the local disk.  The retrieved mail can then be 
-manipulated using a local mail reader, such as
-.I mail
-or 
-.I elm.
+program can gather mail from servers supporting POP2 (as specified in RFC
+937), POP3 (RFC 1725), IMAP2bis (as implemented by the 4.4BSD imapd
+program), and IMAP4 (RFC1730).  It can use (but does not require) the
+RPOP and LAST facilities removed from later POP3 versions.
+.PP
+The behavior of
+.I fetchmail
+is controlled by comand-line options and a run control file,
+.I ~/.fetchrc
+the syntax of which we describe below.  Command-line options override
+.I ~/.fetchrc
+declarations.
 .PP
 To facilitate the use of
 .I fetchmail
 in scripts, pipelines, etc, it returns an appropriate exit code upon 
 termination -- see EXIT CODES below.
-.PP
-The behavior of
-.I fetchmail
-is controlled by comand-line options and a control file,
-.I ~/.fetchrc
-the syntax of which we describe below.  Command-line options override
-.I ~/.fetchrc
-declarations.
 .SH OPTIONS
 Each server name that you specify (following the options on the
 command line) will be queried.  If you don't specify any servers
@@ -68,10 +64,8 @@ be delivered to the client by a normal Internet TCP/IP connection).
 With this option you can specify another host to deliver to.
 .TP
 .B \-m mda, --mda mda
-Specify a mail delivery agent to use.  This can be used to pass
-fetched mail to programs like procmail.  If the MDA string contains
-%s, that escape will be expanded into your username on the client
-machine.
+Specify a mail delivery agent to use.  See OUTPUT OPTIONS below for a
+complete description.
 .TP
 .B \-o folder, --local folder
 Causes retrieved messages to be appended to file named by the folder 
@@ -87,14 +81,14 @@ and
 options on the same command line.
 .TP
 .B \-F, --flush
-POP3 only.  Delete old (previously retrieved) messages from the mailserver
+POP3/IMAP only.  Delete old (previously retrieved) messages from the mailserver
 before retrieving new messages.
 .TP
 .B \-f pathname, --fetchrc pathname
-Specify an alternate name for the .fetchrc file.
+Specify an alternate name for the .fetchrc run control file.
 .TP
 .B \-i pathname, --idfile pathname
-Specify an alternate name for the .popids file.
+Specify an alternate name for the .fetchids file.
 .TP
 .B \-k, --keep
 Keep retrieved messages in folder on remote mailserver.  Normally, messages 
@@ -134,7 +128,7 @@ may be one of the following:
 .RS
 .IP IMAP
 IMAP2bis, a compatible subset of IMAP4.
-.IP POP2 
+.IP POP2
 Post Office Protocol 2
 .IP POP3
 Post Office Protocol 3
@@ -264,17 +258,19 @@ server to believe it's allowed to bind to a privileged remote port.)
 .SH OUTPUT OPTIONS
 The default behavior of 
 .I fetchmail
-is to ship mail to the the SMTP port on the machine it is running on
-(localhost), as though it were being passed over a normal TCP/IP link.
+is to ship mail via SMTP to port 25 on the machine it is running on
+(localhost), just as though it were being passed in over a normal TCP/IP link.
 This normally results in the mail being delivered locally via your
 system's default MDA (Mail Delivery Agent, usually
 .I /usr/lib/sendmail
 but your system may use a different MDA).
 .PP
-You can force mail to be passed to an MDA directly with the -mda or -m option.
-Some possible MDAs are "/usr/lib/sendmail -oem %s", "/usr/formail",
-and "/usr/bin/deliver %s".  This shouldn't be necessary unless
-for some reason you want to bypass your system's default MDA.
+You can force mail to be passed to an MDA directly with the -mda or -m
+option.  Some possible MDAs are "/usr/lib/sendmail -oem %s",
+"/usr/formail", and "/usr/bin/deliver %s" (if the MDA string contains
+%s, that escape will be expanded into your username on the client
+machine).  This shouldn't be necessary unless for some reason you
+want to bypass your system's default MDA.
 .PP
 Using the 
 .B \-o
@@ -552,16 +548,21 @@ queries more than one host, the returned status is that of the last
 host queried.
 .SH AUTHOR
 .I fetchmail
-was originated by Carl Harris at Virginia Polytechnic Institute and State   
-University (a.k.a. Virginia Tech).  Version 3.0 was extensively improved
-by Eric S. Raymond <esr@snark.thyrsus.com> and is now maintained by esr.
+was originated (under the name `popclient') by Carl Harris at Virginia
+Polytechnic Institute and State University (a.k.a. Virginia Tech).
+Version 3.0 of popclient was extensively rewritten and improved by
+Eric S. Raymond <esr@snark.thyrsus.com>. The program's name was
+then changed to
+.I fetchmail
+to reflect both the presence of IMAP support and the symmetry with sendmail
+created by the new SMTP forwarding default.
 .PP
 .SH FILES
 .TP 5
 ~/.fetchrc
 default configuration file
 .TP 5
-~/.popids
+~/.fetchids
 default location of file associating hosts with last message IDs seen
 (used only with newer RFC1725-compliant servers supporting the UIDL command).
 .TP 5
