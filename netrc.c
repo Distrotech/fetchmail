@@ -209,7 +209,7 @@ parse_netrc (file)
 	    if (premature_token)
 	    {
 #ifdef HAVE_ERROR
-		error_at_line (0, 0, file, ln,
+		error_at_line (0, file, ln,
 			       _("warning: found \"%s\" before any host names"),
 			       premature_token);
 #else

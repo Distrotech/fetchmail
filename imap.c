@@ -465,7 +465,7 @@ static int do_gssauth(int sock, char *hostname, char *username)
     sec_token = GSS_C_NO_BUFFER;
     context = GSS_C_NO_CONTEXT;
     if (outlevel >= O_VERBOSE)
-        report(stdout, 0,0,_("Sending credentials"));
+        report(stdout, 0, _("Sending credentials"));
     do {
         maj_stat = gss_init_sec_context(&min_stat, GSS_C_NO_CREDENTIAL, 
             &context, target_name, NULL, 0, 0, NULL, sec_token, NULL,
@@ -484,7 +484,7 @@ static int do_gssauth(int sock, char *hostname, char *username)
         SockWrite(sock, buf1, strlen(buf1));
         SockWrite(sock, "\r\n", 2);
         if (outlevel >= O_MONITOR)
-            report(stdout, 0,0,"IMAP> %s", buf1);
+            report(stdout, 0, "IMAP> %s", buf1);
         if (maj_stat == GSS_S_CONTINUE_NEEDED) {
 	    if (result = gen_recv(sock, buf1, sizeof buf1)) {
 	        gss_release_name(&min_stat, &target_name);
@@ -512,7 +512,7 @@ static int do_gssauth(int sock, char *hostname, char *username)
         return PS_AUTHFAIL;
     }
     if (outlevel >= O_DEBUG)
-        report(stdout, 0,0,_("Credential exchange complete"));
+        report(stdout, 0, _("Credential exchange complete"));
     /* first octet is security levels supported. We want none, for now */
     server_conf_flags = ((char *)send_token.value)[0];
     if ( !(((char *)send_token.value)[0] & GSSAUTH_P_NONE) ) {
@@ -525,11 +525,11 @@ static int do_gssauth(int sock, char *hostname, char *username)
     /* we don't care about buffer size if we don't wrap data */
     gss_release_buffer(&min_stat, &send_token);
     if (outlevel >= O_DEBUG) {
-        report(stdout, 0,0,_("Unwrapped security level flags: %s%s%s"),
+        report(stdout, 0, _("Unwrapped security level flags: %s%s%s"),
             server_conf_flags & GSSAUTH_P_NONE ? "N" : "-",
             server_conf_flags & GSSAUTH_P_INTEGRITY ? "I" : "-",
             server_conf_flags & GSSAUTH_P_PRIVACY ? "C" : "-");
-        report(stdout, 0,0,_("Maximum GSS token size is %ld"),buf_size);
+        report(stdout, 0, _("Maximum GSS token size is %ld"),buf_size);
     }
 
     /* now respond in kind (hack!!!) */
@@ -547,8 +547,8 @@ static int do_gssauth(int sock, char *hostname, char *username)
     }
     to64frombits(buf1, send_token.value, send_token.length);
     if (outlevel >= O_DEBUG) {
-        report(stdout, 0,0,_("Requesting authorisation as %s"), username);
-        report(stdout, 0,0,"IMAP> %s",buf1);
+        report(stdout, 0, _("Requesting authorisation as %s"), username);
+        report(stdout, 0, "IMAP> %s",buf1);
     }
     SockWrite(sock, buf1, strlen(buf1));
     SockWrite(sock, "\r\n", 2);

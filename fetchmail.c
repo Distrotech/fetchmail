@@ -464,7 +464,7 @@ int main (int argc, char **argv)
     {
 	if (!nodetach)
 	    daemonize(run.logfile, termhook);
-	report(stdout,  0, 0, _("starting fetchmail %s daemon "), VERSION);
+	report(stdout, 0, _("starting fetchmail %s daemon "), VERSION);
 
 	/*
 	 * We'll set up a handler for these when we're sleeping,

@@ -731,7 +731,8 @@ static int readheaders(int sock,
     if (!headers_ok)
     {
 	if (outlevel > O_SILENT)
-	    report(stdout, 0,0,_("message delimiter found while scanning headers"));
+	    report(stdout, 0,
+		   _("message delimiter found while scanning headers"));
     }
 
     /*
@@ -869,7 +870,8 @@ static int readheaders(int sock,
     if (ctl->errcount > olderrs)	/* there were DNS errors above */
     {
 	if (outlevel >= O_DEBUG)
-	    report(stdout, 0,0, _("forwarding and deletion suppressed due to DNS errors"));
+	    report(stdout, 0,
+		   _("forwarding and deletion suppressed due to DNS errors"));
 	free(msgblk.headers);
 	free_str_list(&msgblk.recipients);
 	return(PS_TRANSIENT);

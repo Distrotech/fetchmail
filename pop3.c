@@ -92,7 +92,7 @@ int pop3_ok (int sock, char *argbuf)
 	    else
 		ok = PS_AUTHFAIL;
 	    if (*bufp)
-	      report(stderr, 0,0,bufp);
+	      report(stderr, 0, bufp);
 	}
 	else
 	    ok = PS_PROTOCOL;
@@ -351,8 +351,8 @@ pop3_slowuidl( int sock,  struct query *ctl, int *countp, int *newp)
 		    try_id--;
 		}
 	    } else {
-		report(stderr, 0,0,_("Messages inserted into list on server. "
-		      "Cannot handle this."));
+		report(stderr, 0, 
+		       _("Messages inserted into list on server. Cannot handle this."));
 		return -1;
 	    }
 	} 

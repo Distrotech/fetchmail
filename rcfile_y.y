@@ -345,7 +345,7 @@ static struct query *hosttail;	/* where to add new elements */
 void yyerror (const char *s)
 /* report a syntax error */
 {
-    error_at_line( 0, 0, rcfile, prc_lineno, "%s at %s", s, 
+    report_at_line(stderr, 0, rcfile, prc_lineno, "%s at %s", s, 
 		   (yytext && yytext[0]) ? yytext : "end of input");
     prc_errflag++;
 }
