@@ -38,7 +38,7 @@
 /* clear a netBSD kernel parameter out of the way */ 
 #undef		MSGBUFSIZE
 
-#define		MSGBUFSIZE	2048   	/* size of message read buffer */
+#define		MSGBUFSIZE	998   	/* RFC822 limit on message line size */
 #define		PASSWORDLEN	64	/* max password length */
 #define		DIGESTLEN	33	/* length of MD5 digest */
 
