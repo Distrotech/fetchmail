@@ -8,8 +8,6 @@
 				Other TO-DO items:
 
 * Get with Craig Metz to write a draft RFC on RFC1938 support in IMAP.
-* Message length check code (#define MSGLEN) works for IMAP, but not for POP.
-  How can this be?
 
 				Release Notes:
 
@@ -19,8 +17,9 @@ fetchmail-4.2.6 ()
 * Improved bug-tracking header, now also emitted when using an MDA.
 * Cope with Post Office/NT's brain-dead habit of prepending bogus LIST items
   with a -1 length.
+* Return of the size consistency check; this time it works for POP3 too.
 
-There are 284 people on the fetchmail-friends list.
+There are 283 people on the fetchmail-friends list.
 
 fetchmail-4.2.5 (Mon Sep 22 23:38:46 EDT 1997)
 * Greg Stark's patch for better autoconfiguration on mixed libc5/libc6 systems.
