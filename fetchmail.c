@@ -159,10 +159,7 @@ int main(int argc, char **argv)
     }
 
 #define IDFILE_NAME	".fetchids"
-    run.idfile = (char *) xmalloc(strlen(fmhome)+sizeof(IDFILE_NAME)+2);
-    strcpy(run.idfile, fmhome);
-    strcat(run.idfile, "/");
-    strcat(run.idfile, IDFILE_NAME);
+    run.idfile = prependdir (IDFILE_NAME, fmhome);
   
     outlevel = O_NORMAL;
 
@@ -175,6 +172,14 @@ int main(int argc, char **argv)
      * to be sure the lock gets nuked on any error exit, basically.
      */
     lock_dispose();
+
+#ifdef HAVE_GETCWD
+    /* save the current directory */
+    if (getcwd (currentwd, sizeof (currentwd)) == NULL) {
+	report(stderr, GT_("could not get current working directory\n"));
+	currentwd[0] = 0;
+    }
+#endif
 
     if ((parsestatus = parsecmdline(argc,argv, &cmd_run, &cmd_opts)) < 0)
 	exit(PS_SYNTAX);
@@ -281,10 +286,7 @@ int main(int argc, char **argv)
 
 #define	NETRC_FILE	".netrc"
     /* parse the ~/.netrc file (if present) for future password lookups. */
-    xalloca(netrc_file, char *, strlen(home) + sizeof(NETRC_FILE) + 2);
-    strcpy (netrc_file, home);
-    strcat (netrc_file, "/");
-    strcat (netrc_file, NETRC_FILE);
+    netrc_file = prependdir (NETRC_FILE, home);
     netrc_list = parse_netrc(netrc_file);
 #undef NETRC_FILE
 
@@ -406,17 +408,14 @@ int main(int argc, char **argv)
 		 pid);
 		return(PS_EXCLUDE);
 	}
+	else if (getpid() == pid)
+	    /* this test enables re-execing on a changed rcfile */
+	    lock_assert();
 	else if (argc > 1)
 	{
-	    /* this test enables re-execing on a changed rcfile */
-	    if (getpid() == pid)
-		lock_assert();
-	    else
-	    {
-		fprintf(stderr,
-			GT_("fetchmail: can't accept options while a background fetchmail is running.\n"));
-		return(PS_EXCLUDE);
-	    }
+	    fprintf(stderr,
+		    GT_("fetchmail: can't accept options while a background fetchmail is running.\n"));
+	    return(PS_EXCLUDE);
 	}
 	else if (kill(pid, SIGUSR1) == 0)
 	{
@@ -546,6 +545,13 @@ int main(int argc, char **argv)
 	else if (rcstat.st_mtime > parsetime)
 	{
 	    report(stdout, GT_("restarting fetchmail (%s changed)\n"), rcfile);
+
+#ifdef HAVE_GETCWD
+	    /* restore the startup directory */
+	    if (!currentwd[0] || chdir (currentwd) == -1)
+		report(stderr, GT_("attempt to re-exec may fail as directory has not been restored\n"));
+#endif
+
 	    /*
 	     * Matthias Andree: Isn't this prone to introduction of
 	     * "false" programs by interfering with PATH? Those
@@ -879,6 +885,7 @@ static int load_params(int argc, char **argv, int optind)
     struct passwd *pw;
     struct query def_opts, *ctl;
     struct stat rcstat;
+    char *p;
 
     run.bouncemail = TRUE;
     run.spambounce = FALSE;	/* don't bounce back to innocent bystanders */
@@ -900,6 +907,17 @@ static int load_params(int argc, char **argv, int optind)
     def_opts.warnings = WARNING_INTERVAL;
     def_opts.remotename = user;
     def_opts.listener = SMTP_MODE;
+
+    /* get the location of rcfile */
+    rcfiledir[0] = 0;
+    p = strrchr (rcfile, '/');
+    if (p && (p - rcfile) < sizeof (rcfiledir)) {
+	*p = 0;			/* replace '/' by '0' */
+	strcpy (rcfiledir, rcfile);
+	*p = '/';		/* restore '/' */
+	if (!rcfiledir[0])	/* "/.fetchmailrc" case */
+	    strcpy (rcfiledir, "/");
+    }
 
     /* note the parse time, so we can pick up on modifications */
     parsetime = 0;	/* foil compiler warnings */

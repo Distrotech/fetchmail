@@ -587,8 +587,13 @@ int do_gssauth(int sock, char *command, char *hostname, char *username);
 int do_otp(int sock, char *command, struct query *ctl);
 
 /* miscellanea */
+
+/* these should be of size PATH_MAX */
+extern char currentwd[1024], rcfiledir[1024];
+
 struct query *hostalloc(struct query *); 
 int parsecmdline (int, char **, struct runctl *, struct query *);
+char *prependdir (const char *, const char *);
 char *MD5Digest (unsigned char *);
 void hmac_md5 (unsigned char *, size_t, unsigned char *, size_t, unsigned char *, size_t);
 int POP3_auth_rpa(unsigned char *, unsigned char *, int socket);

@@ -313,7 +313,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'L':
 	case LA_LOGFILE:
-	    rctl->logfile = optarg;
+	    rctl->logfile = prependdir (optarg, currentwd);
 	    break;
 	case LA_INVISIBLE:
 	    rctl->invisible = TRUE;
@@ -323,11 +323,11 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'f':
 	case LA_RCFILE:
-	    rcfile = (char *) xstrdup(optarg);
+	    rcfile = prependdir (optarg, currentwd);
 	    break;
 	case 'i':
 	case LA_IDFILE:
-	    rctl->idfile = (char *) xstrdup(optarg);
+	    rctl->idfile = prependdir (optarg, currentwd);
 	    break;
 	case LA_POSTMASTER:
 	    rctl->postmaster = (char *) xstrdup(optarg);
@@ -538,7 +538,7 @@ struct query *ctl;	/* option record to be initialized */
 	    ocount++;
 	    break;
 	case LA_BSMTP:
-	    ctl->bsmtp = xstrdup(optarg);
+	    ctl->bsmtp = prependdir (optarg, currentwd);
 	    ocount++;
 	    break;
 	case LA_LMTP:
@@ -578,11 +578,11 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 
 	case LA_SSLKEY:
-	    ctl->sslkey = xstrdup(optarg);
+	    ctl->sslkey = prependdir (optarg, currentwd);
 	    break;
 
 	case LA_SSLCERT:
-	    ctl->sslcert = xstrdup(optarg);
+	    ctl->sslcert = prependdir (optarg, currentwd);
 	    break;
 
 	case LA_SSLPROTO:
