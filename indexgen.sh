@@ -145,7 +145,7 @@ include it.  A customized version is used at Whole Earth 'Lectronic
 Link. Several large ISPs are known to recommend it to Unix-using SLIP
 and PPP customers.<p>
 
-Over three hundred people have participated on the fetchmail beta
+Over four hundred people have participated on the fetchmail beta
 list.  While it's hard to count free software users, we can estimate
 based on (a) population figures at the WELL and other known fetchmail
 sites, (b) the size of the Linux-using ISP customer base, and (c) the
@@ -169,16 +169,16 @@ August 19th-21st 1997.  A lot of people like it.<P>
 
 <H1>Recent releases and where fetchmail is going:</H2>
 
-After 4.0.1 I wrote: "Development has essentially stopped because
-there seems to be little more that needs doing."  This turned out to
-be not quite true, I've added some minor option switches since, mostly
-to deal with weird configuration situations.  We've also fixed a hang
-problem with Cyrus IMAP servers and enabled the code to work with the
-<a href="fetchmail-FAQ.html#T5">(extremely broken)</a> Microsoft
-Exchange POP3 server.  And we've added support for Compuserve RPA.<P>
+Fetchmail is now sufficiently stable and effective that I'm getting
+very little pressure to fix things or add features.  Development has
+slowed way down, release frequency has dropped off, and we're
+basically in maintainance mode.<p>
 
-Major changes or additions now seem unlikely until there are
-significant changes in or additions to the related protocol RFCs.<p>
+Major changes or additions therefore seem unlikely until there are
+significant changes in or additions to the related protocol RFCs.  One
+development that would stimulate a new release almost instantly is the
+development of a lightweight encrypted authentication method for IMAP
+sessions.<p>
 
 <H1>Where you can use fetchmail:</H1>
 
