@@ -588,6 +588,7 @@ int main (int argc, char **argv)
 		ntimeout.it_value.tv_usec = 0;
 
 		setitimer(ITIMER_REAL,&ntimeout,NULL);
+		/* there's a small window here */
 		signal(SIGALRM, donothing);
 		pause();
 		signal(SIGALRM, SIG_IGN);
