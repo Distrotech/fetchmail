@@ -270,7 +270,7 @@ docs = $(srcdir)/COPYING $(srcdir)/FEATURES $(srcdir)/fetchmail-features.html \
 	$(srcdir)/*.man	$(srcdir)/FAQ $(srcdir)/fetchmail-FAQ.html
 config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/configure \
 	$(srcdir)/config.guess $(srcdir)/config.h.in $(srcdir)/config.sub \
-	$(srcdir)/acconfig.h
+	$(srcdir)/acconfig.h $(srcdir)/aclocal.m4
 scripts = $(srcdir)/install.sh $(srcdir)/mkinstalldirs \
 	$(srcdir)/specgen.sh $(srcdir)/lsmgen.sh $(srcdir)/fetchmailconf
 all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) \
