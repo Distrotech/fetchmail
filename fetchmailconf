@@ -855,11 +855,13 @@ You may use this panel to set options
 that may differ between individual
 users on your site.
 
-Note: if a site entry has more than one
-local user, messages will be retrieved
-in multidrop mode.  This complicates
-the configuration issues; see the manual
-page section on multidrop mode.
+Once you have a user configuration set
+up as you like it, you can select `Save' to
+store it in the server list maintained in
+the main configuration window.
+
+If you wish to discard the changes you have
+made to user options, select `Quit'.
 """}
 
 localhelp = {
@@ -937,32 +939,34 @@ class UserEdit(Frame):
 
 	leftwin = Frame(self);
 
-	secwin = Frame(leftwin, relief=RAISED, bd=5)
-	Label(secwin, text="Authentication").pack(side=TOP)
-	LabeledEntry(secwin, 'Password:',
+        secwin = Frame(leftwin, relief=RAISED, bd=5)
+        Label(secwin, text="Authentication").pack(side=TOP)
+        LabeledEntry(secwin, 'Password:',
 		      self.password, '12').pack(side=TOP, fill=X)
-	secwin.pack(fill=X, anchor=N)
+        secwin.pack(fill=X, anchor=N)
 
-	names = Frame(leftwin, relief=RAISED, bd=5)
-	Label(names, text="Local names").pack(side=TOP)
-	ListEdit("New name: ", self.user.localnames, None, names, localhelp)
-	names.pack(fill=X, anchor=N)
+        names = Frame(leftwin, relief=RAISED, bd=5)
+        Label(names, text="Local names").pack(side=TOP)
+        ListEdit("New name: ",
+                     self.user.localnames, None, names, localhelp)
+        names.pack(fill=X, anchor=N)
 
-	targwin = Frame(leftwin, relief=RAISED, bd=5)
-	Label(targwin, text="Forwarding Options").pack(side=TOP)
-        Label(targwin, text="Listeners to forward to").pack(side=TOP)
-        ListEdit("New listener:", self.user.smtphunt, None, targwin, None)
-	LabeledEntry(targwin, 'Append to MAIL FROM line:',
+        if mode != 'novice':
+            targwin = Frame(leftwin, relief=RAISED, bd=5)
+            Label(targwin, text="Forwarding Options").pack(side=TOP)
+            Label(targwin, text="Listeners to forward to").pack(side=TOP)
+            ListEdit("New listener:", self.user.smtphunt, None, targwin, None)
+            LabeledEntry(targwin, 'Append to MAIL FROM line:',
 		     self.smtpaddress, '26').pack(side=TOP, fill=X)
-	LabeledEntry(targwin, 'Connection setup command:',
+            LabeledEntry(targwin, 'Connection setup command:',
 		     self.preconnect, '26').pack(side=TOP, fill=X)
-	LabeledEntry(targwin, 'Connection wrapup command:',
+            LabeledEntry(targwin, 'Connection wrapup command:',
 		     self.postconnect, '26').pack(side=TOP, fill=X)
-	LabeledEntry(targwin, 'Local delivery agent:',
+            LabeledEntry(targwin, 'Local delivery agent:',
 		     self.mda, '26').pack(side=TOP, fill=X)
-	LabeledEntry(targwin, 'Listener spam-block code:',
+            LabeledEntry(targwin, 'Listener spam-block code:',
 		     self.antispam, '26').pack(side=TOP, fill=X)
-	targwin.pack(fill=X, anchor=N)
+            targwin.pack(fill=X, anchor=N)
 
 	leftwin.pack(side=LEFT, fill=X, anchor=N)
 	rightwin = Frame(self)
@@ -971,40 +975,42 @@ class UserEdit(Frame):
 	Label(optwin, text="Processing Options").pack(side=TOP)
 	Checkbutton(optwin, text="Suppress deletion of messages after reading",
 		    variable=self.keep).pack(side=TOP, anchor=W)
-	Checkbutton(optwin, text="Flush seen messages before retrieval", 
-		    variable=self.flush).pack(side=TOP, anchor=W)
 	Checkbutton(optwin, text="Fetch old messages as well as new",
 		    variable=self.fetchall).pack(side=TOP, anchor=W)
-	Checkbutton(optwin, text="Rewrite To/Cc/Bcc messages to enable reply", 
+        if mode != 'novice':
+            Checkbutton(optwin, text="Flush seen messages before retrieval", 
+		    variable=self.flush).pack(side=TOP, anchor=W)
+            Checkbutton(optwin, text="Rewrite To/Cc/Bcc messages to enable reply", 
 		    variable=self.rewrite).pack(side=TOP, anchor=W)
-	Checkbutton(optwin, text="Force CR/LF at end of each line",
+            Checkbutton(optwin, text="Force CR/LF at end of each line",
 		    variable=self.forcecr).pack(side=TOP, anchor=W)
-	Checkbutton(optwin, text="Strip CR from end of eacgh line",
+            Checkbutton(optwin, text="Strip CR from end of eacgh line",
 		    variable=self.stripcr).pack(side=TOP, anchor=W)
-	Checkbutton(optwin, text="Pass 8 bits even though SMTP says 7BIT",
+            Checkbutton(optwin, text="Pass 8 bits even though SMTP says 7BIT",
 		    variable=self.pass8bits).pack(side=TOP, anchor=W)
-	Checkbutton(optwin, text="Undo MIME armoring on header and body",
+            Checkbutton(optwin, text="Undo MIME armoring on header and body",
 		    variable=self.mimedecode).pack(side=TOP, anchor=W)
-	Checkbutton(optwin, text="Drop Status lines from forwarded messages", 
+            Checkbutton(optwin, text="Drop Status lines from forwarded messages", 
 		    variable=self.dropstatus).pack(side=TOP, anchor=W)
 	optwin.pack(fill=X)
 
-	limwin = Frame(rightwin, relief=RAISED, bd=5)
-	Label(limwin, text="Resource Limits").pack(side=TOP)
-	LabeledEntry(limwin, 'Message size limit:',
+        if mode != 'novice':
+            limwin = Frame(rightwin, relief=RAISED, bd=5)
+            Label(limwin, text="Resource Limits").pack(side=TOP)
+            LabeledEntry(limwin, 'Message size limit:',
 		      self.limit, '30').pack(side=TOP, fill=X)
-	LabeledEntry(limwin, 'Max messages to fetch per poll:',
+            LabeledEntry(limwin, 'Max messages to fetch per poll:',
 		      self.fetchlimit, '30').pack(side=TOP, fill=X)
-	LabeledEntry(limwin, 'Max messages to forward per poll:',
+            LabeledEntry(limwin, 'Max messages to forward per poll:',
 		      self.batchlimit, '30').pack(side=TOP, fill=X)
-	LabeledEntry(limwin, 'Interval between expunges (IMAP):',
+            LabeledEntry(limwin, 'Interval between expunges (IMAP):',
 		      self.expunge, '30').pack(side=TOP, fill=X)
-	limwin.pack(fill=X)
+            limwin.pack(fill=X)
 
-	foldwin = Frame(rightwin, relief=RAISED, bd=5)
-	Label(foldwin, text="Remote folders (IMAP only)").pack(side=TOP)
-	ListEdit("New folder:", self.user.mailboxes, None, foldwin, None)
-	foldwin.pack(fill=X, anchor=N)
+            foldwin = Frame(rightwin, relief=RAISED, bd=5)
+            Label(foldwin, text="Remote folders (IMAP only)").pack(side=TOP)
+            ListEdit("New folder:", self.user.mailboxes, None, foldwin, None)
+            foldwin.pack(fill=X, anchor=N)
 
 	rightwin.pack(side=LEFT)
 
