@@ -49,6 +49,9 @@ const char *host;	/* server hostname */
     }
 
 #ifndef TESTMAIN
+    if (outlevel >= O_DEBUG)
+	error_build(0, 0, "About to rewrite %s", buf);
+#else
     /* make room to hack the address; buf must be malloced */
     for (cp = buf; *cp; cp++)
 	if (*cp == ',' || isspace(*cp))
@@ -170,6 +173,10 @@ const char *host;	/* server hostname */
 	}
     }
 
+#ifndef TESTMAIN
+    if (outlevel >= O_DEBUG)
+	error_complete(0, 0, "Rewritten version is %s", buf);
+#endif /* TESTMAIN */
     return(buf);
 }
 
