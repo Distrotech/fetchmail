@@ -519,10 +519,10 @@ int main (int argc, char **argv)
 
 		   /* Save UID list to prevent re-fetch in case fetchmail 
 		      recover from crash */
-		    if (!check_only)
+		    if (!check_only && outlevel == O_VERBOSE)
 		    {
 			write_saved_lists(querylist, run.idfile);
-			syslog(LOG_INFO,"Saved UID List");
+			error(0, 0, "fetchmail: saved UID List");
 		    }
 #endif  /* POP3_ENABLE */
 		}
