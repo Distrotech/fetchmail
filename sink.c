@@ -422,8 +422,11 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
     SockPrintf(sock, "--%s\r\n", boundary); 
     SockPrintf(sock, "Content-Type: text/rfc822-headers\r\n");
     SockPrintf(sock, "\r\n");
-    SockWrite(sock, msg->headers, strlen(msg->headers));
-    SockPrintf(sock, "\r\n");
+    if (msg->headers)
+    {
+	SockWrite(sock, msg->headers, strlen(msg->headers));
+	SockPrintf(sock, "\r\n");
+    }
     SockPrintf(sock, "--%s--\r\n", boundary); 
 
     if (SMTP_eom(sock) != SM_OK || SMTP_quit(sock))
@@ -1511,7 +1514,7 @@ int open_warning_by_mail(struct query *ctl, struct msgblk *msg)
     }
     else				/* send to postmaster  */
 	status = open_sink(ctl, &reply, &good, &bad);
-    stuff_warning(ctl, "Date: %s", rfc822timestamp());
+    if (status == 0) stuff_warning(ctl, "Date: %s", rfc822timestamp());
     return(status);
 }
 
