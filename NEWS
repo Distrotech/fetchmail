@@ -47,6 +47,7 @@ fetchmail-4.3.7 ()
   multidrop environment.
 * Doug Muth's runfetchmail version 1.1.
 * Minor port patches from Philippe De Muyter.
+* Patch by Chun-Chung Chen <cjj@u.washington.edu> to handle quotes in .netrc
 
 fetchmail-4.3.6 (Fri Jan 23 00:25:57 EST 1998)
 * Improved RPM packaging with correct grouping and an icon.

@@ -133,6 +133,9 @@ parse_netrc (file)
 	/* If we are defining macros, then skip parsing the line. */
 	while (*p && last_token != tok_macdef)
 	{
+	    char quote_char = 0;
+	    char *pp;
+
 	    /* Skip any whitespace. */
 	    while (*p && isspace (*p))
 		p++;
@@ -141,15 +144,41 @@ parse_netrc (file)
 	    if (*p == '#')
 		break;
 
-	    tok = p;
+	    tok = pp = p;
 
 	    /* Find the end of the token. */
-	    while (*p && !isspace (*p))
-		p ++;
-
+	    while (*p && (quote_char || !isspace (*p)))
+	    {
+		if (quote_char)
+		{
+		    if (quote_char == *p)
+		    {
+			quote_char = 0;
+			p ++;
+		    }
+		    else
+		    {
+			*pp = *p;
+			p ++;
+			pp ++;
+		    }
+		}
+		else
+		{
+		    if (*p == '"' || *p == '\'')
+			quote_char = *p;
+		    else
+		    {
+			*pp = *p;
+			pp ++;
+		    }
+		    p ++;
+		}
+	    }
 	    /* Null-terminate the token, if it isn't already. */
 	    if (*p)
 		*p ++ = '\0';
+	    *pp = 0;
 
 	    switch (last_token)
 	    {
