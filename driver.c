@@ -1662,7 +1662,8 @@ const struct method *proto;	/* protocol method table */
 		     * other hand, you can (peek_capable is set by 
 		     * each driver module to convey this; it's not a
 		     * method constant because of the difference between
-		     * IMAP2bis and IMAP4).
+		     * IMAP2bis and IMAP4, and because POP3 doesn't  peek
+		     * if fetchall is on).
 		     *
 		     * The result of being unable to peek is that if there's
 		     * any kind of transient error (DNS lookup failure, or

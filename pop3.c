@@ -667,7 +667,7 @@ int doPOP3 (struct query *ctl)
 	return(PS_SYNTAX);
     }
 #endif /* MBOX */
-    peek_capable = FALSE;
+    peek_capable = !ctl->fetchall;
     return(do_protocol(ctl, &pop3));
 }
 #endif /* POP3_ENABLE */
