@@ -93,7 +93,7 @@ static void vtalarm_handler (int signal)
     longjmp(restart, 1);
 }
 
-#ifdef HAVE_GETHOSTBYNAME
+#ifdef HAVE_RES_SEARCH
 #define MX_RETRIES	3
 
 static int is_host_alias(name, ctl)
@@ -199,7 +199,7 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 		((cp = nxtaddr((char *)NULL)) != (char *)NULL);
     }
 }
-#endif /* HAVE_GETHOSTBYNAME */
+#endif /* HAVE_RES_SEARCH */
 
 static FILE *smtp_open(ctl)
 /* try to open a socket to the appropriate SMTP server for this query */ 
@@ -341,7 +341,7 @@ struct query *ctl;	/* query control record */
 
 	    /* cons up a list of local recipients */
 	    xmit_names = (struct idlist *)NULL;
-#ifdef HAVE_GETHOSTBYNAME
+#ifdef HAVE_RES_SEARCH
 	    /* is this a multidrop box? */
 	    if (MULTIDROP(ctl))
 	    {
@@ -351,7 +351,7 @@ struct query *ctl;	/* query control record */
 		find_server_names(bcchdr, ctl, &xmit_names);
 	    }
 	    else	/* it's a single-drop box, use first localname */
-#endif /* HAVE_GETHOSTBYNAME */
+#endif /* HAVE_RES_SEARCH */
 	    {
 		if (ctl->localnames)
 		    save_uid(&xmit_names, -1, ctl->localnames->id);
