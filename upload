@@ -7,7 +7,6 @@ if [ $* ]
 then
     ../upload $*
 else
-keywords="mail, client, POP, POP2, POP3, APOP, RPOP, KPOP, IMAP, ETRN, ODMR, SMTP, ESMTP, GSSAPI, RPA, NTLM, CRAM-MD5, SASL"
 
 echo "Beginning web upload..."
 # First, copy to primary website
@@ -37,7 +36,6 @@ scp history.html $dest
 echo "Upload to ${WWWVIRTUAL} complete"
 
 echo "Beginning FTP upload..."
-rpm2lsm $version -k ${keywords} fetchmail-${version}-1.i386.rpm >fetchmail.lsm
 lftp <<EOF
   # Copy to FTP site
   open $FTPHOST
