@@ -49,12 +49,12 @@ nofetchall	{ yylval.flag = -1; return KW_FETCHALL; }
 
 (#.*)?\n	{ prc_lineno++; return KW_EOL; }
 
-[^ \t\r\n#]+	{ yylval.sval = (char *) strdup(yytext); return PARAM_STRING; }
-\"[^\"]*\"`	{
+\"[^\"]*\"	{
 			yytext[strlen(yytext)-1] = '\0';
 			yylval.sval = (char *) strdup(yytext+1);
 			return PARAM_STRING;
 		}
+[^ \t\r\n#]+	{ yylval.sval = (char *) strdup(yytext); return PARAM_STRING; }
 
 [ \t\r]+	;	/* whitespace */
 

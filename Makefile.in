@@ -11,7 +11,7 @@ LDFLAGS = @LDFLAGS@
 LEX = @LEX@
 LEXFLAGS=
 YACC = @YACC@
-YACCFLAGS=-d
+YACCFLAGS = -dt
 
 # How to invoke ranlib.  This is only used by the `glob' subdirectory.
 RANLIB = @RANLIB@
