@@ -35,6 +35,7 @@
 #define		A_PASSWORD	0	/* password or inline authentication */
 #define		A_KERBEROS_V4	1	/* preauthenticate w/ Kerberos V4 */
 #define		A_KERBEROS_V5	2	/* preauthenticate w/ Kerberos V5 */
+#define		A_SSH		3	/* preauthentication at session level */
 
 /*
  * Definitions for buffer sizes.  We get little help on setting maxima

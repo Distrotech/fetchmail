@@ -93,7 +93,9 @@ int pop3_ok (int sock, char *argbuf)
 	    else if (strstr(bufp,"lock")
 		     || strstr(bufp,"Lock")
 		     || strstr(bufp,"LOCK")
-		     || strstr(bufp,"wait"))
+		     || strstr(bufp,"wait")
+		     /* these are blessed by RFC 2449 */
+		     || strstr(bufp,"[IN-USE]")||strstr(bufp,"[LOGIN-DELAY]"))
 		ok = PS_LOCKBUSY;
 	    else
 		ok = PS_AUTHFAIL;
@@ -129,6 +131,15 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
     if (!(ctl->server.sdps) && MULTIDROP(ctl) && strstr(greeting, "demon."))
         ctl->server.sdps = TRUE;
 #endif /* SDPS_ENABLE */
+
+    /* 
+     * In theory, we ought to probe with CAPA here (RFC 2449).
+     * But AFAIK this commpand is not widely implemented, and
+     * we have our own tests for optional commands, and it seems
+     * vanishingly unlikely that the RFC 2449 extended responses
+     * [IN-USE] and [LOGIN-DELAY] will ever be accidentally spoofed.
+     * So we'll not bother, and save ourselves the overhead.
+     */
 
     switch (ctl->server.protocol) {
     case P_POP3:

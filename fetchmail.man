@@ -490,9 +490,12 @@ when interface data is being collected.
 This option permits you to specify a preauthentication type (see USER
 AUTHENTICATION below for details).  The possible values are
 \&`\fBpassword\fR', `\fBkerberos_v5\fR' and `\fBkerberos\fR' (or, for
-excruciating exactness, `\fBkerberos_v4\fR').  This option is provided
-primarily for developers; choosing KPOP protocol automatically selects
-Kerberos preauthentication, and all other alternatives use password
+excruciating exactness, `\fBkerberos_v4\fR'), and \fBssh\fR.  Use
+\fBssh\fR to suppress fetchmail's normal inquiry for a password when
+you are using an end-to-end secure connection such as an ssh tunnel.
+Other values of this option are provided primarily for developers;
+choosing KPOP protocol automatically selects Kerberos
+preauthentication, and all other alternatives use password
 authentication (though APOP uses a generated one-time key as the
 password and IMAP-K4 uses RFC1731 Kerberos v4 authentication).  This
 option does not work with ETRN.
@@ -578,7 +581,9 @@ configuration report to standard output.  The configuration report is
 a data structure assignment in the language Python.  This option
 is meant to be used with an interactive 
 .I ~/.fetchmailrc
-editor written in Python.
+editor like 
+.IR fetchmailconf ,
+written in Python.
 
 .SH USER AUTHENTICATION AND ENCRYPTION
 Every mode except ETRN requires authentication of the client.
@@ -684,6 +689,9 @@ the \fI.fetchmailrc\fR option \fBuser\fR.
 If your IMAP daemon returns the PREAUTH response in its greeting line, 
 fetchmail will notice this and skip the normal authentication step.
 This could be useful, e.g. if you start imapd explicitly using ssh.
+In this case you can declare the preauthentication value `ssh' on that
+site entry to stop \fI.fetchmail\fR from asking you for a password
+when it starts up.
 .PP
 If you are using POP3, and the server issues a one-time-password
 challenge conforming to RFC1938, \fIfetchmail\fR will use your
@@ -1970,7 +1978,7 @@ POP2:
 RFC 937
 .TP 5
 POP3:
-RFC 1081, RFC 1225, RFC 1460, RFC 1725, RFC 1939, RFC 2449
+RFC 1081, RFC 1225, RFC 1460, RFC 1725, RFC 1939, RFC 1957, RFC2195, RFC 2449
 .TP 5
 APOP:
 RFC 1460, RFC 1725, RFC 1939

@@ -1045,7 +1045,7 @@ static int readheaders(int sock,
 	free_str_list(&msgblk.recipients);
 	return(PS_IOERR);
     }
-    else if (!run.use_syslog && outlevel >= O_VERBOSE)
+    else if ((run.poll_interval == 0 || nodetach) && outlevel >= O_VERBOSE)
 	fputs("#", stderr);
 
     /* write error notifications */
@@ -1155,7 +1155,7 @@ static int readbody(int sock, struct query *ctl, flag forward, int len)
 	    sizeticker += linelen;
 	    while (sizeticker >= SIZETICKER)
 	    {
-		if (!run.use_syslog && outlevel > O_SILENT)
+		if ((run.poll_interval == 0 || nodetach) && outlevel > O_SILENT)
 		{
 		    fputc('.', stdout);
 		    fflush(stdout);
@@ -1596,30 +1596,34 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	     * in daemon mode but the connection to the outside world
 	     * is down.
 	     */
-	    if (err_no == EHOSTUNREACH && run.poll_interval)
-	        goto ehostunreach;
-
-	    report_build(stderr, _("fetchmail: %s connection to %s failed"), 
-			 protocol->name, ctl->server.pollname);
-#ifdef HAVE_RES_SEARCH
-	    if (h_errno != 0)
+	    if (!(err_no == EHOSTUNREACH && run.poll_interval))
 	    {
-		if (h_errno == HOST_NOT_FOUND)
-		    report_complete(stderr, _(": host is unknown\n"));
-		else if (h_errno == NO_ADDRESS)
-		    report_complete(stderr, _(": name is valid but has no IP address\n"));
-		else if (h_errno == NO_RECOVERY)
-		    report_complete(stderr, _(": unrecoverable name server error\n"));
-		else if (h_errno == TRY_AGAIN)
-		    report_complete(stderr, _(": temporary name server error\n"));
+		report_build(stderr, _("fetchmail: %s connection to %s failed"), 
+			     protocol->name, ctl->server.pollname);
+#ifdef HAVE_RES_SEARCH
+		if (h_errno != 0)
+		{
+		    if (h_errno == HOST_NOT_FOUND)
+			report_complete(stderr,
+				_(": host is unknown\n"));
+		    else if (h_errno == NO_ADDRESS)
+			report_complete(stderr, 
+				_(": name is valid but has no IP address\n"));
+		    else if (h_errno == NO_RECOVERY)
+			report_complete(stderr,
+				_(": unrecoverable name server error\n"));
+		    else if (h_errno == TRY_AGAIN)
+			report_complete(stderr,
+				_(": temporary name server error\n"));
+		    else
+			report_complete(stderr,
+				_(": unknown DNS error %d\n"), h_errno);
+		}
 		else
-		    report_complete(stderr, _(": unknown DNS error %d\n"), h_errno);
-	    }
-	    else
 #endif /* HAVE_RES_SEARCH */
-		report_complete(stderr, ": %s\n", strerror(err_no));
+		    report_complete(stderr, ": %s\n", strerror(err_no));
 
-	ehostunreach:
+	    }
 #endif /* INET6_ENABLE */
 	    ok = PS_SOCKET;
 	    set_timeout(0);

@@ -335,11 +335,12 @@ int main(int argc, char **argv)
 	if (ctl->active && !(implicitmode && ctl->server.skip)&&!ctl->password)
 	{
 	    if (ctl->server.preauthenticate == A_KERBEROS_V4 ||
-		ctl->server.preauthenticate == A_KERBEROS_V5 ||
+			ctl->server.preauthenticate == A_KERBEROS_V5 ||
+			ctl->server.preauthenticate == A_SSH ||
 #ifdef GSSAPI
-		ctl->server.protocol == P_IMAP_GSS ||
+			ctl->server.protocol == P_IMAP_GSS ||
 #endif /* GSSAPI */
-		ctl->server.protocol == P_IMAP_K4)
+			ctl->server.protocol == P_IMAP_K4)
 		/* Server won't care what the password is, but there
 		   must be some non-null string here.  */
 		ctl->password = ctl->remotename;
@@ -602,7 +603,12 @@ int main(int argc, char **argv)
 	struct stat	rcstat;
 
 	if (stat(rcfile, &rcstat) == -1)
-	    report(stderr, _("couldn't time-check %s\n"), rcfile);
+	{
+	    if (errno != ENOENT)
+		report(stderr, 
+		       _("couldn't time-check %s (error %d)\n"),
+		       rcfile, errno);
+	}
 	else if (rcstat.st_mtime > parsetime)
 	{
 	    report(stdout, _("restarting fetchmail (%s changed)\n"), rcfile);
@@ -954,10 +960,11 @@ static int load_params(int argc, char **argv, int optind)
     def_opts.listener = SMTP_MODE;
 
     /* note the parse time, so we can pick up on modifications */
-    if (stat(rcfile, &rcstat) == -1)
-	report(stderr, _("couldn't time-check the run-control file\n"));
-    else
+    parsetime = 0;	/* foil compiler warnings */
+    if (stat(rcfile, &rcstat) != -1)
 	parsetime = rcstat.st_mtime;
+    else if (errno != ENOENT)
+	report(stderr, _("couldn't time-check the run-control file\n"));
 
     /* this builds the host list */
     if ((st = prc_parse_file(rcfile, !versioninfo)) != 0)
@@ -1561,8 +1568,10 @@ static void dump_params (struct runctl *runp,
 	putchar('\n');
 	if (ctl->server.preauthenticate == A_KERBEROS_V4)
 	    printf(_("  Kerberos V4 preauthentication enabled.\n"));
-	if (ctl->server.preauthenticate == A_KERBEROS_V5)
+	else if (ctl->server.preauthenticate == A_KERBEROS_V5)
 	    printf(_("  Kerberos V5 preauthentication enabled.\n"));
+	else if (ctl->server.preauthenticate == A_SSH)
+	    printf(_("  End-to-end encryption assumed.\n"));
 #ifdef	SSL_ENABLE
 	if (ctl->use_ssl)
 	    printf("  SSL encrypted sessions enabled.\n");

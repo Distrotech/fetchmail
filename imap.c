@@ -894,7 +894,11 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     else
 	expunge_period = 1;
 
-    if (preauth)
+    /* 
+     * If either (a) we saw a PREAUTH token in the capability response, or
+     * (b) the user specified ssh preauthentication, then we're done.
+     */
+    if (preauth || ctl->server.preauthenticate == A_SSH)
 	return(PS_SUCCESS);
 
 #if OPIE_ENABLE

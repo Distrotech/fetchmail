@@ -270,6 +270,8 @@ void dump_config(struct runctl *runp, struct query *querylist)
 		stringdump("preauth", "kerberos_v4");
 	    else if (ctl->server.preauthenticate == A_KERBEROS_V5)
 		stringdump("preauth", "kerberos_v5");
+	    else if (ctl->server.preauthenticate == A_SSH)
+		stringdump("preauth", "ssh");
 	    else
 		stringdump("preauth", "password");
 

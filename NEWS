@@ -1,7 +1,5 @@
 				Things to do:
 
-Scrollbars on fetchmailconf help windows (Debian normal bug #51770). 
-
 Notify user by mail when pop server nonexistent (Debian wishlist #47143).
 
 In the SSL support, we need to add server certificate validation (In
@@ -29,7 +27,11 @@ The Debian bug-tracking page for fetchmail is:
   before close (sigh...NFS might still betray us...).
 * Added Martijn Lievaart's sendmail hacks for multidrop to the contrib 
   directory.
+* Fix bug in processing of plugout option.
+* Add support for `ssh' preauth type to suppress password prompts at startup.
+* Support for RFC2449 extended POP3 responses [IN-USE] and [LOGIN-DELAY].
 * Log bounced messages via syslog (Debian bug #50184).
+* Add scrollbars on fetchmailconf help windows (Debian bug #51770). 
 * Debian buglist cleanup.
 
 fetchmail-5.2.5 (Mon Jan 31 02:02:48 EST 2000), 18445 lines:

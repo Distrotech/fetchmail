@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.19"
+version = "1.20"
 
 from Tkinter import *
 from Dialog import *
@@ -352,7 +352,7 @@ defaultports = {"auto":0,
 		"IMAP-K4":143,
 		"ETRN":25}
 
-preauthlist = ("password", "kerberos")
+preauthlist = ("password", "kerberos", "ssh")
 
 listboxhelp = {
     'title' : 'List Selection Help',
@@ -407,10 +407,18 @@ def helpwin(helpdict):
     helpwin.title(helpdict['title']) 
     helpwin.iconname(helpdict['title'])
     Label(helpwin, text=helpdict['banner']).pack()
-    textwin = Message(helpwin, text=helpdict['text'], width=600)
-    textwin.pack()
+    textframe = Frame(helpwin)
+    scroll = Scrollbar(textframe)
+    helpwin.textwidget = Text(textframe, setgrid=TRUE)
+    textframe.pack(side=TOP, expand=YES, fill=BOTH)
+    helpwin.textwidget.config(yscrollcommand=scroll.set)
+    helpwin.textwidget.pack(side=LEFT, expand=YES, fill=BOTH)
+    scroll.config(command=helpwin.textwidget.yview)
+    scroll.pack(side=RIGHT, fill=BOTH)
+    helpwin.textwidget.insert(END, helpdict['text']);
     Button(helpwin, text='Done', 
 	   command=lambda x=helpwin: Widget.destroy(x), bd=2).pack()
+    textframe.pack(side=TOP)
 
 def make_icon_window(base, image):
     try:
@@ -867,7 +875,7 @@ The `interface' and `monitor' options are available
 only for Linux and freeBSD systems.  See the fetchmail
 manual page for details on these.
 
-The ssl option enables SSL communication with a maolserver
+The ssl option enables SSL communication with a mailserver
 supporting Secure Sockets Layer. The sslkey and sslcert options
 declare key and certificate files for use with SSL.
 
@@ -1531,7 +1539,7 @@ return to the main panel.
         self.master.destroy()
         self.onexit()
 
-# Run a command an a scrolling text widget, displaying its output
+# Run a command in a scrolling text widget, displaying its output
 
 class RunWindow(Frame):
     def __init__(self, command, master, parent):

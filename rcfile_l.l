@@ -84,6 +84,7 @@ preauth(enticate)?	{ SETSTATE(PREAUTH); return PREAUTHENTICATE; }
 kerberos(_v)?4	{ SETSTATE(0); return KERBEROS4; }
 kerberos(_v)?5	{ SETSTATE(0); return KERBEROS5; }
 kerberos	{ SETSTATE(0); return KERBEROS; }
+ssh		{ SETSTATE(0); return SSH; }
 <PREAUTH>password { SETSTATE(0); return PASSWORD; }
 timeout		{ return TIMEOUT;}
 envelope	{ return ENVELOPE; }
@@ -104,7 +105,7 @@ netsec		{ return NETSEC; }
 interface	{ return INTERFACE; }
 monitor		{ return MONITOR; }
 plugin		{ return PLUGIN; }
-plugout		{ return PLUGIN; }
+plugout		{ return PLUGOUT; }
 batchlimit	{ return BATCHLIMIT; }
 fetchlimit	{ return FETCHLIMIT; }
 expunge		{ return EXPUNGE; }

@@ -391,6 +391,8 @@ struct query *ctl;	/* option record to be initialized */
 		ctl->server.preauthenticate = A_KERBEROS_V5;
 	    else if (strcmp(optarg, "kerberos_v4") == 0)
 		ctl->server.preauthenticate = A_KERBEROS_V4;
+	    else if (strcmp(optarg, "ssh") == 0)
+		ctl->server.preauthenticate = A_SSH;
 	    else {
 		fprintf(stderr,_("Invalid preauthentication `%s' specified.\n"), optarg);
 		errflag++;
@@ -612,7 +614,7 @@ struct query *ctl;	/* option record to be initialized */
 	P(_("  -p, --protocol    specify retrieval protocol (see man page)\n"));
 	P(_("  -U, --uidl        force the use of UIDLs (pop3 only)\n"));
 	P(_("  -P, --port        TCP/IP service port to connect to\n"));
-	P(_("      --preauth     preauthentication type (password or kerberos)\n"));
+	P(_("      --preauth     preauthentication type (password/kerberos/ssh)\n"));
 	P(_("  -t, --timeout     server nonresponse timeout\n"));
 	P(_("  -E, --envelope    envelope address header\n"));
 	P(_("  -Q, --qvirtual    prefix to remove from local user id\n"));

@@ -680,7 +680,7 @@ int SockClose(int sock)
      * side is acknowledged at the TCP level.
      */
     if (recv(sock, &ch, 1, MSG_PEEK) > 0)
-	while (recv(sock, &ch, 1, MSG_NOSIGNAL) > 0)
+	while (read(sock, &ch, 1) > 0)
 	    continue;
 
     /* if there's an error closing at this point, not much we can do */
