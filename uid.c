@@ -117,7 +117,7 @@ char *str;
 
     new = (struct idlist *)xmalloc(sizeof(struct idlist));
     new->num = num;
-    new->id = strdup(str);
+    new->id = xstrdup(str);
     new->next = *idl;
     *idl = new;
 }

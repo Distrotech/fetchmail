@@ -139,8 +139,16 @@ extern int versioninfo;		/* emit only version info */
 #ifdef HAVE_PROTOTYPES
 
 /* prototypes for globally callable functions */
+#if defined(HAVE_STDARG_H)
+void gen_send (int socket, char *fmt, ... );
+int gen_transact (int socket, char *fmt, ... );
+#else
 void gen_send ();
 int gen_transact ();
+#endif
+
+void *xmalloc(int);
+char *xstrdup(char *);
 
 int doPOP2 (struct hostrec *); 
 int doPOP3 (struct hostrec *);

@@ -13,6 +13,7 @@
 
 #include <config.h>
 #include <stdio.h>
+#include <string.h>
 #include <sys/types.h>
 #include "fetchmail.h"
 
@@ -24,7 +25,7 @@
 
 XMALLOCTYPE *
 xmalloc (n)
-size_t n;
+int n;
 {
   XMALLOCTYPE *p;
 
@@ -34,4 +35,13 @@ size_t n;
     exit(PS_UNDEFINED);
   }
   return(p);
+}
+
+char *xstrdup(s)
+char *s;
+{ 
+  char *p;
+  p = (char *) xmalloc(strlen(s)+1);
+  strcpy(p,s);
+  return p;
 }

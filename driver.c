@@ -14,7 +14,7 @@
 #include  <config.h>
 #include  <stdio.h>
 #include  <stdlib.h>
-#ifdef QNX
+#if defined(HAVE_STDARG_H)
 #include  <stdarg.h>
 #else
 #include  <varargs.h>
@@ -846,7 +846,7 @@ closeUp:
   globals:       reads outlevel.
  *********************************************************************/
 
-#if defined(QNX)
+#if defined(HAVE_STDARG_H)
 void gen_send(int socket, char *fmt, ... )
 {
 #else
@@ -864,7 +864,7 @@ va_dcl {
     else
 	buf[0] = '\0';
 
-#if defined(QNX)
+#if defined(HAVE_STDARG_H)
     va_start(ap, fmt) ;
 #else
     va_start(ap);
@@ -898,10 +898,15 @@ va_dcl {
   globals:       reads outlevel.
  *********************************************************************/
 
+#if defined(HAVE_STDARG_H)
+int gen_transact(int socket, char *fmt, ... )
+{
+#else
 int gen_transact(socket, fmt, va_alist)
 int socket;
 const char *fmt;
 va_dcl {
+#endif
 
   int ok;
   char buf [POPBUFSIZE+1];
@@ -912,7 +917,7 @@ va_dcl {
   else
       buf[0] = '\0';
 
-#if defined(QNX)
+#if defined(HAVE_STDARG_H)
   va_start(ap, fmt) ;
 #else
   va_start(ap);
