@@ -217,12 +217,12 @@ int main (int argc, char **argv)
 
     /* set up to do lock protocol */
 #define	FETCHMAIL_PIDFILE	"fetchmail.pid"
-    xalloca(tmpbuf, char *, !getuid?
-	(strlen(PID_DIR) + strlen(FETCHMAIL_PIDFILE) + 2):
-	(strlen(home) + strlen(FETCHMAIL_PIDFILE) + 3));
-    if (!getuid())
+    if (!getuid()) {
+	xalloca(tmpbuf, char *,
+		strlen(PID_DIR) + strlen(FETCHMAIL_PIDFILE) + 2);
 	sprintf(tmpbuf, "%s/%s", PID_DIR, FETCHMAIL_PIDFILE);
-    else {
+    } else {
+	xalloca(tmpbuf, char *, strlen(home) + strlen(FETCHMAIL_PIDFILE) + 3);
 	strcpy(tmpbuf, home);
 	strcat(tmpbuf, "/.");
 	strcat(tmpbuf, FETCHMAIL_PIDFILE);

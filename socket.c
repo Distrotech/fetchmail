@@ -55,17 +55,37 @@ static int handle_plugin(const char *host,
 	error(0, 0, _("fetchmail: socketpair failed: %s(%d)"),strerror(errno),errno);
 	return -1;
     }
-    if (!fork())
-    {
-	dup2(fds[0],0);
-	dup2(fds[0],1);
-	if (outlevel >= O_VERBOSE)
-	    error(0, 0, _("running %s %s %s"), plugin, host, service);
-	execlp(plugin,plugin,host,service,0);
-	error(0, 0, _("execl(%s) failed: %s (%d)"),
-	      plugin, strerror(errno), errno);
-	exit(0);
+    switch (fork()) {
+	case -1:
+		/* error */
+		error(0, 0, _("fetchmail: fork failed: %s(%d)"),
+						strerror(errno), errno);
+		return -1;
+		break;
+	case 0:	/* child */
+		/* fds[1] is the parent's end; close it for proper EOF
+		** detection */
+		(void) close(fds[1]);
+		if ( (dup2(fds[0],0) == -1) || (dup2(fds[0],1) == -1) ) {
+			error(0, 0, _("fetchmail: dup2 failed: %s(%d)"),
+						strerror(errno), errno);
+			exit(1);
+		}
+		/* fds[0] is now connected to 0 and 1; close it */
+		(void) close(fds[0]);
+		if (outlevel >= O_VERBOSE)
+		    error(0, 0, _("running %s %s %s"), plugin, host, service);
+		execlp(plugin,plugin,host,service,0);
+		error(0, 0, _("execl(%s) failed: %s (%d)"),
+		      plugin, strerror(errno), errno);
+		exit(0);
+		break;
+	default:	/* parent */
+		/* NOP */
+		break;
     }
+    /* fds[0] is the child's end; close it for proper EOF detection */
+    (void) close(fds[0]);
     return fds[1];
 }
 #endif /* HAVE_SOCKETPAIR */
