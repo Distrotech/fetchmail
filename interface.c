@@ -59,7 +59,7 @@ static char *netdevfmt;
 #if defined(linux)
 
 void interface_init(void)
-/* figure out which /roc/dev/net format to use */
+/* figure out which /proc/dev/net format to use */
 {
     FILE *fp = popen("uname -r", "r");	/* still wins if /proc is out */
 
