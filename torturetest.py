@@ -1,18 +1,26 @@
 #!/usr/bin/env python
 
-import sys, getopt, os, smtplib
+import sys, getopt, os, smtplib, commands
 
 class TestSite:
+    temp = "/usr/tmp/torturestest-%d" % os.getpid()
+
     def __init__(self, line):
+        "Initialize site data from the external representation."
         (self.host, self.userid, self.password, \
                 self.proto, self.options, self.version, self.comment) = \
                 line.strip().split(":")
+        # Test results
+        self.status = None
+        self.output = None
 
     def allattrs(self):
+        "Return a tuple consisting of alll this site's attributes."
         return (self.host, self.userid, self.password, \
                          self.proto, self.options, self.version, self.comment)
 
     def __repr__(self):
+        "Return the external representation of this site's data."
         return ":".join(self.allattrs())
 
     def prettyprint(self):
@@ -36,6 +44,41 @@ class TestSite:
         "Print an HTML server-type table entry."
         return "<tr><td>%s %s</td><td>%s</td><td>%s</td></tr>\n" \
                % (self.proto, self.version, self.options, self.comment)
+
+    def id(self):
+        "Identify this site."
+        return "%s %s at %s" % (self.proto, self.version, self.host)
+
+    def testmail(self):
+        "Send test mail to the site."
+        server = smtplib.SMTP("localhost")
+        fromaddr = "esr@thyrsus.com"
+        toaddr = "%s@%s" % (self.userid, self.host)
+        msg = ("From: %s\r\nTo: %s\r\n\r\n" % (fromaddr, toaddr))
+        msg += "Test mail collected from %s.\n" % (toaddr, self.id())
+        server.sendmail(fromaddr, toaddr, msg)
+        server.quit()
+
+    def fetch(self):
+        "Run a mail fetch on this site."
+        try:
+            ofp = open(TestSite.temp, "w")
+            ofp.write(site.entryprint())
+            ofp.close()
+            (self.status, self.output) = commands.getstatusoutput("fetchmail -d0 -v -f - <%s"%TestSite.temp)
+        finally:
+            os.remove(TestSite.temp)
+
+    def failed(self):
+        "Did we have a test failure here?"
+        return os.WIFEXITED(self.status) or os.WEXITSTATUS(self.status) > 1
+
+    def explain(self):
+        "Explain the status of the last test."
+        if not os.WIFEXITED(self.status):
+            return self.id() + ": abnormal termination\n"
+        elif os.WEXITSTATUS(self.status) > 1:
+            return self.id() + ": %d\n" % os.WEXITSTATUS(status) + self.output
 
 if __name__ == "__main__":
     # Start by reading in the sitelist
@@ -65,15 +108,9 @@ if __name__ == "__main__":
             map(lambda x: sys.stdout.write(x.tableprint()), sitelist)
             sys.exit(0)
         elif switch == "-g":
-            # Send test mail to each site
-            server = smtplib.SMTP("localhost")
-            fromaddr = "esr@thyrsus.com"
             for site in sitelist:
-                toaddr = "%s@%s" % (site.userid, site.host)
-                msg = ("From: %s\r\nTo: %s\r\n\r\n" % (fromaddr, toaddr))
-                msg += "Test mail collected from %s.\n" % (toaddr,)
-                server.sendmail(fromaddr, toaddr, msg)
-            server.quit()
+                site.testmail()
+            # Send test mail to each site
             sys.stdout.write("Delaying to give the test mail time to land...")
             time.sleep(5)
             sys.stdout.write("here we go:\n")
@@ -82,43 +119,25 @@ if __name__ == "__main__":
     # If no options, run the torture test
     try:
         failures = successes = 0
-        returns = []
         for site in sitelist:
-            print "#\n#Testing %s %s at %s\n#" \
-                  % (site.proto,site.version,site.host)
-
-            # Generate the control file for this run
-            temp = "/usr/tmp/torturestest-%d" % os.getpid()
-            ofp = open(temp, "w")
-            ofp.write(site.entryprint())
-            ofp.close()
-
-            # Run the test
-            status = os.system("fetchmail -d0 -v -f - <%s" % temp)
-            print "Status: %d" % status
-            returns.append((site, status))
-            if not os.WIFEXITED(status) or os.WEXITSTATUS(status) > 1:
+            print "Testing %s %s at %s" % (site.proto,site.version,site.host)
+            site.fetch()
+            if not site.failed():
                 failures += 1
             else:
                 successes += 1
-    finally:
-        os.remove(temp)
 
-    # OK, summarize results
-    print "\n%d successes and %d failures out of %d tests" \
-          % (successes, failures, len(sitelist))
+        # OK, summarize results
+        print "\n%d successes and %d failures out of %d tests" \
+              % (successes, failures, len(sitelist))
 
-    if failures:
-        print "Bad status was returned on the following sites:"
-        for (site, status) in returns:
-            if not os.WIFEXITED(status):
-                sys.stdout.write("%s %s at %s: " \
-                             % (site.proto,site.version,site.host))
-                sys.stdout.write("abnormal termination\n")
-            elif os.WEXITSTATUS(status) > 1:
-                sys.stdout.write("%s %s at %s: " \
-                             % (site.proto,site.version,site.host))
-                sys.stdout.write("%d\n" % os.WEXITSTATUS(status))
+        if failures:
+            print "Bad status was returned on the following sites:"
+            for site in sitelist:
+                sys.stdout.write(self.explain)
+    except KeyboardInterrupt:
+        print "Interrupted."
+
 # end
 
 
