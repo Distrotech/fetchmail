@@ -203,7 +203,7 @@ config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/configure \
 scripts = $(srcdir)/install.sh $(srcdir)/mkinstalldirs \
 	$(srcdir)/specgen.sh $(srcdir)/lsmgen.sh
 all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) \
-	$(srcdir)/contrib/* $(srcdir)/MANIFEST $(srcdir)/LIBOPIE.PATCH
+	$(srcdir)/contrib/*[A-Za-uw-z] $(srcdir)/MANIFEST $(srcdir)/LIBOPIE.PATCH
 
 MANIFEST: $(srcdir) Makefile.in
 	@echo $(all) | tr "[ \t]" '\n' | sed -e '/^\.\//s///' | sort >MANIFEST
