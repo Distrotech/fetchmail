@@ -2,6 +2,10 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Jan Klaverstijn's verbosity-lowering patch.
+* Updated Turkish, German, Catalan, and Danish translation files.
+* Fix processing of POP3 messages with missing bodies.
+
 fetchmail-6.1.1 (Fri Oct 18 14:53:51 EDT 2002), 22087 lines:
 
 * OTP fix patches from Stanislav Brabec <utx@penguin.cz>

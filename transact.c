@@ -860,6 +860,7 @@ int readheaders(int sock,
 	if (outlevel > O_SILENT)
 	    report(stdout,
 		   GT_("message delimiter found while scanning headers\n"));
+	return(PS_TRUNCATED);
     }
 
     /*

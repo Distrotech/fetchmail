@@ -521,23 +521,14 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 		if (ctl->server.base_protocol->fetch_body)
 		    suppress_readbody = TRUE;
 	    }
-#if 0
-	    /* 
-	     * readheaders does not read the body when it
-	     * hits a non-header. It has been recently
-	     * fixed to return PS_TRUNCATED (properly) when
-	     * that happens, but apparently fixing that bug
-	     * opened this one here (which looks like an 
-	     * inproper fix from some ancient thinko)
-	     */
 	    else if (err == PS_TRUNCATED)
-		suppress_readbody = TRUE;
+	    {
+		if (ctl->server.base_protocol->fetch_body)
+		    suppress_readbody = TRUE;
+		len = 0;	/* suppress body processing */
+	    }
 	    else if (err)
 		return(err);
-#else
-	    else if (err && err != PS_TRUNCATED)
-		return(err);
-#endif
 
 	    /* 
 	     * If we're using IMAP4 or something else that
