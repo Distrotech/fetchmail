@@ -4,7 +4,7 @@
 # So just uncomment all the lines marked QNX.
 
 PACKAGE = fetchmail
-VERSION = 5.7.1
+VERSION = 5.7.2
 
 SUBDIRS = @POSUB@  
 
@@ -15,7 +15,7 @@ VPATH = @srcdir@
 CC = @CC@
 # CC = cc		# QNX
 
-CFLAGS = @CFLAGS@ -I$(top_srcdir)/intl
+CFLAGS = @CFLAGS@
 # CFLAGS =  -g2 -5	# QNX
 LDFLAGS = @LDFLAGS@
 # LDFLAGS =  -g2 -5 -N64k	# QNX
@@ -193,6 +193,7 @@ clean:
 
 distclean: clean 
 	@POMAKE@ distclean
+	rm -f po/*.gmo
 	-rm -f Makefile config.h TAGS tags
 	-rm -f config.cache config.status config.log stamp-config
 
