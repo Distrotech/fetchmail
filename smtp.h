@@ -13,7 +13,7 @@
 #ifndef _POPSMTP_
 #define _POPSMTP_
 
-#define         SMTPBUFSIZE     128  
+#define         SMTPBUFSIZE     256
 
 /* SMTP error values */
 #define         SM_OK              0
