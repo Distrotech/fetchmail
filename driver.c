@@ -538,7 +538,7 @@ static int readheaders(int sock,
 	     * With it, we treat such messages as though they had the missing
 	     * blank line.
 	     */
-	    if (!isspace(line[0]) && !strchr(line, ":"))
+	    if (!isspace(line[0]) && !strchr(line, ':'))
 	    {
 		headers_ok = TRUE;
 		free(line);
