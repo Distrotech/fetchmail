@@ -158,6 +158,7 @@ int main(int argc, char **argv)
 
     envquery(argc, argv);
 #ifdef ENABLE_NLS
+    setlocale (LC_ALL, "");
     bindtextdomain(PACKAGE, LOCALEDIR);
     textdomain(PACKAGE);
 #endif
