@@ -1236,8 +1236,10 @@ static int query_host(struct query *ctl)
 
 	time(&now);
 	report(stdout, 0, _("%s querying %s (protocol %s) at %s\n"),
-	    VERSION,
-	    ctl->server.pollname, showproto(ctl->server.protocol), ctime(&now));
+	       VERSION,
+	       ctl->server.pollname,
+	       showproto(ctl->server.protocol),
+	       rfc822timestamp());
     }
     switch (ctl->server.protocol) {
     case P_AUTO:
