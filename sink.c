@@ -760,7 +760,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	    {
 		report(stderr, _("can't even send to %s!\n"), run.postmaster);
 		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
-		return(PS_SMTP);
+		return(PS_REFUSED);
 	    }
 
 	    if (outlevel >= O_VERBOSE)
