@@ -974,7 +974,6 @@ class ServerEdit(Frame, MyWidget):
     def user_delete(self, username):
         if self.subwidgets.has_key(username):
             self.subwidgets[username].destruct()
-            del self.subwidgets[username]
         del self.server[username]
 
     def makeWidgets(self, host, mode):
