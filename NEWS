@@ -17,6 +17,7 @@ fetchmail-5.0.0 ():
 * Henrik Storner's fix for the PGP/mimedecode problem.
 * Fix netrc search code to be able to search >1 host entry per file.
 * Added heads-up about SpryNet in the FAQ and a test in the autoprobe code.
+* Removed the Hotmole script.  Instead, the web page and FAQ now refer to it.
 
 There are 267 people on fetchmail-friends and 365 on fetchmail-announce.
 
