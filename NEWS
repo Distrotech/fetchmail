@@ -34,10 +34,10 @@ every user entry in a multi-user poll declaration.
 
 ------------------------------------------------------------------------------
 
-pl 3.9.3 ():
+pl 3.9.3 (Wed May  7 11:40:47 EDT 1997):
 * Fix for -I option from George Sipe.
 * Finally got error.c to compile under AIX, thanks to Dave Vinish.
-* Prevent header rerwrite logic from appending mailserver name to blank To.
+* Prevent header rewrite logic from appending mailserver name to blank To.
 * When header rewrite is on, hack Return-Path as well.
 
 There are 240 people on the fetchmail-friends list.
