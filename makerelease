@@ -73,7 +73,7 @@ if (system("make rpm $null && chown esr *.rpm")) {
 }
 
 # Clean up permissions so next build won't foo up.
-system("chown esr config.log stamp-h po/Makefile")
+system("chown esr config.log stamp-h po/Makefile");
 
 open(REPORT, ">PREAMBLE.$$");
 
