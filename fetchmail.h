@@ -11,6 +11,7 @@
 #define		P_APOP		6
 #define		P_RPOP		7
 #define		P_ETRN		8
+#define		P_IMAP_GSS	9
 
 #define		KPOP_PORT	1109
 

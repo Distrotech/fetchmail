@@ -26,6 +26,11 @@
 #include <krb.h>
 #endif /* KERBEROS_V4 */
 
+#ifdef GSSAPI
+#include <gssapi/gssapi.h>
+#include <gssapi/gssapi_generic.h>
+#endif
+
 #ifndef strstr		/* glibc-2.1 declares this as a macro */
 extern char *strstr();	/* needed on sysV68 R3V7.1. */
 #endif /* strstr */
@@ -173,7 +178,7 @@ static int do_rfc1731(int sock, char *truename)
       }
     }
 
-    strncpy(srvrealm, krb_realmofhost(srvinst), (sizeof srvrealm)-1);
+    strncpy(srvrealm, (char *)krb_realmofhost(srvinst), (sizeof srvrealm)-1);
     srvrealm[(sizeof srvrealm)-1] = '\0';
     if (p = strchr(srvinst, '.')) {
       *p = '\0';
@@ -328,6 +333,165 @@ static int do_rfc1731(int sock, char *truename)
 }
 #endif /* KERBEROS_V4 */
 
+#ifdef GSSAPI
+#define GSSAUTH_P_NONE      1
+#define GSSAUTH_P_INTEGRITY 2
+#define GSSAUTH_P_PRIVACY   4
+
+static int do_gssauth(int sock, char *hostname, char *username)
+{
+    gss_buffer_desc request_buf, send_token;
+    gss_buffer_t sec_token;
+    gss_name_t target_name;
+    gss_ctx_id_t context;
+    gss_OID mech_name;
+    gss_qop_t quality;
+    int cflags;
+    OM_uint32 maj_stat, min_stat;
+    char buf1[8192], buf2[8192], server_conf_flags;
+    unsigned long buf_size;
+    int result;
+
+    /* first things first: get an imap ticket for host */
+    sprintf(buf1, "imap@%s", hostname);
+    request_buf.value = buf1;
+    request_buf.length = strlen(buf1) + 1;
+    maj_stat = gss_import_name(&min_stat, &request_buf, gss_nt_service_name,
+        &target_name);
+    if (maj_stat != GSS_S_COMPLETE) {
+        error(0, -1, "Couldn't get service name for [%s]", buf1);
+        return PS_AUTHFAIL;
+    }
+    else if (outlevel == O_VERBOSE) {
+        maj_stat = gss_display_name(&min_stat, target_name, &request_buf,
+            &mech_name);
+        error(0, 0, "Using service name [%s]",request_buf.value);
+        maj_stat = gss_release_buffer(&min_stat, &request_buf);
+    }
+
+    gen_send(sock, "AUTHENTICATE GSSAPI");
+
+    /* upon receipt of the GSSAPI authentication request, server returns
+     * null data ready response. */
+    if (result = gen_recv(sock, buf1, sizeof buf1)) {
+        return result;
+    }
+
+    /* now start the security context initialisation loop... */
+    sec_token = GSS_C_NO_BUFFER;
+    context = GSS_C_NO_CONTEXT;
+    if (outlevel == O_VERBOSE)
+        error(0,0,"Sending credentials");
+    do {
+        maj_stat = gss_init_sec_context(&min_stat, GSS_C_NO_CREDENTIAL, 
+            &context, target_name, NULL, 0, 0, NULL, sec_token, NULL,
+	    &send_token, &cflags, NULL);
+        if (maj_stat!=GSS_S_COMPLETE && maj_stat!=GSS_S_CONTINUE_NEEDED) {
+            error(0, -1,"Error exchanging credentials");
+            gss_release_name(&min_stat, &target_name);
+            /* wake up server and await NO response */
+            SockWrite(sock, "\r\n", 2);
+            if (result = gen_recv(sock, buf1, sizeof buf1))
+                return result;
+            return PS_AUTHFAIL;
+        }
+        to64frombits(buf1, send_token.value, send_token.length);
+        gss_release_buffer(&min_stat, &send_token);
+        SockWrite(sock, buf1, strlen(buf1));
+        SockWrite(sock, "\r\n", 2);
+        if (outlevel == O_VERBOSE)
+            error(0,0,"IMAP> %s", buf1);
+        if (maj_stat == GSS_S_CONTINUE_NEEDED) {
+	    if (result = gen_recv(sock, buf1, sizeof buf1)) {
+	        gss_release_name(&min_stat, &target_name);
+	        return result;
+	    }
+	    request_buf.length = from64tobits(buf2, buf1 + 2);
+	    request_buf.value = buf2;
+	    sec_token = &request_buf;
+        }
+    } while (maj_stat == GSS_S_CONTINUE_NEEDED);
+    gss_release_name(&min_stat, &target_name);
+
+    /* get security flags and buffer size */
+    if (result = gen_recv(sock, buf1, sizeof buf1)) {
+        return result;
+    }
+    request_buf.length = from64tobits(buf2, buf1 + 2);
+    request_buf.value = buf2;
+
+    maj_stat = gss_unwrap(&min_stat, context, &request_buf, &send_token,
+        &cflags, &quality);
+    if (maj_stat != GSS_S_COMPLETE) {
+        error(0,-1,"Couldn't unwrap security level data");
+        gss_release_buffer(&min_stat, &send_token);
+        return PS_AUTHFAIL;
+    }
+    if (outlevel == O_VERBOSE)
+        error(0,0,"Credential exchange complete");
+    /* first octet is security levels supported. We want none, for now */
+    server_conf_flags = ((char *)send_token.value)[0];
+    if ( !(((char *)send_token.value)[0] & GSSAUTH_P_NONE) ) {
+        error(0,-1,"Server requires integrity and/or privacy");
+        gss_release_buffer(&min_stat, &send_token);
+        return PS_AUTHFAIL;
+    }
+    ((char *)send_token.value)[0] = 0;
+    buf_size = ntohl(*((long *)send_token.value));
+    /* we don't care about buffer size if we don't wrap data */
+    gss_release_buffer(&min_stat, &send_token);
+    if (outlevel == O_VERBOSE) {
+        error(0,0,"Unwrapped security level flags: %s%s%s",
+            server_conf_flags & GSSAUTH_P_NONE ? "N" : "-",
+            server_conf_flags & GSSAUTH_P_INTEGRITY ? "I" : "-",
+            server_conf_flags & GSSAUTH_P_PRIVACY ? "C" : "-");
+        error(0,0,"Maximum GSS token size is %ld",buf_size);
+    }
+
+    /* now respond in kind (hack!!!) */
+    buf_size = htonl(buf_size); /* do as they do... only matters if we do enc */
+    memcpy(buf1, &buf_size, 4);
+    buf1[0] = GSSAUTH_P_NONE;
+    strcpy(buf1+4, username); /* server decides if princ is user */
+    request_buf.length = 4 + strlen(username) + 1;
+    request_buf.value = buf1;
+    maj_stat = gss_wrap(&min_stat, context, 0, GSS_C_QOP_DEFAULT, &request_buf,
+        &cflags, &send_token);
+    if (maj_stat != GSS_S_COMPLETE) {
+        error(0,-1,"Error creating security level request");
+        return PS_AUTHFAIL;
+    }
+    to64frombits(buf1, send_token.value, send_token.length);
+    if (outlevel == O_VERBOSE) {
+        error(0,0,"Requesting authorisation as %s", username);
+        error(0,0,"IMAP> %s",buf1);
+    }
+    SockWrite(sock, buf1, strlen(buf1));
+    SockWrite(sock, "\r\n", 2);
+
+    /* we should be done. Get status and finish up */
+    if (result = gen_recv(sock, buf1, sizeof buf1))
+        return result;
+    if (strstr(buf1, "OK")) {
+        /* flush security context */
+        if (outlevel == O_VERBOSE)
+            error(0, 0, "Releasing GSS credentials");
+        maj_stat = gss_delete_sec_context(&min_stat, &context, &send_token);
+        if (maj_stat != GSS_S_COMPLETE) {
+            error(0, -1, "Error releasing credentials");
+            return PS_AUTHFAIL;
+        }
+        /* send_token may contain a notification to the server to flush
+         * credentials. RFC 1731 doesn't specify what to do, and since this
+         * support is only for authentication, we'll assume the server
+         * knows enough to flush its own credentials */
+        return PS_SUCCESS;
+    }
+
+    return PS_AUTHFAIL;
+}	
+#endif /* GSSAPI */
+
 int imap_getauth(int sock, struct query *ctl, char *greeting)
 /* apply for connection authorization */
 {
@@ -366,6 +530,23 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 	if ((ok = gen_recv(sock, scratchbuf, sizeof(scratchbuf))))
 	    return(ok);
     }
+
+#ifdef GSSAPI
+    if (strstr(capabilities, "AUTH=GSSAPI"))
+    {
+        if (ctl->server.protocol == P_IMAP_GSS)
+        {
+            if (outlevel == O_VERBOSE)
+                error(0, 0, "GSS authentication is supported");
+            return do_gssauth(sock, ctl->server.truename, ctl->remotename);
+        }
+    }
+    else if (ctl->server.protocol == P_IMAP_GSS)
+    {
+        error(0,-1, "Required GSS capability not supported by server");
+        return(PS_AUTHFAIL);
+    }
+#endif /* GSSAPI */
 
 #ifdef KERBEROS_V4
     if (strstr(capabilities, "AUTH=KERBEROS_V4"))

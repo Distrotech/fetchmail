@@ -295,7 +295,7 @@ int main (int argc, char **argv)
     for (ctl = querylist; ctl; ctl = ctl->next)
 	if (ctl->active && !(implicitmode && ctl->server.skip)&&!ctl->password)
 	{
-	    if (ctl->server.preauthenticate == A_KERBEROS_V4 || ctl->server.protocol == P_IMAP_K4)
+	    if (ctl->server.preauthenticate == A_KERBEROS_V4 || ctl->server.protocol == P_IMAP_K4 || ctl->server.protocol == P_IMAP_GSS)
 		/* Server won't care what the password is, but there
 		   must be some non-null string here.  */
 		ctl->password = ctl->remotename;
@@ -311,7 +311,7 @@ int main (int argc, char **argv)
 		    ctl->password = xstrdup(p->password);
 	    }
 
-	    if (ctl->server.protocol != P_ETRN && ctl->server.protocol != P_IMAP_K4 && !ctl->password)
+	    if (ctl->server.protocol != P_ETRN && ctl->server.protocol != P_IMAP_K4 && ctl->server.protocol != P_IMAP_GSS && !ctl->password)
 	    {
 		(void) sprintf(tmpbuf, "Enter password for %s@%s: ",
 			       ctl->remotename, ctl->server.pollname);
@@ -874,6 +874,7 @@ static int query_host(struct query *ctl)
 	break;
     case P_IMAP:
     case P_IMAP_K4:
+    case P_IMAP_GSS:
 #ifdef IMAP_ENABLE
 	return(doIMAP(ctl));
 #else

@@ -7,6 +7,7 @@
   when user's pop3 host isn't the same as his SMTP host.)
 * Allow -c -F to work to flush messages without retrieval.
 * Read from /etc/fetchmailrc before ~/.fetchmailrc?
+* Do is_host_alias checks by comparing IP addresses rather than names?
 
 				Other TO-DO items:
 
@@ -18,6 +19,7 @@
 fetchmail-4.3.5 ()
 * Added Kent Robotti's fetchsetup configuration script.
 * Corrected buggy  handling of `expunge 0'.
+* GSSAPI support from Brendan Cully <brendan@kublai.com>.
 
 fetchmail-4.3.4 (Fri Dec  5 12:39:31 EST 1997)
 * Yet another attempt on the Compuserve RPA moving target.

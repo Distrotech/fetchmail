@@ -196,6 +196,35 @@ then
     AC_DEFINE(OPIE,1)
 fi
 
+###	use option --with-gssapi=DIR to compile in GSSAPI support
+AC_ARG_WITH(gssapi,
+	[  --with-gssapi[=DIR]  compile in GSSAPI support using libraries in DIR])
+if test "$with-gssapi" = "yes"
+then
+    GSSAPIDIR="/usr /usr/local /usr/athena"
+else
+    GSSAPIDIR="$with_gssapi"
+fi
+if test "$GSSAPIDIR" != "" -a "$GSSAPIDIR" != "no"
+then
+    AC_MSG_CHECKING([for gssapi])
+    for curgssapidir in $GSSAPIDIR
+    do
+        if test -f $curgssapidir/include/gssapi/gssapi.h
+        then
+            CEFLAGS="$CEFLAGS -DGSSAPI -I$curgssapidir/include"
+            LDEFLAGS="$LDEFLAGS -L$curgssapidir/lib"
+            LIBS="$LIBS -lgssapi_krb5 -lkrb5"
+            AC_MSG_RESULT([in $curgssapidir])
+            GSSAPIFOUND="yes"
+        fi
+    done
+    if test "$GSSAPIFOUND" != "yes"
+    then
+        AC_MSG_ERROR([not found])
+    fi
+fi
+
 ###	use option --with-kerberos=DIR to point at a Kerberos directory
 AC_ARG_WITH(kerberos,
 	[  --with-kerberos=DIR  point fetchmail compilation at a Kerberos directory])

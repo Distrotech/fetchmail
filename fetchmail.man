@@ -166,6 +166,9 @@ IMAP2bis, IMAP4, or IMAP4rev1 (\fIfetchmail\fR autodetects their capabilities).
 .IP IMAP-K4
 IMAP4, or IMAP4rev1 (\fIfetchmail\fR autodetects their capabilities)
 with RFC 1731 Kerberos v4 authentication.
+.IP IMAP-GSS
+IMAP4, or IMAP4rev1 (\fIfetchmail\fR autodetects their capabilities)
+with RFC 1731 GSSAPI authentication.
 .IP ETRN
 Use the ESMTP ETRN option.
 .RE
@@ -487,6 +490,13 @@ ticket from the mailserver at the start of each query.
 If you use IMAP-K4, \fIfetchmail\fR will expect the IMAP server to have
 RFC1731-conformant AUTHENTICATE KERBEROS_V4 capability, and will use it.
 .PP
+If you use IMAP-GSS, \fIfetchmail\fR will expect the IMAP server to have
+RFC1731-conformant AUTHENTICATE GSSAPI capability, and will use it. 
+Currently this has only been tested over Kerberos V, so you're expected
+to already have a ticket-granting ticket. You may pass a username different
+from your principal name using the standard \fB--user\fR command or by
+the \fI.fetchmailrc\fR option \fBuser\fR.
+.PP
 If you are using POP3, and the server issues a one-time-password
 challenge conforming to RFC1938, \fIfetchmail\fR will use your
 password as a pass phrase to generate the required response. This
@@ -773,7 +783,7 @@ Specify DNS name of mailserver, overriding poll name
 T}
 proto[col]	-p	T{
 Specify protocol (case insensitive):
-POP2, POP3, IMAP, IMAP-K4, APOP, KPOP
+POP2, POP3, IMAP, IMAP-K4, IMAP-GSS, APOP, KPOP
 T}
 port    	-P	T{
 Specify TCP/IP service port
@@ -1071,6 +1081,7 @@ Legal protocol identifiers for use with the `protocol' keyword are:
     pop3 (or POP3)
     imap (or IMAP)
     imap-k4 (or IMAP-K4)
+    imap-gss (or IMAP-GSS)
     apop (or APOP)
     kpop (or KPOP)
 
@@ -1457,7 +1468,7 @@ are technically legal but bizarre.  Strange uses of quoting and
 embedded comments are likely to confuse it.
 .PP
 Use of any of the supported protocols other than POP3 with OTP or RPA, APOP,
-KPOP, IMAP-K4, or ETRN requires that the program send unencrypted
+KPOP, IMAP-K4, IMAP-GSS, or ETRN requires that the program send unencrypted
 passwords over the TCP/IP connection to the mailserver.  This creates
 a risk that name/password pairs might be snaffled with a packet
 sniffer or more sophisticated monitoring software.  Under Linux, the

@@ -90,6 +90,7 @@ options		{/* EMPTY */}
 (pop2)|(POP2)	{ yylval.proto = P_POP2;  return PROTO; }
 (pop3)|(POP3)	{ yylval.proto = P_POP3;  return PROTO; }
 (imap-k4)|(IMAP-K4)   { yylval.proto = P_IMAP_K4;  return PROTO; }
+(imap-gss)|(IMAP-GSS) { yylval.proto = P_IMAP_GSS;  return PROTO; }
 (imap)|(IMAP)	{ yylval.proto = P_IMAP;  return PROTO; }
 (apop)|(APOP)   { yylval.proto = P_APOP;  return PROTO; }
 (etrn)|(ETRN)   { yylval.proto = P_ETRN;  return PROTO; }
