@@ -47,6 +47,9 @@
 /* Define if you have on_exit */
 #undef HAVE_ON_EXIT
 
+/* Define if you have setrlimit */
+#undef HAVE_SETRLIMIT
+
 /* Compute an appropriate directory for PID lock files */
 #undef PID_DIR
 
@@ -78,8 +81,12 @@
 
 /* Define if you want network security support compiled in */
 #undef NET_SECURITY
+
+/* Define if you want GSSAPI authentication */
+#undef GSSAPI
 
 /* Leave that blank line there!!  Autoheader needs it.
    If you're adding to this file, keep in mind:
    The entries are in sort -df order: alphabetical, case insensitive,
    ignoring punctuation (such as underscores).  */
+

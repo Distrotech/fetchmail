@@ -30,6 +30,9 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#ifdef HAVE_SETRLIMIT
+#include <sys/resource.h>
+#endif /* HAVE_SETRLIMIT */
 #ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>
 #endif
@@ -335,6 +338,21 @@ int main (int argc, char **argv)
     strcpy (netrc_file, home);
     strcat (netrc_file, "/.netrc");
     netrc_list = parse_netrc(netrc_file);
+
+#ifdef HAVE_SETRLIMIT
+    /*
+     * Before getting passwords, disable core dumps unless -v -d0 mode is on.
+     * Core dumps could otherwise contain passwords to be scavenged by a
+     * cracker.
+     */
+    if (outlevel < O_VERBOSE || run.poll_interval > 0)
+    {
+	struct rlimit corelimit;
+	corelimit.rlim_cur = 0;
+	corelimit.rlim_max = 0;
+	setrlimit(RLIMIT_CORE, &corelimit);
+    }
+#endif /* HAVE_SETRLIMIT */
 
     /* pick up interactively any passwords we need but don't have */ 
     for (ctl = querylist; ctl; ctl = ctl->next)
