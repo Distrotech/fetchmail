@@ -1116,6 +1116,15 @@ Therefore, it is strongly recommended that you turn on `fetchall' on all
 user entries associated with this server.  
 
 """
+            if string.find(greetline, "OpenMail") > 0:
+                warnings = warnings + """
+You appear to be using some version of HP OpenMail.  Many versions of
+OpenMail do not process the "TOP" command correctly; the symptom is that
+only the header and first line of each message is retrieved.  To work
+around this bug, turn on `fetchall' on all user entries associated with
+this server.  
+
+"""
             if string.find(greetline, "sprynet.com") > 0:
                 warnings = warnings + """
 You appear to be using a SpryNet server.  In mid-1999 it was reported that
