@@ -10,6 +10,7 @@
  * Configuration file support for fetchmail 4.3.8 by 
  * Frank Damgaard <frda@post3.tele.dk>
  * 
+ * For license terms, see the file COPYING in this directory.
  */
 
 #include "config.h"
