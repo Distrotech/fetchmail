@@ -371,7 +371,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	else
 	    return ok;
 #else
-    if (ctl->server.authenticate == A_NTLM)
+    if (ctl->server.authenticate == A_OTP)
     {
 	report(stderr, 
 	   _("Required OTP capability not compiled into fetchmail\n"));
