@@ -25,6 +25,7 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/time.h>	/* needed for Sun 4.1.2 */
 #ifdef HAVE_SETRLIMIT
 #include <sys/resource.h>
 #endif /* HAVE_SETRLIMIT */
