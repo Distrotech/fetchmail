@@ -29,7 +29,9 @@ const char *host;	/* server hostname */
 {
     char *from, *cp, last_nws = '\0', *parens_from = NULL;
     int parendepth, state, has_bare_name_part, has_host_part;
+#ifndef TESTMAIN
     int addresscount = 1;
+#endif /* TESTMAIN */
 
     if (strncasecmp("From: ", buf, 6)
 	&& strncasecmp("To: ", buf, 4)
@@ -52,7 +54,7 @@ const char *host;	/* server hostname */
 #ifndef TESTMAIN
     if (outlevel >= O_DEBUG)
 	error_build(0, 0, "About to rewrite %s", buf);
-#else
+
     /* make room to hack the address; buf must be malloced */
     for (cp = buf; *cp; cp++)
 	if (*cp == ',' || isspace(*cp))
