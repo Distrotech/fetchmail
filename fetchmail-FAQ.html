@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/01/07 14:49:01 $
+<td width="30%" align=right>$Date: 1998/01/17 23:34:23 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -46,6 +46,7 @@ IP address?</a><br>
 <a href="#F2">F2. The .fetchmailrc parser won't accept my all-numeric user name.</a><br>
 <a href="#F3">F3. The .fetchmailrc parser won't accept my host or username beginning with `no'.</a><br>
 <a href="#F4">F4. I'm migrating from popclient.  How do I need to modify my .poprc?</a><br>
+<a href="#F5">F5. I'm getting a `parse error' message I don't understand.</a><br>
 
 <h1>Configuration questions:</h1>
 
@@ -550,6 +551,17 @@ token) will trigger a warning.  To eliminate this warning, add the
 already required before second and subsequent user entries per server.<p>
 
 In some future version the `<CODE>username</CODE>' keyword will be required.<p>
+
+<a name="F5">F5. I'm getting a `parse error' message I don't understand.</a><h2>
+
+The most common cause of mysterious parse errors is putting a server
+option after a user option.  Check the manual page; you'll probably
+find that by moving one or more options closer to the `poll' keyword
+you can eliminate the problem.
+
+Yes, I know these ordering restrictions are a hard to understand.
+Unfortunately, they're necessary in order to allow the `defaults' 
+feature to work.
 
 <hr>
 <h2><a name="C1">C1. Why do I need a .fetchmailrc when running as root on my own machine?</a></h2>
@@ -1656,7 +1668,7 @@ a faster MTA like qmail or exim might help. <p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/01/07 14:49:01 $
+<td width="30%" align=right>$Date: 1998/01/17 23:34:23 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
