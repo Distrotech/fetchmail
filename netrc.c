@@ -1,6 +1,7 @@
 /* netrc.c -- parse the .netrc file to get hosts, accounts, and passwords
 
    Gordon Matzigkeit <gord@gnu.ai.mit.edu>, 1996
+   Copyright assigned to Eric S. Raymond, October 2001.
 
    For license terms, see the file COPYING in this directory.
 
