@@ -1516,7 +1516,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	     * Don't do this if the connection can idle, though; idle
 	     * timeouts just mean the frequency of mail is low.
 	     */
-	    if (!ctl->idle && timeoutcount > MAX_TIMEOUTS 
+	    if (timeoutcount > MAX_TIMEOUTS 
 		&& !open_warning_by_mail(ctl, (struct msgblk *)NULL))
 	    {
 		stuff_warning(ctl,
@@ -2206,11 +2206,11 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		}
 	    } while
 		  /*
-		   * Only re-poll if we either had some actual forwards or, 
-		   * are idling, and allowed deletions and had no errors.
+		   * Only re-poll if we either had some actual forwards and 
+		   * either allowed deletions and had no errors.
 		   * Otherwise it is far too easy to get into infinite loops.
 		   */
-		  ((dispatches || ctl->idle) && protocol->retry && !ctl->keep && !ctl->errcount);
+		  (dispatches && protocol->retry && !ctl->keep && !ctl->errcount);
 	}
 
    no_error:
