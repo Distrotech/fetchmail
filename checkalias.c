@@ -136,7 +136,7 @@ int is_host_alias(const char *name, struct query *ctl)
 	 * ep[-1] is a valid reference.
 	 */
 	if (strlen(idl->id) <= namelen)
-	    break;
+	    continue;
 	ep = idl->id + (strlen(idl->id) - namelen);
 	/* a suffix led by . must match */
 	if (ep[-1] == '.' && !strcmp(ep, name))
