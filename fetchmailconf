@@ -1,7 +1,10 @@
 #!/usr/bin/python
 #
 # A GUI configurator for generating Fetchmail configuration files
-# by Eric S. Raymond, <esr@snark.thyrsus.com>.  Requires Python with Tkinter.
+# by Eric S. Raymond, <esr@snark.thyrsus.com>.
+# Requires Python with Tkinter, and both posix and posixpath services.
+#
+# Version 0.99 beta: Tue May 26 12:00:49 EDT 1998
 #
 # TO DO: Arrange for save and quit buttons to clean up all frames dependent
 # on the current ones.
