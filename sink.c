@@ -249,42 +249,65 @@ static void sanitize(char *s)
     	*cp = '_';
 }
 
-static int send_bouncemail(struct query *ctl, struct msgblk *msgcopy, 
-		int nerrors, char *errors[])
+static int send_bouncemail(struct msgblk *msg, 
+			   char *message, int nerrors, char *errors[])
+/* bounce back an error report a la RFC 1892 */
 {
-    char buf[MSGBUFSIZE];
-    int i;
+    char daemon_name[MSGBUFSIZE] = "FETCHMAIL-DAEMON@";
+    int i, sock;
 
-    if (open_warning_by_mail(ctl, msgcopy))
+    /* don't bounce  in reply to undeliverable bounces */
+    if (!msg->return_path[0] || strcmp(msg->return_path, "<>") == 0)
 	return(FALSE);
 
-    /* generate an error report a la RFC 1892 */
-    stuff_warning(ctl, "MIME-Version: 1.0");
-    stuff_warning(ctl, "Content-Type: multipart/report report-type=text/plain boundary=\"om-mani-padme-hum\"");
-    stuff_warning(ctl, "Content-Transfer-Encoding: 7bit");
-    stuff_warning(ctl, "");
+    SMTP_setmode(SMTP_MODE);
 
+    strcat(daemon_name, fetchmailhost);
+
+    /* we need only SMTP for this purpose */
+    if ((sock = SockOpen("localhost", SMTP_PORT, NULL, NULL)) == -1
+    		|| SMTP_ok(sock) != SM_OK 
+		|| SMTP_helo(sock, "localhost") != SM_OK
+		|| SMTP_from(sock, daemon_name, (char *)NULL) != SM_OK
+		|| SMTP_rcpt(sock, msg->return_path) != SM_OK
+		|| SMTP_data(sock) != SM_OK)
+	return(FALSE);
+
+    error(0, 0, "SMTP: (bounce-message body)");
+
+    /* bouncemail headers */
+    SockPrintf(sock, "Return-Path: <>");
+    SockPrintf(sock, "From: FETCHMAIL-DAEMON@%s\r\n", fetchmailhost);
+    SockPrintf(sock, "To: %s\n", msg->return_path);
+    SockPrintf(sock, "MIME-Version: 1.0\r\n");
+    SockPrintf(sock, "Content-Type: multipart/report report-type=text/plain boundary=\"om-mani-padme-hum\"\r\n");
+    SockPrintf(sock, "Content-Transfer-Encoding: 7bit\r\n");
+    SockPrintf(sock, "\r\n");
 
     /* RFC1892 part 1 -- human-readable message */
-    stuff_warning(ctl, "-- om-mani-padme-hum"); 
-    stuff_warning(ctl, "");
+    SockPrintf(sock, "-- om-mani-padme-hum\r\n"); 
+    SockPrintf(sock,"Content-Type: text/plain\r\n");
+    SockPrintf(sock, "\r\n");
+    SockWrite(sock, message, strlen(message));
 
     /* RFC1892 part 2 -- machine-readable responses */
-    stuff_warning(ctl, "-- om-mani-padme-hum"); 
-    stuff_warning(ctl,"Content-Type: message/delivery-status");
-    stuff_warning(ctl, "");
+    SockPrintf(sock, "-- om-mani-padme-hum\r\n"); 
+    SockPrintf(sock,"Content-Type: message/delivery-status\r\n");
+    SockPrintf(sock, "\r\n");
     for (i = 0; i < nerrors; i++)
-	stuff_warning(ctl, errors[i]);
+	SockPrintf(sock, errors[i]);
 
     /* RFC1892 part 3 -- headers of undelivered message */
-    stuff_warning(ctl, "-- om-mani-padme-hum"); 
-    stuff_warning(ctl, "Content-Type: text/rfc822-headers");
-    stuff_warning(ctl, "");
-    stuffline(ctl, msgcopy->headers);
+    SockPrintf(sock, "-- om-mani-padme-hum\r\n"); 
+    SockPrintf(sock, "Content-Type: text/rfc822-headers\r\n");
+    SockPrintf(sock, "\r\n");
+    SockWrite(sock, msg->headers, strlen(msg->headers));
+    SockPrintf(sock, "-- om-mani-padme-hum --\r\n"); 
 
-    stuff_warning(ctl, "-- om-mani-padme-hum --"); 
+    if (SMTP_eom(sock) != SM_OK || SMTP_quit(sock))
+	return(FALSE);
 
-    close_warning_by_mail(ctl, msgcopy);
+    SockClose(sock);
 
     return(TRUE);
 }
@@ -535,14 +558,14 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	 * This is a potential problem if the MTAs further upstream
 	 * didn't pass canonicalized From/Return-Path lines, *and* the
 	 * local SMTP listener insists on them.
-	 *
-	 * None of these error conditions generates bouncemail.  Comments
-	 * below explain for each case why this is so.
 	 */
 	ap = (msg->return_path[0]) ? msg->return_path : user;
 	if (SMTP_from(ctl->smtp_socket, ap, options) != SM_OK)
 	{
 	    int smtperr = atoi(smtp_response);
+	    char *responses[1];
+
+	    responses[0] = smtp_response;
 
 	    if (str_find(&ctl->antispam, smtperr))
 	    {
@@ -558,11 +581,11 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		 * 553 = sendmail 8.8.7's generic REJECT 
 		 * 571 = sendmail's "unsolicited email refused"
 		 *
-		 * We don't send bouncemail on antispam failures because
-		 * we don't want the scumbags to know the address is even
-		 * valid.
 		 */
 		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
+		send_bouncemail(msg, 
+				_("We do not accept mail from you.)\r\n"), 
+				1, responses);
 		return(PS_REFUSED);
 	    }
 
@@ -594,18 +617,26 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		return(PS_TRANSIENT);
 
 	    case 552: /* message exceeds fixed maximum message size */
-	    case 553: /* invalid sending domain */
 		/*
 		 * Permanent no-go condition on the
 		 * ESMTP server.  Don't try to ship the message, 
 		 * and allow it to be deleted.
-		 *
-		 * Bouncemail would be appropriate for 552, but in these 
-		 * latter days 553 usually means a spammer is trying to
-		 * cover his tracks.  We'd rather deny the scumbags any
-		 * feedback that the address is valid.
 		 */
 		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
+		send_bouncemail(msg, 
+				_("This message was too large.\r\n"), 
+				1, responses);
+		return(PS_REFUSED);
+
+	    case 553: /* invalid sending domain */
+		/*
+		 * These latter days 553 usually means a spammer is trying to
+		 * cover his tracks.
+		 */
+		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
+		send_bouncemail(msg,
+				_("Invalid address.\r\n"), 
+				1, responses);
 		return(PS_REFUSED);
 
 	    default:	/* retry with postmaster's address */
@@ -793,42 +824,18 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 
 		if (errors == 0)
 		    return(TRUE);	/* all deliveries succeeded */
-		else if (errors == msg->lmtp_responses)
-		    return(FALSE);	/* all deliveries failed */
 		else
 		{
 		    /*
-		     * Now life gets messy.  There are multiple recipients,
-		     * and one or more (but not all) deliveries failed.
-		     *
-		     * What we'd really like to do is bounce a
-		     * failures list back to the sender and return
- 		     * TRUE, deleting the message from the server so
+		     * One or more deliveries failed.
+		     * If we can bounce a failures list back to the sender,
+ 		     * return TRUE, deleting the message from the server so
  		     * it won't be re-forwarded on subsequent poll
  		     * cycles.
-		     *
-		     * We can't do that yet, so instead we report 
-		     * failures to the calling-user/postmaster.  If we can't,
-		     * there's a transient error in local delivery; leave
-		     * the message on the server.
 		     */
-		    send_bouncemail(ctl,
-				    (struct msgblk *)NULL,
-				    errors, responses);
-
-		    /*
-		     * It's not completely clear what to do here,
-		     * either.  We choose to interpret delivery
-		     * failure here as a permanent error, so the
-		     * people who got successful deliveries won't see
-		     * endless repetitions of the same message on
-		     * subsequent poll messages.  If we're wrong, a
-		     * transient error will cause someone to lose
-		     * mail.  This could only happen with
-		     * multi-recipient messages coming from a remote
-		     * mailserver to two or more local users...
-		     */
-		    return(TRUE);
+		    return(send_bouncemail(msg,
+				   "LSMTP partial delivery failure.\r\n",
+				   errors, responses));
 		}
 	    }
     }
@@ -843,21 +850,18 @@ int open_warning_by_mail(struct query *ctl, struct msgblk *msg)
 
     /*
      * Dispatching warning email is a little complicated.  The problem is
-     * that we have to deal with four distinct cases:
+     * that we have to deal with three distinct cases:
      *
-     * 1. Non-null msg argument.  We're trying to generate bouncemail
-     * about the given message.  Address using the Return-Path member.
-     *
-     * 2. Single-drop running from user account.  Warning mail should
+     * 1. Single-drop running from user account.  Warning mail should
      * go to the local name for which we're collecting (coincides
      * with calling user).
      *
-     * 3. Single-drop running from root or other privileged ID, with rc
+     * 2. Single-drop running from root or other privileged ID, with rc
      * file generated on the fly (Ken Estes's weird setup...)  Mail
      * should go to the local name for which we're collecting (does not 
      * coincide with calling user).
      * 
-     * 4. Multidrop.  Mail must go to postmaster.  We leave the recipients
+     * 3. Multidrop.  Mail must go to postmaster.  We leave the recipients
      * member null so this message will fall through to run.postmaster.
      *
      * The zero in the reallen element means we won't pass a SIZE
@@ -865,20 +869,11 @@ int open_warning_by_mail(struct query *ctl, struct msgblk *msg)
      * it's worth to compute.
      */
     struct msgblk reply = {NULL, NULL, "FETCHMAIL-DAEMON", 0};
-    int status;
 
-    if (msg)				/* send bouncemail (not used yet) */
+    if (!MULTIDROP(ctl))		/* send to calling user */
     {
-	if (!msg->return_path[0])
-	    return(PS_REFUSED);
-	
-	save_str(&reply.recipients, msg->return_path, XMIT_ACCEPT);
-	status = open_sink(ctl, &reply, &good, &bad);
-	free_str_list(&reply.recipients);
-	return(status);
-    }
-    else if (!MULTIDROP(ctl))		/* send to calling user */
-    {
+	int status;
+
 	save_str(&reply.recipients, ctl->localnames->id, XMIT_ACCEPT);
 	status = open_sink(ctl, &reply, &good, &bad);
 	free_str_list(&reply.recipients);
