@@ -37,7 +37,7 @@ static int etrn_getrange(int sock, struct query *ctl, const char *id,
     char buf [MSGBUFSIZE+1];
     struct idlist *qnp;		/* pointer to Q names */
 
-    if ((ok = SMTP_ehlo(sock, ctl->server.truename, &opts)))
+    if ((ok = SMTP_ehlo(sock, fetchmailhost, &opts)))
     {
 	error(0, 0, _("%s's SMTP listener does not support ESMTP"),
 	      ctl->server.pollname);
