@@ -6,6 +6,9 @@
   Now builds with NLS by default, unavoidable side effect of fix.
 * Various cleanups and minor bugfixes in OTP support.
 * Corrected header error in SSL support.
+* Updated Spanish translation by Javier Kohen.
+* Incorporated Red Hat's 5.5.0 Kerberos V patch.
+* Incorporated Henrique Holschuh's fetchmailconf warning on local names with @.
 
 fetchmail-5.7.1 (Sun Mar  4 00:30:04 EST 2001), 20167 lines:
 
