@@ -137,6 +137,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
     booldump("syslog", runp->use_syslog);
     stringdump("logfile", runp->logfile);
     stringdump("idfile", runp->idfile);
+    stringdump("postmaster", runp->postmaster);
     booldump("invisible", runp->invisible);
 
     if (!querylist)
