@@ -1156,7 +1156,7 @@ const struct method *proto;	/* protocol method table */
     }
     if (ok==PS_SOCKET || ok==PS_AUTHFAIL || ok==PS_SYNTAX || ok==PS_IOERR
 		|| ok==PS_ERROR || ok==PS_PROTOCOL || ok==PS_SMTP)
-	error(0, 0, "%s error while talking to %s", msg, ctl->servernames->id);
+	error(0, 0, "%s error while fetching from %s", msg, ctl->servernames->id);
 
 closeUp:
     signal(SIGVTALRM, sigsave);
