@@ -380,6 +380,7 @@ void escapes(const char *, char *);
 char *visbuf(const char *);
 char *showproto(int);
 void dump_config(struct runctl *runp, struct query *querylist);
+int is_host_alias(const char *, struct query *);
 
 void yyerror(const char *);
 int yylex(void);
