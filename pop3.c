@@ -27,7 +27,7 @@
 extern char *strstr();	/* needed on sysV68 R3V7.1. */
 #endif /* strstr */
 
-static int phase;
+static int pop3_phase;
 #define PHASE_GETAUTH	0
 #define PHASE_GETRANGE	1
 #define PHASE_GETSIZES	2
@@ -73,7 +73,7 @@ int pop3_ok (int sock, char *argbuf)
 	}
 	else if (strncmp(buf,"-ERR", 4) == 0)
 	{
-	    if (phase > PHASE_GETAUTH) 
+	    if (pop3_phase > PHASE_GETAUTH) 
 		ok = PS_PROTOCOL;
 	    /*
 	     * We're checking for "lock busy", "unable to lock", 
@@ -112,7 +112,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
     char *challenge;
 #endif /* OPIE */
 
-    phase = PHASE_GETAUTH;
+    pop3_phase = PHASE_GETAUTH;
 
 #ifdef SDPS_ENABLE
     /*
@@ -383,7 +383,7 @@ static int pop3_getrange(int sock,
     int ok;
     char buf [POPBUFSIZE+1];
 
-    phase = PHASE_GETRANGE;
+    pop3_phase = PHASE_GETRANGE;
 
     /* Ensure that the new list is properly empty */
     ctl->newsaved = (struct idlist *)NULL;
@@ -476,7 +476,7 @@ static int pop3_getsizes(int sock, int count, int *sizes)
 {
     int	ok;
 
-    /* phase = PHASE_GETSIZES */
+    /* pop3_phase = PHASE_GETSIZES */
 
     if ((ok = gen_transact(sock, "LIST")) != 0)
 	return(ok);
@@ -521,7 +521,7 @@ static int pop_fetch_headers(int sock, struct query *ctl,int number,int *lenp)
     int ok;
     char buf[POPBUFSIZE+1];
 
-    /* phase = PHASE_FETCH */
+    /* pop3_phase = PHASE_FETCH */
 
     gen_send(sock, "TOP %d 0", number);
     if ((ok = pop3_ok(sock, buf)) != 0)
@@ -539,7 +539,7 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
     int ok;
     char buf[POPBUFSIZE+1];
 
-    /* phase = PHASE_FETCH */
+    /* pop3_phase = PHASE_FETCH */
 
 #ifdef SDPS_ENABLE
     /*
@@ -622,7 +622,7 @@ static int pop3_logout(int sock, struct query *ctl)
 {
     int ok;
 
-    /* phase = PHASE_LOGOUT */
+    /* pop3_phase = PHASE_LOGOUT */
 
     ok = gen_transact(sock, "QUIT");
     if (!ok)
