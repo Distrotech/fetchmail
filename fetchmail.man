@@ -1830,7 +1830,7 @@ Here's an example of another kind of multidrop connection:
 
 .nf
   poll pop.provider.net localdomains loonytoons.org toons.org:
-        user maildrop with pass secret1 to 'esr' * here
+        user maildrop with pass secret1 to * here
 .fi
 
 This also says that the mailbox of account `maildrop' on the server is
