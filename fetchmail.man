@@ -1,5 +1,3 @@
-.\" Copyright 1993-95 by Carl Harris, Jr. Copyright 1996 by Eric S. Raymond
-.\" All rights reserved.
 .\" For license terms, see the file COPYING in this directory.
 .TH fetchmail LOCAL
 .SH NAME
@@ -610,7 +608,7 @@ monitoring software.
 .PP
 Send comments, bug reports, gripes, and the like to Eric S. Raymond
 <esr@thyrsus.com>.
-.SH NOTES
+.SH BACKWARD COMPATIBILITY
 This program used to be called `popclient' (the name was changed
 because it supports IMAP now and may well support more remote-fetch
 protocols such as DMSP in the future).  If called through a link named
@@ -621,5 +619,5 @@ to be a little stricter about the order of options than the old,
 in order to support multiple user desriptions per server; you may have
 to rearrange things a bit.)
 .SH SEE ALSO
-mail(1), binmail(1), sendmail(8), popd(8), imapd(8)
+elm(1), mail(1), sendmail(8), popd(8), imapd(8)
 RFC 937, RFC 1081, RFC 1082, RFC1176, RFC 1225, RFC 1460, RFC 1725, RFC1939.
