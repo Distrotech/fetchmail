@@ -256,7 +256,7 @@ static int send_bouncemail(struct msgblk *msg, int userclass,
 /* bounce back an error report a la RFC 1892 */
 {
     char daemon_name[18 + HOSTLEN] = "FETCHMAIL-DAEMON@";
-    char boundary[BUFSIZ];
+    char boundary[BUFSIZ], *ts;
     int i, sock;
 
     /* don't bounce  in reply to undeliverable bounces */
@@ -279,6 +279,8 @@ static int send_bouncemail(struct msgblk *msg, int userclass,
     sprintf(boundary, 
 	    "om-mani-padme-hum-%d-%d-%ld", 
 	    getpid(), getppid(), time((time_t *)NULL));
+
+    ts = rfc822timestamp();
 
     if (outlevel >= O_VERBOSE)
 	error(0, 0, "SMTP: (bounce-message body)");
@@ -320,6 +322,7 @@ static int send_bouncemail(struct msgblk *msg, int userclass,
 		/* Minimum RFC1894 compliance + Diagnostic-Code field */
 		SockPrintf(sock, "\r\n");
 		SockPrintf(sock, "Final-Recipient: rfc822; %s\r\n", idp->id);
+		SockPrintf(sock, "Last-Attempt-Date: %s\r\n", ts);
 		SockPrintf(sock, "Action: failed\r\n");
 
 		if (nerrors == 1)
@@ -423,7 +426,9 @@ static int handle_smtp_error(struct query *ctl, struct msgblk *msg)
 	 * a future retrieval cycle. 
 	 *
 	 * Bouncemail *might* be appropriate here as a delay
-	 * notification.  But it's not really necessary because
+	 * notification (note; if we ever add this, we must make
+	 * sure the RFC1894 Action field is "delayed" rather thwn
+	 * "failed").  But it's not really necessary because
 	 * this is not an actual failure, we're very likely to be
 	 * able to recover on the next cycle.
 	 */
