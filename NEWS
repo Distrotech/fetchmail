@@ -6,8 +6,10 @@ fetchmail-4.6.9 ():
 * Prevent core dumps on 'for' and 'by' in names (bug introduced in 4.6.8).
 * Peter Hamlen's fix for bounce-message generation.
 * Silent mode now suppresses progress messages from 2xx responses in ETRN.
+* Fix for netrc.c core dump from Michael Pearce 
+  <Michael_Pearce-AMP001@email.mot.com>.
 
-There are 247 people on fetchmail-friends and 309 on fetchmail-announce.
+There are 244 people on fetchmail-friends and 315 on fetchmail-announce.
 
 fetchmail-4.6.8 (Sat Nov 28 21:07:46 EST 1998):
 * Added bounce-mail capability on SMTP/ESMTP error conditions.

@@ -119,7 +119,7 @@ parse_netrc (file)
 
 	/* Strip trailing CRLF */
 	p = buf + strlen(buf) - 1;
-	while (*p && isspace(*p))
+	while ((p > buf) && *p && isspace(*p))
 	    *p-- = '\0';
 
 	/* Parse the line. */

@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/12/01 07:14:18 $
+<td width="30%" align=right>$Date: 1998/12/01 19:29:53 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -89,10 +89,9 @@ IP address?</a><br>
 <a href="#R2">R2. When I try to configure an MDA, fetchmail doesn't work.</a><br>
 <a href="#R3">R3. Fetchmail dumps core when given an invalid rc file.</a><br>
 <a href="#R4">R4. Fetchmail dumps core in -V mode, but operates normally otherwise.</a><br>
-<a href="#R5">R5. Fetchmail dumps core when I use a .netrc file but works otherwise.</a><br>
-<a href="#R6">R6. Running fetchmail in daemon mode doesn't work.</a><br>
-<a href="#R7">R7. Fetchmail hangs when used with pppd.</a><br>
-<a href="#R8">R8. Fetchmail randomly dies with socket errors.</a><br>
+<a href="#R5">R5. Running fetchmail in daemon mode doesn't work.</a><br>
+<a href="#R6">R6. Fetchmail hangs when used with pppd.</a><b>
+<a href="#R7">R7. Fetchmail randomly dies with socket errors.</a><br>
 
 <h1>Disappearing mail</h1>
 
@@ -1615,24 +1614,10 @@ calls on the same pointer (the malloc arena gets corrupted).
 Unfortunately it appears from doing gdb traces that whatever free()
 calls producing the problem are being made by the C library itself, not the
 fetchmail code (they're all from within fclose, and not an fclose called
-by fetchmail, either).<p>
+directly by fetchmail, either).<p>
 
 <hr>
-<h2><a name="R5">R5. Fetchmail dumps core when I use a .netrc file but works otherwise.</a></h2>
-
-We have a report that under Solaris 2.5 using gcc-2.7.2, if fetchmail
-is compiled with -O or -O2, it segfaults on startup when reading a
-.netrc.<p>
-
-You can work around this by disabling optimization.<p>
-
-There may be an actual bug here that the optimizer exposes; the stack
-trace says the segfault is in free() and has all the earmarks of a heap-
-corruption screw.  But the symptom doesn't reproduce under Linux with the
-same .fetchmailrc and .netrc.<p>
-
-<hr>
-<h2><a name="R6">R6. Running fetchmail in daemon mode doesn't work.</a><br></h2>
+<h2><a name="R5">R5. Running fetchmail in daemon mode doesn't work.</a><br></h2>
 
 We have one report from a Solaris 4.1.4 user that trying to run
 fetchmail in detached daemon mode doesn't work, but that using the
@@ -1646,14 +1631,14 @@ fetchmail with -N and an ampersand to background it.<P>
 This should not happen under Linux or any truly POSIX-conformant Unix.<P>
 
 <hr>
-<h2><a name="R7">R7. Fetchmail hangs when used with pppd.</a></h2>
+<h2><a name="R6">R6. Fetchmail hangs when used with pppd.</a></h2>
 
 Your problem may be with pppd's `demand' option.  We have a report that
 fetchmail doesn't play well with it, but works with pppd if `demand'
 is turned off.  We have no idea why this is.<p>
 
 <hr>
-<h2><a name="R8">R8. Fetchmail randomly dies with socket errors.</a></h2>
+<h2><a name="R7">R7. Fetchmail randomly dies with socket errors.</a></h2>
 
 Check the MTU value in your PPP interface reported by
 <code>/sbin/ifconfig</code>.  If it's over 600, change it in your PPP
@@ -2222,7 +2207,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/12/01 07:14:18 $
+<td width="30%" align=right>$Date: 1998/12/01 19:29:53 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
