@@ -11,8 +11,10 @@ fetchmail-5.1.1 ():
 * -A has been retired (goes with authenticate -> preauthenticate change).
 * Check for both fetchall and keep on in daemon mode; reject this.
 * Fixed a logfile bug dumping IMAP-LOGIN and IMAP-CRAM-MD5.
+* Tolerate a tunable constant number of authorization failures before
+  complaining and wedging.
 
-There are 262 people on fetchmail-friends and 443 on fetchmail-announce.
+There are 266 people on fetchmail-friends and 447 on fetchmail-announce.
 
 ------------------------------------------------------------------------------
 fetchmail-5.1.0 (Wed Sep 22 01:27:42 EDT 1999), 17767 lines:

@@ -263,6 +263,7 @@ struct query
     flag active;		/* should we actually poll this server? */
     const char *destaddr;	/* destination host for this query */
     int errcount;		/* count transient errors in last pass */
+    int authfailcount;		/* count of authorization failures */
     int wedged;			/* wedged by auth failures or timeouts? */
     char *smtphost;		/* actual SMTP host we connected to */
     int smtp_socket;		/* socket descriptor for SMTP connection */

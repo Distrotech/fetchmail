@@ -1653,10 +1653,11 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		    /*
 		     * If we're running in background, try to mail the
 		     * calling user a heads-up about the authentication 
-		     * failure the first time it happens.
+		     * failure once it looks like this isn't a fluke 
+		     * due to the server being temporarily inaccessible.
 		     */
 		    if (run.poll_interval
-			&& !ctl->wedged 
+			&& ctl->authfailcount++ > MAX_AUTHFAILS 
 			&& !open_warning_by_mail(ctl, (struct msgblk *)NULL))
 		    {
 			stuff_warning(ctl,
