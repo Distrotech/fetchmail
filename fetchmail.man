@@ -910,6 +910,8 @@ executed just before each time
 establishes a mailserver connection.  This may be useful if you are 
 attempting to set up secure POP connections with the aid of
 .IR ssh (1).
+If the command returns a nonzero status, the poll of that mailserver
+will be aborted.
 .PP
 Similarly, the `postconnect' keyword similarly allows you to specify a
 shell command to be executed just after each time a mailserver
