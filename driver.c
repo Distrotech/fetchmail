@@ -1254,6 +1254,9 @@ int num;		/* index of message */
 	 * This is a potential problem if the MTAs further upstream
 	 * didn't pass canonicalized From/Return-Path lines, *and* the
 	 * local SMTP listener insists on them.
+	 *
+	 * None of these error conditions generates bouncemail.  Comments
+	 * below explain for each case why this is so.
 	 */
 	ap = (return_path[0]) ? return_path : user;
 	if (SMTP_from(ctl->smtp_socket, ap, options) != SM_OK)
@@ -1272,6 +1275,10 @@ int num;		/* index of message */
 		 * 571 = sendmail's "unsolicited email refused"
 		 * 501 = exim's old antispam response
 		 * 550 = exim's new antispam response (temporary)
+		 *
+		 * We don't send bouncemail on antispam failures because
+		 * we don't want the scumbags to know the address is even
+		 * valid.
 		 */
 		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
 		free(headers);
@@ -1294,7 +1301,12 @@ int num;		/* index of message */
 		 * Temporary out-of-queue-space condition on the
 		 * ESMTP server.  Don't try to ship the message, 
 		 * and suppress deletion so it can be retried on
-		 * a future retrieval cycle.
+		 * a future retrieval cycle. 
+		 *
+		 * Bouncemail *might* be appropriate here as a delay
+		 * notification.  But it's not really necessary because
+		 * this is not an actual failure, we're very likely to be
+		 * able to recover on the next cycle.
 		 */
 		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
 		free(headers);
@@ -1307,6 +1319,11 @@ int num;		/* index of message */
 		 * Permanent no-go condition on the
 		 * ESMTP server.  Don't try to ship the message, 
 		 * and allow it to be deleted.
+		 *
+		 * Bouncemail would be appropriate for 552, but in these 
+		 * latter days 553 usually means a spammer is trying to
+		 * cover his tracks.  We'd rather deny the scumbags any
+		 * feedback that the address is valid.
 		 */
 		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
 		free(headers);
