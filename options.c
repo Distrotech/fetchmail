@@ -127,7 +127,7 @@ static const struct option longoptions[] = {
 static int xatoi(char *s, int *errflagptr)
 /* do safe conversion from string to number */
 {
-#if defined (__STDC__)
+#if defined (STDC_HEADERS) && defined (LONG_MAX) && defined (INT_MAX)
     /* parse and convert numbers, but also check for invalid characters in
      * numbers
      */

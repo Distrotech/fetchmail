@@ -88,7 +88,7 @@ static void termhook();		/* forward declaration of exit hook */
  * and close the window entirely.  But since the interval isn't normally
  * going to be less than one second this is not a big issue.
  */
-#if defined(__STDC__)
+#if defined(STDC_HEADERS)
 static sig_atomic_t	alarm_latch = FALSE;
 #else
 /* assume int can be written in one atomic operation on non ANSI-C systems */
