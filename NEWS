@@ -1,12 +1,5 @@
 			    Features To Consider
 
-* Generate bounce messages when delivery is refused.  See RFC1891, RFC1892.
-* Use the libmd functions for md5 under Free BSD?  (Low priority.)
-* Allow an explicit "append" option to specify what rewrite appends?  (For
-  when user's pop3 host isn't the same as his SMTP host.)
-* Allow -c -F to work to flush messages without retrieval.
-* Do is_host_alias checks by comparing IP addresses rather than names?
-* Handle multi-homed hosts correctly.
 * Add an "ident" per-user option for debugging that produces an 
   "X-Fetchmail-ID" header in fetched messages for debugging.
 * -U/--userdefault option to specify postmaster overriding USER.
@@ -14,12 +7,12 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.4.5 ():
+fetchmail-4.4.5 (Wed May 13 21:37:02 EDT 1998):
 * Make RPA logging use error() rather than stderr.
 * Autoconfiguration support for NetBSD.
 * Henrik Storner's fix for a minor mimedecode bug.
 
-There are 273 people on fetchmail-friends and 209 on fetchmail-announce.
+There are 271 people on fetchmail-friends and 209 on fetchmail-announce.
 
 fetchmail-4.4.4 (Wed May  6 10:08:15 EDT 1998):
 * Francois Wautier's fix for qvirtual.
