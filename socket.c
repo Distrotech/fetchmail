@@ -51,8 +51,19 @@ int clientPort;
     sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0)
         return (FILE *)NULL;
-    if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) < 0)
+
+    /*
+     * Return of connect(2) doesn't seem to reliably return -1 on 
+     * ENETUNREACH failure
+     */
+    errno = 0;
+    connect(sock, (struct sockaddr *) &ad, sizeof(ad));
+    if (errno != 0);
+    {
+	close(sock);
         return (FILE *)NULL;
+    }
+
     return fdopen(sock, "r+");
 }
 

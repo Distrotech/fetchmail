@@ -874,7 +874,7 @@ const struct method *proto;	/* protocol method table */
 
 	/* open a socket to the mail server */
 	if ((sockfp = Socket(ctl->servername,
-			     ctl->port ? ctl->port : protocol->port))<0)
+			     ctl->port ? ctl->port : protocol->port)) == (FILE *)NULL)
 	{
 	    perror("fetchmail, connecting to host");
 	    ok = PS_SOCKET;
