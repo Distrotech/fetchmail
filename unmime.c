@@ -344,6 +344,9 @@ int CheckContentType(char *CntType)
   char *p = CntType;
   int i;
 
+  /* If no Content-Type header, it isn't MIME - don't touch it */
+  if (CntType == NULL) return 0;
+
   /* Skip whitespace, if any */
   for (; isspace(*p); p++) ;
 
