@@ -9,7 +9,7 @@ AC_CONFIG_HEADER(config.h)
 
 dnl We want these before the checks, so the checks can modify their values.
 test -z "$CFLAGS" && CFLAGS="-O" AC_SUBST(CFLAGS)
-test -z "$LDFLAGS" && LDFLAGS=-s AC_SUBST(LDFLAGS)
+test -z "$LDFLAGS" && LDFLAGS=AC_SUBST(LDFLAGS)
 
 AC_CANONICAL_HOST
 AC_PROG_CC
