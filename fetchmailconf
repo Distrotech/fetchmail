@@ -219,7 +219,7 @@ class User:
         self.password = None            # Password for mail account access
         self.mailboxes = []             # Remote folders to retrieve from
         self.smtphunt = []              # Hosts to forward to
-        self.fetchdomains = []		# Domains to fetch from
+        self.fetchdomains = []          # Domains to fetch from
         self.smtpaddress = None         # Append this to MAIL FROM line
         self.smtpname = None            # Use this for RCPT TO
         self.preconnect = None          # Connection setup
@@ -369,7 +369,6 @@ class User:
                 res = res + " " + x
                 res = res + "\n"
         trimmed = self.fetchdomains
-        print "FOO!", `trimmed`
         if trimmed != [] and trimmed[len(trimmed) - 1] == hostname:
             trimmed = trimmed[0:len(trimmed) - 1]
         if trimmed != []:

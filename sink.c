@@ -127,8 +127,8 @@ int smtp_open(struct query *ctl)
 					     ctl->server.plugout)) == -1)
 		continue;
 
-           /* return immediately for ODMR */
-           if (ctl->server.protocol == P_ODMR)
+	    /* return immediately for ODMR */
+	    if (ctl->server.protocol == P_ODMR)
                return(ctl->smtp_socket); /* success */
 
 	    /* are we doing SMTP or LMTP? */
@@ -180,11 +180,6 @@ int smtp_open(struct query *ctl)
 
 /* these are shared by open_sink and stuffline */
 static FILE *sinkfp;
-#ifndef HAVE_SIGACTION
-static RETSIGTYPE (*sigchld)(int);
-#else
-static struct sigaction sa_old;
-#endif /* HAVE_SIGACTION */
 
 int stuffline(struct query *ctl, char *buf)
 /* ship a line to the given control block's output sink (SMTP server or MDA) */
@@ -694,7 +689,6 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		else
 		{
 		    char	errbuf[POPBUFSIZE];
-		    int		res;
 
 		    /*
 		     * Do *not* interpret a PS_REFUSED here as a directive
@@ -966,7 +960,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	memset (&sa_new, 0, sizeof sa_new);
 	sigemptyset (&sa_new.sa_mask);
 	sa_new.sa_handler = SIG_DFL;
-	sigaction (SIGCHLD, &sa_new, &sa_old);
+	sigaction (SIGCHLD, &sa_new, NULL);
 #endif /* HAVE_SIGACTION */
     }
 
@@ -991,12 +985,7 @@ void release_sink(struct query *ctl)
 	    pclose(sinkfp);
 	    sinkfp = (FILE *)NULL;
 	}
-#ifndef HAVE_SIGACTION
-	signal(SIGCHLD, sigchld);
-#else
-	sigaction (SIGCHLD, &sa_old, NULL);
-#endif /* HAVE_SIGACTION */
-	deal_with_sigchld();
+	deal_with_sigchld(); /* Restore SIGCHLD handling to reap zombies */
     }
 }
 
@@ -1015,12 +1004,9 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 	}
 	else
 	    rc = 0;
-#ifndef HAVE_SIGACTION
-	signal(SIGCHLD, sigchld);
-#else
-	sigaction (SIGCHLD, &sa_old, NULL);
-#endif /* HAVE_SIGACTION */
-	deal_with_sigchld();
+
+	deal_with_sigchld(); /* Restore SIGCHLD handling to reap zombies */
+
 	if (rc)
 	{
 	    report(stderr, 

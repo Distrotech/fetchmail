@@ -31,7 +31,7 @@ void lock_setup(void)
 #define	FETCHMAIL_PIDFILE	"fetchmail.pid"
     if (!getuid()) {
 	lockfile = (char *)xmalloc(
-		sizeof(PID_DIR) + sizeof(FETCHMAIL_PIDFILE));
+		sizeof(PID_DIR) + sizeof(FETCHMAIL_PIDFILE) + 1);
 	sprintf(lockfile, "%s/%s", PID_DIR, FETCHMAIL_PIDFILE);
     } else {
 	lockfile = (char *)xmalloc(strlen(fmhome)+sizeof(FETCHMAIL_PIDFILE)+2);

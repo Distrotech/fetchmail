@@ -1322,12 +1322,10 @@ static void terminate_poll(int sig)
 	for (ctl = querylist; ctl; ctl = ctl->next)
 	    if (ctl->smtp_socket != -1)
 	    {
-                /* 
-		 * Don't send QUIT for ODMR case because we're acting
-                 * as a proxy between the SMTP server and client.
-		 */
-                if (ctl->server.protocol != P_ODMR)
-                    SMTP_quit(ctl->smtp_socket);
+		/* don't send QUIT for ODMR case because we're acting
+		   as a proxy between the SMTP server and client. */
+		if (ctl->server.protocol != P_ODMR)
+		    SMTP_quit(ctl->smtp_socket);
 		SockClose(ctl->smtp_socket);
 		ctl->smtp_socket = -1;
 	    }
@@ -1395,7 +1393,7 @@ static const int autoprobe[] =
 static int query_host(struct query *ctl)
 /* perform fetch transaction with single host */
 {
-    int i, st;
+    int i, st = 0;
 
     /*
      * If we're syslogging the progress messages are automatically timestamped.
@@ -1414,7 +1412,8 @@ static int query_host(struct query *ctl)
 	for (i = 0; i < sizeof(autoprobe)/sizeof(autoprobe[0]); i++)
 	{
 	    ctl->server.protocol = autoprobe[i];
-	    if ((st = query_host(ctl)) == PS_SUCCESS || st == PS_NOMAIL || st == PS_AUTHFAIL || st == PS_LOCKBUSY || st == PS_SMTP || st == PS_MAXFETCH)
+	    st = query_host(ctl);
+	    if (st == PS_SUCCESS || st == PS_NOMAIL || st == PS_AUTHFAIL || st == PS_LOCKBUSY || st == PS_SMTP || st == PS_MAXFETCH)
 		break;
 	}
 	ctl->server.protocol = P_AUTO;
