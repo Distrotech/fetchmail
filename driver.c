@@ -1118,7 +1118,12 @@ const struct method *proto;	/* protocol method table */
 	if (ok == PS_ERROR)
 	    ok = PS_AUTHFAIL;
 	if (ok != 0)
+	{
+	    error(0, 0, "Authorization failure on %s@%s", 
+		  ctl->remotename,
+		  realname);
 	    goto cleanUp;
+	}
 	vtalarm(ctl->server.timeout);
 
 	/* compute number of messages and number of new messages waiting */
