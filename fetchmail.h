@@ -103,7 +103,7 @@ struct runctl
     int		poll_interval;
     flag	use_syslog;
     flag	invisible;
-    const char	*postmaster;
+    char	*postmaster;
 };
 
 struct idlist
