@@ -180,6 +180,7 @@ void error (int status, int errnum, const char *format, ...);
 void error_build (const char *format, ...);
 void error_complete (int status, int errnum, const char *format, ...);
 void gen_send (FILE *sockfp, char *, ... );
+int gen_recv(FILE *sockfp, char *buf, int size);
 int gen_transact (FILE *sockfp, char *, ... );
 #else
 void error ();

@@ -23,14 +23,9 @@ int pop2_ok (FILE *sockfp, char *argbuf)
     char buf [POPBUFSIZE+1];
 
     pound_arg = equal_arg = -1;
-    if (SockGets(buf, sizeof(buf), sockfp)) {
-	if (buf[strlen(buf)-1] == '\n')
-	    buf[strlen(buf)-1] = '\0';
-	if (buf[strlen(buf)-1] == '\r')
-	    buf[strlen(buf)-1] = '\r';
-	if (outlevel == O_VERBOSE)
-	    error(0, 0, "POP2< %s", buf);
 
+    if ((ok = gen_recv(sockfp, buf, sizeof(buf))) == 0)
+    {
 	if (buf[0] == '+')
 	    ok = 0;
 	else if (buf[0] == '#')
@@ -51,8 +46,6 @@ int pop2_ok (FILE *sockfp, char *argbuf)
 	if (argbuf != NULL)
 	    strcpy(argbuf,buf);
     }
-    else 
-	ok = PS_SOCKET;
 
     return(ok);
 }

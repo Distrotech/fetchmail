@@ -32,14 +32,10 @@ int imap_ok (FILE *sockfp,  char *argbuf)
 
     seen = 0;
     do {
-	if (!SockGets(buf, sizeof(buf), sockfp))
-	    return(PS_SOCKET);
-	if (buf[strlen(buf)-1] == '\n')
-	    buf[strlen(buf)-1] = '\0';
-	if (buf[strlen(buf)-1] == '\r')
-	    buf[strlen(buf)-1] = '\r';
-	if (outlevel == O_VERBOSE)
-	    error(0, 0, "IMAP< %s", buf);
+	int	ok;
+
+	if (ok = gen_recv(sockfp, buf, sizeof(buf)))
+	    return(ok);
 
 	/* interpret untagged status responses */
 	if (strstr(buf, "EXISTS"))
@@ -95,14 +91,8 @@ int imap_getauth(FILE *sockfp, struct query *ctl, char *buf)
 
     /* probe to see if we're running IMAP4 and can use RFC822.PEEK */
     gen_send(sockfp, "CAPABILITY");
-    if (!SockGets(rbuf, sizeof(rbuf), sockfp))
-	return(PS_SOCKET);
-    if (rbuf[strlen(buf)-1] == '\n')
-	rbuf[strlen(buf)-1] = '\0';
-    if (rbuf[strlen(buf)-1] == '\r')
-	rbuf[strlen(buf)-1] = '\r';
-    if (outlevel == O_VERBOSE)
-	error(0, 0, "IMAP< %s", rbuf);
+    if (ok = gen_recv(sockfp, rbuf, sizeof(rbuf)))
+	return(ok);
     if (strstr(rbuf, "BAD"))
     {
 	imap_version = IMAP2;
@@ -160,14 +150,10 @@ static int imap_getsizes(FILE *sockfp, int count, int *sizes)
     gen_send(sockfp, "FETCH 1:%d RFC822.SIZE", count);
     while (SockGets(buf, sizeof(buf), sockfp))
     {
-	int num, size;
+	int num, size, ok;
 
-	if (buf[strlen(buf)-1] == '\n')
-	    buf[strlen(buf)-1] = '\0';
-	if (buf[strlen(buf)-1] == '\r')
-	    buf[strlen(buf)-1] = '\r';
-	if (outlevel == O_VERBOSE)
-	    error(0, 0, "IMAP< %s", buf);
+	if (ok = gen_recv(sockfp, buf, sizeof(buf)))
+	    return(ok);
 	if (strstr(buf, "OK"))
 	    break;
 	else if (sscanf(buf, "* %d FETCH (RFC822.SIZE %d)", &num, &size) == 2)
@@ -235,14 +221,10 @@ static int imap_fetch(FILE *sockfp, struct query *ctl, int number, int *lenp)
 
     /* looking for FETCH response */
     do {
-	if (!SockGets(buf, sizeof(buf), sockfp))
-	    return(PS_SOCKET);
-	if (buf[strlen(buf)-1] == '\n')
-	    buf[strlen(buf)-1] = '\0';
-	if (buf[strlen(buf)-1] == '\r')
-	    buf[strlen(buf)-1] = '\r';
-	if (outlevel == O_VERBOSE)
-	    error(0, 0, "IMAP< %s", buf);
+	int	ok;
+
+	if (ok = gen_recv(sockfp, buf, sizeof(buf)))
+	    return(ok);
     } while
 	/* third token can be "RFC822" or "BODY[]" */
 	(sscanf(buf+2, "%d FETCH (%*s {%d}", &num, lenp) != 2);
@@ -261,10 +243,7 @@ static int imap_trail(FILE *sockfp, struct query *ctl, int number)
     /* expunges change the fetch numbers */
     /* number -= deletecount; */
 
-    if (!SockGets(buf, sizeof(buf), sockfp))
-	return(PS_SOCKET);
-    else
-	return(0);
+    return(gen_recv(sockfp, buf, sizeof(buf)));
 }
 
 static int imap_delete(FILE *sockfp, struct query *ctl, int number)

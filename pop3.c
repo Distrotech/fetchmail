@@ -32,14 +32,8 @@ int pop3_ok (FILE *sockfp, char *argbuf)
     char buf [POPBUFSIZE+1];
     char *bufp;
 
-    if (SockGets(buf, sizeof(buf), sockfp)) {
-	if (buf[strlen(buf)-1] == '\n')
-	    buf[strlen(buf)-1] = '\0';
-	if (buf[strlen(buf)-1] == '\r')
-	    buf[strlen(buf)-1] = '\r';
-	if (outlevel == O_VERBOSE)
-	    error(0, 0, "POP3< %s", buf);
-
+    if ((ok = gen_recv(sockfp, buf, sizeof(buf))) == 0)
+    {
 	bufp = buf;
 	if (*bufp == '+' || *bufp == '-')
 	    bufp++;
@@ -60,8 +54,6 @@ int pop3_ok (FILE *sockfp, char *argbuf)
 	if (argbuf != NULL)
 	    strcpy(argbuf,bufp);
     }
-    else 
-	ok = PS_SOCKET;
 
     return(ok);
 }
@@ -179,14 +171,8 @@ static int pop3_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
 		int	num;
 
 		*newp = 0;
- 		while (SockGets(buf, sizeof(buf), sockfp))
+ 		while (!gen_recv(sockfp, buf, sizeof(buf)))
 		{
-		    if (buf[strlen(buf)-1] == '\n')
-			buf[strlen(buf)-1] = '\0';
-		    if (buf[strlen(buf)-1] == '\r')
-			buf[strlen(buf)-1] = '\r';
- 		    if (outlevel == O_VERBOSE)
-			error(0, 0, "POP3< %s", buf);
  		    if (buf[0] == '.')
  			break;
  		    else if (sscanf(buf, "%d %s", &num, id) == 2)
@@ -216,16 +202,10 @@ static int pop3_getsizes(FILE *sockfp, int count, int *sizes)
     {
 	char buf [POPBUFSIZE+1];
 
-	while (SockGets(buf, sizeof(buf), sockfp))
+	while (!gen_recv(sockfp, buf, sizeof(buf)))
 	{
 	    int num, size;
 
-	    if (buf[strlen(buf)-1] == '\n')
-		buf[strlen(buf)-1] = '\0';
-	    if (buf[strlen(buf)-1] == '\r')
-		buf[strlen(buf)-1] = '\r';
-	    if (outlevel == O_VERBOSE)
-		error(0, 0, "POP3< %s", buf);
 	    if (buf[0] == '.')
 		break;
 	    else if (sscanf(buf, "%d %d", &num, &size) == 2)

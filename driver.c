@@ -1384,6 +1384,26 @@ va_dcl
     }
 }
 
+int gen_recv(sockfp, buf, size)
+/* get one line of input from the server */
+FILE *sockfp;	/* socket to which server is connected */
+char *buf;	/* buffer to receive input */
+int size;	/* length of buffer */
+{
+    if (!SockGets(buf, size, sockfp))
+	return(PS_SOCKET);
+    else
+    {
+	if (buf[strlen(buf)-1] == '\n')
+	    buf[strlen(buf)-1] = '\0';
+	if (buf[strlen(buf)-1] == '\r')
+	    buf[strlen(buf)-1] = '\r';
+	if (outlevel == O_VERBOSE)
+	    error(0, 0, "%s< %s", protocol->name, buf);
+	return(PS_SUCCESS);
+    }
+}
+
 #if defined(HAVE_STDARG_H)
 int gen_transact(FILE *sockfp, char *fmt, ... )
 /* assemble command in printf(3) style, send to server, accept a response */
