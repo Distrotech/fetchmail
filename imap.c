@@ -29,7 +29,7 @@ extern char *strstr();	/* needed on sysV68 R3V7.1. */
 #define IMAP4		0	/* IMAP4 rev 0, RFC1730 */
 #define IMAP4rev1	1	/* IMAP4 rev 1, RFC2060 */
 
-static int count, unseen, deletions = 0;
+static int count = 0, recentcount = 0, unseen = 0, deletions = 0;
 static int expunged, expunge_period, saved_timeout = 0;
 static int imap_version, preauth;
 static flag do_idle;
@@ -76,6 +76,10 @@ static int imap_ok(int sock, char *argbuf)
 		mytimeout = saved_timeout;
 		stage = STAGE_FETCH;
 	    }
+	}
+	else if (strstr(buf, "RECENT"))
+	{
+	    recentcount = atoi(buf+2);
 	}
 	else if (strstr(buf, "PREAUTH"))
 	    preauth = TRUE;
@@ -487,25 +491,38 @@ static int imap_getrange(int sock,
 	 * just after deletion.
 	 */
 	ok = 0;
-	if (deletions && expunge_period != 1)
+	if (deletions) {
 	    ok = internal_expunge(sock);
-	count = -1;
-	if (do_idle)
-	    ok = imap_idle(sock);
-	if (ok || gen_transact(sock, "NOOP"))
-	{
-	    report(stderr, GT_("re-poll failed\n"));
-	    return(ok);
+	    if (ok)
+	    {
+		report(stderr, GT_("expunge failed\n"));
+		return(ok);
+	    }
 	}
-	else if (count == -1)	/* no EXISTS response to NOOP/IDLE */
-	{
-	    count = 0;
+
+	/*
+	 * recentcount is already set here by the last imap command which
+	 * returned RECENT on detecting new mail. if recentcount is 0, wait
+	 * for new mail.
+	 */
+
+	/* this is a while loop because imap_idle() might return on other
+	 * mailbox changes also */
+	while (recentcount == 0 && do_idle) {
+	    smtp_close(ctl, 1);
+	    ok = imap_idle(sock);
+	    if (ok)
+	    {
+		report(stderr, GT_("re-poll failed\n"));
+		return(ok);
+	    }
 	}
 	if (outlevel >= O_DEBUG)
 	    report(stdout, GT_("%d messages waiting after re-poll\n"), count);
     }
     else
     {
+	count = 0;
 	ok = gen_transact(sock, 
 			  check_only ? "EXAMINE \"%s\"" : "SELECT \"%s\"",
 			  folder ? folder : "INBOX");
@@ -540,6 +557,7 @@ static int imap_getrange(int sock,
     }
 
     *countp = count;
+    recentcount = 0;
 
     /* OK, now get a count of unseen messages and their indices */
     if (!ctl->fetchall && count > 0)

@@ -46,17 +46,29 @@
 /* makes the open_sink()/close_sink() pair non-reentrant */
 static int lmtp_responses;
 
+void smtp_close(struct query *ctl, int sayquit)
+/* close the socket to SMTP server */
+{
+    if (ctl->smtp_socket != -1)
+    {
+	if (sayquit)
+	    SMTP_quit(ctl->smtp_socket);
+	SockClose(ctl->smtp_socket);
+	ctl->smtp_socket = -1;
+    }
+    batchcount = 0;
+}
+
 int smtp_open(struct query *ctl)
 /* try to open a socket to the appropriate SMTP server for this query */ 
 {
     char *parsed_host = NULL;
 
     /* maybe it's time to close the socket in order to force delivery */
-    if (NUM_NONZERO(ctl->batchlimit) && (ctl->smtp_socket != -1) && ++batchcount == ctl->batchlimit)
-    {
-	SockClose(ctl->smtp_socket);
-	ctl->smtp_socket = -1;
-	batchcount = 0;
+    if (NUM_NONZERO(ctl->batchlimit)) {
+	if (batchcount == ctl->batchlimit)
+	    smtp_close(ctl, 1);
+	batchcount++;
     }
 
     /* if no socket to any SMTP host is already set up, try to open one */
@@ -146,8 +158,7 @@ int smtp_open(struct query *ctl)
 	     * RFC 1869 warns that some listeners hang up on a failed EHLO,
 	     * so it's safest not to assume the socket will still be good.
 	     */
-	    SockClose(ctl->smtp_socket);
-	    ctl->smtp_socket = -1;
+	    smtp_close(ctl, 0);
 
 	    /* if opening for ESMTP failed, try SMTP */
 	    if ((ctl->smtp_socket = SockOpen(parsed_host,portnum,NULL,
@@ -158,8 +169,7 @@ int smtp_open(struct query *ctl)
 		    SMTP_helo(ctl->smtp_socket, id_me) == SM_OK)
 		break;  /* success */
 
-	    SockClose(ctl->smtp_socket);
-	    ctl->smtp_socket = -1;
+	    smtp_close(ctl, 0);
 	}
 	set_timeout(0);
 	phase = oldphase;

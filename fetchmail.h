@@ -462,6 +462,7 @@ extern int mytimeout;
 int interruptible_idle(int interval);
 
 /* sink.c: forwarding */
+void smtp_close(struct query *, int);
 int smtp_open(struct query *);
 int stuffline(struct query *, char *);
 int open_sink(struct query*, struct msgblk *, int*, int*);
