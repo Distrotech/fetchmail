@@ -4,14 +4,14 @@
  * This module was implemented by George M. Sipe <gsipe@mindspring.com>
  * or <gsipe@acm.org> and is:
  *
- *	Copyright (c) 1996 by George M. Sipe - ALL RIGHTS RESERVED
+ *	Copyright (c) 1996,1997 by George M. Sipe - ALL RIGHTS RESERVED
  *
  * This is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free
  * Software Foundation; version 2, or (at your option) any later version.
  */
 
-#ifdef	linux
+#ifdef linux
 
 #include <stdio.h>
 #include <string.h>
@@ -26,15 +26,14 @@ typedef struct {
 	int rx_packets, tx_packets;
 } ifinfo_t;
 
-struct ipair {
-    struct in_addr	interface_address;
-    struct in_addr	interface_mask;
-};
-
-/* Get active network interface information.  Return non-zero upon success. */
+struct interface_pair_s {
+	struct in_addr interface_address;
+	struct in_addr interface_mask;
+} *interface_pair;
 
 static int _get_ifinfo_(int socket_fd, FILE *stats_file, const char *ifname,
 		ifinfo_t *ifinfo)
+/* get active network interface information - return non-zero upon success */
 {
 	int namelen = strlen(ifname);
 	struct ifreq request;
@@ -100,27 +99,18 @@ static int get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
 }
 
 void interface_parse(struct hostdata *hp)
-/* parse 'interface' specification. */
+/* parse 'interface' specification */
 {
-	int socket_fd;
 	char *cp1, *cp2;
-	struct ifreq request;
 
+	/* if no interface specification present, all done */
 	if (!hp->interface)
-	    return;
+		return;
 
 	/* find and isolate just the IP address */
 	if (!(cp1 = strchr(hp->interface, '/')))
 		(void) error(PS_SYNTAX, 0, "missing IP interface address");
 	*cp1++ = '\000';
-
-	/* validate specified interface exists */
-	strcpy(request.ifr_name, hp->interface);
-	socket_fd = socket(AF_INET, SOCK_DGRAM, 0);
-	if (ioctl(socket_fd, SIOCGIFFLAGS, &request) < 0)
-		(void) error(PS_SYNTAX, 0, "no such interface device '%s'",
-			     hp->interface);
-	close(socket_fd);
 
 	/* find and isolate just the netmask */
 	if (!(cp2 = strchr(cp1, '/')))
@@ -129,17 +119,37 @@ void interface_parse(struct hostdata *hp)
 		*cp2++ = '\000';
 
 	/* convert IP address and netmask */
-	hp->inter = xmalloc(sizeof(struct ipair));
-	if (!inet_aton(cp1, &hp->inter->interface_address))
+	hp->interface_pair = xmalloc(sizeof(struct interface_pair_s));
+	if (!inet_aton(cp1, &hp->interface_pair->interface_address))
 		(void) error(PS_SYNTAX, 0, "invalid IP interface address");
-	if (!inet_aton(cp2, &hp->inter->interface_mask))
+	if (!inet_aton(cp2, &hp->interface_pair->interface_mask))
 		(void) error(PS_SYNTAX, 0, "invalid IP interface mask");
 	/* apply the mask now to the IP address (range) required */
-	hp->inter->interface_address.s_addr &= hp->inter->interface_mask.s_addr;
+	hp->interface_pair->interface_address.s_addr &=
+		hp->interface_pair->interface_mask.s_addr;
 	return;
 }
 
-int interface_check(struct hostdata *hp)
+void interface_note_activity(struct hostdata *hp)
+/* save interface I/O counts */
+{
+	ifinfo_t ifinfo;
+
+	/* if not monitoring link, all done */
+	if (!hp->monitor)
+		return;
+
+	/* get the current I/O stats for the monitored link */
+	if (get_ifinfo(hp->monitor, &ifinfo))
+		hp->monitor_io = ifinfo.rx_packets + ifinfo.tx_packets;
+
+#ifdef	ACTIVITY_DEBUG
+	(void) error(0, 0, "activity on %s -noted- as %d", 
+		hp->names->id, hp->monitor_io);
+#endif
+}
+
+int interface_approve(struct hostdata *hp)
 /* return TRUE if OK to poll, FALSE otherwise */
 {
 	ifinfo_t ifinfo;
@@ -153,28 +163,33 @@ int interface_check(struct hostdata *hp)
 			return(FALSE);
 		}
 		/* check the IP address (range) */
-		if ((ifinfo.addr.s_addr & hp->inter->interface_mask.s_addr) !=
-				hp->inter->interface_address.s_addr) {
+		if ((ifinfo.addr.s_addr &
+				hp->interface_pair->interface_mask.s_addr) !=
+				hp->interface_pair->interface_address.s_addr) {
 			(void) error(0, 0,
-			   "skipping poll of %s, %s IP address excluded",
-			   hp->names->id, hp->interface);
+				"skipping poll of %s, %s IP address excluded",
+				hp->names->id, hp->interface);
 			return(FALSE);
 		}
 	}
 
+	/* if not monitoring link, all done */
+	if (!hp->monitor)
+		return(TRUE);
+
+#ifdef	ACTIVITY_DEBUG
+	(void) error(0, 0, "activity on %s checked as %d", 
+		hp->names->id, hp->monitor_io);
+#endif
 	/* if monitoring, check link for activity if it is up */
-	if (hp->monitor && get_ifinfo(hp->monitor, &ifinfo) &&
-			hp->monitor_io == ifinfo.rx_packets + ifinfo.tx_packets) {
-		(void) error(0, 0,
-			     "skipping poll of %s, %s inactive",
-			     hp->names->id, hp->monitor);
+	if (get_ifinfo(hp->monitor, &ifinfo) &&
+			hp->monitor_io == ifinfo.rx_packets +
+				ifinfo.tx_packets) {
+		(void) error(0, 0, "skipping poll of %s, %s inactive",
+			hp->names->id, hp->monitor);
 		return(FALSE);
 	}
 
-	/* get the current I/O stats for the monitored link */
-	if (hp->monitor && get_ifinfo(hp->monitor, &ifinfo))
-		hp->monitor_io = ifinfo.rx_packets + ifinfo.tx_packets;
-
 	return(TRUE);
 }
-#endif	/* linux */
+#endif /* linux */

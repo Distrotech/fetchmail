@@ -364,8 +364,8 @@ int main (int argc, char **argv)
 	    if (ctl->active && !(implicitmode && ctl->server.skip))
 	    {
 #ifdef linux
-		/* interface_check does its own error logging */
-		if (!interface_check(&ctl->server))
+		/* interface_approve() does its own error logging */
+		if (!interface_approve(&ctl->server))
 		    continue;
 #endif /* linux */
 
@@ -409,6 +409,17 @@ int main (int argc, char **argv)
 		querystatus = query_host(ctl);
 		if (!check_only)
 		    update_str_lists(ctl);
+#ifdef	linux
+		if (ctl->server.monitor)
+		    {
+			/* Allow some time for the link to quiesce.  One
+			 * second is usually sufficient, three is safe.
+			 * Note:  this delay is important - don't remove!
+			 */
+			sleep(3);
+			interface_note_activity(&ctl->server);
+		    }
+#endif
 	    }
 	}
 
@@ -624,7 +635,7 @@ static int load_params(int argc, char **argv, int optind)
 		ctl->server.envelope = "X-Envelope-To:";
 
 #ifdef linux
-	    /* interface_check does its own error logging */
+	    /* interface_parse() does its own error logging */
 	    interface_parse(&ctl->server);
 #endif /* linux */
 

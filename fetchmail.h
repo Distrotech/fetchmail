@@ -70,10 +70,10 @@ struct hostdata		/* shared among all user connections to given server */
     int no_dns;
 
 #ifdef linux
-    char		*interface;
-    char		*monitor;
-    int 		monitor_io;
-    struct ipair	*inter;
+    char *interface;
+    char *monitor;
+    int  monitor_io;
+    struct interface_pair_s *interface_pair;
 #endif /* linux */
 
     /* computed for internal use */
@@ -223,7 +223,8 @@ int prc_parse_file(const char *);
 int prc_filecheck(const char *);
 
 void interface_parse(struct hostdata *);
-int interface_check(struct hostdata *);
+void interface_note_activity(struct hostdata *);
+int interface_approve(struct hostdata *);
 
 char *getpassword(char *);
 
