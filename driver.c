@@ -1543,7 +1543,7 @@ const struct method *proto;	/* protocol method table */
 
 		if (outlevel >= O_VERBOSE)
 		    if (idp->next)
-			error(0, 0, "selecting or re-polling folder %s");
+			error(0, 0, "selecting or re-polling folder %s", idp->id);
 		    else
 			error(0, 0, "selecting or re-polling default folder");
 
