@@ -38,7 +38,7 @@ AC_CHECK_LIB(opie,opiegenerator)
 
 dnl Port hack for Interactive UNIX System V/386 Release 3.2
 AC_CHECK_LIB(cposix, strchr,
-		[DEFS="$DEFS -D_SYSV3"
+		[EXTRADEFS="$EXTRADEFS -D_SYSV3"
 		LIBS="$LIBS -lcposix"])
 
 AC_CHECK_FUNC(strstr, AC_DEFINE(HAVE_STRSTR), 
@@ -63,6 +63,7 @@ fi
 
 dnl All AC_CHECK_FUNCs must precede the following AC_SUBSTs
 
+AC_SUBST(EXTRADEFS)
 AC_SUBST(EXTRASRC)
 AC_SUBST(EXTRAOBJ)
 
