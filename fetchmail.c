@@ -1326,7 +1326,7 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 			    else
 				printf("\t%s\n", idp->id);
 			if (ctl->wildcard)
-			    fputs("*\n", stdout);
+			    fputs("\t*\n", stdout);
 		    }
 
 		    if (count > 1 || ctl->wildcard)
