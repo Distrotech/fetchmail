@@ -41,4 +41,6 @@ make install
 
 /usr/bin/fetchmail
 /usr/man/man1/fetchmail.1
+/usr/doc/fetchmail-${1}/INSTALL
+/usr/doc/fetchmail-${1}/sample.rcfile
 EOF
