@@ -25,9 +25,9 @@ poll one or more systems at a specified interval.
 The
 .I fetchmail
 program can gather mail from servers supporting any of the common
-mail-retrieval protocols: POP2, POP3, IMAP2bis, and IMAP4.  It can
-also use the ESMTP ETRN extension.  (The RFCs describing all these
-protocols are listed at the end of this manual page.)
+mail-retrieval protocols: POP2, POP3, IMAP2bis, IMAP4, and IMAPrev1.
+It can also use the ESMTP ETRN extension.  (The RFCs describing all
+these protocols are listed at the end of this manual page.)
 .PP
 While
 .I fetchmail
