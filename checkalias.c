@@ -90,6 +90,8 @@ int is_host_alias(const char *name, struct query *ctl)
 {
     struct hostent	*he,*he_st;
     struct mxentry	*mxp, *mxrecords;
+    struct idlist	*idl;
+    int			namelen;
 
     struct hostdata *lead_server = 
 	ctl->server.lead_server ? ctl->server.lead_server : &ctl->server;
@@ -118,6 +120,29 @@ int is_host_alias(const char *name, struct query *ctl)
     else if (!ctl->server.dns)
 	return(FALSE);
 
+    /*
+     * Now check for a suffix match on the akalist.  The theory here is
+     * that if the user says `aka netaxs.com', we actually want to match
+     * foo.netaxs.com and bar.netaxs.com.
+     */
+    namelen = strlen(name);
+    for (idl = lead_server->akalist; idl; idl = idl->next)
+    {
+	char	*ep;
+
+	/*
+	 * Test is <= here because str_in_list() should have caught the
+	 * equal-length case above.  Doing it this way guarantees that
+	 * ep[-1] is a valid reference.
+	 */
+	if (strlen(idl->id) <= namelen)
+	    break;
+	ep = idl->id + (strlen(idl->id) - namelen);
+	/* a suffix led by . must match */
+	if (ep[-1] == '.' && !strcmp(ep, name))
+	    return(TRUE);
+    }
+
 #ifndef HAVE_RES_SEARCH
     return(FALSE);
 #else
@@ -130,7 +155,7 @@ int is_host_alias(const char *name, struct query *ctl)
      * delivering the current message or anything else from the
      * current server until it's back up.
      */
-    else if ((he = gethostbyname(name)) != (struct hostent *)NULL)
+    if ((he = gethostbyname(name)) != (struct hostent *)NULL)
     {
 	if (strcasecmp(ctl->server.truename, he->h_name) == 0)
 	    goto match;
@@ -146,6 +171,7 @@ int is_host_alias(const char *name, struct query *ctl)
 	    }
 	    if (outlevel >= O_DEBUG)
 		report(stdout, _("No, their IP addresses don't match\n"));
+	    return(FALSE);
 	}
 	else
 	    return(FALSE);
