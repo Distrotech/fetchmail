@@ -1016,13 +1016,10 @@ const struct method *proto;	/* protocol method table */
 		    vtalarm(ctl->timeout);
 		    if (ok != 0)
 			goto cleanUp;
+		    delete_uid(&ctl->newsaved, num);
 		}
 		else if (outlevel > O_SILENT) 
-		{
-		    /* nuke it from the unseen-messages list */
-		    delete_uid(&ctl->newsaved, num);
 		    fprintf(stderr, " not flushed\n");
-		}
 	    }
 
 	    /* remove all messages flagged for deletion */
