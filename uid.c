@@ -81,10 +81,15 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
     /* let's get stored message UIDs from previous queries */
     if ((tmpfp = fopen(idfile, "r")) != (FILE *)NULL)
     {
-	char buf[POPBUFSIZE+1],host[HOSTLEN+1],user[USERNAMELEN+1],id[IDLEN+1];
-       
-	char userhost[USERNAMELEN+1]; /* temp string for parsing the UID */
+	char buf[POPBUFSIZE+1];
+	char *host;
+	char *user;
+	char *id;
 	char *atsign;	/* temp pointer used in parsing user and host */
+	char *delimp1;
+	char saveddelim1;
+	char *delimp2;
+	char saveddelim2;
 
 	while (fgets(buf, POPBUFSIZE, tmpfp) != (char *)NULL)
 	{
@@ -96,33 +101,46 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
            * '@' in the UIDL.
 	   */
 	  
+	  /* very first, skip leading spaces */
+	  user = buf + strspn(buf, " \t");
+
 	  /* First, we split the buf into a userhost part and an id part */
-	  if ((st = sscanf(buf, "%s %s\n", userhost, id)) == 2)
-	    {
-	      /* we should now have parsed out the ID and must resolve 
-                 user and host. We assume that the field can now be divided 
-                 by the rightmost '@' */
-	      atsign = strrchr(userhost,'@');
-	      if(atsign) *atsign = ' '; /* replace right-@ with space */
-
-	      /* we should now be able to parse userhost into user and host */
-	      if ((st = sscanf(userhost, "%s %s", user, host)) == 2)
-		{
-
-		  for (ctl = hostlist; ctl; ctl = ctl->next)
-		    {
-		      if (ctl->server.truename &&
-			  strcasecmp(host, ctl->server.truename) == 0
-			  && strcasecmp(user, ctl->remotename) == 0)
-			{
-			  save_str(&ctl->oldsaved, id, UID_SEEN);
-			  break;
+	  if ( (delimp1 = strpbrk(user, " \t")) != NULL ) {
+		id = delimp1 + strspn(delimp1, " \t");	/* set pointer to id */
+	  	saveddelim1 = *delimp1;	/* save char after token */
+		*delimp1 = '\0';		/* delimit token with \0 */
+		if (id != NULL) {
+			/* now remove trainling white space chars from id */
+	  		if ( (delimp2 = strpbrk(id, " \t\n")) != NULL ) {
+				saveddelim2 = *delimp2;
+				*delimp2 = '\0';
 			}
-		    }
+	      		atsign = strrchr(user, '@');
+	      		if (atsign) {
+				*atsign = '\0';
+				host = atsign + 1;
 
-		  /* if it's not in a host we're querying, save it anyway */
-		  if (ctl == (struct query *)NULL)
-		    save_str(&scratchlist, buf, UID_SEEN);
+			}
+			for (ctl = hostlist; ctl; ctl = ctl->next) {
+				if (ctl->server.truename &&
+			 	    strcasecmp(host, ctl->server.truename) == 0
+			 	    && strcasecmp(user, ctl->remotename) == 0) {
+	
+					save_str(&ctl->oldsaved, id, UID_SEEN);
+					break;
+				}
+			}
+			/* if it's not in a host we're querying,
+			** save it anyway */
+			if (ctl == (struct query *)NULL) {
+				/* restore string */
+				*delimp1 = saveddelim1;
+				*atsign = '@';
+	  			if (delimp2 != NULL) {
+					*delimp2 = saveddelim2;
+				}
+				save_str(&scratchlist, buf, UID_SEEN);
+			}
 		}
 	    }
 	}
