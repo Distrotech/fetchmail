@@ -34,13 +34,27 @@
 #endif
 #endif
 
+/* #define USE_STDIO */
+
+#ifdef USE_STDIO
+/*
+ * Size of buffer for internal buffering read function 
+ * don't increase beyond the maximum atomic read/write size for
+ * your sockets, or you'll take a potentially huge performance hit
+ */
+#define  INTERNAL_BUFSIZE	2048
+#endif /* USE_STDIO */
+
 FILE *SockOpen(char *host, int clientPort)
 {
     int sock;
     unsigned long inaddr;
     struct sockaddr_in ad;
     struct hostent *hp;
-    
+#ifdef USE_STDIO
+    FILE *fp;
+#endif /* USE_STDIO */
+
     memset(&ad, 0, sizeof(ad));
     ad.sin_family = AF_INET;
 
@@ -64,7 +78,16 @@ FILE *SockOpen(char *host, int clientPort)
 	close(sock);
         return (FILE *)NULL;
     }
+
+#ifndef USE_STDIO
     return fdopen(sock, "r+");
+#else
+    fp = fdopen(sock, "r+");
+
+    setvbuf(fp, NULL, _IOLBF, INTERNAL_BUFSIZE);
+
+    return(fp);
+#endif /* USE_STDIO */
 }
 
 
@@ -92,6 +115,7 @@ va_dcl {
 
 }
 
+#ifndef USE_STDIO
 /*
  * FIXME: This needs to be recoded to use stdio, if that's possible.
  *
@@ -102,16 +126,8 @@ va_dcl {
  * two or more sockets open at a time.
  *
  * The right thing to do would be to use stdio for internal per-socket
- * buffering here (which is why Socket() returns a file pointer) but 
- * this causes mysterious lossage.  In case someone ever finds a way
- * around this, a note on Carl Harris's original implementation said:
- *
- * Size of buffer for internal buffering read function 
- * don't increase beyond the maximum atomic read/write size for
- * your sockets, or you'll take a potentially huge performance hit
- *
- * #define  INTERNAL_BUFSIZE	2048
- *
+ * buffering here (which is why SockOpen() returns a file pointer) but 
+ * this causes mysterious lossage.
  */
 
 int SockWrite(char *buf, int size, int len, FILE *sockfp)
@@ -148,5 +164,18 @@ char *SockGets(char *buf, int len, FILE *sockfp)
     *cp = 0;
     return buf;
 }
+#else
+
+int SockWrite(char *buf, int size, int len, FILE *sockfp)
+{
+    return(fwrite(buf, size, len, sockfp));
+}
+
+char *SockGets(char *buf, int len, FILE *sockfp)
+{
+    return(fgets(buf, len, sockfp));
+}
+
+#endif
 
 /* socket.c ends here */
