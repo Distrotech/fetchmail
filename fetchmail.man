@@ -283,6 +283,7 @@ or
 .B --logfile
 option allows you to redirect status messages emitted while in daemon
 mode into a specified logfile (follow the option with the logfile name).
+The logfile is opened for append, so previous messages aren't deleted.
 This is primarily useful for debugging configurations.
 .SH RETRIEVAL FAILURE MODES
 The protocols \fIfetchmail\fR uses to talk to mail servers are next to
