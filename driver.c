@@ -830,10 +830,13 @@ int num;		/* index of message */
 	 * If the SMTP server conforms to the standards, and fetchmail gets the
 	 * envelope sender from the Return-Path, the new Return-Path should be
 	 * exactly the same as the original one.
+	 *
+	 * Empty Return-Path headers will be ignored.
+	 *
 	 */
-	if (!strncasecmp("Return-Path:", line, 12))
+	if (!strncasecmp("Return-Path:", line, 12) && (cp = nxtaddr(line)))
 	{
-	    strcpy(return_path, nxtaddr(line));
+	    strcpy(return_path, cp);
 	    if (!ctl->mda) {
 		free(line);
 		continue;

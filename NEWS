@@ -22,6 +22,7 @@ fetchmail-4.4.0 (Fri Mar 13 15:48:27 EST 1998):
 * Fix timer-leak problem with the SIGALRM fix, pointed out by Dave Bodenstab.
 * Deal with more M$ Exchange braindamage (violating an RFC1939 limit).
 * Allow spaces in IMAP usernames (thank Juerg Wanner <juerg.wanner@ubs.com>).
+* Handle empty Return-Path (thank Dmitry Yaitskov <dyaitskov@insystems.com>).
 * Improvements in UID handling; should be a cleaner fix for Dick van den Burg.
 
 There are 270 people on fetchmail-friends and 160 on fetchmail-announce.
