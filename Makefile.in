@@ -75,7 +75,7 @@ popobjs = socket.o getpass.o pop2.o pop3.o imap.o fetchmail.o options.o	\
        rcfile_l.o rcfile_y.o rcfile.o daemon.o driver.o smtp.o xmalloc.o \
        md5c.o md5ify.o
 
-objs = $(popobjs) $(extras) $(EXTRAOBJS)
+objs = $(popobjs) $(extras) $(EXTRAOBJ)
 
 srcs = $(srcdir)/socket.c $(srcdir)/getpass.c $(srcdir)/pop2.c 		\
        $(srcdir)/pop3.c $(srcdir)/imap.c $(srcdir)/fetchmail.c		\
