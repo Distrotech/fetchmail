@@ -148,7 +148,8 @@ class User:
 	self.forcecr = FALSE		# Force LF -> CR/LF
 	self.stripcr = FALSE		# Strip CR
 	self.pass8bits = FALSE		# Force BODY=7BIT
-	self.dropstatus = FALSE		# Force BODY=7BIT
+	self.mimedecode = FALSE		# Undo MIME armoring
+	self.dropstatus = FALSE		# Drop incoming Status lines
 	self.limit = 0			# Message size limit
 	self.fetchlimit = 0		# Max messages fetched per batch
 	self.batchlimit = 0		# Max message forwarded per batch
@@ -169,6 +170,7 @@ class User:
 	    ('forcecr',     'Boolean'),
 	    ('stripcr',     'Boolean'),
 	    ('pass8bits',   'Boolean'),
+	    ('mimedecode',  'Boolean'),
 	    ('dropstatus',  'Boolean'),
 	    ('limit',       'Int'),
 	    ('fetchlimit',  'Int'),
@@ -191,6 +193,7 @@ class User:
 		or self.forcecr != UserDefaults.forcecr 
 		or self.stripcr != UserDefaults.stripcr 
 		or self.pass8bits != UserDefaults.pass8bits
+		or self.mimedecode != UserDefaults.mimedecode
 		or self.dropstatus != UserDefaults.dropstatus):
 	    str = str + " options"
 	if self.keep != UserDefaults.keep:
@@ -207,6 +210,8 @@ class User:
 	    str = str + flag2str(self.stripcr, 'stripcr')
 	if self.pass8bits != UserDefaults.pass8bits:
 	    str = str + flag2str(self.pass8bits, 'pass8bits')
+	if self.mimedecode != UserDefaults.mimedecode:
+	    str = str + flag2str(self.mimedecode, 'mimedecode')
 	if self.dropstatus != UserDefaults.dropstatus:
 	    str = str + flag2str(self.dropstatus, 'dropstatus')
 	if self.limit != UserDefaults.limit:
@@ -883,8 +888,10 @@ class UserEdit(Frame):
 		    variable=self.forcecr).pack(side=TOP, anchor=W)
 	Checkbutton(optwin, text="Strip CR from end of eacgh line",
 		    variable=self.stripcr).pack(side=TOP, anchor=W)
-	Checkbutton(optwin, text="Pass 8 bits even theough SMTP says 7BIT",
+	Checkbutton(optwin, text="Pass 8 bits even though SMTP says 7BIT",
 		    variable=self.pass8bits).pack(side=TOP, anchor=W)
+	Checkbutton(optwin, text="Undo MIME armoring on header and body",
+		    variable=self.mimedecode).pack(side=TOP, anchor=W)
 	Checkbutton(optwin, text="Drop Status lines from forwarded messages", 
 		    variable=self.dropstatus).pack(side=TOP, anchor=W)
 	optwin.pack(fill=X)
