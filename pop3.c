@@ -121,15 +121,16 @@ struct hostrec *queryctl;
     goto cleanUp;
   }
 
-  /* Ask for number of last message retrieved */
-  if (queryctl->fetchall) 
-    first = 1;
-  else {
+  /*
+   * Ask for number of last message retrieved.  
+   * Newer, RFC-1760-conformant POP servers may not have the LAST command.
+   * Therefore we don't croak if we get a nonzero return.
+   */
+  first = 1;
+  if (!queryctl->fetchall) {
     ok = POP3_sendLAST(&first, socket);
-    if (ok != 0)
-      goto cleanUp;
-
-    first++;
+    if (ok == 0)
+      first++;
   }
     
   /* show them how many messages we'll be downloading */
@@ -138,14 +139,12 @@ struct hostrec *queryctl;
       fprintf(stderr,"%d messages in folder, %d new messages.\n", 
                       count, count - first + 1);
     else
-      fprintf(stderr,"%d new messages in folder.\n", count);
+      fprintf(stderr,"%d %smessages in folder.\n", count, ok ? "" : "new ");
   else
     ;
 
   if (count > 0) { 
-    for (number = (queryctl->flush || queryctl->fetchall)? 1 : first;  
-                   number <= count;  
-                   number++) {
+    for (number = queryctl->flush ? 1 : first;  number <= count;  number++) {
 
       /* open the mail pipe if we're using an MDA */
       if (queryctl->output == TO_MDA
