@@ -31,6 +31,7 @@ extern char *strstr();	/* needed on sysV68 R3V7.1. */
 #define IMAP4rev1	1	/* IMAP4 rev 1, RFC2060 */
 
 static int count = 0, recentcount = 0, unseen = 0, deletions = 0;
+static unsigned int startcount = 1;
 static int expunged, expunge_period, saved_timeout = 0;
 static int imap_version, preauth;
 static flag do_idle;
@@ -603,6 +604,7 @@ static int imap_getrange(int sock,
 
     *countp = count;
     recentcount = 0;
+    startcount = 1;
 
     /* OK, now get a count of unseen messages and their indices */
     if (!ctl->fetchall && count > 0)
@@ -626,6 +628,10 @@ static int imap_getrange(int sock,
 		char	*ep;
 
 		cp += 8;	/* skip "* SEARCH" */
+		/* startcount is higher than count so that if there are no
+		 * unseen messages, imap_getsizes() will not need to do
+		 * anything! */
+		startcount = count + 1;
 
 		while (*cp && unseen < count)
 		{
@@ -634,24 +640,29 @@ static int imap_getrange(int sock,
 			cp++;
 		    if (*cp) 
 		    {
+			unsigned int um;
 			/*
 			 * Message numbers are between 1 and 2^32 inclusive,
 			 * so unsigned int is large enough.
 			 */
-			unseen_messages[unseen]=(unsigned int)strtol(cp,&ep,10);
-
-			if (outlevel >= O_DEBUG)
-			    report(stdout, 
-				   GT_("%u is unseen\n"), 
-				   unseen_messages[unseen]);
-		
-			unseen++;
+			um=(unsigned int)strtol(cp,&ep,10);
+			if (um <= count)
+			{
+			    unseen_messages[unseen++] = um;
+			    if (outlevel >= O_DEBUG)
+				report(stdout, GT_("%u is unseen\n"), um);
+			    if (startcount > um)
+				startcount = um;
+			}
 			cp = ep;
 		    }
 		}
 	    }
 	} while
 	    (tag[0] != '\0' && strncmp(buf, tag, strlen(tag)));
+
+	if (outlevel >= O_DEBUG && unseen > 0)
+	    report(stdout, GT_("%u is first unseen\n"), startcount);
     } else
 	unseen = -1;
 
@@ -702,10 +713,16 @@ static int imap_getsizes(int sock, int count, int *sizes)
      * on the fact that the sizes array has been preinitialized with a
      * known-bad size value.
      */
-    if (count == 1)
-	gen_send(sock, "FETCH 1 RFC822.SIZE");
-    else
-	gen_send(sock, "FETCH 1:%d RFC822.SIZE", count);
+    /* if fetchall is specified, startcount is 1;
+     * else if there is new mail, startcount is first unseen message;
+     * else startcount is greater than count.
+     */
+    if (count == startcount)
+	gen_send(sock, "FETCH %d RFC822.SIZE", count);
+    else if (count > startcount)
+	gen_send(sock, "FETCH %d:%d RFC822.SIZE", startcount, count);
+    else /* no unseen messages! */
+	return(PS_SUCCESS);
     for (;;)
     {
 	unsigned int num, size;
