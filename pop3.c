@@ -254,7 +254,7 @@ static struct method pop3 =
     "QUIT",				/* the POP3 exit command */
 };
 
-int doPOP3bis (queryctl)
+int doPOP3 (queryctl)
 /* retrieve messages using POP3 */
 struct hostrec *queryctl;
 {
