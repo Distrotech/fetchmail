@@ -343,8 +343,10 @@ int main (int argc, char **argv)
 			    if (errno == ENETUNREACH)
 				break;	/* go to sleep */
 			}
+#ifdef HAVE_HERROR		/* NEXTSTEP doesn't */
 			else
 			    herror("DNS error");
+#endif /* HAVE_HERROR */
 			continue;
 		    }
 		    else
