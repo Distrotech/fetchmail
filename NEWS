@@ -8,7 +8,7 @@
 
 				Release Notes:
 
-fetchmail-4.7.9 ():
+fetchmail-4.7.9 (Tue Mar  9 13:25:01 EST 1999):
 * Patch by Dan Root to solve an endianness problem in IMAP-K4.
 * Fix lexical-analyzer bug that rejected `set nobouncemail',
 * Prevent send_bouncemail from stepping on SMTP antispam response.
