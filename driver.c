@@ -104,26 +104,23 @@ static int is_host_alias(const char *name, struct query *ctl)
 
     /*
      * The first two checks are optimizations that will catch a good
-     * many cases.  First, check against the hostname the user specified.
-     * Odds are good this will either be the mailserver's FQDN or a
-     * suffix of it with the mailserver's domain's default host name
-     * omitted.  Next, check against the mailserver's FQDN, in case
+     * many cases.  (1) check against the hostname the user
+     * specified.  Odds are good this will either be the mailserver's
+     * FQDN or a suffix of it with the mailserver's domain's default
+     * host name omitted.  Then check the rest of the `also known as'
+     * cache accumulated by previous DNS checks.  This cache is primed
+     * by the aka list option.
+     *
+     * (2) check against the mailserver's FQDN, in case
      * it's not the same as the declared hostname.
      *
      * Either of these on a mail address is definitive.  Only if the
      * name doesn't match either is it time to call the bind library.
      * If this happens odds are good we're looking at an MX name.
      */
-    if (strcmp(name, ctl->servername) == 0)
+    if (uid_in_list(&ctl->lead_server->servernames, name))
 	return(TRUE);
     else if (strcmp(name, ctl->canonical_name) == 0)
-	return(TRUE);
-
-    /*
-     * Is it in the `also known as' cache accumulated by previous DNS checks?
-     * This cache is primed by the aka list option.
-     */
-    else if (uid_in_list(&ctl->lead_server->aka, name))
 	return(TRUE);
 
     /*
@@ -153,7 +150,7 @@ static int is_host_alias(const char *name, struct query *ctl)
 		putchar('\n');	/* terminate the progress message */
 	    fprintf(stderr,
 		"fetchmail: nameserver failure while looking for `%s' during poll of %s.\n",
-		name, ctl->servername);
+		name, ctl->servernames->id);
 	    ctl->errcount++;
 	    longjmp(restart, 2);	/* try again next poll cycle */
 	    break;
@@ -182,7 +179,7 @@ static int is_host_alias(const char *name, struct query *ctl)
 	default:
 	    fprintf(stderr,
 		"fetchmail: nameserver failure while looking for `%s' during poll of %s.\n",
-		name, ctl->servername);
+		name, ctl->servernames->id);
 	    ctl->errcount++;
 	    longjmp(restart, 2);	/* try again next poll cycle */
 	    break;
@@ -192,7 +189,7 @@ static int is_host_alias(const char *name, struct query *ctl)
 
 match:
     /* add this name to relevant server's `also known as' list */
-    save_uid(&ctl->lead_server->aka, -1, name);
+    save_uid(&ctl->lead_server->servernames, -1, name);
     return(TRUE);
 }
 
@@ -273,7 +270,7 @@ static FILE *smtp_open(struct query *ctl)
 	if ((ctl->smtp_sockfp = Socket(ctl->smtphost, SMTP_PORT)) == (FILE *)NULL)
 	    return((FILE *)NULL);
 	else if (SMTP_ok(ctl->smtp_sockfp) != SM_OK
-		 || SMTP_helo(ctl->smtp_sockfp, ctl->servername) != SM_OK)
+		 || SMTP_helo(ctl->smtp_sockfp, ctl->servernames->id) != SM_OK)
 	{
 	    fclose(ctl->smtp_sockfp);
 	    ctl->smtp_sockfp = (FILE *)NULL;
@@ -336,7 +333,7 @@ struct query *ctl;	/* query control record */
 	if (inheaders)
         {
 	    if (!ctl->norewrite)
-		reply_hack(bufp, ctl->servername);
+		reply_hack(bufp, ctl->servernames->id);
 
 	    if (!lines)
 	    {
@@ -804,7 +801,7 @@ const struct method *proto;	/* protocol method table */
     {
 	fprintf(stderr,
 		"fetchmail: timeout after %d seconds waiting for %s.\n",
-		ctl->timeout, ctl->servername);
+		ctl->timeout, ctl->servernames->id);
 	ok = PS_ERROR;
     }
     else if (js == 2)
@@ -819,7 +816,7 @@ const struct method *proto;	/* protocol method table */
 	FILE *sockfp;
 
 	/* open a socket to the mail server */
-	if ((sockfp = Socket(ctl->servername,
+	if ((sockfp = Socket(ctl->servernames->id,
 			     ctl->port ? ctl->port : protocol->port)) == NULL)
 	{
 	    perror("fetchmail, connecting to host");
@@ -863,7 +860,7 @@ const struct method *proto;	/* protocol method table */
 	    if (count == 0)
 		fprintf(stderr, "No mail from %s@%s\n", 
 			ctl->remotename,
-			ctl->servername);
+			ctl->servernames->id);
 	    else
 	    {
 		fprintf(stderr, "%d message%s", count, count > 1 ? "s" : ""); 
@@ -872,7 +869,7 @@ const struct method *proto;	/* protocol method table */
 		fprintf(stderr,
 			" from %s@%s.\n",
 			ctl->remotename,
-			ctl->servername);
+			ctl->servernames->id);
 	    }
 
 	/* we may need to get sizes in order to check message limits */
@@ -1051,7 +1048,7 @@ const struct method *proto;	/* protocol method table */
     }
     if (ok==PS_SOCKET || ok==PS_AUTHFAIL || ok==PS_SYNTAX || ok==PS_IOERR
 		|| ok==PS_ERROR || ok==PS_PROTOCOL || ok==PS_SMTP)
-	fprintf(stderr, " error while talking to %s\n", ctl->servername);
+	fprintf(stderr, " error while talking to %s\n", ctl->servernames->id);
 
 closeUp:
     signal(SIGVTALRM, sigsave);

@@ -84,7 +84,7 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 	    {
 		for (ctl = hostlist; ctl; ctl = ctl->next)
 		{
-		    if (strcmp(host, ctl->servername) == 0
+		    if (strcmp(host, ctl->servernames->id) == 0
 				&& strcmp(user, ctl->remotename) == 0)
 		    {
 			save_uid(&ctl->oldsaved, -1, id);
@@ -104,15 +104,18 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 struct idlist *save_uid(struct idlist **idl, int num, const char *str)
 /* save a number/UID pair on the given UID list */
 {
-    struct idlist *new;
+    struct idlist **end;
 
-    new = (struct idlist *)xmalloc(sizeof(struct idlist));
-    new->val.num = num;
-    new->id = xstrdup(str);
-    new->next = *idl;
-    *idl = new;
+    /* do it nonrecursively so the list is in the right order */
+    for (end = idl; *end; end = &(*end)->next)
+	continue;
 
-    return(new);
+    *end = (struct idlist *)xmalloc(sizeof(struct idlist));
+    (*end)->val.num = num;
+    (*end)->id = xstrdup(str);
+    (*end)->next = NULL;
+
+    return(*end);
 }
 
 void free_uid_list(struct idlist **idl)
@@ -251,7 +254,7 @@ void write_saved_lists(struct query *hostlist, const char *idfile)
 	    for (ctl = hostlist; ctl; ctl = ctl->next) {
 		for (idp = ctl->oldsaved; idp; idp = idp->next)
 		    fprintf(tmpfp, "%s@%s %s\n", 
-			    ctl->remotename, ctl->servername, idp->id);
+			    ctl->remotename, ctl->servernames->id, idp->id);
 	    }
 	    for (idp = scratchlist; idp; idp = idp->next)
 		fputs(idp->id, tmpfp);

@@ -61,7 +61,7 @@ struct idlist
 struct query
 {
     /* per-host data */
-    char servername [HOSTLEN+1];
+    struct idlist *servernames;		/* servername first, then akas*/
     struct idlist *localnames;
     int wildcard;	/* true if unmatched names should be passed through */
     int protocol;
@@ -98,7 +98,6 @@ struct query
     struct query *lead_smtp;	/* pointer to this query's SMTP leader */
     FILE *smtp_sockfp;		/* socket descriptor for SMTP connection */
     struct query *lead_server;	/* pointer to lead query for this server */
-    struct idlist *aka;		/* server alias list */
     unsigned int uid;		/* UID of user to deliver to */
     char digest [DIGESTLEN];	/* md5 digest buffer */
 #ifdef HAVE_GETHOSTBYNAME

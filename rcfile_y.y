@@ -78,19 +78,22 @@ statement	: SET BATCHLIMIT MAP NUMBER	{batchlimit = $4;}
 		| define_server serverspecs userspecs
 		;
 
-define_server	: POLL STRING	{strcpy(current.servername, $2);
-						current.skip = FALSE;}
-		| SKIP STRING	{strcpy(current.servername, $2);
-						current.skip = TRUE;}
-		| DEFAULTS	{strcpy(current.servername,"defaults");}
+define_server	: POLL STRING	{current.servernames = (struct idlist *)NULL;
+					save_uid(&current.servernames, -1, $2);
+					current.skip = FALSE;}
+		| SKIP STRING	{current.servernames = (struct idlist *)NULL;
+					save_uid(&current.servernames, -1, $2);
+					current.skip = TRUE;}
+		| DEFAULTS	{current.servernames = (struct idlist *)NULL;
+					save_uid(&current.servernames, -1,"defaults");}
   		;
 
 serverspecs	: /* EMPTY */
 		| serverspecs serv_option
 		;
 
-alias_list	: STRING		{save_uid(&current.aka, -1, $1);}
-		| alias_list STRING	{save_uid(&current.aka, -1, $2);}
+alias_list	: STRING		{save_uid(&current.servernames, -1, $1);}
+		| alias_list STRING	{save_uid(&current.servernames, -1, $2);}
 		;
 
 serv_option	: AKA alias_list
@@ -258,9 +261,8 @@ const char *pathname;		/* pathname for the configuration file */
 static void prc_reset(void)
 /* clear the global current record (server parameters) used by the parser */
 {
-    char	savename[HOSTLEN+1];
     int		saveport, saveproto, saveauth, saveskip;
-    struct idlist *saveaka;
+    struct idlist *saveservernames;
 
     /*
      * Purpose of this code is to initialize the new server block, but
@@ -268,20 +270,18 @@ static void prc_reset(void)
      * preserve server options unless the command-line explicitly
      * overrides them.
      */
-    (void) strcpy(savename, current.servername);
     saveport = current.port;
     saveproto = current.protocol;
     saveauth = current.authenticate;
     saveskip = current.skip;
-    saveaka = current.aka;
+    saveservernames = current.servernames;
 
     memset(&current, '\0', sizeof(current));
 
-    (void) strcpy(current.servername, savename);
     current.protocol = saveproto;
     current.authenticate = saveauth;
     current.skip = saveskip;
-    current.aka = saveaka;
+    current.servernames = saveservernames;
 }
 
 struct query *hostalloc(init)
@@ -337,7 +337,6 @@ void optmerge(struct query *h2, struct query *h1)
 /* merge two options records; empty fields in h2 are filled in from h1 */
 {
     append_uid_list(&h2->localnames, &h1->localnames);
-    append_uid_list(&h2->aka, &h1->aka);
 
 #define STR_MERGE(fld, len) if (*(h2->fld) == '\0') strcpy(h2->fld, h1->fld)
     STR_MERGE(remotename, USERNAMELEN);

@@ -1,6 +1,6 @@
 			Release Notes:
 
-fetchmail-2.1 ():
+fetchmail-2.1 (Thu Nov 28 11:07:48 EST 1996):
 
 features --
 
@@ -22,7 +22,8 @@ features --
 
 * Added an `aka' option to allow users to declare mailserver aliases at start
   of run, so DNS does less work.  During a run, cache host matches on the
-  aka list so no potential alias has to be DNS-checked more than once.
+  aka list so no potential alias has to be DNS-checked more than once.  
+  A server being polled explicitly may be referred to by any of its aliaseses.
 
 bugs --
 

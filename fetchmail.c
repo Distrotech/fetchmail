@@ -263,7 +263,7 @@ int main (int argc, char **argv)
 	    else
 	      {
 		(void) sprintf(tmpbuf, "Enter password for %s@%s: ",
-			       ctl->remotename, ctl->servername);
+			       ctl->remotename, ctl->servernames->id);
 		(void) strncpy(ctl->password,
 			       (char *)getpassword(tmpbuf),PASSWORDLEN-1);
 	      }
@@ -327,12 +327,12 @@ int main (int argc, char **argv)
 
 		    /* compute the canonical name of the host */
 		    errno = 0;
-		    namerec = gethostbyname(ctl->servername);
+		    namerec = gethostbyname(ctl->servernames->id);
 		    if (namerec == (struct hostent *)NULL)
 		    {
 			fprintf(stderr,
 				"fetchmail: skipping %s poll, ",
-				ctl->servername);
+				ctl->servernames->id);
 			if (errno)
 			{
 			    perror("general error");
@@ -456,18 +456,18 @@ static int load_params(int argc, char **argv, int optind)
 	     * record from command line and defaults
 	     */
 	    for (ctl = querylist; ctl; ctl = ctl->next)
-		if (strcmp(ctl->servername, argv[optind]) == 0)
+		if (uid_in_list(&ctl->servernames, argv[optind]) == 0)
 		    goto foundit;
 
 	    ctl = hostalloc(&cmd_opts);
-	    strcpy(ctl->servername, argv[optind]);
+	    strcpy(ctl->servernames->id, argv[optind]);
 
 	foundit:
 	    ctl->active = TRUE;
 	}
 
     /* if there's a defaults record, merge it and lose it */ 
-    if (querylist && strcmp(querylist->servername, "defaults") == 0)
+    if (querylist && strcmp(querylist->servernames->id, "defaults") == 0)
     {
 	for (ctl = querylist; ctl; ctl = ctl->next)
 	    optmerge(ctl, querylist);
@@ -476,7 +476,7 @@ static int load_params(int argc, char **argv, int optind)
 
     /* don't allow a defaults record after the first */
     for (ctl = querylist; ctl; ctl = ctl->next)
-	if (strcmp(ctl->servername, "defaults") == 0)
+	if (ctl != querylist && strcmp(ctl->servernames->id, "defaults") == 0)
 	    exit(PS_SYNTAX);
 
     /* merge in wired defaults, do sanity checks and prepare internal fields */
@@ -544,7 +544,7 @@ static int load_params(int argc, char **argv, int optind)
 
 	    /* similarly, compute server leaders for queries */
 	    for (mp = querylist; mp && mp != ctl; mp = mp->next)
-		if (strcmp(mp->servername, ctl->servername) == 0)
+		if (strcmp(mp->servernames->id, ctl->servernames->id) == 0)
 		{
 		    ctl->lead_server = mp->lead_server;
 		    goto no_new_server;
@@ -557,7 +557,7 @@ static int load_params(int argc, char **argv, int optind)
 	    {
 		(void) fprintf(stderr,
 			       "%s configuration invalid, port number cannot be negative",
-			       ctl->servername);
+			       ctl->servernames->id);
 		exit(PS_SYNTAX);
 	    }
 
@@ -651,7 +651,7 @@ static int query_host(struct query *ctl)
 
 	time(&now);
 	fprintf(stderr, "Querying %s (protocol %s) at %s",
-	    ctl->servername, showproto(ctl->protocol), ctime(&now));
+	    ctl->servernames->id, showproto(ctl->protocol), ctime(&now));
     }
     switch (ctl->protocol) {
     case P_AUTO:
@@ -684,17 +684,17 @@ void dump_params (struct query *ctl)
 /* display query parameters in English */
 {
     printf("Options for retrieving from %s@%s:\n",
-	   ctl->remotename, visbuf(ctl->servername));
+	   ctl->remotename, visbuf(ctl->servernames->id));
 #ifdef HAVE_GETHOSTBYNAME
     if (ctl->canonical_name)
 	printf("  Canonical DNS name of server is %s.\n", ctl->canonical_name);
 #endif /* HAVE_GETHOSTBYNAME */
-    if (ctl->aka)
+    if (ctl->servernames->next)
     {
 	struct idlist *idp;
 
 	printf("  Predeclared mailserver aliases:");
-	for (idp = ctl->aka; idp; idp = idp->next)
+	for (idp = ctl->servernames->next; idp; idp = idp->next)
 	    printf(" %s", idp->id);
 	putchar('\n');
     }
