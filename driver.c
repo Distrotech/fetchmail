@@ -1019,15 +1019,6 @@ closeUp:
     return(ok);
 }
 
-void smtp_close(mboxfd)
-/* close the current SMTP connection */
-int	mboxfd;
-{
-    if (mboxfd != -1)
-    {
-	close(mboxfd);
-    }
-}
 #if defined(HAVE_STDARG_H)
 void gen_send(int socket, char *fmt, ... )
 /* assemble command in printf(3) style and send to the server */
