@@ -2,6 +2,8 @@
 #
 # indexgen.sh -- generate current version of fetchmail home page.
 #
+goldvers="4.5.0"
+goldname="4.5.0bis"
 version=`sed -n <Makefile.in "/VERS=/s/VERS=\([^ 	]*\)/\1/p"`
 date=`date "+%d %b %Y"`
 
@@ -39,8 +41,9 @@ Fetchmail is a free, full-featured, robust, well-documented
 remote-mail retrieval and forwarding utility intended to be used over
 on-demand TCP/IP links (such as SLIP or PPP connections). It supports
 every remote-mail protocol now in use on the Internet: POP2, POP3,
-RPOP, APOP, KPOP, all flavors of IMAP, and ESMTP ETRN. It can even support
-IPv6 and IPSEC.<P>
+RPOP, APOP, KPOP, all flavors of <a
+href="http://www.imap.org">IMAP</a>, and ESMTP ETRN. It can even
+support IPv6 and IPSEC.<P>
 
 Fetchmail retrieves mail from remote mail servers and forwards it via
 SMTP, so it can then be be read by normal mail user agents such as <a
@@ -84,12 +87,9 @@ troubleshooting help.<p>
 See the <a href="http:design-notes.html">Fetchmail Design Notes</a>
 for discussion of some of the design choices in fetchmail.<P>
 
-Finally, see the distribution <a href="NEWS">NEWS file</a> for a
-description of changes in recent versions.<p>
-
 <H1>How to get fetchmail:</H1>
 
-You can get any of the following here:
+You can get any of the following leading-edge resources here:
 <UL>
 <LI> <a href="fetchmail-$version.tar.gz">
 	Gzipped source archive of fetchmail $version</a>
@@ -98,6 +98,17 @@ You can get any of the following here:
 <LI> <a href="fetchmail-$version-1.src.rpm">
 	Source RPM of fetchmail $version</a>
 </UL>
+Or you can get the last \`gold' version, $goldname:
+<UL>
+<LI> <a href="fetchmail-$goldvers.tar.gz">
+	Gzipped source archive of fetchmail $goldname</a>
+<LI> <a href="fetchmail-$goldvers-1.i386.rpm">
+	Intel binary RPM of fetchmail $goldname (uses glibc)</a>
+<LI> <a href="fetchmail-$goldvers-1.src.rpm">
+	Source RPM of fetchmail $goldname</a>
+</UL>
+For differences between the leading-edge $version and gold $goldname versions,
+see the distribution <a href="NEWS">NEWS</a> file.<p>
 
 (Note that the RPMs don't have the POP2, OTP, IPv6, Kereberos, or
 Compuserve RPA support compiled in.  To get that you will have to
@@ -107,7 +118,7 @@ The latest version of fetchmail is also carried in the
 <a href="http://sunsite.unc.edu/pub/Linux/system/mail/pop/!INDEX.html">
 Sunsite remote mail tools directory</a>.
 
-<H1>Getting help with fetchmail</H1>
+<H1>Getting help with fetchmail:</H1>
 
 There is a fetchmail-friends list for people who want to discuss fixes
 and improvements in fetchmail and help co-develop it.  It's at <a
@@ -126,10 +137,7 @@ Note: before submitting a question to the list, <strong>please read
 the <a href="fetchmail-FAQ.html">FAQ</a></strong> (especially item <a
 href="http:fetchmail-FAQ.html#G3">G3</a> on how to report bugs).  We
 tend to get the same three newbie questions over and over again.  The
-FAQ covers them like a blanket.  Actually, I'll answer the most common
-one right here: <em>If you've tried everything but can't get multidrop
-mode to work, it is almost certainly because your DNS service (or your
-provider's) is broken.</em><P>
+FAQ covers them like a blanket.<P>
 
 Fetchmail was written and is maintained by <a
 href="../index.html">Eric S. Raymond</a>.  <a
@@ -164,18 +172,10 @@ The fetchmail development project was a sociological experiment as well
 as a technical effort.  I ran it as a test of some theories about why the
 Linux development model works.<P>
 
-I wrote a paper, <A HREF="../writings/cathedral.html">The Cathedral
-And The Bazaar</A>, about these theories and the project. It was well
-received at <A HREF="http://www.linux-kongress.de"> Linux Kongress
-'97</A> and the <A HREF="http://www.ale.org/showcase"> Atlanta Linux
-Expo</A> two weeks later.  I also presented it at Tim O'Reilly's <A
-HREF="http://www.ora.com/perlconference">Perl Conference</A> August
-19th-21st 1997, at LinuxPro in Warsaw, December 11 1997 and at
-UniForum '98 in May 1998.  It's going to be the basis for an invited
-presentation at Usenix '98. A lot of people like it (and the folks at
-Netscape tell me it helped them decide to <a
-href="http://www.netscape.com/newsref/pr/newsrelease558.html"> give
-away the source for Netscape Communicator</a>).<P>
+I wrote a paper, <A HREF="../writings/cathedral-bazaar/">The Cathedral
+And The Bazaar</A>, about these theories and the project.  The paper
+became quite popular and may have actually helped change the world
+(!). Chase the title link, above, to its page. <P>
 
 <H1>Recent releases and where fetchmail is going:</H2>
 

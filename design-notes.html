@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/06/29 21:38:03 $
+<td width="30%" align=right>$Date: 1998/07/01 23:29:16 $
 </table>
 <HR>
 <H1 ALIGN=CENTER>Design Notes On Fetchmail</H1>
@@ -158,7 +158,7 @@ program isn't perfect, but it's trying.<P>
 
 <H1>The most-requested features that I will never add, and why not:</H1>
 
-<H2>1. Password encryption in .fetchmailrc</H2>
+<H2>Password encryption in .fetchmailrc</H2>
 
 The reason there's no facility to store passwords encrypted in the
 .fetchmailrc file is because this doesn't actually add protection.<P>
@@ -213,7 +213,7 @@ they're not portable.<P>
 I've thought about this a lot and roughed up several designs.  All are
 complicated and fragile, with a bunch of the standard problems (what
 happens if a fetchmail aborts before clearing its semaphore, and how
-do we recover reliably?)<P>.
+do we recover reliably?).<P>
 
 I'm just not satisfied that there's enough functional gain here to pay
 for the large increase in complexity that adding these semaphores
@@ -316,7 +316,7 @@ following minimum steps.
     forget the <code>%token</code> declaration.  
 
 <LI>Pick a long-form option name, and a one-letter short option if any
-    are left.  Go to <code>options.c</code>.  Pick a new <code>LA_<code>
+    are left.  Go to <code>options.c</code>.  Pick a new <code>LA_</code>
     value.  Hack the <code>longoptions</code> table to set up the
     association.  Hack the big switch statement to set the option.
     Hack the `?' message to describe it.
@@ -412,8 +412,8 @@ a gift from the gods, and this is my expression of gratitude.<P>
 
 The beta testers didn't know it at the time, but they were also the
 subjects of a sociological experiment.  The results are described in
-my paper, <cite>The Cathedral And The Bazaar</cite>, available on the
-<a href="http://www.tuxedo.org/~esr/fetchmail">Fetchmail home page</a>.
+my paper, <A HREF="../writings/cathedral-bazaar/">The Cathedral
+And The Bazaar</A>.
 
 <H1>Credits</H1>
 
@@ -424,7 +424,7 @@ Hochheiser, who gave me the idea of the SMTP-forwarding delivery mode.<P>
 Other significant contributors to the code have included Dave Bodenstab
 (error.c code and --syslog), George Sipe (--monitor and --interface),
 Gordon Matzigkeit (netrc.c), Al Longyear (UIDL support), Chris
-Hanson (Kerberos V4 support), anc Craig Metz (OPIE, IPv6, IPSEC).<P>
+Hanson (Kerberos V4 support), and Craig Metz (OPIE, IPv6, IPSEC).<P>
 
 <H1>Conclusion</H1>
 
@@ -477,7 +477,7 @@ all shaped the design in one way or another.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/06/29 21:38:03 $
+<td width="30%" align=right>$Date: 1998/07/01 23:29:16 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
