@@ -10,7 +10,7 @@
 			Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-2.3 ()
+fetchmail-2.3 (Wed Dec 18 09:17:52 EST 1996)
 
 features -- 
 
@@ -45,6 +45,8 @@ bugs --
 * SIGCHLD used everywhere now, not SIGCLD (this was strictly a cosmetic bug).
 
 * Prevent occasional hangs when fetchmail was terminated by signal.
+
+There are 168 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-2.2 (Mon Dec  9 00:15:01 EST 1996):
