@@ -4,13 +4,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta name="generator"
-content="HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org" />
+content="HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org"/>
 <title>The Fetchmail FAQ</title>
-<link rev="made" href="mailto:esr@thyrsus.com" />
+<link rev="made" href="mailto:esr@thyrsus.com"/>
 <meta name="description"
-content="Frequently asked questions about fetchmail." />
-<meta name="keywords"
-content="fetchmail, POP, POP2, POP3, IMAP, remote mail" />
+content="Frequently asked questions about fetchmail."/>
+<meta name="keywords" content="fetchmail, POP, POP2, POP3, IMAP, remote mail"/>
 </head>
 <body>
 <table width="100%" cellpadding="0" summary="Canned page footer">
@@ -19,11 +18,11 @@ content="fetchmail, POP, POP2, POP3, IMAP, remote mail" />
 Page</a></td>
 <td width="30%" align="center">To <a href="/~esr/sitemap.html">Site
 Map</a></td>
-<td width="30%" align="right">$Date: 2002/07/30 13:26:48 $</td>
+<td width="30%" align="right">$Date: 2002/09/04 13:58:24 $</td>
 </tr>
 </table>
 
-<hr />
+<hr/>
 <h1>Frequently Asked Questions About Fetchmail</h1>
 
 <p>Before reporting any bug, please read <a href="#G3">G3</a> for
@@ -36,245 +35,217 @@ at <a href="mailto:esr@thyrsus.com">esr@thyrsus.com</a>.</p>
 
 <h1>General questions:</h1>
 
-<a href="#G1">G1. What is fetchmail and why should I
-bother?</a><br />
-<a href="#G2">G2. Where do I find the latest FAQ and fetchmail
-sources?</a><br />
-<a href="#G3">G3. I think I've found a bug. Will you fix
-it?</a><br />
-<a href="#G4">G4. I have this idea for a neat feature. Will you add
-it?</a><br />
-<a href="#G5">G5. I want to make fetchmail behave like Outlook
-Express.</a><br />
-<a href="#G6">G6. Is there a mailing list for exchanging
-tips?</a><br />
-<a href="#G7">G7. So, what's this I hear about a fetchmail
-paper?</a><br />
-<a href="#G8">G8. What is the best server to use with
-fetchmail?</a><br />
-<a href="#G9">G9. What is the best mail program to use with
-fetchmail?</a><br />
-<a href="#G10">G10. How can I avoid sending my password en
-clair?</a><br />
-<a href="#G11">G11. Is any special configuration needed to use a
-dynamic IP address?</a><br />
-<a href="#G12">G12. Is any special configuration needed to use
-firewalls?</a><br />
-<a href="#G13">G13. Is any special configuration needed to
-<em>send</em> mail?</a><br />
-<a href="#G14">G14. Is fetchmail Y2K-compliant?</a><br />
-<a href="#G15">G15. Is there a way in fetchmail to support
-disconnected IMAP mode?</a><br />
-<a href="#G16">G16. How will fetchmail perform under heavy
-loads?</a><br />
+<a href="#G1">G1. What is fetchmail and why should I bother?</a><br/>
+<a href="#G2">G2. Where do I find the latest FAQ and fetchmail sources?</a><br/>
+<a href="#G3">G3. I think I've found a bug. Will you fix it?</a><br/>
+<a href="#G4">G4. I have this idea for a neat feature. Will you add it?</a><br/>
+<a href="#G5">G5. I want to make fetchmail behave like Outlook Express.</a><br/>
+<a href="#G6">G6. Is there a mailing list for exchanging tips?</a><br/>
+<a href="#G7">G7. So, what's this I hear about a fetchmail paper?</a><br/>
+<a href="#G8">G8. What is the best server to use with fetchmail?</a><br/>
+<a href="#G9">G9. What is the best mail program to use with fetchmail?</a><br/>
+<a href="#G10">G10. How can I avoid sending my password en clair?</a><br/>
+<a href="#G11">G11. Is any special configuration needed to use a dynamic IP address?</a><br/>
+<a href="#G12">G12. Is any special configuration needed to use firewalls?</a><br/>
+<a href="#G13">G13. Is any special configuration needed to <em>send</em> mail?</a><br/>
+<a href="#G14">G14. Is fetchmail Y2K-compliant?</a><br/>
+<a href="#G15">G15. Is there a way in fetchmail to support disconnected IMAP mode?</a><br/>
+<a href="#G16">G16. How will fetchmail perform under heavy loads?</a><br/>
  
 
 <h1>Build-time problems:</h1>
 
-<a href="#B1">B1. Make coughs and dies when building on
-FreeBSD.</a><br />
-<a href="#B2">B2. Lex bombs out while building the fetchmail
-lexer.</a><br />
-<a href="#B3">B3. I get link failures when I try to build
-fetchmail.</a><br />
-<a href="#B4">B4. I get build failures in the intl
-directory.</a><br />
+<a href="#B1">B1. Make coughs and dies when building on FreeBSD.</a><br/>
+<a href="#B2">B2. Lex bombs out while building the fetchmail lexer.</a><br/>
+<a href="#B3">B3. I get link failures when I try to build fetchmail.</a><br/>
+<a href="#B4">B4. I get build failures in the intl directory.</a><br/>
  
-
 <h1>Fetchmail configuration file grammar questions:</h1>
 
-<a href="#F1">F1. Why does my old .fetchmailrc no longer
-work?</a><br />
-<a href="#F2">F2. The .fetchmailrc parser won't accept my
-all-numeric user name.</a><br />
-<a href="#F3">F3. The .fetchmailrc parser won't accept my host or
-username beginning with `no'.</a><br />
-<a href="#F4">F4. I'm getting a `parse error' message I don't
-understand.</a><br />
- 
+<a href="#F1">F1. Why does my old .fetchmailrc no longer work?</a><br/>
+<a href="#F2">F2. The .fetchmailrc parser won't accept my all-numeric user name.</a><br/>
+<a href="#F3">F3. The .fetchmailrc parser won't accept my host or username beginning with `no'.</a><br/>
+<a href="#F4">F4. I'm getting a `parse error' message I don't understand.</a><br/>
 
 <h1>Configuration questions:</h1>
 
 <a href="#C1">C1. Why do I need a .fetchmailrc when running as root
-on my own machine?</a><br />
+on my own machine?</a><br/>
 <a href="#C2">C2. How can I arrange for a fetchmail daemon to get
-killed when I log out?</a><br />
+killed when I log out?</a><br/>
 <a href="#C3">C3. How do I know what interface and address to use
-with --interface?</a><br />
+with --interface?</a><br/>
 <a href="#C4">C4. How can I set up support for sendmail's anti-spam
-features?</a><br />
+features?</a><br/>
 <a href="#C5">C5. How can I poll some of my mailboxes more/less
-often than others?</a><br />
+often than others?</a><br/>
 <a href="#C6">C6. Fetchmail works OK started up manually, but not
-from an init script.</a><br />
+from an init script.</a><br/>
 <a href="#C7">C7. How can I forward mail to another
-host?.</a><br />
+host?.</a><br/>
  
 
 <h1>How to make fetchmail play nice with various MTAs:</h1>
 
-<a href="#T1">T1. How can I use fetchmail with sendmail?</a><br />
-<a href="#T2">T2. How can I use fetchmail with qmail?</a><br />
-<a href="#T3">T3. How can I use fetchmail with exim?</a><br />
-<a href="#T4">T4. How can I use fetchmail with smail?</a><br />
-<a href="#T5">T5. How can I use fetchmail with SCO's
-MMDF?</a><br />
-<a href="#T6">T6. How can I use fetchmail with Lotus
-Notes?</a><br />
-<a href="#T7">T7. How can I use fetchmail with Courier
-IMAP?</a><br />
- 
+<a href="#T1">T1. How can I use fetchmail with sendmail?</a><br/>
+<a href="#T2">T2. How can I use fetchmail with qmail?</a><br/>
+<a href="#T3">T3. How can I use fetchmail with exim?</a><br/>
+<a href="#T4">T4. How can I use fetchmail with smail?</a><br/>
+<a href="#T5">T5. How can I use fetchmail with SCO's MMDF?</a><br/>
+<a href="#T6">T6. How can I use fetchmail with Lotus Notes?</a><br/>
+<a href="#T7">T7. How can I use fetchmail with Courier IMAP?</a><br/>
+<a href="#T8">T8. How can I use fetchmail with vbmailshield?</a><br/>
 
 <h1>How to make fetchmail work with various servers:</h1>
 
-<a href="#S1">S1. How can I use fetchmail with qpopper?</a><br />
+<a href="#S1">S1. How can I use fetchmail with qpopper?</a><br/>
 <a href="#S2">S2. How can I use fetchmail with Microsoft
-Exchange?</a><br />
+Exchange?</a><br/>
 <a href="#S3">S3. How can I use fetchmail with Compuserve
-RPA?</a><br />
+RPA?</a><br/>
 <a href="#S4">S4. How can I use fetchmail with Demon Internet's
-SDPS?</a><br />
+SDPS?</a><br/>
 <a href="#S5">S5. How can I use fetchmail with usa.net's
-servers?</a><br />
+servers?</a><br/>
 <a href="#S6">S6. How can I use fetchmail with HP
-OpenMail?</a><br />
+OpenMail?</a><br/>
 <a href="#S7">S7. How can I use fetchmail with geocities POP3
-servers?</a><br />
-<a href="#S8">S8. How can I use fetchmail with Hotmail?</a><br />
-<a href="#S9">S9. How can I use fetchmail with MSN?</a><br />
-<a href="#S10">S10. How can I use fetchmail with SpryNet?</a><br />
-<a href="#S11">S11. How can I use fetchmail with FTGate?</a><br />
-<a href="#S12">S12. How can I use fetchmail with MailMax?</a><br />
+servers?</a><br/>
+<a href="#S8">S8. How can I use fetchmail with Hotmail?</a><br/>
+<a href="#S9">S9. How can I use fetchmail with MSN?</a><br/>
+<a href="#S10">S10. How can I use fetchmail with SpryNet?</a><br/>
+<a href="#S11">S11. How can I use fetchmail with FTGate?</a><br/>
+<a href="#S12">S12. How can I use fetchmail with MailMax?</a><br/>
 <a href="#S13">S13. How can I use fetchmail with Novell
-GroupWise?</a><br />
+GroupWise?</a><br/>
 <a href="#S14">S14. How can I use fetchmail with
-InterChange?</a><br />
-<a href="#S15">S15. How can I use fetchmail with GMX?</a><br />
+InterChange?</a><br/>
+<a href="#S15">S15. How can I use fetchmail with GMX?</a><br/>
  
 
 <h1>How to set up well-known security and authentication
 methods:</h1>
 
-<a href="#K1">K1. How can I use fetchmail with SOCKS?</a><br />
+<a href="#K1">K1. How can I use fetchmail with SOCKS?</a><br/>
 <a href="#K2">K2. How can I use fetchmail with IPv6 and
-IPsec?</a><br />
+IPsec?</a><br/>
 <a href="#K3">K3. How can I get fetchmail to work with
-ssh?</a><br />
+ssh?</a><br/>
 <a href="#K4">K4. What do I have to do to use the IMAP-GSS
-protocol?</a><br />
-<a href="#K5">K5. How can I use fetchmail with SSL?</a><br />
+protocol?</a><br/>
+<a href="#K5">K5. How can I use fetchmail with SSL?</a><br/>
  
 
 <h1>Runtime fatal errors:</h1>
 
 <a href="#R1">R1. Fetchmail isn't working, and -v shows `SMTP
-connect failed' messages.</a><br />
+connect failed' messages.</a><br/>
 <a href="#R2">R2. When I try to configure an MDA, fetchmail doesn't
-work.</a><br />
+work.</a><br/>
 <a href="#R3">R3. Fetchmail dumps core when given an invalid rc
-file.</a><br />
+file.</a><br/>
 <a href="#R4">R4. Fetchmail dumps core in -V mode, but operates
-normally otherwise.</a><br />
+normally otherwise.</a><br/>
 <a href="#R5">R5. Running fetchmail in daemon mode doesn't
-work.</a><br />
+work.</a><br/>
 <a href="#R6">R6. Fetchmail randomly dies with socket
-errors.</a><br />
+errors.</a><br/>
 <a href="#R7">R7. Fetchmail running as root stopped working after
-an OS upgrade</a><br />
+an OS upgrade</a><br/>
 <a href="#R8">R8. Fetchmail is timing out after fetching certain
-messages but before deleting them</a><br />
+messages but before deleting them</a><br/>
 <a href="#R9">R9. Fetchmail is timing out during message
-fetches</a><br />
-<a href="#R10">R10. Fetchmail is dying with SIGPIPE.</a><br />
+fetches</a><br/>
+<a href="#R10">R10. Fetchmail is dying with SIGPIPE.</a><br/>
 <a href="#R11">R11. My server is hanging up or emitting errors on
-CAPA.</a><br />
+CAPA.</a><br/>
  
 
 <h1>Hangs and lockups:</h1>
 
-<a href="#H1">H1. Fetchmail hangs when used with pppd.</a><br />
+<a href="#H1">H1. Fetchmail hangs when used with pppd.</a><br/>
 <a href="#H2">H2. Fetchmail hangs during the MAIL FROM
-exchange.</a><br />
-<a href="#H3">H3. Fetchmail hangs while fetching mail.</a><br />
+exchange.</a><br/>
+<a href="#H3">H3. Fetchmail hangs while fetching mail.</a><br/>
  
 
 <h1>Disappearing mail:</h1>
 
 <a href="#D1">D1. I think I've set up fetchmail correctly, but I'm
-not getting any mail.</a><br />
+not getting any mail.</a><br/>
 <a href="#D2">D2. All my mail seems to disappear after a dropped
-connection.</a><br />
+connection.</a><br/>
 <a href="#D3">D3. Mail that was being fetched when I interrupted my
-fetchmail seems to have been vanished.</a><br />
+fetchmail seems to have been vanished.</a><br/>
  
 
 <h1>Multidrop-mode problems:</h1>
 
 <a href="#M1">M1. I've declared local names, but all my multidrop
-mail is going to root anyway.</a><br />
+mail is going to root anyway.</a><br/>
 <a href="#M2">M2. I can't seem to get fetchmail to route to a local
-domain properly.</a><br />
+domain properly.</a><br/>
 <a href="#M3">M3. I tried to run a mailing list using multidrop,
-and I have a mail loop!</a><br />
+and I have a mail loop!</a><br/>
 <a href="#M4">M4. My multidrop fetchmail seems to be having DNS
-problems.</a><br />
+problems.</a><br/>
 <a href="#M5">M5. I'm seeing long DNS delays before each message is
-processed.</a><br />
+processed.</a><br/>
 <a href="#M6">M6. How do I get multidrop mode to work with
-majordomo?</a><br />
+majordomo?</a><br/>
 <a href="#M7">M7. Multidrop mode isn't parsing envelope addresses
-from my Received headers as it should.</a><br />
+from my Received headers as it should.</a><br/>
 <a href="#M8">M8. Users are getting multiple copies of
-messages.</a><br />
+messages.</a><br/>
  
 
 <h1>Mangled mail:</h1>
 
 <a href="#X1">X1. Spurious blank lines are appearing in the headers
-of fetched mail.</a><br />
+of fetched mail.</a><br/>
 <a href="#X2">X2. My mail client can't see a Subject
-line.</a><br />
+line.</a><br/>
 <a href="#X3">X3. Messages containing "From" at start of line are
-being split.</a><br />
+being split.</a><br/>
 <a href="#X4">X4. My mail is being mangled in a new and different
-way.</a><br />
+way.</a><br/>
 <a href="#X5">X5. Using POP3, retrievals seems to be fetching too
-much!</a><br />
+much!</a><br/>
 <a href="#X6">X6. My mail attachments are being dropped or
-mangled.</a><br />
+mangled.</a><br/>
 <a href="#X7">X7. Some mail attachments are hanging
-fetchmail.</a><br />
+fetchmail.</a><br/>
 <a href="#X8">X8. A spurious ) is being appended to my
-messages.</a><br />
+messages.</a><br/>
  
 
 <h1>Other problems:</h1>
 
 <a href="#O1">O1. The --logfile option doesn't work if the logfile
-doesn't exist.</a><br />
+doesn't exist.</a><br/>
 <a href="#O2">O2. Every time I get a POP or IMAP message the header
-is dumped to all my terminal sessions.</a><br />
+is dumped to all my terminal sessions.</a><br/>
 <a href="#O3">O3. Does fetchmail reread its rc file every poll
-cycle?</a><br />
+cycle?</a><br/>
 <a href="#O4">O4. Why do deleted messages show up again when I take
-a line hit while downloading?</a><br />
+a line hit while downloading?</a><br/>
 <a href="#O5">O5. Why is fetched mail being logged with my name,
-not the real From address?</a><br />
+not the real From address?</a><br/>
 <a href="#O6">O6. I'm seeing long sendmail delays or hangs near the
-start of each poll cycle.</a><br />
+start of each poll cycle.</a><br/>
 <a href="#O7">O7. Why doesn't fetchmail deliver mail in date-sorted
-order?</a><br />
+order?</a><br/>
 <a href="#O8">O8. I'm using pppd. Why isn't my monitor option
-working?</a><br />
+working?</a><br/>
 <a href="#O9">O9. Why does fetchmail keep retrieving the same
-messages over and over?</a><br />
+messages over and over?</a><br/>
 <a href="#O10">O10. Why is the received date on all my messages the
-same?</a><br />
+same?</a><br/>
  
 
 <h1>Answers:</h1>
 
-<hr />
+<hr/>
 <h2><a id="G1" name="G1">G1. What is fetchmail and why should I
 bother?</a></h2>
 
@@ -306,7 +277,7 @@ License</a>.</p>
 <p>If you found this FAQ in the distribution, see the README for
 fetchmail's full feature list.</p>
 
-<hr />
+<hr/>
 <h2><a id="G2" name="G2">G2. Where do I find the latest FAQ and
 fetchmail sources?</a></h2>
 
@@ -321,7 +292,7 @@ POP mail tools directory on Sunsite</a>.</p>
 distribution. Because it freezes at distribution release time, it
 may not be completely current.</p>
 
-<hr />
+<hr/>
 <h2><a id="G3" name="G3">G3. I think I've found a bug. Will you fix
 it?</a></h2>
 
@@ -432,7 +403,7 @@ tested that the easy bugs have long since been found). So if you
 want your bug fixed rapidly, it is not just sufficient but nearly
 <em>necessary</em> that you give me a way to reproduce it.</p>
 
-<hr />
+<hr/>
 <h2><a id="G4" name="G4">G4. I have this idea for a neat feature.
 Will you add it?</a></h2>
 
@@ -469,7 +440,7 @@ stability or involve me in large amounts of coding.</p>
 transport problem that can't be handled anywhere but fetchmail, lay
 it on me. I'm very accommodating about good ideas.</p>
 
-<hr />
+<hr/>
 <h2><a id="G5" name="G5">G5. I want to make fetchmail behave like
 Outlook Express.</a></h2>
 
@@ -485,7 +456,7 @@ Python script, to be run from a cron job, that deletes old messages
 off your maildrop. Send it to me and I'll put it in the contrib
 directory.</p>
 
-<hr />
+<hr/>
 <h2><a id="G6" name="G6">G6. Is there a mailing list for exchanging
 tips?</a></h2>
 
@@ -498,7 +469,7 @@ There is also an announcements-only list,
 fetchmail-announce@lists.ccil.org, which you can sign up for at <a
 href="http://lists.ccil.org/mailman/listinfo/fetchmail-announce">http://lists.ccil.org/mailman/listinfo/fetchmail-announce</a>.</p>
 
-<hr />
+<hr/>
 <h2><a id="G7" name="G7">G7. So, what's this I hear about a
 fetchmail paper?</a></h2>
 
@@ -520,7 +491,7 @@ away the source for Netscape Communicator</a>.</p>
 <p>If you're reading a non-HTML dump of this FAQ, you can find the
 paper on the Web with a search for that title.</p>
 
-<hr />
+<hr/>
 <h2><a id="G8" name="G8">G8. What is the best server to use with
 fetchmail?</a></h2>
 
@@ -569,7 +540,7 @@ FTP site</a>. Don't use 2.5, which has a rather restrictive
 license. The 2.5.2 version appears to restore the open-source
 license of previous versions.</p>
 
-<hr />
+<hr/>
 <h2><a id="G9" name="G9">G9. What is the best mail program to use
 with fetchmail?</a></h2>
 
@@ -593,7 +564,7 @@ by itself. You won't need its built-in POP3 support, though; most
 of the mutt developers will cheerfully admit that fetchmail's is
 better :-).</p>
 
-<hr />
+<hr/>
 <h2><a id="G10" name="G10">G10. How can I avoid sending my password
 en clair?</a></h2>
 
@@ -697,7 +668,7 @@ better, because this is how Craig gets his mail ;-)</p>
 <p>Finally, you can use <a href="#K5">SSL</a> for complete
 end-to-end encryption if you have an SSL-enabled mailserver.</p>
 
-<hr />
+<hr/>
 <h2><a id="G11" name="G11">G11. Is any special configuration needed
 to use a dynamic IP address?</a></h2>
 
@@ -775,7 +746,7 @@ mailhost.) See the <a
 href="http://www.lege.com/sendmail-FAQ.txt">sendmail FAQ</a> for
 more details.</p>
 
-<hr />
+<hr/>
 <h2><a id="G12" name="G12">G12. Is any special configuration needed
 to use firewalls?</a></h2>
 
@@ -788,7 +759,7 @@ site</a>.</p>
 <p>The specific recipe for using fetchmail with a firewall is at <a
 href="#K1">K1</a></p>
 
-<hr />
+<hr/>
 <h2><a id="G13" name="G13">G13. Is any special configuration needed
 to <em>send</em> mail?</a></h2>
 
@@ -807,7 +778,7 @@ the outgoing queue. If you have set up something like pppd to
 automatically dial out when your kernel is called to open a TCP/IP
 connection, this will ensure that the mail gets out.</p>
 
-<hr />
+<hr/>
 <h2><a id="G14" name="G14">G14. Is fetchmail
 Y2K-compliant?</a></h2>
 
@@ -819,7 +790,7 @@ aren't used for anything but log entry generation. Anyway, if you
 aren't running on a 64-bit machine by then, you'll deserve to
 lose.</p>
 
-<hr />
+<hr/>
 <h2><a id="G15" name="G15">G15. Is there a way in fetchmail to
 support disconnected IMAP mode?</a></h2>
 
@@ -828,7 +799,7 @@ protocol gateway between POP3/IMAP servers and SMTP. Disconnected
 operation requires an elaborate interactive client. It's a very
 different problem.</p>
 
-<hr />
+<hr/>
 <h2><a id="G16" name="G16">G16. How will fetchmail perform under
 heavy loads?</a></h2>
 
@@ -849,7 +820,7 @@ This is not a problem readily solved by tuning fetchmail, or even
 by buying more TCP/IP capacity (which tends to improve bandwidth
 but not necessarily latency).</p>
 
-<hr />
+<hr/>
 <h2><a id="B1" name="B1">B1. Make coughs and dies when building on
 FreeBSD.</a></h2>
 
@@ -857,7 +828,7 @@ FreeBSD.</a></h2>
 within FreeBSD's "scope", e.g. the ports collection. Type "gmake"
 to run GNU make and better things will happen.</p>
 
-<hr />
+<hr/>
 <h2><a id="B2" name="B2">B2. Lex bombs out while building the
 fetchmail lexer.</a></h2>
 
@@ -873,7 +844,7 @@ now.</p>
 <p>(The same problem has been reported under HP-UX v10.20 and
 IRIX)</p>
 
-<hr />
+<hr/>
 <h2><a id="B3" name="B3">B3. I get link failures when I try to
 build fetchmail.</a></h2>
 
@@ -908,7 +879,7 @@ rcfile_y.o(.text+0xdf9): more undefined references to `dcgettext__' follow
 This is due to some brain-damage in the GNU internationalization
 libraries.</p>
 
-<hr />
+<hr/>
 <h2><a id="B4" name="B4">B4. I get build failures in the intl
 directory.</a></h2>
 
@@ -918,7 +889,7 @@ directory.</a></h2>
 teetered on the brink of removing support for it entirely several
 times.</p>
 
-<hr />
+<hr/>
 <h2><a id="F1" name="F1">F1. Why does my old .fetchmailrc file no
 longer work?</a></h2>
 
@@ -1046,7 +1017,7 @@ options, like `<code>protocol</code>'.</p>
 <p>Do similarly for any `<code>monitor</code>' or
 `<code>batchlimit</code>' options.</p>
 
-<hr />
+<hr/>
 <h2><a id="F2" name="F2">F2. The .fetchmailrc parser won't accept
 my all-numeric user name.</a></h2>
 
@@ -1061,7 +1032,7 @@ class.</p>
 <p>The lexical analyzer in 5.0.6 and beyond is smarter and assumes
 any token following "username" or "password" is a string.</p>
 
-<hr />
+<hr/>
 <h2><a id="F3" name="F3">F3. The .fetchmailrc parser won't accept
 my host or username beginning with `no'.</a></h2>
 
@@ -1073,7 +1044,7 @@ rewrite' etc.) and the older style run-on syntax (`nokeep',
 <p>Upgrade to a 5.0.6 or later fetchmail, or put string quotes
 around your token.</p>
 
-<hr />
+<hr/>
 <h2><a id="F4" name="F4">F4. I'm getting a `parse error' message I
 don't understand.</a></h2>
 
@@ -1086,7 +1057,7 @@ probably find that by moving one or more options closer to the
 Unfortunately, they're necessary in order to allow the `defaults'
 feature to work.</p>
 
-<hr />
+<hr/>
 <h2><a id="C1" name="C1">C1. Why do I need a .fetchmailrc when
 running as root on my own machine?</a></h2>
 
@@ -1144,7 +1115,7 @@ about ways to tinker with the mapping rules, you'll quickly find
 that all the alternatives to the present default are worse or
 unacceptably more complicated or both.</p>
 
-<hr />
+<hr/>
 <h2><a id="C2" name="C2">C2. How can I arrange for a fetchmail
 daemon to get killed when I log out?</a></h2>
 
@@ -1165,7 +1136,7 @@ profiles that will accomplish this. Thank James Laferriere
 <p>Some people start up and shut down fetchmail using the ppp-up
 and ppp-down scripts of pppd.</p>
 
-<hr />
+<hr/>
 <h2><a id="C3" name="C3">C3. How do I know what interface and
 address to use with --interface?</a></h2>
 
@@ -1244,7 +1215,7 @@ dynamic address pool is 255 addresses ranging from 205.164.136.1 to
     interface "sl0/205.164.0.0/255.255.0.0"
 </pre>
 
-<hr />
+<hr/>
 <h2><a id="C4" name="C4">C4. How can I set up support for
 sendmail's anti-spam features?</a></h2>
 
@@ -1292,7 +1263,7 @@ fetchmail will flush and delete it.</p>
 your reject file. You <strong>will</strong> lose mail if you do
 this!!!</p>
 
-<hr />
+<hr/>
 <h2><a id="C5" name="C5">C5. How can I poll some of my mailboxes
 more/less often than others?</a></h2>
 
@@ -1311,7 +1282,7 @@ mainsite.example.com is polled, which with a polling interval of
 every 5 minutes means that secondary.example.com will be polled
 every 30 minutes.</p>
 
-<hr />
+<hr/>
 <h2><a id="C6" name="C6">Fetchmail works OK started up manually,
 but not from an init script.</a></h2>
 
@@ -1325,7 +1296,7 @@ fetchmail at startup can't find the .fetchmailrc.</p>
 -f option to point fetchmail at it. That should solve the
 problem.</p>
 
-<hr />
+<hr/>
 <h2><a id="C7" name="C7">C7. How can I forward mail to another
 host?</a></h2>
 
@@ -1333,7 +1304,7 @@ host?</a></h2>
 fetchmail on, use the <code>smtphost</code> or
 <code>smtpname</code> option. See the manual page for details.</p>
 
-<hr />
+<hr/>
 <h2><a id="T1" name="T1">T1. How can I use fetchmail with
 sendmail?</a></h2>
 
@@ -1420,7 +1391,7 @@ occasionally get mysterious delivery failures with a SIGPIPE as the
 sendmail instance dies. The problem is messages with a single dot
 at start of a text line.</p>
 
-<hr />
+<hr/>
 <h2><a id="T2" name="T2">T2. How can I use fetchmail with
 qmail?</a></h2>
 
@@ -1502,7 +1473,7 @@ the alias mechanism described above, you can use the option
 `<code>qvirtual "mbox-userstr-"</code>' in your fetchmail config
 file to strip the prefix from the local user name.</p>
 
-<hr />
+<hr/>
 <h2><a id="T3" name="T3">T3. How can I use fetchmail with
 exim?</a></h2>
 
@@ -1551,7 +1522,7 @@ this will result in such messages having an incorrect domain name
 attached to their return address (your SMTP listener's hostname
 rather than that of the remote mail server).</p>
 
-<hr />
+<hr/>
 <h2><a id="T4" name="T4">T4. How can I use fetchmail with
 smail?</a></h2>
 
@@ -1578,7 +1549,7 @@ listener <em>must</em> allow this mismatch, so smail's new behavior
 to accept the "localhost" that fetchmail normally appends to
 recipient addresses.</p>
 
-<hr />
+<hr/>
 <h2><a id="T5" name="T5">T5. How can I use fetchmail with SCO's
 MMDF?</a></h2>
 
@@ -1589,7 +1560,7 @@ href="http://www.aplawrence.com/Unixart/uucptofetch.html">MMDF
 recipe</a> that describes replacing a UUCP link with fetchmail
 feeding MMDF.</p>
 
-<hr />
+<hr/>
 <h2><a id="T6" name="T6">T6. How can I use fetchmail with Lotus
 Notes?</a></h2>
 
@@ -1604,7 +1575,14 @@ IMAP?</a></h2>
 <code>someone@localhost</code>. Work around this with an
 <code>smtphost</code> or <code>smtpaddress</code>.</p>
 
-<hr />
+<hr/>
+<h2><a href="T8">T8. How can I use fetchmail with vbmailshield?</a></h2>
+
+<p>vbmailshield's SMTP interpreter is broken.  It doesn't understand RSET.</p>
+
+<p>As a workaround, you can set batchlimit to 1 so RSET is never used.</p>
+
+<hr/>
 <h2><a id="S1" name="S1">S1. How can I use fetchmail with
 qpopper?</a></h2>
 
@@ -1638,7 +1616,7 @@ interaction with Eudora qpopper versions 2.3 and later. See <a
 href="#X5">X5</a> for details. The solution is to upgrade your
 fetchmail.</p>
 
-<hr />
+<hr/>
 <h2><a id="S2" name="S2">S2. How can I use fetchmail with Microsoft
 Exchange?</a></h2>
 
@@ -1773,7 +1751,7 @@ CD.</p>
 
 <p>I'll provide the CD.</p>
 
-<hr />
+<hr/>
 <h2><a id="S3" name="S3">S3. How can I use fetchmail with
 CompuServe RPA?</a></h2>
 
@@ -1813,7 +1791,7 @@ poll non-rpa.csi.com via "pop.site1.csi.com" with proto POP3 and options no dns
        is LOCAL_USER here options fetchall stripcr
 </pre>
 
-<hr />
+<hr/>
 <h2><a id="S4" name="S4">S4. How can I use fetchmail with Demon
 Internet's SDPS?</a></h2>
 
@@ -1886,7 +1864,7 @@ address.</p>
 greeting line; if you're accessing Demon Internet through a proxy
 it may fail. To force SDPS mode, pick "sdps" as your protocol.</p>
 
-<hr />
+<hr/>
 <h2><a id="S5" name="S5">S5. How can I use fetchmail with usa.net's
 servers?</a></h2>
 
@@ -1911,7 +1889,7 @@ to avoid having fetched mail rejected.</p>
 servers. They seem to be chronically flaky. We recommend finding
 another provider.)</p>
 
-<hr />
+<hr/>
 <h2><a id="S6" name="S6">S6. How can I use fetchmail with HP
 OpenMail?</a></h2>
 
@@ -1931,7 +1909,7 @@ OpenMail's project manager claims these bugs have been fixed in
 command fails, returning only one line regrardless of its argument,
 on something identifying itself as "OpenMail POP3 interface".</p>
 
-<hr />
+<hr/>
 <h2><a id="S7" name="S7">S7. How can I use fetchmail with geocities
 POP3 servers?</a></h2>
 
@@ -1956,17 +1934,15 @@ already been read.</p>
 <p>Fix: Get an email provider that doesn't suck. The pop-up ads on
 Geocities are lame, you should boycott them anyway.</p>
 
-<hr />
-<h2><a id="S8" name="S8">S8. How can I use fetchmail with
-Hotmail?</a></h2>
+<hr/>
+<h2><a id="S8" name="S8">S8. How can I use fetchmail with Hotmail?</a></h2>
 
 <p>You can't, yet. But <a
-href="http://hawkins.emu.id.au/gotmail/">gotmail</a> might be what
-you need.</p>
+href="http://linux.cudeso.be/linuxdoc/gotmail.php">gotmail</a> might
+be what you need.</p>
 
-<hr />
-<h2><a id="S9" name="S9">S9. How can I use fetchmail with
-MSN?</a></h2>
+<hr/>
+<h2><a id="S9" name="S9">S9. How can I use fetchmail with MSN?</a></h2>
 
 <p>You can't. MSN uses something that looks like POP3, except the
 authentication part is nonstandard. And of course they don't
@@ -1980,7 +1956,7 @@ authentication. It's possible this may enable fetchmail to talk to
 MSN; if so, somebody should report it so this FAQ can be
 corrected.</p>
 
-<hr />
+<hr/>
 <h2><a id="S10" name="S10">S10. How can I use fetchmail with
 SpryNet?</a></h2>
 
@@ -1990,7 +1966,7 @@ may end up invisibly stuck on your mail spool. Use the
 <code>fetchall</code> flag to ensure that it's recovered on the
 next cycle.</p>
 
-<hr />
+<hr/>
 <h2><a id="S11" name="S11">S11. How can I use fetchmail with
 FTGate?</a></h2>
 
@@ -1999,7 +1975,7 @@ weird bug. It answers OK twice to a TOP request! Use the
 <code>fetchall</code> option to force use of RETR and work around
 this bug.</p>
 
-<hr />
+<hr/>
 <h2><a id="S12" name="S12">S12. How can I use fetchmail with
 MailMax?</a></h2>
 
@@ -2013,7 +1989,7 @@ developers have acknowledged this bug as of 4 May 2000, but there
 is no fix yet. If you must use this server, force RETR with the
 <tt>fetchall</tt> option.</p>
 
-<hr />
+<hr/>
 <h2><a id="S13" name="S13">S13. How can I use fetchmail with Novell
 GroupWise?</a></h2>
 
@@ -2027,7 +2003,7 @@ voting with your dollars for a server that isn't brain-dead. If you
 stick with code as shoddy as GroupWise seems to be, you will
 probably pay for it with other problems.</p>
 
-<hr />
+<hr/>
 <h2><a id="S14" name="S14">S14. How can I use fetchmail with
 InterChange?</a></h2>
 
@@ -2048,7 +2024,7 @@ authentication failures, sending back a non-conformant error
 message (missing an <code>-ERR</code> tag) that confuses
 fetchmail.</p>
 
-<hr />
+<hr/>
 <h2><a id="K1" name="K1">K1. How can I use fetchmail with
 SOCKS?</a></h2>
 
@@ -2061,7 +2037,7 @@ directory containing the Rconnect library.</p>
 <p>Alan Schmitt has added a similar --with-socks5 option that may
 work better if you have a recent version of the SOCKS library.</p>
 
-<hr />
+<hr/>
 <h2><a id="K2" name="K2">K2. How can I use fetchmail with IPv6 and
 IPsec?</a></h2>
 
@@ -2106,7 +2082,7 @@ href="http://www.inner.net/ipv6">http://www.inner.net/ipv6</a> (via
 IPv4)</li>
 </ul>
 
-<hr />
+<hr/>
 <h2><a id="K3" name="K3">K3. How can I get fetchmail to work with
 ssh?</a></h2>
 
@@ -2131,7 +2107,7 @@ preauthenticated in this mode, so you'll actually have to ship your
 password. It will be under ssh encryption, though, so that
 shouldn't be a problem.</p>
 
-<hr />
+<hr/>
 <h2><a id="K4" name="K4">K4. What do I have to do to use the
 IMAP-GSS protocol?</a></h2>
 
@@ -2171,7 +2147,7 @@ Kerberos principal.</p>
 <p>Now you don't have to worry about your password appearing in
 cleartext in your .fetchmailrc, or across the network.</p>
 
-<hr />
+<hr/>
 <h2><a id="K5" name="K5">K5. How can I use fetchmail with
 SSL?</a></h2>
 
@@ -2214,7 +2190,7 @@ poll MYSERVER port 993 plugin "openssl s_client -connect %h:%p"
         protocol imap username MYUSERNAME password MYPASSWORD
 </pre>
 
-<hr />
+<hr/>
 <h2><a id="R1" name="R1">R1. Fetchmail isn't working, and -v shows
 `SMTP connect failed' messages.</a></h2>
 
@@ -2293,7 +2269,7 @@ Linux distributions the libc bind library version works better.</p>
 library is linked only if it is actually needed. So under Linux it
 won't be, and this particular cause should go away.</p>
 
-<hr />
+<hr/>
 <h2><a id="R2" name="R2">R2. When I try to configure an MDA,
 fetchmail doesn't work.</a></h2>
 
@@ -2310,7 +2286,7 @@ configure an MDA, your MDA is mangling the message. If it doesn't
 match what you sent, then fetchmail or something on the server is
 broken.</p>
 
-<hr />
+<hr/>
 <h2><a id="R3" name="R3">R3. Fetchmail dumps core when given an
 invalid rc file.</a></h2>
 
@@ -2327,7 +2303,7 @@ Software Foundation. An FSF <a
 href="http://www.gnu.ai.mit.edu/order/ftp.html">mirror site</a>
 will help you get it faster.</p>
 
-<hr />
+<hr/>
 <h2><a id="R4" name="R4">R4. Fetchmail dumps core in -V mode, but
 operates normally otherwise.</a></h2>
 
@@ -2346,9 +2322,9 @@ calls producing the problem are being made by the C library itself,
 not the fetchmail code (they're all from within fclose, and not an
 fclose called directly by fetchmail, either).</p>
 
-<hr />
+<hr/>
 <h2><a id="R5" name="R5">R5. Running fetchmail in daemon mode
-doesn't work.</a><br />
+doesn't work.</a><br/>
 </h2>
 
 <p>We have one report from a SunOS 4.1.4 user that trying to run
@@ -2376,7 +2352,7 @@ child of PID 1). This is important when you start fetchmail
 interactively and than quit interactive shell. The line above makes
 sure fetchmail lives after that!</p>
 
-<hr />
+<hr/>
 <h2><a id="R6" name="R6">R6. Fetchmail randomly dies with socket
 errors.</a></h2>
 
@@ -2397,7 +2373,7 @@ different poll cycles. To work around this, change the poll name
 either to the real name of one of the servers in the ring or to a
 corresponding IP address.</p>
 
-<hr />
+<hr/>
 <h2><a id="R7" name="R7">R7. Fetchmail running as root stopped
 working after an OS upgrade</a></h2>
 
@@ -2407,7 +2383,7 @@ your .fetchmailrc or use a -f option to explicitly point at the
 file. (Oddly, a similar problem has been reported from Debian
 systems.)</p>
 
-<hr />
+<hr/>
 <h2><a id="R8" name="R8">R8. Fetchmail is timing out after fetching
 certain messages but before deleting them</a></h2>
 
@@ -2435,7 +2411,7 @@ least [now] I am now getting good performance and no queue
 blocking.</p>
 </blockquote>
 
-<hr />
+<hr/>
 <h2><a id="R9" name="R9">R9. Fetchmail is timing out during message
 fetches</a></h2>
 
@@ -2444,7 +2420,7 @@ command will cause the server to start sending large amounts of
 data, which means large packets. If your networking layer has a
 packet-fragmentation problem, that's where you'll see it.</p>
 
-<hr />
+<hr/>
 <h2><a id="R10" name="R10">R10. Fetchmail is dying with
 SIGPIPE.</a></h2>
 
@@ -2460,14 +2436,14 @@ occasionally get mysterious delivery failures with a SIGPIPE as the
 sendmail instance dies. The problem is messages with a single dot
 at start of a text line.</p>
 
-<hr />
+<hr/>
 <h2><a id="R11" name="R11">R11. My server is hanging up or emitting
 errors on CAPA.</a></h2>
 
 <p>Your POP3 server is broken. You can work around this with the
 declaration <tt>auth password</tt> in your .fetchmailrc.</p>
 
-<hr />
+<hr/>
 <h2><a id="H1" name="H1">H1. Fetchmail hangs when used with
 pppd.</a></h2>
 
@@ -2475,7 +2451,7 @@ pppd.</a></h2>
 report that fetchmail doesn't play well with it, but works with
 pppd if `demand' is turned off. We have no idea why this is.</p>
 
-<hr />
+<hr/>
 <h2><a id="H2" name="H2">H2. Fetchmail hangs during the MAIL FROM
 exchange.</a></h2>
 
@@ -2519,7 +2495,7 @@ configuration of sendmail. You must enable the 'nodns' and
 <p>For more details consult the file
 /usr/share/sendmail-cf/README.</p>
 
-<hr />
+<hr/>
 <h2><a id="H3" name="H3">H3. Fetchmail hangs while fetching
 mail.</a></h2>
 
@@ -2541,7 +2517,7 @@ TCP wrappers.</p>
 <p>Adding 'sendmail : 127.0.0.1' to /etc/hosts.allow could solve
 this problem.</p>
 
-<hr />
+<hr/>
 <h2><a id="D1" name="D1">D1. I think I've set up fetchmail
 correctly, but I'm not getting any mail.</a></h2>
 
@@ -2564,7 +2540,7 @@ following line</p>
 
 <p>make sure that 'localuser' does exist and can receive mail.</p>
 
-<hr />
+<hr/>
 <h2><a id="D2" name="D2">D2. All my mail seems to disappear after a
 dropped connection.</a></h2>
 
@@ -2595,7 +2571,7 @@ amount of time to do deletions and clean up its queue. (Fetchmail
 waits a bit before retrying in order to avoid a `lock busy'
 error.)</p>
 
-<hr />
+<hr/>
 <h2><a id="D3" name="D3">D3. Mail that was being fetched when I
 interrupted my fetchmail seems to have been vanished.</a></h2>
 
@@ -2619,7 +2595,7 @@ fetch options.</p>
 <p>Solution: switch to an <a href="http://www.imap.org">IMAP4</a>
 server.</p>
 
-<hr />
+<hr/>
 <h2><a id="M1" name="M1">M1. I've declared local names, but all my
 multidrop mail is going to root anyway.</a></h2>
 
@@ -2648,7 +2624,7 @@ net.</p>
 <p>Occasionally these errors indicate the sort of header-parsing
 problem described in <a href="#M7">M7</a>.</p>
 
-<hr />
+<hr/>
 <h2><a id="M2" name="M2">M2. I can't seem to get fetchmail to route
 to a local domain properly.</a></h2>
 
@@ -2698,7 +2674,7 @@ bamboozled by this.</p>
 multidrop delivery if your ISP (or your mail redirection provider)
 is using qmail.</p>
 
-<hr />
+<hr/>
 <h2><a id="M3" name="M3">M3. I tried to run a mailing list using
 multidrop, and I have a mail loop!</a></h2>
 
@@ -2710,7 +2686,7 @@ chop the host part off any local addresses in the list.</p>
 <p>If you use sendmail, you can check the list expansion with
 <code>sendmail -bv</code>.</p>
 
-<hr />
+<hr/>
 <h2><a id="M4" name="M4">M4. My multidrop fetchmail seems to be
 having DNS problems.</a></h2>
 
@@ -2724,7 +2700,7 @@ works better.</p>
 library is linked only if it is actually needed. So under Linux it
 won't be, and this problem should go away.</p>
 
-<hr />
+<hr/>
 <h2><a id="M5" name="M5">M5. I'm seeing long DNS delays before each
 message is processed.</a></h2>
 
@@ -2741,7 +2717,7 @@ other hostname parts from being looked up at all.</p>
 call DNS on the From-address hostname as a way of checking that the
 address is valid.</p>
 
-<hr />
+<hr/>
 <h2><a id="M6" name="M6">M6. How do I get multidrop mode to work
 with majordomo?</a></h2>
 
@@ -2793,7 +2769,7 @@ default ISP user+domain and service about 30 mail accounts +
 majordomo on my inside pop3 server with fetchmail and sendmail
 8.83</blockquote>
 
-<hr />
+<hr/>
 <h2><a id="M7" name="M7">M7. Multidrop mode isn't parsing envelope
 addresses from my Received headers as it should.</a></h2>
 
@@ -2831,7 +2807,7 @@ address. This check might fail if your DNS were misconfigured, or
 if you were using `no dns' and had failed to declare iserv.ttns.net
 as an alias of your server.</p>
 
-<hr />
+<hr/>
 <h2><a id="M8" name="M8">M8. Users are getting multiple copies of
 messages.</a></h2>
 
@@ -2855,7 +2831,7 @@ that matches a seen mail ID. The trouble is that this is an O(N**2)
 operation that might significantly slow down the retrieval of large
 mail batches.</p>
 
-<hr />
+<hr/>
 <h2><a id="X1" name="X1">X1. Spurious blank lines are appearing in
 the headers of fetched mail.</a></h2>
 
@@ -2872,7 +2848,7 @@ inserting the blank line and replace that. If you can't do either
 of these things, pick a different MDA (such as procmail) and
 declare it with the `<code>mda</code>' option.</p>
 
-<hr />
+<hr/>
 <h2><a id="X2" name="X2">X2. My mail client can't see a Subject
 line.</a></h2>
 
@@ -2886,7 +2862,7 @@ process X- headers correctly. If this is your problem, all I can
 suggest is replacing IDA sendmail, because it's broken and not
 RFC822 conformant.</p>
 
-<hr />
+<hr/>
 <h2><a id="X3" name="X3">X3. Messages containing "From" at start of
 line are being split.</a></h2>
 
@@ -2926,7 +2902,7 @@ option in the flags part (the F= string). This will make sendmail
 turn each dangerous start-of-line From into a &gt;From, preventing
 programs further downstream from acting up.</p>
 
-<hr />
+<hr/>
 <h2><a id="X4" name="X4">X4.</a><a id="generic_mangling"
 name="generic_mangling">My mail is being mangled in a new and
 different way</a></h2>
@@ -3015,7 +2991,7 @@ Please include the session transcript of your manual fetchmail
 simulation along with the other things described in the FAQ entry
 on <a href="#G3">reporting bugs</a>.</p>
 
-<hr />
+<hr/>
 <h2><a id="X5" name="X5">X5. Using POP3, retrievals seems to be
 fetching too much!</a></h2>
 
@@ -3035,7 +3011,7 @@ argument. Decrementing the TOP argument in 4.4.7 fixed this.</p>
 <p>Workaround: set the <code>fetchall</code> option. Under POP3
 this has the side effect of forcing RETR use.</p>
 
-<hr />
+<hr/>
 <h2><a id="X6" name="X6">X6. My mail attachments are being dropped
 or mangled.</a></h2>
 
@@ -3161,7 +3137,7 @@ world doesn't understand its attachments, so it really shouldn't be
 used at all), and make sure dtmail is set to use MIME rather than
 mailtool's format.</p>
 
-<hr />
+<hr/>
 <h2><a id="X7" name="X7">X7. Some mail attachments are hanging
 fetchmail.</a></h2>
 
@@ -3185,7 +3161,7 @@ malfunctioning path-MTU discovery on the mailserver. Or, if there's
 a modem in the link, it may be because the attachment contains the
 Hayes mode escape "+++".</p>
 
-<hr />
+<hr/>
 <h2><a id="X8" name="X8">X8. A spurious ) is being appended to my
 messages.</a></h2>
 
@@ -3235,7 +3211,7 @@ on, you'll get a message about actual != expected.</p>
 <p>There is no fix for this. The nuke mentioned in <a
 href="#S2">S2</a> looks more tempting all the time.</p>
 
-<hr />
+<hr/>
 <h2><a id="O1" name="O1">O1. The --logfile option doesn't work if
 the logfile doesn't exist.</a></h2>
 
@@ -3246,7 +3222,7 @@ get around it, just touch(1) the logfile before you run fetchmail
 (this will have no effect on the contents of the logfile if it
 already exists).</p>
 
-<hr />
+<hr/>
 <h2><a id="O2" name="O2">O2. Every time I get a POP or IMAP message
 the header is dumped to all my terminal sessions.</a></h2>
 
@@ -3284,14 +3260,14 @@ biff n
 
 to solve the problem system-wide. 
 
-<hr />
+<hr/>
 <h2><a id="O3" name="O3">O3. Does fetchmail reread its rc file
 every poll cycle?</a></h2>
 
 <p>No, but versions 5.2.2 and later will notice when you modify
 your rc file and restart, reading it.</p>
 
-<hr />
+<hr/>
 <h2><a id="O4" name="O4">O4. Why do deleted messages show up again
 when I take a line hit while downloading?</a></h2>
 
@@ -3318,7 +3294,7 @@ between the delete and the expunge. If you've set a longer expunge
 interval, the window gets wider. This problem should correct itself
 the next time you complete a successful query.</p>
 
-<hr />
+<hr/>
 <h2><a id="O5" name="O5">O5. Why is fetched mail being logged with
 my name, not the real From address?</a></h2>
 
@@ -3340,7 +3316,7 @@ on any MAIL FROM address fetchmail hands them with an @ in it!</p>
 back to the calling-user ID. So if your SMTP listener isn't picky,
 the log will look right.</p>
 
-<hr />
+<hr/>
 <h2><a id="O6" name="O6">O6. I'm seeing long sendmail delays or
 hangs near the start of each poll cycle.</a></h2>
 
@@ -3361,7 +3337,7 @@ reconfiguring with <code>FEATURE(nodns)</code>.</p>
 help, and is a good idea for speeding up other services as well.
 Switching to a faster MTA like qmail or exim might help.</p>
 
-<hr />
+<hr/>
 <h2><a id="O7" name="O7">O7. Why doesn't fetchmail deliver mail in
 date-sorted order?</a></h2>
 
@@ -3381,7 +3357,7 @@ it uses.</p>
 
 <p>Re-ordering messages is a user-agent function, anyway.</p>
 
-<hr />
+<hr/>
 <h2><a id="O8" name="O8">O8. I'm using pppd. Why isn't my monitor
 option working?</a></h2>
 
@@ -3394,7 +3370,7 @@ fetchmail relies upon, triggering fetchmail into polling after its
 own delay interval and thus preventing the pppd link from ever
 reaching its inactivity timeout.</p>
 
-<hr />
+<hr/>
 <h2><a id="O9" name="O9">O9. Why does fetchmail keep retrieving the
 same messages over and over?</a></h2>
 
@@ -3451,25 +3427,25 @@ connection is terminated correctly.</em></p>
 to behave on a line drop, according to the RFCs. I recommend
 switching to IMAP and using a short expunge interval.</p>
 
-<hr />
+<hr/>
 <h2><a id="O10" name="O10">O10. Why is the received date on all my
 messages the same?</a></h2>
 
 <p>This is a design choice in your MTA, not fetchmail. It's taking
 the received date from the last Received header.</p>
 
-<hr />
+<hr/>
 <table width="100%" cellpadding="0" summary="Canned page footer">
 <tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home
 Page</a></td>
 <td width="30%" align="center">To <a href="/~esr/sitemap.html">Site
 Map</a></td>
-<td width="30%" align="right">$Date: 2002/07/30 13:26:48 $</td>
+<td width="30%" align="right">$Date: 2002/09/04 13:58:24 $</td>
 </tr>
 </table>
 
-<br clear="left" />
+<br clear="left"/>
 <address>Eric S. Raymond <a
 href="mailto:esr@thyrsus.com">&lt;esr@thyrsus.com&gt;</a></address>
 
