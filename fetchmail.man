@@ -288,9 +288,10 @@ down upon your head.
 .TP 
 .B \--lmtp
 (Keyword: lmtp)
-Cause delivery via LMTP (Local Mail Transfer Protocol).  A service port 
-\fdImust\fR be explicitly specified if this option is selected; port
-25 will (in accordance with RFC 2033) not be accepted.
+Cause delivery via LMTP (Local Mail Transfer Protocol).  A service
+port \fdImust\fR be explicitly specified (with a slash suffix on an
+smtphost option) if this option is selected; the default port 25 will (in
+accordance with RFC 2033) not be accepted.
 .TP
 .B \--bsmtp
 (keyword: bsmtp)
@@ -1607,7 +1608,8 @@ The exit codes returned by
 .I fetchmail
 are as follows:
 .IP 0
-One or more messages were successfully retrieved.
+One or more messages were successfully retrieved (or, if the -c option
+was selected, were found waiting but not retrieved).
 .IP 1
 There was no mail awaiting retrieval.  (There may have been old mail still
 on the server but not selected for retrieval.)
