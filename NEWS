@@ -2,9 +2,12 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
-* Added support for RFC2177 IDLE command extension of IMAP.
+* Added experimental support for RFC2177 IDLE command extension of IMAP.
 * Updated fr.po.
-* Fixed a bug in fetchmailconfs handling of envelope skip prefixes.
+* Fixed a bug in fetchmailconf's handling of envelope skip prefixes.
+* Don't nuke .fetchids when authorization failure keeps us from getting URLs.
+
+There are 291 people on fetchmail-friends and 500 on fetchmail-announce.
 
 fetchmail-5.3.1 (Sun Mar  5 23:02:42 EST 2000), 18648 lines:
 
@@ -18,7 +21,7 @@ fetchmail-5.3.1 (Sun Mar  5 23:02:42 EST 2000), 18648 lines:
 * Jun-ichiro itojun Hagino <itojun@iijlab.net> sent a fix for IPv6.
 * Fix Red Hat 6.2beta bug 9982: fetchmailconf now automatically pups up
   an edit panel whenever a new user or site is created.
-* Fix Red Hat 6.2beta bug 9988: Deal gracefully with the possibility that
+* Fix Red Hat 6.2beta bug 9987: Deal gracefully with the possibility that
   we might be running as a subprocess with stdin not attached to a tty,
   and thus unable to query for a password.
 * Resolved all current Debian bugs classed `important'; #43139, #44744, #44760,

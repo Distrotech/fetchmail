@@ -895,9 +895,10 @@ The protocols \fIfetchmail\fR uses to talk to mailservers are next to
 bulletproof.  In normal operation forwarding to port 25, no message is
 ever deleted (or even marked for deletion) on the host until the SMTP
 listener on the client has acknowledged to \fIfetchmail\fR that the
-message has been accepted for delivery.  When forwarding to an MDA,
-however, there is more possibility of error (because there's no way
-for fetchmail to get a reliable positive acknowledgement from the MDA).
+message has been accepted for delivery or rejected due to a apam
+block.  When forwarding to an MDA, however, there is more possibility
+of error (because there's no way for fetchmail to get a reliable
+positive acknowledgement from the MDA).
 .PP
 The normal mode of \fIfetchmail\fR is to try to download only `new'
 messages, leaving untouched (and undeleted) messages you have already
