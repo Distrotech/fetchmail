@@ -119,6 +119,30 @@ struct idlist
     struct idlist *next;
 };
 
+struct method		/* describe methods for protocol state machine */
+{
+    char *name;			/* protocol name */
+#if INET6
+    char *service;
+#else /* INET6 */
+    int	port;			/* service port */
+#endif /* INET6 */
+    flag tagged;		/* if true, generate & expect command tags */
+    flag delimited;		/* if true, accept "." message delimiter */
+    int (*parse_response)();	/* response_parsing function */
+    int (*password_canonify)();	/* canonicalize password */
+    int (*getauth)();		/* authorization fetcher */
+    int (*getrange)();		/* get message range to fetch */
+    int (*getsizes)();		/* get sizes of messages */
+    int (*is_old)();		/* check for old message */
+    int (*fetch_headers)();	/* fetch FROM headera given message */
+    int (*fetch_body)();	/* fetch a given message */
+    int (*trail)();		/* eat trailer of a message */
+    int (*delete)();		/* delete method */
+    int (*logout_cmd)();	/* logout command */
+    flag retry;			/* can getrange poll for new messages? */
+};
+
 struct hostdata		/* shared among all user connections to given server */
 {
     /* rc file data */
@@ -156,6 +180,7 @@ struct hostdata		/* shared among all user connections to given server */
 #endif /* linux */
 
     /* computed for internal use */
+    struct method *base_protocol;	/* relevant protocol method table */
     int poll_count;			/* count of polls so far */
     char *queryname;			/* name to attempt DNS lookup on */
     char *truename;			/* "true name" of server host */
@@ -198,18 +223,21 @@ struct query
     int	batchlimit;		/* max # msgs to pass in single SMTP session */
     int	expunge;		/* max # msgs to pass between expunges */
 
-    /* holds the info on the messages skipped on the mail server */
-    struct idlist *skipped;
-
     struct idlist *oldsaved, *newsaved;
 
-    /* internal use */
+    /* internal use -- per-poll state */
     flag active;		/* should we actually poll this server? */
     char *destaddr;		/* destination host for this query */
     int errcount;		/* count transient errors in last pass */
     int smtp_socket;		/* socket descriptor for SMTP connection */
     unsigned int uid;		/* UID of user to deliver to */
+    struct idlist *skipped;	/* messages skipped on the mail server */
+
+    /* internal use -- per-message state */
+    int mimemsg;		/* bitmask indicating MIME body-type */
     char digest [DIGESTLEN];	/* md5 digest buffer */
+
+    /* internal use -- housekeeping */
     struct query *next;		/* next query control block in chain */
 };
 
@@ -224,30 +252,6 @@ struct query
 
 #define MULTIDROP(ctl)	(ctl->wildcard || \
 				((ctl)->localnames && (ctl)->localnames->next))
-
-struct method
-{
-    char *name;			/* protocol name */
-#if INET6
-    char *service;
-#else /* INET6 */
-    int	port;			/* service port */
-#endif /* INET6 */
-    flag tagged;		/* if true, generate & expect command tags */
-    flag delimited;		/* if true, accept "." message delimiter */
-    int (*parse_response)();	/* response_parsing function */
-    int (*password_canonify)();	/* canonicalize password */
-    int (*getauth)();		/* authorization fetcher */
-    int (*getrange)();		/* get message range to fetch */
-    int (*getsizes)();		/* get sizes of messages */
-    int (*is_old)();		/* check for old message */
-    int (*fetch_headers)();	/* fetch FROM headera given message */
-    int (*fetch_body)();	/* fetch a given message */
-    int (*trail)();		/* eat trailer of a message */
-    int (*delete)();		/* delete method */
-    int (*logout_cmd)();	/* logout command */
-    flag retry;			/* can getrange poll for new messages? */
-};
 
 /*
  * Note: tags are generated with an a%04d format from a 1-origin
@@ -305,6 +309,7 @@ void error_at_line ();
 #endif
 
 /* driver.c: transaction support */
+void set_timeout(int);
 #if defined(HAVE_STDARG_H)
 void gen_send (int sock, const char *, ... );
 int gen_recv(int sock, char *buf, int size);
@@ -314,6 +319,25 @@ void gen_send ();
 int gen_recv();
 int gen_transact ();
 #endif
+
+/* use these to track what was happening when the nonresponse timer fired */
+#define GENERAL_WAIT	0	/* unknown wait type */
+#define OPEN_WAIT	1	/* waiting from mailserver open */
+#define SERVER_WAIT	2	/* waiting for mailserver response */
+#define LISTENER_WAIT	3	/* waiting for listener initialization */
+#define FORWARDING_WAIT	4	/* waiting for listener response */
+extern int phase;
+
+/* mark values for name lists */
+#define XMIT_ACCEPT		1
+#define XMIT_REJECT		2
+#define XMIT_ANTISPAM		3
+
+/* sink.c: forwarding */
+int stuffline(struct query *, char *);
+int open_sink(struct query*, char*, struct idlist*, long reallen, int*, int*);
+void release_sink(struct query *);
+int close_sink(struct query *, flag);
 
 /* rfc822.c: RFC822 header parsing */
 char *reply_hack(char *, const char *);
