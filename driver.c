@@ -1154,7 +1154,7 @@ va_dcl {
 	if (shroud && (cp = strstr(buf, shroud)))
 	    memset(cp, '*', strlen(shroud));
 	buf[strlen(buf)-1] = '\0';
-	error(0, 0, "> %s", buf);
+	error(0, 0, "%s> %s", protocol->name, buf);
     }
 }
 
@@ -1196,7 +1196,7 @@ va_dcl {
       if (shroud && (cp = strstr(buf, shroud)))
 	  memset(cp, '*', strlen(shroud));
       buf[strlen(buf)-1] = '\0';
-      error(0, 0, "> %s", buf);
+      error(0, 0, "%s> %s", protocol->name, buf);
   }
 
   /* we presume this does its own response echoing */

@@ -32,7 +32,7 @@ int pop3_ok (FILE *sockfp, char *argbuf)
 
     if (SockGets(buf, sizeof(buf), sockfp) >= 0) {
 	if (outlevel == O_VERBOSE)
-	    error(0, 0, "< %s", buf);
+	    error(0, 0, "POP3< %s", buf);
 
 	bufp = buf;
 	if (*bufp == '+' || *bufp == '-')
@@ -168,7 +168,7 @@ static int pop3_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
  		while (SockGets(buf, sizeof(buf), sockfp) >= 0)
 		{
  		    if (outlevel == O_VERBOSE)
-			error(0, 0, "< %s", buf);
+			error(0, 0, "POP3< %s", buf);
  		    if (buf[0] == '.')
  			break;
  		    else if (sscanf(buf, "%d %s", &num, id) == 2)
@@ -201,7 +201,7 @@ static int pop3_getsizes(FILE *sockfp, int count, int *sizes)
 	    int num, size;
 
 	    if (outlevel == O_VERBOSE)
-		error(0, 0, "< %s", buf);
+		error(0, 0, "POP3< %s", buf);
 	    if (buf[0] == '.')
 		break;
 	    else if (sscanf(buf, "%d %d", &num, &size) == 2)
