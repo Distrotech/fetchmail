@@ -904,10 +904,12 @@ static int imap_getrange(int sock,
     {
 	/* 
 	 * We have to have an expunge here, otherwise the re-poll will
-	 * infinite-loop picking up un-expunged messages.
+	 * infinite-loop picking up un-expunged messages -- unless the
+	 * expunge period is one and we've been nuking each message 
+	 * just after deletion.
 	 */
 	ok = 0;
-	if (deletions && expunge_period > 1)
+	if (deletions && expunge_period != 1)
 	    internal_expunge(sock);
 	count = -1;
 	if (ok || gen_transact(sock, "NOOP"))
