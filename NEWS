@@ -23,6 +23,12 @@ features --
 * Make configure more GNUish; it understands --prefix and other standard
   autoconf options now (see INSTALL for details)
 
+* Better documentation of the new .fetchmailrc extensions and the slightly
+  stricter rules for ordering options.
+
+* Expanded installation instructions including how to test for correct
+  operation without losing mail.
+
 bugs --
 
 * You may have to rearrange the order of options in your .fetchmailrc.
@@ -34,7 +40,7 @@ bugs --
 * Fixed broken 'p' option.
 
 * `norewrite' and `rewrite' in .fetchrc were the inverses of what they
-  should have been.
+  should have been (but the rewrite default was set correctly).
 
 fetchmail-1.6 (Sun Oct  6 20:55:09 EDT 1996):
 
