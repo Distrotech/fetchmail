@@ -1290,6 +1290,10 @@ def copy_instance(toclass, fromdict):
 # have different data members (except for any typemap member in the class;
 # that one is strictly for use by the MyWidget supperclass).
 #
+# Once the object tree is set up, require user to choose novice or expert
+# mode and instantiate an edit object for the configuration.  Class methods
+# will take it all from there.
+#
 # Options (not documented because they're for fetchmailconf debuggers only):
 # -d: Read the configuration and dump it to stdout before editing.  Dump
 #     the edited result to stdout as well.
