@@ -1647,8 +1647,11 @@ const struct method *proto;	/* protocol method table */
 			/* these are pointless in normal daemon mode */
 			if (pass == 1 && (poll_interval == 0 || outlevel == O_VERBOSE))
 			    error(0, 0, "No mail at %s", buf); 
-			break;
 		    }
+
+		/* very important, this is where we leave the do loop */ 
+		if (count == 0)
+		    break;
 
 		if (check_only)
 		{
