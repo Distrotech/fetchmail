@@ -90,7 +90,7 @@ char *greeting;
 
 #if defined(HAVE_APOP_SUPPORT)
   /* build MD5 digest from greeting timestamp + password */
-  if (queryctl->whichpop == P_APOP) 
+  if (queryctl->protocol == P_APOP) 
     if (POP3_BuildDigest(greeting,queryctl) != 0) {
       return(PS_AUTHFAIL);
     }
