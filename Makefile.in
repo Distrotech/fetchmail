@@ -75,7 +75,7 @@ popobjs = socket.o getpass.o pop2.o pop3.o imap.o fetchmail.o options.o	\
        rcfile_l.o rcfile_y.o rcfile.o daemon.o driver.o smtp.o xmalloc.o \
        md5c.o md5ify.o
 
-objs = $(popobjs) $(extras)
+objs = $(popobjs) $(extras) $(EXTRAOBJS)
 
 srcs = $(srcdir)/socket.c $(srcdir)/getpass.c $(srcdir)/pop2.c 		\
        $(srcdir)/pop3.c $(srcdir)/imap.c $(srcdir)/fetchmail.c		\
@@ -205,7 +205,7 @@ $(srcdir)/rcfile_y.c: $(srcdir)/rcfile_y.y
 parser = $(srcdir)/rcfile_l.l $(srcdir)/rcfile_y.y
 headers = $(srcdir)/fetchmail.h $(srcdir)/socket.h $(srcdir)/smtp.h
 extra = $(srcdir)/alloca.c $(srcdir)/getopt.[ch] $(srcdir)/getopt1.c \
-	$(srcdir)/md5*.[ch] $(srcdir)/strcasecmp.c $(srcdir)/strdup.c
+	$(srcdir)/strcasecmp.c $(srcdir)/strdup.c
 docs = $(srcdir)/COPYING $(srcdir)/README $(srcdir)/INSTALL $(srcdir)/NEWS \
 	$(srcdir)/NOTES $(srcdir)/fetchmail.lsm $(srcdir)/RFC/*.txt \
 	$(srcdir)/*.man	$(srcdir)/sample.rcfile
