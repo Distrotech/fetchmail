@@ -27,6 +27,7 @@
   Andree), limiting the header to 7 bits.
 * Normalize most locale codesets to IANA codesets, based on
   norm_charmap.c by Markus Kuhn. (Matthias Andree)
+* Remove sleep(3) after POP3 login, patch by Brian Candler.
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
