@@ -62,7 +62,7 @@ extern char *strstr();	/* needed on sysV68 R3V7.1. */
 #define IMAP4		0	/* IMAP4 rev 0, RFC1730 */
 #define IMAP4rev1	1	/* IMAP4 rev 1, RFC2060 */
 
-static int count, seen, recent, unseen, deletions, imap_version, preauth; 
+static int count, seen, unseen, deletions, imap_version, preauth; 
 #ifdef USE_SEARCH
 static int unseen_count;
 #endif /* USE_SEARCH */
@@ -123,8 +123,6 @@ int imap_ok(int sock, char *argbuf)
 		stage = STAGE_FETCH;
 	    }
 	}
-	if (strstr(buf, "RECENT"))
-	    recent = atoi(buf+2);
 	if (strstr(buf, "UNSEEN"))
 	{
 	    char	*cp;
@@ -149,7 +147,8 @@ int imap_ok(int sock, char *argbuf)
 	 * * SEARCH list of sequence numbers
          * It means stuffing unseen_sequence and eating white space in between.
 	 */
-	if (strstr(buf, "* SEARCH")) {
+	if (strstr(buf, "* SEARCH"))
+	{
 	    char	*cp = strstr(buf, "SEARCH") + 6; /* Start after SEARCH */
 	    char	*endofnumber = NULL;
 
@@ -158,32 +157,35 @@ int imap_ok(int sock, char *argbuf)
 		free(unseen_sequence);
 
 	    /* 
-	     * unseen_sequence memory allocation
-	     * Chances are it is grossly oversized, but there is no
-             * way to size it correctly in one pass without
-             * relying on the RECENT response. Which is exactly why
-             * we're using SEARCH UNSEEN.
-             * Fill unseen_sequence with zero because 0 means end of data
+	     * We do unseen_sequence memory allocation here.  Chances
+	     * are it will be grossly oversized, but there is no way
+	     * to size it correctly in one pass without relying on
+	     * the flaky RECENT response.  Which is exactly why
+	     * we're using SEARCH UNSEEN. Fill unseen_sequence with
+	     * zero because 0 means end of data.
              */
 	    unseen_sequence = xmalloc(count * sizeof(unsigned int));
 	    memset(unseen_sequence, 0, count * sizeof(unsigned int));
 	    unseen_count = 0;
 
-	    while (*cp) {
+	    while (*cp)
+	    {
 		/* White space */
 		while (*cp && isspace(*cp)) cp++;
 		/* Number is between 1 and 2^32 included so unsigned int is enough. */
-		if (*cp) {
-	    	/*
-                 * To avoid a buffer overflow.
-	         * That count would be less than unseen_count is not supposed to
-                 * happen, but you never know.
-                 */
-		if (unseen_count >= count) break; /* Flush the rest of the command? */
-		unseen_sequence[unseen_count++] = (unsigned int)strtol(cp, &endofnumber, 10);
+		if (*cp) 
+		{
+		    /*
+		     * To avoid a buffer overflow.  That count would
+		     * be less than unseen_count is not supposed to
+		     * happen, but you never know.
+		     */
+		    if (unseen_count >= count) 
+			break;
+		    unseen_sequence[unseen_count++] = (unsigned int)strtol(cp, &endofnumber, 10);
 
-		if (outlevel >= O_DEBUG)
-	    	    report(stdout, _("%u is unseen\n"), unseen_sequence[unseen_count - 1]);
+		    if (outlevel >= O_DEBUG)
+			report(stdout, _("%u is unseen\n"), unseen_sequence[unseen_count - 1]);
 		
 		    cp = endofnumber;
 		}
@@ -191,7 +193,7 @@ int imap_ok(int sock, char *argbuf)
 
 	    if (unseen_sequence[0] > 0 && unseen_count > 0)
 		unseen = unseen_sequence[0];
-	    }
+	}
 #endif /* USE_SEARCH */
     } while
 	(tag[0] != '\0' && strncmp(buf, tag, strlen(tag)));
@@ -1134,7 +1136,7 @@ static int imap_getrange(int sock,
     int ok;
 
     /* find out how many messages are waiting */
-    *bytes = recent = unseen = -1;
+    *bytes = unseen = -1;
 
     if (pass > 1)
     {
@@ -1161,7 +1163,7 @@ static int imap_getrange(int sock,
 	}
 	else if (count == -1)	/* no EXISTS response to NOOP/IDLE */
 	{
-	    count = recent = 0;
+	    count = 0;
 	    unseen = -1;
 	}
     }
@@ -1200,21 +1202,20 @@ static int imap_getrange(int sock,
      * UNSEEN response but not all messages above the first UNSEEN one
      * are likewise).
      *
-     * RECENT is not really a good indication of recent messages,
-     * because it is ill-defined, e.g. if several connections are made
-     * to the folder, messages might appear as recent to some and not
-     * to others.  Using SEARCH UNSEEN provides us with the exact
-     * number of unseen messages.
+     * We used to fall back to using the value from the last RECENT
+     * response here.  But RECENT is not really a good indication of
+     * recent messages, because it is ill-defined, e.g. if several
+     * connections are made to the folder, messages might appear as
+     * recent to some and not to others.  Using SEARCH UNSEEN provides
+     * us with the exact number of unseen messages.
      */
 #ifndef USE_SEARCH
-    if (unseen >= 0)		/* optional, but better if we see it */
+    if (unseen >= 0)
 	*newp = count - unseen + 1;
 #else
-    if (unseen >= 0 && unseen_count > 0)	/* optional, but better if we see it */
+    if (unseen >= 0 && unseen_count > 0)
 	*newp = unseen_count;
 #endif /* USE_SEARCH */
-    else if (recent >= 0)
-	*newp = recent;
     else
 	*newp = -1;		/* should never happen */ 
 
@@ -1424,12 +1425,6 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
     else
 	*lenp = -1;	/* missing length part in FETCH reponse */
 
-#ifdef USE_SEARCH
-    /* Memory clean-up */
-    if (unseen_sequence)
-	free(unseen_sequence);
-#endif /* USE_SEARCH */
-
     return(PS_SUCCESS);
 }
 
@@ -1510,12 +1505,6 @@ static int imap_delete(int sock, struct query *ctl, int number)
      */
     if (NUM_NONZERO(expunge_period) && (deletions % expunge_period) == 0)
 	internal_expunge(sock);
-
-#ifdef USE_SEARCH
-    /* Memory clean-up */
-    if (unseen_sequence)
-	free(unseen_sequence);
-#endif /* USE_SEARCH */
 
     return(PS_SUCCESS);
 }
