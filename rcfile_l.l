@@ -13,6 +13,8 @@
 int prc_lineno = 1;
 %}
 
+%o 4000
+
 %%
 
 defaults 	{ return DEFAULTS; }
@@ -32,6 +34,7 @@ is		{ return IS; }
 here		{ return HERE; }
 there		{ return THERE; }
 to		{ return TO; }
+=		{ return MAP; }
 
 keep		{ yylval.flag = FLAG_TRUE;  return KEEP; }
 flush		{ yylval.flag = FLAG_TRUE;  return FLUSH; }

@@ -110,7 +110,7 @@ char *str;
     struct idlist *new;
 
     new = (struct idlist *)xmalloc(sizeof(struct idlist));
-    new->num = num;
+    new->val.num = num;
     new->id = xstrdup(str);
     new->next = *idl;
     *idl = new;
@@ -128,6 +128,39 @@ struct idlist **idl;
     free(*idl);
     *idl = (struct idlist *)NULL;
 }
+
+void save_id_pair(idl, str1, str2)
+/* save an ID pair on the given list */
+struct idlist **idl;
+char *str1, *str2;
+{
+    struct idlist *new;
+
+    new = (struct idlist *)xmalloc(sizeof(struct idlist));
+    new->id = xstrdup(str1);
+    if (str2)
+	new->val.id2 = xstrdup(str2);
+    else
+	new->val.id2 = (char *)NULL;
+    new->next = *idl;
+    *idl = new;
+}
+
+#ifdef __UNUSED__
+void free_idpair_list(idl)
+/* free the given ID pair list */
+struct idlist **idl;
+{
+    if (*idl == (struct idlist *)NULL)
+	return;
+
+    free_idpair_list(&(*idl)->next);
+    free ((*idl)->id);
+    free ((*idl)->val.id2);
+    free(*idl);
+    *idl = (struct idlist *)NULL;
+}
+#endif
 
 int uid_in_list(idl, str)
 /* is a given ID in the given list? */
@@ -149,10 +182,23 @@ int number;
 {
     if (*idl == (struct idlist *) 0)
 	return((char *) 0);
-    else if (number == (*idl)->num)
+    else if (number == (*idl)->val.num)
 	return((*idl)->id);
     else
 	return(uid_find(&(*idl)->next, number));
+}
+
+char *idpair_find(idl, id)
+/* return the id of the given number in the given list. */
+struct idlist **idl;
+char *id;
+{
+    if (*idl == (struct idlist *) 0)
+	return((char *) 0);
+    else if (strcmp(id, (*idl)->id))
+	return((*idl)->val.id2 ? (*idl)->val.id2 : (*idl)->id);
+    else
+	return(idpair_find(&(*idl)->next, id));
 }
 
 int delete_uid(idl, num)
@@ -162,7 +208,7 @@ int num;
 {
     if (*idl == (struct idlist *)NULL)
 	return(0);
-    else if ((*idl)->num == num)
+    else if ((*idl)->val.num == num)
     {
 	struct idlist	*next = (*idl)->next;
 
@@ -174,6 +220,19 @@ int num;
     else
 	return(delete_uid(&(*idl)->next, num));
     return(0);
+}
+
+void append_uid_list(idl, nidl)
+/* append nidl to idl (does not copy *) */
+struct idlist **idl;
+struct idlist **nidl;
+{
+    if ((*idl) == (struct idlist *)NULL)
+	*idl = *nidl;
+    else if ((*idl)->next == (struct idlist *)NULL)
+	(*idl)->next = *nidl;
+    else
+	append_uid_list(&(*idl)->next, nidl);
 }
 
 void update_uid_lists(hostp)

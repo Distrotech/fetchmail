@@ -20,6 +20,10 @@
 #include  <sys/time.h>
 #include  <signal.h>
 
+#ifdef HAVE_GETHOSTBYNAME
+#include <netdb.h>
+#endif /* HAVE_GETHOSTBYNAME */
+
 #ifdef KERBEROS_V4
 #include <krb.h>
 #include <des.h>
@@ -295,6 +299,86 @@ char *hdr;	/* header line to be parsed, NUL to continue in previous hdr */
     return(NULL);
 }
 
+#ifdef HAVE_GETHOSTBYNAME
+static int is_host_alias(name, host, canonical)
+/* determine whether name is a DNS alias of either following hostname */
+const char *name, *host, *canonical;
+{
+    struct hostent	*he;
+
+    /*
+
+     * The first two checks are optimizations that will catch a good
+     * many cases.  First, check against the hostname the user specified.
+     * Odds are good this will either be the mailserver's FQDN or a
+     * suffix of it with the mailserver's domain's default host name
+     * omitted.  Next, check against the mailserver's FQDN, in case
+     * it's not the same as the declared hostname.
+     *
+     * Either of these on a mail address is definitive.  Only if the
+     * name doesn't match either is it time to call the bind library.
+     * If this happens odds are good we're looking at an MX name.
+     */
+    if (strcmp(name, host) == 0)
+	return(1);
+    else if (strcmp(name, canonical) == 0)
+	return(1);
+    else if ((he = gethostbyname(name)) == (struct hostent *)NULL)
+    {
+	/*
+	 * We treat lookup failure as a negative on the theory that
+	 * the mailserver's DNS server is `nearby' and should be able
+	 * to respond quickly and reliably.  Ergo if we get failure,
+	 * the name isn't a mailserver alias.
+	 */
+	if (outlevel == O_VERBOSE)
+	    fprintf(stderr, "fetchmail: DNS lookup of %s failed\n", name);
+	return(FALSE);
+    }
+    else
+	return(strcmp(name, he->h_name) == 0);
+}
+
+void find_server_names(hdr, queryctl, xmit_names)
+/* parse names out of a RFC822 header into an ID list */
+const char *hdr;		/* RFC822 header in question */
+struct hostrec *queryctl;	/* list of permissible aliases */
+struct idlist **xmit_names;	/* list of recipient names parsed out */
+{
+    if (hdr == (char *)NULL)
+	return;
+    else
+    {
+	char	*cp = nxtaddr(hdr), *lname;
+
+	do {
+	    char	*atsign = strchr(cp, '@');
+
+	    if (atsign)
+		if (queryctl->norewrite)
+		    continue;
+	        else
+	        {
+		    if (!is_host_alias(atsign+1, 
+				       queryctl->servername,
+				       queryctl->canonical_name))
+			continue;
+		    atsign[0] = '\0';
+		}
+	    if ((lname = idpair_find(&queryctl->localnames, cp))!=(char *)NULL)
+	    {
+		if (outlevel == O_VERBOSE)
+		    fprintf(stderr,
+			    "fetchmail: mapped %s to local %s\n",
+			    cp, lname);
+		save_uid(xmit_names, -1, lname);
+	    }
+	} while
+	    ((cp = nxtaddr((char *)NULL)) != (char *)NULL);
+    }
+}
+#endif /* HAVE_GETHOSTBYNAME */
+
 static int gen_readmsg (socket, mboxfd, len, delimited, queryctl)
 /* read message content and ship to SMTP or MDA */
 int socket;	/* to which the server is connected */
@@ -398,14 +482,47 @@ struct hostrec *queryctl;	/* query control record */
 	}
 	else if (headers)
 	{
-	    char	*cp;
+	    char		*cp;
 
 	    if (!queryctl->mda[0])
 	    {
 		if (SMTP_from(mboxfd, nxtaddr(fromhdr)) != SM_OK)
 		    return(PS_SMTP);
-		if (SMTP_rcpt(mboxfd, queryctl->localname) != SM_OK)
-		    return(PS_SMTP);
+
+#ifdef HAVE_GETHOSTBYNAME
+		/* is this a multidrop box? */
+		if (queryctl->localnames != (struct idlist *)NULL
+		    && queryctl->localnames->next != (struct idlist *)NULL)
+		{
+		    struct idlist 	*idp, *xmit_names;
+
+		    /* compute the local address list */
+		    xmit_names = (struct idlist *)NULL;
+		    find_server_names(tohdr,  queryctl, &xmit_names);
+		    find_server_names(cchdr,  queryctl, &xmit_names);
+		    find_server_names(bcchdr, queryctl, &xmit_names);
+
+		    /* if nothing supplied localnames, default appropriately */
+		    if (!xmit_names)
+			save_uid(&xmit_names, -1, dfltuser);
+
+		    for (idp = xmit_names; idp; idp = idp->next)
+			if (SMTP_rcpt(mboxfd, idp->id) != SM_OK)
+			    return(PS_SMTP);
+		    free_uid_list(&xmit_names);
+		}
+		else	/* it's a single-drop box, use first localname */
+#endif /* HAVE_GETHOSTBYNAME */
+		{
+		    if (queryctl->localnames)
+			cp = queryctl->localnames->id;
+		    else
+			cp = dfltuser;
+
+		    if (SMTP_rcpt(mboxfd, cp) != SM_OK)
+			return(PS_SMTP);
+		}
+
 		SMTP_data(mboxfd);
 		if (outlevel == O_VERBOSE)
 		    fputs("SMTP> ", stderr);
@@ -618,9 +735,8 @@ struct method *proto;		/* protocol method table */
     /* show user how many messages we downloaded */
     if (outlevel > O_SILENT && outlevel < O_VERBOSE)
 	if (count == 0)
-	    fprintf(stderr, "No mail for %s from %s@%s\n", 
+	    fprintf(stderr, "No mail from %s@%s\n", 
 		    queryctl->remotename,
-		    queryctl->localname,
 		    queryctl->servername);
 	else
 	{
@@ -628,9 +744,8 @@ struct method *proto;		/* protocol method table */
 	    if (new != -1 && (count - new) > 0)
 		fprintf(stderr, " (%d seen)", count-new);
 	    fprintf(stderr,
-		    " from %s for %s@%s.\n",
+		    " from %s@%s.\n",
 		    queryctl->remotename,
-		    queryctl->localname,
 		    queryctl->servername);
 	}
 

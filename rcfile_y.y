@@ -31,7 +31,7 @@ static int prc_errflag;
 }
 
 %token DEFAULTS SERVER PROTOCOL AUTHENTICATE TIMEOUT KPOP KERBEROS
-%token USERNAME PASSWORD FOLDER SMTPHOST MDA IS HERE THERE TO
+%token USERNAME PASSWORD FOLDER SMTPHOST MDA IS HERE THERE TO MAP
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
@@ -91,7 +91,7 @@ explicitdef	: userdef user0opts
 		;
 
 userdef		: USERNAME STRING	{strcpy(current.remotename, $2);}
-		| USERNAME STRING HERE	{strcpy(current.localname, $2);}
+		| USERNAME mapping_list HERE
 		| USERNAME STRING THERE	{strcpy(current.remotename, $2);}
 		;
 
@@ -103,10 +103,20 @@ user1opts	: user_option
 		| user1opts user_option
 		;
 
-user_option	: TO STRING		{strcpy(current.localname, $2);}
-		| TO STRING HERE	{strcpy(current.localname, $2);}
-		| IS STRING		{strcpy(current.localname, $2);}
-		| IS STRING HERE	{strcpy(current.localname, $2);}
+mapping_list	: mapping		
+		| mapping_list mapping
+		;
+
+mapping		: STRING	
+				{save_id_pair(&current.localnames, $1, NULL);}
+		| STRING MAP STRING
+				{save_id_pair(&current.localnames, $1, $3);}
+		;
+
+user_option	: TO mapping_list HERE
+		| TO mapping_list
+		| IS mapping_list HERE
+		| IS mapping_list
 		| IS STRING THERE	{strcpy(current.remotename, $2);}
 		| PASSWORD STRING	{strcpy(current.password, $2);}
 		| FOLDER STRING 	{strcpy(current.mailbox, $2);}
@@ -256,7 +266,6 @@ int prc_register()
 {
 #define STR_FORCE(fld, len) if (cmd_opts.fld[0]) \
     					strcpy(current.fld, cmd_opts.fld)
-    STR_FORCE(localname, USERNAMELEN);
     STR_FORCE(remotename, USERNAMELEN);
     STR_FORCE(password, PASSWORDLEN);
     STR_FORCE(mailbox, FOLDERLEN);
@@ -284,8 +293,11 @@ void optmerge(h2, h1)
 struct hostrec *h1;
 struct hostrec *h2;
 {
+    struct idlist *idp;
+
+    append_uid_list(&h2->localnames, &h1->localnames);
+
 #define STR_MERGE(fld, len) if (*(h2->fld) == '\0') strcpy(h2->fld, h1->fld)
-    STR_MERGE(localname, USERNAMELEN);
     STR_MERGE(remotename, USERNAMELEN);
     STR_MERGE(password, PASSWORDLEN);
     STR_MERGE(mailbox, FOLDERLEN);
@@ -304,6 +316,7 @@ struct hostrec *h2;
     FLAG_MERGE(authenticate);
     FLAG_MERGE(timeout);
 #undef FLAG_MERGE
+
 }
 
 /* easier to do this than cope with variations in where the library lives */

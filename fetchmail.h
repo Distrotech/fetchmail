@@ -56,8 +56,12 @@
 
 struct idlist
 {
-    int num;
     char *id;
+    union
+    {
+	int num;
+	char *id2;
+    } val;
     struct idlist *next;
 };
 
@@ -65,12 +69,12 @@ struct hostrec
 {
     /* per-host data */
     char servername [HOSTLEN+1];
-    char localname [USERNAMELEN+1];
     char remotename [USERNAMELEN+1];
     char password [PASSWORDLEN+1];
     char mailbox [FOLDERLEN];
     char smtphost[HOSTLEN+1];
     char mda [MDALEN+1];
+    struct idlist *localnames;
     int protocol;
     int port;
     int authenticate;
@@ -95,6 +99,9 @@ struct hostrec
     struct hostrec *next;	/* next host in chain */
     unsigned int uid;		/* UID of user to deliver to */
     char digest [DIGESTLEN];
+#ifdef HAVE_GETHOSTBYNAME
+    char *canonical_name;	/* DNS canonical name of server host */
+#endif /* HAVE_GETHOSTBYNAME */
 };
 
 struct method
@@ -135,6 +142,7 @@ extern char *rcfile;		/* path name of rc file */
 extern char *idfile;		/* path name of UID file */
 extern int linelimit;		/* limit # lines retrieved per site */
 extern int versioninfo;		/* emit only version info */
+extern char *dfltuser;		/* invoking user */
 
 #ifdef HAVE_PROTOTYPES
 
@@ -157,9 +165,13 @@ int doIMAP (struct hostrec *);
 void initialize_saved_lists(struct hostrec *, char *);
 void save_uid(struct idlist **, int, char *);
 void free_uid_list(struct idlist **);
+void save_id_pair(struct idlist **, char *, char *);
+void free_idpair_list(struct idlist **);
 int delete_uid(struct idlist **, int);
 int uid_in_list(struct idlist **, char *);
 char *uid_find(struct idlist **, int);
+char *idpair_find(struct idlist **, char *);
+void append_uid_list(struct idlist **, struct idlist **);
 void update_uid_lists(struct hostrec *);
 void write_saved_lists(struct hostrec *, char *);
 

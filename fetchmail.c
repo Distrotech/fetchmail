@@ -26,10 +26,14 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#ifdef HAVE_GETHOSTBYNAME
+#include <netdb.h>
+#endif /* HAVE_GETHOSTBYNAME */
+
 #include "fetchmail.h"
 #include "getopt.h"
 
-#define DROPDEAD	6	/* maximum bad socjet opens */
+#define DROPDEAD	6	/* maximum bad socket opens */
 
 #ifdef HAVE_PROTOTYPES
 /* prototypes for internal functions */
@@ -52,6 +56,7 @@ int check_only;		/* if --probe was set */
 char *rcfile;		/* path name of rc file */
 char *idfile;		/* UID list file */
 int versioninfo;	/* emit only version info */
+char *dfltuser;		/* invoking user */
 
 static void termhook();
 static char *lockfile;
@@ -166,25 +171,50 @@ char **argv;
 	if (strcmp(hostp->servername, "defaults") == 0)
 	    exit(PS_SYNTAX);
 
+    /* figure out who the default recipient should be */
+    if (getuid() == 0)
+	dfltuser = hostp->remotename;
+    else
+	dfltuser = user;
+
     /* merge in wired defaults, do sanity checks and prepare internal fields */
     for (hostp = hostlist; hostp; hostp = hostp->next)
 	if (hostp->active && !(implicitmode && hostp->skip))
 	{
+#ifdef HAVE_GETHOSTBYNAME
+	    struct hostent	*namerec;
+#endif /* HAVE_GETHOSTBYNAME */
+
 	    /* merge in defaults */
 	    optmerge(hostp, &def_opts);
-
-	    /* if rc file didn't supply a localname, default appropriately */
-	    if (!hostp->localname[0])
-		if (getuid() == 0)
-		    strcpy(hostp->localname, hostp->remotename);
-	        else
-		    strcpy(hostp->localname, user);
 
 	    /* check that delivery is going to a real local user */
 	    if ((pw = getpwnam(user)) == (struct passwd *)NULL)
 		exit(PS_SYNTAX);	/* has to be from bad rc file */
 	    else
 		hostp->uid = pw->pw_uid;
+
+#ifdef HAVE_GETHOSTBYNAME
+	    /* compute the canonical name of the host */
+	    namerec = gethostbyname(hostp->servername);
+	    if (namerec == (struct hostent *)NULL)
+	    {
+		fprintf(stderr,
+			"fetchmail: can't get canonical name of host %s\n",
+			hostp->servername);
+		exit(PS_SYNTAX);
+	    }
+	    else
+		hostp->canonical_name = xstrdup((char *)namerec->h_name);
+#else
+	    /* can't handle multidrop mailboxes unless we can do DNS lookups */
+	    if (hostp->localnames && hostp->localnames->next)
+	    {
+		fputs("fetchmail: can't handle multidrop mailboxes without DNS\n",
+			stderr);
+		exit(PS_SYNTAX);
+	    }
+#endif /* HAVE_GETHOSTBYNAME */
 
 	    /* sanity checks */
 	    if (hostp->port < 0)
@@ -201,10 +231,7 @@ char **argv;
 		int argi;
 		char *argp;
 
-		/* expand the %s escape if any before parsing */
-		sprintf(hostp->mdabuf, hostp->mda, hostp->localname);
-
-		/* now punch nulls into the delimiting whitespace in the args */
+		/* punch nulls into the delimiting whitespace in the args */
 		for (argp = hostp->mdabuf, argi = 1; *argp != '\0'; argi++)
 		{
 		    hostp->mda_argv[argi] = argp;
@@ -398,6 +425,11 @@ char **argv;
      */
     lossage = 0;
     do {
+
+#ifdef HAVE_GETHOSTBYNAME
+	sethostent(TRUE);	/* use TCP/IP for mailserver queries */
+#endif /* HAVE_GETHOSTBYNAME */
+
 	for (hostp = hostlist; hostp; hostp = hostp->next)
 	{
 	    if (hostp->active && !(implicitmode && hostp->skip))
@@ -432,6 +464,10 @@ char **argv;
 		    update_uid_lists(hostp);
 	    }
 	}
+
+#ifdef HAVE_GETHOSTBYNAME
+	endhostent();		/* release TCP/IP connection to nameserver */
+#endif /* HAVE_GETHOSTBYNAME */
 
 	if (sleep(poll_interval))
 	    (void) fputs("fetchmail: awakened by SIGHUP\n", stderr);
@@ -523,12 +559,14 @@ int dump_params (queryctl)
 /* display query parameters in English */
 struct hostrec *queryctl;	/* query parameter block */
 {
-    printf("Options for %s retrieving from %s:\n",
-	   hostp->localname, visbuf(hostp->servername));
+    printf("Options for retrieving from %s@%s:\n",
+	   hostp->remotename, visbuf(hostp->servername));
+#ifdef HAVE_GETHOSTBYNAME
+    printf("  Canonical DNS name of server is %s.\n", hostp->canonical_name);
+#endif /* HAVE_GETHOSTBYNAME */
     if (queryctl->skip || outlevel == O_VERBOSE)
 	printf("  This host will%s be queried when no host is specified.\n",
 	       queryctl->skip ? " not" : "");
-    printf("  Username = '%s'.\n", visbuf(queryctl->remotename));
     if (queryctl->password[0] == '\0')
 	printf("  Password will be prompted for.\n");
     else if (outlevel == O_VERBOSE)
@@ -583,6 +621,25 @@ struct hostrec *queryctl;	/* query parameter block */
     else
 	printf("  Messages will be SMTP-forwarded to '%s'.\n",
 	       visbuf(queryctl->smtphost));
+    if (!queryctl->localnames)
+	printf("  No localnames declared for this host.\n");
+    else
+    {
+	struct idlist *idp;
+	int count = 0;
+
+	for (idp = hostp->localnames; idp; idp = idp->next)
+	    ++count;
+
+	printf("  %d local names recognized.\n", count);
+	if (outlevel == O_VERBOSE)
+	    for (idp = hostp->localnames; idp; idp = idp->next)
+		if (idp->val.id2)
+		    fprintf(stderr, "\t%s -> %s\n", idp->id, idp->val.id2);
+		else
+		    fprintf(stderr, "\t%s\n", idp->id);
+    }
+
     if (queryctl->protocol > P_POP2)
 	if (!queryctl->oldsaved)
 	    printf("  No UIDs saved from this host.\n");

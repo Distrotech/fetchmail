@@ -51,6 +51,9 @@ with **.
 
 	** Timeout if server connection is dropped.
 
+	** Support for retrieving and forwarding from multi-drop mailboxes
+	   that is guaranteed not to cause mail loops.
+
 	*  Easy control via command line or free-format run control file.
 
 	*  Daemon mode -- fetchmail can be run in background to poll

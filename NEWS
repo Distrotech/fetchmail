@@ -4,6 +4,13 @@ fetchmail-1.9 (Mon Oct 21 13:42:07 EDT 1996):
 
 features --
 
+* It is now possible to specify multiple local recipients by giving a list
+  of names following "to" or "is".  Each local recipient is checked for in the
+  To:, Cc: and Bcc: headers of each message; if a match is found, the message
+  is sent to that local recipient.  This makes it possible to do mailing
+  lists and multidrop mailboxes.  See the man page for details (and note
+  the caveat in the BUGS AND KNOWN PROBLEMS section).
+
 * The first message from a query now includes the number of old messages
   when this can be determined (that is not under POP2).
 

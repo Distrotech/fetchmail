@@ -408,18 +408,31 @@ Legal user options are
     norewrite
 .PP
 All options correspond to the obvious command-line arguments except
-four: \fBis\fR, \fBto\fR, \fBpassword\fR and \fBskip\fR.
+five: \fBis\fR, \fBto\fR, \fBpassword\fR, and \fBskip\fR.
 .PP
-The \fBis\fR or \fIto\fR keywords associate a following local
-username with the mailserver user name in the entry.  They are intended
-to be used in configurations where \fIfetchmail\fR runs as root and
-retrieves mail for multiple local users.  If no \fBis\fR or \fIto\fR 
-clause is present, the default local username is the calling user,
-unless the calling user is root in which case it is the remote user
-name of the current entry.
+The \fBis\fR or \fIto\fR keywords associate the following local (client)
+name(s) (or server-name to client-name mappings separated by =) with
+the mailserver user name in the entry.
+.PP
+A single local name can be used to support redirecting your mail when
+your username on the client machine is different from your name on the
+mailserver.  When there is only a single local name, mail is forwarded
+to that username regardless of the message's To, Cc, and Bcc headers.
+.PP
+When there is more than one local name (or name mapping) the
+\fIfetchmail\fR code does look at the To, Cc, and Bcc headers of
+retrieved mail. When a declared mailserver username is recognized, its
+local mapping is added to the list of local recipients.  If
+\fIfetchmail\fR cannot recognize any mailserver usernames, the default
+recipient is the calling user, unless the calling user is root in
+which case it is the remote user name of the current entry.
 .PP
 The \fBpassword\fR option requires a string argument, which is the password
 to be used with the entry's server.
+.PP
+The \fBaliases\fR option declares names that are recognized as OK for
+local delivery.  Your local name is automatically one of these; the
+aliases directive can be used to declare others.   
 .PP
 The \fBskip\fR option tells
 .I fetchmail 
@@ -552,6 +565,21 @@ to be specifying multiple users per server unless running it as root
 pop-provider.net, which is probably not what you want).
 In any case, we strongly recommend always having an explicit
 \fBuser\fR clause when specifying multiple users for server.
+.PP
+Here's what a simple retrieval configuration for a multi-drop mailbox
+looks like:
+
+.nf
+  server pop.provider.net:
+        user maildrop with pass secret1 to golux hurkle=happy snark here
+.fi
+
+This says that the mailbox of account `maildrop' on the server is a
+multi-drop box, and that messages in it should be parsed for the
+server user names `golux', `hurkle', and `snark'.  It further
+specifies that `golux' and `snark' have the same name on the
+client as on the server, but mail for server user `hurkle' should be
+delivered to client user `happy'.
 .SH EXIT CODES
 To facilitate the use of 
 .I fetchmail
@@ -598,6 +626,19 @@ When
 .I fetchmail
 queries more than one host, the returned status is that of the last
 host queried.
+.SH NOTE
+Multiple local names can be used to support forwarding from a
+"multi-drop" mailbox accumulating mail on the server for several
+client-machine users.  Local names can also be used to administer a
+mailing list from the client side of a \fIfetchmail\fR collection.
+Suppose your name is `esr', and you maintain a mailing list called
+(say) "fetchmail-friends", and you want to keep the alias list on your
+client machine.  On your server, you can alias fetchmail-friends to
+esr; then, in your \fI.fetchmailrc\fR, declare `to esr
+fetchmail-friends here'.  Then, when mail including that alias in any
+of its recpient lines line gets fetched, the alias will be appended to
+the list of recipients your SMTP listener sees.  Therefore it will
+undergo alias expansion locally.
 .SH AUTHORS
 .I fetchmail
 was originated (under the name `popclient') by Carl Harris at Virginia
@@ -641,6 +682,15 @@ that the program send unencrypted passwords over the TCP/IP connection
 to the mailserver.  This creates a risk that name/password pairs
 might be snaffled with a packet sniffer or more sophisticated
 monitoring software.
+.PP
+Retrieval and forwarding from multi-drop server mailboxes is only as
+reliable as your mail server host's DNS service.  Each host
+address part in each message of a multi-drop mailbox is checked 
+with
+.BR gethostbyname (2)
+to see if it's an alias of the mail server.  If it is, but the
+lookup fails due to network congestion or a crashed server, forwarding
+will not get done correctly. 
 .PP
 Under Linux, if fetchmail is run in daemon mode with the network
 inaccessible, each poll leaves a socket allocated but in CLOSE state
