@@ -1132,7 +1132,7 @@ const struct method *proto;	/* protocol method table */
 #ifndef EHOSTUNREACH
 #define EHOSTUNREACH (-1)
 #endif
-	    if (errno != EHOSTUNREACH)
+	    if (outlevel == O_VERBOSE || errno != EHOSTUNREACH)
 		error(0, errno, "connecting to host");
 	    ok = PS_SOCKET;
 	    goto closeUp;

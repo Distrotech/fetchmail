@@ -217,7 +217,7 @@ static struct query *hosttail;	/* where to add new elements */
 void yyerror (const char *s)
 /* report a syntax error */
 {
-    fprintf(stderr,"%s line %d: %s at %s\n", rcfile, prc_lineno, s, yytext);
+    error_at_line( 0, 0, rcfile, prc_lineno, "%s at %s", s, yytext );
     prc_errflag++;
 }
 

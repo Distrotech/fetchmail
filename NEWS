@@ -12,6 +12,8 @@ bugs --
 * Fix password-shrouding logic so it doesn't crap out on a zero-length
   password.
 
+* Various error-logging fixes by Dave Bodenstab.
+
 ------------------------------------------------------------------------------
 fetchmail-3.6 (Mon Feb 17 00:19:55 EST 1997)
 
