@@ -71,7 +71,7 @@ int smtp_open(struct query *ctl)
 	 * HELO name fails (RFC1123 section 5.2.5, paragraph 2).
 	 *
 	 * How we compute the true mailhost name to pass to the
-	 * listener doesn't affect behavior on RFC1123- violating
+	 * listener doesn't affect behavior on RFC1123-violating
 	 * listeners that check for name match; we're going to lose
 	 * on those anyway because we can never give them a name
 	 * that matches the local machine fetchmail is running on.
