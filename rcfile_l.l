@@ -13,10 +13,14 @@
 int prc_lineno = 1;
 %}
 
-%o 4000
+/* this doesn't work with Linux lex, see the INSTALL file */
+%o 5000
+%a 2100
 
 %%
 
+set		{ return SET; }
+batchlimit	{ return BATCHLIMIT; }
 defaults 	{ return DEFAULTS; }
 server 		{ return POLL; }
 poll		{ return POLL; }

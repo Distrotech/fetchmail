@@ -43,6 +43,7 @@ static void prc_reset();
 
 %token DEFAULTS POLL PROTOCOL AUTHENTICATE TIMEOUT KPOP KERBEROS
 %token USERNAME PASSWORD FOLDER SMTPHOST MDA IS HERE THERE TO MAP LIMIT
+%token SET BATCHLIMIT 
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
@@ -62,7 +63,9 @@ statement_list	: statement
 		| statement_list statement
 		;
 
-statement	: define_server serverspecs userspecs      
+/* future global options should also have the form SET <name> <value> */
+statement	: define_server serverspecs userspecs
+		| SET BATCHLIMIT MAP NUMBER	{batchlimit = $4;}
 		;
 
 define_server	: POLL STRING	{strcpy(current.servername, $2);}
@@ -152,10 +155,10 @@ static struct query *hosttail;	/* where to add new elements */
 
 void yyerror (s)
 /* report a syntax error */
-const char *s;	/* error string */
+char *s;	/* error string */
 {
-  fprintf(stderr,"%s line %d: %s at %s\n", rcfile, prc_lineno, s, yytext);
-  prc_errflag++;
+    fprintf(stderr,"%s line %d: %s at %s\n", rcfile, prc_lineno, s, yytext);
+    prc_errflag++;
 }
 
 int prc_filecheck(pathname)

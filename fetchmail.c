@@ -136,13 +136,17 @@ char **argv;
 
     /* perhaps we just want to check options? */
     if (versioninfo) {
-	    printf("Taking options from command line");
-	    if (access(rcfile, 0))
-		printf("\n");
-	    else
-		printf(" and %s\n", rcfile);
-	    if (outlevel == O_VERBOSE)
-		printf("Lockfile at %s\n", tmpbuf);
+	printf("Taking options from command line");
+	if (access(rcfile, 0))
+	    printf("\n");
+	else
+	    printf(" and %s\n", rcfile);
+	if (outlevel == O_VERBOSE)
+	    printf("Lockfile at %s\n", tmpbuf);
+	if (batchlimit)
+	    printf("SMTP message batch limit is %d.\n", batchlimit);
+	else
+	    printf("No SMTP message batch limit.\n");
 	for (ctl = querylist; ctl; ctl = ctl->next) {
 	    if (ctl->active && !(implicitmode && ctl->skip))
 		dump_params(ctl);
@@ -667,9 +671,7 @@ struct query *ctl;	/* query parameter block */
 		&& ctl->authenticate == A_KERBEROS)
 	printf("  Protocol is KPOP");
     else
-    {
 	printf("  Protocol is %s", showproto(ctl->protocol));
-    }
     if (ctl->port)
 	printf(" (using port %d)", ctl->port);
     else if (outlevel == O_VERBOSE)

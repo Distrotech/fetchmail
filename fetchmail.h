@@ -138,6 +138,7 @@ extern int nodetach;		/* if TRUE, don't detach daemon process */
 extern char *logfile;		/* log file for daemon mode */
 extern int quitmode;		/* if --quit was set */
 extern int check_only;		/* if --check was set */
+extern int batchlimit;		/* if --batchlimit was set */
 
 /* miscellaneous global controls */
 extern char *rcfile;		/* path name of rc file */
@@ -196,7 +197,7 @@ char *getpassword(char *);
 
 void escapes(const char *, char *);
 
-void yyerror(const char *);
+void yyerror(char *);
 int yylex();
 
 #else

@@ -189,6 +189,18 @@ provided to pacify people who are paranoid about having an MTA edit
 mail headers and want to know they can prevent it, but it is generally
 not a good idea to actually turn off rewrite.)
 .TP
+.B -b, --batchlimit
+Specify the maximum number of messages that will be shipped to an SMTP
+listener before the connection is deliberately torn down and rebuilt
+(defaults to 0, meaning no limit).  While \fBsendmail\fR(8) normally
+initiates delivery of a message immediately after receiving the
+message terminator, some SMTP listeners are not so prompt.  MTAs like
+\fIqmail\fR(8) and \fsmail\fR(8) will wait till the delivery socket is
+shut down to deliver.  This may produce annoying delays when
+.IR fetchmail (8)
+is processing very large batches.  Setting the batch limit to some
+nonzero size will prevent these delays.
+.TP
 .B \-V, --version
 Displays the version information for your copy of 
 .I fetchmail.
@@ -388,7 +400,9 @@ be executed when
 is called with no arguments.
 .PP
 Comments begin with a '#' and extend through the end of the line.
-Otherwise the file consists of a series of free-format server entries.
+Otherwise the file consists of a series of free-format server entries
+or global option statement.
+.PP
 Any amount of whitespace separates keywords, tokens, or strings in
 server entries, but is otherwise ignored (except that whitespace
 enclosed in double quotes is treated as part of the string).  Keywords
@@ -494,6 +508,11 @@ but you can make this clearer by saying `user eric there is esr here',
 or reverse it by saying `user esr here is eric there'
 .PP
 For backward compatibility, the word `server' is a syninym for `poll'.
+.PP
+There is currently only one valid global option statement; it is 
+\&`set batchlimit = ' followed by a number and sets the same global
+specified by the --batchlimit option.  (The command line option
+can override this.)
 .PP
 Basic format is:
 
