@@ -150,6 +150,11 @@ system("rm -f testservers.html; testservers-gen.sh >testservers.html");
 print "Making activity graph...";
 growthplot;
 
+print "Making LSM...";
+$keywords="mail, client, POP, POP2, POP3, APOP, RPOP, KPOP, IMAP, ETRN, ODMR, SMTP, ESMTP, GSSAPI, RPA, NTLM, CRAM-MD5, SASL"
+system("rpm2lsm $version -k $keywords fetchmail-$version-1.i386.rpm >fetchmail.lsm");
+system("ls -l fetchmail.lsm")
+
 print "Done\n";
 
 # makerelease ends here
