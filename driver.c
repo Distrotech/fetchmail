@@ -963,7 +963,10 @@ char *realname;		/* real name of host */
 		}
 	}
 
-	strcat(errmsg, "\n");
+	if (ctl->mda && !ctl->forcecr)
+	    strcat(errmsg, "\n");
+	else
+	    strcat(errmsg, "\r\n");
 
 	/* we may need to strip carriage returns */
 	if (ctl->stripcr)
@@ -980,9 +983,9 @@ char *realname;		/* real name of host */
 	if (sinkfp)
 	{
 	    if (ctl->mda)
-		fwrite(errmsg, 1, strlen(errmsg), sinkfp);
+		fwrite(errmsg, sizeof(char), strlen(errmsg), sinkfp);
 	    else
-		SockWrite(errmsg, 1, strlen(errmsg), sinkfp);
+		SockWrite(errmsg, sizeof(char), strlen(errmsg), sinkfp);
 	}
     }
 
@@ -993,8 +996,10 @@ char *realname;		/* real name of host */
     {
 	if (ctl->mda)
 	    fputc('\n', sinkfp);
+	else if (ctl->stripcr)
+	    SockWrite("\n", sizeof(char), 1, sinkfp);
 	else
-	    SockWrite("\r\n", 1, 2, sinkfp);
+	    SockWrite("\r\n", sizeof(char), 2, sinkfp);
     }
 
     /*
