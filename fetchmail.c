@@ -90,17 +90,22 @@ main (argc,argv)
 int argc;
 char **argv;
 { 
-    int mboxfd, st;
+    int mboxfd, st, sargc;
     struct hostrec cmd_opts, def_opts;
     int parsestatus;
-    char *servername, *user, *tmpdir, tmpbuf[256]; 
+    char *servername, *user, *tmpdir, tmpbuf[256], *sargv[64]; 
     FILE	*tmpfp;
     pid_t pid;
 
     if (setdefaults(&def_opts) != 0)
 	exit(PS_UNDEFINED);
 
-    if ((parsestatus = parsecmdline(argc,argv,&cmd_opts)) < 0)
+    if (argc > sizeof(sargv))
+	exit(PS_SYNTAX);
+    for (sargc = 0; sargc < argc; sargc++)
+	sargv[sargc] = argv[sargc];
+
+    if ((parsestatus = parsecmdline(sargc,sargv,&cmd_opts)) < 0)
 	exit(PS_SYNTAX);
 
     if (versioninfo)
@@ -110,10 +115,10 @@ char **argv;
 	exit(PS_SYNTAX);
 
     if (optind >= argc)
-	append_server_names(&argc, argv);
+	append_server_names(&sargc, sargv, sizeof(sargv));
 
     /* build in-core data list on all hosts */
-    while ((servername = getnextserver(argc, argv, &parsestatus)) != (char *)0)
+    while ((servername = getnextserver(sargc, sargv, &parsestatus)) != (char *)0)
     {
 	if (strcmp(servername, "defaults") == 0)
 	    continue;
@@ -151,7 +156,8 @@ char **argv;
 		printf("  Lockfile at %s\n", tmpbuf);
 	}
 	if (hostlist == NULL)
-	    (void) printf("No mailservers set up -- perhaps %s is missing?\n",
+	    (void) fprintf(stderr,
+		"No mailservers set up -- perhaps %s is missing?\n",
 			  poprcfile);
 	exit(0);
     }
@@ -386,7 +392,7 @@ struct hostrec *queryctl;
     char *cp;
 
     printf("  Username = '%s'\n", queryctl->remotename);
-    if (queryctl->password)
+    if (queryctl->password && outlevel == O_VERBOSE)
 	printf("  Password = '%s'\n", queryctl->password);
     if (queryctl->rpopid)
 	printf("  RPOP id = '%s'\n", queryctl->rpopid);

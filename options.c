@@ -220,6 +220,7 @@ struct hostrec *queryctl;
         break;
       case 'm':
       case LA_MDA:
+	queryctl->output = TO_MDA;
         strncpy(queryctl->mda,optarg,sizeof(queryctl->mda)-1);
         break;
       case 'P':

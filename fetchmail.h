@@ -131,7 +131,7 @@ int closeuserfolder (int);
 int openmailpipe (struct hostrec *);
 int closemailpipe (int);
 char *MD5Digest (char *);
-void append_server_names(int *, char **);
+void append_server_names(int *, char **, int);
 int daemonize(const char *, void (*)(int));
 
 #else
