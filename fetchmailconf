@@ -138,9 +138,11 @@ class User:
 	self.password = ""		# Password for mail account access
 	self.folder = ""		# Remote folder to retrieve from
 	self.smtphost = 'localhost'	# Host to forward to
-	self.mda = ""			# Mail Delivery Agent
+	self.smtpaddress = None;	# Append this to MAIL FROM line
 	self.preconnect = ""		# Connection setup
 	self.postconnect = ""		# Connection wrapup
+	self.mda = ""			# Mail Delivery Agent
+	self.antispam = 571;		# Listener's spam-block code
 	self.keep = FALSE		# Keep messages
 	self.flush = FALSE		# Flush messages
 	self.fetchall = FALSE		# Fetch old messages
@@ -160,9 +162,11 @@ class User:
 	    # leave out localnames
 	    ('password',    'String'),
 	    ('smtphost',    'String'),
+	    ('smtpaddress',  'String'),
 	    ('preconnect',  'String'),
 	    ('postconnect', 'String'),
 	    ('mda',         'String'),
+	    ('antispam',    'Int'),
 	    ('keep',        'Boolean'),
 	    ('flush',       'Boolean'),
 	    ('fetchall',    'Boolean'),
@@ -863,12 +867,16 @@ class UserEdit(Frame):
 	Label(targwin, text="Forwarding Options").pack(side=TOP)
 	LabeledEntry(targwin, 'System to forward to:',
 		     self.smtphost, '26').pack(side=TOP, fill=X)
+	LabeledEntry(targwin, 'Append to MAIL FROM line:',
+		     self.smtpaddress, '26').pack(side=TOP, fill=X)
 	LabeledEntry(targwin, 'Connection setup command:',
 		     self.preconnect, '26').pack(side=TOP, fill=X)
 	LabeledEntry(targwin, 'Connection wrapup command:',
 		     self.postconnect, '26').pack(side=TOP, fill=X)
 	LabeledEntry(targwin, 'Local delivery agent:',
 		     self.mda, '26').pack(side=TOP, fill=X)
+	LabeledEntry(targwin, 'Listener spam-block code:',
+		     self.antispam, '26').pack(side=TOP, fill=X)
 	targwin.pack(fill=X, anchor=N)
 
 	leftwin.pack(side=LEFT, fill=X, anchor=N)
