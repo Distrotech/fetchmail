@@ -425,10 +425,16 @@ static int imap_getrange(int sock,
 	if (!ok)
 	    expunge_uids(ctl);
 #endif /* IMAP_UID */
+	count = -1;
 	if (ok || gen_transact(sock, "NOOP"))
 	{
 	    error(0, 0, "re-poll failed");
 	    return(ok);
+	}
+	else if (count == -1)	/* no EXISTS response to NOOP */
+	{
+	    count = recent = 0;
+	    unseen = -1;
 	}
     }
     else

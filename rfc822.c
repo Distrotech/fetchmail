@@ -88,7 +88,7 @@ const char *host;	/* server hostname */
 		else if ((*from == ',' || HEADER_END(from) || from[1] == '(')
 			 && has_bare_name_part
 			 && !has_host_part
-			 && last_nws != ';')
+			 && last_nws != ';' && last_nws != ')')
 		{
 		    int hostlen;
 

@@ -14,9 +14,12 @@
 ------------------------------------------------------------------------------
 fetchmail-4.3.3 ()
 * Robert Hardy <rhardy@webcon.net>'s patch to use IMAP EXAMINE in check mode. 
-* Accommodate the PMDF IMAP server's pickiness about set syntax.
+* Alexander Kourakos's patch for cleaner handling of group addresses.
+* Fixed expansion of MDA %-escapes (thanks Wez Furlong <wjf103@york.ac.uk>).
+* Deal with the possibility that IMAP NOOP issued on rescan might not get an
+  EXISTS response (thanks to Jonathan T. Agnew <jtagnew@amherst.edu>).
 
-There are 263 people on fetchmail-friends and 68 on fetchmail-announce.
+There are 272 people on fetchmail-friends and 73 on fetchmail-announce.
 
 fetchmail-4.3.2 (Wed Oct 22 20:30:14 EDT 1997)
 * More slow-UIDL patches from Wolfgang Wander.
