@@ -819,7 +819,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
     }
     else
     {
-	/* set up sinkfp so we can deliver the message body through it */ 
+	/* set up stuffline() so we can deliver the message body through it */ 
 	if ((n = open_sink(ctl, return_path, xmit_names, reallen,
 			   &good_addresses, &bad_addresses)) != PS_SUCCESS)
 	{
@@ -1229,15 +1229,71 @@ static void clean_skipped_list(struct idlist **skipped_list)
     *skipped_list = head;
 }
 
-static void send_warning(struct query *ctl)
+static open_warning_by_mail(struct query *ctl)
+/* set up output sink for a mailed warning to calling user */
+{
+    int	good, bad;
+
+    /*
+     * We give a null address list as arg 3 because we actually *want*
+     * this message to go to run.postmaster.  The zero length arg 4 means
+     * we won't pass a SIZE option to ESMTP; the message length would
+     * be more trouble than it's worth to compute.
+     */
+    return(open_sink(ctl, "FETCHMAIL-DAEMON", NULL, 0, &good, &bad));
+}
+
+#if defined(HAVE_STDARG_H)
+void stuff_warning_line(struct query *ctl, const char *fmt, ... )
+#else
+void stuff_warning_line(struct query *ctl, fmt, va_alist)
+struct query *ctl;
+const char *fmt;	/* printf-style format */
+va_dcl
+#endif
+/* format and ship a warning message line by mail */
+{
+    char	buf[POPBUFSIZE];
+    va_list ap;
+
+    /*
+     * stuffline() requires its input to be writeable (for CR stripping),
+     * so we needed to copy the message to a writeable buffer anyway in
+     * case it was a string constant.  We make a virtue of that necessity
+     * here by supporting stdargs/varargs.
+     */
+#if defined(HAVE_STDARG_H)
+    va_start(ap, fmt) ;
+#else
+    va_start(ap);
+#endif
+#ifdef HAVE_VSNPRINTF
+    vsnprintf(buf, sizeof(buf), fmt, ap);
+#else
+    vsprintf(buf, fmt, ap);
+#endif
+    va_end(ap);
+
+    strcat(buf, "\r\n");
+
+    stuffline(ctl, buf);
+}
+
+static close_warning_by_mail(struct query *ctl)
+/* sign and send mailed warnings */
+{
+    stuff_warning_line(ctl, "--\r\n\t\t\t\tThe Fetchmail Daemon\r\n");
+    close_sink(ctl, TRUE);
+}
+
+static void send_size_warnings(struct query *ctl)
 /* send warning mail with skipped msg; reset msg count when user notified */
 {
     int size, nbr;
     int msg_to_send = FALSE;
     struct idlist *head=NULL, *current=NULL;
     int max_warning_poll_count, good, bad;
-#define OVERHD	"Subject: Fetchmail WARNING.\r\n\r\nThe following oversized messages remain on the mail server:\n\r\n"
-    char	buf[sizeof(OVERHD) + 2];
+#define OVERHD	"Subject: Fetchmail oversized-messages warning.\r\n\r\nThe following oversized messages remain on the mail server:"
 
     head = ctl->skipped;
     if (!head)
@@ -1254,18 +1310,10 @@ static void send_warning(struct query *ctl)
      * There's no good way to recover if we can't send notification mail, 
      * but it's not a disaster, either, since the skipped mail will not
      * be deleted.
-     *
-     * We give a null address list as arg 3 because we actually *want*
-     * this message to go to run.postmaster.  The zero length arg 4 means
-     * we won't pass a SIZE option to ESMTP; the message length would
-     * be more trouble than it's worth to compute.
      */
-    if (open_sink(ctl, "FETCHMAIL-DAEMON", NULL, 0, &good, &bad))
+    if (open_warning_by_mail(ctl))
 	return;
-
-    /* stuffline() requires its input to be writeable for CR stripping */
-    strcpy(buf, OVERHD);
-    stuffline(ctl, buf);
+    stuff_warning_line(ctl, OVERHD);
  
     if (run.poll_interval == 0)
 	max_warning_poll_count = 0;
@@ -1279,10 +1327,9 @@ static void send_warning(struct query *ctl)
 	{
 	    nbr = current->val.status.mark;
 	    size = atoi(current->id);
-	    sprintf(buf, 
-		    "\t%d msg %d octets long skipped by fetchmail.\n",
+	    stuff_warning_line(ctl, 
+		    "\t%d msg %d octets long skipped by fetchmail.",
 		    nbr, size);
-	    stuffline(ctl, buf);
 	}
 	current->val.status.num++;
 	current->val.status.mark = 0;
@@ -1291,7 +1338,7 @@ static void send_warning(struct query *ctl)
 	    current->val.status.num = 0;
     }
 
-    close_sink(ctl, TRUE);
+    close_warning_by_mail(ctl);
 #undef OVERHD
 }
 
@@ -1510,6 +1557,28 @@ const struct method *proto;	/* protocol method table */
 		    error(0, -1, "Authorization failure on %s@%s", 
 			  ctl->remotename,
 			  ctl->server.truename);
+
+		    /*
+		     * If we're running in background, try to mail the
+		     * calling user a heads-up about the authentication 
+		     * failure the first time it happens.
+		     */
+		    if (run.poll_interval && !nodetach 
+			&& !ctl->authfailcount && !open_warning_by_mail(ctl))
+		    {
+			stuff_warning_line(ctl,
+			       "Subject: fetchmail authentication failed\r\n");
+			stuff_warning_line(ctl,
+				"Fetchmail could not get mail from %s@%s.", 
+				ctl->remotename,
+				ctl->server.truename);
+			stuff_warning_line(ctl, 
+			       "The attempt to get authorization failed.");
+			stuff_warning_line(ctl, 
+			       "This probably means your password is invalid.");
+			close_warning_by_mail(ctl);
+			ctl->authfailcount++;
+		    }
 		}
 		goto cleanUp;
 	    }
@@ -1925,7 +1994,7 @@ const struct method *proto;	/* protocol method table */
 		    if (!check_only && ctl->skipped)
 		    {
 			clean_skipped_list(&ctl->skipped);
-			send_warning(ctl);
+			send_size_warnings(ctl);
 		    }
 		}
 	    } while
@@ -2011,14 +2080,13 @@ closeUp:
 
 #if defined(HAVE_STDARG_H)
 void gen_send(int sock, const char *fmt, ... )
-/* assemble command in printf(3) style and send to the server */
 #else
 void gen_send(sock, fmt, va_alist)
-/* assemble command in printf(3) style and send to the server */
 int sock;		/* socket to which server is connected */
 const char *fmt;	/* printf-style format */
 va_dcl
 #endif
+/* assemble command in printf(3) style and send to the server */
 {
     char buf [MSGBUFSIZE+1];
     va_list ap;
@@ -2094,14 +2162,13 @@ int size;	/* length of buffer */
 
 #if defined(HAVE_STDARG_H)
 int gen_transact(int sock, const char *fmt, ... )
-/* assemble command in printf(3) style, send to server, accept a response */
 #else
 int gen_transact(int sock, fmt, va_alist)
-/* assemble command in printf(3) style, send to server, accept a response */
 int sock;		/* socket to which server is connected */
 const char *fmt;	/* printf-style format */
 va_dcl
 #endif
+/* assemble command in printf(3) style, send to server, accept a response */
 {
     int ok;
     char buf [MSGBUFSIZE+1];

@@ -367,6 +367,9 @@ int main (int argc, char **argv)
 
     /* pick up interactively any passwords we need but don't have */ 
     for (ctl = querylist; ctl; ctl = ctl->next)
+    {
+	ctl->authfailcount = 0;
+
 	if (ctl->active && !(implicitmode && ctl->server.skip)&&!ctl->password)
 	{
 	    if (ctl->server.preauthenticate == A_KERBEROS_V4 ||
@@ -406,6 +409,7 @@ int main (int argc, char **argv)
 #undef	PASSWORD_PROMPT
 	    }
 	}
+    }
 
     /*
      * Maybe time to go to demon mode...
@@ -481,6 +485,13 @@ int main (int argc, char **argv)
 	batchcount = 0;
 	for (ctl = querylist; ctl; ctl = ctl->next)
 	{
+	    if (ctl->authfailcount)
+	    {
+		error(0, -1, 
+		      "poll of %s skipped until authentication is unwedged",
+		      ctl->server.pollname);
+		continue;
+	    }
 	    if (ctl->active && !(implicitmode && ctl->server.skip))
 	    {
 		/* check skip interval first so that it counts all polls */

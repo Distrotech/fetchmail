@@ -2,7 +2,8 @@
 
 fetchmail-4.6.6 ():
 * Fixed a core-dump bug in reply_hack with -v -v on.
-* Fix fetchmailconf to be able to edit proprerties.
+* Fix fetchmailconf to be able to edit properties.
+* Send calling user mail when password authentication fails in daemon mode.
 
 There are 249 people on fetchmail-friends and 309 on fetchmail-announce.
 
