@@ -194,7 +194,7 @@ char **argv;
 	    }
 
 	    /* expand MDA commands */
-	    if (hostp->mda[0])
+	    if (!check_only && hostp->mda[0])
 	    {
 		int argi;
 		char *argp;
