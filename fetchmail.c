@@ -1085,6 +1085,9 @@ void dump_params (struct query *ctl)
     printf("  Interpretation of Content-Transfer-Encoding is %sabled (pass8bits %s).\n",
 	   ctl->pass8bits ? "dis" : "en",
 	   ctl->pass8bits ? "on" : "off");
+    printf("  MIME decoding is %sabled (mimedecode %s).\n",
+	   ctl->mimedecode ? "dis" : "en",
+	   ctl->mimedecode ? "on" : "off");
     printf("  Nonempty Status lines will be %s (dropstatus %s)\n",
 	   ctl->dropstatus ? "discarded" : "kept",
 	   ctl->dropstatus ? "on" : "off");
