@@ -750,7 +750,9 @@ static char *showproto(int proto)
     case P_IMAP_K4: return("IMAP-K4"); break;
     case P_APOP: return("APOP"); break;
     case P_RPOP: return("RPOP"); break;
+#ifdef HAVE_GETHOSTBYNAME
     case P_ETRN: return("ETRN"); break;
+#endif /* HAVE_GETHOSTBYNAME */
     default: return("unknown?!?"); break;
     }
 }
@@ -819,7 +821,12 @@ static int query_host(struct query *ctl)
 	return(doIMAP(ctl));
 	break;
     case P_ETRN:
+#ifdef HAVE_GETHOSTBYNAME
 	return(doETRN(ctl));
+#else
+	fprintf(stderr, "Cannot support ETRN without gethostbyname(2).\n");
+	return(PS_PROTOCOL);
+#endif /* HAVE_GETHOSTBYNAME */
     default:
 	error(0, 0, "unsupported protocol selected.");
 	return(PS_PROTOCOL);
