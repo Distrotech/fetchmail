@@ -5,7 +5,8 @@ fetchmail-4.7.4 ():
 * HTML cleanup in design notes and FAQ, thanks to Byrial Jensen.
 * Don't get message sizes when --check is on.
 * Supply our own strerror() if system doesn't have one.
-* Gunther Leber's cleanup for the plugin/plugout code/
+* Gunther Leber's cleanup for the plugin/plugout code.
+* Hajimu UMEMOTO's code for localtime in timestamps.
 
 There are 248 people on fetchmail-friends and 336 on fetchmail-announce.
 

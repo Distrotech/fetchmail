@@ -104,6 +104,35 @@ char *host_fqdn(void)
 	return(xstrdup(tmpbuf));
 }
 
+static char *tzoffset(time_t *now)
+/* calculate timezone offset */
+{
+    static char offset_string[6];
+    struct tm gmt, *lt;
+    int off;
+    char sign = '+';
+
+    gmt = *gmtime(now);
+    lt = localtime(now);
+    off = (lt->tm_hour - gmt.tm_hour) * 60 + lt->tm_min - gmt.tm_min;
+    if (lt->tm_year < gmt.tm_year)
+	off -= 24 * 60;
+    else if (lt->tm_year > gmt.tm_year)
+	off += 24 * 60;
+    else if (lt->tm_yday < gmt.tm_yday)
+	off -= 24 * 60;
+    else if (lt->tm_yday > gmt.tm_yday)
+	off += 24 * 60;
+    if (off < 0) {
+	sign = '-';
+	off = -off;
+    }
+    if (off >= 24 * 60)			/* should be impossible */
+	off = 23 * 60 + 59;		/* if not, insert silly value */
+    sprintf(offset_string, "%c%02d%02d", sign, off / 60, off % 60);
+    return (offset_string);
+}
+
 char *rfc822timestamp(void)
 /* return a timestamp in RFC822 form */
 {
@@ -113,16 +142,14 @@ char *rfc822timestamp(void)
     time(&now);
 #ifdef HAVE_STRFTIME
     /*
-     * Conform to RFC822. UTC rather than local time because of the
-     * mess that %Z generates obsolete 822 syntax but %z is not
-     * guaranteed portable. We generate a 4-digit year here, avoiding
+     * Conform to RFC822.  We generate a 4-digit year here, avoiding
      * Y2K hassles.  Max length of this timestamp in an English locale
      * should be 29 chars.  The only things that should vary by locale
      * are the day and month abbreviations.
      */
     strftime(buf, sizeof(buf)-1, 
-	     "%a, %d %b %Y %H:%M:%S +0000 (UTC)",
-	     gmtime(&now));
+	     "%a, %d %b %Y %H:%M:%S XXXXX (%Z)", localtime(&now));
+    strncpy(strstr(buf, "XXXXX"), tzoffset(&now), 5);
 #else
     /*
      * This is really just a portability fallback, as the
