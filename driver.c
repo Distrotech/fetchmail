@@ -570,7 +570,7 @@ struct query *ctl;	/* query control record */
 		oldlen = strlen(bufp);
 		headers = malloc(oldlen + 1);
 		if (headers == NULL)
-		    return(PS_IOERR);
+		    return(PS_SYNTAX);
 		(void) strcpy(headers, bufp);
 		bufp = headers;
 	    }
@@ -593,7 +593,7 @@ struct query *ctl;	/* query control record */
 		newlen = oldlen + strlen(bufp);
 		headers = realloc(headers, newlen + 1);
 		if (headers == NULL)
-		    return(PS_IOERR);
+		    return(PS_SYNTAX);
 		strcpy(headers + oldlen, bufp);
 		bufp = headers + oldlen;
 		oldlen = newlen;
@@ -726,10 +726,8 @@ struct query *ctl;	/* query control record */
 	    /* replace all LFs with CR-LF before sending to the SMTP server */
 	    if (!ctl->mda[0])
 	    {
-		char *newheaders = malloc(1 + oldlen * 2);
+		char *newheaders = xmalloc(1 + oldlen * 2);
 
-		if (newheaders == NULL)
-		    return(PS_IOERR);
 		oldlen = strcrlf(newheaders, headers, oldlen);
 		free(headers);
 		headers = newheaders;
@@ -761,10 +759,8 @@ struct query *ctl;	/* query control record */
 	/* replace all LFs with CR-LF  in the line */
 	if (!ctl->mda[0])
 	{
-	    char *newbufp = malloc(1 + strlen(bufp) * 2);
+	    char *newbufp = xmalloc(1 + strlen(bufp) * 2);
 
-	    if (newbufp == NULL)
-		return(PS_IOERR);
 	    strcrlf(newbufp, bufp, strlen(bufp));
 	    bufp = newbufp;
 	}
@@ -902,9 +898,12 @@ const struct method *proto;	/* protocol method table */
     vtalarm(mytimeout = ctl->timeout);
 
     if (setjmp(restart) == 1)
+    {
 	fprintf(stderr,
 		"fetchmail: timeout after %d seconds waiting for %s.\n",
 		ctl->timeout, ctl->servername);
+	ok = PS_ERROR;
+    }
     else
     {
 	char buf [POPBUFSIZE+1];
@@ -1091,9 +1090,39 @@ const struct method *proto;	/* protocol method table */
 	}
     }
 
-    signal(SIGVTALRM, sigsave);
+    switch (ok)
+    {
+    case PS_SOCKET:
+	fputs("fetchmail: socket", stderr);
+	break;
+    case PS_AUTHFAIL:
+	fputs("fetchmail: authorization", stderr);
+	break;
+    case PS_SYNTAX:
+	fputs("fetchmail: missing or bad RFC822 header", stderr);
+	break;
+    case PS_IOERR:
+	fputs("fetchmail: MDA", stderr);
+	break;
+    case PS_ERROR:
+	fputs("fetchmail: client/server synchronization", stderr);
+	break;
+    case PS_PROTOCOL:
+	fputs("fetchmail: client/server protocol", stderr);
+	break;
+    case PS_SMTP:
+	fputs("fetchmail: SMTP transaction", stderr);
+	break;
+    case PS_UNDEFINED:
+	fputs("fetchmail: undefined", stderr);
+	break;
+    }
+    if (ok==PS_SOCKET || ok==PS_AUTHFAIL || ok==PS_SYNTAX || ok==PS_IOERR
+		|| ok==PS_ERROR || ok==PS_PROTOCOL || ok==PS_SMTP)
+	fprintf(stderr, "error while talking to %s\n", ctl->servername);
 
 closeUp:
+    signal(SIGVTALRM, sigsave);
     return(ok);
 }
 
