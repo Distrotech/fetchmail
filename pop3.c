@@ -247,7 +247,9 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	}
 
 #ifdef SSL_ENABLE
-	if (has_ssl && !ctl->use_ssl)
+	if (has_ssl
+	    && !ctl->use_ssl
+	    && (ctl->server.authenticate == A_ANY))
 	{
 	    char *realhost;
 
