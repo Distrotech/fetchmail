@@ -54,28 +54,25 @@ RETSIGTYPE
 sigchld_handler (int sig)
 /* process SIGCHLD to obtain the exit code of the terminating process */
 {
-  pid_t pid;
+    pid_t pid;
 
+#if 	defined(HAVE_WAITPID)				/* the POSIX way */
+    int status;
+
+    while ((pid = waitpid(-1, &status, WNOHANG)) > 0)
+	continue; /* swallow 'em up. */
+#elif 	defined(HAVE_WAIT3)				/* the BSD way */
 #if defined(HAVE_UNION_WAIT) && !defined(__FreeBSD__)
-  union wait status;
+    union wait status;
 #else
-  int status;
+    int status;
 #endif
 
-#if 	defined(HAVE_WAIT3)
-#ifdef oldhpux	/* HP-UX fixed this sometime between 9.01 and 10.20 */
-  while ((pid = wait3(&status, WNOHANG, (int *) 0)) > 0)
-#else
-  while ((pid = wait3(&status, WNOHANG, (struct rusage *) 0)) > 0)
-#endif
-    ; /* swallow 'em up. */
-#elif 	defined(HAVE_WAITPID)
-  while ((pid = waitpid(-1, &status, WNOHANG)) > 0)
-    ; /* swallow 'em up. */
+    while ((pid = wait3(&status, WNOHANG, 0)) > 0)
+	continue; /* swallow 'em up. */
 #else	/* Zooks! Nothing to do but wait(), and hope we don't block... */
-  wait(&status);
+    wait(&status);
 #endif
-
 }
 
 int
