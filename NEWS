@@ -2,12 +2,18 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.6.6 (Thu Feb 15 20:43:47 EST 2001), 20083 lines:
+
 * Fixed locale setting; this should make i18n actually work.
-* Don't issue AUTH between USER and PASS, some servers choke on this.
+* Resolved Debian bug #85938: fetchmail asks for a password when using ETRN.
+* Resolved Debian bugs #85853 and #86047.  POP3: Don't issue AUTH between
+  USER and PASS, some servers choke on this.
 * Resolved Debian bug #85772 re Kerberos compilation.
-* Resolved Debian bug ##85961: Wrong error message when local connection fails.
+* Resolved Debian bug #85961: Wrong error message when local connection fails.
 * Serious pre-release regression testing begins.  This version tested
-  against 18 different POP3 and IMAP server tests.
+  against 18 different POP3 and IMAP servers.
+
+There are 274 people on fetchmail-friends and 562 on fetchmail-announce.
 
 fetchmail-5.6.5 (Mon Feb 12 04:33:39 EST 2001), 20062 lines:
 
