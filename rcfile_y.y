@@ -36,8 +36,8 @@ int yydebug;	/* in case we didn't generate with -- debug */
 %token <flag>  KW_KEEP KW_FLUSH KW_FETCHALL KW_REWRITE KW_PORT KW_SKIP
 
 /* these are actually used by the lexer */
-%token TRUE	1
-%token FALSE	0
+%token FLAG_TRUE	2
+%token FLAG_FALSE	1
 
 %%
 
@@ -62,17 +62,17 @@ server_options:	serv_option_clause
   ;
 
 serv_option_clause: 
-		KW_PROTOCOL KW_PROTO		{prc_setproto($2);}
-	|	KW_USERNAME PARAM_STRING	{prc_remotename($2);}
-	|	KW_PASSWORD PARAM_STRING	{prc_setpassword($2);}
-	|	KW_REMOTEFOLDER PARAM_STRING	{prc_setremote($2);}
-	|	KW_SMTPHOST PARAM_STRING	{prc_setsmtphost($2);}
-	|	KW_KEEP				{prc_setkeep($1);}
-	|	KW_FLUSH			{prc_setflush($1);}
-	|	KW_FETCHALL			{prc_setfetchall($1);}
-	|	KW_REWRITE			{prc_setrewrite($1);}
-	|	KW_SKIP				{prc_setskip($1);}
-	|	KW_PORT PARAM_STRING		{prc_setport($2);}
+		KW_PROTOCOL KW_PROTO	     {prc_setproto($2);}
+	|	KW_USERNAME PARAM_STRING     {prc_remotename($2);}
+	|	KW_PASSWORD PARAM_STRING     {prc_setpassword($2);}
+	|	KW_REMOTEFOLDER PARAM_STRING {prc_setremote($2);}
+	|	KW_SMTPHOST PARAM_STRING     {prc_setsmtphost($2);}
+	|	KW_KEEP			     {prc_setkeep($1==FLAG_TRUE);}
+	|	KW_FLUSH		     {prc_setflush($1==FLAG_TRUE);}
+	|	KW_FETCHALL		     {prc_setfetchall($1==FLAG_TRUE);}
+	|	KW_REWRITE		     {prc_setrewrite($1==FLAG_TRUE);}
+	|	KW_SKIP			     {prc_setskip($1==FLAG_TRUE);}
+	|	KW_PORT PARAM_STRING	     {prc_setport($2);}
   ;
 
 %%

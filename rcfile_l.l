@@ -30,16 +30,16 @@ user(name)?	{ return KW_USERNAME; }
 pass(word)?	{ return KW_PASSWORD; }
 remote(folder)? { return KW_REMOTEFOLDER; }
 smtp(host)?	{ return KW_SMTPHOST; }
-keep		{ yylval.flag = TRUE; return KW_KEEP; }
-flush		{ yylval.flag = TRUE; return KW_FLUSH; }
-fetchall	{ yylval.flag = TRUE; return KW_FETCHALL; }
-rewrite		{ yylval.flag = TRUE; return KW_REWRITE; }
-skip		{ yylval.flag = TRUE; return KW_SKIP; }
-nokeep		{ yylval.flag = FALSE; return KW_KEEP; }
-noflush		{ yylval.flag = FALSE; return KW_FLUSH; }
-nofetchall	{ yylval.flag = FALSE; return KW_FETCHALL; }
-norewrite	{ yylval.flag = FALSE; return KW_REWRITE; }
-noskip		{ yylval.flag = FALSE; return KW_SKIP; }
+keep		{ yylval.flag = FLAG_TRUE; return KW_KEEP; }
+flush		{ yylval.flag = FLAG_TRUE; return KW_FLUSH; }
+fetchall	{ yylval.flag = FLAG_TRUE; return KW_FETCHALL; }
+rewrite		{ yylval.flag = FLAG_TRUE; return KW_REWRITE; }
+skip		{ yylval.flag = FLAG_TRUE; return KW_SKIP; }
+nokeep		{ yylval.flag = FLAG_FALSE; return KW_KEEP; }
+noflush		{ yylval.flag = FLAG_FALSE; return KW_FLUSH; }
+nofetchall	{ yylval.flag = FLAG_FALSE; return KW_FETCHALL; }
+norewrite	{ yylval.flag = FLAG_FALSE; return KW_REWRITE; }
+noskip		{ yylval.flag = FLAG_FALSE; return KW_SKIP; }
 port		{ return KW_PORT; }
 
 (auto)|(AUTO)	{ yylval.proto = P_AUTO;  return KW_PROTO; }
