@@ -1188,10 +1188,11 @@ directly, with a text editor, or indirectly via \fIfetchmailconf\fR).
 When there is a conflict between the command-line arguments and the
 arguments in this file, the command-line arguments take precedence.
 .PP
-To protect the security of your passwords, when --version is not on
-your \fI~/.fetchmailrc\fR may not have more than 0600 (u=rw,g=,o=) permissions;
+To protect the security of your passwords, 
+your \fI~/.fetchmailrc\fR may not normally have more than 0600 (u=rw,g=,o=) permissions;
 .I fetchmail
-will complain and exit otherwise.
+will complain and exit otherwise (this check is suppressed when
+--version is on).
 .PP
 You may read the \fI.fetchmailrc\fR file as a list of commands to 
 be executed when 
