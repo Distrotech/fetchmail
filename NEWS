@@ -1,6 +1,17 @@
 			Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-3.6 ()
+
+features --
+
+* New Makefile production to generate an RPM.
+
+bugs --
+
+* Yet another fix to the password-shrouding logic.
+
+------------------------------------------------------------------------------
 fetchmail-3.5 (Sat Feb 15 15:19:36 EST 1997)
 
 Note: The .poprc compatibility hack that allows your first user declaration
