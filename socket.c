@@ -35,17 +35,11 @@
 #endif
 
 /*
- * In case we ever optimize this further,
- * a note on Carl Harris's original implementation said:
- *
  * Size of buffer for internal buffering read function 
  * don't increase beyond the maximum atomic read/write size for
  * your sockets, or you'll take a potentially huge performance hit
- *
- * #define  INTERNAL_BUFSIZE	2048
- *
- * Note that stdio's 1024-byte default is just fine.
  */
+#define  INTERNAL_BUFSIZE	2048
 
 FILE *sockopen(char *host, int clientPort)
 {
@@ -53,7 +47,9 @@ FILE *sockopen(char *host, int clientPort)
     unsigned long inaddr;
     struct sockaddr_in ad;
     struct hostent *hp;
-    
+    FILE *fp;
+    static char sbuf[INTERNAL_BUFSIZE];
+
     memset(&ad, 0, sizeof(ad));
     ad.sin_family = AF_INET;
 
@@ -77,7 +73,9 @@ FILE *sockopen(char *host, int clientPort)
 	close(sock);
         return (FILE *)NULL;
     }
-    return fdopen(sock, "r+");
+    fp = fdopen(sock, "r+");
+    setvbuf(fp, sbuf, _IOLBF, INTERNAL_BUFSIZE);
+    return(fp);
 }
 
 /* socket.c ends here */

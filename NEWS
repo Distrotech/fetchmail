@@ -26,6 +26,8 @@ bugs --
 
 * Restored portability to Solaris.
 
+* Force line-buffering on socket streams (Linux apparently defaults to this).
+
 ------------------------------------------------------------------------------
 
 features -- 
