@@ -436,6 +436,8 @@ struct query *init;	/* pointer to block containing initial values */
     /* initialize it */
     if (init)
 	memcpy(node, init, sizeof(struct query));
+    else
+	memset(node, '\0', sizeof(struct query));
 
     /* append to end of list */
     if (hosttail != (struct query *) 0)

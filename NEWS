@@ -7,8 +7,14 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.4.6 ()
+fetchmail-4.4.7 ()
+* FEATURE FREEZE IS NOW IN EFFECT!  No new features until after 4.5.0.
 * Better workaround for TOP bounds-checking in qpopper 2.3+.
+* Gunther Leber's fix to processing of command-line options.
+* George Colouris's second try at NetBSD autoconfiguration.
+* Bruce Mah's fix for core dump in command-line host specification.
+* Mimedecode default turned off pending a fix for the PGP-signature-
+  munging bug.
 
 There are 270 people on fetchmail-friends and 212 on fetchmail-announce.
 

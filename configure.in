@@ -250,9 +250,16 @@ fi
 AC_ARG_WITH(kerberos,
 	[  --with-kerberos=DIR  point fetchmail compilation at a Kerberos directory])
 
-# The "then" arm (nonempty $with_kerberos) is kind of a crock.  It works for
+# The "elif" arm (nonempty $with_kerberos) is kind of a crock.  It works for
 # configuring the BSD/OS Kerberos IV support, though. 
-if test -n "$with_kerberos"
+
+# Check for a NetBSD special case
+if test "$with_kerberos" = "yes" -a `uname` = "NetBSD" 
+then
+  echo "Configuring kerberosIV for NetBSD"
+  CEFLAGS="$CEFLAGS -DKERBEROS_V4 -I/usr/include/kerberosIV"
+  LIBS="$LIBS -lkrb -ldes"
+elif test -n "$with_kerberos"
 then
     CEFLAGS="$CEFLAGS -DKERBEROS_V4 -I$with_kerberos/include"
     LDEFLAGS="$LDEFLAGS -L$with_kerberos/lib"

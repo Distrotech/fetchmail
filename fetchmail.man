@@ -917,7 +917,7 @@ dropstatus	\&	T{
 Strip Status and X-Mozilla-Status lines out of incoming mail
 T}
 mimedecode	\&	T{
-Convert quoted-printable to 8-bit in MIME messages (default)
+Convert quoted-printable to 8-bit in MIME messages
 T}
 no keep  	-K	T{
 Delete seen messages from server (default)
@@ -944,7 +944,7 @@ no dropstatus	\&	T{
 Don't drop Status headers (default)
 T}
 no mimedecode	\&	T{
-Don't convert quoted-printable to 8-bit in MIME messages
+Don't convert quoted-printable to 8-bit in MIME messages (default)
 T}
 limit   	-l	T{
 Set message size limit
