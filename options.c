@@ -277,12 +277,7 @@ struct hostrec *queryctl;
     }
 
     queryctl->protocol = P_AUTO;
-
-#if defined(KEEP_IS_DEFAULT)
-    queryctl->keep = 1;
-#else
     queryctl->keep = 0;
-#endif
     queryctl->norewrite = 0;
 
     strcpy(queryctl->localname, user);

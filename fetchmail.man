@@ -3,55 +3,53 @@
 .\" For license terms, see the file COPYING in this directory.
 .TH fetchmail LOCAL
 .SH NAME
-fetchmail \- retrieve mail from a mailserver using POP2, POP3, APOP, or IMAP
+fetchmail \- deliver mail fetched from a POP or IMAP server
 .SH SYNOPSIS
 .B fetchmail
 [\fI options \fR] \fI [server-host...]\fR
 .SH DESCRIPTION
 .I fetchmail
-is a batch mail retrieval utility intended to be used over on-demand
-TCP/IP links (such as SLIP or PPP connections).  It fetches mail from
-remote mail servers and forwards it to your local (client) machine's
-delivery system, where it can then be be read by normal mail user
-agents such as \fIelm\fR(1) or \fIMail\fR(1).
+is a batch mail-retrieval/forwarding utility intended to be used over
+on-demand TCP/IP links (such as SLIP or PPP connections).  It fetches
+mail from remote mail servers and forwards it to your local (client)
+machine's delivery system.  You can then handle the retrieved mail
+using normal mail user agents such as \fIelm\fR(1) or \fIMail\fR(1).
+The \fBfetchmail\fR utility can be run in a daemon mode to repeatedly
+poll one or more systems at a specified interval.
 .PP
 The
 .I fetchmail
-program can gather mail from servers supporting POP2 (as specified in RFC
-937), POP3 (RFC 1725), IMAP2bis (as implemented by the 4.4BSD imapd
-program), and IMAP4 (RFC1730).  It can use (but does not require) the
-RPOP and LAST facilities removed from later POP3 versions.
+program can gather mail from servers supporting any of the common
+mail-retrieval protocols: POP2 (as specified in RFC 937), POP3 (RFC
+1725), IMAP2bis (as implemented by the 4.4BSD imapd program), and
+IMAP4 (as specified by RFC1730).  It can use (but does not require)
+the RPOP and LAST facilities removed from later POP3 versions.
 .PP
-.I fetchmail
-delivers mail via SMTP to port 25 on the machine it is running on
-(localhost), just as though it were being passed in over a normal TCP/IP link.
-This normally results in the mail being delivered locally via your
-system's default MDA (Mail Delivery Agent, usually
-.I /usr/lib/sendmail
-but your system may use a different MDA).  All the delivery-control
-mechanisms (such as 
-.I .forward
-files) normally available with your system MDA will therefore work on
-received mail.
+As each message is retrieved \fIfetchmail\fR delivers it via SMTP to
+port 25 on the machine it is running on (localhost), just as though it
+were being passed in over a normal TCP/IP link.  The mail will then be
+delivered locally via your system's MDA (Mail Delivery Agent, usually
+\fI/usr/lib/sendmail\fR but your system may use a different one such
+as \fIsmail\fR, \fImmdf\fR, or \fIqmail\fR).  All the delivery-control
+mechanisms (such as \fI.forward\fR files) normally available through
+your system MDA will therefore work.
 .PP
 The behavior of
 .I fetchmail
-is controlled by comand-line options and a run control file,
-.I ~/.fetchmailrc
-the syntax of which we describe below.  Command-line options override
+is controlled by command-line options and a run control file,
+\fI~/.fetchmailrc\fR, the syntax of which we describe below.  Command-line
+options override
 .I ~/.fetchmailrc
 declarations.
 .PP
 To facilitate the use of
 .I fetchmail
-in scripts, pipelines, etc, it returns an appropriate exit code upon 
+In scripts, pipelines, etc., it returns an appropriate exit code upon 
 termination -- see EXIT CODES below.
 .SH OPTIONS
-Each server name that you specify (following the options on the
-command line) will be queried.  If you don't specify any servers
-on the command line, each server in your 
-.I ~/.fetchmailrc
-file will be queried.
+The following options modify the behavior of \fIfetchmail\fR.  It is
+seldom necessary to specify any of these once you have a
+working \fI.fetchmailrc\fR file set up.
 .TP
 .B \-2
 Use Post Office Protocol version 2 (POP2).  See also the 
@@ -64,39 +62,34 @@ Use Post Office Protocol version 3 (POP3).  See also the
 option, below.
 .TP
 .B \-a, --all
-POP3 only.  Retrieve both old (previously retrieved) and new messages from 
-the mailserver.
+Retrieve both old (seen) and new messages from the mailserver.  The
+default is to fetch only messages the server has not marked seen.  Note
+that POP2 retrieval, and POP3 retrieval on servers without the LAST
+command, behaves as though --all is always on (see KNOWN PROBLEMS below).
 .TP
 .B \-S host, --smtphost host
-Specify an SMTP forwarding host (other than localhost).  Normally
-fetched mail is delivered by SMTP over a socket to the client machine
-.I fetchmail
-is running on (this simulates the way mail would
-be delivered to the client by a normal Internet TCP/IP connection).
-With this option you can specify another host to deliver to.
+Specify an host to forward mail to (other than localhost).
 .TP
 .B \-F, --flush
 POP3/IMAP only.  Delete old (previously retrieved) messages from the mailserver
 before retrieving new messages.
 .TP
 .B \-f pathname, --fetchmailrc pathname
-Specify an alternate name for the .fetchmailrc run control file.
+Specify a non-default name for the 
+.I .fetchmailrc
+run control file.
 .TP
 .B \-k, --keep
 Keep retrieved messages in folder on remote mailserver.  Normally, messages 
-are deleted from the folder on the mailserver after they have been retrieved
-(unless 
-.I fetchmail
-was compiled with the KEEP_IS_DEFAULT option).  Specifying the 
+are deleted from the folder on the mailserver after they have been retrieved.
+Specifying the 
 .B keep 
 option causes retrieved messages to remain in your folder on the mailserver.
 .TP
 .B \-K, --kill
-Delete retrieved messages from the remote mailserver.  If 
-.I fetchmail
-is compiled with the KEEP_IS_DEFAULT option, the
-.B kill
-option forces retrieved mail to be deleted.
+Delete retrieved messages from the remote mailserver.  This
+option forces retrieved mail to be deleted.  It may be useful if
+you have specified a default of \fBnokill\fR in your \fI.fetchmailrc\fR.
 .TP
 .B \-p, \--protocol proto
 Specify the protocol to used when communicating with the remote 
@@ -115,6 +108,8 @@ Post Office Protocol 2
 Post Office Protocol 3
 .IP APOP
 Use POP3 with MD5 authentication.
+.IP RPOP
+POP3 with \fI.rhosts\fR processing (not recommended).
 .RE
 .TP
 .B \-P, --port
@@ -124,20 +119,13 @@ this option will seldom be necessary as all the supported protocols have
 well-established default port numbers.
 .TP
 .B \-r folder, --remote folder
-Causes an alternate mail folder on the mailserver to be retrieved.
+Causes a specified non-default mail folder on the mailserver to be retrieved.
 The syntax of the folder name is server dependent, as is the default
-behavior when no folder is specified.  Fortunately, most POP2 and IMAP
-servers have a reasonable default behavior, so use of this option
-should be limited to fairly specialized applications.  POP3 does not
-support a folder specification in the protocol.
-If the
-.B remote
-option is used in conjunction with the POP3 protocol, the remote folder 
-specification is ignored.
+behavior when no folder is specified.
 .TP
 .B \-s, --silent
 Silent mode.  Suppresses all progress/status messages that are normally
-echoed to stderr during a POP connection.  If both the 
+echoed to stderr during a fetch.  If both the 
 .B silent
 and
 .B verbose
@@ -165,7 +153,7 @@ Normally,
 .I fetchmail
 edits RFC-822 address headers (To, From, Cc, Bcc, and Reply-To) in
 fetched mail so that any mail IDs local to the server are expanded to
-full addresses (@ and the POP host name are appended).  This enables 
+full addresses (@ and the mail server hostname are appended).  This enables 
 replies on the client to get addressed correctly (otherwise your
 mailer might think they should be addressed to local users on the
 client machine).  This option disables the rewrite.
@@ -178,6 +166,12 @@ Instead, for each server specified, all option information
 that would be computed if
 .I fetchmail.
 were connecting to that server is displayed.
+.PP
+Each server name that you specify following the options on the
+command line will be queried.  If you don't specify any servers
+on the command line, each server in your 
+.I ~/.fetchmailrc
+file will be queried.
 .PP
 .SH USER AUTHENTICATION
 User authentication in 
@@ -194,7 +188,7 @@ If you use the same login name on both the server and the client machines,
 you needn't worry about specifying a user-id with the 
 .B \-u
 option \-\- 
-the default behavior will use your login name on the client machine as the 
+the default behavior is to use your login name on the client machine as the 
 user-id on the server machine.  If you use a different login name
 on the server machine, specify that login name with the
 .B \-u
@@ -223,12 +217,12 @@ a mailbox on the server.  Contact your server administrator if you don't know
 the correct user-id and password for your mailbox account.
 .PP
 POP3 versions up to the RFC1225 version supported an alternate
-authentication mechanism called RPOP intended to remove the security
+authentication mechanism called RPOP intended to address the security
 risk inherent in sending unencrypted account passwords across the net
 (in RFC1460 this facility was replaced with APOP).  If you specify the
 RPOP protocol and a connection port in the privileged range (1..1024),
-.I fetchmail will
-ship your password entry to the mail server as an RPOP id.
+.I fetchmail 
+will ship your password entry to the mail server as an RPOP id.
 (Note: you'll need to be running fetchmail setuid root for RPOP to
 work --
 .I fetchmail
@@ -366,8 +360,8 @@ Multiple servers may be listed:
   server other.provider.net proto pop2 user John.Smith pass My^Hat
 .fi
 .PP
-Other possibilities (note use of \ to escape newline -- this is all 
-one server definition.
+Other possibilities (note use of \ to escape newline -- this is now
+optional, not required as in older versions):
 
 .nf
   server pop.provider.net       \e
@@ -380,15 +374,15 @@ If you need to include whitespace in a parameter string, enclose the
 string in double quotes.  Thus:
 
 .nf
-  server mail.provider.net      \e
-        proto pop3              \e
-        user jsmith             \e
+  server mail.provider.net
+        proto pop3
+        user jsmith
         pass "u can't krak this"
 .fi
 
 Finally, you may have an initial server description headed by the keyword
 `defaults' instead of `server' followed by a name.  Such a record
-is interpreted as defaults for all quries to use. It may be overwritten
+is interpreted as defaults for all queries to use. It may be overwritten
 by individual server descriptions.  So, you could write:
 
 .nf
@@ -486,10 +480,11 @@ on the same mailbox may cause messages to be lost or remain unfetched.
 (This is a design problem of the POP2, POP3 and IMAP2bis protocols.)
 .PP
 If, using POP3, you find that messages you've already read on the
-server are being fetched, blame RFC1725.  That late version of the
-POP3 protocol specification ill-advisedly removed the LAST command, and
-some servers (including the one distributed with at least some
-versions of SunOS) follow it (you can verify this by invoking
+server are being fetched even when you don't specify --all, blame
+RFC1725.  That late version of the POP3 protocol specification
+ill-advisedly removed the LAST command, and some servers (including
+the one distributed with at least some versions of SunOS) follow it
+(you can verify this by invoking
 .I fetchmail -v
 and watching the response to LAST early in the query).  The fix is to
 install an older POP3 server with LAST or switch to an IMAP server.
@@ -498,19 +493,20 @@ The RPOP support is not yet well tested.
 .PP
 Send comments, bug reports, gripes, and the like to Eric S. Raymond
 <esr@thyrsus.com>.
-.SH NOTE
+.SH NOTES
 This program used to be called `popclient' (the name was changed
 because it supports IMAP now and may well support more remote-fetch
 protocols such as DMSP in the future).
 .PP
-The --stdout, --local, --mda and --limit arguments of previous versions have
-been removed.  Those features did jobs that belonged to your local MDA.
-The job of 
+The --stdout, --local, --mda and --limit arguments of previous
+versions have been removed, greatly simplifying the code and making it
+faster.  Those features did jobs that belonged to your local MDA and
+mail reader. The job of
 .I popclient
-is to forward local mail to your MDA.  Saint-Exupery said, "Perfection
-[in design] is achieved not when there is nothing more to add, but
-rather when there is nothing more to take away."  This program isn't
-perfect, but it's trying.
+is to forward local mail to your MDA, not to be one.  Saint-Exupery
+said, "Perfection [in design] is achieved not when there is nothing
+more to add, but rather when there is nothing more to take away."
+This program isn't perfect, but it's trying.
 .PP
 The --password option of previous (popclient) versions has been removed -- it
 encouraged people to expose passwords in scripts.  Passwords

@@ -21,7 +21,6 @@
 int prc_lineno = 1;
 %}
 
-
 %%
 
 defaults 	{ return KW_DEFAULTS; }
@@ -43,16 +42,14 @@ norewrite	{ yylval.flag = FALSE; return KW_REWRITE; }
 noskip		{ yylval.flag = FALSE; return KW_SKIP; }
 port		{ return KW_PORT; }
 
-(auto)|(AUTO)	{ yylval.proto = P_AUTO;  return PROTO_AUTO; }
-(pop2)|(POP2)	{ yylval.proto = P_POP2;  return PROTO_POP2; }
-(pop3)|(POP3)	{ yylval.proto = P_POP3;  return PROTO_POP3; }
-(imap)|(IMAP)	{ yylval.proto = P_IMAP;  return PROTO_IMAP; }
-(apop)|(APOP)   { yylval.proto = P_APOP;  return PROTO_APOP; }
-(rpop)|(RPOP)   { yylval.proto = P_RPOP;  return PROTO_RPOP; }
+(auto)|(AUTO)	{ yylval.proto = P_AUTO;  return KW_PROTO; }
+(pop2)|(POP2)	{ yylval.proto = P_POP2;  return KW_PROTO; }
+(pop3)|(POP3)	{ yylval.proto = P_POP3;  return KW_PROTO; }
+(imap)|(IMAP)	{ yylval.proto = P_IMAP;  return KW_PROTO; }
+(apop)|(APOP)   { yylval.proto = P_APOP;  return KW_PROTO; }
+(rpop)|(RPOP)   { yylval.proto = P_RPOP;  return KW_PROTO; }
 
-(#.*)?\\\n	{ prc_lineno++;	}   /* escaped newline is ignored */
-
-(#.*)?\n	{ prc_lineno++; return KW_EOL; }
+(#.*)?\\?\n	{ prc_lineno++;	}   /* newline is ignored */
 
 \"[^\"]*\"	{
 			yytext[strlen(yytext)-1] = '\0';

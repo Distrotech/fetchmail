@@ -30,11 +30,10 @@ int yydebug;	/* in case we didn't generate with -- debug */
 }
 
 %token KW_SERVER KW_PROTOCOL KW_USERNAME KW_PASSWORD
-%token KW_REMOTEFOLDER KW_SMTPHOST KW_EOL KW_DEFAULTS
-%token <proto> PROTO_AUTO PROTO_POP2 PROTO_POP3 PROTO_IMAP PROTO_APOP PROTO_RPOP
-%token <sval> PARAM_STRING
-%token <flag> KW_KEEP KW_FLUSH KW_FETCHALL KW_REWRITE KW_PORT KW_SKIP
-%type <proto> proto;
+%token KW_REMOTEFOLDER KW_SMTPHOST KW_DEFAULTS
+%token <proto> KW_PROTO
+%token <sval>  PARAM_STRING
+%token <flag>  KW_KEEP KW_FLUSH KW_FETCHALL KW_REWRITE KW_PORT KW_SKIP
 
 /* these are actually used by the lexer */
 %token TRUE	1
@@ -46,7 +45,7 @@ rcfile:		rcline
 	|	rcfile rcline
   ;
 
-rcline:		statement KW_EOL
+rcline:		statement
   ;
 
 statement:
@@ -63,7 +62,7 @@ server_options:	serv_option_clause
   ;
 
 serv_option_clause: 
-		KW_PROTOCOL proto		{prc_setproto($2);}
+		KW_PROTOCOL KW_PROTO		{prc_setproto($2);}
 	|	KW_USERNAME PARAM_STRING	{prc_remotename($2);}
 	|	KW_PASSWORD PARAM_STRING	{prc_setpassword($2);}
 	|	KW_REMOTEFOLDER PARAM_STRING	{prc_setremote($2);}
@@ -76,15 +75,7 @@ serv_option_clause:
 	|	KW_PORT PARAM_STRING		{prc_setport($2);}
   ;
 
-proto:		PROTO_POP2
-	|	PROTO_POP3
-	|	PROTO_IMAP
-	|	PROTO_APOP
-	|	PROTO_RPOP
-  ;
-
 %%
-
 
 yyerror (s)
 char *s;
