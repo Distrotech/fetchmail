@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/02/19 07:30:18 $
+<td width="30%" align=right>$Date: 1998/02/24 17:43:11 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -365,14 +365,31 @@ their RPA authentication (which works much like APOP).  See <a
 href="#T7">T7</a> for details.<P>
 
 Your POP3 server may have the RFC1938 OTP capability to use one-time
-passwords. To check this, look for the string "otp-" in the greeting
-line.  If you see it, and your fetchmail was built with OPIE support
-compiled in (see the distribution INSTALL file), fetchmail will
-detect it also.  When using OTP, you will specify a password but it
-will not be sent en clair.<P>
+passwords (if it doesn't, you can get OTP patches for the 2.2 version
+of the Qualcomm popper from <a href="#cmetz">Craig Metz</a>). To check
+this, look for the string "otp-" in the greeting line.  If you see it,
+and your fetchmail was built with OPIE support compiled in (see the
+distribution INSTALL file), fetchmail will detect it also.  When using
+OTP, you will specify a password but it will not be sent en clair.<P>
 
-Sadly, there is at present (October 1997) no OTP or APOP-like facility
-generally available on IMAP servers.<P>
+Sadly, there is at present (February 1998) no OTP or APOP-like
+facility generally available on IMAP servers.  However, there do exist
+patches which will OTP-enable the University of Washington IMAP
+daemon, version 4.1-BETA.<P>
+
+You can get both POP3 and IMAP OTP patches from <a name="cmetz">Craig
+Metz</A>, over FTP via either
+<a href="ftp://ftp.inner.net/pub/opie/patches">
+ftp://ftp.inner.net/pub/opie/patches</a> (IPv4) or
+<a href="ftp://ftp.ipv6.inner.net/pub/opie/patches">
+ftp://ftp.ipv6.inner.net/pub/opie/patches</a> (IPv6).MP>
+
+These patches use a SASL authentication method named "X-OTP" because there is
+not currently a standard way to do this; fetchmail also uses this method, so
+the two will interoperate happily.  They better, because this is how Craig gets
+his mail ;)<P>
+
+(One important win of OTP is that it's not subject to ITAR restrictions.)<P>
 
 <hr>
 <h2><a name="G9">G9. Is any special configuration needed to use a dynamic IP address?</a></h2>
@@ -1816,7 +1833,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/02/19 07:30:18 $
+<td width="30%" align=right>$Date: 1998/02/24 17:43:11 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
