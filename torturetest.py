@@ -149,24 +149,31 @@ class TortureGUI:
     def display(self, site):
         for member in TortureGUI.field_map:
             self.set_widget(member + "_entry", getattr(site, member))
-        for proto in ('POP3', 'IMAP'):
+        for proto in ('POP3', 'APOP', 'IMAP'):
             self.wtree.get_widget(proto + "_radiobutton").set_active(site.protocol == proto)
 
     # Housekeeping
     def on_torturetest_destroy(self, obj):
         gtk.mainquit()
-    def on_quit1_activate(self, obj):
+        print "Destroy"
+    def on_quitbutton_activate(self, obj):
         gtk.mainquit()
-    def on_save1_activate(self, obj):
+        print "Mainquit"
+    def on_savebutton_activate(self, obj):
+        gtk.mainquit()
         print "Save"
-    def on_delete1_activate(self, obj):
+    def on_deletebutton_activate(self, obj):
+        gtk.mainquit()
         print "Delete"
+        gtk.mainquit()
     def on_new1_activate(self, obj):
+        gtk.mainquit()
         print "New"
     def on_open1_activate(self, obj):
         print "Open"
 
     def on_combo_entry1_activate(self, obj):
+        print "I see you!"
         key = self.combo.entry.get_text()
         for site in sitelist:
             if site.comment.find(key) > -1:
