@@ -102,7 +102,24 @@ const char *host;	/* server hostname */
 
 	    /* If the address token is not properly terminated, ignore it. */
 	    else if (*from == ' ' || *from == '\t')
-		state = 1;
+	    {
+		const char *cp;
+
+		/*
+		 * The only lookahead case.  If we're looking at space or tab,
+		 * we might be looking at a local name immediately followed
+		 * by a human name.
+		 */
+		for (cp = from; isspace(*cp); cp++)
+		    continue;
+		if (*cp == '(')
+		{
+		    strcpy(buf, "@");
+		    strcat(buf, host);
+		    buf += strlen(buf);
+		    state = 1;
+		}
+	    }
 
 	    /*
 	     * On proper termination with no @, insert hostname.
