@@ -127,12 +127,11 @@ mkdir -p \$RPM_BUILD_ROOT/{etc/X11/wmconfig,usr/lib/rhs/control-panel}
 make install prefix=\$RPM_BUILD_ROOT/usr
 cp rh-config/*.{xpm,init} \$RPM_BUILD_ROOT/usr/lib/rhs/control-panel
 cp fetchmail.man \$RPM_BUILD_ROOT/usr/man/man1/fetchmail.1
-gzip -9nf \$RPM_BUILD_ROOT/usr/man/man1/fetchmail.1
 rm -rf contrib/RCS
 chmod 644 contrib/*
 cp rh-config/fetchmailconf.wmconfig \$RPM_BUILD_ROOT/etc/X11/wmconfig/fetchmailconf
 cd \$RPM_BUILD_ROOT/usr/man/man1
-ln -sf fetchmail.1.gz fetchmailconf.1.gz
+ln -sf fetchmail.1 fetchmailconf.1
 
 %clean
 rm -rf \$RPM_BUILD_ROOT
@@ -141,7 +140,7 @@ rm -rf \$RPM_BUILD_ROOT
 %defattr (644, root, root, 755)
 %doc README NEWS NOTES FAQ COPYING FEATURES sample.rcfile contrib
 %doc fetchmail-features.html fetchmail-FAQ.html design-notes.html
-%attr(644, root, man) /usr/man/man1/*.1.gz
+%attr(644, root, man) /usr/man/man1/*.1
 %attr(755, root, root) /usr/bin/fetchmail
 # Uncomment the following to support internationalization
 # %attr(644,root,root) /usr/share/locale/*/LC_MESSAGES/fetchmail.mo
