@@ -31,6 +31,10 @@
 #include <unix.h>
 #endif
 
+#if defined(HAVE_TERMIOS_H)
+#  include <termios.h>		/* for TIOCNOTTY under Linux */
+#endif
+
 #if !defined(TIOCNOTTY) && defined(HAVE_SGTTY_H)
 #  include <sgtty.h>		/* for TIOCNOTTY under NEXTSTEP */
 #endif
