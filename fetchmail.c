@@ -1149,7 +1149,7 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
     if (runp->invisible)
 	printf("Fetchmail will masquerade and will not generate Received\n");
     if (runp->postmaster)
-	printf("Fetchmail will forward misaddressed multidrop messages to %s.",
+	printf("Fetchmail will forward misaddressed multidrop messages to %s.\n",
 	       runp->postmaster);
 
     for (ctl = querylist; ctl; ctl = ctl->next)
