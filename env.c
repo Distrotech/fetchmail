@@ -40,23 +40,22 @@ void envquery(int argc, char **argv)
     else
 	program_name = argv[0];
 
-    if ((user = getenv("USER")) == (char *)NULL)
-        user = getenv("LOGNAME");
-
-    if ((user == (char *)NULL) || (home = getenv("HOME")) == (char *)NULL)
+    if ((pw = getpwuid(getuid())) != NULL)
     {
-	if ((pw = getpwuid(getuid())) != NULL)
-	{
-	    user = pw->pw_name;
-	    home = pw->pw_dir;
-	}
-	else
-	{
-	    fprintf(stderr,
-		    _("%s: can't find your name and home directory!\n"),
-		    program_name);
-	    exit(PS_UNDEFINED);
-	}
+	user = pw->pw_name;
+	home = pw->pw_dir;
+    }
+    else if ((home = getenv("HOME")))
+    {
+	if ((user = getenv("LOGNAME")) == (char *)NULL || user[0] == '\0')
+	    user = getenv("USER");
+    }
+    else
+    {
+	fprintf(stderr,
+		_("%s: can't find your name and home directory!\n"),
+		program_name);
+	exit(PS_UNDEFINED);
     }
 
 #define RCFILE_NAME	".fetchmailrc"

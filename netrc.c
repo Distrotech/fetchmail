@@ -298,11 +298,7 @@ search_netrc (list, host, account)
     /* Look for the HOST in LIST. */
     while (list)
     {
-	if (!list->host)
-	    /* We hit the default entry. */
-	    break;
-
-	else if (!strcmp(list->host, host))
+	if (list->host && !strcmp(list->host, host))
 	    if (!list->account || !strcmp(list->account, account))
 		/* We found a matching entry. */
 		break;

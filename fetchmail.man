@@ -1755,11 +1755,11 @@ lock file to help prevent concurrent runs (root mode, Linux systems).
 lock file to help prevent concurrent runs (root mode, systems without /var/run).
 
 .SH ENVIRONMENT
-For correct initialization, 
+For correct initialization,
 .I fetchmail
-requires either that both the USER and HOME environment variables are
-correctly set, or that \fBgetpwuid\fR(3) be able to retrieve a password
-entry from your user ID.
+requires either that \fBgetpwuid\fR(3) be able to retrieve a password
+entry from your user ID, or that either the LOGNAME or USER and the
+HOME environment variables are correctly set.
 
 .SH SIGNALS
 If a

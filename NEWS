@@ -8,6 +8,13 @@
 
 				Release Notes:
 
+fetchmail-5.0.1 ():
+* Try to discover user/home via getpwuid(getuid()) before using LOGNAME/HOME.
+* Mike Pearce's fix for buggy DEFAULT handling in .netrc.
+
+There are 255 people on fetchmail-friends and 369 on fetchmail-announce.
+
+------------------------------------------------------------------------------
 fetchmail-5.0.0 (Mon Apr  5 11:00:24 EDT 1999):
 * Update for fetchsetup from Kent Robotti.
 * Eliminate a realloc error in fetchmail -v -v progress message generation.
