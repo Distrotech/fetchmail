@@ -58,7 +58,7 @@ int check_only;		/* if --probe was set */
 char *rcfile;		/* path name of rc file */
 char *idfile;		/* UID list file */
 int versioninfo;	/* emit only version info */
-char *dfltuser;		/* invoking user */
+char *user;		/* the name of the invoking user */
 
 static void termhook();
 static char *lockfile;
@@ -74,7 +74,7 @@ char **argv;
     int st, bkgd, lossage;
     struct query def_opts;
     int parsestatus, implicitmode;
-    char *user, *home, *tmpdir, tmpbuf[BUFSIZ]; 
+    char *home, *tmpdir, tmpbuf[BUFSIZ]; 
     struct passwd *pw;
     FILE	*lockfp;
     pid_t pid;
@@ -172,12 +172,6 @@ char **argv;
     for (ctl = querylist; ctl; ctl = ctl->next)
 	if (strcmp(ctl->servername, "defaults") == 0)
 	    exit(PS_SYNTAX);
-
-    /* figure out who the default recipient should be */
-    if (getuid() == 0)
-	dfltuser = ctl->remotename;
-    else
-	dfltuser = user;
 
     /* merge in wired defaults, do sanity checks and prepare internal fields */
     for (ctl = querylist; ctl; ctl = ctl->next)

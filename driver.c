@@ -546,19 +546,19 @@ struct query *ctl;	/* query control record */
 		find_server_names(tohdr,  ctl, &xmit_names);
 		find_server_names(cchdr,  ctl, &xmit_names);
 		find_server_names(bcchdr, ctl, &xmit_names);
-
-		/* if nothing supplied localnames, default appropriately */
-		if (!xmit_names)
-		    save_uid(&xmit_names, -1, dfltuser);
 	    }
 	    else	/* it's a single-drop box, use first localname */
 #endif /* HAVE_GETHOSTBYNAME */
 	    {
 		if (ctl->localnames)
 		    save_uid(&xmit_names, -1, ctl->localnames->id);
-		else
-		    save_uid(&xmit_names, -1, dfltuser);
 	    }
+
+	    /* if nothing supplied localnames, default appropriately */
+	    if (getuid() == 0)
+		save_uid(&xmit_names, -1, ctl->remotename);
+	    else
+		save_uid(&xmit_names, -1, user);
 
 	    /* time to address the message */
 	    if (ctl->mda[0])	/* we have a declared MDA */
