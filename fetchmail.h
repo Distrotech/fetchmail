@@ -73,7 +73,7 @@ struct hostrec
   int port;
 
   /* state used for tracking UIDL ids */
-  char lastid [IDLEN];
+  char lastid [IDLEN+1];
 
   /* dependent on the above members */
   int output;
