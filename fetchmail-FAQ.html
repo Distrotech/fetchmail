@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/01/22 23:33:42 $
+<td width="30%" align=right>$Date: 1998/02/11 08:04:00 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -38,7 +38,8 @@ IP address?</a><br>
 
 <h1>Build-time problems:</h1>
 
-<a href="#B1">B1. I get link failures when I try to build fetchmail.</a><br>
+<a href="#B1">B1. Lex bombs out while building the fetchmail lexer.</a><br>
+<a href="#B2">B2. I get link failures when I try to build fetchmail.</a><br>
 
 <h1>Fetchmail configuration file grammar questions:</h1>
 
@@ -160,7 +161,7 @@ not be completely current.<p>
 
 Yes I will, provided you include enough diagnostic information for me
 to go on.  Send bugs to <a
-href="mailto:fetchmail-friends">fetchmail-friends</a>.  When reporting
+href="mailto:fetchmail-friends@ccil.org">fetchmail-friends</a>.  When reporting
 bugs, please include the following:
 
 <ol>
@@ -393,7 +394,16 @@ first, observe the actual address range you see on connections, and
 add an <code>interface</code> option (if you need one) later.<P>
 
 <hr>
-<h2><a name="B1">B1. I get link failures when I try to build fetchmail.</a></h2>
+<h2><a name="B1">B1. Lex bombs out while building the fetchmail lexer.</a></h2>
+
+In the immortal words of Alan Cox the last time this came up: "Take
+the Solaris lex and stick it up the backside of a passing Sun
+salesman, then install flex and use that.  All will be happier."<P>
+
+I couldn't have put it better myself, and aren't going to try now.<P>
+
+<hr>
+<h2><a name="B2">B2. I get link failures when I try to build fetchmail.</a></h2>
 
 If you get errors resembling these<P>
 
@@ -1708,7 +1718,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/01/22 23:33:42 $
+<td width="30%" align=right>$Date: 1998/02/11 08:04:00 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
