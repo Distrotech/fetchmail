@@ -22,13 +22,14 @@ every user entry in a multi-user poll declaration.
 
 ------------------------------------------------------------------------------
 
-pl 3.9.4 ():
+pl 3.9.4 (Wed May 14 12:27:22 EDT 1997):
 * Fixed a compilation glitch for systems like SunOS & others without atexit(3).
 * Fixed a compilation glitch in daemonize for HP-UX.
 * Changes to compile correctly on systems that have on_exit() but not atexit().
 * Changes to forbid duplicate server names in the rc file.
 * Do caseblind comparisons of host and user names everywhere.
-* IMAP retrieval can now handle messages with embedded NULs
+* IMAP retrieval can now handle messages with embedded NULs.
+* Fixed a core dump in .netrc searching reported by Jim Spath.
 
 There are 248 people on the fetchmail-friends list.
 
