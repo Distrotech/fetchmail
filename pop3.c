@@ -150,6 +150,8 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 		    if (ok != 2)
 		  	PROTOCOL_ERROR
 	    }
+
+	    /* otherwise generate a challenge from the secret we have */
 	    else if (opiegenerator(challenge, ctl->password, response))
 		 PROTOCOL_ERROR
 
