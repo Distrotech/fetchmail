@@ -14,6 +14,10 @@
 #include <sys/types.h>
 #include <sys/param.h>
 
+#if defined(linux)
+#include <sys/utsname.h>
+#endif
+
 #if (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__)
 
 #include "config.h"
@@ -73,24 +77,23 @@ static char *netdevfmt;
 #if defined(linux)
 
 void interface_init(void)
-/* figure out which /proc/dev/net format to use */
+/* figure out which /proc/net/dev format to use */
 {
-    FILE *fp = popen("uname -r", "r");	/* still wins if /proc is out */
+    struct utsname utsname;
 
-    /* pre-linux-2.2 format -- transmit packet count in 8th field */
-    netdevfmt = "%d %d %*d %*d %*d %d %*d %d %*d %*d %*d %*d %d";
+    /* Linux 2.2 -- transmit packet count in 10th field */
+    netdevfmt = "%d %d %*d %*d %*d %d %*d %*d %*d %d %*d %*d %d";
 
-    if (!fp)
-	return;
+    if (uname(&utsname) < 0)
+        return;
     else
     {
 	int major, minor;
 
-	if (fscanf(fp, "%d.%d.%*d", &major, &minor) >= 2
-					&& major >= 2 && minor >= 2)
-	    /* Linux 2.2 -- transmit packet count in 10th field */
-	    netdevfmt = "%d %d %*d %*d %*d %d %*d %*d %*d %d %*d %*d %d";
-	pclose(fp);
+	if (sscanf(utsname.release, "%d.%d.%*d", &major, &minor) >= 2
+					&& !(major >= 2 && minor >= 2))
+	    /* pre-linux-2.2 format -- transmit packet count in 8th field */
+	    netdevfmt = "%d %d %*d %*d %*d %d %*d %d %*d %*d %*d %*d %d";
     }
 }
 
