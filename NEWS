@@ -9,12 +9,17 @@ a Certifying Authority we recognize?).
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.2.0 (Sun Dec 19 23:08:53 EST 1999), 18330 lines:
 * Added FAQ item R10 on timeouts during messages.
 * Fixed indentation problem in fetchmailconf.
 * Federico Schwindt's patch to fix broken SSL configuration.
 * Fixes to use fetchmail with IPv6 enabled on glibc without inet6-apps 
   installed; thanks to Arkadiusz Mi¶kiewicz.
 * Interpret IMAP PREAUTH tag correctly (from Joerg Dorchain).
+* Upgraded to version 0.21 of smbutil.c.  FAQ item S2 now documents 
+  how to set a domain name.
+
+There are 282 people on fetchmail-friends and 479 on fetchmail-announce.
 
 fetchmail-5.2.0 (Tue Nov 30 14:24:25 EST 1999), 18302 lines:
 * fetchmailconf now complains and exits gracefully when not run under X.

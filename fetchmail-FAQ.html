@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/12/19 20:11:48 $
+<td width="30%" align=right>$Date: 1999/12/20 04:24:55 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1206,7 +1206,9 @@ for details.  The solution is to upgrade your fetchmail.<p>
 
 Fetchmail now supports the proprietary NTLM mode used with M$ Exchange
 servers. To enable this, configure fetchmail with the --enable-NTLM
-option and recompile it.<P>
+option and recompile it.  Note: if you specify a user option value
+that looks like `user@domain', the part to the left of the @ will
+be passed as the username and the part to the right as the NTLM domain.<P>
 
 M$ Exchange violates the POP3 RFCs.  Its LIST command does not reveal
 the real sizes of mail in the pop mailbox, but the sizes of the
@@ -2508,7 +2510,7 @@ inactivity timeout.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/12/19 20:11:48 $
+<td width="30%" align=right>$Date: 1999/12/20 04:24:55 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

@@ -699,7 +699,9 @@ Microsoft's NTLM authentication (used by Microsoft Exchange) is
 supported. If you compile in the support, \fIfetchmail\fR will try to
 perform an NTLM authentication (instead of sending over the
 password en clair) whenever the server returns AUTH=NTLM in its
-capability response.
+capability response.  Note: if you specify a user option value
+that looks like `user@domain', the part to the left of the @ will
+be passed as the username and the part to the right as the NTLM domain.
 .PP
 If you are using IPsec, the -T (--netsec) option can be used to pass
 an IP security request to be used when outgoing IP connections are
