@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.9.11 (Mon Apr  1 17:09:13 EST 2002), 21597 lines:
+
 * Updated Turkish and Japanese translations.
 * Added warning about auth failures on the GMX server.
 * HMH's Debian 5.9.10 patches:
@@ -21,6 +23,10 @@
    without SSL support.
 8. Byrial Jensen <byrial@image.dk> i18n fixes
 * Sunil Shetye's attribute patch.
+* HMH's revised but untested SMTP authentication patch.
+* Added GPL license exemption to COPYING for linking with OpenSSL.
+
+There are 489 people on fetchmail-friends and 654 on fetchmail-announce.
 
 fetchmail-5.9.10 (Sun Mar 10 15:09:57 EST 2002), 21529 lines:
 
