@@ -105,10 +105,12 @@ options, in case there is something not quite right with your server,
 your local delivery configuration or your port 25 listener.  Also,
 beware of aliases that direct your local mail back to the server host!
 
-This software is known to work with the qpop/popper series of
-freeware POP3 servers; also with the IMAP2bis and IMAP4 servers that are
-distributed with Pine from the University of Washington.  This covers
-all the servers normally hosted on Linux and *BSD systems.
+This software is known to work with the qpop/popper series of freeware
+POP3 servers; also with the IMAP2bis and IMAP4 servers that are
+distributed with Pine from the University of Washington; also with the
+Cyrus IMAP server from CMU.  This covers all the servers normally
+hosted on Linux and *BSD systems.  Note that this software does *not*
+work with Microsoft Exchange, because Microsoft Exchange is broken.
 
 7. REPORTING BUGS
 
