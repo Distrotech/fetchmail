@@ -1280,6 +1280,12 @@ This POP server has a weird bug; it says OK twice in response to TOP.
 Its response to RETR is normal, so use the `fetchall' option.
 
 """
+	    if string.find(greetline, " geonet.de") > 0:
+		warnings = warnings + """
+You appear to be using geonet.  As of late 2002, the TOP command on
+geonet's POP3 is broken.  Use the fetchall option.
+
+"""
 	    if string.find(greetline, "GMX POP3 StreamProxy") > 0:
 		warnings = warnings + """
 The GMX POP3 server behaves badly on authentication failures, sending
