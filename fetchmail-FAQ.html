@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/12/01 19:29:53 $
+<td width="30%" align=right>$Date: 1998/12/07 05:19:08 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -90,7 +90,7 @@ IP address?</a><br>
 <a href="#R3">R3. Fetchmail dumps core when given an invalid rc file.</a><br>
 <a href="#R4">R4. Fetchmail dumps core in -V mode, but operates normally otherwise.</a><br>
 <a href="#R5">R5. Running fetchmail in daemon mode doesn't work.</a><br>
-<a href="#R6">R6. Fetchmail hangs when used with pppd.</a><b>
+<a href="#R6">R6. Fetchmail hangs when used with pppd.</a><br>
 <a href="#R7">R7. Fetchmail randomly dies with socket errors.</a><br>
 
 <h1>Disappearing mail</h1>
@@ -2048,15 +2048,6 @@ simulation along with the other things described in the FAQ entry on
 <a href="#G3">reporting bugs</a>.
 
 <hr>
-<h2><a name="O1">O1. The --logfile option doesn't work if the logfile doesn't exist.</a></h2>
-
-This is a feature, not a bug.  It's in line with normal practice for
-system daemons and allows you to suppress logging by removing the log,
-without hacking potentially fragile startup scripts.  To get around
-it, just touch(1) the logfile before you run fetchmail (this will have
-no effect on the contents of the logfile if it already exists).<P>
-
-<hr>
 <h2><a name="X5">X5. Using POP3, retrievals seems to be fetching too much!</a></h2>
 
 This may happen in versions of fetchmail after 4.4.1 and before 4.4.8.
@@ -2075,6 +2066,15 @@ Fix: Upgrade to a later version of fetchmail.<P>
 Workaround: set the <code>fetchall</code> option.  Under POP3 in these
 fetchmail version only, this had the side effect of forcing RETR
 use.<P>
+
+<hr>
+<h2><a name="O1">O1. The --logfile option doesn't work if the logfile doesn't exist.</a></h2>
+
+This is a feature, not a bug.  It's in line with normal practice for
+system daemons and allows you to suppress logging by removing the log,
+without hacking potentially fragile startup scripts.  To get around
+it, just touch(1) the logfile before you run fetchmail (this will have
+no effect on the contents of the logfile if it already exists).<P>
 
 <hr>
 <h2><a name="O2">O2. Every time I get a POP or IMAP message the header
@@ -2207,7 +2207,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/12/01 19:29:53 $
+<td width="30%" align=right>$Date: 1998/12/07 05:19:08 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
