@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/08/11 20:03:53 $
+<td width="30%" align=right>$Date: 1997/09/03 19:19:34 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -87,6 +87,7 @@ when I may have multiple login sessions going?</a><br>
 <a href="#O1">O1. The --logfile option doesn't work if the logfile doesn't exist.</a><br>
 <a href="#O2">O2. Every time I get a POP or IMAP message the header is
 dumped to all my terminal sessions.</a><br>
+<a href="#O3">O3. Does fetchmail reread its rc file every poll cycle?</a><br>
 
 <h1>Answers:</h1>
 <hr>
@@ -1197,7 +1198,7 @@ no effect on the contents of the logfile if it already exists).<P>
 <h2><a name="O2">O2. Every time I get a POP or IMAP message the header
 is dumped to all my terminal sessions.</a></h2>
 
-fetchmail uses the local sendmail to perform final delivery, which
+Fetchmail uses the local sendmail to perform final delivery, which
 Netscape and other clients doen't do; the announcement of new messages
 is done by a daemon that sendmail pokes. There should be a ``biff''
 command to control this.  Type
@@ -1230,11 +1231,17 @@ biff n
 
 to solve the problem system-wide.<P>
 
+<hr>
+<h2><a name="O3">O3. Does fetchmail reread its rc file every poll cycle?</a></h2>
+
+No.  Fetchmail only reads the rc file once, when it starts up.  To
+force an rc file reread, do <code>fetchmail -q; fetchmail</code>.<P>
+
 <HR>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/08/11 20:03:53 $
+<td width="30%" align=right>$Date: 1997/09/03 19:19:34 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
