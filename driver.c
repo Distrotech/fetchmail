@@ -676,9 +676,11 @@ cleanUp:
 #endif /* HAVE_RRESVPORT_H */
 
 closeUp:
-    SMTP_quit(mboxfd);
-    close(mboxfd);
-
+    if (mboxfd != -1)
+    {
+	SMTP_quit(mboxfd);
+	close(mboxfd);
+    }
     return(ok);
 }
 
