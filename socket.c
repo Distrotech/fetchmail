@@ -172,7 +172,17 @@ int SockWrite(char *buf, int size, int len, FILE *sockfp)
 
 char *SockGets(char *buf, int len, FILE *sockfp)
 {
-    return(fgets(buf, len, sockfp));
+    char *in = fgets(buf, len, sockfp);
+
+#ifndef linux
+    /*
+     * Weirdly, this actually wedges under Linux (2.0.27 with libc 5.3.12-8).
+     * It's apparently good under NEXTSTEP.
+     */
+    fseek(sockfp, 0L, SEEK_CUR);	/* required by POSIX */
+#endif /* linux */
+
+    return(in);
 }
 
 #endif
