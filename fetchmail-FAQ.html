@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/09/09 10:40:08 $
+<td width="30%" align=right>$Date: 2001/09/26 14:11:25 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1376,17 +1376,16 @@ RFC-compliant server.  IMAP is alleged to work OK, though.
 
 <p>Older versions of Exchange are semi-usable.
 
-
 <p>Fetchmail using IMAP supports the proprietary NTLM mode used with
 M$ Exchange servers. To enable this, configure fetchmail with the
 --enable-NTLM option and recompile it.  Specify a user option value
 that looks like `user@domain': the part to the left of the @ will
 be passed as the username and the part to the right as the NTLM domain.
 
-<p>M$ Exchange violates the POP3 RFCs.  Its LIST command does not reveal
-the real sizes of mail in the pop mailbox, but the sizes of the
-compressed versions in the exchange mail database (thanks to Arjan De
-Vet and Guido Van Rooij for alerting us to this problem).
+<p>M$ Exchange violates the POP3 and IMAP RFCs.  Its LIST command does
+not reveal the real sizes of mail in the pop mailbox, but the sizes of
+the compressed versions in the exchange mail database (thanks to Arjan
+De Vet and Guido Van Rooij for alerting us to this problem).
 
 <p>Fetchmail works with M$ Exchange, despite this brain damage.  Two
 features are compromised.  One is that the --limit option will not
@@ -1473,7 +1472,7 @@ Get your administrator to add an alias that maps your
 username explicitly to your mailbox name.
 </ul>
 
-But, the best option involves a tactical nuclear weapon (an old
+<p>But, the best option involves a tactical nuclear weapon (an old
 ASROC will do), pissing off a lot people who live downwind from
 Redmond, and your choice of any Linux, NetBSD, FreeBSD, or
 Solaris CD.
@@ -2879,7 +2878,7 @@ date from the last Received header.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/09/09 10:40:08 $
+<td width="30%" align=right>$Date: 2001/09/26 14:11:25 $
 </table>
 
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@thyrsus.com&gt;</A></ADDRESS>
