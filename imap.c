@@ -27,6 +27,10 @@ int imap_ok (FILE *sockfp,  char *argbuf)
     do {
 	if (!fgets(buf, sizeof(buf), sockfp))
 	    return(PS_SOCKET);
+	if (buf[strlen(buf)-1] == '\n')
+	    buf[strlen(buf)-1] = '\0';
+	if (buf[strlen(buf)-1] == '\r')
+	    buf[strlen(buf)-1] = '\r';
 
 	if (outlevel == O_VERBOSE)
 	    error(0, 0, "IMAP< %s", buf);
@@ -122,6 +126,10 @@ static int imap_getsizes(FILE *sockfp, int count, int *sizes)
     {
 	int num, size;
 
+	if (buf[strlen(buf)-1] == '\n')
+	    buf[strlen(buf)-1] = '\0';
+	if (buf[strlen(buf)-1] == '\r')
+	    buf[strlen(buf)-1] = '\r';
 	if (outlevel == O_VERBOSE)
 	    error(0, 0, "IMAP< %s", buf);
 	if (strstr(buf, "OK"))

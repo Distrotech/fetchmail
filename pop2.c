@@ -24,6 +24,10 @@ int pop2_ok (FILE *sockfp, char *argbuf)
 
     pound_arg = equal_arg = -1;
     if (fgets(buf, sizeof(buf), sockfp)) {
+	if (buf[strlen(buf)-1] == '\n')
+	    buf[strlen(buf)-1] = '\0';
+	if (buf[strlen(buf)-1] == '\r')
+	    buf[strlen(buf)-1] = '\r';
 	if (outlevel == O_VERBOSE)
 	    error(0, 0, "POP2< %s", buf);
 

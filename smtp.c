@@ -101,6 +101,10 @@ int SMTP_ok(FILE *sockfp)
     {
 	int  n = strlen(ip);
 
+	if (buf[strlen(buf)-1] == '\n')
+	    buf[strlen(buf)-1] = '\0';
+	if (buf[strlen(buf)-1] == '\r')
+	    buf[strlen(buf)-1] = '\r';
 	if (n < 4)
 	    return SM_ERROR;
 	buf[n] = '\0';
