@@ -24,7 +24,10 @@ int SMTP_from(FILE *sockfp,char *from,char *opts);
 int SMTP_rcpt(FILE *sockfp,char *to);
 int SMTP_data(FILE *sockfp);
 int SMTP_eom(FILE *sockfp);
+int SMTP_rset(FILE *sockfp);
 int SMTP_quit(FILE *sockfp);
 int SMTP_ok(FILE *sockfp);
+
+extern char smtp_response[MSGBUFSIZE];
 
 #endif

@@ -11,9 +11,15 @@ features --
   Content-Transfer-Encoding header is 7BIT or 8BIT, it is appended to the
   MAIL FROM command as a BODY option.
 
+* ESMTP SIZE option is supported when using IMAP2bis or IMAP4.  This means
+  messages too long for the local ESMTP listener will be rejected *before*
+  they are downloaded.
+
 bugs --
 
 * Compilation fixes for non-Linux machines.
+
+There are 202 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-3.0 (Tue Jan 21 16:44:56 EST 1997)

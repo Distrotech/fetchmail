@@ -395,7 +395,7 @@ char *realname;		/* real name of host */
     char *bufp, *headers, *fromhdr,*tohdr,*cchdr,*bcchdr,*received_for,*envto;
     char *fromptr, *toptr, *ctthdr;
     int n, oldlen, ch;
-    int inheaders, sizeticker;
+    int inheaders, sizeticker, delete_ok;
     FILE *sinkfp;
     RETSIGTYPE (*sigchld)();
 #ifdef HAVE_GETHOSTBYNAME
@@ -403,7 +403,7 @@ char *realname;		/* real name of host */
 #endif /* HAVE_GETHOSTBYNAME */
 
     /* read the message content from the server */
-    inheaders = 1;
+    inheaders = delete_ok = TRUE;
     headers = fromhdr = tohdr = cchdr = bcchdr = received_for = envto = ctthdr = NULL;
     sizeticker = 0;
     oldlen = 0;
@@ -432,7 +432,7 @@ char *realname;		/* real name of host */
 	len -= n;
 	bufp = buf;
 	if (buf[0] == '\r' && buf[1] == '\n')
-	    inheaders = 0;
+	    inheaders = FALSE;
 	if (delimited && *bufp == '.') {
 	    if (bufp[1] == '\r' && bufp[2] == '\n')
 		break;  /* end of message */
@@ -597,6 +597,7 @@ char *realname;		/* real name of host */
 	    else
 	    {
 		char	*ap, *ctt, options[MSGBUFSIZE];
+		int	smtperr;
 
 		/* build a connection to the SMTP listener */
 		if (!ctl->mda && ((sinkfp = smtp_open(ctl)) == NULL))
@@ -612,13 +613,14 @@ char *realname;		/* real name of host */
 		 * headers isn't semantically an address.  But it has the
 		 * desired tokenizing effect.
 		 */
+		options[0] = '\0';
 		if ((ctl->server.esmtp_options & ESMTP_8BITMIME)
 			&& ctthdr
 			&& (ctt = nxtaddr(ctthdr))
 			&& (!strcasecmp(ctt,"7BIT")||!strcasecmp(ctt,"8BIT")))
 		    sprintf(options, " BODY=%s", ctt);
-		else
-		    options[0] = '\0';
+		if ((ctl->server.esmtp_options & ESMTP_SIZE) && !delimited)
+		    sprintf(options + strlen(options), " SIZE=%d", len);
 
 		/*
 		 * Try to get the SMTP listener to take the header
@@ -628,27 +630,67 @@ char *realname;		/* real name of host */
 		 * From address anyway.
 		 */
 		if (!fromhdr || !(ap = nxtaddr(fromhdr)))
+		    ap = user;
+		if (SMTP_from(sinkfp, ap, options) != SM_OK)
 		{
-		    if (SMTP_from(sinkfp, user, options)!=SM_OK)
+		    int smtperr = atoi(smtp_response);
+
+		    if (smtperr >= 400)
+			error(0, 0, "SMTP error: %s", smtp_response);
+
+		    /*
+		     * There'a one problem with this flow of control;
+		     * there's no way to avoid reading the whole message
+		     * off the server, even if the MAIL FROM response 
+		     * tells us that it's just to be discarded.  We could
+		     * fix this under IMAP by reading headers first, then
+		     * trying to issue the MAIL FROM, and *then* reading
+		     * the body...but POP3 can't do this.
+		     */
+
+		    switch (smtperr)
 		    {
-			error(0, 0, "%s not accepted as From address?", user);
-			return(PS_SMTP);	/* should never happen */
-		    }
-		}
-		else if (SMTP_from(sinkfp, ap, options)!=SM_OK)
-		    if (smtp_response == 571)
-		    {
+		    case 571: /* unsolicited email refused */
 			/*
 			 * SMTP listener explicitly refuses to deliver
 			 * mail coming from this address, probably due
 			 * to an anti-spam domain exclusion.  Respect
-			 * this.
+			 * this.  Don't try to ship the message, and
+			 * don't prevent it from being deleted.
 			 */
 			sinkfp = (FILE *)NULL;
 			goto skiptext;
+
+		    case 452: /* insufficient system storage */
+			/*
+			 * Temporary out-of-queue-space condition on the
+			 * ESMTP server.  Don't try to ship the message, 
+			 * and suppress deletion so it can be retried on
+			 * a future retrieval cycle.
+			 */
+			delete_ok = FALSE;
+			sinkfp = (FILE *)NULL;
+			SMTP_rset(sockfp);	/* required by RFC1870 */
+			goto skiptext;
+
+		    case 552: /* message exceeds fixed maximum message size */
+			/*
+			 * Permanent no-go condition on the
+			 * ESMTP server.  Don't try to ship the message, 
+			 * and allow it to be deleted.
+			 */
+			sinkfp = (FILE *)NULL;
+			SMTP_rset(sockfp);	/* required by RFC1870 */
+			goto skiptext;
+
+		    default:	/* retry with invoking user's address */
+			if (SMTP_from(sinkfp, user, options) != SM_OK)
+			{
+			    error(0,0,"SMTP error: %s", smtp_response);
+			    return(PS_SMTP);	/* should never happen */
+			}
 		    }
-		    else if (SMTP_from(sinkfp, user, options) != SM_OK)
-			return(PS_SMTP);	/* should never happen */
+		}
 
 		/* now list the recipient addressees */
 		for (idp = xmit_names; idp; idp = idp->next)
@@ -810,11 +852,11 @@ char *realname;		/* real name of host */
 	if (SMTP_eom(sinkfp) != SM_OK)
 	{
 	    error(0, 0, "SMTP listener refused delivery");
-	    return(PS_SMTP);
+	    return(PS_TRANSIENT);
 	}
     }
 
-    return(0);
+    return(delete_ok ? PS_SUCCESS : PS_TRANSIENT);
 }
 
 #ifdef KERBEROS_V4
@@ -1081,7 +1123,6 @@ const struct method *proto;	/* protocol method table */
 	    vtalarm(ctl->server.timeout);
 	}
 
-
 	if (check_only)
 	{
 	    if (new == -1 || ctl->fetchall)
@@ -1123,6 +1164,7 @@ const struct method *proto;	/* protocol method table */
 		int	toolarge = msgsizes && (msgsizes[num-1] > ctl->limit);
 		int	fetch_it = ctl->fetchall ||
 		    (!toolarge && (force_retrieval || !(protocol->is_old && (protocol->is_old)(sockfp,ctl,num))));
+		int	suppress_delete = FALSE;
 
 		/* we may want to reject this message if it's old */
 		if (!fetch_it)
@@ -1159,7 +1201,9 @@ const struct method *proto;	/* protocol method table */
 				     protocol->delimited,
 				     ctl,
 				     realname);
-		    if (ok != 0)
+		    if (ok == PS_TRANSIENT)
+			suppress_delete = TRUE;
+		    else if (ok)
 			goto cleanUp;
 		    vtalarm(ctl->server.timeout);
 
@@ -1184,6 +1228,7 @@ const struct method *proto;	/* protocol method table */
 
 		/* maybe we delete this message now? */
 		if (protocol->delete
+		    && !suppress_delete
 		    && (fetch_it ? !ctl->keep : ctl->flush))
 		{
 		    deletions++;

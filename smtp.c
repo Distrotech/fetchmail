@@ -25,11 +25,12 @@ struct opt
 
 static struct opt extensions[] =
 {
-    {"8BITMIME", ESMTP_8BITMIME},
+    {"8BITMIME",	ESMTP_8BITMIME},
+    {"SIZE",    	ESMTP_SIZE},
     {(char *)NULL, 0},
 };
 
-int smtp_response;	/* numeric value of SMTP response code */
+char smtp_response[MSGBUFSIZE];
 
 int SMTP_helo(FILE *sockfp,char *host)
 /* send a "HELO" message to the SMTP listener */
@@ -47,7 +48,7 @@ int SMTP_ehlo(FILE *sockfp, char *host, int *opt)
 /* send a "EHLO" message to the SMTP listener, return extension status bits */
 {
   int ok;
-  char buf[SMTPBUFSIZE], *ip;
+  char *ip;
   struct opt *hp;
 
   SockPrintf(sockfp,"EHLO %s\r\n", host);
@@ -55,26 +56,25 @@ int SMTP_ehlo(FILE *sockfp, char *host, int *opt)
       error(0, 0, "SMTP> EHLO %s", host);
   
   *opt = 0;
-  while ((ip = SockGets(buf, sizeof(buf)-1, sockfp)))
+  while ((ip = SockGets(smtp_response, sizeof(smtp_response)-1, sockfp)))
   {
       int  n = strlen(ip);
 
-      if (buf[strlen(buf)-1] == '\n')
-	  buf[strlen(buf)-1] = '\0';
-      if (buf[strlen(buf)-1] == '\r')
-	  buf[strlen(buf)-1] = '\r';
+      if (smtp_response[strlen(smtp_response)-1] == '\n')
+	  smtp_response[strlen(smtp_response)-1] = '\0';
+      if (smtp_response[strlen(smtp_response)-1] == '\r')
+	  smtp_response[strlen(smtp_response)-1] = '\r';
       if (n < 4)
 	  return SM_ERROR;
-      buf[n] = '\0';
+      smtp_response[n] = '\0';
       if (outlevel == O_VERBOSE)
-	  error(0, 0, "SMTP< %s", buf);
+	  error(0, 0, "SMTP< %s", smtp_response);
       for (hp = extensions; hp->name; hp++)
-	  if (!strncasecmp(hp->name, buf+4, strlen(hp->name)))
+	  if (!strncasecmp(hp->name, smtp_response+4, strlen(hp->name)))
 	      *opt |= hp->value;
-      smtp_response = atoi(buf);
-      if ((buf[0] == '1' || buf[0] == '2' || buf[0] == '3') && buf[3] == ' ')
+      if ((smtp_response[0] == '1' || smtp_response[0] == '2' || smtp_response[0] == '3') && smtp_response[3] == ' ')
 	  return SM_OK;
-      else if (buf[3] != '-')
+      else if (smtp_response[3] != '-')
 	  return SM_ERROR;
   }
   return SM_UNRECOVERABLE;
@@ -121,6 +121,18 @@ int SMTP_data(FILE *sockfp)
   return ok;
 }
 
+int SMTP_rset(FILE *sockfp)
+/* send a "RSET" message to the SMTP listener */
+{
+  int ok;
+
+  SockPrintf(sockfp,"RSET\r\n");
+  if (outlevel == O_VERBOSE)
+      error(0, 0, "SMTP> RSET");
+  ok = SMTP_ok(sockfp);
+  return ok;
+}
+
 int SMTP_quit(FILE *sockfp)
 /* send a "QUIT" message to the SMTP listener */
 {
@@ -148,25 +160,24 @@ int SMTP_eom(FILE *sockfp)
 int SMTP_ok(FILE *sockfp)
 /* returns status of SMTP connection */
 {
-    char buf[SMTPBUFSIZE], *ip;
+    char *ip;
   
-    while ((ip = SockGets(buf, sizeof(buf)-1, sockfp)))
+    while ((ip = SockGets(smtp_response, sizeof(smtp_response)-1, sockfp)))
     {
 	int  n = strlen(ip);
 
-	if (buf[strlen(buf)-1] == '\n')
-	    buf[strlen(buf)-1] = '\0';
-	if (buf[strlen(buf)-1] == '\r')
-	    buf[strlen(buf)-1] = '\r';
+	if (smtp_response[strlen(smtp_response)-1] == '\n')
+	    smtp_response[strlen(smtp_response)-1] = '\0';
+	if (smtp_response[strlen(smtp_response)-1] == '\r')
+	    smtp_response[strlen(smtp_response)-1] = '\r';
 	if (n < 4)
 	    return SM_ERROR;
-	buf[n] = '\0';
+	smtp_response[n] = '\0';
 	if (outlevel == O_VERBOSE)
-	    error(0, 0, "SMTP< %s", buf);
-	smtp_response = atoi(buf);
-	if ((buf[0] == '1' || buf[0] == '2' || buf[0] == '3') && buf[3] == ' ')
+	    error(0, 0, "SMTP< %s", smtp_response);
+	if ((smtp_response[0] == '1' || smtp_response[0] == '2' || smtp_response[0] == '3') && smtp_response[3] == ' ')
 	    return SM_OK;
-	else if (buf[3] != '-')
+	else if (smtp_response[3] != '-')
 	    return SM_ERROR;
     }
     return SM_UNRECOVERABLE;

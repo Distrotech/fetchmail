@@ -37,6 +37,7 @@
 #define		PS_EXCLUDE	8	/* exclusion error */
 #define         PS_SMTP         9       /* SMTP error */
 #define		PS_UNDEFINED	10	/* something I hadn't thought of */
+#define		PS_TRANSIENT	11	/* transient failure (internal use) */
 
 /* output noise level */
 #define         O_SILENT	0	/* mute, max squelch, etc. */
@@ -171,8 +172,6 @@ extern char *idfile;		/* path name of UID file */
 extern int linelimit;		/* limit # lines retrieved per site */
 extern int versioninfo;		/* emit only version info */
 extern char *user;		/* name of invoking user */
-
-extern int smtp_response;	/* numeric value of SMTP response code */
 
 /* prototypes for globally callable functions */
 #if defined(HAVE_STDARG_H)
