@@ -411,7 +411,7 @@ char *realname;		/* real name of host */
     char buf [MSGBUFSIZE+1]; 
     int	from_offs, to_offs, cc_offs, bcc_offs, ctt_offs, env_offs, rtp_offs;
     char *headers, *received_for;
-    int n, oldlen, ch, sizeticker, delete_ok;
+    int n, oldlen, ch, sizeticker, delete_ok, remaining;
     FILE *sinkfp;
     RETSIGTYPE (*sigchld)();
 #ifdef HAVE_GETHOSTBYNAME
@@ -426,6 +426,7 @@ char *realname;		/* real name of host */
 
     sizeticker = 0;
     delete_ok = TRUE;
+    remaining = len;
 
     /* read message headers */
     headers = received_for = NULL;
@@ -451,7 +452,8 @@ char *realname;		/* real name of host */
 	    ((ch = SockPeek(sockfp)) == ' ' || ch == '\t');
 
 	/* write the message size dots */
-	if ((outlevel>O_SILENT && outlevel<O_VERBOSE) && (n=strlen(line)) > 0)
+	n = strlen(line);
+	if ((outlevel > O_SILENT && outlevel < O_VERBOSE) && n > 0)
 	{
 	    sizeticker += n;
 	    while (sizeticker >= SIZETICKER)
@@ -460,7 +462,7 @@ char *realname;		/* real name of host */
 		sizeticker -= SIZETICKER;
 	    }
 	}
-	len -= n;
+	remaining -= n;
 
 	/* check for end of headers; don't save terminating line */
 	if (line[0] == '\r' && line[1] == '\n')
@@ -911,7 +913,7 @@ char *realname;		/* real name of host */
      */
 
     /* pass through the text lines */
-    while (delimited || len > 0)
+    while (delimited || remaining > 0)
     {
 	if (!SockGets(buf, sizeof(buf)-1, sockfp))
 	    return(PS_SOCKET);
@@ -928,7 +930,7 @@ char *realname;		/* real name of host */
 		sizeticker -= SIZETICKER;
 	    }
 	}
-	len -= n;
+	remaining -= n;
 
 	/* check for end of message */
 	if (delimited && *buf == '.')
