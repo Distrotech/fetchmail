@@ -339,7 +339,7 @@ AC_ARG_WITH(kerberos5,
 if test -n "$with_kerberos5" -a "$with_kerberos5" != "no"
 then
     # Path given
-    echo "Configuring kerberosIV for `uname`"
+    echo "Configuring kerberosV for `uname`"
     AC_DEFINE(KERBEROS_V5)
     CEFLAGS="$CEFLAGS -I$with_kerberos5/include"
     LDEFLAGS="$LDEFLAGS -L$with_kerberos5/lib"
