@@ -801,12 +801,41 @@ listener without modification.  Be careful of mail loops if you do this!
 
 .SH THE USE AND ABUSE OF MULTIDROP MAILBOXES
 Use the multiple-local-recipients feature with caution -- it can bite.
-The fundamental problem is that by having your server toss several
+
+.SS Header vs. Envelope addresses 
+The fundamental problem is that by having your mailserver toss several
 peoples' mail in a box, you may have thrown away potentially vital
 information about who each piece of mail was actually addressed to
-(the `envelope address', as opposed to the addresses in the headers).
-This can't always be deduced from the headers, especially when mailing
-lists are involved.
+(the `envelope address', as opposed to the addresses in the RFC822
+To/Cc/Bcc headers).  This `envelope address' is the address you need
+in order to reroute mail properly.
+.PP
+Sometimes 
+.I fetchmail
+can deduce the envelope address.  If the mailserver MTA is
+.I sendmail
+and the item of mail had just one recipient, the MTA will have written
+a `for' clause that gives the envelope addressee into its Received
+header. But this doesn't work reliably for other MTAs, nor if there is more
+than one recipient.
+.PP
+Alternatively, some SMTP listeners and/or mail servers insert a header
+in each message containing a copy of the envelope addresses.  This
+header (when it exists) is often `X-Envelope-To'.  Fetchmail's
+assumption about this can be changed with the -E or `envelope' option.
+.PP
+Sometimes, unfortunately, neither of these methods works.  When they
+both fail, fetchmail must fall back on the contents of To/Cc/Bcc
+headers to try to determine recipient addressees -- and these are not
+reliable.  In particular, mailing-list software often ships mail with
+the list broadcast address in the To header.
+.PP
+When
+.I fetchmail
+cannot deduce a recipient address that is local, and the intended
+recipient address was anyone other than fetchmail's invoking user,
+mail will get lost.  This is what makes the multidrop feature risky.
+
 .SS Good Ways To Use Multidrop Mailboxes
 Multiple local names can be used to administer a mailing list from the
 client side of a \fIfetchmail\fR collection.  Suppose your name is
@@ -816,8 +845,8 @@ list on your client machine.
 .PP
 On your server, you can alias \&`fetchmail-friends' to `esr'; then, in
 your \fI.fetchmailrc\fR, declare \&`to esr fetchmail-friends here'.
-Then, when mail including `fetchmail-friends' in any of its recipient
-lines gets fetched, the list name will be appended to the list of
+Then, when mail including `fetchmail-friends' as a local address
+gets fetched, the list name will be appended to the list of
 recipients your SMTP listener sees.  Therefore it will undergo alias
 expansion locally.  Be sure to include `esr' in the local alias
 expansion of fetchmail-friends, or you'll never see mail sent only to
@@ -834,30 +863,32 @@ addresses.  Such messages default (as was described above) to being
 sent to the local user running
 .IR fetchmail ,
 but the program has no way to know that that's actually the right thing.
+
 .SS Bad Ways To Abuse Multidrop Mailboxes
 Multidrop mailboxes and 
 .I fetchmail
 serving multiple users in daemon mode do not mix.  The problem, again, is
 mail from mailing lists, which typically does not have an individual
-recipient address on it.  If you have multiple local names declared,
+recipient address on it.   Unless 
 .I fetchmail
-cannot know which to send it to!  It will only go to the account
+can deduce an envelope address, such mail will only go to the account
 running fetchmail (probably root).
-.PP
-Matters are further complicated by the fact that sometimes 
+
+.SS Speeding Up Multidrop Checking
+Normally, when multiple user are declared 
 .I fetchmail
-\fIcan\fR in fact deduce the envelope address.  If the server-side
-MTA is  
-.I sendmail
-and the item of mail had just one recipient, the MTA will have written
-a `for' clause that gives the envelope addressee into its Received
-header. But this doesn't work for other MTAs, nor if there is more
-than one recipient.
+extracts recipient addresses as described above and checks each host
+part with DNS to see if it's an alias of the mailserver.  If so, the
+name mappings described in the to ... here declaration are done and
+the mail locally delivered.
 .PP
-Alternatively, some SMTP listeners and/or mail servers insert a header
-in each message containing a copy of the envelope addresses.  This
-header (when it exists) is often `X-Envelope-To'.  Fetchmail's
-assumption about this can be changed with the -E or `envelope' option.
+This is the safest but also slowest method.  To speed it up,
+pre-declare mailserver aliases with `aka'; these are checked before
+DNS lookups are done.  If you're certain your aka list contains
+.B all
+DNS aliases of the mailserver (and all MX names pointing at it) 
+you can declare `no dns' to suppress DNS lookups entirely and
+\fIonly\fR match against the aka list.
 
 .SH EXIT CODES
 To facilitate the use of 
