@@ -397,8 +397,9 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	    if (outlevel > O_SILENT)
 	    {
 		report_build(stdout, 
-			     _("skipping message %d (%d octets)"),
-			     num, msgsizes[num-1]);
+			     _("skipping message %s@%s:%d (%d octets)"),
+			     ctl->remotename, ctl->server.truename, num,
+			     msgsizes[num-1]);
 		switch (msgcodes[num-1])
 		{
 		case MSGLEN_INVALID:
@@ -431,8 +432,9 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	    if (err == PS_TRANSIENT)    /* server is probably Exchange */
 	    {
 		report_build(stdout,
-			     _("couldn't fetch headers, msg %d (%d octets)"),
-			     num, msgsizes[num-1]);
+			     _("couldn't fetch headers, message %s@%s:%d (%d octets)"),
+			     ctl->remotename, ctl->server.truename, num,
+			     msgsizes[num-1]);
 		continue;
 	    }
 	    else if (err != 0)
@@ -447,8 +449,9 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 
 	    if (outlevel > O_SILENT)
 	    {
-		report_build(stdout, _("reading message %d of %d"),
-			     num,count);
+		report_build(stdout, _("reading message %s@%s:d of %d"),
+			     ctl->remotename, ctl->server.truename,
+			     num, count);
 
 		if (len > 0)
 		    report_build(stdout, _(" (%d %soctets)"),
@@ -583,8 +586,9 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	    {
 		if (outlevel >= O_DEBUG)
 		    report(stdout,
-			   _("message %d was not the expected length (%d actual != %d expected)\n"),
-			   num, msgblk.msglen, msgsizes[num-1]);
+			   _("message %s@%s:%d was not the expected length (%d actual != %d expected)\n"),
+			   ctl->remotename, ctl->server.truename, num,
+			   msgblk.msglen, msgsizes[num-1]);
 	    }
 
 	    /* end-of-message processing starts here */
@@ -646,8 +650,8 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	/* perhaps this as many as we're ready to handle */
 	if (maxfetch && maxfetch <= *fetches && *fetches < count)
 	{
-	    report(stdout, _("fetchlimit %d reached; %d messages left on server\n"),
-		   maxfetch, count - *fetches);
+	    report(stdout, _("fetchlimit %d reached; %d messages left on server %s account %s\n"),
+		   maxfetch, count - *fetches, ctl->server.truename, ctl->remotename);
 	    return(PS_MAXFETCH);
 	}
     }
