@@ -1816,8 +1816,8 @@ const int maxfetch;		/* maximum number of messages to fetch */
 			{
 			    if (outlevel >= O_VERBOSE)
 				report(stdout, 
-				      _("Skipping message %d, length -1"),
-				      num - 1);
+				      _("Skipping message %d, length -1\n"),
+				      num);
 			    continue;
 			}
 
