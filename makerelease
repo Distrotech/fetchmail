@@ -1,7 +1,8 @@
 #!/usr/bin/perl
 #
 # Make a fetchmail release.  Must be run as root, to make RPMs.
-# Dumps a release notice and diffs in RELEASE_NOTES
+# Dumps a release notice and diffs as a MIME multipart message 
+# in RELEASE_NOTES
 #
 $version=`grep VERS= Makefile.in`;
 $version =~ /VERS=(.*)/;
@@ -47,7 +48,7 @@ if (system("make rpm >/dev/null 2>/dev/null && chown esr *.rpm")) {
 	die("RPM-build failure\n");
 }
 
-open(REPORT, ">RELEASE_NOTES");
+open(REPORT, ">PREAMBLE.$$");
 
 print REPORT <<EOF;
 The $version release of fetchmail is now available at the usual locations,
@@ -70,16 +71,26 @@ while (<NEWS>) {
     print REPORT $_;
 }
 
-print REPORT "\nDiffs from the previous ($oldid) release:\n\n";
+$oldrcs = $oldid;
+$oldrcs =~ tr/-/./;
+print REPORT <<EOF;
+
+Diffs from the previous ($oldrcs) release follow as a MIME attachment.
+EOF
 
 close(NEWS);
 
 close(REPORT);
 
 if ($rcsid eq '<workfile>') {
-    system("rcsdiff -u -r$oldid          RCS/* 2>/dev/null >>RELEASE_NOTES");
+    system("rcsdiff -u -r$oldid          RCS/* 2>/dev/null >DIFFS.$$");
 } else {
-    system("rcsdiff -u -r$oldid -r$rcsid RCS/* 2>/dev/null >>RELEASE_NOTES");
+    system("rcsdiff -u -r$oldid -r$rcsid RCS/* 2>/dev/null >DIFFS.$$");
 }
+
+system "metasend -b -D 'fetchmail-$rcsid announcement' -m 'text/plain' -e 7bit -f PREAMBLE.$$ -n -D 'diff -u between -$oldrcs $rcsid' -m 'text/plain' -e 7bit -f DIFFS.$$ -o RELEASE_NOTES";
+
+unlink("PREAMBLE.$$");
+unlink("DIFFS.$$");
 
 # makerelease ends here
