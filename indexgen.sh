@@ -77,10 +77,11 @@ It allows all your system MTA's filtering, forwarding, and aliasing
 facilities to work just as they would on normal mail.<P>
 
 Fetchmail offers better security than any other Unix remote-mail
-client.  It supports APOP, KPOP, OTP, Compuserve RPA, and IMAP RFC1731
-encrypted authentication methods to avoid sending passwords en
-clair. It can be configured to support end-to-end encryption via
-tunneling with <a href="http://www.cs.hut.fi/ssh/">ssh, the Secure Shell</a><p>
+client.  It supports APOP, KPOP, OTP, Compuserve RPA, Microsoft NTLM,
+and IMAP RFC1731 encrypted authentication methods to avoid sending
+passwords en clair. It can be configured to support end-to-end
+encryption via tunneling with <a href="http://www.cs.hut.fi/ssh/">ssh,
+the Secure Shell</a><p>
 
 Fetchmail can be used as a POP/IMAP-to-SMTP gateway for an entire DNS
 domain, collecting mail from a single drop box on an ISP and
@@ -156,9 +157,10 @@ EOF
 fi
 
 cat >>index.html <<EOF
-(Note that the RPMs don't have the POP2, OTP, IPv6, Kerberos, GSSAPI,
-Compuserve RPA, or GNU gettext internationalization support compiled
-in.  To get any of these you will have to build from sources.)<p>
+(Note that the binary RPMs don't have the POP2, OTP, IPv6, Kerberos,
+GSSAPI, Compuserve RPA, Microsoft NTLM, or GNU gettext
+internationalization support compiled in.  To get any of these you
+will have to build from sources.)<p>
 
 The latest version of fetchmail is also carried in the 
 <a href="http://metalab.unc.edu/pub/Linux/system/mail/pop/!INDEX.html">
@@ -200,9 +202,10 @@ Fetchmail entered full production status with the 2.0 version in
 November 1996 after about five months of evolution from the ancestral
 <IT>popclient</IT> utility. It has since come into extremely wide use
 in the Internet/Unix/Linux community.  The Red Hat, Debian and
-S.u.S.e. Linux distributions include it.  A customized version is used
-at Whole Earth 'Lectronic Link. Several large ISPs are known to
-recommend it to Unix-using SLIP and PPP customers.<p>
+S.u.S.e. Linux distributions and their derivatives all include it.  A
+customized version is used at Whole Earth 'Lectronic Link. Several
+large ISPs are known to recommend it to Unix-using SLIP and PPP
+customers.<p>
 
 Over seven hundred people have participated on the fetchmail beta list
 (at time of current release there were $subscribers on the friends and
