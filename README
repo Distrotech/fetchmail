@@ -25,6 +25,9 @@ major new features since 2.0:
 
 	** Transaction and error logging may optionally be done via syslog.
 
+	** (Linux only) Security option to permit fetchmail to poll a host 
+	   only when a point-to-point link to a particular IP address is up.
+
 There have also been numerous improvements in multidrop mailbox handling.
 Under many circumstances fetchmail can now determine a mail message's
 envelope address from its headers, making multidrop forwarding more reliable.
@@ -46,13 +49,10 @@ pop-perl5-1.2, popc, popmail-1.6 and upop) are marked with **.
 	   means the retrieved mail automatically goes to the system
 	   default MDA as if it were normal sender-initiated SMTP mail.
 
-	** Timeout if server connection is dropped.
+	** Configurable timeout to detect if server connection is dropped.
 
 	** Support for retrieving and forwarding from multi-drop mailboxes
 	   that is guaranteed not to cause mail loops.
-
-	** (Linux only) Security option to permit fetchmail to run only
-	   when an interface to a particular IP address is up.
 
 	*  Easy control via command line or free-format run control file.
 
