@@ -415,6 +415,16 @@ By using the option `envelope Delivered-To:' you can make fetchmail reliably
 identify the original envelope recipient, but you have to strip the
 `mbox-userstr-' prefix to deliver to the correct user.
 This is what this option is for.
+.TP
+.B --configdump
+Parse the 
+.I ~/.fetchmailrc
+file, interpret any command-line options specified, and dump a
+configuration report to standard output.  The configuration report is
+a data structure assignment in the language Python.  This option
+is meant to be used with an interactive 
+.I ~/.fetchmailrc
+editor written in Python.
 
 .SH USER AUTHENTICATION AND ENCRYPTION
 Every mode except ETRN requires authentication of the client.
