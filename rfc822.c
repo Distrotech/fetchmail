@@ -38,8 +38,8 @@ const char *host;	/* server hostname */
     for (from = buf; *from; from++)
     {
 #ifdef TESTMAIN
-	printf("state %d: %s", state, mycopy);
-	printf("%*s^\n", from - mycopy + 10, " ");
+	printf("state %d: %s", state, buf);
+	printf("%*s^\n", from - buf + 10, " ");
 #endif /* TESTMAIN */
 	if (state != 2)
 	    if (*from == '(')
