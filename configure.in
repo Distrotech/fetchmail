@@ -85,10 +85,15 @@ AC_CHECK_FUNC(socket,
     AC_CHECK_LIB(socket,socket)
     AC_CHECK_LIB(inet,socket))
 
-# If gettext isn't in the C library, maybe there's a -lintl.
-AC_CHECK_FUNC(gettext,
-    AC_MSG_RESULT(using libc's gettext),
-    AC_CHECK_LIB(intl,gettext))
+# If gettext isn't in the C library, maybe there's a -lintl. However,
+# do not check if user has specified --with-included-gettext. On
+# some systems (e.g. Solaris), there is a gettext in libc which
+# we do not want to use if --with-included-gettext is specified.
+if test x$nls_cv_force_use_gnu_gettext != xyes; then
+    AC_CHECK_FUNC(gettext,
+	AC_MSG_RESULT(using libc's gettext),
+	AC_CHECK_LIB(intl,gettext))
+fi
 
 # The condition in this test copes with the presence of inet_addr in libc6.
 AC_CHECK_FUNC(inet_addr,
