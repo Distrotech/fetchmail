@@ -22,7 +22,9 @@
   added Subject header, rewording the human readable part. (Matthias Andree)
 * Merge Sunil Shetye's time.h handling fix. (Matthias Andree)
 * Merge Gerd von Egidy's patch to avoid a segfault in multidrop/received
-  mode when the Received: headers are malformatted.
+  mode when the Received: headers are malformatted. (Matthias Andree)
+* MIME-encode bodies and Subject headers of warning messages (Matthias
+  Andree), limiting the header to 7 bits.
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
