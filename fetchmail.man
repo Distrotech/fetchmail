@@ -1049,7 +1049,7 @@ T}
 mda     	-m	T{
 Specify MDA for local delivery
 T}
-bsmtp		-o	T{
+bsmtp   	-o	T{
 Specify BSMTP batch file to append to
 T}
 preconnect	\&	T{
@@ -1115,7 +1115,7 @@ T}
 limit   	-l	T{
 Set message size limit
 T}
-warnings   	-l	T{
+warnings   	-w	T{
 Set message size warning interval
 T}
 batchlimit	-b	T{
