@@ -13,7 +13,14 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.2 (Sun Sep 14 16:31:58 EDT 1997)
+fetchmail-4.2.1 (Sun Sep 14 16:31:58 EDT 1997)
+* Type and inclusion changes to eliminate warnings on weird Unixes.
+* Detect and warn about servers like M$ Exchange that get lengths now.
+
+There are 285 people on the fetchmail-friends list.
+
+------------------------------------------------------------------------------
+fetchmail-4.2.0 (Sun Sep 14 16:31:58 EDT 1997)
 * Driver code changed so delimited protocols don't rely on message lengths
   being correct (this means #@!%^# brain-dead Microsoft Exchange will work).
 
