@@ -139,6 +139,7 @@ extern char *logfile;		/* log file for daemon mode */
 extern int quitmode;		/* if --quit was set */
 extern int check_only;		/* if --check was set */
 extern int batchlimit;		/* if --batchlimit was set */
+extern int batchcount;		/* count of messages sent in current batch */
 
 /* miscellaneous global controls */
 extern char *rcfile;		/* path name of rc file */

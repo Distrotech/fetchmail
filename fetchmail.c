@@ -306,6 +306,7 @@ char **argv;
 	sethostent(TRUE);	/* use TCP/IP for mailserver queries */
 #endif /* HAVE_RES_SEARCH */
 
+	batchcount = 0;
 	for (ctl = querylist; ctl; ctl = ctl->next)
 	{
 	    if (ctl->active && !(implicitmode && ctl->skip))
