@@ -28,6 +28,12 @@ having trouble figuring why it wouldn't just break *all* the time.)
 
 ------------------------------------------------------------------------------
 
+pl 3.9.3 ():
+* Fix for -I option from George Sipe.
+* Finally got error.c to compile under AIX, thanks to Dave Vinish.
+
+There are 224 people on the fetchmail-friends list.
+
 pl 3.9.2 (Wed Apr 23 14:07:03 EDT 1997):
 * Fixed a glitch in the Makefile yacc and lex productions
 * Add logic for X-Fetchmail-Warning emission of \r\n to pacify qmail.

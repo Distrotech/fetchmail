@@ -277,7 +277,7 @@ struct query *ctl;	/* option record to be initialized */
 #ifdef	linux
 	case 'I':
 	case LA_INTERFACE:
-	    ctl->server.interface = xstrdup(optarg);
+	    interface_parse(optarg, &ctl->server);
 	    break;
 	case 'M':
 	case LA_MONITOR:
