@@ -13,7 +13,7 @@ Source:         %{name}-%{version}.tar.gz
 Group:		Applications/Mail
 Group(pt_BR):   Aplicações/Correio Eletrônico
 Copyright:	GPL
-Icon:		fetchmail.gif
+Icon:		fetchmail.xpm
 Requires:	smtpdaemon
 BuildRoot:	/var/tmp/%{name}-%{version}
 Summary:	Full-featured POP/IMAP mail retrieval daemon

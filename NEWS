@@ -8,6 +8,12 @@
 
 				Release Notes:
 
+fetchmail-5.1.0 ():
+* Fixed compilation error on systems without vnsprintf.
+* No more GIFs!  RPM is now patent-encumbrance-free.
+
+There are 260 people on fetchmail-friends and 387 on fetchmail-announce.
+
 fetchmail-5.0.3 (Sun May  2 23:39:22 EDT 1999):
 * Added FAQ item about things to check if --monitor fails with pppd.
 * Fixed Matthias Andree's SMTP error bug.
