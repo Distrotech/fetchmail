@@ -52,10 +52,7 @@ int clientPort;
     if (sock < 0)
         return (FILE *)NULL;
 
-    /* under 2.0.23, connect(2) doesn't return -1 on ENETUNREACH failure */
-    errno = 0;
-    connect(sock, (struct sockaddr *) &ad, sizeof(ad));
-    if (errno != 0)
+    if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) < 0)
     {
 	close(sock);
         return (FILE *)NULL;
