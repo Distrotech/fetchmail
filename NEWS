@@ -1,6 +1,6 @@
 				Release Notes:
 
-fetchmail-4.6.2 ():
+fetchmail-4.6.2 (Fri Oct 16 12:49:30 EDT 1998):
 * Time out server open requests like we do reads.  This protects against
   buggy TCP/IP configurations that hang forever on a bad open.
 * The '--limit' option can now be used with daemon mode. The user is notfied
@@ -10,8 +10,9 @@ fetchmail-4.6.2 ():
   size warnings are sent to the user (default = 3600 sec).
 * Added FAQ item M7 on diagnosing failures to extract envelope addresses
   from sendmail trace headers.
+* Added Andrea Sterbini's init script for Red Hat to the contrib directory.
 
-There are 255 people on fetchmail-friends and 293 on fetchmail-announce.
+There are 252 people on fetchmail-friends and 295 on fetchmail-announce.
 
 fetchmail-4.6.1 (Wed Oct 14 18:46:58 EDT 1998):
 * Fixed a minor memory leak in the IP-address-comparison code.
