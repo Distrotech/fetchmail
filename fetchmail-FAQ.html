@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/06/11 07:49:05 $
+<td width="30%" align=right>$Date: 1999/06/25 18:09:02 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -100,6 +100,7 @@ IP address?</a><br>
 <a href="#R5">R5. Running fetchmail in daemon mode doesn't work.</a><br>
 <a href="#R6">R6. Fetchmail hangs when used with pppd.</a><br>
 <a href="#R7">R7. Fetchmail randomly dies with socket errors.</a><br>
+<a href="#R8">R8. Fetchmail running as root stopped working after an OS upgrade</a><br>
 
 <h1>Disappearing mail</h1>
 
@@ -1039,7 +1040,7 @@ Simply create a dot-qmail file called '.qmail-mbox-userstr-default'
 in the alias directory (normally /var/qmail/alias) with the contents:<p>
 
 <pre>
-      | ../bin/qmail-inject -a -f"$SENDER" "${LOCAL#mbox-userstr-}@$HOST}"
+      | ../bin/qmail-inject -a -f"$SENDER" "${LOCAL#mbox-userstr-}@$HOST"
 </pre>
 
 Note this <em>does</em> require a modern /bin/sh.<p>
@@ -1834,6 +1835,14 @@ option values that work:<P>
 </pre>
 
 <hr>
+<a name="R8">R8. Fetchmail running as root stopped working after an OS upgrade</a>/h2>
+
+In RH 6.0, the HOME value in the boot-time root environment changed
+from /root to / as the result of a change in init.  Move your
+.fetchmailrc or use a -f option to explicitly point at the file.
+(Oddly, a similar problem has been reported from Debian systems)<P>
+
+<hr>
 <h2><a name="D1">D1. I think I've set up fetchmail correctly, but I'm not getting any mail.</a></h2>
 
 Maybe you have a .forward or alias set up that you've forgotten about.  You
@@ -2409,7 +2418,7 @@ inactivity timeout.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/06/11 07:49:05 $
+<td width="30%" align=right>$Date: 1999/06/25 18:09:02 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
