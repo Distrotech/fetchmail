@@ -80,7 +80,7 @@ Fetchmail offers better security than any other Unix remote-mail
 client.  It supports APOP, KPOP, OTP, Compuserve RPA, Microsoft NTLM,
 and IMAP RFC1731 encrypted authentication methods to avoid sending
 passwords en clair. It can be configured to support end-to-end
-encryption via tunneling with <a href="http://www.cs.hut.fi/ssh/">ssh,
+encryption via tunneling with <a href="http://www.openssh.com/">ssh,
 the Secure Shell</a><p>
 
 Fetchmail can be used as a POP/IMAP-to-SMTP gateway for an entire DNS
