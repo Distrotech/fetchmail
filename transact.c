@@ -217,7 +217,7 @@ static char *parse_received(struct query *ctl, char *bufp)
 	    for (sp = ok + 2; isspace((unsigned char)*sp); sp++)
 		continue;
 	    tp = rbuf;
-	    for (; !isspace((unsigned char)*sp); sp++)
+	    for (; *sp && !isspace((unsigned char)*sp); sp++)
 		RBUF_WRITE(*sp);
 	    *tp = '\0';
 
