@@ -29,6 +29,8 @@ AC_C_CONST			dnl getopt needs this.
 
 AC_PROG_LEX
 AC_PROG_YACC
+AC_SUBST(CEFLAGS)
+AC_SUBST(LDEFLAGS)
 AC_SUBST(LIBOBJS)
 
 # Under sysV68, socket and friends are provided by the C library.
@@ -169,16 +171,16 @@ AC_ARG_WITH(kerberos,
 # configuring the BSD/OS Kerberos IV support, though. 
 if test -n "$with_kerberos"
 then
-    CFLAGS="$CFLAGS -DKERBEROS_V4 -I$with_kerberos"
-    LDFLAGS="$LDFLAGS -L$dir/lib"
+    CEFLAGS="$CEFLAGS -DKERBEROS_V4 -I$with_kerberos"
+    LDEFLAGS="$LDEFLAGS -L$dir/lib"
     LIBS="$LIBS -lkrb -ldes"
 else
     for dir in /usr/kerberos /usr/kerberosIV /usr/athena
     do
       if test -f "$dir/include/krb.h"
       then
-        CFLAGS="$CFLAGS -DKERBEROS_V4 -I$dir/include"
-        LDFLAGS="$LDFLAGS -L$dir/lib"
+        CEFLAGS="$CEFLAGS -DKERBEROS_V4 -I$dir/include"
+        LDEFLAGS="$LDEFLAGS -L$dir/lib"
         LIBS="$LIBS -lkrb -ldes"
         break
       fi

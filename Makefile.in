@@ -22,6 +22,9 @@ YACC = @YACC@
 # YACC = yacc
 YACCFLAGS = -dt
 
+CEFLAGS = @CEFLAGS@
+LDEFLAGS = @LDEFLAGS@
+
 # How to invoke ranlib.  This is only used by the `glob' subdirectory.
 RANLIB = @RANLIB@
 
@@ -101,14 +104,14 @@ all: fetchmail
 .PHONY: all
 
 fetchmail: $(objs)
-	$(CC) $(LDFLAGS) $(objs) $(LOADLIBS) -o fetchmail
+	$(CC) $(LDEFLAGS) $(LDFLAGS) $(objs) $(LOADLIBS) -o fetchmail
 
 # Tester for address parsing
 rfc822: rfc822.c
 	gcc -DTESTMAIN -g rfc822.c -o rfc822
 
 .c.o:
-	$(CC) $(defines) -c -I$(srcdir) -I. $(CFLAGS) $<
+	$(CC) $(defines) -c -I$(srcdir) -I. $(CEFLAGS) $(CFLAGS) $<
 
 # For some losing Unix makes.
 SHELL = /bin/sh
