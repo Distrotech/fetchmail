@@ -172,14 +172,18 @@ class Server:
            res = res + "tracepolls\n"
 
         if self.interface:
-            res = res + "interface " + str(self.interface)
+            res = res + " interface " + str(self.interface)
         if self.monitor:
             res = res + " monitor " + str(self.monitor)
+        if self.plugin != ServerDefaults.plugin:
+            res = res + " plugin " + `self.plugin`
+        if self.plugout != ServerDefaults.plugout:
+            res = res + " plugout " + `self.plugout`
         if self.netsec:
             res = res + " netsec " + str(self.netsec)
         if self.principal:
             res = res + " principal " + `self.principal`
-        if self.interface or self.monitor or self.netsec or self.principal:
+        if self.interface or self.monitor or self.netsec or self.principal or self.plugin or self.plugout:
             if folded:
                 res = res + "\n"
 
