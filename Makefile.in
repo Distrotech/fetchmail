@@ -272,7 +272,7 @@ config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/configure \
 	$(srcdir)/config.guess $(srcdir)/config.h.in $(srcdir)/config.sub \
 	$(srcdir)/acconfig.h $(srcdir)/aclocal.m4
 scripts = $(srcdir)/install-sh $(srcdir)/missing $(srcdir)/mkinstalldirs \
-	$(srcdir)/specgen.sh $(srcdir)/lsmgen.sh $(srcdir)/fetchmailconf
+	$(srcdir)/specgen.sh $(srcdir)/lsmgen.py $(srcdir)/fetchmailconf
 all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) \
 	$(srcdir)/rh-config/* $(srcdir)/contrib/*[A-Za-uw-z] \
 	$(srcdir)/po/* $(srcdir)/intl $(srcdir)/beos/* ABOUT-NLS $(srcdir)/MANIFEST
@@ -310,7 +310,7 @@ fetchmail-man.html: fetchmail.man
 dist: distclean MANIFEST Makefile.in distdocs
 	touch fetchmail.lsm
 	make fetchmail-$(VERSION).tar.gz 
-	lsmgen.sh $(VERSION) `wc -c fetchmail-$(VERSION).tar.gz` >fetchmail.lsm
+	lsmgen.py $(VERSION) `wc -c fetchmail-$(VERSION).tar.gz` >fetchmail.lsm
 	make fetchmail-$(VERSION).tar.gz
 	#-cd po; make update-po
 	ls -l fetchmail-$(VERSION).tar.gz
