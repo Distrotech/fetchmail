@@ -157,7 +157,7 @@ char **argv;
 			  rcfile);
 	exit(0);
     }
-    else if (querylist == NULL) {
+    else if (!quitmode && querylist == NULL) {
 	(void) fputs("fetchmail: no mailservers have been specified.\n", stderr);
 	exit(PS_SYNTAX);
     }
@@ -385,7 +385,7 @@ char **argv;
 	(poll_interval);
 
     if (outlevel == O_VERBOSE)
-	fprintf(stderr, "fetchmail: normal termination, status %d\n", popstatus);
+	fprintf(stderr,"fetchmail: normal termination, status %d\n",popstatus);
 
     termhook(0);
     exit(popstatus);
