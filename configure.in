@@ -155,7 +155,7 @@ dnl Check for libcrypt
 AC_CHECK_LIB(crypt,crypt)
 
 dnl Check for RSA refersence library in case we're using SSL
-AC_CHECK_LIB(rsaref, _RSAPublicDecrypt)
+AC_CHECK_LIB(rsaref, RSAPublicDecrypt)
 
 dnl AC_FUNC_SETVBUF_REVERSED
 
