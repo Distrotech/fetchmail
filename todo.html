@@ -19,7 +19,7 @@ content="Known bugs and to-do items in fetchmail" />
 <tr>
 <td width="30%">Back to <a href="/~esr">Eric's Home Page</a></td>
 <td width="30%" align="center">Up to <a href="/~esr/sitemap.html">Site Map</a></td>
-<td width="30%" align="right">$Date: 2003/10/10 10:55:46 $</td>
+<td width="30%" align="right">$Date: 2004/01/13 03:21:41 $</td>
 </tr>
 </table>
 
@@ -83,6 +83,29 @@ failed" (leaving the message on the server, not putting it into
 found.  (This is so you don't lose mail if you configure the wrong
 envelope header.)</p>
 
+<p>Matthias Andree writes:</p>
+
+<blockquote> 
+<p>NOTE that the current code need optimization, if I have
+unseen articles 3 and 47, fetchmail will happily request LIST for
+articles 3...47 rather than just 3 and 47. In cases where the message
+numbers are far apart, this involves considerable overhead - which
+could be alleviated by pipelining the list commands, which needs
+either asynchronous reading while sending the commands, or knowing the
+send buffer, to avoid deadlocks. Unfortunately, I don't have the time
+to delve deeper into the code and look around.</p>
+                            
+<p>Note that such a pipelining function would be of universal use, so it
+should not be in pop3.c or something. I'd think the best approach is to
+call a "sender" function with the command and a callback, and the sender
+will call the receiver when the send buffer is full and call the
+callback function for each reply received.</p> 
+
+<p>See the ESMTP PIPELINING RFC for details on the deadlock avoidance
+requirements.</p>
+</blockquote>
+
+
 <p>The <a
 href="http://bugs.debian.org/cgi-bin/pkgreport.cgi?pkg=fetchmail&amp;archive=no">
 Debian bug-tracking page for fetchmail</a> lists other bug
@@ -93,7 +116,7 @@ reports.</p>
 <tr>
 <td width="30%">Back to <a href="/~esr">Eric's Home Page</a></td>
 <td width="30%" align="center">Up to <a href="/~esr/sitemap.html">Site Map</a></td>
-<td width="30%" align="right">$Date: 2003/10/10 10:55:46 $</td>
+<td width="30%" align="right">$Date: 2004/01/13 03:21:41 $</td>
 </tr>
 </table>
 

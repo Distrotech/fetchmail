@@ -911,25 +911,24 @@ static int pop3_getrange(int sock,
 static int pop3_getpartialsizes(int sock, int first, int last, int *sizes)
 /* capture the size of message #first */
 {
-    int	ok;
+    int	ok, i;
     char buf [POPBUFSIZE+1];
     unsigned int num, size;
 
-    /* for POP3, we can get the size of one mail only! */
-    if (first != last)
-    {
-	report(stderr, "cannot get a range of message sizes (%d-%d).\n", first, last);
-	return(PS_PROTOCOL);
-    }
-    gen_send(sock, "LIST %d", first);
-    if ((ok = pop3_ok(sock, buf)) != 0)
-	return(ok);
-    if (sscanf(buf, "%u %u", &num, &size) == 2) {
-	if (num == first)
-	    sizes[0] = size;
-	else
-	    /* warn about possible attempt to induce buffer overrun */
-	    report(stderr, "Warning: ignoring bogus data for message sizes returned by server.\n");
+    for (i = first; i <= last; i++) {
+	gen_send(sock, "LIST %d", i);
+	if ((ok = pop3_ok(sock, buf)) != 0)
+	    return(ok);
+	if (sscanf(buf, "%u %u", &num, &size) == 2) {
+	    if (num == i)
+		sizes[i - first] = size;
+	    else
+		/* warn about possible attempt to induce buffer overrun
+		 *
+		 * we expect server reply message number and requested
+		 * message number to match */
+		report(stderr, "Warning: ignoring bogus data for message sizes returned by server.\n");
+	}
     }
     return(ok);
 }
