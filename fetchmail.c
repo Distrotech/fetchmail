@@ -324,7 +324,7 @@ int main(int argc, char **argv)
     {
 	if (ctl->active && !(implicitmode && ctl->server.skip)&&!ctl->password)
 	{
-	    if (ctl->server.authenticate > A_PASSWORD || ctl->server.protocol >= P_ETRN)
+	    if (NO_PASSWORD(ctl))
 		/* Server won't care what the password is, but there
 		   must be some non-null string here.  */
 		ctl->password = ctl->remotename;
@@ -494,9 +494,7 @@ int main(int argc, char **argv)
     for (ctl = querylist; ctl; ctl = ctl->next)
     {
 	if (ctl->active && !(implicitmode && ctl->server.skip)
-		&& ctl->server.authenticate <= A_PASSWORD
-	        && ctl->server.protocol < P_ETRN
-		&& !ctl->password)
+		&& !NO_PASSWORD(ctl) && !ctl->password)
 	{
 	    if (!isatty(0))
 	    {

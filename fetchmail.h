@@ -36,6 +36,9 @@
 #define 	A_GSSAPI	4	/* authenticate with GSSAPI */
 #define		A_SSH		5	/* authentication at session level */
 
+/* some protocols (KERBEROS, GSSAPI, SSH) don't require a password */
+#define NO_PASSWORD(ctl)	((ctl)->server.authenticate > A_PASSWORD || (ctl)->server.protocol >= P_ETRN)
+
 /*
  * Definitions for buffer sizes.  We get little help on setting maxima
  * from IMAP RFCs up to 2060, so these are mostly from POP3.
