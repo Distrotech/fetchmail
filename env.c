@@ -16,6 +16,9 @@
 #endif
 #include <pwd.h>
 #include <string.h>
+#ifdef HAVE_NET_SOCKET_H
+#include <net/socket.h>
+#endif
 #ifdef HAVE_GETHOSTBYNAME
 #include <netdb.h>
 #endif /* HAVE_GETHOSTBYNAME */

@@ -31,6 +31,10 @@
 #include  <sys/time.h>
 #include  <signal.h>
 
+#ifdef HAVE_NET_SOCKET_H
+#include <net/socket.h>
+#endif
+
 #ifdef HAVE_RES_SEARCH
 #include <netdb.h>
 #include "mx.h"
@@ -98,7 +102,7 @@ static int msglen;			/* actual message length */
 void set_timeout(int timeleft)
 /* reset the nonresponse-timeout */
 {
-#ifndef __EMX__
+#if !defined(__EMX__) && !defined(__BEOS__) 
     struct itimerval ntimeout;
 
     if (timeleft == 0)
@@ -1612,8 +1616,10 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		{
 		    if (h_errno == HOST_NOT_FOUND)
 			strcpy(errbuf, _("host is unknown."));
+#ifndef __BEOS__
 		    else if (h_errno == NO_ADDRESS)
 			strcpy(errbuf, _("name is valid but has no IP address."));
+#endif
 		    else if (h_errno == NO_RECOVERY)
 			strcpy(errbuf, _("unrecoverable name server error."));
 		    else if (h_errno == TRY_AGAIN)

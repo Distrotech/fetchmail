@@ -13,9 +13,15 @@
 #include <memory.h>
 #endif /* HAVE_MEMORY_H */
 #include <sys/types.h>
+#ifndef HAVE_NET_SOCKET_H
 #include <sys/socket.h>
+#else
+#include <net/socket.h>
+#endif
 #include <netinet/in.h>
+#ifdef HAVE_ARPA_INET_H
 #include <arpa/inet.h>
+#endif
 #include <netdb.h>
 #if defined(STDC_HEADERS)
 #include <stdlib.h>
@@ -31,6 +37,20 @@
 #include "socket.h"
 #include "fetchmail.h"
 #include "i18n.h"
+
+/* Defines to allow BeOS to play nice... */
+#ifdef __BEOS__
+static char peeked;
+#define fm_close(a)  closesocket(a)
+#define fm_write(a,b,c)  send(a,b,c,0)
+#define fm_peek(a,b,c)   recv(a,b,c,0)
+#define fm_read(a,b,c)   recv(a,b,c,0)
+#else
+#define fm_close(a)  close(a)
+#define fm_write(a,b,c)  write(a,b,c)
+#define fm_peek(a,b,c)   recv(a,b,c, MSG_PEEK)
+#define fm_read(a,b,c)   read(a,b,c)
+#endif
 
 /* We need to define h_errno only if it is not already */
 #ifndef h_errno
@@ -164,7 +184,7 @@ int SockOpen(const char *host, const char *service, const char *options,
 	if (i < 0)
 	    continue;
 	if (connect(i, (struct sockaddr *) ai->ai_addr, ai->ai_addrlen) < 0) {
-	    close(i);
+	    fm_close(i);
 	    i = -1;
 	    continue;
 	}
@@ -230,7 +250,7 @@ int SockOpen(const char *host, int clientPort, const char *options,
         if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) < 0)
         {
             int olderr = errno;
-            close(sock);	/* don't use SockClose, no traffic yet */
+            fm_close(sock);	/* don't use SockClose, no traffic yet */
             h_errno = 0;
             errno = olderr;
             return -1;
@@ -276,19 +296,20 @@ int SockOpen(const char *host, int clientPort, const char *options,
 	    memcpy(&ad.sin_addr, *pptr, sizeof(struct in_addr));
 	    if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) == 0)
 		break; /* success */
-	    close(sock);	/* don't use SockClose, no traffic yet */
+	    fm_close(sock);	/* don't use SockClose, no traffic yet */
 	    memset(&ad, 0, sizeof(ad));
 	    ad.sin_family = AF_INET;
 	}
 	if(*pptr == NULL)
 	{
 	    int olderr = errno;
-	    close(sock);	/* don't use SockClose, no traffic yet */
+	    fm_close(sock);	/* don't use SockClose, no traffic yet */
 	    h_errno = 0;
 	    errno = olderr;
 	    return -1;
 	}
     }
+
     return(sock);
 }
 #endif /* INET6_ENABLE */
@@ -347,9 +368,9 @@ int SockWrite(int sock, char *buf, int len)
 	if( NULL != ( ssl = SSLGetContext( sock ) ) )
 		n = SSL_write(ssl, buf, len);
 	else
-        	n = write(sock, buf, len);
+       	n = fm_write(sock, buf, len);
 #else
-        n = write(sock, buf, len);
+        n = fm_write(sock, buf, len);
 #endif
         if (n <= 0)
             return -1;
@@ -370,6 +391,14 @@ int SockRead(int sock, char *buf, int len)
 
     if (--len < 1)
 	return(-1);
+#ifdef __BEOS__
+    if (peeked != 0){
+        (*bp) = peeked;
+        bp++;
+        len--;
+        peeked = 0;
+    }
+#endif        
     do {
 	/* 
 	 * The reason for these gymnastics is that we want two things:
@@ -422,20 +451,27 @@ int SockRead(int sock, char *buf, int len)
 			newline = bp;
 		}
 	} else {
-		if ((n = recv(sock, bp, len, MSG_PEEK)) <= 0)
+		if ((n = fm_peek(sock, bp, len)) <= 0)
 			return(-1);
 		if ((newline = memchr(bp, '\n', n)) != NULL)
 			n = newline - bp + 1;
-		if ((n = read(sock, bp, n)) == -1)
+		if ((n = fm_read(sock, bp, n)) == -1)
 			return(-1);
 	}
 #else
-	if ((n = recv(sock, bp, len, MSG_PEEK)) <= 0)
-	    return(-1);
+
+#ifdef __BEOS__
+    if ((n = fm_read(sock, bp, 1)) <= 0)
+#else
+    if ((n = fm_peek(sock, bp, len)) <= 0)
+#endif
+        return (-1);
 	if ((newline = memchr(bp, '\n', n)) != NULL)
 	    n = newline - bp + 1;
-	if ((n = read(sock, bp, n)) == -1)
+#ifndef __BEOS__
+	if ((n = fm_read(sock, bp, n)) == -1)
 	    return(-1);
+#endif /* __BEOS__ */
 #endif
 	bp += n;
 	len -= n;
@@ -479,15 +515,20 @@ int SockPeek(int sock)
 			return 0;	/* Give him a '\0' character */
 		}
 	} else {
-    		n = recv(sock, &ch, 1, MSG_PEEK);
+    		n = fm_peek(sock, &ch, 1);
 	}
 #else
-    	n = recv(sock, &ch, 1, MSG_PEEK);
-#endif
+
+        n = fm_peek(sock, &ch, 1);
+
+#endif /* SSL_ENABLE */
 	if (n == -1)
 		return -1;
-	else
-		return(ch);
+
+#ifdef __BEOS__
+    peeked = ch;
+#endif
+    return(ch);
 }
 
 #ifdef SSL_ENABLE
@@ -679,12 +720,12 @@ int SockClose(int sock)
 	 * or any error occurs.  This makes sure all data sent by the other
 	 * side is acknowledged at the TCP level.
 	 */
-	if (recv(sock, &ch, 1, MSG_PEEK) > 0)
-	    while (read(sock, &ch, 1) > 0)
+	if (fm_peek(sock, &ch, 1) > 0)
+	    while (fm_read(sock, &ch, 1) > 0)
 		continue;
 
     /* if there's an error closing at this point, not much we can do */
-    return(close(sock));	/* this is guarded */
+    return(fm_close(sock));	/* this is guarded */
 }
 
 #ifdef MAIN

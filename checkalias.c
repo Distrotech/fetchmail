@@ -10,9 +10,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
+#ifdef HAVE_NET_SOCKET_H
+#include <net/socket.h>
+#else
 #include <sys/socket.h>
+#endif
 #include <netinet/in.h>
+#ifdef HAVE_ARPA_INET_H
 #include <arpa/inet.h>
+#endif
 #include <netdb.h>
 #include "i18n.h"
 #include "mx.h"
@@ -180,9 +186,10 @@ int is_host_alias(const char *name, struct query *ctl)
 	switch (h_errno)
 	{
 	case HOST_NOT_FOUND:	/* specified host is unknown */
+#ifndef __BEOS__
 	case NO_ADDRESS:	/* valid, but does not have an IP address */
 	    break;
-
+#endif
 	case NO_RECOVERY:	/* non-recoverable name server error */
 	case TRY_AGAIN:		/* temporary error on authoritative server */
 	default:
@@ -206,10 +213,11 @@ int is_host_alias(const char *name, struct query *ctl)
 	switch (h_errno)
 	{
 	case HOST_NOT_FOUND:	/* specified host is unknown */
+#ifndef __BEOS__
 	case NO_ADDRESS:	/* valid, but does not have an IP address */
 	    return(FALSE);
 	    break;
-
+#endif
 	case NO_RECOVERY:	/* non-recoverable name server error */
 	case TRY_AGAIN:		/* temporary error on authoritative server */
 	default:

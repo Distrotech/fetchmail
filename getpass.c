@@ -60,7 +60,7 @@ void static disable_tty_echo(void);
 void static restore_tty_state(void);
 static RETSIGTYPE sigint_handler(int);
 
-char *getpassword(prompt)
+char *fm_getpassword(prompt)
 char *prompt;
 {
 #if !(defined(HAVE_TCSETATTR) || defined(HAVE_TERMIO_H) || defined(HAVE_STTY))

@@ -405,12 +405,14 @@ int prc_filecheck(const char *pathname, const flag securecheck)
 	return(PS_IOERR);
     }
 
+#ifndef __BEOS__
     if (statbuf.st_mode & ~(S_IFREG | S_IREAD | S_IWRITE | S_IEXEC | S_IXGRP))
     {
 	fprintf(stderr, "File %s must have no more than -rwx--x--- (0710) permissions.\n", 
 		pathname);
 	return(PS_IOERR);
     }
+#endif /* __BEOS__ */
 
 #ifdef HAVE_GETEUID
     if (statbuf.st_uid != geteuid())

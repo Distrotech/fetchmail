@@ -507,7 +507,7 @@ int parsecmdline (int, char **, struct runctl *, struct query *);
 char *MD5Digest (unsigned char *);
 int POP3_auth_rpa(unsigned char *, unsigned char *, int socket);
 int daemonize(const char *, void (*)(int));
-char *getpassword(char *);
+char *fm_getpassword(char *);
 void escapes(const char *, char *);
 char *visbuf(const char *);
 const char *showproto(int);
