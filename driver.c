@@ -762,7 +762,7 @@ struct query *ctl;	/* query control record */
 	    error(0, 0, "MDA exited abnormally or returned nonzero status");
 	    return(PS_IOERR);
 	}
-   }
+    }
     else if (sinkfp)
     {
 	/* write message terminator */
