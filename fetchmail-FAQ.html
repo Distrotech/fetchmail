@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2002/02/01 02:14:23 $
+<td width="30%" align=right>$Date: 2002/02/01 21:47:49 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -73,6 +73,7 @@ IP address?</a><br>
 <a href="#T4">T4. How can I use fetchmail with smail?</a><br>
 <a href="#T5">T5. How can I use fetchmail with SCO's MMDF?</a><br>
 <a href="#T6">T6. How can I use fetchmail with Lotus Notes?</a><br>
+<a href="#T7">T7. How can I use fetchmail with Courier IMAP?</a><br>
 
 <h1>How to make fetchmail work with various servers:</h1>
 
@@ -1322,6 +1323,11 @@ According to RFC1123 an SMTP listener <em>must</em> allow this
 mismatch, so smail's new behavior (introduced sometime between
 3.2.0.90 and 3.2.0.95) is a bug.
 
+<p>You may also need to say
+<code>-smtp_hello_broken_allow=127.0.0.1</code>
+in order for smail to accept the "localhost" that fetchmail normally 
+appends to recipient addresses.
+
 <hr>
 <h2><a name="T5">T5. How can I use fetchmail with SCO's MMDF?</a></h2>
 
@@ -1338,6 +1344,12 @@ fetchmail feeding MMDF.
 <p>The Lotus Notes SMTP gateway tries to deduce when it should convert \n
 to \r\n, but its rules are not the intuitive and correct-for-RFC822
 ones.  Use `forcecr'.
+
+<a name="T7">T7. How can I use fetchmail with Courier IMAP?</a></h2>
+
+<p>The courier mta doesn't like RCPT addresses that look like 
+<code>someone@localhost</code>.  Work around this with an 
+<code>smtphost</code> or <code>smtpaddress</code>.
 
 <hr>
 <h2><a name="S1">S1. How can I use fetchmail with qpopper?</a></h2>
@@ -2993,7 +3005,7 @@ date from the last Received header.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2002/02/01 02:14:23 $
+<td width="30%" align=right>$Date: 2002/02/01 21:47:49 $
 </table>
 
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@thyrsus.com&gt;</A></ADDRESS>

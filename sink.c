@@ -453,7 +453,7 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	 *
 	 * Bouncemail *might* be appropriate here as a delay
 	 * notification (note; if we ever add this, we must make
-	 * sure the RFC1894 Action field is "delayed" rather thwn
+	 * sure the RFC1894 Action field is "delayed" rather than
 	 * "failed").  But it's not really necessary because
 	 * these are not actual failures, we're very likely to be
 	 * able to recover on the next cycle.

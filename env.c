@@ -66,6 +66,19 @@ void envquery(int argc, char **argv)
 	exit(PS_UNDEFINED);
     }
 
+    if (getenv("NULLMAILER_FLAGS") && strcmp(getenv("NULLMAILER_FLAGS"), ""))
+    {
+	fprintf(stderr,
+		GT_("%s: The NULLMAILER_FLAGS environment variable is set.\n"
+		    "This is dangerous as it can make nullmailer-inject
+or nullmailer's\n" 
+		    "sendmail wrapper tamper with your From:, Message-ID: or Return-Path: headers.\n"
+		    "Try \"env NULLMAILER_FLAGS= %s YOUR ARGUMENTS HERE\"\n"
+		    "%s: Abort.\n"), 
+		program_name, program_name, program_name);
+	exit(PS_UNDEFINED);
+    }
+
     if (!(pwp = getpwuid(getuid())))
     {
 	fprintf(stderr,

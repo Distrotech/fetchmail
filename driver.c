@@ -632,8 +632,14 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	 * now.
 	 */
 
-	/* tell the UID code we've seen this */
-	if (ctl->newsaved)
+	/*
+	 * Tell the UID code we've seen this.
+	 * Matthias Andree: only register the UID if we could actually
+	 * forward this mail. If we omit this !suppress_forward check,
+	 * fetchmail will never retry mail that the local listener
+	 * refused temporarily.
+	 */
+	if (ctl->newsaved && !suppress_delete)
 	{
 	    struct idlist	*sdp;
 

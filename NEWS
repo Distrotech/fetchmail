@@ -7,6 +7,7 @@
 * Updated German (de) po file.  Added Turkish (tr) po file.
 * Expunge edge case fix by Sunil Shetye.
 * Fixes for some odd IMAP and SMTP edge cases by Sunil Shetye.
+* UIDL bug fix by Matthias Andree.
 
 fetchmail-5.9.6 (Fri Dec 14 04:03:50 EST 2001), 21247 lines:
 
