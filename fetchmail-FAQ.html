@@ -16,7 +16,7 @@ content="Frequently asked questions about fetchmail."/>
 Page</a></td>
 <td width="30%" align="center">To <a href="/~esr/sitemap.html">Site
 Map</a></td>
-<td width="30%" align="right">$Date: 2002/10/31 12:40:12 $</td>
+<td width="30%" align="right">$Date: 2002/11/12 17:40:07 $</td>
 </tr>
 </table>
 
@@ -222,6 +222,7 @@ messages over and over?</a><br/>
 same?</a><br/>
 <a href="#O11">O11. I keep getting messages that say "Repoll
 immediately" in my logs.</a><br/>
+<a href="#O12">O12. Fetchmail no longer expunges mail on a 451 SMTP response.</a><br/>
 
 
 <h1>Answers:</h1>
@@ -3427,8 +3428,8 @@ messages the same?</a></h2>
 the received date from the last Received header.</p>
 
 <hr />
-<a name="#O11">O11. I keep getting messages that say "Repoll
-immediately" in my logs.</a><br/>
+<h2><a name="#O11">O11. I keep getting messages that say "Repoll
+immediately" in my logs.</a></h2>
 
 <p>This is your server barfing on the CAPA probe that fetchmail sends.</p>
 If you run fetchmail in daemon mode (say "set daemon 600"), you will
@@ -3437,6 +3438,31 @@ get the message only once per run.</p>
 <p>If you set an authentication method explicitly (say, with
 <code>auth password</code>), you will never get the message.</p>
 
+<hr />
+<h2><a name="#O12">O12. Fetchmail no longer expunges mail on a 451 SMTP response.</a></h2>
+
+<p>This is a feature, not a bug.</p>
+
+<p>Any 4xx response (like 451) indicates a transient (temporary) error.
+This means that the mail could be accepted if retried later. Lookup
+failures are normally transient errors as a mail should not get
+rejected if a dns server is unreachable or down.</p>
+
+<p>A permanent reject response is of the form 5xx (like 550).</p>
+
+<p>You could tell your smtp server to not lookup any addresses if you are
+not keen on checking the sender addresses. This problem typically
+occurs if your mail server is not checking the sender addresses, but
+your local server is.</p>
+
+<p>Or, you could change the response code to a permanent reject for
+lookup failures if you want the previous situation to continue.</p>
+
+<p>Or, you could check your nameserver configuration and query logs for
+dns errors.</p>
+
+<p>All these issues are not related to fetchmail directly.</p>
+
 <hr/>
 <table width="100%" cellpadding="0" summary="Canned page footer">
 <tr>
@@ -3444,7 +3470,7 @@ get the message only once per run.</p>
 Page</a></td>
 <td width="30%" align="center">To <a href="/~esr/sitemap.html">Site
 Map</a></td>
-<td width="30%" align="right">$Date: 2002/10/31 12:40:12 $</td>
+<td width="30%" align="right">$Date: 2002/11/12 17:40:07 $</td>
 </tr>
 </table>
 
