@@ -479,14 +479,14 @@ struct hostrec *queryctl;
     if (queryctl->skip || outlevel == O_VERBOSE)
 	printf("  This host will%s be queried when no host is specified.\n",
 	       queryctl->skip ? " not" : "");
-    printf("  Username = '%s'\n", queryctl->remotename);
+    printf("  Username = '%s'.\n", queryctl->remotename);
     if (queryctl->password[0] == '\0')
 	printf("  Password will be prompted for.\n");
     else if (outlevel == O_VERBOSE)
 	if (queryctl->protocol == P_APOP)
-	    printf("  APOP secret = '%s'\n", queryctl->password);
+	    printf("  APOP secret = '%s'.\n", queryctl->password);
         else
-	    printf("  Password = '%s'\n", queryctl->password);
+	    printf("  Password = '%s'.\n", queryctl->password);
     if (queryctl->protocol == P_POP3 
 		&& queryctl->port == KPOP_PORT
 		&& queryctl->authenticate == A_KERBEROS)
@@ -499,6 +499,7 @@ struct hostrec *queryctl;
 	printf(" (using port %d)", queryctl->port);
     else if (outlevel == O_VERBOSE)
 	printf(" (using default port)");
+    putchar('.');
     putchar('\n');
     if (queryctl->authenticate == A_KERBEROS)
 	    printf("  Kerberos authentication enabled.\n");
