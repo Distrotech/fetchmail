@@ -1556,7 +1556,11 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	phase = OPEN_WAIT;
 	set_timeout(mytimeout);
 #if !INET6
+#ifdef SSL_ENABLE
+	port = ctl->server.port ? ctl->server.port : ( ctl->use_ssl ? protocol->sslport : protocol->port );
+#else
 	port = ctl->server.port ? ctl->server.port : protocol->port;
+#endif
 #endif /* !INET6 */
 	realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;
 
@@ -1614,6 +1618,17 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	}
 	set_timeout(0);
 	phase = oldphase;
+
+#ifdef SSL_ENABLE
+	/* perform initial SSL handshake on open connection */
+	/* Note:  We pass the realhost name over for certificate
+		verification.  We may want to make this configurable */
+	if (ctl->use_ssl && SSLOpen(mailserver_socket,ctl->sslkey,ctl->sslcert,realhost) == -1) 
+	{
+	    report(stderr, "SSL connection failed.");
+	    goto closeUp;
+	}
+#endif
 
 #ifdef KERBEROS_V4
 	if (ctl->server.preauthenticate == A_KERBEROS_V4)

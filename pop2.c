@@ -125,9 +125,11 @@ const static struct method pop2 =
 {
     "POP2",				/* Post Office Protocol v2 */
 #if INET6
-    "pop2",				/* standard POP3 port */
+    "pop2",				/* standard POP2 port */
+    "pop2",				/* ssl POP2 port */
 #else /* INET6 */
     109,				/* standard POP2 port */
+    109,				/* ssl POP2 port - not */
 #endif /* INET6 */
     FALSE,				/* this is not a tagged protocol */
     FALSE,				/* does not use message delimiter */

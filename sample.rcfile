@@ -27,6 +27,9 @@
 #   uidl
 #   no uidl
 #   port                      -- must be followed by a TCP/IP port number
+#   ssl
+#   sslkeyfile                -- must be followed by path to private key file
+#   sslcertfile               -- must be followed by path to certificate file
 #   authenticate (or auth)    -- must be followed by an authentication type
 #   timeout                   -- must be followed by a numeric timeout value
 #   envelope                  -- must be followed by an envelope header name
@@ -90,6 +93,11 @@
 #   rpop (or RPOP)
 #   kpop (or KPOP)
 #   etrn (or ETRN)
+#
+# Add ssl for protocols operating over an SSL connection (POP3 and IMAP)
+#   Default port for IMAPS (IMAP over SSL) is 993
+#   Default port for POP3S (POP3 over SSL) is 995
+#      Taken from assigned numbers and compatible with netscape/outlook usage.
 #
 # Legal authentication types are
 #   login

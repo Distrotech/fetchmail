@@ -69,7 +69,7 @@ extern char * yytext;
 %token <sval>  STRING
 %token <number> NUMBER
 %token NO KEEP FLUSH FETCHALL REWRITE FORCECR STRIPCR PASS8BITS DROPSTATUS
-%token DNS SERVICE PORT UIDL INTERVAL MIMEDECODE CHECKALIAS
+%token DNS SERVICE PORT UIDL INTERVAL MIMEDECODE CHECKALIAS SSL SSLKEY SSLCERT
 
 %%
 
@@ -317,6 +317,10 @@ user_option	: TO localnames HERE
 		| DROPSTATUS		{current.dropstatus  = FLAG_TRUE;}
 		| MIMEDECODE		{current.mimedecode  = FLAG_TRUE;}
 
+		| SSL 	                {current.use_ssl = FLAG_TRUE;}
+		| SSLKEY STRING		{current.sslkey = xstrdup($2);}
+		| SSLCERT STRING	{current.sslcert = xstrdup($2);}
+
 		| NO KEEP		{current.keep        = FLAG_FALSE;}
 		| NO FLUSH		{current.flush       = FLAG_FALSE;}
 		| NO FETCHALL		{current.fetchall    = FLAG_FALSE;}
@@ -326,6 +330,8 @@ user_option	: TO localnames HERE
 		| NO PASS8BITS		{current.pass8bits   = FLAG_FALSE;}
 		| NO DROPSTATUS		{current.dropstatus  = FLAG_FALSE;}
 		| NO MIMEDECODE		{current.mimedecode  = FLAG_FALSE;}
+
+		| NO SSL 	        {current.use_ssl = FLAG_FALSE;}
 
 		| LIMIT NUMBER		{current.limit       = NUM_VALUE_IN($2);}
 		| WARNINGS NUMBER	{current.warnings    = NUM_VALUE_IN($2);}

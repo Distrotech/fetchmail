@@ -26,6 +26,11 @@
 #define		KPOP_PORT	1109
 #endif /* INET6 */
 
+#ifdef SSL_ENABLE
+#define		SIMAP_PORT	993
+#define		SPOP3_PORT	995
+#endif
+
 /* preauthentication types */
 #define		A_PASSWORD	0	/* password or inline authentication */
 #define		A_KERBEROS_V4	1	/* preauthenticate w/ Kerberos V4 */
@@ -141,8 +146,10 @@ struct method		/* describe methods for protocol state machine */
     const char *name;		/* protocol name */
 #if INET6
     const char *service;
+    const char *sslservice;
 #else /* INET6 */
     int	port;			/* service port */
+    int	sslport;		/* service port for ssl */
 #endif /* INET6 */
     flag tagged;		/* if true, generate & expect command tags */
     flag delimited;		/* if true, accept "." message delimiter */
@@ -257,6 +264,9 @@ struct query
     int	fetchlimit;		/* max # msgs to get in single poll */
     int	batchlimit;		/* max # msgs to pass in single SMTP session */
     int	expunge;		/* max # msgs to pass between expunges */
+    flag use_ssl;		/* use SSL encrypted session */
+    char *sslkey;		/* optional SSL private key file */
+    char *sslcert;		/* optional SSL certificate file */
     char *properties;		/* passthrough properties for extensions */
 
     /* internal use -- per-poll state */

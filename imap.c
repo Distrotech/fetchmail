@@ -1318,8 +1318,10 @@ const static struct method imap =
     "IMAP",		/* Internet Message Access Protocol */
 #if INET6
     "imap",
+    "imaps",
 #else /* INET6 */
     143,                /* standard IMAP2bis/IMAP4 port */
+    993,                /* ssl IMAP2bis/IMAP4 port */
 #endif /* INET6 */
     TRUE,		/* this is a tagged protocol */
     FALSE,		/* no message delimiter */

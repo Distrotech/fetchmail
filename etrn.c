@@ -119,8 +119,10 @@ const static struct method etrn =
     "ETRN",		/* ESMTP ETRN extension */
 #if INET6
     "smtp",		/* standard SMTP port */
+    "smtps",		/* ssl SMTP port */
 #else /* INET6 */
     25,			/* standard SMTP port */
+    465,			/* ssl SMTP port */
 #endif /* INET6 */
     FALSE,		/* this is not a tagged protocol */
     FALSE,		/* this does not use a message delimiter */

@@ -71,6 +71,12 @@
 #define LA_CONFIGDUMP	47
 #define LA_YYDEBUG	48
 
+#ifdef SSL_ENABLE
+#define LA_SSL		49
+#define LA_SSLKEY	50
+#define LA_SSLCERT	51
+#endif
+
 /* options still left: CDgGhHjJoORwWxXYz */
 static const char *shortoptions = 
 	"?Vcsvd:NqL:f:i:p:UP:A:t:E:Q:u:akKFnl:r:S:Z:b:B:e:m:T:I:M:yw:";
@@ -129,6 +135,12 @@ static const struct option longoptions[] = {
 #ifdef INET6
   {"netsec",	required_argument, (int *) 0, LA_NETSEC      },
 #endif /* INET6 */
+
+#ifdef SSL_ENABLE
+  {"ssl",       no_argument,       (int *) 0, LA_SSL        },
+  {"sslkey",    required_argument, (int *) 0, LA_SSLKEY     },
+  {"sslcert",   required_argument, (int *) 0, LA_SSLCERT    },
+#endif
 
 #if (defined(linux) && !INET6) || defined(__FreeBSD__)
   {"interface",	required_argument, (int *) 0, LA_INTERFACE   },
@@ -523,6 +535,20 @@ struct query *ctl;	/* option record to be initialized */
 	    ctl->server.plugout = xstrdup(optarg);
 	    break;
 
+#ifdef SSL_ENABLE
+	case LA_SSL:
+	    ctl->use_ssl = FLAG_TRUE;
+	    break;
+
+	case LA_SSLKEY:
+	    ctl->sslkey = xstrdup(optarg);
+	    break;
+
+	case LA_SSLCERT:
+	    ctl->sslcert = xstrdup(optarg);
+	    break;
+#endif
+
 	case 'y':
 	case LA_YYDEBUG:
 	    yydebug = TRUE;
@@ -577,6 +603,11 @@ struct query *ctl;	/* option record to be initialized */
 #if (defined(linux) && !INET6) || defined(__FreeBSD__)
 	P(_("  -I, --interface   interface required specification\n"));
 	P(_("  -M, --monitor     monitor interface for activity\n"));
+#endif
+#if defined( SSL_ENABLE )
+	P(_("      --ssl         enable ssl encrypted session\n"));
+	P(_("      --sslkey      ssl private key file\n"));
+	P(_("      --sslcert     ssl client certificate\n"));
 #endif
 	P(_("      --plugin      specify external command to open connection\n"));
 	P(_("      --plugout     specify external command to open smtp connection\n"));

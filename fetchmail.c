@@ -220,6 +220,9 @@ int main(int argc, char **argv)
 #ifndef ETRN_ENABLE
 	printf("-ETRN");
 #endif /* ETRN_ENABLE */
+#ifdef SSL_ENABLE
+	printf("+SSL");
+#endif
 #if OPIE
 	printf("+OPIE");
 #endif /* OPIE */
@@ -856,6 +859,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
 
     FLAG_MERGE(server.plugin);
     FLAG_MERGE(server.plugout);
+
     FLAG_MERGE(wildcard);
     FLAG_MERGE(remotename);
     FLAG_MERGE(password);
@@ -879,6 +883,11 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(warnings);
     FLAG_MERGE(fetchlimit);
     FLAG_MERGE(batchlimit);
+#ifdef	SSL_ENABLE
+    FLAG_MERGE(use_ssl);
+    FLAG_MERGE(sslkey);
+    FLAG_MERGE(sslcert);
+#endif
     FLAG_MERGE(expunge);
 
     FLAG_MERGE(properties);
@@ -1003,6 +1012,9 @@ static int load_params(int argc, char **argv, int optind)
 	    DEFAULT(ctl->mimedecode, FALSE);
 	    DEFAULT(ctl->server.dns, TRUE);
 	    DEFAULT(ctl->server.uidl, FALSE);
+#ifdef	SSL_ENABLE
+	    DEFAULT(ctl->use_ssl, FALSE);
+#endif
 	    DEFAULT(ctl->server.checkalias, FALSE);
 #undef DEFAULT
 
@@ -1476,6 +1488,10 @@ static void dump_params (struct runctl *runp,
 	    printf(_("  Kerberos V4 preauthentication enabled.\n"));
 	if (ctl->server.preauthenticate == A_KERBEROS_V5)
 	    printf(_("  Kerberos V5 preauthentication enabled.\n"));
+#ifdef	SSL_ENABLE
+	if (ctl->use_ssl)
+	    printf("  SSL encrypted sessions enabled.\n");
+#endif
 	if (ctl->server.timeout > 0)
 	    printf(_("  Server nonresponse timeout is %d seconds"), ctl->server.timeout);
 	if (ctl->server.timeout ==  CLIENT_TIMEOUT)

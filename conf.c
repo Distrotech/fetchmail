@@ -169,6 +169,9 @@ void dump_config(struct runctl *runp, struct query *querylist)
 #ifdef ETRN_ENABLE
     printf("'etrn',");
 #endif /* ETRN_ENABLE */
+#ifdef SSL_ENABLE
+    printf("'ssl',");
+#endif /* SSL_ENABLE */
 #if OPIE
     printf("'opie',");
 #endif /* OPIE */
@@ -342,6 +345,11 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	numdump("warnings", ctl->warnings);
 	numdump("fetchlimit", ctl->fetchlimit);
 	numdump("batchlimit", ctl->batchlimit);
+#ifdef SSL_ENABLE
+	booldump("ssl", ctl->use_ssl);
+	stringdump("sslkey", ctl->sslkey);
+	stringdump("sslcert", ctl->sslcert);
+#endif /* SSL_ENABLE */
 	numdump("expunge", ctl->expunge);
 	stringdump("properties", ctl->properties);
 	listdump("smtphunt", ctl->smtphunt);

@@ -147,6 +147,9 @@ dropstatus	{ return DROPSTATUS; }
 mimedec(ode)?   { return MIMEDECODE; }
 dns		{ return DNS; }
 uidl		{ return UIDL; }
+ssl		{ return SSL; }
+sslkey		{ return SSLKEY; }
+sslcert		{ return SSLCERT; }
 checkalias	{ return CHECKALIAS; }
 
 limit		{ return LIMIT; }

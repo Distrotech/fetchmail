@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.17"
+version = "1.18"
 
 from Tkinter import *
 from Dialog import *
@@ -221,6 +221,9 @@ class User:
 	self.fetchlimit = 0		# Max messages fetched per batch
 	self.batchlimit = 0		# Max message forwarded per batch
 	self.expunge = 0		# Interval between expunges (IMAP)
+        self.ssl = 0			# Enable Seccure Socket Layer
+        self.sslkey = None		# SSL key filename
+        self.sslcert = None		# SSL certificate filename
         self.properties = None		# Extension properties
 	User.typemap = (
 	    ('remote',      'String'),
@@ -248,7 +251,10 @@ class User:
 	    ('fetchlimit',  'Int'),
 	    ('batchlimit',  'Int'),
 	    ('expunge',     'Int'),
-            ('properties',   'String'))
+	    ('ssl',         'Boolean'),
+	    ('sslkey',      'String'),
+	    ('sslcert',     'String'),
+            ('properties',  'String'))
 
     def __repr__(self):
 	str = "    "
@@ -296,6 +302,12 @@ class User:
 	    str = str + " fetchlimit " + `self.fetchlimit`
 	if self.batchlimit != UserDefaults.batchlimit:
 	    str = str + " batchlimit " + `self.batchlimit`
+	if self.ssl != UserDefaults.ssl:
+	    str = str + flag2str(self.ssl, 'ssl')
+	if self.sslkey != UserDefaults.sslkey:
+	    str = str + " sslkey " + `self.sslkey`
+	if self.sslcert != UserDefaults.sslcert:
+	    str = str + " ssl " + `self.sslcert`
 	if self.expunge != UserDefaults.expunge:
 	    str = str + " expunge " + `self.expunge`
         str = str + "\n"
@@ -855,6 +867,10 @@ The `interface' and `monitor' options are available
 only for Linux and freeBSD systems.  See the fetchmail
 manual page for details on these.
 
+The ssl option enables SSL communication with a maolserver
+supporting Secure Sockets Layer. The sslkey and sslcert options
+declare key and certificate files for use with SSL.
+
 The `netsec' option will be configurable only if fetchmail
 was compiled with IPV6 support.  If you need to use it,
 you probably know what to do.
@@ -1338,6 +1354,16 @@ class UserEdit(Frame, MyWidget):
 		      self.password, '12').pack(side=TOP, fill=X)
         secwin.pack(fill=X, anchor=N)
 
+        if 'ssl' in feature_options or 'ssl' in dictmembers:
+            sslwin = Frame(leftwin, relief=RAISED, bd=5)
+            Checkbutton(sslwin, text="Use SSL?",
+                        variable=self.ssl).pack(side=TOP, fill=X)
+            LabeledEntry(sslwin, 'SSL key:',
+			 self.sslkey, '14').pack(side=TOP, fill=X)
+            LabeledEntry(sslwin, 'SSL certificate:',
+			 self.sslcert, '14').pack(side=TOP, fill=X)
+            sslwin.pack(fill=X, anchor=N)
+
         names = Frame(leftwin, relief=RAISED, bd=5)
         Label(names, text="Local names").pack(side=TOP)
         ListEdit("New name: ",
@@ -1602,7 +1628,7 @@ def copy_instance(toclass, fromdict):
 # The `optional' fields are the ones we can ignore for purposes of
 # conformability checking; they'll still get copied if they are
 # present in the dictionary.
-    optional = ('interface', 'monitor', 'netsec')
+    optional = ('interface', 'monitor', 'netsec', 'ssl', 'sslkey', 'sslcert')
     class_sig = setdiff(toclass.__dict__.keys(), optional)
     class_sig.sort()
     dict_keys = setdiff(fromdict.keys(), optional)
@@ -1739,7 +1765,7 @@ gUSiYASJpMEHhilJTEnhAlGoQqYAZQ1AiqEMZ0jDGtqQImhwwA13yMMevoQAGvGhEAWHGMOAAAA7
     # `Configuration' is the top level of the object tree we're going to mung.
     # The dictmembers list is used to track the set of fields the dictionary
     # contains; in particular, we can use it to tell whether things like the
-    # monitor, interface, and netsec fields are present.
+    # monitor, interface, netsec, ssl, sslkey, or sslcert fields are present.
     dictmembers = []
     Fetchmailrc = Configuration()
     copy_instance(Fetchmailrc, fetchmailrc)

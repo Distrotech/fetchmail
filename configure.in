@@ -346,6 +346,24 @@ else
   fi
 fi
 
+###	use option --with-ssl to compile in the SSL support
+AC_ARG_WITH(ssl,
+	[  --with-ssl[=DIR]       enable SSL and point its top directory])
+
+if test -n "$with_ssl"
+then
+    if test "$with_ssl" = "yes"
+    then
+	# Let's just define the standard location for the SSLeay root
+        with_ssl="/usr/local/ssl"
+    fi
+    includedir=$with_ssl/include
+    AC_DEFINE(SSL_ENABLE)
+    CEFLAGS="$CPPFLAGS -I$includedir"
+    LDEFLAGS="$LDEFLAGS -L$with_ssl/lib"
+    LIBS="$LIBS -lssl -lcrypto"
+fi
+
 ###	use option --with-kerberos=DIR to point at a Kerberos directory
 AC_ARG_WITH(kerberos,
 	[  --with-kerberos=DIR     point fetchmail compilation at a Kerberos directory])
@@ -488,7 +506,8 @@ AC_OUTPUT([Makefile intl/Makefile po/Makefile.in], [
 	# The reason for this odd makedepend line is that we want
 	# to have all dependencies evaluated relative to the source directory
 	# and let VPATH do all the dirty work when we build remotely
-	echo "You can ignore any makedepend error messages";
+	echo "You can ignore any makedepend error messages:";
+	echo timestamp > stamp-h;
 	(cd $srcdir; makedepend -f - *.c) >>Makefile])
 
 dnl Local Variables:

@@ -1,3 +1,10 @@
+				Things to do:
+
+In the SSL support, we eed to add server certificate validation (In
+other words, does the certificate match the system we are trying to
+contact?).  Also, add authentication of Certifying Authority (Is this
+a Certifying Authority we recognize?).
+
 				Release Notes:
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
@@ -8,6 +15,8 @@
 * Backed out the 5.1.0 change to quote usernames with embedded spaces.
   It actually breaks things.
 * Added to fetchmailconf a warning about Imail IMAP servers.
+* SSL patches by Michael Warfield merged in.  Distribution still contains
+  no crypto code.
 
 fetchmail-5.1.2 (Thu Oct  7 09:46:07 EDT 1999), 17906 lines:
 * Joe Loughry <loughry@uswest.net> sent a patch to handle multihomed machines.
