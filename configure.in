@@ -34,8 +34,6 @@ AC_SUBST(CPFLAGS)
 AC_SUBST(CEFLAGS)
 AC_SUBST(LDEFLAGS)
 AC_SUBST(LIBOBJS)
-AC_SUBST(POMAKE)
-AC_SUBST(LOCALE_DIR)
 
 PACKAGE=`sed -n '/PACKAGE *= *\(.*\)/s//\1/p' <$srcdir/Makefile.in`
 AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
@@ -70,12 +68,10 @@ then
    LDFLAGS=`echo $LDFLAGS | sed "s/-s //"`
 fi
  
-# i18n
+dnl i18n
 ALL_LINGUAS="cs es fr pl pt_BR gl da"
-
 AM_GNU_GETTEXT
-
-# end i18n
+dnl end i18n
 
 # Under sysV68, socket and friends are provided by the C library.
 # -linet does not provide socket, but causes multiple definition
@@ -85,16 +81,6 @@ AC_CHECK_FUNC(socket,
     AC_MSG_RESULT(using libc's socket),
     AC_CHECK_LIB(socket,socket)
     AC_CHECK_LIB(inet,socket))
-
-# If gettext isn't in the C library, maybe there's a -lintl. However,
-# do not check if user has specified --with-included-gettext. On
-# some systems (e.g. Solaris), there is a gettext in libc which
-# we do not want to use if --with-included-gettext is specified.
-if test x$nls_cv_force_use_gnu_gettext != xyes; then
-    AC_CHECK_FUNC(gettext,
-	AC_MSG_RESULT(using libc's gettext),
-	AC_CHECK_LIB(intl,gettext))
-fi
 
 # The condition in this test copes with the presence of inet_addr in libc6.
 AC_CHECK_FUNC(inet_addr,
@@ -223,21 +209,6 @@ AC_DEFINE_UNQUOTED(PID_DIR, "$dir")
 AC_CHECK_SIZEOF(short)
 AC_CHECK_SIZEOF(int)
 AC_CHECK_SIZEOF(long)
-
-if test "$USE_NLS" = "yes"
-then
-	echo 'Enabling internationalization support...'
-	POMAKE='cd po; $(MAKE)'
-  	if test "x$prefix" != xNONE; then
-		LOCALE_DIR=$prefix/share/locale
-  	else
-		LOCALE_DIR=$ac_default_prefix/share/locale
-	fi
-	EXTRADEFS="$EXTRADEFS -DLOCALEDIR='\"${LOCALE_DIR}\"'"
-else
-	echo 'Disabling internationalization support...'
-	POMAKE="@echo '(NLS support disabled)'; #"
-fi
 
 ###	use option --enable-POP2 to compile in the POP2 support
 AC_ARG_ENABLE(POP2,
@@ -625,7 +596,7 @@ then
   fi
 fi])
 
-AC_OUTPUT([Makefile po/Makefile.in], [
+AC_OUTPUT([Makefile intl/Makefile po/Makefile.in], [
 	# The reason for this odd makedepend line is that we want
 	# to have all dependencies evaluated relative to the source directory
 	# and let VPATH do all the dirty work when we build remotely

@@ -6,8 +6,6 @@
 PACKAGE = fetchmail
 VERSION = 5.7.2
 
-SUBDIRS = @POSUB@  
-
 # Ultrix 2.2 make doesn't expand the value of VPATH.
 srcdir = @srcdir@
 VPATH = @srcdir@
@@ -29,31 +27,30 @@ CEFLAGS = @CEFLAGS@
 CPFLAGS = @CPFLAGS@
 LDEFLAGS = @LDEFLAGS@
 
-INTLDEPS = @INTLDEPS@
-INTLLIBS = @INTLLIBS@
-INTLOBJS = @INTLOBJS@
+# for gettext (used by fetchmail.c, NOT by GNU gettext)
+localedir = $(datadir)/locale
 
 # How to invoke ranlib.  This is only used by the `glob' subdirectory.
 RANLIB = @RANLIB@
 
 # NeXT 1.0a uses an old version of GCC, which required -D__inline=inline.
 # See also `config.h'.
-DEFS = @DEFS@ @EXTRADEFS@
+DEFS = @DEFS@ @EXTRADEFS@ -DLOCALEDIR=\"$(localedir)\"
 # DEFS = -DQNX -DHAVE_CONFIG_H -DHAVE_UNISTD_H -DHAVE_STDARG_H -DSTDC_HEADERS	# QNX
 defines = $(DEFS)
 
 # If your system needs extra libraries loaded in, define them here.
 # In particular, add -lresolv if you are running bind 4.9.5
-LOADLIBS = @LIBS@ @LEXLIB@
+LOADLIBS = @LIBS@ @INTLLIBS@ @LEXLIB@
 # LOADLIBS = -lsocket3r -lunix3r	# QNX
 
 # Any extra object files your system needs.
-extras = @LIBOBJS@ $(INTLDEPS)
+extras = @LIBOBJS@
 
 # Extra sources/objects for library functions not provided on the host system.
 EXTRASRC = @EXTRASRC@
 # EXTRASRC = $(srcdir)/strcasecmp.c $(srcdir)/getopt.c $(srcdir)/getopt1.c $(srcdir)/alloca.c	# QNX
-EXTRAOBJ = @EXTRAOBJ@
+EXTRAOBJ = @EXTRAOBJ@ @INTLOBJS@
 # EXTRAOBJ = strcasecmp.o getopt.o getopt1.o alloca.o
 
 DESTDIR = 
@@ -125,15 +122,15 @@ all: fetchmail po
 # Some makes apparently use .PHONY as the default goal if it is before `all'.
 .PHONY: all
 
-fetchmail: $(objs)
+fetchmail: $(objs) @INTLDEPS@
 	$(CC) $(LDEFLAGS) $(LDFLAGS) $(objs) $(LOADLIBS) -o fetchmail
 
-po:	dummy
-	@POMAKE@
+intl:
+@INTLDEPS@:	dummy
+	$(MAKE) -C intl
 
-$(INTLDEPS): dummy
-	@echo "Making $@ in intl"; \
-	cd intl; $(MAKE) || exit 1
+po:	dummy
+	$(MAKE) -C po
 
 dummy:
 
@@ -151,7 +148,7 @@ netrc: netrc.c xmalloc.o error.o
 	$(CC) -DSTANDALONE -DHAVE_CONFIG_H -I. -g -o $@ $^
 
 .c.o:
-	$(CC) $(defines) -c $(CPFLAGS) -I. -I$(srcdir) $(CEFLAGS) $(CFLAGS) $<
+	$(CC) $(defines) -c $(CPFLAGS) -I. -I$(srcdir) -I../intl -I$(top_srcdir)/intl $(CEFLAGS) $(CFLAGS) $<
 
 # For some losing Unix makes.
 SHELL = /bin/sh
@@ -176,29 +173,33 @@ install:
 	rm -f $(DESTDIR)$(mandir)/fetchmailconf.$(manext)
 	cd $(DESTDIR)$(mandir) && ln -s fetchmail.$(manext) fetchmailconf.$(manext)
 	@echo "Installing language catalogs..."
-	@POMAKE@ install
+	-$(MAKE) -C intl install
+	$(MAKE) -C po install
 
 uninstall:
 	rm -f $(DESTDIR)$(bindir)/fetchmail $(DESTDIR)$(bindir)/fetchmailconf
 	rm -f $(DESTDIR)$(mandir)/fetchmail.$(manext) $(DESTDIR)$(mandir)/fetchmailconf.$(manext)
-	@POMAKE@ uninstall
+	-$(MAKE) -C intl uninstall
+	$(MAKE) -C po uninstall
 
 .PHONY: clean realclean distclean mostlyclean
 clean: 
-	@POMAKE@ clean
+	-$(MAKE) -C intl clean
+	#work around braindamage in GNU gettext
+	-rm -f intl/libintl.h
+	-$(MAKE) -C po clean
 	-rm -f fetchmail *.o core fetchmail.dvi \
 	       rcfile_l.c rcfile_y.h rcfile_y.c \
 	       fetchmail.tar fetchmail.tar.gz \
 	       netrc rfc822 unmime fetchmail-man.html
 
 distclean: clean 
-	@POMAKE@ distclean
-	rm -f po/*.gmo
+	-$(MAKE) -C intl distclean
+	-$(MAKE) -C po distclean
 	-rm -f Makefile config.h TAGS tags
 	-rm -f config.cache config.status config.log stamp-config
 
 realclean: distclean
-	@POMAKE@ clean
 	-rm -f FAQ FEATURES NOTES MANIFEST 
 	-rm -f config.cache config.log Makefile
 	-rm -f fetchmail-*.tar.gz fetchmail-*.i386.rpm 
@@ -305,7 +306,7 @@ fetchmail-man.html: fetchmail.man
 # Make distribution, update LSM with proper size, remake distribution
 # (Making fetchmail-man.html is a kluge to ensure that it will be
 # available when I upload the distribution.)
-dist: Makefile.in distdocs
+dist: distclean Makefile.in distdocs
 	rm -f MANIFEST; make MANIFEST;
 	touch fetchmail.lsm
 	make fetchmail-$(VERSION).tar.gz 
