@@ -48,8 +48,9 @@ forwarding, and aliasing facilities to work just as they would on
 normal mail.<P>
 
 Fetchmail offers better security than any other Unix remote-mail
-client.  It supports APOP, KPOP, and IMAP RFC1731 encrypted
-authentication methods to avoid sending passwords en clair.<p>
+client.  It supports APOP, KPOP, OTP, Compuservs RPA, and IMAP RFC1731
+encrypted authentication methods to avoid sending passwords en
+clair.<p>
 
 Fetchmail can be used as a POP/IMAP-to-SMTP gateway for an entire DNS
 domain, collecting mail from a single drop box on an ISP and
