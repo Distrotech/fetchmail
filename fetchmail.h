@@ -209,6 +209,7 @@ extern flag versioninfo;	/* emit only version info */
 extern char *user;		/* name of invoking user */
 extern char *home;		/* home directory of invoking user */
 extern char *fetchmailhost;	/* the name of the host running fetchmail */
+extern int pass;		/* number of re-polling pass */
 
 /* prototypes for globally callable functions */
 

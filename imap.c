@@ -33,7 +33,7 @@ extern char *strstr();	/* needed on sysV68 R3V7.1. */
 #define IMAP4		0	/* IMAP4 rev 0, RFC1730 */
 #define IMAP4rev1	1	/* IMAP4 rev 1, RFC2060 */
 
-static int count,seen,recent,unseen, deletions,expunged, imap_version, pass;
+static int count, seen, recent, unseen, deletions,expunged, imap_version;
 
 int imap_ok(int sock, char *argbuf)
 /* parse command response */
@@ -419,7 +419,7 @@ static int imap_getrange(int sock,
     /* find out how many messages are waiting */
     recent = unseen = -1;
 
-    if (++pass > 1)
+    if (pass > 1)
     {
 	ok = gen_transact(sock, "NOOP");
 	if (ok != 0)
@@ -684,7 +684,6 @@ const static struct method imap =
 int doIMAP(struct query *ctl)
 /* retrieve messages using IMAP Version 2bis or Version 4 */
 {
-    pass = 0;
     return(do_protocol(ctl, &imap));
 }
 

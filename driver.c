@@ -73,6 +73,7 @@ extern char *strstr();	/* needed on sysV68 R3V7.1. */
 int fetchlimit;		/* how often to tear down the server connection */
 int batchcount;		/* count of messages sent in current batch */
 flag peek_capable;	/* can we peek for better error recovery? */
+int pass;		/* how many times have we re-polled? */
 
 static const struct method *protocol;
 static jmp_buf	restart;
@@ -1348,6 +1349,7 @@ const struct method *proto;	/* protocol method table */
     }
 
     protocol = proto;
+    pass = 0;
     tagnum = 0;
     tag[0] = '\0';	/* nuke any tag hanging out from previous query */
     ok = 0;
@@ -1536,6 +1538,8 @@ const struct method *proto;	/* protocol method table */
 	for (idp = ctl->mailboxes; idp; idp = idp->next)
 	{
 	    do {
+		++pass;
+
 		if (outlevel >= O_VERBOSE)
 		    if (idp->next)
 			error(0, 0, "selecting or re-polling folder %s");
@@ -1557,14 +1561,7 @@ const struct method *proto;	/* protocol method table */
 		if (outlevel > O_SILENT)
 		    if (count == -1)		/* only used for ETRN */
 			error(0, 0, "Polling %s", realname);
-		    else if (count == 0)
-		    {
-			/* these are pointless in normal daemon mode */
-			if (poll_interval == 0 || outlevel == O_VERBOSE )
-			    error(0, 0, "No mail at %s", buf); 
-			break;
-		    }
-		    else
+		    else if (count != 0)
 		    {
 			if (new != -1 && (count - new) > 0)
 			    error(0, 0, "%d message%s (%d seen) at %s.",
@@ -1572,6 +1569,13 @@ const struct method *proto;	/* protocol method table */
 			else
 			    error(0, 0, "%d message%s at %s.", 
 				  count, count > 1 ? "s" : "", buf);
+		    }
+		    else
+		    {
+			/* these are pointless in normal daemon mode */
+			if (pass == 1 && (poll_interval == 0 || outlevel == O_VERBOSE))
+			    error(0, 0, "No mail at %s", buf); 
+			break;
 		    }
 
 		if (check_only)
