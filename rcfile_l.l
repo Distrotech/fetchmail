@@ -83,6 +83,7 @@ service		{ return SERVICE; }
 port		{ return PORT; }
 interval	{ return INTERVAL; }
 preauth(enticate)?	{ SETSTATE(PREAUTH); return PREAUTHENTICATE; }
+gssapi		{ SETSTATE(0); return GSSAPI; }
 kerberos(_v)?4	{ SETSTATE(0); return KERBEROS4; }
 kerberos(_v)?5	{ SETSTATE(0); return KERBEROS5; }
 kerberos	{ SETSTATE(0); return KERBEROS; }
@@ -174,10 +175,6 @@ options		{/* EMPTY */}
 (pop2)|(POP2)	{ yylval.proto = P_POP2;  return PROTO; }
 (sdps)|(SDPS)   { return SDPS; }
 (pop3)|(POP3)	{ yylval.proto = P_POP3;  return PROTO; }
-(imap-k4)|(IMAP-K4)   { yylval.proto = P_IMAP_K4;  return PROTO; }
-(imap-gss)|(IMAP-GSS) { yylval.proto = P_IMAP_GSS;  return PROTO; }
-(imap-crammd5)|(IMAP-CRAMMD5) { yylval.proto = P_IMAP_CRAM_MD5;  return PROTO; }
-(imap-login)|(IMAP-LOGIN) { yylval.proto = P_IMAP_LOGIN;  return PROTO; }
 (imap)|(IMAP)	{ yylval.proto = P_IMAP;  return PROTO; }
 (apop)|(APOP)   { yylval.proto = P_APOP;  return PROTO; }
 (etrn)|(ETRN)   { yylval.proto = P_ETRN;  return PROTO; }

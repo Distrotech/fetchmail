@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/02/10 21:24:24 $
+<td width="30%" align=right>$Date: 2001/02/11 23:26:07 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -352,7 +352,7 @@ on the Web with a search for that title.<p>
 <hr>
 <h2><a name="G7">G7. What is the best server to use with fetchmail?</a></h2>
 
-The short answer: IMAP4rev1 running over Unix.<P>
+The short answer: IMAP 2000 running over Unix.<P>
 
 Here's a longer answer: <P>
 
@@ -374,7 +374,12 @@ the fetchmailconf utility).<P>
 If you have the option, we recommend using or installing an IMAP4rev1
 server; it has the best facilities for tracking message `seen' states.
 It also recovers from interrupted connections more gracefully than
-POP3, and enables some significant performance optimizations.<P>
+POP3, and enables some significant performance optimizations.  The new
+<a href="ftp://ftp.cac.washington.edu/imap/imap.tar.Z">IMAP 2000</a>
+is particularly nice, as it supports CRAM-MD5 so you don't have to
+ship your mail password over the net en clair (fetchmail autodetects
+this capability).  Older versions had support for GSSAPI giving a
+similar effect, .<P>
 
 Don't be fooled by NT/Exchange propaganda.  M$ Exchange is just plain
 broken (see item <a href="#S2">S2</a>) and NT cannot handle the
@@ -383,13 +388,6 @@ itself knows better than to try this; their own Hotmail service runs
 over Solaris!  For extended discussion, see John Kirch's excellent <a
 href="http://unix-vs-nt.org/kirch/">white paper</a> on Unix
 vs. NT performance.<P>
-
-You can find sources for IMAP software at <a
-href="http://www.imap.org">The IMAP Connection</a>; we like the
-open-source <a href="ftp://ftp.cac.washington.edu/imap/">UW IMAP</a>
-server, which is the reference implementation of IMAP.  UW IMAP's
-support for GSSAPI gives you a good way to authenticate without
-sending a password en clair.<P>
 
 Source for a high-quality supported implementation of POP is available
 from the <a href="ftp://ftp.qualcomm.com/eudora/servers/unix/popper/">Eudora
@@ -462,7 +460,11 @@ response to a CAPABILITY query).  Do a <code>fetchmail -v</code>
 to see these, or telnet direct to the server port (110 for POP3, 143 for
 IMAP).<P>
 
-The facility you are most likely to have available is APOP.  This is a
+If your mailserver is using IMAP 2000, you'll have CRAM-MD5 support
+built in.  Fetchmail autodetects this; you can skip the rest of this
+section.<P>
+
+The POP3 facility you are most likely to have available is APOP.  This is a
 POP3 feature supported by many servers (fetchmailconf's autoprobe
 facility will detect it and tell you if you have it).  If you see
 something in the greeting line that looks like an
@@ -478,12 +480,12 @@ Alternatively, you may have Kerberos available. This may require you
 to set up some magic files in your home directory on your client
 machine, but means you can omit specifying any password at all.<P>
 
-Fetchmail supports two different Kerberos schemes.  One is a
-POP3 variant called KPOP; consult the documentation of your mail
-server to see if you have it (one clue is the string "krb-IV" in the
-greeting line on port 110).  The other is an IMAP facility described
-by RFC1731. You can tell if this one is present by looking for
-AUTH=KERBEROS_V4 in the CAPABILITY response.<P>
+Fetchmail supports two different Kerberos schemes.  One is a POP3
+variant called KPOP; consult the documentation of your mail server to
+see if you have it (one clue is the string "krb-IV" in the greeting
+line on port 110).  The other is an IMAP and POP3 facility described
+by RFC1731 and RFC1734. You can tell if this one is present by looking
+for AUTH=KERBEROS_V4 in the CAPABILITY response.<P>
 
 If you are fetching mail from a CompuServe POP3 account, you can use
 their RPA authentication (which works much like APOP).  See <a
@@ -498,14 +500,6 @@ and your fetchmail was built with OPIE support compiled in (see the
 distribution INSTALL file), fetchmail will detect it also.  When using
 OTP, you will specify a password but it will not be sent en clair.<P>
 
-Sadly, there is at present (September 1999) no OTP or APOP-like
-facility generally available on IMAP servers.  However, there do exist
-patches which will OTP-enable the University of Washington IMAP
-daemon, version 4.2-FINAL.  We have a report that the GSSAPI support
-in fetchmail works with the GSSAPI support in the most recent version
-of UW IMAP.  Or you can use <a href="#K5">SSL</a> for complete
-end-to-end encryption if you have an SSL-enabled mailserver.<P>
-
 You can get both POP3 and IMAP OTP patches from <a name="cmetz">Craig
 Metz</A> at <a
 href="http://www.inner.net/pub/">http://www.inner.net/pub/</a>.<P>
@@ -514,6 +508,8 @@ there is not currently a standard way to do this; fetchmail also uses
 this method, so the two will interoperate happily.  They better,
 because this is how Craig gets his mail ;-)<P>
 
+Finally, you can use <a href="#K5">SSL</a> for complete
+end-to-end encryption if you have an SSL-enabled mailserver.<P>
 <hr>
 <h2><a name="G10">G10. Is any special configuration needed to use a dynamic IP address?</a></h2>
 
@@ -2967,7 +2963,7 @@ switching to IMAP and using a short expunge interval.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/02/10 21:24:24 $
+<td width="30%" align=right>$Date: 2001/02/11 23:26:07 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

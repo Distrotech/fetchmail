@@ -177,7 +177,7 @@ Post Office Protocol 2
 .IP POP3
 Post Office Protocol 3
 .IP APOP
-Use POP3 with MD5 authentication.
+Use POP3 with old-fashioned MD5-challenge authentication.
 .IP RPOP
 Use POP3 with RPOP authentication.
 .IP KPOP
@@ -186,19 +186,6 @@ Use POP3 with Kerberos V4 preauthentication on port 1109.
 Use POP3 with Demon Internet's SDPS extensions.
 .IP IMAP
 IMAP2bis, IMAP4, or IMAP4rev1 (\fIfetchmail\fR autodetects their capabilities).
-.IP IMAP-K4
-IMAP4, or IMAP4rev1 (\fIfetchmail\fR autodetects their capabilities)
-with RFC 1731 Kerberos v4 preauthentication.
-.IP IMAP-GSS
-IMAP4, or IMAP4rev1 (\fIfetchmail\fR autodetects their capabilities)
-with RFC 1731 GSSAPI preauthentication.
-.IP IMAP-CRAMMD5
-IMAP4, or IMAP4rev1 (\fIfetchmail\fR autodetects their capabilities)
-with RFC 2195 CRAM-MD5 authentication.
-.IP IMAP-LOGIN
-IMAP4, or IMAP4rev1 (\fIfetchmail\fR autodetects their capabilities)
-with plain LOGIN authentication only, even if the server supports
-better methods.
 .IP ETRN
 Use the ESMTP ETRN option.
 .IP ODMR
@@ -511,16 +498,18 @@ fetchmail runs with the effective GID set to that of the kmem group
 when interface data is being collected.
 .TP
 .B --preauth <type>
-(Keyword: preauth[enticate]) 
+(Keyword: preauth[enticate])
 This option permits you to specify a preauthentication type (see USER
 AUTHENTICATION below for details).  The possible values are
 \&`\fBpassword\fR', `\fBkerberos_v5\fR' and `\fBkerberos\fR' (or, for
-excruciating exactness, `\fBkerberos_v4\fR'), and \fBssh\fR.  Use
-\fBssh\fR to suppress fetchmail's normal inquiry for a password when
-you are using an end-to-end secure connection such as an ssh tunnel.
-Other values of this option are provided primarily for developers;
-choosing KPOP protocol automatically selects Kerberos
-preauthentication, and all other alternatives use password
+excruciating exactness, `\fBkerberos_v4\fR'), \fRgssapi\fR, and
+\fBssh\fR.  Any value other than "password" suppresses fetchmail's
+normal inquiry for a password.  Specify \fBssh\fR when you are using
+an end-to-end secure connection such as an ssh tunnel; specify
+\fRgssapi\fR or \fBkerberos_v4\fR if you are using a protocol variant
+that employs GSSAPI or K4.  Other values of this option are provided
+primarily for developers; choosing KPOP protocol automatically selects
+Kerberos preauthentication, and all other alternatives use password
 authentication (though APOP uses a generated one-time key as the
 password and IMAP-K4 uses RFC1731 Kerberos v4 authentication).  This
 option does not work with ETRN or ODMR.
@@ -696,21 +685,19 @@ the server greeting time to the server, which can verify it by
 checking its authorization database. 
 .PP
 If your \fIfetchmail\fR was built with Kerberos support and you specify 
-Kerberos preauthentication (either with --auth or the \fI.fetchmailrc\fR
+Kerberos preauthentication (either with --preauth or the \fI.fetchmailrc\fR
 option \fBauthenticate kerberos_v4\fR) it will try to get a Kerberos
 ticket from the mailserver at the start of each query.  Note: if
 either the pollnane or via name is `hesiod', fetchmail will try to use
 Hesiod to look up the mailserver.
 .PP
-If you use IMAP-K4, \fIfetchmail\fR will expect the IMAP server to have
-RFC1731-conformant AUTHENTICATE KERBEROS_V4 capability, and will use it.
-.PP
-If you use IMAP-GSS, \fIfetchmail\fR will expect the IMAP server to have
-RFC1731-conformant AUTHENTICATE GSSAPI capability, and will use it. 
-Currently this has only been tested over Kerberos V, so you're expected
-to already have a ticket-granting ticket. You may pass a username different
-from your principal name using the standard \fB--user\fR command or by
-the \fI.fetchmailrc\fR option \fBuser\fR.
+If you use POP3 or IMAP with GSSAPI preauthentication, \fIfetchmail\fR will
+expect the server to have RFC1731- or RFC1734-conformant GSSAPI
+capability, and will use it.  Currently this has only been tested over
+Kerberos V, so you're expected to already have a ticket-granting
+ticket. You may pass a username different from your principal name
+using the standard \fB--user\fR command or by the \fI.fetchmailrc\fR
+option \fBuser\fR.
 .PP
 If your IMAP daemon returns the PREAUTH response in its greeting line, 
 fetchmail will notice this and skip the normal authentication step.
@@ -1158,7 +1145,7 @@ Specify DNS name of mailserver, overriding poll name
 T}
 proto[col]	-p	T{
 Specify protocol (case insensitive):
-POP2, POP3, IMAP, IMAP-K4, IMAP-GSS, APOP, KPOP
+POP2, POP3, IMAP, APOP, KPOP
 T}
 local[domains]	\&	T{
 Specify domain(s) to be regarded as local
@@ -1221,7 +1208,7 @@ netsec   	\&	T{
 Pass in IPsec security option request.
 T}
 principal   	\&	T{
-Set Kerberos principal (only useful with imap-k4)
+Set Kerberos principal (only useful with imap and kerberos)
 T}
 .TE
 
@@ -1584,20 +1571,17 @@ Legal protocol identifiers for use with the `protocol' keyword are:
     pop3 (or POP3)
     sdps (or SDPS)
     imap (or IMAP)
-    imap-k4 (or IMAP-K4)
-    imap-gss (or IMAP-GSS)
-    imap-crammd5 (or IMAP-CRAMMD5)
-    imap-login (or IMAP-LOGIN)
     apop (or APOP)
     kpop (or KPOP)
 
 .PP
-Legal authentication types are `password' or `kerberos'.  The former
-specifies authentication by normal transmission of a password (the
-password may be plaintext or subject to protocol-specific encryption
-as in APOP); the second tells \fIfetchmail\fR to try to get a Kerberos
-ticket at the start of each query instead, and send an arbitrary
-string as the password.
+Legal authentication types are `password', `kerberos', and `gssapi'.
+The `password' type specifies authentication by normal transmission of a
+password (the password may be plaintext or subject to
+protocol-specific encryption as in APOP); `kerberos' tells
+\fIfetchmail\fR to try to get a Kerberos ticket at the start of each
+query instead, and send an arbitrary string as the password; and
+`gssapi' tells fetchmail to use GSSAPI authentication.
 .PP
 Specifying `kpop' sets POP3 protocol over port 1109 with Kerberos V4
 preauthentication.  These defaults may be overridden by later options.
@@ -2049,16 +2033,17 @@ mailserver-side filter that consolidates the contents of all envelope
 headers into a single one (procmail, mailagent, or maildrop can be
 programmed to do this fairly easily).
 .PP
-Use of any of the supported protocols other than POP3 with OTP or RPA,
-APOP, KPOP, IMAP-K4, IMAP-GSS, IMAP-CRAMMD5, or ETRN requires that the
-program send unencrypted passwords over the TCP/IP connection to the
-mailserver.  This creates a risk that name/password pairs might be
-snaffled with a packet sniffer or more sophisticated monitoring
-software.  Under Linux and FreeBSD, the --interface option can be used
-to restrict polling to availability of a specific interface device
-with a specific local or remote IP address, but snooping is still
-possible if (a) either host has a network device that can be opened
-in promiscuous mode, or (b) the intervening network link can be tapped.
+Use of some of these protocols (POP2, POP3, or POP4 with the password
+authentication type, if the server doesn't have CRAM-MD5 capability)
+requires that the program send unencrypted passwords over the TCP/IP
+connection to the mailserver.  This creates a risk that name/password
+pairs might be snaffled with a packet sniffer or more sophisticated
+monitoring software.  Under Linux and FreeBSD, the --interface option
+can be used to restrict polling to availability of a specific
+interface device with a specific local or remote IP address, but
+snooping is still possible if (a) either host has a network device
+that can be opened in promiscuous mode, or (b) the intervening network
+link can be tapped.
 .PP
 Use of the %F or %T escapes in an mda option could open a security
 hole, because they pass text manipulable by an attacker to a shell

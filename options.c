@@ -358,18 +358,6 @@ struct query *ctl;	/* option record to be initialized */
 	    }
 	    else if (strcasecmp(optarg,"imap") == 0)
 		ctl->server.protocol = P_IMAP;
-#ifdef KERBEROS_V4
-	    else if (strcasecmp(optarg,"imap-k4") == 0)
-		ctl->server.protocol = P_IMAP_K4;
-#endif /* KERBEROS_V4 */
-#ifdef GSSAPI
-	    else if (strcasecmp(optarg, "imap-gss") == 0)
-                ctl->server.protocol = P_IMAP_GSS;
-#endif /* GSSAPI */
-	    else if (strcasecmp(optarg, "imap-crammd5") == 0)
-                ctl->server.protocol = P_IMAP_CRAM_MD5;
-	    else if (strcasecmp(optarg, "imap-login") == 0)
-                ctl->server.protocol = P_IMAP_LOGIN;
 	    else if (strcasecmp(optarg,"etrn") == 0)
 		ctl->server.protocol = P_ETRN;
 	    else {

@@ -276,27 +276,20 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
         return(PS_SUCCESS);
     }
 
-#if OPIE_ENABLE
-    if ((ctl->server.protocol == P_IMAP) && strstr(capabilities, "AUTH=X-OTP"))
-    {
-	if (outlevel >= O_DEBUG)
-	    report(stdout, _("OTP authentication is supported\n"));
-	if (do_otp(sock, ctl) == PS_SUCCESS)
-	    return(PS_SUCCESS);
-    };
-#endif /* OPIE_ENABLE */
-
+    /*
+     * OK, now try the protocol variants that don't require passwords first.
+     */
 #ifdef GSSAPI
     if (strstr(capabilities, "AUTH=GSSAPI"))
     {
-        if (ctl->server.protocol == P_IMAP_GSS)
+        if (ctl->server.preauthenticate == A_GSSAPI)
         {
             if (outlevel >= O_DEBUG)
                 report(stdout, _("GSS authentication is supported\n"));
             return do_gssauth(sock, ctl->server.truename, ctl->remotename);
         }
     }
-    else if (ctl->server.protocol == P_IMAP_GSS)
+    else if (ctl->server.preauthenticate == P_IMAP_GSS)
     {
         report(stderr, 
 	       _("Required GSS capability not supported by server\n"));
@@ -310,43 +303,47 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 	if (outlevel >= O_DEBUG)
 	    report(stdout, _("KERBEROS_V4 authentication is supported\n"));
 
-	if (ctl->server.protocol == P_IMAP_K4)
+	if (ctl->server.preauthenticate == A_KERBEROS_V4)
 	{
 	    if ((ok = do_rfc1731(sock, "AUTHENTICATE", ctl->server.truename)))
 		/* SASL cancellation of authentication */
 		gen_send(sock, "*");
-	    
 	    return(ok);
 	}
 	/* else fall through to ordinary AUTH=LOGIN case */
     }
-    else if (ctl->server.protocol == P_IMAP_K4)
+    else if (ctl->server.preauthenticate == A_KERBEROS_V4)
     {
-	report(stderr, 
+        report(stderr, 
 	       _("Required KERBEROS_V4 capability not supported by server\n"));
-	return(PS_AUTHFAIL);
+        return(PS_AUTHFAIL);
     }
 #endif /* KERBEROS_V4 */
+
+    /*
+     * No such luck.  OK, now try the variants that mask your password
+     * in a challenge-response.
+     */
 
     if (strstr(capabilities, "AUTH=CRAM-MD5"))
     {
         if (outlevel >= O_DEBUG)
-            report (stdout, _("CRAM-MD5 authentication is supported\n"));
-        if (ctl->server.protocol != P_IMAP_LOGIN)
-        {
-            if ((ok = do_cram_md5 (sock, "AUTHENTICATE", ctl)))
-		/* SASL cancellation of authentication */
-		gen_send(sock, "*");
+            report(stdout, _("CRAM-MD5 authentication is supported\n"));
+	if ((ok = do_cram_md5 (sock, "AUTHENTICATE", ctl)))
+	    /* SASL cancellation of authentication */
+	    gen_send(sock, "*");
+	return(ok);
+    }
 
-            return(ok);
-        }
-    }
-    else if (ctl->server.protocol == P_IMAP_CRAM_MD5)
+#if OPIE_ENABLE
+    if (strstr(capabilities, "AUTH=X-OTP"))
     {
-        report(stderr,
-               _("Required CRAM-MD5 capability not supported by server\n"));
-        return(PS_AUTHFAIL);
-    }
+	if (outlevel >= O_DEBUG)
+	    report(stdout, _("OTP authentication is supported\n"));
+	if (do_otp(sock, ctl) == PS_SUCCESS)
+	    return(PS_SUCCESS);
+    };
+#endif /* OPIE_ENABLE */
 
 #ifdef NTLM_ENABLE
     if (strstr (capabilities, "AUTH=NTLM"))
@@ -366,6 +363,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     };
 #endif /* __UNUSED__ */
 
+    /* we're stuck with sending the password en clair */
     {
 	/* these sizes guarantee no buffer overflow */
 	char	remotename[NAMELEN*2+1], password[PASSWORDLEN*2+1];

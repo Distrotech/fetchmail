@@ -206,12 +206,9 @@ const char *showproto(int proto)
 #endif /* POP2_ENABLE */
     case P_POP3: return("POP3");
     case P_IMAP: return("IMAP");
-    case P_IMAP_K4: return("IMAP-K4");
 #ifdef GSSAPI
     case P_IMAP_GSS: return("IMAP-GSS");
 #endif /* GSSAPI */
-    case P_IMAP_CRAM_MD5: return("IMAP-LOGIN");
-    case P_IMAP_LOGIN: return("IMAP-LOGIN");
     case P_APOP: return("APOP");
     case P_RPOP: return("RPOP");
     case P_ETRN: return("ETRN");

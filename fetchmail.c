@@ -323,13 +323,7 @@ int main(int argc, char **argv)
     {
 	if (ctl->active && !(implicitmode && ctl->server.skip)&&!ctl->password)
 	{
-	    if (ctl->server.preauthenticate == A_KERBEROS_V4 ||
-			ctl->server.preauthenticate == A_KERBEROS_V5 ||
-			ctl->server.preauthenticate == A_SSH ||
-#ifdef GSSAPI
-			ctl->server.protocol == P_IMAP_GSS ||
-#endif /* GSSAPI */
-			ctl->server.protocol == P_IMAP_K4)
+	    if (ctl->server.preauthenticate != A_PASSWORD)
 		/* Server won't care what the password is, but there
 		   must be some non-null string here.  */
 		ctl->password = ctl->remotename;
@@ -499,11 +493,7 @@ int main(int argc, char **argv)
     for (ctl = querylist; ctl; ctl = ctl->next)
     {
 	if (ctl->active && !(implicitmode && ctl->server.skip)
-		&& ctl->server.protocol != P_ETRN
-		&& ctl->server.protocol != P_IMAP_K4
-#ifdef GSSAPI
-		&& ctl->server.protocol != P_IMAP_GSS
-#endif /* GSSAPI */
+		&& ctl->server.preauthenticate == A_PASSWORD
 		&& !ctl->password)
 	{
 	    if (!isatty(0))
@@ -1486,9 +1476,6 @@ static int query_host(struct query *ctl)
 #endif /* POP3_ENABLE */
 	break;
     case P_IMAP:
-    case P_IMAP_K4:
-    case P_IMAP_CRAM_MD5:
-    case P_IMAP_LOGIN:
 #ifdef GSSAPI
     case P_IMAP_GSS:
 #endif /* GSSAPI */
@@ -1578,14 +1565,16 @@ static void dump_params (struct runctl *runp,
 		   ctl->server.skip ? _("will not") : _("will"));
 	/*
 	 * Don't poll for password when there is one or when using the ETRN
-	 * or IMAP-GSS protocol
+	 * or GSSAPI or KERBEROS protocol
 	 */
 	/* ETRN, IMAP_GSS, and IMAP_K4 do not need a password, so skip this */
 	if ( (ctl->server.protocol != P_ETRN)
 #ifdef GSSAPI
-				&& (ctl->server.protocol != P_IMAP_GSS)
+			&& (ctl->server.preauthenticate != A_GSSAPI)
 #endif /* GSSAPI */
-       				&& (ctl->server.protocol != P_IMAP_K4) ) {
+       			&& (ctl->server.preauthenticate != A_KERBEROS_V4) 
+       			&& (ctl->server.preauthenticate != A_KERBEROS_V5)) 
+	{
 		if (!ctl->password)
 			printf(_("  Password will be prompted for.\n"));
 		else if (outlevel >= O_VERBOSE)

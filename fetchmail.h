@@ -12,12 +12,8 @@
 #define		P_APOP		4
 #define		P_RPOP		5
 #define		P_IMAP		6
-#define		P_IMAP_K4	7
-#define		P_IMAP_GSS	8
-#define		P_IMAP_CRAM_MD5	9
-#define		P_IMAP_LOGIN	10
-#define		P_ETRN		11
-#define		P_ODMR		12
+#define		P_ETRN		7
+#define		P_ODMR		8
 
 #if INET6_ENABLE
 #define		SMTP_PORT	"smtp"
@@ -36,7 +32,8 @@
 #define		A_PASSWORD	0	/* password or inline authentication */
 #define		A_KERBEROS_V4	1	/* preauthenticate w/ Kerberos V4 */
 #define		A_KERBEROS_V5	2	/* preauthenticate w/ Kerberos V5 */
-#define		A_SSH		3	/* preauthentication at session level */
+#define 	A_GSSAPI	3	/* preauthenticate with GSSAPI */
+#define		A_SSH		4	/* preauthentication at session level */
 
 /*
  * Definitions for buffer sizes.  We get little help on setting maxima
