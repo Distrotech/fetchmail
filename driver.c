@@ -705,8 +705,11 @@ char *realname;		/* real name of host */
 
 		strcat(errmsg, "\n");
 
-		if (sinkfp)
-		    fputs(errmsg, sinkfp);
+		/* ship out the error line */
+		if (ctl->mda)
+		    fwrite(errmsg, 1, strlen(errmsg), sinkfp);
+		else if (sinkfp)
+		    SockWrite(errmsg, 1, strlen(errmsg), sinkfp);
 	    }
 
 	    free_str_list(&xmit_names);
