@@ -81,7 +81,11 @@ static void termhook();		/* forward declaration of exit hook */
 
 RETSIGTYPE donothing(sig) int sig; {signal(sig, donothing); lastsig = sig;}
 
+#ifdef HAVE_ATEXIT
 static void unlockit(void)
+#else  /* use on_exit(), e.g. on SunOS */
+static void unlockit(int n, void *p)
+#endif
 /* must-do actions for exit (but we can't count on being able to do malloc) */
 {
     unlink(lockfile);
@@ -364,7 +368,12 @@ int main (int argc, char **argv)
 	if (poll_interval)
 	    fprintf(lockfp," %d", poll_interval);
 	fclose(lockfp);
+
+#ifdef HAVE_ATEXIT
 	atexit(unlockit);
+#else
+	on_exit(unlockit, (char *)NULL);
+#endif
     }
 
     /*

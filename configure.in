@@ -80,7 +80,7 @@ AC_SUBST(EXTRASRC)
 AC_SUBST(EXTRAOBJ)
 
 AC_CHECK_FUNCS(tcsetattr stty setsid seteuid gethostbyname res_search herror \
-  strrchr strstr strerror setlinebuf syslog snprintf vsnprintf vsyslog)
+  strrchr strstr strerror setlinebuf syslog snprintf vsnprintf vsyslog atexit)
 
 dnl AC_FUNC_SETVBUF_REVERSED
 

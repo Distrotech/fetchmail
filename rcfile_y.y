@@ -260,7 +260,7 @@ const char *pathname;		/* pathname for the configuration file */
     }
 
     if (statbuf.st_mode & ~(S_IFREG | S_IREAD | S_IWRITE)) {
-	fprintf(stderr, "File %s must have no more than -rw------ permissions.\n", 
+	fprintf(stderr, "File %s must have no more than -rw------ (0600) permissions.\n", 
 		pathname);
 	return(PS_AUTHFAIL);
     }

@@ -13,13 +13,6 @@ every user entry in a multi-user poll declaration.
   form "foo"@bar.com are not parsed correctly, even though they are
   technically RFC822 legal. The general problem is mentioned on the man page.
 
-* Rich Kulawiec <rsk@itw.com> writes: fetchmail 3.9 seems to work fine when
-  run from a tty or pty,  but not when run from cron or at. [...]  It looks
-  like the problem is that fetchmail is having difficulty opening an SMTP
-  connection to push mail to, but I'm somewhat baffled as to why that might be.
-  (I guess a better way of saying that is that I'm having trouble figuring
-  why it wouldn't just break *all* the time.)
-
 * fetchmail has been reported to break when processing 0-length (bodyless)
   messages retrieved via IMAP.  It is not clear whether this is a fetchmail
   bug or a glitch in some specific IMAP server.  (Such messages are sometimes 
@@ -31,6 +24,12 @@ every user entry in a multi-user poll declaration.
   can turn off the size limit with --limit 0.
 
 				Release Notes:
+
+------------------------------------------------------------------------------
+
+pl 3.9.4 ():
+* Fixed a compilation glitch for systems like SunOS & others without atexit(3).
+* Fixed a compilation glitch in daemonize for HP-UX.
 
 ------------------------------------------------------------------------------
 

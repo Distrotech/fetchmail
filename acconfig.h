@@ -38,6 +38,9 @@
 /* Define if you have vsyslog */
 #undef HAVE_VSYSLOG
 
+/* Define if you have atexit */
+#undef HAVE_ATEXIT
+
 
 /* Leave that blank line there!!  Autoheader needs it.
    If you're adding to this file, keep in mind:

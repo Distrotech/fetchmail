@@ -50,7 +50,11 @@ sigchld_handler (int sig)
 #endif
 
 #if 	defined(HAVE_WAIT3)
+#ifdef hpux
+  while ((pid = wait3(&status, WNOHANG, (int *) 0)) > 0)
+#else
   while ((pid = wait3(&status, WNOHANG, (struct rusage *) 0)) > 0)
+#endif
     ; /* swallow 'em up. */
 #elif 	defined(HAVE_WAITPID)
   while ((pid = waitpid(-1, &status, WNOHANG)) > 0)
