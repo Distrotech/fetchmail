@@ -757,6 +757,8 @@ class ServerEdit(Frame):
 
     def save(self):
 	self.gather()
+        for u in self.server.users:
+            print "Attempting to save for a user named " + u.remote
 	Widget.destroy(self.master)
 
     def refreshPort(self):
@@ -1025,7 +1027,8 @@ class UserEdit(Frame):
 
 
 #
-# And this is the main sequence
+# Top-level window that offers either novice or expert mode
+# (but not both at once; it disappears when one is selected).
 #
 
 class MainWindow(Frame):
@@ -1067,8 +1070,11 @@ Or you can just select `Quit' to leave the configurator now.
 	ConfigurationEdit(Configuration, 'expert')
 
     def leave(self):
-	if ConfirmQuit(self, "configuration editor"):
-	    self.quit()
+        self.quit()
+
+#
+# And this is the main sequence
+#
 
 def intersect(list1, list2):
 # Compute set intersection of lists
