@@ -318,6 +318,13 @@ static int pop3_getrange(int sock,
     /* Ensure that the new list is properly empty */
     ctl->newsaved = (struct idlist *)NULL;
 
+#ifdef MBOX
+    /* Alain Knaff suggests this, but it's not RFC standard */
+    if (folder)
+	if ((ok = gen_transact(sock, "MBOX %s", folder)))
+	    return ok;
+#endif /* MBOX */
+
     /* get the total message count */
     gen_send(sock, "STAT");
     ok = pop3_ok(sock, buf);
@@ -498,10 +505,12 @@ const static struct method pop3 =
 int doPOP3 (struct query *ctl)
 /* retrieve messages using POP3 */
 {
+#ifndef MBOX
     if (ctl->mailboxes->id) {
 	fprintf(stderr,"Option --remote is not supported with POP3\n");
 	return(PS_SYNTAX);
     }
+#endif /* MBOX */
     peek_capable = FALSE;
     return(do_protocol(ctl, &pop3));
 }
