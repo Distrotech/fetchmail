@@ -1330,13 +1330,14 @@ Status line in it has been seen.  (Note: the empty Status lines
 inserted by some buggy POP servers are unconditionally discarded.)
 .PP
 The `mimedecode' option controls whether MIME messages using the
-quoted-printable encoding are automatically converted into pure
-8-bit data. If you are delivering mail to an ESMTP-capable,
-8-bit-clean listener (that includes all of the major programs
-like sendmail), then this will automatically convert quoted-printable
-message headers and data into 8-bit data, making it easier to
-understand when reading mail. If your e-mail programs know how to
-deal with MIME messages, then this option is not needed.
+quoted-printable encoding are automatically converted into pure 8-bit
+data. If you are delivering mail to an ESMTP-capable, 8-bit-clean
+listener (that includes all of the major MTAs like sendmail), then
+this will automatically convert quoted-printable message headers and
+data into 8-bit data, making it easier to understand when reading
+mail. If your e-mail programs know how to deal with MIME messages,
+then this option is not needed (but does no harm).  The mimedecode
+option is on by default.
 .PP
 The `properties' option is an extension mechanism.  It takes a string
 argument, which is ignored by fetchmail itself.  The string argument may be
