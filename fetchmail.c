@@ -1300,7 +1300,12 @@ static void terminate_poll(int sig)
 	for (ctl = querylist; ctl; ctl = ctl->next)
 	    if (ctl->smtp_socket != -1)
 	    {
-		SMTP_quit(ctl->smtp_socket);
+                /* 
+		 * Don't send QUIT for ODMR case because we're acting
+                 * as a proxy between the SMTP server and client.
+		 */
+                if (ctl->server.protocol != P_ODMR)
+                    SMTP_quit(ctl->smtp_socket);
 		SockClose(ctl->smtp_socket);
 		ctl->smtp_socket = -1;
 	    }

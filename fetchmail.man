@@ -954,7 +954,8 @@ option (keyword: set postmaster) specifies the last-resort username to
 which multidrop mail is to be forwarded if no matching local recipient
 can be found.  Normally this is just the user who invoked fetchmail.
 If the invoking user is root, then the default of this option is
-the user `postmaster'.
+the user `postmaster'.  Setting postmaster to the empty string causes
+such mail to be discarded.
 .PP
 The
 .B --nobounce
