@@ -1397,10 +1397,19 @@ const struct method *proto;	/* protocol method table */
 #endif /* INET6 */
 	{
 #if !INET6
+	    int err_no = errno;
 #ifdef HAVE_RES_SEARCH
-	    if (errno != 0 && h_errno != 0)
+	    if (err_no != 0 && h_errno != 0)
 		error(0, 0, "fetchmail: internal inconsistency");
 #endif
+	    /*
+	     * Avoid generating a bogus error every poll cycle when we're
+	     * in daemon mode but the connection to the outside world
+	     * is down.
+	     */
+	    if (err_no == EHOSTUNREACH && run.poll_interval)
+	        goto ehostunreach;
+
 	    error_build("fetchmail: %s connection to %s failed", 
 			 protocol->name, ctl->server.pollname);
 #ifdef HAVE_RES_SEARCH
@@ -1417,10 +1426,12 @@ const struct method *proto;	/* protocol method table */
 		else
 		    error_complete(0, 0, ": unknown DNS error %d", h_errno);
 	    }
+	    else
 #endif /* HAVE_RES_SEARCH */
 
-	    if (errno != 0)
-		error_complete(0, errno, "");
+		error_complete(0, err_no, "");
+
+	ehostunreach:
 #endif /* INET6 */
 	    ok = PS_SOCKET;
 	    set_timeout(0);
@@ -1485,7 +1496,7 @@ const struct method *proto;	/* protocol method table */
 		     * calling user a heads-up about the authentication 
 		     * failure the first time it happens.
 		     */
-		    if (run.poll_interval && !nodetach 
+		    if (run.poll_interval
 			&& !ctl->authfailcount && !open_warning_by_mail(ctl))
 		    {
 			stuff_warning_line(ctl,
