@@ -24,7 +24,7 @@ every user entry in a multi-user poll declaration.
 
 ------------------------------------------------------------------------------
 
-pl 3.9.5 ():
+pl 3.9.5 (Sun May 18 01:05:13 EDT 1997):
 * Add an error notification when an incoming message has embedded NULs.
 * Throw out >From lines in headers to prevent getting hosed by upstream
   sendmails with the 'E' option on.
