@@ -150,8 +150,6 @@ struct hostrec *queryctl;
           queryctl->protocol = P_IMAP;
         else if (strcasecmp(optarg,"apop") == 0)
           queryctl->protocol = P_APOP;
-        else if (strcasecmp(optarg,"rpop") == 0)
-          queryctl->protocol = P_RPOP;
         else {
           fprintf(stderr,"Invalid protocol '%s'\n specified.\n", optarg);
           errflag++;

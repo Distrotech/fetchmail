@@ -109,16 +109,6 @@ char *greeting;
 	    goto badAuth;
 	break;
 
-    case P_RPOP:
-	gen_send(socket,"USER %s", queryctl->remotename);
-	if (pop3_ok(socket, buf) != 0)
-	    goto badAuth;
-
-	gen_send(socket, "RPOP %s", queryctl->password);
-	if (pop3_ok(socket, buf) != 0)
-	    goto badAuth;
-	break;
-
     case P_APOP:
 	gen_send(socket,"APOP %s %s", queryctl->remotename, queryctl->digest);
 	if (pop3_ok(socket, buf) != 0) 

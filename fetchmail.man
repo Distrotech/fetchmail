@@ -23,7 +23,7 @@ program can gather mail from servers supporting any of the common
 mail-retrieval protocols: POP2 (as specified in RFC 937), POP3 (RFC
 1725), IMAP2bis (as implemented by the 4.4BSD imapd program), and
 IMAP4 (as specified by RFC1730).  It can use (but does not require)
-the RPOP and LAST facilities removed from later POP3 versions.
+LAST facility removed from later POP3 versions.
 .PP
 As each message is retrieved \fIfetchmail\fR normally delivers it via SMTP to
 port 25 on the machine it is running on (localhost), just as though it
@@ -110,14 +110,11 @@ Post Office Protocol 2
 Post Office Protocol 3
 .IP APOP
 Use POP3 with MD5 authentication.
-.IP RPOP
-POP3 with \fI.rhosts\fR processing (not recommended).
 .RE
 .TP
 .B \-P, --port
-The  option permits you to specify a TCP/IP port to connect on.  You
-will need to specify this in order to use RPOP authentication.  Otherwise
-this option will seldom be necessary as all the supported protocols have
+The  option permits you to specify a TCP/IP port to connect on. 
+This option will seldom be necessary as all the supported protocols have
 well-established default port numbers.
 .TP
 .B \-r folder, --remote folder
@@ -216,19 +213,6 @@ On mailservers that do not provide ordinary user accounts, your user-id and
 password are usually assigned by the server administrator when you apply for 
 a mailbox on the server.  Contact your server administrator if you don't know 
 the correct user-id and password for your mailbox account.
-.PP
-POP3 versions up to the RFC1225 version supported an alternate
-authentication mechanism called RPOP intended to address the security
-risk inherent in sending unencrypted account passwords across the net
-(in RFC1460 this facility was replaced with APOP).  If you specify the
-RPOP protocol and a connection port in the privileged range (1..1024),
-.I fetchmail 
-will ship your password entry to the mail server as an RPOP id.
-(Note: you'll need to be running fetchmail setuid root for RPOP to
-work --
-.I fetchmail
-has to bind to a privileged port locally in order for the mail 
-server to believe it's allowed to bind to a privileged remote port.)
 .PP
 RFC1460 introduced APOP authentication.  In this variant of POP3,
 you register an APOP password on your server host (the program
@@ -396,7 +380,6 @@ Legal protocol identifiers are
     pop3 (or POP3)
     imap (or IMAP)
     apop (or APOP)
-    rpop (or RPOP)
 .PP
 You can use the `noise' keywords \fBand\fR, \fBwith\fR,
 \fBhas\fR, \fBwants\fR, and \fBoptions\fR anywhere in an entry to make
@@ -519,7 +502,7 @@ connection.  If you don't know what a socket is, don't worry about it --
 just treat this as an 'unrecoverable error'.
 .IP 3
 The user authentication step failed.  This usually means that a bad 
-user-id, password, or RPOP id was specified.
+user-id, password, or APOP id was specified.
 .IP 4
 Some sort of fatal protocol error was detected.
 .IP 5
@@ -578,8 +561,6 @@ the program send unencrypted passwords over the TCP/IP connection to
 the mail server.  This creates a risk that name/password pairs might
 be snaffled with a packet sniffer or more sophisticated monitoring
 software.
-.PP
-The RPOP support is not yet well tested.
 .PP
 Send comments, bug reports, gripes, and the like to Eric S. Raymond
 <esr@thyrsus.com>.

@@ -197,13 +197,6 @@ char **argv;
 			       hostp->servername);
 		exit(PS_SYNTAX);
 	    }
-	    if (hostp->protocol == P_RPOP && hostp->port >= 1024) 
-	    {
-		(void) fprintf(stderr,
-			       "%s configuration invalid, can't do RPOP to an unprivileged port\n",
-			       hostp->servername);
-		exit(PS_SYNTAX);
-	    }
 
 	    /* expand MDA commands */
 	    if (hostp->mda[0])
@@ -393,7 +386,6 @@ int proto;
     case P_POP3: return("POP3"); break;
     case P_IMAP: return("IMAP"); break;
     case P_APOP: return("APOP"); break;
-    case P_RPOP: return("RPOP"); break;
     default: return("unknown?!?"); break;
     }
 }
@@ -433,7 +425,6 @@ struct hostrec *queryctl;
 	break;
     case P_POP3:
     case P_APOP:
-    case P_RPOP:
 	return(doPOP3(queryctl));
 	break;
     case P_IMAP:
@@ -484,8 +475,6 @@ struct hostrec *queryctl;
     else if (outlevel == O_VERBOSE)
 	if (queryctl->protocol == P_APOP)
 	    printf("  APOP secret = '%s'\n", queryctl->password);
-	else if (queryctl->protocol == P_RPOP)
-	    printf("  RPOP secret = '%s'\n", queryctl->password);
         else
 	    printf("  Password = '%s'\n", queryctl->password);
     printf("  Protocol is %s", showproto(queryctl->protocol));
