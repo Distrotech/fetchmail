@@ -8,6 +8,7 @@
 
 pl 2.0.1 ():
 * Include Nalin Dahyabhai's patch for MIT Kerberos support.
+* Deduce the envelope address from single-addressee mail through sendmail.
 
 fetchmail-2.0 (Mon Nov 18 00:32:17 EST 1996):
 

@@ -620,8 +620,9 @@ delivered to client user `happy'.
 .SH THE USE AND ABUSE OF MULTIDROP MAILBOXES
 Use the multiple-local-recipients feature with caution -- it can bite.
 The fundamental problem is that by having your server toss several
-peoples' mail in a box, you have thrown away potentially vital
-information about who each piece of mail was actually addressed to.
+peoples' mail in a box, you may have thrown away potentially vital
+information about who each piece of mail was actually addressed to
+(the `envelope address', as opposed to the addresses in the headers).
 This can't always be deduced from the headers, especially when mailing
 lists are involved.
 .SS Good Ways To Use Multidrop Mailboxes
@@ -658,6 +659,16 @@ recipient address on it.  If you have multiple local names declared,
 .I fetchmail
 cannot know which to send it to!  It will only go to the account
 running fetchmail (probably root).
+.PP
+Matters are further complicated by the fact that sometimes 
+.I fetchmail
+\fIcan\fR in fact deduce the envelope address.  If the server-side
+MTA is  
+.I sendmail
+and the item of mail had just one recipient, the MTA will have written
+a `for' clause that gives the envelope addressee into its Received
+header. But this doesn't work for other MTAs, nor if there is more
+than one recipient.
 .SH EXIT CODES
 To facilitate the use of 
 .I fetchmail
