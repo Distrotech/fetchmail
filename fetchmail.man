@@ -1946,12 +1946,14 @@ lock file to help prevent concurrent runs (root mode, Linux systems).
 lock file to help prevent concurrent runs (root mode, systems without /var/run).
 
 .SH ENVIRONMENT
-If either the LOGNAME or USER variable is correctly set
-(e.g. the corresponding UID matches the session user ID) then that
-name is used as the default local name.  Otherwise \fBgetpwuid\fR(3)
-must be able to retrieve a password entry for the session ID (this
-elaborate logic is designed to handle the case of multiple names per
-userid gracefully).
+If the FETCHMAILUSER variable is set, it is used as the name of the
+calling user (default local name) for purposes such as mailing error
+notifications.  Otherwise, if either the LOGNAME or USER variable is
+correctly set (e.g. the corresponding UID matches the session user ID)
+then that name is used as the default local name.  Otherwise
+\fBgetpwuid\fR(3) must be able to retrieve a password entry for the
+session ID (this elaborate logic is designed to handle the case of
+multiple names per userid gracefully).
 
 If the environment variable FETCHMAILHOME is set to a valid and
 existing directory name, the .fetchmailrc and .fetchids and

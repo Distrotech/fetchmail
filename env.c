@@ -37,8 +37,9 @@ void envquery(int argc, char **argv)
 {
     struct passwd by_name, by_uid, *pwp;
 
-    if (!(user = getenv("LOGNAME")))
-	user = getenv("USER");
+    (user = getenv("FETCHMAILUSER"))
+	|| (user = getenv("LOGNAME"))
+	|| (user = getenv("USER"));
 
     if (!(pwp = getpwuid(getuid())))
     {
@@ -50,13 +51,13 @@ void envquery(int argc, char **argv)
     else
     {
 	memcpy(&by_uid, pwp, sizeof(struct passwd));
-	if (!user)
+	if (!user || !(pwp = getpwnam(user)))
 	    pwp = &by_uid;
-	else if ((pwp = getpwnam(user)))
+	else
 	{
 	    /*
 	     * This logic is needed to handle gracefully the possibility
-	     * that multiple names might be mapped to one UID
+	     * that multiple names might be mapped to one UID.
 	     */
 	    memcpy(&by_name, pwp, sizeof(struct passwd));
 
@@ -64,13 +65,6 @@ void envquery(int argc, char **argv)
 		pwp = &by_name;
 	    else
 		pwp = &by_uid;
-	}
-	else
-	{
-	    fprintf(stderr,
-		    _("%s: can't find your name and home directory!\n"),
-		    program_name);
-	    exit(PS_UNDEFINED);
 	}
 	user = xstrdup(pwp->pw_name);
     }
