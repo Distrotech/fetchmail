@@ -14,6 +14,8 @@ a Certifying Authority we recognize?).
 * Javier Kohen's replacement for es.po.
 * Munechika SUMIKAWA's patch to make IPv6 version build when POP2 is enabled.
 * Russian translation removed; it was badly garbled.
+* Note to translators: The bodies of the login-error and timeout-error
+  form letters have been changed in driver.c.
 
 fetchmail-5.2.2 (Sun Dec 26 09:31:07 EST 1999), 18365 lines:
 * Arrange for fetchmail to restart itself quietly when the rc file is touched.
