@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/02/07 01:50:05 $
+<td width="30%" align=right>$Date: 2000/02/12 06:02:32 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -60,6 +60,7 @@ IP address?</a><br>
 <a href="#C3">C3. How do I know what interface and address to use with --interface?</a><br>
 <a href="#C4">C4. How can I set up support for sendmail's anti-spam features?</a><br>
 <a href="#C5">C5. How can I poll some of my mailboxes more/less often than others?</a><br>
+<a href="#C6">C6. Fetchmail works OK started up manually, but not from an init script.</a><br>
 
 <h1>How to make fetchmail play nice with various MTAs:</h1>
 
@@ -990,6 +991,18 @@ mainsite.example.com is polled, which with a polling interval of every
 minutes.<p>
 
 <hr>
+<h2><a name="C6">Fetchmail works OK started up manually, but not from an init script.</a></h2>
+
+Often, startup scripts have a different environment than an interactive
+login shell.  For instance, $HOME might point to "/root" when you are
+logged in as root, but it might be either unset, or set to "/" when the
+startup scripts are running.  That means fetchmail at startup can't find
+the .fetchmailrc.<p>
+
+Pick a location (such as /etc/fetchmailrc) and use fetchmail's -f
+option to point fetchmail at it.  That should solve the problem.<p>
+
+<hr>
 <h2><a name="T1">T1. How can I use fetchmail with sendmail?</a></h2>
 
 For most sendmails, no special configuration is required.  Eric Allman
@@ -1398,8 +1411,8 @@ use user+host.<P>
 
 Note that Demon may delete mail on the server which is more than 30
 days old; see their <a
-href="http://www.demon.net/services/mail/pop3.html">POP3 page</a> for
-details.<P>
+href="http://www.demon.net/info/helpdesk/demon_products/mail/sdps-tech.shtml">
+POP3 page</a> for details.<P>
 
 <h3>The SDPS extension</h3>
 
@@ -2460,8 +2473,8 @@ to solve the problem system-wide.<P>
 <hr>
 <h2><a name="O3">O3. Does fetchmail reread its rc file every poll cycle?</a></h2>
 
-No.  Fetchmail only reads the rc file once, when it starts up.  To
-force an rc file reread, do <code>fetchmail -q; fetchmail</code>.<P>
+No, but versions 5.2.2 and later will notice when you modify your rc
+file and restart, reading it.
 
 <hr>
 <h2><a name="O4">O4. Why do deleted messages show up again when I take
@@ -2578,7 +2591,7 @@ terminate it.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/02/07 01:50:05 $
+<td width="30%" align=right>$Date: 2000/02/12 06:02:32 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
