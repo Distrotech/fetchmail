@@ -58,12 +58,12 @@ if ($versions[0] eq $rcsid) {
 print "Building $version release, RCS ID $rcsid, previous RCS ID $oldid\n";
 
 print "### Test-building the software...\n";
-if (system("su -c '(configure --disable-nls; make) $null' esr")) {
+if (system("configure --disable-nls; make")) {
 	die("Compilation failure\n");
 }
 
 print "### Building the distribution...\n";
-if (system("su -c 'make dist $null' esr")) {
+if (system("make dist $null")) {
 	die("Distribution-build failure\n");
 }
 
