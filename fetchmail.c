@@ -116,6 +116,12 @@ static char *timestamp (void)
 #define timestamp rfc822timestamp
 #endif
 
+static RETSIGTYPE donothing(int sig) 
+{
+    extern volatile int lastsig;	/* declared in idle.c */
+    signal(sig, donothing); lastsig = sig;
+}
+
 int main(int argc, char **argv)
 {
     int bkgd = FALSE;
@@ -717,6 +723,17 @@ int main(int argc, char **argv)
 	    if (outlevel > O_SILENT)
 		report(stdout, 
 		       GT_("sleeping at %s\n"), timestamp());
+
+	    /*
+	     * With this simple hack, we make it possible for a foreground 
+	     * fetchmail to wake up one in daemon mode.  What we want is the
+	     * side effect of interrupting any sleep that may be going on,
+	     * forcing fetchmail to re-poll its hosts.  The second line is
+	     * for people who think all system daemons wake up on SIGHUP.
+	     */
+	    signal(SIGUSR1, donothing);
+	    if (!getuid())
+		signal(SIGHUP, donothing);
 
 	    /*
 	     * OK, now pause until it's time for the next poll cycle.
