@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #       posix, posixpath, socket
-version = "1.41"
+version = "1.42"
 
 from Tkinter import *
 from Dialog import *
@@ -73,29 +73,31 @@ class Configuration:
 
 class Server:
     def __init__(self):
-	self.pollname = None	    # Poll label
-	self.via = None		 # True name of host
-	self.active = TRUE	      # Poll status
-	self.interval = 0	       # Skip interval
-	self.protocol = 'auto'	  # Default to auto protocol
-	self.port = 0		   # Port number to use
-	self.uidl = FALSE	       # Don't use RFC1725 UIDLs by default
-	self.auth = 'any'	       # Default to password authentication
-	self.timeout = 300	      # 5-minute timeout
+	self.pollname = None	        # Poll label
+	self.via = None		        # True name of host
+	self.active = TRUE	        # Poll status
+	self.interval = 0	        # Skip interval
+	self.protocol = 'auto'	        # Default to auto protocol
+	self.port = 0		        # Port number to use
+	self.uidl = FALSE	        # Don't use RFC1725 UIDLs by default
+	self.auth = 'any'	        # Default to password authentication
+	self.timeout = 300	        # 5-minute timeout
 	self.envelope = 'Received'      # Envelope-address header
-	self.envskip = 0		# Number of envelope headers to skip
-	self.qvirtual = None	    # Name prefix to strip
-	self.aka = []		   # List of DNS aka names
-	self.dns = TRUE		 # Enable DNS lookup on multidrop
-	self.localdomains = []	  # Domains to be considered local
-	self.interface = None	   # IP address and range
-	self.monitor = None	     # IP address and range
-	self.plugin = None	      # Plugin command for going to server
-	self.plugout = None	     # Plugin command for going to listener
-	self.netsec = None	      # IPV6 security options
-	self.principal = None	   # Kerberos principal
-	self.tracepolls = FALSE	 # Add trace-poll info to headers
-	self.users = []		 # List of user entries for site
+	self.envskip = 0	        # Number of envelope headers to skip
+	self.qvirtual = None	        # Name prefix to strip
+	self.aka = []		        # List of DNS aka names
+	self.dns = TRUE		        # Enable DNS lookup on multidrop
+	self.localdomains = []	        # Domains to be considered local
+	self.interface = None	        # IP address and range
+	self.monitor = None	        # IP address and range
+	self.plugin = None	        # Plugin command for going to server
+	self.plugout = None	        # Plugin command for going to listener
+	self.netsec = None	        # IPV6 security options
+	self.principal = None	        # Kerberos principal
+        self.esmtpname = None	        # ESMTP 2554 name
+        self.esmtppassword = None	# ESMTP 2554 password
+	self.tracepolls = FALSE	        # Add trace-poll info to headers
+	self.users = []		        # List of user entries for site
 	Server.typemap = (
 	    ('pollname',  'String'),
 	    ('via',       'String'),
@@ -183,6 +185,10 @@ class Server:
 	    res = res + " netsec " + str(self.netsec)
 	if self.principal:
 	    res = res + " principal " + `self.principal`
+	if self.esmtpname:
+	    res = res + " esmtpname " + `self.esmtpname`
+	if self.esmtppassword:
+	    res = res + " esmtppassword " + `self.esmtppassword`
 	if self.interface or self.monitor or self.netsec or self.principal or self.plugin or self.plugout:
 	    if folded:
 		res = res + "\n"
@@ -1160,6 +1166,11 @@ class ServerEdit(Frame, MyWidget):
 		if 'kerberos' in feature_options:
 		    LabeledEntry(secwin, 'Principal:',
 			 self.principal, '12').pack(side=TOP, fill=X)
+                # ESMTP authentication
+                LabeledEntry(secwin, 'ESMTP name:',
+                             self.esmtpname, '12').pack(side=TOP, fill=X)
+                LabeledEntry(secwin, 'ESMTP password:',
+                             self.esmtppassword, '12').pack(side=TOP, fill=X)
 		Button(secwin, text='Help', fg='blue',
 		       command=lambda: helpwin(sechelp)).pack(side=RIGHT)
 		secwin.pack(fill=X)
@@ -1882,7 +1893,7 @@ def copy_instance(toclass, fromdict):
 # conformability checking; they'll still get copied if they are
 # present in the dictionary.
     optional = ('interface', 'monitor',
-		'netsec',
+		'netsec', 'esmtpname', 'esmtppassword',
 		'ssl', 'sslkey', 'sslcert', 'sslproto', 'sslcertck',
 		'sslcertpath', 'sslfingerprint', 'showdots')
     class_sig = setdiff(toclass.__dict__.keys(), optional)
