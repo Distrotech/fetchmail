@@ -153,8 +153,11 @@ static int pop3_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
     {
 	char id [IDLEN+1];
 
-	gen_send(sockfp,"LAST");
-	ok = pop3_ok(sockfp, buf);
+	if (!ctl->server.uidl) {
+	    gen_send(sockfp,"LAST");
+	    ok = pop3_ok(sockfp, buf);
+	} else
+	    ok = 1;
 	if (ok == 0)
 	{
 	    if (sscanf(buf, "%d", &last) == 0)

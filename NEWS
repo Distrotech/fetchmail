@@ -45,6 +45,8 @@ features --
 
 * It is now possible to set a default poll interval with `set daemon'.
 
+* -U option to force UIDL use under POP3 (thanks, Ingmar Baumgart).
+
 There are 249 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------

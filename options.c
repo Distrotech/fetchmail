@@ -29,27 +29,28 @@
 #define LA_RCFILE	11
 #define LA_IDFILE	12
 #define LA_PROTOCOL	13
-#define LA_PORT		14
-#define LA_AUTHENTICATE	15
-#define LA_TIMEOUT	16
-#define LA_ENVELOPE	17
-#define LA_USERNAME	18
-#define LA_ALL          19
-#define LA_KILL		20
-#define	LA_KEEP		21
-#define LA_FLUSH        22
-#define LA_NOREWRITE	23
-#define LA_LIMIT	24
-#define LA_REMOTEFILE	25
-#define LA_SMTPHOST	26
-#define LA_BATCHLIMIT	27
-#define LA_FETCHLIMIT	28
-#define LA_MDA		29
-#define LA_INTERFACE    30
-#define LA_MONITOR      31
-#define LA_YYDEBUG	32
+#define LA_UIDL		14
+#define LA_PORT		15
+#define LA_AUTHENTICATE	16
+#define LA_TIMEOUT	17
+#define LA_ENVELOPE	18
+#define LA_USERNAME	19
+#define LA_ALL          20
+#define LA_KILL		21
+#define	LA_KEEP		22
+#define LA_FLUSH        23
+#define LA_NOREWRITE	24
+#define LA_LIMIT	25
+#define LA_REMOTEFILE	26
+#define LA_SMTPHOST	27
+#define LA_BATCHLIMIT	28
+#define LA_FETCHLIMIT	29
+#define LA_MDA		30
+#define LA_INTERFACE    31
+#define LA_MONITOR      32
+#define LA_YYDEBUG	33
 
-static char *shortoptions = "?Vcsvd:NqL:f:i:p:P:A:t:E:u:akKFnl:r:S:b:B:m:I:M:y";
+static char *shortoptions = "?Vcsvd:NqL:f:i:p:UP:A:t:E:u:akKFnl:r:S:b:B:m:I:M:y";
 static struct option longoptions[] = {
   {"help",	no_argument,	   (int *) 0, LA_HELP        },
   {"version",   no_argument,       (int *) 0, LA_VERSION     },
@@ -66,6 +67,7 @@ static struct option longoptions[] = {
 
   {"protocol",	required_argument, (int *) 0, LA_PROTOCOL    },
   {"proto",	required_argument, (int *) 0, LA_PROTOCOL    },
+  {"uidl",	no_argument,	   (int *) 0, LA_UIDL	     },
   {"port",	required_argument, (int *) 0, LA_PORT        },
   {"auth",	required_argument, (int *) 0, LA_AUTHENTICATE},
   {"timeout",	required_argument, (int *) 0, LA_TIMEOUT     },
@@ -192,6 +194,10 @@ struct query *ctl;	/* option record to be initialized */
 		fprintf(stderr,"Invalid protocol `%s' specified.\n", optarg);
 		errflag++;
 	    }
+	    break;
+	case 'U':
+	case LA_UIDL:
+	    ctl->server.uidl = FLAG_TRUE;
 	    break;
 	case 'P':
 	case LA_PORT:
@@ -330,6 +336,7 @@ struct query *ctl;	/* option record to be initialized */
 #endif
 
 	fputs("  -p, --protocol    specify pop2, pop3, imap, apop, rpop, kpop, etrn\n", stderr);
+	fputs("  -U, --uidl        force the use of UIDLs (pop3 only)\n", stderr);
 	fputs("  -P, --port        TCP/IP service port to connect to\n",stderr);
 	fputs("  -A, --auth        authentication type (password or kerberos)\n",stderr);
 	fputs("  -t, --timeout     server nonresponse timeout\n",stderr);

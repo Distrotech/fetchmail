@@ -632,6 +632,7 @@ static int load_params(int argc, char **argv, int optind)
 	    DEFAULT(ctl->rewrite, TRUE);
 	    DEFAULT(ctl->stripcr, (ctl->mda != (char *)NULL)); 
 	    DEFAULT(ctl->server.dns, TRUE);
+	    DEFAULT(ctl->server.uidl, FALSE);
 #undef DEFAULT
 
 	    /* plug in the semi-standard way of indicating a mail address */
@@ -812,6 +813,8 @@ void dump_params (struct query *ctl)
 	printf(" (using port %d)", ctl->server.port);
     else if (outlevel == O_VERBOSE)
 	printf(" (using default port)");
+    if (ctl->server.uidl)
+	printf(" (forcing UIDL use)");
     putchar('.');
     putchar('\n');
     if (ctl->server.authenticate == A_KERBEROS)

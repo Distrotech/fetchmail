@@ -75,6 +75,7 @@ struct hostdata		/* shared among all user connections to given server */
     char *envelope;
     int skip;
     int dns;
+    int uidl;
 
 #ifdef linux
     char *interface;

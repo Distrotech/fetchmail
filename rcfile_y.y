@@ -48,7 +48,7 @@ static void user_reset();
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
-%token NO KEEP FLUSH FETCHALL REWRITE STRIPCR DNS PORT
+%token NO KEEP FLUSH FETCHALL REWRITE STRIPCR DNS PORT UIDL
 
 %%
 
@@ -198,12 +198,14 @@ user_option	: TO localnames HERE
 		| FETCHALL		{current.fetchall   = FLAG_TRUE;}
 		| REWRITE		{current.rewrite    = FLAG_TRUE;}
 		| STRIPCR		{current.stripcr    = FLAG_TRUE;}
+		| UIDL			{current.uidl	    = FLAG_TRUE;}
 
 		| NO KEEP		{current.keep       = FLAG_FALSE;}
 		| NO FLUSH		{current.flush      = FLAG_FALSE;}
 		| NO FETCHALL		{current.fetchall   = FLAG_FALSE;}
 		| NO REWRITE		{current.rewrite    = FLAG_FALSE;}
 		| NO STRIPCR		{current.stripcr    = FLAG_FALSE;}
+		| NO UIDL		{current.uidl	    = FLAG_FALSE;}
 
 		| LIMIT NUMBER		{current.limit      = $2;}
 		| FETCHLIMIT NUMBER	{current.fetchlimit = $2;}
