@@ -381,6 +381,7 @@ int readheaders(int sock,
     flag		headers_ok, has_nuls;
     int			olderrs, good_addresses, bad_addresses;
     int			retain_mail = 0;
+    flag		already_has_return_path = FALSE;
 
     sizeticker = 0;
     has_nuls = headers_ok = FALSE;
@@ -676,9 +677,15 @@ int readheaders(int sock,
 	 * not trigger bounces if delivery fails.  What we *do* need to do is
 	 * make sure we never try to rewrite such a blank Return-Path.  We
 	 * handle this with a check for <> in the rewrite logic above.
+	 *
+	 * Also, if an email has multiple Return-Path: statement, we only
+	 * read the first occurance, as some spam email has more than one
+	 * Return-Path.
+	 *
 	 */
-	if (!strncasecmp("Return-Path:", line, 12) && (cp = nxtaddr(line)))
+	if ((already_has_return_path==FALSE) && !strncasecmp("Return-Path:", line, 12) && (cp = nxtaddr(line)))
 	{
+	    already_has_return_path = TRUE;
 	    strncpy(msgblk.return_path, cp, sizeof(msgblk.return_path));
 	    msgblk.return_path[sizeof(msgblk.return_path)-1] = '\0';
 	    if (!ctl->mda) {

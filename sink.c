@@ -624,10 +624,15 @@ int stuffline(struct query *ctl, char *buf)
 	}
         else /* if (!protocol->delimited)	-- not byte-stuffed already */
 	{
-	    if (!ctl->mda)
-		SockWrite(ctl->smtp_socket, buf, 1);	/* byte-stuff it */
-	    else
-		/* leave it alone */;
+	  if (!ctl->mda)      /* byte-stuff it */
+	    {
+	      if (!ctl->bsmtp)
+		SockWrite(ctl->smtp_socket, buf, 1);
+	      else
+		{
+		  fwrite(buf, 1, 1, sinkfp);
+		}
+	    }
 	}
     }
 

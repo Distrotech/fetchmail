@@ -68,7 +68,7 @@ then
 fi
  
 dnl i18n
-ALL_LINGUAS="ca cs da de es fr gl ja pl pt_BR tr sk"
+ALL_LINGUAS="ca cs da de el es fr gl ja pl pt_BR tr sk"
 AM_GNU_GETTEXT
 dnl end i18n
 

@@ -497,7 +497,7 @@ int main(int argc, char **argv)
     }
     else
     {
-	if (run.logfile && access(run.logfile, F_OK) == 0)
+	if (run.logfile && !nodetach && access(run.logfile, F_OK) == 0)
     	{
 	    if (!freopen(run.logfile, "a", stdout))
 		    report(stderr, GT_("could not open %s to append logs to \n"), run.logfile);

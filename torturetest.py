@@ -2,23 +2,27 @@
 
 import sys, getopt, os, smtplib, commands, time, gtk, gtk.glade
 
+protocols = ('POP3', 'APOP', 'IMAP',)
+
 class TestSite:
     temp = "/usr/tmp/torturestest-%d" % os.getpid()
 
     def __init__(self, line=None):
         "Initialize site data from the external representation."
-        self.site = ""
+        self.host = ""
         self.mailaddr = ""
         self.username = ""
         self.password = ""
         self.protocol = ""
+        self.ssl = ""
         self.options = ""
         self.capabilities = ""
         self.recognition = ""
         self.comment = ""
         if line:
             (self.host, self.mailaddr, self.username, self.password, \
-                self.protocol, self.options, self.capabilities, self.recognition, self.comment) = \
+             self.protocol, self.ssl, self.options, self.capabilities, \
+             self.recognition, self.comment) = \
                 line.strip().split(":")
         if not self.mailaddr:
             self.mailaddr = self.username
@@ -27,9 +31,9 @@ class TestSite:
         self.output = None
 
     def allattrs(self):
-        "Return a tuple consisting of alll this site's attributes."
+        "Return a tuple consisting of all this site's attributes."
         return (self.host, self.mailaddr, self.username, self.password, \
-                self.protocol, self.options, self.capabilities, \
+                self.protocol, self.ssl, self.options, self.capabilities, \
                 self.recognition, self.comment)
 
     def __repr__(self):
@@ -43,6 +47,7 @@ class TestSite:
               "Username: %s\n" \
               "Password: %s\n" \
               "Protocol: %s\n" \
+              "SSL: %s\n" \
               "Options: %s\n" \
               "Capabilities: %s\n" \
               "Recognition: %s\n" \
@@ -51,9 +56,13 @@ class TestSite:
 
     def entryprint(self):
         "Print a .fetchmailrc entry corresponding to a site entry."
-        return "poll %s-%s via %s with proto %s %s\n" \
-               "   user %s there with password '%s' is esr here\n\n" \
+        rep = "poll %s-%s via %s with proto %s %s\n" \
+               "   user %s there with password '%s' is esr here" \
                % (self.host,self.protocol,self.host,self.protocol,self.options,self.username,self.password)
+        if self.ssl and self.ssl != 'False':
+            rep += " options ssl"
+        rep += "\n\n"
+        return rep
 
     def tableprint(self):
         "Print an HTML server-type table entry."
@@ -84,14 +93,20 @@ class TestSite:
         server.sendmail(fromaddr, toaddr, msg)
         server.quit()
 
-    def fetch(self):
+    def fetch(self, logfile=False):
         "Run a mail fetch on this site."
         try:
             ofp = open(TestSite.temp, "w")
-            ofp.write('defaults mda "(echo; echo \'From torturetest\' `date`; cat) >>TEST.LOG"\n')
+            if logfile:
+                mda = "(echo; echo \'From torturetest\' `date`;cat) >>TEST.LOG"
+            else:
+                mda = 'cat'
+            ofp.write('defaults mda "%s"\n' % mda)
             ofp.write(self.entryprint())
             ofp.close()
             (self.status, self.output) = commands.getstatusoutput("fetchmail -d0 -v -f - <%s"%TestSite.temp)
+            if self.status:
+                os.system("cat " + TestSite.temp)
         finally:
             os.remove(TestSite.temp)
 
@@ -121,6 +136,7 @@ class TortureGUI:
         # File in initial values
         self.combo = self.wtree.get_widget("combo1")
         self.combo.set_popdown_strings(map(lambda x: x.comment, sitelist))
+        self.sslcheck = self.wtree.get_widget("ssl_checkbox")
         self.site = sitelist[0]
         self.display(self.site)
 
@@ -131,6 +147,7 @@ class TortureGUI:
                     'on_newbutton_clicked',
                     'on_testbutton_clicked',
                     'on_quitbutton_clicked',
+                    'on_dumpbutton_clicked',
                     'on_combo_entry1_activate'):
 	    mydict[key] = getattr(self, key)
 	self.wtree.signal_autoconnect(mydict)
@@ -164,22 +181,32 @@ class TortureGUI:
     def display(self, site):
         for member in TortureGUI.field_map:
             self.set_widget(member + "_entry", getattr(site, member))
-        for proto in ('POP3', 'APOP', 'IMAP'):
+        for proto in protocols:
             self.wtree.get_widget(proto + "_radiobutton").set_active(site.protocol == proto)
-        self.combo.entry.set_text(self.site.comment)
+        self.sslcheck.set_active(int(site.ssl != '' and site.ssl != 'False'))
+        self.combo.entry.set_text(site.comment)
 
     def update(self, site):
         for member in TortureGUI.field_map:
             setattr(site, member, self.get_widget(member + "_entry"))
-            for proto in ('POP3', 'APOP', 'IMAP'):
-                if self.wtree.get_widget(proto + "_radiobutton").get_active():
-                    site.proto = proto
+        for proto in protocols:
+            if self.wtree.get_widget(proto + "_radiobutton").get_active():
+                site.protocol = proto
+        if self.wtree.get_widget("ssl_checkbox").get_active():
+            site.ssl = "True"
+        else:
+            site.ssl = "False"
 
     # Housekeeping
     def on_torturetest_destroy(self, obj):
         gtk.mainquit()
     def on_updatebutton_clicked(self, obj):
-        self.update()
+        self.update(self.site)
+        print self.site
+        if self.site.comment:
+            self.combo.entry.set_text(self.site.comment)
+        else:
+            self.combo.entry.set_text(self.site.host)
     def on_newbutton_clicked(self, obj):
         global sitelist
         sitelist = [TestSite()] + sitelist
@@ -187,11 +214,13 @@ class TortureGUI:
         self.display(self.site)
         self.combo.entry.set_text("")
     def on_testbutton_clicked(self, obj):
-        self.site.fetch()
-        print site.output
+        self.site.fetch(False)
+        print self.site.output
     def on_quitbutton_clicked(self, obj):
         gtk.mainquit()
-    
+    def on_dumpbutton_clicked(self, obj):
+        print `self.site`
+
     def on_combo_entry1_activate(self, obj):
         key = self.combo.entry.get_text()
         for site in sitelist:
@@ -274,7 +303,7 @@ if __name__ == "__main__":
         os.system("fetchmail -q")
         for site in sitelist:
             print "Testing " + site.id()
-            site.fetch()
+            site.fetch(True)
             if verbose:
                 print site.output
             if site.failed():

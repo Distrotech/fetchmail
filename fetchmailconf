@@ -1844,10 +1844,10 @@ whether to use POP or IMAP, and so forth).
 	self.configbutton.pack()
 
 	Message(self, text="""
-Use `Test fetchmail' to run fetchmail with debugging enabled.
+Use `Run fetchmail' to run fetchmail with debugging enabled.
 This is a good way to test out a new configuration.
 """, width=600).pack(side=TOP)
-	Button(self, text='Test fetchmail',fg='blue', command=self.test).pack()
+	Button(self, text='Run fetchmail',fg='blue', command=self.test).pack()
 
 	Message(self, text="""
 Use `Run fetchmail' to run fetchmail in foreground.

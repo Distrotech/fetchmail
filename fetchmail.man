@@ -401,23 +401,25 @@ this option.  For the command-line option, the list values should
 be comma-separated.
 .TP
 .B \-m <command> | \-\-mda <command>
-(Keyword: mda)
-You can force mail to be passed to an MDA directly (rather than
-forwarded to port 25) with the --mda or -m option.  To avoid losing
-mail, use this option only with MDAs like procmail or sendmail that
-return a nonzero status on disk-full and other resource-exhaustion
-errors; the nonzero status tells fetchmail that delivery failed and
-prevents the message from being deleted off the server.  If
-\fIfetchmail\fR is running as root, it sets its userid to that of the
-target user while delivering mail through an MDA.  Some possible MDAs
-are "/usr/sbin/sendmail -i -f %F %T", "/usr/bin/deliver" and
-"/usr/bin/procmail -d %T" (but the latter is usually redundant as it's
-what SMTP listeners normally forward to).  Local delivery addresses
-will be inserted into the MDA command wherever you place a %T; the
-mail message's From address will be inserted where you place an %F.
-Do \fInot\fR use an MDA invocation like "sendmail -i -t" that
-dispatches on the contents of To/Cc/Bcc, it will create mail loops and
-bring the just wrath of many postmasters down upon your head.
+(Keyword: mda) You can force mail to be passed to an MDA directly
+(rather than forwarded to port 25) with the --mda or -m option.  To
+avoid losing mail, use this option only with MDAs like procmail or
+sendmail that return a nonzero status on disk-full and other
+resource-exhaustion errors; the nonzero status tells fetchmail that
+delivery failed and prevents the message from being deleted off the
+server.  If \fIfetchmail\fR is running as root, it sets its userid to
+that of the target user while delivering mail through an MDA.  Some
+possible MDAs are "/usr/sbin/sendmail -i -f %F %T", "/usr/bin/deliver"
+and "/usr/bin/procmail -d %T" (but the latter is usually redundant as
+it's what SMTP listeners normally forward to).  Local delivery
+addresses will be inserted into the MDA command wherever you place a
+%T; the mail message's From address will be inserted where you place
+an %F.  In both cases the addresses are enclosed in single quotes ('),
+after removing any single quotes they may contain, before the MDA
+command is passed to the shell.  Do \fInot\fR use an MDA invocation
+like "sendmail -i -t" that dispatches on the contents of To/Cc/Bcc, it
+will create mail loops and bring the just wrath of many postmasters
+down upon your head.
 .TP 
 .B \-\-lmtp
 (Keyword: lmtp)
@@ -1320,6 +1322,9 @@ T}
 interval   	\&	T{
 Only check this site every N poll cycles; N is a numeric argument.
 T}
+tracepolls	\&	T{
+Add poll tracing information to the Received header
+T}
 netsec   	\&	T{
 Pass in IPsec security option request.
 T}
@@ -1475,9 +1480,6 @@ Max # messages to fetch in single connect
 T}
 expunge 	-e	T{
 Perform an expunge on every #th message (IMAP and POP3 only)
-T}
-tracepolls	\&	T{
-Add poll tracing information to the Received header
 T}
 properties  	\&	T{
 String value is ignored by fetchmail (may be used by extension scripts)

@@ -354,9 +354,8 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	}
 #endif /* OPIE_ENABLE */
 
-	if (has_cram &&
-	    (ctl->server.authenticate == A_CRAM_MD5 ||
-	     ctl->server.authenticate == A_ANY))
+	if (ctl->server.authenticate == A_CRAM_MD5 || 
+	    (has_cram && ctl->server.authenticate == A_ANY))
 	{
 	    ok = do_cram_md5(sock, "AUTH", ctl, NULL);
 	    if (ok == PS_SUCCESS || ctl->server.authenticate != A_ANY)

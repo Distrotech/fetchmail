@@ -2,13 +2,22 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* German, Danish, Spanish, and Turkish translations updated.
+* Brian Sammon's patch to deal with malformed message lines containiing NULs.
+* Fai's patch to ignore all but the first Return-Path (some spams have
+  more than one of these).
+* Benjamin Drieu's ptch to properly byte-stuff when talking to BSNTP.
+  Fixes Debian bug #184469.
+* Benjamin Drieu's patch to enable auth=cram-md5.
+  Fixes Debian bug #185232.
+
 fetchmail-6.2.2 (Fri Feb 28 21:34:26 EST 2003), 22345 lines:
 
-* Sunil Shetye's patch to imprive behavior in empty messages.
+* Sunil Shetye's patch to improve behavior on empty messages.
 * Conform to RFC2595; reissue capability probes after successful 
   STARTTLS negotiation.
 * Sunil's patch to make handling of failed STARTTLS more graceful.
-* Sunil's JF2 fix patch for .fetchmailrc security fix.
+* Sunil's JF2 fix patch for .fetchmailrc security.
 * Christophe GIAUME <christophe@giaume.com> finished the implementation
   of RFC2177 IDLE.
 * Jason Tishler's fix patch for Cygwin.
@@ -32,7 +41,7 @@ fetchmail-6.2.0 (Fri Dec 13 00:10:07 EST 2002), 22235 lines:
 
 * Applied Steffen Esser's fix for a buffer-overflow bug in rfc822.c
 * Updated Danish, German, and Turkish translation files.
-* Sunil Sheye's SMTP timeout patch.
+* Sunil Shetye's SMTP timeout patch.
 
 There are 538 people on fetchmail-friends and 701 on fetchmail-announce.
 

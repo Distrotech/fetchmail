@@ -49,17 +49,6 @@ KPOP_PORT	= 1109
 SIMAP_PORT	= 993
 SPOP3_PORT	= 995
 
-# authentication types
-A_ANY		= 0	# use the first method that works
-A_PASSWORD	= 1	# password authentication
-A_NTLM		= 2	# Microsoft NTLM protocol
-A_CRAM_MD5	= 3	# CRAM-MD5 shrouding (RFC2195)
-A_OTP		= 4	# One-time password (RFC1508)
-A_KERBEROS_V4	= 5	# authenticate w/ Kerberos V4
-A_KERBEROS_V5	= 6	# authenticate w/ Kerberos V5
-A_GSSAPI	= 7	# authenticate with GSSAPI
-A_SSH		= 8	# authentication at session level
-
 def DOTLINE(s):
     return (s[0] == '.' and (s[1]=='\r' or s[1]=='\n' or s[1]=='\0'))
 
@@ -174,11 +163,10 @@ class hostdata:
     akalist = []		# server name first, then akas
     localdomains = []		# list of pass-through domains
     protocol = None		# protocol type
-    service = None		# IPv6 service name
     netsec = None		# IPv6 security request
-    port = 0			# TCP/IP service port number
+    port = None			# TCP/IP service port number (name in IPV6)
     interval = 0		# cycles to skip between polls
-    authenticate = 'A_PASSWD'	# authentication mode to try
+    authenticate = 'password'	# authentication mode to try
     timeout = 300		# inactivity timout in seconds
     envelope = None		# envelope address list header
     envskip = 0			# skip to numbered envelope header
@@ -209,6 +197,12 @@ class hostdata:
     trueaddr = None             # IP address of truename, as char
     lead_server = None		# ptr to lead query for this server
     esmtp_options = []		# ESMTP option list
+
+    def is_mailbox_protocol(self):
+         # We need to distinguish between mailbox and mailbag protocols.
+         # Under a mailbox protocol we're pulling mail for a speecific user.
+         # Under a mailbag protocol we're fetching mail for an entire domain.
+         return self.protocol != proto_etrn
 
 class query:
     "All the parameters of a fetchmail query."
@@ -283,11 +277,346 @@ class query:
     mimemsg = 0			# bitmask indicating MIME body-type
     digest = None
 
-    def mailbox_protocol(self):
-         # We need to distinguish between mailbox and mailbag protocols.
-         # Under a mailbox protocol we're pulling mail for a speecific user.
-         # Under a mailbag protocol we're fetching mail for an entire domain.
-         return self.server.protocol != proto_etrn
+    def dump(self):
+	print "Options for retrieving from %s@%s:" \
+              % (self.remotename, self.server.pollname)
+        if self.server.via and self.server.server.is_mailbox_protocol():
+	    print "  Mail will be retrieved via %s" % self.server.via
+	if self.server.interval:
+	    print "  Poll of this server will occur every %d intervals." \
+		   % self.server.interval;
+	if self.server.truename:
+	    print "  True name of server is %s." % self.server.truename
+	if self.server.skip || outlevel >= O_VERBOSE:
+            if self.server.skip:
+                print "  Will not be queried when no host is specified."
+            else:
+                print "  Will not be queried when no host is specified."
+	if self.server.authenticate not in ('KERBEROS', 'GSSAPI', 'SSH'):
+            if not self.password:
+		print "  Password will be prompted for."
+	    else if outlevel >= O_VERBOSE:
+                if self.server.protocol == proto_apop:
+		    print "  APOP secret = \"%s\"." % self.password
+		elif self.server.protocol == proto_rpop:
+		    print "  RPOP id = \"%s\"." % self.password
+		else
+		    print "  Password = \"%s\"." % self.password
+
+	if self.server.protocol == proto_pop3 \
+	    	and self.server.port == KPOP_PORT \
+            	and self.server.authenticate.startswith("Kerberos"):
+            sys.stdout.write("  Protocol is KPOP with %s authentication" \
+                  % self.server.authenticate)
+	else
+	    sys.stdout.write("  Protocol is %s" % self.server.protocol.name)
+        if ipv6:
+            if self.server.port:
+                sys.stdout.write(" (using service %s)" % self.server.port)
+            if (self.server.netsec)
+                sys.stdout.write(" (using network security options %s)" % self.server.netsec)
+        else:
+            if self.server.port:
+                sys.stdout.write(" (using port %d)" % self.server.port)
+            else if outlevel >= O_VERBOSE:
+                sys.stdout.write(" (using default port)")
+	if self.server.uidl and self.server.is_mailbox.protocol())
+	    sys.stdout.write(" (forcing UIDL use)")
+        sys.stdout.write("\n")
+        print {
+        None :       "  All available authentication methods will be tried.",
+        'password' :    "  Password authentication will be forced.",
+        'NTLM' :        "  NTLM authentication will be forced.",
+        'OTP' :         "  OTP authentication will be forced.",
+        'CRAM-MD5'      "  CRAM-MD5 authentication will be forced.",
+        'GSSAPI' :      "  GSSAPI authentication will be forced.",
+        'Kerberos V4' : "  Kerberos V4 authentication will be forced.",
+        'Kerberos V5' : "  Kerberos V5 authentication will be forced.",
+        'ssh' :         "  End-to-end encryption will be assumed.",
+        }[self.server.authenticate]
+
+        if self.server.principal:
+	    print "  Mail service principal is: %s" % self.server.principal
+	if self.use_ssl:
+	    print "  SSL encrypted sessions enabled."
+	if self.sslproto:
+	    print "  SSL protocol: %s." % self.sslproto;
+	if self.sslcertck:
+	    print "  SSL server certificate checking enabled."
+	    if self.sslcertpath:
+		print "  SSL trusted certificate directory: %s" % self.sslcertpath;
+	if self.sslfingerprint:
+		print "  SSL key fingerprint (checked against the server key): %s" % self.sslfingerprint;
+	if self.server.timeout > 0:
+	    print "  Server nonresponse timeout is %d seconds" % self.server.timeout;
+	if self.server.is_mailbox_protocol(): 
+	    if not self.mailboxes.id:
+		print "  Default mailbox selected."
+	    else
+		print "  Selected mailboxes are: ", ", ".join(self.mailboxes)
+            flagarray = (
+                ('fetchall', 
+                 "%s messages will be retrieved (--all %s)."
+                 "All", "Only new")
+                ('keep', 
+                 "  Fetched messages %s be kept on the server (--keep %s)."
+                 "will", "will not")
+                ('flush',
+                "  Old messages %s be flushed before message retrieval (--flush %s).",
+                 "will", "will not")
+                ('rewrite',
+                "  Rewrite of server-local addresses is %s (norewrite %s).",
+                 "enabled", "disabled")
+                ('stripcr',
+                "  Carriage-return stripping is %s (stripcr %s).",
+                 "enabled", "disabled")
+                ('forcecr',
+                "  Carriage-return forcing is %s (forcecr %s).",
+                 "enabled", "disabled")
+                ('pass8bits',
+                 "  Interpretation of Content-Transfer-Encoding is %s (pass8bits %s).",
+                 "enabled", "disabled")
+                ('mimedecode',
+                 "  MIME decoding is %s (mimedecode %s).",
+                 "enabled", "disabled")
+                ('idle',
+                 "  Idle after poll is %s (idle %s).",
+                 "enabled", "disabled")
+                ('dropstatus',
+                 "  Nonempty Status lines will be %s (dropstatus %s)",
+                 "discarded", "kept")
+                ('dropdelivered',
+                 "  Delivered-To lines will be %s (dropdelivered %s)",
+                 "discarded", "kept")
+                )
+            for (attr, template, on, off) in flagarray:
+                flag = getattr(self, att)
+                if flag:
+                    onoff1 = on
+                    onoff2 = "on"
+                else:
+                    onoff1 = off
+                    onoff2 = "off"
+                print template % (onoff1, onoff2)
+	    if self.limit:
+	    {
+		if NUM_NONZERO(self.limit):
+		    print "  Message size limit is %d octets (--limit %d)." % 
+			   self.limit, self.limit);
+		else if outlevel >= O_VERBOSE:
+		    print "  No message size limit (--limit 0)."
+		if run.poll_interval > 0:
+		    print "  Message size warning interval is %d seconds (--warnings %d)." % 
+			   self.warnings, self.warnings);
+		else if outlevel >= O_VERBOSE:
+		    print "  Size warnings on every poll (--warnings 0)."
+	    }
+	    if NUM_NONZERO(self.fetchlimit):
+		print "  Received-message limit is %d (--fetchlimit %d)."),
+		       self.fetchlimit, self.fetchlimit);
+	    else if outlevel >= O_VERBOSE:
+		print "  No received-message limit (--fetchlimit 0)."
+	    if NUM_NONZERO(self.batchlimit):
+		print "  SMTP message batch limit is %d." % self.batchlimit);
+	    else if outlevel >= O_VERBOSE:
+		print "  No SMTP message batch limit (--batchlimit 0)."
+	    if MAILBOX_PROTOCOL(ctl):
+	    {
+		if NUM_NONZERO(self.expunge):
+		    print "  Deletion interval between expunges forced to %d (--expunge %d)." % self.expunge, self.expunge);
+		else if outlevel >= O_VERBOSE:
+		    print "  No forced expunges (--expunge 0)."
+	    }
+	}
+	else	/* ODMR or ETRN */
+	{
+	    struct idlist *idp;
+
+	    print "  Domains for which mail will be fetched are:"
+	    for (idp = self.domainlist; idp; idp = idp.next:
+	    {
+		printf(" %s", idp.id);
+		if not idp.val.status.mark:
+		    print " (default)"
+	    }
+	    printf("");
+	}
+	if self.bsmtp:
+	    print "  Messages will be appended to %s as BSMTP" % visbuf(self.bsmtp
+	else if self.mda and MAILBOX_PROTOCOL(ctl):
+	    print "  Messages will be delivered with \"%s\"." % visbuf(self.mda
+	else
+	{
+	    struct idlist *idp;
+
+	    if self.smtphunt:
+	    {
+		print "  Messages will be %cMTP-forwarded to:" % 
+		       self.listener);
+		for (idp = self.smtphunt; idp; idp = idp.next:
+		{
+		    printf(" %s", idp.id);
+		    if not idp.val.status.mark:
+			print " (default)"
+		}
+		printf("");
+	    }
+	    if self.smtpaddress:
+		print "  Host part of MAIL FROM line will be %s"),
+		       self.smtpaddress);
+	    if self.smtpname:
+		print "  Address to be put in RCPT TO lines shipped to SMTP will be %s"),
+		       self.smtpname);
+	}
+	if MAILBOX_PROTOCOL(ctl):
+	{
+		if self.antispam != (struct idlist *)NULL:
+		{
+		    struct idlist *idp;
+
+		    print "  Recognized listener spam block responses are:"
+		    for (idp = self.antispam; idp; idp = idp.next:
+			printf(" %d", idp.val.status.num);
+		    printf("");
+		}
+		else if outlevel >= O_VERBOSE:
+		    print "  Spam-blocking disabled"
+	}
+	if self.preconnect:
+	    print "  Server connection will be brought up with \"%s\"."),
+		   visbuf(self.preconnect
+	else if outlevel >= O_VERBOSE:
+	    print "  No pre-connection command."
+	if self.postconnect:
+	    print "  Server connection will be taken down with \"%s\"."),
+		   visbuf(self.postconnect
+	else if outlevel >= O_VERBOSE:
+	    print "  No post-connection command."
+	if MAILBOX_PROTOCOL(ctl)) {
+		if !self.localnames:
+		    print "  No localnames declared for this host."
+		else
+		{
+		    struct idlist *idp;
+		    int count = 0;
+
+		    for (idp = self.localnames; idp; idp = idp.next:
+			++count;
+
+		    if count > 1 || self.wildcard:
+			print "  Multi-drop mode: "
+		    else
+			print "  Single-drop mode: "
+
+		    print "%d local name(s) recognized." % count);
+		    if outlevel >= O_VERBOSE:
+		    {
+			for (idp = self.localnames; idp; idp = idp.next:
+			    if idp.val.id2:
+				printf("\t%s . %s", idp.id, idp.val.id2);
+			    else
+				printf("\t%s", idp.id);
+			if self.wildcard:
+			    fputs("\t*", stdout);
+		    }
+
+		    if count > 1 || self.wildcard:
+		    {
+			print "  DNS lookup for multidrop addresses is %s."),
+			       self.server.dns ? GT_("enabled") : GT_("disabled"
+			if self.server.dns:
+			{
+			    print "  Server aliases will be compared with multidrop addresses by "
+	       		    if self.server.checkalias:
+				print "IP address."
+			    else
+				print "name."
+			}
+			if self.server.envelope == STRING_DISABLED:
+			    print "  Envelope-address routing is disabled"
+			else
+			{
+			    print "  Envelope header is assumed to be: %s"),
+				   self.server.envelope ? self.server.envelope:GT_("Received"
+			    if self.server.envskip > 1 || outlevel >= O_VERBOSE:
+				print "  Number of envelope header to be parsed: %d"),
+				       self.server.envskip);
+			    if self.server.qvirtual:
+				print "  Prefix %s will be removed from user id"),
+				       self.server.qvirtual);
+			    else if outlevel >= O_VERBOSE) 
+				print "  No prefix stripping"
+			}
+
+			if self.server.akalist:
+			{
+			    struct idlist *idp;
+
+			    print "  Predeclared mailserver aliases:"
+			    for (idp = self.server.akalist; idp; idp = idp.next:
+				printf(" %s", idp.id);
+			    putchar('');
+			}
+			if self.server.localdomains:
+			{
+			    struct idlist *idp;
+
+			    print "  Local domains:"
+			    for (idp = self.server.localdomains; idp; idp = idp.next:
+				printf(" %s", idp.id);
+			    putchar('');
+			}
+		    }
+		}
+	}
+#if defined(linux) || defined(__FreeBSD__:
+	if self.server.interface:
+	    print "  Connection must be through interface %s." % self.server.interface);
+	else if outlevel >= O_VERBOSE:
+	    print "  No interface requirement specified."
+	if self.server.monitor:
+	    print "  Polling loop will monitor %s." % self.server.monitor);
+	else if outlevel >= O_VERBOSE:
+	    print "  No monitor interface specified."
+#endif
+
+	if self.server.plugin:
+	    print "  Server connections will be made via plugin %s (--plugin %s)." % self.server.plugin, self.server.plugin);
+	else if outlevel >= O_VERBOSE:
+	    print "  No plugin command specified."
+	if self.server.plugout:
+	    print "  Listener connections will be made via plugout %s (--plugout %s)." % self.server.plugout, self.server.plugout);
+	else if outlevel >= O_VERBOSE:
+	    print "  No plugout command specified."
+
+	if self.server.protocol > P_POP2 and MAILBOX_PROTOCOL(ctl):
+	{
+	    if !self.oldsaved:
+		print "  No UIDs saved from this host."
+	    else
+	    {
+		struct idlist *idp;
+		int count = 0;
+
+		for (idp = self.oldsaved; idp; idp = idp.next:
+		    ++count;
+
+		print "  %d UIDs saved." % count);
+		if outlevel >= O_VERBOSE:
+		    for (idp = self.oldsaved; idp; idp = idp.next:
+			printf("\t%s", idp.id);
+	    }
+	}
+
+        if self.tracepolls:
+            print "  Poll trace information will be added to the Received header."
+        else if outlevel >= O_VERBOSE:
+            print "  No poll trace information will be added to the Received header.."
+
+	if self.properties:
+	    print "  Pass-through properties \"%s\"." % self.properties
+
+
 
 if __name__ == '__main__':
     # C version queried FETCHMAILUSER, then USER, then LOGNAME.

@@ -416,9 +416,8 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
      * in a challenge-response.
      */
 
-    if ((ctl->server.authenticate == A_ANY 
-	 || ctl->server.authenticate == A_CRAM_MD5)
-	&& strstr(capabilities, "AUTH=CRAM-MD5"))
+    if ((ctl->server.authenticate == A_ANY && strstr(capabilities, "AUTH=CRAM-MD5"))
+	|| ctl->server.authenticate == A_CRAM_MD5)
     {
 	if ((ok = do_cram_md5 (sock, "AUTHENTICATE", ctl, NULL)))
 	{
