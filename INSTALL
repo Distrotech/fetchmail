@@ -42,9 +42,9 @@ have to do is uncomment them.
 2. MAKE 
 
 You may find you need flex at version 2.5.3 or greater to build
-fetchmail.  The stock lex distributed with Linux does not work -- it
-yields a parser which core-dumps on syntax errors.  You can get flex
-at the GNU ftp site, ftp://prep.ai.mit.edu/pub/gnu.
+fetchmail.  The stock lex distributed with some versions of Linux does
+not work -- it yields a parser which core-dumps on syntax errors.  You
+can get flex at the GNU ftp site, ftp://prep.ai.mit.edu/pub/gnu.
 
 Run
 
@@ -59,19 +59,16 @@ Lastly, become root and run
 	make install
 
 This will install fetchmail.  By default, fetchmail will be installed
-in /usr/local/bin, with the man page in /usr/local/man/man1.  If you
-wish to change these defaults, edit the Makefile AFTER you run
-"configure" but BEFORE you run "make install."  You can easily choose
-a prefix other than /usr/local, or you can choose completely different
-directories for each item.
+in /usr/local/bin, with the man page in /usr/local/man/man1.  You can
+use the configure options --bindir and --mandir to change these.
 
-NOTE: If you are using an MTA other than sendmail (such as qmail or exim),
-see the FAQ (section T) for discussion of any special configuration steps
-that may be necessary.
+NOTE: If you are using an MTA other than sendmail (such as qmail,
+exim, or smail), see the FAQ (section T) for discussion of any special
+configuration steps that may be necessary.
 
 4. SET UP A RUN CONTROL FILE
 
-See the man page or the file sample.rcfile for a description of how to
+See the man page and the file sample.rcfile for a description of how to
 configure your individual preferences.
 
 If you're upgrading from popclient, see question F4 in the FAQ file.
@@ -85,13 +82,14 @@ beware of aliases that direct your local mail back to the server host!
 
 This software is known to work with the qpop/popper series of
 freeware POP3 servers; also with the IMAP2bis and IMAP4 servers that are
-distributed with Pine from the University of Washington.  
+distributed with Pine from the University of Washington.  This covers
+all the servers normally hosted on Linux and *BSD systems.
 
 6. REPORTING BUGS
 
-You should read the FAQ file question G1 before reporting a bug.
+You should read the FAQ file question G3 before reporting a bug.
 
 7. USE IT
 
-Enjoy!
-
+Once you've verified your configuration, you can start fetchmail to
+run in background and forget about it.  Enjoy!
