@@ -7,34 +7,32 @@ if [ $* ]
 then
     ../upload $*
 else
-    lftp <<EOF
 # First, copy to primary website
-open ${WWWHOST}
-cd ${WWWDIR}/fetchmail
-put fetchmail-${version}.tar.gz
-put fetchmail-FAQ.html
-put fetchmail-${version}-1.i386.rpm
-put fetchmail-${version}-1.src.rpm
-put fetchmail-features.html
-put NEWS
-put fetchmail-man.html
-put design-notes.html
-put todo.html
-put testservers.html
+dest=esr@${WWWHOST}:${WWWDIR}/fetchmail
+scp fetchmail-${version}.tar.gz $dest
+scp fetchmail-FAQ.html $dest
+scp fetchmail-${version}-1.i386.rpm $dest
+scp fetchmail-${version}-1.src.rpm $dest
+scp fetchmail-features.html $dest
+scp NEWS $dest
+scp fetchmail-man.html $dest
+scp design-notes.html $dest
+scp todo.html $dest
+scp testservers.html $dest
 # The following things vary seldom
-#put funny.html
-#put fetchmail.png
-#put bighand.png
-put growth.png
-put timeseries
-put growthplot
+#scp funny.html $dest
+#scp fetchmail.png $dest
+#scp bighand.png $dest
+scp growth.png $dest
+scp timeseries $dest
+scp growthplot $dest
 # The following things vary often
-put checksums
-put index.html
-put history.html
-close
-echo "Upload to tuxedo complete"
+scp checksums $dest
+scp index.html $dest
+scp history.html $dest
+echo "Upload to ${WWWVIRTUAL} complete"
 
+    lftp <<EOF
 # Next, upload to Metalab
 open -u anonymous,esr@thyrsus.com metalab.unc.edu
 cd incoming/Linux 
