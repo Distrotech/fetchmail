@@ -6,6 +6,7 @@
 * Nerijus Baliunas's patch to support STARTTLS over IMAP.
 * More cleanups and minor bugfixes from Sunil Shetye.
 * Default antispam-response list is now empty.
+* Updated de and po translations,
 
 % 6.0.0 release
 
