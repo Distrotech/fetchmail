@@ -16,7 +16,7 @@
 #include "fetchmail.h"
 #include "i18n.h"
 
-#define HEADER_END(p)	((p)[0] == '\n' && ((p)[1] != ' ' && (p)[1] != '\t'))
+#define HEADER_END(p)	((p)[0] == '\n' && ((p)[1] != ' ' && (p)[1] != '\t' && (p)[1] != '\0'))
 
 #ifdef TESTMAIN
 static int verbose;
@@ -190,7 +190,8 @@ unsigned char *nxtaddr(hdr)
 /* parse addresses in succession out of a specified RFC822 header */
 const unsigned char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 {
-    static unsigned char *tp, address[POPBUFSIZE+1];
+    static unsigned char address[POPBUFSIZE+1];
+    static int tp;
     static const unsigned char *hp;
     static int	state, oldstate;
 #ifdef TESTMAIN
@@ -206,6 +207,8 @@ const unsigned char *hdr;	/* header to be parsed, NUL to continue previous hdr *
 #define INSIDE_BRACKETS	5	/* inside bracketed address */
 #define ENDIT_ALL	6	/* after last address */
 
+#define NEXTTP()	((tp < sizeof(address)-1) ? tp++ : tp)
+
     if (hdr)
     {
 	hp = hdr;
@@ -213,7 +216,7 @@ const unsigned char *hdr;	/* header to be parsed, NUL to continue previous hdr *
 #ifdef TESTMAIN
 	orighdr = hdr;
 #endif /* TESTMAIN */
-	tp = address;
+	tp = 0;
     }
 
     for (; *hp; hp++)
@@ -231,20 +234,22 @@ const unsigned char *hdr;	/* header to be parsed, NUL to continue previous hdr *
 	else if (HEADER_END(hp))
 	{
 	    state = ENDIT_ALL;
-	    if (tp > address)
+	    if (tp)
 	    {
-		while (isspace(*--tp))
+		while (isspace(address[--tp]))
 		    continue;
-		*++tp = '\0';
+		address[++tp] = '\0';
+		tp = 0;
+		return (address);
 	    }
-	    return(tp > address ? (tp = address) : (unsigned char *)NULL);
+	    return((unsigned char *)NULL);
 	}
 	else if (*hp == '\\')		/* handle RFC822 escaping */
 	{
 	    if (state != INSIDE_PARENS)
 	    {
-		*tp++ = *hp++;			/* take the escape */
-		*tp++ = *hp;			/* take following unsigned char */
+		address[NEXTTP()] = *hp++;	/* take the escape */
+		address[NEXTTP()] = *hp;	/* take following unsigned char */
 	    }
 	}
 	else switch (state)
@@ -259,7 +264,7 @@ const unsigned char *hdr;	/* header to be parsed, NUL to continue previous hdr *
 	    {
 		oldstate = SKIP_JUNK;
 	        state = INSIDE_DQUOTE;
-		*tp++ = *hp;
+		address[NEXTTP()] = *hp;
 	    }
 	    else if (*hp == '(')	/* address comment -- ignore */
 	    {
@@ -270,7 +275,7 @@ const unsigned char *hdr;	/* header to be parsed, NUL to continue previous hdr *
 	    else if (*hp == '<')	/* begin <address> */
 	    {
 		state = INSIDE_BRACKETS;
-		tp = address;
+		tp = 0;
 	    }
 	    else if (*hp != ',' && !isspace(*hp))
 	    {
@@ -282,11 +287,12 @@ const unsigned char *hdr;	/* header to be parsed, NUL to continue previous hdr *
 	case BARE_ADDRESS:   	/* collecting address without delimiters */
 	    if (*hp == ',')  	/* end of address */
 	    {
-		if (tp > address)
+		if (tp)
 		{
-		    *tp++ = '\0';
+		    address[NEXTTP()] = '\0';
 		    state = SKIP_JUNK;
-		    return(tp = address);
+		    tp = 0;
+		    return(address);
 		}
 	    }
 	    else if (*hp == '(')  	/* beginning of comment */
@@ -298,18 +304,18 @@ const unsigned char *hdr;	/* header to be parsed, NUL to continue previous hdr *
 	    else if (*hp == '<')  	/* beginning of real address */
 	    {
 		state = INSIDE_BRACKETS;
-		tp = address;
+		tp = 0;
 	    }
 	    else if (!isspace(*hp)) 	/* just take it, ignoring whitespace */
-		*tp++ = *hp;
+		address[NEXTTP()] = *hp;
 	    break;
 
 	case INSIDE_DQUOTE:	/* we're in a quoted string, copy verbatim */
 	    if (*hp != '"')
-	        *tp++ = *hp;
+	        address[NEXTTP()] = *hp;
 	    else
 	    {
-	        *tp++ = *hp;
+	        address[NEXTTP()] = *hp;
 		state = oldstate;
 	    }
 	    break;
@@ -326,21 +332,22 @@ const unsigned char *hdr;	/* header to be parsed, NUL to continue previous hdr *
 	case INSIDE_BRACKETS:	/* possible <>-enclosed address */
 	    if (*hp == '>')	/* end of address */
 	    {
-		*tp++ = '\0';
+		address[NEXTTP()] = '\0';
 		state = SKIP_JUNK;
 		++hp;
-		return(tp = address);
+		tp = 0;
+		return(address);
 	    }
 	    else if (*hp == '<')	/* nested <> */
-	        tp = address;
+	        tp = 0;
 	    else if (*hp == '"')	/* quoted address */
 	    {
-	        *tp++ = *hp;
+	        address[NEXTTP()] = *hp;
 		oldstate = INSIDE_BRACKETS;
 		state = INSIDE_DQUOTE;
 	    }
 	    else			/* just copy address */
-		*tp++ = *hp;
+		address[NEXTTP()] = *hp;
 	    break;
 	}
     }

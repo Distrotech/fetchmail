@@ -1826,23 +1826,9 @@ loonytoons.org or toons.org domains (including subdomain addresses like
 `joe@daffy.loonytoons.org') should be passed through to the local SMTP
 listener without modification.  Be careful of mail loops if you do this!
 .PP
-Here's an example configuration using ssh.  The queries go through an
-ssh connecting local port 1234 to port 110 on mailhost.net; the
-preconnect command sets up the ssh.
-
-.nf
-poll mailhost.net via localhost port 1234 with proto pop3:
-	user esr is esr here
-        preconnect "ssh -f -L 1234:mailhost.net:110
-		mailhost.net sleep 20 </dev/null >/dev/null";
-.fi
-
-.PP
-Here's an example configuration using ssh and the plugin option (this
-method is better, as it doesn't require the IMAP port to be open on
-the server).  The queries are made directly on the stdin and stdout of
-imapd via ssh.  Note that in this setup, IMAP authentication can be
-skipped.
+Here's an example configuration using ssh and the plugin option.  The
+queries are made directly on the stdin and stdout of imapd via ssh.
+Note that in this setup, IMAP authentication can be skipped.
 
 .nf
 poll mailhost.net with proto imap:

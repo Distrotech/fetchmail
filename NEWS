@@ -2,12 +2,19 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.8.6 (Tue Jun 12 08:16:54 EDT 2001), 20676 lines:
+
 * Reject candidate headers for the MAIL FROM address that have \n in them.
 * Add capability to insert poll trace data in the Received line.
+* HMH's patch to prevent buffer overflow due to long headers. Addresses
+  Debian bug #100394.
+* Brendan Kehoe's patch to avoid doing DNS lookups on skip entries.
+
+There are 347 people on fetchmail-friends and 592 on fetchmail-announce.
 
 fetchmail-5.8.5 (Tue May 29 20:01:39 EDT 2001), 20650 lines:
 
-* Interface option fix from Alexander Kourakov.
+* Interface option fix from Alexander Kourakos.
 * Fixes for i18n glitches and new Danish translation from Byrial Jensen.
 * Attempted fix for Harry McGavran's problems with the Kerberos V build.
 * Added fetchmailnochda.pl to the contrib directory.
