@@ -5,6 +5,7 @@
 * Don't depend on having snprintf available.
 * Bug fix for envskip.
 * ODMR finally seems to be working.
+* Handle multiple backslashes within RFC822 address strings correctly.
 
 fetchmail-5.8.11 (Sun Jul  1 21:39:26 EDT 2001), 20973 lines:
 

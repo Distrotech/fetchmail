@@ -145,7 +145,16 @@ const unsigned char *host;	/* server hostname */
 
 	    case 2:	/* we're in a string */
 		if (*from == '"')
-		    state = 1;
+		{
+		    char	*bp;
+		    int		bscount;
+
+		    bscount = 0;
+		    for (bp = from - 1; *bp == '\\'; bp--)
+			bscount++;
+		    if (bscount % 2)
+			state = 1;
+		}
 		break;
 
 	    case 3:	/* we're in a <>-enclosed address */
