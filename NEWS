@@ -6,6 +6,7 @@ pl 1.9.9 (Fri Nov  8 17:16:25 EST 1996):
 * Improved error notification on SMTP and no-matching-local-address errors.
 * Delivery to multidrop mailboxes now always aborts on DNS errors.
 * Batch limit option prevents long delivery delays on smail/qmail.
+* Configuration now handles -lresolv and non-Linux bind libraries correctly.
 
 pl 1.9.8 (Wed Nov  6 16:40:34 EST 1996):
 * Don't append spurious NUL to the headers, qmail actually notices it.
