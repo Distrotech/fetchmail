@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.9.7 (Sat Feb  2 00:33:40 EST 2002), 21330 lines:
+
 * Minor fixes by HMH.
 * Properly guard some transaction reporting in the SSL code.
 * Updated German (de) po file.  Added Turkish (tr) po file.
@@ -11,6 +13,8 @@
 * Use smtpaddress, if present, to set the return path on warning mail.
 * Tell parser to object when SSL keyboard is used with SSL not compiled.
 * GSSAPI and ODMR fixes by Tom Hughes.
+
+There are 456 people on fetchmail-friends and 635 on fetchmail-announce.
 
 fetchmail-5.9.6 (Fri Dec 14 04:03:50 EST 2001), 21247 lines:
 
