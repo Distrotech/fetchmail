@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.30"
+version = "1.31"
 
 from Tkinter import *
 from Dialog import *
@@ -88,6 +88,7 @@ class Server:
 	self.plugout = None		# Plugin command for going to listener
 	self.netsec = None		# IPV6 security options
 	self.users = []			# List of user entries for site
+        self.principal = None		# Kerberos principal
 	Server.typemap = (
 	    ('pollname',  'String'),
 	    ('via',       'String'),
@@ -108,7 +109,8 @@ class Server:
 	    ('monitor',   'String'),
 	    ('plugin',   'String'),
 	    ('plugout',  'String'),
-	    ('netsec',   'String'))
+	    ('netsec',   'String'),
+	    ('principal',   'String')),
 
     def dump(self, folded):
 	res = ""
@@ -226,7 +228,6 @@ class User:
         self.ssl = 0			# Enable Seccure Socket Layer
         self.sslkey = None		# SSL key filename
         self.sslcert = None		# SSL certificate filename
-        self.principal = None		# Kerberos principal
         self.properties = None		# Extension properties
 	User.typemap = (
 	    ('remote',      'String'),
@@ -259,7 +260,6 @@ class User:
 	    ('ssl',         'Boolean'),
 	    ('sslkey',      'String'),
 	    ('sslcert',     'String'),
-	    ('principal',     'String'),
             ('properties',  'String'))
 
     def __repr__(self):
