@@ -164,9 +164,6 @@ int main (int argc, char **argv)
     if ((parsestatus = parsecmdline(argc,argv, &cmd_run, &cmd_opts)) < 0)
 	exit(PS_SYNTAX);
 
-    /* this hint to stdio should help messages come out in the right order */
-    setvbuf(stdout, NULL, _IOLBF, MSGBUFSIZE);
-
     if (versioninfo)
     {
 	printf(_("This is fetchmail release %s"), VERSION);
