@@ -2,6 +2,14 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.6.2 (Fri Jan  5 15:40:47 EST 2001), 19744 lines:
+
+* Dave Bodenstab's fix for the lockfile re-exec problem.
+* Fixes for `principal' handling in fetchmailconf.
+* Make --with-included-gettext work again (Thanks to Albert Chin-A-Young).
+
+There are 287 people on fetchmail-friends and 567 on fetchmail-announce.
+
 fetchmail-5.6.1 (Mon Dec 11 23:11:59 EST 2000), 19718 lines:
 
 * More on ETRN in the FAQ.
@@ -13,7 +21,7 @@ fetchmail-5.6.1 (Mon Dec 11 23:11:59 EST 2000), 19718 lines:
   user will get a notification).
 * Samuel Leo's patch to add LMTP capability to the smtphost option.
 * Fix UIDL handling on skip entries.
-* Add Don Beausee's `spambounce' option (default off).
+* Add Don Beusee's `spambounce' option (default off).
 
 There are 281 people on fetchmail-friends and 563 on fetchmail-announce.
 
