@@ -6,6 +6,7 @@
 * Updated fr.po.
 * Fixed a bug in fetchmailconf's handling of envelope skip prefixes.
 * Don't nuke .fetchids when authorization failure keeps us from getting URLs.
+* Added FAQ item X6 on dropped and mangled attachments, thanks to Rob Funk.
 
 There are 291 people on fetchmail-friends and 500 on fetchmail-announce.
 
