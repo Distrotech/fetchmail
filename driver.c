@@ -872,7 +872,7 @@ int num;		/* index of message */
 	if ((smtp_open(ctl) == -1))
 	{
 	    free_str_list(&xmit_names);
-	    error(0, -1, "SMTP connect to %s failed",
+	    error(0, errno, "SMTP connect to %s failed",
 		  ctl->smtphost ? ctl->smtphost : "localhost");
 	    return(PS_SMTP);
 	}
