@@ -54,15 +54,15 @@ static int ttyfd;
 #endif
 #endif
 
-void save_tty_state();
-void disable_tty_echo();
-void restore_tty_state();
+void static save_tty_state();
+void static disable_tty_echo();
+void static restore_tty_state();
+static RETSIGTYPE sigint_handler();
 
 char *getpassword(prompt)
 char *prompt;
 {
 #if !(defined(HAVE_TCSETATTR) || defined(HAVE_TERMIO_H) || defined(HAVE_STTY))
-
 #if defined(HAVE_GETPASS) 
     char *getpass();
     return getpass(prompt);
@@ -70,19 +70,17 @@ char *prompt;
     fputs("ERROR: no support for getpassword() routine\n",stderr);
     exit(1);
 #endif
-
-#endif /* !(defined(HAVE_TCSETATTR) || ... */
-
+#else
     register char *p;
     register c;
     FILE *fi;
     static char pbuf[INPUT_BUF_SIZE];
     RETSIGTYPE (*sig)();
     RETSIGTYPE sigint_handler();
-    int istty = (tcgetpgrp(0) != -1);
 
-    /* get the file descriptor for the input device */
+    int istty = isatty(0);
 
+    /* get the file descriptor for the actual input device if it's a tty */
     if (istty)
     {
 	if ((fi = fdopen(open("/dev/tty", 2), "r")) == NULL)
@@ -135,11 +133,10 @@ char *prompt;
 	fclose(fi);
 
     return(pbuf);
+#endif /* !(defined(HAVE_TCSETATTR) || ... */
 }
 
-
-void
-save_tty_state ()
+static void save_tty_state ()
 {
 #if defined(HAVE_TCSETATTR)
     tcgetattr(ttyfd, &termb);
@@ -155,9 +152,7 @@ save_tty_state ()
 #endif
 }
 
-
-void
-disable_tty_echo() 
+static void disable_tty_echo() 
 {
     /* turn off echo on the tty */
 #if defined(HAVE_TCSETATTR)
@@ -174,10 +169,7 @@ disable_tty_echo()
 #endif
 }
 
-
-
-void
-restore_tty_state()
+static void restore_tty_state()
 {
     /* restore previous tty echo state */
 #if defined(HAVE_TCSETATTR)
@@ -194,9 +186,10 @@ restore_tty_state()
 #endif
 }
 
-
-RETSIGTYPE sigint_handler()
+static RETSIGTYPE sigint_handler()
 {
     restore_tty_state();
     error(1, 0, "\nCaught signal... bailing out.");
 }
+
+/* getpass.c ends here */
