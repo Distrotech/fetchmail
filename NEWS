@@ -6,6 +6,8 @@
 * Bug fix for envskip.
 * ODMR finally seems to be working.
 * Handle multiple backslashes within RFC822 address strings correctly.
+* Don't exit on a failure to DNS-resolve a mailserver name, just 
+  make it inactive.  Exit only if all lookups fail.
 * Restore code to deal with SMTP error responses at RCPT TO time, but
   without issuing an RSET.  This is intended to fix obscure bugs that
   show up in recentb Postfix releases and sendmail configurations that

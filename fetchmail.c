@@ -1169,7 +1169,10 @@ static int load_params(int argc, char **argv, int optind)
 			report(stderr,
 			       _("couldn't find canonical DNS name of %s\n"),
 			       ctl->server.pollname);
-			exit(PS_DNS);
+			ctl->server.truename = xstrdup(ctl->server.queryname);
+			ctl->active = FALSE;
+			/* use this initially to flag DNS errors */
+			ctl->wedged = TRUE;
 		    }
 		    else {
 			ctl->server.truename=xstrdup((char *)namerec->h_name);
@@ -1265,6 +1268,21 @@ static int load_params(int argc, char **argv, int optind)
 	    run.postmaster = user;
 	else					/* root */
 	    run.postmaster = "postmaster";
+    }
+
+    /*
+     * If all connections are wedged due to DNS errors, quit.  This is
+     * important for the common case that you just have one connection.
+     */
+    st = PS_DNS;
+    for (ctl = querylist; ctl; ctl = ctl->next)
+	if (!ctl->wedged)
+	    st = 0;
+    if (st == PS_DNS)
+    {
+	(void) fprintf(stderr,
+		       _("all mailserver name lookups failed, exiting\n"));
+	exit(PS_DNS);
     }
 
     return(implicitmode);
