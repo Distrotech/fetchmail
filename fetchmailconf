@@ -1305,12 +1305,12 @@ class UserEdit(Frame, MyWidget):
 		      self.fetchlimit, '30').pack(side=TOP, fill=X)
             LabeledEntry(limwin, 'Max messages to forward per poll:',
 		      self.batchlimit, '30').pack(side=TOP, fill=X)
-            if parent.server.protocol in ('IMAP', 'IMAP-K4', 'IMAP-GSS'):
+            if self.parent.server.protocol in ('IMAP', 'IMAP-K4', 'IMAP-GSS'):
                 LabeledEntry(limwin, 'Interval between expunges (IMAP):',
                              self.expunge, '30').pack(side=TOP, fill=X)
             limwin.pack(fill=X)
 
-            if parent.server.protocol in ('IMAP', 'IMAP-K4', 'IMAP-GSS'):
+            if self.parent.server.protocol in ('IMAP', 'IMAP-K4', 'IMAP-GSS'):
                 foldwin = Frame(rightwin, relief=RAISED, bd=5)
                 Label(foldwin, text="Remote folders (IMAP only)").pack(side=TOP)
                 ListEdit("New folder:", self.user.mailboxes, None, foldwin, None)
@@ -1361,11 +1361,11 @@ return to the main panel.
         self.parent.configuration_active = 1
 
     def novice(self):
-	self.destroy()
+	self.master.destroy()
 	ConfigurationEdit(Fetchmailrc, self.outfile, Toplevel()).edit('novice')
 
     def expert(self):
-	self.destroy()
+	self.master.destroy()
 	ConfigurationEdit(Fetchmailrc, self.outfile, Toplevel()).edit('expert')
 
     def leave(self):
