@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/06/08 07:39:16 $
+<td width="30%" align=right>$Date: 1999/06/11 07:49:05 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1274,6 +1274,24 @@ poll non-rpa.csi.com via "pop.site1.csi.com" with proto POP3 and options no dns
 <hr>
 <h2><a name="S4">S4. How can I use fetchmail with Demon Internet's SDPS?</a></h2>
 
+<h3>Single-drop mode</h3>
+
+You can get fetchmail to download the email for just one user from
+Demon Internet's POP3 server by giving it a username consisting of your
+Demon user name followed by your account name, with an at-sign between
+them.<P>
+
+For example, to download email for the user &lt;philh@vision25.demon.co.uk&gt;,
+you could use the following .fetchmailrc file:<P>
+
+<pre>
+set postmaster "philh"
+poll pop3.demon.co.uk with protocol POP3:
+    user "philh@vision25" is philh
+</pre>
+
+<h3>Multi-drop mode</h3>
+
 Demon Internet's SDPS service is an implementation of POP3. All messages
 have a Received: header added when they enter the maildrop, like this:
 
@@ -1310,10 +1328,10 @@ details.<P>
 
 <h3>The SDPS extension</h3>
 
-There's a different way to solve this problem.  It's not necessary on
-Demon Internet, since fetchmail can parse Received addresses, but the
-person who implemented this didn't know that. It may be useful if 
-Demon Internet ever changes mail transports.<P>
+There's a different way to do multidrop.  It's not necessary on Demon
+Internet, since fetchmail can parse Received addresses, but the person
+who implemented this didn't know that. It may be useful if Demon
+Internet ever changes mail transports.<P>
 
 SDPS includes a non-standard extension for retrieving the envelope of a
 message (*ENV), which fetchmail optionally supports if compiled with the
@@ -1656,10 +1674,10 @@ U.S. at this time, if the patches do leak out of the U.S. through no
 fault of our own, and someone informs us of their location, we can
 provide the URL pointing to archive sites outside of the U.S.<P>
 
-Newer versions of the SSL patches make appear in the "incoming" directory
+Newer versions of the SSL patches make appear in the `incoming' directory
 and stay there a while until they can be processed and moved to the SSL
-directory.  Check for patches in "incoming" if you do not find patches
-for the latest release.<P>
+directory.  Check for patches in `incoming' if you do not find patches
+for the latest fetchmail release.<P>
 
 <hr>
 <h2><a name="R1">R1. Fetchmail isn't working, and -v shows `SMTP connect failed' messages.</a></h2>
@@ -2391,7 +2409,7 @@ inactivity timeout.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/06/08 07:39:16 $
+<td width="30%" align=right>$Date: 1999/06/11 07:49:05 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
