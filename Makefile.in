@@ -4,7 +4,7 @@
 # So just uncomment all the lines marked QNX.
 
 PACKAGE = fetchmail
-VERSION = 5.8.0
+VERSION = 5.8.1
 
 # Ultrix 2.2 make doesn't expand the value of VPATH.
 srcdir = @srcdir@
@@ -241,6 +241,7 @@ $(srcdir)/aclocal.m4: configure.in
 rcfile_l.c rcfile_l.h: $(srcdir)/rcfile_l.l
 	$(LEX) $(LEXFLAGS) $(srcdir)/rcfile_l.l
 	sed <lex.yy.c >rcfile_l.c -e "/lex\\.yy\\.c/s//rcfile_l.c/"
+	rm -f lex.yy.c
 rcfile_y.c rcfile_y.h: $(srcdir)/rcfile_y.y
 	@echo "expect conflicts:  2 shift/reduce"
 	$(YACC) $(YACCFLAGS) $(srcdir)/rcfile_y.y
@@ -249,8 +250,8 @@ rcfile_y.c rcfile_y.h: $(srcdir)/rcfile_y.y
 
 # These must be explicit, because the .c files often don't exist at
 # makefile build time. 
-rcfile_l.o: rcfile_y.c rcfile_y.h config.h fetchmail.h
-rcfile_y.o: rcfile_y.c rcfile_y.h config.h fetchmail.h
+rcfile_l.o: rcfile_l.c config.h fetchmail.h
+rcfile_y.o: rcfile_y.c config.h fetchmail.h
 
 parser = $(srcdir)/rcfile_l.l $(srcdir)/rcfile_y.y
 headers = $(srcdir)/fetchmail.h $(srcdir)/socket.h $(srcdir)/smtp.h \

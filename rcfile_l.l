@@ -14,7 +14,7 @@
 int prc_lineno = 1;
 
 #ifdef LEXDEBUG
-#define SETSTATE(n)	if (yydebug) do {BEGIN(n); fprintf(stderr, "Entering lexer state %d\n", n);} while (0)
+#define SETSTATE(n)	do {BEGIN(n); if (yydebug) fprintf(stderr, "Entering lexer state %d\n", n);} while (0)
 #else
 #define SETSTATE(n)	BEGIN(n)
 #endif /* LEXDEBUG */
@@ -92,14 +92,14 @@ kerberos	{ SETSTATE(0); yylval.proto = A_KERBEROS_V4; return AUTHTYPE;}
 ssh		{ SETSTATE(0); yylval.proto = A_SSH; return AUTHTYPE;}
 cram(-md5)?	{ SETSTATE(0); yylval.proto = A_CRAM_MD5; return AUTHTYPE;}
 ntlm		{ SETSTATE(0); yylval.proto = A_NTLM; return AUTHTYPE;}
-<AUTH>password { SETSTATE(0); return PASSWORD; }
+<AUTH>password	{ SETSTATE(0); yylval.proto = A_PASSWORD; return AUTHTYPE;}
 timeout		{ return TIMEOUT;}
 envelope	{ return ENVELOPE; }
 qvirtual	{ return QVIRTUAL; }
 principal	{ return PRINCIPAL; }
 
 user(name)?	{SETSTATE(NAME); return USERNAME; }
-pass(word)?	{SETSTATE(NAME); return PASSWORD; }
+<INITIAL,NAME>pass(word)?	{SETSTATE(NAME); return PASSWORD; }
 folder(s)? 	{ return FOLDER; }
 smtp(host)?	{ return SMTPHOST; }
 smtpaddress	{ return SMTPADDRESS; }

@@ -226,7 +226,7 @@ serv_option	: AKA alias_list
 #if (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__)
 					current.server.monitor = xstrdup($2);
 #else /* (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__) */
-					fprintf(stderr, _("fetchmail: monitor option is only supported under Linux\n"));
+					fprintf(stderr, _("fetchmail: monitor option is only supported under Linux (without IPv6) and FreeBSD\n"));
 #endif /* (defined(linux) && !defined(INET6_ENABLE) || defined(__FreeBSD__)) */
 					}
 		| PLUGIN STRING		{ current.server.plugin = xstrdup($2); }
