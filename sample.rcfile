@@ -23,7 +23,6 @@
 #   protocol (or proto)
 #   username (or user)
 #   password (or pass)
-#   rpopid
 #   remotefolder (or remote)
 #   localfolder (or local)
 #   mda

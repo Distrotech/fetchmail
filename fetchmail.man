@@ -244,11 +244,10 @@ the correct user-id and password for your mailbox account.
 POP3 versions up to the RFC1225 version supported an alternate
 authentication mechanism called RPOP intended to remove the security
 risk inherent in sending unencrypted account passwords across the net
-(in RFC1460 this facility was replaced with APOP).  If your .fetchmailrc
-file specifies an RPOP id and a connection port in the privileged
-range (1..1024),
+(in RFC1460 this facility was replaced with APOP).  If you specify the
+RPOP protocol and a connection port in the privileged range (1..1024),
 .I fetchmail will
-ship the id with an RPOP command rather than sending a password.
+ship your password entry to the mail server as an RPOP id.
 (Note: you'll need to be running fetchmail setuid root for RPOP to
 work --
 .I fetchmail
@@ -395,7 +394,6 @@ Legal keywords are:
     protocol (or proto)
     username (or user)
     password (or pass)
-    rpopid
     remotefolder (or remote)
     localfolder (or local)
     mda

@@ -225,8 +225,7 @@ char **argv;
 
     /* pick up interactively any passwords we need but don't have */ 
     for (hostp = hostlist; hostp; hostp = hostp->next)
-	if (!(implicitmode && hostp->skip)
-	    && !hostp->password[0] && !hostp->rpopid[0])
+	if (!(implicitmode && hostp->skip) && !hostp->password[0])
 	{
 	    (void) sprintf(tmpbuf, "Enter password for %s@%s: ",
 			   hostp->remotename, hostp->servername);
@@ -411,9 +410,10 @@ struct hostrec *queryctl;
     if (queryctl->password[0] == '\0')
 	printf("  Password will be prompted for.\n");
     else if (outlevel == O_VERBOSE)
-	printf("  Password = '%s'\n", queryctl->password);
-    if (queryctl->rpopid[0])
-	printf("  RPOP id = '%s'\n", queryctl->rpopid);
+	if (queryctl->protocol == P_RPOP)
+	    printf("  RPOP id = '%s'\n", queryctl->password);
+        else
+	    printf("  Password = '%s'\n", queryctl->password);
     printf("  Protocol is %s", showproto(queryctl->protocol));
     if (queryctl->port)
 	printf(" (using port %d)", queryctl->port);

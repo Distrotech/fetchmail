@@ -29,7 +29,7 @@ int yydebug;	/* in case we didn't generate with -- debug */
   char *sval;
 }
 
-%token KW_SERVER KW_PROTOCOL KW_USERNAME KW_PASSWORD KW_RPOPID
+%token KW_SERVER KW_PROTOCOL KW_USERNAME KW_PASSWORD
 %token KW_REMOTEFOLDER KW_LOCALFOLDER KW_SMTPHOST KW_MDA KW_EOL KW_DEFAULTS
 %token <proto> PROTO_AUTO PROTO_POP2 PROTO_POP3 PROTO_IMAP PROTO_APOP PROTO_RPOP
 %token <sval> PARAM_STRING
@@ -66,7 +66,6 @@ serv_option_clause:
 		KW_PROTOCOL proto		{prc_setproto($2);}
 	|	KW_USERNAME PARAM_STRING	{prc_remotename($2);}
 	|	KW_PASSWORD PARAM_STRING	{prc_setpassword($2);}
-	|	KW_RPOPID PARAM_STRING		{prc_setrpopid($2);}
 	|	KW_REMOTEFOLDER PARAM_STRING	{prc_setremote($2);}
 	|	KW_LOCALFOLDER PARAM_STRING	{prc_setlocal($2);}
 	|	KW_SMTPHOST PARAM_STRING	{prc_setsmtphost($2);}

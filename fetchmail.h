@@ -62,7 +62,6 @@ struct hostrec
   char localname [USERNAMELEN+1];
   char remotename [USERNAMELEN+1];
   char password [PASSWORDLEN+1];
-  char rpopid [PASSWORDLEN+1];
   char userfolder [FOLDERLEN+1];
   char remotefolder [FOLDERLEN];
   char smtphost[HOSTLEN+1];

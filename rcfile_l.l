@@ -29,7 +29,6 @@ server 		{ return KW_SERVER; }
 proto(col)? 	{ return KW_PROTOCOL; }
 user(name)?	{ return KW_USERNAME; }
 pass(word)?	{ return KW_PASSWORD; }
-rpopid		{ return KW_RPOPID; }
 remote(folder)? { return KW_REMOTEFOLDER; }
 local(folder)?	{ return KW_LOCALFOLDER; }
 smtp(host)?	{ return KW_SMTPHOST; }
