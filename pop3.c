@@ -162,14 +162,17 @@ int *countp, *newp;
  	    /* grab the mailbox's UID list */
 	    *newp = 0;
  	    gen_send(socket, "UIDL");
- 	    if ((ok = pop3_ok(socket, buf)) == 0) {
- 		while (SockGets(socket, buf, sizeof(buf)) >= 0) {
+ 	    if ((ok = pop3_ok(socket, buf)) != 0)
+		return(PS_ERROR);
+	    else
+	    {
+ 		while (SockGets(socket, buf, sizeof(buf)) >= 0)
+		{
  		    if (outlevel == O_VERBOSE)
  			fprintf(stderr,"%s\n",buf);
- 		    if (strcmp(buf, ".") == 0) {
+ 		    if (buf[0] == '.')
  			break;
- 		    }
- 		    if (sscanf(buf, "%d %s", &num, id) == 2)
+ 		    else if (sscanf(buf, "%d %s", &num, id) == 2)
 		    {
  			save_uid(&queryctl->newsaved, num, id);
 			if (!uid_in_list(&queryctl->oldsaved, id))
