@@ -17,6 +17,12 @@
 * Fabrice Bellet's fix for Red Hat bug #113492, fetchmail hangs in IMAP
   mode after EXPUNGE when the server (Dovecot 0.99.10) doesn't update
   RECENT and EXISTS counts. (Matthias Andree)
+* Holger Mauermann's bounce patch, to use a NULL envelope from, not
+  write a Return-Path header (both to meet RFC-2821), changed From,
+  added Subject header, rewording the human readable part. (Matthias Andree)
+* Merge Sunil Shetye's time.h handling fix. (Matthias Andree)
+* Merge Gerd von Egidy's patch to avoid a segfault in multidrop/received
+  mode when the Received: headers are malformatted.
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
