@@ -11,7 +11,7 @@ BUILT_SOURCES=		rcfile_y.h
 
 bin_PROGRAMS=		fetchmail
 dist_bin_SCRIPTS=	fetchmailconf
-dist_noinst_SCRIPTS=	html2txt.sh specgen.sh
+dist_noinst_SCRIPTS=	specgen.sh
 dist_man1_MANS=		fetchmail.man
 
 # for gettext (used by fetchmail.c, NOT by GNU gettext)
@@ -81,16 +81,16 @@ EXTRA_DIST= $(DISTDOCS) fetchmail.spec $(distdirs) ucs/README.svn \
 	    trio/CHANGES trio/README
 
 FAQ: fetchmail-FAQ.html
-	AWK=$(AWK) $(SHELL) $(srcdir)/html2txt.sh $(srcdir)/fetchmail-FAQ.html >$@ || { rm -f $@ ; exit 1 ; }
+	AWK=$(AWK) $(SHELL) $(srcdir)/dist-tools/html2txt $(srcdir)/fetchmail-FAQ.html >$@ || { rm -f $@ ; exit 1 ; }
 
 FEATURES: fetchmail-features.html
-	AWK=$(AWK) $(SHELL) $(srcdir)/html2txt.sh $(srcdir)/fetchmail-features.html >$@ || { rm -f $@ ; exit 1 ; }
+	AWK=$(AWK) $(SHELL) $(srcdir)/dist-tools/html2txt $(srcdir)/fetchmail-features.html >$@ || { rm -f $@ ; exit 1 ; }
 
 NOTES: design-notes.html
-	AWK=$(AWK) $(SHELL) $(srcdir)/html2txt.sh $(srcdir)/design-notes.html >$@ || { rm -f $@ ; exit 1 ; }
+	AWK=$(AWK) $(SHELL) $(srcdir)/dist-tools/html2txt $(srcdir)/design-notes.html >$@ || { rm -f $@ ; exit 1 ; }
 
 TODO: todo.html
-	AWK=$(AWK) $(SHELL) $(srcdir)/html2txt.sh $(srcdir)/todo.html >$@ || { rm -f $@ ; exit 1 ; }
+	AWK=$(AWK) $(SHELL) $(srcdir)/dist-tools/html2txt $(srcdir)/todo.html >$@ || { rm -f $@ ; exit 1 ; }
 
 # man2html no longer chokes and dies on this man page,
 # but manServer.pl does a much better job. 
