@@ -57,6 +57,7 @@
 #define		PS_TRANSIENT	13	/* transient failure (internal use) */
 #define		PS_REFUSED	14	/* mail refused (internal use) */
 #define		PS_RETAINED	15	/* message retained (internal use) */
+#define		PS_TRUNCATED	16	/* headers incomplete (internal use) */
 
 /* output noise level */
 #define         O_SILENT	0	/* mute, max squelch, etc. */
