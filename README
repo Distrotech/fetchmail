@@ -7,10 +7,11 @@ It retrieves mail from remote mail servers and forwards it to your
 local (client) machine's delivery system, so it can then be be read by
 normal mail user agents such as elm(1) or Mail(1).
 
-The fetchmail code was developed under Linux, but should be readily
-portable to other Unix variants (it uses GNU autoconf).  It has also
-been ported to QNX; to build under QNX, see the header comments in the
-Makefile.
+The fetchmail code was developed under Linux, but has also been
+extensively tested under 4.4BSD, Solaris and NEXTSTEP.  It should be
+readily portable to other Unix variants (it uses GNU autoconf).  It
+has also been ported to QNX; to build under QNX, see the header
+comments in the Makefile.
 
 For those of you already familiar with previous versions, here are the
 major new features since 2.0:
