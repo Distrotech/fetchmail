@@ -80,10 +80,10 @@ static void termhook();		/* forward declaration of exit hook */
 
 RETSIGTYPE donothing(sig) int sig; {signal(sig, donothing); lastsig = sig;}
 
-#ifdef HAVE_ATEXIT
-static void unlockit(void)
-#else  /* use on_exit(), e.g. on SunOS */
+#ifdef HAVE_ON_EXIT
 static void unlockit(int n, void *p)
+#else
+static void unlockit(void)
 #endif
 /* must-do actions for exit (but we can't count on being able to do malloc) */
 {
