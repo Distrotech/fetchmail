@@ -420,6 +420,11 @@ extern char *sdps_envfrom;
 extern char *sdps_envto;
 #endif /* SDPS_ENABLE */
 
+extern char *iana_charset;	/* IANA assigned charset name */
+
+/* from ucs/norm_charmap.c */
+const char *norm_charmap(const char *name);
+
 /* prototypes for globally callable functions */
 
 /* from /usr/include/sys/cdefs.h */

@@ -36,7 +36,7 @@ fetchmail_SOURCES=	fetchmail.h getopt.h \
 		opie.c rpa.c interface.c netrc.c \
 		unmime.c conf.c checkalias.c smbdes.c smbencrypt.c \
 		smbmd4.c smbutil.c ipv6-connect.c lock.c \
-		rcfile_l.l rcfile_y.y
+		rcfile_l.l rcfile_y.y ucs/norm_charmap.c
 
 check_PROGRAMS=	rfc822 unmime netrc rfc2047e
 
@@ -64,7 +64,7 @@ DISTDOCS=	FAQ FEATURES NOTES fetchmail-man.html fetchmail-FAQ.html \
 # extra directories to ship
 distdirs = rh-config contrib beos
 
-EXTRA_DIST= $(DISTDOCS) fetchmail.spec $(distdirs)
+EXTRA_DIST= $(DISTDOCS) fetchmail.spec $(distdirs) ucs/README.svn
 
 FAQ: fetchmail-FAQ.html
 	AWK=$(AWK) $(SHELL) $(srcdir)/html2txt.sh $(srcdir)/fetchmail-FAQ.html >$@ || { rm -f $@ ; exit 1 ; }

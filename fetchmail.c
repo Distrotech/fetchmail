@@ -30,6 +30,10 @@
 #endif /* HAVE_SETRLIMIT */
 #include <sys/utsname.h>
 
+#ifdef HAVE_LANGINFO_H
+#include <langinfo.h>
+#endif
+
 #include "fetchmail.h"
 #include "socket.h"
 #include "tunable.h"
@@ -120,6 +124,8 @@ static RETSIGTYPE donothing(int sig)
     lastsig = sig;
 }
 
+char *iana_charset;
+
 int main(int argc, char **argv)
 {
     int bkgd = FALSE;
@@ -139,6 +145,11 @@ int main(int argc, char **argv)
     setlocale (LC_ALL, "");
     bindtextdomain(PACKAGE, LOCALEDIR);
     textdomain(PACKAGE);
+    iana_charset = norm_charmap(nl_langinfo(CODESET)); /* normalize local
+							  charset to
+							  IANA charset. */
+#else
+    iana_charset = "US-ASCII";
 #endif
 
     /*
