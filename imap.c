@@ -63,9 +63,23 @@ extern char *strstr();	/* needed on sysV68 R3V7.1. */
 #define IMAP4rev1	1	/* IMAP4 rev 1, RFC2060 */
 
 static int count, seen, recent, unseen, deletions, imap_version, preauth; 
+#ifdef USE_SEARCH
+static int unseen_count;
+#endif /* USE_SEARCH */
 static int expunged, expunge_period, saved_timeout;
 static flag do_idle;
 static char capabilities[MSGBUFSIZE+1];
+
+#ifdef USE_SEARCH
+/*
+ * unseen_count is a dynamic array that holds the sequence number
+ * of unseen_messages. It is created whenever a SEARCH UNSEEN response
+ * is returned and deleted at logout time.
+ * Data are terminated by 0 in unseen_sequence since sequence numbers
+ * are between 1 and 2^32.
+ */
+static unsigned int* unseen_sequence;
+#endif /* USE_SEARCH */
 
 int imap_ok(int sock, char *argbuf)
 /* parse command response */
@@ -116,7 +130,7 @@ int imap_ok(int sock, char *argbuf)
 	    char	*cp;
 
 	    /*
-	     * Handle both "* 42 UNSEEN" (if tha ever happens) and 
+	     * Handle both "* 42 UNSEEN" (if that ever happens) and 
 	     * "* OK [UNSEEN 42] 42". Note that what this gets us is
 	     * a minimum index, not a count.
 	     */
@@ -129,6 +143,56 @@ int imap_ok(int sock, char *argbuf)
 	    seen = (strstr(buf, "SEEN") != (char *)NULL);
 	if (strstr(buf, "PREAUTH"))
 	    preauth = TRUE;
+#ifdef USE_SEARCH
+	/*
+	 * The response to SEARCH UNSEEN looks like:
+	 * * SEARCH list of sequence numbers
+         * It means stuffing unseen_sequence and eating white space in between.
+	 */
+	if (strstr(buf, "* SEARCH")) {
+	    char	*cp = strstr(buf, "SEARCH") + 6; /* Start after SEARCH */
+	    char	*endofnumber = NULL;
+
+	    /* unseen_sequence already exists. Discard it for a new use */
+	    if (unseen_sequence)
+		free(unseen_sequence);
+
+	    /* 
+	     * unseen_sequence memory allocation
+	     * Chances are it is grossly oversized, but there is no
+             * way to size it correctly in one pass without
+             * relying on the RECENT response. Which is exactly why
+             * we're using SEARCH UNSEEN.
+             * Fill unseen_sequence with zero because 0 means end of data
+             */
+	    unseen_sequence = xmalloc(count * sizeof(unsigned int));
+	    memset(unseen_sequence, 0, count * sizeof(unsigned int));
+	    unseen_count = 0;
+
+	    while (*cp) {
+		/* White space */
+		while (*cp && isspace(*cp)) cp++;
+		/* Number is between 1 and 2^32 included so unsigned int is enough. */
+		if (*cp) {
+	    	/*
+                 * To avoid a buffer overflow.
+	         * That count would be less than unseen_count is not supposed to
+                 * happen, but you never know.
+                 */
+		if (unseen_count >= count) break; /* Flush the rest of the command? */
+		unseen_sequence[unseen_count++] = (unsigned int)strtol(cp, &endofnumber, 10);
+
+		if (outlevel >= O_DEBUG)
+	    	    report(stdout, _("%u is unseen\n"), unseen_sequence[unseen_count - 1]);
+		
+		    cp = endofnumber;
+		}
+	    }
+
+	    if (unseen_sequence[0] > 0 && unseen_count > 0)
+		unseen = unseen_sequence[0];
+	    }
+#endif /* USE_SEARCH */
     } while
 	(tag[0] != '\0' && strncmp(buf, tag, strlen(tag)));
 
@@ -1066,6 +1130,14 @@ static int imap_getrange(int sock,
 			 const char *folder, 
 			 int *countp, int *newp, int *bytes)
 /* get range of messages to be fetched */
+#ifdef USE_SEARCH
+/* 
+ * I'm using SEARCH UNSEEN instead of some other unreliable method.
+ * Hopefully I'm able to stuff SEARCH in here.
+ * The response will have to be in imap_ok since the driver invokes
+ * parse_response in gen_transact.
+ */
+#endif /* USE_SEARCH */
 {
     int ok;
 
@@ -1103,9 +1175,23 @@ static int imap_getrange(int sock,
     }
     else
     {
+#ifdef USE_SEARCH
 	ok = gen_transact(sock, 
 			  check_only ? "EXAMINE \"%s\"" : "SELECT \"%s\"",
 			  folder ? folder : "INBOX");
+#else
+	if (check_only) {
+	    ok = gen_transact(sock, "EXAMINE \"%s\"", folder? folder: "INBOX");
+	} else {
+            ok = gen_transact(sock, "SELECT \"%s\"", folder? folder: "INBOX");
+	    /*
+	     * SEARCH UNSEEN will modify the static unseen variable.
+	     * It is a much better way than RECENT to determine UNSEEN
+	     * messages.
+             */
+	    ok = gen_transact(sock, "SEARCH UNSEEN");
+	}
+#endif /* USE_SEARCH */
 	if (ok != 0)
 	{
 	    report(stderr, _("mailbox selection failed\n"));
@@ -1121,13 +1207,33 @@ static int imap_getrange(int sock,
      * it doesn't matter much that it can be wrong (e.g. if we see an
      * UNSEEN response but not all messages above the first UNSEEN one
      * are likewise).
+#ifdef USE_SEARCH
+     *
+     * RECENT is not a good indication of recent messages, because it is
+     * really ill-defined, e.g. if several connections are made to the
+     * folder, messages might appear as recent to some and not to others.
+     * Using SEARCH UNSEEN provide us with the exact number of unseen
+     * messages.
+#endif /* USE_SEARCH */
      */
+#ifdef USE_SEARCH
     if (unseen >= 0)		/* optional, but better if we see it */
 	*newp = count - unseen + 1;
+#else
+    if (unseen >= 0 && unseen_count > 0)	/* optional, but better if we see it */
+	*newp = unseen_count;
+#endif /* USE_SEARCH */
     else if (recent >= 0)	/* mandatory */
 	*newp = recent;
     else
+#ifdef USE_SEARCH
 	*newp = -1;		/* should never happen, RECENT is mandatory */ 
+#else
+	*newp = -1;
+    /* Contrary to what the previous comment says, RECENT is NOT
+     * mandatory. It's actually a flaky, ill-defined method.
+     */
+#endif /* USE_SEARCH */
 
     expunged = 0;
 
@@ -1195,13 +1301,34 @@ static int imap_getsizes(int sock, int count, int *sizes)
 static int imap_is_old(int sock, struct query *ctl, int number)
 /* is the given message old? */
 {
+#ifdef USE_SEARCH
     int ok;
+#else
+    int ok, i;
+#endif /* USE_SEARCH */
 
     /* expunges change the fetch numbers */
     number -= expunged;
 
+#ifdef USE_SEARCH
+    if (unseen_count > 0) {
+        /* unseen_count[i] == 0 means end of data - redundant with unseen_count */
+    	for (i = 0; i < unseen_count && 0 < unseen_sequence[i]; i++) {
+	    	unseen_sequence[i] -= expunged;	/* expunge adjustment */
+	    if (unseen_sequence[i] == number) {
+			seen = FALSE;			/* message in unseen_sequence */
+			break;
+	    } else
+			seen = TRUE;
+		}
+    } else {
+	/* Fall back to FETCH FLAGS */
+#endif /* USE_SEARCH */
     if ((ok = gen_transact(sock, "FETCH %d FLAGS", number)) != 0)
 	return(PS_ERROR);
+#ifdef USE_SEARCH
+    }
+#endif /* USE_SEARCH */
 
     return(seen);
 }
@@ -1313,6 +1440,12 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
     else
 	*lenp = -1;	/* missing length part in FETCH reponse */
 
+#ifdef USE_SEARCH
+    /* Memory clean-up */
+    if (unseen_sequence)
+	free(unseen_sequence);
+#endif /* USE_SEARCH */
+
     return(PS_SUCCESS);
 }
 
@@ -1394,6 +1527,12 @@ static int imap_delete(int sock, struct query *ctl, int number)
     if (NUM_NONZERO(expunge_period) && (deletions % expunge_period) == 0)
 	internal_expunge(sock);
 
+#ifdef USE_SEARCH
+    /* Memory clean-up */
+    if (unseen_sequence)
+	free(unseen_sequence);
+#endif /* USE_SEARCH */
+
     return(PS_SUCCESS);
 }
 
@@ -1403,6 +1542,12 @@ static int imap_logout(int sock, struct query *ctl)
     /* if any un-expunged deletions remain, ship an expunge now */
     if (deletions)
 	internal_expunge(sock);
+
+#ifdef USE_SEARCH
+    /* Memory clean-up */
+    if (unseen_sequence)
+	free(unseen_sequence);
+#endif /* USE_SEARCH */
 
     return(gen_transact(sock, "LOGOUT"));
 }
