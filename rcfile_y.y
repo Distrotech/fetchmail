@@ -89,6 +89,10 @@ statement	: SET LOGFILE MAP STRING	{logfile = xstrdup($4);}
  */
 		| define_server serverspecs		{record_current();}
 		| define_server serverspecs userspecs
+
+/* detect and complain about the most common user error */
+		| define_server serverspecs userspecs serv_option
+			{yyerror("server option after user options");}
 		;
 
 define_server	: POLL STRING		{reset_server($2, FALSE);}

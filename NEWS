@@ -21,6 +21,13 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.1.0 ()
+* Make the RPM depend on `smtpdaemon', which the sendmail package provides.
+* Clean up the Interactive UNIX System V/386 Release 3.2 port.
+* Enable parser to detect and complain about the most common syntax error.
+
+There are 262 people on the fetchmail-friends list.
+
 fetchmail-4.0.8 (Thu Aug  7 17:05:27 EDT 1997)
 * Fixed core dump bug in UID handling introduced by the 4.0.6 change.
 * Retrieval code for POP3 & older IMAP versions now skips X-IMAP message
