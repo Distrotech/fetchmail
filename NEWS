@@ -22,7 +22,7 @@ driver to SMTP.  (This requires that we find a POP2 server to test with.)
   specified.
 
 * SMTP forwarding support.  Thanks to Harry Hochheiser <harry@tigger.jvnc.net>
-  for this simple but clever idea.  
+  for this simple but clever idea.  It's now the default delivery mode.
 
 * If no UNIX From line is found, popclient will now synthesize a correct
   line from the RFC822 From line.

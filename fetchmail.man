@@ -57,6 +57,24 @@ option, below.
 POP3 only.  Retrieve both old (previously retrieved) and new messages from 
 the mailserver.
 .TP
+.B \-S host, --smtphost host
+Specify an SMTP forwarding host (other than localhost).  Normally
+fetched mail is delivered by SMTP over a socket to the client machine
+.I popclient
+is running on (this simulates the way mail would
+be delivered to the client by a normal Internet TCP/IP connection).
+With this option you can specify another host to deliver to.
+.TP
+.B \-m mda, --mda mda
+Specify a mail delivery agent to use.  This can be used to pass
+fetched mail to programs like procmail.  If the MDA string contains
+%s, that escape will be expanded into your username on the client
+machine.
+.TP
+.B \-o folder, --local folder
+Causes retrieved messages to be appended to file named by the folder 
+argument. See OUTPUT OPTIONS below for a complete description.
+.TP
 .B \-c, --stdout
 Causes retrieved messages to be written to stdout instead of a mail folder.
 See OUTPUT OPTIONS below for a complete description.  You may not specify
@@ -103,19 +121,6 @@ option -- i.e. messages downloaded with the
 .B limit
 option remain on the remote mailserver.
 .TP
-.B \-m mda, --mda mda
-Specify a mail delivery agent to use.  This can be used to pass
-fetched mail to programs like procmail.  If the MDA string contains
-%s, that escape will be expanded into your username on the client
-machine.  Some possible MDAs are "/usr/formail", "/usr/bin/deliver %s",
-"/usr/lib/sendmail -oem %s".
-.TP
-.B \-S host, --smtphost host
-Specify an SMTP forwarding host.  If you specify this option, fetched
-mail is delivered by SMTP over a socket connection to the specified
-host.  This simulates the way mail would be delivered to that host 
-by a normal Internet mail connection.  
-.TP
 .B \-p, \--protocol proto
 Specify the protocol to used when communicating with the remote 
 mailserver.  If no protocol is specified,
@@ -144,22 +149,13 @@ The  option permits you to specify a TCP/IP port to connect on.
 This will seldom be necessary as all the supported protocols have
 well-established default port numbers.
 .TP
-.B \-o folder, --local folder
-Causes retrieved messages to be appended to file named by the folder 
-argument.  When neither 
-.B \-o
-nor
-.B \-c
-is specified, retrieved messages are appended to the system default mail 
-folder. See OUTPUT OPTIONS below for a complete description.
-.TP
 .B \-r folder, --remote folder
 Causes an alternate mail folder on the mailserver to be retrieved.
 The syntax of the folder name is server dependent, as is the default
 behavior when no folder is specified.  Fortunately, most POP2 and IMAP
 servers have a reasonable default behavior, so use of this option
 should be limited to fairly specialized applications.  POP3 does not
-provide a folder specification in the protocol.
+support a folder specification in the protocol.
 If the
 .B remote
 option is used in conjunction with the POP3 protocol, the remote folder 
@@ -177,7 +173,7 @@ option takes precedence.
 .TP
 .B \-u name, --username name
 Specifies the user idenfication to be used when logging-in to the mailserver.
-The appropriate user identification is both server and user dependent.  
+The appropriate user identification is both server and user-dependent.  
 The default is your login name on the machine that is running 
 .I popclient.
 See USER AUTHENTICATION below for a complete description.
@@ -194,7 +190,7 @@ to be modified or omitted.
 Normally,
 .I popclient
 edits RFC-822 address headers (To, From, Cc, Bcc, and Reply-To) in
-fetched mail so that any mail IDs local to the host are expanded to
+fetched mail so that any mail IDs local to the server are expanded to
 full addresses (@ and the POP host name are appended).  This enables 
 replies on the client to get addressed correctly (otherwise your
 mailer might think they should be addressed to local users on the
@@ -253,19 +249,23 @@ a mailbox on the server.  Contact your server administrator if you don't know
 the correct user-id and password for your mailbox account.
 .PP
 .SH OUTPUT OPTIONS
-The normal behavior of 
+The default behavior of 
 .I popmail
-is to deliver mail locally via your system's default mail delivery
-agent or MDA (usually
+is to ship mail to the the SMTP port on the machine it is running on
+(localhost), as though it were being passed over a normal TCP/IP link.
+This normally results in the mail being delivered locally via your
+system's default MDA (Mail Delivery Agent, usually
 .I /usr/lib/sendmail
-but your system may use a different MDA -- the 
-.I popclient
-configuration process should detect this automatically).
-You can change the MDA the mail is passed to with the -mda or -m option.
+but your system may use a different MDA).
+.PP
+You can force mail to be passed to an MDA directly with the -mda or -m option.
+Some possible MDAs are "/usr/lib/sendmail -oem %s", "/usr/formail",
+and "/usr/bin/deliver %s".  This shouldn't be necessary unless
+for some reason you want to bypass your system's default MDA.
 .PP
 Using the 
 .B \-o
-option, you can specify a different mail folder to which the retrieved
+option, you can specify a mail folder to which retrieved
 messages will be appended;
 .I popclient
 always writes the retrieved messages using Unix mail folder format so

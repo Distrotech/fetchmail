@@ -334,7 +334,8 @@ struct hostrec *queryctl;
   strcpy(queryctl->localname,pw->pw_name);
   strcpy(queryctl->remotename,pw->pw_name);
   sprintf(queryctl->userfolder, USERFOLDER, pw->pw_name);
-  queryctl->output = TO_MDA;
+  strcpy(queryctl->smtphost, "localhost");
+  queryctl->output = TO_SMTP;
   (void) sprintf(queryctl->mda, DEF_MDA, queryctl->localname);
 
   poprcfile = 
