@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.33"
+version = "1.34"
 
 from Tkinter import *
 from Dialog import *
@@ -93,8 +93,8 @@ class Server:
 	self.plugin = None		# Plugin command for going to server
 	self.plugout = None		# Plugin command for going to listener
 	self.netsec = None		# IPV6 security options
-	self.users = []			# List of user entries for site
         self.principal = None		# Kerberos principal
+	self.users = []			# List of user entries for site
 	Server.typemap = (
 	    ('pollname',  'String'),
 	    ('via',       'String'),
@@ -103,7 +103,7 @@ class Server:
 	    ('protocol',  'String'),
 	    ('port',      'Int'),
 	    ('uidl',      'Boolean'),
-	    ('preauth',      'String'),
+	    ('preauth',   'String'),
 	    ('timeout',   'Int'),
 	    ('envelope',  'String'),
 	    ('envskip',   'Int'),
@@ -116,7 +116,7 @@ class Server:
 	    ('plugin',   'String'),
 	    ('plugout',  'String'),
 	    ('netsec',   'String'),
-	    ('principal',   'String'))
+	    ('principal','String'))
 
     def dump(self, folded):
 	res = ""
@@ -172,7 +172,9 @@ class Server:
             res = res + "monitor " + str(self.monitor)
 	if self.netsec:
             res = res + "netsec " + str(self.netsec)
-	if self.interface or self.monitor or self.netsec:
+	if self.principal:
+	    res = res + " principal " + `self.principal`
+	if self.interface or self.monitor or self.netsec or self.principal:
 	    if folded:
 		res = res + "\n"
 
@@ -328,8 +330,6 @@ class User:
 	    res = res + " sslkey " + `self.sslkey`
 	if self.sslcert and self.sslcert != UserDefaults.sslcert:
 	    res = res + " sslcert " + `self.sslcert`
-	if self.principal and self.principal != UserDefaults.principal:
-	    res = res + " principal " + `self.principal`
 	if self.expunge != UserDefaults.expunge:
 	    res = res + " expunge " + `self.expunge`
         res = res + "\n"
@@ -1096,7 +1096,7 @@ class ServerEdit(Frame, MyWidget):
 		 self.server.localdomains, None, None, mdropwin, multihelp)
             mdropwin.pack(fill=X)
 
-            if os_type == 'linux' or os_type == 'freebsd' or 'netsec' in feature_options:
+            if os_type == 'linux' or os_type == 'freebsd' or 'netsec' in feature_options or 'imap-k4' in feature_options:
                 secwin = Frame(rightwin, relief=RAISED, bd=5)
                 Label(secwin, text="Security").pack(side=TOP)
                 # Don't actually let users set this.  KPOP sets it implicitly
@@ -1111,6 +1111,10 @@ class ServerEdit(Frame, MyWidget):
                 if 'netsec' in feature_options or 'netsec' in dictmembers:
                     LabeledEntry(secwin, 'IPV6 security options:',
 			 self.netsec, leftwidth).pack(side=TOP, fill=X)
+        	# Someday this should handle Kerberos 5 too
+        	if 'imap-k4' in feature_options:
+                    LabeledEntry(secwin, 'Principal:',
+                         self.principal, '12').pack(side=TOP, fill=X)
                 Button(secwin, text='Help', fg='blue',
                        command=lambda: helpwin(sechelp)).pack(side=RIGHT)
                 secwin.pack(fill=X)
@@ -1498,11 +1502,6 @@ class UserEdit(Frame, MyWidget):
             LabeledEntry(sslwin, 'SSL certificate:',
 			 self.sslcert, '14').pack(side=TOP, fill=X)
             sslwin.pack(fill=X, anchor=N)
-
-        # Someday this should handle Kerberos 5 too
-        if 'imap-k4':
-            LabeledEntry(secwin, 'Principal:',
-                         self.principal, '12').pack(side=TOP, fill=X)
 
         names = Frame(leftwin, relief=RAISED, bd=5)
         Label(names, text="Local names").pack(side=TOP)
