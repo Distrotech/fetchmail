@@ -52,7 +52,7 @@ int imap_ok (FILE *sockfp,  char *argbuf)
     if (tag[0] == '\0')
     {
 	strcpy(argbuf, buf);
-	return(0); 
+	return(PS_SUCCESS); 
     }
     else
     {
@@ -67,7 +67,7 @@ int imap_ok (FILE *sockfp,  char *argbuf)
 	if (strncmp(cp, "OK", 2) == 0)
 	{
 	    strcpy(argbuf, cp);
-	    return(0);
+	    return(PS_SUCCESS);
 	}
 	else if (strncmp(cp, "BAD", 2) == 0)
 	    return(PS_ERROR);
@@ -113,6 +113,8 @@ int imap_getauth(FILE *sockfp, struct query *ctl, char *buf)
     }
 
     peek_capable = (imap_version >= IMAP4);
+
+    return(PS_SUCCESS);
 }
 
 static int imap_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
@@ -139,7 +141,7 @@ static int imap_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
 
     deletecount = 0;
 
-    return(0);
+    return(PS_SUCCESS);
 }
 
 static int imap_getsizes(FILE *sockfp, int count, int *sizes)
@@ -162,7 +164,7 @@ static int imap_getsizes(FILE *sockfp, int count, int *sizes)
 	    sizes[num - 1] = -1;
     }
 
-    return(0);
+    return(PS_SUCCESS);
 }
 
 static int imap_is_old(FILE *sockfp, struct query *ctl, int number)
@@ -232,7 +234,7 @@ static int imap_fetch(FILE *sockfp, struct query *ctl, int number, int *lenp)
     if (num != number)
 	return(PS_ERROR);
     else
-	return(0);
+	return(PS_SUCCESS);
 }
 
 static int imap_trail(FILE *sockfp, struct query *ctl, int number)
@@ -272,7 +274,7 @@ static int imap_delete(FILE *sockfp, struct query *ctl, int number)
 
     deletecount++;
 
-    return(0);
+    return(PS_SUCCESS);
 }
 
 const static struct method imap =
