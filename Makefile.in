@@ -88,13 +88,12 @@ srcs = $(srcdir)/socket.c $(srcdir)/getpass.c $(srcdir)/pop2.c 		\
 
 all: fetchmail fetchmail.spec
 
-check: # No tests.
 depend:
 	test -f config.h || touch config.h
 	test -f rcfile_y.h || touch rcfile_y.h
-	makedepend -fMakefile.in *.c
+	makedepend -fMakefile *.c
 
-# Some makes apparently use .PHONY as the default goal is it is before `all'.
+# Some makes apparently use .PHONY as the default goal if it is before `all'.
 .PHONY: all check
 
 $(popobjs): fetchmail.h
