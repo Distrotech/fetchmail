@@ -1278,6 +1278,13 @@ This POP server has a weird bug; it says OK twice in response to TOP.
 Its response to RETR is normal, so use the `fetchall' option.
 
 """
+	    if string.find(greetline, "GMX POP3 StreamProxy") > 0:
+		warnings = warnings + """
+The GMX POP3 server behaves badly on authentication failures, sending
+back a non-conformant error message (missing an <code>-ERR</code> tag)
+that confuses fetchmail.  Use IMAP.
+
+"""
 	    if string.find(greetline, "OpenMail") > 0:
 		warnings = warnings + """
 You appear to be using some version of HP OpenMail.  Many versions of

@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2002/03/09 12:21:27 $
+<td width="30%" align=right>$Date: 2002/03/15 19:16:33 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -91,6 +91,7 @@ IP address?</a><br>
 <a href="#S12">S12. How can I use fetchmail with MailMax?</a><br>
 <a href="#S13">S13. How can I use fetchmail with Novell GroupWise?</a><br>
 <a href="#S14">S14. How can I use fetchmail with InterChange?</a><br>
+<a href="#S15">S15. How can I use fetchmail with GMX?</a><br>
 
 <h1>How to set up well-known security and authentication methods:</h1>
 
@@ -1748,6 +1749,12 @@ RETR.
 their new 3.61.08 release of InterChange fixes this problem.  I don't
 have any reports one way or the other yet.
 
+<a name="S15">S15. How can I use fetchmail with GMX?</a></h2>
+
+<p>Use IMAP.  The GMX StreamProxy server behaves badly on
+authentication failures, sending back a non-conformant error message
+(missing an <code>-ERR</code> tag) that confuses fetchmail.
+
 <hr>
 <h2><a name="K1">K1. How can I use fetchmail with SOCKS?</a></h2>
 
@@ -3006,7 +3013,7 @@ date from the last Received header.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2002/03/09 12:21:27 $
+<td width="30%" align=right>$Date: 2002/03/15 19:16:33 $
 </table>
 
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@thyrsus.com&gt;</A></ADDRESS>
