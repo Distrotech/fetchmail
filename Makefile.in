@@ -320,7 +320,7 @@ fetchmail-$(VERSION).tar.gz: $(all)
 
 # Make RPMs.  You need to be root to make this work
 RPMROOT=/usr/src/redhat
-RPM = rpm
+RPM = rpmbuild
 RPMFLAGS = -ba
 rpm: dist
 	cp fetchmail-$(VERSION).tar.gz fetchmail.xpm $(RPMROOT)/SOURCES;
