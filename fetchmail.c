@@ -240,7 +240,13 @@ int query_host(queryctl)
 struct hostrec *queryctl;
 {
   if (outlevel != O_SILENT)
-    fprintf(stderr, "popclient: querying %s\n", queryctl->servername);
+  {
+    time_t now;
+
+    time(&now);
+    fprintf(stderr, "popclient: querying %s at %s",
+	    queryctl->servername, ctime(&now));
+  }
   switch (queryctl->protocol) {
   case P_POP2:
     return(doPOP2(queryctl));
