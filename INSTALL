@@ -40,14 +40,6 @@ Run
 
 This should compile fetchmail for your system.
 
-Some makes (on AIX and HPUX and possibly elsewhere) choke on the YACC
-grammar dependencies.  If this happens to you, install the free GNU
-make program and throw away your native one, it's broken.
-
-If linking fails to resolve atexit(), go find a compiler that isn't lying
-about being ANSI-compliant (such as gcc).  Some SunOS users have had this
-problem.
-
 3. INSTALL
 
 Lastly, become root and run
@@ -82,11 +74,6 @@ beware of aliases that direct your local mail back to the server host!
 This software is known to work with the qpop/popper series of
 freeware POP3 servers; also with the IMAP2bis and IMAP4 servers that are
 distributed with Pine from the University of Washington.  
-
-A couple of users have reported that some recent (post-2.7.2) versions
-of gcc seem to have an optimizer bug that affects fetchmail.  If your
-fetchmail core dumps (especially near startup) try recompiling without
--O.  Alternatively, you can drop back to gcc 2.7.2 or below.
 
 6. REPORTING BUGS
 
