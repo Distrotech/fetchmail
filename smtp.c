@@ -323,16 +323,13 @@ int SMTP_eom(int sock)
   return ok;
 }
 
-/* ignore SIGALRM signal indicating a timeout during smtp ok */
-static void smtp_timeout_handler (int signal) { }
-
 int SMTP_ok(int sock)
 /* returns status of SMTP connection */
 {
-    void (*alrmsave)(int);
+    SIGHANDLERTYPE alrmsave;
 
     /* set an alarm for smtp ok */
-    alrmsave = signal(SIGALRM, smtp_timeout_handler);
+    alrmsave = set_signal_handler(SIGALRM, null_signal_handler);
     set_timeout(mytimeout);
 
     while ((SockRead(sock, smtp_response, sizeof(smtp_response)-1)) != -1)
@@ -341,7 +338,7 @@ int SMTP_ok(int sock)
 
 	/* restore alarm */
 	set_timeout(0);
-	signal(SIGALRM, alrmsave);
+	set_signal_handler(SIGALRM, alrmsave);
 
 	n = strlen(smtp_response);
 	if (n > 0 && smtp_response[n-1] == '\n')
@@ -366,14 +363,14 @@ int SMTP_ok(int sock)
 	    return SM_ERROR;
 
 	/* set an alarm for smtp ok */
-	signal(SIGALRM, smtp_timeout_handler);
+	set_signal_handler(SIGALRM, null_signal_handler);
 	set_timeout(mytimeout);
 
     }
 
     /* restore alarm */
     set_timeout(0);
-    signal(SIGALRM, alrmsave);
+    set_signal_handler(SIGALRM, alrmsave);
 
     if (outlevel >= O_MONITOR)
 	report(stderr, GT_("smtp listener protocol error\n"));

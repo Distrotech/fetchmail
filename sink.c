@@ -1011,9 +1011,6 @@ static int open_mda_sink(struct query *ctl, struct msgblk *msg,
 	      int *good_addresses, int *bad_addresses)
 /* open a stream to a local MDA */
 {
-#ifdef HAVE_SIGACTION
-    struct      sigaction sa_new;
-#endif /* HAVE_SIGACTION */
 #ifdef HAVE_SETEUID
     uid_t orig_uid;
 #endif /* HAVE_SETEUID */
@@ -1166,14 +1163,7 @@ static int open_mda_sink(struct query *ctl, struct msgblk *msg,
      * sigchld_handler() would reap away the error status, returning
      * error status instead of 0 for successful completion.
      */
-#ifndef HAVE_SIGACTION
-    signal(SIGCHLD, SIG_DFL);
-#else
-    memset (&sa_new, 0, sizeof sa_new);
-    sigemptyset (&sa_new.sa_mask);
-    sa_new.sa_handler = SIG_DFL;
-    sigaction (SIGCHLD, &sa_new, NULL);
-#endif /* HAVE_SIGACTION */
+    set_signal_handler(SIGCHLD, SIG_DFL);
 
     return(PS_SUCCESS);
 }

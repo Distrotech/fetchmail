@@ -74,8 +74,8 @@ static int activecount;		/* count number of active entries */
 static struct runctl cmd_run;	/* global options set from command line */
 static time_t parsetime;	/* time of last parse */
 
-static void terminate_run(int);
-static void terminate_poll(int);
+static RETSIGTYPE terminate_run(int);
+static RETSIGTYPE terminate_poll(int);
 
 #if defined(__FreeBSD__) && defined(__FreeBSD_USE_KVM)
 /* drop SGID kmem privileage until we need it */
@@ -119,7 +119,8 @@ static char *timestamp (void)
 static RETSIGTYPE donothing(int sig) 
 {
     extern volatile int lastsig;	/* declared in idle.c */
-    signal(sig, donothing); lastsig = sig;
+    set_signal_handler(sig, donothing);
+    lastsig = sig;
 }
 
 int main(int argc, char **argv)
@@ -490,9 +491,9 @@ int main(int argc, char **argv)
 	 * We'll set up a handler for these when we're sleeping,
 	 * but ignore them otherwise so as not to interrupt a poll.
 	 */
-	signal(SIGUSR1, SIG_IGN);
+	set_signal_handler(SIGUSR1, SIG_IGN);
 	if (run.poll_interval && getuid() == ROOT_UID)
-	    signal(SIGHUP, SIG_IGN);
+	    set_signal_handler(SIGHUP, SIG_IGN);
     }
     else
     {
@@ -511,12 +512,12 @@ int main(int argc, char **argv)
 
     /* beyond here we don't want more than one fetchmail running per user */
     umask(0077);
-    signal(SIGABRT, terminate_run);
-    signal(SIGINT, terminate_run);
-    signal(SIGTERM, terminate_run);
-    signal(SIGALRM, terminate_run);
-    signal(SIGPIPE, terminate_run);
-    signal(SIGQUIT, terminate_run);
+    set_signal_handler(SIGABRT, terminate_run);
+    set_signal_handler(SIGINT, terminate_run);
+    set_signal_handler(SIGTERM, terminate_run);
+    set_signal_handler(SIGALRM, terminate_run);
+    set_signal_handler(SIGPIPE, terminate_run);
+    set_signal_handler(SIGQUIT, terminate_run);
 
     /* here's the exclusion lock */
     lock_or_die();
@@ -737,9 +738,9 @@ int main(int argc, char **argv)
 	     * forcing fetchmail to re-poll its hosts.  The second line is
 	     * for people who think all system daemons wake up on SIGHUP.
 	     */
-	    signal(SIGUSR1, donothing);
+	    set_signal_handler(SIGUSR1, donothing);
 	    if (getuid() != ROOT_UID)
-		signal(SIGHUP, donothing);
+		set_signal_handler(SIGHUP, donothing);
 
 	    /*
 	     * OK, now pause until it's time for the next poll cycle.
@@ -1207,7 +1208,7 @@ static int load_params(int argc, char **argv, int optind)
     return(implicitmode);
 }
 
-static void terminate_poll(int sig)
+static RETSIGTYPE terminate_poll(int sig)
 /* to be executed at the end of a poll cycle */
 {
     /*
@@ -1254,7 +1255,7 @@ static void terminate_poll(int sig)
 #endif /* POP3_ENABLE */
 }
 
-static void terminate_run(int sig)
+static RETSIGTYPE terminate_run(int sig)
 /* to be executed on normal or signal-induced termination */
 {
     struct query	*ctl;

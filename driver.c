@@ -89,21 +89,18 @@ void set_timeout(int timeleft)
 #endif
 }
 
-static void timeout_handler (int signal)
+static RETSIGTYPE timeout_handler (int signal)
 /* handle SIGALRM signal indicating a server timeout */
 {
     timeoutcount++;
     longjmp(restart, THROW_TIMEOUT);
 }
 
-static void sigpipe_handler (int signal)
+static RETSIGTYPE sigpipe_handler (int signal)
 /* handle SIGPIPE signal indicating a broken stream socket */
 {
     longjmp(restart, THROW_SIGPIPE);
 }
-
-/* ignore SIGALRM signal indicating a timeout during cleanup */
-static void cleanup_timeout_handler (int signal) { }
 
 #define CLEANUP_TIMEOUT 60 /* maximum timeout during cleanup */
 
@@ -111,12 +108,12 @@ static int cleanupSockClose (int fd)
 /* close sockets in maximum CLEANUP_TIMEOUT seconds during cleanup */
 {
     int scerror;
-    void (*alrmsave)(int);
-    alrmsave = signal(SIGALRM, cleanup_timeout_handler);
+    SIGHANDLERTYPE alrmsave;
+    alrmsave = set_signal_handler(SIGALRM, null_signal_handler);
     set_timeout(CLEANUP_TIMEOUT);
     scerror = SockClose(fd);
     set_timeout(0);
-    signal(SIGALRM, alrmsave);
+    set_signal_handler(SIGALRM, alrmsave);
     return (scerror);
 }
 
@@ -734,8 +731,8 @@ const int maxfetch;		/* maximum number of messages to fetch */
     int err, mailserver_socket = -1;
 #endif /* HAVE_VOLATILE */
     const char *msg;
-    void (*pipesave)(int);
-    void (*alrmsave)(int);
+    SIGHANDLERTYPE pipesave;
+    SIGHANDLERTYPE alrmsave;
 
     ctl->server.base_protocol = proto;
 
@@ -744,11 +741,11 @@ const int maxfetch;		/* maximum number of messages to fetch */
     init_transact(proto);
 
     /* set up the server-nonresponse timeout */
-    alrmsave = signal(SIGALRM, timeout_handler);
+    alrmsave = set_signal_handler(SIGALRM, timeout_handler);
     mytimeout = ctl->server.timeout;
 
     /* set up the broken-pipe timeout */
-    pipesave = signal(SIGPIPE, sigpipe_handler);
+    pipesave = set_signal_handler(SIGPIPE, sigpipe_handler);
 
     if ((js = setjmp(restart)))
     {
@@ -770,7 +767,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	
 	if (js == THROW_SIGPIPE)
 	{
-	    signal(SIGPIPE, SIG_IGN);
+	    set_signal_handler(SIGPIPE, SIG_IGN);
 	    report(stdout,
 		   GT_("SIGPIPE thrown from an MDA or a stream socket error\n"));
 	    wait(0);
@@ -1510,8 +1507,8 @@ closeUp:
     }
 
     set_timeout(0); /* cancel any pending alarm */
-    signal(SIGALRM, alrmsave);
-    signal(SIGPIPE, pipesave);
+    set_signal_handler(SIGALRM, alrmsave);
+    set_signal_handler(SIGPIPE, pipesave);
     return(err);
 }
 
