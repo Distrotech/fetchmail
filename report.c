@@ -98,7 +98,7 @@ char *strerror (errnum)
 
   if (errnum > 0 && errnum <= sys_nerr)
     return sys_errlist[errnum];
-  return _("Unknown system error");
+  return GT_("Unknown system error");
 }
 # endif	/* HAVE_STRERROR */
 #endif	/* _LIBC */
@@ -125,7 +125,7 @@ report (FILE *errfp, message, va_alist)
   if (partial_message_size_used != 0)
     {
       partial_message_size_used = 0;
-      report (errfp, 0, _("%s (log message incomplete)"), partial_message);
+      report (errfp, 0, GT_("%s (log message incomplete)"), partial_message);
     }
 
 #if defined(HAVE_SYSLOG)
@@ -283,7 +283,7 @@ report_build (FILE *errfp, message, va_alist)
   if (partial_message_size_used >= partial_message_size)
     {
       partial_message_size_used = 0;
-      report (stderr, _("partial error message buffer overflow"));
+      report (stderr, GT_("partial error message buffer overflow"));
     }
 #endif
   va_end (args);
@@ -311,7 +311,7 @@ report_build (FILE *errfp, message, va_alist)
   if ((partial_message_size_used = strlen (partial_message)) >= partial_message_size)
     {
       partial_message_size_used = 0;
-      report (stderr, _("partial error message buffer overflow"));
+      report (stderr, GT_("partial error message buffer overflow"));
     }
 #endif
 #endif
@@ -383,7 +383,7 @@ report_complete (FILE *errfp, message, va_alist)
   if (partial_message_size_used >= partial_message_size)
     {
       partial_message_size_used = 0;
-      report (stderr, _("partial error message buffer overflow"));
+      report (stderr, GT_("partial error message buffer overflow"));
     }
 #endif
   va_end (args);
@@ -411,7 +411,7 @@ report_complete (FILE *errfp, message, va_alist)
   if ((partial_message_size_used = strlen (partial_message)) >= partial_message_size)
     {
       partial_message_size_used = 0;
-      report (stderr, _("partial error message buffer overflow"));
+      report (stderr, GT_("partial error message buffer overflow"));
     }
 #endif
 #endif

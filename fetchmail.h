@@ -539,7 +539,7 @@ char *xstrdup(const char *);
 #endif
 #endif
 #define	xalloca(ptr, t, n)	if (!(ptr = (t) alloca(n)))\
-       {report(stderr, _("alloca failed")); exit(PS_UNDEFINED);}
+       {report(stderr, GT_("alloca failed")); exit(PS_UNDEFINED);}
 #if FALSE
 /*
  * This is a hack to help xgettext which cannot find strings in

@@ -97,7 +97,7 @@ char *const *parse_plugin(const char *plugin, const char *host, const char *serv
 	plugin_copy = malloc(plugin_copy_len + 1);
 	if (!plugin_copy)
 	{
-		report(stderr, _("fetchmail: malloc failed\n"));
+		report(stderr, GT_("fetchmail: malloc failed\n"));
 		return NULL;
 	}
 
@@ -123,7 +123,7 @@ char *const *parse_plugin(const char *plugin, const char *host, const char *serv
 	argvec = malloc(s);
 	if (!argvec)
 	{
-		report(stderr, _("fetchmail: malloc failed\n"));
+		report(stderr, GT_("fetchmail: malloc failed\n"));
 		return NULL;
 	}
 	memset(argvec, 0, s);
@@ -155,13 +155,13 @@ static int handle_plugin(const char *host,
      */
     if (socketpair(AF_UNIX,SOCK_STREAM,0,fds))
     {
-	report(stderr, _("fetchmail: socketpair failed\n"));
+	report(stderr, GT_("fetchmail: socketpair failed\n"));
 	return -1;
     }
     switch (fork()) {
 	case -1:
 		/* error */
-		report(stderr, _("fetchmail: fork failed\n"));
+		report(stderr, GT_("fetchmail: fork failed\n"));
 		return -1;
 		break;
 	case 0:	/* child */
@@ -169,16 +169,16 @@ static int handle_plugin(const char *host,
 		** detection */
 		(void) close(fds[1]);
 		if ( (dup2(fds[0],0) == -1) || (dup2(fds[0],1) == -1) ) {
-			report(stderr, _("dup2 failed\n"));
+			report(stderr, GT_("dup2 failed\n"));
 			exit(1);
 		}
 		/* fds[0] is now connected to 0 and 1; close it */
 		(void) close(fds[0]);
 		if (outlevel >= O_VERBOSE)
-		    report(stderr, _("running %s (host %s service %s)\n"), plugin, host, service);
+		    report(stderr, GT_("running %s (host %s service %s)\n"), plugin, host, service);
 		argvec = parse_plugin(plugin,host,service);
 		execvp(*argvec, argvec);
-		report(stderr, _("execvp(%s) failed\n"), *argvec);
+		report(stderr, GT_("execvp(%s) failed\n"), *argvec);
 		exit(0);
 		break;
 	default:	/* parent */
@@ -260,7 +260,7 @@ int SockOpen(const char *host, const char *service, const char *options,
     req.ai_socktype = SOCK_STREAM;
 
     if (getaddrinfo(host, service, &req, &ai0)) {
-	report(stderr, _("fetchmail: getaddrinfo(%s.%s)\n"), host,service);
+	report(stderr, GT_("fetchmail: getaddrinfo(%s.%s)\n"), host,service);
 	return -1;
     }
 
@@ -385,7 +385,7 @@ int SockOpen(const char *host, int clientPort, const char *options,
 	{
 	    h_errno = errno = 0;
 	    report(stderr, 
-		   _("fetchmail: illegal address length received for host %s\n"),host);
+		   GT_("fetchmail: illegal address length received for host %s\n"),host);
 	    return -1;
 	}
 	/*
@@ -683,25 +683,25 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 		
 		if (outlevel == O_VERBOSE) {
 			if ((i = X509_NAME_get_text_by_NID(issuer, NID_organizationName, buf, sizeof(buf))) != -1) {
-				report(stdout, _("Issuer Organization: %s\n"), buf);
+				report(stdout, GT_("Issuer Organization: %s\n"), buf);
 				if (i >= sizeof(buf) - 1)
-					report(stdout, _("Warning: Issuer Organization Name too long (possibly truncated).\n"));
+					report(stdout, GT_("Warning: Issuer Organization Name too long (possibly truncated).\n"));
 			} else
-				report(stdout, _("Unknown Organization\n"));
+				report(stdout, GT_("Unknown Organization\n"));
 			if ((i = X509_NAME_get_text_by_NID(issuer, NID_commonName, buf, sizeof(buf))) != -1) {
-				report(stdout, _("Issuer CommonName: %s\n"), buf);
+				report(stdout, GT_("Issuer CommonName: %s\n"), buf);
 				if (i >= sizeof(buf) - 1)
-					report(stdout, _("Warning: Issuer CommonName too long (possibly truncated).\n"));
+					report(stdout, GT_("Warning: Issuer CommonName too long (possibly truncated).\n"));
 			} else
-				report(stdout, _("Unknown Issuer CommonName\n"));
+				report(stdout, GT_("Unknown Issuer CommonName\n"));
 		}
 		if ((i = X509_NAME_get_text_by_NID(subj, NID_commonName, buf, sizeof(buf))) != -1) {
 			if (outlevel == O_VERBOSE)
-				report(stdout, _("Server CommonName: %s\n"), buf);
+				report(stdout, GT_("Server CommonName: %s\n"), buf);
 			if (i >= sizeof(buf) - 1) {
 				/* Possible truncation. In this case, this is a DNS name, so this
 				 * is really bad. We do not tolerate this even in the non-strict case. */
-				report(stderr, _("Bad certificate: Subject CommonName too long!\n"));
+				report(stderr, GT_("Bad certificate: Subject CommonName too long!\n"));
 				return (0);
 			}
 			if (_ssl_server_cname != NULL) {
@@ -717,20 +717,20 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 				}	
 				if (0 != strcasecmp(p1, p2)) {
 					report(stderr,
-					    _("Server CommonName mismatch: %s != %s\n"),
+					    GT_("Server CommonName mismatch: %s != %s\n"),
 					    buf, _ssl_server_cname );
 					if (ok_return && strict)
 						return (0);
 				}
 			} else if (ok_return && strict) {
-				report(stderr, _("Server name not set, could not verify certificate!\n"));
+				report(stderr, GT_("Server name not set, could not verify certificate!\n"));
 				return (0);
 			}
 		} else {
 			if (outlevel == O_VERBOSE)
-				report(stdout, _("Unknown Server CommonName\n"));
+				report(stdout, GT_("Unknown Server CommonName\n"));
 			if (ok_return && strict) {
-				report(stderr, _("Server name not specified in certificate!\n"));
+				report(stderr, GT_("Server name not specified in certificate!\n"));
 				return (0);
 			}
 		}
@@ -740,11 +740,11 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 			_check_fp = 0;
 			digest_tp = EVP_md5();
 			if (digest_tp == NULL) {
-				report(stderr, _("EVP_md5() failed!\n"));
+				report(stderr, GT_("EVP_md5() failed!\n"));
 				return (0);
 			}
 			if (!X509_digest(x509_cert, digest_tp, digest, &dsz)) {
-				report(stderr, _("Out of memory!\n"));
+				report(stderr, GT_("Out of memory!\n"));
 				return (0);
 			}
 			tp = text;
@@ -756,17 +756,17 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 				esz = sprintf(tp, i > 0 ? ":%02X" : "%02X", digest[i]);
 #endif
 				if (esz >= te - tp) {
-					report(stderr, _("Digest text buffer too small!\n"));
+					report(stderr, GT_("Digest text buffer too small!\n"));
 					return (0);
 				}
 				tp += esz;
 			}
-			report(stdout, _("%s key fingerprint: %s\n"), _server_label, text);
+			report(stdout, GT_("%s key fingerprint: %s\n"), _server_label, text);
 			if (_check_digest != NULL) {
 				if (strcmp(text, _check_digest) == 0)
-					report(stdout, _("%s fingerprints match.\n"), _server_label);
+					report(stdout, GT_("%s fingerprints match.\n"), _server_label);
 				else {
-					report(stderr, _("%s fingerprints do not match!\n"), _server_label);
+					report(stderr, GT_("%s fingerprints do not match!\n"), _server_label);
 					return (0);
 				}
 			}
@@ -774,13 +774,13 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 	}
 
 	if (err != X509_V_OK && (strict || outlevel == O_VERBOSE)) {
-		report(strict ? stderr : stdout, _("Warning: server certificate verification: %s\n"), X509_verify_cert_error_string(err));
+		report(strict ? stderr : stdout, GT_("Warning: server certificate verification: %s\n"), X509_verify_cert_error_string(err));
 		/* We gave the error code, but maybe we can add some more details for debugging */
 		switch (err) {
 		case X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT:
 			X509_NAME_oneline(issuer, buf, sizeof(buf));
 			buf[sizeof(buf) - 1] = '\0';
-			report(stdout, _("unknown issuer (first %d characters): %s\n"), sizeof(buf), buf);
+			report(stdout, GT_("unknown issuer (first %d characters): %s\n"), sizeof(buf), buf);
 			break;
 		}
 	}
@@ -812,7 +812,7 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char
 	SSLeay_add_ssl_algorithms();
 	
 	if( sock < 0 || sock > FD_SETSIZE ) {
-		report(stderr, _("File descriptor out of range for SSL") );
+		report(stderr, GT_("File descriptor out of range for SSL") );
 		return( -1 );
 	}
 
@@ -827,7 +827,7 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char
 			} else if(!strcmp("tls1",myproto)) {
 				_ctx = SSL_CTX_new(TLSv1_client_method());
 			} else {
-				fprintf(stderr,_("Invalid SSL protocol '%s' specified, using default (SSLv23).\n"), myproto);
+				fprintf(stderr,GT_("Invalid SSL protocol '%s' specified, using default (SSLv23).\n"), myproto);
 				myproto = NULL;
 			}
 		}
@@ -887,7 +887,7 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char
 
 	/* Paranoia: was the callback not called as we expected? */
 	if ((fingerprint != NULL || certck) && !_depth0ck) {
-		report(stderr, _("Certificate/fingerprint verification was somehow skipped!\n"));
+		report(stderr, GT_("Certificate/fingerprint verification was somehow skipped!\n"));
 		
 		if( NULL != ( ssl = SSLGetContext( sock ) ) ) {
 			/* Clean up the SSL stack */

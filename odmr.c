@@ -50,13 +50,13 @@ static int odmr_getrange(int sock, struct query *ctl, const char *id,
 
     if ((ok = SMTP_ehlo(sock, fetchmailhost, &opts)))
     {
-	report(stderr, _("%s's SMTP listener does not support ESMTP\n"),
+	report(stderr, GT_("%s's SMTP listener does not support ESMTP\n"),
 	      ctl->server.pollname);
 	return(ok);
     }
     else if (!(opts & ESMTP_ATRN))
     {
-	report(stderr, _("%s's SMTP listener does not support ATRN\n"),
+	report(stderr, GT_("%s's SMTP listener does not support ATRN\n"),
 	      ctl->server.pollname);
 	return(PS_PROTOCOL);
     }
@@ -94,32 +94,32 @@ static int odmr_getrange(int sock, struct query *ctl, const char *id,
     {
     case 250:	/* OK, turnaround is about to happe */
 	if (outlevel >= O_SILENT)
-	    report(stdout, _("Turnaround now...\n"));
+	    report(stdout, GT_("Turnaround now...\n"));
 	break;
 
     case 450:	/* ATRN request refused */
 	if (outlevel >= O_SILENT)
-	    report(stdout, _("ATRN request refused.\n"));
+	    report(stdout, GT_("ATRN request refused.\n"));
 	return(PS_PROTOCOL);
 
     case 451:	/* Unable to process ATRN request now */
-	report(stderr, _("Unable to process ATRN request now\n"));
+	report(stderr, GT_("Unable to process ATRN request now\n"));
 	return(PS_EXCLUDE);
 
     case 453:	/* You have no mail */
-	report(stderr, _("You have no mail.\n"));
+	report(stderr, GT_("You have no mail.\n"));
 	return(PS_NOMAIL);
 
     case 502:	/* Command not implemented */
-	report(stderr, _("Command not implemented\n"));
+	report(stderr, GT_("Command not implemented\n"));
 	return(PS_PROTOCOL);
 
     case 530:	/* Authentication required */
-	report(stderr, _("Authentication required.\n"));
+	report(stderr, GT_("Authentication required.\n"));
 	return(PS_AUTHFAIL);
 
     default:
-	report(stderr, _("Unknown ODMR error %d\n"), atoi(buf));
+	report(stderr, GT_("Unknown ODMR error %d\n"), atoi(buf));
 	return(PS_PROTOCOL);
     }
 
@@ -222,19 +222,19 @@ int doODMR (struct query *ctl)
     int status;
 
     if (ctl->keep) {
-	fprintf(stderr, _("Option --keep is not supported with ODMR\n"));
+	fprintf(stderr, GT_("Option --keep is not supported with ODMR\n"));
 	return(PS_SYNTAX);
     }
     if (ctl->flush) {
-	fprintf(stderr, _("Option --flush is not supported with ODMR\n"));
+	fprintf(stderr, GT_("Option --flush is not supported with ODMR\n"));
 	return(PS_SYNTAX);
     }
     if (ctl->mailboxes->id) {
-	fprintf(stderr, _("Option --remote is not supported with ODMR\n"));
+	fprintf(stderr, GT_("Option --remote is not supported with ODMR\n"));
 	return(PS_SYNTAX);
     }
     if (check_only) {
-	fprintf(stderr, _("Option --check is not supported with ODMR\n"));
+	fprintf(stderr, GT_("Option --check is not supported with ODMR\n"));
 	return(PS_SYNTAX);
     }
     peek_capable = FALSE;

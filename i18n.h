@@ -4,9 +4,9 @@
 #ifdef ENABLE_NLS
 #undef __OPTIMIZE__
 #include <libintl.h>
-#define _(String) gettext((String))
-#define N_(String) (String)
+#define GT_(String) gettext((String))
+#define NGT_(String) (String)
 #else
-#define _(String) (String)
-#define N_(String) (String)
+#define GT_(String) (String)
+#define NGT_(String) (String)
 #endif

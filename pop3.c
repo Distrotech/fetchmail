@@ -293,7 +293,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	    continue;
 	if (*start == 0) {
 	    report(stderr,
-		   _("Required APOP timestamp not found in greeting\n"));
+		   GT_("Required APOP timestamp not found in greeting\n"));
 	    return(PS_AUTHFAIL);
 	}
 
@@ -302,7 +302,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	    continue;
 	if (*end == 0 || end == start + 1) {
 	    report(stderr, 
-		   _("Timestamp syntax error in greeting\n"));
+		   GT_("Timestamp syntax error in greeting\n"));
 	    return(PS_AUTHFAIL);
 	}
 	else
@@ -324,7 +324,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	break;
 
     default:
-	report(stderr, _("Undefined protocol request in POP3_auth\n"));
+	report(stderr, GT_("Undefined protocol request in POP3_auth\n"));
 	ok = PS_ERROR;
     }
 
@@ -332,7 +332,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
     {
 	/* maybe we detected a lock-busy condition? */
         if (ok == PS_LOCKBUSY)
-	    report(stderr, _("lock busy!  Is another session active?\n")); 
+	    report(stderr, GT_("lock busy!  Is another session active?\n")); 
 
 	return(ok);
     }
@@ -440,7 +440,7 @@ static int pop3_slowuidl( int sock,  struct query *ctl, int *countp, int *newp)
 		}
 	    } else {
 		report(stderr, 
-		       _("Messages inserted into list on server. Cannot handle this.\n"));
+		       GT_("Messages inserted into list on server. Cannot handle this.\n"));
 		return -1;
 	    }
 	} 
@@ -511,7 +511,7 @@ static int pop3_getrange(int sock,
 	{
 	    if (sscanf(buf, "%d", &last) == 0)
 	    {
-		report(stderr, _("protocol error\n"));
+		report(stderr, GT_("protocol error\n"));
 		return(PS_ERROR);
 	    }
 	    *newp = (*countp - last);
@@ -524,7 +524,7 @@ static int pop3_getrange(int sock,
 		/* don't worry, yet! do it the slow way */
 		if((ok = pop3_slowuidl( sock, ctl, countp, newp))!=0)
 		{
-		    report(stderr, _("protocol error while fetching UIDLs\n"));
+		    report(stderr, GT_("protocol error while fetching UIDLs\n"));
 		    return(PS_ERROR);
 		}
 	    }
@@ -777,7 +777,7 @@ int doPOP3 (struct query *ctl)
 {
 #ifndef MBOX
     if (ctl->mailboxes->id) {
-	fprintf(stderr,_("Option --remote is not supported with POP3\n"));
+	fprintf(stderr,GT_("Option --remote is not supported with POP3\n"));
 	return(PS_SYNTAX);
     }
 #endif /* MBOX */

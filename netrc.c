@@ -214,11 +214,11 @@ parse_netrc (file)
 	    {
 #ifdef HAVE_ERROR
 		error_at_line (0, file, ln,
-			       _("warning: found \"%s\" before any host names"),
+			       GT_("warning: found \"%s\" before any host names"),
 			       premature_token);
 #else
 		fprintf (stderr,
-			 _("%s:%d: warning: found \"%s\" before any host names\n"),
+			 GT_("%s:%d: warning: found \"%s\" before any host names\n"),
 			 file, ln, premature_token);
 #endif
 		premature_token = NULL;
@@ -257,7 +257,7 @@ parse_netrc (file)
 
 		else
 		{
-		    fprintf (stderr, _("%s:%d: warning: unknown token \"%s\"\n"),
+		    fprintf (stderr, GT_("%s:%d: warning: unknown token \"%s\"\n"),
 			     file, ln, tok);
 		}
 	    }

@@ -248,20 +248,20 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	{
 	    imap_version = IMAP4rev1;
 	    if (outlevel >= O_DEBUG)
-		report(stdout, _("Protocol identified as IMAP4 rev 1\n"));
+		report(stdout, GT_("Protocol identified as IMAP4 rev 1\n"));
 	}
 	else
 	{
 	    imap_version = IMAP4;
 	    if (outlevel >= O_DEBUG)
-		report(stdout, _("Protocol identified as IMAP4 rev 0\n"));
+		report(stdout, GT_("Protocol identified as IMAP4 rev 0\n"));
 	}
     }
     else if (ok == PS_ERROR)
     {
 	imap_version = IMAP2;
 	if (outlevel >= O_DEBUG)
-	    report(stdout, _("Protocol identified as IMAP2 or IMAP2BIS\n"));
+	    report(stdout, GT_("Protocol identified as IMAP2 or IMAP2BIS\n"));
     }
     else
 	return(ok);
@@ -285,7 +285,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
     {
 	do_idle = TRUE;
 	if (outlevel >= O_VERBOSE)
-	    report(stdout, _("will idle after poll\n"));
+	    report(stdout, GT_("will idle after poll\n"));
     }
 
     /* 
@@ -374,7 +374,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
     if (ctl->server.authenticate == A_OTP)
     {
 	report(stderr, 
-	   _("Required OTP capability not compiled into fetchmail\n"));
+	   GT_("Required OTP capability not compiled into fetchmail\n"));
     }
 #endif /* OPIE_ENABLE */
 
@@ -396,7 +396,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
     if (ctl->server.authenticate == A_NTLM)
     {
 	report(stderr, 
-	   _("Required NTLM capability not compiled into fetchmail\n"));
+	   GT_("Required NTLM capability not compiled into fetchmail\n"));
     }
 #endif /* NTLM_ENABLE */
 
@@ -405,7 +405,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
     if ((imap_version >= IMAP4rev1) && (!strstr(capabilities, "LOGIN")))
     {
 	report(stderr, 
-	       _("Required LOGIN capability not supported by server\n"));
+	       GT_("Required LOGIN capability not supported by server\n"));
     }
 #endif /* __UNUSED__ */
 
@@ -493,7 +493,7 @@ static int imap_getrange(int sock,
 	    ok = imap_idle(sock);
 	if (ok || gen_transact(sock, "NOOP"))
 	{
-	    report(stderr, _("re-poll failed\n"));
+	    report(stderr, GT_("re-poll failed\n"));
 	    return(ok);
 	}
 	else if (count == -1)	/* no EXISTS response to NOOP/IDLE */
@@ -501,7 +501,7 @@ static int imap_getrange(int sock,
 	    count = 0;
 	}
 	if (outlevel >= O_DEBUG)
-	    report(stdout, _("%d messages waiting after re-poll\n"), count);
+	    report(stdout, GT_("%d messages waiting after re-poll\n"), count);
     }
     else
     {
@@ -510,11 +510,11 @@ static int imap_getrange(int sock,
 			  folder ? folder : "INBOX");
 	if (ok != 0)
 	{
-	    report(stderr, _("mailbox selection failed\n"));
+	    report(stderr, GT_("mailbox selection failed\n"));
 	    return(ok);
 	}
 	else if (outlevel >= O_DEBUG)
-	    report(stdout, _("%d messages waiting after first poll\n"), count);
+	    report(stdout, GT_("%d messages waiting after first poll\n"), count);
 
 	/* no messages?  then we may need to idle until we get some */
 	if (count == 0 && do_idle)
@@ -537,7 +537,7 @@ static int imap_getrange(int sock,
 	    ok = gen_recv(sock, buf, sizeof(buf));
 	    if (ok != 0)
 	    {
-		report(stderr, _("search for unseen messages failed\n"));
+		report(stderr, GT_("search for unseen messages failed\n"));
 		return(PS_PROTOCOL);
 	    }
 	    else if ((cp = strstr(buf, "* SEARCH")))
@@ -561,7 +561,7 @@ static int imap_getrange(int sock,
 
 			if (outlevel >= O_DEBUG)
 			    report(stdout, 
-				   _("%u is unseen\n"), 
+				   GT_("%u is unseen\n"), 
 				   unseen_messages[unseen]);
 		
 			unseen++;

@@ -96,7 +96,7 @@ void interface_init(void)
     }
 }
 
-static int _get_ifinfo_(int socket_fd, FILE *stats_file, const char *ifname,
+static int _get_ifinfoGT_(int socket_fd, FILE *stats_file, const char *ifname,
 		ifinfo_t *ifinfo)
 /* get active network interface information - return non-zero upon success */
 {
@@ -176,7 +176,7 @@ static int get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
 
 	    if (sp)
 		*sp = '\0';
-	    result = _get_ifinfo_(socket_fd, stats_file, ifname, ifinfo);
+	    result = _get_ifinfoGT_(socket_fd, stats_file, ifname, ifinfo);
 	    if (sp)
 		*sp = '/';
 	}
@@ -252,7 +252,7 @@ get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
 	{
 		if (!openkvm())
 		{
-			report(stderr, 0, _("Unable to open kvm interface. Make sure fetchmail is SGID kmem."));
+			report(stderr, 0, GT_("Unable to open kvm interface. Make sure fetchmail is SGID kmem."));
 			if (if_egid)
 				setegid(if_rgid);
 			exit(1);
@@ -397,7 +397,7 @@ get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
 	
     if (i == 0 || i == sizeof(iname))
     {
-	report(stderr, _("Unable to parse interface name from %s"), ifname);
+	report(stderr, GT_("Unable to parse interface name from %s"), ifname);
 	return 0;
     }
 
@@ -419,19 +419,19 @@ get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
     if (sysctl(mib, 6, NULL, &needed, NULL, 0) == -1)
     {
  	report(stderr, 
-	    _("get_ifinfo: sysctl (iflist estimate) failed"));
+	    GT_("get_ifinfo: sysctl (iflist estimate) failed"));
 	exit(1);
     }
     if ((buf = malloc(needed)) == NULL)
     {
  	report(stderr, 
-	    _("get_ifinfo: malloc failed"));
+	    GT_("get_ifinfo: malloc failed"));
 	exit(1);
     }
     if (sysctl(mib, 6, buf, &needed, NULL, 0) == -1)
     {
  	report(stderr, 
-	    _("get_ifinfo: sysctl (iflist) failed"));
+	    GT_("get_ifinfo: sysctl (iflist) failed"));
 	exit(1);
     }
 
@@ -449,7 +449,7 @@ get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
 	if (ifm->ifm_version != RTM_VERSION) 
 	{
  	    report(stderr, 
-		_("Routing message version %d not understood."),
+		GT_("Routing message version %d not understood."),
 		ifm->ifm_version);
 	    exit(1);
 	}
@@ -481,7 +481,7 @@ get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
     if (ifindex < 0)
     {
 	/* we did not find an interface with a matching name */
-	report(stderr, _("No interface found with name %s"), iname);
+	report(stderr, GT_("No interface found with name %s"), iname);
 	goto get_ifinfo_end;
     }
 
@@ -539,7 +539,7 @@ get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
 
     if (rc == 0)
     {
-	report(stderr, _("No IP address found for %s"), iname);
+	report(stderr, GT_("No IP address found for %s"), iname);
     }
 
 get_ifinfo_end:
@@ -591,7 +591,7 @@ void interface_parse(char *buf, struct hostdata *hp)
 	if (!(cp1 = strchr(buf, '/')))
 	{
 		(void) report(stderr,
-			      _("missing IP interface address\n"));
+			      GT_("missing IP interface address\n"));
 		exit(PS_SYNTAX);
 	}
 	*cp1++ = '\000';
@@ -607,13 +607,13 @@ void interface_parse(char *buf, struct hostdata *hp)
 	if (!inet_aton(cp1, &hp->interface_pair->interface_address))
 	{
 		(void) report(stderr,
-			      _("invalid IP interface address\n"));
+			      GT_("invalid IP interface address\n"));
 		exit(PS_SYNTAX);
 	}
 	if (!inet_aton(cp2, &hp->interface_pair->interface_mask))
 	{
 		(void) report(stderr,
-			      _("invalid IP interface mask\n"));
+			      GT_("invalid IP interface mask\n"));
 		exit(PS_SYNTAX);
 	}
 	/* apply the mask now to the IP address (range) required */
@@ -652,7 +652,7 @@ void interface_note_activity(struct hostdata *hp)
 
 #ifdef	ACTIVITY_DEBUG
 	(void) report(stdout, 
-		      _("activity on %s -noted- as %d\n"), 
+		      GT_("activity on %s -noted- as %d\n"), 
 		      hp->monitor, hp->monitor_io);
 #endif
 }
@@ -667,7 +667,7 @@ int interface_approve(struct hostdata *hp, flag domonitor)
 		/* get interface info */
 		if (!get_ifinfo(hp->interface, &ifinfo)) {
 			(void) report(stdout, 
-				      _("skipping poll of %s, %s down\n"),
+				      GT_("skipping poll of %s, %s down\n"),
 				      hp->pollname, hp->interface);
 			return(FALSE);
 		}
@@ -686,7 +686,7 @@ int interface_approve(struct hostdata *hp, flag domonitor)
 			) )
 		{
 			(void) report(stdout,
-				_("skipping poll of %s, %s IP address excluded\n"),
+				GT_("skipping poll of %s, %s IP address excluded\n"),
 				hp->pollname, hp->interface);
 			return(FALSE);
 		}
@@ -698,7 +698,7 @@ int interface_approve(struct hostdata *hp, flag domonitor)
 
 #ifdef	ACTIVITY_DEBUG
 	(void) report(stdout, 
-		      _("activity on %s checked as %d\n"), 
+		      GT_("activity on %s checked as %d\n"), 
 		      hp->monitor, hp->monitor_io);
 #endif
 	/* if monitoring, check link for activity if it is up */
@@ -724,14 +724,14 @@ int interface_approve(struct hostdata *hp, flag domonitor)
 	    if (diff >= 0 && diff <= MONITOR_SLOP)
 	    {
 		(void) report(stdout, 
-			      _("skipping poll of %s, %s inactive\n"),
+			      GT_("skipping poll of %s, %s inactive\n"),
 			      hp->pollname, hp->monitor);
 		return(FALSE);
 	    }
 	}
 
 #ifdef ACTIVITY_DEBUG
-       report(stdout, _("activity on %s was %d, is %d\n"),
+       report(stdout, GT_("activity on %s was %d, is %d\n"),
              hp->monitor, hp->monitor_io,
              ifinfo.rx_packets + ifinfo.tx_packets);
 #endif

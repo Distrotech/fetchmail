@@ -66,7 +66,7 @@ static void map_name(const char *name, struct query *ctl, struct idlist **xmit_n
     if (lname != (char *)NULL)
     {
 	if (outlevel >= O_DEBUG)
-	    report(stdout, _("mapped %s to local %s\n"), name, lname);
+	    report(stdout, GT_("mapped %s to local %s\n"), name, lname);
 	save_str(xmit_names, lname, XMIT_ACCEPT);
 	accept_count++;
     }
@@ -123,7 +123,7 @@ static void find_server_names(const char *hdr,
 			strcasecmp(rhs, idp->id) == 0)
 		    {
 			if (outlevel >= O_DEBUG)
-			    report(stdout, _("passed through %s matching %s\n"), 
+			    report(stdout, GT_("passed through %s matching %s\n"), 
 				  cp, idp->id);
 			save_str(xmit_names, cp, XMIT_ACCEPT);
 			accept_count++;
@@ -190,7 +190,7 @@ static char *parse_received(struct query *ctl, char *bufp)
      * does this when the mail has a single recipient.
      */
     if (outlevel >= O_DEBUG)
-	report(stdout, _("analyzing Received line:\n%s"), bufp);
+	report(stdout, GT_("analyzing Received line:\n%s"), bufp);
 
     /* search for whitepace-surrounded "by" followed by valid address */
     for (base = bufp;  ; base = ok + 2)
@@ -229,13 +229,13 @@ static char *parse_received(struct query *ctl, char *bufp)
 	{
 	    if (outlevel >= O_DEBUG)
 		report(stdout, 
-		      _("line accepted, %s is an alias of the mailserver\n"), rbuf);
+		      GT_("line accepted, %s is an alias of the mailserver\n"), rbuf);
 	}
 	else
 	{
 	    if (outlevel >= O_DEBUG)
 		report(stdout, 
-		      _("line rejected, %s is not an alias of the mailserver\n"), 
+		      GT_("line rejected, %s is not an alias of the mailserver\n"), 
 		      rbuf);
 	    return(NULL);
 	}
@@ -306,7 +306,7 @@ static char *parse_received(struct query *ctl, char *bufp)
     if (!ok)
     {
 	if (outlevel >= O_DEBUG)
-	    report(stdout, _("no Received address found\n"));
+	    report(stdout, GT_("no Received address found\n"));
 	return(NULL);
     }
     else
@@ -315,7 +315,7 @@ static char *parse_received(struct query *ctl, char *bufp)
 	    char *lf = rbuf + strlen(rbuf)-1;
 	    *lf = '\0';
 	    if (outlevel >= O_DEBUG)
-		report(stdout, _("found Received address `%s'\n"), rbuf+2);
+		report(stdout, GT_("found Received address `%s'\n"), rbuf+2);
 	    *lf = '\n';
 	}
 	return(rbuf);
@@ -820,7 +820,7 @@ int readheaders(int sock,
     {
 	if (outlevel > O_SILENT)
 	    report(stdout,
-		   _("message delimiter found while scanning headers\n"));
+		   GT_("message delimiter found while scanning headers\n"));
     }
 
     /*
@@ -958,7 +958,7 @@ int readheaders(int sock,
 	    save_str(&msgblk.recipients, run.postmaster, XMIT_ACCEPT);
 	    if (outlevel >= O_DEBUG)
 		report(stdout,
-		      _("no local matches, forwarding to %s\n"),
+		      GT_("no local matches, forwarding to %s\n"),
 		      run.postmaster);
 	}
     }
@@ -973,7 +973,7 @@ int readheaders(int sock,
     {
 	if (outlevel >= O_DEBUG)
 	    report(stdout,
-		   _("forwarding and deletion suppressed due to DNS errors\n"));
+		   GT_("forwarding and deletion suppressed due to DNS errors\n"));
 	free(msgblk.headers);
 	msgblk.headers = NULL;
 	free_str_list(&msgblk.recipients);
@@ -1122,7 +1122,7 @@ int readheaders(int sock,
 
     if (n == -1)
     {
-	report(stdout, _("writing RFC822 msgblk.headers\n"));
+	report(stdout, GT_("writing RFC822 msgblk.headers\n"));
 	release_sink(ctl);
 	free(msgblk.headers);
 	msgblk.headers = NULL;
@@ -1143,13 +1143,13 @@ int readheaders(int sock,
 	if (no_local_matches)
 	{
 	    if (reject_count != 1)
-		strcat(errhd, _("no recipient addresses matched declared local names"));
+		strcat(errhd, GT_("no recipient addresses matched declared local names"));
 	    else
 	    {
 		for (idp = msgblk.recipients; idp; idp = idp->next)
 		    if (idp->val.status.mark == XMIT_REJECT)
 			break;
-		sprintf(errhd+strlen(errhd), _("recipient address %s didn't match any local name"), idp->id);
+		sprintf(errhd+strlen(errhd), GT_("recipient address %s didn't match any local name"), idp->id);
 	    }
 	}
 
@@ -1157,14 +1157,14 @@ int readheaders(int sock,
 	{
 	    if (errhd[sizeof("X-Fetchmail-Warning: ")])
 		strcat(errhd, "; ");
-	    strcat(errhd, _("message has embedded NULs"));
+	    strcat(errhd, GT_("message has embedded NULs"));
 	}
 
 	if (bad_addresses)
 	{
 	    if (errhd[sizeof("X-Fetchmail-Warning: ")])
 		strcat(errhd, "; ");
-	    strcat(errhd, _("SMTP listener rejected local recipient addresses: "));
+	    strcat(errhd, GT_("SMTP listener rejected local recipient addresses: "));
 	    errlen = strlen(errhd);
 	    for (idp = msgblk.recipients; idp; idp = idp->next)
 		if (idp->val.status.mark == XMIT_RCPTBAD)
@@ -1293,7 +1293,7 @@ int readbody(int sock, struct query *ctl, flag forward, int len)
 
 	    if (n < 0)
 	    {
-		report(stdout, _("writing message text\n"));
+		report(stdout, GT_("writing message text\n"));
 		release_sink(ctl);
 		return(PS_IOERR);
 	    }

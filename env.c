@@ -52,7 +52,7 @@ void envquery(int argc, char **argv)
     if (!(pwp = getpwuid(getuid())))
     {
 	fprintf(stderr,
-		_("%s: You don't exist.  Go away.\n"),
+		GT_("%s: You don't exist.  Go away.\n"),
 		program_name);
 	exit(PS_UNDEFINED);
     }
@@ -118,7 +118,7 @@ char *host_fqdn(void)
 
     if (gethostname(tmpbuf, sizeof(tmpbuf)))
     {
-	fprintf(stderr, _("%s: can't determine your host!"),
+	fprintf(stderr, GT_("%s: can't determine your host!"),
 		program_name);
 	exit(PS_DNS);
     }
@@ -134,7 +134,7 @@ char *host_fqdn(void)
 	{
 	    /* exit with error message */
 	    fprintf(stderr,
-		    _("gethostbyname failed for %s\n"), tmpbuf);
+		    GT_("gethostbyname failed for %s\n"), tmpbuf);
 	    exit(PS_DNS);
 	}
 	return(xstrdup(hp->h_name));
