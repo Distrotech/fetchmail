@@ -240,7 +240,7 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 		    {
 			char	*rhs;
 
-			rhs = atsign + 1 + (strlen(atsign) - strlen(idp->id));
+			rhs = atsign + (strlen(atsign) - strlen(idp->id));
 			if ((rhs[-1] == '.' || rhs[-1] == '@')
 					&& strcmp(rhs, idp->id) == 0)
 			{
