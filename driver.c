@@ -2420,9 +2420,9 @@ is restored."));
 	char	*stem;
 
 	if (phase == FORWARDING_WAIT || phase == LISTENER_WAIT)
-	    stem = _("%s error while fetching from %s\n");
-	else
 	    stem = _("%s error while delivering to SMTP host %s\n");
+	else
+	    stem = _("%s error while fetching from %s\n");
 	report(stderr, stem, msg, ctl->server.pollname);
     }
 
