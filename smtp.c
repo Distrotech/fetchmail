@@ -15,6 +15,7 @@
 #include "socket.h"
 #include "smtp.h"
 #include "config.h"
+#include "i18n.h"
 
 struct opt
 {
@@ -73,7 +74,7 @@ static void SMTP_auth(int sock, char *username, char *password, char *buf)
 		memset(digest, 0, 16);
 
 		if (outlevel >= O_MONITOR)
-			report(stdout, "ESMTP CRAM-MD5 Authentication...\n");
+			report(stdout, GT_("ESMTP CRAM-MD5 Authentication...\n"));
 		SockPrintf(sock, "AUTH CRAM-MD5\r\n");
 		SockRead(sock, smtp_response, sizeof(smtp_response) - 1);
 		strncpy(tmp, smtp_response, sizeof(tmp));
@@ -82,7 +83,7 @@ static void SMTP_auth(int sock, char *username, char *password, char *buf)
 			SockPrintf(sock, "*\r\n");
 			SockRead(sock, smtp_response, sizeof(smtp_response) - 1);
 			if (outlevel >= O_MONITOR)
-				report(stdout, "Server rejected the AUTH command.\n");
+				report(stdout, GT_("Server rejected the AUTH command.\n"));
 			return;
 		}
 
@@ -90,7 +91,7 @@ static void SMTP_auth(int sock, char *username, char *password, char *buf)
 		p++;
 		from64tobits(b64buf, p, sizeof(b64buf));
 		if (outlevel >= O_DEBUG)
-			report(stdout, "Challenge decoded: %s\n", b64buf);
+			report(stdout, GT_("Challenge decoded: %s\n"), b64buf);
 		hmac_md5(password, strlen(password),
 				 b64buf, strlen(b64buf), digest, sizeof(digest));
 		for (c = 0; c < 16; c++)
@@ -109,7 +110,7 @@ static void SMTP_auth(int sock, char *username, char *password, char *buf)
 	else if (strstr(buf, "PLAIN")) {
 		int len;
 		if (outlevel >= O_MONITOR)
-			report(stdout, "ESMTP PLAIN Authentication...\n");
+			report(stdout, GT_("ESMTP PLAIN Authentication...\n"));
 #ifdef HAVE_SNPRINTF
 		snprintf(tmp, sizeof(tmp),
 #else
@@ -129,7 +130,7 @@ static void SMTP_auth(int sock, char *username, char *password, char *buf)
 	}
 	else if (strstr(buf, "LOGIN")) {
 		if (outlevel >= O_MONITOR)
-			report(stdout, "ESMTP LOGIN Authentication...\n");
+			report(stdout, GT_("ESMTP LOGIN Authentication...\n"));
 		SockPrintf(sock, "AUTH LOGIN\r\n");
 		SockRead(sock, smtp_response, sizeof(smtp_response) - 1);
 		strncpy(tmp, smtp_response, sizeof(tmp));
@@ -138,7 +139,7 @@ static void SMTP_auth(int sock, char *username, char *password, char *buf)
 			SockPrintf(sock, "*\r\n");
 			SockRead(sock, smtp_response, sizeof(smtp_response) - 1);
 			if (outlevel >= O_MONITOR)
-				report(stdout, "Server rejected the AUTH command.\n");
+				report(stdout, GT_("Server rejected the AUTH command.\n"));
 			return;
 		}
 

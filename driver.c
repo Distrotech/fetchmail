@@ -1311,7 +1311,7 @@ is restored."));
 		     */
 		    if (count > INT_MAX/sizeof(int))
 		    {
-			report(stderr, "bogus message count!");
+			report(stderr, GT_("bogus message count!"));
 			return(PS_PROTOCOL);
 		    }
 
