@@ -119,7 +119,6 @@ struct query *ctl;	/* option record to be initialized */
     int option_index;
 
     memset(ctl, '\0', sizeof(struct query));    /* start clean */
-    cmd_batchlimit = -1;
 
     while (!errflag && 
 	   (c = getopt_long(argc,argv,shortoptions,
@@ -253,7 +252,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'b':
 	case LA_BATCHLIMIT:
-	    cmd_batchlimit = atoi(optarg);
+	    ctl->batchlimit = atoi(optarg);
 	    break;
 	case 'B':
 	case LA_FETCHLIMIT:

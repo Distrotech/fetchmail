@@ -49,6 +49,7 @@
 #   norewrite
 #   limit                     -- must be followed by numeric size limit
 #   fetchlimit                -- must be followed by numeric msg fetch limit
+#   batchlimit                -- must be followed by numeric SMTP batch limit
 #
 # Legal protocol identifiers are
 #   pop2 (or POP2)
@@ -63,7 +64,6 @@
 #
 # Legal global option statements are
 #
-#   set batchlimit =		-- must be followed by a number
 #   set logfile =		-- must be followed by a string
 #
 # The noise keywords `and', `with', `has', `wants', and `options' are ignored
@@ -74,8 +74,6 @@
 # fetchmail manual page.
 # 
 # This is what the developer's .fetchmailrc looks like:
-
-set batchlimit = 0		# I forward to sendmail
 
 defaults
 	interface "sl0/10.0.2.15"	# SLIRP standard address

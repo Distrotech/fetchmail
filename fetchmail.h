@@ -104,6 +104,7 @@ struct query
     int norewrite;
     int limit;
     int fetchlimit;
+    int batchlimit;
 
     /* unseen, previous state of mailbox (initially from .fetchids) */
     struct idlist *oldsaved, *newsaved;
@@ -155,11 +156,9 @@ extern char *logfile;		/* log file for daemon mode */
 extern int use_syslog;		/* if --syslog was set */
 extern int quitmode;		/* if --quit was set */
 extern int check_only;		/* if --check was set */
-extern int cmd_batchlimit;	/* if --batchlimit was set */
 extern char *cmd_logfile;	/* if --logfile was set */
 
 /* these get computed */
-extern int batchlimit;		/* if --batchlimit was set */
 extern int batchcount;		/* count of messages sent in current batch */
 extern int peek_capable;	/* can we read msgs without setting seen? */
 

@@ -66,8 +66,7 @@ statement_list	: statement
 		;
 
 /* future global options should also have the form SET <name> <value> */
-statement	: SET BATCHLIMIT MAP NUMBER	{batchlimit = $4;}
-		| SET LOGFILE MAP STRING	{logfile = xstrdup($4);}
+statement	: SET LOGFILE MAP STRING	{logfile = xstrdup($4);}
 
 /* 
  * The way the next two productions are written depends on the fact that
@@ -194,6 +193,7 @@ user_option	: TO localnames HERE
 		| REWRITE		{current.norewrite = ($1==FLAG_TRUE);}
 		| LIMIT NUMBER		{current.limit = $2;}
 		| FETCHLIMIT NUMBER	{current.fetchlimit = $2;}
+		| BATCHLIMIT NUMBER	{current.batchlimit = $2;}
 		;
 %%
 
@@ -345,6 +345,7 @@ static void prc_register(void)
     FLAG_FORCE(norewrite);
     FLAG_FORCE(limit);
     FLAG_FORCE(fetchlimit);
+    FLAG_FORCE(batchlimit);
 #undef FLAG_FORCE
 
     (void) hostalloc(&current);
@@ -377,6 +378,7 @@ void optmerge(struct query *h2, struct query *h1)
     FLAG_MERGE(norewrite);
     FLAG_MERGE(limit);
     FLAG_MERGE(fetchlimit);
+    FLAG_MERGE(batchlimit);
 #undef FLAG_MERGE
 }
 

@@ -7,6 +7,13 @@ features --
 
 * `interface' and `monitor' options are now per-server.
 
+* `batchlimit' option is now per-user.
+
+Note: These changes mean that older .fetchmailrc files using the `set'
+syntax for these options will cause fetchmail to die with a parse
+error at initialization time.  Conversion is trivial -- for details,
+see the FAQ.
+
 bugs --
 
 * Stricter parsing of greeting message for the host name; eliminates some

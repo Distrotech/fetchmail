@@ -58,8 +58,6 @@ char *logfile;		/* log file for daemon mode */
 int use_syslog;		/* if --syslog was set */
 int quitmode;		/* if --quit was set */
 int check_only;		/* if --probe was set */
-int cmd_batchlimit;	/* if --batchlimit was set */
-int cmd_fetchlimit;	/* if --fetchlimit was set */
 char *cmd_logfile;	/* if --logfile was set */
 
 /* miscellaneous global controls */
@@ -170,10 +168,6 @@ int main (int argc, char **argv)
 	    printf(" and %s\n", rcfile);
 	if (outlevel == O_VERBOSE)
 	    printf("Lockfile at %s\n", tmpbuf);
-	if (batchlimit)
-	    printf("SMTP message batch limit is %d.\n", batchlimit);
-	else if (outlevel == O_VERBOSE)
-	    printf("No SMTP message batch limit.\n");
 	for (ctl = querylist; ctl; ctl = ctl->next) {
 	    if (ctl->active && !(implicitmode && ctl->server.skip))
 		dump_params(ctl);
@@ -650,10 +644,6 @@ static int load_params(int argc, char **argv, int optind)
     else
 	initialize_saved_lists(querylist, idfile);
 
-    /* if cmd_batchlimit was explicitly set, use it to override batchlimit */
-   if (cmd_batchlimit > -1)
-	batchlimit = cmd_batchlimit;
-
     /* if cmd_logfile was explicitly set, use it to override logfile */
     if (cmd_logfile)
 	logfile = cmd_logfile;
@@ -828,6 +818,10 @@ void dump_params (struct query *ctl)
 	       ctl->fetchlimit, ctl->fetchlimit);
     else if (outlevel == O_VERBOSE)
 	printf("  No received-message limit (--fetchlimit 0).\n");
+    if (ctl->batchlimit)
+	printf("  SMTP message batch limit is %d.\n", ctl->batchlimit);
+    else if (outlevel == O_VERBOSE)
+	printf("  No SMTP message batch limit.\n");
     if (ctl->mda)
 	printf("  Messages will be delivered with '%s.'\n", visbuf(ctl->mda));
     else
