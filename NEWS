@@ -2,6 +2,11 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Use remotename@hostname for MAIL FROM if we have not been able to deduce
+  a Return-Path.
+* Fix the attempted fix for Joop Susan's ENOTCONN bug.
+* Added FAQ material on a Microsoft Exchange bug.
+
 fetchmail-5.3.0 (Tue Feb 22 08:53:31 PST 2000), 18618 lines:
 
 * Horst von Brand's improvements to the specfile generator.

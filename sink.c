@@ -716,22 +716,32 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 
 	/*
 	 * Try to get the SMTP listener to take the Return-Path
-	 * address as MAIL FROM .  If it won't, fall back on the
-	 * calling-user ID.  This won't affect replies, which use the
-	 * header From address anyway.
+	 * address as MAIL FROM.  If it won't, fall back on the
+	 * remotename and mailserver host.  This won't affect replies,
+	 * which use the header From address anyway; the MAIL FROM
+	 * address is a place for the SMTP listener to send
+	 * bouncemail.  The point is to guarantee a FQDN in the MAIL
+	 * FROM line -- some SMTP listeners, like smail, become
+	 * unhappy otherwise.
 	 *
 	 * RFC 1123 requires that the domain name part of the
 	 * MAIL FROM address be "canonicalized", that is a
-	 * FQDN or MX but not a CNAME.  We'll assume the From
+	 * FQDN or MX but not a CNAME.  We'll assume the Return-Path
 	 * header is already in this form here (it certainly
 	 * is if rewrite is on).  RFC 1123 is silent on whether
 	 * a nonexistent hostname part is considered canonical.
 	 *
 	 * This is a potential problem if the MTAs further upstream
 	 * didn't pass canonicalized From/Return-Path lines, *and* the
-	 * local SMTP listener insists on them.
+	 * local SMTP listener insists on them. 
 	 */
-	ap = (msg->return_path[0]) ? msg->return_path : user;
+	if (msg->return_path[0])
+	    ap = msg->return_path;
+	else
+	{
+	    sprintf(addr, "%s@%s", ctl->remotename, ctl->server.truename);
+	    ap = addr;
+	}
 	if (SMTP_from(ctl->smtp_socket, ap, options) != SM_OK)
 	    return(handle_smtp_report(ctl, msg));
 
