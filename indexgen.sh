@@ -34,9 +34,11 @@ then
 fi
 
 # Cryptographically sign checksums 
+su -l esr <<EOF
 gpg --clearsign checksums
 mv checksums.asc checksums
-gpg --detach-sign --armor fetchmail-$(VERSION).tar.gz
+gpg --detach-sign --armor fetchmail-$VERSION.tar.gz
+EOF
 
 cat >index.html <<EOF
 <!doctype HTML public "-//W3O//DTD W3 HTML 3.2//EN">
