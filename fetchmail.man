@@ -231,7 +231,7 @@ folder name is server-dependent.  This option is not available under
 POP3 or ETRN.
 .SS Delivery Control Options
 .TP
-.B \-S host, --smtphost host
+.B \-S hosts, --smtphost hosts
 (Keyword: smtp[host])
 Specify a hunt list of hosts to forward mail to (one or more
 hostnames, comma-separated).  In ETRN mode, set the host that the
