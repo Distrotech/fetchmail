@@ -164,9 +164,11 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	{
 	    state = ENDIT_ALL;
 	    if (tp > address)
+	    {
 		while (isspace(*--tp))
 		    continue;
-	    *++tp = '\0';
+		*++tp = '\0';
+	    }
 	    return(tp > address ? (tp = address) : (char *)NULL);
 	}
 	else if (*hp == '\\')		/* handle RFC822 escaping */
