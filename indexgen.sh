@@ -183,19 +183,18 @@ sessions.<p>
 <H1>Where you can use fetchmail:</H1>
 
 The fetchmail code was developed under Linux, but has also been
-extensively tested under 4.4BSD, Solaris, AIX, and NEXTSTEP.  It should be
-readily portable to other Unix variants (it uses GNU autoconf).  It is
-reported to build and run correctly under AmigaOS and QNX as well.<p>
+extensively tested under 4.4BSD, Solaris, AIX, and NEXTSTEP.  It
+should be readily portable to other Unix variants (it requires only
+POSIX plus BSD sockets, and uses GNU autoconf).
+
+Fetchmail is supported only for Unix by its official maintainers.
+However, it is reported to build and run correctly under AmigaOS and
+QNX as well. A <a href="http://studentweb.tulane.edu/%7Ejmcbray/os2">beta
+OS/2 port</a> is available from Jason F. McBrayer.<p>
 
 <H1>Fetchmail's funniest fan letter:</H1>
 
 <A HREF="funny.html">This letter</A> still cracks me up whenever I reread it. 
-
-<H1>Foreign Ports</H1>
-
-Fetchmail is supported only for Unix by its official maintainers.
-However, a <a href="http://studentweb.tulane.edu/%7Ejmcbray/os2">beta
-OS/2 port</a> is available from Jason F. McBrayer.<P>
 
 <H1>The fetchmail button:</H1>
 
