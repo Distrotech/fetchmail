@@ -1214,7 +1214,7 @@ int num;		/* index of message */
 		    buf[1] = '\0';
 
 		time(&now);
-#ifdef STRFTIME
+#ifdef HAVE_STRFTIME
 		/* conform to RFC822 */
 		strftime(buf, sizeof(buf), "%a, %d b %Y %H:%M:%S %Z\n", localtime(&now));
 #else
