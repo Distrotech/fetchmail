@@ -92,8 +92,8 @@ when I may have multiple login sessions going?</a><br>
 
 <h1>Other Problems:</h1>
 
-<a href="#O4">O4. The --logfile option doesn't work if the logfile doesn't exist.</a><br>
-<a href="#O5">O5. Every time I get a POP or IMAP message the header is
+<a href="#O1">O1. The --logfile option doesn't work if the logfile doesn't exist.</a><br>
+<a href="#O2">O2. Every time I get a POP or IMAP message the header is
 dumped to all my terminal sessions.</a><br>
 
 <h1>Answers:</h1>
@@ -1068,7 +1068,7 @@ start-of-line From into a >From, preventing programs further downstream
 from acting up.<p>
 
 <hr>
-<h2><a name="O4">O4. The --logfile option doesn't work if the logfile doesn't exist.</a></h2>
+<h2><a name="O1">O1. The --logfile option doesn't work if the logfile doesn't exist.</a></h2>
 
 This is a feature, not a bug.  It's in line with normal practice for
 system daemons and allows you to suppress logging by removing the log,
@@ -1077,7 +1077,7 @@ it, just touch(1) the logfile before you run fetchmail (this will have
 no effect on the contents of the logfile if it already exists).<P>
 
 <hr>
-<h2><a name="O5">O5. Every time I get a POP or IMAP message the header
+<h2><a name="O2">O2. Every time I get a POP or IMAP message the header
 is dumped to all my terminal sessions.</a></h2>
 
 fetchmail uses the local sendmail to perform final delivery, which
@@ -1113,7 +1113,7 @@ biff n
 
 to solve the problem system-wide.<P>
 
-$Id: fetchmail-FAQ.html,v 1.39 1997/06/25 22:40:19 esr Exp $<p>
+$Id: fetchmail-FAQ.html,v 1.40 1997/06/25 22:42:43 esr Exp $<p>
 
 <HR>
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
