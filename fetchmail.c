@@ -37,6 +37,7 @@
 #include "tunable.h"
 #include "smtp.h"
 #include "getopt.h"
+#include "netrc.h"
 
 #define DROPDEAD	6	/* maximum bad socket opens */
 
@@ -94,6 +95,8 @@ int main (int argc, char **argv)
     struct passwd *pw;
     struct query *ctl;
     FILE	*lockfp;
+    netrc_entry *netrc_list;
+    char *netrc_file;
     pid_t pid;
 
     if ((program_name = strrchr(argv[0], '/')) != NULL)
@@ -291,22 +294,44 @@ int main (int argc, char **argv)
 	}
     }
 
+    /* parse the ~/.netrc file, for future password lookups. */
+    netrc_file = (char *) xmalloc (strlen (home) + 8);
+    strcpy (netrc_file, home);
+    strcat (netrc_file, "/.netrc");
+
+    netrc_list = parse_netrc (netrc_file);
+
     /* pick up interactively any passwords we need but don't have */ 
     for (ctl = querylist; ctl; ctl = ctl->next)
 	if (ctl->active && !(implicitmode && ctl->skip) && !ctl->password[0])
 	{
 	    if (ctl->authenticate == A_KERBEROS)
-	      /* Server won't care what the password is, but there
-		 must be some non-null string here.  */
-	      (void) strncpy(ctl->password, 
-			     ctl->remotename, PASSWORDLEN-1);
+		/* Server won't care what the password is, but there
+		   must be some non-null string here.  */
+		(void) strncpy(ctl->password, 
+			       ctl->remotename, PASSWORDLEN-1);
 	    else
-	      {
+	    {
+		/* Look up the host and account in the .netrc file. */
+		netrc_entry *p = search_netrc(netrc_list,ctl->servernames->id);
+		while (p && strcmp (p->account, ctl->remotename))
+		    p = search_netrc (p->next, ctl->remotename);
+
+		if (p)
+		{
+		    /* We found the entry, so use the password. */
+		    (void) strncpy (ctl->password, p->password,
+				    PASSWORDLEN - 1);
+		}
+	    }
+
+	    if (!ctl->password[0])
+	    {
 		(void) sprintf(tmpbuf, "Enter password for %s@%s: ",
 			       ctl->remotename, ctl->servernames->id);
 		(void) strncpy(ctl->password,
 			       (char *)getpassword(tmpbuf),PASSWORDLEN-1);
-	      }
+	    }
 	}
 
     /*

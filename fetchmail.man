@@ -290,6 +290,21 @@ file.  This is convenient when using
 .I fetchmail
 in daemon mode or with scripts.
 .PP
+If you do not specify a password, and
+.I fetchmail
+cannot extract one from your
+.I .fetchmailrc
+file, it will look for a 
+.I .netrc
+file in your home directory before requesting one interactively; if an
+entry matching the mailserver is found in that file, the password will
+be used.  See the
+.IR ftp (1)
+man page for details of the syntax of the
+.I .netrc
+file.  (This feature may allow you to avoid duplicating password
+information in more than one file.)
+.PP
 On mailservers that do not provide ordinary user accounts, your user-id and 
 password are usually assigned by the server administrator when you apply for 
 a mailbox on the server.  Contact your server administrator if you don't know 
@@ -842,6 +857,10 @@ default run control file
 default location of file associating hosts with last message IDs seen
 (used only with newer RFC1725-compliant POP3 servers supporting the
 UIDL command).
+.TP 5
+~/.netrc your FTP run control file, which (if present) will be
+searched for passwords as a last resort before prompting for one
+interactively.
 .TP 5
 ~/.fetchmail
 lock file to help prevent concurrent runs (non-root mode).

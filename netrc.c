@@ -18,26 +18,6 @@
 
 /* Compile with -DSTANDALONE to test this module. */
 
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif /* HAVE_CONFIG_H */
-
-/* If SYSTEM_WGETRC is defined in config.h, then we assume we are being
-   compiled as a part of Wget.  That means we make special Wget-specific
-   modifications to the code (at least until we settle on a cleaner
-   library interface). */
-/* FIXME - eliminate all WGET_HACKS conditionals by massaging Wget. */
-#ifdef SYSTEM_WGETRC
-# define WGET_HACKS 1
-#endif
-
-/* If CLIENT_TIMEOUT is defined in config.h, then we assume we are being
-   compiled as a part of fetchmail. */
-/* FIXME - eliminate all FETCHMAIL_HACKS conditionals by fixing fetchmail. */
-#ifdef CLIENT_TIMEOUT
-# define FETCHMAIL_HACKS 1
-#endif
-
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
@@ -47,14 +27,8 @@
 #  include <strings.h>
 #endif
 
-#if ENABLE_NLS
-# include <libintl.h>
-# define _(Text) gettext (Text)
-#else
-# define textdomain(Domain)
-# define _(Text) Text
-#endif
-
+#include "config.h"
+#include "fetchmail.h"
 #include "netrc.h"
 
 #ifdef STANDALONE
@@ -66,141 +40,9 @@
 # define xrealloc realloc
 #endif
 
-#if defined(STANDALONE) || defined(WGET_HACKS) || defined(FETCHMAIL_HACKS)
-/* We need to implement our own dynamic strings. */
-typedef struct
-{
-  int ds_length;
-  char *ds_string;
-} dynamic_string;
-#else
-/* We must be part of libit, or another GNU program, so assume that we have
-   the ERROR function */
-# define HAVE_ERROR 1
-# include "error.h"
-# include "dstring.h"
-#endif
-
-#define DS_INIT_LENGTH 40
-
-#ifdef WGET_HACKS
-/* Wget uses different naming conventions. */
-# define xmalloc nmalloc
-# define xstrdup nstrdup
-# define xrealloc nrealloc
-
-/* Wget has read_whole_line defined in utils.c */
-# include "utils.h"
-
-/* Temporary dynamic string (dstring.c from libit)-like interface to
-   using read_whole_line. */
-#define ds_init(string, size) ((string)->ds_string = NULL)
-#define ds_destroy(string) free ((string)->ds_string)
-
-/* We use read_whole_line to implement ds_fgets. */
-static char *
-ds_fgets (FILE *f, dynamic_string *s)
-{
-  free (s->ds_string);
-  s->ds_string = read_whole_line (f);
-  return s->ds_string;
-}
-#endif /* WGET_HACKS */
-
-#ifdef FETCHMAIL_HACKS
-/* fetchmail, too, is not consistent with the xmalloc functions. */
+/* fetchmail is not consistent with the xmalloc functions. */
 # define xrealloc realloc
 # define xstrdup strdup
-#endif
-
-#if defined(STANDALONE) || defined(FETCHMAIL_HACKS)
-/* Bits and pieces of Tom Tromey's dstring.c, taken from libit-0.2. */
-
-/* Initialize dynamic string STRING with space for SIZE characters.  */
-
-void
-ds_init (string, size)
-     dynamic_string *string;
-     int size;
-{
-  string->ds_length = size;
-  string->ds_string = (char *) xmalloc (size);
-}
-
-/* Expand dynamic string STRING, if necessary, to hold SIZE characters.  */
-
-void
-ds_resize (string, size)
-     dynamic_string *string;
-     int size;
-{
-  if (size > string->ds_length)
-    {
-      string->ds_length = size;
-      string->ds_string = (char *) xrealloc ((char *) string->ds_string, size);
-    }
-}
-
-/* Delete dynamic string.  */
-
-void
-ds_destroy (string)
-     dynamic_string *string;
-{
-  free (string->ds_string);
-  string->ds_string = NULL;
-}
-
-/* Dynamic string S gets a string terminated by the EOS character
-   (which is removed) from file F.  S will increase
-   in size during the function if the string from F is longer than
-   the current size of S.
-   Return NULL if end of file is detected.  Otherwise,
-   Return a pointer to the null-terminated string in S.  */
-
-char *
-ds_fgetstr (f, s, eos)
-     FILE *f;
-     dynamic_string *s;
-     char eos;
-{
-  int insize;			/* Amount needed for line.  */
-  int strsize;			/* Amount allocated for S.  */
-  int next_ch;
-
-  /* Initialize.  */
-  insize = 0;
-  strsize = s->ds_length;
-
-  /* Read the input string.  */
-  next_ch = getc (f);
-  while (next_ch != eos && next_ch != EOF)
-    {
-      if (insize >= strsize - 1)
-	{
-	  ds_resize (s, strsize * 2 + 2);
-	  strsize = s->ds_length;
-	}
-      s->ds_string[insize++] = next_ch;
-      next_ch = getc (f);
-    }
-  s->ds_string[insize++] = '\0';
-
-  if (insize == 1 && next_ch == EOF)
-    return NULL;
-  else
-    return s->ds_string;
-}
-
-char *
-ds_fgets (f, s)
-     FILE *f;
-     dynamic_string *s;
-{
-  return ds_fgetstr (f, s, '\n');
-}
-#endif /* !STANDALONE */
-
 
 /* Maybe add NEWENTRY to the account information list, LIST.  NEWENTRY is
    set to a ready-to-use netrc_entry, in any event. */
@@ -252,9 +94,8 @@ parse_netrc (file)
      char *file;
 {
   FILE *fp;
-  char *p, *tok, *premature_token;
+  char buf[POPBUFSIZE+1], *p, *tok, *premature_token;
   netrc_entry *current, *retval;
-  dynamic_string line;
   int ln;
 
   /* The latest token we've seen in the file. */
@@ -277,13 +118,12 @@ parse_netrc (file)
   premature_token = NULL;
 
   /* While there are lines in the file... */
-  ds_init (&line, DS_INIT_LENGTH);
-  while (ds_fgets (fp, &line))
+  while (fgets(buf, POPBUFSIZE, fp))
     {
       ln ++;
 
       /* Parse the line. */
-      p = line.ds_string;
+      p = buf;
 
       /* If the line is empty, then end any macro definition. */
       if (last_token == tok_macdef && !*p)
@@ -391,14 +231,13 @@ parse_netrc (file)
 
 	      else
 		{
-		  fprintf (stderr, _("%s:%d: warning: unknown token \"%s\"\n"),
+		  fprintf (stderr, "%s:%d: warning: unknown token \"%s\"\n",
 			   file, ln, tok);
 		}
 	    }
 	}
     }
 
-  ds_destroy (&line);
   fclose (fp);
 
   /* Finalize the last machine entry we found. */

@@ -7,11 +7,14 @@ features --
 
 * New --syslog option by Dave Bodenstab.
 
+* Automatic parsing of ~/.netrc for a mailserver password if necessary, thanks
+  to Gordon Matzigkeit.
+
 bugs --
 
 * Fixed a minor bug introduced into From handling by 2.6.
 
-There are 169 people on the fetchmail-friends list.
+There are 173 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-2.6 (Fri Dec 27 12:42:56 EST 1996)
