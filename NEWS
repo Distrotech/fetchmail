@@ -9,6 +9,8 @@ features --
 
 * `batchlimit' option is now per-user.
 
+* RFC822 header continuation for long address lists is is now handled properly.
+
 Note: These changes mean that older .fetchmailrc files using the `set'
 syntax for these options will cause fetchmail to die with a parse
 error at initialization time.  Conversion is trivial -- for details,
