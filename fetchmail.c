@@ -167,14 +167,16 @@ int main (int argc, char **argv)
 	    printf("SMTP message batch limit is %d.\n", batchlimit);
 	else if (outlevel == O_VERBOSE)
 	    printf("No SMTP message batch limit.\n");
+#ifdef	linux
 	if (interface)
-	    printf("TCP/IP interface is %s.\n", interface);
+	    printf("TCP/IP interface requirements for %s.\n", interface);
 	else if (outlevel == O_VERBOSE)
-	    printf("No TCP/IP interface specified\n");
+	    printf("No TCP/IP interface requirements specified\n");
 	if (monitor)
 	    printf("Polling loop will monitor %s.\n", monitor);
 	else if (outlevel == O_VERBOSE)
-	    printf("No monitor address specified\n");
+	    printf("No monitor interface specified\n");
+#endif
 	for (ctl = querylist; ctl; ctl = ctl->next) {
 	    if (ctl->active && !(implicitmode && ctl->skip))
 		dump_params(ctl);
@@ -334,6 +336,54 @@ int main (int argc, char **argv)
      * reflect the status of that transaction.
      */
     do {
+	if (poll_interval)
+	{
+	    if (outlevel == O_VERBOSE)
+	    {
+		time_t	now;
+
+		time(&now);
+		fprintf(stderr, "fetchmail: sleeping at %s", ctime(&now));
+	    }
+
+	    /*
+	     * We can't use sleep(3) here because we need an alarm(3)
+	     * equivalent in order to implement server nonresponse timeout.
+	     * We'll just assume setitimer(2) is available since fetchmail
+	     * has to have a BSDoid socket layer to work at all.
+	     */
+#ifdef	linux
+	    do {
+		interface_note_activity();
+#endif
+	    {
+		struct itimerval ntimeout;
+
+		ntimeout.it_interval.tv_sec = ntimeout.it_interval.tv_usec = 0;
+		ntimeout.it_value.tv_sec  = poll_interval;
+		ntimeout.it_value.tv_usec = 0;
+
+		setitimer(ITIMER_REAL,&ntimeout,NULL);
+		signal(SIGALRM, donothing);
+		pause();
+		if (lastsig == SIGUSR1) {
+		    signal(SIGALRM, SIG_IGN);
+		    (void) error(0, 0, "awakened by SIGUSR1");
+		}
+	    }
+#ifdef	linux
+	    } while (!interface_approve());
+#endif
+
+	    if (outlevel == O_VERBOSE)
+	    {
+		time_t	now;
+
+		time(&now);
+		fprintf(stderr, "fetchmail: awakened at %s", ctime(&now));
+	    }
+	}
+
 #ifdef HAVE_RES_SEARCH
 	sethostent(TRUE);	/* use TCP/IP for mailserver queries */
 #endif /* HAVE_RES_SEARCH */
@@ -405,52 +455,6 @@ int main (int argc, char **argv)
 		fclose(ctl->smtp_sockfp);
 		ctl->smtp_sockfp = (FILE *)NULL;
 	    }
-
-	if (poll_interval)
-	{
-	    if (outlevel == O_VERBOSE)
-	    {
-		time_t	now;
-
-		time(&now);
-		fprintf(stderr, "fetchmail: sleeping at %s", ctime(&now));
-	    }
-
-	    /*
-	     * We can't use sleep(3) here because we need an alarm(3)
-	     * equivalent in order to implement server nonresponse timeout.
-	     * We'll just assume setitimer(2) is available since fetchmail
-	     * has to have a BSDoid socket layer to work at all.
-	     */
-#ifdef	linux
-	    do {
-		interface_note_activity();
-#endif
-	    {
-		struct itimerval ntimeout;
-
-		ntimeout.it_interval.tv_sec = ntimeout.it_interval.tv_usec = 0;
-		ntimeout.it_value.tv_sec  = poll_interval;
-		ntimeout.it_value.tv_usec = 0;
-
-		setitimer(ITIMER_REAL,&ntimeout,NULL);
-		signal(SIGALRM, donothing);
-		pause();
-		if (lastsig == SIGUSR1)
-		    (void) error(0, 0, "awakened by SIGUSR1");
-	    }
-#ifdef	linux
-	    } while (!interface_approve());
-#endif
-
-	    if (outlevel == O_VERBOSE)
-	    {
-		time_t	now;
-
-		time(&now);
-		fprintf(stderr, "fetchmail: awakened at %s", ctime(&now));
-	    }
-	}
     } while
 	(poll_interval);
 
