@@ -697,11 +697,6 @@ catch equivalences created by MX records).  If it is an alias of the
 server, but the lookup fails due to network congestion or a crashed
 server, forwarding will not get done correctly.
 .PP
-Presently, 
-.I fetchmail
-cannot handle a response longer than your machine's atomic read size
-for sockets.
-.PP
 Under Linux, if fetchmail is run in daemon mode with the network
 inaccessible, each poll leaves a socket allocated but in CLOSE state
 (this is visible in netstat(1)'s output).  For some reason, these
