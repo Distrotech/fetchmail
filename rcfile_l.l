@@ -30,6 +30,7 @@ defaults 	{ return DEFAULTS; }
 server 		{ return POLL; }
 poll		{ return POLL; }
 skip		{ return SKIP; }
+via		{ return VIA; }
 aka		{ return AKA; }
 local(domains)	{ return LOCALDOMAINS; }
 proto(col)? 	{ return PROTOCOL; }

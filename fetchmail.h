@@ -78,6 +78,7 @@ typedef	char	flag;
 struct hostdata		/* shared among all user connections to given server */
 {
     /* rc file data */
+    char *via;				/* "true" server name if non-NULL */
     struct idlist *names;		/* server name first, then akas */
     struct idlist *localdomains;	/* list of pass-through domains */
     int protocol;			/* protocol type */

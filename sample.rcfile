@@ -19,8 +19,9 @@
 # arguments in this file, the command-line arguments take precedence.
 #
 # Legal keywords are
-#   poll                      -- must be followed by a mailserver name
-#   skip                      -- must be followed by a mailserver name
+#   poll                      -- must be followed by a mailserver name or label
+#   skip                      -- must be followed by a mailserver name or label
+#   via                       -- must be followed by true name of host to poll
 #   interval                  -- must be followed by an interval skip count
 #   protocol (or proto)       -- must be followed by a protocol ID
 #   uidl

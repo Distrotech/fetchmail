@@ -17,6 +17,7 @@
 ------------------------------------------------------------------------------
 fetchmail 4.0.3 ()
 * Replace vsprintf with vnsprintf to avoid buffer-overrun screws.
+* Added via option to make ssh configuration cleaner.
 
 There are 257 people on the fetchmail-friends list.
 

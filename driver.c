@@ -114,22 +114,31 @@ static int is_host_alias(const char *name, struct query *ctl)
 	ctl->server.lead_server ? ctl->server.lead_server : &ctl->server;
 
     /*
-     * The first two checks are optimizations that will catch a good
-     * many cases.  (1) check against the hostname the user
-     * specified.  Odds are good this will either be the mailserver's
-     * FQDN or a suffix of it with the mailserver's domain's default
-     * host name omitted.  Then check the rest of the `also known as'
+     * The first three checks are optimizations that will catch a good
+     * many cases.
+     *
+     * (1) check against the poll name the user specified.  Odds are
+     * good this will either be the mailserver's FQDN or a suffix of
+     * it with the mailserver's domain's default host name omitted.
+     *
+     * (2) Check the `via' or true host name if present, just in case
+     * the poll name is a label for one of a couple of different 
+     * configurations and the real server name is here.
+     *
+     * (3) Then check the rest of the `also known as'
      * cache accumulated by previous DNS checks.  This cache is primed
      * by the aka list option.
      *
-     * (2) check against the mailserver's FQDN, in case
+     * (4) Finally check against the mailserver's FQDN, in case
      * it's not the same as the declared hostname.
      *
-     * Either of these on a mail address is definitive.  Only if the
-     * name doesn't match either is it time to call the bind library.
+     * Any of these on a mail address is definitive.  Only if the
+     * name doesn't match any is it time to call the bind library.
      * If this happens odds are good we're looking at an MX name.
      */
     if (str_in_list(&lead_server->names, name))
+	return(TRUE);
+    else if (ctl->server.via && strcmp(name, ctl->server.via) == 0)
 	return(TRUE);
     else if (strcmp(name, ctl->server.canonical_name) == 0)
 	return(TRUE);
@@ -391,11 +400,48 @@ int smtp_open(struct query *ctl)
 	/* if no socket to this host is already set up, try to open ESMTP */
 	if (ctl->smtp_socket == -1)
 	{
+#ifndef HAVE_RES_SEARCH
+	    char	*fakename;
+#endif /* HAVE_RES_SEARCH */
+
 	    if ((ctl->smtp_socket = SockOpen(idp->id,SMTP_PORT)) == -1)
 		continue;
-	    else if (SMTP_ok(ctl->smtp_socket) != SM_OK
+
+#ifndef HAVE_RES_SEARCH
+	    /*
+	     * How we compute the fake client name to pass to the
+	     * listener doesn't affect behavior on RFC1123- violating
+	     * listener that check for name match; we're going to lose
+	     * on those anyway because we can never give them a name
+	     * that matches the local machine fetchmail is running on.
+	     * What it will affect is the listener's logging.
+	     *
+	     * If we have the mailserver's canonical FQDN that is clearly
+	     * the right thing to log.  If we don't life is more complicated.
+	     * The problem is there are two clashing cases:
+	     *
+	     * (1) The poll name is a label.  In that case we want the
+	     * log to show the via or true mailserver name.
+	     *
+	     * (2) The poll name is the true one, the via name is localhost.
+	     * This is going to be typical for ssh-using configurations.
+	     *
+	     * We're going to assume the via name is true unless it's
+	     * localhost.
+	     */
+	    if (ctrl->server.via && strcmp(ctrl->server.via, "localhost"))
+		fakename = ctrl->server.via;
+	    else
+		fakename = ctrl->server->names.id;
+#endif /* HAVE_RES_SEARCH */
+
+	    if (SMTP_ok(ctl->smtp_socket) != SM_OK
 		     || SMTP_ehlo(ctl->smtp_socket, 
-				  ctl->server.names->id,
+#ifdef HAVE_RES_SEARCH
+				  ctl->server.canonical_name,
+#else
+				  fakename,
+#endif /* HAVE_RES_SEARCH */
 				  &ctl->server.esmtp_options) != SM_OK)
 	    {
 		/*
@@ -418,7 +464,13 @@ int smtp_open(struct query *ctl)
 	    if ((ctl->smtp_socket = SockOpen(idp->id,SMTP_PORT)) == -1)
 		continue;
 	    else if (SMTP_ok(ctl->smtp_socket) != SM_OK
-		     || SMTP_helo(ctl->smtp_socket, ctl->server.names->id) != SM_OK)
+		     || SMTP_helo(ctl->smtp_socket, 
+#ifdef HAVE_RES_SEARCH
+				  ctl->server.canonical_name
+#else
+				  fakename
+#endif /* HAVE_RES_SEARCH */
+				  ) != SM_OK)
 	    {
 		close(ctl->smtp_socket);
 		ctl->smtp_socket = -1;
@@ -1242,7 +1294,7 @@ const struct method *proto;	/* protocol method table */
     }
     else
     {
-	char buf [POPBUFSIZE+1], *sp;
+	char buf [POPBUFSIZE+1], *sp, *realhost;
 	int *msgsizes, len, num, count, new, deletions = 0;
 	int port, fetches;
 	struct idlist *idp;
@@ -1258,7 +1310,8 @@ const struct method *proto;	/* protocol method table */
 
 	/* open a socket to the mail server */
 	port = ctl->server.port ? ctl->server.port : protocol->port;
-	if ((sock = SockOpen(ctl->server.names->id, port)) == -1)
+	realhost = ctl->server.via ? ctl->server.via : ctl->server.names->id;
+	if ((sock = SockOpen(realhost, port)) == -1)
 	{
 #ifndef EHOSTUNREACH
 #define EHOSTUNREACH (-1)

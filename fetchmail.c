@@ -135,8 +135,12 @@ int main (int argc, char **argv)
 	    printf("\n");
 	else
 	    printf(" and %s\n", rcfile);
+	if (poll_interval)
+	    printf("Poll interval is %d seconds\n", poll_interval);
 	if (outlevel == O_VERBOSE)
 	    printf("Lockfile at %s\n", tmpbuf);
+	if (logfile)
+	    printf("Logfile is %s\n", logfile);
 	for (ctl = querylist; ctl; ctl = ctl->next) {
 	    if (ctl->active && !(implicitmode && ctl->server.skip))
 		dump_params(ctl);
@@ -779,10 +783,9 @@ void dump_params (struct query *ctl)
     printf("Options for retrieving from %s@%s:\n",
 	   ctl->remotename, visbuf(ctl->server.names->id));
 
-    if (logfile)
-	printf("  Logfile is %s\n", logfile);
-    if (poll_interval)
-	printf("  Poll interval is %d seconds\n", poll_interval);
+    if (ctl->server.via)
+	printf("  Mail will be retrieved via %s\n", ctl->server.via);
+
     if (ctl->server.interval)
 	printf("  Poll of this server will occur every %d intervals.\n",
 	       ctl->server.interval);

@@ -54,7 +54,7 @@ extern char * yytext;
   char *sval;
 }
 
-%token DEFAULTS POLL SKIP AKA LOCALDOMAINS PROTOCOL
+%token DEFAULTS POLL SKIP VIA AKA LOCALDOMAINS PROTOCOL
 %token AUTHENTICATE TIMEOUT KPOP KERBEROS4
 %token ENVELOPE USERNAME PASSWORD FOLDER SMTPHOST MDA PRECONNECT LIMIT
 %token IS HERE THERE TO MAP WILDCARD
@@ -126,6 +126,7 @@ domain_list	: STRING		{save_str(&current.server.localdomains,-1,$1);}
 		;
 
 serv_option	: AKA alias_list
+		| VIA STRING		{current.server.via = xstrdup($2);}
 		| LOCALDOMAINS domain_list
 		| PROTOCOL PROTO	{current.server.protocol = $2;}
 		| PROTOCOL KPOP		{
@@ -398,6 +399,7 @@ static void record_current(void)
 /* register current parameters and append to the host list */
 {
 #define FLAG_FORCE(fld) if (cmd_opts.fld) current.fld = cmd_opts.fld
+    FLAG_FORCE(server.via);
     FLAG_FORCE(server.protocol);
     FLAG_FORCE(server.port);
     FLAG_FORCE(server.interval);
@@ -449,6 +451,7 @@ void optmerge(struct query *h2, struct query *h1)
     append_str_list(&h2->smtphunt, &h1->smtphunt);
 
 #define FLAG_MERGE(fld) if (!h2->fld) h2->fld = h1->fld
+    FLAG_MERGE(server.via);
     FLAG_MERGE(server.protocol);
     FLAG_MERGE(server.port);
     FLAG_MERGE(server.interval);
