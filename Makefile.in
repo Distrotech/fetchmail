@@ -3,7 +3,7 @@
 # If you're running QNX, we can't assume a working autoconf.
 # So just uncomment all the lines marked QNX.
 
-VERS=3.9.1
+VERS=3.9.2
 
 # Ultrix 2.2 make doesn't expand the value of VPATH.
 srcdir = @srcdir@
@@ -112,23 +112,23 @@ rfc822: rfc822.c
 # lex rule
 .l.o:
 	$(LEX) $(LEXFLAGS) $<
-	mv lex.yy.c $*
+	mv lex.yy.c $*.c
 	$(CC) $(defines) -c -I. -I$(srcdir) $(CFLAGS) $*.c $(OUTPUT_OPTION)
 
 .l.c:
 	$(LEX) $(LEXFLAGS) $<
-	mv lex.yy.c $@
+	mv lex.yy.c $*.c
 
 # yacc rule
 .y.o:
 	$(YACC) $(YACCFLAGS) $<
-	mv y.tab.c $@
+	mv y.tab.c $*.c
 	mv -f y.tab.h $*.h
 	$(CC) $(defines) -c -I. -I$(srcdir) $(CFLAGS) $*.c $(OUTPUT_OPTION)
 
 .y.c:
 	$(YACC) $(YACCFLAGS) $<
-	mv y.tab.c $@
+	mv y.tab.c $*.c
 	mv -f y.tab.h $*.h
 
 # For some losing Unix makes.
@@ -211,7 +211,7 @@ scripts = $(srcdir)/install.sh $(srcdir)/mkinstalldirs $(srcdir)/specgen.sh
 all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) \
 	$(srcdir)/contrib/* $(srcdir)/MANIFEST
 
-MANIFEST: $(srcdir)
+MANIFEST: $(srcdir) Makefile.in
 	@echo $(all) | tr "[ \t]" '\n' | sort | sed "s/\\./fetchmail-$(VERS)/" >MANIFEST
 
 FAQ: fetchmail.FAQ.html

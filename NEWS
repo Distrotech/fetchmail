@@ -9,6 +9,10 @@ every user entry in a multi-user poll declaration.
 
 			   Known But Unresolved Bugs:
 
+In multidrop mode without an applicable localdomain, addresses of the
+form "foo"@bar.com are not parsed correctly, even though they are
+technically RFC822 legal.
+
 Rich Kulawiec <rsk@itw.com> writes:
 
 Problem: fetchmail 3.9 seems to work fine when run from a tty or pty,
@@ -23,6 +27,11 @@ having trouble figuring why it wouldn't just break *all* the time.)
 				Release Notes:
 
 ------------------------------------------------------------------------------
+
+pl 3.9.2 ():
+* Fixed a glitch in the Makefile yacc and lex productions
+* Add logic for X-Fetchmail-Warning emission of \r\n to pacify qmail.
+* Yet another try at getting error.c to play nice with AIX.
 
 pl 3.9.1 (Thu Apr 17 11:37:14 EDT 1997):
 * Hypertext FAQ added to distribution manifest.

@@ -117,34 +117,6 @@ private_strerror (errnum)
    Exit with status STATUS if it is nonzero.  */
 /* VARARGS */
 
-#if !defined(HAVE_VSYSLOG)
-#if defined(VA_START) && __STDC__
-int vsyslog(int priority, char *message, ...)
-#else
-int vsyslog(priority, message, va_alist)
-int priority;
-char *message;
-va_dcl
-#endif
-{
-#ifdef VA_START
-    va_list args;
-#endif
-  
-    char *string;
-  
-    string = (char *)malloc(LINELEN);
- 
-    VA_START (ap, fmt) ;
-
-    vsprintf(string, message, args);
-    va_end(args);
- 
-    syslog(priority, string);
-    free(string);
-}
-#endif
-
 void
 #if defined(VA_START) && __STDC__
 error (int status, int errnum, const char *message, ...)
@@ -172,9 +144,9 @@ error (status, errnum, message, va_alist)
     {
       int priority;
 
-# ifdef VA_START
+#ifdef VA_START
       VA_START (args, message);
-# endif
+#endif
       priority = status? LOG_ALERT : errnum? LOG_ERR : LOG_INFO;
 
       if (errnum > 0)
@@ -185,22 +157,24 @@ error (status, errnum, message, va_alist)
 	  strcat (msg, ": %m");
 
 	  errno = errnum;
-# ifdef VA_START
+#ifdef HAVE_VSYSLOG
 	  vsyslog (priority, msg, args);
-	  va_end (args);
-# else
+#else
 	  syslog (priority, msg, a1, a2, a3, a4, a5, a6, a7, a8);
-# endif
+#endif
 	}
       else
         {
-# ifdef VA_START
+#ifdef HAVE_VSYSLOG
 	  vsyslog (priority, message, args);
-	  va_end (args);
-# else
+#else
 	  syslog (priority, message, a1, a2, a3, a4, a5, a6, a7, a8);
-# endif
+#endif
 	}
+
+#ifdef VA_START
+      va_end(args);
+#endif
     }
   else
 #endif
