@@ -14,6 +14,7 @@ fetchmail-4.4.9 ():
 * CompuServe RPA and idfile fixes from Rich Beerman <rbeerman@pobox.com>.
 * Hajimu UMEMOTO <ume@calm.imasy.or.jp> patched the address-rewrite logic to
   deal with addresses of the form "John Smith (foo) <jsmith@bar.com>" better.
+* Command-line argument merging has been fixed.
 
 There are 278 people on fetchmail-friends and 216 on fetchmail-announce.
 

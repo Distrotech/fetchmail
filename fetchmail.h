@@ -370,7 +370,6 @@ int doETRN (struct query *);
 /* miscellanea */
 struct query *hostalloc(struct query *); 
 int parsecmdline (int, char **, struct runctl *, struct query *);
-void optmerge(struct query *, struct query *);
 char *MD5Digest (unsigned char *);
 int POP3_auth_rpa(unsigned char *, unsigned char *, int socket);
 int daemonize(const char *, void (*)(int));

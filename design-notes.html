@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/05/14 01:35:46 $
+<td width="30%" align=right>$Date: 1998/06/03 14:54:27 $
 </table>
 <HR>
 <H1 ALIGN=CENTER>Design Notes On Fetchmail</H1>
@@ -313,8 +313,7 @@ following minimum steps.
     the token to <code>rcfile_l</code>.  
 
 <LI>Go to <code>rcfile_y.y</code>.  Add the token to the grammar. Don't
-    forget the <code>%token</code> declaration.  Add proper 
-    <code>FLAG_FORCE</code> and <code>FLAG_MERGE</code> actions.
+    forget the <code>%token</code> declaration.  
 
 <LI>Pick a long-form option name, and a one-letter short option if any
     are left.  Go to <code>options.c</code>.  Pick a new <code>LA_<code>
@@ -326,6 +325,9 @@ following minimum steps.
     <code>load_params</code> in <code>fetchmail.c</code>.
 
 <LI>Add code to dump the option value in <code>fetchmail.c:dump_params</code>.
+
+<LI>Add proper <code>FLAG_FORCE</code> and <code>FLAG_MERGE</code> actions
+    in fetchmail.c's optmerge function.
 
 <LI>Document the option in fetchmail.man.  This will require at least
     two changes; one to the collected table of options, and one full
@@ -475,7 +477,7 @@ all shaped the design in one way or another.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/05/14 01:35:46 $
+<td width="30%" align=right>$Date: 1998/06/03 14:54:27 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

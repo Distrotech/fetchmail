@@ -692,6 +692,71 @@ int main (int argc, char **argv)
     exit(successes ? PS_SUCCESS : querystatus);
 }
 
+static void optmerge(struct query *h2, struct query *h1, int force)
+/* merge two options records */
+{
+    /*
+     * If force is off, modify h2 fields only when they're empty (treat h1
+     * as defaults).  If force is on, modify each h2 field whenever h1
+     * is nonempty (treat h1 as an override).  
+     */
+
+    if (!force)
+    {
+	append_str_list(&h2->server.localdomains, &h1->server.localdomains);
+	append_str_list(&h2->localnames, &h1->localnames);
+	append_str_list(&h2->mailboxes, &h1->mailboxes);
+	append_str_list(&h2->smtphunt, &h1->smtphunt);
+    }
+
+#define FLAG_MERGE(fld) if (force ? !!h1->fld : !h2->fld) h2->fld = h1->fld
+    FLAG_MERGE(server.via);
+    FLAG_MERGE(server.protocol);
+#if INET6
+    FLAG_MERGE(server.service);
+    FLAG_MERGE(server.netsec);
+#else /* INET6 */
+    FLAG_MERGE(server.port);
+#endif /* INET6 */
+    FLAG_MERGE(server.interval);
+    FLAG_MERGE(server.preauthenticate);
+    FLAG_MERGE(server.timeout);
+    FLAG_MERGE(server.envelope);
+    FLAG_MERGE(server.envskip);
+    FLAG_MERGE(server.qvirtual);
+    FLAG_MERGE(server.skip);
+    FLAG_MERGE(server.dns);
+    FLAG_MERGE(server.uidl);
+
+#ifdef linux
+    FLAG_MERGE(server.interface);
+    FLAG_MERGE(server.monitor);
+    FLAG_MERGE(server.interface_pair);
+#endif /* linux */
+
+    FLAG_MERGE(remotename);
+    FLAG_MERGE(password);
+    FLAG_MERGE(mda);
+    FLAG_MERGE(smtpaddress);
+    FLAG_MERGE(antispam);
+    FLAG_MERGE(preconnect);
+
+    FLAG_MERGE(keep);
+    FLAG_MERGE(flush);
+    FLAG_MERGE(fetchall);
+    FLAG_MERGE(rewrite);
+    FLAG_MERGE(forcecr);
+    FLAG_MERGE(stripcr);
+    FLAG_MERGE(pass8bits);
+    FLAG_MERGE(dropstatus);
+    FLAG_MERGE(mimedecode);
+    FLAG_MERGE(limit);
+    FLAG_MERGE(fetchlimit);
+    FLAG_MERGE(batchlimit);
+    FLAG_MERGE(expunge);
+#undef FLAG_MERGE
+}
+
 static int load_params(int argc, char **argv, int optind)
 {
     int	implicitmode, st;
@@ -748,7 +813,7 @@ static int load_params(int argc, char **argv, int optind)
     if (querylist && strcmp(querylist->server.pollname, "defaults") == 0)
     {
 	for (ctl = querylist->next; ctl; ctl = ctl->next)
-	    optmerge(ctl, querylist);
+	    optmerge(ctl, querylist, FALSE);
 	querylist = querylist->next;
     }
 
@@ -763,7 +828,10 @@ static int load_params(int argc, char **argv, int optind)
 	if (configdump || (ctl->active && !(implicitmode && ctl->server.skip)))
 	{
 	    /* merge in defaults */
-	    optmerge(ctl, &def_opts);
+	    optmerge(ctl, &def_opts, FALSE);
+
+	    /* force command-line options */
+	    optmerge(ctl, &cmd_opts, TRUE);
 
 	    /* make sure we have a nonempty host list to forward to */
 	    if (!ctl->smtphunt)
@@ -1152,7 +1220,7 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 	       ctl->forcecr ? "en" : "dis",
 	       ctl->forcecr ? "on" : "off");
 	printf("  Interpretation of Content-Transfer-Encoding is %sabled (pass8bits %s).\n",
-	       ctl->pass8bits ? "en" : "dis",
+	       ctl->pass8bits ? "dis" : "en",
 	       ctl->pass8bits ? "on" : "off");
 	printf("  MIME decoding is %sabled (mimedecode %s).\n",
 	       ctl->mimedecode ? "en" : "dis",
