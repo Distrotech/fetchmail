@@ -73,6 +73,7 @@ when I may have multiple login sessions going?</a><br>
 <a href="#R3">R3. When I try to configure an MDA, fetchmail doesn't work.</a><br>
 <a href="#R4">R4. Fetchmail dumps core in -V mode, but operates normally otherwise.</a><br>
 <a href="#R5">R5. Mail that was being fetched when I interrupted my fetchmail seems to have been vanished.</a></br>
+<a href="#R6">R6. Fetchmail dumps core when I use a .netrc file but works otherwise.</a><br>
 
 <h1>Multidrop-mode problems:</h1>
 
@@ -803,6 +804,20 @@ Workaround: add the `<tt>fetchall</tt>' keyword to your POP3 fetch options.<p>
 Solution: switch to an IMAP server.<p>
 
 <hr>
+<h2><a name="R6">R6. Fetchmail dumps core when I use a .netrc file but works otherwise.</a></h2>
+
+We have a report that under Solaris 2.5 using gcc-2.7.2, if fetchmail
+is compiled with -O or -O2, it segfaults on startup when reading a
+.netrc.<p>
+
+You can work around this by disabling optimization.<p>
+
+There may be an actual bug here that the optimizer exposes; the stack
+trace says the segfault is in free() and has all the earmarks of a heap-
+corruption screw.  But the symptom doesn't reproduce under Linux with the
+same .fetchmailrc and .netrc.<p>
+
+<hr>
 <h2><a name="M1">M1. I've declared local names, but all my multidrop
 mail is going to root anyway.</a></h2>
 
@@ -985,7 +1000,7 @@ without hacking potentially fragile startup scripts.  To get around
 it, just touch(1) the logfile before you run fetchmail (this will have
 no effect on the contents of the logfile if it already exists).<P>
 
-$Id: fetchmail-FAQ.html,v 1.28 1997/06/11 04:28:15 esr Exp $<p>
+$Id: fetchmail-FAQ.html,v 1.29 1997/06/11 04:48:54 esr Exp $<p>
 
 <HR>
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
