@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/11/05 14:25:03 $
+<td width="30%" align=right>$Date: 1997/11/05 15:36:00 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -70,12 +70,13 @@ when I may have multiple login sessions going?</a><br>
 
 <h1>Runtime fatal errors:</h1>
 
-<a href="#R1">R1. Fetchmail isn't working, and -v shows `SMTP connect failed' messages.</a><br>
-<a href="#R2">R2. When I try to configure an MDA, fetchmail doesn't work.</a><br>
-<a href="#R3">R3. Fetchmail dumps core when given an invalid rc file.</a><br>
-<a href="#R4">R4. Fetchmail dumps core in -V mode, but operates normally otherwise.</a><br>
-<a href="#R5">R5. Fetchmail dumps core when I use a .netrc file but works otherwise.</a><br>
-<a href="#R6">R6. Running fetchmail in daemon mode doesn't work.</a><br>
+<a href="#R1">R1. Fetchmail's initial gethostbyname call fails on my host.</a><br>
+<a href="#R2">R2. Fetchmail isn't working, and -v shows `SMTP connect failed' messages.</a><br>
+<a href="#R3">R3. When I try to configure an MDA, fetchmail doesn't work.</a><br>
+<a href="#R4">R4. Fetchmail dumps core when given an invalid rc file.</a><br>
+<a href="#R5">R5. Fetchmail dumps core in -V mode, but operates normally otherwise.</a><br>
+<a href="#R6">R6. Fetchmail dumps core when I use a .netrc file but works otherwise.</a><br>
+<a href="#R7">R7. Running fetchmail in daemon mode doesn't work.</a><br>
 
 <h1>Disappearing mail</h1>
 
@@ -1035,7 +1036,14 @@ As with M$ Exchange, the only real fix for these problems is to get a
 POP server that isn't brain-dead.<P>
 
 <hr>
-<h2><a name="R1">R1. Fetchmail isn't working, and -v shows `SMTP connect failed' messages.</a></h2>
+<h2><a name="R1">R1. Fetchmail's initial gethostbyname call fails on my host.</a></h2>
+
+This is probably due to a DNS or NIS misconfiguration.  The first
+thinh to do is check your /etc/hosts file for duplicate or missing
+entries related to your host.<P>
+
+<hr>
+<h2><a name="R2">R2. Fetchmail isn't working, and -v shows `SMTP connect failed' messages.</a></h2>
 
 Fetchmail itself is probably working, but your SMTP port 25 listener
 is down or inaccessible.<p>
@@ -1084,7 +1092,7 @@ linked only if it is actually needed.  So under Linux it won't be, and
 this particular cause should go away.<p>
 
 <hr>
-<h2><a name="R2">R2. When I try to configure an MDA, fetchmail doesn't work.</a></h2>
+<h2><a name="R3">R3. When I try to configure an MDA, fetchmail doesn't work.</a></h2>
 
 (I hear this one from people who have run into the blank-line problem in <a href="#X1">X1</a>.)<p>
 
@@ -1115,7 +1123,7 @@ href="http://www.gnu.ai.mit.edu/order/ftp.html">mirror site</a>
 will help you get it faster.<P>
 
 <hr>
-<h2><a name="R4">R4. Fetchmail dumps core in -V mode, but operates normally otherwise.</a></h2>
+<h2><a name="R5">R5. Fetchmail dumps core in -V mode, but operates normally otherwise.</a></h2>
 
 We've had this reported to us under Linux using libc-5.4.17 and gcc-2.7.2.
 It does not occur with libc-5.3.12 or earlier versions.<p>
@@ -1131,7 +1139,7 @@ fetchmail code (they're all from within fclose, and not an fclose called
 by fetchmail, either).<p>
 
 <hr>
-<h2><a name="R5">R5. Fetchmail dumps core when I use a .netrc file but works otherwise.</a></h2>
+<h2><a name="R6">R6. Fetchmail dumps core when I use a .netrc file but works otherwise.</a></h2>
 
 We have a report that under Solaris 2.5 using gcc-2.7.2, if fetchmail
 is compiled with -O or -O2, it segfaults on startup when reading a
@@ -1145,7 +1153,7 @@ corruption screw.  But the symptom doesn't reproduce under Linux with the
 same .fetchmailrc and .netrc.<p>
 
 <hr>
-<h2><a name="R6">R6. Running fetchmail in daemon mode doesn't work.</a><br></h2>
+<h2><a name="R7">R7. Running fetchmail in daemon mode doesn't work.</a><br></h2>
 
 We have one report from a Solaris 4.1.4 user that trying to run
 fetchmail in detached daemon mode doesn't work, but that using the
@@ -1617,7 +1625,7 @@ will look right.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/11/05 14:25:03 $
+<td width="30%" align=right>$Date: 1997/11/05 15:36:00 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
