@@ -1,5 +1,5 @@
 /*
- * damemon.c -- turn a process into a daemon under POSIX, SYSV, BSD.
+ * daemon.c -- turn a process into a daemon under POSIX, SYSV, BSD.
  *
  * For license terms, see the file COPYING in this directory.
  */
