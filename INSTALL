@@ -103,6 +103,11 @@ distributed with Pine from the University of Washington.  Other
 POP3 servers have been known to give it indigestion.  Test carefully!
 If you have problems, try to switch to IMAP.
 
+A couple of users have reported that some recent (post-2.7.2) versions
+of gcc seem to have an optimizer bug that affects fetchmail.  If your
+fetchmail core dumps (especially near startup) try recompiling without
+-O.  Alternatively, you can drop back to gcc 2.7.2 or below.
+
 6. USE IT
 
 Enjoy!
