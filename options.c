@@ -285,6 +285,13 @@ struct query *ctl;	/* option record to be initialized */
 	    /* XXX -- should probably use a table lookup here */
 	    if (strcasecmp(optarg,"pop2") == 0)
 		ctl->server.protocol = P_POP2;
+#ifdef SDPS_ENABLE
+	    else if (strcasecmp(optarg,"sdps") == 0)
+	    {
+	        ctl->server.protocol = P_POP3; 
+                ctl->server.sdps = TRUE;
+	    }
+#endif /* SDPS_ENABLE */
 	    else if (strcasecmp(optarg,"pop3") == 0)
 		ctl->server.protocol = P_POP3;
 	    else if (strcasecmp(optarg,"apop") == 0)

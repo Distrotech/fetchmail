@@ -58,7 +58,7 @@ extern char * yytext;
 }
 
 %token DEFAULTS POLL SKIP VIA AKA LOCALDOMAINS PROTOCOL
-%token AUTHENTICATE TIMEOUT KPOP KERBEROS4 KERBEROS5 KERBEROS
+%token AUTHENTICATE TIMEOUT KPOP SDPS KERBEROS4 KERBEROS5 KERBEROS
 %token ENVELOPE QVIRTUAL USERNAME PASSWORD FOLDER SMTPHOST MDA SMTPADDRESS
 %token SPAMRESPONSE PRECONNECT POSTCONNECT LIMIT
 %token NETSEC INTERFACE MONITOR
@@ -138,6 +138,10 @@ serv_option	: AKA alias_list
 #else /* INET6 */
 					    current.server.port = KPOP_PORT;
 #endif /* INET6 */
+					}
+		| SDPS			{
+					    current.server.protocol = P_POP3;
+					    current.server.sdps = TRUE;
 					}
 		| UIDL			{current.server.uidl = FLAG_TRUE;}
 		| NO UIDL		{current.server.uidl  = FLAG_FALSE;}

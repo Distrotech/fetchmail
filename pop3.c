@@ -120,7 +120,14 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
      * If we see either, and we're in multidrop mode, try to use
      * the SDPS *ENV extension.
      */
-    sdps_enable = MULTIDROP(ctl) && strstr(greeting, "demon.");
+    sdps_enable = (MULTIDROP(ctl) && strstr(greeting, "demon."));
+    /*
+     * Use SDPS if configured, regardless of the greeting string
+     * returned from the POP server. (Users accessing demon by a
+     * POP3 proxy may need this)
+     */
+    if (ctl->server.sdps)
+        sdps_enable = ctl->server.sdps;
 #endif /* SDPS_ENABLE */
 
     switch (ctl->server.protocol) {
@@ -543,22 +550,21 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
     if (sdps_enable)
     {
 	int	linecount = 0;
-
 	sdps_envto = (char *)NULL;
 	gen_send(sock, "*ENV %d", number);
 	do {
 	    if (gen_recv(sock, buf, sizeof(buf)))
-		break;
-	    linecount++;
-	    if (buf[0] == '-' || strncmp(buf , "+OK", 3))
-		break;
-	    if (linecount == 4)
 	    {
-		sdps_envto = strdup(buf);
+		break;
+	    }
+	    linecount++;
+	    if (linecount == 5)
+	    {
+		sdps_envto = strdup(buf); 
 		error(0, 0, "*ENV returned envelope address %s");
 	    }
 	} while
-	    (buf[0] != '.' && (buf[1] == '\r' || buf[1] == '\n'));
+	    (buf[0] !='.');
     }
 #endif /* SDPS_ENABLE */
 

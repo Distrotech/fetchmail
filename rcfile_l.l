@@ -97,6 +97,7 @@ options		{/* EMPTY */}
 
 (auto)|(AUTO)	{ yylval.proto = P_AUTO;  return PROTO; }
 (pop2)|(POP2)	{ yylval.proto = P_POP2;  return PROTO; }
+(sdps)|(SDPS)   { return SDPS; }
 (pop3)|(POP3)	{ yylval.proto = P_POP3;  return PROTO; }
 (imap-k4)|(IMAP-K4)   { yylval.proto = P_IMAP_K4;  return PROTO; }
 (imap-gss)|(IMAP-GSS) { yylval.proto = P_IMAP_GSS;  return PROTO; }
