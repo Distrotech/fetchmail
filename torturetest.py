@@ -84,6 +84,8 @@ class TestSite:
             return self.id() + ": abnormal termination\n"
         elif os.WEXITSTATUS(self.status) > 1:
             return self.id() + ": %d\n" % os.WEXITSTATUS(status) + self.output
+        else:
+            return self.id() + ": succeeded\n"
 
 if __name__ == "__main__":
     # Start by reading in the sitelist
@@ -98,7 +100,8 @@ if __name__ == "__main__":
         else:
             sitelist.append(TestSite(line))
 
-    (options, arguments) = getopt.getopt(sys.argv[1:], "dftig")
+    (options, arguments) = getopt.getopt(sys.argv[1:], "dfp:tigv")
+    verbose = 0
     for (switch, value) in options:
         if switch == "-d":
             # Prettprint the sitelist
@@ -108,6 +111,14 @@ if __name__ == "__main__":
             # Dump the sitelist as a .fetchmailrc file
             map(lambda x: sys.stdout.write(x.entryprint()), sitelist)
             sys.exit(0)
+        elif switch == "-p":
+            # Probe a single site
+            selected = []
+            for site in sitelist:
+                if site.id().find(value) > -1:
+                    selected.append(site)
+            sitelist = selected
+            # Fall through
         elif switch == "-t":
             # Dump the sitelist in HTML table form
             map(lambda x: sys.stdout.write(x.tableprint()), sitelist)
@@ -124,6 +135,9 @@ if __name__ == "__main__":
             time.sleep(5)
             sys.stdout.write("here we go:\n")
             # Fall through
+        elif switch == "-v":
+            # Display the test output
+            verbose = 1
 
     # If no options, run the torture test
     try:
@@ -132,6 +146,8 @@ if __name__ == "__main__":
         for site in sitelist:
             print "Testing " + site.id()
             site.fetch()
+            if verbose:
+                print site.output
             if not site.failed():
                 failures += 1
             else:
