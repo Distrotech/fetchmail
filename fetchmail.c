@@ -917,17 +917,17 @@ void dump_params (struct query *ctl)
     printf("  Carriage-return forcing is %sabled (--forcecr %s).\n",
 	   ctl->forcecr ? "en" : "dis",
 	   ctl->forcecr ? "on" : "off");
-    if (ctl->limit)
+    if (ctl->limit > 0)
 	printf("  Message size limit is %d bytes (--limit %d).\n", 
 	       ctl->limit, ctl->limit);
     else if (outlevel == O_VERBOSE)
 	printf("  No message size limit (--limit 0).\n");
-    if (ctl->fetchlimit)
+    if (ctl->fetchlimit > 0)
 	printf("  Received-message limit is %d (--fetchlimit %d).\n",
 	       ctl->fetchlimit, ctl->fetchlimit);
     else if (outlevel == O_VERBOSE)
 	printf("  No received-message limit (--fetchlimit 0).\n");
-    if (ctl->batchlimit)
+    if (ctl->batchlimit > 0)
 	printf("  SMTP message batch limit is %d.\n", ctl->batchlimit);
     else if (outlevel == O_VERBOSE)
 	printf("  No SMTP message batch limit.\n");
