@@ -92,7 +92,7 @@ int do_cram_md5 (int sock, char *command, struct query *ctl, char *strip)
     len = from64tobits (msg_id, respdata);
 
     if (len < 0) {
-	report (stderr, _("could not decode BASE64 challenge\n"));
+	report (stderr, GT_("could not decode BASE64 challenge\n"));
 	return PS_AUTHFAIL;
     } else if (len < sizeof (msg_id)) {
         msg_id[len] = 0;
@@ -100,7 +100,7 @@ int do_cram_md5 (int sock, char *command, struct query *ctl, char *strip)
         msg_id[sizeof (msg_id)-1] = 0;
     }
     if (outlevel >= O_DEBUG) {
-        report (stdout, _("decoded as %s\n"), msg_id);
+        report (stdout, GT_("decoded as %s\n"), msg_id);
     }
 
     /* The client makes note of the data and then responds with a string
