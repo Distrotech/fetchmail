@@ -1,5 +1,10 @@
 				Release Notes:
 
+fetchmail-4.7.5 ():
+* Issue proper logout after running fetchmail -c
+
+There are 249 people on fetchmail-friends and 334 on fetchmail-announce.
+
 fetchmail-4.7.4 (Mon Jan  4 13:26:32 EST 1999):
 * Error message cleanup.
 * HTML cleanup in design notes and FAQ, thanks to Byrial Jensen.

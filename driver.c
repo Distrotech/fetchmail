@@ -1692,7 +1692,7 @@ const struct method *proto;	/* protocol method table */
 		    if (new == -1 || ctl->fetchall)
 			new = count;
 		    ok = ((new > 0) ? PS_SUCCESS : PS_NOMAIL);
-		    goto cleanUp;
+		    goto no_error;
 		}
 		else if (count > 0)
 		{    
