@@ -173,14 +173,13 @@ int SockWrite(char *buf, int size, int len, FILE *sockfp)
 char *SockGets(char *buf, int len, FILE *sockfp)
 {
     return(fgets(buf, len, sockfp));
-
 }
 
 #endif
 
 #ifdef MAIN
 /*
- * Use the chargen service to test buffering directly.
+ * Use the chargen service to test input beuffering directly.
  * You may have to uncomment the `chargen' service description in your
  * inetd.conf (and then SIGHUP inetd) for this to work. 
  */
