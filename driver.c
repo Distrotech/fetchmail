@@ -668,10 +668,10 @@ struct hostrec *queryctl;	/* query control record */
 
 #ifdef KERBEROS_V4
 int
-kerberos_auth (socket, servername) 
+kerberos_auth (socket, canonical) 
 /* authenticate to the server host using Kerberos V4 */
 int socket;		/* socket to server host */
-char *servername;	/* server name */
+char *canonical;	/* server name */
 {
     char * host_primary;
     KTEXT ticket;
@@ -680,23 +680,10 @@ char *servername;	/* server name */
     Key_schedule schedule;
     int rem;
   
-    /* Get the primary name of the host.  */
-    {
-	struct hostent * hp = (gethostbyname (servername));
-	if (hp == 0)
-	{
-	    fprintf (stderr, "fetchmail: server %s unknown: n", servername);
-	    return (PS_ERROR);
-	}
-	host_primary = ((char *) (malloc ((strlen (hp -> h_name)) + 1)));
-	strcpy (host_primary, (hp -> h_name));
-    }
-  
     ticket = ((KTEXT) (malloc (sizeof (KTEXT_ST))));
-    rem
-	= (krb_sendauth (0L, socket, ticket, "pop",
-			 host_primary,
-			 ((char *) (krb_realmofhost (host_primary))),
+    rem = (krb_sendauth (0L, socket, ticket, "pop",
+			 canonical,
+			 ((char *) (krb_realmofhost (canonical))),
 			 ((unsigned long) 0),
 			 (&msg_data),
 			 (&cred),
@@ -705,7 +692,6 @@ char *servername;	/* server name */
 			 ((struct sockaddr_in *) 0),
 			 "KPOPV0.1"));
     free (ticket);
-    free (host_primary);
     if (rem != KSUCCESS)
     {
 	fprintf (stderr, "fetchmail: kerberos error %s\n", (krb_get_err_text (rem)));
@@ -779,7 +765,7 @@ struct method *proto;		/* protocol method table */
 #ifdef KERBEROS_V4
     if (queryctl->authenticate == A_KERBEROS)
     {
-	ok = (kerberos_auth (socket, queryctl->servername));
+	ok = (kerberos_auth (socket, queryctl->canonical_name));
 	if (ok != 0)
 	    goto cleanUp;
     }
