@@ -689,7 +689,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
        if (!newpass)
           return(PS_AUTHFAIL); /* should report error better!!!! */
        
-       ok = gen_transact(sock, "LOGIN %s \"%s\"", ctl->remotename, newpass);
+       ok = gen_transact(sock, "LOGIN \"%s\" \"%s\"", ctl->remotename,newpass);
        
        free(newpass);
     
