@@ -5,7 +5,7 @@
 
 /***********************************************************************
   module:       getpass.c
-  project:      popclient
+  project:      fetchmail
   programmer:   Carl Harris, ceharris@mal.com
   description: 	getpass() replacement which allows for long passwords.
 

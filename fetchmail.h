@@ -4,8 +4,8 @@
  */
 
 /***********************************************************************
-  module:       popclient.h
-  project:      popclient
+  module:       fetchmail.h
+  project:      fetchmail
   programmer:   Carl Harris, ceharris@mal.com
   description:  global constant, type, and variable definitions.
 
@@ -108,7 +108,7 @@ extern char *logfile;		/* log file for daemon mode */
 extern int quitmode;		/* if --quit was set */
 
 /* miscellaneous global controls */
-extern char *poprcfile;		/* path name of rc file */
+extern char *rcfile;		/* path name of rc file */
 extern char *idfile;		/* path name of id file */
 extern int linelimit;		/* limit # lines retrieved per site */
 extern int versioninfo;		/* emit only version info */

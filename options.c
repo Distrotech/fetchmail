@@ -5,7 +5,7 @@
 
 /***********************************************************************
   module:       options.c
-  project:      popclient
+  project:      fetchmail
   programmer:   Carl Harris, ceharris@mal.com
   description:	command-line option processing
 
@@ -16,7 +16,7 @@
 
 #include <pwd.h>
 #include "getopt.h"
-#include "popclient.h"
+#include "fetchmail.h"
 #include "bzero.h"
 
 #define LA_VERSION	1 
@@ -30,7 +30,7 @@
 #define LA_FLUSH        9
 #define LA_PROTOCOL	10
 #define LA_DAEMON	11
-#define LA_POPRC	12
+#define LA_FETCHRC	12
 #define	LA_IDFILE	13
 #define LA_USERNAME	14
 #define LA_REMOTEFILE	15
@@ -57,7 +57,7 @@ static struct option longoptions[] = {
   {"protocol",	required_argument, (int *) 0, LA_PROTOCOL   },
   {"proto",	required_argument, (int *) 0, LA_PROTOCOL   },
   {"daemon",	required_argument, (int *) 0, LA_DAEMON     },
-  {"poprc",	required_argument, (int *) 0, LA_POPRC      },
+  {"fetchrc",	required_argument, (int *) 0, LA_FETCHRC      },
   {"user",	required_argument, (int *) 0, LA_USERNAME   },
   {"username",  required_argument, (int *) 0, LA_USERNAME   },
   {"remote",    required_argument, (int *) 0, LA_REMOTEFILE },
@@ -91,7 +91,7 @@ static struct option longoptions[] = {
 	   	 syntax errors.
   calls:         none.  
   globals:       writes outlevel, versioninfo, yydebug, logfile, 
-		 poll_interval, quitmode, poprcfile, idfile, linelimit.  
+		 poll_interval, quitmode, rcfile, idfile, linelimit.  
  *********************************************************************/
 
 int parsecmdline (argc,argv,queryctl)
@@ -191,9 +191,9 @@ struct hostrec *queryctl;
 	poll_interval = atoi(optarg);
         break;
       case 'f':
-      case LA_POPRC:
-        poprcfile = (char *) xmalloc(strlen(optarg)+1);
-        strcpy(poprcfile,optarg);
+      case LA_FETCHRC:
+        rcfile = (char *) xmalloc(strlen(optarg)+1);
+        strcpy(rcfile,optarg);
         break;
       case 'i':
       case LA_IDFILE:
@@ -259,7 +259,7 @@ struct hostrec *queryctl;
 
   if (errflag) {
     /* squawk if syntax errors were detected */
-    fputs("usage:  popclient [options] [server ...]\n", stderr);
+    fputs("usage:  fetchmail [options] [server ...]\n", stderr);
     fputs("  options\n",stderr);
     fputs("  -2               use POP2 protocol\n", stderr);
     fputs("  -3               use POP3 protocol\n", stderr);
@@ -277,7 +277,7 @@ struct hostrec *queryctl;
     fputs("  -s, --silent     work silently\n", stderr);
     fputs("  -v, --verbose    work noisily (diagnostic output)\n", stderr);
     fputs("  -d, --daemon     run as a daemon once per n seconds\n", stderr);
-    fputs("  -f, --poprc      specify alternate config file\n", stderr);
+    fputs("  -f, --fetchrc      specify alternate config file\n", stderr);
     fputs("  -i, --idfile     specify alternate ID database\n", stderr);
     fputs("  -u, --username   specify server user ID\n", stderr);
     fputs("  -c, --stdout     write received mail to stdout\n", stderr);
@@ -306,7 +306,7 @@ struct hostrec *queryctl;
   return value:  zero if defaults were successfully set, else non-zero
                  (indicates a problem reading /etc/passwd).
   calls:         none.
-  globals:       writes outlevel, poprcfile, idfile.
+  globals:       writes outlevel, rcfile, idfile.
  *********************************************************************/
 #include <stdlib.h>
 
@@ -350,12 +350,12 @@ struct hostrec *queryctl;
     queryctl->output = TO_SMTP;
     (void) sprintf(queryctl->mda, DEF_MDA, queryctl->localname);
 
-    poprcfile = 
-	(char *) xmalloc(strlen(home)+strlen(POPRC_NAME)+2);
+    rcfile = 
+	(char *) xmalloc(strlen(home)+strlen(FETCHRC_NAME)+2);
 
-    strcpy(poprcfile, home);
-    strcat(poprcfile, "/");
-    strcat(poprcfile, POPRC_NAME);
+    strcpy(rcfile, home);
+    strcat(rcfile, "/");
+    strcat(rcfile, FETCHRC_NAME);
 
     idfile = 
 	(char *) xmalloc(strlen(home)+strlen(IDFILE_NAME)+2);

@@ -5,7 +5,7 @@
 
 /***********************************************************************
   module:       xmalloc.c
-  project:      popclient
+  project:      fetchmail
   programmer:   Carl Harris, ceharris@mal.com
   description:  malloc wrapper.
 
@@ -15,7 +15,7 @@
 #include <config.h>
 #include <stdio.h>
 #include <sys/types.h>
-#include "popclient.h"
+#include "fetchmail.h"
 
 #if defined(HAVE_VOIDPOINTER)
 #define XMALLOCTYPE void

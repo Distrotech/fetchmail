@@ -5,7 +5,7 @@
 
 /***********************************************************************
   module:       pop2.c
-  project:      popclient
+  project:      fetchmail
   programmer:   Carl Harris, ceharris@mal.com
 		Hacks and bug fixes by esr.
   description:  POP2 client code.
@@ -26,7 +26,7 @@
 #include  <errno.h>
 
 #include  "socket.h"
-#include  "popclient.h"
+#include  "fetchmail.h"
 
 
 /* TCP port number for POP2 as defined by RFC 937 */
@@ -55,7 +55,7 @@ int POP2_stateXFER (int msgsize, int socket, int mboxfd, int topipe);
                  etc).
 
   return value:  exit code from the set of PS_.* constants defined in 
-                 popclient.h
+                 fetchmail.h
   calls:         POP2_stateGREET, POP2_stateNMBR, POP2_stateSIZE,
                  POP2_stateXFER, POP2_sendcmd, POP2_sendHELO,
                  POP2_sendFOLD, POP2_quit, Socket, openuserfolder,

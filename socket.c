@@ -5,7 +5,7 @@
 
 /***********************************************************************
   module:       socket.c
-  project:      popclient
+  project:      fetchmail
   programmer:   Carl Harris, ceharris@mal.com
   description:  socket library functions
 

@@ -4,11 +4,11 @@
  */
 
 /***********************************************************************
-  module:       popclient.c
-  project:      popclient
+  module:       fetchmail.c
+  project:      fetchmail
   programmer:   Carl Harris, ceharris@mal.com
 		Extensively hacked and improved by esr.
-  description:	main driver module for popclient
+  description:	main driver module for fetchmail
 
  ***********************************************************************/
 
@@ -36,7 +36,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#include "popclient.h"
+#include "fetchmail.h"
 
 /* release info */
 #define         RELEASE_TAG	"3.1"
@@ -60,7 +60,7 @@ char *logfile;		/* log file for daemon mode */
 int quitmode;		/* if --quit was set */
 
 /* miscellaneous global controls */
-char *poprcfile;	/* path name of rc file */
+char *rcfile;		/* path name of rc file */
 char *idfile;		/* path name of id file */
 int linelimit;		/* limit # lines retrieved per site */
 int versioninfo;	/* emit only version info */
@@ -111,7 +111,7 @@ char **argv;
     if (versioninfo)
 	showversioninfo();
 
-    if (prc_parse_file(poprcfile) != 0)
+    if (prc_parse_file(rcfile) != 0)
 	exit(PS_SYNTAX);
 
     if (optind >= argc)
@@ -138,7 +138,7 @@ char **argv;
     if ((tmpdir = getenv("TMPDIR")) == (char *)NULL)
 	tmpdir = "/tmp";
     strcpy(tmpbuf, tmpdir);
-    strcat(tmpbuf, "/poplock-");
+    strcat(tmpbuf, "/fetchmail-");
     gethostname(tmpbuf + strlen(tmpbuf), HOSTLEN+1);
     if ((user = getenv("USER")) != (char *)NULL)
     {
@@ -148,7 +148,7 @@ char **argv;
 
     /* perhaps we just want to check options? */
     if (versioninfo) {
-	printf("Taking options from command line and %s\n", poprcfile);
+	printf("Taking options from command line and %s\n", rcfile);
 	for (hostp = hostlist; hostp; hostp = hostp->next) {
 	    printf("Options for host %s:\n", hostp->servername);
 	    dump_params(hostp);
@@ -158,17 +158,17 @@ char **argv;
 	if (hostlist == NULL)
 	    (void) fprintf(stderr,
 		"No mailservers set up -- perhaps %s is missing?\n",
-			  poprcfile);
+			  rcfile);
 	exit(0);
     }
     else if (hostlist == NULL) {
-	(void) fputs("popclient: no mailservers have been specified.\n", stderr);
+	(void) fputs("fetchmail: no mailservers have been specified.\n", stderr);
 	exit(PS_SYNTAX);
     }
 
     if ((lockfile = (char *) malloc(strlen(tmpbuf) + 1)) == NULL)
     {
-	fprintf(stderr,"popclient: cannot allocate memory for lock name.\n");
+	fprintf(stderr,"fetchmail: cannot allocate memory for lock name.\n");
 	exit(PS_EXCLUDE);
     }
     else
@@ -180,16 +180,16 @@ char **argv;
 	FILE* fp;
 
 	if ( (fp = fopen(lockfile, "r")) == NULL ) {
-	    fprintf(stderr,"popclient: no other popclient is running\n");
+	    fprintf(stderr,"fetchmail: no other fetchmail is running\n");
 	    return(PS_EXCLUDE);
 	}
   
 	fscanf(fp,"%d",&pid);
-	fprintf(stderr,"popclient: killing popclient at PID %d\n",pid);
+	fprintf(stderr,"fetchmail: killing fetchmail at PID %d\n",pid);
 	if ( kill(pid,SIGTERM) < 0 )
-	    fprintf(stderr,"popclient: error killing the process %d.\n",pid);
+	    fprintf(stderr,"fetchmail: error killing the process %d.\n",pid);
 	else
-	    fprintf(stderr,"popclient: popclient at %d is dead.\n", pid);
+	    fprintf(stderr,"fetchmail: fetchmail at %d is dead.\n", pid);
   
 	fclose(fp);
 	remove(lockfile);
@@ -197,7 +197,7 @@ char **argv;
     }
 
 
-    /* beyond here we don't want more than one popclient running per user */
+    /* beyond here we don't want more than one fetchmail running per user */
     umask(0077);
     if ( (tmpfp = fopen(lockfile, "r")) != NULL ) {
 	fscanf(tmpfp,"%d",&pid);
@@ -331,7 +331,7 @@ struct hostrec *queryctl;
 	time_t now;
 
 	time(&now);
-	fprintf(stderr, "popclient: querying %s (protocol %s) at %s",
+	fprintf(stderr, "fetchmail: querying %s (protocol %s) at %s",
 	    queryctl->servername, showproto(queryctl->protocol), ctime(&now));
     }
     switch (queryctl->protocol) {
@@ -356,7 +356,7 @@ struct hostrec *queryctl;
 	return(doIMAP(queryctl));
 	break;
     default:
-	fprintf(stderr,"popclient: unsupported protocol selected.\n");
+	fprintf(stderr,"fetchmail: unsupported protocol selected.\n");
 	return(PS_PROTOCOL);
     }
 }
@@ -372,7 +372,7 @@ struct hostrec *queryctl;
 
 int showversioninfo()
 {
-    printf("This is popclient release %s\n",RELEASE_TAG);
+    printf("This is fetchmail release %s\n",RELEASE_TAG);
 }
 
 /*********************************************************************
@@ -495,7 +495,7 @@ struct hostrec *queryctl;
 	    return(fd);
 	}
 	else {
-	    perror("popclient: openuserfolder: open()");
+	    perror("fetchmail: openuserfolder: open()");
 	    return(-1);
 	}
   
@@ -523,11 +523,11 @@ struct hostrec *queryctl;
     char binmailargs [80];
 
     if (pipe(pipefd) < 0) {
-	perror("popclient: openmailpipe: pipe");
+	perror("fetchmail: openmailpipe: pipe");
 	return(-1);
     }
     if ((childpid = fork()) < 0) {
-	perror("popclient: openmailpipe: fork");
+	perror("fetchmail: openmailpipe: fork");
 	return(-1);
     }
     else if (childpid == 0) {
@@ -536,14 +536,14 @@ struct hostrec *queryctl;
 	close(pipefd[1]);  /* close the 'write' end of the pipe */
 	close(0);          /* get rid of inherited stdin */
 	if (dup(pipefd[0]) != 0) {
-	    fputs("popclient: openmailpipe: dup() failed\n",stderr);
+	    fputs("fetchmail: openmailpipe: dup() failed\n",stderr);
 	    exit(1);
 	}
 
 	execv(queryctl->mda, mda_argv+1);
 
 	/* if we got here, an error occurred */
-	perror("popclient: openmailpipe: exec");
+	perror("fetchmail: openmailpipe: exec");
 	return(-1);
 
     }
@@ -578,7 +578,7 @@ int fd;
 	err = 0;
   
     if (err)
-	perror("popclient: closeuserfolder: close");
+	perror("fetchmail: closeuserfolder: close");
 
     return(err);
 }
@@ -613,7 +613,7 @@ int fd;
     childpid = wait((int *) 0);
 #endif
     if (err)
-	perror("popclient: closemailpipe: close");
+	perror("fetchmail: closemailpipe: close");
 
     if (outlevel == O_VERBOSE)
 	fprintf(stderr, "closed pipe %d\n", fd);

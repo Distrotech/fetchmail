@@ -1,10 +1,10 @@
-dnl Autoconfigure input file for popclient
+dnl Autoconfigure input file for fetchmail
 dnl Carl Harris, ceharris@mal.com
 dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl
 
-AC_INIT(popclient.h)		dnl A distinctive file to look for in srcdir. 
+AC_INIT(fetchmail.h)		dnl A distinctive file to look for in srcdir. 
 AC_CONFIG_HEADER(config.h)
 
 # We want these before the checks, so the checks can modify their values.
@@ -67,7 +67,7 @@ case $host in
 		# Do *not* use the -t option!  We explicitly want only
 		# local delivery to the recipients named on the command line.
 		# Also don't use -fpopmail -- this looks tempting, but will
-		# cause lossage unless you always run popclient from the
+		# cause lossage unless you always run fetchmail from the
 		# account of a privileged user.
 		AC_DEFINE(DEF_MDA,"/usr/lib/sendmail -oem %s")
 		mdacmd="/usr/lib/sendmail -fpopmail \$u"
@@ -195,7 +195,7 @@ AC_TRY_LINK([#include <signal.h>
   AC_MSG_RESULT(no))
 
 # The presence of the following is not meant to imply
-# that popclient necessarily works on those systems.
+# that fetchmail necessarily works on those systems.
 dnl AC_DYNIX_SEQ
 dnl AC_XENIX_DIR
 dnl AC_IRIX_SUN

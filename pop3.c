@@ -5,7 +5,7 @@
 
 /***********************************************************************
   module:       pop3.c
-  project:      popclient
+  project:      fetchmail
   programmer:   Carl Harris, ceharris@mal.com
 		Hacks and bug fixes by esr.
   description:  POP3 client code.
@@ -24,7 +24,7 @@
 #include  <errno.h>
 
 #include  "socket.h"
-#include  "popclient.h"
+#include  "fetchmail.h"
 
 #ifdef HAVE_PROTOTYPES
 /* prototypes for internal functions */

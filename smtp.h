@@ -5,7 +5,7 @@
 
 /***********************************************************************
   module:       smtp.h
-  project:      popclient
+  project:      fetchmail
   description:  Prototypes for smtp handling code.
 
  ***********************************************************************/

@@ -5,7 +5,7 @@
 
 /***********************************************************************
   module:       driver.c
-  project:      popclient
+  project:      fetchmail
   programmer:   Eric S. Raymond
   description:  Generic driver for mail fetch method protocols
 
@@ -28,7 +28,7 @@
 #include  <malloc.h>
 
 #include  "socket.h"
-#include  "popclient.h"
+#include  "fetchmail.h"
 #include  "smtp.h"
 
 static struct method *protocol;
@@ -55,7 +55,7 @@ static int gen_readmsg (int socket, int mboxfd, long len, int delimited,
     proto        protocol method pointer
 
   return value:  exit code from the set of PS_.* constants defined in 
-                 popclient.h
+                 fetchmail.h
   calls:
   globals:       reads outlevel.
  *********************************************************************/
@@ -660,7 +660,7 @@ int rewrite;
 		    return(PS_SMTP);
 #ifdef SMTP_RESEND
 		/*
-		 * This is what we'd do if popclient were a real MDA
+		 * This is what we'd do if fetchmail were a real MDA
 		 * a la sendmail -- crack all the destination headers
 		 * and send to every address we can reach via SMTP.
 		 */

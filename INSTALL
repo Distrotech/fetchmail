@@ -1,6 +1,6 @@
-		INSTALL Instructions for Popclient
+		INSTALL Instructions for Fetchmail
 
-Installing popclient is easy.  From within this directory, type:
+Installing fetchmail is easy.  From within this directory, type:
 
 	./configure
 
@@ -17,14 +17,14 @@ Next run
 
 	make
 
-This will compile popclient for your system.  Note that in order to
+This will compile fetchmail for your system.  Note that in order to
 build it, you'll need either flex at version 2.5.3 org greater, or lex.
 
 Lastly, become root and run
 
 	make install
 
-This will install popclient.  By default, popclient will be installed
+This will install fetchmail.  By default, fetchmail will be installed
 in /usr/local/bin, with the man page in /usr/local/man/man1, and the
 GNU info file in /usr/local/info.  If you wish to change these defaults,
 edit the Makefile AFTER you run "configure" but BEFORE you run 

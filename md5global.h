@@ -2,7 +2,7 @@
  * All rights reserved.
  * For license terms, see the file COPYING in this directory.
  *
- * md5global.h    Global declarations for MD5 module used by popclient
+ * md5global.h    Global declarations for MD5 module used by fetchmail
  *
  */
 

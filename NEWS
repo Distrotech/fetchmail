@@ -49,7 +49,11 @@ Recode POP2 to use the same driver/method strategy as POP3/IMAP, so
 all three protocols will be able to forward messages through the generic
 driver to SMTP.  (This requires that we find a POP2 server to test with.)
 
-3.2 (Mon Sep 23 13:29:46 EDT 1996):
+fetchmail-1.0 (Mon Sep 23 19:54:01 EDT 1996):
+
+* Name change (it ain't just for POP3 any more).
+
+popclient-3.2 (Mon Sep 23 13:29:46 EDT 1996):
 
 * RPOP support (coded at a user's request but untested).
 
@@ -66,7 +70,7 @@ driver to SMTP.  (This requires that we find a POP2 server to test with.)
 * Try USER and HOME to set defaults before going to the password file.
   This should work better in Sun NIS environments.
 
-3.1:
+popclient-3.1:
 
 * MDA arguments are now dumped when using the -V option.
 
@@ -85,20 +89,20 @@ driver to SMTP.  (This requires that we find a POP2 server to test with.)
 
 * It is now possible to specify the host TCP/IP port number to connect to.
 
-3.05:
+popclient-3.05:
 
 * Experimental support for RFC1725-compliant POP servers with the UIDL
   command and without LAST.
 
-3.04:
+popclient-3.04:
 
 * Logfile option works.
 
-3.03:
+popclient-3.03:
 
 * Minor bug fixes for password querying and redirection to stdout.
 
-3.02:
+popclient-3.02:
 
 * Correct buggy processing of nokeep/noflush/fetchall.
 
@@ -108,7 +112,7 @@ driver to SMTP.  (This requires that we find a POP2 server to test with.)
 
 * Delivery via sendmail now works in non-daemon mode.
 
-3.01:
+popclient-3.01:
 
 * Fixed a lexical analyzer bug in quoted-string processing.
 
@@ -117,7 +121,7 @@ driver to SMTP.  (This requires that we find a POP2 server to test with.)
 * The lock assertion code was in the wrong place relative to the daemonize()
   call.  
 
-3.0:
+popclient-3.0:
 
 Eric S. Raymond <esr@thyrsus.com> hacked extensively on 3.0b6 and took over
 the package with the consent of Carl Harris, the original implementor.

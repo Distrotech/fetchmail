@@ -5,7 +5,7 @@
 
 /***********************************************************************
   module:       smtp.c
-  project:      popclient
+  project:      fetchmail
   programmer:   Harry Hochheiser
   description:  Handling of SMTP connections, and processing of mail 
                  to be forwarded via SMTP connections.
@@ -18,7 +18,7 @@
 #include <unistd.h>
 #include <string.h>
 #include "socket.h"
-#include "popclient.h"
+#include "fetchmail.h"
 #include "smtp.h"
 
 /*********************************************************************
@@ -27,7 +27,7 @@
 
   arguments:     
     socket       TCP/IP socket for connection to SMTP
-  return value:  Result of SMTP_OK: based on codes in popclient.h.
+  return value:  Result of SMTP_OK: based on codes in fetchmail.h.
                  
  *********************************************************************/
 
@@ -56,7 +56,7 @@ int SMTP_helo(int socket,char *host)
     Note: these args are likely to change, as we get fancier about
     handling the names.
 
-  return value:  Result of SMTP_ok: based on codes in popclient.h.
+  return value:  Result of SMTP_ok: based on codes in fetchmail.h.
                  
  *********************************************************************/
 int SMTP_from(int socket, char *from)
@@ -81,7 +81,7 @@ int SMTP_from(int socket, char *from)
     touser:      user name of recipient
     tohost:      host name of recipient
 
-  return value:  Result of SMTP_OK: based on codes in popclient.h.
+  return value:  Result of SMTP_OK: based on codes in fetchmail.h.
                  
  *********************************************************************/
 int SMTP_rcpt(int socket,char *to)
@@ -124,7 +124,7 @@ int SMTP_data(int socket)
 
   arguments:     
     socket       TCP/IP socket for connection to SMTP
-  return value:  Result of SMTP_OK: based on codes in popclient.h.
+  return value:  Result of SMTP_OK: based on codes in fetchmail.h.
                  
  *********************************************************************/
 
@@ -159,7 +159,7 @@ void SMTP_rset(int socket)
   description:   Returns the status of the smtp connection
   arguments:     
     socket       TCP/IP socket for connection to SMTP
-  return value:  based on codes in popclient.h.
+  return value:  based on codes in fetchmail.h.
                  Do the dirty work of seeing what the status is..
  *********************************************************************/
 static int SMTP_check(int socket,char *argbuf)
@@ -188,7 +188,7 @@ static int SMTP_check(int socket,char *argbuf)
   description:   Returns the statsus of the smtp connection
   arguments:     
     socket       TCP/IP socket for connection to SMTP
-  return value:  based on codes in popclient.h.
+  return value:  based on codes in fetchmail.h.
  *********************************************************************/
 int SMTP_ok(int socket,char *argbuf)
 {

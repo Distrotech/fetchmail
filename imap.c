@@ -5,7 +5,7 @@
 
 /***********************************************************************
   module:       imap.c
-  project:      popclient
+  project:      fetchmail
   programmer:   Eric S. Raymond
   description:  IMAP client code
 
@@ -24,7 +24,7 @@
 #include  <errno.h>
 
 #include  "socket.h"
-#include  "popclient.h"
+#include  "fetchmail.h"
 
 static int count, first;
 

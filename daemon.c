@@ -6,7 +6,7 @@
 
 /***********************************************************************
   module:       daemon
-  project:      popclient
+  project:      fetchmail
   programmer:   Carl Harris, ceharris@mal.com
   description:  This module contains all of the code needed to 
 	 	turn a process into a daemon for POSIX, SysV, and
@@ -40,7 +40,7 @@
 #define SIGCLD	SIGCHLD
 #endif
 
-#include "popclient.h"
+#include "fetchmail.h"
 
 /******************************************************************
   function:	sigchld_handler

@@ -2,14 +2,14 @@
 #
 # This file (or one of your own creation, rather) should be located 
 # in your home directory with the name .poprc.  Permissions on this
-# file may be no greater than -rw-------, or popclient will refuse to
+# file may be no greater than -rw-------, or fetchmail will refuse to
 # use it.
 #
 # To see what effect your ~/.poprc file has, do 
 #
-#	popclient --version
+#	fetchmail --version
 #
-# This will display the popclient version number and an explanation
+# This will display the fetchmail version number and an explanation
 # in English of what the currently set options and defaults mean.
 #
 # Comments begin with a '#' and extend through the end of the line.

@@ -7,7 +7,7 @@
 
 /***********************************************************************
   module:       poprc_l.l
-  project:      popclient
+  project:      fetchmail
   programmer:   Carl Harris, ceharris@mal.com
 		Extensively hacked by esr.
   description:  .poprc lexer
@@ -16,7 +16,7 @@
 
 #include <config.h>
 #include "poproto.h"
-#include "poprc_y.h"
+#include "fetchrc_y.h"
 
 int prc_lineno = 1;
 %}

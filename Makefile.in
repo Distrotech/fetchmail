@@ -1,9 +1,9 @@
-# Makefile for popclient
+# Makefile for fetchmail
 
 # If you're running QNX, we can't assume a working autoconf.
 # So just uncomment all the lines marked QNX.
 
-VERS=3.2
+VERS=1.0
 
 # Ultrix 2.2 make doesn't expand the value of VPATH.
 srcdir = @srcdir@
@@ -44,8 +44,8 @@ prefix = /usr/local
 # Common prefix for machine-dependent installed files.
 exec_prefix = $(prefix)
 
-# Name under which to install popclient
-instname = popclient
+# Name under which to install fetchmail
+instname = fetchmail
 # Directory in which to install.
 bindir = $(exec_prefix)/bin
 # Directory to install the Info files in.
@@ -71,33 +71,33 @@ TEXI2DVI = texi2dvi
 ETAGS = etags -tw
 CTAGS = ctags -tw
 
-popobjs = socket.o getpass.o pop2.o pop3.o imap.o popclient.o options.o	\
-       poprc_l.o poprc_y.o poprc.o daemon.o driver.o smtp.o xmalloc.o
+popobjs = socket.o getpass.o pop2.o pop3.o imap.o fetchmail.o options.o	\
+       fetchrc_l.o fetchrc_y.o fetchrc.o daemon.o driver.o smtp.o xmalloc.o
 
 objs = $(popobjs) $(EXTRAOBJ) $(extras)
 
 srcs = $(srcdir)/socket.c $(srcdir)/getpass.c $(srcdir)/pop2.c 		\
-       $(srcdir)/pop3.c $(srcdir)/imap.c $(srcdir)/popclient.c		\
-       $(srcdir)/options.c $(srcdir)/poprc.c $(srcdir)/daemon.c 	\
+       $(srcdir)/pop3.c $(srcdir)/imap.c $(srcdir)/fetchmail.c		\
+       $(srcdir)/options.c $(srcdir)/fetchrc.c $(srcdir)/daemon.c 	\
        $(srcdir)/driver.c $(srcdir)/smtp.c $(srcdir)/xmalloc.c $(EXTRASRC)
 
 .SUFFIXES:
 .SUFFIXES: .o .c .h .y .l .ps .dvi .info .texi
 
-all: popclient
+all: fetchmail
 check: # No tests.
 depend:
 	test -f config.h || touch config.h
-	test -f poprc_y.h || touch poprc_y.h
+	test -f fetchrc_y.h || touch fetchrc_y.h
 	makedepend -fMakefile.in *.c
 
 # Some makes apparently use .PHONY as the default goal is it is before `all'.
 .PHONY: all check
 
-$(popobjs): popclient.h
+$(popobjs): fetchmail.h
 
-popclient: $(srcdir)/poprc_l.c $(srcdir)/poprc_y.c $(objs)
-	$(CC) $(LDFLAGS) $(objs) $(LOADLIBS) -o popclient
+fetchmail: $(srcdir)/fetchrc_l.c $(srcdir)/fetchrc_y.c $(objs)
+	$(CC) $(LDFLAGS) $(objs) $(LOADLIBS) -o fetchmail
 
 
 # -I. is needed to find config.h in the build directory.
@@ -125,7 +125,7 @@ MAKE = make
 
 FORCE:
 
-tagsrcs = $(srcs) $(srcdir)/poprc_l.c $(srcdir)/poprc_y.c
+tagsrcs = $(srcs) $(srcdir)/fetchrc_l.c $(srcdir)/fetchrc_y.c
 TAGS: $(tagsrcs)
 	$(ETAGS) $(tagsrcs)
 tags: $(tagsrcs)
@@ -133,21 +133,21 @@ tags: $(tagsrcs)
 
 .PHONY: install installdirs
 install: installdirs \
-	 $(bindir)/$(instname) # $(infodir)/popclient.info \
+	 $(bindir)/$(instname) # $(infodir)/fetchmail.info \
 	 $(mandir)/$(instname).$(manext)
 
 installdirs:
 	$(SHELL) ${srcdir}/mkinstalldirs $(bindir) $(infodir) $(mandir)
 
-$(bindir)/$(instname): popclient
-	$(INSTALL_PROGRAM) popclient $@
+$(bindir)/$(instname): fetchmail
+	$(INSTALL_PROGRAM) fetchmail $@
 
-$(infodir)/popclient.info: popclient.info
-	if [ -r ./popclient.info ]; then dir=.; else dir=$(srcdir); fi; \
-	for file in $${dir}/popclient.info*; do \
+$(infodir)/fetchmail.info: fetchmail.info
+	if [ -r ./fetchmail.info ]; then dir=.; else dir=$(srcdir); fi; \
+	for file in $${dir}/fetchmail.info*; do \
 	  name="`basename $$file`"; \
 	  $(INSTALL_DATA) $$file \
-	    `echo $@ | sed "s,popclient.info\$$,$$name,"`; \
+	    `echo $@ | sed "s,fetchmail.info\$$,$$name,"`; \
 	done
 # Run install-info only if it exists.
 # Use `if' instead of just prepending `-' to the
@@ -155,25 +155,25 @@ $(infodir)/popclient.info: popclient.info
 # We use `$(SHELL) -c' because some shells do not
 # fail gracefully when there is an unknown command.
 	if $(SHELL) -c 'install-info --version' >/dev/null 2>&1; then \
-	  install-info --infodir=$(infodir) $$dir/popclient.info; \
+	  install-info --infodir=$(infodir) $$dir/fetchmail.info; \
 	else true; fi
 
-$(mandir)/$(instname).$(manext): popclient.man
-	$(INSTALL_DATA) $(srcdir)/popclient.man $@
+$(mandir)/$(instname).$(manext): fetchmail.man
+	$(INSTALL_DATA) $(srcdir)/fetchmail.man $@
 
 
 .PHONY: clean realclean distclean mostlyclean
 clean: 
-	-rm -f popclient *.o core popclient.dvi \
-	       poprc_l.c poprc_y.h poprc_y.c popclient.tar popclient.tar.gz
+	-rm -f fetchmail *.o core fetchmail.dvi \
+	       fetchrc_l.c fetchrc_y.h fetchrc_y.c fetchmail.tar fetchmail.tar.gz
 
 distclean: clean 
 	-rm -f Makefile config.h
 	-rm -f config.cache config.status config.log stamp-config
 	-rm -f TAGS tags
-	-rm -f popclient.log popclient.toc popclient.*aux
+	-rm -f fetchmail.log fetchmail.toc fetchmail.*aux
 
-realclean: popclient.info* distclean
+realclean: fetchmail.info* distclean
 
 mostlyclean: clean
 
@@ -194,31 +194,31 @@ configure: configure.in
 
 
 # Special dependencies, not easily handled without explicit rules
-$(srcdir)/poprc_l.c: $(srcdir)/poprc_l.l
-$(srcdir)/poprc_y.c: $(srcdir)/poprc_y.y
+$(srcdir)/fetchrc_l.c: $(srcdir)/fetchrc_l.l
+$(srcdir)/fetchrc_y.c: $(srcdir)/fetchrc_y.y
 
-parser = $(srcdir)/poprc_l.l $(srcdir)/poprc_y.y
-headers = $(srcdir)/popclient.h $(srcdir)/socket.h $(srcdir)/poproto.h \
+parser = $(srcdir)/fetchrc_l.l $(srcdir)/fetchrc_y.y
+headers = $(srcdir)/fetchmail.h $(srcdir)/socket.h $(srcdir)/poproto.h \
 	$(srcdir)/smtp.h
 extra = $(srcdir)/alloca.c $(srcdir)/bzero.[ch] $(srcdir)/errorcodes \
 	$(srcdir)/getopt.[ch] $(srcdir)/getopt1.c $(srcdir)/md5*.[ch] \
 	$(srcdir)/strcasecmp.c $(srcdir)/strdup.c
 docs = $(srcdir)/COPYING $(srcdir)/README $(srcdir)/INSTALL $(srcdir)/NEWS \
-	$(srcdir)/popclient.lsm $(srcdir)/RFC/*.txt \
-	$(srcdir)/*.man	$(srcdir)/sample.poprc
+	$(srcdir)/fetchmail.lsm $(srcdir)/RFC/*.txt \
+	$(srcdir)/*.man	$(srcdir)/sample.fetchrc
 config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/configure \
 	$(srcdir)/config.guess $(srcdir)/config.h.in $(srcdir)/config.sub
 scripts = $(srcdir)/install.sh $(srcdir)/mkinstalldirs
 all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) MANIFEST
 
 manifest: $(all)
-	@echo $(all) | tr "[ \t]" '\n' | sort | sed "s/\\./popclient-$(VERS)/"
+	@echo $(all) | tr "[ \t]" '\n' | sort | sed "s/\\./fetchmail-$(VERS)/"
 
-popclient-$(VERS).tar: $(all)
-	(cd ..; tar -cf popclient-$(VERS).tar `cat popclient-$(VERS)/MANIFEST`)
-	mv ../popclient-$(VERS).tar popclient-$(VERS).tar
-popclient-$(VERS).tar.gz: popclient-$(VERS).tar
-	gzip -f popclient-$(VERS).tar
+fetchmail-$(VERS).tar: $(all)
+	(cd ..; tar -cf fetchmail-$(VERS).tar `cat fetchmail-$(VERS)/MANIFEST`)
+	mv ../fetchmail-$(VERS).tar fetchmail-$(VERS).tar
+fetchmail-$(VERS).tar.gz: fetchmail-$(VERS).tar
+	gzip -f fetchmail-$(VERS).tar
 
 # The automatically generated dependencies below may omit config.h
 # because it is included with ``#include <config.h>'' rather than

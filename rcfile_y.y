@@ -6,7 +6,7 @@
 
 /***********************************************************************
   module:       poprc_y.y
-  project:      popclient
+  project:      fetchmail
   programmer:   Carl Harris, ceharris@mal.com
 		Extensively hacked and fixed by esr.
   description:  .poprc parser
@@ -15,7 +15,7 @@
 
 #include <config.h>
 #include <stdio.h>
-extern char *poprcfile;
+extern char *rcfile;
 extern int prc_lineno;
 extern int prc_errflag;
 extern char *yytext;
@@ -91,6 +91,6 @@ proto:		PROTO_POP2
 yyerror (s)
 char *s;
 {
-  fprintf(stderr,"%s line %d: %s at %s\n", poprcfile, prc_lineno, s, yytext);
+  fprintf(stderr,"%s line %d: %s at %s\n", rcfile, prc_lineno, s, yytext);
   prc_errflag++;
 }

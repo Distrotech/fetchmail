@@ -5,7 +5,7 @@
 
 /***********************************************************************
   module:       md5ify.c
-  project:      popclient
+  project:      fetchmail
   programmer:   Carl Harris, ceharris@mal.com
   description:  Simple interface to MD5 module.
 
