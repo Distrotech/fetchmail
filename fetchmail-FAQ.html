@@ -696,28 +696,40 @@ and see the next question.<p>
 <hr>
 <h2>R2. Fetchmail isn't working, and -v shows `SMTP connect failed' messages.</a></h2>
 
-Fetchmail is working, but your SMTP port 25 listener is down or inaccessible.
-The first thing to check is if you can telnet to port 25 and get a greeting
-line from the listener.  If the listener is down, bring it back up.<p>
+Fetchmail itself is probably working, but your SMTP port 25 listener
+is down or inaccessible.<p>
 
-If the listener seems to be up when you test with telnet, it could
-have had a momentary problem due to resource exhaustion (process table
-full or some other problem that stopped the listener process from
-forking).  If your SMTP host is not `localhost' or something else in
-/etc/hosts, the glitch could also have been caused by transient
-nameserver failure, or the SMTP host's actually being down.<p>
+The first thing to check is if you can telnet to port 25 on your smtp
+host (which is normally `localhost' unless you've specified an smtp
+option in your .fetchmailrc or on the command line) and get a greeting
+line from the listener.  If the SMTP host is inaccessible or the listener
+is down, fix that first.<p>
 
-If the listener tests up, you can usually ignore the glitch (except as
-a symptom of other problems) because a future fetchmail run will get
-the mail through.  If this is a recurring or constant failure mode,
-OTOH, you may have more serious problems in your network layer which I
-can't diagnose in this FAQ.<p>
+If the listener seems to be up when you test with telnet, the most
+benign and typical problem is that the listener had a momentary seizure
+due to resource exhaustion while fetchmail was polling it -- process
+table full or some other problem that stopped the listener process
+from forking.  If your SMTP host is not `localhost' or something else
+in /etc/hosts, the fetchmail glitch could also have been caused by
+transient nameserver failure. <p>
 
-One way to work around chronic SMTP connect problems is to use --mda.
-But this only attacks the symptom.  You should really try to figure
-out what's going on underneath before it bites you some other way. <p>
+Try running fetchmail -v again; if it succeeds, you had one of these
+kinds of transient glitch.  You can ignore these hiccups, because a
+future fetchmail run will get the mail through. <p>
 
-We have one report from a Linux user of 2.1 who solved his SMTP
+If the listener tests up, but you have chronic failures trying to
+connect to it anyway, your problem is more serious.  One way to work
+around chronic SMTP connect problems is to use --mda.  But this only
+attacks the symptom; you may have a DNS or TCP routing problem.  You
+should really try to figure out what's going on underneath before it
+bites you some other way. <p>
+
+We have one report (from toby@eskimo.com) that you can sometimes solve
+such problems by doing an <TT>smtp</TT> declaration with an IP
+address that your routing table maps to something other than the
+loopback device (he used ppp0).<p>
+
+We had another report from a Linux user of fetchmail 2.1 who solved his SMTP
 connection problem by removing the reference to -lresolv from his link
 line and relinking.  Apparently in some recent Linux distributions the
 libc bind library version works better.<p>
@@ -971,7 +983,7 @@ without hacking potentially fragile startup scripts.  To get around
 it, just touch(1) the logfile before you run fetchmail (this will have
 no effect on the contents of the logfile if it already exists).<P>
 
-$Id: fetchmail-FAQ.html,v 1.18 1997/05/28 14:44:40 esr Exp $<p>
+$Id: fetchmail-FAQ.html,v 1.19 1997/05/28 17:36:23 esr Exp $<p>
 
 <HR>
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
