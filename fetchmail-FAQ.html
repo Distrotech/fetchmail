@@ -9,7 +9,8 @@
 <BODY>
 <H1>Frequently Asked Questions About Fetchmail</H1>
 
-The current version of fetchmail is 4.0.
+The current version of fetchmail is 4.0.  New in the FAQ: <a
+href="#O5">O5</a>, on what to do if your progress messages look garbled.<p>
 
 Before reporting any bug, please read <a href="#G3">G3</a> for advice
 on how to include diagnostic information that will get your bug fixed
@@ -93,6 +94,7 @@ when I may have multiple login sessions going?</a><br>
 <h1>Other Problems:</h1>
 
 <a href="#O4">O4. The --logfile option doesn't work if the logfile doesn't exist.</a><br>
+<a href="#O5">O5. The message lengths in my POP3 progress messages look like garbage.</a><br>
 
 <h1>Answers:</h1>
 <hr>
@@ -801,7 +803,8 @@ message can lurk invisibly in your server mailbox forever.<p>
 
 Workaround: add the `<tt>fetchall</tt>' keyword to your POP3 fetch options.<p>
 
-Solution: switch to an IMAP server.<p>
+Solution: switch to an <a
+href="http://www.washington.edu/imap">IMAP</a> server.<p>
 
 <hr>
 <h2><a name="R6">R6. Fetchmail dumps core when I use a .netrc file but works otherwise.</a></h2>
@@ -1000,7 +1003,28 @@ without hacking potentially fragile startup scripts.  To get around
 it, just touch(1) the logfile before you run fetchmail (this will have
 no effect on the contents of the logfile if it already exists).<P>
 
-$Id: fetchmail-FAQ.html,v 1.29 1997/06/11 04:48:54 esr Exp $<p>
+<hr>
+<h2><a name="#O5">O5. The message lengths in my POP3 progress messages look like garbage.</a></h2>
+
+Aha.  You are running a server that was written to the letter of the
+never-to-be-sufficiently-damned RFC 1725, which (among other heinous
+omissions) neglected to require that the <TT>OK</TT> response to a
+<TT>FETCH</TT> include the message length in octets.  Requirement or
+not, there are very few servers that actually fail to issue this
+length. <P>
+
+There is a way to compensate for this lack using the <TT>LIST</TT> ,
+command, but it would incur a possibly significant speed penalty on
+<emph>all</emph> POP3 retrievals.  Instead I have opted for a hack
+that has the unavoidable side effect of garbaging the length messages.
+This will not affect actual retrieval, and the messages will not
+even be visible when you run in daemon mode.<P>
+
+To fix this problem, install a better POP3 server like qpopper.  Or
+better yet, install an <a href="http://www.washington.edu/imap">IMAP</a>
+server and chuck POP3 entirely.<p>
+
+$Id: fetchmail-FAQ.html,v 1.30 1997/06/13 04:26:32 esr Exp $<p>
 
 <HR>
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
