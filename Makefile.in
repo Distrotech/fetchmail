@@ -101,7 +101,7 @@ all: fetchmail
 
 $(protobjs): fetchmail.h
 
-fetchmail: $(srcdir)/rcfile_l.c $(srcdir)/rcfile_y.c $(objs)
+fetchmail: $(objs)
 	$(CC) $(LDFLAGS) $(objs) $(LOADLIBS) -o fetchmail
 
 # Tester for address parsing
