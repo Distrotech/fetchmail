@@ -80,6 +80,7 @@ extern char *strstr();	/* needed on sysV68 R3V7.1. */
 int batchcount;		/* count of messages sent in current batch */
 flag peek_capable;	/* can we peek for better error recovery? */
 int pass;		/* how many times have we re-polled? */
+int stage;		/* where are we? */
 int phase;		/* where are we, for error-logging purposes? */
 
 static const struct method *protocol;
@@ -1664,6 +1665,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	    goto cleanUp;
 
 	/* try to get authorized to fetch mail */
+	stage = STAGE_GETAUTH;
 	if (protocol->getauth)
 	{
 	    if (protocol->password_canonify)
@@ -1737,6 +1739,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		}
 
 		/* compute # of messages and number of new messages waiting */
+		stage = STAGE_GETRANGE;
 		ok = (protocol->getrange)(mailserver_socket, ctl, idp->id, &count, &new, &bytes);
 		if (ok != 0)
 		    goto cleanUp;
@@ -1835,6 +1838,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 			for (i = 0; i < count; i++)
 			    msgsizes[i] = -1;
 
+			stage = STAGE_GETSIZES;
 			ok = (proto->getsizes)(mailserver_socket, count, msgsizes);
 			if (ok != 0)
 			    goto cleanUp;
@@ -1848,6 +1852,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		    }
 
 		    /* read, forward, and delete messages */
+		    stage = STAGE_FETCH;
 		    for (num = 1; num <= count; num++)
 		    {
 			flag toolarge = NUM_NONZERO(ctl->limit)
@@ -2188,7 +2193,10 @@ const int maxfetch;		/* maximum number of messages to fetch */
     cleanUp:
 	/* we only get here on error */
 	if (ok != 0 && ok != PS_SOCKET)
+	{
+	    stage = STAGE_LOGOUT;
 	    (protocol->logout_cmd)(mailserver_socket, ctl);
+	}
 	SockClose(mailserver_socket);
     }
 

@@ -62,13 +62,6 @@ extern char *strstr();	/* needed on sysV68 R3V7.1. */
 #define IMAP4		0	/* IMAP4 rev 0, RFC1730 */
 #define IMAP4rev1	1	/* IMAP4 rev 1, RFC2060 */
 
-static int imap_phase;
-#define PHASE_GETAUTH	0
-#define PHASE_GETRANGE	1
-#define PHASE_GETSIZES	2
-#define PHASE_FETCH	3
-#define PHASE_LOGOUT	4
-
 static int count, seen, recent, unseen, deletions, imap_version, preauth; 
 static int expunged, expunge_period;
 static char capabilities[MSGBUFSIZE+1];
@@ -152,7 +145,7 @@ int imap_ok(int sock, char *argbuf)
 	    return(PS_ERROR);
 	else if (strncmp(cp, "NO", 2) == 0)
 	{
-	    if (imap_phase == PHASE_GETAUTH) 
+	    if (stage == STAGE_GETAUTH) 
 		return(PS_AUTHFAIL);	/* RFC2060, 6.2.2 */
 	    else
 		return(PS_ERROR);
@@ -863,8 +856,6 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 {
     int ok = 0;
 
-    imap_phase = PHASE_GETAUTH;
-
     /* probe to see if we're running IMAP4 and can use RFC822.PEEK */
     capabilities[0] = '\0';
     if ((ok = gen_transact(sock, "CAPABILITY")) == PS_SUCCESS)
@@ -1042,8 +1033,6 @@ static int imap_getrange(int sock,
 {
     int ok;
 
-    imap_phase = PHASE_GETRANGE;
-
     /* find out how many messages are waiting */
     *bytes = recent = unseen = -1;
 
@@ -1109,8 +1098,6 @@ static int imap_getsizes(int sock, int count, int *sizes)
 {
     char buf [MSGBUFSIZE+1];
 
-    imap_phase = PHASE_GETSIZES;
-
     /*
      * Some servers (as in, PMDF5.1-9.1 under OpenVMS 6.1)
      * won't accept 1:1 as valid set syntax.  Some implementors
@@ -1131,8 +1118,6 @@ static int imap_getsizes(int sock, int count, int *sizes)
 	else if (sscanf(buf, "* %d FETCH (RFC822.SIZE %d)", &num, &size) == 2)
 	    sizes[num - 1] = size;
     }
-
-    imap_phase = PHASE_FETCH;
 
     return(PS_SUCCESS);
 }
@@ -1331,8 +1316,6 @@ static int imap_delete(int sock, struct query *ctl, int number)
 static int imap_logout(int sock, struct query *ctl)
 /* send logout command */
 {
-    imap_phase = PHASE_LOGOUT;
-
     /* if any un-expunged deletions remain, ship an expunge now */
     if (deletions)
 	internal_expunge(sock);

@@ -394,6 +394,14 @@ int gen_transact ();
 #define FORWARDING_WAIT	4	/* waiting for listener response */
 extern int phase;
 
+/* response hooks can use this to identify the query stage */
+#define STAGE_GETAUTH	0
+#define STAGE_GETRANGE	1
+#define STAGE_GETSIZES	2
+#define STAGE_FETCH	3
+#define STAGE_LOGOUT	4
+extern int stage;
+
 /* mark values for name lists */
 #define XMIT_ACCEPT	1	/* accepted; matches local domain or name */
 #define XMIT_REJECT	2	/* rejected; no match */
