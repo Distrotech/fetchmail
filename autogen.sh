@@ -8,18 +8,22 @@ set -e
 test -f fetchmail.h
 test -f fetchmail.c
 test -f Makefile.am
+
+# kill junk:
 rm -rf autom4te.cache
+
 echo
 echo "Please stand by while generating files,"
 echo "this may take a minute or two..."
 echo
+
 # Original autogen.sh:
 #rm -f po/Makefile.in.in po/ChangeLog po/ChangeLog~ || true
 #gettextize -c -f || true
 
 # do not use -s here, Eric S. Raymond (ESR) writes they don't
 # work well in Debian's build system
-autoreconf -iv
+${AUTORECONF:=autoreconf} -iv
 
 # Taken from ESR's autgen.sh:
 #
