@@ -329,6 +329,7 @@ void optmerge(struct query *h2, struct query *h1)
 /* merge two options records; empty fields in h2 are filled in from h1 */
 {
     append_uid_list(&h2->localnames, &h1->localnames);
+    append_uid_list(&h2->aka, &h1->aka);
 
 #define STR_MERGE(fld, len) if (*(h2->fld) == '\0') strcpy(h2->fld, h1->fld)
     STR_MERGE(remotename, USERNAMELEN);

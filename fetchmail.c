@@ -533,7 +533,6 @@ static int load_params(int argc, char **argv, int optind)
 	    }
 
 	    /* similarly, compute server leaders for queries */
-	    ctl->aka = (struct idlist *)NULL;
 	    for (mp = querylist; mp && mp != ctl; mp = mp->next)
 		if (strcmp(mp->servername, ctl->servername) == 0)
 		{
@@ -676,6 +675,15 @@ void dump_params (struct query *ctl)
     if (ctl->canonical_name)
 	printf("  Canonical DNS name of server is %s.\n", ctl->canonical_name);
 #endif /* HAVE_GETHOSTBYNAME */
+    if (ctl->aka)
+    {
+	struct idlist *idp;
+
+	printf("  Predeclared mailserver aliases:");
+	for (idp = ctl->aka; idp; idp = idp->next)
+	    printf(" %s", idp->id);
+	putchar('\n');
+    }
     if (ctl->skip || outlevel == O_VERBOSE)
 	printf("  This host will%s be queried when no host is specified.\n",
 	       ctl->skip ? " not" : "");
