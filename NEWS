@@ -1,5 +1,10 @@
 			Release Notes:
 
+fetchmail-2.0 ():
+
+* Fix typo in setitimer call setup that caused obscure bugs under FreeBSD.
+* Handle Apparently-To.
+
 pl 1.9.9 (Mon Nov 11 10:40:14 EST 1996):
 * Accept Resent-From & Apparently-From a la RFC822.
 * Include file fixes for Solaris 2.5 and FreeBSD 2.2.

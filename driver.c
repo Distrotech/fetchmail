@@ -345,7 +345,7 @@ struct query *ctl;	/* query control record */
 		fromhdr = bufp;
 	    else if (!strncasecmp("To:", bufp, 3))
 		tohdr = bufp;
-	    else if (!strncasecmp("To:", bufp, 3))
+	    else if (!strncasecmp("Apparently-To:", bufp, 14))
 		tohdr = bufp;
 	    else if (!strncasecmp("Cc:", bufp, 3))
 		cchdr = bufp;
