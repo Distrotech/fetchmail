@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/05/13 06:36:21 $
+<td width="30%" align=right>$Date: 1998/05/14 01:01:14 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -57,8 +57,6 @@ IP address?</a><br>
 <a href="#C3">C3. How do I know what interface and address to use with --interface?</a><br>
 <a href="#C4">C4. How can I get fetchmail to work with ssh?</a><br>
 <a href="#C5">C5. How can I set up support for sendmail's anti-spam 571 response?</a><br>
-<a href="#C6">C6. How can I do automatic startup/shutdown of fetchmail
-when I may have multiple login sessions going?</a><br>
 
 <h1>How to make fetchmail play nice with other software:</h1>
 
@@ -396,7 +394,7 @@ ftp://ftp.ipv6.inner.net/pub/opie/patches</a> (IPv6).<P>
 These patches use a SASL authentication method named "X-OTP" because there is
 not currently a standard way to do this; fetchmail also uses this method, so
 the two will interoperate happily.  They better, because this is how Craig gets
-his mail ;)<P>
+his mail ;-)<P>
 
 (One important win of OTP is that it's not subject to ITAR restrictions.)<P>
 
@@ -416,7 +414,7 @@ machine had when it started up.<P>
 Since the new IP address (looked up at RCPT TO interpretation time)
 doesn't match the original, the most benign possible result is that
 your MTA thinks it's seeing a relaying attempt and refuses.  More
-frequently, fetchmail will try to connect top a nonexistent host
+frequently, fetchmail will try to connect to a nonexistent host
 address and time out.  Worst case, you could up forwarding your mail
 to the wrong machine!<P>
 
@@ -476,7 +474,9 @@ href="#T10">T10</a><P>
 
 In the immortal words of Alan Cox the last time this came up: ``Take
 the Solaris lex and stick it up the backside of a passing Sun
-salesman, then install flex and use that.  All will be happier.''<P>
+salesman, then install <a
+href="ftp://prep.ai.mit.edu/~ftp/pub/gnu">flex</a> and use that.  All
+will be happier.''<P>
 
 I couldn't have put it better myself, and aren't going to try now.<P>
 
@@ -712,16 +712,19 @@ more complicated or both.<p>
 <hr>
 <h2><a name="C2">C2. How can I arrange for a fetchmail daemon to get killed when I log out?</a></h2>
 
-Fetchmail versions before 2.3 actually used SIGHUP as a wakeup signal.
-Newer versions use SIGUSR1 for wakeup (and SIGHUP only in
-background-daemon mode) in order to avoid any potential confusion
-about logout-time behavior.  The right way to dispatch fetchmail on
-logout is to arrange for the command `fetchmail -q' to be called on
-logout.<p>
-
-Under bash, you can arrange this by putting `fetchmail -q' in the file
+The easiest way to dispatch fetchmail on logout (which will work
+reliably onlif you have just one login going at any time) is to
+arrange for the command `fetchmail -q' to be called on logout.  Under
+bash, you can arrange this by putting `fetchmail -q' in the file
 `~/.bash_logout'.  Most csh variants execute `~/.logout' on logout.
 For other shells, consult your shell manual page.<p>
+
+Automatic startup/shutdown of fetchmail is a little harder to arrange
+if you may have multiple login sessions going.  In the contrib
+subdirectory of the fetchmail distribution there is some shell code
+you can add to your .bash_login and .bash_logout profiles that will
+accomplish this.  Thank James Laferriere &lt;babydr@nwrain.net&gt; for
+it.<p>
 
 <hr>
 <h2><a name="C3">C3. How do I know what interface and address to use with --interface?</a></h2>
@@ -959,15 +962,6 @@ to allow sendmail to process the message further and generate an error
 message to the sender.  <p>
 
 <hr>
-<h2><a name="C6">C6. How can I do automatic startup/shutdown of fetchmail
-when I may have multiple login sessions going?</a></h2>
-
-In the contrib subdirectory of the fetchmail distribution there is
-some shell code you can add to your .bash_login and .bash_logout
-profiles that will accomplish this.  Thank James Laferriere
-&lt;babydr@nwrain.net&gt; for it.<p>
-
-<hr>
 <h2><a name="T1">T1. How can I use fetchmail with sendmail?</a></h2>
 
 For most sendmails, no special configuration is required.  Eric Allman
@@ -1136,7 +1130,7 @@ problem unless the actual size of the message is above the listener's
 configured length limit).<P>
 
 If you want these fixed, go bug the Evil Empire.  Or, better yet,
-install a real operating system on your server and run IMAP.<P>
+install a real operating system on your mailserver and run IMAP.<P>
 
 <hr>
 <h2><a name="T8">T8. How can I use fetchmail with CompuServe RPA?</a></h2>
@@ -1170,7 +1164,7 @@ bytes.  It also has a nasty habit of discarding headers it doesn't
 recognize, such as X- and Resent- headers.<P>
 
 As with M$ Exchange, the only real fix for these problems is to get a
-POP server that isn't brain-dead.<P>
+POP (or preferably IMAP) server that isn't brain-dead.<P>
 
 <hr>
 <h2><a name="#T10">T10. How can I use fetchmail with SOCKS?</a></h2>
@@ -1916,7 +1910,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/05/13 06:36:21 $
+<td width="30%" align=right>$Date: 1998/05/14 01:01:14 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
