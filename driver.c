@@ -792,11 +792,15 @@ int num;		/* index of message */
 
 	/*
 	 * This code prevents fetchmail from becoming an accessory after
-	 * the fact to upstream sendmails with the `E' option on.  This
-	 * can result in an escaped Unix From_ line at the beginning of
-	 * the headers.  If fetchmail just passes it through, the client
-	 * listener may think the message has *no* headers (since the first)
-	 * line it sees doesn't look RFC822-conformant) and fake up a set.
+	 * the fact to upstream sendmails with the `E' option on.  It also
+	 * copes with certain brain-dead POP servers (like NT's) that pass
+	 * through Unix from_ lines.
+	 *
+	 * Either of these bugs can result in a non-RFC822 line at the
+	 * beginning of the headers.  If fetchmail just passes it
+	 * through, the client listener may think the message has *no*
+	 * headers (since the first) line it sees doesn't look
+	 * RFC822-conformant) and fake up a set.
 	 *
 	 * What the user would see in this case is bogus (synthesized)
 	 * headers, followed by a blank line, followed by the >From, 
@@ -804,10 +808,10 @@ int num;		/* index of message */
 	 * followed by text.
 	 *
 	 * We forestall this lossage by tossing anything that looks
-	 * like an escaped From_ line in headers.  These aren't RFC822
-	 * so our conscience is clear...
+	 * like an escaped or passed-through From_ line in headers.
+	 * These aren't RFC822 so our conscience is clear...
 	 */
-	if (!strncasecmp(line, ">From ", 6))
+	if (!strncasecmp(line, ">From ", 6) || !strncasecmp(line, "From ", 5))
 	{
 	    free(line);
 	    continue;
@@ -829,6 +833,7 @@ int num;		/* index of message */
 	 */
 	{
 	    char	*cp;
+
 	    if (!strncasecmp(line, "Status:", 7))
 		cp = line + 7;
 	    else if (!strncasecmp(line, "X-Mozilla-Status:", 17))
