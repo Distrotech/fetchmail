@@ -7,6 +7,8 @@
 * Matt Kraai's patch for supporting STLS over POP3.
 * French translation updated.
 * Debian fixes merged.
+* Added maildrop (MDA shipped with courier) as fallback after procmail
+  and sendmail (thanks to Alexander Lazic <al-fetchmail@none.at>).
 
 fetchmail-5.9.8 (Thu Feb 14 23:47:31 EST 2002), 21358 lines:
 
