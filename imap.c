@@ -1061,7 +1061,7 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
 	if ((ok = gen_recv(sock, buf, sizeof(buf))))
 	    return(ok);
     } while
-	(sscanf(buf+2, "%d FETCH", &num) != 1);
+	(!strstr(buf+4, "FETCH") || sscanf(buf+2, "%d", &num) != 1);
 
     if (num != number)
 	return(PS_ERROR);
