@@ -754,7 +754,7 @@ static int imap_getrange(int sock,
     {
 	/* 
 	 * We have to have an expunge here, otherwise the re-poll will
-	 * infinite-loop picking up un-expunged message.
+	 * infinite-loop picking up un-expunged messages.
 	 */
 	ok = 0;
 	if (deletions && expunge_period > 1)
