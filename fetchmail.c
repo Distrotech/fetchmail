@@ -45,6 +45,10 @@
 
 #define DROPDEAD	6	/* maximum bad socket opens */
 
+#ifndef ENETUNREACH
+#define ENETUNREACH   128       /* Interactive doesn't know this */
+#endif /* ENETUNREACH */
+
 /* prototypes for internal functions */
 static int load_params(int, char **, int);
 static void dump_params (struct query *);
@@ -331,7 +335,8 @@ int main (int argc, char **argv)
 
 #ifdef HAVE_ATEXIT
 	atexit(unlockit);
-#else
+#endif
+#ifdef HAVE_ON_EXIT
 	on_exit(unlockit, (char *)NULL);
 #endif
     }
@@ -738,6 +743,10 @@ void termhook(int sig)
 
     if (!check_only)
 	write_saved_lists(querylist, idfile);
+
+#if !defined(HAVE_ATEXIT) && !defined(HAVE_ON_EXIT)
+    unlockit();
+#endif
 
     exit(successes ? PS_SUCCESS : querystatus);
 }

@@ -7,7 +7,7 @@ dnl
 AC_INIT(fetchmail.h)		dnl A distinctive file to look for in srcdir. 
 AC_CONFIG_HEADER(config.h)
 
-# We want these before the checks, so the checks can modify their values.
+dnl We want these before the checks, so the checks can modify their values.
 test -z "$CFLAGS" && CFLAGS=-O AC_SUBST(CFLAGS)
 test -z "$LDFLAGS" && LDFLAGS=-s AC_SUBST(LDFLAGS)
 
@@ -35,7 +35,11 @@ AC_CHECK_LIB(nsl,inet_addr)
 AC_CHECK_LIB(socket,socket)
 AC_CHECK_LIB(inet,socket)
 AC_CHECK_LIB(opie,opiegenerator)
-AC_CHECK_LIB(cposix, strchr)	dnl Interactive UNIX System V/386 Release 3.2
+
+dnl Port hack for Interactive UNIX System V/386 Release 3.2
+AC_CHECK_LIB(cposix, strchr,
+		[DEFS="$DEFS -D_SYSV3"
+		LIBS="$LIBS -lcposix"])
 
 AC_CHECK_FUNC(strstr, AC_DEFINE(HAVE_STRSTR), 
               [EXTRASRC="$EXTRASRC \$(srcdir)/strstr.c"

@@ -41,6 +41,9 @@
 /* Define if you have atexit */
 #undef HAVE_ATEXIT
 
+/* Define if you have on_exit */
+#undef HAVE_ON_EXIT
+
 /* Define to help us deduce a 32-bit type (required for Kerberos) */
 #undef SIZEOF_INT
 #undef SIZEOF_SHORT

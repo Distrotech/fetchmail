@@ -25,6 +25,7 @@ fetchmail-4.0.8 ()
 * Fixed core dump bug in UID handling introduced by the 4.0.6 change.
 * Retrieval code for POP3 & older IMAP versions now skips X-IMAP message
   used by UW IMAP4rev1 server to store UIDs.
+* Port to Interactive UNIX System V/386 Release 3.2.
 
 There are 260 people on the fetchmail-friends list.
 
