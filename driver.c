@@ -1223,18 +1223,19 @@ const struct method *proto;	/* protocol method table */
 	/* show user how many messages we downloaded */
 	if (outlevel > O_SILENT)
 	    if (count == 0)
-		error(0, 0, "No mail from %s@%s", 
+		error(0, 0, "No mail at %s@%s", 
 			ctl->remotename,
 			realname);
 	    else
 	    {
 		if (new != -1 && (count - new) > 0)
-		    error(0, 0, "%d message%s (%d seen) from %s@%s.",
+		    error(0, 0, "%d message%s (%d seen) at %s@%s.",
 		    		count, count > 1 ? "s" : "", count-new,
 				ctl->remotename,
 				realname);
 		else
-		    error(0, 0, "%d message%s from %s@%s.", count, count > 1 ? "s" : "",
+		    error(0, 0, "%d message%s at %s@%s.", 
+				count, count > 1 ? "s" : "",
 				ctl->remotename,
 				realname);
 	    }
