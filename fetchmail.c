@@ -34,6 +34,7 @@
 #ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>
 #endif /* HAVE_SYS_WAIT_H */
+#include <sys/utsname.h>
 
 #ifdef HAVE_GETHOSTBYNAME
 #include <netdb.h>
@@ -183,7 +184,7 @@ int main(int argc, char **argv)
 #endif
 
 #define IDFILE_NAME	".fetchids"
-    run.idfile = (char *) xmalloc(strlen(home)+strlen(IDFILE_NAME)+2);
+    run.idfile = (char *) xmalloc(strlen(home)+sizeof(IDFILE_NAME)+1);
     strcpy(run.idfile, home);
     strcat(run.idfile, "/");
     strcat(run.idfile, IDFILE_NAME);
@@ -267,10 +268,10 @@ int main(int argc, char **argv)
 #define	FETCHMAIL_PIDFILE	"fetchmail.pid"
     if (!getuid()) {
 	xalloca(tmpbuf, char *,
-		strlen(PID_DIR) + strlen(FETCHMAIL_PIDFILE) + 2);
+		sizeof(PID_DIR) + sizeof(FETCHMAIL_PIDFILE));
 	sprintf(tmpbuf, "%s/%s", PID_DIR, FETCHMAIL_PIDFILE);
     } else {
-	xalloca(tmpbuf, char *, strlen(home) + strlen(FETCHMAIL_PIDFILE) + 3);
+	xalloca(tmpbuf, char *, strlen(home) + sizeof(FETCHMAIL_PIDFILE) + 2);
 	strcpy(tmpbuf, home);
 	strcat(tmpbuf, "/.");
 	strcat(tmpbuf, FETCHMAIL_PIDFILE);
@@ -294,7 +295,7 @@ int main(int argc, char **argv)
 
 #define	NETRC_FILE	".netrc"
     /* parse the ~/.netrc file (if present) for future password lookups. */
-    xalloca(netrc_file, char *, strlen (home) + strlen(NETRC_FILE) + 2);
+    xalloca(netrc_file, char *, strlen (home) + sizeof(NETRC_FILE) + 1);
     strcpy (netrc_file, home);
     strcat (netrc_file, "/");
     strcat (netrc_file, NETRC_FILE);

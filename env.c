@@ -81,7 +81,7 @@ void envquery(int argc, char **argv)
 	program_name = argv[0];
 
 #define RCFILE_NAME	".fetchmailrc"
-    rcfile = (char *) xmalloc(strlen(home)+strlen(RCFILE_NAME)+2);
+    rcfile = (char *) xmalloc(strlen(home)+sizeof(RCFILE_NAME)+1);
     /* avoid //.fetchmailrc */
     if (strcmp(home, "/") != 0) {
     	strcpy(rcfile, home);
