@@ -171,7 +171,7 @@ What you probably want is the default setting: if you don't specify `-k', then
 fetchmail will automatically delete messages after successful delivery.
 .SS Protocol and Query Options
 .TP
-.B \-p | \-\-protocol <proto>
+.B \-p <proto> | \-\-protocol <proto>
 (Keyword: proto[col])
 Specify the protocol to use when communicating with the remote 
 mailserver.  If no protocol is specified, the default is AUTO.
@@ -219,7 +219,7 @@ of `newness' of messages (UIDL stands for ``unique ID listing'' and is
 described in RFC1725).  Use with `keep' to use a mailbox as a baby
 news drop for a group of users.
 .TP
-.B \-P | \-\-port <portnumber>
+.B \-P <portnumber> | \-\-port <portnumber>
 (Keyword: port)
 The port option permits you to specify a TCP/IP port to connect on. 
 This option will seldom be necessary as all the supported protocols have
@@ -231,7 +231,7 @@ The principal option permits you to specify a service principal for
 mutual authentication.  This is applicable to POP3 or IMAP with Kerberos
 authentication.
 .TP 
-.B \-t, -\-timeout <seconds>
+.B \-t <seconds> | -\-timeout <seconds>
 (Keyword: timeout)
 The timeout option allows you to set a server-nonresponse
 timeout in seconds.  If a mailserver does not send a greeting message
@@ -363,9 +363,11 @@ slash; the default port is 25 (or ``smtp'' under IPv6).  If you
 specify an absolute pathname (beginning with a /), it will be
 interpreted as the name of a UNIX socket accepting LMTP connections
 (such as is supported by the Cyrus IMAP daemon) Example:
-
+.sp
+.nf
 	--smtphost server1,server2/2525,server3,/var/imap/socket/lmtp
-
+.fi
+.sp
 This option can be used with ODMR, and will make fetchmail a relay
 between the ODMR server and SMTP or LMTP receiver.
 .TP 
@@ -539,7 +541,7 @@ under Linux and FreeBSD. Please see the
 .B monitor 
 section for below for FreeBSD specific information.
 .TP
-.B \-M <interface>, --monitor <interface>
+.B \-M <interface> | --monitor <interface>
 (Keyword: monitor)
 Daemon mode can cause transient links which are automatically taken down
 after a period of inactivity (e.g. PPP links) to remain up
@@ -680,10 +682,10 @@ account, your regular login name and password are used with
 If you use the same login name on both the server and the client machines,
 you needn't worry about specifying a user-id with the 
 .B \-u
-option \-\- 
-the default behavior is to use your login name on the client machine as the 
-user-id on the server machine.  If you use a different login name
-on the server machine, specify that login name with the
+option \-\- the default behavior is to use your login name on the
+client machine as the user-id on the server machine.  If you use a
+different login name on the server machine, specify that login name
+with the
 .B \-u
 option.  e.g. if your login name is 'jsmith' on a machine named 'mailgrunt',
 you would start 
@@ -841,9 +843,9 @@ defaults to the username of the calling user.
 
 .SH DAEMON MODE
 The 
-.B --daemon <interval>
+.B \-\-daemon <interval>
 or
-.B -d <interval>
+.B \-d <interval>
 option runs 
 .I fetchmail
 in daemon mode.  You must specify a numeric argument which is a
@@ -1681,7 +1683,8 @@ but you can make this clearer by saying `user eric there is esr here',
 or reverse it by saying `user esr here is eric there'
 .PP
 Legal protocol identifiers for use with the `protocol' keyword are:
-
+.sp
+.nf
     auto (or AUTO)
     pop2 (or POP2)
     pop3 (or POP3)
@@ -1689,7 +1692,8 @@ Legal protocol identifiers for use with the `protocol' keyword are:
     imap (or IMAP)
     apop (or APOP)
     kpop (or KPOP)
-
+.fi
+.sp
 .PP
 Legal authentication types are `any', `password', `kerberos', 'kereberos_v5' 
 and `gssapi', `cram-md5', `otp', `ntlm', `ssh`.
@@ -1716,7 +1720,8 @@ matches.  Finally, `set syslog' sends log messages to syslogd(8).
 .SH INTERACTION WITH RFC 822
 When trying to determine the originating address of a message,
 fetchmail looks through headers in the following order: 
-
+.sp
+.nf
         Return-Path:
         Resent-Sender: (ignored if it doesn't contain an @ or !)
         Sender: (ignored if it doesn't contain an @ or !)
@@ -1724,7 +1729,8 @@ fetchmail looks through headers in the following order:
         From:
         Reply-To:
         Apparently-From:
-
+.fi
+.sp
 The originating address is used for logging, and to set the MAIL FROM
 address when forwarding to SMTP.  This order is intended to cope
 gracefully with receiving mailing list messages in multidrop mode. The
