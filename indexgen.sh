@@ -90,7 +90,7 @@ You can get any of the following here:
 <LI> <a href="fetchmail-$version.tar.gz">
 	Gzipped source archive of fetchmail $version</a>
 <LI> <a href="fetchmail-$version-1.i386.rpm">
-	Intel binary RPM of fetchmail $version</a>
+	Intel binary RPM of fetchmail $version (uses glibc)</a>
 <LI> <a href="fetchmail-$version-1.src.rpm">
 	Source RPM of fetchmail $version</a>
 </UL>
