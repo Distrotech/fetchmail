@@ -1108,9 +1108,21 @@ if __name__ == '__main__':
 
     # Read the existing configuration
     tmpfile = "/tmp/fetchmailconf." + `os.getpid()`
-    os.system("fetchmail --configdump >" + tmpfile)
-    execfile(tmpfile)
-    os.remove(tmpfile)
+    try:
+        s = os.system("fechmail --configdump >" + tmpfile)
+	if s != 0:
+            print "Fetchmail run failure, status " + `s`
+            raise SystemExit
+
+        s = execfile(tmpfile)
+        if s:
+            print "Invalid configuration, status " + `s`
+            raise SystemExit
+    except:
+        os.remove(tmpfile)
+        sys.exit(1)
+    else:
+        os.remove(tmpfile)
 
     # The tricky part -- initializing objects from the configuration global
     # `Configuration' is the top level of the object tree we're going to mung 
