@@ -2029,11 +2029,13 @@ const struct method *proto;	/* protocol method table */
 		    flag	force_retrieval;
 
 		    /*
-		     * What forces this code is that in POP3 and
-		     * IMAP2BIS you can't fetch a message without
-		     * having it marked `seen'.  In IMAP4, on the
-		     * other hand, you can (peek_capable is set to
-		     * convey this).
+		     * What forces this code is that in POP2 and
+		     * IMAP2bis you can't fetch a message without
+		     * having it marked `seen'.  In POP3 and IMAP4, on the
+		     * other hand, you can (peek_capable is set by 
+		     * each driver module to convey this; it's not a
+		     * method constant because of the difference between
+		     * IMAP2bis and IMAP4).
 		     *
 		     * The result of being unable to peek is that if there's
 		     * any kind of transient error (DNS lookup failure, or
@@ -2477,7 +2479,7 @@ int size;	/* length of buffer */
 	if (buf[strlen(buf)-1] == '\n')
 	    buf[strlen(buf)-1] = '\0';
 	if (buf[strlen(buf)-1] == '\r')
-	    buf[strlen(buf)-1] = '\r';
+	    buf[strlen(buf)-1] = '\0';
 	if (outlevel == O_VERBOSE)
 	    error(0, 0, "%s< %s", protocol->name, buf);
 	phase = oldphase;

@@ -234,6 +234,9 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
      */
     sleep(3); /* to be _really_ safe, probably need sleep(5)! */
 
+    /* we're peek-capable because the TOP command exists */
+    peek_capable = TRUE;
+
     /* we're approved */
     return(PS_SUCCESS);
 }
@@ -519,7 +522,29 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
 
     /* phase = PHASE_FETCH */
 
-    gen_send(sock, "RETR %d", number);
+    /*
+     * Though the POP RFCs don't document this fact, on every POP3 server
+     * I know of messages are marked "seen" only at the time the OK
+     * response to a RETR is issued.
+     *
+     * This means we can use TOP to fetch the message without setting its
+     * seen flag.  This is good!  It means that if the protocol exchange
+     * craps out during the message, it will still be marked `unseen' on
+     * the server.
+     *
+     * The line count passed is the maximum value of a twos-complement
+     * signed integer (we take advantage of the fact that, according
+     * to all the POP RFCs, "if the number of lines requested by the
+     * POP3 client is greater than than the number of lines in the
+     * body, then the POP3 server sends the entire message.").
+     *
+     * However...*don't* do this if we're using keep to suppress deletion!
+     * In that case, marking the seen flag is the only way to prevent the
+     * message from being re-fetched on subsequent runs.  */
+    if (ctl->keep)
+	gen_send(sock, "RETR %d", number);
+    else
+	gen_send(sock, "TOP %d 2147483647", number);
     if ((ok = pop3_ok(sock, buf)) != 0)
 	return(ok);
 

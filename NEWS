@@ -14,6 +14,9 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.4.2 ():
+* Use TOP for POP3 retrieval to avoid marking messages seen.  Duh!
+
 fetchmail-4.4.1 (Tue Mar 24 00:01:20 EST 1998):
 * We now properly shroud IMAP passwords containing ", \, and SP.
 * Checked for Y2K safety.  No 2-digit dates anywhere, so we're safe.
