@@ -107,7 +107,7 @@ static int SMTP_check(FILE *sockfp,char *argbuf)
   if ((ok = SockGets(buf, sizeof(buf)-1, sockfp)) > 0) {
     buf[ok] = '\0';
     if (outlevel == O_VERBOSE)
-	fprintf(stderr, "SMTP< %s", buf);
+	fprintf(stderr, "SMTP< %s\n", buf);
     if (argbuf)
       strcpy(argbuf,buf);
     if (buf[0] == '1' || buf[0] == '2' || buf[0] == '3')
