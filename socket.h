@@ -16,6 +16,13 @@ int SockOpen(const char *host, int clientPort, const char *options,
 	     const char *plugin);
 #endif /* INET6 */
 
+/* Returns 1 if this socket is OK, 0 if it isn't select()able
+ * on - probably because it's been closed. You should
+ * always check this function before passing stuff to the
+ * select()-based waiter, as otherwise it may loop. 
+ */
+int SockCheckOpen(int fd);
+
 /* 
 Get a string terminated by an '\n' (matches interface of fgets).
 Pass it a valid socket, a buffer for the string, and

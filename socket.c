@@ -92,6 +92,31 @@ static int handle_plugin(const char *host,
 }
 #endif /* HAVE_SOCKETPAIR */
 
+#ifdef __UNUSED__
+#include <sys/time.h>
+
+int SockCheckOpen(int fd)
+/* poll given socket; is it selectable? */
+{
+    fd_set r, w, e;
+    int rt;
+    struct timeval tv;
+  
+    for (;;) 
+    {
+	FD_ZERO(&r); FD_ZERO(&w); FD_ZERO(&e);
+	FD_SET(fd, &e);
+    
+	tv.tv_sec = 0; tv.tv_usec = 0;
+	rt = select(fd+1, &r, &w, &e, &tv);
+	if (rt == -1 && (errno != EAGAIN && errno != EINTR))
+	    return 0;
+	if (rt != -1)
+	    return 1;
+    }
+}
+#endif /* __UNUSED__ */
+
 #if INET6
 int SockOpen(const char *host, const char *service, const char *options,
 	     const char *plugin)
@@ -148,7 +173,7 @@ int SockOpen(const char *host, const char *service, const char *options,
 int SockOpen(const char *host, int clientPort, const char *options,
 	     const char *plugin)
 {
-    int sock;
+    int sock = -1;	/* pacify -Wall */
 #ifndef HAVE_INET_ATON
     unsigned long inaddr;
 #endif /* HAVE_INET_ATON */
