@@ -171,7 +171,7 @@ int main (int argc, char **argv)
 
     if (versioninfo)
     {
-	printf(_("This is fetchmail release %s"), RELEASE_ID);
+	printf(_("This is fetchmail release %s"), VERSION);
 #ifdef POP2_ENABLE
 	printf("+POP2");
 #endif /* POP2_ENABLE */
@@ -456,7 +456,7 @@ int main (int argc, char **argv)
     {
 	if (!nodetach)
 	    daemonize(run.logfile, termhook);
-	error( 0, 0, _("starting fetchmail %s daemon "), RELEASE_ID);
+	error( 0, 0, _("starting fetchmail %s daemon "), VERSION);
 
 	/*
 	 * We'll set up a handler for these when we're sleeping,
@@ -1214,7 +1214,7 @@ static int query_host(struct query *ctl)
 
 	time(&now);
 	error(0, -1, _("fetchmail: %s querying %s (protocol %s) at %s"),
-	    RELEASE_ID,
+	    VERSION,
 	    ctl->server.pollname, showproto(ctl->server.protocol), ctime(&now));
     }
     switch (ctl->server.protocol) {

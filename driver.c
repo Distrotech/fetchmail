@@ -919,7 +919,7 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 	    sprintf(buf, "\tby %s with %s (fetchmail-%s)\r\n",
 		    fetchmailhost,
 		    protocol->name,
-		    RELEASE_ID);
+		    VERSION);
 	    n = stuffline(ctl, buf);
 	    if (n != -1)
 	    {
