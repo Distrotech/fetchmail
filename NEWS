@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
+
 * Updated Spanish, Turkish, and German translation files.
 * Matthew Gregan's patch to handle garbage lengths from dbmail;
   closes Debian bug #207919.
@@ -15,6 +17,8 @@
 * Smash all NULs out of headers right after the socket read.
 * Dup-killer code now keys on an MD5 hash of the raw headers.
 * Sunil Shetye's patches to break up fetching of sizes and UIDLs.
+
+There are 599 people on fetchmail-friends and 748 on fetchmail-announce.
 
 fetchmail-6.2.4 (Wed Aug 13 04:27:35 EDT 2003), 22625 lines:
 
