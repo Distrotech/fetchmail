@@ -117,20 +117,20 @@ GUI konfigurator do fetchmaila napisany w pythonie.
 %build
 CFLAGS="\$RPM_OPT_FLAGS" LDFLAGS="-s"
 export CFLAGS LDFLAGS
-./configure --prefix=/usr # Add  --enable-nls --without-included-gettext
+./configure --prefix=/usr --mandir=%{_mandir} 
+                         # Add  --enable-nls --without-included-gettext
                          # for internationalization. Also look below.
-make
+make "LOADLIBS=-lkrb4 -ldes425 -lcrypt -lresolv -lkrb5 -lcom_err -lfl"
 
 %install
 if [ -d \$RPM_BUILD_ROOT ]; then rm -rf \$RPM_BUILD_ROOT; fi
 mkdir -p \$RPM_BUILD_ROOT/{etc/X11/wmconfig,usr/lib/rhs/control-panel}
-make install prefix=\$RPM_BUILD_ROOT/usr
+make install prefix=\$RPM_BUILD_ROOT/usr mandir=\$RPM_BUILD_ROOT%{_mandir}/man1
 cp rh-config/*.{xpm,init} \$RPM_BUILD_ROOT/usr/lib/rhs/control-panel
-cp fetchmail.man \$RPM_BUILD_ROOT/usr/man/man1/fetchmail.1
 rm -rf contrib/RCS
 chmod 644 contrib/*
 cp rh-config/fetchmailconf.wmconfig \$RPM_BUILD_ROOT/etc/X11/wmconfig/fetchmailconf
-cd \$RPM_BUILD_ROOT/usr/man/man1
+cd \$RPM_BUILD_ROOT%{_mandir}/man1
 ln -sf fetchmail.1 fetchmailconf.1
 
 %clean
@@ -140,7 +140,7 @@ rm -rf \$RPM_BUILD_ROOT
 %defattr (644, root, root, 755)
 %doc README NEWS NOTES FAQ COPYING FEATURES sample.rcfile contrib
 %doc fetchmail-features.html fetchmail-FAQ.html design-notes.html
-%attr(644, root, man) /usr/man/man1/*.1*
+%attr(644, root, man) %{_mandir}/man1/*.1*
 %attr(755, root, root) /usr/bin/fetchmail
 # Uncomment the following to support internationalization
 # %attr(644,root,root) /usr/share/locale/*/LC_MESSAGES/fetchmail.mo
