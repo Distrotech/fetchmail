@@ -1478,24 +1478,24 @@ const struct method *proto;	/* protocol method table */
 		    }
 		    else
 		    {
+			bool wholesize = !protocol->fetch_body;
+
 			/* request a message */
 			ok = (protocol->fetch_headers)(sock, ctl, num, &len);
 			if (ok != 0)
 			    goto cleanUp;
 			set_timeout(ctl->server.timeout);
 
+			/* -1 means we didn't see a size in the response */
+			if (len == -1 && msgsizes)
+			{
+			    len = msgsizes[num - 1];
+			    wholesize = TRUE;
+			}
+
 			if (outlevel > O_SILENT)
 			{
-			    bool wholesize = !protocol->fetch_body;
-
 			    error_build("reading message %d", num);
-
-			    /* -1 means we didn't see a size in the response */
-			    if (len == -1 && msgsizes)
-			    {
-				len = msgsizes[num - 1];
-				wholesize = TRUE;
-			    }
 
  			    if (len > 0)
 				error_build(" (%d %sbytes)",
