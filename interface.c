@@ -41,13 +41,30 @@ struct interface_pair_s {
 	struct in_addr interface_mask;
 } *interface_pair;
 
-#ifdef HAVE_NEWPROCNETDEV
-/* Linux 2.2 /proc/net/dev format -- transmit packet count in 10th field */
-#define PROCNETDEV	"%d %d %*d %*d %*d %d %*d %*d %*d %*d %d %*d %d"
-#else
-/* pre-linux-2.2 format -- transmit packet count in 8th field */
-#define PROCNETDEV	"%d %d %*d %*d %*d %d %*d %d %*d %*d %*d %*d %d"
-#endif
+static char *netdevfmt;
+
+void interface_init(void)
+/* figure out which /roc/dev/net format to use */
+{
+    FILE *fp = fopen("/proc/sys/kernel/osrelease", "r");
+
+    /* pre-linux-2.2 format -- transmit packet count in 8th field */
+    netdevfmt = "%d %d %*d %*d %*d %d %*d %d %*d %*d %*d %*d %d";
+
+    if (!fp)
+	return;
+    else
+    {
+	int major, minor;
+
+	if (fscanf(fp, "%d.%d.%*d", &major, &minor) != 2)
+	    return;
+
+	if (major >= 2 && minor >= 2)
+	    /* Linux 2.2 -- transmit packet count in 10th field */
+	    netdevfmt = "%d %d %*d %*d %*d %d %*d %*d %*d %*d %d %*d %d";
+    }
+}
 
 static int _get_ifinfo_(int socket_fd, FILE *stats_file, const char *ifname,
 		ifinfo_t *ifinfo)
@@ -68,7 +85,7 @@ static int _get_ifinfo_(int socket_fd, FILE *stats_file, const char *ifname,
 		if (!strncmp(cp, ifname, namelen) &&
 				cp[namelen] == ':') {
 			cp += namelen + 1;
-			if (sscanf(cp, PROCNETDEV,
+			if (sscanf(cp, netdevfmt,
 				   counts, counts+1, counts+2, 
 				   counts+3,&found)>4) { /* found = dummy */
 			        /* newer kernel with byte counts */

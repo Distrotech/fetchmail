@@ -112,9 +112,6 @@
 /* Define if you want built-in SOCKS support */
 #undef HAVE_SOCKS
 
-/* Define if it looks like we have new /proc/dev/net format under Linux */
-#undef HAVE_NEWPROCNETDEV
-
 /* Define to the version of the distribution.  */
 #undef VERSION
 

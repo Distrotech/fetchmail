@@ -433,6 +433,7 @@ extern int  MimeBodyType(unsigned char *hdrs, int WantDecode);
 extern int  UnMimeBodyline(unsigned char **buf, int collapsedoubledot);
 
 /* interface.c */
+void interface_init(void);
 void interface_parse(char *, struct hostdata *);
 void interface_note_activity(struct hostdata *);
 int interface_approve(struct hostdata *);

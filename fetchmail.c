@@ -478,6 +478,10 @@ int main (int argc, char **argv)
 	    signal(SIGHUP, SIG_IGN);
     }
 
+#ifdef linux
+    interface_init();
+#endif /* linux */
+
     /* beyond here we don't want more than one fetchmail running per user */
     umask(0077);
     signal(SIGABRT, termhook);

@@ -9,6 +9,8 @@
 fetchmail-4.7.7 ():
 * Fixed off-by-one error in batchlimit logic (thanks to Brian Warner).
 * Added MD5 checksums to web page.
+* Get kernel type (and derive /proc/net/dev format) at startup.
+* Fixes for fetchmailconf bugs reported by Gunther Leber.
 
 There are 263 people on fetchmail-friends and 342 on fetchmail-announce.
 
