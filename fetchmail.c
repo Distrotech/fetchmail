@@ -653,9 +653,10 @@ int main(int argc, char **argv)
 	 * reliability and shave off some per-UDP-packet costs.
 	 * Unfortunately it interacted badly with diald, which effectively 
 	 * filters out DNS queries over TCP/IP for reasons having to do
-	 * with some obscure kernel problem involving bootstrapping of
+	 * with some obscure Linux kernel problem involving bootstrapping of
 	 * dynamically-addressed links.  I don't understand this mess
-	 * and don't want to, so it's "See ya!" to this hack.  */
+	 * and don't want to, so it's "See ya!" to this hack.
+	 */
 	sethostent(TRUE);	/* use TCP/IP for mailserver queries */
 #endif /* HAVE_RES_SEARCH */
 
