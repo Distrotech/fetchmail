@@ -310,7 +310,7 @@ struct hostrec *queryctl;
 	    if (delimited && *bufp == 0)
 		break;  /* end of message */
 	}
-	strcat(bufp, !inheaders ? "\r\n" : "\n");
+	strcat(bufp, inheaders ? "\n" : "\r\n");
      
 	if (inheaders)
         {
@@ -458,8 +458,9 @@ struct hostrec *queryctl;
 	fputs("\n", stderr);
 
     /* write message terminator */
-    if (SMTP_eom(mboxfd) != SM_OK)
-	return(PS_SMTP);
+    if (!queryctl->mda[0])
+	if (SMTP_eom(mboxfd) != SM_OK)
+	    return(PS_SMTP);
     return(0);
 }
 
