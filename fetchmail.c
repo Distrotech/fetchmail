@@ -69,6 +69,7 @@ char *program_name;	/* the name to prefix error messages with */
 
 static char *lockfile;		/* name of lockfile */
 static int querystatus;		/* status of query */
+static int successes;		/* count number of successful polls */
 static int lastsig;		/* last signal received */
 
 static void termhook();		/* forward declaration of exit hook */
@@ -389,6 +390,10 @@ int main (int argc, char **argv)
 #endif /* HAVE_GETHOSTBYNAME */
 
 		querystatus = query_host(ctl);
+
+		if (querystatus == PS_SUCCESS)
+		    successes++;
+
 		if (!check_only)
 		    update_str_lists(ctl);
 #ifdef	linux
@@ -478,10 +483,11 @@ int main (int argc, char **argv)
 	(poll_interval);
 
     if (outlevel == O_VERBOSE)
-	fprintf(stderr,"fetchmail: normal termination, status %d\n",querystatus);
+	fprintf(stderr,"fetchmail: normal termination, status %d\n",
+		successes ? PS_SUCCESS : querystatus);
 
     termhook(0);
-    exit(querystatus);
+    exit(successes ? PS_SUCCESS : querystatus);
 }
 
 static int load_params(int argc, char **argv, int optind)
@@ -673,7 +679,7 @@ void termhook(int sig)
     if (!check_only)
 	write_saved_lists(querylist, idfile);
 
-    exit(querystatus);
+    exit(successes ? PS_SUCCESS : querystatus);
 }
 
 /*

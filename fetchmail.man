@@ -1101,8 +1101,9 @@ details.
 .PP
 When
 .I fetchmail
-queries more than one host, the returned status is that of the last
-host queried.
+queries more than one host, return status is 0 if \fIany\fR query
+successfully retrieved mail. Otherwise the returned error status is
+that of the last host queried.
 
 .SH AUTHOR
 Eric S. Raymond <esr@snark.thyrsus.com>.  

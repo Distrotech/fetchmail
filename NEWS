@@ -6,10 +6,6 @@
 
 			    Features To Consider
 
-* It would be nice to be able to have the '-c' and standard retrieval modes
-  return a zero exit status if *any* host had mail, not just the last one
-  checked.
-
 * Generate bounce messages when delivery is refused.  See RFC1891, RFC1894.
 
 * More log levels?
@@ -30,8 +26,9 @@ And about time, too, I've been hacking on this code for a year now!
 * Leif Erlingsson <leif@lege.com> sent a patch to avoid colliding with 
   the busy-lock after authentication failure on a POP3 server.
 * Allow duplicate server hostnames again.
+* Fetchmail now returns 0 if *any* poll during the run succeeded.
 
-There are 252 people on the fetchmail-friends list.
+There are 249 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 pl 3.9.9 (Wed Jun 25 11:01:51 EDT 1997):
