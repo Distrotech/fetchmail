@@ -539,8 +539,14 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
      * However...*don't* do this if we're using keep to suppress deletion!
      * In that case, marking the seen flag is the only way to prevent the
      * message from being re-fetched on subsequent runs.
+     *
+     * Also suppress TOP if fetchall is on.  This is a kludge to get
+     * around a really obnoxious bug in qpopper 2.41 beta 1 that must
+     * have been introduced sometime after the 2.2 I tested with.  The
+     * newer version doesn't bounds-check TOP requests to clip them
+     * at the next end of message.  Grrrrr...
      */
-    if (ctl->keep)
+    if (ctl->keep || ctl->fetchall)
 	gen_send(sock, "RETR %d", number);
     else
 	gen_send(sock, "TOP %d 2147483647", number);

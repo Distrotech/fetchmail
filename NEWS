@@ -14,11 +14,13 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.4.3 (Sun Apr 19 17:35:56 EDT 1998):
+fetchmail-4.4.3 (Sun Apr 19 18:22:00 EDT 1998):
 * Back out one of the changes to the null Return-Path handling, as it caused
   invalid rewrites leading to protocol sync errors under some configurations.
+* Add code to disable using TOP for pop3.c when fetchall is on.  Recent
+  versions of qpopper don't bounds-check TOP requests properly.
 
-There are 276 people on fetchmail-friends and 186 on fetchmail-announce.
+There are 277 people on fetchmail-friends and 186 on fetchmail-announce.
 
 fetchmail-4.4.2 (Sun Apr 19 00:13:42 EDT 1998):
 * Use TOP for POP3 retrieval to avoid marking messages seen.  Duh!
