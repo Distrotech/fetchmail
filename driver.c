@@ -710,7 +710,8 @@ char *realname;		/* real name of host */
 	if (!ctl->mda && ((sinkfp = smtp_open(ctl)) == NULL))
 	{
 	    free_str_list(&xmit_names);
-	    error(0, 0, "SMTP connect to %s failed", ctl->smtphost);
+	    error(0, 0, "SMTP connect to %s failed",
+		  ctl->smtphost ? ctl->smtphost : "localhost");
 	    if (return_path)
 		free(return_path);
 	    return(PS_SMTP);
@@ -1070,7 +1071,7 @@ char *realname;		/* real name of host */
 	signal(SIGCHLD, sigchld);
 	if (rc)
 	{
-	    error(0, 0, "MDA exited abnormally or returned nonzero status");
+	    error(0, -1, "MDA exited abnormally or returned nonzero status");
 	    return(PS_IOERR);
 	}
     }
@@ -1079,7 +1080,7 @@ char *realname;		/* real name of host */
 	/* write message terminator */
 	if (SMTP_eom(sinkfp) != SM_OK)
 	{
-	    error(0, 0, "SMTP listener refused delivery");
+	    error(0, -1, "SMTP listener refused delivery");
 	    ctl->errcount++;
 	    return(PS_TRANSIENT);
 	}

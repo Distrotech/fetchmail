@@ -307,9 +307,9 @@ struct query *ctl;	/* option record to be initialized */
 	return(-1);
     }
 
-    if (poll_interval == 0 && use_syslog)
+    if ((poll_interval == 0 || nodetach) && use_syslog)
     {
-	fputs("The --syslog option is only valid with the --daemon option.\n", stderr);
+	fputs("The --syslog option is only valid when running detached.\n", stderr);
 	return(-1);
     }
 

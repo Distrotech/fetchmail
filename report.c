@@ -170,7 +170,7 @@ error (status, errnum, message, va_alist)
 # endif
       priority = status? LOG_ALERT : errnum? LOG_ERR : LOG_INFO;
 
-      if (errnum)
+      if (errnum > 0)
         {
 	  char *msg = alloca (strlen (message) + 5);
 
