@@ -415,7 +415,11 @@ int main (int argc, char **argv)
 		pause();
 		signal(SIGALRM, SIG_IGN);
 		if (lastsig == sigwakeup) {
+#ifdef SYS_SIGLIST_DECLARED
 		    error(0, 0, "awakened by %s", sys_siglist[lastsig]);
+#else
+		    error(0, 0, "awakened by signal %d", lastsig);
+#endif
 		}
 	    }
 
