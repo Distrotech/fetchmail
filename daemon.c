@@ -51,7 +51,7 @@ sigchld_handler (int sig)
 #endif
 
 #if 	defined(HAVE_WAIT3)
-#ifdef hpux
+#ifdef oldhpux	/* HP-UX fixed this sometime between 9.01 and 10.20 */
   while ((pid = wait3(&status, WNOHANG, (int *) 0)) > 0)
 #else
   while ((pid = wait3(&status, WNOHANG, (struct rusage *) 0)) > 0)
