@@ -446,7 +446,7 @@ static FILE *sinkfp;
 static RETSIGTYPE (*sigchld)();
 static int sizeticker;
 
-static int stuffline(struct query *ctl, char *buf, flag delimited)
+static int stuffline(struct query *ctl, char *buf)
 /* ship a line to the given control block's SMTP server */
 {
     int	n;
@@ -469,7 +469,7 @@ static int stuffline(struct query *ctl, char *buf, flag delimited)
      * use .<CR><LF> as EOM.  If it does, the server will already have
      * decorated any . lines it sends back up.
      */
-    if (!delimited && *buf == '.')
+    if (!protocol->delimited && *buf == '.')
 	if (sinkfp && ctl->mda)
 	    fputs(".", sinkfp);
 	else if (ctl->smtp_socket != -1)
@@ -1128,7 +1128,7 @@ int num;		/* index of message */
 
 	/* ship out the error line */
 	if (sinkfp)
-	    stuffline(ctl, errmsg, protocol->delimited);
+	    stuffline(ctl, errmsg);
     }
 
     free_str_list(&xmit_names);
@@ -1138,24 +1138,23 @@ int num;		/* index of message */
     *cp++ = '\r';
     *cp++ = '\n';
     *cp++ = '\0';
-    stuffline(ctl, buf, protocol->delimited);
+    stuffline(ctl, buf);
 
     return(PS_SUCCESS);
 }
 
-static int readbody(sock, ctl, forward, len, delimited)
+static int readbody(sock, ctl, forward, len)
 /* read and dispose of a message body presented on sock */
 struct query *ctl;	/* query control record */
 int sock;		/* to which the server is connected */
 int len;		/* length of message */
 flag forward;		/* TRUE to forward */
-flag delimited;		/* does the protocol use a message delimiter? */
 {
     int	linelen;
     char buf[MSGBUFSIZE+1], *cp;
 
     /* pass through the text lines */
-    while (delimited || len > 0)
+    while (protocol->delimited || len > 0)
     {
 	if ((linelen = SockRead(sock, buf, sizeof(buf)-1)) == -1)
 	{
@@ -1182,7 +1181,7 @@ flag delimited;		/* does the protocol use a message delimiter? */
 	len -= linelen;
 
 	/* check for end of message */
-	if (delimited && *buf == '.')
+	if (protocol->delimited && *buf == '.')
 	    if (buf[1] == '\r' && buf[2] == '\n' && buf[3] == '\0')
 		break;
 	    else if (buf[1] == '\n' && buf[2] == '\0')
@@ -1191,7 +1190,7 @@ flag delimited;		/* does the protocol use a message delimiter? */
 	/* ship out the text line */
 	if (forward)
 	{
-	    int	n = stuffline(ctl, buf, delimited);
+	    int	n = stuffline(ctl, buf);
 
 	    if (n < 0)
 	    {
@@ -1664,8 +1663,7 @@ const struct method *proto;	/* protocol method table */
 			    ok = readbody(sock,
 					  ctl,
 					  !suppress_forward,
-					  len,
-					  protocol->delimited);
+					  len);
 			    if (ok == PS_TRANSIENT)
 				suppress_delete = suppress_forward = TRUE;
 			    else if (ok)
