@@ -544,11 +544,33 @@ static int internal_expunge(int sock)
 static int imap_idle(int sock)
 /* start an RFC2177 IDLE */
 {
+    int ok;
+
+    /* special timeout to terminate the IDLE and re-issue it
+     * at least every 28 minutes:
+     * (the server may have an inactivity timeout) */
     stage = STAGE_IDLE;
     saved_timeout = mytimeout;
-    mytimeout = 0;
+    mytimeout = 1680; /* 28 min */
 
-    return (gen_transact(sock, "IDLE"));
+    /* enter IDLE mode */
+    ok = gen_transact(sock, "IDLE");
+
+    if(ok == PS_IDLETIMEOUT) {
+	/* send "DONE" continuation */
+	SockWrite(sock, "DONE\r\n", 6);
+	if (outlevel >= O_MONITOR)
+	    report(stdout, "IMAP> DONE\n");
+
+	/* restore normal timeout value */
+	mytimeout = saved_timeout;
+	stage = STAGE_FETCH;
+
+	/* get OK IDLE message */
+	return imap_ok(sock, NULL);
+    } else
+	/* not idle timeout */
+	return ok;
 }
 
 static int imap_getrange(int sock, 

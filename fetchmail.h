@@ -94,6 +94,7 @@
 #define		PS_BSMTP	12	/* output batch could not be opened */
 #define		PS_MAXFETCH	13	/* poll ended by fetch limit */
 #define		PS_SERVBUSY	14	/* server is busy */
+#define		PS_IDLETIMEOUT	15	/* timeout on imap IDLE */
 /* leave space for more codes */
 #define		PS_UNDEFINED	23	/* something I hadn't thought of */
 #define		PS_TRANSIENT	24	/* transient failure (internal use) */
@@ -426,6 +427,7 @@ void report_at_line ();
 
 /* driver.c -- main driver loop */
 void set_timeout(int);
+int isidletimeout(void);
 int do_protocol(struct query *, const struct method *);
 
 /* transact.c: transaction support */

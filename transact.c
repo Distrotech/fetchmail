@@ -1446,7 +1446,10 @@ int size;	/* length of buffer */
     {
 	set_timeout(0);
 	phase = oldphase;
-	return(PS_SOCKET);
+	if(isidletimeout())
+	  return(PS_IDLETIMEOUT);
+	else
+	  return(PS_SOCKET);
     }
     else
     {

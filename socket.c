@@ -1018,6 +1018,8 @@ static ssize_t cygwin_read(int sock, void *buf, size_t count)
 	    return(-1);
 	}
     }
+
+    return count;
 }
 #endif /* __CYGWIN__ */
 

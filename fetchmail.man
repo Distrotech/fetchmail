@@ -1240,7 +1240,7 @@ T}
 set syslog  	\&	T{
 Do error logging through syslog(3).
 T}
-set nosyslog  	\&	T{
+set no syslog  	\&	T{
 Turn off error logging through syslog(3).
 T}
 set properties 	\&	T{

@@ -7,6 +7,10 @@
   STARTTLS negotiation.
 * Sunil's patch to make handling of failed STARTTLS more graceful.
 * Sunil's JF2 fix patch for .fetchmailrc security fix.
+* Christophe GIAUME <christophe@giaume.com> finished the implementation
+  of RFC2177 IDLE.
+* Jason Tishler's fix patch for Cygwin.
+* Spanish and Polish translations updated.
 
 fetchmail-6.2.1 (Tue Jan 14 08:17:19 EST 2003), 22219 lines:
 
