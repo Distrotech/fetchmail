@@ -1,7 +1,7 @@
 			Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-3.2 ()
+fetchmail-3.2 (Mon Jan 27 02:51:10 EST 1997)
 
 features --
 
@@ -14,6 +14,10 @@ bugs --
 * Fix RFC822 parsing to strip comments at end of bare addresses.
 
 * Explicitly strip CRs out of fetched mail.
+
+* Corrections to 8BITMIME processing.
+
+There are 207 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-3.1 (Fri Jan 24 12:45:18 EST 1997)
