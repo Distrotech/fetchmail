@@ -56,9 +56,9 @@
 #define LA_MONITOR      38
 #define LA_YYDEBUG	39
 
-/* options still left: CgGhHjJoORUwWxXYzZ */
+/* options still left: CgGhHjJoORUwWxXYz */
 static const char *shortoptions = 
-	"?Vcsvd:NqL:f:i:p:UP:A:t:E:Q:u:akKFnl:r:S:b:B:e:m:I:M:y";
+	"?Vcsvd:NqL:f:i:p:UP:A:t:E:Q:u:akKFnl:r:S:Z:b:B:e:m:T:I:M:y";
 
 static const struct option longoptions[] = {
 /* this can be const because all flag fields are 0 and will never get set */
