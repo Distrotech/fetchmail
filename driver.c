@@ -790,7 +790,7 @@ va_dcl {
     fprintf(stderr,"> %s\n", buf);
 
   ok = (protocol->parse_response)(buf,socket);
-  if (outlevel > O_SILENT && outlevel <= O_VERBOSE)
+  if (outlevel == O_VERBOSE)
     fprintf(stderr,"%s\n",buf);
 
   return(ok);
