@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.9.9 (Sat Mar  9 08:54:28 EST 2002), 21508 lines:
+
 * Renamed misnamed tr.po and da.po files
 * Jakub Ulanowski's patch to fix SSL fingerprint handling.
 * Matt Kraai's patch for supporting STLS over POP3.
@@ -10,6 +12,8 @@
 * Added maildrop (MDA shipped with courier) as fallback after procmail
   and sendmail (thanks to Alexander Lazic <al-fetchmail@none.at>).
 * ESMTP AUTH support from Wojciech Polak <polak@lodz.pdi.net>.
+
+There are 481 people on fetchmail-friends and 646 on fetchmail-announce.
 
 fetchmail-5.9.8 (Thu Feb 14 23:47:31 EST 2002), 21358 lines:
 
