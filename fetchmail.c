@@ -180,18 +180,6 @@ char **argv;
 	        else
 		    strcpy(hostp->localname, user);
 
-	    /*
-	     * Turn the localname into a full Internet address...
-	     * otherwise exim (somebody's smail equivalent) becomes
-	     * annoyed much later when the SMTP interface tries to
-	     * ship it a local name in a RCPT TO command.
-	     */
-	    if (strchr(hostp->localname, '@') == 0)
-	    {
-		strcat(hostp->localname, "@");
-		strcat(hostp->localname, hostp->smtphost);
-	    }
-
 	    /* check that delivery is going to a real local user */
 	    if ((pw = getpwnam(user)) == (struct passwd *)NULL)
 		exit(PS_SYNTAX);	/* has to be from bad rc file */
