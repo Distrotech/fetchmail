@@ -1128,9 +1128,10 @@ this server.
             if string.find(greetline, "GroupWise") > 0:
                 warnings = warnings + """
 You appear to be using the Novell GroupWise IMAP server.  This server would
-be better named GroupFoolish; it is unusably broken.  The specific problem
-is that it doesn't include a content length in its BODY[TEXT] response, so
-fetchmail can't know how much content to fetch.
+be better named GroupFoolish; according to the designer of IMAP it is unusably
+broken.  The specific problem is that it doesn't include a required content
+length in its BODY[TEXT] response, so fetchmail can't know how much content
+to fetch.
 
 """
 

@@ -8,6 +8,14 @@
 
 				Release Notes:
 
+fetchmail-5.1.1 ():
+* Consistently show dummy arguments on manual page.
+* Fix lexer to permit `antispam -1'.
+* Added fetchmailconf and FAQ warnings about Novell GroupWise.
+
+There are 266 people on fetchmail-friends and 444 on fetchmail-announce.
+
+------------------------------------------------------------------------------
 fetchmail-5.1.0 (Wed Sep 22 01:27:42 EDT 1999):
 * CRAM-MD5 code now doublequotes usernames with embedded spaces.  This will
   probably fail (the RFCs don't support quoting) but it's better than nothing
