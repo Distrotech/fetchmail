@@ -1244,7 +1244,8 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 #endif /* INET6 */
 	    && (ctl->server.preauthenticate == A_KERBEROS_V4 ||
 		ctl->server.preauthenticate == A_KERBEROS_V5))
-	    printf("  Protocol is KPOP");
+	    printf("  Protocol is KPOP with Kerberos %s authentication",
+		   ctl->server.preauthenticate == A_KERBEROS_V5 ? "V" : "IV");
 	else
 	    printf("  Protocol is %s", showproto(ctl->server.protocol));
 #if INET6
