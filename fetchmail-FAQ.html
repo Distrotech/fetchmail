@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2002/02/01 21:47:49 $
+<td width="30%" align=right>$Date: 2002/03/09 12:21:27 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -2216,7 +2216,8 @@ order to avoid a `lock busy' error.)
 
 Fetchmail only sends a delete mail request to the server when either
 (a) it gets a positive delivery acknowledgment from the SMTP
-listener, or (b) it gets an error 571 (the spam-filter error) from the
+listener, or (b) it gets one of the spam-filter errors (see the
+description of the <code>antispam></code> option) from the
 listener.  No interrupt can cause it to lose mail.
 
 <p>However, IMAP2bis has a design problem in that its normal fetch
@@ -3005,7 +3006,7 @@ date from the last Received header.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2002/02/01 21:47:49 $
+<td width="30%" align=right>$Date: 2002/03/09 12:21:27 $
 </table>
 
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@thyrsus.com&gt;</A></ADDRESS>
