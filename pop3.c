@@ -198,7 +198,7 @@ int socket;
 struct hostrec *queryctl;
 int number;
 {
-    return(gen_transact(socket, "DELE %d", number);
+    return(gen_transact(socket, "DELE %d", number));
 }
 
 const static struct method pop3 =
