@@ -3,10 +3,11 @@
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
 * Cygwin port fixes for socket.c.
-* Matthias Andree's patches to 
+* Matthias Andree's patches to: 
   (a) clean up xmalloc types,
   (b) improve distclean,
-  (c) use sendmail -i in configure.in and dump the fallback configuration.
+  (c) use sendmail -i in configure.in and dump the fallback configuration,
+  (d) turn fallback off by default.
 
 fetchmail-5.9.12 (Tue Jun  4 14:57:47 EDT 2002), 21669 lines:
 
