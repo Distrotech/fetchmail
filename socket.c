@@ -58,7 +58,7 @@ int clientPort;
      */
     errno = 0;
     connect(sock, (struct sockaddr *) &ad, sizeof(ad));
-    if (errno != 0);
+    if (errno != 0)
     {
 	close(sock);
         return (FILE *)NULL;
