@@ -321,6 +321,7 @@ struct msgblk			/* message header parsed for open_sink() */
     char   		*headers;	/* raw message headers */
     struct idlist	*recipients;	/* addressees */
     char		return_path[HOSTLEN + USERNAMELEN + 4]; 
+    int			msglen;
     int			reallen;
 };
 
@@ -403,8 +404,15 @@ void report_complete ();
 void report_at_line ();
 #endif
 
-/* driver.c: transaction support */
+/* transact.c: transaction support */
+void init_transact(const struct method *);
 void set_timeout(int);
+int readheaders(int sock,
+		       long fetchlen,
+		       long reallen,
+		       struct query *ctl,
+		int num);
+int readbody(int sock, struct query *ctl, flag forward, int len);
 #if defined(HAVE_STDARG_H)
 void gen_send (int sock, const char *, ... );
 int gen_recv(int sock, char *buf, int size);
@@ -414,6 +422,7 @@ void gen_send ();
 int gen_recv();
 int gen_transact ();
 #endif
+extern struct msgblk msgblk;
 
 /* lock.c: concurrency locking */
 void lock_setup(void), lock_assert(void);
