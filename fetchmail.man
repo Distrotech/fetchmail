@@ -577,9 +577,6 @@ software.
 .PP
 The RPOP support is not yet well tested.
 .PP
-The configuration file lexer handles punctuation adjacent to keywords poorly.
-Flex can be very mysterious at times.
-.PP
 Send comments, bug reports, gripes, and the like to Eric S. Raymond
 <esr@thyrsus.com>.
 .SH NOTES

@@ -69,7 +69,7 @@ options		{/* EMPTY */}
 			yylval.sval = (char *) strdup(yytext+1);
 			return STRING;
 		}
-[^ \t\r\n]+	{ yylval.sval = (char *) strdup(yytext); return STRING; }
+[^;:, \t\r\n]+	{ yylval.sval = (char *) strdup(yytext); return STRING; }
 
 [ \t\r]+	;	/* whitespace */
 
