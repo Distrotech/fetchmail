@@ -77,11 +77,11 @@ TEXI2DVI = texi2dvi
 ETAGS = etags -tw
 CTAGS = ctags -tw
 
-popobjs = socket.o getpass.o pop2.o pop3.o imap.o fetchmail.o options.o	\
+protobjs = socket.o getpass.o pop2.o pop3.o imap.o fetchmail.o options.o \
        rcfile_l.o rcfile_y.o daemon.o smtp.o driver.o rfc822.o xmalloc.o \
        uid.o mxget.o md5c.o md5ify.o
 
-objs = $(popobjs) $(extras) $(EXTRAOBJ)
+objs = $(protobjs) $(extras) $(EXTRAOBJ)
 
 srcs = $(srcdir)/socket.c $(srcdir)/getpass.c $(srcdir)/pop2.c 		\
        $(srcdir)/pop3.c $(srcdir)/imap.c $(srcdir)/fetchmail.c		\
@@ -98,7 +98,7 @@ all: fetchmail fetchmail.spec
 # Some makes apparently use .PHONY as the default goal if it is before `all'.
 .PHONY: all check
 
-$(popobjs): fetchmail.h
+$(protobjs): fetchmail.h
 
 fetchmail: $(srcdir)/rcfile_l.c $(srcdir)/rcfile_y.c $(objs)
 	$(CC) $(LDFLAGS) $(objs) $(LOADLIBS) -o fetchmail
