@@ -230,7 +230,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 		    has_kerberos = TRUE;
 #endif /* defined(KERBEROS_IV) */
 #ifdef OPIE_ENABLE
-		if (strncasecmp(buffer, "SKEY", 8) == 0)
+		if (strncasecmp(buffer, "X-OTP", 8) == 0)
 		    has_opie = TRUE;
 #endif /* OPIE_ENABLE */
 	    }
