@@ -179,7 +179,7 @@ serv_option	: AKA alias_list
 					        free(request);
 					    }
 #else
-					    yyerror("network-security support disabled")
+					    yyerror("network-security support disabled");
 #endif /* NET_SECURITY */
 					}
 		| INTERFACE STRING	{
