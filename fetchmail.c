@@ -750,9 +750,7 @@ static char *showproto(int proto)
     case P_IMAP_K4: return("IMAP-K4"); break;
     case P_APOP: return("APOP"); break;
     case P_RPOP: return("RPOP"); break;
-#ifdef HAVE_GETHOSTBYNAME
     case P_ETRN: return("ETRN"); break;
-#endif /* HAVE_GETHOSTBYNAME */
     default: return("unknown?!?"); break;
     }
 }

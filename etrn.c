@@ -14,9 +14,6 @@
 #include  "smtp.h"
 #include  "socket.h"
 
-#ifdef HAVE_GETHOSTBYNAME
-#include <netdb.h>
-
 static int etrn_ok (int sock, char *argbuf)
 /* parse command response */
 {
@@ -95,7 +92,7 @@ static int etrn_getrange(int sock, struct query *ctl, char *id, int *countp,
 	    if (hp == (struct hostent *) NULL)
 	    {
 		/* exit with error message */
-	        error(5, h_errno, "gethostbyname");
+	        error(5, 0, "gethostbyname");
 	    }
 	    /* here it is */
 	    qname = hp->h_name;
@@ -189,7 +186,5 @@ int doETRN (struct query *ctl)
     peek_capable = FALSE;
     return(do_protocol(ctl, &etrn));
 }
-
-#endif /* HAVE_GETHOSTBYNAME */
 
 /* etrn.c ends here */
