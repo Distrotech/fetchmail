@@ -141,7 +141,7 @@ int main (int argc, char **argv)
     if ((parsestatus = parsecmdline(argc,argv,&cmd_opts)) < 0)
 	exit(PS_SYNTAX);
 
-    /* this hint to stdio should halp messages come out in the right order */
+    /* this hint to stdio should help messages come out in the right order */
     setvbuf(stdout, NULL, _IOLBF, POPBUFSIZE);
 
     if (versioninfo)
