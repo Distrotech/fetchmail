@@ -21,9 +21,6 @@
 #if defined(HAVE_UNISTD_H)
 #include  <unistd.h>
 #endif
-
-#include  <sys/time.h>
-#include  <ctype.h>
 #include  <errno.h>
 
 #include  "socket.h"
