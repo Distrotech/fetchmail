@@ -1026,7 +1026,21 @@ which is essentially what <code>biff -n</code> will do. If this
 doesn't work, comment out any reference to ``comsat'' in your
 /etc/inetd.conf file and restart inetd.<P>
 
-$Id: fetchmail-FAQ.html,v 1.35 1997/06/18 22:42:47 esr Exp $<p>
+In Slackware Linux distributions, the last line in /etc/profile is
+
+<PRE>
+biff y
+</PRE>
+
+Change this to
+
+<PRE>
+biff n
+</PRE>
+
+to solve theproblem system-wide.
+
+$Id: fetchmail-FAQ.html,v 1.36 1997/06/18 23:26:13 esr Exp $<p>
 
 <HR>
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
