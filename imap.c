@@ -1315,7 +1315,7 @@ const static struct method imap =
     imap_canonicalize,	/* deal with embedded slashes and spaces */
     imap_getauth,	/* get authorization */
     imap_getrange,	/* query range of messages */
-    imap_getsizes,	/* get sizes of messages (used for --limit option */
+    imap_getsizes,	/* get sizes of messages (used for ESMTP SIZE option) */
     imap_is_old,	/* no UID check */
     imap_fetch_headers,	/* request given message headers */
     imap_fetch_body,	/* request given message body */

@@ -1773,7 +1773,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 
 		    /* 
 		     * We need the size of each message before it's
-		     * loaded in order to pass via the ESMTP SIZE
+		     * loaded in order to pass it to the ESMTP SIZE
 		     * option.  If the protocol has a getsizes method,
 		     * we presume this means it doesn't get reliable
 		     * sizes from message fetch responses.
