@@ -266,6 +266,15 @@ struct query
     struct query *next;		/* next query control block in chain */
 };
 
+struct msgblk			/* message header parsed for open_sink() */
+{
+    char   		*headers;	/* raw message headers */
+    struct idlist	*xmit_names;	/* addressees */
+    char		return_path[HOSTLEN + USERNAMELEN + 4]; 
+    int			reallen;
+};
+
+
 /*
  * Numeric option handling.  Numeric option value of zero actually means
  * it's unspecified.  Value less than zero is zero.
@@ -361,7 +370,7 @@ extern int phase;
 
 /* sink.c: forwarding */
 int stuffline(struct query *, char *);
-int open_sink(struct query*, const char*, struct idlist*, long reallen, int*, int*);
+int open_sink(struct query*, struct msgblk *, int*, int*);
 void release_sink(struct query *);
 int close_sink(struct query *, flag);
 int open_warning_by_mail(struct query *);

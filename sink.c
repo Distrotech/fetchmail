@@ -249,10 +249,7 @@ static void sanitize(char *s)
     	*cp = '_';
 }
 
-int open_sink(struct query *ctl, 
-	      const char *return_path,
-	      struct idlist *xmit_names,
-	      long reallen,
+int open_sink(struct query *ctl, struct msgblk *msg,
 	      int *good_addresses, int *bad_addresses)
 /* set up sinkfp to be an input sink we can ship a message to */
 {
@@ -269,14 +266,14 @@ int open_sink(struct query *ctl,
 
 	/* see the ap computation under the SMTP branch */
 	fprintf(sinkfp, 
-		"MAIL FROM: %s", (return_path[0]) ? return_path : user);
+		"MAIL FROM: %s", (msg->return_path[0]) ? msg->return_path : user);
 
 	if (ctl->pass8bits || (ctl->mimemsg & MSG_IS_8BIT))
 	    fputs(" BODY=8BITMIME", sinkfp);
 	else if (ctl->mimemsg & MSG_IS_7BIT)
 	    fputs(" BODY=7BIT", sinkfp);
 
-	fprintf(sinkfp, " SIZE=%ld\r\n", reallen);
+	fprintf(sinkfp, " SIZE=%ld\r\n", msg->reallen);
 
 	/*
 	 * RFC 1123 requires that the domain name part of the
@@ -288,7 +285,7 @@ int open_sink(struct query *ctl,
 	ctl->destaddr = ctl->smtpaddress ? ctl->smtpaddress : "localhost";
 
 	*bad_addresses = 0;
-	for (idp = xmit_names; idp; idp = idp->next)
+	for (idp = msg->xmit_names; idp; idp = idp->next)
 	    if (idp->val.status.mark == XMIT_ACCEPT)
 	    {
 		if (strchr(idp->id, '@'))
@@ -315,7 +312,7 @@ int open_sink(struct query *ctl,
 
 	ctl->destaddr = "localhost";
 
-	for (idp = xmit_names; idp; idp = idp->next)
+	for (idp = msg->xmit_names; idp; idp = idp->next)
 	    if (idp->val.status.mark == XMIT_ACCEPT)
 		(*good_addresses)++;
 
@@ -330,7 +327,7 @@ int open_sink(struct query *ctl,
 	     * long lists of users and (re)implement %s.
 	     */
 	    nameslen = 0;
-	    for (idp = xmit_names; idp; idp = idp->next)
+	    for (idp = msg->xmit_names; idp; idp = idp->next)
 		if ((idp->val.status.mark == XMIT_ACCEPT))
 		    nameslen += (strlen(idp->id) + 1);	/* string + ' ' */
 	    if ((*good_addresses == 0))
@@ -342,7 +339,7 @@ int open_sink(struct query *ctl,
 	    else
 	    {
 		names[0] = '\0';
-		for (idp = xmit_names; idp; idp = idp->next)
+		for (idp = msg->xmit_names; idp; idp = idp->next)
 		    if (idp->val.status.mark == XMIT_ACCEPT)
 		    {
 			strcat(names, idp->id);
@@ -358,7 +355,7 @@ int open_sink(struct query *ctl,
 	/* get From address for %F */
 	if (strstr(before, "%F"))
 	{
-	    from = xstrdup(return_path);
+	    from = xstrdup(msg->return_path);
 
 	    /* sanitize from in order to contain *only* harmless shell chars */
 	    sanitize(from);
@@ -478,8 +475,8 @@ int open_sink(struct query *ctl,
 		strcpy(options, " BODY=7BIT");
         }
 
-	if ((ctl->server.esmtp_options & ESMTP_SIZE) && reallen > 0)
-	    sprintf(options + strlen(options), " SIZE=%ld", reallen);
+	if ((ctl->server.esmtp_options & ESMTP_SIZE) && msg->reallen > 0)
+	    sprintf(options + strlen(options), " SIZE=%ld", msg->reallen);
 
 	/*
 	 * Try to get the SMTP listener to take the Return-Path
@@ -501,7 +498,7 @@ int open_sink(struct query *ctl,
 	 * None of these error conditions generates bouncemail.  Comments
 	 * below explain for each case why this is so.
 	 */
-	ap = (return_path[0]) ? return_path : user;
+	ap = (msg->return_path[0]) ? msg->return_path : user;
 	if (SMTP_from(ctl->smtp_socket, ap, options) != SM_OK)
 	{
 	    int smtperr = atoi(smtp_response);
@@ -580,7 +577,7 @@ int open_sink(struct query *ctl,
 	/*
 	 * Now list the recipient addressees
 	 */
-	for (idp = xmit_names; idp; idp = idp->next)
+	for (idp = msg->xmit_names; idp; idp = idp->next)
 	    if (idp->val.status.mark == XMIT_ACCEPT)
 	    {
 		if (strchr(idp->id, '@'))
@@ -693,14 +690,15 @@ int open_warning_by_mail(struct query *ctl)
 /* set up output sink for a mailed warning to calling user */
 {
     int	good, bad;
+    static struct msgblk msg = {NULL, NULL, "FETCHMAIL-DAEMON", 0};
 
     /*
-     * We give a null address list as arg 3 because we actually *want*
-     * this message to go to run.postmaster.  The zero length arg 4 means
+     * We give a null address list as arg 4 because we actually *want*
+     * this message to go to run.postmaster.  The zero length arg 5 means
      * we won't pass a SIZE option to ESMTP; the message length would
      * be more trouble than it's worth to compute.
      */
-    return(open_sink(ctl, "FETCHMAIL-DAEMON", NULL, 0, &good, &bad));
+    return(open_sink(ctl, &msg, &good, &bad));
 }
 
 #if defined(HAVE_STDARG_H)
