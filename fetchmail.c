@@ -169,8 +169,16 @@ int main (int argc, char **argv)
 	    printf("Lockfile at %s\n", tmpbuf);
 	if (batchlimit)
 	    printf("SMTP message batch limit is %d.\n", batchlimit);
-	else
+	else if (outlevel == O_VERBOSE)
 	    printf("No SMTP message batch limit.\n");
+	if (interface)
+	    printf("TCP/IP interface is %s.\n", interface);
+	else if (outlevel == O_VERBOSE)
+	    printf("No TCP/IP interface specified\n");
+	if (monitor)
+	    printf("Polling loop will monitor %s.\n", monitor);
+	else if (outlevel == O_VERBOSE)
+	    printf("No monitor address specified\n");
 	for (ctl = querylist; ctl; ctl = ctl->next) {
 	    if (ctl->active && !(implicitmode && ctl->skip))
 		dump_params(ctl);
