@@ -14,21 +14,9 @@ has also been ported to QNX; to build under QNX, see the header
 comments in the Makefile.
 
 For those of you already familiar with previous versions, here are the
-major new features since 2.0:
+major new features since 3.0:
 
-	** Support for secure use with ssh.
-
-	** Mailserver passwords can be parsed out of your .netrc file.
-
-	** When forwarding mail via SMTP, fetchmail respects the 571
-           "spam filter" response and discards any mail that triggers it.
-
-	** Transaction and error logging may optionally be done via syslog.
-
-	** (Linux only) Security option to permit fetchmail to poll a host 
-	   only when a point-to-point link to a particular IP address is up.
-
-	** RPOP support is back.
+	** Support for ESMTP 8BITMIME and SIZE options
 
 There have also been numerous improvements in multidrop mailbox handling.
 Under many circumstances fetchmail can now determine a mail message's
@@ -55,6 +43,20 @@ pop-perl5-1.2, popc, popmail-1.6 and upop) are marked with **.
 
 	** Support for retrieving and forwarding from multi-drop mailboxes
 	   that is guaranteed not to cause mail loops.
+
+	** Support for secure use with ssh.
+
+	** Mailserver passwords can be parsed out of your .netrc file.
+
+	** When forwarding mail via SMTP, fetchmail respects the 571
+           "spam filter" response and discards any mail that triggers it.
+
+	** Transaction and error logging may optionally be done via syslog.
+
+	** (Linux only) Security option to permit fetchmail to poll a host 
+	   only when a point-to-point link to a particular IP address is up.
+
+	** RPOP support is back.
 
 	*  Easy control via command line or free-format run control file.
 

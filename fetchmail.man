@@ -1001,8 +1001,8 @@ Send comments, bug reports, gripes, and the like to Eric S. Raymond
 elm(1), mail(1), sendmail(8), popd(8), imapd(8)
 .SH APPLICABLE STANDARDS
 .TP 5
-SMTP:
-RFC 821
+SMTP/ESMTP:
+RFC 821, RFC 1869, RFC 1652, RFC 1870 
 .TP 5
 mail:
 RFC 822

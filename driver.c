@@ -362,6 +362,10 @@ static FILE *smtp_open(struct query *ctl)
 			      ctl->server.names->id,
 			      &lead->server.esmtp_options) != SM_OK)
 	{
+	    /*
+	     * RFC 1869 warns that some listeners hang up on a failed EHLO,
+	     * so it's safest not to assume the socket will still be good.
+	     */
 	    fclose(lead->smtp_sockfp);
 	    lead->smtp_sockfp = (FILE *)NULL;
 	}
