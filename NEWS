@@ -16,6 +16,9 @@
 ------------------------------------------------------------------------------
 fetchmail-4.2.6 ()
 * Prevent bad matches on Received line due to hostnames ending "for" and "by".
+* Improved bug-tracking header, now also emitted when using an MDA.
+* Cope with Post Office/NT's brain-dead habit of prepending bogus LIST items
+  with a -1 length.
 
 There are 284 people on the fetchmail-friends list.
 
