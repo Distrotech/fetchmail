@@ -16,6 +16,26 @@ Inflict severe pain on the person(s) responsible for removing LAST from POP3.
 
 			Release Notes:
 
+fetchmail-1.7 (Tue Oct  8 01:00:08 EDT 1996):
+
+features --
+
+* Make configure more GNUish; it understands --prefix and other standard
+  autoconf options now (see INSTALL for details)
+
+bugs --
+
+* You may have to rearrange the order of options in your .fetchmailrc.
+  The grammar for the new multiple-user syntax requires that server 
+  options (protocol and port) come before any user options.
+
+* Fixed core dump bug that was screwing configurations with no .fetchmailrc.
+
+* Fixed broken 'p' option.
+
+* `norewrite' and `rewrite' in .fetchrc were the inverses of what they
+  should have been.
+
 fetchmail-1.6 (Sun Oct  6 20:55:09 EDT 1996):
 
 features --

@@ -330,7 +330,7 @@ permissions;
 will complain and exit otherwise.
 .PP
 Comments begin with a '#' and extend through the end of the line.
-Otherwise the file consists of a series of server entries.
+Otherwise the file consists of a series of free-format server entries.
 Any amount of whitespace separates keywords, tokens, or strings 
 in server entries but is otherwise ignored (but whitespace enclosed
 in double quotes is treated as part of the string).
@@ -338,10 +338,18 @@ Keywords and identifiers are case sensitive.
 When there is a conflict between the command-line arguments and the
 arguments in this file, the command-line arguments take precedence.
 .PP
-Legal keywords are:
+Each server entry consists of the keyword \fBserver\fR, followed by a
+server name, followed by server options, followed by any number of
+user descriptions.
+.PP
+Legal server options are:
 
     server
     protocol (or proto)
+    port
+
+Legal user options are
+
     username (or user)
     is
     password (or pass)
@@ -358,13 +366,12 @@ Legal keywords are:
     nofetchall
     norewrite
     noskip
-    port
 .PP
-All these correspond to the obvious command-line arguments except
+All options correspond to the obvious command-line arguments except
 three: \fBis\fR, \fBpassword\fR and \fBskip\fR.
 .PP
 The \fBis\fR keyword associates a following local username with the
-mailserver usename in the entry.  It is intended to be used in 
+mailserver user name in the entry.  It is intended to be used in 
 configurations where \fIfetchmail\fR runs as root and retrieves
 mail for multiple local users.  If no \fBis\fR clause is present,
 the default local username is the same as the argument of the
@@ -420,11 +427,8 @@ If you need to include whitespace in a parameter string, enclose the
 string in double quotes.  Thus:
 
 .nf
-  server mail.provider.net
-        proto pop3
-        user jsmith
-        pass "u can't krak this"
-        mda "/bin/mail %s"
+  server mail.provider.net proto pop3
+        user jsmith pass "u can't krak this" mda "/bin/mail %s"
 .fi
 
 You may have an initial server description headed by the keyword
@@ -433,8 +437,7 @@ is interpreted as defaults for all queries to use. It may be overwritten
 by individual server descriptions.  So, you could write:
 
 .nf
-  defaults
-        proto pop3
+  defaults proto pop3
         user jsmith
   server pop.provider.net
         pass secret1
@@ -557,7 +560,10 @@ because it supports IMAP now and may well support more remote-fetch
 protocols such as DMSP in the future).  If called through a link named
 popclient, it will look in ~/.poprc for its run control file.  As
 long as the file does not use the removed \fBlimit\fR or \fBlocalfolder\fR
-options, this should actually work.
+options, this will often work.  (The new run control file syntax also has
+to be a bit stricter about the order of options than the old,
+in order to support multiple user desriptions per server; you may have
+to rearrange things a bit.)
 .PP
 The --stdout, --local, and --limit arguments of previous
 versions have been removed.  Those features did jobs that belonged to

@@ -35,12 +35,12 @@ mda		{ return KW_MDA; }
 keep		{ yylval.flag = FLAG_TRUE; return KW_KEEP; }
 flush		{ yylval.flag = FLAG_TRUE; return KW_FLUSH; }
 fetchall	{ yylval.flag = FLAG_TRUE; return KW_FETCHALL; }
-rewrite		{ yylval.flag = FLAG_TRUE; return KW_REWRITE; }
+rewrite		{ yylval.flag = FLAG_FALSE; return KW_REWRITE; }
 skip		{ yylval.flag = FLAG_TRUE; return KW_SKIP; }
 nokeep		{ yylval.flag = FLAG_FALSE; return KW_KEEP; }
 noflush		{ yylval.flag = FLAG_FALSE; return KW_FLUSH; }
 nofetchall	{ yylval.flag = FLAG_FALSE; return KW_FETCHALL; }
-norewrite	{ yylval.flag = FLAG_FALSE; return KW_REWRITE; }
+norewrite	{ yylval.flag = FLAG_TRUE; return KW_REWRITE; }
 noskip		{ yylval.flag = FLAG_FALSE; return KW_SKIP; }
 port		{ return KW_PORT; }
 

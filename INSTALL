@@ -1,5 +1,7 @@
 		INSTALL Instructions for fetchmail
 
+1. CONFIGURE
+
 Installing fetchmail is easy.  From within this directory, type:
 
 	./configure
@@ -9,9 +11,15 @@ specifics of your system.  If you want to specify a particular compiler
 (e.g. you have gcc but want to compile with cc), set the environment 
 variable CC before you run configure.  
 
+The configure script accepts certain standard configuration options.
+These include --prefix, --exec-prefix, --bindir, --infodir, --mandir,
+and --srcdir.  Do `config --help' for more.
+
 If you're running QNX, edit the distributed Makefile directly.  The
 QNX values for various macros are there but commented out; all you
 have to do is uncomment them.
+
+2. MAKE 
 
 Next run
 
@@ -19,6 +27,8 @@ Next run
 
 This will compile fetchmail for your system.  Note that in order to
 build it, you'll need either flex at version 2.5.3 org greater, or lex.
+
+3. INSTALL
 
 Lastly, become root and run
 
@@ -37,6 +47,8 @@ is so it can call rresvport and bind to a privileged port, so the
 server's TCP/IP will see that and know it's OK to let it bind to
 a privileged port at the other end.
 
+4. SET UP A RUN CONTROL FILE
+
 See the man page or the file sample.rcfile for a description of how to
 configure your individual preferences.
 
@@ -47,4 +59,14 @@ at version 3.0b6 or later, do this
 
 in order to migrate.
 
+5. TEST
+
+I strongly recommend that your first fetchmail run use the -v and -k
+options, in case there is something not quite right with your local
+delivery configuration or your port 25 listener.  Also, beware
+of aliases that direct your local mail back to the server host!
+
+6. USE IT
+
 Enjoy!
+

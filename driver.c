@@ -424,6 +424,10 @@ struct hostrec *queryctl;
 	    headers = NULL;
 	}
 
+	/* SMTP byte-stuffing */
+	if (*bufp == '.' && queryctl->mda[0] == 0)
+	    write(mboxfd, ".", 1);
+
 	/* write this line to the file */
 	if (write(mboxfd,bufp,strlen(bufp)) < 0)
 	{

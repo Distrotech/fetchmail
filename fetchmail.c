@@ -165,7 +165,7 @@ char **argv;
 	}
 
     /* if there's a defaults record, merge it and lose it */ 
-    if (strcmp(hostlist->servername, "defaults") == 0)
+    if (hostlist && strcmp(hostlist->servername, "defaults") == 0)
     {
 	for (hostp = hostlist; hostp; hostp = hostp->next)
 	    optmerge(hostp, hostlist);
