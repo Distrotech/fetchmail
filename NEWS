@@ -13,6 +13,7 @@
 * Benjamin Drieu's patch for Debian bug #156592, incorrect handing of host/port
   option.
 * Smash all NULs out of headers right after the socket read.
+* Dup-killer code now keys on an MD5 hash of the raw headers.
 
 fetchmail-6.2.4 (Wed Aug 13 04:27:35 EDT 2003), 22625 lines:
 

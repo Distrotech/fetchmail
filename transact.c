@@ -29,6 +29,7 @@
 #ifdef HAVE_NET_SOCKET_H
 #include <net/socket.h>
 #endif
+#include "md5.h"
 
 #include "i18n.h"
 #include "socket.h"
@@ -406,10 +407,8 @@ int readheaders(int sock,
     if (delivered_to)
 	free(delivered_to);
 
-    /* initially, no message ID */
-    if (ctl->thisid)
-	free(ctl->thisid);
-    ctl->thisid = NULL;
+    /* initially, no message digest */
+    memset(ctl->thisid, '\0', sizeof(ctl->thisid));
 
     msgblk.headers = received_for = delivered_to = NULL;
     from_offs = reply_to_offs = resent_from_offs = app_from_offs = 
@@ -605,10 +604,6 @@ int readheaders(int sock,
 	if (linelen != strlen (line))
 	    has_nuls = TRUE;
 
-	/* save the message's ID, we may use it for killing duplicates later */
-	if (MULTIDROP(ctl) && !strncasecmp(line, "Message-ID:", 11))
-	    ctl->thisid = xstrdup(line);
-
 	/*
 	 * The University of Washington IMAP server (the reference
 	 * implementation of IMAP4 written by Mark Crispin) relies
@@ -735,7 +730,7 @@ int readheaders(int sock,
 	 * make sure we never try to rewrite such a blank Return-Path.  We
 	 * handle this with a check for <> in the rewrite logic above.
 	 *
-	 * Also, if an email has multiple Return-Path: statement, we only
+	 * Also, if an email has multiple Return-Path: headers, we only
 	 * read the first occurance, as some spam email has more than one
 	 * Return-Path.
 	 *
@@ -890,6 +885,8 @@ int readheaders(int sock,
     if (refuse_mail)
 	return(PS_REFUSED);
     /*
+     * This is the duplicate-message killer code.
+     *
      * When mail delivered to a multidrop mailbox on the server is
      * addressed to multiple people on the client machine, there will
      * be one copy left in the box for each recipient.  This is not a
@@ -901,10 +898,10 @@ int readheaders(int sock,
      * if the mail is addressed to N people, each recipient will
      * get N copies.  This is bad when N > 1.
      *
-     * Foil this by suppressing all but one copy of a message with
-     * a given Message-ID.  The accept_count test ensures that
-     * multiple pieces of email with the same Message-ID, each
-     * with a *single* addressee (the N == 1 case), won't be 
+     * Foil this by suppressing all but one copy of a message with a
+     * given set of headers.  The accept_count test ensures
+     * that multiple pieces of email with the same Message-ID, each
+     * with a *single* addressee (the N == 1 case), won't be
      * suppressed.
      *
      * Note: This implementation only catches runs of successive
@@ -918,19 +915,25 @@ int readheaders(int sock,
      * to break it in a way that blackholed mail.  Better to pass
      * the occasional duplicate than to do that...
      */
-    if (!received_for && env_offs == -1 && !delivered_to)
+    if (MULTIDROP(ctl))
     {
-	if (ctl->lastid && ctl->thisid && !strcasecmp(ctl->lastid, ctl->thisid))
+	MD5_CTX context;
+
+	MD5Init(&context);
+	MD5Update(&context, msgblk.headers, strlen(msgblk.headers));
+	MD5Final(ctl->thisid, &context);
+
+	if (!received_for && env_offs == -1 && !delivered_to)
 	{
-	    if (accept_count > 1)
+	    /*
+	     * Hmmm...can MD5 ever yield all zeroes as a hash value?
+	     * If so there is a one in 18-quadrillion chance this 
+	     * code will incorrectly nuke the first message.
+	     */
+	    if (memcmp(ctl->lastid, ctl->thisid, sizeof(ctl->lastid)))
+		ctl->lastid = ctl->thisid;
+	    else if (accept_count > 1)
 		return(PS_REFUSED);
-	}
-	else
-	{
-	    if (ctl->lastid)
-		free(ctl->lastid);
-	    ctl->lastid = ctl->thisid;
-	    ctl->thisid = NULL;
 	}
     }
 

@@ -316,7 +316,7 @@ struct query
     struct idlist *oldsaved, *newsaved;
     struct idlist **oldsavedend;
     char *lastid;		/* last Message-ID seen on this connection */
-    char *thisid;		/* Message-ID of current message */
+    char thisid[16];		/* Message fingerprint for dup killing */
 
     /* internal use -- per-message state */
     int mimemsg;		/* bitmask indicating MIME body-type */
