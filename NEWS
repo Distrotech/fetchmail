@@ -8,7 +8,7 @@ to a true IMAP4 server and do the UID thing (see header comments in imap.c).
 
 			Release Notes:
 
-fetchmail-1.0 (Mon Sep 23 19:54:01 EDT 1996):
+fetchmail-1.0 (Wed Sep 25 18:06:51 EDT 1996):
 
 * SMTP forwarding and header-rewrite features work with POP2 now.
 
