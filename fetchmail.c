@@ -541,7 +541,6 @@ int main(int argc, char **argv)
      */
     if (run.poll_interval)
     {
-	deal_with_sigchld();
 	if (nodetach)
 	    deal_with_sigchld();
 	else
