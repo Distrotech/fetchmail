@@ -2,6 +2,10 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Don't depend on having snprintf available.
+* Bug fix for envskip.
+* ODMR finally seems to be working.
+
 fetchmail-5.8.11 (Sun Jul  1 21:39:26 EDT 2001), 20973 lines:
 
 * Signal-processing fix for Debian bug #102711.

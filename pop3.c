@@ -711,6 +711,13 @@ static int pop3_logout(int sock, struct query *ctl)
 {
     int ok;
 
+    /*
+     * Just in case the server marks messages deleted when seen.
+     * Yes, this has been reported, in the MercuryP/NLM server.
+     */
+    if (ctl->keep)
+	gen_transact(sock, "RSET");
+
     ok = gen_transact(sock, "QUIT");
     if (!ok)
 	expunge_uids(ctl);
