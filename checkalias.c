@@ -6,6 +6,7 @@
  */
 #include "config.h"
 #ifdef HAVE_GETHOSTBYNAME
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
