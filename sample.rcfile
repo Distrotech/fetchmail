@@ -1,4 +1,4 @@
-# fetchmail control file sample
+# fetchmail control file sample (remove this header comment from yours!)
 #
 # This file (or one of your own creation, rather) should be located 
 # in your home directory with the name .fetchmailrc.  Permissions on this
@@ -36,8 +36,10 @@
 #   localdomains              -- must be followed by one or more domain names
 #   interface                 -- must be followed by device/IP address/mask
 #   monitor                   -- must be followed by device
-#   no dns
 #   dns
+#   no dns
+#   checkalias                -- do multidrop address compaison by IP address
+#   no checkalias             -- do multidrop address compaison by name
 #
 #   username (or user)        -- must be followed by a name
 #   is                        -- must be followed by one or more names
