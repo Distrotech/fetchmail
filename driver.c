@@ -286,9 +286,22 @@ struct hostrec *queryctl;	/* query control record */
     headers = unixfrom = fromhdr = tohdr = cchdr = bcchdr = NULL;
     lines = 0;
     sizeticker = 0;
-    while (delimited || len > 0) {
+    while (delimited || len > 0)
+    {
 	if ((n = SockGets(socket,buf,sizeof(buf))) < 0)
 	    return(PS_SOCKET);
+
+	/* write the message size dots */
+	if (n > 0)
+	{
+	    sizeticker += n;
+	    while (sizeticker >= SIZETICKER)
+	    {
+		if (outlevel > O_SILENT && outlevel < O_VERBOSE)
+		    fputc('.',stderr);
+		sizeticker -= SIZETICKER;
+	    }
+	}
 	len -= n;
 	bufp = buf;
 	if (buf[0] == '\0' || buf[0] == '\r' || buf[0] == '\n')
@@ -452,18 +465,6 @@ struct hostrec *queryctl;	/* query control record */
 	    fputc('*', stderr);
 
     skipwrite:;
-
-	/* write the message size dots */
-	sizeticker += strlen(bufp);
-	while (sizeticker >= SIZETICKER)
-	{
-	    if (outlevel > O_SILENT && outlevel < O_VERBOSE)
-		fputc('.',stderr);
-	    sizeticker -= SIZETICKER;
-
-	    /* reset timeout so we don't choke on very long messages */
-	    alarm(queryctl->timeout);
-	}
 	lines++;
     }
 
