@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/02/22 13:35:21 $
+<td width="30%" align=right>$Date: 1999/03/07 17:10:03 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -75,6 +75,8 @@ IP address?</a><br>
 <a href="#S4">S4. How can I use fetchmail with usa.net's servers?</a><br>
 <a href="#S5">S5. How can I use fetchmail with HP OpenMail?</a><br>
 <a href="#S6">S6. How can I use fetchmail with geocities POP3 servers?</a><br>
+<a href="#S7">S7. How can I use fetchmail with Hotmail?</a><br>
+<a href="#S8">S8. How can I use fetchmail with MSN?</a><br>
 
 <h1>How to set up well-known security and authentication methods:</h1>
 
@@ -1295,6 +1297,24 @@ As with M$ Exchange, the only real fix for these problems is to get a
 POP (or preferably IMAP) server that isn't brain-dead.<P>
 
 <hr>
+<h2><a name="S7">S7. How can I use fetchmail with Hotmail?</a></h2>
+
+You can't, yet.  But the fetchmail contrib directory contains a script
+called `hotmole' that can retrieve Hotmail mail via the web using
+Lynx.  That is, until Microsoft changes the page structure to break
+this kind of access.<p>
+
+<hr>
+<h2><a name="S8">S8. How can I use fetchmail with MSN?</a></h2>
+
+You can't.  MSN uses something that looks like POP3, except the
+authentication part is nonstandard.  And of course they don't 
+document it, so nobody but their Windows clients can speak it.<p>
+
+This is a customer lock-in tactic; we recommend boycotting MSN as the
+only appropriate response.<p>
+
+<hr>
 <h2><a name="K1">K1. How can I use fetchmail with SOCKS?</a></h2>
 
 Daniel Sobral &lt<a href="mailto:dcs@gns.com.br">dcs@gns.com.br</a>
@@ -2260,7 +2280,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/02/22 13:35:21 $
+<td width="30%" align=right>$Date: 1999/03/07 17:10:03 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
