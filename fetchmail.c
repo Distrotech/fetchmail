@@ -729,7 +729,7 @@ int main(int argc, char **argv)
 	     * unwedge all servers in case the problem has been
 	     * manually repaired.
 	     */
-	    if ((lastsig = idle(run.poll_interval)))
+	    if ((lastsig = interruptible_idle(run.poll_interval)))
 	    {
 #ifdef SYS_SIGLIST_DECLARED
 		report(stdout, 

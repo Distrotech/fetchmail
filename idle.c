@@ -66,7 +66,7 @@ void itimerthread(void* dummy)
 
 RETSIGTYPE donothing(int sig) {signal(sig, donothing); lastsig = sig;}
 
-int idle(int seconds)
+int interruptible_idle(int seconds)
 /* time for a pause in the action; return TRUE if awakened by signal */
 {
     int awoken = FALSE;

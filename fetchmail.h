@@ -410,7 +410,7 @@ extern int stage;
 #define XMIT_RCPTBAD	3	/* SMTP listener rejected the name */ 
 
 /* idle.c */
-int idle(int interval);
+int interruptible_idle(int interval);
 
 /* sink.c: forwarding */
 int stuffline(struct query *, char *);
