@@ -194,6 +194,7 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	    else if (*hp == '(')	/* address comment -- ignore */
 	    {
 		parendepth = 1;
+		oldstate = SKIP_JUNK;
 		state = INSIDE_PARENS;    
 	    }
 	    else if (*hp == '<')	/* begin <address> */
@@ -221,6 +222,7 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	    else if (*hp == '(')  	/* beginning of comment */
 	    {
 		parendepth = 1;
+		oldstate = BARE_ADDRESS;
 		state = INSIDE_PARENS;    
 	    }
 	    else if (*hp == '<')  	/* beginning of real address */
@@ -248,7 +250,7 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	    else if (*hp == ')')
 		--parendepth;
 	    if (parendepth == 0)
-		state = SKIP_JUNK;
+		state = oldstate;
 	    break;
 
 	case INSIDE_BRACKETS:	/* possible <>-enclosed address */
