@@ -1,10 +1,32 @@
 				NEWS
 
+To-do list:
+
+I want a --logfile option that redirects the daemon-mode output to a
+given file, but the code (in daemon.c near 200) unaccountably doesn't
+work (so I haven't documented it yet).
+
+Option to enable EMACS-like user folder versioning on each run.
+
+-p option to come back?
+
+S/key for secure challenge-response.
+
+Implement IMAP support.
+
+3.02:
+
+* Correct buggy processing of nokeep/noflush/fetchall.
+
+* Fix buggy -mda option processing.
+
+* Added -N/--norewrite option.
+
 3.01:
 
 * Fixed a lexical analyzer bug in quoted-string processing.
 
-* Fixed a bug in dump_options that cauded username to be displayed incorrectly.
+* Fixed a bug in dump_options that caused username to be displayed incorrectly.
 
 * The lock assertion code was in the wrong place relative to the daemonize()
   call.  
@@ -99,11 +121,6 @@ MISCELLANEOUS BUG FIXES
 
 * I've fixed the flaky parser error messages. They turned out to be due 
   to a misdeclaration of yytext.
-
-There's only one feature I haven't been able to add successfully.  I
-want a --logfile option that redirects the daemon-mode output to a
-given file, but the code (in daemon.c near 200) unaccountably doesn't
-work (so I haven't documented it yet).
 
 These are Carl Harris's change notes from prevuious releases:
 

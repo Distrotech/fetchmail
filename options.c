@@ -39,9 +39,10 @@
 #define LA_MDA		16
 #define LA_LOGFILE	17
 #define LA_QUIT		18
-#define LA_YYDEBUG	19
+#define LA_NOREWRITE	19
+#define LA_YYDEBUG	20
  
-static char *shortoptions = "23VaKkvscl:Fd:f:u:r:o:m:";
+static char *shortoptions = "23VaKkvscl:Fd:f:u:r:o:m:L:qN";
 static struct option longoptions[] = {
   {"version",   no_argument,       (int *) 0, LA_VERSION    },
   {"all",	no_argument,       (int *) 0, LA_ALL        },
@@ -63,6 +64,7 @@ static struct option longoptions[] = {
   {"mda",	required_argument, (int *) 0, LA_MDA        },
   {"logfile",	required_argument, (int *) 0, LA_LOGFILE    },
   {"quit",	no_argument,	   (int *) 0, LA_QUIT       },
+  {"norewrite",	no_argument,	   (int *) 0, LA_NOREWRITE  },
   {"yydebug",	no_argument,	   (int *) 0, LA_YYDEBUG    },
   {(char *) 0,  no_argument,       (int *) 0, 0             }
 };
@@ -218,6 +220,10 @@ struct hostrec *queryctl;
       case LA_QUIT:
         quitmode = 1;
         break;
+      case 'N':
+      case LA_NOREWRITE:
+	queryctl->rewrite = 0;
+	break;
       case LA_YYDEBUG:
 	yydebug = 1;
         break;
@@ -297,6 +303,7 @@ struct hostrec *queryctl;
 #else
   queryctl->keep = 0;
 #endif
+  queryctl->rewrite = 1;
 
   strcpy(queryctl->localname,pw->pw_name);
   strcpy(queryctl->remotename,pw->pw_name);

@@ -21,7 +21,7 @@
 #define		PASSWORDLEN	MAX_PASSWORD_LENGTH
 #define		FOLDERLEN	256     /* max folder name length */
 #define		DIGESTLEN	33	/* length of MD5 digest */
-#define		MDALEN		33	/* length of delivery agent command */
+#define		MDALEN		256	/* length of delivery agent command */
 
 /* exit code values */
 #define		PS_SUCCESS	0	/* successful receipt of messages */
@@ -57,6 +57,7 @@ struct hostrec {
   int protocol;
   int fetchall;
   int flush;
+  int rewrite;
 
   /* dependent on the above members */
   int output;

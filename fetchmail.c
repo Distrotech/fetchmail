@@ -404,7 +404,7 @@ struct hostrec *queryctl;
       exit(1);
     }
 
-    execv(queryctl->mda,mda_argv);
+    execv(queryctl->mda, mda_argv+1);
 
     /* if we got here, an error occurred */
     perror("popclient: openmailpipe: exec");

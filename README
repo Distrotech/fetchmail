@@ -14,14 +14,14 @@ Features of POP include:
 
 	* Easy configuration via command line or free-format .poprc file.
 
-	* Daemon mode --  popmail can be run in background to poll
+	* Daemon mode -- popmail can be run in background to poll
 	  one or more hosts at a specified interval.
 
 	* Delivery via either file-append with mandatory locking or an
 	  MDA you specify.
 
 	* From:, To:, Cc:, and Reply-To: headers are rewritten so that 
-	  usernames relative to the popclient host become fiully-qualified
+	  usernames relative to the popclient host become fully-qualified
 	  Internet addresses.  This enables replies to work correctly.
 
 There is a man page at popclient.man.  A sample rc file is at sample.poprc.

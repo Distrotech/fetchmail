@@ -40,7 +40,7 @@ int POP3_sendSTAT (int *msgcount, int socket);
 int POP3_sendRETR (int msgnum, int socket);
 int POP3_sendDELE (int msgnum, int socket);
 int POP3_sendLAST (int *last, int socket);
-int POP3_readmsg (int socket, int mboxfd, char *host, int topipe);
+int POP3_readmsg (int socket, int mboxfd, char *host, int topipe, int rewrite);
 int POP3_BuildDigest (char *buf, struct hostrec *options);
 #endif
 
@@ -165,7 +165,10 @@ struct hostrec *queryctl;
         goto cleanUp;
       
       if (number >= first || queryctl->fetchall)
-        ok = POP3_readmsg(socket,mboxfd,queryctl->servername,queryctl->output == TO_MDA);
+        ok = POP3_readmsg(socket,mboxfd,
+			  queryctl->servername,
+			  queryctl->output == TO_MDA, 
+			  queryctl->rewrite);
       else
         ok = 0;
       if (ok != 0)
@@ -537,11 +540,12 @@ int socket;
   globals:       reads outlevel. 
  *********************************************************************/
 
-int POP3_readmsg (socket,mboxfd,pophost,topipe)
+int POP3_readmsg (socket,mboxfd,pophost,topipe,rewrite)
 int socket;
 int mboxfd;
 char *pophost;
 int topipe;
+int rewrite;
 { 
   char buf [MSGBUFSIZE]; 
   char *bufp;
@@ -610,7 +614,7 @@ int topipe;
     /*
      * Edit some headers so that replies will work properly.
      */
-    if (inheaders)
+    if (inheaders && rewrite)
       reply_hack(bufp, pophost);
 
     /* write this line to the file */

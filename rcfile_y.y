@@ -33,8 +33,12 @@ int yydebug;	/* in case we didn't generate with -- debug */
 %token KW_REMOTEFOLDER KW_LOCALFOLDER KW_MDA KW_EOL KW_DEFAULTS
 %token <proto> PROTO_POP2 PROTO_POP3 PROTO_IMAP PROTO_APOP PROTO_RPOP
 %token <sval> PARAM_STRING
-%token <flag> KW_KEEP KW_FLUSH KW_FETCHALL
+%token <flag> KW_KEEP KW_FLUSH KW_FETCHALL KW_REWRITE
 %type <proto> proto;
+
+/* these are actually used by the lexer */
+%token TRUE	1
+%token FALSE	0
 
 %%
 
@@ -68,6 +72,7 @@ serv_option_clause:
 	|	KW_KEEP				{prc_setkeep($1);}
 	|	KW_FLUSH			{prc_setflush($1);}
 	|	KW_FETCHALL			{prc_setfetchall($1);}
+	|	KW_REWRITE			{prc_setrewrite($1);}
   ;
 
 proto:		PROTO_POP2

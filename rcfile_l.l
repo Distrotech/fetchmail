@@ -32,12 +32,14 @@ pass(word)?	{ return KW_PASSWORD; }
 remote(folder)? { return KW_REMOTEFOLDER; }
 local(folder)?	{ return KW_LOCALFOLDER; }
 mda		{ return KW_MDA; }
-keep		{ yylval.flag = 1; return KW_KEEP; }
-flush		{ yylval.flag = 1; return KW_FLUSH; }
-fetchall	{ yylval.flag = 1; return KW_FETCHALL; }
-nokeep		{ yylval.flag = -1; return KW_KEEP; }
-noflush		{ yylval.flag = -1; return KW_FLUSH; }
-nofetchall	{ yylval.flag = -1; return KW_FETCHALL; }
+keep		{ yylval.flag = TRUE; return KW_KEEP; }
+flush		{ yylval.flag = TRUE; return KW_FLUSH; }
+fetchall	{ yylval.flag = TRUE; return KW_FETCHALL; }
+rewrite		{ yylval.flag = TRUE; return KW_REWRITE; }
+nokeep		{ yylval.flag = FALSE; return KW_KEEP; }
+noflush		{ yylval.flag = FALSE; return KW_FLUSH; }
+nofetchall	{ yylval.flag = FALSE; return KW_FETCHALL; }
+norewrite	{ yylval.flag = FALSE; return KW_REWRITE; }
 
 (pop2)|(POP2)	{ yylval.proto = P_POP2;  return PROTO_POP2; }
 (pop3)|(POP3)	{ yylval.proto = P_POP3;  return PROTO_POP3; }

@@ -168,6 +168,16 @@ and the mailserver are echoed to stderr.  Specifying
 causes normal progress/status messages which would be redundant or meaningless
 to be modified or omitted.
 .TP
+.B \-N, --norewrite
+Normally,
+.I popclient
+edits RFC-822 address headers (To, From, Cc, Bcc, and Reply-To) in
+fetched mail so that any mail IDs local to the host are expanded to
+full addresses (@ and the POP host name are appended).  This enables 
+replies on the client to get addressed correctly (otherwise your
+mailer might think they should be addressed to local users on the
+client machine).  This option disables the rewrite.
+.TP
 .B \-V, --version
 Displays the version information for your copy of 
 .I popclient.
@@ -369,9 +379,11 @@ Legal keywords are:
     keep
     flush
     fetchall
+    rewrite
     nokeep
     noflush
     nofetchall
+    norewrite
 .PP
 Legal protocol identifiers are
 
