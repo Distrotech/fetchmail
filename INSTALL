@@ -1,4 +1,4 @@
-INSTALL Instructions for Popclient
+		INSTALL Instructions for Popclient
 
 Installing popclient is easy.  From within this directory, type:
 
@@ -9,12 +9,18 @@ specifics of your system.  If you want to specify a particular compiler
 (e.g. you have gcc but want to compile with cc), set the environment 
 variable CC before you run configure.  
 
+If you're running QNX, edit the distributed Makefile directly.  The
+QNX values for various macros are there but commented out; all you
+have to do is uncomment them.
+
 Next run
 
 	make
 
-This will compile popclient for your system.  Lastly, become root and
-run
+This will compile popclient for your system.  Note that in order to
+build it, you'll need either flex at version 2.5.3 org greater, or lex.
+
+Lastly, become root and run
 
 	make install
 
