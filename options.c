@@ -341,7 +341,11 @@ struct query *ctl;	/* option record to be initialized */
 	fputs("  -M, --monitor     monitor interface for activity\n",stderr);
 #endif
 
+#ifdef KERBEROS_V4
+	fputs("  -p, --protocol    specify pop2, pop3, imap, apop, rpop, kpop, etrn, imap-k4\n", stderr);
+#else
 	fputs("  -p, --protocol    specify pop2, pop3, imap, apop, rpop, kpop, etrn\n", stderr);
+#endif /* KERBEROS_V4 */
 	fputs("  -U, --uidl        force the use of UIDLs (pop3 only)\n", stderr);
 	fputs("  -P, --port        TCP/IP service port to connect to\n",stderr);
 	fputs("  -A, --auth        authentication type (password or kerberos)\n",stderr);
