@@ -716,9 +716,6 @@ struct method *proto;
 	     * server now.
 	     */
 
-	    /* nuke it from the unseen-messages list */
-	    delete_uid(&queryctl->unseen, num);
-
 	    /* maybe we delete this message now? */
 	    if (protocol->delete
 		&& !queryctl->keep
@@ -732,7 +729,11 @@ struct method *proto;
 		    goto cleanUp;
 	    }
 	    else if (outlevel > O_SILENT && outlevel < O_VERBOSE) 
-		fprintf(stderr, " not flushed\n", num);	
+	    {
+		/* nuke it from the unseen-messages list */
+		delete_uid(&queryctl->newsaved, num);
+		fprintf(stderr, " not flushed\n", num);
+	    }
 	}
 
 	/* remove all messages flagged for deletion */

@@ -37,29 +37,33 @@
  * Here's the theory:
  *
  * At start of a query, we have a (possibly empty) list of UIDs to be
- * considered `already seen'.  These are messages that were left in
+ * considered seen in `oldsaved'.  These are messages that were left in
  * the mailbox and *not deleted* on previous queries (we don't need to
- * remember the UIDs of deleted messages because ... well, they're gone!).
- * This list is set up by initialized_saved_list() from the .fetchids 
- * file and hangs off the host's `saved' member.
+ * remember the UIDs of deleted messages because ... well, they're gone!)
+ * This list is initially set up by initialized_saved_list() from the
+ * .fetchids file.
  *
  * Early in the query, during the execution of the protocol-specific 
- * getrange code, the driver expects that the host's `unseen' member
+ * getrange code, the driver expects that the host's `newsaved' member
  * will be filled with a list of UIDs and message numbers representing
- * the unseen mailbox state.  If this list is empty, the server did
+ * the mailbox state.  If this list is empty, the server did
  * not respond to the request for a UID listing.
  *
  * Each time a message is fetched, we can check its UID against the
- * `saved' list to see if it is old.  If not, it should be downloaded
+ * `oldsaved' list to see if it is old.  If not, it should be downloaded
  * (and possibly deleted).  It should be downloaded anyway if --all
  * is on.  It should not be deleted if --keep is on.
  *
- * Each time a message is read, we remove its id from the `unseen'
+ * Each time a message is deleted, we remove its id from the `newsaved'
  * member.
  *
- * At the end of the query, whatever remains in the `unseen' member
- * (because it was not deleted) becomes the `saved' list.  The old
- * `saved' list is freed.
+ * At the end of the query, whatever remains in the `newsaved' member
+ * (because it was not deleted) becomes the `oldsaved' list.  The old
+ * `oldsaved' list is freed.
+ *
+ * At the end of the fetchmail run, all current `oldsaved' lists are
+ * flushed out to the .fetchids file to be picked up by the next run.
+ * If there are no such messages, the file is deleted.
  */
 
 /* UIDs associated with un-queried hosts */
@@ -76,7 +80,7 @@ char *idfile;
 
     /* make sure lists are initially empty */
     for (hostp = hostlist; hostp; hostp = hostp->next)
-	hostp->saved = hostp->unseen = (struct idlist *)NULL;
+	hostp->oldsaved = hostp->newsaved = (struct idlist *)NULL;
 
     /* let's get stored message UIDs from previous queries */
     if ((tmpfp = fopen(idfile, "r")) != (FILE *)NULL) {
@@ -90,7 +94,7 @@ char *idfile;
 		{
 		    if (strcmp(host, hostp->servername) == 0)
 		    {
-			save_uid(&hostp->saved, -1, id);
+			save_uid(&hostp->oldsaved, -1, id);
 			break;
 		    }
 		}
@@ -170,11 +174,8 @@ void update_uid_lists(hostp)
 /* perform end-of-query actions on UID lists */
 struct hostrec *hostp;
 {
-    /*
-     * Replace `saved' list with `unseen' list as modified by deletions.
-     */
-    free_uid_list(&hostp->saved);
-    hostp->saved = hostp->unseen;
+    free_uid_list(&hostp->oldsaved);
+    hostp->oldsaved = hostp->newsaved;
 }
 
 void write_saved_lists(hostlist, idfile)
@@ -190,7 +191,7 @@ char *idfile;
     /* if all lists are empty, nuke the file */
     idcount = 0;
     for (hostp = hostlist; hostp; hostp = hostp->next) {
-	if (hostp->saved)
+	if (hostp->oldsaved)
 	    idcount++;
     }
 
@@ -200,7 +201,7 @@ char *idfile;
     else
 	if ((tmpfp = fopen(idfile, "w")) != (FILE *)NULL) {
 	    for (hostp = hostlist; hostp; hostp = hostp->next) {
-		for (idp = hostp->saved; idp; idp = idp->next)
+		for (idp = hostp->oldsaved; idp; idp = idp->next)
 		    fprintf(tmpfp, "%s %s\n", hostp->servername, idp->id);
 	    }
 	    for (idp = scratchlist; idp; idp = idp->next)

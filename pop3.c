@@ -168,7 +168,7 @@ int *countp;
  			break;
  		    }
  		    if (sscanf(buf, "%d %s\n", &num, id) == 2)
- 			save_uid(&queryctl->unseen, num, id);
+ 			save_uid(&queryctl->newsaved, num, id);
  		}
  	    }
  	}
@@ -182,7 +182,7 @@ int socket;
 struct hostrec *queryctl;
 int num;
 {
-    if (!queryctl->saved)
+    if (!queryctl->oldsaved)
 	return (num <= last);
     else
     {
@@ -197,7 +197,7 @@ int num;
 	    char	id[IDLEN+1];
 
 	    if (sscanf(buf, "%*d %s", id) == 2)
-		return(uid_in_list(&queryctl->saved, id));
+		return(uid_in_list(&queryctl->oldsaved, id));
 	    else
 		return(0);
 	}

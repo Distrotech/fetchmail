@@ -539,19 +539,19 @@ struct hostrec *queryctl;
     else
 	printf("  Messages will be SMTP-forwarded to '%s'\n", queryctl->smtphost);
     if (queryctl->protocol > P_POP2)
-	if (!queryctl->saved)
+	if (!queryctl->oldsaved)
 	    printf("  No UIDs saved from this host.\n");
 	else
 	{
 	    struct idlist *idp;
 	    int count = 0;
 
-	    for (idp = hostp->saved; idp; idp = idp->next)
+	    for (idp = hostp->oldsaved; idp; idp = idp->next)
 		++count;
 
 	    printf("  %d UIDs saved.\n", count);
 	    if (outlevel == O_VERBOSE)
-		for (idp = hostp->saved; idp; idp = idp->next)
+		for (idp = hostp->oldsaved; idp; idp = idp->next)
 		    fprintf(stderr, "\t%s %s\n", hostp->servername, idp->id);
 	}
 }

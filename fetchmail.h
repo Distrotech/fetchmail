@@ -88,7 +88,7 @@ struct hostrec
     int skip;
 
     /* unseen, previous state of mailbox (initially from .fetchids) */
-    struct idlist *saved, *unseen;
+    struct idlist *oldsaved, *newsaved;
 
     /* internal use */
     int active;
