@@ -30,8 +30,8 @@ int yydebug;	/* in case we didn't generate with -- debug */
 static struct query current;		/* current server record */
 static int prc_errflag;
 
-void prc_register();
-void prc_reset();
+static void prc_register();
+static void prc_reset();
 %}
 
 %union {
@@ -228,7 +228,7 @@ const char *pathname;		/* pathname for the configuration file */
 	return(0);
 }
 
-void prc_reset()
+static void prc_reset()
 /* clear the global current record (server parameters) used by the parser */
 {
     char	savename[HOSTLEN+1];
@@ -273,7 +273,7 @@ struct query *init;	/* pointer to block containing initial values */
     return(node);
 }
 
-void prc_register()
+static void prc_register()
 /* register current parameters and append to the host list */
 {
 #define STR_FORCE(fld, len) if (cmd_opts.fld[0]) \
