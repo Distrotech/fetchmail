@@ -216,14 +216,13 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	ok = PS_ERROR;
     }
 
-    /* maybe we detected a lock-busy condition? */
     if (ok != 0)
     {
+	/* maybe we detected a lock-busy condition? */
         if (ok == PS_LOCKBUSY)
-	{
 	    error(0, 0, "lock busy!  Is another session active?"); 
-	    return(PS_LOCKBUSY);
-	}
+
+	return(ok);
     }
 
     /*

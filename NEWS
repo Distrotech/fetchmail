@@ -14,6 +14,11 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.4.0 ():
+* Fix bug that prevented graceful exit from POP3 validation on wrong password.
+
+There are 275 people on fetchmail-friends and 153 on fetchmail-announce.
+
 fetchmail-4.3.9 (Fri Mar  6 10:45:32 EST 1998):
 * Relax the LOGIN capability check in IMAP.
 * John Stracke <francis@netscape.com> sent a workaround for SIGALRM flakiness
