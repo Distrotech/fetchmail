@@ -5,6 +5,7 @@
 * More log levels?
 * Allow an explicit "append" option to specify what rewrite appends?  (For
   when user's pop3 host isn't the same as his SMTP host.)
+* Allow -c -F to work to flush messages without retrieval.
 
 				Other TO-DO items:
 
