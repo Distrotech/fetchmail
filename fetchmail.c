@@ -1214,21 +1214,23 @@ static int load_params(int argc, char **argv, int optind)
 			ctl->server.truename=xstrdup((char *)namerec->h_name);
 		}
 #endif /* HAVE_GETHOSTBYNAME */
-		else {
+		else 
+		{
 #ifdef HAVE_GETHOSTBYNAME
 		    struct hostent	*namerec;
 		    
-		    /* <fetchmail@mail.julianhaight.com>
-		       Get the host's IP, so we can report it like this:
-
-		       Received: from hostname [10.0.0.1]
-
-		       do we actually need to gethostbyname to find the IP?
-		       it seems like it would be faster to do this later, when
-		       we are actually resolving the hostname for a connection,
-		       but I ain't that smart, so I don't know where to make
-		       the change later..
-		    */
+		    /* 
+		     * Get the host's IP, so we can report it like this:
+		     *
+		     * Received: from hostname [10.0.0.1]
+		     *
+		     * For ultra-efficiency, we should find the IP later, when
+		     * we are actually resolving the hostname for a connection.
+		     * Problem is this would have to be done inside SockOpen
+		     * and there's no way to do that that wouldn't both (a)
+		     * be horribly complicated, and (b) blow a couple of
+		     * layers of modularity all to hell.
+		     */
 		    errno = 0;
 		    namerec = gethostbyname(ctl->server.queryname);
 		    if (namerec == (struct hostent *)NULL)
