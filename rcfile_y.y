@@ -79,6 +79,7 @@ statement	: SET BATCHLIMIT MAP NUMBER	{batchlimit = $4;}
  */
 		| define_server serverspecs	{prc_register(); prc_reset();}
 		| define_server serverspecs userspecs
+				{memset(&current,'\0',sizeof(current));}
 		;
 
 define_server	: POLL STRING	{current.server.names = (struct idlist *)NULL;

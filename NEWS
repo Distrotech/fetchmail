@@ -15,6 +15,9 @@ bugs --
 
 * --quit in root-daemon mode didn't work, fixed this.
 
+* Ensure that default server parameters get properly zeroed out after each
+  poll or skip statement in .fetchmailrc. 
+
 There are 188 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
