@@ -30,6 +30,7 @@ struct query cmd_opts;		/* where to put command-line info */
 int poll_interval;		/* poll interval in seconds */
 char *logfile;			/* log file for daemon mode */
 flag use_syslog;		/* if syslog was set */
+flag use_invisible;		/* if invisible was set */
 struct query *querylist;	/* head of server list (globally visible) */
 
 int yydebug;			/* in case we didn't generate with -- debug */
@@ -60,7 +61,7 @@ extern char * yytext;
 %token PRECONNECT POSTCONNECT LIMIT
 %token IS HERE THERE TO MAP WILDCARD
 %token BATCHLIMIT FETCHLIMIT EXPUNGE
-%token SET LOGFILE DAEMON SYSLOG INTERFACE MONITOR
+%token SET LOGFILE DAEMON SYSLOG INVISIBLE INTERFACE MONITOR
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
@@ -83,6 +84,7 @@ optmap		: MAP | /* EMPTY */;
 statement	: SET LOGFILE optmap STRING	{logfile = xstrdup($4);}
 		| SET DAEMON optmap NUMBER	{poll_interval = $4;}
 		| SET SYSLOG			{use_syslog = TRUE;}
+		| SET INVISIBLE			{use_invisible = TRUE;}
 
 /* 
  * The way the next two productions are written depends on the fact that

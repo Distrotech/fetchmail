@@ -25,32 +25,33 @@
 #define LA_NODETACH	7
 #define LA_QUIT		8
 #define LA_LOGFILE	9
-#define LA_SYSLOG	10
-#define LA_RCFILE	11
-#define LA_IDFILE	12
-#define LA_PROTOCOL	13
-#define LA_UIDL		14
-#define LA_PORT		15
-#define LA_AUTHENTICATE	16
-#define LA_TIMEOUT	17
-#define LA_ENVELOPE	18
-#define LA_USERNAME	19
-#define LA_ALL          20
-#define LA_NOKEEP	21
-#define	LA_KEEP		22
-#define LA_FLUSH        23
-#define LA_NOREWRITE	24
-#define LA_LIMIT	25
-#define LA_FOLDER	26
-#define LA_SMTPHOST	27
-#define LA_BATCHLIMIT	28
-#define LA_FETCHLIMIT	29
-#define LA_EXPUNGE	30
-#define LA_MDA		31
-#define LA_INTERFACE    32
-#define LA_MONITOR      33
-#define LA_YYDEBUG	34
-#define LA_QVIRTUAL     35
+#define LA_INVISIBLE	10
+#define LA_SYSLOG	11
+#define LA_RCFILE	12
+#define LA_IDFILE	13
+#define LA_PROTOCOL	14
+#define LA_UIDL		15
+#define LA_PORT		16
+#define LA_AUTHENTICATE	17
+#define LA_TIMEOUT	18
+#define LA_ENVELOPE	19
+#define LA_USERNAME	20
+#define LA_ALL          21
+#define LA_NOKEEP	22
+#define	LA_KEEP		23
+#define LA_FLUSH        24
+#define LA_NOREWRITE	25
+#define LA_LIMIT	26
+#define LA_FOLDER	27
+#define LA_SMTPHOST	28
+#define LA_BATCHLIMIT	29
+#define LA_FETCHLIMIT	30
+#define LA_EXPUNGE	31
+#define LA_MDA		32
+#define LA_INTERFACE    33
+#define LA_MONITOR      34
+#define LA_YYDEBUG	35
+#define LA_QVIRTUAL     36
 
 /* options still left: CDgGhHjJoORTUwWxXYzZ */
 static const char *shortoptions = 
@@ -67,6 +68,7 @@ static const struct option longoptions[] = {
   {"nodetach",	no_argument,	   (int *) 0, LA_NODETACH    },
   {"quit",	no_argument,	   (int *) 0, LA_QUIT        },
   {"logfile",	required_argument, (int *) 0, LA_LOGFILE     },
+  {"invisible",	no_argument,	   (int *) 0, LA_INVISIBLE   },
   {"syslog",	no_argument,	   (int *) 0, LA_SYSLOG      },
   {"fetchmailrc",required_argument,(int *) 0, LA_RCFILE      },
   {"idfile",	required_argument, (int *) 0, LA_IDFILE      },
@@ -168,6 +170,9 @@ struct query *ctl;	/* option record to be initialized */
 	case 'L':
 	case LA_LOGFILE:
 	    cmd_logfile = optarg;
+	    break;
+	case LA_INVISIBLE:
+	    use_invisible = TRUE;
 	    break;
 	case 'f':
 	case LA_RCFILE:
@@ -360,6 +365,7 @@ struct query *ctl;	/* option record to be initialized */
 	fputs("  -q, --quit        kill daemon process\n", stderr);
 	fputs("  -L, --logfile     specify logfile name\n", stderr);
 	fputs("      --syslog      use syslog(3) for most messages when running as a daemon\n", stderr);
+	fputs("      --invisible   suppress Received line & enable host spoofing\n", stderr);
 	fputs("  -f, --fetchmailrc specify alternate run control file\n", stderr);
 	fputs("  -i, --idfile      specify alternate UIDs file\n", stderr);
 #ifdef	linux

@@ -170,6 +170,8 @@ int main (int argc, char **argv)
 	if (use_syslog)
 	    printf("Progress messages will be logged via syslog\n");
 #endif
+	if (use_invisible)
+	    printf("Fetchmail will masquerade and will not generate Received\n");
 	for (ctl = querylist; ctl; ctl = ctl->next) {
 	    if (ctl->active && !(implicitmode && ctl->server.skip))
 		dump_params(ctl);

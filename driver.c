@@ -394,9 +394,10 @@ static int smtp_open(struct query *ctl)
     {
 	/* 
 	 * RFC 1123 requires that the domain name in HELO address is a
-	 * "valid principal domain name" for the client host.  We
-	 * violate this with malice aforethought in order to make the
-	 * Received headers and logging look right.
+	 * "valid principal domain name" for the client host. If we're
+	 * running in invisible mode, violate this with malice
+	 * aforethought in order to make the Received headers and
+	 * logging look right.
 	 *
 	 * In fact this code relies on the RFC1123 requirement that the
 	 * SMTP listener must accept messages even if verification of the
@@ -410,6 +411,7 @@ static int smtp_open(struct query *ctl)
 	 * What it will affect is the listener's logging.
 	 */
 	struct idlist	*idp;
+	char *id_me = use_invisible ? ctl->server.truename : fetchmailhost;
 
 	errno = 0;
 
@@ -422,8 +424,7 @@ static int smtp_open(struct query *ctl)
 		continue;
 
 	    if (SMTP_ok(ctl->smtp_socket) == SM_OK &&
-		    SMTP_ehlo(ctl->smtp_socket, 
-			  ctl->server.truename,
+		    SMTP_ehlo(ctl->smtp_socket, id_me,
 			  &ctl->server.esmtp_options) == SM_OK)
 	       break;  /* success */
 
@@ -439,7 +440,7 @@ static int smtp_open(struct query *ctl)
 		continue;
 
 	    if (SMTP_ok(ctl->smtp_socket) == SM_OK && 
-		    SMTP_helo(ctl->smtp_socket, ctl->server.truename) == SM_OK)
+		    SMTP_helo(ctl->smtp_socket, id_me) == SM_OK)
 		break;  /* success */
 
 	    close(ctl->smtp_socket);
@@ -1138,7 +1139,7 @@ int num;		/* index of message */
 	n = stuffline(ctl, headers);
 	*rcv = 'R';
     }
-    if (n != -1)
+    if (!use_invisible && n != -1)
     {
 	/* utter any per-message Received information we need here */
 	sprintf(buf, "Received: from %s\n", ctl->server.truename);
@@ -1177,11 +1178,12 @@ int num;		/* index of message */
 		time(&now);
 		strcat(buf, ctime(&now));
 		n = stuffline(ctl, buf);
-		if (n != -1)
-		    n = stuffline(ctl, rcv);	/* ship out rest of headers */
 	    }
 	}
     }
+
+    if (n != -1)
+	n = stuffline(ctl, rcv);	/* ship out rest of headers */
 
     if (n == -1)
     {

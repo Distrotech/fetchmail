@@ -572,6 +572,16 @@ or
 option was used.
 .PP
 The 
+.B --invisible
+option tries to make fetchmail invisible.  Normally, fetchmail behaves
+like any other MTA would -- it generates a Received header into each
+message describing its place in the chain of transmission, and tells
+the MTA it forwards to that the mail came from the machine fetchmail
+itself is running on.  If the invisible option is on, the Received
+header is suppressed and fetchmail tries to spoof the MTA it forwards
+to into thinking it came directly from the mailserver host.
+.PP
+The 
 .B \-N
 or --nodetach option suppresses backgrounding and detachment of the
 daemon process from its control terminal.  This is primarily useful

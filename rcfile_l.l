@@ -24,6 +24,7 @@ set		{ return SET; }
 logfile		{ return LOGFILE; }
 daemon		{ return DAEMON; }
 syslog		{ return SYSLOG; }
+invisible	{ return INVISIBLE; }
 
 defaults 	{ return DEFAULTS; }
 server 		{ return POLL; }
