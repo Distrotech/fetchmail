@@ -1,14 +1,8 @@
-/* Copyright 1996 by Eric S. Raymond
- * All rights reserved.
+/*
+ * smtp.h -- prototypes for smtp handling code
+ *
  * For license terms, see the file COPYING in this directory.
  */
-
-/***********************************************************************
-  module:       smtp.h
-  project:      fetchmail
-  description:  Prototypes for smtp handling code.
-
- ***********************************************************************/
 
 #ifndef _POPSMTP_
 #define _POPSMTP_

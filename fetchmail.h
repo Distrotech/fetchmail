@@ -2,14 +2,6 @@
  * For license terms, see the file COPYING in this directory.
  */
 
-/***********************************************************************
-  module:       fetchmail.h
-  project:      fetchmail
-  programmer:   Eric S. Raymond <esr@thyrsus.com>
-  description:  global constant, type, and variable definitions.
-
- ***********************************************************************/
-
 /* constants designating the various supported protocols */
 #define		P_AUTO		0
 #define		P_POP2		2
