@@ -253,7 +253,8 @@ static int send_bouncemail(struct msgblk *msg,
 			   char *message, int nerrors, char *errors[])
 /* bounce back an error report a la RFC 1892 */
 {
-    char daemon_name[MSGBUFSIZE] = "FETCHMAIL-DAEMON@";
+    char daemon_name[18 + HOSTLEN] = "FETCHMAIL-DAEMON@";
+    char boundary[BUFSIZ];
     int i, sock;
 
     /* don't bounce  in reply to undeliverable bounces */
@@ -273,6 +274,10 @@ static int send_bouncemail(struct msgblk *msg,
 		|| SMTP_data(sock) != SM_OK)
 	return(FALSE);
 
+    sprintf(boundary, 
+	    "om-mani-padme-hum-%d-%d-%ld", 
+	    getpid(), getppid(), time((time_t *)NULL));
+
     if (outlevel >= O_VERBOSE)
 	error(0, 0, "SMTP: (bounce-message body)");
 
@@ -281,13 +286,13 @@ static int send_bouncemail(struct msgblk *msg,
     SockPrintf(sock, "From: FETCHMAIL-DAEMON@%s\r\n", fetchmailhost);
     SockPrintf(sock, "To: %s\n", msg->return_path);
     SockPrintf(sock, "MIME-Version: 1.0\r\n");
-    SockPrintf(sock, "Content-Type: multipart/report; report-type=text/plain; boundary=\"om-mani-padme-hum\"\r\n");
+    SockPrintf(sock, "Content-Type: multipart/report; report-type=text/plain; boundary=\"%s\"\r\n", boundary);
     SockPrintf(sock, "\r\n");
     SockPrintf(sock, "Content-Transfer-Encoding: 7bit\r\n");
     SockPrintf(sock, "\r\n");
 
     /* RFC1892 part 1 -- human-readable message */
-    SockPrintf(sock, "--om-mani-padme-hum\r\n"); 
+    SockPrintf(sock, "--%s\r\n", boundary); 
     SockPrintf(sock,"Content-Type: text/plain\r\n");
     SockPrintf(sock, "\r\n");
     SockWrite(sock, message, strlen(message));
@@ -296,7 +301,7 @@ static int send_bouncemail(struct msgblk *msg,
     if (nerrors)
     {
 	/* RFC1892 part 2 -- machine-readable responses */
-	SockPrintf(sock, "--om-mani-padme-hum\r\n"); 
+	SockPrintf(sock, "--%s\r\n", boundary); 
 	SockPrintf(sock,"Content-Type: message/delivery-status\r\n");
 	SockPrintf(sock, "\r\n");
 	for (i = 0; i < nerrors; i++)
@@ -305,12 +310,12 @@ static int send_bouncemail(struct msgblk *msg,
     }
 
     /* RFC1892 part 3 -- headers of undelivered message */
-    SockPrintf(sock, "--om-mani-padme-hum\r\n"); 
+    SockPrintf(sock, "--%s\r\n", boundary); 
     SockPrintf(sock, "Content-Type: text/rfc822-headers\r\n");
     SockPrintf(sock, "\r\n");
     SockWrite(sock, msg->headers, strlen(msg->headers));
     SockPrintf(sock, "\r\n");
-    SockPrintf(sock, "--om-mani-padme-hum--\r\n"); 
+    SockPrintf(sock, "--%s--\r\n", boundary); 
 
     if (SMTP_eom(sock) != SM_OK || SMTP_quit(sock))
 	return(FALSE);
