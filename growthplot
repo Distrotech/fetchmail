@@ -6,11 +6,12 @@
 # Get data from the NEWS file
 timeseries >/tmp/growthplot$$
 grep "^[0-9]" /tmp/growthplot$$ >/tmp/growthnumbers$$
+grep "^[0-9.]*.[05].0	" /tmp/growthplot$$ >/tmp/growthmajors$$
 sed '/^4.2.9/,$d' </tmp/growthnumbers$$ >/tmp/growthannounce$$
 
 cat >/tmp/growthimage$$ <<EOF
 set title "Fetchmail project growth history"
-set xlabel 'Days since project start'
+set xlabel 'Days since baseline'
 set ylabel 'Participants' 6	# Put it right over the Y axis
 set key bottom right box
 
@@ -43,7 +44,16 @@ EOF
 			lasttotal=$total
 		fi
 	done
-) </tmp/growthplot$$ >>/tmp/growthimage$$
+) </tmp/growthplot$$ >>/tmp/growthimage$$ 
+
+# OK, now write the major-release labels
+(
+	while read version friends announce total days date
+	do
+	    echo "set arrow from $days, $total - 80 to $days, $total - 30 head"
+	    echo "set label '$version' at $days - 5, $total - 90"
+	done
+) </tmp/growthmajors$$ >>/tmp/growthimage$$ 
 
 cat >>/tmp/growthimage$$ <<EOF
 # First, plot total participants
