@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/04/14 22:27:03 $
+<td width="30%" align=right>$Date: 1998/04/18 16:39:02 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -84,6 +84,7 @@ when I may have multiple login sessions going?</a><br>
 <a href="#R6">R6. Fetchmail dumps core when I use a .netrc file but works otherwise.</a><br>
 <a href="#R7">R7. Running fetchmail in daemon mode doesn't work.</a><br>
 <a href="#R8">R8. Fetchmail hangs when used with pppd.</a><br>
+<a href="#R9">R9. Fetchmail randomly dies with socket errors.</a><br>
 
 <h1>Disappearing mail</h1>
 
@@ -1361,6 +1362,19 @@ fetchmail doesn't play well with it, but works with pppd if `demand'
 is turned off.  We have no idea why this is.<p>
 
 <hr>
+<h2><a name="#R9">R9. Fetchmail randomly dies with socket errors.</a></h2>
+
+Check the MTU value in your PPP interface reported by
+<code>/sbin/ifconfig</code>.  If it's over 600, change it in your PPP
+options file.  (<code>/etc/ppp/options</code> on my box).  Here are
+option values that work:<P>
+
+<pre>
+  mtu 552
+  mru 552
+</pre>
+
+<hr>
 <h2><a name="D1">D1. I think I've set up fetchmail correctly, but I'm not getting any mail.</a></h2>
 
 Maybe you have a .forward or alias set up that you've forgotten about.  You
@@ -1856,7 +1870,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/04/14 22:27:03 $
+<td width="30%" align=right>$Date: 1998/04/18 16:39:02 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
