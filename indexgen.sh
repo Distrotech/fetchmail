@@ -191,8 +191,8 @@ FAQ covers them like a blanket.<P>
 Fetchmail was written and is maintained by <a
 href="../index.html">Eric S. Raymond</a>.  There are some designated
 backup maintainers (<a href="mailto:funk+@osu.edu">Rob Funk</a>, <a
-href="mailto:alberty@allnix.com">Al Youngwerth</a>, <a
-href="mailto:imdave@mcs.net">Dave Bodenstab</a>).  Other backup
+href="http://www.dallas.net/~fox/">David DeSimone aka Fuzzy Fox</a>,
+<a href="mailto:imdave@mcs.net">Dave Bodenstab</a>).  Other backup
 maintainers may be added in the future, in order to ensure continued
 support should Eric S.  Raymond drop permanently off the net for any
 reason.<P>
