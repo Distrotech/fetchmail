@@ -75,10 +75,10 @@ static const char *shortoptions =
 static const struct option longoptions[] = {
 /* this can be const because all flag fields are 0 and will never get set */
   {"help",	no_argument,	   (int *) 0, LA_HELP        },
-  {"version",   no_argument,       (int *) 0, LA_VERSION     },
+  {"version",	no_argument,       (int *) 0, LA_VERSION     },
   {"check",	no_argument,	   (int *) 0, LA_CHECK       },
-  {"silent",    no_argument,       (int *) 0, LA_SILENT      },
-  {"verbose",   no_argument,       (int *) 0, LA_VERBOSE     },
+  {"silent",	no_argument,       (int *) 0, LA_SILENT      },
+  {"verbose",	no_argument,       (int *) 0, LA_VERBOSE     },
   {"daemon",	required_argument, (int *) 0, LA_DAEMON      },
   {"nodetach",	no_argument,	   (int *) 0, LA_NODETACH    },
   {"quit",	no_argument,	   (int *) 0, LA_QUIT        },
@@ -100,27 +100,27 @@ static const struct option longoptions[] = {
   {"qvirtual",	required_argument, (int *) 0, LA_QVIRTUAL    },
 
   {"user",	required_argument, (int *) 0, LA_USERNAME    },
-  {"username",  required_argument, (int *) 0, LA_USERNAME    },
+  {"username",	required_argument, (int *) 0, LA_USERNAME    },
 
   {"all",	no_argument,       (int *) 0, LA_ALL         },
   {"nokeep",	no_argument,	   (int *) 0, LA_NOKEEP      },
-  {"keep",      no_argument,       (int *) 0, LA_KEEP        },
+  {"keep",	no_argument,       (int *) 0, LA_KEEP        },
   {"flush",	no_argument,	   (int *) 0, LA_FLUSH       },
   {"norewrite",	no_argument,	   (int *) 0, LA_NOREWRITE   },
   {"limit",	required_argument, (int *) 0, LA_LIMIT       },
   {"warnings",	required_argument, (int *) 0, LA_WARNINGS    },
 
-  {"folder",    required_argument, (int *) 0, LA_FOLDER	     },
+  {"folder",	required_argument, (int *) 0, LA_FOLDER	     },
   {"smtphost",	required_argument, (int *) 0, LA_SMTPHOST    },
   {"smtpaddress", required_argument, (int *) 0, LA_SMTPADDR  },
   {"antispam",	required_argument, (int *) 0, LA_ANTISPAM    },
   
   {"batchlimit",required_argument, (int *) 0, LA_BATCHLIMIT  },
   {"fetchlimit",required_argument, (int *) 0, LA_FETCHLIMIT  },
-  {"expunge",   required_argument, (int *) 0, LA_EXPUNGE     },
+  {"expunge",	required_argument, (int *) 0, LA_EXPUNGE     },
   {"mda",	required_argument, (int *) 0, LA_MDA         },
   {"bsmtp",	required_argument, (int *) 0, LA_BSMTP       },
-  {"lmtp",	required_argument, (int *) 0, LA_LMTP        },
+  {"lmtp",	no_argument,       (int *) 0, LA_LMTP        },
 
 #ifdef INET6
   {"netsec",	required_argument, (int *) 0, LA_NETSEC      },
