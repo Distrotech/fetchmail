@@ -240,7 +240,8 @@ static struct query *hosttail;	/* where to add new elements */
 void yyerror (const char *s)
 /* report a syntax error */
 {
-    error_at_line( 0, 0, rcfile, prc_lineno, "%s at %s", s, yytext );
+    error_at_line( 0, 0, rcfile, prc_lineno, "%s at %s", s, 
+		   (yytext && yytext[0]) ? yytext : "end of input");
     prc_errflag++;
 }
 
@@ -250,15 +251,16 @@ const char *pathname;		/* pathname for the configuration file */
 {
     struct stat statbuf;
 
-    /* special case, useful for debugging purposes */
-    if (strcmp("/dev/null", pathname) == 0)
+    errno = 0;
+
+    /* special cases useful for debugging purposes */
+    if (strcmp("/dev/null", pathname) == 0 || versioninfo)
 	return(0);
 
     /* the run control file must have the same uid as the REAL uid of this 
        process, it must have permissions no greater than 600, and it must not 
        be a symbolic link.  We check these conditions here. */
 
-    errno = 0;
     if (lstat(pathname, &statbuf) < 0) {
 	if (errno == ENOENT) 
 	    return(0);
