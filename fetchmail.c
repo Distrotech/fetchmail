@@ -1291,6 +1291,7 @@ static int query_host(struct query *ctl)
 		break;
 	}
 	ctl->server.protocol = P_AUTO;
+	break;
     case P_POP2:
 #ifdef POP2_ENABLE
 	st = doPOP2(ctl);

@@ -2,6 +2,9 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Finished license cleanup, all licenses in the distribution are noe
+  officially GPL-compatible.
+
 fetchmail-5.9.3 (Sun Sep 30 12:08:52 EDT 2001), 21075 lines:
 
 * Fix configuration error in handling of long options.

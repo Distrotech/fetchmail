@@ -4,7 +4,7 @@
  *
  * This code is distantly descended from the error.c module written by
  * David MacKenzie <djm@gnu.ai.mit.edu>.  It was redesigned and
- * rewritten by Dave Bodenstab, then reseedesigned again by ESR, then
+ * rewritten by Dave Bodenstab, then redesigned again by ESR, then
  * bludgeoned into submission for SunOS 4.1.3 by Chris Cheyney
  * <cheyney@netcom.com>.  It works even when the return from
  * vprintf(3) is unreliable.

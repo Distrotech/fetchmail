@@ -95,7 +95,7 @@ protobjs = rcfile_y.o rcfile_l.o socket.o getpass.o pop2.o pop3.o imap.o \
        etrn.o odmr.o fetchmail.o idle.o env.o options.o daemon.o driver.o \
        transact.o sink.o rfc822.o smtp.o xmalloc.o uid.o mxget.o md5ify.o \
        cram.o kerberos.o gssapi.o opie.o rpa.o interface.o netrc.o base64.o \
-       error.o unmime.o conf.o checkalias.o smbdes.o smbencrypt.o smbmd4.o \
+       report.o unmime.o conf.o checkalias.o smbdes.o smbencrypt.o smbmd4.o \
        smbutil.o ipv6-connect.o lock.o
 
 objs = $(protobjs) $(extras) $(EXTRAOBJ)
@@ -109,7 +109,7 @@ srcs = $(srcdir)/socket.c $(srcdir)/getpass.c $(srcdir)/pop2.c 		\
        $(srcdir)/uid.c $(srcdir)/mxget.c $(srcdir)/md5ify.c   		\
        $(srcdir)/cram.c $(srcdir)/kerberos.c $(srcdir)/gssapi.c 	\
        $(srcdir)/opie.c $(srcdir)/rpa.c $(srcdir)/interface.c 		\
-       $(srcdir)/netrc.c $(srcdir)/base64.c $(srcdir)/error.c 		\
+       $(srcdir)/netrc.c $(srcdir)/base64.c $(srcdir)/report.c 		\
        $(srcdir)/unmime.c $(srcdir)/conf.c $(srcdir)/checkalias.c 	\
        $(srcdir)/smbdes.c $(srcdir)/smbencrypt.c $(srcdir)/smbmd4.c 	\
        $(srcdir)/smbutil.c $(srcdir)/ipv6-connect.c $(srcdir)/lock.c
@@ -139,12 +139,12 @@ rfc822: rfc822.c
 	gcc -DTESTMAIN -g rfc822.c -o rfc822
 
 # Stand-alone MIME decoder
-unmime: unmime.c base64.c rfc822.c xmalloc.c error.c
+unmime: unmime.c base64.c rfc822.c xmalloc.c report.c
 	$(CC) -DSTANDALONE -DHAVE_CONFIG_H -I. -g -o $@ $^
 
 
 # Stand-alone netrc tester
-netrc: netrc.c xmalloc.o error.o
+netrc: netrc.c xmalloc.o report.o
 	$(CC) -DSTANDALONE -DHAVE_CONFIG_H -I. -g -o $@ $^
 
 .c.o:
@@ -174,7 +174,7 @@ install:
 	cd $(DESTDIR)$(mandir) && ln -s fetchmail.$(manext) fetchmailconf.$(manext)
 	@echo "Installing language catalogs..."
 	-cd intl; $(MAKE) install
-	cd po; $(MAKE) install
+	cd po; $(MAKE) update-po install
 
 uninstall:
 	rm -f $(DESTDIR)$(bindir)/fetchmail $(DESTDIR)$(bindir)/fetchmailconf
@@ -312,6 +312,7 @@ dist: distclean MANIFEST Makefile.in distdocs
 	make fetchmail-$(VERSION).tar.gz 
 	lsmgen.sh $(VERSION) `wc -c fetchmail-$(VERSION).tar.gz` >fetchmail.lsm
 	make fetchmail-$(VERSION).tar.gz
+	-cd po; make update-po
 	ls -l fetchmail-$(VERSION).tar.gz
 	@echo "Don't forget to build RPMs from root!"
 
