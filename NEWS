@@ -2,7 +2,8 @@
 
 fetchmail-4.6.7 ():
 * Gerald Britton's patches to enable Hesiod support.
-* Postmater option fix from Bill Metzenthen <billm@melbpc.org.au>.
+* Postmaster option fix from Bill Metzenthen <billm@melbpc.org.au>.
+* Socks library support forom Guiseppe Guerini.
 
 There are 248 people on fetchmail-friends and 306 on fetchmail-announce.
 

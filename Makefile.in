@@ -23,6 +23,7 @@ YACC = @YACC@
 YACCFLAGS = -dt
 
 CEFLAGS = @CEFLAGS@
+CPFLAGS = @CPFLAGS@
 LDEFLAGS = @LDEFLAGS@
 
 # How to invoke ranlib.  This is only used by the `glob' subdirectory.
@@ -116,7 +117,7 @@ unmime: unmime.c base64.c rfc822.c xmalloc.c error.c memmove.c
 	$(CC) -DSTANDALONE -g -o $@ $^ 
 
 .c.o:
-	$(CC) $(defines) -c -I$(srcdir) -I. $(CEFLAGS) $(CFLAGS) $<
+	$(CC) $(defines) -c $(CPFLAGS) -I$(srcdir) -I. $(CEFLAGS) $(CFLAGS) $<
 
 # For some losing Unix makes.
 SHELL = /bin/sh

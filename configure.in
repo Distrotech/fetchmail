@@ -29,9 +29,24 @@ AC_C_CONST			dnl getopt needs this.
 
 AC_PROG_LEX
 AC_PROG_YACC
+AC_SUBST(CPFLAGS)
 AC_SUBST(CEFLAGS)
 AC_SUBST(LDEFLAGS)
 AC_SUBST(LIBOBJS)
+
+# Check for LynxOS special case: -lbsd needed (at least on 2.3.0) and -s
+# not working.
+if test `uname` = "LynxOS" 
+then
+  echo "Adding -lbsd to standard libraries"
+  LIBS="$LIBS -lbsd"
+  LDFLAGS=""
+  if test `uname -r` = "2.5.0"
+  then
+    echo "Prepending standard include path to gcc flags"
+    CPFLAGS="-I/usr/include"
+  fi
+fi
 
 # Under sysV68, socket and friends are provided by the C library.
 # -linet does not provide socket, but causes multiple definition
@@ -305,9 +320,28 @@ else
     done
 fi
 
+###	use option --with-socks=DIR to point at SOCKS library
+AC_ARG_WITH(socks,
+	[  --with-socks[=DIR]   add built-in SOCKS firewall access],
+[
+if test "$with_socks" != no
+then
+    if test "$with_socks" != yes
+    then
+        LDEFLAGS="$LDEFLAGS -L$with_socks"
+    else
+        AC_CHECK_LIB(socks, Rconnect,,
+               AC_MSG_ERROR([could not find libsocks which is needed for built-in SOCKS support]))
+    fi
+    AC_DEFINE(HAVE_SOCKS)
+    CEFLAGS="$CEFLAGS -Dconnect=Rconnect -Dgetsockname=Rgetsockname -Dbind=Rbind -Daccept=Raccept -Dlisten=Rlisten -Dselect=Rselect"
+    LIBS="-lsocks $LIBS"
+fi])
+
+
 ###	use option --with-hesiod=DIR to point at a HESIOD directory
 AC_ARG_WITH(hesiod,
-	[  --with-hesiod=DIR  point fetchmail compilation at a HESIOD directory])
+	[  --with-hesiod=DIR    point fetchmail compilation at a HESIOD directory])
 
 if test -n "$with_hesiod"
 then

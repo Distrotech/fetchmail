@@ -90,6 +90,10 @@
 
 /* Define if you want GSSAPI authentication */
 #undef GSSAPI
+
+/* Define if you want built-in SOCKS support */
+#undef HAVE_SOCKS
+
 
 /* Leave that blank line there!!  Autoheader needs it.
    If you're adding to this file, keep in mind:

@@ -195,6 +195,11 @@ int main (int argc, char **argv)
 #if NET_SECURITY
 	printf("+NETSEC");
 #endif /* NET_SECURITY */
+#ifdef HAVE_SOCKS
+  #if HAVE_SOCKS
+	printf("+SOCKS");
+  #endif
+#endif /* HAVE_SOCKS */
 	putchar('\n');
 
 	/* this is an attempt to help remote debugging */
@@ -414,6 +419,17 @@ int main (int argc, char **argv)
 	    }
 	}
     }
+
+/* Time to initiate the SOCKS library (this is not mandatory: it just
+ registers the correct application name for logging purpose. If you
+ have some problem, comment these lines). */
+#ifdef HAVE_SOCKS
+  #if HAVE_SOCKS
+/* Mmmh... I don't like hardcoded application names,
+ but "fetchmail" is everywhere... */
+    SOCKSinit("fetchmail");
+  #endif
+#endif /* HAVE_SOCKS */
 
     /*
      * Maybe time to go to demon mode...
