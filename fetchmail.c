@@ -1062,25 +1062,7 @@ static int load_params(int argc, char **argv, int optind)
 	    }
 #endif /* !HAVE_GETHOSTBYNAME || !HAVE_RES_SEARCH */
 
-	    /*
-	     *
-	     * Compute the true name of the mailserver host.  
-	     * There are two clashing cases here:
-	     *
-	     * (1) The poll name is a label, possibly on one of several
-	     *     poll configurations for the same host.  In this case 
-	     *     the `via' option will be present and give the true name.
-	     *
-	     * (2) The poll name is the true one, the via name is 
-	     *     localhost.   This is going to be typical for ssh-using
-	     *     configurations.
-	     *
-	     * We're going to assume the via name is true unless it's
-	     * localhost.
-	     */
-	    if ((ctl->server.via) && 
-		(!(ctl->localnames && ctl->localnames->next) || 
-		 strcmp(ctl->server.via, "localhost")))
+	    if (ctl->server.via) 
 		ctl->server.queryname = xstrdup(ctl->server.via);
 	    else
 		ctl->server.queryname = xstrdup(ctl->server.pollname);

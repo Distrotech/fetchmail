@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/04/26 03:24:46 $
+<td width="30%" align=right>$Date: 2001/05/12 06:13:45 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -707,9 +707,14 @@ once you have installed the `bind' package.
 <hr>
 <h2><a name="F1">F1. Why does my old .fetchmailrc file no longer work?</a></h2>
 
+<h3>If your file predates 5.8.3</h3>
+
+<p>The `via localhost' special case for use with ssh tunnelling is gone.
+Use the %h feature of <tt>plugin</tt> instead.
+
 <h3>If your file predates 5.6.8</h3>
 
-In 5.6.8, the <tt>preauth</tt> keyword and option were changed back to
+<p>In 5.6.8, the <tt>preauth</tt> keyword and option were changed back to
 <tt>auth</tt>. The <tt>preauth</tt> synonym will still be supported
 through a few more point releases.
 
@@ -1747,135 +1752,25 @@ http://www.bieringer.de/linux/IPv6/IPv6-HOWTO/IPv6-HOWTO.html</a>
 <hr>
 <h2><a name="K3">K3. How can I get fetchmail to work with ssh?</a></h2>
 
-We have three recipes for this.
-
-<p><h3>Using plugin</h3>
-
-There's a very simple IMAP recipe using the <tt>plugin</tt> option.
-Use the following:
+<p>Use the <tt>plugin</tt> option.  This is dead simple with IMAP:
 
 <TT>
 	plugin "ssh %h /usr/sbin/imapd"
 </TT>
 
-You may have to use a different absolute pathname, whatever the
+<p>You may have to use a different absolute pathname, whatever the
 location of imapd on your mailserver is.  This option tells fetchmail
 that instead of opening a connection on the server's port 143 and
 doing standard IMAP authentication, fetchmail should ssh to the server
 and run imapd, using the more secure ssh authentication (as well as
-getting ssh's end-to-end encryption).
+getting ssh's end-to-end encryption). Most IMAP daemons will detect
+that they've been called from the command line and assume the
+connection is peauthenticated.
 
-<p><h3>Single-User POP3</h3>
-
-First, a lightly edited version of a recipe from Masafumi NAKANE.
-This one is easy to set up, but only supports one user at a time.
-
-<p>1. You must have ssh (the ssh client) on the local host and sshd (ssh
-server) on the remote mail server.  And you have to configure ssh so
-you can login to the sshd server host without a password.  (Refer to ssh
-man page for several authentication methods.)
-
-<p>2. Add something like following to your .fetchmailrc file: 
-
-<p><pre>
-poll mailhost port 1234 via localhost with proto pop3:
-        preconnect "ssh -l username -f mailhost -L 1234:mailhost:110 sleep 5"
-</pre>
-
-This is an SSH 1.x recipe.  According to Mick Papadonis, the
-equivalent SSH 2.x recipe is this:
-
-<p><pre>
-poll localhost port 1234 with proto pop3:
-        preconnect "ssh -n -S -x -l username -fo mailhost -L 1234:mailhost:110; sleep 5"
-</pre>
-
-The sleep is needed on slower machines to prevent fetchmail from
-trying to open the socket before ssh actually makes it ready.  Faster
-machines may not need it.
-
-<p>(Note that 1234 can be an arbitrary port number.  Privileged ports can
-be specified only by root.)  The effect of this ssh command is to
-forward connections made to localhost port 1234 (in above example) to
-mailhost's 110. 
-
-<p>This configuration will enable secure mail transfer.  All the
-conversation between fetchmail and remote pop server will be
-encrypted.
-
-<p>If sshd is not running on the remote mail server, you can specify an
-intermediate host running it.  If you do this, however, communication
-between the machine running sshd and the POP server will not be encrypted.
-And the preconnect line would be like this:
-
-<p><pre>
-preconnect "ssh -f -L 1234:mailhost:110 sshdhost sleep 20 &lt;/dev/null &gt;/dev/null"
-</pre>
-
-You can work this trick with IMAP too, but the port number 110 in the
-above would need to become 143.  In either case you'll have to specify
-a password but the password will not be sent in clear.
-
-<p>There is an explanation of a similar recipe at <a
-href="http://sunsite.unc.edu/LDP/HOWTO/mini/Secure-POP+SSH.html">Secure
-POP via SSH mini-HOWTO</a>.
-
-<p><h3>Multi-User POP3</h3>
-
-Second, a recipe from Charlie Brady &lt;cbrady@ind.tansu.com.au&gt;:
-
-<p>Charlie says: "The recipe [from Masafume NAKANE] certainly works, but
-the solution I post here is better in a few respects":
-
-<UL>
-<LI>this method will not fail if two or more users attempt to use fetchmail
-    simultaneously.
-<LI>you are able to use the full facilities of tcpd to control access
-<LI>this method does not depend on the preconnect feature of fetchmail, so
-    can be used for tunneling of other services as well.
-</UL>
-
-Here are the steps:
-
-<OL>
-<LI>
-Make sure that the "socket" program is installed on the server
-machine. Presently it lives at <a
-href="ftp://sunsite.unc.edu/pub/linux/system/network/misc/socket-1.1.tar.gz">
-ftp://sunsite.unc.edu/pub/linux/system/network/misc/socket-1.1.tar.gz</a>,
-but watch out for a change in version number.<p>
-<LI>
-Set up an unprivileged account on your system with a .ssh directory
-containing an SSH identity file "identity" with no pass phrase,
-"identity.pub" and "known_hosts" containing the host key of your
-mailhost. Let's call this account "noddy".
-<LI>
-On mailhost, set up no-password access for noddy@yourhost. Add to your
-SSH authorized_keys file:
-
-<pre>
-command="socket localhost 110",no-port-forwarding 1024 ......
-</pre>
-
-where "<code>1024 ......</code>" is the content of noddy's identity.pub file.
-<LI>
-Create a script /usr/local/bin/ssh.fm and make it executable:
-
-<pre>
-#! /bin/sh
-exec ssh -q -C -l your.login.id -e none mailhost socket localhost 110
-</pre>
-<LI>
-Add an entry in inetd.conf for whatever port you choose to use - say:
-
-<pre>
-1234 stream tcp nowait noddy /usr/sbin/tcpd /usr/local/bin/ssh.fm
-</pre>
-<LI>
-Send a HUP signal to your inetd.
-</OL>
-
-Now just use localhost:1234 to access your POP server.
+<p>POP3 daemons aren't quite as smart.  They won't know they are 
+preauthenticated in this mode, so you'll actually have to ship your 
+password.  It will be under ssh encryption, though, so that shouldn't
+be a problem.
 
 <hr>
 <h2><a name="K4">K4. What do I have to do to use the IMAP-GSS protocol?</a></h2>
@@ -2950,7 +2845,7 @@ switching to IMAP and using a short expunge interval.
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/04/26 03:24:46 $
+<td width="30%" align=right>$Date: 2001/05/12 06:13:45 $
 </table>
 
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
