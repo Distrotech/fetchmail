@@ -236,9 +236,9 @@ static int pop3_fetch(FILE *sockfp, int number, int *lenp)
 	*lenp = 0;
     else
     {
-	while (isdigit(*--cp))
+	while (--cp > buf && isdigit(*cp))
 	    continue;
-	*lenp = atoi(++cp);
+	*lenp = atoi(cp);
     }
     return(0);
 }
