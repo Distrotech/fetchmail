@@ -109,7 +109,8 @@ Run
 	make
 
 This should compile fetchmail for your system.  If fetchmail fails to build
-properly, see the FAQ section B on build-time problems.
+properly, see the FAQ section B on build-time problems.  Note: parallelized
+make (e.g. make -j 4) fails due to some weirdness in the yacc productions.
 
 4. INSTALL
 

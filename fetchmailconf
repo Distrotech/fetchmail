@@ -1046,7 +1046,7 @@ class ServerEdit(Frame, MyWidget):
             rightwin.pack(side=LEFT, anchor=N);
 
     def autoprobe(self):
-        # Note: this only handles case (1) near fetchmail.c:892
+        # Note: this only handles case (1) near fetchmail.c:1032
         # We're assuming people smart enough to set up ssh tunneling
         # won't need autoprobing.
         if self.server.via:

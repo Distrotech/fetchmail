@@ -962,7 +962,7 @@ T}
 set postmaster  	\&	T{
 Give the name of the last-resort mail recipient
 T}
-set nobouncemail	\&	T{
+set no bouncemail	\&	T{
 Direct error mail to postmaster rather than sender
 T}
 set logfile  	\&	T{

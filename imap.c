@@ -239,6 +239,14 @@ static int do_rfc1731(int sock, char *truename)
 	return result;
     }
 
+    /* this patch by Dan Root <dar@thekeep.org> solves an endianess problem. */
+    {
+	char tmp[4];
+
+	*(int *)tmp = ntohl(*(int *) challenge1.cstr);
+	memcpy(challenge1.cstr, tmp, sizeof(tmp));
+    }
+
     len = from64tobits(challenge1.cstr, buf1);
     if (len < 0) {
 	report(stderr, _("could not decode initial BASE64 challenge\n"));

@@ -6,6 +6,12 @@
 
 				Release Notes:
 
+fetchmail-5.0.0 ():
+* Patch by Dan Root to solve an endianness problem in IMAP-K4.
+* Fix lexical-analyzer bug that rejected `set nobouncemail',
+
+There are 262 people on fetchmail-friends and 356 on fetchmail-announce.
+
 fetchmail-4.7.8 (Mon Feb 22 10:06:04 EST 1999):
 * FreeBSD support for interface and monitor options by Andy Doran <ad@psn.ie>.
 * Fixed server-deletion bug in fetchmailconf.  Also, handle `port' properly.
@@ -15,7 +21,7 @@ fetchmail-4.7.8 (Mon Feb 22 10:06:04 EST 1999):
   postmaster.
 * Suppress dancing progress dots when syslog is on.
 * es.po update by Javier Kohen.
-* Added FAQ material on what to do for a "do not relay" sendmail error.
+* Added FAQ material on what to do for a "do not relay" sendmail response.
 * Can now build under Lynx 3.0.0.
 
 There are 261 people on fetchmail-friends and 358 on fetchmail-announce.

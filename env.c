@@ -168,20 +168,20 @@ const char *showproto(int proto)
 {
     switch (proto)
     {
-    case P_AUTO: return("auto"); break;
+    case P_AUTO: return("auto");
 #ifdef POP2_ENABLE
-    case P_POP2: return("POP2"); break;
+    case P_POP2: return("POP2");
 #endif /* POP2_ENABLE */
-    case P_POP3: return("POP3"); break;
-    case P_IMAP: return("IMAP"); break;
-    case P_IMAP_K4: return("IMAP-K4"); break;
+    case P_POP3: return("POP3");
+    case P_IMAP: return("IMAP");
+    case P_IMAP_K4: return("IMAP-K4");
 #ifdef GSSAPI
-    case P_IMAP_GSS: return("IMAP-GSS"); break;
+    case P_IMAP_GSS: return("IMAP-GSS");
 #endif /* GSSAPI */
-    case P_APOP: return("APOP"); break;
-    case P_RPOP: return("RPOP"); break;
-    case P_ETRN: return("ETRN"); break;
-    default: return("unknown?!?"); break;
+    case P_APOP: return("APOP");
+    case P_RPOP: return("RPOP");
+    case P_ETRN: return("ETRN");
+    default: return("unknown?!?");
     }
 }
 

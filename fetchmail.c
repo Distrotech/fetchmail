@@ -1284,7 +1284,6 @@ static int query_host(struct query *ctl)
 	}
 	ctl->server.protocol = P_AUTO;
 	return(st);
-	break;
     case P_POP2:
 #ifdef POP2_ENABLE
 	return(doPOP2(ctl));
@@ -1314,7 +1313,6 @@ static int query_host(struct query *ctl)
 	report(stderr, _("IMAP support is not configured.\n"));
 	return(PS_PROTOCOL);
 #endif /* IMAP_ENABLE */
-	break;
     case P_ETRN:
 #ifndef ETRN_ENABLE
 	report(stderr, _("ETRN support is not configured.\n"));
