@@ -1,43 +1,79 @@
-			README for fetchmail
+		The fetchmail announcement 
 
-fetchmail is a full-featured, robust, well-documented POP2, POP3, APOP, and
-IMAP batch mail retrieval utility intended to be used over on-demand TCP/IP
-links (such as SLIP or PPP connections).  It retrieves mail from remote
-mail servers and forwards it to your local (client) machine's delivery
-system, where it can then be be read by normal mail user agents such as
-elm(1) or Mail(1).
+fetchmail is a full-featured, robust, well-documented POP2, POP3,
+APOP, and IMAP batch mail retrieval/forwarding utility intended to be
+used over on-demand TCP/IP links (such as SLIP or PPP connections).
+It retrieves mail from remote mail servers and forwards it to your
+local (client) machine's delivery system, so it can then be be read by
+normal mail user agents such as elm(1) or Mail(1).
 
-The fetchmail program was originally developed (under the name popclient) by
-Carl Harris <ceharris@mal.com> and now maintained by Eric S. Raymond
-<esr@thyrsus.com>.  See the file NEWS for a version history.
+The fetchmail code was developed under Linux, but should be readily
+portable to other Unix variants (it uses GNU autoconf).  It has also
+been ported to QNX; to build under QNX, see the header comments in the
+Makefile.
 
-The fetchmail code was developed under Linux and should be readily portable
-to other UNIX systems (it uses GNU autoconf).  It has also been ported to
-QNX; to build under QNX, see the header comments in the Makefile.
+The fetchmail program was originally authored (under the name
+popclient) by Carl Harris <ceharris@mal.com>. I, Eric S. Raymond,
+<esr@thyrsus.com> took over development in June 1996.  I subsequently
+renamed the program `fetchmail' to reflect the addition of IMAP
+support.  See the distribution file NEWS for detailed information on
+recent changes.
 
-You can find the latest version of fetchmail from Eric's home page
+Before accepting responsibility for the popclient sources from Carl, I
+had investigated and used and tinkered with every other UNIX
+remote-mail forwarder I could find, including fetchpop1.9,
+PopTart-0.9.3, get-mail, gwpop, pimp-1.0, pop-perl5-1.2, popc,
+popmail-1.6 and upop.  I learned from all of them, and fetchmail is a
+carefully-thought-out attempt to render obsolete every other program
+in its class.
+
+Here are fetchmail's main features.  Those unique to fetchmail are marked
+with **.
+
+	*  POP2, POP3, **APOP, **RPOP and **IMAP support.
+
+	** Host is auto-probed for a working server if no protocol is
+	   specified for the connection.  Thus you don't need to know
+	   what servers are running on your mail host in advance; the
+	   verbose option will tell you which one succeeds.
+
+	** Delivery via via SMTP to the client machine's port 25.  This
+	   means the retrieved mail automatically goes to the system
+	   default MDA as if it were normal sender-initiated SMTP mail.
+
+	*  Easy control via command line or free-format run control file.
+
+	*  Daemon mode -- fetchmail can be run in background to poll
+	   one or more hosts at a specified interval.
+
+	*  From:, To:, Cc:, and Reply-To: headers are rewritten so that 
+	   usernames relative to the fetchmail host become fully-qualified
+	   Internet addresses.  This enables replies to work correctly.
+	   (Would be unique to fetchmail if I hadn't added it to fetchpop.)
+
+	*  Strict conformance to relevant RFCs and good debugging options.
+	   You could use fetchmail to test and debug server implementatations.
+
+	*  Carefully written, comprehensive and up-to-date man page describing
+	   not only modes of operation but also (**) how to interpret the most
+	   common kinds of problems and what to do about deficient servers
+
+	*  Rugged, simple, and well-tested code -- the author relies on it
+           every day and it has never lost mail, not even in experimental
+	   versions.
+
+	*  Large user community -- fetchmail has inherited a significant
+	   user base from Carl Harris's popclient community.   This means
+	   feedback is rapid, bugs get found and fixed rapidly.
+
+You can easily find the latest version of fetchmail from Eric's home page:
 
 	http://www.ccil.org/~esr
 
-Features of fetchmail include:
+Just chase the link to the freeware collection.  Besides fetchmail, it
+includes a tasty selection of Web authoring tools, programmer's aids,
+graphics libraries, compilers for bizarre languages, games, and 
+miscellaneous interesting hacks.  Enjoy!
 
-	* POP2, POP3, APOP, RPOP and IMAP support with auto-probing for a
-	  server on the host if no protocol is specified.
-
-	* Easy control via command line or free-format run control file.
-
-	* Daemon mode -- fetchmail can be run in background to poll
-	  one or more hosts at a specified interval.
-
-	* Delivery via via SMTP to the client machine's port 25 (or
-	  optionally via either file-append with mandatory locking or an
-	  MDA you specify). 
-
-	* From:, To:, Cc:, and Reply-To: headers are rewritten so that 
-	  usernames relative to the fetchmail host become fully-qualified
-	  Internet addresses.  This enables replies to work correctly.
-
-There is a man page at fetchmail.man.  A sample rc file is at sample.rcfile.
-For a release history, see the file NEWS.
 							-- esr
 
