@@ -1761,6 +1761,7 @@ const struct method *proto;	/* protocol method table */
 			 * wrong, reporting compressed rather than
 			 * actual sizes (so the actual length of
 			 * message is longer than the reported size).
+			 * Another fine example of Microsoft brain death!
 			 *
 			 * Some older POP servers, like the old UCB
 			 * POP server and the pre-QPOP QUALCOMM
