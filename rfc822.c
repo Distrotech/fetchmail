@@ -72,6 +72,7 @@ const char *host;	/* server hostname */
 		    strcpy(buf, "@");
 		    strcat(buf, host);
 		    buf += strlen(buf);
+		    has_host_part = TRUE;
 		}
 		break;
 
