@@ -298,13 +298,15 @@ struct idlist *save_str(struct idlist **idl, const char *str, flag st)
 void free_str_list(struct idlist **idl)
 /* free the given UID list */
 {
-    if (*idl == (struct idlist *)NULL)
-	return;
+    struct idlist *i = *idl;
 
-    free_str_list(&(*idl)->next);
-    free ((*idl)->id);
-    free(*idl);
-    *idl = (struct idlist *)NULL;
+    while(i) {
+	struct idlist *t = i->next;
+	free(i->id);
+	free(i);
+	i = t;
+    }
+    *idl = 0;
 }
 
 void save_str_pair(struct idlist **idl, const char *str1, const char *str2)
