@@ -368,22 +368,25 @@ struct query *ctl;	/* query control record */
 		strcpy(rbuf, "by ");
 		strcat(rbuf, ctl->canonical_name);
 		if ((ok = strstr(bufp, rbuf)))
-		    ok = strstr(bufp, "for ");
+		    ok = strstr(ok, "for <");
+		else
+		    ok = (char *)NULL;
 		if (ok)
 		{
 		    char	*sp, *tp;
 
 		    tp = rbuf;
-		    for (sp = ok + 4; *sp && *sp != ';'; sp++)
+		    for (sp = ok + 5; *sp && *sp != '>' && *sp != '@'; sp++)
 			*tp++ = *sp;
 		    *tp = '\0';
-		    if (*sp != ';')
+		    if (*sp != ';' && *sp != '@')
 			ok = (char *)NULL;
 		}
 
 		if (ok)
 		{
-		    received_for = rbuf;
+		    received_for = alloca(strlen(rbuf)+1);
+		    strcpy(received_for, rbuf);
 		    if (outlevel == O_VERBOSE)
 			fprintf(stderr, 
 				"fetchmail: found Received address `%s'\n",
