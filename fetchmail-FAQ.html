@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/03/02 08:32:04 $
+<td width="30%" align=right>$Date: 2000/03/04 00:13:09 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -437,9 +437,10 @@ delivery is that you may be able to arrange this by using ssh(1); see
 <a href="#K3">K3</a>.<P>
 
 Note that ssh is not a complete privacy solution either, as your mail
-could have been snooped in transit to your POP server.  For best
-security, agree with your correspondents to use a tool such as GPG
-(Gnu Privacy Guard) or PGP (Pretty Good Privacy).<P>
+could have been snooped in transit to your POP server from wherever it
+originated.  For best security, agree with your correspondents to use
+a tool such as GPG (Gnu Privacy Guard) or PGP (Pretty Good
+Privacy).<P>
 
 If ssh/sshd isn't available, or you find it too complicated for you to
 set up, password encryption will at least keep a malicious cracker
@@ -1753,32 +1754,46 @@ Now just use localhost:1234 to access your POP server.<P>
 <h3>Multi-User IMAP</h3>
 
 This is the preferred method.  It comes to us from Joerg Dorchain.
-He writes:<p>
+The basic idea is to set up a bidirectional encrypted socket connection:<p>
 
-I have set up a special ssh-identity with no password and RSA-only
-authentication, which executes /usr/sbin/imapd when authenticated (for
-security reasons exeverything else, i.e. other commands, escape chars,
-..., are disabled). The imapd I use sees that it is not running as
-root and goes into preauthenticated mode. The only magic to to is have
-fetchmail talk to stdin of of ssh-command. This goes via the plugin
-keyword. In practise, this looks as follows:
+<pre>
+fetchmail <--> ssh <---> sshd <--> imapd
+ \---local side--/       \-remote side-/
+</pre>
+
+Use ssh-keygen(1) to set up a special ssh identity with no password
+and RSA-only authentication, which executes /usr/sbin/imapd when
+authenticated.  For security reasons all other commands should be
+disabled. (There is some security exposure in using an identity 
+without a passphrase; it means anyone who can get access to your
+account could use it to read your mail).<p>
+
+Running ssh-keygen will generate two files.  Have it create the
+private key to ~/.ssh/identity-imap. Once you have generated the
+corresponding public key, prepend this to the line of key data in it:
+
+<pre>
+command="/usr/sbin/imapd",no-port-forwarding,no-agent-forwarding
+</pre>
+
+This identity data has to be appended to ~/.ssh/authorized_keys on the
+remote machine, as usual for RSA authentication.  Whenever your ssh
+uses this identity, the remote side will run imapd.  The imapd will
+see that it is not running as root and go into preauthenticated
+mode.<p>
+
+On the client side, use the <code>plugin</code> keyword to make
+fetchmail talk to the stdin of the remote ssh.  Here's an examople:
 
 <pre>
 poll mail.dorchain.net options proto imap plugin fetchmail-imap-wrapper 
 </pre>
 
-The wrapper script looks like this:<p>
+The wrapper script should look like this:<p>
 
 <pre>
 #!/bin/sh
 exec ssh -i $HOME/.ssh/identity-imap $1 /usr/sbin/imapd
-</pre>
-
-This gives a bidirectional socket connection:<p>
-
-<pre>
-fetchmail <--> ssh <---> sshd <--> imapd
- \---local side--/        \---remote side/
 </pre>
 
 <hr>
@@ -2652,7 +2667,7 @@ terminate it.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/03/02 08:32:04 $
+<td width="30%" align=right>$Date: 2000/03/04 00:13:09 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
