@@ -107,10 +107,13 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 #ifdef RPA_ENABLE
 	 /*
 	  * CompuServe has changed its RPA behavior.  Used to be they didn't
-	  * accept USER, but I'm told this changed in mid-November.
+	  * accept PASS, but I'm told this changed in mid-November.
 	  */
 	 if (strstr(greeting, "csi.com"))
 	 {
+             /* temporary fix to get back out of cleartext authentication */
+             gen_transact(sock, "PASS %s", "dummypass");
+  
 	     /* AUTH command should return a list of available mechanisms */
 	     if (gen_transact(sock, "AUTH") == 0)
 	     {
@@ -128,6 +131,8 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 					       ctl->password, sock))
 		     return(PS_SUCCESS);
 	     }
+
+	     return(PS_AUTHFAIL);
 	 }
 #endif /* RPA_ENABLE */
 

@@ -581,7 +581,6 @@ static int load_params(int argc, char **argv, int optind)
     def_opts.server.timeout = CLIENT_TIMEOUT;
     def_opts.remotename = user;
     save_str(&def_opts.smtphunt, FALSE, fetchmailhost);
-    save_str(&def_opts.smtphunt, FALSE, "localhost");
     def_opts.expunge = 1;
     def_opts.server.envskip = 0;
 

@@ -10,7 +10,17 @@
 * Periodically check for listener-up and croak gracefully if it's not.
 * Rewrite maps "From: John Smith (Systems) <jsmith@domain>" to 
   "From: John Smith@my.pop.server (Systems) <jsmith@domain>".  Is this
-  just GIGO, or should we try to cope
+  just GIGO, or should we try to cope?
+
+Greg Stark <gsstark@mit.edu> writes:
+
+Hm, the --expunge N option only works for IMAP? I suggested back when you
+proposed this that it should work for POP as well by closing and reopening the
+POP connection. That's exactly what I do currently using a shell script
+``while fetchmail --limit 10 ; do : ; done'' But it would be nice if --expunge
+just worked. That would eliminate the race condition with the lock file and it
+would just be all-around pleasing aesthetically.
+
 
 				Other TO-DO items:
 
@@ -19,6 +29,10 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.3.4 (Sat Nov 22 01:51:41 EST 1997)
+* Yet another attempt on the Compuserve RPA moving target.
+* Fix ETRN code to poll for the fetchmail host if there's no -S option.
+
 fetchmail-4.3.3 (Sat Nov 22 01:51:41 EST 1997)
 * Robert Hardy <rhardy@webcon.net>'s patch to use IMAP EXAMINE in check mode. 
 * Alexander Kourakos's patch for cleaner handling of group addresses.

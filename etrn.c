@@ -52,54 +52,53 @@ static int etrn_getrange(int sock, struct query *ctl, char *id, int *countp,
     *countp = *newp = -1;	/* make sure we don't enter the fetch loop */
 
     /*
-     * Do it for all nondefault queues in the smtphunt list.
-     * We can tell the nondefault ones because they have a TRUE num field.
+     * By default, the hostlist has a single entry, the fetchmail host's
+     * canonical DNS name.
      */
     for (qnp = ctl->smtphunt; qnp; qnp = qnp->next)
-	if (qnp->val.num)
+    {
+	/* ship the actual poll and get the response */
+	gen_send(sock, "ETRN %s", qnp->id);
+	if ((ok = gen_recv(sock, buf, sizeof(buf))))
+	    return(ok);
+
+	/* this switch includes all response codes described in RFC1985 */
+	switch(atoi(buf))
 	{
-	    /* ship the actual poll and get the response */
-	    gen_send(sock, "ETRN %s", qnp->id);
-	    if ((ok = gen_recv(sock, buf, sizeof(buf))))
-		return(ok);
+	case 250:	/* OK, queuing for node <x> started */
+	    error(0, 0, "Queuing for %s started", qnp->id);
+	    break;
 
-	    /* this switch includes all response codes described in RFC1985 */
-	    switch(atoi(buf))
-	    {
-	    case 250:	/* OK, queuing for node <x> started */
-		error(0, 0, "Queuing for %s started", qnp->id);
-		break;
+	case 251:	/* OK, no messages waiting for node <x> */
+	    error(0, 0, "No messages waiting for %s", qnp->id);
+	    return(PS_NOMAIL);
 
-	    case 251:	/* OK, no messages waiting for node <x> */
-		error(0, 0, "No messages waiting for %s", qnp->id);
-		return(PS_NOMAIL);
+	case 252:	/* OK, pending messages for node <x> started */
+	case 253:	/* OK, <n> pending messages for node <x> started */
+	    error(0, 0, "Pending messages for %s started", qnp->id);
+	    break;
 
-	    case 252:	/* OK, pending messages for node <x> started */
-	    case 253:	/* OK, <n> pending messages for node <x> started */
-		error(0, 0, "Pending messages for %s started", qnp->id);
-		break;
+	case 458:	/* Unable to queue messages for node <x> */
+	    error(0, -1, "Unable to queue messages for node %s",qnp->id);
+	    return(PS_PROTOCOL);
 
-	    case 458:	/* Unable to queue messages for node <x> */
-		error(0, -1, "Unable to queue messages for node %s",qnp->id);
-		return(PS_PROTOCOL);
+	case 459:	/* Node <x> not allowed: <reason> */
+	    error(0, -1, "Node %s not allowed: %s", qnp->id, buf);
+	    return(PS_AUTHFAIL);
 
-	    case 459:	/* Node <x> not allowed: <reason> */
-		error(0, -1, "Node %s not allowed: %s", qnp->id, buf);
-		return(PS_AUTHFAIL);
+	case 500:	/* Syntax Error */
+	    error(0, -1, "ETRN syntax error");
+	    return(PS_PROTOCOL);
 
-	    case 500:	/* Syntax Error */
-		error(0, -1, "ETRN syntax error");
-		return(PS_PROTOCOL);
+	case 501:	/* Syntax Error in Parameters */
+	    error(0, -1, "ETRN syntax error in parameters");
+	    return(PS_PROTOCOL);
 
-	    case 501:	/* Syntax Error in Parameters */
-		error(0, -1, "ETRN syntax error in parameters");
-		return(PS_PROTOCOL);
-
-	    default:
-		error(0, -1, "Unknown ETRN error %d", atoi(buf));
-		return(PS_PROTOCOL);
-	    }
+	default:
+	    error(0, -1, "Unknown ETRN error %d", atoi(buf));
+	    return(PS_PROTOCOL);
 	}
+    }
 
     return(0);
 }
