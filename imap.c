@@ -656,6 +656,14 @@ static int imap_is_old(int sock, struct query *ctl, int number)
     return(seen);
 }
 
+static char *skip_token(char *ptr)
+{
+    while(isspace(*ptr)) ptr++;
+    while(!isspace(*ptr) && !iscntrl(*ptr)) ptr++;
+    while(isspace(*ptr)) ptr++;
+    return(ptr);
+}
+
 static int imap_fetch_headers(int sock, struct query *ctl,int number,int *lenp)
 /* request headers of nth message */
 {
@@ -675,11 +683,18 @@ static int imap_fetch_headers(int sock, struct query *ctl,int number,int *lenp)
     for (;;) 
     {
 	int	ok;
+	char	*ptr;
 
 	if ((ok = gen_recv(sock, buf, sizeof(buf))))
 	    return(ok);
-	if (sscanf(buf+2, "%d FETCH (%*s {%d}", &num, lenp) == 2)
-	    break;
+ 	ptr = skip_token(buf);	/* either "* " or "AXXXX " */
+ 	if (sscanf(ptr, "%d FETCH (%*s {%d}", &num, lenp) == 2)
+  	    break;
+	/* try to recover from chronically fucked-up M$ Exchange servers */
+ 	else if (!strncmp(ptr, "NO", 2))
+ 	    return(PS_TRANSIENT);
+ 	else if (!strncmp(ptr, "BAD", 3))
+ 	    return(PS_TRANSIENT);
     }
 
     if (num != number)

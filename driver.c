@@ -428,7 +428,14 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 
 	    /* request a message */
 	    err = (ctl->server.base_protocol->fetch_headers)(mailserver_socket,ctl,num, &len);
-	    if (err != 0)
+	    if (err == PS_TRANSIENT)    /* server is probably Exchange */
+	    {
+		report_build(stdout,
+			     _("couldn't fetch headers, msg %d (%d octets)"),
+			     num, msgsizes[num-1]);
+		continue;
+	    }
+	    else if (err != 0)
 		return(err);
 
 	    /* -1 means we didn't see a size in the response */
