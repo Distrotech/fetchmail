@@ -120,7 +120,7 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     SockPrintf(socket,"AUTH RPA\r\n");
 
     if (outlevel == O_VERBOSE)
-	fprintf(stderr,"> AUTH RPA\n");
+	error(0, 0, "> AUTH RPA\n");
 
     /* Create unicode user name in Nu.              */
     /* Create MD5 digest of user's passphrase in Pu */
@@ -134,7 +134,7 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     if ((ok = POP3_rpa_resp(buf,socket)) != 0)
     {
 	if (outlevel > O_SILENT && outlevel < O_VERBOSE)
-	    fprintf(stderr,"%s\n",buf);
+	    error(0, 0, "%s\n",buf);
 
 	return(ok);
     }
@@ -156,17 +156,17 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     SockPrintf(socket,"%s\r\n",buf);
 #endif
     if (outlevel == O_VERBOSE)
-	fprintf(stderr,"> %s\n",buf);
+	error(0, 0, "> %s\n",buf);
     if ((ok = POP3_rpa_resp(buf,socket)) != 0)
     {
 	if (outlevel > O_SILENT && outlevel < O_VERBOSE)
-	    fprintf(stderr,"%s\n",buf);
+	    error(0, 0, "%s\n",buf);
 	return(ok);
     }
     if ((rxlen = DecBase64(buf)) == 0)
     {
 	if (outlevel > O_SILENT)
-	    fprintf(stderr,"RPA token 2: Base64 decode error\n");
+	    error(0, 0, "RPA token 2: Base64 decode error\n");
 	return(PS_RPA);
     }
     bufp = buf;
@@ -177,34 +177,34 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
 
     verh = *(bufp++); verl = *(bufp++);
     if (outlevel == O_VERBOSE)
-	fprintf(stderr,"Service chose RPA version %d.%d\n",verh,verl);
+	error(0, 0, "Service chose RPA version %d.%d\n",verh,verl);
     Csl  = *(bufp++);
     memcpy(Cs, bufp, Csl);
     bufp += Csl;
     if (outlevel == O_VERBOSE)
     {
-	fprintf(stderr,"Service challenge (l=%d):",Csl);
-	for (i=0; i<Csl; i++) fprintf(stderr," %02X",Cs[i]);
-	fprintf(stderr,"\n");
+	error(0, 0, "Service challenge (l=%d):",Csl);
+	for (i=0; i<Csl; i++) error(0, 0, " %02X",Cs[i]);
+	error(0, 0, "\n");
     }
     memcpy(Ts, bufp, Tsl);
     Ts[Tsl] = 0;
     bufp += Tsl;
     if (outlevel == O_VERBOSE)
-	fprintf(stderr,"Service timestamp %s\n",Ts);
+	error(0, 0, "Service timestamp %s\n",Ts);
     rll = *(bufp++) << 8; rll = rll | *(bufp++);
     if ((bufp-buf+rll) != rxlen)
     {
 	if (outlevel > O_SILENT)
-	    fprintf(stderr,"RPA token 2 length error\n");
+	    error(0, 0, "RPA token 2 length error\n");
 	return(PS_RPA);
     }
     if (outlevel == O_VERBOSE)
-	fprintf(stderr,"Realm list: %s\n",bufp);
+	error(0, 0, "Realm list: %s\n",bufp);
     if (SetRealmService(bufp) != 0)
     {
 	if (outlevel > O_SILENT)
-	    fprintf(stderr,"RPA error in service@realm string\n");
+	    error(0, 0, "RPA error in service@realm string\n");
 	return(PS_RPA);
     }
 
@@ -231,17 +231,17 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
   SockPrintf(socket,"%s\r\n",buf);
 #endif
   if (outlevel == O_VERBOSE)
-    fprintf(stderr,"> %s\n",buf);
+    error(0, 0, "> %s\n",buf);
   if ((ok = POP3_rpa_resp(buf,socket)) != 0)
     {
     if (outlevel > O_SILENT && outlevel < O_VERBOSE)
-      fprintf(stderr,"%s\n",buf);
+      error(0, 0, "%s\n",buf);
     return(ok);
     }
   if ((rxlen = DecBase64(buf)) == 0)
     {
     if (outlevel > O_SILENT)
-      fprintf(stderr,"RPA token 4: Base64 decode error\n");
+      error(0, 0, "RPA token 4: Base64 decode error\n");
     return(PS_RPA);
     }
   bufp = buf;
@@ -252,9 +252,9 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
   aulin = *(bufp++);
   if (outlevel == O_VERBOSE)
     {
-    fprintf(stderr,"User authentication (l=%d):",aulin);
-    for (i=0; i<aulin; i++) fprintf(stderr," %02X",bufp[i]);
-    fprintf(stderr,"\n");
+    error(0, 0, "User authentication (l=%d):",aulin);
+    for (i=0; i<aulin; i++) error(0, 0, " %02X",bufp[i]);
+    error(0, 0, "\n");
     }
   if (aulin == Aul) memcpy(Au, bufp, Aul);
   bufp += aulin;
@@ -265,45 +265,45 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     {
     status = *(bufp++);
     if (outlevel == O_VERBOSE)
-      fprintf(stderr,"RPA status: %02X\n",status);
+      error(0, 0, "RPA status: %02X\n",status);
     }
   else status = 0;
   if ((bufp - buf) != rxlen)
     {
     if (outlevel > O_SILENT)
-      fprintf(stderr,"RPA token 4 length error\n");
+      error(0, 0, "RPA token 4 length error\n");
     return(PS_RPA);
     }
   if (status != 0)
     {
     if (outlevel > O_SILENT)
       if (status < 4)
-        fprintf(stderr,"RPA rejects you: %s\n",stdec[status]);
+        error(0, 0, "RPA rejects you: %s\n",stdec[status]);
       else
-        fprintf(stderr,"RPA rejects you, reason unknown\n");
+        error(0, 0, "RPA rejects you, reason unknown\n");
     return(PS_AUTHFAIL);
     }
   if (Aul != aulin)
     {
-    fprintf(stderr,"RPA User Authentication length error: %d\n",aulin);
+    error(0, 0, "RPA User Authentication length error: %d\n",aulin);
     return(PS_RPA);
     }
   if (Kusl != kuslin)
     {
-    fprintf(stderr,"RPA Session key length error: %d\n",kuslin);
+    error(0, 0, "RPA Session key length error: %d\n",kuslin);
     return(PS_RPA);
     }
   if (CheckUserAuth() != 0)
     {
     if (outlevel > O_SILENT)
-      fprintf(stderr,"RPA _service_ auth fail. Spoof server?\n");
+      error(0, 0, "RPA _service_ auth fail. Spoof server?\n");
     return(PS_AUTHFAIL);
     }
   if (outlevel == O_VERBOSE)
     {
-    fprintf(stderr,"Session key established:");
-    for (i=0; i<Kusl; i++) fprintf(stderr," %02X",Kus[i]);
-    fprintf(stderr,"\n");
+    error(0, 0, "Session key established:");
+    for (i=0; i<Kusl; i++) error(0, 0, " %02X",Kus[i]);
+    error(0, 0, "\n");
     }
 
   /* Assemble Token 5 in buf and send (not in ver 2 though)  */
@@ -321,17 +321,17 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     SockPrintf(socket,"%s\r\n",buf);
 #endif
     if (outlevel == O_VERBOSE)
-      fprintf(stderr,"> %s\n",buf);
+      error(0, 0, "> %s\n",buf);
     if ((ok = POP3_rpa_resp(buf,socket)) != 0)
       {
       if (outlevel > O_SILENT && outlevel < O_VERBOSE)
-        fprintf(stderr,"%s\n",buf);
+        error(0, 0, "%s\n",buf);
       return(ok);
       }
     }
 
   if (outlevel > O_SILENT)
-    fprintf(stderr,"RPA authorisation complete\n");
+    error(0, 0, "RPA authorisation complete\n");
 
   return(PS_SUCCESS);
 }
@@ -358,7 +358,9 @@ int socket;
   char buf [POPBUFSIZE];
   char *bufp;
   int sockrc;
-  fprintf(stderr, "Get response\n");
+
+  if (outlevel == O_VERBOSE)
+    error(0, 0,  "Get response\n");
 #ifndef TESTMODE
   sockrc = gen_recv(socket, buf, sizeof(buf));
 #else
@@ -366,7 +368,7 @@ int socket;
   if (linecount == 1) strcpy(buf,line1);
   if (linecount == 2) strcpy(buf,line2);
   if (linecount == 3) strcpy(buf,line3);
-/*  fprintf(stderr,"--> "); fflush(stderr);  */
+/*  error(0, 0, "--> "); fflush(stderr);  */
 /*  scanf("%s",&buf)                         */
   sockrc = PS_SUCCESS;
 #endif
@@ -387,7 +389,8 @@ int socket;
   }
   else
     ok = PS_SOCKET;
-  fprintf(stderr, "Get response return %d [%s]\n", ok, buf);
+  if (outlevel == O_VERBOSE)
+    error(0, 0,  "Get response return %d [%s]\n", ok, buf);
   buf[sockrc] = 0;
   return(ok);
 }
@@ -449,7 +452,7 @@ int rxlen;
   save = *pptr;
   if (**pptr != HDR)
     {
-    if (outlevel > O_SILENT) fprintf(stderr,"Hdr not 60\n");
+    if (outlevel > O_SILENT) error(0, 0, "Hdr not 60\n");
     return(0);
     }
   (*pptr)++;
@@ -470,18 +473,18 @@ int rxlen;
   if (len==0)
     {
     if (outlevel>O_SILENT)
-      fprintf(stderr,"Token length error\n");
+      error(0, 0, "Token length error\n");
     }
   else if (((*pptr-save)+len) != rxlen)
     {
     if (outlevel>O_SILENT)
-      fprintf(stderr,"Token Length %d disagrees with rxlen %d\n",len,rxlen);
+      error(0, 0, "Token Length %d disagrees with rxlen %d\n",len,rxlen);
     len = 0;
     }
   else if (memcmp(*pptr,MECH,11))
     {
     if (outlevel > O_SILENT)
-      fprintf(stderr,"Mechanism field incorrect\n");
+      error(0, 0, "Mechanism field incorrect\n");
     len = 0;
     }
   else (*pptr) += 11;  /* Skip mechanism field */
@@ -518,7 +521,7 @@ unsigned char *bufp;
       else if ( ch=='+'                )   new = 62;
       else if ( ch=='/'                )   new = 63;
       else {
-	fprintf(stderr, "dec64 error at char %d: %x\n", inp - bufp, ch);
+	error(0, 0,  "dec64 error at char %d: %x\n", inp - bufp, ch);
 	return(0);
       }
       part=((part & 0x3F)*64) + new;
@@ -533,12 +536,12 @@ unsigned char *bufp;
     }
   if (outlevel == O_VERBOSE)
     {
-    fprintf(stderr,"Inbound binary data:\n");
+    error(0, 0, "Inbound binary data:\n");
     for (i=0; i<cnt; i++)
       {
-      fprintf(stderr," %02X",bufp[i]);
+      error(0, 0, " %02X",bufp[i]);
       if (((i % 16)==15) || (i==(cnt-1)))
-        fprintf(stderr,"\n");
+        error(0, 0, "\n");
       }
     }
   return(cnt);
@@ -571,12 +574,12 @@ int  len;
 
   if (outlevel == O_VERBOSE)
     {
-    fprintf(stderr,"Outbound data:\n");
+    error(0, 0, "Outbound data:\n");
     for (i=0; i<len; i++)
       {
-      fprintf(stderr," %02X",bufp[i]);
+      error(0, 0, " %02X",bufp[i]);
       if (((i % 16)==15) || (i==(len-1)))
-        fprintf(stderr,"\n");
+        error(0, 0, "\n");
       }
     }
   outp = bufp + (((len-1)/3)*4);
@@ -637,14 +640,14 @@ int conv;
   if ( ((**pptr)!=delim) && ((**pptr)!=0) && ((*plen)==STRMAX) )
     {
     if (outlevel > O_SILENT)
-      fprintf(stderr,"RPA String too long\n");
+      error(0, 0, "RPA String too long\n");
     *plen = 0;
     }
   if (outlevel == O_VERBOSE)
     {
-    fprintf(stderr,"Unicode:");
-    for (i=0; i<(*plen); i++) fprintf(stderr,"%02X ",buf[i]);
-    fprintf(stderr,"\n");
+    error(0, 0, "Unicode:");
+    for (i=0; i<(*plen); i++) error(0, 0, "%02X ",buf[i]);
+    error(0, 0, "\n");
     }
 }
 
@@ -700,20 +703,20 @@ int  len;
   if (devrandom == NULL)
     {
     if (outlevel > O_SILENT)
-      fprintf(stderr,"RPA Failed open of /dev/random. This shouldn't\n");
-      fprintf(stderr,"    prevent you logging in, but means you\n");
-      fprintf(stderr,"    cannot be sure you are talking to the\n");
-      fprintf(stderr,"    service that you think you are (replay\n");
-      fprintf(stderr,"    attacks by a dishonest service are possible.)\n");
+      error(0, 0, "RPA Failed open of /dev/random. This shouldn't\n");
+      error(0, 0, "    prevent you logging in, but means you\n");
+      error(0, 0, "    cannot be sure you are talking to the\n");
+      error(0, 0, "    service that you think you are (replay\n");
+      error(0, 0, "    attacks by a dishonest service are possible.)\n");
     }
   for (i=0; i<len; i++) buf[i] = fgetc(devrandom);
 //  for (i=0; i<len; i++) buf[i] = random();
   fclose(devrandom);
   if (outlevel == O_VERBOSE)
     {
-    fprintf(stderr,"User challenge:");
-    for (i=0; i<len; i++) fprintf(stderr," %02X",buf[i]);
-    fprintf(stderr,"\n");
+    error(0, 0, "User challenge:");
+    for (i=0; i<len; i++) error(0, 0, " %02X",buf[i]);
+    error(0, 0, "\n");
     }
 }
 
@@ -865,11 +868,11 @@ unsigned char*    out;
 
   if (outlevel == O_VERBOSE)
     {
-    fprintf(stderr,"MD5 being applied to data block:\n");
+    error(0, 0, "MD5 being applied to data block:\n");
     for (i=0; i<len; i++)
       {
-      fprintf(stderr," %02X",in[i]);
-      if (((i % 16)==15) || (i==(len-1))) fprintf(stderr,"\n");
+      error(0, 0, " %02X",in[i]);
+      if (((i % 16)==15) || (i==(len-1))) error(0, 0, "\n");
       }
     }
   MD5Init(   &md5context );
@@ -877,9 +880,9 @@ unsigned char*    out;
   MD5Final(  out, &md5context );
   if (outlevel == O_VERBOSE)
     {
-    fprintf(stderr,"MD5 result is: ");
-    for (i=0; i<16; i++) fprintf(stderr,"%02X ",out[i]);
-    fprintf(stderr,"\n");
+    error(0, 0, "MD5 result is: ");
+    for (i=0; i<16; i++) error(0, 0, "%02X ",out[i]);
+    error(0, 0, "\n");
     }
 }
 #endif /* POP3_ENABLE && RPA_ENABLE */
