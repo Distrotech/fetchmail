@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/12/07 05:19:08 $
+<td width="30%" align=right>$Date: 1998/12/14 15:10:26 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -735,9 +735,9 @@ unless I create a .fetchmailrc in root's home directory containing:<p>
 
 It won't work if the second line is just "<CODE>user itz</CODE>".  This is silly.<p>
 
-It seems fetchmail decides to RECP the `default local user' (ie. the
+It seems fetchmail decides to RECP the `default local user' (i.e. the
 uid running fetchmail) unless there are local aliases, and the
-`default' aliases (itz->itz) don't count.  They should.<p>
+`default' aliases (itz-&gt;itz) don't count.  They should.<p>
 
 Answer:<p>
 
@@ -766,7 +766,7 @@ more complicated or both.<p>
 <h2><a name="C2">C2. How can I arrange for a fetchmail daemon to get killed when I log out?</a></h2>
 
 The easiest way to dispatch fetchmail on logout (which will work
-reliably onlif you have just one login going at any time) is to
+reliably only if you have just one login going at any time) is to
 arrange for the command `fetchmail -q' to be called on logout.  Under
 bash, you can arrange this by putting `fetchmail -q' in the file
 `~/.bash_logout'.  Most csh variants execute `~/.logout' on logout.
@@ -874,7 +874,7 @@ cyberspammer.com (or any host within the cyberspammer.com domain), and
 any host on the 192.168.212.* network.  (This feature can be used to
 do other things as well; see the <a
 href="http://www.sendmail.org/m4/anti-spam.html">sendmail
-documentattion</a> for details)</P>
+documentation</a> for details)</P>
 
 To actually set up the database, run 
 
@@ -1069,7 +1069,7 @@ the real sizes of mail in the pop mailbox, but the sizes of the
 compressed versions in the exchange mail database (thanks to Arjan De
 Vet and Guido Van Rooij for alerting us to this problem).<P>
 
-Fetchmail works with M$ Exchange, despite this braindamage.  Two
+Fetchmail works with M$ Exchange, despite this brain damage.  Two
 features are compromised.  One is that the --limit option will not
 work right (it will check against compressed and not actual sizes).
 The other is that a too-small SIZE argument may be passed to your
@@ -1269,7 +1269,7 @@ gave us the following recipe:<P>
      want the "runsocks" program.
 <LI> Set the environment variable SOCKS_SERVER to the server you'll be
      using. Alternatively, you may set SOCKS4_SERVER and/or
-     SOCKS5_SERVER. Eg: 
+     SOCKS5_SERVER. E.g.: 
 <pre>
 	export SOCKS5_SERVER=socks.my.domain.com
 </pre>
@@ -1299,10 +1299,10 @@ headers.<P>
 
 Workaround: 
 <pre>
-mda "sed -e1,2D | formail | /usr/bin/procmail -d &lt;user&gt;
+mda "sed -e1,2D | formail | /usr/bin/procmail -d &lt;user&gt;"
 </pre>
 
-Fix: Get an email provider that doesn't suck.  Geocities's pop-up adds
+Fix: Get an email provider that doesn't suck.  Geocities' pop-up adds
 are lame, you should boycott them anyway.<P>
 
 <hr>
@@ -1413,7 +1413,7 @@ containing an SSH identity file "identity" with no pass phrase,
 mailhost. Let's call this account "noddy".
 <LI>
 On mailhost, set up no-password access for noddy@yourhost. Add to your
-SSH authorised_keys file:
+SSH authorized_keys file:
 
 <PRE>
 command="socket localhost 110",no-port-forwarding 1024 ......
@@ -1458,7 +1458,7 @@ it requires libraries from the Kerberos V distribution (available via FTP at
 <a href="ftp://athena-dist.mit.edu/pub/ATHENA/kerberos">athena-dist.mit.edu</a>
 but mind the export restrictions). If you have these, compiling in GSS support
 is simple: add a <pre>--with-gssapi=[/path/to/krb5/root]</pre> option to
-configure. For instance, I have all of my kerberos V libraries installed under
+configure. For instance, I have all of my Kerberos V libraries installed under
 /usr/krb5 so I run <pre>configure --with-gssapi=/usr/krb5</pre><p>
 
 Setting up Kerberos V authentication is beyond the scope of this FAQ
@@ -1472,7 +1472,7 @@ your machine (cf. kinit).<p>
 After that things are very simple. Set your protocol to imap-gss in your
 .fetchmailrc, and omit the password, since imap-gss doesn't need one. You
 can specify a username if you want, but this is only useful if your mailbox
-belongs to a username different from your kerberos principal. <p>
+belongs to a username different from your Kerberos principal. <p>
 
 Now you don't have to worry about your password appearing in cleartext in
 your .fetchmailrc, or across the network.<p>
@@ -1551,11 +1551,11 @@ look at <code>/etc/resolv.conf</code>; it should say something like
 </pre>
 
 so your <code>/etc/hosts</code> file is checked first.  If you're
-running GNU libc6, check your <code>/etc/nsswitch</code> file.  Make
+running GNU libc6, check your <code>/etc/nsswitch.conf</code> file.  Make
 sure it says something like
 
 <pre>
-        order hosts,bind
+        hosts:  files dns
 </pre>
 
 again, in order to make sure <code>/etc/hosts</code> is seen first.<P>
@@ -1696,7 +1696,7 @@ order to avoid a `lock busy' error.)<P>
 <h2><a name="D3">D3. Mail that was being fetched when I interrupted my fetchmail seems to have been vanished.</a></h2>
 
 Fetchmail only sends a delete mail request to the server when either
-(a) it gets a positive delivery acknowledgement from the SMTP
+(a) it gets a positive delivery acknowledgment from the SMTP
 listener, or (b) it gets an error 571 (the spam-filter error) from the
 listener.  No interrupt can cause it to lose mail.<p>
 
@@ -1743,7 +1743,7 @@ server mailbox and then routing based on what's in the To/Cc/Bcc lines.<p>
 In general, this is not really a good idea.  It would be smarter to
 just let the mail sit in the mailserver's queue and use fetchmail's
 ETRN mode to trigger SMTP sends periodically (of course, this means
-you have to poll more frequently than the mailserver's expiry period).
+you have to poll more frequently than the mailserver's expiration period).
 If you can't arrange this, try setting up a UUCP feed.<P>
 
 If neither of these alternatives is available, multidrop mode may do
@@ -1765,7 +1765,7 @@ in a `<CODE>here</CODE>' list before it will do multidrop routing.<p>
 
 Normally, multidrop mode tries to deduce an envelope address from a message
 before parsing the To/Cc/Bcc lines (this enables it to avoid losing to mailing
-list software that doesn't put a recipient addess in the To lines).<p>
+list software that doesn't put a recipient address in the To lines).<p>
 
 Some ways of accumulating a whole domain's messages in a single server
 mailbox mean it all ends up with a single envelope address that is
@@ -1806,7 +1806,7 @@ Use the `<CODE>aka</CODE>' option to pre-declare as many of your
 mailserver's DNS names as you can.  When an address's host part
 matches an aka name, no DNS lookup needs to be done to check it.<p>
 
-If you're sure you've pre-declared all of your mailserver's DNS dames,
+If you're sure you've pre-declared all of your mailserver's DNS names,
 you can use the `<CODE>no dns</CODE>' option to prevent other hostname
 parts from being looked up at all.<p>
 
@@ -1963,7 +1963,7 @@ Mlocal, P=/usr/bin/procmail, F=lsDFMShP, S=10, R=20/40, A=procmail -Y -d $u
 
 describing your local delivery agent.  Try inserting the `E' option in the
 flags part (the F= string).  This will make sendmail turn each dangerous
-start-of-line From into a >From, preventing programs further downstream
+start-of-line From into a &gt;From, preventing programs further downstream
 from acting up.<p>
 
 <hr>
@@ -1997,7 +1997,7 @@ with a .fetchmailrc entry containing the following (or by running with
 the equivalent command-line options):<P>
 
 <pre>
-    mda "cat >MBOX" keep fetchall
+    mda "cat &gt;MBOX" keep fetchall
 </pre>
 
 This will capture what fetchmail gets from the server, except for (a)
@@ -2175,7 +2175,7 @@ time it gets a HELO in listener mode.<p>
 Your resolver configuration may be causing one of these lookups to
 fail and time out.  Check <code>/etc/resolv.conf</code> and
 <code>/etc/hosts</code> file. Make sure your hostname and
-fully-qualified doman name are both in <code>/etc/hosts</code>, and
+fully-qualified domain name are both in <code>/etc/hosts</code>, and
 that hosts is looked at before DNS is queried.  You probably also want
 your remote mail server(s) to be in the hosts file.<p>
 
@@ -2207,7 +2207,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/12/07 05:19:08 $
+<td width="30%" align=right>$Date: 1998/12/14 15:10:26 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
