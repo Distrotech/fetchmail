@@ -354,6 +354,9 @@ static char *parse_received(struct query *ctl, char *bufp)
 	    sp = ok + 4;
 	    if (*sp == '<')
 		sp++;
+	    while (*sp == '@')		/* skip routes */
+		while (*sp++ != ':')
+		    continue;
 	    while (*sp && *sp != '>' && *sp != '@' && *sp != ';')
 		if (!isspace(*sp))
 		    *tp++ = *sp++;
