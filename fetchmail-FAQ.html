@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/04/29 06:53:23 $
+<td width="30%" align=right>$Date: 1999/05/03 06:36:20 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -133,6 +133,7 @@ a line hit while downloading?</a><br>
 <a href="#O5">O5. Why is fetched mail being logged with my name, not the real From address?</a><br>
 <a href="#O6">O6. I'm seeing long sendmail delays or hangs near the start of each poll cycle.</a><br>
 <a href="#O7">O7. Why doesn't fetchmail deliver mail in date-sorted order?</a><br>
+<a href="#O8">O8. I'm using pppd.  Why isn't my monitor option working?</a><br>
 
 <h1>Answers:</h1>
 <hr>
@@ -2323,11 +2324,23 @@ differences between the remote-fetch protocols it uses.<P>
 
 Re-ordering messages is a user-agent function, anyway.<P>
 
+<hr>
+<h2><a name="O8">O8. I'm using pppd.  Why isn't my monitor option working?</a></h2>
+
+There is a combination of circumstances that can confuse fetchmail.
+If you have set up demand dialing with pppd, and pppd has an idle
+timeout, and you have lcp-echo-interval set, then the
+lcp-echo-interval time must be longer than the pppd idle timeout.
+Otherwise it is going keep increasing the packet counters that fetchmail
+relies upon, triggering fetchmail into polling after its own delay
+interval and thus preventing the pppd link from ever reaching its
+inactivity timeout.<p>
+
 <HR>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/04/29 06:53:23 $
+<td width="30%" align=right>$Date: 1999/05/03 06:36:20 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
