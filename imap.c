@@ -32,6 +32,7 @@ extern char *strstr(const char *, const char *);	/* needed on sysV68 R3V7.1. */
 #define IMAP4rev1	1	/* IMAP4 rev 1, RFC2060 */
 
 static int count = 0, recentcount = 0, unseen = 0, deletions = 0;
+static int recentcount_ok = 0;
 static unsigned int startcount = 1;
 static int expunged, expunge_period, saved_timeout = 0;
 static int imap_version, preauth;
@@ -103,8 +104,15 @@ static int imap_ok(int sock, char *argbuf)
 	/* a space is required to avoid confusion with the \Recent flag */
 	else if (strstr(buf, " RECENT"))
 	{
+            recentcount_ok = 1;
 	    recentcount = atoi(buf+2);
 	}
+        else if (strstr(buf, "EXPUNGE") && !strstr(buf, "OK"))
+        {
+            count -= atoi(buf+2);
+            if (count < 0)
+                count = 0;
+        }
 	else if (strstr(buf, "PREAUTH"))
 	    preauth = TRUE;
 	/*
@@ -547,8 +555,15 @@ static int internal_expunge(int sock)
 {
     int	ok;
 
+    recentcount_ok = 0;
+
     if ((ok = gen_transact(sock, "EXPUNGE")))
 	return(ok);
+
+    /* some servers do not report RECENT after an EXPUNGE. in this case, 
+     * the previous value of recentcount is just ignored. */
+    if (!recentcount_ok)
+        recentcount = 0;
 
     expunged += deletions;
     deletions = 0;
@@ -650,10 +665,6 @@ static int imap_getrange(int sock,
 	 * for new mail.
 	 */
 
-	/* some servers do not report RECENT after an EXPUNGE. this check
-	 * forces an incorrect recentcount to be ignored. */
-	if (recentcount > count)
-	    recentcount = 0;
 	/* this is a while loop because imap_idle() might return on other
 	 * mailbox changes also */
 	while (recentcount == 0 && do_idle) {
