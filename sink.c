@@ -862,7 +862,15 @@ int open_warning_by_mail(struct query *ctl)
     struct msgblk msg = {NULL, NULL, "FETCHMAIL-DAEMON", 0};
 
     if (!MULTIDROP(ctl))
+    {
 	msg.recipients = ctl->localnames;
+
+	/*
+	 * Ick. This could get us in trouble someday, but
+	 * it's necessary in order to fool open_sink().
+	 */
+	msg.recipients->val.status.mark = XMIT_ACCEPT;
+    }
 
     return(open_sink(ctl, &msg, &good, &bad));
 }
