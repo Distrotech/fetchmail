@@ -14,7 +14,7 @@
 ------------------------------------------------------------------------------
 fetchmail-4.1.7 (Tue Sep  9 16:55:04 EDT 1997)
 * Now works with Cyrus IMAP server.
-* Will build OK even id local environment lacks ststr(3).
+* Will build OK even if local environment lacks strstr(3).
 
 There are 283 people on the fetchmail-friends list.
 
