@@ -535,7 +535,7 @@ mail for the remote user `eric' is to be delivered to `esr',
 but you can make this clearer by saying `user eric there is esr here',
 or reverse it by saying `user esr here is eric there'
 .PP
-For backward compatibility, the word `server' is a syninym for `poll'.
+For backward compatibility, the word `server' is a synonym for `poll'.
 .PP
 There are currently two valid global option statements; 
 \&`set batchlimit = ' followed by a number and sets the same global
