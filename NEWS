@@ -2,11 +2,24 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.8.12 (Tue Jun  4 14:57:47 EDT 2002), 21669 lines:
+
 * Brian Grayson's patch enabling compilation under AIX 4.1.
 * Federico G. Schwindt's patch to support BSD ELF systems.
 * Fix to Sunil Shetye's attributes patch.
 * Scott Bronson's patch to reap zombies after an MDA core dump.
 * New Japanese translation file.
+* Catalan support integrated.
+* Danish support updated.
+* Nalin Dahyabai's patch to prevent a malicious server from crashing
+  fetchmail on a 64-bit machine.
+* Cygwin port patch from Jason Tishler.
+* Sunil Shetye's fix for password shrouding.
+* Various Debian fixes from HMH.
+* Arun A Tharuvai's patch to avoid speaking KPOP to an IMAP server.
+* Added Richard Harris's PopDel.py utility to the contrib directory.
+
+There are 505 people on fetchmail-friends and 670 on fetchmail-announce.
 
 fetchmail-5.9.11 (Mon Apr  1 17:09:13 EST 2002), 21597 lines:
 
@@ -58,7 +71,7 @@ fetchmail-5.9.8 (Thu Feb 14 23:47:31 EST 2002), 21358 lines:
 * Added de translation catalog; updated da and tr catalogs.
 * vsprintf underflow fixes by Sunil Shetye.
 * Added warning about IMS POP3 server.
-* Mattyhias Andree's fix for a longstanding SSL hang bug.
+* Matthias Andree's fix for a longstanding SSL hang bug.
 * Fix yacc syntax bug when building with SSL.
 * Sunil Shetye's patch for idle timeout during poll.
 * Applied HMH's fix for the "message delimiter found in headers" code path
