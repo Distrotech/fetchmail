@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/10/12 16:01:54 $
+<td width="30%" align=right>$Date: 1998/10/16 14:00:02 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -107,6 +107,8 @@ IP address?</a><br>
 <a href="#M4">M4. My multidrop fetchmail seems to be having DNS problems.</a><br>
 <a href="#M5">M5. I'm seeing long DNS delays before each message is processed.</a><br>
 <a href="#M6">M6. How do I get multidrop mode to work with majordomo?</a>
+<a href="#M7">M7. Multidrop mode isn't parsing envelope addresses from
+my Received headers as it should.</a>
 
 <h1>Mangled mail:</h1>
 
@@ -1840,6 +1842,43 @@ inside pop3 server with fetchmail and sendmail 8.83<P>
 </BLOCKQUOTE>
 
 <hr>
+<h2><a href="M7">M7. Multidrop mode isn't parsing envelope addresses from
+my Received headers as it should.</a></h2>
+
+It may happen that you're getting what appear to be well-formed
+sendmail Received headers, but fetchmail can't seem to extract an
+envelope address from them.  There can be a couple of reasons for
+this.<P>
+
+<h3>Spurious Received lines need to be skipped:</h3>
+
+First, fetchmail might be looking at the wrong Received header.
+Normally it looks only on the first one it sees, on the theory that
+that one was last added and is going to be the one containing your
+mailserver's theory of who the message was addressed to.<P>
+
+Some (unusual) mailserver configurations will generate extra Received
+lines which you need to skip.  To arrange this, use the optional
+skip prefix argument of the `envelope' option; you may need to say
+something like `<code>envelope 1 Received</code>' or `<code>envelope 2 
+Received</code>'.
+
+<h3>The `by' clause doesn't contain a mailserver alias:</h3>
+
+When fetchmail parses a Received line that looks like
+
+<pre>
+Received: from send103.yahoomail.com (send103.yahoomail.com [205.180.60.92])
+    by iserv.ttns.net (8.8.5/8.8.5) with SMTP id RAA10088
+    for <ksturgeon@fbceg.org>; Wed, 9 Sep 1998 17:01:59 -0700
+</pre>
+
+it checks to see if `iserv.ttns.net' is a DNS alias of your mailserver
+before accepting `ksturgeon@fbceg.org' as an envelope address.  This
+check might fail if your DNS were misconfigured, or if you were using `no dns'
+and had failed to declare iserv.ttns.net as an alias of your server.<P>
+
+<hr>
 <h2><a name="X1">X1. Spurious blank lines are appearing in the headers of fetched mail.</a></h2>
 
 What's probably happening is that the POP/IMAP daemon on your
@@ -2142,7 +2181,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/10/12 16:01:54 $
+<td width="30%" align=right>$Date: 1998/10/16 14:00:02 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

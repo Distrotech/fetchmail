@@ -3,13 +3,13 @@
 fetchmail-4.6.2 ():
 * Time out server open requests like we do reads.  This protects against
   buggy TCP/IP configurations that hang forever on a bad open.
-* The '--limit' option can now be used with daemon mode.
-* Implementation of a warning procedure to notify a user that some messages
-  are being skipped on the mail server; the user get notified by an E-Mail
-  that mentions all the messages being skipped (including their size).
-  (Implementation is thanks to Marc Jauvin).
-* A -w/--warnings parameter can be set on the command line to specify at
-  what interval size warnings are sent to the user (default = 3600 sec).
+* The '--limit' option can now be used with daemon mode. The user is notfied
+  that some messages are being skipped on the mail server; the user get
+  notified by email that mentions all the messages being skipped (including
+  their size). A -w/--warnings per-user option specifies at what intervals
+  size warnings are sent to the user (default = 3600 sec).
+* Added FAQ item M7 on diagnosing failures to extract envelope addresses
+  from sendmail trace headers.
 
 There are 255 people on fetchmail-friends and 293 on fetchmail-announce.
 
