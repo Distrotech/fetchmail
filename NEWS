@@ -2,15 +2,19 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.8.3 (Sat May 12 04:07:12 EDT 2001), 20502 lines:
+
 * The `localhost' special case of `via' is gone.  Use `plugin %h' for talking
   to ssh instead.
 * Prevent POP3 code from authenticating multiple times on success.
 * Fixed IMAP password shrouding.
 * GCC warning cleanups from ahaas@neosoft.com.
 * Plug another hole that was letting zombies through.
-* SA_RESDTART portability fix for SunOS.
+* SA_RESTART portability fix for SunOS.
 * Ignore Sender and Resent-Sender headers unless they contain @.
 * Makefile no longer requires GNU make.
+
+There are 333 people on fetchmail-friends and 582 on fetchmail-announce.
 
 fetchmail-5.8.2 (Tue May  8 17:07:53 EDT 2001), 20481 lines:
 
