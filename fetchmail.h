@@ -66,21 +66,6 @@
 
 #define		SIZETICKER	1024	/* print 1 dot per this many bytes */
 
-/* we need to use zero as a flag-uninitialized value */
-#define FLAG_TRUE	2
-#define FLAG_FALSE	1
-
-struct idlist
-{
-    char *id;
-    union
-    {
-	int num;
-	char *id2;
-    } val;
-    struct idlist *next;
-};
-
 /*
  * We #ifdef this and use flag rather than bool
  * to avoid a type clash with curses.h
@@ -90,6 +75,30 @@ struct idlist
 #define TRUE	1
 #endif /* TRUE */
 typedef	char	flag;
+
+/* we need to use zero as a flag-uninitialized value */
+#define FLAG_TRUE	2
+#define FLAG_FALSE	1
+
+struct idlist
+{
+    char *id;
+    union
+    {
+	struct
+	{
+	    short	num;
+	    flag	mark;		/* UID-index information */
+#define UID_UNSEEN	0		/* hasn't been seen */
+#define UID_SEEN	1		/* seen, but not deleted */
+#define UID_DELETED	2		/* this message has been deleted */
+#define UID_EXPUNGED	3		/* this message has been expunged */ 
+        }
+	status;
+	char *id2;
+    } val;
+    struct idlist *next;
+};
 
 struct hostdata		/* shared among all user connections to given server */
 {
@@ -173,17 +182,6 @@ struct query
     char digest [DIGESTLEN];	/* md5 digest buffer */
     struct query *next;		/* next query control block in chain */
 };
-
-/*
- * UID-index information.  If the sign bit is on, this means the 
- * message UID has been seen or expunged and should be written
- * out to .fetchids at end of run.
- */
-#define UID_KEPT	0		/* remembered from a previous run */
-#define UID_DELETED	INT_MIN		/* this message has been deleted */
-#define UID_EXPUNGED	INT_MAX		/* this message has been expunged */ 
-#define SAVE_UID(n)	((n) <= 0)	/* must this UID be saved? */
-#define MARK_SEEN(n)	n *= -1		/* mark a UID seen */
 
 /*
  * Numeric option handling.  Numeric option value of zero actually means
@@ -299,7 +297,7 @@ char *nxtaddr(const char *);
 
 /* uid.c: UID support */
 void initialize_saved_lists(struct query *, const char *);
-struct idlist *save_str(struct idlist **, int, const char *);
+struct idlist *save_str(struct idlist **, const char *, flag);
 void free_str_list(struct idlist **);
 void save_str_pair(struct idlist **, const char *, const char *);
 void free_str_pair_list(struct idlist **);

@@ -312,7 +312,7 @@ struct query *ctl;	/* option record to be initialized */
 	    strcpy(buf, optarg);
 	    cp = strtok(buf, ",");
 	    do {
-		save_str(&ctl->mailboxes, -1, cp);
+		save_str(&ctl->mailboxes, cp, 0);
 	    } while
 		((cp = strtok((char *)NULL, ",")));
 	    break;
@@ -321,7 +321,7 @@ struct query *ctl;	/* option record to be initialized */
 	    strcpy(buf, optarg);
 	    cp = strtok(buf, ",");
 	    do {
-		save_str(&ctl->smtphunt, TRUE, cp);
+		save_str(&ctl->smtphunt, cp, TRUE);
 	    } while
 		((cp = strtok((char *)NULL, ",")));
 	    ocount++;

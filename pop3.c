@@ -331,11 +331,14 @@ pop3_slowuidl( int sock,  struct query *ctl, int *countp, int *newp)
 	    }
 	} 
     }
-    /* The first try_id messages are known -> copy them to
-       the newsaved list */
+    /* the first try_id messages are known -> copy them to the newsaved list */
     for( num = first_nr; num < list_len; num++ )
-	save_str(&ctl->newsaved, num-first_nr + 1,
-		 str_from_nr_list( &ctl->oldsaved, num ));
+    {
+	struct idlist	*new = save_str(&ctl->newsaved, 
+				str_from_nr_list(&ctl->oldsaved, num),
+				UID_UNSEEN);
+	new->val.status.num = num - first_nr + 1;
+    }
 
     if( nolinear ) {
 	free_str_list(&ctl->oldsaved);
@@ -424,10 +427,15 @@ static int pop3_getrange(int sock,
  			break;
  		    else if (sscanf(buf, "%d %s", &num, id) == 2)
 		    {
- 			save_str(&ctl->newsaved, num, id);
+ 			struct idlist	*new;
+
+			new = save_str(&ctl->newsaved, id, UID_UNSEEN);
+			new->val.status.num = num;
 
 			/* note: ID comparison is caseblind */
-			if (!str_in_list(&ctl->oldsaved, id))
+			if (str_in_list(&ctl->oldsaved, id))
+			    new->val.status.mark = UID_SEEN;
+			else
 			    (*newp)++;
 		    }
  		}

@@ -20,6 +20,7 @@ fetchmail-4.4.0 ():
 * Fix bug that prevented graceful exit from POP3 validation on wrong password.
 * Dominique Unruh's patch that copes gracefully with bodiless messages.
 * Fix timer-leak problem pointed ouit by Dave Bodenstab.
+* Improvements in UID handling; should be a cleaner fix for Dick van den Burg.
 
 There are 268 people on fetchmail-friends and 160 on fetchmail-announce.
 

@@ -719,7 +719,7 @@ static int load_params(int argc, char **argv, int optind)
 
 	    /* make sure we have a nonempty host list to forward to */
 	    if (!ctl->smtphunt)
-		save_str(&ctl->smtphunt, FALSE, fetchmailhost);
+		save_str(&ctl->smtphunt, fetchmailhost, FALSE);
 
 	    /* keep lusers from shooting themselves in the foot :-) */
 	    if (poll_interval && ctl->limit)
@@ -792,7 +792,7 @@ static int load_params(int argc, char **argv, int optind)
 
 	    /* if no folders were specified, set up the null one as default */
 	    if (!ctl->mailboxes)
-		save_str(&ctl->mailboxes, -1, (char *)NULL);
+		save_str(&ctl->mailboxes, (char *)NULL, 0);
 
 	    /* maybe user overrode timeout on command line? */
 	    if (ctl->server.timeout == -1)	
@@ -1102,10 +1102,10 @@ void dump_params (struct query *ctl)
 
 	printf("  Messages will be SMTP-forwarded to:");
 	for (idp = ctl->smtphunt; idp; idp = idp->next)
-	    if (ctl->server.protocol != P_ETRN || idp->val.num)
+	    if (ctl->server.protocol != P_ETRN || idp->val.status.mark)
 	    {
 		printf(" %s", idp->id);
-		if (!idp->val.num)
+		if (!idp->val.status.mark)
 	    	    printf(" (default)");
 	    }
 	printf("\n");

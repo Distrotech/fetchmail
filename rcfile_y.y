@@ -115,12 +115,12 @@ serverspecs	: /* EMPTY */
 		| serverspecs serv_option
 		;
 
-alias_list	: STRING		{save_str(&current.server.akalist,-1,$1);}
-		| alias_list STRING	{save_str(&current.server.akalist,-1,$2);}
+alias_list	: STRING		{save_str(&current.server.akalist,$1,0);}
+		| alias_list STRING	{save_str(&current.server.akalist,$2,0);}
 		;
 
-domain_list	: STRING		{save_str(&current.server.localdomains,-1,$1);}
-		| domain_list STRING	{save_str(&current.server.localdomains,-1,$2);}
+domain_list	: STRING		{save_str(&current.server.localdomains,$1,0);}
+		| domain_list STRING	{save_str(&current.server.localdomains,$2,0);}
 		;
 
 serv_option	: AKA alias_list
@@ -252,12 +252,12 @@ mapping		: STRING
 				{save_str_pair(&current.localnames, $1, $3);}
 		;
 
-folder_list	: STRING		{save_str(&current.mailboxes,-1,$1);}
-		| folder_list STRING	{save_str(&current.mailboxes,-1,$2);}
+folder_list	: STRING		{save_str(&current.mailboxes,$1,0);}
+		| folder_list STRING	{save_str(&current.mailboxes,$2,0);}
 		;
 
-smtp_list	: STRING		{save_str(&current.smtphunt, TRUE,$1);}
-		| smtp_list STRING	{save_str(&current.smtphunt, TRUE,$2);}
+smtp_list	: STRING		{save_str(&current.smtphunt, $1,TRUE);}
+		| smtp_list STRING	{save_str(&current.smtphunt, $2,TRUE);}
 		;
 
 user_option	: TO localnames HERE

@@ -248,7 +248,7 @@ static int is_host_alias(const char *name, struct query *ctl)
     }
 
     /* add this name to relevant server's `also known as' list */
-    save_str(&lead_server->akalist, -1, name);
+    save_str(&lead_server->akalist, name, 0);
     return(TRUE);
 #endif /* HAVE_RES_SEARCH */
 }
@@ -281,7 +281,7 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 	}
 	if (outlevel == O_VERBOSE)
 	    error(0, 0, "mapped %s to local %s", name, lname+off);
-	save_str(xmit_names, XMIT_ACCEPT, lname+off);
+	save_str(xmit_names, lname+off, XMIT_ACCEPT);
 	accept_count++;
     }
 }
@@ -323,7 +323,7 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 			if (outlevel == O_VERBOSE)
 			    error(0, 0, "passed through %s matching %s", 
 				  cp, idp->id);
-			save_str(xmit_names, XMIT_ACCEPT, cp);
+			save_str(xmit_names, cp, XMIT_ACCEPT);
 			accept_count++;
 			break;
 		    }
@@ -339,7 +339,7 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 		 */
 		if (!is_host_alias(atsign+1, ctl))
 		{
-		    save_str(xmit_names, XMIT_REJECT, cp);
+		    save_str(xmit_names, cp, XMIT_REJECT);
 		    reject_count++;
 		    continue;
 		}
@@ -879,16 +879,19 @@ int num;		/* index of message */
 
 	else if (!strncasecmp("Content-Transfer-Encoding:", line, 26))
 	    ctt_offs = (line - headers);
- 	else if (!strncasecmp("Message-Id:", buf, 11 ))
+ 	else if (!strncasecmp("Message-Id:", buf, 11))
 	{
-	    if( ctl->server.uidl )
+	    if (ctl->server.uidl)
  	    {
 	        char id[IDLEN+1];
-	        /* prevent stack overflows */
-		buf[IDLEN+12] = 0;
- 		sscanf( buf+12, "%s", id);
- 	        if( !str_find( &ctl->newsaved, num ) )
- 		    save_str(&ctl->newsaved, num, id );
+
+		buf[IDLEN+12] = 0;		/* prevent stack overflow */
+ 		sscanf(buf+12, "%s", id);
+ 	        if (!str_find( &ctl->newsaved, num))
+		{
+ 		    struct idlist *new = save_str(&ctl->newsaved,id,UID_SEEN);
+		    new->val.status.num = num;
+		}
  	    }
  	}
 
@@ -1050,7 +1053,7 @@ int num;		/* index of message */
 	if (!accept_count)
 	{
 	    no_local_matches = TRUE;
-	    save_str(&xmit_names, XMIT_ACCEPT, user);
+	    save_str(&xmit_names, user, XMIT_ACCEPT);
 	    if (outlevel == O_VERBOSE)
 		error(0, 0, 
 		      "no local matches, forwarding to %s",
@@ -1058,7 +1061,7 @@ int num;		/* index of message */
 	}
     }
     else	/* it's a single-drop box, use first localname */
-	save_str(&xmit_names, XMIT_ACCEPT, ctl->localnames->id);
+	save_str(&xmit_names, ctl->localnames->id, XMIT_ACCEPT);
 
 
     /*
@@ -1078,7 +1081,7 @@ int num;		/* index of message */
 	char	*names, *before, *after;
 
 	for (idp = xmit_names; idp; idp = idp->next)
-	    if (idp->val.num == XMIT_ACCEPT)
+	    if (idp->val.status.mark == XMIT_ACCEPT)
 		good_addresses++;
 
 	destaddr = "localhost";
@@ -1105,13 +1108,13 @@ int num;		/* index of message */
 	     * long lists of users and (re)implement %s.
 	     */
 	    for (idp = xmit_names; idp; idp = idp->next)
-		if (idp->val.num == XMIT_ACCEPT)
+		if (idp->val.status.mark == XMIT_ACCEPT)
 		    length += (strlen(idp->id) + 1);
 
 	    names = (char *)xmalloc(++length);
 	    names[0] = '\0';
 	    for (idp = xmit_names; idp; idp = idp->next)
-		if (idp->val.num == XMIT_ACCEPT)
+		if (idp->val.status.mark == XMIT_ACCEPT)
 		{
 		    strcat(names, idp->id);
 		    strcat(names, " ");
@@ -1318,7 +1321,7 @@ int num;		/* index of message */
 	destaddr = ctl->smtpaddress ? ctl->smtpaddress : ( ctl->smtphost ? ctl->smtphost : "localhost");
 	
 	for (idp = xmit_names; idp; idp = idp->next)
-	    if (idp->val.num == XMIT_ACCEPT)
+	    if (idp->val.status.mark == XMIT_ACCEPT)
 	    {
 		if (strchr(idp->id, '@'))
 		    strcpy(addr, idp->id);
@@ -1334,7 +1337,7 @@ int num;		/* index of message */
 		else
 		{
 		    bad_addresses++;
-		    idp->val.num = XMIT_ANTISPAM;
+		    idp->val.status.mark = XMIT_ANTISPAM;
 		    error(0, 0, 
 			  "SMTP listener doesn't like recipient address `%s'",
 			  addr);
@@ -1406,7 +1409,7 @@ int num;		/* index of message */
 		else if (good_addresses == 1)
 		{
 		    for (idp = xmit_names; idp; idp = idp->next)
-			if (idp->val.num == XMIT_ACCEPT)
+			if (idp->val.status.mark == XMIT_ACCEPT)
 			    break;	/* only report first address */
 		    if (strchr(idp->id, '@'))
 			sprintf(buf+1, "for <%s>", idp->id);
@@ -1475,7 +1478,7 @@ int num;		/* index of message */
 	    else
 	    {
 		for (idp = xmit_names; idp; idp = idp->next)
-		    if (idp->val.num == XMIT_REJECT)
+		    if (idp->val.status.mark == XMIT_REJECT)
 			break;
 		sprintf(errhd+strlen(errhd), "recipient address %s didn't match any local name", idp->id);
 	    }
@@ -1495,13 +1498,13 @@ int num;		/* index of message */
 	    strcat(errhd, "SMTP listener rejected local recipient addresses: ");
 	    errlen = strlen(errhd);
 	    for (idp = xmit_names; idp; idp = idp->next)
-		if (idp->val.num == XMIT_ANTISPAM)
+		if (idp->val.status.mark == XMIT_ANTISPAM)
 		    errlen += strlen(idp->id) + 2;
 
 	    errmsg = alloca(errlen+3);
 	    (void) strcpy(errmsg, errhd);
 	    for (idp = xmit_names; idp; idp = idp->next)
-		if (idp->val.num == XMIT_ANTISPAM)
+		if (idp->val.status.mark == XMIT_ANTISPAM)
 		{
 		    strcat(errmsg, idp->id);
 		    if (idp->next)
@@ -2248,8 +2251,8 @@ const struct method *proto;	/* protocol method table */
 			    struct idlist	*sdp;
 
 			    for (sdp = ctl->newsaved; sdp; sdp = sdp->next)
-				if (sdp->val.num == num)
-				    MARK_SEEN(sdp->val.num);
+				if (sdp->val.status.num == num)
+				    sdp->val.status.mark = UID_SEEN;
 			}
 
 			/* maybe we delete this message now? */

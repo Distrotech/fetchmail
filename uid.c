@@ -93,14 +93,14 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 		        strcasecmp(host, ctl->server.truename) == 0
 				&& strcasecmp(user, ctl->remotename) == 0)
 		    {
-			save_str(&ctl->oldsaved, UID_KEPT, id);
+			save_str(&ctl->oldsaved, id, UID_SEEN);
 			break;
 		    }
 		}
 
 		/* if it's not in a host we're querying, save it anyway */
 		if (ctl == (struct query *)NULL)
-		    save_str(&scratchlist, UID_KEPT, buf);
+		    save_str(&scratchlist, buf, UID_SEEN);
 	    }
 	}
 	fclose(tmpfp);
@@ -108,7 +108,7 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 }
 #endif /* POP3_ENABLE */
 
-struct idlist *save_str(struct idlist **idl, int num, const char *str)
+struct idlist *save_str(struct idlist **idl, const char *str, flag status)
 /* save a number/UID pair on the given UID list */
 {
     struct idlist **end;
@@ -118,7 +118,7 @@ struct idlist *save_str(struct idlist **idl, int num, const char *str)
 	continue;
 
     *end = (struct idlist *)xmalloc(sizeof(struct idlist));
-    (*end)->val.num = num;
+    (*end)->val.status.mark = status;
     (*end)->id = str ? xstrdup(str) : (char *)NULL;
     (*end)->next = NULL;
 
@@ -231,7 +231,7 @@ char *str_find(struct idlist **idl, int number)
 {
     if (*idl == (struct idlist *) 0)
 	return((char *) 0);
-    else if (number == (*idl)->val.num)
+    else if (number == (*idl)->val.status.num)
 	return((*idl)->id);
     else
 	return(str_find(&(*idl)->next, number));
@@ -251,31 +251,15 @@ char *idpair_find(struct idlist **idl, const char *id)
 int delete_str(struct idlist **idl, int num)
 /* delete given message from given list */
 {
-#ifdef HARD_DELETE	/* not used */
-    if (*idl == (struct idlist *)NULL)
-	return(0);
-    else if ((*idl)->val.num == num)
-    {
-	struct idlist	*next = (*idl)->next;
-
-	free ((*idl)->id);
-	free(*idl);
-	*idl = next;
-	return(1);
-    }
-    else
-	return(delete_str(&(*idl)->next, num));
-#else
     struct idlist	*idp;
 
     for (idp = *idl; idp; idp = idp->next)
-	if (idp->val.num == num)
+	if (idp->val.status.num == num)
 	{
-	    idp->val.num = UID_DELETED;
+	    idp->val.status.mark = UID_DELETED;
 	    return(1);
 	}
     return(0);
-#endif /* HARD_DELETE */
 }
 
 void append_str_list(struct idlist **idl, struct idlist **nidl)
@@ -296,8 +280,8 @@ void expunge_uids(struct query *ctl)
     struct idlist *idl;
 
     for (idl = ctl->newsaved; idl; idl = idl->next)
-	if (idl->val.num == UID_DELETED)
-	    idl->val.num = UID_EXPUNGED;
+	if (idl->val.status.mark == UID_DELETED)
+	    idl->val.status.mark = UID_EXPUNGED;
 }
 
 void update_str_lists(struct query *ctl)
@@ -330,7 +314,8 @@ void write_saved_lists(struct query *hostlist, const char *idfile)
 	if ((tmpfp = fopen(idfile, "w")) != (FILE *)NULL) {
 	    for (ctl = hostlist; ctl; ctl = ctl->next) {
 		for (idp = ctl->oldsaved; idp; idp = idp->next)
-		    if (SAVE_UID(idp->val.num))
+		    if (idp->val.status.mark == UID_SEEN
+				|| idp->val.status.mark == UID_DELETED)
 			fprintf(tmpfp, "%s@%s %s\n", 
 			    ctl->remotename, ctl->server.truename, idp->id);
 	    }
