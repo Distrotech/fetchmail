@@ -264,11 +264,11 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	    stringdump("qvirtual", ctl->server.qvirtual);
  
 	    if (ctl->server.preauthenticate == A_KERBEROS_V4)
-		stringdump("auth", "kerberos_v4");
+		stringdump("preauth", "kerberos_v4");
 	    else if (ctl->server.preauthenticate == A_KERBEROS_V5)
-		stringdump("auth", "kerberos_v5");
+		stringdump("preauth", "kerberos_v5");
 	    else
-		stringdump("auth", "password");
+		stringdump("preauth", "password");
 
 #if defined(HAVE_GETHOSTBYNAME) && defined(HAVE_RES_SEARCH)
 	    booldump("dns", ctl->server.dns);
