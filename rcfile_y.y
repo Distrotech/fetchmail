@@ -334,10 +334,10 @@ static void prc_register(void)
     FLAG_FORCE(server.skip);
     FLAG_FORCE(server.no_dns);
 
-#ifdef HAVE_RES_SEARCH
+#ifdef linux
     FLAG_FORCE(server.interface);
     FLAG_FORCE(server.monitor);
-#endif /* HAVE_RES_SEARCH */
+#endif /* linux */
 
     FLAG_FORCE(remotename);
     FLAG_FORCE(password);
@@ -374,10 +374,10 @@ void optmerge(struct query *h2, struct query *h1)
     FLAG_MERGE(server.skip);
     FLAG_MERGE(server.no_dns);
 
-#ifdef HAVE_RES_SEARCH
+#ifdef linux
     FLAG_MERGE(server.interface);
     FLAG_MERGE(server.monitor);
-#endif /* HAVE_RES_SEARCH */
+#endif /* linux */
 
     FLAG_MERGE(remotename);
     FLAG_MERGE(password);
