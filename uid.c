@@ -84,8 +84,17 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 
 	while (fgets(buf, POPBUFSIZE, tmpfp) != (char *)NULL)
 	{
-	    /* possible lossage here with very old versions of sscanf(3)... */
-	    if ((st = sscanf(buf, "%[^@]@%s %s\n", user, host, id)) == 3)
+	    /*
+	     * This inelegant hack was brought to you by the fact that
+	     * some dial-up resellers actually use account names with
+	     * @ in them.  So we need to split on the rightmost @...
+	     */
+	    char	*atsign = strrchr(buf, '@');
+
+	    if (atsign)
+		*atsign = ' ';
+
+	    if ((st = sscanf(buf, "%s %s %s\n", user, host, id)) == 3)
 	    {
 		for (ctl = hostlist; ctl; ctl = ctl->next)
 		{

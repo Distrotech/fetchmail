@@ -18,6 +18,8 @@ fetchmail-5.0.6 ():
   `username' or `password' keyword, courtesy of Brian Boutel.
 * Interface option fix from Bill Currie.
 * 554 added to default antispam vaklues (for Postfix).
+* In UID files, split on *rightmost* @ as some dialups actually embed
+  @ in usernames.
 
 Warning: CompuServe changed their POP3 system on 31 July 1999.  In doing
 so, they broke fetchmail's RPA support.  Nobody has sent me either code that
