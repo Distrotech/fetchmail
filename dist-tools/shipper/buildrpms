@@ -25,7 +25,8 @@ echo "%_topdir $TMPDIR" >"$MACROFILE"
 echo "%_topdir $TMPDIR" >"$MACROFILE"
 
 #  build RPMs
-rpmbuild --rcfile "$RCFILE" $ARCH -ta $TARBALL
+rpmbuild --rcfile "$RCFILE" $ARCH -ta $TARBALL \
+|| rpm --rcfile "$RCFILE" $ARCH -ta $TARBALL
 status=$?
 
 if [ $status = '0' ]
