@@ -77,7 +77,7 @@ struct hostdata		/* shared among all user connections to given server */
     int preauthenticate;		/* preauthentication mode to try */
     int timeout;			/* inactivity timout in seconds */
     char *envelope;			/* envelope address list header */
-    bool skip;				/* skip this server? */
+    bool skip;				/* suppress poll in implicit mode? */
     bool dns;				/* do DNS lookup on multidrop? */
     bool uidl;				/* use RFC1725 UIDLs? */
 
@@ -103,32 +103,32 @@ struct query
     struct hostdata server;
 
     /* per-user data */
-    struct idlist *localnames;		/* including calling user's name */
+    struct idlist *localnames;	/* including calling user's name */
     int wildcard;		/* should unmatched names be passed through */
-    char *remotename;
-    char *password;
-    struct idlist *mailboxes;
-    struct idlist *smtphunt;
-    char *smtphost;
-    char *mda;
-    char *preconnect;
+    char *remotename;		/* remote login name to use */
+    char *password;		/* remote password to use */
+    struct idlist *mailboxes;	/* list of mailboxes to check */
+    struct idlist *smtphunt;	/* list of SMTP hosts to try forwarding to */
+    char *smtphost;		/* actual SMTP host to point to */
+    char *mda;			/* local MDA to pass mail to */
+    char *preconnect;		/* pre-connection command to execute */
 
     /* per-user control flags */
-    bool keep;
-    bool fetchall;
-    bool flush;
-    bool rewrite;
-    bool stripcr;
-    bool forcecr;
-    bool limit;
-    bool fetchlimit;
-    bool batchlimit;
+    bool keep;			/* if TRUE, leave messages undeleted */
+    bool fetchall;		/* if TRUE, fetch all (not just unseen) */
+    bool flush;			/* if TRUE, delete messages already seen */
+    bool rewrite;		/* if TRUE, canonicalize recipient addresses */
+    bool stripcr;		/* if TRUE, strip CRs in text */
+    bool forcecr;		/* if TRUE, force CRs before LFs in text */
+    int	limit;			/* limit size of retrieved messages */
+    int	fetchlimit;		/* max # msgs to get in single poll */
+    int	batchlimit;		/* max # msgs to pass in single SMTP session */
 
     /* unseen, previous state of mailbox (initially from .fetchids) */
     struct idlist *oldsaved, *newsaved;
 
     /* internal use */
-    bool active;
+    bool active;		/* should we actually poll this server? */
     int errcount;		/* count transient errors in last pass */
     struct query *next;		/* next query control block in chain */
     int smtp_socket;		/* socket descriptor for SMTP connection */
