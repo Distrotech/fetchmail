@@ -5,6 +5,7 @@
 * Grant Edwards's patch to correct NTLM behavior.
 * In IMAP, set Seen flag explicity when keep is on; works around flaky
   servers that don't set Seen on a body fetch.
+* James Bristers fix for IP-address hostnames.
 
 fetchmail-5.1.2 (Thu Oct  7 09:46:07 EDT 1999), 17906 lines:
 * Joe Loughry <loughry@uswest.net> sent a patch to handle multihomed machines.

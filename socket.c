@@ -248,6 +248,23 @@ int SockOpen(const char *host, int clientPort, const char *options,
 	    errno = olderr;
 	    return -1;
 	}
+    } else {
+        ad.sin_port = htons(clientPort);
+
+        sock = socket(AF_INET, SOCK_STREAM, 0);
+        if (sock < 0)
+        {
+            h_errno = 0;
+            return -1;
+        }
+        if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) < 0)
+        {
+            int olderr = errno;
+            close(sock);
+            h_errno = 0;
+            errno = olderr;
+            return -1;
+        }
     }
     return(sock);
 }
