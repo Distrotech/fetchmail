@@ -437,29 +437,7 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
     if ((ok = pop3_ok(sock, buf)) != 0)
 	return(ok);
 
-#ifdef __UNUSED__ 
-    /* 
-     * Look for "nnn octets" -- there may or may not be preceding cruft.
-     * This works with Eudora qpopper and some other common servers.
-     * It's OK to punt and pass back -1 as a failure indication here.
-     */
-    if ((cp = strstr(buf, " octets")) != (char *)NULL)
-    {
-	while (--cp >= buf && isdigit(*cp))
-	    continue;
-	*lenp = atoi(++cp);
-    }
-    else
-	*lenp = -1;
-#endif /* __UNUSED__ */
-
-    /* 
-     * POP3 is delimited, we don't care about lengths.
-     * Editorial comment: it's really bogus that standard POP3
-     * doesn't give you a length in the fetch response, before
-     * the message.  Even freakin' *POP2* got this right!
-     */
-    *lenp = -1;
+    *lenp = -1;		/* we got sizes from the LIST response */
 
     return(0);
 }
@@ -467,6 +445,7 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
 static int pop3_delete(int sock, struct query *ctl, int number)
 /* delete a given message */
 {
+    /* actually, mark for deletion -- doesn't happen until QUIT time */
     return(gen_transact(sock, "DELE %d", number));
 }
 
