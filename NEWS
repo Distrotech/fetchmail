@@ -1,7 +1,7 @@
 			Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-3.0 (Sat Jan 18 22:00:17 EST 1997)
+fetchmail-3.0 (Tue Jan 21 16:44:56 EST 1997)
 
 features --
 
@@ -46,7 +46,7 @@ Note: the RFC subdirectory is no longer included with the distribution
 (this cut its size in half!)  Instead, applicable RFCs are listed on the
 manual page.
 
-There are 197 people on the fetchmail-friends list.
+There are 199 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-2.8 (Sat Jan 11 15:48:33 EST 1997)
