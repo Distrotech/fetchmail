@@ -63,8 +63,8 @@ extern char *strstr();	/* needed on sysV68 R3V7.1. */
 #define IMAP4rev1	1	/* IMAP4 rev 1, RFC2060 */
 
 static int count, seen, recent, unseen, deletions, imap_version, preauth; 
-static int expunged, expunge_period;
-static flag do_idle, idling;
+static int expunged, expunge_period, saved_timeout;
+static flag do_idle;
 static char capabilities[MSGBUFSIZE+1];
 
 int imap_ok(int sock, char *argbuf)
@@ -105,6 +105,7 @@ int imap_ok(int sock, char *argbuf)
 		if (outlevel >= O_MONITOR)
 		    report(stdout, "IMAP> DONE\n");
 
+		mytimeout = saved_timeout;
 		stage = STAGE_FETCH;
 	    }
 	}
@@ -1086,8 +1087,8 @@ static int imap_getrange(int sock,
 	if (do_idle)
 	{
 	    stage = STAGE_IDLE;
-	    /* this is the RFC2177-recommended timeout for an IDLE */
-	    mytimeout = 29 * 60;
+	    saved_timeout = mytimeout;
+	    mytimeout = 0;
 	}
 	if (ok || gen_transact(sock, do_idle ? "IDLE" : "NOOP"))
 	{
