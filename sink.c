@@ -794,6 +794,12 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
 	return(handle_smtp_report(ctl, msg));
     }
 
+    /*
+     * We need to stash this away in order to know how many
+     * response lines to expect after the LMTP end-of-message.
+     */
+    lmtp_responses = *good_addresses;
+
     return(PS_SUCCESS);
 }
 
@@ -1015,12 +1021,6 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 
     if (ctl->mda)		/* must deliver through an MDA */
 	return(open_mda_sink(ctl, msg, good_addresses, bad_addresses));
-
-    /*
-     * We need to stash this away in order to know how many
-     * response lines to expect after the LMTP end-of-message.
-     */
-    lmtp_responses = *good_addresses;
 
     return(PS_SUCCESS);
 }

@@ -2,12 +2,17 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* OPIE bug fixes by Jun Miyoshi <usako@omnisci.co.jp>.
+* Documented known IDLE bug in the todo.html file.
+* Sunil Shetye's fix for a timeout/reconnect bug.
+* LMTP fix from Toshiro HIKITA <toshi@sodan.org>.
+
 fetchmail-5.9.5 (Thu Nov  8 14:14:35 EST 2001), 21162 lines:
 
 * Changed the logging logic along lines suggested by Jan Klaverstijn,
 * fetchmailconf looks first in the directory it's running from to find
   fetchmail.
-* Make sure we vet a success status correctly from open_smtp_sink()
+* Make sure we get a success status correctly from open_smtp_sink()
   and open_bsmtp_sink().
 * Matthias Andree's env.c patch to refuse service when QMAILINJECT is defined.
 * Immediately abort if a non-empty QMAILINJECT environment variable is
