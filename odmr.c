@@ -9,6 +9,9 @@
 #include  <stdio.h>
 #include  <stdlib.h>
 #include  <assert.h>
+#ifdef HAVE_STRING_H /* strcat() */
+#include <string.h>
+#endif
 #ifdef HAVE_NET_SOCKET_H /* BeOS needs this */
 #include <net/socket.h>
 #endif

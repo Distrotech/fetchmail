@@ -6,6 +6,9 @@
 #include "config.h"
 
 #include <stdio.h>
+#ifdef HAVE_STRING_H
+#include <string.h> /* strcat() */
+#endif
 #if defined(STDC_HEADERS)
 #include <stdlib.h>
 #endif

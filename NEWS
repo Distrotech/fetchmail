@@ -2,6 +2,10 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* GCC warning cleanups from ahaas@neosoft.com.
+* Plug another hole that was letting zombies through.
+* SA_RESDTART portability fix for SunOS.
+
 fetchmail-5.8.2 (Tue May  8 17:07:53 EDT 2001), 20481 lines:
 
 * HH's patches fixing Debian bug #90966 and addressing Debian bug #92554.

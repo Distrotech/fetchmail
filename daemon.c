@@ -90,10 +90,13 @@ void deal_with_sigchld(void)
 
   memset (&sa_new, 0, sizeof sa_new);
   sigemptyset (&sa_new.sa_mask);
-  sa_new.sa_handler = SIG_IGN;
+  /* sa_new.sa_handler = SIG_IGN;     pointless */
 
   /* set up to catch child process termination signals */ 
   sa_new.sa_handler = sigchld_handler;
+#ifdef SA_RESTART	/* SunOS 4.1 portability hack */
+  sa_new.sa_flags = SA_RESTART;
+#endif
   sigaction (SIGCHLD, &sa_new, NULL);
 #if defined(SIGPWR)
   sigaction (SIGPWR, &sa_new, NULL);
@@ -127,6 +130,9 @@ daemonize (const char *logfile, void (*termhook)(int))
   memset (&sa_new, 0, sizeof sa_new);
   sigemptyset (&sa_new.sa_mask);
   sa_new.sa_handler = SIG_IGN;
+#ifdef SA_RESTART	/* SunOS 4.1 portability hack */
+  sa_new.sa_flags = SA_RESTART;
+#endif
 #endif /* HAVE_SIGACTION */
 #ifdef 	SIGTTOU
 #ifndef HAVE_SIGACTION

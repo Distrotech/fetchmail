@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
+#include <ctype.h> /* isspace() */
 #ifdef HAVE_MEMORY_H
 #include <memory.h>
 #endif /* HAVE_MEMORY_H */
