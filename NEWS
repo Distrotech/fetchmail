@@ -12,7 +12,7 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.3.0 ()
+fetchmail-4.3.0-alpha (Sun Oct  5 11:07:53 EDT 1997)
 * Rearranged IMAP authentication so CAPABILITY is done first,
 * FAQ update, including a major new item on how to protect your password.
 * Added code to have %F in an MDA string expand to the From address
@@ -20,9 +20,10 @@ fetchmail-4.3.0 ()
 * Luca Olivetti's --qvirtual option patch for qmail users.  
 * Fixed a bug in the code that was supposed to suppress expansion of RFC822 
   groupnames.  (Thanks to Santiago Vila Doncel for pointing this.)
-* It's now possible to explicitly configure out POP3, IMAP, or ETRN
+* It's now possible to explicitly configure out POP3, IMAP, or ETRN.
+* Created fetchmail-announce list.
 
-There are 286 people on the fetchmail-friends list.
+There are 283 people on fetchmail-friends and 6 on fetchmail-announce.
 
 fetchmail-4.2.9 (Tue Sep 30 18:21:35 EDT 1997)
 * Don't byte-stuff when writing to an MDA.
