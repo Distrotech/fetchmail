@@ -5,6 +5,7 @@
 # Requires Python with Tkinter, and both posix and posixpath services.
 #
 # Version 0.90 beta: Tue May 26 12:00:49 EDT 1998
+# Version 0.91 beta: Tue Jun  2 12:23:42 EDT 1998
 #
 # TO DO: Arrange for save and quit buttons to clean up all frames dependent
 # on the current ones.
@@ -23,7 +24,7 @@ class Configuration:
     def __init__(self):
 	self.poll_interval = 300	# Default to 5-minute timeout
 	self.syslog = FALSE		# Use syslogd for logging?
-	self.logfile = None		# No logfile, initially
+	self.logfile = ""		# No logfile, initially
 	self.idfile = os.environ["HOME"] + "/.fetchids"		# Default idfile, initially
 	self.invisible = FALSE		# Suppress Received line & spoof?
 	self.servers = []		# List of included sites
@@ -53,8 +54,8 @@ class Configuration:
 
 class Server:
     def __init__(self):
-	self.pollname = None		# Poll label
-	self.via = None			# True name of host
+	self.pollname = ''		# Poll label
+	self.via = ''			# True name of host
 	self.active = TRUE		# Poll status
 	self.interval = 0		# Skip interval
 	self.protocol = 'auto'		# Default to auto protocol
@@ -64,12 +65,12 @@ class Server:
 	self.timeout = 300		# 5-minute timeout
 	self.envelope = 'Received'	# Envelope-address header
 	self.envskip = 0		# Number of envelope headers to skip
-	self.qvirtual = None		# Name prefix to strip
+	self.qvirtual = ''		# Name prefix to strip
 	self.aka = []			# List of DNS aka names
 	self.dns = TRUE			# Enable DNS lookup on multidrop
 	self.localdomains = []		# Domains to be considered local
-	self.interface = None		# IP address and range
-	self.monitor = None		# IP address and range
+	self.interface = ''		# IP address and range
+	self.monitor = ''		# IP address and range
 	self.users = []			# List of user entries for site
 	Server.typemap = (
 	    ('pollname',  'String'),
@@ -97,7 +98,7 @@ class Server:
 	else:             str = str + "skip"
 	str = str + (" " + self.pollname)
 	if self.via:
-	    str = str + " via " + self.via
+	    str = str + (" via \"%s\"\n" % (self.via,));
 	if self.protocol != ServerDefaults.protocol:
 	    str = str + " with proto " + self.protocol 
 	if self.port != defaultports[self.protocol] and self.port != 0:
@@ -112,7 +113,7 @@ class Server:
 	    else:
 		str = str + " envelope " + self.envelope
 	if self.qvirtual != ServerDefaults.qvirtual:
-	    str = str + " qvirtual " + self.qvirtual
+	    str = str + (" qvirtual \"%s\"\n" % (self.qvirtual,));
 	if self.auth != ServerDefaults.auth:
 	    str = str + " auth " + self.auth
 	if self.dns != ServerDefaults.dns or self.uidl != ServerDefaults.uidl:
@@ -163,9 +164,9 @@ class User:
 	self.remote = os.environ["USER"]# Remote username
 	self.localnames = (self.remote,)# Local names
 	self.password = ""		# Password for mail account access
-	self.mailboxes = None		# Remote folders to retrieve from
-	self.smtphunt = None		# Hosts to forward to
-	self.smtpaddress = None;	# Append this to MAIL FROM line
+	self.mailboxes = ""		# Remote folders to retrieve from
+	self.smtphunt = []		# Hosts to forward to
+	self.smtpaddress = "";		# Append this to MAIL FROM line
 	self.preconnect = ""		# Connection setup
 	self.postconnect = ""		# Connection wrapup
 	self.mda = ""			# Mail Delivery Agent
@@ -209,7 +210,7 @@ class User:
 
     def __repr__(self):
 	str = "    "
-	str = str + "user " + self.remote + " there ";
+	str = str + "user \"" + self.remote + "\" there ";
 	if self.password: str = str + "with password " + self.password + ' '
 	if self.localnames:
 	     str = str + "is"
