@@ -165,7 +165,7 @@ and the mailserver are echoed to stderr.  Specifying
 causes normal progress/status messages which would be redundant or meaningless
 to be modified or omitted.
 .TP
-.B \-N, --norewrite
+.B \-n, --norewrite
 Normally,
 .I fetchmail
 edits RFC-822 address headers (To, From, Cc, Bcc, and Reply-To) in
