@@ -155,7 +155,7 @@ static int do_otp(int sock, struct query *ctl)
   };
 
   rval = opiegenerator(challenge, !strcmp(ctl->password, "opie") ? "" : ctl->password, response);
-  if ((rval == -2) && (cmd_opts.poll_interval == -1)) {
+  if ((rval == -2) && !run.poll_interval) {
     char secret[OPIE_SECRET_MAX+1];
     fprintf(stderr, "Secret pass phrase: ");
     if (opiereadpass(secret, sizeof(secret), 0))
