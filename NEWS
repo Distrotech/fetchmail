@@ -15,7 +15,6 @@
 
 ------------------------------------------------------------------------------
 fetchmail-4.2.5 ()
-* Alexander Kourakos corrected his patch to avoid a buffer overrun.
 * Greg Stark's patch for better autoconfiguration on mixed libc5/libc6 systems.
 * We no longer mess with CFLAGS/LDFLAGS to get Kerberos support linked.
 

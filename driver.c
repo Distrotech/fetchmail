@@ -562,8 +562,9 @@ int num;		/* index of message */
 	    }
 
 	    set_timeout(ctl->server.timeout);
-	    /* leave extra room for reply_hack to play with */
-	    line = (char *) realloc(line, strlen(line) + strlen(buf) + HOSTLEN + 1);
+
+	    line = (char *) realloc(line, strlen(line) + strlen(buf) +1);
+
 	    strcat(line, buf);
 	    if (line[0] == '\r' && line[1] == '\n')
 		break;
@@ -671,7 +672,7 @@ int num;		/* index of message */
 	}
 
 	if (ctl->rewrite)
-	    reply_hack(line, realname);
+	    line = reply_hack(line, realname);
 
 	if (!headers)
 	{

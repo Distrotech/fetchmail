@@ -20,13 +20,14 @@
 static int verbose;
 #endif /* TESTMAIN */
 
-void reply_hack(buf, host)
+char *reply_hack(buf, host)
 /* hack message headers so replies will work properly */
 char *buf;		/* header to be hacked */
 const char *host;	/* server hostname */
 {
     char *from, *cp;
     int parendepth, state, has_bare_name_part, has_host_part;
+    int addresscount = 1;
 
     if (strncasecmp("From: ", buf, 6)
 	&& strncasecmp("To: ", buf, 4)
@@ -34,8 +35,16 @@ const char *host;	/* server hostname */
 	&& strncasecmp("Return-Path: ", buf, 13)
 	&& strncasecmp("Cc: ", buf, 4)
 	&& strncasecmp("Bcc: ", buf, 5)) {
-	return;
+	return(buf);
     }
+
+#ifndef TESTMAIN
+    /* make room to hack the address; buf must be malloced */
+    for (cp = buf; *cp; cp++)
+	if (*cp == ',' || isspace(*cp))
+	    addresscount++;
+    buf = (char *)realloc(buf, strlen(buf) + addresscount * strlen(host) + 1);
+#endif /* TESTMAIN */
 
     parendepth = state = 0;
     has_host_part = has_bare_name_part = FALSE;
@@ -130,6 +139,8 @@ const char *host;	/* server hostname */
 	  has_host_part = has_bare_name_part = FALSE;
 	}
     }
+
+    return(buf);
 }
 
 char *nxtaddr(hdr)

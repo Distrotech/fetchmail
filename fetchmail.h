@@ -237,7 +237,7 @@ int gen_transact ();
 #endif
 
 /* rfc822.c: RFC822 header parsing */
-void reply_hack(char *, const char *);
+char *reply_hack(char *, const char *);
 char *nxtaddr(const char *);
 
 /* uid.c: UID support */
