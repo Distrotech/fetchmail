@@ -62,6 +62,7 @@ struct idlist
 
 struct hostdata		/* shared among all user connections to given server */
 {
+    /* rc file data */
     struct idlist *names;		/* server name first, then akas */
     struct idlist *localdomains;	/* list of pass-through domains */
     int protocol;
@@ -70,6 +71,12 @@ struct hostdata		/* shared among all user connections to given server */
     int timeout;
     char *envelope;
     int skip;
+
+    /* computed for internal use */
+#ifdef HAVE_GETHOSTBYNAME
+    char *canonical_name;		/* DNS canonical name of server host */
+#endif /* HAVE_GETHOSTBYNAME */
+    struct hostdata *lead_server;	/* ptr to lead query for this server */
 };
 
 struct query
@@ -104,12 +111,8 @@ struct query
     struct query *next;		/* next query control block in chain */
     struct query *lead_smtp;	/* pointer to this query's SMTP leader */
     FILE *smtp_sockfp;		/* socket descriptor for SMTP connection */
-    struct query *lead_server;	/* pointer to lead query for this server */
     unsigned int uid;		/* UID of user to deliver to */
     char digest [DIGESTLEN];	/* md5 digest buffer */
-#ifdef HAVE_GETHOSTBYNAME
-    char *canonical_name;	/* DNS canonical name of server host */
-#endif /* HAVE_GETHOSTBYNAME */
 };
 
 #define MULTIDROP(ctl)	(ctl->wildcard || \

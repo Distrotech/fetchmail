@@ -130,9 +130,9 @@ static int is_host_alias(const char *name, struct query *ctl)
      * name doesn't match either is it time to call the bind library.
      * If this happens odds are good we're looking at an MX name.
      */
-    if (str_in_list(&ctl->lead_server->server.names, name))
+    if (str_in_list(&ctl->server.lead_server->names, name))
 	return(TRUE);
-    else if (strcmp(name, ctl->canonical_name) == 0)
+    else if (strcmp(name, ctl->server.canonical_name) == 0)
 	return(TRUE);
 
     /*
@@ -143,7 +143,7 @@ static int is_host_alias(const char *name, struct query *ctl)
      */
     else if ((he = gethostbyname(name)) != (struct hostent *)NULL)
     {
-	if (strcmp(ctl->canonical_name, he->h_name) == 0)
+	if (strcmp(ctl->server.canonical_name, he->h_name) == 0)
 	    goto match;
 	else
 	    return(FALSE);
@@ -197,14 +197,14 @@ static int is_host_alias(const char *name, struct query *ctl)
     else
     {
 	for (mxp = mxrecords; mxp->name; mxp++)
-	    if (strcmp(ctl->canonical_name, mxp->name) == 0)
+	    if (strcmp(ctl->server.canonical_name, mxp->name) == 0)
 		goto match;
 	return(FALSE);
     match:;
     }
 
     /* add this name to relevant server's `also known as' list */
-    save_str(&ctl->lead_server->server.names, -1, name);
+    save_str(&ctl->server.lead_server->names, -1, name);
     return(TRUE);
 }
 
@@ -947,7 +947,7 @@ const struct method *proto;	/* protocol method table */
 #ifdef KERBEROS_V4
 	if (ctl->authenticate == A_KERBEROS)
 	{
-	    ok = kerberos_auth(fileno(sockfp), ctl->canonical_name);
+	    ok = kerberos_auth(fileno(sockfp), ctl->server.canonical_name);
  	    if (ok != 0)
 		goto cleanUp;
 	    vtalarm(ctl->server.timeout);

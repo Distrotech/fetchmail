@@ -480,8 +480,8 @@ int main (int argc, char **argv)
 		    }
 		    else
 		    {
-			free(ctl->canonical_name);
-			ctl->canonical_name = xstrdup((char *)namerec->h_name);
+			free(ctl->server.canonical_name);
+			ctl->server.canonical_name = xstrdup((char *)namerec->h_name);
 		    }
 		}
 #endif /* HAVE_GETHOSTBYNAME */
@@ -642,10 +642,10 @@ static int load_params(int argc, char **argv, int optind)
 	    for (mp = querylist; mp && mp != ctl; mp = mp->next)
 		if (strcmp(mp->server.names->id, ctl->server.names->id) == 0)
 		{
-		    ctl->lead_server = mp->lead_server;
+		    ctl->server.lead_server = mp->server.lead_server;
 		    goto no_new_server;
 		}
-	    ctl->lead_server = ctl;
+	    ctl->server.lead_server = &(ctl->server);
 	no_new_server:;
 
 	    /* plug in the semi-standard way of indicating a mail address */
@@ -799,8 +799,8 @@ void dump_params (struct query *ctl)
     printf("Options for retrieving from %s@%s:\n",
 	   ctl->remotename, visbuf(ctl->server.names->id));
 #ifdef HAVE_GETHOSTBYNAME
-    if (ctl->canonical_name)
-	printf("  Canonical DNS name of server is %s.\n", ctl->canonical_name);
+    if (ctl->server.canonical_name)
+	printf("  Canonical DNS name of server is %s.\n", ctl->server.canonical_name);
 #endif /* HAVE_GETHOSTBYNAME */
     if (ctl->server.names->next)
     {
