@@ -12,21 +12,9 @@
  ***********************************************************************/
 
 #include  <config.h>
-#include  <varargs.h>
-
 #include  <stdio.h>
-#if defined(STDC_HEADERS)
-#include  <string.h>
-#endif
-#if defined(HAVE_UNISTD_H)
-#include  <unistd.h>
-#endif
-#include  <errno.h>
-
 #include  "socket.h"
 #include  "fetchmail.h"
-
-static int count, first;
 
 /*********************************************************************
 
@@ -34,6 +22,7 @@ static int count, first;
 
  *********************************************************************/
 
+static int count, first;
 static int exists, unseen, recent;
 
 int imap_ok (argbuf,socket)
@@ -176,7 +165,7 @@ int number;
 static struct method imap =
 {
     "IMAP",				/* Internet Message Access Protocol */
-    143,				/* standard IMAP3bis/IMAP4 port */
+    143,				/* standard IMAP2bis/IMAP4 port */
     1,					/* this is a tagged protocol */
     0,					/* no message delimiter */
     imap_ok,				/* parse command response */
@@ -195,4 +184,5 @@ struct hostrec *queryctl;
 {
     return(do_protocol(queryctl, &imap));
 }
+
 

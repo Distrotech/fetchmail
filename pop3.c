@@ -13,16 +13,7 @@
  ***********************************************************************/
 
 #include  <config.h>
-
 #include  <stdio.h>
-#if defined(STDC_HEADERS)
-#include  <string.h>
-#endif
-#if defined(HAVE_UNISTD_H)
-#include  <unistd.h>
-#endif
-#include  <errno.h>
-
 #include  "socket.h"
 #include  "fetchmail.h"
 

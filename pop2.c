@@ -1,4 +1,4 @@
-/* Copyright 1993-95 by Carl Harris, Jr. Copyright 1996 by Eric S. Raymond
+/* Copyright 1996 by Eric S. Raymond
  * All rights reserved.
  * For license terms, see the file COPYING in this directory.
  */
@@ -6,30 +6,15 @@
 /***********************************************************************
   module:       pop2.c
   project:      fetchmail
-  programmer:   Carl Harris, ceharris@mal.com
-		Hacks and bug fixes by esr.
-  description:  POP2 client code.
+  programmer:   Eric S. Raymond
+  description:  POP2 method code.
 
  ***********************************************************************/
 
 #include  <config.h>
-
 #include  <stdio.h>
-#if defined(STDC_HEADERS)
-#include  <string.h>
-#endif
-#if defined(HAVE_UNISTD_H)
-#include  <unistd.h>
-#endif
-
-#include  <sys/time.h>
-#include  <errno.h>
-
 #include  "socket.h"
 #include  "fetchmail.h"
-
-#if HAVE_PROTOTYPES
-#endif
 
 /*********************************************************************
 
