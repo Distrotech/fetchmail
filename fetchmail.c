@@ -510,22 +510,30 @@ int main(int argc, char **argv)
     for (ctl = querylist; ctl; ctl = ctl->next)
     {
 	if (ctl->active && !(implicitmode && ctl->server.skip)
-	    && ctl->server.protocol != P_ETRN 
-	    && ctl->server.protocol != P_IMAP_K4
+		&& ctl->server.protocol != P_ETRN 
+		&& ctl->server.protocol != P_IMAP_K4
 #ifdef GSSAPI
-	    && ctl->server.protocol != P_IMAP_GSS
+		&& ctl->server.protocol != P_IMAP_GSS
 #endif /* GSSAPI */
-	    && !ctl->password)
-	{
-	    char* password_prompt = _("Enter password for %s@%s: ");
+		&& !ctl->password)
+	    if (!isatty(0))
+	    {
+		fprintf(stderr,
+			_("fetchmail: can't find a password for %s@s.\n"),
+			ctl->remotename, ctl->server.pollname);
+		return(PS_AUTHFAIL);
+	    }
+	    else
+	    {
+		char* password_prompt = _("Enter password for %s@%s: ");
 
-	    xalloca(tmpbuf, char *, strlen(password_prompt) +
-		    strlen(ctl->remotename) +
-		    strlen(ctl->server.pollname) + 1);
-	    (void) sprintf(tmpbuf, password_prompt,
-			   ctl->remotename, ctl->server.pollname);
-	    ctl->password = xstrdup((char *)getpassword(tmpbuf));
-	}
+		xalloca(tmpbuf, char *, strlen(password_prompt) +
+			strlen(ctl->remotename) +
+			strlen(ctl->server.pollname) + 1);
+		(void) sprintf(tmpbuf, password_prompt,
+			       ctl->remotename, ctl->server.pollname);
+		ctl->password = xstrdup((char *)getpassword(tmpbuf));
+	    }
     }
 
     /*
