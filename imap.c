@@ -18,7 +18,12 @@
 
 extern char *strstr();	/* needed on sysV68 R3V7.1. */
 
-static int count, seen, recent, unseen, imap4, deletecount;
+/* imap_version values */
+#define IMAP2		-1	/* IMAP2 or IMAP2BIS, RFC1176 */
+#define IMAP4		0	/* IMAP4 rev 0, RFC1730 */
+#define IMAP4rev1	1	/* IMAP4 rev 1, RFC2060 */
+
+static int count, seen, recent, unseen, deletecount, imap_version;
 
 int imap_ok (FILE *sockfp,  char *argbuf)
 /* parse command response */
@@ -33,7 +38,6 @@ int imap_ok (FILE *sockfp,  char *argbuf)
 	    buf[strlen(buf)-1] = '\0';
 	if (buf[strlen(buf)-1] == '\r')
 	    buf[strlen(buf)-1] = '\r';
-
 	if (outlevel == O_VERBOSE)
 	    error(0, 0, "IMAP< %s", buf);
 
@@ -79,6 +83,8 @@ int imap_ok (FILE *sockfp,  char *argbuf)
 int imap_getauth(FILE *sockfp, struct query *ctl, char *buf)
 /* apply for connection authorization */
 {
+    char rbuf [POPBUFSIZE+1];
+
     /* try to get authorized */
     int ok = gen_transact(sockfp,
 		  "LOGIN %s \"%s\"",
@@ -88,9 +94,33 @@ int imap_getauth(FILE *sockfp, struct query *ctl, char *buf)
 	return(ok);
 
     /* probe to see if we're running IMAP4 and can use RFC822.PEEK */
-    imap4 = ((gen_transact(sockfp, "CAPABILITY")) == 0);
-
-    return(0);
+    gen_send(sockfp, "CAPABILITY");
+    if (!SockGets(rbuf, sizeof(rbuf), sockfp))
+	return(PS_SOCKET);
+    if (rbuf[strlen(buf)-1] == '\n')
+	rbuf[strlen(buf)-1] = '\0';
+    if (rbuf[strlen(buf)-1] == '\r')
+	rbuf[strlen(buf)-1] = '\r';
+    if (outlevel == O_VERBOSE)
+	error(0, 0, "IMAP< %s", rbuf);
+    if (strstr(rbuf, "BAD"))
+    {
+	imap_version = IMAP2;
+	if (outlevel == O_VERBOSE)
+	    error(0, 0, "Protocol identified as IMAP2 or IMAP2BIS");
+    }
+    else if (strstr(rbuf, "IMAP4rev1"))
+    {
+	imap_version = IMAP4rev1;
+	if (outlevel == O_VERBOSE)
+	    error(0, 0, "Protocol identified as IMAP4 rev 1");
+    }
+    else
+    {
+	imap_version = IMAP4;
+	if (outlevel == O_VERBOSE)
+	    error(0, 0, "Protocol identified as IMAP4 rev 0");
+    }
 }
 
 static int imap_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
@@ -164,7 +194,7 @@ static int imap_is_old(FILE *sockfp, struct query *ctl, int number)
 static int imap_fetch(FILE *sockfp, struct query *ctl, int number, int *lenp)
 /* request nth message */
 {
-    char buf [POPBUFSIZE+1];
+    char buf [POPBUFSIZE+1], *fetch;
     int	num;
 
     /* expunges change the fetch numbers */
@@ -180,17 +210,40 @@ static int imap_fetch(FILE *sockfp, struct query *ctl, int number, int *lenp)
      * In that case, marking the seen flag is the only way to prevent the
      * message from being re-fetched on subsequent runs.
      */
-    if (imap4 && !ctl->keep)
-	gen_send(sockfp, "FETCH %d RFC822.PEEK", number);
-    else
+    switch (imap_version)
+    {
+    case IMAP4rev1:	/* RFC 2060 */
+	if (!ctl->keep)
+	    gen_send(sockfp, "FETCH %d BODY.PEEK[]", number);
+	else
+	    gen_send(sockfp, "FETCH %d BODY", number);
+	break;
+
+    case IMAP4:		/* RFC 1730 */
+	if (!ctl->keep)
+	    gen_send(sockfp, "FETCH %d RFC822.PEEK", number);
+	else
+	    gen_send(sockfp, "FETCH %d RFC822", number);
+	break;
+
+    default:		/* RFC 1176 */
 	gen_send(sockfp, "FETCH %d RFC822", number);
+	break;
+    }
 
     /* looking for FETCH response */
     do {
 	if (!SockGets(buf, sizeof(buf), sockfp))
 	    return(PS_SOCKET);
+	if (buf[strlen(buf)-1] == '\n')
+	    buf[strlen(buf)-1] = '\0';
+	if (buf[strlen(buf)-1] == '\r')
+	    buf[strlen(buf)-1] = '\r';
+	if (outlevel == O_VERBOSE)
+	    error(0, 0, "IMAP< %s", buf);
     } while
-	    (sscanf(buf+2, "%d FETCH (RFC822 {%d}", &num, lenp) != 2);
+	/* third token can be "RFC822" or "BODY[]" */
+	(sscanf(buf+2, "%d FETCH (%*s {%d}", &num, lenp) != 2);
 
     if (num != number)
 	return(PS_ERROR);
@@ -222,7 +275,7 @@ static int imap_delete(FILE *sockfp, struct query *ctl, int number)
 
     /* use SILENT if possible as a minor throughput optimization */
     if ((ok = gen_transact(sockfp,
-			imap4 
+			imap_version >= IMAP4 
 				? "STORE %d +FLAGS.SILENT (\\Deleted)"
 				: "STORE %d +FLAGS (\\Deleted)", 
 			number)))
