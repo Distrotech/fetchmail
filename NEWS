@@ -1,6 +1,6 @@
 				Release Notes:
 
-fetchmail-4.6.9 ():
+fetchmail-4.6.9 (Tue Dec  1 14:46:19 EST 1998):
 * Better RFC822 conformance in fetchmail trace headers.
 * Corrected MIME generation of bounce mail.
 * Prevent core dumps on 'for' and 'by' in names (bug introduced in 4.6.8).
