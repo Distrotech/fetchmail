@@ -51,9 +51,11 @@ Fetchmail offers better security than any other Unix remote-mail
 client.  It supports APOP, KPOP, and IMAP RFC1731 encrypted
 authentication methods to avoid sending passwords en clair.<p>
 
-Fetchmail can be used as a POP/IMAP-to-SMTP gateway for an entire
-DNS domain, collecting mail from a single drop box on an ISP and
-SMTP-forwarding it based on envelope and header addresses.<p>
+Fetchmail can be used as a POP/IMAP-to-SMTP gateway for an entire DNS
+domain, collecting mail from a single drop box on an ISP and
+SMTP-forwarding it based on header addresses. (We don't really
+recommend this, though, as it may lose important envelope-header
+information.  ETRN or a UUCP connection is better.)<p>
 
 Fetchmail can be started automatically and silently as a system daemon
 at boot time.  When running in this mode with a short poll interval,
