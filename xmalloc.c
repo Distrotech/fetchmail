@@ -6,6 +6,7 @@
 
 #include <config.h>
 #include <stdio.h>
+#include <errno.h>
 #include <string.h>
 #if defined(STDC_HEADERS)
 #include  <stdlib.h>
@@ -24,10 +25,8 @@ xmalloc (int n)
     XMALLOCTYPE *p;
 
     p = (XMALLOCTYPE *) malloc(n);
-    if (p == (XMALLOCTYPE *) 0) {
-	fputs("fetchmail: malloc failed\n",stderr);
-	exit(PS_UNDEFINED);
-    }
+    if (p == (XMALLOCTYPE *) 0)
+	error(PS_UNDEFINED, errno, "malloc failed");
     return(p);
 }
 

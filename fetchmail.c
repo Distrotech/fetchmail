@@ -35,6 +35,7 @@
 #endif /* HAVE_GETHOSTBYNAME */
 
 #include "fetchmail.h"
+#include "tunable.h"
 #include "smtp.h"
 #include "getopt.h"
 
@@ -64,6 +65,7 @@ char *rcfile;		/* path name of rc file */
 char *idfile;		/* UID list file */
 int versioninfo;	/* emit only version info */
 char *user;		/* the name of the invoking user */
+char *program_name;	/* the name to prefix error messages with */
 
 static char *lockfile;		/* name of lockfile */
 static int querystatus;		/* status of query */
@@ -88,6 +90,11 @@ int main (int argc, char **argv)
     struct query *ctl;
     FILE	*lockfp;
     pid_t pid;
+
+    if ((program_name = strrchr(argv[0], '/')) != NULL)
+	++program_name;
+    else
+	program_name = argv[0];
 
     if ((user = getenv("USER")) == (char *)NULL)
         user = getenv("LOGNAME");
@@ -345,12 +352,11 @@ int main (int argc, char **argv)
 		    namerec = gethostbyname(ctl->servernames->id);
 		    if (namerec == (struct hostent *)NULL)
 		    {
-			fprintf(stderr,
-				"fetchmail: skipping %s poll, ",
+			error(0, errno,
+				"skipping %s poll, ",
 				ctl->servernames->id);
 			if (errno)
 			{
-			    perror("general error");
 			    if (errno == ENETUNREACH)
 				break;	/* go to sleep */
 			}
@@ -421,7 +427,7 @@ int main (int argc, char **argv)
 		signal(SIGALRM, donothing);
 		pause();
 		if (lastsig == SIGHUP)
-		    (void) fputs("fetchmail: awakened by SIGHUP\n", stderr);
+		    (void) error(0, 0, "awakened by SIGHUP");
 	    }
 
 	    if (outlevel == O_VERBOSE)
@@ -639,7 +645,7 @@ void termhook(int sig)
      */
 
     if (sig != 0)
-	fprintf(stderr, "terminated with signal %d\n", sig);
+        error(0, 0, "terminated with signal %d\n", sig);
     else
 	/* terminate all SMTP connections cleanly */
 	for (ctl = querylist; ctl; ctl = ctl->next)
@@ -706,7 +712,7 @@ static int query_host(struct query *ctl)
 	return(doIMAP(ctl));
 	break;
     default:
-	fprintf(stderr,"fetchmail: unsupported protocol selected.\n");
+	error(0, 0, "unsupported protocol selected.");
 	return(PS_PROTOCOL);
     }
 }
@@ -852,11 +858,11 @@ int openmailpipe (char **argv)
     }
 
     if (pipe(pipefd) < 0) {
-	perror("fetchmail: openmailpipe: pipe");
+	error(0, errno, "openmailpipe: pipe");
 	return(-1);
     }
     if ((childpid = fork()) < 0) {
-	perror("fetchmail: openmailpipe: fork");
+	error(0, errno, "openmailpipe: fork");
 	return(-1);
     }
     else if (childpid == 0) {
@@ -865,14 +871,14 @@ int openmailpipe (char **argv)
 	close(pipefd[1]);  /* close the 'write' end of the pipe */
 	close(0);          /* get rid of inherited stdin */
 	if (dup(pipefd[0]) != 0) {
-	    fputs("fetchmail: openmailpipe: dup() failed\n",stderr);
-	    exit(1);
+	    error(0, errno, "openmailpipe: dup");
+	    _exit(1);
 	}
 
 	execv(argv[0], argv + 1);
 
 	/* if we got here, an error occurred */
-	perror("fetchmail: openmailpipe: exec");
+	error(0, errno, "openmailpipe: exec");
 	_exit(PS_SYNTAX);
 
     }
@@ -890,7 +896,7 @@ int fd;
     int childpid;
 
     if ((err = close(fd)) != 0)
-	perror("fetchmail: closemailpipe: close failed");
+	error(0, errno, "closemailpipe: close");
 
     childpid = wait(&status);
 
@@ -901,7 +907,7 @@ int fd;
      */
     if (WIFEXITED(status) == 0 || WEXITSTATUS(status) != 0)
     {
-	perror("fetchmail: MDA exited abnormally or returned nonzero status");
+	error(0, errno, "MDA exited abnormally or returned nonzero status");
 	err = -1;
     }
 #endif

@@ -186,6 +186,5 @@ restore_tty_state()
 RETSIGTYPE sigint_handler ()
 {
   restore_tty_state();
-  fputs("\nCaught signal... bailing out.\n", stderr);
-  exit(1);
+  error(1, 0, "\nCaught signal... bailing out.");
 }

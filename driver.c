@@ -9,6 +9,7 @@
 #include  <config.h>
 #include  <stdio.h>
 #include  <setjmp.h>
+#include  <errno.h>
 #include  <ctype.h>
 #include  <string.h>
 #if defined(STDC_HEADERS)
@@ -157,8 +158,8 @@ static int is_host_alias(const char *name, struct query *ctl)
 	default:
 	    if (outlevel != O_SILENT)
 		putchar('\n');	/* terminate the progress message */
-	    fprintf(stderr,
-		"fetchmail: nameserver failure while looking for `%s' during poll of %s.\n",
+	    error(0, 0,
+		"nameserver failure while looking for `%s' during poll of %s.",
 		name, ctl->servernames->id);
 	    ctl->errcount++;
 	    longjmp(restart, 2);	/* try again next poll cycle */
@@ -188,8 +189,8 @@ static int is_host_alias(const char *name, struct query *ctl)
 	case NO_RECOVERY:	/* non-recoverable name server error */
 	case TRY_AGAIN:		/* temporary error on authoritative server */
 	default:
-	    fprintf(stderr,
-		"fetchmail: nameserver failure while looking for `%s' during poll of %s.\n",
+	    error(0, 0,
+		"nameserver failure while looking for `%s' during poll of %s.",
 		name, ctl->servernames->id);
 	    ctl->errcount++;
 	    longjmp(restart, 2);	/* try again next poll cycle */
@@ -535,7 +536,7 @@ struct query *ctl;	/* query control record */
 
 		if (mboxfd < 0)
 		{
-		    fprintf(stderr, "fetchmail: MDA open failed\n");
+		    error(0, 0, "MDA open failed");
 		    return(PS_IOERR);
 		}
 
@@ -549,7 +550,7 @@ struct query *ctl;	/* query control record */
 		if (ctl->mda[0] == '\0'	&& ((sinkfp = smtp_open(ctl)) == NULL))
 		{
 		    free_str_list(&xmit_names);
-		    fprintf(stderr, "fetchmail: SMTP connect failed\n");
+		    error(0, 0, "SMTP connect failed");
 		    return(PS_SMTP);
 		}
 
@@ -588,13 +589,13 @@ struct query *ctl;	/* query control record */
 		    {
 			bad_addresses++;
 			idp->val.num = 0;
-			fprintf(stderr, 
-				"fetchmail: SMTP listener doesn't like recipient address `%s'\n", idp->id);
+			error(0, 0, 
+				"SMTP listener doesn't like recipient address `%s'", idp->id);
 		    }
 		if (!good_addresses && SMTP_rcpt(sinkfp, user) != SM_OK)
 		{
-		    fprintf(stderr, 
-			    "fetchmail: can't even send to calling user!\n");
+		    error(0, 0, 
+			    "can't even send to calling user!");
 		    return(PS_SMTP);
 		}
 
@@ -631,7 +632,7 @@ struct query *ctl;	/* query control record */
 	    {
 		free(headers);
 		headers = NULL;
-		perror("fetchmail: writing RFC822 headers");
+		error(0, errno, "writing RFC822 headers");
 		if (ctl->mda[0])
 		{
 		    closemailpipe(mboxfd);
@@ -719,7 +720,7 @@ struct query *ctl;	/* query control record */
 	    free(bufp);
 	if (n < 0)
 	{
-	    perror("fetchmail: writing message text");
+	    error(0, errno, "writing message text");
 	    if (ctl->mda[0])
 	    {
 		closemailpipe(mboxfd);
@@ -749,7 +750,7 @@ struct query *ctl;	/* query control record */
 	/* write message terminator */
 	if (SMTP_eom(sinkfp) != SM_OK)
 	{
-	    fputs("fetchmail: SMTP listener refused delivery\n", stderr);
+	    error(0, 0, "SMTP listener refused delivery");
 	    return(PS_SMTP);
 	}
     }
@@ -785,7 +786,7 @@ const char *canonical;	/* server name */
     free (ticket);
     if (rem != KSUCCESS)
     {
-	fprintf (stderr, "fetchmail: kerberos error %s\n", (krb_get_err_text (rem)));
+	error(0, 0, "kerberos error %s", (krb_get_err_text (rem)));
 	return (PS_ERROR);
     }
     return (0);
@@ -798,6 +799,7 @@ struct query *ctl;		/* parsed options with merged-in defaults */
 const struct method *proto;	/* protocol method table */
 {
     int ok, js;
+    char *msg;
     void (*sigsave)();
 
 #ifndef KERBEROS_V4
@@ -844,8 +846,8 @@ const struct method *proto;	/* protocol method table */
 
     if ((js = setjmp(restart)) == 1)
     {
-	fprintf(stderr,
-		"fetchmail: timeout after %d seconds waiting for %s.\n",
+	error(0, 0,
+		"timeout after %d seconds waiting for %s.",
 		ctl->timeout, ctl->servernames->id);
 	ok = PS_ERROR;
     }
@@ -864,7 +866,7 @@ const struct method *proto;	/* protocol method table */
 	if ((sockfp = Socket(ctl->servernames->id,
 			     ctl->port ? ctl->port : protocol->port)) == NULL)
 	{
-	    perror("fetchmail, connecting to host");
+	    error(0, errno, "connecting to host");
 	    ok = PS_SOCKET;
 	    goto closeUp;
 	}
@@ -904,18 +906,20 @@ const struct method *proto;	/* protocol method table */
 	/* show user how many messages we downloaded */
 	if (outlevel > O_SILENT)
 	    if (count == 0)
-		fprintf(stderr, "No mail from %s@%s\n", 
+		error(0, 0, "No mail from %s@%s", 
 			ctl->remotename,
 			ctl->servernames->id);
 	    else
 	    {
-		fprintf(stderr, "%d message%s", count, count > 1 ? "s" : ""); 
 		if (new != -1 && (count - new) > 0)
-		    fprintf(stderr, " (%d seen)", count-new);
-		fprintf(stderr,
-			" from %s@%s.\n",
-			ctl->remotename,
-			ctl->servernames->id);
+		    error(0, 0, "%d message%s (%d seen) from %s@%s.",
+		    		count, count > 1 ? "s" : "", count-new,
+				ctl->remotename,
+				ctl->servernames->id);
+		else
+		    error(0, 0, "%d message%s from %s@%s.", count, count > 1 ? "s" : "",
+				ctl->remotename,
+				ctl->servernames->id);
 	    }
 
 	/* we may need to get sizes in order to check message limits */
@@ -1083,33 +1087,33 @@ const struct method *proto;	/* protocol method table */
     switch (ok)
     {
     case PS_SOCKET:
-	fputs("fetchmail: socket", stderr);
+	msg = "socket";
 	break;
     case PS_AUTHFAIL:
-	fputs("fetchmail: authorization", stderr);
+	msg = "authorization";
 	break;
     case PS_SYNTAX:
-	fputs("fetchmail: missing or bad RFC822 header", stderr);
+	msg = "missing or bad RFC822 header";
 	break;
     case PS_IOERR:
-	fputs("fetchmail: MDA", stderr);
+	msg = "MDA";
 	break;
     case PS_ERROR:
-	fputs("fetchmail: client/server synchronization", stderr);
+	msg = "client/server synchronization";
 	break;
     case PS_PROTOCOL:
-	fputs("fetchmail: client/server protocol", stderr);
+	msg = "client/server protocol";
 	break;
     case PS_SMTP:
-	fputs("fetchmail: SMTP transaction", stderr);
+	msg = "SMTP transaction";
 	break;
     case PS_UNDEFINED:
-	fputs("fetchmail: undefined", stderr);
+	error(0, 0, "undefined");
 	break;
     }
     if (ok==PS_SOCKET || ok==PS_AUTHFAIL || ok==PS_SYNTAX || ok==PS_IOERR
 		|| ok==PS_ERROR || ok==PS_PROTOCOL || ok==PS_SMTP)
-	fprintf(stderr, " error while talking to %s\n", ctl->servernames->id);
+	error(0, 0, "%s error while talking to %s", msg, ctl->servernames->id);
 
 closeUp:
     signal(SIGVTALRM, sigsave);

@@ -204,7 +204,7 @@ const char *pathname;		/* pathname for the configuration file */
 	if (errno == ENOENT) 
 	    return(0);
 	else {
-	    perror(pathname);
+	    error(0, errno, "lstat: %s", pathname);
 	    return(PS_IOERR);
 	}
     }
@@ -245,7 +245,7 @@ const char *pathname;		/* pathname for the configuration file */
 
     /* Open the configuration and feed it to the lexer. */
     if ((yyin = fopen(pathname,"r")) == (FILE *)NULL) {
-	perror(pathname);
+	error(0, errno, "open: %s", pathname);
 	return(PS_IOERR);
     }
 

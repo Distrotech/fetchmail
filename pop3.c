@@ -19,7 +19,7 @@
 #include  "socket.h"
 #include  "fetchmail.h"
 
-#define PROTOCOL_ERROR	{fputs("fetchmail: protocol error\n", stderr); return(PS_ERROR);}
+#define PROTOCOL_ERROR	{error(0, 0, "protocol error"); return(PS_ERROR);}
 
 static int last;
 
@@ -73,7 +73,7 @@ int pop3_getauth(FILE *sockfp, struct query *ctl, char *greeting)
 	for (start = greeting;  *start != 0 && *start != '<';  start++)
 	    continue;
 	if (*start == 0) {
-	    fprintf(stderr,"Required APOP timestamp not found in greeting\n");
+	    error(0, 0, "Required APOP timestamp not found in greeting");
 	    return(PS_AUTHFAIL);
 	}
 
@@ -81,7 +81,7 @@ int pop3_getauth(FILE *sockfp, struct query *ctl, char *greeting)
 	for (end = start;  *end != 0  && *end != '>';  end++)
 	    continue;
 	if (*end == 0 || end == start + 1) {
-	    fprintf(stderr,"Timestamp syntax error in greeting\n");
+	    error(0, 0, "Timestamp syntax error in greeting");
 	    return(PS_AUTHFAIL);
 	}
 	else
@@ -112,7 +112,7 @@ int pop3_getauth(FILE *sockfp, struct query *ctl, char *greeting)
 	break;
 
     default:
-	fprintf(stderr,"Undefined protocol request in POP3_auth\n");
+	error(0, 0, "Undefined protocol request in POP3_auth");
     }
 
     /* we're approved */

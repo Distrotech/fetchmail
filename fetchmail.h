@@ -162,9 +162,11 @@ extern int smtp_response;	/* numeric value of SMTP response code */
 
 /* prototypes for globally callable functions */
 #if defined(HAVE_STDARG_H)
+void error (int status, int errnum, const char *format, ...);
 void gen_send (FILE *sockfp, char *, ... );
 int gen_transact (FILE *sockfp, char *, ... );
 #else
+void error ();
 void gen_send ();
 int gen_transact ();
 #endif
