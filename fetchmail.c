@@ -694,6 +694,12 @@ static int load_params(int argc, char **argv, int optind)
 	    ctl = hostalloc(&cmd_opts);
 	    ctl->server.pollname = xstrdup(argv[optind]);
 
+	    /* avoid making pathological circular lists */
+	    ctl->server.localdomains = (struct idlist *)NULL;
+	    ctl->localnames = (struct idlist *)NULL;
+	    ctl->mailboxes = (struct idlist *)NULL;
+	    ctl->smtphunt = (struct idlist *)NULL;
+
 	foundit:
 	    ctl->active = TRUE;
 	}

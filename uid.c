@@ -277,7 +277,9 @@ int delete_str(struct idlist **idl, int num)
 void append_str_list(struct idlist **idl, struct idlist **nidl)
 /* append nidl to idl (does not copy *) */
 {
-    if ((*idl) == (struct idlist *)NULL)
+    if ((*nidl) == (struct idlist *)NULL)
+	return;
+    else if ((*idl) == (struct idlist *)NULL)
 	*idl = *nidl;
     else if ((*idl)->next == (struct idlist *)NULL)
 	(*idl)->next = *nidl;
