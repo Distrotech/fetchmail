@@ -13,6 +13,8 @@
 #if defined(STDC_HEADERS)
 #include  <stdlib.h>
 #include  <limits.h>
+#else
+#include  <ctype.h>
 #endif
 
 #include "getopt.h"
@@ -159,7 +161,39 @@ static int xatoi(char *s, int *errflagptr)
 
     return (int) value;  /* shut up, I know what I'm doing */
 #else
-    return atoi(s);
+    int	i;
+    char *dp;
+# if defined (STDC_HEADERS)
+    size_t	len;
+# else
+    int		len;
+# endif
+
+    /* We do only base 10 conversions here (atoi)! */
+
+    len = strlen(s);
+    /* check for leading white spaces */
+    for (i = 0; (i < len) && isspace(s[i]); i++)
+    	;
+
+    dp = &s[i];
+
+    /* check for +/- */
+    if (i < len && (s[i] == '+' || s[i] == '-'))	i++;
+
+    /* skip over digits */
+    for ( /* no init */ ; (i < len) && isdigit(s[i]); i++)
+    	;
+
+    /* check for trailing garbage */
+    if (i != len) {
+    	(void) fprintf(stderr, "String '%s' is not a valid number string.\n", s);
+    	(*errflagptr)++;
+	return 0;
+    }
+
+    /* atoi should be safe by now, except for number range over/underflow */
+    return atoi(dp);
 #endif
 }
 
