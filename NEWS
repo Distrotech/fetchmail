@@ -14,6 +14,7 @@ fetchmail-5.0.0 ():
 * Spanish-language update by Javier Kohen.
 * Danish summary and description for specgen.sh.
 * Henrik Storner's fix for the PGP/mimedecode problem.
+* Fix netrc search code to be able to search >1 host entry per file.
 
 There are 267 people on fetchmail-friends and 365 on fetchmail-announce.
 

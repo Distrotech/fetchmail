@@ -124,6 +124,11 @@ rfc822: rfc822.c
 unmime: unmime.c base64.c rfc822.c xmalloc.c error.c
 	$(CC) -DSTANDALONE -DHAVE_CONFIG_H -I. -g -o $@ $^
 
+
+# Stand-alone netrc tester
+netrc: netrc.c xmalloc.o error.o
+	$(CC) -DSTANDALONE -DHAVE_CONFIG_H -I. -g -o $@ $^
+
 .c.o:
 	$(CC) $(defines) -c $(CPFLAGS) -I$(srcdir) -I. $(CEFLAGS) $(CFLAGS) $<
 

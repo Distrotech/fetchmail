@@ -23,6 +23,8 @@
 /* Normally defined in xmalloc.c */
 # define xmalloc malloc
 # define xrealloc realloc
+
+char *program_name = "netrc";
 #endif
 
 /* Maybe add NEWENTRY to the account information list, LIST.  NEWENTRY is
@@ -289,9 +291,9 @@ parse_netrc (file)
 /* Return the netrc entry from LIST corresponding to HOST.  NULL is
    returned if no such entry exists. */
 netrc_entry *
-search_netrc (list, host)
+search_netrc (list, host, account)
      netrc_entry *list;
-     char *host;
+     char *host, *account;
 {
     /* Look for the HOST in LIST. */
     while (list)
@@ -300,9 +302,10 @@ search_netrc (list, host)
 	    /* We hit the default entry. */
 	    break;
 
-	else if (!strcmp (list->host, host))
-	    /* We found a matching entry. */
-	    break;
+	else if (!strcmp(list->host, host))
+	    if (!list->account || !strcmp(list->account, account))
+		/* We found a matching entry. */
+		break;
 
 	list = list->next;
     }
@@ -324,18 +327,13 @@ main (argc, argv)
      char **argv;
 {
     struct stat sb;
-    char *program_name, *file, *target;
+    char *program_name, *file, *host, *account;
     netrc_entry *head, *a;
-
-    if (argc < 2)
-    {
-	fprintf (stderr, "Usage: %s NETRC [HOSTNAME]...\n", argv[0]);
-	exit (1);
-    }
 
     program_name = argv[0];
     file = argv[1];
-    target = argv[2];
+    host = argv[2];
+    account = argv[3];
 
     if (stat (file, &sb))
     {
@@ -351,32 +349,25 @@ main (argc, argv)
 	exit (1);
     }
 
-    if (argc > 2)
+    if (host && account)
     {
 	int i, status;
 	status = 0;
-	for (i = 2; i < argc; i++)
+
+	printf("Host: %s, Account: %s\n", host, account);
+	    
+	a = search_netrc (head, host, account);
+	if (a)
 	{
-	    /* Print out the host that we are checking for. */
-	    fputs (argv[i], stdout);
-
-	    a = search_netrc (head, argv[i]);
-	    if (a)
+	    /* Print out the password (if any). */
+	    if (a->password)
 	    {
-		/* Print out the account and password (if any). */
 		fputc (' ', stdout);
-		fputs (a->account, stdout);
-		if (a->password)
-		{
-		    fputc (' ', stdout);
-		    fputs (a->password, stdout);
-		}
+		fputs (a->password, stdout);
 	    }
-	    else
-		status = 1;
-
-	    fputc ('\n', stdout);
 	}
+	fputc ('\n', stdout);
+
 	exit (status);
     }
 

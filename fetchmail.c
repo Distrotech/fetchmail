@@ -428,9 +428,8 @@ int main (int argc, char **argv)
 		netrc_entry *p;
 
 		/* look up the pollname and account in the .netrc file. */
-		p = search_netrc(netrc_list, ctl->server.pollname);
-		while (p && strcmp(p->account, ctl->remotename))
-		    p = search_netrc(p->next, ctl->remotename);
+		p = search_netrc(netrc_list,
+				 ctl->server.pollname, ctl->remotename);
 		/* if we find a matching entry with a password, use it */
 		if (p && p->password)
 		    ctl->password = xstrdup(p->password);
@@ -438,9 +437,8 @@ int main (int argc, char **argv)
 		/* otherwise try with "via" name if there is one */
 		else if (ctl->server.via)
 		{
-		    p = search_netrc(netrc_list, ctl->server.via);
-		    while (p && strcmp(p->account, ctl->remotename))
-		        p = search_netrc(p->next, ctl->remotename);
+		    p = search_netrc(netrc_list, 
+				     ctl->server.via, ctl->remotename);
 		    if (p && p->password)
 		        ctl->password = xstrdup(p->password);
 		}

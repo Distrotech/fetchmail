@@ -59,7 +59,7 @@ netrc_entry *parse_netrc __P((char *file));
 
 /* Return the netrc entry from LIST corresponding to HOST.  NULL is
    returned if no such entry exists. */
-netrc_entry *search_netrc __P((netrc_entry *list, char *host));
+netrc_entry *search_netrc __P((netrc_entry *list, char *host, char *account));
 __END_DECLS
 
 #endif /* _NETRC_H_ */
