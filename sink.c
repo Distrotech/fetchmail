@@ -604,6 +604,9 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	const char	*ap;
 	char		options[MSGBUFSIZE]; 
 	char		addr[HOSTLEN+USERNAMELEN+1];
+#ifdef EXPLICIT_BOUNCE
+	char		**from_responses;
+#endif /* EXPLICIT_BOUNCE */
 	int		total_addresses;
 
 	/*
@@ -683,6 +686,9 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	total_addresses = 0;
 	for (idp = msg->recipients; idp; idp = idp->next)
 	    total_addresses++;
+#ifdef EXPLICIT_BOUNCE_ON_BAD_ADDRESS
+	xalloca(from_responses, char **, sizeof(char *) * total_addresses);
+#endif /* EXPLICIT_BOUNCE_ON_BAD_ADDRESS */
 	for (idp = msg->recipients; idp; idp = idp->next)
 	    if (idp->val.status.mark == XMIT_ACCEPT)
 	    {
@@ -710,6 +716,22 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		{
 		    handle_smtp_report(ctl, msg);
 
+#ifdef EXPLICIT_BOUNCE_ON_BAD_ADDRESS
+#ifdef HAVE_SNPRINTF
+		    snprintf(errbuf, sizeof(errbuf), "%s: %s",
+				    idp->id, smtp_response);
+#else
+		    strncpy(errbuf, idp->id, sizeof(errbuf));
+		    strcat(errbuf, ": ");
+		    strcat(errbuf, smtp_response);
+#endif /* HAVE_SNPRINTF */
+
+		    xalloca(from_responses[*bad_addresses], 
+			    char *, 
+			    strlen(errbuf)+1);
+		    strcpy(from_responses[*bad_addresses], errbuf);
+#endif /* EXPLICIT_BOUNCE_ON_BAD_ADDRESS */
+
 		    (*bad_addresses)++;
 		    idp->val.status.mark = XMIT_RCPTBAD;
 		    if (outlevel >= O_VERBOSE)
@@ -718,6 +740,17 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 			      ctl->listener, addr);
 		}
 	    }
+
+#ifdef EXPLICIT_BOUNCE_ON_BAD_ADDRESS
+	/*
+	 * This should not be necessary, because the SMTP listener itself
+	 * should genrate a bounce for the bad address.
+	 */
+	if (*bad_addresses)
+	    send_bouncemail(ctl, msg, XMIT_RCPTBAD,
+                            "Some addresses were rejected by the MDA fetchmail forwards to.\r\n",
+                            *bad_addresses, from_responses);
+#endif /* EXPLICIT_BOUNCE_ON_BAD_ADDRESS */
 
 	/*
 	 * It's tempting to do local notification only if bouncemail was
