@@ -17,7 +17,7 @@
 #include <ctype.h>
 #include "fetchmail.h"
 
-static inline unsigned char unhex(unsigned char c)
+static unsigned char unhex(unsigned char c)
 {
   if ((c >= '0') && (c <= '9'))
     return (c - '0');
