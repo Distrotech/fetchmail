@@ -14,10 +14,12 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.2.5 ()
+fetchmail-4.2.5 (Mon Sep 22 23:38:46 EDT 1997)
 * Greg Stark's patch for better autoconfiguration on mixed libc5/libc6 systems.
 * We no longer mess with CFLAGS/LDFLAGS to get Kerberos support linked.
 * fetchmail now generates its own Received header for bug-tracking.
+* Improved handling of IMAP4rev1 CAPABILITY response.
+* Better code to avoid buffer overruns on long To/Cc/Bcc headers.
 
 There are 284 people on the fetchmail-friends list.
 
