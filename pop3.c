@@ -486,11 +486,36 @@ static int pop3_is_old(int sock, struct query *ctl, int num)
 			    str_find (&ctl->newsaved, num)));
 }
 
+#ifdef UNUSED
+/*
+ * We could use this to fetch headers only as we do for IMAP.  The trouble 
+ * is that there's no way to fetch the body only.  So the following RETR 
+ * would have to re-fetch the header.  Enough messages have longer headers
+ * than bodies to make this a net loss.
+ */
+static int pop_fetch_headers(int sock, struct query *ctl,int number,int *lenp)
+/* request headers of nth message */
+{
+    int ok;
+    char buf[POPBUFSIZE+1];
+
+    /* phase = PHASE_FETCH */
+
+    gen_send(sock, "TOP %d 0", number);
+    if ((ok = pop3_ok(sock, buf)) != 0)
+	return(ok);
+
+    *lenp = -1;		/* we got sizes from the LIST response */
+
+    return(PS_SUCCESS);
+}
+#endif /* UNUSED */
+
 static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
 /* request nth message */
 {
     int ok;
-    char buf [POPBUFSIZE+1];
+    char buf[POPBUFSIZE+1];
 
     /* phase = PHASE_FETCH */
 
@@ -500,7 +525,7 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
 
     *lenp = -1;		/* we got sizes from the LIST response */
 
-    return(0);
+    return(PS_SUCCESS);
 }
 
 static int pop3_delete(int sock, struct query *ctl, int number)
