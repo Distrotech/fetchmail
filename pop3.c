@@ -714,6 +714,7 @@ static int pop3_logout(int sock, struct query *ctl)
     /*
      * Just in case the server marks messages deleted when seen.
      * Yes, this has been reported, in the MercuryP/NLM server.
+     * It's even legal under RFC 1939 (section 8) as a site policy.
      */
     if (ctl->keep)
 	gen_transact(sock, "RSET");
