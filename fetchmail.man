@@ -409,12 +409,12 @@ errors; the nonzero status tells fetchmail that delivery failed and
 prevents the message from being deleted off the server.  If
 \fIfetchmail\fR is running as root, it sets its userid to that of the
 target user while delivering mail through an MDA.  Some possible MDAs
-are "/usr/sbin/sendmail -i -oem -f %F %T", "/usr/bin/deliver" and
+are "/usr/sbin/sendmail -i -f %F %T", "/usr/bin/deliver" and
 "/usr/bin/procmail -d %T" (but the latter is usually redundant as it's
 what SMTP listeners normally forward to).  Local delivery addresses
 will be inserted into the MDA command wherever you place a %T; the
 mail message's From address will be inserted where you place an %F.
-Do \fInot\fR use an MDA invocation like "sendmail -i -oem -t" that
+Do \fInot\fR use an MDA invocation like "sendmail -i -t" that
 dispatches on the contents of To/Cc/Bcc, it will create mail loops and
 bring the just wrath of many postmasters down upon your head.
 .TP 
