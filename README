@@ -19,7 +19,7 @@ Features of POP include:
 	  one or more hosts at a specified interval.
 
 	* Delivery via either file-append with mandatory locking or an
-	  MDA you specify.
+	  MDA you specify, or via SMTP to the client machine's port 25.
 
 	* From:, To:, Cc:, and Reply-To: headers are rewritten so that 
 	  usernames relative to the popclient host become fully-qualified
