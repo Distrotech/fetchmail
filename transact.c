@@ -459,8 +459,8 @@ int readheaders(int sock,
 	    if (!isspace(line[0]) && !strchr(line, ':'))
 	    {
 		headers_ok = TRUE;
-		free(line);
 		has_nuls = (linelen != strlen(line));
+		free(line);
 		goto process_headers;
 	    }
 
