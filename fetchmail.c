@@ -104,7 +104,7 @@ char **argv;
 	}
 	else
 	{
-	    fprintf(stderr,"I can't find your name and home directory!\n");
+	    fprintf(stderr,"fetchmail: can't find your name and home directory!\n");
 	    exit(PS_UNDEFINED);
 	}
     }
@@ -408,7 +408,8 @@ char **argv;
      * reflect the status of that transaction.
      */
     do {
-	for (hostp = hostlist; hostp; hostp = hostp->next) {
+	for (hostp = hostlist; hostp; hostp = hostp->next)
+	{
 	    if (hostp->active && !(implicitmode && hostp->skip))
 	    {
 		popstatus = query_host(hostp);
@@ -416,12 +417,13 @@ char **argv;
 	    }
 	}
 
-	sleep(poll_interval);
+	if (sleep(poll_interval))
+	    (void) fputs("fetchmail: awakened by SIGHUP\n", stderr);
     } while
 	(poll_interval);
 
     if (outlevel == O_VERBOSE)
-	fprintf(stderr, "normal termination, status %d\n", popstatus);
+	fprintf(stderr, "fetchmail: normal termination, status %d\n", popstatus);
 
     termhook(0);
     exit(popstatus);

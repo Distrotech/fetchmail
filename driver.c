@@ -41,6 +41,7 @@ static struct method *protocol;
 
 static int alarmed;	/* a flag to indicate that SIGALRM happened */
 static int mytimeout;	/* server-nonresponse timeout for current query */
+static char *srvname;	/* current server name for timeout message */
 
 char tag[TAGLEN];
 static int tagnum;
@@ -588,6 +589,7 @@ struct method *proto;
     void (*sigsave)();
     int num, count, deletions = 0;
 
+    srvname = queryctl->servername;
     alarmed = 0;
     sigsave = signal(SIGALRM, alarm_handler);
     alarm (mytimeout = queryctl->timeout);
@@ -971,5 +973,6 @@ alarm_handler (int signal)
 {
     alarmed = 1;
     fprintf(stderr,
-	    "fetchmail: timeout after %d seconds.\n", mytimeout);
+	    "fetchmail: timeout after %d seconds waiting for %s.\n",
+	    mytimeout, srvname);
 }

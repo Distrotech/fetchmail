@@ -31,7 +31,7 @@ int n;
 
   p = (XMALLOCTYPE *) malloc(n);
   if (p == (XMALLOCTYPE *) 0) {
-    fputs("malloc failed\n",stderr);
+    fputs("fetchmail: malloc failed\n",stderr);
     exit(PS_UNDEFINED);
   }
   return(p);

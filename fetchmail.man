@@ -293,7 +293,7 @@ a mailserver does not send a greeting message or respond to commands for
 the given number of seconds, \fIfetchmail\fR will hang up on it.
 Without such a timeout \fIfetchmail\fR might hang up indefinitely
 trying to fetch mail from a down host.  This would be particularly
-annoying for a server running in background.
+annoying for a \fIfetchmail\fR running in background.
 .PP
 The
 .B -L
@@ -321,7 +321,8 @@ server are being fetched (and deleted) even when you don't specify
 .PP
 One could be that you're using POP2.  The POP2 protocol includes no
 representation of `new' or `old' state in messages, so \fIfetchmail\fR
-must treat all messages as new all the time.  POP2 is obsolete.
+must treat all messages as new all the time.  But POP2 is obsolete, so
+this is unlikely.
 .PP
 Under POP3, blame RFC1725.  That version of the POP3 protocol
 specification removed the LAST command, and some POP servers follow it
@@ -329,7 +330,7 @@ specification removed the LAST command, and some POP servers follow it
 and watching the response to LAST early in the query).  The
 \fIfetchmail\fR code tries to compensate by using POP3's UID feature,
 storing the identifiers of messages seen in each session until the
-next session,in the \fI.fetchids\fR file.  But this doesn't track
+next session, in the \fI.fetchids\fR file.  But this doesn't track
 messages seen with other clients, or read but not deleted directly with
 a mailer on the host.  A better solution would be to switch to IMAP.
 .PP
@@ -429,7 +430,7 @@ Legal protocol identifiers are
     pop3 (or POP3)
     imap (or IMAP)
     apop (or APOP)
-    kpop (or APOP)
+    kpop (or KPOP)
 
 .PP
 Legal authentication types are `password' or `kerberos'.  The former
@@ -448,7 +449,7 @@ it resemble English.  They're ignored, but but can make entries much
 easier to read at a glance.  The punctuation characters ':', ';' and
 ',' are also ignored.
 .PP
-The words \fBhere\fR and \fBthere\fR also have useful English-like
+The words \fBhere\fR and \fBthere\fR have useful English-like
 significance.  Normally `\fBuser eric is esr\fR' would mean that 
 mail for the remote user \fBeric\fR is to be delivered to \fBesr\fR,
 but you can make this clearer by saying `\fBuser eric there is esr here\fR',
@@ -499,7 +500,7 @@ If you need to include whitespace in a parameter string, enclose the
 string in double quotes.  Thus:
 
 .nf
-  server mail.provider.net with proto pop3
+  server mail.provider.net with proto pop3:
         user jsmith there has password "u can't krak this"
                     is jws here and wants mda "/bin/mail %s"
 .fi
@@ -523,7 +524,7 @@ likely to be useful when running fetchmail in daemon mode as root).
 The \fBuser\fR keyword leads off a user description, and every user
 description except optionally the first one must include it.  (If the
 first description lacks the \fBuser\fR keyword, the name of the
-invoking user is used .) Here's a contrived example:
+invoking user is used.) Here's a contrived example:
 
 .nf
   server pop.provider.net proto pop3 port 3111
@@ -543,7 +544,7 @@ to be specifying multiple users per server unless running it as root
 (thus the \fBpass gumshoe\fR would try to fetch root's mail on
 pop-provider.net, which is probably not what you want).
 In any case, we strongly recommend always having an explicit
-\fBuser\fR clause when specifying nultiple users for server.
+\fBuser\fR clause when specifying multiple users for server.
 .SH EXIT CODES
 To facilitate the use of 
 .I fetchmail
@@ -583,9 +584,8 @@ The
 .I fetchmail.
 run failed while trying to do an SMTP port open or transaction.
 .IP 10
-Something totally undefined occured.  This is usually caused by a bug within
-.I fetchmail.
-Do let me know if this happens.
+Internal error.  You should see a message on standard error with
+details.
 .PP
 When
 .I fetchmail
