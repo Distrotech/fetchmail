@@ -380,7 +380,7 @@ int main (int argc, char **argv)
 	    {
 		struct itimerval ntimeout;
 
-		ntimeout.it_interval.tv_sec = ntimeout.it_interval.tv_sec = 0;
+		ntimeout.it_interval.tv_sec = ntimeout.it_interval.tv_usec = 0;
 		ntimeout.it_value.tv_sec  = poll_interval;
 		ntimeout.it_value.tv_usec = 0;
 
