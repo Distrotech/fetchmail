@@ -503,14 +503,15 @@ int main (int argc, char **argv)
 
 #if defined(linux) && !INET6
 		if (ctl->server.monitor)
-		    {
-			/* Allow some time for the link to quiesce.  One
-			 * second is usually sufficient, three is safe.
-			 * Note:  this delay is important - don't remove!
-			 */
-			sleep(3);
-			interface_note_activity(&ctl->server);
-		    }
+		{
+		    /*
+		     * Allow some time for the link to quiesce.  One
+		     * second is usually sufficient, three is safe.
+		     * Note:  this delay is important - don't remove!
+		     */
+		    sleep(3);
+		    interface_note_activity(&ctl->server);
+		}
 #endif /* defined(linux) && !INET6 */
 	    }
 	}
