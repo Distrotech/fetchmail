@@ -1970,15 +1970,6 @@ queries more than one host, return status is 0 if \fIany\fR query
 successfully retrieved mail. Otherwise the returned error status is
 that of the last host queried.
 
-.SH AUTHOR
-Eric S. Raymond <esr@snark.thyrsus.com>.  Too many other people to
-name here have contributed code and patches. 
-This program is descended from and replaces 
-.IR popclient , 
-by Carl Harris <ceharris@mal.com>; the internals have become quite different, 
-but some of its interface design is directly traceable to that
-ancestral program.
-
 .SH FILES
 .TP 5
 ~/.fetchmailrc
@@ -2047,17 +2038,15 @@ mailserver-side filter that consolidates the contents of all envelope
 headers into a single one (procmail, mailagent, or maildrop can be
 programmed to do this fairly easily).
 .PP
-Use of some of these protocols (POP2, POP3, or POP4 with the password
-authentication type, if the server doesn't have CRAM-MD5 capability)
-requires that the program send unencrypted passwords over the TCP/IP
-connection to the mailserver.  This creates a risk that name/password
-pairs might be snaffled with a packet sniffer or more sophisticated
-monitoring software.  Under Linux and FreeBSD, the --interface option
-can be used to restrict polling to availability of a specific
-interface device with a specific local or remote IP address, but
-snooping is still possible if (a) either host has a network device
-that can be opened in promiscuous mode, or (b) the intervening network
-link can be tapped.
+Use of some of these protocols requires that the program send
+unencrypted passwords over the TCP/IP connection to the mailserver.
+This creates a risk that name/password pairs might be snaffled with a
+packet sniffer or more sophisticated monitoring software.  Under Linux
+and FreeBSD, the --interface option can be used to restrict polling to
+availability of a specific interface device with a specific local or
+remote IP address, but snooping is still possible if (a) either host
+has a network device that can be opened in promiscuous mode, or (b)
+the intervening network link can be tapped.
 .PP
 Use of the %F or %T escapes in an mda option could open a security
 hole, because they pass text manipulable by an attacker to a shell
@@ -2098,6 +2087,15 @@ fetchmail-friends list <fetchmail-friends@ccil.org>.  An HTML FAQ is
 available at the fetchmail home page; surf to
 http://www.tuxedo.org/~esr/fetchmail or do a WWW search for pages with
 `fetchmail' in their titles.
+
+.SH AUTHOR
+Eric S. Raymond <esr@snark.thyrsus.com>.  Too many other people to
+name here have contributed code and patches. 
+This program is descended from and replaces 
+.IR popclient , 
+by Carl Harris <ceharris@mal.com>; the internals have become quite different, 
+but some of its interface design is directly traceable to that
+ancestral program.
 
 .SH SEE ALSO
 mutt(1), elm(1), mail(1), sendmail(8), popd(8), imapd(8), netrc(5)
