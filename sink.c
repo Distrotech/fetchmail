@@ -455,10 +455,12 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	return(PS_REFUSED);
 
     default:	/* bounce the error back to the sender */
-	send_bouncemail(msg, XMIT_ACCEPT,
+	if (send_bouncemail(msg, XMIT_ACCEPT,
 			"General SMTP/ESMTP error.\r\n", 
-			1, responses);
-	return(PS_REFUSED);
+			1, responses))
+	    return(PS_REFUSED);
+	else
+	    return(PS_TRANSIENT);
     }
 }
 

@@ -12,6 +12,8 @@ fetchmail-4.7.6 ():
 * All bounce messages now use FQDN return paths.
 * Check for background nmode before generating oversized-message mail.  Duh!
 * Paul Murphy's improvements for SDPS.
+* Message deletion on miscellaneous 5xx SMTP errors is suppressed unless a
+  bounce can be sent.
 
 There are 263 people on fetchmail-friends and 343 on fetchmail-announce.
 
