@@ -19,6 +19,7 @@
 #include <sys/ioctl.h>
 #include <netinet/in.h>
 #include <linux/netdevice.h>
+#include <errno.h>
 #include "fetchmail.h"
 
 static struct in_addr interface_address;
@@ -45,8 +46,9 @@ static int _get_ifinfo_(int socket_fd, FILE *stats_file, const char *ifname,
 
 	/* see if the interface is up */
 	strcpy(request.ifr_name, ifname);
+	errno = 0;
 	if (ioctl(socket_fd, SIOCGIFFLAGS, &request) < 0)
-		return(FALSE);
+		error(PS_IOERR, errno, "interface status check failed");
 	if (!(request.ifr_flags & IFF_RUNNING))
 		return(FALSE);
 
