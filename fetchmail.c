@@ -566,6 +566,7 @@ int main (int argc, char **argv)
 
                 timeout.tv_sec = poll_interval;
                 timeout.tv_usec = 0;
+		lastsig = 0;
                 select(0,0,0,0, &timeout);
 #else
 		/* 
