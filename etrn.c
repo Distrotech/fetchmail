@@ -4,11 +4,12 @@
  * For license terms, see the file COPYING in this directory.
  */
 
-#include  <config.h>
+#include  "config.h"
 #include  <stdio.h>
 #include  <stdlib.h>
 #include  <assert.h>
 #include  <netdb.h>
+#include  <errno.h>
 #include  "fetchmail.h"
 #include  "smtp.h"
 #include  "socket.h"
