@@ -67,7 +67,7 @@ remote-mail retrieval and forwarding utility intended to be used over
 on-demand TCP/IP links (such as SLIP or PPP connections). It supports
 every remote-mail protocol now in use on the Internet: POP2, POP3,
 RPOP, APOP, KPOP, all flavors of <a
-href="http://www.imap.org">IMAP</a>, and ESMTP ETRN. It can even
+href="http://www.imap.org">IMAP</a>, ETRN, and ODMR. It can even
 support IPv6 and IPSEC.<P>
 
 Fetchmail retrieves mail from remote mail servers and forwards it via
@@ -169,17 +169,13 @@ Metalab remote mail tools directory</a>.
 <H1>Getting help with fetchmail:</H1>
 
 There is a fetchmail-friends list for people who want to discuss fixes
-and improvements in fetchmail and help co-develop it.  It's at <a
-href="mailto:fetchmail-friends@ccil.org">fetchmail-friends@ccil.org</a>.
-There is also an announcements-only list, <em>fetchmail-announce@ccil.org</em>.<P>
-
-Both lists are SmartList reflectors; sign up in the usual way with a
-message containing the word "subscribe" in the subject line sent to
-<a href="mailto:fetchmail-friends-request@ccil.org?subject=subscribe">
-fetchmail-friends-request@ccil.org</a> or
-<a href="mailto:fetchmail-announce-request@ccil.org?subject=subscribe">
-fetchmail-announce-request@ccil.org</a>. (Similarly, "unsubscribe"
-in the Subject line unsubscribes you, and "help" returns general list help) <p>
+and improvements in fetchmail and help co-develop it.  It's a MailMan
+list, which you can sign up for at <a
+<a href="http://lists.ccil.org/mailman/listinfo/fetchmail-friends">
+fetchmail-friends@ccil.org</a>.
+There is also an announcements-only list, 
+<a href="http://lists.ccil.org/mailman/listinfo/fetchmail-announce">
+fetchmail-announce@lists.ccil.org</em>.<P>
 
 Note: before submitting a question to the list, <strong>please read
 the <a href="fetchmail-FAQ.html">FAQ</a></strong> (especially item <a
