@@ -1065,7 +1065,7 @@ int num;		/* index of message */
 
 	/* write a line describing fetchmail's processing of the message */
 	sprintf(buf,
-	"Received: from %s\r\n\tby %s (fetchmail-%s %s) with remote id %s\r\n",
+	"Received: from %s\r\n\tby %s (fetchmail-%s %s run by %s)\r\n",
 		ctl->server.truename, 
 		fetchmailhost, 
 		RELEASE_ID,
@@ -1081,8 +1081,9 @@ int num;		/* index of message */
 	    for (idp = xmit_names; idp; idp = idp->next)
 		if (idp->val.num == XMIT_ACCEPT)
 		{
-		    sprintf(buf + strlen(buf),
-			    "\tfor <%s@%s>; ", idp->id, desthost);
+		    sprintf(buf + strlen(buf), "\tfor <%s@%s> (%s); ",
+			    idp->id, desthost,
+			    MULTIDROP(ctl) ? "multi-drop" : "single-drop");
 		    break;	/* only report first address */
 		}
 	}
