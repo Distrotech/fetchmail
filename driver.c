@@ -292,7 +292,6 @@ struct hostrec *queryctl;
     int n, oldlen;
     int inheaders;
     int lines,sizeticker;
-    time_t now;
     /* This keeps the retrieved message count for display purposes */
     static int msgnum = 0;  
 
@@ -417,13 +416,17 @@ struct hostrec *queryctl;
 		if (*cp == '\r')
 		    *cp = '\n';
 
-	    /*
-	     * Strictly speaking, we ought to replace all LFs
-	     * with CR-LF before shipping to an SMTP listener.
-	     * Since most SMTP listeners built since the mid-1980s
-	     * (and *all* Unix listeners) accept lone LF as equivalent
-	     * to CR-LF, we'll skip this particular contortion.
-	     */
+	    /* replace all LFs with CR-LF before sending to the SMTP server */
+	    if (!queryctl->mda[0])
+	    {
+		char *newheaders = malloc(1 + oldlen * 2);
+
+		if (newheaders == NULL)
+		    return(PS_IOERR);
+		oldlen = strcrlf(newheaders, headers, oldlen);
+		free(headers);
+		headers = newheaders;
+	    }
 	    if (write(mboxfd,headers,oldlen) < 0)
 	    {
 		free(headers);
@@ -441,8 +444,20 @@ struct hostrec *queryctl;
 	if (*bufp == '.' && queryctl->mda[0] == 0)
 	    write(mboxfd, ".", 1);
 
-	/* write this line to the file -- comment about CR-LF vs. LF applies */
-	if (write(mboxfd,bufp,strlen(bufp)) < 0)
+	/* write this line to the file after replacing all LFs with CR-LF */
+	if (!queryctl->mda[0])
+	{
+	    char *newbufp = malloc(1 + strlen(bufp) * 2);
+
+	    if (newbufp == NULL)
+		return(PS_IOERR);
+	    strcrlf(newbufp, bufp, strlen(bufp));
+	    bufp = newbufp;
+	}
+	n = write(mboxfd,bufp,strlen(bufp));
+	if (!queryctl->mda[0])
+	    free(bufp);
+	if (n < 0)
 	{
 	    perror("gen_readmsg: writing message text");
 	    return(PS_IOERR);
@@ -859,7 +874,39 @@ va_dcl {
   return(ok);
 }
 
+/*********************************************************************
+  function:      strcrlf
+  description:   replace LFs with CR-LF
 
+  arguments:     
+    dst          new string with CR-LFs
+    src          original string with LFs
+    count        length of src
+
+  return value:  length of dst
+  calls:         none.
+  globals:       none.
+ *********************************************************************/
+
+int strcrlf(dst, src, count)
+char *dst;
+char *src;
+int count;
+{
+  int len = count;
+
+  while (count--)
+  {
+      if (*src == '\n')
+      {
+	  *dst++ = '\r';
+	  len++;
+      }
+      *dst++ = *src++;
+  }
+  *dst = '\0';
+  return len;
+}
 /*********************************************************************
   function:      alarm_handler
   description:   In real life process can get stuck waiting for 
