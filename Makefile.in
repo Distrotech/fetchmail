@@ -105,7 +105,7 @@ srcs = $(srcdir)/socket.c $(srcdir)/getpass.c $(srcdir)/pop2.c 		\
 .SUFFIXES:
 .SUFFIXES: .o .c .h .y .l .ps .dvi .info .texi
 
-all: fetchmail po
+all: fetchmail po NOTES FAQ FEATURES
 
 # Some makes apparently use .PHONY as the default goal if it is before `all'.
 .PHONY: all
