@@ -657,10 +657,6 @@ static int load_params(int argc, char **argv, int optind)
 		ctl->server.queryname = xstrdup(ctl->server.pollname);
 	    ctl->server.truename = xstrdup(ctl->server.queryname);
 
-	    /* plug in the semi-standard way of indicating a mail address */
-	    if (ctl->server.envelope == (char *)NULL)
-		ctl->server.envelope = "X-Envelope-To:";
-
 	    /* if no folders were specified, set up the null one as default */
 	    if (!ctl->mailboxes)
 		save_str(&ctl->mailboxes, -1, (char *)NULL);

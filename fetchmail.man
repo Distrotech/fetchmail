@@ -335,7 +335,7 @@ this is `X-Envelope-To' but as this header is not standard, practice
 varies. See the discussion of multidrop address handling below.  As a
 special case, `envelope "Received"' enables parsing of sendmail-style
 Received lines.  This is the default, and it should not be necessary
-unless you have globally disable Received parsing with `no envelope'
+unless you have globally disabled Received parsing with `no envelope'
 in the \fI.fetchmailrc\fR file.
 
 .SH USER AUTHENTICATION
