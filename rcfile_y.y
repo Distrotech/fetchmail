@@ -15,6 +15,7 @@
 
 #include <config.h>
 #include <stdio.h>
+#include "fetchmail.h"
 extern char *rcfile;
 extern int prc_lineno;
 extern int prc_errflag;
@@ -25,13 +26,15 @@ int yydebug;	/* in case we didn't generate with -- debug */
 
 %union {
   int proto;
+  int auth;
   int flag;
   char *sval;
 }
 
-%token DEFAULTS SERVER PROTOCOL 
+%token DEFAULTS SERVER PROTOCOL AUTHENTICATE KPOP KERBEROS
 %token USERNAME PASSWORD FOLDER SMTPHOST MDA IS HERE THERE
 %token <proto> PROTO
+%token <auth>  AUTHTYPE
 %token <sval>  STRING
 %token <flag>  KEEP FLUSH FETCHALL REWRITE PORT SKIP
 
@@ -63,8 +66,15 @@ serverspecs	: /* EMPTY */
 		;
 
 serv_option	: PROTOCOL PROTO	{prc_setproto($2);}
+		| PROTOCOL KPOP		{
+						prc_setproto(P_POP3);
+		    				prc_setauth(A_KERBEROS);
+						prc_setport(KPOP_PORT);
+					}
 		| PORT STRING		{prc_setport($2);}
 		| SKIP			{prc_setskip($1==FLAG_TRUE);}
+		| AUTHENTICATE PASSWORD	{prc_setauth(A_PASSWORD);}
+		| AUTHENTICATE KERBEROS	{prc_setauth(A_KERBEROS);}
 		;
 
 /* the first and only the first user spec may omit the USERNAME part */

@@ -115,13 +115,22 @@ Post Office Protocol 3
 .IP APOP
 Use POP3 with MD5 authentication.
 .IP KPOP
-POP3 with Kerberos authentication.
+Use POP3 with Kerberos authentication on port 1109.
 .RE
 .TP
 .B \-P, --port
 The  option permits you to specify a TCP/IP port to connect on. 
 This option will seldom be necessary as all the supported protocols have
 well-established default port numbers.
+.TP
+.B \-A, --auth
+This option permits you to specify an authentication type (see USER
+AUTHENTICATION below for details).  The possible values are
+\&`\fBpassword\ffR and `\fBkerberos\fR'.  This option is provided
+primarily for developers; choosing KPOP protocol automatically selects
+Kerberos authentication, and all other alternatives use ordinary
+password authentication (though APOP uses a generated one-time
+key as the password).
 .TP
 .B \-r folder, --remote folder
 Causes a specified non-default mail folder on the mailserver to be retrieved.
@@ -178,7 +187,7 @@ on the command line, each server in your
 .I ~/.fetchmailrc
 file will be queried.
 .SH USER AUTHENTICATION
-User authentication in 
+Normal user authentication in 
 .I fetchmail
 is very much like the authentication mechanism of 
 .I ftp(1).
@@ -230,6 +239,11 @@ file.  Each time
 logs in, it sends a cryptographically secure hash of your password and
 the server greeting time to the server, which can verify it by
 checking its authorization database. 
+.PP
+If your \fIfetchmail\fR was built with Kerberos support and you specify 
+Kerberos authentication (either with --auth or the \fI.fetchmailrc\fR
+option \fBauthenticate kerberos\fR) it will try to get a Kerberos
+ticket from the mailserver at the start of each query. 
 .SH DAEMON MODE
 The 
 .B --daemon
@@ -339,6 +353,7 @@ Legal server options are:
     port
     skip
     noskip
+    authenticate (or auth)
 
 Legal user options are
 
@@ -387,6 +402,17 @@ Legal protocol identifiers are
     imap (or IMAP)
     apop (or APOP)
     kpop (or APOP)
+
+.PP
+Legal authentication types are `password' or `kerberos'.  The former
+specifies authentication by normal transmission of a password (the
+password may be plaintext or subject to protocol-specific encryption
+as in APOP); the second tells \fIfetchmail\fR to try to get a Kerberos
+ticket at the start of each query instead, and send an arbitrary
+string as the password.
+.PP
+Specifying \fBkpop\fR sets POP3 protocol over port 1109 with Kerberos
+authentication.  These defaults may be overridden by later options.
 .PP
 You can use the `noise' keywords \fBand\fR, \fBwith\fR,
 \fBhas\fR, \fBwants\fR, and \fBoptions\fR anywhere in an entry to make

@@ -20,7 +20,10 @@
 #
 # Legal keywords are
 #   server
-#   protocol (or proto)
+#   protocol (or proto) -- nuat be followed by a protocol ID
+#   port
+#   authenticate (or auth) -- must be followed by an authentication type
+#
 #   username (or user)
 #   is
 #   remotefolder (or remote)
@@ -38,7 +41,6 @@
 #   nofetchall
 #   norewrite
 #   noskip
-#   port
 #
 # Legal protocol identifiers are
 #   pop2 (or POP2)
@@ -46,6 +48,10 @@
 #   imap (or IMAP)
 #   apop (or APOP)
 #   kpop (or KPOP)
+#
+# Legal authentication types are
+#   login
+#   kerberos
 #
 # Basic format is
 # server SERVERNAME protocol PROTOCOL username NAME password PASSWORD 
@@ -62,7 +68,7 @@ server pop.provider.net proto pop3 user jsmith password secret1
 server pop.provider.net proto pop3 user jsmith password secret1
 server other.provider.net proto pop2 user John.Smith password My^Hat
 
-# Other possibilities (note use of \ to escape newline -- this is all 
+# Other possibilities (note optional use of \ to escape newline -- this is all 
 # one server definition.
 server pop.provider.net 	\
 	proto pop3		\

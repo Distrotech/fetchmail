@@ -27,6 +27,8 @@ defaults 	{ return DEFAULTS; }
 server 		{ return SERVER; }
 proto(col)? 	{ return PROTOCOL; }
 port		{ return PORT; }
+auth(enticate)?	{ return AUTHENTICATE; }
+kerberos	{ return KERBEROS; }
 
 user(name)?	{ return USERNAME; }
 pass(word)?	{ return PASSWORD; }
@@ -60,7 +62,8 @@ options		{/* EMPTY */}
 (pop3)|(POP3)	{ yylval.proto = P_POP3;  return PROTO; }
 (imap)|(IMAP)	{ yylval.proto = P_IMAP;  return PROTO; }
 (apop)|(APOP)   { yylval.proto = P_APOP;  return PROTO; }
-(kpop)|(KPOP)   { yylval.proto = P_KPOP;  return PROTO; }
+(kpop)|(KPOP)	{ return KPOP; }
+
 
 (#.*)?\\?\n	{ prc_lineno++;	}   /* newline is ignored */
 

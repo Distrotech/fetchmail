@@ -27,19 +27,20 @@
 #define LA_STDOUT	7
 #define LA_FLUSH        8
 #define LA_PROTOCOL	9
-#define LA_DAEMON	10
-#define LA_RCFILE	11
-#define LA_USERNAME	12
-#define LA_REMOTEFILE	13
-#define LA_PORT		14
-#define LA_SMTPHOST	15
-#define LA_MDA		16
-#define LA_LOGFILE	17
-#define LA_QUIT		18
-#define LA_NOREWRITE	19
-#define LA_CHECK	20
-#define LA_HELP		21
-#define LA_YYDEBUG	22
+#define LA_AUTHENTICATE	10
+#define LA_DAEMON	11
+#define LA_RCFILE	12
+#define LA_USERNAME	13
+#define LA_REMOTEFILE	14
+#define LA_PORT		15
+#define LA_SMTPHOST	16
+#define LA_MDA		17
+#define LA_LOGFILE	18
+#define LA_QUIT		19
+#define LA_NOREWRITE	20
+#define LA_CHECK	21
+#define LA_HELP		22
+#define LA_YYDEBUG	23
 
 static char *shortoptions = "P:p:VaKkvS:m:sFd:f:u:r:L:qN?";
 static struct option longoptions[] = {
@@ -52,6 +53,7 @@ static struct option longoptions[] = {
   {"flush",	no_argument,	   (int *) 0, LA_FLUSH      },
   {"protocol",	required_argument, (int *) 0, LA_PROTOCOL   },
   {"proto",	required_argument, (int *) 0, LA_PROTOCOL   },
+  {"auth",	required_argument, (int *) 0, LA_PROTOCOL   },
   {"daemon",	required_argument, (int *) 0, LA_DAEMON     },
   {"fetchmailrc",required_argument,(int *) 0, LA_RCFILE     },
   {"user",	required_argument, (int *) 0, LA_USERNAME   },
@@ -153,7 +155,11 @@ struct hostrec *queryctl;
         else if (strcasecmp(optarg,"apop") == 0)
           queryctl->protocol = P_APOP;
 	else if (strcasecmp(optarg,"kpop") == 0)
-	    queryctl->protocol = P_KPOP;
+	{
+	    queryctl->protocol = P_POP3;
+	    queryctl->port = KPOP_PORT;
+	    queryctl->authenticate ==  A_KERBEROS;
+	}
         else {
           fprintf(stderr,"Invalid protocol '%s'\n specified.\n", optarg);
           errflag++;
@@ -184,6 +190,17 @@ struct hostrec *queryctl;
       case LA_PORT:
 	queryctl->port = atoi(optarg);
 	break;
+      case 'A':
+      case LA_AUTHENTICATE:
+        if (strcmp(optarg, "password") == 0)
+          queryctl->authenticate = A_PASSWORD;
+        else if (strcmp(optarg, "kerberos") == 0)
+          queryctl->authenticate = A_KERBEROS;
+        else {
+          fprintf(stderr,"Invalid authentication '%s'\n specified.\n", optarg);
+          errflag++;
+        }
+        break;
       case 'S':
       case LA_SMTPHOST:
         if (fflag) 
@@ -224,22 +241,26 @@ struct hostrec *queryctl;
     fputs("usage:  fetchmail [options] [server ...]\n", stderr);
     fputs("  Options are as follows:\n",stderr);
     fputs("  -?, --help        display this option help\n", stderr);
-    fputs("  -p, --protocol    specify pop2, pop3, imap, apop, rpop, kpop\n", stderr);
     fputs("  -V, --version     display version info\n", stderr);
+    fputs("  -v, --verbose     work noisily (diagnostic output)\n", stderr);
+    fputs("  -d, --daemon      run as a daemon once per n seconds\n", stderr);
+    fputs("  -c, --check       check for messages without fetching\n", stderr);
+    fputs("  -L, --logfile     specify logfile name\n", stderr);
+    fputs("  -q, --quit        kill daemon process\n", stderr);
+    fputs("  -f, --fetchmailrc specify alternate run control file\n", stderr);
+
+    fputs("  -p, --protocol    specify pop2, pop3, imap, apop, rpop, kpop\n", stderr);
+    fputs("  -P, --port        TCP/IP service port to connect to\n",stderr);
+    fputs("  -A, --auth        authentication type\n",stderr);
+
+    fputs("  -u, --username    specify users's login on server\n", stderr);
     fputs("  -a, --all         retrieve old and new messages\n", stderr);
     fputs("  -F, --flush       delete old messages from server\n", stderr);
     fputs("  -K, --kill        delete new messages after retrieval\n", stderr);
     fputs("  -k, --keep        save new messages after retrieval\n", stderr);
     fputs("  -S, --smtphost    set SMTP forwarding host\n", stderr);
-    fputs("  -q, --quit        kill daemon process\n", stderr);
     fputs("  -s, --silent      work silently\n", stderr);
-    fputs("  -v, --verbose     work noisily (diagnostic output)\n", stderr);
-    fputs("  -d, --daemon      run as a daemon once per n seconds\n", stderr);
-    fputs("  -f, --fetchmailrc specify alternate run control file\n", stderr);
-    fputs("  -u, --username    specify users's login on server\n", stderr);
     fputs("  -r, --remote      specify remote folder name\n", stderr);
-    fputs("  -L, --logfile     specify logfile name\n", stderr);
-    fputs("  -c, --check       check for messages without retrieving\n", stderr);
     return(-1);
   }
 

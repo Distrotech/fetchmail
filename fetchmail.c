@@ -310,8 +310,8 @@ char **argv;
     for (hostp = hostlist; hostp; hostp = hostp->next)
 	if (hostp->active && !(implicitmode && hostp->skip) && !hostp->password[0])
 	{
-	    if (hostp->protocol == P_KPOP)
-	      /* Server doesn't care what the password is, but there
+	    if (hostp->authenticate == A_KERBEROS)
+	      /* Server won't care what the password is, but there
 		 must be some non-null string here.  */
 	      (void) strncpy(hostp->password, 
 			     hostp->remotename, PASSWORDLEN-1);
@@ -395,7 +395,6 @@ int proto;
     case P_POP3: return("POP3"); break;
     case P_IMAP: return("IMAP"); break;
     case P_APOP: return("APOP"); break;
-    case P_KPOP: return("KPOP"); break;
     default: return("unknown?!?"); break;
     }
 }
@@ -435,7 +434,6 @@ struct hostrec *queryctl;
 	break;
     case P_POP3:
     case P_APOP:
-    case P_KPOP:
 	return(doPOP3(queryctl));
 	break;
     case P_IMAP:
@@ -488,7 +486,10 @@ struct hostrec *queryctl;
 	    printf("  APOP secret = '%s'\n", queryctl->password);
         else
 	    printf("  Password = '%s'\n", queryctl->password);
-    printf("  Protocol is %s", showproto(queryctl->protocol));
+    if (queryctl->protocol == P_POP3 && queryctl->port == KPOP_PORT)
+	printf("  Protocol is KPOP");
+    else
+	printf("  Protocol is %s", showproto(queryctl->protocol));
     if (queryctl->port)
 	printf(" (using port %d)", queryctl->port);
     else if (outlevel == O_VERBOSE)

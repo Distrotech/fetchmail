@@ -12,12 +12,17 @@
  ***********************************************************************/
 
 /* constants designating the various supported protocols */
-#define		P_AUTO	0
-#define		P_POP2	2
-#define		P_POP3	3
-#define		P_IMAP	4
-#define		P_APOP	5
-#define		P_KPOP	6
+#define		P_AUTO		0
+#define		P_POP2		2
+#define		P_POP3		3
+#define		P_IMAP		4
+#define		P_APOP		5
+
+#define		KPOP_PORT	1109
+
+/* authentication types */
+#define		A_PASSWORD	0	/* passwords in cleartext */
+#define		A_KERBEROS	1	/* get Kerberos V4 ticket */
 
 /* definitions for buffer sizes -- somewhat arbitrary */
 #define		POPBUFSIZE	512	/* per RFC 937 */
@@ -62,6 +67,7 @@ struct hostrec
     char mda [MDALEN+1];
     int protocol;
     int port;
+    int authenticate;
 
     /* MDA arguments */
     char *mda_argv[32];

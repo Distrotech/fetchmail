@@ -100,13 +100,6 @@ char *greeting;
     }
 
     switch (queryctl->protocol) {
-    case P_KPOP:
-#ifndef KERBEROS_V4
-	strcat (buf, "KPOP support not compiled into this executable.\n");
-	return(PS_ERROR);
-#endif
-	/* fall through */
-
     case P_POP3:
 	if ((gen_transact(socket,"USER %s", queryctl->remotename)) != 0)
 	    return(PS_ERROR);
@@ -221,12 +214,6 @@ struct hostrec *queryctl;
 	fprintf(stderr,"Option --remote is not supported with POP3\n");
 	return(PS_SYNTAX);
     }
-    if (queryctl->protocol == P_KPOP)
-      {
-	struct method kpop_method = pop3;
-	kpop_method.port = 1109;
-	return(do_protocol(queryctl, &kpop_method));
-      }
     return(do_protocol(queryctl, &pop3));
 }
 
