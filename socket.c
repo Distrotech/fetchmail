@@ -536,7 +536,7 @@ int SockWrite(int sock, char *buf, int len)
 int SockRead(int sock, char *buf, int len)
 {
     char *newline, *bp = buf;
-    int n;
+    int n, n2;
 #ifdef	SSL_ENABLE
     SSL *ssl;
 #endif
@@ -627,8 +627,25 @@ int SockRead(int sock, char *buf, int len)
 	if ((newline = memchr(bp, '\n', n)) != NULL)
 	    n = newline - bp + 1;
 #ifndef __BEOS__
-	if ((n = fm_read(sock, bp, n)) == -1)
+	if ((n2 = fm_read(sock, bp, n)) == -1)
 	    return(-1);
+#ifdef __CYGWIN__
+	/*
+	 * Workaround Microsoft Winsock recv/WSARecv(..., MSG_PEEK) bug.
+	 * See http://sources.redhat.com/ml/cygwin/2001-08/msg00628.html
+	 * for more details.
+	 */
+	if (n2 != n) {
+	    int n3;
+	    if (outlevel >= O_VERBOSE)
+		report(stdout, GT_("Cygwin socket read retry\n"));
+	    n3 = fm_read(sock, bp + n2, n - n2);
+	    if (n3 == -1 || n2 + n3 != n) {
+		report(stderr, GT_("Cygwin socket read retry failed!\n"));
+		return(-1);
+	    }
+	}
+#endif /* __CYGWIN__ */
 #endif /* __BEOS__ */
 #endif
 	bp += n;
