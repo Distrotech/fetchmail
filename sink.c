@@ -14,11 +14,6 @@
 #include  <stdio.h>
 #include  <errno.h>
 #include  <string.h>
-#include  <signal.h>
-#include  <time.h>
-#ifdef HAVE_MEMORY_H
-#include  <memory.h>
-#endif /* HAVE_MEMORY_H */
 #if defined(STDC_HEADERS)
 #include  <stdlib.h>
 #endif
@@ -30,17 +25,11 @@
 #else
 #include  <varargs.h>
 #endif
-#include  <ctype.h>
 
 #include  "fetchmail.h"
 #include  "socket.h"
 #include  "smtp.h"
 #include  "i18n.h"
-
-/* BSD portability hack...I know, this is an ugly place to put it */
-#if !defined(SIGCHLD) && defined(SIGCLD)
-#define SIGCHLD	SIGCLD
-#endif
 
 /* makes the open_sink()/close_sink() pair non-reentrant */
 static int lmtp_responses;
@@ -175,11 +164,6 @@ int smtp_open(struct query *ctl)
 
 /* these are shared by open_sink and stuffline */
 static FILE *sinkfp;
-#ifndef HAVE_SIGACTION
-static RETSIGTYPE (*sigchld)(int);
-#else
-static struct sigaction sa_old;
-#endif /* HAVE_SIGACTION */
 
 int stuffline(struct query *ctl, char *buf)
 /* ship a line to the given control block's output sink (SMTP server or MDA) */
@@ -507,9 +491,6 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 /* set up sinkfp to be an input sink we can ship a message to */
 {
     struct	idlist *idp;
-#ifdef HAVE_SIGACTION
-    struct      sigaction sa_new;
-#endif /* HAVE_SIGACTION */
 
     *bad_addresses = *good_addresses = 0;
 
@@ -934,15 +915,6 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	    report(stderr, _("MDA open failed\n"));
 	    return(PS_IOERR);
 	}
-
-#ifndef HAVE_SIGACTION
-	sigchld = signal(SIGCHLD, SIG_DFL);
-#else
-	memset (&sa_new, 0, sizeof sa_new);
-	sigemptyset (&sa_new.sa_mask);
-	sa_new.sa_handler = SIG_DFL;
-	sigaction (SIGCHLD, &sa_new, &sa_old);
-#endif /* HAVE_SIGACTION */
     }
 
     /*
@@ -966,12 +938,6 @@ void release_sink(struct query *ctl)
 	    pclose(sinkfp);
 	    sinkfp = (FILE *)NULL;
 	}
-#ifndef HAVE_SIGACTION
-	signal(SIGCHLD, sigchld);
-#else
-	sigaction (SIGCHLD, &sa_old, NULL);
-#endif /* HAVE_SIGACTION */
-	deal_with_sigchld();
     }
 }
 
@@ -990,12 +956,6 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 	}
 	else
 	    rc = 0;
-#ifndef HAVE_SIGACTION
-	signal(SIGCHLD, sigchld);
-#else
-	sigaction (SIGCHLD, &sa_old, NULL);
-#endif /* HAVE_SIGACTION */
-	deal_with_sigchld();
 	if (rc)
 	{
 	    report(stderr, 
