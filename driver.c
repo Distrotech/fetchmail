@@ -121,7 +121,7 @@ static int is_host_alias(const char *name, struct query *ctl)
 
     /*
      * Is it in the `also known as' cache accumulated by previous DNS checks?
-     * This cache may someday be primed by an aka option.
+     * This cache is primed by the aka list option.
      */
     else if (uid_in_list(&ctl->lead_server->aka, name))
 	return(TRUE);
@@ -196,6 +196,28 @@ match:
     return(TRUE);
 }
 
+static void map_name(name, ctl, xmit_names)
+/* add given name to xmit_names if it matches declared localnames */
+const char *name;		/* name to map */
+struct query *ctl;		/* list of permissible aliases */
+struct idlist **xmit_names;	/* list of recipient names parsed out */
+{
+    const char	*lname;
+
+    lname = idpair_find(&ctl->localnames, name);
+    if (!lname && ctl->wildcard)
+	lname = name;
+
+    if (lname != (char *)NULL)
+    {
+	if (outlevel == O_VERBOSE)
+	    fprintf(stderr,
+		    "fetchmail: mapped %s to local %s\n",
+		    name, lname);
+	save_uid(xmit_names, -1, lname);
+    }
+}
+
 void find_server_names(hdr, ctl, xmit_names)
 /* parse names out of a RFC822 header into an ID list */
 const char *hdr;		/* RFC822 header in question */
@@ -225,18 +247,7 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 		    atsign[0] = '\0';
 		}
 
-		lname = idpair_find(&ctl->localnames, cp);
-		if (!lname && ctl->wildcard)
-		    lname = cp;
-
-		if (lname != (char *)NULL)
-		{
-		    if (outlevel == O_VERBOSE)
-			fprintf(stderr,
-				"fetchmail: mapped %s to local %s\n",
-				cp, lname);
-		    save_uid(xmit_names, -1, lname);
-		}
+		map_name(cp, ctl, xmit_names);
 	    } while
 		((cp = nxtaddr((char *)NULL)) != (char *)NULL);
     }
@@ -397,13 +408,20 @@ struct query *ctl;	/* query control record */
 		{
 		    char	*sp, *tp;
 
-		    strcpy(rbuf, "For: ");	/* nxtaddr() fodder */
-		    tp = rbuf + 5;
-		    for (sp = ok + 5; *sp && *sp != '>' && *sp != '@'; sp++)
-			*tp++ = *sp;
+		    tp = rbuf;
+		    sp = ok + 4;
+		    if (*sp == '<')
+			sp++;
+		    while (*sp && *sp != '>' && *sp != '@' && *sp != ';')
+			if (!isspace(*sp))
+			    *tp++ = *sp++;
+			else
+			{
+			    /* uh oh -- whitespace here can't be right! */
+			    ok = (char *)NULL;
+			    break;
+			}
 		    *tp = '\0';
-		    if (*sp != ';' && *sp != '@')
-			ok = (char *)NULL;
 		}
 
 		if (ok)
@@ -444,7 +462,7 @@ struct query *ctl;	/* query control record */
 		     * It has to be a mailserver address, or we
 		     * wouldn't have got here.
 		     */
-		    find_server_names(received_for, ctl, &xmit_names);
+		    map_name(received_for, ctl, &xmit_names);
 		else
 		{
 		    /*
