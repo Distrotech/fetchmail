@@ -54,6 +54,84 @@ static char lastok[POPBUFSIZE+1];
     flag has_ssl = FALSE;
 #endif /* SSL_ENABLE */
 
+#if NTLM_ENABLE
+#include "ntlm.h"
+
+static tSmbNtlmAuthRequest   request;		   
+static tSmbNtlmAuthChallenge challenge;
+static tSmbNtlmAuthResponse  response;
+
+/*
+ * NTLM support by Grant Edwards.
+ *
+ * Handle MS-Exchange NTLM authentication method.  This is the same
+ * as the NTLM auth used by Samba for SMB related services. We just
+ * encode the packets in base64 instead of sending them out via a
+ * network interface.
+ * 
+ * Much source (ntlm.h, smb*.c smb*.h) was borrowed from Samba.
+ */
+
+static int do_pop3_ntlm(int sock, struct query *ctl)
+{
+    char msgbuf[2048];
+    int result,len;
+  
+    gen_send(sock, "AUTH MSN");
+
+    if ((result = gen_recv(sock, msgbuf, sizeof msgbuf)))
+	return result;
+  
+    if (msgbuf[0] != '+')
+	return PS_AUTHFAIL;
+  
+    buildSmbNtlmAuthRequest(&request,ctl->remotename,NULL);
+
+    if (outlevel >= O_DEBUG)
+	dumpSmbNtlmAuthRequest(stdout, &request);
+
+    memset(msgbuf,0,sizeof msgbuf);
+    to64frombits (msgbuf, (unsigned char*)&request, SmbLength(&request));
+  
+    if (outlevel >= O_MONITOR)
+	report(stdout, "POP3> %s\n", msgbuf);
+  
+    strcat(msgbuf,"\r\n");
+    SockWrite (sock, msgbuf, strlen (msgbuf));
+
+    if ((gen_recv(sock, msgbuf, sizeof msgbuf)))
+	return result;
+  
+    len = from64tobits ((unsigned char*)&challenge, msgbuf, sizeof(msgbuf));
+    
+    if (outlevel >= O_DEBUG)
+	dumpSmbNtlmAuthChallenge(stdout, &challenge);
+    
+    buildSmbNtlmAuthResponse(&challenge, &response,ctl->remotename,ctl->password);
+  
+    if (outlevel >= O_DEBUG)
+	dumpSmbNtlmAuthResponse(stdout, &response);
+  
+    memset(msgbuf,0,sizeof msgbuf);
+    to64frombits (msgbuf, (unsigned char*)&response, SmbLength(&response));
+
+    if (outlevel >= O_MONITOR)
+	report(stdout, "POP3> %s\n", msgbuf);
+      
+    strcat(msgbuf,"\r\n");
+    SockWrite (sock, msgbuf, strlen (msgbuf));
+  
+    if ((result = gen_recv (sock, msgbuf, sizeof msgbuf)))
+	return result;
+  
+    if (strstr (msgbuf, "OK"))
+	return PS_SUCCESS;
+    else
+	return PS_AUTHFAIL;
+}
+#endif /* NTLM */
+
+
 #define DOTLINE(s)	(s[0] == '.' && (s[1]=='\r'||s[1]=='\n'||s[1]=='\0'))
 
 static int pop3_ok (int sock, char *argbuf)
@@ -205,6 +283,21 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
     if (!(ctl->server.sdps) && MULTIDROP(ctl) && strstr(greeting, "demon."))
         ctl->server.sdps = TRUE;
 #endif /* SDPS_ENABLE */
+#ifdef NTLM_ENABLE
+	/* MSN servers require the use of NTLM (MSN) authentication */
+	if (!strcasecmp(ctl->server.pollname, "pop3.email.msn.com") ||
+	    ctl->server.authenticate == A_NTLM)
+	{
+	    if (!do_pop3_ntlm(sock, ctl))
+	    {
+		return(PS_SUCCESS);
+	    }
+	    else
+	    {
+		return(PS_AUTHFAIL);
+	    }
+	}
+#endif
 
     switch (ctl->server.protocol) {
     case P_POP3:

@@ -13,6 +13,8 @@
 * Sunil Shetye's configure.in patch to avoid spurious search order messages
   from GCC.
 * Header-reading code now copes better with lines ending in \n only.
+* Elias Israel's patches for POP3 NTLM support and dealing with byte-
+  stuffing failures at socket level.
 
 fetchmail-6.2.2 (Fri Feb 28 21:34:26 EST 2003), 22345 lines:
 
