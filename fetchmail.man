@@ -84,7 +84,9 @@ before retrieving new messages.
 .B \-c, --check
 Return a status code to indicate whether there is mail waiting,
 without actually fetching or deleting mail (see EXIT CODES below).
-(This option doesn't play well with queries to multiple sites.)
+This option doesn't play well with queries to multiple sites, and
+is ignored in daemon mode.  It's also prone to false positives if
+you leave read but undeleted mail in your server mailbox.
 .TP
 .B \-f pathname, --fetchmailrc pathname
 Specify a non-default name for the 

@@ -4,6 +4,9 @@ fetchmail-1.9 ():
 
 features --
 
+* The first message from a query now includes the number of new messages
+  when this can be determined (that is not under POP2).
+
 * POP3 UID support really works now.  I make rude noises at the POP3 mavens
   who forced us to this with RFC1725, but thank Al Longyear <longyear@sii.com>
   for fixing and verifying my slightly buggy implementation.
@@ -43,6 +46,9 @@ bugs --
 * Rewrite "To: jrh (J. Random Hacker)" correctly.
 
 * Find "nnn octets" anywhere on a POP3 server's RETR response line.
+
+* Fixed various bugs in --check.  It now reports PS_SUCCESS only if
+  there is new mail waiting.
 
 fetchmail-1.8 (Fri Oct 11 15:08:10 EDT 1996):
 

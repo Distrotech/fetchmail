@@ -400,7 +400,8 @@ char **argv;
 	    if (hostp->active && !(implicitmode && hostp->skip))
 	    {
 		popstatus = query_host(hostp);
- 		update_uid_lists(hostp);
+		if (!check_only)
+		    update_uid_lists(hostp);
 	    }
 	}
 
@@ -422,7 +423,8 @@ void termhook(int sig)
     if (sig != 0)
 	fprintf(stderr, "terminated with signal %d\n", sig);
 
-    write_saved_lists(hostlist, idfile);
+    if (!check_only)
+	write_saved_lists(hostlist, idfile);
 
     unlink(lockfile);
     exit(popstatus);

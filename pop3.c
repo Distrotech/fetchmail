@@ -115,11 +115,11 @@ char *greeting;
     return(0);
 }
 
-static pop3_getrange(socket, queryctl, countp)
+static pop3_getrange(socket, queryctl, countp, newp)
 /* get range of messages to be fetched */
 int socket;
 struct hostrec *queryctl;
-int *countp;
+int *countp, *newp;
 {
     int ok;
     char buf [POPBUFSIZE+1];
@@ -137,8 +137,11 @@ int *countp;
 
     /*
      * Newer, RFC-1725-conformant POP servers may not have the LAST command.
+     * We work as hard as possible to hide this ugliness, but it makes 
+     * counting new messages intrinsically quadratic in the worst case.
      */
     last = 0;
+    *newp = -1;
     if (*countp > 0 && !queryctl->fetchall)
     {
 	char id [IDLEN+1];
@@ -149,12 +152,15 @@ int *countp;
 	{
 	    if (sscanf(buf, "%d", &last) == 0)
 		return(PS_ERROR);
+	    *newp = (*countp - last);
 	}
  	else
  	{
 	    int	num;
+	    struct idlist *idp;
 
  	    /* grab the mailbox's UID list */
+	    *newp = 0;
  	    gen_send(socket, "UIDL");
  	    if ((ok = pop3_ok(socket, buf)) == 0) {
  		while (SockGets(socket, buf, sizeof(buf)) >= 0) {
@@ -164,7 +170,11 @@ int *countp;
  			break;
  		    }
  		    if (sscanf(buf, "%d %s", &num, id) == 2)
+		    {
  			save_uid(&queryctl->newsaved, num, id);
+			if (!uid_in_list(&queryctl->oldsaved, id))
+			    (*newp)++;
+		    }
  		}
  	    }
  	}

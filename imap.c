@@ -12,7 +12,7 @@
 #include  "socket.h"
 #include  "fetchmail.h"
 
-static int count, seen;
+static int count, seen, recent, unseen;
 
 int imap_ok (socket, argbuf)
 /* parse command response */
@@ -35,6 +35,10 @@ int socket;
 	/* interpret untagged status responses */
 	if (strstr(buf, "EXISTS"))
 	    count = atoi(buf+2);
+	if (strstr(buf, "RECENT"))
+	    recent = atoi(buf+2);
+	if (strstr(buf, "UNSEEN"))
+	    unseen = atoi(buf+2);
 	if (strstr(buf, "FLAGS"))
 	    seen = (strstr(buf, "Seen") != (char *)NULL);
     } while
@@ -79,15 +83,16 @@ char *buf;
 		  queryctl->remotename, queryctl->password));
 }
 
-static imap_getrange(socket, queryctl, countp)
+static imap_getrange(socket, queryctl, countp, newp)
 /* get range of messages to be fetched */
 int socket;
 struct hostrec *queryctl;
-int *countp;
+int *countp, *newp;
 {
     int ok;
 
     /* find out how many messages are waiting */
+    recent = unseen = 0;
     ok = gen_transact(socket,
 		  "SELECT %s",
 		  queryctl->mailbox[0] ? queryctl->mailbox : "INBOX");
@@ -95,6 +100,13 @@ int *countp;
 	return(ok);
 
     *countp = count;
+
+    if (unseen)		/* optional response, but better if we see it */
+	*newp = unseen;
+    else if (recent)	/* mandatory */
+	*newp = recent;
+    else
+	*newp = -1;	/* should never happen, RECENT is mandatory */ 
 
     return(0);
 }

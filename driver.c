@@ -536,7 +536,7 @@ struct method *proto;		/* protocol method table */
     char buf [POPBUFSIZE+1], host[HOSTLEN+1];
     int socket;
     void (*sigsave)();
-    int num, count, deletions = 0;
+    int num, count, new, deletions = 0;
 
     srvname = queryctl->servername;
     alarmed = 0;
@@ -610,8 +610,8 @@ struct method *proto;		/* protocol method table */
     if (alarmed || ok != 0)
 	goto cleanUp;
 
-    /* compute count, and get UID list if possible */
-    if ((protocol->getrange)(socket, queryctl, &count) != 0 || alarmed)
+    /* compute number of messages and number of new messages waiting */
+    if ((protocol->getrange)(socket, queryctl, &count, &new) != 0 || alarmed)
 	goto cleanUp;
 
     /* show user how many messages we downloaded */
@@ -622,14 +622,25 @@ struct method *proto;		/* protocol method table */
 		    queryctl->localname,
 		    queryctl->servername);
 	else
+	{
+	    fprintf(stderr, "%d message%s", count, count > 1 ? "s" : ""); 
+	    if (new != -1)
+		fprintf(stderr, " (%d new)", new);
 	    fprintf(stderr,
-		    "%d message%s from %s for %s@%s.\n",
-		    count, count > 1 ? "s" : "", 
+		    " from %s for %s@%s.\n",
 		    queryctl->remotename,
 		    queryctl->localname,
 		    queryctl->servername);
+	}
 
-    if ((count > 0) && (!check_only))
+    if (check_only)
+    {
+	if (new == -1 || queryctl->fetchall)
+	    new = count;
+	ok = ((new > 0) ? PS_SUCCESS : PS_NOMAIL);
+	goto closeUp;
+    }
+    else if (count > 0)
     {
 	if (queryctl->mda[0] == '\0')
 	    if ((mboxfd = Socket(queryctl->smtphost, SMTP_PORT)) < 0
@@ -749,10 +760,6 @@ struct method *proto;		/* protocol method table */
 	    ok = PS_SUCCESS;
 	close(socket);
 	goto closeUp;
-    }
-    else if (check_only) {
-      ok = ((count > 0) ? PS_SUCCESS : PS_NOMAIL);
-      goto closeUp;
     }
     else {
 	ok = gen_transact(socket, protocol->exit_cmd);

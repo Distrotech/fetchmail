@@ -63,11 +63,11 @@ char *buf;
 		  queryctl->remotename, queryctl->password));
 }
 
-static pop2_getrange(socket, queryctl, countp)
+static pop2_getrange(socket, queryctl, countp, newp)
 /* get range of messages to be fetched */
 int socket;
 struct hostrec *queryctl;
-int *countp;
+int *countp, *newp;
 {
     /*
      * We should have picked up a count of messages in the user's
@@ -88,6 +88,7 @@ int *countp;
     }
 
     *countp = pound_arg;
+    *newp = -1;
 
     return(0);
 }

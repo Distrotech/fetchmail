@@ -228,6 +228,12 @@ struct hostrec *queryctl;	/* option record to be initialized */
 	}
     }
 
+    if (check_only && poll_interval)
+    {
+	fputs("The --check and --daemon options aren't compatible.\n", stderr);
+	return(-1);
+    }
+
     if (errflag || ocount > 1) {
 	/* squawk if syntax errors were detected */
 	fputs("usage:  fetchmail [options] [server ...]\n", stderr);
