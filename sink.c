@@ -529,6 +529,9 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
     }
 }
 
+/* this is experimental and will be removed if double bounces are reported */
+#define EXPLICIT_BOUNCE
+
 int open_sink(struct query *ctl, struct msgblk *msg,
 	      int *good_addresses, int *bad_addresses)
 /* set up sinkfp to be an input sink we can ship a message to */
