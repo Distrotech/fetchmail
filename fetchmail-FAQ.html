@@ -9,7 +9,7 @@
 <BODY>
 <H1>Frequently Asked Questions About Fetchmail</H1>
 
-The current version of fetchmail is 3.9.8.<P>
+The current version of fetchmail is 3.9.9.<P>
 
 Before reporting any bug, please read <a href="#G3">G3</a> for advice
 on how to include diagnostic information that will get your bug fixed
@@ -466,7 +466,10 @@ would work.  To range over any value of the last two octets
 <hr>
 <h2><a name="C4">C4. How can I get fetchmail to work with ssh?</a></h2>
 
-This is a lightly edited version of a recipe from Masafumi NAKANE.<p>
+We have two recipes for this.  The first is a little easier to set up,
+but only supports one user at a time.<P>
+
+First, a lightly edited version of a recipe from Masafumi NAKANE:<p>
 
 1. You must have ssh (the ssh client) on the local host and sshd (ssh
 server) on the remote mail server.  And, you have to configure ssh so
@@ -500,6 +503,57 @@ preconnect "ssh -f -L 1234:mailhost:110 sshdhost sleep 20 </dev/null >/dev/null"
 
 You can work this trick with IMAP too, but the port number 110 in the
 above would need to become 143.<p>
+
+Second, a recipe frm Charlie Brady &lt;cbrady@ind.tansu.com.au&gt;.
+
+Charlie says: "The [previous] recipe certainly works, but
+the solution I post here is better in a few respects":
+
+<UL>
+<LI>this method will not fail if two or more users attempt to use fetchmail
+    simultaneously.
+<LI>you are able to use the full facilities of tcpd to control access
+<LI>this method does not depend on the preconnect feature of fetchmail, so
+    can be used for tunneling of other services as well.
+</UL>
+
+Here are the steps:
+
+<OL>
+<LI>
+Make sure that the "socket" program is installed on the server machine.
+<LI>
+Set up an unprivileged account on your system with a .ssh directory
+containing an SSH identity file "identity" with no pass phrase,
+"identity.pub" and "known_hosts" containing the host key of your
+mailhost. Let's call this account "noddy".
+<LI>
+On mailhost, set up no-password access for noddy@yourhost. Add to your
+SSH authorised_keys file:
+
+<PRE>
+command="socket localhost 110",no-port-forwarding 1024 ......
+</PRE>
+
+where "<code>1024</code> ......" is the content of noddy's identity.pub file.
+<LI>
+Create a script /usr/local/bin/ssh.fm and make it executable:
+
+<PRE>
+#! /bin/sh
+exec ssh -q -C -l your.login.id -e none mailhost socket localhost 110
+</PRE>
+<LI>
+Add an entry in inetd.conf for whatever port you choose to use - say:
+
+<PRE>
+1234 stream tcp nowait noddy /usr/sbin/tcpd /usr/local/bin/ssh.fm
+</PRE>
+<LI>
+Send a HUP signal to your inetd.
+</OL>
+
+Now just use localhost:1234 to access your POP server.<P>
 
 <hr>
 <h2><a name="C5">C5. How can I set up support for sendmail's anti-spam 571 response?</a></h2>
@@ -1059,7 +1113,7 @@ biff n
 
 to solve theproblem system-wide.
 
-$Id: fetchmail-FAQ.html,v 1.37 1997/06/24 16:12:12 esr Exp $<p>
+$Id: fetchmail-FAQ.html,v 1.38 1997/06/25 15:00:40 esr Exp $<p>
 
 <HR>
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
