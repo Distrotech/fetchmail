@@ -125,7 +125,7 @@ static int odmr_getrange(int sock, struct query *ctl, const char *id,
      * throw their data at each other.
      */
     smtp_sock = SockOpen(ctl->smtphost, SMTP_PORT, NULL, NULL);
-    if (smtp_sock)
+    if (smtp_sock == -1)
 	return(PS_SOCKET);
     else
     {
@@ -150,14 +150,25 @@ static int odmr_getrange(int sock, struct query *ctl, const char *id,
 	    if (FD_ISSET(sock, &readfds))
 	    {
 		int n = SockRead(sock, buf, sizeof(buf));
+		if (n <= 0)
+		    break;
+
 		SockWrite(smtp_sock, buf, n);
+		if (outlevel >= O_MONITOR)
+		    report(stdout, "ODMR< %s\n", buf);
 	    }
 	    if (FD_ISSET(smtp_sock, &readfds))
 	    {
 		int n = SockRead(smtp_sock, buf, sizeof(buf));
+		if (n <= 0)
+		    break;
+
 		SockWrite(sock, buf, n);
+		if (outlevel >= O_MONITOR)
+		    report(stdout, "ODMR> %s\n", buf);
 	    }
 	}
+	SockClose(smtp_sock);
     }
 
     return(0);
