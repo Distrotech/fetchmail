@@ -108,7 +108,7 @@ struct optrec *options;
   }
 
   /* log the user onto the server */
-  POP2_sendHELO(options->username,options->password,socket);
+  POP2_sendHELO(options->remotename,options->password,socket);
   if ((number = POP2_stateNMBR(socket)) < 0) {
     POP2_quit(socket);
     status = PS_AUTHFAIL;

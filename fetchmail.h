@@ -56,9 +56,9 @@ struct optrec {
   int fetchall;
   int flush;
   int output;
-  char loginid [USERNAMELEN];
   char *poprcfile;
-  char username [USERNAMELEN];
+  char localname [USERNAMELEN];
+  char remotename [USERNAMELEN];
   char password [PASSWORDLEN];
 #if defined(HAVE_APOP_SUPPORT)
   char digest [DIGESTLEN];
@@ -73,7 +73,7 @@ struct optrec {
 struct prc_server {
   char *server;
   int protocol;
-  char *username;
+  char *remotename;
   char *password;
   char *remotefolder;
   char *userfolder;

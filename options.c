@@ -189,7 +189,7 @@ struct optrec *options;
         break;
       case 'u':
       case LA_USERNAME:
-        strncpy(options->username,optarg,sizeof(options->username)-1);
+        strncpy(options->remotename,optarg,sizeof(options->remotename)-1);
         break;
       case 'o':
       case LA_LOCALFILE:
@@ -288,8 +288,6 @@ struct optrec *options;
     fprintf(stderr,"No passwd entry for uid %d\n",uid);
     return(-1);
   }
-  /* save the login name for delivery use */
-  strcpy(options->loginid,pw->pw_name);
 
   options->whichpop = DEF_PROTOCOL;
 
@@ -299,16 +297,17 @@ struct optrec *options;
   options->keep = 0;
 #endif
 
-  strcpy(options->username,pw->pw_name);
+  strcpy(options->localname,pw->pw_name);
+  strcpy(options->remotename,pw->pw_name);
 
 #if defined(USERFOLDER) && defined(HAVE_FLOCK) 
   options->output = TO_FOLDER;
-  sprintf(options->userfolder, USERFOLDER, options->username);
+  sprintf(options->userfolder, USERFOLDER, pw->pw_name);
 #else
   options->output = TO_MDA;
 #endif
 
-  (void) sprintf(options->mda, DEF_MDA, options->username);
+  (void) sprintf(options->mda, DEF_MDA, options->localname);
 
   options->poprcfile = 
       (char *) xmalloc(strlen(pw->pw_dir)+strlen(POPRC_NAME)+2);

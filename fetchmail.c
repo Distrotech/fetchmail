@@ -277,10 +277,7 @@ int showversioninfo()
 int dump_options (options)
 struct optrec *options;
 {
-  if (!options->loginid[0])
-    printf("  No password set\n");
-  else
-    printf("  Username = '%s'\n", options->username);
+  printf("  Username = '%s'\n", options->remotename);
   printf("  Password = '%s'\n", options->password);
 
   printf("  Protocol is ");
@@ -551,15 +548,7 @@ struct optrec *options;
     /* punch in a null terminator */
     if (*argp != '\0')
       *(argp++) = '\0';  
- 
-    /* check for macros */
-    if (strcmp(mda_argv[argi],"$u") == 0)
-      mda_argv[argi] = 
-        strcpy((char *) malloc(strlen(options->loginid)+1),options->loginid);
-    else
-      ;  /* no macros to expand */
-
-  }
+   }
   mda_argv[argi] = (char *) 0;
 
 }

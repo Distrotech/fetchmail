@@ -60,7 +60,7 @@ server_options:	serv_option_clause
 
 serv_option_clause: 
 		KW_PROTOCOL proto		{prc_setproto($2);}
-	|	KW_USERNAME PARAM_STRING	{prc_setusername($2);}
+	|	KW_USERNAME PARAM_STRING	{prc_remotename($2);}
 	|	KW_PASSWORD PARAM_STRING	{prc_setpassword($2);}
 	|	KW_REMOTEFOLDER PARAM_STRING	{prc_setremote($2);}
 	|	KW_LOCALFOLDER PARAM_STRING	{prc_setlocal($2);}

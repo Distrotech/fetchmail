@@ -299,9 +299,9 @@ int socket;
 
   switch (options->whichpop) {
     case P_POP3:
-      SockPrintf(socket,"USER %s\r\n",options->username);
+      SockPrintf(socket,"USER %s\r\n",options->remotename);
       if (outlevel == O_VERBOSE)
-        fprintf(stderr,"> USER %s\n",options->username);
+        fprintf(stderr,"> USER %s\n",options->remotename);
       if (POP3_OK(buf,socket) != 0)
         goto badAuth;
 
@@ -316,9 +316,9 @@ int socket;
 #if defined(HAVE_APOP_SUPPORT)
     case P_APOP:
       SockPrintf(socket,"APOP %s %s\r\n", 
-                 options->username, options->digest);
+                 options->remotename, options->digest);
       if (outlevel == O_VERBOSE)
-        fprintf(stderr,"> APOP %s %s\n",options->username, options->digest);
+        fprintf(stderr,"> APOP %s %s\n",options->remotename, options->digest);
       if (POP3_OK(buf,socket) != 0) 
         goto badAuth;
       break;
@@ -326,11 +326,11 @@ int socket;
 
 #if defined(HAVE_RPOP_SUPPORT)
     case P_RPOP:
-      SockPrintf(socket, "RPOP %s\r\n", options->username);
+      SockPrintf(socket, "RPOP %s\r\n", options->remotename);
       if (POP3_OK(buf,socket) != 0)
          goto badAuth;
       if (outlevel == O_VERBOSE)
-        fprintf(stderr,"> RPOP %s %s\n",options->username);
+        fprintf(stderr,"> RPOP %s %s\n",options->remotename);
       break;
 #endif  /* HAVE_RPOP_SUPPORT */
 
