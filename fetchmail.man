@@ -263,7 +263,7 @@ server to believe it's allowed to bind to a privileged remote port.)
 .PP
 .SH OUTPUT OPTIONS
 The default behavior of 
-.I popmail
+.I popclient
 is to ship mail to the the SMTP port on the machine it is running on
 (localhost), as though it were being passed over a normal TCP/IP link.
 This normally results in the mail being delivered locally via your
@@ -348,18 +348,18 @@ The
 or
 .B -d 
 option runs 
-.I popmail
+.I popclient
 in daemon mode.  You must specify a numeric argument which is a
 polling interval in seconds.
 .PP
 In daemon mode, 
-.I popmail
+.I popclient
 puts itself in background and runs forever, querying each specified
 host and then sleeping for the given polling interval.
 .PP
 Simply invoking
 .IP
-popmail -d 900
+popclient -d 900
 .PP
 will, therefore, poll the hosts described in your 
 .I ~/.poprc
