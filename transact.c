@@ -1503,7 +1503,10 @@ va_dcl
     va_end(ap);
 
     snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), "\r\n");
-    SockWrite(sock, buf, strlen(buf));
+    if (SockWrite(sock, buf, strlen(buf)) < strlen(buf)) {
+	/* short write, bail out */
+	return PS_SOCKET;
+    }
 
     if (outlevel >= O_MONITOR)
     {
