@@ -19,11 +19,11 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-pl 3.9.9 ():
+pl 3.9.9 (Wed Jun 25 11:01:51 EDT 1997):
 * We can now process multiple To headers a la Microsoft Exchange Server.
 * Avoid sending LIST and getting an error when no messages are waiting.
 * Allow `fetchmail' to do wakeup even when no .fetchmailrc.
-* Fixed Paul Sutcliffe's headerless-mail bug.
+* Fixed Paul Sutcliffe's headerless-mail bug triggered by -s.
 * Added `pass8bits' to help prevent internationalization lossage.
 * Add Guenther Leber's fixes for ETRN mode.
 
