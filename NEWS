@@ -14,8 +14,9 @@
 ------------------------------------------------------------------------------
 fetchmail-4.2.7 ()
 * Full OTP support with Craig Metz's libopie 2.32 or higher.
+* Major upgrade of FAQ with a procedure for diagnosing mangled-mail problems.
 
-There are 283 people on the fetchmail-friends list.
+There are 286 people on the fetchmail-friends list.
 
 fetchmail-4.2.6 (Wed Sep 24 17:37:13 EDT 1997)
 * Prevent bad matches on Received line due to hostnames ending "for" and "by".
