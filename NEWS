@@ -2,6 +2,14 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-6.1.0 (Sun Sep 22 18:31:23 EDT 2002), 21999 lines:
+
+* Updated French translation.
+* Stefan Esser's fix for potential remote vulnerability in multidrop mode.
+  This is an important security fix!
+
+There are 519 people on fetchmail-friends and 680 on fetchmail-announce.
+
 fetchmail-6.0.0 (Tue Sep 17 19:48:25 EDT 2002), 21972 lines:
 
 * Applied Matt Kraai's fix for minor Debian bug #144539.
@@ -11,7 +19,6 @@ fetchmail-6.0.0 (Tue Sep 17 19:48:25 EDT 2002), 21972 lines:
 * Updated de and po translations,
 
 There are 520 people on fetchmail-friends and 683 on fetchmail-announce.
-% 6.0.0 release
 
 fetchmail-5.9.14 (Fri Sep  6 05:03:25 EDT 2002), 21932 lines:
 
@@ -232,7 +239,6 @@ fetchmail-5.9.0 (Sun Aug 12 23:52:16 EDT 2001), 21062 lines:
 * Matthias Andree's patch to correct parsing of spaces in quoted usernames.
 
 There are 371 people on fetchmail-friends and 610 on fetchmail-announce.
-% Release 5.9.0
 
 fetchmail-5.8.17 (Tue Aug  7 20:05:36 EDT 2001), 21056 lines:
 
