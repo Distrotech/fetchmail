@@ -730,7 +730,7 @@ void dump_params (struct query *ctl)
 
 	printf("  %d local name(s) recognized%s.\n",
 	       count,
-	       (count == 1 && !strcmp(idp->id, user)) ? " (by default)" : "");
+	       (count == 1 && !strcmp(ctl->localnames->id, user)) ? " (by default)" : "");
 	if (outlevel == O_VERBOSE)
 	    for (idp = ctl->localnames; idp; idp = idp->next)
 		if (idp->val.id2)
