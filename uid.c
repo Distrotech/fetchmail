@@ -134,6 +134,16 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 	     */
 	    if ((id = strchr(user, ' ')) != NULL )
 	    {
+
+	      /*
+	       * this is one other trick. The userhost part 
+	       * may contain ' ' in the user part, at least in
+	       * the lotus notes case.
+	       * So we start looking for the '@' after which the
+	       * host will follow with the ' ' seperator finaly id.
+	       */
+	        delimp1 = strchr(user, '@');
+	        id = strchr(delimp1,' ');
 	        for (delimp1 = id; delimp1 >= user; delimp1--)
 		    if ((*delimp1 != ' ') && (*delimp1 != '\t'))
 			break;
