@@ -172,7 +172,7 @@ void reply_hack(char *, const char *);
 char *nxtaddr(const char *);
 
 void initialize_saved_lists(struct query *, char *);
-void save_uid(struct idlist **, int, char *);
+struct idlist *save_uid(struct idlist **, int, char *);
 void free_uid_list(struct idlist **);
 void save_id_pair(struct idlist **, char *, char *);
 void free_idpair_list(struct idlist **);

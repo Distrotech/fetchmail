@@ -99,7 +99,7 @@ void initialize_saved_lists(struct query *hostlist, char *idfile)
     }
 }
 
-void save_uid(struct idlist **idl, int num, char *str)
+struct idlist *save_uid(struct idlist **idl, int num, char *str)
 /* save a number/UID pair on the given UID list */
 {
     struct idlist *new;
@@ -109,6 +109,8 @@ void save_uid(struct idlist **idl, int num, char *str)
     new->id = xstrdup(str);
     new->next = *idl;
     *idl = new;
+
+    return(new);
 }
 
 void free_uid_list(struct idlist **idl)

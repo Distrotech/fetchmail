@@ -509,13 +509,15 @@ struct query *ctl;	/* query control record */
 	    /* write error notifications */
 #ifdef HAVE_RES_SEARCH
 	    if (no_local_matches || bad_addresses)
-#endif /* HAVE_RES_SEARCH */
+#else
 	    if (bad_addresses)
+#endif /* HAVE_RES_SEARCH */
 	    {
 		int	errlen = 0;
 		char	errhd[USERNAMELEN + POPBUFSIZE], *errmsg;
 
-		(void) strcpy(errmsg, "X-Fetchmail-Error: ");
+		errmsg = errhd;
+		(void) strcpy(errhd, "X-Fetchmail-Error: ");
 #ifdef HAVE_RES_SEARCH
 		if (no_local_matches)
 		{
@@ -524,21 +526,25 @@ struct query *ctl;	/* query control record */
 			strcat(errhd, "; ");
 		}
 #endif /* HAVE_RES_SEARCH */
-		strcat(errhd, "SMTP listener rejected recipient addresses: ");
-		errlen = strlen(errhd);
-		for (idp = xmit_names; idp; idp = idp->next)
-		    if (!idp->val.num)
-			errlen += strlen(idp->id) + 2;
 
-		errmsg = alloca(errlen+1);
-		(void) strcpy(errmsg, errhd);
-		for (idp = xmit_names; idp; idp = idp->next)
-		    if (!idp->val.num)
-		    {
-			strcat(errmsg, idp->id);
-			if (idp->next)
-			    strcat(errmsg, ", ");
-		    }
+		if (bad_addresses)
+		{
+		    strcat(errhd, "SMTP listener rejected local recipient addresses: ");
+		    errlen = strlen(errhd);
+		    for (idp = xmit_names; idp; idp = idp->next)
+			if (!idp->val.num)
+			    errlen += strlen(idp->id) + 2;
+
+		    errmsg = alloca(errlen+3);
+		    (void) strcpy(errmsg, errhd);
+		    for (idp = xmit_names; idp; idp = idp->next)
+			if (!idp->val.num)
+			{
+			    strcat(errmsg, idp->id);
+			    if (idp->next)
+				strcat(errmsg, ", ");
+			}
+		}
 
 		strcat(errmsg, "\n");
 
