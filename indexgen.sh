@@ -190,7 +190,7 @@ sessions.<p>
 The fetchmail code was developed under Linux, but has also been
 extensively tested under 4.4BSD, Solaris, AIX, and NEXTSTEP.  It
 should be readily portable to other Unix variants (it requires only
-POSIX plus BSD sockets, and uses GNU autoconf).
+POSIX plus BSD sockets, and uses GNU autoconf).<P>
 
 Fetchmail is supported only for Unix by its official maintainers.
 However, it is reported to build and run correctly under AmigaOS and
