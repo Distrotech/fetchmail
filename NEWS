@@ -19,6 +19,10 @@ fetchmail-5.0.6 ():
 * Interface option fix from Bill Currie.
 * 554 added to default antispam vaklues (for Postfix).
 
+Warning: CompuServe changed their POP3 system on 31 July 1999.  In doing
+so, they broke fetchmail's RPA support.  Nobody has sent me either code that
+works with the new system or a spec for it yet.
+
 There are 267 people on fetchmail-friends and 420 on fetchmail-announce.
 
 fetchmail-5.0.5 (Sat Jun 26 14:41:27 EDT 1999):
