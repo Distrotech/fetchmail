@@ -22,6 +22,9 @@ fetchmail-4.1.2 ()
 * Prevent buffer spamming in SockOpen by a broken DNS.
 * Al Youngwerth's fix to prevent segfaults when Return-Path has no address.
 * Phillippe De Muyter's port changes for sysV68 R3V7.1.
+* Port changes for Kerberos under FreeBSD, thanks to Benjamin Greenwald.
+
+There are 285 people on the fetchmail-friends list.
 
 fetchmail-4.1.1 (Fri Aug 15 21:02:50 EDT 1997)
 * Fix an obvious bug in some snprintf calls (non-Linux systems only)

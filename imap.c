@@ -20,6 +20,9 @@
 #include <des.h>
 #define krb_get_err_text(e) (krb_err_txt[e])
 #endif
+#if defined (__FreeBSD__)
+#define krb_get_err_text(e) (krb_err_txt[e])
+#endif
 #include <krb.h>
 #endif /* KERBEROS_V4 */
 

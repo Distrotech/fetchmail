@@ -46,8 +46,14 @@
 #include <krb.h>
 #define krb_get_err_text(e) (krb_err_txt[e])
 #else
+#if defined(__FreeBSD__)
+#define krb_get_err_text(e) (krb_err_txt[e])
 #include <krb.h>
 #include <des.h>
+#else
+#include <krb.h>
+#include <des.h>
+#endif /* ! defined (__FreeBSD__) */
 #endif /* ! defined (__bsdi__) */
 #include <netinet/in.h>
 #include <netdb.h>
@@ -1219,7 +1225,11 @@ int
 kerberos_auth (socket, canonical) 
 /* authenticate to the server host using Kerberos V4 */
 int socket;		/* socket to server host */
+#ifdef __FreeBSD__
+char *canonical;	/* server name */
+#else
 const char *canonical;	/* server name */
+#endif
 {
     char * host_primary;
     KTEXT ticket;

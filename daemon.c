@@ -54,7 +54,7 @@ sigchld_handler (int sig)
 {
   pid_t pid;
 
-#if defined(HAVE_UNION_WAIT)
+#if defined(HAVE_UNION_WAIT) && !defined(__FreeBSD__)
   union wait status;
 #else
   int status;
