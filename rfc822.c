@@ -40,6 +40,13 @@ const char *host;	/* server hostname */
 	printf("state %d: %s", state, mycopy);
 	printf("%*s^\n", from - mycopy + 10, " ");
 #endif /* TESTMAIN */
+
+#define INSERT_HOSTNAME	\
+		strcpy(buf, "@"); \
+		strcat(buf, host); \
+		buf += strlen(buf); \
+		state = 7;
+
 	switch (state)
 	{
 	case 0:   /* before header colon */
@@ -71,6 +78,7 @@ const char *host;	/* server hostname */
 		--from;
 		continue;
 	    }
+	    break;
 
 	case 3:   /* we're in a quoted human name, copy and ignore */
 	    if (*from == '"')
@@ -91,30 +99,26 @@ const char *host;	/* server hostname */
 		state = 7;
 	    else if (*from == '>')
 	    {
-		strcpy(buf, "@");
-		strcat(buf, host);
-		buf += strlen(buf);
-		state = 7;
+		INSERT_HOSTNAME
 	    }
-
 	    break;
 
 	case 6:   /* not string or comment, could be a bare address */
 	    if (*from == '@')
 		state = 7;
 
+	    else if (*from == '<')
+		state = 5;
+
 	    /* on proper termination with no @, insert hostname */
 	    else if (*from == ',')
 	    {
-		strcpy(buf, "@");
-		strcat(buf, host);
-		buf += strlen(buf);
+		INSERT_HOSTNAME
 		tokencount = 0;
-		state = 1;
 	    }
 
 	    /* If the address token is not properly terminated, ignore it. */
-	    else if (*from == ' ' || *from == '\t')
+	    else if (isspace(*from))
 	    {
 		const char *cp;
 
@@ -127,10 +131,7 @@ const char *host;	/* server hostname */
 		    continue;
 		if (*cp == '(')
 		{
-		    strcpy(buf, "@");
-		    strcat(buf, host);
-		    buf += strlen(buf);
-		    state = 1;
+		    INSERT_HOSTNAME
 		}
 	    }
 
@@ -140,8 +141,8 @@ const char *host;	/* server hostname */
 	case 7:   /* we're done with this address, skip to end */
 	    if (*from == ',')
 	    {
-		tokencount == 0;
 		state = 1;
+		tokencount == 0;
 	    }
 	    break;
 	}
@@ -149,6 +150,7 @@ const char *host;	/* server hostname */
 	/* all characters from the old buffer get copied to the new one */
 	*buf++ = *from;
     }
+#undef INSERT_HOSTNAME
 
     /* back up and nuke the appended comma sentinel */
     *--buf = '\0';
