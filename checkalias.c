@@ -33,7 +33,8 @@ static int is_ip_alias(const char *name1,const char *name2)
 	address_t address;
     } 
     address_e;
-    address_e *host_a_addr, *host_b_addr,*dummy_addr;
+    address_e *host_a_addr=0, *host_b_addr=0;	/* assignments pacify -Wall */
+    address_e *dummy_addr;
 
     int i;
     struct hostent *hp;

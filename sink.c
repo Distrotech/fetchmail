@@ -276,9 +276,9 @@ int open_sink(struct query *ctl,
 	     */
 	    nameslen = 0;
 	    for (idp = xmit_names; idp; idp = idp->next)
-		if (idp->val.status.mark == XMIT_ACCEPT)
+		if ((idp->val.status.mark == XMIT_ACCEPT))
 		    nameslen += (strlen(idp->id) + 1);	/* string + ' ' */
-	    if (*good_addresses = 0)
+	    if ((*good_addresses = 0))
 		nameslen = strlen(run.postmaster);
 
 	    names = (char *)xmalloc(nameslen + 1);	/* account for '\0' */
@@ -318,17 +318,17 @@ int open_sink(struct query *ctl,
 
 	    /* find length of resulting mda string */
 	    sp = before;
-	    while (sp = strstr(sp, "%s")) {
+	    while ((sp = strstr(sp, "%s"))) {
 		length += nameslen - 2;	/* subtract %s */
 		sp += 2;
 	    }
 	    sp = before;
-	    while (sp = strstr(sp, "%T")) {
+	    while ((sp = strstr(sp, "%T"))) {
 		length += nameslen - 2;	/* subtract %T */
 		sp += 2;
 	    }
 	    sp = before;
-	    while (sp = strstr(sp, "%F")) {
+	    while ((sp = strstr(sp, "%F"))) {
 		length += fromlen - 2;	/* subtract %F */
 		sp += 2;
 	    }
@@ -336,7 +336,7 @@ int open_sink(struct query *ctl,
 	    after = xmalloc(length + 1);
 
 	    /* copy mda source string to after, while expanding %[sTF] */
-	    for (dp = after, sp = before; *dp = *sp; dp++, sp++) {
+	    for (dp = after, sp = before; (*dp = *sp); dp++, sp++) {
 		if (sp[0] != '%')	continue;
 
 		/* need to expand? BTW, no here overflow, because in

@@ -64,6 +64,7 @@
 #include <com_err.h>
 #endif /* KERBEROS_V5 */
 
+#include "socket.h"
 #include  "fetchmail.h"
 
 #if INET6
@@ -121,7 +122,6 @@ struct query *ctl;		/* list of permissible aliases */
 struct idlist **xmit_names;	/* list of recipient names parsed out */
 {
     const char	*lname;
-    int sl;
     int off = 0;
     
     lname = idpair_find(&ctl->localnames, name+off);
@@ -1239,7 +1239,6 @@ static void send_warning(struct query *ctl)
 {
     int size, nbr;
     int msg_to_send = FALSE;
-    FILE *tmpfile = NULL;
     struct idlist *head=NULL, *current=NULL;
     int max_warning_poll_count, good, bad;
 #define OVERHD	"Subject: Fetchmail WARNING.\r\n\r\nThe following oversized messages remain on the mail server:\n\r\n"
@@ -1309,7 +1308,7 @@ const struct method *proto;	/* protocol method table */
     int ok, js, sock = -1;
     char *msg;
     void (*sigsave)();
-    struct idlist *current=NULL, *prev=NULL, *next=NULL, *head=NULL, *tmp=NULL;
+    struct idlist *current=NULL, *tmp=NULL;
 
     protocol = (struct method *)proto;
     ctl->server.base_protocol = protocol;
@@ -1395,7 +1394,7 @@ const struct method *proto;	/* protocol method table */
     else
     {
 	char buf [POPBUFSIZE+1], *realhost;
-	int *msgsizes, len, num, count, new, bytes, deletions = 0;
+	int len, num, count, new, bytes, deletions = 0, *msgsizes = NULL;
 #if INET6
 	int fetches, dispatches;
 #else /* INET6 */
@@ -1676,7 +1675,7 @@ const struct method *proto;	/* protocol method table */
 				if (toolarge && !check_only) 
 				{
 				    char size[32];
-				    int cnt, bytesz = msgsizes[num-1];
+				    int cnt;
 
 				    /* convert sz to string */
 				    sprintf(size, "%d", msgsizes[num-1]);

@@ -74,7 +74,7 @@ void UnMimeHeader(unsigned char *hdr)
 
   int  state = S_COPY_PLAIN;
   unsigned char *p_in, *p_out, *p;
-  unsigned char enc;
+  unsigned char enc = '\0';		/* initialization pacifies -Wall */
   int  i;
 
   /* Speed up in case this is not a MIME-encoded header */

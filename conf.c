@@ -60,8 +60,6 @@ static void indent(char ic)
 static void stringdump(const char *name, const char *member)
 /* dump a string member with current indent */
 {
-    static char	buf[BUFSIZ];
-
     indent('\0');
     fprintf(stdout, "\"%s\":", name);
     if (member)
@@ -71,14 +69,14 @@ static void stringdump(const char *name, const char *member)
     fputs(",\n", stdout);
 }
 
-static int numdump(const char *name, const int num)
+static void numdump(const char *name, const int num)
 /* dump a numeric quantity at current indent */
 {
     indent('\0');
     fprintf(stdout, "'%s':%d,\n", name, num);
 }
 
-static int booldump(const char *name, const int onoff)
+static void booldump(const char *name, const int onoff)
 /* dump a boolean quantity at current indent */
 {
     indent('\0');

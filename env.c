@@ -28,7 +28,6 @@ extern char *program_name;
 void envquery(int argc, char **argv)
 /* set up basic stuff from the environment (including the rc file name) */
 {
-    char tmpbuf[BUFSIZ]; 
     struct passwd *pw;
 
     if ((program_name = strrchr(argv[0], '/')) != NULL)

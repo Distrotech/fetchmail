@@ -75,7 +75,7 @@ char *prompt;
     register c;
     FILE *fi;
     static char pbuf[INPUT_BUF_SIZE];
-    RETSIGTYPE (*sig)();
+    RETSIGTYPE (*sig)() = 0;	/* initialization pacifies -Wall */
     RETSIGTYPE sigint_handler();
 
     int istty = isatty(0);
