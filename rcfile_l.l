@@ -25,6 +25,7 @@ fetchlimit	{ return FETCHLIMIT; }
 logfile		{ return LOGFILE; }
 interface	{ return INTERFACE; }
 monitor		{ return MONITOR; }
+
 defaults 	{ return DEFAULTS; }
 server 		{ return POLL; }
 poll		{ return POLL; }
@@ -42,6 +43,8 @@ pass(word)?	{ return PASSWORD; }
 remote(folder)? { return FOLDER; }
 smtp(host)?	{ return SMTPHOST; }
 mda		{ return MDA; }
+pre(connect)	{ return PRECONNECT; }
+
 is		{ return IS; }
 here		{ return HERE; }
 there		{ return THERE; }

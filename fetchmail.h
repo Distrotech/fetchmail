@@ -25,6 +25,7 @@
 #define		DIGESTLEN	33	/* length of MD5 digest */
 #define		MDALEN		256	/* length of delivery agent command */
 #define		IDLEN		128	/* length of UIDL message ID */
+#define		CMDLEN		128	/* length of initialization command */
 
 /* exit code values */
 #define		PS_SUCCESS	0	/* successful receipt of messages */
@@ -74,9 +75,10 @@ struct query
     /* per-user data */
     char remotename [USERNAMELEN+1];
     char password [PASSWORDLEN+1];
-    char mailbox [FOLDERLEN];
+    char mailbox [FOLDERLEN+1];
     char smtphost[HOSTLEN+1];
     char mda [MDALEN+1];
+    char preconnect [CMDLEN+1];
 
     /* per-user control flags */
     int keep;

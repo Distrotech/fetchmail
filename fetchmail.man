@@ -530,6 +530,7 @@ Legal user options are
     remotefolder (or remote)
     smtphost (or smtp)
     mda
+    preconnect
     keep
     flush
     fetchall
@@ -540,9 +541,11 @@ Legal user options are
     norewrite
     limit
     fetchlimit
+    syslog
 .PP
 All options correspond to the obvious command-line arguments except
-four: `aka', `is', `to', `password', and `envelope'.
+the following: `aka', `is', `to', `password', `envelope',
+`preconnect', and `syslog'.
 .PP
 The `aka' option is for use with multidrop mailboxes.  It allows you
 to pre-declare a list of DNS aliases for a server.  This is an
@@ -578,9 +581,16 @@ recipient is the calling user.
 The \fBpassword\fR option requires a string argument, which is the password
 to be used with the entry's server.
 .PP
-The \fBaliases\fR option declares names that are recognized as OK for
+The \fBaka\fR option declares names that are recognized as OK for
 local delivery.  Your local name is automatically one of these; the
-aliases directive can be used to declare others.   
+aka directive can be used to declare others.   
+.PP
+The `preconnect' keyword allows you to specify a shell command to be
+executed just before each time
+.I fetchmail
+establishes a mailserver connection.  This may be useful if you are 
+attempting to set up secure POP connections with the aid of
+.IR ssh (1).
 .PP
 Legal protocol identifiers are
 

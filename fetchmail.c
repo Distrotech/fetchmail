@@ -861,6 +861,10 @@ void dump_params (struct query *ctl)
 	printf("  Messages will be delivered with '%s.'\n", visbuf(ctl->mda));
     else
 	printf("  Messages will be SMTP-forwarded to '%s'.\n", visbuf(ctl->smtphost));
+    if (ctl->preconnect[0])
+	printf("  Server connection will be preinitialized with '%s.'\n", visbuf(ctl->preconnect));
+    else if (outlevel == O_VERBOSE)
+	printf("  No preinitialization command.\n");
     if (!ctl->localnames)
 	printf("  No localnames declared for this host.\n");
     else

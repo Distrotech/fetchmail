@@ -34,6 +34,8 @@
 #   password (or pass)        -- must be followed by a password string
 #   smtphost (or smtp)        -- must be followed by a host name
 #   mda                       -- must be followed by an MDA command string
+#   preconnect (or pre)       -- must be followed by an initialization command
+#
 #   keep
 #   flush
 #   fetchall

@@ -898,7 +898,15 @@ const struct method *proto;	/* protocol method table */
     {
 	char buf [POPBUFSIZE+1];
 	int *msgsizes, len, num, count, new, deletions = 0;
-	FILE *sockfp;
+	FILE *sockfp; 
+	/* execute pre-initialization command, if any */
+	if (ctl->preconnect[0] && (ok = system(ctl->preconnect)))
+	{
+	    sprintf(buf, "pre-connection command failed with status %d", ok);
+	    error(0, 0, buf);
+	    ok = PS_SYNTAX;
+	    goto closeUp;
+	}
 
 	/* open a socket to the mail server */
 	if ((sockfp = SockOpen(ctl->servernames->id,

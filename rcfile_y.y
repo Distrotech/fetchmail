@@ -42,7 +42,7 @@ static void prc_reset();
 }
 
 %token DEFAULTS POLL SKIP AKA PROTOCOL AUTHENTICATE TIMEOUT KPOP KERBEROS
-%token ENVELOPE USERNAME PASSWORD FOLDER SMTPHOST MDA LIMIT
+%token ENVELOPE USERNAME PASSWORD FOLDER SMTPHOST MDA PRECONNECT LIMIT
 %token IS HERE THERE TO MAP WILDCARD
 %token SET BATCHLIMIT FETCHLIMIT LOGFILE INTERFACE MONITOR
 %token <proto> PROTO
@@ -167,6 +167,7 @@ user_option	: TO localnames HERE
 		| FOLDER STRING 	{strcpy(current.mailbox, $2);}
 		| SMTPHOST STRING	{strcpy(current.smtphost, $2);}
 		| MDA STRING		{strcpy(current.mda, $2);}
+		| PRECONNECT STRING	{strcpy(current.preconnect, $2);}
 
 		| KEEP			{current.keep = ($1==FLAG_TRUE);}
 		| FLUSH			{current.flush = ($1==FLAG_TRUE);}
@@ -319,6 +320,7 @@ static void prc_register(void)
     STR_FORCE(mailbox, FOLDERLEN);
     STR_FORCE(smtphost, HOSTLEN);
     STR_FORCE(mda, MDALEN);
+    STR_FORCE(preconnect, CMDLEN);
 #undef STR_FORCE
     
 #define FLAG_FORCE(fld) if (cmd_opts.fld) current.fld = cmd_opts.fld
@@ -349,6 +351,7 @@ void optmerge(struct query *h2, struct query *h1)
     STR_MERGE(mailbox, FOLDERLEN);
     STR_MERGE(smtphost, HOSTLEN);
     STR_MERGE(mda, MDALEN);
+    STR_MERGE(preconnect, CMDLEN);
 #undef STR_MERGE
 
 #define FLAG_MERGE(fld) if (!h2->fld) h2->fld = h1->fld

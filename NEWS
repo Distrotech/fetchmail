@@ -10,6 +10,8 @@ features --
 * Automatic parsing of ~/.netrc for a mailserver password if necessary, thanks
   to Gordon Matzigkeit.
 
+* Added preconnect option for initializing ssh connections.
+
 * More FAQ material on how and when to use --interface.
 
 bugs --
