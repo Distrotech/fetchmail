@@ -13,6 +13,7 @@
 
 #ifdef linux
 
+#include <config.h>
 #include <stdio.h>
 #include <string.h>
 #if defined(STDC_HEADERS)
@@ -94,7 +95,7 @@ static int get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
 	int result;
 
 	if (socket_fd < 0 || !stats_file)
-		result = -1;
+		result = FALSE;
 	else
 		result = _get_ifinfo_(socket_fd, stats_file, ifname, ifinfo);
 	if (socket_fd >= 0)
@@ -137,6 +138,7 @@ void interface_note_activity(struct hostdata *hp)
 /* save interface I/O counts */
 {
 	ifinfo_t ifinfo;
+	struct query *ctl;
 
 	/* if not monitoring link, all done */
 	if (!hp->monitor)
@@ -144,11 +146,22 @@ void interface_note_activity(struct hostdata *hp)
 
 	/* get the current I/O stats for the monitored link */
 	if (get_ifinfo(hp->monitor, &ifinfo))
-		hp->monitor_io = ifinfo.rx_packets + ifinfo.tx_packets;
+		/* update this and preceeding host entries using the link
+		   (they were already set during this pass but the I/O
+		   count has now changed and they need to be re-updated)
+		*/
+		for (ctl = querylist; ctl; ctl = ctl->next) {
+			if (!strcmp(hp->monitor, ctl->server.monitor))
+				ctl->server.monitor_io =
+					ifinfo.rx_packets + ifinfo.tx_packets;
+			/* do NOT update host entries following this one */
+			if (&ctl->server == hp)
+				break;
+		}
 
 #ifdef	ACTIVITY_DEBUG
 	(void) error(0, 0, "activity on %s -noted- as %d", 
-		hp->names->id, hp->monitor_io);
+		hp->monitor, hp->monitor_io);
 #endif
 }
 
@@ -182,7 +195,7 @@ int interface_approve(struct hostdata *hp)
 
 #ifdef	ACTIVITY_DEBUG
 	(void) error(0, 0, "activity on %s checked as %d", 
-		hp->names->id, hp->monitor_io);
+		hp->monitor, hp->monitor_io);
 #endif
 	/* if monitoring, check link for activity if it is up */
 	if (get_ifinfo(hp->monitor, &ifinfo) &&

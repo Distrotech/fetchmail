@@ -36,6 +36,15 @@ happens when you try that?)
 (But fetchmail -V reports the timeout option set correctly.  Are server
 timeouts really broken?  We must find a way to test this.)
 
+				Heads-up!
+
+The .poprc compatibility hack that allows your first user declaration
+per server to omit the "username" keyword. has been causing some
+confusion (see question F3 in the FAQ for details).  Use of the
+feature now generates a warning to standard error.  In a future
+release, probably 4.0, this hack will be removed and the leading
+`username' token required for every user entry.
+
 			Release Notes:
 
 ------------------------------------------------------------------------------
@@ -47,7 +56,11 @@ features --
 
 * -U option to force UIDL use under POP3 (thanks, Ingmar Baumgart).
 
-There are 249 people on the fetchmail-friends list.
+bugs -- 
+
+* George Sipe sent a fix for the --monitor code.
+
+There are 261 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-3.8 (Fri Mar  7 17:34:02 EST 1997)
@@ -123,13 +136,6 @@ There are 229 people on the fetchmail-friends list.
 ------------------------------------------------------------------------------
 fetchmail-3.5 (Sat Feb 15 15:19:36 EST 1997)
 
-Note: The .poprc compatibility hack that allows your first user declaration
-per server to omit the "username" keyword. has been causing some confusion (see
-question F3 in the FAQ for details).  Use of the feature now generates a 
-warning to standard error.  In a future release, probably 4.0, this hack
-will be removed and the leading `username' token required for every user
-entry.
-
 features --
 
 * The host that ETRN specifies is now set by the smtphost option.
@@ -138,6 +144,8 @@ features --
   with a new `no received' per-server option.
 
 * Major FAQ reorganization and additions.
+
+* .poprc-style `user'-less entry now triggers a warning.
 
 bugs --
 
