@@ -224,7 +224,7 @@ struct hostrec *queryctl;
         break;
       case 'P':
       case LA_PORT:
-	queryctl->port = strtol(optarg,0,0L);
+	queryctl->port = atoi(optarg);
 	break;
       case 'S':
       case LA_SMTPHOST:
@@ -307,54 +307,65 @@ struct hostrec *queryctl;
   calls:         none.
   globals:       writes outlevel, poprcfile, idfile.
  *********************************************************************/
+#include <stdlib.h>
 
 int setdefaults (queryctl)
 struct hostrec *queryctl;
 {
-  int uid;
-  struct passwd *pw;
-  char *mailvar;
+    char *user, *home;
 
-  bzero(queryctl,sizeof(*queryctl));
+    bzero(queryctl,sizeof(*queryctl));
 
-  if ((pw = getpwuid(uid = getuid())) == NULL) {
-    fprintf(stderr,"No passwd entry for uid %d\n",uid);
-    return(-1);
-  }
+    if ((user = getenv("USER")) == (char *)NULL
+		|| (home = getenv("HOME")) == (char *)NULL)
+    {
+	struct passwd *pw;
 
-  queryctl->protocol = DEF_PROTOCOL;
+	if ((pw = getpwuid(getuid())) != NULL)
+	{
+	    user = pw->pw_name;
+	    home = pw->pw_dir;
+	}
+	else
+	{
+	    fprintf(stderr,"I can't find your name and home directory!\n");
+	    return(-1);
+	}
+    }
+
+    queryctl->protocol = DEF_PROTOCOL;
 
 #if defined(KEEP_IS_DEFAULT)
-  queryctl->keep = 1;
+    queryctl->keep = 1;
 #else
-  queryctl->keep = 0;
+    queryctl->keep = 0;
 #endif
-  queryctl->norewrite = 0;
+    queryctl->norewrite = 0;
 
-  strcpy(queryctl->localname,pw->pw_name);
-  strcpy(queryctl->remotename,pw->pw_name);
-  sprintf(queryctl->userfolder, USERFOLDER, pw->pw_name);
-  strcpy(queryctl->smtphost, "localhost");
-  queryctl->output = TO_SMTP;
-  (void) sprintf(queryctl->mda, DEF_MDA, queryctl->localname);
+    strcpy(queryctl->localname, user);
+    strcpy(queryctl->remotename, user);
+    sprintf(queryctl->userfolder, USERFOLDER, user);
+    strcpy(queryctl->smtphost, "localhost");
+    queryctl->output = TO_SMTP;
+    (void) sprintf(queryctl->mda, DEF_MDA, queryctl->localname);
 
-  poprcfile = 
-      (char *) xmalloc(strlen(pw->pw_dir)+strlen(POPRC_NAME)+2);
+    poprcfile = 
+	(char *) xmalloc(strlen(home)+strlen(POPRC_NAME)+2);
 
-  strcpy(poprcfile, pw->pw_dir);
-  strcat(poprcfile, "/");
-  strcat(poprcfile, POPRC_NAME);
+    strcpy(poprcfile, home);
+    strcat(poprcfile, "/");
+    strcat(poprcfile, POPRC_NAME);
 
-  idfile = 
-      (char *) xmalloc(strlen(pw->pw_dir)+strlen(IDFILE_NAME)+2);
+    idfile = 
+	(char *) xmalloc(strlen(home)+strlen(IDFILE_NAME)+2);
 
-  strcpy(idfile, pw->pw_dir);
-  strcat(idfile, "/");
-  strcat(idfile, IDFILE_NAME);
+    strcpy(idfile, home);
+    strcat(idfile, "/");
+    strcat(idfile, IDFILE_NAME);
 
-  outlevel = O_NORMAL;
+    outlevel = O_NORMAL;
 
-  return(0);
+    return(0);
 }
 
 

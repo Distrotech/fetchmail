@@ -567,6 +567,12 @@ default location of file associating hosts with last message IDs seen
 .TP 5
 ${TMPDIR}/poplock-${HOST}-${USER}
 lock file to help prevent concurrent runs.
+.SH ENVIRONMENT
+For correct initialization, 
+.I popclient
+requires either that both the USER and HOME environment variables are
+correctly set, or that \fBgetpwuid\fR(3) be able to retrieve a password
+entry from your user ID.
 .SH BUGS
 Running more than one concurrent instance of
 .I popclient

@@ -61,6 +61,9 @@ driver to SMTP.  (This requires that we find a POP2 server to test with.)
 
 * Warn users that running concurrent instances of popclient is a bad idea.
 
+* Try USER and HOME to set defaults before going to the password file.
+  This should work in Sun NIS environments.
+
 3.1:
 
 * MDA arguments are now dumped when using the -V option.
