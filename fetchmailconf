@@ -302,11 +302,11 @@ class User:
 	    res = res + " fetchlimit " + `self.fetchlimit`
 	if self.batchlimit != UserDefaults.batchlimit:
 	    res = res + " batchlimit " + `self.batchlimit`
-	if self.ssl != UserDefaults.ssl:
+	if self.ssl and self.ssl != UserDefaults.ssl:
 	    res = res + flag2str(self.ssl, 'ssl')
-	if self.sslkey != UserDefaults.sslkey:
+	if self.sslkey and self.sslkey != UserDefaults.sslkey:
 	    res = res + " sslkey " + `self.sslkey`
-	if self.sslcert != UserDefaults.sslcert:
+	if self.sslcert and self.sslcert != UserDefaults.sslcert:
 	    res = res + " ssl " + `self.sslcert`
 	if self.expunge != UserDefaults.expunge:
 	    res = res + " expunge " + `self.expunge`

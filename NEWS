@@ -5,6 +5,7 @@
 * Attempted fix for Joop Susan's ENOTCONN bug.
 * Fix for NO response during SIZE fetches for M$ Exchange IMAP server.
 * Thomas Zajic <zlatko@gmx.at> sent a change that copes with GMX X-UIDLs.
+* Fix fetchmailconf's handling of ssl attributes when SSL is not configured.
 
 fetchmail-5.2.7 (Sun Feb  6 20:45:41 EST 2000), 18517 lines:
 * Updated FAQ.
