@@ -127,24 +127,17 @@ TAGS: $(tagsrcs)
 tags: $(tagsrcs)
 	$(CTAGS) $(tagsrcs)
 
-.PHONY: install installdirs uninstall
-install: installdirs $(bindir)/fetchmail $(bindir)/fetchmailconf $(mandir)/fetchmail.$(manext)
-
-installdirs:
+.PHONY: install uninstall
+install:
+	@echo "Creating installation directories..." 
 	$(SHELL) ${srcdir}/mkinstalldirs $(bindir) $(mandir)
-
-$(bindir)/fetchmail: fetchmail
 	@echo "Installing fetchmail binary..."
-	$(INSTALL_PROGRAM) fetchmail $@
-
-$(bindir)/fetchmailconf: fetchmailconf
+	$(INSTALL_PROGRAM) ${srcdir}/fetchmail $(bindir)/fetchmail
 	@echo "Installing fetchmail configurator..."
-	$(INSTALL_PROGRAM) fetchmailconf $@
-
-$(mandir)/fetchmail.$(manext): fetchmail.man
+	$(INSTALL_PROGRAM) ${srcdir}/fetchmailconf $(bindir)/fetchmailconf
 	@echo "Installing manual page..."
-	$(INSTALL_DATA) $(srcdir)/fetchmail.man $@
-	ln -s $(mandir)/fetchmail.$(manext) $(mandir)/fetchmailconf.$(manext)
+	$(INSTALL_DATA) $(srcdir)/fetchmail.man $(mandir)/fetchmailconf.$(manext)
+	ln -sf $(mandir)/fetchmail.$(manext) $(mandir)/fetchmailconf.$(manext)
 
 uninstall:
 	rm -f $(bindir)/fetchmail $(bindir)/fetchmailconf
@@ -216,7 +209,7 @@ config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/configure \
 	$(srcdir)/config.guess $(srcdir)/config.h.in $(srcdir)/config.sub \
 	$(srcdir)/acconfig.h
 scripts = $(srcdir)/install.sh $(srcdir)/mkinstalldirs \
-	$(srcdir)/specgen.sh $(srcdir)/lsmgen.sh
+	$(srcdir)/specgen.sh $(srcdir)/lsmgen.sh $(srcdir)/fetchmailconf
 all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) \
 	$(srcdir)/contrib/*[A-Za-uw-z] $(srcdir)/MANIFEST
 
@@ -260,5 +253,10 @@ rpm: dist
 	cd $(RPMROOT)/SPECS; $(RPM) $(RPMFLAGS) fetchmail.spec	
 	cp $(RPMROOT)/RPMS/`arch|sed 's/i[4-9]86/i386/'`/fetchmail-$(VERS)*.rpm $(srcdir)
 	cp $(RPMROOT)/SRPMS/fetchmail-$(VERS)*.src.rpm $(srcdir)
+
+# The following sets edit modes for GNU EMACS.
+# Local Variables:
+# compile-command:"configure"
+# End:
 
 # Automatically generated dependencies will be put at the end of the makefile.
