@@ -1,5 +1,5 @@
 /*
- * cram.c -- GSSAPI authentication (see RFC 1508)
+ * gssapi.c -- GSSAPI authentication (see RFC 1508)
  *
  * For license terms, see the file COPYING in this directory.
  */
@@ -171,36 +171,29 @@ int do_gssauth(int sock, char *command, char *hostname, char *username)
         return PS_AUTHFAIL;
     }
     to64frombits(buf1, send_token.value, send_token.length);
-    if (outlevel >= O_DEBUG) {
-        report(stdout, _("Requesting authorization as %s\n"), username);
-        report(stdout, "IMAP> %s\n",buf1);
-    }
-    strcat(buf1, "\r\n");
-    SockWrite(sock, buf1, strlen(buf1));
 
-    /* we should be done. Get status and finish up */
-    do {
-	if (result = gen_recv(sock, buf1, sizeof buf1))
-           return result;
-    } while(strncmp(buf1, tag, strlen(tag)) != 0);
-    if (strstr(buf1, "OK")) {
-        /* flush security context */
-        if (outlevel >= O_DEBUG)
-            report(stdout, _("Releasing GSS credentials\n"));
-        maj_stat = gss_delete_sec_context(&min_stat, &context, &send_token);
-        if (maj_stat != GSS_S_COMPLETE) {
-            report(stderr, _("Error releasing credentials\n"));
-            return PS_AUTHFAIL;
-        }
-        /* send_token may contain a notification to the server to flush
-         * credentials. RFC 1731 doesn't specify what to do, and since this
-         * support is only for authentication, we'll assume the server
-         * knows enough to flush its own credentials */
-        gss_release_buffer(&min_stat, &send_token);
-        return PS_SUCCESS;
-    }
+    suppress_tags = TRUE;
+    result = gen_transact(sock, buf1, strlen(buf));
+    suppress_tags = FALSE;
 
-    return PS_AUTHFAIL;
+    /* flush security context */
+    if (outlevel >= O_DEBUG)
+	report(stdout, _("Releasing GSS credentials\n"));
+    maj_stat = gss_delete_sec_context(&min_stat, &context, &send_token);
+    if (maj_stat != GSS_S_COMPLETE) {
+	report(stderr, _("Error releasing credentials\n"));
+	return PS_AUTHFAIL;
+    }
+    /* send_token may contain a notification to the server to flush
+     * credentials. RFC 1731 doesn't specify what to do, and since this
+     * support is only for authentication, we'll assume the server
+     * knows enough to flush its own credentials */
+    gss_release_buffer(&min_stat, &send_token);
+
+    if (result)
+	return(result);
+    else
+	return(PS_SUCCESS);
 }	
 #endif /* GSSAPI */
 
