@@ -4,6 +4,18 @@
 # Dumps a release notice and diffs as a MIME multipart message 
 # in RELEASE_NOTES
 #
+$timezone = "EDT";
+
+sub rfc822date
+{
+    @wdays  = ("Mon", "Tue", "Wed", "Thu", "Fri", "Sat");
+    @months = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Nov", "Dec");
+
+    my($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = gmtime(time());
+    "$wdays[$wday] $months[$mon] " . substr("0$mday", -2) . " " . substr("0$hour", -2) . ":" . substr("0$min", -2) . ":" . substr("0$sec", -2) . " $timezone " . (1900+$year);
+}
+
+
 $version=`grep 'VERSION *=' Makefile.in`;
 $version =~ /VERSION *= *(.*)/;
 $version = $1;
@@ -47,6 +59,7 @@ $logvers = $1;
 if ($version eq $logvers) {
     print "No change to Debian logfile...\n";
 } else {
+    $date = &rfc822date();
     print "Updating the Debian logfile ($logvers -> $version)...\n";
     open(DEBLOG, ">>debian/changelog");
     print DEBLOG <<EOF;
