@@ -163,8 +163,9 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	else if (HEADER_END(hp))
 	{
 	    state = ENDIT_ALL;
-	    while (isspace(*--tp))
-		continue;
+	    if (tp > address)
+		while (isspace(*--tp))
+		    continue;
 	    *++tp = '\0';
 	    return(tp > address ? (tp = address) : (char *)NULL);
 	}
