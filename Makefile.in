@@ -156,7 +156,7 @@ clean:
 	-rm -f fetchmail *.o core fetchmail.dvi \
 	       rcfile_l.c rcfile_y.h rcfile_y.c \
 	       fetchmail.tar fetchmail.tar.gz \
-	       linetext[12]
+	       rfc822
 
 distclean: clean 
 	-rm -f Makefile config.h
@@ -221,11 +221,9 @@ fetchmail-$(VERS).tar: $(all)
 fetchmail-$(VERS).tar.gz: fetchmail-$(VERS).tar
 	gzip -f fetchmail-$(VERS).tar
 
-# Test for stdio line-buffering lossage on sockets
-linetest1: socket.c
-	$(CC) -g -I. -DMAIN socket.c -o linetest1	# Use setlinebuf
-linetest2: socket.c
-	$(CC) -g -I. -DMAIN -DUSE_STDIO socket.c -o linetest2	# Use setvnbuf
+# Tester for address parsing
+rfc822: rfc822.c
+	gcc -DTESTMAIN -g rfc822.c -o rfc822
 
 # The automatically generated dependencies below may omit config.h
 # because it is included with ``#include <config.h>'' rather than

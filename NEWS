@@ -11,6 +11,8 @@ features --
 
 * Reorganized and improved man page.
 
+* Mail header parsing now handles RFC822 escapes.
+
 bugs --
 
 * Stop netrc parser from complaining about blank lines.
@@ -18,6 +20,8 @@ bugs --
 * Add ssh recipe correction.
 
 * Eliminate infinite-loop bug in defaults handling.
+
+* Fixed some address-parsing bugs in rfc822.c:nxtaddr().
 
 There are 180 people on the fetchmail-friends list.
 
