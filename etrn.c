@@ -7,6 +7,8 @@
 #include  <config.h>
 #include  <stdio.h>
 #include  <stdlib.h>
+#include  <assert.h>
+#include  <netdb.h>
 #include  "fetchmail.h"
 #include  "smtp.h"
 #include  "socket.h"
@@ -23,11 +25,16 @@ static int etrn_ok (int sock, char *argbuf)
 	return(ok);
 }
 
-static int etrn_getrange(int sock, struct query *ctl, int*countp, int*newp)
+static int etrn_getrange(int sock, struct query *ctl, char *id, int *countp,
+                                                                    int *newp)
 /* send ETRN and interpret the response */
 {
-    int ok, opts;
-    char buf [POPBUFSIZE+1];
+    int ok, opts, qdone = 0;
+    char buf [POPBUFSIZE+1],
+	 hname[256];
+    const char *qname;
+    struct idlist *qnp;		/* pointer to Q names */
+    struct hostent *hp;
 
     if ((ok = SMTP_ehlo(sock, ctl->server.names->id, &opts)))
     {
@@ -44,46 +51,94 @@ static int etrn_getrange(int sock, struct query *ctl, int*countp, int*newp)
 
     *countp = *newp = -1;	/* make sure we don't enter the fetch loop */
 
-    /* ship the actual poll and get the response */
-    gen_send(sock, "ETRN %s", ctl->smtphost);
-    if ((ok = gen_recv(sock, buf, sizeof(buf))))
-	return(ok);
-
-    /* this switch includes all the response codes described in RFC1985 */
-    switch(atoi(buf))
+    /*** This is a sort of horrible HACK because the ETRN protocol
+     *** does not fit very well into the mailbox concept used in
+     *** this program (IMHO).  The last element of ctl->smtphunt
+     *** turned out to be the host being queried (i.e., the smtp server).
+     *** for that reason the rather "funny" condition in the for loop.
+     *** Isn't it sort of unreasonable to add the server to the ETRN
+     *** hunt list? (Concerning ETRN I'm sure! In case I want a Q-run of
+     *** my SMTP-server I can always specify -Smyserver, and this is only
+     *** resonable if I start sendmail without -qtime and in Q-only mode.)
+     *** 
+     *** -- 1997-06-22 Guenther Leber
+     ***/
+    /* do it for all queues in the smtphunt list except the last one
+       which is the SMTP-server itself */
+    for (qnp = ctl->smtphunt; ( (qnp != (struct idlist *) NULL) && 
+		(qnp->next != (struct idlist *) NULL) ) || (qdone == 0);
+		qnp = qnp->next, qdone++)
     {
-    case 250:	/* OK, queuing for node <x> started */
-	error(0, 0, "Queuing for %s started", ctl->smtphost);
-	break;
 
-    case 251:	/* OK, no messages waiting for node <x> */
-	error(0, 0, "No messages waiting for %s", ctl->smtphost);
-	return(PS_NOMAIL);
+	/* extract name of Q */
+        if ( (qnp != (struct idlist *) NULL) &&
+				(qnp->next != (struct idlist *) NULL) )
+	{
+	    /* take Q-name given in smtp hunt list */
+	    qname = qnp->id;
+	} else {
+	    assert(qdone == 0);
+	    /*** use fully qualified host name as Q name ***/
+	    /* get hostname */
+	    if (gethostname(hname, sizeof hname) != 0)
+	    {
+		/* exit with error message */
+	        error(5, errno, "gethostname");
+	    }
+	    /* in case we got a host basename (as we do in Linux),
+	       make a FQDN of it				*/
+	    hp = gethostbyname(hname);
+	    if (hp == (struct hostent *) NULL)
+	    {
+		/* exit with error message */
+	        error(5, h_errno, "gethostbyname");
+	    }
+	    /* here it is */
+	    qname = hp->h_name;
+	}
 
-    case 252:	/* OK, pending messages for node <x> started */
-    case 253:	/* OK, <n> pending messages for node <x> started */
-	error(0, 0, "Pending messages for %s started");
-	break;
 
-    case 458:	/* Unable to queue messages for node <x> */
-	error(0, -1, "Unable to queue messages for node %s", ctl->smtphost);
-	return(PS_PROTOCOL);
+        /* ship the actual poll and get the response */
+        gen_send(sock, "ETRN %s", qname);
+        if ((ok = gen_recv(sock, buf, sizeof(buf))))
+	    return(ok);
 
-    case 459:	/* Node <x> not allowed: <reason> */
-	error(0, -1, "Node %s not allowed: %s", ctl->smtphost, buf);
-	return(PS_AUTHFAIL);
+        /* this switch includes all the response codes described in RFC1985 */
+        switch(atoi(buf))
+        {
+        case 250:	/* OK, queuing for node <x> started */
+	    error(0, 0, "Queuing for %s started", qname);
+	    break;
 
-    case 500:	/* Syntax Error */
-	error(0, -1, "ETRN syntax error");
-	return(PS_PROTOCOL);
+        case 251:	/* OK, no messages waiting for node <x> */
+	    error(0, 0, "No messages waiting for %s", qname);
+	    return(PS_NOMAIL);
 
-    case 501:	/* Syntax Error in Parameters */
-	error(0, -1, "ETRN syntax error in parameters");
-	return(PS_PROTOCOL);
+        case 252:	/* OK, pending messages for node <x> started */
+        case 253:	/* OK, <n> pending messages for node <x> started */
+	    error(0, 0, "Pending messages for %s started", qname);
+	    break;
 
-    default:
-	error(0, -1, "Unknown ETRN error %d", atoi(buf));
-	return(PS_PROTOCOL);
+        case 458:	/* Unable to queue messages for node <x> */
+	    error(0, -1, "Unable to queue messages for node %s", qname);
+	    return(PS_PROTOCOL);
+
+        case 459:	/* Node <x> not allowed: <reason> */
+	    error(0, -1, "Node %s not allowed: %s", qname, buf);
+	    return(PS_AUTHFAIL);
+
+        case 500:	/* Syntax Error */
+	    error(0, -1, "ETRN syntax error");
+	    return(PS_PROTOCOL);
+
+        case 501:	/* Syntax Error in Parameters */
+	    error(0, -1, "ETRN syntax error in parameters");
+	    return(PS_PROTOCOL);
+
+        default:
+	    error(0, -1, "Unknown ETRN error %d", atoi(buf));
+	    return(PS_PROTOCOL);
+        }
     }
 
     return(0);
@@ -119,7 +174,7 @@ int doETRN (struct query *ctl)
 	fprintf(stderr, "Option --flush is not supported with ETRN\n");
 	return(PS_SYNTAX);
     }
-    if (ctl->mailboxes) {
+    if (ctl->mailboxes->id) {
 	fprintf(stderr, "Option --remote is not supported with ETRN\n");
 	return(PS_SYNTAX);
     }
