@@ -114,7 +114,6 @@ static void timeout_handler (int signal)
 #define XMIT_ANTISPAM		3	
 static int accept_count, reject_count;
 
-#ifdef HAVE_RES_SEARCH
 #define MX_RETRIES	3
 
 static int is_host_alias(const char *name, struct query *ctl)
@@ -150,7 +149,13 @@ static int is_host_alias(const char *name, struct query *ctl)
     else if (!ctl->server.dns)
 	return(FALSE);
 
+#ifndef HAVE_RES_SEARCH
+    return(FALSE);
+#else
     /*
+     * The only code that calls the BIND library is here and in the
+     * start-of-query probe with gethostbyname(3).
+     *
      * We know DNS service was up at the beginning of this poll cycle.
      * If it's down, our nameserver has crashed.  We don't want to try
      * delivering the current message or anything else from this
@@ -219,6 +224,7 @@ static int is_host_alias(const char *name, struct query *ctl)
     /* add this name to relevant server's `also known as' list */
     save_str(&lead_server->akalist, -1, name);
     return(TRUE);
+#endif /* HAVE_RES_SEARCH */
 }
 
 static void map_name(name, ctl, xmit_names)
@@ -381,7 +387,6 @@ static char *parse_received(struct query *ctl, char *bufp)
 	return(rbuf);
     }
 }
-#endif /* HAVE_RES_SEARCH */
 
 static int smtp_open(struct query *ctl)
 /* try to open a socket to the appropriate SMTP server for this query */ 
@@ -546,10 +551,8 @@ int num;		/* index of message */
     int n, linelen, oldlen, ch, remaining, skipcount;
     char		*cp;
     struct idlist 	*idp, *xmit_names;
-    flag			good_addresses, bad_addresses, has_nuls;
-#ifdef HAVE_RES_SEARCH
+    flag		good_addresses, bad_addresses, has_nuls;
     flag		no_local_matches = FALSE;
-#endif /* HAVE_RES_SEARCH */
     int			olderrs;
 
     next_address = sizeticker = 0;
@@ -787,14 +790,12 @@ int num;		/* index of message */
 		    env_offs = (line - headers);
 		}    
 	    }
-#ifdef HAVE_RES_SEARCH
 	    else if (!received_for && !strncasecmp("Received:", line, 9))
 	    {
 		if (skipcount++ != ctl->server.envskip)
 		    continue;
 		received_for = parse_received(ctl, line);
 	    }
-#endif /* HAVE_RES_SEARCH */
 	}
     }
 
@@ -827,7 +828,6 @@ int num;		/* index of message */
     /* cons up a list of local recipients */
     xmit_names = (struct idlist *)NULL;
     bad_addresses = good_addresses = accept_count = reject_count = 0;
-#ifdef HAVE_RES_SEARCH
     /* is this a multidrop box? */
     if (MULTIDROP(ctl))
     {
@@ -867,7 +867,6 @@ int num;		/* index of message */
 	}
     }
     else	/* it's a single-drop box, use first localname */
-#endif /* HAVE_RES_SEARCH */
 	save_str(&xmit_names, XMIT_ACCEPT, ctl->localnames->id);
 
 
@@ -1238,18 +1237,13 @@ int num;		/* index of message */
 	fputs("#", stderr);
 
     /* write error notifications */
-#ifdef HAVE_RES_SEARCH
     if (no_local_matches || has_nuls || bad_addresses)
-#else
-    if (has_nuls || bad_addresses)
-#endif /* HAVE_RES_SEARCH */
     {
 	int	errlen = 0;
 	char	errhd[USERNAMELEN + POPBUFSIZE], *errmsg;
 
 	errmsg = errhd;
 	(void) strcpy(errhd, "X-Fetchmail-Warning: ");
-#ifdef HAVE_RES_SEARCH
 	if (no_local_matches)
 	{
 	    if (reject_count != 1)
@@ -1262,7 +1256,6 @@ int num;		/* index of message */
 		sprintf(errhd+strlen(errhd), "recipient address %s didn't match any local name", idp->id);
 	    }
 	}
-#endif /* HAVE_RES_SEARCH */
 
 	if (has_nuls)
 	{

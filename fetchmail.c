@@ -664,7 +664,7 @@ static int load_params(int argc, char **argv, int optind)
 
 #if !defined(HAVE_GETHOSTBYNAME) || !defined(HAVE_RES_SEARCH)
 	    /* can't handle multidrop mailboxes unless we can do DNS lookups */
-	    if (ctl->localnames && ctl->localnames->next)
+	    if (ctl->localnames && ctl->localnames->next && ctl->server.dns)
 	    {
 		fputs("fetchmail: can't handle multidrop mailboxes without DNS\n",
 			stderr);
