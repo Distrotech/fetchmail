@@ -520,7 +520,7 @@ char *realname;		/* real name of host */
 	    ctt_offs = (bufp - headers);
 
 #ifdef HAVE_RES_SEARCH
-	else if (MULTIDROP(ctl) && !strncasecmp("Received:", bufp, 9))
+	else if (MULTIDROP(ctl) && !received_for && !strncasecmp("Received:", bufp, 9))
 	    received_for = parse_received(ctl, bufp);
 #endif /* HAVE_RES_SEARCH */
     }
@@ -1465,11 +1465,14 @@ va_dcl
 
     if (outlevel == O_VERBOSE)
     {
-	char *cp;
+	if (shroud)
+	{
+	    char *cp;
 
-	if (shroud && (cp = strstr(buf, shroud)))
-	    memset(cp, '*', strlen(shroud));
-	buf[strlen(buf)-1] = '\0';
+	    if ((cp = strstr(buf, shroud)))
+		memset(cp, '*', strlen(shroud));
+	    buf[strlen(buf)-1] = '\0';
+	}
 	error(0, 0, "%s> %s", protocol->name, buf);
     }
 }
