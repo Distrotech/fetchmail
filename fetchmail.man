@@ -1928,7 +1928,7 @@ In a message with multiple envelope headers, only the last one
 processed will be visible to fetchmail.  To get around this, use a
 mailserver-side filter that consolidates the contents of all envelope
 headers into a single one (procmail, mailagent, or maildrop can be
-orogrammed to do this fairly easily).
+programmed to do this fairly easily).
 .PP
 Use of any of the supported protocols other than POP3 with OTP or RPA,
 APOP, KPOP, IMAP-K4, IMAP-GSS, IMAP-CRAMMD5, or ETRN requires that the

@@ -27,7 +27,8 @@ run under AmigaOS.
 Fetchmail is Y2K safe.
 
 See the distribution files FEATURES for a full list of features, NEWS
-for detailed information on recent changes and NOTES for design notes.
+for detailed information on recent changes, NOTES for design notes, and
+TODO for a list of things that still need doing.
 
 The fetchmail code appears to be stable and free of bugs affecting
 normal operation (that is, retrieving from POP3 or IMAP in single-drop

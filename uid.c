@@ -124,12 +124,26 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 	    /* first, skip leading spaces */
 	    user = buf + strspn(buf, " \t");
 
-	    /* First, we split the buf into a userhost part and an id part */
-	    if ((id = strchr(user, '<')) != NULL ) 	/* set pointer to id */
+	    /*
+	     * First, we split the buf into a userhost part and an id
+	     * part ... but id doesn't necessarily start with a '<',
+	     * espescially if the POP server returns an X-UIDL header
+	     * instead of a Message-ID, as GMX's (www.gmx.net) POP3
+	     * StreamProxy V1.0 does.
+	     */
+	    if ((id = strchr(user, ' ')) != NULL )
 	    {
 	        for (delimp1 = id; delimp1 >= user; delimp1--)
 		    if ((*delimp1 != ' ') && (*delimp1 != '\t'))
 			break;
+
+		/* 
+		 * It should be safe to assume that id starts after
+		 * the " " - after all, we're writing the " "
+		 * ourselves in write_saved_lists() :-)
+		 */
+		id = id + strspn(id, " ");
+
 		delimp1++; /* but what if there is only white space ?!? */
 	  	saveddelim1 = *delimp1;	/* save char after token */
 		*delimp1 = '\0';		/* delimit token with \0 */

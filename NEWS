@@ -1,33 +1,10 @@
-				Things to do:
-
-In the SSL support, we need to add server certificate validation (In
-other words, does the certificate match the system we are trying to
-contact?).  Also, add authentication of Certifying Authority (Is this
-a Certifying Authority we recognize?).
-
-Jorge Godoy asked, about the MD5 sums: Are they on the RPMs? How about
-using GPG/PGP instead of MD5 to sign the packages? If people are
-worried with copies of it, GPG/PGP offers more security than MD5. I
-don't know exactly, but I think you can sign it both ways so that your
-package will have two security verifications instead of one...
-
-Laszlo Vecsey writes: I believe qmail uses a technique of writing
-temporary files to nfs, and then moving them into place to ensure that
-they're written. Actually a hardlink is made to the temporary file and
-the destination name in a new directory, then the first one is
-unlinked.. maybe a combination of this will help with the fetchmail
-lock file
-
-The Debian bug-tracking page for fetchmail is:
-
-	http://cgi.debian.org/cgi-bin/pkgreport.cgi?archive=no&pkg=fetchmail
-
 				Release Notes:
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
 * Attempted fix for Joop Susan's ENOTCONN bug.
 * Fix for NO response during SIZE fetches for M$ Exchange IMAP server.
+* Thomas Zajic <zlatko@gmx.at> sent a change that copes with GMX X-UIDLs.
 
 fetchmail-5.2.7 (Sun Feb  6 20:45:41 EST 2000), 18517 lines:
 * Updated FAQ.
