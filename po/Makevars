@@ -8,7 +8,15 @@ subdir = po
 top_builddir = ..
 
 # These options get passed to xgettext.
-XGETTEXT_OPTIONS = --keyword=GT_ --keyword=N_
+XGETTEXT_OPTIONS = --keyword=GT_ --keyword=N_ \
+    --flag=GT_:1:pass-c-format \
+    --flag=report:2:c-format \
+    --flag=report_build:2:c-format \
+    --flag=report_complete:2:c-format \
+    --flag=report_at_line:5:c-format \
+    --flag=gen_send:2:c-format \
+    --flag=gen_transact:2:c-format \
+    --flag=stuff_warning:2:c-format \
 
 # This is the copyright holder that gets inserted into the header of the
 # $(DOMAIN).pot file.  Set this to the copyright holder of the surrounding
