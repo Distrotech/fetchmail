@@ -1398,7 +1398,11 @@ optimization hack that allows you to trade space for speed.  When
 .IR fetchmail ,
 while processing a multidrop mailbox, grovels through message headers
 looking for names of the mailserver, pre-declaring common ones can
-save it from having to do DNS lookups.
+save it from having to do DNS lookups.  Note: the names you give
+as arguments to `aka' are matched as suffixes -- if you specify 
+(say) `aka netaxs.com', this will match not just a hostnamed
+netaxs.com, but any hostname that ends with `.netaxs.com'; such as 
+(say) pop3.netaxs.com and mail.netaxs.com.
 .PP
 The `localdomains' option allows you to declare a list of domains
 which fetchmail should consider local.  When fetchmail is parsing
