@@ -183,6 +183,7 @@ class User:
 	self.preconnect = None		# Connection setup
 	self.postconnect = None		# Connection wrapup
 	self.mda = None			# Mail Delivery Agent
+	self.bsmtp = None		# BSMTP output file
 	self.antispam = "571 550 501"	# Listener's spam-block code
 	self.keep = FALSE		# Keep messages
 	self.flush = FALSE		# Flush messages
@@ -208,6 +209,7 @@ class User:
 	    ('preconnect',  'String'),
 	    ('postconnect', 'String'),
 	    ('mda',         'String'),
+	    ('bsmtp',       'String'),
 	    ('antispam',    'String'),
 	    ('keep',        'Boolean'),
 	    ('flush',       'Boolean'),
@@ -289,7 +291,7 @@ class User:
 	     for x in self.mailboxes:
 		str = str + " " + x
 	     str = str + "\n"
-        for fld in ('smtpaddress', 'preconnect', 'postconnect', 'mda', 'properties'):
+        for fld in ('smtpaddress', 'preconnect', 'postconnect', 'mda', 'bsmtp', 'properties'):
             if getattr(self, fld):
                 str = str + " %s %s\n" % (fld, `getattr(self, fld)`)
         if self.antispam != UserDefaults.antispam:
@@ -1191,6 +1193,8 @@ class UserEdit(Frame, MyWidget):
 		     self.postconnect, '26').pack(side=TOP, fill=X)
             LabeledEntry(targwin, 'Local delivery agent:',
 		     self.mda, '26').pack(side=TOP, fill=X)
+            LabeledEntry(targwin, 'BSMTP output file:',
+		     self.bsmtp, '26').pack(side=TOP, fill=X)
             LabeledEntry(targwin, 'Listener spam-block codes:',
 		     self.antispam, '26').pack(side=TOP, fill=X)
             targwin.pack(fill=X, anchor=N)

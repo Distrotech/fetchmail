@@ -58,11 +58,12 @@
 #define LA_FETCHLIMIT	36
 #define LA_EXPUNGE	37
 #define LA_MDA		38
-#define LA_NETSEC	39
-#define LA_INTERFACE    40
-#define LA_MONITOR      41
-#define LA_CONFIGDUMP	42
-#define LA_YYDEBUG	43
+#define LA_BSMTP	39
+#define LA_NETSEC	40
+#define LA_INTERFACE    41
+#define LA_MONITOR      42
+#define LA_CONFIGDUMP	43
+#define LA_YYDEBUG	44
 
 /* options still left: CDgGhHjJoORwWxXYz */
 static const char *shortoptions = 
@@ -115,9 +116,10 @@ static const struct option longoptions[] = {
   {"fetchlimit",required_argument, (int *) 0, LA_FETCHLIMIT  },
   {"expunge",   required_argument, (int *) 0, LA_EXPUNGE     },
   {"mda",	required_argument, (int *) 0, LA_MDA         },
+  {"bsmtp",	required_argument, (int *) 0, LA_BSMTP       },
 
 #ifdef INET6
-  {"netsec",	required_argument, (int *) 0, LA_NETSEC    },
+  {"netsec",	required_argument, (int *) 0, LA_NETSEC      },
 #endif /* INET6 */
 
 #if defined(linux) && !INET6
@@ -468,6 +470,10 @@ struct query *ctl;	/* option record to be initialized */
 	    ctl->mda = xstrdup(optarg);
 	    ocount++;
 	    break;
+	case LA_BSMTP:
+	    ctl->bsmtp = xstrdup(optarg);
+	    ocount++;
+	    break;
 
 	case 'T':
 	case LA_NETSEC:
@@ -571,6 +577,8 @@ struct query *ctl;	/* option record to be initialized */
 	P("  -b, --batchlimit  set batch limit for SMTP connections\n");
 	P("  -B, --fetchlimit  set fetch limit for server connections\n");
 	P("  -e, --expunge     set max deletions between expunges\n");
+        P("      --mda         set MDA to use for forwarding\n");
+        P("      --bsmtp       set output BSMTP file\n");
 	P("  -r, --folder      specify remote folder name\n");
 #undef P
 	return(-1);

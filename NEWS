@@ -2,8 +2,9 @@
 
 fetchmail-4.6.5 ():
 * Fixed a bug in reply_hack that could occasionally cause malloc smashes.
+* Added --bsmtp option to dump mail as a BSMTP batch.
 
-There are 245 people on fetchmail-friends and 306 on fetchmail-announce.
+There are 247 people on fetchmail-friends and 306 on fetchmail-announce.
 
 fetchmail-4.6.4 (Tue Oct 27 09:07:58 EST 1998):
 * Code cleanup fixes by Jonathan T. Agnew <jtagnew@amherst.edu>.

@@ -749,6 +749,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(remotename);
     FLAG_MERGE(password);
     FLAG_MERGE(mda);
+    FLAG_MERGE(bsmtp);
     FLAG_MERGE(smtpaddress);
     FLAG_MERGE(preconnect);
     FLAG_MERGE(postconnect);
@@ -1344,7 +1345,9 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 		    else if (outlevel >= O_VERBOSE)
 			printf("  No expunges (--expunge 0).\n");
 	}
-	if (ctl->mda && (ctl->server.protocol != P_ETRN))
+	if (ctl->bsmtp)
+	    printf("  Messages will be appended to %s as BSMTP\n", visbuf(ctl->bsmtp));
+	else if (ctl->mda && (ctl->server.protocol != P_ETRN))
 	    printf("  Messages will be delivered with \"%s\".\n", visbuf(ctl->mda));
 	else
 	{

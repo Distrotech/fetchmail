@@ -56,6 +56,7 @@ smtp(host)?	{ return SMTPHOST; }
 smtpaddress	{ return SMTPADDRESS; }
 antispam	{ return SPAMRESPONSE; }
 mda		{ return MDA; }
+bsmtp		{ return BSMTP; }
 pre(connect)?	{ return PRECONNECT; }
 post(connect)?	{ return POSTCONNECT; }
 netsec		{ return NETSEC; }

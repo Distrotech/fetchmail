@@ -64,12 +64,14 @@
 #define		PS_EXCLUDE	8	/* client-side exclusion error */
 #define		PS_LOCKBUSY	9	/* server responded lock busy */
 #define		PS_SMTP         10      /* SMTP error */
-#define		PS_DNS		11	/* fatal DNS error */	
-#define		PS_UNDEFINED	12	/* something I hadn't thought of */
-#define		PS_TRANSIENT	13	/* transient failure (internal use) */
-#define		PS_REFUSED	14	/* mail refused (internal use) */
-#define		PS_RETAINED	15	/* message retained (internal use) */
-#define		PS_TRUNCATED	16	/* headers incomplete (internal use) */
+#define		PS_DNS		11	/* fatal DNS error */
+#define		PS_BSMTP	12	/* output batch could not be opened */
+/* leave space for more codes */
+#define		PS_UNDEFINED	23	/* something I hadn't thought of */
+#define		PS_TRANSIENT	24	/* transient failure (internal use) */
+#define		PS_REFUSED	25	/* mail refused (internal use) */
+#define		PS_RETAINED	26	/* message retained (internal use) */
+#define		PS_TRUNCATED	27	/* headers incomplete (internal use) */
 
 /* output noise level */
 #define         O_SILENT	0	/* mute, max squelch, etc. */
@@ -222,6 +224,7 @@ struct query
     char *smtpaddress;		/* address we want to force in the delivery messages */ 
     struct idlist *antispam;	/* list of listener's antispam response */
     char *mda;			/* local MDA to pass mail to */
+    char *bsmtp;		/* BSMTP output file */
     char *preconnect;		/* pre-connection command to execute */
     char *postconnect;		/* post-connection command to execute */
 

@@ -49,6 +49,7 @@
 #   smtpaddress               -- must be followed by a host name
 #   antispam                  -- must be followed by a numeric response value
 #   mda                       -- must be followed by an MDA command string
+#   bsmtp                     -- must be followed by a filename or -
 #   preconnect (or pre)       -- must be followed by an executable command
 #   postconnect (or post)     -- must be followed by an executable command
 #

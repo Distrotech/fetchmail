@@ -222,7 +222,7 @@ int stuffline(struct query *ctl, char *buf)
     }
 
     n = 0;
-    if (ctl->mda)
+    if (ctl->mda || ctl->bsmtp)
 	n = fwrite(buf, 1, last - buf, sinkfp);
     else if (ctl->smtp_socket != -1)
 	n = SockWrite(ctl->smtp_socket, buf, last - buf);
@@ -253,7 +253,55 @@ int open_sink(struct query *ctl,
 
     *bad_addresses = *good_addresses = 0;
 
-    if (ctl->mda)		/* we have a declared MDA */
+    if (ctl->bsmtp)		/* dump to a BSMTP batch file */
+    {
+	if (strcmp(ctl->bsmtp, "-") == 0)
+	    sinkfp = stdout;
+	else
+	    sinkfp = fopen(ctl->bsmtp, "a");
+
+	/* see the ap computation under the SMTP branch */
+	fprintf(sinkfp, 
+		"MAIL FROM: %s", (return_path[0]) ? return_path : user);
+
+	if (ctl->pass8bits || (ctl->mimemsg & MSG_IS_8BIT))
+	    fputs(" BODY=8BITMIME", sinkfp);
+	else if (ctl->mimemsg & MSG_IS_7BIT)
+	    fputs(" BODY=7BIT", sinkfp);
+
+	fprintf(sinkfp, " SIZE=%ld\r\n", reallen);
+
+	/*
+	 * RFC 1123 requires that the domain name part of the
+	 * RCPT TO address be "canonicalized", that is a FQDN
+	 * or MX but not a CNAME.  Some listeners (like exim)
+	 * enforce this.  Now that we have the actual hostname,
+	 * compute what we should canonicalize with.
+	 */
+	ctl->destaddr = ctl->smtpaddress ? ctl->smtpaddress : "localhost";
+
+	*bad_addresses = 0;
+	for (idp = xmit_names; idp; idp = idp->next)
+	    if (idp->val.status.mark == XMIT_ACCEPT)
+	    {
+		if (strchr(idp->id, '@'))
+		    fprintf(sinkfp,
+				"RCPT TO: %s\r\n", idp->id);
+		else
+		    fprintf(sinkfp,
+				"RCPT TO: %s@%s\r\n", idp->id, ctl->destaddr);
+		*good_addresses = 0;
+	    }
+
+	fputs("DATA\r\n", sinkfp);
+
+	if (ferror(sinkfp))
+	{
+	    error(0, -1, "BSMTP file open or preamble write failed");
+	    return(PS_BSMTP);
+	}
+    }
+    else if (ctl->mda)		/* we have a declared MDA */
     {
 	int	length = 0, fromlen = 0, nameslen = 0;
 	char	*names = NULL, *before, *after, *from = NULL;
@@ -399,7 +447,7 @@ int open_sink(struct query *ctl,
 
 	sigchld = signal(SIGCHLD, SIG_DFL);
     }
-    else
+    else /* forward to an SMTP listener */
     {
 	const char	*ap;
 	char	options[MSGBUFSIZE], addr[128];
@@ -574,7 +622,9 @@ int open_sink(struct query *ctl,
 void release_sink(struct query *ctl)
 /* release the per-message output sink, whether it's a pipe or SMTP socket */
 {
-    if (ctl->mda)
+    if (ctl->bsmtp)
+	fclose(sinkfp);
+    else if (ctl->mda)
     {
 	if (sinkfp)
 	{
@@ -604,6 +654,18 @@ int close_sink(struct query *ctl, flag forward)
 	if (rc)
 	{
 	    error(0, -1, "MDA exited abnormally or returned nonzero status");
+	    return(FALSE);
+	}
+    }
+    else if (ctl->bsmtp)
+    {
+	/* implicit disk-full check here... */
+	fputs("..\r\n", sinkfp);
+	if (strcmp(ctl->bsmtp, "-"))
+	    fclose(sinkfp);
+	if (ferror(sinkfp))
+	{
+	    error(0, -1, "Message termination or close of BSMTP file failed");
 	    return(FALSE);
 	}
     }
