@@ -48,7 +48,9 @@ static int odmr_getrange(int sock, struct query *ctl, const char *id,
     char buf [MSGBUFSIZE+1];
     struct idlist *qnp;		/* pointer to Q names */
 
-    if ((ok = SMTP_ehlo(sock, fetchmailhost, &opts)))
+    if ((ok = SMTP_ehlo(sock, fetchmailhost, 
+			ctl->server.esmtp_name, ctl->server.esmtp_password,
+			&opts)))
     {
 	report(stderr, GT_("%s's SMTP listener does not support ESMTP\n"),
 	      ctl->server.pollname);

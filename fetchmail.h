@@ -220,7 +220,7 @@ struct hostdata		/* shared among all user connections to given server */
 #endif /* SDPS_ENABLE */
     flag checkalias;                  	/* resolve aliases by comparing IPs? */
     char *principal;			/* Kerberos principal for mail service */
-
+    char *esmtp_name, *esmtp_password;	/* ESMTP AUTH information */
 
 #if defined(linux) || defined(__FreeBSD__)
     char *interface;

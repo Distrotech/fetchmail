@@ -74,7 +74,7 @@ extern char * yytext;
 %token DROPSTATUS DROPDELIVERED
 %token DNS SERVICE PORT UIDL INTERVAL MIMEDECODE IDLE CHECKALIAS 
 %token SSL SSLKEY SSLCERT SSLPROTO SSLCERTCK SSLCERTPATH SSLFINGERPRINT
-%token PRINCIPAL
+%token PRINCIPAL ESMTPNAME ESMTPPASSWORD
 %token TRACEPOLLS
 
 %%
@@ -157,6 +157,8 @@ serv_option	: AKA alias_list
 #endif /* INET6_ENABLE */
 					}
 		| PRINCIPAL STRING	{current.server.principal = xstrdup($2);}
+		| ESMTPNAME STRING	{current.server.esmtp_name = xstrdup($2);}
+		| ESMTPPASSWORD STRING	{current.server.esmtp_password = xstrdup($2);}
 		| PROTOCOL SDPS		{
 #ifdef SDPS_ENABLE
 					    current.server.protocol = P_POP3;

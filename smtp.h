@@ -23,7 +23,7 @@
 
 void SMTP_setmode(char);
 int SMTP_helo(int socket,const char *host);
-int SMTP_ehlo(int socket,const char *host,int *opt);
+int SMTP_ehlo(int socket,const char *host, char *name, char *passwd, int *opt);
 int SMTP_from(int socket,const char *from,const char *opts);
 int SMTP_rcpt(int socket,const char *to);
 int SMTP_data(int socket);

@@ -154,8 +154,9 @@ int smtp_open(struct query *ctl)
 
 	    /* first, probe for ESMTP */
 	    if (SMTP_ok(ctl->smtp_socket) == SM_OK &&
-		    SMTP_ehlo(ctl->smtp_socket, id_me,
-			  &ctl->server.esmtp_options) == SM_OK)
+		    SMTP_ehlo(ctl->smtp_socket, id_me, 
+			      ctl->server.esmtp_name, ctl->server.esmtp_password,
+			      &ctl->server.esmtp_options) == SM_OK)
 	       break;  /* success */
 
 	    /*
