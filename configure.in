@@ -48,6 +48,7 @@ AC_CHECK_FUNC(getopt_long, AC_DEFINE(HAVE_GETOPTLONG),
               [EXTRASRC="$EXTRASRC \$(srcdir)/getopt.c \$(srcdir)/getopt1.c"
                EXTRAOBJ="$EXTRAOBJ getopt.o getopt1.o"])
 
+AC_FUNC_VPRINTF
 AC_FUNC_ALLOCA
 if test -n "$ALLOCA" 
 then
@@ -75,7 +76,8 @@ dnl All AC_CHECK_FUNCs must precede the following AC_SUBSTs
 AC_SUBST(EXTRASRC)
 AC_SUBST(EXTRAOBJ)
 
-AC_CHECK_FUNCS(tcsetattr stty setsid seteuid gethostbyname res_search herror)
+AC_CHECK_FUNCS(tcsetattr stty setsid seteuid gethostbyname res_search herror \
+  strrchr strerror)
 
 dnl AC_FUNC_SETVBUF_REVERSED
 
