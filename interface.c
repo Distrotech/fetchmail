@@ -488,7 +488,7 @@ int interface_approve(struct hostdata *hp)
 	     * (c) newpacket count is greater than the old packet count,
 	     * and the difference is large. Connection is live.  Don't skip.
 	     */
-	    if (diff > 0 && diff <= MONITOR_SLOP)
+	    if (diff >= 0 && diff <= MONITOR_SLOP)
 	    {
 		(void) report(stdout, 
 			      _("skipping poll of %s, %s inactive\n"),
@@ -498,7 +498,7 @@ int interface_approve(struct hostdata *hp)
 	}
 
 #ifdef ACTIVITY_DEBUG
-       report(stdout _("activity on %s was %d, is %d"),
+       report(stdout, _("activity on %s was %d, is %d\n"),
              hp->monitor, hp->monitor_io,
              ifinfo.rx_packets + ifinfo.tx_packets);
 #endif

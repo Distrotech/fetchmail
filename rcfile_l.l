@@ -42,6 +42,8 @@ int prc_lineno = 1;
 			return STRING;
 		}
 
+"*"		{ BEGIN(0); return WILDCARD; }
+
 <NAME>[^=;:, \t\r\n]+	{
 			char buf[MSGBUFSIZE];
 
@@ -106,7 +108,6 @@ here		{ return HERE; }
 there		{ return THERE; }
 to		{ BEGIN(NAME); return TO; }
 =		{ BEGIN(NAME); return MAP; }
-"*"		{ BEGIN(0); return WILDCARD; }
 
 nobouncemail	|
 nouidl		|

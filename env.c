@@ -16,7 +16,6 @@
 #endif
 #include <pwd.h>
 #include <string.h>
-#include <ctype.h>
 #ifdef HAVE_GETHOSTBYNAME
 #include <netdb.h>
 #endif /* HAVE_GETHOSTBYNAME */

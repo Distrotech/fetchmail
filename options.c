@@ -430,7 +430,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'r':
 	case LA_FOLDER:
-	    xalloca(buf, char *, strlen(optarg));
+	    xalloca(buf, char *, strlen(optarg) + 1);
 	    strcpy(buf, optarg);
 	    cp = strtok(buf, ",");
 	    do {
@@ -440,7 +440,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'S':
 	case LA_SMTPHOST:
-	    xalloca(buf, char *, strlen(optarg));
+	    xalloca(buf, char *, strlen(optarg) + 1);
 	    strcpy(buf, optarg);
 	    cp = strtok(buf, ",");
 	    do {
@@ -455,7 +455,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'Z':
 	case LA_ANTISPAM:
-	    xalloca(buf, char *, strlen(optarg));
+	    xalloca(buf, char *, strlen(optarg) + 1);
 	    strcpy(buf, optarg);
 	    cp = strtok(buf, ",");
 	    do {

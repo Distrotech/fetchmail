@@ -13,6 +13,10 @@
 fetchmail-5.0.7 ():
 * RPA support works again.
 * Added debian_rc startup/shutdown script to contrib/.
+* Yet another monitor option fix.
+* Variouas small option-processing fixes.
+* Teach fetchmailconf about HP OpenMail.
+* SunOS compilation fixes.
 
 There are 263 people on fetchmail-friends and 421 on fetchmail-announce.
 
@@ -21,7 +25,8 @@ fetchmail-5.0.6 (Mon Aug  2 14:04:23 EDT 1999):
 * Russion internationalization support (but I couldn't read the contributor
   name in the headers!)
 * Update of the French internationalization support by Guy Brand.
-* Lexer fix for the `nokeep' problem by Robert de Bath.
+* Lexer fix for the `nokeep' problem by Robert de Bath (thanks
+  to David "Hi! I'm an obnoxious twerp" Ashley for stimulating this).
 * Lexer states added to tell the lexer to return a string after a
   `username' or `password' keyword, courtesy of Brian Boutel.
 * Interface option fix from Bill Currie.

@@ -16,6 +16,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <signal.h>
+#include <getopt.h>
 #if defined(HAVE_SYSLOG)
 #include <syslog.h>
 #endif
@@ -32,7 +33,7 @@
 #endif /* HAVE_SETRLIMIT */
 #ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>
-#endif
+#endif /* HAVE_SYS_WAIT_H */
 
 #ifdef HAVE_GETHOSTBYNAME
 #include <netdb.h>
@@ -272,11 +273,14 @@ int main(int argc, char **argv)
     }
 #endif /* HAVE_SETRLIMIT */
 
+#define	NETRC_FILE	".netrc"
     /* parse the ~/.netrc file (if present) for future password lookups. */
-    xalloca(netrc_file, char *, strlen (home) + 8);
+    xalloca(netrc_file, char *, strlen (home) + strlen(NETRC_FILE) + 2);
     strcpy (netrc_file, home);
-    strcat (netrc_file, "/.netrc");
+    strcat (netrc_file, "/");
+    strcat (netrc_file, NETRC_FILE);
     netrc_list = parse_netrc(netrc_file);
+#undef NETRC_FILE
 
     /* pick up passwords where we can */ 
     for (ctl = querylist; ctl; ctl = ctl->next)
@@ -1391,19 +1395,26 @@ static void dump_params (struct runctl *runp,
 	 * Don't poll for password when there is one or when using the ETRN
 	 * or IMAP-GSS protocol
 	 */
-	if (!ctl->password && (ctl->server.protocol != P_ETRN)
+	/* ETRN, IMAP_GSS, and IMAP_K4 do not need a password, so skip this */
+	if ( (ctl->server.protocol != P_ETRN)
 #ifdef GSSAPI
-		&& (ctl->server.protocol != P_IMAP_GSS)
+				&& (ctl->server.protocol != P_IMAP_GSS)
 #endif /* GSSAPI */
-	        && ctl->server.protocol != P_IMAP_K4)
-	    printf(_("  Password will be prompted for.\n"));
-	else if (outlevel >= O_VERBOSE)
-	    if (ctl->server.protocol == P_APOP)
-		printf(_("  APOP secret = \"%s\".\n"), visbuf(ctl->password));
-	    else if (ctl->server.protocol == P_RPOP)
-		printf(_("  RPOP id = \"%s\".\n"), visbuf(ctl->password));
-	    else
-		printf(_("  Password = \"%s\".\n"), visbuf(ctl->password));
+       				&& (ctl->server.protocol != P_IMAP_K4) ) {
+		if (!ctl->password)
+			printf(_("  Password will be prompted for.\n"));
+		else if (outlevel >= O_VERBOSE)
+			if (ctl->server.protocol == P_APOP)
+				printf(_("  APOP secret = \"%s\".\n"),
+							visbuf(ctl->password));
+			else if (ctl->server.protocol == P_RPOP)
+				printf(_("  RPOP id = \"%s\".\n"),
+							visbuf(ctl->password));
+			else
+				printf(_("  Password = \"%s\".\n"),
+							visbuf(ctl->password));
+	}
+
 	if (ctl->server.protocol == P_POP3 
 #if INET6
 	    && !strcmp(ctl->server.service, KPOP_PORT)
