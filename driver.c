@@ -433,7 +433,7 @@ static RETSIGTYPE (*sigchld)();
 static int sizeticker;
 
 static int readheaders(sock, len, ctl, realname)
-/* read message content and ship to SMTP or MDA */
+/* read message headers and ship to SMTP or MDA */
 int sock;		/* to which the server is connected */
 long len;		/* length of message */
 struct query *ctl;	/* query control record */
@@ -808,7 +808,7 @@ char *realname;		/* real name of host */
 	{
 	    int smtperr = atoi(smtp_response);
 
-	    if (smtperr >= 400)
+	    if (smtperr >= 400 && smtperr != 571)
 		error(0, -1, "SMTP error: %s", smtp_response);
 
 	    /*
@@ -1033,9 +1033,9 @@ static int readbody(sock, ctl, forward, len, delimited)
 /* read and dispose of a message body presented on sock */
 struct query *ctl;	/* query control record */
 int sock;		/* to which the server is connected */
-int len;		/* length of message;
-int delimited;		/* does the protocol use a message delimiter? */
+int len;		/* length of message */
 int forward;		/* TRUE to forward */
+int delimited;		/* does the protocol use a message delimiter? */
 {
     int	linelen;
     char buf[MSGBUFSIZE+1], *cp;
@@ -1141,7 +1141,7 @@ int forward;		/* TRUE to forward */
 	    return(PS_IOERR);
 	}
     }
-    else if (ctl->smtp_socket != -1)
+    else if (forward)
     {
 	/* write message terminator */
 	if (SMTP_eom(ctl->smtp_socket) != SM_OK)
