@@ -165,7 +165,7 @@ char **argv;
 	if (access(rcfile, 0))
 	    printf("\n");
 	else
-	    printf("and %s\n", rcfile);
+	    printf(" and %s\n", rcfile);
 	for (hostp = hostlist; hostp; hostp = hostp->next) {
 	    printf("Options for host %s:\n", hostp->servername);
 	    dump_params(hostp);
