@@ -32,6 +32,10 @@ bugs --
 
 * Accept RFC822 headers with a tab after the colon.
 
+* You now see a "skipping" message for each message not retrieved.
+
+* --keep no longer overrides --flush.
+
 fetchmail-1.8 (Fri Oct 11 15:08:10 EDT 1996):
 
 features --

@@ -693,12 +693,13 @@ struct method *proto;
 	/* read, forward, and delete messages */
 	for (num = 1; num <= count; num++)
 	{
-	    int	treat_as_new = 
-		!protocol->is_old 
-		|| !(protocol->is_old)(socket, queryctl, num);
+	    int	fetch_it = queryctl->fetchall ||
+		!(protocol->is_old && (protocol->is_old)(socket,queryctl,num));
 
 	    /* we may want to reject this message if it's old */
-	    if (treat_as_new || queryctl->fetchall)
+	    if (!fetch_it)
+		fprintf(stderr, "skipping message %d ", num);
+	    else
 	    {
 		int	saveduid = getuid();
 
@@ -771,8 +772,7 @@ struct method *proto;
 
 	    /* maybe we delete this message now? */
 	    if (protocol->delete
-		&& !queryctl->keep
-		&& (treat_as_new || queryctl->flush))
+		&& (fetch_it ? !queryctl->keep : queryctl->flush))
 	    {
 		deletions++;
 		if (outlevel > O_SILENT && outlevel < O_VERBOSE) 
