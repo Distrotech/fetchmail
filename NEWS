@@ -3,6 +3,7 @@
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
 * ODMR port fix for AIX.
+* Dave Zarzycki's fix for former FAQ item F5 (%h and %p not being expanded).
 
 fetchmail-5.6.3 (Wed Feb  7 10:56:21 EST 2001), 19901 lines:
 

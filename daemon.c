@@ -82,13 +82,36 @@ sigchld_handler (int sig)
     lastsig = SIGCHLD;
 }
 
+void deal_with_sigchld(void)
+{
+  RETSIGTYPE sigchld_handler(int);
+#ifdef HAVE_SIGACTION
+  struct sigaction sa_new;
+
+  memset (&sa_new, 0, sizeof sa_new);
+  sigemptyset (&sa_new.sa_mask);
+  sa_new.sa_handler = SIG_IGN;
+
+  /* set up to catch child process termination signals */ 
+  sa_new.sa_handler = sigchld_handler;
+  sigaction (SIGCHLD, &sa_new, NULL);
+#if defined(SIGPWR)
+  sigaction (SIGPWR, &sa_new, NULL);
+#endif
+#else
+  signal(SIGCHLD, sigchld_handler); 
+#if defined(SIGPWR)
+  signal(SIGPWR, sigchld_handler); 
+#endif
+#endif /* HAVE_SIGACTION */
+}
+
 int
 daemonize (const char *logfile, void (*termhook)(int))
 /* detach from control TTY, become process group leader, catch SIGCHLD */
 {
   int fd;
   pid_t childpid;
-  RETSIGTYPE sigchld_handler(int);
 #ifdef HAVE_SIGACTION
   struct sigaction sa_new;
 #endif /* HAVE_SIGACTION */
@@ -221,20 +244,7 @@ nottyDetach:
   umask(022);
 #endif
 
-  /* set up to catch child process termination signals */ 
-#ifndef HAVE_SIGACTION
-  signal(SIGCHLD, sigchld_handler); 
-#else
-  sa_new.sa_handler = sigchld_handler;
-  sigaction (SIGCHLD, &sa_new, NULL);
-#endif /* HAVE_SIGACTION */
-#if defined(SIGPWR)
-#ifndef HAVE_SIGACTION
-  signal(SIGPWR, sigchld_handler); 
-#else
-  sigaction (SIGPWR, &sa_new, NULL);
-#endif /* HAVE_SIGACTION */
-#endif
+  deal_with_sigchld();
 
   return(0);
 }

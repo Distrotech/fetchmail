@@ -71,22 +71,54 @@ static int h_errno;
 #endif /* NET_SECURITY */
 
 #ifdef HAVE_SOCKETPAIR
-const char **parse_plugin(const char *plugin, const char *host, const char *service)
+char *const *parse_plugin(const char *plugin, const char *host, const char *service)
 {	const char **argvec;
-	char *c, *p, *plugin_copy;
-	unsigned int s = 2 * sizeof(char*), i;
+	const char *c, *p;
+	char *cp, *plugin_copy;
+	unsigned int plugin_copy_len;
+	unsigned int plugin_offset = 0, plugin_copy_offset = 0;
+	unsigned int i, s = 2 * sizeof(char*), host_count = 0, service_count = 0;
+	unsigned int plugin_len = strlen(plugin);
+	unsigned int host_len = strlen(host);
+	unsigned int service_len = strlen(service);
 
-	plugin_copy = strdup(plugin);
+	for (c = p = plugin; *c; c++)
+	{	if (isspace(*c) && !isspace(*p))
+			s += sizeof(char*);
+		if (*p == '%' && *c == 'h')
+			host_count++;
+		if (*p == '%' && *c == 'p')
+			service_count++;
+		p = c;
+	}
+
+	plugin_copy_len = plugin_len + host_len * host_count + service_len * service_count;
+	plugin_copy = malloc(plugin_copy_len + 1);
 	if (!plugin_copy)
 	{
 		report(stderr, _("fetchmail: malloc failed\n"));
 		return NULL;
 	}
-	for (c = p = plugin_copy; *c; c++)
-	{	if (isspace(*c) && !isspace(*p))
-			s += sizeof(char*);
-		p = c;
+
+	while (plugin_copy_offset < plugin_copy_len)
+	{	if ((plugin[plugin_offset] == '%') && (plugin[plugin_offset + 1] == 'h'))
+		{	strcat(plugin_copy + plugin_copy_offset, host);
+			plugin_offset += 2;
+			plugin_copy_offset += host_len;
+		}
+		else if ((plugin[plugin_offset] == '%') && (plugin[plugin_offset + 1] == 'p'))
+		{	strcat(plugin_copy + plugin_copy_offset, service);
+			plugin_offset += 2;
+			plugin_copy_offset += service_len;
+		}
+		else
+		{	plugin_copy[plugin_copy_offset] = plugin[plugin_offset];
+			plugin_offset++;
+			plugin_copy_offset++;
+		}
 	}
+	plugin_copy[plugin_copy_len] = 0;
+
 	argvec = malloc(s);
 	if (!argvec)
 	{
@@ -101,17 +133,11 @@ const char **parse_plugin(const char *plugin, const char *host, const char *serv
 		}
 		p = c;
 	}
-	for (c = plugin_copy; *c; c++)
-	{	if (isspace(*c))
-			*c = 0;
+	for (cp = plugin_copy; *cp; cp++)
+	{	if (isspace(*cp))
+			*cp = 0;
 	}
-	for (i = 0; argvec[i]; i++)
-	{	if (strcmp(argvec[i], "%h") == 0)
-			argvec[i] = host;
-		if (strcmp(argvec[i], "%p") == 0)
-			argvec[i] = service;
-	}
-	return argvec;
+	return (char *const*)argvec;
 }
 
 static int handle_plugin(const char *host,
@@ -149,7 +175,7 @@ static int handle_plugin(const char *host,
 		(void) close(fds[0]);
 		if (outlevel >= O_VERBOSE)
 		    report(stderr, _("running %s (host %s service %s)\n"), plugin, host, service);
-		argvec = (char *const *)parse_plugin(plugin,host,service);
+		argvec = parse_plugin(plugin,host,service);
 		execvp(*argvec, argvec);
 		report(stderr, _("execvp(%s) failed\n"), *argvec);
 		exit(0);

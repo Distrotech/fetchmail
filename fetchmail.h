@@ -522,6 +522,7 @@ struct query *hostalloc(struct query *);
 int parsecmdline (int, char **, struct runctl *, struct query *);
 char *MD5Digest (unsigned char *);
 int POP3_auth_rpa(unsigned char *, unsigned char *, int socket);
+void deal_with_sigchld(void);
 int daemonize(const char *, void (*)(int));
 char *fm_getpassword(char *);
 void escapes(const char *, char *);

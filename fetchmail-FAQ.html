@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/02/07 08:01:08 $
+<td width="30%" align=right>$Date: 2001/02/10 21:20:33 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -53,7 +53,6 @@ IP address?</a><br>
 <a href="#F2">F2. The .fetchmailrc parser won't accept my all-numeric user name.</a><br>
 <a href="#F3">F3. The .fetchmailrc parser won't accept my host or username beginning with `no'.</a><br>
 <a href="#F4">F4. I'm getting a `parse error' message I don't understand.</a><br>
-<a href="#F5">F5. The %h and %p escapes aren't being interporated correctly.</a><br>
 
 <h1>Configuration questions:</h1>
 
@@ -804,30 +803,6 @@ you can eliminate the problem.<p>
 Yes, I know these ordering restrictions are hard to understand.
 Unfortunately, they're necessary in order to allow the `defaults' 
 feature to work.<P>
-
-<hr>
-<h2><a name="F5">F5. The %h and %p escapes aren't being interporated correctly.</a></h2>
-
-Note that %h and %p are only recognized as placeholders if they are a
-single word each; you cannot use %h:%p or other interpolations that
-aren't space-delimited.  If you happen to need such a thing, write a
-wrapper.  For example, in .fetchmailrc you can add this line:<p>
-
-<pre>
-plugin 'mywrap.sh %h %p'
-</pre>
-
-With mywrap.sh containing:<p>
-
-<pre>
-#! /bin/sh
-if test $# -ne 2 ; then
-  echo "usage: `basename $0` <host> <port>"
-  exit 1
-fi
-exec openssl 2>/dev/null s_client -connect $1:$2 -quiet
-exit 2 # never reached unless openssl fails
-</pre>
 
 <hr>
 <h2><a name="C1">C1. Why do I need a .fetchmailrc when running as root on my own machine?</a></h2>
@@ -2991,7 +2966,7 @@ switching to IMAP and using a short expunge interval.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/02/07 08:01:08 $
+<td width="30%" align=right>$Date: 2001/02/10 21:20:33 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
