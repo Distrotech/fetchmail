@@ -1242,7 +1242,8 @@ static void send_warning(struct query *ctl)
     FILE *tmpfile = NULL;
     struct idlist *head=NULL, *current=NULL;
     int max_warning_poll_count, good, bad;
-    char	buf[100];
+#define OVERHD	"Subject: Fetchmail WARNING.\r\n\r\nThe following oversized messages remain on the mail server:\n\r\n"
+    char	buf[sizeof(OVERHD) + 2];
 
     head = ctl->skipped;
     if (!head)
@@ -1260,8 +1261,8 @@ static void send_warning(struct query *ctl)
      * but it's not a disaster, either, since the skipped mail will not
      * be deleted.
      *
-     * We give a null address list here because we actually *want*
-     * this message to go to run.postmaster.  The zero length means
+     * We give a null address list as arg 3 because we actually *want*
+     * this message to go to run.postmaster.  The zero length arg 4 means
      * we won't pass a SIZE option to ESMTP; the message length would
      * be more trouble than it's worth to compute.
      */
@@ -1269,7 +1270,6 @@ static void send_warning(struct query *ctl)
 	return;
 
     /* stuffline() requires its input to be writeable for CR stripping */
-#define OVERHD	"Subject: Fetchmail WARNING.\r\n\r\nThe following oversized messages remain on the mail server:\n\r\n"
     strcpy(buf, OVERHD);
     stuffline(ctl, buf);
  
@@ -1298,6 +1298,7 @@ static void send_warning(struct query *ctl)
     }
 
     close_sink(ctl, TRUE);
+#undef OVERHD
 }
 
 int do_protocol(ctl, proto)
