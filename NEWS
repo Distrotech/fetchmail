@@ -2,6 +2,10 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Attempted fix for Harry McGavran's problems with the Kerberos V build.
+* Added fetchmailnochda.pl to the contrib directory.
+* Sunil Shetye's patch for the seen count on IMAP.
+
 fetchmail-5.8.4 (Mon May 21 15:08:03 EDT 2001), 20636 lines:
 
 * SSL certificate options from Thomas Moestl <tmoestl@gmx.net>.

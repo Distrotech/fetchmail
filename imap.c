@@ -565,7 +565,8 @@ static int imap_getrange(int sock,
 	    }
 	} while
 	    (tag[0] != '\0' && strncmp(buf, tag, strlen(tag)));
-    }
+    } else
+	unseen = -1;
 
     *newp = unseen;
     expunged = 0;
