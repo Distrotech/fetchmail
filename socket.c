@@ -29,23 +29,21 @@
 #include "socket.h"
 
 #if NETSEC
-#if MAIN
-void *request = NULL;
-int requestlen = 0;
-#else /* MAIN */
-extern void *request;
-extern int requestlen;
-#endif /* MAIN */
+#include <net/security.h>
 #endif /* NETSEC */
 
 #if INET6
-int SockOpen(const char *host, const char *service)
+int SockOpen(const char *host, const char *service, const char *options)
 {
   int i;
   struct addrinfo *ai, req;
 
   memset(&req, 0, sizeof(struct addrinfo));
   req.ai_socktype = SOCK_STREAM;
+#if NETSEC
+  net_security_operation	request[32];
+  int requestlen = 32;
+#endif /* NETSEC */
 
   if (i = getaddrinfo(host, service, &req, &ai)) {
     fprintf(stderr, "fetchmail: getaddrinfo(%s.%s): %s(%d)\n", host, service, gai_strerror(i), i);
@@ -53,7 +51,10 @@ int SockOpen(const char *host, const char *service)
   };
 
 #if NETSEC
-  i = inner_connect(ai, request, requestlen, NULL, NULL, "fetchmail", NULL);
+  if (net_security_strtorequest(options, request, &requestlen))
+      i = -1;
+  else
+      i = inner_connect(ai, request, requestlen, NULL,NULL, "fetchmail", NULL);
 #else /* NETSEC */
   i = inner_connect(ai, NULL, 0, NULL, NULL, "fetchmail", NULL);
 #endif /* NETSEC */

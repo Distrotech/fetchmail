@@ -63,7 +63,7 @@ extern char * yytext;
 %token PRECONNECT POSTCONNECT LIMIT
 %token IS HERE THERE TO MAP WILDCARD
 %token BATCHLIMIT FETCHLIMIT EXPUNGE
-%token SET LOGFILE DAEMON SYSLOG INVISIBLE INTERFACE MONITOR
+%token SET LOGFILE DAEMON SYSLOG INVISIBLE NETSEC INTERFACE MONITOR
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
@@ -162,7 +162,15 @@ serv_option	: AKA alias_list
 					    current.server.envskip = 0;
 					}
 
-		| QVIRTUAL STRING	{current.server.qvirtual = xstrdup($2);}
+		| QVIRTUAL STRING	{current.server.qvirtual=xstrdup($2);}
+		| NETSEC STRING		{
+#ifdef INET6
+					    current.server.netsec = 
+						xstrdup($2);
+#else
+					    yyerror("IPV6 support disabled")
+#endif /* INET6 */
+					}
 		| INTERFACE STRING	{
 #if defined(linux) && !defined(INET6)
 					interface_parse($2, &current.server);
@@ -427,6 +435,7 @@ static void record_current(void)
     FLAG_FORCE(server.protocol);
 #if INET6
     FLAG_FORCE(server.service);
+    FLAG_FORCE(server.netsec);
 #else /* INET6 */
     FLAG_FORCE(server.port);
 #endif /* INET6 */
@@ -490,6 +499,7 @@ void optmerge(struct query *h2, struct query *h1)
     FLAG_MERGE(server.protocol);
 #if INET6
     FLAG_MERGE(server.service);
+    FLAG_MERGE(server.netsec);
 #else /* INET6 */
     FLAG_MERGE(server.port);
 #endif /* INET6 */
@@ -534,3 +544,5 @@ void optmerge(struct query *h2, struct query *h1)
 int yywrap(void) {return 1;}
 
 /* rcfile_y.y ends here */
+
+

@@ -35,26 +35,27 @@
 #define LA_AUTHENTICATE	17
 #define LA_TIMEOUT	18
 #define LA_ENVELOPE	19
-#define LA_USERNAME	20
-#define LA_ALL          21
-#define LA_NOKEEP	22
-#define	LA_KEEP		23
-#define LA_FLUSH        24
-#define LA_NOREWRITE	25
-#define LA_LIMIT	26
-#define LA_FOLDER	27
-#define LA_SMTPHOST	28
-#define LA_SMTPADDR     29
-#define LA_BATCHLIMIT	30
-#define LA_FETCHLIMIT	31
-#define LA_EXPUNGE	32
-#define LA_MDA		33
-#define LA_INTERFACE    34
-#define LA_MONITOR      35
-#define LA_YYDEBUG	36
-#define LA_QVIRTUAL     37
+#define LA_QVIRTUAL     20
+#define LA_USERNAME	21
+#define LA_ALL          22
+#define LA_NOKEEP	23
+#define	LA_KEEP		24
+#define LA_FLUSH        25
+#define LA_NOREWRITE	26
+#define LA_LIMIT	27
+#define LA_FOLDER	28
+#define LA_SMTPHOST	29
+#define LA_SMTPADDR     30
+#define LA_BATCHLIMIT	31
+#define LA_FETCHLIMIT	32
+#define LA_EXPUNGE	33
+#define LA_MDA		34
+#define LA_NETSEC	35
+#define LA_INTERFACE    36
+#define LA_MONITOR      37
+#define LA_YYDEBUG	38
 
-/* options still left: CgGhHjJoORTUwWxXYzZ */
+/* options still left: CgGhHjJoORUwWxXYzZ */
 static const char *shortoptions = 
 	"?Vcsvd:NqL:f:i:p:UP:A:t:E:Q:u:akKFnl:r:S:b:B:e:m:I:M:y";
 
@@ -87,7 +88,7 @@ static const struct option longoptions[] = {
   {"username",  required_argument, (int *) 0, LA_USERNAME    },
 
   {"all",	no_argument,       (int *) 0, LA_ALL         },
-  {"nokeep",	no_argument,	   (int *) 0, LA_NOKEEP        },
+  {"nokeep",	no_argument,	   (int *) 0, LA_NOKEEP      },
   {"keep",      no_argument,       (int *) 0, LA_KEEP        },
   {"flush",	no_argument,	   (int *) 0, LA_FLUSH       },
   {"norewrite",	no_argument,	   (int *) 0, LA_NOREWRITE   },
@@ -95,12 +96,16 @@ static const struct option longoptions[] = {
 
   {"folder",    required_argument, (int *) 0, LA_FOLDER	     },
   {"smtphost",	required_argument, (int *) 0, LA_SMTPHOST    },
-  {"smtpaddress", required_argument, (int *) 0, LA_SMTPADDR    },
+  {"smtpaddress", required_argument, (int *) 0, LA_SMTPADDR  },
   
   {"batchlimit",required_argument, (int *) 0, LA_BATCHLIMIT  },
   {"fetchlimit",required_argument, (int *) 0, LA_FETCHLIMIT  },
   {"expunge",   required_argument, (int *) 0, LA_EXPUNGE     },
   {"mda",	required_argument, (int *) 0, LA_MDA         },
+
+#ifdef INET6
+  {"netsec",	required_argument, (int *) 0, LA_NETSEC    },
+#endif /* INET6 */
 
 #if defined(linux) && !INET6
   {"interface",	required_argument, (int *) 0, LA_INTERFACE   },
@@ -300,13 +305,6 @@ struct query *ctl;	/* option record to be initialized */
 		((cp = strtok((char *)NULL, ",")));
 	    break;
 	case 'S':
-#if NETSEC
-	    if (net_security_strtorequest(optarg, request, &requestlen)) {
-	      fprintf(stderr, "fetchmail: net_security_strtorequest(%s, ...) failed!\n", optarg);
-	      errflag++;
-	    };
-	    break;
-#endif /* NETSEC */
 	case LA_SMTPHOST:
 	    strcpy(buf, optarg);
 	    cp = strtok(buf, ",");
@@ -316,7 +314,7 @@ struct query *ctl;	/* option record to be initialized */
 		((cp = strtok((char *)NULL, ",")));
 	    ocount++;
 	    break;
-    case 'D':
+	case 'D':
 	case LA_SMTPADDR:
 	  ctl->smtpaddress = xstrdup(optarg);
 	  break;
@@ -339,6 +337,16 @@ struct query *ctl;	/* option record to be initialized */
 	case LA_MDA:
 	    ctl->mda = xstrdup(optarg);
 	    ocount++;
+	    break;
+
+	case 'T':
+	case LA_NETSEC:
+#if NETSEC
+	    ctl->server.ipsec = (void *)optarg;
+#else
+	    fprintf(stderr, "fetchmail: IPv6 support is disabled\n");
+	    errflag++;
+#endif /* NETSEC */
 	    break;
 
 #if defined(linux) && !INET6
@@ -412,11 +420,9 @@ struct query *ctl;	/* option record to be initialized */
 	fputs("  -l, --limit       don't fetch messages over given size\n", stderr);
 
 #if NETSEC
-	fputs("  -S                set security request\n", stderr);
-	fputs("      --smtphost    set SMTP forwarding host\n", stderr);
-#else /* NETSEC */
-	fputs("  -S, --smtphost    set SMTP forwarding host\n", stderr);
+	fputs("  -T, --netsec      set IP security request\n", stderr);
 #endif /* NETSEC */
+	fputs("  -S, --smtphost    set SMTP forwarding host\n", stderr);
 	fputs("  -D, --smtpaddress set SMTP delivery domain to use\n", stderr);
 	fputs("  -b, --batchlimit  set batch limit for SMTP connections\n", stderr);
 	fputs("  -B, --fetchlimit  set fetch limit for server connections\n", stderr);

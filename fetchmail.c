@@ -951,6 +951,8 @@ void dump_params (struct query *ctl)
 #if INET6
     if (ctl->server.service)
 	printf(" (using service %s)", ctl->server.service);
+    if (ctl->server.netsec)
+	printf(" (using IPsec options %s)", ctl->server.netsec);
 #else /* INET6 */
     if (ctl->server.port)
 	printf(" (using port %d)", ctl->server.port);

@@ -9,7 +9,7 @@
 
 /* Create a new client socket; returns (FILE *)NULL on error */
 #if INET6
-int SockOpen(const char *host, const char *service);
+int SockOpen(const char *host, const char *service, const char *options);
 #else /* INET6 */
 int SockOpen(const char *host, int clientPort);
 #endif /* INET6 */

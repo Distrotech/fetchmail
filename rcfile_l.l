@@ -53,6 +53,7 @@ smtpaddress	{ return SMTPADDRESS; }
 mda		{ return MDA; }
 pre(connect)?	{ return PRECONNECT; }
 post(connect)?	{ return POSTCONNECT; }
+netsec		{ return NETSEC; }
 interface	{ return INTERFACE; }
 monitor		{ return MONITOR; }
 batchlimit	{ return BATCHLIMIT; }

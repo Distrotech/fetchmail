@@ -98,7 +98,8 @@ struct hostdata		/* shared among all user connections to given server */
     struct idlist *localdomains;	/* list of pass-through domains */
     int protocol;			/* protocol type */
 #if INET6
-    char *service;
+    char *service;			/* IPv6 service name */
+    void *netsec;			/* IPv6 security request */
 #else /* INET6 */
     int port;				/* TCP/IP service port number */
 #endif /* INET6 */
@@ -261,11 +262,6 @@ extern char *user;		/* name of invoking user */
 extern char *home;		/* home directory of invoking user */
 extern char *fetchmailhost;	/* the name of the host running fetchmail */
 extern int pass;		/* number of re-polling pass */
-
-#if NETSEC
-extern void *request;
-extern int requestlen;
-#endif /* NETSEC */
 
 /* prototypes for globally callable functions */
 

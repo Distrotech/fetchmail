@@ -1665,7 +1665,9 @@ const struct method *proto;	/* protocol method table */
 #endif /* !INET6 */
 	realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;
 #if INET6
-	if ((sock = SockOpen(realhost, ctl->server.service ? ctl->server.service : protocol->service)) == -1)
+	if ((sock = SockOpen(realhost, 
+			     ctl->server.service ? ctl->server.service : protocol->service,
+			     ctl->server.netsec)) == -1)
 #else /* INET6 */
 	if ((sock = SockOpen(realhost, port)) == -1)
 #endif /* INET6 */

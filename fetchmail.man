@@ -405,7 +405,7 @@ identify the original envelope recipient, but you have to strip the
 `mbox-userstr-' prefix to deliver to the correct user.
 This is what this option is for.
 
-.SH USER AUTHENTICATION
+.SH USER AUTHENTICATION AND ENCRYPTION
 Every mode except ETRN requires authentication of the client.
 Normal user authentication in 
 .I fetchmail
@@ -513,6 +513,13 @@ you are using POP3, and the RPA code has been compiled into your
 binary, and you query a server in the Compuserve csi.com domain,
 \fIfetchmail\fR will try to perform an RPA pass-phrase authentication
 instead of sending over the password en clair.
+.PP
+If you are using IPsec, the -T (--netsec) option can be used to pass
+an IP security request to be used when outgoing IP connections are
+initialized.  You can also do this using the `netsec' server option
+in the .fetchmailrc file.  In either case, the option value is a
+string in the format accepted by the net_security_strtorequest() 
+function of the inet6_apps library.
 
 .SH DAEMON MODE
 The 
