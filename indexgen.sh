@@ -9,6 +9,7 @@ date=`date "+%d %b %Y"`
 
 set -- `timeseries | grep -v "[%#]" | head -1`
 subscribers=$4
+make fetchmail
 set -- `ls -ks fetchmail`
 fetchmailsize=$1
 set -- `(cd /lib; ls libc-*)`
@@ -26,9 +27,9 @@ done
 
 if [ $version != $goldvers ]
 then
-    for file in fetchmail-$goldvers.tar.gz fetchmail-$goldvers-1.i386.rpm fetchmail-$goldvers-1.src.rpm
+    for file in /usr/src/redhat/SOURCES/fetchmail-$goldvers.tar.gz /usr/src/redhat/RPMS/i386/fetchmail-$goldvers-1.i386.rpm /usr/src/redhat/SRPMS/fetchmail-$goldvers-1.src.rpm
     do
-	md5sum $file >>checksums
+	md5sum $file | sed -e "s: .*/:  :" >>checksums
     done
 fi
 
