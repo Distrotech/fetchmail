@@ -39,7 +39,8 @@ Fetchmail is a free, full-featured, robust, well-documented
 remote-mail retrieval and forwarding utility intended to be used over
 on-demand TCP/IP links (such as SLIP or PPP connections). It supports
 every remote-mail protocol now in use on the Internet: POP2, POP3,
-RPOP, APOP, KPOP, all flavors of IMAP, and ESMTP ETRN. <P>
+RPOP, APOP, KPOP, all flavors of IMAP, and ESMTP ETRN. It can even support
+IPv6 and IPSEC.<P>
 
 Fetchmail retrieves mail from remote mail servers and forwards it via
 SMTP, so it can then be be read by normal mail user agents such as
