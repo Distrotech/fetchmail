@@ -7,7 +7,6 @@
 
 				Other TO-DO items:
 
-* Autoconfigure the root-mode lockfile location so Solaris will work.
 * Get with Craig Metz to write a draft RFC on RFC1938 support in IMAP.
 * Message length check code (#define MSGLEN) works for IMAP, but not for POP.
   How can this be?
@@ -18,6 +17,7 @@
 fetchmail-4.2.5 ()
 * Alexander Kourakos corrected his patch to avoid a buffer overrun.
 * Greg Stark's patch for better autoconfiguration on mixed libc5/libc6 systems.
+* We no longer mess with CFLAGS/LDFLAGS to get Kerberos support linked.
 
 There are 287 people on the fetchmail-friends list.
 
