@@ -1198,7 +1198,8 @@ likely never to see their mail at all.
 If you're tempted to use 
 .I fetchmail 
 to retrieve mail for multiple users from a single mail drop via POP or
-IMAP, think again.  It would be smarter to just let the mail sit in the
+IMAP, think again (and reread the section on header and envelope
+addresses above).  It would be smarter to just let the mail sit in the
 mailserver's queue and use fetchmail's ETRN mode to trigger SMTP sends
 periodically (of course, this means you have to poll more frequently
 than the mailserver's expiry period).  If you can't arrange this, try
