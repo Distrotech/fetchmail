@@ -2,12 +2,16 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.3.0 (Tue Feb 22 08:53:31 PST 2000), 18618 lines:
+
 * Horst von Brand's improvements to the specfile generator.
 * Joop Susan's improvements in error status reporting.
 * Only emit progress dots when stdout is connected to a tty.
 * Fix for GNATS bug 16468, "INET6 breaks fetchmail preconnect"
   by Munechika SUMIKAWA <sumikawa@ebina.hitachi.co.jp>.
 * Lexical analyzer now understands that -?[0-9]*[a-zA-Z] is not a number.
+
+There are 293 people on fetchmail-friends and 498 on fetchmail-announce.
 
 fetchmail-5.2.8 (Mon Feb 14 19:16:46 EST 2000), 18571 lines:
 
