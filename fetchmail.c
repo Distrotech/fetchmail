@@ -257,6 +257,64 @@ int main (int argc, char **argv)
     }
 #undef FETCHMAIL_PIDFILE
 
+#ifdef HAVE_SETRLIMIT
+    /*
+     * Before getting passwords, disable core dumps unless -v -d0 mode is on.
+     * Core dumps could otherwise contain passwords to be scavenged by a
+     * cracker.
+     */
+    if (outlevel < O_VERBOSE || run.poll_interval > 0)
+    {
+	struct rlimit corelimit;
+	corelimit.rlim_cur = 0;
+	corelimit.rlim_max = 0;
+	setrlimit(RLIMIT_CORE, &corelimit);
+    }
+#endif /* HAVE_SETRLIMIT */
+
+    /* parse the ~/.netrc file (if present) for future password lookups. */
+    xalloca(netrc_file, char *, strlen (home) + 8);
+    strcpy (netrc_file, home);
+    strcat (netrc_file, "/.netrc");
+    netrc_list = parse_netrc(netrc_file);
+
+    /* pick up passwords where we can */ 
+    for (ctl = querylist; ctl; ctl = ctl->next)
+    {
+	if (ctl->active && !(implicitmode && ctl->server.skip)&&!ctl->password)
+	{
+	    if (ctl->server.preauthenticate == A_KERBEROS_V4 ||
+		ctl->server.preauthenticate == A_KERBEROS_V5 ||
+#ifdef GSSAPI
+		ctl->server.protocol == P_IMAP_GSS ||
+#endif /* GSSAPI */
+		ctl->server.protocol == P_IMAP_K4)
+		/* Server won't care what the password is, but there
+		   must be some non-null string here.  */
+		ctl->password = ctl->remotename;
+	    else
+	    {
+		netrc_entry *p;
+
+		/* look up the pollname and account in the .netrc file. */
+		p = search_netrc(netrc_list,
+				 ctl->server.pollname, ctl->remotename);
+		/* if we find a matching entry with a password, use it */
+		if (p && p->password)
+		    ctl->password = xstrdup(p->password);
+
+		/* otherwise try with "via" name if there is one */
+		else if (ctl->server.via)
+		{
+		    p = search_netrc(netrc_list, 
+				     ctl->server.via, ctl->remotename);
+		    if (p && p->password)
+		        ctl->password = xstrdup(p->password);
+		}
+	    }
+	}
+    }
+
     /* perhaps we just want to check options? */
     if (versioninfo)
     {
@@ -388,77 +446,25 @@ int main (int argc, char **argv)
 	}
     }
 
-    /* parse the ~/.netrc file (if present) for future password lookups. */
-    xalloca(netrc_file, char *, strlen (home) + 8);
-    strcpy (netrc_file, home);
-    strcat (netrc_file, "/.netrc");
-    netrc_list = parse_netrc(netrc_file);
-
-#ifdef HAVE_SETRLIMIT
-    /*
-     * Before getting passwords, disable core dumps unless -v -d0 mode is on.
-     * Core dumps could otherwise contain passwords to be scavenged by a
-     * cracker.
-     */
-    if (outlevel < O_VERBOSE || run.poll_interval > 0)
-    {
-	struct rlimit corelimit;
-	corelimit.rlim_cur = 0;
-	corelimit.rlim_max = 0;
-	setrlimit(RLIMIT_CORE, &corelimit);
-    }
-#endif /* HAVE_SETRLIMIT */
-
     /* pick up interactively any passwords we need but don't have */ 
     for (ctl = querylist; ctl; ctl = ctl->next)
     {
-	if (ctl->active && !(implicitmode && ctl->server.skip)&&!ctl->password)
+	if (ctl->active && !(implicitmode && ctl->server.skip)
+	    && ctl->server.protocol != P_ETRN 
+	    && ctl->server.protocol != P_IMAP_K4
+#ifdef GSSAPI
+	    && ctl->server.protocol != P_IMAP_GSS
+#endif /* GSSAPI */
+	    && !ctl->password)
 	{
-	    if (ctl->server.preauthenticate == A_KERBEROS_V4 ||
-		ctl->server.preauthenticate == A_KERBEROS_V5 ||
-#ifdef GSSAPI
-		ctl->server.protocol == P_IMAP_GSS ||
-#endif /* GSSAPI */
-		ctl->server.protocol == P_IMAP_K4)
-		/* Server won't care what the password is, but there
-		   must be some non-null string here.  */
-		ctl->password = ctl->remotename;
-	    else
-	    {
-		netrc_entry *p;
+	    char* password_prompt = _("Enter password for %s@%s: ");
 
-		/* look up the pollname and account in the .netrc file. */
-		p = search_netrc(netrc_list,
-				 ctl->server.pollname, ctl->remotename);
-		/* if we find a matching entry with a password, use it */
-		if (p && p->password)
-		    ctl->password = xstrdup(p->password);
-
-		/* otherwise try with "via" name if there is one */
-		else if (ctl->server.via)
-		{
-		    p = search_netrc(netrc_list, 
-				     ctl->server.via, ctl->remotename);
-		    if (p && p->password)
-		        ctl->password = xstrdup(p->password);
-		}
-	    }
-
-	    if (ctl->server.protocol != P_ETRN && ctl->server.protocol != P_IMAP_K4
-#ifdef GSSAPI
-                && ctl->server.protocol != P_IMAP_GSS
-#endif /* GSSAPI */
-                && !ctl->password)
-	    {
-		char* password_prompt = _("Enter password for %s@%s: ");
-
-		xalloca(tmpbuf, char *, strlen(password_prompt) +
-					strlen(ctl->remotename) +
-					strlen(ctl->server.pollname) + 1);
-		(void) sprintf(tmpbuf, password_prompt,
-			       ctl->remotename, ctl->server.pollname);
-		ctl->password = xstrdup((char *)getpassword(tmpbuf));
-	    }
+	    xalloca(tmpbuf, char *, strlen(password_prompt) +
+		    strlen(ctl->remotename) +
+		    strlen(ctl->server.pollname) + 1);
+	    (void) sprintf(tmpbuf, password_prompt,
+			   ctl->remotename, ctl->server.pollname);
+	    ctl->password = xstrdup((char *)getpassword(tmpbuf));
 	}
     }
 
@@ -1380,9 +1386,9 @@ static void dump_params (struct runctl *runp,
 	 */
 	if (!ctl->password && (ctl->server.protocol != P_ETRN)
 #ifdef GSSAPI
-            && (ctl->server.protocol != P_IMAP_GSS)
+		&& (ctl->server.protocol != P_IMAP_GSS)
 #endif /* GSSAPI */
-        )
+	        && ctl->server.protocol != P_IMAP_K4)
 	    printf(_("  Password will be prompted for.\n"));
 	else if (outlevel >= O_VERBOSE)
 	    if (ctl->server.protocol == P_APOP)
