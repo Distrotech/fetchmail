@@ -98,7 +98,7 @@ unlink("PREAMBLE.$$");
 unlink("DIFFS.$$");
 
 print "Building index page...\n";
-system("indexgen.sh $version");
+system("rm -f index.html; indexgen.sh");
 
 print "Done\n";
 
