@@ -261,18 +261,6 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
     int sl;
     int off = 0;
     
-    /* 
-     * If the name of the user begins with a 
-     * qmail virtual domain prefix, remove
-     * the prefix.
-     */
-    if (ctl->server.qvirtual)
-    {
-	sl = strlen(ctl->server.qvirtual);
-	if (!strncasecmp(name,ctl->server.qvirtual,sl))
-	    off = sl; 
-    }
-
     lname = idpair_find(&ctl->localnames, name+off);
     if (!lname && ctl->wildcard)
 	lname = name+off;
@@ -303,6 +291,20 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 	     cp = nxtaddr(NULL))
 	{
 	    char	*atsign;
+
+	    /*
+	     * If the name of the user begins with a qmail virtual
+	     * domain prefix, ignore the prefix.  Doing this here
+	     * means qvirtual will work either with ordinary name
+	     * mapping or with a localdomains option.
+	     */
+	    if (ctl->server.qvirtual)
+	    {
+		int sl = strlen(ctl->server.qvirtual);
+ 
+		if (!strncasecmp(cp, ctl->server.qvirtual, sl))
+		    cp += sl;
+	    }
 
 	    if ((atsign = strchr(cp, '@'))) {
 		struct idlist	*idp;
@@ -355,7 +357,7 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 static char *parse_received(struct query *ctl, char *bufp)
 /* try to extract real address from the Received line */
 /* If a valid Received: line is found, we return the full address in
- * a buffer wich can be parsed from nxtaddr().  This is to ansure that
+ * a buffer which can be parsed from nxtaddr().  This is to ansure that
  * the local domain part of the address can be passed along in 
  * find_server_names() if it contains one.
  * Note: We should return a dummy header containing the address 
