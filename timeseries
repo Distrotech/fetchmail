@@ -4,11 +4,12 @@
 #
 # Output other than pass-through % lines is tab-separated fields.
 # Field 1: release ID
-# Field 2: count of fetchmail-friends subscribers
-# Field 3: count of fetchmail-announce subscribers
-# Field 4: total subscribers to both lists
-# Field 5: date of release (days since first datum)
-# Field 6: date of release (RFC822 date format)
+# Field 2: count of source lines under version control 
+# Field 3: count of fetchmail-friends subscribers
+# Field 4: count of fetchmail-announce subscribers
+# Field 5: total subscribers to both lists
+# Field 6: date of release (days since first datum)
+# Field 7: date of release (RFC822 date format)
 #
 my($release, $date, $jdate);
 
@@ -60,19 +61,24 @@ while ($_ = <NEWS>)
     if (/^%/) {
 	print $_;
     }
-    elsif (/^fetchmail-([^ ]*) \(([^)]+)\):?/) {
+    elsif (/^fetchmail-([^ ]*) \(([^)]+)\)(, [0-9]* lines)?:/) {
 	$release = $1;
 	$date = $2;
 	$jdate = &day_offset($date);
+	if ($3) {
+	    $lines = substr($3, 2, length($3) - 8);
+	} else {
+	    $lines = 'na'
+	}
     }
     elsif (/There are ([0-9]*) people on fetchmail-friends and ([0-9]*) on fetchmail-announce/) {
 	$sum = $1 + $2;
-	print "${release}\t$1\t$2\t${sum}\t${jdate}\t${date}\n";
+	print "${release}\t${lines}\t$1\t$2\t${sum}\t${jdate}\t${date}\n";
 	$release = "unknown";
 	$date = "unknown";
     }
     elsif (/There are ([0-9]*) people on the fetchmail-friends list./) {
-	print "$release\t$1\t0\t$1\t$jdate\t$date\n";
+	print "$release\t${lines}\t$1\t0\t$1\t$jdate\t$date\n";
 	$release = "unknown";
 	$date = "unknown";
     }
