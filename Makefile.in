@@ -53,8 +53,6 @@ prefix = @prefix@
 # Common prefix for machine-dependent installed files.
 exec_prefix = @exec_prefix@
 
-# Name under which to install fetchmail
-instname = fetchmail
 # Directory in which to install.
 bindir = @bindir@
 # Directory to install the Info files in.
@@ -130,21 +128,25 @@ tags: $(tagsrcs)
 	$(CTAGS) $(tagsrcs)
 
 .PHONY: install installdirs uninstall
-install: installdirs $(bindir)/$(instname) $(mandir)/$(instname).$(manext)
+install: installdirs $(bindir)/fetchmail $(bindir)/fetchmailconf $(mandir)/fetchmail.$(manext)
 
 installdirs:
 	$(SHELL) ${srcdir}/mkinstalldirs $(bindir) $(mandir)
 
-$(bindir)/$(instname): fetchmail
-	@echo "Installing binary..."
+$(bindir)/fetchmail: fetchmail
+	@echo "Installing fetchmail binary..."
 	$(INSTALL_PROGRAM) fetchmail $@
 
-$(mandir)/$(instname).$(manext): fetchmail.man
+$(bindir)/fetchmailconf: fetchmailconf
+	@echo "Installing fetchmail configurator..."
+	$(INSTALL_PROGRAM) fetchmailconf $@
+
+$(mandir)/fetchmail.$(manext): fetchmail.man
 	@echo "Installing manual page..."
 	$(INSTALL_DATA) $(srcdir)/fetchmail.man $@
 
 uninstall:
-	rm -f $(bindir)/$(instname) $(mandir)/$(instname).$(manext)
+	rm -f $(bindir)/fetchmail $(bindir)/fetchmailconf $(mandir)/fetchmail.$(manext)
 
 .PHONY: clean realclean distclean mostlyclean
 clean: 

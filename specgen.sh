@@ -35,5 +35,6 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %doc README NEWS NOTES fetchmail-FAQ.html FAQ COPYING INSTALL sample.rcfile
 /usr/bin/fetchmail
+/usr/bin/fetchmailconf
 /usr/man/man1/fetchmail.1
 EOF
