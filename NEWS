@@ -1,5 +1,18 @@
 			Release Notes:
 
+fetchmail-2.2 (Wed Dec  4 23:55:20 EST 1996):
+
+features --
+
+* If SMTP returns 571 (unsolicited mail refused) to a MAIL FROM, the
+  address is excluded by the local sendmail's spam filter.  Drop the mail.
+
+bugs --
+
+* Fixed a startup-time core dump introduced by 2.1's aka-list feature
+* Fixed a bug in non-implicit (poll specified host) mode also due to aka.
+* Various minor portability fixes for Suns.
+
 fetchmail-2.1 (Thu Nov 28 11:07:48 EST 1996):
 
 features --

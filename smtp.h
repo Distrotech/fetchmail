@@ -21,6 +21,5 @@ int SMTP_data(FILE *sockfp);
 int SMTP_eom(FILE *sockfp);
 int SMTP_quit(FILE *sockfp);
 int SMTP_ok(FILE *sockfp);
-void SMTP_rset(FILE *sockfp);
 
 #endif

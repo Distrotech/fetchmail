@@ -92,16 +92,7 @@ int SMTP_eom(FILE *sockfp)
   return ok;
 }
 
-void SMTP_rset(FILE *sockfp)
-/* send a "RSET" message to the SMTP listener */
-{
-  SockPrintf(sockfp,"RSET\r\n");
-  if (outlevel == O_VERBOSE)
-      fprintf(stderr, "SMTP> RSET\n");
-}
-
-
-static int SMTP_check(FILE *sockfp)
+int SMTP_ok(FILE *sockfp)
 /* returns status of SMTP connection */
 {
     int  n;
@@ -121,35 +112,6 @@ static int SMTP_check(FILE *sockfp)
 	    return SM_ERROR;
     }
     return SM_UNRECOVERABLE;
-}
-
-int SMTP_ok(FILE *sockfp)
-/* accepts SMTP response, returns status of SMTP connection */
-{
-  int  ok;  
-
-  /* I can tell that the SMTP server connection is ok if I can read a
-     status message that starts with "1xx" ,"2xx" or "3xx".
-     Therefore, it can't be ok if there's no data waiting to be read
-     
-     Tried to deal with this with a call to SockDataWaiting, but 
-     it failed badly.
-
-    */
-
-  ok = SMTP_check(sockfp);
-  if (ok == SM_ERROR) /* if we got an error, */
-    {
-      SMTP_rset(sockfp);
-      ok = SMTP_check(sockfp);  /* how does it look now ? */
-      if (ok == SM_OK)  
-	ok = SM_ERROR;                /* It's just a simple error, for*/
-				      /*	 the current message  */
-      else
-	ok = SM_UNRECOVERABLE;       /* if it still says error, we're */
-                                     /* in bad shape                  */ 
-    }
-  return ok;
 }
 
 /* smtp.c ends here */
