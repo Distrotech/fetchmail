@@ -117,7 +117,7 @@ GUI konfigurator do fetchmaila napisany w pythonie.
 %build
 LDFLAGS="-s"
 export CFLAGS LDFLAGS
-./configure --prefix=/usr --disable-nls --without-kerberos --mandir=%{_mandir} 
+./configure --prefix=/usr --disable-nls --without-kerberos --mandir=%{_mandir} --enable-SSL --enable-inet6
                          # Remove --disable-nls, add --without-included-gettext
                          # for internationalization. Also look below.
 make
