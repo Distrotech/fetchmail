@@ -121,6 +121,8 @@ int imap_getauth(FILE *sockfp, struct query *ctl, char *buf)
 	if (outlevel == O_VERBOSE)
 	    error(0, 0, "Protocol identified as IMAP4 rev 0");
     }
+
+    peek_capable = (imap_version >= IMAP4);
 }
 
 static int imap_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
