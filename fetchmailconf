@@ -59,7 +59,7 @@ class Server:
 	self.interface = None		# IP address and range
 	self.monitor = None		# IP address and range
 	self.users = []			# List of user entries for site
-	self.typemap = (
+	Server.typemap = (
 	    ('pollname',  'String'),
 	    ('via',       'String'),
 	    ('active',    'Boolean'),
@@ -171,7 +171,7 @@ class User:
 	self.fetchlimit = 0		# Max messages fetched per batch
 	self.batchlimit = 0		# Max message forwarded per batch
 	self.expunge = 1		# Interval between expunges (IMAP)
-	self.typemap = (
+	User.typemap = (
 	    ('remote',      'String'),
 	    # leave out mailboxes and localnames
 	    ('password',    'String'),
@@ -733,7 +733,7 @@ class ServerEdit(Frame):
 
     def post(self):
 	# we can't abstract this away, execs would happen in the wrong scope
-	for x in self.server.typemap:
+	for x in Server.typemap:
 	    target = "self." + x[0]
 	    source = "self.server." + x[0]
 	    if x[1] == 'Boolean':
@@ -750,7 +750,7 @@ class ServerEdit(Frame):
 		    exec target + ".set(" + source + ")"
 
     def gather(self):
-	for x in self.server.typemap:
+	for x in Server.typemap:
 	    setattr(self.server, x[0], getattr(self, x[0]).get())
 
     def nosave(self):
@@ -910,7 +910,7 @@ class UserEdit(Frame):
 
     def post(self):
 	# we can't abstract this away, execs would happen in the wrong scope
-	for x in self.user.typemap:
+	for x in User.typemap:
 	    target = "self." + x[0]
 	    source = "self.user." + x[0]
 	    if x[1] == 'Boolean':
@@ -927,7 +927,7 @@ class UserEdit(Frame):
 		    exec target + ".set(" + source + ")"
 
     def gather(self):
-	for x in self.user.typemap:
+	for x in User.typemap:
 	    setattr(self.user, x[0], getattr(self, x[0]).get())
 
     def nosave(self):
