@@ -438,7 +438,6 @@ struct hostrec *queryctl;
 
   return value:  open file descriptor for the pipe or -1.
   calls:         none.
-  globals:       reads mda_argv.
  *********************************************************************/
 
 int openmailpipe (queryctl)
