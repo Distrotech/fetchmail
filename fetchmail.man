@@ -615,17 +615,47 @@ server user names `golux', `hurkle', and `snark'.  It further
 specifies that `golux' and `snark' have the same name on the
 client as on the server, but mail for server user `hurkle' should be
 delivered to client user `happy'.
-.PP
-Local names can also be used to administer a mailing list from the
+.SH THE USE AND ABUSE OF MULTIDROP MAILBOXES
+Use the multiple-local-recipients feature with caution -- it can bite.
+The fundamental problem is that by having your server toss several
+peoples' mail in a box, you have thrown away potentially vital
+information about who each piece of mail was actually addressed to.
+This can't always be deduced from the headers, especially when mailing
+lists are involved.
+.SS Good Ways To Use Multidrop Mailboxes
+Multiple local names can be used to administer a mailing list from the
 client side of a \fIfetchmail\fR collection.  Suppose your name is
 \&`esr', and you want to both pick up your own mail and maintain a mailing
 list called (say) "fetchmail-friends", and you want to keep the alias
-list on your client machine.  On your server, you can alias
-\&`fetchmail-friends' to `esr'; then, in your \fI.fetchmailrc\fR, declare
-\&`to esr fetchmail-friends here'.  Then, when mail including `fetchmail'
-in any of its recipient lines line gets fetched, the alias will be
-appended to the list of recipients your SMTP listener sees.  Therefore
-it will undergo alias expansion locally.
+list on your client machine.
+.PP
+On your server, you can alias \&`fetchmail-friends' to `esr'; then, in
+your \fI.fetchmailrc\fR, declare \&`to esr fetchmail-friends here'.
+Then, when mail including `fetchmail-friends' in any of its recipient
+lines gets fetched, the list name will be appended to the list of
+recipients your SMTP listener sees.  Therefore it will undergo alias
+expansion locally.  (Be sure to include `esr' in the local alias
+expansion of fetchmail-friends, or you'll never see mail sent only to
+the list!)
+.PP
+This trick is not without its problems, however.  You'll begin to see
+this when a message comes in that is addressed only to a mailing list
+you do \fInot\fR have declared as a local name.  Each such message
+will feature an `X-Fetchmail-Warning' header which is generated
+because fetchmail cannot find a valid local name in the recipient
+addresses.  Such messages default (as was described above) to being
+sent to the local user running
+.IR fetchmail ,
+but the program has no way to know that that's actually the right thing.
+.SS Bad Ways To Abuse Multidrop Mailboxes
+Multidrop mailboxes and 
+.I fetchmail
+serving multiple users in daemon mode do not mix.  The problem, again, is
+mail from mailing lists, which typically does not have an individual
+recipient address on it.  If you have multiple local names declared,
+.I fetchmail
+cannot know which to send it to!  It will only go to the account
+running fetchmail (probably root).
 .SH EXIT CODES
 To facilitate the use of 
 .I fetchmail
@@ -716,14 +746,6 @@ that the program send unencrypted passwords over the TCP/IP connection
 to the mailserver.  This creates a risk that name/password pairs
 might be snaffled with a packet sniffer or more sophisticated
 monitoring software.
-.PP
-Retrieval and forwarding from multi-drop server mailboxes is at most
-as reliable as your mail server host's DNS service.  Each host address
-part in each message of a multi-drop mailbox is looked up through DNS
-to see if it's an alias of the mail server (the method \fIwill\fR
-catch equivalences created by MX records).  If it is an alias of the
-server, but the lookup fails due to network congestion or a crashed
-server, forwarding will not get done correctly.
 .PP
 Send comments, bug reports, gripes, and the like to Eric S. Raymond
 <esr@thyrsus.com>.
