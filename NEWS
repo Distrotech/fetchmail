@@ -1,41 +1,3 @@
-		Complaints and Suspected Bugs:
-
-Reports from from Klee Dienes <klee@mit.edu> on the Debian bug list and from
-fetchmail-friend Dirk Eddelbuettel <edd@rosebud.sps.queensu.ca>:
-
-[KD1] If the local SMTP server disconnects while fetchmail is initializing
-the connection (for example, because inetd answers the connection but
-can't find the appropriate binary), fetchmail will wait forever for a
-response from the server.
-
-(Hm.  Possibly this is the same bug as DE2 below.  It appears the server
-timeout feature may be broken, but I have not been able to reproduce this yet.
-It's hard to test without a customized server or a very overloaded or flaky
-one.  The one I use is too fast.  :-))
-
-[KD2] Also, fetchmail seems to be using a polling loop to wait for responses
-from the server.  This should probably be changed to a select()-based
-mechanism.
-
-(Perhaps.  This is a design change I'm not ready to do quickly.)
-
-[DE1] After starting 
-
-	fetchmail --syslog --monitor ppp0 --daemon 300 --timeout 30
-
-I said 'fetchmail --quit' but that isn't logged.
-
-(I haven't been able to reproduce this.  I ran `fetchmail -d 2 -N -v'
-in one window and then did `fetchmail -q' in another, and the log
-message "fetchmail: terminated with signal 15" did show up.  What 
-happens when you try that?)
-
-[DE2] I had requested a timeout of 30 secs, but it didn't time out in almot
-      fifteen minutes
-
-(But fetchmail -V reports the timeout option set correctly.  Are server
-timeouts really broken?  We must find a way to test this.)
-
 				Heads-up!
 
 The .poprc compatibility hack that allows your first user declaration
@@ -57,6 +19,11 @@ features --
 * -U option to force UIDL use under POP3 (thanks, Ingmar Baumgart).
 
 bugs -- 
+
+* Server-response timeouts were broken.  Various symptoms of this problem
+  were reported by Klee Dienes <klee@mit.edu>, Dirk Eddelbuettel
+  <edd@rosebud.sps.queensu.ca>, Robert V. Schipper" <rvs@gol.com>,
+  and Steven Brown <swbrown@ucsd.edu>.
 
 * George Sipe sent a fix for the --monitor code.
 
