@@ -375,7 +375,8 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
     int smtperr = atoi(smtp_response);
     char *responses[1];
 
-    responses[0] = smtp_response;
+    xalloca(responses[0], char *, strlen(smtp_response)+1);
+    strcpy(responses[0], smtp_response);
 
     /* required by RFC1870; sets us up to be able to send bouncemail */
     SMTP_rset(ctl->smtp_socket);

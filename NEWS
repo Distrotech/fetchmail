@@ -9,6 +9,7 @@
 fetchmail-5.0.0 ():
 * Patch by Dan Root to solve an endianness problem in IMAP-K4.
 * Fix lexical-analyzer bug that rejected `set nobouncemail',
+* Prevent send_bouncemail from stepping on SMTP antispam response.
 
 There are 262 people on fetchmail-friends and 356 on fetchmail-announce.
 
