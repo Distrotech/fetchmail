@@ -4,8 +4,8 @@
   error(), but since they are built piecemeal, they go to stderr.  What
   would be needed is an error() variant that didn't write a message until
   it got a trailing \n -- otherwise, if a syslog option were added, these
-  messages would wind up as separate syslog calls -- probably not the desired
-  result.
+  messages would wind up as separate syslog calls (probably not the desired
+  result).
 
 			Release Notes:
 
@@ -25,6 +25,9 @@ features --
 * Almost all error messages that might be emitted in daemon mode now go
   through the error() subroutine.  This is a first step towards allowing
   a daemon-mode fetchmail to use syslog.
+
+* SIGUSR1 is now used for wakeup rather than SIGHUP.  This eliminates any
+  possible confusion about fetchmail's behavior at logout time.
 
 bugs --
 

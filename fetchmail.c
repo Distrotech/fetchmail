@@ -252,7 +252,7 @@ int main (int argc, char **argv)
 		 pid);
 		return(PS_EXCLUDE);
 	}
-	else if (kill(pid, SIGHUP) == 0)
+	else if (kill(pid, SIGUSR1) == 0)
 	{
 	    fprintf(stderr,
 		    "fetchmail: background fetchmail at %d awakened.\n",
@@ -263,7 +263,7 @@ int main (int argc, char **argv)
 	{
 	    /*
 	     * Should never happen -- possible only if a background fetchmail
-	     * croaks after the first kill probe above but before the SIGHUP
+	     * croaks after the first kill probe above but before the SIGUSR1
 	     * transmission.
 	     */
 	    fprintf(stderr,
@@ -312,7 +312,7 @@ int main (int argc, char **argv)
      * side effect of interrupting any sleep that may be going on,
      * forcing fetchmail to re-poll its hosts.
      */
-    signal(SIGHUP, donothing);
+    signal(SIGUSR1, donothing);
 
     /* here's the exclusion lock */
     if ( (lockfp = fopen(lockfile,"w")) != NULL ) {
@@ -426,8 +426,8 @@ int main (int argc, char **argv)
 		setitimer(ITIMER_REAL,&ntimeout,NULL);
 		signal(SIGALRM, donothing);
 		pause();
-		if (lastsig == SIGHUP)
-		    (void) error(0, 0, "awakened by SIGHUP");
+		if (lastsig == SIGUSR1)
+		    (void) error(0, 0, "awakened by SIGUSR1");
 	    }
 
 	    if (outlevel == O_VERBOSE)
