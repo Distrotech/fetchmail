@@ -69,8 +69,8 @@ it is pretty hard for anyone to tell that the incoming mail link is
 not a full-time "push" connection.<p>
 
 Fetchmail is easy to configure.  You can edit its dotfile directly, or
-use the interactive GUI configurator supplied with the fetchmail
-distribution.<P>
+use the interactive GUI configurator (fetchmailconf) supplied with the
+fetchmail distribution.<P>
 
 Fetchmail is fast and lightweight.  It packs all its standard
 features (POP3, IMAP, and ETRN support) in less than 97K of core on a

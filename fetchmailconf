@@ -7,7 +7,7 @@
 #
 # TO DO: Arrange for save and quit buttons to clean up all frames dependent
 # on the current ones.
-version = "1.4"
+version = "1.5"
 
 from Tkinter import *
 from Dialog import *
@@ -972,7 +972,7 @@ you'll have to build it from sources yourself with the configure
 switch --enable-POP2.
 
 """
-            if string.find(greetline, "1.003") > 0 or string.find(greetline, "1.003") > 0:
+            if string.find(greetline, "1.003") > 0 or string.find(greetline, "1.004") > 0:
                 warnings = warnings + """
 This appears to be an old version of the UC Davis POP server.  These are
 dangerously unreliable (among other problems, they may drop your mailbox
@@ -1028,6 +1028,12 @@ To work around this, it is recommended that you set the `fetchall'
 option on all user entries associated with this server, so any stuck
 mail will be retrieved next time around.
 
+"""
+            if string.find(greetline, "IMAP4rev1") > 0:
+                warnings = warnings + """
+I see an IMAP4rev1 server.  Excellent.  This is (a) the best kind of
+remote-mail server, and (b) the one the fetchmail author uses.  Fetchmail
+has therefore been extremely well tested with this class of server.
 """
             if warnings == '':
                 warnings = warnings + """

@@ -53,7 +53,9 @@ language Python and the Tk toolkit be present on your system.  If
 you are first setting up fetchmail for single-user mode, it is
 recommended that you use Novice mode.  Expert mode provides
 complete control of fetchmail configuration, including the
-multidrop features.
+multidrop features.  In either case, the `Autoprobe' button
+will tell you the most capable protocol a given mailserver
+supported, and warn you of potential problems with that server.
 
 .SH GENERAL OPERATION
 The behavior of
