@@ -153,7 +153,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	  int i;
 
 	  i = opiegenerator(challenge, !strcmp(ctl->password, "opie") ? "" : ctl->password, response);
-	  if ((i == -2) && (cmd_daemon == -1)) {
+	  if ((i == -2) && (cmd_opts.poll_interval == -1)) {
 	    char secret[OPIE_SECRET_MAX+1];
 	    fprintf(stderr, "Secret pass phrase: ");
 	    if (opiereadpass(secret, sizeof(secret), 0))
