@@ -187,6 +187,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	    numdump("timeout",  ctl->server.timeout);
 	    numdump("interval", ctl->server.interval);
 	    stringdump("envelope", ctl->server.envelope); 
+	    numdump("envskip", ctl->server.envskip);
 	    stringdump("qvirtual", ctl->server.qvirtual);
  
 	    if (ctl->server.preauthenticate == A_KERBEROS_V4)

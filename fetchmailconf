@@ -19,6 +19,7 @@ class Controls:
 	self.logfile = None		# No logfile, initially
 	self.idfile = None		# Default idfile, initially
 	self.invisible = FALSE		# Suppress Received line & spoof?
+	self.servers = []		# List of included sites
 
     def __repr__(self):
 	str = "";
@@ -30,10 +31,12 @@ class Controls:
 	    str = str + ("set idfile \"%s\"\n" % (self.idfile,));
 	if self.poll_interval > 0:
 	    str = str + ("set daemon %s\n" % (self.poll_interval,))
+	for site in self.servers:
+	    str = str + repr(site)
 	return str + "\n"
 
     def __str__(self):
-	return "[Server: " + repr(self) + "]"
+	return "[Controls: " + repr(self) + "]"
 
 class Server:
     def __init__(self):
@@ -54,7 +57,7 @@ class Server:
 	self.localdomains = []		# Domains to be considered local
 	self.interface = None		# IP address and range
 	self.monitor = None		# IP address and range
-	self.userlist = []		# List of user entries for site
+	self.users = []		# List of user entries for site
 	self.typemap = (
 	    ('pollname',  'String'),
 	    ('via',       'String'),
@@ -130,6 +133,9 @@ class Server:
 		str = str + "\n"
 
 	if str[-1] == "\t": str = str[0:-1]
+
+	for user in site.users:
+	    str = str + repr(user)
 	return str;
 
     def __repr__(self):
@@ -536,11 +542,6 @@ class ControlEdit(Frame):
 	self.GatherControls()
 	sys.stdout.write("# Configuration created %s\n" % time.ctime(time.time()))
 	sys.stdout.write(`self.controls`)
-	for site in self.sites:
-	    sys.stdout.write(`site`)
-	    for user in site.userlist:
-		sys.stdout.write(`user`)
-		sys.stdout.write("\n")
 	self.quit()
 
 #
@@ -664,18 +665,37 @@ you will open a window to configure the
 user's options on that site.
 """}
 
+def dispose_window(master, legend, help):
+    dispose = Frame(master, relief=RAISED, bd=5)
+    Label(dispose, text=legend).pack(side=TOP,pady=10)
+    Button(dispose, text='Save', fg='blue',
+		command=master.save).pack(side=LEFT)
+    Button(dispose, text='Quit', fg='blue',
+		command=master.nosave).pack(side=LEFT)
+    Button(dispose, text='Help', fg='blue',
+	       command=lambda: helpwin(help)).pack(side=RIGHT)
+    dispose.pack(fill=X)
+    return dispose
+
 class ServerEdit(Frame):
-    def __init__(self, host, sitelist, master=None):
+    def __init__(self, host, servers, master=None):
 	Frame.__init__(self, master)
 	Pack.config(self)
 	self.master.title('Fetchmail host ' + host);
 	self.master.iconname('Fetchmail host ' + host);
-	self.server = Server()
-	self.server.pollname = host
-	self.server.via = host
-	self.sitelist = sitelist
+
+	self.server = None
+	for site in servers:
+	    if site.pollname == host:
+		self.server = site
+	if (self.server == None):
+		self.server = Server()
+		self.server.pollname = host
+		self.server.via = host
+		servers.append(self.server)
+
 	self.post()
-	self.createWidgets(host)
+	self.expertEdit(host)
 #	self.grab_set()
 #	self.focus_set()
 #	self.wait_window()
@@ -708,7 +728,6 @@ class ServerEdit(Frame):
 
     def save(self):
 	self.gather()
-	self.sitelist.append(self.server) 
 	Widget.destroy(self.master)
 
     def refreshPort(self):
@@ -717,16 +736,7 @@ class ServerEdit(Frame):
 	if not proto in ("POP3", "APOP", "KPOP"): self.uidl = FALSE
 
     def expertEdit(self, host):
-	topwin = Frame(self, relief=RAISED, bd=5)
-	# This pushes the window past a 480 depth.
-#	Label(topwin, text="Server options for " + host).pack(side=TOP,pady=10)
-	Button(topwin, text='Save', fg='blue',
-		command=self.save).pack(side=LEFT)
-	Button(topwin, text='Quit', fg='blue',
-		command=self.nosave).pack(side=LEFT)
-	Button(topwin, text='Help', fg='blue',
-	       command=lambda: helpwin(serverhelp)).pack(side=RIGHT)
-	topwin.pack(fill=X)
+	topwin = dispose_window(self, "Server options for " + host, serverhelp)
 
 	leftwin = Frame(self);
 	leftwidth = '25';
@@ -840,15 +850,22 @@ page section on multidrop mode.
 """}
 
 class UserEdit(Frame):
-    def __init__(self, user, server, master=None):
+    def __init__(self, username, server, master=None):
 	Frame.__init__(self, master)
 	Pack.config(self)
-	self.master.title('Fetchmail user ' + user + ' querying ' + server.pollname);
-	self.master.iconname('Fetchmail user ' + user);
-	self.user = User()
-	self.user.remote = user
-	self.user.localnames = [user]
-	self.server = server
+	self.master.title('Fetchmail user ' + username + ' querying ' + server.pollname);
+	self.master.iconname('Fetchmail user ' + username);
+
+	self.user = None
+	for user in server.users:
+	    if user.remote == username:
+		self.user = user
+	if self.user == None:
+	    self.user = User()
+	    self.user.remote = user
+	    self.user.localnames = [user]
+	    server.users.append(self.user)
+
 	self.post()
 	self.expertEdit()
 #	self.grab_set()
@@ -883,20 +900,12 @@ class UserEdit(Frame):
 
     def save(self):
 	self.gather()
-	self.server.userlist.append(self.user) 
 	Widget.destroy(self.master)
 
     def expertEdit(self):
-	topwin = Frame(self, relief=RAISED, bd=5)
-#	Label(topwin, 
-#	      text="User options for " + self.user.remote).pack(side=TOP,pady=10)
-	Button(topwin, text='Save', fg='blue',
-		command=self.save).pack(side=LEFT)
-	Button(topwin, text='Quit', fg='blue',
-		command=self.nosave).pack(side=LEFT)
-	Button(topwin, text='Help', fg='blue',
-	       command=lambda: helpwin(userhelp)).pack(side=RIGHT)
-	topwin.pack(fill=X)
+	dispose_window(self,
+			"User options for " + self.user.remote,
+			userhelp)
 
 	leftwin = Frame(self);
 
@@ -979,28 +988,12 @@ class ExpertConfigure(Frame, ControlEdit):
 	Frame.__init__(self, master)
 	self.master.title('fetchmail expert configurator');
 	self.master.iconname('fetchmail expert configurator');
-	Pack.config(self)
 	self.controls = controls
-	self.makeDispose()
+	Pack.config(self)
+	dispose_window(self, 'Expert Configurator Controls', experthelp)
 	self.postControls()
 	self.expertEdit()
 	self.makeSitelist(master)
-	self.sites = []
-	#XXX Must read existing configuration
-
-    def makeDispose(self):
-	# Set the disposal of the given configuration
-	dispose = Frame(self, relief=RAISED, bd=5);
-	Label(dispose,
-		text='Expert Configurator Controls', 
-		bd=2).pack(side=TOP, pady=10)
-	Button(dispose, text='Save', fg='blue',
-		command=self.save).pack(side=LEFT)
-	Button(dispose, text='Quit', fg='blue',
-		command=self.nosave).pack(side=LEFT)
-	Button(dispose, text='Help', fg='blue',
-	       command=lambda: helpwin(experthelp)).pack(side=RIGHT)
-	dispose.pack(side=TOP, fill=X);
 
     def makeSitelist(self, master):
 	lf = Frame(master, relief=RAISED, bd=5)
@@ -1011,7 +1004,7 @@ class ExpertConfigure(Frame, ControlEdit):
 	lf.pack(fill=X)
 
     def editSite(self, site):
-	ServerEdit(site, self.sites, Toplevel())
+	ServerEdit(site, self.servers, Toplevel())
 
     def nosave(self):
 	if ConfirmQuit(self, "expert configuration editor"):
@@ -1029,8 +1022,6 @@ class NoviceConfigure(Frame, ControlEdit):
 	self.master.iconname('fetchmail novice configurator');
 	self.controls = controls;
 	Pack.config(self)
-
-	#XXX Must read existing configuration
 
 	dispose = Frame(self, relief=RAISED, bd=5)
 	Label(dispose,
@@ -1113,13 +1104,17 @@ Or you can just select `Quit' to leave the configurator now.
 
 def copy_instance(toclass, fromdict):
 # Initialize a class object of given type from a conformant dictionary.
-    if tuple(toclass.__dict__.keys()) != tuple(fromdict.keys()):
+    class_signature = toclass.__dict__.keys(); class_signature.sort()
+    dict_keys = fromdict.keys(); dict_keys.sort()
+    if 'typemap' in class_signature: 
+	class_signature.remove('typemap')
+    if tuple(class_signature) != tuple(dict_keys):
 	print "Conformability error"
-	print "Class signature: " + `tuple(toclass.__dict__.keys())`
-	print "Dictionary keys: " + `tuple(fromdict.keys())`
+	print "Class signature: " + `class_signature`
+	print "Dictionary keys: " + `dict_keys`
 	sys.exit(1)
     else:
-	for x in fromdict.keys():
+	for x in dict_keys:
 	    setattr(toclass, x, fromdict[x])
 
 if __name__ == '__main__': 
@@ -1136,12 +1131,16 @@ if __name__ == '__main__':
     sys.stdout.write("Done.\n")
     os.remove(tmpfile)
 
-    # This is the top-level 
+    # This is the top level of the object we're going to mung 
     Configuration = Controls()
 
     # The tricky part -- initializing objects from the configuration global
-    copy_instance(Configuration, configuration['controls'])
-#    for server in configuration['servers']:
+    copy_instance(Configuration, configuration)
+    Configuration.servers = [];
+    for server in configuration['servers']:
+	Newsite = Server()
+	copy_instance(Newsite, server)
+	Configuration.servers.append(Newsite)
 
     # OK, now run the configuration edit
     MainWindow().mainloop()
