@@ -33,6 +33,7 @@ const char *host;	/* server hostname */
     }
 
     strcpy(mycopy, buf);
+    strcat(mycopy, ",");
     for (from = mycopy; *from; from++)
     {
 #ifdef FOO
@@ -54,14 +55,16 @@ const char *host;	/* server hostname */
 		parendepth = 1;
 		state = 4;    
 	    }
-	    else if (*from == '<' || isalnum(*from))
+	    else if (*from == '<')
 		state = 5;
+	    else if (isalnum(*from))
+		state = 6;
 	    else if (isspace(*from))
 		state = 2;
 	    break;
 
 	case 2:	    /* found a token boundary -- reset without copying */
-	    if (*from != ' ' && *from != '\t')
+	    if (!isspace(*from))
 	    {
 		tokencount++;
 		state = 1;
@@ -83,15 +86,32 @@ const char *host;	/* server hostname */
 		state = 1;
 	    break;
 
-	case 5:   /* the real work gets done here */
-	    /*
-	     * We're in something that might be an address part,
-	     * either a bare unquoted/unparenthesized text or text
-	     * enclosed in <> as per RFC822.
-	     */
-	    /* if the address part contains an @, don't mess with it */
+	case 5:   /* we're in a <>-enclosed address */
 	    if (*from == '@')
-		state = 6;
+		state = 7;
+	    else if (*from == '>')
+	    {
+		strcpy(buf, "@");
+		strcat(buf, host);
+		buf += strlen(buf);
+		state = 7;
+	    }
+
+	    break;
+
+	case 6:   /* not string or comment, could be a bare address */
+	    if (*from == '@')
+		state = 7;
+
+	    /* on proper termination with no @, insert hostname */
+	    else if (*from == ',')
+	    {
+		strcpy(buf, "@");
+		strcat(buf, host);
+		buf += strlen(buf);
+		tokencount = 0;
+		state = 1;
+	    }
 
 	    /* If the address token is not properly terminated, ignore it. */
 	    else if (*from == ' ' || *from == '\t')
@@ -114,42 +134,24 @@ const char *host;	/* server hostname */
 		}
 	    }
 
-	    /*
-	     * On proper termination with no @, insert hostname.
-	     * Case '>' catches <>-enclosed mail IDs.  Case ',' catches
-	     * comma-separated bare IDs.
-	     */
-	    else if (strchr(">,", *from))
-	    {
-		strcpy(buf, "@");
-		strcat(buf, host);
-		buf += strlen(buf);
-		tokencount = 0;
-		state = 1;
-	    }
-
-	    /* a single local name alone on the line */
-	    else if (*from == '\n' && tokencount == 1)
-	    {
-		strcpy(buf, "@");
-		strcat(buf, host);
-		buf += strlen(buf);
-		state = 2;
-	    }
-
 	    /* everything else, including alphanumerics, just passes through */
 	    break;
 
-	case 6:   /* we're in a remote mail ID, no need to append hostname */
-	    if (*from == '>' || *from == ',' || isspace(*from))
+	case 7:   /* we're done with this address, skip to end */
+	    if (*from == ',')
+	    {
+		tokencount == 0;
 		state = 1;
+	    }
 	    break;
 	}
 
 	/* all characters from the old buffer get copied to the new one */
 	*buf++ = *from;
     }
-    *buf++ = '\0';
+
+    /* back up and nuke the appended comma sentinel */
+    *--buf = '\0';
 }
 
 char *nxtaddr(hdr)
