@@ -69,6 +69,10 @@
 #include "fetchmail.h"
 #include "tunable.h"
 
+/* throw types for runtime errors */
+#define THROW_TIMEOUT	1		/* server timed out */
+#define THROW_SIGPIPE	2		/* SIGPIPE on stream socket */
+
 #ifndef strstr		/* glibc-2.1 declares this as a macro */
 extern char *strstr();	/* needed on sysV68 R3V7.1. */
 #endif /* strstr */
@@ -107,10 +111,16 @@ void set_timeout(int timeleft)
 }
 
 static void timeout_handler (int signal)
-/* handle server-timeout SIGALRM signal */
+/* handle SIGALRM signal indicating a server timeout */
 {
     timeoutcount++;
-    longjmp(restart, 1);
+    longjmp(restart, THROW_TIMEOUT);
+}
+
+static void sigpipe_handler (int signal)
+/* handle SIGPIPE signal indicating a broken stream socket */
+{
+    longjmp(restart, THROW_SIGPIPE);
 }
 
 static int accept_count, reject_count;
@@ -1368,12 +1378,13 @@ const int maxfetch;		/* maximum number of messages to fetch */
 {
     int ok, js;
 #ifdef HAVE_VOLATILE
-    volatile int sock = -1;	/* pacifies -Wall */
+    volatile int mailserver_socket = -1;	/* pacifies -Wall */
 #else
-    int sock = -1;
+    int mailserver_socket = -1;
 #endif /* HAVE_VOLATILE */
     const char *msg;
-    void (*sigsave)(int);
+    void (*pipesave)(int);
+    void (*alrmsave)(int);
     struct idlist *current=NULL, *tmp=NULL;
 
     protocol = proto;
@@ -1385,10 +1396,13 @@ const int maxfetch;		/* maximum number of messages to fetch */
     ok = 0;
 
     /* set up the server-nonresponse timeout */
-    sigsave = signal(SIGALRM, timeout_handler);
+    alrmsave = signal(SIGALRM, timeout_handler);
     mytimeout = ctl->server.timeout;
 
-    if ((js = setjmp(restart)) == 1)
+    /* set up the broken-pipe timeout */
+    pipesave = signal(SIGPIPE, sigpipe_handler);
+
+    if ((js = setjmp(restart)))
     {
 #ifdef HAVE_SIGPROCMASK
 	/*
@@ -1406,58 +1420,69 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	sigprocmask(SIG_UNBLOCK, &allsigs, NULL);
 #endif /* HAVE_SIGPROCMASK */
 
-	if (phase == OPEN_WAIT)
+	if (js == THROW_SIGPIPE)
+	{
 	    report(stdout,
-		  _("timeout after %d seconds waiting to connect to server %s.\n"),
-		  ctl->server.timeout, ctl->server.pollname);
-	else if (phase == SERVER_WAIT)
-	    report(stdout,
-		  _("timeout after %d seconds waiting for server %s.\n"),
-		  ctl->server.timeout, ctl->server.pollname);
-	else if (phase == FORWARDING_WAIT)
-	    report(stdout,
-		  _("timeout after %d seconds waiting for %s.\n"),
-		  ctl->server.timeout,
-		  ctl->mda ? "MDA" : "SMTP");
-	else if (phase == LISTENER_WAIT)
-	    report(stdout,
-		  _("timeout after %d seconds waiting for listener to respond.\n"));
-	else
-	    report(stdout, _("timeout after %d seconds.\n"), ctl->server.timeout);
+		   _("SIGPIPE thrown from an MDA or a stream socket error"));
+	    ok = PS_SOCKET;
+	}
+	else if (js == THROW_TIMEOUT)
+	{
+	    if (phase == OPEN_WAIT)
+		report(stdout,
+		       _("timeout after %d seconds waiting to connect to server %s.\n"),
+		       ctl->server.timeout, ctl->server.pollname);
+	    else if (phase == SERVER_WAIT)
+		report(stdout,
+		       _("timeout after %d seconds waiting for server %s.\n"),
+		       ctl->server.timeout, ctl->server.pollname);
+	    else if (phase == FORWARDING_WAIT)
+		report(stdout,
+		       _("timeout after %d seconds waiting for %s.\n"),
+		       ctl->server.timeout,
+		       ctl->mda ? "MDA" : "SMTP");
+	    else if (phase == LISTENER_WAIT)
+		report(stdout,
+		       _("timeout after %d seconds waiting for listener to respond.\n"));
+	    else
+		report(stdout, 
+		       _("timeout after %d seconds.\n"), ctl->server.timeout);
 
+	    /*
+	     * If we've exceeded our threshold for consecutive timeouts, 
+	     * try to notify the user, then mark the connection wedged.
+	     */
+	    if (timeoutcount > MAX_TIMEOUTS 
+		&& !open_warning_by_mail(ctl, (struct msgblk *)NULL))
+	    {
+		stuff_warning(ctl,
+			      _("Subject: fetchmail sees repeated timeouts\r\n"));
+		stuff_warning(ctl,
+			      _("Fetchmail saw more than %d timouts while attempting to get mail from %s@%s.\n"), 
+			      MAX_TIMEOUTS,
+			      ctl->remotename,
+			      ctl->server.truename);
+		stuff_warning(ctl, 
+			      _("This could mean that your mailserver is stuck, or that your SMTP listener"));
+		stuff_warning(ctl, 
+			      _("is wedged, or that your mailbox file on the server has been corrupted by"));
+		stuff_warning(ctl, 
+			      _("a server error.  You can run `fetchmail -v -v' to diagnose the problem."));
+		stuff_warning(ctl,
+			      _("Fetchmail won't poll this mailbox again until you restart it."));
+		close_warning_by_mail(ctl, (struct msgblk *)NULL);
+		ctl->wedged = TRUE;
+	    }
+
+	    ok = PS_ERROR;
+	}
+
+	/* try to clean up all streams */
 	release_sink(ctl);
 	if (ctl->smtp_socket != -1)
 	    close(ctl->smtp_socket);
-	if (sock != -1)
-	    SockClose(sock);
-
-	/*
-	 * If we've exceeded our threshold for consecutive timeouts, 
-	 * try to notify the user, then mark the connection wedged.
-	 */
-	if (timeoutcount > MAX_TIMEOUTS 
-			&& !open_warning_by_mail(ctl, (struct msgblk *)NULL))
-	{
-	    stuff_warning(ctl,
-			  _("Subject: fetchmail sees repeated timeouts\r\n"));
-	    stuff_warning(ctl,
-			  _("Fetchmail saw more than %d timouts while attempting to get mail from %s@%s.\n"), 
-			  MAX_TIMEOUTS,
-			  ctl->remotename,
-			  ctl->server.truename);
-	    stuff_warning(ctl, 
-			  _("This could mean that your mailserver is stuck, or that your SMTP listener"));
-	    stuff_warning(ctl, 
-			  _("is wedged, or that your mailbox file on the server has been corrupted by"));
-	    stuff_warning(ctl, 
-			  _("a server error.  You can run `fetchmail -v -v' to diagnose the problem."));
-	    stuff_warning(ctl,
-			  _("Fetchmail won't poll this mailbox again until you restart it."));
-	    close_warning_by_mail(ctl, (struct msgblk *)NULL);
-	    ctl->wedged = TRUE;
-	}
-
-	ok = PS_ERROR;
+	if (mailserver_socket != -1)
+	    SockClose(mailserver_socket);
     }
     else
     {
@@ -1488,11 +1513,11 @@ const int maxfetch;		/* maximum number of messages to fetch */
 #endif /* !INET6 */
 	realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;
 #if INET6
-	if ((sock = SockOpen(realhost, 
+	if ((mailserver_socket = SockOpen(realhost, 
 			     ctl->server.service ? ctl->server.service : protocol->service,
 			     ctl->server.netsec, ctl->server.plugin)) == -1)
 #else /* INET6 */
-	if ((sock = SockOpen(realhost, port, NULL, ctl->server.plugin)) == -1)
+	if ((mailserver_socket = SockOpen(realhost, port, NULL, ctl->server.plugin)) == -1)
 #endif /* INET6 */
 	{
 #if !INET6
@@ -1543,7 +1568,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	if (ctl->server.preauthenticate == A_KERBEROS_V4)
 	{
 	    set_timeout(mytimeout);
-	    ok = kerberos_auth(sock, ctl->server.truename);
+	    ok = kerberos_auth(mailserver_socket, ctl->server.truename);
 	    set_timeout(0);
  	    if (ok != 0)
 		goto cleanUp;
@@ -1554,7 +1579,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	if (ctl->server.preauthenticate == A_KERBEROS_V5)
 	{
 	    set_timeout(mytimeout);
-	    ok = kerberos5_auth(sock, ctl->server.truename);
+	    ok = kerberos5_auth(mailserver_socket, ctl->server.truename);
 	    set_timeout(0);
  	    if (ok != 0)
 		goto cleanUp;
@@ -1562,7 +1587,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 #endif /* KERBEROS_V5 */
 
 	/* accept greeting message from mail server */
-	ok = (protocol->parse_response)(sock, buf);
+	ok = (protocol->parse_response)(mailserver_socket, buf);
 	if (ok != 0)
 	    goto cleanUp;
 
@@ -1574,7 +1599,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	    else
 		strcpy(shroud, ctl->password);
 
-	    ok = (protocol->getauth)(sock, ctl, buf);
+	    ok = (protocol->getauth)(mailserver_socket, ctl, buf);
 	    if (ok != 0)
 	    {
 		if (ok == PS_LOCKBUSY)
@@ -1633,7 +1658,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 			report(stdout, _("selecting or re-polling default folder\n"));
 
 		/* compute # of messages and number of new messages waiting */
-		ok = (protocol->getrange)(sock, ctl, idp->id, &count, &new, &bytes);
+		ok = (protocol->getrange)(mailserver_socket, ctl, idp->id, &count, &new, &bytes);
 		if (ok != 0)
 		    goto cleanUp;
 
@@ -1729,7 +1754,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 			for (i = 0; i < count; i++)
 			    msgsizes[i] = -1;
 
-			ok = (proto->getsizes)(sock, count, msgsizes);
+			ok = (proto->getsizes)(mailserver_socket, count, msgsizes);
 			if (ok != 0)
 			    goto cleanUp;
 
@@ -1746,7 +1771,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		    {
 			flag toolarge = NUM_NONZERO(ctl->limit)
 			    && msgsizes && (msgsizes[num-1] > ctl->limit);
-			flag oldmsg = (!new) || (protocol->is_old && (protocol->is_old)(sock,ctl,num));
+			flag oldmsg = (!new) || (protocol->is_old && (protocol->is_old)(mailserver_socket,ctl,num));
 			flag fetch_it = !toolarge 
 			    && (ctl->fetchall || force_retrieval || !oldmsg);
 			flag suppress_delete = FALSE;
@@ -1836,7 +1861,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 			    flag wholesize = !protocol->fetch_body;
 
 			    /* request a message */
-			    ok = (protocol->fetch_headers)(sock,ctl,num, &len);
+			    ok = (protocol->fetch_headers)(mailserver_socket,ctl,num, &len);
 			    if (ok != 0)
 				goto cleanUp;
 
@@ -1865,7 +1890,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 			     * Read the message headers and ship them to the
 			     * output sink.  
 			     */
-			    ok = readheaders(sock, len, msgsizes[num-1],
+			    ok = readheaders(mailserver_socket, len, msgsizes[num-1],
 					     ctl, num);
 			    if (ok == PS_RETAINED)
 				suppress_forward = retained = TRUE;
@@ -1894,12 +1919,12 @@ const int maxfetch;		/* maximum number of messages to fetch */
 				    fflush(stdout);
 				}
 
-				if ((ok = (protocol->trail)(sock, ctl, num)))
+				if ((ok = (protocol->trail)(mailserver_socket, ctl, num)))
 				    goto cleanUp;
 				len = 0;
 				if (!suppress_forward)
 				{
-				    if ((ok=(protocol->fetch_body)(sock,ctl,num,&len)))
+				    if ((ok=(protocol->fetch_body)(mailserver_socket,ctl,num,&len)))
 					goto cleanUp;
 				    if (outlevel > O_SILENT && !wholesize)
 					report_complete(stdout,
@@ -1920,7 +1945,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 				}
 				else
 				{
-				  ok = readbody(sock,
+				  ok = readbody(mailserver_socket,
 					        ctl,
 					        !suppress_forward,
 					        len);
@@ -1939,7 +1964,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 					fflush(stdout);
 				    }
 
-				    ok = (protocol->trail)(sock, ctl, num);
+				    ok = (protocol->trail)(mailserver_socket, ctl, num);
 				    if (ok != 0)
 					goto cleanUp;
 				}
@@ -2022,7 +2047,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 			    deletions++;
 			    if (outlevel > O_SILENT) 
 				report_complete(stdout, _(" flushed\n"));
-			    ok = (protocol->delete)(sock, ctl, num);
+			    ok = (protocol->delete)(mailserver_socket, ctl, num);
 			    if (ok != 0)
 				goto cleanUp;
 #ifdef POP3_ENABLE
@@ -2060,21 +2085,21 @@ const int maxfetch;		/* maximum number of messages to fetch */
 
    no_error:
 	/* ordinary termination with no errors -- officially log out */
-	ok = (protocol->logout_cmd)(sock, ctl);
+	ok = (protocol->logout_cmd)(mailserver_socket, ctl);
 	/*
 	 * Hmmmm...arguably this would be incorrect if we had fetches but
 	 * no dispatches (due to oversized messages, etc.)
 	 */
 	if (ok == 0)
 	    ok = (fetches > 0) ? PS_SUCCESS : PS_NOMAIL;
-	SockClose(sock);
+	SockClose(mailserver_socket);
 	goto closeUp;
 
     cleanUp:
 	/* we only get here on error */
 	if (ok != 0 && ok != PS_SOCKET)
-	    (protocol->logout_cmd)(sock, ctl);
-	SockClose(sock);
+	    (protocol->logout_cmd)(mailserver_socket, ctl);
+	SockClose(mailserver_socket);
     }
 
     msg = (const char *)NULL;	/* sacrifice to -Wall */
@@ -2126,7 +2151,8 @@ closeUp:
 	    ok = PS_SYNTAX;
     }
 
-    signal(SIGALRM, sigsave);
+    signal(SIGALRM, alrmsave);
+    signal(SIGPIPE, pipesave);
     return(ok);
 }
 

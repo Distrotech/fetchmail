@@ -19,8 +19,10 @@ fetchmail-5.0.7 ():
 * SunOS compilation fixes.
 * Steve Dodd's fix to not send bouncemail on transient errors.
 * Don Willis's improved UID parsing.
+* Fetchmail now logs and recovers from SIGPIPE errors produced by broken
+  socket streams or MDAs.  The current poll cycle is terminated.
 
-There are 263 people on fetchmail-friends and 421 on fetchmail-announce.
+There are 256 people on fetchmail-friends and 433 on fetchmail-announce.
 
 fetchmail-5.0.6 (Mon Aug  2 14:04:23 EDT 1999):
 * Czech internationalization support (thanks to Jiri Pavlovsky).
