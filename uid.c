@@ -411,24 +411,24 @@ void expunge_uids(struct query *ctl)
 void uid_end_query(struct query *ctl) 
 /* finish a query */
 {
-    /* old state of mailbox is now irrelevant */
-    free_str_list(&ctl->oldsaved);
-    free_str_list(&scratchlist);
-    ctl->oldsaved = ctl->newsaved;
-    ctl->newsaved = (struct idlist *) NULL;
-
     /* debugging code */
     if (ctl->server.uidl && outlevel >= O_DEBUG)
     {
 	struct idlist *idp;
 
 	report_build(stdout, "New UID list from %s:", ctl->server.pollname);
-	for (idp = ctl->oldsaved; idp; idp = idp->next)
+	for (idp = ctl->newsaved; idp; idp = idp->next)
 	    report_build(stdout, " %s = %d", idp->id, idp->val.status.mark);
 	if (!idp)
 	    report_build(stdout, " <empty>");
 	report_complete(stdout, "\n");
     }
+
+    /* old state of mailbox may now be irrelevant */
+    free_str_list(&ctl->oldsaved);
+    free_str_list(&scratchlist);
+    ctl->oldsaved = ctl->newsaved;
+    ctl->newsaved = (struct idlist *) NULL;
 }
 
 void write_saved_lists(struct query *hostlist, const char *idfile)

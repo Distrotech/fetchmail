@@ -1587,7 +1587,7 @@ static void dump_params (struct runctl *runp,
 
 	if (ctl->server.protocol == P_POP3 
 #if INET6_ENABLE
-	    && !strcmp(ctl->server.service, KPOP_PORT)
+	    && ctl->server.service && !strcmp(ctl->server.service, KPOP_PORT)
 #else /* INET6_ENABLE */
 	    && ctl->server.port == KPOP_PORT
 #endif /* INET6_ENABLE */
