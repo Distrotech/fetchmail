@@ -41,19 +41,13 @@
 /* release info */
 #define         RELEASE_TAG	"3.0b6"
 
-struct hostrec {
-  char *servername;
-  struct optrec options;
-  struct hostrec *next;
-};
-
 #ifdef HAVE_PROTOTYPES
 /* prototypes for internal functions */
 int showoptions (struct optrec *options);
 int parseMDAargs (struct optrec *options);
 int showversioninfo (void);
 int dump_options (struct optrec *options);
-int query_host(char *servername, struct optrec *options);
+int query_host(struct optrec *options);
 #endif
 
 /* Controls the detail of status/progress messages written to stderr */
@@ -91,10 +85,10 @@ int argc;
 char **argv;
 { 
   int mboxfd;
-  struct optrec cmd_opts, def_opts, merged_opts;
+  struct optrec cmd_opts, def_opts;
   int parsestatus;
   char *servername; 
-  struct hostrec *hostp, *hostlist = (struct hostrec *)NULL;
+  struct optrec *hostp, *hostlist = (struct optrec *)NULL;
   FILE	*tmpfp;
   pid_t pid;
 
@@ -118,12 +112,11 @@ char **argv;
     if (strcmp(servername, "defaults") == 0)
       continue;
 
-    prc_mergeoptions(servername, &cmd_opts, &def_opts, &merged_opts);
-    parseMDAargs(&merged_opts);
+    hostp = (struct optrec *)xmalloc(sizeof(struct optrec));
 
-    hostp = (struct hostrec *)xmalloc(sizeof(struct hostrec));
-    hostp->servername = strdup(servername);
-    memcpy(&hostp->options, &merged_opts, sizeof(struct optrec));
+    prc_mergeoptions(servername, &cmd_opts, &def_opts, hostp);
+    strcpy(hostp->servername, servername);
+    parseMDAargs(hostp);
 
     hostp->next = hostlist;
     hostlist = hostp;
@@ -134,7 +127,7 @@ char **argv;
     printf("Taking options from command line and %s\n", poprcfile);
     for (hostp = hostlist; hostp; hostp = hostp->next) {
       printf("Options for host %s:\n", hostp->servername);
-      dump_options(&hostp->options);
+      dump_options(hostp);
     }
     if (hostlist == NULL)
 	(void) printf("No mailservers set up -- perhaps %s is missing?\n",
@@ -212,7 +205,7 @@ char **argv;
    */
   do {
       for (hostp = hostlist; hostp; hostp = hostp->next) {
-	  popstatus = query_host(hostp->servername, &hostp->options);
+	  popstatus = query_host(hostp);
       }
 
       sleep(poll_interval);
@@ -229,23 +222,22 @@ void termhook()
     exit(popstatus);
 }
 
-int query_host(servername, options)
+int query_host(options)
 /* perform fetch transaction with single host */
-char *servername;
 struct optrec *options;
 {
   if (outlevel != O_SILENT)
-    fprintf(stderr, "querying %s\n", servername);
+    fprintf(stderr, "popclient: querying %s\n", options->servername);
   switch (options->whichpop) {
   case P_POP2:
-    return(doPOP2(servername, options));
+    return(doPOP2(options));
     break;
   case P_POP3:
   case P_APOP:
-    return(doPOP3(servername, options));
+    return(doPOP3(options));
     break;
   default:
-    fprintf(stderr,"unsupported protocol selected.\n");
+    fprintf(stderr,"popclient: unsupported protocol selected.\n");
     return(PS_PROTOCOL);
   }
 }

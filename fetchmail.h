@@ -55,6 +55,7 @@ struct optrec {
   int fetchall;
   int flush;
   int output;
+  char servername [HOSTLEN];
   char localname [USERNAMELEN];
   char remotename [USERNAMELEN];
   char password [PASSWORDLEN];
@@ -64,6 +65,7 @@ struct optrec {
   char userfolder [FOLDERLEN];
   char remotefolder [FOLDERLEN];
   char mda [MDALEN];
+  struct optrec *next;
 };
 
 
@@ -96,8 +98,8 @@ extern char *poprcfile;		/* path name of rc file */
 #ifdef HAVE_PROTOTYPES
 
 /* prototypes for globally callable functions */
-int doPOP2 (char *servername, struct optrec *options); 
-int doPOP3 (char *servername, struct optrec *options);
+int doPOP2 (struct optrec *options); 
+int doPOP3 (struct optrec *options);
 
 int parsecmdline (int argc, char **argv, struct optrec *options);
 int setdefaults (struct optrec *options);

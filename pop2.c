@@ -51,7 +51,6 @@ int POP2_stateXFER (int msgsize, int socket, int mboxfd, int topipe);
                  using Post Office Protocol 2.
 
   arguments:     
-    servername	 name of the server to which we'll connect.
     options      fully-specified options (i.e. parsed, defaults invoked,
                  etc).
 
@@ -64,8 +63,7 @@ int POP2_stateXFER (int msgsize, int socket, int mboxfd, int topipe);
   globals:       reads outlevel.
  *********************************************************************/
 
-int doPOP2 (servername,options)
-char *servername;
+int doPOP2 (options)
 struct optrec *options;
 {
   int mboxfd;
@@ -90,7 +88,7 @@ struct optrec *options;
     ;
 
   /* open the socket to the POP server */
-  if ((socket = Socket(servername,POP2_PORT)) < 0) {
+  if ((socket = Socket(options->servername,POP2_PORT)) < 0) {
     perror("doPOP2: socket");
     return(PS_SOCKET);
   }

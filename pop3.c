@@ -51,7 +51,6 @@ int POP3_BuildDigest (char *buf, struct optrec *options);
                  using Post Office Protocol 3.
 
   arguments:     
-    servername	 name of server to which we'll connect.
     options      fully-specified options (i.e. parsed, defaults invoked,
                  etc).
 
@@ -61,8 +60,7 @@ int POP3_BuildDigest (char *buf, struct optrec *options);
   globals:       reads outlevel.
  *********************************************************************/
 
-int doPOP3 (servername,options)
-char *servername;
+int doPOP3 (options)
 struct optrec *options;
 {
   int ok;
@@ -78,7 +76,7 @@ struct optrec *options;
       return(PS_IOERR);
     
   /* open the socket and get the greeting */
-  if ((socket = Socket(servername,POP3_PORT)) < 0) {
+  if ((socket = Socket(options->servername,POP3_PORT)) < 0) {
     perror("doPOP3: socket");
     ok = PS_SOCKET;
     goto closeUp;
@@ -167,7 +165,7 @@ struct optrec *options;
         goto cleanUp;
       
       if (number >= first || options->fetchall)
-        ok = POP3_readmsg(socket,mboxfd,servername,options->output == TO_MDA);
+        ok = POP3_readmsg(socket,mboxfd,options->servername,options->output == TO_MDA);
       else
         ok = 0;
       if (ok != 0)
