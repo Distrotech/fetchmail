@@ -638,9 +638,11 @@ char *realname;		/* real name of host */
 		options[0] = '\0';
 		if ((ctl->server.esmtp_options & ESMTP_8BITMIME)
 			&& ctthdr
-			&& (ctt = nxtaddr(ctthdr))
-			&& (!strcasecmp(ctt,"7BIT")||!strcasecmp(ctt,"8BIT")))
-		    sprintf(options, " BODY=%s", ctt);
+			&& (ctt = nxtaddr(ctthdr)))
+		    if (!strcasecmp(ctt,"7BIT"))
+			sprintf(options, " BODY=7BIT", ctt);
+		    else if (!strcasecmp(ctt,"8BIT"))
+			sprintf(options, " BODY=8BITMIME", ctt);
 		if ((ctl->server.esmtp_options & ESMTP_SIZE) && !delimited)
 		    sprintf(options + strlen(options), " SIZE=%d", len);
 
