@@ -41,6 +41,7 @@ extern char *strstr();	/* needed on sysV68 R3V7.1. */
 #define IMAP4rev1	1	/* IMAP4 rev 1, RFC2060 */
 
 static int count, seen, recent, unseen, deletions,expunged, imap_version;
+static char capabilities[POPBUFSIZE+1];
 
 int imap_ok(int sock, char *argbuf)
 /* parse command response */
@@ -55,6 +56,8 @@ int imap_ok(int sock, char *argbuf)
 	    return(ok);
 
 	/* interpret untagged status responses */
+	if (strstr(buf, "CAPABILITIES"))
+	    strncpy(capabilities, buf + 12, sizeof(capabilities));
 	if (strstr(buf, "EXISTS"))
 	    count = atoi(buf+2);
 	if (strstr(buf, "RECENT"))
@@ -495,41 +498,36 @@ static int do_gssauth(int sock, char *hostname, char *username)
 int imap_getauth(int sock, struct query *ctl, char *greeting)
 /* apply for connection authorization */
 {
-    char capabilities[POPBUFSIZE+1];
     int ok = 0;
 
     /* probe to see if we're running IMAP4 and can use RFC822.PEEK */
-    gen_send(sock, "CAPABILITY");
-    if ((ok = gen_recv(sock, capabilities, sizeof(capabilities))))
-	return(ok);
-    if (strstr(capabilities, "BAD"))
+    capabilities[0] = '\0';
+    if ((ok = gen_transact(sock, "CAPABILITY")) == PS_SUCCESS)
+    {
+	/* UW-IMAP server 10.173 notifies in all caps */
+	if (strstr(capabilities, "IMAP4rev1") || strstr(capabilities, "IMAP4REV1"))
+	{
+	    imap_version = IMAP4rev1;
+	    if (outlevel == O_VERBOSE)
+		error(0, 0, "Protocol identified as IMAP4 rev 1");
+	}
+	else
+	{
+	    imap_version = IMAP4;
+	    if (outlevel == O_VERBOSE)
+	    error(0, 0, "Protocol identified as IMAP4 rev 0");
+	}
+    }
+    else if (ok == PS_ERROR)
     {
 	imap_version = IMAP2;
 	if (outlevel == O_VERBOSE)
 	    error(0, 0, "Protocol identified as IMAP2 or IMAP2BIS");
     }
-    /* UW-IMAP server 10.173 notifies in all caps */
-    else if (strstr(capabilities, "IMAP4rev1") || strstr(capabilities, "IMAP4REV1"))
-    {
-	imap_version = IMAP4rev1;
-	if (outlevel == O_VERBOSE)
-	    error(0, 0, "Protocol identified as IMAP4 rev 1");
-    }
     else
-    {
-	imap_version = IMAP4;
-	if (outlevel == O_VERBOSE)
-	    error(0, 0, "Protocol identified as IMAP4 rev 0");
-    }
+	return(ok);
 
-    /* eat the tail of the CAPABILITY response (if any) */
-    if ((peek_capable = (imap_version >= IMAP4)))
-    {
-	char	scratchbuf[POPBUFSIZE];	/* don't clobber capabilities buffer */
-
-	if ((ok = gen_recv(sock, scratchbuf, sizeof(scratchbuf))))
-	    return(ok);
-    }
+    peek_capable = (imap_version >= IMAP4);
 
 #ifdef GSSAPI
     if (strstr(capabilities, "AUTH=GSSAPI"))
