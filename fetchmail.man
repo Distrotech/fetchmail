@@ -1034,8 +1034,8 @@ bit.)
 Run control files in the .poprc format will trigger a warning.  To
 eliminate this warning, add the `username' keyword before your first user
 entry per server (it is already required before second and subsequent
-user entries per server.  In some future version the `username' keyword
-will be required.
+user entries per server).  In some future version the `username' keyword
+will always be required in server entries declaring multiple users.
 
 .SH FILES
 .TP 5
@@ -1047,9 +1047,9 @@ default location of file associating hosts with last message IDs seen
 (used only with newer RFC1725-compliant POP3 servers supporting the
 UIDL command).
 .TP 5
-~/.netrc your FTP run control file, which (if present) will be
-searched for passwords as a last resort before prompting for one
-interactively.
+~/.netrc 
+your FTP run control file, which (if present) will be searched for
+passwords as a last resort before prompting for one interactively.
 .TP 5
 ~/.fetchmail
 lock file to help prevent concurrent runs (non-root mode).
@@ -1065,6 +1065,10 @@ correctly set, or that \fBgetpwuid\fR(3) be able to retrieve a password
 entry from your user ID.
 
 .SH BUGS AND KNOWN PROBLEMS
+The RFC822 parser used in multidrop mode chokes on some @-addresses that
+are technically legal but bizarre.  Strange uses of quoting and
+embedded comments are likely to confuse it.
+.PP
 Use of any of the supported protocols other than APOP, KPOP, or ETRN requires
 that the program send unencrypted passwords over the TCP/IP connection
 to the mailserver.  This creates a risk that name/password pairs
