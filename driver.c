@@ -381,7 +381,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 			  int *fetches, int *dispatches, int *deletions)
 /* fetch messages in lockstep mode */
 {
-    int num, ok, len;
+    int num, err, len;
 
     for (num = 1; num <= count; num++)
     {
@@ -427,9 +427,9 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	    flag wholesize = !ctl->server.base_protocol->fetch_body;
 
 	    /* request a message */
-	    ok = (ctl->server.base_protocol->fetch_headers)(mailserver_socket,ctl,num, &len);
-	    if (ok != 0)
-		return(FALSE);
+	    err = (ctl->server.base_protocol->fetch_headers)(mailserver_socket,ctl,num, &len);
+	    if (err != 0)
+		return(err);
 
 	    /* -1 means we didn't see a size in the response */
 	    if (len == -1 && msgsizes)
@@ -456,18 +456,18 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	     * Read the message headers and ship them to the
 	     * output sink.  
 	     */
-	    ok = readheaders(mailserver_socket, len, msgsizes[num-1],
+	    err = readheaders(mailserver_socket, len, msgsizes[num-1],
 			     ctl, num);
-	    if (ok == PS_RETAINED)
+	    if (err == PS_RETAINED)
 		suppress_forward = retained = TRUE;
-	    else if (ok == PS_TRANSIENT)
+	    else if (err == PS_TRANSIENT)
 		suppress_delete = suppress_forward = TRUE;
-	    else if (ok == PS_REFUSED)
+	    else if (err == PS_REFUSED)
 		suppress_forward = TRUE;
-	    else if (ok == PS_TRUNCATED)
+	    else if (err == PS_TRUNCATED)
 		suppress_readbody = TRUE;
-	    else if (ok)
-		return(FALSE);
+	    else if (err)
+		return(err);
 
 	    /* 
 	     * If we're using IMAP4 or something else that
@@ -485,13 +485,13 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 		    fflush(stdout);
 		}
 
-		if ((ok = (ctl->server.base_protocol->trail)(mailserver_socket, ctl, num)))
-		    return(FALSE);
+		if ((err = (ctl->server.base_protocol->trail)(mailserver_socket, ctl, num)))
+		    return(err);
 		len = 0;
 		if (!suppress_forward)
 		{
-		    if ((ok=(ctl->server.base_protocol->fetch_body)(mailserver_socket,ctl,num,&len)))
-			return(FALSE);
+		    if ((err=(ctl->server.base_protocol->fetch_body)(mailserver_socket,ctl,num,&len)))
+			return(err);
 		    /*
 		     * Work around a bug in Novell's
 		     * broken GroupWise IMAP server;
@@ -517,19 +517,19 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 		     * has already been read by readheaders,
 		     * so we say readbody returned PS_SUCCESS
 		     */
-		    ok = PS_SUCCESS;
+		    err = PS_SUCCESS;
 		}
 		else
 		{
-		    ok = readbody(mailserver_socket,
+		    err = readbody(mailserver_socket,
 				  ctl,
 				  !suppress_forward,
 				  len);
 		}
-		if (ok == PS_TRANSIENT)
+		if (err == PS_TRANSIENT)
 		    suppress_delete = suppress_forward = TRUE;
-		else if (ok)
-		    return(FALSE);
+		else if (err)
+		    return(err);
 
 		/* tell server we got it OK and resynchronize */
 		if (ctl->server.base_protocol->trail)
@@ -540,9 +540,9 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 			fflush(stdout);
 		    }
 
-		    ok = (ctl->server.base_protocol->trail)(mailserver_socket, ctl, num);
-		    if (ok != 0)
-			return(FALSE);
+		    err = (ctl->server.base_protocol->trail)(mailserver_socket, ctl, num);
+		    if (err != 0)
+			return(err);
 		}
 	    }
 
@@ -626,9 +626,9 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	    (*deletions)++;
 	    if (outlevel > O_SILENT) 
 		report_complete(stdout, _(" flushed\n"));
-	    ok = (ctl->server.base_protocol->delete)(mailserver_socket, ctl, num);
-	    if (ok != 0)
-		return(FALSE);
+	    err = (ctl->server.base_protocol->delete)(mailserver_socket, ctl, num);
+	    if (err != 0)
+		return(err);
 #ifdef POP3_ENABLE
 	    delete_str(&ctl->newsaved, num);
 #endif /* POP3_ENABLE */
@@ -641,12 +641,11 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	{
 	    report(stdout, _("fetchlimit %d reached; %d messages left on server\n"),
 		   maxfetch, count - *fetches);
-	    ok = PS_MAXFETCH;
-	    return(FALSE);
+	    return(PS_MAXFETCH);
 	}
     }
 
-    return(TRUE);
+    return(PS_SUCCESS);
 }
 
 static int do_session(ctl, proto, maxfetch)
@@ -657,9 +656,9 @@ const int maxfetch;		/* maximum number of messages to fetch */
 {
     int js;
 #ifdef HAVE_VOLATILE
-    volatile int ok, mailserver_socket = -1;	/* pacifies -Wall */
+    volatile int err, mailserver_socket = -1;	/* pacifies -Wall */
 #else
-    int ok, mailserver_socket = -1;
+    int err, mailserver_socket = -1;
 #endif /* HAVE_VOLATILE */
     const char *msg;
     void (*pipesave)(int);
@@ -668,7 +667,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
     ctl->server.base_protocol = proto;
 
     pass = 0;
-    ok = 0;
+    err = 0;
     init_transact(proto);
 
     /* set up the server-nonresponse timeout */
@@ -701,7 +700,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	    signal(SIGPIPE, SIG_IGN);
 	    report(stdout,
 		   _("SIGPIPE thrown from an MDA or a stream socket error\n"));
-	    ok = PS_SOCKET;
+	    err = PS_SOCKET;
 	    goto cleanUp;
 	}
 	else if (js == THROW_TIMEOUT)
@@ -752,7 +751,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		ctl->wedged = TRUE;
 	    }
 
-	    ok = PS_ERROR;
+	    err = PS_ERROR;
 	}
 
 	/* try to clean up all streams */
@@ -774,11 +773,11 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	struct idlist *idp;
 
 	/* execute pre-initialization command, if any */
-	if (ctl->preconnect && (ok = system(ctl->preconnect)))
+	if (ctl->preconnect && (err = system(ctl->preconnect)))
 	{
 	    report(stderr, 
-		   _("pre-connection command failed with status %d\n"), ok);
-	    ok = PS_SYNTAX;
+		   _("pre-connection command failed with status %d\n"), err);
+	    err = PS_SYNTAX;
 	    goto closeUp;
 	}
 
@@ -870,7 +869,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 #endif
 	    }
 #endif /* INET6_ENABLE */
-	    ok = PS_SOCKET;
+	    err = PS_SOCKET;
 	    set_timeout(0);
 	    phase = oldphase;
 	    goto closeUp;
@@ -894,10 +893,10 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	if (ctl->server.authenticate == A_KERBEROS_V4)
 	{
 	    set_timeout(mytimeout);
-	    ok = kerberos_auth(mailserver_socket, ctl->server.truename,
+	    err = kerberos_auth(mailserver_socket, ctl->server.truename,
 			       ctl->server.principal);
 	    set_timeout(0);
- 	    if (ok != 0)
+ 	    if (err != 0)
 		goto cleanUp;
 	}
 #endif /* KERBEROS_V4 */
@@ -906,35 +905,35 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	if (ctl->server.authenticate == A_KERBEROS_V5)
 	{
 	    set_timeout(mytimeout);
-	    ok = kerberos5_auth(mailserver_socket, ctl->server.truename);
+	    err = kerberos5_auth(mailserver_socket, ctl->server.truename);
 	    set_timeout(0);
- 	    if (ok != 0)
+ 	    if (err != 0)
 		goto cleanUp;
 	}
 #endif /* KERBEROS_V5 */
 
 	/* accept greeting message from mail server */
-	ok = (ctl->server.base_protocol->parse_response)(mailserver_socket, buf);
-	if (ok != 0)
+	err = (ctl->server.base_protocol->parse_response)(mailserver_socket, buf);
+	if (err != 0)
 	    goto cleanUp;
 
 	/* try to get authorized to fetch mail */
 	stage = STAGE_GETAUTH;
 	if (ctl->server.base_protocol->getauth)
 	{
-	    ok = (ctl->server.base_protocol->getauth)(mailserver_socket, ctl, buf);
+	    err = (ctl->server.base_protocol->getauth)(mailserver_socket, ctl, buf);
 
-	    if (ok != 0)
+	    if (err != 0)
 	    {
-		if (ok == PS_LOCKBUSY)
+		if (err == PS_LOCKBUSY)
 		    report(stderr, _("Lock-busy error on %s@%s\n"),
 			  ctl->remotename,
 			  ctl->server.truename);
-		else if (ok == PS_SERVBUSY)
+		else if (err == PS_SERVBUSY)
 		    report(stderr, _("Server busy error on %s@%s\n"),
 			  ctl->remotename,
 			  ctl->server.truename);
-		else if (ok == PS_AUTHFAIL)
+		else if (err == PS_AUTHFAIL)
 		{
 		    report(stderr, _("Authorization failure on %s@%s%s\n"), 
 			   ctl->remotename,
@@ -1070,8 +1069,8 @@ is restored."));
 
 		/* compute # of messages and number of new messages waiting */
 		stage = STAGE_GETRANGE;
-		ok = (ctl->server.base_protocol->getrange)(mailserver_socket, ctl, idp->id, &count, &new, &bytes);
-		if (ok != 0)
+		err = (ctl->server.base_protocol->getrange)(mailserver_socket, ctl, idp->id, &count, &new, &bytes);
+		if (err != 0)
 		    goto cleanUp;
 
 		/* show user how many messages we downloaded */
@@ -1184,8 +1183,8 @@ is restored."));
 		    if (proto->getsizes)
 		    {
 			stage = STAGE_GETSIZES;
-			ok = (proto->getsizes)(mailserver_socket, count, msgsizes);
-			if (ok != 0)
+			err = (proto->getsizes)(mailserver_socket, count, msgsizes);
+			if (err != 0)
 			    goto cleanUp;
 
 			if (bytes == -1)
@@ -1211,10 +1210,11 @@ is restored."));
 		    stage = STAGE_FETCH;
 
 		    /* fetch in lockstep mode */
-		    if (!fetch_messages(mailserver_socket, ctl, 
+		    err = fetch_messages(mailserver_socket, ctl, 
 					count, msgsizes, 
 					maxfetch,
-					&fetches, &dispatches, &deletions))
+					&fetches, &dispatches, &deletions);
+		    if (err)
 			goto cleanUp;
 
 		    if (!check_only && ctl->skipped
@@ -1235,19 +1235,19 @@ is restored."));
 
     /* no_error: */
 	/* ordinary termination with no errors -- officially log out */
-	ok = (ctl->server.base_protocol->logout_cmd)(mailserver_socket, ctl);
+	err = (ctl->server.base_protocol->logout_cmd)(mailserver_socket, ctl);
 	/*
 	 * Hmmmm...arguably this would be incorrect if we had fetches but
 	 * no dispatches (due to oversized messages, etc.)
 	 */
-	if (ok == 0)
-	    ok = (fetches > 0) ? PS_SUCCESS : PS_NOMAIL;
+	if (err == 0)
+	    err = (fetches > 0) ? PS_SUCCESS : PS_NOMAIL;
 	SockClose(mailserver_socket);
 	goto closeUp;
 
     cleanUp:
 	/* we only get here on error */
-	if (ok != 0 && ok != PS_SOCKET)
+	if (err != 0 && err != PS_SOCKET)
 	{
 	    stage = STAGE_LOGOUT;
 	    (ctl->server.base_protocol->logout_cmd)(mailserver_socket, ctl);
@@ -1256,7 +1256,7 @@ is restored."));
     }
 
     msg = (const char *)NULL;	/* sacrifice to -Wall */
-    switch (ok)
+    switch (err)
     {
     case PS_SOCKET:
 	msg = _("socket");
@@ -1287,9 +1287,9 @@ is restored."));
 	break;
     }
     /* no report on PS_MAXFETCH or PS_UNDEFINED or PS_AUTHFAIL */
-    if (ok==PS_SOCKET || ok==PS_SYNTAX
-		|| ok==PS_IOERR || ok==PS_ERROR || ok==PS_PROTOCOL 
-		|| ok==PS_LOCKBUSY || ok==PS_SMTP || ok==PS_DNS)
+    if (err==PS_SOCKET || err==PS_SYNTAX
+		|| err==PS_IOERR || err==PS_ERROR || err==PS_PROTOCOL 
+		|| err==PS_LOCKBUSY || err==PS_SMTP || err==PS_DNS)
     {
 	char	*stem;
 
@@ -1302,16 +1302,16 @@ is restored."));
 
 closeUp:
     /* execute wrapup command, if any */
-    if (ctl->postconnect && (ok = system(ctl->postconnect)))
+    if (ctl->postconnect && (err = system(ctl->postconnect)))
     {
-	report(stderr, _("post-connection command failed with status %d\n"), ok);
-	if (ok == PS_SUCCESS)
-	    ok = PS_SYNTAX;
+	report(stderr, _("post-connection command failed with status %d\n"), err);
+	if (err == PS_SUCCESS)
+	    err = PS_SYNTAX;
     }
 
     signal(SIGALRM, alrmsave);
     signal(SIGPIPE, pipesave);
-    return(ok);
+    return(err);
 }
 
 int do_protocol(ctl, proto)
@@ -1319,7 +1319,7 @@ int do_protocol(ctl, proto)
 struct query *ctl;		/* parsed options with merged-in defaults */
 const struct method *proto;	/* protocol method table */
 {
-    int	ok;
+    int	err;
 
 #ifndef KERBEROS_V4
     if (ctl->server.authenticate == A_KERBEROS_V4)
@@ -1384,15 +1384,15 @@ const struct method *proto;	/* protocol method table */
 	do {
 	    if (fetchlimit > 0 && (expunge == 0 || expunge > fetchlimit - totalcount))
 		expunge = fetchlimit - totalcount;
-	    ok = do_session(ctl, proto, expunge);
+	    err = do_session(ctl, proto, expunge);
 	    totalcount += expunge;
 	    if (NUM_SPECIFIED(ctl->fetchlimit) && totalcount >= fetchlimit)
 		break;
-	    if (ok != PS_LOCKBUSY)
+	    if (err != PS_LOCKBUSY)
 		lockouts = 0;
 	    else if (lockouts >= MAX_LOCKOUTS)
 		break;
-	    else /* ok == PS_LOCKBUSY */
+	    else /* err == PS_LOCKBUSY */
 	    {
 		/*
 		 * Allow time for the server lock to release.  if we
@@ -1403,9 +1403,9 @@ const struct method *proto;	/* protocol method table */
 		sleep(3);
 	    }
 	} while
-	    (ok == PS_MAXFETCH || ok == PS_LOCKBUSY);
+	    (err == PS_MAXFETCH || err == PS_LOCKBUSY);
 
-	return(ok);
+	return(err);
     }
 }
 
