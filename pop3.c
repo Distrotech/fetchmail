@@ -263,7 +263,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	    return(do_rfc1731(sock, "AUTH", ctl->server.truename));
 #endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
 #if defined(GSSAPI)
-	if (ctl->server.authenticate==A_GSSAPI))
+	if (ctl->server.authenticate==A_GSSAPI)
 	    return(do_gssauth(sock, "AUTH", 
 			      ctl->server.truename, ctl->remotename));
 #endif /* defined(GSSAPI) */

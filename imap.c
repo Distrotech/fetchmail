@@ -295,7 +295,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     if ((ctl->server.authenticate == A_ANY 
 	 || ctl->server.authenticate==A_GSSAPI)
 	&& strstr(capabilities, "AUTH=GSSAPI"))
-	return(do_gssauth(sock, ctl->server.truename, ctl->remotename));
+	return(do_gssauth(sock, "AUTHENTICATE", ctl->server.truename, ctl->remotename));
 #endif /* GSSAPI */
 
 #ifdef KERBEROS_V4
