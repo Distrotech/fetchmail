@@ -621,8 +621,7 @@ struct query *ctl;	/* query control record */
 
 		/*
 		 * We go through this in order to be able to handle very
-		 * long lists of users and (re
-)implement %s.
+		 * long lists of users and (re)implement %s.
 		 */
 		for (idp = xmit_names; idp; idp = idp->next)
 		    nlocals++;
@@ -713,7 +712,7 @@ struct query *ctl;	/* query control record */
 	    if (ctl->mda[0])
 		n = write(mboxfd,headers,oldlen);
 	    else
-		n = SockWrite(headers, oldlen, sinkfp);
+		n = fwrite(headers, sizeof(char), oldlen, sinkfp);
 
 	    if (n < 0)
 	    {
@@ -730,7 +729,7 @@ struct query *ctl;	/* query control record */
 
 	/* SMTP byte-stuffing */
 	if (*bufp == '.' && ctl->mda[0] == 0)
-	    SockWrite(".", 1, sinkfp);
+	    fwrite(".", sizeof(char), 1, sinkfp);
 
 	/* replace all LFs with CR-LF  in the line */
 	if (!ctl->mda[0])
@@ -747,7 +746,7 @@ struct query *ctl;	/* query control record */
 	if (ctl->mda[0])
 	    n = write(mboxfd,bufp,strlen(bufp));
 	else
-	    n = SockWrite(bufp, strlen(bufp), sinkfp);
+	    n = fwrite(bufp, sizeof(char), strlen(bufp), sinkfp);
 
 	if (!ctl->mda[0])
 	    free(bufp);
@@ -1092,7 +1091,7 @@ va_dcl {
     va_end(ap);
 
     strcat(buf, "\r\n");
-    SockWrite(buf, strlen(buf), sockfp);
+    fputs(buf, sockfp);
 
     if (outlevel == O_VERBOSE)
     {
@@ -1134,7 +1133,7 @@ va_dcl {
   va_end(ap);
 
   strcat(buf, "\r\n");
-  SockWrite(buf, strlen(buf), sockfp);
+  fputs(buf, sockfp);
   if (outlevel == O_VERBOSE)
   {
       char *cp;

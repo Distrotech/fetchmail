@@ -66,38 +66,6 @@ int clientPort;
     return sockfp;
 }
 
-#if defined(HAVE_STDARG_H)
-int SockPrintf(FILE *sockfp, char* format, ...)
-{
-#else
-int SockPrintf(sockfp,format,va_alist)
-FILE *sockfp;
-char *format;
-va_dcl {
-#endif
-
-    va_list ap;
-    char buf[8192];
-
-#if defined(HAVE_STDARG_H)
-    va_start(ap, format) ;
-#else
-    va_start(ap);
-#endif
-    vsprintf(buf, format, ap);
-    va_end(ap);
-    return SockWrite(buf, strlen(buf), sockfp);
-
-}
-
-int SockWrite(buf,len,sockfp)
-char *buf;
-int len;
-FILE *sockfp;
-{
-    return(fputs(buf, sockfp));
-}
-
 int SockGets(buf, len, sockfp)
 char *buf;
 int len;
