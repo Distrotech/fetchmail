@@ -1046,7 +1046,7 @@ string as the password.
 Specifying `kpop' sets POP3 protocol over port 1109 with Kerberos V4
 preauthentication.  These defaults may be overridden by later options.
 .PP
-There are currently three global option statements; `set logfile = '
+There are currently three global option statements; `set logfile'
 followed by a string sets the same global specified by --logfile.  A
 command-line --logfile option will override this.  Also, `set daemon'
 sets the poll interval as --daemon does.  This can be overridden by

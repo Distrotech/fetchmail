@@ -77,9 +77,11 @@ statement_list	: statement
 		| statement_list statement
 		;
 
-/* future global options should also have the form SET <name> <value> */
-statement	: SET LOGFILE MAP STRING	{logfile = xstrdup($4);}
-		| SET DAEMON NUMBER		{poll_interval = $3;}
+optmap		: MAP | /* EMPTY */;
+
+/* future global options should also have the form SET <name> optmap <value> */
+statement	: SET LOGFILE optmap STRING	{logfile = xstrdup($4);}
+		| SET DAEMON optmap NUMBER	{poll_interval = $4;}
 		| SET SYSLOG			{use_syslog = TRUE;}
 
 /* 

@@ -14,8 +14,9 @@
 fetchmail-4.3.1 ()
 * Minor portation fixes for early AIX version and NextSTEP.
 * Fixed a bad interaction between --limit and the repoll feature.
+* = is now optional in global options.
 
-There are 280 people on fetchmail-friends and 8 on fetchmail-announce.
+There are 276 people on fetchmail-friends and 20 on fetchmail-announce.
 
 ------------------------------------------------------------------------------
 fetchmail-4.3.0 (Mon Oct  6 16:44:38 EDT 1997)
