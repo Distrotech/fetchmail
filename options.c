@@ -43,38 +43,38 @@
 
 static char *shortoptions = "?Vcsvd:qL:f:i:p:P:A:u:akKFnr:S:m:y";
 static struct option longoptions[] = {
-  {"help",	no_argument,	   (int *) 0, LA_HELP       },
-  {"version",   no_argument,       (int *) 0, LA_VERSION    },
-  {"check",	no_argument,	   (int *) 0, LA_CHECK      },
-  {"silent",    no_argument,       (int *) 0, LA_SILENT     },
-  {"verbose",   no_argument,       (int *) 0, LA_VERBOSE    },
-  {"daemon",	required_argument, (int *) 0, LA_DAEMON     },
-  {"quit",	no_argument,	   (int *) 0, LA_QUIT       },
-  {"logfile",	required_argument, (int *) 0, LA_LOGFILE    },
-  {"fetchmailrc",required_argument,(int *) 0, LA_RCFILE     },
-  {"idfile",	required_argument, (int *) 0, LA_IDFILE     },
+  {"help",	no_argument,	   (int *) 0, LA_HELP        },
+  {"version",   no_argument,       (int *) 0, LA_VERSION     },
+  {"check",	no_argument,	   (int *) 0, LA_CHECK       },
+  {"silent",    no_argument,       (int *) 0, LA_SILENT      },
+  {"verbose",   no_argument,       (int *) 0, LA_VERBOSE     },
+  {"daemon",	required_argument, (int *) 0, LA_DAEMON      },
+  {"quit",	no_argument,	   (int *) 0, LA_QUIT        },
+  {"logfile",	required_argument, (int *) 0, LA_LOGFILE     },
+  {"fetchmailrc",required_argument,(int *) 0, LA_RCFILE      },
+  {"idfile",	required_argument, (int *) 0, LA_IDFILE      },
 
-  {"protocol",	required_argument, (int *) 0, LA_PROTOCOL   },
-  {"proto",	required_argument, (int *) 0, LA_PROTOCOL   },
-  {"port",	required_argument, (int *) 0, LA_PORT       },
-  {"auth",	required_argument, (int *) 0, LA_PROTOCOL   },
+  {"protocol",	required_argument, (int *) 0, LA_PROTOCOL    },
+  {"proto",	required_argument, (int *) 0, LA_PROTOCOL    },
+  {"port",	required_argument, (int *) 0, LA_PORT        },
+  {"auth",	required_argument, (int *) 0, LA_AUTHENTICATE},
 
-  {"user",	required_argument, (int *) 0, LA_USERNAME   },
-  {"username",  required_argument, (int *) 0, LA_USERNAME   },
+  {"user",	required_argument, (int *) 0, LA_USERNAME    },
+  {"username",  required_argument, (int *) 0, LA_USERNAME    },
 
-  {"all",	no_argument,       (int *) 0, LA_ALL        },
-  {"kill",	no_argument,	   (int *) 0, LA_KILL       },
-  {"keep",      no_argument,       (int *) 0, LA_KEEP       },
-  {"flush",	no_argument,	   (int *) 0, LA_FLUSH      },
-  {"norewrite",	no_argument,	   (int *) 0, LA_NOREWRITE  },
+  {"all",	no_argument,       (int *) 0, LA_ALL         },
+  {"kill",	no_argument,	   (int *) 0, LA_KILL        },
+  {"keep",      no_argument,       (int *) 0, LA_KEEP        },
+  {"flush",	no_argument,	   (int *) 0, LA_FLUSH       },
+  {"norewrite",	no_argument,	   (int *) 0, LA_NOREWRITE   },
 
-  {"remote",    required_argument, (int *) 0, LA_REMOTEFILE },
-  {"smtphost",	required_argument, (int *) 0, LA_SMTPHOST   },
-  {"mda",	required_argument, (int *) 0, LA_MDA        },
+  {"remote",    required_argument, (int *) 0, LA_REMOTEFILE  },
+  {"smtphost",	required_argument, (int *) 0, LA_SMTPHOST    },
+  {"mda",	required_argument, (int *) 0, LA_MDA         },
 
-  {"yydebug",	no_argument,	   (int *) 0, LA_YYDEBUG    },
+  {"yydebug",	no_argument,	   (int *) 0, LA_YYDEBUG     },
 
-  {(char *) 0,  no_argument,       (int *) 0, 0             }
+  {(char *) 0,  no_argument,       (int *) 0, 0              }
 };
 
 
@@ -171,7 +171,7 @@ struct hostrec *queryctl;
 		queryctl->authenticate ==  A_KERBEROS;
 	    }
 	    else {
-		fprintf(stderr,"Invalid protocol '%s'\n specified.\n", optarg);
+		fprintf(stderr,"Invalid protocol `%s' specified.\n", optarg);
 		errflag++;
 	    }
 	    break;
@@ -186,7 +186,7 @@ struct hostrec *queryctl;
 	    else if (strcmp(optarg, "kerberos") == 0)
 		queryctl->authenticate = A_KERBEROS;
 	    else {
-		fprintf(stderr,"Invalid authentication '%s'\n specified.\n", optarg);
+		fprintf(stderr,"Invalid authentication `%s' specified.\n", optarg);
 		errflag++;
 	    }
 	    break;

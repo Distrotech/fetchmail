@@ -39,7 +39,6 @@
 
 #ifdef HAVE_PROTOTYPES
 /* prototypes for internal functions */
-static int showversioninfo (void);
 static int dump_options (struct hostrec *queryctl);
 static int query_host(struct hostrec *queryctl);
 #endif
@@ -141,7 +140,7 @@ char **argv;
 	exit(PS_SYNTAX);
 
     if (versioninfo)
-	showversioninfo();
+	printf("This is fetchmail release %s\n", RELEASE_ID);
 
     /* this builds the host list */
     if (prc_parse_file(rcfile) != 0)
@@ -460,20 +459,6 @@ struct hostrec *queryctl;
 	return(PS_PROTOCOL);
     }
 }
- 
-/*********************************************************************
-  function:      showversioninfo
-  description:   display program release
-  arguments:     none.
-  return value:  none.
-  calls:         none.
-  globals:       none.
- *********************************************************************/
-
-static int showversioninfo()
-{
-    printf("This is fetchmail release %s\n",RELEASE_ID);
-}
 
 /*********************************************************************
   function:      dump_params
@@ -502,15 +487,21 @@ struct hostrec *queryctl;
 	    printf("  APOP secret = '%s'\n", queryctl->password);
         else
 	    printf("  Password = '%s'\n", queryctl->password);
-    if (queryctl->protocol == P_POP3 && queryctl->port == KPOP_PORT)
+    if (queryctl->protocol == P_POP3 
+		&& queryctl->port == KPOP_PORT
+		&& queryctl->authenticate == A_KERBEROS)
 	printf("  Protocol is KPOP");
     else
+    {
 	printf("  Protocol is %s", showproto(queryctl->protocol));
+    }
     if (queryctl->port)
 	printf(" (using port %d)", queryctl->port);
     else if (outlevel == O_VERBOSE)
 	printf(" (using default port)");
     putchar('\n');
+    if (queryctl->authenticate == A_KERBEROS)
+	    printf("  Kerberos authentication enabled.\n");
 
     printf("  Fetched messages will%s be kept on the server (--keep %s).\n",
 	   queryctl->keep ? "" : " not",
@@ -521,7 +512,7 @@ struct hostrec *queryctl;
     printf("  Old messages will%s be flushed before message retrieval (--flush %s).\n",
 	   queryctl->flush ? "" : " not",
 	   queryctl->flush ? "on" : "off");
-    printf("  Rewrite of server-local addresses is %sabled (--norewrite %s)\n",
+    printf("  Rewrite of server-local addresses is %sabled (--norewrite %s).\n",
 	   queryctl->norewrite ? "dis" : "en",
 	   queryctl->norewrite ? "on" : "off");
     if (queryctl->mda[0])
@@ -535,7 +526,8 @@ struct hostrec *queryctl;
 	putchar('\n');
     }
     else
-	printf("  Messages will be SMTP-forwarded to '%s'\n", queryctl->smtphost);
+	printf("  Messages will be SMTP-forwarded to '%s'.\n",
+	       queryctl->smtphost);
     if (queryctl->protocol > P_POP2)
 	if (!queryctl->oldsaved)
 	    printf("  No UIDs saved from this host.\n");
