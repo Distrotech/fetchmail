@@ -446,37 +446,52 @@ char *hdr;
 	    if (*hp == '\n')
 		return(NULL);
 	    else if (*hp == ':')
+	    {
 		state = 1;
+		tp = address;
+	    }
 	    break;
 
-	case 1:   /* we've seen the colon, we're looking for addresses */
-	    if (*hp == '\n')
-		return(NULL);
-	    else if (*hp == '"')
-		state = 2;
-	    else if (*hp == '(')
+	case 1:   /* we've seen the colon, now grab the address */
+	    if ((*hp == '\n') || (*hp == ','))  /* end of address list */
+	    {
+	        *tp++ = '\0';
+		return(address);
+	    }
+	    else if (*hp == '"') /* quoted string */
+	    {
+	        state = 2;
+		*tp++ = *hp;
+	    }
+	    else if (*hp == '(') /* address comment -- ignore */
 		state = 3;    
-	    else if (*hp == '<')
+	    else if (*hp == '<') /* begin <address> */
 	    {
 		state = 4;
 		tp = address;
 	    }
-	    else if (isalnum(*hp))
+	    else if (isspace(*hp)) /* ignore space */
+	        state = 1;
+	    else   /* just take it */
 	    {
-		state = 5;
-		tp = address;
+		state = 1;
 		*tp++ = *hp;
 	    }
 	    break;
 
-	case 2:   /* we're in a quoted human name, copy and ignore */
+	case 2:   /* we're in a quoted string, copy verbatim */
 	    if (*hp == '\n')
 		return(NULL);
+	    if (*hp != '"')
+	        *tp++ = *hp;
 	    else if (*hp == '"')
+	    {
+	        *tp++ = *hp;
 		state = 1;
+	    }
 	    break;
 
-	case 3:   /* we're in a parenthesized human name, copy and ignore */
+	case 3:   /* we're in a parenthesized comment, ignore */
 	    if (*hp == '\n')
 		return(NULL);
 	    else if (*hp == ')')
@@ -484,25 +499,33 @@ char *hdr;
 	    break;
 
 	case 4:   /* possible <>-enclosed address */
-	    if (*hp == '>')
+	    if (*hp == '>') /* end of address */
 	    {
 		*tp++ = '\0';
 		state = 1;
 		return(address);
 	    }
-	    else
+	    else if (*hp == '<')  /* nested <> */
+	        tp = address;
+	    else if (*hp == '"') /* quoted address */
+	    {
+	        *tp++ = *hp;
+		state = 5;
+	    }
+	    else  /* just copy address */
 		*tp++ = *hp;
 	    break;
 
-	case 5:	/* address not <>-enclosed, terminate on any whitespace */
-	    if (isspace(*hp))
+	case 5:   /* we're in a quoted address, copy verbatim */
+	    if (*hp == '\n')  /* mismatched quotes */
+		return(NULL);
+	    if (*hp != '"')  /* just copy it if it isn't a quote */
+	        *tp++ = *hp;
+	    else if (*hp == '"')  /* end of quoted string */
 	    {
-		*tp++ = '\0';
-		state = 1;
-		return(address);	/* prevents normal hp++ */
+	        *tp++ = *hp;
+		state = 4;
 	    }
-	    else
-		*tp++ = *hp;
 	    break;
 	}
     }
