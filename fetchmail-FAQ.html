@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/10/17 21:52:38 $
+<td width="30%" align=right>$Date: 2000/11/11 18:20:46 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -110,7 +110,7 @@ IP address?</a><br>
 <a href="#R8">R8. Fetchmail running as root stopped working after an OS upgrade</a><br>
 <a href="#R9">R9. Fetchmail is timing out after fetching certain
 messages but before deleting them</a><br>
-<a href="#R10">R10. Fetchmail is timing out during message fetches</a></br>
+<a href="#R10">R10. Fetchmail is timing out during message fetches</a><br>
 
 <h1>Disappearing mail</h1>
 
@@ -267,9 +267,9 @@ If the bug involves a core dump or hang, a gdb stack trace is good to have.
 giving the process ID as a second argument.)  You will need to
 reconfigure with <p>
 
-<LISTING>
+<PRE>
 CFLAGS=-g LDFLAGS=" " ./configure
-</LISTING>
+</PRE>
 
 and then rebuild in order to generate a version that can be gdb-traced.<p>
 
@@ -1796,7 +1796,7 @@ This one comes comes to us from Joerg Dorchain.
 The basic idea is to set up a bidirectional encrypted socket connection:<p>
 
 <pre>
-fetchmail <--> ssh <---> sshd <--> imapd
+fetchmail &lt;--&gt; ssh &lt;---&gt; sshd &lt;--&gt; imapd
  \---local side--/       \-remote side-/
 </pre>
 
@@ -1894,7 +1894,7 @@ to have GSS support compiled in.<p>
 Neither UW-IMAP nor fetchmail compile in support for GSS by default,
 since it requires libraries from the Kerberos V distribution
 (available via FTP at <a
-href="ftp://athena-dist.mit.edu/pub/ATHENA/kerberos">athena-dist.mit.edu</a).
+href="ftp://athena-dist.mit.edu/pub/ATHENA/kerberos">athena-dist.mit.edu</a>).
 If you have these, compiling in GSS support is simple: add a
 <pre>--with-gssapi=[/path/to/krb5/root]</pre> option to configure. For
 instance, I have all of my Kerberos V libraries installed under
@@ -2081,9 +2081,9 @@ fetchmail with -N and an ampersand to background it.  A Sun user
 recommends
 this:<P>
 
-<listing>
+<PRE>
 (fetchmail --nodetach &lt;other params&gt; &amp;)
-</listing>
+</PRE>
 
 The extra pair of parens is significant --- it makes sure that the process
 detaches from the initial shell (one more shell is started and dies
@@ -2115,7 +2115,7 @@ option values that work:<P>
 </pre>
 
 <hr>
-<a name="R8">R8. Fetchmail running as root stopped working after an OS upgrade</a></h2>
+<h2><a name="R8">R8. Fetchmail running as root stopped working after an OS upgrade</a></h2>
 
 In RH 6.0, the HOME value in the boot-time root environment changed
 from /root to / as the result of a change in init.  Move your
@@ -2500,7 +2500,7 @@ start-of-line From into a &gt;From, preventing programs further downstream
 from acting up.<p>
 
 <hr>
-<h2><a name="generic_mangling"><a name="X4">X4. My mail is being mangled in a new and different way</a></a></h2>
+<h2><a name="X4">X4.</a><a name="generic_mangling">My mail is being mangled in a new and different way</a></h2>
 
 The first thing you need to do is pin down what program is doing the
 mangling.  We don't like getting bug reports about fetchmail that are
@@ -2884,7 +2884,7 @@ inactivity timeout.<p>
 
 <hr>
 <h2><a name="O9">O9. Why does fetchmail keep retrieving the same messages
-over and over?</h2>
+over and over?</a></h2>
 
 First, check to see that you haven't enabled the <cite>keep</cite>
 and <cite>fetchall</cite> option.  If you have, turn <cite>keep</cite> off.<p>
@@ -2941,7 +2941,7 @@ install Linux on your server...<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/10/17 21:52:38 $
+<td width="30%" align=right>$Date: 2000/11/11 18:20:46 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
