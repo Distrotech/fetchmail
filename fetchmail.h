@@ -315,12 +315,11 @@ struct query
     struct idlist *skipped;	/* messages skipped on the mail server */
     struct idlist *oldsaved, *newsaved;
     struct idlist **oldsavedend;
-    char thisid[16];		/* Message fingerprint for dup killing */
-    char lastid[16];		/* last fingerprint seen on this connection */
+    char lastdigest[DIGESTLEN];	/* last MD5 hash seen on this connection */
 
     /* internal use -- per-message state */
     int mimemsg;		/* bitmask indicating MIME body-type */
-    char digest [DIGESTLEN];	/* md5 digest buffer */
+    char digest[DIGESTLEN];	/* md5 digest buffer */
 
     /* internal use -- housekeeping */
     struct query *next;		/* next query control block in chain */

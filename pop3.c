@@ -1004,12 +1004,6 @@ static int pop3_logout(int sock, struct query *ctl)
     if (!ok)
 	expunge_uids(ctl);
 
-    if (ctl->lastid)
-    {
-	free(ctl->lastid);
-	ctl->lastid = NULL;
-    }
-
     return(ok);
 }
 

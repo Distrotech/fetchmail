@@ -408,7 +408,7 @@ int readheaders(int sock,
 	free(delivered_to);
 
     /* initially, no message digest */
-    memset(ctl->thisid, '\0', sizeof(ctl->thisid));
+    memset(ctl->digest, '\0', sizeof(ctl->digest));
 
     msgblk.headers = received_for = delivered_to = NULL;
     from_offs = reply_to_offs = resent_from_offs = app_from_offs = 
@@ -921,7 +921,7 @@ int readheaders(int sock,
 
 	MD5Init(&context);
 	MD5Update(&context, msgblk.headers, strlen(msgblk.headers));
-	MD5Final(ctl->thisid, &context);
+	MD5Final(ctl->digest, &context);
 
 	if (!received_for && env_offs == -1 && !delivered_to)
 	{
@@ -930,8 +930,8 @@ int readheaders(int sock,
 	     * If so there is a one in 18-quadrillion chance this 
 	     * code will incorrectly nuke the first message.
 	     */
-	    if (memcmp(ctl->lastid, ctl->thisid, sizeof(ctl->lastid)))
-		ctl->lastid = ctl->thisid;
+	    if (memcmp(ctl->lastdigest, ctl->digest, DIGESTLEN))
+		memcpy(ctl->lastdigest, ctl->digest, DIGESTLEN);
 	    else if (accept_count > 1)
 		return(PS_REFUSED);
 	}
