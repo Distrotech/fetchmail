@@ -59,7 +59,7 @@ port		{ return KW_PORT; }
 			yylval.sval = (char *) strdup(yytext+1);
 			return PARAM_STRING;
 		}
-[^ \t\r\n#]+	{ yylval.sval = (char *) strdup(yytext); return PARAM_STRING; }
+[^ \t\r\n]+	{ yylval.sval = (char *) strdup(yytext); return PARAM_STRING; }
 
 [ \t\r]+	;	/* whitespace */
 
