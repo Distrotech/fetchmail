@@ -42,7 +42,7 @@ envelope	{ return ENVELOPE; }
 
 user(name)?	{ return USERNAME; }
 pass(word)?	{ return PASSWORD; }
-folder(s) 	{ return FOLDER; }
+folder(s)? 	{ return FOLDER; }
 smtp(host)?	{ return SMTPHOST; }
 mda		{ return MDA; }
 pre(connect)	{ return PRECONNECT; }
