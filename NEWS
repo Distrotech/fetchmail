@@ -18,7 +18,7 @@ fetchmail-4.4.1 (Tue Mar 24 00:01:20 EST 1998):
 * We now properly shroud IMAP passwords containing ", \, and SP.
 * Checked for Y2K safety.  No 2-digit dates anywhere, so we're safe.
 * Added mimedecode option by Henrik Storner.
-* Display a total byte count in the mail count message.
+* Display a total byte count in the fetchmail status message.
 * Fixed a strange core-dump bug that manifested when using -f and --smtphunt.
 
 There are 279 people on fetchmail-friends and 165 on fetchmail-announce.
