@@ -34,6 +34,10 @@
 #endif
 #endif
 
+#ifdef SUNOS
+#include <memory.h>
+#endif
+
 FILE *SockOpen(char *host, int clientPort)
 {
     int sock;

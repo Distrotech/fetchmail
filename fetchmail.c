@@ -33,6 +33,10 @@
 #include <netdb.h>
 #endif /* HAVE_GETHOSTBYNAME */
 
+#ifdef SUNOS
+#include <stdlib.h>
+#endif
+
 #include "fetchmail.h"
 #include "tunable.h"
 #include "smtp.h"

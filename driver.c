@@ -37,6 +37,10 @@
 #include "mx.h"
 #endif /* HAVE_GETHOSTBYNAME */
 
+#ifdef SUNOS
+#include <memory.h>
+#endif
+
 #ifdef KERBEROS_V4
 #include <krb.h>
 #include <des.h>
@@ -481,7 +485,7 @@ char *realname;		/* real name of host */
 
 	    set_timeout(ctl->server.timeout);
 	    /* leave extra room for reply_hack to play with */
-	    line = realloc(line, strlen(line) + strlen(buf) + HOSTLEN + 1);
+	    line = (char *) realloc(line, strlen(line) + strlen(buf) + HOSTLEN + 1);
 	    strcat(line, buf);
 	    if (line[0] == '\r' && line[1] == '\n')
 		break;
@@ -548,7 +552,7 @@ char *realname;		/* real name of host */
 	    int	newlen;
 
 	    newlen = oldlen + strlen(line);
-	    headers = realloc(headers, newlen + 1);
+	    headers = (char *) realloc(headers, newlen + 1);
 	    if (headers == NULL)
 		return(PS_IOERR);
 	    strcpy(headers + oldlen, line);
