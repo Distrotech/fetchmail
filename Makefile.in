@@ -136,7 +136,7 @@ install:
 	@echo "Installing fetchmail configurator..."
 	$(INSTALL_PROGRAM) ${srcdir}/fetchmailconf $(bindir)/fetchmailconf
 	@echo "Installing manual page..."
-	$(INSTALL_DATA) $(srcdir)/fetchmail.man $(mandir)/fetchmailconf.$(manext)
+	$(INSTALL_DATA) $(srcdir)/fetchmail.man $(mandir)/fetchmail.$(manext)
 	ln -sf $(mandir)/fetchmail.$(manext) $(mandir)/fetchmailconf.$(manext)
 
 uninstall:

@@ -37,4 +37,5 @@ rm -rf $RPM_BUILD_ROOT
 /usr/bin/fetchmail
 /usr/bin/fetchmailconf
 /usr/man/man1/fetchmail.1
+/usr/man/man1/fetchmailconf.1
 EOF
