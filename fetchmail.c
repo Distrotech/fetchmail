@@ -304,6 +304,14 @@ int main (int argc, char **argv)
 	if (!nodetach)
 	    daemonize(logfile, termhook);
 	error( 0, 0, "starting fetchmail %s daemon ", RELEASE_ID);
+
+	/*
+	 * We'll set up a handler for these when we're sleeping,
+	 * but ignore them otherwise so as not to interrupt a poll.
+	 */
+	signal(SIGUSR1, SIG_IGN);
+	if (poll_interval && !getuid())
+	    signal(SIGHUP, SIG_IGN);
     }
 
     /* beyond here we don't want more than one fetchmail running per user */
@@ -315,20 +323,8 @@ int main (int argc, char **argv)
     signal(SIGPIPE, termhook);
     signal(SIGQUIT, termhook);
 
-    /*
-     * With this simple hack, we make it possible for a foreground 
-     * fetchmail to wake up one in daemon mode.  What we want is the
-     * side effect of interrupting any sleep that may be going on,
-     * forcing fetchmail to re-poll its hosts.
-     */
-    signal(SIGUSR1, donothing);
-
-    /* pacify people who think all system daemons wake up on SIGHUP */
-    if (poll_interval && !getuid())
-	signal(SIGHUP, donothing);
-
     /* here's the exclusion lock */
-    if ( (lockfp = fopen(lockfile,"w")) != NULL ) {
+    if ((lockfp = fopen(lockfile,"w")) != NULL) {
 	fprintf(lockfp,"%d",getpid());
 	if (poll_interval)
 	    fprintf(lockfp," %d", poll_interval);
@@ -467,6 +463,17 @@ int main (int argc, char **argv)
 	    }
 
 	    /*
+	     * With this simple hack, we make it possible for a foreground 
+	     * fetchmail to wake up one in daemon mode.  What we want is the
+	     * side effect of interrupting any sleep that may be going on,
+	     * forcing fetchmail to re-poll its hosts.  The second line is
+	     * for people who think all system daemons wake up on SIGHUP.
+	     */
+	    signal(SIGUSR1, donothing);
+	    if (!getuid())
+		signal(SIGHUP, donothing);
+
+	    /*
 	     * We can't use sleep(3) here because we need an alarm(3)
 	     * equivalent in order to implement server nonresponse timeout.
 	     * We'll just assume setitimer(2) is available since fetchmail
@@ -493,6 +500,11 @@ int main (int argc, char **argv)
 #endif
 		}
 	    }
+
+	    /* now lock out interrupts again */
+	    signal(SIGUSR1, SIG_IGN);
+	    if (!getuid())
+		signal(SIGHUP, SIG_IGN);
 
 	    if (outlevel == O_VERBOSE)
 	    {
