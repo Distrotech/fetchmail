@@ -9,6 +9,7 @@ Group:		Applications/Mail
 Copyright:	GPL
 Icon:		fetchmail.gif
 Requires:	smtpdaemon
+Summary:	Full-featured POP/IMAP mail retrieval daemon
 
 %description
 fetchmail is a free, full-featured, robust, and well-documented remote
