@@ -19,9 +19,6 @@ features --
 
 * Password is no longer displayed in verbose mode.
 
-* Program now tries to set itself to the ID of the local user before
-  running an MDA, and reset to root afterwards. 
-
 bugs --
 
 * Default user name to deliver to is now the calling user, unless
