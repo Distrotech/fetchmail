@@ -50,35 +50,6 @@ if (system("su -c 'make >/dev/null' esr")) {
 	die("Compilation failure\n");
 }
 
-# Update the Debian logfile
-open(DEBLOG, "debian/changelog");
-$firstline = <DEBLOG>;
-close(DEBLOG);
-$firstline =~ /fetchmail \(*([^-]*)/;
-$logvers = $1;
-if ($version eq $logvers) {
-    print "No change to Debian logfile...\n";
-} else {
-    $date = &rfc822date();
-    print "Updating the Debian logfile ($logvers -> $version)...\n";
-    open(DEBLOG, "<debian/changelog");
-    open(TMP, ">mkr$$.tmp") || die("Error opening temp file\n");
-    print TMP <<EOF;
-fetchmail (${version}-1) unstable; urgency=low
-
-  * new upstream version
-  
- -- Eric S. Raymond <esr\@thyrsus.com>  ${date}
-  
-EOF
-    while (<DEBLOG>) {
-	print TMP $_;
-    }
-    close(TMP);
-    close(DEBLOG);
-    system("mv mkr$$.tmp debian/changelog");
-}
-
 print "Building the distribution...\n";
 if (system("su -c 'make dist >/dev/null' esr")) {
 	die("Distribution-build failure\n");
