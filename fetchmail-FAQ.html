@@ -93,7 +93,8 @@ when I may have multiple login sessions going?</a><br>
 <h1>Other Problems:</h1>
 
 <a href="#O4">O4. The --logfile option doesn't work if the logfile doesn't exist.</a><br>
-<a href="#O5">O5. The message lengths in my POP3 progress messages look like garbage.</a><br>
+<a href="#O5">O5. Every time I get a POP or IMAP message the header is
+dumped to all my terminal sessions.</a><br>
 
 <h1>Answers:</h1>
 <hr>
@@ -186,7 +187,7 @@ and got <em>really</em> tired of, is for tin-like kill files).<p>
 You can do spam filtering better with procmail or mailagent on the
 server side and (if you're the server sysadmin) sendmail.cf domain
 exclusions.  You can do other policy things better with the
-<tt>mda</tt> option and script wrappers around fetchmail.  If
+<CODE>mda</CODE> option and script wrappers around fetchmail.  If
 it's a prime-time-vs.-non-prime-time issue, ask yourself whether a
 wrapper script called from crontab would do the job.<p>
 
@@ -220,8 +221,8 @@ Probably it's because you're using a .fetchmailrc that's
 written in the old popclient syntax without an explicit `username'
 keyword leading the first user entry attached to a server entry.<p>
 
-This error can be triggered by having a user option such as `<tt>keep</tt>'
-or `<tt>fetchall</tt>' before the first explicit username.  For
+This error can be triggered by having a user option such as `<CODE>keep</CODE>'
+or `<CODE>fetchall</CODE>' before the first explicit username.  For
 example, if you write<p>
 
 <pre>
@@ -229,14 +230,14 @@ poll openmail protocol pop3
 	keep user "Hal DeVore" there is hdevore here
 </pre>
 
-the `<tt>keep</tt>' option will generate an entire user entry with the default
+the `<CODE>keep</CODE>' option will generate an entire user entry with the default
 username (the name of fetchmail's invoking user).<p>
 
 The popclient compatibility syntax was removed in 4.0.  It complicated
 the configuration file grammar and confused users.<p>
 
-Also, the `<tt>interface</tt>', `<tt>monitor</tt>' and
-`<tt>batchlimit</tt>' options changed after 2.8.<p>
+Also, the `<CODE>interface</CODE>', `<CODE>monitor</CODE>' and
+`<CODE>batchlimit</CODE>' options changed after 2.8.<p>
 
 They used to be global options with `set' syntax like the batchlimit
 and logfile options.  Now they're per-server options, like `protocol'.<p>
@@ -251,7 +252,7 @@ in your .fetchmailrc file, simply delete that line and insert
 `interface sl0/10.0.2.15' in the server options part of your `defaults'
 declaration.<p>
 
-Do similarly for any `<tt>monitor</tt>' or `<tt>batchlimit</tt>' options.<p>
+Do similarly for any `<CODE>monitor</CODE>' or `<CODE>batchlimit</CODE>' options.<p>
 
 <hr>
 <h2><a name="F2">F2. The .fetchmailrc parser won't accept my all-numeric user name.</a></h2>
@@ -306,13 +307,13 @@ because the port 25 listener returns a positive acknowledge, fetchmail
 can be sure you're not going to lose mail to a disk-full or some other
 resource-exhaustion problem.<p>
 
-If you used to use <tt>-mda "procmail -d</tt>
-<em>&lt;you&gt;</em><tt>"</tt> or something similar, forward to port
-25 and do "<tt>| procmail -d</tt> <em>&lt;you&gt;</em><tt>"</tt> in
+If you used to use <CODE>-mda "procmail -d</CODE>
+<em>&lt;you&gt;</em><CODE>"</CODE> or something similar, forward to port
+25 and do "<CODE>| procmail -d</CODE> <em>&lt;you&gt;</em><CODE>"</CODE> in
 your ~/.forward file.<p>
 
 As long as your new .fetchmailrc file does not use the removed
-`localfolder' option or `<tt>limit</tt>' (which now takes a maximum byte size
+`localfolder' option or `<CODE>limit</CODE>' (which now takes a maximum byte size
 rather than a line count), a straight move or copy of your .poprc will
 often work.  (The new run control file syntax also has to be a little
 stricter about the order of options than the old, in order to support
@@ -321,10 +322,10 @@ things a bit.)<p>
 
 Run control files in the minimal .poprc format (without the `username'
 token) will trigger a warning.  To eliminate this warning, add the
-`<tt>username</tt>' keyword before your first user entry per server (it is
+`<CODE>username</CODE>' keyword before your first user entry per server (it is
 already required before second and subsequent user entries per server.<p>
 
-In some future version the `<tt>username</tt>' keyword will be required.<p>
+In some future version the `<CODE>username</CODE>' keyword will be required.<p>
 
 <hr>
 <h2><a name="C1">C1. Why do I need a .fetchmailrc when running as root on my own machine?</a></h2>
@@ -348,7 +349,7 @@ unless I create a .fetchmailrc in root's home directory containing:<p>
           user itz is itz
 </pre>
 
-It won't work if the second line is just "<tt>user itz</tt>".  This is silly.<p>
+It won't work if the second line is just "<CODE>user itz</CODE>".  This is silly.<p>
 
 It seems fetchmail decides to RECP the `default local user' (ie. the
 uid running fetchmail) unless there are local aliases, and the
@@ -588,7 +589,7 @@ profiles that will accomplish this.  Thank James Laferriere
 <hr>
 <h2><a name="T1">T1. How can I use fetchmail with qmail?</a></h2>
 
-Turn on the <tt>forcecr</tt> option; qmail's listener mode doesn't like 
+Turn on the <CODE>forcecr</CODE> option; qmail's listener mode doesn't like 
 header or message lines terminated with bare linefeeds.<p>
 
 (This information is thanks to Robert de Bath 
@@ -656,16 +657,16 @@ that MAIL FROM addresses you pass to it have to be canonical
 
 This is a potential problem if the MTAs upstream from your fetchmail
 don't necessarily pass canonicalized From and Return-Path addresses,
-and fetchmail's <TT>rewrite</TT> option is off.  The specific case
+and fetchmail's <CODE>rewrite</CODE> option is off.  The specific case
 where this has come up involves bounce messages generated by sendmail
 on your mailer host, which have the (un-canonicalized) origin address
 MAILER-DAEMON.<p>
 
-The right way to fix this is to enable the <TT>rewrite</TT> option and
+The right way to fix this is to enable the <CODE>rewrite</CODE> option and
 have fetchmail canonicalize From and Return-Path addresses with the
 mailserver hostname before exim sees them.<p>
 
-If you must run with <TT>rewrite</TT> off, there is a switch in exim's
+If you must run with <CODE>rewrite</CODE> off, there is a switch in exim's
 configuration files that allows it to accept domainless MAIL FROM
 addresses; you will have to flip it by putting the line <p>
 
@@ -742,7 +743,7 @@ should really try to figure out what's going on underneath before it
 bites you some other way. <p>
 
 We have one report (from toby@eskimo.com) that you can sometimes solve
-such problems by doing an <TT>smtp</TT> declaration with an IP
+such problems by doing an <CODE>smtp</CODE> declaration with an IP
 address that your routing table maps to something other than the
 loopback device (he used ppp0).<p>
 
@@ -761,7 +762,7 @@ this particular cause should go away.<p>
 (I hear this one from people who have run into the blank-line problem in <a href="#X2">X2</a>.)<p>
 
 Try sending yourself test mail and retrieving it using the
-command-line options `<tt>-k -m cat</tt>'.  This will dump exactly what
+command-line options `<CODE>-k -m cat</CODE>'.  This will dump exactly what
 fetchmail retrieves to standard output. <p>
 
 If the dump doesn't match what shows up in your mailbox when you
@@ -800,7 +801,7 @@ during the download, or your port 25 listener can't find enough free
 disk space, or you interrupt the delivery in mid-message) that `seen'
 message can lurk invisibly in your server mailbox forever.<p>
 
-Workaround: add the `<tt>fetchall</tt>' keyword to your POP3 fetch options.<p>
+Workaround: add the `<CODE>fetchall</CODE>' keyword to your POP3 fetch options.<p>
 
 Solution: switch to an <a
 href="http://www.washington.edu/imap">IMAP</a> server.<p>
@@ -845,15 +846,15 @@ This is one of the things multidrop mode is for (though you
 <em>are</em> going to get hurt by some mailing list software; see the
 caveats under THE USE AND ABUSE OF MULTIDROP MAILBOXES on the man
 page).  If you want to try it, the way to do it is with the
-`<tt>localdomains</tt>' option.<p>
+`<CODE>localdomains</CODE>' option.<p>
 
 In general, if you use localdomains you need to make sure of two other
 things: <p>
 
 <strong>1. You've actually set up your .fetchmailrc entry to invoke multidrop mode.</strong><p>
 
-Many people set a `<tt>localdomains</tt>' list and then forget that fetchmail
-wants to see more than one name (or the wildcard `*') in a `<tt>here</tt>' list
+Many people set a `<CODE>localdomains</CODE>' list and then forget that fetchmail
+wants to see more than one name (or the wildcard `*') in a `<CODE>here</CODE>' list
 before it will do multidrop routing.<p>
 
 <strong>2. You may have to set `no envelope'.</strong><p>
@@ -864,8 +865,8 @@ list software that doesn't put a recipient addess in the To lines).<p>
 
 Some ways of accumulating a whole domain's messages in a single server
 mailbox mean it all ends up with a single envelope address that is
-useless for rerouting purposes.  You may have to set `<tt>no
-envelope</tt>' to prevent fetchmail from being bamboozled by this.<p>
+useless for rerouting purposes.  You may have to set `<CODE>no
+envelope</CODE>' to prevent fetchmail from being bamboozled by this.<p>
 
 <hr>
 <h2><a name="M3">M3. I tried to run a mailing list using multidrop, and I have a mail loop!</a></h2>
@@ -876,7 +877,7 @@ the client side) you've created a mail loop.  Just chop the host part off any
 local addresses in the list.<p>
 
 If you use sendmail, you can check the list expansion with
-<tt>sendmail -bv</tt>.<p>
+<CODE>sendmail -bv</CODE>.<p>
 
 <hr>
 <h2><a name="M4">M4. My multidrop fetchmail seems to be having DNS problems.</a></h2>
@@ -894,12 +895,12 @@ should go away.<p>
 <hr>
 <h2><a name="M5">M5. I'm seeing long DNS delays before each message is processed.</a></h2>
 
-Use the `<tt>aka</tt>' option to pre-declare as many of your
+Use the `<CODE>aka</CODE>' option to pre-declare as many of your
 mailserver's DNS names as you can.  When an address's host part
 matches an aka name, no DNS lookup needs to be done to check it.<p>
 
 If you're sure you've pre-declared all of your mailserver's DNS dames,
-you can use the `<tt>no dns</tt>' option to prevent other hostname
+you can use the `<CODE>no dns</CODE>' option to prevent other hostname
 parts from being looked up at all.<p>
 
 Sometimes delays are unavoidable.  Some SMTP listeners try to call DNS
@@ -943,7 +944,7 @@ a current version of <em>deliver</em>.  If this doesn't work, try to
 figure out which other program in your mail path is inserting the
 blank line and replace that.  If you can't do either of these things,
 pick a different MDA (such as procmail) and declare it with the
-`<tt>mda</tt>' option.<p>
+`<CODE>mda</CODE>' option.<p>
 
 <hr>
 <h2><a name="X3">X3. My mail client can't see a Subject line.</a></h2>
@@ -1002,7 +1003,30 @@ without hacking potentially fragile startup scripts.  To get around
 it, just touch(1) the logfile before you run fetchmail (this will have
 no effect on the contents of the logfile if it already exists).<P>
 
-$Id: fetchmail-FAQ.html,v 1.34 1997/06/16 14:35:09 esr Exp $<p>
+<hr>
+<h2><a name="O5">O5. Every time I get a POP or IMAP message the header
+is dumped to all my terminal sessions.</a></h2>
+
+fetchmail uses the local sendmail to perform final delivery, which
+Netscape and other clients doen't do; the announcement of new messages
+is done by a daemon that sendmail pokes. There should be a ``biff''
+command to control this.  Type
+
+<PRE>
+biff n
+</PRE>
+
+to turn it off. If this doesn't work, try the command 
+
+<PRE>
+chmod -x `tty`
+</PRE>
+
+which is essentially what <code>biff -n</code> will do. If this
+doesn't work, comment out any reference to ``comsat'' in your
+/etc/inetd.conf file and restart inetd.<P>
+
+$Id: fetchmail-FAQ.html,v 1.35 1997/06/18 22:42:47 esr Exp $<p>
 
 <HR>
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
