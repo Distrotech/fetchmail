@@ -474,9 +474,11 @@ char *realname;		/* real name of host */
 		received_for = parse_received(ctl, bufp);
 #endif /* HAVE_RES_SEARCH */
 
-	    continue;
-	}
-	else if (headers)	/* OK, we're at end of headers now */
+ 	    if (len > 0)
+ 	        continue;
+ 	} /* if (inheaders) */
+
+ 	if (headers && (!inheaders || len == 0))    /* at end of headers now */
 	{
 	    char		*cp;
 	    struct idlist 	*idp, *xmit_names;
@@ -713,6 +715,16 @@ char *realname;		/* real name of host */
 	    }
 
 	    free_str_list(&xmit_names);
+	} /* else if (headers) */
+
+	/* output a crlf if zero length message body */
+	if (!len && inheaders)
+	{
+	    if (ctl->mda[0])
+		fputs("\r\n", sinkfp);
+	    else if (sinkfp)
+		SockWrite("\r\n", 1, 2, sinkfp);
+	    continue;
 	}
 
 	/* following code is executed on non-header lines only */

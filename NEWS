@@ -42,11 +42,13 @@ bugs --
   Carey Evans <c.evans@student.canterbury.ac.nz> for pointing out these
   problems.
 
+* Handle zero-length messages properly; thanks to Bob Craycroft.
+
 Note: the RFC subdirectory is no longer included with the distribution
 (this cut its size in half!)  Instead, applicable RFCs are listed on the
 manual page.
 
-There are 199 people on the fetchmail-friends list.
+There are 200 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-2.8 (Sat Jan 11 15:48:33 EST 1997)
