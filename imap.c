@@ -719,7 +719,7 @@ static int do_cram_md5 (int sock, struct query *ctl)
 #else
     sprintf(reply,
 #endif
-              "%s %02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x", 
+              "\"%s\" %02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x", 
               ctl->remotename,
               response[0], response[1], response[2], response[3],
               response[4], response[5], response[6], response[7],
