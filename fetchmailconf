@@ -935,8 +935,44 @@ This could mean the host doesn't support any,
 or just that your Internet connection is down.
 """
         else:
+            warnings = ''
+            # OK, now try to recognize potential problems
+
+            if string.find(greetline, "1.003") > 0 or string.find(greetline, "1.003") > 0:
+                warnings = warnings + """
+This appears to be an old version of the UC Davis POP server.  These are
+dangerously unreliable (among other problems, they may drop your mailbox
+on the floor if your connection is interrupted during the session).
+
+It is strongly recommended that you find a better POP3 server.
+
+"""
+            if string.find(greetline, "usa.net") > 0:
+                warnings = warnings + """
+You appear to be using USA.NET's free mail service.  This is a problem;
+their POP3 servers, at least as of the 2.2 version in use mid-1998,
+are quite flaky.  They seem to require that fetchall be switched on
+(otherwise you won't necessarily see all your mail, not even new mail).
+They botch the TOP command the fetchmail normally uses for retrieval
+(it only retrieves about 10 lines rather than the number specified).
+
+It is recommended that you turn on fetchall and keep.  Turning on keep
+will disable the use of TOP.
+
+"""
+            if string.find(greetline, "IMAP2bis") > 0:
+                warnings = warnings + """
+IMAP2bis servers have a minor problem; they can't peek at messages without
+marking them seen.  If you take a line hit during the retrieval, the 
+interrupted message may get left on the server, marked seen.
+
+To work around this, it is recommended that you set the `fetchall' option,
+so any stuck mail will be retrieved next time around.
+"""
+
+            # Display success window with warnings
             title = "Autoprobe of " + realhost + " succeeded"
-            confirm = "The " + protocol + " server said:\n\n" + greetline
+            confirm = "The " + protocol + " server said:\n\n" + greetline + warnings
             self.protocol.set(protocol)
         confwin.title(title) 
         confwin.iconname(title)
