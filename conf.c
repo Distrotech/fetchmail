@@ -156,6 +156,9 @@ void dump_config(struct runctl *runp, struct query *querylist)
 #ifdef GSSAPI
     printf("'imap-gss',");
 #endif /* GSSAPI */
+#if defined(IMAP4) && defined(KERBEROS_V4)
+    printf("'imap-k4',");
+#endif /* defined(IMAP4) && defined(KERBEROS_V4) */
 #ifdef RPA_ENABLE
     printf("'rpa',");
 #endif /* RPA_ENABLE */
