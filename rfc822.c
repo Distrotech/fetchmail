@@ -158,9 +158,8 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
     int parendepth;
 
     /*
-     * Note 1: RFC822 escaping with \ is *not* handled.  Note 2: it is
-     * important that this routine not stop on \r, since we use \r as
-     * a marker for RFC822 continuations elsewhere.
+     * Note: it is important that this routine not stop on \r, since
+     * we use \r as a marker for RFC822 continuations elsewhere.
      */
 #define START_HDR	0	/* before header colon */
 #define SKIP_JUNK	1	/* skip whitespace, \n, and junk */
@@ -199,6 +198,11 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 		state = ENDIT_ALL;
 		return(NULL);
 	    }
+	    else if (*hp == '\\')	/* handle RFC822 escaping */
+	    {
+	        *tp++ = *hp++;			/* take the escape */
+	        *tp++ = *hp;			/* take following char */
+	    }
 	    else if (*hp == '"')	/* quoted string */
 	    {
 		oldstate = SKIP_JUNK;
@@ -222,12 +226,17 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	    }
 	    break;
 
-	case BARE_ADDRESS:   /* collecting address without delimiters */
-	    if (*hp == '\n')	/* end of bare address */
+	case BARE_ADDRESS:   	/* collecting address without delimiters */
+	    if (*hp == '\n')		/* end of bare address */
 	    {
 	        *tp++ = '\0';
 		state = ENDIT_ALL;
 		return(tp = address);
+	    }
+	    else if (*hp == '\\')	/* handle RFC822 escaping */
+	    {
+	        *tp++ = *hp++;			/* take the escape */
+	        *tp++ = *hp;			/* take following char */
 	    }
 	    else if (*hp == ',' || isspace(*hp))  /* end of address */
 	    {
@@ -241,18 +250,22 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	    }
 	    else   		/* just take it */
 	    {
-		state = BARE_ADDRESS;
 		*tp++ = *hp;
 	    }
 	    break;
 
-	case INSIDE_DQUOTE:   /* we're in a quoted string, copy verbatim */
-	    if (*hp == '\n')
+	case INSIDE_DQUOTE:	/* we're in a quoted string, copy verbatim */
+	    if (*hp == '\n')		/* premature end of string */
 	    {
 		state = ENDIT_ALL;
 		return(NULL);
 	    }
-	    if (*hp != '"')
+	    else if (*hp == '\\')	/* handle RFC822 escaping */
+	    {
+	        *tp++ = *hp++;			/* take the escape */
+	        *tp++ = *hp;			/* take following char */
+	    }
+	    else if (*hp != '"')
 	        *tp++ = *hp;
 	    else
 	    {
@@ -261,9 +274,14 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	    }
 	    break;
 
-	case INSIDE_PARENS:   /* we're in a parenthesized comment, ignore */
-	    if (*hp == '\n')
+	case INSIDE_PARENS:	/* we're in a parenthesized comment, ignore */
+	    if (*hp == '\n')		/* end of line, just bomb out */
 		return(NULL);
+	    else if (*hp == '\\')	/* handle RFC822 escaping */
+	    {
+	        *tp++ = *hp++;			/* take the escape */
+	        *tp++ = *hp;			/* take following char */
+	    }
 	    else if (*hp == '(')
 		++parendepth;
 	    else if (*hp == ')')
@@ -272,27 +290,32 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 		state = SKIP_JUNK;
 	    break;
 
-	case INSIDE_BRACKETS:   /* possible <>-enclosed address */
-	    if (*hp == '>') /* end of address */
+	case INSIDE_BRACKETS:	/* possible <>-enclosed address */
+	    if (*hp == '\\')		/* handle RFC822 escaping */
+	    {
+	        *tp++ = *hp++;			/* take the escape */
+	        *tp++ = *hp;			/* take following char */
+	    }
+	    else if (*hp == '>')	/* end of address */
 	    {
 		*tp++ = '\0';
 		state = SKIP_JUNK;
 		++hp;
 		return(tp = address);
 	    }
-	    else if (*hp == '<')  /* nested <> */
+	    else if (*hp == '<')	/* nested <> */
 	        tp = address;
-	    else if (*hp == '"') /* quoted address */
+	    else if (*hp == '"')	/* quoted address */
 	    {
 	        *tp++ = *hp;
 		oldstate = INSIDE_BRACKETS;
 		state = INSIDE_DQUOTE;
 	    }
-	    else  /* just copy address */
+	    else			/* just copy address */
 		*tp++ = *hp;
 	    break;
 
-	case ENDIT_ALL:	/* after last address */
+	case ENDIT_ALL:		/* after last address */
 	    return(NULL);
 	    break;
 	}
@@ -319,7 +342,7 @@ main(int argc, char *argv[])
 	    fputs(buf, stdout);
 	    if ((cp = nxtaddr(buf)) != (char *)NULL)
 		do {
-		    printf("%s\n", cp);
+		    printf("\t%s\n", cp);
 		} while
 		    ((cp = nxtaddr((char *)NULL)) != (char *)NULL);
 	}
