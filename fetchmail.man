@@ -579,11 +579,6 @@ Running more than one concurrent instance of
 .I fetchmail
 on the same mailbox may cause messages to be lost or remain unfetched.
 .PP
-When using POP2, the --smtphost option doesn't work, and mail headers
-are not rewritten to enable replies as described under --norewrite. 
-This isn't a protocol problem, it's because the developer couldn't
-find a POP2 server to test the necessary code reorganization with.
-.PP
 The --remotefolder option doesn't work with POP3, the protocol won't
 support it.
 .PP

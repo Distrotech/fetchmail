@@ -114,10 +114,6 @@ struct method *proto;
 	goto closeUp;
     }
 
-    /* print the greeting */
-    if (outlevel == O_VERBOSE) 
-	fprintf(stderr,"%s greeting: %s\n", protocol->name, buf);
-
     /* try to get authorized to fetch mail */
     ok = (protocol->getauth)(socket, queryctl, buf);
     if (ok == PS_ERROR)
@@ -180,14 +176,17 @@ struct method *proto;
 	    }
 
 	    /* maybe we delete this message now? */
-	    if ((number < first && queryctl->flush) || !queryctl->keep) {
-		if (outlevel > O_SILENT && outlevel < O_VERBOSE) 
-		    fprintf(stderr,"flushing message %d\n", number);
-		else
-		    ;
-		ok = gen_transact(socket, protocol->delete_cmd, number);
-		if (ok != 0)
-		    goto cleanUp;
+	    if (protocol->delete_cmd)
+	    {
+		if ((number < first && queryctl->flush) || !queryctl->keep) {
+		    if (outlevel > O_SILENT && outlevel < O_VERBOSE) 
+			fprintf(stderr,"flushing message %d\n", number);
+		    else
+			;
+		    ok = gen_transact(socket, protocol->delete_cmd, number);
+		    if (ok != 0)
+			goto cleanUp;
+		}
 	    }
 
 	    /* close the mail pipe, we'll reopen before next message */

@@ -2,9 +2,7 @@
 
 To-do list:
 
-Option to enable EMACS-like user folder versioning on each run.
-
-The IMAP support is naive.  Chris Newman, one of the IMAP maintainers,
+1. The IMAP support is naive.  Chris Newman, one of the IMAP maintainers,
 criticized it as follows:
 ------------------------------- CUT HERE -----------------------------------
 On Wed, 18 Sep 1996, Eric S. Raymond wrote:
@@ -42,16 +40,18 @@ The key thing to remember is that in IMAP the server holds the
 authoratative list of messages and the client just holds a cache.  This is
 a very different model from POP.
 ------------------------------- CUT HERE -----------------------------------
+If we ever decide that concurrent runs need to work safely, this will have
+to be fixed.
 
-IMAP extensions for secure challenge-response.
+2. Support IMAP4 extensions for secure challenge-response.
 
-Recode POP2 to use the same driver/method strategy as POP3/IMAP, so 
-all three protocols will be able to forward messages through the generic
-driver to SMTP.  (This requires that we find a POP2 server to test with.)
+3. Option to enable EMACS-like user folder versioning on each run.
 
 fetchmail-1.0 (Mon Sep 23 19:54:01 EDT 1996):
 
 * Name change (it ain't just for POP3 any more).
+
+* SMTP forwarding and header-rewrite features work with POP2 now.
 
 * Stricter RFC822 conformance, so SMTP to qmail works.  Thanks to
   Cameron MacPherson <unsound@oz.net> for these changes.
