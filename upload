@@ -36,9 +36,9 @@ echo "Upload to ${WWWVIRTUAL} complete"
 # Copy to FTP site
 open $FTPHOST/fetchmail
 cd $FTPDIR
-put ${package}-${version}.tar.gz
-put ${package}-${version}-1.i386.rpm
-put ${package}-${version}-1.src.rpm
+put fetchmail-${version}.tar.gz
+put fetchmail-${version}-1.i386.rpm
+put fetchmail-${version}-1.src.rpm
 close
 
 # Next, upload to Metalab
