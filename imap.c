@@ -52,7 +52,7 @@ extern char *strstr();	/* needed on sysV68 R3V7.1. */
 #define IMAP4		0	/* IMAP4 rev 0, RFC1730 */
 #define IMAP4rev1	1	/* IMAP4 rev 1, RFC2060 */
 
-static int count, seen, recent, unseen, deletions, imap_version; 
+static int count, seen, recent, unseen, deletions, imap_version, preauth; 
 static int expunged, expunge_period;
 static char capabilities[MSGBUFSIZE+1];
 
@@ -116,7 +116,14 @@ int imap_ok(int sock, char *argbuf)
 	while (isspace(*cp))
 	    cp++;
 
-	if (strncmp(cp, "OK", 2) == 0)
+	if (strncmp(cp, "PREAUTH", 2) == 0)
+	{
+	    if (argbuf)
+		strcpy(argbuf, cp);
+	    preauth = TRUE;
+	    return(PS_SUCCESS);
+	}
+	else if (strncmp(cp, "OK", 2) == 0)
 	{
 	    if (argbuf)
 		strcpy(argbuf, cp);
@@ -766,6 +773,9 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 	return(ok);
 
     peek_capable = (imap_version >= IMAP4);
+
+    if (preauth)
+	return(PS_SUCCESS);
 
 #if OPIE
     if ((ctl->server.protocol == P_IMAP) && strstr(capabilities, "AUTH=X-OTP"))

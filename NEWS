@@ -13,7 +13,9 @@ fetchmail-5.0.5 ():
 * Added Spanish and German descriptions to spec (thanks to Horst von Brand).
 * Moved MIME decoding earlier to avoid messing with header length after
   offsets have been calculated.
-* Make the .fetchmail_pid lockfile with O_ECL.  Duhh...
+* Make the .fetchmail_pid lockfile with O_EXCL.  Duhh...
+* New FAQ item RH on startup failures under Red Hat 6.0.
+* IMAP now skips the authorization step on a PREAUTH response.
 
 There are 258 people on fetchmail-friends and 412 on fetchmail-announce.
 

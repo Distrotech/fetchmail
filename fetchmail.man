@@ -636,6 +636,10 @@ to already have a ticket-granting ticket. You may pass a username different
 from your principal name using the standard \fB--user\fR command or by
 the \fI.fetchmailrc\fR option \fBuser\fR.
 .PP
+If your IMAP daemon returns the PREAUTH response in its greeting line, 
+fetchmail will notice this and skip the normal authentication step.
+This could be useful, e.g. if you start imapd explicitly using ssh.
+.PP
 If you are using POP3, and the server issues a one-time-password
 challenge conforming to RFC1938, \fIfetchmail\fR will use your
 password as a pass phrase to generate the required response. This
