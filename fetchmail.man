@@ -1110,6 +1110,39 @@ a command-line --daemon option; in particular --daemon 0 can be used
 to force foreground operation. Finally, `set syslog' sends log
 messages to syslogd(8).
 
+.SH INTERACTION WITH RFC 822
+When trying to detertmine the originating address of a message,
+fetchmail looks through headers in the following order: 
+
+        Return-Path:
+        Resent-Sender:
+        Sender:
+        Resent-From:
+        From:
+        Reply-To:
+        Apparently-From:
+
+The originating address is used for logging, and to set the MAIL FROM
+address when forwarding to SMTP.  This order is intended to cope
+gracefully with receiving mailing list messages in multidrop mode. The
+intent is that if a local address doesn't exist, the bounce message
+won't be returned blindly to the author or to the list itself, but
+rather to the list manager (which is less annoying).
+
+In multidrop mode, destination headers are processed as follows:
+First, fetchmail looks for the Received: header (or whichever one is
+specified by the `envelope' option) to determine the local
+recipient adress. If the mail is addressed to more than one recipient,
+the Received line won't contain any information regarding recipient adresses.
+
+Then fetchmail looks for the Resent-To:, Resent-Cc:, and Resent-Bcc:
+lines.  If they exists, they should contain the final recipients and
+have precedence over their To:/Cc:/Bcc: counterparts.  If the Resent-*
+lines doesn't exist, the To:, Cc:, Bcc: and Apparently-To: lines are
+looked for. (The presence of a Resent-To: is taken to impluy that the
+person referred by the To: address has already received the original
+copy of the mail).
+
 .SH CONFIGURATION EXAMPLES
 Basic format is:
 
