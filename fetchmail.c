@@ -26,6 +26,7 @@
 #include <sys/file.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #include <fcntl.h>
 
 #ifdef HAVE_GETHOSTBYNAME
@@ -519,8 +520,27 @@ char **argv;
 	    time(&now);
 	    fprintf(stderr, "fetchmail: sleeping at %s", ctime(&now));
 	}
-	if (sleep(poll_interval))
-	    (void) fputs("fetchmail: awakened by SIGHUP\n", stderr);
+
+	/*
+	 * We can't use sleep(3) here, the alarm(2) call used to
+	 * implement server nonresponse timeout collides with it.
+	 * We'll just assume setitimer(2) is available since fetchmail
+	 * has to have the socket layer to work at all.
+	 */
+	{
+	    struct itimerval ntimeout;
+
+	    ntimeout.it_interval.tv_sec = ntimeout.it_interval.tv_sec = 0;
+	    ntimeout.it_value.tv_sec  = poll_interval;
+	    ntimeout.it_value.tv_usec = 0;
+
+	    if (setitimer(ITIMER_REAL,&ntimeout,(struct itimerval *)NULL)==-1
+			&& errno == EINTR)
+		(void) fputs("fetchmail: awakened by SIGHUP\n", stderr);
+	    signal(SIGALRM, donothing);
+	    pause();
+	}
+
 	if (outlevel == O_VERBOSE)
 	{
 	    time_t	now;

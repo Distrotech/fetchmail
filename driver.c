@@ -72,8 +72,8 @@ int count;	/* length of src */
   return len;
 }
 
-static void alarm_handler (int signal)
-/* handle server-timeout signal */
+static void vtalarm_handler (int signal)
+/* handle server-timeout SIGVTALARM signal */
 {
     longjmp(restart, 1);
 }
@@ -784,6 +784,7 @@ const struct method *proto;	/* protocol method table */
 {
     int ok;
     void (*sigsave)();
+    struct itimerval ntimeout;
 
 #ifndef KERBEROS_V4
     if (ctl->authenticate == A_KERBEROS)
@@ -823,6 +824,13 @@ const struct method *proto;	/* protocol method table */
     tag[0] = '\0';	/* nuke any tag hanging out from previous query */
     ok = 0;
 
+    /* set up the server-nonresponse timeout */
+    sigsave = signal(SIGVTALRM, vtalarm_handler);
+    ntimeout.it_interval.tv_sec = ntimeout.it_interval.tv_sec = 0;
+    ntimeout.it_value.tv_sec  = ctl->timeout;
+    ntimeout.it_value.tv_usec = 0;
+    setitimer(ITIMER_VIRTUAL, &ntimeout, (struct itimerval *)NULL);
+
     if (setjmp(restart) == 1)
 	fprintf(stderr,
 		"fetchmail: timeout after %d seconds waiting for %s.\n",
@@ -831,10 +839,6 @@ const struct method *proto;	/* protocol method table */
     {
 	char buf [POPBUFSIZE+1];
 	int *msgsizes, socket, len, num, count, new, deletions = 0;
-
-	/* set up the server-nonresponse timeout */
-	sigsave = signal(SIGALRM, alarm_handler);
-	alarm(ctl->timeout);
 
 	/* open a socket to the mail server */
 	if ((socket = Socket(ctl->servername,
@@ -1012,8 +1016,7 @@ const struct method *proto;	/* protocol method table */
 	}
     }
 
-    alarm(0);
-    signal(SIGALRM, sigsave);
+    signal(SIGVTALRM, sigsave);
 
 closeUp:
     return(ok);
