@@ -114,6 +114,27 @@ private_strerror (errnum)
    Exit with status STATUS if it is nonzero.  */
 /* VARARGS */
 
+#if !defined(HAVE_VSYSLOG) && !defined(VA_START)
+int vsyslog(priority, message, va_alist)
+int priority;
+char *message;
+va_dcl
+{
+    va_list args;
+  
+    char *string;
+  
+    string = (char *)malloc(LINELEN);
+ 
+    va_start(args);
+    vsprintf(string, message, args);
+    va_end(args);
+ 
+    syslog(priority, string);
+    free(string);
+}
+#endif
+
 void
 #if defined(VA_START) && __STDC__
 error (int status, int errnum, const char *message, ...)
@@ -415,7 +436,10 @@ error_complete (status, errnum, message, va_alist)
 	      exit(status);
       }
       else
-	  error (status, errnum, "%s", partial_message);
+	  if (partial_message_size_used != 0)
+	      error (status, errnum, "%s", partial_message);
+	  else
+	      error (status, errnum, "");
     }
 }
 

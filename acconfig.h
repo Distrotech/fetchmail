@@ -32,6 +32,12 @@
 /* Define if you have GNU's getopt family of functions.  */
 #undef HAVE_GETOPTLONG
 
+/* Define if you have strstr */
+#undef HAVE_STRSTR
+
+/* Define if you have vsyslog */
+#undef HAVE_VSYSLOG
+
 
 /* Leave that blank line there!!  Autoheader needs it.
    If you're adding to this file, keep in mind:
