@@ -1,7 +1,7 @@
 			Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-2.2 (Mon Dec  9 00:10:34 EST 1996):
+fetchmail-2.2 (Mon Dec  9 00:15:01 EST 1996):
 
 features --
 
@@ -12,7 +12,7 @@ features --
 * The header your mailserver uses to convey envelope addresses is no longer
   wired to `X-Envelope-Header'.  You can now specify it with the `envelope'
   option in .fetchmailrc.  (This header is not RFC822 standard, and we have a
-  report of and ISP using X-Frontier-To).
+  report of an ISP using X-Frontier-To).
 
 bugs --
 
