@@ -159,6 +159,9 @@ int main (int argc, char **argv)
 #ifndef IMAP_ENABLE
 	printf("-IMAP");
 #endif /* IMAP_ENABLE */
+#ifdef GSSAPI
+	printf("+IMAP-GSS");
+#endif /* GSSAPI */
 #ifdef RPA_ENABLE
 	printf("+RPA");
 #endif /* RPA_ENABLE */
@@ -1163,9 +1166,15 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 	if (ctl->server.skip || outlevel == O_VERBOSE)
 	    printf("  This host will%s be queried when no host is specified.\n",
 		   ctl->server.skip ? " not" : "");
-	/* don't poll for password when there is one or when using the ETRN
-	** protocol */
-	if (!ctl->password && (ctl->server.protocol != P_ETRN))
+	/*
+	 * Don't poll for password when there is one or when using the ETRN
+	 * or IMAP-GSS protocol
+	 */
+	if (!ctl->password && (ctl->server.protocol != P_ETRN)
+#ifdef GSSAPI
+            && (ctl->server.protocol != P_IMAP_GSS)
+#endif /* GSSAPI */
+        )
 	    printf("  Password will be prompted for.\n");
 	else if (outlevel == O_VERBOSE)
 	    if (ctl->server.protocol == P_APOP)

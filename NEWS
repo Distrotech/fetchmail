@@ -3,11 +3,16 @@
 * Add an "ident" per-user option for debugging that produces an 
   "X-Fetchmail-ID" header in fetched messages for debugging.
 * -U/--userdefault option to specify postmaster overriding USER.
-* Runtime selection of either straight POP3 or RPA on CompuServe sites
+* Can the initial gethostname() be eliminated?
 
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.5.3 ():
+* Minor fixes to the GSSAPI code.  Seems to work with stock UW IMAP now! 
+
+There are 267 people on fetchmail-friends and 249 on fetchmail-announce.
+
 fetchmail-4.5.2 (Tue Jul 14 19:02:52 EDT 1998):
 * German-language internationalization in the RPM, thanks to Jochen Hayek.
 * .fetchmailrc files are now permitted to be executable by user and group.
