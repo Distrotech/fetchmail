@@ -236,11 +236,14 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	fprintf(stdout, "'localnames':[");
 	for (idp = ctl->localnames; idp; idp = idp->next)
 	{
+	    char	namebuf[USERNAMELEN + 1];
+
+	    strncpy(namebuf, visbuf(idp->id), USERNAMELEN);
+	    namebuf[USERNAMELEN] = '\0';
 	    if (idp->val.id2)
-		fprintf(stdout, "(\"%s\", %s)", 
-			visbuf(idp->id), visbuf(idp->val.id2));
+		fprintf(stdout, "(\"%s\", %s)", namebuf, visbuf(idp->val.id2));
 	    else
-		fprintf(stdout, "\"%s\"", visbuf(idp->id));
+		fprintf(stdout, "\"%s\"", namebuf);
 	    if (idp->next)
 		fputs(", ", stdout);
 	}

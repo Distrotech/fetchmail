@@ -7,7 +7,7 @@
 #
 # TO DO: Arrange for save and quit buttons to clean up all frames dependent
 # on the current ones.
-version = "1.3"
+version = "1.4"
 
 from Tkinter import *
 from Dialog import *
@@ -278,7 +278,7 @@ class User:
 	     str = str + "\n"
         for fld in ('smtpaddress', 'preconnect', 'postconnect', 'mda'):
             if getattr(self, fld):
-                str = str + " %s \"%s\"\n" % (fld, `getattr(self, fld)`)
+                str = str + " %s %s\n" % (fld, `getattr(self, fld)`)
         if self.antispam != UserDefaults.antispam:
             str = str + "    antispam " + self.antispam + "\n"
 	return str;
