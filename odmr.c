@@ -62,7 +62,7 @@ static int odmr_getrange(int sock, struct query *ctl, const char *id,
     *bytes = *countp = *newp = -1;
 
     /* authenticate via CRAM-MD5 */
-    ok = do_cram_md5(sock, ctl);
+    ok = do_cram_md5(sock, "AUTH", ctl);
     if (ok)
 	return(ok);
 

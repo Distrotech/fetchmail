@@ -534,7 +534,7 @@ int is_host_alias(const char *, struct query *);
 char *host_fqdn(void);
 char *rfc822timestamp(void);
 flag isafile(int);
-int do_cram_md5 (int sock, struct query *ctl);
+int do_cram_md5 (int sock, char *command, struct query *ctl);
 
 void yyerror(const char *);
 int yylex(void);

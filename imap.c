@@ -849,7 +849,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
             report (stdout, _("CRAM-MD5 authentication is supported\n"));
         if (ctl->server.protocol != P_IMAP_LOGIN)
         {
-            if ((ok = do_cram_md5 (sock, ctl)))
+            if ((ok = do_cram_md5 (sock, "AUTHENTICATE", ctl)))
 		/* SASL cancellation of authentication */
 		gen_send(sock, "*");
 

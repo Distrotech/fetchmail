@@ -60,7 +60,7 @@ static void hmac_md5 (unsigned char *password,  size_t pass_len,
     MD5Final (response, &ctx);
 }
 
-int do_cram_md5 (int sock, struct query *ctl)
+int do_cram_md5 (int sock, char *command, struct query *ctl)
 /* authenticate as per RFC2195 */
 {
     int result;
@@ -70,7 +70,7 @@ int do_cram_md5 (int sock, struct query *ctl)
     unsigned char response[16];
     unsigned char reply[1024];
 
-    gen_send (sock, "AUTHENTICATE CRAM-MD5");
+    gen_send (sock, "%s CRAM-MD5", command);
 
     /* From RFC2195:
      * The data encoded in the first ready response contains an
