@@ -791,6 +791,8 @@ static int load_params(int argc, char **argv, int optind)
     else
 	for (; optind < argc; optind++) 
 	{
+	    flag	predeclared =  FALSE;
+
 	    /*
 	     * If hostname corresponds to a host known from the rc file,
 	     * simply declare it active.  Otherwise synthesize a host
@@ -799,18 +801,22 @@ static int load_params(int argc, char **argv, int optind)
 	    for (ctl = querylist; ctl; ctl = ctl->next)
 		if (!strcmp(ctl->server.pollname, argv[optind])
 			|| str_in_list(&ctl->server.akalist, argv[optind], TRUE))
-		    goto foundit;
+		{
+		    ctl->active = TRUE;
+		    predeclared = TRUE;
+		}
 
-	    /*
-	     * Allocate and link record without copying in command-line args;
-	     * we'll do that with the optmerge call later on.
-	     */
-	    ctl = hostalloc((struct query *)NULL);
-	    ctl->server.via =
-		ctl->server.pollname = xstrdup(argv[optind]);
-
-	foundit:
-	    ctl->active = TRUE;
+	    if (!predeclared)
+	    {
+		/*
+		 * Allocate and link record without copying in
+		 * command-line args; we'll do that with the optmerge
+		 * call later on.
+		 */
+		ctl = hostalloc((struct query *)NULL);
+		ctl->server.via =
+		    ctl->server.pollname = xstrdup(argv[optind]);
+	    }
 	}
 
     /*
