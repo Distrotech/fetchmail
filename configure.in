@@ -733,7 +733,7 @@ AC_CONFIG_COMMANDS([default],[
 	# and let VPATH do all the dirty work when we build remotely
 	echo "You can ignore any makedepend error messages:";
 	echo timestamp > stamp-h;
-	(cd $srcdir; makedepend -f - *.c) >>Makefile])
+	(cd $srcdir; makedepend -I "$ac_abs_builddir" -f - *.c) >>Makefile])
 
 AC_OUTPUT
 dnl Local Variables:
