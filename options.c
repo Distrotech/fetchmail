@@ -56,20 +56,20 @@
 #define LA_FLUSH        27
 #define LA_NOREWRITE	28
 #define LA_LIMIT	29
-#define LA_FOLDER	30
-#define LA_SMTPHOST	31
-#define LA_SMTPADDR     32
-#define LA_ANTISPAM	33
-#define LA_BATCHLIMIT	34
-#define LA_FETCHLIMIT	35
-#define LA_EXPUNGE	36
-#define LA_MDA		37
-#define LA_NETSEC	38
-#define LA_INTERFACE    39
+#define LA_WARNINGS	30
+#define LA_FOLDER	31
+#define LA_SMTPHOST	32
+#define LA_SMTPADDR     33
+#define LA_ANTISPAM	34
+#define LA_BATCHLIMIT	35
+#define LA_FETCHLIMIT	36
+#define LA_EXPUNGE	37
+#define LA_MDA		38
+#define LA_NETSEC	39
+#define LA_INTERFACE    40
 #define LA_MONITOR      41
 #define LA_CONFIGDUMP	42
 #define LA_YYDEBUG	43
-#define LA_WARNINGS	44
 
 /* options still left: CgGhHjJoORwWxXYz */
 static const char *shortoptions = 
@@ -111,6 +111,7 @@ static const struct option longoptions[] = {
   {"flush",	no_argument,	   (int *) 0, LA_FLUSH       },
   {"norewrite",	no_argument,	   (int *) 0, LA_NOREWRITE   },
   {"limit",	required_argument, (int *) 0, LA_LIMIT       },
+  {"warnings",	required_argument, (int *) 0, LA_WARNINGS    },
 
   {"folder",    required_argument, (int *) 0, LA_FOLDER	     },
   {"smtphost",	required_argument, (int *) 0, LA_SMTPHOST    },
@@ -134,8 +135,6 @@ static const struct option longoptions[] = {
   {"configdump",no_argument,	   (int *) 0, LA_CONFIGDUMP  },
 
   {"yydebug",	no_argument,	   (int *) 0, LA_YYDEBUG     },
-
-  {"warnings",	required_argument, (int *) 0, LA_WARNINGS   },
 
   {(char *) 0,  no_argument,       (int *) 0, 0              }
 };
