@@ -127,7 +127,7 @@ class Server:
 	    res = res + " interval " + `self.interval`
 	if self.envelope != ServerDefaults.envelope or self.envskip != ServerDefaults.envskip:
 	    if self.envskip:
-		res = res + " envelope " + self.envskip + " " + self.envelope
+		res = res + " envelope " + `self.envskip` + " " + self.envelope
 	    else:
 		res = res + " envelope " + self.envelope
 	if self.qvirtual:

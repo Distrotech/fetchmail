@@ -4,6 +4,7 @@
 
 * Added support for RFC2177 IDLE command extension of IMAP.
 * Updated fr.po.
+* Fixed a bug in fetchmailconfs handling of envelope skip prefixes.
 
 fetchmail-5.3.1 (Sun Mar  5 23:02:42 EST 2000), 18648 lines:
 
@@ -23,7 +24,7 @@ fetchmail-5.3.1 (Sun Mar  5 23:02:42 EST 2000), 18648 lines:
 * Resolved all current Debian bugs classed `important'; #43139, #44744, #44760,
   #44774, #43140, #50990.
 * Resolved Debian ordinary bugs #17769, #34383, #38303, #39732, #51674,
-  #53386, #53732, #58553, 
+  #53386, #53732, #58553.
 * Resolved Debian wishlist bug #26630.
 * Resolution of #59281 (still loops on Ctrl-C) involved a small change in
   behavior; SIGPIPE now terminates the current poll cycle.
