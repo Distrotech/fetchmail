@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.6\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2004-11-14 21:55+0100\n"
-"PO-Revision-Date: 2004-10-20 00:59+0200\n"
+"POT-Creation-Date: 2005-03-06 02:11+0100\n"
+"PO-Revision-Date: 2005-03-06 02:13+0100\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -136,43 +136,43 @@ msgstr " nicht gelöscht\n"
 msgid "fetchlimit %d reached; %d messages left on server %s account %s\n"
 msgstr "fetchlimit %d erreicht; %d Nachrichten übrig auf Server %s Konto %s\n"
 
-#: driver.c:874
+#: driver.c:875
 msgid "SIGPIPE thrown from an MDA or a stream socket error\n"
 msgstr "SIGPIPE geworfen von einem MDA oder Stream-Socket-Fehler\n"
 
-#: driver.c:881
+#: driver.c:882
 #, c-format
 msgid "timeout after %d seconds waiting to connect to server %s.\n"
 msgstr ""
 "Zeitüberschreitung nach %d Sekunden beim Warten auf Verbindung mit Server %"
 "s.\n"
 
-#: driver.c:885
+#: driver.c:886
 #, c-format
 msgid "timeout after %d seconds waiting for server %s.\n"
 msgstr "Zeitüberschreitung nach %d Sekunden beim Warten auf Server %s.\n"
 
-#: driver.c:889
+#: driver.c:890
 #, c-format
 msgid "timeout after %d seconds waiting for %s.\n"
 msgstr "Zeitüberschreitung nach %d Sekunden beim Warten auf %s.\n"
 
-#: driver.c:894
+#: driver.c:895
 #, c-format
 msgid "timeout after %d seconds waiting for listener to respond.\n"
 msgstr ""
 "Zeitüberschreitung nach %d Sekunden beim Warten Antwort des Lauschers.\n"
 
-#: driver.c:897
+#: driver.c:898
 #, c-format
 msgid "timeout after %d seconds.\n"
 msgstr "Zeitüberschreitung nach %d Sekunden.\n"
 
-#: driver.c:909
+#: driver.c:910
 msgid "Subject: fetchmail sees repeated timeouts"
 msgstr "Subject: fetchmail erlebt wiederholte Zeitüberschreitungen"
 
-#: driver.c:912
+#: driver.c:913
 #, c-format
 msgid ""
 "Fetchmail saw more than %d timeouts while attempting to get mail from %s@%"
@@ -181,7 +181,7 @@ msgstr ""
 "Fetchmail hat mehr als %d Zeitüberschreitungen erhalten beim Versuch, Mail "
 "von %s@%s abzuholen.\n"
 
-#: driver.c:916
+#: driver.c:917
 msgid ""
 "This could mean that your mailserver is stuck, or that your SMTP\n"
 "server is wedged, or that your mailbox file on the server has been\n"
@@ -198,99 +198,99 @@ msgstr ""
 "\n"
 "Fetchmail wird diese Mailbox nicht mehr abfragen, bis Sie es erneut starten\n"
 
-#: driver.c:944
+#: driver.c:946
 #, c-format
 msgid "pre-connection command failed with status %d\n"
 msgstr "Vor-Verbindungs-Befehl scheiterte mit Status %d\n"
 
-#: driver.c:975
+#: driver.c:977
 #, c-format
 msgid "couldn't find HESIOD pobox for %s\n"
 msgstr "konnte das HESIOD-Postfach für %s nicht finden\n"
 
-#: driver.c:997
+#: driver.c:999
 msgid "Lead server has no name.\n"
 msgstr "Erster Server hat keinen Namen.\n"
 
-#: driver.c:1020
+#: driver.c:1022
 #, c-format
 msgid "couldn't find canonical DNS name of %s (%s)\n"
 msgstr "konnte kanonischen DNS-Namen von %s (%s) nicht finden\n"
 
-#: driver.c:1057
+#: driver.c:1059
 msgid "internal inconsistency\n"
 msgstr "interne Inkonsistenz\n"
 
-#: driver.c:1067
+#: driver.c:1069
 #, c-format
 msgid "%s connection to %s failed"
 msgstr "%s Verbindung zu %s fehlgeschlagen"
 
-#: driver.c:1073
+#: driver.c:1075
 msgid "host is unknown."
 msgstr "Host ist unbekannt."
 
-#: driver.c:1076
+#: driver.c:1078
 msgid "name is valid but has no IP address."
 msgstr "Name ist gültig, hat aber keine IP-Adresse."
 
-#: driver.c:1079
+#: driver.c:1081
 msgid "unrecoverable name server error."
 msgstr "nicht behebbarer Nameserver-Fehler"
 
-#: driver.c:1081
+#: driver.c:1083
 msgid "temporary name server error."
 msgstr "temporärer Nameserver-Fehler"
 
-#: driver.c:1084
+#: driver.c:1086
 #, c-format
 msgid "unknown DNS error %d."
 msgstr "unbekannter DNS-Fehler %d."
 
-#: driver.c:1102
+#: driver.c:1104
 msgid "Subject: Fetchmail unreachable-server warning."
 msgstr "Subject: Fetchmail-Warnung: übergroße Nachrichten"
 
-#: driver.c:1104
+#: driver.c:1106
 #, c-format
 msgid "Fetchmail could not reach the mail server %s:"
 msgstr "Fetchmail konnte keine Mail von %s erhalten:"
 
-#: driver.c:1131 imap.c:367 pop3.c:411
+#: driver.c:1133 imap.c:367 pop3.c:411
 msgid "SSL connection failed.\n"
 msgstr "SSL-Verbindung fehlgeschlagen.\n"
 
-#: driver.c:1184
+#: driver.c:1186
 #, c-format
 msgid "Lock-busy error on %s@%s\n"
 msgstr "Lock-beschäftigt-Fehler bei %s@%s\n"
 
-#: driver.c:1188
+#: driver.c:1190
 #, c-format
 msgid "Server busy error on %s@%s\n"
 msgstr "Server-beschäftigt-Fehler bei %s@%s\n"
 
-#: driver.c:1193
+#: driver.c:1195
 #, c-format
 msgid "Authorization failure on %s@%s%s\n"
 msgstr "Authentifikationsfehlschlag bei %s@%s%s\n"
 
-#: driver.c:1196
+#: driver.c:1198
 msgid " (previously authorized)"
 msgstr " (vormals autorisiert)"
 
-#: driver.c:1217
+#: driver.c:1219
 #, c-format
 msgid "Subject: fetchmail authentication failed on %s@%s"
 msgstr "Subject: Fetchmail: Authentifikation fehlgeschlagen bei %s@%s"
 
-#: driver.c:1221
+#: driver.c:1223
 #, c-format
 msgid "Fetchmail could not get mail from %s@%s.\n"
 msgstr "Fetchmail konnte keine Mail von %s@%s erhalten.\n"
 
 #
-#: driver.c:1225
+#: driver.c:1227
 msgid ""
 "The attempt to get authorization failed.\n"
 "Since we have already succeeded in getting authorization for this\n"
@@ -322,7 +322,7 @@ msgstr ""
 "Wiederherstellung des Dienstes keine weiteren Meldungen gesendet."
 
 #
-#: driver.c:1240
+#: driver.c:1242
 msgid ""
 "The attempt to get authorization failed.\n"
 "This probably means your password is invalid, but some servers have\n"
@@ -344,164 +344,164 @@ msgstr ""
 "versuchen, eine Verbindung herzustellen. Es werden bis zur\n"
 "Wiederherstellung des Dienstes keine weiteren Meldungen gesendet."
 
-#: driver.c:1255
+#: driver.c:1257
 #, c-format
 msgid "Repoll immediately on %s@%s\n"
 msgstr "Sofortige erneute Abfrage von %s@%s\n"
 
-#: driver.c:1260
+#: driver.c:1262
 #, c-format
 msgid "Unknown login or authentication error on %s@%s\n"
 msgstr "Unbekannter Einlogg- oder Authentifikationsfehler bei %s@%s\n"
 
-#: driver.c:1284
+#: driver.c:1286
 #, c-format
 msgid "Authorization OK on %s@%s\n"
 msgstr "Authentifikation OK bei %s@%s\n"
 
-#: driver.c:1290
+#: driver.c:1292
 #, c-format
 msgid "Subject: fetchmail authentication OK on %s@%s"
 msgstr "Subject: Fetchmail: Authentifikation OK bei %s@%s"
 
-#: driver.c:1294
+#: driver.c:1296
 #, c-format
 msgid "Fetchmail was able to log into %s@%s.\n"
 msgstr "Fetchmail war in der Lage, sich bei %s@%s einzuloggen.\n"
 
 #
-#: driver.c:1298
+#: driver.c:1300
 msgid "Service has been restored.\n"
 msgstr "Der Dienst ist wieder hergestellt.\n"
 
-#: driver.c:1329
+#: driver.c:1331
 #, c-format
 msgid "selecting or re-polling folder %s\n"
 msgstr "Ordner %s wird gewählt oder erneut abgefragt\n"
 
-#: driver.c:1331
+#: driver.c:1333
 msgid "selecting or re-polling default folder\n"
 msgstr "Vorgabe-Ordner wird gewählt oder erneut abgefragt\n"
 
-#: driver.c:1343
+#: driver.c:1345
 #, c-format
 msgid "%s at %s (folder %s)"
 msgstr "%s bei %s (Ordner %s)"
 
-#: driver.c:1346 rcfile_y.y:401
+#: driver.c:1348 rcfile_y.y:401
 #, c-format
 msgid "%s at %s"
 msgstr "%s bei %s"
 
-#: driver.c:1351
+#: driver.c:1353
 #, c-format
 msgid "Polling %s\n"
 msgstr "Frage %s ab\n"
 
-#: driver.c:1355
+#: driver.c:1357
 #, c-format
 msgid "%d message (%d %s) for %s"
 msgid_plural "%d messages (%d %s) for %s"
 msgstr[0] "%d Nachricht (%d %s) für %s"
 msgstr[1] "%d Nachrichten (%d %s) für %s"
 
-#: driver.c:1358
+#: driver.c:1360
 msgid "seen"
 msgid_plural "seen"
 msgstr[0] "gesehene"
 msgstr[1] "gesehene"
 
-#: driver.c:1361
+#: driver.c:1363
 #, c-format
 msgid "%d message for %s"
 msgid_plural "%d messages for %s"
 msgstr[0] "%d Nachricht für %s"
 msgstr[1] "%d Nachrichten für %s"
 
-#: driver.c:1368
+#: driver.c:1370
 #, c-format
 msgid " (%d octets).\n"
 msgstr " (%d Oktetts).\n"
 
-#: driver.c:1374
+#: driver.c:1376
 #, c-format
 msgid "No mail for %s\n"
 msgstr "Keine Post für %s\n"
 
-#: driver.c:1407
+#: driver.c:1409
 msgid "bogus message count!"
 msgstr "ungültige Nachrichtenanzahl!"
 
-#: driver.c:1508
+#: driver.c:1510
 msgid "socket"
 msgstr "Socket"
 
-#: driver.c:1511
+#: driver.c:1513
 msgid "missing or bad RFC822 header"
 msgstr "fehlende oder fehlerhafte RFC822-Kopfzeile"
 
-#: driver.c:1514
+#: driver.c:1516
 msgid "MDA"
 msgstr "MDA"
 
-#: driver.c:1517
+#: driver.c:1519
 msgid "client/server synchronization"
 msgstr "Klient/Server-Synchronisation"
 
-#: driver.c:1520
+#: driver.c:1522
 msgid "client/server protocol"
 msgstr "Klient/Server-Protokoll"
 
-#: driver.c:1523
+#: driver.c:1525
 msgid "lock busy on server"
 msgstr "Lock auf Server beschäftigt"
 
-#: driver.c:1526
+#: driver.c:1528
 msgid "SMTP transaction"
 msgstr "SMTP-Transaktion"
 
-#: driver.c:1529
+#: driver.c:1531
 msgid "DNS lookup"
 msgstr "DNS-Nachschlag"
 
-#: driver.c:1532
+#: driver.c:1534
 msgid "undefined error\n"
 msgstr "undefinierter Fehler\n"
 
-#: driver.c:1543
+#: driver.c:1545
 #, c-format
 msgid "%s error while delivering to SMTP host %s\n"
 msgstr "%s-Fehler bei Auslieferung zu SMTP-Host %s\n"
 
-#: driver.c:1545
+#: driver.c:1547
 #, c-format
 msgid "%s error while fetching from %s\n"
 msgstr "%s-Fehler beim Abholen von %s\n"
 
-#: driver.c:1553
+#: driver.c:1555
 #, c-format
 msgid "post-connection command failed with status %d\n"
 msgstr "Nach-Verbindungs-Befehl scheiterte mit Status %d\n"
 
-#: driver.c:1574
+#: driver.c:1576
 msgid "Kerberos V4 support not linked.\n"
 msgstr "Kerberos-V4-Unterstützung nicht vorhanden.\n"
 
-#: driver.c:1582
+#: driver.c:1584
 msgid "Kerberos V5 support not linked.\n"
 msgstr "Kerberos-V5-Unterstützung nicht vorhanden.\n"
 
-#: driver.c:1593
+#: driver.c:1595
 #, c-format
 msgid "Option --flush is not supported with %s\n"
 msgstr "Option --flush ist mit %s nicht unterstützt\n"
 
-#: driver.c:1599
+#: driver.c:1601
 #, c-format
 msgid "Option --all is not supported with %s\n"
 msgstr "Option --all ist mit %s nicht unterstützt\n"
 
-#: driver.c:1607
+#: driver.c:1609
 #, c-format
 msgid "Option --limit is not supported with %s\n"
 msgstr "Option --limit ist mit %s nicht unterstützt\n"
@@ -2767,17 +2767,12 @@ msgstr "SMTP-Lauscher lehnte Adressen mit lokalem Empfänger ab: "
 msgid "writing message text\n"
 msgstr "Nachrichtentext wird geschrieben\n"
 
-#: uid.c:137
-#, c-format
-msgid "lstat: %s: %s\n"
-msgstr "lstat: %s: %s\n"
-
 #: uid.c:248
 #, c-format
 msgid "Old UID list from %s:"
 msgstr "Alte UID-Liste aus %s:"
 
-#: uid.c:253 uid.c:264 uid.c:518 uid.c:567
+#: uid.c:253 uid.c:264 uid.c:517 uid.c:567
 msgid " <empty>"
 msgstr " <leer>"
 
@@ -2785,12 +2780,12 @@ msgstr " <leer>"
 msgid "Scratch list of UIDs:"
 msgstr "Leere UID-Liste:"
 
-#: uid.c:512 uid.c:563
+#: uid.c:511 uid.c:563
 #, c-format
 msgid "Merged UID list from %s:"
 msgstr "Vereinigte UID-Liste aus %s:"
 
-#: uid.c:514
+#: uid.c:513
 #, c-format
 msgid "New UID list from %s:"
 msgstr "Neue UID-Liste aus %s:"
@@ -2812,9 +2807,29 @@ msgstr "verwerfe neue UID-Liste\n"
 msgid "Deleting fetchids file.\n"
 msgstr "Datei fetchids wird gelöscht.\n"
 
-#: uid.c:616
+#: uid.c:612
+#, c-format
+msgid "Error deleting %s: %s\n"
+msgstr "Fehler beim Löschen von %s: %s\n"
+
+#: uid.c:618
 msgid "Writing fetchids file.\n"
 msgstr "Datei fetchids wird geschrieben.\n"
+
+#: uid.c:637
+#, c-format
+msgid "Error writing to fetchids file %s, old file left in place.\n"
+msgstr "Fehler beim Schreiben in die UID-Datei %s, alte Datei belassen.\n"
+
+#: uid.c:641
+#, c-format
+msgid "Cannot rename fetchids file %s to %s: %s\n"
+msgstr "Kann UID-Datei %s nicht in %s umbennen: %s\n"
+
+#: uid.c:645
+#, c-format
+msgid "Cannot open fetchids file %s for writing: %s\n"
+msgstr "Kann UID-Datei %s nicht zum Schreiben öffnen: %s\n"
 
 #: xmalloc.c:33
 msgid "malloc failed\n"
@@ -2823,6 +2838,9 @@ msgstr "malloc fehlgeschlagen\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "realloc fehlgeschlagen\n"
+
+#~ msgid "lstat: %s: %s\n"
+#~ msgstr "lstat: %s: %s\n"
 
 #~ msgid "partial error message buffer overflow"
 #~ msgstr "Überlauf des Puffers für Teilmeldungen"
