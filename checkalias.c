@@ -131,15 +131,15 @@ int is_host_alias(const char *name, struct query *ctl)
 	char	*ep;
 
 	/*
-	 * Test is <= here because str_in_list() should have caught the
+	 * Test is >= here because str_in_list() should have caught the
 	 * equal-length case above.  Doing it this way guarantees that
 	 * ep[-1] is a valid reference.
 	 */
-	if (strlen(idl->id) <= namelen)
+	if (strlen(idl->id) >= namelen)
 	    continue;
-	ep = idl->id + (strlen(idl->id) - namelen);
+	ep = (char *)name + (namelen - strlen(idl->id));
 	/* a suffix led by . must match */
-	if (ep[-1] == '.' && !strcmp(ep, name))
+	if (ep[-1] == '.' && !strcmp(ep, idl->id))
 	    return(TRUE);
     }
 
