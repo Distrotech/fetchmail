@@ -41,7 +41,7 @@ gpg --detach-sign --armor fetchmail-$version.tar.gz
 EOF
 
 cat >index.html <<EOF
-<!doctype HTML public "-//W3O//DTD W3 HTML 3.2//EN">
+<!doctype HTML PUBLIC "-//W3O//DTD W3 HTML 3.2//EN">
 <HTML>
 <HEAD>
 <TITLE>Fetchmail Home Page</TITLE>
@@ -50,12 +50,12 @@ cat >index.html <<EOF
 <meta name="keywords" content="fetchmail, POP, POP3, IMAP, IMAP2bis, IMAP4, IMAP4rev1, ETRN, OTP, RPA"> 
 </HEAD>
 <BODY>
-<table width="100%" cellpadding=0><tr>
+<table width="100%" cellpadding=0 summary="Canned page header"><tr>
 <td width="30%">Back to
 <a href="http://$WWWVIRTUAL/~esr/software.html">Software</a>
 <td width="30%" align=center>Up to <a href="http://$WWWVIRTUAL/~esr/sitemap.html">Site Map</a>
 <td width="30%" align=right>$date
-</table>
+</tr></table>
 <HR>
 <center>
 <table border="10">
@@ -369,14 +369,15 @@ ftp://ftp.win.ne.jp/pub/network/mail/fetchmail</a>.
 <P>Fetchmail was a five-star Editor's Pick at Softlandindia.</P>
 
 <HR>
-<table width="100%" cellpadding=0><tr>
+<table width="100%" cellpadding=0 summary="Canned page footer"><tr>
 <td width="30%">Back to 
 <a href="http://$WWWVIRTUAL/~esr/software.html">Software</a>
 <td width="30%" align=center>Up to <a href="http://$WWWVIRTUAL/~esr/sitemap.html">Site Map</a>
 <td width="30%" align=right>$date
-</table>
+</tr></table>
 
-<P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
+<br clear="left">
+<ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
 </BODY>
 </HTML>
 EOF
