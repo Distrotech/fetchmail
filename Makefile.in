@@ -221,11 +221,12 @@ fetchmail-$(VERS).tar.gz: fetchmail-$(VERS).tar
 	gzip -f fetchmail-$(VERS).tar
 
 RPMROOT=/usr/src/redhat
+RPM = rpm
 RPMFLAGS = -ba
 rpm: fetchmail-$(VERS).tar.gz
 	cp fetchmail-$(VERS).tar.gz $(RPMROOT)/SOURCES;
 	$(srcdir)/specgen.sh $(VERS) $(PL) >$(RPMROOT)/SPECS/fetchmail.spec
-	cd $(RPMROOT)/SPECS; rpm $(RPMFLAGS) fetchmail.spec	
+	cd $(RPMROOT)/SPECS; $(RPM) $(RPMFLAGS) fetchmail.spec	
 
 # The automatically generated dependencies below may omit config.h
 # because it is included with ``#include <config.h>'' rather than
