@@ -15,7 +15,8 @@ features --
   messages too long for the local ESMTP listener will be rejected *before*
   they are passed to the ESMTP listener.
 
-* IMAP code now detevts IMAP4rev1 capabilities (RFC 2060) and uses them.
+* IMAP code now detects IMAP4rev1 capabilities (RFC 2060) and uses them.
+  (It will fall back to IMAP4 or IMAP2bis depending on what it sees.)
 
 bugs --
 
