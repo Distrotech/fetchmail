@@ -621,8 +621,8 @@ const static struct method imap =
 {
     "IMAP",		/* Internet Message Access Protocol */
     143,		/* standard IMAP2bis/IMAP4 port */
-    1,			/* this is a tagged protocol */
-    0,			/* no message delimiter */
+    TRUE,		/* this is a tagged protocol */
+    FALSE,		/* no message delimiter */
     imap_ok,		/* parse command response */
     imap_getauth,	/* get authorization */
     imap_getrange,	/* query range of messages */

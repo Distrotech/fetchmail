@@ -28,7 +28,7 @@ fetchmail-4.0 ():
 * Values of --limit, --fetchlimit, and --batchlimit in .fetchmailrc can now
   be overridden from the command line by specifying an explicit option of 0.
 * Architecture-independent RPM building.
-* Work with the MercuryP/NLM v1.31 POP3 daenon (thanks to Pavel Kankovsky)
+* Work with the MercuryP/NLM v1.31 POP3 daemon (thanks to Pavel Kankovsky).
 
 There are 258 people on the fetchmail-friends list.
 

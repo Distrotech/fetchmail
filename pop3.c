@@ -280,8 +280,8 @@ const static struct method pop3 =
 {
     "POP3",		/* Post Office Protocol v3 */
     110,		/* standard POP3 port */
-    0,			/* this is not a tagged protocol */
-    1,			/* this uses a message delimiter */
+    FALSE,		/* this is not a tagged protocol */
+    TRUE,		/* this uses a message delimiter */
     pop3_ok,		/* parse command response */
     pop3_getauth,	/* get authorization */
     pop3_getrange,	/* query range of messages */

@@ -118,8 +118,8 @@ const static struct method pop2 =
 {
     "POP2",				/* Post Office Protocol v2 */
     109,				/* standard POP2 port */
-    0,					/* this is not a tagged protocol */
-    0,					/* does not use message delimiter */
+    FALSE,				/* this is not a tagged protocol */
+    FALSE,				/* does not use message delimiter */
     pop2_ok,				/* parse command response */
     pop2_getauth,			/* get authorization */
     pop2_getrange,			/* query range of messages */
