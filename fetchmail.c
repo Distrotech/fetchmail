@@ -648,8 +648,9 @@ int main(int argc, char **argv)
 		querystatus = query_host(ctl);
 
 #ifdef POP3_ENABLE
-		if (!check_only)
-		    uid_end_query(ctl);
+		/* leave the UIDL state alone if there have been any errors */
+		if (!check_only && !querystatus)
+		    uid_swap_lists(ctl);
 #endif  /* POP3_ENABLE */
 
 		if (querystatus == PS_SUCCESS)

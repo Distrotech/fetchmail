@@ -424,7 +424,7 @@ void expunge_uids(struct query *ctl)
 	    idl->val.status.mark = UID_EXPUNGED;
 }
 
-void uid_end_query(struct query *ctl) 
+void uid_swap_lists(struct query *ctl) 
 /* finish a query */
 {
     /* debugging code */
