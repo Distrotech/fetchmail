@@ -27,7 +27,7 @@ The
 program can gather mail from servers supporting any of the common
 mail-retrieval protocols: POP2, POP3, IMAP2bis, and IMAP4.  It can
 also use the ESMTP ETRN extension.  (The RFCs describing all these
-protocols are listed at the end of this document.)
+protocols are listed at the end of this manual page.)
 .PP
 While
 .I fetchmail
@@ -41,9 +41,10 @@ port 25 on the machine it is running on (localhost), just as though it
 were being passed in over a normal TCP/IP link.  The mail will then be
 delivered locally via your system's MDA (Mail Delivery Agent, usually
 \fIsendmail\fR(8) but your system may use a different one such
-as \fIsmail\fR, \fImmdf\fR, or \fIqmail\fR).  All the delivery-control
-mechanisms (such as \fI.forward\fR files) normally available through
-your system MDA and local delivery agents will therefore work.
+as \fIsmail\fR, \fImmdf\fR, \fIexim\fR, or \fIqmail\fR).  All the
+delivery-control mechanisms (such as \fI.forward\fR files) normally
+available through your system MDA and local delivery agents will
+therefore work.
 .PP
 If the program
 .I fetchmailconf
@@ -69,14 +70,15 @@ declarations.
 .PP
 Each server name that you specify following the options on the
 command line will be queried.  If you don't specify any servers
-on the command line, each server in your 
+on the command line, each `poll' entry in your 
 .I ~/.fetchmailrc
 file will be queried.
 .PP
 To facilitate the use of
 .I fetchmail
-In scripts, pipelines, etc., it returns an appropriate exit code upon 
+in scripts and pipelines, it returns an appropriate exit code upon 
 termination -- see EXIT CODES below.
+.PP
 The following options modify the behavior of \fIfetchmail\fR.  It is
 seldom necessary to specify any of these once you have a
 working \fI.fetchmailrc\fR file set up.
@@ -94,9 +96,9 @@ in sections on AUTHENTICATION and DAEMON MODE which follow.
 Displays the version information for your copy of 
 .I fetchmail.
 No mail fetch is performed.
-Instead, for each server specified, all option information
+Instead, for each server specified, all the option information
 that would be computed if
-.I fetchmail.
+.I fetchmail
 were connecting to that server is displayed.  Any non-printables in
 passwords or other string names are shown as backslashed C-like
 escape sequences.  This option is useful for verifying that your
@@ -191,6 +193,7 @@ with RFC 1731 GSSAPI authentication.
 .IP ETRN
 Use the ESMTP ETRN option.
 .RE
+.P
 All these alternatives work in basically the same way (communicating
 with standard server daemons to fetch mail already delivered to a
 mailbox on the server) except ETRN.  The ETRN mode allows you to ask a
@@ -834,14 +837,14 @@ that defaults to [571, 550, 501] but can be set with the `antispam'
 option.  This is the
 .I only
 circumstance under which fetchmail ever discards mail.
-.P
+.PP
 If
 .I fetchmail
 is fetching from an IMAP server, the antispam response will be detected and
 the message rejected immediately after the headers have been fetched,
 without reading the message body.  Thus, you won't pay for downloading 
 spam message bodies.
-.P
+.PP
 Mail that is spam-blocked triggers an RFC1892 bounce message informing
 the originator that we do not accept mail from it.
 
@@ -857,8 +860,8 @@ Delete the message from the server.  Send bounce-mail to the originator.
 .TP 5
 553 (invalid sending domain)
 Delete the message from the server.  Send bounce-mail to the originator.
-.P
-Other errors trigger an attempt 
+.PP
+Other errors trigger bounce mail back to the originator.
 
 .SH THE RUN CONTROL FILE
 The preferred way to set up fetchmail is to write a
@@ -1689,7 +1692,7 @@ that of the last host queried.
 Eric S. Raymond <esr@snark.thyrsus.com>.  
 This program is descended from and replaces 
 .IR popclient , 
-by Carl Harris <ceharris@mal.com>; the internals are quite different, 
+by Carl Harris <ceharris@mal.com>; the internals have become quite different, 
 but some of its interface design is directly traceable to that
 ancestral program.
 
@@ -1744,7 +1747,7 @@ whichever of these is appropriate to wake it up.
 Enabling the `mimedecode' option (which defaults to off) may render
 invalid any PGP signatures attached to mail with quoted-printable headers.
 This bug will be fixed in a future version.
-.P
+.PP
 The RFC822 address parser used in multidrop mode chokes on some
 @-addresses that are technically legal but bizarre.  Strange uses of
 quoting and embedded comments are likely to confuse it.
@@ -1778,7 +1781,7 @@ http://www.tuxedo.org/~esr/fetchmail or do a WWW search for pages with
 `fetchmail' in their titles.
 
 .SH SEE ALSO
-elm(1), mail(1), sendmail(8), popd(8), imapd(8)
+mutt(1), elm(1), mail(1), sendmail(8), popd(8), imapd(8)
 .SH APPLICABLE STANDARDS
 .TP 5
 SMTP/ESMTP:
