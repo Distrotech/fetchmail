@@ -183,17 +183,11 @@ int main(int argc, char **argv)
     textdomain(PACKAGE);
 #endif
 
-    /* logging must be set up early in case we were restarted from exec */
-#if defined(HAVE_SYSLOG)
-    if (run.use_syslog)
-    {
-    	openlog(program_name, LOG_PID, LOG_MAIL);
-	report_init(-1);
-    }
-    else
-#endif
-	report_init((run.poll_interval == 0 || nodetach) && !run.logfile);
-
+    /*
+     * Note: because we can't initialize reporting before we  know whether
+     * syslog is supposed to be on, this message will go to stdout and
+     * be lost when running in background.
+     */
     if (outlevel >= O_VERBOSE)
     {
 	int i;
@@ -285,6 +279,17 @@ int main(int argc, char **argv)
     if (!(quitmode && argc == 2))
 	implicitmode = load_params(argc, argv, optind);
 
+#if defined(HAVE_SYSLOG)
+    /* logging should be set up early in case we were restarted from exec */
+    if (run.use_syslog)
+    {
+	openlog(program_name, LOG_PID, LOG_MAIL);
+	report_init(-1);
+    }
+    else
+#endif
+	report_init((run.poll_interval == 0 || nodetach) && !run.logfile);
+
     /* set up to do lock protocol */
 #define	FETCHMAIL_PIDFILE	"fetchmail.pid"
     if (!getuid()) {
@@ -363,11 +368,12 @@ int main(int argc, char **argv)
     /* perhaps we just want to check options? */
     if (versioninfo)
     {
-	report(stdout, _("Taking options from command line"));
-	if (access(rcfile, 0))
-	    report(stdout, "\n");
-	else
-	    report(stdout, _(" and %s\n"), rcfile);
+	int havercfile = access(rcfile, 0);
+
+	report(stdout, _("Taking options from command line%s%s\n"),
+				havercfile ? "" :  _(" and "),
+				havercfile ? "" : rcfile);
+
 	if (outlevel >= O_VERBOSE)
 	    report(stdout, _("Lockfile at %s\n"), tmpbuf);
 
