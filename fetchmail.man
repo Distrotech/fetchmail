@@ -1781,9 +1781,9 @@ preconnect command sets up the ssh.
 
 .nf
 poll mailhost.net via localhost port 1234 with proto pop3:
+	user esr is esr here
         preconnect "ssh -f -L 1234:mailhost.net:110
 		mailhost.net sleep 20 </dev/null >/dev/null";
-	user esr is esr here
 .fi
 
 .PP
