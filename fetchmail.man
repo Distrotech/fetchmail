@@ -1,7 +1,7 @@
 .\" For license terms, see the file COPYING in this directory.
-.TH fetchmail LOCAL
+.TH fetchmail 8
 .SH NAME
-fetchmail \- fetch mail from a POP or IMAP server
+fetchmail \- fetch mail from a POP, IMAP, or ETRN-capable ESMTP server
 
 .SH SYNOPSIS
 \fBfetchmail\fR [\fIoptions\fR] [\fImailserver...\fR]
@@ -20,7 +20,7 @@ The
 program can gather mail from servers supporting any of the common
 mail-retrieval protocols: POP2, POP3, IMAP2bis, and IMAP4.  It can
 also use the ESMTP ETRN extension.  (The RFCs describing all these
-protocols are listed at the end of this page.)
+protocols are listed at the end of this ducument.)
 .PP
 While
 .I fetchmail
@@ -32,11 +32,11 @@ agent for sites which refuse for security reasons to permit
 As each message is retrieved \fIfetchmail\fR normally delivers it via SMTP to
 port 25 on the machine it is running on (localhost), just as though it
 were being passed in over a normal TCP/IP link.  The mail will then be
-delivered locally via your system's MDA (Mail Delivery Agent, usually
+delivered locally via your system's MTA (Mail Delivery Agent, usually
 \fIsendmail\fR(8) but your system may use a different one such
 as \fIsmail\fR, \fImmdf\fR, or \fIqmail\fR).  All the delivery-control
 mechanisms (such as \fI.forward\fR files) normally available through
-your system MDA will therefore work.
+your system MTA and local delivery agents will therefore work.
 .PP
 The behavior of
 .I fetchmail
@@ -61,6 +61,11 @@ termination -- see EXIT CODES below.
 The following options modify the behavior of \fIfetchmail\fR.  It is
 seldom necessary to specify any of these once you have a
 working \fI.fetchmailrc\fR file set up.
+.PP
+Almost all options have a corresponding keyword which can be used to
+declare them in a 
+.I fetchmailrc
+file.
 .PP
 Some special options are not covered here, but are documented insttead
 in sections on AUTHENTICATION and DAEMON MODE which follows.
@@ -97,12 +102,14 @@ Verbose mode.  All control messages passed between
 and the mailserver are echoed to stderr.  Overrides --silent.
 .TP
 .B \-a, --all
+(Keyword: fetchall)
 Retrieve both old (seen) and new messages from the mailserver.  The
 default is to fetch only messages the server has not marked seen.
 Note that POP2 retrieval behaves as though --all is always on (see
 RETRIEVAL FAILURE MODES below) and this option does not work with ETRN.
 .TP
 .B \-k, --keep
+(Keyword: keep)
 Keep retrieved messages on the remote mailserver.  Normally, messages 
 are deleted from the folder on the mailserver after they have been retrieved.
 Specifying the 
@@ -122,6 +129,7 @@ before retrieving new messages. This option does not work with ETRN.
 .SS Protocol and Query Options
 .TP
 .B \-p, \--protocol proto
+(Keyword: proto[col])
 Specify the protocol to used when communicating with the remote 
 mailserver.  If no protocol is specified,
 .I fetchmail
@@ -157,17 +165,20 @@ client machine and begin forwarding any items addressed to your client
 machine in the server's queue of undelivered mail.
 .TP
 .B \-U, --uidl
+(Keyword: uidl)
 Force UIDL use (effective only with POP3).  Force client-side tracking
 of `newness' of messages.  Use with `keep' to use a mailbox as a baby
 news drop for a group of users; if the mailbox is periodically purged,
 every member will get a chance to read the message.
 .TP
 .B \-P, --port
+(Keyword: port)
 The  option permits you to specify a TCP/IP port to connect on. 
 This option will seldom be necessary as all the supported protocols have
 well-established default port numbers.
 .TP
 .B \-r folder, --folder folder
+(Keyword: folder[s])
 Causes a specified non-default mail folder on the mailserver (or
 comma-separated list of folders) to be retrieved.  The syntax of the
 folder name is server-dependent.  This option is not available under
@@ -175,6 +186,7 @@ POP3 or ETRN.
 .SS Delivery Control Options
 .TP
 .B \-S host, --smtphost host
+(Keyword: smtp[host])
 Specify a hunt list of hosts to forward mail to (one or more
 hostnames, comma-separated).  In ETRN mode, set the host that the
 mailserver is asked to ship mail to.  Hosts are tried in list order;
@@ -182,6 +194,7 @@ the first one that is up becomes the forwarding or ETRN target for the
 current run.
 .TP
 .B \-m, \--mda
+(Keyword: mda)
 You can force mail to be passed to an MDA directly (rather than
 forwarded to port 25) with the -mda or -m option.  If \fIfetchmail\fR
 is running as root, it sets its userid to that of the target user
@@ -196,6 +209,7 @@ down upon your head.
 .SS Resource Limit Control Options
 .TP
 .B \-l, --limit
+(Keyword: limit)
 Takes a maximum octet size argument.  Messages larger than this size
 will not be fetched, not be marked seen, and will be left on the
 server (in foreground sessions, the progress messages will note that
@@ -206,6 +220,7 @@ with daemon mode, as users would never receive a notification that
 messages were waiting.  This option does not work with ETRN.
 .TP
 .B -b, --batchlimit
+(Keyword: batchlimit)
 Specify the maximum number of messages that will be shipped to an SMTP
 listener before the connection is deliberately torn down and rebuilt
 (defaults to 0, meaning no limit).  An explicit --batchlimit of 0
@@ -221,6 +236,7 @@ nonzero size will prevent these delays.
 This option does not work with ETRN.
 .TP
 .B -B, --fetchlimit
+(Keyword: fetchlimit)
 Limit the number of messages accepted from a given server in a single
 poll.  By default there is no limit. An explicit --fetchlimit of 0
 overrides any limits set in your run control file.
@@ -228,6 +244,7 @@ This option does not work with ETRN.
 .SS Authentication Options
 .TP
 .B \-u name, --username name
+(Keyword: user[name])
 Specifies the user identification to be used when logging in to the mailserver.
 The appropriate user identification is both server and user-dependent.  
 The default is your login name on the client machine that is running 
@@ -235,6 +252,7 @@ The default is your login name on the client machine that is running
 See USER AUTHENTICATION below for a complete description.
 .TP
 .B \-I specification, --interface specification
+(Keyword: interface)
 Require that a specific interface device be up and have a specific local
 IP address (or range) before polling.  Frequently
 .I fetchmail
@@ -258,6 +276,7 @@ assumed (i.e. an exact match).  This option is currently only supported
 under Linux.
 .TP
 .B \-M interface, --monitor interface
+(Keyword: monitor)
 Daemon mode can cause transient links which are automatically taken down
 after a period of inactivity (e.g. PPP links) to remain up
 indefinitely.  This option identifies a system TCP/IP interface to be
@@ -266,12 +285,13 @@ no other activity has occurred on the link, then the poll will be
 skipped.  This option is currently only supported under Linux.
 .TP
 .B \-A, --auth
+(Keyword: auth[enticate])
 This option permits you to specify a preauthentication type (see USER
 AUTHENTICATION below for details).  The possible values are
 \&`\fBpassword\fR' and `\fBkerberos\fR' (or, for excruciating
 exactness, `\fBkerberos_v4\fR').  This option is provided
 primarily for developers; choosing KPOP protocol automatically selects
-Kerberos preauthentication, and all other alternatives use ordinary
+Kerberos preauthentication, and all other alternatives use
 password authentication (though APOP uses a generated one-time
 key as the password and IMAP-K4 uses RFC1731 Kerberos v4 authentication).
 This option does not work with ETRN.
@@ -288,6 +308,7 @@ Specify an alternate name for the .fetchids file used to save POP3
 UIDs. 
 .TP
 .B \-n, --norewrite
+(Keyword: no rewrite)
 Normally,
 .I fetchmail
 edits RFC-822 address headers (To, From, Cc, Bcc, and Reply-To) in
@@ -302,6 +323,7 @@ not a good idea to actually turn off rewrite.)
 When using ETRN, the rewrite option is ineffective.
 .TP
 .B -E, --envelope
+(Keyword: envelope)
 This option changes the header 
 .I fetchmail
 assumes will carry a copy of the mail's envelope address.  Normally
@@ -447,25 +469,28 @@ The
 .B -t
 or
 .B --timeout
-option allows you to set a server-nonresponse timeout in seconds.  If
-a mailserver does not send a greeting message or respond to commands for
-the given number of seconds, \fIfetchmail\fR will hang up on it.
-Without such a timeout \fIfetchmail\fR might hang up indefinitely
-trying to fetch mail from a down host.  This would be particularly
-annoying for a \fIfetchmail\fR running in background.
+option (keyword: timeout)allows you to set a server-nonresponse
+timeout in seconds.  If a mailserver does not send a greeting message
+or respond to commands for the given number of seconds,
+\fIfetchmail\fR will hang up on it.  Without such a timeout
+\fIfetchmail\fR might hang up indefinitely trying to fetch mail from a
+down host.  This would be particularly annoying for a \fIfetchmail\fR
+running in background.
 .PP
 The
 .B -L
 or
 .B --logfile
-option allows you to redirect status messages emitted while in daemon
-mode into a specified logfile (follow the option with the logfile name).
-The logfile is opened for append, so previous messages aren't deleted.
-This is primarily useful for debugging configurations.
+option (keyword: set logfile) allows you to redirect status messages
+emitted while in daemon mode into a specified logfile (follow the
+option with the logfile name).  The logfile is opened for append, so
+previous messages aren't deleted.  This is primarily useful for
+debugging configurations.
 .PP
 The
 .B --syslog
-option allows you to redirect status and error messages emitted to the
+option (keyword: syslog) allows you to redirect status and error
+messages emitted to the
 .IR syslog (3)
 system daemon if available.
 Messages are logged with an id of \fBfetchmail\fR, the facility \fBLOG_MAIL\fR,
@@ -670,7 +695,7 @@ Legal user options are
     fetchlimit
     syslog
 .PP
-The 'remotefolder' and 'smtphost' options can take a space- or
+The 'folder' and 'smtphost' options can take a space- or
 comma-separated list of names following them.
 .PP
 All options correspond to the obvious command-line arguments, except
@@ -1141,7 +1166,9 @@ opened in promiscuous mode, or (b) the intervening network link can be
 tapped.
 .PP
 Send comments, bug reports, gripes, and the like to Eric S. Raymond
-<esr@thyrsus.com>.
+<esr@thyrsus.com>.  An HTML FAQ is available at the fetchmail home
+page; surf to http://www.ccil.org/~esr/fetchmail or do a WWW search
+for pages with `fetchmail' in their titles.
 
 .SH SEE ALSO
 elm(1), mail(1), sendmail(8), popd(8), imapd(8)
