@@ -29,6 +29,8 @@ fetchmail-4.4.8 ():
       better validity checks for input numbers.  This fix only works on
       ANSI-C systems; old systems still use atoi.  
 
+There are 270 people on fetchmail-friends and 214 on fetchmail-announce.
+
 fetchmail-4.4.7 (Sat May 23 08:26:58 EDT 1998):
 * FEATURE FREEZE IS NOW IN EFFECT!  No new features until after 4.5.0.
 * Better workaround for TOP bounds-checking in qpopper 2.3+.
