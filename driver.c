@@ -550,15 +550,24 @@ static int readheaders(int sock,
 	 * addressed to multiple people on the client machine, there
 	 * will be one copy left in the box for each recipient.  Thus,
 	 * if the mail is addressed to N people, each recipient will
-	 * get N copies.
+	 * get N copies.  This is bad when N > 1.
 	 *
 	 * Foil this by suppressing all but one copy of a message with
-	 * a given Message-ID.  Note: This implementation only catches
-	 * runs of successive identical messages, but that should be
-	 * good enough. A more general implementation would have to store
+	 * a given Message-ID.  The accept_count test ensures that
+	 * multiple pieces of email with the same Message-ID, each
+	 * with a *single* addressee (the N == 1 case), won't be 
+	 * suppressed.
+	 *
+	 * Note: This implementation only catches runs of successive
+	 * messages with the same ID, but that should be good
+	 * enough. A more general implementation would have to store
+	 * ever-growing lists of seen message-IDs; in a long-running
+	 * daemon this would turn into a memory leak even if the 
+	 * implementation were perfect.
 	 * 
-	 * The accept_count test ensures that multiple pieces of identical 
-	 * email, each with a *single* addressee, won't be suppressed.
+	 * Don't mess with this code casually.  It would be way too easy
+	 * to break it in a way that blackholed mail.  Better to pass
+	 * the occasional duplicate than to do that...
 	 */
 	if (MULTIDROP(ctl) && !strncasecmp(line, "Message-ID:", 11))
 	{
