@@ -669,7 +669,8 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	else if (ctl->server.base_protocol->delete
 		 && !suppress_delete
 		 && ((msgcodes[num-1] >= 0 && !ctl->keep)
-		     || (msgcodes[num-1] == MSGLEN_OLD && ctl->flush)))
+		     || (msgcodes[num-1] == MSGLEN_OLD||
+			 msgcodes[num-1] == MSGLEN_TOOLARGE) && ctl->flush))
 	{
 	    (*deletions)++;
 	    if (outlevel > O_SILENT) 
