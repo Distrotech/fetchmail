@@ -129,22 +129,20 @@ int SockRead(int sock, char *buf, int len)
 	 */
 	readlen = 0;
 
-	/* return value of 0 is EOF, < 0 is error */
 	if ((n = recv(sock, bp, len, MSG_PEEK)) <= 0)
 	    return(-1);
 	if ((p = memchr(bp, '\n', n)) != NULL)
-	{
-	    if ((n = read(sock, bp, ++p - bp)) == -1)
-		return(-1);
-	    readlen += n;
-	    *p = '\0';
-	    return readlen;
-	}
+	    n = ++p - bp;
 	if ((n = read(sock, bp, n)) == -1)
 	    return(-1);
 	readlen += n;
 	bp += n;
 	len -= n;
+	if (p)
+	{
+	    *p = '\0';
+	    break;
+	}
     } while 
 	    (len);
     *bp = '\0';
