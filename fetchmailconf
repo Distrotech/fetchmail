@@ -226,6 +226,7 @@ class User:
         self.ssl = 0			# Enable Seccure Socket Layer
         self.sslkey = None		# SSL key filename
         self.sslcert = None		# SSL certificate filename
+        self.principal = None		# Kerberos principal
         self.properties = None		# Extension properties
 	User.typemap = (
 	    ('remote',      'String'),
@@ -258,6 +259,7 @@ class User:
 	    ('ssl',         'Boolean'),
 	    ('sslkey',      'String'),
 	    ('sslcert',     'String'),
+	    ('principal',     'String'),
             ('properties',  'String'))
 
     def __repr__(self):
@@ -318,6 +320,8 @@ class User:
 	    res = res + " sslkey " + `self.sslkey`
 	if self.sslcert and self.sslcert != UserDefaults.sslcert:
 	    res = res + " sslcert " + `self.sslcert`
+	if self.principal and self.principal != UserDefaults.principal:
+	    res = res + " principal " + `self.principal`
 	if self.expunge != UserDefaults.expunge:
 	    res = res + " expunge " + `self.expunge`
         res = res + "\n"
@@ -1474,6 +1478,11 @@ class UserEdit(Frame, MyWidget):
             LabeledEntry(sslwin, 'SSL certificate:',
 			 self.sslcert, '14').pack(side=TOP, fill=X)
             sslwin.pack(fill=X, anchor=N)
+
+        # Someday this should handle Kerberos 5 too
+        if 'imap-k4':
+            LabeledEntry(secwin, 'Principal:',
+                         self.principal, '12').pack(side=TOP, fill=X)
 
         names = Frame(leftwin, relief=RAISED, bd=5)
         Label(names, text="Local names").pack(side=TOP)

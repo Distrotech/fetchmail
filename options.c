@@ -79,6 +79,7 @@
 #endif
 
 #define LA_SHOWDOTS	53
+#define LA_PRINCIPAL	54
 
 /* options still left: CDgGhHjJoORwWxXYz */
 static const char *shortoptions = 
@@ -146,6 +147,8 @@ static const struct option longoptions[] = {
   {"sslkey",    required_argument, (int *) 0, LA_SSLKEY     },
   {"sslcert",   required_argument, (int *) 0, LA_SSLCERT    },
 #endif
+
+  {"principal", required_argument, (int *) 0, LA_PRINCIPAL },
 
 #if (defined(linux) && !INET6_ENABLE) || defined(__FreeBSD__)
   {"interface",	required_argument, (int *) 0, LA_INTERFACE   },
@@ -559,6 +562,10 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 #endif
 
+	case LA_PRINCIPAL:
+	    ctl->server.principal = xstrdup(optarg);
+	    break;
+
 	case 'y':
 	case LA_YYDEBUG:
 	    yydebug = TRUE;
@@ -629,6 +636,7 @@ struct query *ctl;	/* option record to be initialized */
 	P(_("  -t, --timeout     server nonresponse timeout\n"));
 	P(_("  -E, --envelope    envelope address header\n"));
 	P(_("  -Q, --qvirtual    prefix to remove from local user id\n"));
+	P(_("      --principal   mail service principal\n"));
 
 	P(_("  -u, --username    specify users's login on server\n"));
 	P(_("  -a, --all         retrieve old and new messages\n"));

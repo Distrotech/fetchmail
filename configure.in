@@ -343,7 +343,7 @@ then
     else
        LIBS="$LIBS -lkrb5 -lcrypto -lcom_err"
     fi
-elif test "$with_kerberos" != "no"; then
+elif test "$with_kerberos" != "no" -a "$with_kerberos5" != "no" ; then
     for dir in /usr/kerberos /usr/local/krb5 /usr/athena
     do
       if test -f "$dir/include/krb5.h"
@@ -437,7 +437,7 @@ then
   echo "Configuring kerberosIV for `uname`"
   CEFLAGS="$CEFLAGS -DKERBEROS_V4 -I/usr/include/kerberosIV"
   LIBS="$LIBS -lkrb -ldes"
-elif test -n "$with_kerberos" -a -n "$with_kerberos5" -a "$with_kerberos" != "no"
+elif test -n "$with_kerberos" -a -n "$with_kerberos5" -a "$with_kerberos" != "no" -a "$with_kerberos5" != "no"
 then
     CEFLAGS="$CEFLAGS -DKERBEROS_V4 -I$with_kerberos/include"
     LDEFLAGS="$LDEFLAGS -L$with_kerberos/lib"
@@ -448,7 +448,7 @@ then
     else
        LIBS="-lkrb4 -ldes425 $LIBS"
     fi
-elif test -n "$with_kerberos5" -a "$with_kerberos" != "no"
+elif test -n "$with_kerberos5" -a "$with_kerberos" != "no" -a "$with_kerberos5" != "no"
 then
     for dir in /usr/kerberos /usr/kerberosIV /usr/athena
     do

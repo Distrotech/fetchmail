@@ -1288,7 +1288,7 @@ static int readbody(int sock, struct query *ctl, flag forward, int len)
 
 #ifdef KERBEROS_V4
 int
-kerberos_auth (socket, canonical) 
+kerberos_auth (socket, canonical, principal) 
 /* authenticate to the server host using Kerberos V4 */
 int socket;		/* socket to server host */
 #if defined(__FreeBSD__) || defined(__OpenBSD__)
@@ -1296,6 +1296,7 @@ char *canonical;	/* server name */
 #else
 const char *canonical;	/* server name */
 #endif
+char *principal;
 {
     char * host_primary;
     KTEXT ticket;
@@ -1303,11 +1304,36 @@ const char *canonical;	/* server name */
     CREDENTIALS cred;
     Key_schedule schedule;
     int rem;
+    char * prin_copy = (char *) NULL;
+    char * prin = (char *) NULL;
+    char * inst = (char *) NULL;
+    char * realm = (char *) NULL;
+
+    if (principal != (char *)NULL && *principal)
+    {
+        char *cp;
+        prin = prin_copy = xstrdup(principal);
+	for (cp = prin_copy; *cp && *cp != '.'; ++cp)
+	    ;
+	if (*cp)
+	{
+	    *cp++ = '\0';
+	    inst = cp;
+	    while (*cp && *cp != '@')
+	        ++cp;
+	    if (*cp)
+	    {
+	        *cp++ = '\0';
+	        realm = cp;
+	    }
+	}
+    }
   
     xalloca(ticket, KTEXT, sizeof (KTEXT_ST));
-    rem = (krb_sendauth (0L, socket, ticket, "pop",
-			 canonical,
-			 ((char *) (krb_realmofhost (canonical))),
+    rem = (krb_sendauth (0L, socket, ticket,
+			 prin ? prin : "pop",
+			 inst ? inst : canonical,
+			 realm ? realm : ((char *) (krb_realmofhost (canonical))),
 			 ((unsigned long) 0),
 			 (&msg_data),
 			 (&cred),
@@ -1315,6 +1341,10 @@ const char *canonical;	/* server name */
 			 ((struct sockaddr_in *) 0),
 			 ((struct sockaddr_in *) 0),
 			 "KPOPV0.1"));
+    if (prin_copy)
+    {
+        free(prin_copy);
+    }
     if (rem != KSUCCESS)
     {
 	report(stderr, _("kerberos error %s\n"), (krb_get_err_text (rem)));
@@ -1735,7 +1765,8 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	if (ctl->server.preauthenticate == A_KERBEROS_V4)
 	{
 	    set_timeout(mytimeout);
-	    ok = kerberos_auth(mailserver_socket, ctl->server.truename);
+	    ok = kerberos_auth(mailserver_socket, ctl->server.truename,
+			       ctl->server.principal);
 	    set_timeout(0);
  	    if (ok != 0)
 		goto cleanUp;

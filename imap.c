@@ -608,8 +608,10 @@ static int do_gssauth(int sock, char *hostname, char *username)
     SockWrite(sock, buf1, strlen(buf1));
 
     /* we should be done. Get status and finish up */
-    if (result = gen_recv(sock, buf1, sizeof buf1))
-        return result;
+    do {
+	if (result = gen_recv(sock, buf1, sizeof buf1))
+           return result;
+    } while(strncmp(buf1, tag, strlen(tag)) != 0);
     if (strstr(buf1, "OK")) {
         /* flush security context */
         if (outlevel >= O_DEBUG)

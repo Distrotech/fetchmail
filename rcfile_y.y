@@ -73,6 +73,7 @@ extern char * yytext;
 %token DROPSTATUS DROPDELIVERED
 %token DNS SERVICE PORT UIDL INTERVAL MIMEDECODE IDLE CHECKALIAS 
 %token SSL SSLKEY SSLCERT
+%token PRINCIPAL
 
 %%
 
@@ -148,6 +149,7 @@ serv_option	: AKA alias_list
 					    current.server.port = KPOP_PORT;
 #endif /* INET6_ENABLE */
 					}
+		| PRINCIPAL STRING	{current.server.principal = xstrdup($2);}
 		| PROTOCOL SDPS		{
 #ifdef SDPS_ENABLE
 					    current.server.protocol = P_POP3;
@@ -483,6 +485,7 @@ static void reset_server(const char *name, int skip)
     current.smtp_socket = -1;
     current.server.pollname = xstrdup(name);
     current.server.skip = skip;
+    current.server.principal = (char *)NULL;
 }
 
 

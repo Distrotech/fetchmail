@@ -291,6 +291,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 
 	    stringdump("plugin", ctl->server.plugin);
 	    stringdump("plugout", ctl->server.plugout);
+	    stringdump("principal", ctl->server.principal);
 
 	    indent(0);
 	    fputs("'users': ", stdout);

@@ -90,6 +90,7 @@ ssh		{ SETSTATE(0); return SSH; }
 timeout		{ return TIMEOUT;}
 envelope	{ return ENVELOPE; }
 qvirtual	{ return QVIRTUAL; }
+principal	{ return PRINCIPAL; }
 
 user(name)?	{SETSTATE(NAME); return USERNAME; }
 pass(word)?	{SETSTATE(NAME); return PASSWORD; }

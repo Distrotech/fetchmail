@@ -207,6 +207,7 @@ struct hostdata		/* shared among all user connections to given server */
     flag sdps;				/* use Demon Internet SDPS *ENV */
 #endif /* SDPS_ENABLE */
     flag checkalias;                  	/* resolve aliases by comparing IPs? */
+    char *principal;			/* Kerberos principal for mail service */
 
 
 #if defined(linux) || defined(__FreeBSD__)

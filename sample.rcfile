@@ -27,6 +27,7 @@
 #   uidl
 #   no uidl
 #   port                      -- must be followed by a TCP/IP port number
+#   principal                 -- must be followed by a principal name
 #   ssl
 #   sslkeyfile                -- must be followed by path to private key file
 #   sslcertfile               -- must be followed by path to certificate file

@@ -842,6 +842,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(server.dns);
     FLAG_MERGE(server.checkalias);
     FLAG_MERGE(server.uidl);
+    FLAG_MERGE(server.principal);
 
 #if defined(linux) || defined(__FreeBSD__)
     FLAG_MERGE(server.interface);
@@ -1571,6 +1572,9 @@ static void dump_params (struct runctl *runp,
 	    printf(_("  Kerberos V5 preauthentication enabled.\n"));
 	else if (ctl->server.preauthenticate == A_SSH)
 	    printf(_("  End-to-end encryption assumed.\n"));
+	if (ctl->server.principal != (char *) NULL) {
+	    printf(_("  Mail service principal is: %s\n"), ctl->server.principal);
+	}
 #ifdef	SSL_ENABLE
 	if (ctl->use_ssl)
 	    printf("  SSL encrypted sessions enabled.\n");

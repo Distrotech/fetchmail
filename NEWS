@@ -2,9 +2,20 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
-* Chip Salzenberg's patch to prevent wilcards in Common Names from causing
+fetchmail-5.5.5 (Sat Nov 11 14:22:24 EST 2000), 19563 lines:
+
+* Chip Salzenberg's patch to prevent wildcards in Common Names from causing
   spurious error messages (resolved Debian bug #75011).
 * Added --showdots option by Thomas Jarosch <tomj@gmx.de>.
+* Added --principal option from R. Lindsay Todd" <toddr@rpi.edu>.
+* Spanish-language update from Javier Kohen.
+* Nalin Dahyabai's fix to handle untagged responses during imap-gss
+  authentication.
+* Koyama Mituru's patch for improved spam handling under qmail; checks
+  for a 553 reponse to RCPT TO.
+* Added FAQ item F5 of %h and  %p interpolation from Matthias Andree.
+
+There are 279 people on fetchmail-friends and 568 on fetchmail-announce.
 
 fetchmail-5.5.5 (Tue Oct 17 17:50:46 EDT 2000), 19523 lines:
 
