@@ -33,6 +33,7 @@ AC_SUBST(LIBOBJS)
 
 AC_CHECK_LIB(socket,socket)
 AC_CHECK_LIB(nsl,inet_addr)
+AC_CHECK_LIB(resolv,res_search)
 
 AC_CHECK_FUNC(strcasecmp, AC_DEFINE(HAVE_STRCASECMP), 
               [EXTRASRC="$EXTRASRC \$(srcdir)/strcasecmp.c"
