@@ -128,16 +128,25 @@ test "$with_POP2" = "yes" && AC_DEFINE(POP2_ENABLE)
 AC_ARG_WITH(kerberos,
 	[  --with-kerberos=DIR  point fetchmail compilation at a Kerberos directory])
 
-for dir in $with_kerberos /usr/kerberos /usr/kerberosIV /usr/athena
-do
-  if test -f "$dir/include/krb.h"
-  then
-    CFLAGS="$CFLAGS -DKERBEROS_V4 -I$dir/include"
+# The "then" arm (nonempty $with_kerberos) is kind of a crock.  It works for
+# configuring the BSD/OS Kerberos IV support, though. 
+if test -n "$with_kerberos"
+then
+    CFLAGS="$CFLAGS -DKERBEROS_V4 -I$with_kerberos"
     LDFLAGS="$LDFLAGS -L$dir/lib"
     LIBS="$LIBS -lkrb -ldes"
-    break
-  fi
-done
+else
+    for dir in /usr/kerberos /usr/kerberosIV /usr/athena
+    do
+      if test -f "$dir/include/krb.h"
+      then
+        CFLAGS="$CFLAGS -DKERBEROS_V4 -I$dir/include"
+        LDFLAGS="$LDFLAGS -L$dir/lib"
+        LIBS="$LIBS -lkrb -ldes"
+        break
+      fi
+    done
+fi
 
 AC_OUTPUT(Makefile, [
 # Makefile uses this timestamp file to know when to remake Makefile,
