@@ -482,15 +482,15 @@ This will take you to a site configuration dialogue.
 class ControlEdit(Frame):
     def postControls(self):
 	self.poll_interval = StringVar(self)
-	self.poll_interval.set(`self.controls.poll_interval`)
+	self.poll_interval.set(`self.configuration.poll_interval`)
 	self.syslog = BooleanVar(self)
-	self.syslog.set(self.controls.syslog)
+	self.syslog.set(self.configuration.syslog)
 	self.logfile = StringVar(self)
-	if self.controls.logfile: self.logfile.set(self.controls.logfile);
+	if self.configuration.logfile: self.logfile.set(self.configuration.logfile);
 	self.idfile = StringVar(self)
-	if self.controls.idfile: self.idfile.set(self.controls.idfile);
+	if self.configuration.idfile: self.idfile.set(self.configuration.idfile);
 	self.invisible = BooleanVar(self)
-	self.invisible.set(self.controls.invisible)
+	self.invisible.set(self.configuration.invisible)
 
     def expertEdit(self):
 	gf = Frame(self, relief=RAISED, bd = 5)
@@ -534,16 +534,16 @@ class ControlEdit(Frame):
 	gf.pack(fill=X)
 
     def GatherControls(self):
-	self.controls.poll_interval = self.poll_interval.get()
-	self.controls.logfile = self.logfile.get()
-	self.controls.idfile = self.idfile.get()
-	self.controls.syslog = self.syslog.get()
-	self.controls.invisible = self.invisible.get()
+	self.configuration.poll_interval = self.poll_interval.get()
+	self.configuration.logfile = self.logfile.get()
+	self.configuration.idfile = self.idfile.get()
+	self.configuration.syslog = self.syslog.get()
+	self.configuration.invisible = self.invisible.get()
 
     def save(self):
 	self.GatherControls()
 	sys.stdout.write("# Configuration created %s\n" % time.ctime(time.time()))
-	sys.stdout.write(`self.controls`)
+	sys.stdout.write(`self.configuration`)
 	self.quit()
 
 #
@@ -1172,9 +1172,10 @@ if __name__ == '__main__':
 	    copy_instance(Newuser, user)
 	    Newsite.users.append(Newuser)
 
-    # Temporary for debugging:
-    print "This is a dump of the configuration we read:\n" + `Configuration`
-    sys.exit(0)
+    # We may want to display the configuration and quit
+    if len(sys.argv) > 1 and sys.argv[1] == '-d':
+        print "This is a dump of the configuration we read:\n"+`Configuration`
+        sys.exit(0)
 
     # OK, now run the configuration edit
     MainWindow().mainloop()
