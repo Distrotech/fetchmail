@@ -1010,13 +1010,13 @@ static int readheaders(int sock,
 	    strcat(errhd, _("SMTP listener rejected local recipient addresses: "));
 	    errlen = strlen(errhd);
 	    for (idp = msgblk.recipients; idp; idp = idp->next)
-		if (idp->val.status.mark == XMIT_ANTISPAM)
+		if (idp->val.status.mark == XMIT_RCPTBAD)
 		    errlen += strlen(idp->id) + 2;
 
 	    xalloca(errmsg, char *, errlen+3);
 	    (void) strcpy(errmsg, errhd);
 	    for (idp = msgblk.recipients; idp; idp = idp->next)
-		if (idp->val.status.mark == XMIT_ANTISPAM)
+		if (idp->val.status.mark == XMIT_RCPTBAD)
 		{
 		    strcat(errmsg, idp->id);
 		    if (idp->next)

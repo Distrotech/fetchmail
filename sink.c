@@ -687,7 +687,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		else
 		{
 		    (*bad_addresses)++;
-		    idp->val.status.mark = XMIT_ANTISPAM;
+		    idp->val.status.mark = XMIT_RCPTBAD;
 		    error(0, 0, 
 			  _("%cMTP listener doesn't like recipient address `%s'"),
 			  ctl->listener, addr);

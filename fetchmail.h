@@ -370,9 +370,9 @@ int gen_transact ();
 extern int phase;
 
 /* mark values for name lists */
-#define XMIT_ACCEPT		1
-#define XMIT_REJECT		2
-#define XMIT_ANTISPAM		3
+#define XMIT_ACCEPT	1	/* accepted; matches local domain or name */
+#define XMIT_REJECT	2	/* rejected; no match */
+#define XMIT_RCPTBAD	3	/* SMTP listener rejected the name */ 
 
 /* sink.c: forwarding */
 int stuffline(struct query *, char *);

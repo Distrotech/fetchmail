@@ -5,8 +5,9 @@ fetchmail-4.7.0 ():
 * Rob Funk's old-message-check optimization.
 * Fix an error in the logic for detecting when all connections are wedged.
 * Unwedge connections on wakeup.
+* Fix Ken Estes's LMTP coredump error.
 
-There are 244 people on fetchmail-friends and 315 on fetchmail-announce.
+There are 243 people on fetchmail-friends and 322 on fetchmail-announce.
 
 fetchmail-4.6.9 (Tue Dec  1 14:46:19 EST 1998):
 * Better RFC822 conformance in fetchmail trace headers.
@@ -36,7 +37,7 @@ There are 247 people on fetchmail-friends and 309 on fetchmail-announce.
 fetchmail-4.6.7 (Sat Nov 21 13:59:47 EST 1998):
 * Gerald Britton's patches to enable Hesiod support.
 * Postmaster option fix from Bill Metzenthen <billm@melbpc.org.au>.
-* Socks library support forom Guiseppe Guerini.
+* Socks library support from Guiseppe Guerini.
 * Notification mail is now sent to the user on 20 consecutive timeouts.
 
 There are 247 people on fetchmail-friends and 308 on fetchmail-announce.
