@@ -35,18 +35,6 @@ put history.html
 close
 echo "Upload to tuxedo complete"
 
-# Next, upload to the ftp site
-open locke.ccil.org
-cd ~ftp/pub/esr/fetchmail
-put fetchmail-${version}.tar.gz
-put fetchmail-${version}-1.i386.rpm
-put fetchmail-${version}-1.src.rpm
-put README
-put FAQ
-put FEATURES
-close
-echo "Upload to locke complete"
-
 # Next, upload to Metalab
 open -u anonymous,esr@thyrsus.com metalab.unc.edu
 cd incoming/Linux 
