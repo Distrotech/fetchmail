@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include <string.h>
 #include "fetchmail.h"
+#include "socket.h"
 #include "smtp.h"
 
 int smtp_response;	/* numeric value of SMTP response code */
@@ -23,7 +24,7 @@ int SMTP_helo(FILE *sockfp,char *host)
 {
   int ok;
 
-  fprintf(sockfp,"HELO %s\r\n", host);
+  SockPrintf(sockfp,"HELO %s\r\n", host);
   if (outlevel == O_VERBOSE)
       error(0, 0, "SMTP> HELO %s", host);
   ok = SMTP_ok(sockfp);
@@ -35,7 +36,7 @@ int SMTP_from(FILE *sockfp, char *from)
 {
   int ok;
 
-  fprintf(sockfp,"MAIL FROM:<%s>\r\n", from);
+  SockPrintf(sockfp,"MAIL FROM:<%s>\r\n", from);
   if (outlevel == O_VERBOSE)
       error(0, 0, "SMTP> MAIL FROM:<%s>", from);
   ok = SMTP_ok(sockfp);
@@ -47,7 +48,7 @@ int SMTP_rcpt(FILE *sockfp, char *to)
 {
   int ok;
 
-  fprintf(sockfp,"RCPT TO:<%s>\r\n", to);
+  SockPrintf(sockfp,"RCPT TO:<%s>\r\n", to);
   if (outlevel == O_VERBOSE)
       error(0, 0, "SMTP> RCPT TO:<%s>", to);
   ok = SMTP_ok(sockfp);
@@ -59,7 +60,7 @@ int SMTP_data(FILE *sockfp)
 {
   int ok;
 
-  fprintf(sockfp,"DATA\r\n");
+  SockPrintf(sockfp,"DATA\r\n");
   if (outlevel == O_VERBOSE)
       error(0, 0, "SMTP> DATA");
   ok = SMTP_ok(sockfp);
@@ -71,7 +72,7 @@ int SMTP_quit(FILE *sockfp)
 {
   int ok;
 
-  fprintf(sockfp,"QUIT\r\n");
+  SockPrintf(sockfp,"QUIT\r\n");
   if (outlevel == O_VERBOSE)
       error(0, 0, "SMTP> QUIT");
   ok = SMTP_ok(sockfp);
@@ -83,7 +84,7 @@ int SMTP_eom(FILE *sockfp)
 {
   int ok;
 
-  fprintf(sockfp,".\r\n");
+  SockPrintf(sockfp,".\r\n");
   if (outlevel == O_VERBOSE)
       error(0, 0, "SMTP>. (EOM)");
   ok = SMTP_ok(sockfp);
@@ -95,7 +96,7 @@ int SMTP_ok(FILE *sockfp)
 {
     char buf[SMTPBUFSIZE], *ip;
   
-    while ((ip = fgets(buf, sizeof(buf)-1, sockfp)))
+    while ((ip = SockGets(buf, sizeof(buf)-1, sockfp)))
     {
 	int  n = strlen(ip);
 

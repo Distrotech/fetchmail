@@ -17,6 +17,7 @@
 #endif
  
 #include  "fetchmail.h"
+#include  "socket.h"
 
 #define PROTOCOL_ERROR	{error(0, 0, "protocol error"); return(PS_ERROR);}
 
@@ -29,7 +30,7 @@ int pop3_ok (FILE *sockfp, char *argbuf)
     char buf [POPBUFSIZE+1];
     char *bufp;
 
-    if (fgets(buf, sizeof(buf), sockfp)) {
+    if (SockGets(buf, sizeof(buf), sockfp)) {
 	if (buf[strlen(buf)-1] == '\n')
 	    buf[strlen(buf)-1] = '\0';
 	if (buf[strlen(buf)-1] == '\r')
@@ -168,7 +169,7 @@ static int pop3_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
 		int	num;
 
 		*newp = 0;
- 		while (fgets(buf, sizeof(buf), sockfp))
+ 		while (SockGets(buf, sizeof(buf), sockfp))
 		{
 		    if (buf[strlen(buf)-1] == '\n')
 			buf[strlen(buf)-1] = '\0';
@@ -205,7 +206,7 @@ static int pop3_getsizes(FILE *sockfp, int count, int *sizes)
     {
 	char buf [POPBUFSIZE+1];
 
-	while (fgets(buf, sizeof(buf), sockfp))
+	while (SockGets(buf, sizeof(buf), sockfp))
 	{
 	    int num, size;
 

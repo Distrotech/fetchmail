@@ -14,6 +14,7 @@
 #include  <stdlib.h>
 #endif
 #include  "fetchmail.h"
+#include  "socket.h"
 
 static int count, seen, recent, unseen, imap4;
 
@@ -24,7 +25,7 @@ int imap_ok (FILE *sockfp,  char *argbuf)
 
     seen = 0;
     do {
-	if (!fgets(buf, sizeof(buf), sockfp))
+	if (!SockGets(buf, sizeof(buf), sockfp))
 	    return(PS_SOCKET);
 	if (buf[strlen(buf)-1] == '\n')
 	    buf[strlen(buf)-1] = '\0';
@@ -121,7 +122,7 @@ static int imap_getsizes(FILE *sockfp, int count, int *sizes)
     char buf [POPBUFSIZE+1];
 
     gen_send(sockfp, "FETCH 1:%d RFC822.SIZE", count);
-    while (fgets(buf, sizeof(buf), sockfp))
+    while (SockGets(buf, sizeof(buf), sockfp))
     {
 	int num, size;
 
@@ -172,7 +173,7 @@ static int imap_fetch(FILE *sockfp, int number, int *lenp)
 
     /* looking for FETCH response */
     do {
-	if (!fgets(buf, sizeof(buf), sockfp))
+	if (!SockGets(buf, sizeof(buf), sockfp))
 	    return(PS_SOCKET);
     } while
 	    (sscanf(buf+2, "%d FETCH (RFC822 {%d}", &num, lenp) != 2);
@@ -188,7 +189,7 @@ static int imap_trail(FILE *sockfp, struct query *ctl, int number)
 {
     char buf [POPBUFSIZE+1];
 
-    if (!fgets(buf, sizeof(buf), sockfp))
+    if (!SockGets(buf, sizeof(buf), sockfp))
 	return(PS_SOCKET);
     else
 	return(0);

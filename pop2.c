@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #endif
 #include  "fetchmail.h"
+#include  "socket.h"
 
 static int pound_arg, equal_arg;
 
@@ -22,7 +23,7 @@ int pop2_ok (FILE *sockfp, char *argbuf)
     char buf [POPBUFSIZE+1];
 
     pound_arg = equal_arg = -1;
-    if (fgets(buf, sizeof(buf), sockfp)) {
+    if (SockGets(buf, sizeof(buf), sockfp)) {
 	if (buf[strlen(buf)-1] == '\n')
 	    buf[strlen(buf)-1] = '\0';
 	if (buf[strlen(buf)-1] == '\r')

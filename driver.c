@@ -42,6 +42,7 @@
 #endif /* KERBEROS_V4 */
 #include  "socket.h"
 #include  "fetchmail.h"
+#include  "socket.h"
 #include  "smtp.h"
 
 /* BSD portability hack...I know, this is an ugly place to put it */
@@ -279,7 +280,7 @@ static FILE *smtp_open(struct query *ctl)
     /* if no socket to this host is already set up, try to open one */
     if (ctl->smtp_sockfp == (FILE *)NULL)
     {
-	if ((ctl->smtp_sockfp = sockopen(ctl->smtphost, SMTP_PORT)) == (FILE *)NULL)
+	if ((ctl->smtp_sockfp = SockOpen(ctl->smtphost, SMTP_PORT)) == (FILE *)NULL)
 	    return((FILE *)NULL);
 	else if (SMTP_ok(ctl->smtp_sockfp) != SM_OK
 		 || SMTP_helo(ctl->smtp_sockfp, ctl->servernames->id) != SM_OK)
@@ -290,26 +291,6 @@ static FILE *smtp_open(struct query *ctl)
     }
 
     return(ctl->smtp_sockfp);
-}
-
-static int SockGets(char *buf, int len, FILE *sockfp)
-/* get a LF-terminated line, removing \r characters */
-{
-    int rdlen = 0;
-
-    while (--len)
-    {
-        if ((*buf = fgetc(sockfp)) == EOF)
-            return -1;
-        else
-	    rdlen++;
-        if (*buf == '\n')
-            break;
-        if (*buf != '\r') /* remove all CRs */
-            buf++;
-    }
-    *buf = 0;
-    return rdlen;
 }
 
 static int gen_readmsg (sockfp, len, delimited, ctl)
@@ -337,9 +318,16 @@ struct query *ctl;	/* query control record */
     oldlen = 0;
     while (delimited || len > 0)
     {
-	if ((n = SockGets(buf,sizeof(buf),sockfp)) < 0)
+	if (!SockGets(buf,sizeof(buf),sockfp))
 	    return(PS_SOCKET);
+	n = strlen(buf);
 	vtalarm(ctl->timeout);
+
+	/* squeeze out all carriage returns */
+	for (fromhdr = tohdr = buf; *fromhdr; fromhdr++)
+	    if (*fromhdr != '\r' && *fromhdr != '\n')
+		*tohdr++ = *fromhdr;
+	*tohdr = '\0';
 
 	/* write the message size dots */
 	if (n > 0)
@@ -664,8 +652,10 @@ struct query *ctl;	/* query control record */
 
 	    /* write all the headers */
 	    n = 0;
-	    if (sinkfp)
+	    if (ctl->mda[0])
 		n = fwrite(headers, 1, oldlen, sinkfp);
+	    else if (sinkfp)
+		n = SockWrite(headers, 1, oldlen, sinkfp);
 
 	    if (n < 0)
 	    {
@@ -749,8 +739,10 @@ struct query *ctl;	/* query control record */
 
 	/* ship out the text line */
 	n = 0;
-	if (sinkfp)
+	if (ctl->mda[0])
 	    n = fwrite(bufp, 1, strlen(bufp), sinkfp);
+	else if (sinkfp)
+	    n = SockWrite(bufp, 1, strlen(bufp), sinkfp);
 
 	if (!ctl->mda[0])
 	    free(bufp);
@@ -902,7 +894,7 @@ const struct method *proto;	/* protocol method table */
 	FILE *sockfp;
 
 	/* open a socket to the mail server */
-	if ((sockfp = sockopen(ctl->servernames->id,
+	if ((sockfp = SockOpen(ctl->servernames->id,
 			     ctl->port ? ctl->port : protocol->port)) == NULL)
 	{
 	    error(0, errno, "connecting to host");
@@ -1191,8 +1183,7 @@ va_dcl
     va_end(ap);
 
     strcat(buf, "\r\n");
-    fputs(buf, sockfp);
-    fflush(sockfp);	/* sockfp should be linebuffered, but let's be sure */
+    SockWrite(buf, 1, strlen(buf), sockfp);
 
     if (outlevel == O_VERBOSE)
     {
@@ -1234,8 +1225,7 @@ va_dcl
     va_end(ap);
 
     strcat(buf, "\r\n");
-    fputs(buf, sockfp);
-    fflush(sockfp);	/* sockfp should be linebuffered, but let's be sure */
+    SockWrite(buf, 1, strlen(buf), sockfp);
 
     if (outlevel == O_VERBOSE)
     {
