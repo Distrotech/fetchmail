@@ -527,7 +527,7 @@ int main (int argc, char **argv)
 #endif  /* POP3_ENABLE */
 		}
 		else
-		    syslog(LOG_INFO,"Query status=%d", querystatus);
+		    error(0, 0, "Query status=%d", querystatus);
 
 #if defined(linux) && !INET6
 		if (ctl->server.monitor)
