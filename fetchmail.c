@@ -155,64 +155,72 @@ char **argv;
 	    hostp->active = TRUE;
 	}
 
-    /* merge in defaults for empty fields, then lose defaults record */ 
+    /* if there's a defaults record, merge it and lose it */ 
     if (strcmp(hostlist->servername, "defaults") == 0)
     {
-	optmerge(hostlist, &def_opts);
 	for (hostp = hostlist; hostp; hostp = hostp->next)
 	    optmerge(hostp, hostlist);
 	hostlist = hostlist->next;
     }
 
-    /* do sanity checks and prepare internal fields */
+    /* don't allow a defaults record after the first */
     for (hostp = hostlist; hostp; hostp = hostp->next)
-    {
-	/* if rc file didn't supply a localname, default appropriately */
-	if (!hostp->localname[0])
-	    strcpy(hostp->localname, hostp->remotename);
-
-	/* sanity checks */
-	if (hostp->port < 0)
-	{
-	    (void) fprintf(stderr,
-			   "%s configuration invalid, port number cannot be negative",
-			   hostp->servername);
+	if (strcmp(hostlist->servername, "defaults") == 0)
 	    exit(PS_SYNTAX);
-	}
-	if (hostp->protocol == P_RPOP && hostp->port >= 1024) 
+
+    /* merge in wired defaults, do sanity checks and prepare internal fields */
+    for (hostp = hostlist; hostp; hostp = hostp->next)
+	if (hostp->active && !(implicitmode && hostp->skip))
 	{
-	    (void) fprintf(stderr,
-			   "%s configuration invalid, can't do RPOP to an unprivileged port\n",
-			   hostp->servername);
-	    exit(PS_SYNTAX);
-	}
+	    /* merge in defaults */
+	    optmerge(hostp, &def_opts);
 
-	/* expand MDA commands */
-	if (hostp->mda[0])
-	{
-	    int argi;
-	    char *argp;
+	    /* if rc file didn't supply a localname, default appropriately */
+	    if (!hostp->localname[0])
+		strcpy(hostp->localname, hostp->remotename);
 
-	    /* expand the %s escape if any before parsing */
-	    sprintf(hostp->mdabuf, hostp->mda, hostp->localname);
-
-	    /* now punch nulls into the delimiting whitespace in the args */
-	    for (argp = hostp->mdabuf, argi = 1; *argp != '\0'; argi++)
+	    /* sanity checks */
+	    if (hostp->port < 0)
 	    {
-		hostp->mda_argv[argi] = argp;
-		while (!(*argp == '\0' || isspace(*argp)))
-		    argp++;
-		if (*argp != '\0')
-		    *(argp++) = '\0';  
+		(void) fprintf(stderr,
+			       "%s configuration invalid, port number cannot be negative",
+			       hostp->servername);
+		exit(PS_SYNTAX);
+	    }
+	    if (hostp->protocol == P_RPOP && hostp->port >= 1024) 
+	    {
+		(void) fprintf(stderr,
+			       "%s configuration invalid, can't do RPOP to an unprivileged port\n",
+			       hostp->servername);
+		exit(PS_SYNTAX);
 	    }
 
-	    hostp->mda_argv[argi] = (char *)NULL;
+	    /* expand MDA commands */
+	    if (hostp->mda[0])
+	    {
+		int argi;
+		char *argp;
 
-	    hostp->mda_argv[0] = hostp->mda_argv[1];
-	    if ((argp = strrchr(hostp->mda_argv[1], '/')) != (char *)NULL)
-		hostp->mda_argv[1] = argp + 1 ;
+		/* expand the %s escape if any before parsing */
+		sprintf(hostp->mdabuf, hostp->mda, hostp->localname);
+
+		/* now punch nulls into the delimiting whitespace in the args */
+		for (argp = hostp->mdabuf, argi = 1; *argp != '\0'; argi++)
+		{
+		    hostp->mda_argv[argi] = argp;
+		    while (!(*argp == '\0' || isspace(*argp)))
+			argp++;
+		    if (*argp != '\0')
+			*(argp++) = '\0';  
+		}
+
+		hostp->mda_argv[argi] = (char *)NULL;
+
+		hostp->mda_argv[0] = hostp->mda_argv[1];
+		if ((argp = strrchr(hostp->mda_argv[1], '/')) != (char *)NULL)
+		    hostp->mda_argv[1] = argp + 1 ;
+	    }
 	}
-    }
 
     /* set up to do lock protocol */
     if ((tmpdir = getenv("TMPDIR")) == (char *)NULL)
