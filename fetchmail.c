@@ -706,9 +706,9 @@ int main(int argc, char **argv)
 		exit(PS_AUTHFAIL);
 	    }
 
-	    if (outlevel >= O_VERBOSE)
+	    if (outlevel > O_SILENT)
 		report(stdout, 
-		       GT_("fetchmail: sleeping at %s\n"), timestamp());
+		       GT_("sleeping at %s\n"), timestamp());
 
 	    /*
 	     * OK, now pause until it's time for the next poll cycle.
@@ -718,11 +718,12 @@ int main(int argc, char **argv)
 	     */
 	    if ((lastsig = interruptible_idle(run.poll_interval)))
 	    {
+		if (outlevel > O_SILENT)
 #ifdef SYS_SIGLIST_DECLARED
-		report(stdout, 
+		    report(stdout, 
 		       GT_("awakened by %s\n"), sys_siglist[lastsig]);
 #else
-		report(stdout, 
+	    	    report(stdout, 
 		       GT_("awakened by signal %d\n"), lastsig);
 #endif
 		for (ctl = querylist; ctl; ctl = ctl->next)
@@ -1272,7 +1273,7 @@ static int query_host(struct query *ctl)
      * If we're syslogging the progress messages are automatically timestamped.
      * Force timestamping if we're going to a logfile.
      */
-    if (outlevel >= O_VERBOSE || (run.logfile && outlevel > O_SILENT))
+    if (outlevel >= O_VERBOSE)
     {
 	report(stdout, GT_("%s querying %s (protocol %s) at %s: poll started\n"),
 	       VERSION,
@@ -1353,7 +1354,7 @@ static int query_host(struct query *ctl)
      * If we're syslogging the progress messages are automatically timestamped.
      * Force timestamping if we're going to a logfile.
      */
-    if (outlevel >= O_VERBOSE || (run.logfile && outlevel > O_SILENT))
+    if (outlevel >= O_VERBOSE)
     {
 	report(stdout, GT_("%s querying %s (protocol %s) at %s: poll completed\n"),
 	       VERSION,
