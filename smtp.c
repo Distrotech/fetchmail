@@ -34,7 +34,7 @@
 int SMTP_helo(int socket,char *host)
 {
   int ok;
-  char buf[SMTPBUFSIZE];
+  char buf[SMTPBUFSIZE+1];
 
   sprintf(buf,"HELO %s",host);
   SockPuts(socket, buf);
@@ -61,7 +61,7 @@ int SMTP_helo(int socket,char *host)
  *********************************************************************/
 int SMTP_from(int socket, char *from)
 {
-  char buf[SMTPBUFSIZE];  /* it's as good as size as any... */
+  char buf[SMTPBUFSIZE+1];  /* it's as good as size as any... */
   int ok;
   SockPrintf(socket, "MAIL FROM: %s\n", from);
   if (outlevel == O_VERBOSE)
@@ -86,7 +86,7 @@ int SMTP_from(int socket, char *from)
  *********************************************************************/
 int SMTP_rcpt(int socket,char *to)
 {
-  char buf[SMTPBUFSIZE];  /* it's as good as size as any... */
+  char buf[SMTPBUFSIZE+1];  /* it's as good as size as any... */
   int ok;
 
   SockPrintf(socket, "RCPT TO: %s\n", to);
@@ -167,12 +167,10 @@ static int SMTP_check(int socket,char *argbuf)
   int  ok;  
   char buf[SMTPBUFSIZE];
   
-  if ((ok = SMTP_Gets(socket, buf, sizeof(buf))) > 0) {
+  if ((ok = SMTP_Gets(socket, buf, sizeof(buf)-1)) > 0) {
+    buf[ok] = '\0';
     if (outlevel == O_VERBOSE)
-    {
-	buf[ok] = '\0';
 	fprintf(stderr, "SMTP< %s", buf);
-    }
     if (argbuf)
       strcpy(argbuf,buf);
     if (buf[0] == '1' || buf[0] == '2' || buf[0] == '3')
@@ -195,7 +193,7 @@ static int SMTP_check(int socket,char *argbuf)
 int SMTP_ok(int socket,char *argbuf)
 {
   int  ok;  
-  char buf[SMTPBUFSIZE];
+  char buf[SMTPBUFSIZE+1];
 
   /* I can tell that the SMTP server connection is ok if I can read a
      status message that starts with "1xx" ,"2xx" or "3xx".
