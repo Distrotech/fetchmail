@@ -601,6 +601,9 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 			     ctl->remotename, ctl->server.truename,
 			     num, count);
 
+		/* XXX FIXME: the gettext stuff needs to list "octets" or
+		 * "header octets" as a unit, and also provide for
+		 * proper plural form */
 		if (len > 0)
 		    report_build(stdout, GT_(" (%d %soctets)"),
 				 len, wholesize ? "" : GT_("header "));
