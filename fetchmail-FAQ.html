@@ -9,7 +9,7 @@
 <BODY>
 <H1>Frequently Asked Questions About Fetchmail</H1>
 
-$Id: fetchmail-FAQ.html,v 1.7 1997/04/17 15:05:22 esr Exp $<p>
+$Id: fetchmail-FAQ.html,v 1.8 1997/04/17 15:14:34 esr Exp $<p>
 
 (Added <a href="#B3">B3</a> on broken makes, <a href="http:#C6">C6</a>
 on working with qmail and <a href="http:#C7">C7</a> on managing
@@ -635,6 +635,15 @@ in the alias directory (normally /var/qmail/alias) with the contents:<p>
 Note this <em>does</em> require a modern /bin/sh.<p>
 
 <hr>
+<h2><a name="C7">C7. How can I do automatic startup/shutdown of fetchmail
+when I may have multiple login sessions going?</h2>
+
+In the contrib subdirectory of the fetchmail distribution there is
+some shell code you can add to your .bash_login and .bash_logout
+profiles that will accomplish this.  Thank James Laferriere
+&lt;babydr@nwrain.net&gt; for it.<p>
+
+<hr>
 <h2><a name="R1">R1. I think I've set up fetchmail correctly, but I'm not getting any mail.</a></h2>
 
 Maybe you have a .forward or alias set up that you've forgotten about.  You
@@ -646,15 +655,6 @@ should; see question <a href="#C1">C1</a>.<p>
 
 Or you may not be connecting to the SMTP listener.   Run fetchmail -v
 and see the next question.<p>
-
-<hr>
-<h2><a name="C7">C7. How can I do automatic startup/shutdown of fetchmail
-when I may have multiple login sessions going?</h2>
-
-In the contrib subdirectory of the fetchmail distribution there is
-some shell code you can add yo your .bash_login and .bash_logout
-profiles that will accomplish this.  Thank James Laferriere
-&lt;babydr@nwrain.net&gt; for it.<p>
 
 <hr>
 <h2>R2. Fetchmail isn't working, and -v shows `SMTP connect failed' messages.</a></h2>
