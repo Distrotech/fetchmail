@@ -1,11 +1,11 @@
 # fetchmail control file sample
 #
 # This file (or one of your own creation, rather) should be located 
-# in your home directory with the name .fetchrc.  Permissions on this
+# in your home directory with the name .fetchmailrc.  Permissions on this
 # file may be no greater than -rw-------, or fetchmail will refuse to
 # use it.
 #
-# To see what effect your ~/.fetchrc file has, do 
+# To see what effect your ~/.fetchmailrc file has, do 
 #
 #	fetchmail --version
 #
