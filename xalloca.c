@@ -15,7 +15,7 @@
 #include <alloca.h>
 #else
 #ifdef _AIX
- #pragma alloca
+#pragma alloca
 #endif
 #endif
 

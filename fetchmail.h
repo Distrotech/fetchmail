@@ -566,7 +566,7 @@ char *xstrdup(const char *);
 #include <alloca.h>
 #else
 #ifdef _AIX
- #pragma alloca
+#pragma alloca
 #endif
 #endif
 #define	xalloca(ptr, t, n)	if (!(ptr = (t) alloca(n)))\
