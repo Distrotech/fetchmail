@@ -318,6 +318,32 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 
 	/* ordinary validation, no one-time password or RPA */ 
 	gen_transact(sock, "USER %s", ctl->remotename);
+
+#if OPIE_ENABLE
+	/* see RFC1938: A One-Time Password System */
+	if (challenge = strstr(lastok, "otp-")) {
+	  char response[OPIE_RESPONSE_MAX+1];
+	  int i;
+
+	  i = opiegenerator(challenge, !strcmp(ctl->password, "opie") ? "" : ctl->password, response);
+	  if ((i == -2) && !run.poll_interval) {
+	    char secret[OPIE_SECRET_MAX+1];
+	    fprintf(stderr, GT_("Secret pass phrase: "));
+	    if (opiereadpass(secret, sizeof(secret), 0))
+	      i = opiegenerator(challenge,  secret, response);
+	    memset(secret, 0, sizeof(secret));
+	  };
+
+	  if (i) {
+	    ok = PS_ERROR;
+	    break;
+	  };
+
+	  ok = gen_transact(sock, "PASS %s", response);
+	  break;
+	}
+#endif /* OPIE_ENABLE */
+
 	strcpy(shroud, ctl->password);
 	ok = gen_transact(sock, "PASS %s", ctl->password);
 	shroud[0] = '\0';

@@ -414,7 +414,7 @@ defaultports = {"auto":0,
 		"ETRN":25,
 		"ODMR":366}
 
-authlist = ("any", "password", "gssapi", "kerberos", "ssh")
+authlist = ("any", "password", "gssapi", "kerberos", "ssh", "otp")
 
 listboxhelp = {
     'title' : 'List Selection Help',

@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* OTP fix patches from Stanislav Brabec <utx@penguin.cz>
+
 fetchmail-6.1.0 (Sun Sep 22 18:31:23 EDT 2002), 21999 lines:
 
 * Updated French translation.

@@ -16,7 +16,7 @@ content="Frequently asked questions about fetchmail."/>
 Page</a></td>
 <td width="30%" align="center">To <a href="/~esr/sitemap.html">Site
 Map</a></td>
-<td width="30%" align="right">$Date: 2002/09/17 09:15:33 $</td>
+<td width="30%" align="right">$Date: 2002/10/18 10:20:44 $</td>
 </tr>
 </table>
 
@@ -2993,21 +2993,34 @@ this has the side effect of forcing RETR use.</p>
 <h2><a id="X6" name="X6">X6. My mail attachments are being dropped
 or mangled.</a></h2>
 
-<p>This isn't fetchmail's doing -- fetchmail never drops lines in
-message bodies or attachments. It may be your POP server, or it may
-be the sender's mail user agent (or a bad combination of both).</p>
+<p>Fetchmail doesn't discard attachments; fetchmail doesn't have any idea
+that attachments are there.  Fetchmail treats the body of each message as
+an uninterpreted byte stream and passes it through without alteration.
+If you are not receiving attachments through fetchmail, it is because 
+your mailserver is not sending them to you.</p>
 
-<p>The Mail Max POP3 server and the InterChange and Imail IMAP
-servers are known to simply drop MIME attachments when uploading
-messages. We've had sporadic reports of problems with Microsoft
-Exchange and Outlook servers. Windows- and NT-based POP servers
+<p>The fix for this is to replace your mailserver with one that works.
+If its operating system makes this difficult, you should replace its
+operating system with one that works. Windows- and NT-based POP servers
 seem especially prone to mangle attachments. If you are running one
 of these, replacing your server with a Unix machine is probably the
 only effective solution.</p>
 
+<p>We've had sporadic reports of problems with Microsoft Exchange and 
+Outlook servers.  These sometimes randomly fail to ship 
+attachments to your client.  They may also mangle the attachments 
+they do pass through.  If you see unreadable attachments with a
+ContentType of "application/x-tnef", you're having this problem.
+The <a href="http://world.std.com/~damned/software.html">TNEF</a>
+utility may help.</p>
+
+<p>The Mail Max POP3 server and the InterChange and Imail IMAP
+servers are known to simply drop MIME attachments when uploading
+messages.</p>
+
 <p>We've also had a report that Lotus Notes sometimes trashes the
 MIME type of messages. In particular, it seems to modify MIME
-headers introducing type application/pdf, mangling the type to
+headers of type application/pdf, mangling the type to
 application/octet-stream. It may corrupt other MIME types as
 well.</p>
 
@@ -3022,12 +3035,6 @@ declared in the Content-type header and another is used to separate
 the MIME parts in the body. This doesn't work. (I have heard a
 rumor that this bug is scheduled to be fixed in Domino release 6;
 you can find a workaround at contrib/domino.)</p>
-
-<p>Another rich source of attachment problems is Microsoft Exchange
-and Microsoft Outlook. If you see unreadable attachments with a
-ContentType of "application/x-tnef", you're having this problem.
-The <a href="http://world.std.com/~damned/software.html">TNEF</a>
-utility may help.</p>
 
 <p>Rob Funk explains: Unfortunately there also remain many mail
 user agents that don't write correct MIME messages. One big
@@ -3419,7 +3426,7 @@ the received date from the last Received header.</p>
 Page</a></td>
 <td width="30%" align="center">To <a href="/~esr/sitemap.html">Site
 Map</a></td>
-<td width="30%" align="right">$Date: 2002/09/17 09:15:33 $</td>
+<td width="30%" align="right">$Date: 2002/10/18 10:20:44 $</td>
 </tr>
 </table>
 

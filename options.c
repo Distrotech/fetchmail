@@ -409,6 +409,8 @@ struct query *ctl;	/* option record to be initialized */
 		ctl->server.authenticate = A_SSH;
 	    else if (strcmp(optarg, "otp") == 0)
 		ctl->server.authenticate = A_OTP;
+	    else if (strcmp(optarg, "opie") == 0)
+		ctl->server.authenticate = A_OTP;
 	    else if (strcmp(optarg, "ntlm") == 0)
 		ctl->server.authenticate = A_NTLM;
 	    else if (strcmp(optarg, "cram") == 0)
@@ -677,7 +679,7 @@ struct query *ctl;	/* option record to be initialized */
 	P(GT_("  -p, --protocol    specify retrieval protocol (see man page)\n"));
 	P(GT_("  -U, --uidl        force the use of UIDLs (pop3 only)\n"));
 	P(GT_("  -P, --port        TCP/IP service port to connect to\n"));
-	P(GT_("      --auth        authentication type (password/kerberos/ssh)\n"));
+	P(GT_("      --auth        authentication type (password/kerberos/ssh/otp)\n"));
 	P(GT_("  -t, --timeout     server nonresponse timeout\n"));
 	P(GT_("  -E, --envelope    envelope address header\n"));
 	P(GT_("  -Q, --qvirtual    prefix to remove from local user id\n"));
