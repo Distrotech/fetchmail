@@ -130,7 +130,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
     fputs("from Tkinter import TRUE, FALSE\n\n", stdout);
 
     fputs("# Start of initializer\n", stdout);
-    fputs("configuration = ", stdout);
+    fputs("fetchmailrc = ", stdout);
     indent('{');
 
     numdump("poll_interval", runp->poll_interval);
