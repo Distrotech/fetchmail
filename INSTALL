@@ -25,11 +25,11 @@ Lastly, become root and run
 	make install
 
 This will install fetchmail.  By default, fetchmail will be installed
-in /usr/local/bin, with the man page in /usr/local/man/man1, and the
-GNU info file in /usr/local/info.  If you wish to change these defaults,
-edit the Makefile AFTER you run "configure" but BEFORE you run 
-"make install."  You can easily choose a prefix other than /usr/local,
-or you can choose completely different directories for each item.
+in /usr/local/bin, with the man page in /usr/local/man/man1.  If you
+wish to change these defaults, edit the Makefile AFTER you run
+"configure" but BEFORE you run "make install."  You can easily choose
+a prefix other than /usr/local, or you can choose completely different
+directories for each item.
 
 See the man page or the file sample.rcfile for a description of how to
 configure your individual preferences.
