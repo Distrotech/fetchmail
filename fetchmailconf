@@ -765,7 +765,7 @@ class ServerEdit(Frame):
 	if not proto in ("POP3", "APOP", "KPOP"): self.uidl = FALSE
 
     def makeWidgets(self, host, mode):
-	topwin = dispose_window(self, "Server options for " + host, serverhelp)
+	topwin = dispose_window(self, "Server options for querying " + host, serverhelp)
 
 	leftwin = Frame(self);
 	leftwidth = '25';
@@ -897,7 +897,7 @@ class UserEdit(Frame):
 	    server.users.append(self.user)
 
 	self.post()
-	self.makeWidgets(mode)
+	self.makeWidgets(mode, server.pollname)
 #	self.grab_set()
 #	self.focus_set()
 #	self.wait_window()
@@ -932,9 +932,9 @@ class UserEdit(Frame):
 	self.gather()
 	Widget.destroy(self.master)
 
-    def makeWidgets(self, mode):
+    def makeWidgets(self, mode, servername):
 	dispose_window(self,
-			"User options for " + self.user.remote,
+			"User options for " + self.user.remote + " querying " + servername,
 			userhelp)
 
         if mode != 'novice':
