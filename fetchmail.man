@@ -1356,13 +1356,13 @@ delivered to client user `happy'.
 Here's an example of another kind of multidrop connection:
 
 .nf
-  poll pop.provider.net localdomains loonytoons.org:
+  poll pop.provider.net localdomains loonytoons.org toons.org:
         user maildrop with pass secret1 to esr * here
 .fi
 
 This also says that the mailbox of account `maildrop' on the server is
 a multi-drop box.  It tells fetchmail that any address in the
-loonytoons.org domain (including subdomain addresses like
+loonytoons.org or toons.org domains (including subdomain addresses like
 `joe@daffy.loonytoons.org') should be passed through to the local SMTP
 listener without modification.  Be careful of mail loops if you do this!
 .PP
