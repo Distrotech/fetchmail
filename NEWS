@@ -2,12 +2,15 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Blush...# characters now go to stdout, same place as the dots.
+* Matthias Andree's patch to correct parsing of spaces in quoted usernames.
+
 fetchmail-5.8.17 (Tue Aug  7 20:05:36 EDT 2001), 21056 lines:
 
-* SECURITY FIX: Fixed a security hole that is exploitable if fetchmail is
-  running as root and the attacker can either subvert the mailserver or
-  redirect to a fake one using DNS spoofing.  Bugtraq announcement to follow
-  soon.  Thanks to Salvatore Sanfilippo <antirez@invece.org>.
+* SECURITY FIX: Fixed a security hole that is exploitable if the attacker can 
+  either subvert the mailserver or redirect to a fake one using DNS spoofing.
+  Bugtraq announcement to follow soon.  Thanks to Salvatore Sanfilippo 
+  <antirez@invece.org>.
 * Eliminated second bounce on failed RCPT TO address.
 * Always use fetchmail host's FQDN to identify the daemon when
   sending bounce messages.

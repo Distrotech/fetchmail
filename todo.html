@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="/~esr">Eric's Home Page</a>
 <td width="30%" align=center>Up to <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/07/31 05:48:06 $
+<td width="30%" align=right>$Date: 2001/08/10 19:03:23 $
 </table>
 <HR>
 <H1 ALIGN=CENTER>Fetchmail Bugs and To-Do Items</H1>
@@ -58,6 +58,10 @@ lock file."
 can get rid of ENABLE_INET6 everywhere but in SockOpen (this will get
 rid of the kluge in rcfile_y.y).
 
+<p>John Summerfield suggests that specifying a localname containing @
+ought to be treated as an smtpname option, with the domain part
+removed for other purposes such as local-address matching.
+
 <p>The <a
 href="http://bugs.debian.org/cgi-bin/pkgreport.cgi?pkg=fetchmail&archive=no">Debian
 bug-tracking page for fetchmail</a> lists other bug reports.
@@ -66,7 +70,7 @@ bug-tracking page for fetchmail</a> lists other bug reports.
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="/~esr">Eric's Home Page</a>
 <td width="30%" align=center>Up to <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/07/31 05:48:06 $
+<td width="30%" align=right>$Date: 2001/08/10 19:03:23 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@thyrsus.com&gt;</A></ADDRESS>

@@ -315,6 +315,12 @@ const unsigned char *hdr;	/* header to be parsed, NUL to continue previous hdr *
 		state = INSIDE_BRACKETS;
 		tp = 0;
 	    }
+	    else if (*hp == '"')        /* quoted word, copy verbatim */
+	    {
+	        oldstate = state;
+		state = INSIDE_DQUOTE;
+                address[NEXTTP()] = *hp;
+            }
 	    else if (!isspace(*hp)) 	/* just take it, ignoring whitespace */
 		address[NEXTTP()] = *hp;
 	    break;
