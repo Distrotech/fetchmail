@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/02/19 15:53:53 $
+<td width="30%" align=right>$Date: 1999/02/22 13:35:21 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -922,6 +922,15 @@ For most sendmails, no special configuration is required.  Eric Allman
 tells me that if <code>FEATURE(always_add_domain)</code> is included
 in sendmail's configuration, you can leave the <code>rewrite</code>
 option off.<P>
+
+If your sendmail complains ``sendmail does not relay'',  make sure
+your sendmail,cf file says 
+
+<code>
+Cwlocalhost
+</code>
+
+so that sendmail recognizes `localhost' as a name of its host.<p>
 
 If you find that your sendmail doesn't like the address 
 `FETCHMAIL-DAEMON@localhost' (which is used in the bouncemail
@@ -2251,7 +2260,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/02/19 15:53:53 $
+<td width="30%" align=right>$Date: 1999/02/22 13:35:21 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
