@@ -1,13 +1,12 @@
 			To-do list:
 
 Support IMAP4 extensions for secure challenge-response, once they're actually
-standardized.
+standardized.  Also, use the CAPABILITY command to detect when we're talking
+to a true IMAP4 server and do the UID thing (see header comments in imap.c).
 
 			Release Notes:
 
 fetchmail-1.0 (Mon Sep 23 19:54:01 EDT 1996):
-
-* Name change (it ain't just for POP3 any more).
 
 * SMTP forwarding and header-rewrite features work with POP2 now.
 
@@ -17,6 +16,8 @@ fetchmail-1.0 (Mon Sep 23 19:54:01 EDT 1996):
 * The program is quieter but more informative now (suppress printing of
   server greeting message; add the server host being queried to the
   message count information line).
+
+* Name change (it ain't just for POP any more).
 
 popclient-3.2 (Mon Sep 23 13:29:46 EDT 1996):
 
