@@ -417,8 +417,7 @@ char *realname;		/* real name of host */
 	if (buf[0] == '\r' && buf[1] == '\n')
 	    inheaders = 0;
 	if (delimited && *bufp == '.') {
-	    bufp++;
-	    if (*bufp == 0)
+	    if (bufp[1] == '\r' && bufp[2] == '\n')
 		break;  /* end of message */
 	}
      
