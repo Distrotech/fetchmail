@@ -217,6 +217,7 @@ if test "$procmail"
 then
 	echo "Found procmail, will use it as a fallback MDA."
 	AC_DEFINE(FALLBACK_MDA, "$procmail -d %T")
+else
 	AC_PATH_PROG(sendmail, sendmail, "", $PATH:/usr/sbin)
 	if test "$sendmail"
 	then
