@@ -424,6 +424,7 @@ not to query this host unless it is explicitly named on the command
 line.  A host entry with this flag will be skipped when
 .I fetchmail
 called with no arguments steps through all hosts in the run control file.
+(This option allows you to experiment with test entries safely.)
 .PP
 Legal protocol identifiers are
 

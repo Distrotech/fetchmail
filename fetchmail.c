@@ -92,7 +92,7 @@ char **argv;
 { 
     int mboxfd, st, sargc;
     struct hostrec cmd_opts, def_opts;
-    int parsestatus;
+    int parsestatus, implicitmode;
     char *servername, *user, *tmpdir, tmpbuf[256], *sargv[64]; 
     FILE	*tmpfp;
     pid_t pid;
@@ -114,7 +114,7 @@ char **argv;
     if (prc_parse_file(rcfile) != 0)
 	exit(PS_SYNTAX);
 
-    if (optind >= argc)
+    if (implicitmode = (optind >= sargc))
 	append_server_names(&sargc, sargv, sizeof(sargv));
 
     /* build in-core data list on all hosts */
@@ -223,6 +223,19 @@ char **argv;
 	fclose(tmpfp);
     }
 
+    /* pick up interactively any passwords we need but don't have */ 
+    for (hostp = hostlist; hostp; hostp = hostp->next)
+	if (!(implicitmode && hostp->explicit)
+	    && !hostp->password[0] && !hostp->rpopid[0])
+	{
+	    char prompt[BUFSIZ];
+
+	    (void) sprintf(prompt, "Enter password for %s@%s: ",
+			   hostp->remotename, servername);
+	    (void) strncpy(hostp->password,
+			   (char *)getpassword(prompt),PASSWORDLEN-1);
+	}
+
     /*
      * Maybe time to go to demon mode...
      */
@@ -248,7 +261,8 @@ char **argv;
      */
     do {
 	for (hostp = hostlist; hostp; hostp = hostp->next) {
-	    popstatus = query_host(hostp);
+	    if (!implicitmode || !hostp->explicit)
+		popstatus = query_host(hostp);
 	}
 
 	sleep(poll_interval);
@@ -395,7 +409,9 @@ struct hostrec *queryctl;
 	printf("  This host will%s be queried when no host is specified.\n",
 	       queryctl->explicit ? " not" : "");
     printf("  Username = '%s'\n", queryctl->remotename);
-    if (queryctl->password && outlevel == O_VERBOSE)
+    if (queryctl->password[0] == '\0')
+	printf("  Password will be prompted for.\n");
+    else if (outlevel == O_VERBOSE)
 	printf("  Password = '%s'\n", queryctl->password);
     if (queryctl->rpopid[0])
 	printf("  RPOP id = '%s'\n", queryctl->rpopid);
