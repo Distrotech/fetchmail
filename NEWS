@@ -24,6 +24,7 @@ fetchmail-4.4.0 ():
 * net-security option is now per-server, with a `netsec' keyword.
 * Handle "account" token in .netrc.
 * Fix IMAP4rev1 detection.
+* Added /-suffix capability to specify a port or service on smtphost args.
 
 There are 272 people on fetchmail-friends and 136 on fetchmail-announce.
 

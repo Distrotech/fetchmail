@@ -466,11 +466,30 @@ static int smtp_open(struct query *ctl)
 	 */
 	for (idp = ctl->smtphunt; idp; idp = idp->next)
 	{
+	    char	*cp, *parsed_host = alloca(strlen(idp->id) + 1);
+#ifdef INET6 
+	    char	*portnum = SMTP_PORT;
+#else
+	    int		portnum = SMTP_PORT;
+#endif /* INET6 */
+
 	    ctl->smtphost = idp->id;  /* remember last host tried. */
 
-	    if ((ctl->smtp_socket = SockOpen(idp->id,SMTP_PORT)) == -1)
+	    strcpy(parsed_host, idp->id);
+	    if ((cp = strrchr(parsed_host, '/')))
+	    {
+		*cp++ = 0;
+#ifdef INET6 
+		portnum = cp;
+#else
+		portnum = atoi(cp);
+#endif /* INET6 */
+	    }
+
+	    if ((ctl->smtp_socket = SockOpen(parsed_host,portnum)) == -1)
 		continue;
 
+	    /* first, probe for ESMTP */
 	    if (SMTP_ok(ctl->smtp_socket) == SM_OK &&
 		    SMTP_ehlo(ctl->smtp_socket, id_me,
 			  &ctl->server.esmtp_options) == SM_OK)
@@ -484,7 +503,7 @@ static int smtp_open(struct query *ctl)
 	    ctl->smtp_socket = -1;
 
 	    /* if opening for ESMTP failed, try SMTP */
-	    if ((ctl->smtp_socket = SockOpen(idp->id,SMTP_PORT)) == -1)
+	    if ((ctl->smtp_socket = SockOpen(parsed_host,portnum)) == -1)
 		continue;
 
 	    if (SMTP_ok(ctl->smtp_socket) == SM_OK && 
@@ -497,7 +516,7 @@ static int smtp_open(struct query *ctl)
     }
 
     if (outlevel >= O_VERBOSE && ctl->smtp_socket != -1)
-	error(0, 0, "forwarding to SMTP port on %s", ctl->smtphost);
+	error(0, 0, "forwarding to %s", ctl->smtphost);
 
     return(ctl->smtp_socket);
 }
