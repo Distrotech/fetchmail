@@ -71,7 +71,7 @@ int pop3_getauth(FILE *sockfp, struct query *ctl, char *greeting)
 	for (start = greeting;  *start != 0 && *start != '<';  start++)
 	    continue;
 	if (*start == 0) {
-	    error(0, 0, "Required APOP timestamp not found in greeting");
+	    error(0, -1, "Required APOP timestamp not found in greeting");
 	    return(PS_AUTHFAIL);
 	}
 
@@ -79,7 +79,7 @@ int pop3_getauth(FILE *sockfp, struct query *ctl, char *greeting)
 	for (end = start;  *end != 0  && *end != '>';  end++)
 	    continue;
 	if (*end == 0 || end == start + 1) {
-	    error(0, 0, "Timestamp syntax error in greeting");
+	    error(0, -1, "Timestamp syntax error in greeting");
 	    return(PS_AUTHFAIL);
 	}
 	else

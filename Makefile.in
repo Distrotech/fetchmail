@@ -3,8 +3,7 @@
 # If you're running QNX, we can't assume a working autoconf.
 # So just uncomment all the lines marked QNX.
 
-VERS=3.9
-PL=1
+VERS=3.9.1
 
 # Ultrix 2.2 make doesn't expand the value of VPATH.
 srcdir = @srcdir@
@@ -30,7 +29,7 @@ RANLIB = @RANLIB@
 # See also `config.h'.
 DEFS = @DEFS@
 # DEFS = -DQNX -DHAVE_CONFIG_H -DHAVE_UNISTD_H -DHAVE_STDARG_H -DSTDC_HEADERS	# QNX
-defines =  -DRELEASE_ID=\"$(VERS)\" -DPATCHLEVEL=\"$(PL)\" $(DEFS)
+defines =  -DRELEASE_ID=\"$(VERS)\" $(DEFS)
 
 # If your system needs extra libraries loaded in, define them here.
 LOADLIBS = @LIBS@ @LEXLIB@

@@ -695,7 +695,7 @@ char *realname;		/* real name of host */
 
 	if (!sinkfp)
 	{
-	    error(0, 0, "MDA open failed");
+	    error(0, -1, "MDA open failed");
 	    return(PS_IOERR);
 	}
 
@@ -710,7 +710,7 @@ char *realname;		/* real name of host */
 	if (!ctl->mda && ((sinkfp = smtp_open(ctl)) == NULL))
 	{
 	    free_str_list(&xmit_names);
-	    error(0, 0, "SMTP connect to %s failed",
+	    error(0, -1, "SMTP connect to %s failed",
 		  ctl->smtphost ? ctl->smtphost : "localhost");
 	    if (return_path)
 		free(return_path);
@@ -767,7 +767,7 @@ char *realname;		/* real name of host */
 	    int smtperr = atoi(smtp_response);
 
 	    if (smtperr >= 400)
-		error(0, 0, "SMTP error: %s", smtp_response);
+		error(0, -1, "SMTP error: %s", smtp_response);
 
 	    /*
 	     * There's one problem with this flow of control;
@@ -817,7 +817,7 @@ char *realname;		/* real name of host */
 	    default:	/* retry with invoking user's address */
 		if (SMTP_from(sinkfp, user, options) != SM_OK)
 		{
-		    error(0,0,"SMTP error: %s", smtp_response);
+		    error(0, -1, "SMTP error: %s", smtp_response);
 		    if (return_path)
 			free(return_path);
 		    return(PS_SMTP);	/* should never happen */
@@ -1117,7 +1117,7 @@ const char *canonical;	/* server name */
     free (ticket);
     if (rem != KSUCCESS)
     {
-	error(0, 0, "kerberos error %s", (krb_get_err_text (rem)));
+	error(0, -1, "kerberos error %s", (krb_get_err_text (rem)));
 	return (PS_ERROR);
     }
     return (0);
@@ -1136,7 +1136,7 @@ const struct method *proto;	/* protocol method table */
 #ifndef KERBEROS_V4
     if (ctl->server.authenticate == A_KERBEROS)
     {
-	error(0, 0, "Kerberos support not linked.");
+	error(0, -1, "Kerberos support not linked.");
 	return(PS_ERROR);
     }
 #endif /* KERBEROS_V4 */
@@ -1311,7 +1311,7 @@ const struct method *proto;	/* protocol method table */
 		ok = PS_AUTHFAIL;
 	    if (ok != 0)
 	    {
-		error(0, 0, "Authorization failure on %s@%s", 
+		error(0, -1, "Authorization failure on %s@%s", 
 		      ctl->remotename,
 		      realname);
 		goto cleanUp;
@@ -1543,7 +1543,7 @@ const struct method *proto;	/* protocol method table */
     }
     if (ok==PS_SOCKET || ok==PS_AUTHFAIL || ok==PS_SYNTAX || ok==PS_IOERR
 		|| ok==PS_ERROR || ok==PS_PROTOCOL || ok==PS_SMTP)
-	error(0, 0, "%s error while fetching from %s", msg, ctl->server.names->id);
+	error(0, -1, "%s error while fetching from %s", msg, ctl->server.names->id);
 
 closeUp:
     signal(SIGALRM, sigsave);
@@ -1676,4 +1676,3 @@ va_dcl
 }
 
 /* driver.c ends here */
-

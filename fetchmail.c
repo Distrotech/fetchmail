@@ -155,7 +155,7 @@ int main (int argc, char **argv)
     setvbuf(stdout, NULL, _IOLBF, POPBUFSIZE);
 
     if (versioninfo)
-	printf("This is fetchmail release %s pl %s\n", RELEASE_ID, PATCHLEVEL);
+	printf("This is fetchmail release %s\n", RELEASE_ID);
 
     /* avoid parsing the config file if all we're doing is killing a daemon */ 
     if (!quitmode)
@@ -330,7 +330,7 @@ int main (int argc, char **argv)
     {
 	if (!nodetach)
 	    daemonize(logfile, termhook);
-	error( 0, 0, "starting fetchmail %s.%s daemon ", RELEASE_ID, PATCHLEVEL);
+	error( 0, 0, "starting fetchmail %s daemon ", RELEASE_ID);
     }
 
     /* beyond here we don't want more than one fetchmail running per user */
@@ -738,8 +738,8 @@ static int query_host(struct query *ctl)
 	time_t now;
 
 	time(&now);
-	fprintf(stderr, "fetchmail: %s.%s querying %s (protocol %s) at %s",
-	    RELEASE_ID, PATCHLEVEL,
+	fprintf(stderr, "fetchmail: %s querying %s (protocol %s) at %s",
+	    RELEASE_ID,
 	    ctl->server.names->id, showproto(ctl->server.protocol), ctime(&now));
     }
     switch (ctl->server.protocol) {

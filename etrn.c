@@ -66,23 +66,23 @@ static int etrn_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
 	break;
 
     case 458:	/* Unable to queue messages for node <x> */
-	error(0, 0, "Unable to queue messages for node %s", ctl->smtphost);
+	error(0, -1, "Unable to queue messages for node %s", ctl->smtphost);
 	return(PS_PROTOCOL);
 
     case 459:	/* Node <x> not allowed: <reason> */
-	error(0, 0, "Node %s not allowed: %s", ctl->smtphost, buf);
+	error(0, -1, "Node %s not allowed: %s", ctl->smtphost, buf);
 	return(PS_AUTHFAIL);
 
     case 500:	/* Syntax Error */
-	error(0, 0, "ETRN syntax error");
+	error(0, -1, "ETRN syntax error");
 	return(PS_PROTOCOL);
 
     case 501:	/* Syntax Error in Parameters */
-	error(0, 0, "ETRN syntax error in parameters");
+	error(0, -1, "ETRN syntax error in parameters");
 	return(PS_PROTOCOL);
 
     default:
-	error(0, 0, "Unknown ETRN error");
+	error(0, -1, "Unknown ETRN error %d", atoi(buf));
 	return(PS_PROTOCOL);
     }
 
