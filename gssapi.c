@@ -119,7 +119,7 @@ int do_gssauth(int sock, char *command, char *hostname, char *username)
 	        gss_release_name(&min_stat, &target_name);
 	        return result;
 	    }
-	    request_buf.length = from64tobits(buf2, buf1 + 2);
+	    request_buf.length = from64tobits(buf2, buf1 + 2, sizeof(buf2));
 	    request_buf.value = buf2;
 	    sec_token = &request_buf;
         }
@@ -131,7 +131,7 @@ int do_gssauth(int sock, char *command, char *hostname, char *username)
     if (result = gen_recv(sock, buf1, sizeof buf1))
         return result;
 
-    request_buf.length = from64tobits(buf2, buf1 + 2);
+    request_buf.length = from64tobits(buf2, buf1 + 2, sizeof(buf2));
     request_buf.value = buf2;
 
     maj_stat = gss_unwrap(&min_stat, context, 

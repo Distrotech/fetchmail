@@ -89,7 +89,7 @@ int do_cram_md5 (int sock, char *command, struct query *ctl, char *strip)
     respdata = buf1;
     if (strip && strncmp(buf1, strip, strlen(strip)) == 0)
 	respdata += strlen(strip);
-    len = from64tobits (msg_id, respdata);
+    len = from64tobits (msg_id, respdata, sizeof(msg_id));
 
     if (len < 0) {
 	report (stderr, GT_("could not decode BASE64 challenge\n"));

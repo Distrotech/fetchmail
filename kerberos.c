@@ -69,7 +69,7 @@ int do_rfc1731(int sock, char *command, char *truename)
 	return result;
     }
 
-    len = from64tobits(challenge1.cstr, buf1);
+    len = from64tobits(challenge1.cstr, buf1, sizeof(challenge1.cstr));
     if (len < 0) {
 	report(stderr, GT_("could not decode initial BASE64 challenge\n"));
 	return PS_AUTHFAIL;
@@ -208,7 +208,7 @@ int do_rfc1731(int sock, char *command, char *truename)
      * process is complete.
      */
 
-    len = from64tobits(buf2, buf1);
+    len = from64tobits(buf2, buf1, sizeof(buf2x));
     if (len < 0) {
 	report(stderr, GT_("could not decode BASE64 ready response\n"));
 	return PS_AUTHFAIL;
