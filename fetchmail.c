@@ -3,7 +3,6 @@
  *
  * For license terms, see the file COPYING in this directory.
  */
-
 #include "config.h"
 
 #include <stdio.h>
@@ -511,13 +510,25 @@ int main (int argc, char **argv)
 
 		querystatus = query_host(ctl);
 
-		if (querystatus == PS_SUCCESS) {
+		if (querystatus == PS_SUCCESS)
+		{
 		    successes++;
 #ifdef POP3_ENABLE
 		    if (!check_only)
-		      update_str_lists(ctl);
+			update_str_lists(ctl);
+
+		   /* Save UID list to prevent re-fetch in case fetchmail 
+		      recover from crash */
+		    if (!check_only)
+		    {
+			write_saved_lists(querylist, run.idfile);
+			syslog(LOG_INFO,"Saved UID List");
+		    }
 #endif  /* POP3_ENABLE */
 		}
+		else
+		    syslog(LOG_INFO,"Query status=%d", querystatus);
+
 #if defined(linux) && !INET6
 		if (ctl->server.monitor)
 		    {
