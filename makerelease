@@ -7,11 +7,20 @@
 $timezone = "-0500";
 
 $diffs = 0;
+$verbose = 0;
+$null = ">/dev/null";
 while ($i = shift @ARGV)
 {
 	if ($i =~ /^(--diffs|-d)$/i)
 	{
 		$diffs = 1;
+		next;
+	}
+
+	if ($i =~ /^(--verbose|-v)$/i)
+	{
+		$verbose = 1;
+		$null = "";
 		next;
 	}
 
@@ -48,18 +57,18 @@ if ($versions[0] eq $rcsid) {
 
 print "Building $version release, RCS ID $rcsid, previous RCS ID $oldid\n";
 
-print "Test-building the software...\n";
-if (system("su -c 'make >/dev/null' esr")) {
+print "### Test-building the software...\n";
+if (system("su -c '(configure --disable-nls; make) $null' esr")) {
 	die("Compilation failure\n");
 }
 
-print "Building the distribution...\n";
-if (system("su -c 'make dist >/dev/null' esr")) {
+print "### Building the distribution...\n";
+if (system("su -c 'make dist $null' esr")) {
 	die("Distribution-build failure\n");
 }
 
-print "Building the RPMs...\n";
-if (system("make rpm >/dev/null 2>/dev/null && chown esr *.rpm")) {
+print "### Building the RPMs...\n";
+if (system("make rpm $null && chown esr *.rpm")) {
 	die("RPM-build failure\n");
 }
 
