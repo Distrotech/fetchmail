@@ -57,6 +57,10 @@ if ($versions[0] eq $rcsid) {
 
 print "Building $version release, RCS ID $rcsid, previous RCS ID $oldid\n";
 
+if (system("./configure; make -C po update-po; make clean")) {
+	die("Failure in translation-file rebuild.")
+}
+
 print "### Test-building the software...\n";
 if (system("configure --disable-nls; make")) {
 	die("Compilation failure\n");
