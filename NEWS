@@ -9,6 +9,7 @@
 * Patch to dusable use of STLS if auth passwd is specified.
 * Fix specfile generation to handle SSL correctly.
 * New Danish, Turkish, and Catalan translation files.
+* Improved ODMR debug messages.
 
 fetchmail-6.1.0 (Sun Sep 22 18:31:23 EDT 2002), 21999 lines:
 
