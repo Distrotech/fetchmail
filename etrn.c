@@ -6,6 +6,7 @@
 
 #include  <config.h>
 #include  <stdio.h>
+#include  <stdlib.h>
 #include  "fetchmail.h"
 #include  "smtp.h"
 #include  "socket.h"
@@ -14,7 +15,6 @@ static int etrn_ok (int sock, char *argbuf)
 /* parse command response */
 {
     int ok;
-    char buf [POPBUFSIZE+1];
 
     ok = SMTP_ok(sock);
     if (ok == SM_UNRECOVERABLE)
@@ -46,7 +46,7 @@ static int etrn_getrange(int sock, struct query *ctl, int*countp, int*newp)
 
     /* ship the actual poll and get the response */
     gen_send(sock, "ETRN %s", ctl->smtphost);
-    if (ok = gen_recv(sock, buf, sizeof(buf)))
+    if ((ok = gen_recv(sock, buf, sizeof(buf))))
 	return(ok);
 
     /* this switch includes all the response codes described in RFC1985 */

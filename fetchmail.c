@@ -919,8 +919,7 @@ void dump_params (struct query *ctl)
 	}
 
 	printf("  DNS lookup for multidrop addresses is %sabled.\n",
-	       ctl->server.dns ? "en" : "dis",
-	       ctl->server.dns ? "off" : "on");
+	       ctl->server.dns ? "en" : "dis");
 
 	if (count > 1)
 	    if (ctl->server.envelope == STRING_DISABLED)

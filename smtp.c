@@ -48,7 +48,6 @@ int SMTP_helo(int sock,char *host)
 int SMTP_ehlo(int sock, char *host, int *opt)
 /* send a "EHLO" message to the SMTP listener, return extension status bits */
 {
-  int ok;
   struct opt *hp;
 
   SockPrintf(sock,"EHLO %s\r\n", host);
@@ -84,7 +83,6 @@ int SMTP_from(int sock, char *from, char *opts)
 /* send a "MAIL FROM:" message to the SMTP listener */
 {
   int ok;
-  struct opt *hp;
   char buf[MSGBUFSIZE];
 
   sprintf(buf, "MAIL FROM:<%s>", from);

@@ -258,8 +258,8 @@ int foreground;
    empty) by calling error_complete().
    If an intervening call to error() occurs when a partially constructed
    message exists, then, in an attempt to keep the messages in their proper
-   sequence, the partial message will be printed as-is (with a trailing newline)
-   before error() prints its message.
+   sequence, the partial message will be printed as-is (with a trailing 
+   newline) before error() prints its message. */
 /* VARARGS */
 
 void
@@ -359,7 +359,7 @@ error_build (message, va_alist)
 /* Complete an error message by appending MESSAGE, which is a printf-style
    format string with optional args, to the existing error message (which may
    be empty.)  The completed error message is then printed (and reset to
-   empty.)
+   empty.) */
 /* VARARGS */
 
 void

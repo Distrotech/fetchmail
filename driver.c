@@ -231,7 +231,7 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 	return;
     else
     {
-	char	*cp, *lname;
+	char	*cp;
 
 	if ((cp = nxtaddr(hdr)) != (char *)NULL)
 	    do {
@@ -441,9 +441,6 @@ char *realname;		/* real name of host */
     int n, linelen, oldlen, ch, sizeticker, delete_ok, remaining;
     FILE *sinkfp;
     RETSIGTYPE (*sigchld)();
-#ifdef HAVE_GETHOSTBYNAME
-    char rbuf[HOSTLEN + USERNAMELEN + 4]; 
-#endif /* HAVE_GETHOSTBYNAME */
     char		*cp;
     struct idlist 	*idp, *xmit_names;
     int			good_addresses, bad_addresses, has_nuls;
@@ -478,7 +475,7 @@ char *realname;		/* real name of host */
 	    if (ctl->forcecr)
 	    {
 		cp = buf + strlen(buf) - 1;
-		if (cp > buf && *cp == '\n' && cp[-1] != '\r')
+		if (*cp == '\n' && (cp == buf || cp[-1] != '\r'))
 		{
 		    *cp++ = '\r';
 		    *cp++ = '\n';
@@ -750,7 +747,6 @@ char *realname;		/* real name of host */
     else
     {
 	char	*ap, *ctt, options[MSGBUFSIZE];
-	int	smtperr;
 
 	/* build a connection to the SMTP listener */
 	if (!ctl->mda && (smtp_open(ctl) == -1))
@@ -774,11 +770,11 @@ char *realname;		/* real name of host */
 	    && (ctt_offs >= 0)
 	    && (ctt = nxtaddr(headers + ctt_offs)))
 	    if (!strcasecmp(ctt,"7BIT"))
-		sprintf(options, " BODY=7BIT", ctt);
+		sprintf(options, " BODY=7BIT");
 	    else if (!strcasecmp(ctt,"8BIT"))
-		sprintf(options, " BODY=8BITMIME", ctt);
+		sprintf(options, " BODY=8BITMIME");
 	if ((ctl->server.esmtp_options & ESMTP_SIZE) && !delimited)
-	    sprintf(options + strlen(options), " SIZE=%d", len);
+	    sprintf(options + strlen(options), " SIZE=%ld", len);
 
 	/*
 	 * If there is a Return-Path address on the message, this was
@@ -1066,7 +1062,7 @@ char *realname;		/* real name of host */
 	if (ctl->forcecr)
 	{
 	    cp = buf + strlen(buf) - 1;
-	    if (cp > buf && *cp == '\n' && cp[-1] != '\r')
+	    if (*cp == '\n' && (cp == buf || cp[-1] != '\r'))
 	    {
 		*cp++ = '\r';
 		*cp++ = '\n';

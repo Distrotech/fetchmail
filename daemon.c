@@ -12,6 +12,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/fcntl.h>	/* Solaris 2.5 requires this */
+#include <sys/stat.h>	/* get umask(2) prototyped */
 
 #if defined(HAVE_UNISTD_H)
 #include <unistd.h>

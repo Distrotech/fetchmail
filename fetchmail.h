@@ -189,6 +189,7 @@ void error_init(int foreground);
 void error (int status, int errnum, const char *format, ...);
 void error_build (const char *format, ...);
 void error_complete (int status, int errnum, const char *format, ...);
+void error_at_line (int, int, const char *, unsigned int, const char *, ...);
 void gen_send (int sock, char *, ... );
 int gen_recv(int sock, char *buf, int size);
 int gen_transact (int sock, char *, ... );
@@ -196,6 +197,7 @@ int gen_transact (int sock, char *, ... );
 void error ();
 void error_build ();
 void error_complete ();
+void error_at_line ();
 void gen_send ();
 int gen_transact ();
 #endif

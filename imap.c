@@ -34,7 +34,7 @@ int imap_ok (int sock,  char *argbuf)
     do {
 	int	ok;
 
-	if (ok = gen_recv(sock, buf, sizeof(buf)))
+	if ((ok = gen_recv(sock, buf, sizeof(buf))))
 	    return(ok);
 
 	/* interpret untagged status responses */
@@ -91,7 +91,7 @@ int imap_getauth(int sock, struct query *ctl, char *buf)
 
     /* probe to see if we're running IMAP4 and can use RFC822.PEEK */
     gen_send(sock, "CAPABILITY");
-    if (ok = gen_recv(sock, rbuf, sizeof(rbuf)))
+    if ((ok = gen_recv(sock, rbuf, sizeof(rbuf))))
 	return(ok);
     if (strstr(rbuf, "BAD"))
     {
@@ -157,7 +157,7 @@ static int imap_getsizes(int sock, int count, int *sizes)
     {
 	int num, size, ok;
 
-	if (ok = gen_recv(sock, buf, sizeof(buf)))
+	if ((ok = gen_recv(sock, buf, sizeof(buf))))
 	    return(ok);
 	if (strstr(buf, "OK"))
 	    break;
@@ -187,7 +187,7 @@ static int imap_is_old(int sock, struct query *ctl, int number)
 static int imap_fetch(int sock, struct query *ctl, int number, int *lenp)
 /* request nth message */
 {
-    char buf [POPBUFSIZE+1], *fetch;
+    char buf [POPBUFSIZE+1];
     int	num;
 
     /* expunges change the fetch numbers */
@@ -228,7 +228,7 @@ static int imap_fetch(int sock, struct query *ctl, int number, int *lenp)
     do {
 	int	ok;
 
-	if (ok = gen_recv(sock, buf, sizeof(buf)))
+	if ((ok = gen_recv(sock, buf, sizeof(buf))))
 	    return(ok);
     } while
 	/* third token can be "RFC822" or "BODY[]" */
