@@ -169,13 +169,13 @@ int main (int argc, char **argv)
 	    printf("No SMTP message batch limit.\n");
 #ifdef	linux
 	if (interface)
-	    printf("TCP/IP interface requirements for %s.\n", interface);
+	    printf("TCP/IP interface requirements are %s.\n", interface);
 	else if (outlevel == O_VERBOSE)
-	    printf("No TCP/IP interface requirements specified\n");
+	    printf("No TCP/IP interface requirements specified.\n");
 	if (monitor)
 	    printf("Polling loop will monitor %s.\n", monitor);
 	else if (outlevel == O_VERBOSE)
-	    printf("No monitor interface specified\n");
+	    printf("No monitor interface specified.\n");
 #endif
 	for (ctl = querylist; ctl; ctl = ctl->next) {
 	    if (ctl->active && !(implicitmode && ctl->skip))
@@ -183,8 +183,7 @@ int main (int argc, char **argv)
 	}
 	if (querylist == NULL)
 	    (void) fprintf(stderr,
-		"No mailservers set up -- perhaps %s is missing?\n",
-			  rcfile);
+		"No mailservers set up -- perhaps %s is missing?\n", rcfile);
 	exit(0);
     }
     else if (!quitmode && querylist == NULL) {
