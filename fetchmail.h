@@ -404,9 +404,12 @@ void report_complete ();
 void report_at_line ();
 #endif
 
+/* driver.c -- main driver loop */
+void set_timeout(int);
+int do_protocol(struct query *, const struct method *);
+
 /* transact.c: transaction support */
 void init_transact(const struct method *);
-void set_timeout(int);
 int readheaders(int sock,
 		       long fetchlen,
 		       long reallen,
@@ -414,13 +417,13 @@ int readheaders(int sock,
 		int num);
 int readbody(int sock, struct query *ctl, flag forward, int len);
 #if defined(HAVE_STDARG_H)
-void gen_send (int sock, const char *, ... );
+void gen_send(int sock, const char *, ... );
 int gen_recv(int sock, char *buf, int size);
-int gen_transact (int sock, const char *, ... );
+int gen_transact(int sock, const char *, ... );
 #else
-void gen_send ();
+void gen_send();
 int gen_recv();
-int gen_transact ();
+int gen_transact();
 #endif
 extern struct msgblk msgblk;
 
@@ -544,7 +547,6 @@ static char *dummy = gettext_noop("alloca failed");
 #endif
 
 /* protocol driver and methods */
-int do_protocol(struct query *, const struct method *);
 int doPOP2 (struct query *); 
 int doPOP3 (struct query *);
 int doIMAP (struct query *);
