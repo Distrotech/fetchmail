@@ -616,6 +616,53 @@ static int open_bsmtp_sink(struct query *ctl, struct msgblk *msg,
 /* this is experimental and will be removed if double bounces are reported */
 #define EXPLICIT_BOUNCE_ON_BAD_ADDRESS
 
+
+static const char *is_quad(const char *q)
+/* Check if the string passed in points to what could be one quad of a
+ * dotted-quad IP address.  Requirements are that the string is not a
+ * NULL pointer, begins with a period (which is skipped) or a digit
+ * and ends with a period or a NULL.  If these requirements are met, a
+ * pointer to the last character (the period or the NULL character) is
+ * returned; otherwise NULL.
+ */
+{
+  const char *r;
+  
+  if (!q || !*q)
+    return NULL;
+  if (*q == '.')
+    q++;
+  for(r=q;isdigit(*r);r++)
+    ;
+  if ( ((*r) && (*r != '.')) || ((r-q) < 1) || ((r-q)>3) )
+    return NULL;
+  /* Make sure quad is < 255 */
+  if ( (r-q) == 3)
+    if (*q > '2')
+      return NULL;
+    else if (*q == '2')
+    {
+      if (*(q+1) > '5')
+        return NULL;
+      else if (*(q+1) == '5')
+      {
+        if (*(q+2) > '5')
+          return NULL;
+      }
+    }
+  return r;
+}
+
+static int is_dottedquad(const char *hostname)
+/* Returns a true value if the passed in string looks like an IP
+ *  address in dotted-quad form, and a false value otherwise.
+ */
+
+{
+  return ((hostname=is_quad(is_quad(is_quad(is_quad(hostname))))) != NULL) &&
+    (*hostname == '\0');
+}
+
 static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
 	      int *good_addresses, int *bad_addresses)
 /* open an SMTP stream */
@@ -669,27 +716,54 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
      * path equal to "@".  Ghod knows why anyone does this, but 
      * it's been reported to happen in mail from Amazon.com and
      * Motorola.
+     *
+     * Also, if the hostname is a dotted quad, wrap it in square brackets.
+     * Apparently this is required by some RFC I wot not of.
      */
     if (!msg->return_path[0] || (0 == strcmp(msg->return_path, "@")))
     {
+      if (is_dottedquad(ctl->server.truename))
+      {
+#ifdef HAVE_SNPRINTF
+	snprintf(addr, sizeof(addr),
+#else
+                 sprintf(addr,
+#endif /* HAVE_SNPRINTF */
+	      "%s@[%s]", ctl->remotename, ctl->server.truename);
+      }
+      else
+      {
 #ifdef HAVE_SNPRINTF
 	snprintf(addr, sizeof(addr),
 #else
 	sprintf(addr,
 #endif /* HAVE_SNPRINTF */
 	      "%s@%s", ctl->remotename, ctl->server.truename);
+      }
 	ap = addr;
     }
     else if (strchr(msg->return_path,'@') || strchr(msg->return_path,'!'))
 	ap = msg->return_path;
     else		/* in case Return-Path existed but was local */
     {
+      if (is_dottedquad(ctl->server.truename))
+      {
+#ifdef HAVE_SNPRINTF
+	snprintf(addr, sizeof(addr),
+#else
+	sprintf(addr,
+#endif /* HAVE_SNPRINTF */
+		"%s@[%s]", msg->return_path, ctl->server.truename);
+      }
+      else
+      {
 #ifdef HAVE_SNPRINTF
 	snprintf(addr, sizeof(addr),
 #else
 	sprintf(addr,
 #endif /* HAVE_SNPRINTF */
 		"%s@%s", msg->return_path, ctl->server.truename);
+      }
 	ap = addr;
     }
 
