@@ -393,9 +393,19 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	 *
 	 */
 	if (run.spambounce)
+     {
+       char rejmsg[160];
+#ifdef HAVE_SNPRINTF
+       snprintf(rejmsg, sizeof(rejmsg),
+#else
+       sprintf(rejmsg,
+#endif /* HAVE_SNPRINTF */
+		"spam filter or virus scanner rejected message because:\r\n"
+		"%s\r\n", responses[0]);
+	  
 		send_bouncemail(ctl, msg, XMIT_ACCEPT,
-			"Our spam filter rejected this transaction.\r\n", 
-			1, responses);
+		       rejmsg, 1, responses);
+     }
 	return(PS_REFUSED);
     }
 
