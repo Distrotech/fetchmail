@@ -466,7 +466,7 @@ listener before the connection is deliberately torn down and rebuilt
 overrides any limits set in your run control file.  While
 \fBsendmail\fR(8) normally initiates delivery of a message immediately
 after receiving the message terminator, some SMTP listeners are not so
-prompt.  MTAs like \fIqmail\fR(8) and \fIsmail\fR(8) may wait till the
+prompt.  MTAs like \fIsmail\fR(8) may wait till the
 delivery socket is shut down to deliver.  This may produce annoying
 delays when \fIfetchmail\fR is processing very large batches.  Setting
 the batch limit to some nonzero size will prevent these delays.  This

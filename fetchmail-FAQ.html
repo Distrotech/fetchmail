@@ -16,7 +16,7 @@ content="Frequently asked questions about fetchmail."/>
 Page</a></td>
 <td width="30%" align="center">To <a href="/~esr/sitemap.html">Site
 Map</a></td>
-<td width="30%" align="right">$Date: 2002/10/18 10:20:44 $</td>
+<td width="30%" align="right">$Date: 2002/10/18 11:03:00 $</td>
 </tr>
 </table>
 
@@ -196,8 +196,7 @@ mangled.</a><br/>
 <a href="#X7">X7. Some mail attachments are hanging
 fetchmail.</a><br/>
 <a href="#X8">X8. A spurious ) is being appended to my
-messages.</a><br/>
- 
+messages.</a><br/> 
 
 <h1>Other problems:</h1>
 
@@ -221,7 +220,9 @@ working?</a><br/>
 messages over and over?</a><br/>
 <a href="#O10">O10. Why is the received date on all my messages the
 same?</a><br/>
- 
+<a href="#O11">O11. I keep getting messages that say "Repoll
+immediately" in my logs.</a><br/>
+
 
 <h1>Answers:</h1>
 
@@ -1918,7 +1919,8 @@ Geocities are lame, you should boycott them anyway.</p>
 <h2><a id="S8" name="S8">S8. How can I use fetchmail with Hotmail?</a></h2>
 
 <p>You can't, yet. But <a
-href="http://linux.cudeso.be/linuxdoc/gotmail.php">gotmail</a> might
+href="http://linux.cudeso.be/linuxdoc/gotmail.php">gotmail</a> or 
+<a href='http://people.freenet.de/courierdave/'>HotWayDaemon</a> might
 be what you need.</p>
 
 <hr/>
@@ -3419,6 +3421,17 @@ messages the same?</a></h2>
 <p>This is a design choice in your MTA, not fetchmail. It's taking
 the received date from the last Received header.</p>
 
+<hr />
+<a name="#O11">O11. I keep getting messages that say "Repoll
+immediately" in my logs.</a><br/>
+
+<p>This is your server barfing on the CAPA probe that fetchmail sends.</p>
+If you run fetchmail in daemon mode (say "set daemon 600"), you will
+get the message only once per run.</p>
+
+<p>If you set an authentication method explicitly (say, with
+<code>auth password</code>), you will never get the message.</p>
+
 <hr/>
 <table width="100%" cellpadding="0" summary="Canned page footer">
 <tr>
@@ -3426,7 +3439,7 @@ the received date from the last Received header.</p>
 Page</a></td>
 <td width="30%" align="center">To <a href="/~esr/sitemap.html">Site
 Map</a></td>
-<td width="30%" align="right">$Date: 2002/10/18 10:20:44 $</td>
+<td width="30%" align="right">$Date: 2002/10/18 11:03:00 $</td>
 </tr>
 </table>
 

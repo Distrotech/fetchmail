@@ -358,6 +358,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 
 #ifdef SSL_ENABLE
     if ((ctl->server.authenticate == A_ANY)
+        && !ctl->use_ssl
         && strstr(capabilities, "STARTTLS"))
     {
            char *realhost;
