@@ -3,11 +3,17 @@
 ------------------------------------------------------------------------------
 fetchmail-3.2 ()
 
+features --
+
+* Better error notification on IMAP select failure.
+
 bugs --
 
 * The code can now handle arbitrarily long address lists.
 
 * Fix RFC822 parsing to strip comments at end of bare addresses.
+
+* Explicitly strip CRs out of fetched mail.
 
 ------------------------------------------------------------------------------
 fetchmail-3.1 (Fri Jan 24 12:45:18 EST 1997)

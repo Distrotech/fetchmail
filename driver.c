@@ -763,25 +763,37 @@ char *realname;		/* real name of host */
     }
 
     /* write all the headers */
-    if (ctl->mda)
-	n = fwrite(headers, 1, oldlen, sinkfp);
-    else if (sinkfp)
-	n = SockWrite(headers, 1, oldlen, sinkfp);
-
-    if (n < 0)
+    if (sinkfp)
     {
-	free(headers);
-	headers = NULL;
-	error(0, errno, "writing RFC822 headers");
 	if (ctl->mda)
 	{
-	    pclose(sinkfp);
-	    signal(SIGCHLD, sigchld);
+	    char	*sp, *tp;
+
+	    for (sp = tp = headers; *sp; sp++)
+		if (*sp != '\r')
+		    *tp++ =  *sp;
+	    *tp = '\0';
+
+	    n = fwrite(headers, 1, oldlen, sinkfp);
 	}
-	return(PS_IOERR);
+	else
+	    n = SockWrite(headers, 1, oldlen, sinkfp);
+
+	if (n < 0)
+	{
+	    free(headers);
+	    headers = NULL;
+	    error(0, errno, "writing RFC822 headers");
+	    if (ctl->mda)
+	    {
+		pclose(sinkfp);
+		signal(SIGCHLD, sigchld);
+	    }
+	    return(PS_IOERR);
+	}
+	else if (outlevel == O_VERBOSE)
+	    fputs("#", stderr);
     }
-    else if (outlevel == O_VERBOSE)
-	fputs("#", stderr);
     free(headers);
     headers = NULL;
 
@@ -828,19 +840,33 @@ char *realname;		/* real name of host */
 	strcat(errmsg, "\n");
 
 	/* ship out the error line */
-	if (ctl->mda)
-	    fwrite(errmsg, 1, strlen(errmsg), sinkfp);
-	else if (sinkfp)
-	    SockWrite(errmsg, 1, strlen(errmsg), sinkfp);
+	if (sinkfp)
+	{
+	    if (ctl->mda)
+	    {
+		char	*sp, *tp;
+
+		for (sp = tp = headers; *sp; sp++)
+		    if (*sp != '\r')
+			*tp++ =  *sp;
+		*tp = '\0';
+		fwrite(errmsg, 1, strlen(errmsg), sinkfp);
+	    }
+	    else
+		SockWrite(errmsg, 1, strlen(errmsg), sinkfp);
+	}
     }
 
     free_str_list(&xmit_names);
 
     /* issue the delimiter line */
-    if (ctl->mda)
-	fputs("\r\n", sinkfp);
-    else if (sinkfp)
-	SockWrite("\r\n", 1, 2, sinkfp);
+    if (sinkfp)
+    {
+	if (ctl->mda)
+	    fputc('\n', sinkfp);
+	else
+	    SockWrite("\r\n", 1, 2, sinkfp);
+    }
 
     /*
      *  Body processing starts here
@@ -871,31 +897,43 @@ char *realname;		/* real name of host */
 	    if (buf[1] == '\r' && buf[2] == '\n')
 		break;
 
-	/* SMTP byte-stuffing */
-	if (*buf == '.')
-	    if (ctl->mda)
-		fputs(".", sinkfp);
-	    else if (sinkfp)
-		SockWrite(buf, 1, 1, sinkfp);
-
 	/* ship out the text line */
-	if (ctl->mda)
-	    n = fwrite(buf, 1, strlen(buf), sinkfp);
-	else if (sinkfp)
-	    n = SockWrite(buf, 1, strlen(buf), sinkfp);
-
-	if (n < 0)
+	if (sinkfp)
 	{
-	    error(0, errno, "writing message text");
+	    /* SMTP byte-stuffing */
+	    if (*buf == '.')
+		if (ctl->mda)
+		    fputs(".", sinkfp);
+		else
+		    SockWrite(buf, 1, 1, sinkfp);
+
 	    if (ctl->mda)
 	    {
-		pclose(sinkfp);
-		signal(SIGCHLD, sigchld);
+		char	*sp, *tp;
+
+		for (sp = tp = headers; *sp; sp++)
+		    if (*sp != '\r')
+			*tp++ =  *sp;
+		*tp = '\0';
+
+		n = fwrite(buf, 1, strlen(buf), sinkfp);
 	    }
-	    return(PS_IOERR);
+	    else if (sinkfp)
+		n = SockWrite(buf, 1, strlen(buf), sinkfp);
+
+	    if (n < 0)
+	    {
+		error(0, errno, "writing message text");
+		if (ctl->mda)
+		{
+		    pclose(sinkfp);
+		    signal(SIGCHLD, sigchld);
+		}
+		return(PS_IOERR);
+	    }
+	    else if (outlevel == O_VERBOSE)
+		fputc('*', stderr);
 	}
-	else if (outlevel == O_VERBOSE)
-	    fputc('*', stderr);
     }
 
     /*

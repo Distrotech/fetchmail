@@ -128,7 +128,10 @@ static int imap_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
 		  "SELECT %s",
 		  ctl->mailbox ? ctl->mailbox : "INBOX");
     if (ok != 0)
+    {
+	error(0, 0, "mailbox selection failed");
 	return(ok);
+    }
 
     *countp = count;
 
