@@ -319,7 +319,7 @@ struct query *ctl;	/* option record to be initialized */
 	    rctl->invisible = TRUE;
 	    break;
 	case LA_SHOWDOTS:
-	    rctl->showdots = TRUE;
+	    rctl->showdots = FLAG_TRUE;
 	    break;
 	case 'f':
 	case LA_RCFILE:
