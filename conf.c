@@ -151,29 +151,31 @@ void dump_config(struct runctl *runp, struct query *querylist)
     for (ctl = querylist; ctl; ctl = ctl->next)
     {
 	/*
-	 * Every time we see a leading server entry after the first one,
-	 * it implicitly ends the both (q) the list of user structures
-	 * associated with the previous entry, and (b) that previous entry.
-	 */
-	if (ctl > querylist)
-	{
-	    indent(']');
-	    indent('}');
-	    indent('\0'); 
-	    putc(',', stdout);
-	    putc('\n', stdout);
-	}
-
-	indent(0);
-	fprintf(stdout,"# Entry for site `%s' begins:\n",ctl->server.pollname);
-	indent('{');
-
-	/*
 	 * First, the server stuff.
 	 */
 	if (!ctl->server.lead_server)
 	{
-	    flag using_kpop =
+	    flag	using_kpop;
+
+	    /*
+	     * Every time we see a leading server entry after the first one,
+	     * it implicitly ends the both (a) the list of user structures
+	     * associated with the previous entry, and (b) that previous entry.
+	     */
+	    if (ctl > querylist)
+	    {
+		indent(']');
+		indent('}');
+		indent('\0'); 
+		putc(',', stdout);
+		putc('\n', stdout);
+	    }
+
+	    indent(0);
+	    fprintf(stdout,"# Entry for site `%s' begins:\n",ctl->server.pollname);
+	    indent('{');
+
+	    using_kpop =
 		(ctl->server.protocol == P_POP3 &&
 		 ctl->server.port == KPOP_PORT &&
 		 ctl->server.preauthenticate == A_KERBEROS_V4);
@@ -268,6 +270,8 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	listdump("mailboxes", ctl->mailboxes);
 
 	indent('}');
+	indent('\0'); 
+	fputc(',', stdout);
     }
 
     /* end last span of user entries and last server entry */
