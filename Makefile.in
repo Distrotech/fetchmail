@@ -108,7 +108,7 @@ rfc822: rfc822.c
 	gcc -DTESTMAIN -g rfc822.c -o rfc822
 
 .c.o:
-	$(CC) $(defines) -c -I$(srcdir) $(CFLAGS) $< $(OUTPUT_OPTION)
+	$(CC) $(defines) -c -I$(srcdir) -I. $(CFLAGS) $< $(OUTPUT_OPTION)
 
 # For some losing Unix makes.
 SHELL = /bin/sh
@@ -153,37 +153,37 @@ realclean: distclean # fetchmail.info*
 
 mostlyclean: clean
 
-Makefile: config.status $(srcdir)/Makefile.in
-	$(SHELL) config.status
-	@echo "You can ignore any makedepend error messages"
-	-makedepend -I$(srcdir) -I. -fMakefile *.c
+config.status: configure
+	$(srcdir)/configure
 
-config.h: stamp-config 
+config.h: config.status config.h.in
+	sh config.status
 
-stamp-config: config.status $(srcdir)/config.h.in
-	$(SHELL) config.status
-	touch stamp-config
+Makefile: config.status Makefile.in
+	sh config.status
 
 configure: configure.in
 	autoconf $(ACFLAGS)
 
 config.h.in: acconfig.h configure.in
-	autoheader $(ACFLAGS); touch config.h.in
+	autoheader $(ACFLAGS)
 
 # This tells versions [3.59,3.63) of GNU make not to export all variables.
 .NOEXPORT:
 
-# Special dependencies, not easily handled without explicit rules
-rcfile_l.o rcfile_l.h: $(srcdir)/rcfile_l.l
-	$(LEX) $(LEXFLAGS) $<
-	mv lex.yy.c $*.c
-	$(CC) $(defines) -c -I$(srcdir) -I. $(CFLAGS) $*.c $(OUTPUT_OPTION)
+# Special dependencies, not easily handled portably without explicit rules
+rcfile_l.c rcfile_l.h: $(srcdir)/rcfile_l.l
+	$(LEX) $(LEXFLAGS) $(srcdir)/rcfile_l.l
+	mv lex.yy.c rcfile_l.c
+rcfile_y.c rcfile_y.h: $(srcdir)/rcfile_y.y
+	$(YACC) $(YACCFLAGS) $(srcdir)/rcfile_y.y
+	mv y.tab.c rcfile_y.c
+	mv -f y.tab.h rcfile_y.h
 
-rcfile_y.o rcfile_y.h: $(srcdir)/rcfile_y.y
-	$(YACC) $(YACCFLAGS) $<
-	mv y.tab.c $*.c
-	mv -f y.tab.h $*.h
-	$(CC) $(defines) -c -I$(srcdir) -I. $(CFLAGS) $*.c $(OUTPUT_OPTION)
+# These must be explicit, because the .c files often don't exist at
+# makefile build time. 
+rcfile_l.o: rcfile_y.c rcfile_y.h config.h fetchmail.h
+rcfile_y.o: rcfile_y.c rcfile_y.h config.h fetchmail.h
 
 parser = $(srcdir)/rcfile_l.l $(srcdir)/rcfile_y.y
 headers = $(srcdir)/fetchmail.h $(srcdir)/socket.h $(srcdir)/smtp.h \
@@ -246,12 +246,5 @@ rpm: dist
 	cp $(RPMROOT)/RPMS/`arch|sed 's/i[4-9]86/i386/'`/fetchmail-$(VERS)*.rpm $(srcdir)
 	cp $(RPMROOT)/SRPMS/fetchmail-$(VERS)*.src.rpm $(srcdir)
 
-# The automatically generated dependencies below may omit config.h
-# because it is included with ``#include <config.h>'' rather than
-# ``#include "config.h"''.  So we add the explicit dependency to make sure.
-$(objs): config.h
-
-rcfile_l.o: rcfile_y.h
-
 # Automatically generated dependencies will be put at the end of the makefile.
-# DO NOT DELETE THIS LINE -- make depend depends on it.
+# DO NOT DELETE THIS LINE -- makedepend depends on it.

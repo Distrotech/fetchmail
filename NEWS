@@ -19,7 +19,10 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail 4.0.3 (Mon Jul 28 16:39:17 EDT 1997)
+fetchmail-4.0.4 ()
+* Overhauled the build machinery.
+
+fetchmail-4.0.3 (Mon Jul 28 16:39:17 EDT 1997)
 * Replace vsprintf with vnsprintf to avoid buffer-overrun screws.
 * Added via option to make ssh configuration cleaner.
 * Added dropstatus option.
@@ -30,7 +33,7 @@ Note: RFC1938 support is tentative, untested, and requires a patch to the
 LIBOPIE library.  See the file LIBOPIE.PATCH for the sad details.
 There are 258 people on the fetchmail-friends list.
 
-fetchmail 4.0.2 (Mon Jul 17 20:54:30 EDT 1997)
+fetchmail-4.0.2 (Mon Jul 17 20:54:30 EDT 1997)
 * Experimental RFC1938 one-time password support using OPIE library,
   courtesy of Craig Metz <cmetz@inner.net> (couthor of RFC1938).
 

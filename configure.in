@@ -150,9 +150,8 @@ else
 fi
 
 AC_OUTPUT(Makefile, [
-# Makefile uses this timestamp file to know when to remake Makefile,
-# build.sh, and glob/Makefile.
-touch stamp-config])
+	echo "You can ignore any makedepend error messages";
+	makedepend -I$srcdir -I. -fMakefile *.c])
 
 dnl Local Variables:
 dnl comment-start: "dnl "
