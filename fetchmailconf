@@ -273,8 +273,6 @@ class User:
 	    str = str + " batchlimit " + `self.batchlimit`
 	if self.expunge != UserDefaults.expunge:
 	    str = str + " expunge " + `self.expunge`
-	if self.properties:
-	    str = str + " properties " + `self.properties`
         str = str + "\n"
         trimmed = self.smtphunt;
         if trimmed != [] and trimmed[len(trimmed) - 1] == "localhost":
@@ -291,7 +289,7 @@ class User:
 	     for x in self.mailboxes:
 		str = str + " " + x
 	     str = str + "\n"
-        for fld in ('smtpaddress', 'preconnect', 'postconnect', 'mda'):
+        for fld in ('smtpaddress', 'preconnect', 'postconnect', 'mda', 'properties'):
             if getattr(self, fld):
                 str = str + " %s %s\n" % (fld, `getattr(self, fld)`)
         if self.antispam != UserDefaults.antispam:
