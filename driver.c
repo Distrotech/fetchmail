@@ -270,7 +270,7 @@ char *hdr;
   globals:       reads outlevel. 
  *********************************************************************/
 
-int gen_readmsg (socket,mboxfd,len,delimited,popuser,pophost,output,rewrite)
+static int gen_readmsg (socket,mboxfd,len,delimited,popuser,pophost,output,rewrite)
 int socket;
 int mboxfd;
 long len;
@@ -762,7 +762,7 @@ va_dcl {
     fmt          printf-style format
 
   return value:  none.
-  calls:         SockPuts, imap_ok.
+  calls:         SockPuts.
   globals:       reads outlevel.
  *********************************************************************/
 
@@ -795,4 +795,5 @@ va_dcl {
 
   return(ok);
 }
+
 
