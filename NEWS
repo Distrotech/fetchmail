@@ -16,12 +16,13 @@ fetchmail-4.3.1 ()
 * Fixed a bad interaction between --limit and the repoll feature.
 * = is now optional in global options.
 * Code for parsing Received headers now strips out RFC822 routes.
-* Fixed processing of -S argument so giving a comma-separated list works. 
+* Fixed processing of -S/-r arguments so giving a comma-separated list works. 
+* Don't query for the fetchmail host machine by default in ETRN mode.
 * Added --invisible option.  Note: you can now either make fetchmail generate
   a Received header (the default) *or* spoof your listener into thinking
   fetchmail connected from the mailserver machine, *but not both*.
 
-There are 277 people on fetchmail-friends and 20 on fetchmail-announce.
+There are 272 people on fetchmail-friends and 36 on fetchmail-announce.
 
 ------------------------------------------------------------------------------
 fetchmail-4.3.0 (Mon Oct  6 16:44:38 EDT 1997)

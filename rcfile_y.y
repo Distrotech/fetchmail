@@ -415,9 +415,9 @@ static void record_current(void)
     FLAG_FORCE(remotename);
     FLAG_FORCE(password);
     if (cmd_opts.mailboxes)
-	save_str(&current.mailboxes, -1, cmd_opts.mailboxes->id);
+	current.mailboxes = cmd_opts.mailboxes;
     if (cmd_opts.smtphunt)
-	save_str(&current.smtphunt, -1, cmd_opts.smtphunt->id);
+	current.smtphunt = cmd_opts.smtphunt;
     FLAG_FORCE(mda);
     FLAG_FORCE(preconnect);
     FLAG_FORCE(postconnect);

@@ -420,7 +420,11 @@ static int smtp_open(struct query *ctl)
 
 	errno = 0;
 
-	/* run down the SMTP hunt list looking for a server that's up */
+	/*
+	 * Run down the SMTP hunt list looking for a server that's up.
+	 * Use both explicit hunt entries (value TRUE) and implicit 
+	 * (default) ones (value FALSE).
+	 */
 	for (idp = ctl->smtphunt; idp; idp = idp->next)
 	{
 	    ctl->smtphost = idp->id;  /* remember last host tried. */

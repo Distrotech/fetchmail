@@ -565,7 +565,7 @@ static int load_params(int argc, char **argv, int optind)
     def_opts.server.protocol = P_AUTO;
     def_opts.server.timeout = CLIENT_TIMEOUT;
     def_opts.remotename = user;
-    save_str(&def_opts.smtphunt, TRUE, fetchmailhost);
+    save_str(&def_opts.smtphunt, FALSE, fetchmailhost);
     save_str(&def_opts.smtphunt, FALSE, "localhost");
     def_opts.expunge = 1;
 
@@ -991,7 +991,12 @@ void dump_params (struct query *ctl)
 
 	printf("  Messages will be SMTP-forwarded to:");
 	for (idp = ctl->smtphunt; idp; idp = idp->next)
-	    printf(" %s", idp->id);
+	    if (ctl->server.protocol != P_ETRN || idp->val.num)
+	    {
+		printf(" %s", idp->id);
+		if (!idp->val.num)
+	    	    printf(" (default)");
+	    }
 	printf("\n");
     }
     if (ctl->preconnect)
