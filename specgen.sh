@@ -3,7 +3,7 @@ Description: Remote mail fetcher for POP2, POP3, APOP, IMAP
 Name: fetchmail
 Version: ${1}
 Release: ${2}
-Source: locke.ccil.org:/pub/esr/fetchmail-${1}.tar.gz
+Source: locke.ccil.org:/pub/esr/fetchmail/fetchmail-${1}.tar.gz
 Copyright: distributable
 Group: Mail
 
