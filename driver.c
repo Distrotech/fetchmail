@@ -2142,12 +2142,12 @@ const struct method *proto;	/* protocol method table */
 	msg = _("DNS lookup");
 	break;
     case PS_UNDEFINED:
-	report(stderr, _("undefined\n"));
+	report(stderr, _("undefined error\n"));
 	break;
     }
     if (ok==PS_SOCKET || ok==PS_AUTHFAIL || ok==PS_SYNTAX 
 		|| ok==PS_IOERR || ok==PS_ERROR || ok==PS_PROTOCOL 
-		|| ok==PS_LOCKBUSY || ok==PS_SMTP)
+		|| ok==PS_LOCKBUSY || ok==PS_SMTP || ok==PS_DNS)
 	report(stderr, _("%s error while fetching from %s\n"), msg, ctl->server.pollname);
 
 closeUp:
