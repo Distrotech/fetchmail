@@ -22,6 +22,9 @@ autoconf).  It has also been ported to QNX; to build under QNX, see
 the header comments in the Makefile.  It is reported to build and run
 under AmigaOS.
 
+A beta OS/2 port of fetchmail is available from Jason F. McBrayer at 
+http://studentweb.tulane.edu/%7Ejmcbray/os2.
+
 See the distribution files FEATURES for a full list of features, NEWS
 for detailed information on recent changes and NOTES for design notes.
 
