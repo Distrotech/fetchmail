@@ -7,14 +7,14 @@
   module:       rcfile_y.y
   project:      fetchmail
   programmer:   Eric S. Raymond <esr@thyrsus.com>
-		Extensively hacked and fixed by esr.
-  description:  configuration file parser
+  description:  fetchmail configuration file parser
 
  ***********************************************************************/
 
 #include <config.h>
 #include <stdio.h>
 #include "fetchmail.h"
+
 extern char *rcfile;
 extern int prc_lineno;
 extern int prc_errflag;
