@@ -81,16 +81,15 @@ int imap_ok (int sock,  char *argbuf)
 }
 
 #ifdef KERBEROS_V4
+#include <sys/types.h>
+
 static int do_rfc1731(int sock, struct query *ctl, char *buf)
-/* authenticate as per RFC1731
- * note 32-bit integer requirement here...
- * sizeof int must be 4!
- */
+/* authenticate as per RFC1731 -- note 32-bit integer requirement here */
 {
     int result = 0, len;
     char buf1[4096], buf2[4096];
     union {
-      int cint;
+      u_int32_t cint;
       char cstr[4];
     } challenge1, challenge2;
     char srvinst[INST_SZ];

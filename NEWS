@@ -20,8 +20,6 @@ every user entry in a multi-user poll declaration.
 
 * Use the libmd functions for md5 under Free BSD?  (Low priority.)
 
-* Make the IMAP-K4 support 64-bit-safe.
-
 				Release Notes:
 
 ------------------------------------------------------------------------------
