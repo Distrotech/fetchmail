@@ -50,8 +50,11 @@
 #define LA_MONITOR      32
 #define LA_YYDEBUG	33
 
-static char *shortoptions = "?Vcsvd:NqL:f:i:p:UP:A:t:E:u:akKFnl:r:S:b:B:m:I:M:y";
-static struct option longoptions[] = {
+static const char *shortoptions = 
+	"?Vcsvd:NqL:f:i:p:UP:A:t:E:u:akKFnl:r:S:b:B:m:I:M:y";
+
+static const struct option longoptions[] = {
+/* this can be const because all flag fields are 0 and will never get set */
   {"help",	no_argument,	   (int *) 0, LA_HELP        },
   {"version",   no_argument,       (int *) 0, LA_VERSION     },
   {"check",	no_argument,	   (int *) 0, LA_CHECK       },
