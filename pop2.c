@@ -54,9 +54,13 @@ static int pop2_ok (int sock, char *argbuf)
 static int pop2_getauth(int sock, struct query *ctl, char *buf)
 /* apply for connection authorization */
 {
-    return(gen_transact(sock,
+    int status;
+
+    strcpy(shroud, ctl->password)
+    status = gen_transact(sock,
 		  "HELO %s %s",
-		  ctl->remotename, ctl->password));
+		  ctl->remotename, ctl->password);
+    shroud[0] = '\0';
 }
 
 static int pop2_getrange(int sock, struct query *ctl, const char *folder, 
@@ -134,7 +138,6 @@ const static struct method pop2 =
     FALSE,				/* this is not a tagged protocol */
     FALSE,				/* does not use message delimiter */
     pop2_ok,				/* parse command response */
-    NULL,				/* no password canonicalization */
     pop2_getauth,			/* get authorization */
     pop2_getrange,			/* query range of messages */
     NULL,				/* no way to get sizes */

@@ -190,7 +190,6 @@ const static struct method odmr =
     FALSE,		/* this is not a tagged protocol */
     FALSE,		/* this does not use a message delimiter */
     odmr_ok,		/* parse command response */
-    NULL,		/* no password canonicalization */
     NULL,		/* no need to get authentication */
     odmr_getrange,	/* initialize message sending */
     NULL,		/* we cannot get a list of sizes */

@@ -3,6 +3,7 @@
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
 * Nalin Dahyabhai's patch to make IPv6 build on older systems.
+* Restrict shrouding to just the password send so it won't leak info.
 
 fetchmail-5.7.4 (Mon Mar 12 00:02:23 EST 2001), 20323 lines:
 

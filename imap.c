@@ -375,7 +375,9 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 
 	imap_canonicalize(remotename, ctl->remotename, NAMELEN);
 	imap_canonicalize(password, ctl->password, PASSWORDLEN);
+	imap_canonicalize(shroud, ctl->password, PASSWORDLEN);
 	ok = gen_transact(sock, "LOGIN \"%s\" \"%s\"", remotename, password);
+	shroud[0] = '\0';
     }
 
     if (ok)
@@ -827,7 +829,6 @@ const static struct method imap =
     TRUE,		/* this is a tagged protocol */
     FALSE,		/* no message delimiter */
     imap_ok,		/* parse command response */
-    imap_canonicalize,	/* deal with embedded slashes and spaces */
     imap_getauth,	/* get authorization */
     imap_getrange,	/* query range of messages */
     imap_getsizes,	/* get sizes of messages (used for ESMTP SIZE option) */

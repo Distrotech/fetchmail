@@ -88,6 +88,7 @@ int stage;		/* where are we? */
 int phase;		/* where are we, for error-logging purposes? */
 int mytimeout;		/* value of nonreponse timeout */
 int suppress_tags;	/* emit tags? */
+char shroud[PASSWORDLEN];	/* string to shroud in debug output */
 
 static const struct method *protocol;
 static jmp_buf	restart;
@@ -96,7 +97,6 @@ char tag[TAGLEN];
 static int tagnum;
 #define GENSYM	(sprintf(tag, "A%04d", ++tagnum % TAGMOD), tag)
 
-static char shroud[PASSWORDLEN];	/* string to shroud in debug output */
 static int timeoutcount;		/* count consecutive timeouts */
 static int msglen;			/* actual message length */
 
@@ -1808,20 +1808,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	stage = STAGE_GETAUTH;
 	if (protocol->getauth)
 	{
-	    /* 
-	     * We want to restrict shrouding as much as possible -- it 
-	     * might actually leak information by splatting out revealing
-	     * pieces of a message.
-	     */
-	    if (ctl->server.authenticate == A_PASSWORD)
-		if (protocol->password_canonify)
-		    (protocol->password_canonify)(shroud, ctl->password, PASSWORDLEN);
-		else
-		    strcpy(shroud, ctl->password);
-
 	    ok = (protocol->getauth)(mailserver_socket, ctl, buf);
-
-	    shroud[0] = '\0';
 
 	    if (ok != 0)
 	    {
@@ -2481,7 +2468,7 @@ is restored."));
     }
 
 closeUp:
-    /* execute post-initialization command, if any */
+    /* execute wrapup command, if any */
     if (ctl->postconnect && (ok = system(ctl->postconnect)))
     {
 	report(stderr, _("post-connection command failed with status %d\n"), ok);

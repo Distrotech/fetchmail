@@ -173,8 +173,6 @@ struct method		/* describe methods for protocol state machine */
     flag delimited;		/* if true, accept "." message delimiter */
     int (*parse_response)(int, char *);
 				/* response_parsing function */
-    int (*password_canonify)(char *, char *, int);
-				/* canonicalize password */
     int (*getauth)(int, struct query *, char *);
 				/* authorization fetcher */
     int (*getrange)(int, struct query *, const char *, int *, int *, int *);
@@ -381,6 +379,7 @@ extern flag configdump;		/* dump control blocks as Python dictionary */
 extern const char *fetchmailhost;
 				/* either "localhost" or an FQDN */
 extern int suppress_tags;	/* suppress tags in tagged protocols? */
+extern char shroud[PASSWORDLEN];	/* string to shroud in debug output */
 #ifdef SDPS_ENABLE
 extern char *sdps_envfrom;
 extern char *sdps_envto;
