@@ -2,8 +2,8 @@
 
 fetchmail-4.7.3 ():
 * Added new FAQ item G11 and added material to R1.
-* Do a full antispam check on the EOM response in case the MTA does
-  content analysis.
+* Do a full antispam check on the EOM response in case the local MTA does
+  content analysis of the message body.
 
 There are 246 people on fetchmail-friends and 329 on fetchmail-announce.
 
