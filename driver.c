@@ -433,7 +433,8 @@ char *realname;		/* real name of host */
 	    if (!SockGets(buf, sizeof(buf)-1, sockfp))
 		return(PS_SOCKET);
 	    vtalarm(ctl->server.timeout);
-	    line = realloc(line, strlen(line) + strlen(buf) + 1);
+	    /* leave extra room for reply_hack to play with */
+	    line = realloc(line, strlen(line) + strlen(buf) + HOSTLEN + 1);
 	    strcat(line, buf);
 	} while
 	    /* we may need to grab RFC822 continuations */
