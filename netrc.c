@@ -115,12 +115,11 @@ parse_netrc (file)
     /* While there are lines in the file... */
     while (fgets(buf, POPBUFSIZE, fp))
     {
-	ln ++;
+	ln++;
 
 	/* Strip trailing CRLF */
-	p = buf + strlen(buf) - 1;
-	while ((p > buf) && *p && isspace(*p))
-	    *p-- = '\0';
+	for (p = buf + strlen(buf) - 1; (p >= buf) && isspace(*p); p--)
+	    *p = '\0';
 
 	/* Parse the line. */
 	p = buf;
