@@ -31,6 +31,10 @@
 #  include <unistd.h>
 #endif
 
+/* BSD portability hack */
+#if !defined(SIGCLD) && defined(SIGCHLD)
+#define SIGCLD	SIGCHLD
+#endif
 
 #include "popclient.h"
 
