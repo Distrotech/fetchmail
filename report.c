@@ -260,19 +260,19 @@ void error_init(int mode)
     {
     case 0:			/* stderr, buffered */
     default:
-	use_stderr = 0;
-	use_syslog = 0;
+	use_stderr = FALSE;
+	use_syslog = FALSE;
 	break;
 
     case 1:			/* stderr, unbuffered */
-	use_stderr = 1;
-	use_syslog = 0;
+	use_stderr = TRUE;
+	use_syslog = FALSE;
 	break;
 
 #ifdef HAVE_SYSLOG
     case -1:			/* syslogd */
-	use_stderr = 0;
-	use_syslog = 1;
+	use_stderr = FALSE;
+	use_syslog = TRUE;
 	break;
 #endif /* HAVE_SYSLOG */
     }
