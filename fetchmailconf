@@ -16,11 +16,7 @@
 
 from Tkinter import *
 from Dialog import *
-import sys
-import time
-import os
-import string
-import socket
+import sys, time, os, string, socket, getopt
 
 #
 # Define the data structures the GUIs will be tossing around
@@ -1153,20 +1149,7 @@ Or you can just select `Quit' to leave the configurator now.
     def leave(self):
         self.quit()
 
-#
-# And this is the main sequence.  How it works:  
-#
-# First, call `fetchmail --configdump' and trap the output in a tempfile.
-# This should fill it with a Python initializer for a variable `fetchmailrc'.
-# Run execfile on the file to pull fetchmailrc into Python global space.
-# You don't want static data, though; you want, instead, a tree of objects
-# with the same data members and added appropriate methods.
-#
-# This is what the copy_instance function() is for.  It tries to copy a
-# dictionary field by field into a class, aborting if the class and dictionary
-# have different data members (except for any typemap member in the class;
-# that one is strictly for use by the MyWidget supperclass).
-#
+# Functions for turning a dictionary into an instantiated object tree.
 
 def intersect(list1, list2):
 # Compute set intersection of lists
@@ -1211,7 +1194,34 @@ def copy_instance(toclass, fromdict):
 	for x in dict_keys:
 	    setattr(toclass, x, fromdict[x])
 
+#
+# And this is the main sequence.  How it works:  
+#
+# First, call `fetchmail --configdump' and trap the output in a tempfile.
+# This should fill it with a Python initializer for a variable `fetchmailrc'.
+# Run execfile on the file to pull fetchmailrc into Python global space.
+# You don't want static data, though; you want, instead, a tree of objects
+# with the same data members and added appropriate methods.
+#
+# This is what the copy_instance function() is for.  It tries to copy a
+# dictionary field by field into a class, aborting if the class and dictionary
+# have different data members (except for any typemap member in the class;
+# that one is strictly for use by the MyWidget supperclass).
+#
+# Options (not documented because they're for fetchmailconf debuggers only):
+# -d: read the configuration and dump it to stdout without editing, then exit.
+# -f: specify the run control file to read.
+
 if __name__ == '__main__': 
+
+    # Process options
+    (options, arguments) = getopt.getopt(sys.argv[1:], "df:")
+    dump = rcfile = None;
+    for (switch, val) in options:
+        if (switch == '-d'):
+            dump = TRUE
+        elif (switch == '-f'):
+            rcfile = val
 
     # Get client host's FQDN
     hostname = socket.gethostbyaddr(socket.gethostname())[0]
@@ -1223,8 +1233,11 @@ if __name__ == '__main__':
 
     # Read the existing configuration
     tmpfile = "/tmp/fetchmailconf." + `os.getpid()`
-    try:
+    if rcfile:
+        cmd = "fetchmail -f " + rcfile + " --configdump >" + tmpfile
+    else:
         cmd = "fetchmail --configdump >" + tmpfile
+    try:
         s = os.system(cmd)
 	if s != 0:
             print "`" + cmd + "' run failure, status " + `s`
@@ -1260,7 +1273,7 @@ if __name__ == '__main__':
 	    Newsite.users.append(Newuser)
 
     # We may want to display the configuration and quit
-    if len(sys.argv) > 1 and sys.argv[1] == '-d':
+    if dump:
         print "This is a dump of the configuration we read:\n"+`Fetchmailrc`
         sys.exit(0)
 
