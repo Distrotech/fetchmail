@@ -138,6 +138,7 @@ extern int yydebug;		/* enable parse debugging */
 extern int poll_interval;	/* poll interval in seconds */
 extern int nodetach;		/* if TRUE, don't detach daemon process */
 extern char *logfile;		/* log file for daemon mode */
+extern int use_syslog;		/* if --syslog was set */
 extern int quitmode;		/* if --quit was set */
 extern int check_only;		/* if --check was set */
 extern int cmd_batchlimit;	/* if --batchlimit was set */
@@ -164,15 +165,20 @@ extern int smtp_response;	/* numeric value of SMTP response code */
 /* prototypes for globally callable functions */
 #if defined(HAVE_STDARG_H)
 void error (int status, int errnum, const char *format, ...);
+void error_build (const char *format, ...);
+void error_complete (int status, int errnum, const char *format, ...);
 void gen_send (FILE *sockfp, char *, ... );
 int gen_transact (FILE *sockfp, char *, ... );
 #else
 void error ();
+void error_build ();
+void error_complete ();
 void gen_send ();
 int gen_transact ();
 #endif
 
 void *xmalloc(int);
+void *xrealloc(void *, int);
 char *xstrdup(const char *);
 
 int do_protocol(struct query *, const struct method *);

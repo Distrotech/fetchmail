@@ -1,16 +1,18 @@
 			    To Do:
 
-* The `reading message N ..(M bytes)' messages ideally should go through
-  error(), but since they are built piecemeal, they go to stderr.  What
-  would be needed is an error() variant that didn't write a message until
-  it got a trailing \n -- otherwise, if a syslog option were added, these
-  messages would wind up as separate syslog calls (probably not the desired
-  result).
-
 * Chris LewisMoss reports that he gets a parse error when the last line of
   his .fetchmailrc is a comment.
 
 			Release Notes:
+
+------------------------------------------------------------------------------
+fetchmail-2.7 ()
+
+features -- 
+
+* New --syslog option by Dave Bodenstab.
+
+bugs --
 
 ------------------------------------------------------------------------------
 fetchmail-2.6 (Fri Dec 27 12:42:56 EST 1996)

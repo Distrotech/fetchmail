@@ -19,6 +19,9 @@
 #endif
 #include <string.h>
 #include <signal.h>
+#if defined(HAVE_SYSLOG)
+#include <syslog.h>
+#endif
 #include <pwd.h>
 #include <errno.h>
 #include <sys/time.h>
@@ -51,6 +54,7 @@ int yydebug;		/* enable parse debugging */
 int poll_interval;	/* poll interval in seconds */
 int nodetach;		/* if TRUE, don't detach daemon process */
 char *logfile;		/* log file for daemon mode */
+int use_syslog;		/* if --syslog was set */
 int quitmode;		/* if --quit was set */
 int check_only;		/* if --probe was set */
 int cmd_batchlimit;	/* if --batchlimit was set */
@@ -85,7 +89,7 @@ static void unlockit(void)
 int main (int argc, char **argv)
 {
     int st, bkgd = FALSE;
-    int parsestatus, implicitmode;
+    int parsestatus, implicitmode, sigwakeup;
     char *home, *tmpdir, tmpbuf[BUFSIZ]; 
     struct passwd *pw;
     struct query *ctl;
@@ -151,8 +155,15 @@ int main (int argc, char **argv)
 	implicitmode = load_params(argc, argv, optind);
 
     /* set up to do lock protocol */
-    strcpy(tmpbuf, home);
-    strcat(tmpbuf, "/.fetchmail");
+    if (poll_interval && getuid() == 0) {
+	sigwakeup = SIGHUP;
+	strcpy(tmpbuf, "/var/run/fetchmail.pid");
+    }
+    else {
+	sigwakeup = SIGUSR1;
+	strcpy(tmpbuf, home);
+	strcat(tmpbuf, "/.fetchmail");
+    }
 
     /* perhaps we just want to check options? */
     if (versioninfo) {
@@ -259,7 +270,7 @@ int main (int argc, char **argv)
 		 pid);
 		return(PS_EXCLUDE);
 	}
-	else if (kill(pid, SIGUSR1) == 0)
+	else if (kill(pid, sigwakeup) == 0)
 	{
 	    fprintf(stderr,
 		    "fetchmail: background fetchmail at %d awakened.\n",
@@ -270,7 +281,7 @@ int main (int argc, char **argv)
 	{
 	    /*
 	     * Should never happen -- possible only if a background fetchmail
-	     * croaks after the first kill probe above but before the SIGUSR1
+	     * croaks after the first kill probe above but before the SIGUSR1/SIGHUP
 	     * transmission.
 	     */
 	    fprintf(stderr,
@@ -301,6 +312,11 @@ int main (int argc, char **argv)
     /*
      * Maybe time to go to demon mode...
      */
+#if defined(HAVE_SYSLOG)
+    if (use_syslog)
+    	openlog(program_name, LOG_PID, LOG_MAIL);
+#endif
+
     if (poll_interval && !nodetach)
 	daemonize(logfile, termhook);
 
@@ -319,7 +335,7 @@ int main (int argc, char **argv)
      * side effect of interrupting any sleep that may be going on,
      * forcing fetchmail to re-poll its hosts.
      */
-    signal(SIGUSR1, donothing);
+    signal(sigwakeup, donothing);
 
     /* here's the exclusion lock */
     if ( (lockfp = fopen(lockfile,"w")) != NULL ) {
@@ -372,9 +388,9 @@ int main (int argc, char **argv)
 		setitimer(ITIMER_REAL,&ntimeout,NULL);
 		signal(SIGALRM, donothing);
 		pause();
-		if (lastsig == SIGUSR1) {
-		    signal(SIGALRM, SIG_IGN);
-		    (void) error(0, 0, "awakened by SIGUSR1");
+		signal(SIGALRM, SIG_IGN);
+		if (lastsig == sigwakeup) {
+		    error(0, 0, "awakened by %s", sys_siglist[lastsig]);
 		}
 	    }
 

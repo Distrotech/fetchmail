@@ -30,6 +30,17 @@ xmalloc (int n)
     return(p);
 }
 
+XMALLOCTYPE *
+xrealloc (XMALLOCTYPE *p, int n)
+{
+    if (p == 0)
+	return xmalloc (n);
+    p = (XMALLOCTYPE *) realloc(p, n);
+    if (p == (XMALLOCTYPE *) 0)
+	error(PS_UNDEFINED, errno, "realloc failed");
+    return p;
+}
+
 char *xstrdup(const char *s)
 {
     char *p;

@@ -336,7 +336,7 @@ struct query *ctl;	/* query control record */
 	    while (sizeticker >= SIZETICKER)
 	    {
 		if (outlevel > O_SILENT)
-		    fputc('.',stderr);
+		    error_build(".");
 		sizeticker -= SIZETICKER;
 	    }
 	}
@@ -763,6 +763,9 @@ struct query *ctl;	/* query control record */
 	lines++;
     }
 
+    if (outlevel == O_VERBOSE)
+	fputc('\n', stderr);
+
     if (ctl->mda[0])
     {
 	int rc;
@@ -897,7 +900,8 @@ const struct method *proto;	/* protocol method table */
 	if ((sockfp = SockOpen(ctl->servernames->id,
 			     ctl->port ? ctl->port : protocol->port)) == NULL)
 	{
-	    error(0, errno, "connecting to host");
+	    if (errno != EHOSTUNREACH)
+		error(0, errno, "connecting to host");
 	    ok = PS_SOCKET;
 	    goto closeUp;
 	}
@@ -1013,9 +1017,9 @@ const struct method *proto;	/* protocol method table */
 		{
 		    if (outlevel > O_SILENT)
 		    {
-			fprintf(stderr, "skipping message %d", num);
+			error_build("skipping message %d", num);
 			if (toolarge)
-			    fprintf(stderr, " (oversized, %d bytes)", msgsizes[num-1]);
+			    error_build(" (oversized, %d bytes)", msgsizes[num-1]);
 		    }
 		}
 		else
@@ -1028,13 +1032,13 @@ const struct method *proto;	/* protocol method table */
 
 		    if (outlevel > O_SILENT)
 		    {
-			fprintf(stderr, "reading message %d", num);
+			error_build("reading message %d", num);
 			if (len > 0)
-			    fprintf(stderr, " (%d bytes)", len);
+			    error_build(" (%d bytes)", len);
 			if (outlevel == O_VERBOSE)
-			    fputc('\n', stderr);
+			    error_complete(0, 0, "");
 			else
-			    fputc(' ', stderr);
+			    error_build(" ");
 		    }
 
 		    /* read the message and ship it to the output sink */
@@ -1071,7 +1075,7 @@ const struct method *proto;	/* protocol method table */
 		{
 		    deletions++;
 		    if (outlevel > O_SILENT) 
-			fprintf(stderr, " flushed\n");
+			error_complete(0, 0, " flushed");
 		    ok = (protocol->delete)(sockfp, ctl, num);
 		    if (ok != 0)
 			goto cleanUp;
@@ -1079,7 +1083,7 @@ const struct method *proto;	/* protocol method table */
 		    delete_str(&ctl->newsaved, num);
 		}
 		else if (outlevel > O_SILENT) 
-		    fprintf(stderr, " not flushed\n");
+		    error_complete(0, 0, " not flushed");
 
 		/* perhaps this as many as we're ready to handle */
 		if (ctl->fetchlimit && ctl->fetchlimit <= num)

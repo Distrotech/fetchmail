@@ -25,27 +25,28 @@
 #define LA_NODETACH	7
 #define LA_QUIT		8
 #define LA_LOGFILE	9
-#define LA_RCFILE	10
-#define LA_IDFILE	11
-#define LA_PROTOCOL	12
-#define LA_PORT		13
-#define LA_AUTHENTICATE	14
-#define LA_TIMEOUT	15
-#define LA_USERNAME	16
-#define LA_ALL          17
-#define LA_KILL		18
-#define	LA_KEEP		19
-#define LA_FLUSH        20
-#define LA_NOREWRITE	21
-#define LA_LIMIT	22
-#define LA_REMOTEFILE	23
-#define LA_SMTPHOST	24
-#define LA_BATCHLIMIT	25
-#define LA_FETCHLIMIT	26
-#define LA_MDA		27
-#define LA_INTERFACE    28
-#define LA_MONITOR      29
-#define LA_YYDEBUG	30
+#define LA_SYSLOG	10
+#define LA_RCFILE	11
+#define LA_IDFILE	12
+#define LA_PROTOCOL	13
+#define LA_PORT		14
+#define LA_AUTHENTICATE	15
+#define LA_TIMEOUT	16
+#define LA_USERNAME	17
+#define LA_ALL          18
+#define LA_KILL		19
+#define	LA_KEEP		20
+#define LA_FLUSH        21
+#define LA_NOREWRITE	22
+#define LA_LIMIT	23
+#define LA_REMOTEFILE	24
+#define LA_SMTPHOST	25
+#define LA_BATCHLIMIT	26
+#define LA_FETCHLIMIT	27
+#define LA_MDA		28
+#define LA_INTERFACE    29
+#define LA_MONITOR      30
+#define LA_YYDEBUG	31
 
 static char *shortoptions = "?Vcsvd:NqL:f:i:p:P:A:t:u:akKFnl:r:S:b:B:m:I:M:y";
 static struct option longoptions[] = {
@@ -58,6 +59,7 @@ static struct option longoptions[] = {
   {"nodetach",	no_argument,	   (int *) 0, LA_NODETACH    },
   {"quit",	no_argument,	   (int *) 0, LA_QUIT        },
   {"logfile",	required_argument, (int *) 0, LA_LOGFILE     },
+  {"syslog",	no_argument,	   (int *) 0, LA_SYSLOG      },
   {"fetchmailrc",required_argument,(int *) 0, LA_RCFILE      },
   {"idfile",	required_argument, (int *) 0, LA_IDFILE      },
 #ifdef	linux
@@ -272,6 +274,10 @@ struct query *ctl;	/* option record to be initialized */
 	    yydebug = TRUE;
 	    break;
 
+	case LA_SYSLOG:
+	    use_syslog = TRUE;
+	    break;
+
 	case '?':
 	case LA_HELP:
 	default:
@@ -282,6 +288,12 @@ struct query *ctl;	/* option record to be initialized */
     if (check_only && poll_interval)
     {
 	fputs("The --check and --daemon options aren't compatible.\n", stderr);
+	return(-1);
+    }
+
+    if (poll_interval == 0 && use_syslog)
+    {
+	fputs("The --syslog option is only valid with the --daemon option.\n", stderr);
 	return(-1);
     }
 
@@ -299,6 +311,7 @@ struct query *ctl;	/* option record to be initialized */
 	fputs("  -N, --nodetach    don't detach daemon process\n", stderr);
 	fputs("  -q, --quit        kill daemon process\n", stderr);
 	fputs("  -L, --logfile     specify logfile name\n", stderr);
+	fputs("      --syslog      use syslog(3) for most messages when running as a daemon\n", stderr);
 	fputs("  -f, --fetchmailrc specify alternate run control file\n", stderr);
 	fputs("  -i, --idfile      specify alternate UIDs file\n", stderr);
 #ifdef	linux

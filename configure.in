@@ -70,6 +70,22 @@ then
   LIBS="$LIBS -lkrb -ldes"
 fi
 
+dnl Configure command line options
+opt_enable_stdio=unset
+
+AC_ARG_ENABLE(stdio, --enable-stdio	enable stdio for socket I/O, opt_enable_stdio=$enableval)
+
+if test $opt_enable_stdio = unset; then
+  dnl Set USE_STDIO based on $host
+  case $host in
+    *-*-*freebsd*)
+      AC_DEFINE(USE_STDIO)
+      ;;
+  esac
+elif test $opt_enable_stdio = yes; then
+  AC_DEFINE(USE_STDIO)
+fi
+
 
 dnl All AC_CHECK_FUNCs must precede the following AC_SUBSTs
 
@@ -77,7 +93,7 @@ AC_SUBST(EXTRASRC)
 AC_SUBST(EXTRAOBJ)
 
 AC_CHECK_FUNCS(tcsetattr stty setsid seteuid gethostbyname res_search herror \
-  strrchr strerror setlinebuf)
+  strrchr strerror setlinebuf syslog snprintf vsnprintf)
 
 dnl AC_FUNC_SETVBUF_REVERSED
 

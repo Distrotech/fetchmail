@@ -362,6 +362,33 @@ mode into a specified logfile (follow the option with the logfile name).
 The logfile is opened for append, so previous messages aren't deleted.
 This is primarily useful for debugging configurations.
 .PP
+The
+.B --syslog
+option allows you to redirect status and error messages emitted while in
+daemon mode to the
+.IR syslog (3)
+system daemon if available.
+Messages are logged with an id of \fBfetchmail\fR, the facility \fBLOG_MAIL\fR,
+and priorities \fBLOG_ERR\fR, \fBLOG_ALERT\fR or \fBLOG_INFO\fR.
+This option is intended for logging status and error messages which
+indicate the status of the daemon and the results while fetching mail
+from the server(s).
+Error messages for command line options and parsing the \fI.fetchmailrc\fR
+file are still written to stderr, or the specified log file if the
+.B -L
+or
+.B --logfile
+option was used.
+.PP
+The \fI/etc/syslog.conf\fR file might contain the following to log
+all messages from \fIfetchmail\fR to a single file:
+.PP
+.RS
+!fetchmail
+.br
+*.*               /var/log/fetchmail
+.RE
+.PP
 The 
 .B \-N
 or --nodetach option suppresses detachment of the daemon process
@@ -816,8 +843,11 @@ default location of file associating hosts with last message IDs seen
 (used only with newer RFC1725-compliant POP3 servers supporting the
 UIDL command).
 .TP 5
-$~/.fetchmail
-lock file to help prevent concurrent runs.
+~/.fetchmail
+lock file to help prevent concurrent runs (non-root mode).
+.TP 5
+/var/run/fetchmail.pid
+lock file to help prevent concurrent runs (root mode).
 .SH ENVIRONMENT
 For correct initialization, 
 .I fetchmail

@@ -32,8 +32,8 @@
 /* Define if you have GNU's getopt family of functions.  */
 #undef HAVE_GETOPTLONG
 
-/* Define if you have setlinebuf(3) */
-#undef HAVE_SETLINEBUF
+/* Define to enable use of stdio for socket I/O.  */
+#undef USE_STDIO
 
 
 /* Leave that blank line there!!  Autoheader needs it.
