@@ -441,7 +441,6 @@ static int imap_getrange(int sock,
     return(PS_SUCCESS);
 }
 
-#ifdef __UNUSED__
 static int imap_getsizes(int sock, int count, int *sizes)
 /* capture the sizes of all messages */
 {
@@ -464,7 +463,6 @@ static int imap_getsizes(int sock, int count, int *sizes)
 
     return(PS_SUCCESS);
 }
-#endif /* __UNUSED__ */
 
 static int imap_is_old(int sock, struct query *ctl, int number)
 /* is the given message old? */
@@ -647,7 +645,7 @@ const static struct method imap =
     imap_ok,		/* parse command response */
     imap_getauth,	/* get authorization */
     imap_getrange,	/* query range of messages */
-    NULL,		/* we can get message sizes from individual messages */
+    imap_getsizes,	/* get sizes of messages (used for --limit option */
     imap_is_old,	/* no UID check */
     imap_fetch_headers,	/* request given message headers */
     imap_fetch_body,	/* request given message body */
