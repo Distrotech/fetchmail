@@ -169,7 +169,7 @@ distclean: clean
 	-rm -f fetchmail.log fetchmail.toc fetchmail.*aux
 
 realclean: distclean # fetchmail.info*
-	rm -f FAQ
+	rm -f FAQ FEATURES
 
 mostlyclean: clean
 
@@ -203,8 +203,9 @@ headers = $(srcdir)/fetchmail.h $(srcdir)/socket.h $(srcdir)/smtp.h \
 	$(srcdir)/netrc.h $(srcdir)/tunable.h
 extra = $(srcdir)/alloca.c $(srcdir)/getopt.[ch] $(srcdir)/getopt1.c \
 	$(srcdir)/strcasecmp.c
-docs = $(srcdir)/COPYING $(srcdir)/README $(srcdir)/INSTALL $(srcdir)/NEWS \
-	$(srcdir)/NOTES $(srcdir)/fetchmail.lsm $(srcdir)/sample.rcfile \
+docs = $(srcdir)/COPYING $(srcdir)/FEATURES $(srcdir)/fetchmail-features.html \
+	$(srcdir)/INSTALL $(srcdir)/NEWS $(srcdir)/NOTES $(srcdir)/README \
+	$(srcdir)/fetchmail.lsm $(srcdir)/sample.rcfile \
 	$(srcdir)/*.man	$(srcdir)/FAQ $(srcdir)/fetchmail.FAQ.html
 config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/configure \
 	$(srcdir)/config.guess $(srcdir)/config.h.in $(srcdir)/config.sub \
@@ -219,6 +220,9 @@ MANIFEST: $(srcdir) Makefile.in
 
 FAQ: fetchmail.FAQ.html
 	lynx -dump -nolist fetchmail.FAQ.html >FAQ
+
+FEATURES: fetchmail-features.html
+	lynx -dump -nolist fetchmail-features.html | grep -v "Back to " >FEATURES
 
 # Make distribution, update LSM with proper size, remake distribution
 dist: Makefile.in  

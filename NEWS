@@ -4,6 +4,9 @@
   form "foo"@bar.com are not parsed correctly, even though they are
   technically RFC822 legal. The general problem is mentioned on the man page.
 
+* If a message has more than two destination headers of the same kind (such
+  as To, or Cc), only the last one will be checked for multidrop addresses.
+
 			    Features To Consider
 
 * Generate bounce messages when delivery is refused.  See RFC1891, RFC1894.
@@ -25,8 +28,9 @@ fetchmail-4.0 ():
 * Values of --limit, --fetchlimit, and --batchlimit in .fetchmailrc can now
   be overridden from the command line by specifying an explicit option of 0.
 * Architecture-independent RPM building.
+* Work with the MercuryP/NLM v1.31 POP3 daenon (thanks to Pavel Kankovsky)
 
-There are 257 people on the fetchmail-friends list.
+There are 258 people on the fetchmail-friends list.
 
 pl 3.9.7 (Mon Jun  9 18:40:04 EDT 1997):
 * Complain and exit if user tries to start fetchmail with options while a

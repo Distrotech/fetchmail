@@ -1,9 +1,10 @@
 			 fetchmail README
 
-fetchmail is a free, full-featured, robust, well-documented
-remote mail retrieval and forwarding utility intended to be used over
+fetchmail is a free, full-featured, robust, well-documented remote
+mail retrieval and forwarding utility intended to be used over
 on-demand TCP/IP links (such as SLIP or PPP connections).  It supports
-POP2, POP3, RPOP, APOP, KPOP, all flavors of IMAP, and ESMTP ETRN.  It
+POP2, POP3, RPOP, APOP, KPOP, all flavors of IMAP (including IMAP4rev1
+with RFC1731 Kerberos v4 authentication), and ESMTP ETRN.  It
 retrieves mail from remote mail servers and forwards it to your local
 (client) machine's delivery system, so it can then be be read by
 normal mail user agents such as elm(1) or Mail(1).
@@ -14,115 +15,25 @@ readily portable to other Unix variants (it uses GNU autoconf).  It
 has also been ported to QNX; to build under QNX, see the header
 comments in the Makefile.
 
-Here are fetchmail's main features.  Those unique to fetchmail
-(relative to fetchpop1.9, PopTart-0.9.3, get-mail, gwpop, pimp-1.0,
-pop-perl5-1.2, popc, popmail-1.6 and upop) are marked with **.
-
-Since 3.0:
-
-	** Support for IMAP RFC 1731 authentication with Kerberos v4.
-
-	** Support for multiple-folder retrieval in a single session
-	   under IMAP.
-
-	** Following SMTP 571 response to a From line, fetchmail no longer
-	   downloads the bodies of spam messages.
-
-	** Support for a `hunt list' of SMTP hosts
-
-	** Support for ESMTP 8BITMIME and SIZE options.
-
-	** Support for ESMTP ETRN command.
-
-	** The stripcr & forcecr options to explicitly control carriage-return
-	   stripping and LF->CRLF mapping before mail forwarding.
-
-Since 2.0:
-
-	** Support for secure use with ssh.
-
-	** Mailserver passwords can be parsed out of your .netrc file.
-
-	** When forwarding mail via SMTP, fetchmail respects the 571
-           "spam filter" response and discards any mail that triggers it.
-
-	** Transaction and error logging may optionally be done via syslog.
-
-	** (Linux only) Security option to permit fetchmail to poll a host 
-	   only when a point-to-point link to a particular IP address is up.
-
-	** RPOP support (restored; had been removed in 1.8).
-
-2.0 and earlier versions:
-
-	**  Support POP2, APOP, RPOP, IMAP2, IMAP2bis, IMAP3, IMAP4, IMAP4rev1.
-
-	** Support for Kerberos V4 user authentication (either MIT or Cygnus).
-
-	** Host is auto-probed for a working server if no protocol is
-	   specified for the connection.  Thus you don't need to know
-	   what servers are running on your mail host in advance; the
-	   verbose option will tell you which one succeeds.
-
-	** Delivery via via SMTP to the client machine's port 25.  This
-	   means the retrieved mail automatically goes to the system
-	   default MDA as if it were normal sender-initiated SMTP mail.
-
-	** Configurable timeout to detect if server connection is dropped.
-
-	** Support for retrieving and forwarding from multi-drop mailboxes
-	   that is guaranteed not to cause mail loops.
-
-	* Support for POP3.
-
-	*  Easy control via command line or free-format run control file.
-
-	*  Daemon mode -- fetchmail can be run in background to poll
-	   one or more hosts at a specified interval.
-
-	*  From:, To:, Cc:, and Reply-To: headers are rewritten so that 
-	   usernames relative to the fetchmail host become fully-qualified
-	   Internet addresses.  This enables replies to work correctly.
-	   (Would be unique to fetchmail if I hadn't added it to fetchpop.)
-
-	*  Strict conformance to relevant RFCs and good debugging options.
-	   You could use fetchmail to test and debug server implementatations.
-
-	*  Message and header processing are 8-bit clean.
-
-	*  Carefully written, comprehensive and up-to-date man page describing
-	   not only modes of operation but also (**) how to diagnose the most
-	   common kinds of problems and what to do about deficient servers
-
-	*  Rugged, simple, and well-tested code -- the author relies on it
-           every day and it has never lost mail, not even in experimental
-	   versions.
-
-	*  Large user community -- fetchmail has a large user base (the
-	   author's beta list includes well over two hundred people).  This 
-	   means feedback is rapid, bugs get found and fixed rapidly.
+See the distribution files FEATURES for a full list of features, NEWS
+for detailed information on recent changes and NOTES for design notes.
 
 The fetchmail code appears to be stable and free of bugs affecting
 normal operation (that is, retrieving from POP3 or IMAP in single-drop
 mode and forwarding via SMTP to sendmail).  It will probably undergo
 substantial change only if and when support for a new retrieval
-protocol or authentication mode is added.  See the distribution files
-NEWS for detailed information on recent changes and NOTES for design
-notes.
+protocol or authentication mode is added.
 
 You can easily fetch the latest version of fetchmail via FTP from the
 following FTP directory:
 
 	ftp://ftp.ccil.org/pub/esr/fetchmail
 
-Or you can get it from Eric's home page:
+Or you can get it from the fetchmail home page:
 
-	http://www.ccil.org/~esr
+	http://www.ccil.org/~esr/fetchmail
 
-Just chase the link to Eric's Freeware Collection.  Besides fetchmail, it
-includes a tasty selection of Web authoring tools, programmer's aids,
-graphics libraries, compilers for bizarre languages, games, and 
-miscellaneous interesting hacks.  Enjoy!
+Enjoy!
 
 							-- esr
 
