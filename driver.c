@@ -866,7 +866,7 @@ int num;		/* index of message */
     }
     else
     {
-	char	*ap, *ctt, options[MSGBUFSIZE], addr[128];
+	char	*ap, *ctt, options[MSGBUFSIZE], addr[128], *desthost;
 
 	/* build a connection to the SMTP listener */
 	if ((smtp_open(ctl) == -1))
@@ -991,13 +991,14 @@ int num;		/* index of message */
 	 * or MX but not a CNAME.  Some listeners (like exim)
 	 * enforce this.
 	 */
+	desthost = ctl->smtphost ? ctl->smtphost : "localhost";
 	for (idp = xmit_names; idp; idp = idp->next)
 	    if (idp->val.num == XMIT_ACCEPT)
 	    {
 #ifdef HAVE_SNPRINTF
-		snprintf(addr, sizeof(addr)-1, "%s@%s", idp->id,ctl->smtphost);
+		snprintf(addr, sizeof(addr)-1, "%s@%s", idp->id, desthost);
 #else
-		sprintf(addr, "%s@%s", idp->id, ctl->smtphost);
+		sprintf(addr, "%s@%s", idp->id, desthost);
 #endif /* HAVE_SNPRINTF */
 
 		if (SMTP_rcpt(ctl->smtp_socket, addr) == SM_OK)
@@ -1013,9 +1014,9 @@ int num;		/* index of message */
 	if (!good_addresses)
 	{
 #ifdef HAVE_SNPRINTF
-	    snprintf(addr, sizeof(addr)-1, "%s@%s", idp->id, ctl->smtphost);
+	    snprintf(addr, sizeof(addr)-1, "%s@%s", idp->id,  desthost);
 #else
-	    sprintf(addr, "%s@%s", idp->id, ctl->smtphost);
+	    sprintf(addr, "%s@%s", idp->id, desthost);
 #endif /* HAVE_SNPRINTF */
 
 	    if (SMTP_rcpt(ctl->smtp_socket, user) != SM_OK)
