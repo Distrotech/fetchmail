@@ -336,7 +336,9 @@ static void send_size_warnings(struct query *ctl)
 	     "\n"
 	     "The following oversized messages remain on the mail server %s:"),
 		  ctl->server.pollname);
- 
+
+    stuff_warning(ctl, "");
+
     if (run.poll_interval == 0)
 	max_warning_poll_count = 0;
     else
@@ -350,7 +352,7 @@ static void send_size_warnings(struct query *ctl)
 	    nbr = current->val.status.mark;
 	    size = atoi(current->id);
 	    stuff_warning(ctl, 
-		    GT_("\t%d msg %d octets long skipped by fetchmail.\n"),
+		    GT_("  %d msg %d octets long skipped by fetchmail."),
 		    nbr, size);
 	}
 	current->val.status.num++;
@@ -359,6 +361,8 @@ static void send_size_warnings(struct query *ctl)
 	if (current->val.status.num >= max_warning_poll_count)
 	    current->val.status.num = 0;
     }
+
+    stuff_warning(ctl, "");
 
     close_warning_by_mail(ctl, (struct msgblk *)NULL);
 }
