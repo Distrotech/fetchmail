@@ -21,9 +21,11 @@ Summary(fr):    Collecteur (POP/IMAP) de courrier électronique
 Summary(de):    Program zum Abholen von E-Mail via POP/IMAP
 Summary(pt_BR): Busca mensagens de um servidor usando POP ou IMAP
 Summary(es_AR): Recolector de correo via POP/IMAP
+Summary(pl):    Zdalny demon pocztowy do protoko³ów POP2, POP3, APOP, IMAP
+Summary(tr):    POP2, POP3, APOP, IMAP protokolleri ile uzaktan mektup alma yazýlýmý
 
 %description
-fetchmail is a free, full-featured, robust, and well-documented remote
+Fetchmail is a free, full-featured, robust, and well-documented remote
 mail retrieval and forwarding utility intended to be used over
 on-demand TCP/IP links (such as SLIP or PPP connections).  It
 retrieves mail from remote mail servers and forwards it to your local
@@ -50,24 +52,48 @@ gelesen werden kann.  Ein interaktiver GUI-Konfigurator auch gut
 geeignet zum Gebrauch durch Endbenutzer wird mitgeliefert.
 
 %description -l pt_BR
-fetchmail é um programa que é usado para recuperar mensagens de um
+Fetchmail é um programa que é usado para recuperar mensagens de um
 servidor de mail remoto. Ele pode usar Post Office Protocol (POP)
 ou IMAP (Internet Mail Access Protocol) para isso, e entrega o mail
 através do servidor local SMTP (normalmente sendmail).
 
-%description -l es_AR
-fetchmail es una utilidad gratis, completa, robusta y bien documentada
+%description -l es
+Fetchmail es una utilidad gratis, completa, robusta y bien documentada
 para la recepción y reeenvío de correo pensada para ser usada en co-
 nexiones TCP/IP por demanda (como SLIP y PPP). Recibe el correo de
 servidores remotos y lo reenvía a el sistema de entrega local, siendo de
 ese modo posible leerlo con programas como mutt, elm, pine, (x)emacs/gnus
 o mailx. Contiene un configurador GUI interactivo pensado para usuarios.
 
+%description -l pl
+Fetchmail jest programem do ¶ci±gania poczty ze zdalnych serwerów
+pocztowych. Do ¶ci±gania poczty mo¿e on uzywaæ protoko³ów POP (Post Office
+Protocol) lub IMAP (Internet Mail Access Protocol). ¦ci±gniêt± pocztê
+dostarcza do koñcowych odbiorców poprzez lokalny serwer SMTP.
+
+description -l tr
+fetchmail yazýlýmý, POP veya IMAP desteði veren bir sunucuda yer alan
+mektuplarýnýzý alýr.
+
+%package -n fetchmailconf
+Summary:        A GUI configurator for generating fetchmail configuration files
+Summary(pl):    GUI konfigurator do fetchmaila
+Group:          Utilities/System
+Requires:       %{name} = %{version}, python
+
+%description -n fetchmailconf
+A GUI configurator for generating fetchmail configuration file written in
+python
+
+%description -n fetchmailconf -l pl
+GUI konfigurator do fetchmaila napisany w pythonie.
+
 %prep
-%setup
+%setup -q
 
 %build
-CFLAGS="\$RPM_OPT_FLAGS" ./configure --prefix=/usr
+CFLAGS="$RPM_OPT_FLAGS" LDFLAGS="-s" \
+./configure --enable-nls --without-included-gettext
 make
 
 %install
@@ -76,7 +102,7 @@ mkdir -p \$RPM_BUILD_ROOT/{etc/X11/wmconfig,usr/lib/rhs/control-panel}
 make install prefix=\$RPM_BUILD_ROOT/usr
 cp %{builddir}/rh-config/*.{xpm,init} \$RPM_BUILD_ROOT/usr/lib/rhs/control-panel
 cp %{builddir}/fetchmail.man \$RPM_BUILD_ROOT/usr/man/man1/fetchmail.1
-gzip -9f \$RPM_BUILD_ROOT/usr/man/man1/fetchmail.1
+gzip -9nf \$RPM_BUILD_ROOT/usr/man/man1/fetchmail.1
 cd \$RPM_BUILD_ROOT/usr/man/man1
 ln -sf fetchmail.1.gz fetchmailconf.1.gz
 rm -rf %{builddir}/contrib/RCS

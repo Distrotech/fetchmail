@@ -7,8 +7,10 @@ fetchmail-4.7.5 ():
 * Attempted fix for Harry McGavran's VPATH bug.
 * Progress messages now go to stdout.  Errors still go to stderr
 * Fetchmailconf can now launch fetchmail with a point-and-click interface.
+* Many small cleanups suggested by Byrial Jensen.
+* Polish-language (LC_ALL=pl) support.  Turkish text in spec file.
 
-There are 249 people on fetchmail-friends and 334 on fetchmail-announce.
+There are 249 people on fetchmail-friends and 333 on fetchmail-announce.
 
 fetchmail-4.7.4 (Mon Jan  4 13:26:32 EST 1999):
 * Error message cleanup.
@@ -18,8 +20,8 @@ fetchmail-4.7.4 (Mon Jan  4 13:26:32 EST 1999):
 * Gunther Leber's cleanup for the plugin/plugout code.
 * Hajimu UMEMOTO's code for localtime in timestamps.
 * Michael Warfield's IPv6 fixes.
-* Added Argentine Spanish as supported language (LC_ALL=pt_BR) from a
-  po file by Javier Cohen <jkohen@tough.com>.
+* Added Argentine Spanish as supported language (LC_ALL=es_AR) from a
+  po file by Javier Kohen <jkohen@tough.com>.
 * Accept 'passwd' as a synonym for 'password' in .netrc files.
 * In fetchmailconf, Save or Quit in a frame first performs that action
   on all dependent frames.
