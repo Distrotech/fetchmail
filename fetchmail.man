@@ -94,7 +94,7 @@ working \fI.fetchmailrc\fR file set up.
 .PP
 Almost all options have a corresponding keyword which can be used to
 declare them in a 
-.I fetchmailrc
+.I .fetchmailrc
 file.
 .PP
 Some special options are not covered here, but are documented instead
