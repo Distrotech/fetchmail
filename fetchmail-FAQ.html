@@ -9,24 +9,23 @@
 <BODY>
 <H1>Frequently Asked Questions About Fetchmail</H1>
 
-$Id: fetchmail-FAQ.html,v 1.1 1997/04/16 20:05:46 esr Exp $<p>
+$Id: fetchmail-FAQ.html,v 1.2 1997/04/16 20:09:34 esr Exp $<p>
 
-(Add a link to Chris Cheyney's <em>atexit</em> patch.)<p>
+(Added <a href="http:#C6">C6</a> on working with qmail)<p>
 
 Before reporting any bug, please read <a href="#G3">G3</a> for advice
 on how to include diagnostic information that will get your bug fixed
-as quickly as possible.
-<p>
+as quickly as possible. <p>
+
 If you have a question or answer you think ought to be added to this FAQ list,
 mail it to fetchmail's maintainer, Eric S. Raymond, at
-<A HREF="mailto:esr@thyrsus.com">esr@snark.thyrsus.com</A>.
-<p>
+<A HREF="mailto:esr@thyrsus.com">esr@snark.thyrsus.com</A>.<p>
+
 There is a fetchmail-friends reflector for people who want to discuss fixes
 and improvements in fetchmail.  It's at 
-<a href="mail:fetchmail-friends@thyrsus.com">fetchmail-friends@thyrsus.com</a>;
-Eric
-can put you on it.
-<p>
+<a href="mail:fetchmail-friends@thyrsus.com">fetchmail-friends@thyrsus.com</a>
+and is a SmartList reflector; sign up in the usual way. <p>
+
 <h1>General questions:</h1>
 
 <a href="#G1">G1. What is fetchmail and why should I bother?</a><br>
@@ -53,6 +52,7 @@ can put you on it.
 <a href="#C3">C3. How do I know what interface and address to use with --interface?</a><br>
 <a href="#C4">C4. How can I get fetchmail to work with ssh?</a><br>
 <a href="#C5">C5. How can I set up support for sendmail's anti-spam 571 response?</a><br>
+<a href="#C6">C6. How can I use fetchmail multidrop mode with qmail?</a><br>
 
 <h1>Runtime fatal errors:</h1>
 
@@ -544,7 +544,66 @@ to allow sendmail to process the message further and generate an error
 message to the sender.  <p>
 
 <hr>
-<h2><a name="">R1. I think I've set up fetchmail correctly, but I'm not getting any mail.</a></h2>
+<h2><a name="C6">C6. How can I use fetchmail multidrop mode with qmail?</a></h2>
+
+(This information is thanks to Robert de Bath 
+&lt;robert@mayday.cix.co.uk&gt;.)<p>
+
+If a mailhost is using the qmail package (see <a
+href="http://pobox.com/~djb/qmail.html">http://pobox.com/~djb/qmail.html</a>)
+then, providing the local hosts are also using qmail, it is possible
+to setup one fetchmail link to be reliably collect the mail for an
+entire domain.<p>
+
+One of the basic features of qmail is the `Delivered-To:' message
+header.  Whenever qmail deliver a message to a local mailbox it puts
+the username and hostname of the envelope recipient on this line.  The
+major reason for this is to prevent mail loops. <p>
+
+To set up qmail to batch mail for a disconnected site the isp-mailhost
+will have normally put that site in its `virtualhosts' control file so
+it will add a prefix to all mail addresses for this site. This results
+in mail sent to 'username@userhost.userdom.dom.com' having a
+'Delivered-To:' line of the form:<p>
+
+<listing>
+       Delivered-To: mbox-userstr-username@userhost.userdom.dom.com
+</listing>
+
+A single host maildrop will be slightly simpler:
+
+<listing>
+       Delivered-To: mbox-userstr-username@userhost.dom.com
+</listing>
+
+The ISP can make the 'mbox-userstr-' prefix anything they choose
+but a string matching the user host name is likely.<p>
+   
+To use this line you must:<p>
+
+<ol>
+<li>Ensure the option `envelope Delivered-To:' is in the fetchmail
+    config file.
+
+<li>Ensure you have a localdomains containing 'userdom.dom.com' or
+    `userhost.dom.com' respectively.
+</ol>
+
+So far this reliably delivers messages to the correct machine of the
+local network, to deliver to the correct user the 'mbox-userstr-'
+prefix must be stripped off of the user name. This can be done by
+setting up an alias within the qmail MTA on each local machine.
+Simply create a dot-qmail file called '.qmail-mbox-userstr-default'
+in the alias directory (normally /var/qmail/alias) with the contents:<p>
+
+<listing>
+      | ../bin/qmail-inject -a -f"$SENDER" "${LOCAL#mbox-userstr-}@$HOST}"
+</listing>
+
+Note this <em>does</em> require a modern /bin/sh.<p>
+
+<hr>
+<h2><a name="R1">R1. I think I've set up fetchmail correctly, but I'm not getting any mail.</a></h2>
 
 Maybe you have a .forward or alias set up that you've forgotten about.  You
 should probably remove it.<p>
