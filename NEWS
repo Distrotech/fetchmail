@@ -1,6 +1,13 @@
 			Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-3.2 ()
+
+bugs --
+
+* The code can now handle arbitrarily long address lists.
+
+------------------------------------------------------------------------------
 fetchmail-3.1 (Fri Jan 24 12:45:18 EST 1997)
 
 features --

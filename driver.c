@@ -408,7 +408,7 @@ char *realname;		/* real name of host */
 {
     char buf [MSGBUFSIZE+1]; 
     char *bufp, *headers, *fromhdr,*tohdr,*cchdr,*bcchdr,*received_for,*envto;
-    char *fromptr, *toptr, *ctthdr;
+    char *fromptr, *toptr, *ctthdr, *line;
     int n, oldlen, ch;
     int inheaders, sizeticker, delete_ok;
     FILE *sinkfp;
@@ -422,19 +422,25 @@ char *realname;		/* real name of host */
     headers = fromhdr = tohdr = cchdr = bcchdr = received_for = envto = ctthdr = NULL;
     sizeticker = 0;
     oldlen = 0;
+    line = (char *)NULL;
     while (delimited || len > 0)
     {
-	buf[0] = '\0';
+	if (line)
+	    free(line);
+	line = xmalloc(sizeof(buf));
+	line[0] = '\0';
 	do {
-	    if (!SockGets(buf+strlen(buf), sizeof(buf)-strlen(buf)-1, sockfp))
+	    if (!SockGets(buf, sizeof(buf)-1, sockfp))
 		return(PS_SOCKET);
 	    vtalarm(ctl->server.timeout);
+	    line = realloc(line, strlen(line) + strlen(buf) + 1);
+	    strcat(line, buf);
 	} while
 	    /* we may need to grab RFC822 continuations */
 	    (inheaders && (ch = SockPeek(sockfp)) == ' ' || ch == '\t');
 
 	/* write the message size dots */
-	if ((n = strlen(buf)) > 0)
+	if ((n = strlen(line)) > 0)
 	{
 	    sizeticker += n;
 	    while (sizeticker >= SIZETICKER)
@@ -444,9 +450,10 @@ char *realname;		/* real name of host */
 		sizeticker -= SIZETICKER;
 	    }
 	}
+
+	bufp = line;
 	len -= n;
-	bufp = buf;
-	if (buf[0] == '\r' && buf[1] == '\n')
+	if (bufp[0] == '\r' && bufp[1] == '\n')
 	    inheaders = FALSE;
 	if (delimited && *bufp == '.') {
 	    if (bufp[1] == '\r' && bufp[2] == '\n')
@@ -864,6 +871,9 @@ char *realname;		/* real name of host */
 	else if (outlevel == O_VERBOSE)
 	    fputc('*', stderr);
     }
+
+    if (line)
+	free(line);
 
     if (outlevel == O_VERBOSE)
 	fputc('\n', stderr);
