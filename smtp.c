@@ -12,6 +12,7 @@
 
  ***********************************************************************/
 
+#include <stdio.h>
 #include <config.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -35,8 +36,10 @@ int SMTP_helo(int socket,char *host)
   int ok;
   char buf[SMTPBUFSIZE];
 
-  sprintf(buf,"HELO %s\r\n",host);
-  SockPrintf(socket,"%s",buf);
+  sprintf(buf,"HELO %s",host);
+  SockPuts(socket, buf);
+  if (outlevel == O_VERBOSE)
+      fprintf(stderr, "SMTP> %s\n", buf);
   ok = SMTP_ok(socket,buf);
   return ok;
 }
@@ -56,11 +59,13 @@ int SMTP_helo(int socket,char *host)
   return value:  Result of SMTP_ok: based on codes in popclient.h.
                  
  *********************************************************************/
-int SMTP_from(int socket,char *from)
+int SMTP_from(int socket, char *from)
 {
   char buf[SMTPBUFSIZE];  /* it's as good as size as any... */
   int ok;
-  SockPrintf(socket, "MAIL FROM %s\n", from);
+  SockPrintf(socket, "MAIL FROM: %s\n", from);
+  if (outlevel == O_VERBOSE)
+      fprintf(stderr, "SMTP> MAIL FROM: %s\n", from);
   ok = SMTP_ok(socket,buf);
 
   return ok;
@@ -85,6 +90,8 @@ int SMTP_rcpt(int socket,char *to)
   int ok;
 
   SockPrintf(socket, "RCPT TO: %s\n", to);
+  if (outlevel == O_VERBOSE)
+      fprintf(stderr, "SMTP> RCPT TO: %s\n", to);
   ok = SMTP_ok(socket,buf);
   
   return ok;
@@ -101,7 +108,14 @@ int SMTP_rcpt(int socket,char *to)
  *********************************************************************/
 int SMTP_data(int socket)
 {
+  int ok;
+
   SockPrintf(socket,"DATA\n");
+  if (outlevel == O_VERBOSE)
+      fprintf(stderr, "SMTP> DATA\n");
+  ok = SMTP_ok(socket, NULL);
+  
+  return ok;
 }
 
 /*********************************************************************
@@ -119,6 +133,8 @@ int SMTP_eom(int socket)
   int ok;
 
   SockPuts(socket,".");
+  if (outlevel == O_VERBOSE)
+      fprintf(stderr, "SMTP> .\n");
   ok = SMTP_ok(socket,NULL);
   return ok;
 }
@@ -134,6 +150,8 @@ int SMTP_eom(int socket)
 void SMTP_rset(int socket)
 {
   SockPrintf(socket,"RSET\n");
+  if (outlevel == O_VERBOSE)
+      fprintf(stderr, "SMTP> RSET\n");
 }
 
 /*********************************************************************
@@ -149,7 +167,12 @@ static int SMTP_check(int socket,char *argbuf)
   int  ok;  
   char buf[SMTPBUFSIZE];
   
-  if (SMTP_Gets(socket, buf, sizeof(buf))  > 0) {
+  if ((ok = SMTP_Gets(socket, buf, sizeof(buf))) > 0) {
+    if (outlevel == O_VERBOSE)
+    {
+	buf[ok] = '\0';
+	fprintf(stderr, "SMTP< %s", buf);
+    }
     if (argbuf)
       strcpy(argbuf,buf);
     if (buf[0] == '1' || buf[0] == '2' || buf[0] == '3')

@@ -41,7 +41,7 @@ static int tagnum;
 
 #ifdef HAVE_PROTOTYPES
 static int gen_readmsg (int socket, int mboxfd, long len, int delimited,
-       char *host, int topipe, int rewrite);
+       char *user, char *host, int topipe, int rewrite);
 #endif /* HAVE_PROTOTYPES */
 
 /*********************************************************************
@@ -80,6 +80,13 @@ struct method *proto;
     } else if (queryctl->output == TO_SMTP) {
 	if ((mboxfd = Socket(queryctl->smtphost,SMTP_PORT)) < 0) 
 	    return(PS_SOCKET);
+
+	/* eat the greeting message */
+	if (SMTP_ok(mboxfd, NULL) != SM_OK) {
+	    close(mboxfd);
+	    mboxfd = 0;
+	    return(PS_SMTP);
+	}
     
 	/* make it look like mail is coming from the server */
 	if (SMTP_helo(mboxfd,queryctl->servername) != SM_OK) {
@@ -152,6 +159,7 @@ struct method *proto;
 		    else
 			fprintf(stderr,"fetching message %d (%d bytes)\n",number,len);
 		ok = gen_readmsg(socket,mboxfd,len,protocol->delimited,
+				 queryctl->localname,
 				 queryctl->servername,
 				 queryctl->output, 
 				 !queryctl->norewrite);
@@ -433,12 +441,16 @@ char *hdr;
 	switch (state)
 	{
 	case 0:   /* before header colon */
-	    if (*hp == ':')
+	    if (*hp == '\n')
+		return(NULL);
+	    else if (*hp == ':')
 		state = 1;
 	    break;
 
 	case 1:   /* we've seen the colon, we're looking for addresses */
-	    if (*hp == '"')
+	    if (*hp == '\n')
+		return(NULL);
+	    else if (*hp == '"')
 		state = 2;
 	    else if (*hp == '(')
 		state = 3;    
@@ -451,16 +463,21 @@ char *hdr;
 	    {
 		state = 5;
 		tp = address;
+		*tp++ = *hp;
 	    }
 	    break;
 
 	case 2:   /* we're in a quoted human name, copy and ignore */
-	    if (*hp == '"')
+	    if (*hp == '\n')
+		return(NULL);
+	    else if (*hp == '"')
 		state = 1;
 	    break;
 
 	case 3:   /* we're in a parenthesized human name, copy and ignore */
-	    if (*hp == ')')
+	    if (*hp == '\n')
+		return(NULL);
+	    else if (*hp == ')')
 		state = 1;
 	    break;
 
@@ -480,7 +497,7 @@ char *hdr;
 	    {
 		*tp++ = '\0';
 		state = 1;
-		return(address);
+		return(address);	/* prevents normal hp++ */
 	    }
 	    else
 		*tp++ = *hp;
@@ -501,6 +518,7 @@ char *hdr;
     mboxfd       open file descriptor to which the retrieved message will
                  be written.
     len          length of text 
+    popuser      name of the POP user 
     pophost      name of the POP host 
     output       output mode
 
@@ -509,11 +527,12 @@ char *hdr;
   globals:       reads outlevel. 
  *********************************************************************/
 
-int gen_readmsg (socket,mboxfd,len,delimited,pophost,output,rewrite)
+int gen_readmsg (socket,mboxfd,len,delimited,popuser,pophost,output,rewrite)
 int socket;
 int mboxfd;
 long len;
 int delimited;
+char *popuser;
 char *pophost;
 int output;
 int rewrite;
@@ -583,13 +602,13 @@ int rewrite;
 
 	    if (!strncmp(bufp,"From ",5))
 		unixfrom = bufp;
-	    else if (strncmp("From: ", bufp, 6))
-		tohdr = bufp;
-	    else if (strncmp("To: ", bufp, 4))
+	    else if (!strncmp("From: ", bufp, 6))
 		fromhdr = bufp;
-	    else if (strncmp("Cc: ", bufp, 4))
+	    else if (!strncmp("To: ", bufp, 4))
+		tohdr = bufp;
+	    else if (!strncmp("Cc: ", bufp, 4))
 		cchdr = bufp;
-	    else if (strncmp("Bcc: ", bufp, 5))
+	    else if (!strncmp("Bcc: ", bufp, 5))
 		bcchdr = bufp;
 
 	    goto skipwrite;
@@ -603,6 +622,12 @@ int rewrite;
 	    case TO_SMTP:
 		if (SMTP_from(mboxfd, nxtaddr(fromhdr)) != SM_OK)
 		    return(PS_SMTP);
+#ifdef SMTP_RESEND
+		/*
+		 * This is what we'd do if popclient were a real MDA
+		 * a la sendmail -- crack all the destination headers
+		 * and send to every address we can reach via SMTP.
+		 */
 		if ((cp = nxtaddr(tohdr)) != (char *)NULL)
 		    do {
 			if (SMTP_rcpt(mboxfd, cp) == SM_UNRECOVERABLE)
@@ -621,6 +646,14 @@ int rewrite;
 			    return(PS_SMTP);
 		    } while
 			(cp = nxtaddr(NULL));
+#else
+		/*
+		 * Since we're really only fetching mail for one user
+		 * per host query, we can be simpler
+		 */
+		if (SMTP_rcpt(mboxfd, popuser) == SM_UNRECOVERABLE)
+		    return(PS_SMTP);
+#endif /* SMTP_RESEND */
 		SMTP_data(mboxfd);
 		break;
 
