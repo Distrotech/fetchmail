@@ -98,14 +98,14 @@ int imap_ok(int sock, char *argbuf)
 	     * see an EXISTS.  Only after that will a tagged response be
 	     * shipped.  The idling flag also gets cleared on a timeout.
 	     */
-	    if (idling)
+	    if (stage == STAGE_IDLE)
 	    {
 		/* we do our own write and report here to disable tagging */
 		SockWrite(sock, "DONE\r\n", 6);
 		if (outlevel >= O_MONITOR)
 		    report(stdout, "IMAP> DONE\n");
 
-		idling = FALSE;
+		stage = STAGE_FETCH;
 	    }
 	}
 	if (strstr(buf, "RECENT"))
@@ -925,7 +925,6 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
      * Handle idling.  We depend on coming through here on startup
      * and after each timeout (including timeouts during idles).
      */
-    idling = FALSE;
     if (strstr(capabilities, "IDLE") && ctl->idle)
     {
 	do_idle = TRUE;
@@ -1084,10 +1083,12 @@ static int imap_getrange(int sock,
 	if (deletions && expunge_period != 1)
 	    ok = internal_expunge(sock);
 	count = -1;
-	idling = do_idle;
-	if (idling)
+	if (do_idle)
+	{
+	    stage = STAGE_IDLE;
 	    /* this is the RFC2177-recommended timeout for an IDLE */
 	    mytimeout = 29 * 60;
+	}
 	if (ok || gen_transact(sock, do_idle ? "IDLE" : "NOOP"))
 	{
 	    report(stderr, _("re-poll failed\n"));

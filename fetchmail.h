@@ -401,7 +401,8 @@ extern int phase;
 #define STAGE_GETRANGE	1
 #define STAGE_GETSIZES	2
 #define STAGE_FETCH	3
-#define STAGE_LOGOUT	4
+#define STAGE_IDLE	4
+#define STAGE_LOGOUT	5
 extern int stage;
 
 extern int mytimeout;
