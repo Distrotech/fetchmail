@@ -1708,11 +1708,11 @@ static void dump_params (struct runctl *runp,
 #endif
 
 	if (ctl->server.plugin)
-	    printf(_("  Server connections will be mode via plugin %s (--plugin %s).\n"), ctl->server.plugin, ctl->server.plugin);
+	    printf(_("  Server connections will be made via plugin %s (--plugin %s).\n"), ctl->server.plugin, ctl->server.plugin);
 	else if (outlevel >= O_VERBOSE)
 	    printf(_("  No plugin command specified.\n"));
 	if (ctl->server.plugout)
-	    printf(_("  Listener connections will be mode via plugout %s (--plugout %s).\n"), ctl->server.plugout, ctl->server.plugout);
+	    printf(_("  Listener connections will be made via plugout %s (--plugout %s).\n"), ctl->server.plugout, ctl->server.plugout);
 	else if (outlevel >= O_VERBOSE)
 	    printf(_("  No plugout command specified.\n"));
 
