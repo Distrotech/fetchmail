@@ -377,7 +377,7 @@ static void mark_oversized(struct query *ctl, int num, int size)
 }
 
 static int fetch_messages(int mailserver_socket, struct query *ctl, 
-			  int count, int *msgsizes, int maxfetch,
+			  int count, int *msgsizes, int *msgcodes, int maxfetch,
 			  int *fetches, int *dispatches, int *deletions)
 /* fetch messages in lockstep mode */
 {
@@ -390,16 +390,16 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	flag suppress_readbody = FALSE;
 	flag retained = FALSE;
 
-	if (msgsizes[num-1] < 0)
+	if (msgcodes[num-1] < 0)
 	{
-	    if ((msgsizes[num-1] == MSGLEN_TOOLARGE) && !check_only)
+	    if ((msgcodes[num-1] == MSGLEN_TOOLARGE) && !check_only)
 		mark_oversized(ctl, num, msgsizes[num-1]);
 	    if (outlevel > O_SILENT)
 	    {
 		report_build(stdout, 
 			     _("skipping message %d (%d octets)"),
 			     num, msgsizes[num-1]);
-		switch (msgsizes[num-1])
+		switch (msgcodes[num-1])
 		{
 		case MSGLEN_INVALID:
 		    /*
@@ -432,7 +432,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 		return(err);
 
 	    /* -1 means we didn't see a size in the response */
-	    if (len == -1 && msgsizes)
+	    if (len == -1)
 	    {
 		len = msgsizes[num - 1];
 		wholesize = TRUE;
@@ -572,7 +572,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	     * QUALCOMM server (at least) seems to be
 	     * reporting the on-disk size correctly.
 	     */
-	    if (msgsizes && msgblk.msglen != msgsizes[num-1])
+	    if (msgblk.msglen != msgsizes[num-1])
 	    {
 		if (outlevel >= O_DEBUG)
 		    report(stdout,
@@ -606,7 +606,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	    struct idlist	*sdp;
 
 	    for (sdp = ctl->newsaved; sdp; sdp = sdp->next)
-		if ((sdp->val.status.num == num) && (msgsizes[num-1] > 0)) 
+		if ((sdp->val.status.num == num) && (msgcodes[num-1] > 0))
 		{
 		    sdp->val.status.mark = UID_SEEN;
 		    save_str(&ctl->oldsaved, sdp->id,UID_SEEN);
@@ -621,7 +621,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	}
 	else if (ctl->server.base_protocol->delete
 		 && !suppress_delete
-		 && ((msgsizes[num-1] > 0) ? !ctl->keep : ctl->flush))
+		 && ((msgcodes[num-1] > 0) ? !ctl->keep : ctl->flush))
 	{
 	    (*deletions)++;
 	    if (outlevel > O_SILENT) 
@@ -764,7 +764,9 @@ const int maxfetch;		/* maximum number of messages to fetch */
     else
     {
 	char buf[MSGBUFSIZE+1], *realhost;
-	int count, new, bytes, deletions = 0, *msgsizes = NULL;
+	int count, new, bytes, deletions = 0;
+	int *msgsizes = (int *)NULL;
+	int *msgcodes = (int *)NULL;
 #if INET6_ENABLE
 	int fetches, dispatches, oldphase;
 #else /* INET6_ENABLE */
@@ -1170,8 +1172,9 @@ is restored."));
 
 		    /* OK, we're going to gather size info next */
 		    xalloca(msgsizes, int *, sizeof(int) * count);
+		    xalloca(msgcodes, int *, sizeof(int) * count);
 		    for (i = 0; i < count; i++)
-			msgsizes[i] = MSGLEN_UNKNOWN;
+			msgcodes[num - 1] = MSGLEN_UNKNOWN;
 
 		    /* 
 		     * We need the size of each message before it's
@@ -1199,11 +1202,11 @@ is restored."));
 		    for (num = 1; num <= count; num++)
 		    {
 			if (NUM_NONZERO(ctl->limit) && (msgsizes[num-1] > ctl->limit))
-			    msgsizes[num-1] = MSGLEN_TOOLARGE;
+			    msgcodes[num-1] = MSGLEN_TOOLARGE;
 			else if (ctl->fetchall || force_retrieval)
 			    continue;
 			else if (ctl->server.base_protocol->is_old && (ctl->server.base_protocol->is_old)(mailserver_socket,ctl,num))
-			    msgsizes[num-1] = MSGLEN_OLD;
+			    msgcodes[num-1] = MSGLEN_OLD;
 		    }
 
 		    /* read, forward, and delete messages */
@@ -1211,9 +1214,9 @@ is restored."));
 
 		    /* fetch in lockstep mode */
 		    err = fetch_messages(mailserver_socket, ctl, 
-					count, msgsizes, 
-					maxfetch,
-					&fetches, &dispatches, &deletions);
+					 count, msgsizes, msgcodes,
+					 maxfetch,
+					 &fetches, &dispatches, &deletions);
 		    if (err)
 			goto cleanUp;
 
