@@ -1,6 +1,6 @@
 				Release Notes:
 
-fetchmail-4.5.3 ():
+fetchmail-4.5.3 (Mon Jul 20 15:02:08 EDT 1998):
 * Minor fixes to the GSSAPI code.  Seems to work with stock UW IMAP now.
 * Fetchmail running as root now sends misaddressed multidrop mail to
   `postmaster', not root.  Added `postmaster' option to allow override.
