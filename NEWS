@@ -1,18 +1,9 @@
-			   Known But Unresolved Bugs:
-
-* In multidrop mode without an applicable localdomain, addresses of the
-  form "foo"@bar.com are not parsed correctly, even though they are
-  technically RFC822 legal. The general problem is mentioned on the man page.
-
 			    Features To Consider
 
 * Generate bounce messages when delivery is refused.  See RFC1891, RFC1894.
-
-* More log levels?
-
 * Use the libmd functions for md5 under Free BSD?  (Low priority.)
-
 * Send notification mail on messages skipped due to --limit?
+* More log levels?
 
 				Other TO-DO items:
 
@@ -25,6 +16,7 @@ fetchmail-4.1.0 ()
 * Make the RPM depend on `smtpdaemon', which the sendmail package provides.
 * Clean up the Interactive UNIX System V/386 Release 3.2 port.
 * Enable parser to detect and complain about the most common syntax error.
+* More warnings about things that can go wrong with multidrop.
 
 There are 262 people on the fetchmail-friends list.
 
