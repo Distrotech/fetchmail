@@ -93,7 +93,7 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 		        strcasecmp(host, ctl->server.truename) == 0
 				&& strcasecmp(user, ctl->remotename) == 0)
 		    {
-			save_str(&ctl->oldsaved, id, UID_UNSEEN);
+			save_str(&ctl->oldsaved, id, UID_SEEN);
 			break;
 		    }
 		}
