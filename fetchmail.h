@@ -28,6 +28,13 @@
 #define		SPOP3_PORT	995
 #endif
 
+/* 
+ * We need to distinguish between mailbox and mailbag protocols.
+ * Under a mailbox protocol wwe're pulling mail for a speecific user.
+ * Under a mailbag protocol we're fetching mail for an entire domain.
+ */
+#define MAILBOX_PROTOCOL(ctl)	((ctl)->server.protocol < P_ETRN)
+
 /* authentication types */
 #define		A_ANY		0	/* use the first method that works */
 #define		A_PASSWORD	1	/* password authentication */
