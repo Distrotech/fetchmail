@@ -13,7 +13,7 @@
 #include  "fetchmail.h"
 #include  "socket.h"
 
-#include  "i18n.h"
+#include <netinet/in.h>  /* for htonl/ntohl */
 
 #ifdef KERBEROS_V4
 
@@ -30,6 +30,10 @@
 #    endif
 #    include <krb.h>
 #  endif
+
+/* des.h might define _ for no good reason.  */
+#undef _
+#include  "i18n.h"
 
 #if SIZEOF_INT == 4
 typedef	int	int32;
@@ -130,7 +134,7 @@ int do_rfc1731(int sock, char *command, char *truename)
 
     memcpy(session, credentials.session, sizeof session);
     memset(&credentials, 0, sizeof credentials);
-    des_key_sched(session, schedule);
+    des_key_sched(&session, schedule);
 
     result = krb_get_tf_fullname(TKT_FILE, tktuser, tktinst, tktrealm);
     if (result) {
