@@ -1,10 +1,13 @@
 				Release Notes:
 
-fetchmail-4.6.0 ():
+fetchmail-4.6.0 (Fri Sep 18 13:17:17 EDT 1998):
 * Added Bill Adams's mailqueue.pl to the contrib directory.
-* Try to enable KPOP initialization to wok even if `no dns' is on.
+* Try to enable KPOP initialization to work even if `no dns' is on.
 
-There are 252 people on fetchmail-friends and 278 on fetchmail-announce.
+This is a "gold" version. It will be carried on the fetchmail home page
+in addition to the current leading-edge one, until the next gold version.
+
+There are 250 people on fetchmail-friends and 281 on fetchmail-announce.
 
 fetchmail-4.5.8 (Tue Sep  8 12:06:26 EDT 1998):
 
