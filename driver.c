@@ -251,10 +251,7 @@ static char *parse_received(struct query *ctl, char *bufp)
 	if (!(ok = strstr(base, "by")))
 	    break;
 	else if (!isspace(ok[-1]) || !isspace(ok[2]))
-	{
-	    ok = (char *)NULL;
 	    continue;
-	}
 	else
 	{
 	    char	*sp, *tp;
@@ -302,10 +299,7 @@ static char *parse_received(struct query *ctl, char *bufp)
 	    if (!(ok = strstr(base, "for")))
 		break;
 	    else if (!isspace(ok[-1]) || !isspace(ok[3]))
-	    {
-		ok = (char *)NULL;
 		continue;
-	    }
 	    else
 	    {
 		char	*sp, *tp;

@@ -2,6 +2,11 @@
 
 fetchmail-4.6.9 ():
 * Better RFC822 conformance in fetchmail trace headers.
+* Corrected MIME generation of bounce mail.
+* Prevent core dumps on 'for' and 'by' embedded in names (bug introduced 
+  in 4.6.8).
+
+There are 247 people on fetchmail-friends and 309 on fetchmail-announce.
 
 fetchmail-4.6.8 (Sat Nov 28 21:07:46 EST 1998):
 * Added bounce-mail capability on SMTP/ESMTP error conditions.
