@@ -3,6 +3,9 @@
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
 * Minor fixes by HMH.
+* Properly guard some transaction reporting in the SSL code.
+* Updated German (de) po file.  Added Turkish (tr) po file.
+* Expunge edge case fix by Sunil Shetye.
 
 fetchmail-5.9.6 (Fri Dec 14 04:03:50 EST 2001), 21247 lines:
 

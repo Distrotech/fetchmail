@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/12/25 04:55:14 $
+<td width="30%" align=right>$Date: 2002/02/01 02:14:23 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1853,6 +1853,11 @@ this will suffice.  If you have them installed in a non-default
 location, you'll need to specify it as an argument to --with-ssl after
 an equal sign.
 
+<p>Note that there is a known bug in the implementation of SSL_peek
+under OpenSSL versions 0.9.5 and older that fetchmail occasionally
+tripped over, causing hangs.  It is recommended that you install 0.9.6
+or later.
+
 <p>Fetchmail binaries built this way support <code>ssl</code>,
 <code>sslkey</code>, and <code>sslcert</code> options that control
 SSL encryption.  You will need to have an SSL-enabled mailserver
@@ -1868,7 +1873,7 @@ probably means your OS doesn't have that device.<p>.
 
 An interactive program could seed the random number generator from 
 keystroke timings or some other form of user input.  Because fetchmail 
-is primarily designed to run forever as a background daemon, that option
+is primarily designed to run forever as a background daemon, that
 option is not available in this case.
 
 <hr>
@@ -2988,7 +2993,7 @@ date from the last Received header.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/12/25 04:55:14 $
+<td width="30%" align=right>$Date: 2002/02/01 02:14:23 $
 </table>
 
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@thyrsus.com&gt;</A></ADDRESS>

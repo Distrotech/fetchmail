@@ -29,8 +29,9 @@ extern char *strstr();	/* needed on sysV68 R3V7.1. */
 #define IMAP4		0	/* IMAP4 rev 0, RFC1730 */
 #define IMAP4rev1	1	/* IMAP4 rev 1, RFC2060 */
 
-static int count, unseen, deletions, imap_version, preauth; 
-static int expunged, expunge_period, saved_timeout;
+static int count, unseen, deletions = 0;
+static int expunged, expunge_period, saved_timeout = 0;
+static int imap_version, preauth;
 static flag do_idle;
 static char capabilities[MSGBUFSIZE+1];
 static unsigned int *unseen_messages;
@@ -519,6 +520,23 @@ static int imap_getrange(int sock,
 	/* no messages?  then we may need to idle until we get some */
 	if (count == 0 && do_idle)
 	    imap_idle(sock);
+
+	/*
+	 * We should have an expunge here to
+	 * a) avoid fetching deleted mails during 'fetchall'
+	 * b) getting a wrong count of mails during 'no fetchall'
+	 */
+	if (!check_only && !ctl->keep && count > 0)
+	{
+	    ok = internal_expunge(sock);
+	    if (ok)
+	    {
+		report(stderr, GT_("expunge failed\n"));
+		return(ok);
+	    }
+	    if (outlevel >= O_DEBUG)
+		report(stdout, GT_("%d messages waiting after expunge\n"), count);
+	}
     }
 
     *countp = count;
@@ -576,6 +594,7 @@ static int imap_getrange(int sock,
 
     *newp = unseen;
     expunged = 0;
+    deletions = 0;
 
     return(PS_SUCCESS);
 }
