@@ -147,7 +147,7 @@ include it.  A customized version is used at Whole Earth 'Lectronic
 Link. Several large ISPs are known to recommend it to Unix-using SLIP
 and PPP customers.<p>
 
-Over four hundred people have participated on the fetchmail beta
+Over five hundred people have participated on the fetchmail beta
 list.  While it's hard to count free software users, we can estimate
 based on (a) population figures at the WELL and other known fetchmail
 sites, (b) the size of the Linux-using ISP customer base, and (c) the
@@ -210,9 +210,10 @@ can put on your web page:<P>
 
 <center><img src="fetchmail.gif"></center><P>
 
-Thanks to Steve Matuszek for the graphic design.  The hand in the
-button (and the larger top-of-page graphic) was actually derived from
-a color scan of the fetchmail author's hand. <P>
+Thanks to <a href="http://www.gl.umbc.edu/~smatus1/">Steve
+Matuszek</a> for the graphic design.  The hand in the button (and the
+larger top-of-page graphic) was actually derived from a color scan of
+the fetchmail author's hand. <P>
 
 <H1>Fetchmail mirror sites:</H1>
 
