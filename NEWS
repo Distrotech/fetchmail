@@ -9,6 +9,7 @@ a Certifying Authority we recognize?).
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.2.3 (Tue Jan  4 01:56:11 EST 2000), 18421 lines:
 * Ken Estes's patch to check for unreachable UIDL file due to bad NFS mount.
 * Jorge Godoy's replacement pt_BR.po and various minor translation fixes.
 * Javier Kohen's replacement for es.po.
@@ -18,6 +19,8 @@ a Certifying Authority we recognize?).
 * Gunther Leber's cleanup patches.
 * Note to translators: The bodies of the login-error and timeout-error
   form letters have been changed in driver.c.
+
+There are 280 people on fetchmail-friends and 483 on fetchmail-announce.
 
 fetchmail-5.2.2 (Sun Dec 26 09:31:07 EST 1999), 18365 lines:
 * Arrange for fetchmail to restart itself quietly when the rc file is touched.
