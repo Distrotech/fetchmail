@@ -135,6 +135,7 @@ do
     CFLAGS="$CFLAGS -DKERBEROS_V4 -I$dir/include"
     LDFLAGS="$LDFLAGS -L$dir/lib"
     LIBS="$LIBS -lkrb -ldes"
+    break
   fi
 done
 
