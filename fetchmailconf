@@ -12,9 +12,11 @@
 # Version 0.94 beta: Thu Jun  4 12:09:06 EDT 1998
 # Version 0.95 beta: Fri Jun  5 11:47:07 EDT 1998
 #
+# Version 1.0: 
+#
 # TO DO: Arrange for save and quit buttons to clean up all frames dependent
 # on the current ones.
-version = "0.95 beta";
+version = "1.0"
 
 from Tkinter import *
 from Dialog import *
@@ -927,9 +929,11 @@ class ServerEdit(Frame, MyWidget):
         if greetline == None:
             title = "Autoprobe of " + realhost + " failed"
             confirm = """
-Fetchmail didn't find any mailservers active.
+Fetchmailconf didn't find any mailservers active.
 This could mean the host doesn't support any,
-or just that your Internet connection is down.
+or that your Internet connection is down, or
+that the host is so slow that the probe timed
+out before getting a response.
 """
         else:
             warnings = ''
@@ -973,6 +977,14 @@ user entries associated with this server.
                 warnings = warnings + """
 This appears to be a version of Eudora qpopper.  That's good.  Fetchmail
 knows all about qpopper.
+
+"""
+            closebrak = string.find(greetline, ">")
+            if  closebrak > 0 and greetline[closebrak+1] == "\r":
+                warnings = warnings + """
+It looks like you could use APOP on this server and avoid sending it your
+password in clear.  You should talk to the mailserver administrator about
+this.
 
 """
             if string.find(greetline, "csi.com") > 0:
