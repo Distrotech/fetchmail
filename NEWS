@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-6.2.3 (Thu Jul 17 14:53:00 EDT 2003), 22487 lines:
+
 * German, Danish, Spanish, and Turkish translations updated.
 * Brian Sammon's patch to deal with malformed message lines containiing NULs.
 * Fai's patch to ignore all but the first Return-Path (some spams have
@@ -15,6 +17,8 @@
 * Header-reading code now copes better with lines ending in \n only.
 * Elias Israel's patches for POP3 NTLM support and dealing with byte-
   stuffing failures at socket level.
+
+There are 580 people on fetchmail-friends and 750 on fetchmail-announce.
 
 fetchmail-6.2.2 (Fri Feb 28 21:34:26 EST 2003), 22345 lines:
 
