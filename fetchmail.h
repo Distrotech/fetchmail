@@ -39,6 +39,7 @@
 #define         PS_SMTP         9       /* SMTP error */
 #define		PS_UNDEFINED	10	/* something I hadn't thought of */
 #define		PS_TRANSIENT	11	/* transient failure (internal use) */
+#define		PS_REFUSED	12	/* mail refused (internal use) */
 
 /* output noise level */
 #define         O_SILENT	0	/* mute, max squelch, etc. */

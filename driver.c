@@ -427,21 +427,22 @@ int smtp_open(struct query *ctl)
     return(ctl->smtp_socket);
 }
 
-static int gen_readmsg(sock, len, delimited, num, ctl, realname)
+/* these are shared by readheaders and readbody */
+static FILE *sinkfp;
+static RETSIGTYPE (*sigchld)();
+static int sizeticker;
+
+static int readheaders(sock, len, ctl, realname)
 /* read message content and ship to SMTP or MDA */
 int sock;		/* to which the server is connected */
 long len;		/* length of message */
-int delimited;		/* does the protocol use a message delimiter? */
-int num;		/* message number we're fetching */
 struct query *ctl;	/* query control record */
 char *realname;		/* real name of host */
 {
     char buf[MSGBUFSIZE+1], return_path[MSGBUFSIZE+1]; 
     int	from_offs, to_offs, cc_offs, bcc_offs, ctt_offs, env_offs;
     char *headers, *received_for;
-    int n, linelen, oldlen, ch, sizeticker, delete_ok, forward_ok, remaining;
-    FILE *sinkfp;
-    RETSIGTYPE (*sigchld)();
+    int n, linelen, oldlen, ch, remaining;
     char		*cp;
     struct idlist 	*idp, *xmit_names;
     int			good_addresses, bad_addresses, has_nuls;
@@ -451,8 +452,6 @@ char *realname;		/* real name of host */
     int			olderrs;
 
     sizeticker = 0;
-    forward_ok = TRUE;
-    delete_ok = TRUE;
     has_nuls = FALSE;
     return_path[0] = '\0';
     remaining = len;
@@ -692,10 +691,10 @@ char *realname;		/* real name of host */
      */
     if (ctl->errcount > olderrs)	/* there were DNS errors above */
     {
-	delete_ok = FALSE;
-	sinkfp = (FILE *)NULL;
 	if (outlevel == O_VERBOSE)
 	    error(0,0, "forwarding and deletion suppressed due to DNS errors");
+	free(headers);
+	return(PS_TRANSIENT);
     }
     else if (ctl->mda)		/* we have a declared MDA */
     {
@@ -774,7 +773,7 @@ char *realname;		/* real name of host */
 		sprintf(options, " BODY=7BIT");
 	    else if (!strcasecmp(ctt,"8BIT"))
 		sprintf(options, " BODY=8BITMIME");
-	if ((ctl->server.esmtp_options & ESMTP_SIZE) && !delimited)
+	if ((ctl->server.esmtp_options & ESMTP_SIZE))
 	    sprintf(options + strlen(options), " SIZE=%ld", len);
 
 	/*
@@ -832,8 +831,8 @@ char *realname;		/* real name of host */
 		 * this.  Don't try to ship the message, and
 		 * don't prevent it from being deleted.
 		 */
-		forward_ok = FALSE;
-		goto skiptext;
+		free(headers);
+		return(PS_REFUSED);
 
 	    case 452: /* insufficient system storage */
 		/*
@@ -842,10 +841,9 @@ char *realname;		/* real name of host */
 		 * and suppress deletion so it can be retried on
 		 * a future retrieval cycle.
 		 */
-		forward_ok = FALSE;
-		delete_ok = FALSE;
 		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
-		goto skiptext;
+		free(headers);
+		return(PS_TRANSIENT);
 
 	    case 552: /* message exceeds fixed maximum message size */
 		/*
@@ -853,9 +851,9 @@ char *realname;		/* real name of host */
 		 * ESMTP server.  Don't try to ship the message, 
 		 * and allow it to be deleted.
 		 */
-		forward_ok = FALSE;
 		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
-		goto skiptext;
+		free(headers);
+		return(PS_REFUSED);
 
 	    default:	/* retry with invoking user's address */
 		if (SMTP_from(ctl->smtp_socket, user, options) != SM_OK)
@@ -1028,33 +1026,22 @@ char *realname;		/* real name of host */
 	    SockWrite(ctl->smtp_socket, "\r\n", 2);
     }
 
-    /*
-     * If we're using IMAP4 or something else that can fetch headers
-     * separately from bodies, it's time to grab the body now.  This
-     * fetch may be skipped if we got an anti-spam or other error
-     * response from SMTP above.
-     *
-     * The protocol methods should never fail here.  Just in case...
-     * we return PS_TRANSIENT because failure could not be due 
-     * to desynchronization or permanent request failure.
-     */
-    if (protocol->fetch_body)
-    {
-	int	ok;
+    return(PS_SUCCESS);
+}
 
-	if ((ok = (protocol->trail)(sock, ctl, num)))
-	    return(PS_TRANSIENT);
-	if ((ok = (protocol->fetch_body)(sock, ctl, num, &remaining)))
-	    return(PS_TRANSIENT);
-    }
+static int readbody(sock, ctl, forward, len, delimited)
+/* read and dispose of a message body presented on sock */
+struct query *ctl;	/* query control record */
+int sock;		/* to which the server is connected */
+int len;		/* length of message;
+int delimited;		/* does the protocol use a message delimiter? */
+int forward;		/* TRUE to forward */
+{
+    int	linelen;
+    char buf[MSGBUFSIZE+1], *cp;
 
-    /*
-     *  Body processing starts here
-     */
-
-skiptext:
     /* pass through the text lines */
-    while (delimited || remaining > 0)
+    while (delimited || len > 0)
     {
 	if ((linelen = SockRead(sock, buf, sizeof(buf)-1)) == -1)
 	    return(PS_SOCKET);
@@ -1071,7 +1058,7 @@ skiptext:
 		sizeticker -= SIZETICKER;
 	    }
 	}
-	remaining -= linelen;
+	len -= linelen;
 
 	/* fix messages that have only \n line-termination (for qmail) */
 	if (ctl->forcecr)
@@ -1091,13 +1078,15 @@ skiptext:
 		break;
 
 	/* ship out the text line */
-	if (forward_ok)
+	if (forward)
 	{
+	    int	n;
+
 	    /* SMTP byte-stuffing */
 	    if (*buf == '.')
 		if (sinkfp && ctl->mda)
 		    fputs(".", sinkfp);
-		else if (forward_ok && ctl->smtp_socket != -1)
+		else if (ctl->smtp_socket != -1)
 		    SockWrite(ctl->smtp_socket, buf, 1);
 
 	    /* we may need to strip carriage returns */
@@ -1163,7 +1152,7 @@ skiptext:
 	}
     }
 
-    return(delete_ok ? PS_SUCCESS : PS_TRANSIENT);
+    return(PS_SUCCESS);
 }
 
 #ifdef KERBEROS_V4
@@ -1490,6 +1479,7 @@ const struct method *proto;	/* protocol method table */
 		    int	fetch_it = ctl->fetchall ||
 			(!toolarge && (force_retrieval || !(protocol->is_old && (protocol->is_old)(sock,ctl,num))));
 		    int	suppress_delete = FALSE;
+		    int	suppress_forward = FALSE;
 
 		    /* we may want to reject this message if it's old */
 		    if (!fetch_it)
@@ -1520,13 +1510,40 @@ const struct method *proto;	/* protocol method table */
 				error_build(" ");
 			}
 
-			/* read the message and ship it to the output sink */
-			ok = gen_readmsg(sock,
-					 len, 
-					 protocol->delimited,
-					 num,
-					 ctl,
-					 realname);
+			/* 
+			 * Read the message headers and ship them to the
+			 * output sink.  
+			 */
+			ok = readheaders(sock, len, ctl, realname);
+			if (ok == PS_TRANSIENT)
+			    suppress_delete = TRUE;
+			else if (ok == PS_REFUSED)
+			    suppress_forward = TRUE;
+			else if (ok)
+			    goto cleanUp;
+			set_timeout(ctl->server.timeout);
+
+			/*
+			 * If we're using IMAP4 or something else that
+			 * can fetch headers separately from bodies,
+			 * it's time to request the body now.  This fetch
+			 * may be skipped if we got an anti-spam or
+			 * other error response from SMTP.
+			 */
+			if (protocol->fetch_body && !suppress_forward)
+			{
+			    int	ok;
+
+			    if ((ok = (protocol->trail)(sock, ctl, num)))
+				goto cleanUp;
+			    set_timeout(ctl->server.timeout);
+			    if ((ok = (protocol->fetch_body)(sock, ctl, num, &len)))
+				goto cleanUp;
+			    set_timeout(ctl->server.timeout);
+			}
+
+			/* process the body now */
+			ok = readbody(sock, ctl,TRUE,len,protocol->delimited);
 			if (ok == PS_TRANSIENT)
 			    suppress_delete = TRUE;
 			else if (ok)
