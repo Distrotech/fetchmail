@@ -770,6 +770,7 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
 #endif /* EXPLICIT_BOUNCE_ON_BAD_ADDRESS */
     int		total_addresses;
     int		force_transient_error = 0;
+    int		smtp_err;
 
     /*
      * Compute ESMTP options.
@@ -861,7 +862,12 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
 	ap = addr;
     }
 
-    if (SMTP_from(ctl->smtp_socket, ap, options) != SM_OK)
+    if ((smtp_err = SMTP_from(ctl->smtp_socket, ap, options)) == SM_UNRECOVERABLE)
+    {
+	smtp_close(ctl, 0);
+	return(PS_TRANSIENT);
+    }
+    if (smtp_err != SM_OK)
     {
 	int err = handle_smtp_report(ctl, msg);
 
@@ -883,7 +889,12 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
 	{
 	    const char *address;
 	    address = rcpt_address (ctl, idp->id, 1);
-	    if (SMTP_rcpt(ctl->smtp_socket, address) == SM_OK)
+	    if ((smtp_err = SMTP_rcpt(ctl->smtp_socket, address)) == SM_UNRECOVERABLE)
+	    {
+		smtp_close(ctl, 0);
+		return(PS_TRANSIENT);
+	    }
+	    if (smtp_err == SM_OK)
 		(*good_addresses)++;
 	    else
 	    {
@@ -954,8 +965,13 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
 	    SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
 	    return(PS_REFUSED);
 	}
-	if (SMTP_rcpt(ctl->smtp_socket,
-		rcpt_address (ctl, run.postmaster, 0)) != SM_OK)
+	if ((smtp_err = SMTP_rcpt(ctl->smtp_socket,
+		rcpt_address (ctl, run.postmaster, 0))) == SM_UNRECOVERABLE)
+	{
+	    smtp_close(ctl, 0);
+	    return(PS_TRANSIENT);
+	}
+	if (smtp_err != SM_OK)
 	{
 	    report(stderr, GT_("can't even send to %s!\n"), run.postmaster);
 	    SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
@@ -970,7 +986,12 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
      * Tell the listener we're ready to send data.
      * Some listeners (like zmailer) may return antispam errors here.
      */
-    if (SMTP_data(ctl->smtp_socket) != SM_OK)
+    if ((smtp_err = SMTP_data(ctl->smtp_socket)) == SM_UNRECOVERABLE)
+    {
+	smtp_close(ctl, 0);
+	return(PS_TRANSIENT);
+    }
+    if (smtp_err != SM_OK)
     {
 	int err = handle_smtp_report(ctl, msg);
 	SMTP_rset(ctl->smtp_socket);    /* stay on the safe side */
@@ -1240,6 +1261,7 @@ void release_sink(struct query *ctl)
 int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 /* perform end-of-message actions on the current output sink */
 {
+    int smtp_err;
     if (ctl->mda)
     {
 	int rc;
@@ -1293,7 +1315,12 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
     else if (forward)
     {
 	/* write message terminator */
-	if (SMTP_eom(ctl->smtp_socket) != SM_OK)
+	if ((smtp_err = SMTP_eom(ctl->smtp_socket)) == SM_UNRECOVERABLE)
+	{
+	    smtp_close(ctl, 0);
+	    return(FALSE);
+	}
+	if (smtp_err != SM_OK)
 	{
 	    if (handle_smtp_report(ctl, msg) != PS_REFUSED)
 	    {
@@ -1355,7 +1382,12 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 		xalloca(responses, char **, sizeof(char *) * lmtp_responses);
 		for (errors = i = 0; i < lmtp_responses; i++)
 		{
-		    if (SMTP_ok(ctl->smtp_socket) == SM_OK)
+		    if ((smtp_err = SMTP_ok(ctl->smtp_socket)) == SM_UNRECOVERABLE)
+		    {
+			smtp_close(ctl, 0);
+			return(FALSE);
+		    }
+		    if (smtp_err == SM_OK)
 			responses[i] = (char *)NULL;
 		    else
 		    {

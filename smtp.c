@@ -343,6 +343,8 @@ int SMTP_ok(int sock)
 	else if (smtp_response[3] != '-')
 	    return SM_ERROR;
     }
+    if (outlevel >= O_MONITOR)
+	report(stderr, GT_("smtp listener protocol error"));
     return SM_UNRECOVERABLE;
 }
 
