@@ -1130,7 +1130,7 @@ int readheaders(int sock,
 	return(PS_IOERR);
     }
     else if ((run.poll_interval == 0 || nodetach) && outlevel >= O_VERBOSE && !isafile(2))
-	fputs("#", stderr);
+	fputs("#", stdout);
 
     /* write error notifications */
     if (no_local_matches || has_nuls || bad_addresses)
