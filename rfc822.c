@@ -15,6 +15,8 @@
 
 #include "fetchmail.h"
 
+#define HEADER_END(p)	((p)[0] == '\n' && ((p)[1] != ' ' && (p)[1] != '\t'))
+
 void reply_hack(buf, host)
 /* hack message headers so replies will work properly */
 char *buf;		/* header to be hacked */
@@ -59,8 +61,12 @@ const char *host;	/* server hostname */
 		    state = 2;
 		else if (*from == '@')
 		    has_host_part = TRUE;
-		else if ((*from == ',' || *from == '\n') && !has_host_part)
+		else if ((*from == ',' || HEADER_END(from)) && !has_host_part)
 		{
+		    while (isspace(*from))
+			--from;
+		    while (isspace(*buf))
+			--buf;
 		    strcpy(buf, "@");
 		    strcat(buf, host);
 		    buf += strlen(buf);
@@ -96,10 +102,6 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
     static int	state, oldstate;
     int parendepth;
 
-    /*
-     * Note: it is important that this routine not stop on \r, since
-     * we use \r as a marker for RFC822 continuations elsewhere.
-     */
 #define START_HDR	0	/* before header colon */
 #define SKIP_JUNK	1	/* skip whitespace, \n, and junk */
 #define BARE_ADDRESS	2	/* collecting address without delimiters */
@@ -119,7 +121,7 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	switch (state)
 	{
 	case START_HDR:   /* before header colon */
-	    if (*hp == '\n')
+	    if (HEADER_END(hp))
 	    {
 		state = ENDIT_ALL;
 		return(NULL);
@@ -132,7 +134,7 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	    break;
 
 	case SKIP_JUNK:		/* looking for address start */
-	    if (*hp == '\n')		/* no more addresses */
+	    if (HEADER_END(hp))		/* no more addresses */
 	    {
 		state = ENDIT_ALL;
 		return(NULL);
@@ -166,11 +168,13 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	    break;
 
 	case BARE_ADDRESS:   	/* collecting address without delimiters */
-	    if (*hp == '\n')		/* end of bare address */
+	    if (HEADER_END(hp))		/* end of bare address */
 	    {
 		if (tp > address)
 		{
-		    *tp++ = '\0';
+		    while (isspace(*--tp))
+			continue;
+		    *++tp = '\0';
 		    state = ENDIT_ALL;
 		    return(tp = address);
 		}
@@ -199,7 +203,7 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	    break;
 
 	case INSIDE_DQUOTE:	/* we're in a quoted string, copy verbatim */
-	    if (*hp == '\n')		/* premature end of string */
+	    if (HEADER_END(hp))		/* premature end of string */
 	    {
 		state = ENDIT_ALL;
 		return(NULL);
@@ -219,8 +223,11 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	    break;
 
 	case INSIDE_PARENS:	/* we're in a parenthesized comment, ignore */
-	    if (*hp == '\n')		/* end of line, just bomb out */
+	    if (HEADER_END(hp))		/* end of line, just bomb out */
+	    {
+		state = ENDIT_ALL;
 		return(NULL);
+	    }
 	    else if (*hp == '\\')	/* handle RFC822 escaping */
 	    {
 	        *tp++ = *hp++;			/* take the escape */
@@ -235,7 +242,12 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	    break;
 
 	case INSIDE_BRACKETS:	/* possible <>-enclosed address */
-	    if (*hp == '\\')		/* handle RFC822 escaping */
+	    if (HEADER_END(hp))		/* end of line, just bomb out */
+	    {
+		state = ENDIT_ALL;
+		return(NULL);
+	    }
+	    else if (*hp == '\\')	/* handle RFC822 escaping */
 	    {
 	        *tp++ = *hp++;			/* take the escape */
 	        *tp++ = *hp;			/* take following char */
