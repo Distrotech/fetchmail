@@ -645,7 +645,7 @@ void termhook(int sig)
      */
 
     if (sig != 0)
-        error(0, 0, "terminated with signal %d\n", sig);
+        error(0, 0, "terminated with signal %d", sig);
     else
 	/* terminate all SMTP connections cleanly */
 	for (ctl = querylist; ctl; ctl = ctl->next)

@@ -29,7 +29,7 @@ int imap_ok (FILE *sockfp,  char *argbuf)
 	    return(PS_SOCKET);
 
 	if (outlevel == O_VERBOSE)
-	    fprintf(stderr,"%s\n",buf);
+	    error(0, 0, buf);
 
 	/* interpret untagged status responses */
 	if (strstr(buf, "EXISTS"))
@@ -123,7 +123,7 @@ static int imap_getsizes(FILE *sockfp, int count, int *sizes)
 	int num, size;
 
 	if (outlevel == O_VERBOSE)
-	    fprintf(stderr,"%s\n",buf);
+	    error(0, 0, buf);
 	if (strstr(buf, "OK"))
 	    break;
 	else if (sscanf(buf, "* %d FETCH (RFC822.SIZE %d)", &num, &size) == 2)

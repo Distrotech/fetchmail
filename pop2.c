@@ -25,7 +25,7 @@ int pop2_ok (FILE *sockfp, char *argbuf)
     pound_arg = equal_arg = -1;
     if (SockGets(buf, sizeof(buf), sockfp) >= 0) {
 	if (outlevel == O_VERBOSE)
-	    fprintf(stderr,"%s\n",buf);
+	    error(0, 0, buf);
 
 	if (buf[0] == '+')
 	    ok = 0;
