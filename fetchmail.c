@@ -67,7 +67,7 @@ char *user;		/* the name of the invoking user */
 char *home;		/* invoking user's home directory */
 char *fetchmailhost;	/* the name of the host running fetchmail */
 char *program_name;	/* the name to prefix error messages with */
-flag pythondump;	/* dump control blocks as Python dictionary */
+flag configdump;	/* dump control blocks for configurator */
 
 #if NET_SECURITY
 void *request = NULL;
@@ -217,9 +217,9 @@ int main (int argc, char **argv)
     }
 
     /* dump options as a Python dictionary, for configurator use */
-    if (pythondump)
+    if (configdump)
     {
-	/* this feature is not yet implemented */
+	dump_config(&run, querylist);
 	exit(0);
     }
 
@@ -730,7 +730,9 @@ static int load_params(int argc, char **argv, int optind)
 	    ctl->active = TRUE;
 	}
 
-    /* if there's a defaults record, merge it and lose it */ 
+    /*
+     * If there's a defaults record, merge it and lose it.
+     */ 
     if (querylist && strcmp(querylist->server.pollname, "defaults") == 0)
     {
 	for (ctl = querylist->next; ctl; ctl = ctl->next)

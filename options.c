@@ -54,7 +54,7 @@
 #define LA_NETSEC	36
 #define LA_INTERFACE    37
 #define LA_MONITOR      38
-#define LA_PYTHONDUMP	39
+#define LA_CONFIGDUMP	39
 #define LA_YYDEBUG	40
 
 /* options still left: CgGhHjJoORUwWxXYz */
@@ -115,7 +115,7 @@ static const struct option longoptions[] = {
   {"monitor",	required_argument, (int *) 0, LA_MONITOR     },
 #endif /* defined(linux) && !INET6 */
 
-  {"pythondump",no_argument,	   (int *) 0, LA_PYTHONDUMP  },
+  {"configdump",no_argument,	   (int *) 0, LA_CONFIGDUMP  },
 
   {"yydebug",	no_argument,	   (int *) 0, LA_YYDEBUG     },
 
@@ -385,8 +385,8 @@ struct query *ctl;	/* option record to be initialized */
 	    yydebug = TRUE;
 	    break;
 
-	case LA_PYTHONDUMP:
-	    pythondump = TRUE;
+	case LA_CONFIGDUMP:
+	    configdump = TRUE;
 	    break;
 
 	case LA_SYSLOG:

@@ -275,7 +275,7 @@ extern char *user;		/* name of invoking user */
 extern char *home;		/* home directory of invoking user */
 extern char *fetchmailhost;	/* the name of the host running fetchmail */
 extern int pass;		/* number of re-polling pass */
-extern flag pythondump;		/* dump control blocks as Python dictionary */
+extern flag configdump;		/* dump control blocks as Python dictionary */
 
 /* prototypes for globally callable functions */
 
@@ -378,6 +378,7 @@ char *getpassword(char *);
 void escapes(const char *, char *);
 char *visbuf(const char *);
 char *showproto(int);
+void dump_config(struct runctl *runp, struct query *querylist);
 
 void yyerror(const char *);
 int yylex(void);
