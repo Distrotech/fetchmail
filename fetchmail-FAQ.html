@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/06/30 19:26:13 $
+<td width="30%" align=right>$Date: 1998/06/30 22:34:35 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -278,7 +278,7 @@ href="http://www.tuxedo.org/~esr/writings/cathedral.html">The
 Cathedral and the Bazaar</a> which was first presented at Linux
 Kongress '97 in Bavaria and very well received there. It was also
 given at Atlanta Linux Expo, Linux Pro '97 in Warsaw, and the first
-Perl Conference, at UniForum '98, and will be the basis of an invited
+Perl Conference, at UniForum '98, and was the basis of an invited
 presentation at Usenix '98.  The folks at Netscape tell me it helped
 them decide to <a
 href="http://www.netscape.com/newsref/pr/newsrelease558.html"> give
@@ -289,6 +289,10 @@ on the Web with a search for that title.<p>
 
 <hr>
 <h2><a name="G7">G7. What is the best server to use with fetchmail?</a></h2>
+
+The short answer: IMAP4rev1 running over Unix.<P>
+
+Here's a longer answer: <P>
 
 Fetchmail will work with any POP, IMAP, or ESMTP/ETRN server that
 conforms to the relevant RFCs (and even some outright broken ones
@@ -304,13 +308,21 @@ also feature IMAP (you can detect IMAP support by running fetchmail in
 AUTO mode, or by using the `Probe for a server' function in the
 fetchmailconf utility).<P>
 
-If you have the option, we recommend using or installing IMAP4rev1; it has
-the best facilities for tracking message `seen' states.  It also
-recovers from interrupted connections more gracefully than POP3, and
-enables some significant performance optimizations.<P>
+If you have the option, we recommend using or installing an IMAP4rev1
+server; it has the best facilities for tracking message `seen' states.
+It also recovers from interrupted connections more gracefully than
+POP3, and enables some significant performance optimizations.<P>
+
+Don't be fooled by NT/Exchange propaganda.  M$ Exchange is just plain
+broken (see item <a href="#T7"></a>) and NT cannot handle the
+sustained load of a high-volume remote mail server.  Even Microsoft
+itself knows better than to try this; their own Hotmail service runs
+over Solaris!  For extended discussion, see John Kirch's excellent <a
+href="http://www.kirch.net/unix-nt.html">white paper</a> on Unix
+vs. NT performance.<P>
 
 You can find sources for IMAP software at <a
-href="http://www.imap.org"> The IMAP Connection</a>; we like the
+href="http://www.imap.org">The IMAP Connection</a>; we like the
 open-source UW IMAP and Cyrus products. UW IMAP is the reference
 implementation of IMAP.<P>
 
@@ -1155,8 +1167,58 @@ ESMTP listener, assuming you're using one (this should not be a
 problem unless the actual size of the message is above the listener's
 configured length limit).<P>
 
-If you want these fixed, go bug the Evil Empire.  Or, better yet,
-install a real operating system on your mailserver and run IMAP.<P>
+Somewhat belatedly, I've learned that there's supposed to be a
+registry bit that can fix this breakage:<P>
+
+<pre>
+HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\MsExchangeIs\Parameters
+System\Pop3 Compatibility
+</pre>
+
+This is a bitmask that controls the variations from the standard protocol.
+The bits defined are:<P>
+
+<DL>
+<DT>0x00000001:
+<DD>Report exact message sizes for the LIST command
+<DT>0x00000002:
+<DD>Allow arbitrary linear whitespace between commands and arguments
+<DT>0x00000004:
+<DD>Enable the LAST command
+<DT>0x00000008:
+<DD>Allow an empty PASS command (needed for users with blank
+passwords, but illegal in the protocol)
+<DT>0x00000010:
+<DD>Relax the length restrictions for arguments to commands (protocol
+requires 40, but some user names may be longer than that).
+<DT>0x00000020:
+<DD>Allow spaces in the argument to the USER command.
+</DL>
+
+There's another one that may be useful to know about:<P>
+
+<pre>
+KEY_LOCAL_MACHINE\System\CurrentControlSet\Services\MsExchangeIs\Parameters
+System\Pop3 Performance
+</pre>
+
+<DL>
+<DT>0x00000001:
+<DD>Render messages to a temporary stream instead of sending directly
+from the database (should always be on)
+<DT>0x00000002:
+Flag unrenderable messages (instead of just failing commands)
+(should only be on if you are seeing the problems reported
+in KB Q168109)
+<DT>0x00000004:
+<DD>Return from the QUIT command before all messages have been deleted.
+</DL>
+
+The Microsoft pod-person who revealed this information to me admitted
+that he couldn't find it anywhere in their public knowledge base.<P>
+
+You can mess with these bits.  Or, better yet, you can install a real
+operating system on your mailserver.<P>
 
 <hr>
 <h2><a name="T8">T8. How can I use fetchmail with CompuServe RPA?</a></h2>
@@ -1964,7 +2026,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/06/30 19:26:13 $
+<td width="30%" align=right>$Date: 1998/06/30 22:34:35 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
