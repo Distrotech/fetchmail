@@ -258,7 +258,7 @@ void update_str_lists(struct query *);
 void write_saved_lists(struct query *, const char *);
 
 /* rcfile_y.y */
-int prc_parse_file(const char *, flag);
+int prc_parse_file(const char *, const flag);
 int prc_filecheck(const char *);
 
 /* base64.c */
