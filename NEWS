@@ -4,6 +4,7 @@
 
 * Fixed Debian bug #63667, fetchmailconf: doesn't write .fetchmailrc properly.
 * RFC2177 IDLE should now be done even when there are no messages.
+* Joerg Plate's SSL typo fix.
 
 fetchmail-5.4.2 (Wed Jun 28 07:21:04 EDT 2000), 19069 lines:
 
