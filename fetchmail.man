@@ -25,9 +25,9 @@ RPOP and LAST facilities removed from later POP3 versions.
 The behavior of
 .I fetchmail
 is controlled by comand-line options and a run control file,
-.I ~/.fetchrc
+.I ~/.fetchmailrc
 the syntax of which we describe below.  Command-line options override
-.I ~/.fetchrc
+.I ~/.fetchmailrc
 declarations.
 .PP
 To facilitate the use of
@@ -38,7 +38,7 @@ termination -- see EXIT CODES below.
 Each server name that you specify (following the options on the
 command line) will be queried.  If you don't specify any servers
 on the command line, each server in your 
-.I ~/.fetchrc
+.I ~/.fetchmailrc
 file will be queried.
 .TP
 .B \-2
@@ -84,8 +84,8 @@ options on the same command line.
 POP3/IMAP only.  Delete old (previously retrieved) messages from the mailserver
 before retrieving new messages.
 .TP
-.B \-f pathname, --fetchrc pathname
-Specify an alternate name for the .fetchrc run control file.
+.B \-f pathname, --fetchmailrc pathname
+Specify an alternate name for the .fetchmailrc run control file.
 .TP
 .B \-i pathname, --idfile pathname
 Specify an alternate name for the .fetchids file.
@@ -231,7 +231,7 @@ established.  This is the safest way to use
 .I fetchmail
 and ensures that your password will not be compromised.  You may also specify
 your password in your
-.I ~/.fetchrc
+.I ~/.fetchmailrc
 file.  This is convenient when using 
 .I fetchmail
 in daemon mode or with scripts.
@@ -244,7 +244,7 @@ the correct user-id and password for your mailbox account.
 POP3 versions up to the RFC1225 version supported an alternate
 authentication mechanism called RPOP intended to remove the security
 risk inherent in sending unencrypted account passwords across the net
-(in RFC1460 this facility was replaced with APOP).  If your .fetchrc
+(in RFC1460 this facility was replaced with APOP).  If your .fetchmailrc
 file specifies an RPOP id and a connection port in the privileged
 range (1..1024),
 .I fetchmail will
@@ -358,7 +358,7 @@ Simply invoking
 fetchmail -d 900
 .PP
 will, therefore, poll the hosts described in your 
-.I ~/.fetchrc
+.I ~/.fetchmailrc
 file once every fifteen minutes.
 .PP
 Only one daemon process is permitted per user; in daemon mode,
@@ -376,8 +376,8 @@ mode into a specified logfile (follow the option with the logfile name).
 This is primarily useful for debugging configurations.
 .SH THE RUN CONTROL FILE
 The preferred way to set up fetchmail (and the only way if you want to
-specify a password) is to write a .fetchrc file in your home directory.
-To protect the security of your passwords, your ~/.fetchrc may not have
+specify a password) is to write a .fetchmailrc file in your home directory.
+To protect the security of your passwords, your ~/.fetchmailrc may not have
 more than u+r,u+w permissions; 
 .I fetchmail
 will complain and exit otherwise.
@@ -575,7 +575,7 @@ created by the new SMTP forwarding default.
 .PP
 .SH FILES
 .TP 5
-~/.fetchrc
+~/.fetchmailrc
 default run control file
 .TP 5
 ~/.fetchids
@@ -616,12 +616,12 @@ protocols such as DMSP in the future).
 The --password option of previous (popclient) versions has been removed -- it
 encouraged people to expose passwords in scripts.  Passwords
 must now be specified either interactively or in your
-.I ~/.fetchrc
+.I ~/.fetchmailrc
 file.  The short-form -p option now specifies the protocol to use.
 .PP
 The reason the password isn't stored encrypted is because this doesn't
 actually add protection.  Anyone who's acquired permissions to read your
-fetchrc file will be able to run 
+fetchmailrc file will be able to run 
 .I fetchmail
 as you anyway -- and if it's
 your password they're after, they'd be able to use the necessary decoder from

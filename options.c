@@ -29,7 +29,7 @@
 #define LA_FLUSH        9
 #define LA_PROTOCOL	10
 #define LA_DAEMON	11
-#define LA_FETCHRC	12
+#define LA_RCFILE	12
 #define	LA_IDFILE	13
 #define LA_USERNAME	14
 #define LA_REMOTEFILE	15
@@ -56,7 +56,7 @@ static struct option longoptions[] = {
   {"protocol",	required_argument, (int *) 0, LA_PROTOCOL   },
   {"proto",	required_argument, (int *) 0, LA_PROTOCOL   },
   {"daemon",	required_argument, (int *) 0, LA_DAEMON     },
-  {"fetchrc",	required_argument, (int *) 0, LA_FETCHRC      },
+  {"fetchmailrc",required_argument,(int *) 0, LA_RCFILE     },
   {"user",	required_argument, (int *) 0, LA_USERNAME   },
   {"username",  required_argument, (int *) 0, LA_USERNAME   },
   {"remote",    required_argument, (int *) 0, LA_REMOTEFILE },
@@ -190,7 +190,7 @@ struct hostrec *queryctl;
 	poll_interval = atoi(optarg);
         break;
       case 'f':
-      case LA_FETCHRC:
+      case LA_RCFILE:
         rcfile = (char *) xmalloc(strlen(optarg)+1);
         strcpy(rcfile,optarg);
         break;
@@ -260,29 +260,28 @@ struct hostrec *queryctl;
     /* squawk if syntax errors were detected */
     fputs("usage:  fetchmail [options] [server ...]\n", stderr);
     fputs("  options\n",stderr);
-    fputs("  -2               use POP2 protocol\n", stderr);
-    fputs("  -3               use POP3 protocol\n", stderr);
-    fputs("  -p,  --protocol   specify pop2, pop3, imap, apop, or rpop\n",
-          stderr);
-    fputs("  -V, --version    display version info\n", stderr);
-    fputs("  -a, --all        retrieve old and new messages\n", stderr);
-    fputs("  -F, --flush      delete old messages from server\n", stderr);
-    fputs("  -K, --kill       delete new messages after retrieval\n", stderr);
-    fputs("  -k, --keep       save new messages after retrieval\n", stderr);
-    fputs("  -l, --limit      retrieve at most n message lines\n", stderr);
-    fputs("  -m, --mda        set mail user agent to pass to\n", stderr);
-    fputs("  -S, --smtphost   set SMTP forwarding host\n", stderr);
-    fputs("  -q, --quit       kill daemon process\n", stderr);
-    fputs("  -s, --silent     work silently\n", stderr);
-    fputs("  -v, --verbose    work noisily (diagnostic output)\n", stderr);
-    fputs("  -d, --daemon     run as a daemon once per n seconds\n", stderr);
-    fputs("  -f, --fetchrc      specify alternate config file\n", stderr);
-    fputs("  -i, --idfile     specify alternate ID database\n", stderr);
-    fputs("  -u, --username   specify server user ID\n", stderr);
-    fputs("  -c, --stdout     write received mail to stdout\n", stderr);
-    fputs("  -o, --local      specify filename for received mail\n", stderr);
-    fputs("  -r, --remote     specify remote folder name\n", stderr);
-    fputs("  -L, --logfile    specify logfile name\n", stderr);
+    fputs("  -2                use POP2 protocol\n", stderr);
+    fputs("  -3                use POP3 protocol\n", stderr);
+    fputs("  -p, --protocol    specify pop2, pop3, imap, apop\n", stderr);
+    fputs("  -V, --version     display version info\n", stderr);
+    fputs("  -a, --all         retrieve old and new messages\n", stderr);
+    fputs("  -F, --flush       delete old messages from server\n", stderr);
+    fputs("  -K, --kill        delete new messages after retrieval\n", stderr);
+    fputs("  -k, --keep        save new messages after retrieval\n", stderr);
+    fputs("  -l, --limit       retrieve at most n message lines\n", stderr);
+    fputs("  -m, --mda         set mail user agent to pass to\n", stderr);
+    fputs("  -S, --smtphost    set SMTP forwarding host\n", stderr);
+    fputs("  -q, --quit        kill daemon process\n", stderr);
+    fputs("  -s, --silent      work silently\n", stderr);
+    fputs("  -v, --verbose     work noisily (diagnostic output)\n", stderr);
+    fputs("  -d, --daemon      run as a daemon once per n seconds\n", stderr);
+    fputs("  -f, --fetchmailrc specify alternate run control file\n", stderr);
+    fputs("  -i, --idfile      specify alternate ID database\n", stderr);
+    fputs("  -u, --username    specify server user ID\n", stderr);
+    fputs("  -c, --stdout      write received mail to stdout\n", stderr);
+    fputs("  -o, --local       specify filename for received mail\n", stderr);
+    fputs("  -r, --remote      specify remote folder name\n", stderr);
+    fputs("  -L, --logfile     specify logfile name\n", stderr);
     return(-1);
   }
   else {
@@ -350,11 +349,11 @@ struct hostrec *queryctl;
     (void) sprintf(queryctl->mda, DEF_MDA, queryctl->localname);
 
     rcfile = 
-	(char *) xmalloc(strlen(home)+strlen(FETCHRC_NAME)+2);
+	(char *) xmalloc(strlen(home)+strlen(RCFILE_NAME)+2);
 
     strcpy(rcfile, home);
     strcat(rcfile, "/");
-    strcat(rcfile, FETCHRC_NAME);
+    strcat(rcfile, RCFILE_NAME);
 
     idfile = 
 	(char *) xmalloc(strlen(home)+strlen(IDFILE_NAME)+2);
