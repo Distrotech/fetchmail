@@ -555,10 +555,11 @@ struct query *ctl;	/* query control record */
 	    }
 
 	    /* if nothing supplied localnames, default appropriately */
-	    if (getuid() == 0)
-		save_uid(&xmit_names, -1, ctl->remotename);
-	    else
-		save_uid(&xmit_names, -1, user);
+	    if (!xmit_names)
+		if (getuid() == 0)
+		    save_uid(&xmit_names, -1, ctl->remotename);
+		else
+		    save_uid(&xmit_names, -1, user);
 
 	    /* time to address the message */
 	    if (ctl->mda[0])	/* we have a declared MDA */
