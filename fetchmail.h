@@ -71,7 +71,8 @@
 /* output noise level */
 #define         O_SILENT	0	/* mute, max squelch, etc. */
 #define		O_NORMAL	1	/* user-friendly */
-#define		O_VERBOSE	2	/* excessive */
+#define		O_VERBOSE	2	/* chatty */
+#define		O_DEBUG		3	/* prolix */
 
 #define		SIZETICKER	1024	/* print 1 dot per this many bytes */
 

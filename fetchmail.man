@@ -121,6 +121,8 @@ suppress actual error messages).  The --verbose option overrides this.
 Verbose mode.  All control messages passed between 
 .I fetchmail
 and the mailserver are echoed to stderr.  Overrides --silent.
+Doubling this option (-v -v) causes extra diagnostic information
+to be printed. 
 .SS Disposal Options
 .TP
 .B \-a, --all

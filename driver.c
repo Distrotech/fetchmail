@@ -137,7 +137,7 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 
     if (lname != (char *)NULL)
     {
-	if (outlevel == O_VERBOSE)
+	if (outlevel >= O_VERBOSE)
 	    error(0, 0, "mapped %s to local %s", name, lname);
 	save_str(xmit_names, lname, XMIT_ACCEPT);
 	accept_count++;
@@ -192,7 +192,7 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 			(rhs[-1] == '.' || rhs[-1] == '@') &&
 			strcasecmp(rhs, idp->id) == 0)
 		    {
-			if (outlevel == O_VERBOSE)
+			if (outlevel >= O_VERBOSE)
 			    error(0, 0, "passed through %s matching %s", 
 				  cp, idp->id);
 			save_str(xmit_names, cp, XMIT_ACCEPT);
@@ -238,7 +238,7 @@ static char *parse_received(struct query *ctl, char *bufp)
     char *ok = (char *)NULL;
     static char rbuf[HOSTLEN + USERNAMELEN + 4]; 
 
-    if (outlevel >= O_VERBOSE)
+    if (outlevel >= O_DEBUG)
 	error(0, 0, "analyzing Received line:\n%s", bufp);
     /*
      * Try to extract the real envelope addressee.  We look here
@@ -267,13 +267,13 @@ static char *parse_received(struct query *ctl, char *bufp)
 	 */
 	if (is_host_alias(rbuf, ctl))
 	{
-	    if (outlevel >= O_VERBOSE)
+	    if (outlevel >= O_DEBUG)
 		error(0, 0, 
 		      "line accepted, %s is an alias of the mailserver", rbuf);
 	}
 	else
 	{
-	    if (outlevel >= O_VERBOSE)
+	    if (outlevel >= O_DEBUG)
 		error(0, 0, 
 		      "line rejected, %s is not an alias of the mailserver", 
 		      rbuf);
@@ -323,7 +323,7 @@ static char *parse_received(struct query *ctl, char *bufp)
     }
     else
     {
-	if (outlevel == O_VERBOSE) {
+	if (outlevel >= O_VERBOSE) {
 	    char *lf = rbuf + strlen(rbuf)-1;
 	    *lf = '\0';
 	    if (outlevel >= O_VERBOSE)
@@ -808,7 +808,7 @@ int num;		/* index of message */
 	{
 	    no_local_matches = TRUE;
 	    save_str(&xmit_names, run.postmaster, XMIT_ACCEPT);
-	    if (outlevel == O_VERBOSE)
+	    if (outlevel >= O_VERBOSE)
 		error(0, 0, 
 		      "no local matches, forwarding to %s",
 		      run.postmaster);
@@ -823,7 +823,7 @@ int num;		/* index of message */
      */
     if (ctl->errcount > olderrs)	/* there were DNS errors above */
     {
-	if (outlevel == O_VERBOSE)
+	if (outlevel >= O_VERBOSE)
 	    error(0,0, "forwarding and deletion suppressed due to DNS errors");
 	free(headers);
 	free_str_list(&xmit_names);
@@ -936,7 +936,7 @@ int num;		/* index of message */
 	free_str_list(&xmit_names);
 	return(PS_IOERR);
     }
-    else if (!run.use_syslog && outlevel == O_VERBOSE)
+    else if (!run.use_syslog && outlevel >= O_VERBOSE)
 	fputs("#", stderr);
 
     /* write error notifications */
@@ -1090,7 +1090,7 @@ flag forward;		/* TRUE to forward */
 		release_sink(ctl);
 		return(PS_IOERR);
 	    }
-	    else if (outlevel == O_VERBOSE)
+	    else if (outlevel >= O_VERBOSE)
 		fputc('*', stderr);
 	}
     }
@@ -1438,7 +1438,7 @@ const struct method *proto;	/* protocol method table */
 #ifndef EHOSTUNREACH
 #define EHOSTUNREACH (-1)
 #endif
-	    if (outlevel == O_VERBOSE || errno != EHOSTUNREACH)
+	    if (outlevel >= O_VERBOSE || errno != EHOSTUNREACH)
 	    {
 		error_build("fetchmail: %s connection to %s failed: ", 
 			     protocol->name, ctl->server.pollname);
@@ -1594,7 +1594,7 @@ const struct method *proto;	/* protocol method table */
 		    else
 		    {
 			/* these are pointless in normal daemon mode */
-			if (pass == 1 && (run.poll_interval == 0 || outlevel == O_VERBOSE))
+			if (pass == 1 && (run.poll_interval == 0 || outlevel >= O_VERBOSE))
 			    error(0, 0, "No mail for %s", buf); 
 		    }
 
@@ -1754,7 +1754,7 @@ const struct method *proto;	/* protocol method table */
 				if (len > 0)
 				    error_build(" (%d %soctets)",
 					len, wholesize ? "" : "header ");
-				if (outlevel == O_VERBOSE)
+				if (outlevel >= O_VERBOSE)
 				    error_complete(0, 0, "");
 				else
 				    error_build(" ");
@@ -1787,7 +1787,7 @@ const struct method *proto;	/* protocol method table */
 			     */
 			    if (protocol->fetch_body && !suppress_readbody) 
 			    {
-				if (outlevel == O_VERBOSE)
+				if (outlevel >= O_VERBOSE)
 				    fputc('\n', stderr);
 
 				if ((ok = (protocol->trail)(sock, ctl, num)))
@@ -1828,7 +1828,7 @@ const struct method *proto;	/* protocol method table */
 				/* tell server we got it OK and resynchronize */
 				if (protocol->trail)
 				{
-				    if (outlevel == O_VERBOSE)
+				    if (outlevel >= O_VERBOSE)
 					fputc('\n', stderr);
 
 				    ok = (protocol->trail)(sock, ctl, num);
@@ -2050,7 +2050,7 @@ va_dcl
     strcat(buf, "\r\n");
     SockWrite(sock, buf, strlen(buf));
 
-    if (outlevel == O_VERBOSE)
+    if (outlevel >= O_VERBOSE)
     {
 	char *cp;
 
@@ -2092,7 +2092,7 @@ int size;	/* length of buffer */
 	    buf[strlen(buf)-1] = '\0';
 	if (buf[strlen(buf)-1] == '\r')
 	    buf[strlen(buf)-1] = '\0';
-	if (outlevel == O_VERBOSE)
+	if (outlevel >= O_VERBOSE)
 	    error(0, 0, "%s< %s", protocol->name, buf);
 	phase = oldphase;
 	return(PS_SUCCESS);
@@ -2137,7 +2137,7 @@ va_dcl
     strcat(buf, "\r\n");
     SockWrite(sock, buf, strlen(buf));
 
-    if (outlevel == O_VERBOSE)
+    if (outlevel >= O_VERBOSE)
     {
 	char *cp;
 

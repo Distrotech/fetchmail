@@ -130,7 +130,7 @@ static void unlockit(void)
 /* Various EMX-specific definitions */
 int itimerflag;
 void itimerthread(void* dummy) {
-  if (outlevel == O_VERBOSE)
+  if (outlevel >= O_VERBOSE)
     fprintf(stderr, "fetchmail: thread sleeping for %d sec.\n", poll_interval);
   while(1) {
     _sleep2(poll_interval*1000);
@@ -228,7 +228,7 @@ int main (int argc, char **argv)
 	    printf("\n");
 	else
 	    printf(" and %s\n", rcfile);
-	if (outlevel == O_VERBOSE)
+	if (outlevel >= O_VERBOSE)
 	    printf("Lockfile at %s\n", tmpbuf);
 
 	if (querylist == NULL)
@@ -495,7 +495,7 @@ int main (int argc, char **argv)
 		{
 		    if (ctl->server.poll_count++ % ctl->server.interval) 
 		    {
-			if (outlevel == O_VERBOSE)
+			if (outlevel >= O_VERBOSE)
 			    fprintf(stderr,
 				    "fetchmail: interval not reached, not querying %s\n",
 				    ctl->server.pollname);
@@ -520,16 +520,16 @@ int main (int argc, char **argv)
 
 		   /* Save UID list to prevent re-fetch in case fetchmail 
 		      recover from crash */
-		    if (!check_only && outlevel == O_VERBOSE)
+		    if (!check_only)
 		    {
 			write_saved_lists(querylist, run.idfile);
-			if (outlevel == O_VERBOSE)
+			if (outlevel >= O_DEBUG)
 			    error(0, 0, "saved UID List");
 		    }
 #endif  /* POP3_ENABLE */
 		}
 		else if (!check_only && 
-			 ((querystatus!=PS_NOMAIL) || (outlevel==O_VERBOSE)))
+			 ((querystatus!=PS_NOMAIL) || (outlevel==O_DEBUG)))
 		    error(0, 0, "Query status=%d", querystatus);
 
 #if defined(linux) && !INET6
@@ -572,7 +572,7 @@ int main (int argc, char **argv)
 	 */
 	if (run.poll_interval)
 	{
-	    if (outlevel == O_VERBOSE)
+	    if (outlevel >= O_VERBOSE)
 	    {
 		time_t	now;
 
@@ -684,7 +684,7 @@ int main (int argc, char **argv)
 	    if (!getuid())
 		signal(SIGHUP, SIG_IGN);
 
-	    if (outlevel == O_VERBOSE)
+	    if (outlevel >= O_VERBOSE)
 	    {
 		time_t	now;
 
@@ -695,7 +695,7 @@ int main (int argc, char **argv)
     } while
 	(run.poll_interval);
 
-    if (outlevel == O_VERBOSE)
+    if (outlevel >= O_VERBOSE)
 	fprintf(stderr,"fetchmail: normal termination, status %d\n",
 		successes ? PS_SUCCESS : querystatus);
 
@@ -1111,7 +1111,7 @@ static int query_host(struct query *ctl)
 {
     int i, st;
 
-    if (outlevel == O_VERBOSE)
+    if (outlevel >= O_VERBOSE)
     {
 	time_t now;
 
@@ -1216,7 +1216,7 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 		   ctl->server.interval);
 	if (ctl->server.truename)
 	    printf("  True name of server is %s.\n", ctl->server.truename);
-	if (ctl->server.skip || outlevel == O_VERBOSE)
+	if (ctl->server.skip || outlevel >= O_VERBOSE)
 	    printf("  This host will%s be queried when no host is specified.\n",
 		   ctl->server.skip ? " not" : "");
 	/*
@@ -1229,7 +1229,7 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 #endif /* GSSAPI */
         )
 	    printf("  Password will be prompted for.\n");
-	else if (outlevel == O_VERBOSE)
+	else if (outlevel >= O_VERBOSE)
 	    if (ctl->server.protocol == P_APOP)
 		printf("  APOP secret = \"%s\".\n", visbuf(ctl->password));
 	    else if (ctl->server.protocol == P_RPOP)
@@ -1256,7 +1256,7 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 	if (ctl->server.port)
 	    printf(" (using port %d)", ctl->server.port);
 #endif /* INET6 */
-	else if (outlevel == O_VERBOSE)
+	else if (outlevel >= O_VERBOSE)
 	    printf(" (using default port)");
 	if (ctl->server.uidl && (ctl->server.protocol != P_ETRN))
 	    printf(" (forcing UIDL use)");
@@ -1317,27 +1317,27 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 		    if (NUM_NONZERO(ctl->limit))
 			printf("  Message size limit is %d bytes (--limit %d).\n", 
 			       ctl->limit, ctl->limit);
-		    else if (outlevel == O_VERBOSE)
+		    else if (outlevel >= O_VERBOSE)
 			printf("  No message size limit (--limit 0).\n");
 		    if (run.poll_interval > 0)
 			printf("  Message size warning interval is %d seconds (--warnings %d).\n", 
 			       ctl->warnings, ctl->warnings);
-		    else if (outlevel == O_VERBOSE)
+		    else if (outlevel >= O_VERBOSE)
 			printf("  Size warnings on every poll (--warnings 0).\n");
 		}
 		if (NUM_NONZERO(ctl->fetchlimit))
 		    printf("  Received-message limit is %d (--fetchlimit %d).\n",
 			   ctl->fetchlimit, ctl->fetchlimit);
-		else if (outlevel == O_VERBOSE)
+		else if (outlevel >= O_VERBOSE)
 		    printf("  No received-message limit (--fetchlimit 0).\n");
 		if (NUM_NONZERO(ctl->batchlimit))
 		    printf("  SMTP message batch limit is %d.\n", ctl->batchlimit);
-		else if (outlevel == O_VERBOSE)
+		else if (outlevel >= O_VERBOSE)
 		    printf("  No SMTP message batch limit (--batchlimit 0).\n");
 		if (ctl->server.protocol == P_IMAP)
 		    if (NUM_NONZERO(ctl->expunge))
 			printf("  Deletion interval between expunges is %d (--expunge %d).\n", ctl->expunge, ctl->expunge);
-		    else if (outlevel == O_VERBOSE)
+		    else if (outlevel >= O_VERBOSE)
 			printf("  No expunges (--expunge 0).\n");
 	}
 	if (ctl->mda && (ctl->server.protocol != P_ETRN))
@@ -1370,18 +1370,18 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 			printf(" %d", idp->val.status.num);
 		    printf("\n");
 		}
-		else if (outlevel == O_VERBOSE)
+		else if (outlevel >= O_VERBOSE)
 		    printf("  Spam-blocking disabled\n");
 	}
 	if (ctl->preconnect)
 	    printf("  Server connection will be brought up with \"%s\".\n",
 		   visbuf(ctl->preconnect));
-	else if (outlevel == O_VERBOSE)
+	else if (outlevel >= O_VERBOSE)
 	    printf("  No pre-connection command.\n");
 	if (ctl->postconnect)
 	    printf("  Server connection will be taken down with \"%s\".\n",
 		   visbuf(ctl->postconnect));
-	else if (outlevel == O_VERBOSE)
+	else if (outlevel >= O_VERBOSE)
 	    printf("  No post-connection command.\n");
 	if (ctl->server.protocol != P_ETRN) {
 		if (!ctl->localnames)
@@ -1400,7 +1400,7 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 			printf("  Single-drop mode: ");
 
 		    printf("%d local name(s) recognized.\n", count);
-		    if (outlevel == O_VERBOSE)
+		    if (outlevel >= O_VERBOSE)
 		    {
 			for (idp = ctl->localnames; idp; idp = idp->next)
 			    if (idp->val.id2)
@@ -1463,11 +1463,11 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 #ifdef	linux
 	if (ctl->server.interface)
 	    printf("  Connection must be through interface %s.\n", ctl->server.interface);
-	else if (outlevel == O_VERBOSE)
+	else if (outlevel >= O_VERBOSE)
 	    printf("  No interface requirement specified.\n");
 	if (ctl->server.monitor)
 	    printf("  Polling loop will monitor %s.\n", ctl->server.monitor);
-	else if (outlevel == O_VERBOSE)
+	else if (outlevel >= O_VERBOSE)
 	    printf("  No monitor interface specified.\n");
 #endif
 
@@ -1483,7 +1483,7 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 		    ++count;
 
 		printf("  %d UIDs saved.\n", count);
-		if (outlevel == O_VERBOSE)
+		if (outlevel >= O_VERBOSE)
 		    for (idp = ctl->oldsaved; idp; idp = idp->next)
 			fprintf(stderr, "\t%s\n", idp->id);
 	    }

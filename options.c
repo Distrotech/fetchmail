@@ -256,7 +256,10 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'v':
 	case LA_VERBOSE:
-	    outlevel = O_VERBOSE;
+	    if (outlevel == O_VERBOSE)
+		outlevel = O_DEBUG;
+	    else
+		outlevel = O_VERBOSE;
 	    break;
 	case 'd':
 	case LA_DAEMON:

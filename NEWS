@@ -1,5 +1,8 @@
 				Release Notes:
 
+fetchmail-4.6.3 ():
+* Introduced `debug' verbosity, invocable by -v -v.
+
 fetchmail-4.6.2 (Fri Oct 16 12:49:30 EDT 1998):
 * Time out server open requests like we do reads.  This protects against
   buggy TCP/IP configurations that hang forever on a bad open.

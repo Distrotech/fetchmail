@@ -374,7 +374,7 @@ int open_sink(struct query *ctl,
 	}
 
 
-	if (outlevel == O_VERBOSE)
+	if (outlevel >= O_VERBOSE)
 	    error(0, 0, "about to deliver with: %s", before);
 
 #ifdef HAVE_SETEUID
