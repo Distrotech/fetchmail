@@ -144,7 +144,7 @@ rm -rf \$RPM_BUILD_ROOT
 %attr(644, root, man) /usr/man/man1/*.1.gz
 %attr(755, root, root) /usr/bin/fetchmail
 # Uncomment the following to support internationalization
-# attr(644,root,root) /usr/share/locale/*/LC_MESSAGES/fetchmail.mo
+# %attr(644,root,root) /usr/share/locale/*/LC_MESSAGES/fetchmail.mo
 # Uncomment the following to make split fetchmail and fetchmailconf packages
 # %files -n fetchmailconf
 %attr(644,root,root) /etc/X11/wmconfig/fetchmailconf

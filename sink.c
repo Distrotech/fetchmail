@@ -508,7 +508,9 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	    fputs(" BODY=7BIT", sinkfp);
 
 	/* exim's BSMTP processor does not handle SIZE */
-	/* fprintf(sinkfp, " SIZE=%d\r\n", msg->reallen); */
+	/* fprintf(sinkfp, " SIZE=%d", msg->reallen); */
+
+	fprintf(sinkfp, "\r\n");
 
 	/*
 	 * RFC 1123 requires that the domain name part of the
@@ -889,11 +891,14 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
     }
     else if (ctl->bsmtp)
     {
+	int error;
+
 	/* implicit disk-full check here... */
 	fputs(".\r\n", sinkfp);
+	error = ferror(sinkfp);
 	if (strcmp(ctl->bsmtp, "-"))
-	    fclose(sinkfp);
-	if (ferror(sinkfp))
+	    if (fclose(sinkfp) == EOF) error = 1;
+	if (error)
 	{
 	    report(stderr, 
 		   _("Message termination or close of BSMTP file failed\n"));

@@ -709,12 +709,18 @@ int SockClose(int sock)
     }
 #endif
 
-    /* Half-close the connection first so the other end gets notified.
+#ifdef __UNUSED__
+    /* 
+     * This hangs in RedHat 6.2 after fetchmail runs for a while a
+     * FIN_WAIT2 comes up in netstat and fetchmail never returns from
+     * the recv system call. (Reported from jtnews
+     * <jtnews@bellatlantic.net>, Wed, 24 May 2000 21:26:02.)
+     *
+     * Half-close the connection first so the other end gets notified.
      *
      * This stops sends but allows receives (effectively, it sends a
-     * TCP <FIN>).
-     */
-    if (shutdown(sock, 1) == 0)
+     * TCP <FIN>).  */
+    if (shutdown(sock, 1) == 0) {
 	/* If there is any data still waiting in the queue, discard it.
 	 * Call recv() until either it returns 0 (meaning we received a FIN)
 	 * or any error occurs.  This makes sure all data sent by the other
@@ -723,6 +729,8 @@ int SockClose(int sock)
 	if (fm_peek(sock, &ch, 1) > 0)
 	    while (fm_read(sock, &ch, 1) > 0)
 		continue;
+    }
+#endif /* __UNUSED__ */
 
     /* if there's an error closing at this point, not much we can do */
     return(fm_close(sock));	/* this is guarded */
