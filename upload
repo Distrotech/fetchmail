@@ -33,6 +33,14 @@ scp history.html $dest
 echo "Upload to ${WWWVIRTUAL} complete"
 
     lftp <<EOF
+# Copy to FTP site
+open $FTPHOST/fetchmail
+cd $FTPDIR
+put ${package}-${version}.tar.gz
+put ${package}-${version}-1.i386.rpm
+put ${package}-${version}-1.src.rpm
+close
+
 # Next, upload to Metalab
 open -u anonymous,esr@thyrsus.com metalab.unc.edu
 cd incoming/Linux 
