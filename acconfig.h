@@ -119,6 +119,12 @@
 /* Define if you want GSSAPI authentication */
 #undef GSSAPI
 
+/* Define if you have Kerberos V4 */
+#undef KERBEROS_V4
+
+/* Define if you have Kerberos V5 */
+#undef KERBEROS_V5
+
 /* Define if you have HEIMDAL kerberos 5 */
 #undef HEIMDAL
 

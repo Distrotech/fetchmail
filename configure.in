@@ -339,7 +339,8 @@ AC_ARG_WITH(kerberos5,
 if test -n "$with_kerberos5" -a "$with_kerberos5" != "no"
 then
     # Path given
-    CEFLAGS="$CEFLAGS -DKERBEROS_V5 -I$with_kerberos5/include"
+    CEFLAGS="$CEFLAGS -I$with_kerberos5/include"
+    AC_DEFINE(KERBEROS_V5)
     LDEFLAGS="$LDEFLAGS -L$with_kerberos5/lib"
     if test -f "$with_kerberos5/include/roken.h"
     then
@@ -353,7 +354,8 @@ elif test "$with_kerberos" != "no" -a "$with_kerberos5" != "no" ; then
     do
       if test -f "$dir/include/krb5.h"
       then
-        CEFLAGS="$CEFLAGS -DKERBEROS_V5 -I$dir/include"
+	AC_DEFINE(KERBEROS_V5)
+        CEFLAGS="$CEFLAGS -I$dir/include"
         LDEFLAGS="$LDEFLAGS -L$dir/lib"
 	if test -f "$dir/include/roken.h"
 	then
@@ -440,11 +442,13 @@ AC_ARG_WITH(kerberos,
 if test "$with_kerberos" = "yes" && test `uname` = "NetBSD" -o `uname` = "OpenBSD"
 then
   echo "Configuring kerberosIV for `uname`"
-  CEFLAGS="$CEFLAGS -DKERBEROS_V4 -I/usr/include/kerberosIV"
+  AC_DEFINE(KERBEROS_V4)
+  CEFLAGS="$CEFLAGS -I/usr/include/kerberosIV"
   LIBS="$LIBS -lkrb -ldes"
 elif test -n "$with_kerberos" -a -n "$with_kerberos5" -a "$with_kerberos" != "no" -a "$with_kerberos5" != "no"
 then
-    CEFLAGS="$CEFLAGS -DKERBEROS_V4 -I$with_kerberos/include"
+    AC_DEFINE(KERBEROS_V4)
+    CEFLAGS="$CEFLAGS -I$with_kerberos/include"
     LDEFLAGS="$LDEFLAGS -L$with_kerberos/lib"
     if test -f "$with_kerberos5/roken.h"
     then
@@ -459,7 +463,8 @@ then
     do
       if test -f "$dir/include/kerberosIV/krb.h"
       then
-        CEFLAGS="$CEFLAGS -DKERBEROS_V4 -I$dir/include"
+        AC_DEFINE(KERBEROS_V4)
+        CEFLAGS="$CEFLAGS -I$dir/include"
         LDEFLAGS="$LDEFLAGS -L$dir/lib"
 	LIBS="-lkrb4 -ldes425 $LIBS"
         break
@@ -467,17 +472,19 @@ then
     done
 elif test -n "$with_kerberos" -a "$with_kerberos" != "no"
 then
-    CEFLAGS="$CEFLAGS -DKERBEROS_V4 -I$with_kerberos/include"
+   AC_DEFINE(KERBEROS_V4)
+    CEFLAGS="$CEFLAGS -I$with_kerberos/include"
     LDEFLAGS="$LDEFLAGS -L$with_kerberos/lib"
     LIBS="$LIBS -lkrb -ldes"
 else
   if test "$with_kerberos" != "no"
   then
+    AC_DEFINE(KERBEROS_V4)
     for dir in /usr/kerberos /usr/kerberosIV /usr/athena
     do
       if test -f "$dir/include/krb.h"
       then
-        CEFLAGS="$CEFLAGS -DKERBEROS_V4 -I$dir/include"
+        CEFLAGS="$CEFLAGS -I$dir/include"
         LDEFLAGS="$LDEFLAGS -L$dir/lib"
         LIBS="$LIBS -lkrb -ldes"
         break
