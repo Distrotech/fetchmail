@@ -9,6 +9,8 @@
   (c) use sendmail -i in configure.in and dump the fallback configuration,
   (d) turn fallback off by default.
 * Scott Gifford's dotted-quad patch.
+* Updated Danish translation.
+* RPM now built with SSL and IPv6 support, reflecting what's in RH 7.3.
 
 fetchmail-5.9.12 (Tue Jun  4 14:57:47 EDT 2002), 21669 lines:
 
