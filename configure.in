@@ -389,12 +389,13 @@ directory],
 [
 if test "$with_kerberos5" != "no"
 then
-  if test "$with_kerberos5" != "yes" ; then
+  if test "$with_kerberos5" != "yes" 
+  then
+      LDEFLAGS="$LDEFLAGS -L${with_kerberos5}/lib"
       searchdirs="$with_kerberos5"
   else
       searchdirs="/usr/kerberos /usr/local/krb5 /usr/athena /usr"
   fi
-  LDEFLAGS="$LDEFLAGS -L${with_kerberos5}/"
   with_kerberos5=
   for dir in $searchdirs
   do AC_MSG_CHECKING([for Kerberos V in $dir])
