@@ -17,9 +17,9 @@
 #include  "i18n.h"
 #include "md5.h"
 
-static void hmac_md5 (unsigned char *password,  size_t pass_len,
-                      unsigned char *challenge, size_t chal_len,
-                      unsigned char *response,  size_t resp_len)
+void hmac_md5 (unsigned char *password,  size_t pass_len,
+               unsigned char *challenge, size_t chal_len,
+               unsigned char *response,  size_t resp_len)
 {
     int i;
     unsigned char ipad[64];

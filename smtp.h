@@ -19,6 +19,7 @@
 #define ESMTP_SIZE	0x02
 #define ESMTP_ETRN	0x04
 #define ESMTP_ATRN	0x08		/* used with ODMR, RFC 2645 */
+#define ESMTP_AUTH	0x10
 
 void SMTP_setmode(char);
 int SMTP_helo(int socket,const char *host);

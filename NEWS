@@ -9,6 +9,7 @@
 * Debian fixes merged.
 * Added maildrop (MDA shipped with courier) as fallback after procmail
   and sendmail (thanks to Alexander Lazic <al-fetchmail@none.at>).
+* ESMTP AUTH support from Wojciech Polak <polak@lodz.pdi.net>.
 
 fetchmail-5.9.8 (Thu Feb 14 23:47:31 EST 2002), 21358 lines:
 
