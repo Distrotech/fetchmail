@@ -83,12 +83,19 @@ static struct runctl cmd_run;	/* global options set from command line */
 
 static void termhook();		/* forward declaration of exit hook */
 
+#if 0
+#define SLEEP_WITH_ALARM
+#endif
+
+#ifdef SLEEP_WITH_ALARM
 /*
- * The function of this variable is to reduce the size of the window during
- * which two SIGALRMS in rapid succession can hose the code.  This is a
- * bit of a kluge; the real right thing would use sigprocmask(), sigsuspend()
- * and close the window entirely.  But since the interval isn't normally
- * going to be less than one second this is not a big issue.
+ * The function of this variable is to remove the window during which a
+ * SIGALRM can hose the code (ALARM is triggered *before* pause() is called).
+ * This is a bit of a kluge; the real right thing would use sigprocmask(),
+ * sigsuspend().
+ * This work around lets the interval timer trigger the first alarm after the
+ * required interval and will then generate alarms all 5 seconds, until it
+ * is certain, that the critical section (ie., the window) is left.
  */
 #if defined(STDC_HEADERS)
 static sig_atomic_t	alarm_latch = FALSE;
@@ -97,8 +104,16 @@ static sig_atomic_t	alarm_latch = FALSE;
 static int		alarm_latch = FALSE;
 #endif
 
+RETSIGTYPE gotsigalrm(sig)
+int sig;
+{
+    signal(sig, gotsigalrm);
+    lastsig = sig;
+    alarm_latch = TRUE;
+}
+#endif /* SLEEP_WITH_ALARM */
+
 RETSIGTYPE donothing(sig) int sig; {signal(sig, donothing); lastsig = sig;}
-RETSIGTYPE gotsigalrm(sig) int sig; {signal(sig, donothing); lastsig = sig; alarm_latch = TRUE;}
 
 #ifdef HAVE_ON_EXIT
 static void unlockit(int n, void *p)
@@ -611,8 +626,9 @@ int main (int argc, char **argv)
 		 */
 		struct itimerval ntimeout;
 
-		ntimeout.it_interval.tv_sec = ntimeout.it_interval.tv_usec = 0;
-		ntimeout.it_value.tv_sec  = poll_interval;
+		ntimeout.it_interval.tv_sec = 5; /* repeat alarm every 5 secs */
+		ntimeout.it_interval.tv_usec = 0;
+		ntimeout.it_value.tv_sec  = run.poll_interval;
 		ntimeout.it_value.tv_usec = 0;
 
 		siginterrupt(SIGALRM, 1);
@@ -620,8 +636,14 @@ int main (int argc, char **argv)
 		signal(SIGALRM, gotsigalrm);	/* first trap signals */
 		setitimer(ITIMER_REAL,&ntimeout,NULL);	/* then start timer */
 		/* there is a very small window between the next two lines */
+		/* which could result in a deadlock.  But this will now be  */
+		/* caught by periodical alarms (see it_interval) */
 		if (!alarm_latch)
 		    pause();
+		/* stop timer */
+		ntimeout.it_interval.tv_sec = ntimeout.it_interval.tv_usec = 0;
+		ntimeout.it_value.tv_sec  = ntimeout.it_value.tv_usec = 0;
+		setitimer(ITIMER_REAL,&ntimeout,NULL);	/* now stop timer */
 		signal(SIGALRM, SIG_IGN);
 #else
 		/* 
