@@ -1282,7 +1282,8 @@ def copy_instance(toclass, fromdict):
 # that one is strictly for use by the MyWidget supperclass).
 #
 # Options (not documented because they're for fetchmailconf debuggers only):
-# -d: read the configuration and dump it to stdout without editing, then exit.
+# -d: Read the configuration and dump it to stdout before editing.  Dump
+#     the edited result to stdout as well.
 # -f: specify the run control file to read.
 
 if __name__ == '__main__': 
