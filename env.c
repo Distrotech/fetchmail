@@ -209,6 +209,9 @@ const char *showproto(int proto)
     case P_APOP: return("APOP");
     case P_RPOP: return("RPOP");
 #endif /* POP3_ENABLE */
+#ifdef IMAP_ENABLE
+    case P_IMAP: return("IMAP");
+#endif /* IMAP_ENABLE */
 #ifdef ETRN_ENABLE
     case P_ETRN: return("ETRN");
 #endif /* ETRN_ENABLE */
