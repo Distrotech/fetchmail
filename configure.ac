@@ -735,7 +735,8 @@ if test "$needtrio" = 1 ; then
 fi
 dnl ----------------------------------------------------------------'
 
-AC_CONFIG_FILES([Makefile m4/Makefile po/Makefile.in intl/Makefile])
+AC_CONFIG_FILES([Makefile m4/Makefile m4-local/Makefile
+                po/Makefile.in intl/Makefile])
 AC_OUTPUT
 
 dnl Local Variables:
