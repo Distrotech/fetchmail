@@ -18,6 +18,7 @@
 
 #ifdef TESTMAIN
 static int verbose;
+char *program_name = "rfc822";
 #endif /* TESTMAIN */
 
 char *reply_hack(buf, host)
@@ -25,7 +26,7 @@ char *reply_hack(buf, host)
 char *buf;		/* header to be hacked */
 const char *host;	/* server hostname */
 {
-    char *from, *cp, last_nws = '\0';
+    char *from, *cp, last_nws = '\0', *parens_from = NULL;
     int parendepth, state, has_bare_name_part, has_host_part;
     int addresscount = 1;
 
@@ -56,13 +57,8 @@ const char *host;	/* server hostname */
 #endif /* TESTMAIN */
 
     /*
-     * This is going to foo up on some ill-formed addresses.  For example,
-     * "From: John Smith (Systems) <jsmith@domain>" will get rewritten as 
-     * "From: John Smith@my.pop.server (Systems) <jsmith@domain>" because
-     * the state machine can't look ahead to the <> part past the comment
-     * and instead treats `John Smith' as a bareword address.
-     *
-     * Also note that we don't rewrite the fake address <> in order to
+     * This is going to foo up on some ill-formed addresses.
+     * Note that we don't rewrite the fake address <> in order to
      * avoid screwing up bounce suppression with a null Return-Path.
      */
 
@@ -105,13 +101,17 @@ const char *host;	/* server hostname */
 		 * an obscure misfeature described in sections
 		 * 6.1, 6.2.6, and A.1.5 of the RFC822 standard.
 		 */
-		else if ((*from == ',' || HEADER_END(from) || from[1] == '(')
+		else if ((*from == ',' || HEADER_END(from))
 			 && has_bare_name_part
 			 && !has_host_part
-			 && last_nws != ';' && last_nws != ')')
+			 && last_nws != ';')
 		{
 		    int hostlen;
+		    char *p;
 
+		    p = from;
+		    if (parens_from)
+			from = parens_from;
 		    while (isspace(*from) || (*from == ','))
 			--from;
 		    from++;
@@ -120,8 +120,15 @@ const char *host;	/* server hostname */
 			cp[hostlen+1] = *cp;
 		    *from++ = '@';
 		    memcpy(from, host, hostlen);
-		    from += hostlen;
+		    from = p + hostlen + 1;
 		    has_host_part = TRUE;
+		} 
+		else if (from[1] == '('
+			 && has_bare_name_part
+			 && !has_host_part
+			 && last_nws != ';' && last_nws != ')')
+		{
+		    parens_from = from;
 		} 
 		else if (!isspace(*from))
 		    has_bare_name_part = TRUE;
@@ -159,6 +166,7 @@ const char *host;	/* server hostname */
 	 */
 	if (from[-1] == ',' && !parendepth) {
 	  has_host_part = has_bare_name_part = FALSE;
+	  parens_from = NULL;
 	}
     }
 

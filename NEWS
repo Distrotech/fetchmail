@@ -12,6 +12,8 @@ fetchmail-4.4.9 ():
 * Fix man-page installation (thanks to Kevin Hawkins <khawkins@ncsa.uiuc.edu>).
 * Should build on SunOS again (__STDC__ conditions changed to STDC_HEADERS).
 * CompuServe RPA and idfile fixes from Rich Beerman <rbeerman@pobox.com>.
+* Hajimu UMEMOTO <ume@calm.imasy.or.jp> patched the address-rewrite logic to
+  deal with addresses of the form "John Smith (foo) <jsmith@bar.com>" better.
 
 There are 278 people on fetchmail-friends and 216 on fetchmail-announce.
 
