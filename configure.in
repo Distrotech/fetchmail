@@ -147,6 +147,9 @@ AC_CHECK_FUNC(res_search,
     AC_CHECK_LIB(resolv,res_search, 
 	[AC_DEFINE(HAVE_RES_SEARCH) AC_MSG_RESULT(found resolver functions in libresolv); LIBS="$LIBS -lresolv"], AC_MSG_RESULT(no resolver calls found)))
 
+dnl Check for libcrypt
+AC_CHECK_LIB(crypt,crypt)
+
 dnl AC_FUNC_SETVBUF_REVERSED
 
 dnl Check for usable void pointer type
@@ -307,7 +310,13 @@ then
     # Path given
     CEFLAGS="$CEFLAGS -DKERBEROS_V5 -I$with_kerberos5/include"
     LDEFLAGS="$LDEFLAGS -L$with_kerberos5/lib"
-    LIBS="$LIBS -lkrb5 -lcrypto -lcom_err"
+    if test -f "$with_kerberos5/include/roken.h"
+    then
+       AC_DEFINE(HEIMDAL)
+       LIBS="$LIBS -lkrb5 -lasn1 -ldes -lroken -lcom_err"
+    else
+       LIBS="$LIBS -lkrb5 -lcrypto -lcom_err"
+    fi
 else
   if test "$with_kerberos5" != "no" ; then
     for dir in /usr/kerberos /usr/local/krb5 /usr/athena
@@ -316,7 +325,13 @@ else
       then
         CEFLAGS="$CEFLAGS -DKERBEROS_V5 -I$dir/include"
         LDEFLAGS="$LDEFLAGS -L$dir/lib"
-        LIBS="$LIBS -lkrb5 -lcrypto -lcom_err"
+	if test -f "$dir/include/roken.h"
+	then
+           AC_DEFINE(HEIMDAL)
+           LIBS="$LIBS -lkrb5 -lasn1 -ldes -lcom_err"
+        else
+           LIBS="$LIBS -lkrb5 -lcrypto -lcom_err"
+        fi
         with_kerberos5=$dir
         break
       fi
@@ -341,7 +356,13 @@ elif test -n "$with_kerberos" -a -n "$with_kerberos5"
 then
     CEFLAGS="$CEFLAGS -DKERBEROS_V4 -I$with_kerberos/include"
     LDEFLAGS="$LDEFLAGS -L$with_kerberos/lib"
-    LIBS="-lkrb4 -ldes425 $LIBS"
+    if test -f "$with_kerberos5/roken.h"
+    then
+       AC_DEFINE(HEIMDAL)
+       LIBS="-lkrb4 -l45 $LIBS" 
+    else
+       LIBS="-lkrb4 -ldes425 $LIBS"
+    fi
 elif test -n "$with_kerberos5"
 then
     for dir in /usr/kerberos /usr/kerberosIV /usr/athena
@@ -435,10 +456,25 @@ then
 
   AC_CHECK_LIB(krb5, krb5_init_context,,
                AC_MSG_ERROR([could not find libkrb5 which is needed for GSSAPI support]))
-  AC_CHECK_LIB(gssapi_krb5, gss_init_sec_context,,
-               AC_MSG_ERROR([could not find libgssapi_krb5 which is needed for GSSAPI support]), -lkrb5)
+  if test -f "$with_kerberos5/include/roken.h"
+  then
+     AC_CHECK_LIB(gssapi, gss_init_sec_context,LIBS="$LIBS -lgssapi",
+                  AC_MSG_ERROR([could not find libgssapi which is needed for GSSAPI support]), )
+     AC_DEFINE(HEIMDAL)
+  else
+     AC_CHECK_LIB(gssapi_krb5, gss_init_sec_context,LIBS="$LIBS -lgssapi_krb5",
+                  AC_MSG_ERROR([could not find libgssapi_krb5 which is needed for GSSAPI support]), -lkrb5)
+  fi
   AC_DEFINE(GSSAPI)
-  LIBS="$LIBS -lgssapi_krb5 -lkrb5"
+  save_CPPFLAGS=$CPPFLAGS
+  CPPFLAGS="-I$with_gssapi/include"
+  AC_CHECK_HEADERS(gssapi.h gssapi/gssapi.h gssapi/gssapi_generic.h)
+  if test "$ac_cv_header_gssapi_h" = "yes"; then
+    AC_EGREP_HEADER(GSS_C_NT_HOSTBASED_SERVICE, gssapi.h, AC_DEFINE(HAVE_GSS_C_NT_HOSTBASED_SERVICE))
+  else
+    AC_EGREP_HEADER(GSS_C_NT_HOSTBASED_SERVICE, gssapi/gssapi.h, AC_DEFINE(HAVE_GSS_C_NT_HOSTBASED_SERVICE))
+  fi
+  CPPFLAGS=$save_CPPFLAGS
 fi])
 
 AC_OUTPUT([Makefile intl/Makefile po/Makefile.in], [

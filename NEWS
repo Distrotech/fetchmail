@@ -21,6 +21,8 @@ fetchmail-5.0.6 ():
 * In UID files, split on *rightmost* @ as some dialups actually embed
   @ in usernames.
 * Detect Intermail server's "wait a few minutes" message and cope.
+* Patches for Heimdal implementation of GSSAPI from Leif Johansson 
+  <leifj@matematik.su.se>.  Somebody should test this against the MIT version.
 
 Warning: CompuServe changed their POP3 system on 31 July 1999.  In doing
 so, they broke fetchmail's RPA support.  Nobody has sent me either code that

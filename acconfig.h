@@ -109,6 +109,12 @@
 /* Define if you want GSSAPI authentication */
 #undef GSSAPI
 
+/* Define if you have HEIMDAL kerberos 5 */
+#undef HEIMDAL
+
+/* Define if you have MIT kerberos */
+#undef HAVE_GSS_C_NT_HOSTBASED_SERVICE
+
 /* Define if you want built-in SOCKS support */
 #undef HAVE_SOCKS
 

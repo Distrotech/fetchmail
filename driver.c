@@ -1243,11 +1243,18 @@ const char *canonical;  /* server name */
     krb5_auth_con_free(context, auth_context);
 
     if (retval) {
+#ifdef HEIMDAL
+      if (err_ret && err_ret->e_text) {
+          report(stderr, _("krb5_sendauth: %s [server says '%*s'] \n"),
+                 error_message(retval),
+                 err_ret->e_text);
+#else
       if (err_ret && err_ret->text.length) {
           report(stderr, _("krb5_sendauth: %s [server says '%*s'] \n"),
 		 error_message(retval),
 		 err_ret->text.length,
 		 err_ret->text.data);
+#endif
 	  krb5_free_error(context, err_ret);
       } else
           report(stderr, "krb5_sendauth: %s\n", error_message(retval));

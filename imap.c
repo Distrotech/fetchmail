@@ -33,8 +33,18 @@
 #include  "i18n.h"
 
 #ifdef GSSAPI
+#ifdef HAVE_GSSAPI_H
+#include <gssapi.h>
+#endif
+#ifdef HAVE_GSSAPI_GSSAPI_H
 #include <gssapi/gssapi.h>
+#endif
+#ifdef HAVE_GSSAPI_GSSAPI_GENERIC_H
 #include <gssapi/gssapi_generic.h>
+#endif
+#ifndef HAVE_GSS_C_NT_HOSTBASED_SERVICE
+#define GSS_C_NT_HOSTBASED_SERVICE gss_nt_service_name
+#endif
 #endif
 
 #include "md5.h"
@@ -460,7 +470,7 @@ static int do_gssauth(int sock, char *hostname, char *username)
     sprintf(buf1, "imap@%s", hostname);
     request_buf.value = buf1;
     request_buf.length = strlen(buf1) + 1;
-    maj_stat = gss_import_name(&min_stat, &request_buf, gss_nt_service_name,
+    maj_stat = gss_import_name(&min_stat, &request_buf, GSS_C_NT_HOSTBASED_SERVICE,
         &target_name);
     if (maj_stat != GSS_S_COMPLETE) {
         report(stderr, _("Couldn't get service name for [%s]\n"), buf1);
@@ -487,9 +497,21 @@ static int do_gssauth(int sock, char *hostname, char *username)
     if (outlevel >= O_VERBOSE)
         report(stdout, _("Sending credentials\n"));
     do {
-        maj_stat = gss_init_sec_context(&min_stat, GSS_C_NO_CREDENTIAL, 
-            &context, target_name, NULL, 0, 0, NULL, sec_token, NULL,
-	    &send_token, &cflags, NULL);
+        send_token.length = 0;
+	send_token.value = NULL;
+        maj_stat = gss_init_sec_context(&min_stat, 
+				        GSS_C_NO_CREDENTIAL,
+            				&context, 
+					target_name, 
+					GSS_C_NO_OID, 
+					GSS_C_MUTUAL_FLAG | GSS_C_SEQUENCE_FLAG, 
+					0, 
+					GSS_C_NO_CHANNEL_BINDINGS, 
+					sec_token, 
+					NULL, 
+					&send_token, 
+					NULL, 
+					NULL);
         if (maj_stat!=GSS_S_COMPLETE && maj_stat!=GSS_S_CONTINUE_NEEDED) {
             report(stderr, _("Error exchanging credentials\n"));
             gss_release_name(&min_stat, &target_name);
