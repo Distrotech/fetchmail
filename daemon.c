@@ -34,8 +34,6 @@
 
 #include "popclient.h"
 
-static void (*my_termhook)(int);
-
 /******************************************************************
   function:	sigchld_handler
   description:	Process the SIGCHLD (a.k.a SIGCLD) signal by calling
@@ -57,9 +55,6 @@ sigchld_handler ()
 #else
   int status;
 #endif
-
-  if (my_termhook)
-      (*my_termhook)(SIGCHLD);
 
 #if 	defined(HAVE_WAIT3)
   while ((pid = wait3(&status, WNOHANG, (struct rusage *) 0)) > 0)
@@ -100,8 +95,6 @@ void (*termhook)(int);
 
   /* if we are started by init (process 1) via /etc/inittab we needn't 
      bother to detach from our process group context */
-
-  my_termhook = termhook;
 
   if (getppid() == 1) 
     goto nottyDetach;
