@@ -499,7 +499,7 @@ static int imap_fetch_headers(int sock, struct query *ctl,int number,int *lenp)
 static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
 /* request body of nth message */
 {
-    char buf [POPBUFSIZE+1];
+    char buf [POPBUFSIZE+1], *cp;
     int	num;
 
     /* expunges change the fetch numbers */
@@ -543,24 +543,40 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
 	if ((ok = gen_recv(sock, buf, sizeof(buf))))
 	    return(ok);
     } while
-	/* third token can be "RFC822" or "BODY[]" */
-	(sscanf(buf+2, "%d FETCH (%*s {%d}", &num, lenp) != 2);
+	(sscanf(buf+2, "%d FETCH", &num) != 1);
 
     if (num != number)
 	return(PS_ERROR);
+
+    /* try to extract a length */
+    if ((cp = strchr(buf, '{')))
+	*lenp = atoi(cp + 1);
     else
-	return(PS_SUCCESS);
+	*lenp = 0;
+
+    return(PS_SUCCESS);
 }
 
 static int imap_trail(int sock, struct query *ctl, int number)
 /* discard tail of FETCH response after reading message text */
 {
-    char buf [POPBUFSIZE+1];
+    int	num;
 
     /* expunges change the fetch numbers */
     /* number -= deletecount; */
 
-    return(gen_recv(sock, buf, sizeof(buf)));
+    for (;;)
+    {
+	char buf[POPBUFSIZE+1];
+	int ok;
+
+	if ((ok = gen_recv(sock, buf, sizeof(buf))))
+	    return(ok);
+	if (strstr(buf, "OK FETCH"))
+	    break;
+    }
+
+    return(PS_SUCCESS);
 }
 
 static int imap_delete(int sock, struct query *ctl, int number)
