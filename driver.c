@@ -277,7 +277,7 @@ int delimited;		/* does the protocol use a message delimiter? */
 struct query *ctl;	/* query control record */
 {
     char buf [MSGBUFSIZE+1]; 
-    char *bufp, *headers, *fromhdr, *tohdr, *cchdr, *bcchdr, *received_for;
+    char *bufp, *headers, *fromhdr,*tohdr,*cchdr,*bcchdr,*received_for,*envto;
     int n, oldlen, mboxfd;
     int inheaders,lines,sizeticker;
     FILE *sinkfp;
@@ -287,7 +287,7 @@ struct query *ctl;	/* query control record */
 
     /* read the message content from the server */
     inheaders = 1;
-    headers = fromhdr = tohdr = cchdr = bcchdr = received_for = NULL;
+    headers = fromhdr = tohdr = cchdr = bcchdr = received_for = envto = NULL;
     lines = 0;
     sizeticker = 0;
     oldlen = 0;
@@ -365,7 +365,9 @@ struct query *ctl;	/* query control record */
 	    else if (!strncasecmp("To:", bufp, 3))
 		tohdr = bufp;
 	    else if (!strncasecmp("Apparently-To:", bufp, 14))
-		tohdr = bufp;
+		envto = bufp;
+	    else if (!strncasecmp("X-Envelope-To:", bufp, 14))
+		envto = bufp;
 	    else if (!strncasecmp("Cc:", bufp, 3))
 		cchdr = bufp;
 	    else if (!strncasecmp("Bcc:", bufp, 4))
@@ -430,9 +432,11 @@ struct query *ctl;	/* query control record */
 	    /* is this a multidrop box? */
 	    if (MULTIDROP(ctl))
 	    {
-		if (received_for)
+		if (envto)	    /* We have the actual envelope addressee */
+		    find_server_names(envto, ctl, &xmit_names);
+		else if (received_for)
 		    /*
-		     * We have the actual envelope addressee.  
+		     * We have the Received for addressee.  
 		     * It has to be a mailserver address, or we
 		     * wouldn't have got here.
 		     */
