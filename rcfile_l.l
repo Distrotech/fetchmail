@@ -141,6 +141,7 @@ nopass8(bits)?	|
 nodropstatus	|
 nodropdelivered	|
 nomimedec(ode)? |
+nospambounce	|
 noidle	        {
                    yyless(2);
                    return NO;
