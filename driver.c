@@ -513,13 +513,12 @@ static int stuffline(struct query *ctl, char *buf)
     return(n);
 }
 
-static int readheaders(sock, fetchlen, reallen, ctl, realname, num)
+static int readheaders(sock, fetchlen, reallen, ctl, num)
 /* read message headers and ship to SMTP or MDA */
 int sock;		/* to which the server is connected */
 long fetchlen;		/* length of message according to fetch response */
 long reallen;		/* length of message according to getsizes */
 struct query *ctl;	/* query control record */
-char *realname;		/* real name of host */
 int num;		/* index of message */
 {
     struct addrblk
@@ -701,7 +700,7 @@ int num;		/* index of message */
 	}
 
 	if (ctl->rewrite)
-	    line = reply_hack(line, realname);
+	    line = reply_hack(line, ctl->server.truename);
 
 	if (!headers)
 	{
@@ -791,7 +790,7 @@ int num;		/* index of message */
 	sprintf(buf, 
 #endif /* HAVE_SNPRINTF */
 	"From: <FETCHMAIL-DAEMON@%s>\r\nTo: %s@localhost\r\nSubject: Headerless mail from %s's mailbox on %s\r\n",
-		fetchmailhost, user, ctl->remotename, realname);
+		fetchmailhost, user, ctl->remotename, ctl->server.truename);
 	headers = xstrdup(buf);
     }
 
@@ -1384,7 +1383,7 @@ struct query *ctl;		/* parsed options with merged-in defaults */
 const struct method *proto;	/* protocol method table */
 {
     int ok, js, pst, sock = -1;
-    char *msg, *cp, realname[HOSTLEN];
+    char *msg, *cp;
     void (*sigsave)();
 
 #ifndef KERBEROS_V4
@@ -1503,82 +1502,6 @@ const struct method *proto;	/* protocol method table */
 	    goto cleanUp;
 	set_timeout(ctl->server.timeout);
 
-	/*
-	 * Try to parse the host's actual name out of the greeting
-	 * message.  We do this so that the progress messages will
-	 * make sense even if the connection is indirected through
-	 * ssh. *Do* use this for hacking reply headers, but *don't*
-	 * use it for error logging, as the names in the log should
-	 * correlate directly back to rc file entries.
-	 *
-	 * This assumes that the first space-delimited token found
-	 * that contains at least two dots (with the characters on
-	 * each side of the dot alphanumeric to exclude version
-	 * numbers) is the hostname.  The hostname candidate may not
-	 * contain @ -- if it does it's probably a mailserver
-	 * maintainer's name.  If no such token is found, fall back on
-	 * the .fetchmailrc id.
-	 */
-	pst = 0;
-	sp = (char *)NULL;	/* sacrifice to -Wall */
-	for (cp = buf; *cp; cp++)
-	{
-	    switch (pst)
-	    {
-	    case 0:		/* skip to end of current token */
-		if (*cp == ' ')
-		    pst = 1;
-		break;
-
-	    case 1:		/* look for blank-delimited token */
-		if (*cp != ' ')
-		{
-		    sp = cp;
-		    pst = 2;
-		}
-		break;
-
-	    case 2:		/* look for first dot */
-		if (*cp == '@')
-		    pst = 0;
-		else if (*cp == ' ')
-		    pst = 1;
-		else if (*cp == '.' && isalpha(cp[1]) && isalpha(cp[-1]))
-		    pst = 3;
-		break;
-
-	    case 3:		/* look for second dot */
-		if (*cp == '@')
-		    pst = 0;
-		else if (*cp == ' ')
-		    pst = 1;
-		else if (*cp == '.' && isalpha(cp[1]) && isalpha(cp[-1]))
-		    pst = 4;
-		break;
-
-	    case 4:		/* look for trailing space */
-		if (*cp == '@')
-		    pst = 0;
-		else if (*cp == ' ')
-		{
-		    pst = 5;
-		    goto done;
-		}
-		break;
-	    }
-	}
-    done:
-	if (pst == 5)
-	{
-	    char	*tp = realname;
-
-	    while (sp < cp)
-		*tp++ = *sp++;
-	    *tp = '\0';
-	}
-	else
-	    strcpy(realname, ctl->server.pollname);
-
 	/* try to get authorized to fetch mail */
 	if (protocol->getauth)
 	{
@@ -1590,14 +1513,14 @@ const struct method *proto;	/* protocol method table */
 		if (ok == PS_LOCKBUSY)
 		    error(0, -1, "Lock-busy error on %s@%s",
 			  ctl->remotename,
-			  realname);
+			  ctl->server.truename);
 		else
 		{
 		    if (ok == PS_ERROR)
 			ok = PS_AUTHFAIL;
 		    error(0, -1, "Authorization failure on %s@%s", 
 			  ctl->remotename,
-			  realname);
+			  ctl->server.truename);
 		}
 		goto cleanUp;
 	    }
@@ -1627,12 +1550,12 @@ const struct method *proto;	/* protocol method table */
 		/* show user how many messages we downloaded */
 		if (idp->id)
 		    (void) sprintf(buf, "%s@%s:%s",
-				   ctl->remotename, realname, idp->id);
+				   ctl->remotename, ctl->server.truename, idp->id);
 		else
-		    (void) sprintf(buf, "%s@%s", ctl->remotename, realname);
+		    (void) sprintf(buf, "%s@%s", ctl->remotename, ctl->server.truename);
 		if (outlevel > O_SILENT)
 		    if (count == -1)		/* only used for ETRN */
-			error(0, 0, "Polling %s", realname);
+			error(0, 0, "Polling %s", ctl->server.truename);
 		    else if (count != 0)
 		    {
 			if (new != -1 && (count - new) > 0)
@@ -1788,7 +1711,7 @@ const struct method *proto;	/* protocol method table */
 			     * output sink.  
 			     */
 			    ok = readheaders(sock, len, msgsizes[num-1],
-					     ctl, realname, num);
+					     ctl, num);
 			    if (ok == PS_RETAINED)
 				suppress_forward = retained = TRUE;
 			    else if (ok == PS_TRANSIENT)
