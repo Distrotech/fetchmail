@@ -11,7 +11,12 @@
 #include <signal.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <sys/fcntl.h>	/* Solaris 2.5 requires this */
+#ifdef HAVE_FCNTL_H
+#include <fcntl.h>
+#endif /* HAVE_FCNTL_H */
+#ifdef HAVE_SYS_FCNTL_H
+#include <sys/fcntl.h>
+#endif /* HAVE_SYS_FCNTL_H */
 #include <sys/stat.h>	/* get umask(2) prototyped */
 
 #if defined(HAVE_UNISTD_H)
