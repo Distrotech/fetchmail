@@ -2,10 +2,12 @@
 #
 # A GUI configurator for generating Fetchmail configuration files
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
-# Requires Python with Tkinter, and both posix and posixpath services.
+# Requires Python with Tkinter, and the following services:
+#	posix, posixpath, socket
 #
 # Version 0.90 beta: Tue May 26 12:00:49 EDT 1998
 # Version 0.91 beta: Tue Jun  2 12:23:42 EDT 1998
+# Version 0.92 beta: Tue Jun  2 14:50:31 EDT 1998
 #
 # TO DO: Arrange for save and quit buttons to clean up all frames dependent
 # on the current ones.
@@ -16,6 +18,7 @@ import sys
 import time
 import os
 import string
+import socket
 
 #
 # Define the data structures the GUIs will be tossing around
@@ -24,7 +27,7 @@ class Configuration:
     def __init__(self):
 	self.poll_interval = 300	# Default to 5-minute timeout
 	self.syslog = FALSE		# Use syslogd for logging?
-	self.logfile = ""		# No logfile, initially
+	self.logfile = None		# No logfile, initially
 	self.idfile = os.environ["HOME"] + "/.fetchids"		# Default idfile, initially
 	self.invisible = FALSE		# Suppress Received line & spoof?
 	self.servers = []		# List of included sites
@@ -54,8 +57,8 @@ class Configuration:
 
 class Server:
     def __init__(self):
-	self.pollname = ''		# Poll label
-	self.via = ''			# True name of host
+	self.pollname = None		# Poll label
+	self.via = None			# True name of host
 	self.active = TRUE		# Poll status
 	self.interval = 0		# Skip interval
 	self.protocol = 'auto'		# Default to auto protocol
@@ -65,12 +68,12 @@ class Server:
 	self.timeout = 300		# 5-minute timeout
 	self.envelope = 'Received'	# Envelope-address header
 	self.envskip = 0		# Number of envelope headers to skip
-	self.qvirtual = ''		# Name prefix to strip
+	self.qvirtual = None		# Name prefix to strip
 	self.aka = []			# List of DNS aka names
 	self.dns = TRUE			# Enable DNS lookup on multidrop
 	self.localdomains = []		# Domains to be considered local
-	self.interface = ''		# IP address and range
-	self.monitor = ''		# IP address and range
+	self.interface = None		# IP address and range
+	self.monitor = None		# IP address and range
 	self.users = []			# List of user entries for site
 	Server.typemap = (
 	    ('pollname',  'String'),
@@ -112,7 +115,7 @@ class Server:
 		str = str + " envelope " + self.envskip + " " + self.envelope
 	    else:
 		str = str + " envelope " + self.envelope
-	if self.qvirtual != ServerDefaults.qvirtual:
+	if self.qvirtual:
 	    str = str + (" qvirtual \"%s\"\n" % (self.qvirtual,));
 	if self.auth != ServerDefaults.auth:
 	    str = str + " auth " + self.auth
@@ -140,9 +143,11 @@ class Server:
 	    else:
 		str = str + " "
 
-	if self.interface: str = str + "interface " + self.interface
-	if self.monitor: str = str + "monitor " + self.monitor
-	if (self.interface or self.monitor):
+	if self.interface:
+            str = str + "interface " + self.interface
+	if self.monitor:
+            str = str + "monitor " + self.monitor
+	if self.interface or self.monitor:
 	    if folded:
 		str = str + "\n"
 
@@ -162,14 +167,14 @@ class Server:
 class User:
     def __init__(self):
 	self.remote = os.environ["USER"]# Remote username
-	self.localnames = (self.remote,)# Local names
-	self.password = ""		# Password for mail account access
-	self.mailboxes = ""		# Remote folders to retrieve from
-	self.smtphunt = []		# Hosts to forward to
-	self.smtpaddress = "";		# Append this to MAIL FROM line
-	self.preconnect = ""		# Connection setup
-	self.postconnect = ""		# Connection wrapup
-	self.mda = ""			# Mail Delivery Agent
+	self.localnames = [self.remote,]# Local names
+	self.password = None		# Password for mail account access
+	self.mailboxes = []		# Remote folders to retrieve from
+	self.smtphunt = [hostname]	# Hosts to forward to
+	self.smtpaddress = None;	# Append this to MAIL FROM line
+	self.preconnect = None		# Connection setup
+	self.postconnect = None		# Connection wrapup
+	self.mda = None			# Mail Delivery Agent
 	self.antispam = 571;		# Listener's spam-block code
 	self.keep = FALSE		# Keep messages
 	self.flush = FALSE		# Flush messages
@@ -189,7 +194,7 @@ class User:
 	    # leave out mailboxes and localnames
 	    ('password',    'String'),
             # Leave out smtphunt
-	    ('smtpaddress',  'String'),
+	    ('smtpaddress', 'String'),
 	    ('preconnect',  'String'),
 	    ('postconnect', 'String'),
 	    ('mda',         'String'),
@@ -211,12 +216,13 @@ class User:
     def __repr__(self):
 	str = "    "
 	str = str + "user \"" + self.remote + "\" there ";
-	if self.password: str = str + "with password " + self.password + ' '
+	if self.password:
+            str = str + "with password " + self.password + ' '
 	if self.localnames:
-	     str = str + "is"
-	     for x in self.localnames:
+            str = str + "is"
+            for x in self.localnames:
 		str = str + " " + x
-	     str = str + " here"
+            str = str + " here"
 	if (self.keep != UserDefaults.keep
 		or self.flush != UserDefaults.flush
 		or self.fetchall != UserDefaults.fetchall
@@ -253,11 +259,23 @@ class User:
 	    str = str + " batchlimit " + `self.batchlimit`
 	if self.expunge != UserDefaults.expunge:
 	    str = str + " expunge " + `self.expunge`
+        str = str + "\n"
+	if self.smtphunt != ():
+	     str = str + "    smtphost"
+	     for x in self.smtphunt:
+                 if x != 'localhost':
+                     str = str + " " + x
+                     str = str + "\n"
 	if self.mailboxes:
-	     str = str + "\n    folder"
+	     str = str + "    folder"
 	     for x in self.mailboxes:
 		str = str + " " + x
-	     str = str + " here"
+	     str = str + "\n"
+        for fld in ('smtpaddress', 'preconnect', 'postconnect', 'mda'):
+            if getattr(self, fld):
+                str = str + " %s \"%s\"\n" % (fld, `getattr(self, fld)`)
+        if self.antispam != UserDefaults.antispam:
+            str = str + " " + `self.antispam`
 	return str;
 
     def __str__(self):
@@ -1101,6 +1119,9 @@ def copy_instance(toclass, fromdict):
 
 if __name__ == '__main__': 
 
+    # Get client host's FQDN
+    hostname = socket.gethostbyaddr(socket.gethostname())[0]
+
     # Compute defaults
     ConfigurationDefaults = Configuration()
     ServerDefaults = Server()
@@ -1109,9 +1130,10 @@ if __name__ == '__main__':
     # Read the existing configuration
     tmpfile = "/tmp/fetchmailconf." + `os.getpid()`
     try:
-        s = os.system("fechmail --configdump >" + tmpfile)
+        cmd = "fetchmail --configdump >" + tmpfile
+        s = os.system(cmd)
 	if s != 0:
-            print "Fetchmail run failure, status " + `s`
+            print "`" + cmd + "' run failure, status " + `s`
             raise SystemExit
 
         s = execfile(tmpfile)
