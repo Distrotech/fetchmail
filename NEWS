@@ -2,8 +2,13 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.6.3 (Sun Feb 11 00:43:14 EST 2001), 20085 lines:
+
 * ODMR port fix for AIX.
 * Dave Zarzycki's fix for former FAQ item F5 (%h and %p not being expanded).
+* Attempted fix for CRAM-MD5 problem with IMAP 2000.
+
+There are 276 people on fetchmail-friends and 564 on fetchmail-announce.
 
 fetchmail-5.6.3 (Wed Feb  7 10:56:21 EST 2001), 19901 lines:
 
