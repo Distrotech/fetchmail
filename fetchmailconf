@@ -516,7 +516,7 @@ class ConfigurationEdit(Frame):
 		text='Fetchmail Run Controls', 
 		bd=2).pack(side=TOP, pady=10)
 
-        df = Frame(gf, relief=RAISED, bd=2)
+        df = Frame(gf)
 
         # Set the poll interval
         de = LabeledEntry(df, '     Poll interval:', self.poll_interval, '14')
@@ -524,7 +524,7 @@ class ConfigurationEdit(Frame):
         df.pack()
 
         if self.mode != 'novice':
-            sf = Frame(gf, relief=RAISED, bd=2)
+            sf = Frame(gf)
             Checkbutton(sf,
 		{'text':'Log to syslog?',
 		'variable':self.syslog,
