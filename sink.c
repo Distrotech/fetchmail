@@ -1029,8 +1029,11 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	/* 
 	 * User was delivering locally.  We have a fallback MDA.
 	 * Latch it in place, logging the error, and fall through.
+	 * Set stripcr as we would if MDA had been the initial transport
 	 */
 	ctl->mda = FALLBACK_MDA;
+	if (!ctl->forcecr)
+	    ctl->stripcr = TRUE;
 
 	report(stderr, GT_("can't raise the listener; falling back to %s"),
 			 FALLBACK_MDA);

@@ -807,10 +807,10 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 			if (outlevel > O_SILENT)
 			    report(stdout, GT_("%s key fingerprint: %s\n"), _server_label, text);
 			if (_check_digest != NULL) {
-				if (strcmp(text, _check_digest) == 0)
+				if (strcmp(text, _check_digest) == 0) {
 				    if (outlevel > O_SILENT)
 					report(stdout, GT_("%s fingerprints match.\n"), _server_label);
-				else {
+				} else {
 				    if (outlevel > O_SILENT)
 					report(stderr, GT_("%s fingerprints do not match!\n"), _server_label);
 				    return (0);

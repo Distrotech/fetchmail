@@ -2,6 +2,10 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Renamed misnamed tr.po and da.po files
+* Jakub Ulanowski's patch to fix SSL fingerprint handling.
+* Matt Kraai's patch for supporting STLS over POP3.
+
 fetchmail-5.9.8 (Thu Feb 14 23:47:31 EST 2002), 21358 lines:
 
 * Added de translation catalog; updated da and tr catalogs.

@@ -141,6 +141,9 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 #ifdef OPIE_ENABLE
     flag has_otp = FALSE;
 #endif /* OPIE_ENABLE */
+#ifdef SSL_ENABLE
+    flag has_ssl = FALSE;
+#endif /* SSL_ENABLE */
 
 #ifdef SDPS_ENABLE
     /*
@@ -207,6 +210,10 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	    {
 		if (DOTLINE(buffer))
 		    break;
+#ifdef SSL_ENABLE
+               if (strstr(buffer, "STLS"))
+                   has_ssl = TRUE;
+#endif /* SSL_ENABLE */
 #if defined(GSSAPI)
 		if (strstr(buffer, "GSSAPI"))
 		    has_gssapi = TRUE;
@@ -223,6 +230,27 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 		    has_cram = TRUE;
 	    }
 	}
+
+#ifdef SSL_ENABLE
+       if (has_ssl &&
+#if INET6_ENABLE
+           ctl->server.service && (strcmp(ctl->server.service, "pop3s"))
+#else /* INET6_ENABLE */
+           ctl->server.port != 995
+#endif /* INET6_ENABLE */
+           )
+       {
+           char *realhost;
+
+           realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;           gen_transact(sock, "STLS");
+           if (SSLOpen(sock,ctl->sslcert,ctl->sslkey,ctl->sslproto,ctl->sslcertck, ctl->sslcertpath,ctl->sslfingerprint,realhost,ctl->server.pollname) == -1)
+           {
+               report(stderr,
+                      GT_("SSL connection failed.\n"));
+               return(PS_AUTHFAIL);
+           }
+       }
+#endif /* SSL_ENABLE */
 
 	/*
 	 * OK, we have an authentication type now.
