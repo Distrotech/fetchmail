@@ -63,7 +63,7 @@ class TestSite:
         "Send test mail to the site."
         server = smtplib.SMTP("localhost")
         fromaddr = "esr@thyrsus.com"
-        if string.find(self.mailname, "@") > -1:
+        if self.mailname.find("@") > -1:
             toaddr = self.mailname
         else:
             toaddr = "%s@%s" % (self.mailname, self.host)
