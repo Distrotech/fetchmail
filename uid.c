@@ -133,16 +133,18 @@ void free_uid_list(struct idlist **idl)
 void save_id_pair(struct idlist **idl, const char *str1, const char *str2)
 /* save an ID pair on the given list */
 {
-    struct idlist *new;
+    struct idlist **end;
 
-    new = (struct idlist *)xmalloc(sizeof(struct idlist));
-    new->id = xstrdup(str1);
+    /* do it nonrecursively so the list is in the right order */
+    for (end = idl; *end; end = &(*end)->next)
+	continue;
+
+    *end = (struct idlist *)xmalloc(sizeof(struct idlist));
+    (*end)->id = xstrdup(str1);
     if (str2)
-	new->val.id2 = xstrdup(str2);
+	(*end)->val.id2 = xstrdup(str2);
     else
-	new->val.id2 = (char *)NULL;
-    new->next = *idl;
-    *idl = new;
+	(*end)->val.id2 = (char *)NULL;
 }
 
 #ifdef __UNUSED__
