@@ -17,10 +17,16 @@ features --
 * It is now possible to suppress Received line parsing in multidrop mode
   with a new `no received' per-server option.
 
+* Major FAQ reorganization and additions.
+
 bugs --
 
 * The counter referred to by the batchlimit option used to count not only 
   fetched messages but skipped ones.  This has been fixed.
+
+* Compilation fixes for Kerberos support and GNU glibc2 support.
+
+There are 230 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-3.4 (Wed Feb 12 19:23:06 EST 1997)
