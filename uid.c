@@ -222,7 +222,7 @@ void append_str_list(struct idlist **idl, struct idlist **nidl)
 	*idl = *nidl;
     else if ((*idl)->next == (struct idlist *)NULL)
 	(*idl)->next = *nidl;
-    else
+    else if ((*idl)->next != *nidl)
 	append_str_list(&(*idl)->next, nidl);
 }
 
