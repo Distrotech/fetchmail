@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/03/14 01:08:26 $
+<td width="30%" align=right>$Date: 2000/03/29 19:29:06 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -2523,6 +2523,16 @@ headers introducing type application/pdf, mangling the type
 to application/octet-stream. It may corrupt other MIME types
 as well.<p>
 
+The IMAP service of Lotus Domino has a known bug in the way it
+generates MIME Content-type headers (observed on Lotus Domino 5.0.2b).
+It's a subtle one that doesn't show up when Netscape Messenger and
+other clients use a FETCH BODY[] to grab the whole message.  When
+fetchmail uses FETCH RFC822.HEADER and FETCH RFC822.TEXT to get first
+the header and then the body, Domino generates different Boundary tags
+for each part, .e.g. one tag is declared in the Content-type header and
+another is used to separate the MIME parts in the body.  This doesn't
+work.<p>
+
 Rob Funk explains: Unfortunately there also remain many mail user
 agents that don't write correct MIME messages. One big offender is Sun
 MailTool attachments, which are formatted enough like MIME that some
@@ -2766,7 +2776,7 @@ terminate it.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/03/14 01:08:26 $
+<td width="30%" align=right>$Date: 2000/03/29 19:29:06 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
