@@ -622,7 +622,7 @@ char *realname;		/* real name of host */
 	    ctt_offs = (line - headers);
 
 #ifdef HAVE_RES_SEARCH
-	else if (ctl->server.envelope != STRING_DISABLED && MULTIDROP(ctl) && !received_for && !strncasecmp("Received:", line, 9))
+	else if (MULTIDROP(ctl) && !received_for && !strncasecmp("Received:", line, 9))
 	    received_for = parse_received(ctl, line);
 #endif /* HAVE_RES_SEARCH */
     }
