@@ -104,7 +104,6 @@ extern int quitmode;		/* if --quit was set */
 
 /* miscellaneous global controls */
 extern char *rcfile;		/* path name of rc file */
-extern char *idfile;		/* path name of id file */
 extern int linelimit;		/* limit # lines retrieved per site */
 extern int versioninfo;		/* emit only version info */
 

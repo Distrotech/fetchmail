@@ -57,7 +57,6 @@ int quitmode;		/* if --quit was set */
 
 /* miscellaneous global controls */
 char *rcfile;		/* path name of rc file */
-char *idfile;		/* path name of id file */
 int versioninfo;	/* emit only version info */
 
 /*********************************************************************
