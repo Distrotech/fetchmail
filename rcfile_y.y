@@ -219,7 +219,7 @@ serv_option	: AKA alias_list
 #if (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__)
 					interface_parse($2, &current.server);
 #else /* (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__) */
-					fprintf(stderr, _("fetchmail: interface option is only supported under Linux and FreeBSD\n"));
+					fprintf(stderr, _("fetchmail: interface option is only supported under Linux (without IPv6) and FreeBSD\n"));
 #endif /* (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__) */
 					}
 		| MONITOR STRING	{
