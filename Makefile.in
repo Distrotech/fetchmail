@@ -62,7 +62,7 @@ manext = 1
 mandir = @mandir@/man$(manext)
 
 # Program to install `make'.
-INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@ -s
 # Program to install the man page.
 INSTALL_DATA = @INSTALL_DATA@
 # Generic install program.

@@ -768,6 +768,17 @@ char *argv[];
     int pipefd [2];
     int childpid;
 
+    if (outlevel == O_VERBOSE)
+    {
+	char **cp;
+
+	printf("fetchmail: about to deliver via MDA %s, args:",
+	       visbuf(argv[0]));
+	for (cp = argv+1; *cp; cp++)
+	    printf(" %s(%p)", visbuf(*cp), *cp);
+	putchar('\n');
+    }
+
     if (pipe(pipefd) < 0) {
 	perror("fetchmail: openmailpipe: pipe");
 	return(-1);
@@ -806,9 +817,6 @@ int fd;
     int err, status;
     int childpid;
 
-    if (outlevel == O_VERBOSE)
-	fprintf(stderr, "about to close pipe %d\n", fd);
-
     if ((err = close(fd)) != 0)
 	perror("fetchmail: closemailpipe: close failed");
 
@@ -826,9 +834,6 @@ int fd;
     }
 #endif
 
-    if (outlevel == O_VERBOSE)
-	fprintf(stderr, "closed pipe %d\n", fd);
-  
     return(err);
 }
 
