@@ -1106,6 +1106,35 @@ static int imap_getsizes(int sock, int count, int *sizes)
      * Some servers (as in, PMDF5.1-9.1 under OpenVMS 6.1)
      * won't accept 1:1 as valid set syntax.  Some implementors
      * should be taken out and shot for excessive anality.
+     *
+     * Microsoft Exchange (brain-dead piece of crap that it is) 
+     * sometimes gets its knickers in a knot about bodiless messages.
+     * You may see responses like this:
+     *
+     *	fetchmail: IMAP> A0004 FETCH 1:9 RFC822.SIZE
+     *	fetchmail: IMAP< * 2 FETCH (RFC822.SIZE 1187)
+     *	fetchmail: IMAP< * 3 FETCH (RFC822.SIZE 3954)
+     *	fetchmail: IMAP< * 4 FETCH (RFC822.SIZE 1944)
+     *	fetchmail: IMAP< * 5 FETCH (RFC822.SIZE 2933)
+     *	fetchmail: IMAP< * 6 FETCH (RFC822.SIZE 1854)
+     *	fetchmail: IMAP< * 7 FETCH (RFC822.SIZE 34054)
+     *	fetchmail: IMAP< * 8 FETCH (RFC822.SIZE 5561)
+     *	fetchmail: IMAP< * 9 FETCH (RFC822.SIZE 1101)
+     *	fetchmail: IMAP< A0004 NO The requested item could not be found.
+     *
+     * This means message 1 has only headers.  For kicks and grins
+     * you can telnet in and look:
+     *	A003 FETCH 1 FULL
+     *	A003 NO The requested item could not be found.
+     *	A004 fetch 1 rfc822.header
+     *	A004 NO The requested item could not be found.
+     *	A006 FETCH 1 BODY
+     *	* 1 FETCH (BODY ("TEXT" "PLAIN" ("CHARSET" "US-ASCII") NIL NIL "7BIT" 35 3))
+     *	A006 OK FETCH completed.
+     *
+     * To get around this, we terminate the read loop on a NO and count
+     * on the fact that the sizes array has been preinitialized with a
+     * known-bad size value.
      */
     if (count == 1)
 	gen_send(sock, "FETCH 1 RFC822.SIZE", count);
@@ -1117,7 +1146,7 @@ static int imap_getsizes(int sock, int count, int *sizes)
 
 	if ((ok = gen_recv(sock, buf, sizeof(buf))))
 	    return(ok);
-	if (strstr(buf, "OK"))
+	else if (strstr(buf, "OK") || strstr(buf, "NO"))
 	    break;
 	else if (sscanf(buf, "* %d FETCH (RFC822.SIZE %d)", &num, &size) == 2)
 	    sizes[num - 1] = size;
