@@ -2,6 +2,12 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* VPATH build fixed (thanks to Harry McGavran).
+* Danny O'Brien's patch allowing preauth and idle to work together.
+* Fixed a bug in configure.in that was resulting in KERBEROS_IV being
+  set when it should not have been (several reports).
+* FAQ change: mailing lists have moved to MailMan.
+
 fetchmail-5.6.2 (Fri Jan  5 16:45:47 EST 2001), 19744 lines:
 
 * Dave Bodenstab's fix for the lockfile re-exec problem.

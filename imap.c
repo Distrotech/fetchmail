@@ -898,16 +898,6 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 	expunge_period = 1;
 
     /* 
-     * If either (a) we saw a PREAUTH token in the greeting, or
-     * (b) the user specified ssh preauthentication, then we're done.
-     */
-    if (preauth || ctl->server.preauthenticate == A_SSH)
-    {
-        preauth = FALSE;  /* reset for the next session */
-        return(PS_SUCCESS);
-    }
-
-    /* 
      * Handle idling.  We depend on coming through here on startup
      * and after each timeout (including timeouts during idles).
      */
@@ -916,6 +906,16 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 	do_idle = TRUE;
 	if (outlevel >= O_VERBOSE)
 	    report(stdout, _("will idle after poll\n"));
+    }
+
+    /* 
+     * If either (a) we saw a PREAUTH token in the greeting, or
+     * (b) the user specified ssh preauthentication, then we're done.
+     */
+    if (preauth || ctl->server.preauthenticate == A_SSH)
+    {
+        preauth = FALSE;  /* reset for the next session */
+        return(PS_SUCCESS);
     }
 
 #if OPIE_ENABLE

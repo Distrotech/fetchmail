@@ -413,18 +413,18 @@ then
     done
 elif test -n "$with_kerberos" -a "$with_kerberos" != "no"
 then
-   AC_DEFINE(KERBEROS_V4)
+    AC_DEFINE(KERBEROS_V4)
     CEFLAGS="$CEFLAGS -I$with_kerberos/include"
     LDEFLAGS="$LDEFLAGS -L$with_kerberos/lib"
     LIBS="$LIBS -lkrb -ldes"
 else
   if test "$with_kerberos" != "no"
   then
-    AC_DEFINE(KERBEROS_V4)
     for dir in /usr/kerberos /usr/kerberosIV /usr/athena
     do
       if test -f "$dir/include/krb.h"
       then
+	AC_DEFINE(KERBEROS_V4)
         CEFLAGS="$CEFLAGS -I$dir/include"
         LDEFLAGS="$LDEFLAGS -L$dir/lib"
         LIBS="$LIBS -lkrb -ldes"
