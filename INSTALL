@@ -24,12 +24,13 @@ a valid USER id.  If the OK response includes the string "otp-",
 you should install OPIE.  You need version 2.32 or better.
 
 The OPIE library sources are available at ftp://ftp.inner.net/pub/opie.
+You can also find OPIE and IPV6-capable servers there.
 
-Building in IPv6 support and the network security patches REQUIRES that
-Craig Metz's inet6-apps kit be installed; the network security patches
-require that the kit be built with network security API support
-enabled. The kit can be gotten from ftp.ipv6.inner.net:/pub/ipv6 (via
-IPv6) or ftp.inner.net /pub/ipv6 (via IPv4).
+Building in IPv6 support or the IPsec patches REQUIRES that Craig
+Metz's inet6-apps kit be installed; the IPsec patches require that the
+kit be built with network security API support enabled. The kit can be
+gotten from ftp.ipv6.inner.net:/pub/ipv6 (via IPv6) or ftp.inner.net
+/pub/ipv6 (via IPv4).
 
 2. CONFIGURE
 
