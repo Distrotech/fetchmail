@@ -2,12 +2,16 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.3.4 (Wed Mar 22 15:55:51 EST 2000), 18819 lines:
+
 * Added FAQ item on performance under load.
 * Fix Debian bug #60202 (segfaults when given command line arguments).
   This only applied to `antispam', as it turned out.
 * Work around InterChange's bug with attachments as suggested by 
   paul666@mailandnews.com.
-* Enable checks on multiople folders.
+* Enable checks on multiple folders.
+
+There are 294 people on fetchmail-friends and 504 on fetchmail-announce.
 
 fetchmail-5.3.3 (Mon Mar 13 16:34:29 EST 2000), 18763 lines:
 
