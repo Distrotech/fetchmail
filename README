@@ -19,13 +19,21 @@ pop-perl5-1.2, popc, popmail-1.6 and upop) are marked with **.
 
 Since 3.0:
 
+	** Support for IMAP RFC 1731 authentication with Kerberos v4.
+
+	** Support for multiple-folder retrieval in a single session
+	   under IMAP.
+
+	** Following SMTP 571 response to a From line, fetchmail no longer
+	   downloads the bodies of spam messages.
+
 	** Support for a `hunt list' of SMTP hosts
 
 	** Support for ESMTP 8BITMIME and SIZE options.
 
 	** Support for ESMTP ETRN command.
 
-	** The stripcr and forcecr option to explicitly control carriage-return
+	** The stripcr & forcecr options to explicitly control carriage-return
 	   stripping and LF->CRLF mapping before mail forwarding.
 
 Since 2.0:
