@@ -761,7 +761,7 @@ int main(int argc, char **argv)
 		    ctl->wedged = FALSE;
 	    }
 
-	    if (outlevel >= O_VERBOSE)
+	    if (outlevel > O_SILENT)
 		report(stdout, GT_("awakened at %s\n"), timestamp());
 	}
     } while

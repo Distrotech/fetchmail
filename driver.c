@@ -420,7 +420,16 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	{
 	    if ((msgcodes[num-1] == MSGLEN_TOOLARGE) && !check_only)
 		mark_oversized(ctl, num, msgsizes[num-1]);
-	    if (outlevel > O_SILENT)
+  		/* To avoid flooding the syslog when using --keep,
+  		 * report "Skipped message" only when:
+  		 *  1) --verbose is on, or
+  		 *  2) fetchmail does not use syslog, or
+  		 *  3) the message was skipped for some other
+  		 *     reason than being old.
+  		 */
+	    if (   (outlevel >= O_VERBOSE) ||
+	           (outlevel > O_SILENT && (!run.use_syslog || msgcodes[num-1] != MSGLEN_OLD))
+	       )
 	    {
 		report_build(stdout, 
 			     GT_("skipping message %s@%s:%d (%d octets)"),
@@ -697,7 +706,16 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	    delete_str(&ctl->newsaved, num);
 #endif /* POP3_ENABLE */
 	}
-	else if (outlevel > O_SILENT)
+	else if (   (outlevel >= O_VERBOSE) ||
+         		/* To avoid flooding the syslog when using --keep,
+         		 * report "Skipped message" only when:
+         		 *  1) --verbose is on, or
+         		 *  2) fetchmail does not use syslog, or
+         		 *  3) the message was skipped for some other
+         		 *     reason than just being old.
+         		 */
+	           (outlevel > O_SILENT && (!run.use_syslog || msgcodes[num-1] != MSGLEN_OLD))
+	       )
 	    report_complete(stdout, GT_(" not flushed\n"));
 
 	/* perhaps this as many as we're ready to handle */

@@ -217,7 +217,10 @@ a static DNS.
 Force UIDL use (effective only with POP3).  Force client-side tracking
 of `newness' of messages (UIDL stands for ``unique ID listing'' and is
 described in RFC1725).  Use with `keep' to use a mailbox as a baby
-news drop for a group of users.
+news drop for a group of users. The fact that seen messages are skipped
+is logged, unless error logging is done through syslog while running in
+daemon mode.
+
 .TP
 .B \-P <portnumber> | \-\-port <portnumber>
 (Keyword: port)
