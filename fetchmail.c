@@ -163,6 +163,103 @@ static void dropprivs(void)
 }
 #endif
 
+static flag idle(int seconds)
+/* time for a pause in the action; return TRUE if awakened by signal */
+{
+#ifndef __EMX__
+#ifdef SLEEP_WITH_ALARM		/* not normally on */
+    /*
+     * We can't use sleep(3) here because we need an alarm(3)
+     * equivalent in order to implement server nonresponse timeout.
+     * We'll just assume setitimer(2) is available since fetchmail
+     * has to have a BSDoid socket layer to work at all.
+     */
+    /* 
+     * This code stopped working under glibc-2, apparently due
+     * to the change in signal(2) semantics.  (The siginterrupt
+     * line, added later, should fix this problem.) John Stracke
+     * <francis@netscape.com> wrote:
+     *
+     * The problem seems to be that, after hitting the interval
+     * timer while talking to the server, the process no longer
+     * responds to SIGALRM.  I put in printf()s to see when it
+     * reached the pause() for the poll interval, and I checked
+     * the return from setitimer(), and everything seemed to be
+     * working fine, except that the pause() just ignored SIGALRM.
+     * I thought maybe the itimer wasn't being fired, so I hit
+     * it with a SIGALRM from the command line, and it ignored
+     * that, too.  SIGUSR1 woke it up just fine, and it proceeded
+     * to repoll--but, when the dummy server didn't respond, it
+     * never timed out, and SIGALRM wouldn't make it.
+     *
+     * (continued below...)
+     */
+    struct itimerval ntimeout;
+
+    ntimeout.it_interval.tv_sec = 5; /* repeat alarm every 5 secs */
+    ntimeout.it_interval.tv_usec = 0;
+    ntimeout.it_value.tv_sec  = seconds;
+    ntimeout.it_value.tv_usec = 0;
+
+    siginterrupt(SIGALRM, 1);
+    alarm_latch = FALSE;
+    signal(SIGALRM, gotsigalrm);	/* first trap signals */
+    setitimer(ITIMER_REAL,&ntimeout,NULL);	/* then start timer */
+    /* there is a very small window between the next two lines */
+    /* which could result in a deadlock.  But this will now be  */
+    /* caught by periodical alarms (see it_interval) */
+    if (!alarm_latch)
+	pause();
+    /* stop timer */
+    ntimeout.it_interval.tv_sec = ntimeout.it_interval.tv_usec = 0;
+    ntimeout.it_value.tv_sec  = ntimeout.it_value.tv_usec = 0;
+    setitimer(ITIMER_REAL,&ntimeout,NULL);	/* now stop timer */
+    signal(SIGALRM, SIG_IGN);
+#else
+    /* 
+     * So the workaround I used is to make it sleep by using
+     * select() instead of setitimer()/pause().  select() is
+     * perfectly happy being called with a timeout and
+     * no file descriptors; it just sleeps until it hits the
+     * timeout.  The only concern I had was that it might
+     * implement its timeout with SIGALRM--there are some
+     * Unices where this is done, because select() is a library
+     * function--but apparently not.
+     */
+    struct timeval timeout;
+
+    timeout.tv_sec = run.poll_interval;
+    timeout.tv_usec = 0;
+    do {
+	lastsig = 0;
+	select(0,0,0,0, &timeout);
+    } while (lastsig == SIGCHLD);
+#endif
+#else /* EMX */
+    alarm_latch = FALSE;
+    signal(SIGALRM, gotsigalrm);
+    _beginthread(itimerthread, NULL, 32768, NULL);
+    /* see similar code above */
+    if (!alarm_latch)
+	pause();
+    signal(SIGALRM, SIG_IGN);
+#endif /* ! EMX */
+    if (lastsig == SIGUSR1
+	|| ((run.poll_interval && !getuid()) && lastsig == SIGHUP))
+    {
+#ifdef SYS_SIGLIST_DECLARED
+	report(stdout, 
+	       _("awakened by %s\n"), sys_siglist[lastsig]);
+#else
+	report(stdout, 
+	       _("awakened by signal %d\n"), lastsig);
+#endif
+	return(TRUE);
+    }
+
+    return(FALSE);
+}
+
 int main(int argc, char **argv)
 {
     int st, bkgd = FALSE;
@@ -780,102 +877,15 @@ int main(int argc, char **argv)
 	    if (!getuid())
 		signal(SIGHUP, donothing);
 
-	    /* time for a pause in the action... */
-	    {
-#ifndef __EMX__
-#ifdef SLEEP_WITH_ALARM		/* not normally on */
-		/*
-		 * We can't use sleep(3) here because we need an alarm(3)
-		 * equivalent in order to implement server nonresponse timeout.
-		 * We'll just assume setitimer(2) is available since fetchmail
-		 * has to have a BSDoid socket layer to work at all.
-		 */
-		/* 
-		 * This code stopped working under glibc-2, apparently due
-		 * to the change in signal(2) semantics.  (The siginterrupt
-		 * line, added later, should fix this problem.) John Stracke
-		 * <francis@netscape.com> wrote:
-		 *
-		 * The problem seems to be that, after hitting the interval
-		 * timer while talking to the server, the process no longer
-		 * responds to SIGALRM.  I put in printf()s to see when it
-		 * reached the pause() for the poll interval, and I checked
-		 * the return from setitimer(), and everything seemed to be
-		 * working fine, except that the pause() just ignored SIGALRM.
-		 * I thought maybe the itimer wasn't being fired, so I hit
-		 * it with a SIGALRM from the command line, and it ignored
-		 * that, too.  SIGUSR1 woke it up just fine, and it proceeded
-		 * to repoll--but, when the dummy server didn't respond, it
-		 * never timed out, and SIGALRM wouldn't make it.
-		 *
-		 * (continued below...)
-		 */
-		struct itimerval ntimeout;
-
-		ntimeout.it_interval.tv_sec = 5; /* repeat alarm every 5 secs */
-		ntimeout.it_interval.tv_usec = 0;
-		ntimeout.it_value.tv_sec  = run.poll_interval;
-		ntimeout.it_value.tv_usec = 0;
-
-		siginterrupt(SIGALRM, 1);
-		alarm_latch = FALSE;
-		signal(SIGALRM, gotsigalrm);	/* first trap signals */
-		setitimer(ITIMER_REAL,&ntimeout,NULL);	/* then start timer */
-		/* there is a very small window between the next two lines */
-		/* which could result in a deadlock.  But this will now be  */
-		/* caught by periodical alarms (see it_interval) */
-		if (!alarm_latch)
-		    pause();
-		/* stop timer */
-		ntimeout.it_interval.tv_sec = ntimeout.it_interval.tv_usec = 0;
-		ntimeout.it_value.tv_sec  = ntimeout.it_value.tv_usec = 0;
-		setitimer(ITIMER_REAL,&ntimeout,NULL);	/* now stop timer */
-		signal(SIGALRM, SIG_IGN);
-#else
-		/* 
-		 * So the workaround I used is to make it sleep by using
-		 * select() instead of setitimer()/pause().  select() is
-		 * perfectly happy being called with a timeout and
-		 * no file descriptors; it just sleeps until it hits the
-		 * timeout.  The only concern I had was that it might
-		 * implement its timeout with SIGALRM--there are some
-		 * Unices where this is done, because select() is a library
-		 * function--but apparently not.
-		 */
-                struct timeval timeout;
-
-                timeout.tv_sec = run.poll_interval;
-                timeout.tv_usec = 0;
-                do {
-                    lastsig = 0;
-                    select(0,0,0,0, &timeout);
-                } while (lastsig == SIGCHLD);
-#endif
-#else /* EMX */
-		alarm_latch = FALSE;
-		signal(SIGALRM, gotsigalrm);
-		_beginthread(itimerthread, NULL, 32768, NULL);
-		/* see similar code above */
-		if (!alarm_latch)
-		    pause();
-		signal(SIGALRM, SIG_IGN);
-#endif /* ! EMX */
-		if (lastsig == SIGUSR1
-			|| ((run.poll_interval && !getuid()) && lastsig == SIGHUP))
-		{
-#ifdef SYS_SIGLIST_DECLARED
-		    report(stdout, 
-			   _("awakened by %s\n"), sys_siglist[lastsig]);
-#else
-		    report(stdout, 
-			   _("awakened by signal %d\n"), lastsig);
-#endif
-		    /* received a wakeup - unwedge all servers in case */
-		    /* the problem has been manually repaired          */
-		    for (ctl = querylist; ctl; ctl = ctl->next)
-		        ctl->wedged = FALSE;
-		}
-	    }
+	    /*
+	     * OK, now pause util it's time for the next poll cycle.
+	     * A TRUE return indicates we received a wakeup signal;
+	     * unwedge all servers in case the problem has been
+	     * manually repaired.
+	     */
+	    if (idle(run.poll_interval))
+		for (ctl = querylist; ctl; ctl = ctl->next)
+		    ctl->wedged = FALSE;
 
 	    /* now lock out interrupts again */
 	    signal(SIGUSR1, SIG_IGN);
