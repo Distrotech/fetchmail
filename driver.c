@@ -47,6 +47,33 @@ static int tagnum;
 
 static char *shroud;
 
+static int strcrlf(dst, src, count)
+/* replace LFs with CR-LF; return length of string with replacements */
+char *dst;	/* new string with CR-LFs */
+char *src;	/* original string with LFs */
+int count;	/* length of src */
+{
+  int len = count;
+
+  while (count--)
+  {
+      if (*src == '\n')
+      {
+	  *dst++ = '\r';
+	  len++;
+      }
+      *dst++ = *src++;
+  }
+  *dst = '\0';
+  return len;
+}
+
+static void alarm_handler (int signal)
+/* handle server-timeout signal */
+{
+    longjmp(restart, 1);
+}
+
 static void reply_hack(buf, host)
 /* hack message headers so replies will work properly */
 char *buf;		/* header to be hacked */
@@ -1024,34 +1051,6 @@ va_dcl {
   ok = (protocol->parse_response)(socket, buf);
 
   return(ok);
-}
-
-int strcrlf(dst, src, count)
-/* replace LFs with CR-LF; return length of string with replacements */
-char *dst;	/* new string with CR-LFs */
-char *src;	/* original string with LFs */
-int count;	/* length of src */
-{
-  int len = count;
-
-  while (count--)
-  {
-      if (*src == '\n')
-      {
-	  *dst++ = '\r';
-	  len++;
-      }
-      *dst++ = *src++;
-  }
-  *dst = '\0';
-  return len;
-}
-
-void 
-alarm_handler (int signal)
-/* handle server-timeout signal */
-{
-    longjmp(restart, 1);
 }
 
 /* driver.c ends here */
