@@ -15,7 +15,9 @@ package will have two security verifications instead of one...
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Fix bug introduced in 5.2.2 that stopped --syslog from working.
 * Javier Kohen's update for es.po.
+* Guy Brand's update for fr.po.
 
 fetchmail-5.2.3 (Tue Jan  4 01:56:11 EST 2000), 18421 lines:
 * Ken Estes's patch to check for unreachable UIDL file due to bad NFS mount.

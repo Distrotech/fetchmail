@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/12/23 18:21:37 $
+<td width="30%" align=right>$Date: 2000/01/09 07:52:09 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -59,6 +59,7 @@ IP address?</a><br>
 <a href="#C2">C2. How can I arrange for a fetchmail daemon to get killed when I log out?</a><br>
 <a href="#C3">C3. How do I know what interface and address to use with --interface?</a><br>
 <a href="#C4">C4. How can I set up support for sendmail's anti-spam features?</a><br>
+<a href="#C5">C5. How can I poll some of my mailboxes more/less often than others?</a><br>
 
 <h1>How to make fetchmail play nice with various MTAs:</h1>
 
@@ -144,6 +145,8 @@ a line hit while downloading?</a><br>
 <a href="#O6">O6. I'm seeing long sendmail delays or hangs near the start of each poll cycle.</a><br>
 <a href="#O7">O7. Why doesn't fetchmail deliver mail in date-sorted order?</a><br>
 <a href="#O8">O8. I'm using pppd.  Why isn't my monitor option working?</a><br>
+<a href="#O9">O9. Why does fetchmail keep retrieving the same messages
+over and over?</a><br>
 
 <h1>Answers:</h1>
 <hr>
@@ -964,6 +967,25 @@ flush and delete it.<p>
 Under no circumstances put your <strong>mailhost</strong> or <strong>any host
 you accept mail from</strong> using fetchmail into your reject file.  You
 <strong>will</strong> lose mail if you do this!!!<p>
+
+<hr>
+<h2><a name="C5">C5. How can I poll some of my mailboxes more/less
+often than others?</a></h2>
+
+Use the <cite>interval</cite> keyword on the ones that should be
+checked less often.  For example, if you do a poll every 5 minutes,
+and want to poll some mailboxes every 5 minutes and some every 30
+minutes, use something like this:<p>
+
+<pre>
+poll mainsite.example.com  proto pop3 user ....
+poll secondary.example.com proto pop3 interval 6 user ...
+</pre>
+
+Then secondary.example.com will be polled every 6th time that
+mainsite.example.com is polled, which with a polling interval of every
+5 minutes means that secondary.example.com will be polled every 30
+minutes.<p>
 
 <hr>
 <h2><a name="T1">T1. How can I use fetchmail with sendmail?</a></h2>
@@ -2510,11 +2532,26 @@ relies upon, triggering fetchmail into polling after its own delay
 interval and thus preventing the pppd link from ever reaching its
 inactivity timeout.<p>
 
+<hr>
+<h2><a name="O9">O9. Why does fetchmail keep retrieving the same messages
+over and over?</h2>
+
+First, check to see that you haven't enabled the <cite>keep</cite>
+and <cite>fetchall</cite> option.  If you have, turn <cite>keep</cite> off.<p>
+
+This can also happen when some other mail client is logged in to your
+mail server, if it uses a simple exclusive-locking scheme (and many,
+especially most POP3 servers, do exactly that).  Your fetchmail is
+able to retrieve the messages, but because the mailbox is write-locked
+by the other instance yours can neither mark messages seen or delete them.
+The solution is to either (a) wait for the other client to finish, or (b)
+terminate it.<p>
+
 <HR>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/12/23 18:21:37 $
+<td width="30%" align=right>$Date: 2000/01/09 07:52:09 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
