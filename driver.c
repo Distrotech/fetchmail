@@ -1523,17 +1523,16 @@ const struct method *proto;	/* protocol method table */
 			    goto cleanUp;
 			set_timeout(ctl->server.timeout);
 
-			/*
+			/* 
 			 * If we're using IMAP4 or something else that
 			 * can fetch headers separately from bodies,
-			 * it's time to request the body now.  This fetch
-			 * may be skipped if we got an anti-spam or
-			 * other error response from SMTP.
+			 * it's time to request the body now.  This
+			 * fetch may be skipped if we got an anti-spam
+			 * or other PS_REFUSED error response during
+			 * read_headers.
 			 */
 			if (protocol->fetch_body && !suppress_forward)
 			{
-			    int	ok;
-
 			    if ((ok = (protocol->trail)(sock, ctl, num)))
 				goto cleanUp;
 			    set_timeout(ctl->server.timeout);
@@ -1543,7 +1542,11 @@ const struct method *proto;	/* protocol method table */
 			}
 
 			/* process the body now */
-			ok = readbody(sock, ctl,TRUE,len,protocol->delimited);
+			ok = readbody(sock,
+				      ctl,
+				      !suppress_forward,
+				      len,
+				      protocol->delimited);
 			if (ok == PS_TRANSIENT)
 			    suppress_delete = TRUE;
 			else if (ok)
