@@ -74,7 +74,12 @@ FILE *sockopen(char *host, int clientPort)
         return (FILE *)NULL;
     }
     fp = fdopen(sock, "r+");
+
+#ifdef FOO
+    /* for unknown reasons, this results in horrible lossage */
     setvbuf(fp, sbuf, _IOLBF, INTERNAL_BUFSIZE);
+#endif /* FOO */
+
     return(fp);
 }
 
