@@ -462,7 +462,7 @@ struct query *ctl;	/* query control record */
 	    sizeticker += n;
 	    while (sizeticker >= SIZETICKER)
 	    {
-		if (outlevel > O_SILENT && outlevel < O_VERBOSE)
+		if (outlevel > O_SILENT)
 		    fputc('.',stderr);
 		sizeticker -= SIZETICKER;
 	    }
@@ -729,7 +729,7 @@ struct query *ctl;	/* parsed options with merged-in defaults */
 struct method *proto;		/* protocol method table */
 {
     int ok, mboxfd = -1;
-    void (*sigsave)() = signal(SIGALRM, alarm_handler);
+    void (*sigsave)();
 
 #ifndef KERBEROS_V4
     if (ctl->authenticate == A_KERBEROS)
@@ -747,16 +747,12 @@ struct method *proto;		/* protocol method table */
 	    fprintf(stderr,
 		    "Option --flush is not supported with %s\n",
 		    proto->name);
-	    alarm(0);
-	    signal(SIGALRM, sigsave);
 	    return(PS_SYNTAX);
 	}
 	else if (ctl->fetchall) {
 	    fprintf(stderr,
 		    "Option --all is not supported with %s\n",
 		    proto->name);
-	    alarm(0);
-	    signal(SIGALRM, sigsave);
 	    return(PS_SYNTAX);
 	}
     }
@@ -765,8 +761,6 @@ struct method *proto;		/* protocol method table */
 	fprintf(stderr,
 		"Option --limit is not supported with %s\n",
 		proto->name);
-	alarm(0);
-	signal(SIGALRM, sigsave);
 	return(PS_SYNTAX);
     }
 
@@ -784,6 +778,8 @@ struct method *proto;		/* protocol method table */
 	char buf [POPBUFSIZE+1], host[HOSTLEN+1];
 	int *msgsizes, socket, len, num, count, new, deletions = 0;
 
+	/* set up the server-nonresponse timeout */
+	sigsave = signal(SIGALRM, alarm_handler);
 	alarm(ctl->timeout);
 
 	/* open a socket to the mail server */
@@ -823,7 +819,7 @@ struct method *proto;		/* protocol method table */
 	    goto cleanUp;
 
 	/* show user how many messages we downloaded */
-	if (outlevel > O_SILENT && outlevel < O_VERBOSE)
+	if (outlevel > O_SILENT)
 	    if (count == 0)
 		fprintf(stderr, "No mail from %s@%s\n", 
 			ctl->remotename,
