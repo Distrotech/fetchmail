@@ -116,8 +116,12 @@ int main (int argc, char **argv)
 	}
     }
 
-    /* we'll need this for error messages */
-    gethostname(tmpbuf, sizeof(tmpbuf));
+    /* we'll need this for the SMTP forwarding target and error messages */
+    if (gethostname(tmpbuf, sizeof(tmpbuf)))
+    {
+	fprintf(stderr, "fetchmail: can't determine fetchmail's host!");
+	exit(PS_IOERR);
+    }
     fetchmailhost = xstrdup(tmpbuf);
 
     /*
@@ -518,7 +522,7 @@ static int load_params(int argc, char **argv, int optind)
     def_opts.server.protocol = P_AUTO;
     def_opts.server.timeout = CLIENT_TIMEOUT;
     def_opts.remotename = user;
-    def_opts.smtphost = "localhost";
+    def_opts.smtphost = fetchmailhost;
 
     /* this builds the host list */
     if (prc_parse_file(rcfile) != 0)

@@ -45,7 +45,7 @@ static int etrn_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
     *countp = *newp = -1;	/* make sure we don't enter the fetch loop */
 
     /* ship the actual poll and get the response */
-    gen_send(sockfp, "ETRN %s", fetchmailhost);
+    gen_send(sockfp, "ETRN %s", ctl->smtphost);
     if (ok = gen_recv(sockfp, buf, sizeof(buf)))
 	return(ok);
 

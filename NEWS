@@ -1,6 +1,13 @@
 			Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-3.5 ()
+
+features --
+
+* The host that ETRN specifies is now set by the smtphost option.
+
+------------------------------------------------------------------------------
 fetchmail-3.4 (Wed Feb 12 19:23:06 EST 1997)
 
 features --
