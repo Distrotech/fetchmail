@@ -22,6 +22,9 @@
   description:	main driver module for popclient
 
   $Log: fetchmail.c,v $
+  Revision 1.2  1996/06/26 19:08:59  esr
+  This is what I sent Harris.
+
   Revision 1.1  1996/06/24 18:32:00  esr
   Initial revision
 
@@ -89,23 +92,30 @@
 /* release info */
 #define         RELEASE_TAG	"3.0b6"
 
+struct hostrec {
+  char *servername;
+  struct optrec options;
+  struct hostrec *next;
+};
+
 #ifdef HAVE_PROTOTYPES
 /* prototypes for internal functions */
 int showoptions (struct optrec *options);
 int parseMDAargs (struct optrec *options);
 int showversioninfo (void);
+int dump_options (struct optrec *options);
+int query_host(char *servername, struct optrec *options);
 #endif
 
 /* Controls the detail of status/progress messages written to stderr */
-int outlevel;      /* see the O_.* constants in popclient.h */
+int outlevel;		/* see the O_.* constants in popclient.h */
+
+/* Daemon-mode control */
+int poll_interval;	/* polling interval for daemon mode */
+char *logfile;		/* logfile to ship progress reports to */ 
 
 /* args for the MDA, parsed out in the usual fashion by parseMDAargs() */
-#ifdef MDA_ARGS
-char *mda_argv [MDA_ARGCOUNT + 2];
-#else
-char *mda_argv [2];
-#endif
-
+char *mda_argv [32];
 
 /*********************************************************************
   function:      main
@@ -129,49 +139,99 @@ char **argv;
   int popstatus;
   int parsestatus;
   char *servername; 
+  struct hostrec *hostp, *hostlist = (struct hostrec *)NULL;
 
-  parsestatus = parsecmdline(argc,argv,&cmd_opts);
-  if (parsestatus >= 0) {
-    setoutlevel(&cmd_opts);
-    if (!cmd_opts.versioninfo)
-      if (setdefaults(&def_opts) == 0) {
-        if (prc_parse_file(prc_getpathname(&cmd_opts,&def_opts)) == 0) {
-          while ((servername = getnextserver(argc, argv, &parsestatus)) 
-                 != (char *) 0) {
-            if (outlevel != O_SILENT) 
-              fprintf(stderr, "querying %s\n", servername);
-            else
-              ;
-            prc_mergeoptions(servername, &cmd_opts, &def_opts, &merged_opts);
-            parseMDAargs(&merged_opts);
-	    switch (merged_opts.whichpop) {
-              case P_POP2:
-                popstatus = doPOP2(servername, &merged_opts);
-                break;
-              case P_POP3:
-              case P_APOP:
-                popstatus = doPOP3(servername, &merged_opts);
-                break;
-              default:
-                fprintf(stderr,"unsupported protocol selected.\n");
-            }
-          }
-        }
-	else
-          popstatus = PS_SYNTAX;
-      } 
-      else
-        popstatus = PS_UNDEFINED;
-    else
-      showversioninfo();
+  if ((parsestatus = parsecmdline(argc,argv,&cmd_opts)) < 0)
+    exit(PS_SYNTAX);
+
+  setoutlevel(&cmd_opts);
+  if (cmd_opts.versioninfo)
+    showversioninfo();
+
+  if (setdefaults(&def_opts) != 0)
+    exit(PS_UNDEFINED);
+
+  if (prc_parse_file(prc_getpathname(&cmd_opts,&def_opts)) != 0)
+    exit(PS_SYNTAX);
+
+  if (optind >= argc)
+    append_server_names(&argc, argv);
+
+  /* build in-core data list on all hosts */
+  while ((servername = getnextserver(argc, argv, &parsestatus)) != (char *)0) {
+    if (strcmp(servername, "defaults") == 0)
+      continue;
+
+    prc_mergeoptions(servername, &cmd_opts, &def_opts, &merged_opts);
+    parseMDAargs(&merged_opts);
+
+    hostp = (struct hostrec *)xmalloc(sizeof(struct hostrec));
+    hostp->servername = strdup(servername);
+    memcpy(&hostp->options, &merged_opts, sizeof(struct optrec));
+
+    hostp->next = hostlist;
+    hostlist = hostp;
   }
-  else
-    popstatus = PS_SYNTAX;
+
+  /* perhaps we just want to check options? */
+  if (cmd_opts.versioninfo) {
+    printf("Taking options from command line and %s\n", prc_pathname);
+    for (hostp = hostlist; hostp; hostp = hostp->next) {
+      printf("Options for host %s:\n", hostp->servername);
+      dump_options(&hostp->options);
+    }
+    if (hostlist == NULL)
+	(void) printf("No mailservers set up -- perhaps %s is missing?\n",
+		      prc_pathname);
+    exit(0);
+  }
+  else if (hostlist == NULL) {
+    (void) fputs("popclient: no mailservers have been specified.\n", stderr);
+    exit(PS_SYNTAX);
+  }
+
+  /*
+   * Maybe time to go to demon mode...
+   */
+  if (poll_interval)
+      daemonize(logfile);
+
+  /*
+   * Query all hosts. If there's only one, the error return will
+   * reflect the status of that transaction.
+   */
+  do {
+      for (hostp = hostlist; hostp; hostp = hostp->next) {
+	  popstatus = query_host(hostp->servername, &hostp->options);
+      }
+
+      sleep(poll_interval);
+  } while
+      (poll_interval);
 
   exit(popstatus);
 }
-    
 
+int query_host(servername, options)
+/* perform fetch transaction with single host */
+char *servername;
+struct optrec *options;
+{
+  if (outlevel != O_SILENT)
+    fprintf(stderr, "querying %s\n", servername);
+  switch (options->whichpop) {
+  case P_POP2:
+    return(doPOP2(servername, options));
+    break;
+  case P_POP3:
+  case P_APOP:
+    return(doPOP3(servername, options));
+    break;
+  default:
+    fprintf(stderr,"unsupported protocol selected.\n");
+    return(PS_PROTOCOL);
+  }
+}
  
 /*********************************************************************
   function:      showversioninfo
@@ -184,11 +244,77 @@ char **argv;
 
 int showversioninfo()
 {
-  printf("popclient release %s\n",RELEASE_TAG);
+  printf("This is popclient release %s\n",RELEASE_TAG);
 }
 
+/*********************************************************************
+  function:      dump_options
+  description:   display program options in English
+  arguments:
+    options      merged options
 
+  return value:  none.
+  calls:         none.
+  globals:       none.
+*********************************************************************/
 
+int dump_options (options)
+struct optrec *options;
+{
+  if (!options->loginid[0])
+    printf("  No password set\n");
+  else
+    printf("  Username = '%s'\n", options->loginid);
+  printf("  Password = '%s'\n", options->password);
+
+  printf("  Protocol is ");
+  switch (options->whichpop)
+  {
+  case P_POP2: printf("POP2\n"); break;
+  case P_POP3: printf("POP3\n"); break;
+  case P_IMAP: printf("IMAP\n"); break;
+  case P_APOP: printf("APOP\n"); break;
+  case P_RPOP: printf("RPOP\n"); break;
+  default: printf("unknown?!?\n"); break;
+  }
+
+  printf("  Fetched messages will%s be kept on the server (--keep %s).\n",
+	 options->keep ? "" : " not",
+	 options->keep ? "on" : "off");
+  printf("  %s messages will be retrieved (--all %s).\n",
+	 options->fetchall ? "All" : "Only new",
+         options->fetchall ? "on" : "off");
+  printf("  Old messages will%s be flushed before message retrieval (--flush %s).\n",
+	 options->flush ? "" : " not",
+         options->flush ? "on" : "off");
+
+  switch(options->output)
+  {
+  case TO_FOLDER:
+    printf("  Messages will be appended to '%s'\n", options->userfolder);
+    break;
+  case TO_MDA:
+    printf("  Messages will be delivered with %s\n", options->mda);
+    break;
+  case TO_STDOUT:
+    printf("  Messages will be dumped to standard output\n");
+  default:
+    printf("  Message destination unknown?!?\n");
+  }
+  if (options->verbose)
+    {
+      if (options->output != TO_FOLDER)
+	printf("  (Mail folder would have been '%s')\n", options->userfolder);
+      if (options->output != TO_MDA)
+	printf("  (MDA would have been '%s')\n", options->mda);
+    }
+
+  if (options->limit == 0)
+    printf("  No limit on retrieved message length.\n");
+  else
+    printf("  Text retrieved per message will be at most %d bytes.\n",
+	   options->limit);
+}
 
 /******************************************************************
   function:	setoutlevel
@@ -217,8 +343,7 @@ struct optrec *options;
 /*********************************************************************
   function:      openuserfolder
   description:   open the file to which the retrieved messages will
-                 be appended.  Do NOT call when options->foldertype
-                 is OF_SYSMBOX.
+                 be appended.  Write-lock the folder if possible.
 
   arguments:     
     options      fully-determined options (i.e. parsed, defaults invoked,
@@ -234,10 +359,17 @@ struct optrec *options;
 {
   int fd;
 
-  if (options->foldertype == OF_STDOUT)
+  if (options->output == TO_STDOUT)
     return(1);
-  else    /* options->foldertype == OF_USERMBOX */
+  else    /* options->output == TO_FOLDER */
     if ((fd = open(options->userfolder,O_CREAT|O_WRONLY|O_APPEND,0600)) >= 0) {
+#ifdef HAVE_FLOCK
+      if (flock(fd, LOCK_EX) == -1)
+	{
+	  close(fd);
+	  fd = -1;
+	}
+#endif /* HAVE_FLOCK */
       return(fd);
     }
     else {
@@ -286,7 +418,7 @@ struct optrec *options;
       exit(1);
     }
 
-    execv(MDA_PATH,mda_argv);
+    execv(options->mda,mda_argv);
 
     /* if we got here, an error occurred */
     perror("popclient: openmailpipe: exec");
@@ -365,7 +497,7 @@ int fd;
 
 /*********************************************************************
   function:      parseMDAargs
-  description:   parse the argument string given in MDA_ARGS into
+  description:   parse the argument string given in agent option into
                  a regular *argv[] array.
   arguments:
     options      fully-determined options record pointer.
@@ -381,14 +513,11 @@ struct optrec *options;
   int argi;
   char *argp;
 
-  /* first put the MDA alias in as argv[0] */
-  mda_argv[0] = MDA_ALIAS;
+  /* first put the last segment of the MDA pathname in argv[0] */
+  argp = strrchr(options->mda, '/');
+  mda_argv[0] = argp ? (argp + 1) : options->mda;
   
-#ifdef MDA_ARGS
-
-  /* make a writeable copy of MDA_ARGS */
-  argp = strcpy((char *) malloc(strlen(MDA_ARGS)+1), MDA_ARGS);
-  
+  argp = options->mda;
   while (*argp != '\0' && isspace(*argp))	/* skip null first arg */
     argp++;					
 
@@ -417,10 +546,108 @@ struct optrec *options;
   }
   mda_argv[argi] = (char *) 0;
 
-#else 
-
-  mda_argv[1] = (char *) 0;
-
-#endif
-
 }
+
+/*********************************************************************
+  function:      
+  description:   hack message headers so replies will work properly
+
+  arguments:
+    after        where to put the hacked header
+    before       header to hack
+    host         name of the pop header
+
+  return value:  none.
+  calls:         none.
+  globals:       writes mda_argv.
+ *********************************************************************/
+
+void reply_hack(buf, host)
+/* hack local mail IDs -- code by Eric S. Raymond 20 Jun 1996 */
+char *buf;
+const char *host;
+{
+  const char *from;
+  int state = 0;
+  char mycopy[POPBUFSIZE];
+
+  if (strncmp("From: ", buf, 6)
+      && strncmp("To: ", buf, 4)
+      && strncmp("Reply-", buf, 6)
+      && strncmp("Cc: ", buf, 4)
+      && strncmp("Bcc: ", buf, 5)) {
+    return;
+  }
+
+  strcpy(mycopy, buf);
+  for (from = mycopy; *from; from++)
+  {
+    switch (state)
+      {
+      case 0:   /* before header colon */
+        if (*from == ':')
+          state = 1;
+        break;
+
+      case 1:   /* we've seen the colon, we're looking for addresses */
+        if (*from == '"')
+          state = 2;
+        else if (*from == '(')
+          state = 3;    
+        else if (*from == '<' || isalnum(*from))
+          state = 4;
+        break;
+
+      case 2:   /* we're in a quoted human name, copy and ignore */
+        if (*from == '"')
+          state = 1;
+        break;
+
+      case 3:   /* we're in a parenthesized human name, copy and ignore */
+        if (*from == ')')
+          state = 1;
+        break;
+
+      case 4:   /* the real work gets done here */
+        /*
+         * We're in something that might be an address part,
+         * either a bare unquoted/unparenthesized text or text
+         * enclosed in <> as per RFC822.
+         */
+        /* if the address part contains an @, don't mess with it */
+        if (*from == '@')
+          state = 5;
+
+        /* If the address token is not properly terminated, ignore it. */
+        else if (*from == ' ' || *from == '\t')
+          state = 1;
+
+        /*
+         * On proper termination with no @, insert hostname.
+         * Case '>' catches <>-enclosed mail IDs.  Case ',' catches
+         * comma-separated bare IDs.  Cases \r and \n catch the case
+         * of a single ID alone on the line.
+         */
+        else if (strchr(">,\r\n", *from))
+        {
+          strcpy(buf, "@");
+          strcat(buf, host);
+          buf += strlen(buf);
+          state = 1;
+        }
+
+        /* everything else, including alphanumerics, just passes through */
+        break;
+
+      case 5:   /* we're in a remote mail ID, no need to append hostname */
+        if (*from == '>' || *from == ',' || isspace(*from))
+          state = 1;
+        break;
+      }
+
+    /* all characters from the old buffer get copied to the new one */
+    *buf++ = *from;
+  }
+  *buf++ = '\0';
+}
+

@@ -23,6 +23,9 @@
   description:  POP2 client code.
 
   $Log: pop2.c,v $
+  Revision 1.2  1996/06/26 19:08:57  esr
+  This is what I sent Harris.
+
   Revision 1.1  1996/06/24 19:00:51  esr
   Initial revision
 
@@ -142,21 +145,23 @@ struct optrec *options;
   }
     
   /* open/lock the folder if it is a user folder or stdout */
-  if (options->foldertype != OF_SYSMBOX)
+  if (options->output == TO_FOLDER)
     if ((mboxfd = openuserfolder(options)) < 0) 
       return(PS_IOERR);
  
   /* wait for the POP2 greeting */
   if (POP2_stateGREET(socket) != 0) {
     POP2_quit(socket);
-    return(PS_PROTOCOL);
+    status = PS_PROTOCOL;
+    goto closeUp;
   }
 
   /* log the user onto the server */
-  POP2_sendHELO(options->userid,options->password,socket);
+  POP2_sendHELO(options->username,options->password,socket);
   if ((number = POP2_stateNMBR(socket)) < 0) {
     POP2_quit(socket);
-    return(PS_AUTHFAIL);
+    status = PS_AUTHFAIL;
+    goto closeUp;
   }
 
   /* set the remote folder if selected */
@@ -164,7 +169,8 @@ struct optrec *options;
     POP2_sendFOLD(options->remotefolder,socket);
     if ((number = POP2_stateNMBR(socket)) < 0) {
       POP2_quit(socket);
-      return(PS_PROTOCOL);
+      status = PS_PROTOCOL;
+      goto closeUp;
     }
   }
 
@@ -182,7 +188,7 @@ struct optrec *options;
     while (msgsize > 0) {
 
       /* open the pipe */
-      if (options->foldertype == OF_SYSMBOX)
+      if (options->output == TO_MDA)
         if ((mboxfd = openmailpipe(options)) < 0) {   
           POP2_quit(socket);
           return(PS_IOERR);
@@ -190,7 +196,7 @@ struct optrec *options;
 
       POP2_sendcmd("RETR",socket);
       actsize = POP2_stateXFER(msgsize,socket,mboxfd,
-                               options->foldertype == OF_SYSMBOX);
+                               options->output == TO_MDA);
       if (actsize == msgsize) 
         if (options->keep)
           POP2_sendcmd("ACKS",socket);
@@ -200,14 +206,16 @@ struct optrec *options;
         POP2_sendcmd("NACK",socket);
       else {
         POP2_quit(socket);
-        return(PS_SOCKET);
+	status = PS_SOCKET;
+	goto closeUp; 
       }
 
       /* close the pipe */
-      if (options->foldertype == OF_SYSMBOX)
+      if (options->output == TO_MDA)
         if (closemailpipe(mboxfd) < 0) {
           POP2_quit(socket);
-          return(PS_IOERR);
+          status = PS_IOERR;
+	  goto closeUp;
         }
     
       msgsize = POP2_stateSIZE(socket);
@@ -220,7 +228,8 @@ struct optrec *options;
     status = PS_NOMAIL;
   }
 
-  if (options->foldertype != OF_SYSMBOX)
+closeUp:
+  if (options->output == TO_FOLDER)
     closeuserfolder(mboxfd);
 
   return(status);

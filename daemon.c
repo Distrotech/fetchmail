@@ -25,6 +25,9 @@
 		BSD systems.
 
   $Log: daemon.c,v $
+  Revision 1.2  1996/06/26 19:08:57  esr
+  This is what I sent Harris.
+
   Revision 1.1  1996/06/25 14:32:01  esr
   Initial revision
 
@@ -98,7 +101,7 @@ sigchld_handler ()
                 become process group leader of our own process group,
                 and set up to catch child process termination signals.
   arguments:
-    options	command-line options.
+    logfile     file to direct stdout and stderr to, if non-NULL.
 
   ret. value:	none.
   globals:	refers to the address of sigchld_handler().
@@ -106,12 +109,12 @@ sigchld_handler ()
  *****************************************************************/
 
 int
-daemonize (options)
-struct optrec *options;
+daemonize (logfile)
+const char *logfile;
 {
   int fd;
   pid_t childpid;
-  RETSIGTYPE sigchild_handler();
+  RETSIGTYPE sigchld_handler();
 
   /* if we are started by init (process 1) via /etc/inittab we needn't 
      bother to detach from our process group context */
@@ -195,13 +198,15 @@ nottyDetach:
     return(PS_IOERR);
   }
 
-
-  if (dup(fd) < 0) {				/* stdout */
-    log_perror("dup");
-    return(PS_IOERR);
-  }
+  if (logfile)
+    open(logfile, O_CREAT|O_WRONLY, 0777);	/* stdout */
+  else
+    if (dup(fd) < 0) {				/* stdout */
+      perror("dup");
+      return(PS_IOERR);
+    }
   if (dup(fd) < 0) {				/* stderr */
-    log_perror("dup");
+    perror("dup");
     return(PS_IOERR);
   }
 
@@ -216,6 +221,6 @@ nottyDetach:
 #endif
 
   /* set up to catch child process termination signals */ 
-  signal(SIGCLD, sigchild_handler); 
+  signal(SIGCLD, sigchld_handler); 
 
 }

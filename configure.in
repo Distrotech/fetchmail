@@ -4,6 +4,9 @@ dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl $Log: configure.in,v $
+dnl Revision 1.2  1996/06/26 19:08:56  esr
+dnl This is what I sent Harris.
+dnl
 dnl Revision 1.1  1996/06/24 20:43:13  esr
 dnl Initial revision
 dnl
@@ -51,43 +54,56 @@ test -z "$LDFLAGS" && LDFLAGS=-g AC_SUBST(LDFLAGS)
 
 AC_CANONICAL_HOST
 
+AC_MSG_CHECKING(system mailbox directory)
+if test -d /var/mail
+then
+	AC_DEFINE(USERFOLDER, "/var/mail/%s")
+	userfolder='/var/mail/$u'
+elif test -d /usr/mail
+then
+	AC_DEFINE(USERFOLDER, "/usr/mail/%s")
+	userfolder='/usr/mail/$u'
+elif test -d /usr/spool/mail
+then
+	AC_DEFINE(USERFOLDER, "/usr/spool/mail/%s")
+	userfolder='/usr/spool/mail/$u'
+elif test -d /var/spool/mail
+then
+	AC_DEFINE(USERFOLDER, "/var/spool/mail/%s")
+	userfolder='/var/mail/$u'
+else
+	userfolder="can't find one, will fall back on system MDA."
+fi
+AC_MSG_RESULT($userfolder)
+
 AC_MSG_CHECKING(delivery agent for $host)
 case $host in
    *-*-*bsd*)
-	AC_DEFINE(MDA_PATH,"/usr/libexec/mail.local")
-	AC_DEFINE(MDA_ALIAS,"mail.local")
-	AC_DEFINE(MDA_ARGS,"$u")
+	AC_DEFINE(DEF_MDA,"/usr/libexec/mail.local %s")
 	mdacmd="/usr/libexec/mail.local \$u"
 	;;
 
-   *-*-linux*)
-	AC_DEFINE(MDA_PATH,"/usr/bin/deliver")
-	AC_DEFINE(MDA_ALIAS,"deliver")
-	AC_DEFINE(MDA_ARGS,"$u")
-	mdacmd="/usr/bin/deliver \$u"
-	;;
-
    *-*-aix*)
-	AC_DEFINE(MDA_PATH,"/usr/bin/bellmail")
-	AC_DEFINE(MDA_ALIAS,"bellmail")
-	AC_DEFINE(MDA_ARGS,"$u")
+	AC_DEFINE(DEF_MDA,"/usr/bin/bellmail %s")
 	mdacmd="/usr/bin/bellmail \$u"
 	;;
 
    *-*-hpux*)
-	AC_DEFINE(MDA_PATH,"/bin/rmail")
-	AC_DEFINE(MDA_ALIAS,"rmail")
-	AC_DEFINE(MDA_ARGS,"-d $u")
+	AC_DEFINE(DEF_MDA,"/bin/rmail -d %s")
 	mdacmd="/bin/rmail -d \$u"
 	;;
 
-   # default case assumes /bin/mail is an MDA -- may LOSE mail on
-   # systems where it is not an MDA.
    *)
-	AC_DEFINE(MDA_PATH,"/bin/mail")
-	AC_DEFINE(MDA_ALIAS,"mail")
-	AC_DEFINE(MDA_ARGS,"-d $u")
-	mdacmd="/bin/mail -d \$u"
+	if test -x "/usr/bin/deliver %s"
+	then
+		AC_DEFINE(DEF_MDA,"/usr/bin/deliver %s")
+		mdacmd="/usr/bin/deliver \$u"
+	else
+		# default case assumes /bin/mail is an MDA -- may LOSE mail on
+		# systems where it is not an MDA.
+		AC_DEFINE(DEF_MDA,"/bin/mail -d %s")
+		mdacmd="/bin/mail -d \$u"
+	fi
 	;;
 esac
 AC_MSG_RESULT($mdacmd)
@@ -156,7 +172,7 @@ dnl All AC_CHECK_FUNCs must precede the following AC_SUBSTs
 AC_SUBST(EXTRASRC)
 AC_SUBST(EXTRAOBJ)
 
-AC_CHECK_FUNCS(dup2 strerror tcsetattr stty setsid)
+AC_CHECK_FUNCS(dup2 strerror tcsetattr stty setsid flock)
 
 dnl AC_FUNC_SETVBUF_REVERSED
 
@@ -183,7 +199,8 @@ AC_TRY_COMPILE([],
                 
 dnl Check out the wait reality.
 AC_CHECK_HEADERS(sys/wait.h) AC_CHECK_FUNCS(waitpid wait3)
-AC_COMPILE_CHECK(union wait, [#include <sys/types.h>
+AC_MSG_CHECKING(for union wait);
+AC_TRY_LINK([#include <sys/types.h>
 #include <sys/wait.h>],
 	 	 [union wait status; int pid; pid = wait (&status);
 #ifdef WEXITSTATUS
@@ -197,19 +214,20 @@ if (WEXITSTATUS (status) != 0) pid = -1;
 pid = waitpid (-1, &status, 0);
 #endif
 ],
-		 AC_DEFINE(HAVE_UNION_WAIT))
+  [AC_DEFINE(HAVE_UNION_WAIT) AC_MSG_RESULT(yes)],
+  AC_MSG_RESULT(no))
 
-AC_COMPILE_CHECK(sys_siglist declaration in signal.h or unistd.h,
-		 [#include <signal.h>
+AC_MSG_CHECKING(sys_siglist declaration in signal.h or unistd.h)
+AC_TRY_LINK([#include <signal.h>
 /* NetBSD declares sys_siglist in <unistd.h>.  */
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif], [char *msg = *(sys_siglist + 1);],
-		 AC_DEFINE(SYS_SIGLIST_DECLARED))
-
+  [AC_DEFINE(SYS_SIGLIST_DECLARED) AC_MSG_RESULT(yes)],
+  AC_MSG_RESULT(no))
 
 # The presence of the following is not meant to imply
-# that necessarily works on those systems.
+# that popclient necessarily works on those systems.
 dnl AC_DYNIX_SEQ
 dnl AC_XENIX_DIR
 dnl AC_IRIX_SUN

@@ -24,6 +24,9 @@
   description:  .poprc parser
 
   $Log: rcfile_y.y,v $
+  Revision 1.2  1996/06/26 19:09:01  esr
+  This is what I sent Harris.
+
   Revision 1.1  1996/06/24 18:17:24  esr
   Initial revision
 
@@ -60,18 +63,22 @@
 extern char *prc_pathname;
 extern int prc_lineno;
 extern int prc_errflag;
-extern char yytext[];
+extern char *yytext;
+
+int yydebug;	/* in case we didn't generate with -- debug */
 %}
 
 %union {
   int proto;
+  int flag;
   char *sval;
 }
 
 %token KW_SERVER KW_PROTOCOL KW_USERNAME KW_PASSWORD
-%token KW_REMOTEFOLDER KW_LOCALFOLDER KW_EOL
+%token KW_REMOTEFOLDER KW_LOCALFOLDER KW_MDA KW_EOL KW_DEFAULTS
 %token <proto> PROTO_POP2 PROTO_POP3 PROTO_IMAP PROTO_APOP PROTO_RPOP
 %token <sval> PARAM_STRING
+%token <flag> KW_KEEP KW_FLUSH KW_FETCHALL
 %type <proto> proto;
 
 %%
@@ -89,6 +96,7 @@ statement:
 
 define_server:	KW_SERVER PARAM_STRING server_options 	{prc_setserver($2);}	
 	|	KW_SERVER PARAM_STRING			{prc_setserver($2);}
+	|	KW_DEFAULTS server_options	{prc_setserver("defaults");}
   ;
 
 server_options:	serv_option_clause
@@ -101,6 +109,10 @@ serv_option_clause:
 	|	KW_PASSWORD PARAM_STRING	{prc_setpassword($2);}
 	|	KW_REMOTEFOLDER PARAM_STRING	{prc_setremote($2);}
 	|	KW_LOCALFOLDER PARAM_STRING	{prc_setlocal($2);}
+	|	KW_MDA PARAM_STRING		{prc_setmda($2);}
+	|	KW_KEEP				{prc_setkeep($1);}
+	|	KW_FLUSH			{prc_setflush($1);}
+	|	KW_FETCHALL			{prc_setfetchall($1);}
   ;
 
 proto:		PROTO_POP2

@@ -1,6 +1,9 @@
 Popclient README
 
 	$Log: README,v $
+	Revision 1.2  1996/06/26 19:08:55  esr
+	This is what I sent Harris.
+
 	Revision 1.1  1996/06/26 15:27:06  esr
 	Initial revision
 
@@ -18,6 +21,94 @@ is provided for this version of popclient.  Consider this BETA version to
 be a "developer/tester" release only.
 
 Release History
+
+3.0b7:
+
+Eric S. Raymond <esr@thyrsus.com> hacked on 3.0b6.  Here are his change notes:
+
+CONFIGURATION AND BUILDING
+
+* The autoconfigure script incorrectly assumed that all Linuxes use
+  /usr/bin/deliver.  Under Linux it now checks for both /usr/bin/delivermail
+  and /bin/mail.
+
+* I added a distribution-maker production to Makefile.in.
+
+OPTIONS AND COMMAND LINE
+
+* I have removed the -p command-line option. Given that there's a .poprc
+  facility there is no excuse for encouraging users to put plaintext passwords
+  in scripts which might be readable.
+
+* Calling popclient with no arguments now causes it to query or operate
+  on every host in the .poprc file.
+
+* I have made --version more useful by having it dump the computed
+  connection options for each server specified.
+
+* The user can now explicitly set an MDA (such as procmail) with the
+  new option -m or -mda.  Various possible MDAs are listed on the man page.
+
+POPRC FILE SYNTAX
+
+* The .poprc lexer now supports "-enclosed strings which may contain
+  whitespace.
+
+* I added a --yydebug option to enable .poprc parser debugging at runtime
+  if the parser was generated with --debug.  It's not documented.
+
+* You may now have a `defaults' entry in .poprc which sets overrideable
+  values for other entries.  See the man page for details.
+
+* It is now possible to set keep, flush and fetchall in your .poprc file.
+
+* Fixed incorrect numbering of source lines in .poprc parse error messages.
+
+* The configure.in specification no longer uses the obsolete AC_TRY_COMPILE
+  macro (it uses AC_TRY_LINK instead).
+
+MAILBOX LOCKING
+
+* I have added mandatory locking of mailbox files where supported.
+  This will cover Linux systems, in particular.
+
+* The default behavior is now to do lock-protected append on the user's
+  system mailbox rather than using delivermail or some other MDA.
+  (This is a performance hack.)
+
+* The autoconfigure script now looks for standard mail locations.  The
+  default mail delivery agent is used only if it can't find a mail spool
+  directory in the standard places.
+
+FUNCTIONAL ENHANCEMENTS
+
+* When using POP3, message headers are edited so that replies won't foo up.
+  Anything that looks like a mail ID local to the POP host gets @ and the
+  pop servername attached to it before being appended to the user's
+  mailbox or passed to an MDA.
+
+* I have implemented daemon mode.
+
+DOCUMENTATION
+
+* All changes and feature additions have been tested in actual use and are
+  documented on the man page.
+
+* I have turned the comments in the sample.poprc into a new manual
+  section documenting the .poprc format.
+
+MISCELLANEOUS BUG FIXES
+
+* I fixed some de-initialization bugs in pop2.c and pop3.c that led to
+  fd leaks (these became painfully obvious when I tested daemon mode!).
+
+* I've fixed the flaky parser error messages. They turned out to be due 
+  to a misdeclaration of yytext.
+
+There's only one feature I haven't been able to add successfully.  I
+want a --logfile option that redirects the daemon-mode output to a
+given file, but the code (in daemon.c near 200) unaccountably doesn't
+work (so I haven't documented it yet).
 
 3.0b5
 o	"From " header fix in pop2.c and pop3.c

@@ -23,6 +23,9 @@
   description:  POP3 client code.
 
   $Log: pop3.c,v $
+  Revision 1.2  1996/06/26 19:08:58  esr
+  This is what I sent Harris.
+
   Revision 1.1  1996/06/24 18:56:35  esr
   Initial revision
 
@@ -86,7 +89,7 @@ int POP3_sendSTAT (int *msgcount, int socket);
 int POP3_sendRETR (int msgnum, int socket);
 int POP3_sendDELE (int msgnum, int socket);
 int POP3_sendLAST (int *last, int socket);
-int POP3_readmsg (int socket, int mboxfd, int topipe);
+int POP3_readmsg (int socket, int mboxfd, char *host, int topipe);
 int POP3_BuildDigest (char *buf, struct optrec *options);
 #endif
 
@@ -118,15 +121,16 @@ struct optrec *options;
   int first,number,count;
 
 
-  /* open the folder if we're not using the system mailbox */
-  if (options->foldertype != OF_SYSMBOX) 
+  /* open/lock the folder if we're using a mailbox */
+  if (options->output == TO_FOLDER) 
     if ((mboxfd = openuserfolder(options)) < 0) 
       return(PS_IOERR);
     
   /* open the socket and get the greeting */
   if ((socket = Socket(servername,POP3_PORT)) < 0) {
     perror("doPOP3: socket");
-    return(PS_SOCKET);
+    ok = PS_SOCKET;
+    goto closeUp;
   }
 
   ok = POP3_OK(buf,socket);
@@ -134,7 +138,7 @@ struct optrec *options;
     if (ok != PS_SOCKET)
       POP3_sendQUIT(socket);
     close(socket);
-    return(ok);
+    goto closeUp;
   }
 
   /* print the greeting */
@@ -146,9 +150,10 @@ struct optrec *options;
 #if defined(HAVE_APOP_SUPPORT)
   /* build MD5 digest from greeting timestamp + password */
   if (options->whichpop == P_APOP) 
-    if (POP3_BuildDigest(buf,options) != 0) 
-      return(PS_AUTHFAIL);
-    else
+    if (POP3_BuildDigest(buf,options) != 0) {
+      ok = PS_AUTHFAIL;
+      goto closeUp;
+    } else
       ;
   else
     ;  /* not using APOP protocol this time */
@@ -193,8 +198,8 @@ struct optrec *options;
                    number <= count;  
                    number++) {
 
-      /* open the mail pipe if we're using the system mailbox */
-      if (options->foldertype == OF_SYSMBOX
+      /* open the mail pipe if we're using an MDA */
+      if (options->output == TO_MDA
            && (options->fetchall || number >= first)) {
         ok = (mboxfd = openmailpipe(options)) < 0 ? -1 : 0;
         if (ok != 0)
@@ -211,7 +216,7 @@ struct optrec *options;
         goto cleanUp;
       
       if (number >= first || options->fetchall)
-        ok = POP3_readmsg(socket,mboxfd,options->foldertype == OF_SYSMBOX);
+        ok = POP3_readmsg(socket,mboxfd,servername,options->output == TO_MDA);
       else
         ok = 0;
       if (ok != 0)
@@ -230,7 +235,7 @@ struct optrec *options;
         ; /* message is kept */
 
       /* close the mail pipe if we're using the system mailbox */
-      if (options->foldertype == OF_SYSMBOX
+      if (options->output == TO_MDA
            && (options->fetchall || number >= first)) {
         ok = closemailpipe(mboxfd);
         if (ok != 0)
@@ -242,21 +247,22 @@ struct optrec *options;
     if (ok == 0)
       ok = PS_SUCCESS;
     close(socket);
-    return(ok);
+    goto closeUp;
   }
   else {
     ok = POP3_sendQUIT(socket);
     if (ok == 0)
       ok = PS_NOMAIL;
     close(socket);
-    return(ok);
+    goto closeUp;
   }
 
 cleanUp:
   if (ok != 0 && ok != PS_SOCKET)
     POP3_sendQUIT(socket);
 
-  if (options->foldertype != OF_SYSMBOX)
+closeUp:
+  if (options->output == TO_FOLDER)
     if (closeuserfolder(mboxfd) < 0 && ok == 0)
       ok = PS_IOERR;
     
@@ -342,9 +348,9 @@ int socket;
 
   switch (options->whichpop) {
     case P_POP3:
-      SockPrintf(socket,"USER %s\r\n",options->userid);
+      SockPrintf(socket,"USER %s\r\n",options->username);
       if (outlevel == O_VERBOSE)
-        fprintf(stderr,"> USER %s\n",options->userid);
+        fprintf(stderr,"> USER %s\n",options->username);
       if (POP3_OK(buf,socket) != 0)
         goto badAuth;
 
@@ -359,9 +365,9 @@ int socket;
 #if defined(HAVE_APOP_SUPPORT)
     case P_APOP:
       SockPrintf(socket,"APOP %s %s\r\n", 
-                 options->userid, options->digest);
+                 options->username, options->digest);
       if (outlevel == O_VERBOSE)
-        fprintf(stderr,"> APOP %s %s\n",options->userid, options->digest);
+        fprintf(stderr,"> APOP %s %s\n",options->username, options->digest);
       if (POP3_OK(buf,socket) != 0) 
         goto badAuth;
       break;
@@ -369,11 +375,11 @@ int socket;
 
 #if defined(HAVE_RPOP_SUPPORT)
     case P_RPOP:
-      SockPrintf(socket, "RPOP %s\r\n", options->userid);
+      SockPrintf(socket, "RPOP %s\r\n", options->username);
       if (POP3_OK(buf,socket) != 0)
          goto badAuth;
       if (outlevel == O_VERBOSE)
-        fprintf(stderr,"> RPOP %s %s\n",options->userid);
+        fprintf(stderr,"> RPOP %s %s\n",options->username);
       break;
 #endif  /* HAVE_RPOP_SUPPORT */
 
@@ -573,7 +579,8 @@ int socket;
   arguments:     
     socket       ... to which the server is connected.
     mboxfd       open file descriptor to which the retrieved message will
-                 be written.  
+                 be written. 
+    pophost      name of the POP host 
     topipe       true if we're writing to the system mailbox pipe.
 
   return value:  zero if success else PS_* return code.
@@ -581,9 +588,10 @@ int socket;
   globals:       reads outlevel. 
  *********************************************************************/
 
-int POP3_readmsg (socket,mboxfd,topipe)
+int POP3_readmsg (socket,mboxfd,pophost,topipe)
 int socket;
 int mboxfd;
+char *pophost;
 int topipe;
 { 
   char buf [MSGBUFSIZE]; 
@@ -591,6 +599,7 @@ int topipe;
   char savec;
   char fromBuf[MSGBUFSIZE];
   int needFrom;
+  int inheaders;
   int lines,sizeticker;
   time_t now;
   /* This keeps the retrieved message count for display purposes */
@@ -609,12 +618,15 @@ int topipe;
     ;
 
   /* read the message content from the server */
+  inheaders = 1;
   lines = 0;
   sizeticker = MSGBUFSIZE;
   while (1) {
     if (SockGets(socket,buf,sizeof(buf)) < 0)
       return(PS_SOCKET);
     bufp = buf;
+    if (buf[0] == '\r' || buf[0] == '\n')
+      inheaders = 0;
     if (*bufp == '.') {
       bufp++;
       if (*bufp == 0)
@@ -622,7 +634,7 @@ int topipe;
     }
     strcat(bufp,"\n");
      
-    /* Check for Unix 'From' header, and a bogus one if it's not
+    /* Check for Unix 'From' header, and add a bogus one if it's not
        present -- only if not using an MDA.
        XXX -- should probably parse real From: header and use its 
               address field instead of bogus 'POPmail' string. 
@@ -645,6 +657,12 @@ int topipe;
         }
       }
     }
+
+    /*
+     * Edit some headers so that replies will work properly.
+     */
+    if (inheaders)
+      reply_hack(bufp, pophost);
 
     /* write this line to the file */
     if (write(mboxfd,bufp,strlen(bufp)) < 0) {

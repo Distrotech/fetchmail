@@ -22,6 +22,9 @@
   description:	command-line option processing
   
   $Log: options.c,v $
+  Revision 1.2  1996/06/26 19:08:57  esr
+  This is what I sent Harris.
+
   Revision 1.1  1996/06/24 18:11:08  esr
   Initial revision
 
@@ -80,12 +83,13 @@
 #define LA_DAEMON	11
 #define LA_POPRC	12
 #define LA_USERNAME	13
-#define LA_PASSWORD	14
-#define LA_REMOTEFILE	15
-#define	LA_LOCALFILE	16
-
+#define LA_REMOTEFILE	14
+#define	LA_LOCALFILE	15
+#define LA_MDA		16
+#define LA_LOGFILE	17
+#define LA_YYDEBUG	18
  
-static char *shortoptions = "23VaKkvscl:Fd:f:u:p:r:o:";
+static char *shortoptions = "23VaKkvscl:Fd:f:u:r:o:m:";
 static struct option longoptions[] = {
   {"version",   no_argument,       (int *) 0, LA_VERSION    },
   {"all",	no_argument,       (int *) 0, LA_ALL        },
@@ -102,9 +106,11 @@ static struct option longoptions[] = {
   {"poprc",	required_argument, (int *) 0, LA_POPRC      },
   {"user",	required_argument, (int *) 0, LA_USERNAME   },
   {"username",  required_argument, (int *) 0, LA_USERNAME   },
-  {"password",  required_argument, (int *) 0, LA_PASSWORD   },
   {"remote",    required_argument, (int *) 0, LA_REMOTEFILE },
   {"local",     required_argument, (int *) 0, LA_LOCALFILE  },
+  {"mda",	required_argument, (int *) 0, LA_MDA        },
+  {"logfile",	required_argument, (int *) 0, LA_LOGFILE    },
+  {"yydebug",	no_argument,	   (int *) 0, LA_YYDEBUG    },
   {(char *) 0,  no_argument,       (int *) 0, 0             }
 };
 
@@ -187,7 +193,7 @@ struct optrec *options;
           errflag++;
         else {
           fflag++;
-          options->foldertype = OF_STDOUT;
+          options->output = TO_STDOUT;
         }
         break;
       case 'l':
@@ -221,7 +227,7 @@ struct optrec *options;
         break;
       case 'd':
       case LA_DAEMON:
-        fprintf(stderr,"Got daemonize option with argument '%s'\n",optarg);
+	poll_interval = atoi(optarg);
         break;
       case 'f':
       case LA_POPRC:
@@ -230,13 +236,7 @@ struct optrec *options;
         break;
       case 'u':
       case LA_USERNAME:
-        strncpy(options->userid,optarg,sizeof(options->userid)-1);
-        break;
-      case 'p':
-      case LA_PASSWORD:
-        strncpy(options->password,optarg,sizeof(options->password)-1);
-	for (i = strlen(options->password)-1;  i >= 0;  i--) 
-          argv[optind-1][i] = '*';
+        strncpy(options->username,optarg,sizeof(options->username)-1);
         break;
       case 'o':
       case LA_LOCALFILE:
@@ -244,7 +244,7 @@ struct optrec *options;
           errflag++;
         else {
           fflag++;
-          options->foldertype = OF_USERMBOX;
+          options->output = TO_FOLDER;
           strncpy(options->userfolder,optarg,sizeof(options->userfolder)-1);
         }
         break;
@@ -252,24 +252,25 @@ struct optrec *options;
       case LA_REMOTEFILE:
         strncpy(options->remotefolder,optarg,sizeof(options->remotefolder)-1);
         break;
+      case 'm':
+      case LA_MDA:
+        strncpy(options->mda,optarg,sizeof(options->mda)-1);
+        break;
+      case 'L':
+      case LA_LOGFILE:
+        logfile = optarg;
+        break;
+      case LA_YYDEBUG:
+	yydebug = 1;
+        break;
       default:
         errflag++;
     }
   }
 
-  if (!options->versioninfo) 
-    /* if options don't obviate the need, we must have server name(s)
-       left on the command line. */
-    if (optind >= argc) 
-      errflag++;
-    else
-      ;
-  else
-    optind = 0;
- 
   if (errflag) {
     /* squawk if syntax errors were detected */
-    fputs("usage:  popclient [options] server [server ...]\n", stderr);
+    fputs("usage:  popclient [options] [server ...]\n", stderr);
     fputs("  options\n",stderr);
     fputs("  -2               use POP2 protocol\n", stderr);
     fputs("  -3               use POP3 protocol\n", stderr);
@@ -281,15 +282,16 @@ struct optrec *options;
     fputs("  -K, --kill       delete new messages after retrieval\n", stderr);
     fputs("  -k, --keep       save new messages after retrieval\n", stderr);
     fputs("  -l, --limit      retrieve at most n message lines\n", stderr);
+    fputs("  -m, --mda        set mail user agent to pass to\n", stderr);
     fputs("  -s, --silent     work silently\n", stderr);
     fputs("  -v, --verbose    work noisily (diagnostic output)\n", stderr);
-    fputs("  -d, --daemon     run as a daemon\n", stderr);
+    fputs("  -d, --daemon     run as a daemon once per n seconds\n", stderr);
     fputs("  -f, --poprc      specify alternate config file\n", stderr);
     fputs("  -u, --username   specify server user ID\n", stderr);
-    fputs("  -p, --password   specify server password\n", stderr);
     fputs("  -c, --stdout     write received mail to stdout\n", stderr);
     fputs("  -o, --local      specify filename for received mail\n", stderr);
     fputs("  -r, --remote     specify remote folder name\n", stderr);
+    fputs("  -L, --logfile    specify logfile name\n", stderr);
     return(-1);
   }
   else {
@@ -332,7 +334,6 @@ struct optrec *options;
   strcpy(options->loginid,pw->pw_name);
 
   options->whichpop = DEF_PROTOCOL;
-  options->foldertype = OF_SYSMBOX;
 
 #if defined(KEEP_IS_DEFAULT)
   options->keep = 1;
@@ -340,7 +341,16 @@ struct optrec *options;
   options->keep = 0;
 #endif
 
-  strcpy(options->userid,pw->pw_name);
+  strcpy(options->username,pw->pw_name);
+
+#if defined(USERFOLDER) && defined(HAVE_FLOCK) 
+  options->output = TO_FOLDER;
+  sprintf(options->userfolder, USERFOLDER, options->username);
+#else
+  options->output = TO_MDA;
+#endif
+
+  (void) sprintf(options->mda, DEF_MDA, options->username);
 
   options->poprcfile = 
       (char *) xmalloc(strlen(pw->pw_dir)+strlen(POPRC_NAME)+2);

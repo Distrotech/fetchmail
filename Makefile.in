@@ -3,6 +3,9 @@
 #	Carl Harris, ceharris@mal.com
 #
 #	$Log: Makefile.in,v $
+#	Revision 1.2  1996/06/26 19:08:55  esr
+#	This is what I sent Harris.
+#
 #	Revision 1.1  1996/06/25 14:29:44  esr
 #	Initial revision
 #
@@ -97,15 +100,13 @@ ETAGS = etags -tw
 CTAGS = ctags -tw
 
 objs = socket.o getpass.o pop2.o pop3.o popclient.o options.o		\
-       poprc_l.o poprc_y.o poprc.o xmalloc.o				\
+       poprc_l.o poprc_y.o poprc.o daemon.o xmalloc.o			\
        $(EXTRAOBJ) $(extras)
 
 srcs = $(srcdir)/socket.c $(srcdir)/getpass.c $(srcdir)/pop2.c 		\
        $(srcdir)/pop3.c $(srcdir)/popclient.c $(srcdir)/options.c	\
-       $(srcdir)/poprc_l.c $(srcdir)/poprc_y.c $(srcdir)/poprc.c	\
-       $(srcdir)/xmalloc.c						\
+       $(srcdir)/poprc.c $(srcdir)/daemon.c $(srcdir)/xmalloc.c		\
        $(EXTRASRC)
-
 
 .SUFFIXES:
 .SUFFIXES: .o .c .h .y .l .ps .dvi .info .texi
@@ -160,7 +161,7 @@ MAKE = make
 
 FORCE:
 
-tagsrcs = $(srcs)
+tagsrcs = $(srcs) $(srcdir)/poprc_l.c $(srcdir)/poprc_y.c
 TAGS: $(tagsrcs)
 	$(ETAGS) $(tagsrcs)
 tags: $(tagsrcs)
@@ -200,7 +201,7 @@ $(mandir)/$(instname).$(manext): popclient.man
 .PHONY: clean realclean distclean mostlyclean
 clean: 
 	-rm -f popclient *.o core popclient.dvi \
-	       poprc_l.c poprc_y.h poprc_y.c
+	       poprc_l.c poprc_y.h poprc_y.c popclient.tar popclient.tar.gz
 
 distclean: clean 
 	-rm -f Makefile config.h
@@ -232,6 +233,26 @@ configure: configure.in
 $(srcdir)/poprc_l.c: $(srcdir)/poprc_l.l
 $(srcdir)/poprc_y.c: $(srcdir)/poprc_y.y
 
+parser = $(srcdir)/poprc_l.l $(srcdir)/poprc_y.y
+headers = $(srcdir)/popclient.h $(srcdir)/socket.h $(srcdir)/poproto.h
+extra = $(srcdir)/alloca.c $(srcdir)/bzero.[ch] $(srcdir)/errorcodes \
+	$(srcdir)/getopt.[ch] $(srcdir)/getopt1.c $(srcdir)/md5*.[ch] \
+	$(srcdir)/strcasecmp.c $(srcdir)/strdup.c
+docs = $(srcdir)/README $(srcdir)/INSTALL $(srcdir)/RFC/*.txt \
+	$(srcdir)/*.man $(srcdir)/*.texi $(srcdir)/*.info \
+	$(srcdir)/sample.poprc $(srcdir)/TODO
+config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/config.guess \
+	$(srcdir)/config.h.in $(srcdir)/config.sub
+scripts = $(srcdir)/install.sh $(srcdir)/mkinstalldirs
+all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts)
+
+manifest:
+	@echo $(all) | tr "[ \t]" '\n' | sort
+
+popclient.tar: $(all)
+	tar -cf popclient.tar $(all)
+popclient.tar.gz: popclient.tar
+	gzip -f popclient.tar
 
 # The automatically generated dependencies below may omit config.h
 # because it is included with ``#include <config.h>'' rather than

@@ -25,6 +25,9 @@
   description:  .poprc lexer
 
   $Log: rcfile_l.l,v $
+  Revision 1.2  1996/06/26 19:09:01  esr
+  This is what I sent Harris.
+
   Revision 1.1  1996/06/24 18:16:08  esr
   Initial revision
 
@@ -60,18 +63,26 @@
 #include "poproto.h"
 #include "poprc_y.h"
 
-int prc_lineno = 0;
+int prc_lineno = 1;
 %}
 
 
 %%
 
+defaults 	{ return KW_DEFAULTS; }
 server 		{ return KW_SERVER; }
 proto(col)? 	{ return KW_PROTOCOL; }
 user(name)?	{ return KW_USERNAME; }
 pass(word)?	{ return KW_PASSWORD; }
 remote(folder)? { return KW_REMOTEFOLDER; }
 local(folder)?	{ return KW_LOCALFOLDER; }
+mda		{ return KW_MDA; }
+keep		{ yylval.flag = 1; return KW_KEEP; }
+flush		{ yylval.flag = 1; return KW_FLUSH; }
+fetchall	{ yylval.flag = 1; return KW_FETCHALL; }
+nokeep		{ yylval.flag = -1; return KW_KEEP; }
+noflush		{ yylval.flag = -1; return KW_FLUSH; }
+nofetchall	{ yylval.flag = -1; return KW_FETCHALL; }
 
 (pop2)|(POP2)	{ yylval.proto = P_POP2;  return PROTO_POP2; }
 (pop3)|(POP3)	{ yylval.proto = P_POP3;  return PROTO_POP3; }
@@ -84,6 +95,11 @@ local(folder)?	{ return KW_LOCALFOLDER; }
 (#.*)?\n	{ prc_lineno++; return KW_EOL; }
 
 [^ \t\r\n#]+	{ yylval.sval = (char *) strdup(yytext); return PARAM_STRING; }
+\"[^\"]*\"`	{
+			yytext[strlen(yytext)-1] = '\0';
+			yylval.sval = (char *) strdup(yytext+1);
+			return PARAM_STRING;
+		}
 
 [ \t\r]+	;	/* whitespace */
 

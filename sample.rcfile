@@ -1,6 +1,9 @@
 # .poprc sample
 #
 #    $Log: sample.rcfile,v $
+#    Revision 1.2  1996/06/26 19:09:01  esr
+#    This is what I sent Harris.
+#
 #    Revision 1.1  1996/06/25 16:50:31  esr
 #    Initial revision
 #
@@ -53,6 +56,13 @@
 #   password (or pass)
 #   remotefolder (or remote)
 #   localfolder (or local)
+#   mda
+#   keep
+#   flush
+#   fetchall
+#   nokeep
+#   noflush
+#   nofetchall
 #
 # Legal protocol identifiers are
 #   pop2 (or POP2)

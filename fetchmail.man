@@ -16,6 +16,9 @@
 \.  */
 \.
 \. $Log: fetchmail.man,v $
+\. Revision 1.2  1996/06/26 19:09:00  esr
+\. This is what I sent Harris.
+\.
 \. Revision 1.1  1996/06/24 19:30:36  esr
 \. Initial revision
 \.
@@ -38,7 +41,7 @@
 popclient \- retrieve mail from a mailserver using Post Office Protocol.
 .SH SYNOPSIS
 .B popclient
-[\fI options \fR] \fI server-host [server-host...]\fR
+[\fI options \fR] \fI [server-host...]\fR
 .SH DESCRIPTION
 .I popclient
 is a Post Office Protocol compliant mail retrieval client which supports 
@@ -48,7 +51,7 @@ Typically,
 .I popclient
 will be used to download mail in batch from the remote mailserver specified by
 .I host
-to a mail folder on the local disk.  The retrieved mail will then be 
+to a mail folder on the local disk.  The retrieved mail can then be 
 manipulated using a local mail reader, such as
 .I mail
 or 
@@ -58,7 +61,20 @@ To facilitate the use of
 .I popclient
 in scripts, pipelines, etc, it returns an appropriate exit code upon 
 termination -- see EXIT CODES below.
+.PP
+The behavior of
+.I popclient
+is controlled by comand-line options and a control file,
+.I ~/.poprc
+the syntax of which we describe below.  Command-line options override
+.I ~/.poprc
+declarations.
 .SH OPTIONS
+Each server name that you specify (following the options on the
+command line) will be queried.  If you don't specify any servers
+on the command line, each server in your 
+.I ~/.poprc
+file will be operated on.
 .TP
 .B \-2
 Use Post Office Protocol version 2 (POP2).  See also the 
@@ -116,15 +132,12 @@ option -- i.e. messages downloaded with the
 .B limit
 option remain on the remote mailserver.
 .TP
-.B \-p string, --password string
-Specifies the password 
-.I string 
-to be used when logging-in to the mailserver.  The 
-appropriate password is both server and user dependent.  If the 
-.B password 
-option is not used to specify a password, you will be prompted 
-for a password before the connection to the mailserver is established.  
-See USER AUTHENTICATION below for a complete description.
+.B \-m mda, --mda mda
+Specify a mail delivery agent to use.  This can be used to pass
+fetched mail to programs like procmail.  If the MDA string contains
+%s, that escape will be expanded into your username on the client
+machine.  Some possible MDAs are "/usr/formail", "/usr/bin/deliver %s",
+"/usr/lib/sendmail -oem -t - -q %s".
 .TP
 .B \--protocol proto
 Specify the protocol to used when communicating with the remote 
@@ -193,9 +206,11 @@ to be modified or omitted.
 .B \-V, --version
 Displays the version information for your copy of 
 .I popclient.
-If you specify the 
-.B \version
-option, all other options are ignored and no POP connection is made.
+No POP connection is made.
+Instead, for each server specified, all option information
+that would be computed if
+.I popclient.
+were connecting to that server is displayed.
 .TP
 .PP
 .SH PROTOCOL SELECTION
@@ -245,19 +260,11 @@ is to prompt you for your mailserver password before the POP connection is
 established.  This is the safest way to use 
 .I popclient
 and ensures that your password will not be compromised.  You may also specify
-your password using the  
-.B \-p
-option.  This is convenient when using 
+your password in your
+.I ~/.poprc
+file.  This is convenient when using 
 .I popclient
-with automated scripts, but it may result in your password being exposed to
-prying eyes \-\- be careful!  Regardless of how your password is specified
-it is never stored in shared memory segments, or left unencrypted in the core 
-image when
-.I popclient
-terminates.  Continuing the preceding example, suppose your password on
-\'mailgrunt' is 'Gr8PassWd'.  The syntax would be:
-.IP
-popclient -u jsmith -p Gr8PassWd mailgrunt
+with automated scripts.
 .PP
 On mailservers that do not provide ordinary user accounts, your user-id and 
 password are usually assigned by the server administrator when you apply for 
@@ -273,10 +280,16 @@ to be used in conjunction with common mail readers like
 .I mail
 and
 .I elm.
-The retrieved messages are normally appended to your default system mailbox
-on the local disk, using the local Mail Delivery Agent (MDA), usually 
-/bin/mail(1), so that when you invoke your mail reader it can manipulate the 
-retrieved messages like any other mail you receive on the client machine.  
+The retrieved messages are normally appended to your default system
+mailbox on the local disk, so that when you invoke your mail reader it
+can manipulate the retrieved messages like any other mail you receive
+on the client machine.  If
+.I popclient
+doesn't know where your mailbox is, or can't modify it safely (e.g. because
+your underlying operating system doesn't support mandatory file
+locking), it will use the local Mail Delivery Agent
+(MDA), usually 
+/bin/mail(1),
 .PP
 Using the 
 .B \-o
@@ -292,8 +305,7 @@ popclient \-o $HOME/mbox mailgrunt
 .PP
 Note that the folder specified with
 .B \-o
-is not locked or otherwise protected from other processes writing to it 
-while popclient is writing to it.  
+is write-locked while popclient is writing to it,   
 .PP
 .I popclient
 can be used in a shell pipeline by using the 
@@ -306,8 +318,10 @@ discards mail marked as 'Precedence: junk'.  Suppose you've written an AWK
 script called 'dumpjunk.awk' to implement a junk mail filter.  The appropriate
 syntax to retrieve your mail from 'mailgrunt', pass it through the filter,
 and write it to a folder called 'realmail' in your home directory would be:
-.IP
-popclient -c mailgrunt | awk -f dumpjunk.awk > $HOME/realmail
+
+.nf
+  popclient -c mailgrunt | awk -f dumpjunk.awk >$HOME/realmail
+.fi
 .PP
 The progress/status messages written to stderr when the 
 .B \-s
@@ -322,15 +336,140 @@ option when using
 .B \-c
 to insure that your messages will not be lost if part of the shell pipeline 
 does not function incorrectly.  The safest bet would be something like:
-.IP
-popclient -k -c mailgrunt | myfilter > $HOME/filtered.mail
+
+.nf
+  popclient -k -c mailgrunt | myfilter >$HOME/filtered.mail
+.fi
 .PP
 followed by
-.IP
-popclient -c mailgrunt > /dev/null
+
+.nf
+  popclient -c mailgrunt > /dev/null
+.fi
 .PP
 when you're sure the messages were correctly processed by 'myfilter'.
 .PP
+.SH DAEMON MODE
+The 
+.B --daemon
+or
+.B -d 
+option runs 
+.I popmail
+in daemon mode.  You must specify a numeric argument which is a
+polling interval in seconds.
+.PP
+In daemon mode, 
+.I popmail
+puts itself in background and runs forever, querying each specified
+host and then sleeping for the given polling interval.
+.PP
+Simply invoking
+.IP
+popmail -d 900
+.PP
+will, therefore, poll the hosts described in your 
+.I ~/.poprc
+file once every fifteen minutes.
+.SH THE POPRC FILE
+The preferred way to set up popclient (and the only way if you want to
+specify a password) is to write a .poprc file in your home directory.
+To protect the security of your passwords, your ~/.poprc may not have
+more than u+r,u+w permissions; 
+.I popclient
+will complain and exit otherwise.
+.PP
+Comments begin with a '#' and extend through the end of the line.
+Otherwise the file consists of a series of server entries.
+Blank lines between server entries are ignored.
+Keywords and identifiers are case sensitive.
+When there is a conflict between the command-line arguments and the
+arguments in this file, the command-line arguments take precedence.
+.PP
+Legal keywords are:
+
+    server
+    protocol (or proto)
+    username (or user)
+    password (or pass)
+    remotefolder (or remote)
+    localfolder (or local)
+    mda
+    keep
+    flush
+    fetchall
+    nokeep
+    noflush
+    nofetchall
+.PP
+Legal protocol identifiers are
+
+    pop2 (or POP2)
+    pop3 (or POP3)
+    imap (or IMAP)
+    apop (or APOP)
+    rpop (or RPOP)
+.PP
+Basic format is:
+
+.nf
+  server SERVERNAME protocol PROTOCOL username NAME password PASSWORD 
+.fi
+.PP
+Example:
+
+.nf
+  server pop.provider.net protocol pop3 username jsmith password secret1
+.fi
+.PP
+Or, using some abbreviations:
+
+.nf
+  server pop.provider.net proto pop3 user jsmith password secret1
+.fi
+.PP
+Multiple servers may be listed:
+
+.nf
+  server pop.provider.net proto pop3 user jsmith pass secret1
+  server other.provider.net proto pop2 user John.Smith pass My^Hat
+.fi
+.PP
+Other possibilities (note use of \ to escape newline -- this is all 
+one server definition.
+
+.nf
+  server pop.provider.net       \e
+        proto pop3              \e
+        user jsmith             \e
+        pass secret1            \e
+        localfolder ~/mbox
+.fi
+If you need to include whitespace in a paramter string, enclose the
+string in double quotes.  Thus:
+
+.nf
+  server mail.provider.net      \e
+        proto pop3              \e
+        user jsmith             \e
+        pass secret1            \e
+        mda "/bin/mail -d %s"
+.fi
+Finally, you may have an initial server description headed by the keyword
+`defaults' instead of `server' followed by a name.  Such a record
+is interpreted as defaults for all quries to use. It may be overwritten
+by individual server descriptions.  So, you could write:
+
+.nf
+  defaults                      \e
+        proto pop3              \e
+        user jsmith             \e
+        mda "/bin/mail -d %s"
+  server pop.provider.net       \e
+        pass secret1            \e
+  server mail.provider.net      \e
+        pass secret2            \e
+.fi
 .SH EXIT CODES
 To facilitate the use of 
 .I popclient
@@ -386,13 +525,28 @@ Something totally undefined occured.  This is usually caused by a bug within
 .I popclient.
 Do let me know if this happens.
 .PP
+When
+.I popclient
+queries more than one host, the returned status is that of the last
+host queried.
 .SH AUTHOR
 .I popclient
 was written by Carl Harris at Virginia Polytechnic Institute and State   
-University (a.k.a. Virginia Tech).
+University (a.k.a. Virginia Tech).  Version 3.0 was extensively hacked
+by Eric S. Raymond <esr@snark.thyrsus.com>.
 .PP
 .SH BUGS
-There are none!  Well, maybe one or two.  Send comments, bug reports, gripes, 
-and the like to ceharris@mal.com.
+.PP
+The --version option doesn't display MDA arguments.
+.PP
+No IMAP or RPOP support yet.
+.PP
+Send comments, bug reports, gripes, and the like to ceharris@mal.com.
+.SH NOTE
+The -p (--password) option of previous versions has been removed -- it
+encouraged people to expose passwords in scripts.  Passwords
+must now be specified either manually or in your
+.I ~/.poprc
+file.
 .SH SEE ALSO
 mail(1), binmail(1), sendmail(8), popd(8), RFC 937, RFC 1225.
