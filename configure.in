@@ -70,10 +70,7 @@ then
 fi
  
 # i18n
-# Arnaldo Carvalho de Melo <acme@conectiva.com.br>
-# Sat Nov  7 15:39:03 EDT 1998
-
-ALL_LINGUAS="cs es fr pl pt_BR gl"
+ALL_LINGUAS="cs es fr pl pt_BR gl da"
 
 AM_GNU_GETTEXT
 
