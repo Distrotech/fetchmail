@@ -7,16 +7,18 @@ class TestSite:
 
     def __init__(self, line):
         "Initialize site data from the external representation."
-        (self.host, self.userid, self.password, \
+        (self.host, self.mailname, self.userid, self.password, \
                 self.proto, self.options, self.capabilities, self.version, self.comment) = \
                 line.strip().split(":")
+        if not self.mailname:
+            self.mailname = self.userid
         # Test results
         self.status = None
         self.output = None
 
     def allattrs(self):
         "Return a tuple consisting of alll this site's attributes."
-        return (self.host, self.userid, self.password, \
+        return (self.host, self.mailname, self.userid, self.password, \
                 self.proto, self.options, self.capabilities, \
                 self.version, self.comment)
 
@@ -27,6 +29,7 @@ class TestSite:
     def prettyprint(self):
         "Prettyprint a site entry in human-readable form."
         return "Host: %s\n" \
+              "Mail To: %s\n" \
               "Userid: %s\n" \
               "Password: %s\n" \
               "Protocol: %s\n" \
@@ -58,7 +61,7 @@ class TestSite:
         "Send test mail to the site."
         server = smtplib.SMTP("localhost")
         fromaddr = "esr@thyrsus.com"
-        toaddr = "%s@%s" % (self.userid, self.host)
+        toaddr = "%s@%s" % (self.mailname, self.host)
         msg = ("From: %s\r\nTo: %s\r\n\r\n" % (fromaddr, toaddr))
         msg += "Test mail collected from %s.\n" % (self.id(),)
         server.sendmail(fromaddr, toaddr, msg)
@@ -167,7 +170,7 @@ if __name__ == "__main__":
             print "Bad status was returned on the following sites:"
             for site in sitelist:
                 if site.failed():
-                    sys.stdout.write(site.explain())
+                    sys.stdout.write(site.explain() + "\n")
     except KeyboardInterrupt:
         print "Interrupted."
 
