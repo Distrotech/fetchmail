@@ -49,6 +49,14 @@ Support for CompuServe's RPA authentication method (rather similar to
 APOP) is available but also not included in the standard build.  You
 can compile it in with `configure --enable-RPA'.
 
+If you want to build for debugging, 
+
+	CFLAGS=-g LDFLAGS=" " ./configure
+
+will do that.
+
+Advanced configuration:
+
 Specifying --with-kerberos=DIR will tell the fetchmail build process to
 look in DIR for Kerberos support.  Configure normally looks in /usr/kerberos
 and /usr/athena; if you specify this option with an argument it will look
@@ -59,16 +67,14 @@ Kerberos lives.  If your configuration doesn't match one of the four
 that fetchmail's configure.in knows about, you may find you have to
 hand-hack the Makefile a bit.
 
+You may also want to hand-hack the Makefile if you're writing a custom
+or bleeding-edge resolver library.  In that case you will probably
+want to add -lresolv or whatever to the definition of LOADLIBS.
+
 It is also possible to explicitly condition out the support for
 POP3, IMAP, and ETRN (with configure arguments of --disable-POP3,
 --disable-IMAP, and --disable-ETRN respectively).  However, none
 of these wins back more that 3 to 4K on an Intel box.
-
-If you want to build for debugging, 
-
-	CFLAGS=-g LDFLAGS=" " ./configure
-
-will do that.
 
 If you're running QNX, edit the distributed Makefile directly.  The
 QNX values for various macros are there but commented out; all you
