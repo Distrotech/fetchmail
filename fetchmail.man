@@ -607,14 +607,13 @@ Legal user options are
     rewrite
     stripcr
     dns
-    received
     no keep
     no flush
     no fetchall
     no rewrite
     no stripcr
     no dns
-    no received
+    no envelope
     limit
     batchlimit
     fetchlimit
@@ -623,7 +622,7 @@ Legal user options are
 All options correspond to the obvious command-line arguments except
 the following: `aka', `is', `to', `dns'/`no dns', `password',
 \&`preconnect', `localdomains', `stripcr'/`no stripcr' and
-\&`received/no received'.
+\&`no received'.
 .PP
 The `is' or `to' keywords associate the following local (client)
 name(s) (or server-name to client-name mappings separated by =) with
@@ -670,9 +669,12 @@ name matches a declared local doman, that address is passed through
 to the listener or MDA unaltered (local-name mappings are \fInot\fR
 applied).
 .PP
-If you are using `localdomains', you may also need to specify 
-\&`no received', which disables \fIfetchmail\fR's normal attempt
-to deduce an envelope address from the Received line.
+If you are using `localdomains', you may also need to specify \&`no
+envelope', which disables \fIfetchmail\fR's normal attempt to deduce
+an envelope address from the Received line or X-Envelope-To header or
+whatever header has been previously set by `envelope'.  If you set `no
+envelope' in the defaults entry it is possible to undo that in
+individual entries by using `envelope <string>'.
 .PP
 The \fBpassword\fR option requires a string argument, which is the password
 to be used with the entry's server.

@@ -45,14 +45,13 @@
 #   rewrite
 #   stripcr
 #   dns
-#   received
 #   no keep
 #   no flush
 #   no fetchall
 #   no rewrite
 #   no stripcr
 #   no dns
-#   no received
+#   no envelope
 #   limit                     -- must be followed by numeric size limit
 #   fetchlimit                -- must be followed by numeric msg fetch limit
 #   batchlimit                -- must be followed by numeric SMTP batch limit

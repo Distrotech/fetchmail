@@ -61,7 +61,6 @@ fetchall	{ return FETCHALL; }
 rewrite		{ return REWRITE; }
 stripcr		{ return STRIPCR; }
 dns		{ return DNS; }
-received	{ return RECEIVED; }
 
 limit		{ return LIMIT; }
 

@@ -10,6 +10,11 @@ features --
 
 * New Makefile production to generate an RPM.
 
+* The `no received' option of 3.4 is gone.  Instead, say `no envelope'. 
+  This suppresses all attempts to extract an envelope address and route
+  based on it.  If you set `no envelope' in the defaults entry it is possible
+  to undo that in individual entries by using `envelope <string>'.
+
 bugs --
 
 * Yet another fix to the password-shrouding logic.

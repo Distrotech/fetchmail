@@ -48,7 +48,7 @@ static void user_reset();
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
-%token NO KEEP FLUSH FETCHALL REWRITE STRIPCR DNS PORT RECEIVED
+%token NO KEEP FLUSH FETCHALL REWRITE STRIPCR DNS PORT
 
 %%
 
@@ -123,9 +123,8 @@ serv_option	: AKA alias_list
 #endif /* linux */
 					}
 		| DNS			{current.server.dns = FLAG_TRUE;}
-		| RECEIVED		{current.server.received = FLAG_TRUE;}
 		| NO DNS		{current.server.dns = FLAG_FALSE;}
-		| NO RECEIVED		{current.server.received = FLAG_FALSE;}
+		| NO ENVELOPE		{current.server.envelope = STRING_DISABLED;}
 		;
 
 /*

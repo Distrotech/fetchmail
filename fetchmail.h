@@ -75,7 +75,6 @@ struct hostdata		/* shared among all user connections to given server */
     char *envelope;
     int skip;
     int dns;
-    int received;
 
 #ifdef linux
     char *interface;
@@ -246,3 +245,5 @@ int yylex(void);
 
 #define FALSE	0
 #define TRUE	1
+
+#define STRING_DISABLED	(char *)-1

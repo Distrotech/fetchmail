@@ -507,7 +507,7 @@ char *realname;		/* real name of host */
 	else if (!strncasecmp("To:", line, 3))
 	    to_offs = (line - headers);
 
-	else if (ctl->server.received && env_offs == -1
+	else if (ctl->server.envelope != STRING_DISABLED && env_offs == -1
 		 && !strncasecmp(ctl->server.envelope,
 						line,
 						strlen(ctl->server.envelope)))
@@ -523,7 +523,7 @@ char *realname;		/* real name of host */
 	    ctt_offs = (line - headers);
 
 #ifdef HAVE_RES_SEARCH
-	else if (ctl->server.received && MULTIDROP(ctl) && !received_for && !strncasecmp("Received:", line, 9))
+	else if (ctl->server.envelope != STRING_DISABLED && MULTIDROP(ctl) && !received_for && !strncasecmp("Received:", line, 9))
 	    received_for = parse_received(ctl, line);
 #endif /* HAVE_RES_SEARCH */
     }
