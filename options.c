@@ -396,6 +396,18 @@ struct query *ctl;	/* option record to be initialized */
 		ctl->server.authenticate = A_KERBEROS_V4;
 	    else if (strcmp(optarg, "ssh") == 0)
 		ctl->server.authenticate = A_SSH;
+	    else if (strcmp(optarg, "otp") == 0)
+		ctl->server.authenticate = A_OTP;
+	    else if (strcmp(optarg, "ntlm") == 0)
+		ctl->server.authenticate = A_NTLM;
+	    else if (strcmp(optarg, "cram") == 0)
+		ctl->server.authenticate = A_CRAM_MD5;
+	    else if (strcmp(optarg, "cram-md5") == 0)
+		ctl->server.authenticate = A_CRAM_MD5;
+	    else if (strcmp(optarg, "gssapi") == 0)
+		ctl->server.authenticate = A_GSSAPI;
+	    else if (strcmp(optarg, "any") == 0)
+		ctl->server.authenticate = A_ANY;
 	    else {
 		fprintf(stderr,_("Invalid authentication `%s' specified.\n"), optarg);
 		errflag++;

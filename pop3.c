@@ -131,6 +131,16 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 #if OPIE_ENABLE
     char *challenge;
 #endif /* OPIE_ENABLE */
+#if defined(GSSAPI)
+    flag has_gssapi = FALSE;
+#endif /* defined(GSSAPI) */
+#if defined(KERBEROS_V4) || defined(KERBEROS_V5)
+    flag has_kerberos = FALSE;
+#endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
+    flag has_cram = FALSE;
+#ifdef OPIE_ENABLE
+    flag has_otp = FALSE;
+#endif /* OPIE_ENABLE */
 
 #ifdef SDPS_ENABLE
     /*
@@ -190,16 +200,6 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	    && strchr(greeting, '<') 
 	    && gen_transact(sock, "CAPA") == 0)
 	{
-#if defined(GSSAPI)
-	    flag has_gssapi = FALSE;
-#endif /* defined(GSSAPI) */
-#if defined(KERBEROS_V4) || defined(KERBEROS_V5)
-	    flag has_kerberos = FALSE;
-#endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
-	    flag has_cram = FALSE;
-#ifdef OPIE_ENABLE
-	    flag has_otp = FALSE;
-#endif /* OPIE_ENABLE */
 	    char buffer[64];
 
 	    /* determine what authentication methods we have available */
@@ -222,25 +222,6 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 		if (strstr(buffer, "CRAM-MD5"))
 		    has_cram = TRUE;
 	    }
-
-	    /*
-	     * Here's where we set priorities.  Note that we must do tests
-	     * in *reverse* order of desirability.
-	     */
-	    if (has_cram)
-		ctl->server.authenticate = A_CRAM_MD5;
-#ifdef OPIE_ENABLE
-	    if (has_otp)
-		ctl->server.authenticate = A_OTP;
-#endif /* OPIE_ENABLE */
-#if defined(GSSAPI)
-	    if (has_gssapi)
-		ctl->server.authenticate = A_GSSAPI;
-#endif /* defined(GSSAPI) */
-#if defined(KERBEROS_V4) || defined(KERBEROS_V5)
-	    if (has_kerberos)
-		ctl->server.authenticate = A_KERBEROS_V4;
-#endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
 	}
 
 	/*
@@ -251,27 +232,45 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	 * Servers doing KPOP have to go through a dummy login sequence
 	 * rather than doing SASL.
 	 */
-	if (
+	if (has_kerberos &&
 #if INET6_ENABLE
 	    ctl->server.service && (strcmp(ctl->server.service, KPOP_PORT)!=0)
 #else /* INET6_ENABLE */
 	    ctl->server.port != KPOP_PORT
 #endif /* INET6_ENABLE */
 	    && (ctl->server.authenticate == A_KERBEROS_V4
-	     || ctl->server.authenticate == A_KERBEROS_V5))
-	    return(do_rfc1731(sock, "AUTH", ctl->server.truename));
+	     || ctl->server.authenticate == A_KERBEROS_V5
+	     || ctl->server.authenticate == A_ANY))
+	    if(ok = do_rfc1731(sock, "AUTH", ctl->server.truename))
+	        if(ctl->server.authenticate != A_ANY)
+                    break;
 #endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
+
 #if defined(GSSAPI)
-	if (ctl->server.authenticate==A_GSSAPI)
-	    return(do_gssauth(sock, "AUTH", 
-			      ctl->server.truename, ctl->remotename));
+	if (has_gssapi &&
+	    (ctl->server.authenticate == A_GSSAPI ||
+	     ctl->server.authenticate == A_ANY))
+	    if(ok = do_gssauth(sock, "AUTH", 
+			       ctl->server.truename, ctl->remotename))
+	        if(ctl->server.authenticate != A_ANY)
+                    break;
 #endif /* defined(GSSAPI) */
+
 #ifdef OPIE_ENABLE
-	if (ctl->server.authenticate == A_OTP)
-	    do_otp(sock, "AUTH", ctl);
+	if (has_otp &&
+	    (ctl->server.authenticate == A_OTP ||
+	     ctl->server.authenticate == A_ANY))
+	    if(ok = do_otp(sock, "AUTH", ctl))
+	        if(ctl->server.authenticate != A_ANY)
+                    break;
 #endif /* OPIE_ENABLE */
-	if (ctl->server.authenticate == A_CRAM_MD5)
-	    return(do_cram_md5(sock, "AUTH", ctl));
+
+	if (has_cram &&
+	    (ctl->server.authenticate == A_CRAM_MD5 ||
+	     ctl->server.authenticate == A_ANY))
+	    if(ok = do_cram_md5(sock, "AUTH", ctl))
+	        if(ctl->server.authenticate != A_ANY)
+                    break;
 
 	/* ordinary validation, no one-time password or RPA */ 
 	gen_transact(sock, "USER %s", ctl->remotename);

@@ -236,8 +236,10 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
     capabilities[0] = '\0';
     if ((ok = gen_transact(sock, "CAPABILITY")) == PS_SUCCESS)
     {
-	/* UW-IMAP server 10.173 notifies in all caps */
-	if (strstr(capabilities, "IMAP4REV1"))
+	/* UW-IMAP server 10.173 notifies in all caps, but RFC2060 says we
+	   should expect a response in mixed-case */
+	if (strstr(capabilities, "IMAP4REV1") ||
+	    strstr(capabilities, "IMAP4rev1"))
 	{
 	    imap_version = IMAP4rev1;
 	    if (outlevel >= O_DEBUG)
@@ -295,26 +297,38 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
      * Time to authenticate the user.
      * Try the protocol variants that don't require passwords first.
      */
+    ok = PS_AUTHFAIL;
+
 #ifdef GSSAPI
     if ((ctl->server.authenticate == A_ANY 
-	 || ctl->server.authenticate==A_GSSAPI)
+	 || ctl->server.authenticate == A_GSSAPI)
 	&& strstr(capabilities, "AUTH=GSSAPI"))
-	if(!(ok = do_gssauth(sock, "AUTHENTICATE", ctl->server.truename, ctl->remotename)))
-        {
-            return ok;
-        }
+	if(ok = do_gssauth(sock, "AUTHENTICATE", ctl->server.truename, ctl->remotename))
+	{
+	    /* SASL cancellation of authentication */
+	    gen_send(sock, "*");
+	    if(ctl->server.authenticate != A_ANY)
+                return ok;
+	}
+	else
+	    return ok;
 #endif /* GSSAPI */
 
 #ifdef KERBEROS_V4
     if ((ctl->server.authenticate == A_ANY 
-	 || ctl->server.authenticate==A_KERBEROS_V4
-	 || ctl->server.authenticate==A_KERBEROS_V5) 
+	 || ctl->server.authenticate == A_KERBEROS_V4
+	 || ctl->server.authenticate == A_KERBEROS_V5) 
 	&& strstr(capabilities, "AUTH=KERBEROS_V4"))
     {
-	if (!(ok = do_rfc1731(sock, "AUTHENTICATE", ctl->server.truename)))
+	if ((ok = do_rfc1731(sock, "AUTHENTICATE", ctl->server.truename)))
+	{
 	    /* SASL cancellation of authentication */
 	    gen_send(sock, "*");
-	return(ok);
+	    if(ctl->server.authenticate != A_ANY)
+                return ok;
+	}
+	else
+	    return ok;
     }
 #endif /* KERBEROS_V4 */
 
@@ -324,40 +338,59 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
      */
 
     if ((ctl->server.authenticate == A_ANY 
-	 || ctl->server.authenticate==A_CRAM_MD5)
+	 || ctl->server.authenticate == A_CRAM_MD5)
 	&& strstr(capabilities, "AUTH=CRAM-MD5"))
     {
 	if ((ok = do_cram_md5 (sock, "AUTHENTICATE", ctl)))
+	{
 	    /* SASL cancellation of authentication */
 	    gen_send(sock, "*");
-	return(ok);
+	    if(ctl->server.authenticate != A_ANY)
+                return ok;
+	}
+	else
+	    return ok;
     }
 
 #if OPIE_ENABLE
     if ((ctl->server.authenticate == A_ANY 
-	 || ctl->server.authenticate==A_OTP)
+	 || ctl->server.authenticate == A_OTP)
 	&& strstr(capabilities, "AUTH=X-OTP"))
-	return(do_otp(sock, "AUTHENTICATE", ctl));
+	if ((ok = do_otp(sock, "AUTHENTICATE", ctl)))
+	{
+	    /* SASL cancellation of authentication */
+	    gen_send(sock, "*");
+	    if(ctl->server.authenticate != A_ANY)
+                return ok;
+	}
+	else
+	    return ok;
 #else
-    if (ctl->server.authenticate==A_NTLM)
+    if (ctl->server.authenticate == A_NTLM)
     {
 	report(stderr, 
 	   _("Required OTP capability not compiled into fetchmail\n"));
-	return(PS_AUTHFAIL);
     }
 #endif /* OPIE_ENABLE */
 
 #ifdef NTLM_ENABLE
     if ((ctl->server.authenticate == A_ANY 
-	 || ctl->server.authenticate==A_NTLM) 
+	 || ctl->server.authenticate == A_NTLM) 
 	&& strstr (capabilities, "AUTH=NTLM"))
-	return(do_imap_ntlm(sock, ctl));
+	if ((ok = do_imap_ntlm(sock, ctl)))
+	{
+	    /* SASL cancellation of authentication */
+	    gen_send(sock, "*");
+	    if(ctl->server.authenticate != A_ANY)
+                return ok;
+	}
+	else
+	    return(ok);
 #else
-    if (ctl->server.authenticate==A_NTLM)
+    if (ctl->server.authenticate == A_NTLM)
     {
 	report(stderr, 
 	   _("Required NTLM capability not compiled into fetchmail\n"));
-	return(PS_AUTHFAIL);
     }
 #endif /* NTLM_ENABLE */
 
@@ -367,26 +400,34 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
     {
 	report(stderr, 
 	       _("Required LOGIN capability not supported by server\n"));
-	return PS_AUTHFAIL;
     }
 #endif /* __UNUSED__ */
 
     /* we're stuck with sending the password en clair */
+    if ((ctl->server.authenticate == A_ANY 
+ 	 || ctl->server.authenticate == A_PASSWORD) 
+ 	&& !strstr (capabilities, "LOGINDISABLED"))
     {
 	/* these sizes guarantee no buffer overflow */
 	char	remotename[NAMELEN*2+1], password[PASSWORDLEN*2+1];
 
 	imap_canonicalize(remotename, ctl->remotename, NAMELEN);
 	imap_canonicalize(password, ctl->password, PASSWORDLEN);
-	imap_canonicalize(shroud, ctl->password, PASSWORDLEN);
+
 	ok = gen_transact(sock, "LOGIN \"%s\" \"%s\"", remotename, password);
 	shroud[0] = '\0';
+	if (ok)
+	{
+	    /* SASL cancellation of authentication */
+	    gen_send(sock, "*");
+	    if(ctl->server.authenticate != A_ANY)
+                return ok;
+	}
+	else
+	    return(ok);
     }
 
-    if (ok)
-	return(ok);
-    
-    return(PS_SUCCESS);
+    return(ok);
 }
 
 static int internal_expunge(int sock)
