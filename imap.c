@@ -34,7 +34,7 @@ static int count = 0, recentcount = 0, unseen = 0, deletions = 0;
 static unsigned int startcount = 1;
 static int expunged, expunge_period, saved_timeout = 0;
 static int imap_version, preauth;
-static flag do_idle;
+static flag do_idle, has_idle;
 static char capabilities[MSGBUFSIZE+1];
 static unsigned int *unseen_messages;
 
@@ -86,10 +86,14 @@ static int imap_ok(int sock, char *argbuf)
 	     */
 	    if (stage == STAGE_IDLE)
 	    {
-		/* we do our own write and report here to disable tagging */
-		SockWrite(sock, "DONE\r\n", 6);
-		if (outlevel >= O_MONITOR)
-		    report(stdout, "IMAP> DONE\n");
+		/* If IDLE isn't supported, we were only sending NOOPs anyway. */
+		if (has_idle)
+		{
+		    /* we do our own write and report here to disable tagging */
+		    SockWrite(sock, "DONE\r\n", 6);
+		    if (outlevel >= O_MONITOR)
+		        report(stdout, "IMAP> DONE\n");
+		}
 
 		mytimeout = saved_timeout;
 		stage = STAGE_FETCH;
@@ -292,9 +296,13 @@ static void capa_probe(int sock, struct query *ctl)
      * Handle idling.  We depend on coming through here on startup
      * and after each timeout (including timeouts during idles).
      */
-    if (strstr(capabilities, "IDLE") && ctl->idle)
+    if (ctl->idle)
     {
 	do_idle = TRUE;
+	if (strstr(capabilities, "IDLE"))
+	{
+	    has_idle = TRUE;
+	}
 	if (outlevel >= O_VERBOSE)
 	    report(stdout, GT_("will idle after poll\n"));
     }
@@ -544,35 +552,57 @@ static int internal_expunge(int sock)
 }
 
 static int imap_idle(int sock)
-/* start an RFC2177 IDLE */
+/* start an RFC2177 IDLE, or fake one if unsupported */
 {
     int ok;
 
-    /* special timeout to terminate the IDLE and re-issue it
-     * at least every 28 minutes:
-     * (the server may have an inactivity timeout) */
     stage = STAGE_IDLE;
     saved_timeout = mytimeout;
-    mytimeout = 1680; /* 28 min */
 
-    /* enter IDLE mode */
-    ok = gen_transact(sock, "IDLE");
+    if (has_idle) {
+	/* special timeout to terminate the IDLE and re-issue it
+	 * at least every 28 minutes:
+	 * (the server may have an inactivity timeout) */
+	mytimeout = 1680; /* 28 min */
+	/* enter IDLE mode */
+	ok = gen_transact(sock, "IDLE");
 
-    if(ok == PS_IDLETIMEOUT) {
-	/* send "DONE" continuation */
-	SockWrite(sock, "DONE\r\n", 6);
-	if (outlevel >= O_MONITOR)
-	    report(stdout, "IMAP> DONE\n");
+	if (ok == PS_IDLETIMEOUT) {
+	    /* send "DONE" continuation */
+	    SockWrite(sock, "DONE\r\n", 6);
+	    if (outlevel >= O_MONITOR)
+		report(stdout, "IMAP> DONE\n");
+	} else
+	    /* not idle timeout */
+	    return ok;
+    } else {  /* no idle support, fake it */
+	/* when faking an idle, we can't assume the server will
+	 * send us the new messages out of the blue (RFC2060);
+	 * this timeout is potentially the delay before we notice
+	 * new mail (can be small since NOOP checking is cheap) */
+	mytimeout = 28;
+	ok = gen_transact(sock, "NOOP");
+	/* if there's an error (not likely) or we just found mail (stage 
+	 * has changed, timeout has also been restored), we're done */
+	if (ok != 0 || stage != STAGE_IDLE)
+	    return(ok);
 
-	/* restore normal timeout value */
-	mytimeout = saved_timeout;
-	stage = STAGE_FETCH;
+	/* wait (briefly) for an unsolicited status update */
+	ok = imap_ok(sock, NULL);
+	/* again, this is new mail or an error */
+	if (ok != PS_IDLETIMEOUT)
+	    return(ok);
+    }
 
-	/* get OK IDLE message */
-	return imap_ok(sock, NULL);
-    } else
-	/* not idle timeout */
-	return ok;
+    /* restore normal timeout value */
+    mytimeout = saved_timeout;
+    stage = STAGE_FETCH;
+
+    /* get OK IDLE message */
+    if (has_idle)
+        return imap_ok(sock, NULL);
+
+    return PS_SUCCESS;
 }
 
 static int imap_getrange(int sock, 

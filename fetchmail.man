@@ -1670,17 +1670,20 @@ default, because doing RFC2047 conversion on headers throws away
 character-set information and can lead to bad results if the encoding
 of the headers differs from the body encoding.
 .PP
-The `idle' option is usable only with IMAP servers supporting the
-RFC2177 IDLE command extension.  If it is enabled, and fetchmail
-detects that IDLE is supported, an IDLE will be issued at the end
-of each poll.  This will tell the IMAP server to hold the connection
-open and notify the client when new mail is available.  If you need to
-poll a link frequently, IDLE can save bandwidth by eliminating TCP/IP
-connects and LOGIN/LOGOUT sequences. On the other hand, an IDLE 
-connection will eat almost all of your fetchmail's time, because it
-will never drop the connection and allow other pools to occur unless
-the server times out the IDLE.  It also doesn't work with multiple 
-folders; only the first folder will ever be polled.
+The `idle' option is intended to be used with IMAP servers supporting
+the RFC2177 IDLE command extension, but does not strictly require it.
+If it is enabled, and fetchmail detects that IDLE is supported, an
+IDLE will be issued at the end of each poll.  This will tell the IMAP
+server to hold the connection open and notify the client when new mail
+is available.  If IDLE is not supported, fetchmail will simulate it by
+periodically issuing NOOP. If you need to poll a link frequently, IDLE
+can save bandwidth by eliminating TCP/IP connects and LOGIN/LOGOUT
+sequences. On the other hand, an IDLE connection will eat almost all
+of your fetchmail's time, because it will never drop the connection
+and allow other pools to occur unless the server times out the IDLE.
+It also doesn't work with multiple folders; only the first folder will
+ever be polled.
+
 .PP
 The `properties' option is an extension mechanism.  It takes a string
 argument, which is ignored by fetchmail itself.  The string argument may be

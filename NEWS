@@ -2,13 +2,17 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Updated German and Turkish translations.
+* IDLE is now supported using no-ops even if the server doesn't support
+  the IMAP IDLE extension.
+
 fetchmail-6.2.3 (Thu Jul 17 14:53:00 EDT 2003), 22490 lines:
 
-* German, Danish, Spanish, and Turkish translations updated.
-* Brian Sammon's patch to deal with malformed message lines containiing NULs.
+* French, German, Danish, Spanish, and Turkish translations updated.
+* Brian Sammon's patch to deal with malformed message lines containing NULs.
 * Fai's patch to ignore all but the first Return-Path (some spams have
   more than one of these).
-* Benjamin Drieu's ptch to properly byte-stuff when talking to BSNTP.
+* Benjamin Drieu's patch to properly byte-stuff when talking to BSNTP.
   Fixes Debian bug #184469.
 * Benjamin Drieu's patch to enable auth=cram-md5.
   Fixes Debian bug #185232.
