@@ -2,10 +2,15 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+------------------------------------------------------------------------------
+fetchmail-5.7.0 (Thu Mar  1 18:00:08 EST 2001), 20131 lines:
+
 * Updated Danish translation from Byrial Jensen.
 * Fixed bug in NTLM support.  Separately, "auth ntlm" now works.
-* Imail server added to test list.
+* Imail server and vircom NTLM account added to test list.
 * Don't require Tkinter to read --configdump output.
+
+There are 283 people on fetchmail-friends and 562 on fetchmail-announce.
 
 fetchmail-5.6.8 (Thu Feb 22 02:57:31 EST 2001), 20110 lines:
 
