@@ -393,7 +393,7 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
     xalloca(responses[0], char *, strlen(smtp_response)+1);
     strcpy(responses[0], smtp_response);
 
-    SMTP_rset(ctl->smtp_socket);    /* stay on the safe site */
+    SMTP_rset(ctl->smtp_socket);    /* stay on the safe side */
 
     if (outlevel >= O_DEBUG)
 	report(stdout, _("Saved error is still %d\n"), smtperr);
