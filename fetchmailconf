@@ -566,7 +566,7 @@ class ConfigurationEdit(Frame):
 	ListEdit('New Server:', 
 		map(lambda x: x.pollname, self.configuration.servers),
 		lambda site, m=self.mode, s=self.configuration.servers:
-                 ServerEdit(site, s, Toplevel()).edit(m),
+                 ServerEdit(site, s).edit(m, Toplevel()),
                 lf, remotehelp)
 	lf.pack(fill=X)
 
@@ -709,8 +709,7 @@ user's options on that site.
 """}
 
 class ServerEdit(Frame):
-    def __init__(self, host, servers, master=None):
-        self.container = master
+    def __init__(self, host, servers):
 	self.server = None
 	for site in servers:
 	    if site.pollname == host:
@@ -721,8 +720,8 @@ class ServerEdit(Frame):
 		self.server.via = host
 		servers.append(self.server)
 
-    def edit(self, mode):
-	Frame.__init__(self, self.container)
+    def edit(self, mode, master=None):
+	Frame.__init__(self, master)
 	Pack.config(self)
 	self.master.title('Fetchmail host ' + self.server.pollname);
 	self.master.iconname('Fetchmail host ' + self.server.pollname);
@@ -806,7 +805,7 @@ class ServerEdit(Frame):
 	Label(userwin, text="User entries for " + host).pack(side=TOP)
 	ListEdit("New user: ",
                  map(lambda x: x.remote, self.server.users),
-                 lambda u, m=mode, s=self.server: UserEdit(m,u,s, Toplevel()),
+                 lambda u, m=mode, s=self.server: UserEdit(u,s).edit(m, Toplevel()),
                  userwin, suserhelp)
 	userwin.pack(fill=X)
 
@@ -885,12 +884,8 @@ page section on multidrop mode.
 """}
 
 class UserEdit(Frame):
-    def __init__(self, mode, username, server, master=None):
-	Frame.__init__(self, master)
-	Pack.config(self)
-	self.master.title('Fetchmail user ' + username + ' querying ' + server.pollname);
-	self.master.iconname('Fetchmail user ' + username);
-
+    def __init__(self, username, server):
+        self.server = server
 	self.user = None
 	for user in server.users:
 	    if user.remote == username:
@@ -901,8 +896,14 @@ class UserEdit(Frame):
 	    self.user.localnames = [user]
 	    server.users.append(self.user)
 
+    def edit(self, mode, master=None):
+	Frame.__init__(self, master)
+	Pack.config(self)
+	self.master.title('Fetchmail user ' + self.user.remote
+                          + ' querying ' + self.server.pollname);
+	self.master.iconname('Fetchmail user ' + self.user.remote);
 	self.post()
-	self.makeWidgets(mode, server.pollname)
+	self.makeWidgets(mode, self.server.pollname)
 #	self.grab_set()
 #	self.focus_set()
 #	self.wait_window()
