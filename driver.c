@@ -269,7 +269,7 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 }
 
 char *parse_received(struct query *ctl, char *bufp)
-/* try to extract */
+/* try to extract real addressee from the Received line */
 {
     char *ok;
     static char rbuf[HOSTLEN + USERNAMELEN + 4]; 
