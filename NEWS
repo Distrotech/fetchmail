@@ -3,9 +3,8 @@
 * Generate bounce messages when delivery is refused.  See RFC1891, RFC1892.
 * Use the libmd functions for md5 under Free BSD?  (Low priority.)
 * More log levels?
-* Allow an explicit "append" option to specify what reqwrite appends?  (For
+* Allow an explicit "append" option to specify what rewrite appends?  (For
   when user's pop3 host isn't the same as his SMTP host.)
-* Periodically check for listener-up and croak gracefully if it's not.
 * Rewrite maps "From: John Smith (Systems) <jsmith@domain>" to 
   "From: John Smith@my.pop.server (Systems) <jsmith@domain>".  Is this
   just GIGO, or should we try to cope?
@@ -17,15 +16,15 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.3.4 (Sat Nov 22 01:51:41 EST 1997)
+fetchmail-4.3.4 ()
 * Yet another attempt on the Compuserve RPA moving target.
 * Fix ETRN code to poll for the fetchmail host if there's no -S option.
 * Allow `--quit' to be given with other options to shut down a running daemon
   before anything else gets done (suggested by Greg Stark).
 * Added Gordon Matzigkeit's warning about -F to the man page.
 * Improved POP3 protocol-synchronization error messages.
-* Allow fetchmail to proceed in that case even if DNS is down or unavailable
-  if all multidrop entries have `no dns'.
+* Allow fetchmail to proceed even if DNS is down or unavailable, if all
+  multidrop entries have `no dns'.
 
 There are 274 people on fetchmail-friends and 95 on fetchmail-announce.
 
