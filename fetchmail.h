@@ -188,8 +188,6 @@ int daemonize(const char *, void (*)(int));
 
 int prc_parse_file(const char *);
 int prc_filecheck(const char *);
-void prc_register();
-void prc_reset();
 
 char *getpassword(char *);
 

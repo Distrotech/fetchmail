@@ -29,6 +29,9 @@ int yydebug;	/* in case we didn't generate with -- debug */
 
 static struct query current;		/* current server record */
 static int prc_errflag;
+
+void prc_register();
+void prc_reset();
 %}
 
 %union {
