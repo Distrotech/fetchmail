@@ -2,8 +2,8 @@
 #
 # indexgen.sh -- generate current version of fetchmail home page.
 #
-goldvers="5.0.0"
-goldname="5.0.0"
+goldvers="5.1.0"
+goldname="5.1.0"
 version=`sed -n <Makefile.in "/VERSION *= */s/VERSION *= *\([^ 	]*\)/\1/p"`
 date=`date "+%d %b %Y"`
 
@@ -198,7 +198,7 @@ reason.<P>
 
 <H1>Who uses fetchmail:</H1>
 
-Fetchmail entered full production status with the 2.0 version in
+Fetchmail entered full production status with the 2.0.0 version in
 November 1996 after about five months of evolution from the ancestral
 <IT>popclient</IT> utility. It has since come into extremely wide use
 in the Internet/Unix/Linux community.  The Red Hat, Debian and
@@ -216,7 +216,7 @@ customer base, and (c) the volume of fetchmail-related talk on USENET.
 These estimates suggest that daily fetchmail users number well into
 the tens of thousands, and possibly over a hundred thousand.<p>
 
-<H1>The fetchmail paper:</H1>
+<H1>The sociology of fetchmail:</H1>
 
 The fetchmail development project was a sociological experiment as well
 as a technical effort.  I ran it as a test of some theories about why the
@@ -225,9 +225,14 @@ Linux development model works.<P>
 I wrote a paper, <A
 HREF="http://www.tuxedo.org/~esr/writings/cathedral-bazaar/">The
 Cathedral And The Bazaar</A>, about these theories and the project.
-The paper became quite popular and (to my continuing astonishment) may
+I developed the line of analysis it suggested in two later essays.
+These papers became quite popular and (to my continuing astonishment) may
 have actually helped change the world.  Chase the title link, above,
-to its page.<P>
+for links to all three papers.<P>
+
+I have done some analysus on the information in the project NEWS file.
+You can view a <a href="history.html">statistical history</a> showing
+levels of participation and release frequency over time.<p>
 
 <H1>Recent releases and where fetchmail is going:</H1>
 

@@ -19,11 +19,17 @@ put fetchmail-features.html
 put NEWS
 put fetchmail-man.html
 put design-notes.html
+# The following things vary seldom
 #put funny.html
 #put fetchmail.png
 #put bighand.png
+put growth.gif
+put timeseries
+put growthplot
+# The following things vary often
 put checksums
 put index.html
+put history.html
 close
 echo "Upload to tuxedo complete"
 
