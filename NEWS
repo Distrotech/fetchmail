@@ -1,6 +1,6 @@
 				Things to do:
 
-In the SSL support, we eed to add server certificate validation (In
+In the SSL support, we need to add server certificate validation (In
 other words, does the certificate match the system we are trying to
 contact?).  Also, add authentication of Certifying Authority (Is this
 a Certifying Authority we recognize?).
@@ -39,7 +39,7 @@ There are 282 people on fetchmail-friends and 479 on fetchmail-announce.
 fetchmail-5.2.0 (Tue Nov 30 14:24:25 EST 1999), 18302 lines:
 * fetchmailconf now complains and exits gracefully when not run under X.
 * configure.in port patch for OpenBSD from Federico G. Schwindt.
-* configure.in port patch fror Heimdal from Leif Johansson <leifj@it.su.se>
+* configure.in port patch for Heimdal from Leif Johansson <leifj@it.su.se>
 * configure.in fix for OpenSSL configuration problems.
 * Teach fetchmail about the buggy FTGate server.
 * cs.po update from Jiri Pavlovsky.
@@ -135,7 +135,7 @@ There are 256 people on fetchmail-friends and 433 on fetchmail-announce.
 
 fetchmail-5.0.6 (Mon Aug  2 14:04:23 EDT 1999), 17528 lines:
 * Czech internationalization support (thanks to Jiri Pavlovsky).
-* Russion internationalization support (but I couldn't read the contributor
+* Russian internationalization support (but I couldn't read the contributor
   name in the headers!)
 * Update of the French internationalization support by Guy Brand.
 * Lexer fix for the `nokeep' problem by Robert de Bath (thanks
