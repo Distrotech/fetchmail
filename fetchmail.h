@@ -51,7 +51,6 @@ struct optrec {
   int keep;
   int verbose;
   int whichpop;
-  int silent;
   int limit;
   int fetchall;
   int flush;

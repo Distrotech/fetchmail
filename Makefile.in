@@ -62,9 +62,10 @@ TEXI2DVI = texi2dvi
 ETAGS = etags -tw
 CTAGS = ctags -tw
 
-objs = socket.o getpass.o pop2.o pop3.o popclient.o options.o		\
-       poprc_l.o poprc_y.o poprc.o daemon.o xmalloc.o			\
-       $(EXTRAOBJ) $(extras)
+popobjs = socket.o getpass.o pop2.o pop3.o popclient.o options.o	\
+       poprc_l.o poprc_y.o poprc.o daemon.o xmalloc.o
+
+objs = $(popobjs) $(EXTRAOBJ) $(extras)
 
 srcs = $(srcdir)/socket.c $(srcdir)/getpass.c $(srcdir)/pop2.c 		\
        $(srcdir)/pop3.c $(srcdir)/popclient.c $(srcdir)/options.c	\
@@ -83,6 +84,8 @@ depend:
 
 # Some makes apparently use .PHONY as the default goal is it is before `all'.
 .PHONY: all check
+
+$(popobjs): popclient.h
 
 popclient: $(srcdir)/poprc_l.c $(srcdir)/poprc_y.c $(objs)
 	$(CC) $(LDFLAGS) $(objs) $(LOADLIBS) -o popclient

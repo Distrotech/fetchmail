@@ -84,7 +84,7 @@ static struct option longoptions[] = {
 		 if negative, the command line is has one or more
 	   	 syntax errors.
   calls:         none.  
-  globals:       none.  
+  globals:       outlevel.  
  *********************************************************************/
 
 int parsecmdline (argc,argv,options)
@@ -134,11 +134,11 @@ struct optrec *options;
         break;
       case 'v':
       case LA_VERBOSE:
-        options->verbose = !0;
+        outlevel = O_VERBOSE;
         break;
       case 's':
       case LA_SILENT:
-        options->silent = !0;
+        outlevel = O_SILENT;
         break;
       case 'c':
       case LA_STDOUT:
@@ -315,6 +315,8 @@ struct optrec *options;
   strcpy(options->poprcfile, pw->pw_dir);
   strcat(options->poprcfile, "/");
   strcat(options->poprcfile, POPRC_NAME);
+
+  outlevel = O_NORMAL;
 
   return(0);
 }

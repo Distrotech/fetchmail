@@ -96,15 +96,14 @@ char **argv;
   FILE	*tmpfp;
   pid_t pid;
 
+  if (setdefaults(&def_opts) != 0)
+    exit(PS_UNDEFINED);
+
   if ((parsestatus = parsecmdline(argc,argv,&cmd_opts)) < 0)
     exit(PS_SYNTAX);
 
-  setoutlevel(&cmd_opts);
   if (cmd_opts.versioninfo)
     showversioninfo();
-
-  if (setdefaults(&def_opts) != 0)
-    exit(PS_UNDEFINED);
 
   if (prc_parse_file(prc_getpathname(&cmd_opts,&def_opts)) != 0)
     exit(PS_SYNTAX);
@@ -328,30 +327,6 @@ struct optrec *options;
     printf("  Text retrieved per message will be at most %d bytes.\n",
 	   options->limit);
 }
-
-/******************************************************************
-  function:	setoutlevel
-  description:	set output verbosity level.
-  arguments:
-    options	command-line options.
-
-  ret. value:	none.
-  globals:	writes outlevel.
-  calls:	none.
- *****************************************************************/
-
-int setoutlevel (options)
-struct optrec *options;
-{
-  if (options->verbose) 
-    outlevel = O_VERBOSE;
-  else if (options->silent)
-    outlevel = O_SILENT;
-  else
-    outlevel = O_NORMAL;
-}
-
-
 
 /*********************************************************************
   function:      openuserfolder
