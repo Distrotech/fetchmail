@@ -1141,15 +1141,14 @@ closeUp:
 #if defined(HAVE_STDARG_H)
 void gen_send(FILE *sockfp, char *fmt, ... )
 /* assemble command in printf(3) style and send to the server */
-{
 #else
 void gen_send(sockfp, fmt, va_alist)
 /* assemble command in printf(3) style and send to the server */
 FILE *sockfp;		/* socket to which server is connected */
 const char *fmt;	/* printf-style format */
-va_dcl {
+va_dcl
 #endif
-
+{
     char buf [POPBUFSIZE+1];
     va_list ap;
 
@@ -1183,49 +1182,48 @@ va_dcl {
 #if defined(HAVE_STDARG_H)
 int gen_transact(FILE *sockfp, char *fmt, ... )
 /* assemble command in printf(3) style, send to server, accept a response */
-{
 #else
 int gen_transact(sockfp, fmt, va_alist)
 /* assemble command in printf(3) style, send to server, accept a response */
 FILE *sockfp;		/* socket to which server is connected */
 const char *fmt;	/* printf-style format */
-va_dcl {
+va_dcl
 #endif
+{
+    int ok;
+    char buf [POPBUFSIZE+1];
+    va_list ap;
 
-  int ok;
-  char buf [POPBUFSIZE+1];
-  va_list ap;
-
-  if (protocol->tagged)
-      (void) sprintf(buf, "%s ", GENSYM);
-  else
-      buf[0] = '\0';
+    if (protocol->tagged)
+	(void) sprintf(buf, "%s ", GENSYM);
+    else
+	buf[0] = '\0';
 
 #if defined(HAVE_STDARG_H)
-  va_start(ap, fmt) ;
+    va_start(ap, fmt) ;
 #else
-  va_start(ap);
+    va_start(ap);
 #endif
-  vsprintf(buf + strlen(buf), fmt, ap);
-  va_end(ap);
+    vsprintf(buf + strlen(buf), fmt, ap);
+    va_end(ap);
 
-  strcat(buf, "\r\n");
-  fputs(buf, sockfp);
-  if (outlevel == O_VERBOSE)
-  {
-      char *cp;
+    strcat(buf, "\r\n");
+    fputs(buf, sockfp);
+    if (outlevel == O_VERBOSE)
+    {
+	char *cp;
 
-      if (shroud && (cp = strstr(buf, shroud)))
-	  memset(cp, '*', strlen(shroud));
-      buf[strlen(buf)-1] = '\0';
-      error(0, 0, "%s> %s", protocol->name, buf);
-  }
+	if (shroud && (cp = strstr(buf, shroud)))
+	    memset(cp, '*', strlen(shroud));
+	buf[strlen(buf)-1] = '\0';
+	error(0, 0, "%s> %s", protocol->name, buf);
+    }
 
-  /* we presume this does its own response echoing */
-  ok = (protocol->parse_response)(sockfp, buf);
-  vtalarm(mytimeout);
+    /* we presume this does its own response echoing */
+    ok = (protocol->parse_response)(sockfp, buf);
+    vtalarm(mytimeout);
 
-  return(ok);
+    return(ok);
 }
 
 /* driver.c ends here */
