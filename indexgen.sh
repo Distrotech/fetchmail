@@ -191,6 +191,12 @@ reported to build and run correctly under AmigaOS and QNX as well.<p>
 
 <A HREF="funny.html">This letter</A> still cracks me up whenever I reread it. 
 
+<H1>Foreign Ports</H1>
+
+Fetchmail is supported only for Unix by its official maintainers.
+However, a <a href="http://studentweb.tulane.edu/%7Ejmcbray/os2">beta
+OS/2 port</a> is available from Jason F. McBrayer.<P>
+
 <H1>The fetchmail button:</H1>
 
 If you use fetchmail and like it, here's a nifty fetchmail button you
