@@ -1,6 +1,6 @@
 				Release Notes:
 
-fetchmail-4.6.5 ():
+fetchmail-4.6.5 (Wed Oct 28 18:28:01 EST 1998):
 * Fixed a bug in reply_hack that could occasionally cause malloc smashes.
 * Added --bsmtp option to dump mail as a BSMTP batch.
 
