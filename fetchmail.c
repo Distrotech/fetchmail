@@ -1065,6 +1065,16 @@ static int load_params(int argc, char **argv, int optind)
 		break;
 	    }
 
+    /* this code enables flags to be turned off */
+#define DEFAULT(flag, dflt)	if (flag == FLAG_TRUE)\
+	    				flag = TRUE;\
+				else if (flag == FLAG_FALSE)\
+					flag = FALSE;\
+				else\
+					flag = (dflt)
+    /* one global gets treated specially */
+    DEFAULT(run.showdots, run.poll_interval==0 || nodetach);
+
     /* merge in wired defaults, do sanity checks and prepare internal fields */
     for (ctl = querylist; ctl; ctl = ctl->next)
     {
@@ -1094,13 +1104,6 @@ static int load_params(int argc, char **argv, int optind)
 
 	if (configdump || ctl->active )
 	{
-	    /* this code enables flags to be turned off */
-#define DEFAULT(flag, dflt)	if (flag == FLAG_TRUE)\
-	    				flag = TRUE;\
-				else if (flag == FLAG_FALSE)\
-					flag = FALSE;\
-				else\
-					flag = (dflt)
 	    DEFAULT(ctl->keep, FALSE);
 	    DEFAULT(ctl->fetchall, FALSE);
 	    DEFAULT(ctl->flush, FALSE);
@@ -1126,8 +1129,6 @@ static int load_params(int argc, char **argv, int optind)
 		exit(PS_SYNTAX);
 	    }
 #endif /* SSL_ENABLE */
-	    /* one global gets treated specially */
-	    DEFAULT(run.showdots, run.poll_interval==0 || nodetach);
 #undef DEFAULT
 
 	    /*
