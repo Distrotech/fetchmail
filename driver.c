@@ -1402,6 +1402,22 @@ const struct method *proto;	/* protocol method table */
 
     if ((js = setjmp(restart)) == 1)
     {
+#ifdef HAVE_SIGPROCMASK
+	/*
+	 * Don't rely on setjmp() to restore the blocked-signal mask.
+	 * It does this under BSD but is required not to under POSIX.
+	 *
+	 * If your Unix doesn't have sigprocmask, better hope it has
+	 * BSD-like behavior.  Otherwise you may see fetchmail get
+	 * permanently wedged after a second timeout on a bad read,
+	 * because alarm signals were blocked after the first.
+	 */
+	sigset_t	allsigs;
+
+	sigfillset(&allsigs);
+	sigprocmask(SIG_UNBLOCK, &allsigs, NULL);
+#endif /* HAVE_SIGPROCMASK */
+
 	if (phase == OPEN_WAIT)
 	    error(0, 0,
 		  _("timeout after %d seconds waiting to connect to server %s."),
