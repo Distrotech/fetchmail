@@ -250,12 +250,17 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	    }
 
 #if defined(GSSAPI)
-	    if (has_kerberos)
+	    if ((ctl->server.preauthenticate == A_ANY 
+		 || ctl->server.preauthenticate==A_GSSAPI)
+		&& has_gssapi)
 		return(do_gssauth(sock, "AUTH", 
 				  ctl->server.truename, ctl->remotename));
 #endif /* defined(GSSAPI) */
 #if defined(KERBEROS_V4) || defined(KERBEROS_V5)
-	    if (has_kerberos)
+	    if ((ctl->server.preauthenticate == A_ANY 
+		 || ctl->server.preauthenticate==A_KERBEROS_V4
+		 || ctl->server.preauthenticate==A_KERBEROS_V5)
+		&& has_kerberos)
 		return(do_rfc1731(sock, "AUTH", ctl->server.truename));
 #endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
 	    if (has_cram)
