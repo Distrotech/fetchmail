@@ -1080,15 +1080,22 @@ fire if
 .I fetchmail
 timed out while waiting for the server.
 .IP 8
-Exclusion error.  This means 
+Client-side exclusion error.  This means 
 .I fetchmail
 either found another copy of itself already running, or failed in such
 a way that it isn't sure whether another copy is running.
 .IP 9
+The user authentication step failed because the server responded "lock
+busy".  Try again after a brief pause!  This error is not implemented
+for all protocols, nor for all servers.  If not implemented for your
+server, "3" will be returned instead, see above.  May be returned when
+talking to qpopper or other servers that can respond with "lock busy"
+or some similar text containing the word "lock".
+.IP 10
 The 
 .I fetchmail.
 run failed while trying to do an SMTP port open or transaction.
-.IP 10
+.IP 11
 Internal error.  You should see a message on standard error with
 details.
 .PP

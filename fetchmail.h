@@ -36,11 +36,12 @@
 #define		PS_SYNTAX	5	/* command-line syntax error */
 #define		PS_IOERR	6	/* bad permissions on rc file */
 #define		PS_ERROR	7	/* protocol error */
-#define		PS_EXCLUDE	8	/* exclusion error */
-#define         PS_SMTP         9       /* SMTP error */
-#define		PS_UNDEFINED	10	/* something I hadn't thought of */
-#define		PS_TRANSIENT	11	/* transient failure (internal use) */
-#define		PS_REFUSED	12	/* mail refused (internal use) */
+#define		PS_EXCLUDE	8	/* client-side exclusion error */
+#define		PS_LOCKBUSY	9	/* server responded lock busy */
+#define		PS_SMTP         10      /* SMTP error */
+#define		PS_UNDEFINED	11	/* something I hadn't thought of */
+#define		PS_TRANSIENT	12	/* transient failure (internal use) */
+#define		PS_REFUSED	13	/* mail refused (internal use) */
 
 /* output noise level */
 #define         O_SILENT	0	/* mute, max squelch, etc. */

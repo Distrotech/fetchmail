@@ -786,7 +786,7 @@ static int query_host(struct query *ctl)
 	for (i = 0; i < sizeof(autoprobe)/sizeof(autoprobe[0]); i++)
 	{
 	    ctl->server.protocol = autoprobe[i];
-	    if ((st = query_host(ctl)) == PS_SUCCESS || st == PS_NOMAIL || st == PS_AUTHFAIL)
+	    if ((st = query_host(ctl)) == PS_SUCCESS || st == PS_NOMAIL || st == PS_AUTHFAIL || st == PS_LOCKBUSY)
 		break;
 	}
 	ctl->server.protocol = P_AUTO;

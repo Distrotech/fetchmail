@@ -21,6 +21,8 @@
 
 #define PROTOCOL_ERROR	{error(0, 0, "protocol error"); return(PS_ERROR);}
 
+#define LOCKBUSY_ERROR	{error(0, 0, "lock busy!  Is another session active?"); return(PS_LOCKBUSY);}
+
 extern char *strstr();	/* needed on sysV68 R3V7.1. */
 
 static int last;
@@ -47,7 +49,22 @@ int pop3_ok (int sock, char *argbuf)
 	if (strcmp(buf,"+OK") == 0)
 	    ok = 0;
 	else if (strcmp(buf,"-ERR") == 0)
-	    ok = PS_ERROR;
+	{
+	    /*
+	     * We're checking for "lock busy", "unable to lock", 
+	     * "already locked" etc. here.  This indicates that we
+	     * have to wait for the server to clean up before we
+	     * can poll again.
+	     *
+	     * PS_LOCKBUSY check empirically verified with two recent
+	     * versions the Berkeley popper;	QPOP (version 2.2)  and
+	     * QUALCOMM Pop server derived from UCB (version 2.1.4-R3)
+	     */
+	    if (strstr(bufp,"lock")||strstr(bufp,"Lock")||strstr(bufp,"LOCK"))
+		ok = PS_LOCKBUSY;
+	    else
+		ok = PS_ERROR;
+	}
 	else
 	    ok = PS_PROTOCOL;
 
@@ -61,6 +78,8 @@ int pop3_ok (int sock, char *argbuf)
 int pop3_getauth(int sock, struct query *ctl, char *greeting)
 /* apply for connection authorization */
 {
+    int ok;
+
     /* build MD5 digest from greeting timestamp + password */
     if (ctl->server.protocol == P_APOP) 
     {
@@ -99,8 +118,21 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	if ((gen_transact(sock, "USER %s", ctl->remotename)) != 0)
 	    PROTOCOL_ERROR
 
-	if ((gen_transact(sock, "PASS %s", ctl->password)) != 0)
+	if ((ok = gen_transact(sock, "PASS %s", ctl->password)) != 0)
+	{
+	    if (ok == PS_LOCKBUSY)
+		LOCKBUSY_ERROR
 	    PROTOCOL_ERROR
+	}
+
+	/*
+	 * Empirical experience shows some server/OS combinations
+	 * may need a brief pause even after any lockfiles on the
+	 * server are released, to give the server time to finish
+	 * copying back very large mailfolders from the temp-file...
+	 * this is only ever an issue with extremely large mailboxes.
+	 */
+	sleep(3); /* to be _really_ safe, probably need sleep(5)! */
 	break;
 
     case P_APOP:
@@ -247,7 +279,7 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
 
     /* 
      * Look for "nnn octets" -- there may or may not be preceding cruft.
-     * It's OK to punt and return 0 as a failure indication here, as 
+     * It's OK to punt and pass back -1 as a failure indication here, as 
      * long as the force_getsizes flag has forced sizes to be preloaded.
      */
     if ((cp = strstr(buf, " octets")) == (char *)NULL)
@@ -258,6 +290,7 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
 	    continue;
 	*lenp = atoi(++cp);
     }
+
     return(0);
 }
 

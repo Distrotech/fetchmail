@@ -1364,13 +1364,20 @@ const struct method *proto;	/* protocol method table */
 	    shroud = ctl->password;
 	    ok = (protocol->getauth)(sock, ctl, buf);
 	    shroud = (char *)NULL;
-	    if (ok == PS_ERROR)
-		ok = PS_AUTHFAIL;
 	    if (ok != 0)
 	    {
-		error(0, -1, "Authorization failure on %s@%s", 
-		      ctl->remotename,
-		      realname);
+		if (ok == PS_LOCKBUSY)
+		    error(0, -1, "Lock Busy error on %s@%s",
+			  ctl->remotename,
+			  realname);
+		else
+		{
+		    if (ok == PS_ERROR)
+			ok = PS_AUTHFAIL;
+		    error(0, -1, "Authorization failure on %s@%s", 
+			  ctl->remotename,
+			  realname);
+		}
 		goto cleanUp;
 	    }
 	    set_timeout(ctl->server.timeout);
@@ -1678,6 +1685,9 @@ const struct method *proto;	/* protocol method table */
     case PS_PROTOCOL:
 	msg = "client/server protocol";
 	break;
+    case PS_LOCKBUSY:
+	msg = "lock busy on server";
+	break;
     case PS_SMTP:
 	msg = "SMTP transaction";
 	break;
@@ -1685,8 +1695,9 @@ const struct method *proto;	/* protocol method table */
 	error(0, 0, "undefined");
 	break;
     }
-    if (ok==PS_SOCKET || ok==PS_AUTHFAIL || ok==PS_SYNTAX || ok==PS_IOERR
-		|| ok==PS_ERROR || ok==PS_PROTOCOL || ok==PS_SMTP)
+    if (ok==PS_SOCKET || ok==PS_AUTHFAIL || ok==PS_SYNTAX 
+		|| ok==PS_IOERR || ok==PS_ERROR || ok==PS_PROTOCOL 
+		|| ok==PS_LOCKBUSY || ok==PS_SMTP)
 	error(0, -1, "%s error while fetching from %s", msg, ctl->server.names->id);
 
 closeUp:
