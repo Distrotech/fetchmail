@@ -29,7 +29,7 @@ int yydebug;	/* in case we didn't generate with -- debug */
   char *sval;
 }
 
-%token SERVER PROTOCOL LOCALNAME USERNAME PASSWORD FOLDER SMTPHOST MDA DEFAULTS
+%token SERVER PROTOCOL USERNAME PASSWORD FOLDER SMTPHOST MDA DEFAULTS IS HERE
 %token <proto> PROTO
 %token <sval>  STRING
 %token <flag>  KEEP FLUSH FETCHALL REWRITE PORT SKIP
@@ -84,7 +84,8 @@ user1opts	: user_option
 		| user1opts user_option
 		;
 
-user_option	: LOCALNAME STRING	{prc_setlocal($2);}
+user_option	: IS STRING		{prc_setlocal($2);}
+		| IS STRING HERE	{prc_setlocal($2);}
 		| PASSWORD STRING	{prc_setpassword($2);}
 		| FOLDER  STRING 	{prc_setfolder($2);}
 		| SMTPHOST STRING	{prc_setsmtphost($2);}

@@ -26,12 +26,16 @@ int prc_lineno = 1;
 defaults 	{ return DEFAULTS; }
 server 		{ return SERVER; }
 proto(col)? 	{ return PROTOCOL; }
-is		{ return LOCALNAME; }
+port		{ return PORT; }
+
 user(name)?	{ return USERNAME; }
 pass(word)?	{ return PASSWORD; }
 remote(folder)? { return FOLDER; }
 smtp(host)?	{ return SMTPHOST; }
 mda		{ return MDA; }
+is		{ return IS; }
+here		{ return HERE; }
+
 keep		{ yylval.flag = FLAG_TRUE;  return KEEP; }
 flush		{ yylval.flag = FLAG_TRUE;  return FLUSH; }
 fetchall	{ yylval.flag = FLAG_TRUE;  return FETCHALL; }
@@ -42,7 +46,10 @@ noflush		{ yylval.flag = FLAG_FALSE; return FLUSH; }
 nofetchall	{ yylval.flag = FLAG_FALSE; return FETCHALL; }
 norewrite	{ yylval.flag = FLAG_TRUE;  return REWRITE; }
 noskip		{ yylval.flag = FLAG_FALSE; return SKIP; }
-port		{ return PORT; }
+
+with		{/* EMPTY */}
+and		{/* EMPTY */}
+options		{/* EMPTY */}
 
 (auto)|(AUTO)	{ yylval.proto = P_AUTO;  return PROTO; }
 (pop2)|(POP2)	{ yylval.proto = P_POP2;  return PROTO; }
