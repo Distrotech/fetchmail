@@ -160,8 +160,8 @@ class Server:
 
 class User:
     def __init__(self):
-	self.remote = ""		# Remote username
-	self.localnames = None		# Local names
+	self.remote = os.environ["USER"]# Remote username
+	self.localnames = (self.remote,)# Local names
 	self.password = ""		# Password for mail account access
 	self.mailboxes = None		# Remote folders to retrieve from
 	self.smtphunt = None		# Hosts to forward to
