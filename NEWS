@@ -10,6 +10,11 @@ features --
   before they are deleted.  This improves recovery from sendmail and
   dropped-connection errors.
 
+bugs --
+
+* Fixed a FreeBSD compilaation glitch involving SIGCLD (thanks to
+  Masafumi NAKANE). 
+
 ------------------------------------------------------------------------------
 fetchmail-2.2 (Mon Dec  9 00:15:01 EST 1996):
 

@@ -43,6 +43,11 @@
 #include  "fetchmail.h"
 #include  "smtp.h"
 
+/* BSD portability hack...I know, this is an ugly place to put it */
+#if !defined(SIGCLD) && defined(SIGCHLD)
+#define SIGCLD	SIGCHLD
+#endif
+
 #define	SMTP_PORT	25	/* standard SMTP service port */
 
 int batchlimit;		/* how often to tear down the delivery connection */
