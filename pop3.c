@@ -119,7 +119,9 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	  * CompuServe has changed its RPA behavior.  Used to be they didn't
 	  * accept PASS, but I'm told this changed in mid-November 1997.
 	  */
-	 if (strstr(greeting, "csi.com"))
+	 if (strstr(greeting, "csi.com")
+	     && (start = strchr(ctl->remotename, '@'))
+	     && !strcmp("@compuserve.com", start))
 	 {
              /* temporary fix to get back out of cleartext authentication */
              gen_transact(sock, "PASS %s", "dummypass");

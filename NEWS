@@ -12,8 +12,12 @@ fetchmail-4.5.1 ():
 * Checkalias option from Enrico Musio <enrico.musio@spaziozerouno.it>.
 * Discard Unix From_ lines in headers (copes with Debian bug report #23808.
 * Tell fetchmailconf not to care if the attempt to create an icon window fails.
+* All fetchmailconf windows now iconify with an image.
 * obituary@freshmeat's enhancements to hook fetchmail into the Red Hat 
   control panel. 
+* Even if RPA is enabled, it won't be done unless your remotename ends in
+  `@compuserve.com' as CompuServe requires.  Thus CompuServe users may now
+  choose ordinary authentication at runtime.
 
 fetchmail-4.5.0bis (Sat Jun 20 10:55:52 EDT 1998):
 
