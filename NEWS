@@ -12,6 +12,7 @@
 * Sunil Shetye's fix for SSL configuration.
 * Simon Josefsson's patch for GSS library support.
 * Added Andrey Lelikov's recupe for Hotmail and Lycos Webmail.
+* Switched to automake.
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
