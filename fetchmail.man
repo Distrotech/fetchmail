@@ -286,7 +286,7 @@ You can force mail to be passed to an MDA directly (rather than
 forwarded to port 25) with the -mda or -m option.  If \fIfetchmail\fR
 is running as root, it sets its userid to that of the target user
 while delivering mail through an MDA.  Some possible MDAs are
-"/usr/sbin/sendmail -oem $USER", "/usr/bin/procmail -d $USER"
+"/usr/sbin/sendmail -oem -f %F %T", "/usr/bin/procmail -d %T"
 and "/usr/bin/deliver".  Local delivery addresses
 will be inserted into the MDA command wherever you place a %T; the
 mail message's From address will be inserted where you place an %F.  Do
