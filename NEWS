@@ -7,6 +7,12 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.5.0 ():
+* 1.0 version of fetchmailconf.
+* Jochen Hayek's changes to make RPA less verbose.
+
+There are 279 people on fetchmail-friends and 217 on fetchmail-announce.
+
 fetchmail-4.4.9 (Thu Jun  4 10:41:02 EDT 1998):
 * 0.93 beta version of fetchmailconf (now with autoprobing for servers!).
 * Merging of command-line arguments has now been fixed (I think!).

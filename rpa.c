@@ -580,9 +580,9 @@ int  len;
     error(0, 0, "Outbound data:\n");
     for (i=0; i<len; i++)
       {
-      error(0, 0, " %02X",bufp[i]);
+      error_build("%02X ",bufp[i]);
       if (((i % 16)==15) || (i==(len-1)))
-        error(0, 0, "\n");
+        error_complete(0, 0, "");
       }
     }
   outp = bufp + (((len-1)/3)*4);
@@ -649,8 +649,12 @@ int conv;
   if (outlevel == O_VERBOSE)
     {
     error(0, 0, "Unicode:");
-    for (i=0; i<(*plen); i++) error(0, 0, "%02X ",buf[i]);
-    error(0, 0, "\n");
+    for (i=0; i<(*plen); i++)
+      {
+      error_build("%02X ",buf[i]);
+      if (((i % 16)==15) || (i==((*plen)-1)))
+        error_complete(0, 0, "");
+      }
     }
 }
 
@@ -722,8 +726,12 @@ int  len;
     if (outlevel == O_VERBOSE)
     {
 	error(0, 0, "User challenge:");
-	for (i=0; i<len; i++) error(0, 0, " %02X",buf[i]);
-	error(0, 0, "\n");
+	for (i=0; i<len; i++)
+	  {
+	  error_build("%02X ",buf[i]);
+	  if (((i % 16)==15) || (i==(len-1)))
+	    error_complete(0, 0, "");
+	  }
     }
 }
 
@@ -878,8 +886,9 @@ unsigned char*    out;
     error(0, 0, "MD5 being applied to data block:\n");
     for (i=0; i<len; i++)
       {
-      error(0, 0, " %02X",in[i]);
-      if (((i % 16)==15) || (i==(len-1))) error(0, 0, "\n");
+      error_build("%02X ",in[i]);
+      if (((i % 16)==15) || (i==(len-1)))
+        error_complete(0, 0, "");
       }
     }
   MD5Init(   &md5context );
@@ -888,8 +897,11 @@ unsigned char*    out;
   if (outlevel == O_VERBOSE)
     {
     error(0, 0, "MD5 result is: ");
-    for (i=0; i<16; i++) error(0, 0, "%02X ",out[i]);
-    error(0, 0, "\n");
+    for (i=0; i<16; i++)
+      {
+      error_build("%02X ",out[i]);
+      }
+    error_complete(0, 0, "");
     }
 }
 #endif /* POP3_ENABLE && RPA_ENABLE */
