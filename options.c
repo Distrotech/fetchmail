@@ -64,7 +64,7 @@
 #define LA_CONFIGDUMP	42
 #define LA_YYDEBUG	43
 
-/* options still left: CgGhHjJoORwWxXYz */
+/* options still left: CDgGhHjJoORwWxXYz */
 static const char *shortoptions = 
 	"?Vcsvd:NqL:f:i:p:UP:A:t:E:Q:u:akKFnl:r:S:Z:b:B:e:m:T:I:M:yw:";
 
@@ -288,7 +288,9 @@ struct query *ctl;	/* option record to be initialized */
 	case 'p':
 	case LA_PROTOCOL:
 	    /* XXX -- should probably use a table lookup here */
-	    if (strcasecmp(optarg,"pop2") == 0)
+	    if (strcasecmp(optarg,"auto") == 0)
+		ctl->server.protocol = P_AUTO;
+	    else if (strcasecmp(optarg,"pop2") == 0)
 		ctl->server.protocol = P_POP2;
 #ifdef SDPS_ENABLE
 	    else if (strcasecmp(optarg,"sdps") == 0)

@@ -2,8 +2,11 @@
  * For license terms, see the file COPYING in this directory.
  */
 
+/* We need this for HAVE_STDARG_H, etc */
+#include "config.h"
+
 /* constants designating the various supported protocols */
-#define		P_AUTO		0
+#define		P_AUTO		1
 #define		P_POP2		2
 #define		P_POP3		3
 #define		P_IMAP		4
@@ -98,7 +101,7 @@ struct runctl
     int		poll_interval;
     flag	use_syslog;
     flag	invisible;
-    char	*postmaster;
+    const char	*postmaster;
 };
 
 struct idlist
@@ -121,27 +124,40 @@ struct idlist
     struct idlist *next;
 };
 
+struct query;
+
 struct method		/* describe methods for protocol state machine */
 {
-    char *name;			/* protocol name */
+    const char *name;		/* protocol name */
 #if INET6
-    char *service;
+    const char *service;
 #else /* INET6 */
     int	port;			/* service port */
 #endif /* INET6 */
     flag tagged;		/* if true, generate & expect command tags */
     flag delimited;		/* if true, accept "." message delimiter */
-    int (*parse_response)();	/* response_parsing function */
-    int (*password_canonify)();	/* canonicalize password */
-    int (*getauth)();		/* authorization fetcher */
-    int (*getrange)();		/* get message range to fetch */
-    int (*getsizes)();		/* get sizes of messages */
-    int (*is_old)();		/* check for old message */
-    int (*fetch_headers)();	/* fetch FROM headera given message */
-    int (*fetch_body)();	/* fetch a given message */
-    int (*trail)();		/* eat trailer of a message */
-    int (*delete)();		/* delete method */
-    int (*logout_cmd)();	/* logout command */
+    int (*parse_response)(int, char *);
+				/* response_parsing function */
+    int (*password_canonify)(char *, char *);
+				/* canonicalize password */
+    int (*getauth)(int, struct query *, char *);
+				/* authorization fetcher */
+    int (*getrange)(int, struct query *, const char *, int *, int *, int *);
+				/* get message range to fetch */
+    int (*getsizes)(int, int, int *);
+				/* get sizes of messages */
+    int (*is_old)(int, struct query *, int);
+				/* check for old message */
+    int (*fetch_headers)(int, struct query *, int, int *);
+				/* fetch FROM headera given message */
+    int (*fetch_body)(int, struct query *, int, int *);
+				/* fetch a given message */
+    int (*trail)(int, struct query *, int);
+				/* eat trailer of a message */
+    int (*delete)(int, struct query *, int);
+				/* delete method */
+    int (*logout_cmd)(int, struct query *);
+				/* logout command */
     flag retry;			/* can getrange poll for new messages? */
 };
 
@@ -182,7 +198,7 @@ struct hostdata		/* shared among all user connections to given server */
 #endif /* linux */
 
     /* computed for internal use */
-    struct method *base_protocol;	/* relevant protocol method table */
+    const struct method *base_protocol;	/* relevant protocol method table */
     int poll_count;			/* count of polls so far */
     char *queryname;			/* name to attempt DNS lookup on */
     char *truename;			/* "true name" of server host */
@@ -230,7 +246,7 @@ struct query
 
     /* internal use -- per-poll state */
     flag active;		/* should we actually poll this server? */
-    char *destaddr;		/* destination host for this query */
+    const char *destaddr;	/* destination host for this query */
     int errcount;		/* count transient errors in last pass */
     int smtp_socket;		/* socket descriptor for SMTP connection */
     unsigned int uid;		/* UID of user to deliver to */
@@ -293,7 +309,8 @@ extern char *user;		/* name of invoking user */
 extern char *home;		/* home directory of invoking user */
 extern int pass;		/* number of re-polling pass */
 extern flag configdump;		/* dump control blocks as Python dictionary */
-extern char *fetchmailhost;	/* either "localhost" or an FQDN */
+extern const char *fetchmailhost;
+				/* either "localhost" or an FQDN */
 
 /* prototypes for globally callable functions */
 
@@ -316,7 +333,7 @@ void set_timeout(int);
 #if defined(HAVE_STDARG_H)
 void gen_send (int sock, const char *, ... );
 int gen_recv(int sock, char *buf, int size);
-int gen_transact (int sock, char *, ... );
+int gen_transact (int sock, const char *, ... );
 #else
 void gen_send ();
 int gen_recv();
@@ -338,7 +355,7 @@ extern int phase;
 
 /* sink.c: forwarding */
 int stuffline(struct query *, char *);
-int open_sink(struct query*, char*, struct idlist*, long reallen, int*, int*);
+int open_sink(struct query*, const char*, struct idlist*, long reallen, int*, int*);
 void release_sink(struct query *);
 int close_sink(struct query *, flag);
 
@@ -422,7 +439,7 @@ int daemonize(const char *, void (*)(int));
 char *getpassword(char *);
 void escapes(const char *, char *);
 char *visbuf(const char *);
-char *showproto(int);
+const char *showproto(int);
 void dump_config(struct runctl *runp, struct query *querylist);
 int is_host_alias(const char *, struct query *);
 char *host_fqdn(void);

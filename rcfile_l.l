@@ -149,7 +149,8 @@ char		*tp;	/* target buffer for digested string */
 
 	if (*cp == '\\' && strchr("0123456789xX", cp[1]))
 	{
-	    char *dp, *hex = "00112233445566778899aAbBcCdDeEfF";
+	    char *dp;
+	    const char *hex = "00112233445566778899aAbBcCdDeEfF";
 	    int dcount = 0;
 
 	    if (*++cp == 'x' || *cp == 'X')

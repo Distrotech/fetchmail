@@ -83,7 +83,7 @@ flag peek_capable;	/* can we peek for better error recovery? */
 int pass;		/* how many times have we re-polled? */
 int phase;		/* where are we, for error-logging purposes? */
 
-static struct method *protocol;
+static const struct method *protocol;
 static jmp_buf	restart;
 
 char tag[TAGLEN];
@@ -115,11 +115,11 @@ static void timeout_handler (int signal)
 
 static int accept_count, reject_count;
 
-static void map_name(name, ctl, xmit_names)
+static void map_name(const char *name, struct query *ctl, struct idlist **xmit_names)
 /* add given name to xmit_names if it matches declared localnames */
-const char *name;		/* name to map */
-struct query *ctl;		/* list of permissible aliases */
-struct idlist **xmit_names;	/* list of recipient names parsed out */
+/*   name:	 name to map */
+/*   ctl:	 list of permissible aliases */
+/*   xmit_names: list of recipient names parsed out */
 {
     const char	*lname;
     int off = 0;
@@ -137,11 +137,11 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
     }
 }
 
-void find_server_names(hdr, ctl, xmit_names)
+void find_server_names(const char *hdr, struct query *ctl, struct idlist **xmit_names)
 /* parse names out of a RFC822 header into an ID list */
-const char *hdr;		/* RFC822 header in question */
-struct query *ctl;		/* list of permissible aliases */
-struct idlist **xmit_names;	/* list of recipient names parsed out */
+/*   hdr:		RFC822 header in question */
+/*   ctl:		list of permissible aliases */
+/*   xmit_names:	list of recipient names parsed out */
 {
     if (hdr == (char *)NULL)
 	return;
@@ -332,13 +332,13 @@ static int sizeticker;
 
 #define EMPTYLINE(s)	((s)[0] == '\r' && (s)[1] == '\n' && (s)[2] == '\0')
 
-static int readheaders(sock, fetchlen, reallen, ctl, num)
+static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl, int num)
 /* read message headers and ship to SMTP or MDA */
-int sock;		/* to which the server is connected */
-long fetchlen;		/* length of message according to fetch response */
-long reallen;		/* length of message according to getsizes */
-struct query *ctl;	/* query control record */
-int num;		/* index of message */
+/*   sock:		to which the server is connected */
+/*   fetchlen:		length of message according to fetch response */
+/*   reallen:		length of message according to getsizes */
+/*   ctl:		query control record */
+/*   num:		index of message */
 {
     struct addrblk
     {
@@ -851,7 +851,7 @@ int num;		/* index of message */
     if (!run.invisible && n != -1)
     {
 	/* utter any per-message Received information we need here */
-	sprintf(buf, "Received: from %s\n", ctl->server.truename);
+	sprintf(buf, "Received: from %s\r\n", ctl->server.truename);
 	n = stuffline(ctl, buf);
 	if (n != -1)
 	{
@@ -860,7 +860,7 @@ int num;		/* index of message */
 	     * but this can be secure information that would be bad
 	     * to reveal.
 	     */
-	    sprintf(buf, "\tby fetchmail-%s %s\n",
+	    sprintf(buf, "\tby fetchmail-%s %s\r\n",
 		    RELEASE_ID,
 		    protocol->name);
 	    n = stuffline(ctl, buf);
@@ -899,7 +899,7 @@ int num;		/* index of message */
 		 * generate a 4-digit year here.
 		 */
 		strftime(buf + strlen(buf), sizeof(buf) - strlen(buf), 
-			 "%a, %d %b %Y %H:%M:%S %Z\n", localtime(&now));
+			 "%a, %d %b %Y %H:%M:%S %Z\r\n", localtime(&now));
 #else
 		/*
 		 * This is really just a portability fallback, as the
@@ -977,7 +977,7 @@ int num;		/* index of message */
 
 	}
 
-	strcat(errmsg, "\n");
+	strcat(errmsg, "\r\n");
 
 	/* ship out the error line */
 	stuffline(ctl, errmsg);
@@ -995,12 +995,12 @@ int num;		/* index of message */
     return(headers_ok ? PS_SUCCESS : PS_TRUNCATED);
 }
 
-static int readbody(sock, ctl, forward, len)
+static int readbody(int sock, struct query *ctl, flag forward, int len)
 /* read and dispose of a message body presented on sock */
-struct query *ctl;	/* query control record */
-int sock;		/* to which the server is connected */
-int len;		/* length of message */
-flag forward;		/* TRUE to forward */
+/*   ctl:		query control record */
+/*   sock:		to which the server is connected */
+/*   len:		length of message */
+/*   forward:		TRUE to forward */
 {
     int	linelen;
     unsigned char buf[MSGBUFSIZE+4];
@@ -1127,7 +1127,7 @@ const char *canonical;	/* server name */
 #ifdef KERBEROS_V5
 int
 kerberos5_auth(socket, canonical)
-/* authernticate to the server host using Kerberos V5 */
+/* authenticate to the server host using Kerberos V5 */
 int socket;             /* socket to server host */
 const char *canonical;  /* server name */
 {
@@ -1306,11 +1306,11 @@ const struct method *proto;	/* protocol method table */
 #else
     int sock = -1;
 #endif /* HAVE_VOLATILE */
-    char *msg;
-    void (*sigsave)();
+    const char *msg;
+    void (*sigsave)(int);
     struct idlist *current=NULL, *tmp=NULL;
 
-    protocol = (struct method *)proto;
+    protocol = proto;
     ctl->server.base_protocol = protocol;
 
 #ifndef KERBEROS_V4
@@ -1428,28 +1428,30 @@ const struct method *proto;	/* protocol method table */
 #endif /* INET6 */
 	{
 #if !INET6
-#ifndef EHOSTUNREACH
-#define EHOSTUNREACH (-1)
-#endif
-	    if (outlevel >= O_DEBUG || errno != EHOSTUNREACH)
-	    {
-		error_build("fetchmail: %s connection to %s failed: ", 
-			     protocol->name, ctl->server.pollname);
 #ifdef HAVE_RES_SEARCH
+	    if (errno != 0 && h_errno != 0)
+		error(0, 0, "fetchmail: internal inconsistency");
+#endif
+	    error_build("fetchmail: %s connection to %s failed", 
+			 protocol->name, ctl->server.pollname);
+#ifdef HAVE_RES_SEARCH
+	    if (h_errno != 0)
+	    {
 		if (h_errno == HOST_NOT_FOUND)
-		    error_complete(0, 0, "host is unknown");
+		    error_complete(0, 0, ": host is unknown");
 		else if (h_errno == NO_ADDRESS)
-		    error_complete(0, 0, "name is valid but has no IP address");
+		    error_complete(0, 0, ": name is valid but has no IP address");
 		else if (h_errno == NO_RECOVERY)
-		    error_complete(0, 0, "unrecoverable name server error");
+		    error_complete(0, 0, ": unrecoverable name server error");
 		else if (h_errno == TRY_AGAIN)
-		    error_complete(0, 0, "temporary name server error");
-		else if (h_errno)
-		    error_complete(0, 0, "unknown DNS error %d", h_errno);
+		    error_complete(0, 0, ": temporary name server error");
 		else
-#endif /* HAVE_RES_SEARCH */
-		    error_complete(0, errno, "local error");
+		    error_complete(0, 0, ": unknown DNS error %d", h_errno);
 	    }
+#endif /* HAVE_RES_SEARCH */
+
+	    if (errno != 0)
+		error_complete(0, errno, "");
 #endif /* INET6 */
 	    ok = PS_SOCKET;
 	    set_timeout(0);
@@ -1952,7 +1954,7 @@ const struct method *proto;	/* protocol method table */
 	SockClose(sock);
     }
 
-    msg = (char *)NULL;		/* sacrifice to -Wall */
+    msg = (const char *)NULL;	/* sacrifice to -Wall */
     switch (ok)
     {
     case PS_SOCKET:
@@ -2091,7 +2093,7 @@ int size;	/* length of buffer */
 }
 
 #if defined(HAVE_STDARG_H)
-int gen_transact(int sock, char *fmt, ... )
+int gen_transact(int sock, const char *fmt, ... )
 /* assemble command in printf(3) style, send to server, accept a response */
 #else
 int gen_transact(int sock, fmt, va_alist)

@@ -50,19 +50,19 @@ static void dump_params (struct runctl *runp, struct query *, flag implicit);
 static int query_host(struct query *);
 
 /* controls the detail level of status/progress messages written to stderr */
-int outlevel;    	/* see the O_.* constants above */
+int outlevel;    	    /* see the O_.* constants above */
 
 /* miscellaneous global controls */
-struct runctl run;	/* global controls for this run */
-flag nodetach;		/* if TRUE, don't detach daemon process */
-flag quitmode;		/* if --quit was set */
-flag check_only;	/* if --probe was set */
-flag versioninfo;	/* emit only version info */
-char *user;		/* the name of the invoking user */
-char *home;		/* invoking user's home directory */
-char *program_name;	/* the name to prefix error messages with */
-flag configdump;	/* dump control blocks for configurator */
-char *fetchmailhost;	/* either `localhost' or the host FQDN */
+struct runctl run;	    /* global controls for this run */
+flag nodetach;		    /* if TRUE, don't detach daemon process */
+flag quitmode;		    /* if --quit was set */
+flag check_only;	    /* if --probe was set */
+flag versioninfo;	    /* emit only version info */
+char *user;		    /* the name of the invoking user */
+char *home;		    /* invoking user's home directory */
+char *program_name;	    /* the name to prefix error messages with */
+flag configdump;	    /* dump control blocks for configurator */
+const char *fetchmailhost;  /* either `localhost' or the host's FQDN */
 
 #if NET_SECURITY
 void *request = NULL;
@@ -75,7 +75,7 @@ static int successes;		/* count number of successful polls */
 static int lastsig;		/* last signal received */
 static struct runctl cmd_run;	/* global options set from command line */
 
-static void termhook();		/* forward declaration of exit hook */
+static void termhook(int);		/* forward declaration of exit hook */
 
 #if 0
 #define SLEEP_WITH_ALARM
@@ -107,7 +107,7 @@ int sig;
 }
 #endif /* SLEEP_WITH_ALARM */
 
-RETSIGTYPE donothing(sig) int sig; {signal(sig, donothing); lastsig = sig;}
+RETSIGTYPE donothing(int sig) {signal(sig, donothing); lastsig = sig;}
 
 #ifdef HAVE_ON_EXIT
 static void unlockit(int n, void *p)
@@ -814,6 +814,9 @@ static int load_params(int argc, char **argv, int optind)
 		if (!strcmp(ctl->server.pollname, argv[optind])
 			|| str_in_list(&ctl->server.akalist, argv[optind], TRUE))
 		{
+		    /* Is this correct? */
+		    if(predeclared)
+			fprintf(stderr,"Warning: multiple mentions of host %s in config file\n",argv[optind]);
 		    ctl->active = TRUE;
 		    predeclared = TRUE;
 		}
@@ -862,37 +865,6 @@ static int load_params(int argc, char **argv, int optind)
 	    /* force command-line options */
 	    optmerge(ctl, &cmd_opts, TRUE);
 
-	    /*
-	     * DNS support is required for some protocols.
-	     *
-	     * If we're using ETRN, the smtp hunt list is the list of
-	     * systems we're polling on behalf of; these have to be 
-	     * fully-qualified domain names.  The default for this list
-	     * should be the FQDN of localhost.
-	     *
-	     * If we're using Kerberos for authentication, we need 
-	     * the FQDN in order to generate capability keys.
-	     */
-	    if ((ctl->server.protocol == P_ETRN
-			 || ctl->server.preauthenticate == A_KERBEROS_V4
-			 || ctl->server.preauthenticate == A_KERBEROS_V5))
-		if (strcmp(fetchmailhost, "localhost") == 0)
-			fetchmailhost = host_fqdn();
-
-	    /*
-	     * Make sure we have a nonempty host list to forward to.
-	     */
-	    if (!ctl->smtphunt)
-		save_str(&ctl->smtphunt, fetchmailhost, FALSE);
-
-	    /* if `user' doesn't name a real local user, try to run as root */
-	    if ((pw = getpwnam(user)) == (struct passwd *)NULL)
-		ctl->uid = 0;
-            else
-		ctl->uid = pw->pw_uid;	/* for local delivery via MDA */
-	    if (!ctl->localnames)	/* for local delivery via SMTP */
-		save_str_pair(&ctl->localnames, user, NULL);
-
 	    /* this code enables flags to be turned off */
 #define DEFAULT(flag, dflt)	if (flag == FLAG_TRUE)\
 	    				flag = TRUE;\
@@ -913,6 +885,37 @@ static int load_params(int argc, char **argv, int optind)
 	    DEFAULT(ctl->server.uidl, FALSE);
 	    DEFAULT(ctl->server.checkalias, FALSE);
 #undef DEFAULT
+
+	    /*
+	     * DNS support is required for some protocols.
+	     *
+	     * If we're using ETRN, the smtp hunt list is the list of
+	     * systems we're polling on behalf of; these have to be 
+	     * fully-qualified domain names.  The default for this list
+	     * should be the FQDN of localhost.
+	     *
+	     * If we're using Kerberos for authentication, we need 
+	     * the FQDN in order to generate capability keys.
+	     */
+	    if (ctl->server.protocol == P_ETRN
+			 || ctl->server.preauthenticate == A_KERBEROS_V4
+			 || ctl->server.preauthenticate == A_KERBEROS_V5)
+		if (strcmp(fetchmailhost, "localhost") == 0)
+			fetchmailhost = host_fqdn();
+
+	    /*
+	     * Make sure we have a nonempty host list to forward to.
+	     */
+	    if (!ctl->smtphunt)
+		save_str(&ctl->smtphunt, fetchmailhost, FALSE);
+
+	    /* if `user' doesn't name a real local user, try to run as root */
+	    if ((pw = getpwnam(user)) == (struct passwd *)NULL)
+		ctl->uid = 0;
+            else
+		ctl->uid = pw->pw_uid;	/* for local delivery via MDA */
+	    if (!ctl->localnames)	/* for local delivery via SMTP */
+		save_str_pair(&ctl->localnames, user, NULL);
 
 #if !defined(HAVE_GETHOSTBYNAME) || !defined(HAVE_RES_SEARCH)
 	    /* can't handle multidrop mailboxes unless we can do DNS lookups */

@@ -23,7 +23,7 @@
 
 /* Python prettyprinting functions */
 
-static indent_level;
+static int indent_level;
 
 static void indent(char ic)
 /* indent current line */

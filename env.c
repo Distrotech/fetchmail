@@ -100,7 +100,7 @@ char *host_fqdn(void)
 }
 
 
-char *showproto(int proto)
+const char *showproto(int proto)
 /* protocol index to protocol name mapping */
 {
     switch (proto)

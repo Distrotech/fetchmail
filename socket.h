@@ -38,7 +38,7 @@ Send formatted output to the socket (matches interface of fprintf).
 Returns number of bytes successfully written.
 */
 #if defined(HAVE_STDARG_H)
-int SockPrintf(int sock, char *format, ...) ;
+int SockPrintf(int sock, const char *format, ...) ;
 #else
 int SockPrintf();
 #endif

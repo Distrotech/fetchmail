@@ -42,9 +42,9 @@ static int prc_errflag;
 static struct hostdata *leadentry;
 static flag trailer;
 
-static void record_current();
-static void user_reset();
-static void reset_server(char *name, int skip);
+static void record_current(void);
+static void user_reset(void);
+static void reset_server(const char *name, int skip);
 
 /* using Bison, this arranges that yydebug messages will show actual tokens */
 extern char * yytext;
@@ -426,7 +426,7 @@ int prc_parse_file (const char *pathname, const flag securecheck)
 	return(PS_SUCCESS);
 }
 
-static void reset_server(char *name, int skip)
+static void reset_server(const char *name, int skip)
 /* clear the entire global record and initialize it with a new name */
 {
     trailer = FALSE;

@@ -12,6 +12,7 @@
 #include  <stdlib.h>
 #endif
 
+#include "config.h"
 #include "fetchmail.h"
 
 #define HEADER_END(p)	((p)[0] == '\n' && ((p)[1] != ' ' && (p)[1] != '\t'))

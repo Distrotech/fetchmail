@@ -20,8 +20,7 @@
 #include "md5.h"
 
 char *
-MD5Digest (s)
-unsigned char *s;
+MD5Digest (unsigned char *s)
 {
   int i;
   MD5_CTX context;

@@ -54,10 +54,10 @@ static int ttyfd;
 #endif
 #endif
 
-void static save_tty_state();
-void static disable_tty_echo();
-void static restore_tty_state();
-static RETSIGTYPE sigint_handler();
+void static save_tty_state(void);
+void static disable_tty_echo(void);
+void static restore_tty_state(void);
+static RETSIGTYPE sigint_handler(int);
 
 char *getpassword(prompt)
 char *prompt;
@@ -72,11 +72,11 @@ char *prompt;
 #endif
 #else
     register char *p;
-    register c;
+    register int c;
     FILE *fi;
     static char pbuf[INPUT_BUF_SIZE];
-    RETSIGTYPE (*sig)() = 0;	/* initialization pacifies -Wall */
-    RETSIGTYPE sigint_handler();
+    RETSIGTYPE (*sig)(int) = 0;	/* initialization pacifies -Wall */
+    RETSIGTYPE sigint_handler(int);
 
     int istty = isatty(0);
 
@@ -136,7 +136,7 @@ char *prompt;
 #endif /* !(defined(HAVE_TCSETATTR) || ... */
 }
 
-static void save_tty_state ()
+static void save_tty_state (void)
 {
 #if defined(HAVE_TCSETATTR)
     tcgetattr(ttyfd, &termb);
@@ -152,7 +152,7 @@ static void save_tty_state ()
 #endif
 }
 
-static void disable_tty_echo() 
+static void disable_tty_echo(void) 
 {
     /* turn off echo on the tty */
 #if defined(HAVE_TCSETATTR)
@@ -169,7 +169,7 @@ static void disable_tty_echo()
 #endif
 }
 
-static void restore_tty_state()
+static void restore_tty_state(void)
 {
     /* restore previous tty echo state */
 #if defined(HAVE_TCSETATTR)
@@ -186,7 +186,7 @@ static void restore_tty_state()
 #endif
 }
 
-static RETSIGTYPE sigint_handler()
+static RETSIGTYPE sigint_handler(int signum)
 {
     restore_tty_state();
     error(1, 0, "\nCaught signal... bailing out.");

@@ -9,16 +9,16 @@
  */
 
 #include <stdio.h>
-#include <config.h>
 #include <unistd.h>
 #include <string.h>
 #include "fetchmail.h"
 #include "socket.h"
 #include "smtp.h"
+#include "config.h"
 
 struct opt
 {
-    char *name;
+    const char *name;
     int value;
 };
 
@@ -32,7 +32,7 @@ static struct opt extensions[] =
 
 char smtp_response[MSGBUFSIZE];
 
-int SMTP_helo(int sock,char *host)
+int SMTP_helo(int sock,const char *host)
 /* send a "HELO" message to the SMTP listener */
 {
   int ok;
@@ -44,7 +44,7 @@ int SMTP_helo(int sock,char *host)
   return ok;
 }
 
-int SMTP_ehlo(int sock, char *host, int *opt)
+int SMTP_ehlo(int sock, const char *host, int *opt)
 /* send a "EHLO" message to the SMTP listener, return extension status bits */
 {
   struct opt *hp;
@@ -78,7 +78,7 @@ int SMTP_ehlo(int sock, char *host, int *opt)
   return SM_UNRECOVERABLE;
 }
 
-int SMTP_from(int sock, char *from, char *opts)
+int SMTP_from(int sock, const char *from, const char *opts)
 /* send a "MAIL FROM:" message to the SMTP listener */
 {
     int ok;
@@ -97,7 +97,7 @@ int SMTP_from(int sock, char *from, char *opts)
     return ok;
 }
 
-int SMTP_rcpt(int sock, char *to)
+int SMTP_rcpt(int sock, const char *to)
 /* send a "RCPT TO:" message to the SMTP listener */
 {
   int ok;

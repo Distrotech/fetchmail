@@ -6,6 +6,7 @@
 
 #include "config.h"
 #include <stdio.h>
+#include <errno.h>
 #include <string.h>
 #ifdef HAVE_MEMORY_H
 #include <memory.h>
@@ -27,6 +28,15 @@
 #include <varargs.h>
 #endif
 #include "socket.h"
+#include "fetchmail.h"
+
+#ifdef HAVE_RES_SEARCH
+/* some versions of FreeBSD should declare this but don't */
+extern int h_errno;
+#else
+/* pretend we have h_errno to avoid some #ifdef's later */
+static int h_errno;
+#endif
 
 #if NET_SECURITY
 #include <net/security.h>
@@ -46,7 +56,7 @@ int SockOpen(const char *host, const char *service, const char *options)
   req.ai_socktype = SOCK_STREAM;
 
   if (i = getaddrinfo(host, service, &req, &ai)) {
-    fprintf(stderr, "fetchmail: getaddrinfo(%s.%s): %s(%d)\n", host, service, gai_strerror(i), i);
+    error(0, 0, "fetchmail: getaddrinfo(%s.%s): %s(%d)", host, service, gai_strerror(i), i);
     return -1;
   };
 
@@ -57,7 +67,7 @@ int SockOpen(const char *host, const char *service, const char *options)
     if (net_security_strtorequest((char *)options, &request, &requestlen))
       goto ret;
 
-  i = inner_connect(ai, request, requestlen, NULL,NULL, "fetchmail", NULL);
+  i = inner_connect(ai, request, requestlen, NULL, NULL, "fetchmail", NULL);
   if (request)
     free(request);
 
@@ -71,7 +81,7 @@ ret:
   return i;
 };
 #else /* INET6 */
-#ifndef INET_ATON
+#ifndef HAVE_INET_ATON
 #ifndef  INADDR_NONE
 #ifdef   INADDR_BROADCAST
 #define  INADDR_NONE	INADDR_BROADCAST
@@ -79,14 +89,14 @@ ret:
 #define	 INADDR_NONE	-1
 #endif
 #endif
-#endif /* INET_ATON */
+#endif /* HAVE_INET_ATON */
 
 int SockOpen(const char *host, int clientPort, const char *options)
 {
     int sock;
-#ifndef INET_ATON
+#ifndef HAVE_INET_ATON
     unsigned long inaddr;
-#endif /* INET_ATON */
+#endif /* HAVE_INET_ATON */
     struct sockaddr_in ad;
     struct hostent *hp;
 
@@ -94,24 +104,32 @@ int SockOpen(const char *host, int clientPort, const char *options)
     ad.sin_family = AF_INET;
 
     /* we'll accept a quad address */
-#ifndef INET_ATON
+#ifndef HAVE_INET_ATON
     inaddr = inet_addr(host);
     if (inaddr != INADDR_NONE)
         memcpy(&ad.sin_addr, &inaddr, sizeof(inaddr));
     else
 #else
     if (!inet_aton(host, &ad.sin_addr))
-#endif /* INET_ATON */
+#endif /* HAVE_INET_ATON */
     {
         hp = gethostbyname(host);
 
+        if (hp == NULL)
+	{
+	    errno = 0;
+	    return -1;
+	}
 	/*
 	 * Add a check to make sure the address has a valid IPv4 or IPv6
 	 * length.  This prevents buffer spamming by a broken DNS.
 	 */
-        if (hp == NULL || (hp->h_length != 4 && hp->h_length != 8))
-            return -1;
-
+	if(hp->h_length != 4 && hp->h_length != 8)
+	{
+	    h_errno = errno = 0;
+	    error(0, 0, "fetchmail: illegal address length received for host %s");
+	    return -1;
+	}
 	/*
 	 * FIXME: make this work for multihomed hosts.
 	 * We're toast if we get back multiple addresses and h_addrs[0]
@@ -124,10 +142,16 @@ int SockOpen(const char *host, int clientPort, const char *options)
     
     sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0)
+    {
+	h_errno = 0;
         return -1;
+    }
     if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) < 0)
     {
+	int olderr = errno;
 	close(sock);
+	h_errno = 0;
+	errno = olderr;
         return -1;
     }
 
@@ -137,7 +161,7 @@ int SockOpen(const char *host, int clientPort, const char *options)
 
 
 #if defined(HAVE_STDARG_H)
-int SockPrintf(int sock, char* format, ...)
+int SockPrintf(int sock, const char* format, ...)
 {
 #else
 int SockPrintf(sock,format,va_alist)
@@ -228,7 +252,7 @@ int SockClose(int sock)
 
 #ifdef MAIN
 /*
- * Use the chargen service to test input beuffering directly.
+ * Use the chargen service to test input buffering directly.
  * You may have to uncomment the `chargen' service description in your
  * inetd.conf (and then SIGHUP inetd) for this to work. 
  */

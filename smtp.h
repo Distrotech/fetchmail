@@ -19,10 +19,10 @@
 #define ESMTP_SIZE	0x02
 #define ESMTP_ETRN	0x04
 
-int SMTP_helo(int socket,char *host);
-int SMTP_ehlo(int socket,char *host,int *opt);
-int SMTP_from(int socket,char *from,char *opts);
-int SMTP_rcpt(int socket,char *to);
+int SMTP_helo(int socket,const char *host);
+int SMTP_ehlo(int socket,const char *host,int *opt);
+int SMTP_from(int socket,const char *from,const char *opts);
+int SMTP_rcpt(int socket,const char *to);
 int SMTP_data(int socket);
 int SMTP_eom(int socket);
 int SMTP_rset(int socket);

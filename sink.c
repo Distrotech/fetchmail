@@ -73,7 +73,7 @@ static int smtp_open(struct query *ctl)
 	 * What it will affect is the listener's logging.
 	 */
 	struct idlist	*idp;
-	char *id_me = run.invisible ? ctl->server.truename : fetchmailhost;
+	const char *id_me = run.invisible ? ctl->server.truename : fetchmailhost;
 	int oldphase = phase;
 
 	errno = 0;
@@ -159,7 +159,7 @@ static int smtp_open(struct query *ctl)
 
 /* these are shared by open_sink and stuffline */
 static FILE *sinkfp;
-static RETSIGTYPE (*sigchld)();
+static RETSIGTYPE (*sigchld)(int);
 
 int stuffline(struct query *ctl, char *buf)
 /* ship a line to the given control block's output sink (SMTP server or MDA) */
@@ -235,7 +235,7 @@ int stuffline(struct query *ctl, char *buf)
 static void sanitize(char *s)
 /* replace unsafe shellchars by an _ */
 {
-    static char *ok_chars = " 1234567890!@%-_=+:,./abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const static char *ok_chars = " 1234567890!@%-_=+:,./abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     char *cp;
 
     for (cp = s; *(cp += strspn(cp, ok_chars)); /* NO INCREMENT */)
@@ -243,7 +243,7 @@ static void sanitize(char *s)
 }
 
 int open_sink(struct query *ctl, 
-	      char *return_path,
+	      const char *return_path,
 	      struct idlist *xmit_names,
 	      long reallen,
 	      int *good_addresses, int *bad_addresses)
@@ -401,7 +401,8 @@ int open_sink(struct query *ctl,
     }
     else
     {
-	char	*ap, options[MSGBUFSIZE], addr[128];
+	const char	*ap;
+	char	options[MSGBUFSIZE], addr[128];
 
 	/* build a connection to the SMTP listener */
 	if ((smtp_open(ctl) == -1))
@@ -559,7 +560,7 @@ int open_sink(struct query *ctl,
 	    {
 		error(0, 0, "can't even send to %s!", run.postmaster);
 		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
-		return(PS_REFUSED);
+		return(PS_SMTP);
 	    }
 	}
 

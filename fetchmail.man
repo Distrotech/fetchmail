@@ -86,8 +86,8 @@ declare them in a
 .I fetchmailrc
 file.
 .PP
-Some special options are not covered here, but are documented insttead
-in sections on AUTHENTICATION and DAEMON MODE which follows.
+Some special options are not covered here, but are documented instead
+in sections on AUTHENTICATION and DAEMON MODE which follow.
 .SS General Options
 .TP
 .B \-V, --version
@@ -160,14 +160,14 @@ fetchmail will automatically delete messages after successful delivery.
 .TP
 .B \-p, \--protocol proto
 (Keyword: proto[col])
-Specify the protocol to used when communicating with the remote 
-mailserver.  If no protocol is specified,
-.I fetchmail
-will try each of the supported protocols in turn, terminating after
-any successful attempt.
+Specify the protocol to use when communicating with the remote 
+mailserver.  If no protocol is specified, the default is AUTO.
 .I proto 
 may be one of the following:
 .RS
+.IP AUTO
+Tries each of the supported protocols in turn, terminating after
+any successful attempt.
 .IP POP2
 Post Office Protocol 2
 .IP POP3
@@ -237,11 +237,12 @@ Specify a hunt list of hosts to forward mail to (one or more
 hostnames, comma-separated).  In ETRN mode, set the host that the
 mailserver is asked to ship mail to.  Hosts are tried in list order;
 the first one that is up becomes the forwarding or ETRN target for the
-current run.  In ETRN mode, the FQDN of the machine running fetchmail
-is added to the end of the list as an invisible default; in all other
-modes `localhost' is added to the end of the list as an invisible
-default.  Each hostname may have a '/'-delimited suffix specifying a
-port or service to forward to; the default is 25 (or "smtp" under IPv6). 
+current run.  Normally, `localhost' is added to the end of the list as
+an invisible default.  However, when using ETRN mode or Kerberos
+authentication, the FQDN of the machine running fetchmail is added to
+the end of the list as an invisible default.  Each hostname may have a
+'/'-delimited suffix specifying a port or service to forward to; the
+default is 25 (or "smtp" under IPv6).
 .TP
 .B \-D domain, --smtpaddress domain
 (Keyword: smtpaddress) 
@@ -907,7 +908,7 @@ auth[enticate]	-A	T{
 Set preauthentication type (default `password')
 T}
 timeout  	-t	T{
-Server inactivity timout in seconds (default 300)
+Server inactivity timeout in seconds (default 300)
 T}
 envelope	-E	T{
 Specify envelope-address header name
@@ -1077,11 +1078,10 @@ following them.
 .PP
 All options correspond to the obvious command-line arguments, except
 the following: `via', `interval', `aka', `is', `to', `dns'/`no dns',
-`checkalias'/`no checkalias', 
-\&`password', \&`preconnect', \&`postconnect', `localdomains',
-\&`stripcr'/`no stripcr', \&`forcecr'/`no forcecr', `pass8bits'/`no
-pass8bits' `dropstatus/no dropstatus', `mimedecode/no mimedecode',
-and `no envelope'.
+`checkalias'/`no checkalias', `password', `preconnect', `postconnect',
+`localdomains', `stripcr'/`no stripcr', `forcecr'/`no forcecr',
+`pass8bits'/`no pass8bits' `dropstatus/no dropstatus', `mimedecode/no
+mimedecode', and `no envelope'.
 .PP
 The `via' option is for use with ssh, or if you want to have more
 than one configuration pointing at the same site.  If it is present,
@@ -1301,14 +1301,14 @@ rather to the list manager (which is less annoying).
 In multidrop mode, destination headers are processed as follows:
 First, fetchmail looks for the Received: header (or whichever one is
 specified by the `envelope' option) to determine the local
-recipient adress. If the mail is addressed to more than one recipient,
-the Received line won't contain any information regarding recipient adresses.
+recipient address. If the mail is addressed to more than one recipient,
+the Received line won't contain any information regarding recipient addresses.
 
 Then fetchmail looks for the Resent-To:, Resent-Cc:, and Resent-Bcc:
 lines.  If they exists, they should contain the final recipients and
 have precedence over their To:/Cc:/Bcc: counterparts.  If the Resent-*
 lines doesn't exist, the To:, Cc:, Bcc: and Apparently-To: lines are
-looked for. (The presence of a Resent-To: is taken to impluy that the
+looked for. (The presence of a Resent-To: is taken to imply that the
 person referred by the To: address has already received the original
 copy of the mail).
 
@@ -1455,7 +1455,7 @@ in each message containing a copy of the envelope addresses.  This
 header (when it exists) is often `X-Envelope-To'.  Fetchmail's
 assumption about this can be changed with the -E or `envelope' option.
 Note that writing an envelope header of this kind exposes the names of
-recipients (including blind-copy recopients) to all receivers of the
+recipients (including blind-copy recipients) to all receivers of the
 messages; it is therefore regarded by some administrators as a
 security/privacy problem.
 .PP
@@ -1568,8 +1568,8 @@ One or more messages were successfully retrieved.
 There was no mail awaiting retrieval.  (There may have been old mail still
 on the server but not selected for retrieval.)
 .IP 2
-An error was encountered when attempting to open a socket for the POP 
-connection.  If you don't know what a socket is, don't worry about it --
+An error was encountered when attempting to open a socket to retrieve
+mail.  If you don't know what a socket is, don't worry about it --
 just treat this as an 'unrecoverable error'.
 .IP 3
 The user authentication step failed.  This usually means that a bad 
@@ -1600,7 +1600,7 @@ talking to qpopper or other servers that can respond with "lock busy"
 or some similar text containing the word "lock".
 .IP 10
 The 
-.I fetchmail.
+.I fetchmail
 run failed while trying to do an SMTP port open or transaction.
 .IP 11
 Fatal DNS error.  Fetchmail encountered an error while performing

@@ -44,7 +44,7 @@ extern char *strstr();	/* needed on sysV68 R3V7.1. */
 #define IMAP4		0	/* IMAP4 rev 0, RFC1730 */
 #define IMAP4rev1	1	/* IMAP4 rev 1, RFC2060 */
 
-static int count, seen, recent, unseen, deletions,expunged, imap_version;
+static int count, seen, recent, unseen, deletions, expunged, imap_version;
 static char capabilities[MSGBUFSIZE+1];
 
 int imap_ok(int sock, char *argbuf)
@@ -113,7 +113,9 @@ int imap_ok(int sock, char *argbuf)
 		strcpy(argbuf, cp);
 	    return(PS_SUCCESS);
 	}
-	else if (strncmp(cp, "BAD", 2) == 0)
+	else if (strncmp(cp, "BAD", 3) == 0)
+	    return(PS_ERROR);
+	else if (strncmp(cp, "NO", 2) == 0)
 	    return(PS_ERROR);
 	else
 	    return(PS_PROTOCOL);
@@ -665,7 +667,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 	    
 	    return(ok);
 	}
-	/* else fall through to ourdinary AUTH=LOGIN case */
+	/* else fall through to ordinary AUTH=LOGIN case */
     }
     else if (ctl->server.protocol == P_IMAP_K4)
     {

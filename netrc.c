@@ -39,9 +39,7 @@
 /* Maybe add NEWENTRY to the account information list, LIST.  NEWENTRY is
    set to a ready-to-use netrc_entry, in any event. */
 static void
-maybe_add_to_list (newentry, list)
-     netrc_entry **newentry;
-     netrc_entry **list;
+maybe_add_to_list (netrc_entry **newentry, netrc_entry **list)
 {
     netrc_entry *a, *l;
     a = *newentry;
@@ -87,7 +85,8 @@ parse_netrc (file)
      char *file;
 {
     FILE *fp;
-    char buf[POPBUFSIZE+1], *p, *tok, *premature_token;
+    char buf[POPBUFSIZE+1], *p, *tok;
+    const char *premature_token;
     netrc_entry *current, *retval;
     int ln;
 

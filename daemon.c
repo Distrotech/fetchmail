@@ -85,7 +85,7 @@ daemonize (const char *logfile, void (*termhook)(int))
 {
   int fd;
   pid_t childpid;
-  RETSIGTYPE sigchld_handler();
+  RETSIGTYPE sigchld_handler(int);
 
   /* if we are started by init (process 1) via /etc/inittab we needn't 
      bother to detach from our process group context */
