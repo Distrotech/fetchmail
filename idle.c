@@ -166,7 +166,7 @@ int interruptible_idle(int seconds)
 }
 
 #ifdef MAIN
-int main(int argc, **argv)
+int main(int argc, char **argv)
 {
     for (;;)
     {
