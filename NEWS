@@ -39,8 +39,8 @@ And about time, too, I've been hacking on this code for a year now!
 * Fixes for minor compilation glitches on non-Linux systems.
 * Progress messages now show total count as well as message number.
 * Removed the popclient backward-compatibility hacks.
-* Leif Erlingsson <leif@lege.com> sent a patch to avoid colliding with 
-  the busy-lock after authentication failure on a POP3 server.
+* Leif Erlingsson <leif@lege.com> sent a patch to separate a "lock busy"
+  condition from other authentication failures on a POP3 server.
 * Allow duplicate server hostnames again.
 * Fetchmail now returns 0 if *any* poll during the run succeeded.
 
