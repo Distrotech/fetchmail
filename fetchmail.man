@@ -660,8 +660,8 @@ invoking user is used.) Here's a contrived example:
 This says that the user invoking \fIfetchmail\fR has the same username
 on pop.provider.net, and password `gumshoe' there.
 It also associates the local username `smith' with the pop.provider.net
-username `jsmith' and the local username `jones' with the pop.provider.net
-username `jjones'.
+username `jsmith' and the local username `jjones' with the pop.provider.net
+username `jones'.
 .PP
 This example is contrived because, in practice, you are very unlikely
 to be specifying multiple users per server unless running it as root
