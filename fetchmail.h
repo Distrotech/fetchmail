@@ -182,7 +182,7 @@ struct query
 #define UID_KEPT	0		/* remembered from a previous run */
 #define UID_DELETED	INT_MIN		/* this message has been deleted */
 #define UID_EXPUNGED	INT_MAX		/* this message has been expunged */ 
-#define SAVE_UID(n)	((n) < 0)	/* must this UID be saved? */
+#define SAVE_UID(n)	((n) <= 0)	/* must this UID be saved? */
 #define MARK_SEEN(n)	n *= -1		/* mark a UID seen */
 
 /*

@@ -23,6 +23,7 @@ fetchmail-4.4.0 ():
   sent to IMAP servers.  This allows them to contain doublequotes and
   backslashes.
 * Made the antispam response configurable.
+* UID-handling fix from Dick van den Burg <burg@is.ge.com>,
 
 There are 269 people on fetchmail-friends and 144 on fetchmail-announce.
 
