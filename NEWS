@@ -1,6 +1,6 @@
 			Release Notes:
 
-fetchmail-2.2 (Wed Dec  4 23:55:20 EST 1996):
+fetchmail-2.2 (Fri Dec  6 18:45:42 EST 1996):
 
 features --
 
@@ -14,7 +14,7 @@ bugs --
 * Fixed a bug in non-implicit (poll specified host) mode also due to aka.
 * Various minor portability fixes for Suns.
 * Avoid using -lresolv when possible, some Linux versions are badly broken.
-* Fix error in MX record handling that was causing multidrop problems
+* Fix error in MX record handling that was causing multidrop problems.
 
 fetchmail-2.1 (Thu Nov 28 11:07:48 EST 1996):
 
