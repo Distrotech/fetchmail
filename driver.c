@@ -513,27 +513,21 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	    if (err == PS_RETAINED)
 	    {
 		suppress_forward = suppress_delete = retained = TRUE;
-		/* do not read the body only if the underlying protocol
-		 * allows the body to be fetched separately */
-		if (ctl->server.base_protocol->fetch_body)
-		    suppress_readbody = TRUE;
+		suppress_readbody = TRUE;
 	    }
 	    else if (err == PS_TRANSIENT)
 	    {
 		suppress_delete = suppress_forward = TRUE;
-		if (ctl->server.base_protocol->fetch_body)
-		    suppress_readbody = TRUE;
+		suppress_readbody = TRUE;
 	    }
 	    else if (err == PS_REFUSED)
 	    {
 		suppress_forward = TRUE;
-		if (ctl->server.base_protocol->fetch_body)
-		    suppress_readbody = TRUE;
+		suppress_readbody = TRUE;
 	    }
 	    else if (err == PS_TRUNCATED)
 	    {
-		if (ctl->server.base_protocol->fetch_body)
-		    suppress_readbody = TRUE;
+		suppress_readbody = TRUE;
 		len = 0;	/* suppress body processing */
 	    }
 	    else if (err)
@@ -1023,8 +1017,8 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	}
 
 #ifdef SSL_ENABLE
-	/* Save the socket opened. Usefull if Fetchmail hangs on SSLOpen 
-	 * because the socket can be closed
+	/* Save the socket opened. Useful if Fetchmail hangs on SSLOpen 
+	 * because the socket can be closed.
 	 */
 	mailserver_socket_temp = mailserver_socket;
 	set_timeout(mytimeout);
@@ -1036,6 +1030,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	    ctl->sslcertpath,ctl->sslfingerprint,realhost,ctl->server.pollname) == -1) 
 	{
 	    report(stderr, GT_("SSL connection failed.\n"));
+	    err = PS_AUTHFAIL;
 	    goto closeUp;
 	}
 	
@@ -1249,7 +1244,7 @@ is restored."));
 		    (void) sprintf(buf,
 #endif /* HAVE_SNPRINTF */
 				   GT_("%s at %s (folder %s)"),
-				   ctl->remotename, ctl->server.truename, idp->id);
+				   ctl->remotename, ctl->server.pollname, idp->id);
 		else
 #ifdef HAVE_SNPRINTF
 		    (void) snprintf(buf, sizeof(buf),
@@ -1257,7 +1252,7 @@ is restored."));
 		    (void) sprintf(buf,
 #endif /* HAVE_SNPRINTF */
 			       GT_("%s at %s"),
-				   ctl->remotename, ctl->server.truename);
+				   ctl->remotename, ctl->server.pollname);
 		if (outlevel > O_SILENT)
 		{
 		    if (count == -1)		/* only used for ETRN */
