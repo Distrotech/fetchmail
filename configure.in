@@ -207,12 +207,21 @@ AC_MSG_RESULT(root-mode pid file will go in $dir)
 AC_DEFINE_UNQUOTED(PID_DIR, "$dir")
 
 # We may have a fallback MDA available in case the socket open to the 
-# local SMTP listener fails...
+# local SMTP listener fails.  Best to use procmail for this, as we know
+# it won't try delivering through local SMTP and cause a mail loop.
+# Sendmail without the -t option to use the message headers will work too,
+# not just for sendmail itself but for workalikes like exim.
 AC_PATH_PROG(procmail, procmail, "", $PATH:/usr/sbin)
 if test "$procmail"
 then
 	echo "Found procmail, will use it as a fallback MDA."
 	AC_DEFINE(FALLBACK_MDA, "$procmail -d %T")
+	AC_PATH_PROG(sendmail, sendmail, "", $PATH:/usr/sbin)
+	if test "$sendmail"
+	then
+		echo "Found sendmail, will use it as a fallback MDA."
+		AC_DEFINE(FALLBACK_MDA, "$sendmail %T")
+	fi	
 fi
 
 AC_CHECK_SIZEOF(short)
