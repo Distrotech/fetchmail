@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Added FAQ item on performance under load.
+
 fetchmail-5.3.3 (Mon Mar 13 16:34:29 EST 2000), 18763 lines:
 
 * Fixed reporting of listener timeouts.
@@ -949,7 +951,7 @@ fetchmail-4.3.0 (Mon Oct  6 16:44:38 EDT 1997), 12304 lines:
 * Created fetchmail-announce list.
 
 There are 281 people on fetchmail-friends and 8 on fetchmail-announce.
-% fetchmail-friends list split
+% fetchmail list split
 
 fetchmail-4.2.9 (Tue Sep 30 18:21:35 EDT 1997), 12185 lines:
 * Don't byte-stuff when writing to an MDA.
@@ -1285,7 +1287,7 @@ fetchmail-3.9.1 (Thu Apr 17 11:37:14 EDT 1997), 8923 lines:
 * Added `forcecr' to fix qmail problems by forcing CRLF termination.
 
 There are 222 people on the fetchmail-friends list.
-% Bad addresses dropped after the switchover to SmartList
+% Bad addresses dropped after switch to SmartList
 
 ------------------------------------------------------------------------------
 fetchmail-3.9.0 (Wed Apr  2 13:36:22 EST 1997), 8889 lines:
