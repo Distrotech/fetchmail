@@ -191,87 +191,6 @@ int smtp_open(struct query *ctl)
     return(ctl->smtp_socket);
 }
 
-/* these are shared by open_sink and stuffline */
-#ifndef HAVE_SIGACTION
-static RETSIGTYPE (*sigchld)(int);
-#else
-static struct sigaction sa_old;
-#endif /* HAVE_SIGACTION */
-static FILE *sinkfp;
-
-int stuffline(struct query *ctl, char *buf)
-/* ship a line to the given control block's output sink (SMTP server or MDA) */
-{
-    int	n, oldphase;
-    char *last;
-
-    /* The line may contain NUL characters. Find the last char to use
-     * -- the real line termination is the sequence "\n\0".
-     */
-    last = buf;
-    while ((last += strlen(last)) && (last[-1] != '\n'))
-        last++;
-
-    /* fix message lines that have only \n termination (for qmail) */
-    if (ctl->forcecr)
-    {
-        if (last - 1 == buf || last[-2] != '\r')
-	{
-	    last[-1] = '\r';
-	    *last++  = '\n';
-	    *last    = '\0';
-	}
-    }
-
-    oldphase = phase;
-    phase = FORWARDING_WAIT;
-
-    /*
-     * SMTP byte-stuffing.  We only do this if the protocol does *not*
-     * use .<CR><LF> as EOM.  If it does, the server will already have
-     * decorated any . lines it sends back up.
-     */
-    if (*buf == '.')
-    {
-	if (ctl->server.base_protocol->delimited)	/* server has already byte-stuffed */
-	{
-	    if (ctl->mda)
-		++buf;
-	    else
-		/* writing to SMTP, leave the byte-stuffing in place */;
-	}
-        else /* if (!protocol->delimited)	-- not byte-stuffed already */
-	{
-	    if (!ctl->mda)
-		SockWrite(ctl->smtp_socket, buf, 1);	/* byte-stuff it */
-	    else
-		/* leave it alone */;
-	}
-    }
-
-    /* we may need to strip carriage returns */
-    if (ctl->stripcr)
-    {
-	char	*sp, *tp;
-
-	for (sp = tp = buf; sp < last; sp++)
-	    if (*sp != '\r')
-		*tp++ =  *sp;
-	*tp = '\0';
-        last = tp;
-    }
-
-    n = 0;
-    if (ctl->mda || ctl->bsmtp)
-	n = fwrite(buf, 1, last - buf, sinkfp);
-    else if (ctl->smtp_socket != -1)
-	n = SockWrite(ctl->smtp_socket, buf, last - buf);
-
-    phase = oldphase;
-
-    return(n);
-}
-
 static void sanitize(char *s)
 /* replace unsafe shellchars by an _ */
 {
@@ -527,6 +446,87 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	 */
 	return(PS_TRANSIENT);
     }
+}
+
+/* these are shared by open_sink and stuffline */
+#ifndef HAVE_SIGACTION
+static RETSIGTYPE (*sigchld)(int);
+#else
+static struct sigaction sa_old;
+#endif /* HAVE_SIGACTION */
+static FILE *sinkfp;
+
+int stuffline(struct query *ctl, char *buf)
+/* ship a line to the given control block's output sink (SMTP server or MDA) */
+{
+    int	n, oldphase;
+    char *last;
+
+    /* The line may contain NUL characters. Find the last char to use
+     * -- the real line termination is the sequence "\n\0".
+     */
+    last = buf;
+    while ((last += strlen(last)) && (last[-1] != '\n'))
+        last++;
+
+    /* fix message lines that have only \n termination (for qmail) */
+    if (ctl->forcecr)
+    {
+        if (last - 1 == buf || last[-2] != '\r')
+	{
+	    last[-1] = '\r';
+	    *last++  = '\n';
+	    *last    = '\0';
+	}
+    }
+
+    oldphase = phase;
+    phase = FORWARDING_WAIT;
+
+    /*
+     * SMTP byte-stuffing.  We only do this if the protocol does *not*
+     * use .<CR><LF> as EOM.  If it does, the server will already have
+     * decorated any . lines it sends back up.
+     */
+    if (*buf == '.')
+    {
+	if (ctl->server.base_protocol->delimited)	/* server has already byte-stuffed */
+	{
+	    if (ctl->mda)
+		++buf;
+	    else
+		/* writing to SMTP, leave the byte-stuffing in place */;
+	}
+        else /* if (!protocol->delimited)	-- not byte-stuffed already */
+	{
+	    if (!ctl->mda)
+		SockWrite(ctl->smtp_socket, buf, 1);	/* byte-stuff it */
+	    else
+		/* leave it alone */;
+	}
+    }
+
+    /* we may need to strip carriage returns */
+    if (ctl->stripcr)
+    {
+	char	*sp, *tp;
+
+	for (sp = tp = buf; sp < last; sp++)
+	    if (*sp != '\r')
+		*tp++ =  *sp;
+	*tp = '\0';
+        last = tp;
+    }
+
+    n = 0;
+    if (ctl->mda || ctl->bsmtp)
+	n = fwrite(buf, 1, last - buf, sinkfp);
+    else if (ctl->smtp_socket != -1)
+	n = SockWrite(ctl->smtp_socket, buf, last - buf);
+
+    phase = oldphase;
+
+    return(n);
 }
 
 /* this is experimental and will be removed if double bounces are reported */
