@@ -122,12 +122,12 @@ int smtp_open(struct query *ctl)
 	    }
 
 	    if (ctl->smtphost[0]=='/'){
-		if((ctl->smtp_socket = UnixOpen(ctl->smtphost))==-1)
+		if ((ctl->smtp_socket = UnixOpen(ctl->smtphost))==-1)
 		    continue;
 	    } else
-	    if ((ctl->smtp_socket = SockOpen(parsed_host,portnum,NULL,
+		if ((ctl->smtp_socket = SockOpen(parsed_host,portnum,NULL,
 					     ctl->server.plugout)) == -1)
-		continue;
+		    continue;
 
 	    /* return immediately for ODMR */
 	    if (ctl->server.protocol == P_ODMR)
