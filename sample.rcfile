@@ -34,7 +34,7 @@
 #   aka                       -- must be followed by one or more server aliases
 #   localdomains              -- must be followed by one or more domain names
 #   interface                 -- must be followed by device/IP address/mask
-#   monitor                   -- must be followed by IP address
+#   monitor                   -- must be followed by device
 #   no dns
 #   dns
 #
