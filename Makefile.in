@@ -147,7 +147,8 @@ install:
 	$(INSTALL_PROGRAM) ${srcdir}/fetchmailconf $(bindir)/fetchmailconf
 	@echo "Installing manual page..."
 	$(INSTALL_DATA) $(srcdir)/fetchmail.man $(mandir)/fetchmail.$(manext)
-	ln -f -s $(mandir)/fetchmail.$(manext) $(mandir)/fetchmailconf.$(manext)
+	rm -f $(mandir)/fetchmailconf.$(manext)
+	ln -s $(mandir)/fetchmail.$(manext) $(mandir)/fetchmailconf.$(manext)
 	@echo "Installing language catalogs..."
 	@POMAKE@ install
 
