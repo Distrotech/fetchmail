@@ -131,7 +131,7 @@ int main (int argc, char **argv)
 
     /* set up to do lock protocol */
     if (!getuid())
-	strcpy(tmpbuf, "/var/run/fetchmail.pid");
+	sprintf(tmpbuf, "%s/fetchmail.pid", PID_DIR);
     else {
 	strcpy(tmpbuf, home);
 	strcat(tmpbuf, "/.fetchmail");

@@ -15,6 +15,7 @@
 ------------------------------------------------------------------------------
 fetchmail-4.2.2 ()
 * Re-enable --limit under IMAP (bug introduced in 4.2.0).
+* Autoconfigure root-mode PID-file directory to /etc if no /var/run.
 
 There are 285 people on the fetchmail-friends list.
 

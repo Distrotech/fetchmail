@@ -1313,7 +1313,10 @@ passwords as a last resort before prompting for one interactively.
 lock file to help prevent concurrent runs (non-root mode).
 .TP 5
 /var/run/fetchmail.pid
-lock file to help prevent concurrent runs (root mode).
+lock file to help prevent concurrent runs (root mode, Linux systems).
+.TP 5
+/etc/fetchmail.pid
+lock file to help prevent concurrent runs (root mode, systems without /var/run).
 
 .SH ENVIRONMENT
 For correct initialization, 

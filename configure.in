@@ -128,6 +128,17 @@ AC_TRY_LINK([#include <signal.h>
   [AC_DEFINE(SYS_SIGLIST_DECLARED) AC_MSG_RESULT(yes)],
   AC_MSG_RESULT(no))
 
+# Find the right directory to put the root-mode PID file in
+for dir in "/var/run" "/etc"
+do
+	if test -d $dir 
+	then
+		break;
+	fi
+done
+AC_MSG_RESULT(root-mode pid file will go in $dir)
+AC_DEFINE_UNQUOTED(PID_DIR, "$dir")
+
 AC_CHECK_SIZEOF(short)
 AC_CHECK_SIZEOF(int)
 AC_CHECK_SIZEOF(long)

@@ -44,6 +44,9 @@
 /* Define if you have on_exit */
 #undef HAVE_ON_EXIT
 
+/* Compute an appropriate directory for PID lock files */
+#undef PID_DIR
+
 /* Define to help us deduce a 32-bit type (required for Kerberos) */
 #undef SIZEOF_INT
 #undef SIZEOF_SHORT
