@@ -34,8 +34,8 @@ echo "Upload to ${WWWVIRTUAL} complete"
 
     lftp <<EOF
 # Copy to FTP site
-open $FTPHOST/fetchmail
-cd $FTPDIR
+open $FTPHOST
+cd $FTPDIR/fetchmail
 put fetchmail-${version}.tar.gz
 put fetchmail-${version}-1.i386.rpm
 put fetchmail-${version}-1.src.rpm
