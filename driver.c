@@ -598,6 +598,34 @@ char *realname;		/* real name of host */
 	}
 
 	/*
+	 * If we see a Status line, it may have been inserted by an MUA
+	 * on the mail host, or it may have been inserted by the server
+	 * program after the headers in the transaction stream.  This
+	 * can actually hose some new-mail notifiers such as xbuffy,
+	 * which assumes any Status line came from a *local* MDA and
+	 * therefore indicates that the message has been seen.
+	 *
+	 * Some buggy POP servers (including at least the 3.3(20)
+	 * version of the one distributed with IMAP) insert empty
+	 * Status lines in the transaction stream; we'll chuck those
+	 * unconditionally.  Nonempty ones get chucked if the user
+	 * turns on the dropstatus flag.
+	 */
+	if (!strncasecmp(line, "Status:", 7))
+	{
+	    char	*cp;
+
+	    for (cp = line + 7; *cp && isspace(*cp); cp++)
+		continue;
+
+	    if (!*cp || ctl->dropstatus)
+	    {
+		free(line);
+		continue;
+	    }
+	}
+
+	/*
 	 * OK, this is messy.  If we're forwarding by SMTP, it's the
 	 * SMTP-receiver's job (according to RFC821, page 22, section
 	 * 4.1.1) to generate a Return-Path line on final delivery.

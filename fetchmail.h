@@ -131,6 +131,7 @@ struct query
     flag stripcr;		/* if TRUE, strip CRs in text */
     flag forcecr;		/* if TRUE, force CRs before LFs in text */
     flag pass8bits;		/* if TRUE, ignore Content-Transfer-Encoding */
+    flag dropstatus;		/* if TRUE, drop Status lines in mail */
     int	limit;			/* limit size of retrieved messages */
     int	fetchlimit;		/* max # msgs to get in single poll */
     int	batchlimit;		/* max # msgs to pass in single SMTP session */

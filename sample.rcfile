@@ -49,6 +49,7 @@
 #   forcecr
 #   stripcr
 #   pass8bits
+#   dropstatus
 #   dns
 #   no keep
 #   no flush
@@ -58,6 +59,8 @@
 #   no stripcr
 #   no dns
 #   no envelope
+#   no pass8bits
+#   no dropstatus
 #   limit                     -- must be followed by numeric size limit
 #   fetchlimit                -- must be followed by numeric msg fetch limit
 #   batchlimit                -- must be followed by numeric SMTP batch limit

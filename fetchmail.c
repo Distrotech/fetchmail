@@ -602,6 +602,7 @@ static int load_params(int argc, char **argv, int optind)
 	    DEFAULT(ctl->stripcr, (ctl->mda != (char *)NULL)); 
 	    DEFAULT(ctl->forcecr, FALSE);
 	    DEFAULT(ctl->pass8bits, FALSE);
+	    DEFAULT(ctl->dropstatus, FALSE);
 	    DEFAULT(ctl->server.dns, TRUE);
 	    DEFAULT(ctl->server.uidl, FALSE);
 #undef DEFAULT
@@ -878,6 +879,9 @@ void dump_params (struct query *ctl)
     printf("  Interpretation of Content-Transfer-Encoding is %sabled (pass8bits %s).\n",
 	   ctl->pass8bits ? "dis" : "en",
 	   ctl->pass8bits ? "on" : "off");
+    printf("  Nonempty Status lines will be %s (dropstatus %s)\n",
+	   ctl->dropstatus ? "discarded" : "kept",
+	   ctl->dropstatus ? "on" : "off");
     if (ctl->limit > 0)
 	printf("  Message size limit is %d bytes (--limit %d).\n", 
 	       ctl->limit, ctl->limit);

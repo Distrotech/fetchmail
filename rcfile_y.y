@@ -62,7 +62,7 @@ extern char * yytext;
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
-%token NO KEEP FLUSH FETCHALL REWRITE FORCECR STRIPCR PASS8BITS 
+%token NO KEEP FLUSH FETCHALL REWRITE FORCECR STRIPCR PASS8BITS DROPSTATUS
 %token DNS PORT UIDL INTERVAL
 
 %%
@@ -227,6 +227,7 @@ user_option	: TO localnames HERE
 		| FORCECR		{current.forcecr    = FLAG_TRUE;}
 		| STRIPCR		{current.stripcr    = FLAG_TRUE;}
 		| PASS8BITS		{current.pass8bits  = FLAG_TRUE;}
+		| DROPSTATUS		{current.dropstatus = FLAG_TRUE;}
 
 		| NO KEEP		{current.keep       = FLAG_FALSE;}
 		| NO FLUSH		{current.flush      = FLAG_FALSE;}
@@ -234,6 +235,8 @@ user_option	: TO localnames HERE
 		| NO REWRITE		{current.rewrite    = FLAG_FALSE;}
 		| NO FORCECR		{current.forcecr    = FLAG_FALSE;}
 		| NO STRIPCR		{current.stripcr    = FLAG_FALSE;}
+		| NO PASS8BITS		{current.pass8bits  = FLAG_FALSE;}
+		| NO DROPSTATUS		{current.dropstatus = FLAG_FALSE;}
 
 		| LIMIT NUMBER		{current.limit      = $2;}
 		| FETCHLIMIT NUMBER	{current.fetchlimit = $2;}
