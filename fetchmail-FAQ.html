@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/10/03 23:05:44 $
+<td width="30%" align=right>$Date: 1997/10/06 15:52:42 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -70,9 +70,10 @@ when I may have multiple login sessions going?</a><br>
 
 <a href="#R1">R1. Fetchmail isn't working, and -v shows `SMTP connect failed' messages.</a><br>
 <a href="#R2">R2. When I try to configure an MDA, fetchmail doesn't work.</a><br>
-<a href="#R3">R3. Fetchmail dumps core in -V mode, but operates normally otherwise.</a><br>
-<a href="#R4">R4. Fetchmail dumps core when I use a .netrc file but works otherwise.</a><br>
-<a href="#R5">R5. Running fetchmail in daemon mode doesn't work.</a><br>
+<a href="#R3">R3. Fetchmail dumps core when given an invalid rc file.</a><br>
+<a href="#R4">R4. Fetchmail dumps core in -V mode, but operates normally otherwise.</a><br>
+<a href="#R5">R5. Fetchmail dumps core when I use a .netrc file but works otherwise.</a><br>
+<a href="#R6">R6. Running fetchmail in daemon mode doesn't work.</a><br>
 
 <h1>Disappearing mail</h1>
 
@@ -264,7 +265,7 @@ page.<P>
 
 Most modern Unixes (and effectively all Linux/*BSD systems) come with
 POP3 support preconfigured (but beware of the horribly broken POP3
-server mentioned in <a href="#R4">R4</a>).  An increasing minority
+server mentioned in <a href="#D2">D2</a>).  An increasing minority
 also feature IMAP (you can detect IMAP support by running fetchmail in
 AUTO mode).<P>
 
@@ -1068,7 +1069,23 @@ match what you sent, then fetchmail or something on the server is
 broken.<p>
 
 <hr>
-<h2><a name="R3">R3. Fetchmail dumps core in -V mode, but operates normally otherwise.</a></h2>
+<a name="#R4">R4. Fetchmail dumps core when given an invalid rc file.</a></h2>
+
+This is usually reported from AIX or Ultrix, but has even been known
+to happen on Linuxes without a recent version of <code>flex</code>
+installed.  The problem appears to be a result of linking with an
+archaic version of lex.<P>
+
+Workaround: fix the syntax of your .fetchmailrc file.<P>
+
+Fix: build and install the latest version of <a
+href="ftp://prep.ai.mit.edu/~ftp/pub/gnu">flex</a> from the Free
+Software Foundation.  An FSF <a
+href="http://www.gnu.ai.mit.edu/order/ftp.html">mirror site</a><P>
+will help you get it faster.<P>
+
+<hr>
+<h2><a name="R4">R4. Fetchmail dumps core in -V mode, but operates normally otherwise.</a></h2>
 
 We've had this reported to us under Linux using libc-5.4.17 and gcc-2.7.2.
 It does not occur with libc-5.3.12 or earlier versions.<p>
@@ -1084,7 +1101,7 @@ fetchmail code (they're all from within fclose, and not an fclose called
 by fetchmail, either).<p>
 
 <hr>
-<h2><a name="R4">R4. Fetchmail dumps core when I use a .netrc file but works otherwise.</a></h2>
+<h2><a name="R5">R5. Fetchmail dumps core when I use a .netrc file but works otherwise.</a></h2>
 
 We have a report that under Solaris 2.5 using gcc-2.7.2, if fetchmail
 is compiled with -O or -O2, it segfaults on startup when reading a
@@ -1098,7 +1115,7 @@ corruption screw.  But the symptom doesn't reproduce under Linux with the
 same .fetchmailrc and .netrc.<p>
 
 <hr>
-<h2><a name="R5">R5. Running fetchmail in daemon mode doesn't work.</a><br></h2>
+<h2><a name="R6">R6. Running fetchmail in daemon mode doesn't work.</a><br></h2>
 
 We have one report from a Solaris 4.1.4 user that trying to run
 fetchmail in detached daemon mode doesn't work, but that using the
@@ -1562,7 +1579,7 @@ will look right.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/10/03 23:05:44 $
+<td width="30%" align=right>$Date: 1997/10/06 15:52:42 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
