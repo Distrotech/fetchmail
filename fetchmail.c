@@ -553,7 +553,7 @@ int main(int argc, char **argv)
 	if (run.poll_interval && !getuid())
 	    signal(SIGHUP, SIG_IGN);
     }
-    else if (run.logfile)
+    else if (run.logfile && access(run.logfile, F_OK) == 0)
     {
 	freopen(run.logfile, "a", stdout);
 	freopen(run.logfile, "a", stderr);
