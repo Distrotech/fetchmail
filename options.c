@@ -527,59 +527,57 @@ struct query *ctl;	/* option record to be initialized */
 
     if (errflag || ocount > 1) {
 	/* squawk if syntax errors were detected */
-	fputs("usage:  fetchmail [options] [server ...]\n", stderr);
-	fputs("  Options are as follows:\n",stderr);
-	fputs("  -?, --help        display this option help\n", stderr);
-	fputs("  -V, --version     display version info\n", stderr);
+#define P(s)	fputs(s, stderr)
+	P("usage:  fetchmail [options] [server ...]\n");
+	P("  Options are as follows:\n");
+	P("  -?, --help        display this option help\n");
+	P("  -V, --version     display version info\n");
 
-	fputs("  -c, --check       check for messages without fetching\n", stderr);
-	fputs("  -s, --silent      work silently\n", stderr);
-	fputs("  -v, --verbose     work noisily (diagnostic output)\n", stderr);
-	fputs("  -d, --daemon      run as a daemon once per n seconds\n", stderr);
-	fputs("  -N, --nodetach    don't detach daemon process\n", stderr);
-	fputs("  -q, --quit        kill daemon process\n", stderr);
-	fputs("  -L, --logfile     specify logfile name\n", stderr);
-	fputs("      --syslog      use syslog(3) for most messages when running as a daemon\n", stderr);
-	fputs("      --invisible   suppress Received line & enable host spoofing\n", stderr);
-	fputs("  -f, --fetchmailrc specify alternate run control file\n", stderr);
-	fputs("  -i, --idfile      specify alternate UIDs file\n", stderr);
-	fputs("      --postmaster  specify recipient of last resort\n",stderr);
+	P("  -c, --check       check for messages without fetching\n");
+	P("  -s, --silent      work silently\n");
+	P("  -v, --verbose     work noisily (diagnostic output)\n");
+	P("  -d, --daemon      run as a daemon once per n seconds\n");
+	P("  -N, --nodetach    don't detach daemon process\n");
+	P("  -q, --quit        kill daemon process\n");
+	P("  -L, --logfile     specify logfile name\n");
+	P("      --syslog      use syslog(3) for most messages when running as a daemon\n");
+	P("      --invisible   don't write Received & enable host spoofing\n");
+	P("  -f, --fetchmailrc specify alternate run control file\n");
+	P("  -i, --idfile      specify alternate UIDs file\n");
+	P("      --postmaster  specify recipient of last resort\n");
 #if defined(linux) && !INET6
-	fputs("  -I, --interface   interface required specification\n",stderr);
-	fputs("  -M, --monitor     monitor interface for activity\n",stderr);
+	P("  -I, --interface   interface required specification\n");
+	P("  -M, --monitor     monitor interface for activity\n");
 #endif
 
-#ifdef KERBEROS_V4
-	fputs("  -p, --protocol    specify pop2, pop3, imap, apop, rpop, kpop, etrn, imap-k4\n", stderr);
-#else
-	fputs("  -p, --protocol    specify pop2, pop3, imap, apop, rpop, kpop, etrn\n", stderr);
-#endif /* KERBEROS_V4 */
-	fputs("  -U, --uidl        force the use of UIDLs (pop3 only)\n", stderr);
-	fputs("  -P, --port        TCP/IP service port to connect to\n",stderr);
-	fputs("  -A, --auth        authentication type (password or kerberos)\n",stderr);
-	fputs("  -t, --timeout     server nonresponse timeout\n",stderr);
-	fputs("  -E, --envelope    envelope address header\n",stderr);
-	fputs("  -Q, --qvirtual    prefix to remove from local user id\n",stderr);
+	P("  -p, --protocol    specify retrieval protocol (see man page)\n");
+	P("  -U, --uidl        force the use of UIDLs (pop3 only)\n");
+	P("  -P, --port        TCP/IP service port to connect to\n");
+	P("  -A, --auth        authentication type (password or kerberos)\n");
+	P("  -t, --timeout     server nonresponse timeout\n");
+	P("  -E, --envelope    envelope address header\n");
+	P("  -Q, --qvirtual    prefix to remove from local user id\n");
 
-	fputs("  -u, --username    specify users's login on server\n", stderr);
-	fputs("  -a, --all         retrieve old and new messages\n", stderr);
-	fputs("  -K, --nokeep      delete new messages after retrieval\n", stderr);
-	fputs("  -k, --keep        save new messages after retrieval\n", stderr);
-	fputs("  -F, --flush       delete old messages from server\n", stderr);
-	fputs("  -n, --norewrite   don't rewrite header addresses\n", stderr);
-	fputs("  -l, --limit       don't fetch messages over given size\n", stderr);
-	fputs("  -w, --warnings   interval between warning mail notification\n", stderr);
+	P("  -u, --username    specify users's login on server\n");
+	P("  -a, --all         retrieve old and new messages\n");
+	P("  -K, --nokeep      delete new messages after retrieval\n");
+	P("  -k, --keep        save new messages after retrieval\n");
+	P("  -F, --flush       delete old messages from server\n");
+	P("  -n, --norewrite   don't rewrite header addresses\n");
+	P("  -l, --limit       don't fetch messages over given size\n");
+	P("  -w, --warnings   interval between warning mail notification\n");
 
 #if NET_SECURITY
-	fputs("  -T, --netsec      set IP security request\n", stderr);
+	P("  -T, --netsec      set IP security request\n");
 #endif /* NET_SECURITY */
-	fputs("  -S, --smtphost    set SMTP forwarding host\n", stderr);
-	fputs("  -D, --smtpaddress set SMTP delivery domain to use\n", stderr);
-	fputs("  -Z, --antispam,   set antispam response values\n", stderr);
-	fputs("  -b, --batchlimit  set batch limit for SMTP connections\n", stderr);
-	fputs("  -B, --fetchlimit  set fetch limit for server connections\n", stderr);
-	fputs("  -e, --expunge     set max deletions between expunges\n", stderr);
-	fputs("  -r, --folder      specify remote folder name\n", stderr);
+	P("  -S, --smtphost    set SMTP forwarding host\n");
+	P("  -D, --smtpaddress set SMTP delivery domain to use\n");
+	P("  -Z, --antispam,   set antispam response values\n");
+	P("  -b, --batchlimit  set batch limit for SMTP connections\n");
+	P("  -B, --fetchlimit  set fetch limit for server connections\n");
+	P("  -e, --expunge     set max deletions between expunges\n");
+	P("  -r, --folder      specify remote folder name\n");
+#undef P
 	return(-1);
     }
 
