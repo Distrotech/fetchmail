@@ -446,7 +446,7 @@ char *realname;		/* real name of host */
 #endif /* HAVE_GETHOSTBYNAME */
     char		*cp;
     struct idlist 	*idp, *xmit_names;
-    int			good_addresses, bad_addresses;
+    int			good_addresses, bad_addresses, has_nuls;
 #ifdef HAVE_RES_SEARCH
     int			no_local_matches = FALSE;
 #endif /* HAVE_RES_SEARCH */
@@ -454,6 +454,7 @@ char *realname;		/* real name of host */
 
     sizeticker = 0;
     delete_ok = TRUE;
+    has_nuls = FALSE;
     remaining = len;
     olderrs = ctl->errcount;
 
@@ -505,6 +506,9 @@ char *realname;		/* real name of host */
 		sizeticker -= SIZETICKER;
 	    }
 	}
+
+	if (linelen != strlen(line))
+	    has_nuls = TRUE;
 
 	remaining -= linelen;
 
@@ -918,9 +922,9 @@ char *realname;		/* real name of host */
 
     /* write error notifications */
 #ifdef HAVE_RES_SEARCH
-    if (no_local_matches || bad_addresses)
+    if (no_local_matches || has_nuls || bad_addresses)
 #else
-    if (bad_addresses)
+    if (has_nuls || bad_addresses)
 #endif /* HAVE_RES_SEARCH */
     {
 	int	errlen = 0;
@@ -940,14 +944,20 @@ char *realname;		/* real name of host */
 			break;
 		sprintf(errhd+strlen(errhd), "recipient address %s didn't match any local name", idp->id);
 	    }
-
-	    if (bad_addresses)
-		strcat(errhd, "; ");
 	}
 #endif /* HAVE_RES_SEARCH */
 
+	if (has_nuls)
+	{
+	    if (errhd[sizeof("X-Fetchmail-Warning: ")])
+		strcat(errhd, "; ");
+	    strcat(errhd, "message has embedded NULs");
+	}
+
 	if (bad_addresses)
 	{
+	    if (errhd[sizeof("X-Fetchmail-Warning: ")])
+		strcat(errhd, "; ");
 	    strcat(errhd, "SMTP listener rejected local recipient addresses: ");
 	    errlen = strlen(errhd);
 	    for (idp = xmit_names; idp; idp = idp->next)
@@ -963,6 +973,7 @@ char *realname;		/* real name of host */
 		    if (idp->next)
 			strcat(errmsg, ", ");
 		}
+
 	}
 
 	if (ctl->mda && !ctl->forcecr)
