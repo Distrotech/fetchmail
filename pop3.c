@@ -711,13 +711,23 @@ static int pop3_logout(int sock, struct query *ctl)
 {
     int ok;
 
+#ifdef __UNUSED__
     /*
-     * Just in case the server marks messages deleted when seen.
-     * Yes, this has been reported, in the MercuryP/NLM server.
-     * It's even legal under RFC 1939 (section 8) as a site policy.
+     * We used to do this in case the server marks messages deleted when seen.
+     * (Yes, this has been reported, in the MercuryP/NLM server.
+     * It's even legal under RFC 1939 (section 8) as a site policy.)
+     * It interacted badly with UIDL, though.  Thomas Zajic wrote:
+     * "Running 'fetchmail -F -v' and checking the logs, I found out
+     * that fetchmail did in fact flush my mailbox properly, but sent
+     * a RSET just before sending QUIT to log off.  This caused the
+     * POP3 server to undo/forget about the previous DELEs, resetting
+     * my mailbox to its original (ie.  unflushed) state. The
+     * ~/.fetchids file did get flushed though, so the next time
+     * fetchmail was run it saw all the old messages as new ones ..."
      */
-    if (ctl->keep)
+     if (ctl->keep)
 	gen_transact(sock, "RSET");
+#endif /* __UNUSED__ */
 
     ok = gen_transact(sock, "QUIT");
     if (!ok)

@@ -652,8 +652,10 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 
 	if (SMTP_from(ctl->smtp_socket, ap, options) != SM_OK)
 	{
+	    int err = handle_smtp_report(ctl, msg);
+
 	    SMTP_rset(ctl->smtp_socket);    /* stay on the safe side */
-	    return(handle_smtp_report(ctl, msg));
+	    return(err);
 	}
 
 	/*
@@ -1035,12 +1037,15 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 	/* write message terminator */
 	if (SMTP_eom(ctl->smtp_socket) != SM_OK)
 	{
-	    SMTP_rset(ctl->smtp_socket);    /* stay on the safe side */
 	    if (handle_smtp_report(ctl, msg) != PS_REFUSED)
+	    {
+	        SMTP_rset(ctl->smtp_socket);    /* stay on the safe side */
 		return(FALSE);
+	    }
 	    else
 	    {
 		report(stderr, _("SMTP listener refused delivery\n"));
+	        SMTP_rset(ctl->smtp_socket);    /* stay on the safe side */
 		return(TRUE);
 	    }
 	}
