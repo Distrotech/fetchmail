@@ -550,10 +550,14 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
     if (sdps_enable)
     {
 	int	linecount = 0;
+
+#define DUMMY_HEADER	"Delivered-To: "	/* will only get discarded */
+#define DUMMY_LENGTH	(sizeof(DUMMY_HEADER) - 1)	
+	strcpy(buf, DUMMY_HEADER);
 	sdps_envto = (char *)NULL;
 	gen_send(sock, "*ENV %d", number);
 	do {
-	    if (gen_recv(sock, buf, sizeof(buf)))
+	    if (gen_recv(sock, buf + DUMMY_LENGTH, sizeof(buf) - DUMMY_LENGTH))
 	    {
 		break;
 	    }
@@ -565,6 +569,8 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
 	    }
 	} while
 	    (buf[0] !='.');
+#undef DUMMY_HEADER
+#undef DUMMY_LENGTH
     }
 #endif /* SDPS_ENABLE */
 
