@@ -234,7 +234,8 @@ The plugin option allows you to use an external program to establish the
 TCP connection.  This is useful if you want to use socks or need some
 special firewalling setup.  The program will be looked up in $PATH and
 it will be passed two arguments: the name of the server and the name of
-the port.
+the port.  Fetchmail will write to the plugin's stdin and read from
+the plugin's stdout.
 .TP
 .B \--plugout
 (Keyword: plugout)
