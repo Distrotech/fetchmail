@@ -33,6 +33,7 @@ AC_SUBST(CPFLAGS)
 AC_SUBST(CEFLAGS)
 AC_SUBST(LDEFLAGS)
 AC_SUBST(LIBOBJS)
+AC_SUBST(POMAKE)
 
 # Check for LynxOS special case: -lbsd needed (at least on 2.3.0) and -s
 # not working.
@@ -190,6 +191,15 @@ AC_DEFINE_UNQUOTED(PID_DIR, "$dir")
 AC_CHECK_SIZEOF(short)
 AC_CHECK_SIZEOF(int)
 AC_CHECK_SIZEOF(long)
+
+if test "$USE_NLS" = "yes"
+then
+	echo "Enabling internationalization support..."
+	POMAKE="make -C po"
+else
+	echo "Disabling internationalization support..."
+	POMAKE="@echo '(NLS support disabled)'; #"
+fi
 
 ###	use option --enable-POP2 to compile in the POP2 support
 AC_ARG_ENABLE(POP2,

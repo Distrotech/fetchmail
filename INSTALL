@@ -70,7 +70,7 @@ will do that.
 
 To enable multilingual support using GNU gettext, 
 
-	configure --prefix=/usr --enable-NLS
+	configure --prefix=/usr --enable-nls
 
 The prefix argument is needed to generate the makefiles in the po directory
 correctly; otherwise, they'll install the internationalization stuff in

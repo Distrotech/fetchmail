@@ -114,7 +114,7 @@ fetchmail: $(objs)
 	$(CC) $(LDEFLAGS) $(LDFLAGS) $(objs) $(LOADLIBS) -o fetchmail
 
 po:	dummy
-	make -C po
+	@POMAKE@
 
 dummy:
 
@@ -151,28 +151,28 @@ install:
 	$(INSTALL_DATA) $(srcdir)/fetchmail.man $(mandir)/fetchmail.$(manext)
 	ln -f -s $(mandir)/fetchmail.$(manext) $(mandir)/fetchmailconf.$(manext)
 	@echo "Installing language catalogs..."
-	make -C po install
+	@POMAKE@ install
 
 uninstall:
 	rm -f $(bindir)/fetchmail $(bindir)/fetchmailconf
 	rm -f $(mandir)/fetchmail.$(manext) $(mandir)/fetchmailconf.$(manext)
-	make -C po uninstall
+	@POMAKE@ uninstall
 
 .PHONY: clean realclean distclean mostlyclean
 clean: 
-	make -C po clean
+	@POMAKE@ clean
 	-rm -f fetchmail *.o core fetchmail.dvi \
 	       rcfile_l.c rcfile_y.h rcfile_y.c \
 	       fetchmail.tar fetchmail.tar.gz \
 	       rfc822 unmime
 
 distclean: clean 
-	make -C po distclean
+	@POMAKE@ distclean
 	-rm -f Makefile config.h TAGS tags
 	-rm -f config.cache config.status config.log stamp-config
 
 realclean: distclean
-	make -C po clean
+	@POMAKE@ clean
 	-rm -f FAQ FEATURES NOTES MANIFEST 
 	-rm -f config.cache config.log Makefile
 	-rm -f fetchmail-*.tar.gz fetchmail-*.i386.rpm 
