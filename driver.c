@@ -80,10 +80,11 @@ const char *host;	/* server hostname */
 		state = 5;
 	    else if (isspace(*from))
 		state = 2;
+	    else if (*from == ',')
+		tokencount = 0;
 	    break;
 
 	case 2:	    /* found a token boundary -- reset without copying */
-
 	    if (*from != ' ' && *from != '\t')
 	    {
 		tokencount++;
