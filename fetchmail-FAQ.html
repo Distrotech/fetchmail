@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/10/01 04:00:27 $
+<td width="30%" align=right>$Date: 1997/10/01 13:43:23 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -32,6 +32,7 @@ mail it to fetchmail's maintainer, Eric S. Raymond, at
 <a href="#G5">G5. Is there a mailing list for exchanging tips?</a><br>
 <a href="#G6">G6. So, what's this I hear about a fetchmail paper?</a><br>
 <a href="#G7">G7. What is the best server to use with fetchmail?</a><br>
+<a href="#G8">G8. How can I avoid sending my password en clair?</a><br>
 
 <h1>Build-time problems:</h1>
 
@@ -274,6 +275,78 @@ You can find sources for IMAP software at <a
 href="http://www.imap.org"> The IMAP Connection</a>; we like the
 freeware UW IMAP and Cyrus products. UW IMAP is the reference
 implementation of IMAP.<P>
+
+<hr>
+<h2><a name="G8">G8. How can I avoid sending my password en clair?</a></h2>
+
+Depending on what your mail server you are talking to, this ranges
+from trivial to impossible.  It may even be next to useless.<P>
+
+Most people use fetchmail over phone wires, which are hard to tap.
+Anybody with the skill and resources to do this could get into your
+server mailbox with much less effort by subverting the server host.
+So if your provider setup is modem wires going straight into a service
+box, you probably don't need to worry.<P>
+
+In general there is little point in trying to secure your fetchmail
+transaction unless you trust the security of the server host you are
+retrieving mail from.  Your vulnerability is more likely to be an
+insecure local network on the server end (e.g. somebody with a TCP/IP
+packet sniffer intercepting Ethernet traffic between the modem
+concentrator you dial in to and the mailserver host).<P>
+
+Having realized this, you need to ask whether password encryption
+alone will really address your security exposure.  If you think you
+might be snooped, it's better to use end-to-end encryption on your
+whole mail stream so none of it can be read.  One of the advantages of
+fetchmail over conventional SMTP-push delivery is that you may be able
+to arrange this by using ssh(1); see <a href="#C4">C4</a>.<P>
+
+If ssh/sshd isn't available, or you find it too complicated for you to
+set up, password encryption will at least keep a malicious cracker
+from deleting your mail, and require him to either tap your connection
+continuously or crack root on the server in order to read it.<P>
+
+You can deduce what encryptions your mail server has available by
+by looking at the server greeting line (and, for IMAP, the
+response to a CAPABILITY query).  Do a <code>fetchmail -v</code>
+to see these, or telnet direct to the server port (110 for POP3, 143 for
+IMAP).<P>
+
+The facility you are most likely to have available is APOP.  This is a
+POP3 feature supported by many servers.  If you see something in the
+greeting line that looks like an angle-bracket-enclosed Internet
+address with a numeric left-hand part, that's an APOP challenge (it
+will vary each time you log in).  You can register a secret on the
+host (using <code>popauth(8)</code> or some program like it).  Specify
+the secret as your password in your .fetchmailrc; it will be used to
+encrypt the current challenge, and the encrypted form will be sent
+back the the server for verification.<P>
+
+Alternatively, you may have Kerberos available. This may require you
+to set up some magic files in your home directory on your client
+machine, but means you can omit specifying any password at all.<P>
+
+Fetchmail supports two different Kerberos schemes.  One is a
+POP3 variant called KPOP; consult the documentation of your mail
+server to see if you have it (one clue is the string "krb-IV" in the
+greeting line on port 110).  The other is an IMAP facility described
+by RFC1731. You can tell if this one is present by looking for
+AUTH=KERBEROS_V4 in the CAPABILITY response.<P>
+
+If you are fetching mail from a CompuServe POP3 account, you can use
+their RPA authentication (which works much like APOP).  See <a
+href="#T7">T7</a> for details.<P>.
+
+Your POP3 server may have the RFC1938 OTP capability to use one-time
+passwords. To check this, look for the string "otp-" in the greeting
+line.  If you see it, and your fetchmail was built with OPIE support
+compiled in (see the distribution INSTALL file), fetchmail will
+detect it also.  When using OTP, you will specify a password but it
+will not be sent en clair.<P>
+
+Sadly, there is at present (October 1997) no OTP or APOP-like facility
+generally available on IMAP servers.<P>
 
 <hr>
 <h2><a name="B1">B1. I get link failures when I try to build fetchmail.</a></h2>
@@ -609,7 +682,7 @@ preconnect "ssh -f -L 1234:mailhost:110 sshdhost sleep 20 </dev/null >/dev/null"
 You can work this trick with IMAP too, but the port number 110 in the
 above would need to become 143.<p>
 
-Second, a recipe frm Charlie Brady &lt;cbrady@ind.tansu.com.au&gt;.
+Second, a recipe from Charlie Brady &lt;cbrady@ind.tansu.com.au&gt;:<p>
 
 Charlie says: "The [previous] recipe certainly works, but
 the solution I post here is better in a few respects":
@@ -1465,7 +1538,7 @@ will look right.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/10/01 04:00:27 $
+<td width="30%" align=right>$Date: 1997/10/01 13:43:23 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
