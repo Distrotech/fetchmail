@@ -971,46 +971,60 @@ const struct method *proto;	/* protocol method table */
 	 * This assumes that the first space-delimited token found
 	 * that contains at least two dots (with the characters on
 	 * each side of the dot alphanumeric to exclude version
-	 * numbers) is the hostname.  If no such token is found, fall
-	 * back on the .fetchmailrc id.  */
+	 * numbers) is the hostname.  The hostname candidate may not
+	 * contain @ -- if it does it's probably a mailserver
+	 * maintainer's name.  If no such token is found, fall back on
+	 * the .fetchmailrc id.
+	 */
 	pst = 0;
 	for (cp = buf; *cp; cp++)
 	{
 	    switch (pst)
 	    {
-	    case 0:		/* looking for blank-delimited token */
+	    case 0:		/* skip to end of current token */
+		if (*cp == ' ')
+		    pst = 1;
+		break;
+
+	    case 1:		/* look for blank-delimited token */
 		if (*cp != ' ')
 		{
 		    sp = cp;
-		    pst = 1;
+		    pst = 2;
 		}
 		break;
 
-	    case 1:		/* looking for first dot */
-		if (*cp == ' ')
+	    case 2:		/* look for first dot */
+		if (*cp == '@')
 		    pst = 0;
-		else if (*cp == '.' && isalpha(cp[1]) && isalpha(cp[-1]))
-		    pst = 2;
-		break;
-
-	    case 2:		/* looking for second dot */
-		if (*cp == ' ')
-		    pst = 0;
+		else if (*cp == ' ')
+		    pst = 1;
 		else if (*cp == '.' && isalpha(cp[1]) && isalpha(cp[-1]))
 		    pst = 3;
 		break;
 
-	    case 3:		/* looking for trailing space */
-		if (*cp == ' ')
-		{
+	    case 3:		/* look for second dot */
+		if (*cp == '@')
+		    pst = 0;
+		else if (*cp == ' ')
+		    pst = 1;
+		else if (*cp == '.' && isalpha(cp[1]) && isalpha(cp[-1]))
 		    pst = 4;
+		break;
+
+	    case 4:		/* look for trailing space */
+		if (*cp == '@')
+		    pst = 0;
+		else if (*cp == ' ')
+		{
+		    pst = 5;
 		    goto done;
 		}
 		break;
 	    }
 	}
     done:
-	if (pst == 4)
+	if (pst == 5)
 	{
 	    char	*tp = realname;
 
