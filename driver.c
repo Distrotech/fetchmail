@@ -1161,7 +1161,7 @@ int do_protocol(ctl, proto)
 struct query *ctl;		/* parsed options with merged-in defaults */
 const struct method *proto;	/* protocol method table */
 {
-    int ok, js, pst;
+    int ok, js, pst, sock = -1;
     char *msg, *cp, realname[HOSTLEN];
     void (*sigsave)();
 
@@ -1213,13 +1213,17 @@ const struct method *proto;	/* protocol method table */
 	error(0, 0,
 		"timeout after %d seconds waiting for %s.",
 		ctl->server.timeout, ctl->server.names->id);
+	if (ctl->smtp_socket != -1)
+	    close(ctl->smtp_socket);
+	if (sock != -1)
+	    close(sock);
 	ok = PS_ERROR;
     }
     else
     {
 	char buf [POPBUFSIZE+1], *sp;
 	int *msgsizes, len, num, count, new, deletions = 0;
-	int sock, port, fetches;
+	int port, fetches;
 	struct idlist *idp;
 
 	/* execute pre-initialization command, if any */
