@@ -2,9 +2,14 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+------------------------------------------------------------------------------
+fetchmail-5.6.0 (Sun Nov 26 13:20:45 EST 2000), 19625 lines:
+
 * Updated FAQ on IPv6 operation.
 * Enabled showdots to work from the command line.
 * Fixed a bug in fetchmailconf's handling of the `principal' option.
+
+There are 288 people on fetchmail-friends and 575 on fetchmail-announce.
 
 fetchmail-5.5.6 (Sat Nov 11 14:22:24 EST 2000), 19563 lines:
 
