@@ -1,5 +1,4 @@
-/* Copyright 1993-95 by Carl Harris, Jr. Copyright 1996 by Eric S. Raymond
- * All rights reserved.
+/*
  * For license terms, see the file COPYING in this directory.
  */
 
@@ -184,7 +183,7 @@ nottyDetach:
   }
 
   if (logfile)
-    fd = open(logfile, O_CREAT|O_WRONLY, 0777);	/* stdout */
+    fd = open(logfile, O_CREAT|O_WRONLY|O_APPEND, 0777);	/* stdout */
   else
     if (dup(fd) < 0) {				/* stdout */
       perror("dup");

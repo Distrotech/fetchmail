@@ -1,5 +1,4 @@
-/* Copyright 1993-95 by Carl Harris, Jr. Copyright 1996 by Eric S. Raymond
- * All rights reserved.
+/*
  * For license terms, see the file COPYING in this directory.
  *
  * md5global.h    Global declarations for MD5 module used by fetchmail

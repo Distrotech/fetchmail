@@ -1,12 +1,11 @@
-/* Copyright 1993-95 by Carl Harris, Jr. Copyright 1996 by Eric S. Raymond
- * All rights reserved.
+/*
  * For license terms, see the file COPYING in this directory.
  */
 
 /***********************************************************************
   module:       options.c
   project:      fetchmail
-  programmer:   Carl Harris, ceharris@mal.com
+  programmer:   Eric S. Raymond, <esr@thyrsus.com>
   description:	command-line option processing
 
  ***********************************************************************/

@@ -1,13 +1,12 @@
 %{
-/* Copyright 1993-95 by Carl Harris, Jr. Copyright 1996 by Eric S. Raymond
- * All rights reserved.
+/*
  * For license terms, see the file COPYING in this directory.
  */
 
 /***********************************************************************
   module:       rcfile_y.y
   project:      fetchmail
-  programmer:   Carl Harris, ceharris@mal.com
+  programmer:   Eric S. Raymond <esr@thyrsus.com>
 		Extensively hacked and fixed by esr.
   description:  configuration file parser
 

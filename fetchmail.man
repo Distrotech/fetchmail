@@ -601,11 +601,11 @@ requires either that both the USER and HOME environment variables are
 correctly set, or that \fBgetpwuid\fR(3) be able to retrieve a password
 entry from your user ID.
 .SH BUGS AND KNOWN PROBLEMS
-Use of any of the supported protocols other than APOP requires that
-the program send unencrypted passwords over the TCP/IP connection to
-the mail server.  This creates a risk that name/password pairs might
-be snaffled with a packet sniffer or more sophisticated monitoring
-software.
+Use of any of the supported protocols other than APOP or KPOP requires
+that the program send unencrypted passwords over the TCP/IP connection
+to the mail server.  This creates a risk that name/password pairs
+might be snaffled with a packet sniffer or more sophisticated
+monitoring software.
 .PP
 Send comments, bug reports, gripes, and the like to Eric S. Raymond
 <esr@thyrsus.com>.
