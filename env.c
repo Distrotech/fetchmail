@@ -5,7 +5,6 @@
  */
 
 #include "config.h"
-#include "fetchmail.h"
 #include <stdio.h>
 #include <ctype.h>
 #if defined(STDC_HEADERS)
@@ -20,6 +19,7 @@
 #ifdef HAVE_GETHOSTBYNAME
 #include <netdb.h>
 #endif /* HAVE_GETHOSTBYNAME */
+#include "fetchmail.h"
 
 extern char *getenv();	/* needed on sysV68 R3V7.1. */
 
