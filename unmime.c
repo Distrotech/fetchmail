@@ -12,6 +12,7 @@
  * 
  */
 
+#include "config.h"
 #include <string.h>
 #include <stdlib.h>
 #if defined(HAVE_ALLOCA_H)
