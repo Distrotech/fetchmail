@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/08/05 04:14:49 $
+<td width="30%" align=right>$Date: 1997/09/29 15:36:26 $
 </table>
 <HR>
 <H1 ALIGN=CENTER>Design Notes On Fetchmail</H1>
@@ -171,7 +171,7 @@ necessary decoder out of the fetchmail code itself to get it.<P>
 All .fetchmailrc encryption would do is give a false sense of
 security to people who don't think very hard.<P>
 
-<H2>2. Truly concurrent queries to multiple hosts</H2>
+<H2>Truly concurrent queries to multiple hosts</H2>
 
 Occasionally I get a request for this on "efficiency" grounds.  These
 people aren't thinking either.  True concurrency would do nothing to lessen
@@ -187,6 +187,25 @@ constant loading at the single-host level).<P>
 Fortunately, I've only seldom seen a server that incurred significant
 wait time on an individual response.  I judge the gain from this not
 worth the hideous complexity increase it would require in the code.<P>
+
+<H2>Multiple concurrent instances of fetchmail</H1>
+
+What would be required for this is a per-host semaphore asserted
+during each poll.<P>
+
+The fundamental problem here is how an instance of fetchmail polling
+host foo can assert that it's doing so in a way visible to all other
+fetchmails.  System V semaphores would be ideal for this purpose, but
+they're not portable.<P>
+
+I've thought about this a lot and roughed up several designs.  All are
+complicated and fragile, with a bunch of the standard problems (what
+happens if a fetchmail aborts before clearing its semaphore, and how
+do we recover reliably?)<P>.
+
+I'm not satisfied that there's enough functional gain here to pay
+for the large increase in complexity that adding these semaphores
+would entail.<P>
 
 <H1>Multidrop and alias handling</H1>
 
@@ -383,7 +402,7 @@ all shaped the design in one way or another.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/08/05 04:14:49 $
+<td width="30%" align=right>$Date: 1997/09/29 15:36:26 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
