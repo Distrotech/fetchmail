@@ -428,7 +428,8 @@ makes a per-user lockfile to guarantee this.  The option
 .B --quit
 will kill a running daemon process.  Otherwise, calling fetchmail with
 a daemon in the background sends a wakeup signal to the daemon,
-forcing it to poll mailservers immediately.
+forcing it to poll mailservers immediately.  (The wakeup signal is
+SIGHUP if fetchmail is running as root, SIGUSR1 otherwise.)
 .PP
 The 
 .B -t
@@ -1087,6 +1088,23 @@ For correct initialization,
 requires either that both the USER and HOME environment variables are
 correctly set, or that \fBgetpwuid\fR(3) be able to retrieve a password
 entry from your user ID.
+
+.SH SIGNALS
+If a
+.I fetchmail
+daemon is running as root, SIGHUP wakes it up from its sleep phase and
+forces a poll of all non-skipped servers (this is in accordance with
+the usual conventions for system daemons).
+.PP
+If
+.I fetchmail
+is running in daemon mode as non-root, use SIGUSR1 to wake it (this is
+so SIGHUP due to logout can retain the default action of killing it).
+.PP
+Running
+.I fetchmail
+in foreground while a background fetchmail is running will do
+whichever of these is appropriate to wake it up.
 
 .SH BUGS AND KNOWN PROBLEMS
 The RFC822 parser used in multidrop mode chokes on some @-addresses that
