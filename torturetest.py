@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, getopt, os, smtplib, commands
+import sys, getopt, os, smtplib, commands, time
 
 class TestSite:
     temp = "/usr/tmp/torturestest-%d" % os.getpid()
@@ -8,7 +8,7 @@ class TestSite:
     def __init__(self, line):
         "Initialize site data from the external representation."
         (self.host, self.userid, self.password, \
-                self.proto, self.options, self.version, self.comment) = \
+                self.proto, self.options, self.capabilities, self.version, self.comment) = \
                 line.strip().split(":")
         # Test results
         self.status = None
@@ -17,7 +17,8 @@ class TestSite:
     def allattrs(self):
         "Return a tuple consisting of alll this site's attributes."
         return (self.host, self.userid, self.password, \
-                         self.proto, self.options, self.version, self.comment)
+                self.proto, self.options, self.capabilities, \
+                self.version, self.comment)
 
     def __repr__(self):
         "Return the external representation of this site's data."
@@ -29,7 +30,8 @@ class TestSite:
               "Userid: %s\n" \
               "Password: %s\n" \
               "Protocol: %s\n" \
-              "Optiond: %s\n" \
+              "Options: '%s'\n" \
+              "Capabilities: '%s'\n" \
               "Version: %s\n" \
               "Comment: %s\n" \
               % self.allattrs()
@@ -37,17 +39,20 @@ class TestSite:
     def entryprint(self):
         "Print a .fetchmailrc entry corresponding to a site entry."
         return "poll %s-%s  via %s with proto %s\n" \
-               "   user %s there with password %s is esr here\n\n" \
-               % (self.host,self.proto,self.host,self.proto,self.userid,self.password)
+               "   user %s there with password %s is esr here %s\n\n" \
+               % (self.host,self.proto,self.host,self.proto,self.userid,self.password,self.options)
 
     def tableprint(self):
         "Print an HTML server-type table entry."
         return "<tr><td>%s %s</td><td>%s</td><td>%s</td></tr>\n" \
-               % (self.proto, self.version, self.options, self.comment)
+               % (self.proto, self.version, self.capabilities, self.comment)
 
     def id(self):
         "Identify this site."
-        return "%s %s at %s" % (self.proto, self.version, self.host)
+        rep = "%s %s at %s" % (self.proto, self.version, self.host)
+        if self.capabilities:
+            rep += " (" + self.capabilities + ")"
+        return rep
 
     def testmail(self):
         "Send test mail to the site."
@@ -55,7 +60,7 @@ class TestSite:
         fromaddr = "esr@thyrsus.com"
         toaddr = "%s@%s" % (self.userid, self.host)
         msg = ("From: %s\r\nTo: %s\r\n\r\n" % (fromaddr, toaddr))
-        msg += "Test mail collected from %s.\n" % (toaddr, self.id())
+        msg += "Test mail collected from %s.\n" % (self.id(),)
         server.sendmail(fromaddr, toaddr, msg)
         server.quit()
 
@@ -93,7 +98,7 @@ if __name__ == "__main__":
         else:
             sitelist.append(TestSite(line))
 
-    (options, arguments) = getopt.getopt(sys.argv[1:], "dft")
+    (options, arguments) = getopt.getopt(sys.argv[1:], "dftig")
     for (switch, value) in options:
         if switch == "-d":
             # Prettprint the sitelist
@@ -107,6 +112,10 @@ if __name__ == "__main__":
             # Dump the sitelist in HTML table form
             map(lambda x: sys.stdout.write(x.tableprint()), sitelist)
             sys.exit(0)
+        elif switch == "-i":
+            # Dump the ids of the sitelist
+            map(lambda x: sys.stdout.write(x.id() + "\n"), sitelist)
+            sys.exit(0)
         elif switch == "-g":
             for site in sitelist:
                 site.testmail()
@@ -119,8 +128,9 @@ if __name__ == "__main__":
     # If no options, run the torture test
     try:
         failures = successes = 0
+        os.system("fetchmail -q")
         for site in sitelist:
-            print "Testing %s %s at %s" % (site.proto,site.version,site.host)
+            print "Testing " + site.id()
             site.fetch()
             if not site.failed():
                 failures += 1
@@ -134,7 +144,8 @@ if __name__ == "__main__":
         if failures:
             print "Bad status was returned on the following sites:"
             for site in sitelist:
-                sys.stdout.write(self.explain)
+                if site.failed():
+                    sys.stdout.write(self.explain)
     except KeyboardInterrupt:
         print "Interrupted."
 
