@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/12/19 18:12:55 $
+<td width="30%" align=right>$Date: 1999/12/19 18:22:47 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -105,6 +105,7 @@ IP address?</a><br>
 <a href="#R8">R8. Fetchmail running as root stopped working after an OS upgrade</a><br>
 <a href="#R9">R9. Fetchmail is timing out after fetching certain
 messages but before deleting them</a><br>
+<a href="#R10">R10. Fetchmail is timing out during message fetches</a></br>
 
 <h1>Disappearing mail</h1>
 
@@ -1899,7 +1900,7 @@ from /root to / as the result of a change in init.  Move your
 (Oddly, a similar problem has been reported from Debian systems.)<P>
 
 <hr>
-<h2><a name="#R9">R9. Fetchmail is timing out after fetching certain
+<h2><a name="R9">R9. Fetchmail is timing out after fetching certain
 messages but before deleting them</a></h2>
 
 There's a TCP/IP stalling problem under Redhat 6.0 (and possibly other
@@ -1922,6 +1923,14 @@ echo 0 &gt; /proc/sys/net/ipv4/tcp_timestamps<p>
 I'm still unclear about the details of why this is happening. At least
 [now] I am now getting good performance and no queue blocking.
 </blockquote>
+
+<hr>
+<h2><a name="R10">R10. Fetchmail is timing out during message fetches</a></h2>
+
+This is probably a general networking issue.  Sending a "RETR" command will
+cause the server to start sending large amounts of data, which means
+large packets.  If your networking layer has a packet-fragmentation
+problem, that's where you'll see it.<p>
 
 <hr>
 <h2><a name="D1">D1. I think I've set up fetchmail correctly, but I'm not getting any mail.</a></h2>
@@ -2499,7 +2508,7 @@ inactivity timeout.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/12/19 18:12:55 $
+<td width="30%" align=right>$Date: 1999/12/19 18:22:47 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
