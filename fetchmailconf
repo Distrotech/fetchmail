@@ -291,7 +291,10 @@ class User:
 
 defaultports = {"auto":0,
     		"POP2":109, 
-		"POP3":110, "APOP":110, "KPOP":1109, "IMAP":143,
+		"POP3":110,
+                "APOP":110,
+                "KPOP":1109,
+                "IMAP":143,
 		"IMAP-K4":143,
 		"ETRN":25}
 
@@ -770,7 +773,7 @@ class ServerEdit(Frame, MyWidget):
 	if (self.server == None):
 		self.server = Server()
 		self.server.pollname = host
-		self.server.via = host
+		self.server.via = None
 		servers.append(self.server)
 
     def edit(self, mode, master=None):
@@ -819,13 +822,17 @@ class ServerEdit(Frame, MyWidget):
 
 	protwin = Frame(leftwin, relief=RAISED, bd=5)
 	Label(protwin, text="Protocol").pack(side=TOP)
-	pb = ButtonBar(protwin, '', self.protocol, protolist, 2, self.refreshPort) 
+	ButtonBar(protwin, '',
+                  self.protocol, protolist, 2,
+                  self.refreshPort) 
         if mode != 'novice':
             LabeledEntry(protwin, 'On server TCP/IP port:',
 		      self.port, leftwidth).pack(side=TOP, fill=X)
             Checkbutton(protwin,
 		text="POP3: track `seen' with client-side UIDLs?",
 		variable=self.uidl).pack(side=TOP)   
+	Button(protwin, text='Probe for a server', fg='blue',
+	       command=self.autoprobe).pack(side=LEFT)
 	Button(protwin, text='Help', fg='blue',
 	       command=lambda: helpwin(protohelp)).pack(side=RIGHT)
 	protwin.pack(fill=X)
@@ -876,6 +883,41 @@ class ServerEdit(Frame, MyWidget):
 
             rightwin.pack(side=LEFT, anchor=N);
 
+    def autoprobe(self):
+        # Note: this only handles case (1) near fetchmail.c:892
+        # We're assuming people smart enough to set up ssh tunneling
+        # won't need autoprobing.
+        if self.server.via != None:
+            realhost = self.server.via
+        else:
+            realhost = self.server.pollname
+        greetline = None
+        for (protocol, port) in (("IMAP",143), ("POP3",109), ("POP2",109)):
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            try:
+                sock.connect(realhost, port)
+                greetline = sock.recv(1024)
+                sock.close()
+            except:
+                pass
+            else:
+                break
+        confwin = Toplevel()
+        if greetline == None:
+            title = "Autoprobe of " + realhost + " failed"
+            confirm = "I didn't find any mailservers active."
+        else:
+            title = "Autoprobe of " + realhost + " succeeded"
+            confirm = "The " + protocol + " server said:\n\n" + greetline
+            self.protocol.set(protocol)
+        confwin.title(title) 
+        confwin.iconname(title)
+        Label(confwin, text=title).pack()
+        Message(confwin, text=confirm, width=600).pack()
+        Button(confwin, text='Done', 
+                   command=lambda x=confwin: Widget.destroy(x),
+                   relief=SUNKEN, bd=2).pack()
+        
 #
 # User editing stuff
 #
