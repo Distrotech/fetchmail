@@ -232,7 +232,7 @@ RPM = rpm
 RPMFLAGS = -ba
 rpm: fetchmail-$(VERS).tar.gz
 	cp fetchmail-$(VERS).tar.gz $(RPMROOT)/SOURCES;
-	$(srcdir)/specgen.sh $(VERS) $(PL) >$(RPMROOT)/SPECS/fetchmail.spec
+	$(srcdir)/specgen.sh $(VERS) >$(RPMROOT)/SPECS/fetchmail.spec
 	cd $(RPMROOT)/SPECS; $(RPM) $(RPMFLAGS) fetchmail.spec	
 	cp $(RPMROOT)/RPMS/i386/fetchmail-$(VERS)*.rpm $(srcdir)
 	cp $(RPMROOT)/SRPMS/fetchmail-$(VERS)*.src.rpm $(srcdir)
