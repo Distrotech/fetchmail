@@ -33,7 +33,7 @@
  * considered seen in `oldsaved'.  These are messages that were left in
  * the mailbox and *not deleted* on previous queries (we don't need to
  * remember the UIDs of deleted messages because ... well, they're gone!)
- * This list is initially set up by initialized_saved_list() from the
+ * This list is initially set up by initialize_saved_list() from the
  * .fetchids file.
  *
  * Early in the query, during the execution of the protocol-specific 
