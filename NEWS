@@ -9,6 +9,7 @@ a Certifying Authority we recognize?).
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.1.3 (Sun Oct 31 09:40:31 EST 1999), 18307 lines:
 * Grant Edwards's patch to correct NTLM behavior.
 * James Brister's fix for IP-address hostnames.
 * Updated config.guess and config.sub.
@@ -17,6 +18,8 @@ a Certifying Authority we recognize?).
 * Added to fetchmailconf a warning about Imail IMAP servers.
 * SSL patches by Michael Warfield merged in.  Distribution still contains
   no crypto code.
+
+There are 274 people on fetchmail-friends and 456 on fetchmail-announce.
 
 fetchmail-5.1.2 (Thu Oct  7 09:46:07 EDT 1999), 17906 lines:
 * Joe Loughry <loughry@uswest.net> sent a patch to handle multihomed machines.
