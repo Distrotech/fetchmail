@@ -2117,7 +2117,7 @@ multiple names per userid gracefully).
 If the environment variable FETCHMAILHOME is set to a valid and
 existing directory name, the .fetchmailrc and .fetchids and
 \&.fetchmail.pid files are put there instead of in the invoking user's
-home directory (and lose the leading dots on theirt names).  The
+home directory (and lose the leading dots on their names).  The
 \&.netrc file is looked for in the the invoking user's home directory
 regardless of FETCHMAILHOME's setting.
 
