@@ -16,6 +16,9 @@
 #include  <malloc.h>
 #include  <varargs.h>
 #include  <sys/time.h>
+#ifdef HAVE_RRESVPORT_H
+#include  <netinet/in.h>
+#endif /* HAVE_RRESVPORT_H */
 
 #include  "socket.h"
 #include  "fetchmail.h"
@@ -543,10 +546,30 @@ struct method *proto;
     int mboxfd = -1;
     char buf [POPBUFSIZE+1], host[HOSTLEN+1];
     int socket;
+#ifdef HAVE_RRESVPORT_H
+    int privport = -1;
+#endif /* HAVE_RRESVPORT_H */
     int first,number,count;
 
     tagnum = 0;
     protocol = proto;
+
+#ifdef HAVE_RRESVPORT_H
+    /*
+     * If we're trying to bind to a reserved port on the remote system,
+     * do likewise on the local one so the remote will know we're privileged.
+     * (This is most likely to happen in connection with RPOP.)
+     */
+    if (queryctl->port < IPPORT_RESERVED)
+    {
+	ok = IPPORT_RESERVED - 1;
+	if ((privport = rresvport(&ok)) == -1)
+	{
+	    perror("fetchmail, binding to reserved port");
+	    return(PS_SOCKET);
+	}
+    }
+#endif /* HAVE_RRESVPORT_H */
 
     /* open a socket to the mail server */
     if ((socket = Socket(queryctl->servername,
@@ -704,6 +727,11 @@ cleanUp:
 	gen_transact(socket, protocol->exit_cmd);
 	close(socket);
     }
+
+#ifdef HAVE_RRESVPORT_H
+    if (privport != -1)
+	close(privport);	/* no big deal if this fails */
+#endif /* HAVE_RRESVPORT_H */
 
 closeUp:
     if (queryctl->output == TO_FOLDER)

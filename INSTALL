@@ -31,6 +31,12 @@ wish to change these defaults, edit the Makefile AFTER you run
 a prefix other than /usr/local, or you can choose completely different
 directories for each item.
 
+Note: if you intended to use RPOP (which we don't recommend, you
+should set up APOP), you'll have to make fetchmail suid root.  This
+is so it can call rresvport and bind to a privileged port, so the
+server's TCP/IP will see that and know it's OK to let it bind to
+a privileged port at the other end.
+
 See the man page or the file sample.rcfile for a description of how to
 configure your individual preferences.
 
