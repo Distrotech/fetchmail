@@ -62,6 +62,7 @@ cp %{builddir}/fetchmail.man \$RPM_BUILD_ROOT/usr/man/man1/fetchmail.1
 gzip -9f \$RPM_BUILD_ROOT/usr/man/man1/fetchmail.1
 cd \$RPM_BUILD_ROOT/usr/man/man1
 ln -sf fetchmail.1.gz fetchmailconf.1.gz
+rm -rf %{builddir}/contrib/RCS
 chmod 644 %{builddir}/contrib/*
 cp %{builddir}/rh-config/fetchmailconf.wmconfig \$RPM_BUILD_ROOT/etc/X11/wmconfig/fetchmailconf
 
