@@ -589,7 +589,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
     sleep(3); /* to be _really_ safe, probably need sleep(5)! */
 
     /* we're peek-capable if use of TOP is enabled */
-    peek_capable = !(ctl->fetchall || ctl->keep);
+    peek_capable = !(ctl->fetchall || (ctl->keep && !ctl->server.uidl));
 
     /* we're approved */
     return(PS_SUCCESS);
@@ -1102,7 +1102,7 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
      * The line count passed (99999999) is the maximum value CompuServe will
      * accept; it's much lower than the natural value 2147483646 (the maximum
      * twos-complement signed 32-bit integer minus 1) */
-    if (ctl->keep || ctl->fetchall)
+    if (!peek_capable)
 	gen_send(sock, "RETR %d", number);
     else
 	gen_send(sock, "TOP %d 99999999", number);
