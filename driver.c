@@ -120,13 +120,25 @@ static int is_host_alias(const char *name, struct query *ctl)
 	return(TRUE);
 
     /*
+     * Is it in the `also known as' cache accumulated by previous DNS checks?
+     * This cache may someday be primed by an aka option.
+     */
+    else if (uid_in_list(&ctl->lead_server->aka, name))
+	return(TRUE);
+
+    /*
      * We know DNS service was up at the beginning of this poll cycle.
      * If it's down, our nameserver has crashed.  We don't want to try
      * delivering the current message or anything else from this
      * mailbox until it's back up.
      */
     else if ((he = gethostbyname(name)) != (struct hostent *)NULL)
-	return(strcmp(ctl->canonical_name, he->h_name) == 0);
+    {
+	if (strcmp(ctl->canonical_name, he->h_name) == 0)
+	    goto match;
+	else
+	    return(FALSE);
+    }
     else
 	switch (h_errno)
 	{
@@ -162,7 +174,7 @@ static int is_host_alias(const char *name, struct query *ctl)
 	case NO_ADDRESS:	/* valid, but does not have an IP address */
 	    for (mxp = mxrecords; mxp->name; mxp++)
 		if (strcmp(name, mxp->name) == 0)
-		    return(TRUE);
+		    goto match;
 	    break;
 
 	case NO_RECOVERY:	/* non-recoverable name server error */
@@ -177,6 +189,11 @@ static int is_host_alias(const char *name, struct query *ctl)
 	}
 
     return(FALSE);
+
+match:
+    /* add this name to relevant server's `also known as' list */
+    save_uid(&ctl->lead_server->aka, -1, name);
+    return(TRUE);
 }
 
 void find_server_names(hdr, ctl, xmit_names)
@@ -226,7 +243,7 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 static FILE *smtp_open(struct query *ctl)
 /* try to open a socket to the appropriate SMTP server for this query */ 
 {
-    ctl = ctl->leader; /* go to the SMTP leader for this query */
+    ctl = ctl->lead_smtp; /* go to the SMTP leader for this query */
 
     /* maybe it's time to close the socket in order to force delivery */
     if (batchlimit && ctl->smtp_sockfp && batchcount++ == batchlimit)

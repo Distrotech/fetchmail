@@ -94,8 +94,10 @@ struct query
     int active;
     int errcount;		/* count transient errors in last pass */
     struct query *next;		/* next query control block in chain */
-    struct query *leader;	/* pointer to this query's SMTP leader */
+    struct query *lead_smtp;	/* pointer to this query's SMTP leader */
     FILE *smtp_sockfp;		/* socket descriptor for SMTP connection */
+    struct query *lead_server;	/* pointer to lead query for this server */
+    struct idlist *aka;		/* server alias list */
     unsigned int uid;		/* UID of user to deliver to */
     char digest [DIGESTLEN];	/* md5 digest buffer */
 #ifdef HAVE_GETHOSTBYNAME
@@ -162,7 +164,7 @@ int gen_transact ();
 #endif
 
 void *xmalloc(int);
-char *xstrdup(char *);
+char *xstrdup(const char *);
 
 int do_protocol(struct query *, const struct method *);
 int doPOP2 (struct query *); 
@@ -172,18 +174,18 @@ int doIMAP (struct query *);
 void reply_hack(char *, const char *);
 char *nxtaddr(const char *);
 
-void initialize_saved_lists(struct query *, char *);
-struct idlist *save_uid(struct idlist **, int, char *);
+void initialize_saved_lists(struct query *, const char *);
+struct idlist *save_uid(struct idlist **, int, const char *);
 void free_uid_list(struct idlist **);
-void save_id_pair(struct idlist **, char *, char *);
+void save_id_pair(struct idlist **, const char *, const char *);
 void free_idpair_list(struct idlist **);
 int delete_uid(struct idlist **, int);
-int uid_in_list(struct idlist **, char *);
+int uid_in_list(struct idlist **, const char *);
 char *uid_find(struct idlist **, int);
-char *idpair_find(struct idlist **, char *);
+char *idpair_find(struct idlist **, const char *);
 void append_uid_list(struct idlist **, struct idlist **);
 void update_uid_lists(struct query *);
-void write_saved_lists(struct query *, char *);
+void write_saved_lists(struct query *, const char *);
 
 struct query *hostalloc(struct query *); 
 int parsecmdline (int, char **, struct query *);

@@ -31,7 +31,7 @@ xmalloc (int n)
     return(p);
 }
 
-char *xstrdup(char *s)
+char *xstrdup(const char *s)
 {
     char *p;
     p = (char *) xmalloc(strlen(s)+1);

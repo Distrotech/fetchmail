@@ -517,20 +517,31 @@ static int load_params(int argc, char **argv, int optind)
 	     *
 	     * In the typical case, there will be only one SMTP host (the
 	     * client machine) and thus just one SMTP leader (and one listener
-	     * process) through the entire run.
+	     * process) through the entire poll cycle.
 	     */
 	    if (!ctl->mda[0])
 	    {
+		ctl->smtp_sockfp = (FILE *)NULL;
 		for (mp = querylist; mp && mp != ctl; mp = mp->next)
 		    if (strcmp(mp->smtphost, ctl->smtphost) == 0)
 		    {
-			ctl->leader = mp->leader;
+			ctl->lead_smtp = mp->lead_smtp;
 			goto no_new_leader;
 		    }
-		ctl->leader = ctl;
-		ctl->smtp_sockfp = (FILE *)NULL;
+		ctl->lead_smtp = ctl;
 	    no_new_leader:;
 	    }
+
+	    /* similarly, compute server leaders for queries */
+	    ctl->aka = (struct idlist *)NULL;
+	    for (mp = querylist; mp && mp != ctl; mp = mp->next)
+		if (strcmp(mp->servername, ctl->servername) == 0)
+		{
+		    ctl->lead_server = mp->lead_server;
+		    goto no_new_server;
+		}
+	    ctl->lead_server = ctl;
+	no_new_server:;
 
 	    /* sanity checks */
 	    if (ctl->port < 0)
@@ -588,7 +599,7 @@ void termhook(int sig)
 
     /* terminate all SMTP connections cleanly */
     for (ctl = querylist; ctl; ctl = ctl->next)
-	if (ctl->leader == ctl && ctl->smtp_sockfp != (FILE *)NULL)
+	if (ctl->lead_smtp == ctl && ctl->smtp_sockfp != (FILE *)NULL)
 	    SMTP_quit(ctl->smtp_sockfp);
 
     if (!check_only)
