@@ -486,7 +486,7 @@ static int smtp_open(struct query *ctl)
 #endif /* INET6 */
 	    }
 
-	    if ((ctl->smtp_socket = SockOpen(parsed_host,portnum)) == -1)
+	    if ((ctl->smtp_socket = SockOpen(parsed_host,portnum,NULL)) == -1)
 		continue;
 
 	    /* first, probe for ESMTP */
@@ -503,7 +503,7 @@ static int smtp_open(struct query *ctl)
 	    ctl->smtp_socket = -1;
 
 	    /* if opening for ESMTP failed, try SMTP */
-	    if ((ctl->smtp_socket = SockOpen(parsed_host,portnum)) == -1)
+	    if ((ctl->smtp_socket = SockOpen(parsed_host,portnum,NULL)) == -1)
 		continue;
 
 	    if (SMTP_ok(ctl->smtp_socket) == SM_OK && 
@@ -1688,7 +1688,7 @@ const struct method *proto;	/* protocol method table */
 			     ctl->server.service ? ctl->server.service : protocol->service,
 			     ctl->server.netsec)) == -1)
 #else /* INET6 */
-	if ((sock = SockOpen(realhost, port)) == -1)
+	if ((sock = SockOpen(realhost, port, NULL)) == -1)
 #endif /* INET6 */
 	{
 #if !INET6

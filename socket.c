@@ -73,7 +73,7 @@ int SockOpen(const char *host, const char *service, const char *options)
 #endif
 #endif /* INET_ATON */
 
-int SockOpen(const char *host, int clientPort)
+int SockOpen(const char *host, int clientPort, const char *options)
 {
     int sock;
 #ifndef INET_ATON
@@ -220,7 +220,7 @@ int SockPeek(int sock)
  */
 main()
 {
-    int	 	sock = SockOpen("localhost", 19);
+    int	 	sock = SockOpen("localhost", 19, NULL);
     char	buf[80];
 
     while (SockRead(sock, buf, sizeof(buf)-1))

@@ -11,7 +11,7 @@
 #if INET6
 int SockOpen(const char *host, const char *service, const char *options);
 #else /* INET6 */
-int SockOpen(const char *host, int clientPort);
+int SockOpen(const char *host, int clientPort, const char *options);
 #endif /* INET6 */
 
 /* 
