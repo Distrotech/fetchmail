@@ -8,6 +8,8 @@ fetchmail-4.7.4 ():
 * Gunther Leber's cleanup for the plugin/plugout code.
 * Hajimu UMEMOTO's code for localtime in timestamps.
 * Michael Warfield's IPv6 fixes.
+* Added Argentine Spanish as supported language (LC_ALL=pt_BR) from a
+  po file by Javier Cohen <jkohen@tough.com>.
 
 There are 249 people on fetchmail-friends and 335 on fetchmail-announce.
 
