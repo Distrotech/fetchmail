@@ -168,7 +168,7 @@ struct hostrec *queryctl;
 	    {
 		queryctl->protocol = P_POP3;
 		queryctl->port = KPOP_PORT;
-		queryctl->authenticate ==  A_KERBEROS;
+		queryctl->authenticate =  A_KERBEROS;
 	    }
 	    else {
 		fprintf(stderr,"Invalid protocol `%s' specified.\n", optarg);

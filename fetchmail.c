@@ -504,12 +504,12 @@ struct hostrec *queryctl;
     if (queryctl->authenticate == A_KERBEROS)
 	    printf("  Kerberos authentication enabled.\n");
 
-    printf("  Fetched messages will%s be kept on the server (--keep %s).\n",
-	   queryctl->keep ? "" : " not",
-	   queryctl->keep ? "on" : "off");
     printf("  %s messages will be retrieved (--all %s).\n",
 	   queryctl->fetchall ? "All" : "Only new",
 	   queryctl->fetchall ? "on" : "off");
+    printf("  Fetched messages will%s be kept on the server (--keep %s).\n",
+	   queryctl->keep ? "" : " not",
+	   queryctl->keep ? "on" : "off");
     printf("  Old messages will%s be flushed before message retrieval (--flush %s).\n",
 	   queryctl->flush ? "" : " not",
 	   queryctl->flush ? "on" : "off");
