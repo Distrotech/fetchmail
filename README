@@ -20,6 +20,10 @@ Features of POP include:
 	* Delivery via either file-append with mandatory locking or an
 	  MDA you specify.
 
+	* From:, To:, Cc:, and Reply-To: headers are rewritten so that 
+	  usernames relative to the popclient host become fiully-qualified
+	  Internet addresses.  This enables replies to work correctly.
+
 There is a man page at popclient.man.  A sample rc file is at sample.poprc.
 For a release history, see the file NEWS.
 							-- esr
