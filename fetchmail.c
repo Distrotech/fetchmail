@@ -307,6 +307,33 @@ int main (int argc, char **argv)
 	{
 	    if (ctl->active && !(implicitmode && ctl->skip))
 	    {
+#ifdef HAVE_GETHOSTBYNAME
+		/*
+		 * This functions partly as an optimization and partly
+		 * as a probe to make sure our nameserver is still up.
+		 * The multidrop case (especially) needs it.
+		 */
+		if (ctl->authenticate == A_KERBEROS || MULTIDROP(ctl))
+		{
+		    struct hostent	*namerec;
+
+		    /* compute the canonical name of the host */
+		    namerec = gethostbyname(ctl->servername);
+		    if (namerec == (struct hostent *)NULL)
+		    {
+			fprintf(stderr,
+				"fetchmail: skipping %s poll, nameserver isn't responding\n",
+				ctl->servername);
+			continue;
+		    }
+		    else
+		    {
+			free(ctl->canonical_name);
+			ctl->canonical_name = xstrdup((char *)namerec->h_name);
+		    }
+		}
+#endif /* HAVE_GETHOSTBYNAME */
+
 		popstatus = query_host(ctl);
 		if (!check_only)
 		    update_uid_lists(ctl);
@@ -439,10 +466,6 @@ static int load_params(int argc, char **argv, int optind)
     {
 	if (ctl->active && !(implicitmode && ctl->skip))
 	{
-#ifdef HAVE_GETHOSTBYNAME
-	    struct hostent	*namerec;
-#endif /* HAVE_GETHOSTBYNAME */
-
 	    /* merge in defaults */
 	    optmerge(ctl, &def_opts);
 
@@ -462,29 +485,6 @@ static int load_params(int argc, char **argv, int optind)
 	    }
 	    else
 		ctl->uid = pw->pw_uid;
-
-#ifdef HAVE_GETHOSTBYNAME
-	    /*
-	     * Don't do DNS lookup unless we need to because we're going
-	     * to use Kerberos or process a multidrop box.  Some sites
-	     * won't have DNS up at fetchmail initialization time but aren't
-	     * using these features -- avoid hosing them unnecessarily.
-	     */
-	    if (ctl->authenticate == A_KERBEROS || MULTIDROP(ctl))
-	    {
-		/* compute the canonical name of the host */
-		namerec = gethostbyname(ctl->servername);
-		if (namerec == (struct hostent *)NULL)
-		{
-		    fprintf(stderr,
-			    "fetchmail: can't get canonical name of host %s\n",
-			    ctl->servername);
-		    exit(PS_SYNTAX);
-		}
-		else
-		    ctl->canonical_name = xstrdup((char *)namerec->h_name);
-	    }
-#endif /* HAVE_GETHOSTBYNAME */
 
 #if !defined(HAVE_GETHOSTBYNAME) || !defined(HAVE_RES_SEARCH)
 	    /* can't handle multidrop mailboxes unless we can do DNS lookups */

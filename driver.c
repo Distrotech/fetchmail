@@ -120,12 +120,16 @@ static int is_host_alias(const char *name, struct query *ctl)
 	return(TRUE);
 
     /*
-     * We treat DNS lookup failure as a negative on the theory that
-     * the mailserver's DNS server is `nearby' and should be able
-     * to respond quickly and reliably.  Ergo if we get failure,
-     * the name isn't a mailserver alias.
+     * We know DNS service was up at the beginning of this poll cycle.
+     * If it's down, our nameserver has crashed.  We don't want to try
+     * delivering the current message or anything else from this
+     * mailbox until it's back up.
      */
-    else if ((he = gethostbyname(name)) && strcmp(ctl->canonical_name, he->h_name) == 0)
+    else if ((he = gethostbyname(name)) == (struct hostent *)NULL)
+	longjmp(restart, 2);
+
+    /* DNS response is OK */
+    else if (strcmp(ctl->canonical_name, he->h_name) == 0)
 	return(TRUE);
 
     /*
@@ -138,12 +142,15 @@ static int is_host_alias(const char *name, struct query *ctl)
 
 	mxrecords = getmxrecords(name);
 
+	h_errno = 0;
 	if (mxrecords == (struct mxentry *)NULL)
 	    if (h_errno == TRY_AGAIN)
 	    {
 		sleep(1);
 		continue;
 	    }
+	    else if (h_errno)		/* fatal error */
+		longjmp(restart, 2);
 	    else
 		break;
 
@@ -628,7 +635,7 @@ int do_protocol(ctl, proto)
 struct query *ctl;		/* parsed options with merged-in defaults */
 const struct method *proto;	/* protocol method table */
 {
-    int ok;
+    int ok, js;
     void (*sigsave)();
 
 #ifndef KERBEROS_V4
@@ -673,11 +680,18 @@ const struct method *proto;	/* protocol method table */
     sigsave = signal(SIGVTALRM, vtalarm_handler);
     vtalarm(mytimeout = ctl->timeout);
 
-    if (setjmp(restart) == 1)
+    if ((js = setjmp(restart)) == 1)
     {
 	fprintf(stderr,
 		"fetchmail: timeout after %d seconds waiting for %s.\n",
 		ctl->timeout, ctl->servername);
+	ok = PS_ERROR;
+    }
+    else if (js == 2)
+    {
+	fprintf(stderr,
+		"fetchmail: nameserver evaporated during poll of %s.\n",
+		ctl->servername);
 	ok = PS_ERROR;
     }
     else
