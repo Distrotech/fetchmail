@@ -148,7 +148,7 @@ static int is_host_alias(const char *name, struct query *ctl)
      * name doesn't match any is it time to call the bind library.
      * If this happens odds are good we're looking at an MX name.
      */
-    if (strcmp(lead_server->truename, name) == 0)
+    if (strcasecmp(lead_server->truename, name) == 0)
 	return(TRUE);
     else if (str_in_list(&lead_server->akalist, name))
 	return(TRUE);
@@ -169,7 +169,7 @@ static int is_host_alias(const char *name, struct query *ctl)
      */
     else if ((he = gethostbyname(name)) != (struct hostent *)NULL)
     {
-	if (strcmp(ctl->server.truename, he->h_name) == 0)
+	if (strcasecmp(ctl->server.truename, he->h_name) == 0)
 	    goto match;
 	else
 	    return(FALSE);
@@ -221,7 +221,7 @@ static int is_host_alias(const char *name, struct query *ctl)
     else
     {
 	for (mxp = mxrecords; mxp->name; mxp++)
-	    if (strcmp(ctl->server.truename, mxp->name) == 0)
+	    if (strcasecmp(ctl->server.truename, mxp->name) == 0)
 		goto match;
 	return(FALSE);
     match:;
@@ -278,59 +278,68 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
     {
 	char	*cp;
 
-	if ((cp = nxtaddr(hdr)) != (char *)NULL)
-	    do {
-		char	*atsign;
+	for (cp = nxtaddr(hdr);
+	     cp != NULL;
+	     cp = nxtaddr(NULL))
+	{
+	    char	*atsign;
 
-		if ((atsign = strchr(cp, '@')))
-		{
-		    struct idlist	*idp;
+	    if ((atsign = strchr(cp, '@'))) {
+		struct idlist	*idp;
 
-		    /*
-		     * Does a trailing segment of the hostname match something
-		     * on the localdomains list?  If so, save the whole name
-		     * and keep going.
-		     */
-		    for (idp = ctl->server.localdomains; idp; idp = idp->next)
+		/*
+		 * Does a trailing segment of the hostname match something
+		 * on the localdomains list?  If so, save the whole name
+		 * and keep going.
+		 */
+		for (idp = ctl->server.localdomains; idp; idp = idp->next) {
+		    char	*rhs;
+
+		    rhs = atsign + (strlen(atsign) - strlen(idp->id));
+		    if (rhs > atsign &&
+			(rhs[-1] == '.' || rhs[-1] == '@') &&
+			strcasecmp(rhs, idp->id) == 0)
 		    {
-			char	*rhs;
-
-			rhs = atsign + (strlen(atsign) - strlen(idp->id));
-			if ((rhs[-1] == '.' || rhs[-1] == '@')
-					&& strcasecmp(rhs, idp->id) == 0)
-			{
-			    if (outlevel == O_VERBOSE)
-				error(0, 0, "passed through %s matching %s", 
-				      cp, idp->id);
-			    save_str(xmit_names, XMIT_ACCEPT, cp);
-			    accept_count++;
-			    continue;
-			}
+			if (outlevel == O_VERBOSE)
+			    error(0, 0, "passed through %s matching %s", 
+				  cp, idp->id);
+			save_str(xmit_names, XMIT_ACCEPT, cp);
+			accept_count++;
+			break;
 		    }
-
-		    /*
-		     * Check to see if the right-hand part is an alias
-		     * or MX equivalent of the mailserver.  If it's
-		     * not, skip this name.  If it is, we'll keep
-		     * going and try to find a mapping to a client name.
-		     */
-		    if (!is_host_alias(atsign+1, ctl))
-		    {
-			save_str(xmit_names, XMIT_REJECT, cp);
-			reject_count++;
-			continue;
-		    }
-		    atsign[0] = '\0';
 		}
+		/* if we matched a local domain, idp != NULL */
+		if (idp) continue;
 
-		map_name(cp, ctl, xmit_names);
-	    } while
-		((cp = nxtaddr((char *)NULL)) != (char *)NULL);
+		/*
+		 * Check to see if the right-hand part is an alias
+		 * or MX equivalent of the mailserver.  If it's
+		 * not, skip this name.  If it is, we'll keep
+		 * going and try to find a mapping to a client name.
+		 */
+		if (!is_host_alias(atsign+1, ctl))
+		{
+		    save_str(xmit_names, XMIT_REJECT, cp);
+		    reject_count++;
+		    continue;
+		}
+		atsign[0] = '\0';
+	    }
+
+	    map_name(cp, ctl, xmit_names);
+	}
     }
 }
 
 static char *parse_received(struct query *ctl, char *bufp)
-/* try to extract real addressee from the Received line */
+/* try to extract real address from the Received line */
+/* If a valid Received: line is found, we return the full address in
+ * a buffer wich can be parsed from nxtaddr().  This is to ansure that
+ * the local domain part of the address can be passed along in 
+ * find_server_names() if it contains one.
+ * Note: We should return a dummy header containing the address 
+ * which makes nxtaddr() behave correctly. 
+ */
 {
     char *ok = (char *)NULL;
     static char rbuf[HOSTLEN + USERNAMELEN + 4]; 
@@ -360,18 +369,20 @@ static char *parse_received(struct query *ctl, char *bufp)
 	 * recipient name after a following "for".  Otherwise
 	 * punt.
 	 */
-	if (!is_host_alias(rbuf, ctl))
-	    ok = (char *)NULL;
-	else if ((ok = strstr(sp, "for ")) && isspace(ok[-1]))
+	if (is_host_alias(rbuf, ctl) &&
+	    (ok = strstr(sp, "for ")) && 
+	    isspace(ok[-1]))
 	{
 	    tp = rbuf;
 	    sp = ok + 4;
+	    *tp++ = ':';	/* Here is the hack.  This is to be friend */
+	    *tp++ = ' ';	/* with nxtaddr()... */
 	    if (*sp == '<')
 		sp++;
 	    while (*sp == '@')		/* skip routes */
-		while (*sp++ != ':')
+		while (*sp && *sp++ != ':')
 		    continue;
-	    while (*sp && *sp != '>' && *sp != '@' && *sp != ';')
+	    while (*sp && *sp != '>' && *sp != ';')
 		if (!isspace(*sp))
 		    *tp++ = *sp++;
 		else
@@ -380,16 +391,24 @@ static char *parse_received(struct query *ctl, char *bufp)
 		    ok = (char *)NULL;
 		    break;
 		}
+	    *tp++ = '\n';
 	    *tp = '\0';
-	}
+	    if (strlen(rbuf) <= 3)	/* apparently nothing has been found */
+		ok = NULL;
+	} else
+	    ok = (char *)NULL;
     }
 
     if (!ok)
 	return(NULL);
     else
     {
-	if (outlevel == O_VERBOSE)
-	    error(0, 0, "found Received address `%s'", rbuf);
+	if (outlevel == O_VERBOSE) {
+	    char *lf = rbuf + strlen(rbuf)-1;
+	    *lf = '\0';
+	    error(0, 0, "found Received address `%s'", rbuf+2);
+	    *lf = '\n';
+	}
 	return(rbuf);
     }
 }
@@ -562,25 +581,33 @@ int num;		/* index of message */
     {
 	int		offset;
 	struct addrblk	*next;
-    } *addrchain = NULL, **chainptr = &addrchain;
-    char buf[MSGBUFSIZE+1], return_path[MSGBUFSIZE+1]; 
-    int	from_offs, ctt_offs, env_offs, next_address;
-    char *headers, *received_for, *destaddr, *rcv;
-    int n, linelen, oldlen, ch, remaining, skipcount;
-    char		*cp;
+    };
+    struct addrblk	*to_addrchain = NULL;
+    struct addrblk	**to_chainptr = &to_addrchain;
+    struct addrblk	*resent_to_addrchain = NULL;
+    struct addrblk	**resent_to_chainptr = &resent_to_addrchain;
+
+    char		buf[MSGBUFSIZE+1];
+    char		return_path[HOSTLEN + USERNAMELEN + 4]; 
+    int			from_offs, reply_to_offs, resent_from_offs;
+    int			app_from_offs, sender_offs, resent_sender_offs;
+    int			ctt_offs, env_offs;
+    char		*headers, *received_for, *destaddr, *rcv, *cp;
+    int 		n, linelen, oldlen, ch, remaining, skipcount;
     struct idlist 	*idp, *xmit_names;
     flag		good_addresses, bad_addresses, has_nuls;
     flag		no_local_matches = FALSE;
     int			olderrs;
 
-    next_address = sizeticker = 0;
+    sizeticker = 0;
     has_nuls = FALSE;
     return_path[0] = '\0';
     olderrs = ctl->errcount;
 
     /* read message headers */
     headers = received_for = NULL;
-    from_offs = ctt_offs = env_offs = -1;
+    from_offs = reply_to_offs = resent_from_offs = app_from_offs = 
+	sender_offs = resent_sender_offs = ctt_offs = env_offs = -1;
     oldlen = 0;
     msglen = 0;
     skipcount = 0;
@@ -593,8 +620,11 @@ int num;		/* index of message */
 	linelen = 0;
 	line[0] = '\0';
 	do {
-	    if ((n = SockRead(sock, buf, sizeof(buf)-1)) == -1)
+	    if ((n = SockRead(sock, buf, sizeof(buf)-1)) == -1) {
+		free(line);
+		free(headers);
 		return(PS_SOCKET);
+	    }
 	    linelen += n;
 	    msglen += n;
 
@@ -658,8 +688,11 @@ int num;		/* index of message */
 	 */
 	if (protocol->port != 109)
 #endif /* POP2_ENABLE */
-	    if (num == 1 && !strncasecmp(line, "X-IMAP:", 7))
+	    if (num == 1 && !strncasecmp(line, "X-IMAP:", 7)) {
+		free(line);
+		free(headers);
 		return(PS_RETAINED);
+	    }
 
 	/*
 	 * This code prevents fetchmail from becoming an accessory after
@@ -713,6 +746,9 @@ int num;		/* index of message */
 	    }
 	}
 
+	if (ctl->rewrite)
+	    line = reply_hack(line, ctl->server.truename);
+
 	/*
 	 * OK, this is messy.  If we're forwarding by SMTP, it's the
 	 * SMTP-receiver's job (according to RFC821, page 22, section
@@ -729,15 +765,14 @@ int num;		/* index of message */
 	 * envelope sender from the Return-Path, the new Return-Path should be
 	 * exactly the same as the original one.
 	 */
-	if (!ctl->mda && !strncasecmp("Return-Path:", line, 12))
+	if (!strncasecmp("Return-Path:", line, 12))
 	{
 	    strcpy(return_path, nxtaddr(line));
-	    free(line);
-	    continue;
+	    if (!ctl->mda) {
+		free(line);
+		continue;
+	    }
 	}
-
-	if (ctl->rewrite)
-	    line = reply_hack(line, ctl->server.truename);
 
 	if (!headers)
 	{
@@ -753,20 +788,29 @@ int num;		/* index of message */
 
 	    newlen = oldlen + strlen(line);
 	    headers = (char *) realloc(headers, newlen + 1);
-	    if (headers == NULL)
+	    if (headers == NULL) {
+		free(line);
 		return(PS_IOERR);
+	    }
 	    strcpy(headers + oldlen, line);
 	    free(line);
 	    line = headers + oldlen;
 	    oldlen = newlen;
 	}
 
-	if (from_offs == -1 && !strncasecmp("From:", line, 5))
+	if (!strncasecmp("From:", line, 5))
 	    from_offs = (line - headers);
-	else if (from_offs == -1 && !strncasecmp("Resent-From:", line, 12))
-	    from_offs = (line - headers);
-	else if (from_offs == -1 && !strncasecmp("Apparently-From:", line, 16))
-	    from_offs = (line - headers);
+	else if (!strncasecmp("Reply-To:", line, 9))
+	    reply_to_offs = (line - headers);
+	else if (!strncasecmp("Resent-From:", line, 12))
+	    resent_from_offs = (line - headers);
+	else if (!strncasecmp("Apparently-From:", line, 16))
+	    app_from_offs = (line - headers);
+	else if (!strncasecmp("Sender:", line, 7))
+	    sender_offs = (line - headers);
+	else if (!strncasecmp("Resent_Sender:", line, 14))
+	    resent_sender_offs = (line - headers);
+
 	else if (!strncasecmp("Content-Transfer-Encoding:", line, 26))
 	    ctt_offs = (line - headers);
  	else if (!strncasecmp("Message-Id:", buf, 11 ))
@@ -787,18 +831,29 @@ int num;		/* index of message */
 
 	else if (!strncasecmp("To:", line, 3)
 			|| !strncasecmp("Cc:", line, 3)
-			|| !strncasecmp("Bcc:", line, 4))
+			|| !strncasecmp("Bcc:", line, 4)
+			|| !strncasecmp("Apparently-To:", line, 14))
 	{
-	    *chainptr = xmalloc(sizeof(struct addrblk));
-	    (*chainptr)->offset = (line - headers);
-	    chainptr = &(*chainptr)->next; 
-	    *chainptr = NULL;
+	    *to_chainptr = xmalloc(sizeof(struct addrblk));
+	    (*to_chainptr)->offset = (line - headers);
+	    to_chainptr = &(*to_chainptr)->next; 
+	    *to_chainptr = NULL;
+	}
+
+	else if (!strncasecmp("Resent-To:", line, 10)
+			|| !strncasecmp("Resent-Cc:", line, 10)
+			|| !strncasecmp("Resent-Bcc:", line, 11))
+	{
+	    *resent_to_chainptr = xmalloc(sizeof(struct addrblk));
+	    (*resent_to_chainptr)->offset = (line - headers);
+	    resent_to_chainptr = &(*resent_to_chainptr)->next; 
+	    *resent_to_chainptr = NULL;
 	}
 
 	else if (ctl->server.envelope != STRING_DISABLED)
 	{
 	    if (ctl->server.envelope 
-			&& strcasecmp(ctl->server.envelope, "received"))
+			&& strcasecmp(ctl->server.envelope, "Received"))
 	    {
 		if (env_offs == -1 && !strncasecmp(ctl->server.envelope,
 						line,
@@ -844,6 +899,32 @@ int num;		/* index of message */
      * In fact we have to, as this will tell us where to forward to.
      */
 
+    /*
+     * If there is a Return-Path address on the message, this was
+     * almost certainly the MAIL FROM address given the originating
+     * sendmail.  This is the best thing to use for logging the
+     * message origin (it sets up the right behavior for bounces and
+     * mailing lists).  Otherwise, fall down to the next available 
+     * envelope address wich is the most probable real sender 
+     * respectively.  *** The order is important! ***
+     * This is especially useful when receiving mailing list
+     * messages in multidrop mode.  if a local address doesn't
+     * exist, the bounce message won't be returned blindly to the 
+     * author or to the list itself but rather to the list manager
+     * (ex: specified by "Sender:") wich is less anoying.  This is
+     * true for most mailing list packages.
+     */
+    if( !return_path[0] ){
+	char *ap = NULL;
+	if (resent_sender_offs >= 0 && (ap = nxtaddr(headers + resent_sender_offs)));
+	else if (sender_offs >= 0 && (ap = nxtaddr(headers + sender_offs)));
+	else if (resent_from_offs >= 0 && (ap = nxtaddr(headers + resent_from_offs)));
+	else if (from_offs >= 0 && (ap = nxtaddr(headers + from_offs)));
+	else if (reply_to_offs >= 0 && (ap = nxtaddr(headers + reply_to_offs)));
+	else if (app_from_offs >= 0 && (ap = nxtaddr(headers + app_from_offs)));
+	if (ap) strcpy( return_path, ap );
+    }
+
     /* cons up a list of local recipients */
     xmit_names = (struct idlist *)NULL;
     bad_addresses = good_addresses = accept_count = reject_count = 0;
@@ -857,22 +938,36 @@ int num;		/* index of message */
 	     * We have the Received for addressee.  
 	     * It has to be a mailserver address, or we
 	     * wouldn't have got here.
+	     * We use find_server_names() to let local 
+	     * hostnames go through.
 	     */
-	    map_name(received_for, ctl, &xmit_names);
-	else
-	{
+	    find_server_names(received_for, ctl, &xmit_names);
+	else {
 	    /*
 	     * We haven't extracted the envelope address.
-	     * So check all the header addresses.
+	     * So check all the "Resent-To" header addresses if 
+	     * they exist.  If and only if they don't, consider
+	     * the "To" adresses.
 	     */
-	    while (addrchain)
-	    {
-		register struct addrblk *nextptr;
-
-		find_server_names(headers+addrchain->offset, ctl, &xmit_names);
-		nextptr = addrchain->next;
-		free(addrchain);
-		addrchain = nextptr;
+	    register struct addrblk *nextptr;
+	    if (resent_to_addrchain) {
+		/* delete the "To" chain and substitute it 
+		 * with the "Resent-To" list 
+		 */
+		while (to_addrchain) {
+		    nextptr = to_addrchain->next;
+		    free(to_addrchain);
+		    to_addrchain = nextptr;
+		}
+		to_addrchain = resent_to_addrchain;
+		resent_to_addrchain = NULL;
+	    }
+	    /* now look for remaining adresses */
+	    while (to_addrchain) {
+		find_server_names(headers+to_addrchain->offset, ctl, &xmit_names);
+		nextptr = to_addrchain->next;
+		free(to_addrchain);
+		to_addrchain = nextptr;
 	    }
 	}
 	if (!accept_count)
@@ -897,6 +992,7 @@ int num;		/* index of message */
 	if (outlevel == O_VERBOSE)
 	    error(0,0, "forwarding and deletion suppressed due to DNS errors");
 	free(headers);
+	free_str_list(&xmit_names);
 	return(PS_TRANSIENT);
     }
     else if (ctl->mda)		/* we have a declared MDA */
@@ -961,7 +1057,7 @@ int num;		/* index of message */
 	/* substitute From address for %F */
 	if ((cp = strstr(before, "%F")))
 	{
-	    char *from = nxtaddr(headers + from_offs);
+	    char *from = return_path;
 	    char	*sp;
 
 	    /* \177 had better be out-of-band for MDA commands */
@@ -1009,6 +1105,8 @@ int num;		/* index of message */
 	if (!sinkfp)
 	{
 	    error(0, 0, "MDA open failed");
+	    free(headers);
+	    free_str_list(&xmit_names);
 	    return(PS_IOERR);
 	}
 
@@ -1023,6 +1121,7 @@ int num;		/* index of message */
 	{
 	    error(0, errno, "SMTP connect to %s failed",
 		  ctl->smtphost ? ctl->smtphost : "localhost");
+	    free(headers);
 	    free_str_list(&xmit_names);
 	    return(PS_SMTP);
 	}
@@ -1048,14 +1147,8 @@ int num;		/* index of message */
 	    sprintf(options + strlen(options), " SIZE=%ld", reallen);
 
 	/*
-	 * If there is a Return-Path address on the message, this was
-	 * almost certainly the MAIL FROM address given the originating
-	 * sendmail.  This is the best thing to use for logging the
-	 * message origin (it sets up the right behavior for bounces and
-	 * mailing lists).  Otherwise, take the From address.
-	 *
-	 * Try to get the SMTP listener to take the Return-Path or
-	 * From address as MAIL FROM .  If it won't, fall back on the
+	 * Try to get the SMTP listener to take the Return-Path
+	 * address as MAIL FROM .  If it won't, fall back on the
 	 * calling-user ID.  This won't affect replies, which use the
 	 * header From address anyway.
 	 *
@@ -1070,11 +1163,7 @@ int num;		/* index of message */
 	 * didn't pass canonicalized From/Return-Path lines, *and* the
 	 * local SMTP listener insists on them.
 	 */
-	ap = (char *)NULL;
-	if (return_path[0])
-	    ap = return_path;
-	else if (from_offs == -1 || !(ap = nxtaddr(headers + from_offs)))
-	    ap = user;
+	ap = (return_path[0]) ? return_path : user;
 	if (SMTP_from(ctl->smtp_socket, ap, options) != SM_OK)
 	{
 	    int smtperr = atoi(smtp_response);
@@ -1100,6 +1189,7 @@ int num;		/* index of message */
 		 * don't prevent it from being deleted.
 		 */
 		free(headers);
+		free_str_list(&xmit_names);
 		return(PS_REFUSED);
 
 	    case 452: /* insufficient system storage */
@@ -1111,6 +1201,7 @@ int num;		/* index of message */
 		 */
 		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
 		free(headers);
+		free_str_list(&xmit_names);
 		return(PS_TRANSIENT);
 
 	    case 552: /* message exceeds fixed maximum message size */
@@ -1121,6 +1212,7 @@ int num;		/* index of message */
 		 */
 		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
 		free(headers);
+		free_str_list(&xmit_names);
 		return(PS_REFUSED);
 
 	    default:	/* retry with invoking user's address */
@@ -1128,6 +1220,7 @@ int num;		/* index of message */
 		{
 		    error(0, -1, "SMTP error: %s", smtp_response);
 		    free(headers);
+		    free_str_list(&xmit_names);
 		    return(PS_SMTP);	/* should never happen */
 		}
 	    }
@@ -1177,6 +1270,7 @@ int num;		/* index of message */
 	    {
 		error(0, 0, "can't even send to calling user!");
 		free(headers);
+		free_str_list(&xmit_names);
 		return(PS_SMTP);
 	    }
 	}
@@ -1274,6 +1368,8 @@ int num;		/* index of message */
 		pclose(sinkfp);
 	    signal(SIGCHLD, sigchld);
 	}
+	free(headers);
+	free_str_list(&xmit_names);
 	return(PS_IOERR);
     }
     else if (outlevel == O_VERBOSE)
@@ -1336,8 +1432,6 @@ int num;		/* index of message */
 	    stuffline(ctl, errmsg);
     }
 
-    free_str_list(&xmit_names);
-
     /* issue the delimiter line */
     cp = buf;
     *cp++ = '\r';
@@ -1345,6 +1439,8 @@ int num;		/* index of message */
     *cp++ = '\0';
     stuffline(ctl, buf);
 
+    free(headers);
+    free_str_list(&xmit_names);
     return(PS_SUCCESS);
 }
 

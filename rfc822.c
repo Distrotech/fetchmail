@@ -34,7 +34,16 @@ const char *host;	/* server hostname */
 	&& strncasecmp("Reply-To: ", buf, 10)
 	&& strncasecmp("Return-Path: ", buf, 13)
 	&& strncasecmp("Cc: ", buf, 4)
-	&& strncasecmp("Bcc: ", buf, 5)) {
+	&& strncasecmp("Bcc: ", buf, 5)
+	&& strncasecmp("Resent-From: ", buf, 13)
+	&& strncasecmp("Resent-To: ", buf, 11)
+	&& strncasecmp("Resent-Cc: ", buf, 11)
+	&& strncasecmp("Resent-Bcc: ", buf, 12)
+	&& strncasecmp("Apparently-From:", buf, 16)
+	&& strncasecmp("Apparently-To:", buf, 14)
+	&& strncasecmp("Sender:", buf, 7)
+	&& strncasecmp("Resent_Sender:", buf, 14)
+       ) {
 	return(buf);
     }
 
