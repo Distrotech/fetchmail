@@ -1146,6 +1146,12 @@ is restored."));
 			close_warning_by_mail(ctl, (struct msgblk *)NULL);
 		    }
 		}
+		else if (err == PS_REPOLL)
+		{
+		    report(stderr, GT_("Repoll immediately on %s@%s\n"),
+			   ctl->remotename,
+			   ctl->server.truename);
+		}
 		else
 		    report(stderr, GT_("Unknown login or authentication error on %s@%s\n"),
 			   ctl->remotename,

@@ -100,6 +100,7 @@
 #define		PS_REFUSED	25	/* mail refused (internal use) */
 #define		PS_RETAINED	26	/* message retained (internal use) */
 #define		PS_TRUNCATED	27	/* headers incomplete (internal use) */
+#define		PS_REPOLL	28	/* repoll immediately with changed parameters (internal use) */
 
 /* output noise level */
 #define         O_SILENT	0	/* mute, max squelch, etc. */

@@ -1298,7 +1298,9 @@ static int query_host(struct query *ctl)
 	for (i = 0; i < sizeof(autoprobe)/sizeof(autoprobe[0]); i++)
 	{
 	    ctl->server.protocol = autoprobe[i];
-	    st = query_host(ctl);
+	    do {
+		st = query_host(ctl);
+	    } while (st == PS_REPOLL);
 	    if (st == PS_SUCCESS || st == PS_NOMAIL || st == PS_AUTHFAIL || st == PS_LOCKBUSY || st == PS_SMTP || st == PS_MAXFETCH)
 		break;
 	}
@@ -1316,7 +1318,9 @@ static int query_host(struct query *ctl)
     case P_APOP:
     case P_RPOP:
 #ifdef POP3_ENABLE
-	st = doPOP3(ctl);
+	do {
+	    st = doPOP3(ctl);
+	} while (st == PS_REPOLL);
 #else
 	report(stderr, GT_("POP3 support is not configured.\n"));
 	st = PS_PROTOCOL;

@@ -190,44 +190,51 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	 * latches the server's authentication type, so that in daemon mode
 	 * the CAPA check only needs to be done once at start of run.
 	 *
-	 * APOP was introduced in RFC 1450, and CAPA not until
-	 * RFC2449. So the < check is an easy way to prevent CAPA from
-	 * being sent to the more primitive POP3 servers dating from
-	 * RFC 1081 and RFC 1225, which seem more likely to choke on
-	 * it.  This certainly catches IMAP-2000's POP3 gateway.
-	 * 
+	 * If CAPA fails, then force the authentication method to PASSORD
+	 * and repoll immediately.
+	 *
 	 * These authentication methods are blessed by RFC1734,
 	 * describing the POP3 AUTHentication command.
 	 */
-	if (ctl->server.authenticate == A_ANY 
-	    && strchr(greeting, '<') 
-	    && gen_transact(sock, "CAPA") == 0)
+	if (ctl->server.authenticate == A_ANY)
 	{
-	    char buffer[64];
-
-	    /* determine what authentication methods we have available */
-	    while ((ok = gen_recv(sock, buffer, sizeof(buffer))) == 0)
+	    ok = gen_transact(sock, "CAPA");
+	    if (ok == PS_SUCCESS)
 	    {
-		if (DOTLINE(buffer))
-		    break;
+		char buffer[64];
+
+		/* determine what authentication methods we have available */
+		while ((ok = gen_recv(sock, buffer, sizeof(buffer))) == 0)
+		{
+		    if (DOTLINE(buffer))
+			break;
 #ifdef SSL_ENABLE
-               if (strstr(buffer, "STLS"))
-                   has_ssl = TRUE;
+		    if (strstr(buffer, "STLS"))
+			has_ssl = TRUE;
 #endif /* SSL_ENABLE */
 #if defined(GSSAPI)
-		if (strstr(buffer, "GSSAPI"))
-		    has_gssapi = TRUE;
+		    if (strstr(buffer, "GSSAPI"))
+			has_gssapi = TRUE;
 #endif /* defined(GSSAPI) */
 #if defined(KERBEROS_V4)
-		if (strstr(buffer, "KERBEROS_V4"))
-		    has_kerberos = TRUE;
+		    if (strstr(buffer, "KERBEROS_V4"))
+			has_kerberos = TRUE;
 #endif /* defined(KERBEROS_V4)  */
 #ifdef OPIE_ENABLE
-		if (strstr(buffer, "X-OTP"))
-		    has_otp = TRUE;
+		    if (strstr(buffer, "X-OTP"))
+			has_otp = TRUE;
 #endif /* OPIE_ENABLE */
-		if (strstr(buffer, "CRAM-MD5"))
-		    has_cram = TRUE;
+		    if (strstr(buffer, "CRAM-MD5"))
+			has_cram = TRUE;
+		}
+	    }
+	    /* we are in STAGE_GETAUTH! */
+	    else if (ok == PS_AUTHFAIL)
+	    {
+		ctl->server.authenticate = A_PASSWORD;
+		/* repoll immediately */
+		ok = PS_REPOLL;
+		break;
 	    }
 	}
 
