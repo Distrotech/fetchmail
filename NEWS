@@ -8,6 +8,7 @@ fetchmail-4.5.3 ():
   of run, and then only if they'll actually be needed later for multidrop
   checking or fetching Kerberos tickets.  This eliminates many gethostbyname
   calls.
+* 1.1 version of fetchmailconf.
 
 There are 267 people on fetchmail-friends and 249 on fetchmail-announce.
 
