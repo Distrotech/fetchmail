@@ -2,7 +2,15 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
-fetchmail-5.6.3 (Sun Feb 11 00:43:14 EST 2001), 20085 lines:
+* CRAM-MD5 authentication of IMAP and POP3 is working.  Tested against 
+  IMAP4rev1 2000.287 and v2000.70 POP3 gateway at neo.netnea.com.
+* Full support for POP3 AUTH (RFC1734) with KERBEROS_IV, GSSAPI, OTP.
+* Noted that Debian bugs #78963, #63064, #81312, #78796, #78363, #78149,
+  #68627, #67559, #63308, #63088, #71428 are fixed.
+* Resolved Debian bug #65505: fetchmail now returns a nonzero exit status
+  when interrupted before a successful fetch.
+
+fetchmail-5.6.4 (Sun Feb 11 00:43:14 EST 2001), 20085 lines:
 
 * ODMR port fix for AIX.
 * Dave Zarzycki's fix for former FAQ item F5 (%h and %p not being expanded).

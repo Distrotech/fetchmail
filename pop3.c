@@ -204,11 +204,20 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	 * don't implement this, so don't do it at all unless the
 	 * server advertises APOP with <> in the greeting line.  This
 	 * certainly catches IMAP-2000's POP3 gateway.
+	 * 
+	 * These authentication methods are blessed by RFC1734,
+	 * POP3 AUTHentication command.
 	 */
 	if (strchr(greeting, '<') && gen_transact(sock, "AUTH") == 0)
 	{
 	    char buffer[10];
 	    flag has_cram = FALSE;
+#if defined(KERBEROS_IV)
+	    flag has_kerberos = FALSE;
+#endif /* defined(KERBEROS_IV) */
+#ifdef OPIE_ENABLE
+	    flag has_opie = FALSE;
+#endif /* OPIE_ENABLE */
 
 	    while ((ok = gen_recv(sock, buffer, sizeof(buffer))) == 0)
 	    {
@@ -216,9 +225,25 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 		    break;
 		if (strncasecmp(buffer, "CRAM-MD5", 8) == 0)
 		    has_cram = TRUE;
+#if defined(KERBEROS_IV)
+		if (strncasecmp(buffer, "KERBEROS_V4", 8) == 0)
+		    has_kerberos = TRUE;
+#endif /* defined(KERBEROS_IV) */
+#ifdef OPIE_ENABLE
+		if (strncasecmp(buffer, "SKEY", 8) == 0)
+		    has_opie = TRUE;
+#endif /* OPIE_ENABLE */
 	    }
-	    if (has_cram && !do_cram_md5(sock, "AUTH", ctl))
-		return(PS_SUCCESS);
+#if defined(KERBEROS_IV)
+	    if (has_kerberos)
+		return(do_rfc1731(sock, "AUTH", ctl->server.truename));
+#endif /* defined(KERBEROS_IV) */
+#ifdef OPIE_ENABLE
+	    if (has_opie)
+		do_otp(sock, ctl)
+#endif /* OPIE_ENABLE */
+	    if (has_cram)
+		return(do_cram_md5(sock, "AUTH", ctl));
 	}
 
 	/* ordinary validation, no one-time password or RPA */ 
