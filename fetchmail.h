@@ -15,7 +15,7 @@
 
 /* definitions for buffer sizes -- somewhat arbitrary */
 #define		POPBUFSIZE	512	/* per RFC 937 */
-#define		MSGBUFSIZE	1024   	/* size of message read buffer */
+#define		MSGBUFSIZE	2048   	/* size of message read buffer */
 #define		HOSTLEN		128	/* max hostname length */
 #define		USERNAMELEN	32	/* max user-length */
 #define		PASSWORDLEN	MAX_PASSWORD_LENGTH
