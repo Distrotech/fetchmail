@@ -122,7 +122,8 @@ static void unlockit(void)
 #endif
 /* must-do actions for exit (but we can't count on being able to do malloc) */
 {
-    unlink(lockfile);
+    if (lockfile[0])
+	unlink(lockfile);
 }
 
 #ifdef __EMX__
@@ -186,6 +187,21 @@ int main(int argc, char **argv)
     strcat(run.idfile, IDFILE_NAME);
   
     outlevel = O_NORMAL;
+
+    /*
+     * We used to arrange for the lockfile to be removed on exit close
+     * to where the lock was asserted.  Now we need to do it here, because
+     * we might have re-executed in background with an existing lockfile
+     * as the result of a changed rcfile (see the code near the execvp(3)
+     * call near the beginning of the polling loop for details).  We want
+     * to be sure the lockfile gets nuked on any error exit, basically.
+     */
+#ifdef HAVE_ATEXIT
+    atexit(unlockit);
+#endif
+#ifdef HAVE_ON_EXIT
+    on_exit(unlockit, (char *)NULL);
+#endif
 
     if ((parsestatus = parsecmdline(argc,argv, &cmd_run, &cmd_opts)) < 0)
 	exit(PS_SYNTAX);
@@ -537,13 +553,6 @@ int main(int argc, char **argv)
 	    write(st, tmpbuf, strlen(tmpbuf));
 	}
 	close(st);
-
-#ifdef HAVE_ATEXIT
-	atexit(unlockit);
-#endif
-#ifdef HAVE_ON_EXIT
-	on_exit(unlockit, (char *)NULL);
-#endif
     }
 
     /*
@@ -694,6 +703,7 @@ int main(int argc, char **argv)
 	    if (!unwedged)
 	    {
 		report(stderr, _("All connections are wedged.  Exiting.\n"));
+		/* FIXME: someday, send notification mail */
 		exit(PS_AUTHFAIL);
 	    }
 
@@ -942,6 +952,12 @@ static int load_params(int argc, char **argv, int optind)
 
     /* this builds the host list */
     if ((st = prc_parse_file(rcfile, !versioninfo)) != 0)
+	/*
+	 * FIXME: someday, send notification mail here if backgrounded.
+	 * Right now, that can happen if the user changes the rcfile
+	 * while the fetchmail is running in background.  Do similarly
+	 * for the other exit() calls in this function.
+	 */
 	exit(st);
 
     if ((implicitmode = (optind >= argc)))
