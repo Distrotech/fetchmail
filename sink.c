@@ -215,12 +215,11 @@ int smtp_open(struct query *ctl)
 }
 
 static void sanitize(char *s)
-/* replace unsafe shellchars by an _ */
+/* replace ' by _ */
 {
-    const static char *ok_chars = " 1234567890!@%-_=+:,./abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     char *cp;
 
-    for (cp = s; *(cp += strspn(cp, ok_chars)); /* NO INCREMENT */)
+    for (cp = s; (cp = strchr (cp, '\'')); cp++)
     	*cp = '_';
 }
 
@@ -264,9 +263,13 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
     char boundary[BUFSIZ], *bounce_to;
     int sock;
     static char *fqdn_of_host = NULL;
+    const char *md1 = "MAILER-DAEMON", *md2 = "MAILER-DAEMON@";
 
     /* don't bounce in reply to undeliverable bounces */
-    if (!msg->return_path[0] || strcmp(msg->return_path, "<>") == 0)
+    if (!msg->return_path[0] ||
+	strcmp(msg->return_path, "<>") == 0 ||
+	strcasecmp(msg->return_path, md1) == 0 ||
+	strncasecmp(msg->return_path, md2, strlen(md2)) == 0)
 	return(FALSE);
 
     bounce_to = (run.bouncemail ? msg->return_path : run.postmaster);
@@ -1056,7 +1059,6 @@ static int open_mda_sink(struct query *ctl, struct msgblk *msg,
 	    names[--nameslen] = '\0';	/* chop trailing space */
 	}
 
-	/* sanitize names in order to contain only harmless shell chars */
 	sanitize(names);
     }
 
@@ -1065,7 +1067,6 @@ static int open_mda_sink(struct query *ctl, struct msgblk *msg,
     {
 	from = xstrdup(msg->return_path);
 
-	/* sanitize from in order to contain *only* harmless shell chars */
 	sanitize(from);
 
 	fromlen = strlen(from);
@@ -1079,17 +1080,17 @@ static int open_mda_sink(struct query *ctl, struct msgblk *msg,
 	/* find length of resulting mda string */
 	sp = before;
 	while ((sp = strstr(sp, "%s"))) {
-	    length += nameslen - 2;	/* subtract %s */
+	    length += nameslen;	/* subtract %s and add '' */
 	    sp += 2;
 	}
 	sp = before;
 	while ((sp = strstr(sp, "%T"))) {
-	    length += nameslen - 2;	/* subtract %T */
+	    length += nameslen;	/* subtract %T and add '' */
 	    sp += 2;
 	}
 	sp = before;
 	while ((sp = strstr(sp, "%F"))) {
-	    length += fromlen - 2;	/* subtract %F */
+	    length += fromlen;	/* subtract %F and add '' */
 	    sp += 2;
 	}
 
@@ -1102,13 +1103,17 @@ static int open_mda_sink(struct query *ctl, struct msgblk *msg,
 	    /* need to expand? BTW, no here overflow, because in
 	    ** the worst case (end of string) sp[1] == '\0' */
 	    if (sp[1] == 's' || sp[1] == 'T') {
+		*dp++ = '\'';
 		strcpy(dp, names);
 		dp += nameslen;
+		*dp++ = '\'';
 		sp++;	/* position sp over [sT] */
 		dp--;	/* adjust dp */
 	    } else if (sp[1] == 'F') {
+		*dp++ = '\'';
 		strcpy(dp, from);
 		dp += fromlen;
+		*dp++ = '\'';
 		sp++;	/* position sp over F */
 		dp--;	/* adjust dp */
 	    }
@@ -1463,7 +1468,7 @@ va_dcl
 #endif
 /* format and ship a warning message line by mail */
 {
-    char	buf[POPBUFSIZE];
+    char	buf[MSGBUFSIZE+4];
     va_list ap;
 
     /*
@@ -1489,6 +1494,11 @@ va_dcl
 #else
     strcat(buf, "\r\n");
 #endif /* HAVE_SNPRINTF */
+
+    /* guard against very long lines */
+    buf[MSGBUFSIZE+1] = '\r';
+    buf[MSGBUFSIZE+2] = '\n';
+    buf[MSGBUFSIZE+3] = '\0';
 
     stuffline(ctl, buf);
 }
