@@ -525,10 +525,8 @@ int SockWrite(int sock, char *buf, int len)
 	if( NULL != ( ssl = SSLGetContext( sock ) ) )
 		n = SSL_write(ssl, buf, len);
 	else
-       	n = fm_write(sock, buf, len);
-#else
-        n = fm_write(sock, buf, len);
-#endif
+#endif /* SSL_ENABLE */
+	    n = fm_write(sock, buf, len);
         if (n <= 0)
             return -1;
         len -= n;
@@ -676,14 +674,10 @@ int SockPeek(int sock)
 
 			return 0;	/* Give him a '\0' character */
 		}
-	} else {
-    		n = fm_peek(sock, &ch, 1);
 	}
-#else
-
-        n = fm_peek(sock, &ch, 1);
-
+	else
 #endif /* SSL_ENABLE */
+	    n = fm_peek(sock, &ch, 1);
 	if (n == -1)
 		return -1;
 
