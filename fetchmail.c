@@ -582,7 +582,7 @@ static int load_params(int argc, char **argv, int optind)
 	    {
 		ctl->uid = pw->pw_uid;	/* for local delivery via MDA */
 		if (!ctl->localnames)	/* for local delivery via SMTP */
-		    save_str(&ctl->localnames, -1, user);
+		    save_str_pair(&ctl->localnames, user, NULL);
 	    }
 
 #if !defined(HAVE_GETHOSTBYNAME) || !defined(HAVE_RES_SEARCH)
