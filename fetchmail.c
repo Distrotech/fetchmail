@@ -300,7 +300,7 @@ int main (int argc, char **argv)
 		}
 	    }
 
-	    if (!ctl->password)
+	    if (ctl->server.protocol != P_ETRN && !ctl->password)
 	    {
 		(void) sprintf(tmpbuf, "Enter password for %s@%s: ",
 			       ctl->remotename, ctl->server.names->id);
@@ -709,6 +709,7 @@ static char *showproto(int proto)
     case P_IMAP: return("IMAP"); break;
     case P_APOP: return("APOP"); break;
     case P_RPOP: return("RPOP"); break;
+    case P_ETRN: return("ETRN"); break;
     default: return("unknown?!?"); break;
     }
 }
@@ -753,6 +754,8 @@ static int query_host(struct query *ctl)
     case P_IMAP:
 	return(doIMAP(ctl));
 	break;
+    case P_ETRN:
+	return(doETRN(ctl));
     default:
 	error(0, 0, "unsupported protocol selected.");
 	return(PS_PROTOCOL);

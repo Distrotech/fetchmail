@@ -9,6 +9,7 @@
 #define		P_IMAP		4
 #define		P_APOP		5
 #define		P_RPOP		6
+#define		P_ETRN		7
 
 #define		KPOP_PORT	1109
 
@@ -199,6 +200,7 @@ int do_protocol(struct query *, const struct method *);
 int doPOP2 (struct query *); 
 int doPOP3 (struct query *);
 int doIMAP (struct query *);
+int doETRN (struct query *);
 
 void reply_hack(char *, const char *);
 char *nxtaddr(const char *);

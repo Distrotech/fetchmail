@@ -17,6 +17,7 @@
 /* ESMTP extension option masks (not all options are listed here) */
 #define ESMTP_8BITMIME	0x01
 #define ESMTP_SIZE	0x02
+#define ESMTP_ETRN	0x04
 
 int SMTP_helo(FILE *sockfp,char *host);
 int SMTP_ehlo(FILE *sockfp,char *host,int *opt);

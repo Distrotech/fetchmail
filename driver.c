@@ -1199,19 +1199,22 @@ const struct method *proto;	/* protocol method table */
 	    strcpy(realname, ctl->server.names->id);
 
 	/* try to get authorized to fetch mail */
-	shroud = ctl->password;
-	ok = (protocol->getauth)(sockfp, ctl, buf);
-	shroud = (char *)NULL;
-	if (ok == PS_ERROR)
-	    ok = PS_AUTHFAIL;
-	if (ok != 0)
+	if (protocol->getauth)
 	{
-	    error(0, 0, "Authorization failure on %s@%s", 
-		  ctl->remotename,
-		  realname);
-	    goto cleanUp;
+	    shroud = ctl->password;
+	    ok = (protocol->getauth)(sockfp, ctl, buf);
+	    shroud = (char *)NULL;
+	    if (ok == PS_ERROR)
+		ok = PS_AUTHFAIL;
+	    if (ok != 0)
+	    {
+		error(0, 0, "Authorization failure on %s@%s", 
+		      ctl->remotename,
+		      realname);
+		goto cleanUp;
+	    }
+	    vtalarm(ctl->server.timeout);
 	}
-	vtalarm(ctl->server.timeout);
 
 	/* compute number of messages and number of new messages waiting */
 	ok = (protocol->getrange)(sockfp, ctl, &count, &new);
@@ -1221,7 +1224,11 @@ const struct method *proto;	/* protocol method table */
 
 	/* show user how many messages we downloaded */
 	if (outlevel > O_SILENT)
-	    if (count == 0)
+	    if (count == -1)			/* only used for ETRN */
+		error(0, 0, "Polling %s@%s", 
+			ctl->remotename,
+			realname);
+	    else if (count == 0)
 		error(0, 0, "No mail at %s@%s", 
 			ctl->remotename,
 			realname);

@@ -77,14 +77,14 @@ TEXI2DVI = texi2dvi
 ETAGS = etags -tw
 CTAGS = ctags -tw
 
-protobjs = socket.o getpass.o pop2.o pop3.o imap.o fetchmail.o options.o \
+protobjs = socket.o getpass.o pop2.o pop3.o imap.o etrn.o fetchmail.o options.o \
        rcfile_l.o rcfile_y.o daemon.o smtp.o driver.o rfc822.o xmalloc.o \
        uid.o mxget.o md5c.o md5ify.o interface.o netrc.o error.o
 
 objs = $(protobjs) $(extras) $(EXTRAOBJ)
 
 srcs = $(srcdir)/socket.c $(srcdir)/getpass.c $(srcdir)/pop2.c 		\
-       $(srcdir)/pop3.c $(srcdir)/imap.c $(srcdir)/fetchmail.c		\
+       $(srcdir)/pop3.c $(srcdir)/imap.c $(srcdir)/imap.c $(srcdir)/etrn.c	\
        $(srcdir)/options.c $(srcdir)/daemon.c $(srcdir)/driver.c	\
        $(srcdir)/rfc822.c $(srcdir)/smtp.c $(srcdir)/xmalloc.c 		\
        $(srcdir)/uid.c $(srcdir)/mxget.c $(srcdir)/md5c.c		\

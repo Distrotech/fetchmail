@@ -21,6 +21,8 @@ Since 3.0:
 
 	** Support for ESMTP 8BITMIME and SIZE options.
 
+	** Support for ESMTP ETRN command.
+
 	** The stripcr option to explicitly control carriage-return
 	   stripping before mail forwarding.
 

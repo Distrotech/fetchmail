@@ -82,9 +82,10 @@ options are set the way you want them.
 .B \-c, --check
 Return a status code to indicate whether there is mail waiting,
 without actually fetching or deleting mail (see EXIT CODES below).
-This option doesn't play well with queries to multiple sites, and
-is ignored in daemon mode.  It's also prone to false positives if
-you leave read but undeleted mail in your server mailbox.
+This option doesn't play well with queries to multiple sites, doen't
+work with ETRN, and is ignored in daemon mode.  It's also prone to
+false positives if you leave read but undeleted mail in your server
+mailbox.
 .TP
 .B \-s, --silent
 Silent mode.  Suppresses all progress/status messages that are normally
@@ -100,23 +101,25 @@ and the mailserver are echoed to stderr.  Overrides --silent.
 Retrieve both old (seen) and new messages from the mailserver.  The
 default is to fetch only messages the server has not marked seen.
 Note that POP2 retrieval behaves as though --all is always on (see
-RETRIEVAL FAILURE MODES below).
+RETRIEVAL FAILURE MODES below) and this option does not work with ETRN.
 .TP
 .B \-k, --keep
 Keep retrieved messages on the remote mailserver.  Normally, messages 
 are deleted from the folder on the mailserver after they have been retrieved.
 Specifying the 
 .B keep 
-option causes retrieved messages to remain in your folder on the mailserver.
+option causes retrieved messages to remain in your folder on the
+mailserver.  This option does not work with ETRN.
 .TP
 .B \-K, --kill
 Delete retrieved messages from the remote mailserver.  This
 option forces retrieved mail to be deleted.  It may be useful if
-you have specified a default of \fBnokill\fR in your \fI.fetchmailrc\fR.
+you have specified a default of \fBnokill\fR in your
+\fI.fetchmailrc\fR.  This option is forced on with ETRN.
 .TP
 .B \-F, --flush
 POP3/IMAP only.  Delete old (previously retrieved) messages from the mailserver
-before retrieving new messages.
+before retrieving new messages. This option does not work with ETRN.
 .SS Protocol and Query Options
 .TP
 .B \-p, \--protocol proto
@@ -140,6 +143,8 @@ Use POP3 with MD5 authentication.
 Use POP3 with RPOP authentication.
 .IP KPOP
 Use POP3 with Kerberos authentication on port 1109.
+.IP ETRN
+Use the ESMTP ETRN option.
 .RE
 .TP
 .B \-P, --port
@@ -151,7 +156,7 @@ well-established default port numbers.
 Causes a specified non-default mail folder on the mailserver to be retrieved.
 The syntax of the folder name is server dependent, as is the default
 behavior when no folder is specified.  This option is not available
-under POP3.
+under POP3 or ETRN.
 .SS Delivery Control Options
 .TP
 .B \-S host, --smtphost host
@@ -179,6 +184,7 @@ they are "oversized").  The --all option overrides this one.  This
 option is intended for those needing to strictly control fetch time
 in interactive mode.  It may not be used with daemon mode,
 as users would never receive a notification that messages were waiting.
+This option does not work with ETRN.
 .TP
 .B -b, --batchlimit
 Specify the maximum number of messages that will be shipped to an SMTP
@@ -191,6 +197,7 @@ shut down to deliver.  This may produce annoying delays when
 .IR fetchmail (8)
 is processing very large batches.  Setting the batch limit to some
 nonzero size will prevent these delays.
+This option does not work with ETRN.
 .TP
 .B -B, --fetchlimit
 Limit the number of messages accepted from a given server in a single
@@ -243,6 +250,7 @@ primarily for developers; choosing KPOP protocol automatically selects
 Kerberos authentication, and all other alternatives use ordinary
 password authentication (though APOP uses a generated one-time
 key as the password).
+This option does not work with ETRN.
 .SS Miscellaneous Options
 .TP
 .B \-f pathname, --fetchmailrc pathname
@@ -266,6 +274,7 @@ client machine!).  This option disables the rewrite.  (This option is
 provided to pacify people who are paranoid about having an MTA edit
 mail headers and want to know they can prevent it, but it is generally
 not a good idea to actually turn off rewrite.)
+When using ETRN, the rewrite option is ineffective.
 .TP
 .B -E, --envelope
 This option changes the header 
@@ -275,6 +284,7 @@ this is `X-Envelope-To' but as this header is not standard, practice
 varies. See the discussion of multidrop address handling below.
 
 .SH USER AUTHENTICATION
+Every mode except ETRN requires authentication of the client.
 Normal user authentication in 
 .I fetchmail
 is very much like the authentication mechanism of 
@@ -501,6 +511,10 @@ RFCs.  If you ever trip over a server that doesn't, the symptom will
 be that messages you have already read on your host will look new to
 the server.  In this (unlikely) case, only messages you fetched with
 \fIfetchmail --keep\fR will be both undeleted and marked old.
+.PP
+In ETRN mode, \fIfetchmail\fR does not actually retrieve messages;
+instead, it asks the server's SMTP listener to start a queue flush
+to the client via SMTP.  Therefore it sends only undelivered messages.
 
 .SH SPAM FILTERING
 Newer versions of
@@ -813,6 +827,7 @@ listener without modification.  Be careful of mail loops if you do this!
 
 .SH THE USE AND ABUSE OF MULTIDROP MAILBOXES
 Use the multiple-local-recipients feature with caution -- it can bite.
+Also note that all multidrop features are ineffective in ETRN mode.
 
 .SS Header vs. Envelope addresses 
 The fundamental problem is that by having your mailserver toss several
@@ -996,7 +1011,7 @@ correctly set, or that \fBgetpwuid\fR(3) be able to retrieve a password
 entry from your user ID.
 
 .SH BUGS AND KNOWN PROBLEMS
-Use of any of the supported protocols other than APOP or KPOP requires
+Use of any of the supported protocols other than APOP, KPOP, or ETRN requires
 that the program send unencrypted passwords over the TCP/IP connection
 to the mailserver.  This creates a risk that name/password pairs
 might be snaffled with a packet sniffer or more sophisticated
@@ -1036,3 +1051,6 @@ RFC 1176, RFC 1732
 .TP 5
 IMAP4:
 RFC 1730, RFC 1731, RFC 1732, RFC 2060
+.TP 5
+ETRN:
+RFC 1985

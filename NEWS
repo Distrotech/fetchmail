@@ -5,6 +5,8 @@ fetchmail-3.4 ()
 
 features --
 
+* Support for ESMTP ETRN extension.
+
 bugs --
 
 * The bug that displayed incorrect sizes for POP3 connections has been fixed.
