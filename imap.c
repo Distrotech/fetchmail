@@ -123,63 +123,63 @@ int imap_ok(int sock, char *argbuf)
 #if OPIE
 static int do_otp(int sock, struct query *ctl)
 {
-  int i, rval;
-  char buffer[128];
-  char challenge[OPIE_CHALLENGE_MAX+1];
-  char response[OPIE_RESPONSE_MAX+1];
+    int i, rval;
+    char buffer[128];
+    char challenge[OPIE_CHALLENGE_MAX+1];
+    char response[OPIE_RESPONSE_MAX+1];
 
-  gen_send(sock, "AUTHENTICATE X-OTP");
+    gen_send(sock, "AUTHENTICATE X-OTP");
 
-  if (rval = gen_recv(sock, buffer, sizeof(buffer)))
-    return rval;
+    if (rval = gen_recv(sock, buffer, sizeof(buffer)))
+	return rval;
 
-  if ((i = from64tobits(challenge, buffer)) < 0) {
-    error(0, -1, "Could not decode initial BASE64 challenge");
-    return PS_AUTHFAIL;
-  };
+    if ((i = from64tobits(challenge, buffer)) < 0) {
+	error(0, -1, "Could not decode initial BASE64 challenge");
+	return PS_AUTHFAIL;
+    };
 
 
-  to64frombits(buffer, ctl->remotename, strlen(ctl->remotename));
+    to64frombits(buffer, ctl->remotename, strlen(ctl->remotename));
 
-  if (outlevel >= O_MONITOR)
-     error(0, 0, "IMAP> %s", buffer);
-  SockWrite(sock, buffer, strlen(buffer));
-  SockWrite(sock, "\r\n", 2);
+    if (outlevel >= O_MONITOR)
+	error(0, 0, "IMAP> %s", buffer);
+    SockWrite(sock, buffer, strlen(buffer));
+    SockWrite(sock, "\r\n", 2);
 
-  if (rval = gen_recv(sock, buffer, sizeof(buffer)))
-    return rval;
+    if (rval = gen_recv(sock, buffer, sizeof(buffer)))
+	return rval;
 
-  if ((i = from64tobits(challenge, buffer)) < 0) {
-    error(0, -1, "Could not decode OTP challenge");
-    return PS_AUTHFAIL;
-  };
+    if ((i = from64tobits(challenge, buffer)) < 0) {
+	error(0, -1, "Could not decode OTP challenge");
+	return PS_AUTHFAIL;
+    };
 
-  rval = opiegenerator(challenge, !strcmp(ctl->password, "opie") ? "" : ctl->password, response);
-  if ((rval == -2) && !run.poll_interval) {
-    char secret[OPIE_SECRET_MAX+1];
-    fprintf(stderr, "Secret pass phrase: ");
-    if (opiereadpass(secret, sizeof(secret), 0))
-      rval = opiegenerator(challenge, secret, response);
-    memset(secret, 0, sizeof(secret));
-  };
+    rval = opiegenerator(challenge, !strcmp(ctl->password, "opie") ? "" : ctl->password, response);
+    if ((rval == -2) && !run.poll_interval) {
+	char secret[OPIE_SECRET_MAX+1];
+	fprintf(stderr, "Secret pass phrase: ");
+	if (opiereadpass(secret, sizeof(secret), 0))
+	    rval = opiegenerator(challenge, secret, response);
+	memset(secret, 0, sizeof(secret));
+    };
 
-  if (rval)
-   return PS_AUTHFAIL;
+    if (rval)
+	return PS_AUTHFAIL;
 
-  to64frombits(buffer, response, strlen(response));
+    to64frombits(buffer, response, strlen(response));
 
-  if (outlevel >= O_MONITOR)
-     error(0, 0, "IMAP> %s", buffer);
-  SockWrite(sock, buffer, strlen(buffer));
-  SockWrite(sock, "\r\n", 2);
+    if (outlevel >= O_MONITOR)
+	error(0, 0, "IMAP> %s", buffer);
+    SockWrite(sock, buffer, strlen(buffer));
+    SockWrite(sock, "\r\n", 2);
 
-  if (rval = gen_recv(sock, buffer, sizeof(buffer)))
-    return rval;
+    if (rval = gen_recv(sock, buffer, sizeof(buffer)))
+	return rval;
 
-  if (strstr(buffer, "OK"))
-    return PS_SUCCESS;
-  else
-    return PS_AUTHFAIL;
+    if (strstr(buffer, "OK"))
+	return PS_SUCCESS;
+    else
+	return PS_AUTHFAIL;
 };
 #endif /* OPIE */
 
