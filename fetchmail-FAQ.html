@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/11/22 07:26:00 $
+<td width="30%" align=right>$Date: 1997/12/01 07:44:40 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -129,8 +129,8 @@ retrieval demand from those of a simple single-user ISP connection up
 to mail retrieval and rerouting for an entire client domain.
 Fetchmail is easy to configure, unobtrusive in operation, powerful,
 feature-rich, and well documented. Extensive testing by a large,
-multi-platform user community has shown that it is as near bulletproof
-as the underlying protocols permit.<p>
+multi-platform user community has shown that fetchmail is as near
+bulletproof as the underlying protocols permit.<p>
 
 If you found this FAQ in the distribution, see the README for fetchmail's
 full feature list.<p>
@@ -223,6 +223,12 @@ I'm not going to do these; fetchmail's job is transport, not policy, and I
 refuse to change it from doing one thing well to attempting many things badly.
 One of my objectives is to keep fetchmail simple so it stays reliable.<p>
 
+Furthermore, since about version 4.3.0 fetchmail has passed out of active
+development and been essentially stable.  It is no longer my top
+project, and I am going to be quite reluctant to add features that
+might either jeopardize its stability or or involve me in large
+amounts of coding.<p>
+
 All that said, if you have a feature idea that really is about a transport
 problem that can't be handled anywhere but fetchmail, lay it on me.  I'm
 very accommodating about good ideas.<p>
@@ -254,7 +260,7 @@ The experiment was a success.  I wrote a paper about it titled
 <a href="http://www.ccil.org/~esr/writings/cathedral.html">The
 Cathedral and the Bazaar</a> which was first presented at Linux
 Kongress '97 in Bavaria and very well received there. It was also
-given at Atlanta Linux Expo.<p>
+given at Atlanta Linux Expo and the first Perl Conference.<p>
 
 If you're reading a non-HTML dump of this FAQ, you can find the paper 
 on the Web with a search for that title.<p>
@@ -300,7 +306,7 @@ box, you probably don't need to worry.<P>
 In general there is little point in trying to secure your fetchmail
 transaction unless you trust the security of the server host you are
 retrieving mail from.  Your vulnerability is more likely to be an
-insecure local network on the server end (e.g. somebody with a TCP/IP
+insecure local network on the server end (e.g. to somebody with a TCP/IP
 packet sniffer intercepting Ethernet traffic between the modem
 concentrator you dial in to and the mailserver host).<P>
 
@@ -501,24 +507,28 @@ at version 3.0b6 or later, start with this<p>
 (cd; mv .poprc .fetchmailrc)
 </pre>
 
-in order to migrate.  Be aware that some of popclient's unnecessary
-options have been removed (see the NOTES file in the distribution for
-explanation).  You can't deliver to a local mail file or to
-standard output any more, and using an MDA for delivery is
-discouraged.  If you throw those options away, fetchmail will now
-forward your mail into your system's normal Internet-mail delivery
-path.<p>
+and do <code>fetchmail -V</code> to see if fetchmail's parser understands
+your configuration.<p>
+
+Be aware that some of popclient's unnecessary options have been
+removed (see the NOTES file in the distribution for explanation).  You
+can't deliver to a local mail file or to standard output any more, and
+using an MDA for delivery is discouraged.  If you throw those options
+away, fetchmail will now forward your mail into your system's normal
+Internet-mail delivery path.<p>
 
 Actually, using an MDA is now almost always the wrong thing; the MDA
 facility has been retained only for people who can't or won't run a
 sendmail-like SMTP listener on port 25. The default, SMTP forwarding
-to port 25, is better for at least two major reasons.  One: it feeds
+to port 25, is better for at least three major reasons.  One: it feeds
 retrieved POP and IMAP mail into your system's normal delivery path
 along with local mail and normal Internet mail, so all your normal
 filtering/aliasing/forwarding setup for local mail works.  Two:
 because the port 25 listener returns a positive acknowledge, fetchmail
 can be sure you're not going to lose mail to a disk-full or some other
-resource-exhaustion problem.<p>
+resource-exhaustion problem.  Three: it means fetchmail doesn't have 
+to know where the system mailboxes are, or futz with file locking
+(which makes two fewer places for it to potentially mess up).<p>
 
 If you used to use <CODE>-mda "procmail -d</CODE>
 <em>&lt;you&gt;</em><CODE>"</CODE> or something similar, forward to port
@@ -1111,7 +1121,7 @@ broken.<p>
 
 This is usually reported from AIX or Ultrix, but has even been known
 to happen on Linuxes without a recent version of <code>flex</code>
-installed.  The problem appears to be a result of linking with an
+installed.  The problem appears to be a result of building with an
 archaic version of lex.<P>
 
 Workaround: fix the syntax of your .fetchmailrc file.<P>
@@ -1625,7 +1635,7 @@ will look right.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/11/22 07:26:00 $
+<td width="30%" align=right>$Date: 1997/12/01 07:44:40 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
