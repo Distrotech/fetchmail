@@ -160,18 +160,13 @@ August 19th-21st 1997.  A lot of people like it.<P>
 
 <H1>Recent releases and where fetchmail is going:</H2>
 
-The 4.0 release was intended to be a stable "gold" release which OS
-integrators could rely on for a good long time.  And so it would have
-been for Linux systems, but some minor build problems on DEC Unix and AIX
-cropped up.  Hence the 4.0.1 release.<p>
-
 After 4.0.1 I wrote: "Development has essentially stopped because
 there seems to be little more that needs doing."  This turned out to
 be not quite true, I've added some minor option switches since, mostly
-to deal with weird configuration situations. <P>
-
-There's also a hang problem with Cyrus IMAP servers that we haven't
-figured out yet (UW IMAP works fine).<P>
+to deal with weird configuration situations.  We've also fixed a hang
+problem with Cyrus IMAP servers and enabled the code to work with the
+<a href="fetchmail.FAQ.html#T5">(extremely broken)</a> Microsoft
+Exchange POP3 server. <P>
 
 The present TO-DO list reads:<P>
 
