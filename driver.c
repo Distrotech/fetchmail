@@ -1248,7 +1248,8 @@ int num;		/* index of message */
 	error(0, errno, "writing RFC822 headers");
 	if (ctl->mda)
 	{
-	    pclose(sinkfp);
+	    if (sinkfp)
+		pclose(sinkfp);
 	    signal(SIGCHLD, sigchld);
 	}
 	return(PS_IOERR);
@@ -1342,7 +1343,8 @@ flag forward;		/* TRUE to forward */
 	{
 	    if (ctl->mda)
 	    {
-		pclose(sinkfp);
+		if (sinkfp)
+		    pclose(sinkfp);
 		signal(SIGCHLD, sigchld);
 	    }
 	    return(PS_SOCKET);
@@ -1383,7 +1385,8 @@ flag forward;		/* TRUE to forward */
 		error(0, errno, "writing message text");
 		if (ctl->mda)
 		{
-		    pclose(sinkfp);
+		    if (sinkfp)
+			pclose(sinkfp);
 		    signal(SIGCHLD, sigchld);
 		}
 		return(PS_IOERR);
@@ -1765,6 +1768,9 @@ const struct method *proto;	/* protocol method table */
 				    error_build(" ");
 			    }
 
+			    /* later we'll test for this before closing */
+			    sinkfp = (FILE *)NULL;
+
 			    /* 
 			     * Read the message headers and ship them to the
 			     * output sink.  
@@ -1875,7 +1881,10 @@ const struct method *proto;	/* protocol method table */
 				int rc;
 
 				/* close the delivery pipe, we'll reopen before next message */
-				rc = pclose(sinkfp);
+				if (sinkfp)
+				    rc = pclose(sinkfp);
+				else
+				    rc = 0;
 				signal(SIGCHLD, sigchld);
 				if (rc)
 				{
