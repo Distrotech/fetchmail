@@ -3,6 +3,7 @@
 * Generate bounce messages when delivery is refused.  See RFC1891, RFC1892.
 * Use the libmd functions for md5 under Free BSD?  (Low priority.)
 * More log levels?
+* Allow an explicit "append" option to specify what reqwrite appends?
 
 				Other TO-DO items:
 
@@ -11,6 +12,9 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.3.3 ()
+* Robert Hardy <rhardy@webcon.net>'s patch to use IMAP EXAMINE in check mode. 
+
 fetchmail-4.3.2 (Wed Oct 22 20:30:14 EDT 1997)
 * More slow-UIDL patches from Wolfgang Wander.
 * Yet another attempt to fix IMAP-K4.  This one, my beta-testers say, works.

@@ -433,7 +433,10 @@ static int imap_getrange(int sock,
     }
     else
     {
-	ok = gen_transact(sock, "SELECT %s", folder ? folder : "INBOX");
+	if (!check_only)
+	    ok = gen_transact(sock, "SELECT %s", folder ? folder : "INBOX");
+	else
+	    ok = gen_transact(sock, "EXAMINE %s", folder ? folder : "INBOX");
 	if (ok != 0)
 	{
 	    error(0, 0, "mailbox selection failed");
