@@ -586,7 +586,7 @@ struct query *ctl;	/* option record to be initialized */
 	P(_("  -F, --flush       delete old messages from server\n"));
 	P(_("  -n, --norewrite   don't rewrite header addresses\n"));
 	P(_("  -l, --limit       don't fetch messages over given size\n"));
-	P(_("  -w, --warnings   interval between warning mail notification\n"));
+	P(_("  -w, --warnings    interval between warning mail notification\n"));
 
 #if NET_SECURITY
 	P(_("  -T, --netsec      set IP security request\n"));
