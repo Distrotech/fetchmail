@@ -38,6 +38,7 @@ mda		{ return MDA; }
 is		{ return IS; }
 here		{ return HERE; }
 there		{ return THERE; }
+to		{ return TO; }
 
 keep		{ yylval.flag = FLAG_TRUE;  return KEEP; }
 flush		{ yylval.flag = FLAG_TRUE;  return FLUSH; }

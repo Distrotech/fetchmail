@@ -385,6 +385,7 @@ Legal user options are
 
     username (or user)
     is
+    to
     password (or pass)
     remotefolder (or remote)
     smtphost (or smtp)
@@ -399,14 +400,15 @@ Legal user options are
     norewrite
 .PP
 All options correspond to the obvious command-line arguments except
-three: \fBis\fR, \fBpassword\fR and \fBskip\fR.
+four: \fBis\fR, \fBto\fR, \fBpassword\fR and \fBskip\fR.
 .PP
-The \fBis\fR keyword associates a following local username with the
-mailserver user name in the entry.  It is intended to be used in 
-configurations where \fIfetchmail\fR runs as root and retrieves
-mail for multiple local users.  If no \fBis\fR clause is present,
-the default local username is the same as the argument of the
-\fBuser\fR keyword.
+The \fBis\fR or \fIto\fR keywords associate a following local
+username with the mailserver user name in the entry.  They are intended
+to be used in configurations where \fIfetchmail\fR runs as root and
+retrieves mail for multiple local users.  If no \fBis\fR or \fIto\fR 
+clause is present, the default local username is the calling user,
+unless the calling user is root in which case it is the remote user
+name of the current entry.
 .PP
 The \fBpassword\fR option requires a string argument, which is the password
 to be used with the entry's server.

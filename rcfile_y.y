@@ -37,7 +37,7 @@ static int prc_errflag;
 }
 
 %token DEFAULTS SERVER PROTOCOL AUTHENTICATE TIMEOUT KPOP KERBEROS
-%token USERNAME PASSWORD FOLDER SMTPHOST MDA IS HERE THERE
+%token USERNAME PASSWORD FOLDER SMTPHOST MDA IS HERE THERE TO
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
@@ -109,7 +109,9 @@ user1opts	: user_option
 		| user1opts user_option
 		;
 
-user_option	: IS STRING		{strcpy(current.localname, $2);}
+user_option	: TO STRING		{strcpy(current.localname, $2);}
+		| TO STRING HERE	{strcpy(current.localname, $2);}
+		| IS STRING		{strcpy(current.localname, $2);}
 		| IS STRING HERE	{strcpy(current.localname, $2);}
 		| IS STRING THERE	{strcpy(current.remotename, $2);}
 		| PASSWORD STRING	{strcpy(current.password, $2);}

@@ -193,7 +193,10 @@ char **argv;
 
 	    /* if rc file didn't supply a localname, default appropriately */
 	    if (!hostp->localname[0])
-		strcpy(hostp->localname, user);
+		if (getuid() == 0)
+		    strcpy(hostp->localname, hostp->remotename);
+	        else
+		    strcpy(hostp->localname, user);
 
 	    /* check that delivery is going to a real local user */
 	    if ((pw = getpwnam(user)) == (struct passwd *)NULL)
