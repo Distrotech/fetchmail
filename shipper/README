@@ -1,0 +1,7 @@
+		README for shipper
+
+shipper automates the tedious process of shipping a software release to
+several standard places, including ibiblio, the Red Hat submission directory,
+and your own hosted website.  It also knows how to post a release announcement
+to freshmeat.net via freshmeat-submit.  Two auxiliary tools, buildrpms and 
+rpm2lsm, build RPMs and generate LSM files from them respectively.
