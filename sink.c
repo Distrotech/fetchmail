@@ -449,11 +449,6 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 }
 
 /* these are shared by open_sink and stuffline */
-#ifndef HAVE_SIGACTION
-static RETSIGTYPE (*sigchld)(int);
-#else
-static struct sigaction sa_old;
-#endif /* HAVE_SIGACTION */
 static FILE *sinkfp;
 
 int stuffline(struct query *ctl, char *buf)
@@ -590,7 +585,7 @@ static int open_bsmtp_sink(struct query *ctl, struct msgblk *msg,
 }
 
 /* this is experimental and will be removed if double bounces are reported */
-#define EXPLICIT_BOUNCE
+#define EXPLICIT_BOUNCE_ON_BAD_ADDRESS
 
 static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
 	      int *good_addresses, int *bad_addresses)
@@ -600,9 +595,9 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
     struct	idlist *idp;
     char		options[MSGBUFSIZE]; 
     char		addr[HOSTLEN+USERNAMELEN+1];
-#ifdef EXPLICIT_BOUNCE
+#ifdef EXPLICIT_BOUNCE_ON_BAD_ADDRESS
     char		**from_responses;
-#endif /* EXPLICIT_BOUNCE */
+#endif /* EXPLICIT_BOUNCE_ON_BAD_ADDRESS */
     int		total_addresses;
 
     /*
@@ -710,6 +705,9 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
 		(*good_addresses)++;
 	    else
 	    {
+#ifdef EXPLICIT_BOUNCE_ON_BAD_ADDRESS
+ 		    char errbuf[POPBUFSIZE];
+#endif /* EXPLICIT_BOUNCE_ON_BAD_ADDRESS */
 		handle_smtp_report(ctl, msg);
 
 #ifdef EXPLICIT_BOUNCE_ON_BAD_ADDRESS
