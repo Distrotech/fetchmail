@@ -289,16 +289,15 @@ int main (int argc, char **argv)
 	}
     }
 
-    /* parse the ~/.netrc file, for future password lookups. */
+    /* parse the ~/.netrc file (if present) for future password lookups. */
     netrc_file = (char *) xmalloc (strlen (home) + 8);
     strcpy (netrc_file, home);
     strcat (netrc_file, "/.netrc");
-
-    netrc_list = parse_netrc (netrc_file);
+    netrc_list = parse_netrc(netrc_file);
 
     /* pick up interactively any passwords we need but don't have */ 
     for (ctl = querylist; ctl; ctl = ctl->next)
-	if (ctl->active && !(implicitmode && ctl->server.skip) && !ctl->password)
+	if (ctl->active && !(implicitmode && ctl->server.skip)&&!ctl->password)
 	{
 	    if (ctl->server.authenticate == A_KERBEROS_V4)
 		/* Server won't care what the password is, but there
@@ -306,16 +305,14 @@ int main (int argc, char **argv)
 		ctl->password = ctl->remotename;
 	    else
 	    {
-		/* Look up the host and account in the .netrc file. */
+		/* look up the host and account in the .netrc file. */
 		netrc_entry *p = search_netrc(netrc_list,ctl->server.names->id);
-		while (p && strcmp (p->account, ctl->remotename))
-		    p = search_netrc (p->next, ctl->remotename);
+		while (p && strcmp(p->account, ctl->remotename))
+		    p = search_netrc(p->next, ctl->remotename);
 
-		if (p)
-		{
-		    /* We found the entry, so use the password. */
+		/* if we find a matching entry with a password, use it */
+		if (p && p->password)
 		    ctl->password = xstrdup(p->password);
-		}
 	    }
 
 	    if (ctl->server.protocol != P_ETRN && !ctl->password)
