@@ -302,6 +302,7 @@ then
     LDEFLAGS="$LDEFLAGS -L$with_kerberos5/lib"
     LIBS="$LIBS -lkrb5 -lcrypto -lcom_err"
 else
+  if test "$with_kerberos5" != "no" ; then
     for dir in /usr/kerberos /usr/local/krb5 /usr/athena
     do
       if test -f "$dir/include/krb5.h"
@@ -313,6 +314,7 @@ else
         break
       fi
     done
+  fi
 fi
 
 ###	use option --with-kerberos=DIR to point at a Kerberos directory
@@ -345,12 +347,14 @@ then
         break
       fi
     done
-elif test -n "$with_kerberos"
+elif test -n "$with_kerberos" -a "$with_kerberos" != "no"
 then
     CEFLAGS="$CEFLAGS -DKERBEROS_V4 -I$with_kerberos/include"
     LDEFLAGS="$LDEFLAGS -L$with_kerberos/lib"
     LIBS="$LIBS -lkrb -ldes"
 else
+  if test "$with_kerberos" != "no"
+  then
     for dir in /usr/kerberos /usr/kerberosIV /usr/athena
     do
       if test -f "$dir/include/krb.h"
@@ -403,6 +407,7 @@ else
         break
       fi
     done
+  fi
 fi
 
 ###	use option --with-gssapi=DIR to compile in GSSAPI support
