@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/07/25 17:15:16 $
+<td width="30%" align=right>$Date: 1998/07/25 18:15:58 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1386,10 +1386,13 @@ is simple: add a <pre>--with-gssapi=[/path/to/krb5/root]</pre> option to
 configure. For instance, I have all of my kerberos V libraries installed under
 /usr/krb5 so I run <pre>configure --with-gssapi=/usr/krb5</pre>.<p>
 
-Setting up Kerberos V authentication is beyond the scope of this FAQ, but
-you'll need to add a credential for imap/[mailhost] to the keytab of the mail
-server (IMAP doesn't just use the host key). Then you'll need to have your
-credentials ready on your machine (cf. kinit).<p>
+Setting up Kerberos V authentication is beyond the scope of this FAQ
+(you may find Jim Rome's paper <a
+href="http://www.ornl.gov/~jar/HowToKerb.html"> How to Kerberize your
+site</a> helpful), but you'll at least need to add a credential for
+imap/[mailhost] to the keytab of the mail server (IMAP doesn't just
+use the host key). Then you'll need to have your credentials ready on
+your machine (cf. kinit).<p>
 
 After that things are very simple. Set your protocol to imap-gss in your
 .fetchmailrc, and omit the password, since imap-gss doesn't need one. You
@@ -2086,7 +2089,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/07/25 17:15:16 $
+<td width="30%" align=right>$Date: 1998/07/25 18:15:58 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
