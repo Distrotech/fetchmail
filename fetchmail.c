@@ -233,7 +233,7 @@ int main (int argc, char **argv)
 	if (check_only)
 	{
 	    fprintf(stderr,
-		 "fetchmail: can't check mail while another fetchmail to same host is running.");
+		 "fetchmail: can't check mail while another fetchmail to same host is running.\n");
 	    return(PS_EXCLUDE);
         }
 	else if (!implicitmode)

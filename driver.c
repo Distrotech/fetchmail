@@ -451,13 +451,12 @@ char *realname;		/* real name of host */
 	    ((ch = SockPeek(sockfp)) == ' ' || ch == '\t');
 
 	/* write the message size dots */
-	if ((n = strlen(line)) > 0)
+	if ((outlevel>O_SILENT && outlevel<O_VERBOSE) && (n=strlen(line)) > 0)
 	{
 	    sizeticker += n;
 	    while (sizeticker >= SIZETICKER)
 	    {
-		if (outlevel > O_SILENT)
-		    error_build(".");
+		error_build(".");
 		sizeticker -= SIZETICKER;
 	    }
 	}

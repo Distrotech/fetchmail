@@ -145,6 +145,7 @@ void save_str_pair(struct idlist **idl, const char *str1, const char *str2)
 	(*end)->val.id2 = xstrdup(str2);
     else
 	(*end)->val.id2 = (char *)NULL;
+    (*end)->next = (char *)NULL;
 }
 
 #ifdef __UNUSED__
