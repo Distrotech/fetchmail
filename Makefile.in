@@ -1,5 +1,8 @@
 # Makefile for popclient
 
+# If you're running QNX, we can't assume a working autoconf.
+# So just uncomment all the lines marked QNX.
+
 # Ultrix 2.2 make doesn't expand the value of VPATH.
 srcdir = @srcdir@
 VPATH = @srcdir@
@@ -7,7 +10,9 @@ VPATH = @srcdir@
 CC = @CC@
 
 CFLAGS = @CFLAGS@
+# CFLAGS =  -g2 -5	# QNX
 LDFLAGS = @LDFLAGS@
+# LDLAGS =  -g2 -5	# QNX
 LEX = @LEX@
 LEXFLAGS=
 YACC = @YACC@
@@ -19,9 +24,11 @@ RANLIB = @RANLIB@
 # NeXT 1.0a uses an old version of GCC, which required -D__inline=inline.
 # See also `config.h'.
 defines = @DEFS@
+# defines = -DHAVE_CONFIG_H -DQNX -DHAVE_UNISTD_H -DSTDC_HEADERS	# QNX
 
 # If your system needs extra libraries loaded in, define them here.
 LOADLIBS = @LIBS@ @LEXLIB@
+# LOADLIBS = -lsocket3r -lunix3r	# QNX
 
 # Any extra object files your system needs.
 extras = @LIBOBJS@

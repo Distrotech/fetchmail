@@ -27,7 +27,12 @@
 #if defined(HAVE_UNISTD_H)
 #include <unistd.h>
 #endif
+#if defined(QNX)
+#include <stdio.h>
+#include <stdarg.h>
+#else
 #include <stdlib.h>
+#endif
 #include <varargs.h>
 #include <errno.h>
 #include "bzero.h"
@@ -181,15 +186,24 @@ int len;
    else {
      bcopy(bp,buf,len);
      sbuflen -= len;
+#if defined(QNX)
+int SockPrintf(int socket, char* format, ...)
+{
+#else
      bp += len;
    }
    return(len);
 }
+#endif
 
 /* SockClearHeader: call this procedure in order to kill off any
    forthcoming Header info from the socket that we no longer want.
    */
+#if defined(QNX)
+    va_start(ap, format) ;
+#else
 int SockClearHeader(socket)
+#endif
 int socket;
 {
    char *bufp;

@@ -19,8 +19,14 @@
 static char sccsid[] = "@(#)strcasecmp.c	5.6 (Berkeley) 6/27/88";
 #endif /* LIBC_SCCS and not lint */
 
+#if defined(QNX)
+#include <sys/types.h>
+#else
+
 #ifndef(u_char)
 typedef unsigned char u_char;
+#endif
+
 #endif
 
 /*

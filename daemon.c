@@ -31,6 +31,10 @@
 #  include <unistd.h>
 #endif
 
+#if defined(QNX)
+#  include <unix.h>
+#endif
+
 /* BSD portability hack */
 #if !defined(SIGCLD) && defined(SIGCHLD)
 #define SIGCLD	SIGCHLD
@@ -203,5 +207,7 @@ nottyDetach:
 
   /* set up to catch child process termination signals */ 
   signal(SIGCLD, sigchld_handler); 
-
+#if defined(QNX)
+  signal(SIGPWR, sigchld_handler); 
+#endif
 }
