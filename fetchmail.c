@@ -830,8 +830,6 @@ int main(int argc, char **argv)
     else
 	/* in case we interrupted before a successful fetch */
 	exit(PS_NOMAIL);
-
-    exit(successes ?  : querystatus);
 }
 
 static void list_merge(struct idlist **dstl, struct idlist **srcl, int force)
