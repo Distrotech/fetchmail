@@ -292,10 +292,8 @@ const char *pathname;		/* pathname for the configuration file */
     return(0);
 }
 
-int prc_parse_file (pathname, securecheck)
+int prc_parse_file (const char *pathname, const flag securecheck)
 /* digest the configuration into a linked list of host records */
-const char *pathname;		/* pathname for the configuration file */
-const flag securecheck;		/* check for a secure rc file? */
 {
     prc_errflag = 0;
     querylist = hosttail = (struct query *)NULL;
