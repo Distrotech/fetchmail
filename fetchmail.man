@@ -652,13 +652,14 @@ then changed to
 to reflect both the presence of IMAP support and the symmetry with sendmail
 created by the new SMTP forwarding default.
 .SH BACKWARD COMPATIBILITY
-If called through a link named `popclient', \fIfetchmail\fR will
-look in ~/.poprc for its run control file.  As long as the file does
-not use the removed `limit' or `localfolder' options, this
-will often work.  (The new run control file syntax also has to be a
-little stricter about the order of options than the old, in order to
-support multiple user desriptions per server; thus you may have to
-rearrange things a bit.)
+If called through a link named `popclient', \fIfetchmail\fR will look
+in ~/.poprc for its run control file.  As long as the file does not
+use the removed `localfolder' option or `limit' (which now takes a
+maximum byte size rather than a line count), this will often work.
+(The new run control file syntax also has to be a little stricter
+about the order of options than the old, in order to support multiple
+user desriptions per server; thus you may have to rearrange things a
+bit.)
 .SH FILES
 .TP 5
 ~/.fetchmailrc

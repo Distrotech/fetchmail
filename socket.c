@@ -192,28 +192,30 @@ int len;
   for data.   */
 int  SockDataWaiting(int socket)
 {
-  int flags;
-  char sbuf[INTERNAL_BUFSIZE];
-  int n;
-  int res;
-  flags = fcntl(socket,F_GETFL,0);
+    int flags;
+    char sbuf[INTERNAL_BUFSIZE];
+    int n;
+    flags = fcntl(socket,F_GETFL,0);
   
-  /* set it to non-block */
-  if (fcntl(socket,F_SETFL,flags | O_NONBLOCK) == -1)
-    return -1;
+    /* set it to non-block */
+    if (fcntl(socket,F_SETFL,flags | O_NONBLOCK) == -1)
+	return -1;
 
-  if ((n = recv(socket,sbuf,INTERNAL_BUFSIZE,MSG_PEEK)) == -1)
+    n = recv(socket,sbuf,INTERNAL_BUFSIZE,MSG_PEEK);
+
+    /* reset it to block (or, whatever it was). */
+    fcntl(socket,F_SETFL,flags);
+
+    if (n == -1)
     { 
-      /* No data to read. */
-      if (errno == EWOULDBLOCK)
-	res = 0;
+	/* No data to read. */
+	if (errno == EWOULDBLOCK)
+	    return(0);
+	else
+	    return(-1);
     }
-  else
-    res = n;
-
-  /* reset it to block (or, whatever it was). */
-  fcntl(socket,F_SETFL,flags);
-  return res;
+    else
+	return(n);
 }
 
 

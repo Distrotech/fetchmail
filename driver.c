@@ -440,17 +440,18 @@ int mboxfd;	/* descriptor to which retrieved message will be written */
 long len;	/* length of message */
 int delimited;	/* does the protocol use a message delimiter? */
 struct query *ctl;	/* query control record */
-{ 
+{
     char buf [MSGBUFSIZE+1]; 
-    char *bufp, *headers, *unixfrom, *fromhdr, *tohdr, *cchdr, *bcchdr;
+    char *bufp, *headers, *fromhdr, *tohdr, *cchdr, *bcchdr;
     int n, oldlen;
     int inheaders,lines,sizeticker;
 
     /* read the message content from the server */
     inheaders = 1;
-    headers = unixfrom = fromhdr = tohdr = cchdr = bcchdr = NULL;
+    headers = fromhdr = tohdr = cchdr = bcchdr = NULL;
     lines = 0;
     sizeticker = 0;
+    oldlen = 0;
     while (delimited || len > 0)
     {
 	if ((n = SockGets(socket,buf,sizeof(buf))) < 0)
@@ -517,9 +518,7 @@ struct query *ctl;	/* query control record */
 		oldlen = newlen;
 	    }
 
-	    if (!strncmp(bufp,"From ",5))
-		unixfrom = bufp;
-	    else if (!strncasecmp("From:", bufp, 5))
+	    if (!strncasecmp("From:", bufp, 5))
 		fromhdr = bufp;
 	    else if (!strncasecmp("To:", bufp, 3))
 		tohdr = bufp;
@@ -539,8 +538,7 @@ struct query *ctl;	/* query control record */
 	    xmit_names = (struct idlist *)NULL;
 #ifdef HAVE_GETHOSTBYNAME
 	    /* is this a multidrop box? */
-	    if (ctl->localnames != (struct idlist *)NULL
-		&& ctl->localnames->next != (struct idlist *)NULL)
+	    if (MULTIDROP(ctl))
 	    {
 		/* compute the local address list */
 		find_server_names(tohdr,  ctl, &xmit_names);

@@ -100,6 +100,8 @@ struct query
 #endif /* HAVE_GETHOSTBYNAME */
 };
 
+#define MULTIDROP(ctl)	((ctl)->localnames && (ctl)->localnames->next)
+
 struct method
 {
     char *name;			/* protocol name */

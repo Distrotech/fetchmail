@@ -71,7 +71,7 @@ int main (argc,argv)
 int argc;
 char **argv;
 { 
-    int st, bkgd, lossage;
+    int st, lossage, bkgd = FALSE;
     struct query def_opts;
     int parsestatus, implicitmode;
     char *home, *tmpdir, tmpbuf[BUFSIZ]; 
@@ -202,17 +202,26 @@ char **argv;
 		ctl->uid = pw->pw_uid;
 
 #ifdef HAVE_GETHOSTBYNAME
-	    /* compute the canonical name of the host */
-	    namerec = gethostbyname(ctl->servername);
-	    if (namerec == (struct hostent *)NULL)
+	    /*
+	     * Don't do DNS lookup unless we need to because we're going
+	     * to use Kerberos or process a multidrop box.  Some sites
+	     * won't have DNS up at fetchmail initialization time but aren't
+	     * using these features -- avoid hosing them unnecessarily.
+	     */
+	    if (ctl->authenticate == A_KERBEROS || MULTIDROP(ctl))
 	    {
-		fprintf(stderr,
-			"fetchmail: can't get canonical name of host %s\n",
-			ctl->servername);
-		exit(PS_SYNTAX);
+		/* compute the canonical name of the host */
+		namerec = gethostbyname(ctl->servername);
+		if (namerec == (struct hostent *)NULL)
+		{
+		    fprintf(stderr,
+			    "fetchmail: can't get canonical name of host %s\n",
+			    ctl->servername);
+		    exit(PS_SYNTAX);
+		}
+		else
+		    ctl->canonical_name = xstrdup((char *)namerec->h_name);
 	    }
-	    else
-		ctl->canonical_name = xstrdup((char *)namerec->h_name);
 #else
 	    /* can't handle multidrop mailboxes unless we can do DNS lookups */
 	    if (ctl->localnames && ctl->localnames->next)
