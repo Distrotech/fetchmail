@@ -30,6 +30,7 @@
 #else
 #include  <varargs.h>
 #endif
+#include  <ctype.h>
 
 #include  "fetchmail.h"
 #include  "socket.h"
@@ -257,7 +258,7 @@ static int send_bouncemail(struct msgblk *msg, int userclass,
 {
     char daemon_name[18 + HOSTLEN] = "FETCHMAIL-DAEMON@";
     char boundary[BUFSIZ], *ts;
-    int i, sock;
+    int sock;
 
     /* don't bounce  in reply to undeliverable bounces */
     if (!msg->return_path[0] || strcmp(msg->return_path, "<>") == 0)
