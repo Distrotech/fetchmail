@@ -99,6 +99,8 @@ fetchmail core dumps (especially near startup) try recompiling without
 
 6. REPORTING BUGS
 
+You should read the FAQ file before rfeporting a bug.
+
 When reporting bugs, please include the following:
 
 1. Your operating system and compiler version.

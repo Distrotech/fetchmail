@@ -18,7 +18,7 @@ make
 make install
 
 %files
-%doc README NEWS NOTES COPYING INSTALL sample.rcfile
+%doc README NEWS NOTES FAQ COPYING INSTALL sample.rcfile
 
 %ifarch i386
 %endif

@@ -7,6 +7,7 @@ pl 2.0.1 ():
   of run, so DNS does less work.  During a run, cache host matches on the
   aka list so no potential alias has to be DNS-checked more than once.
 * Try to use envelope From.  If that fails, fall back on calling-user.
+* Added FAQ file
 
 fetchmail-2.0 (Mon Nov 18 00:32:17 EST 1996):
 
