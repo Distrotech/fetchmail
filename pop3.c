@@ -16,7 +16,6 @@
 #include  <stdlib.h>
 #endif
  
-#include  "socket.h"
 #include  "fetchmail.h"
 
 #define PROTOCOL_ERROR	{error(0, 0, "protocol error"); return(PS_ERROR);}

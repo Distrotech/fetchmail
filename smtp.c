@@ -11,10 +11,8 @@
 
 #include <stdio.h>
 #include <config.h>
-#include <sys/types.h>
 #include <unistd.h>
 #include <string.h>
-#include "socket.h"
 #include "fetchmail.h"
 #include "smtp.h"
 

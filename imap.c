@@ -13,7 +13,6 @@
 #if defined(STDC_HEADERS)
 #include  <stdlib.h>
 #endif
-#include  "socket.h"
 #include  "fetchmail.h"
 
 static int count, seen, recent, unseen, imap4;
@@ -164,7 +163,7 @@ static int imap_fetch(FILE *sockfp, int number, int *lenp)
      * If we're using IMAP4, we can fetch the message without setting its
      * seen flag.  This is good!  It means that if the protocol exchange
      * craps out during the message, it will still be marked `unseen' on
-     * the server 
+     * the server.
      */
     if (imap4)
 	gen_send(sockfp, "FETCH %d RFC822.PEEK", number);

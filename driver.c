@@ -37,7 +37,7 @@
 #ifdef KERBEROS_V4
 #include <krb.h>
 #include <des.h>
-#include <netinet/in.h>		/* must be included before "socket.h".*/
+#include <netinet/in.h>
 #include <netdb.h>
 #endif /* KERBEROS_V4 */
 #include  "socket.h"
