@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.8.9 (Sun Jun 24 20:30:49 EDT 2001), 20922 lines:
+
 * HMH's snprintf/strncat cleanup patch.
 * Fixes for Debian bugs #101792, #101950.
 * Updated Danish translation by Byrial Jensen.
@@ -9,6 +11,8 @@
 * The smtphost option has been split.  It is no longer overloaded to set 
   the list of domains to be queried in ETRN and ODMR modes.  Instead, use
   the `fetchdomains' option.
+
+There are 353 people on fetchmail-friends and 599 on fetchmail-announce.
 
 fetchmail-5.8.8 (Wed Jun 20 17:22:26 EDT 2001), 20782 lines:
 

@@ -33,6 +33,11 @@ then
     done
 fi
 
+# Cryptographically sign checksums 
+gpg --clearsign checksums
+mv checksums.asc checksums
+gpg --detach-sign --armor fetchmail-$(VERSION).tar.gz
+
 cat >index.html <<EOF
 <!doctype HTML public "-//W3O//DTD W3 HTML 3.2//EN">
 <HTML>
@@ -137,7 +142,21 @@ You can get any of the following leading-edge resources here:
 	Source RPM of fetchmail $version</a>
 </UL>
 
-MD5 <a href="checksums">checksums</a> are available for these files.<p>
+The <a href="fetchmail-$version.tar.gz.asc">detached GPG signature</a> for the
+binary tarball can be used to check it for correctness, with the command
+
+<listing>
+gpg --verify fetchmail-$version.tar.gz.asc fetchmail-$version.tar.gz
+</listing>
+
+MD5 <a href="checksums">checksums</a> are available for these files; the
+checksum file is cryptographically signed and can be verified with the
+command:
+
+<listing>
+gpg --verify checksums.asc
+</listing>
+
 EOF
 
 if [ $version != $goldvers ]
@@ -155,6 +174,13 @@ Or you can get the last \`gold' version, $goldname:
 <LI> <a href="fetchmail-$goldvers-1.src.rpm">
 	Source RPM of fetchmail $goldname</a>
 </UL>
+The <a href="fetchmail-$goldvers.tar.gz.asc">detached GPG signature</a> for the
+binary tarball can be used to check it for correctness, with the command
+
+<listing>
+gpg --verify fetchmail-$goldvers.tar.gz.asc fetchmail-$goldvers.tar.gz
+</listing>
+
 For differences between the leading-edge $version and gold $goldname versions,
 see the distribution <a href="NEWS">NEWS</a> file.<p>
 EOF

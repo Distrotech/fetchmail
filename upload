@@ -11,6 +11,7 @@ echo "Beginning web upload..."
 # First, copy to primary website
 dest=esr@${WWWHOST}:${WWWDIR}/fetchmail
 scp fetchmail-${version}.tar.gz $dest
+scp fetchmail-${version}.tar.gz.asc $dest
 scp fetchmail-FAQ.html $dest
 scp fetchmail-${version}-1.i386.rpm $dest
 scp fetchmail-${version}-1.src.rpm $dest
