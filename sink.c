@@ -314,7 +314,7 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
 		if (nerrors == 1)
 		    /* one error applies to all users */
 		    error = errors[0];
-		else if (nerrors > nusers)
+		else if (nerrors <= nusers)
 		{
 		    SockPrintf(sock, "Internal error: SMTP error count doesn't match number of recipients.\r\n");
 		    break;
@@ -458,7 +458,7 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 #ifdef __DONT_FEED_THE_SPAMMERS__
 	if (run.bouncemail)
 	    send_bouncemail(ctl, msg, XMIT_ACCEPT,
-			"Invalid address in MAIL FROM (SMTP error 553).\r\n", 
+			"Invalid address in MAIL FROM/RCPT TO (SMTP error 553).\r\n", 
 			1, responses);
 #endif /* __DONT_FEED_THE_SPAMMERS__ */
 	return(PS_REFUSED);
@@ -487,6 +487,48 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	 * these are not actual failures, we're very likely to be
 	 * able to recover on the next cycle.
 	 */
+	return(PS_TRANSIENT);
+    }
+}
+
+static int handle_smtp_report_without_bounce(struct query *ctl, struct msgblk *msg)
+/* handle SMTP errors based on the content of SMTP_response */
+/* atleast one PS_TRANSIENT: do not send the bounce mail, keep the mail;
+ * no PS_TRANSIENT, atleast one PS_SUCCESS: send the bounce mail, delete the mail;
+ * no PS_TRANSIENT, no PS_SUCCESS: do not send the bounce mail, delete the mail */
+{
+    int smtperr = atoi(smtp_response);
+
+    if (str_find(&ctl->antispam, smtperr))
+    {
+	if (run.spambounce)
+	 return(PS_SUCCESS);
+	return(PS_REFUSED);
+    }
+
+    if (smtperr >= 400)
+	report(stderr, GT_("%cMTP error: %s\n"), 
+	      ctl->listener,
+	      smtp_response);
+
+    switch (smtperr)
+    {
+    case 552: /* message exceeds fixed maximum message size */
+	if (run.bouncemail)
+	    return(PS_SUCCESS);
+	return(PS_REFUSED);
+
+    case 553: /* invalid sending domain */
+#ifdef __DONT_FEED_THE_SPAMMERS__
+	if (run.bouncemail)
+	    return(PS_SUCCESS);
+#endif /* __DONT_FEED_THE_SPAMMERS__ */
+	return(PS_REFUSED);
+
+    default:
+	/* bounce non-transient errors back to the sender */
+	if (smtperr >= 500 && smtperr <= 599)
+	    return(PS_SUCCESS);
 	return(PS_TRANSIENT);
     }
 }
@@ -823,37 +865,46 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
 		(*good_addresses)++;
 	    else
 	    {
-#ifdef EXPLICIT_BOUNCE_ON_BAD_ADDRESS
- 		    char errbuf[POPBUFSIZE];
-#endif /* EXPLICIT_BOUNCE_ON_BAD_ADDRESS */
-		if (handle_smtp_report(ctl, msg) == PS_TRANSIENT)
+		switch (handle_smtp_report_without_bounce(ctl, msg))
+		{
+		    case PS_TRANSIENT:
 		    force_transient_error = 1;
+		    break;
 
+		    case PS_SUCCESS:
 #ifdef EXPLICIT_BOUNCE_ON_BAD_ADDRESS
-#ifdef HAVE_SNPRINTF
-		snprintf(errbuf, sizeof(errbuf), "%s: %s",
-				idp->id, smtp_response);
-#else
-		strncpy(errbuf, idp->id, sizeof(errbuf));
-		strcat(errbuf, ": ");
-		strcat(errbuf, smtp_response);
-#endif /* HAVE_SNPRINTF */
-
-		xalloca(from_responses[*bad_addresses], 
-			char *, 
-			strlen(errbuf)+1);
-		strcpy(from_responses[*bad_addresses], errbuf);
+		    xalloca(from_responses[*bad_addresses],
+			    char *,
+			    strlen(smtp_response)+1);
+		    strcpy(from_responses[*bad_addresses], smtp_response);
 #endif /* EXPLICIT_BOUNCE_ON_BAD_ADDRESS */
 
-		(*bad_addresses)++;
-		idp->val.status.mark = XMIT_RCPTBAD;
-		if (outlevel >= O_VERBOSE)
-		    report(stderr, 
-			  GT_("%cMTP listener doesn't like recipient address `%s'\n"),
-			  ctl->listener, addr);
+		    (*bad_addresses)++;
+		    idp->val.status.mark = XMIT_RCPTBAD;
+		    if (outlevel >= O_VERBOSE)
+			report(stderr,
+			      GT_("%cMTP listener doesn't like recipient address `%s'\n"),
+			      ctl->listener, addr);
+		    break;
+
+		    case PS_REFUSED:
+		    if (outlevel >= O_VERBOSE)
+			report(stderr,
+			      GT_("%cMTP listener doesn't really like recipient address `%s'\n"),
+			      ctl->listener, addr);
+		    break;
+		}
 	    }
 	}
 
+    if (force_transient_error) {
+	    /* do not risk dataloss due to overengineered multidrop
+	     * crap. If one of the recipients returned PS_TRANSIENT,
+	     * we return exactly that.
+	     */
+	    SMTP_rset(ctl->smtp_socket);        /* required by RFC1870 */
+	    return(PS_TRANSIENT);
+    }
 #ifdef EXPLICIT_BOUNCE_ON_BAD_ADDRESS
     /*
      * This should not be necessary, because the SMTP listener itself
@@ -874,14 +925,6 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
      */
     if (!(*good_addresses)) 
     {
-	if (force_transient_error) {
-		/* do not risk dataloss due to overengineered multidrop
-		 * crap. If one of the recipients returned PS_TRANSIENT,
-		 * we return exactly that.
-		 */
-		SMTP_rset(ctl->smtp_socket);        /* required by RFC1870 */
-		return(PS_TRANSIENT);
-	}
 	if (!run.postmaster[0])
 	{
 	    if (outlevel >= O_VERBOSE)
