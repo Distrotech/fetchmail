@@ -290,8 +290,10 @@ char *parse_received(struct query *ctl, char *bufp)
 	char	*sp, *tp;
 
 	/* extract space-delimited token after "by " */
+	for (sp = ok + 3; isspace(*sp); sp++)
+	    continue;
 	tp = rbuf;
-	for (sp = ok + 3; !isspace(*sp); sp++)
+	for (; !isspace(*sp); sp++)
 	    *tp++ = *sp;
 	*tp = '\0';
 
