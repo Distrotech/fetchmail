@@ -11,6 +11,10 @@
 
 The current version of fetchmail is 4.0.1.<P>
 
+New in the FAQ: A misfeature introduced in recent versions of smail
+breaks fetchmail, but there is a workaround.  See question <a
+href="#T3">T3</a>.
+
 Before reporting any bug, please read <a href="#G3">G3</a> for advice
 on how to include diagnostic information that will get your bug fixed
 as quickly as possible. <p>
@@ -740,7 +744,7 @@ that of the remote mail server). <p>
 <hr>
 <h2><a name="T3">T3. How can I use fetchmail with smail?</a></h2><p>
 
-Smail 3.2 is very nearly plug-compatible with sendmail, and will work
+Smail 3.2 is very nearly plug-compatible with sendmail, and may work
 fine out of the box.<P>
 
 We have one report that when processing multiple messages from a
@@ -749,6 +753,14 @@ order other than received-date order.  This can be annoying because it
 scrambles conversational threads.  This is not fetchmail's problem,
 it is an smail "feature" and has been reported to the maintainers
 as a bug.<P>
+
+Very recent smail versions require an <code>-smtp_hello_verify</code>
+option in the smail config file.  This overrides smail's check to see
+that the HELO address is actually that of the client machine, which
+is never going to be the case when fetchmail is in the picture.
+According to RFC1123 an SMTP listener <em>must</em> allow this
+mismatch, so smail's new behavior (introduced sometime between
+3.2.0.90 and 3.2.0.95) is a bug.<P>
 
 <hr>
 <h2><a name="T4">T4. How can I use fetchmail with Lotus Notes?</a></h2><p>
@@ -1188,7 +1200,7 @@ biff n
 
 to solve the problem system-wide.<P>
 
-$Id: fetchmail-FAQ.html,v 1.46 1997/07/16 18:33:11 esr Exp $<p>
+$Id: fetchmail-FAQ.html,v 1.47 1997/07/24 08:22:49 esr Exp $<p>
 
 <HR>
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
