@@ -256,7 +256,7 @@ AC_PATH_PROG(maildrop, maildrop, "", $PATH:/usr/local/bin)
 ###	use option --enable-fallback=procmail or 
 ###		   --enable-fallback=sendmail to select
 AC_ARG_ENABLE(fallback,
-	[  --enable-fallback=procmail    enable procmail as fallback (default)
+	[  --enable-fallback=procmail    enable procmail as fallback
   --enable-fallback=sendmail    enable /usr/sbin/sendmail as fallback
   --enable-fallback=maildrop    enable maildrop as fallback
   --enable-fallback=no          disable fallback],,[enable_fallback=no])
