@@ -1474,8 +1474,8 @@ va_dcl
 
 	    if ((cp = strstr(buf, shroud)))
 		memset(cp, '*', strlen(shroud));
-	    buf[strlen(buf)-1] = '\0';
 	}
+	buf[strlen(buf)-2] = '\0';
 	error(0, 0, "%s> %s", protocol->name, buf);
     }
 }
@@ -1533,10 +1533,13 @@ va_dcl
 
     if (outlevel == O_VERBOSE)
     {
-	char *cp;
+	if (shroud)
+	{
+	    char *cp;
 
-	if (shroud && (cp = strstr(buf, shroud)))
-	    memset(cp, '*', strlen(shroud));
+	    if ((cp = strstr(buf, shroud)))
+		memset(cp, '*', strlen(shroud));
+	}
 	buf[strlen(buf)-1] = '\0';
 	error(0, 0, "%s> %s", protocol->name, buf);
     }
@@ -1549,3 +1552,4 @@ va_dcl
 }
 
 /* driver.c ends here */
+
