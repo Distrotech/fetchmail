@@ -15,7 +15,7 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.0.0 ()
+fetchmail-4.0.0 (Wed Jul  9 10:30:16 EDT 1997)
 
 This is a "gold" version.  Bug cleanup was finished (I hope...) in 3.9.9.
 And about time, too, I've been hacking on this code for a year now!
@@ -28,7 +28,7 @@ And about time, too, I've been hacking on this code for a year now!
 * Allow duplicate server hostnames again.
 * Fetchmail now returns 0 if *any* poll during the run succeeded.
 
-There are 249 people on the fetchmail-friends list.
+There are 251 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 pl 3.9.9 (Wed Jun 25 11:01:51 EDT 1997):
