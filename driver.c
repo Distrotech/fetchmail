@@ -555,15 +555,18 @@ static int readheaders(int sock,
 	 * Foil this by suppressing all but one copy of a message with
 	 * a given Message-ID.  Note: This implementation only catches
 	 * runs of successive identical messages, but that should be
-	 * good enough. 
+	 * good enough. A more general implementation would have to store
 	 * 
 	 * The accept_count test ensures that multiple pieces of identical 
 	 * email, each with a *single* addressee, won't be suppressed.
 	 */
-	if (MULTIDROP(ctl) && accept_count > 1 && !strncasecmp(line, "Message-ID:", 11))
+	if (MULTIDROP(ctl) && !strncasecmp(line, "Message-ID:", 11))
 	{
 	    if (ctl->lastid && !strcasecmp(ctl->lastid, line))
-		return(PS_REFUSED);
+	    {
+		if (accept_count > 1)
+		    return(PS_REFUSED);
+	    }
 	    else
 	    {
 		if (ctl->lastid)
