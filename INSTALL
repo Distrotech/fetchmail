@@ -1,0 +1,58 @@
+INSTALL Instructions for Popclient
+
+	$Log: INSTALL,v $
+	Revision 1.1  1996/06/28 14:09:41  esr
+	Initial revision
+
+	Revision 1.2  1995/08/10 00:32:17  ceharris
+	Preparation for 3.0b3 beta release:
+	-	added code for --kill/--keep, --limit, --protocol, --flush
+		options; --pop2 and --pop3 options now obsoleted by --protocol.
+	- 	added support for APOP authentication, including --with-APOP
+		argument for configure.
+	-	provisional and broken support for RPOP
+	-	added buffering to SockGets and SockRead functions.
+	-	fixed problem of command-line options not being correctly
+		carried into the merged options record.
+
+	Revision 1.1  1995/08/09 01:32:40  ceharris
+	Version 3.0 beta 2 release.
+	Added
+	-	.poprc functionality
+	-	GNU long options
+	-	multiple servers on the command line.
+	Fixed
+	-	Passwords showing up in ps output.
+
+
+
+Installing popclient is easier than ever.  From within this directory,
+type:
+
+	./configure
+
+The autoconfiguration script will spend a bit of time figuring out the
+specifics of your system.  If you want to specify a particular compiler
+(e.g. you have gcc but want to compile with cc), set the environment 
+variable CC before you run configure.  
+
+Next run
+
+	make
+
+This will compile popclient for your system.  Lastly, become root and
+run
+
+	make install
+
+This will install popclient.  By default, popclient will be installed
+in /usr/local/bin, with the man page in /usr/local/man/man1, and the
+GNU info file in /usr/local/info.  If you wish to change these defaults,
+edit the Makefile AFTER you run "configure" but BEFORE you run 
+"make install."  You can easily choose a prefix other than /usr/local,
+or you can choose completely different directories for each item.
+
+See the file sample.poprc for a description of configuring your 
+individual preferences.
+
+Enjoy!
