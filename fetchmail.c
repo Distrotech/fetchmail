@@ -987,6 +987,16 @@ static int load_params(int argc, char **argv, int optind)
 	initialize_saved_lists(querylist, run.idfile);
 #endif /* POP3_ENABLE */
 
+    /*
+     * If the user didn't set a last-resort user to get misaddressed
+     * multidrop mail, set an appropriate default here.
+     */
+    if (!run.postmaster)
+	if (getuid())				/* ordinary user */
+	    run.postmaster = user;
+	else					/* root */
+	    run.postmaster = "postmaster";
+
     return(implicitmode);
 }
 
@@ -1146,6 +1156,9 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 #endif
     if (runp->invisible)
 	printf("Fetchmail will masquerade and will not generate Received\n");
+    if (runp->postmaster)
+	printf("Fetchmail will forward misaddressed multidrop messages to %s.",
+	       runp->postmaster);
 
     for (ctl = querylist; ctl; ctl = ctl->next)
     {

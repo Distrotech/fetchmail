@@ -976,11 +976,11 @@ int num;		/* index of message */
 	if (!accept_count)
 	{
 	    no_local_matches = TRUE;
-	    save_str(&xmit_names, user, XMIT_ACCEPT);
+	    save_str(&xmit_names, run.postmaster, XMIT_ACCEPT);
 	    if (outlevel == O_VERBOSE)
 		error(0, 0, 
 		      "no local matches, forwarding to %s",
-		      user);
+		      run.postmaster);
 	}
     }
     else	/* it's a single-drop box, use first localname */

@@ -94,6 +94,7 @@
 #
 #   set logfile			-- must be followed by a string
 #   set idfile			-- must be followed by a string
+#   set postmaster		-- must be followed by a string
 #   set daemon			-- must be followed by a number   
 #   set syslog
 #   set invisible

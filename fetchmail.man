@@ -657,17 +657,6 @@ or
 option was used.
 .PP
 The 
-.B --invisible
-option (keyword: set invisible) tries to make fetchmail invisible.
-Normally, fetchmail behaves like any other MTA would -- it generates a
-Received header into each message describing its place in the chain of
-transmission, and tells the MTA it forwards to that the mail came from
-the machine fetchmail itself is running on.  If the invisible option
-is on, the Received header is suppressed and fetchmail tries to spoof
-the MTA it forwards to into thinking it came directly from the
-mailserver host.
-.PP
-The 
 .B \-N
 or --nodetach option suppresses backgrounding and detachment of the
 daemon process from its control terminal.  This is primarily useful
@@ -682,6 +671,27 @@ fetched (and thus marked seen by the mailserver) but not delivered
 locally due to some transient error, it will be re-fetched during the
 next poll cycle.  (The IMAP logic doesn't delete messages until
 they're delivered, so this problem does not arise.)
+
+.SH ADMINISTRATIVE OPTIONS
+.PP
+The 
+.B --postmaster
+option (keyword: set postmaster) specifies the last-resort username to
+which multidrop mail is to be forwarded if no matching local recipient
+can be found.  Normally this is just the user who invoked fetchmail.
+If the invoking user is root, then the default of this option is
+the user `postmaster'.
+.PP
+The 
+.B --invisible
+option (keyword: set invisible) tries to make fetchmail invisible.
+Normally, fetchmail behaves like any other MTA would -- it generates a
+Received header into each message describing its place in the chain of
+transmission, and tells the MTA it forwards to that the mail came from
+the machine fetchmail itself is running on.  If the invisible option
+is on, the Received header is suppressed and fetchmail tries to spoof
+the MTA it forwards to into thinking it came directly from the
+mailserver host.
 
 .SH RETRIEVAL FAILURE MODES
 The protocols \fIfetchmail\fR uses to talk to mailservers are next to
@@ -1059,11 +1069,14 @@ headers of retrieved mail (this is `multidrop mode').  It looks for
 addresses with hostname parts that match your poll name or your `via',
 `aka' or `localdomains' options, and usually also for hostname parts
 which DNS tells it are aliases of the mailserver.  See the discussion
-of `dns', `checkalias', `localdomains', and `aka' for details on how matching
-addresses are handled.  If \fIfetchmail\fR cannot match any mailserver
-usernames or localdomain addresses, the default recipient is the
+of `dns', `checkalias', `localdomains', and `aka' for details on how
+matching addresses are handled.
+.PP
+If \fIfetchmail\fR cannot match any mailserver usernames or
+localdomain addresses, the default recipient is the value of the
+`postmaster' global option if that has been set; otherwise it's the
 calling user (as set by the USER or LOGNAME variable in the
-environment; you could use this to redirect to an alias like postmaster).
+environment).
 .PP
 The `dns' option (normally on) controls the way addresses from
 multidrop mailboxes are checked.  On, it enables logic to check each
@@ -1536,7 +1549,7 @@ run failed while trying to do an SMTP port open or transaction.
 .IP 11
 Fatal DNS error.  Fetchmail encountered an error while performing
 a DNS lookup at startup and could not proceed.
-.IP 11
+.IP 12
 Internal error.  You should see a message on standard error with
 details.
 .PP

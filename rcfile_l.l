@@ -27,6 +27,7 @@ idfile		{ return IDFILE; }
 daemon		{ return DAEMON; }
 syslog		{ return SYSLOG; }
 invisible	{ return INVISIBLE; }
+postmaster	{ return POSTMASTER; }
 
 defaults 	{ return DEFAULTS; }
 server 		{ return POLL; }

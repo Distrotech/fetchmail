@@ -33,10 +33,6 @@ char *rcfile;			/* path name of rc file */
 struct query cmd_opts;		/* where to put command-line info */
 
 /* parser sets these */
-int poll_interval;		/* poll interval in seconds */
-char *logfile;			/* log file for daemon mode */
-flag errors_to_syslog;		/* if syslog was set */
-flag use_invisible;		/* if invisible was set */
 struct query *querylist;	/* head of server list (globally visible) */
 
 int yydebug;			/* in case we didn't generate with -- debug */
@@ -65,9 +61,10 @@ extern char * yytext;
 %token AUTHENTICATE TIMEOUT KPOP KERBEROS4 KERBEROS5 KERBEROS
 %token ENVELOPE QVIRTUAL USERNAME PASSWORD FOLDER SMTPHOST MDA SMTPADDRESS
 %token SPAMRESPONSE PRECONNECT POSTCONNECT LIMIT
+%token NETSEC INTERFACE MONITOR
 %token IS HERE THERE TO MAP WILDCARD
 %token BATCHLIMIT FETCHLIMIT EXPUNGE
-%token SET LOGFILE DAEMON SYSLOG IDFILE INVISIBLE NETSEC INTERFACE MONITOR
+%token SET LOGFILE DAEMON SYSLOG IDFILE INVISIBLE POSTMASTER
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
@@ -90,6 +87,7 @@ optmap		: MAP | /* EMPTY */;
 statement	: SET LOGFILE optmap STRING	{run.logfile = xstrdup($4);}
 		| SET IDFILE optmap STRING	{run.idfile = xstrdup($4);}
 		| SET DAEMON optmap NUMBER	{run.poll_interval = $4;}
+		| SET POSTMASTER optmap STRING	{run.postmaster = xstrdup($4);}
 		| SET SYSLOG			{run.use_syslog = TRUE;}
 		| SET INVISIBLE			{run.invisible = TRUE;}
 

@@ -96,6 +96,7 @@ struct runctl
     int		poll_interval;
     flag	use_syslog;
     flag	invisible;
+    char	*postmaster;
 };
 
 struct idlist

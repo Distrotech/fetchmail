@@ -7,7 +7,7 @@
 #
 # TO DO: Arrange for save and quit buttons to clean up all frames dependent
 # on the current ones.
-version = "1.0"
+version = "1.1"
 
 from Tkinter import *
 from Dialog import *
@@ -22,6 +22,7 @@ class Configuration:
 	self.syslog = FALSE		# Use syslogd for logging?
 	self.logfile = None		# No logfile, initially
 	self.idfile = os.environ["HOME"] + "/.fetchids"		# Default idfile, initially
+        self.postmaster = None		# No last-resort address, initially
 	self.invisible = FALSE		# Suppress Received line & spoof?
 	self.servers = []		# List of included sites
 	Configuration.typemap = (
@@ -29,6 +30,7 @@ class Configuration:
 	    ('syslog',		'Boolean'),
 	    ('logfile',		'String'),
 	    ('idfile',		'String'),
+	    ('postmaster',	'String'),
 	    ('invisible',	'Boolean'))
 
     def __repr__(self):
@@ -39,6 +41,8 @@ class Configuration:
 	    str = str + ("set logfile \"%s\"\n" % (self.logfile,));
 	if self.idfile != ConfigurationDefaults.idfile:
 	    str = str + ("set idfile \"%s\"\n" % (self.idfile,));
+	if self.postmaster != ConfigurationDefaults.postmaster:
+	    str = str + ("set postmaster \"%s\"\n" % (self.postmaster,));
 	if self.poll_interval > 0:
 	    str = str + "set daemon " + `self.poll_interval` + "\n"
 	for site in self.servers:
@@ -544,7 +548,13 @@ Idfile
         If empty, store seen-message IDs in .fetchids under user's home
         directory.  If nonempty, use given file name.
 
-Invisible:
+Postmaster
+        Who to send multidrop mail to as a last resort if no address can
+        be matched.  Normally empty; in this case, fetchmail treats the
+        invoking user as the address of last resort unless that user is
+        root.  If that user is root, fetchmail sends to `postmaster'.
+
+Invisible
         If false (the default) fetchmail generates a Received line into
         each message and generates a HELO from the machine it is running on.
         If true, fetchmail generates no Received line and HELOs as if it were
@@ -617,6 +627,9 @@ class ConfigurationEdit(Frame, MyWidget):
                  'relief':GROOVE}).pack(side=LEFT, anchor=W)
             # Set the idfile
             log = LabeledEntry(gf, '     Idfile:', self.idfile, '14')
+            log.pack(side=RIGHT, anchor=E)
+            # Set the postmaster
+            log = LabeledEntry(gf, '     Postmaster:', self.postmaster, '14')
             log.pack(side=RIGHT, anchor=E)
 
 	gf.pack(fill=X)
