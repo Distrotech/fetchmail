@@ -204,14 +204,14 @@ const char *showproto(int proto)
 #ifdef POP2_ENABLE
     case P_POP2: return("POP2");
 #endif /* POP2_ENABLE */
+#ifdef POP3_ENABLE
     case P_POP3: return("POP3");
-    case P_IMAP: return("IMAP");
-#ifdef GSSAPI
-    case P_IMAP_GSS: return("IMAP-GSS");
-#endif /* GSSAPI */
     case P_APOP: return("APOP");
     case P_RPOP: return("RPOP");
+#endif /* POP3_ENABLE */
+#ifdef ETRN_ENABLE
     case P_ETRN: return("ETRN");
+#endif /* ETRN_ENABLE */
 #ifdef ODMR_ENABLE
     case P_ODMR: return("ODMR");
 #endif /* ODMR_ENABLE */
