@@ -20,7 +20,7 @@ The
 program can gather mail from servers supporting any of the common
 mail-retrieval protocols: POP2, POP3, IMAP2bis, and IMAP4.  It can
 also use the ESMTP ETRN extension.  (The RFCs describing all these
-protocols are listed below.)
+protocols are listed at the end of this page.)
 .PP
 While
 .I fetchmail
@@ -152,7 +152,7 @@ All these alternatives work in basically the same way (communicating
 with standard server daemons to fetch mail already delivered to a
 mailbox on the server) except ETRN.  The ETRN mode allows you to ask a
 compliant ESMTP server (such as BSD sendmail at release 8.8.0 or
-higher) to immediately open an sender-SMTP connection to your
+higher) to immediately open a sender-SMTP connection to your
 client machine and begin forwarding any items addressed to your client
 machine in the server's queue of undelivered mail.
 .TP
@@ -189,7 +189,7 @@ while delivering mail through an MDA.  Some possible MDAs are
 "/usr/sbin/sendmail -oem", "/usr/lib/sendmail -oem",
 "/usr/bin/formail", and "/usr/bin/deliver".  Local delivery addresses
 will be inserted into the MDA command wherever you place a %s.  Do
-\fInot\fR use an MDA like
+\fInot\fR use an MDA invocation like
 "sendmail -oem -t" that dispatches on the contents of To/Cc/Bcc, it
 will create mail loops and bring the just wrath of many postmasters
 down upon your head.
@@ -224,6 +224,7 @@ This option does not work with ETRN.
 Limit the number of messages accepted from a given server in a single
 poll.  By default there is no limit. An explicit --fetchlimit of 0
 overrides any limits set in your run control file.
+This option does not work with ETRN.
 .SS Authentication Options
 .TP
 .B \-u name, --username name
@@ -425,6 +426,14 @@ will, therefore, poll all the hosts described in your
 file (except those explicitly excluded with the `skip' verb) once
 every fifteen minutes.
 .PP
+It is possible to set a polling interval 
+in your
+.I ~/.fetchmailrc
+file by saying `set demon <interval>', where <interval> is an
+integer number of seconds.  If you do this, fetchmail will always
+start in daemon mode unless you override it with the command-line
+option --daemon 0 or -d0.
+.PP
 Only one daemon process is permitted per user; in daemon mode,
 .I fetchmail
 makes a per-user lockfile to guarantee this.  The option
@@ -476,14 +485,14 @@ The
 or --nodetach option suppresses detachment of the daemon process
 from its control terminal.  This is primarily useful for debugging.
 .PP
-Note that while running in daemon mode polling a POP server, transient
-errors (such as DNS failures or sendmail delivery refusals) may force
-the fetchall option on for the duration of the next polling cycle.
-This is a robustness feature.  It means that if a message is fetched
-(and thus marked seen by the mailserver) but not delivered locally due
-to some transient error, it will be re-fetched during the next poll
-cycle.  (The IMAP logic doesn't delete messages until they're
-delivered, so this problem does not arise.)
+Note that while running in daemon mode polling a POP2 or POP3 server,
+transient errors (such as DNS failures or sendmail delivery refusals)
+may force the fetchall option on for the duration of the next polling
+cycle.  This is a robustness feature.  It means that if a message is
+fetched (and thus marked seen by the mailserver) but not delivered
+locally due to some transient error, it will be re-fetched during the
+next poll cycle.  (The IMAP logic doesn't delete messages until
+they're delivered, so this problem does not arise.)
 
 .SH RETRIEVAL FAILURE MODES
 The protocols \fIfetchmail\fR uses to talk to mailservers are next to
@@ -715,7 +724,7 @@ save it from having to do DNS lookups.
 The `localdomains' option allows you to declare a list of domains
 which fetchmail should consider local.  When fetchmail is parsing
 address lines in multidrop modes, and a trailing segment of a host
-name matches a declared local doman, that address is passed through
+name matches a declared local domain, that address is passed through
 to the listener or MDA unaltered (local-name mappings are \fInot\fR
 applied).
 .PP
@@ -802,7 +811,7 @@ followed by a string sets the same global specified by --logfile.  A
 command-line --logfile option will override this.  Also, `set daemon'
 sets the poll interval as --daemon does.  This can be overridden by
 a command-line --daemon option; in particular --daemon 0 can be used 
-to force foreground operation. Finally, `set syslog' set\nds log
+to force foreground operation. Finally, `set syslog' sends log
 messages to syslogd(8).
 .PP
 Basic format is:
@@ -868,32 +877,18 @@ by individual server descriptions.  So, you could write:
 
 It's possible to specify more than one user per server (this is only
 likely to be useful when running fetchmail in daemon mode as root).
-The `user' keyword leads off a user description, and every user
-description except optionally the first one must include it.  If the
-first description lacks the `user' keyword, the name of the invoking
-user is used (in a future version, the option to omit the `user'
-keyword may be removed). Here's a contrived example:
+The `user' keyword leads off a user description, and every user specification
+in a multi-user entry must include it.  Here's an example:
 
 .nf
   poll pop.provider.net proto pop3 port 3111
-        pass gumshoe
         user jsmith with pass secret1 is smith here
         user jones with pass secret2 is jjones here
 .fi
 
-This says that the user invoking \fIfetchmail\fR has the same username
-on pop.provider.net, and password `gumshoe' there.  It also associates
-the local username `smith' with the pop.provider.net username `jsmith'
-and the local username `jjones' with the pop.provider.net username
-`jones'.
-.PP
-This example is contrived because, in practice, you are very unlikely
-to be specifying multiple users per server unless running it as root
-(thus the `pass gumshoe' would try to fetch root's mail on
-pop-provider.net, which is probably not what you want).  In any case,
-we strongly recommend always having an explicit \&`user' clause when
-specifying multiple users per mailserver.  In a future version, the
-option not to explicitly declare the username may be removed.
+This associates the local username `smith' with the pop.provider.net
+username `jsmith' and the local username `jjones' with the
+pop.provider.net username `jones'.
 .PP
 Here's what a simple retrieval configuration for a multi-drop mailbox
 looks like:
@@ -1001,6 +996,14 @@ recipient address on it.   Unless
 .I fetchmail
 can deduce an envelope address, such mail will only go to the account
 running fetchmail (probably root).
+.PP
+If you're tempted to use 
+.I fetchmail 
+to retrieve mail for multiple users via POP or IMAP, think again.
+It would be smarter to just let it sit in the mailserver's queue and
+use ETRN mode to trigger SMTP sends periodically (of course, this
+means you have to poll more frequently than the mailserver's expiry
+period).  If you can't arrange this, try setting up a UUCP feed.
 
 .SS Speeding Up Multidrop Checking
 Normally, when multiple user are declared 
@@ -1047,7 +1050,10 @@ There was a syntax error in the arguments to
 .IP 6
 The run control file had bad permissions.
 .IP 7
-There was an error condition reported by the server (POP3 only).
+There was an error condition reported by the server.  Can also
+fire if
+.I fetchmail
+timed out while waiting for the server.
 .IP 8
 Exclusion error.  This means 
 .I fetchmail
