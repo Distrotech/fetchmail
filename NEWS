@@ -2,12 +2,16 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.3.5 (Wed Mar 29 18:17:19 EST 2000), 18840 lines:
+
 * Back out the InterChange workaround, it breaks operation with M$ Exchange.
 * Update for cs.po from Jiri Pavlovsky.
 * Prevent spurious hostname matches in fetchmailconf.
 * Ultrix 4.5 port patches from Simon Burge <simonb@thistledown.com.au>.
 * Add bug warning to FAQ about Lotus Domino.
 * Suppress monitor check just after being woken by signal.
+
+There are 293 people on fetchmail-friends and 511 on fetchmail-announce.
 
 fetchmail-5.3.4 (Wed Mar 22 15:55:51 EST 2000), 18819 lines:
 
