@@ -250,10 +250,10 @@ class LabeledEntry(Frame):
 	self.E.bind(key, action)
     def focus_set(self):
 	self.E.focus_set()
-    def __init__(self, Master, text, textvar, width):
+    def __init__(self, Master, text, textvar, lwidth, ewidth=12):
 	Frame.__init__(self, Master)
-	self.L = Label(self, {'text':text, 'width':width, 'anchor':'w'})
-	self.E = Entry(self, {'textvar':textvar})
+	self.L = Label(self, {'text':text, 'width':lwidth, 'anchor':'w'})
+	self.E = Entry(self, {'textvar':textvar, 'width':ewidth})
 	self.L.pack({'side':'left'})
 	self.E.pack({'side':'left', 'expand':'1', 'fill':'x'})
 
@@ -261,7 +261,7 @@ def ButtonBar(frame, legend, ref, alternatives, depth, command):
 # array of radio buttons, caption to left, picking from a string list
     bar = Frame(frame)
     width = len(alternatives) / depth;
-    Label(bar, text=legend).pack(side=LEFT, anchor=N)
+    Label(bar, text=legend).pack(side=LEFT)
     for column in range(width):
 	subframe = Frame(bar)
 	for row in range(depth):
@@ -557,13 +557,19 @@ sechelp = {
     'title' : 'Security option help',
     'banner': 'Security',
     'text' : """
-These options control the security procedure used
-to protect mail transfer
+The `interface' option, if given, specifies the only
+device through which fetchmail is permitted to connect
+to servers.  Specifying this may protect you from a 
+spoofing attack if your client machine has more than
+one IP gateway address and some of the gateways are
+to insecure nets.
 
-Normally the mail fetch is validated using an 
-ordinary password logon.  If your server speaks
-MIT Kerberos IV it is possible to pre-authenticate
-the exxchange with a Kerberos ticket.
+The `monitor' option allows you to specify a range
+of IP addresses to monitor for activity.  If these
+addresses are not active, fetchmail will not poll.
+This option may be used to prevent fetchmail from
+triggering an expensive dial-out if the interface
+is not already active.
 
 The `interface' and `monitor' options are available
 only for Linux systems.  See the fetchmail manual page
@@ -647,7 +653,8 @@ class ServerEdit(Frame):
 
     def createWidgets(self, host):
 	topwin = Frame(self, relief=RAISED, bd=5)
-	Label(topwin, text="Server options for " + host).pack(side=TOP,pady=10)
+	# This pushes the window past a 480 depth.
+#	Label(topwin, text="Server options for " + host).pack(side=TOP,pady=10)
 	Button(topwin, text='Save', fg='blue',
 		command=self.save).pack(side=LEFT)
 	Button(topwin, text='Quit', fg='blue',
@@ -657,7 +664,7 @@ class ServerEdit(Frame):
 	topwin.pack(fill=X)
 
 	leftwin = Frame(self);
-	leftwidth = '26';
+	leftwidth = '25';
 
 	ctlwin = Frame(leftwin, relief=RAISED, bd=5)
 	Label(ctlwin, text="Run Controls").pack(side=TOP)
@@ -674,58 +681,62 @@ class ServerEdit(Frame):
 
 	protwin = Frame(leftwin, relief=RAISED, bd=5)
 	Label(protwin, text="Protocol and Port").pack(side=TOP)
-	pb = ButtonBar(protwin, 'Protocol:', self.protocol, protolist, 2, self.refreshPort) 
-	LabeledEntry(protwin, 'TCP/IP service port to query:',
+	pb = ButtonBar(protwin, '', self.protocol, protolist, 2, self.refreshPort) 
+	LabeledEntry(protwin, 'On server TCP/IP port:',
 		      self.port, leftwidth).pack(side=TOP, fill=X)
 	Checkbutton(protwin,
-		text="Track seen POP3 messages with client-side UIDL list?",
+		text="POP3: track `seen' with client-side UIDLs?",
 		variable=self.uidl).pack(side=TOP)   
 	Button(protwin, text='Help', fg='blue',
 	       command=lambda: helpwin(protohelp)).pack(side=RIGHT)
 	protwin.pack(fill=X)
 
-	secwin = Frame(leftwin, relief=RAISED, bd=5)
-	Label(secwin, text="Security").pack(side=TOP)
-	ButtonBar(secwin, 'Authorization mode:',
-		  self.auth, authlist, 1, None).pack(side=TOP)
+	userwin = Frame(leftwin, relief=RAISED, bd=5)
+	Label(userwin, text="User entries for " + host).pack(side=TOP)
+	ListEdit("New user: ", None, self.edituser, userwin, suserhelp)
+	userwin.pack(fill=X)
+
+	leftwin.pack(side=LEFT, anchor=N, fill=X);
+	rightwin = Frame(self);
+
+	mdropwin = Frame(rightwin, relief=RAISED, bd=5)
+	Label(mdropwin, text="Multidrop options").pack(side=TOP)
+	LabeledEntry(mdropwin, 'Envelope address header:',
+		      self.envelope, '22').pack(side=TOP, fill=X)
+	LabeledEntry(mdropwin, 'Name prefix to strip:',
+		      self.qvirtual, '22').pack(side=TOP, fill=X)
+	Checkbutton(mdropwin, text="Enable multidrop DNS lookup?",
+		    variable=self.dns).pack(side=TOP)
+	Label(mdropwin, text="DNS aliases").pack(side=TOP)
+	ListEdit("New alias: ", self.server.aka, None, mdropwin, None)
+	Label(mdropwin, text="Domains to be considered local").pack(side=TOP)
+	ListEdit("New domain: ",
+		 self.server.localdomains, None, mdropwin, multihelp)
+	mdropwin.pack(fill=X)
+
+	secwin = Frame(rightwin, relief=RAISED, bd=5)
+
+	# Pushes the window depth past 480
+#	Label(secwin, text="Security").pack(side=TOP)
+
+	# Don't actually let users set this.  KPOP sets it implicitly
+#	ButtonBar(secwin, 'Authorization mode:',
+#		  self.auth, authlist, 1, None).pack(side=TOP)
 
 	if os.popen("uname").readlines()[0] == 'Linux\n':
 	    LabeledEntry(secwin, 'Interface to check before poll:',
 			 self.interface, leftwidth).pack(side=TOP, fill=X)
-	    LabeledEntry(secwin, 'IP range to watch for activity:',
+	    LabeledEntry(secwin, 'IP range to monitor:',
 			 self.monitor, leftwidth).pack(side=TOP, fill=X)
 
 	Button(secwin, text='Help', fg='blue',
 	       command=lambda: helpwin(sechelp)).pack(side=RIGHT)
 	secwin.pack(fill=X)
 
-	leftwin.pack(side=LEFT, anchor=N);
-	rightwin = Frame(self);
-
-	mdropwin = Frame(rightwin, relief=RAISED, bd=5)
-	Label(mdropwin, text="Multidrop options").pack(side=TOP)
-	LabeledEntry(mdropwin, 'Envelope address header:',
-		      self.envelope, '24').pack(side=TOP, fill=X)
-	LabeledEntry(mdropwin, 'Name prefix to strip:',
-		      self.qvirtual, '24').pack(side=TOP, fill=X)
-	Checkbutton(mdropwin, text="Enable multidrop DNS lookup?",
-		    variable=self.dns).pack(side=TOP)
-	Label(mdropwin, text="DNS aliases").pack(side=TOP)
-	ListEdit("New site alias: ", self.server.aka, None, mdropwin, None)
-	Label(mdropwin, text="Domains to be considered local").pack(side=TOP)
-	ListEdit("New domain: ",
-		 self.server.localdomains, None, mdropwin, multihelp)
-	mdropwin.pack(fill=X)
-
-	userwin = Frame(rightwin, relief=RAISED, bd=5)
-	Label(userwin, text="User entries for " + host).pack(side=TOP)
-	ListEdit("New user: ", None, self.edituser, userwin, suserhelp)
-	userwin.pack(fill=X)
-
-	rightwin.pack(side=LEFT);
+	rightwin.pack(side=LEFT, anchor=N);
 
     def edituser(self, user):
-	UserEdit(user, self.server.userlist, Toplevel())
+	UserEdit(user, self.server, Toplevel())
 
 #
 # User editing stuff
@@ -762,15 +773,15 @@ page section on multidrop mode.
 """}
 
 class UserEdit(Frame):
-    def __init__(self, user, userlist, master=None):
+    def __init__(self, user, server, master=None):
 	Frame.__init__(self, master)
 	Pack.config(self)
-	self.master.title('Fetchmail user ' + user);
+	self.master.title('Fetchmail user ' + user + ' querying ' + server.pollname);
 	self.master.iconname('Fetchmail user ' + user);
 	self.user = User()
 	self.user.remote = user
 	self.user.localnames = [user]
-	self.userlist = userlist
+	self.server = server
 	self.post()
 	self.createWidgets()
 #	self.grab_set()
@@ -805,13 +816,13 @@ class UserEdit(Frame):
 
     def save(self):
 	self.gather()
-	self.userlist.append(self.user) 
+	self.server.userlist.append(self.user) 
 	Widget.destroy(self.master)
 
     def createWidgets(self):
 	topwin = Frame(self, relief=RAISED, bd=5)
-	Label(topwin, 
-	      text="User options for " + self.user.remote).pack(side=TOP,pady=10)
+#	Label(topwin, 
+#	      text="User options for " + self.user.remote).pack(side=TOP,pady=10)
 	Button(topwin, text='Save', fg='blue',
 		command=self.save).pack(side=LEFT)
 	Button(topwin, text='Quit', fg='blue',
