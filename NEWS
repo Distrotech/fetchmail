@@ -9,7 +9,7 @@ fetchmail-4.6.6 (Sat Nov  7 17:27:04 EST 1998):
 * You can make fetchmail read its config from stdin with the option `-f -'.
 * Experimental, UNTESTED support of LSMTP (RFC2033).
 
-There are 247 people on fetchmail-friends and 308 on fetchmail-announce.
+There are 249 people on fetchmail-friends and 304 on fetchmail-announce.
 
 fetchmail-4.6.5 (Wed Oct 28 18:28:01 EST 1998):
 * Fixed a bug in reply_hack that could occasionally cause malloc smashes.
