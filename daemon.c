@@ -127,8 +127,9 @@ daemonize (const char *logfile, void (*termhook)(int))
   }
 #elif	defined(SIGTSTP)		/* BSD */
   /* change process group */
+#ifndef __EMX__
   setpgrp(0, getpid());
-
+#endif
   /* lose controlling tty */
   if ((fd = open("/dev/tty", O_RDWR)) >= 0) {
     ioctl(fd, TIOCNOTTY, (char *) 0);
@@ -136,7 +137,9 @@ daemonize (const char *logfile, void (*termhook)(int))
   }
 #else					/* SVR3 and older */
   /* change process group */
+#ifndef __EMX__
   setpgrp();
+#endif
   
   /* lose controlling tty */
   signal(SIGHUP, SIG_IGN);

@@ -306,6 +306,7 @@ int prc_filecheck(pathname)
 /* check that a configuration file is secure */
 const char *pathname;		/* pathname for the configuration file */
 {
+#ifndef __EMX__
     struct stat statbuf;
 
     errno = 0;
@@ -342,7 +343,7 @@ const char *pathname;		/* pathname for the configuration file */
 	fprintf(stderr, "File %s must be owned by you.\n", pathname);
 	return(PS_AUTHFAIL);
     }
-
+#endif
     return(0);
 }
 

@@ -84,6 +84,7 @@ static int lastsig;		/* last signal received */
 
 static void termhook();		/* forward declaration of exit hook */
 
+
 RETSIGTYPE donothing(sig) int sig; {signal(sig, donothing); lastsig = sig;}
 
 #ifdef HAVE_ON_EXIT
@@ -95,6 +96,19 @@ static void unlockit(void)
 {
     unlink(lockfile);
 }
+
+#ifdef __EMX__
+/* Various EMX-specific definitions */
+int itimerflag;
+void itimerthread(void* dummy) {
+  if (outlevel == O_VERBOSE)
+    fprintf(stderr, "fetchmail: thread sleeping for %d sec.\n", poll_interval);
+  while(1) {
+    _sleep2(poll_interval*1000);
+    kill((getpid()), SIGALRM);
+  }
+}
+#endif
 
 int main (int argc, char **argv)
 {
@@ -541,6 +555,7 @@ int main (int argc, char **argv)
 	     * has to have a BSDoid socket layer to work at all.
 	     */
 	    {
+#ifndef __EMX__
 		struct itimerval ntimeout;
 
 		ntimeout.it_interval.tv_sec = ntimeout.it_interval.tv_usec = 0;
@@ -551,6 +566,12 @@ int main (int argc, char **argv)
 		signal(SIGALRM, donothing);
 		pause();
 		signal(SIGALRM, SIG_IGN);
+#else /* EMX */
+		signal(SIGALRM, donothing);
+		_beginthread(itimerthread, NULL, 32768, NULL);
+		pause();
+		signal(SIGALRM, SIG_IGN);
+#endif /* ! EMX */
 		if (lastsig == SIGUSR1
 			|| ((poll_interval && !getuid()) && lastsig == SIGHUP))
 		{
@@ -771,7 +792,6 @@ static int load_params(int argc, char **argv, int optind)
     /* check and daemon options are not compatible */
     if (check_only && poll_interval)
 	poll_interval = 0;
-
     return(implicitmode);
 }
 

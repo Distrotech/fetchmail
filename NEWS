@@ -27,6 +27,7 @@ fetchmail-4.3.8 ():
 * Added /-suffix capability to specify a port or service on smtphost args.
 * More fixes by Nicholas Pitre.
 * Fix for core-dump bug in the new UID-marking code by timw@aracnet.com.
+* EMX changes support running fetchmail under OS/2.
 
 There are 274 people on fetchmail-friends and 138 on fetchmail-announce.
 

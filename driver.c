@@ -110,12 +110,14 @@ static phase;
 static void set_timeout(int timeleft)
 /* reset the nonresponse-timeout */
 {
+#ifndef __EMX__
     struct itimerval ntimeout;
 
     ntimeout.it_interval.tv_sec = ntimeout.it_interval.tv_usec = 0;
     ntimeout.it_value.tv_sec  = timeleft;
     ntimeout.it_value.tv_usec = 0;
     setitimer(ITIMER_REAL, &ntimeout, (struct itimerval *)NULL);
+#endif
 }
 
 static void timeout_handler (int signal)
