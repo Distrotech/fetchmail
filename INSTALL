@@ -49,7 +49,7 @@ Support for CompuServe's RPA authentication method (rather similar to
 APOP) is available but also not included in the standard build.  You
 can compile it in with `configure --enable-RPA'.
 
-Support for authentication using GSSAPI over Kerberos V is available
+Support for authentication using RFC1731 GSSAPI is available
 but also not included by default.  You can compile it in with
 `configure --enable-RPA', which looks for GSSAPI support in standard
 locations (/usr, /usr/local, /usr/athena).  If you set --enable-GSSAPI=DIR
