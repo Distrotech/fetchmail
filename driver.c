@@ -1324,14 +1324,14 @@ int num;		/* index of message */
 	if (!good_addresses)
 	{
 #ifdef HAVE_SNPRINTF
-	    snprintf(addr, sizeof(addr)-1, "%s@%s", user, destaddr);
+	    snprintf(addr, sizeof(addr)-1, "%s@%s", run.postmaster, destaddr);
 #else
-	    sprintf(addr, "%s@%s", user, destaddr);
+	    sprintf(addr, "%s@%s", run.postmaster, destaddr);
 #endif /* HAVE_SNPRINTF */
 
 	    if (SMTP_rcpt(ctl->smtp_socket, addr) != SM_OK)
 	    {
-		error(0, 0, "can't even send to calling user!");
+		error(0, 0, "can't even send to %s!", run.postmaster);
 		free(headers);
 		free_str_list(&xmit_names);
 		return(PS_SMTP);

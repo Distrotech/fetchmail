@@ -2,6 +2,7 @@
 
 fetchmail-4.5.7 (Tue Aug 25 00:29:44 EDT 1998):
 * Fixed SDPS support (thanks to Chris Brooks).
+* One more fix for the snakebit postmaster option.
 
 There are 253 people on fetchmail-friends and 272 on fetchmail-announce.
 
