@@ -2,6 +2,9 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Matthias Scheler's fix for SSL under IPV6
+* Added FAQ material on SSL's "RPNG not seeded" message and on ssh tunnelling.
+
 fetchmail-5.3.8 (Fri Apr 21 03:47:14 EDT 2000), 18977 lines:
 
 * Fixed brown-paper-bag bugs involving rcfile name initialization.
@@ -14,7 +17,7 @@ fetchmail-5.3.7 (Sun Apr 16 03:46:13 EDT 2000), 18975 lines:
 * Updated and corrected version of contrib/domino.
 * Galician translation added, courtesy of Jesus Bravo Alvarez <jba@pobox.com>.
 * Spanish translation updated, courtesy of Javier Kohen.
-* Removed an unnecessary Kereberos check that seemed to be causing lossage.
+* Removed an unnecessary Kerberos check that seemed to be causing lossage.
 * FETCHMAILHOME environment variable introduced to optionally override the
   normal $HOME location of fetchmail's rc, id, and pid files.
 * Fixed a bug in the SEARCH UNSEEN code that resulted in only half the

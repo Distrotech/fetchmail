@@ -1123,9 +1123,9 @@ static int load_params(int argc, char **argv, int optind)
 		ctl->server.truename = xstrdup(leadname);
 	    }
 #ifdef HAVE_GETHOSTBYNAME
-	    else if (ctl->server.preauthenticate==A_KERBEROS_V4 ||
+	    else if (!configdump && (ctl->server.preauthenticate==A_KERBEROS_V4 ||
 		ctl->server.preauthenticate==A_KERBEROS_V5 ||
-		(ctl->server.dns && MULTIDROP(ctl)))
+		      (ctl->server.dns && MULTIDROP(ctl))))
 	    {
 		struct hostent	*namerec;
 

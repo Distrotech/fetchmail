@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/05/13 21:59:36 $
+<td width="30%" align=right>$Date: 2000/05/13 22:14:55 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1648,12 +1648,12 @@ http://www.bieringer.de/linux/IPv6/IPv6-HOWTO/IPv6-HOWTO.html</a>
 <hr>
 <h2><a name="K3">K3. How can I get fetchmail to work with ssh?</a></h2>
 
-We have three recipes for this.  The first is easy to set up,
-but only supports one user at a time.<P>
+We have four recipes for this.<P>
 
 <h3>Single-User POP3</h3>
 
-First, a lightly edited version of a recipe from Masafumi NAKANE:<p>
+First, a lightly edited version of a recipe from Masafumi NAKANE.
+This one is easy to set up, but only supports one user at a time.<p>
 
 1. You must have ssh (the ssh client) on the local host and sshd (ssh
 server) on the remote mail server.  And you have to configure ssh so
@@ -1757,7 +1757,7 @@ Now just use localhost:1234 to access your POP server.<P>
 
 <h3>Multi-User IMAP</h3>
 
-This is the preferred method.  It comes to us from Joerg Dorchain.
+This one comes comes to us from Joerg Dorchain.
 The basic idea is to set up a bidirectional encrypted socket connection:<p>
 
 <pre>
@@ -1800,6 +1800,35 @@ The wrapper script should look like this:<p>
 #!/bin/sh
 exec ssh -i $HOME/.ssh/identity-imap $1 /usr/sbin/imapd
 </pre>
+
+<h3>Netcat-based POP or IMAP tunnelling</h3>
+
+Oren Tirosh &lt;oren@mimique.com&gt; sends us a method of using
+fetchmail over ssh without port forwarding, using the plugin keyword.<P>
+
+First, set up a poll entry resembling thius one:
+
+<TT>
+poll target.host plugin sshtunnel proto pop3 user foo password *
+</TT>
+
+The important part is the "plugin sshtunnel".  Now set up sshtunnel
+as follows:<P>
+
+<TT>
+This is the sshtunnel script:
+#!/bin/sh
+ssh $1 "nc localhost $2"
+</TT>
+
+Thia method uses netcat to connect to the pop3 port locally on the
+target host and create a two-way channel over the ssh connection.<P>
+
+Oren says: "In my experience it is much more reliable than the methods
+described in your FAQ.  ssh port forwarding often keeps the local port
+bound for along timeout and has timing issues requiring tricks like
+sleep, etc.  I use this method for fetching all the mail for
+mimique.com"<P>
 
 <hr>
 <h2><a name="K4">K4. What do I have to do to use the IMAP-GSS protocol?</a></h2>
@@ -2798,7 +2827,7 @@ terminate it.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/05/13 21:59:36 $
+<td width="30%" align=right>$Date: 2000/05/13 22:14:55 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
