@@ -124,7 +124,7 @@ static RETSIGTYPE donothing(int sig)
     lastsig = sig;
 }
 
-char *iana_charset;
+const char *iana_charset;
 
 int main(int argc, char **argv)
 {
