@@ -52,10 +52,7 @@ int clientPort;
     if (sock < 0)
         return (FILE *)NULL;
 
-    /*
-     * Return of connect(2) doesn't seem to reliably return -1 on 
-     * ENETUNREACH failure
-     */
+    /* under 2.0.23, connect(2) doesn't return -1 on ENETUNREACH failure */
     errno = 0;
     connect(sock, (struct sockaddr *) &ad, sizeof(ad));
     if (errno != 0)
