@@ -433,6 +433,7 @@ char *nxtaddr(const char *);
 void initialize_saved_lists(struct query *, const char *);
 struct idlist *save_str(struct idlist **, const char *, flag);
 void free_str_list(struct idlist **);
+struct idlist *copy_str_list(struct idlist *idl);
 void save_str_pair(struct idlist **, const char *, const char *);
 void free_str_pair_list(struct idlist **);
 int delete_str(struct idlist **, int);

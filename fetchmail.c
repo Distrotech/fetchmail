@@ -756,23 +756,30 @@ int main(int argc, char **argv)
     exit(successes ? PS_SUCCESS : querystatus);
 }
 
-static void optmerge(struct query *h2, struct query *h1, int force)
-/* merge two options records */
+static void list_merge(struct idlist **dstl, struct idlist **srcl, int force)
 {
     /*
      * If force is off, modify h2 fields only when they're empty (treat h1
      * as defaults).  If force is on, modify each h2 field whenever h1
      * is nonempty (treat h1 as an override).  
      */
-#define LIST_MERGE(dstl, srcl) if (force ? !!srcl : !dstl) \
-    						free_str_list(&dstl), \
-						append_str_list(&dstl, &srcl)
-    LIST_MERGE(h2->server.localdomains, h1->server.localdomains);
-    LIST_MERGE(h2->localnames, h1->localnames);
-    LIST_MERGE(h2->mailboxes, h1->mailboxes);
-    LIST_MERGE(h2->smtphunt, h1->smtphunt);
-    LIST_MERGE(h2->antispam, h1->antispam);
-#undef LIST_MERGE
+    if (force ? !!srcl : !dstl)
+    {
+	struct idlist *cpl = copy_str_list(*srcl);
+
+	free_str_list(dstl);
+	append_str_list(dstl, &cpl);
+    }
+}
+
+static void optmerge(struct query *h2, struct query *h1, int force)
+/* merge two options records */
+{
+    list_merge(&h2->server.localdomains, &h1->server.localdomains, force);
+    list_merge(&h2->localnames, &h1->localnames, force);
+    list_merge(&h2->mailboxes, &h1->mailboxes, force);
+    list_merge(&h2->smtphunt, &h1->smtphunt, force);
+    list_merge(&h2->antispam, &h1->antispam, force);
 
 #define FLAG_MERGE(fld) if (force ? !!h1->fld : !h2->fld) h2->fld = h1->fld
     FLAG_MERGE(server.via);

@@ -384,6 +384,21 @@ int delete_str(struct idlist **idl, int num)
     return(0);
 }
 
+struct idlist *copy_str_list(struct idlist *idl)
+/* copy the given UID list */
+{
+    struct idlist *newnode ;
+
+    if (idl == (struct idlist *)NULL)
+	return(NULL);
+    else
+    {
+	newnode = (struct idlist *)xmalloc(sizeof(struct idlist));
+	newnode->next = copy_str_list(idl->next);
+	return(newnode);
+    }
+}
+
 void append_str_list(struct idlist **idl, struct idlist **nidl)
 /* append nidl to idl (does not copy *) */
 {
