@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.8.15 (Tue Jul 31 02:07:03 EDT 2001), 21075 lines:
+
 * Refuse mail that has no good addresses and can't be sent to postmaster.
 * Restore behavior of discarding mail on 550 (Debian bug #105237).
 * John Summerfield updated getfetchmail.
@@ -11,6 +13,13 @@
 * Updated French translation by Thierry Vignaud.
 * Man page bugs pointed out by Andrew Benham.
 * POP3 end of session RSET on keep removed.
+* In IMAP, handle BAD and NO responses to FETCH gracefully.
+* Parse "no {syslog|invisible|showdots} properly.
+* Change AC_DEFINE to AC_DEFINE_UNQUOTED appropriately in configure.in
+  (Debian bug #104484).
+* Fixed bug in fetchmailconf plugin/plugout code (Debian bug #105987).
+
+There are 369 people on fetchmail-friends and 612 on fetchmail-announce.
 
 fetchmail-5.8.14 (Thu Jul 12 03:19:57 EDT 2001), 21058 lines:
 
