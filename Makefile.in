@@ -261,7 +261,7 @@ headers = $(srcdir)/fetchmail.h $(srcdir)/socket.h $(srcdir)/smtp.h \
 	$(srcdir)/smbbyteorder.h $(srcdir)/smbdes.h $(srcdir)/smbencrypt.h \
 	$(srcdir)/smbmd4.h
 extra = $(srcdir)/alloca.c $(srcdir)/strcasecmp.c $(srcdir)/strstr.c \
-	$(srcdir)/memmove.c $(srcdir)/md5c.c $(srcdir)/getopt.c $(srcdir)/getopt1.c 
+	$(srcdir)/memmove.c $(srcdir)/md5c.c $(srcdir)/getopt.[ch] $(srcdir)/getopt1.c 
 docs = $(srcdir)/COPYING $(srcdir)/FEATURES $(srcdir)/fetchmail-features.html \
 	$(srcdir)/design-notes.html $(srcdir)/NOTES \
 	$(srcdir)/todo.html $(srcdir)/TODO \
