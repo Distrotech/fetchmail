@@ -1,16 +1,16 @@
 
 				Release Notes:
 
-fetchmail-4.7.5 ():
+fetchmail-4.7.5 (Sat Jan  9 17:01:13 EST 1999):
 * Issue proper logout after running fetchmail -c
 * Fix prefix problem with internationalized version.
-* Attempted fix for Harry McGavran's VPATH bug.
+* Fix for Harry McGavran's VPATH bug.
 * Progress messages now go to stdout.  Errors still go to stderr
 * Fetchmailconf can now launch fetchmail with a point-and-click interface.
 * Many small cleanups suggested by Byrial Jensen.
 * Polish-language (LC_ALL=pl) support.  Turkish text in spec file.
 
-There are 249 people on fetchmail-friends and 333 on fetchmail-announce.
+There are 253 people on fetchmail-friends and 331 on fetchmail-announce.
 
 fetchmail-4.7.4 (Mon Jan  4 13:26:32 EST 1999):
 * Error message cleanup.
