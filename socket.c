@@ -35,7 +35,6 @@
 #endif
 #include <varargs.h>
 #include <errno.h>
-#include "bzero.h"
 #include "socket.h"
 
 /* Size of buffer for internal buffering read function 

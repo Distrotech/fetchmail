@@ -17,7 +17,6 @@
 #include <pwd.h>
 #include "getopt.h"
 #include "fetchmail.h"
-#include "bzero.h"
 
 #define LA_VERSION	1 
 #define LA_ALL          2
@@ -108,7 +107,7 @@ struct hostrec *queryctl;
   extern int optind, opterr;     /* defined in getopt(2) */
   extern char *optarg;          /* defined in getopt(2) */
 
-  bzero(queryctl,sizeof(struct hostrec));    /* start clean */
+  memset(queryctl, '\0', sizeof(struct hostrec));    /* start clean */
 
   while (!errflag && 
          (c = getopt_long(argc,argv,shortoptions,
@@ -315,7 +314,7 @@ struct hostrec *queryctl;
 {
     char *user, *home;
 
-    bzero(queryctl,sizeof(*queryctl));
+    memset(queryctl, '\0', sizeof(*queryctl));
 
     if ((user = getenv("USER")) == (char *)NULL
 		|| (home = getenv("HOME")) == (char *)NULL)
