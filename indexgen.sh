@@ -268,6 +268,11 @@ designed to work with fetchmail.   Jochen's tools can report selected
 header lines, or move incoming messages to named mailboxes based on
 the contents of headers.<p>
 
+Scott Bronson has written a fetchmnail plugin (actually, a specialist
+MDA) called <a
+href="http://www.trestle.com/linux/trestlemail/">trestlemail</a> that
+helps redirect multidrop mail.<p>
+
 Hugo Rabson has written a script called \`hotmole' that can retrieve
 Hotmail mail via the web using Lynx.  The script is available on <a
 href="http://www.jin-sei-kai.demon.co.uk/hugo/linux.html"> Hugo
