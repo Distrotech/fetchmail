@@ -1963,8 +1963,13 @@ const struct method *proto;	/* protocol method table */
 			    error_complete(0, 0, _(" not flushed"));
 
 			/* perhaps this as many as we're ready to handle */
-			if (NUM_NONZERO(ctl->fetchlimit) && ctl->fetchlimit <= fetches)
+			if (NUM_NONZERO(ctl->fetchlimit)
+					&& ctl->fetchlimit <= fetches)
+			{
+			    error(0, 0, _("fetchlimit reached; %d messages left on server"),
+				  count - fetches);
 			    goto no_error;
+			}
 		    }
 
 		    if (!check_only && ctl->skipped)

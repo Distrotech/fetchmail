@@ -5,6 +5,7 @@ fetchmail-4.6.8 ():
   <acme@conectiva.com.br> and Jorge Godoy <jorge@bestway.com.br>.  First
   supported language is Brazilo-Portuegese (LC_ALL=pt_BR).
 * Fixed Debian Bug#29913: -M on the command line causes SEGV in daemon mode.
+* Emit a message  when fetchlimit is reached.
 
 There are 247 people on fetchmail-friends and 309 on fetchmail-announce.
 
