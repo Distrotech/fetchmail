@@ -150,8 +150,8 @@ extern char *user;		/* name of invoking user */
 
 /* prototypes for globally callable functions */
 #if defined(HAVE_STDARG_H)
-void gen_send (int socket, char *, ... );
-int gen_transact (int socket, char *, ... );
+void gen_send (FILE *sockfp, char *, ... );
+int gen_transact (FILE *sockfp, char *, ... );
 #else
 void gen_send ();
 int gen_transact ();

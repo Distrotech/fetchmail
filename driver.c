@@ -852,6 +852,7 @@ const struct method *proto;	/* protocol method table */
     {
 	char buf [POPBUFSIZE+1];
 	int *msgsizes, socket, len, num, count, new, deletions = 0;
+	FILE *sockfp;
 
 	/* open a socket to the mail server */
 	if ((socket = Socket(ctl->servername,
@@ -861,6 +862,8 @@ const struct method *proto;	/* protocol method table */
 	    ok = PS_SOCKET;
 	    goto closeUp;
 	}
+
+	sockfp = fdopen(socket, "r+");
 
 #ifdef KERBEROS_V4
 	if (ctl->authenticate == A_KERBEROS)
@@ -873,14 +876,14 @@ const struct method *proto;	/* protocol method table */
 #endif /* KERBEROS_V4 */
 
 	/* accept greeting message from mail server */
-	ok = (protocol->parse_response)(socket, buf);
+	ok = (protocol->parse_response)(sockfp, buf);
 	vtalarm(ctl->timeout);
 	if (ok != 0)
 	    goto cleanUp;
 
 	/* try to get authorized to fetch mail */
 	shroud = ctl->password;
-	ok = (protocol->getauth)(socket, ctl, buf);
+	ok = (protocol->getauth)(sockfp, ctl, buf);
 	vtalarm(ctl->timeout);
 	shroud = (char *)NULL;
 	if (ok == PS_ERROR)
@@ -889,7 +892,7 @@ const struct method *proto;	/* protocol method table */
 	    goto cleanUp;
 
 	/* compute number of messages and number of new messages waiting */
-	if ((protocol->getrange)(socket, ctl, &count, &new) != 0)
+	if ((protocol->getrange)(sockfp, ctl, &count, &new) != 0)
 	    goto cleanUp;
 	vtalarm(ctl->timeout);
 
@@ -916,7 +919,7 @@ const struct method *proto;	/* protocol method table */
 	{
 	    msgsizes = (int *)alloca(sizeof(int) * count);
 
-	    if ((ok = (proto->getsizes)(socket, count, msgsizes)) != 0)
+	    if ((ok = (proto->getsizes)(sockfp, count, msgsizes)) != 0)
 		return(PS_ERROR);
 	}
 
@@ -934,7 +937,7 @@ const struct method *proto;	/* protocol method table */
 	    {
 		int	toolarge = msgsizes && msgsizes[num-1]>ctl->limit;
 		int	fetch_it = ctl->fetchall ||
-		    (!(protocol->is_old && (protocol->is_old)(socket,ctl,num)) && !toolarge);
+		    (!(protocol->is_old && (protocol->is_old)(sockfp,ctl,num)) && !toolarge);
 
 		/* we may want to reject this message if it's old */
 		if (!fetch_it)
@@ -949,7 +952,7 @@ const struct method *proto;	/* protocol method table */
 		else
 		{
 		    /* request a message */
-		    (protocol->fetch)(socket, num, &len);
+		    (protocol->fetch)(sockfp, num, &len);
 		    vtalarm(ctl->timeout);
 
 		    if (outlevel > O_SILENT)
@@ -964,7 +967,7 @@ const struct method *proto;	/* protocol method table */
 		    }
 
 		    /* read the message and ship it to the output sink */
-		    ok = gen_readmsg(socket,
+		    ok = gen_readmsg(fileno(sockfp),
 				     len, 
 				     protocol->delimited,
 				     ctl);
@@ -974,7 +977,7 @@ const struct method *proto;	/* protocol method table */
 
 		    /* tell the server we got it OK and resynchronize */
 		    if (protocol->trail)
-			(protocol->trail)(socket, ctl, num);
+			(protocol->trail)(sockfp, ctl, num);
 		}
 
 		/*
@@ -993,7 +996,7 @@ const struct method *proto;	/* protocol method table */
 		    deletions++;
 		    if (outlevel > O_SILENT) 
 			fprintf(stderr, " flushed\n");
-		    ok = (protocol->delete)(socket, ctl, num);
+		    ok = (protocol->delete)(sockfp, ctl, num);
 		    vtalarm(ctl->timeout);
 		    if (ok != 0)
 			goto cleanUp;
@@ -1009,30 +1012,30 @@ const struct method *proto;	/* protocol method table */
 	    /* remove all messages flagged for deletion */
 	    if (protocol->expunge_cmd && deletions > 0)
 	    {
-		ok = gen_transact(socket, protocol->expunge_cmd);
+		ok = gen_transact(sockfp, protocol->expunge_cmd);
 		if (ok != 0)
 		    goto cleanUp;
 	    }
 
-	    ok = gen_transact(socket, protocol->exit_cmd);
+	    ok = gen_transact(sockfp, protocol->exit_cmd);
 	    if (ok == 0)
 		ok = PS_SUCCESS;
-	    close(socket);
+	    fclose(sockfp);
 	    goto closeUp;
 	}
 	else {
-	    ok = gen_transact(socket, protocol->exit_cmd);
+	    ok = gen_transact(sockfp, protocol->exit_cmd);
 	    if (ok == 0)
 		ok = PS_NOMAIL;
-	    close(socket);
+	    fclose(sockfp);
 	    goto closeUp;
 	}
 
     cleanUp:
 	if (ok != 0 && ok != PS_SOCKET)
 	{
-	    gen_transact(socket, protocol->exit_cmd);
-	    close(socket);
+	    gen_transact(sockfp, protocol->exit_cmd);
+	    fclose(sockfp);
 	}
     }
 
@@ -1043,13 +1046,13 @@ closeUp:
 }
 
 #if defined(HAVE_STDARG_H)
-void gen_send(int socket, char *fmt, ... )
+void gen_send(FILE *sockfp, char *fmt, ... )
 /* assemble command in printf(3) style and send to the server */
 {
 #else
-void gen_send(socket, fmt, va_alist)
+void gen_send(sockfp, fmt, va_alist)
 /* assemble command in printf(3) style and send to the server */
-int socket;		/* socket to which server is connected */
+FILE *sockfp;		/* socket to which server is connected */
 const char *fmt;	/* printf-style format */
 va_dcl {
 #endif
@@ -1070,7 +1073,7 @@ va_dcl {
     vsprintf(buf + strlen(buf), fmt, ap);
     va_end(ap);
 
-    SockPuts(socket, buf);
+    SockPuts(fileno(sockfp), buf);
 
     if (outlevel == O_VERBOSE)
     {
@@ -1083,13 +1086,13 @@ va_dcl {
 }
 
 #if defined(HAVE_STDARG_H)
-int gen_transact(int socket, char *fmt, ... )
+int gen_transact(FILE *sockfp, char *fmt, ... )
 /* assemble command in printf(3) style, send to server, accept a response */
 {
 #else
-int gen_transact(socket, fmt, va_alist)
+int gen_transact(sockfp, fmt, va_alist)
 /* assemble command in printf(3) style, send to server, accept a response */
-int socket;		/* socket to which server is connected */
+FILE *sockfp;		/* socket to which server is connected */
 const char *fmt;	/* printf-style format */
 va_dcl {
 #endif
@@ -1111,7 +1114,7 @@ va_dcl {
   vsprintf(buf + strlen(buf), fmt, ap);
   va_end(ap);
 
-  SockPuts(socket, buf);
+  SockPuts(fileno(sockfp), buf);
   if (outlevel == O_VERBOSE)
   {
       char *cp;
@@ -1122,7 +1125,7 @@ va_dcl {
   }
 
   /* we presume this does its own response echoing */
-  ok = (protocol->parse_response)(socket, buf);
+  ok = (protocol->parse_response)(sockfp, buf);
   vtalarm(mytimeout);
 
   return(ok);

@@ -16,16 +16,16 @@
 
 static int pound_arg, equal_arg;
 
-int pop2_ok (socket, argbuf)
+int pop2_ok (sockfp, argbuf)
 /* parse POP2 command response */
-int socket;
+FILE *sockfp;
 char *argbuf;
 {
     int ok;
     char buf [POPBUFSIZE+1];
 
     pound_arg = equal_arg = -1;
-    if (SockGets(socket, buf, sizeof(buf)) >= 0) {
+    if (SockGets(fileno(sockfp), buf, sizeof(buf)) >= 0) {
 	if (outlevel == O_VERBOSE)
 	    fprintf(stderr,"%s\n",buf);
 
@@ -55,20 +55,20 @@ char *argbuf;
     return(ok);
 }
 
-int pop2_getauth(socket, ctl, buf)
+int pop2_getauth(sockfp, ctl, buf)
 /* apply for connection authorization */
-int socket;
+FILE *sockfp;
 struct query *ctl;
 char *buf;
 {
-    return(gen_transact(socket,
+    return(gen_transact(sockfp,
 		  "HELO %s %s",
 		  ctl->remotename, ctl->password));
 }
 
-static int pop2_getrange(socket, ctl, countp, newp)
+static int pop2_getrange(sockfp, ctl, countp, newp)
 /* get range of messages to be fetched */
-int socket;
+FILE *sockfp;
 struct query *ctl;
 int *countp, *newp;
 {
@@ -82,7 +82,7 @@ int *countp, *newp;
     /* maybe the user wanted a non-default folder */
     if (ctl->mailbox[0])
     {
-	int	ok = gen_transact(socket, "FOLD %s", ctl->mailbox);
+	int	ok = gen_transact(sockfp, "FOLD %s", ctl->mailbox);
 
 	if (ok != 0)
 	    return(ok);
@@ -96,32 +96,32 @@ int *countp, *newp;
     return(0);
 }
 
-static int pop2_fetch(socket, number, lenp)
+static int pop2_fetch(sockfp, number, lenp)
 /* request nth message */
-int socket;
+FILE *sockfp;
 int number;
 int *lenp; 
 {
     int	ok;
 
     *lenp = 0;
-    ok = gen_transact(socket, "READ %d", number);
+    ok = gen_transact(sockfp, "READ %d", number);
     if (ok)
 	return(0);
     *lenp = equal_arg;
 
-    gen_send(socket, "RETR");
+    gen_send(sockfp, "RETR");
 
     return(ok);
 }
 
-static int pop2_trail(socket, ctl, number)
+static int pop2_trail(sockfp, ctl, number)
 /* send acknowledgement for message data */
-int socket;
+FILE *sockfp;
 struct query *ctl;
 int number;
 {
-    return(gen_transact(socket, ctl->keep ? "ACKS" : "ACKD"));
+    return(gen_transact(sockfp, ctl->keep ? "ACKS" : "ACKD"));
 }
 
 const static struct method pop2 =

@@ -18,16 +18,16 @@
 
 static int count, seen, recent, unseen;
 
-int imap_ok (socket, argbuf)
+int imap_ok (sockfp, argbuf)
 /* parse command response */
 char *argbuf;
-int socket;
+FILE *sockfp;
 {
     char buf [POPBUFSIZE+1];
 
     seen = 0;
     do {
-	if (SockGets(socket, buf, sizeof(buf)) < 0)
+	if (SockGets(fileno(sockfp), buf, sizeof(buf)) < 0)
 	    return(PS_SOCKET);
 
 	if (outlevel == O_VERBOSE)
@@ -72,21 +72,21 @@ int socket;
     }
 }
 
-int imap_getauth(socket, ctl, buf)
+int imap_getauth(sockfp, ctl, buf)
 /* apply for connection authorization */
-int socket;
+FILE *sockfp;
 struct query *ctl;
 char *buf;
 {
     /* try to get authorized */
-    return(gen_transact(socket,
+    return(gen_transact(sockfp,
 		  "LOGIN %s \"%s\"",
 		  ctl->remotename, ctl->password));
 }
 
-static int imap_getrange(socket, ctl, countp, newp)
+static int imap_getrange(sockfp, ctl, countp, newp)
 /* get range of messages to be fetched */
-int socket;
+FILE *sockfp;
 struct query *ctl;
 int *countp, *newp;
 {
@@ -94,7 +94,7 @@ int *countp, *newp;
 
     /* find out how many messages are waiting */
     recent = unseen = 0;
-    ok = gen_transact(socket,
+    ok = gen_transact(sockfp,
 		  "SELECT %s",
 		  ctl->mailbox[0] ? ctl->mailbox : "INBOX");
     if (ok != 0)
@@ -112,16 +112,16 @@ int *countp, *newp;
     return(0);
 }
 
-static int imap_getsizes(socket, count, sizes)
+static int imap_getsizes(sockfp, count, sizes)
 /* capture the sizes of all messages */
-int	socket;
+FILE	*sockfp;
 int	count;
 int	*sizes;
 {
     char buf [POPBUFSIZE+1];
 
-    gen_send(socket, "FETCH 1:%d RFC822.SIZE", count);
-    while (SockGets(socket, buf, sizeof(buf)) >= 0)
+    gen_send(sockfp, "FETCH 1:%d RFC822.SIZE", count);
+    while (SockGets(fileno(sockfp), buf, sizeof(buf)) >= 0)
     {
 	int num, size;
 
@@ -138,34 +138,34 @@ int	*sizes;
     return(0);
 }
 
-static int imap_is_old(socket, ctl, num)
+static int imap_is_old(sockfp, ctl, num)
 /* is the given message old? */
-int socket;
+FILE *sockfp;
 struct query *ctl;
 int num;
 {
     int ok;
 
-    if ((ok = gen_transact(socket, "FETCH %d FLAGS", num)) != 0)
+    if ((ok = gen_transact(sockfp, "FETCH %d FLAGS", num)) != 0)
 	exit(PS_ERROR);
 
     return(seen);
 }
 
-static int imap_fetch(socket, number, lenp)
+static int imap_fetch(sockfp, number, lenp)
 /* request nth message */
-int socket;
+FILE *sockfp;
 int number;
 int *lenp; 
 {
     char buf [POPBUFSIZE+1];
     int	num;
 
-    gen_send(socket, "FETCH %d RFC822", number);
+    gen_send(sockfp, "FETCH %d RFC822", number);
 
     /* looking for FETCH response */
     do {
-	if (SockGets(socket, buf,sizeof(buf)) < 0)
+	if (SockGets(fileno(sockfp), buf,sizeof(buf)) < 0)
 	    return(PS_SOCKET);
     } while
 	    (sscanf(buf+2, "%d FETCH (RFC822 {%d}", &num, lenp) != 2);
@@ -176,27 +176,27 @@ int *lenp;
 	return(0);
 }
 
-static int imap_trail(socket, ctl, number)
+static int imap_trail(sockfp, ctl, number)
 /* discard tail of FETCH response after reading message text */
-int socket;
+FILE *sockfp;
 struct query *ctl;
 int number;
 {
     char buf [POPBUFSIZE+1];
 
-    if (SockGets(socket, buf,sizeof(buf)) < 0)
+    if (SockGets(fileno(sockfp), buf,sizeof(buf)) < 0)
 	return(PS_SOCKET);
     else
 	return(0);
 }
 
-static int imap_delete(socket, ctl, number)
+static int imap_delete(sockfp, ctl, number)
 /* set delete flag for given message */
-int socket;
+FILE *sockfp;
 struct query *ctl;
 int number;
 {
-    return(gen_transact(socket, "STORE %d +FLAGS (\\Deleted)", number));
+    return(gen_transact(sockfp, "STORE %d +FLAGS (\\Deleted)", number));
 }
 
 const static struct method imap =

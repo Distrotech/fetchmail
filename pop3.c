@@ -22,16 +22,16 @@
 
 static int last;
 
-int pop3_ok (socket, argbuf)
+int pop3_ok (sockfp, argbuf)
 /* parse command response */
-int socket;
+FILE *sockfp;
 char *argbuf;
 {
   int ok;
   char buf [POPBUFSIZE+1];
   char *bufp;
 
-  if (SockGets(socket, buf, sizeof(buf)) >= 0) {
+  if (SockGets(fileno(sockfp), buf, sizeof(buf)) >= 0) {
     if (outlevel == O_VERBOSE)
       fprintf(stderr,"%s\n",buf);
 
@@ -61,9 +61,9 @@ char *argbuf;
   return(ok);
 }
 
-int pop3_getauth(socket, ctl, greeting)
+int pop3_getauth(sockfp, ctl, greeting)
 /* apply for connection authorization */
-int socket;
+FILE *sockfp;
 struct query *ctl;
 char *greeting;
 {
@@ -101,15 +101,15 @@ char *greeting;
 
     switch (ctl->protocol) {
     case P_POP3:
-	if ((gen_transact(socket,"USER %s", ctl->remotename)) != 0)
+	if ((gen_transact(sockfp,"USER %s", ctl->remotename)) != 0)
 	    PROTOCOL_ERROR
 
-	if ((gen_transact(socket, "PASS %s", ctl->password)) != 0)
+	if ((gen_transact(sockfp, "PASS %s", ctl->password)) != 0)
 	    PROTOCOL_ERROR
 	break;
 
     case P_APOP:
-	if ((gen_transact(socket, "APOP %s %s",
+	if ((gen_transact(sockfp, "APOP %s %s",
 			  ctl->remotename, ctl->digest)) != 0)
 	    PROTOCOL_ERROR
 	break;
@@ -122,9 +122,9 @@ char *greeting;
     return(0);
 }
 
-static int pop3_getrange(socket, ctl, countp, newp)
+static int pop3_getrange(sockfp, ctl, countp, newp)
 /* get range of messages to be fetched */
-int socket;
+FILE *sockfp;
 struct query *ctl;
 int *countp, *newp;
 {
@@ -135,8 +135,8 @@ int *countp, *newp;
     ctl->newsaved = (struct idlist *)NULL;
 
     /* get the total message count */
-    gen_send(socket, "STAT");
-    ok = pop3_ok(socket, buf);
+    gen_send(sockfp, "STAT");
+    ok = pop3_ok(sockfp, buf);
     if (ok == 0)
 	sscanf(buf,"%d %*d", countp);
     else
@@ -153,8 +153,8 @@ int *countp, *newp;
     {
 	char id [IDLEN+1];
 
-	gen_send(socket,"LAST");
-	ok = pop3_ok(socket, buf);
+	gen_send(sockfp,"LAST");
+	ok = pop3_ok(sockfp, buf);
 	if (ok == 0)
 	{
 	    if (sscanf(buf, "%d", &last) == 0)
@@ -164,14 +164,14 @@ int *countp, *newp;
  	else
  	{
  	    /* grab the mailbox's UID list */
- 	    if ((ok = gen_transact(socket, "UIDL")) != 0)
+ 	    if ((ok = gen_transact(sockfp, "UIDL")) != 0)
 		PROTOCOL_ERROR
 	    else
 	    {
 		int	num;
 
 		*newp = 0;
- 		while (SockGets(socket, buf, sizeof(buf)) >= 0)
+ 		while (SockGets(fileno(sockfp), buf, sizeof(buf)) >= 0)
 		{
  		    if (outlevel == O_VERBOSE)
  			fprintf(stderr,"%s\n",buf);
@@ -191,21 +191,21 @@ int *countp, *newp;
     return(0);
 }
 
-static int pop3_getsizes(socket, count, sizes)
+static int pop3_getsizes(sockfp, count, sizes)
 /* capture the sizes of all messages */
-int	socket;
+FILE	*sockfp;
 int	count;
 int	*sizes;
 {
     int	ok;
 
-    if ((ok = gen_transact(socket, "LIST")) != 0)
+    if ((ok = gen_transact(sockfp, "LIST")) != 0)
 	return(ok);
     else
     {
 	char buf [POPBUFSIZE+1];
 
-	while (SockGets(socket, buf, sizeof(buf)) >= 0)
+	while (SockGets(fileno(sockfp), buf, sizeof(buf)) >= 0)
 	{
 	    int num, size;
 
@@ -223,9 +223,9 @@ int	*sizes;
     }
 }
 
-static int pop3_is_old(socket, ctl, num)
+static int pop3_is_old(sockfp, ctl, num)
 /* is the given message old? */
-int socket;
+FILE *sockfp;
 struct query *ctl;
 int num;
 {
@@ -236,17 +236,17 @@ int num;
 			    uid_find (&ctl->newsaved, num)));
 }
 
-static int pop3_fetch(socket, number, lenp)
+static int pop3_fetch(sockfp, number, lenp)
 /* request nth message */
-int socket;
+FILE *sockfp;
 int number;
 int *lenp; 
 {
     int ok;
     char buf [POPBUFSIZE+1], *cp;
 
-    gen_send(socket, "RETR %d", number);
-    if ((ok = pop3_ok(socket, buf)) != 0)
+    gen_send(sockfp, "RETR %d", number);
+    if ((ok = pop3_ok(sockfp, buf)) != 0)
 	return(ok);
     /* look for "nnn octets" -- there may or may not be preceding cruft */
     if ((cp = strstr(buf, " octets")) == (char *)NULL)
@@ -260,13 +260,13 @@ int *lenp;
     return(0);
 }
 
-static int pop3_delete(socket, ctl, number)
+static int pop3_delete(sockfp, ctl, number)
 /* delete a given message */
-int socket;
+FILE *sockfp;
 struct query *ctl;
 int number;
 {
-    return(gen_transact(socket, "DELE %d", number));
+    return(gen_transact(sockfp, "DELE %d", number));
 }
 
 const static struct method pop3 =
