@@ -121,6 +121,7 @@ struct query
     char *smtphost;		/* actual SMTP host to point to */
     char *mda;			/* local MDA to pass mail to */
     char *preconnect;		/* pre-connection command to execute */
+    char *postconnect;		/* post-connection command to execute */
 
     /* per-user control flags */
     flag keep;			/* if TRUE, leave messages undeleted */

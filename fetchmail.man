@@ -754,6 +754,9 @@ T}
 preconnect	\&	T{
 Command to be executed before each connection
 T}
+postconnect	\&	T{
+Command to be executed after each connection
+T}
 keep     	-k	T{
 Don't delete seen messages from server
 T}
@@ -823,9 +826,9 @@ following them.
 .PP
 All options correspond to the obvious command-line arguments, except
 the following: `via', `interval', `aka', `is', `to', `dns'/`no dns',
-\&`password', \&`preconnect', `localdomains', `stripcr'/`no stripcr',
-\&`forcecr'/`no forcecr', `pass8bits'/`no pass8bits' `dropstatus/no
-dropstatus', and `no envelope'.
+\&`password', \&`preconnect', \&`postconnect', `localdomains',
+\&`stripcr'/`no stripcr', \&`forcecr'/`no forcecr', `pass8bits'/`no
+pass8bits' `dropstatus/no dropstatus', and `no envelope'.
 .PP
 The `via' option is for use with ssh, or if you want to have more
 than one configuration pointing at the same site.  If it is present,
@@ -907,6 +910,10 @@ executed just before each time
 establishes a mailserver connection.  This may be useful if you are 
 attempting to set up secure POP connections with the aid of
 .IR ssh (1).
+.PP
+Similarly, the `postconnect' keyword similarly allows you to specify a
+shell command to be executed just after each time a mailserver
+connection is taken down.
 .PP
 The `forcecr' option controls whether lines terminated by LF only are
 given CRLF termination before forwarding.  Strictly speaking RFC821

@@ -930,9 +930,15 @@ void dump_params (struct query *ctl)
 	printf("\n");
     }
     if (ctl->preconnect)
-	printf("  Server connection will be preinitialized with '%s.'\n", visbuf(ctl->preconnect));
+	printf("  Server connection will be brought up with '%s.'\n",
+	       visbuf(ctl->preconnect));
     else if (outlevel == O_VERBOSE)
-	printf("  No preinitialization command.\n");
+	printf("  No pre-connection command.\n");
+    if (ctl->postconnect)
+	printf("  Server connection will be taken down with '%s.'\n",
+	       visbuf(ctl->postconnect));
+    else if (outlevel == O_VERBOSE)
+	printf("  No post-connection command.\n");
     if (!ctl->localnames)
 	printf("  No localnames declared for this host.\n");
     else

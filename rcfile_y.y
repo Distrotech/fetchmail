@@ -56,7 +56,8 @@ extern char * yytext;
 
 %token DEFAULTS POLL SKIP VIA AKA LOCALDOMAINS PROTOCOL
 %token AUTHENTICATE TIMEOUT KPOP KERBEROS4
-%token ENVELOPE USERNAME PASSWORD FOLDER SMTPHOST MDA PRECONNECT LIMIT
+%token ENVELOPE USERNAME PASSWORD FOLDER SMTPHOST MDA
+%token PRECONNECT POSTCONNECT LIMIT
 %token IS HERE THERE TO MAP WILDCARD
 %token SET BATCHLIMIT FETCHLIMIT LOGFILE DAEMON SYSLOG INTERFACE MONITOR
 %token <proto> PROTO
@@ -219,6 +220,7 @@ user_option	: TO localnames HERE
 		| SMTPHOST smtp_list
 		| MDA STRING		{current.mda        = xstrdup($2);}
 		| PRECONNECT STRING	{current.preconnect = xstrdup($2);}
+		| POSTCONNECT STRING	{current.postconnect = xstrdup($2);}
 
 		| KEEP			{current.keep       = FLAG_TRUE;}
 		| FLUSH			{current.flush      = FLAG_TRUE;}
@@ -426,6 +428,7 @@ static void record_current(void)
 	save_str(&current.smtphunt, -1, cmd_opts.smtphunt->id);
     FLAG_FORCE(mda);
     FLAG_FORCE(preconnect);
+    FLAG_FORCE(postconnect);
 
     FLAG_FORCE(keep);
     FLAG_FORCE(flush);

@@ -35,7 +35,7 @@ aka		{ return AKA; }
 local(domains)	{ return LOCALDOMAINS; }
 proto(col)? 	{ return PROTOCOL; }
 port		{ return PORT; }
-interval		{ return INTERVAL; }
+interval	{ return INTERVAL; }
 auth(enticate)?	{ return AUTHENTICATE; }
 kerberos_v4	{ return KERBEROS4; }
 kerberos	{ return KERBEROS4; }
@@ -48,6 +48,7 @@ folder(s)? 	{ return FOLDER; }
 smtp(host)?	{ return SMTPHOST; }
 mda		{ return MDA; }
 pre(connect)?	{ return PRECONNECT; }
+post(connect)?	{ return POSTCONNECT; }
 interface	{ return INTERFACE; }
 monitor		{ return MONITOR; }
 

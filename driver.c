@@ -1770,6 +1770,17 @@ const struct method *proto;	/* protocol method table */
 	error(0,-1, "%s error while fetching from %s", msg, ctl->server.pollname);
 
 closeUp:
+    /* execute post-initialization command, if any */
+    if (ctl->postconnect && (ok = system(ctl->postconnect)))
+    {
+	char buf[80];
+
+	sprintf(buf, "post-connection command failed with status %d", ok);
+	error(0, 0, buf);
+	if (ok == PS_SUCCESS)
+	    ok = PS_SYNTAX;
+    }
+
     signal(SIGALRM, sigsave);
     return(ok);
 }

@@ -12,6 +12,8 @@
 
 * Use the libmd functions for md5 under Free BSD?  (Low priority.)
 
+* Make interval count polls skipped because of interface or monitor option?
+
 				Other TO-DO items:
 
 * Get with Craig Metz to write a draft RFC on RFC1938 support in IMAP.
@@ -19,6 +21,12 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.0.7 ()
+* Fixed a minor bug in handling of DNS errors in multidrop mode.
+* Added a `postconnect' analogous to `preconnect'.
+
+There are 258 people on the fetchmail-friends list.
+
 fetchmail-4.0.6 (Fri Aug  1 11:14:31 EDT 1997)
 * Changed semantics of `via' and `poll <name>' to be more orthogonal.
 * Substantially improved option coverage on the man page.
