@@ -358,9 +358,12 @@ fi
 
 ###	use option --with-ssl to compile in the SSL support
 AC_ARG_WITH(ssl,
-	[  --with-ssl[=DIR]        compile in SSL support using libraries in DIR])
+	[  --with-ssl[=DIR]        enable SSL support using libraries in DIR]
+	[with_ssl=$enableval],
+	[with_ssl=no])
+test "$with_netsec" = "yes" && AC_DEFINE(SSL_ENABLE)
 
-if test -z "$with_ssl" -o "$with_ssl" = "yes"
+if test "$with_ssl" = "yes"
 then
 #	He didn't specify an SSL location.  Let's look at some common
 #	directories where SSL has been found in the past and try and auto
@@ -397,15 +400,15 @@ then
     then
 ###	ssl.h found under openssl.  Use openssl configuration preferentially
         echo "Enabling OpenSSL support in $with_ssl"
-        CEFLAGS="$CEFLAGS -DSSL_ENABLE -I$with_ssl/include -I$with_ssl/include/openssl"
+        CEFLAGS="$CEFLAGS -I$with_ssl/include -I$with_ssl/include/openssl"
     else
         echo "Enabling SSLeay support in $with_ssl"
-        CEFLAGS="$CEFLAGS -DSSL_ENABLE -I$with_ssl/include"
+        CEFLAGS="$CEFLAGS -I$with_ssl/include"
     fi
     LDEFLAGS="$LDEFLAGS -L$with_ssl/lib"
     LIBS="$LIBS -lssl -lcrypto"
 else
-    echo 'SSL support disabled'
+    echo 'Disabling SSL support...'
 fi
 
 ###	use option --with-kerberos=DIR to point at a Kerberos directory
