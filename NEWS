@@ -27,6 +27,8 @@ bugs --
 
 * George Sipe sent a fix for the --monitor code.
 
+* --nowrewrite was a no-op.  Fixed.
+
 There are 261 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------

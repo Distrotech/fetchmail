@@ -245,7 +245,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'n':
 	case LA_NOREWRITE:
-	    ctl->rewrite = FLAG_TRUE;
+	    ctl->rewrite = FLAG_FALSE;
 	    break;
 	case 'l':
 	case LA_LIMIT:
