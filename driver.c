@@ -547,9 +547,24 @@ struct query *ctl;	/* query control record */
 		 * ID.  This won't affect replies, which use the header
 		 * From address anyway.
 		 */
-		if (!fromhdr || !(ap = nxtaddr(fromhdr)) 
-					|| SMTP_from(sinkfp, ap) != SM_OK)
+		if (!fromhdr || !(ap = nxtaddr(fromhdr)))
+		{
 		    if (SMTP_from(sinkfp, user) != SM_OK)
+			return(PS_SMTP);	/* should never happen */
+		}
+		else if (SMTP_from(sinkfp, ap) != SM_OK)
+		    if (smtp_response == 571)
+		    {
+			/*
+			 * SMTP listener explicitly refuses to deliver
+			 * mail coming from this address, probably due
+			 * to an anti-spam domain exclusion.  Respect
+			 * this.
+			 */
+			sinkfp = (FILE *)NULL;
+			goto skiptext;
+		    }
+		    else if (SMTP_from(sinkfp, user) != SM_OK)
 			return(PS_SMTP);	/* should never happen */
 
 		/* now list the recipient addressees */
@@ -574,6 +589,8 @@ struct query *ctl;	/* query control record */
 		SMTP_data(sinkfp);
 		if (outlevel == O_VERBOSE)
 		    fputs("SMTP> ", stderr);
+
+	    skiptext:;
 	    }
 
 	    /* change continuation markers back to regular newlines */
@@ -594,7 +611,7 @@ struct query *ctl;	/* query control record */
 	    /* write all the headers */
 	    if (ctl->mda[0])
 		n = write(mboxfd,headers,oldlen);
-	    else
+	    else if (sinkfp)
 		n = SockWrite(headers, oldlen, sinkfp);
 
 	    if (n < 0)
@@ -676,7 +693,7 @@ struct query *ctl;	/* query control record */
 	/* ship out the text line */
 	if (ctl->mda[0])
 	    n = write(mboxfd,bufp,strlen(bufp));
-	else
+	else if (sinkfp)
 	    n = SockWrite(bufp, strlen(bufp), sinkfp);
 
 	if (!ctl->mda[0])

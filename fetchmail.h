@@ -156,6 +156,8 @@ extern int linelimit;		/* limit # lines retrieved per site */
 extern int versioninfo;		/* emit only version info */
 extern char *user;		/* name of invoking user */
 
+extern int smtp_response;	/* numeric value of SMTP response code */
+
 /* prototypes for globally callable functions */
 #if defined(HAVE_STDARG_H)
 void gen_send (FILE *sockfp, char *, ... );

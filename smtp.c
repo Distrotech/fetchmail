@@ -18,6 +18,8 @@
 #include "fetchmail.h"
 #include "smtp.h"
 
+int smtp_response;	/* numeric value of SMTP response code */
+
 int SMTP_helo(FILE *sockfp,char *host)
 /* send a "HELO" message to the SMTP listener */
 {
@@ -112,6 +114,7 @@ static int SMTP_check(FILE *sockfp)
 	buf[n] = '\0';
 	if (outlevel == O_VERBOSE)
 	    fprintf(stderr, "SMTP< %s\n", buf);
+	smtp_response = atoi(buf);
 	if ((buf[0] == '1' || buf[0] == '2' || buf[0] == '3') && buf[3] == ' ')
 	    return SM_OK;
 	else if (buf[3] != '-')
