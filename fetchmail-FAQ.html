@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/02/12 01:14:27 $
+<td width="30%" align=right>$Date: 2001/02/15 22:58:43 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -44,8 +44,9 @@ IP address?</a><br>
 
 <h1>Build-time problems:</h1>
 
-<a href="#B1">B1. Lex bombs out while building the fetchmail lexer.</a><br>
-<a href="#B2">B2. I get link failures when I try to build fetchmail.</a><br>
+<a href="#B1">B1. Make coughs and dies when building on FreeBSD.</a><br>
+<a href="#B2">B2. Lex bombs out while building the fetchmail lexer.</a><br>
+<a href="#B3">B3. I get link failures when I try to build fetchmail.</a><br>
 
 <h1>Fetchmail configuration file grammar questions:</h1>
 
@@ -651,7 +652,14 @@ TCP/IP capacity (which tends to improve bandwidth but not necessarily
 latency).<p>
 
 <hr>
-<h2><a name="B1">B1. Lex bombs out while building the fetchmail lexer.</a></h2>
+<h2><a name="B1">B1. Make coughs and dies when building on FreeBSD.</a></h2>
+
+The vendor-supplied make on FreeBSD systems can only be used within
+FreeBSD's "scope", e.g. the ports collection.  Type "gmake" to run GNU
+make and better things will happen.<P>
+
+<hr>
+<h2><a name="B2">B2. Lex bombs out while building the fetchmail lexer.</a></h2>
 
 In the immortal words of Alan Cox the last time this came up: ``Take
 the Solaris lex and stick it up the backside of a passing Sun
@@ -664,7 +672,7 @@ I couldn't have put it better myself, and ain't going to try now.<P>
 (The same problem has been reported under HP-UX v10.20 and IRIX)<P>
 
 <hr>
-<h2><a name="B2">B2. I get link failures when I try to build fetchmail.</a></h2>
+<h2><a name="B3">B3. I get link failures when I try to build fetchmail.</a></h2>
 
 If you get errors resembling these<P>
 
@@ -2981,7 +2989,7 @@ switching to IMAP and using a short expunge interval.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/02/12 01:14:27 $
+<td width="30%" align=right>$Date: 2001/02/15 22:58:43 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
