@@ -2,6 +2,15 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.6.7 (Mon Feb 19 12:31:03 EST 2001), 20082 lines:
+
+* Fixed brown-paper-bag password bug (only showed up if it was necessary
+  to prompt for a password).  This fixes Debian bug #86350: Fetchmail doesn't
+  ask for password.
+* In POP3, query for AUTH methods a la RFC2449.
+
+There are 276 people on fetchmail-friends and 561 on fetchmail-announce.
+
 fetchmail-5.6.6 (Thu Feb 15 20:43:47 EST 2001), 20083 lines:
 
 * Fixed locale setting; this should make i18n actually work.
