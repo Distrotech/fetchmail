@@ -278,9 +278,6 @@ struct msgblk			/* message header parsed for open_sink() */
     struct idlist	*recipients;	/* addressees */
     char		return_path[HOSTLEN + USERNAMELEN + 4]; 
     int			reallen;
-
-    /* this is written by open_sink */
-    int			lmtp_responses;	/* count of LMTP responses expected  */
 };
 
 
