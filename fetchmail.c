@@ -1266,7 +1266,7 @@ static int query_host(struct query *ctl)
      * If we're syslogging the progress messages are automatically timestamped.
      * Force timestamping if we're going to a logfile.
      */
-    if (outlevel >= O_VERBOSE || run.logfile)
+    if (outlevel >= O_VERBOSE || (run.logfile && outlevel > O_SILENT))
     {
 	report(stdout, _("%s querying %s (protocol %s) at %s\n"),
 	       VERSION,
