@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-6.1.1 (Fri Oct 18 14:53:51 EDT 2002), 22087 lines:
+
 * OTP fix patches from Stanislav Brabec <utx@penguin.cz>
 * fix patch for writing antispam capability correctly in conf.c.
 * Fix patches for Debian bugs #162571, #156592.
@@ -11,11 +13,13 @@
 * New Danish, Turkish, and Catalan translation files.
 * Improved ODMR debug messages.
 * IMAP efficiency hack; don't fetch sizes unless needed.
-* Detect and rwerite invalid return paths beginning with @.
+* Detect and rewrite invalid return paths beginning with @.
 * Fix for subtle freeing bug that suppressed information in some bounce msgs.
 * Newline fix patches for internationalization files.
 * Fix reversed test guarding authentication-failure warnings.
 * Fix POP3 breakage starting at 5.9.14.
+
+There are 529 people on fetchmail-friends and 693 on fetchmail-announce.
 
 fetchmail-6.1.0 (Sun Sep 22 18:31:23 EDT 2002), 21999 lines:
 
