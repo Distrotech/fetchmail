@@ -122,7 +122,7 @@ struct runctl
 
 struct idlist
 {
-    char *id;
+    unsigned char *id;
     union
     {
 	struct
@@ -135,7 +135,7 @@ struct idlist
 #define UID_EXPUNGED	3		/* this message has been expunged */ 
         }
 	status;
-	char *id2;
+	unsigned char *id2;
     } val;
     struct idlist *next;
 };
