@@ -330,7 +330,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     if ((ctl->server.authenticate == A_ANY 
 	 || ctl->server.authenticate==A_OTP)
 	&& strstr(capabilities, "AUTH=X-OTP"))
-	return(do_otp(sock, ctl));
+	return(do_otp(sock, "AUTHENTICATE", ctl));
 #else
     if (ctl->server.authenticate==A_NTLM)
     {

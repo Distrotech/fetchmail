@@ -195,7 +195,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 #endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
 	    flag has_cram = FALSE;
 #ifdef OPIE_ENABLE
-	    flag has_opie = FALSE;
+	    flag has_otp = FALSE;
 #endif /* OPIE_ENABLE */
 	    char buffer[64];
 
@@ -227,7 +227,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	    if (has_cram)
 		ctl->server.authenticate = A_CRAM_MD5;
 #ifdef OPIE_ENABLE
-	    if (has_opie)
+	    if (has_otp)
 		ctl->server.authenticate = A_OTP;
 #endif /* OPIE_ENABLE */
 #if defined(GSSAPI)
@@ -250,7 +250,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	 */
 	if (
 #if INET6_ENABLE
-	    strcmp(ctl->server.service, KPOP_PORT)!=0
+	    ctl->server.service && (strcmp(ctl->server.service, KPOP_PORT)!=0)
 #else /* INET6_ENABLE */
 	    ctl->server.port != KPOP_PORT
 #endif /* INET6_ENABLE */
@@ -265,7 +265,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 #endif /* defined(GSSAPI) */
 #ifdef OPIE_ENABLE
 	if (ctl->server.authenticate == A_OTP)
-	    do_otp(sock, "AUTH", ctl)
+	    do_otp(sock, "AUTH", ctl);
 #endif /* OPIE_ENABLE */
 	if (ctl->server.authenticate == A_CRAM_MD5)
 	    return(do_cram_md5(sock, "AUTH", ctl));
