@@ -41,45 +41,47 @@ int yydebug;	/* in case we didn't generate with -- debug */
 
 %%
 
-rcfile:
-	/* empty */
-	| statement_list
-	;
+rcfile		: /* empty */
+		| statement_list
+		;
 
-statement_list:
-	statement
-	| statement_list statement
-	;
+statement_list	: statement
+		| statement_list statement
+		;
 
-statement:
-	define_server			{prc_register(); prc_reset();}
-	;
+statement	: define_server serverspecs userspecs      
+						{prc_register(); prc_reset();}
+		;
 
-define_server:	KW_SERVER PARAM_STRING server_options 	{prc_setserver($2);}
-	|	KW_SERVER PARAM_STRING			{prc_setserver($2);}
-	|	KW_DEFAULTS server_options	{prc_setserver("defaults");}
-  ;
+define_server	: KW_SERVER PARAM_STRING	{prc_setserver($2);}
+		| KW_DEFAULTS			{prc_setserver("defaults");}
+  		;
 
-server_options:	serv_option_clause
-	|	server_options serv_option_clause
-  ;
+serverspecs	: /* EMPTY */
+		| serverspecs serv_option
+		;
 
-serv_option_clause: 
-		KW_PROTOCOL KW_PROTO	     {prc_setproto($2);}
-	|	KW_LOCALNAME PARAM_STRING    {prc_setlocal($2);}
-	|	KW_USERNAME PARAM_STRING     {prc_setremote($2);}
-	|	KW_PASSWORD PARAM_STRING     {prc_setpassword($2);}
-	|	KW_FOLDER  PARAM_STRING      {prc_setfolder($2);}
-	|	KW_SMTPHOST PARAM_STRING     {prc_setsmtphost($2);}
-	|	KW_MDA PARAM_STRING          {prc_setmda($2);}
-	|	KW_KEEP			     {prc_setkeep($1==FLAG_TRUE);}
-	|	KW_FLUSH		     {prc_setflush($1==FLAG_TRUE);}
-	|	KW_FETCHALL		     {prc_setfetchall($1==FLAG_TRUE);}
-	|	KW_REWRITE		     {prc_setrewrite($1==FLAG_TRUE);}
-	|	KW_SKIP			     {prc_setskip($1==FLAG_TRUE);}
-	|	KW_PORT PARAM_STRING	     {prc_setport($2);}
-  ;
+serv_option	: KW_PROTOCOL KW_PROTO		{prc_setproto($2);}
+		| KW_PORT PARAM_STRING		{prc_setport($2);}
+		;
 
+userspecs	: /* EMPTY */
+		| userspecs user_option
+		;
+
+user_option	: KW_LOCALNAME PARAM_STRING	{prc_setlocal($2);}
+		| KW_USERNAME PARAM_STRING	{prc_setremote($2);}
+		| KW_PASSWORD PARAM_STRING	{prc_setpassword($2);}
+		| KW_FOLDER  PARAM_STRING 	{prc_setfolder($2);}
+		| KW_SMTPHOST PARAM_STRING	{prc_setsmtphost($2);}
+		| KW_MDA PARAM_STRING		{prc_setmda($2);}
+
+		| KW_KEEP		{prc_setkeep($1==FLAG_TRUE);}
+		| KW_FLUSH		{prc_setflush($1==FLAG_TRUE);}
+		| KW_FETCHALL		{prc_setfetchall($1==FLAG_TRUE);}
+		| KW_REWRITE		{prc_setrewrite($1==FLAG_TRUE);}
+		| KW_SKIP		{prc_setskip($1==FLAG_TRUE);}
+		;
 %%
 
 yyerror (s)
