@@ -7,8 +7,7 @@ fetchmail \- deliver mail fetched from a POP or IMAP server
 [\fI options \fR] \fI [server-host...]\fR
 .SH DESCRIPTION
 .I fetchmail
-is a batch mail-retrieval/forwarding utility intended to be used over
-on-demand TCP/IP links (such as SLIP or PPP connections).  It fetches
+is a batch mail-retrieval/forwarding utility; it fetches
 mail from remote mailservers and forwards it to your local (client)
 machine's delivery system.  You can then handle the retrieved mail
 using normal mail user agents such as \fIelm\fR(1) or \fIMail\fR(1).
@@ -20,8 +19,15 @@ The
 program can gather mail from servers supporting any of the common
 mail-retrieval protocols: POP2 (as specified in RFC 937), POP3 (RFC
 1939), IMAP2bis (as implemented by the 4.4BSD imapd program), and
-IMAP4 (as specified by RFC1730).  It can use (but does not require)
-LAST facility removed from later POP3 versions.
+IMAP4 (as specified by RFC 1730).  It can use (but does not require)
+the LAST facility removed from later POP3 versions.
+.PP
+While
+.I fetchmail
+is primarily intended to be used over on-demand TCP/IP links (such as
+SLIP or PPP connections), it may also be useful as a message transfer
+agent for sites which refuse for security reasons to permit
+(sender-initiated) SMTP transactions with sendmail.
 .PP
 As each message is retrieved \fIfetchmail\fR normally delivers it via SMTP to
 port 25 on the machine it is running on (localhost), just as though it
@@ -616,5 +622,5 @@ monitoring software.
 Send comments, bug reports, gripes, and the like to Eric S. Raymond
 <esr@thyrsus.com>.
 .SH SEE ALSO
-elm(1), mail(1), sendmail(8), popd(8), imapd(8)
+elm(1), mail(1), sendmail(8), popd(8), imapd(8);
 RFC 937, RFC 1081, RFC1176, RFC 1225, RFC 1460, RFC 1725, RFC1939.
