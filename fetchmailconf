@@ -7,7 +7,7 @@
 #
 # Version 0.90 beta: Tue May 26 12:00:49 EDT 1998
 # Version 0.91 beta: Tue Jun  2 12:23:42 EDT 1998
-# Version 0.92 beta: Tue Jun  2 14:50:31 EDT 1998
+# Version 0.92 beta: Wed Jun  3 14:17:03 EDT 1998
 #
 # TO DO: Arrange for save and quit buttons to clean up all frames dependent
 # on the current ones.
@@ -25,14 +25,14 @@ import socket
 #
 class Configuration:
     def __init__(self):
-	self.poll_interval = 300	# Default to 5-minute timeout
+	self.poll_interval = 0		# Normally, run in foreground
 	self.syslog = FALSE		# Use syslogd for logging?
 	self.logfile = None		# No logfile, initially
 	self.idfile = os.environ["HOME"] + "/.fetchids"		# Default idfile, initially
 	self.invisible = FALSE		# Suppress Received line & spoof?
 	self.servers = []		# List of included sites
 	Configuration.typemap = (
-	    ('poll_interval',	'String'),
+	    ('poll_interval',	'Int'),
 	    ('syslog',		'Boolean'),
 	    ('logfile',		'String'),
 	    ('idfile',		'String'),
@@ -46,8 +46,8 @@ class Configuration:
 	    str = str + ("set logfile \"%s\"\n" % (self.logfile,));
 	if self.idfile != ConfigurationDefaults.idfile:
 	    str = str + ("set idfile \"%s\"\n" % (self.idfile,));
-	if self.poll_interval != ConfigurationDefaults.poll_interval:
-	    str = str + ("set daemon %s\n" % (self.poll_interval,))
+	if self.poll_interval > 0:
+	    str = str + "set daemon " + `self.poll_interval` + "\n"
 	for site in self.servers:
 	    str = str + repr(site)
 	return str
