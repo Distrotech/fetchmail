@@ -253,10 +253,11 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	{
 	    char *realhost;
 
-	    realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;           gen_transact(sock, "STLS");
-	    if (SSLOpen(sock,ctl->sslcert,ctl->sslkey,ctl->sslproto,ctl->sslcertck, ctl->sslcertpath,ctl->sslfingerprint,realhost,ctl->server.pollname) == -1)
-	    {
-		report(stderr,
+	   realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;
+           gen_transact(sock, "STLS");
+	   if (SSLOpen(sock,ctl->sslcert,ctl->sslkey,ctl->sslproto,ctl->sslcertck, ctl->sslcertpath,ctl->sslfingerprint,realhost,ctl->server.pollname) == -1)
+	   {
+	       report(stderr,
 		       GT_("SSL connection failed.\n"));
 		return(PS_AUTHFAIL);
 	    }
