@@ -68,7 +68,8 @@ extern char * yytext;
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
-%token NO KEEP FLUSH FETCHALL REWRITE FORCECR STRIPCR PASS8BITS DROPSTATUS
+%token NO KEEP FLUSH FETCHALL REWRITE FORCECR STRIPCR PASS8BITS 
+%token DROPSTATUS DROPDELIVERED
 %token DNS SERVICE PORT UIDL INTERVAL MIMEDECODE IDLE CHECKALIAS 
 %token SSL SSLKEY SSLCERT
 
@@ -322,6 +323,7 @@ user_option	: TO localnames HERE
 		| STRIPCR		{current.stripcr     = FLAG_TRUE;}
 		| PASS8BITS		{current.pass8bits   = FLAG_TRUE;}
 		| DROPSTATUS		{current.dropstatus  = FLAG_TRUE;}
+                | DROPDELIVERED         {current.dropdelivered = FLAG_TRUE;}
 		| MIMEDECODE		{current.mimedecode  = FLAG_TRUE;}
 		| IDLE			{current.idle        = FLAG_TRUE;}
 
@@ -337,6 +339,7 @@ user_option	: TO localnames HERE
 		| NO STRIPCR		{current.stripcr     = FLAG_FALSE;}
 		| NO PASS8BITS		{current.pass8bits   = FLAG_FALSE;}
 		| NO DROPSTATUS		{current.dropstatus  = FLAG_FALSE;}
+                | NO DROPDELIVERED      {current.dropdelivered = FLAG_FALSE;}
 		| NO MIMEDECODE		{current.mimedecode  = FLAG_FALSE;}
 		| NO IDLE		{current.idle        = FLAG_FALSE;}
 

@@ -328,6 +328,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	booldump("forcecr", ctl->forcecr);
 	booldump("pass8bits", ctl->pass8bits);
 	booldump("dropstatus", ctl->dropstatus);
+	booldump("dropdelivered", ctl->dropdelivered);
 	booldump("mimedecode", ctl->mimedecode);
 	booldump("idle", ctl->idle);
 

@@ -847,6 +847,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(stripcr);
     FLAG_MERGE(pass8bits);
     FLAG_MERGE(dropstatus);
+    FLAG_MERGE(dropdelivered);
     FLAG_MERGE(mimedecode);
     FLAG_MERGE(idle);
     FLAG_MERGE(limit);
@@ -1014,6 +1015,7 @@ static int load_params(int argc, char **argv, int optind)
 	    DEFAULT(ctl->forcecr, FALSE);
 	    DEFAULT(ctl->pass8bits, FALSE);
 	    DEFAULT(ctl->dropstatus, FALSE);
+	    DEFAULT(ctl->dropdelivered, FALSE);
 	    DEFAULT(ctl->mimedecode, FALSE);
 	    DEFAULT(ctl->idle, FALSE);
 	    DEFAULT(ctl->server.dns, TRUE);
@@ -1590,6 +1592,9 @@ static void dump_params (struct runctl *runp,
 		printf(_("  Nonempty Status lines will be %s (dropstatus %s)\n"),
 		       ctl->dropstatus ? _("discarded") : _("kept"),
 		       ctl->dropstatus ? "on" : "off");
+		printf(_("  Delivered-To lines will be %s (dropdelivered %s)\n"),
+		       ctl->dropdelivered ? _("discarded") : _("kept"),
+		       ctl->dropdelivered ? "on" : "off");
 		if (NUM_NONZERO(ctl->limit))
 		{
 		    if (NUM_NONZERO(ctl->limit))

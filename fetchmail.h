@@ -261,6 +261,7 @@ struct query
     flag forcecr;		/* if TRUE, force CRs before LFs in text */
     flag pass8bits;		/* if TRUE, ignore Content-Transfer-Encoding */
     flag dropstatus;		/* if TRUE, drop Status lines in mail */
+    flag dropdelivered;         /* if TRUE, drop Delivered-To lines in mail */
     flag mimedecode;		/* if TRUE, decode MIME-armored messages */
     flag idle;			/* if TRUE, idle after each poll */
     int	limit;			/* limit size of retrieved messages */

@@ -216,6 +216,7 @@ class User:
 	self.pass8bits = FALSE		# Force BODY=7BIT
 	self.mimedecode = FALSE		# Undo MIME armoring
 	self.dropstatus = FALSE		# Drop incoming Status lines
+        self.dropdelivered = FALSE      # Drop incoming Delivered-To lines
 	self.idle = FALSE		# IDLE after poll
 	self.limit = 0			# Message size limit
         self.warnings = 0		# Size warning interval
@@ -247,6 +248,7 @@ class User:
 	    ('pass8bits',   'Boolean'),
 	    ('mimedecode',  'Boolean'),
 	    ('dropstatus',  'Boolean'),
+            ('dropdelivered', 'Boolean')
 	    ('idle',        'Boolean'),
 	    ('limit',       'Int'),
 	    ('warnings',    'Int'),
@@ -277,6 +279,7 @@ class User:
 		or self.pass8bits != UserDefaults.pass8bits
 		or self.mimedecode != UserDefaults.mimedecode
 		or self.dropstatus != UserDefaults.dropstatus
+		or self.dropdelivered != UserDefaults.dropdelivered
 		or self.idle != UserDefaults.idle):
 	    res = res + " options"
 	if self.keep != UserDefaults.keep:
@@ -297,6 +300,8 @@ class User:
 	    res = res + flag2str(self.mimedecode, 'mimedecode')
 	if self.dropstatus != UserDefaults.dropstatus:
 	    res = res + flag2str(self.dropstatus, 'dropstatus')
+	if self.dropdelivered != UserDefaults.dropdelivered:
+	    res = res + flag2str(self.dropdelivered, 'dropdelivered')
 	if self.idle != UserDefaults.idle:
 	    res = res + flag2str(self.idle, 'idle')
 	if self.limit != UserDefaults.limit:
@@ -1509,6 +1514,8 @@ class UserEdit(Frame, MyWidget):
 		    variable=self.mimedecode).pack(side=TOP, anchor=W)
             Checkbutton(optwin, text="Drop Status lines from forwarded messages", 
 		    variable=self.dropstatus).pack(side=TOP, anchor=W)
+            Checkbutton(optwin, text="Drop Delivered-To lines from forwarded messages", 
+		    variable=self.dropdelivered).pack(side=TOP, anchor=W)
 	optwin.pack(fill=X)
 
         if mode != 'novice':

@@ -626,6 +626,19 @@ static int readheaders(int sock,
 	}
 
 	/*
+	 * We remove all Delivered-To: headers.
+	 * 
+	 * This is to avoid false mail loops messages when delivering
+	 * local messages to and from a Postfix/qmail mailserver. 
+	 * 
+	 * Should be controlled by an option
+	 */
+	if (ctl->dropdelivered && !strncasecmp(line, "Delivered-To:", 13)) {
+	  free(line);
+	  continue;
+	}
+
+	/*
 	 * If we see a Status line, it may have been inserted by an MUA
 	 * on the mail host, or it may have been inserted by the server
 	 * program after the headers in the transaction stream.  This
