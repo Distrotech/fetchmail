@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.24"
+version = "1.25"
 
 from Tkinter import *
 from Dialog import *
@@ -667,6 +667,8 @@ class ConfigurationEdit(Frame, MyWidget):
 
     def server_delete(self, sitename):
         try:
+            for user in self.subwidgets.keys():
+                user.destruct()
             del self.configuration[sitename]
         except:
 	    pass
@@ -971,6 +973,7 @@ class ServerEdit(Frame, MyWidget):
 
     def user_delete(self, username):
         if self.subwidgets.has_key(username):
+            self.subwidgets[username].destruct()
             del self.subwidgets[username]
         del self.server[username]
 
@@ -1401,7 +1404,9 @@ class UserEdit(Frame, MyWidget):
 	return self
 
     def destruct(self):
-        del self.parent.subwidgets[self.user.remote]
+        # Yes, this test can fail -- if you delete the parent window.
+        if self.parent.subwidgets.has_key(self.user.remote):
+            del self.parent.subwidgets[self.user.remote]
         Widget.destroy(self.master)
 
     def nosave(self):
