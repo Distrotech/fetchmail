@@ -160,7 +160,7 @@ static int odmr_getrange(int sock, struct query *ctl, const char *id,
 
 		SockWrite(smtp_sock, buf, n);
 		if (outlevel >= O_MONITOR)
-		    report(stdout, "ODMR< %s\n", buf);
+		    report(stdout, "ODMR< %s", buf);
 	    }
 	    if (FD_ISSET(smtp_sock, &readfds))
 	    {
@@ -170,7 +170,7 @@ static int odmr_getrange(int sock, struct query *ctl, const char *id,
 
 		SockWrite(sock, buf, n);
 		if (outlevel >= O_MONITOR)
-		    report(stdout, "ODMR> %s\n", buf);
+		    report(stdout, "ODMR> %s", buf);
 	    }
 	}
 	SockClose(smtp_sock);
