@@ -377,13 +377,15 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
 
 static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 /* handle SMTP errors based on the content of SMTP_response */
-/* Mail is deleted from the server if this function returns PS_REFUSED. */
+/* return of PS_REFUSED deletes mail from the server; PS_TRANSIENT keeps it */
 {
     int smtperr = atoi(smtp_response);
     char *responses[1];
 
     xalloca(responses[0], char *, strlen(smtp_response)+1);
     strcpy(responses[0], smtp_response);
+
+    SMTP_rset(ctl->smtp_socket);    /* stay on the safe site */
 
     /*
      * Note: send_bouncemail message strings are not made subject
@@ -408,7 +410,6 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	 * 554 = Postfix antispam response.
 	 *
 	 */
-	SMTP_rset(ctl->smtp_socket);    /* stay on the safe site */
 	send_bouncemail(ctl, msg, XMIT_ACCEPT,
 			"Our spam filter rejected this transaction.\r\n", 
 			1, responses);
@@ -427,30 +428,12 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 
     switch (smtperr)
     {
-    case 452: /* insufficient system storage */
-	/*
-	 * Temporary out-of-queue-space condition on the
-	 * ESMTP server.  Don't try to ship the message, 
-	 * and suppress deletion so it can be retried on
-	 * a future retrieval cycle. 
-	 *
-	 * Bouncemail *might* be appropriate here as a delay
-	 * notification (note; if we ever add this, we must make
-	 * sure the RFC1894 Action field is "delayed" rather thwn
-	 * "failed").  But it's not really necessary because
-	 * this is not an actual failure, we're very likely to be
-	 * able to recover on the next cycle.
-	 */
-	SMTP_rset(ctl->smtp_socket);    /* required by RFC1870 */
-	return(PS_TRANSIENT);
-
     case 552: /* message exceeds fixed maximum message size */
 	/*
 	 * Permanent no-go condition on the
 	 * ESMTP server.  Don't try to ship the message, 
 	 * and allow it to be deleted.
 	 */
-	SMTP_rset(ctl->smtp_socket);    /* required by RFC1870 */
 	send_bouncemail(ctl, msg, XMIT_ACCEPT,
 			"This message was too large.\r\n", 
 			1, responses);
@@ -464,19 +447,35 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	 * (b) we wouldn't want spammers to get confirmation that
 	 * this address is live, anyway.
 	 */
-	SMTP_rset(ctl->smtp_socket);    /* stay on the safe side */
 	send_bouncemail(ctl, msg, XMIT_ACCEPT,
 			"Invalid address.\r\n", 
 			1, responses);
 	return(PS_REFUSED);
 
-    default:	/* bounce non-transient errors back to the sender */
-	SMTP_rset(ctl->smtp_socket);    /* stay on the safe side */
+    default:
+	/* bounce non-transient errors back to the sender */
 	if (smtperr >= 500 && smtperr <= 599)
 	    if (send_bouncemail(ctl, msg, XMIT_ACCEPT,
 				"General SMTP/ESMTP error.\r\n", 
 				1, responses))
 		return(run.bouncemail ? PS_REFUSED : PS_TRANSIENT);
+	/*
+	 * We're going to end up here on 4xx errors, like:
+	 *
+	 * 451: temporarily unable to identify sender (exim)
+	 * 452: temporary out-of-queue-space condition on the ESMTP server.
+	 *
+	 * These are temporary errors.  Don't try to ship the message,
+	 * and suppress deletion so it can be retried on a future
+	 * retrieval cycle.
+	 *
+	 * Bouncemail *might* be appropriate here as a delay
+	 * notification (note; if we ever add this, we must make
+	 * sure the RFC1894 Action field is "delayed" rather thwn
+	 * "failed").  But it's not really necessary because
+	 * these are not actual failures, we're very likely to be
+	 * able to recover on the next cycle.
+	 */
 	return(PS_TRANSIENT);
     }
 }
