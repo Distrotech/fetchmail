@@ -44,9 +44,10 @@
  *
  * #define  INTERNAL_BUFSIZE	2048
  *
+ * Note that stdio's 1024-byte default is just fine.
  */
 
-FILE *Socket(char *host, int clientPort)
+FILE *sockopen(char *host, int clientPort)
 {
     int sock;
     unsigned long inaddr;
@@ -77,26 +78,6 @@ FILE *Socket(char *host, int clientPort)
         return (FILE *)NULL;
     }
     return fdopen(sock, "r+");
-}
-
-
-int SockGets(char *buf, int len, FILE *sockfp)
-{
-    int rdlen = 0;
-
-    while (--len)
-    {
-        if ((*buf = fgetc(sockfp)) == EOF)
-            return -1;
-        else
-	    rdlen++;
-        if (*buf == '\n')
-            break;
-        if (*buf != '\r') /* remove all CRs */
-            buf++;
-    }
-    *buf = 0;
-    return rdlen;
 }
 
 /* socket.c ends here */

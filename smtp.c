@@ -95,11 +95,12 @@ int SMTP_eom(FILE *sockfp)
 int SMTP_ok(FILE *sockfp)
 /* returns status of SMTP connection */
 {
-    int  n;
-    char buf[SMTPBUFSIZE];
+    char buf[SMTPBUFSIZE], *ip;
   
-    while ((n = SockGets(buf, sizeof(buf)-1, sockfp)) > 0)
+    while ((ip = fgets(buf, sizeof(buf)-1, sockfp)))
     {
+	int  n = strlen(ip);
+
 	if (n < 4)
 	    return SM_ERROR;
 	buf[n] = '\0';

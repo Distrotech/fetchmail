@@ -276,7 +276,7 @@ static FILE *smtp_open(struct query *ctl)
     /* if no socket to this host is already set up, try to open one */
     if (ctl->smtp_sockfp == (FILE *)NULL)
     {
-	if ((ctl->smtp_sockfp = Socket(ctl->smtphost, SMTP_PORT)) == (FILE *)NULL)
+	if ((ctl->smtp_sockfp = sockopen(ctl->smtphost, SMTP_PORT)) == (FILE *)NULL)
 	    return((FILE *)NULL);
 	else if (SMTP_ok(ctl->smtp_sockfp) != SM_OK
 		 || SMTP_helo(ctl->smtp_sockfp, ctl->servernames->id) != SM_OK)
@@ -287,6 +287,26 @@ static FILE *smtp_open(struct query *ctl)
     }
 
     return(ctl->smtp_sockfp);
+}
+
+static int SockGets(char *buf, int len, FILE *sockfp)
+/* get a LF-terminated line, removing \r characters */
+{
+    int rdlen = 0;
+
+    while (--len)
+    {
+        if ((*buf = fgetc(sockfp)) == EOF)
+            return -1;
+        else
+	    rdlen++;
+        if (*buf == '\n')
+            break;
+        if (*buf != '\r') /* remove all CRs */
+            buf++;
+    }
+    *buf = 0;
+    return rdlen;
 }
 
 static int gen_readmsg (sockfp, len, delimited, ctl)
@@ -861,7 +881,7 @@ const struct method *proto;	/* protocol method table */
 	FILE *sockfp;
 
 	/* open a socket to the mail server */
-	if ((sockfp = Socket(ctl->servernames->id,
+	if ((sockfp = sockopen(ctl->servernames->id,
 			     ctl->port ? ctl->port : protocol->port)) == NULL)
 	{
 	    error(0, errno, "connecting to host");
