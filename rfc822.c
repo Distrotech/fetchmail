@@ -138,6 +138,7 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 #ifdef TESTMAIN
 	orighdr = hdr;
 #endif /* TESTMAIN */
+	tp = address;
     }
 
     for (; *hp; hp++)
@@ -172,10 +173,7 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	{
 	case START_HDR:   /* before header colon */
 	    if (*hp == ':')
-	    {
 		state = SKIP_JUNK;
-		tp = address;
-	    }
 	    break;
 
 	case SKIP_JUNK:		/* looking for address start */
