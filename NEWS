@@ -25,6 +25,8 @@
   mode when the Received: headers are malformatted. (Matthias Andree)
 * MIME-encode bodies and Subject headers of warning messages (Matthias
   Andree), limiting the header to 7 bits.
+* Normalize most locale codesets to IANA codesets, based on
+  norm_charmap.c by Markus Kuhn. (Matthias Andree)
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
