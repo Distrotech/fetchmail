@@ -891,28 +891,26 @@ char *realname;		/* real name of host */
     }
 
     /* write all the headers */
-    if (sinkfp)
-    {
-	if (ctl->mda)
-	    n = fwrite(headers, 1, strlen(headers), sinkfp);
-	else
-	    n = SockWrite(ctl->smtp_socket, headers, strlen(headers));
+    n = 0;
+    if (ctl->mda && sinkfp)
+	n = fwrite(headers, 1, strlen(headers), sinkfp);
+    else if (ctl->smtp_socket != -1)
+	n = SockWrite(ctl->smtp_socket, headers, strlen(headers));
 
-	if (n < 0)
+    if (n < 0)
+    {
+	free(headers);
+	headers = NULL;
+	error(0, errno, "writing RFC822 headers");
+	if (ctl->mda)
 	{
-	    free(headers);
-	    headers = NULL;
-	    error(0, errno, "writing RFC822 headers");
-	    if (ctl->mda)
-	    {
-		pclose(sinkfp);
-		signal(SIGCHLD, sigchld);
-	    }
-	    return(PS_IOERR);
+	    pclose(sinkfp);
+	    signal(SIGCHLD, sigchld);
 	}
-	else if (outlevel == O_VERBOSE)
-	    fputs("#", stderr);
+	return(PS_IOERR);
     }
+    else if (outlevel == O_VERBOSE)
+	fputs("#", stderr);
     free(headers);
     headers = NULL;
 
