@@ -2,11 +2,15 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.8.5 (Tue May 29 20:01:39 EDT 2001), 20650 lines:
+
 * Interface option fix from Alexander Kourakov.
 * Fixes for i18n glitches and new Danish translation from Byrial Jensen.
 * Attempted fix for Harry McGavran's problems with the Kerberos V build.
 * Added fetchmailnochda.pl to the contrib directory.
 * Sunil Shetye's patches for the seen count on IMAP and auto protocol.
+
+There are 337 people on fetchmail-friends and 583 on fetchmail-announce.
 
 fetchmail-5.8.4 (Mon May 21 15:08:03 EDT 2001), 20636 lines:
 
