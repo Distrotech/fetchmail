@@ -29,6 +29,7 @@ AC_CHECK_HEADERS(arpa/inet.h arpa/nameser.h resolv.h net/socket.h sys/select.h)
 AC_C_CONST			dnl getopt needs this.
 
 AC_PROG_LEX
+AC_PROG_MAKE_SET
 AC_PROG_YACC
 AC_SUBST(CPFLAGS)
 AC_SUBST(CEFLAGS)
