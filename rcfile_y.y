@@ -64,8 +64,16 @@ statement_list	: statement
 		;
 
 /* future global options should also have the form SET <name> <value> */
-statement	: define_server serverspecs userspecs
-		| SET BATCHLIMIT MAP NUMBER	{batchlimit = $4;}
+statement	: SET BATCHLIMIT MAP NUMBER	{batchlimit = $4;}
+
+/* 
+ * The way the next two productions are written depends on the fact that
+ * userspecs cannot be empty.  It's a kluge to deal with files that sset
+ * up a load of defaults and then have poll statements following with no
+ * user options at all. 
+ */
+		| define_server serverspecs	{prc_register(); prc_reset();}
+		| define_server serverspecs userspecs
 		;
 
 define_server	: POLL STRING	{strcpy(current.servername, $2);}
@@ -90,9 +98,12 @@ serv_option	: PROTOCOL PROTO	{current.protocol = $2;}
 		| TIMEOUT NUMBER	{current.timeout = $2;}
 		;
 
-/* the first and only the first user spec may omit the USERNAME part */
-userspecs	: /* EMPTY */
-		| user1opts		{prc_register(); prc_reset();}
+/*
+ * The first and only the first user spec may omit the USERNAME part.
+ * This is a backward-compatibility kluge to allow old popclient files
+ * to keep working.
+ */
+userspecs	: user1opts		{prc_register(); prc_reset();}
 		| user1opts explicits	{prc_register(); prc_reset();}
 		| explicits
 		;
@@ -131,6 +142,7 @@ user_option	: TO mapping_list HERE
 		| TO mapping_list
 		| IS mapping_list HERE
 		| IS mapping_list
+
 		| IS STRING THERE	{strcpy(current.remotename, $2);}
 		| PASSWORD STRING	{strcpy(current.password, $2);}
 		| FOLDER STRING 	{strcpy(current.mailbox, $2);}
