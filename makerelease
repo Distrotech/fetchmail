@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 #
 # Make a fetchmail release.  Must be run as root, to make RPMs.
 # Dumps a release notice and diffs as a MIME multipart message 
@@ -13,6 +13,7 @@ $svnrepos = "svn://svn.berlios.de/$project";
 $website = "http://developer.berlios.de/projects/$project";
 $mailfrom = "<$project-devel-owner\@lists.berlios.de> (Fetchmail Development Team)";
 
+# parse options
 $diffs = 0;
 $verbose = 0;
 $null = ">/dev/null";
@@ -35,13 +36,15 @@ while ($i = shift @ARGV)
 	die "Error: Unknown option: $i\n";
 }
 
-
-$version=`grep 'VERSION *=' Makefile.in`;
-$version =~ /VERSION *= *(.*)/;
+# extract version from source
+$version=`grep 'AC_INIT' configure.in`;
+$version =~ /AC_INIT\([^,]*,\[?([0-9.]+)\]?\)/;
 $version = $1;
+die "cannot determine version" unless defined $1;
 $tag = "RELEASE_$version";
 $tag =~ tr/./-/;
 
+# extract existing tags
 open(ID, "svn ls $svnrepos/tags|");
 while (<ID>) {
     if (m{^(RELEASE_.*)/}) {
@@ -62,7 +65,12 @@ $ENV{PATH} .= ":./dist-tools:./dist-tools/shipper:.";
 
 print "Building $version release, tag $tag, previous tag $oldtag\n";
 
-if (system("aclocal && autoconf")) {
+if (-d autom4te.cache) {
+    system("rm -rf autom4te.cache")
+	and die "Failure in removing autom4te.cache";
+}
+
+if (system("autoreconf -isv")) {
 	die("Failure in regenerating autoconf files\n");
 }
 
@@ -71,7 +79,7 @@ if (system("./configure && make clean && make -C po update-po && make clean")) {
 }
 
 print "### Test-building the software...\n";
-if (system("./configure --disable-nls && make clean && make")) {
+if (system("./configure && make clean && make all check")) {
 	die("Compilation failure\n");
 }
 

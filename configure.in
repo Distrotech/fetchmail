@@ -4,23 +4,20 @@ dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl
 
-AC_INIT([fetchmail], [6.1.2])
+AC_INIT([fetchmail],[6.2.6])
 AC_CONFIG_SRCDIR([fetchmail.h])
 AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_LIBOBJ_DIR([.])
 
-dnl We want these before the checks, so the checks can modify their values.
-test -z "$CFLAGS" && CFLAGS="-O" AC_SUBST(CFLAGS)
-test -z "$LDFLAGS" && LDFLAGS=AC_SUBST(LDFLAGS)
+dnl we may need a newer automake version - the oldest tested is 1.7
+AC_PREREQ(2.59)
+AM_INIT_AUTOMAKE(1.5 foreign no-installinfo)
 
-PACKAGE=`sed -n '/PACKAGE *= *\(.*\)/s//\1/p' <$srcdir/Makefile.in`
-VERSION=`sed -n '/VERSION *= *\(.*\)/s//\1/p' <$srcdir/Makefile.in`
-AM_INIT_AUTOMAKE("$PACKAGE", "$VERSION")
-
-AC_CANONICAL_HOST
+AC_PROG_AWK
 AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_CPP			dnl Later checks need this.
-AC_PROG_CC_C_O
+AM_PROG_CC_C_O
 AC_AIX
 AC_ISC_POSIX
 AC_MINIX
@@ -29,20 +26,18 @@ AC_HEADER_TIME
 AC_TYPE_SIZE_T
 AC_TYPE_PID_T
 AC_TYPE_SIGNAL
-AC_CHECK_HEADERS(unistd.h termios.h termio.h sgtty.h stdarg.h alloca.h)
-AC_CHECK_HEADERS(sys/itimer.h fcntl.h sys/fcntl.h memory.h sys/wait.h sys/shm.h)
-AC_CHECK_HEADERS(arpa/inet.h arpa/nameser.h resolv.h net/socket.h sys/select.h)
-AC_CHECK_HEADERS(sys/time.h)
+AC_CHECK_HEADERS([unistd.h termios.h termio.h sgtty.h stdarg.h \
+	alloca.h sys/itimer.h fcntl.h sys/fcntl.h memory.h sys/wait.h \
+	sys/shm.h arpa/inet.h arpa/nameser.h resolv.h net/socket.h \
+	sys/select.h sys/time.h])
 
 AC_C_CONST			dnl getopt needs this.
 
-dnl do NOT use AM_PROG_LEX, builds without LEX are not supported properly
-AC_PROG_LEX
+AM_PROG_LEX
 AC_PROG_MAKE_SET
 AC_PROG_YACC
-AC_SUBST(CPFLAGS)
-AC_SUBST(CEFLAGS)
-AC_SUBST(LDEFLAGS)
+
+AC_FUNC_ALLOCA
 
 # Check for LynxOS special case: -lbsd needed (at least on 2.3.0) and -s
 # not working.
@@ -70,8 +65,8 @@ then
 fi
  
 dnl i18n
-ALL_LINGUAS="ca cs da de el es fr gl ja pl pt_BR tr sk"
-AM_GNU_GETTEXT
+AM_GNU_GETTEXT(no-libtool)
+AM_GNU_GETTEXT_VERSION(0.13)
 dnl end i18n
 
 # Under sysV68, socket and friends are provided by the C library.
@@ -90,53 +85,36 @@ AC_CHECK_FUNC(inet_addr,
 
 dnl Port hack for Interactive UNIX System V/386 Release 3.2
 AC_CHECK_LIB(cposix, strchr,
-		[EXTRADEFS="$EXTRADEFS -D_SYSV3"
+		[DEFS="$DEFS -D_SYSV3"
 		LIBS="$LIBS -lcposix"])
 
 dnl Port hack for Sparc/NetBSD-1.5
 AC_CHECK_LIB(intl, gettext,
 		[LIBS="$LIBS -lintl"])
 
-AC_CHECK_FUNC(strstr, AC_DEFINE(HAVE_STRSTR,1,Define to 1 if you have the 'strstr' function),
-              [EXTRASRC="$EXTRASRC \$(srcdir)/strstr.c"
-               EXTRAOBJ="$EXTRAOBJ strstr.o"])
+AC_REPLACE_FUNCS([strstr strcasecmp memmove])
 
-AC_CHECK_FUNC(strcasecmp, AC_DEFINE(HAVE_STRCASECMP,1,Define to 1 if you have the 'strcasecmp' function),
-              [EXTRASRC="$EXTRASRC \$(srcdir)/strcasecmp.c"
-               EXTRAOBJ="$EXTRAOBJ strcasecmp.o"])
-
-AC_CHECK_FUNC(memmove, AC_DEFINE(HAVE_MEMMOVE,1,Define to 1 if you have the 'memmove' function),
-              [EXTRASRC="$EXTRASRC \$(srcdir)/memmove.c"
-               EXTRAOBJ="$EXTRAOBJ memmove.o"])
-
-AC_CHECK_FUNC(MD5Init, AC_DEFINE(HAVE_MD5,1,Define if you have m5 in libc),
-              [EXTRASRC="$EXTRASRC \$(srcdir)/md5c.c"
-               EXTRAOBJ="$EXTRAOBJ md5c.o"])
+AC_CHECK_FUNC(MD5Init, AC_DEFINE(HAVE_MD5,1,Define if you have md5 in libc),
+	      [AC_LIBSOURCE(md5c.c)
+               EXTRAOBJ="$EXTRAOBJ md5c.\$(OBJEXT)"])
 
 AC_CHECK_FUNC(getopt_long, AC_DEFINE(HAVE_GETOPT_LONG),
-              [EXTRASRC="$EXTRASRC \$(srcdir)/getopt.c \$(srcdir)/getopt1.c"
-               EXTRAOBJ="$EXTRAOBJ getopt.o getopt1.o"])
+              [AC_LIBSOURCES([getopt.c, getopt1.c])
+	       EXTRAOBJ="$EXTRAOBJ getopt.\$(OBJEXT) getopt1.\$(OBJEXT)"])
 
 AC_FUNC_VPRINTF
-AC_FUNC_ALLOCA
 if test -n "$ALLOCA"
 then
-  EXTRASRC="$EXTRASRC \$(srcdir)/alloca.c"
-  EXTRAOBJ="$EXTRAOBJ alloca.o"
+  EXTRAOBJ="$EXTRAOBJ alloca.\$(OBJEXT)"
 fi
 
-dnl AC_CHECK_FUNC calls that might hack the Makefile must precede
-dnl the following AC_SUBSTs
-
-AC_SUBST(EXTRADEFS)
-AC_SUBST(EXTRASRC)
 AC_SUBST(EXTRAOBJ)
 
 AC_CHECK_FUNCS(tcsetattr stty setsid geteuid seteuid gethostbyname \
   res_search herror strrchr strerror setlinebuf syslog \
   snprintf vprintf vsnprintf vsyslog \
   atexit inet_aton strftime setrlimit socketpair sigprocmask sigaction \
-  getopt_long)
+  getopt_long strdup)
 
 # Under Red Hat 4.0 (and many other Linuxes) -lresolv is seriously flaky
 # and breaks gethostbyname(2).  It's better to use the bind stuff in the C
@@ -157,13 +135,10 @@ dnl AC_FUNC_SETVBUF_REVERSED
 
 dnl Check for usable void pointer type
 AC_MSG_CHECKING(use of void pointer type)
-AC_TRY_COMPILE([],
-   [char *p;
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[char *p;
     void *xmalloc();
     p = (char *) xmalloc(1);
-   ],
- [AC_DEFINE(HAVE_VOIDPOINTER,1,[Define if your C compiler allows void * as a function result]) AC_MSG_RESULT(yes)],
- AC_MSG_RESULT(no))
+   ]])],[AC_DEFINE(HAVE_VOIDPOINTER,1,[Define if your C compiler allows void * as a function result]) AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)])
 
 dnl Check for ANSI volatile
 AC_C_VOLATILE
@@ -171,9 +146,8 @@ AC_C_VOLATILE
 dnl Check out the wait reality.  We have to assume sys/wait.h is present.
 AC_CHECK_FUNCS(waitpid wait3)
 AC_MSG_CHECKING(for union wait);
-AC_TRY_LINK([#include <sys/types.h>
-#include <sys/wait.h>],
-	 	 [union wait status; int pid; pid = wait (&status);
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
+#include <sys/wait.h>]], [[union wait status; int pid; pid = wait (&status);
 #ifdef WEXITSTATUS
 /* Some POSIXoid systems have both the new-style macros and the old
    union wait type, and they do not work together.  If union wait
@@ -184,18 +158,14 @@ if (WEXITSTATUS (status) != 0) pid = -1;
 /* Make sure union wait works with waitpid.  */
 pid = waitpid (-1, &status, 0);
 #endif
-],
-[AC_DEFINE(HAVE_UNION_WAIT,1,Define if 'union wait' is the type of the first arg to wait functions.) AC_MSG_RESULT(yes)],
-  AC_MSG_RESULT(no))
+]])],[AC_DEFINE(HAVE_UNION_WAIT,1,Define if 'union wait' is the type of the first arg to wait functions.) AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)])
 
 AC_MSG_CHECKING(sys_siglist declaration in signal.h or unistd.h)
-AC_TRY_LINK([#include <signal.h>
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <signal.h>
 /* NetBSD declares sys_siglist in <unistd.h>.  */
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
-#endif], [char *msg = *(sys_siglist + 1);],
-  [AC_DEFINE(SYS_SIGLIST_DECLARED,1,[Define if 'sys_siglist' is declared by <signal.h>.]) AC_MSG_RESULT(yes)],
-  AC_MSG_RESULT(no))
+#endif]], [[char *msg = *(sys_siglist + 1);]])],[AC_DEFINE(SYS_SIGLIST_DECLARED,1,[Define if 'sys_siglist' is declared by <signal.h>.]) AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)])
 
 # Find the right directory to put the root-mode PID file in
 for dir in "/var/run" "/etc"
@@ -262,21 +232,21 @@ AC_ARG_ENABLE(fallback,
 
 case "$enable_fallback" in
 	sendmail)	if test -z "$sendmail" ; then 
-				AC_ERROR([Sendmail selected as fallback, but not found])
+				AC_MSG_ERROR([Sendmail selected as fallback, but not found])
 				#not reached
 			fi
 			AC_DEFINE_UNQUOTED(FALLBACK_MDA, "$sendmail -i %T", Fallback MTA to use if defined)
 			echo "Will use $sendmail as fallback MDA."
 			;;
 	procmail)	if test -z "$procmail" ; then
-				AC_ERROR([procmail selected as fallback, but not found])
+				AC_MSG_ERROR([procmail selected as fallback, but not found])
 				#not reached
 			fi
 			AC_DEFINE_UNQUOTED(FALLBACK_MDA, "$procmail -d %T")
 			echo "Will use $procmail as fallback MDA."
 			;;
 	maildrop)	if test -z "$maildrop" ; then
-				AC_ERROR([maildrop selected as fallback, but not found])
+				AC_MSG_ERROR([maildrop selected as fallback, but not found])
 				#not reached
 			fi
 			AC_DEFINE_UNQUOTED(FALLBACK_MDA, "$maildrop -d %T")
@@ -292,7 +262,7 @@ case "$enable_fallback" in
 				echo "for automatic fallback MDA configuration for reliability reasons."
 			fi
 			;;
-	*)		AC_ERROR([unkown value for --enable-fallback given: $enable_fallback])
+	*)		AC_MSG_ERROR([unkown value for --enable-fallback given: $enable_fallback])
 			#notreached
 			;;
 esac
@@ -427,7 +397,7 @@ then
 # Check for a OpenBSD special case
 if test "$with_kerberos5" = "yes" && ( test `uname` = "OpenBSD" )
 then
-  AC_CHECKING([kerberosV for OpenBSD])
+  AS_MESSAGE(checking kerberosV for OpenBSD...)
   AC_DEFINE(HEIMDAL,1,Define if you have HEIMDAL kerberos 5)
   AC_DEFINE(KERBEROS_V5,1,Define if you have Kerberos V5)
   CEFLAGS="$CEFLAGS -I/usr/include/kerberosV"
@@ -456,7 +426,7 @@ else
                 ${LDEFLAGS})
            AC_CHECK_LIB(des, des_string_to_key, libk5crypto=-ldes,
               AC_CHECK_LIB(ssl, MD5_Init, [],
-                AC_ERROR([DES libraries not found. Try adding --with-ssl to enable OpenSSL support]),
+                AC_MSG_ERROR([DES libraries not found. Try adding --with-ssl to enable OpenSSL support]),
                 ${LDEFLAGS} ${ac_krblibs}),
            ${LDEFLAGS} ${ac_krblibs})
            AC_DEFINE(HEIMDAL)
@@ -469,7 +439,7 @@ else
                 AC_CHECK_LIB(k5crypto,
                    krb5_des_string_to_key,
                    libk5crypto=-lk5crypto,
-                      AC_ERROR([Kerberos 5 DES libraries not found]),
+                      AC_MSG_ERROR([Kerberos 5 DES libraries not found]),
                    ${LDEFLAGS} ${ac_krblibs}),
                  ${LDEFLAGS} ${ac_krblibs})
         fi
@@ -487,7 +457,7 @@ else
      fi
   done
   if test -z "$with_kerberos5" ; then
-     AC_ERROR([Kerberos 5 libraries not found])
+     AC_MSG_ERROR([Kerberos 5 libraries not found])
   fi
 fi
 fi
@@ -503,7 +473,7 @@ then
 # Check for a NetBSD/OpenBSD special case
 if test "$with_kerberos" = "yes" && ( test `uname` = "NetBSD" || test `uname` = "OpenBSD" )
 then
-  AC_CHECKING([kerberosIV for `uname`])
+  AS_MESSAGE(checking kerberosIV for `uname`...)
   AC_DEFINE(KERBEROS_V4,1,Define if you have Kerberos V4)
   CEFLAGS="$CEFLAGS -I/usr/include/kerberosIV"
   LIBS="$LIBS -lkrb -ldes"
@@ -548,7 +518,7 @@ else
      break
   done
   if test -z "$with_kerberos" ; then
-     AC_ERROR([Kerberos 4 libraries not found])
+     AC_MSG_ERROR([Kerberos 4 libraries not found])
   fi
   LDFLAGS="$ac_saveLDFLAGS"
 fi
@@ -608,7 +578,7 @@ then
     CEFLAGS="$CEFLAGS -I/usr/kerberos/include"
     ###	OpenBSD comes with ssl headers
   else
-    AC_ERROR([SSL support enabled, but OpenSSL not found])
+    AC_MSG_ERROR([SSL support enabled, but OpenSSL not found])
   fi
   LDEFLAGS="$LDEFLAGS -L$with_ssl/lib"
   LIBS="$LIBS -lssl -lcrypto"
@@ -726,16 +696,13 @@ then
   fi
 fi])
 
-AC_CONFIG_FILES([Makefile intl/Makefile po/Makefile.in])
-AC_CONFIG_COMMANDS([default],[
-	# The reason for this odd makedepend line is that we want
-	# to have all dependencies evaluated relative to the source directory
-	# and let VPATH do all the dirty work when we build remotely
-	echo "You can ignore any makedepend error messages:";
-	echo timestamp > stamp-h;
-	(cd $srcdir; makedepend -I "$ac_abs_builddir" -f - *.c) >>Makefile])
+AC_SUBST(CPFLAGS)
+AC_SUBST(CEFLAGS)
+AC_SUBST(LDEFLAGS)
 
+AC_CONFIG_FILES([Makefile po/Makefile.in  m4/Makefile intl/Makefile ])
 AC_OUTPUT
+
 dnl Local Variables:
 dnl comment-start: "dnl "
 dnl comment-end: ""
