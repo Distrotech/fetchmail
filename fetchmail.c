@@ -268,6 +268,13 @@ int main (int argc, char **argv)
 		 pid);
 		return(PS_EXCLUDE);
 	}
+	else if (argc > 1)
+	{
+	    fprintf(stderr,
+		    "fetchmail: can't accept options while a background fetchmail is running.\n",
+		    pid);
+	    return(PS_EXCLUDE);
+	}
 	else if (kill(pid, SIGUSR1) == 0)
 	{
 	    fprintf(stderr,
