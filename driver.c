@@ -326,20 +326,20 @@ static void send_size_warnings(struct query *ctl)
     close_warning_by_mail(ctl, (struct msgblk *)NULL);
 }
 
-static void mark_oversized(int num, struct query *ctl, int *msgsizes)
+static void mark_oversized(struct query *ctl, int num, int size)
 /* mark a message oversized */
 {
     struct idlist *current=NULL, *tmp=NULL;
-    char size[32];
+    char sizestr[32];
     int cnt;
 
-    /* convert sz to string */
+    /* convert size to string */
 #ifdef HAVE_SNPRINTF
-    snprintf(size, sizeof(size),
+    snprintf(sizestr, sizeof(sizestr),
 #else
-    sprintf(size,
+    sprintf(sizestr,
 #endif /* HAVE_SNPRINTF */
-      "%d", msgsizes[num-1]);
+      "%d", size);
 
     /* build a list of skipped messages
      * val.id = size of msg (string cnvt)
@@ -356,11 +356,11 @@ static void mark_oversized(int num, struct query *ctl, int *msgsizes)
     cnt = current ? current->val.status.num : 0;
 
     /* if entry exists, increment the count */
-    if (current && str_in_list(&current, size, FALSE))
+    if (current && str_in_list(&current, sizestr, FALSE))
     {
 	for ( ; current; current = current->next)
 	{
-	    if (strcmp(current->id, size) == 0)
+	    if (strcmp(current->id, sizestr) == 0)
 	    {
 		current->val.status.mark++;
 		break;
@@ -371,7 +371,7 @@ static void mark_oversized(int num, struct query *ctl, int *msgsizes)
     /* initialise with current poll count */
     else
     {
-	tmp = save_str(&ctl->skipped, size, 1);
+	tmp = save_str(&ctl->skipped, sizestr, 1);
 	tmp->val.status.num = cnt;
     }
 }
@@ -393,7 +393,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	if (msgsizes[num-1] < 0)
 	{
 	    if ((msgsizes[num-1] == MSGLEN_TOOLARGE) && !check_only)
-		mark_oversized(num, ctl, msgsizes);
+		mark_oversized(ctl, num, msgsizes[num-1]);
 	    if (outlevel > O_SILENT)
 	    {
 		report_build(stdout, 
