@@ -2,10 +2,14 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.4.2 (Wed Jun 28 07:21:04 EDT 2000), 19069 lines:
+
 * Julian Haight's fix for his 5.4.1 patch, which created a potential 
   memory leak.
 * Minor bug fixes for SSL by Wolfram Kleff.
 * Be more clever about when we suppress progress dots.
+
+There are 290 people on fetchmail-friends and 534 on fetchmail-announce.
 
 fetchmail-5.4.1 (Tue Jun  6 23:24:22 EDT 2000), 19051 lines:
 
