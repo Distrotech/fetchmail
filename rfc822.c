@@ -42,7 +42,7 @@ const char *host;	/* server hostname */
 	&& strncasecmp("Apparently-From:", buf, 16)
 	&& strncasecmp("Apparently-To:", buf, 14)
 	&& strncasecmp("Sender:", buf, 7)
-	&& strncasecmp("Resent_Sender:", buf, 14)
+	&& strncasecmp("Resent-Sender:", buf, 14)
        ) {
 	return(buf);
     }
