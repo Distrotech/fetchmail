@@ -100,6 +100,7 @@ static int is_host_alias(const char *name, struct query *ctl)
 /* determine whether name is a DNS alias of the hostname */
 {
     struct hostent	*he;
+    struct mxentry	*mxp, *mxrecords;
     int			i;
 
     /*
@@ -125,39 +126,46 @@ static int is_host_alias(const char *name, struct query *ctl)
      * delivering the current message or anything else from this
      * mailbox until it's back up.
      */
-    else if ((he = gethostbyname(name)) == (struct hostent *)NULL)
-	longjmp(restart, 2);
+    else if ((he = gethostbyname(name)) != (struct hostent *)NULL)
+	return(strcmp(ctl->canonical_name, he->h_name) == 0);
+    else
+	switch (h_errno)
+	{
+	case HOST_NOT_FOUND:	/* specified host is unknown */
+	case NO_ADDRESS:	/* valid, but does not have an IP address */
+	    break;
 
-    /* DNS response is OK */
-    else if (strcmp(ctl->canonical_name, he->h_name) == 0)
-	return(TRUE);
+	case NO_RECOVERY:	/* non-recoverable name server error */
+	case TRY_AGAIN:		/* temporary error on authoritative server */
+	default:
+	    longjmp(restart, 2);	/* try again next poll cycle */
+	    break;
+	}
 
     /*
-     * Search for a name match on MX records pointing to the server
-     * site.  These may live far away, so allow a couple of retries.
+     * We're only here if DNS was OK but the gethostbyname() failed
+     * with a HOST_NOT_FOUND or NO_ADDRESS error.
+     * Search for a name match on MX records pointing to the server.
      */
-    for (i = 0; i < MX_RETRIES; i++)
-    {
-	struct mxentry *mxrecords, *mxp;
+    h_errno = 0;
+    if ((mxrecords = getmxrecords(name)) == (struct mxentry *)NULL)
+	switch (h_errno)
+	{
+	case HOST_NOT_FOUND:	/* specified host is unknown */
+	    return(FALSE);
 
-	mxrecords = getmxrecords(name);
+	case NO_ADDRESS:	/* valid, but does not have an IP address */
+	    for (mxp = mxrecords; mxp->name; mxp++)
+		if (strcmp(name, mxp->name) == 0)
+		    return(TRUE);
+	    break;
 
-	h_errno = 0;
-	if (mxrecords == (struct mxentry *)NULL)
-	    if (h_errno == TRY_AGAIN)
-	    {
-		sleep(1);
-		continue;
-	    }
-	    else if (h_errno)		/* fatal error */
-		longjmp(restart, 2);
-	    else
-		break;
-
-	for (mxp = mxrecords; mxp->name; mxp++)
-	    if (strcmp(name, mxp->name) == 0)
-		return(TRUE);
-    }
+	case NO_RECOVERY:	/* non-recoverable name server error */
+	case TRY_AGAIN:		/* temporary error on authoritative server */
+	default:
+	    longjmp(restart, 2);	/* try again next poll cycle */
+	    break;
+	}
 
     return(FALSE);
 }
