@@ -12,7 +12,6 @@
   "X-Fetchmail-ID" header in fetched messages for debugging.
 * Total byte count in status message?
 * -U/--userdefault option to specify postmaster overriding USER.
-* imap_canonicalize screws up password shrouding.
 
 				Release Notes:
 
