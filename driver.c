@@ -417,8 +417,7 @@ struct hostrec *queryctl;	/* query control record */
     char fromBuf[MSGBUFSIZE+1];
     char *bufp, *headers, *unixfrom, *fromhdr, *tohdr, *cchdr, *bcchdr;
     int n, oldlen;
-    int inheaders;
-    int lines,sizeticker;
+    int inheaders,lines,sizeticker;
     /* This keeps the retrieved message count for display purposes */
     static int msgnum = 0;  
 
@@ -506,53 +505,89 @@ struct hostrec *queryctl;	/* query control record */
 
 	    goto skipwrite;
 	}
-	else if (headers)
+	else if (headers)	/* OK, we're at end of headers now */
 	{
 	    char		*cp;
+	    struct idlist 	*idp, *xmit_names;
 
-	    if (!queryctl->mda[0])
+	    /* cons up a list of local recipients */
+	    xmit_names = (struct idlist *)NULL;
+#ifdef HAVE_GETHOSTBYNAME
+	    /* is this a multidrop box? */
+	    if (queryctl->localnames != (struct idlist *)NULL
+		&& queryctl->localnames->next != (struct idlist *)NULL)
+	    {
+		/* compute the local address list */
+		find_server_names(tohdr,  queryctl, &xmit_names);
+		find_server_names(cchdr,  queryctl, &xmit_names);
+		find_server_names(bcchdr, queryctl, &xmit_names);
+
+		/* if nothing supplied localnames, default appropriately */
+		if (!xmit_names)
+		    save_uid(&xmit_names, -1, dfltuser);
+	    }
+	    else	/* it's a single-drop box, use first localname */
+#endif /* HAVE_GETHOSTBYNAME */
+	    {
+		if (queryctl->localnames)
+		    save_uid(&xmit_names, -1, queryctl->localnames->id);
+		else
+		    save_uid(&xmit_names, -1, dfltuser);
+	    }
+
+	    /* time to address the message */
+	    if (queryctl->mda[0])	/* we have a declared MDA */
+	    {
+		int	i, nlocals = 0;
+		char	**sargv, **sp;
+
+		/*
+		 * We go through this in order to be able to handle very
+		 * long lists of users.
+		 */
+		for (idp = xmit_names; idp; idp = idp->next)
+		    nlocals++;
+		sp = sargv = (char **)alloca(queryctl->mda_argcount + nlocals);
+		for (i = 0; i < queryctl->mda_argcount; i++)
+		    *sp++ = queryctl->mda_argv[i];
+		for (idp = xmit_names; idp; idp = idp->next)
+		    *sp++ = idp->id;
+		*sp =  (char *)NULL;
+
+#ifdef HAVE_SETEUID
+		/*
+		 * Arrange to run with user's permissions if we're root.
+		 * This will initialize the ownership of any files the
+		 * MDA creates properly.  (The seteuid call is available
+		 * under all BSDs and Linux)
+		 */
+		seteuid(queryctl->uid);
+#endif /* HAVE_SETEUID */
+
+		mboxfd = openmailpipe(sargv);
+
+#ifdef HAVE_SETEUID
+		/* this will fail quietly if we didn't start as root */
+		seteuid(0);
+#endif /* HAVE_SETEUID */
+
+		if (mboxfd < 0)
+		    return(PS_IOERR);
+	    }
+	    else
 	    {
 		if (SMTP_from(mboxfd, nxtaddr(fromhdr)) != SM_OK)
 		    return(PS_SMTP);
 
-#ifdef HAVE_GETHOSTBYNAME
-		/* is this a multidrop box? */
-		if (queryctl->localnames != (struct idlist *)NULL
-		    && queryctl->localnames->next != (struct idlist *)NULL)
-		{
-		    struct idlist 	*idp, *xmit_names;
-
-		    /* compute the local address list */
-		    xmit_names = (struct idlist *)NULL;
-		    find_server_names(tohdr,  queryctl, &xmit_names);
-		    find_server_names(cchdr,  queryctl, &xmit_names);
-		    find_server_names(bcchdr, queryctl, &xmit_names);
-
-		    /* if nothing supplied localnames, default appropriately */
-		    if (!xmit_names)
-			save_uid(&xmit_names, -1, dfltuser);
-
-		    for (idp = xmit_names; idp; idp = idp->next)
-			if (SMTP_rcpt(mboxfd, idp->id) != SM_OK)
-			    return(PS_SMTP);
-		    free_uid_list(&xmit_names);
-		}
-		else	/* it's a single-drop box, use first localname */
-#endif /* HAVE_GETHOSTBYNAME */
-		{
-		    if (queryctl->localnames)
-			cp = queryctl->localnames->id;
-		    else
-			cp = dfltuser;
-
-		    if (SMTP_rcpt(mboxfd, cp) != SM_OK)
+		for (idp = xmit_names; idp; idp = idp->next)
+		    if (SMTP_rcpt(mboxfd, idp->id) != SM_OK)
 			return(PS_SMTP);
-		}
 
 		SMTP_data(mboxfd);
 		if (outlevel == O_VERBOSE)
 		    fputs("SMTP> ", stderr);
 	    }
+	    free_uid_list(&xmit_names);
 
 	    /* change continuation markers back to regular newlines */
 	    for (cp = headers; cp < headers +  oldlen; cp++)
@@ -614,10 +649,20 @@ struct hostrec *queryctl;	/* query control record */
 
     if (alarmed)
        return (0);
-    /* write message terminator */
-    if (!queryctl->mda[0])
+
+    if (queryctl->mda[0])
+    {
+	/* close the delivery pipe, we'll reopen before next message */
+	if (closemailpipe(mboxfd))
+	    return(PS_IOERR);
+    }
+    else
+    {
+	/* write message terminator */
 	if (SMTP_eom(mboxfd) != SM_OK)
 	    return(PS_SMTP);
+    }
+
     return(0);
 }
 
@@ -821,38 +866,19 @@ struct method *proto;		/* protocol method table */
 			fputc(' ', stderr);
 		}
 
-		/* open the delivery pipe now if we're using an MDA */
-		if (queryctl->mda[0])
-		{
-#ifdef HAVE_SETEUID
-		    /*
-		     * Arrange to run with user's permissions if we're root.
-		     * This will initialize the ownership of any files the
-		     * MDA creates properly.  (The seteuid call is available
-		     * under all BSDs and Linux)
-		     */
-		    seteuid(queryctl->uid);
-#endif /* HAVE_SETEUID */
-		    mboxfd = openmailpipe(queryctl);
-#ifdef HAVE_SETEUID
-		    /* this will fail quietly if we didn't start as root */
-		    seteuid(0);
-#endif /* HAVE_SETEUID */
-
-		    if (mboxfd < 0)
-			goto cleanUp;
-		}
+		/*
+		 * If we're forwarding via SMTP, mboxfd is initialized
+		 * at this point (it was set at start of retrieval). 
+		 * If we're using an MDA it's not set -- gen_readmsg()
+		 * may have to parse message headers to know what
+		 * delivery addresses should be passed to the MDA
+		 */
 
 		/* read the message and ship it to the output sink */
 		ok = gen_readmsg(socket, mboxfd,
 				 len, 
 				 protocol->delimited,
 				 queryctl);
-
-		/* close the delivery pipe, we'll reopen before next message */
-		if (queryctl->mda[0])
-		    if ((ok = closemailpipe(mboxfd)) != 0 || alarmed)
-			goto cleanUp;
 
 		/* tell the server we got it OK and resynchronize */
 		if (protocol->trail)

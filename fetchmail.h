@@ -53,6 +53,7 @@
 #define		O_VERBOSE	2	/* excessive */
 
 #define		SIZETICKER	1024	/* print 1 dot per this many bytes */
+#define		MDA_MAXARGS	32	/* max arguments per MDA call */
 
 struct idlist
 {
@@ -81,7 +82,8 @@ struct hostrec
     int timeout;
 
     /* MDA arguments */
-    char *mda_argv[32];
+    int mda_argcount;
+    char *mda_argv[MDA_MAXARGS];
     char mdabuf[MDALEN+1];
 
     /* control flags */
@@ -179,7 +181,7 @@ struct hostrec *hostalloc(struct hostrec *);
 int parsecmdline (int, char **, struct hostrec *);
 void optmerge(struct hostrec *, struct hostrec *);
 char *MD5Digest (char *);
-int openmailpipe (struct hostrec *);
+int openmailpipe (char **);
 int daemonize(const char *, void (*)(int));
 
 void escapes(const char *, char *);

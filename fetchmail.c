@@ -228,20 +228,20 @@ char **argv;
 	    /* expand MDA commands */
 	    if (!check_only && hostp->mda[0])
 	    {
-		int argi;
 		char *argp;
 
 		/* punch nulls into the delimiting whitespace in the args */
-		for (argp = hostp->mdabuf, argi = 1; *argp != '\0'; argi++)
+		hostp->mda_argcount = 0;
+		for (argp = hostp->mdabuf, hostp->mda_argcount = 1; *argp != '\0'; hostp->mda_argcount++)
 		{
-		    hostp->mda_argv[argi] = argp;
+		    hostp->mda_argv[hostp->mda_argcount] = argp;
 		    while (!(*argp == '\0' || isspace(*argp)))
 			argp++;
 		    if (*argp != '\0')
 			*(argp++) = '\0';  
 		}
 
-		hostp->mda_argv[argi] = (char *)NULL;
+		hostp->mda_argv[hostp->mda_argcount] = (char *)NULL;
 
 		hostp->mda_argv[0] = hostp->mda_argv[1];
 		if ((argp = strrchr(hostp->mda_argv[1], '/')) != (char *)NULL)
@@ -658,9 +658,9 @@ struct hostrec *queryctl;	/* query parameter block */
 	}
 }
 
-int openmailpipe (queryctl)
+int openmailpipe (argv)
 /* open a one-way pipe to a mail delivery agent */
-struct hostrec *queryctl;	/* query control block */
+char *argv[];
 {
     int pipefd [2];
     int childpid;
@@ -683,7 +683,7 @@ struct hostrec *queryctl;	/* query control block */
 	    exit(1);
 	}
 
-	execv(queryctl->mda_argv[0], queryctl->mda_argv + 1);
+	execv(argv[0], argv + 1);
 
 	/* if we got here, an error occurred */
 	perror("fetchmail: openmailpipe: exec");
