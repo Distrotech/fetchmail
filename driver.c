@@ -477,17 +477,23 @@ static int stuffline(struct query *ctl, char *buf)
 /* ship a line to the given control block's output sink (SMTP server or MDA) */
 {
     int	n;
+    char *last;
+
+    /* The line may contain NUL characters. Find the last char to use
+     * -- the real line termination is the sequence "\n\0".
+     */
+    last = buf;
+    while ((last += strlen(last)) && (last[-1] != '\n'))
+        last++;
 
     /* fix message lines that have only \n termination (for qmail) */
     if (ctl->forcecr)
     {
-	char	*cp = buf + strlen(buf) - 1;
-
-	if (*cp == '\n' && (cp == buf || cp[-1] != '\r'))
+        if (last - 1 == buf || last[-2] != '\r')
 	{
-	    *cp++ = '\r';
-	    *cp++ = '\n';
-	    *cp++ = '\0';
+	    last[-1] = '\r';
+	    *last++  = '\n';
+	    *last    = '\0';
 	}
     }
 
@@ -517,17 +523,18 @@ static int stuffline(struct query *ctl, char *buf)
     {
 	char	*sp, *tp;
 
-	for (sp = tp = buf; *sp; sp++)
+	for (sp = tp = buf; sp < last; sp++)
 	    if (*sp != '\r')
 		*tp++ =  *sp;
 	*tp = '\0';
+        last = tp;
     }
 
     n = 0;
     if (ctl->mda)
-	n = fwrite(buf, 1, strlen(buf), sinkfp);
+	n = fwrite(buf, 1, last - buf, sinkfp);
     else if (ctl->smtp_socket != -1)
-	n = SockWrite(ctl->smtp_socket, buf, strlen(buf));
+	n = SockWrite(ctl->smtp_socket, buf, last - buf);
 
     return(n);
 }
