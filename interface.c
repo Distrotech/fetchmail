@@ -15,7 +15,12 @@
 
 #include <stdio.h>
 #include <string.h>
+#if defined(STDC_HEADERS)
+#include <stdlib.h>
+#endif
+#if defined(HAVE_UNISTD_H)
 #include <unistd.h>
+#endif
 #include <sys/ioctl.h>
 #include <netinet/in.h>
 #include <linux/netdevice.h>
