@@ -236,10 +236,15 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
     capabilities[0] = '\0';
     if ((ok = gen_transact(sock, "CAPABILITY")) == PS_SUCCESS)
     {
+	char	*cp;
+
+	/* capability checks are supposed to be caseblind */
+	for (cp = capabilities; *cp; cp++)
+	    *cp = toupper(*cp);
+
 	/* UW-IMAP server 10.173 notifies in all caps, but RFC2060 says we
 	   should expect a response in mixed-case */
-	if (strstr(capabilities, "IMAP4REV1") ||
-	    strstr(capabilities, "IMAP4rev1"))
+	if (strstr(capabilities, "IMAP4REV1"))
 	{
 	    imap_version = IMAP4rev1;
 	    if (outlevel >= O_DEBUG)
