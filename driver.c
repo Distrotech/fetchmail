@@ -366,7 +366,6 @@ static FILE *smtp_open(struct query *ctl)
     /* run down the SMTP hunt list looking for a server that's up */
     for (idp = ctl->smtphunt; idp; idp = idp->next)
     {
-
 	/* 
 	 * RFC 1123 requires that the domain name in HELO address is a
 	 * "valid principal domain name" for the client host.  We
@@ -382,7 +381,7 @@ static FILE *smtp_open(struct query *ctl)
 	if (ctl->smtp_sockfp == (FILE *)NULL)
 	{
 	    if ((ctl->smtp_sockfp = SockOpen(idp->id,SMTP_PORT))==(FILE *)NULL)
-		return((FILE *)NULL);
+		continue;
 	    else if (SMTP_ok(ctl->smtp_sockfp) != SM_OK
 		     || SMTP_ehlo(ctl->smtp_sockfp, 
 				  ctl->server.names->id,
@@ -406,7 +405,7 @@ static FILE *smtp_open(struct query *ctl)
 	if (ctl->smtp_sockfp == (FILE *)NULL)
 	{
 	    if ((ctl->smtp_sockfp = SockOpen(idp->id,SMTP_PORT))==(FILE *)NULL)
-		return((FILE *)NULL);
+		continue;
 	    else if (SMTP_ok(ctl->smtp_sockfp) != SM_OK
 		     || SMTP_helo(ctl->smtp_sockfp, ctl->server.names->id) != SM_OK)
 	    {
