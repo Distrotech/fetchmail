@@ -1631,7 +1631,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	if (protocol->getauth)
 	{
 	    if (protocol->password_canonify)
-		(protocol->password_canonify)(shroud, ctl->password);
+		(protocol->password_canonify)(shroud, ctl->password, PASSWORDLEN);
 	    else
 		strcpy(shroud, ctl->password);
 

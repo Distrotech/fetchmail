@@ -148,7 +148,7 @@ struct method		/* describe methods for protocol state machine */
     flag delimited;		/* if true, accept "." message delimiter */
     int (*parse_response)(int, char *);
 				/* response_parsing function */
-    int (*password_canonify)(char *, char *);
+    int (*password_canonify)(char *, char *, int);
 				/* canonicalize password */
     int (*getauth)(int, struct query *, char *);
 				/* authorization fetcher */
