@@ -2,12 +2,15 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-6.0.0 (Tue Sep 17 19:48:25 EDT 2002), 21972 lines:
+
 * Applied Matt Kraai's fix for minor Debian bug #144539.
 * Nerijus Baliunas's patch to support STARTTLS over IMAP.
 * More cleanups and minor bugfixes from Sunil Shetye.
 * Default antispam-response list is now empty.
 * Updated de and po translations,
 
+There are 520 people on fetchmail-friends and 683 on fetchmail-announce.
 % 6.0.0 release
 
 fetchmail-5.9.14 (Fri Sep  6 05:03:25 EDT 2002), 21932 lines:
