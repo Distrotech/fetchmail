@@ -49,7 +49,7 @@ Recode POP2 to use the same driver/method strategy as POP3/IMAP, so
 all three protocols will be able to forward messages through the generic
 driver to SMTP.  (This requires that we find a POP2 server to test with.)
 
-3.2:
+3.2 (Mon Sep 23 13:29:46 EDT 1996):
 
 * RPOP support (coded at a user's request but untested).
 
