@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/09/22 14:55:26 $
+<td width="30%" align=right>$Date: 1999/09/22 21:04:17 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1446,6 +1446,17 @@ up invisibly stuck on your mail spool.  Use the <code>fetchall</code>
 flag to ensure that it's recovered on the next cycle.<p>
 
 <hr>
+<h2><a name="S10">S10. How can I use fetchmail with Novell GroupWise?</a></h2>
+
+You can't.  The Novell GroupWise IMAP server would be better named
+GroupFoolish; it is unusably broken.  The specific problem is that it
+doesn't include a content length in its BODY[TEXT] response, so
+fetchmail can't know how much content to fetch. <p>
+
+If GroupWise is capable of supporting POP3, and that implementation
+isn't also broken, some lucky winner should tell me.<p>
+
+<hr>
 <h2><a name="K1">K1. How can I use fetchmail with SOCKS?</a></h2>
 
 Daniel Sobral &lt<a href="mailto:dcs@gns.com.br">dcs@gns.com.br</a>
@@ -2480,7 +2491,7 @@ inactivity timeout.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/09/22 14:55:26 $
+<td width="30%" align=right>$Date: 1999/09/22 21:04:17 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
