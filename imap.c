@@ -83,12 +83,16 @@ int imap_ok(int sock, char *argbuf)
 	 * which causes fetchmail to go into a endless loop
 	 * fetching the same message over and over again. 
 	 * 
+	 * However, for check_only, we use EXAMINE which will
+	 * mark the mailbox read-only as per the RFC.
+	 * 
 	 * This checks for the condition and aborts if 
 	 * the mailbox is read-only. 
 	 *
 	 * See RFC 2060 section 6.3.1 (SELECT).
+	 * See RFC 2060 section 6.3.2 (EXAMINE).
 	 */ 
-	else if (strstr(buf, "[READ-ONLY]"))
+	else if (!check_only && strstr(buf, "[READ-ONLY]"))
 	    return(PS_LOCKBUSY);
     } while
 	(tag[0] != '\0' && strncmp(buf, tag, strlen(tag)));
