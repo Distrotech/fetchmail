@@ -383,6 +383,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	numdump("expunge", ctl->expunge);
 	stringdump("properties", ctl->properties);
 	listdump("smtphunt", ctl->smtphunt);
+	listdump("fetchdomains", ctl->domainlist);
 	stringdump("smtpaddress", ctl->smtpaddress);
 	stringdump("smtpname", ctl->smtpname);
 

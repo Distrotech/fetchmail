@@ -59,8 +59,8 @@ extern char * yytext;
 }
 
 %token DEFAULTS POLL SKIP VIA AKA LOCALDOMAINS PROTOCOL
-%token AUTHENTICATE TIMEOUT KPOP SDPS
-%token ENVELOPE QVIRTUAL USERNAME PASSWORD FOLDER SMTPHOST MDA BSMTP LMTP
+%token AUTHENTICATE TIMEOUT KPOP SDPS ENVELOPE QVIRTUAL
+%token USERNAME PASSWORD FOLDER SMTPHOST FETCHDOMAINS MDA BSMTP LMTP
 %token SMTPADDRESS SMTPNAME SPAMRESPONSE PRECONNECT POSTCONNECT LIMIT WARNINGS
 %token NETSEC INTERFACE MONITOR PLUGIN PLUGOUT
 %token IS HERE THERE TO MAP WILDCARD
@@ -286,6 +286,10 @@ smtp_list	: STRING		{save_str(&current.smtphunt, $1,TRUE);}
 		| smtp_list STRING	{save_str(&current.smtphunt, $2,TRUE);}
 		;
 
+domain_list	: STRING		{save_str(&current.domainlist, $1,TRUE);}
+		| domain_list STRING	{save_str(&current.domainlist, $2,TRUE);}
+		;
+
 num_list	: NUMBER
 			{
 			    struct idlist *id;
@@ -309,6 +313,7 @@ user_option	: TO localnames HERE
 		| PASSWORD STRING	{current.password    = xstrdup($2);}
 		| FOLDER folder_list
 		| SMTPHOST smtp_list
+		| FETCHDOMAINS domain_list
 		| SMTPADDRESS STRING	{current.smtpaddress = xstrdup($2);}
 		| SMTPNAME STRING	{current.smtpname = xstrdup($2);}
 		| SPAMRESPONSE num_list

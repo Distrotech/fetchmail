@@ -60,7 +60,7 @@ static int etrn_getrange(int sock, struct query *ctl, const char *id,
      * By default, the hostlist has a single entry, the fetchmail host's
      * canonical DNS name.
      */
-    for (qnp = ctl->smtphunt; qnp; qnp = qnp->next)
+    for (qnp = ctl->domainlist; qnp; qnp = qnp->next)
     {
 	/* ship the actual poll and get the response */
 	gen_send(sock, "ETRN %s", qnp->id);

@@ -45,7 +45,7 @@
 /* makes the open_sink()/close_sink() pair non-reentrant */
 static int lmtp_responses;
 
-static int smtp_open(struct query *ctl)
+int smtp_open(struct query *ctl)
 /* try to open a socket to the appropriate SMTP server for this query */ 
 {
     /* maybe it's time to close the socket in order to force delivery */

@@ -6,6 +6,9 @@
 * Fixes for Debian bugs #101792, #101950.
 * Updated Danish translation by Byrial Jensen.
 * ODMR fixes from Matt Armstrong <matt@lickey.com>.
+* The smtphost option has been split.  It is no longer overloaded to set 
+  the list of domains to be queried in ETRN and ODMR modes.  Instead, use
+  the `fetchdomains' option.
 
 fetchmail-5.8.8 (Wed Jun 20 17:22:26 EDT 2001), 20782 lines:
 

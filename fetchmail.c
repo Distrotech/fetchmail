@@ -780,6 +780,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     list_merge(&h2->localnames, &h1->localnames, force);
     list_merge(&h2->mailboxes, &h1->mailboxes, force);
     list_merge(&h2->smtphunt, &h1->smtphunt, force);
+    list_merge(&h2->domainlist, &h1->domainlist, force);
     list_merge(&h2->antispam, &h1->antispam, force);
 
 #define FLAG_MERGE(fld) if (force ? !!h1->fld : !h2->fld) h2->fld = h1->fld
@@ -1049,6 +1050,12 @@ static int load_params(int argc, char **argv, int optind)
 	     */
 	    if (!ctl->smtphunt)
 		save_str(&ctl->smtphunt, fetchmailhost, FALSE);
+
+	    /*
+	     * Make sure we have a nonempty list of domains to fetch from.
+	     */
+	    if ((ctl->server.protocol==P_ETRN || ctl->server.protocol==P_ODMR) && !ctl->domainlist)
+		save_str(&ctl->domainlist, fetchmailhost, FALSE);
 
 	    /* if `user' doesn't name a real local user, try to run as root */
 	    if ((pw = getpwnam(user)) == (struct passwd *)NULL)
@@ -1580,80 +1587,94 @@ static void dump_params (struct runctl *runp,
 	else
 	    printf(".\n");
 
-	if (MAILBOX_PROTOCOL(ctl)) {
-		if (!ctl->mailboxes->id)
-		    printf(_("  Default mailbox selected.\n"));
-		else
-		{
-		    struct idlist *idp;
+	if (MAILBOX_PROTOCOL(ctl)) 
+	{
+	    if (!ctl->mailboxes->id)
+		printf(_("  Default mailbox selected.\n"));
+	    else
+	    {
+		struct idlist *idp;
 
-		    printf(_("  Selected mailboxes are:"));
-		    for (idp = ctl->mailboxes; idp; idp = idp->next)
-			printf(" %s", idp->id);
-		    printf("\n");
-		}
-		printf(_("  %s messages will be retrieved (--all %s).\n"),
-		       ctl->fetchall ? _("All") : _("Only new"),
-		       ctl->fetchall ? "on" : "off");
-		printf(_("  Fetched messages %s be kept on the server (--keep %s).\n"),
-		       ctl->keep ? _("will") : _("will not"),
-		       ctl->keep ? "on" : "off");
-		printf(_("  Old messages %s be flushed before message retrieval (--flush %s).\n"),
-		       ctl->flush ? _("will") : _("will not"),
-		       ctl->flush ? "on" : "off");
-		printf(_("  Rewrite of server-local addresses is %s (--norewrite %s).\n"),
-		       ctl->rewrite ? _("enabled") : _("disabled"),
-		       ctl->rewrite ? "off" : "on");
-		printf(_("  Carriage-return stripping is %s (stripcr %s).\n"),
-		       ctl->stripcr ? _("enabled") : _("disabled"),
-		       ctl->stripcr ? "on" : "off");
-		printf(_("  Carriage-return forcing is %s (forcecr %s).\n"),
-		       ctl->forcecr ? _("enabled") : _("disabled"),
-		       ctl->forcecr ? "on" : "off");
-		printf(_("  Interpretation of Content-Transfer-Encoding is %s (pass8bits %s).\n"),
-		       ctl->pass8bits ? _("disabled") : _("enabled"),
-		       ctl->pass8bits ? "on" : "off");
-		printf(_("  MIME decoding is %s (mimedecode %s).\n"),
-		       ctl->mimedecode ? _("enabled") : _("disabled"),
-		       ctl->mimedecode ? "on" : "off");
-		printf(_("  Idle after poll is %s (idle %s).\n"),
-		       ctl->idle ? _("enabled") : _("disabled"),
-		       ctl->idle ? "on" : "off");
-		printf(_("  Nonempty Status lines will be %s (dropstatus %s)\n"),
-		       ctl->dropstatus ? _("discarded") : _("kept"),
-		       ctl->dropstatus ? "on" : "off");
-		printf(_("  Delivered-To lines will be %s (dropdelivered %s)\n"),
-		       ctl->dropdelivered ? _("discarded") : _("kept"),
-		       ctl->dropdelivered ? "on" : "off");
+		printf(_("  Selected mailboxes are:"));
+		for (idp = ctl->mailboxes; idp; idp = idp->next)
+		    printf(" %s", idp->id);
+		printf("\n");
+	    }
+	    printf(_("  %s messages will be retrieved (--all %s).\n"),
+		   ctl->fetchall ? _("All") : _("Only new"),
+		   ctl->fetchall ? "on" : "off");
+	    printf(_("  Fetched messages %s be kept on the server (--keep %s).\n"),
+		   ctl->keep ? _("will") : _("will not"),
+		   ctl->keep ? "on" : "off");
+	    printf(_("  Old messages %s be flushed before message retrieval (--flush %s).\n"),
+		   ctl->flush ? _("will") : _("will not"),
+		   ctl->flush ? "on" : "off");
+	    printf(_("  Rewrite of server-local addresses is %s (--norewrite %s).\n"),
+		   ctl->rewrite ? _("enabled") : _("disabled"),
+		   ctl->rewrite ? "off" : "on");
+	    printf(_("  Carriage-return stripping is %s (stripcr %s).\n"),
+		   ctl->stripcr ? _("enabled") : _("disabled"),
+		   ctl->stripcr ? "on" : "off");
+	    printf(_("  Carriage-return forcing is %s (forcecr %s).\n"),
+		   ctl->forcecr ? _("enabled") : _("disabled"),
+		   ctl->forcecr ? "on" : "off");
+	    printf(_("  Interpretation of Content-Transfer-Encoding is %s (pass8bits %s).\n"),
+		   ctl->pass8bits ? _("disabled") : _("enabled"),
+		   ctl->pass8bits ? "on" : "off");
+	    printf(_("  MIME decoding is %s (mimedecode %s).\n"),
+		   ctl->mimedecode ? _("enabled") : _("disabled"),
+		   ctl->mimedecode ? "on" : "off");
+	    printf(_("  Idle after poll is %s (idle %s).\n"),
+		   ctl->idle ? _("enabled") : _("disabled"),
+		   ctl->idle ? "on" : "off");
+	    printf(_("  Nonempty Status lines will be %s (dropstatus %s)\n"),
+		   ctl->dropstatus ? _("discarded") : _("kept"),
+		   ctl->dropstatus ? "on" : "off");
+	    printf(_("  Delivered-To lines will be %s (dropdelivered %s)\n"),
+		   ctl->dropdelivered ? _("discarded") : _("kept"),
+		   ctl->dropdelivered ? "on" : "off");
+	    if (NUM_NONZERO(ctl->limit))
+	    {
 		if (NUM_NONZERO(ctl->limit))
-		{
-		    if (NUM_NONZERO(ctl->limit))
-			printf(_("  Message size limit is %d octets (--limit %d).\n"), 
-			       ctl->limit, ctl->limit);
-		    else if (outlevel >= O_VERBOSE)
-			printf(_("  No message size limit (--limit 0).\n"));
-		    if (run.poll_interval > 0)
-			printf(_("  Message size warning interval is %d seconds (--warnings %d).\n"), 
-			       ctl->warnings, ctl->warnings);
-		    else if (outlevel >= O_VERBOSE)
-			printf(_("  Size warnings on every poll (--warnings 0).\n"));
-		}
-		if (NUM_NONZERO(ctl->fetchlimit))
-		    printf(_("  Received-message limit is %d (--fetchlimit %d).\n"),
-			   ctl->fetchlimit, ctl->fetchlimit);
+		    printf(_("  Message size limit is %d octets (--limit %d).\n"), 
+			   ctl->limit, ctl->limit);
 		else if (outlevel >= O_VERBOSE)
-		    printf(_("  No received-message limit (--fetchlimit 0).\n"));
-		if (NUM_NONZERO(ctl->batchlimit))
-		    printf(_("  SMTP message batch limit is %d.\n"), ctl->batchlimit);
+		    printf(_("  No message size limit (--limit 0).\n"));
+		if (run.poll_interval > 0)
+		    printf(_("  Message size warning interval is %d seconds (--warnings %d).\n"), 
+			   ctl->warnings, ctl->warnings);
 		else if (outlevel >= O_VERBOSE)
-		    printf(_("  No SMTP message batch limit (--batchlimit 0).\n"));
-		if (MAILBOX_PROTOCOL(ctl))
-		{
-		    if (NUM_NONZERO(ctl->expunge))
-			printf(_("  Deletion interval between expunges forced to %d (--expunge %d).\n"), ctl->expunge, ctl->expunge);
-		    else if (outlevel >= O_VERBOSE)
-			printf(_("  No forced expunges (--expunge 0).\n"));
-		}
+		    printf(_("  Size warnings on every poll (--warnings 0).\n"));
+	    }
+	    if (NUM_NONZERO(ctl->fetchlimit))
+		printf(_("  Received-message limit is %d (--fetchlimit %d).\n"),
+		       ctl->fetchlimit, ctl->fetchlimit);
+	    else if (outlevel >= O_VERBOSE)
+		printf(_("  No received-message limit (--fetchlimit 0).\n"));
+	    if (NUM_NONZERO(ctl->batchlimit))
+		printf(_("  SMTP message batch limit is %d.\n"), ctl->batchlimit);
+	    else if (outlevel >= O_VERBOSE)
+		printf(_("  No SMTP message batch limit (--batchlimit 0).\n"));
+	    if (MAILBOX_PROTOCOL(ctl))
+	    {
+		if (NUM_NONZERO(ctl->expunge))
+		    printf(_("  Deletion interval between expunges forced to %d (--expunge %d).\n"), ctl->expunge, ctl->expunge);
+		else if (outlevel >= O_VERBOSE)
+		    printf(_("  No forced expunges (--expunge 0).\n"));
+	    }
+	}
+	else	/* ODMR or ETRN */
+	{
+	    struct idlist *idp;
+
+	    printf(_("  Domains for which mail will be fetched are:"));
+	    for (idp = ctl->domainlist; idp; idp = idp->next)
+	    {
+		printf(" %s", idp->id);
+		if (!idp->val.status.mark)
+		    printf(_(" (default)"));
+	    }
+	    printf("\n");
 	}
 	if (ctl->bsmtp)
 	    printf(_("  Messages will be appended to %s as BSMTP\n"), visbuf(ctl->bsmtp));
@@ -1663,14 +1684,18 @@ static void dump_params (struct runctl *runp,
 	{
 	    struct idlist *idp;
 
-	    printf(_("  Messages will be %cMTP-forwarded to:"), ctl->listener);
-	    for (idp = ctl->smtphunt; idp; idp = idp->next)
+	    if (ctl->smtphunt)
 	    {
-                printf(" %s", idp->id);
-		if (!idp->val.status.mark)
-		    printf(_(" (default)"));
+		printf(_("  Messages will be %cMTP-forwarded to:"), 
+		       ctl->listener);
+		for (idp = ctl->smtphunt; idp; idp = idp->next)
+		{
+		    printf(" %s", idp->id);
+		    if (!idp->val.status.mark)
+			printf(_(" (default)"));
+		}
+		printf("\n");
 	    }
-	    printf("\n");
 	    if (ctl->smtpaddress)
 		printf(_("  Host part of MAIL FROM line will be %s\n"),
 		       ctl->smtpaddress);

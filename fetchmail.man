@@ -352,23 +352,28 @@ match. This can be used to prevent man-in-the-middle attacks.
 .B \-S <hosts>, --smtphost <hosts>
 (Keyword: smtp[host])
 Specify a hunt list of hosts to forward mail to (one or more
-hostnames, comma-separated).  In ETRN mode, set the host that the
-mailserver is asked to ship mail to.  Hosts are tried in list order;
-the first one that is up becomes the forwarding target for the current
-run.  Normally, `localhost' is added to the end of the list as an
-invisible default.  However, when using ETRN or ODMR mode or Kerberos
-authentication, the FQDN of the machine running fetchmail is added to
-the end of the list as an invisible default. Each hostname may have a
-port number following the host name.  The port number is separated
-from the host name by a slash; the default port is 25 (or ``smtp''
-under IPv6).  If you specify an absolute pathname (beginning with a
-/), it will be interpreted as the name of a UNIX socket accepting LMTP
-connections (such as is supported by the Cyrus IMAP daemon) Example:
+hostnames, comma-separated). Hosts are tried in list order; the first
+one that is up becomes the forwarding target for the current run.
+Normally, `localhost' is added to the end of the list as an invisible
+default.  However, when using Kerberos authentication, the FQDN of the
+machine running fetchmail is added to the end of the list as an
+invisible default. Each hostname may have a port number following the
+host name.  The port number is separated from the host name by a
+slash; the default port is 25 (or ``smtp'' under IPv6).  If you
+specify an absolute pathname (beginning with a /), it will be
+interpreted as the name of a UNIX socket accepting LMTP connections
+(such as is supported by the Cyrus IMAP daemon) Example:
 
 	--smtphost server1,server2/2525,server3,/var/imap/socket/lmtp
 
-In ODMR mode, this option specifies the list of domains the ODMR
-server should ship mail for once the connection is turned around.
+This option can be used with ODMR, and will make fetchmail a relay
+between the ODMR server and and SMTP or LMTP receiver.
+.TP 
+.B --fetchdomains <hosts>
+(Keyword: fetchdomains)
+In ETRN or ODMR mode, this option specifies the list of domains the
+server should ship mail for once the connection is turned around.  The
+default is the FQDN of the machine running fetchmail.
 .TP
 .B \-D <domain>, --smtpaddress <domain>
 (Keyword: smtpaddress) 
@@ -1332,6 +1337,9 @@ T}
 smtphost	-S	T{
 Specify smtp host(s) to forward to
 T}
+fetchdomains	\&	T{
+Specify domains for which mail should be fetched
+T}
 smtpaddress	-D	T{
 Specify the domain to be put in RCPT TO lines
 T}
@@ -2152,8 +2160,6 @@ you, switch to IMAP4.
 .PP
 Usuing LMTP with a localname that is not a full email name (containing
 @ and having a host part) will fail.
-.PP
-ODMR is very new.  The ODMR code is untested.
 .PP
 The `principal' option only handles Kerberos IV, not V.
 .PP

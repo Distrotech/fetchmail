@@ -41,7 +41,7 @@
 #define LA_PROTOCOL	17
 #define LA_UIDL		18
 #define LA_PORT		19
-#define LA_AUTH	20
+#define LA_AUTH		20
 #define LA_TIMEOUT	21
 #define LA_ENVELOPE	22
 #define LA_QVIRTUAL     23
@@ -55,37 +55,37 @@
 #define LA_WARNINGS	31
 #define LA_FOLDER	32
 #define LA_SMTPHOST	33
-#define LA_SMTPADDR     34
-#define LA_ANTISPAM	35
-#define LA_BATCHLIMIT	36
-#define LA_FETCHLIMIT	37
-#define LA_EXPUNGE	38
-#define LA_MDA		39
-#define LA_BSMTP	40
-#define LA_LMTP		41
-#define LA_PLUGIN	42
-#define LA_PLUGOUT	43
-#define LA_NETSEC	44
-#define LA_INTERFACE    45
-#define LA_MONITOR      46
-#define LA_CONFIGDUMP	47
-#define LA_YYDEBUG	48
-#define LA_SMTPNAME     49
+#define LA_FETCHDOMAINS	34
+#define LA_SMTPADDR     35
+#define LA_ANTISPAM	36
+#define LA_BATCHLIMIT	37
+#define LA_FETCHLIMIT	38
+#define LA_EXPUNGE	39
+#define LA_MDA		40
+#define LA_BSMTP	41
+#define LA_LMTP		42
+#define LA_PLUGIN	43
+#define LA_PLUGOUT	44
+#define LA_NETSEC	45
+#define LA_INTERFACE    46
+#define LA_MONITOR      47
+#define LA_CONFIGDUMP	48
+#define LA_YYDEBUG	49
+#define LA_SMTPNAME     50
+#define LA_SHOWDOTS	51
+#define LA_PRINCIPAL	52
+#define LA_TRACEPOLLS	53
 
 #ifdef SSL_ENABLE
-#define LA_SSL		50
-#define LA_SSLKEY	51
-#define LA_SSLCERT	52
-#define LA_SSLPROTO 53
-#define LA_SSLCERTCK	54
-#define LA_SSLCERTPATH	55
-#define LA_SSLFINGERPRINT	56
+#define LA_SSL		54
+#define LA_SSLKEY	55
+#define LA_SSLCERT	56
+#define LA_SSLPROTO 	57
+#define LA_SSLCERTCK	58
+#define LA_SSLCERTPATH	59
+#define LA_SSLFINGERPRINT	60
 #endif
 
-#define LA_SHOWDOTS	57
-#define LA_PRINCIPAL	58
-
-#define LA_TRACEPOLLS	59
 
 /* options still left: CDgGhHjJoORwWxXYz */
 static const char *shortoptions = 
@@ -133,6 +133,7 @@ static const struct option longoptions[] = {
 
   {"folder",	required_argument, (int *) 0, LA_FOLDER	     },
   {"smtphost",	required_argument, (int *) 0, LA_SMTPHOST    },
+  {"fetchdomains",	required_argument, (int *) 0, LA_FETCHDOMAINS    },
   {"smtpaddress", required_argument, (int *) 0, LA_SMTPADDR  },
   {"smtpname",  required_argument, (int *) 0, LA_SMTPNAME    },
   {"antispam",	required_argument, (int *) 0, LA_ANTISPAM    },
@@ -488,6 +489,15 @@ struct query *ctl;	/* option record to be initialized */
 		((cp = strtok((char *)NULL, ",")));
 	    ocount++;
 	    break;
+	case LA_FETCHDOMAINS:
+	    xalloca(buf, char *, strlen(optarg) + 1);
+	    strcpy(buf, optarg);
+	    cp = strtok(buf, ",");
+	    do {
+		save_str(&ctl->domainlist, cp, TRUE);
+	    } while
+		((cp = strtok((char *)NULL, ",")));
+	    break;
 	case 'D':
 	case LA_SMTPADDR:
 	    ctl->smtpaddress = xstrdup(optarg);
@@ -687,6 +697,7 @@ struct query *ctl;	/* option record to be initialized */
 	P(_("  -T, --netsec      set IP security request\n"));
 #endif /* NET_SECURITY */
 	P(_("  -S, --smtphost    set SMTP forwarding host\n"));
+	P(_("      --fetchdomains fetch mail for specified domains\n"));
 	P(_("  -D, --smtpaddress set SMTP delivery domain to use\n"));
 	P(_("      --smtpname    set SMTP full name username@domain\n"));
 	P(_("  -Z, --antispam,   set antispam response values\n"));

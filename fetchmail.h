@@ -255,6 +255,7 @@ struct query
 
     /* per-forwarding-target data */
     struct idlist *smtphunt;	/* list of SMTP hosts to try forwarding to */
+    struct idlist *domainlist;	/* domainlist to fetch from */
     char *smtpaddress;		/* address to force in RCPT TO */ 
     char *smtpname;             /* full RCPT TO name, including domain */
     struct idlist *antispam;	/* list of listener's antispam response */
@@ -461,6 +462,7 @@ extern int mytimeout;
 int interruptible_idle(int interval);
 
 /* sink.c: forwarding */
+int smtp_open(struct query *);
 int stuffline(struct query *, char *);
 int open_sink(struct query*, struct msgblk *, int*, int*);
 void release_sink(struct query *);

@@ -103,6 +103,7 @@ user(name)?	{SETSTATE(NAME); return USERNAME; }
 <INITIAL,NAME>pass(word)?	{SETSTATE(NAME); return PASSWORD; }
 folder(s)? 	{ return FOLDER; }
 smtp(host)?	{ return SMTPHOST; }
+fetchdomains	{ return FETCHDOMAINS; }
 smtpaddress	{ return SMTPADDRESS; }
 smtpname	{ return SMTPNAME; }
 antispam	{ return SPAMRESPONSE; }

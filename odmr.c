@@ -74,7 +74,7 @@ static int odmr_getrange(int sock, struct query *ctl, const char *id,
      * canonical DNS name.
      */
     buf[0] = '\0';
-    for (qnp = ctl->smtphunt; qnp; qnp = qnp->next)
+    for (qnp = ctl->domainlist; qnp; qnp = qnp->next)
 	if (strlen(buf) + strlen(qnp->id) + 1 >= sizeof(buf))
 	    break;
 	else
@@ -125,20 +125,12 @@ static int odmr_getrange(int sock, struct query *ctl, const char *id,
 
     /*
      * OK, if we got here it's time to become a pipe between the ODMR
-     * remote server (sending) and the local SMTP daemon (receiving).
-     * We're npt going to try to be a protocol machine; instead, we'll
-     * use select(2) to watch the read sides of both sockets and just
-     * throw their data at each other.
+     * remote server (sending) and the SMTP listener we've designated
+     * (receiving).  We're not going to try to be a protocol machine;
+     * instead, we'll use select(2) to watch the read sides of both
+     * sockets and just throw their data at each other.
      */
-    /*
-     * FIXME: we hardcode "localhost" here because ODMR is fighting
-     * over the ETRN meaning of smtphost and the POP/IMAP meaning.
-     * ODMR needs both meanings, but there is only one config var.  So
-     * for now ODMR always uses the "localhost" SMTP server to connect
-     * with locally.
-     */
-    smtp_sock = SockOpen("localhost", SMTP_PORT, NULL, NULL);
-    if (smtp_sock == -1)
+    if ((smtp_sock = smtp_open(ctl)) == -1)
 	return(PS_SOCKET);
     else
     {
