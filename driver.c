@@ -517,11 +517,11 @@ struct query *ctl;	/* query control record */
 		char	errhd[USERNAMELEN + POPBUFSIZE], *errmsg;
 
 		errmsg = errhd;
-		(void) strcpy(errhd, "X-Fetchmail-Error: ");
+		(void) strcpy(errhd, "X-Fetchmail-Warning: ");
 #ifdef HAVE_RES_SEARCH
 		if (no_local_matches)
 		{
-		    strcat(errhd, "no declared local names matched recipient addresses");
+		    strcat(errhd, "no recipient addresses matched declared local names");
 		    if (bad_addresses)
 			strcat(errhd, "; ");
 		}
