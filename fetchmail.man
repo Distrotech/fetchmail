@@ -1203,6 +1203,7 @@ Legal protocol identifiers for use with the `protocol' keyword are:
     auto (or AUTO)
     pop2 (or POP2)
     pop3 (or POP3)
+    sdps (or SDPS)
     imap (or IMAP)
     imap-k4 (or IMAP-K4)
     imap-gss (or IMAP-GSS)
@@ -1229,7 +1230,7 @@ to force foreground operation. Finally, `set syslog' sends log
 messages to syslogd(8).
 
 .SH INTERACTION WITH RFC 822
-When trying to detertmine the originating address of a message,
+When trying to determine the originating address of a message,
 fetchmail looks through headers in the following order: 
 
         Return-Path:

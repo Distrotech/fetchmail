@@ -922,8 +922,8 @@ int num;		/* index of message */
      * messages in multidrop mode.  if a local address doesn't
      * exist, the bounce message won't be returned blindly to the 
      * author or to the list itself but rather to the list manager
-     * (ex: specified by "Sender:") wich is less anoying.  This is
-     * true for most mailing list packages.
+     * (ex: specified by "Sender:") which is much less annoying.  This 
+     * is true for most mailing list packages.
      */
     if( !return_path[0] ){
 	char *ap = NULL;
