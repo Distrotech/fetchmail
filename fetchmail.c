@@ -1,68 +1,14 @@
-/* Copyright 1993-95 by Carl Harris, Jr.
- * All rights reserved
- *
- * Distribute freely, except: don't remove my name from the source or
- * documentation (don't take credit for my work), mark your changes (don't
- * get me blamed for your possible bugs), don't alter or remove this
- * notice.  May be sold if buildable source is provided to buyer.  No
- * warrantee of any kind, express or implied, is included with this
- * software; use at your own risk, responsibility for damages (if any) to
- * anyone resulting from the use of this software rests entirely with the
- * user.
- *
- * Send bug reports, bug fixes, enhancements, requests, flames, etc., and
- * I'll try to keep a version up to date.  I can be reached as follows:
- * Carl Harris <ceharris@mal.com>
+/* Copyright 1993-95 by Carl Harris, Jr. Copyright 1996 by Eric S. Raymond
+ * All rights reserved.
+ * For license terms, see the file COPYING in this directory.
  */
 
 /***********************************************************************
   module:       popclient.c
   project:      popclient
   programmer:   Carl Harris, ceharris@mal.com
+		Extensively hacked and improved by esr.
   description:	main driver module for popclient
-
-  $Log: fetchmail.c,v $
-  Revision 1.3  1996/06/27 19:22:32  esr
-  Sent to ceharris.
-
-  Revision 1.2  1996/06/26 19:08:59  esr
-  This is what I sent Harris.
-
-  Revision 1.1  1996/06/24 18:32:00  esr
-  Initial revision
-
-  Revision 1.7  1995/09/07 22:37:34  ceharris
-  Preparation for 3.0b4 release.
-
-  Revision 1.6  1995/08/14 18:36:43  ceharris
-  Patches to support POP3's LAST command.
-  Final revisions for beta3 release.
-
-  Revision 1.5  1995/08/10 00:32:39  ceharris
-  Preparation for 3.0b3 beta release:
-  -	added code for --kill/--keep, --limit, --protocol, --flush
-  	options; --pop2 and --pop3 options now obsoleted by --protocol.
-  - 	added support for APOP authentication, including --with-APOP
-  	argument for configure.
-  -	provisional and broken support for RPOP
-  -	added buffering to SockGets and SockRead functions.
-  -	fixed problem of command-line options not being correctly
-  	carried into the merged options record.
-
-  Revision 1.4  1995/08/09 01:32:56  ceharris
-  Version 3.0 beta 2 release.
-  Added
-  -	.poprc functionality
-  -	GNU long options
-  -	multiple servers on the command line.
-  Fixed
-  -	Passwords showing up in ps output.
-
-  Revision 1.3  1995/08/08 01:01:25  ceharris
-  Added GNU-style long options processing.
-  Fixed password in 'ps' output problem.
-  Fixed various RCS tag blunders.
-  Integrated .poprc parser, lexer, etc into Makefile processing.
 
  ***********************************************************************/
 

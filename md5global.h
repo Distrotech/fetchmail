@@ -1,21 +1,8 @@
-/*
+/* Copyright 1993-95 by Carl Harris, Jr. Copyright 1996 by Eric S. Raymond
+ * All rights reserved.
+ * For license terms, see the file COPYING in this directory.
+ *
  * md5global.h    Global declarations for MD5 module used by popclient
- *
- * $Log: md5global.h,v $
- * Revision 1.1  1996/06/28 14:36:11  esr
- * Initial revision
- *
- * Revision 1.2  1995/08/10 00:32:31  ceharris
- * Preparation for 3.0b3 beta release:
- * -	added code for --kill/--keep, --limit, --protocol, --flush
- * 	options; --pop2 and --pop3 options now obsoleted by --protocol.
- * - 	added support for APOP authentication, including --with-APOP
- * 	argument for configure.
- * -	provisional and broken support for RPOP
- * -	added buffering to SockGets and SockRead functions.
- * -	fixed problem of command-line options not being correctly
- * 	carried into the merged options record.
- *
  *
  */
 

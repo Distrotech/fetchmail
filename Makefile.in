@@ -3,6 +3,10 @@
 #	Carl Harris, ceharris@mal.com
 #
 #	$Log: Makefile.in,v $
+#	Revision 1.3  1996/06/28 14:53:20  esr
+#	Licensing and copyright changes pursuant to Carl Harris handing me the
+#	baton.
+#
 #	Revision 1.2  1996/06/26 19:08:55  esr
 #	This is what I sent Harris.
 #
@@ -240,7 +244,7 @@ extra = $(srcdir)/alloca.c $(srcdir)/bzero.[ch] $(srcdir)/errorcodes \
 	$(srcdir)/strcasecmp.c $(srcdir)/strdup.c
 docs = $(srcdir)/README $(srcdir)/INSTALL $(srcdir)/RFC/*.txt \
 	$(srcdir)/*.man $(srcdir)/*.texi $(srcdir)/*.info \
-	$(srcdir)/sample.poprc $(srcdir)/TODO
+	$(srcdir)/sample.poprc $(srcdir)/NEWS
 config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/config.guess \
 	$(srcdir)/config.h.in $(srcdir)/config.sub
 scripts = $(srcdir)/install.sh $(srcdir)/mkinstalldirs

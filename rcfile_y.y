@@ -1,60 +1,15 @@
 %{
-/* Copyright 1993-95 by Carl Harris, Jr.
- * All rights reserved
- *
- * Distribute freely, except: don't remove my name from the source or
- * documentation (don't take credit for my work), mark your changes (don't
- * get me blamed for your possible bugs), don't alter or remove this
- * notice.  May be sold if buildable source is provided to buyer.  No
- * warrantee of any kind, express or implied, is included with this
- * software; use at your own risk, responsibility for damages (if any) to
- * anyone resulting from the use of this software rests entirely with the
- * user.
- *
- * Send bug reports, bug fixes, enhancements, requests, flames, etc., and
- * I'll try to keep a version up to date.  I can be reached as follows:
- * Carl Harris <ceharris@mal.com>
+/* Copyright 1993-95 by Carl Harris, Jr. Copyright 1996 by Eric S. Raymond
+ * All rights reserved.
+ * For license terms, see the file COPYING in this directory.
  */
-
 
 /***********************************************************************
   module:       poprc_y.y
   project:      popclient
   programmer:   Carl Harris, ceharris@mal.com
+		Extensively hacked and fixed by esr.
   description:  .poprc parser
-
-  $Log: rcfile_y.y,v $
-  Revision 1.2  1996/06/26 19:09:01  esr
-  This is what I sent Harris.
-
-  Revision 1.1  1996/06/24 18:17:24  esr
-  Initial revision
-
-  Revision 1.4  1995/08/10 00:32:45  ceharris
-  Preparation for 3.0b3 beta release:
-  -	added code for --kill/--keep, --limit, --protocol, --flush
-  	options; --pop2 and --pop3 options now obsoleted by --protocol.
-  - 	added support for APOP authentication, including --with-APOP
-  	argument for configure.
-  -	provisional and broken support for RPOP
-  -	added buffering to SockGets and SockRead functions.
-  -	fixed problem of command-line options not being correctly
-  	carried into the merged options record.
-
-  Revision 1.3  1995/08/09 01:33:02  ceharris
-  Version 3.0 beta 2 release.
-  Added
-  -	.poprc functionality
-  -	GNU long options
-  -	multiple servers on the command line.
-  Fixed
-  -	Passwords showing up in ps output.
-
-  Revision 1.2  1995/08/08 01:01:36  ceharris
-  Added GNU-style long options processing.
-  Fixed password in 'ps' output problem.
-  Fixed various RCS tag blunders.
-  Integrated .poprc parser, lexer, etc into Makefile processing.
 
  ***********************************************************************/
 

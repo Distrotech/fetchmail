@@ -1,47 +1,13 @@
-/* Copyright 1993-95 by Carl Harris, Jr.
- * All rights reserved
- *
- * Distribute freely, except: don't remove my name from the source or
- * documentation (don't take credit for my work), mark your changes (don't
- * get me blamed for your possible bugs), don't alter or remove this
- * notice.  May be sold if buildable source is provided to buyer.  No
- * warrantee of any kind, express or implied, is included with this
- * software; use at your own risk, responsibility for damages (if any) to
- * anyone resulting from the use of this software rests entirely with the
- * user.
- *
- * Send bug reports, bug fixes, enhancements, requests, flames, etc., and
- * I'll try to keep a version up to date.  I can be reached as follows:
- * Carl Harris <ceharris@mal.com>
+/* Copyright 1993-95 by Carl Harris, Jr. Copyright 1996 by Eric S. Raymond
+ * All rights reserved.
+ * For license terms, see the file COPYING in this directory.
  */
-
 
 /***********************************************************************
   module:       getpass.c
   project:      popclient
   programmer:   Carl Harris, ceharris@mal.com
   description: 	getpass() replacement which allows for long passwords.
-
-  $Log: getpass.c,v $
-  Revision 1.1  1996/06/28 14:33:54  esr
-  Initial revision
-
-  Revision 1.4  1995/08/10 00:32:27  ceharris
-  Preparation for 3.0b3 beta release:
-  -	added code for --kill/--keep, --limit, --protocol, --flush
-  	options; --pop2 and --pop3 options now obsoleted by --protocol.
-  - 	added support for APOP authentication, including --with-APOP
-  	argument for configure.
-  -	provisional and broken support for RPOP
-  -	added buffering to SockGets and SockRead functions.
-  -	fixed problem of command-line options not being correctly
-  	carried into the merged options record.
-
-  Revision 1.3  1995/08/08 01:01:19  ceharris
-  Added GNU-style long options processing.
-  Fixed password in 'ps' output problem.
-  Fixed various RCS tag blunders.
-  Integrated .poprc parser, lexer, etc into Makefile processing.
 
  ***********************************************************************/
 

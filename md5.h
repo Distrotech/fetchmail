@@ -1,28 +1,3 @@
-/*
- * md5.h  header file for MD5 module used by popclient
- *
- * $Log: md5.h,v $
- * Revision 1.1  1996/06/28 14:34:58  esr
- * Initial revision
- *
- * Revision 1.2  1995/08/10 00:32:28  ceharris
- * Preparation for 3.0b3 beta release:
- * -	added code for --kill/--keep, --limit, --protocol, --flush
- * 	options; --pop2 and --pop3 options now obsoleted by --protocol.
- * - 	added support for APOP authentication, including --with-APOP
- * 	argument for configure.
- * -	provisional and broken support for RPOP
- * -	added buffering to SockGets and SockRead functions.
- * -	fixed problem of command-line options not being correctly
- * 	carried into the merged options record.
- *
- * Revision 1.1  1995/08/09 14:27:22  ceharris
- * First revision popclient MD5 support for APOP.  The MD5 code is
- * provided by RSA Data Security.  See notice below.
- *
- *
- */
-
 /* MD5.H - header file for MD5C.C
  */
 
