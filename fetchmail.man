@@ -44,7 +44,7 @@ delivered locally via your system's MDA (Mail Delivery Agent, usually
 as \fIsmail\fR, \fImmdf\fR, \fIexim\fR, or \fIqmail\fR).  All the
 delivery-control mechanisms (such as \fI.forward\fR files) normally
 available through your system MDA and local delivery agents will
-therefore work.
+therefore work automatically.
 .PP
 If no port 25 listener is available, but your fetchmail configuration
 was told about a reliable local MDA, it will use that MDA for local
@@ -2265,4 +2265,7 @@ RFC 2033.
 .TP 5
 GSSAPI:
 RFC 1508.
+.TP 5
+TLS
+RFC 2595.
 
