@@ -611,7 +611,10 @@ struct query *ctl;	/* query control record */
 #endif /* HAVE_SETEUID */
 
 		if (mboxfd < 0)
+		{
+		    fprintf(stderr, "fetchmail: MDA open failed\n");
 		    return(PS_IOERR);
+		}
 	    }
 	    else
 	    {
@@ -623,15 +626,22 @@ struct query *ctl;	/* query control record */
 			close(mboxfd);
 			mboxfd = -1;
 			free_uid_list(&xmit_names);
+			fprintf(stderr, "fetchmail: SMTP connect failed\n");
 			return(PS_SMTP);
 		    }
 
 		if (SMTP_from(mboxfd, nxtaddr(fromhdr)) != SM_OK)
+		{
+		    fprintf(stderr, "fetchmail: SMTP listener is confused\n");
 		    return(PS_SMTP);
+		}
 
 		for (idp = xmit_names; idp; idp = idp->next)
 		    if (SMTP_rcpt(mboxfd, idp->id) != SM_OK)
+		    {
+			fprintf(stderr, "fetchmail: SMTP listener is upset\n");
 			return(PS_SMTP);
+		    }
 
 		SMTP_data(mboxfd);
 		if (outlevel == O_VERBOSE)
@@ -659,7 +669,7 @@ struct query *ctl;	/* query control record */
 	    {
 		free(headers);
 		headers = NULL;
-		perror("gen_readmsg: writing RFC822 headers");
+		perror("fetchmail: writing RFC822 headers");
 		return(PS_IOERR);
 	    }
 	    else if (outlevel == O_VERBOSE)
@@ -687,7 +697,7 @@ struct query *ctl;	/* query control record */
 	    free(bufp);
 	if (n < 0)
 	{
-	    perror("gen_readmsg: writing message text");
+	    perror("fetchmail: writing message text");
 	    return(PS_IOERR);
 	}
 	else if (outlevel == O_VERBOSE)
