@@ -31,7 +31,6 @@
 #endif /* HAVE_SETRLIMIT */
 #include <sys/utsname.h>
 
-#include "getopt.h"
 #include "fetchmail.h"
 #include "socket.h"
 #include "tunable.h"
