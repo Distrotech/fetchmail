@@ -148,7 +148,7 @@ int main (int argc, char **argv)
 	sprintf(tmpbuf, "%s/fetchmail.pid", PID_DIR);
     else {
 	strcpy(tmpbuf, home);
-	strcat(tmpbuf, "/.fetchmail");
+	strcat(tmpbuf, "/.fetchmail.pid");
     }
 
     /* perhaps we just want to check options? */

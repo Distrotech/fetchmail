@@ -1435,7 +1435,7 @@ UIDL command).
 your FTP run control file, which (if present) will be searched for
 passwords as a last resort before prompting for one interactively.
 .TP 5
-~/.fetchmail
+~/.fetchmail.pid
 lock file to help prevent concurrent runs (non-root mode).
 .TP 5
 /var/run/fetchmail.pid
