@@ -369,7 +369,6 @@ struct query *ctl;	/* option record to be initialized */
 	    ctl->server.port = xatoi(optarg, &errflag);
 #endif /* INET6 */
 	    break;
-	case 'A':
 	case LA_PREAUTH:
 	    if (strcmp(optarg, "password") == 0)
 		ctl->server.preauthenticate = A_PASSWORD;
@@ -585,7 +584,7 @@ struct query *ctl;	/* option record to be initialized */
 	P(_("  -p, --protocol    specify retrieval protocol (see man page)\n"));
 	P(_("  -U, --uidl        force the use of UIDLs (pop3 only)\n"));
 	P(_("  -P, --port        TCP/IP service port to connect to\n"));
-	P(_("  -A, --preauth     preauthentication type (password or kerberos)\n"));
+	P(_("      --preauth     preauthentication type (password or kerberos)\n"));
 	P(_("  -t, --timeout     server nonresponse timeout\n"));
 	P(_("  -E, --envelope    envelope address header\n"));
 	P(_("  -Q, --qvirtual    prefix to remove from local user id\n"));
@@ -608,7 +607,7 @@ struct query *ctl;	/* option record to be initialized */
 	P(_("  -b, --batchlimit  set batch limit for SMTP connections\n"));
 	P(_("  -B, --fetchlimit  set fetch limit for server connections\n"));
 	P(_("  -e, --expunge     set max deletions between expunges\n"));
-        P(_("      --mda         set MDA to use for forwarding\n"));
+        P(_("  -m, --mda         set MDA to use for forwarding\n"));
         P(_("      --bsmtp       set output BSMTP file\n"));
         P(_("      --lmtp        use LMTP (RFC2033) for delivery\n"));
 	P(_("  -r, --folder      specify remote folder name\n"));

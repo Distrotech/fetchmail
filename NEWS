@@ -14,6 +14,7 @@ fetchmail-5.1.1 ():
 * Fix lexer to permit `antispam -1'.
 * John Cigas's delay patch to avoid a timing problem with plugins.
 * During IMAP authentication, canonicalize both name and password.
+* -A has been retired (goes with authenticate -> preauthenticate change).
 
 There are 266 people on fetchmail-friends and 444 on fetchmail-announce.
 
