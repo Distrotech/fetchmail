@@ -418,11 +418,11 @@ int main (int argc, char **argv)
 
 		querystatus = query_host(ctl);
 
-		if (querystatus == PS_SUCCESS)
+		if (querystatus == PS_SUCCESS) {
 		    successes++;
-
-		if (!check_only)
-		    update_str_lists(ctl);
+		    if (!check_only)
+		      update_str_lists(ctl);
+		}
 #ifdef	linux
 		if (ctl->server.monitor)
 		    {
