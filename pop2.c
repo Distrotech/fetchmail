@@ -308,7 +308,7 @@ int socket;
   char buf [POPBUFSIZE];
  
   /* read the greeting from the server */
-  if (SockGets(socket, buf, sizeof(buf)) == 0) {
+  if (SockGets(socket, buf, sizeof(buf)) >= 0) {
 
     /* echo the server's greeting to the user */
     if (outlevel > O_SILENT)
@@ -353,7 +353,7 @@ int socket;
   char buf [POPBUFSIZE];
 
   /* read the NMBR (#ccc) message from the server */
-  if (SockGets(socket, buf, sizeof(buf)) == 0) {
+  if (SockGets(socket, buf, sizeof(buf)) >= 0) {
 
     /* is the message in the proper format? */
     if (*buf == '#') {
@@ -402,7 +402,7 @@ int socket;
   char buf [POPBUFSIZE];
 
   /* read the SIZE message (=ccc) from the server */
-  if (SockGets(socket, buf, sizeof(buf)) == 0) 
+  if (SockGets(socket, buf, sizeof(buf)) >= 0) 
     /* is the message in the correct format? */
     if (*buf == '=') {
       msgsize = atoi(buf + 1);

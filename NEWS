@@ -8,13 +8,13 @@ Option to enable EMACS-like user folder versioning on each run.
 
 S/key for secure challenge-response.
 
-Implement IMAP support.
-
 3.1:
 
 * MDA arguments are now dumped when using the -V option.
 
 * Sendmail delivery from background seems to work now.
+
+* We have IMAP2bis/IMAP4 suppport.
 
 3.05:
 

@@ -76,17 +76,21 @@ int socket;
 char *buf;
 int len;
 {
+    int rdlen = 0;
+
     while (--len)
     {
         if (SockInternalRead(socket, buf, 1) != 1)
             return -1;
+        else
+	    rdlen++;
         if (*buf == '\n')
             break;
         if (*buf != '\r') /* remove all CRs */
             buf++;
     }
     *buf = 0;
-    return 0;
+    return rdlen;
 }
 
 int SockPuts(socket,buf)

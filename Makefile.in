@@ -62,15 +62,15 @@ TEXI2DVI = texi2dvi
 ETAGS = etags -tw
 CTAGS = ctags -tw
 
-popobjs = socket.o getpass.o pop2.o pop3.o popclient.o options.o	\
+popobjs = socket.o getpass.o pop2.o pop3.o imap.o popclient.o options.o	\
        poprc_l.o poprc_y.o poprc.o daemon.o xmalloc.o
 
 objs = $(popobjs) $(EXTRAOBJ) $(extras)
 
 srcs = $(srcdir)/socket.c $(srcdir)/getpass.c $(srcdir)/pop2.c 		\
-       $(srcdir)/pop3.c $(srcdir)/popclient.c $(srcdir)/options.c	\
-       $(srcdir)/poprc.c $(srcdir)/daemon.c $(srcdir)/xmalloc.c		\
-       $(EXTRASRC)
+       $(srcdir)/pop3.c $(srcdir)/imap.c $(srcdir)/popclient.c		\
+       $(srcdir)/options.c $(srcdir)/poprc.c $(srcdir)/daemon.c 	\
+       $(srcdir)/xmalloc.c $(EXTRASRC)
 
 .SUFFIXES:
 .SUFFIXES: .o .c .h .y .l .ps .dvi .info .texi

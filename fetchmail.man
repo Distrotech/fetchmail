@@ -3,18 +3,20 @@
 .\" For license terms, see the file COPYING in this directory.
 .TH popclient LOCAL
 .SH NAME
-popclient \- retrieve mail from a mailserver using Post Office Protocol.
+popclient \- retrieve mail from a mailserver using POP or IMAP
 .SH SYNOPSIS
 .B popclient
 [\fI options \fR] \fI [server-host...]\fR
 .SH DESCRIPTION
 .I popclient
-is a Post Office Protocol compliant mail retrieval client which supports 
-both POP2 (as specified in RFC 937) and POP3 (RFC 1725).
+is a mail retrieval client which supports 
+POP2 (as specified in RFC 937), POP3 (RFC 1725), IMAP2bis (as
+implemented by the 4.4BSD imapd program), and IMAP4 (RFC1730).
 .PP
-Typically,
+The,
 .I popclient
-will be used to download mail in batch from the remote mailserver specified by
+program may be used to download mail in batch from the remote
+mailserver specified by
 .I host
 to a mail folder on the local disk.  The retrieved mail can then be 
 manipulated using a local mail reader, such as
@@ -39,7 +41,7 @@ Each server name that you specify (following the options on the
 command line) will be queried.  If you don't specify any servers
 on the command line, each server in your 
 .I ~/.poprc
-file will be operated on.
+file will be queried.
 .TP
 .B \-2
 Use Post Office Protocol version 2 (POP2).  See also the 
@@ -91,8 +93,9 @@ is compiled with the KEEP_IS_DEFAULT option, the
 option forces retrieved mail to be deleted.
 .TP
 .B \-l lines, --limit lines
-POP3 only.  Retrieve no more than the specified number of lines of each
-message body (plus message headers).  The
+POP3 and IMAP only.  Retrieve no more than the specified number of
+lines (POP3) or characters (IMAP) of each message body (plus message
+headers). The
 .B keep
 option is implied by the
 .B limit
@@ -113,6 +116,8 @@ mailserver.
 .I proto 
 may be one of the following:
 .RS
+.IP IMAP
+IMAP2bis, a compatible subset of IMAP4.
 .IP POP2 
 Post Office Protocol 2
 .IP POP3
@@ -136,11 +141,12 @@ is specified, retrieved messages are appended to the system default mail
 folder. See OUTPUT OPTIONS below for a complete description.
 .TP
 .B \-r folder, --remote folder
-Causes an alternate mail folder on the mailserver to be retrieved.  The
-syntax of the folder name is server dependent, as is the default behavior
-when no folder is specified.  Fortunately, most POP servers have a reasonable
-default behavior, so use of this option should be limited to fairly specialized
-applications.  POP3 does not provide a folder specification in the protocol.
+Causes an alternate mail folder on the mailserver to be retrieved.
+The syntax of the folder name is server dependent, as is the default
+behavior when no folder is specified.  Fortunately, most POP2 and IMAP
+servers have a reasonable default behavior, so use of this option
+should be limited to fairly specialized applications.  POP3 does not
+provide a folder specification in the protocol.
 If the
 .B remote
 option is used in conjunction with the POP3 protocol, the remote folder 
@@ -529,9 +535,9 @@ queries more than one host, the returned status is that of the last
 host queried.
 .SH AUTHOR
 .I popclient
-was written by Carl Harris at Virginia Polytechnic Institute and State   
+was originated by Carl Harris at Virginia Polytechnic Institute and State   
 University (a.k.a. Virginia Tech).  Version 3.0 was extensively improved
-by Eric S. Raymond <esr@snark.thyrsus.com> and is now maintained by esr..
+by Eric S. Raymond <esr@snark.thyrsus.com> and is now maintained by esr.
 .PP
 .SH FILES
 .TP 5
@@ -542,10 +548,12 @@ default location of file associating hosts with last message IDs seen
 (used only with newer RFC1725-compliant servers supporting the UIDL command).
 .SH BUGS
 .PP
+The --remotefolder option doesn't work with POP3.
+.PP
 The UIDL support for RFC1725-compliant servers without LAST is not yet
 very well tested.
 .PP
-No IMAP or RPOP support yet.
+No RPOP support yet.
 .PP
 Send comments, bug reports, gripes, and the like to Eric S. Raymond
 <esr@thyrsus.com>.

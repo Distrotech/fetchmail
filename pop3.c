@@ -145,7 +145,7 @@ struct hostrec *queryctl;
      */ 
     if (use_uidl && queryctl->lastid[0]) {
       if ((ok = POP3_sendUIDL(-1, socket, 0)) == 0) {
-          while (SockGets(socket, buf, sizeof(buf)) == 0) {
+          while (SockGets(socket, buf, sizeof(buf)) >= 0) {
 	    if (outlevel == O_VERBOSE)
 	      fprintf(stderr,"%s\n",buf);
 	    if (strcmp(buf, ".\n") == 0) {
@@ -325,7 +325,7 @@ int socket;
   char buf [POPBUFSIZE];
   char *bufp;
 
-  if (SockGets(socket, buf, sizeof(buf)) == 0) {
+  if (SockGets(socket, buf, sizeof(buf)) >= 0) {
     if (outlevel == O_VERBOSE)
       fprintf(stderr,"%s\n",buf);
 

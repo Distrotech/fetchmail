@@ -290,6 +290,9 @@ struct hostrec *queryctl;
   case P_APOP:
     return(doPOP3(queryctl));
     break;
+  case P_IMAP:
+    return(doIMAP(queryctl));
+    break;
   default:
     fprintf(stderr,"popclient: unsupported protocol selected.\n");
     return(PS_PROTOCOL);
