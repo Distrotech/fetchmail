@@ -2,7 +2,7 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
-fetchmail-5.3.7 (Fri Apr 21 03:47:14 EDT 2000), 18977 lines:
+fetchmail-5.3.8 (Fri Apr 21 03:47:14 EDT 2000), 18977 lines:
 
 * Fixed brown-paper-bag bugs involving rcfile name initialization.
 * In fetchmailconf, don't permit editing of a blank server entry.
