@@ -351,6 +351,14 @@ Only one daemon process is permitted per user; in daemon mode,
 makes a per-user lockfile to guarantee this.  The option
 .B --quit
 will kill a running daemon process.
+.PP
+The
+.B -L
+or
+.B --logfile
+option allows you to redirect status messages emitted while in daemon
+mode into a specified logfile (follow the option with the logfile name).
+This is primarily useful for debugging configurations.
 .SH THE POPRC FILE
 The preferred way to set up popclient (and the only way if you want to
 specify a password) is to write a .poprc file in your home directory.
@@ -525,9 +533,6 @@ by Eric S. Raymond <esr@snark.thyrsus.com> and is now maintained by esr..
 .SH BUGS
 .PP
 The --version option doesn't display MDA arguments.
-.PP
-The (undocumented) --logfile option doesn't work, due to some weirdness
-in the daemon code.  Fixes cheerfully accepted.
 .PP
 Delivery via
 .IR sendmail (8)
