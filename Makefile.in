@@ -268,12 +268,15 @@ docs = $(srcdir)/COPYING $(srcdir)/FEATURES $(srcdir)/fetchmail-features.html \
 	$(srcdir)/*.man	$(srcdir)/FAQ $(srcdir)/fetchmail-FAQ.html
 config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/configure \
 	$(srcdir)/config.guess $(srcdir)/config.h.in $(srcdir)/config.sub \
-	$(srcdir)/acconfig.h $(srcdir)/aclocal.m4
+	$(srcdir)/acconfig.h $(srcdir)/aclocal.m4 $(srcdir)/fetchmail.spec 
 scripts = $(srcdir)/install-sh $(srcdir)/missing $(srcdir)/mkinstalldirs \
 	$(srcdir)/specgen.sh $(srcdir)/fetchmailconf
 all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) \
 	$(srcdir)/rh-config/* $(srcdir)/contrib/*[A-Za-uw-z] \
 	$(srcdir)/po/* $(srcdir)/intl $(srcdir)/beos/* ABOUT-NLS $(srcdir)/MANIFEST
+
+fetchmail.spec: Makefile.in
+	specgen.sh $(VERSION) >fetchmail.spec
 
 MANIFEST: $(srcdir) Makefile.in
 	@echo $(all) | tr "[ \t]" '\n' | sed -e '/^\.\//s///' | sort >MANIFEST
@@ -317,17 +320,6 @@ fetchmail-$(VERSION).tar.gz: $(all)
 	(cd ..; tar $(EX) -czf fetchmail-$(VERSION).tar.gz `sed <fetchmail-$(VERSION)/MANIFEST s:^:fetchmail-$(VERSION)/:`)
 	mv -f ../fetchmail-$(VERSION).tar.gz .
 	rm ../fetchmail-$(VERSION)
-
-# Make RPMs.  You need to be root to make this work
-RPMROOT=/usr/src/redhat
-RPM = rpmbuild
-RPMFLAGS = -ba
-rpm: dist
-	cp fetchmail-$(VERSION).tar.gz fetchmail.xpm $(RPMROOT)/SOURCES;
-	$(srcdir)/specgen.sh $(VERSION) >$(RPMROOT)/SPECS/fetchmail.spec
-	cd $(RPMROOT)/SPECS; $(RPM) $(RPMFLAGS) fetchmail.spec	
-	cp $(RPMROOT)/RPMS/`arch|sed 's/i[4-9]86/i386/'`/fetchmail*-$(VERSION)*.rpm $(srcdir)
-	cp $(RPMROOT)/SRPMS/fetchmail*-$(VERSION)*.src.rpm $(srcdir)
 
 # The following sets edit modes for GNU EMACS.
 # Local Variables:
