@@ -22,6 +22,7 @@
 fetchmail-4.0.5 ()
 * Increased %o in the Lex source to cope with Ultrix lex.
 * RPMs are now built with --without-OPIE to avoid validation problems.
+* Channge in computation of true name to avoid HELO (null) bug.
 
 fetchmail-4.0.4 (Mon Jul 28 23:38:20 EDT 1997)
 * Overhauled the build machinery.

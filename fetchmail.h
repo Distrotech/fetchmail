@@ -100,9 +100,7 @@ struct hostdata		/* shared among all user connections to given server */
 
     /* computed for internal use */
     int poll_count;			/* count of polls so far */
-#ifdef HAVE_GETHOSTBYNAME
-    char *canonical_name;		/* DNS canonical name of server host */
-#endif /* HAVE_GETHOSTBYNAME */
+    char *truename;			/* "true name" of server host */
     struct hostdata *lead_server;	/* ptr to lead query for this server */
     int esmtp_options;
 };

@@ -356,6 +356,32 @@ int main (int argc, char **argv)
 		    continue;
 #endif /* linux */
 
+	    /*
+	     * How we compute the true mailhost name to pass to the
+	     * listener doesn't affect behavior on RFC1123- violating
+	     * listener that check for name match; we're going to lose
+	     * on those anyway because we can never give them a name
+	     * that matches the local machine fetchmail is running on.
+	     * What it will affect is the listener's logging.
+	     *
+	     * If we have the mailserver's canonical FQDN that is clearly
+	     * the right thing to log.  If we don't life is more complicated.
+	     * The problem is there are two clashing cases:
+	     *
+	     * (1) The poll name is a label.  In that case we want the
+	     * log to show the via or true mailserver name.
+	     *
+	     * (2) The poll name is the true one, the via name is localhost.
+	     * This is going to be typical for ssh-using configurations.
+	     *
+	     * We're going to assume the via name is true unless it's
+	     * localhost.
+	     */
+	    if (ctl->server.via && strcmp(ctl->server.via, "localhost"))
+		ctl->server.truename = xstrdup(ctl->server.via);
+	    else
+		ctl->server.truename = xstrdup(ctl->server.names->id);
+
 #ifdef HAVE_GETHOSTBYNAME
 		/*
 		 * This functions partly as an optimization and partly
@@ -368,7 +394,7 @@ int main (int argc, char **argv)
 
 		    /* compute the canonical name of the host */
 		    errno = 0;
-		    namerec = gethostbyname(ctl->server.names->id);
+		    namerec = gethostbyname(ctl->server.truename);
 		    if (namerec == (struct hostent *)NULL)
 		    {
 			error(0, errno,
@@ -387,8 +413,8 @@ int main (int argc, char **argv)
 		    }
 		    else
 		    {
-			free(ctl->server.canonical_name);
-			ctl->server.canonical_name = xstrdup((char *)namerec->h_name);
+			free(ctl->server.truename);
+			ctl->server.truename=xstrdup((char *)namerec->h_name);
 		    }
 		}
 #endif /* HAVE_GETHOSTBYNAME */
@@ -790,10 +816,8 @@ void dump_params (struct query *ctl)
     if (ctl->server.interval)
 	printf("  Poll of this server will occur every %d intervals.\n",
 	       ctl->server.interval);
-#ifdef HAVE_GETHOSTBYNAME
-    if (ctl->server.canonical_name)
-	printf("  Canonical DNS name of server is %s.\n", ctl->server.canonical_name);
-#endif /* HAVE_GETHOSTBYNAME */
+    if (ctl->server.truename)
+	printf("  True name of server is %s.\n", ctl->server.truename);
     if (ctl->server.names->next)
     {
 	struct idlist *idp;
