@@ -6,7 +6,7 @@
  * For license terms, see the file COPYING in this directory.
  */
 
-#include <config.h>
+#include "config.h"
 #include "fetchmail.h"
 #include "rcfile_y.h"
 

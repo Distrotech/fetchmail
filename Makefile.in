@@ -106,9 +106,8 @@ fetchmail: $(objs)
 rfc822: rfc822.c
 	gcc -DTESTMAIN -g rfc822.c -o rfc822
 
-# -I. is needed to find config.h in the build directory.
 .c.o:
-	$(CC) $(defines) -c -I. -I$(srcdir) $(CFLAGS) $< $(OUTPUT_OPTION)
+	$(CC) $(defines) -c -I$(srcdir) $(CFLAGS) $< $(OUTPUT_OPTION)
 
 # lex rule
 .l.o:

@@ -5,7 +5,7 @@
  * For license terms, see the file COPYING in this directory.
  */
 
-#include  <config.h>
+#include  "config.h"
 #include  <stdio.h>
 #include  <string.h>
 #include  <ctype.h>

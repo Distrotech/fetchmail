@@ -4,15 +4,13 @@
  * For license terms, see the file COPYING in this directory.
  */
 
-#include <config.h>
+#include "config.h"
 
 #include <stdio.h>
-
 #if defined(STDC_HEADERS)
 #include <stdlib.h>
 #include <string.h>
 #endif
-
 #if defined(HAVE_UNISTD_H)
 #include <unistd.h>
 #endif
