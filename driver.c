@@ -50,7 +50,7 @@ char *buf;		/* header to be hacked */
 const char *host;	/* server hostname */
 {
     const char *from;
-    int state = 0;
+    int state = 0, tokencount = 0;
     char mycopy[POPBUFSIZE+1];
 
     if (strncmp("From: ", buf, 6)
@@ -73,24 +73,36 @@ const char *host;	/* server hostname */
 
 	case 1:   /* we've seen the colon, we're looking for addresses */
 	    if (*from == '"')
-		state = 2;
+		state = 3;
 	    else if (*from == '(')
-		state = 3;    
+		state = 4;    
 	    else if (*from == '<' || isalnum(*from))
-		state = 4;
+		state = 5;
+	    else if (isspace(*from))
+		state = 2;
 	    break;
 
-	case 2:   /* we're in a quoted human name, copy and ignore */
+	case 2:	    /* found a token boundary -- reset without copying */
+
+	    if (*from != ' ' && *from != '\t')
+	    {
+		tokencount++;
+		state = 1;
+		--from;
+		continue;
+	    }
+
+	case 3:   /* we're in a quoted human name, copy and ignore */
 	    if (*from == '"')
 		state = 1;
 	    break;
 
-	case 3:   /* we're in a parenthesized human name, copy and ignore */
+	case 4:   /* we're in a parenthesized human name, copy and ignore */
 	    if (*from == ')')
 		state = 1;
 	    break;
 
-	case 4:   /* the real work gets done here */
+	case 5:   /* the real work gets done here */
 	    /*
 	     * We're in something that might be an address part,
 	     * either a bare unquoted/unparenthesized text or text
@@ -98,7 +110,7 @@ const char *host;	/* server hostname */
 	     */
 	    /* if the address part contains an @, don't mess with it */
 	    if (*from == '@')
-		state = 5;
+		state = 6;
 
 	    /* If the address token is not properly terminated, ignore it. */
 	    else if (*from == ' ' || *from == '\t')
@@ -124,10 +136,9 @@ const char *host;	/* server hostname */
 	    /*
 	     * On proper termination with no @, insert hostname.
 	     * Case '>' catches <>-enclosed mail IDs.  Case ',' catches
-	     * comma-separated bare IDs.  Cases \r and \n catch the case
-	     * of a single ID alone on the line.
+	     * comma-separated bare IDs.
 	     */
-	    else if (strchr(">,\r\n", *from))
+	    else if (strchr(">,", *from))
 	    {
 		strcpy(buf, "@");
 		strcat(buf, host);
@@ -135,10 +146,19 @@ const char *host;	/* server hostname */
 		state = 1;
 	    }
 
+	    /* a single local name alone on the line */
+	    else if (*from == '\n' && tokencount == 0)
+	    {
+		strcpy(buf, "@");
+		strcat(buf, host);
+		buf += strlen(buf);
+		state = 2;
+	    }
+
 	    /* everything else, including alphanumerics, just passes through */
 	    break;
 
-	case 5:   /* we're in a remote mail ID, no need to append hostname */
+	case 6:   /* we're in a remote mail ID, no need to append hostname */
 	    if (*from == '>' || *from == ',' || isspace(*from))
 		state = 1;
 	    break;
