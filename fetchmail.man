@@ -519,10 +519,11 @@ or reverse it by saying `user esr here is eric there'
 .PP
 For backward compatibility, the word `server' is a syninym for `poll'.
 .PP
-There is currently only one valid global option statement; it is 
+There are currently two valid global option statements; 
 \&`set batchlimit = ' followed by a number and sets the same global
-specified by the --batchlimit option.  (The command line option
-can override this.)
+specified by the --batchlimit option, and `set logfile = ' followed 
+by a string sets the same global specified by --logfile.  In both
+cases, a command-line option will override.
 .PP
 Basic format is:
 

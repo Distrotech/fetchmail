@@ -43,7 +43,7 @@ static void prc_reset();
 
 %token DEFAULTS POLL SKIP AKA PROTOCOL AUTHENTICATE TIMEOUT KPOP KERBEROS
 %token USERNAME PASSWORD FOLDER SMTPHOST MDA IS HERE THERE TO MAP LIMIT
-%token SET BATCHLIMIT 
+%token SET BATCHLIMIT LOGFILE
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
@@ -65,6 +65,7 @@ statement_list	: statement
 
 /* future global options should also have the form SET <name> <value> */
 statement	: SET BATCHLIMIT MAP NUMBER	{batchlimit = $4;}
+		| SET LOGFILE STRING		{logfile = xstrdup($3);}
 
 /* 
  * The way the next two productions are written depends on the fact that

@@ -141,7 +141,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'L':
 	case LA_LOGFILE:
-	    logfile = optarg;
+	    cmd_logfile = optarg;
 	    break;
 	case 'f':
 	case LA_RCFILE:

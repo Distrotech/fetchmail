@@ -142,6 +142,7 @@ extern char *logfile;		/* log file for daemon mode */
 extern int quitmode;		/* if --quit was set */
 extern int check_only;		/* if --check was set */
 extern int cmd_batchlimit;	/* if --batchlimit was set */
+extern char *cmd_logfile;	/* if --logfile was set */
 
 /* these get computed */
 extern int batchlimit;		/* if --batchlimit was set */

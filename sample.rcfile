@@ -56,6 +56,7 @@
 # Legal global option statements are
 #
 #   set batchlimit =		-- must be followed by a number
+#   set logfile =		-- must be followed by a string
 #
 # The noise keywords `and', `with', `has', `wants', and `options' are ignored
 # anywhere in an entry; they can be used to make it resemble English.  The
