@@ -13,6 +13,7 @@ fetchmail-5.0.2 ():
   ships DSNs when that bit is set (HP OpenMail does this).
 * Delay between POP3 subsessions to allow the server time to release locks.
 * Improved environment-query logic to handle mutiple names per UID.
+* FAQ now includes the location of SSL patches.
 
 There are 255 people on fetchmail-friends and 374 on fetchmail-announce.
 
