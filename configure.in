@@ -361,7 +361,7 @@ AC_ARG_WITH(ssl,
 	[  --with-ssl=[DIR]        enable SSL support using libraries in DIR],
 	[with_ssl=$withval],
 	[with_ssl=no])
-test "$with_netsec" = "yes" && AC_DEFINE(SSL_ENABLE)
+test "$with_ssl" = "yes" && AC_DEFINE(SSL_ENABLE)
 
 if test "$with_ssl" = "yes"
 then

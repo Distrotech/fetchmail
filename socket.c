@@ -126,6 +126,7 @@ int SockOpen(const char *host, const char *service, const char *options,
     void *request = NULL;
     int requestlen;
 #endif /* NET_SECURITY */
+    int i;
 
 #ifdef HAVE_SOCKETPAIR
     if (plugin)

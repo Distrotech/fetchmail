@@ -9,6 +9,10 @@ a Certifying Authority we recognize?).
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Added FAQ item R10 on timeouts during messages.
+* Fixed indentation problem in fetchmailconf.
+* Federico Schwindt's patch to fix broken SSL configuration.
+
 fetchmail-5.2.0 (Tue Nov 30 14:24:25 EST 1999), 18302 lines:
 * fetchmailconf now complains and exits gracefully when not run under X.
 * configure.in port patch for OpenBSD from Federico G. Schwindt.
