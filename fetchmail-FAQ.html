@@ -16,7 +16,7 @@ content="Frequently asked questions about fetchmail."/>
 Page</a></td>
 <td width="30%" align="center">To <a href="/~esr/sitemap.html">Site
 Map</a></td>
-<td width="30%" align="right">$Date: 2003/02/28 11:26:48 $</td>
+<td width="30%" align="right">$Date: 2003/07/17 18:48:50 $</td>
 </tr>
 </table>
 
@@ -222,7 +222,7 @@ same?</a><br/>
 <a href="#O11">O11. I keep getting messages that say "Repoll
 immediately" in my logs.</a><br/>
 <a href="#O12">O12. Fetchmail no longer expunges mail on a 451 SMTP response.</a><br/>
-
+<a href="#O13">O13. I want timestamp information in my fetchmail logs.</a>
 
 <h1>Answers:</h1>
 
@@ -3461,9 +3461,15 @@ dns errors.</p>
 Page</a></td>
 <td width="30%" align="center">To <a href="/~esr/sitemap.html">Site
 Map</a></td>
-<td width="30%" align="right">$Date: 2003/02/28 11:26:48 $</td>
+<td width="30%" align="right">$Date: 2003/07/17 18:48:50 $</td>
 </tr>
 </table>
+
+<hr />
+<h2><a name="#O13">O13. I want timestamp information in my fetchmail logs.</a></h2>
+
+<p>Write a <code>preconnect</connect> command in your configuration file that
+does something like "date >> $HOME/Procmail/fetchmail.log".</p>
 
 <br clear="left"/>
 <address>Eric S. Raymond <a
