@@ -1070,16 +1070,15 @@ static int load_params(int argc, char **argv, int optind)
 		{
 		    char	*cp;
 
-		    if ((cp = strrchr(idp->id, '/')))
-		    {
+		    if (!(cp = strrchr(idp->id, '/')) ||
 #ifdef INET6 
-			if (strcmp(++cp, SMTP_PORT) == 0)
+				(strcmp(++cp, SMTP_PORT) == 0))
 #else
-			if (atoi(++cp) == SMTP_PORT)
+				(atoi(++cp) == SMTP_PORT))
 #endif /* INET6 */
 			{
 			    (void) fprintf(stderr,
-					   "%s configuration invalid, LMTP can't use SMTP port\n",
+					   "%s configuration invalid, LMTP can't use default SMTP port\n",
 					   ctl->server.pollname);
 			    exit(PS_SYNTAX);
 			}
