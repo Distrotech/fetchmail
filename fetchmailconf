@@ -1254,6 +1254,13 @@ Therefore, it is strongly recommended that you turn on `fetchall' on all
 user entries associated with this server.  
 
 """
+            if string.find(greetline, " Novonyx POP3") > 0:
+                warnings = warnings + """
+Your mailserver is running Novonyx POP3.  This server, at least as of
+version 2.17, seems to have problems handling and reporting seen bits.
+You may have to use the fetchall option.
+
+"""
 
 ### IMAP servers start here
 
