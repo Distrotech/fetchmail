@@ -27,6 +27,7 @@
 #define		PASSWORDLEN	MAX_PASSWORD_LENGTH
 #define		FOLDERLEN	256     /* max folder name length */
 #define		DIGESTLEN	33	/* length of MD5 digest */
+#define		MDALEN		256	/* length of delivery agent command */
 #define		IDLEN		128	/* length of UIDL message ID */
 
 /* exit code values */
@@ -58,8 +59,13 @@ struct hostrec
     char password [PASSWORDLEN+1];
     char remotefolder [FOLDERLEN];
     char smtphost[HOSTLEN+1];
+    char mda [MDALEN+1];
     int protocol;
     int port;
+
+    /* MDA arguments */
+    char *mda_argv[32];
+    char mdabuf[MDALEN+1];
 
     /* control flags */
     int keep;
@@ -121,6 +127,7 @@ int parsecmdline (int, char **, struct hostrec *);
 int setdefaults (struct hostrec *);
 char *getnextserver (int argc, char **, int *);
 char *MD5Digest (char *);
+int openmailpipe (struct hostrec *);
 void append_server_names(int *, char **, int);
 int daemonize(const char *, void (*)(int));
 

@@ -25,7 +25,7 @@ mail-retrieval protocols: POP2 (as specified in RFC 937), POP3 (RFC
 IMAP4 (as specified by RFC1730).  It can use (but does not require)
 the RPOP and LAST facilities removed from later POP3 versions.
 .PP
-As each message is retrieved \fIfetchmail\fR delivers it via SMTP to
+As each message is retrieved \fIfetchmail\fR normally delivers it via SMTP to
 port 25 on the machine it is running on (localhost), just as though it
 were being passed in over a normal TCP/IP link.  The mail will then be
 delivered locally via your system's MDA (Mail Delivery Agent, usually
@@ -59,6 +59,17 @@ command, behaves as though --all is always on (see KNOWN PROBLEMS below).
 .TP
 .B \-S host, --smtphost host
 Specify an host to forward mail to (other than localhost).
+.TP
+.B \-m, \--mda
+You can force mail to be passed to an MDA directly (rather than
+forwarded to port 25) with the -mda or -m
+option (this can be useful if you don't want to run sendmail as an
+SMTP listener for security or other reasons).  
+Some possible MDAs are "/usr/sbin/sendmail -oem %s",
+"/usr/lib/sendmail -oem %s",
+"/usr/formail", and "/usr/bin/deliver %s" (if the MDA command contains
+%s, that escape will be expanded into your username on the client
+machine).
 .TP
 .B \-F, --flush
 POP3/IMAP only.  Delete old (previously retrieved) messages from the mailserver
@@ -289,6 +300,7 @@ Legal keywords are:
     password (or pass)
     remotefolder (or remote)
     smtphost (or smtp)
+    mda
     keep
     flush
     fetchall
@@ -367,6 +379,7 @@ string in double quotes.  Thus:
         proto pop3
         user jsmith
         pass "u can't krak this"
+        mda "/bin/mail %s"
 .fi
 
 Finally, you may have an initial server description headed by the keyword

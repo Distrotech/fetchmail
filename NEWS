@@ -23,6 +23,9 @@ fetchmail-1.6 ():
 * Fix a bonehead coding error in pop3_delete() that was masked by the
   Intel register architecture.  *blush*  Thanks to Jay Anderson.
 
+* Restore --mda, seems some people either can't run a port 25 listener
+  due to bizarre dynamic-SLIP problems, or won't for security reasons.
+
 fetchmail-1.5 (Thu Oct  3 04:35:15 EDT 1996):
 
 * Naturally, my decision to announce 1.4 on comp.os.linux.announce 

@@ -40,10 +40,9 @@
 
 #ifdef HAVE_PROTOTYPES
 /* prototypes for internal functions */
-int showoptions (struct hostrec *queryctl);
-int showversioninfo (void);
-int dump_options (struct hostrec *queryctl);
-int query_host(struct hostrec *queryctl);
+static int showversioninfo (void);
+static int dump_options (struct hostrec *queryctl);
+static int query_host(struct hostrec *queryctl);
 #endif
 
 /* controls the detail level of status/progress messages written to stderr */
@@ -118,8 +117,34 @@ char **argv;
 
 	prc_mergeoptions(servername, &cmd_opts, &def_opts, hostp);
 	strcpy(hostp->servername, servername);
+
 	hostp->next = hostlist;
 	hostlist = hostp;
+
+	if (hostp->mda[0])
+	{
+	    int argi;
+	    char *argp;
+
+	    /* expand the %s escape if any before parsing */
+	    sprintf(hostp->mdabuf, hostp->mda, hostp->localname);
+
+	    /* now punch nulls into the delimiting whitespace in the args */
+	    for (argp = hostp->mdabuf, argi = 1; *argp != '\0'; argi++)
+	    {
+		hostp->mda_argv[argi] = argp;
+		while (!(*argp == '\0' || isspace(*argp)))
+		    argp++;
+		if (*argp != '\0')
+		    *(argp++) = '\0';  
+	    }
+
+	    hostp->mda_argv[argi] = (char *)NULL;
+
+	    hostp->mda_argv[0] = hostp->mda_argv[1];
+	    if ((argp = strrchr(hostp->mda_argv[1], '/')) != (char *)NULL)
+		hostp->mda_argv[1] = argp + 1 ;
+	}
     }
 
     /* set up to do lock protocol */
@@ -264,7 +289,7 @@ void termhook(int sig)
   globals:       none.
  *********************************************************************/
 
-char *showproto(proto)
+static char *showproto(proto)
 int proto;
 {
     switch (proto)
@@ -284,7 +309,7 @@ int proto;
  */
 static const int autoprobe[] = {P_IMAP, P_POP3, P_POP2};
 
-int query_host(queryctl)
+static int query_host(queryctl)
 /* perform fetch transaction with single host */
 struct hostrec *queryctl;
 {
@@ -328,14 +353,14 @@ struct hostrec *queryctl;
  
 /*********************************************************************
   function:      showversioninfo
-  description:   display program release and compiler info
+  description:   display program release
   arguments:     none.
   return value:  none.
   calls:         none.
   globals:       none.
  *********************************************************************/
 
-int showversioninfo()
+static int showversioninfo()
 {
     printf("This is fetchmail release %s\n",RELEASE_ID);
 }
@@ -354,8 +379,6 @@ int showversioninfo()
 int dump_params (queryctl)
 struct hostrec *queryctl;
 {
-    char *cp;
-
     if (queryctl->skip || outlevel == O_VERBOSE)
 	printf("  This host will%s be queried when no host is specified.\n",
 	       queryctl->skip ? " not" : "");
@@ -388,7 +411,101 @@ struct hostrec *queryctl;
     printf("  Rewrite of server-local addresses is %sabled (--norewrite %s)\n",
 	   queryctl->norewrite ? "dis" : "en",
 	   queryctl->norewrite ? "on" : "off");
-    printf("  Messages will be SMTP-forwarded to '%s'\n", queryctl->smtphost);
+    if (queryctl->mda[0])
+    {
+	char **cp;
+
+	printf("  Messages will be delivered with %s, args:",
+	       queryctl->mda_argv[0]);
+	for (cp = queryctl->mda_argv+1; *cp; cp++)
+	    printf(" %s", *cp);
+	putchar('\n');
+    }
+    else
+	printf("  Messages will be SMTP-forwarded to '%s'\n", queryctl->smtphost);
 }
 
+/*********************************************************************
+  function:      openmailpipe
+  description:   open a one-way pipe to the mail delivery agent.
+  arguments:     
+    queryctl     fully-determined options (i.e. parsed, defaults invoked,
+                 etc).
 
+  return value:  open file descriptor for the pipe or -1.
+  calls:         none.
+  globals:       reads mda_argv.
+ *********************************************************************/
+
+int openmailpipe (queryctl)
+struct hostrec *queryctl;
+{
+    int pipefd [2];
+    int childpid;
+
+    if (pipe(pipefd) < 0) {
+	perror("fetchmail: openmailpipe: pipe");
+	return(-1);
+    }
+    if ((childpid = fork()) < 0) {
+	perror("fetchmail: openmailpipe: fork");
+	return(-1);
+    }
+    else if (childpid == 0) {
+
+	/* in child process space */
+	close(pipefd[1]);  /* close the 'write' end of the pipe */
+	close(0);          /* get rid of inherited stdin */
+	if (dup(pipefd[0]) != 0) {
+	    fputs("fetchmail: openmailpipe: dup() failed\n",stderr);
+	    exit(1);
+	}
+
+	execv(queryctl->mda_argv[0], queryctl->mda_argv + 1);
+
+	/* if we got here, an error occurred */
+	perror("fetchmail: openmailpipe: exec");
+	_exit(PS_SYNTAX);
+
+    }
+
+    /* in the parent process space */
+    close(pipefd[0]);  /* close the 'read' end of the pipe */
+    return(pipefd[1]);
+}
+
+/*********************************************************************
+  function:      closemailpipe
+  description:   close pipe to the mail delivery agent.
+  arguments:     
+    queryctl     fully-determined options record
+    fd           pipe descriptor.
+
+  return value:  0 if success, else -1.
+  calls:         none.
+  globals:       none.
+ *********************************************************************/
+
+int closemailpipe (fd)
+int fd;
+{
+    int err;
+    int childpid;
+
+    if (outlevel == O_VERBOSE)
+	fprintf(stderr, "about to close pipe %d\n", fd);
+
+    err = close(fd);
+#if defined(STDC_HEADERS)
+    childpid = wait(NULL);
+#else
+    childpid = wait((int *) 0);
+#endif
+    if (err)
+	perror("fetchmail: closemailpipe: close");
+
+    if (outlevel == O_VERBOSE)
+	fprintf(stderr, "closed pipe %d\n", fd);
+  
+    return(err);
+}

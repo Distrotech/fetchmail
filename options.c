@@ -33,13 +33,14 @@
 #define LA_REMOTEFILE	13
 #define LA_PORT		14
 #define LA_SMTPHOST	15
-#define LA_LOGFILE	16
-#define LA_QUIT		17
-#define LA_NOREWRITE	18
-#define LA_HELP		19
-#define LA_YYDEBUG	20
+#define LA_MDA		16
+#define LA_LOGFILE	17
+#define LA_QUIT		18
+#define LA_NOREWRITE	19
+#define LA_HELP		20
+#define LA_YYDEBUG	21
 
-static char *shortoptions = "PVaKkvS:sFd:f:u:r:L:qN?";
+static char *shortoptions = "PVaKkvS:m:sFd:f:u:r:L:qN?";
 static struct option longoptions[] = {
   {"version",   no_argument,       (int *) 0, LA_VERSION    },
   {"all",	no_argument,       (int *) 0, LA_ALL        },
@@ -57,6 +58,7 @@ static struct option longoptions[] = {
   {"remote",    required_argument, (int *) 0, LA_REMOTEFILE },
   {"port",	required_argument, (int *) 0, LA_PORT       },
   {"smtphost",	required_argument, (int *) 0, LA_SMTPHOST   },
+  {"mda",	required_argument, (int *) 0, LA_MDA        },
   {"logfile",	required_argument, (int *) 0, LA_LOGFILE    },
   {"quit",	no_argument,	   (int *) 0, LA_QUIT       },
   {"norewrite",	no_argument,	   (int *) 0, LA_NOREWRITE  },
@@ -171,6 +173,10 @@ struct hostrec *queryctl;
       case 'r':
       case LA_REMOTEFILE:
         strncpy(queryctl->remotefolder,optarg,sizeof(queryctl->remotefolder)-1);
+        break;
+      case 'm':
+      case LA_MDA:
+        strncpy(queryctl->mda,optarg,sizeof(queryctl->mda));
         break;
       case 'P':
       case LA_PORT:

@@ -264,23 +264,20 @@ char *hdr;
     mboxfd       open file descriptor to which the retrieved message will
                  be written.
     len          length of text 
-    popuser      name of the POP user 
-    pophost      name of the POP host 
-    output       output mode
+    delimited    does the protocol use a message delimiter?
+    queryctl     host control block
 
   return value:  zero if success else PS_* return code.
   calls:         SockGets.
   globals:       reads outlevel. 
  *********************************************************************/
 
-static int gen_readmsg (socket,mboxfd,len,delimited,popuser,pophost,rewrite)
+static int gen_readmsg (socket, mboxfd, len, delimited, queryctl)
 int socket;
 int mboxfd;
 long len;
 int delimited;
-char *popuser;
-char *pophost;
-int rewrite;
+struct hostrec *queryctl;
 { 
     char buf [MSGBUFSIZE+1]; 
     char fromBuf[MSGBUFSIZE+1];
@@ -293,12 +290,8 @@ int rewrite;
     static int msgnum = 0;  
 
     /* set up for status message if outlevel allows it */
-    if (outlevel > O_SILENT && outlevel < O_VERBOSE) {
+    if (outlevel > O_SILENT && outlevel < O_VERBOSE)
 	fprintf(stderr,"reading message %d",++msgnum);
-	/* won't do the '...' if retrieved messages are being sent to stdout */
-	if (mboxfd == 1)
-	    fputs("\n",stderr);
-    }
 
     /* read the message content from the server */
     inheaders = 1;
@@ -321,8 +314,8 @@ int rewrite;
      
 	if (inheaders)
         {
-	    if (rewrite)
-		reply_hack(bufp, pophost);
+	    if (!queryctl->norewrite)
+		reply_hack(bufp, queryctl->servername);
 
 	    if (!lines)
 	    {
@@ -340,7 +333,7 @@ int rewrite;
 		/*
 		 * We deal with RFC822 continuation lines here.
 		 * Replace previous '\n' with '\r' so nxtaddr 
-		 * and reply-hack will be able to see past it.
+		 * and reply_hack will be able to see past it.
 		 * We'll undo this before writing the header.
 		 */
 		if (isspace(bufp[0]))
@@ -372,43 +365,46 @@ int rewrite;
 	{
 	    char	*cp;
 
-	    if (SMTP_from(mboxfd, nxtaddr(fromhdr)) != SM_OK)
-		return(PS_SMTP);
+	    if (!queryctl->mda[0])
+	    {
+		if (SMTP_from(mboxfd, nxtaddr(fromhdr)) != SM_OK)
+		    return(PS_SMTP);
 #ifdef SMTP_RESEND
-	    /*
-	     * This is what we'd do if fetchmail were a real MDA
-	     * a la sendmail -- crack all the destination headers
-	     * and send to every address we can reach via SMTP.
-	     */
-	    if (tohdr && (cp = nxtaddr(tohdr)) != (char *)NULL)
-		do {
-		    if (SMTP_rcpt(mboxfd, cp) == SM_UNRECOVERABLE)
-			return(PS_SMTP);
-		} while
-		    (cp = nxtaddr(NULL));
-	    if (cchdr && (cp = nxtaddr(cchdr)) != (char *)NULL)
-		do {
-		    if (SMTP_rcpt(mboxfd, cp) == SM_UNRECOVERABLE)
-			return(PS_SMTP);
-		} while
-		    (cp = nxtaddr(NULL));
-	    if (bcchdr && (cp = nxtaddr(bcchdr)) != (char *)NULL)
-		do {
-		    if (SMTP_rcpt(mboxfd, cp) == SM_UNRECOVERABLE)
-			return(PS_SMTP);
-		} while
-		    (cp = nxtaddr(NULL));
+		/*
+		 * This is what we'd do if fetchmail were a real MDA
+		 * a la sendmail -- crack all the destination headers
+		 * and send to every address we can reach via SMTP.
+		 */
+		if (tohdr && (cp = nxtaddr(tohdr)) != (char *)NULL)
+		    do {
+			if (SMTP_rcpt(mboxfd, cp) == SM_UNRECOVERABLE)
+			    return(PS_SMTP);
+		    } while
+			(cp = nxtaddr(NULL));
+		if (cchdr && (cp = nxtaddr(cchdr)) != (char *)NULL)
+		    do {
+			if (SMTP_rcpt(mboxfd, cp) == SM_UNRECOVERABLE)
+			    return(PS_SMTP);
+		    } while
+			(cp = nxtaddr(NULL));
+		if (bcchdr && (cp = nxtaddr(bcchdr)) != (char *)NULL)
+		    do {
+			if (SMTP_rcpt(mboxfd, cp) == SM_UNRECOVERABLE)
+			    return(PS_SMTP);
+		    } while
+			(cp = nxtaddr(NULL));
 #else
-	    /*
-	     * Since we're really only fetching mail for one user
-	     * per host query, we can be simpler
-	     */
-	    if (SMTP_rcpt(mboxfd, popuser) == SM_UNRECOVERABLE)
-		return(PS_SMTP);
+		/*
+		 * Since we're really only fetching mail for one user
+		 * per host query, we can be simpler
+		 */
+		if (SMTP_rcpt(mboxfd, queryctl->localname) == SM_UNRECOVERABLE)
+		    return(PS_SMTP);
 #endif /* SMTP_RESEND */
-	    SMTP_data(mboxfd);
-	    if (outlevel == O_VERBOSE)
-		fputs("SMTP> ", stderr);
+		SMTP_data(mboxfd);
+		if (outlevel == O_VERBOSE)
+		    fputs("SMTP> ", stderr);
+	    }
 
 	    /* change continuation markers back to regular newlines */
 	    for (cp = headers; cp < headers +  oldlen; cp++)
@@ -439,28 +435,27 @@ int rewrite;
 
     skipwrite:;
 
+	/* write the message size dots */
 	sizeticker += strlen(bufp);
 	while (sizeticker >= SIZETICKER)
 	{
-	    if (outlevel > O_SILENT && outlevel < O_VERBOSE && mboxfd != 1)
+	    if (outlevel > O_SILENT && outlevel < O_VERBOSE)
 		fputc('.',stderr);
 	    sizeticker -= SIZETICKER;
 	}
 	lines++;
     }
 
+
+    /* finish up display output */
     if (outlevel == O_VERBOSE)
-	fputc('\n', stderr);
+	fprintf(stderr,"\n(%d lines of message content)\n",lines);
+    else if (outlevel > O_SILENT) 
+	fputs("\n", stderr);
 
     /* write message terminator */
     if (SMTP_eom(mboxfd) != SM_OK)
 	return(PS_SMTP);
-
-    /* finish up display output */
-    if (outlevel == O_VERBOSE)
-	fprintf(stderr,"(%d lines of message content)\n",lines);
-    else if (outlevel > O_SILENT && mboxfd != 1) 
-	fputs("\n",stderr);
     return(0);
 }
 
@@ -568,24 +563,17 @@ struct method *proto;
 
     if (count > 0)
     {
-	ok = PS_SMTP;
-	if ((mboxfd = Socket(queryctl->smtphost, SMTP_PORT)) < 0) 
-	    goto cleanUp;
-	
-	/* eat the greeting message */
-	if (SMTP_ok(mboxfd, NULL) != SM_OK) {
-	    close(mboxfd);
-	    mboxfd = -1;
-	    goto cleanUp;
-	}
+	if (queryctl->mda[0] == '\0')
+	    if ((mboxfd = Socket(queryctl->smtphost, SMTP_PORT)) < 0
+		|| SMTP_ok(mboxfd, NULL) != SM_OK
+		|| SMTP_helo(mboxfd, queryctl->servername) != SM_OK)
+	    {
+		ok = PS_SMTP;
+		close(mboxfd);
+		mboxfd = -1;
+		goto cleanUp;
+	    }
     
-	/* make it look like mail is coming from the server */
-	if (SMTP_helo(mboxfd,queryctl->servername) != SM_OK) {
-	    close(mboxfd);
-	    mboxfd = -1;
-	    goto cleanUp;
-	}
-
 	/* read, forward, and delete messages */
 	for (num = 1; num <= count; num++)
 	{
@@ -608,14 +596,21 @@ struct method *proto;
 				"fetching message %d (%d bytes)\n",
 				num, len);
 
+		/* open the delivery pipe now if we're using an MDA */
+		if (queryctl->mda[0])
+		    if ((mboxfd = openmailpipe(queryctl)) < 0)
+			goto cleanUp;
+
 		/* read the message and ship it to the output sink */
-		ok = gen_readmsg(socket,
-				 mboxfd,
-				 len,
+		ok = gen_readmsg(socket, mboxfd,
+				 len, 
 				 protocol->delimited,
-				 queryctl->localname,
-				 queryctl->servername,
-				 !queryctl->norewrite);
+				 queryctl);
+
+		/* close the delivery pipe, we'll reopen before next message */
+		if (queryctl->mda[0])
+		    if ((ok = closemailpipe(mboxfd)) != 0)
+			goto cleanUp;
 
 		/* tell the server we got it OK and resynchronize */
 		if (protocol->trail)
