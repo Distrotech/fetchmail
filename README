@@ -61,14 +61,15 @@ pop-perl5-1.2, popc, popmail-1.6 and upop) are marked with **.
 
 The fetchmail code appears to be stable and free of bugs affecting
 normal operation (that is, retrieving from POP3 or IMAP and forwarding
-via SMTP to sendmail).  It will probably undergo substantial change
+99via SMTP to sendmail).  It will probably undergo substantial change
 only if and when support for a new retrieval protocol or authentication
 is added.  See the distribution files NEWS for detailed information on
 recent changes and NOTES for design notes.
 
-You can easily fetch the latest version of fetchmail  via FTP from:
+You can easily fetch the latest version of fetchmail  via FTP from the
+following FTP directory:
 
-	ftp://ftp.ccil.org/pub/esr/fetchmail-2.2.tar.gz
+	ftp://ftp.ccil.org/pub/esr/fetchmail
 
 Or you can get it from Eric's home page:
 

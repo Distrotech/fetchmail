@@ -10,7 +10,7 @@
 			Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-2.4 ()
+fetchmail-2.4 (Sat Dec 21 02:37:58 EST 1996)
 
 features -- 
 
@@ -24,9 +24,10 @@ bugs --
 
 * Fixed a minor bug in Received processing.
 
-* Restored portability to Solaris.
+* Restored compile-time portability to Solaris.
 
 * Force line-buffering on socket streams (Linux apparently defaults to this).
+  This may fix some hang problems reported under Solaris.
 
 ------------------------------------------------------------------------------
 
