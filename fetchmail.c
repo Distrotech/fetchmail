@@ -37,6 +37,7 @@
 #include <fcntl.h>
 
 #include "fetchmail.h"
+#include "getopt.h"
 
 #ifdef HAVE_PROTOTYPES
 /* prototypes for internal functions */
