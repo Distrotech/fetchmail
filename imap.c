@@ -786,7 +786,7 @@ static int do_cram_md5 (int sock, struct query *ctl)
         msg_id[sizeof (msg_id)-1] = 0;
     }
     if (outlevel >= O_DEBUG) {
-        report (stdout, "decoded as %s\n", msg_id);
+        report (stdout, _("decoded as %s\n"), msg_id);
     }
 
     /* The client makes note of the data and then responds with a string
@@ -813,7 +813,7 @@ static int do_cram_md5 (int sock, struct query *ctl)
               response[12], response[13], response[14], response[15]);
 
     if (outlevel >= O_DEBUG) {
-        report (stdout, "replying with %s\n", reply);
+        report (stdout, _("replying with %s\n"), reply);
     }
 
     to64frombits (buf1, reply, strlen (reply));
@@ -913,7 +913,7 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     {
 	do_idle = TRUE;
 	if (outlevel >= O_VERBOSE)
-	    report(stdout, "will idle after poll\n");
+	    report(stdout, _("will idle after poll\n"));
     }
 
 #if OPIE_ENABLE
@@ -1090,7 +1090,7 @@ static int imap_getrange(int sock,
 	    count = 0;
 	}
 	if (outlevel >= O_DEBUG)
-	    report(stdout, "%d messages waiting after re-poll\n", count);
+	    report(stdout, _("%d messages waiting after re-poll\n"), count);
     }
     else
     {
@@ -1103,7 +1103,7 @@ static int imap_getrange(int sock,
 	    return(ok);
 	}
 	else if (outlevel >= O_DEBUG)
-	    report(stdout, "%d messages waiting after first poll\n", count);
+	    report(stdout, _("%d messages waiting after first poll\n"), count);
 
 	/* no messages?  then we may need to idle until we get some */
 	if (count == 0 && do_idle)

@@ -14,6 +14,7 @@
 
 #include "config.h"
 #include "fetchmail.h"
+#include "i18n.h"
 
 #define HEADER_END(p)	((p)[0] == '\n' && ((p)[1] != ' ' && (p)[1] != '\t'))
 
@@ -53,7 +54,7 @@ const unsigned char *host;	/* server hostname */
 
 #ifndef TESTMAIN
     if (outlevel >= O_DEBUG)
-	report_build(stdout, "About to rewrite %s", buf);
+	report_build(stdout, _("About to rewrite %s"), buf);
 
     /* make room to hack the address; buf must be malloced */
     for (cp = buf; *cp; cp++)
@@ -180,7 +181,7 @@ const unsigned char *host;	/* server hostname */
 
 #ifndef TESTMAIN
     if (outlevel >= O_DEBUG)
-	report_complete(stdout, "Rewritten version is %s\n", buf);
+	report_complete(stdout, _("Rewritten version is %s\n"), buf);
 #endif /* TESTMAIN */
     return(buf);
 }

@@ -264,7 +264,7 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
 /* bounce back an error report a la RFC 1892 */
 {
     char daemon_name[18 + HOSTLEN] = "FETCHMAIL-DAEMON@";
-    char boundary[BUFSIZ], *ts, *bounce_to;
+    char boundary[BUFSIZ], *bounce_to;
     int sock;
 
     /* don't bounce  in reply to undeliverable bounces */
@@ -291,13 +291,11 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
 	    "foo-mani-padme-hum-%d-%d-%ld", 
 	    (int)getpid(), (int)getppid(), time((time_t *)NULL));
 
-    ts = rfc822timestamp();
-
     if (outlevel >= O_VERBOSE)
-	report(stdout, "SMTP: (bounce-message body)\n");
+	report(stdout, _("SMTP: (bounce-message body)\n"));
     else
 	/* this will usually go to sylog... */
-	report(stderr, "mail from %s bounced to %s\n",
+	report(stderr, _("mail from %s bounced to %s\n"),
 	       daemon_name, bounce_to);
 
     /* bouncemail headers */
@@ -335,7 +333,7 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
 		/* Minimum RFC1894 compliance + Diagnostic-Code field */
 		SockPrintf(sock, "\r\n");
 		SockPrintf(sock, "Final-Recipient: rfc822; %s\r\n", idp->id);
-		SockPrintf(sock, "Last-Attempt-Date: %s\r\n", ts);
+		SockPrintf(sock, "Last-Attempt-Date: %s\r\n", rfc822timestamp());
 		SockPrintf(sock, "Action: failed\r\n");
 
 		if (nerrors == 1)
@@ -392,7 +390,7 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
     SMTP_rset(ctl->smtp_socket);    /* stay on the safe site */
 
     if (outlevel >= O_DEBUG)
-	report(stdout, "Saved error is still %d\n", smtperr);
+	report(stdout, _("Saved error is still %d\n"), smtperr);
 
     /*
      * Note: send_bouncemail message strings are not made subject
@@ -1113,7 +1111,7 @@ va_dcl
 void close_warning_by_mail(struct query *ctl, struct msgblk *msg)
 /* sign and send mailed warnings */
 {
-    stuff_warning(ctl, "--\r\n\t\t\t\tThe Fetchmail Daemon\r\n");
+    stuff_warning(ctl, _("--\r\n\t\t\t\tThe Fetchmail Daemon\r\n"));
     close_sink(ctl, msg, TRUE);
 }
 

@@ -19,6 +19,7 @@
 #endif
 
 #include "fetchmail.h"
+#include "i18n.h"
 
 /*
  * Machinery for handling UID lists live here.  This is mainly to support
@@ -93,7 +94,7 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
    if (lstat(idfile, &statbuf) < 0) {
      if (errno == ENOTDIR) 
     {
-      report(stderr, "lstat: %s: %s\n", idfile, strerror(errno));
+      report(stderr, _("lstat: %s: %s\n"), idfile, strerror(errno));
       exit(PS_IOERR);
     }
    }
@@ -194,22 +195,23 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 	for (ctl = hostlist; ctl; ctl = ctl->next)
 	    if (ctl->server.uidl)
 	    {
-		report_build(stdout, "Old UID list from %s:",ctl->server.pollname);
+		report_build(stdout, _("Old UID list from %s:"), 
+			     ctl->server.pollname);
 		for (idp = ctl->oldsaved; idp; idp = idp->next)
 		    report_build(stdout, " %s", idp->id);
 		if (!idp)
-		    report_build(stdout, " <empty>");
+		    report_build(stdout, _(" <empty>"));
 		report_complete(stdout, "\n");
 		uidlcount++;
 	    }
 
 	if (uidlcount)
 	{
-	    report_build(stdout, "Scratch list of UIDs:");
+	    report_build(stdout, _("Scratch list of UIDs:"));
 	    for (idp = scratchlist; idp; idp = idp->next)
 		report_build(stdout, " %s", idp->id);
 	    if (!idp)
-		report_build(stdout, " <empty>");
+		report_build(stdout, _(" <empty>"));
 	    report_complete(stdout, "\n");
 	}
     }
@@ -432,11 +434,11 @@ void uid_swap_lists(struct query *ctl)
     {
 	struct idlist *idp;
 
-	report_build(stdout, "New UID list from %s:", ctl->server.pollname);
+	report_build(stdout, _("New UID list from %s:"), ctl->server.pollname);
 	for (idp = ctl->newsaved; idp; idp = idp->next)
 	    report_build(stdout, " %s = %d", idp->id, idp->val.status.mark);
 	if (!idp)
-	    report_build(stdout, " <empty>");
+	    report_build(stdout, _(" <empty>"));
 	report_complete(stdout, "\n");
     }
 
@@ -449,14 +451,14 @@ void uid_swap_lists(struct query *ctl)
     {
 	/* old state of mailbox may now be irrelevant */
 	if (outlevel >= O_DEBUG)
-	    report(stdout, "swapping UID lists\n");
+	    report(stdout, _("swapping UID lists\n"));
 	free_str_list(&ctl->oldsaved);
 	free_str_list(&scratchlist);
 	ctl->oldsaved = ctl->newsaved;
 	ctl->newsaved = (struct idlist *) NULL;
     }
     else if (outlevel >= O_DEBUG)
-	report(stdout, "not swapping UID lists, no UIDs seen this query\n");
+	report(stdout, _("not swapping UID lists, no UIDs seen this query\n"));
 }
 
 void write_saved_lists(struct query *hostlist, const char *idfile)
@@ -480,13 +482,13 @@ void write_saved_lists(struct query *hostlist, const char *idfile)
     if (!idcount && !scratchlist)
     {
 	if (outlevel >= O_DEBUG)
-	    report(stdout, "Deleting fetchids file.\n");
+	    report(stdout, _("Deleting fetchids file.\n"));
 	unlink(idfile);
     }
     else
     {
 	if (outlevel >= O_DEBUG)
-	    report(stdout, "Writing fetchids file.\n");
+	    report(stdout, _("Writing fetchids file.\n"));
 	if ((tmpfp = fopen(idfile, "w")) != (FILE *)NULL) {
 	    for (ctl = hostlist; ctl; ctl = ctl->next) {
 		for (idp = ctl->oldsaved; idp; idp = idp->next)

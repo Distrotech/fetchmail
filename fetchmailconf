@@ -1171,6 +1171,12 @@ under that version, and doesn't cope with the result gracefully.  Newer
 SunOS and Solaris machines run cucipop OK.
 
 """
+	    if string.find(greetline, "David POP3 Server") > 0:
+                warnings = warnings + """
+This POP3 serrver is badly broken.  You should get rid of it -- and the
+brain-dead NT operating system it rode in on.
+
+"""
 # The greeting line on the server known to be buggy is:
 # +OK POP3 server ready (running FTGate V2, 2, 1, 0 Jun 21 1999 09:55:01)
 #

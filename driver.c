@@ -1420,7 +1420,6 @@ static void send_size_warnings(struct query *ctl)
     int msg_to_send = FALSE;
     struct idlist *head=NULL, *current=NULL;
     int max_warning_poll_count;
-#define OVERHD	"Subject: Fetchmail oversized-messages warning.\r\n\r\nThe following oversized messages remain on the mail server %s:"
 
     head = ctl->skipped;
     if (!head)
@@ -1440,7 +1439,11 @@ static void send_size_warnings(struct query *ctl)
      */
     if (open_warning_by_mail(ctl, (struct msgblk *)NULL))
 	return;
-    stuff_warning(ctl, OVERHD, ctl->server.pollname);
+    stuff_warning(ctl,
+	   _("Subject: Fetchmail oversized-messages warning.\r\n"
+	     "\r\n"
+	     "The following oversized messages remain on the mail server %s:"),
+		  ctl->server.pollname);
  
     if (run.poll_interval == 0)
 	max_warning_poll_count = 0;
@@ -1466,7 +1469,6 @@ static void send_size_warnings(struct query *ctl)
     }
 
     close_warning_by_mail(ctl, (struct msgblk *)NULL);
-#undef OVERHD
 }
 
 static int do_session(ctl, proto, maxfetch)
@@ -1677,11 +1679,13 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		/* warn the system administrator */
 		if (open_warning_by_mail(ctl, (struct msgblk *)NULL) == 0)
 		{
-#define OPENFAIL	"Subject: Fetchmail unreachable-server warning.\r\n\r\nFetchmail could not reach the mail server %s:"
-		    stuff_warning(ctl, OPENFAIL, ctl->server.pollname);
+		    stuff_warning(ctl,
+			 _("Subject: Fetchmail unreachable-server warning.\r\n"
+			   "\r\n"
+			   "Fetchmail could not reach the mail server %s:")
+				  ctl->server.pollname);
 		    stuff_warning(ctl, errbuf, ctl->server.pollname);
 		    close_warning_by_mail(ctl, (struct msgblk *)NULL);
-#undef OPENFAIL
 		}
 #endif
 	    }
@@ -1700,7 +1704,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		verification.  We may want to make this configurable */
 	if (ctl->use_ssl && SSLOpen(mailserver_socket,ctl->sslkey,ctl->sslcert,realhost) == -1) 
 	{
-	    report(stderr, "SSL connection failed.\n");
+	    report(stderr, _("SSL connection failed.\n"));
 	    goto closeUp;
 	}
 #endif
@@ -1968,7 +1972,9 @@ const int maxfetch;		/* maximum number of messages to fetch */
 			{
 			    if (outlevel > O_SILENT)
 			    {
-				report_build(stdout, _("skipping message %d"), num);
+				report_build(stdout, 
+				     _("skipping message %d (%d octets)"),
+				     num, msgsizes[num-1]);
 				if (toolarge && !check_only) 
 				{
 				    char size[32];

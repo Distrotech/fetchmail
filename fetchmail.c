@@ -123,6 +123,24 @@ static void dropprivs(void)
 }
 #endif
 
+#if defined(HAVE_SETLOCALE) && defined(ENABLE_NLS) && defined(HAVE_STRFTIME)
+#include <time.h>
+#include <locale.h>
+static char *timestamp (void)
+{
+    time_t      now;
+    static char buf[60];
+
+    time (&now);
+    setlocale (LC_TIME, "");
+    strftime (buf, sizeof (buf), "%c", localtime(&now));
+    setlocale (LC_TIME, "C");
+    return (buf);
+}
+#else
+#define timestamp rfc822timestamp
+#endif
+
 int main(int argc, char **argv)
 {
     int st, bkgd = FALSE;
@@ -153,7 +171,7 @@ int main(int argc, char **argv)
     {
 	int i;
 
-	report(stdout, "fetchmail: invoked with");
+	report(stdout, _("fetchmail: invoked with"));
 	for (i = 0; i < argc; i++)
 	    report(stdout, " %s", argv[i]);
 	report(stdout, "\n");
@@ -665,33 +683,33 @@ int main(int argc, char **argv)
 			switch(querystatus)
 			{
 			case PS_SUCCESS:
-			    report(stdout,"Query status=0 (SUCCESS)\n");break;
+			    report(stdout,_("Query status=0 (SUCCESS)\n"));break;
 			case PS_NOMAIL: 
-			    report(stdout,"Query status=1 (NOMAIL)\n"); break;
+			    report(stdout,_("Query status=1 (NOMAIL)\n")); break;
 			case PS_SOCKET:
-			    report(stdout,"Query status=2 (SOCKET)\n"); break;
+			    report(stdout,_("Query status=2 (SOCKET)\n")); break;
 			case PS_AUTHFAIL:
-			    report(stdout,"Query status=3 (AUTHFAIL)\n");break;
+			    report(stdout,_("Query status=3 (AUTHFAIL)\n"));break;
 			case PS_PROTOCOL:
-			    report(stdout,"Query status=4 (PROTOCOL)\n");break;
+			    report(stdout,_("Query status=4 (PROTOCOL)\n"));break;
 			case PS_SYNTAX:
-			    report(stdout,"Query status=5 (SYNTAX)\n"); break;
+			    report(stdout,_("Query status=5 (SYNTAX)\n")); break;
 			case PS_IOERR:
-			    report(stdout,"Query status=6 (IOERR)\n");  break;
+			    report(stdout,_("Query status=6 (IOERR)\n"));  break;
 			case PS_ERROR:
-			    report(stdout,"Query status=7 (ERROR)\n");  break;
+			    report(stdout,_("Query status=7 (ERROR)\n"));  break;
 			case PS_EXCLUDE:
-			    report(stdout,"Query status=8 (EXCLUDE)\n"); break;
+			    report(stdout,_("Query status=8 (EXCLUDE)\n")); break;
 			case PS_LOCKBUSY:
-			    report(stdout,"Query status=9 (LOCKBUSY)\n");break;
+			    report(stdout,_("Query status=9 (LOCKBUSY)\n"));break;
 			case PS_SMTP:
-			    report(stdout,"Query status=10 (SMTP)\n"); break;
+			    report(stdout,_("Query status=10 (SMTP)\n")); break;
 			case PS_DNS:
-			    report(stdout,"Query status=11 (DNS)\n"); break;
+			    report(stdout,_("Query status=11 (DNS)\n")); break;
 			case PS_BSMTP:
-			    report(stdout,"Query status=12 (BSMTP)\n"); break;
+			    report(stdout,_("Query status=12 (BSMTP)\n")); break;
 			case PS_MAXFETCH:
-			    report(stdout,"Query status=13 (MAXFETCH)\n");break;
+			    report(stdout,_("Query status=13 (MAXFETCH)\n"));break;
 			default:
 			    report(stdout,_("Query status=%d\n"),querystatus);
 			    break;
@@ -746,7 +764,7 @@ int main(int argc, char **argv)
 
 	    if (outlevel >= O_VERBOSE)
 		report(stdout, 
-		       _("fetchmail: sleeping at %s\n"), rfc822timestamp());
+		       _("fetchmail: sleeping at %s\n"), timestamp());
 
 	    /*
 	     * OK, now pause util it's time for the next poll cycle.
@@ -768,7 +786,7 @@ int main(int argc, char **argv)
 	    }
 
 	    if (outlevel >= O_VERBOSE)
-		report(stdout, _("awakened at %s\n"), rfc822timestamp());
+		report(stdout, _("awakened at %s\n"), timestamp());
 	}
     } while
 	(run.poll_interval);
@@ -1150,7 +1168,7 @@ static int load_params(int argc, char **argv, int optind)
 		    report(stderr,
 			  _("couldn't find canonical DNS name of %s\n"),
 			  ctl->server.pollname);
-		    exit(PS_DNS);
+		    ctl->active = FALSE;
 		}
 		else
 		    ctl->server.truename=xstrdup((char *)namerec->h_name);
@@ -1382,7 +1400,7 @@ static int query_host(struct query *ctl)
 	       VERSION,
 	       ctl->server.pollname,
 	       showproto(ctl->server.protocol),
-	       rfc822timestamp());
+	       timestamp());
     }
     switch (ctl->server.protocol) {
     case P_AUTO:

@@ -2,6 +2,10 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Added skip size reporting as suggested by Franck Pommereau.
+* Don't terminate on failed DNS lookup of host, go to next entry.
+* Danish localizationb support, courtesy of Byrial Jensen.
+
 fetchmail-5.5.2 (Thu Sep  7 23:00:24 EDT 2000), 19243 lines:
 
 * Horst Von Brand's security and specfile patches.

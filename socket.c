@@ -661,15 +661,15 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx )
 	switch (ctx->error) {
 	case X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT:
 		X509_NAME_oneline(X509_get_issuer_name(ctx->current_cert), buf, 256);
-		report(stdout, "unknown issuer= %s", buf);
+		report(stdout, _("unknown issuer= %s"), buf);
 		break;
 	case X509_V_ERR_CERT_NOT_YET_VALID:
 	case X509_V_ERR_ERROR_IN_CERT_NOT_BEFORE_FIELD:
-		report(stderr, "Server Certificate not yet valid");
+		report(stderr, _("Server Certificate not yet valid"));
 		break;
 	case X509_V_ERR_CERT_HAS_EXPIRED:
 	case X509_V_ERR_ERROR_IN_CERT_NOT_AFTER_FIELD:
-		report(stderr, "Server Certificate expired");
+		report(stderr, _("Server Certificate expired"));
 		break;
 	}
 	/* We are not requiring or validating server or issuer id's as yet */
