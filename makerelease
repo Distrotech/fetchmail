@@ -76,7 +76,7 @@ open(REPORT, ">PREAMBLE.$$");
 
 print REPORT <<EOF;
 From: esr\@thyrsus.com (Eric S. Raymond)
-To: fetchmail-announce\@ccil.org
+To: fetchmail-friends@ccil.org, fetchmail-announce\@ccil.org
 Reply-To: esr\@thyrsus.com (Eric S. Raymond)
 Subject: The $version release of fetchmail is available
 FCC: ~/postings/outmail
