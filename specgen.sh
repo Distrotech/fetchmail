@@ -112,7 +112,7 @@ GUI konfigurator do fetchmaila napisany w pythonie.
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" LDFLAGS="-s" # Add  --enable-nls --without-included-gettext for internationalization
-./configure --prefix=/usr `./config.guess | sed -e 's/-unknown-/-redhat-/'`
+./configure
 make
 
 %install
