@@ -79,6 +79,7 @@ before retrieving new messages.
 .B \-c, --check
 Return a status code to indicate whether there is mail waiting,
 without actually fetching or deleting mail (see EXIT CODES below).
+(This option doesn't play well with queries to multiple sites.)
 .TP
 .B \-f pathname, --fetchmailrc pathname
 Specify a non-default name for the 
@@ -592,7 +593,7 @@ default location of file associating hosts with last message IDs seen
 (used only with newer RFC1725-compliant POP3 servers supporting the
 UIDL command).
 .TP 5
-${TMPDIR}/fetchmail-${HOST}-${USER}
+${TMPDIR}/fetchmail-${USER}
 lock file to help prevent concurrent runs.
 .SH ENVIRONMENT
 For correct initialization, 
