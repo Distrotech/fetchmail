@@ -460,7 +460,7 @@ static int load_params(int argc, char **argv, int optind)
 		    goto foundit;
 
 	    ctl = hostalloc(&cmd_opts);
-	    strcpy(ctl->servernames->id, argv[optind]);
+	    save_str(&ctl->servernames, -1, argv[optind]);
 
 	foundit:
 	    ctl->active = TRUE;
