@@ -21,8 +21,8 @@ char *buf;		/* header to be hacked */
 const char *host;	/* server hostname */
 {
     const char *from;
-    int parendepth, oldstate, state = 0, tokencount = 0, nlterm = 0;
-    char mycopy[POPBUFSIZE+1];
+    int parendepth, oldstate, state = 0, has_host_part = FALSE;
+    char mycopy[MSGBUFSIZE+1];
 
     if (strncmp("From: ", buf, 6)
 	&& strncmp("To: ", buf, 4)
@@ -33,150 +33,54 @@ const char *host;	/* server hostname */
     }
 
     strcpy(mycopy, buf);
-    if (mycopy[strlen(mycopy) - 1] == '\n')
-    {
-	mycopy[strlen(mycopy) - 1] = '\0';
-	nlterm = TRUE;
-    }
-    if (mycopy[strlen(mycopy) - 1] != ',')
-	strcat(mycopy, ",");
-
     for (from = mycopy; *from; from++)
     {
-#ifdef FOO
-	printf("state %d: %s", state, mycopy);
-	printf("%*s^\n", from - mycopy + 10, " ");
-#endif /* TESTMAIN */
-
 #define INSERT_HOSTNAME	\
 		strcpy(buf, "@"); \
 		strcat(buf, host); \
 		buf += strlen(buf); \
-		state = 7;
+		has_host_part = TRUE;
 
-	switch (state)
-	{
-	case 0:   /* before header colon */
-	    if (*from == ':')
-		state = 1;
-	    break;
+	if (*from == '(')
+	    ++parendepth;
+	else if (*from == ')')
+	    --parendepth;
 
-	case 1:   /* we've seen the colon, we're looking for addresses */
-	    if (*from == '"')
-		state = 3;
-	    else if (*from == '(')
+	if (!parendepth)
+	    switch (state)
 	    {
-		parendepth = 1;
-		oldstate = 1;
-		state = 4;    
-	    }
-	    else if (*from == '<')
-		state = 5;
-	    else if (isalnum(*from))
-		state = 6;
-	    else if (isspace(*from))
-		state = 2;
-	    break;
+	    case 0:   /* before header colon */
+		if (*from == ':')
+		    state = 1;
+		break;
 
-	case 2:	    /* found a token boundary -- reset without copying */
-	    if (!isspace(*from))
-	    {
-		tokencount++;
-		state = 1;
-		--from;
-		continue;
-	    }
-	    break;
-
-	case 3:   /* we're in a quoted human name, copy and ignore */
-	    if (*from == '"')
-		state = 1;
-	    break;
-
-	case 4:   /* we're in a parenthesized human name, copy and ignore */
-	    if (*from == '(')
-		++parendepth;
-	    else if (*from == ')')
-		--parendepth;
-	    if (parendepth == 0)
-		state = oldstate;
-	    break;
-
-	case 5:   /* we're in a <>-enclosed address */
-	    if (*from == '@')
-		state = 7;
-	    else if (*from == '>')
-	    {
-		INSERT_HOSTNAME
-	    }
-	    break;
-
-	case 6:   /* not string or comment, could be a bare address */
-	    if (*from == '@')
-		state = 7;
-
-	    else if (*from == '<')
-		state = 5;
-
-	    else if (*from == '(')
-	    {
-		oldstate = 6;
-		state = 4;
-	    }
-
-	    /* on proper termination with no @, insert hostname */
-	    else if (*from == ',')
-	    {
-		INSERT_HOSTNAME
-		tokencount = 0;
-	    }
-
-	    /* If the address token is not properly terminated, ignore it. */
-	    else if (isspace(*from))
-	    {
-		const char *cp;
-
-		/*
-		 * The only lookahead case.  If we're looking at space or tab,
-		 * we might be looking at a local name immediately followed
-		 * by a human name.
-		 */
-		for (cp = from; isspace(*cp); cp++)
-		    continue;
-		if (*cp == '(')
+	    case 1:   /* we've seen the colon, we're looking for addresses */
+		if (*from == '<')
+		    state = 2;
+		else if (*from == '@')
+		    has_host_part = TRUE;
+		else if ((*from == ',' || *from == '\n') && !has_host_part)
 		{
-		    char	*bp = strchr(cp, '<');
-		    char	*ep = strchr(cp, ',');
-
-		    if (!bp || bp > ep)
-		    {
-			INSERT_HOSTNAME
-		    }
+		    INSERT_HOSTNAME
 		}
-	    }
+		break;
 
-	    /* everything else, including alphanumerics, just passes through */
-	    break;
-
-	case 7:   /* we're done with this address, skip to end */
-	    if (*from == ',')
-	    {
-		state = 1;
-		tokencount == 0;
+	    case 2:   /* we're in a <>-enclosed address */
+		if (*from == '@')
+		    has_host_part = TRUE;
+		else if (*from == '>' && !has_host_part)
+		{
+		    INSERT_HOSTNAME
+		}
+		break;
 	    }
-	    break;
-	}
 
 	/* all characters from the old buffer get copied to the new one */
 	*buf++ = *from;
-    }
 #undef INSERT_HOSTNAME
+    }
 
-    /* back up and nuke the appended comma sentinel */
-    *--buf = '\0';
-
-    if (nlterm)
-	strcat(buf, "\n");
+    *buf = '\0';
 }
 
 char *nxtaddr(hdr)
