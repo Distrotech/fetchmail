@@ -13,7 +13,7 @@ features --
 
 * ESMTP SIZE option is supported when using IMAP2bis or IMAP4.  This means
   messages too long for the local ESMTP listener will be rejected *before*
-  they are downloaded.
+  they are passed to the ESMTP listener.
 
 bugs --
 
