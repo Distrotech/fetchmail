@@ -154,5 +154,4 @@ rm -rf \$RPM_BUILD_ROOT
 %attr(755,root,root) /usr/bin/fetchmailconf
 /usr/lib/rhs/control-panel/fetchmailconf.xpm
 /usr/lib/rhs/control-panel/fetchmailconf.init
-/etc/X11/wmconfig/fetchmailconf
 EOF
