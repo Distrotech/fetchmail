@@ -875,14 +875,6 @@ static int load_params(int argc, char **argv, int optind)
 	}
     }
 
-    /* initialize UID handling */
-    if (!versioninfo && (st = prc_filecheck(run.idfile, !versioninfo)) != 0)
-	exit(st);
-#ifdef POP3_ENABLE
-    else
-	initialize_saved_lists(querylist, run.idfile);
-#endif /* POP3_ENABLE */
-
     /* here's where we override globals */
     if (cmd_run.logfile)
 	run.logfile = cmd_run.logfile;
@@ -898,6 +890,15 @@ static int load_params(int argc, char **argv, int optind)
     /* check and daemon options are not compatible */
     if (check_only && run.poll_interval)
 	run.poll_interval = 0;
+
+#ifdef POP3_ENABLE
+    /* initialize UID handling */
+    if (!versioninfo && (st = prc_filecheck(run.idfile, !versioninfo)) != 0)
+	exit(st);
+    else
+	initialize_saved_lists(querylist, run.idfile);
+#endif /* POP3_ENABLE */
+
     return(implicitmode);
 }
 
