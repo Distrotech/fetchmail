@@ -1818,7 +1818,12 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		    if (new == -1 || ctl->fetchall)
 			new = count;
 		    fetches = new;	/* set error status ccorrectly */
-		    goto no_error;
+		    /*
+		     * There used to be a `got noerror' here, but this
+		     * prevneted checking of multiple folders.  This
+		     * comment is a reminder in case I introduced some
+		     * subtle bug by removing it...
+		     */
 		}
 		else if (count > 0)
 		{    

@@ -7,6 +7,7 @@
   This only applied to `antispam', as it turned out.
 * Work around InterChange's bug with attachments as suggested by 
   paul666@mailandnews.com.
+* Enable checks on multiople folders.
 
 fetchmail-5.3.3 (Mon Mar 13 16:34:29 EST 2000), 18763 lines:
 
