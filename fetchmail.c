@@ -142,7 +142,7 @@ int main (int argc, char **argv)
     }
 
     /* avoid parsing the config file if all we're doing is killing a daemon */ 
-    if (!quitmode && argc == 2)
+    if (!(quitmode && argc == 2))
 	implicitmode = load_params(argc, argv, optind);
 
     /* set up to do lock protocol */
