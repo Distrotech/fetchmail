@@ -193,9 +193,13 @@ struct query
     flag dropstatus;		/* if TRUE, drop Status lines in mail */
     flag mimedecode;		/* if TRUE, decode MIME-coded headers/coded printable*/
     int	limit;			/* limit size of retrieved messages */
+    int warnings;		/* size warning interval */
     int	fetchlimit;		/* max # msgs to get in single poll */
     int	batchlimit;		/* max # msgs to pass in single SMTP session */
     int	expunge;		/* max # msgs to pass between expunges */
+
+    /* holds the info on the messages skipped on the mail server */
+    struct idlist *skipped;
 
     struct idlist *oldsaved, *newsaved;
 

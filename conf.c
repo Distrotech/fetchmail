@@ -268,6 +268,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	stringdump("preconnect", ctl->preconnect);
 	stringdump("postconnect", ctl->postconnect);
 	numdump("limit", ctl->limit);
+	numdump("warnings", ctl->warnings);
 	numdump("fetchlimit", ctl->fetchlimit);
 	numdump("batchlimit", ctl->batchlimit);
 	numdump("expunge", ctl->expunge);

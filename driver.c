@@ -438,7 +438,7 @@ static int smtp_open(struct query *ctl)
     return(ctl->smtp_socket);
 }
 
-/* these are shared by stuffline, readheaders and readbody */
+/* these are shared by open_sink, stuffline, readheaders and readbody */
 static FILE *sinkfp;
 static RETSIGTYPE (*sigchld)();
 static int sizeticker;
@@ -514,10 +514,8 @@ static int stuffline(struct query *ctl, char *buf)
     return(n);
 }
 
-
-static void sanitize(s)
+static void sanitize(char *s)
 /* replace unsafe shellchars by an _ */
-char *s;
 {
     static char *ok_chars = " 1234567890!@%-_=+:,./abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     char *cp;
@@ -526,6 +524,379 @@ char *s;
     	*cp = '_';
 }
 
+int open_sink(struct query *ctl, 
+	      char *return_path, char *destaddr, 
+	      struct idlist *xmit_names,
+	      long reallen,
+	      int *good_addresses, int *bad_addresses)
+/* set up sinkfp to be an input sink we can ship a message to */
+{
+    struct	idlist *idp;
+
+    *bad_addresses = *good_addresses = 0;
+
+    if (ctl->mda)		/* we have a declared MDA */
+    {
+	int	length = 0, fromlen = 0, nameslen = 0;
+	char	*names = NULL, *before, *after, *from = NULL;
+
+	for (idp = xmit_names; idp; idp = idp->next)
+	    if (idp->val.status.mark == XMIT_ACCEPT)
+		(*good_addresses)++;
+
+	length = strlen(ctl->mda);
+	before = xstrdup(ctl->mda);
+
+	/* get user addresses for %T (or %s for backward compatibility) */
+	if (strstr(before, "%s") || strstr(before, "%T"))
+	{
+	    /*
+	     * We go through this in order to be able to handle very
+	     * long lists of users and (re)implement %s.
+	     */
+	    nameslen = 0;
+	    for (idp = xmit_names; idp; idp = idp->next)
+		if (idp->val.status.mark == XMIT_ACCEPT)
+		    nameslen += (strlen(idp->id) + 1);	/* string + ' ' */
+	    if (*good_addresses = 0)
+		nameslen = strlen(run.postmaster);
+
+	    names = (char *)xmalloc(nameslen + 1);	/* account for '\0' */
+	    if (*good_addresses == 0)
+		strcpy(names, run.postmaster);
+	    else
+	    {
+		names[0] = '\0';
+		for (idp = xmit_names; idp; idp = idp->next)
+		    if (idp->val.status.mark == XMIT_ACCEPT)
+		    {
+			strcat(names, idp->id);
+			strcat(names, " ");
+		    }
+		names[--nameslen] = '\0';	/* chop trailing space */
+	    }
+
+	    /* sanitize names in order to contain only harmless shell chars */
+	    sanitize(names);
+	}
+
+	/* get From address for %F */
+	if (strstr(before, "%F"))
+	{
+	    from = xstrdup(return_path);
+
+	    /* sanitize from in order to contain *only* harmless shell chars */
+	    sanitize(from);
+
+	    fromlen = strlen(from);
+	}
+
+	/* do we have to build an mda string? */
+	if (names || from) 
+	{		
+	    char	*sp, *dp;
+
+	    /* find length of resulting mda string */
+	    sp = before;
+	    while (sp = strstr(sp, "%s")) {
+		length += nameslen - 2;	/* subtract %s */
+		sp += 2;
+	    }
+	    sp = before;
+	    while (sp = strstr(sp, "%T")) {
+		length += nameslen - 2;	/* subtract %T */
+		sp += 2;
+	    }
+	    sp = before;
+	    while (sp = strstr(sp, "%F")) {
+		length += fromlen - 2;	/* subtract %F */
+		sp += 2;
+	    }
+		
+	    after = xmalloc(length + 1);
+
+	    /* copy mda source string to after, while expanding %[sTF] */
+	    for (dp = after, sp = before; *dp = *sp; dp++, sp++) {
+		if (sp[0] != '%')	continue;
+
+		/* need to expand? BTW, no here overflow, because in
+		** the worst case (end of string) sp[1] == '\0' */
+		if (sp[1] == 's' || sp[1] == 'T') {
+		    strcpy(dp, names);
+		    dp += nameslen;
+		    sp++;	/* position sp over [sT] */
+		    dp--;	/* adjust dp */
+		} else if (sp[1] == 'F') {
+		    strcpy(dp, from);
+		    dp += fromlen;
+		    sp++;	/* position sp over F */
+		    dp--;	/* adjust dp */
+		}
+	    }
+
+	    if (names) {
+		free(names);
+		names = NULL;
+	    }
+	    if (from) {
+		free(from);
+		from = NULL;
+	    }
+
+	    free(before);
+
+	    before = after;
+	}
+
+
+	if (outlevel == O_VERBOSE)
+	    error(0, 0, "about to deliver with: %s", before);
+
+#ifdef HAVE_SETEUID
+	/*
+	 * Arrange to run with user's permissions if we're root.
+	 * This will initialize the ownership of any files the
+	 * MDA creates properly.  (The seteuid call is available
+	 * under all BSDs and Linux)
+	 */
+	seteuid(ctl->uid);
+#endif /* HAVE_SETEUID */
+
+	sinkfp = popen(before, "w");
+	free(before);
+	before = NULL;
+
+#ifdef HAVE_SETEUID
+	/* this will fail quietly if we didn't start as root */
+	seteuid(0);
+#endif /* HAVE_SETEUID */
+
+	if (!sinkfp)
+	{
+	    error(0, 0, "MDA open failed");
+	    return(PS_IOERR);
+	}
+
+	sigchld = signal(SIGCHLD, SIG_DFL);
+    }
+    else
+    {
+	char	*ap, options[MSGBUFSIZE], addr[128];
+
+	/* build a connection to the SMTP listener */
+	if ((smtp_open(ctl) == -1))
+	{
+	    error(0, errno, "SMTP connect to %s failed",
+		  ctl->smtphost ? ctl->smtphost : "localhost");
+	    return(PS_SMTP);
+	}
+
+	/*
+	 * Compute ESMTP options.
+	 */
+	options[0] = '\0';
+	if (ctl->server.esmtp_options & ESMTP_8BITMIME) {
+             if (ctl->pass8bits || (mimemsg & MSG_IS_8BIT))
+		strcpy(options, " BODY=8BITMIME");
+             else if (mimemsg & MSG_IS_7BIT)
+		strcpy(options, " BODY=7BIT");
+        }
+
+	if ((ctl->server.esmtp_options & ESMTP_SIZE) && reallen > 0)
+	    sprintf(options + strlen(options), " SIZE=%ld", reallen);
+
+	/*
+	 * Try to get the SMTP listener to take the Return-Path
+	 * address as MAIL FROM .  If it won't, fall back on the
+	 * calling-user ID.  This won't affect replies, which use the
+	 * header From address anyway.
+	 *
+	 * RFC 1123 requires that the domain name part of the
+	 * MAIL FROM address be "canonicalized", that is a
+	 * FQDN or MX but not a CNAME.  We'll assume the From
+	 * header is already in this form here (it certainly
+	 * is if rewrite is on).  RFC 1123 is silent on whether
+	 * a nonexistent hostname part is considered canonical.
+	 *
+	 * This is a potential problem if the MTAs further upstream
+	 * didn't pass canonicalized From/Return-Path lines, *and* the
+	 * local SMTP listener insists on them.
+	 *
+	 * None of these error conditions generates bouncemail.  Comments
+	 * below explain for each case why this is so.
+	 */
+	ap = (return_path[0]) ? return_path : user;
+	if (SMTP_from(ctl->smtp_socket, ap, options) != SM_OK)
+	{
+	    int smtperr = atoi(smtp_response);
+
+	    if (str_find(&ctl->antispam, smtperr))
+	    {
+		/*
+		 * SMTP listener explicitly refuses to deliver mail
+		 * coming from this address, probably due to an
+		 * anti-spam domain exclusion.  Respect this.  Don't
+		 * try to ship the message, and don't prevent it from
+		 * being deleted.  Typical values:
+		 *
+		 * 501 = exim's old antispam response
+		 * 550 = exim's new antispam response (temporary)
+		 * 553 = sendmail 8.8.7's generic REJECT 
+		 * 571 = sendmail's "unsolicited email refused"
+		 *
+		 * We don't send bouncemail on antispam failures because
+		 * we don't want the scumbags to know the address is even
+		 * valid.
+		 */
+		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
+		return(PS_REFUSED);
+	    }
+
+	    /*
+	     * Suppress error message only if the response specifically 
+	     * meant `excluded for policy reasons'.  We *should* see
+	     * an error when the return code is less specific.
+	     */
+	    if (smtperr >= 400)
+		error(0, -1, "SMTP error: %s", smtp_response);
+
+	    switch (smtperr)
+	    {
+	    case 452: /* insufficient system storage */
+		/*
+		 * Temporary out-of-queue-space condition on the
+		 * ESMTP server.  Don't try to ship the message, 
+		 * and suppress deletion so it can be retried on
+		 * a future retrieval cycle. 
+		 *
+		 * Bouncemail *might* be appropriate here as a delay
+		 * notification.  But it's not really necessary because
+		 * this is not an actual failure, we're very likely to be
+		 * able to recover on the next cycle.
+		 */
+		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
+		return(PS_TRANSIENT);
+
+	    case 552: /* message exceeds fixed maximum message size */
+	    case 553: /* invalid sending domain */
+		/*
+		 * Permanent no-go condition on the
+		 * ESMTP server.  Don't try to ship the message, 
+		 * and allow it to be deleted.
+		 *
+		 * Bouncemail would be appropriate for 552, but in these 
+		 * latter days 553 usually means a spammer is trying to
+		 * cover his tracks.  We'd rather deny the scumbags any
+		 * feedback that the address is valid.
+		 */
+		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
+		return(PS_REFUSED);
+
+	    default:	/* retry with postmaster's address */
+		if (SMTP_from(ctl->smtp_socket,run.postmaster,options)!=SM_OK)
+		{
+		    error(0, -1, "SMTP error: %s", smtp_response);
+		    return(PS_SMTP);	/* should never happen */
+		}
+	    }
+	}
+
+	/*
+	 * Now list the recipient addressees
+	 */
+	for (idp = xmit_names; idp; idp = idp->next)
+	    if (idp->val.status.mark == XMIT_ACCEPT)
+	    {
+		if (strchr(idp->id, '@'))
+		    strcpy(addr, idp->id);
+		else
+#ifdef HAVE_SNPRINTF
+		    snprintf(addr, sizeof(addr)-1, "%s@%s", idp->id, destaddr);
+#else
+		    sprintf(addr, "%s@%s", idp->id, destaddr);
+#endif /* HAVE_SNPRINTF */
+
+		if (SMTP_rcpt(ctl->smtp_socket, addr) == SM_OK)
+		    (*good_addresses)++;
+		else
+		{
+		    (*bad_addresses)++;
+		    idp->val.status.mark = XMIT_ANTISPAM;
+		    error(0, 0, 
+			  "SMTP listener doesn't like recipient address `%s'",
+			  addr);
+		}
+	    }
+	if (!(*good_addresses))
+	{
+#ifdef HAVE_SNPRINTF
+	    snprintf(addr, sizeof(addr)-1, "%s@%s", run.postmaster, destaddr);
+#else
+	    sprintf(addr, "%s@%s", run.postmaster, destaddr);
+#endif /* HAVE_SNPRINTF */
+
+	    if (SMTP_rcpt(ctl->smtp_socket, addr) != SM_OK)
+	    {
+		error(0, 0, "can't even send to %s!", run.postmaster);
+		return(PS_SMTP);
+	    }
+	}
+
+	/* tell it we're ready to send data */
+	SMTP_data(ctl->smtp_socket);
+    }
+
+    return(PS_SUCCESS);
+}
+
+void release_sink(struct query *ctl)
+/* release the per-message output sink, whether it's a pipe or SMTP socket */
+{
+    if (ctl->mda)
+    {
+	if (sinkfp)
+	{
+	    pclose(sinkfp);
+	    sinkfp = (FILE *)NULL;
+	}
+	signal(SIGCHLD, sigchld);
+    }
+}
+
+int close_sink(struct query *ctl, flag forward)
+/* perform end-of-message actions on the current output sink */
+{
+    if (ctl->mda)
+    {
+	int rc;
+
+	/* close the delivery pipe, we'll reopen before next message */
+	if (sinkfp)
+	{
+	    rc = pclose(sinkfp);
+	    sinkfp = (FILE *)NULL;
+	}
+	else
+	    rc = 0;
+	signal(SIGCHLD, sigchld);
+	if (rc)
+	{
+	    error(0, -1, "MDA exited abnormally or returned nonzero status");
+	    return(FALSE);
+	}
+    }
+    else if (forward)
+    {
+				/* write message terminator */
+	if (SMTP_eom(ctl->smtp_socket) != SM_OK)
+	{
+	    error(0, -1, "SMTP listener refused delivery");
+	    return(FALSE);
+	}
+    }
+
+    return(TRUE);
+}
 
 #define EMPTYLINE(s)	((s)[0] == '\r' && (s)[1] == '\n' && (s)[2] == '\0')
 
@@ -552,13 +923,12 @@ int num;		/* index of message */
     int			from_offs, reply_to_offs, resent_from_offs;
     int			app_from_offs, sender_offs, resent_sender_offs;
     int			env_offs;
-    char		*headers, *received_for, *destaddr, *rcv, *cp;
+    char		*headers, *destaddr, *received_for, *rcv, *cp;
     int 		n, linelen, oldlen, ch, remaining, skipcount;
     struct idlist 	*idp, *xmit_names;
-    flag		good_addresses, bad_addresses, has_nuls;
     flag		no_local_matches = FALSE;
-    flag		headers_ok;
-    int			olderrs;
+    flag		headers_ok, has_nuls;
+    int			olderrs, good_addresses, bad_addresses;
 
     sizeticker = 0;
     has_nuls = headers_ok = FALSE;
@@ -944,7 +1314,7 @@ int num;		/* index of message */
 
     /* cons up a list of local recipients */
     xmit_names = (struct idlist *)NULL;
-    bad_addresses = good_addresses = accept_count = reject_count = 0;
+    accept_count = reject_count = 0;
     /* is this a multidrop box? */
     if (MULTIDROP(ctl))
     {
@@ -1020,332 +1390,27 @@ int num;		/* index of message */
 	free_str_list(&xmit_names);
 	return(PS_TRANSIENT);
     }
-    else if (ctl->mda)		/* we have a declared MDA */
-    {
-	int	length = 0, fromlen = 0, nameslen = 0;
-	char	*names = NULL, *before, *after, *from = NULL;
-
-	for (idp = xmit_names; idp; idp = idp->next)
-	    if (idp->val.status.mark == XMIT_ACCEPT)
-		good_addresses++;
-
-	destaddr = "localhost";
-
-	length = strlen(ctl->mda);
-	before = xstrdup(ctl->mda);
-
-	/* get user addresses for %T (or %s for backward compatibility) */
-	if (strstr(before, "%s") || strstr(before, "%T"))
-	{
-	    /*
-	     * We go through this in order to be able to handle very
-	     * long lists of users and (re)implement %s.
-	     */
-	    nameslen = 0;
-	    for (idp = xmit_names; idp; idp = idp->next)
-		if (idp->val.status.mark == XMIT_ACCEPT)
-		    nameslen += (strlen(idp->id) + 1);	/* string + ' ' */
-
-	    names = (char *)xmalloc(nameslen + 1);	/* account for '\0' */
-	    names[0] = '\0';
-	    for (idp = xmit_names; idp; idp = idp->next)
-		if (idp->val.status.mark == XMIT_ACCEPT)
-		{
-		    strcat(names, idp->id);
-		    strcat(names, " ");
-		}
-	    names[--nameslen] = '\0';	/* chop trailing space */
-
-	    /* sanitize names in order to contain *only* harmless shell chars */
-	    sanitize(names);
-	}
-
-	/* get From address for %F */
-	if (strstr(before, "%F"))
-	{
-	    from = xstrdup(return_path);
-
-	    /* sanitize from in order to contain *only* harmless shell chars */
-	    sanitize(from);
-
-	    fromlen = strlen(from);
-	}
-
-	/* do we have to build an mda string? */
-	if (names || from) {
-		
-		char	*sp, *dp;
-
-
-		/* find length of resulting mda string */
-		sp = before;
-		while (sp = strstr(sp, "%s")) {
-			length += nameslen - 2;	/* subtract %s */
-			sp += 2;
-		}
-		sp = before;
-		while (sp = strstr(sp, "%T")) {
-			length += nameslen - 2;	/* subtract %T */
-			sp += 2;
-		}
-		sp = before;
-		while (sp = strstr(sp, "%F")) {
-			length += fromlen - 2;	/* subtract %F */
-			sp += 2;
-		}
-		
-		after = xmalloc(length + 1);
-
-		/* copy mda source string to after, while expanding %[sTF] */
-		for (dp = after, sp = before; *dp = *sp; dp++, sp++) {
-			if (sp[0] != '%')	continue;
-
-			/* need to expand? BTW, no here overflow, because in
-			** the worst case (end of string) sp[1] == '\0' */
-			if (sp[1] == 's' || sp[1] == 'T') {
-				strcpy(dp, names);
-				dp += nameslen;
-				sp++;	/* position sp over [sT] */
-				dp--;	/* adjust dp */
-			} else if (sp[1] == 'F') {
-				strcpy(dp, from);
-				dp += fromlen;
-				sp++;	/* position sp over F */
-				dp--;	/* adjust dp */
-			}
-		}
-
-		if (names) {
-			free(names);
-			names = NULL;
-		}
-		if (from) {
-			free(from);
-			from = NULL;
-		}
-
-		free(before);
-
-		before = after;
-	}
-
-
-	if (outlevel == O_VERBOSE)
-	    error(0, 0, "about to deliver with: %s", before);
-
-#ifdef HAVE_SETEUID
-	/*
-	 * Arrange to run with user's permissions if we're root.
-	 * This will initialize the ownership of any files the
-	 * MDA creates properly.  (The seteuid call is available
-	 * under all BSDs and Linux)
-	 */
-	seteuid(ctl->uid);
-#endif /* HAVE_SETEUID */
-
-	sinkfp = popen(before, "w");
-	free(before);
-	before = NULL;
-
-#ifdef HAVE_SETEUID
-	/* this will fail quietly if we didn't start as root */
-	seteuid(0);
-#endif /* HAVE_SETEUID */
-
-	if (!sinkfp)
-	{
-	    error(0, 0, "MDA open failed");
-	    free(headers);
-	    free_str_list(&xmit_names);
-	    return(PS_IOERR);
-	}
-
-	sigchld = signal(SIGCHLD, SIG_DFL);
-    }
     else
     {
-	char	*ap, options[MSGBUFSIZE], addr[128];
+	if (ctl->mda)
+	    destaddr = "localhost";
+	else
+	    /*
+	     * RFC 1123 requires that the domain name part of the
+	     * RCPT TO address be "canonicalized", that is a FQDN
+	     * or MX but not a CNAME.  Some listeners (like exim)
+	     * enforce this.
+	     */
+	    destaddr = ctl->smtpaddress ? ctl->smtpaddress : ( ctl->smtphost ? ctl->smtphost : "localhost");
 
-	/* build a connection to the SMTP listener */
-	if ((smtp_open(ctl) == -1))
+	/* set up sinkfp so we can deliver the message body through it */ 
+	if ((n = open_sink(ctl, return_path, destaddr, xmit_names, reallen,
+			   &good_addresses, &bad_addresses)) != PS_SUCCESS)
 	{
-	    error(0, errno, "SMTP connect to %s failed",
-		  ctl->smtphost ? ctl->smtphost : "localhost");
 	    free(headers);
 	    free_str_list(&xmit_names);
-	    return(PS_SMTP);
+	    return(n);
 	}
-
-	/*
-	 * Compute ESMTP options.
-	 */
-	options[0] = '\0';
-	if (ctl->server.esmtp_options & ESMTP_8BITMIME) {
-             if (ctl->pass8bits || (mimemsg & MSG_IS_8BIT))
-		strcpy(options, " BODY=8BITMIME");
-             else if (mimemsg & MSG_IS_7BIT)
-		strcpy(options, " BODY=7BIT");
-        }
-
-	if ((ctl->server.esmtp_options & ESMTP_SIZE) && reallen > 0)
-	    sprintf(options + strlen(options), " SIZE=%ld", reallen);
-
-	/*
-	 * Try to get the SMTP listener to take the Return-Path
-	 * address as MAIL FROM .  If it won't, fall back on the
-	 * calling-user ID.  This won't affect replies, which use the
-	 * header From address anyway.
-	 *
-	 * RFC 1123 requires that the domain name part of the
-	 * MAIL FROM address be "canonicalized", that is a
-	 * FQDN or MX but not a CNAME.  We'll assume the From
-	 * header is already in this form here (it certainly
-	 * is if rewrite is on).  RFC 1123 is silent on whether
-	 * a nonexistent hostname part is considered canonical.
-	 *
-	 * This is a potential problem if the MTAs further upstream
-	 * didn't pass canonicalized From/Return-Path lines, *and* the
-	 * local SMTP listener insists on them.
-	 *
-	 * None of these error conditions generates bouncemail.  Comments
-	 * below explain for each case why this is so.
-	 */
-	ap = (return_path[0]) ? return_path : user;
-	if (SMTP_from(ctl->smtp_socket, ap, options) != SM_OK)
-	{
-	    int smtperr = atoi(smtp_response);
-
-	    if (str_find(&ctl->antispam, smtperr))
-	    {
-		/*
-		 * SMTP listener explicitly refuses to deliver mail
-		 * coming from this address, probably due to an
-		 * anti-spam domain exclusion.  Respect this.  Don't
-		 * try to ship the message, and don't prevent it from
-		 * being deleted.  Typical values:
-		 *
-		 * 501 = exim's old antispam response
-		 * 550 = exim's new antispam response (temporary)
-		 * 553 = sendmail 8.8.7's generic REJECT 
-		 * 571 = sendmail's "unsolicited email refused"
-		 *
-		 * We don't send bouncemail on antispam failures because
-		 * we don't want the scumbags to know the address is even
-		 * valid.
-		 */
-		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
-		free(headers);
-		free_str_list(&xmit_names);
-		return(PS_REFUSED);
-	    }
-
-	    /*
-	     * Suppress error message only if the response specifically 
-	     * meant `excluded for policy reasons'.  We *should* see
-	     * an error when the return code is less specific.
-	     */
-	    if (smtperr >= 400)
-		error(0, -1, "SMTP error: %s", smtp_response);
-
-	    switch (smtperr)
-	    {
-	    case 452: /* insufficient system storage */
-		/*
-		 * Temporary out-of-queue-space condition on the
-		 * ESMTP server.  Don't try to ship the message, 
-		 * and suppress deletion so it can be retried on
-		 * a future retrieval cycle. 
-		 *
-		 * Bouncemail *might* be appropriate here as a delay
-		 * notification.  But it's not really necessary because
-		 * this is not an actual failure, we're very likely to be
-		 * able to recover on the next cycle.
-		 */
-		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
-		free(headers);
-		free_str_list(&xmit_names);
-		return(PS_TRANSIENT);
-
-	    case 552: /* message exceeds fixed maximum message size */
-	    case 553: /* invalid sending domain */
-		/*
-		 * Permanent no-go condition on the
-		 * ESMTP server.  Don't try to ship the message, 
-		 * and allow it to be deleted.
-		 *
-		 * Bouncemail would be appropriate for 552, but in these 
-		 * latter days 553 usually means a spammer is trying to
-		 * cover his tracks.  We'd rather deny the scumbags any
-		 * feedback that the address is valid.
-		 */
-		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
-		free(headers);
-		free_str_list(&xmit_names);
-		return(PS_REFUSED);
-
-	    default:	/* retry with postmaster's address */
-		if (SMTP_from(ctl->smtp_socket,run.postmaster,options)!=SM_OK)
-		{
-		    error(0, -1, "SMTP error: %s", smtp_response);
-		    free(headers);
-		    free_str_list(&xmit_names);
-		    return(PS_SMTP);	/* should never happen */
-		}
-	    }
-	}
-
-	/*
-	 * Now list the recipient addressees
-	 *
-	 * RFC 1123 requires that the domain name part of the
-	 * RCPT TO address be "canonicalized", that is a FQDN
-	 * or MX but not a CNAME.  Some listeners (like exim)
-	 * enforce this.
-	 */
-	destaddr = ctl->smtpaddress ? ctl->smtpaddress : ( ctl->smtphost ? ctl->smtphost : "localhost");
-	
-	for (idp = xmit_names; idp; idp = idp->next)
-	    if (idp->val.status.mark == XMIT_ACCEPT)
-	    {
-		if (strchr(idp->id, '@'))
-		    strcpy(addr, idp->id);
-		else
-#ifdef HAVE_SNPRINTF
-		    snprintf(addr, sizeof(addr)-1, "%s@%s", idp->id, destaddr);
-#else
-		    sprintf(addr, "%s@%s", idp->id, destaddr);
-#endif /* HAVE_SNPRINTF */
-
-		if (SMTP_rcpt(ctl->smtp_socket, addr) == SM_OK)
-		    good_addresses++;
-		else
-		{
-		    bad_addresses++;
-		    idp->val.status.mark = XMIT_ANTISPAM;
-		    error(0, 0, 
-			  "SMTP listener doesn't like recipient address `%s'",
-			  addr);
-		}
-	    }
-	if (!good_addresses)
-	{
-#ifdef HAVE_SNPRINTF
-	    snprintf(addr, sizeof(addr)-1, "%s@%s", run.postmaster, destaddr);
-#else
-	    sprintf(addr, "%s@%s", run.postmaster, destaddr);
-#endif /* HAVE_SNPRINTF */
-
-	    if (SMTP_rcpt(ctl->smtp_socket, addr) != SM_OK)
-	    {
-		error(0, 0, "can't even send to %s!", run.postmaster);
-		free(headers);
-		free_str_list(&xmit_names);
-		return(PS_SMTP);
-	    }
-	}
-
-	/* tell it we're ready to send data */
-	SMTP_data(ctl->smtp_socket);
     }
 
     n = 0;
@@ -1438,12 +1503,7 @@ int num;		/* index of message */
     if (n == -1)
     {
 	error(0, errno, "writing RFC822 headers");
-	if (ctl->mda)
-	{
-	    if (sinkfp)
-		pclose(sinkfp);
-	    signal(SIGCHLD, sigchld);
-	}
+	release_sink(ctl);
 	free(headers);
 	free_str_list(&xmit_names);
 	return(PS_IOERR);
@@ -1504,8 +1564,7 @@ int num;		/* index of message */
 	strcat(errmsg, "\n");
 
 	/* ship out the error line */
-	if (sinkfp)
-	    stuffline(ctl, errmsg);
+	stuffline(ctl, errmsg);
     }
 
     /* issue the delimiter line */
@@ -1539,12 +1598,7 @@ flag forward;		/* TRUE to forward */
 	if ((linelen = SockRead(sock, inbufp, sizeof(buf)-4-(inbufp-buf)))==-1)
 	{
 	    set_timeout(0);
-	    if (ctl->mda)
-	    {
-		if (sinkfp)
-		    pclose(sinkfp);
-		signal(SIGCHLD, sigchld);
-	    }
+	    release_sink(ctl);
 	    return(PS_SOCKET);
 	}
 	set_timeout(0);
@@ -1605,12 +1659,7 @@ flag forward;		/* TRUE to forward */
 	    if (n < 0)
 	    {
 		error(0, errno, "writing message text");
-		if (ctl->mda)
-		{
-		    if (sinkfp)
-			pclose(sinkfp);
-		    signal(SIGCHLD, sigchld);
-		}
+		release_sink(ctl);
 		return(PS_IOERR);
 	    }
 	    else if (outlevel == O_VERBOSE)
@@ -1725,6 +1774,110 @@ const char *canonical;  /* server name */
 }
 #endif /* KERBEROS_V5 */
 
+static void clean_skipped_list(struct idlist **skipped_list)
+/* struct "idlist" contains no "prev" ptr; we must remove unused items first */
+{
+    struct idlist *current=NULL, *prev=NULL, *tmp=NULL, *head=NULL;
+    prev = current = head = *skipped_list;
+
+    if (!head)
+	return;
+    do
+    {
+	/* if item has no reference, remove it */
+	if (current && current->val.status.mark == 0)
+	{
+	    if (current == head) /* remove first item (head) */
+	    {
+		head = current->next;
+		if (current->id) free(current->id);
+		free(current);
+		prev = current = head;
+	    }
+	    else /* remove middle/last item */
+	    {
+		tmp = current->next;
+		prev->next = tmp;
+		if (current->id) free(current->id);
+		free(current);
+		current = tmp;
+	    }
+	}
+	else /* skip this item */
+	{
+	    prev = current;
+	    current = current->next;
+	}
+    } while(current);
+
+    *skipped_list = head;
+}
+
+static void send_warning(struct query *ctl, 
+			 struct idlist **skipped_list, const char *user)
+/* send warning mail with skipped msg; reset msg count when user notified */
+{
+    int size, nbr;
+    int msg_to_send = FALSE;
+    FILE *tmpfile = NULL;
+    struct idlist *head=NULL, *current=NULL;
+    int max_warning_poll_count, good, bad;
+    char	buf[100];
+
+    head = *skipped_list;
+    if (!head)
+	return;
+
+    /* don't start a notification message unless we need to */
+    for (current = head; current; current = current->next)
+	if (current->val.status.num == 0 && current->val.status.mark)
+	    msg_to_send = TRUE;
+    if (!msg_to_send)
+	return;
+
+    /*
+     * There's no good way to recover if we can't send notification mail, 
+     * but it's not a disaster, either, since the skipped mail will not
+     * be deleted.
+     *
+     * We give a null address list here because we actually *want*
+     * this message to go to run.postmaster.
+     */
+    if (open_sink(ctl, "FETCHMAIL-DAEMON", "localhost", NULL, 0, &good, &bad))
+	return;
+
+    /* stuffline() requires its input to be writeable for CR stripping */
+#define OVERHD	"Subject: Fetchmail WARNING.\r\n\r\nThe following oversized messages remain on the mail server:\n\r\n"
+    strcpy(buf, OVERHD);
+    stuffline(ctl, buf);
+ 
+    if (run.poll_interval == 0)
+	max_warning_poll_count = 0;
+    else
+	max_warning_poll_count = ctl->warnings/run.poll_interval;
+
+    /* parse list of skipped msg, adding items to the mail */
+    for (current = head; current; current = current->next)
+    {
+	if (current->val.status.num == 0 && current->val.status.mark)
+	{
+	    nbr = current->val.status.mark;
+	    size = atoi(current->id);
+	    sprintf(buf, 
+		    "\t%d msg of %d bytes skipped by fetchmail.\n",
+		    nbr, size);
+	    stuffline(ctl, buf);
+	}
+	current->val.status.num++;
+	current->val.status.mark = 0;
+
+	if (current->val.status.num >= max_warning_poll_count)
+	    current->val.status.num = 0;
+    }
+
+    close_sink(ctl, TRUE);
+}
+
 int do_protocol(ctl, proto)
 /* retrieve messages from server using given protocol method table */
 struct query *ctl;		/* parsed options with merged-in defaults */
@@ -1732,7 +1885,15 @@ const struct method *proto;	/* protocol method table */
 {
     int ok, js, sock = -1;
     char *msg;
+    char localuser[32];
     void (*sigsave)();
+    struct idlist *current=NULL, *prev=NULL, *next=NULL, *head=NULL, *tmp=NULL;
+
+    strcpy(localuser, "root");
+    if (ctl->localnames)
+    {
+	strcpy(localuser, ctl->localnames->id);
+    }
 
 #ifndef KERBEROS_V4
     if (ctl->server.preauthenticate == A_KERBEROS_V4)
@@ -1806,12 +1967,11 @@ const struct method *proto;	/* protocol method table */
 	else
 	    error(0, 0, "timeout after %d seconds.", ctl->server.timeout);
 
+	release_sink(ctl);
 	if (ctl->smtp_socket != -1)
 	    close(ctl->smtp_socket);
 	if (sock != -1)
 	    SockClose(sock);
-	if (sinkfp)
-	    pclose(sinkfp);
 	ok = PS_ERROR;
     }
     else
@@ -2062,8 +2222,9 @@ const struct method *proto;	/* protocol method table */
 		    {
 			flag toolarge = NUM_NONZERO(ctl->limit)
 			    && msgsizes && (msgsizes[num-1] > ctl->limit);
+			flag oldmsg = (protocol->is_old && (protocol->is_old)(sock,ctl,num));
 			flag fetch_it = !toolarge 
-			    && (ctl->fetchall || force_retrieval || !(protocol->is_old && (protocol->is_old)(sock,ctl,num)));
+			    && (ctl->fetchall || force_retrieval || !oldmsg);
 			flag suppress_delete = FALSE;
 			flag suppress_forward = FALSE;
 			flag suppress_readbody = FALSE;
@@ -2094,9 +2255,55 @@ const struct method *proto;	/* protocol method table */
 			    if (outlevel > O_SILENT)
 			    {
 				error_build("skipping message %d", num);
-				if (toolarge)
+				if (toolarge && !check_only) 
+				{
+				    char size[32];
+				    int cnt, bytesz = msgsizes[num-1];
+#ifdef POP3_ENABLE
+				    /* convert sz to string */
+				    sprintf(size, "%d", msgsizes[num-1]);
+
+				    /* build a list of skipped messages
+				     * val.id = size of msg (string cnvt)
+				     * val.status.num = warning_poll_count
+				     * val.status.mask = nbr of msg this size
+				     */
+
+				    current = ctl->skipped;
+
+				    /* initialise warning_poll_count to the
+				     * current value so that all new msg will
+				     * be included in the next mail
+				     */
+				    cnt = current? current->val.status.num : 0;
+
+				    /* if entry exists, increment the count */
+				    if (current && 
+					str_in_list(&current, size, FALSE))
+				    {
+					for ( ; current; 
+						current = current->next)
+					{
+					    if (strcmp(current->id, size) == 0)
+					    {
+					        current->val.status.mark++;
+						break;
+					    }
+					}
+				    }
+				    /* otherwise, create a new entry */
+				    /* initialise with current poll count */
+				    else
+				    {
+					tmp = save_str(&ctl->skipped, size, 1);
+					tmp->val.status.num = cnt;
+				    }
+
+#endif /* POP3_ENABLE */
+
 				    error_build(" (oversized, %d bytes)",
 						msgsizes[num-1]);
+				}
 			    }
 			}
 			else
@@ -2128,9 +2335,6 @@ const struct method *proto;	/* protocol method table */
 				else
 				    error_build(" ");
 			    }
-
-			    /* later we'll test for this before closing */
-			    sinkfp = (FILE *)NULL;
 
 			    /* 
 			     * Read the message headers and ship them to the
@@ -2244,34 +2448,11 @@ const struct method *proto;	/* protocol method table */
 			    }
 
 			    /* end-of-message processing starts here */
-
-			    if (ctl->mda)
+			    if (!close_sink(ctl, !suppress_forward))
 			    {
-				int rc;
-
-				/* close the delivery pipe, we'll reopen before next message */
-				if (sinkfp)
-				    rc = pclose(sinkfp);
-				else
-				    rc = 0;
-				signal(SIGCHLD, sigchld);
-				if (rc)
-				{
-				    error(0, -1, "MDA exited abnormally or returned nonzero status");
-				    goto cleanUp;
-				}
+				ctl->errcount++;
+				suppress_delete = TRUE;
 			    }
-			    else if (!suppress_forward)
-			    {
-				/* write message terminator */
-				if (SMTP_eom(ctl->smtp_socket) != SM_OK)
-				{
-				    error(0, -1, "SMTP listener refused delivery");
-				    ctl->errcount++;
-				    suppress_delete = TRUE;
-				}
-			    }
-
 			    fetches++;
 			}
 
@@ -2322,6 +2503,12 @@ const struct method *proto;	/* protocol method table */
 			/* perhaps this as many as we're ready to handle */
 			if (NUM_NONZERO(ctl->fetchlimit) && ctl->fetchlimit <= fetches)
 			    goto no_error;
+		    }
+
+		    if (!check_only && ctl->skipped)
+		    {
+			clean_skipped_list(&ctl->skipped);
+			send_warning(ctl, &ctl->skipped, localuser);
 		    }
 		}
 	    } while

@@ -765,6 +765,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(dropstatus);
     FLAG_MERGE(mimedecode);
     FLAG_MERGE(limit);
+    FLAG_MERGE(warnings);
     FLAG_MERGE(fetchlimit);
     FLAG_MERGE(batchlimit);
     FLAG_MERGE(expunge);
@@ -786,6 +787,7 @@ static int load_params(int argc, char **argv, int optind)
 
     def_opts.server.protocol = P_AUTO;
     def_opts.server.timeout = CLIENT_TIMEOUT;
+    def_opts.warnings = WARNING_INTERVAL;
     def_opts.remotename = user;
     def_opts.expunge = 1;
 
@@ -882,13 +884,6 @@ static int load_params(int argc, char **argv, int optind)
 	     */
 	    if (!ctl->smtphunt)
 		save_str(&ctl->smtphunt, fetchmailhost, FALSE);
-
-	    /* keep lusers from shooting themselves in the foot :-) */
-	    if (run.poll_interval && ctl->limit)
-	    {
-		fprintf(stderr,"fetchmail: you'd never see large messages!\n");
-		exit(PS_SYNTAX);
-	    }
 
 	    /* if `user' doesn't name a real local user, try to run as root */
 	    if ((pw = getpwnam(user)) == (struct passwd *)NULL)
@@ -1318,10 +1313,18 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 		       ctl->dropstatus ? "discarded" : "kept",
 		       ctl->dropstatus ? "on" : "off");
 		if (NUM_NONZERO(ctl->limit))
-		    printf("  Message size limit is %d bytes (--limit %d).\n", 
-			   ctl->limit, ctl->limit);
-		else if (outlevel == O_VERBOSE)
-		    printf("  No message size limit (--limit 0).\n");
+		{
+		    if (NUM_NONZERO(ctl->limit))
+			printf("  Message size limit is %d bytes (--limit %d).\n", 
+			       ctl->limit, ctl->limit);
+		    else if (outlevel == O_VERBOSE)
+			printf("  No message size limit (--limit 0).\n");
+		    if (run.poll_interval > 0)
+			printf("  Message size warning interval is %d seconds (--warnings %d).\n", 
+			       ctl->warnings, ctl->warnings);
+		    else if (outlevel == O_VERBOSE)
+			printf("  Size warnings on every poll (--warnings 0).\n");
+		}
 		if (NUM_NONZERO(ctl->fetchlimit))
 		    printf("  Received-message limit is %d (--fetchlimit %d).\n",
 			   ctl->fetchlimit, ctl->fetchlimit);

@@ -69,10 +69,11 @@
 #define LA_MONITOR      41
 #define LA_CONFIGDUMP	42
 #define LA_YYDEBUG	43
+#define LA_WARNINGS	44
 
 /* options still left: CgGhHjJoORwWxXYz */
 static const char *shortoptions = 
-	"?Vcsvd:NqL:f:i:p:UP:A:t:E:Q:u:akKFnl:r:S:Z:b:B:e:m:T:I:M:y";
+	"?Vcsvd:NqL:f:i:p:UP:A:t:E:Q:u:akKFnl:r:S:Z:b:B:e:m:T:I:M:yw:";
 
 static const struct option longoptions[] = {
 /* this can be const because all flag fields are 0 and will never get set */
@@ -133,6 +134,8 @@ static const struct option longoptions[] = {
   {"configdump",no_argument,	   (int *) 0, LA_CONFIGDUMP  },
 
   {"yydebug",	no_argument,	   (int *) 0, LA_YYDEBUG     },
+
+  {"warnings",	required_argument, (int *) 0, LA_WARNINGS   },
 
   {(char *) 0,  no_argument,       (int *) 0, 0              }
 };
@@ -495,6 +498,12 @@ struct query *ctl;	/* option record to be initialized */
 	    yydebug = TRUE;
 	    break;
 
+	case 'w':
+	case LA_WARNINGS:
+	    c = xatoi(optarg, &errflag);
+	    ctl->warnings = NUM_VALUE(c);
+	    break;
+
 	case LA_CONFIGDUMP:
 	    configdump = TRUE;
 	    break;
@@ -557,6 +566,7 @@ struct query *ctl;	/* option record to be initialized */
 	fputs("  -F, --flush       delete old messages from server\n", stderr);
 	fputs("  -n, --norewrite   don't rewrite header addresses\n", stderr);
 	fputs("  -l, --limit       don't fetch messages over given size\n", stderr);
+	fputs("  -w, --warnings   interval between warning mail notification\n", stderr);
 
 #if NET_SECURITY
 	fputs("  -T, --netsec      set IP security request\n", stderr);

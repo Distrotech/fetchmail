@@ -28,6 +28,7 @@ daemon		{ return DAEMON; }
 syslog		{ return SYSLOG; }
 invisible	{ return INVISIBLE; }
 postmaster	{ return POSTMASTER; }
+warnings	{ return WARNINGS; }
 
 defaults 	{ return DEFAULTS; }
 server 		{ return POLL; }

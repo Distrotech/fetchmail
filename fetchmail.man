@@ -260,8 +260,8 @@ You can force mail to be passed to an MDA directly (rather than
 forwarded to port 25) with the -mda or -m option.  If \fIfetchmail\fR
 is running as root, it sets its userid to that of the target user
 while delivering mail through an MDA.  Some possible MDAs are
-"/usr/sbin/sendmail -oem", "/usr/lib/sendmail -oem",
-"/usr/bin/formail", and "/usr/bin/deliver".  Local delivery addresses
+"/usr/sbin/sendmail -oem $USER", "/usr/bin/procmail -d $USER"
+and "/usr/bin/deliver".  Local delivery addresses
 will be inserted into the MDA command wherever you place a %T; the
 mail message's From address will be inserted where you place an %F.  Do
 \fInot\fR use an MDA invocation like
@@ -275,11 +275,24 @@ down upon your head.
 Takes a maximum octet size argument.  Messages larger than this size
 will not be fetched, not be marked seen, and will be left on the
 server (in foreground sessions, the progress messages will note that
-they are "oversized").  An explicit --limit of 0 overrides any limits set
-in your run control file. This option is intended for those needing to
-strictly control fetch time in interactive mode.  It may not be used
-with daemon mode, as users would never receive a notification that
-messages were waiting.  This option does not work with ETRN.
+they are "oversized").  An explicit --limit of 0 overrides any limits
+set in your run control file. This option is intended for those
+needing to strictly control fetch time due to expensive and variable
+phone rates.  In daemon mode, oversize notifications are mailed to the
+calling user (see the --warnings option).  This option does not work
+with ETRN.
+.TP
+.B \-w, --warnings
+(Keyword: warnings)
+Takes an interval in seconds.  When you call
+.I fetchmail
+with a `limit' option in daemon mode, this controls the interval at
+which warnings about oversized messages are mailed to the calling user
+(or the user specified by the `postmaster' option).  One such
+notification is always mailed at the end of the the first poll that
+the oversized message is detected.  Thereafter, renotification is
+suppressed until after the warning interval elapses (it will take
+place at the end of the first following poll).
 .TP
 .B -b, --batchlimit
 (Keyword: batchlimit)
@@ -292,7 +305,7 @@ after receiving the message terminator, some SMTP listeners are not so
 prompt.  MTAs like \fIqmail\fR(8) and \fIsmail\fR(8) may wait till the
 delivery socket is shut down to deliver.  This may produce annoying
 delays when
-.IR fetchmail (8)
+.I fetchmail
 is processing very large batches.  Setting the batch limit to some
 nonzero size will prevent these delays.
 This option does not work with ETRN.
@@ -999,6 +1012,9 @@ Don't convert quoted-printable to 8-bit in MIME messages (default)
 T}
 limit   	-l	T{
 Set message size limit
+T}
+warnings   	-l	T{
+Set message size warning interval
 T}
 batchlimit	-b	T{
 Max # messages to fetch in single connect

@@ -194,6 +194,7 @@ class User:
 	self.mimedecode = FALSE		# Undo MIME armoring
 	self.dropstatus = FALSE		# Drop incoming Status lines
 	self.limit = 0			# Message size limit
+        self.warnings = 0		# Size warning interval
 	self.fetchlimit = 0		# Max messages fetched per batch
 	self.batchlimit = 0		# Max message forwarded per batch
 	self.expunge = 1		# Interval between expunges (IMAP)
@@ -217,6 +218,7 @@ class User:
 	    ('mimedecode',  'Boolean'),
 	    ('dropstatus',  'Boolean'),
 	    ('limit',       'Int'),
+	    ('warnings',    'Int'),
 	    ('fetchlimit',  'Int'),
 	    ('batchlimit',  'Int'),
 	    ('expunge',     'Int'))
@@ -261,6 +263,8 @@ class User:
 	    str = str + flag2str(self.dropstatus, 'dropstatus')
 	if self.limit != UserDefaults.limit:
 	    str = str + " limit " + `self.limit`
+	if self.warnings != UserDefaults.warnings:
+	    str = str + " warnings " + `self.warnings`
 	if self.fetchlimit != UserDefaults.fetchlimit:
 	    str = str + " fetchlimit " + `self.fetchlimit`
 	if self.batchlimit != UserDefaults.batchlimit:
@@ -1203,6 +1207,8 @@ class UserEdit(Frame, MyWidget):
             Label(limwin, text="Resource Limits").pack(side=TOP)
             LabeledEntry(limwin, 'Message size limit:',
 		      self.limit, '30').pack(side=TOP, fill=X)
+            LabeledEntry(limwin, 'Size warning interval:',
+		      self.warnings, '30').pack(side=TOP, fill=X)
             LabeledEntry(limwin, 'Max messages to fetch per poll:',
 		      self.fetchlimit, '30').pack(side=TOP, fill=X)
             LabeledEntry(limwin, 'Max messages to forward per poll:',

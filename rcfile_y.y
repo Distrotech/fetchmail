@@ -64,7 +64,7 @@ extern char * yytext;
 %token NETSEC INTERFACE MONITOR
 %token IS HERE THERE TO MAP WILDCARD
 %token BATCHLIMIT FETCHLIMIT EXPUNGE
-%token SET LOGFILE DAEMON SYSLOG IDFILE INVISIBLE POSTMASTER
+%token SET LOGFILE DAEMON SYSLOG IDFILE INVISIBLE POSTMASTER WARNINGS
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
@@ -319,6 +319,7 @@ user_option	: TO localnames HERE
 		| NO MIMEDECODE		{current.mimedecode = FLAG_FALSE;}
 
 		| LIMIT NUMBER		{current.limit      = NUM_VALUE($2);}
+		| WARNINGS NUMBER	{current.warnings   = NUM_VALUE($2);}
 		| FETCHLIMIT NUMBER	{current.fetchlimit = NUM_VALUE($2);}
 		| BATCHLIMIT NUMBER	{current.batchlimit = NUM_VALUE($2);}
 		| EXPUNGE NUMBER	{current.expunge    = NUM_VALUE($2);}

@@ -10,3 +10,6 @@
 /* default timeout period in seconds if server connection dies */
 #define	CLIENT_TIMEOUT		300
 
+/* default skipped message warning interval in seconds */
+#define WARNING_INTERVAL	3600
+

@@ -76,7 +76,7 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 
     /* make sure lists are initially empty */
     for (ctl = hostlist; ctl; ctl = ctl->next)
-	ctl->oldsaved = ctl->newsaved = (struct idlist *)NULL;
+	ctl->skipped = ctl->oldsaved = ctl->newsaved = (struct idlist *)NULL;
 
     /* let's get stored message UIDs from previous queries */
     if ((tmpfp = fopen(idfile, "r")) != (FILE *)NULL) {
