@@ -357,6 +357,36 @@ special case, `envelope "Received"' enables parsing of sendmail-style
 Received lines.  This is the default, and it should not be necessary
 unless you have globally disabled Received parsing with `no envelope'
 in the \fI.fetchmailrc\fR file.
+.TP
+.B -Q, --qvirtual
+(Keyword: qvirtual)
+The string assigned to this option will be removed from the user
+name found in the header specified with the \fIenvelope\fR option.
+This option is useful if you are using  
+.I fetchmail
+to collect the mail for an entire domain and your ISP (or your mail
+redirection provider) is using qmail.
+One of the basic features of qmail is the
+.sp
+\&`Delivered-To:'
+.sp
+message header.  Whenever qmail delivers a message to a local mailbox
+it puts the username and hostname of the envelope recipient on this
+line.  The major reason for this is to prevent mail loops.  To set up
+qmail to batch mail for a disconnected site the ISP-mailhost will have
+normally put that site in its `Virtualhosts' control file so it will
+add a prefix to all mail addresses for this site. This results in mail
+sent to 'username@userhost.userdom.dom.com' having a
+\&`Delivered-To:' line of the form:
+.sp
+Delivered-To: mbox-userstr-username@userhost.userdom.dom.com
+.sp
+The ISP can make the 'mbox-userstr-' prefix anything they choose
+but a string matching the user host name is likely.
+By using the option `envelope Delivered-To:' you can make fetchmail reliably
+identify the original envelope recipient, but you have to strip the
+`mbox-userstr-' prefix to deliver to the correct user.
+This is what this option is for.
 
 .SH USER AUTHENTICATION
 Every mode except ETRN requires authentication of the client.
@@ -728,6 +758,9 @@ Specify envelope-address header name
 T}
 no envelope	\&	T{
 Disable looking for envelope address
+T}
+qvirtual	-Q	T{
+Qmail virtual domain prefix to remove from user name
 T}
 aka      	\&	T{
 Specify alternate DNS names of mailserver
@@ -1168,8 +1201,13 @@ recipients (including blind-copy recopients) to all receivers of the
 messages; it is therefore regarded by some administrators as a
 security/privacy problem.
 .PP
+A slight variation of the `X-Envelope-To' header is the `Delivered-To' put
+by qmail to avoid mail loops. It will probably prefix the user name with a
+string that normally matches the user's domain. To remove this prefix you
+can use the -Q or `qvirtual' option.
+.PP
 Sometimes, unfortunately, neither of these methods works.  When they
-both fail, fetchmail must fall back on the contents of To/Cc/Bcc
+all fail, fetchmail must fall back on the contents of To/Cc/Bcc
 headers to try to determine recipient addressees -- and these are not
 reliable.  In particular, mailing-list software often ships mail with
 only the list broadcast address in the To header.

@@ -40,6 +40,7 @@ kerberos_v4	{ return KERBEROS4; }
 kerberos	{ return KERBEROS4; }
 timeout		{ return TIMEOUT;}
 envelope	{ return ENVELOPE; }
+qvirtual	{ return QVIRTUAL; }
 
 user(name)?	{ return USERNAME; }
 pass(word)?	{ return PASSWORD; }

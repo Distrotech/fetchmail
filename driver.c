@@ -222,16 +222,28 @@ struct query *ctl;		/* list of permissible aliases */
 struct idlist **xmit_names;	/* list of recipient names parsed out */
 {
     const char	*lname;
-
+    int sl;
+    int off = 0;
+    
     lname = idpair_find(&ctl->localnames, name);
     if (!lname && ctl->wildcard)
 	lname = name;
 
     if (lname != (char *)NULL)
     {
+        /* 
+         * If the name of the user begins with a 
+         * qmail virtual domain prefix, remove
+         * the prefix
+         */
+	if (ctl->server.qvirtual)
+	{
+	   sl=strlen(ctl->server.qvirtual);
+	   if (!strncasecmp(lname,ctl->server.qvirtual,sl)) off=sl; 
+	}
 	if (outlevel == O_VERBOSE)
-	    error(0, 0, "mapped %s to local %s", name, lname);
-	save_str(xmit_names, XMIT_ACCEPT, lname);
+	    error(0, 0, "mapped %s to local %s", name, lname+off);
+	save_str(xmit_names, XMIT_ACCEPT, lname+off);
 	accept_count++;
     }
 }

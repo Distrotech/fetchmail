@@ -56,7 +56,7 @@ extern char * yytext;
 
 %token DEFAULTS POLL SKIP VIA AKA LOCALDOMAINS PROTOCOL
 %token AUTHENTICATE TIMEOUT KPOP KERBEROS4
-%token ENVELOPE USERNAME PASSWORD FOLDER SMTPHOST MDA
+%token ENVELOPE QVIRTUAL USERNAME PASSWORD FOLDER SMTPHOST MDA
 %token PRECONNECT POSTCONNECT LIMIT
 %token IS HERE THERE TO MAP WILDCARD
 %token BATCHLIMIT FETCHLIMIT EXPUNGE
@@ -130,6 +130,7 @@ serv_option	: AKA alias_list
 		| AUTHENTICATE KERBEROS4	{current.server.preauthenticate = A_KERBEROS_V4;}
 		| TIMEOUT NUMBER	{current.server.timeout = $2;}
 		| ENVELOPE STRING	{current.server.envelope = xstrdup($2);}
+		| QVIRTUAL STRING	{current.server.qvirtual = xstrdup($2);}
 		| INTERFACE STRING	{
 #ifdef linux
 					interface_parse($2, &current.server);
@@ -396,6 +397,7 @@ static void record_current(void)
     FLAG_FORCE(server.preauthenticate);
     FLAG_FORCE(server.timeout);
     FLAG_FORCE(server.envelope);
+    FLAG_FORCE(server.qvirtual);
     FLAG_FORCE(server.skip);
     FLAG_FORCE(server.dns);
     FLAG_FORCE(server.uidl);
@@ -452,6 +454,7 @@ void optmerge(struct query *h2, struct query *h1)
     FLAG_MERGE(server.preauthenticate);
     FLAG_MERGE(server.timeout);
     FLAG_MERGE(server.envelope);
+    FLAG_MERGE(server.qvirtual);
     FLAG_MERGE(server.skip);
     FLAG_MERGE(server.dns);
     FLAG_MERGE(server.uidl);

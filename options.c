@@ -50,10 +50,11 @@
 #define LA_INTERFACE    32
 #define LA_MONITOR      33
 #define LA_YYDEBUG	34
+#define LA_QVIRTUAL     35
 
-/* options still left: CDgGhHjJoOqQRTUwWxXYzZ */
+/* options still left: CDgGhHjJoORTUwWxXYzZ */
 static const char *shortoptions = 
-	"?Vcsvd:NqL:f:i:p:UP:A:t:E:u:akKFnl:r:S:b:B:e:m:I:M:y";
+	"?Vcsvd:NqL:f:i:p:UP:A:t:E:Q:u:akKFnl:r:S:b:B:e:m:I:M:y";
 
 static const struct option longoptions[] = {
 /* this can be const because all flag fields are 0 and will never get set */
@@ -77,6 +78,7 @@ static const struct option longoptions[] = {
   {"auth",	required_argument, (int *) 0, LA_AUTHENTICATE},
   {"timeout",	required_argument, (int *) 0, LA_TIMEOUT     },
   {"envelope",	required_argument, (int *) 0, LA_ENVELOPE    },
+  {"qvirtual",	required_argument, (int *) 0, LA_QVIRTUAL    },
 
   {"user",	required_argument, (int *) 0, LA_USERNAME    },
   {"username",  required_argument, (int *) 0, LA_USERNAME    },
@@ -238,6 +240,10 @@ struct query *ctl;	/* option record to be initialized */
 	case LA_ENVELOPE:
 	    ctl->server.envelope = xstrdup(optarg);
 	    break;
+	case 'Q':    
+	case LA_QVIRTUAL:
+	    ctl->server.qvirtual = xstrdup(optarg);
+	    break;
 
 	case 'u':
 	case LA_USERNAME:
@@ -371,6 +377,7 @@ struct query *ctl;	/* option record to be initialized */
 	fputs("  -A, --auth        authentication type (password or kerberos)\n",stderr);
 	fputs("  -t, --timeout     server nonresponse timeout\n",stderr);
 	fputs("  -E, --envelope    envelope address header\n",stderr);
+	fputs("  -Q, --qvirtual    prefix to remove from local user id\n",stderr);
 
 	fputs("  -u, --username    specify users's login on server\n", stderr);
 	fputs("  -a, --all         retrieve old and new messages\n", stderr);

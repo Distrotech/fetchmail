@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/10/01 13:43:23 $
+<td width="30%" align=right>$Date: 1997/10/02 03:06:01 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -834,11 +834,11 @@ to set up one fetchmail link to be reliably collect the mail for an
 entire domain.<p>
 
 One of the basic features of qmail is the `Delivered-To:' message
-header.  Whenever qmail deliver a message to a local mailbox it puts
+header.  Whenever qmail delivers a message to a local mailbox it puts
 the username and hostname of the envelope recipient on this line.  The
 major reason for this is to prevent mail loops. <p>
 
-To set up qmail to batch mail for a disconnected site the isp-mailhost
+To set up qmail to batch mail for a disconnected site the ISP-mailhost
 will have normally put that site in its `virtualhosts' control file so
 it will add a prefix to all mail addresses for this site. This results
 in mail sent to 'username@userhost.userdom.dom.com' having a
@@ -879,6 +879,13 @@ in the alias directory (normally /var/qmail/alias) with the contents:<p>
 </pre>
 
 Note this <em>does</em> require a modern /bin/sh.<p>
+
+Luca Olivetti adds:<P>
+
+If you aren't using qmail locally, or you don't want to set up the
+alias mechanism described above, you can use the option `<code>qvirtual
+"mbox-userstr-"</code>' in your fetchmail config file to strip the prefix
+from the local user name.<p>
 
 <hr>
 <h2><a name="T2">T2. How can I use fetchmail with exim?</a></h2><p>
@@ -1210,6 +1217,9 @@ mailbox mean it all ends up with a single envelope address that is
 useless for rerouting purposes.  You may have to set `<CODE>no
 envelope</CODE>' to prevent fetchmail from being bamboozled by this.<p>
 
+Check also answer <a href="#T1">T1</a> on a reliable way to do multidrop
+delivery if your ISP (or your mail redirection provider) is using qmail.<p>
+
 <hr>
 <h2><a name="M3">M3. I tried to run a mailing list using multidrop, and I have a mail loop!</a></h2>
 
@@ -1538,7 +1548,7 @@ will look right.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/10/01 13:43:23 $
+<td width="30%" align=right>$Date: 1997/10/02 03:06:01 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
