@@ -1083,24 +1083,23 @@ static int load_params(int argc, char **argv, int optind)
 		ctl->server.queryname = xstrdup(ctl->server.pollname);
 
 #ifdef HESIOD
-        /* If either the pollname or vianame are "hesiod" we want to
-           lookup the user's hesiod pobox host */
-
-        if (!strcasecmp(ctl->server.queryname, "hesiod")) {
-            struct hes_postoffice *hes_p;
-            hes_p = hes_getmailhost(ctl->remotename);
-            if (hes_p != NULL && strcmp(hes_p->po_type, "POP") == 0) {
-                 free(ctl->server.queryname);
-                 ctl->server.queryname = xstrdup(hes_p->po_host);
-                 if (ctl->server.via)
-                     free(ctl->server.via);
-                 ctl->server.via = xstrdup(hes_p->po_host);
-            } else {
-                 report(stderr,
-			_("couldn't find HESIOD pobox for %s\n"),
-			ctl->remotename);
-            }
-        }
+	    /* If either the pollname or vianame are "hesiod" we want to
+	       lookup the user's hesiod pobox host */
+	    if (!strcasecmp(ctl->server.queryname, "hesiod")) {
+		struct hes_postoffice *hes_p;
+		hes_p = hes_getmailhost(ctl->remotename);
+		if (hes_p != NULL && strcmp(hes_p->po_type, "POP") == 0) {
+		     free(ctl->server.queryname);
+		     ctl->server.queryname = xstrdup(hes_p->po_host);
+		     if (ctl->server.via)
+			 free(ctl->server.via);
+		     ctl->server.via = xstrdup(hes_p->po_host);
+		} else {
+		     report(stderr,
+			    _("couldn't find HESIOD pobox for %s\n"),
+			    ctl->remotename);
+		}
+	    }
 #endif /* HESIOD */
 
 	    /*
@@ -1378,12 +1377,13 @@ static int query_host(struct query *ctl)
      */
     if (outlevel >= O_VERBOSE || (run.logfile && outlevel > O_SILENT))
     {
-	report(stdout, _("%s querying %s (protocol %s) at %s\n"),
+	report(stdout, _("%s querying %s (protocol %s) at %s: poll started\n"),
 	       VERSION,
 	       ctl->server.pollname,
 	       showproto(ctl->server.protocol),
 	       timestamp());
     }
+
     switch (ctl->server.protocol) {
     case P_AUTO:
 	for (i = 0; i < sizeof(autoprobe)/sizeof(autoprobe[0]); i++)
@@ -1394,60 +1394,74 @@ static int query_host(struct query *ctl)
 		break;
 	}
 	ctl->server.protocol = P_AUTO;
-	return(st);
     case P_POP2:
 #ifdef POP2_ENABLE
-	return(doPOP2(ctl));
+	st = doPOP2(ctl);
 #else
 	report(stderr, _("POP2 support is not configured.\n"));
-	return(PS_PROTOCOL);
+	st = PS_PROTOCOL;
 #endif /* POP2_ENABLE */
 	break;
     case P_POP3:
     case P_APOP:
     case P_RPOP:
 #ifdef POP3_ENABLE
-	return(doPOP3(ctl));
+	st = doPOP3(ctl);
 #else
 	report(stderr, _("POP3 support is not configured.\n"));
-	return(PS_PROTOCOL);
+	st = PS_PROTOCOL;
 #endif /* POP3_ENABLE */
 	break;
     case P_IMAP:
 #ifdef IMAP_ENABLE
-	return(doIMAP(ctl));
+	st = doIMAP(ctl);
 #else
 	report(stderr, _("IMAP support is not configured.\n"));
-	return(PS_PROTOCOL);
+	st = PS_PROTOCOL;
 #endif /* IMAP_ENABLE */
     case P_ETRN:
 #ifndef ETRN_ENABLE
 	report(stderr, _("ETRN support is not configured.\n"));
-	return(PS_PROTOCOL);
+	st = PS_PROTOCOL;
 #else
 #ifdef HAVE_GETHOSTBYNAME
-	return(doETRN(ctl));
+	st = doETRN(ctl);
 #else
 	report(stderr, _("Cannot support ETRN without gethostbyname(2).\n"));
-	return(PS_PROTOCOL);
+	st = PS_PROTOCOL;
 #endif /* HAVE_GETHOSTBYNAME */
 #endif /* ETRN_ENABLE */
     case P_ODMR:
 #ifndef ODMR_ENABLE
 	report(stderr, _("ODMR support is not configured.\n"));
-	return(PS_PROTOCOL);
+	st = PS_PROTOCOL;
 #else
 #ifdef HAVE_GETHOSTBYNAME
-	return(doODMR(ctl));
+	st = doODMR(ctl);
 #else
 	report(stderr, _("Cannot support ODMR without gethostbyname(2).\n"));
-	return(PS_PROTOCOL);
+	st = PS_PROTOCOL;
 #endif /* HAVE_GETHOSTBYNAME */
 #endif /* ODMR_ENABLE */
     default:
 	report(stderr, _("unsupported protocol selected.\n"));
-	return(PS_PROTOCOL);
+	st = PS_PROTOCOL;
     }
+
+    /*
+     * If we're syslogging the progress messages are automatically timestamped.
+     * Force timestamping if we're going to a logfile.
+     */
+    if (outlevel >= O_VERBOSE || (run.logfile && outlevel > O_SILENT))
+    {
+	report(stdout, _("%s querying %s (protocol %s) at %s: poll completed\n"),
+	       VERSION,
+	       ctl->server.pollname,
+	       showproto(ctl->server.protocol),
+	       timestamp());
+    }
+
+    return(st);
 }
 
 static void dump_params (struct runctl *runp,
