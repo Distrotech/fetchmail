@@ -36,7 +36,7 @@
 #define LA_ENVELOPE	18
 #define LA_USERNAME	19
 #define LA_ALL          20
-#define LA_KILL		21
+#define LA_NOKEEP		21
 #define	LA_KEEP		22
 #define LA_FLUSH        23
 #define LA_NOREWRITE	24
@@ -81,7 +81,7 @@ static const struct option longoptions[] = {
   {"username",  required_argument, (int *) 0, LA_USERNAME    },
 
   {"all",	no_argument,       (int *) 0, LA_ALL         },
-  {"kill",	no_argument,	   (int *) 0, LA_KILL        },
+  {"nokeep",	no_argument,	   (int *) 0, LA_NOKEEP        },
   {"keep",      no_argument,       (int *) 0, LA_KEEP        },
   {"flush",	no_argument,	   (int *) 0, LA_FLUSH       },
   {"norewrite",	no_argument,	   (int *) 0, LA_NOREWRITE   },
@@ -246,7 +246,7 @@ struct query *ctl;	/* option record to be initialized */
 	    ctl->fetchall = FLAG_TRUE;
 	    break;
 	case 'K':
-	case LA_KILL:
+	case LA_NOKEEP:
 	    ctl->keep = FLAG_FALSE;
 	    break;
 	case 'k':
@@ -366,7 +366,7 @@ struct query *ctl;	/* option record to be initialized */
 
 	fputs("  -u, --username    specify users's login on server\n", stderr);
 	fputs("  -a, --all         retrieve old and new messages\n", stderr);
-	fputs("  -K, --kill        delete new messages after retrieval\n", stderr);
+	fputs("  -K, --nokeep      delete new messages after retrieval\n", stderr);
 	fputs("  -k, --keep        save new messages after retrieval\n", stderr);
 	fputs("  -F, --flush       delete old messages from server\n", stderr);
 	fputs("  -n, --norewrite   don't rewrite header addresses\n", stderr);

@@ -24,9 +24,11 @@ fetchmail-4.0.6 ()
 * Substantially improved option coverage on the man page.
 * Yet another try at getting the remote-build right for Harry McGavran.
 * Don't emit "No mail" messages in (non-verbose) daemon mode).
+* Fixed the stock POP3 authorization sequence, which got broken in 4.0.4.
+* --kill option renamed to --nokeep for consistency
 
 WARNING: If you are running multidrop, (RE)READ FAQ ITEM F1 NOW!
-There are 255 people on the fetchmail-friends list.
+There are 258 people on the fetchmail-friends list.
 
 fetchmail-4.0.5 (Wed Jul 30 10:27:25 EDT 1997)
 * Increased %o in the Lex source to cope with Ultrix lex.

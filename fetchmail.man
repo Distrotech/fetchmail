@@ -118,10 +118,11 @@ Specifying the
 option causes retrieved messages to remain in your folder on the
 mailserver.  This option does not work with ETRN.
 .TP
-.B \-K, --kill
+.B \-K, --nokeep
+(Keyword: nokeep)
 Delete retrieved messages from the remote mailserver.  This
 option forces retrieved mail to be deleted.  It may be useful if
-you have specified a default of \fBnokill\fR in your
+you have specified a default of \fBkeep\fR in your
 \fI.fetchmailrc\fR.  This option is forced on with ETRN.
 .TP
 .B \-F, --flush
@@ -775,7 +776,7 @@ T}
 dropstatus	\&	T{
 Strip Status lines out of incoming mail
 T}
-no keep  	\&	T{
+no keep  	-K	T{
 Delete seen messages from server (default)
 T}
 no flush	\&	T{
