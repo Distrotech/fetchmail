@@ -544,6 +544,8 @@ Legal server options are:
     timeout
     envelope
     aka
+    interface
+    monitor
 
 Legal user options are
 
@@ -650,13 +652,11 @@ or reverse it by saying `user esr here is eric there'
 .PP
 For backward compatibility, the word `server' is a synonym for `poll'.
 .PP
-There are currently four valid global option statements; 
-\&`set batchlimit = ' followed by a number and sets the same global
-specified by the --batchlimit option, `set logfile = ' followed by a
-string sets the same global specified by --logfile, `set interface = '
-followed by a string sets the same global specified by --interface, and
-`set monitor = ' followed by a string sets the same global specified by
---monitor.  In all cases, a command-line option will override.
+There are currently two valid global option statements; \&`set
+batchlimit = ' followed by a number and sets the same global specified
+by the --batchlimit option, and `set logfile = ' followed by a string
+sets the same global specified by --logfile.  In both cases, a
+command-line option will override.
 .PP
 Basic format is:
 

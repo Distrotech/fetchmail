@@ -61,10 +61,6 @@ int check_only;		/* if --probe was set */
 int cmd_batchlimit;	/* if --batchlimit was set */
 int cmd_fetchlimit;	/* if --fetchlimit was set */
 char *cmd_logfile;	/* if --logfile was set */
-char *interface;	/* interface required specification */
-char *cmd_interface;	/* if --interface was set */
-char *monitor;		/* monitored interface for activity */
-char *cmd_monitor;	/* if --monitor was set */
 
 /* miscellaneous global controls */
 char *rcfile;		/* path name of rc file */
@@ -178,16 +174,6 @@ int main (int argc, char **argv)
 	    printf("SMTP message batch limit is %d.\n", batchlimit);
 	else if (outlevel == O_VERBOSE)
 	    printf("No SMTP message batch limit.\n");
-#ifdef	linux
-	if (interface)
-	    printf("TCP/IP interface requirements for %s.\n", interface);
-	else if (outlevel == O_VERBOSE)
-	    printf("No TCP/IP interface requirements specified.\n");
-	if (monitor)
-	    printf("Polling loop will monitor %s.\n", monitor);
-	else if (outlevel == O_VERBOSE)
-	    printf("No monitor interface specified.\n");
-#endif
 	for (ctl = querylist; ctl; ctl = ctl->next) {
 	    if (ctl->active && !(implicitmode && ctl->server.skip))
 		dump_params(ctl);
@@ -374,69 +360,6 @@ int main (int argc, char **argv)
      * reflect the status of that transaction.
      */
     do {
-	if (poll_interval)
-	{
-#ifdef	linux
-	    if (monitor)
-	    {
-		/*
-		 * Allow some time for the link to quiesce.
-		 * Note: this delay is important!  Don't remove it casually!
-		 */
-		sleep(3);
-		interface_note_activity();
-	    }
-#endif
-	    if (outlevel == O_VERBOSE)
-	    {
-		time_t	now;
-
-		time(&now);
-		fprintf(stderr, "fetchmail: sleeping at %s", ctime(&now));
-	    }
-
-	    /*
-	     * We can't use sleep(3) here because we need an alarm(3)
-	     * equivalent in order to implement server nonresponse timeout.
-	     * We'll just assume setitimer(2) is available since fetchmail
-	     * has to have a BSDoid socket layer to work at all.
-	     */
-	    {
-		struct itimerval ntimeout;
-
-		ntimeout.it_interval.tv_sec = ntimeout.it_interval.tv_usec = 0;
-		ntimeout.it_value.tv_sec  = poll_interval;
-		ntimeout.it_value.tv_usec = 0;
-
-		setitimer(ITIMER_REAL,&ntimeout,NULL);
-		signal(SIGALRM, donothing);
-		pause();
-		signal(SIGALRM, SIG_IGN);
-		if (lastsig == SIGUSR1
-			|| ((poll_interval && !getuid()) && lastsig == SIGHUP))
-		{
-#ifdef SYS_SIGLIST_DECLARED
-		    error(0, 0, "awakened by %s", sys_siglist[lastsig]);
-#else
-		    error(0, 0, "awakened by signal %d", lastsig);
-#endif
-		}
-	    }
-
-	    if (outlevel == O_VERBOSE)
-	    {
-		time_t	now;
-
-		time(&now);
-		fprintf(stderr, "fetchmail: awakened at %s", ctime(&now));
-	    }
-	}
-
-#ifdef	linux
-	if (!interface_approve())
-	    continue;
-#endif
-
 #ifdef HAVE_RES_SEARCH
 	sethostent(TRUE);	/* use TCP/IP for mailserver queries */
 #endif /* HAVE_RES_SEARCH */
@@ -446,6 +369,12 @@ int main (int argc, char **argv)
 	{
 	    if (ctl->active && !(implicitmode && ctl->server.skip))
 	    {
+#ifdef linux
+		/* interface_check does its own error logging */
+		if (!interface_check(&ctl->server))
+		    continue;
+#endif /* linux */
+
 #ifdef HAVE_GETHOSTBYNAME
 		/*
 		 * This functions partly as an optimization and partly
@@ -508,6 +437,56 @@ int main (int argc, char **argv)
 		fclose(ctl->smtp_sockfp);
 		ctl->smtp_sockfp = (FILE *)NULL;
 	    }
+
+	/*
+	 * OK, we've polled.  Now sleep.
+	 */
+	if (poll_interval)
+	{
+	    if (outlevel == O_VERBOSE)
+	    {
+		time_t	now;
+
+		time(&now);
+		fprintf(stderr, "fetchmail: sleeping at %s", ctime(&now));
+	    }
+
+	    /*
+	     * We can't use sleep(3) here because we need an alarm(3)
+	     * equivalent in order to implement server nonresponse timeout.
+	     * We'll just assume setitimer(2) is available since fetchmail
+	     * has to have a BSDoid socket layer to work at all.
+	     */
+	    {
+		struct itimerval ntimeout;
+
+		ntimeout.it_interval.tv_sec = ntimeout.it_interval.tv_usec = 0;
+		ntimeout.it_value.tv_sec  = poll_interval;
+		ntimeout.it_value.tv_usec = 0;
+
+		setitimer(ITIMER_REAL,&ntimeout,NULL);
+		signal(SIGALRM, donothing);
+		pause();
+		signal(SIGALRM, SIG_IGN);
+		if (lastsig == SIGUSR1
+			|| ((poll_interval && !getuid()) && lastsig == SIGHUP))
+		{
+#ifdef SYS_SIGLIST_DECLARED
+		    error(0, 0, "awakened by %s", sys_siglist[lastsig]);
+#else
+		    error(0, 0, "awakened by signal %d", lastsig);
+#endif
+		}
+	    }
+
+	    if (outlevel == O_VERBOSE)
+	    {
+		time_t	now;
+
+		time(&now);
+		fprintf(stderr, "fetchmail: awakened at %s", ctime(&now));
+	    }
+	}
     } while
 	(poll_interval);
 
@@ -649,6 +628,11 @@ static int load_params(int argc, char **argv, int optind)
 	    if (ctl->server.envelope == (char *)NULL)
 		ctl->server.envelope = "X-Envelope-To:";
 
+#ifdef linux
+	    /* interface_check does its own error logging */
+	    interface_parse(&ctl->server);
+#endif /* linux */
+
 	    /* sanity checks */
 	    if (ctl->server.port < 0)
 	    {
@@ -673,31 +657,6 @@ static int load_params(int argc, char **argv, int optind)
     /* if cmd_logfile was explicitly set, use it to override logfile */
     if (cmd_logfile)
 	logfile = cmd_logfile;
-
-    /* if cmd_interface was explicitly set, use it to override interface */
-    if (cmd_interface)
-	interface = cmd_interface;
-
-    /* if cmd_monitor was explicitly set, use it to override monitor */
-    if (cmd_monitor)
-	monitor = cmd_monitor;
-
-    if (interface)
-#ifdef	linux
-	interface_parse();
-#else
-	{
-	    (void) fprintf(stderr,
-	    		"interface specification supported only on Linux\n");
-	    exit(PS_SYNTAX);
-	}
-    if (monitor)
-	{
-	    (void) fprintf(stderr,
-	    		"monitor supported only on Linux\n");
-	    exit(PS_SYNTAX);
-	}
-#endif
 
     return(implicitmode);
 }
@@ -904,6 +863,16 @@ void dump_params (struct query *ctl)
 	if (count > 1)
 	    printf("  Envelope header is assumed to be: %s\n", ctl->server.envelope);
     }
+#ifdef	linux
+    if (ctl->server.interface)
+	printf("TCP/IP interface requirements for %s.\n", ctl->server.interface);
+    else if (outlevel == O_VERBOSE)
+	printf("No TCP/IP interface requirements specified.\n");
+    if (ctl->server.monitor)
+	printf("Polling loop will monitor %s.\n", ctl->server.monitor);
+    else if (outlevel == O_VERBOSE)
+	printf("No monitor interface specified.\n");
+#endif
 
     if (ctl->server.protocol > P_POP2)
 	if (!ctl->oldsaved)

@@ -68,8 +68,6 @@ statement_list	: statement
 /* future global options should also have the form SET <name> <value> */
 statement	: SET BATCHLIMIT MAP NUMBER	{batchlimit = $4;}
 		| SET LOGFILE MAP STRING	{logfile = xstrdup($4);}
-		| SET INTERFACE MAP STRING	{interface = xstrdup($4);}
-		| SET MONITOR MAP STRING	{monitor = xstrdup($4);}
 
 /* 
  * The way the next two productions are written depends on the fact that
@@ -117,6 +115,20 @@ serv_option	: AKA alias_list
 		| AUTHENTICATE KERBEROS	{current.server.authenticate = A_KERBEROS;}
 		| TIMEOUT NUMBER	{current.server.timeout = $2;}
 		| ENVELOPE STRING	{current.server.envelope = xstrdup($2);}
+		| INTERFACE STRING	{
+#ifdef linux
+					current.server.interface = xstrdup($2);
+#else
+					fprintf(stderr, "fetchmail: interface option is only supported under Linux\n");
+#endif /* linux */
+					}
+		| MONITOR STRING	{
+#ifdef linux
+					current.server.monitor = xstrdup($2);
+#else
+					fprintf(stderr, "fetchmail: monitor option is only supported under Linux\n");
+#endif /* linux */
+					}
 		;
 
 /*

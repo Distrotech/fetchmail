@@ -268,11 +268,11 @@ struct query *ctl;	/* option record to be initialized */
 #ifdef	linux
 	case 'I':
 	case LA_INTERFACE:
-	    cmd_interface = optarg;
+	    ctl->server.interface = xstrdup(optarg);
 	    break;
 	case 'M':
 	case LA_MONITOR:
-	    cmd_monitor = optarg;
+	    ctl->server.monitor = xstrdup(optarg);
 	    break;
 #endif
 

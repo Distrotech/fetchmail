@@ -68,6 +68,13 @@ struct hostdata		/* shared among all user connections to given server */
     char *envelope;
     int skip;
 
+#ifdef linux
+    char		*interface;
+    char		*monitor;
+    int 		monitor_io;
+    struct ipair	*inter;
+#endif /* linux */
+
     /* computed for internal use */
 #ifdef HAVE_GETHOSTBYNAME
     char *canonical_name;		/* DNS canonical name of server host */
@@ -150,10 +157,6 @@ extern int quitmode;		/* if --quit was set */
 extern int check_only;		/* if --check was set */
 extern int cmd_batchlimit;	/* if --batchlimit was set */
 extern char *cmd_logfile;	/* if --logfile was set */
-extern char *interface;		/* interface required specification */
-extern char *cmd_interface;	/* if --interface was set */
-extern char *monitor;		/* monitored interface for activity */
-extern char *cmd_monitor;	/* if --monitor was set */
 
 /* these get computed */
 extern int batchlimit;		/* if --batchlimit was set */
@@ -219,9 +222,8 @@ int daemonize(const char *, void (*)(int));
 int prc_parse_file(const char *);
 int prc_filecheck(const char *);
 
-void interface_parse(void);
-void interface_note_activity(void);
-int interface_approve(void);
+void interface_parse(struct hostdata *);
+int interface_check(struct hostdata *);
 
 char *getpassword(char *);
 

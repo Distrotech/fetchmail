@@ -21,15 +21,15 @@
 #include <linux/netdevice.h>
 #include "fetchmail.h"
 
-static struct in_addr interface_address;
-static struct in_addr interface_mask;
-
-static int monitor_io = 0;
-
 typedef struct {
 	struct in_addr addr, dstaddr, netmask;
 	int rx_packets, tx_packets;
 } ifinfo_t;
+
+struct ipair {
+    struct in_addr	interface_address;
+    struct in_addr	interface_mask;
+};
 
 /* Get active network interface information.  Return non-zero upon success. */
 
@@ -99,34 +99,27 @@ static int get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
 	return(result);
 }
 
-/* Parse 'interface' specification. */
-
-void interface_parse(void)
+void interface_parse(struct hostdata *hp)
+/* parse 'interface' specification. */
 {
-	int socket_fd = socket(AF_INET, SOCK_DGRAM, 0);
+	int socket_fd;
 	char *cp1, *cp2;
 	struct ifreq request;
 
-	/* in the event we point to a null string, make pointer null */
-	if (interface && !*interface)
-		interface = NULL;
-	if (monitor && !*monitor)
-		monitor = NULL;
-
-	/* if no interface specification present, all done */
-	if (!interface)
-		return;
+	if (!hp->interface)
+	    return;
 
 	/* find and isolate just the IP address */
-	if (!(cp1 = strchr(interface, '/')))
+	if (!(cp1 = strchr(hp->interface, '/')))
 		(void) error(PS_SYNTAX, 0, "missing IP interface address");
 	*cp1++ = '\000';
 
 	/* validate specified interface exists */
-	strcpy(request.ifr_name, interface);
+	strcpy(request.ifr_name, hp->interface);
+	socket_fd = socket(AF_INET, SOCK_DGRAM, 0);
 	if (ioctl(socket_fd, SIOCGIFFLAGS, &request) < 0)
 		(void) error(PS_SYNTAX, 0, "no such interface device '%s'",
-			interface);
+			     hp->interface);
 	close(socket_fd);
 
 	/* find and isolate just the netmask */
@@ -136,56 +129,51 @@ void interface_parse(void)
 		*cp2++ = '\000';
 
 	/* convert IP address and netmask */
-	if (!inet_aton(cp1, &interface_address))
+	hp->inter = xmalloc(sizeof(struct ipair));
+	if (!inet_aton(cp1, &hp->inter->interface_address))
 		(void) error(PS_SYNTAX, 0, "invalid IP interface address");
-	if (!inet_aton(cp2, &interface_mask))
+	if (!inet_aton(cp2, &hp->inter->interface_mask))
 		(void) error(PS_SYNTAX, 0, "invalid IP interface mask");
 	/* apply the mask now to the IP address (range) required */
-	interface_address.s_addr &= interface_mask.s_addr;
+	hp->inter->interface_address.s_addr &= hp->inter->interface_mask.s_addr;
 	return;
 }
 
-/* Save interface I/O counts. */
-
-void interface_note_activity(void)
-{
-	ifinfo_t ifinfo;
-
-	/* get the current I/O stats for the monitored link */
-	if (monitor && get_ifinfo(monitor, &ifinfo))
-		monitor_io = ifinfo.rx_packets + ifinfo.tx_packets;
-}
-
-/* Return TRUE if OK to poll, FALSE otherwise. */
-
-int interface_approve(void)
+int interface_check(struct hostdata *hp)
+/* return TRUE if OK to poll, FALSE otherwise */
 {
 	ifinfo_t ifinfo;
 
 	/* check interface IP address (range), if specified */
-	if (interface) {
+	if (hp->interface) {
 		/* get interface info */
-		if (!get_ifinfo(interface, &ifinfo)) {
-			(void) error(0, 0, "skipping poll, %s down",
-				interface);
+		if (!get_ifinfo(hp->interface, &ifinfo)) {
+			(void) error(0, 0, "skipping poll of %s, %s down",
+				hp->names->id, hp->interface);
 			return(FALSE);
 		}
 		/* check the IP address (range) */
-		if ((ifinfo.addr.s_addr & interface_mask.s_addr) !=
-				interface_address.s_addr) {
+		if ((ifinfo.addr.s_addr & hp->inter->interface_mask.s_addr) !=
+				hp->inter->interface_address.s_addr) {
 			(void) error(0, 0,
-			   "skipping poll, %s IP address excluded",
-			   interface);
+			   "skipping poll of %s, %s IP address excluded",
+			   hp->names->id, hp->interface);
 			return(FALSE);
 		}
 	}
 
 	/* if monitoring, check link for activity if it is up */
-	if (monitor && get_ifinfo(monitor, &ifinfo) &&
-			monitor_io == ifinfo.rx_packets + ifinfo.tx_packets) {
-		(void) error(0, 0, "skipping poll, %s inactive", monitor);
+	if (hp->monitor && get_ifinfo(hp->monitor, &ifinfo) &&
+			hp->monitor_io == ifinfo.rx_packets + ifinfo.tx_packets) {
+		(void) error(0, 0,
+			     "skipping poll of %s, %s inactive",
+			     hp->names->id, hp->monitor);
 		return(FALSE);
 	}
+
+	/* get the current I/O stats for the monitored link */
+	if (hp->monitor && get_ifinfo(hp->monitor, &ifinfo))
+		hp->monitor_io = ifinfo.rx_packets + ifinfo.tx_packets;
 
 	return(TRUE);
 }

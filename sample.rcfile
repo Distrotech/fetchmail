@@ -28,6 +28,8 @@
 #   envelope                  -- must be followed by an envelope header name
 #   aka                       -- must be followed by one or more server aliases
 #   localdomains              -- must be followed by one or more domain names
+#   interface                 -- must be followed by device/IP address/mask
+#   monitor                   -- must be followed by IP address
 #
 #   username (or user)        -- must be followed by a name
 #   is                        -- must be followed by one or more names
@@ -63,8 +65,6 @@
 #
 #   set batchlimit =		-- must be followed by a number
 #   set logfile =		-- must be followed by a string
-#   set interface =             -- must be followed by IP address
-#   set monitor =               -- must be followed by IP address
 #
 # The noise keywords `and', `with', `has', `wants', and `options' are ignored
 # anywhere in an entry; they can be used to make it resemble English.  The
@@ -76,18 +76,20 @@
 # This is what the developer's .fetchmailrc looks like:
 
 set batchlimit = 0		# I forward to sendmail
-set interface = sl0/10.0.2.15	# SLIRP's default IP address
 
-defaults password not_blowing_my_cover;
+defaults
+	interface "sl0/10.0.2.15"	# SLIRP standard address
+	user esr is esr fetchmail-friends magic-numbers here
+	fetchall
 
 # Use this for production
 poll locke.ccil.org with protocol APOP:
-	user esr there with password my_apop_secret is esr here;
+	password my_apop_secret;
 
 # Use this to test IMAP
 skip locke protocol IMAP:
-	user esr here is esr there;
+	password my_remote_password;
 
 # Use this to test against POP2 using a local server
 skip localhost protocol pop2:
-	user esr here is esr there;
+	password my_local_password;
