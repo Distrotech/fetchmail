@@ -6,6 +6,7 @@
 * FreeBSD port fixes.
 * Man page polished and updated.
 * Added --sslproto option from Peter Hedwig.
+* Fix KPOP support, which got broken in 5.6.8.
 
 ------------------------------------------------------------------------------
 fetchmail-5.7.0 (Thu Mar  1 18:00:08 EST 2001), 20131 lines:
