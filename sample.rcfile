@@ -30,10 +30,13 @@
 #   authenticate (or auth)    -- must be followed by an authentication type
 #   timeout                   -- must be followed by a numeric timeout value
 #   envelope                  -- must be followed by an envelope header name
+#   no envelope
 #   aka                       -- must be followed by one or more server aliases
 #   localdomains              -- must be followed by one or more domain names
 #   interface                 -- must be followed by device/IP address/mask
 #   monitor                   -- must be followed by IP address
+#   no dns
+#   dns
 #
 #   username (or user)        -- must be followed by a name
 #   is                        -- must be followed by one or more names
@@ -52,15 +55,12 @@
 #   stripcr
 #   pass8bits
 #   dropstatus
-#   dns
 #   no keep
 #   no flush
 #   no fetchall
 #   no rewrite
 #   no forcecr
 #   no stripcr
-#   no dns
-#   no envelope
 #   no pass8bits
 #   no dropstatus
 #   limit                     -- must be followed by numeric size limit
