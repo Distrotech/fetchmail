@@ -163,11 +163,12 @@ int *firstp;
 	return(ok);
 
     /*
-     * Ask for number of last message retrieved.  
-     * Newer, RFC-1760-conformant POP servers may not have the LAST command.
-     * Therefore we don't croak if we get a nonzero return.  Instead, send
-     * UIDL and try to find the last received ID stored for this host in
-     * the list we get back.
+     * Newer, RFC-1725-conformant POP servers may not have the LAST command.
+     * Try LAST first as it simplifies life.  If it fails, go through the
+     * contortions with UID lists required.
+     *
+     * We could reverse this order (checking for UID capabilities first),
+     * but if LAST works we can finish faster and do fewer mallocs.
      */
     *firstp = 1;
     use_uidl = 0;
@@ -181,6 +182,7 @@ int *firstp;
 	if (ok == 0 && sscanf(buf, "%d", &num) == 0)
 	    return(PS_ERROR);
 
+	/* crucial fork in the road here */
 	use_uidl = (ok != 0); 
 
 	if (!use_uidl)
