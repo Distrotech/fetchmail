@@ -13,6 +13,7 @@
 #include  "fetchmail.h"
 #include  "socket.h"
 
+#include <sys/types.h>
 #include <netinet/in.h>  /* for htonl/ntohl */
 
 #ifdef KERBEROS_V4
