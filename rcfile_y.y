@@ -32,6 +32,7 @@ static int prc_errflag;
 
 static void record_current();
 static void user_reset();
+static int reset_server(char *name, int skip);
 %}
 
 %union {
@@ -41,7 +42,7 @@ static void user_reset();
 }
 
 %token DEFAULTS POLL SKIP AKA LOCALDOMAINS PROTOCOL
-%token AUTHENTICATE TIMEOUT KPOP KERBEROS
+%token AUTHENTICATE TIMEOUT KPOP KERBEROS_V4
 %token ENVELOPE USERNAME PASSWORD FOLDER SMTPHOST MDA PRECONNECT LIMIT
 %token IS HERE THERE TO MAP WILDCARD
 %token SET BATCHLIMIT FETCHLIMIT LOGFILE DAEMON INTERFACE MONITOR
@@ -74,14 +75,27 @@ statement	: SET LOGFILE MAP STRING	{logfile = xstrdup($4);}
 		| define_server serverspecs userspecs
 		;
 
-define_server	: POLL STRING	{memset(&current,'\0',sizeof(current));
-					save_str(&current.server.names, -1,$2);
-					current.server.skip = FALSE;}
-		| SKIP STRING	{memset(&current,'\0',sizeof(current));
-					save_str(&current.server.names, -1,$2);
-					current.server.skip = TRUE;}
-		| DEFAULTS	{memset(&current,'\0',sizeof(current));
-					save_str(&current.server.names, -1,"defaults");}
+define_server	: POLL STRING	{
+    				    if (!reset_server($2, FALSE))
+				    {
+					yyerror("duplicate entry name not allowed");
+					YYERROR;
+				    }
+				}
+		| SKIP STRING	{
+    				    if (!reset_server($2, TRUE))
+				    {
+					yyerror("duplicate entry name not allowed");
+					YYERROR;
+				    }
+				}
+		| DEFAULTS	{
+    				    if (!reset_server("defaults", FALSE))
+				    {
+					yyerror("can't have two default entries");
+					YYERROR;
+				    }
+				}
   		;
 
 serverspecs	: /* EMPTY */
@@ -101,14 +115,14 @@ serv_option	: AKA alias_list
 		| PROTOCOL PROTO	{current.server.protocol = $2;}
 		| PROTOCOL KPOP		{
 					    current.server.protocol = P_POP3;
-		    			    current.server.authenticate = A_KERBEROS;
+		    			    current.server.authenticate = A_KERBEROS_V4;
 					    current.server.port = KPOP_PORT;
 					}
 		| UIDL			{current.server.uidl = FLAG_TRUE;}
 		| NO UIDL		{current.server.uidl  = FLAG_FALSE;}
 		| PORT NUMBER		{current.server.port = $2;}
 		| AUTHENTICATE PASSWORD	{current.server.authenticate = A_PASSWORD;}
-		| AUTHENTICATE KERBEROS	{current.server.authenticate = A_KERBEROS;}
+		| AUTHENTICATE KERBEROS_V4	{current.server.authenticate = A_KERBEROS_V4;}
 		| TIMEOUT NUMBER	{current.server.timeout = $2;}
 		| ENVELOPE STRING	{current.server.envelope = xstrdup($2);}
 		| INTERFACE STRING	{
@@ -302,6 +316,23 @@ const char *pathname;		/* pathname for the configuration file */
     else
 	return(0);
 }
+
+static int reset_server(char *name, int skip)
+/* clear the entire global record and initialize it with a new name */
+{
+    struct query *ctl;
+
+    /* don't allow name collisions, this screws up the data structures */
+    for (ctl = querylist; ctl; ctl = ctl->next)
+	if (strcmp(name, ctl->server.names->id) == 0)
+	    return(FALSE);
+
+    memset(&current,'\0',sizeof(current));
+    save_str(&current.server.names, -1, name);
+    current.server.skip = skip;
+    return(TRUE);
+}
+
 
 static void user_reset(void)
 /* clear the global current record (server parameters) used by the parser */

@@ -139,7 +139,7 @@ Use POP3 with MD5 authentication.
 .IP RPOP
 Use POP3 with RPOP authentication.
 .IP KPOP
-Use POP3 with Kerberos authentication on port 1109.
+Use POP3 with Kerberos V4 authentication on port 1109.
 .IP IMAP
 IMAP2bis, IMAP4, or IMAP4rev1 (\fIfetchmail\fR autodetects their capabilities).
 .IP ETRN
@@ -258,11 +258,12 @@ no other activity has occurred on the link, then the poll will be
 skipped.  This option is currently only supported under Linux.
 .TP
 .B \-A, --auth
-This option permits you to specify an authentication type (see USER
+This option permits you to specify a preauthentication type (see USER
 AUTHENTICATION below for details).  The possible values are
-\&`\fBpassword\fR' and `\fBkerberos\fR'.  This option is provided
+\&`\fBpassword\fR' and `\fBkerberos\fR' (or, for excruciating
+exactness, `\fBkerberos_v4\fR').  This option is provided
 primarily for developers; choosing KPOP protocol automatically selects
-Kerberos authentication, and all other alternatives use ordinary
+Kerberos preauthentication, and all other alternatives use ordinary
 password authentication (though APOP uses a generated one-time
 key as the password).
 This option does not work with ETRN.
@@ -385,8 +386,8 @@ the server greeting time to the server, which can verify it by
 checking its authorization database. 
 .PP
 If your \fIfetchmail\fR was built with Kerberos support and you specify 
-Kerberos authentication (either with --auth or the \fI.fetchmailrc\fR
-option \fBauthenticate kerberos\fR) it will try to get a Kerberos
+Kerberos preauthentication (either with --auth or the \fI.fetchmailrc\fR
+option \fBauthenticate kerberos_v4\fR) it will try to get a Kerberos
 ticket from the mailserver at the start of each query. 
 
 .SH DAEMON MODE
@@ -730,7 +731,7 @@ as in APOP); the second tells \fIfetchmail\fR to try to get a Kerberos
 ticket at the start of each query instead, and send an arbitrary
 string as the password.
 .PP
-Specifying `kpop' sets POP3 protocol over port 1109 with Kerberos
+Specifying `kpop' sets POP3 protocol over port 1109 with Kerberos V4
 authentication.  These defaults may be overridden by later options.
 .PP
 You can use the noise keywords `and', `with',

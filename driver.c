@@ -1168,9 +1168,9 @@ const struct method *proto;	/* protocol method table */
     void (*sigsave)();
 
 #ifndef KERBEROS_V4
-    if (ctl->server.authenticate == A_KERBEROS)
+    if (ctl->server.authenticate == A_KERBEROS_V4)
     {
-	error(0, -1, "Kerberos support not linked.");
+	error(0, -1, "Kerberos V4 support not linked.");
 	return(PS_ERROR);
     }
 #endif /* KERBEROS_V4 */
@@ -1245,7 +1245,7 @@ const struct method *proto;	/* protocol method table */
 	}
 
 #ifdef KERBEROS_V4
-	if (ctl->server.authenticate == A_KERBEROS)
+	if (ctl->server.authenticate == A_KERBEROS_V4)
 	{
 	    ok = kerberos_auth(fileno(sockfp), ctl->server.canonical_name);
  	    if (ok != 0)

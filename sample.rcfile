@@ -2,7 +2,7 @@
 #
 # This file (or one of your own creation, rather) should be located 
 # in your home directory with the name .fetchmailrc.  Permissions on this
-# file may be no greater than -rw-------, or fetchmail will refuse to
+# file may be no greater than -rw------- (0600), or fetchmail will refuse to
 # use it.
 #
 # To see what effect your ~/.fetchmailrc file has, do 

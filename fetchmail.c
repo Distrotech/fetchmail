@@ -300,7 +300,7 @@ int main (int argc, char **argv)
     for (ctl = querylist; ctl; ctl = ctl->next)
 	if (ctl->active && !(implicitmode && ctl->server.skip) && !ctl->password)
 	{
-	    if (ctl->server.authenticate == A_KERBEROS)
+	    if (ctl->server.authenticate == A_KERBEROS_V4)
 		/* Server won't care what the password is, but there
 		   must be some non-null string here.  */
 		ctl->password = ctl->remotename;
@@ -402,7 +402,7 @@ int main (int argc, char **argv)
 		 * as a probe to make sure our nameserver is still up.
 		 * The multidrop case (especially) needs it.
 		 */
-		if (ctl->server.authenticate == A_KERBEROS || MULTIDROP(ctl))
+		if (ctl->server.authenticate==A_KERBEROS_V4 || MULTIDROP(ctl))
 		{
 		    struct hostent	*namerec;
 
@@ -823,7 +823,7 @@ void dump_params (struct query *ctl)
 	    printf("  Password = '%s'.\n", visbuf(ctl->password));
     if (ctl->server.protocol == P_POP3 
 		&& ctl->server.port == KPOP_PORT
-		&& ctl->server.authenticate == A_KERBEROS)
+		&& ctl->server.authenticate == A_KERBEROS_V4)
 	printf("  Protocol is KPOP");
     else
 	printf("  Protocol is %s", showproto(ctl->server.protocol));
@@ -835,8 +835,8 @@ void dump_params (struct query *ctl)
 	printf(" (forcing UIDL use)");
     putchar('.');
     putchar('\n');
-    if (ctl->server.authenticate == A_KERBEROS)
-	    printf("  Kerberos authentication enabled.\n");
+    if (ctl->server.authenticate == A_KERBEROS_V4)
+	    printf("  Kerberos V4 preauthentication enabled.\n");
     printf("  Server nonresponse timeout is %d seconds", ctl->server.timeout);
     if (ctl->server.timeout ==  CLIENT_TIMEOUT)
 	printf(" (default).\n");

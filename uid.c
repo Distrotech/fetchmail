@@ -23,9 +23,7 @@
  * Machinery for handling UID lists live here.  This is mainly to support
  * RFC1725-conformant POP3 servers without a LAST command, but may also be
  * useful for making the IMAP4 querying logic UID-oriented, if a future
- * revision of IMAP forces me to.  (This would be bad.  Server-side 
- * seen bits are better than UIDs, because they track messages seen by
- * *all* clients.)
+ * revision of IMAP forces me to.
  *
  * Here's the theory:
  *
@@ -57,6 +55,8 @@
  * At the end of the fetchmail run, all current `oldsaved' lists are
  * flushed out to the .fetchids file to be picked up by the next run.
  * If there are no such messages, the file is deleted.
+ *
+ * Note: all comparisons are caseblind!
  */
 
 /* UIDs associated with un-queried hosts */
@@ -84,8 +84,8 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 	    {
 		for (ctl = hostlist; ctl; ctl = ctl->next)
 		{
-		    if (strcmp(host, ctl->server.names->id) == 0
-				&& strcmp(user, ctl->remotename) == 0)
+		    if (strcasecmp(host, ctl->server.names->id) == 0
+				&& strcasecmp(user, ctl->remotename) == 0)
 		    {
 			save_str(&ctl->oldsaved, -1, id);
 			break;
@@ -186,11 +186,11 @@ char *str_find(struct idlist **idl, int number)
 }
 
 char *idpair_find(struct idlist **idl, const char *id)
-/* return the id of the given number in the given list. */
+/* return the id of the given id in the given list (caseblind comparison) */
 {
     if (*idl == (struct idlist *) 0)
 	return((char *) 0);
-    else if (strcmp(id, (*idl)->id) == 0)
+    else if (strcasecmp(id, (*idl)->id) == 0)
 	return((*idl)->val.id2 ? (*idl)->val.id2 : (*idl)->id);
     else
 	return(idpair_find(&(*idl)->next, id));

@@ -186,7 +186,7 @@ struct query *ctl;	/* option record to be initialized */
 	    {
 		ctl->server.protocol = P_POP3;
 		ctl->server.port = KPOP_PORT;
-		ctl->server.authenticate =  A_KERBEROS;
+		ctl->server.authenticate =  A_KERBEROS_V4;
 	    }
 	    else if (strcasecmp(optarg,"etrn") == 0)
 		ctl->server.protocol = P_ETRN;
@@ -208,7 +208,9 @@ struct query *ctl;	/* option record to be initialized */
 	    if (strcmp(optarg, "password") == 0)
 		ctl->server.authenticate = A_PASSWORD;
 	    else if (strcmp(optarg, "kerberos") == 0)
-		ctl->server.authenticate = A_KERBEROS;
+		ctl->server.authenticate = A_KERBEROS_V4;
+	    else if (strcmp(optarg, "kerberos_v4") == 0)
+		ctl->server.authenticate = A_KERBEROS_V4;
 	    else {
 		fprintf(stderr,"Invalid authentication `%s' specified.\n", optarg);
 		errflag++;

@@ -48,7 +48,7 @@ Since 2.0:
 
 	**  Support POP2, APOP, RPOP, IMAP2, IMAP2bis, IMAP3, IMAP4, IMAP4rev1.
 
-	** Support for Kerberos user authentication (either MIT or Cygnus).
+	** Support for Kerberos V4 user authentication (either MIT or Cygnus).
 
 	** Host is auto-probed for a working server if no protocol is
 	   specified for the connection.  Thus you don't need to know

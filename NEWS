@@ -14,9 +14,8 @@ every user entry in a multi-user poll declaration.
   technically RFC822 legal. The general problem is mentioned on the man page.
 
 * fetchmail has been reported to break when processing 0-length (bodyless)
-  messages retrieved via IMAP.  It is not clear whether this is a fetchmail
-  bug or a glitch in some specific IMAP server.  (Such messages are sometimes 
-  issued by the INN suite as status notifications.)
+  messages retrieved via IMAP.  (Such messages are sometimes issued by the
+  INN suite as status notifications.)
 
 * Dave Holland <dave@zenda.demon.co.uk> thinks it's a misfeature that
   --fetchall overrides --limit.  He may have a point.   Perhaps I should
@@ -30,8 +29,11 @@ every user entry in a multi-user poll declaration.
 pl 3.9.4 ():
 * Fixed a compilation glitch for systems like SunOS & others without atexit(3).
 * Fixed a compilation glitch in daemonize for HP-UX.
+* Changes to compile correctly on systems that have on_exit() but not atexit().
+* Changes to forbid duplicate server names in the rc file.
+* Do caseblind comparisons of host and user names everywhere.
 
-------------------------------------------------------------------------------
+There are 239 people on the fetchmail-friends list.
 
 pl 3.9.3 (Wed May  7 11:40:47 EDT 1997):
 * Fix for -I option from George Sipe.
@@ -177,7 +179,7 @@ bugs --
 * The counter referred to by the batchlimit option used to count not only 
   fetched messages but skipped ones.  This has been fixed.
 
-* Compilation fixes for Kerberos support and GNU glibc2 support.
+* Compilation fixes for Kerberos V4 support and GNU glibc2 support.
 
 There are 230 people on the fetchmail-friends list.
 
@@ -540,7 +542,7 @@ features --
 
 bugs --
 
-* Nalin Dahyabhai's fix patch for MIT Kerberos support.
+* Nalin Dahyabhai's fix patch for MIT Kerberos V4 support.
 
 * Fixed a fencepost error in the APOP code that was causing a core dump.
 
@@ -642,7 +644,7 @@ features --
   who forced us to this with RFC1725, but thank Al Longyear <longyear@sii.com>
   for fixing and verifying my slightly buggy implementation.
 
-* Kerberos support ditto.  Thanks to Chris Hanson <cph@martigny.mit.edu>
+* Kerberos V4 support ditto.  Thanks to Chris Hanson <cph@martigny.mit.edu>
   for this feature.
 
 * When there's a daemon fetchmail in background, running fetchmail in
@@ -713,7 +715,7 @@ features --
 
 * Linux packagers: building fetchmail now generates an RPM specfile for it.
 
-* Kerberos support via KPOP protocol (thanks to Chris Hanson).
+* Kerberos V4 support via KPOP protocol (thanks to Chris Hanson).
 
 * New --check option for asking server whether there is mail without
   actually retrieving or deleting it.

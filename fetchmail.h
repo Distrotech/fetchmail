@@ -14,8 +14,8 @@
 #define		KPOP_PORT	1109
 
 /* authentication types */
-#define		A_PASSWORD	0	/* passwords in cleartext */
-#define		A_KERBEROS	1	/* get Kerberos V4 ticket */
+#define		A_PASSWORD	0	/* password or inline authentication */
+#define		A_KERBEROS_V4	1	/* preauthenticate w/ Kerberos V4 */
 
 /* definitions for buffer sizes -- somewhat arbitrary */
 #define		POPBUFSIZE	512	/* per RFC 937 */
