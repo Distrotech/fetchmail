@@ -26,11 +26,11 @@ void lock_setup(void)
     /* set up to do lock protocol */
 #define	FETCHMAIL_PIDFILE	"fetchmail.pid"
     if (!getuid()) {
-	xalloca(lockfile, char *,
+	lockfile = (char *)xmalloc(
 		sizeof(PID_DIR) + sizeof(FETCHMAIL_PIDFILE));
 	sprintf(lockfile, "%s/%s", PID_DIR, FETCHMAIL_PIDFILE);
     } else {
-	xalloca(lockfile, char *, strlen(fmhome) + sizeof(FETCHMAIL_PIDFILE) + 2);
+	lockfile = (char *)xmalloc(strlen(fmhome)+sizeof(FETCHMAIL_PIDFILE)+2);
 	strcpy(lockfile, fmhome);
 	strcat(lockfile, "/");
         if (fmhome == home)
