@@ -1335,6 +1335,8 @@ static int query_host(struct query *ctl)
 	break;
     case P_IMAP:
     case P_IMAP_K4:
+    case P_IMAP_CRAM_MD5:
+    case P_IMAP_LOGIN:
 #ifdef GSSAPI
     case P_IMAP_GSS:
 #endif /* GSSAPI */

@@ -960,13 +960,22 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     {
         if (outlevel >= O_DEBUG)
             report (stdout, _("CRAM-MD5 authentication is supported\n"));
-        if ((ok = do_cram_md5 (sock, ctl)))
+        if (ctl->server.protocol != P_IMAP_LOGIN)
         {
-            if (outlevel >= O_MONITOR)
-                report (stdout, "IMAP> *\n");
-            SockWrite (sock, "*\r\n", 3);
+            if ((ok = do_cram_md5 (sock, ctl)))
+            {
+                if (outlevel >= O_MONITOR)
+                    report (stdout, "IMAP> *\n");
+                SockWrite (sock, "*\r\n", 3);
+            }
+            return ok;
         }
-        return ok;
+    }
+    else if (ctl->server.protocol == P_IMAP_CRAM_MD5)
+    {
+        report(stderr,
+               _("Required CRAM-MD5 capability not supported by server\n"));
+        return(PS_AUTHFAIL);
     }
 
 #ifdef NTLM_ENABLE

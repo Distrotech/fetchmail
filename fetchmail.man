@@ -190,6 +190,13 @@ with RFC 1731 Kerberos v4 preauthentication.
 .IP IMAP-GSS
 IMAP4, or IMAP4rev1 (\fIfetchmail\fR autodetects their capabilities)
 with RFC 1731 GSSAPI preauthentication.
+.IP IMAP-CRAMMD5
+IMAP4, or IMAP4rev1 (\fIfetchmail\fR autodetects their capabilities)
+with RFC 2195 CRAM-MD5 authentication.
+.IP IMAP-LOGIN
+IMAP4, or IMAP4rev1 (\fIfetchmail\fR autodetects their capabilities)
+with plain LOGIN authentication only, even if the server supports
+better methods.
 .IP ETRN
 Use the ESMTP ETRN option.
 .RE

@@ -15,6 +15,8 @@
 #define		P_APOP		7
 #define		P_RPOP		8
 #define		P_ETRN		9
+#define		P_IMAP_CRAM_MD5	10
+#define		P_IMAP_LOGIN	11
 
 #if INET6
 #define		SMTP_PORT	"smtp"

@@ -15,6 +15,9 @@ fetchmail-5.0.9 ():
 * Federico G. Schwindt's fix for NetBSD/OpenBSD --with-kerberos.
 * auth keyword and option changed to preauth.
 * Correct the exit value when .fetchmailrc permissions are wrong.
+* getmail/gotmail scripts by Thomas Nesges added to contrib.
+* Guenther H. Leber's fix for a ptential uid.c buffer overflow.
+* Todd Sabin's option to force IMAP authentication type.
 
 There are 264 people on fetchmail-friends and 441 on fetchmail-announce.
 

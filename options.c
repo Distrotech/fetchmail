@@ -346,6 +346,10 @@ struct query *ctl;	/* option record to be initialized */
 	    else if (strcasecmp(optarg, "imap-gss") == 0)
                 ctl->server.protocol = P_IMAP_GSS;
 #endif /* GSSAPI */
+	    else if (strcasecmp(optarg, "imap-crammd5") == 0)
+                ctl->server.protocol = P_IMAP_CRAM_MD5;
+	    else if (strcasecmp(optarg, "imap-login") == 0)
+                ctl->server.protocol = P_IMAP_LOGIN;
 	    else if (strcasecmp(optarg,"etrn") == 0)
 		ctl->server.protocol = P_ETRN;
 	    else {
