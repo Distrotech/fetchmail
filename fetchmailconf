@@ -327,6 +327,7 @@ class ListEdit(Frame):
     def __init__(self, newlegend, list, editor, master, helptxt):
 	self.editor = editor
 	self.list = list
+        print "Here's the initial list: " + `self.list`
 
 	# Set up a widget to accept new elements
 	self.newval = StringVar(master)
@@ -338,16 +339,17 @@ class ListEdit(Frame):
 	# Edit the existing list
 	listframe = Frame(master)
 	scroll = Scrollbar(listframe)
-	listwidget = Listbox(listframe, height=0, selectmode='browse')
+	self.listwidget = Listbox(listframe, height=0, selectmode='browse')
+        for x in self.list:
+            self.listwidget.insert(END, x)
 	listframe.pack(side=TOP, expand=YES, fill=BOTH)
-	listwidget.config(yscrollcommand=scroll.set, relief=SUNKEN)
-	listwidget.pack(side=LEFT, expand=YES, fill=BOTH)
-	scroll.config(command=listwidget.yview, relief=SUNKEN)
+	self.listwidget.config(yscrollcommand=scroll.set, relief=SUNKEN)
+	self.listwidget.pack(side=LEFT, expand=YES, fill=BOTH)
+	scroll.config(command=self.listwidget.yview, relief=SUNKEN)
 	scroll.pack(side=RIGHT, fill=BOTH)
-	listwidget.config(selectmode=SINGLE, setgrid=TRUE)
-	listwidget.bind('<Double-1>', self.handleList);
-	listwidget.bind('<Return>', self.handleList);
-	self.listwidget = listwidget
+	self.listwidget.config(selectmode=SINGLE, setgrid=TRUE)
+	self.listwidget.bind('<Double-1>', self.handleList);
+	self.listwidget.bind('<Return>', self.handleList);
 
 	bf = Frame(master);
 	if self.editor:
@@ -540,6 +542,8 @@ class ControlEdit(Frame):
 	self.configuration.syslog = self.syslog.get()
 	self.configuration.invisible = self.invisible.get()
 
+    # The nosave mathod has to be defined by subclasses
+    # XXX Someday this must go to the actual config file location
     def save(self):
 	self.GatherControls()
 	sys.stdout.write("# Configuration created %s\n" % time.ctime(time.time()))
@@ -770,7 +774,9 @@ class ServerEdit(Frame):
 
 	userwin = Frame(leftwin, relief=RAISED, bd=5)
 	Label(userwin, text="User entries for " + host).pack(side=TOP)
-	ListEdit("New user: ", None, self.edituser, userwin, suserhelp)
+	ListEdit("New user: ",
+                 map(lambda x: x.remote, self.server.users),
+                 self.edituser, userwin, suserhelp)
 	userwin.pack(fill=X)
 
 	leftwin.pack(side=LEFT, anchor=N, fill=X);
@@ -996,9 +1002,8 @@ class ExpertConfigure(Frame, ControlEdit):
 	dispose_window(self, 'Expert Configurator Controls', experthelp)
 	self.postControls()
 	self.expertEdit()
-	self.makeSitelist(master)
 
-    def makeSitelist(self, master):
+        # Expert mode allows us to edit multiple sites
 	lf = Frame(master, relief=RAISED, bd=5)
 	Label(lf,
 	      text='Remote Mail Server Configurations', 
@@ -1029,18 +1034,7 @@ class NoviceConfigure(Frame, ControlEdit):
 	self.configuration = configuration;
 	Pack.config(self)
 
-	dispose = Frame(self, relief=RAISED, bd=5)
-	Label(dispose,
-		text='Novice Configurator Controls', 
-		bd=2).pack(side=TOP, pady=10)
-	Button(dispose, text='Save', fg='blue',
-		command=self.save).pack(side=LEFT)
-	Button(dispose, text='Quit', fg='blue',
-		command=self.nosave).pack(side=LEFT)
-	Button(dispose, text='Help', fg='blue',
-	       command=lambda: helpwin(novicehelp)).pack(side=RIGHT)
-	dispose.pack(side=TOP, fill=X);
-
+        dispose_window(self, 'Novice Configurator Controls', novicehelp)
 	novice = Frame(self, relief=RAISED, bd=5)
 	Label(novice,
 		text='Novice Configuration Window', 
@@ -1053,10 +1047,6 @@ class NoviceConfigure(Frame, ControlEdit):
 #	LabeledEntry(novice, 'Your password on the remote host:',
 #		      self.remote_passwd).pack(side=TOP, fill=X)
 	novice.pack(side=TOP, fill=X);
-
-    def save(self):
-	#XXX Save code must go here
-	self.quit()
 
     def nosave(self):
 	if ConfirmQuit(self, "novice configuration editor"):
