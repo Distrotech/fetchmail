@@ -260,7 +260,7 @@ docs = $(srcdir)/COPYING $(srcdir)/FEATURES $(srcdir)/fetchmail-features.html \
 	$(srcdir)/design-notes.html $(srcdir)/NOTES \
 	$(srcdir)/todo.html $(srcdir)/TODO \
 	$(srcdir)/INSTALL $(srcdir)/NEWS $(srcdir)/README \
-	$(srcdir)/README.NTLM $(srcdir)/fetchmail.lsm $(srcdir)/sample.rcfile \
+	$(srcdir)/README.NTLM $(srcdir)/fetchmail.lsm \
 	$(srcdir)/*.man	$(srcdir)/FAQ $(srcdir)/fetchmail-FAQ.html
 config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/configure \
 	$(srcdir)/config.guess $(srcdir)/config.h.in $(srcdir)/config.sub \
