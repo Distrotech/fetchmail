@@ -18,6 +18,9 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.4.0 ():
+* Relax the LOGIN capability check in IMAP.
+
 fetchmail-4.3.8 (Tue Feb 24 15:47:13 EST 1998):
 * Documentation cleanup.
 * -S is back to setting smtphost all the time; net-security option is now -T.
