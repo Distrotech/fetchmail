@@ -175,7 +175,7 @@ list, which you can sign up for at <a
 fetchmail-friends@ccil.org</a>.
 There is also an announcements-only list, 
 <a href="http://lists.ccil.org/mailman/listinfo/fetchmail-announce">
-fetchmail-announce@lists.ccil.org</em>.<P>
+fetchmail-announce@lists.ccil.org</a>.<P>
 
 Note: before submitting a question to the list, <strong>please read
 the <a href="fetchmail-FAQ.html">FAQ</a></strong> (especially item <a
