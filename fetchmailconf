@@ -21,6 +21,12 @@ class Controls:
 	self.idfile = os.environ["HOME"] + "/.fetchids"		# Default idfile, initially
 	self.invisible = FALSE		# Suppress Received line & spoof?
 	self.servers = []		# List of included sites
+	Controls.typemap = (
+	    ('poll_interval',	'String'),
+	    ('syslog',		'Boolean'),
+	    ('logfile',		'String'),
+	    ('idfile',		'String'),
+	    ('invisible',	'Boolean'))
 
     def __repr__(self):
 	str = "";
@@ -417,6 +423,29 @@ def dispose_window(master, legend, help):
     dispose.pack(fill=X)
     return dispose
 
+class MyWidget:
+# Common methods for Tkinter widgets -- deals with Tkinter declaration
+    def post(self, template, field):
+	for x in template.typemap:
+	    target = "self." + x[0]
+	    source = "self." + field + "." + x[0]
+	    if x[1] == 'Boolean':
+		exec target + " = BooleanVar(self)"
+		if eval(source):
+		    exec target + ".set(" + source + ")"
+	    elif x[1] == 'String':
+		exec target + " = StringVar(self)"
+		if eval(source):
+		    exec target + ".set(" + source + ")"
+	    elif x[1] == 'Int':
+		exec target + " = IntVar(self)"
+		if eval(source):
+		    exec target + ".set(" + source + ")"
+
+    def fetch(self, template, field):
+	for x in template.typemap:
+	    setattr(eval("self." + field), x[0], getattr(self, x[0]).get())
+
 #
 # First, code to set the global fetchmail run controls.
 #
@@ -496,7 +525,7 @@ This will take you to a site configuration dialogue.
 """}
 
 
-class ConfigurationEdit(Frame):
+class ConfigurationEdit(Frame, MyWidget):
     def __init__(self, configuration, master=None):
 	self.configuration = configuration
         self.container = master
@@ -576,12 +605,7 @@ class ConfigurationEdit(Frame):
 
     # XXX Someday this must go to the actual config file location
     def save(self):
-        if self.mode == 'expert':
-            self.configuration.poll_interval = self.poll_interval.get()
-            self.configuration.logfile = self.logfile.get()
-            self.configuration.idfile = self.idfile.get()
-            self.configuration.syslog = self.syslog.get()
-            self.configuration.invisible = self.invisible.get()
+        self.fetch(Controls, 'configuration')
 	sys.stdout.write("# Configuration created %s\n" % time.ctime(time.time()))
 	sys.stdout.write(`self.configuration`)
 	self.quit()
@@ -708,29 +732,6 @@ you will open a window to configure the
 user's options on that site.
 """}
 
-class MyWidget:
-# Common methods for Tkinter Widgets
-    def post(self, template, field):
-	for x in template.typemap:
-	    target = "self." + x[0]
-	    source = "self." + field + "." + x[0]
-	    if x[1] == 'Boolean':
-		exec target + " = BooleanVar(self)"
-		if eval(source):
-		    exec target + ".set(" + source + ")"
-	    elif x[1] == 'String':
-		exec target + " = StringVar(self)"
-		if eval(source):
-		    exec target + ".set(" + source + ")"
-	    elif x[1] == 'Int':
-		exec target + " = IntVar(self)"
-		if eval(source):
-		    exec target + ".set(" + source + ")"
-
-    def gather(self, template, field):
-	for x in template.typemap:
-	    setattr(eval("self." + field), x[0], getattr(self, x[0]).get())
-
 class ServerEdit(Frame, MyWidget):
     def __init__(self, host, servers):
 	self.server = None
@@ -759,7 +760,7 @@ class ServerEdit(Frame, MyWidget):
 	    Widget.destroy(self.master)
 
     def save(self):
-	self.gather(Server, 'server')
+	self.fetch(Server, 'server')
 	Widget.destroy(self.master)
 
     def refreshPort(self):
@@ -912,7 +913,7 @@ class UserEdit(Frame, MyWidget):
 	    Widget.destroy(self.master)
 
     def save(self):
-	self.gather(User, 'user')
+	self.fetch(User, 'user')
 	Widget.destroy(self.master)
 
     def makeWidgets(self, mode, servername):
