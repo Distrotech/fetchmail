@@ -711,11 +711,12 @@ These options control the remote-mail protocol
 and TCP/IP service port used to query this
 server.
 
-If you click the `Probe for a server' button, fetchmail
-will try to find you the most capable server on the
-selected host (this will only work if you're conncted
-to the Internet).  The probe only checks for ordinary
-IMAP and POP protocols; fortunately these are the most
+If you click the `Probe for supported protocols'
+button, fetchmail will try to find you the most
+capable server on the selected host (this will
+only work if you're conncted to the Internet).
+The probe only checks for ordinary IMAP and POP
+protocols; fortunately these are the most
 frequently supported.
 
 The `Protocol' button bar offers you a choice of
@@ -848,7 +849,7 @@ class ServerEdit(Frame, MyWidget):
             Checkbutton(protwin,
 		text="POP3: track `seen' with client-side UIDLs?",
 		variable=self.uidl).pack(side=TOP)   
-	Button(protwin, text='Probe for a server', fg='blue',
+	Button(protwin, text='Probe for supported protocols', fg='blue',
 	       command=self.autoprobe).pack(side=LEFT)
 	Button(protwin, text='Help', fg='blue',
 	       command=lambda: helpwin(protohelp)).pack(side=RIGHT)
