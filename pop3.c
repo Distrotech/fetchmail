@@ -64,7 +64,6 @@ char *greeting;
 {
     char buf [POPBUFSIZE+1];
 
-#if defined(HAVE_APOP_SUPPORT)
     /* build MD5 digest from greeting timestamp + password */
     if (queryctl->protocol == P_APOP) 
     {
@@ -96,7 +95,6 @@ char *greeting;
 	strcpy(queryctl->digest, MD5Digest(msg));
 	free(msg);
     }
-#endif  /* HAVE_APOP_SUPPORT */
 
     switch (queryctl->protocol) {
     case P_POP3:
@@ -119,13 +117,11 @@ char *greeting;
 	    goto badAuth;
 	break;
 
-#if defined(HAVE_APOP_SUPPORT)
     case P_APOP:
 	gen_send(socket,"APOP %s %s", queryctl->remotename, queryctl->digest);
 	if (pop3_ok(buf,socket) != 0) 
 	    goto badAuth;
 	break;
-#endif  /* HAVE_APOP_SUPPORT */
 
     default:
 	fprintf(stderr,"Undefined protocol request in POP3_auth\n");
@@ -182,18 +178,14 @@ int *firstp;
     return(0);
 }
 
-static int pop3_fetch(socket, number, limit, lenp)
+static int pop3_fetch(socket, number, lenp)
 /* request nth message */
 int socket;
 int number;
-int limit;
 int *lenp; 
 {
     *lenp = 0;
-    if (limit) 
-        return(gen_transact(socket, "TOP %d %d", number, limit));
-      else 
-        return(gen_transact(socket, "RETR %d", number));
+    return(gen_transact(socket, "RETR %d", number));
 }
 
 static pop3_delete(socket, queryctl, number)

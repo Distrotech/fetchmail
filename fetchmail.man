@@ -22,6 +22,18 @@ program can gather mail from servers supporting POP2 (as specified in RFC
 program), and IMAP4 (RFC1730).  It can use (but does not require) the
 RPOP and LAST facilities removed from later POP3 versions.
 .PP
+.I fetchmail
+delivers mail via SMTP to port 25 on the machine it is running on
+(localhost), just as though it were being passed in over a normal TCP/IP link.
+This normally results in the mail being delivered locally via your
+system's default MDA (Mail Delivery Agent, usually
+.I /usr/lib/sendmail
+but your system may use a different MDA).  All the delivery-control
+mechanisms (such as 
+.I .forward
+files) normally available with your system MDA will therefore work on
+received mail.
+.PP
 The behavior of
 .I fetchmail
 is controlled by comand-line options and a run control file,
@@ -63,23 +75,6 @@ is running on (this simulates the way mail would
 be delivered to the client by a normal Internet TCP/IP connection).
 With this option you can specify another host to deliver to.
 .TP
-.B \-m mda, --mda mda
-Specify a mail delivery agent to use.  See OUTPUT OPTIONS below for a
-complete description.
-.TP
-.B \-o folder, --local folder
-Causes retrieved messages to be appended to file named by the folder 
-argument. See OUTPUT OPTIONS below for a complete description.
-.TP
-.B \-c, --stdout
-Causes retrieved messages to be written to stdout instead of a mail folder.
-See OUTPUT OPTIONS below for a complete description.  You may not specify
-both the
-.B \-c
-and 
-.B \-o
-options on the same command line.
-.TP
 .B \-F, --flush
 POP3/IMAP only.  Delete old (previously retrieved) messages from the mailserver
 before retrieving new messages.
@@ -102,17 +97,6 @@ Delete retrieved messages from the remote mailserver.  If
 is compiled with the KEEP_IS_DEFAULT option, the
 .B kill
 option forces retrieved mail to be deleted.
-.TP
-.B \-l lines, --limit lines
-POP3 and IMAP only.  Retrieve no more than the specified number of
-lines (POP3) or characters (IMAP) of each message body (plus message
-headers). The
-.B keep
-option is implied by the
-.B limit
-option -- i.e. messages downloaded with the 
-.B limit
-option remain on the remote mailserver.
 .TP
 .B \-p, \--protocol proto
 Specify the protocol to used when communicating with the remote 
@@ -194,7 +178,7 @@ Instead, for each server specified, all option information
 that would be computed if
 .I fetchmail.
 were connecting to that server is displayed.
-.TP
+.PP
 .SH USER AUTHENTICATION
 User authentication in 
 .I fetchmail
@@ -223,7 +207,7 @@ fetchmail -u jsmith mailgrunt
 .PP
 The default behavior of 
 .I fetchmail
-is to prompt you for your mailserver password before the POP connection is
+is to prompt you for your mailserver password before the connection is
 established.  This is the safest way to use 
 .I fetchmail
 and ensures that your password will not be compromised.  You may also specify
@@ -261,89 +245,6 @@ file.  Each time
 logs in, it sends a cryptographically secure hash of your password and
 the server greeting time to the server, which can verify it by
 checking its authorization database. 
-.PP
-.SH OUTPUT OPTIONS
-The default behavior of 
-.I fetchmail
-is to ship mail via SMTP to port 25 on the machine it is running on
-(localhost), just as though it were being passed in over a normal TCP/IP link.
-This normally results in the mail being delivered locally via your
-system's default MDA (Mail Delivery Agent, usually
-.I /usr/lib/sendmail
-but your system may use a different MDA).
-.PP
-You can force mail to be passed to an MDA directly with the -mda or -m
-option.  Some possible MDAs are "/usr/lib/sendmail -oem %s",
-"/usr/formail", and "/usr/bin/deliver %s" (if the MDA string contains
-%s, that escape will be expanded into your username on the client
-machine).  This shouldn't be necessary unless for some reason you
-want to bypass your system's default MDA.
-.PP
-Using the 
-.B \-o
-option, you can specify a mail folder to which retrieved
-messages will be appended;
-.I fetchmail
-always writes the retrieved messages using Unix mail folder format so
-the folder will be parsed correctly by Unix mail programs such as
-.I elm
-or
-.I pine. 
-.PP
-If you prefer, for example, to have your POP
-mail from a machine called 'mailgrunt' stored in the 
-.I mbox
-file in your home directory, you would start 
-.I fetchmail
-as follows:
-.IP 
-fetchmail \-o $HOME/mbox mailgrunt
-.PP
-Note that the folder specified with
-.B \-o
-is write-locked while fetchmail is writing to it,   
-.PP
-.I fetchmail
-can be used in a shell pipeline by using the 
-.B \-c
-option.  In this mode, 
-.I fetchmail
-writes the retrieved messages to stdout, instead of a mail folder.  This would
-allow you, for instance, to pass the incoming mail through a filter that
-discards mail marked as 'Precedence: junk'.  Suppose you've written an AWK
-script called 'dumpjunk.awk' to implement a junk mail filter.  The appropriate
-syntax to retrieve your mail from 'mailgrunt', pass it through the filter,
-and write it to a folder called 'realmail' in your home directory would be:
-
-.nf
-  fetchmail -c mailgrunt | awk -f dumpjunk.awk >$HOME/realmail
-.fi
-.PP
-The progress/status messages written to stderr when the 
-.B \-s
-option has not been specified, do not interfere with the message stream, which 
-is written to stdout.  You may even use 
-.B \-v
-and 
-.B \-c
-together without corrupting the message stream.  It is a good idea to use the
-.B \-k
-option when using 
-.B \-c
-to insure that your messages will not be lost if part of the shell pipeline 
-does not function incorrectly.  The safest bet would be something like:
-
-.nf
-  fetchmail -k -c mailgrunt | myfilter >$HOME/filtered.mail
-.fi
-.PP
-followed by
-
-.nf
-  fetchmail -c mailgrunt > /dev/null
-.fi
-.PP
-when you're sure the messages were correctly processed by 'myfilter'.
 .PP
 .SH DAEMON MODE
 The 
@@ -403,7 +304,6 @@ Legal keywords are:
     username (or user)
     password (or pass)
     remotefolder (or remote)
-    localfolder (or local)
     mda
     smtphost (or smtp)
     keep
@@ -418,7 +318,7 @@ Legal keywords are:
     noskip
     port
 .PP
-All these correspond to the obvuious command-line arguments except
+All these correspond to the obvious command-line arguments except
 two: \fBpassword\fR and \fBskip\fR.
 .PP
 The \fBpassword\fR option requires a string argument, which is the password
@@ -474,8 +374,7 @@ one server definition.
         proto pop3              \e
         port 3111               \e
         user jsmith             \e
-        pass secret1            \e
-        localfolder ~/mbox
+        pass secret1
 .fi
 If you need to include whitespace in a parameter string, enclose the
 string in double quotes.  Thus:
@@ -484,9 +383,9 @@ string in double quotes.  Thus:
   server mail.provider.net      \e
         proto pop3              \e
         user jsmith             \e
-        pass secret1            \e
-        mda "/bin/mail %s"
+        pass "u can't krak this"
 .fi
+
 Finally, you may have an initial server description headed by the keyword
 `defaults' instead of `server' followed by a name.  Such a record
 is interpreted as defaults for all quries to use. It may be overwritten
@@ -496,36 +395,17 @@ by individual server descriptions.  So, you could write:
   defaults                      \e
         proto pop3              \e
         user jsmith             \e
-        mda "/bin/mail %s"
   server pop.provider.net       \e
         pass secret1            \e
   server mail.provider.net      \e
-        pass secret2            \e
+        pass secret2
 .fi
+
 .SH EXIT CODES
 To facilitate the use of 
 .I fetchmail
-in shell scripts and the like, an exit code is returned to give an indication
-of what occured during a given POP connection.  The exit code can be tested
-by the script and appropriate action taken.
-.PP
-A simple example follows.  This Bourne shell script executes 
-.I fetchmail
-and, if some messages were successfully retrieved from a mailserver retrieved
-from the command line, it starts the 
-.I mail
-utility to read those messages.  Otherwise, it prints a brief message, and
-exits.
-.EX 0
-#!/bin/sh
-
-if fetchmail $1
-then
-  mail
-else
-  echo "No mail to read."
-fi
-.EE
+in shell scripts, an exit code is returned to give an indication
+of what occurred during a given connection.
 .PP
 The exit codes returned by 
 .I fetchmail
@@ -547,7 +427,7 @@ Some sort of fatal protocol error was detected.
 There was a syntax error in the arguments to 
 .I fetchmail.
 .IP 6
-Some kind of I/O woes occurred when writing to the local folder.
+The run control file had bad permissions.
 .IP 7
 There was an error condition reported by the server (POP3 only).
 .IP 8
@@ -568,10 +448,11 @@ When
 .I fetchmail
 queries more than one host, the returned status is that of the last
 host queried.
-.SH AUTHOR
+.SH AUTHORS
 .I fetchmail
 was originated (under the name `popclient') by Carl Harris at Virginia
 Polytechnic Institute and State University (a.k.a. Virginia Tech).
+.PP
 Version 3.0 of popclient was extensively rewritten and improved by
 Eric S. Raymond <esr@snark.thyrsus.com>. The program's name was
 then changed to
@@ -605,7 +486,7 @@ on the same mailbox may cause messages to be lost or remain unfetched.
 (This is a design problem of the POP2, POP3 and IMAP2bis protocols.)
 .PP
 If, using POP3, you find that messages you've already read on the
-server are being fetched, blame RFC1725.  That late version pf the
+server are being fetched, blame RFC1725.  That late version of the
 POP3 protocol specification ill-advisedly removed the LAST command, and
 some servers (including the one distributed with at least some
 versions of SunOS) follow it (you can verify this by invoking
@@ -621,6 +502,15 @@ Send comments, bug reports, gripes, and the like to Eric S. Raymond
 This program used to be called `popclient' (the name was changed
 because it supports IMAP now and may well support more remote-fetch
 protocols such as DMSP in the future).
+.PP
+The --stdout, --local, --mda and --limit arguments of previous versions have
+been removed.  Those features did jobs that belonged to your local MDA.
+The job of 
+.I popclient
+is to forward local mail to your MDA.  Saint-Exupery said, "Perfection
+[in design] is achieved not when there is nothing more to add, but
+rather when there is nothing more to take away."  This program isn't
+perfect, but it's trying.
 .PP
 The --password option of previous (popclient) versions has been removed -- it
 encouraged people to expose passwords in scripts.  Passwords
@@ -639,4 +529,4 @@ itself to get it.  All encryption would do in this context is give a
 false sense of security to people who don't think very hard.
 .SH SEE ALSO
 mail(1), binmail(1), sendmail(8), popd(8), imapd(8)
-RFC 937, RFC 1081, RFC 1082, RFC 1225, RFC 1460, RFC 1725.
+RFC 937, RFC 1081, RFC 1082, RFC1176, RFC 1225, RFC 1460, RFC 1725.

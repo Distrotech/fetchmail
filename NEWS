@@ -10,6 +10,16 @@ Inflict pain on the person(s) responsible for removing LAST from POP3.
 
 			Release Notes:
 
+fetchmail-1.2 (Sat Sep 28 15:40:50 EDT 1996):
+
+* The great option massacre.  Remove --stdout, --limit, --local, --mda.
+  We get a significant code and complexity shrinkage this way (a lot of the
+  configuration machinery goes away too).  These things are your MDA's job.
+
+* Link APOP support by default.
+
+* Fix embarrassing Makefile bug.
+
 fetchmail-1.1 (Sat Sep 28 09:21:10 EDT 1996):
 
 * In POP3, don't send LAST if STAT shows count of waiting messages to be zero.

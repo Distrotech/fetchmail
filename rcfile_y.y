@@ -30,7 +30,7 @@ int yydebug;	/* in case we didn't generate with -- debug */
 }
 
 %token KW_SERVER KW_PROTOCOL KW_USERNAME KW_PASSWORD
-%token KW_REMOTEFOLDER KW_LOCALFOLDER KW_SMTPHOST KW_MDA KW_EOL KW_DEFAULTS
+%token KW_REMOTEFOLDER KW_SMTPHOST KW_EOL KW_DEFAULTS
 %token <proto> PROTO_AUTO PROTO_POP2 PROTO_POP3 PROTO_IMAP PROTO_APOP PROTO_RPOP
 %token <sval> PARAM_STRING
 %token <flag> KW_KEEP KW_FLUSH KW_FETCHALL KW_REWRITE KW_PORT KW_SKIP
@@ -67,9 +67,7 @@ serv_option_clause:
 	|	KW_USERNAME PARAM_STRING	{prc_remotename($2);}
 	|	KW_PASSWORD PARAM_STRING	{prc_setpassword($2);}
 	|	KW_REMOTEFOLDER PARAM_STRING	{prc_setremote($2);}
-	|	KW_LOCALFOLDER PARAM_STRING	{prc_setlocal($2);}
 	|	KW_SMTPHOST PARAM_STRING	{prc_setsmtphost($2);}
-	|	KW_MDA PARAM_STRING		{prc_setmda($2);}
 	|	KW_KEEP				{prc_setkeep($1);}
 	|	KW_FLUSH			{prc_setflush($1);}
 	|	KW_FETCHALL			{prc_setfetchall($1);}

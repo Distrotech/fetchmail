@@ -99,11 +99,10 @@ int *firstp;
     return(0);
 }
 
-static int pop2_fetch(socket, number, limit, lenp)
+static int pop2_fetch(socket, number, lenp)
 /* request nth message */
 int socket;
 int number;
-int limit;
 int *lenp; 
 {
     int	ok;
@@ -149,11 +148,7 @@ int doPOP2 (queryctl)
 struct hostrec *queryctl;
 {
     /* check for unsupported options */
-    if (linelimit) {
-	fprintf(stderr,"Option --limit is not supported with POP2\n");
-	return(PS_SYNTAX);
-    }
-    else if (queryctl->flush) {
+    if (queryctl->flush) {
 	fprintf(stderr,"Option --flush is not supported with POP2\n");
 	return(PS_SYNTAX);
     }

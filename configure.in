@@ -1,5 +1,5 @@
 dnl Autoconfigure input file for fetchmail
-dnl Carl Harris, ceharris@mal.com
+dnl Eric S. Raymond <esr@thyrsus.com>
 dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl
@@ -12,80 +12,6 @@ test -z "$CFLAGS" && CFLAGS=-g AC_SUBST(CFLAGS)
 test -z "$LDFLAGS" && LDFLAGS=-g AC_SUBST(LDFLAGS)
 
 AC_CANONICAL_HOST
-
-AC_MSG_CHECKING(system mailbox directory)
-if test -d /var/mail
-then
-	AC_DEFINE(USERFOLDER, "/var/mail/%s")
-	userfolder='/var/mail/$u'
-elif test -d /usr/mail
-then
-	AC_DEFINE(USERFOLDER, "/usr/mail/%s")
-	userfolder='/usr/mail/$u'
-elif test -d /usr/spool/mail
-then
-	AC_DEFINE(USERFOLDER, "/usr/spool/mail/%s")
-	userfolder='/usr/spool/mail/$u'
-elif test -d /var/spool/mail
-then
-	AC_DEFINE(USERFOLDER, "/var/spool/mail/%s")
-	userfolder='/var/mail/$u'
-else
-	userfolder="can't find one, will fall back on system MDA."
-fi
-AC_MSG_RESULT($userfolder)
-
-AC_MSG_CHECKING(delivery agent for $host)
-case $host in
-   *-*-*bsd*)
-	AC_DEFINE(DEF_MDA,"/usr/libexec/mail.local %s")
-	mdacmd="/usr/libexec/mail.local \$u"
-	;;
-
-   *-*-aix*)
-	AC_DEFINE(DEF_MDA,"/usr/bin/bellmail %s")
-	mdacmd="/usr/bin/bellmail \$u"
-	;;
-
-   *-*-sco*)
-	AC_DEFINE(DEF_MDA,"/usr/mmdf/bin/deliver %s")
-	mdacmd="/usr/mmdf/bin/deliver \$u"
-	AC_DEFINE(BINMAIL_TERM, "\001\001\001\001\n")
-	;;
-
-   *-*-hpux*)
-	AC_DEFINE(DEF_MDA,"/bin/rmail -d %s")
-	mdacmd="/bin/rmail -d \$u"
-	;;
-
-   *)
-	if test -x "/usr/bin/deliver %s"
-	then
-		AC_DEFINE(DEF_MDA,"/usr/bin/deliver %s")
-		mdacmd="/usr/bin/deliver \$u"
-	else
-		# Do *not* use the -t option!  We explicitly want only
-		# local delivery to the recipients named on the command line.
-		# Also don't use -fpopmail -- this looks tempting, but will
-		# cause lossage unless you always run fetchmail from the
-		# account of a privileged user.
-		AC_DEFINE(DEF_MDA,"/usr/lib/sendmail -oem %s")
-		mdacmd="/usr/lib/sendmail -fpopmail \$u"
-	fi
-	;;
-esac
-AC_MSG_RESULT($mdacmd)
-
-
-AC_MSG_CHECKING(whether we want APOP support)
-AC_ARG_WITH(APOP,
-            [  --with-APOP              should we include APOP support?],
-            [EXTRASRC="$EXTRASRC \$(srcdir)/md5c.c \$(srcdir)/md5ify.c"
-             EXTRAOBJ="$EXTRAOBJ md5c.o md5ify.o" 
-             AC_DEFINE(HAVE_APOP_SUPPORT)
-             AC_MSG_RESULT(yes)],
-             AC_MSG_RESULT(no))
-
 AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_CPP			dnl Later checks need this.
@@ -107,14 +33,6 @@ AC_SUBST(LIBOBJS)
 
 AC_CHECK_LIB(socket,socket)
 AC_CHECK_LIB(nsl,inet_addr)
-
-
-
-AC_CHECK_FUNC(bzero, AC_DEFINE(HAVE_BZERO), 
-   AC_CHECK_FUNC(memset, [AC_DEFINE(HAVE_MEMSET) 
-                          AC_DEFINE(HAVE_MEMCPY)], 
-                 [EXTRASRC="$EXTRASRC \$(srcdir)/bzero.c"
-                  EXTRAOBJ="$EXTRALIB bzero.o"]))
 
 AC_CHECK_FUNC(strdup, AC_DEFINE(HAVE_STRDUP), 
               [EXTRASRC="$EXTRASRC \$(srcdir)/strdup.c"
@@ -140,7 +58,7 @@ dnl All AC_CHECK_FUNCs must precede the following AC_SUBSTs
 AC_SUBST(EXTRASRC)
 AC_SUBST(EXTRAOBJ)
 
-AC_CHECK_FUNCS(dup2 strerror tcsetattr stty setsid flock rresvport)
+AC_CHECK_FUNCS(dup2 strerror tcsetattr stty setsid rresvport)
 
 dnl AC_FUNC_SETVBUF_REVERSED
 

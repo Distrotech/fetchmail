@@ -27,7 +27,6 @@
 #define		PASSWORDLEN	MAX_PASSWORD_LENGTH
 #define		FOLDERLEN	256     /* max folder name length */
 #define		DIGESTLEN	33	/* length of MD5 digest */
-#define		MDALEN		256	/* length of delivery agent command */
 #define		IDLEN		128	/* length of UIDL message ID */
 
 /* exit code values */
@@ -37,8 +36,8 @@
 #define		PS_AUTHFAIL	3	/* user authorization failed */
 #define		PS_PROTOCOL	4	/* protocol violation */
 #define		PS_SYNTAX	5	/* command-line syntax error */
-#define		PS_IOERR	6	/* local folder I/O woes */
-#define		PS_ERROR	7	/* some kind of POP3 error condition */
+#define		PS_IOERR	6	/* bad permissions on rc file */
+#define		PS_ERROR	7	/* protocol error */
 #define		PS_EXCLUDE	8	/* exclusion error */
 #define         PS_SMTP         9       /* SMTP error */
 #define		PS_UNDEFINED	10	/* something I hadn't thought of */
@@ -47,12 +46,6 @@
 #define         O_SILENT	0	/* mute, max squelch, etc. */
 #define		O_NORMAL	1	/* user-friendly */
 #define		O_VERBOSE	2	/* excessive */
-
-/* output sink type */
-#define		TO_SMTP		1	/* use SMTP forwarding */
-#define		TO_FOLDER	2	/* use a mailbox */
-#define		TO_STDOUT	3	/* use stdout */
-#define		TO_MDA		4	/* use agent */
 
 #define		SIZETICKER	1024	/* print 1 dot per this many bytes */
 
@@ -63,15 +56,12 @@ struct hostrec
     char localname [USERNAMELEN+1];
     char remotename [USERNAMELEN+1];
     char password [PASSWORDLEN+1];
-    char userfolder [FOLDERLEN+1];
     char remotefolder [FOLDERLEN];
     char smtphost[HOSTLEN+1];
-    char mda [MDALEN+1];
     int protocol;
     int port;
 
     /* control flags */
-    int output;
     int keep;
     int fetchall;
     int flush;
@@ -80,9 +70,7 @@ struct hostrec
 
     /* internal use */
     struct hostrec *next;	/* next host in chain */
-#if defined(HAVE_APOP_SUPPORT)
     char digest [DIGESTLEN];
-#endif
 };
 
 struct method
@@ -133,10 +121,6 @@ int doIMAP (struct hostrec *);
 int parsecmdline (int, char **, struct hostrec *);
 int setdefaults (struct hostrec *);
 char *getnextserver (int argc, char **, int *);
-int openuserfolder (struct hostrec *);
-int closeuserfolder (int);
-int openmailpipe (struct hostrec *);
-int closemailpipe (int);
 char *MD5Digest (char *);
 void append_server_names(int *, char **, int);
 int daemonize(const char *, void (*)(int));

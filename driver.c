@@ -273,14 +273,13 @@ char *hdr;
   globals:       reads outlevel. 
  *********************************************************************/
 
-static int gen_readmsg (socket,mboxfd,len,delimited,popuser,pophost,output,rewrite)
+static int gen_readmsg (socket,mboxfd,len,delimited,popuser,pophost,rewrite)
 int socket;
 int mboxfd;
 long len;
 int delimited;
 char *popuser;
 char *pophost;
-int output;
 int rewrite;
 { 
     char buf [MSGBUFSIZE+1]; 
@@ -318,7 +317,7 @@ int rewrite;
 	    if (delimited && *bufp == 0)
 		break;  /* end of message */
 	}
-	strcat(bufp, output == TO_SMTP && !inheaders ? "\r\n" : "\n");
+	strcat(bufp, !inheaders ? "\r\n" : "\n");
      
 	if (inheaders)
         {
@@ -373,72 +372,43 @@ int rewrite;
 	{
 	    char	*cp;
 
-	    switch (output)
-	    {
-	    case TO_SMTP:
-		if (SMTP_from(mboxfd, nxtaddr(fromhdr)) != SM_OK)
-		    return(PS_SMTP);
+	    if (SMTP_from(mboxfd, nxtaddr(fromhdr)) != SM_OK)
+		return(PS_SMTP);
 #ifdef SMTP_RESEND
-		/*
-		 * This is what we'd do if fetchmail were a real MDA
-		 * a la sendmail -- crack all the destination headers
-		 * and send to every address we can reach via SMTP.
-		 */
-		if ((cp = nxtaddr(tohdr)) != (char *)NULL)
-		    do {
-			if (SMTP_rcpt(mboxfd, cp) == SM_UNRECOVERABLE)
-			    return(PS_SMTP);
-		    } while
-			(cp = nxtaddr(NULL));
-		if ((cp = nxtaddr(cchdr)) != (char *)NULL)
-		    do {
-			if (SMTP_rcpt(mboxfd, cp) == SM_UNRECOVERABLE)
-			    return(PS_SMTP);
-		    } while
-			(cp = nxtaddr(NULL));
-		if ((cp = nxtaddr(bcchdr)) != (char *)NULL)
-		    do {
-			if (SMTP_rcpt(mboxfd, cp) == SM_UNRECOVERABLE)
-			    return(PS_SMTP);
-		    } while
-			(cp = nxtaddr(NULL));
+	    /*
+	     * This is what we'd do if fetchmail were a real MDA
+	     * a la sendmail -- crack all the destination headers
+	     * and send to every address we can reach via SMTP.
+	     */
+	    if ((cp = nxtaddr(tohdr)) != (char *)NULL)
+		do {
+		    if (SMTP_rcpt(mboxfd, cp) == SM_UNRECOVERABLE)
+			return(PS_SMTP);
+		} while
+		    (cp = nxtaddr(NULL));
+	    if ((cp = nxtaddr(cchdr)) != (char *)NULL)
+		do {
+		    if (SMTP_rcpt(mboxfd, cp) == SM_UNRECOVERABLE)
+			return(PS_SMTP);
+		} while
+		    (cp = nxtaddr(NULL));
+	    if ((cp = nxtaddr(bcchdr)) != (char *)NULL)
+		do {
+		    if (SMTP_rcpt(mboxfd, cp) == SM_UNRECOVERABLE)
+			return(PS_SMTP);
+		} while
+		    (cp = nxtaddr(NULL));
 #else
-		/*
-		 * Since we're really only fetching mail for one user
-		 * per host query, we can be simpler
-		 */
-		if (SMTP_rcpt(mboxfd, popuser) == SM_UNRECOVERABLE)
-		    return(PS_SMTP);
+	    /*
+	     * Since we're really only fetching mail for one user
+	     * per host query, we can be simpler
+	     */
+	    if (SMTP_rcpt(mboxfd, popuser) == SM_UNRECOVERABLE)
+		return(PS_SMTP);
 #endif /* SMTP_RESEND */
-		SMTP_data(mboxfd);
-		if (outlevel == O_VERBOSE)
-		    fputs("SMTP> ", stderr);
-		break;
-
-	    case TO_FOLDER:
-	    case TO_STDOUT:
-		if (unixfrom)
-		    (void) strcpy(fromBuf, unixfrom);
-		else
-		{
-		    now = time(NULL);
-		    if (fromhdr && (cp = nxtaddr(fromhdr)))
-			sprintf(fromBuf,
-				"From %s %s", cp, ctime(&now));
-		    else
-			sprintf(fromBuf,
-				"From POPmail %s",ctime(&now));
-		}
-
-		if (write(mboxfd,fromBuf,strlen(fromBuf)) < 0) {
-		    perror("gen_readmsg: writing From header");
-		    return(PS_IOERR);
-		}
-		break;
-
-	    case TO_MDA:
-		break;
-	    }
+	    SMTP_data(mboxfd);
+	    if (outlevel == O_VERBOSE)
+		fputs("SMTP> ", stderr);
 
 	    /* change continuation markers back to regular newlines */
 	    for (cp = headers; cp < headers +  oldlen; cp++)
@@ -482,43 +452,15 @@ int rewrite;
     if (outlevel == O_VERBOSE)
 	fputc('\n', stderr);
 
-    /* write message terminator, if any */
-    switch (output)
-    {
-    case TO_SMTP:
-	if (SMTP_eom(mboxfd) != SM_OK)
-	    return(PS_SMTP);
-	break;
-
-    case TO_FOLDER:
-    case TO_STDOUT:
-	/* The server may not write the extra newline required by the Unix
-	   mail folder format, so we write one here just in case */
-	if (write(mboxfd,"\n",1) < 0) {
-	    perror("gen_readmsg: writing terminator");
-	    return(PS_IOERR);
-	}
-	break;
-
-    case TO_MDA:
-	/* The mail delivery agent may require a terminator.  Write it if
-	   it has been defined */
-#ifdef BINMAIL_TERM
-	if (write(mboxfd,BINMAIL_TERM,strlen(BINMAIL_TERM)) < 0) {
-	    perror("gen_readmsg: writing terminator");
-	    return(PS_IOERR);
-	}
-#endif /* BINMAIL_TERM */
-	break;
-    }
+    /* write message terminator */
+    if (SMTP_eom(mboxfd) != SM_OK)
+	return(PS_SMTP);
 
     /* finish up display output */
     if (outlevel == O_VERBOSE)
 	fprintf(stderr,"(%d lines of message content)\n",lines);
     else if (outlevel > O_SILENT && mboxfd != 1) 
 	fputs("\n",stderr);
-    else
-	;
     return(0);
 }
 
@@ -614,34 +556,22 @@ struct method *proto;
 
     if (count > 0)
     {
-	/* 
-	 * We expect the open of the output sink to always succeed.
-	 * Therefore, defer it until here so the typical case (no
-	 * mail waiting) is just a bit cheaper and faster.
-	 */
-	if (queryctl->output == TO_FOLDER || queryctl->output == TO_STDOUT) {
-	    if ((mboxfd = openuserfolder(queryctl)) < 0) {
-		ok = PS_IOERR;
-		goto cleanUp;
-	    }
-	} else if (queryctl->output == TO_SMTP) {
-	    ok = PS_SMTP;
-	    if ((mboxfd = Socket(queryctl->smtphost, SMTP_PORT)) < 0) 
-		goto cleanUp;
-
-	    /* eat the greeting message */
-	    if (SMTP_ok(mboxfd, NULL) != SM_OK) {
-		close(mboxfd);
-		mboxfd = -1;
-		goto cleanUp;
-	    }
+	ok = PS_SMTP;
+	if ((mboxfd = Socket(queryctl->smtphost, SMTP_PORT)) < 0) 
+	    goto cleanUp;
+	
+	/* eat the greeting message */
+	if (SMTP_ok(mboxfd, NULL) != SM_OK) {
+	    close(mboxfd);
+	    mboxfd = -1;
+	    goto cleanUp;
+	}
     
-	    /* make it look like mail is coming from the server */
-	    if (SMTP_helo(mboxfd,queryctl->servername) != SM_OK) {
-		close(mboxfd);
-		mboxfd = -1;
-		goto cleanUp;
-	    }
+	/* make it look like mail is coming from the server */
+	if (SMTP_helo(mboxfd,queryctl->servername) != SM_OK) {
+	    close(mboxfd);
+	    mboxfd = -1;
+	    goto cleanUp;
 	}
 
 	/* read, forward, and delete messages */
@@ -657,7 +587,7 @@ struct method *proto;
 			continue;
 
 		/* request a message */
-		(*protocol->fetch)(socket, num, linelimit, &len);
+		(*protocol->fetch)(socket, num, &len);
 		if (outlevel == O_VERBOSE)
 		    if (protocol->delimited)
 			fprintf(stderr,
@@ -668,14 +598,6 @@ struct method *proto;
 				"fetching message %d (%d bytes)\n",
 				num, len);
 
-		/* open the mail pipe now if we're using an MDA */
-		if (queryctl->output == TO_MDA)
-		{
-		    ok = (mboxfd = openmailpipe(queryctl)) < 0 ? -1 : 0;
-		    if (ok != 0)
-			goto cleanUp;
-		}
-
 		/* read the message and ship it to the output sink */
 		ok = gen_readmsg(socket,
 				 mboxfd,
@@ -683,16 +605,7 @@ struct method *proto;
 				 protocol->delimited,
 				 queryctl->localname,
 				 queryctl->servername,
-				 queryctl->output, 
 				 !queryctl->norewrite);
-
-		/* close the mail pipe, we'll reopen before next message */
-		if (queryctl->output == TO_MDA)
-		{
-		    ok = closemailpipe(mboxfd);
-		    if (ok != 0)
-			goto cleanUp;
-		}
 
 		/* tell the server we got it OK and resynchronize */
 		if (protocol->trail)
@@ -749,18 +662,8 @@ cleanUp:
 #endif /* HAVE_RRESVPORT_H */
 
 closeUp:
-    if (queryctl->output == TO_FOLDER)
-    {
-	if (closeuserfolder(mboxfd) < 0 && ok == 0)
-	{
-	    perror("fetchmail, closing output sink");
-	    ok = PS_IOERR;
-	}
-    }
-    else if (queryctl->output == TO_SMTP && mboxfd > -1) {
-	SMTP_quit(mboxfd);
-	close(mboxfd);
-    }
+    SMTP_quit(mboxfd);
+    close(mboxfd);
 
     return(ok);
 }

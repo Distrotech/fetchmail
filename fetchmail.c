@@ -44,7 +44,6 @@
 #ifdef HAVE_PROTOTYPES
 /* prototypes for internal functions */
 int showoptions (struct hostrec *queryctl);
-int parseMDAargs (struct hostrec *queryctl);
 int showversioninfo (void);
 int dump_options (struct hostrec *queryctl);
 int query_host(struct hostrec *queryctl);
@@ -62,11 +61,7 @@ int quitmode;		/* if --quit was set */
 /* miscellaneous global controls */
 char *rcfile;		/* path name of rc file */
 char *idfile;		/* path name of id file */
-int linelimit;		/* limit # lines retrieved per site */
 int versioninfo;	/* emit only version info */
-
-/* args for the MDA, parsed out in the usual fashion by parseMDAargs() */
-char *mda_argv [32];
 
 /*********************************************************************
   function:      main
@@ -127,8 +122,6 @@ char **argv;
 
 	prc_mergeoptions(servername, &cmd_opts, &def_opts, hostp);
 	strcpy(hostp->servername, servername);
-	parseMDAargs(hostp);
-
 	hostp->next = hostlist;
 	hostlist = hostp;
     }
@@ -359,7 +352,7 @@ int showversioninfo()
 
   return value:  none.
   calls:         none.
-  globals:       linelimit, outlimit.
+  globals:       outlimit.
 *********************************************************************/
 
 int dump_params (queryctl)
@@ -399,254 +392,7 @@ struct hostrec *queryctl;
     printf("  Rewrite of server-local addresses is %sabled (--norewrite %s)\n",
 	   queryctl->norewrite ? "dis" : "en",
 	   queryctl->norewrite ? "on" : "off");
-
-
-    switch(queryctl->output)
-    {
-    case TO_SMTP:
-	printf("  Messages will be SMTP-forwarded to '%s'\n", queryctl->smtphost);
-	break;
-    case TO_FOLDER:
-	printf("  Messages will be appended to '%s'\n", queryctl->userfolder);
-	break;
-    case TO_MDA:
-	printf("  Messages will be delivered with");
-	for (cp = queryctl->mda; *cp; cp += strlen(cp) + 1) {
-	    printf(" %s", cp);
-	}
-	putchar('\n');
-	break;
-    case TO_STDOUT:
-	printf("  Messages will be dumped to standard output\n");
-    default:
-	printf("  Message destination unknown?!?\n");
-    }
-    if (outlevel == O_VERBOSE)
-    {
-	if (queryctl->smtphost[0] != '\0' && queryctl->output != TO_SMTP)
-	    printf("  (SMTP host would have been '%s')\n", queryctl->smtphost);
-	if (queryctl->output != TO_FOLDER)
-	    printf("  (Mail folder would have been '%s')\n", queryctl->userfolder);
-	if (queryctl->output != TO_MDA)
-	{
-	    printf("  (MDA would have been");
-	    for (cp = queryctl->mda; *cp; cp += strlen(cp) + 1) {
-		printf(" %s", cp);
-	    }
-	    printf(")\n");
-	}
-    }
-
-    if (linelimit == 0)
-	printf("  No limit on retrieved message length.\n");
-    else
-	printf("  Text retrieved per message will be at most %d bytes.\n",
-	       linelimit);
+    printf("  Messages will be SMTP-forwarded to '%s'\n", queryctl->smtphost);
 }
 
-/*********************************************************************
-  function:      openuserfolder
-  description:   open the file to which the retrieved messages will
-                 be appended.  Write-lock the folder if possible.
-
-  arguments:     
-    queryctl     fully-determined options (i.e. parsed, defaults invoked,
-                 etc).
-
-  return value:  file descriptor for the open file, else -1.
-  calls:         none.
-  globals:       none.
- *********************************************************************/
-
-int openuserfolder (queryctl)
-struct hostrec *queryctl;
-{
-    int fd;
-
-    if (queryctl->output == TO_STDOUT)
-	return(1);
-    else    /* queryctl->output == TO_FOLDER */
-	if ((fd = open(queryctl->userfolder,O_CREAT|O_WRONLY|O_APPEND,0600)) >= 0) {
-#ifdef HAVE_FLOCK
-	    if (flock(fd, LOCK_EX) == -1)
-	    {
-		close(fd);
-		fd = -1;
-	    }
-#endif /* HAVE_FLOCK */
-	    return(fd);
-	}
-	else {
-	    perror("fetchmail: openuserfolder: open()");
-	    return(-1);
-	}
-  
-}
-
-
-
-/*********************************************************************
-  function:      openmailpipe
-  description:   open a one-way pipe to the mail delivery agent.
-  arguments:     
-    queryctl     fully-determined options (i.e. parsed, defaults invoked,
-                 etc).
-
-  return value:  open file descriptor for the pipe or -1.
-  calls:         none.
-  globals:       reads mda_argv.
- *********************************************************************/
-
-int openmailpipe (queryctl)
-struct hostrec *queryctl;
-{
-    int pipefd [2];
-    int childpid;
-    char binmailargs [80];
-
-    if (pipe(pipefd) < 0) {
-	perror("fetchmail: openmailpipe: pipe");
-	return(-1);
-    }
-    if ((childpid = fork()) < 0) {
-	perror("fetchmail: openmailpipe: fork");
-	return(-1);
-    }
-    else if (childpid == 0) {
-
-	/* in child process space */
-	close(pipefd[1]);  /* close the 'write' end of the pipe */
-	close(0);          /* get rid of inherited stdin */
-	if (dup(pipefd[0]) != 0) {
-	    fputs("fetchmail: openmailpipe: dup() failed\n",stderr);
-	    exit(1);
-	}
-
-	execv(queryctl->mda, mda_argv+1);
-
-	/* if we got here, an error occurred */
-	perror("fetchmail: openmailpipe: exec");
-	return(-1);
-
-    }
-
-    /* in the parent process space */
-    close(pipefd[0]);  /* close the 'read' end of the pipe */
-    return(pipefd[1]);
-}
-
-
-
-/*********************************************************************
-  function:      closeuserfolder
-  description:   close the user-specified mail folder.
-  arguments:     
-    fd           mail folder descriptor.
-
-  return value:  zero if success else -1.
-  calls:         none.
-  globals:       none.
- *********************************************************************/
-
-int closeuserfolder(fd)
-int fd;
-{
-    int err;
-
-    if (fd != 1) {   /* not stdout */
-	err = close(fd);
-    }   
-    else
-	err = 0;
-  
-    if (err)
-	perror("fetchmail: closeuserfolder: close");
-
-    return(err);
-}
-
-
-
-/*********************************************************************
-  function:      closemailpipe
-  description:   close pipe to the mail delivery agent.
-  arguments:     
-    queryctl     fully-determined options record
-    fd           pipe descriptor.
-
-  return value:  0 if success, else -1.
-  calls:         none.
-  globals:       none.
- *********************************************************************/
-
-int closemailpipe (fd)
-int fd;
-{
-    int err;
-    int childpid;
-
-    if (outlevel == O_VERBOSE)
-	fprintf(stderr, "about to close pipe %d\n", fd);
-
-    err = close(fd);
-#if defined(STDC_HEADERS)
-    childpid = wait(NULL);
-#else
-    childpid = wait((int *) 0);
-#endif
-    if (err)
-	perror("fetchmail: closemailpipe: close");
-
-    if (outlevel == O_VERBOSE)
-	fprintf(stderr, "closed pipe %d\n", fd);
-  
-    return(err);
-}
-
-
-
-/*********************************************************************
-  function:      parseMDAargs
-  description:   parse the argument string given in agent option into
-                 a regular *argv[] array.
-  arguments:
-    queryctl     fully-determined options record pointer.
-
-  return value:  none.
-  calls:         none.
-  globals:       writes mda_argv.
- *********************************************************************/
-
-int parseMDAargs (queryctl)
-struct hostrec *queryctl;
-{
-    int argi;
-    char *argp;
-
-    /* first put the last segment of the MDA pathname in argv[0] */
-    argp = strrchr(queryctl->mda, '/');
-    mda_argv[0] = argp ? (argp + 1) : queryctl->mda;
-  
-    argp = queryctl->mda;
-    while (*argp != '\0' && isspace(*argp))	/* skip null first arg */
-	argp++;					
-
-    /* now punch nulls into the delimiting whitespace in the args */
-    for (argi = 1;  
-	 *argp != '\0';
-	 argi++) {
-
-	mda_argv[argi] = argp;     /* store pointer to this argument */
-
-	/* find end of this argument */
-	while (!(*argp == '\0' || isspace(*argp)))
-	    argp++;
-
-	/* punch in a null terminator */
-	if (*argp != '\0')
-	    *(argp++) = '\0';  
-    }
-    mda_argv[argi] = (char *) 0;
-
-}
 

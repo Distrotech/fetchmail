@@ -160,24 +160,16 @@ int *firstp;
     return(0);
 }
 
-static int imap_fetch(socket, number, limit, lenp)
+static int imap_fetch(socket, number, lenp)
 /* request nth message */
 int socket;
 int number;
-int limit;
 int *lenp; 
 {
     char buf [POPBUFSIZE+1];
     int	num;
 
-    if (limit) 
-	gen_send(socket,
-		     "PARTIAL %d RFC822 0 %d",
-		     number, limit);
-    else 
-	gen_send(socket,
-		     "FETCH %d RFC822",
-		     number);
+    gen_send(socket, "FETCH %d RFC822", number);
 
     /* looking for FETCH response */
     do {

@@ -25,23 +25,20 @@
 #define LA_VERBOSE	5 
 #define LA_SILENT	6 
 #define LA_STDOUT	7
-#define LA_LIMIT	8
-#define LA_FLUSH        9
-#define LA_PROTOCOL	10
-#define LA_DAEMON	11
-#define LA_RCFILE	12
-#define LA_USERNAME	13
-#define LA_REMOTEFILE	14
-#define	LA_LOCALFILE	15
-#define LA_MDA		16
-#define LA_PORT		17
-#define LA_SMTPHOST	18
-#define LA_LOGFILE	19
-#define LA_QUIT		20
-#define LA_NOREWRITE	21
-#define LA_YYDEBUG	22
- 
-static char *shortoptions = "23PVaKkvS:scl:Fd:f:u:r:o:m:L:qN";
+#define LA_FLUSH        8
+#define LA_PROTOCOL	9
+#define LA_DAEMON	10
+#define LA_RCFILE	11
+#define LA_USERNAME	12
+#define LA_REMOTEFILE	13
+#define LA_PORT		14
+#define LA_SMTPHOST	15
+#define LA_LOGFILE	16
+#define LA_QUIT		17
+#define LA_NOREWRITE	18
+#define LA_YYDEBUG	19
+
+static char *shortoptions = "23PVaKkvS:sFd:f:u:r:L:qN";
 static struct option longoptions[] = {
   {"version",   no_argument,       (int *) 0, LA_VERSION    },
   {"all",	no_argument,       (int *) 0, LA_ALL        },
@@ -49,8 +46,6 @@ static struct option longoptions[] = {
   {"keep",      no_argument,       (int *) 0, LA_KEEP       },
   {"verbose",   no_argument,       (int *) 0, LA_VERBOSE    },
   {"silent",    no_argument,       (int *) 0, LA_SILENT     },
-  {"stdout",    no_argument,       (int *) 0, LA_STDOUT     },
-  {"limit",     required_argument, (int *) 0, LA_LIMIT      },
   {"flush",	no_argument,	   (int *) 0, LA_FLUSH      },
   {"protocol",	required_argument, (int *) 0, LA_PROTOCOL   },
   {"proto",	required_argument, (int *) 0, LA_PROTOCOL   },
@@ -59,8 +54,6 @@ static struct option longoptions[] = {
   {"user",	required_argument, (int *) 0, LA_USERNAME   },
   {"username",  required_argument, (int *) 0, LA_USERNAME   },
   {"remote",    required_argument, (int *) 0, LA_REMOTEFILE },
-  {"local",     required_argument, (int *) 0, LA_LOCALFILE  },
-  {"mda",	required_argument, (int *) 0, LA_MDA        },
   {"port",	required_argument, (int *) 0, LA_PORT       },
   {"smtphost",	required_argument, (int *) 0, LA_SMTPHOST   },
   {"logfile",	required_argument, (int *) 0, LA_LOGFILE    },
@@ -88,7 +81,7 @@ static struct option longoptions[] = {
 	   	 syntax errors.
   calls:         none.  
   globals:       writes outlevel, versioninfo, yydebug, logfile, 
-		 poll_interval, quitmode, rcfile, idfile, linelimit.  
+		 poll_interval, quitmode, rcfile, idfile.  
  *********************************************************************/
 
 int parsecmdline (argc,argv,queryctl)
@@ -144,23 +137,6 @@ struct hostrec *queryctl;
       case LA_SILENT:
         outlevel = O_SILENT;
         break;
-      case 'c':
-      case LA_STDOUT:
-        if (fflag)
-          errflag++;
-        else {
-          fflag++;
-          queryctl->output = TO_STDOUT;
-        }
-        break;
-      case 'l':
-      case LA_LIMIT:
-        linelimit = atoi(optarg);
-        if (linelimit < 0) {
-          fprintf(stderr,"Line count limit must be non-negative");
-          errflag++;
-        }
-        break;
       case 'F':
       case LA_FLUSH:
         queryctl->flush = !0;
@@ -196,24 +172,9 @@ struct hostrec *queryctl;
       case LA_USERNAME:
         strncpy(queryctl->remotename,optarg,sizeof(queryctl->remotename)-1);
         break;
-      case 'o':
-      case LA_LOCALFILE:
-        if (fflag) 
-          errflag++;
-        else {
-          fflag++;
-          queryctl->output = TO_FOLDER;
-          strncpy(queryctl->userfolder,optarg,sizeof(queryctl->userfolder)-1);
-        }
-        break;
       case 'r':
       case LA_REMOTEFILE:
         strncpy(queryctl->remotefolder,optarg,sizeof(queryctl->remotefolder)-1);
-        break;
-      case 'm':
-      case LA_MDA:
-	queryctl->output = TO_MDA;
-        strncpy(queryctl->mda,optarg,sizeof(queryctl->mda)-1);
         break;
       case 'P':
       case LA_PORT:
@@ -225,7 +186,6 @@ struct hostrec *queryctl;
           errflag++;
         else {
           fflag++;
-          queryctl->output = TO_SMTP;
           strncpy(queryctl->smtphost,optarg,sizeof(queryctl->smtphost)-1);
         }
 	break;
@@ -261,8 +221,6 @@ struct hostrec *queryctl;
     fputs("  -F, --flush       delete old messages from server\n", stderr);
     fputs("  -K, --kill        delete new messages after retrieval\n", stderr);
     fputs("  -k, --keep        save new messages after retrieval\n", stderr);
-    fputs("  -l, --limit       retrieve at most n message lines\n", stderr);
-    fputs("  -m, --mda         set mail user agent to pass to\n", stderr);
     fputs("  -S, --smtphost    set SMTP forwarding host\n", stderr);
     fputs("  -q, --quit        kill daemon process\n", stderr);
     fputs("  -s, --silent      work silently\n", stderr);
@@ -271,19 +229,12 @@ struct hostrec *queryctl;
     fputs("  -f, --fetchmailrc specify alternate run control file\n", stderr);
     fputs("  -i, --idfile      specify alternate ID database\n", stderr);
     fputs("  -u, --username    specify server user ID\n", stderr);
-    fputs("  -c, --stdout      write received mail to stdout\n", stderr);
-    fputs("  -o, --local       specify filename for received mail\n", stderr);
     fputs("  -r, --remote      specify remote folder name\n", stderr);
     fputs("  -L, --logfile     specify logfile name\n", stderr);
     return(-1);
   }
-  else {
-    if (linelimit && !got_kill) 
-      queryctl->keep = !0;
-    else
-      ;
-    return(optind);
-  }
+
+  return(optind);
 }
          
 
@@ -325,7 +276,7 @@ struct hostrec *queryctl;
 	}
     }
 
-    queryctl->protocol = DEF_PROTOCOL;
+    queryctl->protocol = P_AUTO;
 
 #if defined(KEEP_IS_DEFAULT)
     queryctl->keep = 1;
@@ -336,14 +287,10 @@ struct hostrec *queryctl;
 
     strcpy(queryctl->localname, user);
     strcpy(queryctl->remotename, user);
-    sprintf(queryctl->userfolder, USERFOLDER, user);
     strcpy(queryctl->smtphost, "localhost");
-    queryctl->output = TO_SMTP;
-    (void) sprintf(queryctl->mda, DEF_MDA, queryctl->localname);
 
     rcfile = 
 	(char *) xmalloc(strlen(home)+strlen(RCFILE_NAME)+2);
-
     strcpy(rcfile, home);
     strcat(rcfile, "/");
     strcat(rcfile, RCFILE_NAME);
