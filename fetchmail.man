@@ -940,5 +940,23 @@ Send comments, bug reports, gripes, and the like to Eric S. Raymond
 <esr@thyrsus.com>.
 
 .SH SEE ALSO
-elm(1), mail(1), sendmail(8), popd(8), imapd(8);
-RFC 937, RFC 1081, RFC1176, RFC 1225, RFC 1460, RFC 1725, RFC1939.
+elm(1), mail(1), sendmail(8), popd(8), imapd(8)
+.SH APPLICABLE STANDARDS
+.TP 5
+SMTP:
+RFC 821
+.TP 5
+mail:
+RFC 822
+.TP 5
+POP2:
+RFC 937
+.TP 5
+POP3:
+RFC 1081, RFC 1225, RFC 1460, RFC 1725, RFC 1939
+.TP 5
+IMAP2/IMAP2BIS:
+RFC 1176, RFC 1732
+.TP 5
+IMAP4:
+RFC 1730, RFC 1731, RFC 1732

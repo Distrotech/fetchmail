@@ -200,7 +200,7 @@ headers = $(srcdir)/fetchmail.h $(srcdir)/socket.h $(srcdir)/smtp.h \
 extra = $(srcdir)/alloca.c $(srcdir)/getopt.[ch] $(srcdir)/getopt1.c \
 	$(srcdir)/strcasecmp.c
 docs = $(srcdir)/COPYING $(srcdir)/README $(srcdir)/INSTALL $(srcdir)/NEWS \
-	$(srcdir)/NOTES $(srcdir)/fetchmail.lsm $(srcdir)/RFC/*.txt \
+	$(srcdir)/NOTES $(srcdir)/fetchmail.lsm \
 	$(srcdir)/*.man	$(srcdir)/sample.rcfile $(srcdir)/FAQ
 config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/configure \
 	$(srcdir)/config.guess $(srcdir)/config.h.in $(srcdir)/config.sub \
