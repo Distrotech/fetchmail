@@ -55,6 +55,8 @@ class TestSite:
         rep = "%s %s at %s" % (self.proto, self.version, self.host)
         if self.capabilities:
             rep += " (" + self.capabilities + ")"
+        if self.options:
+            rep += " using " + self.options
         return rep
 
     def testmail(self):
