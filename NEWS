@@ -1,16 +1,34 @@
 			Release Notes:
 
-pl 2.0.1 ():
-* Include Nalin Dahyabhai's patch for MIT Kerberos support.
-* Deduce the envelope To address from single-addressee mail through sendmail.
+fetchmail-2.1 ():
+
+features --
+
+* Added FAQ file.
+
+* Try to pass envelope From to the listener so that logging and procmail
+  processing works right.  If that fails, fall back on calling-user.
+
+* Added `set logfile = ' option to rc syntax.
+
+* We now use X-Envelope-To headers and parse the Received lines.  If
+  X-Envelope-To is found, OK; otherwise we look for a `Received for' line;
+  either is treated as a true envelope address.  If neither of these are
+  found we go to the To/Cc/Bcc header addresses.
+
+* Added `*' as a wildcard option for multidrop to ... here.  This will allow
+  names to be local names to be passed through from a multi-drop box on
+  a mailserver 
+
 * Added an `aka' option to allow users to declare mailserver aliases at start
   of run, so DNS does less work.  During a run, cache host matches on the
   aka list so no potential alias has to be DNS-checked more than once.
-* Try to use envelope From.  If that fails, fall back on calling-user.
-* Added `logfile' keyword to rc syntax.
-* We now use X-Envelope-To headers.
-* Added `*' as a wildcard option for multidrop to ... here
-* Added FAQ file
+
+bugs --
+
+* Nalin Dahyabhai's fix patch for MIT Kerberos support.
+
+* Fixed a fencepost error in the APOP code that was causing a core dump.
 
 fetchmail-2.0 (Mon Nov 18 00:32:17 EST 1996):
 
