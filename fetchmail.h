@@ -115,6 +115,7 @@ struct runctl
     int		poll_interval;
     char	*postmaster;
     flag	bouncemail;
+    flag	spambounce;
     char	*properties;
     flag	use_syslog;
     flag	invisible;

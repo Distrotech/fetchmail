@@ -413,7 +413,13 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	 * coming from this address, probably due to an
 	 * anti-spam domain exclusion.  Respect this.  Don't
 	 * try to ship the message, and don't prevent it from
-	 * being deleted.  Default values:
+	 * being deleted.  There's no point in bouncing the
+	 * email either since most spammers don't put their
+	 * real return email address anywhere in the headers
+	 * (unless the user insists with the SET SPAMBOUNCE
+	 * config option).
+	 *
+	 * Default values:
 	 *
 	 * 571 = sendmail's "unsolicited email refused"
 	 * 550 = exim's new antispam response (temporary)
@@ -421,7 +427,8 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	 * 554 = Postfix antispam response.
 	 *
 	 */
-	send_bouncemail(ctl, msg, XMIT_ACCEPT,
+	if (run.spambounce)
+		send_bouncemail(ctl, msg, XMIT_ACCEPT,
 			"Our spam filter rejected this transaction.\r\n", 
 			1, responses);
 	return(PS_REFUSED);

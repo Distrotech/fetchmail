@@ -68,6 +68,7 @@ invisible	{ return INVISIBLE; }
 showdots	{ return SHOWDOTS; }
 postmaster	{ return POSTMASTER; }
 bouncemail	{ return BOUNCEMAIL; }
+spambounce	{ return SPAMBOUNCE; }
 warnings	{ return WARNINGS; }
 
 defaults 	{ return DEFAULTS; }

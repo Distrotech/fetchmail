@@ -1109,6 +1109,9 @@ T}
 set no bouncemail	\&	T{
 Direct error mail to postmaster rather than sender
 T}
+set no spambounce	\&	T{
+Send spam bounces
+T}
 set logfile  	\&	T{
 Name of a file to dump error and status messages to
 T}
@@ -2041,8 +2044,8 @@ temporarily discards any suid privileges it may have while running the
 MDA.  For maximum safety, however, don't use an mda command containing
 %F or %T when fetchmail is run from the root account itself.
 .PP
-Fetchmail's method of sending bouncemail requires that port 25 of localhost
-be available for sending mail via SMTP.
+Fetchmail's method of sending bouncemail and spambounce requires that
+port 25 of localhost be available for sending mail via SMTP.
 .PP
 If you modify a
 .I .fetchmailrc

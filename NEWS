@@ -10,6 +10,8 @@
   continue polling silently until service is restored (at which time the
   user will get a notification).
 * Samuel Leo's patch to add LMTP capability to the smtphost option.
+* Fix UIDL handling on skip entries.
+* Add Don Beausee's `spambounce' option (default off).
 
 ------------------------------------------------------------------------------
 fetchmail-5.6.0 (Sun Nov 26 22:11:09 EST 2000), 19625 lines:

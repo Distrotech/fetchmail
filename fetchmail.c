@@ -903,6 +903,7 @@ static int load_params(int argc, char **argv, int optind)
     struct stat rcstat;
 
     run.bouncemail = TRUE;
+    run.spambounce = FALSE;	/* don't bounce back to innocent bystanders */
 
     memset(&def_opts, '\0', sizeof(struct query));
     def_opts.smtp_socket = -1;

@@ -20,6 +20,7 @@ class Configuration:
 	self.idfile = os.environ["HOME"] + "/.fetchids"		# Default idfile, initially
         self.postmaster = None		# No last-resort address, initially
         self.bouncemail = TRUE		# Bounce errors to users
+        self.spambounce = FALSE		# Bounce spam errors
         self.properties = None		# No exiguous properties
 	self.invisible = FALSE		# Suppress Received line & spoof?
 	self.syslog = FALSE		# Use syslogd for logging?
@@ -30,6 +31,7 @@ class Configuration:
 	    ('idfile',		'String'),
 	    ('postmaster',	'String'),
 	    ('bouncemail',	'Boolean'),
+	    ('spambounce',	'Boolean'),
 	    ('properties',	'String'),
 	    ('syslog',		'Boolean'),
 	    ('invisible',	'Boolean'))
@@ -48,6 +50,10 @@ class Configuration:
             str = str + ("set bouncemail\n")
         else:
             str = str + ("set nobouncemail\n")
+        if self.spambounce:
+            str = str + ("set spambounce\n")
+        else:
+            str = str + ("set nospambounce\n")
 	if self.properties != ConfigurationDefaults.properties:
 	    str = str + ("set properties \"%s\"\n" % (self.properties,));
 	if self.poll_interval > 0:
@@ -640,6 +646,11 @@ Bounces to sender?
 	If this option is on (the default) error mail goes to the sender.
         Otherwise it goes to the postmaster.
 
+Send spam bounces?
+	If this option is on, spam bounces are sent to the sender or
+	postmaster (depending on the "Bounces to sender?" option.  Otherwise,
+	spam bounces are not sent (the default).
+
 Invisible
         If false (the default) fetchmail generates a Received line into
         each message and generates a HELO from the machine it is running on.
@@ -727,6 +738,13 @@ class ConfigurationEdit(Frame, MyWidget):
 		'variable':self.bouncemail,
 		'relief':GROOVE}).pack(side=LEFT, anchor=W)
             pf.pack(fill=X)
+
+            sb = Frame(gf)
+            Checkbutton(sb,
+		{'text':'send spam bounces?',
+		'variable':self.spambounce,
+		'relief':GROOVE}).pack(side=LEFT, anchor=W)
+            sb.pack(fill=X)
 
             sf = Frame(gf)
             Checkbutton(sf,

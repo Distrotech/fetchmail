@@ -65,7 +65,8 @@ extern char * yytext;
 %token NETSEC INTERFACE MONITOR PLUGIN PLUGOUT
 %token IS HERE THERE TO MAP WILDCARD
 %token BATCHLIMIT FETCHLIMIT EXPUNGE PROPERTIES
-%token SET LOGFILE DAEMON SYSLOG IDFILE INVISIBLE POSTMASTER BOUNCEMAIL SHOWDOTS
+%token SET LOGFILE DAEMON SYSLOG IDFILE INVISIBLE POSTMASTER BOUNCEMAIL 
+%token SPAMBOUNCE SHOWDOTS
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
@@ -94,6 +95,8 @@ statement	: SET LOGFILE optmap STRING	{run.logfile = xstrdup($4);}
 		| SET POSTMASTER optmap STRING	{run.postmaster = xstrdup($4);}
 		| SET BOUNCEMAIL		{run.bouncemail = TRUE;}
 		| SET NO BOUNCEMAIL		{run.bouncemail = FALSE;}
+		| SET SPAMBOUNCE		{run.spambounce = TRUE;}
+		| SET NO SPAMBOUNCE		{run.spambounce = FALSE;}
 		| SET PROPERTIES optmap STRING	{run.properties =xstrdup($4);}
 		| SET SYSLOG			{run.use_syslog = TRUE;}
 		| SET INVISIBLE			{run.invisible = TRUE;}
