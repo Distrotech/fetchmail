@@ -1,6 +1,6 @@
 				Release Notes:
 
-fetchmail-4.7.2 ():
+fetchmail-4.7.2 (Fri Dec 25 01:01:54 EST 1998):
 * Don't append the destination address to a postmaster name containing @.
 * Added John Summerfield's getfetchmail script.
 * Minor fixes in bouncemail format.
