@@ -10,6 +10,7 @@ fetchmail-4.6.8 ():
 * Documented fetchmail's actions on ESMTP errors.
 * Fix an undead-message hole in POP3 with fetchall on.
 * Fix a minor error in generation of fetchmail's trace headers.
+* Better Received-line parsing (avoid some false positives).
 
 There are 247 people on fetchmail-friends and 309 on fetchmail-announce.
 

@@ -231,11 +231,9 @@ static char *parse_received(struct query *ctl, char *bufp)
  * which makes nxtaddr() behave correctly. 
  */
 {
-    char *ok = (char *)NULL;
+    char *base, *ok = (char *)NULL;
     static char rbuf[HOSTLEN + USERNAMELEN + 4]; 
 
-    if (outlevel >= O_DEBUG)
-	error(0, 0, _("analyzing Received line:\n%s"), bufp);
     /*
      * Try to extract the real envelope addressee.  We look here
      * specifically for the mailserver's Received line.
@@ -244,18 +242,40 @@ static char *parse_received(struct query *ctl, char *bufp)
      * address in the Received line.  Sendmail itself only
      * does this when the mail has a single recipient.
      */
-    if ((ok = strstr(bufp, "by ")) && isspace(ok[-1]))
+    if (outlevel >= O_DEBUG)
+	error(0, 0, _("analyzing Received line:\n%s"), bufp);
+
+    /* search for whitepace-surrounded "by" followed by xxxx.yyyy */
+    for (base = bufp;  ; base = ok + 2)
     {
-	char	*sp, *tp;
-
-	/* extract space-delimited token after "by " */
-	for (sp = ok + 3; isspace(*sp); sp++)
+	if (!(ok = strstr(base, "by")))
+	    break;
+	else if (!isspace(ok[-1]) || !isspace(ok[2]))
+	{
+	    ok = (char *)NULL;
 	    continue;
-	tp = rbuf;
-	for (; !isspace(*sp); sp++)
-	    *tp++ = *sp;
-	*tp = '\0';
+	}
+	else
+	{
+	    char	*sp, *tp;
 
+	    /* extract space-delimited token after "by" */
+	    for (sp = ok + 2; isspace(*sp); sp++)
+		continue;
+	    tp = rbuf;
+	    for (; !isspace(*sp); sp++)
+		*tp++ = *sp;
+	    *tp = '\0';
+
+	    /* look for embedded periods */
+	    if (strchr(rbuf, '.'))
+		break;
+	    else
+		ok = sp - 1;	/* arrange to skip this token */
+	}
+    }
+    if (ok)
+    {
 	/*
 	 * If it's a DNS name of the mail server, look for the
 	 * recipient name after a following "for".  Otherwise
@@ -276,9 +296,38 @@ static char *parse_received(struct query *ctl, char *bufp)
 	    return(NULL);
 	}
 
-	if ((ok = strstr(sp, "for")) && isspace(ok[3]) && isspace(ok[-1]))
+	/* search for whitepace-surrounded "for" followed by xxxx@yyyy */
+	for (base = ok + 4 + strlen(rbuf);  ; base = ok + 2)
+	{
+	    if (!(ok = strstr(base, "for")))
+		break;
+	    else if (!isspace(ok[-1]) || !isspace(ok[3]))
+	    {
+		ok = (char *)NULL;
+		continue;
+	    }
+	    else
+	    {
+		char	*sp, *tp;
+
+		/* extract space-delimited token after "for" */
+		for (sp = ok + 3; isspace(*sp); sp++)
+		    continue;
+		tp = rbuf;
+		for (; !isspace(*sp); sp++)
+		    *tp++ = *sp;
+		*tp = '\0';
+
+		if (strchr(rbuf, '@'))
+		    break;
+		else
+		    ok = sp - 1;	/* arrange to skip this token */
+	    }
+	}
+	if (ok)
 	{
 	    flag	want_gt = FALSE;
+	    char	*sp, *tp;
 
 	    /* char after "for" could be space or a continuation newline */
 	    for (sp = ok + 4; isspace(*sp); sp++)
