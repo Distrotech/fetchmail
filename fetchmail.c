@@ -153,6 +153,10 @@ int main (int argc, char **argv)
 	    printf("Lockfile at %s\n", tmpbuf);
 	if (logfile)
 	    printf("Logfile is %s\n", logfile);
+#if defined(HAVE_SYSLOG)
+	if (use_syslog)
+	    printf("Progress messages will be logged via syslog\n");
+#endif
 	for (ctl = querylist; ctl; ctl = ctl->next) {
 	    if (ctl->active && !(implicitmode && ctl->server.skip))
 		dump_params(ctl);
