@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/01/17 23:34:23 $
+<td width="30%" align=right>$Date: 1998/01/18 00:16:10 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -871,9 +871,18 @@ profiles that will accomplish this.  Thank James Laferriere
 <hr>
 <h2><a name="T1">T1. How can I use fetchmail with sendmail?</a></h2>
 
-No special configuration is required.  Eric Allman tells me that if
-<code>FEATURE(always_add_domain)</code> is included in sendmail's
-configuration, you can leave the <code>rewrite</code> option off.
+For most swndmails, no special configuration is required.  Eric Allman
+tells me that if <code>FEATURE(always_add_domain)</code> is included
+in sendmail's configuration, you can leave the <code>rewrite</code>
+option off.<P>
+
+G&uuml;nther Leber reports that Digital Unix sendmails won't work with
+fetchmail.  The symptom is an error message "553 Local configuration
+error, hostname not recognized as local". The problem is that
+fetchmail normally feeds sendmail with the client machine's host
+address in the MAIL FROM line.  These sendmails think this means
+they're seeing the result of a mail loop and suppress the mail.  You
+may be able to work around this by running in --invisible mode.
 
 <hr>
 <h2><a name="T2">T2. How can I use fetchmail with qmail?</a></h2>
@@ -1668,7 +1677,7 @@ a faster MTA like qmail or exim might help. <p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/01/17 23:34:23 $
+<td width="30%" align=right>$Date: 1998/01/18 00:16:10 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
