@@ -195,7 +195,8 @@ clean:
 distclean: clean 
 	-cd intl; $(MAKE) distclean
 	-cd po; $(MAKE) distclean
-	-rm -f TAGS tags
+	-rm -f TAGS tags config.h config.status config.log \
+		config.cache stamp-h stamp-h.in Makefile
 
 realclean: distclean
 	-rm -f FAQ FEATURES NOTES MANIFEST 
