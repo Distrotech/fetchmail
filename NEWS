@@ -5,8 +5,9 @@ fetchmail-4.7.1 ():
 * gcc -Wall cleanup.
 * Make sure user can see a trouble message in verbose mode when there 
   are no local matches for recipient addresses.
+* Harry McGavran's configure.in fix for mixed Kerberos IV/V installations.
 
-There are 246 people on fetchmail-friends and 329 on fetchmail-announce.
+There are 245 people on fetchmail-friends and 329 on fetchmail-announce.
 
 fetchmail-4.7.0 (Mon Dec 14 12:05:27 EST 1998):
 * Minor correction to make i18n subdirectory builds work better.

@@ -322,7 +322,7 @@ elif test -n "$with_kerberos" -a -n "$with_kerberos5"
 then
     CEFLAGS="$CEFLAGS -DKERBEROS_V4 -I$with_kerberos/include"
     LDEFLAGS="$LDEFLAGS -L$with_kerberos/lib"
-    LIBS="$LIBS -lkrb4"
+    LIBS="-lkrb4 -ldes425 $LIBS"
 elif test -n "$with_kerberos5"
 then
     for dir in /usr/kerberos /usr/kerberosIV /usr/athena
@@ -331,7 +331,7 @@ then
       then
         CEFLAGS="$CEFLAGS -DKERBEROS_V4 -I$dir/include"
         LDEFLAGS="$LDEFLAGS -L$dir/lib"
-        LIBS="$LIBS -lkrb4"
+	LIBS="-lkrb4 -ldes425 $LIBS"
         break
       fi
     done
