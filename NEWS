@@ -12,6 +12,7 @@
   flushing if both "flush" and "limit" were specified.
 * Benjamin Drieu's patch for Debian bug #156592, incorrect handing of host/port
   option.
+* Smash all NULs out of headers right after the socket read.
 
 fetchmail-6.2.4 (Wed Aug 13 04:27:35 EDT 2003), 22625 lines:
 
