@@ -1,5 +1,8 @@
 			Release Notes:
 
+pl 1.9.6 ():
+* Make rewrite option handle multiple comma-separated local names correctly.
+
 pl 1.9.5 (Tue Oct 29 20:07:41 EST 1996):
 * Added -N, --nodetach option for debugging purposes.
 * Use interval timers for poll-interval sleep and nonresponse timeout.

@@ -117,8 +117,6 @@ const char *host;	/* server hostname */
 		state = 5;
 	    else if (isspace(*from))
 		state = 2;
-	    else if (*from == ',')
-		tokencount = 0;
 	    break;
 
 	case 2:	    /* found a token boundary -- reset without copying */
@@ -185,11 +183,12 @@ const char *host;	/* server hostname */
 		strcpy(buf, "@");
 		strcat(buf, host);
 		buf += strlen(buf);
+		tokencount = 0;
 		state = 1;
 	    }
 
 	    /* a single local name alone on the line */
-	    else if (*from == '\n' && tokencount == 0)
+	    else if (*from == '\n' && tokencount == 1)
 	    {
 		strcpy(buf, "@");
 		strcat(buf, host);
