@@ -717,7 +717,10 @@ struct query *ctl;	/* query control record */
     {
 	/* write message terminator */
 	if (SMTP_eom(mboxfd) != SM_OK)
+	{
+	    fputs("fetchmail: SMTP listener refused delivery\n", stderr);
 	    return(PS_SMTP);
+	}
     }
 
     return(0);
