@@ -3,7 +3,8 @@
 If you have installed binaries (e.g. from an RPM) you can skip to step 4.
 
 If you are a Linux system packager, be aware that the build process generates
-an RPM spec file at fetchmail.spec.
+an RPM spec file at fetchmail.spec, and you can "make rpm" to generate an
+RPM and SRPM.
 
 The Frequently Asked Questions list, included as the file FAQ in this
 distributions, answers the most common questions about configuring and 
