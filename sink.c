@@ -531,7 +531,8 @@ int open_sink(struct query *ctl, struct msgblk *msg,
     else /* forward to an SMTP or LMTP listener */
     {
 	const char	*ap;
-	char	options[MSGBUFSIZE], addr[128];
+	char		options[MSGBUFSIZE], addr[128], **from_responses;
+	int		total_addresses;
 
 	/* build a connection to the SMTP listener */
 	if ((smtp_open(ctl) == -1))
@@ -670,6 +671,10 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	/*
 	 * Now list the recipient addressees
 	 */
+	total_addresses = 0;
+	for (idp = msg->recipients; idp; idp = idp->next)
+	    total_addresses++;
+	xalloca(from_responses, char **, sizeof(char *) * total_addresses);
 	for (idp = msg->recipients; idp; idp = idp->next)
 	    if (idp->val.status.mark == XMIT_ACCEPT)
 	    {
@@ -686,14 +691,31 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		    (*good_addresses)++;
 		else
 		{
+		    char	errbuf[POPBUFSIZE];
+
+		    strcpy(errbuf, idp->id);
+		    strcat(errbuf, ": ");
+		    strcat(errbuf, smtp_response);
+
+		    xalloca(from_responses[*bad_addresses], 
+			    char *, 
+			    strlen(errbuf)+1);
+		    strcpy(from_responses[*bad_addresses], errbuf);
+
 		    (*bad_addresses)++;
 		    idp->val.status.mark = XMIT_RCPTBAD;
-		    error(0, 0, 
-			  _("%cMTP listener doesn't like recipient address `%s'"),
-			  ctl->listener, addr);
+		    if (outlevel >= O_VERBOSE)
+			error(0, 0, 
+			      _("%cMTP listener doesn't like recipient address `%s'"),
+			      ctl->listener, addr);
 		}
 	    }
-	if (!(*good_addresses))
+	if (*bad_addresses)
+	    send_bouncemail(msg, 
+                            "Some addresses were rejected by the MDA fetchmail forwards to.\r\n",
+                            *bad_addresses, from_responses);
+	/* local notification only if bouncemail was insufficient */
+	if (!(*good_addresses) && total_addresses > *bad_addresses)
 	{
 #ifdef HAVE_SNPRINTF
 	    snprintf(addr, sizeof(addr)-1, "%s@%s", run.postmaster, ctl->destaddr);
