@@ -67,7 +67,7 @@ static char *encode_words(char *const *words, int nwords, const char *charset)
 	    }
 	    if (*u == ' ') { *t++ = '_'; continue; }
 	    if (strchr(encchars, *u)) { *t++ = *u; continue; }
-	    sprintf(t, "=%02X", (unsigned char)*u);
+	    sprintf(t, "=%02X", (unsigned int)((unsigned char)*u));
 	    t += 3;
 	}
     }
@@ -112,14 +112,14 @@ char *rfc2047e(const char *string, const char *charset) {
 	l = strcspn(r, ws);
 	words[idx] = xmalloc(l+1);
 	memcpy(words[idx], r, l);
-	words[idx][l] = 0;
+	words[idx][l] = '\0';
 	idx++;
 	r += l;
 	if (!*r) break;
 	l = strspn(r, ws);
 	words[idx] = xmalloc(l+1);
 	memcpy(words[idx], r, l);
-	words[idx][l] = 0;
+	words[idx][l] = '\0';
 	idx++;
 	r += l;
     }
@@ -145,11 +145,12 @@ char *rfc2047e(const char *string, const char *charset) {
 	free(words[idx]);
 	words[idx] = tmp;
 	for (i = idx + 1; i <= end; i++)
-	    words[i][0] = 0;
+	    words[i][0] = '\0';
 	idx = end + 2;
     }
 
-    for (idx = l = 0; idx < count; idx++) {
+    l = 0;
+    for (idx = 0; idx < count; idx++) {
 	l += strlen(words[idx]);
     }
 
@@ -179,7 +180,10 @@ char *rfc2047e(const char *string, const char *charset) {
 	    t = stpcpy(t, words[i+1]);
 	}
 	tmp = strrchr(out, '\n');
-	if (!tmp) tmp = out; else tmp++;
+	if (tmp == NULL)
+	    tmp = out;
+	else
+	    tmp++;
 	l = strlen(tmp);
     }
 
