@@ -193,7 +193,12 @@ struct hostrec *queryctl;
         ok = POP3_sendRETR(number,socket);
       if (ok != 0)
         goto cleanUp;
-      
+
+#ifdef DEBUGLOG      
+      if (outlevel == O_VERBOSE)
+	fprintf(stderr, "reading text of %d\n", number);
+#endif /* DEBUGLOG */
+
       if (number >= first || queryctl->fetchall)
         ok = POP3_readmsg(socket,mboxfd,
 			  queryctl->servername,
@@ -201,12 +206,28 @@ struct hostrec *queryctl;
 			  queryctl->rewrite);
       else
         ok = 0;
+
+#ifdef DEBUGLOG      
+      if (outlevel == O_VERBOSE)
+	fprintf(stderr, "done reading text of %d; status %d\n", number, ok);
+#endif /* DEBUGLOG */
+
       if (ok != 0)
         goto cleanUp;
+
+#ifdef DEBUGLOG      
+      if (outlevel == O_VERBOSE)
+	fprintf(stderr, "about to update last-seen field with %d\n", number);
+#endif /* DEBUGLOG */
 
       /* update the last-seen field for this host */
       if (use_uidl && (ok = POP3_sendUIDL(number, socket, &cp)) == 0)
 	  (void) strcpy(queryctl->lastid, cp);
+
+#ifdef DEBUGLOG      
+      if (outlevel == O_VERBOSE)
+	fprintf(stderr, "about to check for deletion of %d\n", number);
+#endif /* DEBUGLOG */
 
       /* maybe we delete this message now? */
       if ((number < first && queryctl->flush) || !queryctl->keep) {
@@ -221,13 +242,35 @@ struct hostrec *queryctl;
       else
         ; /* message is kept */
 
-      /* close the mail pipe if we're using the system mailbox */
+#ifdef DEBUGLOG      
+      if (outlevel == O_VERBOSE)
+	fprintf(stderr, "about to check for mail folder close after %d\n", number);
+#endif /* DEBUGLOG */
+
+      /* close the mail pipe, we'll reopen before next message */
       if (queryctl->output == TO_MDA
            && (queryctl->fetchall || number >= first)) {
+
+#ifdef DEBUGLOG      
+      if (outlevel == O_VERBOSE)
+	fprintf(stderr, "about to close pipe\n");
+#endif /* DEBUGLOG */
+
         ok = closemailpipe(mboxfd);
+
+#ifdef DEBUGLOG      
+      if (outlevel == O_VERBOSE)
+	fprintf(stderr, "done closing pipe, status %d\n", ok);
+#endif /* DEBUGLOG */
+
         if (ok != 0)
           goto cleanUp;
       }
+      
+#ifdef DEBUGLOG      
+      if (outlevel == O_VERBOSE)
+	fprintf(stderr, "finished processing of %d\n", number);
+#endif /* DEBUGLOG */
     }
 
     ok = POP3_sendQUIT(socket);
