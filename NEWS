@@ -2,7 +2,7 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
-* Updated Turkish translation.
+* Updated Turkish and Japanese translations.
 * Added warning about auth failures on the GMX server.
 * HMH's Debian 5.9.10 patches:
 1. Fix minor typo in FAQ
@@ -20,6 +20,7 @@
 7. Stop stupid complaint about turning off SSL being illegal
    without SSL support.
 8. Byrial Jensen <byrial@image.dk> i18n fixes
+* Sunil Shetye's attribute patch.
 
 fetchmail-5.9.10 (Sun Mar 10 15:09:57 EST 2002), 21529 lines:
 

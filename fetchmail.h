@@ -391,13 +391,26 @@ extern char *sdps_envto;
 
 /* prototypes for globally callable functions */
 
+/* from /usr/include/sys/cdefs.h */
+#if !defined __GNUC__ || __GNUC__ < 2
+# define __attribute__(xyz)»    /* Ignore. */
+#endif
+
 /* error.c: Error reporting */
 #if defined(HAVE_STDARG_H)
 void report_init(int foreground);
-void report (FILE *fp, const char *format, ...);
-void report_build (FILE *fp, const char *format, ...);
-void report_complete (FILE *fp, const char *format, ...);
-void report_at_line (FILE *fp, int, const char *, unsigned int, const char *, ...);
+void report (FILE *fp, const char *format, ...)
+    __attribute__ ((format (printf, 2, 3)))
+    ;
+void report_build (FILE *fp, const char *format, ...)
+    __attribute__ ((format (printf, 2, 3)))
+    ;
+void report_complete (FILE *fp, const char *format, ...)
+    __attribute__ ((format (printf, 2, 3)))
+    ;
+void report_at_line (FILE *fp, int, const char *, unsigned int, const char *, ...)
+    __attribute__ ((format (printf, 5, 6)))
+    ;
 #else
 void report ();
 void report_build ();
@@ -418,9 +431,13 @@ int readheaders(int sock,
 		int num);
 int readbody(int sock, struct query *ctl, flag forward, int len);
 #if defined(HAVE_STDARG_H)
-void gen_send(int sock, const char *, ... );
+void gen_send(int sock, const char *, ... )
+    __attribute__ ((format (printf, 2, 3)))
+    ;
 int gen_recv(int sock, char *buf, int size);
-int gen_transact(int sock, const char *, ... );
+int gen_transact(int sock, const char *, ... )
+    __attribute__ ((format (printf, 2, 3)))
+    ;
 #else
 void gen_send();
 int gen_recv();
@@ -470,7 +487,9 @@ void release_sink(struct query *);
 int close_sink(struct query *, struct msgblk *, flag);
 int open_warning_by_mail(struct query *, struct msgblk *);
 #if defined(HAVE_STDARG_H)
-void stuff_warning(struct query *, const char *, ... );
+void stuff_warning(struct query *, const char *, ... )
+    __attribute__ ((format (printf, 2, 3)))
+    ;
 #else
 void stuff_warning();
 #endif

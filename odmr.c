@@ -95,12 +95,12 @@ static int odmr_getrange(int sock, struct query *ctl, const char *id,
     switch(atoi(buf))
     {
     case 250:	/* OK, turnaround is about to happe */
-	if (outlevel >= O_SILENT)
+	if (outlevel > O_SILENT)
 	    report(stdout, GT_("Turnaround now...\n"));
 	break;
 
     case 450:	/* ATRN request refused */
-	if (outlevel >= O_SILENT)
+	if (outlevel > O_SILENT)
 	    report(stdout, GT_("ATRN request refused.\n"));
 	return(PS_PROTOCOL);
 
@@ -109,7 +109,8 @@ static int odmr_getrange(int sock, struct query *ctl, const char *id,
 	return(PS_EXCLUDE);
 
     case 453:	/* You have no mail */
-	report(stderr, GT_("You have no mail.\n"));
+	if (outlevel > O_SILENT)
+	    report(stderr, GT_("You have no mail.\n"));
 	return(PS_NOMAIL);
 
     case 502:	/* Command not implemented */

@@ -15,6 +15,7 @@
 #endif
 #include <stdio.h>
 #include <errno.h>
+#include <string.h>
 #if defined(HAVE_SYSLOG)
 #include <syslog.h>
 #endif
@@ -104,7 +105,7 @@ report (FILE *errfp, message, va_alist)
     if (partial_message_size_used != 0)
     {
 	partial_message_size_used = 0;
-	report (errfp, 0, GT_("%s (log message incomplete)"), partial_message);
+	report (errfp, GT_("%s (log message incomplete)"), partial_message);
     }
 
 #if defined(HAVE_SYSLOG)

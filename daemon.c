@@ -205,7 +205,7 @@ daemonize (const char *logfile, void (*termhook)(int))
   sigaction (SIGHUP, &sa_new, NULL);
 #endif /* HAVE_SIGACTION */
   if ((childpid = fork()) < 0) {
-    report(stderr, "fork (%)\n", strerror(errno));
+    report(stderr, "fork (%s)\n", strerror(errno));
     return(PS_IOERR);
   }
   else if (childpid > 0) {

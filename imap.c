@@ -667,7 +667,7 @@ static int imap_getsizes(int sock, int count, int *sizes)
      * known-bad size value.
      */
     if (count == 1)
-	gen_send(sock, "FETCH 1 RFC822.SIZE", count);
+	gen_send(sock, "FETCH 1 RFC822.SIZE");
     else
 	gen_send(sock, "FETCH 1:%d RFC822.SIZE", count);
     for (;;)
