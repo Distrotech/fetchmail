@@ -56,34 +56,43 @@
 
 #define		SIZETICKER	1024	/* print 1 dot per this many bytes */
 
+struct idlist
+{
+    int num;
+    char *id;
+    struct idlist *next;
+};
+
 struct hostrec
 {
-  char servername [HOSTLEN+1];
-  char localname [USERNAMELEN+1];
-  char remotename [USERNAMELEN+1];
-  char password [PASSWORDLEN+1];
-  char userfolder [FOLDERLEN+1];
-  char remotefolder [FOLDERLEN];
-  char smtphost[HOSTLEN+1];
-  char mda [MDALEN+1];
-  int keep;
-  int protocol;
-  int fetchall;
-  int flush;
-  int norewrite;
-  int skip;
-  int port;
+    /* per-host data */
+    char servername [HOSTLEN+1];
+    char localname [USERNAMELEN+1];
+    char remotename [USERNAMELEN+1];
+    char password [PASSWORDLEN+1];
+    char userfolder [FOLDERLEN+1];
+    char remotefolder [FOLDERLEN];
+    char smtphost[HOSTLEN+1];
+    char mda [MDALEN+1];
+    int protocol;
+    int port;
 
-  /* state used for tracking UIDL ids */
-  char lastid [IDLEN+1];
+    /* control flags */
+    int output;
+    int keep;
+    int fetchall;
+    int flush;
+    int norewrite;
+    int skip;
 
-  /* dependent on the above members */
-  int output;
-  struct hostrec *next;
+    /* previous state of mailbox (initially from .fetchids) */
+    struct idlist *saved;
 
-  /* internal use only */ 
+    /* internal use */
+    struct hostrec *next;	/* next host in chain */
+    struct idlist *mailbox;	/* current state of mailbox */
 #if defined(HAVE_APOP_SUPPORT)
-  char digest [DIGESTLEN];
+    char digest [DIGESTLEN];
 #endif
 };
 
@@ -96,9 +105,10 @@ struct method
     int (*parse_response)();	/* response_parsing function */
     int (*getauth)();		/* authorization fetcher */
     int (*getrange)();		/* get message range to fetch */
+    int (*is_old)();		/* check for old message */
     int (*fetch)();		/* fetch a given message */
     int (*trail)();		/* eat trailer of a message */
-    char *delete_cmd;		/* delete command */
+    int (*delete)();		/* delete method */
     char *expunge_cmd;		/* expunge command */
     char *exit_cmd;		/* exit command */
 };
@@ -123,14 +133,22 @@ extern int versioninfo;		/* emit only version info */
 
 #ifdef HAVE_PROTOTYPES
 
-int gen_ok (char *buf, int socket);
+/* prototypes for globally callable functions */
 void gen_send ();
 int gen_transact ();
 
-/* prototypes for globally callable functions */
 int doPOP2 (struct hostrec *); 
 int doPOP3 (struct hostrec *);
 int doIMAP (struct hostrec *);
+
+void initialize_saved_lists(struct hostrec *, char *);
+void save_uid(struct idlist **, int, char *);
+void free_uid_list(struct idlist **);
+int delete_uid(struct idlist **, char *);
+int uid_in_list(struct idlist **, char *);
+void update_uid_lists(struct hostrec *);
+void write_saved_lists(struct hostrec *, char *);
+
 int parsecmdline (int, char **, struct hostrec *);
 int setdefaults (struct hostrec *);
 char *getnextserver (int argc, char **, int *);

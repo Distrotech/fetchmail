@@ -206,20 +206,30 @@ int number;
 	return(0);
 }
 
+static imap_delete(socket, queryctl, number)
+/* set delete flag for given message */
+int socket;
+struct hostrec *queryctl;
+int number;
+{
+    return(socket, gen_transact("STORE %d +FLAGS (\\Deleted)", number));
+}
+
 static struct method imap =
 {
-    "IMAP",				/* Internet Message Access Protocol */
-    143,				/* standard IMAP2bis/IMAP4 port */
-    1,					/* this is a tagged protocol */
-    0,					/* no message delimiter */
-    imap_ok,				/* parse command response */
-    imap_getauth,			/* get authorization */
-    imap_getrange,			/* query range of messages */
-    imap_fetch,				/* request given message */
-    imap_trail,				/* eat message trailer */
-    "STORE %d +FLAGS (\\Deleted)",	/* set IMAP delete flag */
-    "EXPUNGE",				/* the IMAP expunge command */
-    "LOGOUT",				/* the IMAP exit command */
+    "IMAP",		/* Internet Message Access Protocol */
+    143,		/* standard IMAP2bis/IMAP4 port */
+    1,			/* this is a tagged protocol */
+    0,			/* no message delimiter */
+    imap_ok,		/* parse command response */
+    imap_getauth,	/* get authorization */
+    imap_getrange,	/* query range of messages */
+    NULL,		/* no UID check */
+    imap_fetch,		/* request given message */
+    imap_trail,		/* eat message trailer */
+    imap_delete,	/* set IMAP delete flag */
+    "EXPUNGE",		/* the IMAP expunge command */
+    "LOGOUT",		/* the IMAP exit command */
 };
 
 int doIMAP (queryctl)

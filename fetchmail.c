@@ -128,7 +128,6 @@ char **argv;
 	prc_mergeoptions(servername, &cmd_opts, &def_opts, hostp);
 	strcpy(hostp->servername, servername);
 	parseMDAargs(hostp);
-	hostp->lastid[0] = '\0';
 
 	hostp->next = hostlist;
 	hostlist = hostp;
@@ -145,6 +144,12 @@ char **argv;
 	strcat(tmpbuf, "-");
 	strcat(tmpbuf, user);
     }
+
+    /* initialize UID handling */
+    if ((st = prc_filecheck(idfile)) != 0)
+	exit(st);
+    else
+	initialize_saved_lists(hostlist, idfile);
 
     /* perhaps we just want to check options? */
     if (versioninfo) {
@@ -206,23 +211,6 @@ char **argv;
 	return(PS_EXCLUDE);
     }
 
-    /* let's get stored message IDs from previous transactions */
-    if ((st = prc_filecheck(idfile)) != 0) {
-	return (st);
-    } else if ((tmpfp = fopen(idfile, "r")) != (FILE *)NULL) {
-	char buf[POPBUFSIZE+1], host[HOSTLEN+1], id[IDLEN+1];
-
-	while (fgets(buf, POPBUFSIZE, tmpfp) != (char *)NULL) {
-	    if ((st = sscanf(buf, "%s %s\n", host, id)) == 2) {
-		for (hostp = hostlist; hostp; hostp = hostp->next) {
-		    if (strcmp(host, hostp->servername) == 0)
-			strcpy(hostp->lastid, id);
-		}
-	    }
-	}
-	fclose(tmpfp);
-    }
-
     /* pick up interactively any passwords we need but don't have */ 
     for (hostp = hostlist; hostp; hostp = hostp->next)
 	if (!(implicitmode && hostp->skip) && !hostp->password[0])
@@ -259,7 +247,10 @@ char **argv;
     do {
 	for (hostp = hostlist; hostp; hostp = hostp->next) {
 	    if (!implicitmode || !hostp->skip)
+	    {
 		popstatus = query_host(hostp);
+		update_uid_lists(hostp);
+	    }
 	}
 
 	sleep(poll_interval);
@@ -274,28 +265,12 @@ char **argv;
 }
 
 void termhook(int sig)
+/* to be executed on normal or signal-induced termination */
 {
-    FILE *tmpfp;
-    int idcount = 0;
-
     if (sig != 0)
 	fprintf(stderr, "terminated with signal %d\n", sig);
 
-    for (hostp = hostlist; hostp; hostp = hostp->next) {
-	if (hostp->lastid[0])
-	    idcount++;
-    }
-
-    /* write updated last-seen IDs */
-    if (!idcount)
-	unlink(idfile);
-    else if ((tmpfp = fopen(idfile, "w")) != (FILE *)NULL) {
-	for (hostp = hostlist; hostp; hostp = hostp->next) {
-	    if (hostp->lastid[0])
-		fprintf(tmpfp, "%s %s\n", hostp->servername, hostp->lastid);
-	}
-	fclose(tmpfp);
-    }
+    write_saved_lists(hostlist, idfile);
 
     unlink(lockfile);
     exit(popstatus);
@@ -478,8 +453,22 @@ struct hostrec *queryctl;
     else
 	printf("  Text retrieved per message will be at most %d bytes.\n",
 	       linelimit);
-    if (queryctl->lastid[0])
-	printf("  ID of last message retrieved %s\n", queryctl->lastid);
+    if (queryctl->protocol > P_POP2)
+	if (!queryctl->saved)
+	    printf("  No UIDs saved from this host.\n");
+	else
+	{
+	    struct idlist *idp;
+	    int count = 0;
+
+	    for (idp = hostp->saved; idp; idp = idp->next)
+		++count;
+
+	    printf("  %d UIDs saved.\n", count);
+	    if (outlevel == O_VERBOSE)
+		for (idp = hostp->saved; idp; idp = idp->next)
+		    fprintf(stderr, "\t%s %s\n", hostp->servername, idp->id);
+	}
 }
 
 /*********************************************************************
@@ -687,5 +676,4 @@ struct hostrec *queryctl;
     mda_argv[argi] = (char *) 0;
 
 }
-
 

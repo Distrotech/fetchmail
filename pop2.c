@@ -137,9 +137,10 @@ static struct method pop2 =
     pop2_ok,				/* parse command response */
     pop2_getauth,			/* get authorization */
     pop2_getrange,			/* query range of messages */
+    NULL,				/* no UID check */
     pop2_fetch,				/* request given message */
     pop2_trail,				/* eat message trailer */
-    NULL,				/* no POP2 delete command */
+    NULL,				/* no POP2 delete method */
     NULL,				/* no POP2 expunge command */
     "QUIT",				/* the POP2 exit command */
 };
