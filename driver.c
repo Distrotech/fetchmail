@@ -78,7 +78,7 @@ struct method *proto;
 	if ((mboxfd = openuserfolder(queryctl)) < 0) 
 	    return(PS_IOERR);
     } else if (queryctl->output == TO_SMTP) {
-	if ((mboxfd = Socket(queryctl->smtphost,SMTP_PORT)) < 0) 
+	if ((mboxfd = Socket(queryctl->smtphost, SMTP_PORT)) < 0) 
 	    return(PS_SOCKET);
 
 	/* eat the greeting message */
@@ -97,7 +97,9 @@ struct method *proto;
     }
 
     /* open a socket to the mail server */
-    if ((socket = Socket(queryctl->servername,protocol->port)) < 0) {
+    if ((socket = Socket(queryctl->servername,
+			 queryctl->port ? queryctl->port : protocol->port))<0)
+    {
 	perror("do_protocol: socket");
 	ok = PS_SOCKET;
 	goto closeUp;

@@ -374,7 +374,12 @@ struct hostrec *queryctl;
 
     printf("  Username = '%s'\n", queryctl->remotename);
     printf("  Password = '%s'\n", queryctl->password);
-    printf("  Protocol is %s\n", showproto(queryctl->protocol));
+    printf("  Protocol is %s", showproto(queryctl->protocol));
+    if (queryctl->port)
+	printf(" (using port %d)", queryctl->port);
+    else if (outlevel == O_VERBOSE)
+	printf(" (using default port)");
+    putchar('\n');
 
     printf("  Fetched messages will%s be kept on the server (--keep %s).\n",
 	   queryctl->keep ? "" : " not",

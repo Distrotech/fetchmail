@@ -84,17 +84,17 @@ struct hostrec *queryctl;
     fprintf(stderr,"Option --all is not supported with POP2\n");
     return(PS_SYNTAX);
   }
-#ifdef FOO
   else if (queryctl->smtphost[0]) {
     fprintf(stderr,"Option --smtphost is not supported with POP2\n");
     return(PS_SYNTAX);
   }
-#endif /* FOO */
   else
     ;
 
   /* open the socket to the POP server */
-  if ((socket = Socket(queryctl->servername,POP2_PORT)) < 0) {
+  if ((socket = Socket(queryctl->servername,
+		     queryctl->port ? queryctl->port : POP2_PORT)) < 0)
+  {
     perror("doPOP2: socket");
     return(PS_SOCKET);
   }

@@ -41,10 +41,10 @@ instname = popclient
 bindir = $(exec_prefix)/bin
 # Directory to install the Info files in.
 infodir = $(prefix)/info
-# Directory to install the man page in.
-mandir = $(prefix)/man/man$(manext)
 # Number to put on the man page filename.
 manext = 1
+# Directory to install the man page in.
+mandir = $(prefix)/man/man$(manext)
 
 # Program to install `make'.
 INSTALL_PROGRAM = @INSTALL_PROGRAM@

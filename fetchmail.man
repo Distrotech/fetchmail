@@ -137,8 +137,12 @@ Use POP3 with MD5 authentication.
 Use POP3 with trusted-host-based authentication (like rlogin/rsh). 
 .I popclient
 must be installed as a setuid root program to use RPOP.
-.B \--proto.
 .RE
+.TP
+.B \-P, --port
+The  option permits you to specify a TCP/IP port to connect on.
+This will seldom be necessary as all the supported protocols have
+well-established default port numbers.
 .TP
 .B \-o folder, --local folder
 Causes retrieved messages to be appended to file named by the folder 
@@ -205,22 +209,6 @@ that would be computed if
 .I popclient.
 were connecting to that server is displayed.
 .TP
-.PP
-.SH PROTOCOL SELECTION
-The selection of the correct Post Office Protocol (POP2 or POP3) depends upon
-the configuration of the mailserver from which you retrieve your mail.  The
-system adminstrator who installed 
-.I popclient
-on your system should have chosen an appropriate default protocol for your 
-mailserver.  If you get the message 'Connection refused' when using the 
-default protocol, try specifying
-.B \-2
-or
-.B \-3
-to select a different protocol.  If the 'Connection refused' message persists 
-regardless of the protocol selected, it is likely that your mailserver is not 
-running a POP compliant mail service.
-.PP
 .SH USER AUTHENTICATION
 User authentication in 
 .I popclient
@@ -410,6 +398,7 @@ Legal keywords are:
     noflush
     nofetchall
     norewrite
+    port
 .PP
 Legal protocol identifiers are
 
@@ -451,6 +440,7 @@ one server definition.
 .nf
   server pop.provider.net       \e
         proto pop3              \e
+        port 3111               \e
         user jsmith             \e
         pass secret1            \e
         localfolder ~/mbox
@@ -563,9 +553,10 @@ default location of file associating hosts with last message IDs seen
 (used only with newer RFC1725-compliant servers supporting the UIDL command).
 .SH BUGS
 .PP
-The --smtphost option doesn't work with POP2.  This isn't a protocol problem,
-it's because the developers couldn't find a POP2 server to test the
-necessary code reorganization with.
+When using POP2, the --smtphost option doesn't work, and mail headers
+are not rewritten to enable replies as described under --norewrite. 
+This isn't a protocol problem, it's because the developer couldn't
+find a POP2 server to test the necessary code reorganization with.
 .PP
 The --remotefolder option doesn't work with POP3.
 .PP
@@ -577,11 +568,11 @@ No RPOP support yet.
 Send comments, bug reports, gripes, and the like to Eric S. Raymond
 <esr@thyrsus.com>.
 .SH NOTE
-The -p (--password) option of previous versions has been removed -- it
+The --password option of previous versions has been removed -- it
 encouraged people to expose passwords in scripts.  Passwords
-must now be specified either manually or in your
+must now be specified either interactively or in your
 .I ~/.poprc
-file.
+file.  The short-form -p option now specifies the protocol to use.
 .SH SEE ALSO
 mail(1), binmail(1), sendmail(8), popd(8),
 RFC 937, RFC 1081, RFC 1082, RFC 1225, RFC 1460, RFC 1725.
