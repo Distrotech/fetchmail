@@ -101,7 +101,7 @@ Some special options are not covered here, but are documented instead
 in sections on AUTHENTICATION and DAEMON MODE which follow.
 .SS General Options
 .TP
-.B \-V, \-\-version
+.B \-V | \-\-version
 Displays the version information for your copy of 
 .IR fetchmail .
 No mail fetch is performed.
@@ -113,7 +113,7 @@ passwords or other string names are shown as backslashed C-like
 escape sequences.  This option is useful for verifying that your
 options are set the way you want them.
 .TP
-.B \-c, \-\-check
+.B \-c | \-\-check
 Return a status code to indicate whether there is mail waiting,
 without actually fetching or deleting mail (see EXIT CODES below).
 This option turns off daemon mode (in which it would be useless).  It
@@ -123,12 +123,12 @@ undeleted mail in your server mailbox and your fetch protocol can't
 tell kept messages from new ones.  This means it will work with IMAP,
 not work with POP2, and may occasionally flake out under POP3.
 .TP
-.B \-s, \-\-silent
+.B \-s | \-\-silent
 Silent mode.  Suppresses all progress/status messages that are
 normally echoed to standard error during a fetch (but does not
 suppress actual error messages).  The --verbose option overrides this.
 .TP
-.B \-v, \-\-verbose
+.B \-v | \-\-verbose
 Verbose mode.  All control messages passed between 
 .I fetchmail
 and the mailserver are echoed to stdout.  Overrides --silent.
@@ -136,7 +136,7 @@ Doubling this option (-v -v) causes extra diagnostic information
 to be printed. 
 .SS Disposal Options
 .TP
-.B \-a, \-\-all
+.B \-a | \-\-all
 (Keyword: fetchall)
 Retrieve both old (seen) and new messages from the mailserver.  The
 default is to fetch only messages the server has not marked seen.
@@ -145,7 +145,7 @@ Note that POP2 retrieval behaves as though --all is always on (see
 RETRIEVAL FAILURE MODES below) and this option does not work with ETRN
 or ODMR.
 .TP
-.B \-k, \-\-keep
+.B \-k | \-\-keep
 (Keyword: keep)
 Keep retrieved messages on the remote mailserver.  Normally, messages 
 are deleted from the folder on the mailserver after they have been retrieved.
@@ -154,14 +154,14 @@ Specifying the
 option causes retrieved messages to remain in your folder on the
 mailserver.  This option does not work with ETRN or ODMR.
 .TP
-.B \-K, \-\-nokeep
+.B \-K | \-\-nokeep
 (Keyword: nokeep)
 Delete retrieved messages from the remote mailserver.  This
 option forces retrieved mail to be deleted.  It may be useful if
 you have specified a default of \fBkeep\fR in your
 \&\fI.fetchmailrc\fR.  This option is forced on with ETRN and ODMR.
 .TP
-.B \-F, \-\-flush
+.B \-F | \-\-flush
 POP3/IMAP only.  Delete old (previously retrieved) messages from the mailserver
 before retrieving new messages. This option does not work with ETRN or
 ODMR.
@@ -171,7 +171,7 @@ What you probably want is the default setting: if you don't specify `-k', then
 fetchmail will automatically delete messages after successful delivery.
 .SS Protocol and Query Options
 .TP
-.B \-p, \-\-protocol <proto>
+.B \-p | \-\-protocol <proto>
 (Keyword: proto[col])
 Specify the protocol to use when communicating with the remote 
 mailserver.  If no protocol is specified, the default is AUTO.
@@ -212,14 +212,14 @@ ODMR mode requires an ODMR-capable server and works similarly to
 ETRN, except that it does not require the client machine to have
 a static DNS.
 .TP
-.B \-U, \-\-uidl
+.B \-U | \-\-uidl
 (Keyword: uidl)
 Force UIDL use (effective only with POP3).  Force client-side tracking
 of `newness' of messages (UIDL stands for ``unique ID listing'' and is
 described in RFC1725).  Use with `keep' to use a mailbox as a baby
 news drop for a group of users.
 .TP
-.B \-P, \-\-port <portnumber>
+.B \-P | \-\-port <portnumber>
 (Keyword: port)
 The port option permits you to specify a TCP/IP port to connect on. 
 This option will seldom be necessary as all the supported protocols have
@@ -261,7 +261,7 @@ Identical to the plugin option above, but this one is used for the SMTP
 connections (which will probably not need it, so it has been separated
 from plugin).
 .TP
-.B \-r <name>, \-\-folder <name>
+.B \-r <name> | \-\-folder <name>
 (Keyword: folder[s])
 Causes a specified non-default mail folder on the mailserver (or
 comma-separated list of folders) to be retrieved.  The syntax of the
@@ -349,7 +349,7 @@ fingerprint with the given one, and the connection will fail if they do not
 match. This can be used to prevent man-in-the-middle attacks.
 .SS Delivery Control Options
 .TP
-.B \-S <hosts>, \-\-smtphost <hosts>
+.B \-S <hosts> | \-\-smtphost <hosts>
 (Keyword: smtp[host])
 Specify a hunt list of hosts to forward mail to (one or more
 hostnames, comma-separated). Hosts are tried in list order; the first
@@ -375,7 +375,7 @@ In ETRN or ODMR mode, this option specifies the list of domains the
 server should ship mail for once the connection is turned around.  The
 default is the FQDN of the machine running fetchmail.
 .TP
-.B \-D <domain>, \-\-smtpaddress <domain>
+.B \-D <domain> | \-\-smtpaddress <domain>
 (Keyword: smtpaddress) Specify the domain to be appended to addresses
 in RCPT TO lines shipped to SMTP. The name of the SMTP server (as
 specified by --smtphost, or defaulted to "localhost") is used when
@@ -386,14 +386,14 @@ this is not specified.
 Specify the domain and user to be put in RCPT TO lines shipped to SMTP.
 The default user is the current local user.
 .TP
-.B \-Z <nnn>, \-\-antispam <nnn[, nnn]...>
+.B \-Z <nnn> | \-\-antispam <nnn[, nnn]...>
 (Keyword: antispam) 
 Specifies the list of numeric SMTP errors that are to be interpreted
 as a spam-block response from the listener.  A value of -1 disables
 this option.  For the command-line option, the list values should
 be comma-separated.
 .TP
-.B \-m <command>, \-\-mda <command>
+.B \-m <command> | \-\-mda <command>
 (Keyword: mda)
 You can force mail to be passed to an MDA directly (rather than
 forwarded to port 25) with the -mda or -m option.  To avoid losing
@@ -430,7 +430,7 @@ correct; the caveats discussed under THE USE AND ABUSE OF MULTIDROP
 MAILBOXES below apply.
 .SS Resource Limit Control Options
 .TP
-.B \-l <maxbytes>, \-\-limit <maxbytes>
+.B \-l <maxbytes> | \-\-limit <maxbytes>
 (Keyword: limit)
 Takes a maximum octet size argument.  Messages larger than this size
 will not be fetched and will be left on the server (in foreground
@@ -443,7 +443,7 @@ fetch time due to expensive and variable phone rates.  In daemon mode,
 oversize notifications are mailed to the calling user (see the
 --warnings option).  This option does not work with ETRN or ODMR.
 .TP
-.B \-w <interval>, \-\-warnings <interval>
+.B \-w <interval> | \-\-warnings <interval>
 (Keyword: warnings)
 Takes an interval in seconds.  When you call
 .I fetchmail
@@ -455,7 +455,7 @@ the oversized message is detected.  Thereafter, renotification is
 suppressed until after the warning interval elapses (it will take
 place at the end of the first following poll).
 .TP
-.B \-b <count>, \-\-batchlimit <count>
+.B \-b <count> | \-\-batchlimit <count>
 (Keyword: batchlimit)
 Specify the maximum number of messages that will be shipped to an SMTP
 listener before the connection is deliberately torn down and rebuilt
@@ -469,14 +469,14 @@ delays when \fIfetchmail\fR is processing very large batches.  Setting
 the batch limit to some nonzero size will prevent these delays.  This
 option does not work with ETRN or ODMR.
 .TP
-.B \-B <number>, \-\-fetchlimit <number>
+.B \-B <number> | \-\-fetchlimit <number>
 (Keyword: fetchlimit)
 Limit the number of messages accepted from a given server in a single
 poll.  By default there is no limit. An explicit --fetchlimit of 0
 overrides any limits set in your run control file.
 This option does not work with ETRN or ODMR.
 .TP
-.B \-e <count>, \-\-expunge <count>
+.B \-e <count> | \-\-expunge <count>
 (keyword: expunge) 
 Arrange for deletions to be made final after a given number of
 messages.  Under POP2 or POP3, fetchmail cannot make deletions final
@@ -503,15 +503,15 @@ suppresses expunges entirely (so no expunges at all will be done until
 the end of run).  This option does not work with ETRN or ODMR.
 .SS Authentication Options
 .TP
-.B \-u <name>, \-\-username <name>
+.B \-u <name> | \-\-username <name>
 (Keyword: user[name])
 Specifies the user identification to be used when logging in to the mailserver.
 The appropriate user identification is both server and user-dependent.  
 The default is your login name on the client machine that is running 
-.I fetchmail.
+.IR fetchmail .
 See USER AUTHENTICATION below for a complete description.
 .TP
-.B \-I <specification>, \-\-interface <specification>
+.B \-I <specification> | \-\-interface <specification>
 (Keyword: interface)
 Require that a specific interface device be up and have a specific local
 or remote IP address (or range) before polling.  Frequently
@@ -580,7 +580,7 @@ that employs GSSAPI or K4.  Choosing KPOP protocol automatically
 selects Kerberos authentication.  This option does not work with ETRN.
 .SS Miscellaneous Options
 .TP
-.B \-f <pathname>, \-\-fetchmailrc <pathname>
+.B \-f <pathname> | \-\-fetchmailrc <pathname>
 Specify a non-default name for the 
 .I ~/.fetchmailrc
 run control file.  The pathname argument must be either "-" (a single
@@ -589,12 +589,12 @@ filename.  Unless the --version option is also on, a named file
 argument must have permissions no more open than 0600 (u=rw,g=,o=) or
 else be /dev/null.
 .TP
-.B \-i <pathname>, \-\-idfile <pathname>
+.B \-i <pathname> | \-\-idfile <pathname>
 (Keyword: idfile)
 Specify an alternate name for the .fetchids file used to save POP3
 UIDs. 
 .TP
-.B \-n, \-\-norewrite
+.B \-n | \-\-norewrite
 (Keyword: no rewrite)
 Normally,
 .I fetchmail
@@ -609,7 +609,7 @@ mail headers and want to know they can prevent it, but it is generally
 not a good idea to actually turn off rewrite.)
 When using ETRN or ODMR, the rewrite option is ineffective.
 .TP
-.B \-E <line>, \-\-envelope <line>
+.B \-E <line> | \-\-envelope <line>
 (Keyword: envelope)
 This option changes the header 
 .I fetchmail
@@ -621,7 +621,7 @@ Received lines.  This is the default, and it should not be necessary
 unless you have globally disabled Received parsing with `no envelope'
 in the \fI.fetchmailrc\fR file.
 .TP
-.B \-Q <prefix>, \-\-qvirtual <prefix>
+.B \-Q <prefix> | \-\-qvirtual <prefix>
 (Keyword: qvirtual)
 The string prefix assigned to this option will be removed from the user
 name found in the header specified with the \fIenvelope\fR option
