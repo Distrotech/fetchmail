@@ -7,6 +7,9 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.4.9 ():
+* Make fetchmail 64-bit clean (thanks to John Franklin <john@iptimaging.com>).
+
 fetchmail-4.4.8 (Tue May 26 12:30:58 EDT 1998):
 * Added 0.90 beta version of fetchmailconf.
 * Removed fetchall side-effect kluge, now that we know how to make TOP work
