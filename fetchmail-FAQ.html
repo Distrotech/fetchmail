@@ -915,11 +915,17 @@ A lot of people want to use fetchmail as a poor man's internetwork
 mail gateway, picking up mail accumulated for a whole domain in a single
 server mailbox and then routing based on what's in the To/Cc/Bcc lines.<p>
 
-This is one of the things multidrop mode is for (though you
-<em>are</em> going to get hurt by some mailing list software; see the
-caveats under THE USE AND ABUSE OF MULTIDROP MAILBOXES on the man
-page).  If you want to try it, the way to do it is with the
-`<CODE>localdomains</CODE>' option.<p>
+In general, this is not really a good idea.  It would be smarter to
+just let the mail sit in the mailserver's queue and use fetchmail's
+ETRN mode to trigger SMTP sends periodically (of course, this means
+you have to poll more frequently than the mailserver's expiry period).
+If you can't arrange this, try setting up a UUCP feed.<P>
+
+If neither of these alternatives is available, multidrop mode may do
+(though you <em>are</em> going to get hurt by some mailing list
+software; see the caveats under THE USE AND ABUSE OF MULTIDROP
+MAILBOXES on the man page).  If you want to try it, the way to do it
+is with the `<CODE>localdomains</CODE>' option.<p>
 
 In general, if you use localdomains you need to make sure of two other
 things: <p>
@@ -1113,7 +1119,7 @@ biff n
 
 to solve the problem system-wide.<P>
 
-$Id: fetchmail-FAQ.html,v 1.41 1997/07/01 13:09:20 esr Exp $<p>
+$Id: fetchmail-FAQ.html,v 1.42 1997/07/02 18:57:20 esr Exp $<p>
 
 <HR>
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
