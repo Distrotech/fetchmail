@@ -110,6 +110,34 @@ static int get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
 	return(result);
 }
 
+#ifndef HAVE_INET_ATON
+/*
+ * Note: This is not a true replacement for inet_aton(), as it won't
+ * do the right thing on "255.255.255.255" (which translates to -1 on
+ * most machines).  Fortunately this code will be used only if you're
+ * on an older Linux that lacks a real implementation.
+ */
+#ifdef HAVE_NETINET_IN_SYSTM_H
+# include <sys/types.h>
+# include <netinet/in_systm.h>
+#endif
+
+#include <netinet/in.h>
+#include <netinet/ip.h>
+#include <arpa/inet.h>
+#include <string.h>
+
+static int inet_aton(const char *cp, struct in_addr *inp) {
+    long addr;
+
+    addr = inet_addr(cp);
+    if (addr == ((long) -1)) return 0;
+
+    memcpy(inp, &addr, sizeof(addr));
+    return 1;
+}
+#endif HAVE_INET_ATON
+
 void interface_parse(char *buf, struct hostdata *hp)
 /* parse 'interface' specification */
 {
