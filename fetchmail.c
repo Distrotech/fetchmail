@@ -626,15 +626,16 @@ int main (int argc, char **argv)
 	    if (!getuid())
 		signal(SIGHUP, donothing);
 
-	    /*
-	     * We can't use sleep(3) here because we need an alarm(3)
-	     * equivalent in order to implement server nonresponse timeout.
-	     * We'll just assume setitimer(2) is available since fetchmail
-	     * has to have a BSDoid socket layer to work at all.
-	     */
+	    /* time for a pause in the action... */
 	    {
 #ifndef __EMX__
 #ifdef SLEEP_WITH_ALARM		/* not normally on */
+		/*
+		 * We can't use sleep(3) here because we need an alarm(3)
+		 * equivalent in order to implement server nonresponse timeout.
+		 * We'll just assume setitimer(2) is available since fetchmail
+		 * has to have a BSDoid socket layer to work at all.
+		 */
 		/* 
 		 * This code stopped working under glibc-2, apparently due
 		 * to the change in signal(2) semantics.  (The siginterrupt
