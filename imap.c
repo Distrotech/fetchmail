@@ -356,6 +356,27 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
     }
 #endif /* KERBEROS_V4 */
 
+#ifdef SSL_ENABLE
+    if ((ctl->server.authenticate == A_ANY)
+        && strstr(capabilities, "STARTTLS"))
+    {
+           char *realhost;
+
+           realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;
+           gen_transact(sock, "STARTTLS");
+
+           /* We use "tls1" instead of ctl->sslproto, as we want STARTTLS,
+            * not other SSL protocols
+            */
+           if (SSLOpen(sock,ctl->sslcert,ctl->sslkey,"tls1",ctl->sslcertck, ctl->sslcertpath,ctl->sslfingerprint,realhost,ctl->server.pollname) == -1)
+           {
+               report(stderr,
+                      GT_("SSL connection failed.\n"));
+               return(PS_AUTHFAIL);
+           }
+    }
+#endif /* SSL_ENABLE */
+
     /*
      * No such luck.  OK, now try the variants that mask your password
      * in a challenge-response.

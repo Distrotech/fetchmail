@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Nerijus Baliunas's patch to support STARTTLS over IMAP.
+
 fetchmail-5.9.14 (Fri Sep  6 05:03:25 EDT 2002), 21932 lines:
 
 * Sunil Shetye's patch to eliminate multiple bounces.
