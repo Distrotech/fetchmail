@@ -467,11 +467,11 @@ int rewrite;
     skipwrite:;
 
 	sizeticker += strlen(bufp);
-	while (sizeticker >= MSGBUFSIZE)
+	while (sizeticker >= SIZETICKER)
 	{
 	    if (outlevel > O_SILENT && outlevel < O_VERBOSE && mboxfd != 1)
 		fputc('.',stderr);
-	    sizeticker -= MSGBUFSIZE;
+	    sizeticker -= SIZETICKER;
 	}
 	lines++;
     }
@@ -790,7 +790,7 @@ va_dcl {
     fprintf(stderr,"> %s\n", buf);
 
   ok = (protocol->parse_response)(buf,socket);
-  if (ok != 0 && outlevel > O_SILENT && outlevel <= O_VERBOSE)
+  if (outlevel > O_SILENT && outlevel <= O_VERBOSE)
     fprintf(stderr,"%s\n",buf);
 
   return(ok);
