@@ -127,6 +127,7 @@ const static struct method etrn =
     NULL,		/* no message trailer */
     NULL,		/* how to delete a message */
     etrn_logout,	/* log out, we're done */
+    FALSE,		/* no, we can't re-poll */
 };
 
 int doETRN (struct query *ctl)

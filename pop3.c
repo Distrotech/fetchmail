@@ -465,6 +465,7 @@ const static struct method pop3 =
     NULL,		/* no message trailer */
     pop3_delete,	/* how to delete a message */
     pop3_logout,	/* log out, we're done */
+    FALSE,		/* no, we can't re-poll */
 };
 
 int doPOP3 (struct query *ctl)

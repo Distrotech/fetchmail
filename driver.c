@@ -1535,325 +1535,342 @@ const struct method *proto;	/* protocol method table */
 	/* now iterate over each folder selected */
 	for (idp = ctl->mailboxes; idp; idp = idp->next)
 	{
-	    if (outlevel >= O_VERBOSE)
-		if (idp->next)
-		    error(0, 0, "selecting folder %s");
-	        else
-		    error(0, 0, "selecting default folder");
-
-	    /* compute number of messages and number of new messages waiting */
-	    ok = (protocol->getrange)(sock, ctl, idp->id, &count, &new);
-	    if (ok != 0)
-		goto cleanUp;
-	    set_timeout(ctl->server.timeout);
-
-	    /* show user how many messages we downloaded */
-	    if (idp->id)
-		(void) sprintf(buf, "%s@%s:%s",
-			       ctl->remotename, realname, idp->id);
-	    else
-		(void) sprintf(buf, "%s@%s", ctl->remotename, realname);
-	    if (outlevel > O_SILENT)
-		if (count == -1)		/* only used for ETRN */
-		    error(0, 0, "Polling %s", realname);
-		else if (count == 0)
-		{
-		    /* these are pointless in normal daemon mode */
-		    if (poll_interval == 0 || outlevel == O_VERBOSE )
-			error(0, 0, "No mail at %s", buf); 
-		}
-		else
-		{
-		    if (new != -1 && (count - new) > 0)
-			error(0, 0, "%d message%s (%d seen) at %s.",
-			      count, count > 1 ? "s" : "", count-new, buf);
+	    do {
+		if (outlevel >= O_VERBOSE)
+		    if (idp->next)
+			error(0, 0, "selecting or re-polling folder %s");
 		    else
-			error(0, 0, "%d message%s at %s.", 
-			      count, count > 1 ? "s" : "", buf);
-		}
+			error(0, 0, "selecting or re-polling default folder");
 
-	    if (check_only)
-	    {
-		if (new == -1 || ctl->fetchall)
-		    new = count;
-		ok = ((new > 0) ? PS_SUCCESS : PS_NOMAIL);
-		goto cleanUp;
-	    }
-	    else if (count > 0)
-	    {    
-		flag	force_retrieval;
+		/* compute # of messages and number of new messages waiting */
+		ok = (protocol->getrange)(sock, ctl, idp->id, &count, &new);
+		if (ok != 0)
+		    goto cleanUp;
+		set_timeout(ctl->server.timeout);
 
-		/*
-		 * What forces this code is that in POP3 and IMAP2BIS you can't
-		 * fetch a message without having it marked `seen'.  In IMAP4,
-		 * on the other hand, you can (peek_capable is set to convey
-		 * this).
-		 *
-		 * The result of being unable to peek is that if there's
-		 * any kind of transient error (DNS lookup failure, or
-		 * sendmail refusing delivery due to process-table limits)
-		 * the message will be marked "seen" on the server without
-		 * having been delivered.  This is not a big problem if
-		 * fetchmail is running in foreground, because the user
-		 * will see a "skipped" message when it next runs and get
-		 * clued in.
-		 *
-		 * But in daemon mode this leads to the message being silently
-		 * ignored forever.  This is not acceptable.
-		 *
-		 * We compensate for this by checking the error count from the 
-		 * previous pass and forcing all messages to be considered new
-		 * if it's nonzero.
-		 */
-		force_retrieval = !peek_capable && (ctl->errcount > 0);
+		/* show user how many messages we downloaded */
+		if (idp->id)
+		    (void) sprintf(buf, "%s@%s:%s",
+				   ctl->remotename, realname, idp->id);
+		else
+		    (void) sprintf(buf, "%s@%s", ctl->remotename, realname);
+		if (outlevel > O_SILENT)
+		    if (count == -1)		/* only used for ETRN */
+			error(0, 0, "Polling %s", realname);
+		    else if (count == 0)
+		    {
+			/* these are pointless in normal daemon mode */
+			if (poll_interval == 0 || outlevel == O_VERBOSE )
+			    error(0, 0, "No mail at %s", buf); 
+			break;
+		    }
+		    else
+		    {
+			if (new != -1 && (count - new) > 0)
+			    error(0, 0, "%d message%s (%d seen) at %s.",
+				  count, count > 1 ? "s" : "", count-new, buf);
+			else
+			    error(0, 0, "%d message%s at %s.", 
+				  count, count > 1 ? "s" : "", buf);
+		    }
 
-		/*
-		 * We need the size of each method before it's loaded in
-		 * order to pass via the ESMTP SIZE option.  If the protocol
-		 * has a getsizes method, we presume this means it doesn't
-		 * get reliable sizes from message fetch responses. 
-		 */
-		if (proto->getsizes)
+		if (check_only)
 		{
-		    msgsizes = (int *)alloca(sizeof(int) * count);
-
-		    ok = (proto->getsizes)(sock, count, msgsizes);
-		    if (ok != 0)
-			goto cleanUp;
-		    set_timeout(ctl->server.timeout);
+		    if (new == -1 || ctl->fetchall)
+			new = count;
+		    ok = ((new > 0) ? PS_SUCCESS : PS_NOMAIL);
+		    goto cleanUp;
 		}
-
-		/* read, forward, and delete messages */
-		for (num = 1; num <= count; num++)
-		{
-		    flag toolarge = (ctl->limit > 0)
-			&& msgsizes && (msgsizes[num-1] > ctl->limit);
-		    flag fetch_it = !toolarge 
-			&& (ctl->fetchall || force_retrieval || !(protocol->is_old && (protocol->is_old)(sock,ctl,num)));
-		    flag suppress_delete = FALSE;
-		    flag suppress_forward = FALSE;
-		    flag retained = FALSE;
+		else if (count > 0)
+		{    
+		    flag	force_retrieval;
 
 		    /*
-		     * This check copes with Post Office/NT's annoying habit
-		     * of randomly prepending bogus LIST items of length -1.
-		     * Patrick Audley <paudley@pobox.com> tells us:
-		     * LIST shows a size of -1, RETR and TOP return
-		     * "-ERR System error - couldn't open message", and DELE
-		     * succeeds but doesn't actually delete the message.
+		     * What forces this code is that in POP3 and
+		     * IMAP2BIS you can't fetch a message without
+		     * having it marked `seen'.  In IMAP4, on the
+		     * other hand, you can (peek_capable is set to
+		     * convey this).
+		     *
+		     * The result of being unable to peek is that if there's
+		     * any kind of transient error (DNS lookup failure, or
+		     * sendmail refusing delivery due to process-table limits)
+		     * the message will be marked "seen" on the server without
+		     * having been delivered.  This is not a big problem if
+		     * fetchmail is running in foreground, because the user
+		     * will see a "skipped" message when it next runs and get
+		     * clued in.
+		     *
+		     * But in daemon mode this leads to the message
+		     * being silently ignored forever.  This is not
+		     * acceptable.
+		     *
+		     * We compensate for this by checking the error
+		     * count from the previous pass and forcing all
+		     * messages to be considered new if it's nonzero.
 		     */
-		    if (msgsizes && msgsizes[num-1] == -1)
-		    {
-			if (outlevel >= O_VERBOSE)
-			    error(0, 0, 
-				  "Skipping message %d, length -1",
-				  num - 1);
-			continue;
-		    }
+		    force_retrieval = !peek_capable && (ctl->errcount > 0);
 
-		    /* we may want to reject this message if it's old */
-		    if (!fetch_it)
+		    /* 
+		     * We need the size of each message before it's
+		     * loaded in order to pass via the ESMTP SIZE
+		     * option.  If the protocol has a getsizes method,
+		     * we presume this means it doesn't get reliable
+		     * sizes from message fetch responses.
+		     */
+		    if (proto->getsizes)
 		    {
-			if (outlevel > O_SILENT)
-			{
-			    error_build("skipping message %d", num);
-			    if (toolarge)
-				error_build(" (oversized, %d bytes)", msgsizes[num-1]);
-			}
-		    }
-		    else
-		    {
-			flag wholesize = !protocol->fetch_body;
+			msgsizes = (int *)alloca(sizeof(int) * count);
 
-			/* request a message */
-			ok = (protocol->fetch_headers)(sock, ctl, num, &len);
+			ok = (proto->getsizes)(sock, count, msgsizes);
 			if (ok != 0)
 			    goto cleanUp;
 			set_timeout(ctl->server.timeout);
+		    }
 
-			/* -1 means we didn't see a size in the response */
-			if (len == -1 && msgsizes)
+		    /* read, forward, and delete messages */
+		    for (num = 1; num <= count; num++)
+		    {
+			flag toolarge = (ctl->limit > 0)
+			    && msgsizes && (msgsizes[num-1] > ctl->limit);
+			flag fetch_it = !toolarge 
+			    && (ctl->fetchall || force_retrieval || !(protocol->is_old && (protocol->is_old)(sock,ctl,num)));
+			flag suppress_delete = FALSE;
+			flag suppress_forward = FALSE;
+			flag retained = FALSE;
+
+			/*
+			 * This check copes with Post Office/NT's
+			 * annoying habit of randomly prepending bogus
+			 * LIST items of length -1.  Patrick Audley
+			 * <paudley@pobox.com> tells us: LIST shows a
+			 * size of -1, RETR and TOP return "-ERR
+			 * System error - couldn't open message", and
+			 * DELE succeeds but doesn't actually delete
+			 * the message.
+			 */
+			if (msgsizes && msgsizes[num-1] == -1)
 			{
-			    len = msgsizes[num - 1];
-			    wholesize = TRUE;
+			    if (outlevel >= O_VERBOSE)
+				error(0, 0, 
+				      "Skipping message %d, length -1",
+				      num - 1);
+			    continue;
 			}
 
-			if (outlevel > O_SILENT)
+			/* we may want to reject this message if it's old */
+			if (!fetch_it)
 			{
-			    error_build("reading message %d of %d",num,count);
-
- 			    if (len > 0)
-				error_build(" (%d %sbytes)",
-					    len, wholesize ? "" : "header ");
-			    if (outlevel == O_VERBOSE)
-				error_complete(0, 0, "");
-			    else
-				error_build(" ");
-			}
-
-			/* 
-			 * Read the message headers and ship them to the
-			 * output sink.  
-			 */
-			ok = readheaders(sock, len, ctl, realname, num);
-			if (ok == PS_RETAINED)
-			    suppress_forward = retained = TRUE;
-			else if (ok == PS_TRANSIENT)
-			    suppress_delete = suppress_forward = TRUE;
-			else if (ok == PS_REFUSED)
-			    suppress_forward = TRUE;
-			else if (ok)
-			    goto cleanUp;
-			set_timeout(ctl->server.timeout);
-
-			/* 
-			 * If we're using IMAP4 or something else that
-			 * can fetch headers separately from bodies,
-			 * it's time to request the body now.  This
-			 * fetch may be skipped if we got an anti-spam
-			 * or other PS_REFUSED error response during
-			 * read_headers.
-			 */
-			if (protocol->fetch_body) 
-			{
-			    if (outlevel == O_VERBOSE)
-				fputc('\n', stderr);
-
-			    if ((ok = (protocol->trail)(sock, ctl, num)))
-				goto cleanUp;
-			    set_timeout(ctl->server.timeout);
-			    len = 0;
-			    if (!suppress_forward)
+			    if (outlevel > O_SILENT)
 			    {
-				if ((ok=(protocol->fetch_body)(sock,ctl,num,&len)))
-				    goto cleanUp;
-				if (outlevel > O_SILENT && !wholesize)
-				    error_build(" (%d body bytes) ", len);
-				set_timeout(ctl->server.timeout);
+				error_build("skipping message %d", num);
+				if (toolarge)
+				    error_build(" (oversized, %d bytes)",
+						msgsizes[num-1]);
 			    }
 			}
-
-			/* process the body now */
-			if (len > 0)
+			else
 			{
-			    ok = readbody(sock,
-					  ctl,
-					  !suppress_forward,
-					  len);
-			    if (ok == PS_TRANSIENT)
+			    flag wholesize = !protocol->fetch_body;
+
+			    /* request a message */
+			    ok = (protocol->fetch_headers)(sock,ctl,num, &len);
+			    if (ok != 0)
+				goto cleanUp;
+			    set_timeout(ctl->server.timeout);
+
+			    /* -1 means we didn't see a size in the response */
+			    if (len == -1 && msgsizes)
+			    {
+				len = msgsizes[num - 1];
+				wholesize = TRUE;
+			    }
+
+			    if (outlevel > O_SILENT)
+			    {
+				error_build("reading message %d of %d",
+					    num,count);
+
+				if (len > 0)
+				    error_build(" (%d %sbytes)",
+					len, wholesize ? "" : "header ");
+				if (outlevel == O_VERBOSE)
+				    error_complete(0, 0, "");
+				else
+				    error_build(" ");
+			    }
+
+			    /* 
+			     * Read the message headers and ship them to the
+			     * output sink.  
+			     */
+			    ok = readheaders(sock, len, ctl, realname, num);
+			    if (ok == PS_RETAINED)
+				suppress_forward = retained = TRUE;
+			    else if (ok == PS_TRANSIENT)
 				suppress_delete = suppress_forward = TRUE;
+			    else if (ok == PS_REFUSED)
+				suppress_forward = TRUE;
 			    else if (ok)
 				goto cleanUp;
 			    set_timeout(ctl->server.timeout);
 
-			    /* tell server we got it OK and resynchronize */
-			    if (protocol->trail)
+			    /* 
+			     * If we're using IMAP4 or something else that
+			     * can fetch headers separately from bodies,
+			     * it's time to request the body now.  This
+			     * fetch may be skipped if we got an anti-spam
+			     * or other PS_REFUSED error response during
+			     * read_headers.
+			     */
+			    if (protocol->fetch_body) 
 			    {
 				if (outlevel == O_VERBOSE)
 				    fputc('\n', stderr);
 
-				ok = (protocol->trail)(sock, ctl, num);
-				if (ok != 0)
+				if ((ok = (protocol->trail)(sock, ctl, num)))
 				    goto cleanUp;
 				set_timeout(ctl->server.timeout);
+				len = 0;
+				if (!suppress_forward)
+				{
+				    if ((ok=(protocol->fetch_body)(sock,ctl,num,&len)))
+					goto cleanUp;
+				    if (outlevel > O_SILENT && !wholesize)
+					error_build(" (%d body bytes) ", len);
+				    set_timeout(ctl->server.timeout);
+				}
 			    }
+
+			    /* process the body now */
+			    if (len > 0)
+			    {
+				ok = readbody(sock,
+					      ctl,
+					      !suppress_forward,
+					      len);
+				if (ok == PS_TRANSIENT)
+				    suppress_delete = suppress_forward = TRUE;
+				else if (ok)
+				    goto cleanUp;
+				set_timeout(ctl->server.timeout);
+
+				/* tell server we got it OK and resynchronize */
+				if (protocol->trail)
+				{
+				    if (outlevel == O_VERBOSE)
+					fputc('\n', stderr);
+
+				    ok = (protocol->trail)(sock, ctl, num);
+				    if (ok != 0)
+					goto cleanUp;
+				    set_timeout(ctl->server.timeout);
+				}
+			    }
+
+			    /*
+			     * Check to see if the numbers matched?
+			     *
+			     * Yes, some servers foo this up horribly.
+			     * All IMAP servers seem to get it right, and
+			     * so does Eudora QPOP at least in 2.xx
+			     * versions.
+			     *
+			     * Microsoft Exchange gets it completely
+			     * wrong, reporting compressed rather than
+			     * actual sizes (so the actual length of
+			     * message is longer than the reported size).
+			     * Another fine example of Microsoft brain death!
+			     *
+			     * Some older POP servers, like the old UCB
+			     * POP server and the pre-QPOP QUALCOMM
+			     * versions, report a longer size in the LIST
+			     * response than actually gets shipped up.
+			     * It's unclear what is going on here, as the
+			     * QUALCOMM server (at least) seems to be
+			     * reporting the on-disk size correctly.
+			     */
+			    if (msgsizes && msglen != msgsizes[num-1])
+			    {
+				if (outlevel >= O_VERBOSE)
+				    error(0, 0,
+					  "message %d was not the expected length (%d != %d)",
+					  num, msglen, msgsizes[num-1]);
+			    }
+
+			    /* end-of-message processing starts here */
+
+			    if (ctl->mda)
+			    {
+				int rc;
+
+				/* close the delivery pipe, we'll reopen before next message */
+				rc = pclose(sinkfp);
+				signal(SIGCHLD, sigchld);
+				if (rc)
+				{
+				    error(0, -1, "MDA exited abnormally or returned nonzero status");
+				    goto cleanUp;
+				}
+			    }
+			    else if (!suppress_forward)
+			    {
+				/* write message terminator */
+				if (SMTP_eom(ctl->smtp_socket) != SM_OK)
+				{
+				    error(0, -1, "SMTP listener refused delivery");
+				    ctl->errcount++;
+				    suppress_delete = TRUE;
+				}
+			    }
+
+			    fetches++;
 			}
 
 			/*
-			 * Check to see if the numbers matched?
-			 *
-			 * Yes, some servers foo this up horribly.
-			 * All IMAP servers seem to get it right, and
-			 * so does Eudora QPOP at least in 2.xx
-			 * versions.
-			 *
-			 * Microsoft Exchange gets it completely
-			 * wrong, reporting compressed rather than
-			 * actual sizes (so the actual length of
-			 * message is longer than the reported size).
-			 * Another fine example of Microsoft brain death!
-			 *
-			 * Some older POP servers, like the old UCB
-			 * POP server and the pre-QPOP QUALCOMM
-			 * versions, report a longer size in the LIST
-			 * response than actually gets shipped up.
-			 * It's unclear what is going on here, as the
-			 * QUALCOMM server (at least) seems to be
-			 * reporting the on-disk size correctly.
+			 * At this point in flow of control, either
+			 * we've bombed on a protocol error or had
+			 * delivery refused by the SMTP server
+			 * (unlikely -- I've never seen it) or we've
+			 * seen `accepted for delivery' and the
+			 * message is shipped.  It's safe to mark the
+			 * message seen and delete it on the server
+			 * now.
 			 */
-			if (msgsizes && msglen != msgsizes[num-1])
+
+			/* maybe we delete this message now? */
+			if (retained)
 			{
-			    if (outlevel >= O_VERBOSE)
-				error(0, 0,
-		      "message %d was not the expected length (%d != %d)",
-				      num, msglen, msgsizes[num-1]);
+			    if (outlevel > O_SILENT) 
+				error_complete(0, 0, " retained");
 			}
-
-			/* end-of-message processing starts here */
-
-			if (ctl->mda)
+			else if (protocol->delete
+				 && !suppress_delete
+				 && (fetch_it ? !ctl->keep : ctl->flush))
 			{
-			    int rc;
-
-			    /* close the delivery pipe, we'll reopen before next message */
-			    rc = pclose(sinkfp);
-			    signal(SIGCHLD, sigchld);
-			    if (rc)
-			    {
-				error(0, -1, "MDA exited abnormally or returned nonzero status");
+			    deletions++;
+			    if (outlevel > O_SILENT) 
+				error_complete(0, 0, " flushed");
+			    ok = (protocol->delete)(sock, ctl, num);
+			    if (ok != 0)
 				goto cleanUp;
-			    }
+			    set_timeout(ctl->server.timeout);
+			    delete_str(&ctl->newsaved, num);
 			}
-			else if (!suppress_forward)
-			{
-			    /* write message terminator */
-			    if (SMTP_eom(ctl->smtp_socket) != SM_OK)
-			    {
-				error(0, -1, "SMTP listener refused delivery");
-				ctl->errcount++;
-				suppress_delete = TRUE;
-			    }
-			}
+			else if (outlevel > O_SILENT) 
+			    error_complete(0, 0, " not flushed");
 
-			fetches++;
+			/* perhaps this as many as we're ready to handle */
+			if (ctl->fetchlimit > 0 && ctl->fetchlimit <= fetches)
+			    goto no_error;
 		    }
-
-		    /*
-		     * At this point in flow of control, either we've bombed
-		     * on a protocol error or had delivery refused by the SMTP
-		     * server (unlikely -- I've never seen it) or we've seen
-		     * `accepted for delivery' and the message is shipped.
-		     * It's safe to mark the message seen and delete it on the
-		     * server now.
-		     */
-
-		    /* maybe we delete this message now? */
-		    if (retained)
-		    {
-			if (outlevel > O_SILENT) 
-			    error_complete(0, 0, " retained");
-		    }
-		    else if (protocol->delete
-			&& !suppress_delete
-			&& (fetch_it ? !ctl->keep : ctl->flush))
-		    {
-			deletions++;
-			if (outlevel > O_SILENT) 
-			    error_complete(0, 0, " flushed");
-			ok = (protocol->delete)(sock, ctl, num);
-			if (ok != 0)
-			    goto cleanUp;
-			set_timeout(ctl->server.timeout);
-			delete_str(&ctl->newsaved, num);
-		    }
-		    else if (outlevel > O_SILENT) 
-			error_complete(0, 0, " not flushed");
-
-		    /* perhaps this as many as we're ready to handle */
-		    if (ctl->fetchlimit > 0 && ctl->fetchlimit <= fetches)
-			goto no_error;
 		}
-	    }
+	    } while
+		  /*
+		   * Only re-poll if we allowed deletions and had no errors.
+		   * Otherwise it is far too easy to get into infinite loops.
+		   */
+		  (protocol->retry && !ctl->keep && !ctl->errcount);
 	}
 
    no_error:

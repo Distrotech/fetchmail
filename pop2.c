@@ -136,6 +136,7 @@ const static struct method pop2 =
     pop2_trail,				/* eat message trailer */
     NULL,				/* no POP2 delete method */
     pop2_logout,			/* log out, we're done */
+    FALSE,				/* no, we can't re-poll */
 };
 
 int doPOP2 (struct query *ctl)

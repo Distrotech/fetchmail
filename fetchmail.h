@@ -171,6 +171,7 @@ struct method
     int (*trail)();		/* eat trailer of a message */
     int (*delete)();		/* delete method */
     int (*logout_cmd)();	/* logout command */
+    flag retry;			/* can getrange poll for new messages? */
 };
 
 #define TAGLEN	6

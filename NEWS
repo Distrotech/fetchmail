@@ -14,6 +14,9 @@
 ------------------------------------------------------------------------------
 fetchmail-4.2.9 ()
 * Don't byte-stuff when writing to an MDA.
+* IMAP mode now does smart re-polling, eliminating connection/authentication
+  overhead when messages are being delivered to the server mailbox while
+  the poll is in progress.
 
 There are 285 people on the fetchmail-friends list.
 
