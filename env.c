@@ -116,7 +116,7 @@ char *rfc822timestamp(void)
     time(&now);
 #ifdef HAVE_STRFTIME
     /*
-     * Conform to RFC822. GMT rather than local time because of the
+     * Conform to RFC822. UTC rather than local time because of the
      * mess that %Z generates obsolete 822 syntax but %z is not
      * guaranteed portable. We generate a 4-digit year here, avoiding
      * Y2K hassles.  Max length of this timestamp in an English locale
@@ -124,7 +124,8 @@ char *rfc822timestamp(void)
      * are the day and month abbreviations.
      */
     strftime(buf, sizeof(buf)-1, 
-	     "%a, %d %b %Y %H:%M:%S GMT", gmtime(&now));
+	     "%a, %d %b %Y %H:%M:%S +0000 (UTC)",
+	     gmtime(&now));
 #else
     /*
      * This is really just a portability fallback, as the
