@@ -39,7 +39,7 @@
 #include "popclient.h"
 
 /* release info */
-#define         RELEASE_TAG	"3.03"
+#define         RELEASE_TAG	"3.04"
 
 #ifdef HAVE_PROTOTYPES
 /* prototypes for internal functions */
