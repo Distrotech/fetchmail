@@ -1152,10 +1152,10 @@ warnings   	-w	T{
 Set message size warning interval
 T}
 batchlimit	-b	T{
-Max # messages to fetch in single connect
+Max # messages to forward in single connect
 T}
 fetchlimit	-B	T{
-Max # messages to forward in single connect
+Max # messages to fetch in single connect
 T}
 expunge 	-e	T{
 Perform an expunge on every #th message (IMAP only)
