@@ -1498,7 +1498,7 @@ const struct method *proto;	/* protocol method table */
 
 			if (outlevel > O_SILENT)
 			{
-			    error_build("reading message %d", num);
+			    error_build("reading message %d of %d",num,count);
 
  			    if (len > 0)
 				error_build(" (%d %sbytes)",

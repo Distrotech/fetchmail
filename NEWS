@@ -10,6 +10,11 @@
   return a zero exit status if *any* host had mail, not just the last one
   checked.
 
+* Remove restriction that no two poll entries can have identical hostnames?
+  The problem is with a skip entry following a poll entry for the same host.
+  This corrupts a data structure leading to core dump, but I'm not sure
+  exactly how.
+
 * Generate bounce messages when delivery is refused.  See RFC1891, RFC1894.
 
 * More log levels?
@@ -19,6 +24,13 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.0.0 ()
+
+* Fixes for minor compilation glitches.
+* Progress messages now show total count as well as message number.
+
+There are 248 people on the fetchmail-friends list.
+
 pl 3.9.9 (Wed Jun 25 11:01:51 EDT 1997):
 * We can now process multiple To headers a la Microsoft Exchange Server.
 * Avoid sending LIST and getting an error when no messages are waiting.
