@@ -286,24 +286,24 @@ static int send_bouncemail(struct msgblk *msg,
     SockPrintf(sock, "\r\n");
 
     /* RFC1892 part 1 -- human-readable message */
-    SockPrintf(sock, "-- om-mani-padme-hum\r\n"); 
+    SockPrintf(sock, "--om-mani-padme-hum\r\n"); 
     SockPrintf(sock,"Content-Type: text/plain\r\n");
     SockPrintf(sock, "\r\n");
     SockWrite(sock, message, strlen(message));
 
     /* RFC1892 part 2 -- machine-readable responses */
-    SockPrintf(sock, "-- om-mani-padme-hum\r\n"); 
+    SockPrintf(sock, "--om-mani-padme-hum\r\n"); 
     SockPrintf(sock,"Content-Type: message/delivery-status\r\n");
     SockPrintf(sock, "\r\n");
     for (i = 0; i < nerrors; i++)
 	SockPrintf(sock, errors[i]);
 
     /* RFC1892 part 3 -- headers of undelivered message */
-    SockPrintf(sock, "-- om-mani-padme-hum\r\n"); 
+    SockPrintf(sock, "--om-mani-padme-hum\r\n"); 
     SockPrintf(sock, "Content-Type: text/rfc822-headers\r\n");
     SockPrintf(sock, "\r\n");
     SockWrite(sock, msg->headers, strlen(msg->headers));
-    SockPrintf(sock, "-- om-mani-padme-hum --\r\n"); 
+    SockPrintf(sock, "--om-mani-padme-hum--\r\n"); 
 
     if (SMTP_eom(sock) != SM_OK || SMTP_quit(sock))
 	return(FALSE);
