@@ -3,11 +3,16 @@
 * Add an "ident" per-user option for debugging that produces an 
   "X-Fetchmail-ID" header in fetched messages for debugging.
 * -U/--userdefault option to specify postmaster overriding USER.
+* Runtime selection of either straight POP3 or RPA on CompuServe sites
 
 				Release Notes:
 
 ------------------------------------------------------------------------------
 fetchmail-4.5.0 ():
+
+This is a "gold" version. It will be carried on the fetchmail home page
+in addition to the current leading-edge one, until the next gold version.
+
 * 1.0 version of fetchmailconf.
 * Jochen Hayek's changes to make RPA less verbose.
 * Harry McGavran's fix for subdirectory installation.
@@ -15,7 +20,7 @@ fetchmail-4.5.0 ():
 * The fetchall option forces RETR again.  We can cope with USA.NET now. 
 * Gunther Leber's patch to make fetchmail -V less chatty when mode is ETRN.
 
-There are 279 people on fetchmail-friends and 217 on fetchmail-announce.
+There are 281 people on fetchmail-friends and 222 on fetchmail-announce.
 
 fetchmail-4.4.9 (Thu Jun  4 10:41:02 EDT 1998):
 * 0.93 beta version of fetchmailconf (now with autoprobing for servers!).
