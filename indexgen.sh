@@ -41,128 +41,129 @@ gpg --detach-sign --armor fetchmail-$version.tar.gz
 EOF
 
 cat >index.html <<EOF
-<!doctype HTML PUBLIC "-//W3O//DTD W3 HTML 3.2//EN">
-<HTML>
-<HEAD>
-<TITLE>Fetchmail Home Page</TITLE>
-<link rev=made href=mailto:esr@snark.thyrsus.com>
-<meta name="description" content="The fetchmail home page.">
-<meta name="keywords" content="fetchmail, POP, POP3, IMAP, IMAP2bis, IMAP4, IMAP4rev1, ETRN, OTP, RPA"> 
-</HEAD>
-<BODY>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Fetchmail Home Page</title>
+<link rev=made href=mailto:esr@snark.thyrsus.com />
+<meta name="description" content="The fetchmail home page." />
+<meta name="keywords" content="fetchmail, POP, POP3, IMAP, IMAP2bis, IMAP4, IMAP4rev1, ETRN, OTP, RPA" /> 
+</head>
+<body>
 <table width="100%" cellpadding=0 summary="Canned page header"><tr>
 <td width="30%">Back to
 <a href="http://$WWWVIRTUAL/~esr/software.html">Software</a>
 <td width="30%" align=center>Up to <a href="http://$WWWVIRTUAL/~esr/sitemap.html">Site Map</a>
 <td width="30%" align=right>$date
 </tr></table>
-<HR>
+<hr />
 <center>
-<table border="10">
+<table border="10" summary="framed fetchmail logo">
 <tr>
 <td>
-<center><img src="bighand.png"></center>
+<center><img src="bighand.png" alt="fetchmail logo" /></center>
 </td>
 </tr>
 </table>
-<H1>The fetchmail Home Page</H1>
-</center><P>
+<h1>The fetchmail Home Page</h1>
+</center>
 
 <p><b>Note: if you are a stranded fetchmail.com user, we're sorry but
 we have nothing to do with that site and cannot help you.  It's just an
-unfortunate coincidence of names.</b>
+unfortunate coincidence of names.</b></p>
 
-<H1>What fetchmail does:</H1>
+<h1>What fetchmail does:</h1>
 
-<P>Fetchmail is a full-featured, robust, well-documented
+<p>Fetchmail is a full-featured, robust, well-documented
 remote-mail retrieval and forwarding utility intended to be used over
 on-demand TCP/IP links (such as SLIP or PPP connections). It supports
 every remote-mail protocol now in use on the Internet: POP2, POP3,
 RPOP, APOP, KPOP, all flavors of <a
 href="http://www.imap.org">IMAP</a>, ETRN, and ODMR. It can even
-support IPv6 and IPSEC.</P>
+support IPv6 and IPSEC.</p>
 
-<P>Fetchmail retrieves mail from remote mail servers and forwards it via
+<p>Fetchmail retrieves mail from remote mail servers and forwards it via
 SMTP, so it can then be read by normal mail user agents such as <a
 href="http://www.mutt.org/">mutt</a>, elm(1) or BSD Mail.
 It allows all your system MTA's filtering, forwarding, and aliasing
-facilities to work just as they would on normal mail.</P>
+facilities to work just as they would on normal mail.</p>
 
-<P>Fetchmail offers better security than any other Unix remote-mail
+<p>Fetchmail offers better security than any other Unix remote-mail
 client.  It supports APOP, KPOP, OTP, Compuserve RPA, Microsoft NTLM,
 and IMAP RFC1731 encrypted authentication methods including CRAM-MD5
 to avoid sending passwords en clair. It can be configured to support
 end-to-end encryption via tunneling with <a
-href="http://www.openssh.com/">ssh, the Secure Shell</a>.</P>
+href="http://www.openssh.com/">ssh, the Secure Shell</a>.</p>
 
-<P>Fetchmail can be used as a POP/IMAP-to-SMTP gateway for an entire DNS
+<p>Fetchmail can be used as a POP/IMAP-to-SMTP gateway for an entire DNS
 domain, collecting mail from a single drop box on an ISP and
 SMTP-forwarding it based on header addresses. (We don't really
 recommend this, though, as it may lose important envelope-header
-information.  ETRN or a UUCP connection is better.)</P>
+information.  ETRN or a UUCP connection is better.)</p>
 
-<P>Fetchmail can be started automatically and silently as a system daemon
+<p>Fetchmail can be started automatically and silently as a system daemon
 at boot time.  When running in this mode with a short poll interval,
 it is pretty hard for anyone to tell that the incoming mail link is
-not a full-time "push" connection.</P>
+not a full-time "push" connection.</p>
 
-<P>Fetchmail is easy to configure.  You can edit its dotfile directly, or
+<p>Fetchmail is easy to configure.  You can edit its dotfile directly, or
 use the interactive GUI configurator (fetchmailconf) supplied with the
 fetchmail distribution.  It is also directly supported in linuxconf
-versions 1.16r8 and later.</P>
+versions 1.16r8 and later.</p>
 
-<P>Fetchmail is fast and lightweight.  It packs all its standard
+<p>Fetchmail is fast and lightweight.  It packs all its standard
 features (POP3, IMAP, and ETRN support) in ${fetchmailsize}K of core on a
-Pentium under Linux.</P>
+Pentium under Linux.</p>
 
-<P>Fetchmail is <a href="http://www.opensource.org">open-source</a>
+<p>Fetchmail is <a href="http://www.opensource.org">open-source</a>
 software.  The openness of the sources is your strongest possible
-assurance of quality and reliability.</P>
+assurance of quality and reliability.</p>
 
-<P><H1>Where to find out more about fetchmail:</H1>
+<h1>Where to find out more about fetchmail:</h1>
 
-<P>See the <a href="fetchmail-features.html">Fetchmail Feature List</a> for more
-about what fetchmail does.</P>
+<p>See the <a href="fetchmail-features.html">Fetchmail Feature List</a> for more
+about what fetchmail does.</p>
 
-<P>See the on-line <a href="fetchmail-man.html">manual page</a> for
-basics.</P>
+<p>See the on-line <a href="fetchmail-man.html">manual page</a> for
+basics.</p>
 
-<P>See the <a href="fetchmail-FAQ.html">HTML Fetchmail FAQ</A> for
-troubleshooting help.</P>
+<p>See the <a href="fetchmail-FAQ.html">HTML Fetchmail FAQ</a> for
+troubleshooting help.</p>
 
-<P>See the <a href="design-notes.html">Fetchmail Design Notes</a>
-for discussion of some of the design choices in fetchmail.</P>
+<p>See the <a href="design-notes.html">Fetchmail Design Notes</a>
+for discussion of some of the design choices in fetchmail.</p>
 
-<P>See the project's <a href="todo.html">To-Do list</a> for indications
-of known problems and requested features.</P>
+<p>See the project's <a href="todo.html">To-Do list</a> for indications
+of known problems and requested features.</p>
 
-<H1>How to get fetchmail:</H1>
+<h1>How to get fetchmail:</h1>
 
-<P>You can get any of the following leading-edge resources here:</P>
-<UL>
-<LI> <a href="fetchmail-$version.tar.gz">
+<p>You can get any of the following leading-edge resources here:</p>
+<ul>
+<li> <a href="fetchmail-$version.tar.gz">
 	Gzipped source archive of fetchmail $version</a>
-<LI> <a href="fetchmail-$version-1.i386.rpm">
+<li> <a href="fetchmail-$version-1.i386.rpm">
 	Intel binary RPM of fetchmail $version (uses $glibc)</a>
-<LI> <a href="fetchmail-$version-1.src.rpm">
+<li> <a href="fetchmail-$version-1.src.rpm">
 	Source RPM of fetchmail $version</a>
-</UL>
+</ul>
 
-<P>The <a href="fetchmail-$version.tar.gz.asc">detached GPG
+<p>The <a href="fetchmail-$version.tar.gz.asc">detached GPG
 signature</a> for the binary tarball can be used to check it for
-correctness, with the command</P>
+correctness, with the command</p>
 
-<listing>
+<pre>
 gpg --verify fetchmail-$version.tar.gz.asc fetchmail-$version.tar.gz
-</listing>
+</pre>
 
-<P>MD5 <a href="checksums">checksums</a> are available for these files; the
+<p>MD5 <a href="checksums">checksums</a> are available for these files; the
 checksum file is cryptographically signed and can be verified with the
-command:</P>
+command:</p>
 
-<listing>
+<pre>
 gpg --verify checksums.asc
-</listing>
+</pre>
 
 EOF
 
@@ -170,205 +171,205 @@ if [ $version != $goldvers ]
 then
     cat >>index.html <<EOF
 
-<P>Or you can get the last \`gold' version, $goldname:</P>
-<UL>
-<LI> <a href="fetchmail-$goldvers.tar.gz">
+<p>Or you can get the last \`gold' version, $goldname:</p>
+<ul>
+<li> <a href="fetchmail-$goldvers.tar.gz">
 	Gzipped source archive of fetchmail $goldname</a>
-<LI> <a href="fetchmail-$goldvers-1.i386.rpm">
+<li> <a href="fetchmail-$goldvers-1.i386.rpm">
 	Intel binary RPM of fetchmail $goldname (uses glibc)</a>
-<LI> <a href="fetchmail-$goldvers-1.alpha.rpm">
+<li> <a href="fetchmail-$goldvers-1.alpha.rpm">
 	Alpha binary RPM of fetchmail $goldname (uses glibc)</a>
-<LI> <a href="fetchmail-$goldvers-1.src.rpm">
+<li> <a href="fetchmail-$goldvers-1.src.rpm">
 	Source RPM of fetchmail $goldname</a>
-</UL>
-<P>The <a href="fetchmail-$goldvers.tar.gz.asc">detached GPG signature</a> for the
-binary tarball can be used to check it for correctness, with the command</P>
+</ul>
+<p>The <a href="fetchmail-$goldvers.tar.gz.asc">detached GPG signature</a> for the
+binary tarball can be used to check it for correctness, with the command</p>
 
-<listing>
+<pre>
 gpg --verify fetchmail-$goldvers.tar.gz.asc fetchmail-$goldvers.tar.gz
-</listing>
+</pre>
 
-<P>For differences between the leading-edge $version and gold $goldname versions,
-see the distribution <a href="NEWS">NEWS</a> file.</P>
+<p>For differences between the leading-edge $version and gold $goldname versions,
+see the distribution <a href="NEWS">NEWS</a> file.</p>
 EOF
 fi
 
 cat >>index.html <<EOF
-<P>(Note that the binary RPMs don't have the POP2, OTP, IPv6, Kerberos,
+<p>(Note that the binary RPMs don't have the POP2, OTP, IPv6, Kerberos,
 GSSAPI, Compuserve RPA, Microsoft NTLM, or GNU gettext
 internationalization support compiled in.  To get any of these you
-will have to build from sources.)</P>
+will have to build from sources.)</p>
 
-<P>The latest version of fetchmail is also carried in the 
+<p>The latest version of fetchmail is also carried in the 
 <a href="http://metalab.unc.edu/pub/Linux/system/mail/pop/!INDEX.html">
-Metalab remote mail tools directory</a>.</P>
+Metalab remote mail tools directory</a>.</p>
 
-<H1>Getting help with fetchmail:</H1>
+<h1>Getting help with fetchmail:</h1>
 
-<P>There is a fetchmail-friends list for people who want to discuss fixes
+<p>There is a fetchmail-friends list for people who want to discuss fixes
 and improvements in fetchmail and help co-develop it.  It's a MailMan
-list, which you can sign up for at <a
+list, which you can sign up for at
 <a href="http://lists.ccil.org/mailman/listinfo/fetchmail-friends">
 fetchmail-friends@ccil.org</a>.
 There is also an announcements-only list, 
 <a href="http://lists.ccil.org/mailman/listinfo/fetchmail-announce">
-fetchmail-announce@lists.ccil.org</a>.</P>
+fetchmail-announce@lists.ccil.org</a>.</p>
 
-<P>Note: before submitting a question to the list, <strong>please read
+<p>Note: before submitting a question to the list, <strong>please read
 the <a href="fetchmail-FAQ.html">FAQ</a></strong> (especially item <a
 href="http:fetchmail-FAQ.html#G3">G3</a> on how to report bugs).  We
 tend to get the same three newbie questions over and over again.  The
-FAQ covers them like a blanket.</P>
+FAQ covers them like a blanket.</p>
 
-<P>Fetchmail was written and is maintained by <a
+<p>Fetchmail was written and is maintained by <a
 href="../index.html">Eric S. Raymond</a>.  There are some designated
 backup maintainers (<a href="mailto:funk+@osu.edu">Rob Funk</a>, <a
 href="http://www.dallas.net/~fox/">David DeSimone aka Fuzzy Fox</a>,
 <a href="mailto:imdave@mcs.net">Dave Bodenstab</a>).  Other backup
 maintainers may be added in the future, in order to ensure continued
 support should Eric S.  Raymond drop permanently off the net for any
-reason.</P>
+reason.</p>
 
-<H1>You can help improve fetchmail:</H1>
+<h1>You can help improve fetchmail:</h1>
 
-<P>I welcome your code contributions.  But even if you don't write code,
-you can help fetchmail improve.</P>
+<p>I welcome your code contributions.  But even if you don't write code,
+you can help fetchmail improve.</p>
 
-<P>If you administer a site that runs a post-office server, you may be
+<p>If you administer a site that runs a post-office server, you may be
 able help improve fetchmail by lending me a test account on your site.
 Note that I do not need a shell account for this purpose, just a 
 maildrop.  Nor am I interested in collecting maildrops per se --
-what I'm collecting is different <em>kinds of servers</em>.</P>
+what I'm collecting is different <em>kinds of servers</em>.</p>
 
-<P>Before each release, I run a test harness that sends date-stamped 
+<p>Before each release, I run a test harness that sends date-stamped 
 test mail to each site on my regression-test list, then tries to
 retrieve it.  Please take a look at my <a href="testservers.html">
 list of test servers</a>.  If you can lend me an account on a kind
-of server that is <em>not</em> already on this list, please do.</P>
+of server that is <em>not</em> already on this list, please do.</p>
 
-<H1>Who uses fetchmail:</H1>
+<h1>Who uses fetchmail:</h1>
 
-<P>Fetchmail entered full production status with the 2.0.0 version in
+<p>Fetchmail entered full production status with the 2.0.0 version in
 November 1996 after about five months of evolution from the ancestral
-<IT>popclient</IT> utility. It has since come into extremely wide use
+<code>popclient</code> utility. It has since come into extremely wide use
 in the Internet/Unix/Linux community.  The Red Hat, Debian and
-S.u.S.e. Linux distributions and their derivatives all include it.  A
+Suse Linux distributions and their derivatives all include it.  A
 customized version is used at Whole Earth 'Lectronic Link. Several
 large ISPs are known to recommend it to Unix-using SLIP and PPP
-customers.</P>
+customers.</p>
 
-<P>Somewhere around a thousand people have participated on the fetchmail
+<p>Somewhere around a thousand people have participated on the fetchmail
 beta lists (at time of current release there were $subscribers on the
 friends and announce lists).  While it's hard to count the users of
 open-source software, we can estimate based on (a) population figures
 at the WELL and other known fetchmail sites, (b) the size of the
 Linux-using ISP customer base, and (c) the volume of fetchmail-related
 talk on USENET.  These estimates suggest that daily fetchmail users
-number well into the hundreds of thousands, and possibly over a million.</P>
+number well into the hundreds of thousands, and possibly over a million.</p>
 
-<H1>The sociology of fetchmail:</H1>
+<h1>The sociology of fetchmail:</h1>
 
-<P>The fetchmail development project was a sociological experiment as well
+<p>The fetchmail development project was a sociological experiment as well
 as a technical effort.  I ran it as a test of some theories about why the
-Linux development model works.</P>
+Linux development model works.</p>
 
-<P>I wrote a paper, <A
-HREF="http://www.tuxedo.org/~esr/writings/cathedral-bazaar/">The
-Cathedral And The Bazaar</A>, about these theories and the project.
+<p>I wrote a paper, <a
+href="http://www.tuxedo.org/~esr/writings/cathedral-bazaar/">The
+Cathedral And The Bazaar</a>, about these theories and the project.
 I developed the line of analysis it suggested in two later essays.
 These papers became quite popular and (to my continuing astonishment) may
 have actually helped change the world.  Chase the title link, above,
-for links to all three papers.</P>
+for links to all three papers.</p>
 
-<P>I have done some analysis on the information in the project NEWS file.
+<p>I have done some analysis on the information in the project NEWS file.
 You can view a <a href="history.html">statistical history</a> showing
-levels of participation and release frequency over time.</P>
+levels of participation and release frequency over time.</p>
 
-<H1>Recent releases and where fetchmail is going:</H1>
+<h1>Recent releases and where fetchmail is going:</h1>
 
 <p>Fetchmail is now sufficiently stable and effective that I'm getting
 very little pressure to fix things or add features.  Development has
 slowed way down, release frequency has dropped off, and we're
-basically in maintainance mode.</P>
+basically in maintainance mode.</p>
 
-<P>Major changes or additions therefore seem unlikely until there are
+<p>Major changes or additions therefore seem unlikely until there are
 significant changes in or additions to the related protocol RFCs.  One
 development that would stimulate a new release almost instantly is the
 deployment of a standard lightweight encrypted authentication method
-for IMAP sessions.</P>
+for IMAP sessions.</p>
 
-<H1>Where you can use fetchmail:</H1>
+<h1>Where you can use fetchmail:</h1>
 
-<P>The fetchmail code was developed under Linux, but has also been
+<p>The fetchmail code was developed under Linux, but has also been
 extensively tested under 4.4BSD, SunOS, Solaris, AIX, and NEXTSTEP.  It
 should be readily portable to other Unix variants (it requires only
-POSIX plus BSD sockets, and uses GNU autoconf).</P>
+POSIX plus BSD sockets, and uses GNU autoconf).</p>
 
-<P>Fetchmail is supported only for Unix by its official maintainers.
+<p>Fetchmail is supported only for Unix by its official maintainers.
 However, it is reported to build and run correctly under BeOS,
-AmigaOS, Rhapsody, and QNX as well.</P>
+AmigaOS, Rhapsody, and QNX as well.</p>
 
-<H1>Related resources:</H1>
+<h1>Related resources:</h1>
 
-<P>Jochen Hayek is developing a set of
+<p>Jochen Hayek is developing a set of
 <a href="http://www.ACM.org/~Jochen_Hayek/JHimap_utils/">
 IMAP tools in Python</a> that read your .fetchmailrc file and are
 designed to work with fetchmail.   Jochen's tools can report selected
 header lines, or move incoming messages to named mailboxes based on
-the contents of headers.</P>
+the contents of headers.</p>
 
-<P>Scott Bronson has written a fetchmail plugin (actually, a specialist
+<p>Scott Bronson has written a fetchmail plugin (actually, a specialist
 MDA) called <a
 href="http://www.trestle.com/linux/trestlemail/">trestlemail</a> that
-helps redirect multidrop mail.</P>
+helps redirect multidrop mail.</p>
 
-<P>Donncha O Caoihm has written a Perl script called 
+<p>Donncha O Caoihm has written a Perl script called 
 <a href="http://cork.linux.ie/projects/install-sendmail/">install-sendmail</a>
-that assists you in installing sendmail and fetchmail together.</P>
+that assists you in installing sendmail and fetchmail together.</p>
 
-<P>Peter Hawkins has written a script called <a
+<p>Peter Hawkins has written a script called <a
 href="http://www.hawkins.emu.id.au/gotmail/">gotmail</a>
 that can retrieve Hotmail. Another script, 
 <a href="http://yosucker.sourceforge.net">yosucker</a>, can retrieve
-Yahoo webmail.</P>
+Yahoo webmail.</p>
 
-<P>A hacker identifying himself simply as \`Steines' has written a
+<p>A hacker identifying himself simply as \`Steines' has written a
 filter which rewrites the to-line with a line which only includes
 receipients for a given domain and renames the old to-line. It also
 rewrites the domain-part of addresses if the offical domain is
 different from the local domain. You can find it <a 
-href="http://www.steines.com/mailf/">here</a>.</P>
+href="http://www.steines.com/mailf/">here</a>.</p>
 
-<H1>Fetchmail's funniest fan letter:</H1>
+<h1>Fetchmail's funniest fan letter:</h1>
 
-<A HREF="funny.html">This letter</A> still cracks me up whenever I reread it. 
+<a href="funny.html">This letter</a> still cracks me up whenever I reread it. 
 
-<H1>The fetchmail button:</H1>
+<h1>The fetchmail button:</h1>
 
-<P>If you use fetchmail and like it, here's a nifty fetchmail button you
-can put on your web page:</P>
+<p>If you use fetchmail and like it, here's a nifty fetchmail button you
+can put on your web page:</p>
 
-<P><center><img src="fetchmail.png"></center></P>
+<center><img src="fetchmail.png" alt="fetchmail logo" /></center>
 
-<P>Thanks to <a href="http://www.gl.umbc.edu/~smatus1/">Steve
+<p>Thanks to <a href="http://www.gl.umbc.edu/~smatus1/">Steve
 Matuszek</a> for the graphic design.  The hand in the button (and the
 larger top-of-page graphic) was actually derived from a color scan of
-the fetchmail author's hand. </P>
+the fetchmail author's hand.</p>
 
-<H1>Fetchmail mirror sites:</H1>
+<h1>Fetchmail mirror sites:</h1>
 
-<P>There is a FTP mirror of the current sources and RPMs in Japan at
+<p>There is a FTP mirror of the current sources and RPMs in Japan at
 <a href="ftp://ftp.win.ne.jp/pub/network/mail/fetchmail">
 ftp://ftp.win.ne.jp/pub/network/mail/fetchmail</a>.
 
-<H1>Reviews and Awards</H1>
+<h1>Reviews and Awards</h1>
 
-<P>Fetchmail was DaveCentral's Best Of Linux winner for
-<a href="http://linux.davecentral.com/bol_19990630.html">June 30 1999</a>.</P>
+<p>Fetchmail was DaveCentral's Best Of Linux winner for
+<a href="http://linux.davecentral.com/bol_19990630.html">June 30 1999</a>.</p>
 
-<P>Fetchmail was a five-star Editor's Pick at Softlandindia.</P>
+<p>Fetchmail was a five-star Editor's Pick at Softlandindia.</p>
 
-<HR>
+<hr />
 <table width="100%" cellpadding=0 summary="Canned page footer"><tr>
 <td width="30%">Back to 
 <a href="http://$WWWVIRTUAL/~esr/software.html">Software</a>
@@ -376,10 +377,10 @@ ftp://ftp.win.ne.jp/pub/network/mail/fetchmail</a>.
 <td width="30%" align=right>$date
 </tr></table>
 
-<br clear="left">
-<ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
-</BODY>
-</HTML>
+<br clear="left" />
+<address>Eric S. Raymond <a href="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</a></address>
+</body>
+</html>
 EOF
 
 # The following sets edit modes for GNU EMACS
