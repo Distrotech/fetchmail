@@ -10,6 +10,7 @@
 * Added contrib/toprocmail, which demonstrates how a plugin can
   displaty selected mail headers.
 * French internationalization update from Guy Brand.
+* IMAP PREAUTH fix from Todd Sabin <tas@webspan.net>.
 
 fetchmail-5.3.5 (Wed Mar 29 18:17:19 EST 2000), 18840 lines:
 

@@ -130,14 +130,7 @@ int imap_ok(int sock, char *argbuf)
 	while (isspace(*cp))
 	    cp++;
 
-	if (strncmp(cp, "PREAUTH", 2) == 0)
-	{
-	    if (argbuf)
-		strcpy(argbuf, cp);
-	    preauth = TRUE;
-	    return(PS_SUCCESS);
-	}
-	else if (strncmp(cp, "OK", 2) == 0)
+        if (strncmp(cp, "OK", 2) == 0)
 	{
 	    if (argbuf)
 		strcpy(argbuf, cp);
@@ -860,7 +853,6 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 
     /* probe to see if we're running IMAP4 and can use RFC822.PEEK */
     capabilities[0] = '\0';
-    preauth = FALSE;
     if ((ok = gen_transact(sock, "CAPABILITY")) == PS_SUCCESS)
     {
 	/* UW-IMAP server 10.173 notifies in all caps */
@@ -898,11 +890,14 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 	expunge_period = 1;
 
     /* 
-     * If either (a) we saw a PREAUTH token in the capability response, or
+     * If either (a) we saw a PREAUTH token in the greeting, or
      * (b) the user specified ssh preauthentication, then we're done.
      */
     if (preauth || ctl->server.preauthenticate == A_SSH)
-	return(PS_SUCCESS);
+    {
+        preauth = FALSE;  /* reset for the next session */
+        return(PS_SUCCESS);
+    }
 
     /* 
      * Handle idling.  We depend on coming through here on startup
