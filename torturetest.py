@@ -1,26 +1,26 @@
 #!/usr/bin/env python2
 
-import sys, getopt, os, smtplib, commands, time
+import sys, getopt, os, smtplib, commands, time, gtk, gtk.glade
 
 class TestSite:
     temp = "/usr/tmp/torturestest-%d" % os.getpid()
 
     def __init__(self, line):
         "Initialize site data from the external representation."
-        (self.host, self.mailname, self.userid, self.password, \
-                self.proto, self.options, self.capabilities, self.version, self.comment) = \
+        (self.host, self.mailaddr, self.username, self.password, \
+                self.protocol, self.options, self.capabilities, self.recognition, self.comment) = \
                 line.strip().split(":")
-        if not self.mailname:
-            self.mailname = self.userid
+        if not self.mailaddr:
+            self.mailaddr = self.username
         # Test results
         self.status = None
         self.output = None
 
     def allattrs(self):
         "Return a tuple consisting of alll this site's attributes."
-        return (self.host, self.mailname, self.userid, self.password, \
-                self.proto, self.options, self.capabilities, \
-                self.version, self.comment)
+        return (self.host, self.mailaddr, self.username, self.password, \
+                self.protocol, self.options, self.capabilities, \
+                self.recognition, self.comment)
 
     def __repr__(self):
         "Return the external representation of this site's data."
@@ -30,12 +30,12 @@ class TestSite:
         "Prettyprint a site entry in human-readable form."
         return "Host: %s\n" \
               "Mail To: %s\n" \
-              "Userid: %s\n" \
+              "Username: %s\n" \
               "Password: %s\n" \
               "Protocol: %s\n" \
               "Options: %s\n" \
               "Capabilities: %s\n" \
-              "Version: %s\n" \
+              "Recognition: %s\n" \
               "Comment: %s\n" \
               % self.allattrs()
 
@@ -43,16 +43,16 @@ class TestSite:
         "Print a .fetchmailrc entry corresponding to a site entry."
         return "poll %s-%s via %s with proto %s %s\n" \
                "   user %s there with password '%s' is esr here\n\n" \
-               % (self.host,self.proto,self.host,self.proto,self.options,self.userid,self.password)
+               % (self.host,self.protocol,self.host,self.protocol,self.options,self.username,self.password)
 
     def tableprint(self):
         "Print an HTML server-type table entry."
         return "<tr><td>%s: %s</td><td>%s</td>\n" \
-               % (self.proto, self.comment, self.capabilities)
+               % (self.protocol, self.comment, self.capabilities)
 
     def id(self):
         "Identify this site."
-        rep = "%s %s at %s" % (self.proto, self.version, self.host)
+        rep = "%s %s at %s" % (self.protocol, self.recognition, self.host)
         if self.capabilities:
             rep += " (" + self.capabilities + ")"
         if self.options:
@@ -63,10 +63,10 @@ class TestSite:
         "Send test mail to the site."
         server = smtplib.SMTP("localhost")
         fromaddr = "esr@thyrsus.com"
-        if self.mailname.find("@") > -1:
-            toaddr = self.mailname
+        if self.mailaddr.find("@") > -1:
+            toaddr = self.mailaddr
         else:
-            toaddr = "%s@%s" % (self.mailname, self.host)
+            toaddr = "%s@%s" % (self.mailaddr, self.host)
         msg = ("From: %s\r\nTo: %s\r\n\r\n" % (fromaddr, toaddr))
         if n != None:
             msg += `n` + ": "
@@ -98,6 +98,82 @@ class TestSite:
         else:
             return self.id() + ": succeeded\n"
 
+class TortureGUI:
+    "Torturetest editing GUI,"
+
+    # All site parameters except protocol
+    field_map = ('host', 'mailaddr', 'username', 'password', \
+                'options', 'capabilities', 'recognition', 'comment')
+
+    def __init__(self):
+        # Build the widget tree from the glade XML file.
+        self.wtree = gtk.glade.XML("torturetest.glade")
+        self.combo = self.wtree.get_widget("combo1")
+        self.site = sitelist[0]
+
+        self.combo.set_popdown_strings(map(lambda x: x.comment, sitelist))
+        self.display(self.site)
+
+        # Provide handlers for the widget tree's events
+	dict = {}
+	for key in dir(self.__class__):
+	    dict[key] = getattr(self, key)
+	self.wtree.signal_autoconnect(dict)
+
+        gtk.mainloop()
+        print `self.site`
+
+    def get_widget(self, widget):
+        "Get the value of a widget's contents."
+        if type(widget) == type(""):
+            widget = self.wtree.get_widget(widget)
+        if type(widget) == gtk.Entry:
+            return widget.get_text()
+        elif type(widget) == gtk.SpinButton:
+            return widget.get_value()
+        elif type(widget) == gtk.TextView:
+            return widget.get_buffer().get_text()
+
+    def set_widget(self, name, exp):
+        "Set the value of a widget by name."
+        widget = self.wtree.get_widget(name)
+        if type(widget) == gtk.Entry:
+            widget.set_text(exp)
+        elif type(widget) == gtk.SpinButton:
+            widget.set_value(exp)
+        elif type(widget) == gtk.TextView:
+            if not widget.get_buffer():
+                widget.set_buffer(gtk.TextBuffer())
+            widget.get_buffer().set_text(exp)
+
+    def display(self, site):
+        for member in TortureGUI.field_map:
+            self.set_widget(member + "_entry", getattr(site, member))
+        for proto in ('POP3', 'IMAP'):
+            self.wtree.get_widget(proto + "_radiobutton").set_active(site.protocol == proto)
+
+    # Housekeeping
+    def on_torturetest_destroy(self, obj):
+        gtk.mainquit()
+    def on_quit1_activate(self, obj):
+        gtk.mainquit()
+    def on_save1_activate(self, obj):
+        print "Save"
+    def on_delete1_activate(self, obj):
+        print "Delete"
+    def on_new1_activate(self, obj):
+        print "New"
+    def on_open1_activate(self, obj):
+        print "Open"
+
+    def on_combo_entry1_activate(self, obj):
+        key = self.combo.entry.get_text()
+        for site in sitelist:
+            if site.comment.find(key) > -1:
+                self.site = site
+                self.display(self.site)
+                break
+
 if __name__ == "__main__":
     # Start by reading in the sitelist
     ifp = open("testsites")
@@ -117,7 +193,7 @@ if __name__ == "__main__":
                 print "Error on line %d" % linect
                 sys.exit(0)
 
-    (options, arguments) = getopt.getopt(sys.argv[1:], "dfp:tigvs")
+    (options, arguments) = getopt.getopt(sys.argv[1:], "dfp:tigvse")
     verbose = 0
     for (switch, value) in options:
         if switch == "-d":
@@ -159,8 +235,11 @@ if __name__ == "__main__":
             # Display the test output
             verbose = 1
         elif switch == "-s":
-            # Dump version strings of all tested servers as a Python tuple
-            print "(" + ",\n".join(map(lambda x: repr(x.version), filter(lambda x: x.version, sitelist))) + ")"
+            # Dump recognition strings of all tested servers as a Python tuple
+            print "(" + ",\n".join(map(lambda x: repr(x.recognition), filter(lambda x: x.recognition, sitelist))) + ")"
+            sys.exit(0)
+        elif switch == "-e":
+            TortureGUI()
             sys.exit(0)
 
     # If no options, run the torture test
