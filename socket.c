@@ -14,6 +14,7 @@
 #include <memory.h>
 #endif /* HAVE_MEMORY_H */
 #include <sys/types.h>
+#include <sys/stat.h>
 #ifndef HAVE_NET_SOCKET_H
 #include <sys/socket.h>
 #else
