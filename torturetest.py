@@ -59,12 +59,14 @@ class TestSite:
             rep += " using " + self.options
         return rep
 
-    def testmail(self):
+    def testmail(self, n=None):
         "Send test mail to the site."
         server = smtplib.SMTP("localhost")
         fromaddr = "esr@thyrsus.com"
         toaddr = "%s@%s" % (self.mailname, self.host)
         msg = ("From: %s\r\nTo: %s\r\n\r\n" % (fromaddr, toaddr))
+        if n != None:
+            msg += `n` + ": "
         msg += "Test mail collected from %s.\n" % (self.id(),)
         server.sendmail(fromaddr, toaddr, msg)
         server.quit()
@@ -73,6 +75,7 @@ class TestSite:
         "Run a mail fetch on this site."
         try:
             ofp = open(TestSite.temp, "w")
+            ofp.write('defaults mda "(echo; echo \'From torturetest\' `date`; cat) >>TEST.LOG"\n')
             ofp.write(site.entryprint())
             ofp.close()
             (self.status, self.output) = commands.getstatusoutput("fetchmail -d0 -v -f - <%s"%TestSite.temp)
@@ -139,9 +142,11 @@ if __name__ == "__main__":
             map(lambda x: sys.stdout.write(x.id() + "\n"), sitelist)
             sys.exit(0)
         elif switch == "-g":
+            i = 1
             for site in sitelist:
                 print "Sending test mail to " + site.id()
-                site.testmail()
+                site.testmail(i)
+                i+= 1
             # Send test mail to each site
             sys.stdout.write("Delaying to give the test mail time to land...")
             time.sleep(5)
