@@ -140,8 +140,10 @@ struct method *proto;
 		    queryctl->servername, count - first + 1);
 	else
 	    fprintf(stderr,
-		    "%d %smessages from %s.\n",
-		    count, ok ? "" : "new ", queryctl->servername);
+		    "%d %smessage%s from %s.\n",
+		    count, ok ? "" : "new ", 
+		    count > 1 ? "s" : "", 
+		    queryctl->servername);
 
     if (count > 0) { 
 	for (number = queryctl->flush ? 1 : first;  number<=count; number++) {
@@ -797,6 +799,7 @@ int rewrite;
 	    return(PS_IOERR);
 	}
 #endif /* BINMAIL_TERM */
+	break;
     }
 
     /* finish up display output */
