@@ -15,6 +15,7 @@
 #include  <errno.h>
 #include  <string.h>
 #include  <signal.h>
+#include  <time.h>
 #ifdef HAVE_MEMORY_H
 #include  <memory.h>
 #endif /* HAVE_MEMORY_H */
@@ -445,7 +446,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	else if (ctl->mimemsg & MSG_IS_7BIT)
 	    fputs(" BODY=7BIT", sinkfp);
 
-	fprintf(sinkfp, " SIZE=%ld\r\n", msg->reallen);
+	fprintf(sinkfp, " SIZE=%d\r\n", msg->reallen);
 
 	/*
 	 * RFC 1123 requires that the domain name part of the
@@ -650,7 +651,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
         }
 
 	if ((ctl->server.esmtp_options & ESMTP_SIZE) && msg->reallen > 0)
-	    sprintf(options + strlen(options), " SIZE=%ld", msg->reallen);
+	    sprintf(options + strlen(options), " SIZE=%d", msg->reallen);
 
 	/*
 	 * Try to get the SMTP listener to take the Return-Path

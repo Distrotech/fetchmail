@@ -2,6 +2,9 @@
 
 fetchmail-4.7.1 ():
 * Enable fetchmail to build correctly on systems without socketpair.
+* gcc -Wall cleanup.
+
+There are 246 people on fetchmail-friends and 327 on fetchmail-announce.
 
 fetchmail-4.7.0 (Mon Dec 14 12:05:27 EST 1998):
 * Minor correction to make i18n subdirectory builds work better.

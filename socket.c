@@ -49,27 +49,24 @@ static int handle_plugin(const char *host,
 			 const char *service, const char *plugin)
 /* get a socket mediated through a given external command */
 {
-    if (plugin) 
+    int fds[2];
+    if (socketpair(AF_UNIX,SOCK_STREAM,0,fds))
     {
-	int fds[2];
-	if (socketpair(AF_UNIX,SOCK_STREAM,0,fds))
-	{
-	    error(0, 0, _("fetchmail: socketpair failed: %s(%d)"),strerror(errno),errno);
-	    return -1;
-	}
-	if (!fork())
-	{
-	    dup2(fds[0],0);
-	    dup2(fds[0],1);
-	    if (outlevel >= O_VERBOSE)
-		error(0, 0, _("running %s %s %s"), plugin, host, service);
-	    execlp(plugin,plugin,host,service,0);
-	    error(0, 0, _("execl(%s) failed: %s (%d)"),
-		  plugin, strerror(errno), errno);
-	    exit(0);
-	}
-	return fds[1];
+	error(0, 0, _("fetchmail: socketpair failed: %s(%d)"),strerror(errno),errno);
+	return -1;
     }
+    if (!fork())
+    {
+	dup2(fds[0],0);
+	dup2(fds[0],1);
+	if (outlevel >= O_VERBOSE)
+	    error(0, 0, _("running %s %s %s"), plugin, host, service);
+	execlp(plugin,plugin,host,service,0);
+	error(0, 0, _("execl(%s) failed: %s (%d)"),
+	      plugin, strerror(errno), errno);
+	exit(0);
+    }
+    return fds[1];
 }
 #endif /* HAVE_SOCKETPAIR */
 

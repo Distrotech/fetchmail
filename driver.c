@@ -1282,7 +1282,7 @@ static void send_size_warnings(struct query *ctl)
     int size, nbr;
     int msg_to_send = FALSE;
     struct idlist *head=NULL, *current=NULL;
-    int max_warning_poll_count, good, bad;
+    int max_warning_poll_count;
 #define OVERHD	"Subject: Fetchmail oversized-messages warning.\r\n\r\nThe following oversized messages remain on the mail server:"
 
     head = ctl->skipped;

@@ -34,7 +34,7 @@ char smtp_response[MSGBUFSIZE];
 
 static char smtp_mode = 'S';
 
-int SMTP_setmode(char sl)
+void SMTP_setmode(char sl)
 /* set whether we are speaking SMTP or LMTP */
 {
     smtp_mode = sl;

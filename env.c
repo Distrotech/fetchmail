@@ -20,10 +20,8 @@
 #ifdef HAVE_GETHOSTBYNAME
 #include <netdb.h>
 #endif /* HAVE_GETHOSTBYNAME */
-#ifndef HAVE_STRFTIME /* For ctime prototype */
 #include  <sys/types.h>
 #include  <time.h>
-#endif
 #include "fetchmail.h"
 
 #include "i18n.h"
