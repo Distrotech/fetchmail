@@ -708,7 +708,30 @@ you will open a window to configure the
 user's options on that site.
 """}
 
-class ServerEdit(Frame):
+class MyWidget:
+# Common methods for Tkinter Widgets
+    def post(self, template, field):
+	for x in template.typemap:
+	    target = "self." + x[0]
+	    source = "self." + field + "." + x[0]
+	    if x[1] == 'Boolean':
+		exec target + " = BooleanVar(self)"
+		if eval(source):
+		    exec target + ".set(" + source + ")"
+	    elif x[1] == 'String':
+		exec target + " = StringVar(self)"
+		if eval(source):
+		    exec target + ".set(" + source + ")"
+	    elif x[1] == 'Int':
+		exec target + " = IntVar(self)"
+		if eval(source):
+		    exec target + ".set(" + source + ")"
+
+    def gather(self, template, field):
+	for x in template.typemap:
+	    setattr(eval("self." + field), x[0], getattr(self, x[0]).get())
+
+class ServerEdit(Frame, MyWidget):
     def __init__(self, host, servers):
 	self.server = None
 	for site in servers:
@@ -725,42 +748,18 @@ class ServerEdit(Frame):
 	Pack.config(self)
 	self.master.title('Fetchmail host ' + self.server.pollname);
 	self.master.iconname('Fetchmail host ' + self.server.pollname);
-	self.post()
+	self.post(Server, 'server')
 	self.makeWidgets(self.server.pollname, mode)
 #	self.grab_set()
 #	self.focus_set()
 #	self.wait_window()
-
-    def post(self):
-	# we can't abstract this away, execs would happen in the wrong scope
-	for x in Server.typemap:
-	    target = "self." + x[0]
-	    source = "self.server." + x[0]
-	    if x[1] == 'Boolean':
-		exec target + " = BooleanVar(self)"
-		if eval(source):
-		    exec target + ".set(" + source + ")"
-	    elif x[1] == 'String':
-		exec target + " = StringVar(self)"
-		if eval(source):
-		    exec target + ".set(" + source + ")"
-	    elif x[1] == 'Int':
-		exec target + " = IntVar(self)"
-		if eval(source):
-		    exec target + ".set(" + source + ")"
-
-    def gather(self):
-	for x in Server.typemap:
-	    setattr(self.server, x[0], getattr(self, x[0]).get())
 
     def nosave(self):
 	if ConfirmQuit(self, 'server option editing'):
 	    Widget.destroy(self.master)
 
     def save(self):
-	self.gather()
-        for u in self.server.users:
-            print "Attempting to save for a user named " + u.remote
+	self.gather(Server, 'server')
 	Widget.destroy(self.master)
 
     def refreshPort(self):
