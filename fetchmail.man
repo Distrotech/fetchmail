@@ -967,7 +967,8 @@ are as follows:
 .IP 0
 One or more messages were successfully retrieved.
 .IP 1
-There was no mail awaiting retrieval.
+There was no mail awaiting retrieval.  (There may have been old mail still
+on the server but not selected for retrieval.)
 .IP 2
 An error was encountered when attempting to open a socket for the POP 
 connection.  If you don't know what a socket is, don't worry about it --

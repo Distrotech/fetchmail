@@ -1492,7 +1492,7 @@ const struct method *proto;	/* protocol method table */
 
 	    ok = gen_transact(sockfp, protocol->exit_cmd);
 	    if (ok == 0)
-		ok = PS_SUCCESS;
+		ok = (fetches > 0) ? PS_SUCCESS : PS_NOMAIL;
 	    set_timeout(0);
 	    fclose(sockfp);
 	    goto closeUp;
