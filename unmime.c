@@ -668,10 +668,11 @@ int main(int argc, char *argv[])
   FILE *fd_orig, *fd_conv;
   char fnam[100];
 
+  /* we don't need snprintf here, but for consistency, we'll use it */
   pid = getpid();
-  sprintf(fnam, "/tmp/i_unmime.%lx", (long)pid);
+  snprintf(fnam, sizeof(fnam), "/tmp/i_unmime.%lx", (long)pid);
   fd_orig = fopen(fnam, "w");
-  sprintf(fnam, "/tmp/o_unmime.%lx", (long)pid);
+  snprintf(fnam, sizeof(fnam), "/tmp/o_unmime.%lx", (long)pid);
   fd_conv = fopen(fnam, "w");
 #endif
 
