@@ -7,7 +7,7 @@
 #
 # TO DO: Arrange for save and quit buttons to clean up all frames dependent
 # on the current ones.
-version = "1.7"
+version = "1.8"
 
 from Tkinter import *
 from Dialog import *
