@@ -85,7 +85,7 @@ int SMTP_eom(int socket)
 
   SockPrintf(socket,".\r\n");
   if (outlevel == O_VERBOSE)
-      fprintf(stderr, "SMTP> (EOM)\n");
+      fprintf(stderr, "SMTP>. (EOM)\n");
   ok = SMTP_ok(socket,NULL);
   return ok;
 }
