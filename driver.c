@@ -23,7 +23,6 @@
 #if defined(HAVE_SYS_ITIMER_H)
 #include <sys/itimer.h>
 #endif
-#include  <sys/time.h>
 #include  <signal.h>
 #ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>
