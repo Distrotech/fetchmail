@@ -138,6 +138,7 @@ if __name__ == "__main__":
             sys.exit(0)
         elif switch == "-g":
             for site in sitelist:
+                print "Sending test mail to " + site.id()
                 site.testmail()
             # Send test mail to each site
             sys.stdout.write("Delaying to give the test mail time to land...")
