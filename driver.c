@@ -461,7 +461,7 @@ struct hostrec *queryctl;
 		fputc('.',stderr);
 	    sizeticker -= SIZETICKER;
 
-	    /* reset timeout so we don't choke on very long messsages */
+	    /* reset timeout so we don't choke on very long messages */
 	    alarm(timeout);
 	}
 	lines++;
