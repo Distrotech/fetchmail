@@ -1471,7 +1471,7 @@ va_dcl
 void close_warning_by_mail(struct query *ctl, struct msgblk *msg)
 /* sign and send mailed warnings */
 {
-    stuff_warning(ctl, GT_("--\r\n\t\t\t\tThe Fetchmail Daemon\r\n"));
+    stuff_warning(ctl, GT_("--\n\t\t\t\tThe Fetchmail Daemon\n"));
     close_sink(ctl, msg, TRUE);
 }
 
