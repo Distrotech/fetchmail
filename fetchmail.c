@@ -766,6 +766,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(password);
     FLAG_MERGE(mda);
     FLAG_MERGE(bsmtp);
+    FLAG_MERGE(listener);
     FLAG_MERGE(smtpaddress);
     FLAG_MERGE(preconnect);
     FLAG_MERGE(postconnect);
@@ -807,6 +808,7 @@ static int load_params(int argc, char **argv, int optind)
     def_opts.warnings = WARNING_INTERVAL;
     def_opts.remotename = user;
     def_opts.expunge = 1;
+    def_opts.listener = SMTP_MODE;
 
     /* this builds the host list */
     if (prc_parse_file(rcfile, !versioninfo) != 0)
@@ -1016,6 +1018,13 @@ static int load_params(int argc, char **argv, int optind)
 	    {
 		(void) fprintf(stderr,
 			       "%s configuration invalid, RPOP requires a privileged port",
+			       ctl->server.pollname);
+		exit(PS_SYNTAX);
+	    }
+	    if (ctl->server.port == 25 && ctl->listener == LMTP_MODE)
+	    {
+		(void) fprintf(stderr,
+			       "%s configuration invalid, LMTP can't use SMTP port",
 			       ctl->server.pollname);
 		exit(PS_SYNTAX);
 	    }
@@ -1369,7 +1378,7 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 	{
 	    struct idlist *idp;
 
-	    printf("  Messages will be SMTP-forwarded to:");
+	    printf("  Messages will be %cMTP-forwarded to:", ctl->listener);
 	    for (idp = ctl->smtphunt; idp; idp = idp->next)
 	    {
                 printf(" %s", idp->id);

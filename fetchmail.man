@@ -285,6 +285,12 @@ mail message's From address will be inserted where you place an %F.  Do
 "sendmail -oem -t" that dispatches on the contents of To/Cc/Bcc, it
 will create mail loops and bring the just wrath of many postmasters
 down upon your head.
+.TP 
+.B \--lmtp
+(Keyword: lmtp)
+Cause delivery via LMTP (Local Mail Transfer Protocol).  A service port 
+\fdImust\fR be explicitly specified if this option is selected; port
+25 will (in accordance with RFC 2033) not be accepted.
 .TP
 .B \--bsmtp
 (keyword: bsmtp)
@@ -1775,3 +1781,6 @@ RFC 1985
 .TP 5
 OTP:
 RFC 1938
+.TP 5
+LMTP:
+RFC 2033

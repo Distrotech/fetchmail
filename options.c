@@ -59,13 +59,14 @@
 #define LA_EXPUNGE	37
 #define LA_MDA		38
 #define LA_BSMTP	39
-#define LA_PLUGIN	40
-#define LA_PLUGOUT	41
-#define LA_NETSEC	42
-#define LA_INTERFACE    43
-#define LA_MONITOR      44
-#define LA_CONFIGDUMP	45
-#define LA_YYDEBUG	46
+#define LA_LMTP		40
+#define LA_PLUGIN	41
+#define LA_PLUGOUT	42
+#define LA_NETSEC	43
+#define LA_INTERFACE    44
+#define LA_MONITOR      45
+#define LA_CONFIGDUMP	46
+#define LA_YYDEBUG	47
 
 /* options still left: CDgGhHjJoORwWxXYz */
 static const char *shortoptions = 
@@ -119,6 +120,7 @@ static const struct option longoptions[] = {
   {"expunge",   required_argument, (int *) 0, LA_EXPUNGE     },
   {"mda",	required_argument, (int *) 0, LA_MDA         },
   {"bsmtp",	required_argument, (int *) 0, LA_BSMTP       },
+  {"lmtp",	required_argument, (int *) 0, LA_LMTP        },
 
 #ifdef INET6
   {"netsec",	required_argument, (int *) 0, LA_NETSEC      },
@@ -478,6 +480,9 @@ struct query *ctl;	/* option record to be initialized */
 	    ctl->bsmtp = xstrdup(optarg);
 	    ocount++;
 	    break;
+	case LA_LMTP:
+	    ctl->listener = LMTP_MODE;
+	    break;
 
 	case 'T':
 	case LA_NETSEC:
@@ -591,6 +596,7 @@ struct query *ctl;	/* option record to be initialized */
 	P("  -e, --expunge     set max deletions between expunges\n");
         P("      --mda         set MDA to use for forwarding\n");
         P("      --bsmtp       set output BSMTP file\n");
+        P("      --lmtp        use LMTP (RFC2033) for delivery\n");
 	P("  -r, --folder      specify remote folder name\n");
 #undef P
 	return(-1);

@@ -7,7 +7,7 @@
 #
 # TO DO: Arrange for save and quit buttons to clean up all frames dependent
 # on the current ones.
-version = "1.8"
+version = "1.9"
 
 from Tkinter import *
 from Dialog import *
@@ -188,6 +188,7 @@ class User:
 	self.postconnect = None		# Connection wrapup
 	self.mda = None			# Mail Delivery Agent
 	self.bsmtp = None		# BSMTP output file
+        self.lmtp = FALSE		# Use LMTP rather than SMTP?
 	self.antispam = "571 550 501"	# Listener's spam-block code
 	self.keep = FALSE		# Keep messages
 	self.flush = FALSE		# Flush messages
@@ -214,6 +215,7 @@ class User:
 	    ('postconnect', 'String'),
 	    ('mda',         'String'),
 	    ('bsmtp',       'String'),
+            ('lmtp',        'Boolean'),
 	    ('antispam',    'String'),
 	    ('keep',        'Boolean'),
 	    ('flush',       'Boolean'),
@@ -298,6 +300,8 @@ class User:
         for fld in ('smtpaddress', 'preconnect', 'postconnect', 'mda', 'bsmtp', 'properties'):
             if getattr(self, fld):
                 str = str + " %s %s\n" % (fld, `getattr(self, fld)`)
+	if self.lmtp != UserDefaults.lmtp:
+	    str = str + flag2str(self.lmtp, 'lmtp')
         if self.antispam != UserDefaults.antispam:
             str = str + "    antispam " + self.antispam + "\n"
 	return str;
@@ -1202,6 +1206,8 @@ class UserEdit(Frame, MyWidget):
 		     self.antispam, '26').pack(side=TOP, fill=X)
             LabeledEntry(targwin, 'Pass-through properties:',
 		     self.properties, '26').pack(side=TOP, fill=X)
+            Checkbutton(targwin, text="Use LMTP?",
+                        variable=self.lmtp).pack(side=TOP, fill=X)
             targwin.pack(fill=X, anchor=N)
 
         if mode != 'novice':

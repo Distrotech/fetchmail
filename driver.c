@@ -1234,7 +1234,7 @@ static void send_size_warnings(struct query *ctl)
      */
     if (open_warning_by_mail(ctl))
 	return;
-    stuff_warning_line(ctl, OVERHD);
+    stuff_warning(ctl, OVERHD);
  
     if (run.poll_interval == 0)
 	max_warning_poll_count = 0;
@@ -1248,7 +1248,7 @@ static void send_size_warnings(struct query *ctl)
 	{
 	    nbr = current->val.status.mark;
 	    size = atoi(current->id);
-	    stuff_warning_line(ctl, 
+	    stuff_warning(ctl, 
 		    "\t%d msg %d octets long skipped by fetchmail.",
 		    nbr, size);
 	}
@@ -1499,15 +1499,15 @@ const struct method *proto;	/* protocol method table */
 		    if (run.poll_interval
 			&& !ctl->authfailcount && !open_warning_by_mail(ctl))
 		    {
-			stuff_warning_line(ctl,
+			stuff_warning(ctl,
 			       "Subject: fetchmail authentication failed\r\n");
-			stuff_warning_line(ctl,
+			stuff_warning(ctl,
 				"Fetchmail could not get mail from %s@%s.", 
 				ctl->remotename,
 				ctl->server.truename);
-			stuff_warning_line(ctl, 
+			stuff_warning(ctl, 
 			       "The attempt to get authorization failed.");
-			stuff_warning_line(ctl, 
+			stuff_warning(ctl, 
 			       "This probably means your password is invalid.");
 			close_warning_by_mail(ctl);
 			ctl->authfailcount++;

@@ -3,7 +3,7 @@
  *
  * The interface of this module (open_sink(), stuff_line(), close_sink(),
  * release_sink()) seals off the delivery logic from the protocol machine,
- * so the latter won't have to care whether it's shipping to an SMTP
+ * so the latter won't have to care whether it's shipping to an [SL]MTP
  * listener daemon or an MDA pipe.
  *
  * Copyright 1998 by Eric S. Raymond
@@ -44,6 +44,9 @@
 #else /* INET6 */
 #define	SMTP_PORT	25	/* standard SMTP service port */
 #endif /* INET6 */
+
+static int lmtp_responses;	/* how many should we expect? */
+static struct msgblk msgcopy;	/* copies of various message internals */
 
 static int smtp_open(struct query *ctl)
 /* try to open a socket to the appropriate SMTP server for this query */ 
@@ -119,6 +122,9 @@ static int smtp_open(struct query *ctl)
 	    if ((ctl->smtp_socket = SockOpen(parsed_host,portnum,NULL,
 					     ctl->server.plugout)) == -1)
 		continue;
+
+	    /* are we doing SMTP or LMTP? */
+	    SMTP_setmode(ctl->listener);
 
 	    /* first, probe for ESMTP */
 	    if (SMTP_ok(ctl->smtp_socket) == SM_OK &&
@@ -459,10 +465,17 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	/* build a connection to the SMTP listener */
 	if ((smtp_open(ctl) == -1))
 	{
-	    error(0, errno, "SMTP connect to %s failed",
+	    error(0, errno, "%cMTP connect to %s failed",
+		  ctl->listener,
 		  ctl->smtphost ? ctl->smtphost : "localhost");
 	    return(PS_SMTP);
 	}
+
+	/*
+	 * Stash a copy of the parsed message block 
+	 * for use by close_sink().
+	 */
+	memcpy(&msgcopy, msg, sizeof(struct msgblk));
 
 	/*
 	 * Compute ESMTP options.
@@ -531,7 +544,9 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	     * an error when the return code is less specific.
 	     */
 	    if (smtperr >= 400)
-		error(0, -1, "SMTP error: %s", smtp_response);
+		error(0, -1, "%cMTP error: %s", 
+		      ctl->listener,
+		      smtp_response);
 
 	    switch (smtperr)
 	    {
@@ -568,7 +583,9 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	    default:	/* retry with postmaster's address */
 		if (SMTP_from(ctl->smtp_socket,run.postmaster,options)!=SM_OK)
 		{
-		    error(0, -1, "SMTP error: %s", smtp_response);
+		    error(0, -1, "%cMTP error: %s",
+			  ctl->listener,
+			  smtp_response);
 		    return(PS_SMTP);	/* should never happen */
 		}
 	    }
@@ -596,8 +613,8 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		    (*bad_addresses)++;
 		    idp->val.status.mark = XMIT_ANTISPAM;
 		    error(0, 0, 
-			  "SMTP listener doesn't like recipient address `%s'",
-			  addr);
+			  "%cMTP listener doesn't like recipient address `%s'",
+			  ctl->listener, addr);
 		}
 	    }
 	if (!(*good_addresses))
@@ -619,6 +636,12 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	/* tell it we're ready to send data */
 	SMTP_data(ctl->smtp_socket);
     }
+
+    /*
+     * We need to stash this away in order to know how many
+     * response lines to expect after the LMTP end-of-message.
+     */
+    lmtp_responses = *good_addresses;
 
     return(PS_SUCCESS);
 }
@@ -675,12 +698,140 @@ int close_sink(struct query *ctl, flag forward)
     }
     else if (forward)
     {
-				/* write message terminator */
+	/* write message terminator */
 	if (SMTP_eom(ctl->smtp_socket) != SM_OK)
 	{
 	    error(0, -1, "SMTP listener refused delivery");
 	    return(FALSE);
 	}
+
+	/*
+	 * If this is an SMTP connection, SMTP_eom() ate the response.
+	 * But could be this is an LMTP connection, in which case we have to
+	 * interpret either (a) a single 503 response meaning there
+	 * were no successful RCPT TOs, or (b) a variable number of
+	 * responses, one for each successful RCPT TO.  We need to send
+	 * bouncemail on each failed response and then return TRUE anyway,
+	 * otherwise the message will get left in the queue and resent
+	 * to people who got it the first time.
+	 */
+	if (ctl->listener == LMTP_MODE)
+	    if (lmtp_responses == 0)
+	    {
+		SMTP_ok(ctl->smtp_socket); 
+
+		/*
+		 * According to RFC2033, 503 is the only legal response
+		 * if no RCPT TO commands succeeded.  No error recovery
+		 * is really possible here, as we have no idea what
+		 * insane thing the listener might be doing if it doesn't
+		 * comply.
+		 */
+		if (atoi(smtp_response) == 503)
+		    error(0, -1, "LMTP delivery error on EOM");
+		else
+		    error(0, -1,
+			  "Unexpected non-503 response to LMTP EOM: %s",
+			  smtp_response);
+
+		/*
+		 * It's not completely clear what to do here.  We choose to
+		 * interpret delivery failure here as a transient error, 
+		 * the same way SMTP delivery failure is handled.  If we're
+		 * wrong, an undead message will get stuck in the queue.
+		 */
+		return(FALSE);
+	    }
+	    else
+	    {
+		int	i, errors;
+		char	**responses;
+
+		/* eat the RFC2033-required responses, saving errors */ 
+		xalloca(responses, char **, sizeof(char *) * lmtp_responses);
+		for (errors = i = 0; i < lmtp_responses; i++)
+		{
+		    if (SMTP_ok(ctl->smtp_socket) == SM_OK)
+			responses[i] = (char *)NULL;
+		    else
+		    {
+			xalloca(responses[errors], 
+				char *, 
+				strlen(smtp_response)+1);
+			strcpy(responses[errors], smtp_response);
+			errors++;
+		    }
+		}
+
+		if (errors == 0)
+		    return(TRUE);	/* all deliveries succeeded */
+		else if (errors == lmtp_responses)
+		    return(FALSE);	/* all deliveries failed */
+		else
+		{
+		    /*
+		     * Now life gets messy.  There are multiple recipients,
+		     * and one or more (but not all) deliveries failed.
+		     *
+		     * What we'd really like to do is bounce a
+		     * failures list back to the sender and return
+		     * TRUE, deleting the message from the server so
+		     * it won't be re-forwarded on subsequent poll
+		     * cycles.
+		     *
+		     * We can't do that yet, so instead we report 
+		     * failures to the calling-user/postmaster.  If we can't,
+		     * there's a transient error in local delivery; leave
+		     * the message on the server.
+		     */
+		    char buf[MSGBUFSIZE];
+
+		    if (open_warning_by_mail(ctl))
+			return(FALSE);
+
+		    /* generate an error report a la RFC 1892 */
+		    stuff_warning(ctl, "MIME-Version: 1.0");
+		    stuff_warning(ctl, "Content-Type: multipart/report report-type=text/plain boundary=\"om-mani-padme-hum\"");
+		    stuff_warning(ctl, "Content-Transfer-Encoding: 7bit");
+		    stuff_warning(ctl, "");
+
+
+		    /* RFC1892 part 1 -- human-readable message */
+		    stuff_warning(ctl, "-- om-mani-padme-hum"); 
+		    stuff_warning(ctl, "");
+
+		    /* RFC1892 part 2 -- machine-readable responses */
+		    stuff_warning(ctl, "-- om-mani-padme-hum"); 
+		    stuff_warning(ctl,"Content-Type: message/delivery-status");
+		    stuff_warning(ctl, "");
+		    for (i = 0; i < errors; i++)
+			stuff_warning(ctl, responses[i]);
+
+		    /* RFC1892 part 3 -- headers of undelivered message */
+		    stuff_warning(ctl, "-- om-mani-padme-hum"); 
+		    stuff_warning(ctl, "Content-Type: text/rfc822-headers");
+		    stuff_warning(ctl, "");
+		    stuffline(ctl, msgcopy.headers);
+
+		    stuff_warning(ctl, "-- om-mani-padme-hum --"); 
+
+		    close_warning_by_mail(ctl);
+
+		    /*
+		     * It's not completely clear what to do here,
+		     * either.  We choose to interpret delivery
+		     * failure here as a permanent error, so the
+		     * people who got successful deliveries won't see
+		     * endless repetitions of the same message on
+		     * subsequent poll messages.  If we're wrong, a
+		     * transient error will cause someone to lose
+		     * mail.  This could only happen with
+		     * multi-recipient messages coming from a remote
+		     * mailserver to two or more local users...
+		     */
+		    return(TRUE);
+		}
+	    }
     }
 
     return(TRUE);
@@ -702,9 +853,9 @@ int open_warning_by_mail(struct query *ctl)
 }
 
 #if defined(HAVE_STDARG_H)
-void stuff_warning_line(struct query *ctl, const char *fmt, ... )
+void stuff_warning(struct query *ctl, const char *fmt, ... )
 #else
-void stuff_warning_line(struct query *ctl, fmt, va_alist)
+void stuff_warning(struct query *ctl, fmt, va_alist)
 struct query *ctl;
 const char *fmt;	/* printf-style format */
 va_dcl
@@ -740,7 +891,7 @@ va_dcl
 void close_warning_by_mail(struct query *ctl)
 /* sign and send mailed warnings */
 {
-    stuff_warning_line(ctl, "--\r\n\t\t\t\tThe Fetchmail Daemon\r\n");
+    stuff_warning(ctl, "--\r\n\t\t\t\tThe Fetchmail Daemon\r\n");
     close_sink(ctl, TRUE);
 }
 

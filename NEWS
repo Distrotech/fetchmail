@@ -7,6 +7,7 @@ fetchmail-4.6.6 ():
 * Added plugin/plugout features from Felix von Leitner.
 * Dave Bodenstab's errno fix.
 * You can make fetchmail read its config from stdin with the option `-f -'.
+* Experimental, UNTESTED support of LSMTP (RFC2033).
 
 There are 247 people on fetchmail-friends and 308 on fetchmail-announce.
 

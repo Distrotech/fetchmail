@@ -59,7 +59,7 @@ extern char * yytext;
 
 %token DEFAULTS POLL SKIP VIA AKA LOCALDOMAINS PROTOCOL
 %token AUTHENTICATE TIMEOUT KPOP SDPS KERBEROS4 KERBEROS5 KERBEROS
-%token ENVELOPE QVIRTUAL USERNAME PASSWORD FOLDER SMTPHOST MDA BSMTP
+%token ENVELOPE QVIRTUAL USERNAME PASSWORD FOLDER SMTPHOST MDA BSMTP LMTP
 %token SMTPADDRESS SPAMRESPONSE PRECONNECT POSTCONNECT LIMIT
 %token NETSEC INTERFACE MONITOR PLUGIN PLUGOUT
 %token IS HERE THERE TO MAP WILDCARD
@@ -292,44 +292,45 @@ user_option	: TO localnames HERE
 		| IS localnames HERE
 		| IS localnames
 
-		| IS STRING THERE	{current.remotename = xstrdup($2);}
-		| PASSWORD STRING	{current.password   = xstrdup($2);}
+		| IS STRING THERE	{current.remotename  = xstrdup($2);}
+		| PASSWORD STRING	{current.password    = xstrdup($2);}
 		| FOLDER folder_list
 		| SMTPHOST smtp_list
 		| SMTPADDRESS STRING	{current.smtpaddress = xstrdup($2);}
 		| SPAMRESPONSE num_list
-		| MDA STRING		{current.mda        = xstrdup($2);}
-		| BSMTP STRING		{current.bsmtp    = xstrdup($2);}
-		| PRECONNECT STRING	{current.preconnect = xstrdup($2);}
+		| MDA STRING		{current.mda         = xstrdup($2);}
+		| BSMTP STRING		{current.bsmtp       = xstrdup($2);}
+		| LMTP			{current.listener    = LMTP_MODE;}
+		| PRECONNECT STRING	{current.preconnect  = xstrdup($2);}
 		| POSTCONNECT STRING	{current.postconnect = xstrdup($2);}
 
-		| KEEP			{current.keep       = FLAG_TRUE;}
-		| FLUSH			{current.flush      = FLAG_TRUE;}
-		| FETCHALL		{current.fetchall   = FLAG_TRUE;}
-		| REWRITE		{current.rewrite    = FLAG_TRUE;}
-		| FORCECR		{current.forcecr    = FLAG_TRUE;}
-		| STRIPCR		{current.stripcr    = FLAG_TRUE;}
-		| PASS8BITS		{current.pass8bits  = FLAG_TRUE;}
-		| DROPSTATUS		{current.dropstatus = FLAG_TRUE;}
-		| MIMEDECODE		{current.mimedecode = FLAG_TRUE;}
+		| KEEP			{current.keep        = FLAG_TRUE;}
+		| FLUSH			{current.flush       = FLAG_TRUE;}
+		| FETCHALL		{current.fetchall    = FLAG_TRUE;}
+		| REWRITE		{current.rewrite     = FLAG_TRUE;}
+		| FORCECR		{current.forcecr     = FLAG_TRUE;}
+		| STRIPCR		{current.stripcr     = FLAG_TRUE;}
+		| PASS8BITS		{current.pass8bits   = FLAG_TRUE;}
+		| DROPSTATUS		{current.dropstatus  = FLAG_TRUE;}
+		| MIMEDECODE		{current.mimedecode  = FLAG_TRUE;}
 
-		| NO KEEP		{current.keep       = FLAG_FALSE;}
-		| NO FLUSH		{current.flush      = FLAG_FALSE;}
-		| NO FETCHALL		{current.fetchall   = FLAG_FALSE;}
-		| NO REWRITE		{current.rewrite    = FLAG_FALSE;}
-		| NO FORCECR		{current.forcecr    = FLAG_FALSE;}
-		| NO STRIPCR		{current.stripcr    = FLAG_FALSE;}
-		| NO PASS8BITS		{current.pass8bits  = FLAG_FALSE;}
-		| NO DROPSTATUS		{current.dropstatus = FLAG_FALSE;}
-		| NO MIMEDECODE		{current.mimedecode = FLAG_FALSE;}
+		| NO KEEP		{current.keep        = FLAG_FALSE;}
+		| NO FLUSH		{current.flush       = FLAG_FALSE;}
+		| NO FETCHALL		{current.fetchall    = FLAG_FALSE;}
+		| NO REWRITE		{current.rewrite     = FLAG_FALSE;}
+		| NO FORCECR		{current.forcecr     = FLAG_FALSE;}
+		| NO STRIPCR		{current.stripcr     = FLAG_FALSE;}
+		| NO PASS8BITS		{current.pass8bits   = FLAG_FALSE;}
+		| NO DROPSTATUS		{current.dropstatus  = FLAG_FALSE;}
+		| NO MIMEDECODE		{current.mimedecode  = FLAG_FALSE;}
 
-		| LIMIT NUMBER		{current.limit      = NUM_VALUE($2);}
-		| WARNINGS NUMBER	{current.warnings   = NUM_VALUE($2);}
-		| FETCHLIMIT NUMBER	{current.fetchlimit = NUM_VALUE($2);}
-		| BATCHLIMIT NUMBER	{current.batchlimit = NUM_VALUE($2);}
-		| EXPUNGE NUMBER	{current.expunge    = NUM_VALUE($2);}
+		| LIMIT NUMBER		{current.limit       = NUM_VALUE($2);}
+		| WARNINGS NUMBER	{current.warnings    = NUM_VALUE($2);}
+		| FETCHLIMIT NUMBER	{current.fetchlimit  = NUM_VALUE($2);}
+		| BATCHLIMIT NUMBER	{current.batchlimit  = NUM_VALUE($2);}
+		| EXPUNGE NUMBER	{current.expunge     = NUM_VALUE($2);}
 
-		| PROPERTIES STRING	{current.properties = xstrdup($2);}
+		| PROPERTIES STRING	{current.properties  = xstrdup($2);}
 		;
 %%
 

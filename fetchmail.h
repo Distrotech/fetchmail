@@ -221,12 +221,16 @@ struct query
     char *remotename;		/* remote login name to use */
     char *password;		/* remote password to use */
     struct idlist *mailboxes;	/* list of mailboxes to check */
+
+    /* per-forwarding-target data */
     struct idlist *smtphunt;	/* list of SMTP hosts to try forwarding to */
-    char *smtphost;		/* actual SMTP host to point to */
-    char *smtpaddress;		/* address we want to force in the delivery messages */ 
+    char *smtpaddress;		/* address to force in RCPT TO */ 
     struct idlist *antispam;	/* list of listener's antispam response */
     char *mda;			/* local MDA to pass mail to */
     char *bsmtp;		/* BSMTP output file */
+    char listener;		/* what's the listener's wire protocol? */
+#define SMTP_MODE	'S'
+#define LMTP_MODE	'L'
     char *preconnect;		/* pre-connection command to execute */
     char *postconnect;		/* post-connection command to execute */
 
@@ -239,7 +243,7 @@ struct query
     flag forcecr;		/* if TRUE, force CRs before LFs in text */
     flag pass8bits;		/* if TRUE, ignore Content-Transfer-Encoding */
     flag dropstatus;		/* if TRUE, drop Status lines in mail */
-    flag mimedecode;		/* if TRUE, decode MIME-coded headers/coded printable*/
+    flag mimedecode;		/* if TRUE, decode MIME-armored messages */
     int	limit;			/* limit size of retrieved messages */
     int warnings;		/* size warning interval */
     int	fetchlimit;		/* max # msgs to get in single poll */
@@ -247,16 +251,16 @@ struct query
     int	expunge;		/* max # msgs to pass between expunges */
     char *properties;		/* passthrough properties for extensions */
 
-    struct idlist *oldsaved, *newsaved;
-
     /* internal use -- per-poll state */
     flag active;		/* should we actually poll this server? */
     const char *destaddr;	/* destination host for this query */
     int errcount;		/* count transient errors in last pass */
     int authfailcount;		/* count authentication failures this run */
+    char *smtphost;		/* actual SMTP host we connected to */
     int smtp_socket;		/* socket descriptor for SMTP connection */
     unsigned int uid;		/* UID of user to deliver to */
     struct idlist *skipped;	/* messages skipped on the mail server */
+    struct idlist *oldsaved, *newsaved;
 
     /* internal use -- per-message state */
     int mimemsg;		/* bitmask indicating MIME body-type */
@@ -375,9 +379,9 @@ void release_sink(struct query *);
 int close_sink(struct query *, flag);
 int open_warning_by_mail(struct query *);
 #if defined(HAVE_STDARG_H)
-void stuff_warning_line(struct query *, const char *, ... );
+void stuff_warning(struct query *, const char *, ... );
 #else
-void stuff_warning_line();
+void stuff_warning();
 #endif
 void close_warning_by_mail(struct query *);
 

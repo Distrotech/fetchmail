@@ -32,6 +32,14 @@ static struct opt extensions[] =
 
 char smtp_response[MSGBUFSIZE];
 
+static char smtp_mode = 'S';
+
+int SMTP_setmode(char sl)
+/* set whether we are speaking SMTP or LMTP */
+{
+    smtp_mode = sl;
+}
+
 int SMTP_helo(int sock,const char *host)
 /* send a "HELO" message to the SMTP listener */
 {
@@ -49,9 +57,10 @@ int SMTP_ehlo(int sock, const char *host, int *opt)
 {
   struct opt *hp;
 
-  SockPrintf(sock,"EHLO %s\r\n", host);
+  SockPrintf(sock,"%cHLO %s\r\n", (smtp_mode == 'S') ? 'E' : smtp_mode, host);
   if (outlevel >= O_MONITOR)
-      error(0, 0, "SMTP> EHLO %s", host);
+      error(0, 0, "%cMTP> %cHLO %s", 
+	    smtp_mode, (smtp_mode == 'S') ? 'E' : smtp_mode, host);
   
   *opt = 0;
   while ((SockRead(sock, smtp_response, sizeof(smtp_response)-1)) != -1)
@@ -92,7 +101,7 @@ int SMTP_from(int sock, const char *from, const char *opts)
 	strcat(buf, opts);
     SockPrintf(sock,"%s\r\n", buf);
     if (outlevel >= O_MONITOR)
-	error(0, 0, "SMTP> %s", buf);
+	error(0, 0, "%cMTP> %s", smtp_mode, buf);
     ok = SMTP_ok(sock);
     return ok;
 }
@@ -104,7 +113,7 @@ int SMTP_rcpt(int sock, const char *to)
 
   SockPrintf(sock,"RCPT TO:<%s>\r\n", to);
   if (outlevel >= O_MONITOR)
-      error(0, 0, "SMTP> RCPT TO:<%s>", to);
+      error(0, 0, "%cMTP> RCPT TO:<%s>", smtp_mode, to);
   ok = SMTP_ok(sock);
   return ok;
 }
@@ -116,7 +125,7 @@ int SMTP_data(int sock)
 
   SockPrintf(sock,"DATA\r\n");
   if (outlevel >= O_MONITOR)
-      error(0, 0, "SMTP> DATA");
+      error(0, 0, "%cMTP> DATA", smtp_mode);
   ok = SMTP_ok(sock);
   return ok;
 }
@@ -128,7 +137,7 @@ int SMTP_rset(int sock)
 
   SockPrintf(sock,"RSET\r\n");
   if (outlevel >= O_MONITOR)
-      error(0, 0, "SMTP> RSET");
+      error(0, 0, "%cMTP> RSET", smtp_mode);
   ok = SMTP_ok(sock);
   return ok;
 }
@@ -140,7 +149,7 @@ int SMTP_quit(int sock)
 
   SockPrintf(sock,"QUIT\r\n");
   if (outlevel >= O_MONITOR)
-      error(0, 0, "SMTP> QUIT");
+      error(0, 0, "%cMTP> QUIT", smtp_mode);
   ok = SMTP_ok(sock);
   return ok;
 }
@@ -152,8 +161,14 @@ int SMTP_eom(int sock)
 
   SockPrintf(sock,".\r\n");
   if (outlevel >= O_MONITOR)
-      error(0, 0, "SMTP>. (EOM)");
-  ok = SMTP_ok(sock);
+      error(0, 0, "%cMTP>. (EOM)", smtp_mode);
+
+  /* 
+   * When doing LMTP, must process many of these at the outer level. 
+   */
+  if (smtp_mode == 'S')
+      ok = SMTP_ok(sock);
+
   return ok;
 }
 
@@ -167,12 +182,12 @@ int SMTP_ok(int sock)
 	if (smtp_response[strlen(smtp_response)-1] == '\n')
 	    smtp_response[strlen(smtp_response)-1] = '\0';
 	if (smtp_response[strlen(smtp_response)-1] == '\r')
-	    smtp_response[strlen(smtp_response)-1] = '\r';
+	    smtp_response[strlen(smtp_response)-1] = '\0';
 	if (n < 4)
 	    return SM_ERROR;
 	smtp_response[n] = '\0';
 	if (outlevel >= O_MONITOR)
-	    error(0, 0, "SMTP< %s", smtp_response);
+	    error(0, 0, "%cMTP< %s", smtp_mode, smtp_response);
 	if ((smtp_response[0] == '1' || smtp_response[0] == '2' || smtp_response[0] == '3') && smtp_response[3] == ' ')
 	    return SM_OK;
 	else if (smtp_response[3] != '-')

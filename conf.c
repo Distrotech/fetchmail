@@ -57,6 +57,7 @@ static void indent(char ic)
 	indent_level++;
 }
 
+
 static void stringdump(const char *name, const char *member)
 /* dump a string member with current indent */
 {
@@ -314,6 +315,12 @@ void dump_config(struct runctl *runp, struct query *querylist)
 
 	stringdump("mda", ctl->mda);
 	stringdump("bsmtp", ctl->bsmtp);
+	indent('\0');
+	if (ctl->listener == LMTP_MODE)
+	    fputs("'lmtp':TRUE,", stdout);
+	else
+	    fputs("'lmtp':FALSE,", stdout);
+	    
 #ifdef INET6
 	stringdump("netsec", ctl->netsec);
 #endif /* INET6 */
