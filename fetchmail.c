@@ -492,7 +492,8 @@ int main (int argc, char **argv)
 		    if (!check_only && outlevel == O_VERBOSE)
 		    {
 			write_saved_lists(querylist, run.idfile);
-			error(0, 0, "fetchmail: saved UID List");
+			if (outlevel == O_VERBOSE)
+			    error(0, 0, "saved UID List");
 		    }
 #endif  /* POP3_ENABLE */
 		}
