@@ -25,29 +25,35 @@ int do_otp(int sock, char *command, struct query *ctl)
     int i, rval;
     int result;
     char buffer[128];
-    char challenge[OPIE_CHALLENGE_MAX+1];
+    char challenge[OPIE_CHALLENGE_MAX+1+8];
     char response[OPIE_RESPONSE_MAX+1];
 
-    gen_send(sock, "%s X-OTP");
+    gen_send(sock, "%s X-OTP", command);
 
     if (rval = gen_recv(sock, buffer, sizeof(buffer)))
 	return rval;
 
-    if ((i = from64tobits(challenge, buffer, sizeof(challenge))) < 0) {
-	report(stderr, GT_("Could not decode initial BASE64 challenge\n"));
+	if (strncmp(buffer, "+", 1)) {
+	report(stderr, GT_("server recv fatal\n"));
 	return PS_AUTHFAIL;
-    };
+	}
 
     to64frombits(buffer, ctl->remotename, strlen(ctl->remotename));
-    if (rval = gen_transact(sock, buffer, sizeof(buffer)))
+	suppress_tags = TRUE;
+    gen_send(sock, buffer, sizeof(buffer));
+	suppress_tags = FALSE;
+
+    if (rval = gen_recv(sock, buffer, sizeof(buffer)))
 	return rval;
 
-    if ((i = from64tobits(challenge, buffer, sizeof(challenge))) < 0) {
+	memset(challenge, '\0', sizeof(challenge));
+    if ((i = from64tobits(challenge, buffer+2, sizeof(challenge))) < 0) {
 	report(stderr, GT_("Could not decode OTP challenge\n"));
 	return PS_AUTHFAIL;
     };
 
-    rval = opiegenerator(challenge, !strcmp(ctl->password, "opie") ? "" : ctl->password, response);
+	memset(response, '\0', sizeof(response));
+    rval = opiegenerator(challenge, ctl->password, response);
     if ((rval == -2) && !run.poll_interval) {
 	char secret[OPIE_SECRET_MAX+1];
 	fprintf(stderr, GT_("Secret pass phrase: "));
@@ -61,8 +67,11 @@ int do_otp(int sock, char *command, struct query *ctl)
 
     to64frombits(buffer, response, strlen(response));
     suppress_tags = TRUE;
-    result = gen_transact(sock, buffer, strlen(buffer));
+    gen_send(sock, buffer, strlen(buffer));
     suppress_tags = FALSE;
+
+    if (rval = gen_recv(sock, buffer, sizeof(buffer)))
+	return rval;
 
     if (result)
 	return PS_SUCCESS;
