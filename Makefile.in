@@ -186,7 +186,7 @@ uninstall:
 clean: 
 	-cd intl; $(MAKE) clean
 	#work around braindamage in GNU gettext
-	-rm -f $(top_builddir)/libintl.h
+	-rm -f $(top_builddir)/intl/libintl.h
 	-cd po; $(MAKE) clean
 	-rm -f fetchmail *.o core fetchmail.dvi \
 	       rcfile_l.c rcfile_y.h rcfile_y.c \
