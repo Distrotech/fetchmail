@@ -11,8 +11,10 @@ fetchmail-5.0.0 ():
 * Fix lexical-analyzer bug that rejected `set nobouncemail',
 * Prevent send_bouncemail from stepping on SMTP antispam response.
 * Added French internationalization (LC_ALL=fr) from Guy Brand.
+* Added Hugo Rabson's script for fetching from Hotmail.
+* Test for .fetchmailrc ownership using geteuid() when possible.
 
-There are 262 people on fetchmail-friends and 356 on fetchmail-announce.
+There are 262 people on fetchmail-friends and 359 on fetchmail-announce.
 
 fetchmail-4.7.8 (Mon Feb 22 10:06:04 EST 1999):
 * FreeBSD support for interface and monitor options by Andy Doran <ad@psn.ie>.

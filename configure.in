@@ -126,8 +126,9 @@ AC_SUBST(EXTRADEFS)
 AC_SUBST(EXTRASRC)
 AC_SUBST(EXTRAOBJ)
 
-AC_CHECK_FUNCS(tcsetattr stty setsid seteuid gethostbyname res_search herror \
-  strrchr strerror setlinebuf syslog snprintf vprintf vsnprintf vsyslog \
+AC_CHECK_FUNCS(tcsetattr stty setsid geteuid seteuid gethostbyname \
+  res_search herror strrchr strerror setlinebuf syslog \
+  snprintf vprintf vsnprintf vsyslog \
   atexit inet_aton strftime setrlimit socketpair sigprocmask)
 
 # Under Red Hat 4.0 (and many other Linuxes) -lresolv is seriously flaky

@@ -397,7 +397,11 @@ int prc_filecheck(const char *pathname, const flag securecheck)
 	return(PS_AUTHFAIL);
     }
 
+#ifdef HAVE_GETEUID
+    if (statbuf.st_uid != geteuid())
+#else
     if (statbuf.st_uid != getuid())
+#endif /* HAVE_GETEUID */
     {
 	fprintf(stderr, "File %s must be owned by you.\n", pathname);
 	return(PS_AUTHFAIL);
