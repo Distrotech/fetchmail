@@ -13,10 +13,11 @@
 #include <sys/wait.h>
 #ifdef HAVE_FCNTL_H
 #include <fcntl.h>
-#endif /* HAVE_FCNTL_H */
+#else /* !HAVE_FCNTL_H */
 #ifdef HAVE_SYS_FCNTL_H
 #include <sys/fcntl.h>
 #endif /* HAVE_SYS_FCNTL_H */
+#endif /* !HAVE_FCNTL_H */
 #include <sys/stat.h>	/* get umask(2) prototyped */
 
 #if defined(HAVE_UNISTD_H)

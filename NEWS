@@ -1,3 +1,7 @@
+				Known Bugs
+
+* We have some kind of incompatibility with the Cyrus IMAP server.
+
 			    Features To Consider
 
 * Generate bounce messages when delivery is refused.  See RFC1891, RFC1894.
@@ -12,6 +16,13 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.1.2 ()
+* Fixed a bonehead bug in RCPT TO name generation introduced in 4.1.1.
+* Added James Steven's ip-up wrapper to the contrib directory.
+* Prevent buffer spamming in SockOpen by a broken DNS.
+* Al Youngwerth's fix to prevent segfaults when Return-Path has no address.
+* Phillippe De Muyter's port changes for sysV68 R3V7.1.
+
 fetchmail-4.1.1 (Fri Aug 15 21:02:50 EDT 1997)
 * Fix an obvious bug in some snprintf calls (non-Linux systems only)
 * No more hard limit on number of destination headers

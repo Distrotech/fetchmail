@@ -31,9 +31,16 @@ AC_PROG_LEX
 AC_PROG_YACC
 AC_SUBST(LIBOBJS)
 
+# Under sysV68, socket and friends are provided by the C library.
+# -linet does not provide socket, but causes multiple definition
+# errors at link-time.  It is thus better to only use the C library.
+# So don't add -linet to the link list unless it's necessary
+AC_CHECK_FUNC(socket,
+    AC_MSG_RESULT(using libc's socket),
+    AC_CHECK_LIB(socket,socket)
+    AC_CHECK_LIB(inet,socket))
+
 AC_CHECK_LIB(nsl,inet_addr)
-AC_CHECK_LIB(socket,socket)
-AC_CHECK_LIB(inet,socket)
 AC_CHECK_LIB(opie,opiegenerator)
 
 dnl Port hack for Interactive UNIX System V/386 Release 3.2
