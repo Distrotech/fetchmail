@@ -1,5 +1,5 @@
 /*
- * etrn.c -- ETRN protocol methods
+ * etrn.c -- ETRN protocol methods (see RFC 1985)
  *
  * For license terms, see the file COPYING in this directory.
  */
