@@ -32,6 +32,7 @@ pl 3.9.5 ():
 * Multiple-folder support for POP2 and IMAP.
 * Under IMAP, bodies of messages refused by SMTP's 571 response are no longer
   fetched.
+* Configure should do the right thing with libc6 now.
 
 There are 249 people on the fetchmail-friends list.
 

@@ -35,11 +35,6 @@ AC_CHECK_LIB(nsl,inet_addr)
 AC_CHECK_LIB(socket,socket)
 AC_CHECK_LIB(inet,socket)
 
-# Under Red Hat 4.0 (and many other Linuxes) -lresolv is seriously flaky
-# and breaks gethostbyname(2).  It's better to use the bind stuff in the C
-# library.  So don't add -lresolv to the link list unless it's necessary
-AC_CHECK_FUNC(res_search,, AC_CHECK_LIB(resolv,res_search))
-
 AC_CHECK_FUNC(strstr, AC_DEFINE(HAVE_STRSTR), 
               [EXTRASRC="$EXTRASRC \$(srcdir)/strstr.c"
                EXTRAOBJ="$EXTRAOBJ strstr.o"])
@@ -80,11 +75,20 @@ AC_SUBST(EXTRASRC)
 AC_SUBST(EXTRAOBJ)
 
 AC_CHECK_FUNCS(tcsetattr stty setsid seteuid gethostbyname res_search herror \
-  strrchr strstr strerror setlinebuf syslog snprintf vsnprintf vsyslog atexit)
+  strrchr strerror setlinebuf syslog snprintf vsnprintf vsyslog atexit)
+
+# Under Red Hat 4.0 (and many other Linuxes) -lresolv is seriously flaky
+# and breaks gethostbyname(2).  It's better to use the bind stuff in the C
+# library.  So don't add -lresolv to the link list unless it's necessary
+# (It will be necessary when using GNU libc6).
+AC_CHECK_FUNC(res_search,
+    AC_MSG_RESULT(using libc's resolver functions),
+    AC_CHECK_LIB(resolv,res_search, 
+	[AC_DEFINE(HAVE_RES_SEARCH) AC_MSG_RESULT(found resolver functions in libresolv)], AC_MSG_RESULT(no resolver calls found)))
 
 dnl AC_FUNC_SETVBUF_REVERSED
 
-dnl Check for usuable void pointer type
+dnl Check for usable void pointer type
 AC_MSG_CHECKING(use of void pointer type)
 AC_TRY_COMPILE([],
    [char *p;
