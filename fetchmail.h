@@ -17,8 +17,10 @@
 #define		P_ETRN		9
 
 #if INET6
+#define		SMTP_PORT	"smtp"
 #define		KPOP_PORT	"kpop"
 #else /* INET6 */
+#define		SMTP_PORT	25
 #define		KPOP_PORT	1109
 #endif /* INET6 */
 
