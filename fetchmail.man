@@ -1111,18 +1111,18 @@ Also note that all multidrop features are ineffective in ETRN mode.
 
 .SS Header vs. Envelope addresses 
 The fundamental problem is that by having your mailserver toss several
-peoples' mail in a box, you may have thrown away potentially vital
-information about who each piece of mail was actually addressed to
-(the `envelope address', as opposed to the header addresses in the RFC822
-To/Cc/Bcc headers).  This `envelope address' is the address you need
-in order to reroute mail properly.
+peoples' mail in a single maildrop box, you may have thrown away
+potentially vital information about who each piece of mail was
+actually addressed to (the `envelope address', as opposed to the
+header addresses in the RFC822 To/Cc/Bcc headers).  This `envelope
+address' is the address you need in order to reroute mail properly.
 .PP
 Sometimes 
 .I fetchmail
 can deduce the envelope address.  If the mailserver MTA is
 .I sendmail
 and the item of mail had just one recipient, the MTA will have written
-a `for' clause that gives the envelope addressee into its Received
+a `by/for' clause that gives the envelope addressee into its Received
 header. But this doesn't work reliably for other MTAs, nor if there is
 more than one recipient.  By default, \fIfetchmail\fR looks for
 envelope addresses in these lines; you can restore this default with
@@ -1132,9 +1132,10 @@ Alternatively, some SMTP listeners and/or mail servers insert a header
 in each message containing a copy of the envelope addresses.  This
 header (when it exists) is often `X-Envelope-To'.  Fetchmail's
 assumption about this can be changed with the -E or `envelope' option.
-Note that writing an envelope header of this kind exposes the names
-of recipients to all receivers of the messages; it is therefore
-regarded by some administrators as a security/privacy problem.
+Note that writing an envelope header of this kind exposes the names of
+recipients (including blind-copy recopients) to all receivers of the
+messages; it is therefore regarded by some administrators as a
+security/privacy problem.
 .PP
 Sometimes, unfortunately, neither of these methods works.  When they
 both fail, fetchmail must fall back on the contents of To/Cc/Bcc
@@ -1147,6 +1148,13 @@ When
 cannot deduce a recipient address that is local, and the intended
 recipient address was anyone other than fetchmail's invoking user,
 mail will get lost.  This is what makes the multidrop feature risky.
+.PP
+A related problem is that when you blind-copy a mail message, the Bcc
+information is carried \fIonly\fR as envelope address (it's not put
+in the headers fetchmail can see unless there is an X-Envelope
+header).  Thus, blind-copying to someone who gets mail over a
+fetchmail link will fail unless the the mailserver host routinely
+writes X-Envelope or an equivalent header into messages in your maildrop.
 
 .SS Good Ways To Use Multidrop Mailboxes
 Multiple local names can be used to administer a mailing list from the
@@ -1184,16 +1192,22 @@ mail from mailing lists, which typically does not have an individual
 recipient address on it.   Unless 
 .I fetchmail
 can deduce an envelope address, such mail will only go to the account
-running fetchmail (probably root).
+running fetchmail (probably root).  Also, blind-copied users are very
+likely never to see their mail at all.
 .PP
 If you're tempted to use 
 .I fetchmail 
 to retrieve mail for multiple users from a single mail drop via POP or
-IMAP, think again.  It would be smarter to just let it sit in the
-mailserver's queue and use ETRN mode to trigger SMTP sends
+IMAP, think again.  It would be smarter to just let the mail sit in the
+mailserver's queue and use fetchmail's ETRN mode to trigger SMTP sends
 periodically (of course, this means you have to poll more frequently
 than the mailserver's expiry period).  If you can't arrange this, try
 setting up a UUCP feed.
+.PP
+If you absolutely \fImust\fR use multidrop for this purpose, make sure
+your mailserver writes an envelope-address header that fetchmail can
+see.  Otherwise you \fIwill\fR lose mail and it \fIwill\fR come back
+to haunt you.
 
 .SS Speeding Up Multidrop Checking
 Normally, when multiple user are declared 
