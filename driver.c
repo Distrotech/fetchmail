@@ -296,6 +296,7 @@ struct query *ctl;	/* query control record */
     int n, oldlen, mboxfd;
     int inheaders,lines,sizeticker;
     FILE *sinkfp;
+    RETSIGTYPE (*sigchld)();
 #ifdef HAVE_GETHOSTBYNAME
     char rbuf[HOSTLEN + USERNAMELEN + 4]; 
 #endif /* HAVE_GETHOSTBYNAME */
@@ -531,6 +532,8 @@ struct query *ctl;	/* query control record */
 		    fprintf(stderr, "fetchmail: MDA open failed\n");
 		    return(PS_IOERR);
 		}
+
+		sigchld = signal(SIGCLD, SIG_DFL);
 	    }
 	    else
 	    {
@@ -623,6 +626,11 @@ struct query *ctl;	/* query control record */
 		free(headers);
 		headers = NULL;
 		perror("fetchmail: writing RFC822 headers");
+		if (ctl->mda[0])
+		{
+		    closemailpipe(mboxfd);
+		    signal(SIGCLD, sigchld);
+		}
 		return(PS_IOERR);
 	    }
 	    else if (outlevel == O_VERBOSE)
@@ -706,6 +714,11 @@ struct query *ctl;	/* query control record */
 	if (n < 0)
 	{
 	    perror("fetchmail: writing message text");
+	    if (ctl->mda[0])
+	    {
+		closemailpipe(mboxfd);
+		signal(SIGCLD, sigchld);
+	    }
 	    return(PS_IOERR);
 	}
 	else if (outlevel == O_VERBOSE)
@@ -717,8 +730,12 @@ struct query *ctl;	/* query control record */
 
     if (ctl->mda[0])
     {
+	int rc;
+
 	/* close the delivery pipe, we'll reopen before next message */
-	if (closemailpipe(mboxfd))
+	rc = closemailpipe(mboxfd);
+	signal(SIGCLD, sigchld);
+	if (rc)
 	    return(PS_IOERR);
     }
     else if (sinkfp)

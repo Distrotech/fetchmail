@@ -7,15 +7,23 @@ features --
 
 * If SMTP returns 571 (unsolicited mail refused) to a MAIL FROM, the
   address is excluded by the local sendmail's spam filter.  Drop the mail.
-  (This the only circumstance in which mail is thrown away.)
+  (This is the only circumstance in which mail is thrown away.)
 
 bugs --
 
-* Fixed a startup-time core dump introduced by 2.1's aka-list feature
-* Fixed a bug in non-implicit (poll specified host) mode also due to aka.
-* Various minor portability fixes for Suns.
+* Fixed a startup-time core dump introduced by 2.1's aka-list feature.
+
+* Fixed a bug in non-implicit mode (poll specified host), also due to aka.
+
+* Various minor portability fixes for Suns.  Adding #include <errno.h>
+  in fetchmail.c was the most significant one. 
+
 * Avoid using -lresolv when possible, some Linux versions are badly broken.
+
 * Fix error in MX record handling that was causing multidrop problems.
+
+* Disable daemon SIGCLD handler while an MDA is running, to avoid snafus.
+  Thanks to Dave Bodenstab <imdave@synet.net> for spotting this obscure bug.
 
 153 people on the contact list.
 
