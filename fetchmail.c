@@ -586,6 +586,11 @@ int main(int argc, char **argv)
 	close(st);	/* should be safe, fd was opened with O_SYNC */
 	lock_acquired = TRUE;
     }
+    else
+    {
+	fprintf(stderr,	_("fetchmail: lock creation failed.\n"));
+	return(PS_EXCLUDE);
+    }
 
     /*
      * Query all hosts. If there's only one, the error return will

@@ -7,7 +7,7 @@ if [ $* ]
 then
     ../upload $*
 else
-    lftp <<EOF
+    lftp -d <<EOF
 # First, copy to primary website
 open ${WWWHOST}
 cd ${WWWDIR}/fetchmail
