@@ -407,8 +407,8 @@ struct query *ctl;	/* query control record */
 char *realname;		/* real name of host */
 {
     char buf [MSGBUFSIZE+1]; 
-    char *headers, *fromhdr,*tohdr,*cchdr,*bcchdr,*received_for,*envto;
-    char *ctthdr, *line;
+    int	fromhdr, tohdr, cchdr, bcchdr, ctthdr, envto;
+    char *headers, *received_for, *line;
     int n, oldlen, ch;
     int sizeticker, delete_ok;
     FILE *sinkfp;
@@ -427,7 +427,8 @@ char *realname;		/* real name of host */
     delete_ok = TRUE;
 
     /* read message headers */
-    headers = fromhdr = tohdr = cchdr = bcchdr = received_for = envto = ctthdr = NULL;
+    headers = received_for = NULL;
+    fromhdr = tohdr = cchdr = bcchdr = ctthdr = envto = -1;
     oldlen = 0;
     line = (char *)NULL;
     for (;;)
@@ -490,28 +491,28 @@ char *realname;		/* real name of host */
 	}
 
 	if (!fromhdr && !strncasecmp("From:", bufp, 5))
-	    fromhdr = bufp;
+	    fromhdr = (bufp - headers);
 	else if (!fromhdr && !strncasecmp("Resent-From:", bufp, 12))
-	    fromhdr = bufp;
+	    fromhdr = (bufp - headers);
 	else if (!fromhdr && !strncasecmp("Apparently-From:", bufp, 16))
-	    fromhdr = bufp;
+	    fromhdr = (bufp - headers);
 
 	else if (!strncasecmp("To:", bufp, 3))
-	    tohdr = bufp;
+	    tohdr = (bufp - headers);
 
 	else if (!envto && !strncasecmp("Apparently-To:", bufp, 14))
-	    envto = bufp;
+	    envto = (bufp - headers);
 	else if (!envto && !strncasecmp(ctl->server.envelope, bufp, 14))
-	    envto = bufp;
+	    envto = (bufp - headers);
 
 	else if (!strncasecmp("Cc:", bufp, 3))
-	    cchdr = bufp;
+	    cchdr = (bufp - headers);
 
 	else if (!strncasecmp("Bcc:", bufp, 4))
-	    bcchdr = bufp;
+	    bcchdr = (bufp - headers);
 
 	else if (!strncasecmp("Content-Transfer-Encoding:", bufp, 26))
-	    ctthdr = bufp;
+	    ctthdr = (bufp - headers);
 
 #ifdef HAVE_RES_SEARCH
 	else if (MULTIDROP(ctl) && !strncasecmp("Received:", bufp, 9))
@@ -534,8 +535,8 @@ char *realname;		/* real name of host */
     /* is this a multidrop box? */
     if (MULTIDROP(ctl))
     {
-	if (envto)	    /* We have the actual envelope addressee */
-	    find_server_names(envto, ctl, &xmit_names);
+	if (envto > -1)	    /* We have the actual envelope addressee */
+	    find_server_names(headers + envto, ctl, &xmit_names);
 	else if (received_for)
 	    /*
 	     * We have the Received for addressee.  
@@ -549,9 +550,12 @@ char *realname;		/* real name of host */
 	     * We haven't extracted the envelope address.
 	     * So check all the header addresses.
 	     */
-	    find_server_names(tohdr,  ctl, &xmit_names);
-	    find_server_names(cchdr,  ctl, &xmit_names);
-	    find_server_names(bcchdr, ctl, &xmit_names);
+	    if (tohdr > -1)
+		find_server_names(headers + tohdr,  ctl, &xmit_names);
+	    if (cchdr > -1)
+		find_server_names(headers + cchdr,  ctl, &xmit_names);
+	    if (bcchdr > -1)
+		find_server_names(headers + bcchdr, ctl, &xmit_names);
 	}
 	if (!xmit_names)
 	{
@@ -637,8 +641,8 @@ char *realname;		/* real name of host */
 	 */
 	options[0] = '\0';
 	if ((ctl->server.esmtp_options & ESMTP_8BITMIME)
-	    && ctthdr
-	    && (ctt = nxtaddr(ctthdr)))
+	    && (ctthdr >= 0)
+	    && (ctt = nxtaddr(headers + ctthdr)))
 	    if (!strcasecmp(ctt,"7BIT"))
 		sprintf(options, " BODY=7BIT", ctt);
 	    else if (!strcasecmp(ctt,"8BIT"))
@@ -664,7 +668,7 @@ char *realname;		/* real name of host */
 	 * upstream didn't pass canonicalized From lines, *and*
 	 * the local SMTP listener insists on them.
 	 */
-	if (!fromhdr || !(ap = nxtaddr(fromhdr)))
+	if (fromhdr == -1 || !(ap = nxtaddr(headers + fromhdr)))
 	    ap = user;
 	if (SMTP_from(sinkfp, ap, options) != SM_OK)
 	{
