@@ -104,7 +104,7 @@ int closemailpipe (int);
 char *MD5Digest (char *);
 void reply_hack(char *, const char *);
 void append_server_names(int *, char **);
-int daemonize(const char *, void (*)(void));
+int daemonize(const char *, void (*)(int));
 
 #else
 

@@ -34,7 +34,7 @@
 
 #include "popclient.h"
 
-static void (*my_termhook)(void);
+static void (*my_termhook)(int);
 
 /******************************************************************
   function:	sigchld_handler
@@ -59,7 +59,7 @@ sigchld_handler ()
 #endif
 
   if (my_termhook)
-      (*my_termhook)();
+      (*my_termhook)(SIGCHLD);
 
 #if 	defined(HAVE_WAIT3)
   while ((pid = wait3(&status, WNOHANG, (struct rusage *) 0)) > 0)
@@ -85,14 +85,14 @@ sigchld_handler ()
     logfile     file to direct stdout and stderr to, if non-NULL.
 
   ret. value:	none.
-  globals:	refers to the address of sigchld_handler().
+  globals:	termhook, sigchld_handler().
   calls:	none.
  *****************************************************************/
 
 int
 daemonize (logfile, termhook)
 const char *logfile;
-void (*termhook)(void);
+void (*termhook)(int);
 {
   int fd;
   pid_t childpid;
