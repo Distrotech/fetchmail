@@ -330,14 +330,28 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     if ((ctl->server.authenticate == A_ANY 
 	 || ctl->server.authenticate==A_OTP)
 	&& strstr(capabilities, "AUTH=X-OTP"))
-	return(do_otp(sock, ctl);
+	return(do_otp(sock, ctl));
+#else
+    if (ctl->server.authenticate==A_NTLM)
+    {
+	report(stderr, 
+	   _("Required OTP capability not compiled into fetchmail\n"));
+	return(PS_AUTHFAIL);
+    }
 #endif /* OPIE_ENABLE */
 
 #ifdef NTLM_ENABLE
     if ((ctl->server.authenticate == A_ANY 
-	 || ctl->server.authenticate==A_NTLM)
+	 || ctl->server.authenticate==A_NTLM) 
 	&& strstr (capabilities, "AUTH=NTLM"))
-        return(do_imap_ntlm(sock, ctl));
+	return(do_imap_ntlm(sock, ctl));
+#else
+    if (ctl->server.authenticate==A_NTLM)
+    {
+	report(stderr, 
+	   _("Required NTLM capability not compiled into fetchmail\n"));
+	return(PS_AUTHFAIL);
+    }
 #endif /* NTLM_ENABLE */
 
 #ifdef __UNUSED__	/* The Cyrus IMAP4rev1 server chokes on this */
