@@ -176,6 +176,7 @@ rcfile_l.c rcfile_l.h: $(srcdir)/rcfile_l.l
 	$(LEX) $(LEXFLAGS) $(srcdir)/rcfile_l.l
 	mv lex.yy.c rcfile_l.c
 rcfile_y.c rcfile_y.h: $(srcdir)/rcfile_y.y
+	@echo "expect conflicts:  2 shift/reduce"
 	$(YACC) $(YACCFLAGS) $(srcdir)/rcfile_y.y
 	mv y.tab.c rcfile_y.c
 	mv -f y.tab.h rcfile_y.h
