@@ -1,15 +1,20 @@
 cat <<EOF
-Name:		fetchmail
-Version:	${1}
+%define name fetchmail
+%define version ${1}
+%define release 1
+%define builddir \$RPM_BUILD_DIR/%{name}-%{version}
+Name:		%{name}
+Version:	%{version}
 Release:	1
 Vendor:		Eric Conspiracy Secret Labs
-Source:		locke.ccil.org:/pub/esr/fetchmail/fetchmail-${1}.tar.gz
-URL:		http://earthspace.net/~esr/fetchmail
+URL:		http://www.tuxedo.org/~esr/fetchmail
+Source:         %{name}-%{version}.tar.gz
 Group:		Applications/Mail
 Copyright:	GPL
 Icon:		fetchmail.gif
 Requires:	smtpdaemon
 Summary:	Full-featured POP/IMAP mail retrieval daemon
+Summary(fr):    Collecteur (POP/IMAP) de courrier électronique
 
 %description
 fetchmail is a free, full-featured, robust, and well-documented remote
@@ -20,23 +25,45 @@ retrieves mail from remote mail servers and forwards it to your local
 normal mail user agents such as mutt, elm, pine, or mailx.
 Comes with an interactive GUI configurator suitable for end-users.
 
+%description -l fr
+Fetchmail est un programme qui permet d'aller
+rechercher du courrier électronique sur un
+serveur de mail distant. Fetchmail connait 
+les protocoles POP (Post Office Protocol),
+IMAP (Internet Mail Access Protocol) et 
+délivre le courrier électronique a travers
+le serveur SMTP local (habituellement sendmail).
+
 %prep
 %setup
 
 %build
-CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=/usr
+CFLAGS="\$RPM_OPT_FLAGS" ./configure --prefix=/usr
 make
 
 %install
-make install
+if [ -d \$RPM_BUILD_ROOT ]; then rm -rf \$RPM_BUILD_ROOT; fi
+mkdir -p \$RPM_BUILD_ROOT/{etc/X11/wmconfig,usr/lib/rhs/control-panel}
+make install prefix=\$RPM_BUILD_ROOT/usr
+cp %{builddir}/rh-config/*.{xpm,init} \$RPM_BUILD_ROOT/usr/lib/rhs/control-panel
+cp %{builddir}/fetchmail.man \$RPM_BUILD_ROOT/usr/man/man1/fetchmail.1
+gzip -9f \$RPM_BUILD_ROOT/usr/man/man1/fetchmail.1
+cd \$RPM_BUILD_ROOT/usr/man/man1
+ln -s fetchmail.1.gz fetchmailconf.1.gz
+chmod 644 %{builddir}/contrib/*
+cp %{builddir}/rh-config/fetchmailconf.wmconfig \$RPM_BUILD_ROOT/etc/X11/wmconfig/fetchmailconf
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf \$RPM_BUILD_ROOT
+rm -rf %{builddir}
 
 %files
-%doc README NEWS NOTES fetchmail-FAQ.html FAQ COPYING INSTALL sample.rcfile
-/usr/bin/fetchmail
-/usr/bin/fetchmailconf
-/usr/man/man1/fetchmail.1
-/usr/man/man1/fetchmailconf.1
+%doc README NEWS NOTES FAQ COPYING FEATURES sample.rcfile contrib
+%doc fetchmail-features.html fetchmail-FAQ.html design-notes.html
+%attr(644,root,root) /etc/X11/wmconfig/fetchmailconf
+%attr(755,root,root) /usr/bin/fetchmail
+%attr(755,root,root) /usr/bin/fetchmailconf
+%attr(644,root,root) /usr/man/man1/*.1.gz
+%attr(644,root,root) /usr/lib/rhs/control-panel/fetchmailconf.xpm
+%attr(644,root,root) /usr/lib/rhs/control-panel/fetchmailconf.init
 EOF
