@@ -23,6 +23,7 @@ Summary(tr):    POP2, POP3, APOP, IMAP protokolleri ile uzaktan mektup alma yazý
 Summary(da):    Alsidig POP/IMAP post-afhentnings dæmon
 BuildRoot: %{_tmppath}/%{name}-root
 #Keywords: mail, client, POP, POP2, POP3, APOP, RPOP, KPOP, IMAP, ETRN, ODMR, SMTP, ESMTP, GSSAPI, RPA, NTLM, CRAM-MD5, SASL
+#Destinations:	fetchmail-friends@ccil.org, fetchmail-announce@ccil.org
 
 %description
 Fetchmail is a free, full-featured, robust, and well-documented remote

@@ -72,18 +72,14 @@ if (system("make dist $null")) {
 }
 
 print "### Building the RPMs...\n";
-if (system("make rpm $null && chown esr *.rpm")) {
+if (system("buildrpms fetchmail-${version}.tar.gz $null")) {
 	die("RPM-build failure\n");
 }
-
-# Clean up permissions so next build won't foo up.
-system("chown esr config.log stamp-h po/Makefile");
 
 open(REPORT, ">PREAMBLE.$$");
 
 print REPORT <<EOF;
 From: esr\@thyrsus.com (Eric S. Raymond)
-To: fetchmail-friends\@ccil.org, fetchmail-announce\@ccil.org
 Reply-To: esr\@thyrsus.com (Eric S. Raymond)
 Subject: The $version release of fetchmail is available
 FCC: ~/postings/outmail
@@ -137,7 +133,7 @@ system("wc <DIFFS.$$");
 if ($diffs) {
 	system "metasend -b -D 'fetchmail-$rcsid announcement' -m 'text/plain' -e 7bit -f PREAMBLE.$$ -n -D 'diff -u between -$oldrcs $rcsid' -m 'text/plain' -e 7bit -f DIFFS.$$ -o RELEASE.NOTES";
 } else {
-	rename("PREAMBLE.$$", "RELEASE.NOTES");
+	rename("PREAMBLE.$$", "ANNOUNCE.EMAIL");
 }
 system("chown esr RELEASE.NOTES");
 chmod(0700, "RELEASE.NOTES");
@@ -153,14 +149,6 @@ system("rm -f testservers.html; testservers-gen.sh >testservers.html");
 
 print "Making activity graph...";
 growthplot;
-
-print "Making LSM...";
-$keywords="mail, client, POP, POP2, POP3, APOP, RPOP, KPOP, IMAP, ETRN, ODMR, SMTP, ESMTP, GSSAPI, RPA, NTLM, CRAM-MD5, SASL";
-system("rpm2lsm -k '$keywords' fetchmail-$version-1.i386.rpm >fetchmail.lsm");
-system("ls -l fetchmail.lsm");
-
-# Avoid leaving unwriteable files around
-system("chown -R esr .");
 
 print "Done\n";
 
