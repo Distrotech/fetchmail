@@ -358,8 +358,6 @@ struct query *ctl;	/* query control record */
 	    char		*cp;
 	    struct idlist 	*idp, *xmit_names;
 	    int			good_addresses, bad_addresses;
-	    int			from_header_ok;
-	    int			from_address_ok;
 #ifdef HAVE_RES_SEARCH
 	    int			no_local_matches = FALSE;
 #endif /* HAVE_RES_SEARCH */
@@ -435,8 +433,6 @@ struct query *ctl;	/* query control record */
 	    }
 	    else
 	    {
-		char	*ap;
-
 		/* build a connection to the SMTP listener */
 		if (ctl->mda[0] == '\0'	&& ((sinkfp = smtp_open(ctl)) == NULL))
 		{
@@ -445,43 +441,17 @@ struct query *ctl;	/* query control record */
 		    return(PS_SMTP);
 		}
 
-		/* we must have a valid From header in order to proceed */
-		if (fromhdr)
-		    from_header_ok = TRUE;
-		else
-		{
-		    fprintf(stderr, "fetchmail: I see no From header\n");
+		/* 
+		 * We used to try parsing the From header address and using
+		 * it here, but listeners were apt to think we were trying to
+		 * forge mail or something.  Screw it.  The only place this
+		 * will ever make a difference is in the Received headers,
+		 * anyway.
+		 */
+		if (SMTP_from(sinkfp, user) != SM_OK)
+		    return(PS_SMTP);	/* shouldn't happen */
 
-		    /* 
-		     * This is not a transient error -- there's no way
-		     * to recover from it on the next poll cycle.  So
-		     * fake one up that we know will be valid and set a
-		     * notification flag, rather than getting stuck on this
-		     * message.
-		     */
-		    fromhdr = user;
-		    from_header_ok = FALSE;
-		}
-
-		/* tell the listener who sent the message */
-		if (SMTP_from(sinkfp, ap = nxtaddr(fromhdr)) == SM_OK)
-		    from_address_ok = TRUE;
-		else
-		{
-		    fprintf(stderr, "fetchmail: SMTP listener doesn't like the From address `%s'\n", ap);
-		    from_address_ok = FALSE;
-
-		    /*
-		     * No big deal.  This will confuse the logging and
-		     * put something midly misleading in the Received
-		     * headers, but replies (which use the header From)
-		     * won't be affected.
-		     */
-		    if (SMTP_from(sinkfp, user) != SM_OK)
-			return(PS_SMTP);	/* shouldn't happen */
-		}
-
-		/* now list its addressees */
+		/* now list the recipient addressees */
 		for (idp = xmit_names; idp; idp = idp->next)
 		    if (SMTP_rcpt(sinkfp, idp->id) == SM_OK)
 			good_addresses++;
@@ -540,9 +510,9 @@ struct query *ctl;	/* query control record */
 
 	    /* write error notifications */
 #ifdef HAVE_RES_SEARCH
-	    if (no_local_matches || bad_addresses || !from_header_ok || !from_address_ok)
+	    if (no_local_matches || bad_addresses)
 #else
-	    if (bad_addresses || !from_header_ok || !from_address_ok)
+	    if (bad_addresses)
 #endif /* HAVE_RES_SEARCH */
 	    {
 		int	errlen = 0;
@@ -554,24 +524,10 @@ struct query *ctl;	/* query control record */
 		if (no_local_matches)
 		{
 		    strcat(errhd, "no recipient addresses matched declared local names");
-		    if (!from_header_ok || !from_address_ok || bad_addresses)
-			strcat(errhd, "; ");
-		}
-#endif /* HAVE_RES_SEARCH */
-
-		if (!from_header_ok)
-		{
-		    strcat(errhd, "no From header");
-		    if (!from_address_ok || bad_addresses)
-			strcat(errhd, "; ");
-		}
-
-		if (!from_address_ok)
-		{
-		    strcat(errhd, "listener rejected From address");
 		    if (bad_addresses)
 			strcat(errhd, "; ");
 		}
+#endif /* HAVE_RES_SEARCH */
 
 		if (bad_addresses)
 		{
