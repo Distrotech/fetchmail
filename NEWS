@@ -12,7 +12,7 @@ fetchmail-4.4.6 (Sat May 16 14:16:49 EDT 1998)
 * Make the internal line buffer eight times longer to cope with idiot
   DOS-world editors.
 * Back out NetBSD configure.in change, it broke all other Kerberos installs. 
-* Fix qmail dup problem.
+* Fixed qmail dup problem, thanks to Chris Bond's smoking-gun -v transcript.
 
 There are 270 people on fetchmail-friends and 212 on fetchmail-announce.
 
