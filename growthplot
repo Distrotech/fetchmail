@@ -28,11 +28,10 @@ EOF
 (
 	echo "count=0"
 	echo "breakheight=510"
-	while read version size friends announce total days date
+	while read version legend
 	do
 		if [ "$version" = '%' ]
 		then
-			legend="$size $friends $announce $total $days $date"
 			echo "# Associate $lastday to '$legend'"
 			echo "count = count + 1"
 			echo "lastday = $lastday - 5"
@@ -47,6 +46,13 @@ EOF
 			echo "if (endy > lasttotal) set label '$legend' at lastday-10, endy+15"
 			echo "if (endy <= lasttotal) set label '$legend' at lastday-475, endy-15"
 		else
+			set -- $legend
+			size=$1 
+			friends=$2
+			announce=$3
+			total=$4
+			days=$5 
+			date=$6
 			lastday=$days
 			lasttotal=$total
 		fi
