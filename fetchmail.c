@@ -1051,14 +1051,14 @@ static int load_params(int argc, char **argv, int optind)
 	    if (ctl->server.port < 0)
 	    {
 		(void) fprintf(stderr,
-			       "%s configuration invalid, port number cannot be negative",
+			       "%s configuration invalid, port number cannot be negative\n",
 			       ctl->server.pollname);
 		exit(PS_SYNTAX);
 	    }
 	    if (ctl->server.protocol == P_RPOP && ctl->server.port >= 1024)
 	    {
 		(void) fprintf(stderr,
-			       "%s configuration invalid, RPOP requires a privileged port",
+			       "%s configuration invalid, RPOP requires a privileged port\n",
 			       ctl->server.pollname);
 		exit(PS_SYNTAX);
 	    }
@@ -1079,7 +1079,7 @@ static int load_params(int argc, char **argv, int optind)
 #endif /* INET6 */
 			{
 			    (void) fprintf(stderr,
-					   "%s configuration invalid, LMTP can't use SMTP port",
+					   "%s configuration invalid, LMTP can't use SMTP port\n",
 					   ctl->server.pollname);
 			    exit(PS_SYNTAX);
 			}
