@@ -132,7 +132,7 @@ static void map_name(const char *name, struct query *ctl, struct idlist **xmit_n
     if (lname != (char *)NULL)
     {
 	if (outlevel >= O_DEBUG)
-	    progress(0, 0, _("mapped %s to local %s"), name, lname);
+	    report(stdout, 0, _("mapped %s to local %s"), name, lname);
 	save_str(xmit_names, lname, XMIT_ACCEPT);
 	accept_count++;
     }
@@ -189,7 +189,7 @@ static void find_server_names(const char *hdr,
 			strcasecmp(rhs, idp->id) == 0)
 		    {
 			if (outlevel >= O_DEBUG)
-			    progress(0, 0, _("passed through %s matching %s"), 
+			    report(stdout, 0, _("passed through %s matching %s"), 
 				  cp, idp->id);
 			save_str(xmit_names, cp, XMIT_ACCEPT);
 			accept_count++;
@@ -243,7 +243,7 @@ static char *parse_received(struct query *ctl, char *bufp)
      * does this when the mail has a single recipient.
      */
     if (outlevel >= O_DEBUG)
-	progress(0, 0, _("analyzing Received line:\n%s"), bufp);
+	report(stdout, 0, _("analyzing Received line:\n%s"), bufp);
 
     /* search for whitepace-surrounded "by" followed by xxxx.yyyy */
     for (base = bufp;  ; base = ok + 2)
@@ -281,13 +281,13 @@ static char *parse_received(struct query *ctl, char *bufp)
 	if (is_host_alias(rbuf, ctl))
 	{
 	    if (outlevel >= O_DEBUG)
-		progress(0, 0, 
+		report(stdout, 0, 
 		      _("line accepted, %s is an alias of the mailserver"), rbuf);
 	}
 	else
 	{
 	    if (outlevel >= O_DEBUG)
-		progress(0, 0, 
+		report(stdout, 0, 
 		      _("line rejected, %s is not an alias of the mailserver"), 
 		      rbuf);
 	    return(NULL);
@@ -359,7 +359,7 @@ static char *parse_received(struct query *ctl, char *bufp)
     if (!ok)
     {
 	if (outlevel >= O_DEBUG)
-	    progress(0, 0, _("no Received address found"));
+	    report(stdout, 0, _("no Received address found"));
 	return(NULL);
     }
     else
@@ -368,7 +368,7 @@ static char *parse_received(struct query *ctl, char *bufp)
 	    char *lf = rbuf + strlen(rbuf)-1;
 	    *lf = '\0';
 	    if (outlevel >= O_DEBUG)
-		progress(0, 0, _("found Received address `%s'"), rbuf+2);
+		report(stdout, 0, _("found Received address `%s'"), rbuf+2);
 	    *lf = '\n';
 	}
 	return(rbuf);
@@ -499,7 +499,7 @@ static int readheaders(int sock,
 	    sizeticker += linelen;
 	    while (sizeticker >= SIZETICKER)
 	    {
-		progress_build(".");
+		report_build(stdout, ".");
 		sizeticker -= SIZETICKER;
 	    }
 	}
@@ -731,7 +731,7 @@ static int readheaders(int sock,
     if (!headers_ok)
     {
 	if (outlevel > O_SILENT)
-	    progress(0,0,_("message delimiter found while scanning headers"));
+	    report(stdout, 0,0,_("message delimiter found while scanning headers"));
     }
 
     /*
@@ -854,7 +854,7 @@ static int readheaders(int sock,
 	    no_local_matches = TRUE;
 	    save_str(&msgblk.recipients, run.postmaster, XMIT_ACCEPT);
 	    if (outlevel >= O_DEBUG)
-		progress(0, 0, 
+		report(stdout, 0, 
 		      _("no local matches, forwarding to %s"),
 		      run.postmaster);
 	}
@@ -869,7 +869,7 @@ static int readheaders(int sock,
     if (ctl->errcount > olderrs)	/* there were DNS errors above */
     {
 	if (outlevel >= O_DEBUG)
-	    progress(0,0, _("forwarding and deletion suppressed due to DNS errors"));
+	    report(stdout, 0,0, _("forwarding and deletion suppressed due to DNS errors"));
 	free(msgblk.headers);
 	free_str_list(&msgblk.recipients);
 	return(PS_TRANSIENT);
@@ -966,7 +966,7 @@ static int readheaders(int sock,
 
     if (n == -1)
     {
-	progress(0, errno, _("writing RFC822 msgblk.headers"));
+	report(stdout, errno, _("writing RFC822 msgblk.headers"));
 	release_sink(ctl);
 	free(msgblk.headers);
 	free_str_list(&msgblk.recipients);
@@ -1074,7 +1074,7 @@ static int readbody(int sock, struct query *ctl, flag forward, int len)
 	    while (sizeticker >= SIZETICKER)
 	    {
 		if (!run.use_syslog && outlevel > O_SILENT)
-		    progress_build(".");
+		    report_build(stdout, ".");
 		sizeticker -= SIZETICKER;
 	    }
 	}
@@ -1122,7 +1122,7 @@ static int readbody(int sock, struct query *ctl, flag forward, int len)
 
 	    if (n < 0)
 	    {
-		progress(0, errno, _("writing message text"));
+		report(stdout, errno, _("writing message text"));
 		release_sink(ctl);
 		return(PS_IOERR);
 	    }
@@ -1165,7 +1165,7 @@ const char *canonical;	/* server name */
 			 "KPOPV0.1"));
     if (rem != KSUCCESS)
     {
-	error(0, -1, _("kerberos error %s"), (krb_get_err_text (rem)));
+	report(stderr, -1, _("kerberos error %s"), (krb_get_err_text (rem)));
 	return (PS_AUTHFAIL);
     }
     return (0);
@@ -1191,19 +1191,19 @@ const char *canonical;  /* server name */
     krb5_auth_con_init(context, &auth_context);
 
     if (retval = krb5_cc_default(context, &ccdef)) {
-        error(0, 0, "krb5_cc_default: %s", error_message(retval));
+        report(stderr, 0, "krb5_cc_default: %s", error_message(retval));
         return(PS_ERROR);
     }
 
     if (retval = krb5_cc_get_principal(context, ccdef, &client)) {
-        error(0, 0, "krb5_cc_get_principal: %s", error_message(retval));
+        report(stderr, 0, "krb5_cc_get_principal: %s", error_message(retval));
         return(PS_ERROR);
     }
 
     if (retval = krb5_sname_to_principal(context, canonical, "pop",
            KRB5_NT_UNKNOWN,
            &server)) {
-        error(0, 0, "krb5_sname_to_principal: %s", error_message(retval));
+        report(stderr, 0, "krb5_sname_to_principal: %s", error_message(retval));
         return(PS_ERROR);
     }
 
@@ -1223,13 +1223,13 @@ const char *canonical;  /* server name */
 
     if (retval) {
       if (err_ret && err_ret->text.length) {
-          error(0, 0, _("krb5_sendauth: %s [server says '%*s'] "),
+          report(stderr, 0, _("krb5_sendauth: %s [server says '%*s'] "),
             error_message(retval),
             err_ret->text.length,
             err_ret->text.data);
-          krb5_free_error(context, err_ret);
+          krb5_free_report(stderr, context, err_ret);
       } else
-          error(0, 0, "krb5_sendauth: %s", error_message(retval));
+          report(stderr, 0, "krb5_sendauth: %s", error_message(retval));
       return(PS_ERROR);
     }
 
@@ -1353,7 +1353,7 @@ const struct method *proto;	/* protocol method table */
 #ifndef KERBEROS_V4
     if (ctl->server.preauthenticate == A_KERBEROS_V4)
     {
-	error(0, -1, _("Kerberos V4 support not linked."));
+	report(stderr, -1, _("Kerberos V4 support not linked."));
 	return(PS_ERROR);
     }
 #endif /* KERBEROS_V4 */
@@ -1361,7 +1361,7 @@ const struct method *proto;	/* protocol method table */
 #ifndef KERBEROS_V5
     if (ctl->server.preauthenticate == A_KERBEROS_V5)
     {
-	error(0, -1, _("Kerberos V5 support not linked."));
+	report(stderr, -1, _("Kerberos V5 support not linked."));
 	return(PS_ERROR);
     }
 #endif /* KERBEROS_V5 */
@@ -1371,13 +1371,13 @@ const struct method *proto;	/* protocol method table */
     {
 	/* check for unsupported options */
 	if (ctl->flush) {
-	    error(0, 0,
+	    report(stderr, 0,
 		    _("Option --flush is not supported with %s"),
 		    proto->name);
 	    return(PS_SYNTAX);
 	}
 	else if (ctl->fetchall) {
-	    error(0, 0,
+	    report(stderr, 0,
 		    _("Option --all is not supported with %s"),
 		    proto->name);
 	    return(PS_SYNTAX);
@@ -1385,7 +1385,7 @@ const struct method *proto;	/* protocol method table */
     }
     if (!proto->getsizes && NUM_SPECIFIED(ctl->limit))
     {
-	error(0, 0,
+	report(stderr, 0,
 		_("Option --limit is not supported with %s"),
 		proto->name);
 	return(PS_SYNTAX);
@@ -1419,23 +1419,23 @@ const struct method *proto;	/* protocol method table */
 #endif /* HAVE_SIGPROCMASK */
 
 	if (phase == OPEN_WAIT)
-	    progress(0, 0,
+	    report(stdout, 0,
 		  _("timeout after %d seconds waiting to connect to server %s."),
 		  ctl->server.timeout, ctl->server.pollname);
 	else if (phase == SERVER_WAIT)
-	    progress(0, 0,
+	    report(stdout, 0,
 		  _("timeout after %d seconds waiting for server %s."),
 		  ctl->server.timeout, ctl->server.pollname);
 	else if (phase == FORWARDING_WAIT)
-	    progress(0, 0,
+	    report(stdout, 0,
 		  _("timeout after %d seconds waiting for %s."),
 		  ctl->server.timeout,
 		  ctl->mda ? "MDA" : "SMTP");
 	else if (phase == LISTENER_WAIT)
-	    progress(0, 0,
+	    report(stdout, 0,
 		  _("timeout after %d seconds waiting for listener to respond."));
 	else
-	    progress(0, 0, _("timeout after %d seconds."), ctl->server.timeout);
+	    report(stdout, 0, _("timeout after %d seconds."), ctl->server.timeout);
 
 	release_sink(ctl);
 	if (ctl->smtp_socket != -1)
@@ -1485,7 +1485,7 @@ const struct method *proto;	/* protocol method table */
 	/* execute pre-initialization command, if any */
 	if (ctl->preconnect && (ok = system(ctl->preconnect)))
 	{
-	    error(0, 0, _("pre-connection command failed with status %d"), ok);
+	    report(stderr, 0, _("pre-connection command failed with status %d"), ok);
 	    ok = PS_SYNTAX;
 	    goto closeUp;
 	}
@@ -1510,7 +1510,7 @@ const struct method *proto;	/* protocol method table */
 	    int err_no = errno;
 #ifdef HAVE_RES_SEARCH
 	    if (err_no != 0 && h_errno != 0)
-		error(0, 0, _("fetchmail: internal inconsistency"));
+		report(stderr, 0, _("fetchmail: internal inconsistency"));
 #endif
 	    /*
 	     * Avoid generating a bogus error every poll cycle when we're
@@ -1520,26 +1520,26 @@ const struct method *proto;	/* protocol method table */
 	    if (err_no == EHOSTUNREACH && run.poll_interval)
 	        goto ehostunreach;
 
-	    error_build(_("fetchmail: %s connection to %s failed"), 
+	    report_build(stderr, _("fetchmail: %s connection to %s failed"), 
 			 protocol->name, ctl->server.pollname);
 #ifdef HAVE_RES_SEARCH
 	    if (h_errno != 0)
 	    {
 		if (h_errno == HOST_NOT_FOUND)
-		    error_complete(0, 0, _(": host is unknown"));
+		    report_complete(stderr, 0, _(": host is unknown"));
 		else if (h_errno == NO_ADDRESS)
-		    error_complete(0, 0, _(": name is valid but has no IP address"));
+		    report_complete(stderr, 0, _(": name is valid but has no IP address"));
 		else if (h_errno == NO_RECOVERY)
-		    error_complete(0, 0, _(": unrecoverable name server error"));
+		    report_complete(stderr, 0, _(": unrecoverable name server error"));
 		else if (h_errno == TRY_AGAIN)
-		    error_complete(0, 0, _(": temporary name server error"));
+		    report_complete(stderr, 0, _(": temporary name server error"));
 		else
-		    error_complete(0, 0, _(": unknown DNS error %d"), h_errno);
+		    report_complete(stderr, 0, _(": unknown DNS error %d"), h_errno);
 	    }
 	    else
 #endif /* HAVE_RES_SEARCH */
 
-		error_complete(0, err_no, "");
+		report_complete(stderr, err_no, "");
 
 	ehostunreach:
 #endif /* INET6 */
@@ -1590,14 +1590,14 @@ const struct method *proto;	/* protocol method table */
 	    if (ok != 0)
 	    {
 		if (ok == PS_LOCKBUSY)
-		    error(0, -1, _("Lock-busy error on %s@%s"),
+		    report(stderr, -1, _("Lock-busy error on %s@%s"),
 			  ctl->remotename,
 			  ctl->server.truename);
 		else
 		{
 		    if (ok == PS_ERROR)
 			ok = PS_AUTHFAIL;
-		    error(0, -1, _("Authorization failure on %s@%s"), 
+		    report(stderr, -1, _("Authorization failure on %s@%s"), 
 			  ctl->remotename,
 			  ctl->server.truename);
 
@@ -1640,9 +1640,9 @@ const struct method *proto;	/* protocol method table */
 
 		if (outlevel >= O_DEBUG)
 		    if (idp->id)
-			progress(0, 0, _("selecting or re-polling folder %s"), idp->id);
+			report(stdout, 0, _("selecting or re-polling folder %s"), idp->id);
 		    else
-			progress(0, 0, _("selecting or re-polling default folder"));
+			report(stdout, 0, _("selecting or re-polling default folder"));
 
 		/* compute # of messages and number of new messages waiting */
 		ok = (protocol->getrange)(sock, ctl, idp->id, &count, &new, &bytes);
@@ -1658,28 +1658,28 @@ const struct method *proto;	/* protocol method table */
 				   ctl->remotename, ctl->server.truename);
 		if (outlevel > O_SILENT)
 		    if (count == -1)		/* only used for ETRN */
-			progress(0, 0, _("Polling %s"), ctl->server.truename);
+			report(stdout, 0, _("Polling %s"), ctl->server.truename);
 		    else if (count != 0)
 		    {
 			if (new != -1 && (count - new) > 0)
-			    progress_build(_("%d %s (%d seen) for %s"),
+			    report_build(stdout, _("%d %s (%d seen) for %s"),
 				  count, count > 1 ? _("messages") :
 				                     _("message"),
 				  count-new, buf);
 			else
-			    progress_build(_("%d %s for %s"), 
+			    report_build(stdout, _("%d %s for %s"), 
 				  count, count > 1 ? _("messages") :
 				                     _("message"), buf);
 			if (bytes == -1)
-			    progress_complete(0, 0, ".");
+			    report_complete(stdout, 0, ".");
 			else
-			    progress_complete(0, 0, _(" (%d octets)."), bytes);
+			    report_complete(stdout, 0, _(" (%d octets)."), bytes);
 		    }
 		    else
 		    {
 			/* these are pointless in normal daemon mode */
 			if (pass == 1 && (run.poll_interval == 0 || outlevel >= O_VERBOSE))
-			    progress(0, 0, _("No mail for %s"), buf); 
+			    report(stdout, 0, _("No mail for %s"), buf); 
 		    }
 
 		/* very important, this is where we leave the do loop */ 
@@ -1779,7 +1779,7 @@ const struct method *proto;	/* protocol method table */
 			if (msgsizes && msgsizes[num-1] == -1)
 			{
 			    if (outlevel >= O_VERBOSE)
-				progress(0, 0, 
+				report(stdout, 0, 
 				      _("Skipping message %d, length -1"),
 				      num - 1);
 			    continue;
@@ -1790,7 +1790,7 @@ const struct method *proto;	/* protocol method table */
 			{
 			    if (outlevel > O_SILENT)
 			    {
-				progress_build(_("skipping message %d"), num);
+				report_build(stdout, _("skipping message %d"), num);
 				if (toolarge && !check_only) 
 				{
 				    char size[32];
@@ -1835,7 +1835,7 @@ const struct method *proto;	/* protocol method table */
 					tmp->val.status.num = cnt;
 				    }
 
-				    progress_build(_(" (oversized, %d octets)"),
+				    report_build(stdout, _(" (oversized, %d octets)"),
 						msgsizes[num-1]);
 				}
 			    }
@@ -1858,16 +1858,16 @@ const struct method *proto;	/* protocol method table */
 
 			    if (outlevel > O_SILENT)
 			    {
-				progress_build(_("reading message %d of %d"),
+				report_build(stdout, _("reading message %d of %d"),
 					    num,count);
 
 				if (len > 0)
-				    progress_build(_(" (%d %soctets)"),
+				    report_build(stdout, _(" (%d %soctets)"),
 					len, wholesize ? "" : _("header "));
 				if (outlevel >= O_VERBOSE)
-				    progress_complete(0, 0, "");
+				    report_complete(stdout, 0, "");
 				else
-				    progress_build(" ");
+				    report_build(stdout, " ");
 			    }
 
 			    /* 
@@ -1908,7 +1908,7 @@ const struct method *proto;	/* protocol method table */
 				    if ((ok=(protocol->fetch_body)(sock,ctl,num,&len)))
 					goto cleanUp;
 				    if (outlevel > O_SILENT && !wholesize)
-					progress_build(_(" (%d body octets) "), len);
+					report_build(stdout, _(" (%d body octets) "), len);
 				}
 			    }
 
@@ -1976,7 +1976,7 @@ const struct method *proto;	/* protocol method table */
 			    if (msgsizes && msglen != msgsizes[num-1])
 			    {
 				if (outlevel >= O_DEBUG)
-				    progress(0, 0,
+				    report(stdout, 0,
 					  _("message %d was not the expected length (%d actual != %d expected)"),
 					  num, msglen, msgsizes[num-1]);
 			    }
@@ -2015,7 +2015,7 @@ const struct method *proto;	/* protocol method table */
 			if (retained)
 			{
 			    if (outlevel > O_SILENT) 
-				progress_complete(0, 0, _(" retained"));
+				report_complete(stdout, 0, _(" retained"));
 			}
 			else if (protocol->delete
 				 && !suppress_delete
@@ -2023,7 +2023,7 @@ const struct method *proto;	/* protocol method table */
 			{
 			    deletions++;
 			    if (outlevel > O_SILENT) 
-				progress_complete(0, 0, _(" flushed"));
+				report_complete(stdout, 0, _(" flushed"));
 			    ok = (protocol->delete)(sock, ctl, num);
 			    if (ok != 0)
 				goto cleanUp;
@@ -2032,13 +2032,13 @@ const struct method *proto;	/* protocol method table */
 #endif /* POP3_ENABLE */
 			}
 			else if (outlevel > O_SILENT) 
-			    progress_complete(0, 0, _(" not flushed"));
+			    report_complete(stdout, 0, _(" not flushed"));
 
 			/* perhaps this as many as we're ready to handle */
 			if (NUM_NONZERO(ctl->fetchlimit)
 					&& ctl->fetchlimit <= fetches)
 			{
-			    progress(0, 0, _("fetchlimit reached; %d messages left on server"),
+			    report(stdout, 0, _("fetchlimit reached; %d messages left on server"),
 				  count - fetches);
 			    goto no_error;
 			}
@@ -2109,19 +2109,19 @@ const struct method *proto;	/* protocol method table */
 	msg = _("DNS lookup");
 	break;
     case PS_UNDEFINED:
-	error(0, 0, _("undefined"));
+	report(stderr, 0, _("undefined"));
 	break;
     }
     if (ok==PS_SOCKET || ok==PS_AUTHFAIL || ok==PS_SYNTAX 
 		|| ok==PS_IOERR || ok==PS_ERROR || ok==PS_PROTOCOL 
 		|| ok==PS_LOCKBUSY || ok==PS_SMTP)
-	error(0,-1, _("%s error while fetching from %s"), msg, ctl->server.pollname);
+	report(stderr,-1, _("%s error while fetching from %s"), msg, ctl->server.pollname);
 
 closeUp:
     /* execute post-initialization command, if any */
     if (ctl->postconnect && (ok = system(ctl->postconnect)))
     {
-	error(0, 0, _("post-connection command failed with status %d"), ok);
+	report(stderr, 0, _("post-connection command failed with status %d"), ok);
 	if (ok == PS_SUCCESS)
 	    ok = PS_SYNTAX;
     }
@@ -2178,7 +2178,7 @@ va_dcl
 	    *cp = '\0';
 	}
 	buf[strlen(buf)-2] = '\0';
-	progress(0, 0, "%s> %s", protocol->name, buf);
+	report(stdout, 0, "%s> %s", protocol->name, buf);
     }
 }
 
@@ -2206,7 +2206,7 @@ int size;	/* length of buffer */
 	if (buf[strlen(buf)-1] == '\r')
 	    buf[strlen(buf)-1] = '\0';
 	if (outlevel >= O_MONITOR)
-	    progress(0, 0, "%s< %s", protocol->name, buf);
+	    report(stdout, 0, "%s< %s", protocol->name, buf);
 	phase = oldphase;
 	return(PS_SUCCESS);
     }
@@ -2264,7 +2264,7 @@ va_dcl
 	    *cp = '\0';
 	}
 	buf[strlen(buf)-1] = '\0';
-	progress(0, 0, "%s> %s", protocol->name, buf);
+	report(stdout, 0, "%s> %s", protocol->name, buf);
     }
 
     /* we presume this does its own response echoing */

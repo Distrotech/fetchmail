@@ -137,15 +137,15 @@ int is_host_alias(const char *name, struct query *ctl)
         else if (((he_st = gethostbyname(ctl->server.truename)) != (struct hostent *)NULL) && ctl->server.checkalias)
 	{
 	    if (outlevel >= O_DEBUG)
-		progress(0, 0, _("Checking if %s is really the same node as %s"),ctl->server.truename,name);
+		report(stdout, 0, _("Checking if %s is really the same node as %s"),ctl->server.truename,name);
 	    if (is_ip_alias(ctl->server.truename,name) == TRUE)
 	    {
 		if (outlevel >= O_DEBUG)
-		    progress(0, 0, _("Yes, their IP addresses match"));
+		    report(stdout, 0, _("Yes, their IP addresses match"));
 		goto match;
 	    }
 	    if (outlevel >= O_DEBUG)
-		progress(0, 0, _("No, their IP addresses don't match"));
+		report(stdout, 0, _("No, their IP addresses don't match"));
 	}
 	else
 	    return(FALSE);
@@ -161,8 +161,8 @@ int is_host_alias(const char *name, struct query *ctl)
 	case TRY_AGAIN:		/* temporary error on authoritative server */
 	default:
 	    if (outlevel != O_SILENT)
-		putchar('\n');	/* terminate the progress message */
-	    error(0, 0,
+		report_complete(stdout, 0, "");	/* terminate the progress message */
+	    report(stderr, 0,
 		_("nameserver failure while looking for `%s' during poll of %s."),
 		name, ctl->server.pollname);
 	    ctl->errcount++;
@@ -187,7 +187,7 @@ int is_host_alias(const char *name, struct query *ctl)
 	case NO_RECOVERY:	/* non-recoverable name server error */
 	case TRY_AGAIN:		/* temporary error on authoritative server */
 	default:
-	    error(0, -1,
+	    report(stderr, -1,
 		_("nameserver failure while looking for `%s' during poll of %s."),
 		name, ctl->server.pollname);
 	    ctl->errcount++;

@@ -190,7 +190,7 @@ static void restore_tty_state(void)
 static RETSIGTYPE sigint_handler(int signum)
 {
     restore_tty_state();
-    error(1, 0, _("\nCaught signal... bailing out."));
+    report(stderr, 1, 0, _("\nCaught signal... bailing out."));
 }
 
 /* getpass.c ends here */

@@ -109,7 +109,7 @@ daemonize (const char *logfile, void (*termhook)(int))
      group leader */
 
   if ((childpid = fork()) < 0) {
-    error(0, errno, "fork");
+    report(stderr, errno, "fork");
     return(PS_IOERR);
   }
   else if (childpid > 0) 
@@ -122,7 +122,7 @@ daemonize (const char *logfile, void (*termhook)(int))
 #if	defined(HAVE_SETSID)		/* POSIX */
   /* POSIX makes this soooo easy to do */
   if (setsid() < 0) {
-    error(0, errno, "setsid");
+    report(stderr, errno, "setsid");
     return(PS_IOERR);
   }
 #elif	defined(SIGTSTP)		/* BSD */
@@ -144,7 +144,7 @@ daemonize (const char *logfile, void (*termhook)(int))
   /* lose controlling tty */
   signal(SIGHUP, SIG_IGN);
   if ((childpid = fork()) < 0) {
-    error(0, errno, "fork");
+    report(stderr, errno, "fork");
     return(PS_IOERR);
   }
   else if (childpid > 0) {
@@ -168,7 +168,7 @@ nottyDetach:
 
   /* Reopen stdin descriptor on /dev/null */
   if ((fd = open("/dev/null", O_RDWR)) < 0) {   /* stdin */
-    error(0, errno, "open: /dev/null");
+    report(stderr, errno, "open: /dev/null");
     return(PS_IOERR);
   }
 
@@ -176,11 +176,11 @@ nottyDetach:
     fd = open(logfile, O_CREAT|O_WRONLY|O_APPEND, 0666);	/* stdout */
   else
     if (dup(fd) < 0) {				/* stdout */
-      error(0, errno, "dup");
+      report(stderr, errno, "dup");
       return(PS_IOERR);
     }
   if (dup(fd) < 0) {				/* stderr */
-    error(0, errno, "dup");
+    report(stderr, errno, "dup");
     return(PS_IOERR);
   }
 

@@ -52,14 +52,13 @@ static int handle_plugin(const char *host,
     int fds[2];
     if (socketpair(AF_UNIX,SOCK_STREAM,0,fds))
     {
-	error(0, 0, _("fetchmail: socketpair failed: %s(%d)"),strerror(errno),errno);
+	report(stderr, errno, _("fetchmail: socketpair failed"));
 	return -1;
     }
     switch (fork()) {
 	case -1:
 		/* error */
-		error(0, 0, _("fetchmail: fork failed: %s(%d)"),
-						strerror(errno), errno);
+		report(stderr, errno, _("fetchmail: fork failed"));
 		return -1;
 		break;
 	case 0:	/* child */
@@ -67,17 +66,15 @@ static int handle_plugin(const char *host,
 		** detection */
 		(void) close(fds[1]);
 		if ( (dup2(fds[0],0) == -1) || (dup2(fds[0],1) == -1) ) {
-			error(0, 0, _("fetchmail: dup2 failed: %s(%d)"),
-						strerror(errno), errno);
+			report(stderr, errno, _("dup2 failed"));
 			exit(1);
 		}
 		/* fds[0] is now connected to 0 and 1; close it */
 		(void) close(fds[0]);
 		if (outlevel >= O_VERBOSE)
-		    error(0, 0, _("running %s %s %s"), plugin, host, service);
+		    report(stderr, 0, _("running %s %s %s"), plugin, host, service);
 		execlp(plugin,plugin,host,service,0);
-		error(0, 0, _("execl(%s) failed: %s (%d)"),
-		      plugin, strerror(errno), errno);
+		report(stderr, errno, _("execl(%s) failed"), plugin);
 		exit(0);
 		break;
 	default:	/* parent */
@@ -109,7 +106,7 @@ int SockOpen(const char *host, const char *service, const char *options,
     req.ai_socktype = SOCK_STREAM;
 
     if (i = getaddrinfo(host, service, &req, &ai)) {
-	error(0, 0, _("fetchmail: getaddrinfo(%s.%s): %s(%d)"), host, service, gai_strerror(i), i);
+	report(stderr, i, _("fetchmail: getaddrinfo(%s.%s)"), host,service);
 	return -1;
     };
 
@@ -189,7 +186,7 @@ int SockOpen(const char *host, int clientPort, const char *options,
 	if(hp->h_length != 4 && hp->h_length != 8)
 	{
 	    h_errno = errno = 0;
-	    error(0, 0, _("fetchmail: illegal address length received for host %s"),host);
+	    report(stderr, 0, _("fetchmail: illegal address length received for host %s"),host);
 	    return -1;
 	}
 	/*

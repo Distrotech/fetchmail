@@ -337,23 +337,17 @@ extern const char *fetchmailhost;
 
 /* error.c: Error reporting */
 #if defined(HAVE_STDARG_H)
-void error_init(int foreground);
-void error (int status, int errnum, const char *format, ...);
-void error_build (const char *format, ...);
-void error_complete (int status, int errnum, const char *format, ...);
-void error_at_line (int, int, const char *, unsigned int, const char *, ...);
+void report_init(FILE *fp, int foreground);
+void report (FILE *fp, int errnum, const char *format, ...);
+void report_build (FILE *fp, const char *format, ...);
+void report_complete (FILE *fp, int errnum, const char *format, ...);
+void report_at_line (FILE *fp, int, const char *, unsigned int, const char *, ...);
 #else
-void error ();
-void error_build ();
-void error_complete ();
-void error_at_line ();
+void report ();
+void report_build ();
+void report_complete ();
+void report_at_line ();
 #endif
-
-/* for now, send progress messages to stderr */
-#define progress	error
-#define progress_build	error_build
-#define progress_complete	error_complete
-#define progress_at_line	error_at_line
 
 /* driver.c: transaction support */
 void set_timeout(int);
@@ -455,7 +449,7 @@ char *xstrdup(const char *);
  #pragma alloca
 #endif
 #endif
-#define	xalloca(ptr, t, n)	if (!(ptr = (t) alloca(n))) error(PS_UNDEFINED, 0, "alloca failed")
+#define	xalloca(ptr, t, n)	if (!(ptr = (t) alloca(n))) report(stderr, PS_UNDEFINED, 0, "alloca failed")
 
 /* protocol driver and methods */
 int do_protocol(struct query *, const struct method *);

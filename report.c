@@ -77,9 +77,6 @@ static unsigned int use_syslog;
 /* This variable is incremented each time `error' is called.  */
 unsigned int error_message_count;
 
-/* for now, send all error messages to stderr */
-#define errfp	stderr
-
 #ifdef _LIBC
 /* In the GNU C library, there is a predefined variable for this.  */
 
@@ -108,16 +105,14 @@ char *strerror (errnum)
 
 /* Print the program name and error message MESSAGE, which is a printf-style
    format string with optional args.
-   If ERRNUM is nonzero, print its corresponding system error message.
-   Exit with status STATUS if it is nonzero.  */
+   If ERRNUM is nonzero, print its corresponding system error message. */
 /* VARARGS */
 
 void
 #ifdef HAVE_STDARG_H
-error (int status, int errnum, const char *message, ...)
+report (FILE *errfp, int errnum, const char *message, ...)
 #else
-error (status, errnum, message, va_alist)
-     int status;
+report (FILE *errfp, errnum, message, va_alist)
      int errnum;
      const char *message;
      va_dcl
@@ -131,7 +126,7 @@ error (status, errnum, message, va_alist)
   if (partial_message_size_used != 0)
     {
       partial_message_size_used = 0;
-      error (0, 0, _("%s (log message incomplete)"), partial_message);
+      report (errfp, 0, 0, _("%s (log message incomplete)"), partial_message);
     }
 
 #if defined(HAVE_SYSLOG)
@@ -142,7 +137,7 @@ error (status, errnum, message, va_alist)
 #ifdef VA_START
       VA_START (args, message);
 #endif
-      priority = status? LOG_ALERT : errnum? LOG_ERR : LOG_INFO;
+      priority = errnum ? LOG_ERR : LOG_INFO;
 
       if (errnum > 0)
         {
@@ -234,8 +229,6 @@ error (status, errnum, message, va_alist)
       fflush (errfp);
     }
   ++error_message_count;
-  if (status)
-    exit (status);
 }
 
 /*
@@ -279,9 +272,9 @@ void error_init(int mode)
 
 void
 #ifdef HAVE_STDARG_H
-error_build (const char *message, ...)
+report_build (FILE *errfp, const char *message, ...)
 #else
-error_build (message, va_alist)
+report_build (FILE *errfp, message, va_alist)
      const char *message;
      va_dcl
 #endif
@@ -331,7 +324,7 @@ error_build (message, va_alist)
   if (partial_message_size_used >= partial_message_size)
     {
       partial_message_size_used = 0;
-      error (PS_UNDEFINED, 0, _("partial error message buffer overflow"));
+      report (PS_UNDEFINED, 0, _("partial error message buffer overflow"));
     }
 #endif
   va_end (args);
@@ -359,7 +352,7 @@ error_build (message, va_alist)
   if ((partial_message_size_used = strlen (partial_message)) >= partial_message_size)
     {
       partial_message_size_used = 0;
-      error (PS_UNDEFINED, 0, _("partial error message buffer overflow"));
+      report (PS_UNDEFINED, 0, _("partial error message buffer overflow"));
     }
 #endif
 #endif
@@ -379,10 +372,9 @@ error_build (message, va_alist)
 
 void
 #ifdef HAVE_STDARG_H
-error_complete (int status, int errnum, const char *message, ...)
+report_complete (FILE *errfp, int errnum, const char *message, ...)
 #else
-error_complete (status, errnum, message, va_alist)
-     int status;
+report_complete (FILE *errfp, errnum, message, va_alist)
      int errnum;
      const char *message;
      va_dcl
@@ -433,7 +425,7 @@ error_complete (status, errnum, message, va_alist)
   if (partial_message_size_used >= partial_message_size)
     {
       partial_message_size_used = 0;
-      error (PS_UNDEFINED, 0, _("partial error message buffer overflow"));
+      report (PS_UNDEFINED, 0, _("partial error message buffer overflow"));
     }
 #endif
   va_end (args);
@@ -461,7 +453,7 @@ error_complete (status, errnum, message, va_alist)
   if ((partial_message_size_used = strlen (partial_message)) >= partial_message_size)
     {
       partial_message_size_used = 0;
-      error (PS_UNDEFINED, 0, _("partial error message buffer overflow"));
+      report (PS_UNDEFINED, 0, _("partial error message buffer overflow"));
     }
 #endif
 #endif
@@ -480,12 +472,9 @@ error_complete (status, errnum, message, va_alist)
       fflush (errfp);
 
       ++error_message_count;
-
-      if (status)
-	  exit(status);
     }
   else
-    error (status, errnum, "%s", partial_message);
+    report (errfp, errnum, "%s", partial_message);
 }
 
 /* Sometimes we want to have at most one error per line.  This
@@ -494,11 +483,10 @@ int error_one_per_line;
 
 void
 #ifdef HAVE_STDARG_H
-error_at_line (int status, int errnum, const char *file_name,
+report_at_line (FILE *errfp, int errnum, const char *file_name,
 	       unsigned int line_number, const char *message, ...)
 #else
-error_at_line (status, errnum, file_name, line_number, message, va_alist)
-     int status;
+report_at_line (FILE *errfp, errnum, file_name, line_number, message, va_alist)
      int errnum;
      const char *file_name;
      unsigned int line_number;
@@ -557,6 +545,4 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
     fprintf (errfp, ": %s", strerror (errnum));
   putc ('\n', errfp);
   fflush (errfp);
-  if (status)
-    exit (status);
 }

@@ -162,7 +162,7 @@ static int smtp_open(struct query *ctl)
     ctl->destaddr = ctl->smtpaddress ? ctl->smtpaddress : ( ctl->smtphost ? ctl->smtphost : "localhost");
 
     if (outlevel >= O_DEBUG && ctl->smtp_socket != -1)
-	progress(0, 0, _("forwarding to %s"), ctl->smtphost);
+	report(stdout, 0, _("forwarding to %s"), ctl->smtphost);
 
     return(ctl->smtp_socket);
 }
@@ -284,7 +284,7 @@ static int send_bouncemail(struct msgblk *msg, int userclass,
     ts = rfc822timestamp();
 
     if (outlevel >= O_VERBOSE)
-	progress(0, 0, "SMTP: (bounce-message body)");
+	report(stdout, 0, "SMTP: (bounce-message body)");
 
     /* bouncemail headers */
     SockPrintf(sock, "Return-Path: <>");
@@ -367,7 +367,7 @@ static int send_bouncemail(struct msgblk *msg, int userclass,
     return(TRUE);
 }
 
-static int handle_smtp_error(struct query *ctl, struct msgblk *msg)
+static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 /* handle SMTP errors based on the content of SMTP_response */
 {
     int smtperr = atoi(smtp_response);
@@ -413,7 +413,7 @@ static int handle_smtp_error(struct query *ctl, struct msgblk *msg)
      * an error when the return code is less specific.
      */
     if (smtperr >= 400)
-	error(0, -1, _("%cMTP error: %s"), 
+	report(stderr, -1, _("%cMTP error: %s"), 
 	      ctl->listener,
 	      smtp_response);
 
@@ -516,7 +516,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 
 	if (ferror(sinkfp))
 	{
-	    error(0, -1, _("BSMTP file open or preamble write failed"));
+	    report(stderr, -1, _("BSMTP file open or preamble write failed"));
 	    return(PS_BSMTP);
 	}
     }
@@ -637,7 +637,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 
 
 	if (outlevel >= O_DEBUG)
-	    progress(0, 0, _("about to deliver with: %s"), before);
+	    report(stdout, 0, _("about to deliver with: %s"), before);
 
 #ifdef HAVE_SETEUID
 	/*
@@ -660,7 +660,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 
 	if (!sinkfp)
 	{
-	    error(0, 0, _("MDA open failed"));
+	    report(stderr, 0, _("MDA open failed"));
 	    return(PS_IOERR);
 	}
 
@@ -677,7 +677,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	/* build a connection to the SMTP listener */
 	if ((smtp_open(ctl) == -1))
 	{
-	    error(0, errno, _("%cMTP connect to %s failed"),
+	    report(stderr, errno, _("%cMTP connect to %s failed"),
 		  ctl->listener,
 		  ctl->smtphost ? ctl->smtphost : "localhost");
 	    return(PS_SMTP);
@@ -716,7 +716,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	 */
 	ap = (msg->return_path[0]) ? msg->return_path : user;
 	if (SMTP_from(ctl->smtp_socket, ap, options) != SM_OK)
-	    return(handle_smtp_error(ctl, msg));
+	    return(handle_smtp_report(ctl, msg));
 
 	/*
 	 * Now list the recipient addressees
@@ -755,7 +755,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		    (*bad_addresses)++;
 		    idp->val.status.mark = XMIT_RCPTBAD;
 		    if (outlevel >= O_VERBOSE)
-			error(0, 0, 
+			report(stderr, 0, 
 			      _("%cMTP listener doesn't like recipient address `%s'"),
 			      ctl->listener, addr);
 		}
@@ -786,13 +786,13 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 
 	    if (SMTP_rcpt(ctl->smtp_socket, addr) != SM_OK)
 	    {
-		error(0, 0, _("can't even send to %s!"), run.postmaster);
+		report(stderr, 0, _("can't even send to %s!"), run.postmaster);
 		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
 		return(PS_SMTP);
 	    }
 
 	    if (outlevel >= O_VERBOSE)
-		error(0, 0, _("no address matches; forwarding to %s."), run.postmaster);
+		report(stderr, 0, _("no address matches; forwarding to %s."), run.postmaster);
 	}
 
 	/* 
@@ -800,7 +800,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	 * Some listeners (like zmailer) may return antispam errors here.
 	 */
 	if (SMTP_data(ctl->smtp_socket) != SM_OK)
-	    return(handle_smtp_error(ctl, msg));
+	    return(handle_smtp_report(ctl, msg));
     }
 
     /*
@@ -846,7 +846,7 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 	signal(SIGCHLD, sigchld);
 	if (rc)
 	{
-	    error(0, -1, _("MDA exited abnormally or returned nonzero status"));
+	    report(stderr, -1, _("MDA exited abnormally or returned nonzero status"));
 	    return(FALSE);
 	}
     }
@@ -858,7 +858,7 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 	    fclose(sinkfp);
 	if (ferror(sinkfp))
 	{
-	    error(0, -1, _("Message termination or close of BSMTP file failed"));
+	    report(stderr, -1, _("Message termination or close of BSMTP file failed"));
 	    return(FALSE);
 	}
     }
@@ -867,11 +867,11 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 	/* write message terminator */
 	if (SMTP_eom(ctl->smtp_socket) != SM_OK)
 	{
-	    if (handle_smtp_error(ctl, msg) != PS_REFUSED)
+	    if (handle_smtp_report(ctl, msg) != PS_REFUSED)
 		return(FALSE);
 	    else
 	    {
-		error(0, -1, _("SMTP listener refused delivery"));
+		report(stderr, -1, _("SMTP listener refused delivery"));
 		return(TRUE);
 	    }
 	}
@@ -899,9 +899,9 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 		 * comply.
 		 */
 		if (atoi(smtp_response) == 503)
-		    error(0, -1, _("LMTP delivery error on EOM"));
+		    report(stderr, -1, _("LMTP delivery error on EOM"));
 		else
-		    error(0, -1,
+		    report(stderr, -1,
 			  _("Unexpected non-503 response to LMTP EOM: %s"),
 			  smtp_response);
 
