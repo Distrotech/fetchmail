@@ -31,10 +31,9 @@ AC_PROG_LEX
 AC_PROG_YACC
 AC_SUBST(LIBOBJS)
 
+AC_CHECK_LIB(nsl,inet_addr)
 AC_CHECK_LIB(socket,socket)
 AC_CHECK_LIB(inet,socket)
-AC_CHECK_LIB(nsl,inet_addr)
-
 
 # Under Red Hat 4.0 (and many other Linuxes) -lresolv is seriously flaky
 # and breaks gethostbyname(2).  It's better to use the bind stuff in the C
