@@ -705,6 +705,9 @@ then
     LDFLAGS="$LDFLAGS -L$with_gssapi/lib"
   fi
 
+  AC_CHECK_LIB(gss, gss_check_version, LIBS="$LIBS -lgss", nogss=t)
+  if test -n "$nogss"
+  then
   if test -f "$with_gssapi/include/roken.h"
   then
      LIBS="$LIBS -lkrb5 -lasn1 -ldes -lroken -ldb -ldl"
@@ -715,10 +718,11 @@ then
      AC_CHECK_LIB(gssapi_krb5, gss_init_sec_context,LIBS="$LIBS -lgssapi_krb5",
                   AC_MSG_ERROR([could not find libgssapi_krb5 which is needed for GSSAPI support]), -lkrb5)
   fi
+  fi
   AC_DEFINE(GSSAPI)
   save_CPPFLAGS=$CPPFLAGS
   CPPFLAGS="-I$with_gssapi/include"
-  AC_CHECK_HEADERS(gssapi.h gssapi/gssapi.h gssapi/gssapi_generic.h)
+  AC_CHECK_HEADERS(gss.h gssapi.h gssapi/gssapi.h gssapi/gssapi_generic.h)
   if test "$ac_cv_header_gssapi_h" = "yes"; then
     AC_EGREP_HEADER(GSS_C_NT_HOSTBASED_SERVICE, gssapi.h, AC_DEFINE(HAVE_GSS_C_NT_HOSTBASED_SERVICE))
   else

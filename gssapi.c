@@ -21,6 +21,9 @@
 #include <netinet/in.h>  /* for htonl/ntohl */
 
 #ifdef GSSAPI
+#  ifdef HAVE_GSS_H
+#    include <gss.h>
+#  else
 #  ifdef HAVE_GSSAPI_H
 #    include <gssapi.h>
 #  endif
@@ -32,6 +35,7 @@
 #  endif
 #  ifndef HAVE_GSS_C_NT_HOSTBASED_SERVICE
 #    define GSS_C_NT_HOSTBASED_SERVICE gss_nt_service_name
+#  endif
 #  endif
 
 #define GSSAUTH_P_NONE      1
