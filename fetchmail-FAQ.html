@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/11/26 18:20:28 $
+<td width="30%" align=right>$Date: 2000/12/01 06:22:45 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -557,6 +557,14 @@ when initially developing your poll configuration -- it's never
 necessary to do this just to get a link working.  Get the link working
 first, observe the actual address range you see on connections, and
 add an <code>interface</code> option (if you need one) later.<P>
+
+You can't use ETRN if you have a dynamic IP address (your ISP changes
+your IP address occasionally, possibly with every connect).  You need
+to have your own registered domain and a definite IP address
+registered for that domain.  The server needs to be configured to
+accept mail for your domain but then queue it to forward to your
+machine.  ETRN just tells to server to flush its queue for your
+domain.  Fetchmail doesn't actually get the mail in that case.<p>
 
 If you're using a dynamic-IP configuration, one other (non-fetchmail)
 problem you may run into with outgoing mail is that some sites will
@@ -2963,7 +2971,7 @@ install Linux on your server...<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/11/26 18:20:28 $
+<td width="30%" align=right>$Date: 2000/12/01 06:22:45 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

@@ -138,13 +138,14 @@ static int _get_ifinfo_(int socket_fd, FILE *stats_file, const char *ifname,
 	if (!(request.ifr_flags & IFF_RUNNING))
 		return(FALSE);
 
-	/* get the IP address */
+	/* get the (local) IP address */
 	strcpy(request.ifr_name, ifname);
 	if (ioctl(socket_fd, SIOCGIFADDR, &request) < 0)
 		return(FALSE);
 	ifinfo->addr = ((struct sockaddr_in *) (&request.ifr_addr))->sin_addr;
 
-	/* get the PPP destination IP address */
+	/* get the PPP destination (remote) IP address */
+	ifinfo->dstaddr.s_addr = 0;
 	strcpy(request.ifr_name, ifname);
 	if (ioctl(socket_fd, SIOCGIFDSTADDR, &request) >= 0)
 		ifinfo->dstaddr = ((struct sockaddr_in *)
@@ -665,10 +666,20 @@ int interface_approve(struct hostdata *hp, flag domonitor)
 				      hp->pollname, hp->interface);
 			return(FALSE);
 		}
-		/* check the IP address (range) */
-		if ((ifinfo.addr.s_addr &
-				hp->interface_pair->interface_mask.s_addr) !=
-				hp->interface_pair->interface_address.s_addr) {
+		/* check the IP addresses (range) */
+		if	(!(
+				/* check remote IP address */
+				((ifinfo.dstaddr.s_addr != 0) &&
+				(ifinfo.dstaddr.s_addr &
+				hp->interface_pair->interface_mask.s_addr) ==
+				hp->interface_pair->interface_address.s_addr)
+				||
+				/* check local IP address */
+				((ifinfo.addr.s_addr &
+				hp->interface_pair->interface_mask.s_addr) ==
+				hp->interface_pair->interface_address.s_addr)
+			) )
+		{
 			(void) report(stdout,
 				_("skipping poll of %s, %s IP address excluded\n"),
 				hp->pollname, hp->interface);

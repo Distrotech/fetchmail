@@ -458,7 +458,7 @@ See USER AUTHENTICATION below for a complete description.
 .B \-I <specification>, --interface <specification>
 (Keyword: interface)
 Require that a specific interface device be up and have a specific local
-IP address (or range) before polling.  Frequently
+or remote IP address (or range) before polling.  Frequently
 .I fetchmail
 is used over a transient point-to-point TCP/IP link established directly
 to a mailserver via SLIP or PPP.  That is a relatively secure channel.
@@ -2027,9 +2027,9 @@ mailserver.  This creates a risk that name/password pairs might be
 snaffled with a packet sniffer or more sophisticated monitoring
 software.  Under Linux and FreeBSD, the --interface option can be used
 to restrict polling to availability of a specific interface device
-with a specific local IP address, but snooping is still possible if
-(a) either host has a network device that can be opened in promiscuous
-mode, or (b) the intervening network link can be tapped.
+with a specific local or remote IP address, but snooping is still
+possible if (a) either host has a network device that can be opened
+in promiscuous mode, or (b) the intervening network link can be tapped.
 .PP
 Use of the %F or %T escapes in an mda option could open a security
 hole, because they pass text manipulable by an attacker to a shell

@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.32"
+version = "1.33"
 
 from Tkinter import *
 from Dialog import *
@@ -110,7 +110,7 @@ class Server:
 	    ('plugin',   'String'),
 	    ('plugout',  'String'),
 	    ('netsec',   'String'),
-	    ('principal',   'String')),
+	    ('principal',   'String'))
 
     def dump(self, folded):
 	res = ""
