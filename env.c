@@ -116,14 +116,15 @@ char *rfc822timestamp(void)
     time(&now);
 #ifdef HAVE_STRFTIME
     /*
-     * Conform to RFC822. Note that we generate a 4-digit year here,
-     * avoiding Y2K hassles. Note: max length of this timestamp in an
-     * English locale should be 32 chars, assuming a 5-character timezone
-     * of the form [+-]nnnn.  The only things that should vary by locale
+     * Conform to RFC822. GMT rather than local time because of the
+     * mess that %Z generates obsolete 822 syntax but %z is not
+     * guaranteed portable. We generate a 4-digit year here, avoiding
+     * Y2K hassles.  Max length of this timestamp in an English locale
+     * should be 29 chars.  The only things that should vary by locale
      * are the day and month abbreviations.
      */
     strftime(buf, sizeof(buf)-1, 
-	     "%a, %d %b %Y %H:%M:%S %z", localtime(&now));
+	     "%a, %d %b %Y %H:%M:%S GMT", gmtime(&now));
 #else
     /*
      * This is really just a portability fallback, as the
