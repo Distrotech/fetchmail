@@ -316,9 +316,11 @@ dist: distclean MANIFEST Makefile.in distdocs
 	ls -l fetchmail-$(VERSION).tar.gz
 	@echo "Don't forget to build RPMs from root!"
 
+# Firewall against the lossage in autoconf that keeps breaking our build.
+EX = --exclude "fetchmail-$(VERSION)/intl/libintl.h"
 fetchmail-$(VERSION).tar.gz: $(all)
 	(cd ..; ln -sf fetchmail fetchmail-$(VERSION))
-	(cd ..; tar -czf fetchmail-$(VERSION).tar.gz `sed <fetchmail-$(VERSION)/MANIFEST s:^:fetchmail-$(VERSION)/:`)
+	(cd ..; tar $(EX) -czf fetchmail-$(VERSION).tar.gz `sed <fetchmail-$(VERSION)/MANIFEST s:^:fetchmail-$(VERSION)/:`)
 	mv -f ../fetchmail-$(VERSION).tar.gz .
 	rm ../fetchmail-$(VERSION)
 
