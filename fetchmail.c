@@ -369,7 +369,17 @@ int main (int argc, char **argv)
      * reflect the status of that transaction.
      */
     do {
-#ifdef HAVE_RES_SEARCH
+#if defined(HAVE_RES_SEARCH) && defined(USE_TCPIP_FOR_DNS)
+	/*
+	 * This was an efficiency hack that backfired.  The theory
+	 * was that using TCP/IP for DNS queries would get us better
+	 * reliability and shave off some per-UDP-packet costs.
+	 * Unfortunately it interacted badly with diald, which effectively 
+	 * filters out DNS queries over TCP/IP for reasons having to do
+	 * with some obscure kernel problem involving bootstrapping of
+	 * dynamically-addressed links.  I don't understand this mess
+	 * and don't want to, so it's "See ya!" to this hack.
+	 */
 	sethostent(TRUE);	/* use TCP/IP for mailserver queries */
 #endif /* HAVE_RES_SEARCH */
 
@@ -457,7 +467,7 @@ int main (int argc, char **argv)
 	    }
 	}
 
-#ifdef HAVE_RES_SEARCH
+#if defined(HAVE_RES_SEARCH) && defined(USE_TCPIP_FOR_DNS)
 	endhostent();		/* release TCP/IP connection to nameserver */
 #endif /* HAVE_RES_SEARCH */
 
