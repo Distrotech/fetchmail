@@ -51,7 +51,6 @@ if (system("make rpm >/dev/null 2>/dev/null && chown esr *.rpm")) {
 open(REPORT, ">PREAMBLE.$$");
 
 print REPORT <<EOF;
-#!/usr/lib/sendmail -t -oem
 From: esr\@thyrsus.com (Eric S. Raymond)
 To: fetchmail-announce\@ccil.org
 
