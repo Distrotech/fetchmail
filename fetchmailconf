@@ -1274,6 +1274,13 @@ Beware!  The UIDL support in this thing is known to be completely broken,
 and other things probably are too.
 
 """
+            if string.find(greetline, "MercuryP/NLM v1.48") > 0:
+                warnings = warnings + """
+This is not a POP3 server.  It has delusions of being one, but after
+RETR all messages are automatically marked to be deleted.  The only
+way to prevent this is to issue an RSET before leaving the server.
+
+"""
             if string.find(greetline, "POP-Max") > 0:
                 warnings = warnings + """
 The Mail Max POP3 server screws up on mail with attachments.  It

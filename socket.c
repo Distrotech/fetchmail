@@ -750,7 +750,11 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 			tp = text;
 			te = text + sizeof(text);
 			for (i = 0; i < dsz; i++) {
+#ifdef HAVE_SNPRINTF
 				esz = snprintf(tp, te - tp, i > 0 ? ":%02X" : "%02X", digest[i]);
+#else
+				esz = sprintf(tp, i > 0 ? ":%02X" : "%02X", digest[i]);
+#endif
 				if (esz >= te - tp) {
 					report(stderr, _("Digest text buffer too small!\n"));
 					return (0);

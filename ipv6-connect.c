@@ -78,13 +78,23 @@ int inner_connect(struct addrinfo *ai, void *request, int requestlen, int (*tryi
       continue;
 
     if ((fd = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol)) < 0) {
-      snprintf(errorbuf, sizeof(errorbuf), "socket: %s(%d)", strerror(errno), errno);
+#ifdef HAVE_SNPRINTF
+     snprintf(errorbuf, sizeof(errorbuf),
+#else
+     sprintf(errorbuf,
+#endif
+      	"socket: %s(%d)", strerror(errno), errno);
       error_callback(myname, errorbuf);
       continue;
     };
 
     if (connect(fd, ai->ai_addr, ai->ai_addrlen) < 0) {
-      snprintf(errorbuf, sizeof(errorbuf), "connect: %s(%d)", strerror(errno), errno);
+#ifdef HAVE_SNPRINTF
+     snprintf(errorbuf, sizeof(errorbuf),
+#else
+     sprintf(errorbuf,
+#endif
+         "connect: %s(%d)", strerror(errno), errno);
       error_callback(myname, errorbuf);
       close(fd);	/* just after a connect; no reads or writes yet */
       continue;
@@ -96,7 +106,12 @@ int inner_connect(struct addrinfo *ai, void *request, int requestlen, int (*tryi
     if (pai)
       *pai = ai;
   } else {
-    snprintf(errorbuf, sizeof(errorbuf), "no connections result");
+#ifdef HAVE_SNPRINTF
+     snprintf(errorbuf, sizeof(errorbuf),
+#else
+     sprintf(errorbuf,
+#endif
+       "no connections result");
     error_callback(myname, errorbuf);
     fd = -1;
   };
