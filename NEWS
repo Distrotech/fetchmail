@@ -2,11 +2,13 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.6.5 (Mon Feb 12 04:33:39 EST 2001), 20062 lines:
+
 * CRAM-MD5 authentication of IMAP and POP3 is working.  Tested against 
   IMAP4rev1 2000.287 and v2000.70 POP3 gateway at neo.netnea.com.
 * Full support for POP3 AUTH (RFC1734) with KERBEROS_IV, GSSAPI, OTP.
   This code has been completely refactored.  In the process, it is
-  possible I have broken GSSAPI and OPIE; this needs to be tested.
+  possible I have broken GSSAPI, KERBEROS, and OPIE; this needs to be tested.
   The old IMAP-LOGIN, IMAP-GSS, and IMAP-K4 protocols are gone; fetchmail
   now uses these automatically when it detects the right capabilities.
   To prevent having fetchmail  look for a password, specify a "preauth"
@@ -15,11 +17,15 @@
   #68627, #67559, #63308, #63088, #71428 are fixed.
 * Resolved Debian bug #65505: fetchmail now returns a nonzero exit status
   when interrupted before a successful fetch.
+* configure --ssl works correctly again.
+
+There are 273 people on fetchmail-friends and 564 on fetchmail-announce.
 
 fetchmail-5.6.4 (Sun Feb 11 00:43:14 EST 2001), 20085 lines:
 
 * ODMR port fix for AIX.
 * Dave Zarzycki's fix for former FAQ item F5 (%h and %p not being expanded).
+* Dave Zarzycki's fix to reap zombie processes when nodetach is set.
 * Attempted fix for CRAM-MD5 problem with IMAP 2000.
 
 There are 276 people on fetchmail-friends and 564 on fetchmail-announce.
