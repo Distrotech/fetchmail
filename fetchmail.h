@@ -102,7 +102,7 @@ struct query
     int wildcard;		/* should unmatched names be passed through */
     char *remotename;
     char *password;
-    char *mailbox;
+    struct idlist *mailboxes;
     struct idlist *smtphunt;
     char *smtphost;
     char *mda;

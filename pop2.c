@@ -58,26 +58,32 @@ int pop2_getauth(int sock, struct query *ctl, char *buf)
 		  ctl->remotename, ctl->password));
 }
 
-static int pop2_getrange(int sock, struct query *ctl, int*countp, int*newp)
+static int pop2_getrange(int sock, struct query *ctl, const char *folder, int*countp, int*newp)
 /* get range of messages to be fetched */
 {
-    /*
-     * We should have picked up a count of messages in the user's
-     * default inbox from the pop2_getauth() response.
-     */
-    if (pound_arg == -1)
-	return(PS_ERROR);
-
     /* maybe the user wanted a non-default folder */
-    if (ctl->mailbox)
+    if (folder)
     {
-	int	ok = gen_transact(sock, "FOLD %s", ctl->mailbox);
+	int	ok = gen_transact(sock, "FOLD %s", folder);
 
 	if (ok != 0)
 	    return(ok);
 	if (pound_arg == -1)
 	    return(PS_ERROR);
     }
+    else
+	/*
+	 * We should have picked up a count of messages in the user's
+	 * default inbox from the pop2_getauth() response. 
+	 *
+	 * Note: this logic only works because there is no way to select
+	 * both the unnamed folder and named folders within a single
+	 * fetchmail run.  If that assumption ever becomes invalid, the
+	 * pop2_getauth code will have to stash the pound response away
+	 * explicitly in case it gets stepped on.
+	 */
+	if (pound_arg == -1)
+	    return(PS_ERROR);
 
     *countp = pound_arg;
     *newp = -1;

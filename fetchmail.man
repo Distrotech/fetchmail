@@ -164,18 +164,19 @@ The  option permits you to specify a TCP/IP port to connect on.
 This option will seldom be necessary as all the supported protocols have
 well-established default port numbers.
 .TP
-.B \-r folder, --remote folder
-Causes a specified non-default mail folder on the mailserver to be retrieved.
-The syntax of the folder name is server dependent, as is the default
-behavior when no folder is specified.  This option is not available
-under POP3 or ETRN.
+.B \-r folder, --folder folder
+Causes a specified non-default mail folder on the mailserver (or
+comma-separated list of folders) to be retrieved.  The syntax of the
+folder name is server-dependent.  This option is not available under
+POP3 or ETRN.
 .SS Delivery Control Options
 .TP
 .B \-S host, --smtphost host
-Specify a hunt list of hosts to forward mail to.  
-In ETRN mode, set the host that the mailserver is asked to ship mail to.
-Hosts are tried in list order; the first one that is up becomes the
-forwarding or ETRN target for the current run.
+Specify a hunt list of hosts to forward mail to (one or more
+hostnames, comma-separated).  In ETRN mode, set the host that the
+mailserver is asked to ship mail to.  Hosts are tried in list order;
+the first one that is up becomes the forwarding or ETRN target for the
+current run.
 .TP
 .B \-m, \--mda
 You can force mail to be passed to an MDA directly (rather than
@@ -610,7 +611,7 @@ Legal user options are
     is
     to
     password (or pass)
-    remotefolder (or remote)
+    folder
     smtphost (or smtp)
     mda
     preconnect
@@ -634,7 +635,10 @@ Legal user options are
     fetchlimit
     syslog
 .PP
-All options correspond to the obvious command-line arguments except
+The 'remotefolder' and 'smtphost' options can take a space- or
+comma-separated list of names following them.
+.PP
+All options correspond to the obvious command-line arguments, except
 the following: `aka', `is', `to', `dns'/`no dns', `password',
 \&`preconnect', `localdomains', `stripcr'/`no stripcr' ,
 \&`forcecr'/`no forcecr' and `no received'.

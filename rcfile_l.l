@@ -41,7 +41,7 @@ envelope	{ return ENVELOPE; }
 
 user(name)?	{ return USERNAME; }
 pass(word)?	{ return PASSWORD; }
-remote(folder)? { return FOLDER; }
+folder(s) 	{ return FOLDER; }
 smtp(host)?	{ return SMTPHOST; }
 mda		{ return MDA; }
 pre(connect)	{ return PRECONNECT; }
@@ -55,7 +55,7 @@ to		{ return TO; }
 =		{ return MAP; }
 "*"		{ return WILDCARD; }
 
-no/[kfrsdu ]	{ return NO;}
+no/[kfrsdu ].*	{ return NO;}
 
 keep		{ return KEEP; }
 flush		{ return FLUSH; }
@@ -83,6 +83,11 @@ options		{/* EMPTY */}
 (etrn)|(ETRN)   { yylval.proto = P_ETRN;  return PROTO; }
 (kpop)|(KPOP)	{ return KPOP; }
 
+remote(folder)? {
+		fprintf(stderr, 
+			"fetchmail: `remote' keyword is gone, use `folder'\n");
+		}
+
 
 (#.*)?\\?\n	{ prc_lineno++;	}   /* newline is ignored */
 
@@ -105,4 +110,6 @@ options		{/* EMPTY */}
 		}
 
 [ \t\r]+	;	/* whitespace */
+
+
 

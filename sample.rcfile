@@ -34,9 +34,9 @@
 #
 #   username (or user)        -- must be followed by a name
 #   is                        -- must be followed by one or more names
-#   remotefolder (or remote)  -- must be followed by a filename
+#   folder                    -- must be followed by remote folder names
 #   password (or pass)        -- must be followed by a password string
-#   smtphost (or smtp)        -- must be followed by a host name
+#   smtphost (or smtp)        -- must be followed by host names
 #   mda                       -- must be followed by an MDA command string
 #   preconnect (or pre)       -- must be followed by an initialization command
 #

@@ -650,6 +650,10 @@ static int load_params(int argc, char **argv, int optind)
 	    if (ctl->server.envelope == (char *)NULL)
 		ctl->server.envelope = "X-Envelope-To:";
 
+	    /* if no folders were specified, set up the null one as default */
+	    if (!ctl->mailboxes)
+		save_str(&ctl->mailboxes, -1, (char *)NULL);
+
 	    /* sanity checks */
 	    if (ctl->server.port < 0)
 	    {
@@ -849,6 +853,17 @@ void dump_params (struct query *ctl)
 	putchar('\n');
     }
 
+    if (!ctl->mailboxes->id)
+	printf("  Default mailbox selected.\n");
+    else
+    {
+	struct idlist *idp;
+
+	printf("  Selected mailboxes are:");
+	for (idp = ctl->mailboxes; idp; idp = idp->next)
+	    printf(" %s", idp->id);
+	printf("\n");
+    }
     printf("  %s messages will be retrieved (--all %s).\n",
 	   ctl->fetchall ? "All" : "Only new",
 	   ctl->fetchall ? "on" : "off");

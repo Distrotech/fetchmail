@@ -193,6 +193,10 @@ mapping		: STRING
 				{save_str_pair(&current.localnames, $1, $3);}
 		;
 
+folder_list	: STRING		{save_str(&current.mailboxes,-1,$1);}
+		| folder_list STRING	{save_str(&current.mailboxes,-1,$2);}
+		;
+
 smtphunt	: STRING		{save_str(&current.smtphunt, -1, $1);}
 		| smtphunt STRING	{save_str(&current.smtphunt, -1, $2);}
 		;
@@ -204,7 +208,7 @@ user_option	: TO localnames HERE
 
 		| IS STRING THERE	{current.remotename = xstrdup($2);}
 		| PASSWORD STRING	{current.password   = xstrdup($2);}
-		| FOLDER STRING 	{current.mailbox    = xstrdup($2);}
+		| FOLDER folder_list
 		| SMTPHOST smtphunt
 		| MDA STRING		{current.mda        = xstrdup($2);}
 		| PRECONNECT STRING	{current.preconnect = xstrdup($2);}
@@ -397,7 +401,8 @@ static void record_current(void)
 
     FLAG_FORCE(remotename);
     FLAG_FORCE(password);
-    FLAG_FORCE(mailbox);
+    if (cmd_opts.mailboxes)
+	save_str(&current.mailboxes, -1, cmd_opts.mailboxes->id);
     if (cmd_opts.smtphunt)
 	save_str(&current.smtphunt, -1, cmd_opts.smtphunt->id);
     FLAG_FORCE(mda);
@@ -423,6 +428,7 @@ void optmerge(struct query *h2, struct query *h1)
 {
     append_str_list(&h2->server.localdomains, &h1->server.localdomains);
     append_str_list(&h2->localnames, &h1->localnames);
+    append_str_list(&h2->mailboxes, &h1->mailboxes);
     append_str_list(&h2->smtphunt, &h1->smtphunt);
 
 #define FLAG_MERGE(fld) if (!h2->fld) h2->fld = h1->fld
@@ -442,7 +448,6 @@ void optmerge(struct query *h2, struct query *h1)
 
     FLAG_MERGE(remotename);
     FLAG_MERGE(password);
-    FLAG_MERGE(mailbox);
     FLAG_MERGE(mda);
     FLAG_MERGE(preconnect);
 

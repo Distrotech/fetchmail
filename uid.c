@@ -112,7 +112,7 @@ struct idlist *save_str(struct idlist **idl, int num, const char *str)
 
     *end = (struct idlist *)xmalloc(sizeof(struct idlist));
     (*end)->val.num = num;
-    (*end)->id = xstrdup(str);
+    (*end)->id = str ? xstrdup(str) : (char *)NULL;
     (*end)->next = NULL;
 
     return(*end);
@@ -140,7 +140,7 @@ void save_str_pair(struct idlist **idl, const char *str1, const char *str2)
 	continue;
 
     *end = (struct idlist *)xmalloc(sizeof(struct idlist));
-    (*end)->id = xstrdup(str1);
+    (*end)->id = str1 ? xstrdup(str1) : (char *)NULL;
     if (str2)
 	(*end)->val.id2 = xstrdup(str2);
     else

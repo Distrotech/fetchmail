@@ -41,7 +41,7 @@
 #define LA_FLUSH        23
 #define LA_NOREWRITE	24
 #define LA_LIMIT	25
-#define LA_REMOTEFILE	26
+#define LA_FOLDER	26
 #define LA_SMTPHOST	27
 #define LA_BATCHLIMIT	28
 #define LA_FETCHLIMIT	29
@@ -83,7 +83,7 @@ static struct option longoptions[] = {
   {"norewrite",	no_argument,	   (int *) 0, LA_NOREWRITE   },
   {"limit",	required_argument, (int *) 0, LA_LIMIT       },
 
-  {"remote",    required_argument, (int *) 0, LA_REMOTEFILE  },
+  {"folder",    required_argument, (int *) 0, LA_FOLDER  },
   {"smtphost",	required_argument, (int *) 0, LA_SMTPHOST    },
   {"batchlimit",required_argument, (int *) 0, LA_BATCHLIMIT  },
   {"fetchlimit",required_argument, (int *) 0, LA_FETCHLIMIT  },
@@ -117,6 +117,7 @@ struct query *ctl;	/* option record to be initialized */
     int ocount = 0;     /* count of destinations specified */
     int errflag = 0;   /* TRUE when a syntax error is detected */
     int option_index;
+    char buf[BUFSIZ], *cp;
 
     cmd_daemon = -1;
 
@@ -254,12 +255,22 @@ struct query *ctl;	/* option record to be initialized */
 	    ctl->limit = atoi(optarg);
 	    break;
 	case 'r':
-	case LA_REMOTEFILE:
-	    ctl->mailbox = xstrdup(optarg);
+	case LA_FOLDER:
+	    strcpy(buf, optarg);
+	    cp = strtok(buf, ",");
+	    do {
+		save_str(&ctl->mailboxes, -1, optarg);
+	    } while
+		((cp = strtok((char *)NULL, ",")));
 	    break;
 	case 'S':
 	case LA_SMTPHOST:
-	    save_str(&ctl->smtphunt, -1, optarg);
+	    strcpy(buf, optarg);
+	    cp = strtok(buf, ",");
+	    do {
+		save_str(&ctl->smtphunt, -1, optarg);
+	    } while
+		((cp = strtok((char *)NULL, ",")));
 	    ocount++;
 	    break;
 	case 'b':
@@ -343,7 +354,7 @@ struct query *ctl;	/* option record to be initialized */
 	fputs("  -S, --smtphost    set SMTP forwarding host\n", stderr);
 	fputs("  -b, --batchlimit  set batch limit for SMTP connections\n", stderr);
 	fputs("  -B, --fetchlimit  set fetch limit for server connections\n", stderr);
-	fputs("  -r, --remote      specify remote folder name\n", stderr);
+	fputs("  -r, --folder      specify remote folder name\n", stderr);
 	return(-1);
     }
 

@@ -18,6 +18,8 @@ every user entry in a multi-user poll declaration.
   re-code this so --limit is still operative with --fetchall on, but you
   can turn off the size limit with --limit 0.
 
+* Use the libmd functions for md5 under Free BSD?  (Low priority.)
+
 				Release Notes:
 
 ------------------------------------------------------------------------------
@@ -26,6 +28,8 @@ pl 3.9.5 ():
 * Add an error notification when an incoming message has embedded NULs.
 * Throw out >From lines in headers to prevent getting hosed by upstream
   sendmails with the 'E' option on.
+* Enable forcecr to work on the \r\n header terminator line.
+* Multiple-folder support for POP2 and IMAP.
 
 pl 3.9.4 (Wed May 14 12:27:22 EDT 1997):
 * Fixed a compilation glitch for systems like SunOS & others without atexit(3).

@@ -117,7 +117,7 @@ int doETRN (struct query *ctl)
 	fprintf(stderr, "Option --flush is not supported with ETRN\n");
 	return(PS_SYNTAX);
     }
-    if (ctl->mailbox) {
+    if (ctl->mailboxes) {
 	fprintf(stderr, "Option --remote is not supported with ETRN\n");
 	return(PS_SYNTAX);
     }

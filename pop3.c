@@ -125,7 +125,10 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
     return(0);
 }
 
-static int pop3_getrange(int sock, struct query *ctl, int*countp, int*newp)
+static int pop3_getrange(int sock, 
+			 struct query *ctl,
+			 const char *folder,
+			 int *countp, int *newp)
 /* get range of messages to be fetched */
 {
     int ok;
@@ -279,7 +282,7 @@ const static struct method pop3 =
 int doPOP3 (struct query *ctl)
 /* retrieve messages using POP3 */
 {
-    if (ctl->mailbox) {
+    if (ctl->mailboxes->id) {
 	fprintf(stderr,"Option --remote is not supported with POP3\n");
 	return(PS_SYNTAX);
     }

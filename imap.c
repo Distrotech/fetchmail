@@ -117,16 +117,17 @@ int imap_getauth(int sock, struct query *ctl, char *buf)
     return(PS_SUCCESS);
 }
 
-static int imap_getrange(int sock, struct query *ctl, int*countp, int*newp)
+static int imap_getrange(int sock, 
+			 struct query *ctl, 
+			 const char *folder, 
+			 int *countp, int *newp)
 /* get range of messages to be fetched */
 {
     int ok;
 
     /* find out how many messages are waiting */
     recent = unseen = 0;
-    ok = gen_transact(sock,
-		  "SELECT %s",
-		  ctl->mailbox ? ctl->mailbox : "INBOX");
+    ok = gen_transact(sock, "SELECT %s", folder ? folder : "INBOX");
     if (ok != 0)
     {
 	error(0, 0, "mailbox selection failed");

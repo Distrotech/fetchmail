@@ -1248,8 +1248,9 @@ const struct method *proto;	/* protocol method table */
     {
 	char buf [POPBUFSIZE+1];
 	int *msgsizes, len, num, count, new, deletions = 0;
-	int sock, port;
- 
+	int sock, port, fetches;
+	struct idlist *idp;
+
 	/* execute pre-initialization command, if any */
 	if (ctl->preconnect && (ok = system(ctl->preconnect)))
 	{
@@ -1381,189 +1382,193 @@ const struct method *proto;	/* protocol method table */
 	    set_timeout(ctl->server.timeout);
 	}
 
-	/* compute number of messages and number of new messages waiting */
-	ok = (protocol->getrange)(sock, ctl, &count, &new);
-	if (ok != 0)
-	    goto cleanUp;
-	set_timeout(ctl->server.timeout);
+	ctl->errcount = fetches = 0;
 
-	/* show user how many messages we downloaded */
-	if (ctl->mailbox)
-	    (void) sprintf(buf, "%s@%s:%s",
-			   ctl->remotename, realname, ctl->mailbox);
-	else
-	    (void) sprintf(buf, "%s@%s", ctl->remotename, realname);
-	if (outlevel > O_SILENT)
-	    if (count == -1)			/* only used for ETRN */
-		error(0, 0, "Polling %s", buf);
-	    else if (count == 0)
-		error(0, 0, "No mail at %s", buf); 
-	    else
-	    {
-		if (new != -1 && (count - new) > 0)
-		    error(0, 0, "%d message%s (%d seen) at %s.",
-		    		count, count > 1 ? "s" : "", count-new, buf);
-		else
-		    error(0, 0, "%d message%s at %s.", 
-				count, count > 1 ? "s" : "", buf);
-	    }
-
-	/* we may need to get sizes in order to check message limits */
-	msgsizes = (int *)NULL;
-	if (!ctl->fetchall && proto->getsizes && ctl->limit)
+	/* now iterate over each folder selected */
+	for (idp = ctl->mailboxes; idp; idp = idp->next)
 	{
-	    msgsizes = (int *)alloca(sizeof(int) * count);
+	    if (outlevel >= O_VERBOSE)
+		if (idp->next)
+		    error(0, 0, "selecting folder %s");
+	        else
+		    error(0, 0, "selecting default folder");
 
-	    ok = (proto->getsizes)(sock, count, msgsizes);
+	    /* compute number of messages and number of new messages waiting */
+	    ok = (protocol->getrange)(sock, ctl, idp->id, &count, &new);
 	    if (ok != 0)
 		goto cleanUp;
 	    set_timeout(ctl->server.timeout);
-	}
 
-	if (check_only)
-	{
-	    if (new == -1 || ctl->fetchall)
-		new = count;
-	    ok = ((new > 0) ? PS_SUCCESS : PS_NOMAIL);
-	    goto cleanUp;
-	}
-	else if (count > 0)
-	{    
-	    int	force_retrieval, fetches;
-
-	    /*
-	     * What forces this code is that in POP3 and IMAP2BIS you can't
-	     * fetch a message without having it marked `seen'.  In IMAP4,
-	     * on the other hand, you can (peek_capable is set to convey
-	     * this).
-	     *
-	     * The result of being unable to peek is that if there's
-	     * any kind of transient error (DNS lookup failure, or
-	     * sendmail refusing delivery due to process-table limits)
-	     * the message will be marked "seen" on the server without
-	     * having been delivered.  This is not a big problem if
-	     * fetchmail is running in foreground, because the user
-	     * will see a "skipped" message when it next runs and get
-	     * clued in.
-	     *
-	     * But in daemon mode this leads to the message being silently
-	     * ignored forever.  This is not acceptable.
-	     *
-	     * We compensate for this by checking the error count from the 
-	     * previous pass and forcing all messages to be considered new
-	     * if it's nonzero.
-	     */
-	    force_retrieval = !peek_capable && (ctl->errcount > 0);
-
-	    ctl->errcount = fetches = 0;
-
-	    /* read, forward, and delete messages */
-	    for (num = 1; num <= count; num++)
-	    {
-		int	toolarge = msgsizes && (msgsizes[num-1] > ctl->limit);
-		int	fetch_it = ctl->fetchall ||
-		    (!toolarge && (force_retrieval || !(protocol->is_old && (protocol->is_old)(sock,ctl,num))));
-		int	suppress_delete = FALSE;
-
-		/* we may want to reject this message if it's old */
-		if (!fetch_it)
-		{
-		    if (outlevel > O_SILENT)
-		    {
-			error_build("skipping message %d", num);
-			if (toolarge)
-			    error_build(" (oversized, %d bytes)", msgsizes[num-1]);
-		    }
-		}
+	    /* show user how many messages we downloaded */
+	    if (idp->id)
+		(void) sprintf(buf, "%s@%s:%s",
+			       ctl->remotename, realname, idp->id);
+	    else
+		(void) sprintf(buf, "%s@%s", ctl->remotename, realname);
+	    if (outlevel > O_SILENT)
+		if (count == -1)		/* only used for ETRN */
+		    error(0, 0, "Polling %s", buf);
+		else if (count == 0)
+		    error(0, 0, "No mail at %s", buf); 
 		else
 		{
-		    /* request a message */
-		    ok = (protocol->fetch)(sock, ctl, num, &len);
-		    if (ok != 0)
-			goto cleanUp;
-		    set_timeout(ctl->server.timeout);
+		    if (new != -1 && (count - new) > 0)
+			error(0, 0, "%d message%s (%d seen) at %s.",
+			      count, count > 1 ? "s" : "", count-new, buf);
+		    else
+			error(0, 0, "%d message%s at %s.", 
+			      count, count > 1 ? "s" : "", buf);
+		}
 
-		    if (outlevel > O_SILENT)
+	    /* we may need to get sizes in order to check message limits */
+	    msgsizes = (int *)NULL;
+	    if (!ctl->fetchall && proto->getsizes && ctl->limit)
+	    {
+		msgsizes = (int *)alloca(sizeof(int) * count);
+
+		ok = (proto->getsizes)(sock, count, msgsizes);
+		if (ok != 0)
+		    goto cleanUp;
+		set_timeout(ctl->server.timeout);
+	    }
+
+	    if (check_only)
+	    {
+		if (new == -1 || ctl->fetchall)
+		    new = count;
+		ok = ((new > 0) ? PS_SUCCESS : PS_NOMAIL);
+		goto cleanUp;
+	    }
+	    else if (count > 0)
+	    {    
+		int	force_retrieval;
+
+		/*
+		 * What forces this code is that in POP3 and IMAP2BIS you can't
+		 * fetch a message without having it marked `seen'.  In IMAP4,
+		 * on the other hand, you can (peek_capable is set to convey
+		 * this).
+		 *
+		 * The result of being unable to peek is that if there's
+		 * any kind of transient error (DNS lookup failure, or
+		 * sendmail refusing delivery due to process-table limits)
+		 * the message will be marked "seen" on the server without
+		 * having been delivered.  This is not a big problem if
+		 * fetchmail is running in foreground, because the user
+		 * will see a "skipped" message when it next runs and get
+		 * clued in.
+		 *
+		 * But in daemon mode this leads to the message being silently
+		 * ignored forever.  This is not acceptable.
+		 *
+		 * We compensate for this by checking the error count from the 
+		 * previous pass and forcing all messages to be considered new
+		 * if it's nonzero.
+		 */
+		force_retrieval = !peek_capable && (ctl->errcount > 0);
+
+		/* read, forward, and delete messages */
+		for (num = 1; num <= count; num++)
+		{
+		    int	toolarge = msgsizes && (msgsizes[num-1] > ctl->limit);
+		    int	fetch_it = ctl->fetchall ||
+			(!toolarge && (force_retrieval || !(protocol->is_old && (protocol->is_old)(sock,ctl,num))));
+		    int	suppress_delete = FALSE;
+
+		    /* we may want to reject this message if it's old */
+		    if (!fetch_it)
 		    {
-			error_build("reading message %d", num);
-			if (len > 0)
-			    error_build(" (%d bytes)", len);
-			if (outlevel == O_VERBOSE)
-			    error_complete(0, 0, "");
-			else
-			    error_build(" ");
+			if (outlevel > O_SILENT)
+			{
+			    error_build("skipping message %d", num);
+			    if (toolarge)
+				error_build(" (oversized, %d bytes)", msgsizes[num-1]);
+			}
 		    }
-
-		    /* read the message and ship it to the output sink */
-		    ok = gen_readmsg(sock,
-				     len, 
-				     protocol->delimited,
-				     ctl,
-				     realname);
-		    if (ok == PS_TRANSIENT)
-			suppress_delete = TRUE;
-		    else if (ok)
-			goto cleanUp;
-		    set_timeout(ctl->server.timeout);
-
-		    /* tell the server we got it OK and resynchronize */
-		    if (protocol->trail)
+		    else
 		    {
-			ok = (protocol->trail)(sock, ctl, num);
+			/* request a message */
+			ok = (protocol->fetch)(sock, ctl, num, &len);
 			if (ok != 0)
 			    goto cleanUp;
 			set_timeout(ctl->server.timeout);
+
+			if (outlevel > O_SILENT)
+			{
+			    error_build("reading message %d", num);
+			    if (len > 0)
+				error_build(" (%d bytes)", len);
+			    if (outlevel == O_VERBOSE)
+				error_complete(0, 0, "");
+			    else
+				error_build(" ");
+			}
+
+			/* read the message and ship it to the output sink */
+			ok = gen_readmsg(sock,
+					 len, 
+					 protocol->delimited,
+					 ctl,
+					 realname);
+			if (ok == PS_TRANSIENT)
+			    suppress_delete = TRUE;
+			else if (ok)
+			    goto cleanUp;
+			set_timeout(ctl->server.timeout);
+
+			/* tell the server we got it OK and resynchronize */
+			if (protocol->trail)
+			{
+			    ok = (protocol->trail)(sock, ctl, num);
+			    if (ok != 0)
+				goto cleanUp;
+			    set_timeout(ctl->server.timeout);
+			}
+
+			fetches++;
 		    }
 
-		    fetches++;
+		    /*
+		     * At this point in flow of control, either we've bombed
+		     * on a protocol error or had delivery refused by the SMTP
+		     * server (unlikely -- I've never seen it) or we've seen
+		     * `accepted for delivery' and the message is shipped.
+		     * It's safe to mark the message seen and delete it on the
+		     * server now.
+		     */
+
+		    /* maybe we delete this message now? */
+		    if (protocol->delete
+			&& !suppress_delete
+			&& (fetch_it ? !ctl->keep : ctl->flush))
+		    {
+			deletions++;
+			if (outlevel > O_SILENT) 
+			    error_complete(0, 0, " flushed");
+			ok = (protocol->delete)(sock, ctl, num);
+			if (ok != 0)
+			    goto cleanUp;
+			set_timeout(ctl->server.timeout);
+			delete_str(&ctl->newsaved, num);
+		    }
+		    else if (outlevel > O_SILENT) 
+			error_complete(0, 0, " not flushed");
+
+		    /* perhaps this as many as we're ready to handle */
+		    if (ctl->fetchlimit && ctl->fetchlimit <= fetches)
+			goto no_error;
 		}
-
-		/*
-		 * At this point in flow of control, either we've bombed
-		 * on a protocol error or had delivery refused by the SMTP
-		 * server (unlikely -- I've never seen it) or we've seen
-		 * `accepted for delivery' and the message is shipped.
-		 * It's safe to mark the message seen and delete it on the
-		 * server now.
-		 */
-
-		/* maybe we delete this message now? */
-		if (protocol->delete
-		    && !suppress_delete
-		    && (fetch_it ? !ctl->keep : ctl->flush))
-		{
-		    deletions++;
-		    if (outlevel > O_SILENT) 
-			error_complete(0, 0, " flushed");
-		    ok = (protocol->delete)(sock, ctl, num);
-		    if (ok != 0)
-			goto cleanUp;
-		    set_timeout(ctl->server.timeout);
-		    delete_str(&ctl->newsaved, num);
-		}
-		else if (outlevel > O_SILENT) 
-		    error_complete(0, 0, " not flushed");
-
-		/* perhaps this as many as we're ready to handle */
-		if (ctl->fetchlimit && ctl->fetchlimit <= fetches)
-		    break;
 	    }
+	}
 
-	    ok = gen_transact(sock, protocol->exit_cmd);
-	    if (ok == 0)
-		ok = (fetches > 0) ? PS_SUCCESS : PS_NOMAIL;
-	    set_timeout(0);
-	    close(sock);
-	    goto closeUp;
-	}
-	else {
-	    ok = gen_transact(sock, protocol->exit_cmd);
-	    if (ok == 0)
-		ok = PS_NOMAIL;
-	    set_timeout(0);
-	    close(sock);
-	    goto closeUp;
-	}
+   no_error:
+	set_timeout(ctl->server.timeout);
+	ok = gen_transact(sock, protocol->exit_cmd);
+	if (ok == 0)
+	    ok = (fetches > 0) ? PS_SUCCESS : PS_NOMAIL;
+	set_timeout(0);
+	close(sock);
+	goto closeUp;
 
     cleanUp:
 	set_timeout(ctl->server.timeout);
