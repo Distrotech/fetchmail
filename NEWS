@@ -16,7 +16,7 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.1.2 ()
+fetchmail-4.1.2 (Wed Sep  3 18:44:58 EDT 1997)
 * Fixed a bonehead bug in RCPT TO name generation introduced in 4.1.1.
 * Added James Steven's ip-up wrapper to the contrib directory.
 * Prevent buffer spamming in SockOpen by a broken DNS.
