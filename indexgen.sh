@@ -7,7 +7,7 @@ goldname="5.7.0"
 version=`sed -n <Makefile.in "/VERSION *= */s/VERSION *= *\([^ 	]*\)/\1/p"`
 date=`date "+%d %b %Y"`
 
-set -- `timeseries | grep -v "%" | head -1`
+set -- `timeseries | grep -v "[%#]" | head -1`
 subscribers=$4
 set -- `ls -ks fetchmail`
 fetchmailsize=$1
@@ -78,10 +78,10 @@ facilities to work just as they would on normal mail.<P>
 
 Fetchmail offers better security than any other Unix remote-mail
 client.  It supports APOP, KPOP, OTP, Compuserve RPA, Microsoft NTLM,
-and IMAP RFC1731 encrypted authentication methods to avoid sending
-passwords en clair. It can be configured to support end-to-end
-encryption via tunneling with <a href="http://www.openssh.com/">ssh,
-the Secure Shell</a><p>
+and IMAP RFC1731 encrypted authentication methods including CRAM-MD5
+to avoid sending passwords en clair. It can be configured to support
+end-to-end encryption via tunneling with <a
+href="http://www.openssh.com/">ssh, the Secure Shell</a><p>
 
 Fetchmail can be used as a POP/IMAP-to-SMTP gateway for an entire DNS
 domain, collecting mail from a single drop box on an ISP and
@@ -195,7 +195,7 @@ maintainers may be added in the future, in order to ensure continued
 support should Eric S.  Raymond drop permanently off the net for any
 reason.<P>
 
-<H1>You can help improve fetchmail</H1>
+<H1>You can help improve fetchmail:</H1>
 
 I welcome your code contributions.  But even if you don't write code,
 you can help fetchmail improve.<p>
@@ -223,14 +223,14 @@ customized version is used at Whole Earth 'Lectronic Link. Several
 large ISPs are known to recommend it to Unix-using SLIP and PPP
 customers.<p>
 
-Over seven hundred people have participated on the fetchmail beta list
-(at time of current release there were $subscribers on the friends and
-announce lists).  While it's hard to count the users of open-source
-software, we can estimate based on (a) population figures at the WELL
-and other known fetchmail sites, (b) the size of the Linux-using ISP
-customer base, and (c) the volume of fetchmail-related talk on USENET.
-These estimates suggest that daily fetchmail users number well into
-the tens of thousands, and possibly over a hundred thousand.<p>
+Somewhere around a thousand people have participated on the fetchmail
+beta lists (at time of current release there were $subscribers on the
+friends and announce lists).  While it's hard to count the users of
+open-source software, we can estimate based on (a) population figures
+at the WELL and other known fetchmail sites, (b) the size of the
+Linux-using ISP customer base, and (c) the volume of fetchmail-related
+talk on USENET.  These estimates suggest that daily fetchmail users
+number well into the hundreds of thousands, and possibly over a million.<p>
 
 <H1>The sociology of fetchmail:</H1>
 
@@ -275,7 +275,7 @@ Fetchmail is supported only for Unix by its official maintainers.
 However, it is reported to build and run correctly under BeOS,
 AmigaOS, Rhapsody, and QNX as well. <p>
 
-<H1>Related resources</H1>
+<H1>Related resources:</H1>
 
 Jochen Hayek is developing a set of
 <a href="http://www.ACM.org/~Jochen_Hayek/JHimap_utils/">
