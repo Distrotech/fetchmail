@@ -270,7 +270,7 @@ config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/configure \
 	$(srcdir)/config.guess $(srcdir)/config.h.in $(srcdir)/config.sub \
 	$(srcdir)/acconfig.h $(srcdir)/aclocal.m4
 scripts = $(srcdir)/install-sh $(srcdir)/missing $(srcdir)/mkinstalldirs \
-	$(srcdir)/specgen.sh $(srcdir)/lsmgen.py $(srcdir)/fetchmailconf
+	$(srcdir)/specgen.sh $(srcdir)/fetchmailconf
 all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) \
 	$(srcdir)/rh-config/* $(srcdir)/contrib/*[A-Za-uw-z] \
 	$(srcdir)/po/* $(srcdir)/intl $(srcdir)/beos/* ABOUT-NLS $(srcdir)/MANIFEST
@@ -302,14 +302,10 @@ TODO: todo.html
 fetchmail-man.html: fetchmail.man
 	manServer.pl fetchmail.man >fetchmail-man.html
 
-# Make distribution, update LSM with proper size, remake distribution
-# (Making fetchmail-man.html is a kluge to ensure that it will be
-# available when I upload the distribution.)
+# Make distribution.
 dist: distclean MANIFEST Makefile.in distdocs
 	touch fetchmail.lsm
 	make fetchmail-$(VERSION).tar.gz 
-	lsmgen.py $(VERSION) `wc -c fetchmail-$(VERSION).tar.gz` >fetchmail.lsm
-	make fetchmail-$(VERSION).tar.gz
 	#-cd po; make update-po
 	ls -l fetchmail-$(VERSION).tar.gz
 	@echo "Don't forget to build RPMs from root!"
