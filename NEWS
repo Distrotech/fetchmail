@@ -5,6 +5,8 @@
 * Renamed misnamed tr.po and da.po files
 * Jakub Ulanowski's patch to fix SSL fingerprint handling.
 * Matt Kraai's patch for supporting STLS over POP3.
+* French translation updated.
+* Debian fixes merged.
 
 fetchmail-5.9.8 (Thu Feb 14 23:47:31 EST 2002), 21358 lines:
 
