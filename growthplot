@@ -66,8 +66,12 @@ plot [] [0:] '/tmp/growthnumbers$$' using 6:5 \
 EOF
 
 # The gnuplot driver for PNG doesn't do color
-gnuplot /tmp/growthimage$$ >growth.gif
-gif2png -s -d growth.gif
+if gnuplot /tmp/growthimage$$ >growth.gif
+then
+    gif2png -s -d growth.gif
+else
+    echo "Plot failed."
+fi
 
 rm -f /tmp/growth*
 
