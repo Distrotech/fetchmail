@@ -7,6 +7,7 @@
 # 1. Support for multiple usernames per UID.
 # 2. Repolling on a changed rc file.
 # 3. It's no longer possible to specify site parameters from the command line.
+# 4. OPIE support -- use STLS instead..
 
 VERSION = "X0.1"
 
@@ -23,7 +24,7 @@ PS_IOERR	= 6	# bad permissions on rc file
 PS_ERROR	= 7	# protocol error
 PS_EXCLUDE	= 8	# client-side exclusion error
 PS_LOCKBUSY	= 9	# server responded lock busy
-PS_SMTP         = 10      # SMTP error
+PS_SMTP         = 10    # SMTP error
 PS_DNS		= 11	# fatal DNS error
 PS_BSMTP	= 12	# output batch could not be opened
 PS_MAXFETCH	= 13	# poll ended by fetch limit
@@ -49,60 +50,65 @@ KPOP_PORT	= 1109
 SIMAP_PORT	= 993
 SPOP3_PORT	= 995
 
+# response hooks can use this to identify the query stage
+STAGE_GETAUTH	= 0
+STAGE_GETRANGE	= 1
+STAGE_GETSIZES	= 2
+STAGE_FETCH	= 3
+STAGE_IDLE	= 4
+STAGE_LOGOUT	= 5
+
+
 def DOTLINE(s):
     return (s[0] == '.' and (s[1]=='\r' or s[1]=='\n' or s[1]=='\0'))
 
 # Error classes
-class TransactionError(Exception):
-    pass
-class GeneralError(Exception):
-    pass
-class ProtocolError(Exception):
-    pass
+class FetchError(Exception):
+    def __init__(self, err):
+        self.error = err
 
 class proto_pop2:
     "POP2 protocol methods"
     def __init__(self, ctl):
-        name = 'POP2'
-        service = 'pop2'
-        sslservice = 'pop2'
-        port = 109
-        sslport = 109
-        peek_capable = False
-        tagged = False
-        delimited = False
-        repoll = False
+        self.name = 'POP2'
+        self.service = 'pop2'
+        self.sslservice = 'pop2'
+        self.port = 109
+        self.sslport = 109
+        self.peek_capable = False
+        self.tagged = False
+        self.delimited = False
+        self.repoll = False
         # Internal
-        pound_arg = -1
-        equal_arg = -1
+        self.pound_arg = -1
+        self.equal_arg = -1
 
-    def ack(sock):
+    def ok(sock):
+        st = 0
         self.pound_arg = self.equal_arg = -1
         buf = gen_recv(sock)
-        if buf[0] == "#":
+        if buf[0] == "+":
             pass
         elif buf[0] == "#":
-            pound_arg = int(buf[1:])
+            self.pound_arg = int(buf[1:])
         elif buf[0] == '=':
-            equal_arg = int(buf[1:])
+            self.equal_arg = int(buf[1:])
         elif buf[0] == '-':
-            raise GeneralError()
+            raise FetchError(PS_ERROR)
         else:
-            raise ProtocolError()
+            raise FetchError(PS_PROTOCOL)
         return buf
 
     def getauth(sock, ctl):
-        shroud = ctl.password
-        status = gen_transact(sock, \
-                              "HELO %s %s" % (ctl.remotename, ctl.password))
-        shroud = None
-        return status
+        return gen_transact(sock,
+                              "HELO %s %s" % (ctl.remotename, ctl.password),
+                              ctl.password)
 
     def getrange(sock, ctl, folder):
         if folder:
           ok = gen_transact(sock, "FOLD %s" % folder)
           if pound_arg == -1:
-              raise GeneralError()
+              raise FetchError(PS_ERROR)
         else:
             # We should have picked up a count of messages in the user's
             # default inbox from the pop2_getauth() response. 
@@ -113,12 +119,12 @@ class proto_pop2:
             # pop2_getauth code will have to stash the pound response away
             # explicitly in case it gets stepped on.
           if pound_arg == -1:
-              raise GeneralError()
+              raise FetchError(PS_ERROR)
         return(pound_arg, -1, -1)
 
     def fetch(sock, ctl, number):
         # request nth message
-        ok = gen_transact(sock, "READ %d", number);
+        gen_transact(sock, "READ %d", number);
         gen_send(sock, "RETR");
         return equal_arg;
 
@@ -146,13 +152,73 @@ class proto_pop3:
         delimited = True
         retry = False
         # Internal
+        self.stage = 0 
         has_gssapi = FALSE
         has_kerberos = FALSE
         has_cram = FALSE
         has_otp = FALSE
         has_ssl = FALSE
 
-        # FIXME: fill in POP3 logic
+    def ok(sock):
+        buf = gen_recv(sock)
+        if buf.beginswith("+OK"):
+            return buf[3:]
+        elif outlevel >= O_VERBOSE:
+            stderr.write(buf + "\n")
+        if buf.beginswith('-ERR'):
+            buf = buf[4:]
+            if self.stage == STAGE_FETCH:
+                raise FetchError(PS_TRANSIENT)
+            elif self.stage > STAGE_GETAUTH:
+                raise FetchError(PS_PROTOCOL)
+                # We're checking for "lock busy", "unable to lock", 
+                # "already locked", "wait a few minutes" etc. here. 
+                # This indicates that we have to wait for the server to
+                # unwedge itself before we can poll again.
+                #
+                # PS_LOCKBUSY check empirically verified with two recent
+                # versions of the Berkeley popper; QPOP (version 2.2)  and
+                # QUALCOMM Pop server derived from UCB (version 2.1.4-R3)
+                # These are caught by the case-indifferent "lock" check.
+                # The "wait" catches "mail storage services unavailable,
+                # wait a few minutes and try again" on the InterMail server.
+                #
+                # [IN-USE] and [LOGIN-DELAY] are blessed by RFC 2449.
+                #
+                # If these aren't picked up on correctly, fetchmail will 
+                # think there is an authentication failure and wedge the
+                # connection in order to prevent futile polls.
+                #
+                # Gad, what a kluge.
+            elif buf.lower().find("lock") > -1 or buf.find("wait") > -1
+            		or buf.find("[IN-USE]") > -1
+                        or buf.find("[LOGIN-DELAY]") > -1:
+                # We always want to pass the user lock-busy messages, because
+                # they're red flags.  Other stuff (like AUTH failures on non-
+                # RFC1734 servers) only if we're debugging.
+                if outlevel < O_VERBOSE:
+                    stderr.write(buf + "\n")
+                raise FetchError(PS_LOCKBUSY)
+            elif buf.find("ervice") > -1 and buf.find("unavailable") > -1:
+                raise FetchError(PS_AUTHFAIL)
+        else:
+            raise FetchError(PS_PROTOCOL)
+
+    def getauth(sock, ctl):
+        did_stls = has_gssapi = has_kerberos = has_cram = has_ssl = False
+        if ctl.server.authenticate == A_SSH:
+            return
+        
+
+    def getrange(sock, ctl, folder):
+
+    def fetch(sock, ctl, number):
+
+    def trail(sock, ctl, number):
+
+    def logout(sock, ctl):
+        return gen_transact(sock, "QUIT")
+
 
 class hostdata:
     "Per-mailserver control data."
