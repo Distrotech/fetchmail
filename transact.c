@@ -337,7 +337,8 @@ static char *parse_received(struct query *ctl, char *bufp)
 /* shared by readheaders and readbody */
 static int sizeticker;
 
-#define EMPTYLINE(s)	((s)[0] == '\r' && (s)[1] == '\n' && (s)[2] == '\0')
+#define EMPTYLINE(s)   (((s)[0] == '\r' && (s)[1] == '\n' && (s)[2] == '\0') \
+                       || ((s)[0] == '\n' && (s)[1] == '\0'))
 
 static int end_of_header (const char *s)
 /* accept "\r*\n" as EOH in order to be bulletproof against broken survers */
@@ -515,12 +516,12 @@ int readheaders(int sock,
 	     */
 	    if (!isspace(line[0]) && !strchr(line, ':'))
 	    {
-		/* the headers_ok flag cannot be set to FALSE here as the
-		 * delimiter has not occurred yet. */
+		headers_ok = FALSE;
+		has_nuls = (linelen != strlen(line));
 		if (outlevel > O_SILENT)
 		    report(stdout,
 			   GT_("incorrect header line found while scanning headers\n"));
-		retain_mail = 1;
+		goto process_headers;
 	    }
 
 	    /* check for RFC822 continuations */
@@ -1313,9 +1314,7 @@ int readbody(int sock, struct query *ctl, flag forward, int len)
 	/* check for end of message */
 	if (protocol->delimited && *inbufp == '.')
 	{
-	    if (inbufp[1] == '\r' && inbufp[2] == '\n' && inbufp[3] == '\0')
-		break;
-	    else if (inbufp[1] == '\n' && inbufp[2] == '\0')
+	    if (EMPTYLINE(inbufp+1))
 		break;
 	    else
 		msgblk.msglen--;	/* subtract the size of the dot escape */
