@@ -78,7 +78,7 @@ CTAGS = ctags -tw
 
 protobjs = rcfile_y.o rcfile_l.o socket.o getpass.o pop2.o pop3.o imap.o \
        etrn.o fetchmail.o options.o daemon.o smtp.o driver.o rfc822.o \
-       xmalloc.o uid.o mxget.o md5c.o md5ify.o interface.o netrc.o base64.c \
+       xmalloc.o uid.o mxget.o md5c.o md5ify.o interface.o netrc.o base64.o \
        error.o
 
 objs = $(protobjs) $(extras) $(EXTRAOBJ)

@@ -808,7 +808,7 @@ char *realname;		/* real name of host */
 	{
 	    int smtperr = atoi(smtp_response);
 
-	    if (smtperr >= 400 && smtperr != 571)
+	    if (smtperr >= 400 && smtperr != 571 || smtperr != 501)
 		error(0, -1, "SMTP error: %s", smtp_response);
 
 	    /*
@@ -823,7 +823,8 @@ char *realname;		/* real name of host */
 
 	    switch (smtperr)
 	    {
-	    case 571: /* unsolicited email refused */
+	    case 571:	/* unsolicited email refused */
+	    case 501:	/* exim's antispam response (temporary) */
 		/*
 		 * SMTP listener explicitly refuses to deliver
 		 * mail coming from this address, probably due

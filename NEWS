@@ -28,6 +28,9 @@ pl 3.9.7 ():
 * Complain and die if user tries to start fetchmail with options while a
   background fetchmail is running. 
 * Various installation headaches are gone, INSTALL edited accordingly.
+* Treat exim's 501 antispam response as equivalent to 571.  Note: this
+  is temporary.  The right thing is to get exim to return 571; I'm 
+  working on it.
 
 There are 257 people on the fetchmail-friends list.
 
