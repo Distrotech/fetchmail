@@ -294,7 +294,8 @@ error_build (message, va_alist)
       partial_message = xrealloc (partial_message, partial_message_size);
     }
 #else
-  sprintf (partial_message + partial_message_size_used, message, a1, a2, a3, a4, a5, a6, a7, a8);
+  VA_START (args, message);
+  vsprintf (partial_message + partial_message_size_used, message, args);
 
   /* Attempt to catch memory overwrites... */
   if ((partial_message_size_used = strlen (partial_message)) >= partial_message_size)
@@ -302,6 +303,7 @@ error_build (message, va_alist)
       partial_message_size_used = 0;
       error (PS_UNDEFINED, 0, "partial error message buffer overflow");
     }
+  va_end (args);
 #endif
 #endif
 
@@ -384,7 +386,8 @@ error_complete (status, errnum, message, va_alist)
       partial_message = xrealloc (partial_message, partial_message_size);
     }
 #else
-  sprintf (partial_message + partial_message_size_used, message, a1, a2, a3, a4, a5, a6, a7, a8);
+  VA_START (args, message);
+  vsprintf (partial_message + partial_message_size_used, message, args);
 
   /* Attempt to catch memory overwrites... */
   if ((partial_message_size_used = strlen (partial_message)) >= partial_message_size)
@@ -392,6 +395,7 @@ error_complete (status, errnum, message, va_alist)
       partial_message_size_used = 0;
       error (PS_UNDEFINED, 0, "partial error message buffer overflow");
     }
+  va_end (args);
 #endif
 #endif
 
