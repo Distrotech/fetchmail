@@ -11,6 +11,9 @@ set -- `timeseries | grep -v "%" | head -1`
 subscribers=$4
 set -- `ls -ks fetchmail`
 fetchmailsize=$1
+set -- `(cd /lib; ls libc-*)`
+glibc=`echo $1 | sed 's/libc-\(.*\)\.so/\1/'`
+glibc="glibc-$glibc"
 
 rm -f index.html
 
@@ -120,7 +123,7 @@ You can get any of the following leading-edge resources here:
 <LI> <a href="fetchmail-$version.tar.gz">
 	Gzipped source archive of fetchmail $version</a>
 <LI> <a href="fetchmail-$version-1.i386.rpm">
-	Intel binary RPM of fetchmail $version (uses glibc)</a>
+	Intel binary RPM of fetchmail $version (uses $glibc)</a>
 <LI> <a href="fetchmail-$version-1.src.rpm">
 	Source RPM of fetchmail $version</a>
 </UL>
