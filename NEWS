@@ -17,6 +17,8 @@
 fetchmail-4.4.4 ():
 * Francois Wautier's fix for qvirtual.
 * Willem Hengeveld's fix for UID initialization.
+* Strip out qvirtual prefix *before* doing name mapping (Mike McCallister
+  <mccallis@netcom.com>)
 
 fetchmail-4.4.3 (Sun Apr 19 18:22:00 EDT 1998):
 * Back out one of the changes to the null Return-Path handling, as it caused

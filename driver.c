@@ -261,25 +261,26 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
     int sl;
     int off = 0;
     
-    lname = idpair_find(&ctl->localnames, name);
-    if (!lname && ctl->wildcard)
-	lname = name;
-
-    if (lname != (char *)NULL)
-    {
-        /* 
-         * If the name of the user begins with a 
-         * qmail virtual domain prefix, remove
-         * the prefix
-         */
+	/* 
+	 * If the name of the user begins with a 
+	 * qmail virtual domain prefix, remove
+	 * the prefix
+	 */
 	if (ctl->server.qvirtual)
 	{
 	   sl=strlen(ctl->server.qvirtual);
-	   if (!strncasecmp(lname,ctl->server.qvirtual,sl)) off=sl; 
+	   if (!strncasecmp(name,ctl->server.qvirtual,sl)) off=sl; 
 	}
+
+    lname = idpair_find(&ctl->localnames, name+off);
+    if (!lname && ctl->wildcard)
+	lname = name+off;
+
+    if (lname != (char *)NULL)
+    {
 	if (outlevel == O_VERBOSE)
-	    error(0, 0, "mapped %s to local %s", name, lname+off);
-	save_str(xmit_names, lname+off, XMIT_ACCEPT);
+	    error(0, 0, "mapped %s to local %s", name, lname);
+	save_str(xmit_names, lname, XMIT_ACCEPT);
 	accept_count++;
     }
 }

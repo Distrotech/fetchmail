@@ -389,7 +389,8 @@ in the \fI.fetchmailrc\fR file.
 .B -Q, --qvirtual
 (Keyword: qvirtual)
 The string assigned to this option will be removed from the user
-name found in the header specified with the \fIenvelope\fR option.
+name found in the header specified with the \fIenvelope\fR option
+(\fIbefore\fR doing multidrop name mapping, if applicable).
 This option is useful if you are using  
 .I fetchmail
 to collect the mail for an entire domain and your ISP (or your mail
