@@ -500,8 +500,8 @@ int main (int argc, char **argv)
 		    if (ctl->server.poll_count++ % ctl->server.interval) 
 		    {
 			if (outlevel >= O_VERBOSE)
-			    fprintf(stderr,
-				    "fetchmail: interval not reached, not querying %s\n",
+			    error(0, -1,
+				    "interval not reached, not querying %s",
 				    ctl->server.pollname);
 			continue;
 		    }
@@ -581,12 +581,30 @@ int main (int argc, char **argv)
 	 */
 	if (run.poll_interval)
 	{
+	    /* 
+	     * Because passwords can expire, it may happen that *all*
+	     * hosts are now out of the loop due to authfail
+	     * conditions.  If this happens daemon-mode fetchmail
+	     * should softly and silently vanish away, rather than
+	     * spinning uselessly.
+	     */
+	    int auth_ok = 0;
+
+	    for (ctl = querylist; ctl; ctl = ctl->next)
+		if (!ctl->authfailcount)
+		    auth_ok++;
+	    if (!auth_ok)
+	    {
+		error(0, -1, "All authentications have failed.  Exiting.");
+		exit(PS_AUTHFAIL);
+	    }
+
 	    if (outlevel >= O_VERBOSE)
 	    {
 		time_t	now;
 
 		time(&now);
-		fprintf(stderr, "fetchmail: sleeping at %s", ctime(&now));
+		error(0, -1, "fetchmail: sleeping at %s", ctime(&now));
 	    }
 
 	    /*
@@ -698,14 +716,14 @@ int main (int argc, char **argv)
 		time_t	now;
 
 		time(&now);
-		fprintf(stderr, "fetchmail: awakened at %s", ctime(&now));
+		error(0, -1, "awakened at %s", ctime(&now));
 	    }
 	}
     } while
 	(run.poll_interval);
 
     if (outlevel >= O_VERBOSE)
-	fprintf(stderr,"fetchmail: normal termination, status %d\n",
+	error(0, -1, "normal termination, status %d",
 		successes ? PS_SUCCESS : querystatus);
 
     termhook(0);
@@ -1131,7 +1149,7 @@ static int query_host(struct query *ctl)
 	time_t now;
 
 	time(&now);
-	fprintf(stderr, "fetchmail: %s querying %s (protocol %s) at %s",
+	error(0, -1, "fetchmail: %s querying %s (protocol %s) at %s",
 	    RELEASE_ID,
 	    ctl->server.pollname, showproto(ctl->server.protocol), ctime(&now));
     }
@@ -1150,7 +1168,7 @@ static int query_host(struct query *ctl)
 #ifdef POP2_ENABLE
 	return(doPOP2(ctl));
 #else
-	fprintf(stderr, "POP2 support is not configured.\n");
+	error(0, -1, "POP2 support is not configured.\n");
 	return(PS_PROTOCOL);
 #endif /* POP2_ENABLE */
 	break;
@@ -1160,7 +1178,7 @@ static int query_host(struct query *ctl)
 #ifdef POP3_ENABLE
 	return(doPOP3(ctl));
 #else
-	fprintf(stderr, "POP3 support is not configured.\n");
+	error(0, -1, "POP3 support is not configured.\n");
 	return(PS_PROTOCOL);
 #endif /* POP3_ENABLE */
 	break;
@@ -1172,19 +1190,19 @@ static int query_host(struct query *ctl)
 #ifdef IMAP_ENABLE
 	return(doIMAP(ctl));
 #else
-	fprintf(stderr, "IMAP support is not configured.\n");
+	error(0, -1, "IMAP support is not configured.\n");
 	return(PS_PROTOCOL);
 #endif /* IMAP_ENABLE */
 	break;
     case P_ETRN:
 #ifndef ETRN_ENABLE
-	fprintf(stderr, "ETRN support is not configured.\n");
+	error(0, -1, "ETRN support is not configured.\n");
 	return(PS_PROTOCOL);
 #else
 #ifdef HAVE_GETHOSTBYNAME
 	return(doETRN(ctl));
 #else
-	fprintf(stderr, "Cannot support ETRN without gethostbyname(2).\n");
+	error(0, -1, "Cannot support ETRN without gethostbyname(2).\n");
 	return(PS_PROTOCOL);
 #endif /* HAVE_GETHOSTBYNAME */
 #endif /* ETRN_ENABLE */
@@ -1502,7 +1520,7 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 		printf("  %d UIDs saved.\n", count);
 		if (outlevel >= O_VERBOSE)
 		    for (idp = ctl->oldsaved; idp; idp = idp->next)
-			fprintf(stderr, "\t%s\n", idp->id);
+			printf("\t%s\n", idp->id);
 	    }
 
 	if (ctl->properties)
