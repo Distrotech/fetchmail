@@ -1831,12 +1831,14 @@ gUSiYASJpMEHhilJTEnhAlGoQqYAZQ1AiqEMZ0jDGtqQImhwwA13yMMevoQAGvGhEAWHGMOAAAA7
     ServerDefaults = Server()
     UserDefaults = User()
 
-    # Read the existing configuration
+    # Read the existing configuration.  We set the umask to 077 to make sure
+    # that group & other read/write permissions are shut off -- we wouldn't
+    # want crackers to snoop password information out of the tempfile.
     tmpfile = "/tmp/fetchmailconf." + `os.getpid()`
     if rcfile:
-        cmd = "fetchmail -f " + rcfile + " --configdump --nosyslog >" + tmpfile
+        cmd = "umask 077; fetchmail -f " + rcfile + " --configdump --nosyslog >" + tmpfile
     else:
-        cmd = "fetchmail --configdump --nosyslog >" + tmpfile
+        cmd = "umask 077; fetchmail --configdump --nosyslog >" + tmpfile
         
     try:
         s = os.system(cmd)
