@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/09/18 07:09:58 $
+<td width="30%" align=right>$Date: 1997/09/22 22:36:47 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -239,8 +239,10 @@ fetchmail's capabilities in various ways described on the manual
 page.<P>
 
 Most modern Unixes (and effectively all Linux/*BSD systems) come with
-POP3 support preconfigured.  An increasing minority also feature IMAP
-(you can detect IMAP support by running fetchmail in AUTO mode).<P>
+POP3 support preconfigured (but beware of the horribly broken POP3
+server mentioned in <a href="#R7">R7</a>).  An increasing minority
+also feature IMAP (you can detect IMAP support by running fetchmail in
+AUTO mode).<P>
 
 If you have the option, we recommend using or installing IMAP4; it has
 the best facilities for tracking message "seen" states.  You can find
@@ -977,7 +979,7 @@ same .fetchmailrc and .netrc.<p>
 <h2><a name="R7">R7. All my mail seems to disappear after an interrupt.</a></h2>
 
 One POP3 daemon used in the Berkeley Unix world that reports itself as
-Pop3 version 1.004 actually throws the queue away. 1.005 fixed that.
+POP3 version 1.004 actually throws the queue away. 1.005 fixed that.
 If you're running this one, upgrade immediately.<P>
 
 Many POP servers, if an interruption occurs, will restore the whole
@@ -995,7 +997,7 @@ more often.<P>
 Qualcomm's qpopper, used at many BSD Unix sites, is better behaved.
 If its connection is dropped, it will first execute all DELE commands (as
 though you had issued an QUIT -- this is a technical violation of
-the RFCs, but a good idea in a world of flaky phone lines). Then it
+the RFCs, but a good idea in a world of flaky phone lines. Then it
 will re-queue any message that was being downloaded at hangup time.
 Still, qpopper may require a noticeable amount of time to do deletions
 and clean up its queue.  (Fetchmail waits a bit before retrying in
@@ -1336,7 +1338,7 @@ template string in fetchmail.c.
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/09/18 07:09:58 $
+<td width="30%" align=right>$Date: 1997/09/22 22:36:47 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
