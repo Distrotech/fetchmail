@@ -1,13 +1,13 @@
 				Release Notes:
 
-fetchmail-4.6.8 ():
+fetchmail-4.6.8 (Sat Nov 28 21:07:46 EST 1998):
+* Added bounce-mail capability on SMTP/ESMTP error conditions.
 * Internationalization support via GNU gettext from Arnaldo Carvalho de Melo
   <acme@conectiva.com.br> and Jorge Godoy <jorge@bestway.com.br>.  First
   supported language is Brazilo-Portuegese (LC_ALL=pt_BR).
 * Fixed Debian Bug#29913: -M on the command line causes SEGV in daemon mode.
 * Emit an informational message when fetchlimit is reached.
-* Added bounce-mail capability on SMTP/ESMTP error messages.
-* Documented fetchmail's actions on ESMTP errors.
+* Documented fetchmail's actions on ESMTP errors on the man page.
 * Fix an undead-message hole in POP3 with fetchall on.
 * Fix a minor error in generation of fetchmail's trace headers.
 * Better Received-line parsing (avoid some false positives).
