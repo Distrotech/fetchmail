@@ -195,6 +195,23 @@ maintainers may be added in the future, in order to ensure continued
 support should Eric S.  Raymond drop permanently off the net for any
 reason.<P>
 
+<H1>You can help improve fetchmail</H1>
+
+I welcome your code contributions.  But even if you don't write code,
+you can help fetchmail improve.<p>
+
+If you administer a site that runs a post-office server, you may be
+able help improve fetchmail by lending me a test account on your site.
+Note that I do not need a shell account for this purpose, just a 
+maildrop.  Nor am I interested in collecting maildrops per se --
+what I'm collecting is different <em>kinds of servers</em>.  
+
+Before each release, I run a test harness that sends date-stamped 
+test mail to each site on my regression-test list, then tries to
+retrieve it.  Please take a look at my <a href="testservers.html">
+list of test servers</a>.  If you can lend me an account on a kind
+of server that is <em>not</em> already on this list, please do.<p>
+
 <H1>Who uses fetchmail:</H1>
 
 Fetchmail entered full production status with the 2.0.0 version in
