@@ -2,7 +2,7 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
-fetchmail-5.6.2 (Fri Jan  5 15:40:47 EST 2001), 19744 lines:
+fetchmail-5.6.2 (Fri Jan  5 16:45:47 EST 2001), 19744 lines:
 
 * Dave Bodenstab's fix for the lockfile re-exec problem.
 * Fixes for `principal' handling in fetchmailconf.
