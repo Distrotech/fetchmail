@@ -196,7 +196,6 @@ class User:
         else:
             print "Can't get your username!"
             sys.exit(1)
-	self.remote = os.environ["USER"]# Remote username
 	self.localnames = [self.remote,]# Local names
 	self.password = None		# Password for mail account access
 	self.mailboxes = []		# Remote folders to retrieve from
