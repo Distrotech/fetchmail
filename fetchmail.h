@@ -101,7 +101,7 @@ struct method
 extern char tag[TAGLEN];
 
 /* list of hosts assembled from run control file and command line */
-extern struct hostrec cmd_opts, *hostlist, *hosttail;
+extern struct hostrec cmd_opts, *hostlist;
 
 /* controls the detail level of status/progress messages written to stderr */
 extern int outlevel;    	/* see the O_.* constants above */
