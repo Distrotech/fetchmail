@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.16"
+version = "1.17"
 
 from Tkinter import *
 from Dialog import *
@@ -1190,6 +1190,14 @@ qpopper does something odd that causes fetchmail to hang with a socket
 error on very large messages.  This is probably not a fetchmail bug, as
 it has been observed with fetchpop.  The fix is to upgrade to qpopper
 3.0beta or a more recent version.  Better yet, switch to IMAP.
+
+"""
+            if string.find(greetline, "Imail") > 0:
+                warnings = warnings + """
+We've seen a bug report indicating that this IMAP server (at least as of
+version 5.0.7) returns an invalid body size for messages with MIME
+attachments; the effect is to drop the attachments on the floor.  We
+recommend you upgrade to a non-broken IMAP server.
 
 """
             closebrak = string.find(greetline, ">")
