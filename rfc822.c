@@ -29,11 +29,12 @@ const char *host;	/* server hostname */
     char *from, *cp;
     int parendepth, state, has_bare_name_part, has_host_part;
 
-    if (strncmp("From: ", buf, 6)
-	&& strncmp("To: ", buf, 4)
-	&& strncmp("Reply-", buf, 6)
-	&& strncmp("Cc: ", buf, 4)
-	&& strncmp("Bcc: ", buf, 5)) {
+    if (strncasecmp("From: ", buf, 6)
+	&& strncasecmp("To: ", buf, 4)
+	&& strncasecmp("Reply-To: ", buf, 10)
+	&& strncasecmp("Return-Path: ", buf, 13)
+	&& strncasecmp("Cc: ", buf, 4)
+	&& strncasecmp("Bcc: ", buf, 5)) {
 	return;
     }
 
@@ -312,11 +313,11 @@ main(int argc, char *argv[])
     {
 	if (buf[0] == ' ' || buf[0] == '\t')
 	    strcat(longbuf, buf);
-	else if (!strncmp("From: ", buf, 6)
-		    || !strncmp("To: ", buf, 4)
-		    || !strncmp("Reply-", buf, 6)
-		    || !strncmp("Cc: ", buf, 4)
-		    || !strncmp("Bcc: ", buf, 5))
+	else if (!strncasecmp("From: ", buf, 6)
+		    || !strncasecmp("To: ", buf, 4)
+		    || !strncasecmp("Reply-", buf, 6)
+		    || !strncasecmp("Cc: ", buf, 4)
+		    || !strncasecmp("Bcc: ", buf, 5))
 	    strcpy(longbuf, buf);	
 	else if (longbuf[0])
 	{

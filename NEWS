@@ -38,8 +38,9 @@ pl 3.9.3 ():
 * Fix for -I option from George Sipe.
 * Finally got error.c to compile under AIX, thanks to Dave Vinish.
 * Prevent header rerwrite logic from appending mailserver name to blank To.
+* When header rewrite is on, hack Return-Path as well.
 
-There are 224 people on the fetchmail-friends list.
+There are 240 people on the fetchmail-friends list.
 
 pl 3.9.2 (Wed Apr 23 14:07:03 EDT 1997):
 * Fixed a glitch in the Makefile yacc and lex productions

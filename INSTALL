@@ -61,8 +61,9 @@ wish to change these defaults, edit the Makefile AFTER you run
 a prefix other than /usr/local, or you can choose completely different
 directories for each item.
 
-NOTE: If you are using exim, you must configure it to accept local
-addresses as valid RCPT TO lines.
+NOTE: If you are using an MTA other than sendmail (such as qmail or exim),
+see the FAQ (section T) for discussion of any special configuration steps
+that may be necessary.
 
 4. SET UP A RUN CONTROL FILE
 

@@ -9,9 +9,9 @@
 <BODY>
 <H1>Frequently Asked Questions About Fetchmail</H1>
 
-$Id: fetchmail-FAQ.html,v 1.9 1997/05/03 02:38:26 esr Exp $<p>
+$Id: fetchmail-FAQ.html,v 1.10 1997/05/06 07:18:59 esr Exp $<p>
 
-(Added <a href="#O4">O3</a> on nonexistent logfiles.)<p>
+(New: <a href="#T2">T2</a> on using fetchmail with exim.)<p>
 
 Before reporting any bug, please read <a href="#G3">G3</a> for advice
 on how to include diagnostic information that will get your bug fixed
@@ -55,9 +55,13 @@ fetchmail-friends-request@thyrsus.com</a>. <p>
 <a href="#C3">C3. How do I know what interface and address to use with --interface?</a><br>
 <a href="#C4">C4. How can I get fetchmail to work with ssh?</a><br>
 <a href="#C5">C5. How can I set up support for sendmail's anti-spam 571 response?</a><br>
-<a href="#C6">C6. How can I use fetchmail with qmail?</a><br>
-<a href="#C7">C7. How can I do automatic startup/shutdown of fetchmail
+<a href="#C6">C6. How can I do automatic startup/shutdown of fetchmail
 when I may have multiple login sessions going?</a><br>
+
+<h1>Configuration tips for non-sendmail MTAs</h1>
+
+<a href="#T1">T1. How can I use fetchmail with qmail?</a><br>
+<a href="#T2">T2. How can I use fetchmail with exim?</a><br>
 
 <h1>Runtime fatal errors:</h1>
 
@@ -575,7 +579,16 @@ to allow sendmail to process the message further and generate an error
 message to the sender.  <p>
 
 <hr>
-<h2><a name="C6">C6. How can I use fetchmail with qmail?</a></h2>
+<h2><a name="C6">C6. How can I do automatic startup/shutdown of fetchmail
+when I may have multiple login sessions going?</h2>
+
+In the contrib subdirectory of the fetchmail distribution there is
+some shell code you can add to your .bash_login and .bash_logout
+profiles that will accomplish this.  Thank James Laferriere
+&lt;babydr@nwrain.net&gt; for it.<p>
+
+<hr>
+<h2><a name="T1">T1. How can I use fetchmail with qmail?</a></h2>
 
 Turn on the <tt>forcecr</tt> option; qmail's listener mode doesn't like 
 header or message lines terminated with bare linefeeds.<p>
@@ -637,13 +650,12 @@ in the alias directory (normally /var/qmail/alias) with the contents:<p>
 Note this <em>does</em> require a modern /bin/sh.<p>
 
 <hr>
-<h2><a name="C7">C7. How can I do automatic startup/shutdown of fetchmail
-when I may have multiple login sessions going?</h2>
+<h2><a name="T2">T2. How can I use fetchmail with exim?</a></h2>
 
-In the contrib subdirectory of the fetchmail distribution there is
-some shell code you can add to your .bash_login and .bash_logout
-profiles that will accomplish this.  Thank James Laferriere
-&lt;babydr@nwrain.net&gt; for it.<p>
+There is a switch somewhere in exim's configuration files that allows
+it to accept domainless MAIL FROM addresses; you may have to flip that
+if you're running a fetchmail version prior to 3.9.3.  Otherwise
+you're all set.<p>
 
 <hr>
 <h2><a name="R1">R1. I think I've set up fetchmail correctly, but I'm not getting any mail.</a></h2>
