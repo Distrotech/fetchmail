@@ -748,7 +748,7 @@ static int load_params(int argc, char **argv, int optind)
     /* merge in wired defaults, do sanity checks and prepare internal fields */
     for (ctl = querylist; ctl; ctl = ctl->next)
     {
-	if (ctl->active && !(implicitmode && ctl->server.skip))
+	if (configdump || (ctl->active && !(implicitmode && ctl->server.skip)))
 	{
 	    /* merge in defaults */
 	    optmerge(ctl, &def_opts);

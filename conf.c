@@ -1,5 +1,5 @@
 /*
- * conf.c -- main driver module for fetchmailconf
+ * conf.c -- dump fetchmail configuration as Python dictionary initializer
  *
  * For license terms, see the file COPYING in this directory.
  */
@@ -21,6 +21,88 @@
 
 #include "fetchmail.h"
 
+/* Python prettyprinting functions */
+
+static indent_level;
+
+static void indent(char ic)
+/* indent current line */
+{
+    int	i;
+
+    if (ic == ')' || ic == ']' || ic == '}')
+	indent_level--;
+
+    for (i = 0; i < indent_level / 2; i++)
+	putc('\t', stdout);
+    if (indent_level % 2)
+	fputs("    ", stdout);
+
+    if (ic)
+    {
+	putc(ic, stdout);
+	putc('\n', stdout);
+    }
+
+    if (ic == '(' || ic == '[' || ic == '{')
+	indent_level++;
+}
+
+static void stringdump(const char *name, const char *member)
+/* dump a string member with current indent */
+{
+    static char	buf[BUFSIZ];
+
+    indent('\0');
+    fprintf(stdout, "'%s':", name);
+    if (member)
+	fprintf(stdout, "'%s'", visbuf(member));
+    else
+	fputs("None", stdout);
+    fputs(",\n", stdout);
+}
+
+static int numdump(const char *name, const int num)
+/* dump a numeric quantity at current indent */
+{
+    indent('\0');
+    fprintf(stdout, "'%s':%d,\n", name, num);
+}
+
+static int booldump(const char *name, const int onoff)
+/* dump a boolean quantity at current indent */
+{
+    indent('\0');
+    if (onoff)
+	fprintf(stdout, "'%s':TRUE,\n", name);
+    else
+	fprintf(stdout, "'%s':FALSE,\n", name);
+}
+
+static void listdump(const char *name, struct idlist *list)
+/* dump a string list member with current indent */
+{
+    indent('\0');
+    fprintf(stdout, "'%s':", name);
+
+    if (!list)
+	fputs("nil,\n", stdout);
+    else
+    {
+	struct idlist *idp;
+
+	fputs("[", stdout);
+	for (idp = list; idp; idp = idp->next)
+	    if (idp->id)
+	    {
+		fprintf(stdout, "'%s'", visbuf(idp->id));
+		if (idp->next)
+		    fputs(", ", stdout);
+	    }
+	fputs("],\n", stdout);
+    }
+}
+
 /*
  * Note: this function dumps the entire configuration,
  * after merging of the defaults record (if any).  It
@@ -33,25 +115,44 @@ void dump_config(struct runctl *runp, struct query *querylist)
 {
     struct query *ctl;
     struct idlist *idp;
-    time_t now;
 
-    /* now write the edited configuration back to the file */
-    time(&now);
-    fprintf(stdout, "# fetchmail rc file generated at %s", ctime(&now));
+    indent_level = 0;
+    fputs("# Start of initializer\n", stdout);
+    indent('{');
 
-    if (runp->poll_interval)
-	fprintf(stdout, "set daemon %d\n", runp->poll_interval);
-    if (runp->use_syslog)
-	fprintf(stdout, "set syslog\n");
-    if (runp->logfile)
-	fprintf(stdout, "set logfile %s\n", runp->logfile);
-    if (runp->idfile)
-	fprintf(stdout, "set idfile %s\n", runp->idfile);
-    if (runp->invisible)
-	fprintf(stdout, "set invisible\n");
+    numdump("poll_interval", runp->poll_interval);
+    booldump("syslog", runp->use_syslog);
+    stringdump("logfile", runp->logfile);
+    stringdump("idfile", runp->idfile);
+    booldump("invisible", runp->invisible);
+
+    if (!querylist)
+    {
+	indent('}'); 
+	return;
+    }
+
+    indent(0);
+    fputs("# List of server entries begins here\n", stdout);
+    indent('[');
 
     for (ctl = querylist; ctl; ctl = ctl->next)
     {
+	/*
+	 * Every time we see a leading server entry after the first one,
+	 * it implicitly ends the both (q) the list of user structures
+	 * associated with the previous entry, and (b) that previous entry.
+	 */
+	if (ctl > querylist)
+	{
+	    indent(']');
+	    indent('}');
+	}
+
+	indent(0);
+	fprintf(stdout,"# Entry for site `%s' begins:\n",ctl->server.pollname);
+	indent('{');
+
 	/*
 	 * First, the server stuff.
 	 */
@@ -62,166 +163,98 @@ void dump_config(struct runctl *runp, struct query *querylist)
 		 ctl->server.port == KPOP_PORT &&
 		 ctl->server.preauthenticate == A_KERBEROS_V4);
 
-	    if (strcmp(ctl->server.pollname, "defaults") == 0)
-		fputs("defaults ", stdout);
-	    else
-		fprintf(stdout, "%s %s ",
-		    ctl->server.skip ? "skip" : "poll",
-		    visbuf(ctl->server.pollname));
-	    if (ctl->server.via)
-		fprintf(stdout, "via %s ", ctl->server.via);
-	    if (ctl->server.protocol != P_AUTO)
-		fprintf(stdout, "with protocol %s ",
-			using_kpop ? "KPOP" : showproto(ctl->server.protocol));
-	    if (ctl->server.port)
-		fprintf(stdout, "port %d ", ctl->server.port);
-	    if (ctl->server.timeout)
-		fprintf(stdout, "timeout %d ", ctl->server.timeout);
-	    if (ctl->server.interval)
-		fprintf(stdout, "interval %d ", ctl->server.interval);
-	    if (ctl->server.envelope == STRING_DISABLED)
-		fprintf(stdout, "no envelope ");
-	    else if (ctl->server.envelope)
-		fprintf(stdout, "envelope \"%s\" ", visbuf(ctl->server.envelope));
-	    if (ctl->server.qvirtual)
-		fprintf(stdout, "qvirtual \"%s\" ", visbuf(ctl->server.qvirtual));
+	    stringdump("pollname", ctl->server.pollname); 
+	    booldump("active", !ctl->server.skip); 
+	    stringdump("via", ctl->server.via); 
+	    stringdump("protocol", 
+		       using_kpop ? "KPOP" : showproto(ctl->server.protocol));
+	    numdump("port",  ctl->server.port);
+	    numdump("timeout",  ctl->server.timeout);
+	    numdump("interval", ctl->server.interval);
+	    stringdump("envelope", ctl->server.envelope); 
+	    stringdump("qvirtual", ctl->server.qvirtual);
+ 
 	    if (ctl->server.preauthenticate == A_KERBEROS_V4)
-		fprintf(stdout, "auth kerberos_v4 ");
-#define DUMPOPT(flag, str) \
-		if (flag) \
-		    fprintf(stdout, "%s ", str); \
-		else \
-		    fprintf(stdout, "no %s ", str);
+		stringdump("auth", "kerberos_v4");
+	    else if (ctl->server.preauthenticate == A_KERBEROS_V5)
+		stringdump("auth", "kerberos_v5");
+	    else
+		stringdump("auth", "password");
+
 #if defined(HAVE_GETHOSTBYNAME) && defined(HAVE_RES_SEARCH)
-	    if (ctl->server.dns || ctl->server.uidl)
-#else
-	    if (ctl->server.uidl)
+	    booldump("dns", ctl->server.dns);
 #endif /* HAVE_GETHOSTBYNAME && HAVE_RES_SEARCH */
-		fputs("and options ", stdout);
-#if defined(HAVE_GETHOSTBYNAME) && defined(HAVE_RES_SEARCH)
-	    DUMPOPT(ctl->server.dns,  "dns");
-#endif /* HAVE_GETHOSTBYNAME && HAVE_RES_SEARCH */
-	    DUMPOPT(ctl->server.uidl, "uidl");
-	    fputs("\n", stdout);
+	    booldump("uidl", ctl->server.uidl);
 
-	    /* AKA and loca-domain declarations */
-	    if (ctl->server.akalist || ctl->server.localdomains)
-	    {
-		fputc('\t', stdout);
-		if (ctl->server.akalist)
-		{
-		    struct idlist *idp;
-
-		    fprintf(stdout, "aka");
-		    for (idp = ctl->server.akalist; idp; idp = idp->next)
-			fprintf(stdout, " %s", visbuf(idp->id));
-		}
-
-		if (ctl->server.akalist && ctl->server.localdomains)
-		    putc(' ', stdout);
-
-		if (ctl->server.localdomains)
-		{
-		    struct idlist *idp;
-
-		    fprintf(stdout, "localdomains");
-		    for (idp = ctl->server.localdomains; idp; idp = idp->next)
-			fprintf(stdout, " %s", visbuf(idp->id));
-		}
-		putc('\n', stdout);
-	    }
+	    listdump("aka", ctl->server.akalist);
+	    listdump("localdomains", ctl->server.localdomains);
 
 #ifdef linux
-	    if (ctl->server.monitor || ctl->server.interface)
-	    {
-		putc('\t', stdout);
-		if (ctl->server.monitor)
-		    fprintf(stdout, "monitor \"%s\" ", ctl->server.monitor);
-		if (ctl->server.interface)
-		    fprintf(stdout, "interface \"%s\"", ctl->server.interface);
-		putc('\n', stdout);
-	    }
+	    stringdump("interface", ctl->server.interface);
+	    stringdump("monitor", ctl->server.monitor);
 #endif /* linux */
+
+	    indent('[');
 	}
 
-	fputc('\t', stdout);
-	if (ctl->remotename || ctl->password || ctl->localnames)
+	indent('{');
+
+	stringdump("user", ctl->remotename);
+	stringdump("password", ctl->password);
+
+	indent('\0');
+	fprintf(stdout, "`localnames':[");
+	for (idp = ctl->localnames; idp; idp = idp->next)
 	{
-	    if (ctl->remotename)
-		fprintf(stdout, "user \"%s\" ", visbuf(ctl->remotename));
-	    if (ctl->remotename && ctl->password)
-		fputs("with ", stdout);
-	    if (ctl->password)
-		fprintf(stdout, "password \"%s\" ", visbuf(ctl->password));
-	    if (ctl->localnames)
-	    {
-		fprintf(stdout, "is ");
-		for (idp = ctl->localnames; idp; idp = idp->next)
-		    if (idp->val.id2)
-			fprintf(stdout, "\"%s\"=\"%s\" ", 
-				visbuf(idp->id), visbuf(idp->val.id2));
-		    else
-			fprintf(stdout, "%s ", visbuf(idp->id));
-		if (ctl->wildcard)
-		    fputs("*", stdout);
-	    }
+	    if (idp->val.id2)
+		fprintf(stdout, "('%s', %s)", 
+			visbuf(idp->id), visbuf(idp->val.id2));
+	    else
+		fprintf(stdout, "'%s'", visbuf(idp->id));
+	    if (idp->next)
+		fputs(", ", stdout);
 	}
+	if (ctl->wildcard)
+	    fputs(", '*'", stdout);
+	fputs("],\n", stdout);
 
-	if (ctl->fetchall || ctl->keep || ctl->flush || ctl->rewrite
-			|| ctl->stripcr || ctl->forcecr || ctl->pass8bits)
-	    fputs("options ", stdout);
-	DUMPOPT(ctl->fetchall,    "fetchall");
-	DUMPOPT(ctl->keep,        "keep");
-	DUMPOPT(ctl->flush,       "flush");
-	DUMPOPT(ctl->rewrite,     "rewrite");
-	DUMPOPT(ctl->stripcr,     "stripcr"); 
-	DUMPOPT(ctl->forcecr,     "forcecr");
-	DUMPOPT(ctl->pass8bits,   "pass8bits");
-	DUMPOPT(ctl->dropstatus,  "dropstatus");
-	DUMPOPT(ctl->mimedecode,  "mimedecode");
-#undef DUMPOPT
+	booldump("fetchall", ctl->fetchall);
+	booldump("keep", ctl->keep);
+	booldump("flush", ctl->flush);
+	booldump("rewrite", ctl->rewrite);
+	booldump("stripcr", ctl->stripcr); 
+	booldump("forcecr", ctl->forcecr);
+	booldump("pass8bits", ctl->pass8bits);
+	booldump("dropstatus", ctl->dropstatus);
+	booldump("mimedecode", ctl->mimedecode);
 
-	if (ctl->mda)
-	    fprintf(stdout, "mda \"%s\" ", visbuf(ctl->mda));
+	stringdump("mda", ctl->mda);
 #ifdef INET6
-	if (ctl->netsec)
-	    fprintf(stdout, "netsec \"%s\" ", visbuf(ctl->netsec));
+	stringdump("netsec", ctl->netsec);
 #endif /* INET6 */
-	if (ctl->preconnect)
-	    fprintf(stdout, "preconnect \"%s\" ", visbuf(ctl->preconnect));	
-	if (ctl->postconnect)
-	    fprintf(stdout, "postconnect \"%s\" ", visbuf(ctl->postconnect));	
-	if (ctl->fetchlimit)
-	    fprintf(stdout, "fetchlimit %d ", ctl->fetchlimit);
-	if (ctl->batchlimit)
-	    fprintf(stdout, "batchlimit %d ", ctl->batchlimit);
+	stringdump("preconnect", ctl->preconnect);
+	stringdump("postconnect", ctl->postconnect);
+	numdump("fetchlimit", ctl->fetchlimit);
+	numdump("batchlimit", ctl->batchlimit);
+	numdump("expunge", ctl->expunge);
+	listdump("smtphost", ctl->smtphunt);
+	stringdump("smtpaddress", ctl->smtpaddress);
+	numdump("antispam", ctl->antispam);
+	listdump("mailboxes", ctl->mailboxes);
 
-	if (ctl->smtphunt)
-	{
-	    struct idlist *idp;
-
-	    fprintf(stdout, "smtphost ");
-	    for (idp = ctl->smtphunt; idp; idp = idp->next)
-		fprintf(stdout, "%s ", visbuf(idp->id));
-	}
-
-	if (ctl->smtpaddress)
-	    fprintf(stdout, "smtpaddress \"%s\" ", visbuf(ctl->smtpaddress));
-
-	if (ctl->antispam)
-	    fprintf(stdout, "antispam %d ", ctl->antispam);
-
-	if (ctl->mailboxes && ctl->mailboxes->id)
-	{
-	    struct idlist *idp;
-
-	    fprintf(stdout, "mailboxes ");
-	    for (idp = ctl->mailboxes; idp; idp = idp->next)
-		fprintf(stdout, "%s ", visbuf(idp->id));
-	}
-
-	putc('\n', stdout);
+	indent('}');
     }
+
+    /* end last span of user entries and last server entry */
+    indent(']');
+    indent('}');
+
+    /* end array of servers */
+    indent(']');
+
+    /* end top-level dictionary */
+    indent('}');
+    fputs("# End of initializer\n", stdout);
 }
 
 /* conf.c ends here */
