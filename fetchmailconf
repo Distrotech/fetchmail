@@ -1103,7 +1103,7 @@ if __name__ == '__main__':
     Fetchmailrc = Configuration()
     copy_instance(Fetchmailrc, fetchmailrc)
     Fetchmailrc.servers = [];
-    for server in configuration['servers']:
+    for server in fetchmailrc['servers']:
 	Newsite = Server()
 	copy_instance(Newsite, server)
 	Fetchmailrc.servers.append(Newsite)
