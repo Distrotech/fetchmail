@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/03/14 00:27:48 $
+<td width="30%" align=right>$Date: 2000/03/14 01:08:26 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -441,8 +441,8 @@ delivery is that you may be able to arrange this by using ssh(1); see
 Note that ssh is not a complete privacy solution either, as your mail
 could have been snooped in transit to your POP server from wherever it
 originated.  For best security, agree with your correspondents to use
-a tool such as GPG (Gnu Privacy Guard) or PGP (Pretty Good
-Privacy).<P>
+a tool such as <a href="http://www.gnupg.org/">GPG</a> (Gnu Privacy
+Guard) or PGP (Pretty Good Privacy).<P>
 
 If ssh/sshd isn't available, or you find it too complicated for you to
 set up, password encryption will at least keep a malicious cracker
@@ -506,9 +506,6 @@ These patches use a SASL authentication method named "X-OTP" because
 there is not currently a standard way to do this; fetchmail also uses
 this method, so the two will interoperate happily.  They better,
 because this is how Craig gets his mail ;-)<P>
-
-(One important win of OTP is that it's not subject to U.S. export
-restrictions.)<P>
 
 <hr>
 <h2><a name="G10">G10. Is any special configuration needed to use a dynamic IP address?</a></h2>
@@ -1813,12 +1810,13 @@ is the only one I'm aware of and the one I recommend anyway for other
 reasons. You'll need version 4.1-FINAL or greater though, and it has
 to have GSS support compiled in.<p>
 
-Neither UW-IMAP nor fetchmail compile in support for GSS by default, since
-it requires libraries from the Kerberos V distribution (available via FTP at
-<a href="ftp://athena-dist.mit.edu/pub/ATHENA/kerberos">athena-dist.mit.edu</a>
-but mind the export restrictions). If you have these, compiling in GSS support
-is simple: add a <pre>--with-gssapi=[/path/to/krb5/root]</pre> option to
-configure. For instance, I have all of my Kerberos V libraries installed under
+Neither UW-IMAP nor fetchmail compile in support for GSS by default,
+since it requires libraries from the Kerberos V distribution
+(available via FTP at <a
+href="ftp://athena-dist.mit.edu/pub/ATHENA/kerberos">athena-dist.mit.edu</a).
+If you have these, compiling in GSS support is simple: add a
+<pre>--with-gssapi=[/path/to/krb5/root]</pre> option to configure. For
+instance, I have all of my Kerberos V libraries installed under
 /usr/krb5 so I run <pre>configure --with-gssapi=/usr/krb5</pre><p>
 
 Setting up Kerberos V authentication is beyond the scope of this FAQ
@@ -2768,7 +2766,7 @@ terminate it.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/03/14 00:27:48 $
+<td width="30%" align=right>$Date: 2000/03/14 01:08:26 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
