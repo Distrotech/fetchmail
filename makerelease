@@ -72,6 +72,9 @@ if (system("make rpm $null && chown esr *.rpm")) {
 	die("RPM-build failure\n");
 }
 
+# Clean up permissions so next build won't foo up.
+system("chown esr config.log stamp-h po/Makefile")
+
 open(REPORT, ">PREAMBLE.$$");
 
 print REPORT <<EOF;
