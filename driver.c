@@ -725,7 +725,7 @@ struct query *ctl;	/* query control record */
 	}
 
 	/* SMTP byte-stuffing */
-	if (*bufp == '.' && ctl->mda[0] == 0)
+	if (*bufp == '.')
 	    if (ctl->mda[0])
 		fputs(".", sinkfp);
 	    else if (sinkfp)
