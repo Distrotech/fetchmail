@@ -13,6 +13,7 @@ fetchmail-4.7.8 ():
 * New `nobounce' debugging option (specifically exempted from feature freeze)
   allows SMTP error bouncemail to be redirected from sender to local
   postmaster.
+* Suppress dancing progress dots when syslog is on.
 
 There are 257 people on fetchmail-friends and 348 on fetchmail-announce.
 

@@ -499,8 +499,11 @@ static int readheaders(int sock,
 	    sizeticker += linelen;
 	    while (sizeticker >= SIZETICKER)
 	    {
-		fputc('.', stdout);
-		fflush(stdout);
+		if (!run.use_syslog)
+		{
+		    fputc('.', stdout);
+		    fflush(stdout);
+		}
 		sizeticker -= SIZETICKER;
 	    }
 	}
