@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/12/03 15:54:06 $
+<td width="30%" align=right>$Date: 1997/12/05 17:30:34 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1648,11 +1648,15 @@ be in the hosts file.<p>
 You can suppress the startup-time lookup if need to by reconfiguring
 with <code>FEATURE(nodns)</code>.<p>
 
+Configuring your bind library to cache DNS lookups locally may help,
+and is a good idea for speeding up other services as well.  Switching to
+a faster MTA like qmail or exim might help. <p>
+
 <HR>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/12/03 15:54:06 $
+<td width="30%" align=right>$Date: 1997/12/05 17:30:34 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
