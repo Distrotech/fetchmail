@@ -18,25 +18,33 @@ Inflict severe pain on the person(s) responsible for removing LAST from POP3.
 
 fetchmail-1.6 ():
 
+features --
+
+* You can now have multiple entries for the same server but different
+  users, and the right thing will happen (each user's mailbox will
+  be queried).  Even better, you can now specify multiple users in a
+  single server entry.
+
+* Restore --mda, seems some people either can't run a port 25 listener
+  due to bizarre dynamic-SLIP problems, or won't for security reasons.
+
+* When delivering to an MDA, print error and die (before deleting the message!)
+  if the MDA returns nonzero status.  Better safe than sorry.
+
+bug fixes --
+
 * Makefile fixes for correct linking on Sparcs and avoiding duplication of
   the md5 files (leading to harmless install-time error messages).
 
 * Fix a bonehead coding error in pop3_delete() that was masked by the
   Intel register architecture.  *blush*  Thanks to Jay Anderson.
 
-* Restore --mda, seems some people either can't run a port 25 listener
-  due to bizarre dynamic-SLIP problems, or won't for security reasons.
-
 * Fix bug that prevented SMTP from being specified on the defaults line.
 
+* Allow program to generate correct lockfiles when USER is undefined
+  (i.e. under zsh).
+
 * Allow program to run with no .fetchmailrc file again.
-
-* Allow program to generate correct lockfiles under zsh.
-
-* You can now have multiple entries for the same server but different
-  users, and the right thing will happen (each user's mailbox will
-  be queried).  Even better, you can now specify multiple users in a
-  single server entry.
 
 fetchmail-1.5 (Thu Oct  3 04:35:15 EDT 1996):
 

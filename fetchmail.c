@@ -566,20 +566,28 @@ struct hostrec *queryctl;
 int closemailpipe (fd)
 int fd;
 {
-    int err;
+    int err, status;
     int childpid;
 
     if (outlevel == O_VERBOSE)
 	fprintf(stderr, "about to close pipe %d\n", fd);
 
-    err = close(fd);
-#if defined(STDC_HEADERS)
-    childpid = wait(NULL);
-#else
-    childpid = wait((int *) 0);
+    if ((err = close(fd)) != 0)
+	perror("fetchmail: closemailpipe: close failed");
+
+    childpid = wait(&status);
+
+#if defined(WIFEXITED) && defined(WEXITSTATUS)
+    /*
+     * Try to pass up an error if the MDA returned nonzero status,
+     * on the assumption that this means it was reporting failure.
+     */
+    if (WIFEXITED(status) == 0 || WEXITSTATUS(status) != 0)
+    {
+	perror("fetchmail: MDA exited abnormally or returned nonzero status");
+	err = -1;
+    }
 #endif
-    if (err)
-	perror("fetchmail: closemailpipe: close");
 
     if (outlevel == O_VERBOSE)
 	fprintf(stderr, "closed pipe %d\n", fd);
