@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="/~esr">Eric's Home Page</a>
 <td width="30%" align=center>Up to <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/08/10 19:03:23 $
+<td width="30%" align=right>$Date: 2001/09/22 23:12:28 $
 </table>
 <HR>
 <H1 ALIGN=CENTER>Fetchmail Bugs and To-Do Items</H1>
@@ -62,6 +62,14 @@ rid of the kluge in rcfile_y.y).
 ought to be treated as an smtpname option, with the domain part
 removed for other purposes such as local-address matching.
 
+<p>I had to remove the getopt.c and getopt1.c files from the
+distribution because the SSL library is under a GPL-incompatible
+license.  Albert Chin-A-Young writes "Another option is another
+GPL-compatible SSL distribution. I think NSS from Mozilla fits the
+bill (I think Evolution uses this):" and gives the URL
+<http://www.mozilla.org/projects/security/pki/nss/>.  Somebody who
+cares about Solaris or HP-UX should port fetchmail to use this.
+
 <p>The <a
 href="http://bugs.debian.org/cgi-bin/pkgreport.cgi?pkg=fetchmail&archive=no">Debian
 bug-tracking page for fetchmail</a> lists other bug reports.
@@ -70,7 +78,7 @@ bug-tracking page for fetchmail</a> lists other bug reports.
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="/~esr">Eric's Home Page</a>
 <td width="30%" align=center>Up to <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/08/10 19:03:23 $
+<td width="30%" align=right>$Date: 2001/09/22 23:12:28 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@thyrsus.com&gt;</A></ADDRESS>
