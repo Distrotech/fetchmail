@@ -23,6 +23,7 @@ fetchmail-4.0.6 ()
 * Changed semantics of `via' and `poll <name>' to be more orthogonal.
 * Substantially improved option coverage on the man page.
 * Yet another try at getting the remote-build right for Harry McGavran.
+* Don't emit "No mail" messages in (non-verbose) daemon mode).
 
 WARNING: If you are running multidrop, (RE)READ FAQ ITEM F1 NOW!
 There are 255 people on the fetchmail-friends list.

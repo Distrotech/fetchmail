@@ -1475,7 +1475,11 @@ const struct method *proto;	/* protocol method table */
 		if (count == -1)		/* only used for ETRN */
 		    error(0, 0, "Polling %s", buf);
 		else if (count == 0)
-		    error(0, 0, "No mail at %s", buf); 
+		{
+		    /* these are pointless in normal daemon mode */
+		    if (poll_interval == 0 || outlevel == O_VERBOSE )
+			error(0, 0, "No mail at %s", buf); 
+		}
 		else
 		{
 		    if (new != -1 && (count - new) > 0)
