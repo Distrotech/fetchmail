@@ -193,7 +193,7 @@ static int is_host_alias(const char *name, struct query *ctl)
 	case NO_RECOVERY:	/* non-recoverable name server error */
 	case TRY_AGAIN:		/* temporary error on authoritative server */
 	default:
-	    error(0, 0,
+	    error(0, -1,
 		"nameserver failure while looking for `%s' during poll of %s.",
 		name, ctl->server.pollname);
 	    ctl->errcount++;
@@ -880,7 +880,7 @@ int num;		/* index of message */
 
 	if (!sinkfp)
 	{
-	    error(0, -1, "MDA open failed");
+	    error(0, 0, "MDA open failed");
 	    return(PS_IOERR);
 	}
 
