@@ -70,7 +70,7 @@ void envquery(int argc, char **argv)
 	if (hp == (struct hostent *) NULL)
 	{
 	    /* exit with error message */
-	    fprintf(stderr, "gethostbyname failed for %s", tmpbuf);
+	    fprintf(stderr, "gethostbyname failed for %s\n", tmpbuf);
 	    exit(PS_DNS);
 	}
 	strcpy(tmpbuf, hp->h_name);
