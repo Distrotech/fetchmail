@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Updated Danish translation from Byrial Jensen.
+
 fetchmail-5.6.8 (Thu Feb 22 02:57:31 EST 2001), 20110 lines:
 
 * `preauth' option changed back to `auth'
@@ -73,7 +75,7 @@ fetchmail-5.6.3 (Wed Feb  7 10:56:21 EST 2001), 19901 lines:
 * ODMR (RFC 2645) support -- untested and probably buggy!
 
 There are 276 people on fetchmail-friends and 558 on fetchmail-announce.
-% Mailing lists moved to MailMan
+% Lists moved to MailMan
 
 fetchmail-5.6.2 (Fri Jan  5 16:45:47 EST 2001), 19744 lines:
 
