@@ -575,14 +575,15 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
 #endif /* SDPS_ENABLE */
 
     /*
-     * Though the POP RFCs don't document this fact, on every POP3 server
-     * I know of messages are marked "seen" only at the time the OK
-     * response to a RETR is issued.
+     * Though the POP RFCs don't document this fact, on almost every
+     * POP3 server I know of messages are marked "seen" only at the
+     * time the OK response to a RETR is issued.
      *
      * This means we can use TOP to fetch the message without setting its
      * seen flag.  This is good!  It means that if the protocol exchange
      * craps out during the message, it will still be marked `unseen' on
-     * the server.
+     * the server.  (Exception: in early 1999 SpryNet's POP3 servers were
+     * reported to mark messages seen on a TOP fetch.)
      *
      * However...*don't* do this if we're using keep to suppress deletion!
      * In that case, marking the seen flag is the only way to prevent the
@@ -601,8 +602,7 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
      *
      * The line count passed (99999999) is the maximum value CompuServe will
      * accept; it's much lower than the natural value 2147483646 (the maximum
-     * twos-complement signed 32-bit integer minus 1)
-     */
+     * twos-complement signed 32-bit integer minus 1) */
     if (ctl->keep || ctl->fetchall)
 	gen_send(sock, "RETR %d", number);
     else

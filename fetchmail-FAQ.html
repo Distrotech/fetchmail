@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/03/27 16:07:00 $
+<td width="30%" align=right>$Date: 1999/04/01 03:16:15 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -77,6 +77,7 @@ IP address?</a><br>
 <a href="#S6">S6. How can I use fetchmail with geocities POP3 servers?</a><br>
 <a href="#S7">S7. How can I use fetchmail with Hotmail?</a><br>
 <a href="#S8">S8. How can I use fetchmail with MSN?</a><br>
+<a href="#S9">S9. How can I use fetchmail with SpryNet?</a><br>
 
 <h1>How to set up well-known security and authentication methods:</h1>
 
@@ -1328,6 +1329,14 @@ This is a customer lock-in tactic; we recommend boycotting MSN as the
 only appropriate response.<p>
 
 <hr>
+<h2><a name="S9">S9. How can I use fetchmail with SpryNet?</a></h2>
+
+The SpryNet POP3 servers mark a message queried with TOP as seen.
+This means that if your connection drops in mid-message, it may end
+up invisibly stuck on your mail spool.  Use the <code>fetchall</code> 
+flag to ensure that it's recovered on the next cycle.<p>
+
+<hr>
 <h2><a name="K1">K1. How can I use fetchmail with SOCKS?</a></h2>
 
 Daniel Sobral &lt<a href="mailto:dcs@gns.com.br">dcs@gns.com.br</a>
@@ -2293,7 +2302,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/03/27 16:07:00 $
+<td width="30%" align=right>$Date: 1999/04/01 03:16:15 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

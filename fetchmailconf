@@ -1113,6 +1113,14 @@ Therefore, it is strongly recommended that you turn on `fetchall' on all
 user entries associated with this server.  
 
 """
+            if string.find(greetline, "sprynet.com") > 0:
+                warnings = warnings + """
+You appear to be using a SpryNet server.  In mid-1999 it was reported that
+the SpryNet TOP command marks messages seen.  Therefore, for proper error
+recovery in the event of a line drop, it is strongly recommended that you
+turn on `fetchall' on all user entries associated with this server.  
+
+"""
 
 # Steve VanDevender <stevev@efn.org> writes:
 # The only system I have seen this happen with is cucipop-1.31
