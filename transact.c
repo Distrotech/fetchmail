@@ -188,6 +188,8 @@ static char *parse_received(struct query *ctl, char *bufp)
     char *base, *ok = (char *)NULL;
     static char rbuf[HOSTLEN + USERNAMELEN + 4]; 
 
+#define RBUF_WRITE(value) if (tp < rbuf+sizeof(rbuf)-1) *tp++=value
+
     /*
      * Try to extract the real envelope addressee.  We look here
      * specifically for the mailserver's Received line.
@@ -215,7 +217,7 @@ static char *parse_received(struct query *ctl, char *bufp)
 		continue;
 	    tp = rbuf;
 	    for (; !isspace(*sp); sp++)
-		*tp++ = *sp;
+		RBUF_WRITE(*sp);
 	    *tp = '\0';
 
 	    /* look for valid address */
@@ -263,7 +265,7 @@ static char *parse_received(struct query *ctl, char *bufp)
 		    continue;
 		tp = rbuf;
 		for (; !isspace(*sp); sp++)
-		    *tp++ = *sp;
+		    RBUF_WRITE(*sp);
 		*tp = '\0';
 
 		if (strchr(rbuf, '@'))
@@ -281,8 +283,8 @@ static char *parse_received(struct query *ctl, char *bufp)
 	    for (sp = ok + 4; isspace(*sp); sp++)
 		continue;
 	    tp = rbuf;
-	    *tp++ = ':';	/* Here is the hack.  This is to be friends */
-	    *tp++ = ' ';	/* with nxtaddr()... */
+	    RBUF_WRITE(':');	/* Here is the hack.  This is to be friends */
+	    RBUF_WRITE(' ');	/* with nxtaddr()... */
 	    if (*sp == '<')
 	    {
 		want_gt = TRUE;
@@ -295,14 +297,17 @@ static char *parse_received(struct query *ctl, char *bufp)
                    && (want_gt ? (*sp != '>') : !isspace(*sp))
                    && *sp != ';')
 		if (!isspace(*sp))
-		    *tp++ = *sp++;
+		{
+		    RBUF_WRITE(*sp);
+		    sp++;
+		}    
 		else
 		{
 		    /* uh oh -- whitespace here can't be right! */
 		    ok = (char *)NULL;
 		    break;
 		}
-	    *tp++ = '\n';
+	    RBUF_WRITE('\n');
 	    *tp = '\0';
 	    if (strlen(rbuf) <= 3)	/* apparently nothing has been found */
 		ok = NULL;
@@ -660,7 +665,8 @@ int readheaders(int sock,
 	 */
 	if (!strncasecmp("Return-Path:", line, 12) && (cp = nxtaddr(line)))
 	{
-	    strcpy(msgblk.return_path, cp);
+	    strncpy(msgblk.return_path, cp, sizeof(msgblk.return_path));
+	    msgblk.return_path[sizeof(msgblk.return_path)-1] = '\0';
 	    if (!ctl->mda) {
 		free(line);
 		continue;
@@ -911,8 +917,10 @@ int readheaders(int sock,
 	else if (reply_to_offs >= 0 && (ap = nxtaddr(msgblk.headers + reply_to_offs)));
 	else if (app_from_offs >= 0 && (ap = nxtaddr(msgblk.headers + app_from_offs)));
 	/* multi-line MAIL FROM addresses confuse SMTP terribly */
-	if (ap && !strchr(ap, '\n')) 
-	    strcpy(msgblk.return_path, ap);
+	if (ap && !strchr(ap, '\n')) {
+	    strncpy(msgblk.return_path, ap, sizeof(msgblk.return_path));
+	    msgblk.return_path[sizeof(msgblk.return_path)-1] = '\0';
+	}
     }
 
     /* cons up a list of local recipients */
@@ -1161,22 +1169,39 @@ int readheaders(int sock,
 		for (idp = msgblk.recipients; idp; idp = idp->next)
 		    if (idp->val.status.mark == XMIT_REJECT)
 			break;
-		sprintf(errhd+strlen(errhd), GT_("recipient address %s didn't match any local name"), idp->id);
+#ifdef HAVE_SNPRINTF
+		snprintf(errhd+strlen(errhd), sizeof(errhd)-strlen(errhd),
+#else
+		sprintf(errhd+strlen(errhd),
+#endif /* HAVE_SNPRINTF */
+			GT_("recipient address %s didn't match any local name"), idp->id);
 	    }
 	}
 
 	if (has_nuls)
 	{
 	    if (errhd[sizeof("X-Fetchmail-Warning: ")])
+#ifdef HAVE_SNPRINTF
+		snprintf(errhd+strlen(errhd), sizeof(errhd)-strlen(errhd), "; ");
+	    snprintf(errhd+strlen(errhd), sizeof(errhd)-strlen(errhd),
+#else
 		strcat(errhd, "; ");
-	    strcat(errhd, GT_("message has embedded NULs"));
+	    strcat(errhd,
+#endif /* HAVE_SNPRINTF */
+			GT_("message has embedded NULs"));
 	}
 
 	if (bad_addresses)
 	{
 	    if (errhd[sizeof("X-Fetchmail-Warning: ")])
+#ifdef HAVE_SNPRINTF
+		snprintf(errhd+strlen(errhd), sizeof(errhd)-strlen(errhd), "; ");
+	    snprintf(errhd+strlen(errhd), sizeof(errhd)-strlen(errhd),
+#else
 		strcat(errhd, "; ");
-	    strcat(errhd, GT_("SMTP listener rejected local recipient addresses: "));
+	    strcat(errhd,
+#endif /* HAVE_SNPRINTF */
+			GT_("SMTP listener rejected local recipient addresses: "));
 	    errlen = strlen(errhd);
 	    for (idp = msgblk.recipients; idp; idp = idp->next)
 		if (idp->val.status.mark == XMIT_RCPTBAD)
