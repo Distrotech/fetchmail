@@ -7,6 +7,13 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.4.6 ()
+* Fix a bug introduced by my 4.4.5 bug-fix release :-(
+* Make the internal line buffer eight times longer to cope with idiot
+  DOS-world editors.
+
+There are 270 people on fetchmail-friends and 212 on fetchmail-announce.
+
 fetchmail-4.4.5 (Wed May 13 21:37:02 EDT 1998):
 * Make RPA logging use error() rather than stderr.
 * Autoconfiguration support for NetBSD.
