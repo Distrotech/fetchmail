@@ -3,8 +3,10 @@
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
 * Joe Loughry <loughry@uswest.net> sent a patch to handle multihomed machines.
+* Changed mimedecode default to `off'; it seems that doing RFC2047 decoding
+  on headers throws away information that the MUA may need to see.
 
-fetchmail-5.1.0 (Wed Sep 29 11:52:06 EDT 1999), 17827 lines:
+fetchmail-5.1.1 (Wed Sep 29 11:52:06 EDT 1999), 17827 lines:
 * Added workaround, fetchmailconf warning, and FAQ about Novell GroupWise.
 * Consistently show dummy arguments on manual page.
 * Fix lexer to permit `antispam -1'.

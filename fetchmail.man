@@ -1138,7 +1138,7 @@ dropstatus	\&	T{
 Strip Status and X-Mozilla-Status lines out of incoming mail
 T}
 mimedecode	\&	T{
-Convert quoted-printable to 8-bit in MIME messages (default)
+Convert quoted-printable to 8-bit in MIME messages
 T}
 no keep  	-K	T{
 Delete seen messages from server (default)
@@ -1165,7 +1165,7 @@ no dropstatus	\&	T{
 Don't drop Status headers (default)
 T}
 no mimedecode	\&	T{
-Don't convert quoted-printable to 8-bit in MIME messages
+Don't convert quoted-printable to 8-bit in MIME messages (default)
 T}
 limit   	-l	T{
 Set message size limit
@@ -1358,8 +1358,10 @@ listener (that includes all of the major MTAs like sendmail), then
 this will automatically convert quoted-printable message headers and
 data into 8-bit data, making it easier to understand when reading
 mail. If your e-mail programs know how to deal with MIME messages,
-then this option is not needed (but does no harm).  The mimedecode
-option is on by default.
+then this option is not needed.  The mimedecode option is off by
+default, because doing RFC2047 conversion on headers throws away
+character-set information and can lead to bad results if the encoding
+of the headers differs from the body encoding.
 .PP
 The `properties' option is an extension mechanism.  It takes a string
 argument, which is ignored by fetchmail itself.  The string argument may be

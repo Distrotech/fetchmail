@@ -214,7 +214,7 @@ class User:
 	self.forcecr = FALSE		# Force LF -> CR/LF
 	self.stripcr = FALSE		# Strip CR
 	self.pass8bits = FALSE		# Force BODY=7BIT
-	self.mimedecode = TRUE		# Undo MIME armoring
+	self.mimedecode = FALSE		# Undo MIME armoring
 	self.dropstatus = FALSE		# Drop incoming Status lines
 	self.limit = 0			# Message size limit
         self.warnings = 0		# Size warning interval
