@@ -74,11 +74,14 @@ const char *host;	/* server hostname */
 		 * an obscure misfeature described in sections
 		 * 6.1, 6.2.6, and A.1.5 of the RFC822 standard.
 		 */
-		else if ((*from == ',' || HEADER_END(from)) && has_bare_name_part && !has_host_part && from[-1] != ';')
+		else if ((*from == ',' || HEADER_END(from) || from[1] == '(')
+			 && has_bare_name_part
+			 && !has_host_part
+			 && from[-1] != ';')
 		{
 		    int hostlen;
 
-		    while (isspace(*from))
+		    while (isspace(*from) || (*from == ','))
 			--from;
 		    from++;
 		    hostlen = strlen(host);
@@ -86,7 +89,7 @@ const char *host;	/* server hostname */
 			cp[hostlen+1] = *cp;
 		    *from++ = '@';
 		    memcpy(from, host, hostlen);
-		    from += strlen(from);
+		    from += hostlen;
 		    has_host_part = TRUE;
 		} 
 		else if (!isspace(*from))
@@ -101,20 +104,31 @@ const char *host;	/* server hostname */
 	    case 3:	/* we're in a <>-enclosed address */
 		if (*from == '@')
 		    has_host_part = TRUE;
-		else if (*from == '>' && !has_host_part)
+		else if (*from == '>')
 		{
-		    int hostlen;
+		    state = 1;
+		    if (!has_host_part)
+		    {
+			int hostlen;
 
-		    hostlen = strlen(host);
-		    for (cp = from + strlen(from); cp >= from; --cp)
-			cp[hostlen+1] = *cp;
-		    *from++ = '@';
-		    memcpy(from, host, hostlen);
-		    from += strlen(from);
-		    has_host_part = TRUE;
+			hostlen = strlen(host);
+			for (cp = from + strlen(from); cp >= from; --cp)
+			    cp[hostlen+1] = *cp;
+			*from++ = '@';
+			memcpy(from, host, hostlen);
+			from += hostlen;
+			has_host_part = TRUE;
+		    }
 		}
 		break;
 	    }
+
+	/*
+	 * If we passed a comma, reset everything.
+	 */
+	if (from[-1] == ',' && !parendepth) {
+	  has_host_part = has_bare_name_part = FALSE;
+	}
     }
 }
 
