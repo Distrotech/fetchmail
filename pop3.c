@@ -551,26 +551,22 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
     {
 	int	linecount = 0;
 
-#define DUMMY_HEADER	"Delivered-To: "	/* will only get discarded */
-#define DUMMY_LENGTH	(sizeof(DUMMY_HEADER) - 1)	
-	strcpy(buf, DUMMY_HEADER);
 	sdps_envto = (char *)NULL;
 	gen_send(sock, "*ENV %d", number);
 	do {
-	    if (gen_recv(sock, buf + DUMMY_LENGTH, sizeof(buf) - DUMMY_LENGTH))
-	    {
-		break;
-	    }
-	    linecount++;
-	    if (linecount == 5)
-	    {
-		sdps_envto = strdup(buf); 
-		error(0, 0, "*ENV returned envelope address %s");
-	    }
+	    if (gen_recv(sock, buf, sizeof(buf)))
+            {
+                break;
+            }
+            linecount++;
+            if (linecount == 5)
+            {
+                /* Wrap address with To: <> so nxtaddr() likes it */
+                sdps_envto = malloc(strlen(buf)+7);
+                sprintf(sdps_envto,"To: <%s>",buf);
+            }
 	} while
 	    (buf[0] !='.');
-#undef DUMMY_HEADER
-#undef DUMMY_LENGTH
     }
 #endif /* SDPS_ENABLE */
 

@@ -139,13 +139,13 @@ serv_option	: AKA alias_list
 					    current.server.port = KPOP_PORT;
 #endif /* INET6 */
 					}
-		| SDPS			{
-#ifdef ENABLE_SDPS
+		| PROTOCOL SDPS		{
+#ifdef SDPS_ENABLE
 					    current.server.protocol = P_POP3;
 					    current.server.sdps = TRUE;
 #else
 					    yyerror("SDPS not enabled.");
-#endif /* ENABLE_SDPS */
+#endif /* SDPS_ENABLE */
 					}
 		| UIDL			{current.server.uidl = FLAG_TRUE;}
 		| NO UIDL		{current.server.uidl  = FLAG_FALSE;}

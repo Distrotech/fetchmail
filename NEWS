@@ -1,5 +1,10 @@
 				Release Notes:
 
+fetchmail-4.5.7 (Tue Aug 25 00:29:44 EDT 1998):
+* Fixed SDPS support (thanks to Chris Brooks).
+
+There are 253 people on fetchmail-friends and 272 on fetchmail-announce.
+
 fetchmail-4.5.6 (Tue Aug 25 00:29:44 EDT 1998):
 * SDPS support, experimental version 2.  Requires configure --enable-SDPS.
 * Major FAQ update.  Added geocities warning.
