@@ -912,7 +912,7 @@ Also note that all multidrop features are ineffective in ETRN mode.
 The fundamental problem is that by having your mailserver toss several
 peoples' mail in a box, you may have thrown away potentially vital
 information about who each piece of mail was actually addressed to
-(the `envelope address', as opposed to the addresses in the RFC822
+(the `envelope address', as opposed to the header addresses in the RFC822
 To/Cc/Bcc headers).  This `envelope address' is the address you need
 in order to reroute mail properly.
 .PP
@@ -929,12 +929,15 @@ Alternatively, some SMTP listeners and/or mail servers insert a header
 in each message containing a copy of the envelope addresses.  This
 header (when it exists) is often `X-Envelope-To'.  Fetchmail's
 assumption about this can be changed with the -E or `envelope' option.
+Note that writing an envelope header of this kind exposes the names
+of recipients to all receivers of the messages; it is therefore
+regarded by some administrators as a security/privacy problem.
 .PP
 Sometimes, unfortunately, neither of these methods works.  When they
 both fail, fetchmail must fall back on the contents of To/Cc/Bcc
 headers to try to determine recipient addressees -- and these are not
 reliable.  In particular, mailing-list software often ships mail with
-the list broadcast address in the To header.
+only the list broadcast address in the To header.
 .PP
 When
 .I fetchmail
