@@ -333,7 +333,7 @@ int from64tobits(char *, const char *);
 #define MSG_IS_8BIT       0x02
 #define MSG_NEEDS_DECODE  0x80
 extern void UnMimeHeader(unsigned char *buf);
-extern int  MimeBodyType(unsigned char *hdrs);
+extern int  MimeBodyType(unsigned char *hdrs, int WantDecode);
 extern int  UnMimeBodyline(unsigned char **buf, int collapsedoubledot);
 
 /* interface.c */

@@ -995,7 +995,7 @@ int num;		/* index of message */
 	UnMimeHeader(headers);
     }
     /* Check for MIME headers indicating possible 8-bit data */
-    mimemsg = MimeBodyType(headers);
+    mimemsg = MimeBodyType(headers, ctl->mimedecode);
 
     /*
      * If there is a Return-Path address on the message, this was

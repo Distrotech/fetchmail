@@ -339,7 +339,7 @@ static char *GetBoundary(char *CntType)
  *
  * The return value is a bitmask.
  */
-int MimeBodyType(unsigned char *hdrs)
+int MimeBodyType(unsigned char *hdrs, int WantDecode)
 {
   unsigned char *NxtHdr = hdrs;
   unsigned char *XferEnc, *XferEncOfs, *CntType, *MimeVer, *p;
@@ -440,7 +440,9 @@ int MimeBodyType(unsigned char *hdrs)
       if (strcasecmp(XferEnc, "quoted-printable") == 0) {
 	CurrEncodingIsQP = 1;
 	BodyType = (MSG_IS_8BIT | MSG_NEEDS_DECODE);
-        SetEncoding8bit(XferEncOfs);
+	if (WantDecode) {
+           SetEncoding8bit(XferEncOfs);
+        }
       }
       else if (strcasecmp(XferEnc, "7bit") == 0) {
 	CurrEncodingIsQP = 0;
@@ -643,7 +645,7 @@ int main(int argc, char *argv[])
   DBG_FWRITE(buffer, strlen(buffer), 1, fd_orig);
 
   UnMimeHeader(buffer);
-  bodytype = MimeBodyType(buffer);
+  bodytype = MimeBodyType(buffer, 1);
 
   i = strlen(buffer);
   fwrite(buffer, i, 1, stdout);

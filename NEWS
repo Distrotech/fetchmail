@@ -17,6 +17,7 @@
 fetchmail-4.4.5 ():
 * Make RPA logging use error() rather than stderr.
 * Autoconfiguration support for NetBSD.
+* Henrik Storner's fix for a minor mimedecode bug.
 
 There are 273 people on fetchmail-friends and 209 on fetchmail-announce.
 
