@@ -139,15 +139,6 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
         ctl->server.sdps = TRUE;
 #endif /* SDPS_ENABLE */
 
-    /* 
-     * In theory, we ought to probe with CAPA here (RFC 2449).
-     * But AFAIK this commpand is not widely implemented, and
-     * we have our own tests for optional commands, and it seems
-     * vanishingly unlikely that the RFC 2449 extended responses
-     * [IN-USE] and [LOGIN-DELAY] will ever be accidentally spoofed.
-     * So we'll not bother, and save ourselves the overhead.
-     */
-
     switch (ctl->server.protocol) {
     case P_POP3:
 #ifdef RPA_ENABLE
@@ -202,21 +193,23 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 #endif /* OPIE_ENABLE */
 
 	/*
-	 * AUTH command may return a list of available mechanisms.
-	 * if it doesn't, no harm done.
+	 * CAPA command may return a list of available mechanisms.
+	 * if it doesn't, no harm done, we just fall back to a 
+	 * plain login.
 	 *
-	 * APOP was introduced in RFC 1450, and POP3 AUTH not until
-	 * RFC1734. So the < check is an easy way to prevent AUTH from
+	 * APOP was introduced in RFC 1450, and CAPA not until
+	 * RFC2449. So the < check is an easy way to prevent CAPA from
 	 * being sent to the more primitive POP3 servers dating from
 	 * RFC 1081 and RFC 1225, which seem more likely to choke on
 	 * it.  This certainly catches IMAP-2000's POP3 gateway.
 	 * 
 	 * These authentication methods are blessed by RFC1734,
-	 * describing the POP3 AUTHentication command.
+	 * describing the POP3 AUTHentication command. 
 	 */
-	if (strchr(greeting, '<') && gen_transact(sock, "AUTH") == 0)
+	if (ctl->server.preauthenticate == A_ANY 
+	    && strchr(greeting, '<') 
+	    && gen_transact(sock, "CAPA") == 0)
 	{
-	    char buffer[10];
 #if defined(GSSAPI)
 	    flag has_gssapi = FALSE;
 #endif /* defined(GSSAPI) */
@@ -227,6 +220,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 #ifdef OPIE_ENABLE
 	    flag has_opie = FALSE;
 #endif /* OPIE_ENABLE */
+	    char buffer[64];
 
 	    /* determine what authentication methods we have available */
 	    while ((ok = gen_recv(sock, buffer, sizeof(buffer))) == 0)
@@ -234,17 +228,17 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 		if (DOTLINE(buffer))
 		    break;
 #if defined(GSSAPI)
-		if (strncasecmp(buffer, "GSSAPI", 8) == 0)
+		if (strstr(buffer, "GSSAPI"))
 		    has_gssapi = TRUE;
 #endif /* defined(GSSAPI) */
 #if defined(KERBEROS_V4) || defined(KERBEROS_V5)
-		if (strncasecmp(buffer, "KERBEROS_V4", 8) == 0)
+		if (strstr(buffer, "KERBEROS_V4"))
 		    has_kerberos = TRUE;
 #endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
-		if (strncasecmp(buffer, "CRAM-MD5", 8) == 0)
+		if (strstr(buffer, "CRAM-MD5"))
 		    has_cram = TRUE;
 #ifdef OPIE_ENABLE
-		if (strncasecmp(buffer, "X-OTP", 8) == 0)
+		if (strstr(buffer, "X-OTP"))
 		    has_opie = TRUE;
 #endif /* OPIE_ENABLE */
 	    }
