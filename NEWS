@@ -17,7 +17,7 @@
 
 ------------------------------------------------------------------------------
 
-fetchmail-4.1.5 ()
+fetchmail-4.1.5 (Fri Sep  5 15:06:13 EDT 1997)
 * Prevent core dumps on messages with no destination lines.
 * Decorate RCPT TO names with smtphost.
 * Have AUTO mode croak on SMTP error.
