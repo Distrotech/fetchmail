@@ -833,12 +833,12 @@ int num;		/* index of message */
 	 * We do *not* want to ignore empty Return-Path headers.  These should
 	 * be passed through as a way of indicating that a message should
 	 * not trigger bounces if delivery fails.  What we *do* need to do is
-	 * make sure we never try to rewrite such a blank Return-Path.
-	 *
+	 * make sure we never try to rewrite such a blank Return-Path.  We
+	 * handle this with a check for <> in the rewrite logic.
 	 */
-	if (!strncasecmp("Return-Path:", line, 12))
+	if (!strncasecmp("Return-Path:", line, 12) && (cp = nxtaddr(line)))
 	{
-	    strcpy(return_path, line);
+	    strcpy(return_path, cp);
 	    if (!ctl->mda) {
 		free(line);
 		continue;
