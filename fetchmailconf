@@ -1112,14 +1112,14 @@ switch --enable-POP2.
 # The greeting line on the server known to be buggy is:
 # +OK POP3 server ready (running FTGate V2, 2, 1, 0 Jun 21 1999 09:55:01)
 #
-if string.find(greetline, "FTGate") > 0:
+            if string.find(greetline, "FTGate") > 0:
                 warnings = warnings + """
 This POP server has a weird bug; it says OK twice in response to TOP.
 Its response to RETR is normal, so use the `fetchall'.
 
 """
 
-if string.find(greetline, "POP-Max") > 0:
+            if string.find(greetline, "POP-Max") > 0:
                 warnings = warnings + """
 The Mail Max server screws up on mail with attachments.  It reports the
 message size with attachments included, but doesn't downloasd them on a
