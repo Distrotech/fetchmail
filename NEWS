@@ -22,7 +22,7 @@ in addition to the current leading-edge one, until the next gold version.
 * Gunther Leber's code to sanitize %T and %F expansion in the MDA string.
 * Jonathan Marten's fix for list option handling.
 
-There are 281 people on fetchmail-friends and 222 on fetchmail-announce.
+There are 281 people on fetchmail-friends and 228 on fetchmail-announce.
 
 fetchmail-4.4.9 (Thu Jun  4 10:41:02 EDT 1998):
 * 0.93 beta version of fetchmailconf (now with autoprobing for servers!).

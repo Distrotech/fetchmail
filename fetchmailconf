@@ -5,17 +5,9 @@
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
 #
-# Version 0.90 beta: Tue May 26 12:00:49 EDT 1998
-# Version 0.91 beta: Tue Jun  2 12:23:42 EDT 1998
-# Version 0.92 beta: Wed Jun  3 14:17:03 EDT 1998
-# Version 0.93 beta: Wed Jun  3 19:46:06 EDT 1998
-# Version 0.94 beta: Thu Jun  4 12:09:06 EDT 1998
-# Version 0.95 beta: Fri Jun  5 11:47:07 EDT 1998
-# Version 0.96 beta: Sun Jun  7 18:25:09 EDT 1998
-#
 # TO DO: Arrange for save and quit buttons to clean up all frames dependent
 # on the current ones.
-version = "0.96"
+version = "1.0"
 
 from Tkinter import *
 from Dialog import *
