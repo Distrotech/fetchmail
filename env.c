@@ -302,8 +302,11 @@ char *visbuf(const char *buf)
 	}
 	else
 	{
-	    (void) sprintf(tp, "\\0x%02x", *buf++);
-	    tp += strlen(tp);
+	    const char hex[] = "0123456789abcdef";
+	    *tp++ = '\\'; *tp++ = '0'; *tp++ = 'x';
+	    *tp++ = hex[*buf >> 4];
+	    *tp++ = hex[*buf & 0xf];
+	    buf++;
 	}
     }
     *tp++ = '\0';
