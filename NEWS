@@ -19,7 +19,7 @@ Inflict severe pain on the person(s) responsible for removing LAST from POP3.
 
 			Release Notes:
 
-fetchmail-1.7 (Tue Oct  8 01:00:08 EDT 1996):
+fetchmail-1.7 (Tue Oct  8 11:32:44 EDT 1996):
 
 features --
 
@@ -32,7 +32,7 @@ features --
   stricter rules for ordering options.
 
 * Expanded installation instructions including how to test for correct
-  operation without losing mail.
+  operation without losing mail to misconfigured MDAs, alias loops, etc.
 
 bugs --
 
