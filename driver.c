@@ -343,12 +343,12 @@ struct hostrec	*queryctl;
      */
     for (i = 0; i < MX_RETRIES; i++)
     {
-	struct mxentry mxresp[32];
+	struct mxentry *mxrecords, *mxp;
 	int j;
 
-	n = getmxrecords(name, sizeof(mxresp)/sizeof(struct mxentry), mxresp);
+	mxrecords = getmxrecords(name);
 
-	if (n == -1)
+	if (mxrecords == (struct mxentry *)NULL)
 	    if (h_errno == TRY_AGAIN)
 	    {
 		sleep(1);
@@ -357,8 +357,8 @@ struct hostrec	*queryctl;
 	    else
 		break;
 
-	for (j = 0; j < n; j++)
-	    if (strcmp(name, mxresp[i].name) == 0)
+	for (mxp = mxrecords; mxp->name; mxp++)
+	    if (strcmp(name, mxp->name) == 0)
 		return(TRUE);
     }
 

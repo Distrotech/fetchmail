@@ -6,7 +6,7 @@
  * For license terms, see the file COPYING in this directory.
  */
 
-#include <config.h>
+#include "config.h"
 #ifdef HAVE_GETHOSTBYNAME
 #include <netdb.h>
 #include <sys/types.h>
@@ -19,26 +19,26 @@
  * This ought to be in the bind library.  It's adapted from sendmail.
  */
 
-int getmxrecords(name, nmx, pmx)
+struct mxentry *getmxrecords(name)
 /* get MX records for given host */
-char *name;
-int nmx;
-struct mxentry *pmx;
+const char *name;
 {
     unsigned char answer[PACKETSZ], MXHostBuf[PACKETSZ], *eom, *cp, *bp;
     int n, ancount, qdcount, buflen, type, pref, ind;
+    static struct mxentry pmx[(PACKETSZ - HFIXEDSZ) / sizeof(struct mxentry)];
     HEADER *hp;
 
     n = res_search(name,C_IN,T_MX,(unsigned char*)&answer, sizeof(answer));
     if (n == -1)
-	return(-1);
+	return((struct mxentry *)NULL);
 
     hp = (HEADER *)&answer;
     cp = answer + HFIXEDSZ;
     eom = answer + n;
+    h_errno = 0;
     for (qdcount = ntohs(hp->qdcount); qdcount--; cp += n + QFIXEDSZ)
 	if ((n = dn_skipname(cp, eom)) < 0)
-	    return(-1);
+	    return((struct mxentry *)NULL);
     buflen = sizeof(MXHostBuf) - 1;
     bp = MXHostBuf;
     ind = 0;
@@ -63,19 +63,36 @@ struct mxentry *pmx;
 
 	pmx[ind].name = bp;
 	pmx[ind].pref = pref;
-	if (++ind > nmx)
-	    break;
+	++ind;
 
 	n = strlen(bp);
 	bp += n;
 	*bp++ = '\0';
 
-
 	buflen -= n + 1;
     }
 
-    return(ind);
+    pmx[ind].name = (char *)NULL;
+    pmx[ind].pref = -1;
+    return(pmx);
 }
 #endif /* HAVE_GETHOSTBYNAME */
+
+#ifdef TESTMAIN
+main(int argc, char *argv[])
+{
+    int	count, i;
+    struct mxentry *responses;
+
+    responses = getmxrecords(argv[1]);
+    if (responses == (struct mxentry *)NULL)
+	puts("No MX records found");
+    else
+	do {
+	    printf("%s %d\n", responses->name, responses->pref);
+	} while
+	    ((++responses)->name);
+}
+#endif /* TESTMAIN */
 
 /* mxget.c ends here */

@@ -7,7 +7,7 @@ struct mxentry
 };
 
 #ifdef HAVE_PROTOTYPES
-extern int getmxrecords(char *, int, struct mxentry *);
+extern struct mxentry * getmxrecords(const char *);
 #endif /* HAVE_PROTOTYPES */
 
 /* mx.h ends here */
