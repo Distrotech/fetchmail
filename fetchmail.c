@@ -1076,12 +1076,11 @@ static int load_params(int argc, char **argv, int optind)
 #else
 				(atoi(++cp) == SMTP_PORT))
 #endif /* INET6 */
-			{
-			    (void) fprintf(stderr,
-					   "%s configuration invalid, LMTP can't use default SMTP port\n",
-					   ctl->server.pollname);
-			    exit(PS_SYNTAX);
-			}
+		    {
+			(void) fprintf(stderr,
+				       "%s configuration invalid, LMTP can't use default SMTP port\n",
+				       ctl->server.pollname);
+			exit(PS_SYNTAX);
 		    }
 		}
 	    }
