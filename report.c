@@ -90,13 +90,8 @@ unsigned int error_message_count;
    name of the executing program.  */
 extern char *program_name;
 
-# if HAVE_STRERROR
-#  ifndef strerror		/* On some systems, strerror is a macro */
-char *strerror ();
-#  endif
-# else
-static char *
-private_strerror (errnum)
+# if !HAVE_STRERROR && !defined(strerror)
+char *strerror (errnum)
      int errnum;
 {
   extern char *sys_errlist[];
@@ -106,7 +101,6 @@ private_strerror (errnum)
     return sys_errlist[errnum];
   return _("Unknown system error");
 }
-#  define strerror private_strerror
 # endif	/* HAVE_STRERROR */
 #endif	/* _LIBC */
 

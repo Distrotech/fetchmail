@@ -1227,7 +1227,7 @@ static int query_host(struct query *ctl)
 	time_t now;
 
 	time(&now);
-	error(0, -1, _("fetchmail: %s querying %s (protocol %s) at %s"),
+	error(0, -1, _("%s querying %s (protocol %s) at %s"),
 	    VERSION,
 	    ctl->server.pollname, showproto(ctl->server.protocol), ctime(&now));
     }

@@ -490,7 +490,13 @@ void itimerthread(void*);
    find all of our lock files and stuff. */
 #define getcwd _getcwd2
 #define chdir _chdir2
-#endif
+#endif /* _EMX_ */
+
+# if HAVE_STRERROR
+#  ifndef strerror		/* On some systems, strerror is a macro */
+char *strerror ();
+#  endif
+# endif /* HAVE_STRERROR */
 
 #define STRING_DISABLED	(char *)-1
 #define STRING_DUMMY	""

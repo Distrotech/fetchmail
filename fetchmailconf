@@ -690,6 +690,8 @@ class ConfigurationEdit(Frame, MyWidget):
         if fm:
             fm.write("# Configuration created %s by fetchmailconf\n" % time.ctime(time.time()))
             fm.write(`self.configuration`)
+            if self.outfile:
+                fm.close()
             if fm != sys.stdout:
                 os.chmod(self.outfile, 0600)
             self.quit()

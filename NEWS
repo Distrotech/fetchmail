@@ -1,5 +1,13 @@
 				Release Notes:
 
+fetchmail-4.7.4 ():
+* Error message cleanup.
+* HTML cleanup in design notes and FAQ, thanks to Byrial Jensen.
+* Don't get message sizes when --check is on.
+* Supply our own strerror() if system doesn't have one.
+
+There are 248 people on fetchmail-friends and 336 on fetchmail-announce.
+
 fetchmail-4.7.3 (Thu Dec 31 11:54:01 EST 1998):
 * Added new FAQ item G11 and added material to R1.
 * Do a full antispam check on the EOM response in case the local MTA does

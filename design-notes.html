@@ -2,7 +2,7 @@
 <HTML>
 <HEAD>
 <TITLE>Design notes on fetchmail</TITLE>
-<link rev=made href=mailto:esr@snark.thyrsus.com>
+<link rev=made href="mailto:esr@snark.thyrsus.com">
 <meta name="description" content="Design notes on fetchmail.">
 <meta name="keywords" content="fetchmail, POP, POP2, POP3, IMAP, remote mail"> 
 </HEAD>
@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="/~esr/index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/12/30 07:49:33 $
+<td width="30%" align=right>$Date: 1999/01/01 18:49:07 $
 </table>
 <HR>
 <H1 ALIGN=CENTER>Design Notes On Fetchmail</H1>
@@ -22,7 +22,7 @@ beginning to end.<P>
 <H1>History</H1>
 
 A direct ancestor of the fetchmail program was originally authored
-(under the name popclient) by Carl Harris <ceharris@mal.com>. I took
+(under the name popclient) by Carl Harris &lt;ceharris@mal.com&gt;. I took
 over development in June 1996 and subsequently renamed the program
 `fetchmail' to reflect the addition of IMAP support.  In early
 November 1996 Carl officially ended support for the last popclient
@@ -188,7 +188,7 @@ Fortunately, I've only seldom seen a server that incurred significant
 wait time on an individual response.  I judge the gain from this not
 worth the hideous complexity increase it would require in the code.<P>
 
-<H2>Multiple concurrent instances of fetchmail</H1>
+<H2>Multiple concurrent instances of fetchmail</H2>
 
 Fetchmail locking is on a per-invoking-user because finer-grained
 locks would be really hard to implement in a portable way.  The
@@ -247,7 +247,7 @@ careful to preserve.<P>
    nameserver handy.  If not, the poll is skipped. If DNS crashes during a
    poll, the error return from the next nameserver lookup aborts message
    delivery and ends the poll.  The daemon mode will then quietly spin until
-   DNS comes up again, at which point it will resume delivering mail.<P>
+   DNS comes up again, at which point it will resume delivering mail.
 </OL>
 
 When I designed this support, I was terrified of doing anything that could 
@@ -530,7 +530,7 @@ all shaped the design in one way or another.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/12/30 07:49:33 $
+<td width="30%" align=right>$Date: 1999/01/01 18:49:07 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

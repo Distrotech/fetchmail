@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/12/30 18:15:59 $
+<td width="30%" align=right>$Date: 1999/01/01 18:49:09 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -98,7 +98,7 @@ IP address?</a><br>
 
 <a href="#D1">D1. I think I've set up fetchmail correctly, but I'm not getting any mail.</a><br>
 <a href="#D2">D2. All my mail seems to disappear after a dropped connection.</a><br>
-<a href="#D3">D3. Mail that was being fetched when I interrupted my fetchmail seems to have been vanished.</a></br>
+<a href="#D3">D3. Mail that was being fetched when I interrupted my fetchmail seems to have been vanished.</a><br>
 
 <h1>Multidrop-mode problems:</h1>
 
@@ -107,9 +107,9 @@ IP address?</a><br>
 <a href="#M3">M3. I tried to run a mailing list using multidrop, and I have a mail loop!</a><br>
 <a href="#M4">M4. My multidrop fetchmail seems to be having DNS problems.</a><br>
 <a href="#M5">M5. I'm seeing long DNS delays before each message is processed.</a><br>
-<a href="#M6">M6. How do I get multidrop mode to work with majordomo?</a>
+<a href="#M6">M6. How do I get multidrop mode to work with majordomo?</a><br>
 <a href="#M7">M7. Multidrop mode isn't parsing envelope addresses from
-my Received headers as it should.</a>
+my Received headers as it should.</a><br>
 
 <h1>Mangled mail:</h1>
 
@@ -474,7 +474,7 @@ Only one fetchmail option interacts directly with your IP address,
 `<code>interface</code>'.  This option can be used to set the gateway
 device and restrict the IP address range fetchmail will use. Such a
 restriction is sometimes useful for security reasons, especially on
-multihomed sites.  See <a href="http:#C3">C3</a>.<P>
+multihomed sites.  See <a href="#C3">C3</a>.<P>
 
 I recommend against trying to set up the <code>interface</code> option
 when initially developing your poll configuration -- it's never
@@ -882,7 +882,7 @@ filter rules.  The human-readable form of the database is at
 <tt>/etc/mail/deny</tt>. The database itself is at
 <tt>/etc/mail/deny.db</tt>.<P>
 
-<P>The table itself uses email addresses, domain names, and network
+The table itself uses email addresses, domain names, and network
 numbers as keys.  For example,</P>
 <PRE>
 spammer@aol.com         REJECT
@@ -1309,7 +1309,7 @@ and set the makefile up to link it.  You can also specify a directory
 containing the Rconnect library.<p>
 
 <hr>
-<h2><a name="#S6">S6. How can I use fetchmail with geocities POP3 servers?</a></h2>
+<h2><a name="S6">S6. How can I use fetchmail with geocities POP3 servers?</a></h2>
 
 Nathan Cutler reports that the the mail.geocities.com POP3 servers
 fail to include the first Received line of the message in the send to 
@@ -1615,7 +1615,7 @@ match what you sent, then fetchmail or something on the server is
 broken.<p>
 
 <hr>
-<h2><a name="#R3">R3. Fetchmail dumps core when given an invalid rc file.</a></h2>
+<h2><a name="R3">R3. Fetchmail dumps core when given an invalid rc file.</a></h2>
 
 This is usually reported from AIX or Ultrix, but has even been known
 to happen on Linuxes without a recent version of <code>flex</code>
@@ -1899,7 +1899,7 @@ says:<P>
 <BLOCKQUOTE>
 I use this scheme with 2 virtual domains and the default ISP 
 user+domain and service about 30 mail accounts + majordomo on my 
-inside pop3 server with fetchmail and sendmail 8.83<P>
+inside pop3 server with fetchmail and sendmail 8.83
 </BLOCKQUOTE>
 
 <hr>
@@ -1931,7 +1931,7 @@ When fetchmail parses a Received line that looks like
 <pre>
 Received: from send103.yahoomail.com (send103.yahoomail.com [205.180.60.92])
     by iserv.ttns.net (8.8.5/8.8.5) with SMTP id RAA10088
-    for <ksturgeon@fbceg.org>; Wed, 9 Sep 1998 17:01:59 -0700
+    for &lt;ksturgeon@fbceg.org&gt;; Wed, 9 Sep 1998 17:01:59 -0700
 </pre>
 
 it checks to see if `iserv.ttns.net' is a DNS alias of your mailserver
@@ -2244,7 +2244,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/12/30 18:15:59 $
+<td width="30%" align=right>$Date: 1999/01/01 18:49:09 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
