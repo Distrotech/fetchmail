@@ -401,18 +401,6 @@ char *realname;		/* real name of host */
 	    {
 		int	newlen;
 
-		/*
-		 * We deal with RFC822 continuation lines here.
-		 * Replace previous '\n' with '\r' so nxtaddr 
-		 * and reply_hack will be able to see past it.
-		 * (We know this is safe because SocketGets stripped
-		 * out all carriage returns in the read loop above
-		 * and we haven't reintroduced any since then.)
-		 * We'll undo this before writing the header.
-		 */
-		if (isspace(bufp[0]))
-		    headers[oldlen-1] = '\r';
-
 		newlen = oldlen + strlen(bufp);
 		headers = realloc(headers, newlen + 1);
 		if (headers == NULL)
