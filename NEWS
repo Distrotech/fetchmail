@@ -19,6 +19,8 @@ fetchmail-4.3.1 (Mon Oct 13 17:12:40 EDT 1997)
 * Fixed processing of -S/-r arguments so giving a comma-separated list works. 
 * Don't query for the fetchmail host machine by default in ETRN mode.
 * Added skip prefix clause on `envelope' option
+* Don't use TCP/IP for DNS queries, it interacts badly with diald.
+* Allow usernames up to 40 chars long a la RFC1939.
 * Added --invisible option.  Note: you can now either make fetchmail generate
   a Received header (the default) *or* spoof your listener into thinking
   fetchmail connected from the mailserver machine, *but not both*.

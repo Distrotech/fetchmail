@@ -18,14 +18,18 @@
 #define		A_PASSWORD	0	/* password or inline authentication */
 #define		A_KERBEROS_V4	1	/* preauthenticate w/ Kerberos V4 */
 
-/* definitions for buffer sizes -- somewhat arbitrary */
-#define		POPBUFSIZE	512	/* per RFC 937 */
+/*
+ * Definitions for buffer sizes.  We get little help on setting maxima
+ * from IMAP RFCs up to 2060, so these are mostly from POP3.
+ */
+#define		HOSTLEN		635	/* max hostname length (RFC1123) */
+#define		POPBUFSIZE	512	/* max length of respone (RFC1939) */
+#define		USERNAMELEN	40	/* max POP3 arg length (RFC1939) */
+#define		IDLEN		128	/* max length of UID (RFC1939) */
+
 #define		MSGBUFSIZE	2048   	/* size of message read buffer */
-#define		HOSTLEN		128	/* max hostname length */
-#define		USERNAMELEN	32	/* max user-name length */
 #define		PASSWORDLEN	64	/* max password length */
 #define		DIGESTLEN	33	/* length of MD5 digest */
-#define		IDLEN		128	/* length of UIDL message ID */
 
 /* exit code values */
 #define		PS_SUCCESS	0	/* successful receipt of messages */
