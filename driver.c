@@ -1818,9 +1818,12 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		     * calling user a heads-up about the authentication 
 		     * failure once it looks like this isn't a fluke 
 		     * due to the server being temporarily inaccessible.
+		     * When we get third failure, we notify the user.  After
+		     * that, once we get authorization we let the user know
+		     * service is restored.
 		     */
 		    if (run.poll_interval
-			&& ctl->authfailcount++ > MAX_AUTHFAILS 
+			&& ++ctl->authfailcount == 3
 			&& !open_warning_by_mail(ctl, (struct msgblk *)NULL))
 		    {
 			stuff_warning(ctl,
@@ -1829,13 +1832,16 @@ const int maxfetch;		/* maximum number of messages to fetch */
 			    _("Fetchmail could not get mail from %s@%s.\r\n"), 
 			    ctl->remotename,
 			    ctl->server.truename);
-			stuff_warning(ctl, 
-    _("The attempt to get authorization failed.\r\n" \
-    "This probably means your password is invalid, but POP3 servers have\r\n" \
-    "other failure modes that fetchmail cannot distinguish from this\r\n" \
-    "because they don't send useful error messages on login failure.\r\n"));
+			stuff_warning(ctl, _("\
+The attempt to get authorization failed.\r\n\
+This probably means your password is invalid, but some servers have\r\n\
+other failure modes that fetchmail cannot distinguish from this\r\n\
+because they don't send useful error messages on login failure.\r\n\
+\r\n\
+The fetchmail daemon will continue running and attempt to connect\r\n\
+at each cycle.  No future notifications will be sent until service\r\n\
+is restored."));
 			close_warning_by_mail(ctl, (struct msgblk *)NULL);
-			ctl->wedged = TRUE;
 		    }
 		}
 		else
@@ -1844,6 +1850,30 @@ const int maxfetch;		/* maximum number of messages to fetch */
 			  ctl->server.truename);
 		    
 		goto cleanUp;
+	    }
+	    else
+	    {
+		if (ctl->authfailcount >= 3)
+		{
+		    report(stderr,
+			   _("Authorization OK on %s@%s\n"),
+			   ctl->remotename,
+			   ctl->server.truename);
+		    if (!open_warning_by_mail(ctl, (struct msgblk *)NULL))
+		    {
+			stuff_warning(ctl,
+			    _("Subject: fetchmail authentication OK\r\n"));
+			stuff_warning(ctl,
+			    _("Fetchmail was able to log into %s@%s.\r\n"), 
+			    ctl->remotename,
+			    ctl->server.truename);
+			stuff_warning(ctl, 
+			    _("Service has been restored.\r\n"));
+			close_warning_by_mail(ctl, (struct msgblk *)NULL);
+		    
+		    }
+		    ctl->authfailcount = 0;
+		}
 	    }
 	}
 
@@ -2344,9 +2374,6 @@ const int maxfetch;		/* maximum number of messages to fetch */
     case PS_SOCKET:
 	msg = _("socket");
 	break;
-    case PS_AUTHFAIL:
-	msg = _("authorization");
-	break;
     case PS_SYNTAX:
 	msg = _("missing or bad RFC822 header");
 	break;
@@ -2372,8 +2399,8 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	report(stderr, _("undefined error\n"));
 	break;
     }
-    /* no report on PS_MAXFETCH or PS_UNDEFINED */
-    if (ok==PS_SOCKET || ok==PS_AUTHFAIL || ok==PS_SYNTAX 
+    /* no report on PS_MAXFETCH or PS_UNDEFINED or PS_AUTHFAIL */
+    if (ok==PS_SOCKET || ok==PS_SYNTAX
 		|| ok==PS_IOERR || ok==PS_ERROR || ok==PS_PROTOCOL 
 		|| ok==PS_LOCKBUSY || ok==PS_SMTP || ok==PS_DNS)
 	report(stderr, _("%s error while fetching from %s\n"), msg, ctl->server.pollname);
