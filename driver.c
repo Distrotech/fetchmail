@@ -574,7 +574,7 @@ struct query *ctl;	/* query control record */
 		for (idp = xmit_names; idp; idp = idp->next)
 		    nlocals++;
 		sp = sargv = (char **)alloca(ctl->mda_argcount+nlocals+2);
-		for (i = 0; i <= ctl->mda_argcount; i++)
+		for (i = 0; i < ctl->mda_argcount; i++)
 		    *sp++ = ctl->mda_argv[i];
 		for (idp = xmit_names; idp; idp = idp->next)
 		    *sp++ = idp->id;
