@@ -109,23 +109,29 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
     if (outlevel >= O_DEBUG)
     {
 	struct idlist	*idp;
+	int uidlcount = 0;
 
 	for (ctl = hostlist; ctl; ctl = ctl->next)
-	{
-	    report(stdout, "Old UID list from %s:", ctl->server.truename);
-	    for (idp = ctl->oldsaved; idp; idp = idp->next)
-		report(stdout, " %s", idp->id);
-	    if (!idp)
-		report(stdout, "<empty>");
-	    report(stdout, "\n");
-	}
+	    if (ctl->server.uidl)
+	    {
+		report_build(stdout, "Old UID list from %s:",ctl->server.pollname);
+		for (idp = ctl->oldsaved; idp; idp = idp->next)
+		    report_build(stdout, " %s", idp->id);
+		if (!idp)
+		    report_build(stdout, " <empty>");
+		report_complete(stdout, "\n");
+		uidlcount++;
+	    }
 
-	report(stdout, "Scratch list of UIDs:");
-	for (idp = scratchlist; idp; idp = idp->next)
-	    report(stdout, " %s", idp->id);
-	if (!idp)
-	    report(stdout, "<empty>");
-	report(stdout, "\n");
+	if (uidlcount)
+	{
+	    report_build(stdout, "Scratch list of UIDs:");
+	    for (idp = scratchlist; idp; idp = idp->next)
+		report_build(stdout, " %s", idp->id);
+	    if (!idp)
+		report_build(stdout, " <empty>");
+	    report_complete(stdout, "\n");
+	}
     }
 }
 #endif /* POP3_ENABLE */
@@ -329,16 +335,16 @@ void update_str_lists(struct query *ctl)
     ctl->oldsaved = ctl->newsaved;
     ctl->newsaved = (struct idlist *) NULL;
 
-    if (outlevel >= O_DEBUG)
+    if (ctl->server.uidl && outlevel >= O_DEBUG)
     {
 	struct idlist *idp;
 
-	report(stdout, "New UID list from %s:", ctl->server.truename);
+	report_build(stdout, "New UID list from %s:", ctl->server.pollname);
 	for (idp = ctl->oldsaved; idp; idp = idp->next)
-	    report(stdout, " %s = %d", idp->id, idp->val.status.mark);
+	    report_build(stdout, " %s = %d", idp->id, idp->val.status.mark);
 	if (!idp)
-	    report(stdout, "<empty>");
-	report(stdout, "\n");
+	    report_build(stdout, " <empty>");
+	report_complete(stdout, "\n");
     }
 }
 
@@ -361,7 +367,7 @@ void write_saved_lists(struct query *hostlist, const char *idfile)
     if (!idcount)
     {
 	if (outlevel >= O_DEBUG)
-	    report(stdout, "Deleting fetchids file.");
+	    report(stdout, "Deleting fetchids file.\n");
 	unlink(idfile);
     }
     else
