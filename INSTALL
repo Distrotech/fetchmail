@@ -85,6 +85,12 @@ To enable multilingual support using GNU gettext,
 
 	configure --enable-nls
 
+Note: for this to work, you need gettext to be included in your libc
+and libintl.h to be in your system headers.  This is the case on
+Red Hat Linux 7.0 and up, Debian, and FreeBSD.  (The author will *not*
+accept patches to include a gettext build in the fetchmail tarball,
+as his experience with this path has been horrible.)
+
 Advanced configuration:
 
 Specifying --with-kerberos=DIR or --with-kerberos5=DIR will tell the
