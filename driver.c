@@ -352,6 +352,17 @@ static FILE *smtp_open(struct query *ctl)
 	batchcount = 0;
     }
 
+    /* 
+     * RFC 1123 requires that the domain name in HELO address is a
+     * "valid principal domain name" for the client host.  We
+     * violate this with malice aforethought in order to make the
+     * Received headers and logging look right.
+     *
+     * In fact this code relies on the RFC1123 requirement that the
+     * SMTP listener must accept messages even if verification of the
+     * HELO name fails (RFC1123 section 5.2.5, paragraph 2).
+     */
+
     /* if no socket to this host is already set up, try to open ESMTP */
     if (lead->smtp_sockfp == (FILE *)NULL)
     {
@@ -632,6 +643,17 @@ char *realname;		/* real name of host */
 		 * nicer).  If it won't, fall back on the calling-user
 		 * ID.  This won't affect replies, which use the header
 		 * From address anyway.
+		 *
+		 * RFC 1123 requires that the domain name part of the
+		 * MAIL FROM address be "canonicalized", that is a
+		 * FQDN or MX but not a CNAME.  We'll assume the From
+		 * header is already in this form here (it certainly
+		 * is if rewrite is on).  RFC 1123 is silent on whether
+		 * a nonexistent hostname part is considered canonical.
+		 *
+		 * This is a potential problem if the MTAs further
+		 * upstream didn't pass canonicalized From lines, *and*
+		 * the local SMTP listener insists on them.
 		 */
 		if (!fromhdr || !(ap = nxtaddr(fromhdr)))
 		    ap = user;
@@ -696,7 +718,16 @@ char *realname;		/* real name of host */
 		    }
 		}
 
-		/* now list the recipient addressees */
+		/*
+		 * Now list the recipient addressees
+		 *
+		 * RFC 1123 requires that the domain name part of the
+		 * RCPT TO address be "canonicalized", that is a FQDN
+		 * or MX but not a CNAME.  RFC1123 doesn't say whether
+		 * the FQDN part can be null (as it frequently will be
+		 * here), but it's hard to see how this could cause a
+		 * problem.
+		 */
 		for (idp = xmit_names; idp; idp = idp->next)
 		    if (SMTP_rcpt(sinkfp, idp->id) == SM_OK)
 			good_addresses++;
