@@ -18,10 +18,10 @@
 
 static int pound_arg, equal_arg;
 
-int pop2_ok (argbuf,socket)
+int pop2_ok (socket, argbuf)
 /* parse POP2 command response */
-char *argbuf;
 int socket;
+char *argbuf;
 {
     int ok;
     char buf [POPBUFSIZE+1];

@@ -523,7 +523,7 @@ struct method *proto;
     }
 
     /* accept greeting message from mail server */
-    ok = (protocol->parse_response)(buf, socket);
+    ok = (protocol->parse_response)(socket, buf);
     if (ok != 0)
 	goto cleanUp;
 
@@ -535,7 +535,7 @@ struct method *proto;
 	goto cleanUp;
 
     /* compute count, and get UID list if possible */
-    if ((*protocol->getrange)(socket, queryctl, &count) != 0)
+    if ((protocol->getrange)(socket, queryctl, &count) != 0)
 	goto cleanUp;
 
     /* show user how many messages we downloaded */
@@ -572,14 +572,14 @@ struct method *proto;
 	for (num = 1; num <= count; num++)
 	{
 	    int	treat_as_new = 
-		!*protocol->is_old 
-		|| !(*protocol->is_old)(socket, queryctl, num);
+		!protocol->is_old 
+		|| !(protocol->is_old)(socket, queryctl, num);
 
 	    /* we may want to reject this message if it's old */
 	    if (treat_as_new || queryctl->fetchall)
 	    {
 		/* request a message */
-		(*protocol->fetch)(socket, num, &len);
+		(protocol->fetch)(socket, num, &len);
 		if (outlevel == O_VERBOSE)
 		    if (protocol->delimited)
 			fprintf(stderr,
@@ -601,7 +601,7 @@ struct method *proto;
 
 		/* tell the server we got it OK and resynchronize */
 		if (protocol->trail)
-		    (*protocol->trail)(socket, queryctl, num);
+		    (protocol->trail)(socket, queryctl, num);
 		if (ok != 0)
 		    goto cleanUp;
 	    }
@@ -742,7 +742,7 @@ va_dcl {
     fprintf(stderr,"> %s\n", buf);
 
   /* we presume this does its own response echoing */
-  ok = (protocol->parse_response)(buf,socket);
+  ok = (protocol->parse_response)(socket, buf);
 
   return(ok);
 }

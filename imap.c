@@ -25,7 +25,7 @@
 
 static int count, seen;
 
-int imap_ok (argbuf,socket)
+int imap_ok (socket, argbuf)
 /* parse command response */
 char *argbuf;
 int socket;

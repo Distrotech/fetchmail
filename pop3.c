@@ -19,10 +19,10 @@
 
 static int last;
 
-int pop3_ok (argbuf,socket)
+int pop3_ok (socket, argbuf)
 /* parse command response */
-char *argbuf;
 int socket;
+char *argbuf;
 {
   int ok;
   char buf [POPBUFSIZE+1];
@@ -101,27 +101,27 @@ char *greeting;
     switch (queryctl->protocol) {
     case P_POP3:
 	gen_send(socket,"USER %s", queryctl->remotename);
-	if (pop3_ok(buf,socket) != 0)
+	if (pop3_ok(socket, buf) != 0)
 	    goto badAuth;
 
 	gen_send(socket, "PASS %s", queryctl->password);
-	if (pop3_ok(buf,socket) != 0)
+	if (pop3_ok(socket, buf) != 0)
 	    goto badAuth;
 	break;
 
     case P_RPOP:
 	gen_send(socket,"USER %s", queryctl->remotename);
-	if (pop3_ok(buf,socket) != 0)
+	if (pop3_ok(socket, buf) != 0)
 	    goto badAuth;
 
 	gen_send(socket, "RPOP %s", queryctl->password);
-	if (pop3_ok(buf,socket) != 0)
+	if (pop3_ok(socket, buf) != 0)
 	    goto badAuth;
 	break;
 
     case P_APOP:
 	gen_send(socket,"APOP %s %s", queryctl->remotename, queryctl->digest);
-	if (pop3_ok(buf,socket) != 0) 
+	if (pop3_ok(socket, buf) != 0) 
 	    goto badAuth;
 	break;
 
@@ -151,7 +151,7 @@ int *countp;
 
     /* get the total message count */
     gen_send(socket, "STAT");
-    ok = pop3_ok(buf,socket);
+    ok = pop3_ok(socket, buf);
     if (ok == 0)
 	sscanf(buf,"%d %*d", countp);
     else
@@ -166,7 +166,7 @@ int *countp;
 	char id [IDLEN+1];
 
 	gen_send(socket,"LAST");
-	ok = pop3_ok(buf,socket);
+	ok = pop3_ok(socket, buf);
 	if (ok == 0 && sscanf(buf, "%d", &last) == 0)
 	    return(PS_ERROR);
     }
