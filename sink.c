@@ -326,6 +326,101 @@ static int send_bouncemail(struct msgblk *msg,
     return(TRUE);
 }
 
+static int handle_smtp_error(struct query *ctl, struct msgblk *msg)
+/* handle SMTP errors based on the content of SMTP_response */
+{
+    int smtperr = atoi(smtp_response);
+    char *responses[1];
+
+    responses[0] = smtp_response;
+
+    /* required by RFC1870; sets us up to be able to send bouncemail */
+    SMTP_rset(ctl->smtp_socket);
+
+    /*
+     * Note: send_bouncemail message strings are not made subject
+     * to gettext translation because (a) they're going to be 
+     * embedded in a text/plain 7bit part, and (b) they're
+     * going to be associated with listener error-response
+     * messages, which are probably in English (none of the
+     * MTAs I know about are internationalized).
+     */
+    if (str_find(&ctl->antispam, smtperr))
+    {
+	/*
+	 * SMTP listener explicitly refuses to deliver mail
+	 * coming from this address, probably due to an
+	 * anti-spam domain exclusion.  Respect this.  Don't
+	 * try to ship the message, and don't prevent it from
+	 * being deleted.  Typical values:
+	 *
+	 * 501 = exim's old antispam response
+	 * 550 = exim's new antispam response (temporary)
+	 * 553 = sendmail 8.8.7's generic REJECT 
+	 * 571 = sendmail's "unsolicited email refused"
+	 *
+	 */
+	send_bouncemail(msg, 
+			"We do not accept mail from you.\r\n", 
+			1, responses);
+	return(PS_REFUSED);
+    }
+
+    /*
+     * Suppress error message only if the response specifically 
+     * meant `excluded for policy reasons'.  We *should* see
+     * an error when the return code is less specific.
+     */
+    if (smtperr >= 400)
+	error(0, -1, _("%cMTP error: %s"), 
+	      ctl->listener,
+	      smtp_response);
+
+    switch (smtperr)
+    {
+    case 452: /* insufficient system storage */
+	/*
+	 * Temporary out-of-queue-space condition on the
+	 * ESMTP server.  Don't try to ship the message, 
+	 * and suppress deletion so it can be retried on
+	 * a future retrieval cycle. 
+	 *
+	 * Bouncemail *might* be appropriate here as a delay
+	 * notification.  But it's not really necessary because
+	 * this is not an actual failure, we're very likely to be
+	 * able to recover on the next cycle.
+	 */
+	return(PS_TRANSIENT);
+
+    case 552: /* message exceeds fixed maximum message size */
+	/*
+	 * Permanent no-go condition on the
+	 * ESMTP server.  Don't try to ship the message, 
+	 * and allow it to be deleted.
+	 */
+	send_bouncemail(msg, 
+			"This message was too large.\r\n", 
+			1, responses);
+	return(PS_REFUSED);
+
+    case 553: /* invalid sending domain */
+	/*
+	 * These latter days 553 usually means a spammer is trying to
+	 * cover his tracks.
+	 */
+	send_bouncemail(msg,
+			"Invalid address.\r\n", 
+			1, responses);
+	return(PS_REFUSED);
+
+    default:	/* bounce the error back to the sender */
+	send_bouncemail(msg,
+			"General SMTP/ESMTP error.\r\n", 
+			1, responses);
+	return(PS_REFUSED);
+    }
+}
+
 int open_sink(struct query *ctl, struct msgblk *msg,
 	      int *good_addresses, int *bad_addresses)
 /* set up sinkfp to be an input sink we can ship a message to */
@@ -573,100 +668,10 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	 * This is a potential problem if the MTAs further upstream
 	 * didn't pass canonicalized From/Return-Path lines, *and* the
 	 * local SMTP listener insists on them.
-	 *
-	 * Note: send_bouncemail message strings are not made subject
-	 * to gettext translation because (a) they're going to be 
-	 * embedded in a text/plain 7bit part, and (b) they're
-	 * going to be associated with listener error-response
-	 * messages, which are probably in English (none of the
-	 * MTAs I know about are internationalized).
 	 */
 	ap = (msg->return_path[0]) ? msg->return_path : user;
 	if (SMTP_from(ctl->smtp_socket, ap, options) != SM_OK)
-	{
-	    int smtperr = atoi(smtp_response);
-	    char *responses[1];
-
-	    responses[0] = smtp_response;
-
-	    /* required by RFC1870; sets us up to be able to send bouncemail */
-	    SMTP_rset(ctl->smtp_socket);
-
-	    if (str_find(&ctl->antispam, smtperr))
-	    {
-		/*
-		 * SMTP listener explicitly refuses to deliver mail
-		 * coming from this address, probably due to an
-		 * anti-spam domain exclusion.  Respect this.  Don't
-		 * try to ship the message, and don't prevent it from
-		 * being deleted.  Typical values:
-		 *
-		 * 501 = exim's old antispam response
-		 * 550 = exim's new antispam response (temporary)
-		 * 553 = sendmail 8.8.7's generic REJECT 
-		 * 571 = sendmail's "unsolicited email refused"
-		 *
-		 */
-		send_bouncemail(msg, 
-				"We do not accept mail from you.\r\n", 
-				1, responses);
-		return(PS_REFUSED);
-	    }
-
-	    /*
-	     * Suppress error message only if the response specifically 
-	     * meant `excluded for policy reasons'.  We *should* see
-	     * an error when the return code is less specific.
-	     */
-	    if (smtperr >= 400)
-		error(0, -1, _("%cMTP error: %s"), 
-		      ctl->listener,
-		      smtp_response);
-
-	    switch (smtperr)
-	    {
-	    case 452: /* insufficient system storage */
-		/*
-		 * Temporary out-of-queue-space condition on the
-		 * ESMTP server.  Don't try to ship the message, 
-		 * and suppress deletion so it can be retried on
-		 * a future retrieval cycle. 
-		 *
-		 * Bouncemail *might* be appropriate here as a delay
-		 * notification.  But it's not really necessary because
-		 * this is not an actual failure, we're very likely to be
-		 * able to recover on the next cycle.
-		 */
-		return(PS_TRANSIENT);
-
-	    case 552: /* message exceeds fixed maximum message size */
-		/*
-		 * Permanent no-go condition on the
-		 * ESMTP server.  Don't try to ship the message, 
-		 * and allow it to be deleted.
-		 */
-		send_bouncemail(msg, 
-				"This message was too large.\r\n", 
-				1, responses);
-		return(PS_REFUSED);
-
-	    case 553: /* invalid sending domain */
-		/*
-		 * These latter days 553 usually means a spammer is trying to
-		 * cover his tracks.
-		 */
-		send_bouncemail(msg,
-				"Invalid address.\r\n", 
-				1, responses);
-		return(PS_REFUSED);
-
-	    default:	/* bounce the error back to the sender */
-		send_bouncemail(msg,
-				"General SMTP/ESMTP error.\r\n", 
-				1, responses);
-		return(PS_REFUSED);
-	    }
-	}
+	    return(handle_smtp_error(ctl, msg));
 
 	/*
 	 * Now list the recipient addressees
@@ -731,8 +736,12 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	    }
 	}
 
-	/* tell it we're ready to send data */
-	SMTP_data(ctl->smtp_socket);
+	/* 
+	 * Tell the listener we're ready to send data.
+	 * Some listeners (like zmailer) may return antispam errors here.
+	 */
+	if (SMTP_data(ctl->smtp_socket) != SM_OK)
+	    return(handle_smtp_error(ctl, msg));
     }
 
     /*
