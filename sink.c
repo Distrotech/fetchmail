@@ -378,9 +378,6 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
     xalloca(responses[0], char *, strlen(smtp_response)+1);
     strcpy(responses[0], smtp_response);
 
-    /* required by RFC1870; sets us up to be able to send bouncemail */
-    SMTP_rset(ctl->smtp_socket);
-
     /*
      * Note: send_bouncemail message strings are not made subject
      * to gettext translation because (a) they're going to be 
@@ -404,6 +401,7 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	 * 571 = sendmail's "unsolicited email refused"
 	 *
 	 */
+	SMTP_rset(ctl->smtp_socket);    /* stay on the safe site */
 	send_bouncemail(ctl, msg, XMIT_ACCEPT,
 			"Our spam filter rejected this transaction.\r\n", 
 			1, responses);
@@ -436,6 +434,7 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	 * this is not an actual failure, we're very likely to be
 	 * able to recover on the next cycle.
 	 */
+	SMTP_rset(ctl->smtp_socket);    /* required by RFC1870 */
 	return(PS_TRANSIENT);
 
     case 552: /* message exceeds fixed maximum message size */
@@ -444,6 +443,7 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	 * ESMTP server.  Don't try to ship the message, 
 	 * and allow it to be deleted.
 	 */
+	SMTP_rset(ctl->smtp_socket);    /* required by RFC1870 */
 	send_bouncemail(ctl, msg, XMIT_ACCEPT,
 			"This message was too large.\r\n", 
 			1, responses);
@@ -454,12 +454,14 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	 * These latter days 553 usually means a spammer is trying to
 	 * cover his tracks.
 	 */
+	SMTP_rset(ctl->smtp_socket);    /* stay on the safe side */
 	send_bouncemail(ctl, msg, XMIT_ACCEPT,
 			"Invalid address.\r\n", 
 			1, responses);
 	return(PS_REFUSED);
 
     default:	/* bounce the error back to the sender */
+	SMTP_rset(ctl->smtp_socket);    /* stay on the safe side */
 	if (send_bouncemail(ctl, msg, XMIT_ACCEPT,
 			"General SMTP/ESMTP error.\r\n", 
 			1, responses))
