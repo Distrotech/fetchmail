@@ -23,6 +23,7 @@ Summary(pt_BR): Busca mensagens de um servidor usando POP ou IMAP
 Summary(es_AR): Recolector de correo via POP/IMAP
 Summary(pl):    Zdalny demon pocztowy do protoko³ów POP2, POP3, APOP, IMAP
 Summary(tr):    POP2, POP3, APOP, IMAP protokolleri ile uzaktan mektup alma yazýlýmý
+Summary(da):    Alsidig POP/IMAP post-afhentnings dæmon
 
 %description
 Fetchmail is a free, full-featured, robust, and well-documented remote
@@ -74,6 +75,16 @@ dostarcza do koñcowych odbiorców poprzez lokalny serwer SMTP.
 description -l tr
 fetchmail yazýlýmý, POP veya IMAP desteði veren bir sunucuda yer alan
 mektuplarýnýzý alýr.
+
+description -l da
+Fetchmail er et gratis, robust, alsidigt og vel-dokumenteret værktøj 
+til afhentning og videresending af elektronisk post via TCP/IP
+baserede opkalds-forbindelser (såsom SLIP eller PPP forbindelser).   
+Den henter post fra en ekstern post-server, og videresender den
+til din lokale klient-maskines post-system, så den kan læses af
+almindelige mail klienter såsom mutt, elm, pine, (x)emacs/gnus,
+eller mailx. Der medfølger også et interaktivt GUI-baseret
+konfigurations-program, som kan bruges af almindelige brugere.
 
 %package -n fetchmailconf
 Summary:        A GUI configurator for generating fetchmail configuration files

@@ -8,6 +8,14 @@
 
 				Release Notes:
 
+fetchmail-5.0.0 ():
+* Update for fetchsetup from Kent Robotti.
+* Eliminate a realloc error in fetchmail -v -v progress message generation.
+* Spanish-language update by Javier Kohen.
+* Danish summary and description for specgen.sh.
+
+There are 263 people on fetchmail-friends and 361 on fetchmail-announce.
+
 fetchmail-4.7.9 (Tue Mar  9 13:25:01 EST 1999):
 * Patch by Dan Root to solve an endianness problem in IMAP-K4.
 * Fix lexical-analyzer bug that rejected `set nobouncemail',
