@@ -2,6 +2,17 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Updated Spanish, Turkish, and German translation files.
+* Matthew Gregan's patch to handle garbage lengths from dbmail;
+  closes Debian bug #207919.
+* Fix IMAP query so new-message count doesn't include deleted messages.
+* Man page typo fix, closes Debian bug #205892.
+* OpenSSL cleanup patches fro levinedl@acm.org.
+* Benjamin Drieu's patch to fix Debian bug #212240, no oversized-nmessage
+  flushing if both "flush" and "limit" were specified.
+* rfc822.c fixes for CAN-2003-0790 and CAN-2003-0792 potential 
+  remote DOS attack vulnerabilities.
+
 fetchmail-6.2.4 (Wed Aug 13 04:27:35 EDT 2003), 22625 lines:
 
 * Updated German, Spanish, Catalan, and Turkish translations.

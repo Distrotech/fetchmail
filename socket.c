@@ -901,10 +901,31 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char
     char *fingerprint, char *servercname, char *label)
 {
 	SSL *ssl;
+        struct stat randstat;
+        int i;
 	
 	SSL_load_error_strings();
 	SSLeay_add_ssl_algorithms();
 	
+#ifdef SSL_ENABLE
+        if (stat("/dev/random", &randstat)  &&
+            stat("/dev/urandom", &randstat)) {
+          /* Neither /dev/random nor /dev/urandom are present, so add
+             entropy to the SSL PRNG a hard way. */
+          for (i = 0; i < 10000  &&  ! RAND_status (); ++i) {
+            char buf[4];
+            struct timeval tv;
+            gettimeofday (&tv, 0);
+            buf[0] = tv.tv_usec & 0xF;
+            buf[2] = (tv.tv_usec & 0xF0) >> 4;
+            buf[3] = (tv.tv_usec & 0xF00) >> 8;
+            buf[1] = (tv.tv_usec & 0xF000) >> 12;
+            RAND_add (buf, sizeof buf, 0.1);
+          }
+        }
+#endif /* SSL_ENABLE */
+
+
 	if( sock < 0 || sock > FD_SETSIZE ) {
 		report(stderr, GT_("File descriptor out of range for SSL") );
 		return( -1 );

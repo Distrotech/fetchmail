@@ -125,7 +125,7 @@ not work with POP2, and may occasionally flake out under POP3.
 .TP
 .B \-s | \-\-silent
 Silent mode.  Suppresses all progress/status messages that are
-normally echoed to standard error during a fetch (but does not
+normally echoed to standard output during a fetch (but does not
 suppress actual error messages).  The --verbose option overrides this.
 .TP
 .B \-v | \-\-verbose
@@ -162,14 +162,13 @@ you have specified a default of \fBkeep\fR in your
 \&\fI.fetchmailrc\fR.  This option is forced on with ETRN and ODMR.
 .TP
 .B \-F | \-\-flush
-POP3/IMAP only.  Delete old (previously retrieved) messages from the mailserver
-before retrieving new messages. This option does not work with ETRN or
-ODMR.  In combination with the --limit option, --flush can be used to 
-delete oversized messages waiting on the server.
-Warning: if your local MTA hangs and fetchmail is aborted, the next
-time you run fetchmail, it will delete mail that was never delivered to you.
-What you probably want is the default setting: if you don't specify `-k', then
-fetchmail will automatically delete messages after successful delivery.
+POP3/IMAP only.  Delete old (previously retrieved) messages from the
+mailserver before retrieving new messages. This option does not work
+with ETRN or ODMR.  Warning: if your local MTA hangs and fetchmail is
+aborted, the next time you run fetchmail, it will delete mail that was
+never delivered to you.  What you probably want is the default
+setting: if you don't specify `-k', then fetchmail will automatically
+delete messages after successful delivery.
 .SS Protocol and Query Options
 .TP
 .B \-p <proto> | \-\-protocol <proto>

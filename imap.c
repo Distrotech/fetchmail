@@ -12,6 +12,7 @@
 #if defined(STDC_HEADERS)
 #include  <stdlib.h>
 #include  <limits.h>
+#include  <errno.h>
 #endif
 #include  "fetchmail.h"
 #include  "socket.h"
@@ -724,7 +725,8 @@ static int imap_getrange(int sock,
 	memset(unseen_messages, 0, count * sizeof(unsigned int));
 	unseen = 0;
 
-	gen_send(sock, "SEARCH UNSEEN");
+	/* don't count deleted messages, in case user enabled keep last time */
+	gen_send(sock, "SEARCH UNSEEN NOT DELETED");
 	do {
 	    ok = gen_recv(sock, buf, sizeof(buf));
 	    if (ok != 0)
@@ -999,10 +1001,15 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
     /*
      * Try to extract a length from the FETCH response.  RFC2060 requires
      * it to be present, but at least one IMAP server (Novell GroupWise)
-     * botches this.
+     * botches this.  The overflow check is needed because of a broken
+     * server called dbmail that returns huge garbage lengths.
      */
-    if ((cp = strchr(buf, '{')))
-	*lenp = atoi(cp + 1);
+    if ((cp = strchr(buf, '{'))) {
+        errno = 0;
+	*lenp = (int)strtol(cp + 1, (char **)NULL, 10);
+        if (errno == ERANGE && (*lenp == LONG_MAX || *lenp == LONG_MIN))
+            *lenp = -1;    /* length is too big/small for us to handle */
+    }
     else
 	*lenp = -1;	/* missing length part in FETCH reponse */
 
