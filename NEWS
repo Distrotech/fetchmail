@@ -2,7 +2,11 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.9.10 (Sun Mar 10 15:09:57 EST 2002), 21529 lines:
+
 * Security fix: don't trust the message count passed back by the server.
+
+There are 481 people on fetchmail-friends and 646 on fetchmail-announce.
 
 fetchmail-5.9.9 (Sat Mar  9 08:54:28 EST 2002), 21508 lines:
 
