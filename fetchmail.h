@@ -65,22 +65,6 @@ struct optrec {
   struct optrec *next;
 };
 
-
-/* .poprc records are passed in this structure type */
-struct prc_server {
-  char *server;
-  int protocol;
-  char *remotename;
-  char *password;
-  char *remotefolder;
-  char *userfolder;
-  char *mda;
-  int keep;
-  int flush;
-  int fetchall;
-};
-
-
 /* controls the detail level of status/progress messages written to stderr */
 extern int outlevel;    	/* see the O_.* constants above */
 extern int yydebug;		/* enable parse debugging */
