@@ -77,8 +77,8 @@ TEXI2DVI = texi2dvi
 ETAGS = etags -tw
 CTAGS = ctags -tw
 
-protobjs = socket.o getpass.o pop2.o pop3.o imap.o etrn.o fetchmail.o  \
-       options.o rcfile_y.o rcfile_l.o daemon.o smtp.o driver.o rfc822.o  \
+protobjs = rcfile_y.o rcfile_l.o socket.o getpass.o pop2.o pop3.o imap.o \
+       etrn.o fetchmail.o options.o daemon.o smtp.o driver.o rfc822.o \
        xmalloc.o uid.o mxget.o md5c.o md5ify.o interface.o netrc.o error.o
 
 objs = $(protobjs) $(extras) $(EXTRAOBJ)
