@@ -937,6 +937,9 @@ static int open_mda_sink(struct query *ctl, struct msgblk *msg,
 #ifdef HAVE_SIGACTION
     struct      sigaction sa_new;
 #endif /* HAVE_SIGACTION */
+#ifdef HAVE_SETEUID
+    uid_t orig_uid;
+#endif /* HAVE_SETEUID */
     struct	idlist *idp;
     int	length = 0, fromlen = 0, nameslen = 0;
     char	*names = NULL, *before, *after, *from = NULL;
@@ -1062,6 +1065,7 @@ static int open_mda_sink(struct query *ctl, struct msgblk *msg,
      * MDA creates properly.  (The seteuid call is available
      * under all BSDs and Linux)
      */
+    orig_uid = getuid();
     seteuid(ctl->uid);
 #endif /* HAVE_SETEUID */
 
@@ -1071,7 +1075,7 @@ static int open_mda_sink(struct query *ctl, struct msgblk *msg,
 
 #ifdef HAVE_SETEUID
     /* this will fail quietly if we didn't start as root */
-    seteuid(0);
+    seteuid(orig_uid);
 #endif /* HAVE_SETEUID */
 
     if (!sinkfp)

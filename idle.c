@@ -22,6 +22,7 @@ MIT license.  Compile with -DMAIN to build the demonstrator.
 #include <signal.h>
 #include <errno.h>
 #include <sys/time.h>
+#include <fetchmail.h>	/* for ROOT_UID */
 
 #ifndef TRUE
 #define TRUE 1
@@ -154,12 +155,13 @@ int interruptible_idle(int seconds)
 	pause();
     signal(SIGALRM, SIG_IGN);
 #endif /* ! EMX */
-    if (lastsig == SIGUSR1 || ((seconds && !getuid()) && lastsig == SIGHUP))
+    if (lastsig == SIGUSR1 || ((seconds && getuid() == ROOT_UID)
+	&& lastsig == SIGHUP))
        awoken = TRUE;
 
     /* now lock out interrupts again */
     signal(SIGUSR1, SIG_IGN);
-    if (!getuid())
+    if (getuid() == ROOT_UID)
 	signal(SIGHUP, SIG_IGN);
 
     return(awoken ? lastsig : 0);

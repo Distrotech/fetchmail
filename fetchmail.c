@@ -492,7 +492,7 @@ int main(int argc, char **argv)
 	 * but ignore them otherwise so as not to interrupt a poll.
 	 */
 	signal(SIGUSR1, SIG_IGN);
-	if (run.poll_interval && !getuid())
+	if (run.poll_interval && getuid() == ROOT_UID)
 	    signal(SIGHUP, SIG_IGN);
     }
     else
@@ -732,7 +732,7 @@ int main(int argc, char **argv)
 	     * for people who think all system daemons wake up on SIGHUP.
 	     */
 	    signal(SIGUSR1, donothing);
-	    if (!getuid())
+	    if (getuid() != ROOT_UID)
 		signal(SIGHUP, donothing);
 
 	    /*
@@ -1187,7 +1187,7 @@ static int load_params(int argc, char **argv, int optind)
      */
     if (!run.postmaster)
     {
-	if (getuid())				/* ordinary user */
+	if (getuid() != ROOT_UID)		/* ordinary user */
 	    run.postmaster = user;
 	else					/* root */
 	    run.postmaster = "postmaster";

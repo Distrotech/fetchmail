@@ -647,4 +647,10 @@ char *strerror ();
        } while(0)
 #endif /* FETCHMAIL_DEBUG */
 
+#ifdef __CYGWIN__
+#define ROOT_UID 18
+#else /* !__CYGWIN__ */
+#define ROOT_UID 0
+#endif /* __CYGWIN__ */
+
 /* fetchmail.h ends here */
