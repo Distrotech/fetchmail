@@ -50,11 +50,8 @@ then
   echo "Adding -lbsd to standard libraries"
   LIBS="$LIBS -lbsd"
   LDFLAGS=""
-  if test `uname -r` = "2.5.0"
-  then
-    echo "Prepending standard include path to gcc flags"
-    CPFLAGS="-I/usr/include"
-  fi
+  echo "Prepending standard include path to gcc flags"
+  CPFLAGS="-I/usr/include"
 fi
 
 # Check for FreeBSD special case: -lkvm needed
