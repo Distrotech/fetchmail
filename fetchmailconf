@@ -916,7 +916,7 @@ class ServerEdit(Frame, MyWidget):
         else:
             realhost = self.server.pollname
         greetline = None
-        for (protocol, port) in (("IMAP",143), ("POP3",109), ("POP2",109)):
+        for (protocol, port) in (("IMAP",143), ("POP3",110), ("POP2",109)):
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             try:
                 sock.connect(realhost, port)
