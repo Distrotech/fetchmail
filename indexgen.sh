@@ -104,6 +104,8 @@ Or you can get the last \`gold' version, $goldname:
 	Gzipped source archive of fetchmail $goldname</a>
 <LI> <a href="fetchmail-$goldvers-1.i386.rpm">
 	Intel binary RPM of fetchmail $goldname (uses glibc)</a>
+<LI> <a href="fetchmail-$goldvers-1.alpha.rpm">
+	Alpha binary RPM of fetchmail $goldname (uses glibc)</a>
 <LI> <a href="fetchmail-$goldvers-1.src.rpm">
 	Source RPM of fetchmail $goldname</a>
 </UL>
