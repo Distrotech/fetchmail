@@ -8,7 +8,7 @@
 
 				Release Notes:
 
-fetchmail-5.0.9 (Wed Sep 22 01:27:42 EDT 1999):
+fetchmail-5.1.0 (Wed Sep 22 01:27:42 EDT 1999):
 * CRAM-MD5 code now doublequotes usernames with embedded spaces.  This will
   probably fail (the RFCs don't support quoting) but it's better than nothing
   and works with at least one server.
