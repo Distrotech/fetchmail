@@ -308,9 +308,9 @@ struct hostrec *queryctl;
 	bufp = buf;
 	if (buf[0] == '\0' || buf[0] == '\r' || buf[0] == '\n')
 	    inheaders = 0;
-	if (*bufp == '.') {
+	if (delimited && *bufp == '.') {
 	    bufp++;
-	    if (delimited && *bufp == 0)
+	    if (*bufp == 0)
 		break;  /* end of message */
 	}
 	strcat(bufp, "\n");
