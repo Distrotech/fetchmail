@@ -128,10 +128,12 @@ serv_option	: AKA alias_list
 		| PROTOCOL PROTO	{current.server.protocol = $2;}
 		| PROTOCOL KPOP		{
 					    current.server.protocol = P_POP3;
+
+					    if (current.server.preauthenticate == A_PASSWORD)
 #ifdef KERBEROS_V5
-		    			    current.server.preauthenticate = A_KERBEROS_V5;
+						current.server.preauthenticate = A_KERBEROS_V5;
 #else
-		    			    current.server.preauthenticate = A_KERBEROS_V4;
+		    				current.server.preauthenticate = A_KERBEROS_V4;
 #endif /* KERBEROS_V5 */
 #if INET6
 					    current.server.service = KPOP_PORT;
