@@ -32,7 +32,7 @@ EOF
 	do
 		if [ "$version" = '%' ]
 		then
-			legend="$friends $announce $total $days $date"
+			legend="$size $friends $announce $total $days $date"
 			echo "# Associate $lastday to '$legend'"
 			echo "count = count + 1"
 			echo "lastday = $lastday - 5"
