@@ -860,7 +860,7 @@ int num;		/* index of message */
 		length += (strlen(idp->id) + 1);
 		good_addresses++;
 	    }
-	names = (char *)alloca(length);
+	names = (char *)alloca(++length);
 	names[0] = '\0';
 	for (idp = xmit_names; idp; idp = idp->next)
 	    if (idp->val.num == XMIT_ACCEPT)
