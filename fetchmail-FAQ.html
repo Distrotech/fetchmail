@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/07/20 18:51:59 $
+<td width="30%" align=right>$Date: 1998/07/25 17:15:16 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -55,8 +55,7 @@ IP address?</a><br>
 <a href="#C1">C1. Why do I need a .fetchmailrc when running as root on my own machine?</a><br>
 <a href="#C2">C2. How can I arrange for a fetchmail daemon to get killed when I log out?</a><br>
 <a href="#C3">C3. How do I know what interface and address to use with --interface?</a><br>
-<a href="#C4">C4. How can I get fetchmail to work with ssh?</a><br>
-<a href="#C5">C5. How can I set up support for sendmail's anti-spam 571 response?</a><br>
+<a href="#C4">C4. How can I set up support for sendmail's anti-spam 571 response?</a><br>
 
 <h1>How to make fetchmail play nice with other software:</h1>
 
@@ -72,6 +71,8 @@ IP address?</a><br>
 <a href="#T10">T10. How can I use fetchmail with HP OpenMail?</a><br>
 <a href="#T11">T11. How can I use fetchmail with SOCKS?</a><br>
 <a href="#T12">T12. How can I use fetchmail with IPv6 and IPsec?</a><br>
+<a href="#T13">T13. How can I get fetchmail to work with ssh?</a><br>
+<a href="#T14">T14. What do I have to do to use the IMAP-GSS protocol?</a><br>
 
 <h1>Runtime fatal errors:</h1>
 
@@ -363,7 +364,7 @@ alone will really address your security exposure.  If you think you
 might be snooped, it's better to use end-to-end encryption on your
 whole mail stream so none of it can be read.  One of the advantages of
 fetchmail over conventional SMTP-push delivery is that you may be able
-to arrange this by using ssh(1); see <a href="#C4">C4</a>.<P>
+to arrange this by using ssh(1); see <a href="#T13">T13</a>.<P>
 
 If ssh/sshd isn't available, or you find it too complicated for you to
 set up, password encryption will at least keep a malicious cracker
@@ -830,103 +831,7 @@ would work.  To range over any value of the last two octets
 </pre>
 
 <hr>
-<h2><a name="C4">C4. How can I get fetchmail to work with ssh?</a></h2>
-
-We have two recipes for this.  The first is a little easier to set up,
-but only supports one user at a time.<P>
-
-First, a lightly edited version of a recipe from Masafumi NAKANE:<p>
-
-1. You must have ssh (the ssh client) on the local host and sshd (ssh
-server) on the remote mail server.  And you have to configure ssh so
-you can login to the sshd server host without a password.  (Refer to ssh
-man page for several authentication methods.)<p>
-
-2. Add something like following to your .fetchmailrc file: <p>
-
-<pre>
-poll mailhost port 1234 via localhost with proto pop3:
-        preconnect "ssh -f -L 1234:mailhost:110 mailhost sleep 20 &lt;/dev/null &gt;/dev/null";
-</pre>
-
-(Note that 1234 can be an arbitrary port number.  Privileged ports can
-be specified only by root.)  The effect of this ssh command is to
-forward connections made to localhost port 1234 (in above example) to
-mailhost's 110.<p>
-
-This configuration will enable secure mail transfer.  All the
-conversation between fetchmail and remote pop server will be
-encrypted.<p>
-
-If sshd is not running on the remote mail server, you can specify
-intermediate host running it.  If you do this, however, communication
-between the machine running sshd and the POP server will not be encrypted.
-And the preconnect line would be like this:<p>
-
-<pre>
-preconnect "ssh -f -L 1234:mailhost:110 sshdhost sleep 20 &lt;/dev/null &gt;/dev/null"
-</pre>
-
-You can work this trick with IMAP too, but the port number 110 in the
-above would need to become 143.<p>
-
-Second, a recipe from Charlie Brady &lt;cbrady@ind.tansu.com.au&gt;:<p>
-
-Charlie says: "The [previous] recipe certainly works, but
-the solution I post here is better in a few respects":
-
-<UL>
-<LI>this method will not fail if two or more users attempt to use fetchmail
-    simultaneously.
-<LI>you are able to use the full facilities of tcpd to control access
-<LI>this method does not depend on the preconnect feature of fetchmail, so
-    can be used for tunneling of other services as well.
-</UL>
-
-Here are the steps:
-
-<OL>
-<LI>
-Make sure that the "socket" program is installed on the server
-machine. Presently it lives at <a
-href="ftp://sunsite.unc.edu/pub/linux/system/network/misc/socket-1.1.tar.gz">
-ftp://sunsite.unc.edu/pub/linux/system/network/misc/socket-1.1.tar.gz</a>,
-but watch out for a change in version number.<P>
-<LI>
-Set up an unprivileged account on your system with a .ssh directory
-containing an SSH identity file "identity" with no pass phrase,
-"identity.pub" and "known_hosts" containing the host key of your
-mailhost. Let's call this account "noddy".
-<LI>
-On mailhost, set up no-password access for noddy@yourhost. Add to your
-SSH authorised_keys file:
-
-<PRE>
-command="socket localhost 110",no-port-forwarding 1024 ......
-</PRE>
-
-where "<code>1024</code> ......" is the content of noddy's identity.pub file.
-<LI>
-Create a script /usr/local/bin/ssh.fm and make it executable:
-
-<PRE>
-#! /bin/sh
-exec ssh -q -C -l your.login.id -e none mailhost socket localhost 110
-</PRE>
-<LI>
-Add an entry in inetd.conf for whatever port you choose to use - say:
-
-<PRE>
-1234 stream tcp nowait noddy /usr/sbin/tcpd /usr/local/bin/ssh.fm
-</PRE>
-<LI>
-Send a HUP signal to your inetd.
-</OL>
-
-Now just use localhost:1234 to access your POP server.<P>
-
-<hr>
-<h2><a name="C5">C5. How can I set up support for sendmail's anti-spam 571 response?</a></h2>
+<h2><a name="C4">C4. How can I set up support for sendmail's anti-spam 571 response?</a></h2>
 
 Rachel Polanskis <r.polanskis@nepean.uws.edu.au> writes:<p>
 
@@ -1364,6 +1269,135 @@ http://www.bieringer.de/linux/IPv6/IPv6-HOWTO/IPv6-HOWTO.html</a>
 <LI>
 <a href="http://www.inner.net/ipv6">http://www.inner.net/ipv6</a> (via IPv4)
 </UL>
+
+<hr>
+<h2><a name="T13">T13. How can I get fetchmail to work with ssh?</a></h2>
+
+We have two recipes for this.  The first is a little easier to set up,
+but only supports one user at a time.<P>
+
+First, a lightly edited version of a recipe from Masafumi NAKANE:<p>
+
+1. You must have ssh (the ssh client) on the local host and sshd (ssh
+server) on the remote mail server.  And you have to configure ssh so
+you can login to the sshd server host without a password.  (Refer to ssh
+man page for several authentication methods.)<p>
+
+2. Add something like following to your .fetchmailrc file: <p>
+
+<pre>
+poll mailhost port 1234 via localhost with proto pop3:
+        preconnect "ssh -f -L 1234:mailhost:110 mailhost sleep 20 &lt;/dev/null &gt;/dev/null";
+</pre>
+
+(Note that 1234 can be an arbitrary port number.  Privileged ports can
+be specified only by root.)  The effect of this ssh command is to
+forward connections made to localhost port 1234 (in above example) to
+mailhost's 110.<p>
+
+This configuration will enable secure mail transfer.  All the
+conversation between fetchmail and remote pop server will be
+encrypted.<p>
+
+If sshd is not running on the remote mail server, you can specify
+intermediate host running it.  If you do this, however, communication
+between the machine running sshd and the POP server will not be encrypted.
+And the preconnect line would be like this:<p>
+
+<pre>
+preconnect "ssh -f -L 1234:mailhost:110 sshdhost sleep 20 &lt;/dev/null &gt;/dev/null"
+</pre>
+
+You can work this trick with IMAP too, but the port number 110 in the
+above would need to become 143.<p>
+
+Second, a recipe from Charlie Brady &lt;cbrady@ind.tansu.com.au&gt;:<p>
+
+Charlie says: "The [previous] recipe certainly works, but
+the solution I post here is better in a few respects":
+
+<UL>
+<LI>this method will not fail if two or more users attempt to use fetchmail
+    simultaneously.
+<LI>you are able to use the full facilities of tcpd to control access
+<LI>this method does not depend on the preconnect feature of fetchmail, so
+    can be used for tunneling of other services as well.
+</UL>
+
+Here are the steps:
+
+<OL>
+<LI>
+Make sure that the "socket" program is installed on the server
+machine. Presently it lives at <a
+href="ftp://sunsite.unc.edu/pub/linux/system/network/misc/socket-1.1.tar.gz">
+ftp://sunsite.unc.edu/pub/linux/system/network/misc/socket-1.1.tar.gz</a>,
+but watch out for a change in version number.<P>
+<LI>
+Set up an unprivileged account on your system with a .ssh directory
+containing an SSH identity file "identity" with no pass phrase,
+"identity.pub" and "known_hosts" containing the host key of your
+mailhost. Let's call this account "noddy".
+<LI>
+On mailhost, set up no-password access for noddy@yourhost. Add to your
+SSH authorised_keys file:
+
+<PRE>
+command="socket localhost 110",no-port-forwarding 1024 ......
+</PRE>
+
+where "<code>1024</code> ......" is the content of noddy's identity.pub file.
+<LI>
+Create a script /usr/local/bin/ssh.fm and make it executable:
+
+<PRE>
+#! /bin/sh
+exec ssh -q -C -l your.login.id -e none mailhost socket localhost 110
+</PRE>
+<LI>
+Add an entry in inetd.conf for whatever port you choose to use - say:
+
+<PRE>
+1234 stream tcp nowait noddy /usr/sbin/tcpd /usr/local/bin/ssh.fm
+</PRE>
+<LI>
+Send a HUP signal to your inetd.
+</OL>
+
+Now just use localhost:1234 to access your POP server.<P>
+
+<hr>
+<h2><a name="T14">T14. What do I have to do to use the IMAP-GSS protocol?</a></h2>
+
+Fetchmail can use RFC1731 GSSAPI authorization to safely identify you
+to your IMAP server, as long as you can share Kerberos V credentials
+with your mail host and you have a GSSAPI-capable IMAP server.
+UW-IMAP (available via FTP at <a
+href="ftp://ftp.cac.washington.edu/mail/">ftp.cac.washington.edu</a>)
+is the only one I'm aware of and the one I recommend anyway for other
+reasons. You'll need version 4.1-FINAL or greater though, and it has
+to have GSS support compiled in.<p>
+
+Neither UW-IMAP nor fetchmail compile in support for GSS by default, since
+it requires libraries from the Kerberos V distribution (available via FTP at
+<a href="ftp://athena-dist.mit.edu/pub/ATHENA/kerberos">athena-dist.mit.edu</a>
+but mind the export restrictions). If you have these, compiling in GSS support
+is simple: add a <pre>--with-gssapi=[/path/to/krb5/root]</pre> option to
+configure. For instance, I have all of my kerberos V libraries installed under
+/usr/krb5 so I run <pre>configure --with-gssapi=/usr/krb5</pre>.<p>
+
+Setting up Kerberos V authentication is beyond the scope of this FAQ, but
+you'll need to add a credential for imap/[mailhost] to the keytab of the mail
+server (IMAP doesn't just use the host key). Then you'll need to have your
+credentials ready on your machine (cf. kinit).<p>
+
+After that things are very simple. Set your protocol to imap-gss in your
+.fetchmailrc, and omit the password, since imap-gss doesn't need one. You
+can specify a username if you want, but this is only useful if your mailbox
+belongs to a username different from your kerberos principal. <p>
+
+Now you don't have to worry about your password appearing in cleartext in
+your .fetchmailrc, or across the network.<p>
 
 <hr>
 <h2><a name="R1">R1. Fetchmail's initial gethostbyname call fails on my host.</a></h2>
@@ -2052,7 +2086,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/07/20 18:51:59 $
+<td width="30%" align=right>$Date: 1998/07/25 17:15:16 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
