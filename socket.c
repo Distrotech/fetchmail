@@ -118,7 +118,8 @@ char *SockGets(char *buf, int len, FILE *sockfp)
     if (--len < 1)
 	return NULL;
     do {
-	if ((n = recv(fileno(sockfp), bp, len, MSG_PEEK)) == -1)
+	/* return value of 0 is EOF, < 0 is error */
+	if ((n = recv(fileno(sockfp), bp, len, MSG_PEEK)) <= 0)
 	    return NULL;
 	if ((p = memchr(bp, '\n', n)) != NULL)
 	{

@@ -1512,7 +1512,7 @@ va_dcl
     {
 	char *cp;
 
-	if (shroud && (cp = strstr(buf, shroud)))
+	if (shroud && shroud[0] && (cp = strstr(buf, shroud)))
 	{
 	    char	*sp;
 
@@ -1582,7 +1582,7 @@ va_dcl
     {
 	char *cp;
 
-	if (shroud && (cp = strstr(buf, shroud)))
+	if (shroud && shroud[0] && (cp = strstr(buf, shroud)))
 	{
 	    char	*sp;
 
