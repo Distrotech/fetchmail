@@ -20,14 +20,14 @@ rm -f index.html
 
 # Compute MD5 checksums for security audit
 rm -f checksums
-for file in fetchmail-$version.tar.gz fetchmail-$version-1.i386.rpm fetchmail-$version-1.src.rpm
+for file in fetchmail-$version.tar.gz fetchmail-$version-1.*.rpm
 do 
     md5sum $file >>checksums
 done
 
 if [ $version != $goldvers ]
 then
-    for file in /usr/src/redhat/SOURCES/fetchmail-$goldvers.tar.gz /usr/src/redhat/RPMS/i386/fetchmail-$goldvers-1.i386.rpm /usr/src/redhat/SRPMS/fetchmail-$goldvers-1.src.rpm
+    for file in fetchmail-$goldvers.tar.gz fetchmail-$goldvers-1.*.rpm 
     do
 	md5sum $file | sed -e "s: .*/:  :" >>checksums
     done
@@ -36,7 +36,6 @@ fi
 # Cryptographically sign checksums 
 gpg --clearsign checksums
 mv checksums.asc checksums
-gpg --detach-sign --armor fetchmail-$version.tar.gz
 
 cat >index.html <<EOF
 <?xml version="1.0" encoding="ISO-8859-1"?>
@@ -161,14 +160,6 @@ of known problems and requested features.</p>
 <li> <a href="fetchmail-$version-1.src.rpm">
 	Source RPM of fetchmail $version</a>
 </ul>
-
-<p>The <a href="fetchmail-$version.tar.gz.asc">detached GPG
-signature</a> for the binary tarball can be used to check it for
-correctness, with the command</p>
-
-<pre>
-gpg --verify fetchmail-$version.tar.gz.asc fetchmail-$version.tar.gz
-</pre>
 
 <p>MD5 <a href="checksums">checksums</a> are available for these files; the
 checksum file is cryptographically signed and can be verified with the

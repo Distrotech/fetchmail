@@ -11,62 +11,16 @@ else
 echo "Beginning web upload..."
 # First, copy to primary website
 dest=esr@${WWWHOST}:${WWWDIR}/fetchmail
-scp fetchmail-${version}.tar.gz $dest
 scp fetchmail-${version}.tar.gz.asc $dest
-scp fetchmail-FAQ.html $dest
-scp fetchmail-${version}-1.i386.rpm $dest
-scp fetchmail-${version}-1.src.rpm $dest
-scp fetchmail-features.html $dest
-scp NEWS $dest
-scp fetchmail-man.html $dest
-scp design-notes.html $dest
-scp todo.html $dest
-scp testservers.html $dest
-# The following things vary seldom
 #scp funny.html $dest
 #scp fetchmail.png $dest
 #scp bighand.png $dest
 scp growth.png $dest
 scp timeseries $dest
 scp growthplot $dest
-# The following things vary often
 scp checksums $dest
-scp index.html $dest
-scp history.html $dest
-echo "Upload to ${WWWVIRTUAL} complete"
+# shipper does the rest.
+rm -f ANNOUNCE.FRESHMEAT
+shipper
 
-echo "Beginning FTP upload..."
-lftp <<EOF
-  # Copy to FTP site
-  open $FTPHOST
-  cd $FTPDIR/fetchmail
-  put fetchmail-${version}.tar.gz
-  put fetchmail-${version}-1.i386.rpm
-  put fetchmail-${version}-1.src.rpm
-  close
-  echo "FTP upload complete."
 
-  # Next, upload to Metalab
-  echo "Beginning Metalab upload..."
-  open -u anonymous,esr@thyrsus.com metalab.unc.edu
-  cd incoming/Linux 
-  put fetchmail-${version}.tar.gz
-  put fetchmail.lsm
-  put README -o fetchmail.README 
-  put fetchmail-FAQ.html
-  put fetchmail-${version}-1.i386.rpm
-  put fetchmail-${version}-1.src.rpm
-  close
-  echo "Upload to Metalab complete"
-
-  # Finally, upload the RPMS to Red Hat
-  echo "Beginning Red Hat upload"
-  open incoming.redhat.com
-  cd libc6
-  put fetchmail-${version}-1.i386.rpm
-  put fetchmail-${version}-1.src.rpm
-  close
-  echo "Upload to Red Hat contrib complete"
-EOF
-    echo "fetchmail uploaded"
-fi

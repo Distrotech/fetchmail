@@ -4,12 +4,14 @@
 
 * Sunil Shetye's fix to force fetchsizelimit to 1 for APOP and RPOP.
 * PopDel.py removed from contrib at author's request.
-* Matthias Andree's fix for Sunil Shetye's fetvh-split patch
+* Matthias Andree's fix for Sunil Shetye's fetch-split patch
 * Include James Stone's moldremover.py script.
 * Enable .fetchmailrc permissions checking under Cygwin.
 * Nalin Dahyabai's fix for POP3 strong authentication.
 * HOME_ETC patch for PLD Linux.
 * Sunil Shetye's fix for SSL configuration.
+* Simon Josefsson's patch for GSS library support.
+* Added Andrey Lelikov's recupe for Hotmail and Lycos Webmail.
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
@@ -21,8 +23,8 @@ fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 * OpenSSL cleanup patches from levinedl@acm.org.
 * Benjamin Drieu's patch to fix Debian bug #212240, no oversized-message
   flushing if both "flush" and "limit" were specified.
-* Benjamin Drieu's patch for Debian bug #156592, incorrect handing of host/port
-  option.
+* Benjamin Drieu's patch for Debian bug #156592, incorrect handing of 
+  host/port option.
 * Smash all NULs out of headers right after the socket read.
 * Dup-killer code now keys on an MD5 hash of the raw headers.
 * Sunil Shetye's patches to break up fetching of sizes and UIDLs.
