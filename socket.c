@@ -74,23 +74,8 @@ FILE *sockopen(char *host, int clientPort)
     }
     fp = fdopen(sock, "r+");
 
-#ifdef __SETVBUF_WORKS_OK__
-    /*
-     * For unknown reasons, this results in horrible lossage under Linux.
-     * To see this, condition in this line, generate a test pattern
-     * of 8K, fetch it, and watch it garble the test pattern.
-     * I think there's a bug in Linux stdio lurking here.
-     */
-    {
-	static char sbuf[INTERNAL_BUFSIZE];
-	setvbuf(fp, sbuf, _IOLBF, INTERNAL_BUFSIZE);
-    }
-#endif /* __SETVBUF_WORKS_OK__ */
-
-#if !defined(__SETVBUF_WORKS_OK__) && defined(HAVE_SETLINEBUF)
-    /* this on the other hand works OK under Linux */
-    setlinebuf(fp);
-#endif
+    /* the point of all this mishigoss ... dynamic per-stream buffering */
+    setvbuf(fp, NULL, _IOLBF, INTERNAL_BUFSIZE);
 
     return(fp);
 }
