@@ -774,6 +774,15 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 
     peek_capable = (imap_version >= IMAP4);
 
+    /* 
+     * Assumption: expunges are cheap, so we want to do them
+     * after every message unless user said otherwise.
+     */
+    if (NUM_SPECIFIED(ctl->expunge))
+	expunge_period = NUM_VALUE_OUT(ctl->expunge);
+    else
+	expunge_period = 1;
+
     if (preauth)
 	return(PS_SUCCESS);
 
@@ -859,15 +868,6 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     if (ok)
 	return(ok);
     
-    /* 
-     * Assumption: expunges are cheap, so we want to do them
-     * after every message unless user said otherwise.
-     */
-    if (NUM_SPECIFIED(ctl->expunge))
-	expunge_period = NUM_VALUE_OUT(ctl->expunge);
-    else
-	expunge_period = 1;
-
     return(PS_SUCCESS);
 }
 

@@ -16,6 +16,7 @@ fetchmail-5.0.5 ():
 * Make the .fetchmail_pid lockfile with O_EXCL.  Duhh...
 * New FAQ item RH on startup failures under Red Hat 6.0.
 * IMAP now skips the authorization step on a PREAUTH response.
+* Fix bug in defaulting of IMAP expunge period with non-LOGIN auth modes.
 
 There are 258 people on fetchmail-friends and 412 on fetchmail-announce.
 
