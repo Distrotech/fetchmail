@@ -658,11 +658,26 @@ void termhook(int sig)
 {
     struct query	*ctl;
 
+    /* 
+     * Craig Metz, the RFC1938 one-time-password guy, points out:
+     * "Remember that most kernels don't zero pages before handing them to the
+     * next process and many kernels share pages between user and kernel space.
+     * You'd be very surprised what you can find from a short program to do a
+     * malloc() and then dump the contents of the pages you got. By zeroing
+     * the secrets at end of run (earlier if you can), you make sure the next
+     * guy can't get the password/pass phrase."
+     *
+     * Right you are, Craig!
+     */
+    for (ctl = querylist; ctl; ctl = ctl->next)
+	if (ctl->password)
+	    memset(ctl->password, '\0', strlen(ctl->password));
+
     /*
      * Sending SMTP QUIT on signal is theoretically nice, but led to a 
      * subtle bug.  If fetchmail was terminated by signal while it was 
      * shipping message text, it would hang forever waiting for a
-     * command acknowledge.  In theory we could disable the QUIT
+     * command acknowledge.  In theory we could enable the QUIT
      * only outside of the message send.  In practice, we don't
      * care.  All mailservers hang up on a dropped TCP/IP connection
      * anyway.
