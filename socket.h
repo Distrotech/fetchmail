@@ -20,7 +20,7 @@ int SockOpen(const char *host, int clientPort, const char *options,
 Get a string terminated by an '\n' (matches interface of fgets).
 Pass it a valid socket, a buffer for the string, and
 the length of the buffer (including the trailing \0)
-returns buffer on success, NULL on failure. 
+returns length of buffer on success, -1 on failure. 
 */
 int SockRead(int sock, char *buf, int len);
 
