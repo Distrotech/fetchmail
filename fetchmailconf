@@ -170,7 +170,7 @@ class User:
 	self.localnames = [self.remote,]# Local names
 	self.password = None		# Password for mail account access
 	self.mailboxes = []		# Remote folders to retrieve from
-	self.smtphunt = [hostname]	# Hosts to forward to
+	self.smtphunt = []		# Hosts to forward to
 	self.smtpaddress = None;	# Append this to MAIL FROM line
 	self.preconnect = None		# Connection setup
 	self.postconnect = None		# Connection wrapup
@@ -260,12 +260,16 @@ class User:
 	if self.expunge != UserDefaults.expunge:
 	    str = str + " expunge " + `self.expunge`
         str = str + "\n"
-	if self.smtphunt != ():
-	     str = str + "    smtphost"
-	     for x in self.smtphunt:
-                 if x != 'localhost':
-                     str = str + " " + x
-                     str = str + "\n"
+        trimmed = self.smtphunt;
+        if trimmed[len(trimmed) - 1] == "localhost":
+            trimmed = trimmed[0:len(trimmed) - 1]
+        if trimmed[len(trimmed) - 1] == hostname:
+            trimmed = trimmed[0:len(trimmed) - 1]
+        if trimmed != []:
+            str = str + "    smtphost "
+            for x in trimmed:
+                str = str + " " + x
+                str = str + "\n"
 	if self.mailboxes:
 	     str = str + "    folder"
 	     for x in self.mailboxes:
@@ -275,7 +279,7 @@ class User:
             if getattr(self, fld):
                 str = str + " %s \"%s\"\n" % (fld, `getattr(self, fld)`)
         if self.antispam != UserDefaults.antispam:
-            str = str + " " + `self.antispam`
+            str = str + "    antispam " + `self.antispam` + "\n"
 	return str;
 
     def __str__(self):
@@ -1080,7 +1084,18 @@ Or you can just select `Quit' to leave the configurator now.
         self.quit()
 
 #
-# And this is the main sequence
+# And this is the main sequence.  How it works:  
+#
+# First, call `fetchmail --configdump' and trap the output in a tempfile.
+# This should fill it with a Python initializer for a variable `fetchmailrc'.
+# Run execfile on the file to pull fetchmailrc into Python global space.
+# You don't want static data, though; you want, instead, a tree of objects
+# with the same data members and added appropriate methods.
+#
+# This is what the copy_instance function() is for.  It tries to copy a
+# dictionary field by field into a class, aborting if the class and dictionary
+# have different data members (except for any typemap member in the class;
+# that one is strictly for use by the MyWidget supperclass).
 #
 
 def intersect(list1, list2):
@@ -1110,7 +1125,7 @@ def copy_instance(toclass, fromdict):
 	print "Conformability error"
 #	print "Class signature: " + `class_sig`
 #	print "Dictionary keys: " + `dict_keys`
-	print "Not matched in class signature: " + `setdiff(class_sig, common)`
+	print "Not matched in class `" + toclass.__class__.__name__ + "' signature: " + `setdiff(class_sig, common)`
 	print "Not matched in dictionary keys: " + `setdiff(dict_keys, common)`
 	sys.exit(1)
     else:
