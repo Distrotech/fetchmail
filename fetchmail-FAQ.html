@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/10/20 07:45:09 $
+<td width="30%" align=right>$Date: 1998/10/28 19:48:33 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -127,7 +127,7 @@ dumped to all my terminal sessions.</a><br>
 <a href="#O4">O4. Why do deleted messages show up again when I take
 a line hit while downloading?</a><br>
 <a href="#O5">O5. Why is fetched mail being logged with my name, not the real From address?</a><br>
-<a href="#O6">O6. I'm seeing long sendmail delays at start of each poll cycle.</a><br>
+<a href="#O6">O6. I'm seeing long sendmail delays or hangs near the start of each poll cycle.</a><br>
 <a href="#O7">O7. Why doesn't fetchmail deliver mail in date-sorted order?</a><br>
 
 <h1>Answers:</h1>
@@ -2142,7 +2142,7 @@ the calling-user ID.  So if your SMTP listener isn't picky, the log
 will look right.<p>
 
 <hr>
-<h2><a name="O6">O6. I'm seeing long sendmail delays at start of each poll cycle.</a></h2>
+<h2><a name="O6">O6. I'm seeing long sendmail delays or hangs near the start of each poll cycle.</a></h2>
 
 Sendmail does a hostname lookup when it first starts up, and also each
 time it gets a HELO in listener mode.<p>
@@ -2182,7 +2182,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/10/20 07:45:09 $
+<td width="30%" align=right>$Date: 1998/10/28 19:48:33 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
