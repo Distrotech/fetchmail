@@ -8,14 +8,15 @@
 
 				Release Notes:
 
-fetchmail-5.0.2 ():
+fetchmail-5.0.2 (Thu Apr 29 22:09:46 EDT 1999):
 * The IMAP driver now sets SEEN at deletion time, in case the server
   ships DSNs when that bit is set (HP OpenMail does this).
 * Delay between POP3 subsessions to allow the server time to release locks.
 * Improved environment-query logic to handle mutiple names per UID.
+  (This also fixes the no-pidfile bug introduced in 5.0.1.)
 * FAQ now includes the location of SSL patches.
 
-There are 255 people on fetchmail-friends and 374 on fetchmail-announce.
+There are 256 people on fetchmail-friends and 377 on fetchmail-announce.
 
 fetchmail-5.0.1 (Sun Apr 18 14:59:56 EDT 1999):
 * Try to discover user/home via getpwuid(getuid()) before using LOGNAME/HOME.
