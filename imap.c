@@ -749,6 +749,7 @@ static int do_cram_md5 (int sock, struct query *ctl)
 {
     int result;
     int len;
+    int quot;
     unsigned char buf1[1024];
     unsigned char msg_id[768];
     unsigned char response[16];
@@ -792,13 +793,14 @@ static int do_cram_md5 (int sock, struct query *ctl)
               msg_id, strlen (msg_id),
               response, sizeof (response));
 
+    quot = (int) strpbrk (ctl->remotename, " ");
 #ifdef HAVE_SNPRINTF
     snprintf (reply, sizeof (reply),
 #else
     sprintf(reply,
 #endif
-              "\"%s\" %02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x", 
-              ctl->remotename,
+              "%s%s%s %02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x", 
+              quot ? "\"" : "", ctl->remotename, quot ? "\"" : "",
               response[0], response[1], response[2], response[3],
               response[4], response[5], response[6], response[7],
               response[8], response[9], response[10], response[11],

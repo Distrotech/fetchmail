@@ -354,7 +354,7 @@ AC_ARG_WITH(kerberos,
 # configuring the BSD/OS Kerberos IV support, though. 
 
 # Check for a NetBSD/OpenBSD special case
-if test "$with_kerberos" = "yes" -a `uname` = "NetBSD" -o `uname` = "OpenBSD"
+if test "$with_kerberos" = "yes" && test `uname` = "NetBSD" -o `uname` = "OpenBSD"
 then
   echo "Configuring kerberosIV for `uname`"
   CEFLAGS="$CEFLAGS -DKERBEROS_V4 -I/usr/include/kerberosIV"

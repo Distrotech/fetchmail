@@ -9,6 +9,14 @@
 				Release Notes:
 
 fetchmail-5.0.8 (Tue Sep 14 06:56:50 EDT 1999):
+* CRAM-MD5 code now doublequotes usernames with embedded spaces.  This will
+  probably fail (the RFCs don't support quoting) but it's better than nothing
+  and works with at least one server.
+* Federico G. Schwindt's fix for NetBSD/OpenBSD --with-kerberos.
+
+There are 264 people on fetchmail-friends and 441 on fetchmail-announce.
+
+fetchmail-5.0.8 (Tue Sep 14 06:56:50 EDT 1999):
 * Todd Sabin's patch to accept spaces in CRAM-MD5 names.
 * Fix to CRAM endianness patch, by Dan Root via Lawrence Rogers.
 * Suppress duplicates by message ID in multidrop mode.
