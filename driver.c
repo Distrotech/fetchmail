@@ -540,7 +540,7 @@ struct hostrec *queryctl;
 struct method *proto;
 {
     int ok, len;
-    int mboxfd;
+    int mboxfd = -1;
     char buf [POPBUFSIZE+1], host[HOSTLEN+1];
     int socket;
     int first,number,count;
@@ -548,46 +548,19 @@ struct method *proto;
     tagnum = 0;
     protocol = proto;
 
-    /* open the output sink, locking it if it is a folder */
-    if (queryctl->output == TO_FOLDER || queryctl->output == TO_STDOUT) {
-	if ((mboxfd = openuserfolder(queryctl)) < 0) 
-	    return(PS_IOERR);
-    } else if (queryctl->output == TO_SMTP) {
-	if ((mboxfd = Socket(queryctl->smtphost, SMTP_PORT)) < 0) 
-	    return(PS_SOCKET);
-
-	/* eat the greeting message */
-	if (SMTP_ok(mboxfd, NULL) != SM_OK) {
-	    close(mboxfd);
-	    mboxfd = 0;
-	    return(PS_SMTP);
-	}
-    
-	/* make it look like mail is coming from the server */
-	if (SMTP_helo(mboxfd,queryctl->servername) != SM_OK) {
-	    close(mboxfd);
-	    mboxfd = 0;
-	    return(PS_SMTP);
-	}
-    }
-
     /* open a socket to the mail server */
     if ((socket = Socket(queryctl->servername,
 			 queryctl->port ? queryctl->port : protocol->port))<0)
     {
-	perror("do_protocol: socket");
+	perror("fetchmail, connecting to host");
 	ok = PS_SOCKET;
 	goto closeUp;
     }
 
     /* accept greeting message from mail server */
     ok = (protocol->parse_response)(buf, socket);
-    if (ok != 0) {
-	if (ok != PS_SOCKET)
-	    gen_transact(socket, protocol->exit_cmd);
-	close(socket);
-	goto closeUp;
-    }
+    if (ok != 0)
+	goto cleanUp;
 
     /* try to get authorized to fetch mail */
     ok = (protocol->getauth)(socket, queryctl, buf);
@@ -616,9 +589,39 @@ struct method *proto;
 		    count > 1 ? "s" : "", 
 		    queryctl->servername);
 
-    if (count > 0) { 
-	for (number = queryctl->flush ? 1 : first;  number<=count; number++) {
+    if (count > 0) {
 
+	/* 
+	 * We expect the open of the output sink to always succeed.
+	 * Therefore, defer it until here so the typical case (no
+	 * mail waiting) is just a bit cheaper and faster.
+	 */
+	if (queryctl->output == TO_FOLDER || queryctl->output == TO_STDOUT) {
+	    if ((mboxfd = openuserfolder(queryctl)) < 0) {
+		ok = PS_IOERR;
+		goto cleanUp;
+	    }
+	} else if (queryctl->output == TO_SMTP) {
+	    ok = PS_SMTP;
+	    if ((mboxfd = Socket(queryctl->smtphost, SMTP_PORT)) < 0) 
+		goto cleanUp;
+
+	    /* eat the greeting message */
+	    if (SMTP_ok(mboxfd, NULL) != SM_OK) {
+		close(mboxfd);
+		mboxfd = -1;
+		goto cleanUp;
+	    }
+    
+	    /* make it look like mail is coming from the server */
+	    if (SMTP_helo(mboxfd,queryctl->servername) != SM_OK) {
+		close(mboxfd);
+		mboxfd = -1;
+		goto cleanUp;
+	    }
+	}
+
+	for (number = queryctl->flush ? 1 : first;  number<=count; number++) {
 	    char *cp;
 
 	    /* open the mail pipe if we're using an MDA */
@@ -697,21 +700,24 @@ struct method *proto;
 
 cleanUp:
     if (ok != 0 && ok != PS_SOCKET)
+    {
 	gen_transact(socket, protocol->exit_cmd);
+	close(socket);
+    }
 
 closeUp:
     if (queryctl->output == TO_FOLDER)
     {
 	if (closeuserfolder(mboxfd) < 0 && ok == 0)
+	{
+	    perror("fetchmail, closing output sink");
 	    ok = PS_IOERR;
+	}
     }
-    else if (queryctl->output == TO_SMTP && mboxfd > 0) {
+    else if (queryctl->output == TO_SMTP && mboxfd > -1) {
 	SMTP_quit(mboxfd);
 	close(mboxfd);
     }
-
-    if (ok == PS_IOERR || ok == PS_SOCKET) 
-	perror("do_protocol: cleanUp");
 
     return(ok);
 }
