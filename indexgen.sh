@@ -278,7 +278,7 @@ as a technical effort.  I ran it as a test of some theories about why the
 Linux development model works.</p>
 
 <p>I wrote a paper, <a
-href="http://www.tuxedo.org/~esr/writings/cathedral-bazaar/">The
+href="http://www.catb.org/~esr/writings/cathedral-bazaar/">The
 Cathedral And The Bazaar</a>, about these theories and the project.
 I developed the line of analysis it suggested in two later essays.
 These papers became quite popular and (to my continuing astonishment) may

@@ -39,6 +39,21 @@ char *sdps_envto;
 static char lastok[POPBUFSIZE+1];
 #endif /* OPIE_ENABLE */
 
+/* these variables are shared between the CAPA probe and the authenticator */
+#if defined(GSSAPI)
+    flag has_gssapi = FALSE;
+#endif /* defined(GSSAPI) */
+#if defined(KERBEROS_V4) || defined(KERBEROS_V5)
+    flag has_kerberos = FALSE;
+#endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
+    flag has_cram = FALSE;
+#ifdef OPIE_ENABLE
+    flag has_otp = FALSE;
+#endif /* OPIE_ENABLE */
+#ifdef SSL_ENABLE
+    flag has_ssl = FALSE;
+#endif /* SSL_ENABLE */
+
 #define DOTLINE(s)	(s[0] == '.' && (s[1]=='\r'||s[1]=='\n'||s[1]=='\0'))
 
 static int pop3_ok (int sock, char *argbuf)
@@ -124,6 +139,46 @@ static int pop3_ok (int sock, char *argbuf)
     return(ok);
 }
 
+
+
+static int capa_probe(sock)
+/* probe the capabilities of the remote server */
+{
+    int	ok;
+
+    ok = gen_transact(sock, "CAPA");
+    if (ok == PS_SUCCESS)
+    {
+	char buffer[64];
+
+	/* determine what authentication methods we have available */
+	while ((ok = gen_recv(sock, buffer, sizeof(buffer))) == 0)
+	{
+	    if (DOTLINE(buffer))
+		break;
+#ifdef SSL_ENABLE
+	    if (strstr(buffer, "STLS"))
+		has_ssl = TRUE;
+#endif /* SSL_ENABLE */
+#if defined(GSSAPI)
+	    if (strstr(buffer, "GSSAPI"))
+		has_gssapi = TRUE;
+#endif /* defined(GSSAPI) */
+#if defined(KERBEROS_V4)
+	    if (strstr(buffer, "KERBEROS_V4"))
+		has_kerberos = TRUE;
+#endif /* defined(KERBEROS_V4)  */
+#ifdef OPIE_ENABLE
+	    if (strstr(buffer, "X-OTP"))
+		has_otp = TRUE;
+#endif /* OPIE_ENABLE */
+	    if (strstr(buffer, "CRAM-MD5"))
+		has_cram = TRUE;
+	}
+    }
+    return(ok);
+}
+
 static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 /* apply for connection authorization */
 {
@@ -133,18 +188,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 #if OPIE_ENABLE
     char *challenge;
 #endif /* OPIE_ENABLE */
-#if defined(GSSAPI)
-    flag has_gssapi = FALSE;
-#endif /* defined(GSSAPI) */
-#if defined(KERBEROS_V4) || defined(KERBEROS_V5)
-    flag has_kerberos = FALSE;
-#endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
-    flag has_cram = FALSE;
-#ifdef OPIE_ENABLE
-    flag has_otp = FALSE;
-#endif /* OPIE_ENABLE */
 #ifdef SSL_ENABLE
-    flag has_ssl = FALSE;
     flag did_stls = FALSE;
 #endif /* SSL_ENABLE */
 
@@ -201,50 +245,21 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	 */
 	if (ctl->server.authenticate == A_ANY)
 	{
-	    ok = gen_transact(sock, "CAPA");
-	    if (ok == PS_SUCCESS)
-	    {
-		char buffer[64];
-
-		/* determine what authentication methods we have available */
-		while ((ok = gen_recv(sock, buffer, sizeof(buffer))) == 0)
-		{
-		    if (DOTLINE(buffer))
-			break;
-#ifdef SSL_ENABLE
-		    if (strstr(buffer, "STLS"))
-			has_ssl = TRUE;
-#endif /* SSL_ENABLE */
-#if defined(GSSAPI)
-		    if (strstr(buffer, "GSSAPI"))
-			has_gssapi = TRUE;
-#endif /* defined(GSSAPI) */
-#if defined(KERBEROS_V4)
-		    if (strstr(buffer, "KERBEROS_V4"))
-			has_kerberos = TRUE;
-#endif /* defined(KERBEROS_V4)  */
-#ifdef OPIE_ENABLE
-		    if (strstr(buffer, "X-OTP"))
-			has_otp = TRUE;
-#endif /* OPIE_ENABLE */
-		    if (strstr(buffer, "CRAM-MD5"))
-			has_cram = TRUE;
-		}
-	    }
+	    if (capa_probe(sock) != PS_SUCCESS)
 	    /* we are in STAGE_GETAUTH! */
-	    else if (ok == PS_AUTHFAIL ||
-		/* Some servers directly close the socket. However, if we
-		 * have already authenticated before, then a previous CAPA
-		 * must have succeeded. In that case, treat this as a
-		 * genuine socket error and do not change the auth method.
-		 */
-		(ok == PS_SOCKET && !ctl->wehaveauthed))
-	    {
-		ctl->server.authenticate = A_PASSWORD;
-		/* repoll immediately */
-		ok = PS_REPOLL;
-		break;
-	    }
+		if (ok == PS_AUTHFAIL ||
+		    /* Some servers directly close the socket. However, if we
+		     * have already authenticated before, then a previous CAPA
+		     * must have succeeded. In that case, treat this as a
+		     * genuine socket error and do not change the auth method.
+		     */
+		    (ok == PS_SOCKET && !ctl->wehaveauthed))
+		{
+		    ctl->server.authenticate = A_PASSWORD;
+		    /* repoll immediately */
+		    ok = PS_REPOLL;
+		    break;
+		}
 	}
 
 #ifdef SSL_ENABLE
@@ -255,12 +270,13 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	    char *realhost;
 
 	   realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;
-           gen_transact(sock, "STLS");
+           ok = gen_transact(sock, "STLS");
 
            /* We use "tls1" instead of ctl->sslproto, as we want STLS,
             * not other SSL protocols
             */
-	   if (SSLOpen(sock,ctl->sslcert,ctl->sslkey,"tls1",ctl->sslcertck, ctl->sslcertpath,ctl->sslfingerprint,realhost,ctl->server.pollname) == -1)
+	   if (ok == PS_SUCCESS &&
+	       SSLOpen(sock,ctl->sslcert,ctl->sslkey,"tls1",ctl->sslcertck, ctl->sslcertpath,ctl->sslfingerprint,realhost,ctl->server.pollname) == -1)
 	   {
 	       if (!ctl->sslproto && !ctl->wehaveauthed)
 	       {
@@ -273,6 +289,18 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 		return(PS_AUTHFAIL);
 	    }
 	   did_stls = TRUE;
+
+	   /*
+	    * RFC 2595 says this:
+	    *
+	    * "Once TLS has been started, the client MUST discard cached
+	    * information about server capabilities and SHOULD re-issue the
+	    * CAPABILITY command.  This is necessary to protect against
+	    * man-in-the-middle attacks which alter the capabilities list prior
+	    * to STARTTLS.  The server MAY advertise different capabilities
+	    * after STARTTLS."
+	    */
+	   capa_probe(sock);
 	}
 #endif /* SSL_ENABLE */
 

@@ -865,18 +865,6 @@ int readheaders(int sock,
     }
 
     /*
-     * We want to detect this early in case there are so few headers that the
-     * dispatch logic barfs.
-     */
-    if (!headers_ok)
-    {
-	if (outlevel > O_SILENT)
-	    report(stdout,
-		   GT_("message delimiter found while scanning headers\n"));
-	return(PS_TRUNCATED);
-    }
-
-    /*
      * Hack time.  If the first line of the message was blank, with no headers
      * (this happens occasionally due to bad gatewaying software) cons up
      * a set of fake headers.  
@@ -1255,7 +1243,15 @@ int readheaders(int sock,
     *cp++ = '\0';
     stuffline(ctl, buf);
 
-    return(headers_ok ? PS_SUCCESS : PS_TRUNCATED);
+    if (!headers_ok)
+    {
+	if (outlevel > O_SILENT)
+	    report(stdout,
+		   GT_("message delimiter found while scanning headers\n"));
+	return(PS_TRUNCATED);
+    }
+
+    return(PS_SUCCESS);
 }
 
 int readbody(int sock, struct query *ctl, flag forward, int len)

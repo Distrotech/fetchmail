@@ -428,14 +428,14 @@ int prc_filecheck(const char *pathname, const flag securecheck)
 
     if (!securecheck)	return PS_SUCCESS;
 
-    if ((statbuf.st_mode & S_IFLNK) == S_IFLNK)
+    if (!S_ISREG(statbuf.st_mode))
     {
-	fprintf(stderr, GT_("File %s must not be a symbolic link.\n"), pathname);
+	fprintf(stderr, GT_("File %s must be a regular file.\n"), pathname);
 	return(PS_IOERR);
     }
 
 #ifndef __BEOS__
-    if (statbuf.st_mode & ~(S_IFREG | S_IREAD | S_IWRITE | S_IEXEC | S_IXGRP))
+    if (statbuf.st_mode & (S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH | S_IXOTH))
     {
 	fprintf(stderr, GT_("File %s must have no more than -rwx--x--- (0710) permissions.\n"), 
 		pathname);

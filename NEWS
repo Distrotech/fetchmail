@@ -2,6 +2,12 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Sunil Shetye's patch to imprive behavior in empty messages.
+* Conform to RFC2595; reissue capability probes after successful 
+  STARTTLS negotiation.
+* Sunil's patch to make handling of failed STARTTLS more graceful.
+* Sunil's JF2 fix patch for .fetchmailrc security fix.
+
 fetchmail-6.2.1 (Tue Jan 14 08:17:19 EST 2003), 22219 lines:
 
 * Updated German, Turkish, Spanish, and Danish translation files.

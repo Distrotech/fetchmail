@@ -248,13 +248,10 @@ static int imap_canonicalize(char *result, char *raw, int maxlen)
     return(i);
 }
 
-static int imap_getauth(int sock, struct query *ctl, char *greeting)
-/* apply for connection authorization */
+static void capa_probe(int sock, struct query *ctl)
+/* set capability variables from a CAPA probe */
 {
-    int ok = 0;
-#ifdef SSL_ENABLE
-    flag did_stls = FALSE;
-#endif /* SSL_ENABLE */
+    int	ok;
 
     /* probe to see if we're running IMAP4 and can use RFC822.PEEK */
     capabilities[0] = '\0';
@@ -287,19 +284,6 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	if (outlevel >= O_DEBUG)
 	    report(stdout, GT_("Protocol identified as IMAP2 or IMAP2BIS\n"));
     }
-    else
-	return(ok);
-
-    peek_capable = (imap_version >= IMAP4);
-
-    /* 
-     * Assumption: expunges are cheap, so we want to do them
-     * after every message unless user said otherwise.
-     */
-    if (NUM_SPECIFIED(ctl->expunge))
-	expunge_period = NUM_VALUE_OUT(ctl->expunge);
-    else
-	expunge_period = 1;
 
     /* 
      * Handle idling.  We depend on coming through here on startup
@@ -311,6 +295,17 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	if (outlevel >= O_VERBOSE)
 	    report(stdout, GT_("will idle after poll\n"));
     }
+}
+
+static int imap_getauth(int sock, struct query *ctl, char *greeting)
+/* apply for connection authorization */
+{
+    int ok = 0;
+#ifdef SSL_ENABLE
+    flag did_stls = FALSE;
+#endif /* SSL_ENABLE */
+
+    capa_probe(sock, ctl);
 
     /* 
      * If either (a) we saw a PREAUTH token in the greeting, or
@@ -321,7 +316,6 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
         preauth = FALSE;  /* reset for the next session */
         return(PS_SUCCESS);
     }
-
     /*
      * Time to authenticate the user.
      * Try the protocol variants that don't require passwords first.
@@ -369,12 +363,13 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
            char *realhost;
 
            realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;
-           gen_transact(sock, "STARTTLS");
+           ok = gen_transact(sock, "STARTTLS");
 
            /* We use "tls1" instead of ctl->sslproto, as we want STARTTLS,
             * not other SSL protocols
             */
-           if (SSLOpen(sock,ctl->sslcert,ctl->sslkey,"tls1",ctl->sslcertck, ctl->sslcertpath,ctl->sslfingerprint,realhost,ctl->server.pollname) == -1)
+           if (ok == PS_SUCCESS &&
+	       SSLOpen(sock,ctl->sslcert,ctl->sslkey,"tls1",ctl->sslcertck, ctl->sslcertpath,ctl->sslfingerprint,realhost,ctl->server.pollname) == -1)
            {
 	       if (!ctl->sslproto && !ctl->wehaveauthed)
 	       {
@@ -387,8 +382,31 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
                return(PS_AUTHFAIL);
            }
 	   did_stls = TRUE;
+
+	   /*
+	    * RFC 2595 says this:
+	    *
+	    * "Once TLS has been started, the client MUST discard cached
+	    * information about server capabilities and SHOULD re-issue the
+	    * CAPABILITY command.  This is necessary to protect against
+	    * man-in-the-middle attacks which alter the capabilities list prior
+	    * to STARTTLS.  The server MAY advertise different capabilities
+	    * after STARTTLS."
+	    */
+	   capa_probe(sock, ctl);
     }
 #endif /* SSL_ENABLE */
+
+    peek_capable = (imap_version >= IMAP4);
+
+    /* 
+     * Assumption: expunges are cheap, so we want to do them
+     * after every message unless user said otherwise.
+     */
+    if (NUM_SPECIFIED(ctl->expunge))
+	expunge_period = NUM_VALUE_OUT(ctl->expunge);
+    else
+	expunge_period = 1;
 
     /*
      * No such luck.  OK, now try the variants that mask your password
