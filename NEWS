@@ -55,14 +55,16 @@ driver to SMTP.  (This requires that we find a POP2 server to test with.)
 
 * Ported to QNX (see the Makefile).
 
-* Add Michael Scwendt's code for improved sizeticker.
+* Add Michael Schwendt's code for improved sizeticker.
+
+* Improved RFC822 parsing (thanks to Rob Funk).
 
 * Move the per-user lockfile to /tmp so it gets cleared at reboot time.
 
 * Warn users that running concurrent instances of popclient is a bad idea.
 
 * Try USER and HOME to set defaults before going to the password file.
-  This should work in Sun NIS environments.
+  This should work better in Sun NIS environments.
 
 3.1:
 

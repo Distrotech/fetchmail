@@ -597,6 +597,14 @@ encouraged people to expose passwords in scripts.  Passwords
 must now be specified either interactively or in your
 .I ~/.poprc
 file.  The short-form -p option now specifies the protocol to use.
+.PP
+The reason the password isn't stored encrypted is because this doesn't
+actually add protection.  Anyone who's acquired permissions to read your
+poprc file will be able to run popclient as you anyway -- and if it's
+your password they're after, they'd be able to use the necessary decoder from
+.I popclient
+itself to get it.  All encryption would do in this context is give a
+false sense of security to people who don't think very hard.
 .SH SEE ALSO
 mail(1), binmail(1), sendmail(8), popd(8),
 RFC 937, RFC 1081, RFC 1082, RFC 1225, RFC 1460, RFC 1725.
