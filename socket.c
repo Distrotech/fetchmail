@@ -116,29 +116,39 @@ int SockWrite(int sock, char *buf, int len)
 int SockRead(int sock, char *buf, int len)
 {
     char *p, *bp = buf;
-    int n;
+    int n, readlen;
 
     if (--len < 1)
 	return(-1);
     do {
+	/* 
+	 * The reason for these gymnastics is that we want two things:
+	 * (1) to read \n-terminated lines,
+	 * (2) to return the true length of data read, even if the
+	 *     data coming in has embedded NULS.
+	 */
+	readlen = 0;
+
 	/* return value of 0 is EOF, < 0 is error */
 	if ((n = recv(sock, bp, len, MSG_PEEK)) <= 0)
 	    return(-1);
 	if ((p = memchr(bp, '\n', n)) != NULL)
 	{
-	    if (read(sock, bp, ++p - bp) == -1)
+	    if ((n = read(sock, bp, ++p - bp)) == -1)
 		return(-1);
+	    readlen += n;
 	    *p = '\0';
-	    return strlen(buf);
+	    return readlen;
 	}
 	if ((n = read(sock, bp, n)) == -1)
 	    return(-1);
+	readlen += n;
 	bp += n;
 	len -= n;
     } while 
 	    (len);
     *bp = '\0';
-    return strlen(buf);
+    return readlen;
 }
 
 int SockPeek(int sock)
