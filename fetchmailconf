@@ -167,6 +167,13 @@ class Server:
 
 class User:
     def __init__(self):
+        if os.environ.has_key("USER"):
+            self.remote = os.environ["USER"]	# Remote username
+        elif os.environ.has_key("LOGNAME"):
+            self.remote = os.environ["LOGNAME"]
+        else:
+            print "Can't get your username!"
+            sys.exit(1)
 	self.remote = os.environ["USER"]# Remote username
 	self.localnames = [self.remote,]# Local names
 	self.password = None		# Password for mail account access
