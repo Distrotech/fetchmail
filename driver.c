@@ -333,30 +333,27 @@ static char *parse_received(struct query *ctl, char *bufp)
 	 * recipient name after a following "for".  Otherwise
 	 * punt.
 	 */
-	if (is_host_alias(rbuf, ctl))
-	    ok = strstr(sp, "for ");
-	else
+	if (!is_host_alias(rbuf, ctl))
 	    ok = (char *)NULL;
-    }
+	else if ((ok = strstr(sp, "for ")) != 0)
+	{
+	    char	*sp, *tp;
 
-    if (ok != 0)
-    {
-	char	*sp, *tp;
-
-	tp = rbuf;
-	sp = ok + 4;
-	if (*sp == '<')
-	    sp++;
-	while (*sp && *sp != '>' && *sp != '@' && *sp != ';')
-	    if (!isspace(*sp))
-		*tp++ = *sp++;
-	    else
-	    {
-		/* uh oh -- whitespace here can't be right! */
-		ok = (char *)NULL;
-		break;
-	    }
-	*tp = '\0';
+	    tp = rbuf;
+	    sp = ok + 4;
+	    if (*sp == '<')
+		sp++;
+	    while (*sp && *sp != '>' && *sp != '@' && *sp != ';')
+		if (!isspace(*sp))
+		    *tp++ = *sp++;
+		else
+		{
+		    /* uh oh -- whitespace here can't be right! */
+		    ok = (char *)NULL;
+		    break;
+		}
+	    *tp = '\0';
+	}
     }
 
     if (!ok)
