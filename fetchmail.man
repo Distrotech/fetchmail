@@ -888,7 +888,7 @@ pass8bits	\&	T{
 Force BODY=8BITMIME to ESMTP listener
 T}
 dropstatus	\&	T{
-Strip Status lines out of incoming mail
+Strip Status and X-Mozilla-Status lines out of incoming mail
 T}
 no keep  	-K	T{
 Delete seen messages from server (default)
@@ -1065,13 +1065,13 @@ is forced to declare BODY=8BITMIME to any ESMTP-capable listener.  If
 the listener is 8-bit-clean (as all the major ones now are) the right
 thing will probably result.
 .PP
-The `dropstatus' option controls whether nonempty Status lines are
-retained in fetched mail (the default) or discarded.  Retaining them
-allows your MUA to see what messages (if any) were marked seen on the
-client.  On the other hand, it can confuse some new-mail notifiers,
-which assume that anything with a Status line in it has been seen.
-(Note: the empty Status lines inserted by some buggy POP servers are
-unconditionally discarded.)
+The `dropstatus' option controls whether nonempty Status and
+X-Mozilla-Status lines are retained in fetched mail (the default) or
+discarded.  Retaining them allows your MUA to see what messages (if
+any) were marked seen on the server.  On the other hand, it can
+confuse some new-mail notifiers, which assume that anything with a
+Status line in it has been seen.  (Note: the empty Status lines
+inserted by some buggy POP servers are unconditionally discarded.)
 .PP
 .SS Miscellaneous Run Control Options
 The words `here' and `there' have useful English-like

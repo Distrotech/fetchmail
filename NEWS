@@ -33,8 +33,9 @@ fetchmail-4.4.0 ()
   logging directory.
 * Close pipe to MDA when we get a nonresponse timeout.  This should 
   prevent MDA zombies from piling up when we have errors.
+* Treat Netscape's "X-Mozilla-Status" lines like "Status:" lines.
 
-There are 271 people on fetchmail-friends and 119 on fetchmail-announce.
+There are 269 people on fetchmail-friends and 123 on fetchmail-announce.
 
 fetchmail-4.3.5 (Mon Dec 15 06:07:08 EST 1997)
 * Added Kent Robotti's fetchsetup configuration script.

@@ -687,7 +687,8 @@ int num;		/* index of message */
 	 * unconditionally.  Nonempty ones get chucked if the user
 	 * turns on the dropstatus flag.
 	 */
-	if (!strncasecmp(line, "Status:", 7))
+	if (!strncasecmp(line, "Status:", 7) 
+				|| !strncasecmp(line, "X-Mozilla-Status:", 7))
 	{
 	    char	*cp;
 
