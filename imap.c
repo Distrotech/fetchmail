@@ -9,6 +9,50 @@
   programmer:   Eric S. Raymond
   description:  IMAP client code
 
+Chris Newman, one of the IMAP maintainers, criticized this as follows:
+------------------------------- CUT HERE -----------------------------------
+On Wed, 18 Sep 1996, Eric S. Raymond wrote:
+> 1. I do one one SELECT, at the beginning of the fetch.  
+> 
+> 2. I assume that I can pick an upper bound on message numbers from the EXISTS
+>    reponse.
+
+Correct.
+
+> 3. If there is an UNSEEN nnn trailer on the OK response to SELECT, I assume
+>    that the unseen messages have message numbers which are the nnn consecutive
+>    integers up to and including the upper bound.
+> 
+> 4. Otherwise, if the response included RECENT nnn, I assume that the unseen
+>    messages have message numbers which are the nnn consecutive integers up to
+>    and including the upper bound.
+
+These will only work if your client is the only client that accesses the
+INBOX.  There is no requirement that the UNSEEN and RECENT messages are at
+the end of the folder in general.
+
+If you want to present all UNSEEN messages and flag all the messages you
+download as SEEN, you could do a SEARCH UNSEEN and just fetch those
+messages.
+
+However, the proper thing to do if you want to present the messages when
+disconnected from the server is to use UIDs.  To do this, you remember the
+highest UID you have (you can initialize to 0), and fetch everything with
+a higher UID.  Ideally, you shouldn't cause the SEEN flag to be set until
+the user has actually seen the message.  This requires STORE +FLAGS SEEN
+for those messages which have been seen since the last update.
+
+The key thing to remember is that in IMAP the server holds the
+authoratative list of messages and the client just holds a cache.  This is
+a very different model from POP.
+------------------------------- CUT HERE -----------------------------------
+
+A problem with this recommendation is that the UID commands don't exist
+in IMAP2bis.  Since we want to preserve IMAP2bis capability (so fetchmail
+will continue to work with the pre-IMAP4 imapd) and we've warned the user
+that multiple concurrent fetchmail runs are a Bad Idea, we'll stick with
+this logic for now.
+
  ***********************************************************************/
 
 #include  <config.h>
