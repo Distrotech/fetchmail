@@ -3,9 +3,12 @@ Description: Remote mail fetch daemon for POP2, POP3, APOP, IMAP
 Name: fetchmail
 Version: ${1}
 Release: 1
+Vendor: Eric Conspiracy Secret Labs
 Source: locke.ccil.org:/pub/esr/fetchmail/fetchmail-${1}.tar.gz
-Copyright: freely redistributable
-Group: Mail
+URL: http://www.ccil.org/~esr/fetchmail
+Group: Applications/Mail
+Copyright: GPL
+Icon: fetchmail.gif
 Requires: smtpdaemon
 
 %prep

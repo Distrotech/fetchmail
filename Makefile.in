@@ -245,7 +245,7 @@ RPMROOT=/usr/src/redhat
 RPM = rpm
 RPMFLAGS = -ba
 rpm: dist
-	cp fetchmail-$(VERS).tar.gz $(RPMROOT)/SOURCES;
+	cp fetchmail-$(VERS).tar.gz fetchmail.gif $(RPMROOT)/SOURCES;
 	$(srcdir)/specgen.sh $(VERS) >$(RPMROOT)/SPECS/fetchmail.spec
 	cd $(RPMROOT)/SPECS; $(RPM) $(RPMFLAGS) fetchmail.spec	
 	cp $(RPMROOT)/RPMS/`arch|sed 's/i[4-9]86/i386/'`/fetchmail-$(VERS)*.rpm $(srcdir)
