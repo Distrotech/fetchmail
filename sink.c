@@ -819,7 +819,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		    int res;
 
 		    if ((res = handle_smtp_report(ctl, msg))==PS_REFUSED)
-			return PS_REFUSED;
+			return(PS_REFUSED);
 
 		    strcpy(errbuf, idp->id);
 		    strcat(errbuf, ": ");
