@@ -5,8 +5,9 @@
 * Use remotename@hostname for MAIL FROM if we have not been able to deduce
   a Return-Path.
 * Fix the attempted fix for Joop Susan's ENOTCONN bug.
-* Added FAQ material on a Microsoft Exchange bug and on forwarding to
-  a different host than the one fetchmail runs on.  Removed the FAQ entry
+* Added FAQ material on a Microsoft Exchange bug, on forwarding to
+  a different host than the one fetchmail runs on, and on using
+  ssh for a secure passwordless connection.  Removed the FAQ entry
   on popclient.
 
 fetchmail-5.3.0 (Tue Feb 22 08:53:31 PST 2000), 18618 lines:
