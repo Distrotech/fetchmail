@@ -870,8 +870,9 @@ code recognizes and discards the message on any of a list of responses
 that defaults to [571, 550, 501, 554] but can be set with the `antispam'
 option.  This is one of the
 .I only
-two circumstance under which fetchmail ever discards mail (the others
-are the 552 and 553 errors described below).
+three circumstance under which fetchmail ever discards mail (the others
+are the 552 and 553 errors described below, and the suppression of
+multidropped messages with a message-ID already seen).
 .PP
 If
 .I fetchmail
@@ -1542,6 +1543,12 @@ poll mailhost.net via localhost port 1234 with proto pop3:
 .SH THE USE AND ABUSE OF MULTIDROP MAILBOXES
 Use the multiple-local-recipients feature with caution -- it can bite.
 Also note that all multidrop features are ineffective in ETRN mode.
+
+Also, note that in multidrop mode duplicate mails are suppressed.
+A piece of mail is considered duplicate if it has the same message-ID 
+as the message immediately preceding.  Such runs of messages may
+be generated when copies of a message addressed to multiple 
+users are delivered to a multidrop box.
 
 .SS Header vs. Envelope addresses 
 The fundamental problem is that by having your mailserver toss several

@@ -528,6 +528,29 @@ static int readheaders(int sock,
 	has_nuls = (linelen != strlen(line));
 
 	/*
+	 * When mail delivered to a multidrop mailbox on the server is
+	 * addressed to multiple people, there will be one copy left
+	 * in the box for each recipient.  Thus, if the mail is addressed
+	 * to N people, each recipient would get N copies.
+	 *
+	 * Foil this by suppressing all but one copy of a message with
+	 * a given Message-ID.  Note: This implementation only catches
+	 * runs of successive identical messages, but that should be
+	 * good enough.
+	 */
+	if (MULTIDROP(ctl) && !strncasecmp(line, "Message-ID:", 11))
+	{
+	    if (ctl->lastid && !strcasecmp(ctl->lastid, line))
+		return(PS_REFUSED);
+	    else
+	    {
+		if (ctl->lastid)
+		    free(ctl->lastid);
+		ctl->lastid = strdup(line);
+	    }
+	}
+
+	/*
 	 * The University of Washington IMAP server (the reference
 	 * implementation of IMAP4 written by Mark Crispin) relies
 	 * on being able to keep base-UID information in a special

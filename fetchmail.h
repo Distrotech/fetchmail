@@ -266,6 +266,7 @@ struct query
     unsigned int uid;		/* UID of user to deliver to */
     struct idlist *skipped;	/* messages skipped on the mail server */
     struct idlist *oldsaved, *newsaved;
+    char *lastid;		/* last Message-ID seen on this connection */
 
     /* internal use -- per-message state */
     int mimemsg;		/* bitmask indicating MIME body-type */
