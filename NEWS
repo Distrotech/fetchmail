@@ -10,7 +10,18 @@
 			Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-2.3 (Wed Dec 18 09:17:52 EST 1996)
+fetchmail-2.4 ()
+
+bugs --
+
+* Fixed a core-dump bug in MX processing that's been lurking there for ghods
+  know how long.
+
+* Fixed a minor bug in Received processing.
+
+* Restored portability to Solaris.
+
+------------------------------------------------------------------------------
 
 features -- 
 

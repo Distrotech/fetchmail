@@ -178,12 +178,7 @@ static int is_host_alias(const char *name, struct query *ctl)
 	switch (h_errno)
 	{
 	case HOST_NOT_FOUND:	/* specified host is unknown */
-	    return(FALSE);
-
 	case NO_ADDRESS:	/* valid, but does not have an IP address */
-	    for (mxp = mxrecords; mxp->name; mxp++)
-		if (strcmp(name, mxp->name) == 0)
-		    goto match;
 	    return(FALSE);
 	    break;
 
@@ -198,8 +193,15 @@ static int is_host_alias(const char *name, struct query *ctl)
 	    break;
 	}
     }
+    else
+    {
+	for (mxp = mxrecords; mxp->name; mxp++)
+	    if (strcmp(ctl->canonical_name, mxp->name) == 0)
+		goto match;
+	return(FALSE);
+    match:;
+    }
 
-match:
     /* add this name to relevant server's `also known as' list */
     save_str(&ctl->lead_server->servernames, -1, name);
     return(TRUE);
@@ -414,7 +416,7 @@ struct query *ctl;	/* query control record */
 		cchdr = bufp;
 	    else if (!strncasecmp("Bcc:", bufp, 4))
 		bcchdr = bufp;
-#ifdef HAVE_GETHOSTBYNAME
+#ifdef HAVE_RES_SEARCH
 	    else if (MULTIDROP(ctl) && !strncasecmp("Received:", bufp, 9))
 	    {
 		char *ok;
@@ -456,7 +458,7 @@ struct query *ctl;	/* query control record */
 
 		    tp = rbuf;
 		    sp = ok + 4;
-		    if (*ok == '<')
+		    if (*sp == '<')
 			sp++;
 		    while (*sp && *sp != '>' && *sp != '@' && *sp != ';')
 			if (!isspace(*sp))
@@ -480,7 +482,7 @@ struct query *ctl;	/* query control record */
 				received_for);
 		}
 	    }
-#endif /* HAVE_GETHOSTBYNAME */
+#endif /* HAVE_RES_SEARCH */
 
 	    goto skipwrite;
 	}
