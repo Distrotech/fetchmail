@@ -1044,6 +1044,16 @@ static int internal_expunge(int sock)
     return(PS_SUCCESS);
 }
 
+static int imap_idle(int sock)
+/* start an RFC2177 IDLE */
+{
+    stage = STAGE_IDLE;
+    saved_timeout = mytimeout;
+    mytimeout = 0;
+
+    return (gen_transact(sock, "IDLE"));
+}
+
 static int imap_getrange(int sock, 
 			 struct query *ctl, 
 			 const char *folder, 
@@ -1069,12 +1079,8 @@ static int imap_getrange(int sock,
 	    ok = internal_expunge(sock);
 	count = -1;
 	if (do_idle)
-	{
-	    stage = STAGE_IDLE;
-	    saved_timeout = mytimeout;
-	    mytimeout = 0;
-	}
-	if (ok || gen_transact(sock, do_idle ? "IDLE" : "NOOP"))
+	    ok = imap_idle(sock);
+	if (ok || gen_transact(sock, "NOOP"))
 	{
 	    report(stderr, _("re-poll failed\n"));
 	    return(ok);
@@ -1098,6 +1104,10 @@ static int imap_getrange(int sock,
 	}
 	else if (outlevel >= O_DEBUG)
 	    report(stdout, "%d messages waiting after first poll\n", count);
+
+	/* no messages?  then we may need to idle until we get some */
+	if (count == 0 && do_idle)
+	    imap_idle(sock);
     }
 
     *countp = count;
