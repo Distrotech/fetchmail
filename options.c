@@ -46,14 +46,15 @@
 #define LA_FOLDER	28
 #define LA_SMTPHOST	29
 #define LA_SMTPADDR     30
-#define LA_BATCHLIMIT	31
-#define LA_FETCHLIMIT	32
-#define LA_EXPUNGE	33
-#define LA_MDA		34
-#define LA_NETSEC	35
-#define LA_INTERFACE    36
-#define LA_MONITOR      37
-#define LA_YYDEBUG	38
+#define LA_ANTISPAM	31
+#define LA_BATCHLIMIT	32
+#define LA_FETCHLIMIT	33
+#define LA_EXPUNGE	34
+#define LA_MDA		35
+#define LA_NETSEC	36
+#define LA_INTERFACE    37
+#define LA_MONITOR      38
+#define LA_YYDEBUG	39
 
 /* options still left: CgGhHjJoORUwWxXYzZ */
 static const char *shortoptions = 
@@ -97,6 +98,7 @@ static const struct option longoptions[] = {
   {"folder",    required_argument, (int *) 0, LA_FOLDER	     },
   {"smtphost",	required_argument, (int *) 0, LA_SMTPHOST    },
   {"smtpaddress", required_argument, (int *) 0, LA_SMTPADDR  },
+  {"antispam",	required_argument, (int *) 0, LA_ANTISPAM    },
   
   {"batchlimit",required_argument, (int *) 0, LA_BATCHLIMIT  },
   {"fetchlimit",required_argument, (int *) 0, LA_FETCHLIMIT  },
@@ -326,8 +328,12 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'D':
 	case LA_SMTPADDR:
-	  ctl->smtpaddress = xstrdup(optarg);
-	  break;
+	    ctl->smtpaddress = xstrdup(optarg);
+	    break;
+	case 'Z':
+	case LA_ANTISPAM:
+	    c = atoi(optarg);
+	    ctl->antispam = NUM_VALUE(c);
 	case 'b':
 	case LA_BATCHLIMIT:
 	    c = atoi(optarg);
@@ -434,6 +440,7 @@ struct query *ctl;	/* option record to be initialized */
 #endif /* NET_SECURITY */
 	fputs("  -S, --smtphost    set SMTP forwarding host\n", stderr);
 	fputs("  -D, --smtpaddress set SMTP delivery domain to use\n", stderr);
+	fputs("  -Z, --antispam,   set antispam response value\n", stderr);
 	fputs("  -b, --batchlimit  set batch limit for SMTP connections\n", stderr);
 	fputs("  -B, --fetchlimit  set fetch limit for server connections\n", stderr);
 	fputs("  -e, --expunge     set max deletions between expunges\n", stderr);

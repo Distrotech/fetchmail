@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/03/04 05:45:27 $
+<td width="30%" align=right>$Date: 1998/03/06 04:17:44 $
 </table>
 <HR>
 <H1 ALIGN=CENTER>Design Notes On Fetchmail</H1>
@@ -287,6 +287,46 @@ in a system's libc, but we can just include that source file if the
 day comes when we want to support IPv6 without the inet6-apps
 library. It just makes life easier.<P>
 
+<H1>Checklist for Adding Options
+
+Adding a control option is not complicated in principle, but there are
+a lot of fiddly details in the process.  You'll need to do the 
+following minimum steps.
+
+<UL>
+<LI>Add a field to represent the control in <code>struct query</code> or
+    <code>struct hostdata</code>.
+
+<LI>Pick a token to declare the option in the .fetchmailrc file.  Add
+    the token to <code>rcfile_l</code>.  
+
+<LI>Go to <code>rcfile_y.y</code>.  Add the token to the grammar. Don't
+    forget the <code>%token</code> declaration.  Add proper 
+    <code>FLAG_FORCE</code> and <code>FLAG_MERGE</code> actions.
+
+<LI>Pick a long-form option name, and a one-letter short option if any
+    are left.  Go to <code>options.c</code>.  Pick a new <code>LA_<code>
+    value.  Hack the <code>longoptions</code> table to set up the
+    association.  Hack the big switch statement to set the option.
+    Hack the `?' message to describe it.
+
+<LI>If the default is nonzero, set it in <code>def_opts</code> near the top of
+    <code>load_params</code> in <code>fetchmail.c</code>.
+
+<LI>Add code to dump the option value in <code>fetchmail.c:dump_params</code>.
+
+<LI>Document the option in fetchmail.man.  This will require at least
+    two changes; one to the collected table of options, and one full
+    text description of the option.
+
+<LI>Add the new token and a brief description to the header comment of
+    sample.rcfile.
+
+<LI>Add an entry to NEWS.
+</UL>
+
+There may be other things you have to do in the way of logic, of course.<P>
+
 <H1>Lessons learned</H1>
 
 <H3>1. Server-side state is essential</H3>
@@ -423,7 +463,7 @@ all shaped the design in one way or another.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/03/04 05:45:27 $
+<td width="30%" align=right>$Date: 1998/03/06 04:17:44 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

@@ -1232,30 +1232,34 @@ int num;		/* index of message */
 	{
 	    int smtperr = atoi(smtp_response);
 
-	    /*
-	     * Suppress error message only if the response specifically 
-	     * means `excluded for policy reasons'.  We *should* see
-	     * an error when the return code is less specific.
-	     */
-	    if (smtperr >= 400 && smtperr != 571)
-		error(0, -1, "SMTP error: %s", smtp_response);
-
-	    switch (smtperr)
+	    if (smtperr == ctl->antispam)
 	    {
-	    case 571:	/* sendmail's "unsolicited email refused" */
-	    case 501:	/* exim's old antispam response */
-	    case 550:	/* exim's new antispam response (temporary) */
 		/*
-		 * SMTP listener explicitly refuses to deliver
-		 * mail coming from this address, probably due
-		 * to an anti-spam domain exclusion.  Respect
-		 * this.  Don't try to ship the message, and
-		 * don't prevent it from being deleted.
+		 * SMTP listener explicitly refuses to deliver mail
+		 * coming from this address, probably due to an
+		 * anti-spam domain exclusion.  Respect this.  Don't
+		 * try to ship the message, and don't prevent it from
+		 * being deleted.  Typical values.
+		 *
+		 * 571 = sendmail's "unsolicited email refused"
+		 * 501 = exim's old antispam response
+		 * 550 = exim's new antispam response (temporary)
 		 */
 		free(headers);
 		free_str_list(&xmit_names);
 		return(PS_REFUSED);
+	    }
 
+	    /*
+	     * Suppress error message only if the response specifically 
+	     * meant `excluded for policy reasons'.  We *should* see
+	     * an error when the return code is less specific.
+	     */
+	    if (smtperr >= 400)
+		error(0, -1, "SMTP error: %s", smtp_response);
+
+	    switch (smtperr)
+	    {
 	    case 452: /* insufficient system storage */
 		/*
 		 * Temporary out-of-queue-space condition on the

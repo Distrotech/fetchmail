@@ -655,6 +655,7 @@ static int load_params(int argc, char **argv, int optind)
     memset(&def_opts, '\0', sizeof(struct query));
     def_opts.smtp_socket = -1;
     def_opts.smtpaddress = (char *)0;
+    def_opts.antispam = 571;
 
     def_opts.server.protocol = P_AUTO;
     def_opts.server.timeout = CLIENT_TIMEOUT;
@@ -1107,6 +1108,11 @@ void dump_params (struct query *ctl)
 	    printf("  Host part of MAIL FROM line will be %s\n",
 		   ctl->smtpaddress);
     }
+    if (ctl->antispam != -1)
+	printf("  Listener SMTP reponse %d will be treated as a spam block\n",
+	       ctl->antispam);
+    else if (outlevel == O_VERBOSE)
+	printf("  Spam-blocking disabled\n");
     if (ctl->preconnect)
 	printf("  Server connection will be brought up with '%s.'\n",
 	       visbuf(ctl->preconnect));

@@ -217,6 +217,12 @@ Specify the domain to be put in RCPT TO lines shipped to SMTP. The
 name of the SMTP server (as specified by --smtphost, or defaulted to
 "localhost") is used when this is not specified.
 .TP
+.B \-Z nnn, --antispam nnn
+(Keyword: antispam) 
+Specifies the numeric SMTP error that is to be interpreted as a
+spam-block response from the listener.  A value of -1 disables
+this option.
+.TP
 .B \-m, \--mda
 (Keyword: mda)
 You can force mail to be passed to an MDA directly (rather than
@@ -719,7 +725,8 @@ move to 550 soon.
 .PP
 The
 .I fetchmail
-code recognizes any of these error codes and discards the message.  This is the
+code recognizes and discards the message on a code that defaults to
+sendmail's 571 but can be set with the `antispam' option.  This is the
 .I only
 circumstance under which fetchmail ever discards mail.
 .P
@@ -865,6 +872,12 @@ Specify remote folder to query
 T}
 smtphost	-S	T{
 Specify smtp host(s) to forward to
+T}
+smtpaddress	-D	T{
+Specify the domain to be put in RCPT TO lines
+T}
+antispam	-Z	T{
+Specify what SMTP return is interpreted as a spam-policy block
 T}
 mda     	-m	T{
 Specify MDA for local delivery

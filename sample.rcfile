@@ -45,6 +45,7 @@
 #   password (or pass)        -- must be followed by a password string
 #   smtphost (or smtp)        -- must be followed by host names
 #   smtpaddress               -- must be followed by a host name
+#   antispam                  -- must be followed by a numeric response value
 #   mda                       -- must be followed by an MDA command string
 #   preconnect (or pre)       -- must be followed by an executable command
 #   postconnect (or post)     -- must be followed by an executable command

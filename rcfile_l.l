@@ -51,6 +51,7 @@ pass(word)?	{ return PASSWORD; }
 folder(s)? 	{ return FOLDER; }
 smtp(host)?	{ return SMTPHOST; }
 smtpaddress	{ return SMTPADDRESS; }
+antispam	{ return SPAMRESPONSE; }
 mda		{ return MDA; }
 pre(connect)?	{ return PRECONNECT; }
 post(connect)?	{ return POSTCONNECT; }

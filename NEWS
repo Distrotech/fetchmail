@@ -8,7 +8,6 @@
 * Allow -c -F to work to flush messages without retrieval.
 * Read from /etc/fetchmailrc before ~/.fetchmailrc?
 * Do is_host_alias checks by comparing IP addresses rather than names?
-* Make the antispam response configurable.
 * Handle multi-homed hosts correctly.
 
 				Release Notes:
@@ -23,6 +22,7 @@ fetchmail-4.4.0 ():
 * Ron Kaminsky <kam@Orbotech.Co.IL> sent a patch to RFC1730-encode passwords
   sent to IMAP servers.  This allows them to contain doublequotes and
   backslashes.
+* Made the antispam response configurable.
 
 There are 269 people on fetchmail-friends and 144 on fetchmail-announce.
 
