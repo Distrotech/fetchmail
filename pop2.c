@@ -73,15 +73,19 @@ struct hostrec *queryctl;
 
   /* check for unsupported options */
   if (linelimit) {
-    fprintf(stderr,"Option --limit is not supported in POP2\n");
+    fprintf(stderr,"Option --limit is not supported with POP2\n");
     return(PS_SYNTAX);
   }
   else if (queryctl->flush) {
-    fprintf(stderr,"Option --flush is not supported in POP2\n");
+    fprintf(stderr,"Option --flush is not supported with POP2\n");
     return(PS_SYNTAX);
   }
   else if (queryctl->fetchall) {
-    fprintf(stderr,"Option --all is not supported in POP2\n");
+    fprintf(stderr,"Option --all is not supported with POP2\n");
+    return(PS_SYNTAX);
+  }
+  else if (queryctl->smtphost[0]) {
+    fprintf(stderr,"Option --smtphost is not supported with POP2\n");
     return(PS_SYNTAX);
   }
   else
