@@ -190,14 +190,14 @@ char **argv;
     /* perhaps we just want to check options? */
     if (versioninfo) {
 	    printf("Taking options from command line");
-	if (access(rcfile, 0))
-	    printf("\n");
-	else
-	    printf(" and %s\n", rcfile);
+	    if (access(rcfile, 0))
+		printf("\n");
+	    else
+		printf(" and %s\n", rcfile);
+	    if (outlevel == O_VERBOSE)
+		printf("Lockfile at %s\n", tmpbuf);
 	for (hostp = hostlist; hostp; hostp = hostp->next) {
 	    dump_params(hostp);
-	    if (outlevel == O_VERBOSE)
-		printf("  Lockfile at %s\n", tmpbuf);
 	}
 	if (hostlist == NULL)
 	    (void) fprintf(stderr,
