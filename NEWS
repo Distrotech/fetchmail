@@ -40,7 +40,7 @@ popclient-3.2 (Mon Sep 23 13:29:46 EDT 1996):
 * Try USER and HOME to set defaults before going to the password file.
   This should work better in Sun NIS environments.
 
-popclient-3.1:
+popclient-3.1 (Thu Sep 12 15:45:25 EDT 1996):
 
 * MDA arguments are now dumped when using the -V option.
 
@@ -59,12 +59,12 @@ popclient-3.1:
 
 * It is now possible to specify the host TCP/IP port number to connect to.
 
-popclient-3.05:
+popclient-3.05 (Thu Aug 22 22:59:04 EDT 1996):
 
 * Experimental support for RFC1725-compliant POP servers with the UIDL
   command and without LAST.
 
-popclient-3.04:
+popclient-3.04 (Wed Aug 21 00:22:44 EDT 1996):
 
 * Logfile option works.
 
@@ -72,7 +72,7 @@ popclient-3.03:
 
 * Minor bug fixes for password querying and redirection to stdout.
 
-popclient-3.02:
+popclient-3.02 (Fri Jul 19 11:37:56 EDT 1996):
 
 * Correct buggy processing of nokeep/noflush/fetchall.
 
@@ -82,7 +82,7 @@ popclient-3.02:
 
 * Delivery via sendmail now works in non-daemon mode.
 
-popclient-3.01:
+popclient-3.01 (Mon Jul  1 13:33:51 EDT 1996):
 
 * Fixed a lexical analyzer bug in quoted-string processing.
 
@@ -91,7 +91,7 @@ popclient-3.01:
 * The lock assertion code was in the wrong place relative to the daemonize()
   call.  
 
-popclient-3.0:
+popclient-3.0 (Fri Jun 28 11:33:34 EDT 1996):
 
 Eric S. Raymond <esr@thyrsus.com> hacked extensively on 3.0b6 and took over
 the package with the consent of Carl Harris, the original implementor.
