@@ -438,6 +438,7 @@ static void record_current(void)
     FLAG_FORCE(forcecr);
     FLAG_FORCE(stripcr);
     FLAG_FORCE(pass8bits);
+    FLAG_FORCE(dropstatus);
     FLAG_FORCE(limit);
     FLAG_FORCE(fetchlimit);
     FLAG_FORCE(batchlimit);
@@ -487,6 +488,7 @@ void optmerge(struct query *h2, struct query *h1)
     FLAG_MERGE(forcecr);
     FLAG_MERGE(stripcr);
     FLAG_MERGE(pass8bits);
+    FLAG_MERGE(dropstatus);
     FLAG_MERGE(limit);
     FLAG_MERGE(fetchlimit);
     FLAG_MERGE(batchlimit);
