@@ -993,7 +993,7 @@ int num;		/* index of message */
 #ifdef HAVE_SNPRINTF
 		snprintf(addr, sizeof(addr)-1, "%s@%s", idp->id,fetchmailhost);
 #else
-		sprintf(addr, "%s@%s", idp->id, );
+		sprintf(addr, "%s@%s", idp->id, idp->id,fetchmailhost);
 #endif /* HAVE_SNPRINTF */
 
 		if (SMTP_rcpt(ctl->smtp_socket, addr) == SM_OK)
@@ -1011,7 +1011,7 @@ int num;		/* index of message */
 #ifdef HAVE_SNPRINTF
 	    snprintf(addr, sizeof(addr)-1, "%s@%s", idp->id, fetchmailhost);
 #else
-	    sprintf(addr, "%s@%s", idp->id, );
+	    sprintf(addr, "%s@%s", idp->id, idp->id,fetchmailhost);
 #endif /* HAVE_SNPRINTF */
 
 	    if (SMTP_rcpt(ctl->smtp_socket, user) != SM_OK)

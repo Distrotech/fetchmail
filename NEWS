@@ -12,6 +12,9 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.1.1 ()
+* Fix an obvious bug in some snprintf calls (non-Linux systems only)
+
 fetchmail-4.1.0 (Mon Aug 11 17:19:57 EDT 1997)
 * Make the RPM depend on `smtpdaemon', which the sendmail package provides.
 * Clean up the Interactive UNIX System V/386 Release 3.2 port.
