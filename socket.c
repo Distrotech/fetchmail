@@ -657,93 +657,76 @@ SSL *SSLGetContext( int sock )
 
 int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 {
-	char buf[260];
-	char cbuf[260];
-	char ibuf[260];
-	char *str_ptr;
+	char buf[257];
 	X509 *x509_cert;
 	int err, depth;
 	unsigned char digest[EVP_MAX_MD_SIZE];
 	char text[EVP_MAX_MD_SIZE * 3 + 1], *tp, *te;
 	EVP_MD *digest_tp;
 	unsigned int dsz, i, esz;
+	X509_NAME *subj, *issuer;
 
 	x509_cert = X509_STORE_CTX_get_current_cert(ctx);
 	err = X509_STORE_CTX_get_error(ctx);
 	depth = X509_STORE_CTX_get_error_depth(ctx);
 
+	subj = X509_get_subject_name(x509_cert);
+	issuer = X509_get_issuer_name(x509_cert);
+
 	if (depth == 0) {
 		_depth0ck = 1;
 		
-		X509_NAME_oneline(X509_get_subject_name(x509_cert), buf, 256);
-		X509_NAME_oneline(X509_get_issuer_name(x509_cert), ibuf, 256);
-
-		/* Just to be sure those buffers are terminated...  I think the
-		   X509 libraries do, but... */
-		buf[256] = ibuf[256] = '\0';
-		if( ( str_ptr = strstr( ibuf, "/O=" ) ) ) {
-			str_ptr += 3;
-			strcpy( cbuf, str_ptr );
-			if( ( str_ptr = strchr(cbuf, '/' ) ) ) {
-				*str_ptr = '\0';
-			}
-			if (outlevel == O_VERBOSE)
-				report(stdout, _("Issuer Organization: %s\n"), cbuf );
-		} else {
-			if (outlevel == O_VERBOSE)
+		if (outlevel == O_VERBOSE) {
+			if ((i = X509_NAME_get_text_by_NID(issuer, NID_organizationName, buf, sizeof(buf))) != -1) {
+				report(stdout, _("Issuer Organization: %s\n"), buf);
+				if (i >= sizeof(buf) - 1)
+					report(stdout, _("Warning: Issuer Organization Name too long (possibly truncated).\n"));
+			} else
 				report(stdout, _("Unknown Organization\n"));
-		}
-		if( ( str_ptr = strstr( ibuf, "/CN=" ) ) ) {
-			str_ptr += 4;
-			strcpy( cbuf, str_ptr );
-			if( ( str_ptr = strchr(cbuf, '/' ) ) ) {
-				*str_ptr = '\0';
-			}
-			if (outlevel == O_VERBOSE)
-				report(stdout, _("Issuer CommonName: %s\n"), cbuf );
-		} else {
-			if (outlevel == O_VERBOSE)
+			if ((i = X509_NAME_get_text_by_NID(issuer, NID_commonName, buf, sizeof(buf))) != -1) {
+				report(stdout, _("Issuer CommonName: %s\n"), buf);
+				if (i >= sizeof(buf) - 1)
+					report(stdout, _("Warning: Issuer CommonName too long (possibly truncated).\n"));
+			} else
 				report(stdout, _("Unknown Issuer CommonName\n"));
 		}
-		if( ( str_ptr = strstr( buf, "/CN=" ) ) ) {
-			str_ptr += 4;
-			strcpy( cbuf, str_ptr );
-			if( ( str_ptr = strchr(cbuf, '/' ) ) ) {
-				*str_ptr = '\0';
-			}
+		if ((i = X509_NAME_get_text_by_NID(subj, NID_commonName, buf, sizeof(buf))) != -1) {
 			if (outlevel == O_VERBOSE)
-				report(stdout, _("Server CommonName: %s\n"), cbuf);
-
-			if (_ssl_server_cname != NULL) 
-			{
-				char *p1 = cbuf;
+				report(stdout, _("Server CommonName: %s\n"), buf);
+			if (i >= sizeof(buf) - 1) {
+				/* Possible truncation. In this case, this is a DNS name, so this
+				 * is really bad. We do not tolerate this even in the non-strict case. */
+				report(stderr, _("Bad certificate: Subject CommonName too long!\n"));
+				return (0);
+			}
+			if (_ssl_server_cname != NULL) {
+				char *p1 = buf;
 				char *p2 = _ssl_server_cname;
 				int n;
-
-				if (*p1 == '*') 
-				{
+				
+				if (*p1 == '*') {
 					++p1;
 					n = strlen(p2) - strlen(p1);
 					if (n >= 0)
 						p2 += n;
-				}
-				if ( 0 != strcasecmp( p1, p2 ) ) {
+				}	
+				if (0 != strcasecmp(p1, p2)) {
 					report(stderr,
 					    _("Server CommonName mismatch: %s != %s\n"),
-					    cbuf, _ssl_server_cname );
+					    buf, _ssl_server_cname );
 					if (ok_return && strict)
-						return( 0 );
+						return (0);
 				}
 			} else if (ok_return && strict) {
-				report(stderr, _("Canonical server name not set, could not verify certificate!\n"));
-				return( 0 );
-		       }
+				report(stderr, _("Server name not set, could not verify certificate!\n"));
+				return (0);
+			}
 		} else {
 			if (outlevel == O_VERBOSE)
 				report(stdout, _("Unknown Server CommonName\n"));
 			if (ok_return && strict) {
 				report(stderr, _("Server name not specified in certificate!\n"));
-				return( 0 );
+				return (0);
 			}
 		}
 		/* Print the finger print. Note that on errors, we might print it more than once
@@ -753,11 +736,11 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 			digest_tp = EVP_md5();
 			if (digest_tp == NULL) {
 				report(stderr, _("EVP_md5() failed!\n"));
-				return( 0 );
+				return (0);
 			}
 			if (!X509_digest(x509_cert, digest_tp, digest, &dsz)) {
-				report(stderr, _("out of memory!\n"));
-				return( 0 );
+				report(stderr, _("Out of memory!\n"));
+				return (0);
 			}
 			tp = text;
 			te = text + sizeof(text);
@@ -765,7 +748,7 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 				esz = snprintf(tp, te - tp, i > 0 ? ":%02X" : "%02X", digest[i]);
 				if (esz >= te - tp) {
 					report(stderr, _("Digest text buffer too small!\n"));
-					return( 0 );
+					return (0);
 				}
 				tp += esz;
 			}
@@ -775,7 +758,7 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 					report(stdout, _("%s fingerprints match.\n"), _server_label);
 				else {
 					report(stderr, _("%s fingerprints do not match!\n"), _server_label);
-					return( 0 );
+					return (0);
 				}
 			}
 		}
@@ -784,19 +767,17 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 	if (err != X509_V_OK && (strict || outlevel == O_VERBOSE)) {
 		report(strict ? stderr : stdout, _("Warning: server certificate verification: %s\n"), X509_verify_cert_error_string(err));
 		/* We gave the error code, but maybe we can add some more details for debugging */
-		switch (ctx->error) {
+		switch (err) {
 		case X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT:
-			X509_NAME_oneline(X509_get_issuer_name(ctx->current_cert), buf, 256);
-			buf[256] = '\0';
-			report(stdout, _("unknown issuer= %s\n"), buf);
+			X509_NAME_oneline(issuer, buf, sizeof(buf));
+			buf[sizeof(buf) - 1] = '\0';
+			report(stdout, _("unknown issuer (first %d characters): %s\n"), sizeof(buf), buf);
 			break;
 		}
 	}
-	/* We are not requiring or validating server or issuer id's as yet */
-	/* Always return OK from here */
 	if (!strict)
 		ok_return = 1;
-	return( ok_return );
+	return (ok_return);
 }
 
 int SSL_nock_verify_callback( int ok_return, X509_STORE_CTX *ctx )

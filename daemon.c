@@ -82,6 +82,11 @@ sigchld_handler (int sig)
     lastsig = SIGCHLD;
 }
 
+/* 
+ * This function is called by other parts of the program to
+ * setup the sigchld handler after a change to the signal context.
+ * This is done to improve robustness of the signal handling code.
+ */
 void deal_with_sigchld(void)
 {
   RETSIGTYPE sigchld_handler(int);
@@ -95,7 +100,7 @@ void deal_with_sigchld(void)
   /* set up to catch child process termination signals */ 
   sa_new.sa_handler = sigchld_handler;
 #ifdef SA_RESTART	/* SunOS 4.1 portability hack */
-  sa_new.sa_flags = SA_RESTART;
+  sa_new.sa_flags = SA_RESTART | SA_NOCLDSTOP;
 #endif
   sigaction (SIGCHLD, &sa_new, NULL);
 #if defined(SIGPWR)

@@ -937,6 +937,7 @@ void release_sink(struct query *ctl)
 #else
 	sigaction (SIGCHLD, &sa_old, NULL);
 #endif /* HAVE_SIGACTION */
+	deal_with_sigchld();
     }
 }
 
@@ -960,6 +961,7 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 #else
 	sigaction (SIGCHLD, &sa_old, NULL);
 #endif /* HAVE_SIGACTION */
+	deal_with_sigchld();
 	if (rc)
 	{
 	    report(stderr, 

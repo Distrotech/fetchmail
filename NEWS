@@ -4,6 +4,7 @@
 
 * SSL certificate options from Thomas Moestl <tmoestl@gmx.net>.
 * Frantisek Brabec's patch for better UIDL error recovery.
+* Another zombie-leak patch from HMH.
 
 fetchmail-5.8.3 (Sat May 12 04:07:12 EDT 2001), 20502 lines:
 
