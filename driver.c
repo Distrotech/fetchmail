@@ -358,13 +358,13 @@ struct hostrec *queryctl;
 
 	    if (!strncmp(bufp,"From ",5))
 		unixfrom = bufp;
-	    else if (!strncasecmp("From: ", bufp, 6))
+	    else if (!strncasecmp("From:", bufp, 5))
 		fromhdr = bufp;
-	    else if (!strncasecmp("To: ", bufp, 4))
+	    else if (!strncasecmp("To:", bufp, 3))
 		tohdr = bufp;
-	    else if (!strncasecmp("Cc: ", bufp, 4))
+	    else if (!strncasecmp("Cc:", bufp, 3))
 		cchdr = bufp;
-	    else if (!strncasecmp("Bcc: ", bufp, 5))
+	    else if (!strncasecmp("Bcc:", bufp, 4))
 		bcchdr = bufp;
 
 	    goto skipwrite;
