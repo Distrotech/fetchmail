@@ -29,6 +29,9 @@ features --
 * SIGUSR1 is now used for wakeup rather than SIGHUP.  This eliminates any
   possible confusion about fetchmail's behavior at logout time.
 
+* Received line parsing for envelope addresses now matches MX as well as 
+  canonical DNS addresses, making multidrop routing slightly more reliable.
+
 bugs --
 
 * Fixed a FreeBSD compilation glitch involving SIGCLD (thanks to

@@ -181,6 +181,8 @@ static int pop3_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
  		    else if (sscanf(buf, "%d %s", &num, id) == 2)
 		    {
  			save_str(&ctl->newsaved, num, id);
+
+			/* note: ID comparison is caseblind */
 			if (!str_in_list(&ctl->oldsaved, id))
 			    (*newp)++;
 		    }
@@ -231,6 +233,7 @@ static int pop3_is_old(FILE *sockfp, struct query *ctl, int num)
     if (!ctl->oldsaved)
 	return (num <= last);
     else
+	/* note: ID comparison is caseblind */
         return (str_in_list(&ctl->oldsaved,
 			    str_find (&ctl->newsaved, num)));
 }

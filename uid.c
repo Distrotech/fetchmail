@@ -163,11 +163,11 @@ void free_str_pair_list(struct idlist **idl)
 #endif
 
 int str_in_list(struct idlist **idl, const char *str)
-/* is a given ID in the given list? */
+/* is a given ID in the given list? (comparison is caseblind) */
 {
     if (*idl == (struct idlist *)NULL || str == (char *) NULL)
 	return(0);
-    else if (strcmp(str, (*idl)->id) == 0)
+    else if (strcasecmp(str, (*idl)->id) == 0)
 	return(1);
     else
 	return(str_in_list(&(*idl)->next, str));
