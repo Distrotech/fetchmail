@@ -7,7 +7,7 @@
 #
 # TO DO: Arrange for save and quit buttons to clean up all frames dependent
 # on the current ones.
-version = "1.1"
+version = "1.2"
 
 from Tkinter import *
 from Dialog import *
@@ -176,7 +176,7 @@ class User:
 	self.preconnect = None		# Connection setup
 	self.postconnect = None		# Connection wrapup
 	self.mda = None			# Mail Delivery Agent
-	self.antispam = 571;		# Listener's spam-block code
+	self.antispam = "571 550 501"	# Listener's spam-block code
 	self.keep = FALSE		# Keep messages
 	self.flush = FALSE		# Flush messages
 	self.fetchall = FALSE		# Fetch old messages
@@ -199,7 +199,7 @@ class User:
 	    ('preconnect',  'String'),
 	    ('postconnect', 'String'),
 	    ('mda',         'String'),
-	    ('antispam',    'Int'),
+	    ('antispam',    'String'),
 	    ('keep',        'Boolean'),
 	    ('flush',       'Boolean'),
 	    ('fetchall',    'Boolean'),
@@ -280,7 +280,7 @@ class User:
             if getattr(self, fld):
                 str = str + " %s \"%s\"\n" % (fld, `getattr(self, fld)`)
         if self.antispam != UserDefaults.antispam:
-            str = str + "    antispam " + `self.antispam` + "\n"
+            str = str + "    antispam " + self.antispam + "\n"
 	return str;
 
     def __str__(self):
@@ -979,7 +979,8 @@ This appears to be an old version of the UC Davis POP server.  These are
 dangerously unreliable (among other problems, they may drop your mailbox
 on the floor if your connection is interrupted during the session).
 
-It is strongly recommended that you find a better POP3 server.
+It is strongly recommended that you find a better POP3 server.  The fetchmail
+FAQ includes pointers to good ones.
 
 """
             if string.find(greetline, "usa.net") > 0:
@@ -1152,7 +1153,7 @@ class UserEdit(Frame, MyWidget):
 		     self.postconnect, '26').pack(side=TOP, fill=X)
             LabeledEntry(targwin, 'Local delivery agent:',
 		     self.mda, '26').pack(side=TOP, fill=X)
-            LabeledEntry(targwin, 'Listener spam-block code:',
+            LabeledEntry(targwin, 'Listener spam-block codes:',
 		     self.antispam, '26').pack(side=TOP, fill=X)
             targwin.pack(fill=X, anchor=N)
 
