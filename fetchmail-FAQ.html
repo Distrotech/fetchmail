@@ -2,7 +2,7 @@
 <HTML>
 <HEAD>
 <TITLE>The Fetchmail FAQ</TITLE>
-<link rev=made href="mailto:esr@snark.thyrsus.com">
+<link rev=made href="mailto:esr@thyrsus.com">
 <meta name="description" content="Frequently asked questions about fetchmail.">
 <meta name="keywords" content="fetchmail, POP, POP2, POP3, IMAP, remote mail"> 
 </HEAD>
@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/06/24 19:23:57 $
+<td width="30%" align=right>$Date: 2001/07/07 17:05:56 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -21,7 +21,7 @@ as quickly as possible.
 
 <p>If you have a question or answer you think ought to be added to
 this FAQ list, mail it to fetchmail's maintainer, Eric S. Raymond, at
-<A HREF="mailto:esr@thyrsus.com">esr@snark.thyrsus.com</A>.
+<A HREF="mailto:esr@thyrsus.com">esr@thyrsus.com</A>.
 
 <h1>General questions:</h1>
 
@@ -1613,6 +1613,27 @@ POP (or preferably IMAP) server that isn't brain-dead. OpenMail's
 project manager claims these bugs have been fixed in 6.0.
 
 <hr>
+<h2><a name="S7">S7. How can I use fetchmail with geocities POP3 servers?</a></h2>
+
+Nathan Cutler reports that the the mail.geocities.com POP3 servers
+fail to include the first Received line of the message in the send to 
+fetchmail.  This can solve problems if your MUA interprets Received 
+continuations as body lines and doesn't parse any of the following
+headers.
+
+<p>Workaround is to use "mda" keyword or "-mda" switch:
+<pre>
+mda "sed -e '1s/^\t/Received: /' | formail | /usr/bin/procmail -d &lt;user&gt;"
+</pre>
+Replace \t with exactly one tabulation character.
+
+You should also consider using "fetchall" option because Geocities' servers
+sometimes think that the first 45 messages have already been read.
+
+<p>Fix: Get an email provider that doesn't suck. The pop-up ads on
+Geocities are lame, you should boycott them anyway.
+
+<hr>
 <h2><a name="S8">S8. How can I use fetchmail with Hotmail?</a></h2>
 
 You can't, yet.  But <a
@@ -1698,27 +1719,6 @@ containing the Rconnect library.
 
 <p>Alan Schmitt has added a similar --with-socks5 option that may work
 better if you have a recent version of the SOCKS library.
-
-<hr>
-<h2><a name="S7">S7. How can I use fetchmail with geocities POP3 servers?</a></h2>
-
-Nathan Cutler reports that the the mail.geocities.com POP3 servers
-fail to include the first Received line of the message in the send to 
-fetchmail.  This can solve problems if your MUA interprets Received 
-continuations as body lines and doesn't parse any of the following
-headers.
-
-<p>Workaround is to use "mda" keyword or "-mda" switch:
-<pre>
-mda "sed -e '1s/^\t/Received: /' | formail | /usr/bin/procmail -d &lt;user&gt;"
-</pre>
-Replace \t with exactly one tabulation character.
-
-You should also consider using "fetchall" option because Geocities' servers
-sometimes think that the first 45 messages have already been read.
-
-<p>Fix: Get an email provider that doesn't suck. The pop-up ads on
-Geocities are lame, you should boycott them anyway.
 
 <hr>
 <h2><a name="K2">K2. How can I use fetchmail with IPv6 and IPsec?</a></h2>
@@ -2864,10 +2864,10 @@ date from the last Received header.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2001/06/24 19:23:57 $
+<td width="30%" align=right>$Date: 2001/07/07 17:05:56 $
 </table>
 
-<ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
+<ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@thyrsus.com&gt;</A></ADDRESS>
 </BODY>
 </HTML>
 <!--
