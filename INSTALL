@@ -61,9 +61,15 @@ in order to migrate.
 5. TEST
 
 I strongly recommend that your first fetchmail run use the -v and -k
-options, in case there is something not quite right with your local
-delivery configuration or your port 25 listener.  Also, beware
-of aliases that direct your local mail back to the server host!
+options, in case there is something not quite right with your server,
+your local delivery configuration or your port 25 listener.  Also,
+beware of aliases that direct your local mail back to the server host!
+
+This software is known to work with the qpop/popper series of
+freeware POP3 servers; also with the imapd servers that are
+distributed with Pine from the University of Washington.  Other
+POP3 servers have been known to give it indigestion.  Test carefully!
+If you have problems, switcch to imap.
 
 6. USE IT
 
