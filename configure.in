@@ -157,8 +157,11 @@ else
 fi
 
 AC_OUTPUT(Makefile, [
+	# The reason for this odd makedepend line is that we want
+	# to have all dependencies evaluated relative to the source directory
+	# and let VPATH do all the dirty work when we build remotely
 	echo "You can ignore any makedepend error messages";
-	makedepend -I$srcdir -I. -fMakefile ${srcdir}/*.c])
+	(cd $srcdir; makedepend -f - *.c) >>Makefile])
 
 dnl Local Variables:
 dnl comment-start: "dnl "
