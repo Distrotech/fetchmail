@@ -116,7 +116,11 @@ static int SMTP_check(FILE *sockfp,char *argbuf)
       ok = SM_ERROR;
   }
   else
+  {
+    if (outlevel == O_VERBOSE)
+	fprintf(stderr, "SMTP< (read failed)\n");
     ok = SM_UNRECOVERABLE;
+  }
   return (ok);
 }
 
