@@ -1236,6 +1236,13 @@ It is strongly recommended that you find a better POP3 server.  The fetchmail
 FAQ includes pointers to good ones.
 
 """
+	    if string.find(greetline, "comcast.net") > 0:
+		warnings = warnings + """
+The Comcast Maillennium POP3 server only returns the first 80K of a long
+message retrieved with TOP. Its response to RETR is normal, so use the
+`fetchall' option.
+
+"""
 # Steve VanDevender <stevev@efn.org> writes:
 # The only system I have seen this happen with is cucipop-1.31
 # under SunOS 4.1.4.  cucipop-1.31 runs fine on at least Solaris

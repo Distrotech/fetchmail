@@ -94,7 +94,6 @@
 #define		PS_BSMTP	12	/* output batch could not be opened */
 #define		PS_MAXFETCH	13	/* poll ended by fetch limit */
 #define		PS_SERVBUSY	14	/* server is busy */
-#define		PS_IDLETIMEOUT	15	/* timeout on imap IDLE */
 /* leave space for more codes */
 #define		PS_UNDEFINED	23	/* something I hadn't thought of */
 #define		PS_TRANSIENT	24	/* transient failure (internal use) */
@@ -102,6 +101,7 @@
 #define		PS_RETAINED	26	/* message retained (internal use) */
 #define		PS_TRUNCATED	27	/* headers incomplete (internal use) */
 #define		PS_REPOLL	28	/* repoll immediately with changed parameters (internal use) */
+#define		PS_IDLETIMEOUT	29	/* timeout on imap IDLE (internal use) */
 
 /* output noise level */
 #define         O_SILENT	0	/* mute, max squelch, etc. */
@@ -391,7 +391,7 @@ extern int pass;		/* number of re-polling pass */
 extern flag configdump;		/* dump control blocks as Python dictionary */
 extern char *fetchmailhost;	/* either "localhost" or an FQDN */
 extern int suppress_tags;	/* suppress tags in tagged protocols? */
-extern char shroud[PASSWORDLEN*2+1];	/* string to shroud in debug output */
+extern char shroud[PASSWORDLEN*2+3];	/* string to shroud in debug output */
 #ifdef SDPS_ENABLE
 extern char *sdps_envfrom;
 extern char *sdps_envto;
@@ -429,6 +429,7 @@ void report_at_line ();
 /* driver.c -- main driver loop */
 void set_timeout(int);
 int isidletimeout(void);
+void resetidletimeout(void);
 int do_protocol(struct query *, const struct method *);
 
 /* transact.c: transaction support */
@@ -437,7 +438,8 @@ int readheaders(int sock,
 		       long fetchlen,
 		       long reallen,
 		       struct query *ctl,
-		int num);
+		       int num,
+		       flag *suppress_readbody);
 int readbody(int sock, struct query *ctl, flag forward, int len);
 #if defined(HAVE_STDARG_H)
 void gen_send(int sock, const char *, ... )

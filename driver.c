@@ -69,8 +69,8 @@ int batchcount;		/* count of messages sent in current batch */
 flag peek_capable;	/* can we peek for better error recovery? */
 int mailserver_socket_temp = -1;	/* socket to free if connect timeout */ 
 
-static int timeoutcount;		/* count consecutive timeouts */
-static int idletimeout;			/* timeout occured in idle stage? */
+volatile static int timeoutcount = 0;	/* count consecutive timeouts */
+volatile static int idletimeout = 0;	/* timeout occured in idle stage? */
 
 static jmp_buf	restart;
 
@@ -78,6 +78,11 @@ int isidletimeout(void)
 /* last timeout occured in idle stage? */
 {
     return idletimeout;
+}
+
+void resetidletimeout(void)
+{
+    idletimeout = 0;
 }
 
 void set_timeout(int timeleft)
@@ -88,8 +93,6 @@ void set_timeout(int timeleft)
 
     if (timeleft == 0)
 	timeoutcount = 0;
-
-    idletimeout = 1;
 
     ntimeout.it_interval.tv_sec = ntimeout.it_interval.tv_usec = 0;
     ntimeout.it_value.tv_sec  = timeleft;
@@ -428,7 +431,10 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	if (msgcodes[num-1] < 0)
 	{
 	    if ((msgcodes[num-1] == MSGLEN_TOOLARGE) && !check_only)
+	    {
 		mark_oversized(ctl, num, msgsizes[num-1]);
+		suppress_delete = TRUE;
+	    }
   		/* To avoid flooding the syslog when using --keep,
   		 * report "Skipped message" only when:
   		 *  1) --verbose is on, or
@@ -468,6 +474,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	else
 	{
 	    flag wholesize = !ctl->server.base_protocol->fetch_body;
+	    flag separatefetchbody = (ctl->server.base_protocol->fetch_body) ? TRUE : FALSE;
 
 	    /* request a message */
 	    err = (ctl->server.base_protocol->fetch_headers)(mailserver_socket,ctl,num, &len);
@@ -509,39 +516,23 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	     * output sink.  
 	     */
 	    err = readheaders(mailserver_socket, len, msgsizes[num-1],
-			     ctl, num);
+			     ctl, num,
+			     /* pass the suppress_readbody flag only if the underlying
+			      * protocol does not fetch the body separately */
+			     separatefetchbody ? 0 : &suppress_readbody);
 	    if (err == PS_RETAINED)
-	    {
 		suppress_forward = suppress_delete = retained = TRUE;
-		suppress_readbody = TRUE;
-	    }
 	    else if (err == PS_TRANSIENT)
-	    {
 		suppress_delete = suppress_forward = TRUE;
-		suppress_readbody = TRUE;
-	    }
 	    else if (err == PS_REFUSED)
-	    {
 		suppress_forward = TRUE;
-		suppress_readbody = TRUE;
-	    }
 	    else if (err == PS_TRUNCATED)
-	    {
 		suppress_readbody = TRUE;
-		len = 0;	/* suppress body processing */
-	    }
 	    else if (err)
 		return(err);
 
-	    /* 
-	     * If we're using IMAP4 or something else that
-	     * can fetch headers separately from bodies,
-	     * it's time to request the body now.  This
-	     * fetch may be skipped if we got an anti-spam
-	     * or other PS_REFUSED error response during
-	     * readheaders.
-	     */
-	    if (ctl->server.base_protocol->fetch_body && !suppress_readbody) 
+	    /* tell server we got it OK and resynchronize */
+	    if (separatefetchbody && ctl->server.base_protocol->trail)
 	    {
 		if (outlevel >= O_VERBOSE && !isafile(1))
 		{
@@ -551,9 +542,27 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 
 		if ((err = (ctl->server.base_protocol->trail)(mailserver_socket, ctl, num)))
 		    return(err);
-		len = 0;
-		if (!suppress_forward)
+	    }
+
+	    /* do not read the body which is not being forwarded only if
+	     * the underlying protocol allows the body to be fetched
+	     * separately */
+	    if (separatefetchbody && suppress_forward)
+		suppress_readbody = TRUE;
+
+	    /* 
+	     * If we're using IMAP4 or something else that
+	     * can fetch headers separately from bodies,
+	     * it's time to request the body now.  This
+	     * fetch may be skipped if we got an anti-spam
+	     * or other PS_REFUSED error response during
+	     * readheaders.
+	     */
+	    if (!suppress_readbody)
+	    {
+		if (separatefetchbody)
 		{
+		    len = -1;
 		    if ((err=(ctl->server.base_protocol->fetch_body)(mailserver_socket,ctl,num,&len)))
 			return(err);
 		    /*
@@ -569,22 +578,12 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 			report_complete(stdout,
 					GT_(" (%d body octets) "), len);
 		}
-	    }
 
-	    /* process the body now */
-	    if (len > 0)
-	    {
-		if (suppress_readbody)
-		{
-		    err = PS_SUCCESS;
-		}
-		else
-		{
-		    err = readbody(mailserver_socket,
-				  ctl,
-				  !suppress_forward,
-				  len);
-		}
+		/* process the body now */
+		err = readbody(mailserver_socket,
+			      ctl,
+			      !suppress_forward,
+			      len);
 		if (err == PS_TRANSIENT)
 		    suppress_delete = suppress_forward = TRUE;
 		else if (err)
@@ -669,7 +668,8 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	}
 	else if (ctl->server.base_protocol->delete
 		 && !suppress_delete
-		 && ((msgcodes[num-1] >= 0) ? !ctl->keep : ctl->flush))
+		 && ((msgcodes[num-1] >= 0 && !ctl->keep)
+		     || (msgcodes[num-1] == MSGLEN_OLD && ctl->flush)))
 	{
 	    (*deletions)++;
 	    if (outlevel > O_SILENT) 
@@ -704,7 +704,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	}
 
 	/* perhaps this as many as we're ready to handle */
-	if (maxfetch && maxfetch <= *fetches && *fetches < count)
+	if (maxfetch && maxfetch <= *fetches && num < count)
 	{
 	    report(stdout, GT_("fetchlimit %d reached; %d messages left on server %s account %s\n"),
 		   maxfetch, count - *fetches, ctl->server.truename, ctl->remotename);
@@ -1260,10 +1260,12 @@ is restored."));
 		    else if (count != 0)
 		    {
 			if (new != -1 && (count - new) > 0)
-			    report_build(stdout, GT_("%d %s (%d seen) for %s"),
+			    report_build(stdout, GT_("%d %s (%d %s) for %s"),
 				  count, count > 1 ? GT_("messages") :
 				                     GT_("message"),
-				  count-new, buf);
+				  count-new, 
+				  GT_("seen"),
+				  buf);
 			else
 			    report_build(stdout, GT_("%d %s for %s"), 
 				  count, count > 1 ? GT_("messages") :

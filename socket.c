@@ -637,8 +637,10 @@ int SockRead(int sock, char *buf, int len)
     } while 
 	    (!newline && len);
     *bp = '\0';
+
+#ifdef FORCE_STUFFING		/* too ugly to live -- besides, there's IMAP */
     /* OK, very weird hack coming up here:
-     * When POP and IMAP servers send us a message, they're supposed to
+     * When POP3 servers send us a message, they're supposed to
      * terminate the message with a line containing only a dot. To protect
      * against lines in the real message that might contain only a dot,
      * they're supposed to preface any line that starts with a dot with
@@ -675,6 +677,7 @@ int SockRead(int sock, char *buf, int len)
 	buf[0] = '.';
 	bp++;
     }
+#endif /* FORCE_STUFFING */
     return bp - buf;
 }
 
@@ -973,7 +976,7 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char
 
 	SSL_set_fd(_ssl_context[sock], sock);
 	
-	if(SSL_connect(_ssl_context[sock]) == -1) {
+	if(SSL_connect(_ssl_context[sock]) < 1) {
 		ERR_print_errors_fp(stderr);
 		return(-1);
 	}

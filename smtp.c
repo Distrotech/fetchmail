@@ -87,7 +87,7 @@ static void SMTP_auth(int sock, char *username, char *password, char *buf)
 		SockPrintf(sock, "AUTH CRAM-MD5\r\n");
 		SockRead(sock, smtp_response, sizeof(smtp_response) - 1);
 		strncpy(tmp, smtp_response, sizeof(tmp));
-		tmp[sizeof(tmp)-1] == '\0';
+		tmp[sizeof(tmp)-1] = '\0';
 
 		if (strncmp(tmp, "334 ", 4)) { /* Server rejects AUTH */
 			SMTP_auth_error(sock, GT_("Server rejected the AUTH command.\n"));
@@ -147,7 +147,7 @@ static void SMTP_auth(int sock, char *username, char *password, char *buf)
 		SockPrintf(sock, "AUTH LOGIN\r\n");
 		SockRead(sock, smtp_response, sizeof(smtp_response) - 1);
 		strncpy(tmp, smtp_response, sizeof(tmp));
-		tmp[sizeof(tmp)-1] == '\0';
+		tmp[sizeof(tmp)-1] = '\0';
 
 		if (strncmp(tmp, "334 ", 4)) { /* Server rejects AUTH */
 			SMTP_auth_error(sock, GT_("Server rejected the AUTH command.\n"));
@@ -164,7 +164,7 @@ static void SMTP_auth(int sock, char *username, char *password, char *buf)
 		SockPrintf(sock, "%s\r\n", b64buf);
 		SockRead(sock, smtp_response, sizeof(smtp_response) - 1);
 		strncpy(tmp, smtp_response, sizeof(tmp));
-		tmp[sizeof(tmp)-1] == '\0';
+		tmp[sizeof(tmp)-1] = '\0';
 		p = strchr(tmp, ' ');
 		if (!p) {
 			SMTP_auth_error(sock, GT_("Bad base64 reply from server.\n"));
@@ -213,7 +213,7 @@ int SMTP_ehlo(int sock, const char *host, char *name, char *password, int *opt)
 	      *opt |= hp->value;
 	      if (strncmp(hp->name, "AUTH ", 5) == 0)
 	      	strncpy(auth_response, smtp_response, sizeof(auth_response));
-		auth_response[sizeof(auth_response)-1] == '\0';
+		auth_response[sizeof(auth_response)-1] = '\0';
 	  }
       if ((smtp_response[0] == '1' || smtp_response[0] == '2' || smtp_response[0] == '3') && smtp_response[3] == ' ') {
 	  if (*opt & ESMTP_AUTH)
@@ -327,6 +327,8 @@ int SMTP_eom(int sock)
   return ok;
 }
 
+time_t last_smtp_ok = 0;
+
 int SMTP_ok(int sock)
 /* returns status of SMTP connection */
 {
@@ -359,6 +361,8 @@ int SMTP_ok(int sock)
 		report(stderr, GT_("smtp listener protocol error\n"));
 	    return SM_UNRECOVERABLE;
 	}
+
+	last_smtp_ok = time((time_t *) NULL);
 
 	if ((smtp_response[0] == '1' || smtp_response[0] == '2' || smtp_response[0] == '3') &&
 	    smtp_response[3] == ' ')

@@ -306,6 +306,8 @@ static void capa_probe(int sock, struct query *ctl)
 	if (outlevel >= O_VERBOSE)
 	    report(stdout, GT_("will idle after poll\n"));
     }
+
+    peek_capable = (imap_version >= IMAP4);
 }
 
 static int imap_getauth(int sock, struct query *ctl, char *greeting)
@@ -315,6 +317,15 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 #ifdef SSL_ENABLE
     flag did_stls = FALSE;
 #endif /* SSL_ENABLE */
+
+    /*
+     * Assumption: expunges are cheap, so we want to do them
+     * after every message unless user said otherwise.
+     */
+    if (NUM_SPECIFIED(ctl->expunge))
+	expunge_period = NUM_VALUE_OUT(ctl->expunge);
+    else
+	expunge_period = 1;
 
     capa_probe(sock, ctl);
 
@@ -327,44 +338,6 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
         preauth = FALSE;  /* reset for the next session */
         return(PS_SUCCESS);
     }
-    /*
-     * Time to authenticate the user.
-     * Try the protocol variants that don't require passwords first.
-     */
-    ok = PS_AUTHFAIL;
-
-#ifdef GSSAPI
-    if ((ctl->server.authenticate == A_ANY 
-	 || ctl->server.authenticate == A_GSSAPI)
-	&& strstr(capabilities, "AUTH=GSSAPI"))
-	if(ok = do_gssauth(sock, "AUTHENTICATE", ctl->server.truename, ctl->remotename))
-	{
-	    /* SASL cancellation of authentication */
-	    gen_send(sock, "*");
-	    if(ctl->server.authenticate != A_ANY)
-                return ok;
-	}
-	else
-	    return ok;
-#endif /* GSSAPI */
-
-#ifdef KERBEROS_V4
-    if ((ctl->server.authenticate == A_ANY 
-	 || ctl->server.authenticate == A_KERBEROS_V4
-	 || ctl->server.authenticate == A_KERBEROS_V5) 
-	&& strstr(capabilities, "AUTH=KERBEROS_V4"))
-    {
-	if ((ok = do_rfc1731(sock, "AUTHENTICATE", ctl->server.truename)))
-	{
-	    /* SASL cancellation of authentication */
-	    gen_send(sock, "*");
-	    if(ctl->server.authenticate != A_ANY)
-                return ok;
-	}
-	else
-	    return ok;
-    }
-#endif /* KERBEROS_V4 */
 
 #ifdef SSL_ENABLE
     if ((!ctl->sslproto || !strcmp(ctl->sslproto,"tls1"))
@@ -408,16 +381,44 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
     }
 #endif /* SSL_ENABLE */
 
-    peek_capable = (imap_version >= IMAP4);
-
-    /* 
-     * Assumption: expunges are cheap, so we want to do them
-     * after every message unless user said otherwise.
+    /*
+     * Time to authenticate the user.
+     * Try the protocol variants that don't require passwords first.
      */
-    if (NUM_SPECIFIED(ctl->expunge))
-	expunge_period = NUM_VALUE_OUT(ctl->expunge);
-    else
-	expunge_period = 1;
+    ok = PS_AUTHFAIL;
+
+#ifdef GSSAPI
+    if ((ctl->server.authenticate == A_ANY 
+	 || ctl->server.authenticate == A_GSSAPI)
+	&& strstr(capabilities, "AUTH=GSSAPI"))
+	if(ok = do_gssauth(sock, "AUTHENTICATE", ctl->server.truename, ctl->remotename))
+	{
+	    /* SASL cancellation of authentication */
+	    gen_send(sock, "*");
+	    if(ctl->server.authenticate != A_ANY)
+                return ok;
+	}
+	else
+	    return ok;
+#endif /* GSSAPI */
+
+#ifdef KERBEROS_V4
+    if ((ctl->server.authenticate == A_ANY 
+	 || ctl->server.authenticate == A_KERBEROS_V4
+	 || ctl->server.authenticate == A_KERBEROS_V5) 
+	&& strstr(capabilities, "AUTH=KERBEROS_V4"))
+    {
+	if ((ok = do_rfc1731(sock, "AUTHENTICATE", ctl->server.truename)))
+	{
+	    /* SASL cancellation of authentication */
+	    gen_send(sock, "*");
+	    if(ctl->server.authenticate != A_ANY)
+                return ok;
+	}
+	else
+	    return ok;
+    }
+#endif /* KERBEROS_V4 */
 
     /*
      * No such luck.  OK, now try the variants that mask your password
@@ -506,7 +507,13 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	imap_canonicalize(remotename, ctl->remotename, NAMELEN);
 	imap_canonicalize(password, ctl->password, PASSWORDLEN);
 
-	strcpy(shroud, password);
+#ifdef HAVE_SNPRINTF
+	snprintf(shroud, sizeof (shroud), "\"%s\"", password);
+#else
+	strcpy(shroud, "\"");
+	strcat(shroud, password);
+	strcat(shroud, "\"");
+#endif
 	ok = gen_transact(sock, "LOGIN \"%s\" \"%s\"", remotename, password);
 	shroud[0] = '\0';
 #ifdef SSL_ENABLE

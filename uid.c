@@ -135,19 +135,16 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 	     * espescially if the POP server returns an X-UIDL header
 	     * instead of a Message-ID, as GMX's (www.gmx.net) POP3
 	     * StreamProxy V1.0 does.
+	     *
+	     * this is one other trick. The userhost part 
+	     * may contain ' ' in the user part, at least in
+	     * the lotus notes case.
+	     * So we start looking for the '@' after which the
+	     * host will follow with the ' ' seperator finaly id.
 	     */
-	    if ((id = strchr(user, ' ')) != NULL )
+	    if ((delimp1 = strchr(user, '@')) != NULL &&
+		(id = strchr(delimp1,' ')) != NULL)
 	    {
-
-	      /*
-	       * this is one other trick. The userhost part 
-	       * may contain ' ' in the user part, at least in
-	       * the lotus notes case.
-	       * So we start looking for the '@' after which the
-	       * host will follow with the ' ' seperator finaly id.
-	       */
-	        delimp1 = strchr(user, '@');
-	        id = strchr(delimp1,' ');
 	        for (delimp1 = id; delimp1 >= user; delimp1--)
 		    if ((*delimp1 != ' ') && (*delimp1 != '\t'))
 			break;

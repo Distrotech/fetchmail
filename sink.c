@@ -73,6 +73,11 @@ int smtp_open(struct query *ctl)
     char *parsed_host = NULL;
 
     /* maybe it's time to close the socket in order to force delivery */
+    if (last_smtp_ok > 0 && time((time_t *)NULL) - last_smtp_ok > mytimeout)
+    {
+	smtp_close(ctl, 1);
+	last_smtp_ok = 0;
+    }
     if (NUM_NONZERO(ctl->batchlimit)) {
 	if (batchcount == ctl->batchlimit)
 	    smtp_close(ctl, 1);
@@ -270,7 +275,7 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
 	strcmp(msg->return_path, "<>") == 0 ||
 	strcasecmp(msg->return_path, md1) == 0 ||
 	strncasecmp(msg->return_path, md2, strlen(md2)) == 0)
-	return(FALSE);
+	return(TRUE);
 
     bounce_to = (run.bouncemail ? msg->return_path : run.postmaster);
 
@@ -406,6 +411,8 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 {
     int smtperr = atoi(smtp_response);
     char *responses[1];
+    struct idlist *walk;
+    int found = 0;
 
     xalloca(responses[0], char *, strlen(smtp_response)+1);
     strcpy(responses[0], smtp_response);
@@ -430,7 +437,15 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
      * messages, which are probably in English (none of the
      * MTAs I know about are internationalized).
      */
-    if (str_find(&ctl->antispam, smtperr))
+    for( walk = ctl->antispam; walk; walk = walk->next )
+        if ( walk->val.status.num == smtperr ) 
+	{ 
+		found=1;
+		break;
+	}
+
+    /* if (str_find(&ctl->antispam, smtperr)) */
+    if ( found )
     {
 	/*
 	 * SMTP listener explicitly refuses to deliver mail
@@ -511,10 +526,12 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
     default:
 	/* bounce non-transient errors back to the sender */
 	if (smtperr >= 500 && smtperr <= 599)
-	    if (send_bouncemail(ctl, msg, XMIT_ACCEPT,
+	{
+	    send_bouncemail(ctl, msg, XMIT_ACCEPT,
 				"General SMTP/ESMTP error.\r\n", 
-				1, responses))
-		return(run.bouncemail ? PS_REFUSED : PS_TRANSIENT);
+				1, responses);
+	    return(PS_REFUSED);
+	}
 	/*
 	 * We're going to end up here on 4xx errors, like:
 	 *
@@ -846,6 +863,9 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
 	ap = addr;
     }
     else if (strchr(msg->return_path,'@') || strchr(msg->return_path,'!'))
+	ap = msg->return_path;
+    /* in case Return-Path was "<>" we want to preserve that */
+    else if (strcmp(msg->return_path,"<>") == 0)
 	ap = msg->return_path;
     else		/* in case Return-Path existed but was local */
     {

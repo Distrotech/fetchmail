@@ -40,7 +40,7 @@ extern char *strstr();	/* needed on sysV68 R3V7.1. */
 
 int mytimeout;		/* value of nonreponse timeout */
 int suppress_tags;	/* emit tags? */
-char shroud[PASSWORDLEN*2+1];	/* string to shroud in debug output */
+char shroud[PASSWORDLEN*2+3];	/* string to shroud in debug output */
 struct msgblk msgblk;
 
 char tag[TAGLEN];
@@ -352,13 +352,15 @@ int readheaders(int sock,
 		       long fetchlen,
 		       long reallen,
 		       struct query *ctl,
-		       int num)
+		       int num,
+		       flag *suppress_readbody)
 /* read message headers and ship to SMTP or MDA */
 /*   sock:		to which the server is connected */
 /*   fetchlen:		length of message according to fetch response */
 /*   reallen:		length of message according to getsizes */
 /*   ctl:		query control record */
 /*   num:		index of message */
+/*   suppress_readbody:	whether call to readbody() should be supressed */
 {
     struct addrblk
     {
@@ -379,13 +381,13 @@ int readheaders(int sock,
     int 		n, linelen, oldlen, ch, remaining, skipcount;
     struct idlist 	*idp;
     flag		no_local_matches = FALSE;
-    flag		headers_ok, has_nuls;
+    flag		has_nuls;
     int			olderrs, good_addresses, bad_addresses;
-    int			retain_mail = 0;
+    int			retain_mail = 0, refuse_mail = 0;
     flag		already_has_return_path = FALSE;
 
     sizeticker = 0;
-    has_nuls = headers_ok = FALSE;
+    has_nuls = FALSE;
     msgblk.return_path[0] = '\0';
     olderrs = ctl->errcount;
 
@@ -419,7 +421,7 @@ int readheaders(int sock,
 
     for (remaining = fetchlen; remaining > 0 || protocol->delimited; )
     {
-	char *line;
+	char *line, *rline;
 	int overlong = FALSE;
 
 	line = xmalloc(sizeof(buf));
@@ -446,7 +448,13 @@ int readheaders(int sock,
 		 */
 		if ( n && buf[n-1] != '\n' ) {
 			overlong = TRUE;
-			line = realloc(line, linelen);
+			rline = (char *) realloc(line, linelen);
+			if (rline == NULL)
+			{
+			    free (line);
+			    return(PS_IOERR);
+			}
+			line = rline;
 			memcpy(line + linelen - n, buf, n);
 			ch = ' '; /* So the next iteration starts */
 			continue;
@@ -458,7 +466,13 @@ int readheaders(int sock,
 	    if (ctl->forcecr && buf[n-1] == '\n' && (n == 1 || buf[n-2] != '\r'))
 	    {
 		char * tcp;
-		line = (char *) realloc(line, linelen + 2);
+		rline = (char *) realloc(line, linelen + 2);
+		if (rline == NULL)
+		{
+		    free (line);
+		    return(PS_IOERR);
+		}
+		line = rline;
 		memcpy(line + linelen - n, buf, n - 1);
 		tcp = line + linelen - 1;
 		*tcp++ = '\r';
@@ -469,15 +483,21 @@ int readheaders(int sock,
 	    }
 	    else
 	    {
-		line = (char *) realloc(line, linelen + 1);
+		rline = (char *) realloc(line, linelen + 1);
+		if (rline == NULL)
+		{
+		    free (line);
+		    return(PS_IOERR);
+		}
+		line = rline;
 		memcpy(line + linelen - n, buf, n + 1);
 	    }
 
 	    /* check for end of headers */
 	    if (end_of_header(line))
 	    {
-		headers_ok = TRUE;
-		has_nuls = (linelen != strlen(line));
+		if (linelen != strlen (line))
+		    has_nuls = TRUE;
 		free(line);
 		goto process_headers;
 	    }
@@ -489,8 +509,13 @@ int readheaders(int sock,
 	     */
 	    if (protocol->delimited && line[0] == '.' && EMPTYLINE(line+1))
 	    {
-		headers_ok = FALSE;
-		has_nuls = (linelen != strlen(line));
+		if (outlevel > O_SILENT)
+		    report(stdout,
+			   GT_("message delimiter found while scanning headers\n"));
+		if (suppress_readbody)
+		    *suppress_readbody = TRUE;
+		if (linelen != strlen (line))
+		    has_nuls = TRUE;
 		free(line);
 		goto process_headers;
 	    }
@@ -499,17 +524,18 @@ int readheaders(int sock,
 	     * At least one brain-dead website (netmind.com) is known to
 	     * send out robotmail that's missing the RFC822 delimiter blank
 	     * line before the body! Without this check fetchmail segfaults.
-	     * With it, we treat such messages as though they had the missing
-	     * blank line.
+	     * With it, we treat such messages as spam and refuse them.
 	     */
-	    if (!isspace(line[0]) && !strchr(line, ':'))
+	    if (!refuse_mail && !isspace(line[0]) && !strchr(line, ':'))
 	    {
-		headers_ok = FALSE;
-		has_nuls = (linelen != strlen(line));
+		if (linelen != strlen (line))
+		    has_nuls = TRUE;
 		if (outlevel > O_SILENT)
 		    report(stdout,
 			   GT_("incorrect header line found while scanning headers\n"));
-		goto process_headers;
+		if (outlevel >= O_VERBOSE)
+		    report (stdout, GT_("line: %s"), line);
+		refuse_mail = 1;
 	    }
 
 	    /* check for RFC822 continuations */
@@ -550,8 +576,16 @@ int readheaders(int sock,
 		}
 
 
+	/* skip processing if we are going to retain or refuse this mail */
+	if (retain_mail || refuse_mail)
+	{
+	    free(line);
+	    continue;
+	}
+
 	/* we see an ordinary (non-header, non-message-delimiter line */
-	has_nuls = (linelen != strlen(line));
+	if (linelen != strlen (line))
+	    has_nuls = TRUE;
 
 	/* save the message's ID, we may use it for killing duplicates later */
 	if (MULTIDROP(ctl) && !strncasecmp(line, "Message-ID:", 11))
@@ -691,6 +725,8 @@ int readheaders(int sock,
 	if ((already_has_return_path==FALSE) && !strncasecmp("Return-Path:", line, 12) && (cp = nxtaddr(line)))
 	{
 	    already_has_return_path = TRUE;
+	    if (cp[0]=='\0')	/* nxtaddr() strips the brackets... */
+		cp="<>";
 	    strncpy(msgblk.return_path, cp, sizeof(msgblk.return_path));
 	    msgblk.return_path[sizeof(msgblk.return_path)-1] = '\0';
 	    if (!ctl->mda) {
@@ -701,9 +737,10 @@ int readheaders(int sock,
 
 	if (!msgblk.headers)
 	{
-	    oldlen = strlen(line);
+	    oldlen = linelen;
 	    msgblk.headers = xmalloc(oldlen + 1);
-	    (void) strcpy(msgblk.headers, line);
+	    (void) memcpy(msgblk.headers, line, linelen);
+	    msgblk.headers[oldlen] = '\0';
 	    free(line);
 	    line = msgblk.headers;
 	}
@@ -712,14 +749,15 @@ int readheaders(int sock,
 	    char *newhdrs;
 	    int	newlen;
 
-	    newlen = oldlen + strlen(line);
+	    newlen = oldlen + linelen;
 	    newhdrs = (char *) realloc(msgblk.headers, newlen + 1);
 	    if (newhdrs == NULL) {
 		free(line);
 		return(PS_IOERR);
 	    }
 	    msgblk.headers = newhdrs;
-	    strcpy(msgblk.headers + oldlen, line);
+	    memcpy(msgblk.headers + oldlen, line, linelen);
+	    msgblk.headers[newlen] = '\0';
 	    free(line);
 	    line = msgblk.headers + oldlen;
 	    oldlen = newlen;
@@ -831,6 +869,8 @@ int readheaders(int sock,
 	msgblk.headers = NULL;
 	return(PS_RETAINED);
     }
+    if (refuse_mail)
+	return(PS_REFUSED);
     /*
      * When mail delivered to a multidrop mailbox on the server is
      * addressed to multiple people on the client machine, there will
@@ -1255,14 +1295,6 @@ int readheaders(int sock,
     *cp++ = '\0';
     stuffline(ctl, buf);
 
-    if (!headers_ok)
-    {
-	if (outlevel > O_SILENT)
-	    report(stdout,
-		   GT_("message delimiter found while scanning headers\n"));
-	return(PS_TRUNCATED);
-    }
-
     return(PS_SUCCESS);
 }
 
@@ -1390,7 +1422,7 @@ static void enshroud(char *buf)
        char    *sp;
 
        sp = cp + strlen(shroud);
-       *cp = '*';
+       *cp++ = '*';
        while (*sp)
            *cp++ = *sp++;
        *cp = '\0';
@@ -1457,7 +1489,10 @@ int size;	/* length of buffer */
 	set_timeout(0);
 	phase = oldphase;
 	if(isidletimeout())
+	{
+	  resetidletimeout();
 	  return(PS_IDLETIMEOUT);
+	}
 	else
 	  return(PS_SOCKET);
     }

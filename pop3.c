@@ -224,6 +224,17 @@ static int capa_probe(sock)
 {
     int	ok;
 
+#if defined(GSSAPI)
+    has_gssapi = FALSE;
+#endif /* defined(GSSAPI) */
+#if defined(KERBEROS_V4) || defined(KERBEROS_V5)
+    has_kerberos = FALSE;
+#endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
+    has_cram = FALSE;
+#ifdef OPIE_ENABLE
+    has_otp = FALSE;
+#endif /* OPIE_ENABLE */
+
     ok = gen_transact(sock, "CAPA");
     if (ok == PS_SUCCESS)
     {
@@ -268,6 +279,20 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 #endif /* OPIE_ENABLE */
 #ifdef SSL_ENABLE
     flag did_stls = FALSE;
+#endif /* SSL_ENABLE */
+
+#if defined(GSSAPI)
+    has_gssapi = FALSE;
+#endif /* defined(GSSAPI) */
+#if defined(KERBEROS_V4) || defined(KERBEROS_V5)
+    has_kerberos = FALSE;
+#endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
+    has_cram = FALSE;
+#ifdef OPIE_ENABLE
+    has_otp = FALSE;
+#endif /* OPIE_ENABLE */
+#ifdef SSL_ENABLE
+    has_ssl = FALSE;
 #endif /* SSL_ENABLE */
 
     if (ctl->server.authenticate == A_SSH) {
@@ -342,7 +367,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	 */
 	if (ctl->server.authenticate == A_ANY)
 	{
-	    if (capa_probe(sock) != PS_SUCCESS)
+	    if ((ok = capa_probe(sock)) != PS_SUCCESS)
 	    /* we are in STAGE_GETAUTH! */
 		if (ok == PS_AUTHFAIL ||
 		    /* Some servers directly close the socket. However, if we
