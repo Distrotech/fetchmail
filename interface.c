@@ -23,7 +23,7 @@
 #endif
 #include <sys/ioctl.h>
 #include <netinet/in.h>
-#include <linux/netdevice.h>
+#include <net/if.h>
 #include "fetchmail.h"
 
 typedef struct {
