@@ -1217,7 +1217,7 @@ class UserEdit(Frame, MyWidget):
 	    self.user = User()
 	    self.user.remote = username
 	    self.user.localnames = [username]
-	    server.users.append(self.user)
+	    parent.server.users.append(self.user)
 
     def edit(self, mode, master=None):
 	Frame.__init__(self, master)
