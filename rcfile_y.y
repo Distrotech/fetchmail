@@ -413,6 +413,7 @@ static void record_current(void)
     FLAG_FORCE(server.envelope);
     FLAG_FORCE(server.skip);
     FLAG_FORCE(server.dns);
+    FLAG_FORCE(server.uidl);
 
 #ifdef linux
     FLAG_FORCE(server.interface);
@@ -466,6 +467,7 @@ void optmerge(struct query *h2, struct query *h1)
     FLAG_MERGE(server.envelope);
     FLAG_MERGE(server.skip);
     FLAG_MERGE(server.dns);
+    FLAG_MERGE(server.uidl);
 
 #ifdef linux
     FLAG_MERGE(server.interface);

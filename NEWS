@@ -25,6 +25,7 @@ fetchmail-4.0.7 ()
 * Fixed a minor bug in handling of DNS errors in multidrop mode.
 * Added a `postconnect' analogous to `preconnect'.
 * Make `interval' count polls skipped because of interface or monitor option.
+* Fix UIDL option processing.
 
 There are 258 people on the fetchmail-friends list.
 
