@@ -143,7 +143,11 @@ int smtp_open(struct query *ctl)
 
 	    /* return immediately for ODMR */
 	    if (ctl->server.protocol == P_ODMR)
+	    {
+	       set_timeout(0);
+	       phase = oldphase;
                return(ctl->smtp_socket); /* success */
+	    }
 
 	    /* are we doing SMTP or LMTP? */
 	    SMTP_setmode(ctl->listener);
