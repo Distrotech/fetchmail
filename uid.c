@@ -178,6 +178,7 @@ struct hostrec *hostp;
 }
 
 void write_saved_lists(hostlist, idfile)
+/* perform end-of-run write of seen-messages list */
 struct hostrec *hostlist;
 char *idfile;
 {
