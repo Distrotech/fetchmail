@@ -85,20 +85,20 @@ extern int versioninfo;		/* emit only version info */
 #ifdef HAVE_PROTOTYPES
 
 /* prototypes for globally callable functions */
-int doPOP2 (struct hostrec *options); 
-int doPOP3 (struct hostrec *options);
+int doPOP2 (struct hostrec *); 
+int doPOP3 (struct hostrec *);
 
-int parsecmdline (int argc, char **argv, struct hostrec *options);
-int setdefaults (struct hostrec *options);
-char *getnextserver (int argc, char **argv, int *optind);
-int openuserfolder (struct hostrec *options);
-int closeuserfolder (int fd);
-int openmailpipe (struct hostrec *options);
-int closemailpipe (int fd);
+int parsecmdline (int, char **, struct hostrec *);
+int setdefaults (struct hostrec *);
+char *getnextserver (int argc, char **, int *);
+int openuserfolder (struct hostrec *);
+int closeuserfolder (int);
+int openmailpipe (struct hostrec *);
+int closemailpipe (int);
 char *MD5Digest (char *);
-void reply_hack(char *buf, const char *host);
-void append_server_names(int *pargc, char **argv);
-int daemonize(const char *logfile, void (*)(void));
+void reply_hack(char *, const char *);
+void append_server_names(int *, char **);
+int daemonize(const char *, void (*)(void));
 
 #else
 

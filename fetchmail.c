@@ -131,7 +131,7 @@ char **argv;
     printf("Taking options from command line and %s\n", poprcfile);
     for (hostp = hostlist; hostp; hostp = hostp->next) {
       printf("Options for host %s:\n", hostp->servername);
-      dump_options(hostp);
+      dump_params(hostp);
     }
     if (hostlist == NULL)
 	(void) printf("No mailservers set up -- perhaps %s is missing?\n",
@@ -261,7 +261,7 @@ int showversioninfo()
 }
 
 /*********************************************************************
-  function:      dump_options
+  function:      dump_params
   description:   display program options in English
   arguments:
     queryctl      merged options
@@ -271,7 +271,7 @@ int showversioninfo()
   globals:       linelimit, outlimit.
 *********************************************************************/
 
-int dump_options (queryctl)
+int dump_params (queryctl)
 struct hostrec *queryctl;
 {
   printf("  Username = '%s'\n", queryctl->remotename);

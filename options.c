@@ -88,10 +88,10 @@ static struct option longoptions[] = {
 		 poll_interval, quitmode, poprcfile, linelimit.  
  *********************************************************************/
 
-int parsecmdline (argc,argv,options)
+int parsecmdline (argc,argv,queryctl)
 int argc;
 char **argv;
-struct hostrec *options;
+struct hostrec *queryctl;
 {
   int c,i;
   int fflag = 0;     /* TRUE when -o or -c has been specified */
@@ -102,7 +102,7 @@ struct hostrec *options;
   extern int optind, opterr;     /* defined in getopt(2) */
   extern char *optarg;          /* defined in getopt(2) */
 
-  bzero(options,sizeof(struct hostrec));    /* start clean */
+  bzero(queryctl,sizeof(struct hostrec));    /* start clean */
 
   while (!errflag && 
          (c = getopt_long(argc,argv,shortoptions,
@@ -110,10 +110,10 @@ struct hostrec *options;
 
     switch (c) {
       case '2':
-        options->protocol = P_POP2;
+        queryctl->protocol = P_POP2;
         break;
       case '3':
-        options->protocol = P_POP3;
+        queryctl->protocol = P_POP3;
         break;
       case 'V':
       case LA_VERSION:
@@ -121,16 +121,16 @@ struct hostrec *options;
         break;
       case 'a':
       case LA_ALL:
-        options->fetchall = !0;
+        queryctl->fetchall = !0;
         break;
       case 'K':
       case LA_KILL:
-        options->keep = 0;
+        queryctl->keep = 0;
         got_kill = 1;
         break;
       case 'k':
       case LA_KEEP:
-        options->keep = !0;
+        queryctl->keep = !0;
         got_kill = 0;
         break;
       case 'v':
@@ -147,7 +147,7 @@ struct hostrec *options;
           errflag++;
         else {
           fflag++;
-          options->output = TO_STDOUT;
+          queryctl->output = TO_STDOUT;
         }
         break;
       case 'l':
@@ -160,20 +160,20 @@ struct hostrec *options;
         break;
       case 'F':
       case LA_FLUSH:
-        options->flush = !0;
+        queryctl->flush = !0;
         break;
       case LA_PROTOCOL:
         /* XXX -- should probably use a table lookup here */
         if (strcasecmp(optarg,"pop2") == 0)
-          options->protocol = P_POP2;
+          queryctl->protocol = P_POP2;
         else if (strcasecmp(optarg,"pop3") == 0)
-          options->protocol = P_POP3;
+          queryctl->protocol = P_POP3;
         else if (strcasecmp(optarg,"imap") == 0)
-          options->protocol = P_IMAP;
+          queryctl->protocol = P_IMAP;
         else if (strcasecmp(optarg,"apop") == 0)
-          options->protocol = P_APOP;
+          queryctl->protocol = P_APOP;
         else if (strcasecmp(optarg,"rpop") == 0)
-          options->protocol = P_RPOP;
+          queryctl->protocol = P_RPOP;
         else {
           fprintf(stderr,"Invalid protocol '%s'\n specified.\n", optarg);
           errflag++;
@@ -190,7 +190,7 @@ struct hostrec *options;
         break;
       case 'u':
       case LA_USERNAME:
-        strncpy(options->remotename,optarg,sizeof(options->remotename)-1);
+        strncpy(queryctl->remotename,optarg,sizeof(queryctl->remotename)-1);
         break;
       case 'o':
       case LA_LOCALFILE:
@@ -198,17 +198,17 @@ struct hostrec *options;
           errflag++;
         else {
           fflag++;
-          options->output = TO_FOLDER;
-          strncpy(options->userfolder,optarg,sizeof(options->userfolder)-1);
+          queryctl->output = TO_FOLDER;
+          strncpy(queryctl->userfolder,optarg,sizeof(queryctl->userfolder)-1);
         }
         break;
       case 'r':
       case LA_REMOTEFILE:
-        strncpy(options->remotefolder,optarg,sizeof(options->remotefolder)-1);
+        strncpy(queryctl->remotefolder,optarg,sizeof(queryctl->remotefolder)-1);
         break;
       case 'm':
       case LA_MDA:
-        strncpy(options->mda,optarg,sizeof(options->mda)-1);
+        strncpy(queryctl->mda,optarg,sizeof(queryctl->mda)-1);
         break;
       case 'L':
       case LA_LOGFILE:
@@ -255,7 +255,7 @@ struct hostrec *options;
   }
   else {
     if (linelimit && !got_kill) 
-      options->keep = !0;
+      queryctl->keep = !0;
     else
       ;
     return(optind);
