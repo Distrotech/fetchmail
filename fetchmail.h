@@ -40,12 +40,13 @@
 /* authentication types */
 #define		A_ANY		0	/* use the first method that works */
 #define		A_PASSWORD	1	/* password authentication */
-#define		A_CRAM_MD5	2	/* CRAM-MD5 shrouding (RFC2195) */
-#define		A_OTP		3	/* One-time password (RFC1508) */
-#define		A_KERBEROS_V4	4	/* authenticate w/ Kerberos V4 */
-#define		A_KERBEROS_V5	5	/* authenticate w/ Kerberos V5 */
-#define 	A_GSSAPI	6	/* authenticate with GSSAPI */
-#define		A_SSH		7	/* authentication at session level */
+#define		A_NTLM		2	/* Microsoft NTLM protocol */
+#define		A_CRAM_MD5	3	/* CRAM-MD5 shrouding (RFC2195) */
+#define		A_OTP		4	/* One-time password (RFC1508) */
+#define		A_KERBEROS_V4	5	/* authenticate w/ Kerberos V4 */
+#define		A_KERBEROS_V5	6	/* authenticate w/ Kerberos V5 */
+#define 	A_GSSAPI	7	/* authenticate with GSSAPI */
+#define		A_SSH		8	/* authentication at session level */
 
 /* some protocols (KERBEROS, GSSAPI, SSH) don't require a password */
 #define NO_PASSWORD(ctl)	((ctl)->server.authenticate > A_OTP || !MAILBOX_PROTOCOL(ctl))

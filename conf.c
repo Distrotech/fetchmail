@@ -277,6 +277,8 @@ void dump_config(struct runctl *runp, struct query *querylist)
 		stringdump("auth", "password");
 	    else if (ctl->server.authenticate == A_OTP)
 		stringdump("auth", "otp");
+	    else if (ctl->server.authenticate == A_NTLM)
+		stringdump("auth", "ntlm");
 	    else if (ctl->server.authenticate == A_CRAM_MD5)
 		stringdump("auth", "cram-md5");
 	    else if (ctl->server.authenticate == A_GSSAPI)

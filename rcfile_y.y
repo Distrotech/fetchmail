@@ -58,16 +58,16 @@ extern char * yytext;
   char *sval;
 }
 
-%token DEFAULTS POLL SKIP VIA AKA LOCALDOMAINS PROTOCOL ANY
-%token AUTHENTICATE TIMEOUT KPOP SDPS KERBEROS4 KERBEROS5 KERBEROS GSSAPI
-%token SSH ENVELOPE QVIRTUAL USERNAME PASSWORD FOLDER SMTPHOST MDA BSMTP LMTP
+%token DEFAULTS POLL SKIP VIA AKA LOCALDOMAINS PROTOCOL
+%token AUTHENTICATE TIMEOUT KPOP SDPS
+%token ENVELOPE QVIRTUAL USERNAME PASSWORD FOLDER SMTPHOST MDA BSMTP LMTP
 %token SMTPADDRESS SMTPNAME SPAMRESPONSE PRECONNECT POSTCONNECT LIMIT WARNINGS
 %token NETSEC INTERFACE MONITOR PLUGIN PLUGOUT
 %token IS HERE THERE TO MAP WILDCARD
 %token BATCHLIMIT FETCHLIMIT EXPUNGE PROPERTIES
 %token SET LOGFILE DAEMON SYSLOG IDFILE INVISIBLE POSTMASTER BOUNCEMAIL 
 %token SPAMBOUNCE SHOWDOTS
-%token <proto> PROTO
+%token <proto> PROTO AUTHTYPE
 %token <sval>  STRING
 %token <number> NUMBER
 %token NO KEEP FLUSH FETCHALL REWRITE FORCECR STRIPCR PASS8BITS 
@@ -182,25 +182,8 @@ serv_option	: AKA alias_list
 		}
 		| INTERVAL NUMBER
 			{current.server.interval = $2;}
-		| AUTHENTICATE ANY
-			{current.server.authenticate = A_ANY;}
-		| AUTHENTICATE PASSWORD
-			{current.server.authenticate = A_PASSWORD;}
-		| AUTHENTICATE GSSAPI
-			{current.server.authenticate = A_GSSAPI;}
-		| AUTHENTICATE KERBEROS4
-			{current.server.authenticate = A_KERBEROS_V4;}
-                | AUTHENTICATE KERBEROS5
-		 	{current.server.authenticate = A_KERBEROS_V5;}
-                | AUTHENTICATE KERBEROS         {
-#ifdef KERBEROS_V5
-		    current.server.authenticate = A_KERBEROS_V5;
-#else
-		    current.server.authenticate = A_KERBEROS_V4;
-#endif /* KERBEROS_V5 */
-		}
-                | AUTHENTICATE SSH
-		 	{current.server.authenticate = A_SSH;}
+		| AUTHENTICATE AUTHTYPE
+			{current.server.authenticate = $2;}
 		| TIMEOUT NUMBER
 			{current.server.timeout = $2;}
 		| ENVELOPE NUMBER STRING 

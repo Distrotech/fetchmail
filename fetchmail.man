@@ -503,14 +503,14 @@ This option permits you to specify an authentication type (see USER
 AUTHENTICATION below for details).  The possible values are \fBany\fR,
 \&`\fBpassword\fR', `\fBkerberos_v5\fR' and `\fBkerberos\fR' (or, for
 excruciating exactness, `\fBkerberos_v4\fR'), \fRgssapi\fR,
-\fIcram-md5\fR, \fIotp\fR, and \fBssh\fR.  When \fBany\fR (the
+\fIcram-md5\fR, \fIotp\fR, \fIntlm\fR, and \fBssh\fR.  When \fBany\fR (the
 default) is specified, fetchmail tries first methods that don't
 require a password (GSSAPI, KERBEROS_IV); then it looks for methods
-that mask your password (CRAM-MD5, X-OTP); and only if the server
+that mask your password (CRAM-MD5, X-OTP, NTLM); and only if the server
 doesn't support any of those will it ship your password en clair.
 Other values may be used to force various authentication methods
 (\fBssh\fR suppresses authentication).  Any value other than
-\fIpassword\fR, \fIcram-md5\fR or \fIotp\fR suppresses fetchmail's
+\fIpassword\fR, \fIcram-md5\fR, \fIntlm\fR or \fIotp\fR suppresses fetchmail's
 normal inquiry for a password.  Specify \fBssh\fR when you are using
 an end-to-end secure connection such as an ssh tunnel; specify
 \fRgssapi\fR or \fBkerberos_v4\fR if you are using a protocol variant

@@ -316,7 +316,9 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
      * in a challenge-response.
      */
 
-    if (strstr(capabilities, "AUTH=CRAM-MD5"))
+    if ((ctl->server.authenticate == A_ANY 
+	 || ctl->server.authenticate==A_CRAM_MD5)
+	&& strstr(capabilities, "AUTH=CRAM-MD5"))
     {
 	if ((ok = do_cram_md5 (sock, "AUTHENTICATE", ctl)))
 	    /* SASL cancellation of authentication */
@@ -325,13 +327,17 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     }
 
 #if OPIE_ENABLE
-    if (strstr(capabilities, "AUTH=X-OTP"))
+    if ((ctl->server.authenticate == A_ANY 
+	 || ctl->server.authenticate==A_OTP)
+	&& strstr(capabilities, "AUTH=X-OTP"))
 	return(do_otp(sock, ctl);
 #endif /* OPIE_ENABLE */
 
 #ifdef NTLM_ENABLE
-    if (strstr (capabilities, "AUTH=NTLM"))
-        return(do_imap_ntlm (sock, ctl));
+    if ((ctl->server.authenticate == A_ANY 
+	 || ctl->server.authenticate==A_NTLM)
+	&& strstr (capabilities, "AUTH=NTLM"))
+        return(do_imap_ntlm(sock, ctl));
 #endif /* NTLM_ENABLE */
 
 #ifdef __UNUSED__	/* The Cyrus IMAP4rev1 server chokes on this */

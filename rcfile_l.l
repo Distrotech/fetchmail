@@ -84,12 +84,14 @@ port		{ return PORT; }
 interval	{ return INTERVAL; }
 preauth(enticate)?	{ SETSTATE(AUTH); return AUTHENTICATE; }
 auth(enticate)?	{ SETSTATE(AUTH); return AUTHENTICATE; }
-any		{ SETSTATE(0); return ANY; }
-gssapi		{ SETSTATE(0); return GSSAPI; }
-kerberos(_v)?4	{ SETSTATE(0); return KERBEROS4; }
-kerberos(_v)?5	{ SETSTATE(0); return KERBEROS5; }
-kerberos	{ SETSTATE(0); return KERBEROS; }
-ssh		{ SETSTATE(0); return SSH; }
+any		{ SETSTATE(0); yylval.proto = A_ANY; return AUTHTYPE;}
+gssapi		{ SETSTATE(0); yylval.proto = A_GSSAPI; return AUTHTYPE;}
+kerberos(_v)?4	{ SETSTATE(0); yylval.proto = A_KERBEROS_V4; return AUTHTYPE;}
+kerberos(_v)?5	{ SETSTATE(0); yylval.proto = A_KERBEROS_V5; return AUTHTYPE;}
+kerberos	{ SETSTATE(0); yylval.proto = A_KERBEROS_V4; return AUTHTYPE;}
+ssh		{ SETSTATE(0); yylval.proto = A_SSH; return AUTHTYPE;}
+cram(-md5)?	{ SETSTATE(0); yylval.proto = A_CRAM_MD5; return AUTHTYPE;}
+ntlm		{ SETSTATE(0); yylval.proto = A_NTLM; return AUTHTYPE;}
 <AUTH>password { SETSTATE(0); return PASSWORD; }
 timeout		{ return TIMEOUT;}
 envelope	{ return ENVELOPE; }
