@@ -43,7 +43,7 @@ RPOP, APOP, KPOP, all flavors of IMAP, and ESMTP ETRN. <P>
 
 Fetchmail retrieves mail from remote mail servers and forwards it via
 SMTP, so it can then be be read by normal mail user agents such as
-elm(1) or Mail(1).  It allows all your sytem MTA's filtering,
+elm(1) or Mail(1).  It allows all your system MTA's filtering,
 forwarding, and aliasing facilities to work just as they would on
 normal mail.<P>
 
