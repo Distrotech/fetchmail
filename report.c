@@ -279,8 +279,9 @@ error_build (message, va_alist)
         partial_message = xrealloc (partial_message, partial_message_size);
       }
 
-#if defined(VA_START) && (HAVE_VSNPRINTF || _LIBC)
+#if defined(VA_START)
   VA_START (args, message);
+#if HAVE_VSNPRINTF || _LIBC
   for ( ; ; )
     {
       n = vsnprintf (partial_message + partial_message_size_used,
@@ -296,6 +297,16 @@ error_build (message, va_alist)
       partial_message_size += 512;
       partial_message = xrealloc (partial_message, partial_message_size);
     }
+#else
+  partial_message_size_used += vsprintf (partial_message + partial_message_size_used, message, args);
+
+  /* Attempt to catch memory overwrites... */
+  if (partial_message_size_used >= partial_message_size)
+    {
+      partial_message_size_used = 0;
+      error (PS_UNDEFINED, 0, "partial error message buffer overflow");
+    }
+#endif
   va_end (args);
 #else
 #if HAVE_SNPRINTF
@@ -369,8 +380,9 @@ error_complete (status, errnum, message, va_alist)
         partial_message = xrealloc (partial_message, partial_message_size);
       }
 
-#if defined(VA_START) && (HAVE_VSNPRINTF || _LIBC)
+#if defined(VA_START)
   VA_START (args, message);
+#if HAVE_VSNPRINTF || _LIBC
   for ( ; ; )
     {
       n = vsnprintf (partial_message + partial_message_size_used,
@@ -386,6 +398,16 @@ error_complete (status, errnum, message, va_alist)
       partial_message_size += 512;
       partial_message = xrealloc (partial_message, partial_message_size);
     }
+#else
+  partial_message_size_used += vsprintf (partial_message + partial_message_size_used, message, args);
+
+  /* Attempt to catch memory overwrites... */
+  if (partial_message_size_used >= partial_message_size)
+    {
+      partial_message_size_used = 0;
+      error (PS_UNDEFINED, 0, "partial error message buffer overflow");
+    }
+#endif
   va_end (args);
 #else
 #if HAVE_SNPRINTF

@@ -178,12 +178,16 @@ struct query *ctl;	/* option record to be initialized */
 		ctl->server.protocol = P_IMAP;
 	    else if (strcasecmp(optarg,"apop") == 0)
 		ctl->server.protocol = P_APOP;
+	    else if (strcasecmp(optarg,"rpop") == 0)
+		ctl->server.protocol = P_RPOP;
 	    else if (strcasecmp(optarg,"kpop") == 0)
 	    {
 		ctl->server.protocol = P_POP3;
 		ctl->server.port = KPOP_PORT;
 		ctl->server.authenticate =  A_KERBEROS;
 	    }
+	    else if (strcasecmp(optarg,"etrn") == 0)
+		ctl->server.protocol = P_ETRN;
 	    else {
 		fprintf(stderr,"Invalid protocol `%s' specified.\n", optarg);
 		errflag++;
@@ -325,7 +329,7 @@ struct query *ctl;	/* option record to be initialized */
 	fputs("  -M, --monitor     monitor interface for activity\n",stderr);
 #endif
 
-	fputs("  -p, --protocol    specify pop2, pop3, imap, apop, rpop, kpop\n", stderr);
+	fputs("  -p, --protocol    specify pop2, pop3, imap, apop, rpop, kpop, etrn\n", stderr);
 	fputs("  -P, --port        TCP/IP service port to connect to\n",stderr);
 	fputs("  -A, --auth        authentication type (password or kerberos)\n",stderr);
 	fputs("  -t, --timeout     server nonresponse timeout\n",stderr);

@@ -162,8 +162,11 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 	}
 	else if (*hp == '\\')		/* handle RFC822 escaping */
 	{
-	    *tp++ = *hp++;			/* take the escape */
-	    *tp++ = *hp;			/* take following char */
+	    if (state != INSIDE_PARENS)
+	    {
+		*tp++ = *hp++;			/* take the escape */
+		*tp++ = *hp;			/* take following char */
+	    }
 	}
 	else switch (state)
 	{
