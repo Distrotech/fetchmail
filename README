@@ -66,6 +66,10 @@ with **.
 	   user base from Carl Harris's popclient community.   This means
 	   feedback is rapid, bugs get found and fixed rapidly.
 
+At this point, the fetchmail code appears to be stable and bug-free.
+It will probably undergo substantial change only if and when support
+for a new retrieval protocol or IMAP extensions are added.
+
 You can easily find the latest version of fetchmail from Eric's home page:
 
 	http://www.ccil.org/~esr

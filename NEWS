@@ -1,6 +1,12 @@
 			To-do list:
 
-Test RPOP feature against a server that has it.
+At this point, the fetchmail code appears to be stable and free of
+known bugs.  It will probably undergo substantial change only if and
+when support for a new retrieval protocol is added.
+
+Test RPOP feature against a Unix server that has it.  The protocol
+transactions are certainly OK, the question is whether the rresvport() 
+authentication stuff does what's needed.
 
 Support IMAP4 extensions for secure challenge-response, once they're actually
 standardized.
