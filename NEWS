@@ -21,13 +21,17 @@ Inflict severe pain on the person(s) responsible for removing LAST from POP3.
 
 fetchmail-1.8 ():
 
-* Fix buggy getopt specification of P and p options.
+features --
 
 * Use kill(0, pid) to make lock handling a bit smarter (thanks to Johann
   Vromans for the suggestion).
 
-* Arrange for timeout of client if connection to server is dropped
-  (thanks to Gasper Sinai).
+* Arrange for timeout of client after 5 minutes if connection to server is 
+  dropped (thanks to Gaspar Sinai).
+
+bugs --
+
+* Fix buggy getopt specification of P and p options.
 
 fetchmail-1.7 (Tue Oct  8 11:32:44 EDT 1996):
 
