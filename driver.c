@@ -407,7 +407,7 @@ struct query *ctl;	/* query control record */
 char *realname;		/* real name of host */
 {
     char buf [MSGBUFSIZE+1]; 
-    char *bufp, *headers, *fromhdr,*tohdr,*cchdr,*bcchdr,*received_for,*envto;
+    char *headers, *fromhdr,*tohdr,*cchdr,*bcchdr,*received_for,*envto;
     char *ctthdr, *line;
     int n, oldlen, ch;
     int sizeticker, delete_ok;
@@ -432,6 +432,8 @@ char *realname;		/* real name of host */
     line = (char *)NULL;
     for (;;)
     {
+	char *bufp;
+
 	if (line)
 	    free(line);
 	line = xmalloc(sizeof(buf));
@@ -460,13 +462,13 @@ char *realname;		/* real name of host */
 	}
 	len -= n;
 
-	bufp = line;
-	if (bufp[0] == '\r' && bufp[1] == '\n')
+	if (line[0] == '\r' && line[1] == '\n')
 		break;  /* end of message */
      
 	if (!ctl->no_rewrite)
-	    reply_hack(bufp, realname);
+	    reply_hack(line, realname);
 
+	bufp = line;
 	if (!headers)
 	{
 	    oldlen = strlen(bufp);
@@ -832,16 +834,11 @@ char *realname;		/* real name of host */
 
     free_str_list(&xmit_names);
 
-#ifdef STUFFBLANK
-    /* output a crlf if zero length message body */
-    if (!len)
-    {
-	if (ctl->mda[0])
-	    fputs("\r\n", sinkfp);
-	else if (sinkfp)
-	    SockWrite("\r\n", 1, 2, sinkfp);
-    }
-#endif
+    /* issue the delimiter line */
+    if (ctl->mda)
+	fputs("\r\n", sinkfp);
+    else if (sinkfp)
+	SockWrite("\r\n", 1, 2, sinkfp);
 
     /*
      *  Body processing starts here
