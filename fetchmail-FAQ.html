@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2002/06/04 15:29:24 $
+<td width="30%" align=right>$Date: 2002/06/06 15:28:49 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1196,6 +1196,12 @@ subdirectory.</p>
 subdirectory of the fetchmail source distribution, it attempts
 to realize multidrop mailboxes with an external script.</p>
 
+<p>If for some reason you are invoking sendmail via the <tt>mda</tt>
+option (rather than delivering to port 25 via smtp), don't forget to
+include the -i switch.  Otherwise you will occasionally get mysterious delivery
+failures with a SIGPIPE as the sendmail instance dies.  The problem is 
+messages with a single dot at start of a text line.</p>
+
 <hr>
 <h2><a name="T2">T2. How can I use fetchmail with qmail?</a></h2>
 
@@ -2142,6 +2148,12 @@ problem, that's where you'll see it.</p>
 croaking while being passed a message.  Best fix is to remove the
 <code>mda</code> option and pass mail to your port 25 SMTP listener.</p>
 
+<p>If for some reason you are invoking sendmail via the <tt>mda</tt>
+option (rather than delivering to port 25 via smtp), don't forget to
+include the -i switch.  Otherwise you will occasionally get mysterious delivery
+failures with a SIGPIPE as the sendmail instance dies.  The problem is 
+messages with a single dot at start of a text line.</p>
+
 <hr>
 <h2><a name="H1">H1. Fetchmail hangs when used with pppd.</a></h2>
 
@@ -3053,7 +3065,7 @@ the received date from the last Received header.</p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2002/06/04 15:29:24 $
+<td width="30%" align=right>$Date: 2002/06/06 15:28:49 $
 </table>
 
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@thyrsus.com&gt;</A></ADDRESS>
