@@ -78,6 +78,8 @@ mektuplarýnýzý alýr.
 %package -n fetchmailconf
 Summary:        A GUI configurator for generating fetchmail configuration files
 Summary(pl):    GUI konfigurator do fetchmaila
+Summary(fr):	GUI configurateur pour fetchmail
+Summary(es):	Configurador GUI interactivo por fetchmail
 Group:          Utilities/System
 Requires:       %{name} = %{version}, python
 
