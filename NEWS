@@ -10,6 +10,9 @@ features --
   before they are deleted.  This improves recovery from sendmail and
   dropped-connection errors.
 
+* True stdio buffering of sockets at last, thanks to Cameron McPherson.
+  This should be good for a significant throughput increase.
+
 bugs --
 
 * Fixed a FreeBSD compilation glitch involving SIGCLD (thanks to
