@@ -163,9 +163,14 @@ I wrote a paper, <A HREF="../writings/cathedral.html">The Cathedral
 And The Bazaar</A>, about these theories and the project. It was well
 received at <A HREF="http://www.linux-kongress.de"> Linux Kongress
 '97</A> and the <A HREF="http://www.ale.org/showcase"> Atlanta Linux
-Expo</A> two weeks later.  I also presented it at Tim O'Reilly's
-<A HREF="http://www.ora.com/perlconference">Perl Conference</A>
-August 19th-21st 1997.  A lot of people like it.<P>
+Expo</A> two weeks later.  I also presented it at Tim O'Reilly's <A
+HREF="http://www.ora.com/perlconference">Perl Conference</A> August
+19th-21st 1997 and at LinuxPro in Warsaw, December 11 1997.  It's
+going to be the basis for an invited presentation at Usenix '98. A lot
+of people like it (and the folks at Netscape tell me it helped them
+decide to <a
+href="http://www.netscape.com/newsref/pr/newsrelease558.html"> give
+away the source for Netscape Communicator</a>).<P>
 
 <H1>Recent releases and where fetchmail is going:</H2>
 
