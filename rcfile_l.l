@@ -23,8 +23,7 @@ set		{ return SET; }
 batchlimit	{ return BATCHLIMIT; }
 fetchlimit	{ return FETCHLIMIT; }
 logfile		{ return LOGFILE; }
-interface	{ return INTERFACE; }
-monitor		{ return MONITOR; }
+daemon		{ return DAEMON; }
 
 defaults 	{ return DEFAULTS; }
 server 		{ return POLL; }
@@ -45,6 +44,8 @@ remote(folder)? { return FOLDER; }
 smtp(host)?	{ return SMTPHOST; }
 mda		{ return MDA; }
 pre(connect)	{ return PRECONNECT; }
+interface	{ return INTERFACE; }
+monitor		{ return MONITOR; }
 
 is		{ return IS; }
 here		{ return HERE; }

@@ -116,6 +116,8 @@ struct query *ctl;	/* option record to be initialized */
     int errflag = 0;   /* TRUE when a syntax error is detected */
     int option_index;
 
+    cmd_daemon = -1;
+
     memset(ctl, '\0', sizeof(struct query));    /* start clean */
 
     while (!errflag && 
@@ -141,7 +143,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'd':
 	case LA_DAEMON:
-	    poll_interval = atoi(optarg);
+	    cmd_daemon = atoi(optarg);
 	    break;
 	case 'N':
 	case LA_NODETACH:

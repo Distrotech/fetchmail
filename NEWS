@@ -39,25 +39,36 @@ timeouts really broken?  We must find a way to test this.)
 			Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-3.9 ()
+
+features --
+
+* It is now possible to set a default poll interval with `set daemon'.
+
+There are 249 people on the fetchmail-friends list.
+
+------------------------------------------------------------------------------
 fetchmail-3.8 (Fri Mar  7 17:34:02 EST 1997)
 
 features --
 
 * More FAQ material on using `localdomains'.
 
-* compilation hacks for ISC 4.0 (thanks, Larry Jones!).
+* Compilation hacks for ISC 4.0 (thanks, Larry Jones!).
 
 bugs --
 
-* enabled ETRN and RPOP command-line options.
+* Enabled ETRN and RPOP command-line options.
 
-* yet another attempt to fix the error.c compilation problems under
+* Yet another attempt to fix the error.c compilation problems under
   Solaris and NEXTSTEP.
 
-* handle \( and \) correctly in RFC822 comments, thanks to Gareth McCaughan.
+* Handle \( and \) correctly in RFC822 comments, thanks to Gareth McCaughan.
 
 * Fixed off-by-one error fingered by Brian Jones that prevented
   `localdomains' from working.
+
+There are 248 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-3.7 (Fri Feb 21 17:38:40 EST 1997)

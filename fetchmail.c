@@ -59,6 +59,7 @@ int use_syslog;		/* if --syslog was set */
 int quitmode;		/* if --quit was set */
 int check_only;		/* if --probe was set */
 char *cmd_logfile;	/* if --logfile was set */
+int cmd_daemon; 	/* if --daemon was set */
 
 /* miscellaneous global controls */
 char *rcfile;		/* path name of rc file */
@@ -665,6 +666,10 @@ static int load_params(int argc, char **argv, int optind)
     if (cmd_logfile)
 	logfile = cmd_logfile;
 
+    /* likewise for poll_interval */
+    if (cmd_daemon >= 0)
+	poll_interval = cmd_daemon;
+
     return(implicitmode);
 }
 
@@ -767,6 +772,11 @@ void dump_params (struct query *ctl)
 {
     printf("Options for retrieving from %s@%s:\n",
 	   ctl->remotename, visbuf(ctl->server.names->id));
+
+    if (logfile)
+	printf("  Logfile is %s\n", logfile);
+    if (poll_interval)
+	printf("  Poll interval is %d seconds\n", poll_interval);
 #ifdef HAVE_GETHOSTBYNAME
     if (ctl->server.canonical_name)
 	printf("  Canonical DNS name of server is %s.\n", ctl->server.canonical_name);

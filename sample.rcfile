@@ -72,6 +72,7 @@
 # Legal global option statements are
 #
 #   set logfile =		-- must be followed by a string
+#   set daemon =		-- must be followed by a number   
 #
 # The noise keywords `and', `with', `has', `wants', and `options' are ignored
 # anywhere in an entry; they can be used to make it resemble English.  The
@@ -81,6 +82,8 @@
 # fetchmail manual page.
 # 
 # This is what the developer's .fetchmailrc looks like:
+
+set daemon 300	# Poll at 5-minute intervals
 
 defaults
 	interface "sl0/10.0.2.15"	# SLIRP standard address

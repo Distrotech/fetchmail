@@ -729,9 +729,12 @@ or reverse it by saying `user esr here is eric there'
 .PP
 For backward compatibility, the word `server' is a synonym for `poll'.
 .PP
-There is currently just one global option statement; `set logfile = '
+There are currently two global option statements; `set logfile = '
 followed by a string sets the same global specified by --logfile.  A
-command-line --logfile option will override this.
+command-line --logfile option will override this.  Also, `set daemon'
+sets the poll interval as --daemon does.  This can be overridden by
+a command-line --daemon option; iin particular --daemon 0 can be used 
+to force foreground operation.
 .PP
 Basic format is:
 

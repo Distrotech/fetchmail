@@ -24,6 +24,7 @@
 #include <sys/ioctl.h>
 #include <netinet/in.h>
 #include <net/if.h>
+#include "config.h"
 #include "fetchmail.h"
 
 typedef struct {
@@ -121,7 +122,7 @@ void interface_parse(char *buf, struct hostdata *hp)
 		*cp2++ = '\000';
 
 	/* convert IP address and netmask */
-	hp->interface_pair = xmalloc(sizeof(struct interface_pair_s));
+	hp->interface_pair = (struct interface_pair_s *)xmalloc(sizeof(struct interface_pair_s));
 	if (!inet_aton(cp1, &hp->interface_pair->interface_address))
 		(void) error(PS_SYNTAX, 0, "invalid IP interface address");
 	if (!inet_aton(cp2, &hp->interface_pair->interface_mask))

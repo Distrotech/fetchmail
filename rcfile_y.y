@@ -44,7 +44,7 @@ static void user_reset();
 %token AUTHENTICATE TIMEOUT KPOP KERBEROS
 %token ENVELOPE USERNAME PASSWORD FOLDER SMTPHOST MDA PRECONNECT LIMIT
 %token IS HERE THERE TO MAP WILDCARD
-%token SET BATCHLIMIT FETCHLIMIT LOGFILE INTERFACE MONITOR
+%token SET BATCHLIMIT FETCHLIMIT LOGFILE DAEMON INTERFACE MONITOR
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
@@ -62,6 +62,7 @@ statement_list	: statement
 
 /* future global options should also have the form SET <name> <value> */
 statement	: SET LOGFILE MAP STRING	{logfile = xstrdup($4);}
+		| SET DAEMON NUMBER		{poll_interval = $3;}
 
 /* 
  * The way the next two productions are written depends on the fact that

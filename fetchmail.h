@@ -167,6 +167,7 @@ extern int use_syslog;		/* if --syslog was set */
 extern int quitmode;		/* if --quit was set */
 extern int check_only;		/* if --check was set */
 extern char *cmd_logfile;	/* if --logfile was set */
+extern int cmd_daemon;		/* if --daemon was set */
 
 /* these get computed */
 extern int batchcount;		/* count of messages sent in current batch */
