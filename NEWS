@@ -16,9 +16,9 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.4.0 ()
+fetchmail-4.3.7 ()
 * Corrected OTP support from Craig Metz.
-* Fixed a minor bug in the IMSP re-polling logic.
+* Fixed a minor bug in the IMAP re-polling logic.
 * Thomas Pitre's extensive changes to multidrop:
 
   - Seek for the true sender of a mail which is not necessarily in the
@@ -45,6 +45,8 @@ fetchmail-4.4.0 ()
 
   Thomas says these changes have been tested for two weeks in a production
   multidrop environment.
+* Doug Muth's runfetchmail version 1.1.
+* Minor port patches from Philippe De Muyter.
 
 fetchmail-4.3.6 (Fri Jan 23 00:25:57 EST 1998)
 * Improved RPM packaging with correct grouping and an icon.
