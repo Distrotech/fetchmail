@@ -7,7 +7,7 @@
 #ifndef _POPSMTP_
 #define _POPSMTP_
 
-#include <time.h>
+#include "config.h"
 
 #define         SMTPBUFSIZE     256
 

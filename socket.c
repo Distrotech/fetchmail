@@ -200,7 +200,6 @@ static int handle_plugin(const char *host,
 #endif /* HAVE_SOCKETPAIR */
 
 #ifdef __UNUSED__
-#include <sys/time.h>
 
 int SockCheckOpen(int fd)
 /* poll given socket; is it selectable? */
@@ -502,10 +501,11 @@ va_dcl {
 }
 
 #ifdef SSL_ENABLE
-#include "openssl/ssl.h"
-#include "openssl/err.h"
-#include "openssl/pem.h"
-#include "openssl/x509.h"
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+#include <openssl/pem.h>
+#include <openssl/x509.h>
+#include <openssl/rand.h>
 
 static	SSL_CTX *_ctx = NULL;
 static	SSL *_ssl_context[FD_SETSIZE];
@@ -759,7 +759,7 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 	int err, depth;
 	unsigned char digest[EVP_MAX_MD_SIZE];
 	char text[EVP_MAX_MD_SIZE * 3 + 1], *tp, *te;
-	EVP_MD *digest_tp;
+	const EVP_MD *digest_tp;
 	unsigned int dsz, i, esz;
 	X509_NAME *subj, *issuer;
 

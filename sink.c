@@ -15,7 +15,6 @@
 #include  <errno.h>
 #include  <string.h>
 #include  <signal.h>
-#include  <time.h>
 #ifdef HAVE_MEMORY_H
 #include  <memory.h>
 #endif /* HAVE_MEMORY_H */
@@ -31,12 +30,10 @@
 #include  <varargs.h>
 #endif
 #include  <ctype.h>
-#include  <time.h>
 
 /* for W* macros after pclose() */
 #define _USE_BSD
 #include <sys/types.h>
-#include <sys/time.h>
 #include <sys/resource.h>
 #include <sys/wait.h>
 
@@ -224,7 +221,7 @@ int smtp_open(struct query *ctl)
 	else if (ctl->smtphost && ctl->smtphost[0] != '/')
 	  {
 	    char * cp;
-	    if (cp = strchr (ctl->smtphost, '/'))
+	    if ((cp = strchr (ctl->smtphost, '/')))
 	    {
 	      /* As an alternate port for smtphost is specified, we
 		 need to strip it from domain name. */
@@ -702,7 +699,7 @@ int stuffline(struct query *ctl, char *buf)
 
     n = 0;
     if (ctl->mda || ctl->bsmtp)
-	n = fwrite(buf, 1, last - buf, sinkfp);
+	n = fwrite(buf, last - buf, 1, sinkfp);
     else if (ctl->smtp_socket != -1)
 	n = SockWrite(ctl->smtp_socket, buf, last - buf);
 

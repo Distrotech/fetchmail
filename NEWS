@@ -8,6 +8,8 @@
 * Include James Stone's moldremover.py script.
 * Enable .fetchmailrc permissions checking under Cygwin.
 * Nalin Dahyabai's fix for POP3 strong authentication.
+* HOME_ETC patch for PLD Linux.
+* Sunil Shetye's fix for SSL configuration.
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 

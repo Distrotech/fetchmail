@@ -23,12 +23,10 @@
 #include <netdb.h>
 #endif /* HAVE_GETHOSTBYNAME */
 #include  <sys/types.h>
-#include  <time.h>
 #include "fetchmail.h"
 
 #include "i18n.h"
 #if defined(HAVE_SETLOCALE) && defined(ENABLE_NLS) && defined(HAVE_STRFTIME)
-#include <time.h>
 #include <locale.h>
 #endif
 
@@ -107,7 +105,8 @@ void envquery(int argc, char **argv)
     }
 
     /* compute user's home directory */
-    if (!(home = getenv("HOME")))
+    home = getenv("HOME_ETC");
+    if (!home && !(home = getenv("HOME")))
 	home = pwp->pw_dir;
 
     /* compute fetchmail's home directory */

@@ -16,7 +16,6 @@
 #include <net/socket.h>
 #endif
 #include  <sys/types.h>
-#include  <sys/time.h>
 #ifdef HAVE_NET_SELECT_H /* AIX needs this */
 #include <net/select.h>
 #endif

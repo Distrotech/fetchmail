@@ -25,12 +25,14 @@ AC_AIX
 AC_ISC_POSIX
 AC_MINIX
 AC_HEADER_STDC
+AC_HEADER_TIME
 AC_TYPE_SIZE_T
 AC_TYPE_PID_T
 AC_TYPE_SIGNAL
 AC_CHECK_HEADERS(unistd.h termios.h termio.h sgtty.h stdarg.h alloca.h)
 AC_CHECK_HEADERS(sys/itimer.h fcntl.h sys/fcntl.h memory.h sys/wait.h sys/shm.h)
 AC_CHECK_HEADERS(arpa/inet.h arpa/nameser.h resolv.h net/socket.h sys/select.h)
+AC_CHECK_HEADERS(sys/time.h)
 
 AC_C_CONST			dnl getopt needs this.
 
@@ -572,15 +574,18 @@ then
     #	This will screw up if an OpenSSL install is located in a later
     #	directory than an older SSLeay install, but the user should fix that
     #	anyways and he can override on the configure line.
+    #	Just testing for directories is not sufficient, /usr exists on
+    #	all systems!
     for ac_dir in \
       /usr/local/ssl \
+      /usr/local \
       /usr/ssl \
       /usr \
       /local/ssl \
       /opt/ssl \
       ; \
     do
-        if test -d "$ac_dir" ; then
+        if test -r "$ac_dir/include/openssl/ssl.h" ; then
             with_ssl=$ac_dir
             break;
         fi
@@ -600,18 +605,14 @@ then
   if test -r $with_ssl/include/openssl/ssl.h
   then
     ###	ssl.h found under openssl.  Use openssl configuration preferentially,
+    echo "Enabling OpenSSL support in $with_ssl"
+    test "$with_ssl" != "/usr" && CEFLAGS="$CEFLAGS -I$with_ssl/include"
     ### In Red Hat 9, this file includes a reference to <krb5.h>, so we
     ### force the Kerberos direcory onto the include path so it will build.
-    echo "Enabling OpenSSL support in $with_ssl"
-    CEFLAGS="$CEFLAGS -I$with_ssl/include -I/usr/kerberos/include"
+    CEFLAGS="$CEFLAGS -I/usr/kerberos/include"
     ###	OpenBSD comes with ssl headers
-  elif test -r /usr/include/ssl/ssl.h
-  then
-    echo "Enabling SSLeay support in $with_ssl"
-    CEFLAGS="$CEFLAGS -I/usr/include/ssl"
   else
-    echo "Enabling SSLeay support in $with_ssl"
-    test "$with_ssl" != "/usr" && CEFLAGS="$CEFLAGS -I$with_ssl/include"
+    AC_ERROR([SSL support enabled, but OpenSSL not found])
   fi
   LDEFLAGS="$LDEFLAGS -L$with_ssl/lib"
   LIBS="$LIBS -lssl -lcrypto"

@@ -2167,6 +2167,9 @@ home directory (and lose the leading dots on their names).  The
 \&.netrc file is looked for in the the invoking user's home directory
 regardless of FETCHMAILHOME's setting.
 
+If the HOME_ETC variable is set, file $HOME_ETC/.fetchmailrc is used
+instead of ~/.fetchmailrc.
+
 .SH SIGNALS
 If a
 .I fetchmail

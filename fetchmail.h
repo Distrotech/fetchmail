@@ -8,6 +8,18 @@
 /* We need this for size_t */
 #include <sys/types.h>
 
+/* We need this for time_t */
+#if TIME_WITH_SYS_TIME
+# include <sys/time.h>
+# include <time.h>
+#else
+# if HAVE_SYS_TIME_H
+#  include <sys/time.h>
+# else
+#  include <time.h>
+# endif
+#endif
+
 /* constants designating the various supported protocols */
 #define		P_AUTO		1
 #define		P_POP2		2

@@ -25,7 +25,6 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/time.h>	/* needed for Sun 4.1.2 */
 #ifdef HAVE_SETRLIMIT
 #include <sys/resource.h>
 #endif /* HAVE_SETRLIMIT */
@@ -99,7 +98,6 @@ static void dropprivs(void)
 #endif
 
 #if defined(HAVE_SETLOCALE) && defined(ENABLE_NLS) && defined(HAVE_STRFTIME)
-#include <time.h>
 #include <locale.h>
 static char *timestamp (void)
 {
