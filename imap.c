@@ -341,7 +341,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	 || ctl->server.authenticate == A_CRAM_MD5)
 	&& strstr(capabilities, "AUTH=CRAM-MD5"))
     {
-	if ((ok = do_cram_md5 (sock, "AUTHENTICATE", ctl)))
+	if ((ok = do_cram_md5 (sock, "AUTHENTICATE", ctl, NULL)))
 	{
 	    /* SASL cancellation of authentication */
 	    gen_send(sock, "*");

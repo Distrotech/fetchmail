@@ -65,7 +65,7 @@ static int odmr_getrange(int sock, struct query *ctl, const char *id,
     *bytes = *countp = *newp = -1;
 
     /* authenticate via CRAM-MD5 */
-    ok = do_cram_md5(sock, "AUTH", ctl);
+    ok = do_cram_md5(sock, "AUTH", ctl, "334 ");
     if (ok)
 	return(ok);
 
@@ -130,7 +130,14 @@ static int odmr_getrange(int sock, struct query *ctl, const char *id,
      * use select(2) to watch the read sides of both sockets and just
      * throw their data at each other.
      */
-    smtp_sock = SockOpen(ctl->smtphost, SMTP_PORT, NULL, NULL);
+    /*
+     * FIXME: we hardcode "localhost" here because ODMR is fighting
+     * over the ETRN meaning of smtphost and the POP/IMAP meaning.
+     * ODMR needs both meanings, but there is only one config var.  So
+     * for now ODMR always uses the "localhost" SMTP server to connect
+     * with locally.
+     */
+    smtp_sock = SockOpen("localhost", SMTP_PORT, NULL, NULL);
     if (smtp_sock == -1)
 	return(PS_SOCKET);
     else
@@ -180,6 +187,12 @@ static int odmr_getrange(int sock, struct query *ctl, const char *id,
     return(0);
 }
 
+static int odmr_logout(int sock, struct query *ctl)
+/* send logout command */
+{
+    return(gen_transact(sock, "QUIT"));
+}
+
 const static struct method odmr =
 {
     "ODMR",		/* ODMR protocol */
@@ -201,7 +214,7 @@ const static struct method odmr =
     NULL,		/* no way to fetch body */
     NULL,		/* no message trailer */
     NULL,		/* how to delete a message */
-    NULL,		/* log out, we're done */
+    odmr_logout,	/* log out, we're done */
     FALSE,		/* no, we can't re-poll */
 };
 

@@ -60,7 +60,7 @@ static void hmac_md5 (unsigned char *password,  size_t pass_len,
     MD5Final (response, &ctx);
 }
 
-int do_cram_md5 (int sock, char *command, struct query *ctl)
+int do_cram_md5 (int sock, char *command, struct query *ctl, char *strip)
 /* authenticate as per RFC2195 */
 {
     int result;
@@ -69,6 +69,7 @@ int do_cram_md5 (int sock, char *command, struct query *ctl)
     unsigned char msg_id[768];
     unsigned char response[16];
     unsigned char reply[1024];
+    unsigned char *respdata;
 
     gen_send (sock, "%s CRAM-MD5", command);
 
@@ -84,7 +85,12 @@ int do_cram_md5 (int sock, char *command, struct query *ctl)
 	return result;
     }
 
-    len = from64tobits (msg_id, buf1);
+    /* caller may specify a response prefix we should strip if present */
+    respdata = buf1;
+    if (strncmp(buf1, strip, strlen(strip)) == 0)
+	respdata += strlen(strip);
+    len = from64tobits (msg_id, respdata);
+
     if (len < 0) {
 	report (stderr, _("could not decode BASE64 challenge\n"));
 	return PS_AUTHFAIL;

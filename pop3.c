@@ -274,7 +274,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	    (ctl->server.authenticate == A_CRAM_MD5 ||
 	     ctl->server.authenticate == A_ANY))
 	{
-	    ok = do_cram_md5(sock, "AUTH", ctl);
+	    ok = do_cram_md5(sock, "AUTH", ctl, NULL);
 	    if (ok == PS_SUCCESS || ctl->server.authenticate != A_ANY)
 		break;
 	}
