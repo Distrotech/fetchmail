@@ -1221,11 +1221,15 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
     if (num != number)
 	return(PS_ERROR);
 
-    /* try to extract a length */
+    /*
+     * Try to extract a length from the FETCH response.  RFC2060 requires
+     * it to be present, but at least one IMAP server (Novell GroupWise)
+     * botches this.
+     */
     if ((cp = strchr(buf, '{')))
 	*lenp = atoi(cp + 1);
     else
-	*lenp = 0;
+	*lenp = -1;	/* missing length part in FETCH reponse */
 
     return(PS_SUCCESS);
 }

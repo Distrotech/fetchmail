@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/09/23 02:00:29 $
+<td width="30%" align=right>$Date: 1999/09/23 12:42:37 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1448,14 +1448,15 @@ flag to ensure that it's recovered on the next cycle.<p>
 <hr>
 <h2><a name="S10">S10. How can I use fetchmail with Novell GroupWise?</a></h2>
 
-You can't.  The Novell GroupWise IMAP server would be better named
-GroupFoolish; it is (according to the designer of IMAP) unusably
-broken.  The specific problem is that it doesn't include a required
-content length in its BODY[TEXT] response, so fetchmail can't know how
-much content to fetch. <p>
+The Novell GroupWise IMAP server would be better named GroupFoolish;
+it is (according to the designer of IMAP) unusably broken.  Among
+other things, it doesn't include a required content length in its
+BODY[TEXT] response.<p>
 
-If GroupWise is capable of supporting POP3, and that implementation
-isn't also broken, some lucky winner should tell me.<p>
+Fetchmail works around this problem, but we strongly recommend voting
+with your dollars for a server that isn't brain-dead.  If you stick
+with code as shoddy as GroupWise seems to be, you will probably pay
+for it with other problems.<p>
 
 <hr>
 <h2><a name="K1">K1. How can I use fetchmail with SOCKS?</a></h2>
@@ -2492,7 +2493,7 @@ inactivity timeout.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/09/23 02:00:29 $
+<td width="30%" align=right>$Date: 1999/09/23 12:42:37 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

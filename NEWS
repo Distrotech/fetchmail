@@ -11,7 +11,7 @@
 fetchmail-5.1.1 ():
 * Consistently show dummy arguments on manual page.
 * Fix lexer to permit `antispam -1'.
-* Added fetchmailconf and FAQ warnings about Novell GroupWise.
+* Added workaround, fetchmailconf warning, and FAQ about Novell GroupWise.
 * John Cigas's delay patch to avoid a timing problem with plugins.
 
 There are 266 people on fetchmail-friends and 444 on fetchmail-announce.

@@ -1962,6 +1962,15 @@ const int maxfetch;		/* maximum number of messages to fetch */
 				{
 				    if ((ok=(protocol->fetch_body)(mailserver_socket,ctl,num,&len)))
 					goto cleanUp;
+                                    /*
+                                     * Work around a bug in Novell's
+				     * broken GroupWise IMAP server;
+                                     * its body FETCH response is missing
+				     * the required length for the data
+				     * string.  This violates RFC2060.
+                                     */
+                                    if (len == -1)
+                                       len = msgsizes[num-1] - msglen;
 				    if (outlevel > O_SILENT && !wholesize)
 					report_complete(stdout,
 					       _(" (%d body octets) "), len);
