@@ -690,7 +690,8 @@ class ConfigurationEdit(Frame, MyWidget):
         if fm:
             fm.write("# Configuration created %s by fetchmailconf\n" % time.ctime(time.time()))
             fm.write(`self.configuration`)
-            os.chmod(self.outfile, 0600)
+            if fm != sys.stdout:
+                os.chmod(self.outfile, 0600)
             self.quit()
 
 #
@@ -1368,7 +1369,7 @@ def copy_instance(toclass, fromdict):
 # The `optional' fields are the ones we can ignore for purposes of
 # conformability checking; they'll still get copied if they are
 # present in the dictionary.
-    optional = ('interface', 'monitor', 'netsec');
+    optional = ('interface', 'monitor', 'netsec')
     class_sig = setdiff(toclass.__dict__.keys(), optional)
     class_sig.sort()
     dict_keys = setdiff(fromdict.keys(), optional)
@@ -1388,7 +1389,7 @@ def copy_instance(toclass, fromdict):
             print "Not matched in dictionary keys: " + `diff`
 	sys.exit(1)
     else:
-	for x in dict_keys:
+	for x in fromdict.keys():
 	    setattr(toclass, x, fromdict[x])
 
 #
