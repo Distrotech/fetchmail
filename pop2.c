@@ -25,7 +25,7 @@ char *argbuf;
     char buf [POPBUFSIZE+1];
 
     pound_arg = equal_arg = -1;
-    if (SockGets(fileno(sockfp), buf, sizeof(buf)) >= 0) {
+    if (SockGets(buf, sizeof(buf), sockfp) >= 0) {
 	if (outlevel == O_VERBOSE)
 	    fprintf(stderr,"%s\n",buf);
 

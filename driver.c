@@ -506,7 +506,7 @@ struct query *ctl;	/* query control record */
     oldlen = 0;
     while (delimited || len > 0)
     {
-	if ((n = SockGets(fileno(sockfp),buf,sizeof(buf))) < 0)
+	if ((n = SockGets(buf,sizeof(buf),sockfp)) < 0)
 	    return(PS_SOCKET);
 	vtalarm(ctl->timeout);
 
@@ -1073,7 +1073,7 @@ va_dcl {
     vsprintf(buf + strlen(buf), fmt, ap);
     va_end(ap);
 
-    SockPuts(fileno(sockfp), buf);
+    SockPuts(buf, sockfp);
 
     if (outlevel == O_VERBOSE)
     {
@@ -1114,7 +1114,7 @@ va_dcl {
   vsprintf(buf + strlen(buf), fmt, ap);
   va_end(ap);
 
-  SockPuts(fileno(sockfp), buf);
+  SockPuts(buf, sockfp);
   if (outlevel == O_VERBOSE)
   {
       char *cp;

@@ -27,7 +27,7 @@ FILE *sockfp;
 
     seen = 0;
     do {
-	if (SockGets(fileno(sockfp), buf, sizeof(buf)) < 0)
+	if (SockGets(buf, sizeof(buf), sockfp) < 0)
 	    return(PS_SOCKET);
 
 	if (outlevel == O_VERBOSE)
@@ -121,7 +121,7 @@ int	*sizes;
     char buf [POPBUFSIZE+1];
 
     gen_send(sockfp, "FETCH 1:%d RFC822.SIZE", count);
-    while (SockGets(fileno(sockfp), buf, sizeof(buf)) >= 0)
+    while (SockGets(buf, sizeof(buf), sockfp) >= 0)
     {
 	int num, size;
 
@@ -165,7 +165,7 @@ int *lenp;
 
     /* looking for FETCH response */
     do {
-	if (SockGets(fileno(sockfp), buf,sizeof(buf)) < 0)
+	if (SockGets(buf, sizeof(buf), sockfp) < 0)
 	    return(PS_SOCKET);
     } while
 	    (sscanf(buf+2, "%d FETCH (RFC822 {%d}", &num, lenp) != 2);
@@ -184,7 +184,7 @@ int number;
 {
     char buf [POPBUFSIZE+1];
 
-    if (SockGets(fileno(sockfp), buf,sizeof(buf)) < 0)
+    if (SockGets(buf, sizeof(buf), sockfp) < 0)
 	return(PS_SOCKET);
     else
 	return(0);

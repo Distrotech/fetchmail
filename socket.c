@@ -77,15 +77,15 @@ int clientPort;
     return sock;
 }
 
-int SockPuts(socket,buf)
-int socket;
+int SockPuts(buf, sockfp)
 char *buf;
+FILE *sockfp;
 {
     int rc;
     
-    if ((rc = SockWrite(socket, buf, strlen(buf))) != 0)
+    if ((rc = SockWrite(fileno(sockfp), buf, strlen(buf))) != 0)
         return rc;
-    return SockWrite(socket, "\r\n", 2);
+    return SockWrite(fileno(sockfp), "\r\n", 2);
 }
 
 int SockWrite(socket,buf,len)
@@ -172,16 +172,16 @@ int len;
     return 0;
 }
 
-int SockGets(socket,buf,len)
-int socket;
+int SockGets(buf, len, sockfp)
 char *buf;
 int len;
+FILE *sockfp;
 {
     int rdlen = 0;
 
     while (--len)
     {
-        if (SockInternalRead(socket, buf, 1) != 1)
+        if (SockInternalRead(fileno(sockfp), buf, 1) != 1)
             return -1;
         else
 	    rdlen++;
@@ -192,65 +192,6 @@ int len;
     }
     *buf = 0;
     return rdlen;
-}
-
-/* SockDataWaiting: Return a non-zero value if this socket is waiting
-  for data.   */
-int  SockDataWaiting(int socket)
-{
-    int flags;
-    char sbuf[INTERNAL_BUFSIZE];
-    int n;
-    flags = fcntl(socket,F_GETFL,0);
-  
-    /* set it to non-block */
-    if (fcntl(socket,F_SETFL,flags | O_NONBLOCK) == -1)
-	return -1;
-
-    n = recv(socket,sbuf,INTERNAL_BUFSIZE,MSG_PEEK);
-
-    /* reset it to block (or, whatever it was). */
-    fcntl(socket,F_SETFL,flags);
-
-    if (n == -1)
-    { 
-	/* No data to read. */
-	if (errno == EWOULDBLOCK)
-	    return(0);
-	else
-	    return(-1);
-    }
-    else
-	return(n);
-}
-
-
-/* SockClearHeader: call this procedure in order to kill off any
-   forthcoming Header info from the socket that we no longer want.
-   */
-int SockClearHeader(socket)
-int socket;
-{
-   char *bufp;
-   static char sbuf[INTERNAL_BUFSIZE];
-   int res;
-
-   if ((res = SockDataWaiting(socket)) <= 0)
-     return res;
-
-   while (1) 
-     {
-        if (SockGets(socket,sbuf,INTERNAL_BUFSIZE) < 0)
-	  return 0;
-	bufp = sbuf;
-	if (*bufp == '.') {
-	  bufp++;
-	  if (*bufp == 0)
-	    break;
-	}
-     }
-   sbuflen = 0;
-   return 0;
 }
 
 #if defined(HAVE_STDARG_H)
