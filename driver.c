@@ -71,7 +71,7 @@ static int tagnum;
 static char *shroud;	/* string to shroud in debug output, if  non-NULL */
 static int mytimeout;	/* value of nonreponse timeout */
 
-static void vtalarm(int timeleft)
+static void set_timeout(int timeleft)
 /* reset the nonresponse-timeout */
 {
     struct itimerval ntimeout;
@@ -79,11 +79,11 @@ static void vtalarm(int timeleft)
     ntimeout.it_interval.tv_sec = ntimeout.it_interval.tv_usec = 0;
     ntimeout.it_value.tv_sec  = timeleft;
     ntimeout.it_value.tv_usec = 0;
-    setitimer(ITIMER_VIRTUAL, &ntimeout, (struct itimerval *)NULL);
+    setitimer(ITIMER_REAL, &ntimeout, (struct itimerval *)NULL);
 }
 
-static void vtalarm_handler (int signal)
-/* handle server-timeout SIGVTALARM signal */
+static void timeout_handler (int signal)
+/* handle server-timeout SIGALRM signal */
 {
     longjmp(restart, 1);
 }
@@ -467,7 +467,7 @@ char *realname;		/* real name of host */
 	do {
 	    if (!SockGets(buf, sizeof(buf)-1, sockfp))
 		return(PS_SOCKET);
-	    vtalarm(ctl->server.timeout);
+	    set_timeout(ctl->server.timeout);
 	    /* leave extra room for reply_hack to play with */
 	    line = realloc(line, strlen(line) + strlen(buf) + HOSTLEN + 1);
 	    strcat(line, buf);
@@ -990,7 +990,7 @@ char *realname;		/* real name of host */
     {
 	if (!SockGets(buf, sizeof(buf)-1, sockfp))
 	    return(PS_SOCKET);
-	vtalarm(ctl->server.timeout);
+	set_timeout(ctl->server.timeout);
 
 	/* write the message size dots */
 	if ((n = strlen(buf)) > 0)
@@ -1170,8 +1170,8 @@ const struct method *proto;	/* protocol method table */
     error_init(poll_interval == 0 && !logfile);
 
     /* set up the server-nonresponse timeout */
-    sigsave = signal(SIGVTALRM, vtalarm_handler);
-    vtalarm(mytimeout = ctl->server.timeout);
+    sigsave = signal(SIGALRM, timeout_handler);
+    set_timeout(mytimeout = ctl->server.timeout);
 
     if ((js = setjmp(restart)) == 1)
     {
@@ -1213,7 +1213,7 @@ const struct method *proto;	/* protocol method table */
 	    ok = kerberos_auth(fileno(sockfp), ctl->server.canonical_name);
  	    if (ok != 0)
 		goto cleanUp;
-	    vtalarm(ctl->server.timeout);
+	    set_timeout(ctl->server.timeout);
 	}
 #endif /* KERBEROS_V4 */
 
@@ -1221,7 +1221,7 @@ const struct method *proto;	/* protocol method table */
 	ok = (protocol->parse_response)(sockfp, buf);
 	if (ok != 0)
 	    goto cleanUp;
-	vtalarm(ctl->server.timeout);
+	set_timeout(ctl->server.timeout);
 
 	/*
 	 * Try to parse the host's actual name out of the greeting
@@ -1313,14 +1313,14 @@ const struct method *proto;	/* protocol method table */
 		      realname);
 		goto cleanUp;
 	    }
-	    vtalarm(ctl->server.timeout);
+	    set_timeout(ctl->server.timeout);
 	}
 
 	/* compute number of messages and number of new messages waiting */
 	ok = (protocol->getrange)(sockfp, ctl, &count, &new);
 	if (ok != 0)
 	    goto cleanUp;
-	vtalarm(ctl->server.timeout);
+	set_timeout(ctl->server.timeout);
 
 	/* show user how many messages we downloaded */
 	if (outlevel > O_SILENT)
@@ -1355,7 +1355,7 @@ const struct method *proto;	/* protocol method table */
 	    ok = (proto->getsizes)(sockfp, count, msgsizes);
 	    if (ok != 0)
 		goto cleanUp;
-	    vtalarm(ctl->server.timeout);
+	    set_timeout(ctl->server.timeout);
 	}
 
 	if (check_only)
@@ -1419,7 +1419,7 @@ const struct method *proto;	/* protocol method table */
 		    ok = (protocol->fetch)(sockfp, ctl, num, &len);
 		    if (ok != 0)
 			goto cleanUp;
-		    vtalarm(ctl->server.timeout);
+		    set_timeout(ctl->server.timeout);
 
 		    if (outlevel > O_SILENT)
 		    {
@@ -1442,7 +1442,7 @@ const struct method *proto;	/* protocol method table */
 			suppress_delete = TRUE;
 		    else if (ok)
 			goto cleanUp;
-		    vtalarm(ctl->server.timeout);
+		    set_timeout(ctl->server.timeout);
 
 		    /* tell the server we got it OK and resynchronize */
 		    if (protocol->trail)
@@ -1450,7 +1450,7 @@ const struct method *proto;	/* protocol method table */
 			ok = (protocol->trail)(sockfp, ctl, num);
 			if (ok != 0)
 			    goto cleanUp;
-			vtalarm(ctl->server.timeout);
+			set_timeout(ctl->server.timeout);
 		    }
 
 		    fetches++;
@@ -1476,7 +1476,7 @@ const struct method *proto;	/* protocol method table */
 		    ok = (protocol->delete)(sockfp, ctl, num);
 		    if (ok != 0)
 			goto cleanUp;
-		    vtalarm(ctl->server.timeout);
+		    set_timeout(ctl->server.timeout);
 		    delete_str(&ctl->newsaved, num);
 		}
 		else if (outlevel > O_SILENT) 
@@ -1490,7 +1490,7 @@ const struct method *proto;	/* protocol method table */
 	    ok = gen_transact(sockfp, protocol->exit_cmd);
 	    if (ok == 0)
 		ok = PS_SUCCESS;
-	    vtalarm(0);
+	    set_timeout(0);
 	    fclose(sockfp);
 	    goto closeUp;
 	}
@@ -1498,16 +1498,16 @@ const struct method *proto;	/* protocol method table */
 	    ok = gen_transact(sockfp, protocol->exit_cmd);
 	    if (ok == 0)
 		ok = PS_NOMAIL;
-	    vtalarm(0);
+	    set_timeout(0);
 	    fclose(sockfp);
 	    goto closeUp;
 	}
 
     cleanUp:
-	vtalarm(ctl->server.timeout);
+	set_timeout(ctl->server.timeout);
 	if (ok != 0 && ok != PS_SOCKET)
 	    gen_transact(sockfp, protocol->exit_cmd);
-	vtalarm(0);
+	set_timeout(0);
 	fclose(sockfp);
     }
 
@@ -1543,7 +1543,7 @@ const struct method *proto;	/* protocol method table */
 	error(0, 0, "%s error while fetching from %s", msg, ctl->server.names->id);
 
 closeUp:
-    signal(SIGVTALRM, sigsave);
+    signal(SIGALRM, sigsave);
     return(ok);
 }
 
@@ -1667,7 +1667,7 @@ va_dcl
 
     /* we presume this does its own response echoing */
     ok = (protocol->parse_response)(sockfp, buf);
-    vtalarm(mytimeout);
+    set_timeout(mytimeout);
 
     return(ok);
 }
