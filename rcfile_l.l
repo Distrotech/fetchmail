@@ -23,42 +23,42 @@ int prc_lineno = 1;
 
 %%
 
-defaults 	{ return KW_DEFAULTS; }
-server 		{ return KW_SERVER; }
-proto(col)? 	{ return KW_PROTOCOL; }
-is		{ return KW_LOCALNAME; }
-user(name)?	{ return KW_USERNAME; }
-pass(word)?	{ return KW_PASSWORD; }
-remote(folder)? { return KW_FOLDER; }
-smtp(host)?	{ return KW_SMTPHOST; }
-mda		{ return KW_MDA; }
-keep		{ yylval.flag = FLAG_TRUE; return KW_KEEP; }
-flush		{ yylval.flag = FLAG_TRUE; return KW_FLUSH; }
-fetchall	{ yylval.flag = FLAG_TRUE; return KW_FETCHALL; }
-rewrite		{ yylval.flag = FLAG_FALSE; return KW_REWRITE; }
-skip		{ yylval.flag = FLAG_TRUE; return KW_SKIP; }
-nokeep		{ yylval.flag = FLAG_FALSE; return KW_KEEP; }
-noflush		{ yylval.flag = FLAG_FALSE; return KW_FLUSH; }
-nofetchall	{ yylval.flag = FLAG_FALSE; return KW_FETCHALL; }
-norewrite	{ yylval.flag = FLAG_TRUE; return KW_REWRITE; }
-noskip		{ yylval.flag = FLAG_FALSE; return KW_SKIP; }
-port		{ return KW_PORT; }
+defaults 	{ return DEFAULTS; }
+server 		{ return SERVER; }
+proto(col)? 	{ return PROTOCOL; }
+is		{ return LOCALNAME; }
+user(name)?	{ return USERNAME; }
+pass(word)?	{ return PASSWORD; }
+remote(folder)? { return FOLDER; }
+smtp(host)?	{ return SMTPHOST; }
+mda		{ return MDA; }
+keep		{ yylval.flag = FLAG_TRUE;  return KEEP; }
+flush		{ yylval.flag = FLAG_TRUE;  return FLUSH; }
+fetchall	{ yylval.flag = FLAG_TRUE;  return FETCHALL; }
+rewrite		{ yylval.flag = FLAG_FALSE; return REWRITE; }
+skip		{ yylval.flag = FLAG_TRUE;  return SKIP; }
+nokeep		{ yylval.flag = FLAG_FALSE; return KEEP; }
+noflush		{ yylval.flag = FLAG_FALSE; return FLUSH; }
+nofetchall	{ yylval.flag = FLAG_FALSE; return FETCHALL; }
+norewrite	{ yylval.flag = FLAG_TRUE;  return REWRITE; }
+noskip		{ yylval.flag = FLAG_FALSE; return SKIP; }
+port		{ return PORT; }
 
-(auto)|(AUTO)	{ yylval.proto = P_AUTO;  return KW_PROTO; }
-(pop2)|(POP2)	{ yylval.proto = P_POP2;  return KW_PROTO; }
-(pop3)|(POP3)	{ yylval.proto = P_POP3;  return KW_PROTO; }
-(imap)|(IMAP)	{ yylval.proto = P_IMAP;  return KW_PROTO; }
-(apop)|(APOP)   { yylval.proto = P_APOP;  return KW_PROTO; }
-(rpop)|(RPOP)   { yylval.proto = P_RPOP;  return KW_PROTO; }
+(auto)|(AUTO)	{ yylval.proto = P_AUTO;  return PROTO; }
+(pop2)|(POP2)	{ yylval.proto = P_POP2;  return PROTO; }
+(pop3)|(POP3)	{ yylval.proto = P_POP3;  return PROTO; }
+(imap)|(IMAP)	{ yylval.proto = P_IMAP;  return PROTO; }
+(apop)|(APOP)   { yylval.proto = P_APOP;  return PROTO; }
+(rpop)|(RPOP)   { yylval.proto = P_RPOP;  return PROTO; }
 
 (#.*)?\\?\n	{ prc_lineno++;	}   /* newline is ignored */
 
 \"[^\"]*\"	{
 			yytext[strlen(yytext)-1] = '\0';
 			yylval.sval = (char *) strdup(yytext+1);
-			return PARAM_STRING;
+			return STRING;
 		}
-[^ \t\r\n]+	{ yylval.sval = (char *) strdup(yytext); return PARAM_STRING; }
+[^ \t\r\n]+	{ yylval.sval = (char *) strdup(yytext); return STRING; }
 
 [ \t\r]+	;	/* whitespace */
 
