@@ -63,7 +63,7 @@ extern char *strstr();	/* needed on sysV68 R3V7.1. */
 
 int fetchlimit;		/* how often to tear down the server connection */
 int batchcount;		/* count of messages sent in current batch */
-int peek_capable;	/* can we peek for better error recovery? */
+bool peek_capable;	/* can we peek for better error recovery? */
 
 static const struct method *protocol;
 static jmp_buf	restart;
@@ -445,9 +445,9 @@ char *realname;		/* real name of host */
     int n, linelen, oldlen, ch, remaining;
     char		*cp;
     struct idlist 	*idp, *xmit_names;
-    int			good_addresses, bad_addresses, has_nuls;
+    bool			good_addresses, bad_addresses, has_nuls;
 #ifdef HAVE_RES_SEARCH
-    int			no_local_matches = FALSE;
+    bool		no_local_matches = FALSE;
 #endif /* HAVE_RES_SEARCH */
     int			olderrs;
 
@@ -1028,8 +1028,8 @@ static int readbody(sock, ctl, forward, len, delimited)
 struct query *ctl;	/* query control record */
 int sock;		/* to which the server is connected */
 int len;		/* length of message */
-int forward;		/* TRUE to forward */
-int delimited;		/* does the protocol use a message delimiter? */
+bool forward;		/* TRUE to forward */
+bool delimited;		/* does the protocol use a message delimiter? */
 {
     int	linelen;
     char buf[MSGBUFSIZE+1], *cp;
@@ -1167,7 +1167,7 @@ const struct method *proto;	/* protocol method table */
     void (*sigsave)();
 
 #ifndef KERBEROS_V4
-    if (ctl->server.authenticate == A_KERBEROS_V4)
+    if (ctl->server.preauthenticate == A_KERBEROS_V4)
     {
 	error(0, -1, "Kerberos V4 support not linked.");
 	return(PS_ERROR);
@@ -1246,7 +1246,7 @@ const struct method *proto;	/* protocol method table */
 	}
 
 #ifdef KERBEROS_V4
-	if (ctl->server.authenticate == A_KERBEROS_V4)
+	if (ctl->server.preauthenticate == A_KERBEROS_V4)
 	{
 	    ok = kerberos_auth(sock, ctl->server.canonical_name);
  	    if (ok != 0)
@@ -1420,7 +1420,7 @@ const struct method *proto;	/* protocol method table */
 	    }
 	    else if (count > 0)
 	    {    
-		int	force_retrieval;
+		bool	force_retrieval;
 
 		/*
 		 * What forces this code is that in POP3 and IMAP2BIS you can't
@@ -1449,11 +1449,11 @@ const struct method *proto;	/* protocol method table */
 		/* read, forward, and delete messages */
 		for (num = 1; num <= count; num++)
 		{
-		    int	toolarge = msgsizes && (msgsizes[num-1] > ctl->limit);
-		    int	fetch_it = ctl->fetchall ||
+		    bool toolarge = msgsizes && (msgsizes[num-1] > ctl->limit);
+		    bool fetch_it = ctl->fetchall ||
 			(!toolarge && (force_retrieval || !(protocol->is_old && (protocol->is_old)(sock,ctl,num))));
-		    int	suppress_delete = FALSE;
-		    int	suppress_forward = FALSE;
+		    bool suppress_delete = FALSE;
+		    bool suppress_forward = FALSE;
 
 		    /* we may want to reject this message if it's old */
 		    if (!fetch_it)
@@ -1475,7 +1475,8 @@ const struct method *proto;	/* protocol method table */
 
 			if (outlevel > O_SILENT)
 			{
-			    int havesizes, mlen;
+			    bool havesizes;
+			    int mlen;
 
 			    error_build("reading message %d", num);
 

@@ -186,7 +186,7 @@ struct query *ctl;	/* option record to be initialized */
 	    {
 		ctl->server.protocol = P_POP3;
 		ctl->server.port = KPOP_PORT;
-		ctl->server.authenticate =  A_KERBEROS_V4;
+		ctl->server.preauthenticate =  A_KERBEROS_V4;
 	    }
 	    else if (strcasecmp(optarg,"imap") == 0)
 		ctl->server.protocol = P_IMAP;
@@ -212,13 +212,13 @@ struct query *ctl;	/* option record to be initialized */
 	case 'A':
 	case LA_AUTHENTICATE:
 	    if (strcmp(optarg, "password") == 0)
-		ctl->server.authenticate = A_PASSWORD;
+		ctl->server.preauthenticate = A_PASSWORD;
 	    else if (strcmp(optarg, "kerberos") == 0)
-		ctl->server.authenticate = A_KERBEROS_V4;
+		ctl->server.preauthenticate = A_KERBEROS_V4;
 	    else if (strcmp(optarg, "kerberos_v4") == 0)
-		ctl->server.authenticate = A_KERBEROS_V4;
+		ctl->server.preauthenticate = A_KERBEROS_V4;
 	    else {
-		fprintf(stderr,"Invalid authentication `%s' specified.\n", optarg);
+		fprintf(stderr,"Invalid preauthentication `%s' specified.\n", optarg);
 		errflag++;
 	    }
 	    break;

@@ -14,7 +14,7 @@
 
 #define		KPOP_PORT	1109
 
-/* authentication types */
+/* preauthentication types */
 #define		A_PASSWORD	0	/* password or inline authentication */
 #define		A_KERBEROS_V4	1	/* preauthenticate w/ Kerberos V4 */
 
@@ -64,21 +64,22 @@ struct idlist
     struct idlist *next;
 };
 
+typedef	int	bool;
 
 struct hostdata		/* shared among all user connections to given server */
 {
     /* rc file data */
     struct idlist *names;		/* server name first, then akas */
     struct idlist *localdomains;	/* list of pass-through domains */
-    int protocol;
-    int port;
-    int interval;
-    int authenticate;
-    int timeout;
-    char *envelope;
-    int skip;
-    int dns;
-    int uidl;
+    int protocol;			/* protocol type */
+    int port;				/* TCP/IP service port number */
+    int interval;			/* # cycles to skip between polls */
+    int preauthenticate;		/* preauthentication mode to try */
+    int timeout;			/* inactivity timout in seconds */
+    char *envelope;			/* envelope address list header */
+    bool skip;				/* skip this server? */
+    bool dns;				/* do DNS lookup on multidrop? */
+    bool uidl;				/* use RFC1725 UIDLs? */
 
 #ifdef linux
     char *interface;
@@ -113,21 +114,21 @@ struct query
     char *preconnect;
 
     /* per-user control flags */
-    int keep;
-    int fetchall;
-    int flush;
-    int rewrite;
-    int stripcr;
-    int forcecr;
-    int limit;
-    int fetchlimit;
-    int batchlimit;
+    bool keep;
+    bool fetchall;
+    bool flush;
+    bool rewrite;
+    bool stripcr;
+    bool forcecr;
+    bool limit;
+    bool fetchlimit;
+    bool batchlimit;
 
     /* unseen, previous state of mailbox (initially from .fetchids) */
     struct idlist *oldsaved, *newsaved;
 
     /* internal use */
-    int active;
+    bool active;
     int errcount;		/* count transient errors in last pass */
     struct query *next;		/* next query control block in chain */
     int smtp_socket;		/* socket descriptor for SMTP connection */
@@ -142,8 +143,8 @@ struct method
 {
     char *name;			/* protocol name */
     int	port;			/* service port */
-    int tagged;			/* if true, generate & expect command tags */
-    int delimited;		/* if true, accept "." message delimiter */
+    bool tagged;		/* if true, generate & expect command tags */
+    bool delimited;		/* if true, accept "." message delimiter */
     int (*parse_response)();	/* response_parsing function */
     int (*getauth)();		/* authorization fetcher */
     int (*getrange)();		/* get message range to fetch */
@@ -168,23 +169,23 @@ extern int yydebug;		/* enable parse debugging */
 
 /* daemon mode control */
 extern int poll_interval;	/* poll interval in seconds */
-extern int nodetach;		/* if TRUE, don't detach daemon process */
+extern bool nodetach;		/* if TRUE, don't detach daemon process */
 extern char *logfile;		/* log file for daemon mode */
-extern int use_syslog;		/* if --syslog was set */
-extern int quitmode;		/* if --quit was set */
-extern int check_only;		/* if --check was set */
+extern bool use_syslog;		/* if --syslog was set */
+extern bool quitmode;		/* if --quit was set */
+extern bool check_only;		/* if --check was set */
 extern char *cmd_logfile;	/* if --logfile was set */
 extern int cmd_daemon;		/* if --daemon was set */
 
 /* these get computed */
 extern int batchcount;		/* count of messages sent in current batch */
-extern int peek_capable;	/* can we read msgs without setting seen? */
+extern bool peek_capable;	/* can we read msgs without setting seen? */
 
 /* miscellaneous global controls */
 extern char *rcfile;		/* path name of rc file */
 extern char *idfile;		/* path name of UID file */
 extern int linelimit;		/* limit # lines retrieved per site */
-extern int versioninfo;		/* emit only version info */
+extern bool versioninfo;	/* emit only version info */
 extern char *user;		/* name of invoking user */
 extern char *fetchmailhost;	/* the name of the host running fetchmail */
 

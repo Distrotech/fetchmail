@@ -57,18 +57,18 @@ int yydebug;		/* enable parse debugging */
 
 /* daemon mode control */
 int poll_interval;	/* poll interval in seconds */
-int nodetach;		/* if TRUE, don't detach daemon process */
+bool nodetach;		/* if TRUE, don't detach daemon process */
 char *logfile;		/* log file for daemon mode */
-int use_syslog;		/* if --syslog was set */
-int quitmode;		/* if --quit was set */
-int check_only;		/* if --probe was set */
+bool use_syslog;	/* if --syslog was set */
+bool quitmode;		/* if --quit was set */
+bool check_only;	/* if --probe was set */
 char *cmd_logfile;	/* if --logfile was set */
 int cmd_daemon; 	/* if --daemon was set */
 
 /* miscellaneous global controls */
 char *rcfile;		/* path name of rc file */
 char *idfile;		/* UID list file */
-int versioninfo;	/* emit only version info */
+bool versioninfo;	/* emit only version info */
 char *user;		/* the name of the invoking user */
 char *fetchmailhost;	/* the name of the host running fetchmail */
 char *program_name;	/* the name to prefix error messages with */
@@ -305,7 +305,7 @@ int main (int argc, char **argv)
     for (ctl = querylist; ctl; ctl = ctl->next)
 	if (ctl->active && !(implicitmode && ctl->server.skip)&&!ctl->password)
 	{
-	    if (ctl->server.authenticate == A_KERBEROS_V4 || ctl->server.protocol == P_IMAP_K4)
+	    if (ctl->server.preauthenticate == A_KERBEROS_V4 || ctl->server.protocol == P_IMAP_K4)
 		/* Server won't care what the password is, but there
 		   must be some non-null string here.  */
 		ctl->password = ctl->remotename;
@@ -405,7 +405,7 @@ int main (int argc, char **argv)
 		 * as a probe to make sure our nameserver is still up.
 		 * The multidrop case (especially) needs it.
 		 */
-		if (ctl->server.authenticate==A_KERBEROS_V4 || MULTIDROP(ctl))
+		if (ctl->server.preauthenticate==A_KERBEROS_V4 || MULTIDROP(ctl))
 		{
 		    struct hostent	*namerec;
 
@@ -859,7 +859,7 @@ void dump_params (struct query *ctl)
 	    printf("  Password = '%s'.\n", visbuf(ctl->password));
     if (ctl->server.protocol == P_POP3 
 		&& ctl->server.port == KPOP_PORT
-		&& ctl->server.authenticate == A_KERBEROS_V4)
+		&& ctl->server.preauthenticate == A_KERBEROS_V4)
 	printf("  Protocol is KPOP");
     else
 	printf("  Protocol is %s", showproto(ctl->server.protocol));
@@ -871,7 +871,7 @@ void dump_params (struct query *ctl)
 	printf(" (forcing UIDL use)");
     putchar('.');
     putchar('\n');
-    if (ctl->server.authenticate == A_KERBEROS_V4)
+    if (ctl->server.preauthenticate == A_KERBEROS_V4)
 	    printf("  Kerberos V4 preauthentication enabled.\n");
     printf("  Server nonresponse timeout is %d seconds", ctl->server.timeout);
     if (ctl->server.timeout ==  CLIENT_TIMEOUT)

@@ -120,15 +120,15 @@ serv_option	: AKA alias_list
 		| PROTOCOL PROTO	{current.server.protocol = $2;}
 		| PROTOCOL KPOP		{
 					    current.server.protocol = P_POP3;
-		    			    current.server.authenticate = A_KERBEROS_V4;
+		    			    current.server.preauthenticate = A_KERBEROS_V4;
 					    current.server.port = KPOP_PORT;
 					}
 		| UIDL			{current.server.uidl = FLAG_TRUE;}
 		| NO UIDL		{current.server.uidl  = FLAG_FALSE;}
 		| PORT NUMBER		{current.server.port = $2;}
 		| INTERVAL NUMBER		{current.server.interval = $2;}
-		| AUTHENTICATE PASSWORD	{current.server.authenticate = A_PASSWORD;}
-		| AUTHENTICATE KERBEROS4	{current.server.authenticate = A_KERBEROS_V4;}
+		| AUTHENTICATE PASSWORD	{current.server.preauthenticate = A_PASSWORD;}
+		| AUTHENTICATE KERBEROS4	{current.server.preauthenticate = A_KERBEROS_V4;}
 		| TIMEOUT NUMBER	{current.server.timeout = $2;}
 		| ENVELOPE STRING	{current.server.envelope = xstrdup($2);}
 		| INTERFACE STRING	{
@@ -384,7 +384,7 @@ static void record_current(void)
     FLAG_FORCE(server.protocol);
     FLAG_FORCE(server.port);
     FLAG_FORCE(server.interval);
-    FLAG_FORCE(server.authenticate);
+    FLAG_FORCE(server.preauthenticate);
     FLAG_FORCE(server.timeout);
     FLAG_FORCE(server.envelope);
     FLAG_FORCE(server.skip);
@@ -432,7 +432,7 @@ void optmerge(struct query *h2, struct query *h1)
     FLAG_MERGE(server.protocol);
     FLAG_MERGE(server.port);
     FLAG_MERGE(server.interval);
-    FLAG_MERGE(server.authenticate);
+    FLAG_MERGE(server.preauthenticate);
     FLAG_MERGE(server.timeout);
     FLAG_MERGE(server.envelope);
     FLAG_MERGE(server.skip);
