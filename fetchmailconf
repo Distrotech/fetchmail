@@ -563,8 +563,9 @@ This will take you to a site configuration dialogue.
 
 
 class ConfigurationEdit(Frame, MyWidget):
-    def __init__(self, configuration, master=None):
+    def __init__(self, configuration, outfile, master=None):
 	self.configuration = configuration
+        self.outfile = outfile
         self.container = master
         ConfigurationEdit.mode_to_help = {
             'novice':configure_novice_help, 'expert':configure_expert_help
@@ -632,14 +633,17 @@ class ConfigurationEdit(Frame, MyWidget):
 
     def save(self):
         self.fetch(Configuration, 'configuration')
-        fetchmailrc = os.environ["HOME"] + "/.fetchmailrc"
-        if not os.path.isfile(fetchmailrc) or Dialog(self, 
+        fm = None
+        if not self.outfile:
+            fm = sys.stdout
+        elif not os.path.isfile(self.outfile) or Dialog(self, 
 		 title = 'Overwrite existing run control file?',
 		 text = 'Really overwrite existing run control file?',
 		 bitmap = 'question',
 		 strings = ('Yes', 'No'),
 		 default = 1).num == 0:
-            fm = open(fetchmailrc, 'w')
+            fm = open(self.outfile, 'w')
+        if fm:
             fm.write("# Configuration created %s by fetchmailconf\n" % time.ctime(time.time()))
             fm.write(`self.configuration`)
             self.quit()
@@ -1109,8 +1113,9 @@ class UserEdit(Frame, MyWidget):
 #
 
 class MainWindow(Frame):
-    def __init__(self, master=None):
+    def __init__(self, outfile, master=None):
 	Frame.__init__(self, master)
+        self.outfile = outfile
 	self.master.title('fetchmail configurator main');
 	self.master.iconname('fetchmail configurator main');
 	Pack.config(self)
@@ -1140,11 +1145,11 @@ Or you can just select `Quit' to leave the configurator now.
 
     def novice(self):
 	self.destroy()
-	ConfigurationEdit(Fetchmailrc).edit('novice')
+	ConfigurationEdit(Fetchmailrc, self.outfile).edit('novice')
 
     def expert(self):
 	self.destroy()
-	ConfigurationEdit(Fetchmailrc).edit('expert')
+	ConfigurationEdit(Fetchmailrc, self.outfile).edit('expert')
 
     def leave(self):
         self.quit()
@@ -1275,10 +1280,14 @@ if __name__ == '__main__':
     # We may want to display the configuration and quit
     if dump:
         print "This is a dump of the configuration we read:\n"+`Fetchmailrc`
-        sys.exit(0)
+
+    # The theory here is that -f alone sets the rcfile location,
+    # but -d and -f together mean the new configuration should go to stdout.
+    if not rcfile and not dump:
+        rcfile = os.environ["HOME"] + "/.fetchmailrc"
 
     # OK, now run the configuration edit
-    MainWindow().mainloop()
+    MainWindow(rcfile).mainloop()
 
 # The following sets edit modes for GNU EMACS
 # Local Variables:
