@@ -1363,9 +1363,9 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 			{
 			    printf("  Server aliases will be compared with multidrop addresses by ");
 	       		    if (ctl->server.checkalias)
-				printf("IP address.");
+				printf("IP address.\n");
 			    else
-				printf("name.");
+				printf("name.\n");
 			}
 			if (ctl->server.envelope == STRING_DISABLED)
 			    printf("  Envelope-address routing is disabled\n");
