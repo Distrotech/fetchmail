@@ -535,6 +535,7 @@ const static struct method pop3 =
     FALSE,		/* this is not a tagged protocol */
     TRUE,		/* this uses a message delimiter */
     pop3_ok,		/* parse command response */
+    NULL,		/* no password canonicalization */
     pop3_getauth,	/* get authorization */
     pop3_getrange,	/* query range of messages */
     pop3_getsizes,	/* we can get a list of sizes */

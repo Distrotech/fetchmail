@@ -131,6 +131,7 @@ const static struct method pop2 =
     FALSE,				/* this is not a tagged protocol */
     FALSE,				/* does not use message delimiter */
     pop2_ok,				/* parse command response */
+    NULL,				/* no password canonicalization */
     pop2_getauth,			/* get authorization */
     pop2_getrange,			/* query range of messages */
     NULL,				/* no way to get sizes */

@@ -568,18 +568,13 @@ static int do_gssauth(int sock, char *hostname, char *username)
 }	
 #endif /* GSSAPI */
 
-static char *canonicalize_imap_password(char *passwd)
+int imap_canonicalize(char *result, char *passwd)
 /* encode an IMAP password as per RFC1730's quoting conventions */
 {
-    char *result;
     int i, j;
 
-    result = malloc(2*strlen(passwd));
-    if (!result)
-	return 0;
-
-    j=0;
-    for (i=0; i<strlen(passwd); ++i)
+    j = 0;
+    for (i = 0; i < strlen(passwd); i++)
     {
 	if ((passwd[i] == '\\') || (passwd[i] == '"'))
 	    result[j++] = '\\';
@@ -587,13 +582,14 @@ static char *canonicalize_imap_password(char *passwd)
     }
     result[j] = '\0';
 
-    return(result);
+    return(i);
 }
 
 int imap_getauth(int sock, struct query *ctl, char *greeting)
 /* apply for connection authorization */
 {
     int ok = 0;
+    char	password[PASSWORDLEN*2];
 
     /* probe to see if we're running IMAP4 and can use RFC822.PEEK */
     capabilities[0] = '\0';
@@ -684,20 +680,10 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     };
 #endif /* __UNUSED__ */
 
-    /* try to get authorized in the ordinary (AUTH=LOGIN) way */
-    {
-       char *newpass = canonicalize_imap_password(ctl->password);
-       
-       if (!newpass)
-          return(PS_AUTHFAIL); /* should report error better!!!! */
-       
-       ok = gen_transact(sock, "LOGIN \"%s\" \"%s\"", ctl->remotename,newpass);
-       
-       free(newpass);
-    
-       if (ok)
-          return(ok);
-    }
+    imap_canonicalize(password, ctl->password);
+    ok = gen_transact(sock, "LOGIN \"%s\" \"%s\"", ctl->remotename, password);
+    if (ok)
+	return(ok);
     
     return(PS_SUCCESS);
 }
@@ -996,6 +982,7 @@ const static struct method imap =
     TRUE,		/* this is a tagged protocol */
     FALSE,		/* no message delimiter */
     imap_ok,		/* parse command response */
+    imap_canonicalize,	/* deal with embedded slashes and spaces */
     imap_getauth,	/* get authorization */
     imap_getrange,	/* query range of messages */
     imap_getsizes,	/* get sizes of messages (used for --limit option */

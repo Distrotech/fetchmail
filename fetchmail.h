@@ -208,6 +208,7 @@ struct method
     flag tagged;		/* if true, generate & expect command tags */
     flag delimited;		/* if true, accept "." message delimiter */
     int (*parse_response)();	/* response_parsing function */
+    int (*password_canonify)();	/* canonicalize password */
     int (*getauth)();		/* authorization fetcher */
     int (*getrange)();		/* get message range to fetch */
     int (*getsizes)();		/* get sizes of messages */

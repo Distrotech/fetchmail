@@ -105,9 +105,9 @@ char tag[TAGLEN];
 static int tagnum;
 #define GENSYM	(sprintf(tag, "A%04d", ++tagnum % TAGMOD), tag)
 
-static char *shroud;	/* string to shroud in debug output, if  non-NULL */
-static int mytimeout;	/* value of nonreponse timeout */
-static int msglen;	/* actual message length */
+static char shroud[PASSWORDLEN];	/* string to shroud in debug output */
+static int mytimeout;			/* value of nonreponse timeout */
+static int msglen;			/* actual message length */
 
 /* use these to track what was happening when the nonresponse timer fired */
 #define GENERAL_WAIT	0	/* unknown wait type */
@@ -1891,9 +1891,12 @@ const struct method *proto;	/* protocol method table */
 	/* try to get authorized to fetch mail */
 	if (protocol->getauth)
 	{
-	    shroud = ctl->password;
+	    if (protocol->password_canonify)
+		(protocol->password_canonify)(shroud, ctl->password);
+	    else
+		strcpy(shroud, ctl->password);
+
 	    ok = (protocol->getauth)(sock, ctl, buf);
-	    shroud = (char *)NULL;
 	    if (ok != 0)
 	    {
 		if (ok == PS_LOCKBUSY)

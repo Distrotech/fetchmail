@@ -12,8 +12,15 @@
   "X-Fetchmail-ID" header in fetched messages for debugging.
 * Total byte count in status message?
 * -U/--userdefault option to specify postmaster overriding USER.
+* imap_canonicalize screws up password shrouding.
 
 				Release Notes:
+
+------------------------------------------------------------------------------
+fetchmail-4.4.1 ():
+* We now properly shroud IMAP passwords containing ", \, and SP.
+
+There are 273 people on fetchmail-friends and 160 on fetchmail-announce.
 
 ------------------------------------------------------------------------------
 fetchmail-4.4.0 (Mon Mar 16 14:57:38 EST 1998):
