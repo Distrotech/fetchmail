@@ -84,6 +84,7 @@ static int tagnum;
 
 static char *shroud;	/* string to shroud in debug output, if  non-NULL */
 static int mytimeout;	/* value of nonreponse timeout */
+static int msglen;	/* actual message length */
 
 static void set_timeout(int timeleft)
 /* reset the nonresponse-timeout */
@@ -528,7 +529,7 @@ int num;		/* index of message */
     /* read message headers */
     headers = received_for = NULL;
     from_offs = ctt_offs = env_offs = -1;
-    oldlen = 0;
+    oldlen = msglen = 0;
     for (remaining = len; remaining > 0 || protocol->delimited; remaining -= linelen)
     {
 	char *line;
@@ -540,6 +541,7 @@ int num;		/* index of message */
 	    if ((n = SockRead(sock, buf, sizeof(buf)-1)) == -1)
 		return(PS_SOCKET);
 	    linelen += n;
+	    msglen += n;
 
 	    /* lines may not be properly CRLF terminated; fix this for qmail */
 	    if (ctl->forcecr)
@@ -1179,6 +1181,7 @@ flag forward;		/* TRUE to forward */
 	    }
 	}
 	len -= linelen;
+	msglen += linelen;
 
 	/* check for end of message */
 	if (protocol->delimited && *buf == '.')
@@ -1679,6 +1682,10 @@ const struct method *proto;	/* protocol method table */
 				set_timeout(ctl->server.timeout);
 			    }
 			}
+
+			/* check to see if the numbers matched? */
+			if (msglen != len)
+			    error(0, 0, "size of message %d (%d) was not what was expected (%d)", num, msglen, len);
 
 			/* end-of-message processing starts here */
 			if (outlevel == O_VERBOSE)
