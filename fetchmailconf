@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.23"
+version = "1.24"
 
 from Tkinter import *
 from Dialog import *
@@ -483,16 +483,17 @@ class ListEdit(Frame):
 	helpwin(self.helptxt)
 
     def handleList(self, event):
-	self.editItem();
+        self.editItem();
 
     def handleNew(self, event):
 	item = self.newval.get()
-	entire = self.listwidget.get(0, self.listwidget.index('end'));
-	if item and (not entire) or (not item in self.listwidget.get(0, self.listwidget.index('end'))):
-	    self.listwidget.insert('end', item)
-	    if self.list != None: self.list.append(item)
-            apply(self.editor, (item,))
-	self.newval.set('')
+        if item:
+            entire = self.listwidget.get(0, self.listwidget.index('end'));
+            if item and (not entire) or (not item in self.listwidget.get(0, self.listwidget.index('end'))):
+                self.listwidget.insert('end', item)
+                if self.list != None: self.list.append(item)
+                apply(self.editor, (item,))
+            self.newval.set('')
 
     def editItem(self):
 	select = self.listwidget.curselection()
@@ -1664,6 +1665,14 @@ Progress  messages will be shown, but not debug messages.
 Or you can just select `Quit' to exit the launcher now.
 """, width=600).pack(side=TOP)
 	Button(self, text='Quit', fg='blue', command=self.leave).pack()
+
+        sysversion = string.split(sys.version, " ")[0]
+        if sysversion < "1.5.2":
+            Message(self, text="""
+Warning: it looks like your Python version is older than 1.5.2.
+Double-clicking an empty listbox entry may cause fetchmailconf
+to abort (this seems to be a tkinter bug).  We recommend upgrading.
+""", width=600).pack(side=TOP)
 
     def configure(self):
         self.configbutton.configure(state=DISABLED)
