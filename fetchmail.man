@@ -376,10 +376,10 @@ server should ship mail for once the connection is turned around.  The
 default is the FQDN of the machine running fetchmail.
 .TP
 .B \-D <domain>, --smtpaddress <domain>
-(Keyword: smtpaddress) 
-Specify the domain to be put in RCPT TO lines shipped to SMTP. The
-name of the SMTP server (as specified by --smtphost, or defaulted to
-"localhost") is used when this is not specified.
+(Keyword: smtpaddress) Specify the domain to be appended to addresses
+in RCPT TO lines shipped to SMTP. The name of the SMTP server (as
+specified by --smtphost, or defaulted to "localhost") is used when
+this is not specified.
 .TP
 .B --smtpname <user@domain>
 (Keyword: smtpname) 
