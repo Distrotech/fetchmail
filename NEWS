@@ -8,6 +8,9 @@
 * Make sure suffix checks on akalists are properly caseblinded.
 * All warning mail now has a generated date stamp.
 * getopt.c and getopt1.c removed due to license incompatibility with OpenSSL.
+* End of poll cycle is now logged.
+* Sanity check now rejects SSL option if SSL support is not compiled in
+  (resolves Debian bug #109796).
 
 fetchmail-5.9.0 (Sun Aug 12 23:52:16 EDT 2001), 21062 lines:
 
