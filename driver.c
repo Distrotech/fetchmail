@@ -76,8 +76,8 @@ struct method *proto;
 	goto closeUp;
     }
 
-    /* accept greeting message from IMAP server */
-    ok = imap_ok(buf,socket);
+    /* accept greeting message from server */
+    ok = (protocol->parse_response)(buf, socket);
     if (ok != 0) {
 	if (ok != PS_SOCKET)
 	    gen_transact(socket, protocol->exit_cmd);

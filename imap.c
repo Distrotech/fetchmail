@@ -64,8 +64,10 @@ int socket;
   } while
       (tag[0] != '\0' && strncmp(buf, tag, strlen(tag)));
 
-  if (tag[0] == '\0')
+  if (tag[0] == '\0') {
+    strcpy(argbuf, buf);
     return(0); 
+  }
   else {
     if (strncmp(buf + TAGLEN + 1, "OK", 2) == 0) {
       strcpy(argbuf, buf + TAGLEN);
