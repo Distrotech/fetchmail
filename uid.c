@@ -424,11 +424,24 @@ void uid_end_query(struct query *ctl)
 	report_complete(stdout, "\n");
     }
 
-    /* old state of mailbox may now be irrelevant */
-    free_str_list(&ctl->oldsaved);
-    free_str_list(&scratchlist);
-    ctl->oldsaved = ctl->newsaved;
-    ctl->newsaved = (struct idlist *) NULL;
+    /*
+     * Don't swap UID lists unless we've actually seen UIDLs.
+     * This is necessary in order to keep UIDL information
+     * from being heedlessly deleted later on.
+     */
+    if (ctl->have_uids)
+    {
+	/* old state of mailbox may now be irrelevant */
+	if (outlevel >= O_DEBUG)
+	    report(stdout, "swapping UID lists\n");
+	free_str_list(&ctl->oldsaved);
+	free_str_list(&scratchlist);
+	ctl->oldsaved = ctl->newsaved;
+	ctl->newsaved = (struct idlist *) NULL;
+	ctl->have_uids = FALSE;
+    }
+    else if (outlevel >= O_DEBUG)
+	report(stdout, "not swapping UID lists, no UIDs seen this query\n");
 }
 
 void write_saved_lists(struct query *hostlist, const char *idfile)

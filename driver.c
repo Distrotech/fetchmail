@@ -1458,6 +1458,9 @@ const int maxfetch;		/* maximum number of messages to fetch */
     alrmsave = signal(SIGALRM, timeout_handler);
     mytimeout = ctl->server.timeout;
 
+    /* no UIDLs seen yet */
+    ctl->have_uids = TRUE;
+
     /* set up the broken-pipe timeout */
     pipesave = signal(SIGPIPE, sigpipe_handler);
 
@@ -1766,6 +1769,9 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		ok = (protocol->getrange)(mailserver_socket, ctl, idp->id, &count, &new, &bytes);
 		if (ok != 0)
 		    goto cleanUp;
+
+		/* we've now seen any UIDs that will be coming up the link */
+		ctl->have_uids = TRUE;
 
 		/* show user how many messages we downloaded */
 		if (idp->id)
