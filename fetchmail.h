@@ -560,4 +560,16 @@ char *strerror ();
 #endif
 #endif
 
+#ifdef FETCHMAIL_DEBUG
+#define exit(e) do { \
+       FILE *out; \
+       out = fopen("/tmp/fetchmail.log", "a"); \
+       fprintf(out, \
+               "Exiting fetchmail from file %s, line %d with status %d\n", \
+               __FILE__, __LINE__, e); \
+       fclose(out); \
+       _exit(e); \
+       } while(0)
+#endif /* FETCHMAIL_DEBUG */
+
 /* fetchmail.h ends here */

@@ -2,7 +2,15 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
-fetchmail-5.5.3 (Sun Oct  8 10:57:37 EDT 2000), 19518 lines:
+fetchmail-5.5.5 (Tue Oct 17 17:50:46 EDT 2000), 19523 lines:
+
+* Killed a nasty segfault due to double-freeing of the header block.
+* Updated Danish internationalization by Byrial Jensen.
+* Added FAQ item X7 on attachment hangs.
+
+There are 277 people on fetchmail-friends and 558 on fetchmail-announce.
+
+fetchmail-5.5.4 (Sun Oct  8 10:57:37 EDT 2000), 19518 lines:
 * Fall back on the computed queryname if we need the DNS name of a a host
   and can't get it. Resolves Debian bug #69199.
 * Andrej Borsenkow's fix for configuration with new SOCKS.

@@ -236,13 +236,15 @@ succession, fetchmail will consider it wedged and stop retrying,
 the calkling user will be notified by email if this happens.
 .TP
 .B \--plugin <command>
-(Keyword: plugin)
-The plugin option allows you to use an external program to establish the
-TCP connection.  This is useful if you want to use socks, SSL, ssh, or
-need some special firewalling setup.  The program will be looked up in
-$PATH and can optionally be passed the hostname and port as arguments
-using "%h" and "%p" respectively.  Fetchmail will write to the plugin's
-stdin and read from the plugin's stdout.
+(Keyword: plugin) The plugin option allows you to use an external
+program to establish the TCP connection.  This is useful if you want
+to use socks, SSL, ssh, or need some special firewalling setup.  The
+program will be looked up in $PATH and can optionally be passed the
+hostname and port as arguments using "%h" and "%p" respectively (note
+that the interpolation logic is rather promitive, and these token must
+be bounded by whitespace or beginning of string or end of stribg).
+Fetchmail will write to the plugin's stdin and read from the plugin's
+stdout.
 .TP
 .B \--plugout <command>
 (Keyword: plugout)
