@@ -1130,14 +1130,6 @@ static int imap_getrange(int sock,
 			 const char *folder, 
 			 int *countp, int *newp, int *bytes)
 /* get range of messages to be fetched */
-#ifdef USE_SEARCH
-/* 
- * I'm using SEARCH UNSEEN instead of some other unreliable method.
- * Hopefully I'm able to stuff SEARCH in here.
- * The response will have to be in imap_ok since the driver invokes
- * parse_response in gen_transact.
- */
-#endif /* USE_SEARCH */
 {
     int ok;
 
@@ -1207,33 +1199,24 @@ static int imap_getrange(int sock,
      * it doesn't matter much that it can be wrong (e.g. if we see an
      * UNSEEN response but not all messages above the first UNSEEN one
      * are likewise).
-#ifdef USE_SEARCH
      *
-     * RECENT is not a good indication of recent messages, because it is
-     * really ill-defined, e.g. if several connections are made to the
-     * folder, messages might appear as recent to some and not to others.
-     * Using SEARCH UNSEEN provide us with the exact number of unseen
-     * messages.
-#endif /* USE_SEARCH */
+     * RECENT is not really a good indication of recent messages,
+     * because it is ill-defined, e.g. if several connections are made
+     * to the folder, messages might appear as recent to some and not
+     * to others.  Using SEARCH UNSEEN provides us with the exact
+     * number of unseen messages.
      */
-#ifdef USE_SEARCH
+#ifndef USE_SEARCH
     if (unseen >= 0)		/* optional, but better if we see it */
 	*newp = count - unseen + 1;
 #else
     if (unseen >= 0 && unseen_count > 0)	/* optional, but better if we see it */
 	*newp = unseen_count;
 #endif /* USE_SEARCH */
-    else if (recent >= 0)	/* mandatory */
+    else if (recent >= 0)
 	*newp = recent;
     else
-#ifdef USE_SEARCH
-	*newp = -1;		/* should never happen, RECENT is mandatory */ 
-#else
-	*newp = -1;
-    /* Contrary to what the previous comment says, RECENT is NOT
-     * mandatory. It's actually a flaky, ill-defined method.
-     */
-#endif /* USE_SEARCH */
+	*newp = -1;		/* should never happen */ 
 
     expunged = 0;
 
@@ -1311,24 +1294,25 @@ static int imap_is_old(int sock, struct query *ctl, int number)
     number -= expunged;
 
 #ifdef USE_SEARCH
-    if (unseen_count > 0) {
-        /* unseen_count[i] == 0 means end of data - redundant with unseen_count */
-    	for (i = 0; i < unseen_count && 0 < unseen_sequence[i]; i++) {
-	    	unseen_sequence[i] -= expunged;	/* expunge adjustment */
+    if (unseen_count > 0) 
+    {
+        /* !unseen_count[i] means end of data - redundant with unseen_count */
+    	for (i = 0; i < unseen_count && 0 < unseen_sequence[i]; i++)
+	{
+	    unseen_sequence[i] -= expunged;	/* expunge adjustment */
 	    if (unseen_sequence[i] == number) {
-			seen = FALSE;			/* message in unseen_sequence */
-			break;
-	    } else
-			seen = TRUE;
-		}
-    } else {
+		seen = FALSE;			/* message in unseen_sequence */
+		break;
+	    } 
+	    else
+		seen = TRUE;
+	}
+    }
+    else
 	/* Fall back to FETCH FLAGS */
 #endif /* USE_SEARCH */
-    if ((ok = gen_transact(sock, "FETCH %d FLAGS", number)) != 0)
-	return(PS_ERROR);
-#ifdef USE_SEARCH
-    }
-#endif /* USE_SEARCH */
+	if ((ok = gen_transact(sock, "FETCH %d FLAGS", number)) != 0)
+	    return(PS_ERROR);
 
     return(seen);
 }
