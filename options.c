@@ -36,7 +36,7 @@
 #define LA_ENVELOPE	18
 #define LA_USERNAME	19
 #define LA_ALL          20
-#define LA_NOKEEP		21
+#define LA_NOKEEP	21
 #define	LA_KEEP		22
 #define LA_FLUSH        23
 #define LA_NOREWRITE	24
