@@ -20,7 +20,7 @@
 #define		MSGBUFSIZE	2048   	/* size of message read buffer */
 #define		HOSTLEN		128	/* max hostname length */
 #define		USERNAMELEN	32	/* max user-length */
-#define		PASSWORDLEN	MAX_PASSWORD_LENGTH
+#define		PASSWORDLEN	64	/* max password length */
 #define		FOLDERLEN	256     /* max folder name length */
 #define		DIGESTLEN	33	/* length of MD5 digest */
 #define		MDALEN		256	/* length of delivery agent command */

@@ -764,7 +764,7 @@ char *argv[];
 	printf("fetchmail: about to deliver via MDA %s, args:",
 	       visbuf(argv[0]));
 	for (cp = argv+1; *cp; cp++)
-	    printf(" %s(%p)", visbuf(*cp), *cp);
+	    printf(" %s", visbuf(*cp));
 	putchar('\n');
     }
 

@@ -17,10 +17,11 @@
 #if defined(HAVE_UNISTD_H)
 #include <unistd.h>
 #endif
+#include "fetchmail.h"
 
 extern int optind;
 
-#define INPUT_BUF_SIZE	MAX_PASSWORD_LENGTH
+#define INPUT_BUF_SIZE	PASSWORDLEN
 
 #if defined(HAVE_TERMIOS_H) && defined(HAVE_TCSETATTR)
 #  include <termios.h>
