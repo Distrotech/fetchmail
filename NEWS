@@ -2,6 +2,13 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.8.1 (Tue Apr 10 09:32:04 EDT 2001), 20511 lines:
+
+* Nalin Dahyabai's password parse and authentication fixe.
+* Vitezslav Samel's patch to Makefile.in to make parallel makes work.
+
+There are 314 people on fetchmail-friends and 569 on fetchmail-announce.
+
 ------------------------------------------------------------------------------
 fetchmail-5.8.0 (Mon Apr  2 15:18:33 EDT 2001), 20459 lines:
 
