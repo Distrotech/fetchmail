@@ -23,6 +23,7 @@ fetchmail-4.3.0-alpha (Sun Oct  5 11:07:53 EDT 1997)
 * It's now possible to explicitly configure out POP3, IMAP, or ETRN.
 * We no longer get the hostname for address rewrites and log messages from the
   server greeting line, instead it's the server's canonical DNS name.
+* Improved UID handling for RFC1725 POP3 servers coping with a line hit.
 * Created fetchmail-announce list.
 
 There are 285 people on fetchmail-friends and 6 on fetchmail-announce.

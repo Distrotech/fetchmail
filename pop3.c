@@ -483,7 +483,12 @@ static int pop3_delete(int sock, struct query *ctl, int number)
 static int pop3_logout(int sock, struct query *ctl)
 /* send logout command */
 {
-    return(gen_transact(sock, "QUIT"));
+    int ok = gen_transact(sock, "QUIT");
+
+    if (!ok)
+	expunge_uids(ctl);
+
+    return(ok);
 }
 
 const static struct method pop3 =

@@ -46,16 +46,22 @@
  * (and possibly deleted).  It should be downloaded anyway if --all
  * is on.  It should not be deleted if --keep is on.
  *
- * Each time a message is deleted, we remove its id from the `newsaved'
- * member.
+ * Each time a message is deleted, we mark its id UID_DELETED from the
+ * `newsaved' member.  When we want to assert that an expunge has been
+ * done on the server, we call expunge_uid() to register that all
+ * deleted messages are gone by marking them UID_EXPUNGED.
  *
- * At the end of the query, whatever remains in the `newsaved' member
- * (because it was not deleted) becomes the `oldsaved' list.  The old
- * `oldsaved' list is freed.
+ * At the end of the query, the `newsaved' member becomes the
+ * `oldsaved' list.  The old `oldsaved' list is freed.
  *
- * At the end of the fetchmail run, all current `oldsaved' lists are
- * flushed out to the .fetchids file to be picked up by the next run.
- * If there are no such messages, the file is deleted.
+ * At the end of the fetchmail run, non-EXPUNGED members of all
+ * current `oldsaved' lists are flushed out to the .fetchids file to
+ * be picked up by the next run.  (The UID_EXPUNGED test means that a
+ * message marked UID_DELETED may still have its ID go to disk if
+ * there has been no intervening expunge operation.  This typically
+ * comes up if the query was aborted by a line hit before a quit or
+ * expunge was sent to the server.)  If there are no un-expunged
+ * messages, the file is deleted.
  *
  * Note: all comparisons are caseblind!
  */
@@ -90,14 +96,14 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 		        strcasecmp(host, ctl->server.truename) == 0
 				&& strcasecmp(user, ctl->remotename) == 0)
 		    {
-			save_str(&ctl->oldsaved, -1, id);
+			save_str(&ctl->oldsaved, UID_KEPT, id);
 			break;
 		    }
 		}
 
 		/* if it's not in a host we're querying, save it anyway */
 		if (ctl == (struct query *)NULL)
-		    save_str(&scratchlist, -1, buf);
+		    save_str(&scratchlist, UID_KEPT, buf);
 	    }
 	}
 	fclose(tmpfp);
@@ -235,6 +241,7 @@ char *idpair_find(struct idlist **idl, const char *id)
 int delete_str(struct idlist **idl, int num)
 /* delete given message from given list */
 {
+#ifdef HARD_DELETE	/* not used */
     if (*idl == (struct idlist *)NULL)
 	return(0);
     else if ((*idl)->val.num == num)
@@ -248,6 +255,17 @@ int delete_str(struct idlist **idl, int num)
     }
     else
 	return(delete_str(&(*idl)->next, num));
+#else
+    struct idlist	*idp;
+
+    for (idp = *idl; idp; idp = idp->next)
+	if (idp->val.num == num)
+	{
+	    idp->val.num = UID_DELETED;
+	    return(1);
+	}
+    return(0);
+#endif /* HARD_DELETE */
 }
 
 void append_str_list(struct idlist **idl, struct idlist **nidl)
@@ -262,6 +280,16 @@ void append_str_list(struct idlist **idl, struct idlist **nidl)
 }
 
 #ifdef POP3_ENABLE
+void expunge_uids(struct query *ctl)
+/* assert that all UIDs marked deleted have actually been expunged */
+{
+    struct idlist *idl;
+
+    for (idl = ctl->newsaved; idl; idl = idl->next)
+	if (idl->val.num == UID_DELETED)
+	    idl->val.num = UID_EXPUNGED;
+}
+
 void update_str_lists(struct query *ctl)
 /* perform end-of-query actions on UID lists */
 {
@@ -292,7 +320,8 @@ void write_saved_lists(struct query *hostlist, const char *idfile)
 	if ((tmpfp = fopen(idfile, "w")) != (FILE *)NULL) {
 	    for (ctl = hostlist; ctl; ctl = ctl->next) {
 		for (idp = ctl->oldsaved; idp; idp = idp->next)
-		    fprintf(tmpfp, "%s@%s %s\n", 
+		    if (idp->val.num != UID_EXPUNGED)
+			fprintf(tmpfp, "%s@%s %s\n", 
 			    ctl->remotename, ctl->server.truename, idp->id);
 	    }
 	    for (idp = scratchlist; idp; idp = idp->next)

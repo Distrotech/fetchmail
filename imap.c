@@ -415,6 +415,10 @@ static int imap_getrange(int sock,
 	ok = 0;
 	if (deletions && ctl->expunge > 1)
 	    ok = gen_transact(sock, "EXPUNGE");
+#ifdef IMAP_UID	/* not used */
+	if (!ok)
+	    expunge_uids(ctl);
+#endif /* IMAP_UID */
 	if (ok || gen_transact(sock, "NOOP"))
 	{
 	    error(0, 0, "re-poll failed");
@@ -479,7 +483,7 @@ static int imap_is_old(int sock, struct query *ctl, int number)
 {
     int ok;
 
-    /* expunged change the fetch numbers */
+    /* expunges change the fetch numbers */
     number -= expunged;
 
     if ((ok = gen_transact(sock, "FETCH %d FLAGS", number)) != 0)
@@ -494,7 +498,7 @@ static int imap_fetch_headers(int sock, struct query *ctl,int number,int *lenp)
     char buf [POPBUFSIZE+1];
     int	num;
 
-    /* expunged change the fetch numbers */
+    /* expunges change the fetch numbers */
     number -= expunged;
 
     /*
@@ -524,7 +528,7 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
     char buf [POPBUFSIZE+1], *cp;
     int	num;
 
-    /* expunged change the fetch numbers */
+    /* expunges change the fetch numbers */
     number -= expunged;
 
     /*
@@ -582,7 +586,7 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
 static int imap_trail(int sock, struct query *ctl, int number)
 /* discard tail of FETCH response after reading message text */
 {
-    /* expunged change the fetch numbers */
+    /* expunges change the fetch numbers */
     /* number -= expunged; */
 
     for (;;)
@@ -606,7 +610,7 @@ static int imap_delete(int sock, struct query *ctl, int number)
 {
     int	ok;
 
-    /* expunged change the fetch numbers */
+    /* expunges change the fetch numbers */
     number -= expunged;
 
     /*
@@ -631,6 +635,10 @@ static int imap_delete(int sock, struct query *ctl, int number)
 	if ((ok = gen_transact(sock, "EXPUNGE")))
 	    return(ok);
 
+#ifdef IMAP_UID	/* not used */
+	expunge_uids(ctl);
+#endif /* IMAP_UID */
+
 	expunged = deletions;
     }
 
@@ -647,6 +655,10 @@ static int imap_logout(int sock, struct query *ctl)
 
 	if ((ok = gen_transact(sock, "EXPUNGE")))
 	    return(ok);
+
+#ifdef IMAP_UID	/* not used */
+	expunge_uids(ctl);
+#endif /* IMAP_UID */
     }
 
     return(gen_transact(sock, "LOGOUT"));

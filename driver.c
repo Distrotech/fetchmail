@@ -1862,7 +1862,9 @@ const struct method *proto;	/* protocol method table */
 			    if (ok != 0)
 				goto cleanUp;
 			    set_timeout(ctl->server.timeout);
+#ifdef POP3_ENABLE
 			    delete_str(&ctl->newsaved, num);
+#endif /* POP3_ENABLE */
 			}
 			else if (outlevel > O_SILENT) 
 			    error_complete(0, 0, " not flushed");

@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/10/06 16:14:18 $
+<td width="30%" align=right>$Date: 1997/10/06 20:34:27 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1164,8 +1164,8 @@ more often.<P>
 
 Qualcomm's qpopper, used at many BSD Unix sites, is better behaved.
 If its connection is dropped, it will first execute all DELE commands (as
-though you had issued an QUIT -- this is a technical violation of
-the RFCs, but a good idea in a world of flaky phone lines). Then it
+though you had issued a QUIT -- this is a technical violation of
+the POP3 RFCs, but a good idea in a world of flaky phone lines). Then it
 will re-queue any message that was being downloaded at hangup time.
 Still, qpopper may require a noticeable amount of time to do deletions
 and clean up its queue.  (Fetchmail waits a bit before retrying in
@@ -1542,10 +1542,13 @@ force an rc file reread, do <code>fetchmail -q; fetchmail</code>.<P>
 <h2><a name="O4">O4. Why do deleted messages show up again when I take
 a line hit while downloading?</a></h2>
 
-Because you're using a POP2 or POP3 server.  According to the POP3 RFCs,
-deletes aren't actually performed until you issue the end-of-session
-QUIT command.  Fetchmail cannot fix this, it takes cooperation from the.
-server. There are two possible remedies:<P>
+Because you're using a POP3 other than Qualcomm qpopper, or an IMAP
+with a long expunge interval.<P>
+
+According to the POP3 RFCs, deletes aren't actually performed until
+you issue the end-of-session QUIT command.  Fetchmail cannot fix this,
+it takes cooperation from the.  server. There are two possible
+remedies:<P>
 
 One is to switch to qpopper (the freeware POP3 server from Qualcomm,
 the Eudora people).  The qpopper software violates the POP3 RFCs by
@@ -1554,8 +1557,13 @@ as on processing a QUIT command.<P>
 
 The other (which we recommend) is to switch to <a
 href="http://www.imap.org">IMAP</a>.  IMAP has an explicit expunge
-command and fetchmail uses it to delete messages quickly after they
-are downloaded.<P>
+command and fetchmail normally uses it to delete messages immediately
+after they are downloaded.<P>
+
+If you get very unlucky, you might take a line hit in the window
+between the delete and the expunge.  If you've set a longer expunge
+interval, the window gets wider.  This problem should correct itself
+the next time you complete a successful query.<P>
 
 <hr>
 <h2><a name="O5">O5. Why is fetched mail being logged with my name, not the real From address?</a></h2>
@@ -1581,7 +1589,7 @@ will look right.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/10/06 16:14:18 $
+<td width="30%" align=right>$Date: 1997/10/06 20:34:27 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

@@ -142,6 +142,9 @@ struct query
     int	expunge;		/* max # msgs to pass between expunges */
 
     /* unseen, previous state of mailbox (initially from .fetchids) */
+#define UID_KEPT	0	/* this was remembered from a previous run */
+#define UID_DELETED	-1	/* this message has been deleted */
+#define UID_EXPUNGED	-2	/* this message has been expunged */ 
     struct idlist *oldsaved, *newsaved;
 
     /* internal use */
@@ -265,6 +268,7 @@ char *str_from_nr_list( struct idlist **idl, int number );
 char *str_find(struct idlist **, int);
 char *idpair_find(struct idlist **, const char *);
 void append_str_list(struct idlist **, struct idlist **);
+void expunge_uids(struct query *);
 void update_str_lists(struct query *);
 void write_saved_lists(struct query *, const char *);
 
