@@ -7,6 +7,8 @@ if [ $* ]
 then
     ../upload $*
 else
+keywords="mail, client, POP, POP2, POP3, APOP, RPOP, KPOP, IMAP, ETRN, ODMR, SMTP, ESMTP, GSSAPI, RPA, NTLM, CRAM-MD5, SASL"
+
 echo "Beginning web upload..."
 # First, copy to primary website
 dest=esr@${WWWHOST}:${WWWDIR}/fetchmail
@@ -47,6 +49,7 @@ echo "FTP upload complete."
 
 # Next, upload to Metalab
 echo "Beginning Metalab upload..."
+rpm2lsm -k ${keywords} *.rpm >fetchmail.lsm
 open -u anonymous,esr@thyrsus.com metalab.unc.edu
 cd incoming/Linux 
 put fetchmail-${version}.tar.gz
