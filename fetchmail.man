@@ -102,7 +102,7 @@ Specify a mail delivery agent to use.  This can be used to pass
 fetched mail to programs like procmail.  If the MDA string contains
 %s, that escape will be expanded into your username on the client
 machine.  Some possible MDAs are "/usr/formail", "/usr/bin/deliver %s",
-"/usr/lib/sendmail -oem -t - -q %s".
+"/usr/lib/sendmail -oem %s".
 .TP
 .B \--protocol proto
 Specify the protocol to used when communicating with the remote 
@@ -247,29 +247,28 @@ a mailbox on the server.  Contact your server administrator if you don't know
 the correct user-id and password for your mailbox account.
 .PP
 .SH OUTPUT OPTIONS
+The normal behavior of 
+.I popmail
+is to deliver mail locally via your system's default mail delivery
+agent or MDA (usually
+.I /usr/lib/sendmail
+but your system may use a different MDA -- the 
 .I popclient
-always writes the retrieved messages using Unix mail folder format.  This
-allows 
-.I popclient
-to be used in conjunction with common mail readers like
-.I mail
-and
-.I elm.
-The retrieved messages are normally appended to your default system
-mailbox on the local disk, so that when you invoke your mail reader it
-can manipulate the retrieved messages like any other mail you receive
-on the client machine.  If
-.I popclient
-doesn't know where your mailbox is, or can't modify it safely (e.g. because
-your underlying operating system doesn't support mandatory file
-locking), it will use the local Mail Delivery Agent
-(MDA), usually 
-/bin/mail(1),
+configuration process should detect this automatically).
+You can change the MDA the mail is passed to with the -mda or -m option.
 .PP
 Using the 
 .B \-o
 option, you can specify a different mail folder to which the retrieved
-messages will be appended.  If you prefer, for example, to have your POP
+messages will be appended;
+.I popclient
+always writes the retrieved messages using Unix mail folder format so
+the folder will be parsed correctly by Unix mail programs such as
+.I elm
+or
+.I pine. 
+.PP
+If you prefer, for example, to have your POP
 mail from a machine called 'mailgrunt' stored in the 
 .I mbox
 file in your home directory, you would start 
@@ -428,7 +427,7 @@ one server definition.
         pass secret1            \e
         localfolder ~/mbox
 .fi
-If you need to include whitespace in a paramter string, enclose the
+If you need to include whitespace in a parameter string, enclose the
 string in double quotes.  Thus:
 
 .nf
@@ -436,7 +435,7 @@ string in double quotes.  Thus:
         proto pop3              \e
         user jsmith             \e
         pass secret1            \e
-        mda "/bin/mail -d %s"
+        mda "/bin/mail %s"
 .fi
 Finally, you may have an initial server description headed by the keyword
 `defaults' instead of `server' followed by a name.  Such a record
@@ -447,7 +446,7 @@ by individual server descriptions.  So, you could write:
   defaults                      \e
         proto pop3              \e
         user jsmith             \e
-        mda "/bin/mail -d %s"
+        mda "/bin/mail %s"
   server pop.provider.net       \e
         pass secret1            \e
   server mail.provider.net      \e

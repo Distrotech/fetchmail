@@ -60,8 +60,8 @@ case $host in
 	else
 		# Do *not* use the -t option!  We explicitly want only
 		# local delivery to the recepients named on the command line.
-		AC_DEFINE(DEF_MDA,"/usr/lib/sendmail -oem %s")
-		mdacmd="/usr/lib/sendmail \$u"
+		AC_DEFINE(DEF_MDA,"/usr/lib/sendmail -oem -fpopmail %s")
+		mdacmd="/usr/lib/sendmail -fpopmail \$u"
 	fi
 	;;
 esac

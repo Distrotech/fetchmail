@@ -22,6 +22,8 @@ Implement IMAP support.
 
 * Added -N/--norewrite option.
 
+* Delivery via sendmail now works.
+
 3.01:
 
 * Fixed a lexical analyzer bug in quoted-string processing.
