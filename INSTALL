@@ -36,6 +36,10 @@ Run
 
 This will compile fetchmail for your system.
 
+If linking fails to resolve atexit(), go find a compiler that isn't lying
+about being ANSI-compliant (such as gcc).  Some SunOS users have had this
+problem.
+
 3. INSTALL
 
 Lastly, become root and run
