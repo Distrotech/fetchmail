@@ -387,6 +387,9 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 
     SMTP_rset(ctl->smtp_socket);    /* stay on the safe site */
 
+    if (outlevel >= O_DEBUG)
+	report(stdout, "Saved error is still %d\n", smtperr);
+
     /*
      * Note: send_bouncemail message strings are not made subject
      * to gettext translation because (a) they're going to be 
