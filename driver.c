@@ -667,6 +667,12 @@ struct query *ctl;	/* query control record */
 		    return(PS_SMTP);
 		}
 
+		if (!fromhdr)
+		{
+		    fprintf(stderr, "fetchmail: I see no From header\n");
+		    return(PS_SMTP);
+		}
+
 		if (SMTP_from(sinkfp, nxtaddr(fromhdr)) != SM_OK)
 		{
 		    fprintf(stderr, "fetchmail: SMTP listener is confused\n");
