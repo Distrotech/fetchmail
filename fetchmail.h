@@ -224,7 +224,7 @@ int daemonize(const char *, void (*)(int));
 int prc_parse_file(const char *);
 int prc_filecheck(const char *);
 
-void interface_parse(struct hostdata *);
+void interface_parse(char *, struct hostdata *);
 void interface_note_activity(struct hostdata *);
 int interface_approve(struct hostdata *);
 

@@ -116,7 +116,7 @@ serv_option	: AKA alias_list
 		| ENVELOPE STRING	{current.server.envelope = xstrdup($2);}
 		| INTERFACE STRING	{
 #ifdef linux
-					current.server.interface = xstrdup($2);
+					interface_parse($2, &current.server);
 #else
 					fprintf(stderr, "fetchmail: interface option is only supported under Linux\n");
 #endif /* linux */
@@ -337,6 +337,7 @@ static void prc_register(void)
 #ifdef linux
     FLAG_FORCE(server.interface);
     FLAG_FORCE(server.monitor);
+    FLAG_FORCE(server.interface_pair);
 #endif /* linux */
 
     FLAG_FORCE(remotename);
@@ -377,6 +378,7 @@ void optmerge(struct query *h2, struct query *h1)
 #ifdef linux
     FLAG_MERGE(server.interface);
     FLAG_MERGE(server.monitor);
+    FLAG_MERGE(server.interface_pair);
 #endif /* linux */
 
     FLAG_MERGE(remotename);

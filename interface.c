@@ -98,19 +98,16 @@ static int get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
 	return(result);
 }
 
-void interface_parse(struct hostdata *hp)
+void interface_parse(char *buf, struct hostdata *hp)
 /* parse 'interface' specification */
 {
 	char *cp1, *cp2;
 
-	/* if no interface specification present, all done */
-	if (!hp->interface)
-		return;
-
 	/* find and isolate just the IP address */
-	if (!(cp1 = strchr(hp->interface, '/')))
+	if (!(cp1 = strchr(buf, '/')))
 		(void) error(PS_SYNTAX, 0, "missing IP interface address");
 	*cp1++ = '\000';
+	hp->interface = xstrdup(buf);
 
 	/* find and isolate just the netmask */
 	if (!(cp2 = strchr(cp1, '/')))

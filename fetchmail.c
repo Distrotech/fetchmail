@@ -634,11 +634,6 @@ static int load_params(int argc, char **argv, int optind)
 	    if (ctl->server.envelope == (char *)NULL)
 		ctl->server.envelope = "X-Envelope-To:";
 
-#ifdef linux
-	    /* interface_parse() does its own error logging */
-	    interface_parse(&ctl->server);
-#endif /* linux */
-
 	    /* sanity checks */
 	    if (ctl->server.port < 0)
 	    {
