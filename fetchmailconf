@@ -1242,21 +1242,25 @@ if __name__ == '__main__':
         cmd = "fetchmail -f " + rcfile + " --configdump >" + tmpfile
     else:
         cmd = "fetchmail --configdump >" + tmpfile
+        
     try:
         s = os.system(cmd)
 	if s != 0:
             print "`" + cmd + "' run failure, status " + `s`
             raise SystemExit
-
-        s = execfile(tmpfile)
-        if s:
-            print "Invalid configuration, status " + `s`
-            raise SystemExit
     except:
+        print "Unknown error while running fetchmail --configdump"
         os.remove(tmpfile)
         sys.exit(1)
-    else:
+
+    try:
+        execfile(tmpfile)
+    except:
+        print "Can't read configuration output of fetchmail --configdump."
         os.remove(tmpfile)
+        sys.exit(1)
+        
+    os.remove(tmpfile)
 
     # The tricky part -- initializing objects from the configuration global
     # `Configuration' is the top level of the object tree we're going to mung.
