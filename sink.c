@@ -127,6 +127,10 @@ int smtp_open(struct query *ctl)
 					     ctl->server.plugout)) == -1)
 		continue;
 
+           /* return immediately for ODMR */
+           if (ctl->server.protocol == P_ODMR)
+               return(ctl->smtp_socket); /* success */
+
 	    /* are we doing SMTP or LMTP? */
 	    SMTP_setmode(ctl->listener);
 
@@ -729,6 +733,13 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 	 */
 	if (!(*good_addresses)) 
 	{
+	    if (!run.postmaster[0])
+	    {
+		if (outlevel >= O_VERBOSE)
+		    report(stderr, _("no address matches; no postmaster set.\n"));
+		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
+		return(PS_REFUSED);
+	    }
 	    if (strchr(run.postmaster, '@'))
 		strncpy(addr, run.postmaster, sizeof(addr));
 	    else
@@ -1005,7 +1016,7 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 	if (rc)
 	{
 	    report(stderr, 
-		   _("MDA exited abnormally or returned nonzero status\n"));
+		   _("MDA returned nonzero status %d\n"), rc);
 	    return(FALSE);
 	}
     }

@@ -2,7 +2,12 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.8.11 (Sun Jul  1 21:39:26 EDT 2001), 20973 lines:
+
 * Signal-processing fix for Debian bug #102711.
+* More ODMR patches from Matt Armstrong.
+
+There are 353 people on fetchmail-friends and 607 on fetchmail-announce.
 
 fetchmail-5.8.10 (Mon Jun 25 17:04:08 EDT 2001), 20922 lines:
 

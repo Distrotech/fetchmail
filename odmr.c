@@ -182,7 +182,13 @@ static int odmr_getrange(int sock, struct query *ctl, const char *id,
 static int odmr_logout(int sock, struct query *ctl)
 /* send logout command */
 {
-    return(gen_transact(sock, "QUIT"));
+    /* if we have a smtp_socket, then we've turned around and the
+       local smtp server is in control of the connection (so we don't
+       send QUIT) */
+    if (ctl->smtp_socket == -1)
+       return(gen_transact(sock, "QUIT"));
+    else
+       return(PS_SUCCESS);
 }
 
 const static struct method odmr =
