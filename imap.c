@@ -18,7 +18,6 @@
 
 #ifdef KERBEROS_V4
 #include <krb.h>
-#include "base64.h"
 #endif /* KERBEROS_V4 */
 
 extern char *strstr();	/* needed on sysV68 R3V7.1. */
@@ -86,12 +85,6 @@ static int do_rfc1731(int sock, struct query *ctl, char *buf)
 /* authenticate as per RFC1731
  * note 32-bit integer requirement here...
  * sizeof int must be 4!
- *
- * Note: Base64 conversion routines come from Cyrus IMAPd and have
- * possibly too-restrictive redistribution requirements.  See base64.c
- * for details.  Base64 is defined in RFC2045 section 6.8, "Base64
- * Content-Transfer-Encoding", but lines must not be broken in the
- * scheme used here.
  */
 {
     int result = 0, len;
@@ -128,7 +121,7 @@ static int do_rfc1731(int sock, struct query *ctl, char *buf)
 	return result;
     }
 
-    len = from64(challenge1.cstr, buf1);
+    len = from64tobits(challenge1.cstr, buf1);
     if (len < 0) {
 	error(0, -1, "could not decode initial BASE64 challenge");
 	return PS_AUTHFAIL;
@@ -204,7 +197,7 @@ static int do_rfc1731(int sock, struct query *ctl, char *buf)
 	return PS_AUTHFAIL;
     }
 
-    to64(buf1, authenticator.dat, authenticator.length);
+    to64frombits(buf1, authenticator.dat, authenticator.length);
     if (outlevel == O_VERBOSE) {
 	error(0, 0, "IMAP> %s", buf1);
     }
@@ -250,7 +243,7 @@ static int do_rfc1731(int sock, struct query *ctl, char *buf)
      * process is complete.
      */
 
-    len = from64(buf2, buf1);
+    len = from64tobits(buf2, buf1);
     if (len < 0) {
 	error(0, -1, "could not decode BASE64 ready response");
 	return PS_AUTHFAIL;
@@ -287,7 +280,7 @@ static int do_rfc1731(int sock, struct query *ctl, char *buf)
 	    (des_cblock *)authenticator.dat, authenticator.length, schedule,
 	    &session, 1);
 
-    to64(buf1, authenticator.dat, authenticator.length);
+    to64frombits(buf1, authenticator.dat, authenticator.length);
     if (outlevel == O_VERBOSE) {
 	error(0, 0, "IMAP> %s", buf1);
     }

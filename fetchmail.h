@@ -247,6 +247,9 @@ void escapes(const char *, char *);
 void yyerror(const char *);
 int yylex(void);
 
+void to64frombits(unsigned char *, const unsigned char *, int);
+int from64tobits(char *, const char *);
+
 #if defined(HAVE_VOIDPOINTER)
 #define XMALLOCTYPE void
 #else
