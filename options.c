@@ -6,7 +6,6 @@
 
 #include <config.h>
 
-#include <stdio.h>
 #include <pwd.h>
 #include <string.h>
 #if defined(STDC_HEADERS)
@@ -25,35 +24,40 @@
 #define LA_NODETACH	7
 #define LA_QUIT		8
 #define LA_LOGFILE	9
-#define LA_RCFILE	10
-#define LA_IDFILE	11
-#define LA_PROTOCOL	12
-#define LA_PORT		13
-#define LA_AUTHENTICATE	14
-#define LA_TIMEOUT	15
-#define LA_USERNAME	16
-#define LA_ALL          17
-#define LA_KILL		18
-#define	LA_KEEP		19
-#define LA_FLUSH        20
-#define LA_NOREWRITE	21
-#define LA_LIMIT	22
-#define LA_REMOTEFILE	23
-#define LA_SMTPHOST	24
-#define LA_MDA		25
-#define LA_YYDEBUG	26
+#define LA_BATCHLIMIT	10
+#define LA_RCFILE	11
+#define LA_IDFILE	12
+#define LA_PROTOCOL	13
+#define LA_PORT		14
+#define LA_AUTHENTICATE	15
+#define LA_TIMEOUT	16
+#define LA_USERNAME	17
+#define LA_ALL          18
+#define LA_KILL		19
+#define	LA_KEEP		20
+#define LA_FLUSH        21
+#define LA_NOREWRITE	22
+#define LA_LIMIT	23
+#define LA_REMOTEFILE	24
+#define LA_SMTPHOST	25
+#define LA_MDA		26
+#define LA_YYDEBUG	27
 
-static char *shortoptions = "?Vcsvd:NqL:f:i:p:P:A:t:u:akKFnl:r:S:m:y";
+static char *shortoptions = "?Vcsvd:NqL:b:f:i:p:P:A:t:u:akKFnl:r:S:m:y";
 static struct option longoptions[] = {
   {"help",	no_argument,	   (int *) 0, LA_HELP        },
   {"version",   no_argument,       (int *) 0, LA_VERSION     },
   {"check",	no_argument,	   (int *) 0, LA_CHECK       },
+
   {"silent",    no_argument,       (int *) 0, LA_SILENT      },
   {"verbose",   no_argument,       (int *) 0, LA_VERBOSE     },
+
   {"daemon",	required_argument, (int *) 0, LA_DAEMON      },
   {"nodetach",	no_argument,	   (int *) 0, LA_NODETACH    },
   {"quit",	no_argument,	   (int *) 0, LA_QUIT        },
   {"logfile",	required_argument, (int *) 0, LA_LOGFILE     },
+  {"batchlimit",required_argument, (int *) 0, LA_BATCHLIMIT  },
+
   {"fetchmailrc",required_argument,(int *) 0, LA_RCFILE      },
   {"idfile",	required_argument, (int *) 0, LA_IDFILE      },
 
@@ -116,6 +120,7 @@ struct query *ctl;	/* option record to be initialized */
 	case LA_CHECK:
 	    check_only = TRUE;
 	    break;
+
 	case 's':
 	case LA_SILENT:
 	    outlevel = O_SILENT;
@@ -124,6 +129,7 @@ struct query *ctl;	/* option record to be initialized */
 	case LA_VERBOSE:
 	    outlevel = O_VERBOSE;
 	    break;
+
 	case 'd':
 	case LA_DAEMON:
 	    poll_interval = atoi(optarg);
@@ -141,6 +147,11 @@ struct query *ctl;	/* option record to be initialized */
 	case LA_LOGFILE:
 	    logfile = optarg;
 	    break;
+	case 'b':
+	case LA_BATCHLIMIT:
+	    batchlimit = atoi(optarg);
+	    break;
+
 	case 'f':
 	case LA_RCFILE:
 	    rcfile = (char *) xmalloc(strlen(optarg)+1);
@@ -266,6 +277,7 @@ struct query *ctl;	/* option record to be initialized */
 	fputs("  -N, --nodetach    don't detach daemon process\n", stderr);
 	fputs("  -q, --quit        kill daemon process\n", stderr);
 	fputs("  -L, --logfile     specify logfile name\n", stderr);
+	fputs("  -b, --batchlimit  delivery batch size limit\n", stderr);
 	fputs("  -f, --fetchmailrc specify alternate run control file\n", stderr);
 	fputs("  -i, --idfile      specify alternate UIDs file\n", stderr);
 
