@@ -10,6 +10,8 @@ fetchmail \- fetch mail from a POP, IMAP, or ETRN-capable server
 
 .SH SYNOPSIS
 \fBfetchmail\fR [\fIoptions\fR] [\fImailserver...\fR]
+.br
+\fBfetchmailconf\fR
 
 .SH DESCRIPTION
 .I fetchmail
@@ -43,11 +45,19 @@ as \fIsmail\fR, \fImmdf\fR, or \fIqmail\fR).  All the delivery-control
 mechanisms (such as \fI.forward\fR files) normally available through
 your system MDA and local delivery agents will therefore work.
 .PP
+If the program
+.I fetchmailconf
+is available, it will assist you in setting up and editing a
+fetchmailrc configuration.  It runs under X and requires that the
+language Python and the Tk toolkit be present on your system.
+
+.SH GENERAL OPERATION
 The behavior of
 .I fetchmail
 is controlled by command-line options and a run control file,
-\fI~/.fetchmailrc\fR, the syntax of which we describe below.  Command-line
-options override
+.IR ~/.fetchmailrc\fR ,
+the syntax of which we describe in a later section (this file is what
+the \fIfetchmailconf\fR program edits).  Command-line options override
 .I ~/.fetchmailrc
 declarations.
 .PP
@@ -61,8 +71,6 @@ To facilitate the use of
 .I fetchmail
 In scripts, pipelines, etc., it returns an appropriate exit code upon 
 termination -- see EXIT CODES below.
-
-.SH OPTIONS
 The following options modify the behavior of \fIfetchmail\fR.  It is
 seldom necessary to specify any of these once you have a
 working \fI.fetchmailrc\fR file set up.

@@ -144,9 +144,11 @@ $(bindir)/fetchmailconf: fetchmailconf
 $(mandir)/fetchmail.$(manext): fetchmail.man
 	@echo "Installing manual page..."
 	$(INSTALL_DATA) $(srcdir)/fetchmail.man $@
+	ln -s $(mandir)/fetchmail.$(manext) $(mandir)/fetchmailconf.$(manext)
 
 uninstall:
-	rm -f $(bindir)/fetchmail $(bindir)/fetchmailconf $(mandir)/fetchmail.$(manext)
+	rm -f $(bindir)/fetchmail $(bindir)/fetchmailconf
+	rm -f $(mandir)/fetchmail.$(manext) $(mandir)/fetchmailconf.$(manext)
 
 .PHONY: clean realclean distclean mostlyclean
 clean: 

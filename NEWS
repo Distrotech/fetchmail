@@ -8,6 +8,7 @@
 
 ------------------------------------------------------------------------------
 fetchmail-4.4.8 ():
+* Added 0.90 beta version of fetchmailconf. 
 * Removed fetchall side-effect kluge, now that we knowe how to make TOP work
   with qpopper 2.3+.
 * Patch by Kok Seng to prevent loss of UID info when a query fails.
@@ -19,19 +20,19 @@ fetchmail-4.4.8 ():
     * when makeing sure we have a nonempty host list to forward to, I
       added "localhost" for non ETRN protocols.  This should relieve the
       situation for people, who do neither have a static ip-address
-      (hostname) assigned and neither bother to set up a dummy-interface
+      (hostname) assigned and don't bother to set up a dummy-interface
       for their hostname.  I think this feature was already in fetchmail
       in an older version.  We lost this, when we changed the code that it
       would work with ETRN.  My fix here works for both ETRN and non ETRN.
-  - fixed reversed dumping of mimedecode option
   - in options.c
     * changed char buf[...] to *buf + xmalloc to avoid buffer overuns and
       possible resulting (and annoying) coredumps
     * in parsecmdline(): replaced atoi by xatoi which uses strtol and
       better validity checks for input numbers.  This fix only works on
       ANSI-C systems; old systems still use atoi.  
+  - fixed reversed dumping of mimedecode option
 
-There are 270 people on fetchmail-friends and 214 on fetchmail-announce.
+There are 272 people on fetchmail-friends and 214 on fetchmail-announce.
 
 fetchmail-4.4.7 (Sat May 23 08:26:58 EDT 1998):
 * FEATURE FREEZE IS NOW IN EFFECT!  No new features until after 4.5.0.
