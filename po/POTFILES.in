@@ -27,5 +27,4 @@ smtp.c
 socket.c
 transact.c
 uid.c
-xalloca.c
 xmalloc.c
