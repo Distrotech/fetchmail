@@ -328,10 +328,11 @@ This option changes the header
 .I fetchmail
 assumes will carry a copy of the mail's envelope address.  Normally
 this is `X-Envelope-To' but as this header is not standard, practice
-varies. See the discussion of multidrop address handling below.  Note:
-do \fInot\fR say `envelope "Received"'; this is not necessary as fetchmail
-will try to parse Received lines if `envelope' is not specified (unless
-you explicitly disable Received parsing with `no envelope').
+varies. See the discussion of multidrop address handling below.  As a
+special case, `envelope "Received"' enables parsing of sendmail-style
+Received lines.  This is the default, and it should not be necessary
+unless you have globally disable Received parsing with `no envelope'
+in the \fI.fetchmailrc\fR file.
 
 .SH USER AUTHENTICATION
 Every mode except ETRN requires authentication of the client.
@@ -785,7 +786,9 @@ envelope', which disables \fIfetchmail\fR's normal attempt to deduce
 an envelope address from the Received line or X-Envelope-To header or
 whatever header has been previously set by `envelope'.  If you set `no
 envelope' in the defaults entry it is possible to undo that in
-individual entries by using `envelope <string>'.
+individual entries by using `envelope <string>'.  As a special case,
+\&`envelope "Received"' restores the default parsing of
+Received lines.
 .PP
 The \fBpassword\fR option requires a string argument, which is the password
 to be used with the entry's server.
@@ -996,8 +999,10 @@ can deduce the envelope address.  If the mailserver MTA is
 .I sendmail
 and the item of mail had just one recipient, the MTA will have written
 a `for' clause that gives the envelope addressee into its Received
-header. But this doesn't work reliably for other MTAs, nor if there is more
-than one recipient.
+header. But this doesn't work reliably for other MTAs, nor if there is
+more than one recipient.  By default, \fIfetchmail\fR looks for
+envelope addresses in these lines; you can restore this default with
+-E "Received" or \&`envelope Received'.
 .PP
 Alternatively, some SMTP listeners and/or mail servers insert a header
 in each message containing a copy of the envelope addresses.  This
@@ -1059,11 +1064,12 @@ running fetchmail (probably root).
 .PP
 If you're tempted to use 
 .I fetchmail 
-to retrieve mail for multiple users via POP or IMAP, think again.
-It would be smarter to just let it sit in the mailserver's queue and
-use ETRN mode to trigger SMTP sends periodically (of course, this
-means you have to poll more frequently than the mailserver's expiry
-period).  If you can't arrange this, try setting up a UUCP feed.
+to retrieve mail for multiple users from a single mail drop via POP or
+IMAP, think again.  It would be smarter to just let it sit in the
+mailserver's queue and use ETRN mode to trigger SMTP sends
+periodically (of course, this means you have to poll more frequently
+than the mailserver's expiry period).  If you can't arrange this, try
+setting up a UUCP feed.
 
 .SS Speeding Up Multidrop Checking
 Normally, when multiple user are declared 

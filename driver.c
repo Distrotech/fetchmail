@@ -679,13 +679,6 @@ char *realname;		/* real name of host */
 	    from_offs = (line - headers);
 	else if (from_offs == -1 && !strncasecmp("Apparently-From:", line, 16))
 	    from_offs = (line - headers);
-
-	else if (ctl->server.envelope != STRING_DISABLED && env_offs == -1
-		 && !strncasecmp(ctl->server.envelope,
-						line,
-						strlen(ctl->server.envelope)))
-	    env_offs = (line - headers);
-
 	else if (!strncasecmp("To:", line, 3))
 	{
 	    if (next_address >= sizeof(addressoffs)/sizeof(addressoffs[0]))
@@ -710,14 +703,21 @@ char *realname;		/* real name of host */
 	else if (!strncasecmp("Content-Transfer-Encoding:", line, 26))
 	    ctt_offs = (line - headers);
 
+	else if (MULTIDROP(ctl) && ctl->server.envelope != STRING_DISABLED)
+	{
+	    if (ctl->server.envelope 
+			&& strcasecmp(ctl->server.envelope, "received"))
+	    {
+		if (env_offs == -1 && !strncasecmp(ctl->server.envelope,
+						line,
+						strlen(ctl->server.envelope)))
+		    env_offs = (line - headers);
+	    }
 #ifdef HAVE_RES_SEARCH
-	/*
-	 * The `no envelope' option should also disable parsing of Received
-	 * lines.
-	 */
-	else if (MULTIDROP(ctl) && ctl->server.envelope != STRING_DISABLED && !received_for && !strncasecmp("Received:", line, 9))
-	    received_for = parse_received(ctl, line);
+	    else if (!received_for && !strncasecmp("Received:", line, 9))
+		received_for = parse_received(ctl, line);
 #endif /* HAVE_RES_SEARCH */
+	}
     }
 
     /*
