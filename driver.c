@@ -365,24 +365,18 @@ struct query *ctl;	/* query control record */
 		find_server_names(cchdr,  ctl, &xmit_names);
 		find_server_names(bcchdr, ctl, &xmit_names);
 		if (!xmit_names)
+		{
 		    no_local_matches = TRUE;
+		    save_uid(&xmit_names, -1, user);
+		    if (outlevel == O_VERBOSE)
+			fprintf(stderr, 
+				"fetchmail: no local matches, forwarding to %s\n",
+				user);
+		}
 	    }
 	    else	/* it's a single-drop box, use first localname */
 #endif /* HAVE_RES_SEARCH */
-	    {
-		if (ctl->localnames)
-		    save_uid(&xmit_names, -1, ctl->localnames->id);
-	    }
-
-	    /* if nothing supplied localnames, default appropriately */
-	    if (!xmit_names)
-	    {
-		save_uid(&xmit_names, -1, user);
-		if (outlevel == O_VERBOSE)
-		    fprintf(stderr, 
-			    "fetchmail: no local matches, forwarding to %s\n",
-			    user);
-	    }
+		save_uid(&xmit_names, -1, ctl->localnames->id);
 
 	    /* time to address the message */
 	    if (ctl->mda[0])	/* we have a declared MDA */

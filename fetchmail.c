@@ -51,10 +51,11 @@ char *idfile;		/* UID list file */
 int versioninfo;	/* emit only version info */
 char *user;		/* the name of the invoking user */
 
-static void termhook();
-static char *lockfile;
-static int popstatus;
-static int lastsig;
+static char *lockfile;		/* name of lockfile */
+static int querystatus;		/* status of query */
+static int lastsig;		/* last signal received */
+
+static void termhook();		/* forward declaration of exit hook */
 
 RETSIGTYPE donothing(sig) int sig; {signal(sig, donothing); lastsig = sig;}
 
@@ -335,7 +336,7 @@ int main (int argc, char **argv)
 		}
 #endif /* HAVE_GETHOSTBYNAME */
 
-		popstatus = query_host(ctl);
+		querystatus = query_host(ctl);
 		if (!check_only)
 		    update_uid_lists(ctl);
 	    }
@@ -402,10 +403,10 @@ int main (int argc, char **argv)
 	(poll_interval);
 
     if (outlevel == O_VERBOSE)
-	fprintf(stderr,"fetchmail: normal termination, status %d\n",popstatus);
+	fprintf(stderr,"fetchmail: normal termination, status %d\n",querystatus);
 
     termhook(0);
-    exit(popstatus);
+    exit(querystatus);
 }
 
 static int load_params(int argc, char **argv, int optind)
@@ -477,15 +478,19 @@ static int load_params(int argc, char **argv, int optind)
 		exit(PS_SYNTAX);
 	    }
 
-	    /* check that delivery is going to a real local user */
+	    /* make sure delivery will default to a real local user */
 	    if ((pw = getpwnam(user)) == (struct passwd *)NULL)
 	    {
 		fprintf(stderr,
-			"fetchmail: can't default delivery to %s\n", user);
+			"fetchmail: can't set up default delivery to %s\n", user);
 		exit(PS_SYNTAX);	/* has to be from bad rc file */
 	    }
 	    else
-		ctl->uid = pw->pw_uid;
+	    {
+		ctl->uid = pw->pw_uid;	/* for local delivery via MDA */
+		if (!ctl->localnames)	/* for local delivery via SMTP */
+		    save_uid(&ctl->localnames, -1, user);
+	    }
 
 #if !defined(HAVE_GETHOSTBYNAME) || !defined(HAVE_RES_SEARCH)
 	    /* can't handle multidrop mailboxes unless we can do DNS lookups */
@@ -583,7 +588,7 @@ void termhook(int sig)
     if (!check_only)
 	write_saved_lists(querylist, idfile);
 
-    exit(popstatus);
+    exit(querystatus);
 }
 
 static char *showproto(int proto)

@@ -544,7 +544,7 @@ Here's a version of those two with more whitespace and some noise words:
   poll pop.provider.net proto pop3
       user jsmith, with password secret1, is jsmith here;
   poll other.provider.net proto pop2:
-      user John.Smith with password My^Hat, is John.Smith here;
+      user John.Smith, with password My^Hat, is John.Smith here;
 .fi
 
 This version is much easier to read and doesn't cost significantly
