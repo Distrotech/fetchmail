@@ -347,6 +347,8 @@ Legal server options are:
     server
     protocol (or proto)
     port
+    skip
+    noskip
 
 Legal user options are
 
@@ -360,12 +362,10 @@ Legal user options are
     flush
     fetchall
     rewrite
-    skip
     nokeep
     noflush
     nofetchall
     norewrite
-    noskip
 .PP
 All options correspond to the obvious command-line arguments except
 three: \fBis\fR, \fBpassword\fR and \fBskip\fR.
@@ -386,7 +386,8 @@ not to query this host unless it is explicitly named on the command
 line.  A host entry with this flag will be skipped when
 .I fetchmail
 called with no arguments steps through all hosts in the run control file.
-(This option allows you to experiment with test entries safely.)
+(This option allows you to experiment with test entries safely, or easily
+disable entries for hosts that are temporarily down.)
 .PP
 Legal protocol identifiers are
 
@@ -397,7 +398,7 @@ Legal protocol identifiers are
     apop (or APOP)
     rpop (or RPOP)
 .PP
-You can also use the `noise' keywords \fBand\fR, \fBwith\fR,
+You can use the `noise' keywords \fBand\fR, \fBwith\fR,
 \fBhas\fR, \fBwants\fR, and \fBoptions\fR anywhere in an entry to make
 it resemble English.  They're ignored, but but can make entries much
 easier to read at a glance.  The punctuation characters ':', ';' and
@@ -408,6 +409,9 @@ significance.  Normally `\fBuser eric is esr\fR' would mean that
 mail for the remote user \fBeric\fR is to be delivered to \fBesr\fR,
 but you can make this clearer by saying `\fBuser eric there is esr here\fR',
 or reverse it by saying `\fBuser esr here is eric there\fR'
+.PP
+Finally, instead of saying `\fBserver fubar.com skip\fR ...' you can say
+\&`\fBskip server fubar.com\fR ...'
 .PP
 Basic format is:
 
@@ -451,9 +455,9 @@ If you need to include whitespace in a parameter string, enclose the
 string in double quotes.  Thus:
 
 .nf
-  server mail.provider.net proto pop3
-        user jsmith has password "u can't krak this"
-                    and wants mda "/bin/mail %s"
+  server mail.provider.net with proto pop3
+        user jsmith there has password "u can't krak this"
+                    is jws here and wants mda "/bin/mail %s"
 .fi
 
 You may have an initial server description headed by the keyword
@@ -467,7 +471,7 @@ by individual server descriptions.  So, you could write:
   server pop.provider.net
         pass secret1
   server mail.provider.net
-        user jjsmith has password secret2
+        user jjsmith there has password secret2
 .fi
 
 It's possible to specify more than one user per server (this is only
