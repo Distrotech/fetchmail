@@ -2,6 +2,8 @@
 
 fetchmail-4.7.2 ():
 * Don't append the destination address to a postmaster name containing @.
+* Added John Summerfield's getfetchmail script.
+* Minor fixes in bouncemail format.
 
 There are 246 people on fetchmail-friends and 329 on fetchmail-announce.
 

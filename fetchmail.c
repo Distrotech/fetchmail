@@ -217,7 +217,9 @@ int main (int argc, char **argv)
 
     /* set up to do lock protocol */
 #define	FETCHMAIL_PIDFILE	"fetchmail.pid"
-    xalloca(tmpbuf, char *, strlen(home) + strlen(FETCHMAIL_PIDFILE) + 3);
+    xalloca(tmpbuf, char *, !getuid?
+	(strlen(PID_DIR) + strlen(FETCHMAIL_PIDFILE) + 2):
+	(strlen(home) + strlen(FETCHMAIL_PIDFILE) + 3));
     if (!getuid())
 	sprintf(tmpbuf, "%s/%s", PID_DIR, FETCHMAIL_PIDFILE);
     else {
