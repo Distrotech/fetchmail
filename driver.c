@@ -504,7 +504,7 @@ int num;		/* index of message */
     {
 	int		offset;
 	struct addrblk	*next;
-    } *addrchain, **chainptr = &addrchain;
+    } *addrchain = NULL, **chainptr = &addrchain;
     char buf[MSGBUFSIZE+1], return_path[MSGBUFSIZE+1]; 
     int	from_offs, ctt_offs, env_offs, next_address;
     char *headers, *received_for;
