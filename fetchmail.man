@@ -465,8 +465,7 @@ When there is more than one local name (or name mapping) the
 retrieved mail. When a declared mailserver username is recognized, its
 local mapping is added to the list of local recipients.  If
 \fIfetchmail\fR cannot recognize any mailserver usernames, the default
-recipient is the calling user, unless the calling user is root in
-which case it is the remote user name of the current entry.
+recipient is the calling user.
 .PP
 The \fBpassword\fR option requires a string argument, which is the password
 to be used with the entry's server.

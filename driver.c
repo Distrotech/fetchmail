@@ -360,17 +360,11 @@ struct query *ctl;	/* query control record */
 	    /* if nothing supplied localnames, default appropriately */
 	    if (!xmit_names)
 	    {
-		char	*dflt;
-
-		if (getuid() == 0)
-		    dflt = ctl->remotename;
-		else
-		    dflt = user;
-		save_uid(&xmit_names, -1, dflt);
+		save_uid(&xmit_names, -1, user);
 		if (outlevel == O_VERBOSE)
 		    fprintf(stderr, 
 			    "fetchmail: no local matches, forwarding to %s\n",
-			    dflt);
+			    user);
 	    }
 
 	    /* time to address the message */
