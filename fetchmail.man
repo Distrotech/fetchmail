@@ -1819,7 +1819,10 @@ mail.  If you don't know what a socket is, don't worry about it --
 just treat this as an 'unrecoverable error'.
 .IP 3
 The user authentication step failed.  This usually means that a bad 
-user-id, password, or APOP id was specified.
+user-id, password, or APOP id was specified.  Or it may mean that you 
+tried to run fetchmail under circumstances where it did not have
+standard input attached to a terminal and could not prompt for a
+missing password.
 .IP 4
 Some sort of fatal protocol error was detected.
 .IP 5
