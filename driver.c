@@ -371,8 +371,6 @@ char *parse_received(struct query *ctl, char *bufp)
 int smtp_open(struct query *ctl)
 /* try to open a socket to the appropriate SMTP server for this query */ 
 {
-    struct idlist	*idp;
-
     /* maybe it's time to close the socket in order to force delivery */
     if (ctl->batchlimit > 0 && (ctl->smtp_socket != -1) && batchcount++ == ctl->batchlimit)
     {
@@ -381,8 +379,8 @@ int smtp_open(struct query *ctl)
 	batchcount = 0;
     }
 
-    /* run down the SMTP hunt list looking for a server that's up */
-    for (idp = ctl->smtphunt; idp; idp = idp->next)
+    /* if no socket to any SMTP host is already set up, try to open one */
+    if (ctl->smtp_socket == -1) 
     {
 	/* 
 	 * RFC 1123 requires that the domain name in HELO address is a
@@ -401,53 +399,39 @@ int smtp_open(struct query *ctl)
 	 * that matches the local machine fetchmail is running on.
 	 * What it will affect is the listener's logging.
 	 */
+	struct idlist	*idp;
 
-	/* if no socket to this host is already set up, try to open ESMTP */
-	if (ctl->smtp_socket == -1)
+	/* run down the SMTP hunt list looking for a server that's up */
+	for (idp = ctl->smtphunt; idp; idp = idp->next)
 	{
-#ifndef HAVE_RES_SEARCH
-	    char	*fakename;
-#endif /* HAVE_RES_SEARCH */
+	    ctl->smtphost = idp->id;  /* remember last host tried. */
 
 	    if ((ctl->smtp_socket = SockOpen(idp->id,SMTP_PORT)) == -1)
 		continue;
 
-	    if (SMTP_ok(ctl->smtp_socket) != SM_OK
-		     || SMTP_ehlo(ctl->smtp_socket, 
-				  ctl->server.truename,
-				  &ctl->server.esmtp_options) != SM_OK)
-	    {
-		/*
-		 * RFC 1869 warns that some listeners hang up on a failed EHLO,
-		 * so it's safest not to assume the socket will still be good.
-		 */
-		close(ctl->smtp_socket);
-		ctl->smtp_socket = -1;
-	    }
-	    else
-	    {
-		ctl->smtphost = idp->id;
-		break;
-	    }
-	}
+	    if (SMTP_ok(ctl->smtp_socket) == SM_OK &&
+		    SMTP_ehlo(ctl->smtp_socket, 
+			  ctl->server.truename,
+			  &ctl->server.esmtp_options) == SM_OK)
+	       break;  /* success */
 
-	/* if opening for ESMTP failed, try SMTP */
-	if (ctl->smtp_socket == -1)
-	{
+	    /*
+	     * RFC 1869 warns that some listeners hang up on a failed EHLO,
+	     * so it's safest not to assume the socket will still be good.
+	     */
+	    close(ctl->smtp_socket);
+	    ctl->smtp_socket = -1;
+
+	    /* if opening for ESMTP failed, try SMTP */
 	    if ((ctl->smtp_socket = SockOpen(idp->id,SMTP_PORT)) == -1)
 		continue;
-	    else if (SMTP_ok(ctl->smtp_socket) != SM_OK
-		     || SMTP_helo(ctl->smtp_socket,
-				  ctl->server.truename) != SM_OK)
-	    {
-		close(ctl->smtp_socket);
-		ctl->smtp_socket = -1;
-	    }
-	    else
-	    {
-		ctl->smtphost = idp->id;
-		break;
-	    }
+
+	    if (SMTP_ok(ctl->smtp_socket) == SM_OK && 
+		    SMTP_helo(ctl->smtp_socket, ctl->server.truename) == SM_OK)
+		break;  /* success */
+
+	    close(ctl->smtp_socket);
+	    ctl->smtp_socket = -1;
 	}
     }
 
