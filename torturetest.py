@@ -47,8 +47,8 @@ class TestSite:
 
     def tableprint(self):
         "Print an HTML server-type table entry."
-        return "<tr><td>%s %s</td><td>%s</td><td>%s</td></tr>\n" \
-               % (self.proto, self.version, self.capabilities, self.comment)
+        return "<tr><td>%s: %s</td><td>%s</td>\n" \
+               % (self.proto, self.comment, self.capabilities)
 
     def id(self):
         "Identify this site."

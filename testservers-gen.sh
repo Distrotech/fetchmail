@@ -25,7 +25,6 @@ Here are the server types on my regression-test list:<p>
 <tr>
 <td><strong>Protocol & Version:</strong></td>
 <td><strong>Special Options:</strong></td>
-<td><strong>Name:</strong></td>
 </tr>
 EOF
 torturetest.py -t
@@ -44,7 +43,7 @@ Microsoft Exchange on here. These are the real robustness tests.
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="/~esr">Eric's Home Page</a>
 <td width="30%" align=center>Up to <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>${dateQ}
+<td width="30%" align=right>${date}
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@thyrsus.com&gt;</A></ADDRESS>
