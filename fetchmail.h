@@ -46,23 +46,26 @@
 #define		TO_MDA		3	/* use agent */
 
 struct optrec {
-  int keep;
-  int protocol;
-  int limit;
-  int fetchall;
-  int flush;
-  int output;
   char servername [HOSTLEN];
   char localname [USERNAMELEN];
   char remotename [USERNAMELEN];
   char password [PASSWORDLEN];
-#if defined(HAVE_APOP_SUPPORT)
-  char digest [DIGESTLEN];
-#endif
   char userfolder [FOLDERLEN];
   char remotefolder [FOLDERLEN];
   char mda [MDALEN];
+  int keep;
+  int protocol;
+  int fetchall;
+  int flush;
+
+  /* dependent on the above members */
+  int output;
   struct optrec *next;
+
+#if defined(HAVE_APOP_SUPPORT)
+  /* internal use only */ 
+  char digest [DIGESTLEN];
+#endif
 };
 
 /* controls the detail level of status/progress messages written to stderr */
