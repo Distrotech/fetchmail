@@ -492,7 +492,7 @@ The
 or
 .B --logfile
 option (keyword: set logfile) allows you to redirect status messages
-emitted while in daemon mode into a specified logfile (follow the
+emitted while detached into a specified logfile (follow the
 option with the logfile name).  The logfile is opened for append, so
 previous messages aren't deleted.  This is primarily useful for
 debugging configurations.
@@ -517,8 +517,10 @@ option was used.
 .PP
 The 
 .B \-N
-or --nodetach option suppresses detachment of the daemon process
-from its control terminal.  This is primarily useful for debugging.
+or --nodetach option suppresses backgrounding and detachment of the
+daemon process from its control terminal.  This is primarily useful
+for debugging.  Note that this also causes the logfile option to be
+ignored (though perhaps it shouldn't).
 .PP
 Note that while running in daemon mode polling a POP2 or POP3 server,
 transient errors (such as DNS failures or sendmail delivery refusals)
