@@ -22,6 +22,8 @@ put design-notes.html
 #put fetchmail.gif
 #put bighand.gif
 put index.html
+close
+echo "Upload to tuxedo complete"
 
 # Next, upload to the ftp site
 open locke.ccil.org
@@ -33,8 +35,9 @@ put README
 put FAQ
 put FEATURES
 close
+echo "Upload to locke complete"
 
-# Next, upload to Sunsite
+# Next, upload to Metalab
 open -u anonymous,esr@thyrsus.com metalab.unc.edu
 cd incoming/Linux 
 put fetchmail-${version}.tar.gz
@@ -44,13 +47,15 @@ put fetchmail-FAQ.html
 put fetchmail-${version}-1.i386.rpm
 put fetchmail-${version}-1.src.rpm
 close
- 
+echo "Upload to Metalab complete"
+
 # Finally, upload the RPMS to Red Hat
 open incoming.redhat.com
 cd libc6
 put fetchmail-${version}-1.i386.rpm
 put fetchmail-${version}-1.src.rpm
 close
+echo "Upload to Red Hat contrib complete"
 
 EOF
     echo "fetchmail uploaded"
