@@ -83,7 +83,7 @@ href="http://www.imap.org">IMAP</a>, ETRN, and ODMR. It can even
 support IPv6 and IPSEC.</P>
 
 <P>Fetchmail retrieves mail from remote mail servers and forwards it via
-SMTP, so it can then be be read by normal mail user agents such as <a
+SMTP, so it can then be read by normal mail user agents such as <a
 href="http://www.mutt.org/">mutt</a>, elm(1) or BSD Mail.
 It allows all your system MTA's filtering, forwarding, and aliasing
 facilities to work just as they would on normal mail.</P>
