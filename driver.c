@@ -273,12 +273,14 @@ static char *parse_received(struct query *ctl, char *bufp)
 	    return(NULL);
 	}
 
-	if ((ok = strstr(sp, "for ")) && isspace(ok[-1]))
+	if ((ok = strstr(sp, "for")) && isspace(ok[3]) && isspace(ok[-1]))
 	{
 	    flag	want_gt = FALSE;
 
+	    /* char after "for" could be space or a continuation newline */
+	    for (sp = ok + 4; isspace(*sp); sp++)
+		continue;
 	    tp = rbuf;
-	    sp = ok + 4;
 	    *tp++ = ':';	/* Here is the hack.  This is to be friends */
 	    *tp++ = ' ';	/* with nxtaddr()... */
 	    if (*sp == '<')
