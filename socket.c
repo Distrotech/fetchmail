@@ -681,7 +681,7 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx )
 				report(stdout, _("Issuer Organization: %s\n"), cbuf );
 		} else {
 			if (outlevel == O_VERBOSE)
-				report(stdout, _("Unknown Organization\n"), cbuf );
+				report(stdout, _("Unknown Organization\n"));
 		}
 		if( ( str_ptr = strstr( ibuf, "/CN=" ) ) ) {
 			str_ptr += 4;
@@ -693,7 +693,7 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx )
 				report(stdout, _("Issuer CommonName: %s\n"), cbuf );
 		} else {
 			if (outlevel == O_VERBOSE)
-				report(stdout, _("Unknown Issuer CommonName\n"), cbuf );
+				report(stdout, _("Unknown Issuer CommonName\n"));
 		}
 		if( ( str_ptr = strstr( buf, "/CN=" ) ) ) {
 			str_ptr += 4;
@@ -724,7 +724,7 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx )
 		       }
 		} else {
 			if (outlevel == O_VERBOSE)
-				report(stdout, _("Unknown Server CommonName\n"), cbuf );
+				report(stdout, _("Unknown Server CommonName\n"));
 		}
 	}
 
