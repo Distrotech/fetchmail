@@ -151,7 +151,10 @@ char **argv;
 
 	hostp->next = hostlist;
 	hostlist = hostp;
+    }
 
+    /* expand MDA commands */
+    for (hostp = hostlist; hostp; hostp = hostp->next)
 	if (hostp->mda[0])
 	{
 	    int argi;
@@ -176,7 +179,6 @@ char **argv;
 	    if ((argp = strrchr(hostp->mda_argv[1], '/')) != (char *)NULL)
 		hostp->mda_argv[1] = argp + 1 ;
 	}
-    }
 
     /* set up to do lock protocol */
     if ((tmpdir = getenv("TMPDIR")) == (char *)NULL)
