@@ -120,12 +120,11 @@ broken.</em><P>
 Fetchmail was written and is maintained by <a
 href="../index.html">Eric S. Raymond</a>.  <a
 href="mailto:funk+@osu.edu">Rob Funk</a>, <a
-href="mailto:alberty@apexxtech.com">Al Youngwerth</a> and Dave
-Bodenstab <a href="mailto:imdave@mcs.net">Dave Bodenstab</a> are
-fetchmail's designated backup maintainers.  Other backup maintainers
-may be added in the future, in order to ensure continued support
-should Eric S.  Raymond drop permanently off the net for any
-reason.<P>
+href="mailto:alberty@apexxtech.com">Al Youngwerth</a> and <a
+href="mailto:imdave@mcs.net">Dave Bodenstab</a> are fetchmail's
+designated backup maintainers.  Other backup maintainers may be added
+in the future, in order to ensure continued support should Eric S.
+Raymond drop permanently off the net for any reason.<P>
 
 <H1>Who uses fetchmail:</H1>
 
