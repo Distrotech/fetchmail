@@ -920,8 +920,8 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		if (namerec == (struct hostent *)NULL)
 		{
 		    report(stderr,
-			   GT_("couldn't find canonical DNS name of %s\n"),
-			   ctl->server.pollname);
+			   GT_("couldn't find canonical DNS name of %s (%s)\n"),
+			   ctl->server.pollname, ctl->server.queryname);
 		    err = PS_DNS;
 		    set_timeout(0);
 		    phase = oldphase;
