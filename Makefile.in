@@ -205,7 +205,7 @@ all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) \
 	$(srcdir)/contrib/* $(srcdir)/MANIFEST $(srcdir)/LIBOPIE.PATCH
 
 MANIFEST: $(srcdir) Makefile.in
-	@echo $(all) | tr "[ \t]" '\n' | sort | sed "s/\\./fetchmail-$(VERS)/" >MANIFEST
+	@echo $(all) | tr "[ \t]" '\n' | sed -e '/^\.\//s///' | sort >MANIFEST
 	@wc -l MANIFEST
 
 FAQ: fetchmail.FAQ.html
@@ -229,11 +229,10 @@ dist: Makefile.in
 	ls -l fetchmail-$(VERS).tar.gz
 	@echo "Don't forget to build RPMs from root!"
 
-fetchmail-$(VERS).tar: $(all)
-	(cd ..; tar -cf fetchmail-$(VERS).tar `cat fetchmail-$(VERS)/MANIFEST`)
-	mv ../fetchmail-$(VERS).tar fetchmail-$(VERS).tar
-fetchmail-$(VERS).tar.gz: fetchmail-$(VERS).tar
-	gzip -f fetchmail-$(VERS).tar
+# This requires my patch to tar-1.12, or a stock tar-1.13 (not yet released);
+# the version must implement the --name-prefix option.
+fetchmail-$(VERS).tar.gz: $(all)
+	tar --name-prefix='fetchmail-$(VERS)/' -czf fetchmail-$(VERS).tar.gz `cat MANIFEST`
 
 # You need to be root to make this work
 RPMROOT=/usr/src/redhat
