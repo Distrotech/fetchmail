@@ -2,6 +2,12 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Brian Grayson's patch enabling compilation under AIX 4.1.
+* Federico G. Schwindt's patch to support BSD ELF systems.
+* Fix to Sunil Shetye's attributes patch.
+* Scott Bronson's patch to reap zombies after an MDA core dump.
+* New Japanese translation file.
+
 fetchmail-5.9.11 (Mon Apr  1 17:09:13 EST 2002), 21597 lines:
 
 * Updated Turkish and Japanese translations.

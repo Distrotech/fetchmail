@@ -25,6 +25,9 @@
 #endif
 #include  <sys/time.h>
 #include  <signal.h>
+#ifdef HAVE_SYS_WAIT_H
+#include <sys/wait.h>
+#endif
 
 #ifdef HAVE_NET_SOCKET_H
 #include <net/socket.h>
@@ -753,6 +756,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	    signal(SIGPIPE, SIG_IGN);
 	    report(stdout,
 		   GT_("SIGPIPE thrown from an MDA or a stream socket error\n"));
+	    wait(0);
 	    err = PS_SOCKET;
 	    goto cleanUp;
 	}

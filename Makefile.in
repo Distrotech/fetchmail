@@ -4,7 +4,7 @@
 # So just uncomment all the lines marked QNX.
 
 PACKAGE = fetchmail
-VERSION = 5.9.11
+VERSION = 6.0.0
 
 # Ultrix 2.2 make doesn't expand the value of VPATH.
 srcdir = @srcdir@
@@ -43,9 +43,6 @@ defines = $(DEFS)
 # In particular, add -lresolv if you are running bind 4.9.5
 LOADLIBS = @LIBS@ @INTLLIBS@ @LEXLIB@
 # LOADLIBS = -lsocket3r -lunix3r	# QNX
-
-# Any extra object files your system needs.
-extras = @LIBOBJS@
 
 # Extra sources/objects for library functions not provided on the host system.
 EXTRASRC = @EXTRASRC@
@@ -98,7 +95,7 @@ protobjs = rcfile_y.o rcfile_l.o socket.o getpass.o pop2.o pop3.o imap.o \
        report.o unmime.o conf.o checkalias.o smbdes.o smbencrypt.o smbmd4.o \
        smbutil.o ipv6-connect.o lock.o
 
-objs = $(protobjs) $(extras) $(EXTRAOBJ)
+objs = $(protobjs) $(EXTRAOBJ)
 
 srcs = $(srcdir)/socket.c $(srcdir)/getpass.c $(srcdir)/pop2.c 		\
        $(srcdir)/pop3.c $(srcdir)/imap.c $(srcdir)/etrn.c 		\

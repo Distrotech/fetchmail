@@ -393,7 +393,7 @@ extern char *sdps_envto;
 
 /* from /usr/include/sys/cdefs.h */
 #if !defined __GNUC__ || __GNUC__ < 2
-# define __attribute__(xyz)»    /* Ignore. */
+# define __attribute__(xyz)    /* Ignore. */
 #endif
 
 /* error.c: Error reporting */
