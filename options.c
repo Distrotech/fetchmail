@@ -342,9 +342,9 @@ struct query *ctl;	/* option record to be initialized */
 	case 'T':
 	case LA_NETSEC:
 #if NET_SECURITY
-	    ctl->server.ipsec = (void *)optarg;
+	    ctl->server.netsec = (void *)optarg;
 #else
-	    fprintf(stderr, "fetchmail: IPv6 support is disabled\n");
+	    fprintf(stderr, "fetchmail: network security support is disabled\n");
 	    errflag++;
 #endif /* NET_SECURITY */
 	    break;

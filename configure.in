@@ -205,6 +205,11 @@ AC_ARG_ENABLE(netsec,
           echo '           for network security support. Either it does not exist, or it was';
           echo '           not built with network security support enabled.';
           exit 1]) ])
+          unset ac_cv_header_net_security_h; AC_CHECK_HEADER(net/security.h,,
+        [ unset ac_cv_header_net_security_h; CPPFLAGS="$CPPFLAGS -I/usr/inet6/include"; CFLAGS="$CFLAGS -I/usr/inet6/include"; AC_CHECK_HEADER(net/security.h,,
+	[ echo 'configure: cannot find <net/security.h>, which is required for network security';
+          echo '           support.';
+          exit 1]) ])
           AC_DEFINE(NET_SECURITY, 1) ])
   
 ###	use option --with-gssapi=DIR to compile in GSSAPI support

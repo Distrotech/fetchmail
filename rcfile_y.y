@@ -46,7 +46,7 @@ static int prc_errflag;
 static struct hostdata *leadentry;
 static flag trailer;
 #if NET_SECURITY
-static net_security_operation	request[NET_SECURITY_OPERATION_MAX];
+static struct net_security_operation request[NET_SECURITY_OPERATION_MAX];
 static int requestlen = NET_SECURITY_OPERATION_MAX;
 #endif /* NET_SECURITY */
 
@@ -173,11 +173,10 @@ serv_option	: AKA alias_list
 		| QVIRTUAL STRING	{current.server.qvirtual=xstrdup($2);}
 		| NETSEC STRING		{
 #ifdef NET_SECURITY
-		    			    if (net_security_strtorequest(options, request, &requestlen))
+		    			    if (net_security_strtorequest($2, request, &requestlen))
 						yyerror("invalid security request");
 					    else
-						current.server.netsec = 
-						    xstrdup($2);
+						current.server.netsec = xstrdup($2);
 #else
 					    yyerror("network-security support disabled")
 #endif /* NET_SECURITY */

@@ -122,7 +122,7 @@ static int do_otp(int sock, struct query *ctl)
   char challenge[OPIE_CHALLENGE_MAX+1];
   char response[OPIE_RESPONSE_MAX+1];
 
-  gen_send(sock, "AUTHENTICATE OTP");
+  gen_send(sock, "AUTHENTICATE X-OTP");
 
   if (rval = gen_recv(sock, buffer, sizeof(buffer)))
     return rval;
@@ -597,10 +597,11 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     peek_capable = (imap_version >= IMAP4);
 
 #if OPIE
-    if ((ctl->server.protocol == P_IMAP) && strstr(capabilities, "AUTH=OTP")) {
+    if ((ctl->server.protocol == P_IMAP) && strstr(capabilities, "AUTH=X-OTP")) {
       if (outlevel == O_VERBOSE)
         error(0, 0, "OTP authentication is supported");
-      return do_otp(sock, ctl);
+      if (do_otp(sock, ctl) == PS_SUCCESS)
+        return PS_SUCCESS;
     };
 #endif /* OPIE */
 
@@ -646,6 +647,11 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 	return(PS_AUTHFAIL);
     }
 #endif /* KERBEROS_V4 */
+
+    if ((imap_version >= IMAP4) && (!strstr(capabilities, "AUTH=LOGIN"))) {
+      error(0,-1, "Required LOGIN capability not supported by server");
+      return PS_AUTHFAIL;
+    };
 
     /* try to get authorized in the ordinary (AUTH=LOGIN) way */
     ok = gen_transact(sock, "LOGIN %s \"%s\"", ctl->remotename, ctl->password);

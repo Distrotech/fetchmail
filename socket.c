@@ -37,13 +37,13 @@ int SockOpen(const char *host, const char *service, const char *options)
 {
   int i;
   struct addrinfo *ai, req;
+#if NET_SECURITY
+  struct net_security_operation request[NET_SECURITY_OPERATION_MAX];
+  int requestlen;
+#endif /* NET_SECURITY */
 
   memset(&req, 0, sizeof(struct addrinfo));
   req.ai_socktype = SOCK_STREAM;
-#if NET_SECURITY
-  net_security_operation	request[NET_SECURITY_OPERATION_MAX];
-  int requestlen = NET_SECURITY_OPERATION_MAX;
-#endif /* NET_SECURITY */
 
   if (i = getaddrinfo(host, service, &req, &ai)) {
     fprintf(stderr, "fetchmail: getaddrinfo(%s.%s): %s(%d)\n", host, service, gai_strerror(i), i);
@@ -51,13 +51,19 @@ int SockOpen(const char *host, const char *service, const char *options)
   };
 
 #if NET_SECURITY
-  if (net_security_strtorequest(options, request, &requestlen))
-      i = -1;
+  if (!options)
+    requestlen = 0;
   else
-      i = inner_connect(ai, request, requestlen, NULL,NULL, "fetchmail", NULL);
+    if (net_security_strtorequest((char *)options, request, &requestlen))
+      goto ret;
+
+  i = inner_connect(ai, request, requestlen, NULL,NULL, "fetchmail", NULL);
+
+ret:
 #else /* NET_SECURITY */
   i = inner_connect(ai, NULL, 0, NULL, NULL, "fetchmail", NULL);
 #endif /* NET_SECURITY */
+
   freeaddrinfo(ai);
 
   return i;
