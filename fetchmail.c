@@ -944,7 +944,7 @@ static int load_params(int argc, char **argv, int optind)
 	    DEFAULT(ctl->forcecr, FALSE);
 	    DEFAULT(ctl->pass8bits, FALSE);
 	    DEFAULT(ctl->dropstatus, FALSE);
-	    DEFAULT(ctl->mimedecode, FALSE);
+	    DEFAULT(ctl->mimedecode, TRUE);
 	    DEFAULT(ctl->server.dns, TRUE);
 	    DEFAULT(ctl->server.uidl, FALSE);
 	    DEFAULT(ctl->server.checkalias, FALSE);
