@@ -70,12 +70,15 @@ cp %{builddir}/rh-config/fetchmailconf.wmconfig \$RPM_BUILD_ROOT/etc/X11/wmconfi
 rm -rf \$RPM_BUILD_ROOT
 
 %files
+%defattr (644, root, root, 755)
 %doc README NEWS NOTES FAQ COPYING FEATURES sample.rcfile contrib
 %doc fetchmail-features.html fetchmail-FAQ.html design-notes.html
-%attr(644,root,root) /etc/X11/wmconfig/fetchmailconf
-%attr(755,root,root) /usr/bin/fetchmail
-%attr(755,root,root) /usr/bin/fetchmailconf
-%attr(644,root,root) /usr/man/man1/*.1.gz
-%attr(644,root,root) /usr/lib/rhs/control-panel/fetchmailconf.xpm
-%attr(644,root,root) /usr/lib/rhs/control-panel/fetchmailconf.init
+/usr/lib/rhs/control-panel/fetchmailconf.xpm
+/usr/lib/rhs/control-panel/fetchmailconf.init
+/etc/X11/wmconfig/fetchmailconf
+%defattr (644, root, man)
+/usr/man/man1/*.1.gz
+%defattr (755, root, root)
+/usr/bin/fetchmail
+/usr/bin/fetchmailconf
 EOF
