@@ -753,10 +753,15 @@ int num;		/* index of message */
 	 * not trigger bounces if delivery fails.  What we *do* need to do is
 	 * make sure we never try to rewrite such a blank Return-Path.  We
 	 * handle this with a check for <> in the rewrite logic.
+	 *
+	 * If the Return-Path header has no host part, tack on "@localhost"
+	 * in order to pacify sendmails that want to see an FQDN.
 	 */
 	if (!strncasecmp("Return-Path:", line, 12) && (cp = nxtaddr(line)))
 	{
 	    strcpy(return_path, cp);
+	    if (!strchr(return_path, '@'))
+		strcat(return_path, "@localhost");
 	    if (!ctl->mda) {
 		free(line);
 		continue;

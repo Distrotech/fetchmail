@@ -7,6 +7,7 @@ fetchmail-4.6.1 ():
 * Removed -pipe compilation option, it confuses too many non-GCC compilers.
 * Major update of SDPS FAQ material from B.Candler@pobox.com.
 * Fetchmailconf can deal with zsh now.
+* Append "@localhost" to MAIL FROM if it's not an FQDN.
 
 There are 255 people on fetchmail-friends and 296 on fetchmail-announce.
 
