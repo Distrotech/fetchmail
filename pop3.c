@@ -37,7 +37,7 @@ static int pop3_phase;
 #define PHASE_LOGOUT	4
 static int last;
 #ifdef SDPS_ENABLE
-static flag sdps_enable = FALSE;
+char *sdps_envfrom;
 char *sdps_envto;
 #endif /* SDPS_ENABLE */
 
@@ -122,14 +122,8 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
      * If we see either, and we're in multidrop mode, try to use
      * the SDPS *ENV extension.
      */
-    sdps_enable = (MULTIDROP(ctl) && strstr(greeting, "demon."));
-    /*
-     * Use SDPS if configured, regardless of the greeting string
-     * returned from the POP server. (Users accessing demon by a
-     * POP3 proxy may need this)
-     */
-    if (ctl->server.sdps)
-        sdps_enable = ctl->server.sdps;
+    if (!(ctl->server.sdps) && MULTIDROP(ctl) && strstr(greeting, "demon."))
+        ctl->server.sdps = TRUE;
 #endif /* SDPS_ENABLE */
 
     switch (ctl->server.protocol) {
@@ -548,10 +542,11 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
      * See http://www.demon.net/services/mail/sdps-tech.html
      * for a description of what we're parsing here.
      */
-    if (sdps_enable)
+    if (ctl->server.sdps)
     {
 	int	linecount = 0;
 
+	sdps_envfrom = (char *)NULL;
 	sdps_envto = (char *)NULL;
 	gen_send(sock, "*ENV %d", number);
 	do {
@@ -560,11 +555,17 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
                 break;
             }
             linecount++;
-            if (linecount == 5)
-            {
+	    switch (linecount) {
+	    case 4:
+		/* No need to wrap envelope from address */
+		sdps_envfrom = xmalloc(strlen(buf)+1);
+		strcpy(sdps_envfrom,buf);
+		break;
+	    case 5:
                 /* Wrap address with To: <> so nxtaddr() likes it */
                 sdps_envto = xmalloc(strlen(buf)+7);
                 sprintf(sdps_envto,"To: <%s>",buf);
+		break;
             }
 	} while
 	    (!(buf[0] == '.' && (buf[1] == '\r' || buf[1] == '\n' || buf[1] == '\0')));

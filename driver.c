@@ -771,6 +771,16 @@ static int readheaders(int sock,
     /* Check for MIME headers indicating possible 8-bit data */
     ctl->mimemsg = MimeBodyType(msgblk.headers, ctl->mimedecode);
 
+#ifdef SDPS_ENABLE
+    if (ctl->server.sdps && sdps_envfrom)
+    {
+	/* We have the real envelope return-path, stored out of band by
+	 * SDPS - that's more accurate than any header is going to be.
+	 */
+	strcpy(msgblk.return_path, sdps_envfrom);
+	free(sdps_envfrom);
+    } else
+#endif /* SDPS_ENABLE */
     /*
      * If there is a Return-Path address on the message, this was
      * almost certainly the MAIL FROM address given the originating
@@ -803,6 +813,16 @@ static int readheaders(int sock,
     /* is this a multidrop box? */
     if (MULTIDROP(ctl))
     {
+#ifdef SDPS_ENABLE
+	if (ctl->server.sdps && sdps_envto)
+	{
+	    /* We have the real envelope recipient, stored out of band by
+	     * SDPS - that's more accurate than any header is going to be.
+	     */
+	    find_server_names(sdps_envto, ctl, &msgblk.recipients);
+	    free(sdps_envto);
+	} else
+#endif /* SDPS_ENABLE */ 
 	if (env_offs > -1)	    /* We have the actual envelope addressee */
 	    find_server_names(msgblk.headers + env_offs, ctl, &msgblk.recipients);
 	else if (received_for)
@@ -814,13 +834,6 @@ static int readheaders(int sock,
 	     * hostnames go through.
 	     */
 	    find_server_names(received_for, ctl, &msgblk.recipients);
-#ifdef SDPS_ENABLE
-	else if (sdps_envto)
-	{
-	    find_server_names(sdps_envto, ctl, &msgblk.recipients);
-	    free(sdps_envto);
-	}
-#endif /* SDPS_ENABLE */ 
 	else
 	{
 	    /*

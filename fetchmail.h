@@ -332,6 +332,10 @@ extern int pass;		/* number of re-polling pass */
 extern flag configdump;		/* dump control blocks as Python dictionary */
 extern const char *fetchmailhost;
 				/* either "localhost" or an FQDN */
+#ifdef SDPS_ENABLE
+extern char *sdps_envfrom;
+extern char *sdps_envto;
+#endif /* SDPS_ENABLE */
 
 /* prototypes for globally callable functions */
 
@@ -472,9 +476,6 @@ void dump_config(struct runctl *runp, struct query *querylist);
 int is_host_alias(const char *, struct query *);
 char *host_fqdn(void);
 char *rfc822timestamp(void);
-#ifdef SDPS_ENABLE
-char *sdps_envto;
-#endif /* SDPS_ENABLE */
 
 void yyerror(const char *);
 int yylex(void);

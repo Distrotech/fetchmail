@@ -14,7 +14,6 @@
 #endif
 #include  "fetchmail.h"
 #include  "socket.h"
-#include  "i18n.h"
 
 #ifdef KERBEROS_V4
 #ifdef KERBEROS_V5
@@ -31,6 +30,7 @@
 #include <krb.h>
 #endif
 #endif /* KERBEROS_V4 */
+#include  "i18n.h"
 
 #ifdef GSSAPI
 #include <gssapi/gssapi.h>
