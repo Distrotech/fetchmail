@@ -19,6 +19,11 @@ returns buffer on success, NULL on failure.
 char *SockGets(char *buf, int len, FILE *sockfp);
 
 /*
+ * Peek at the next socket character without actually reading it.
+ */
+int SockPeek(FILE *sockfp);
+
+/*
 Write a chunk of bytes to the socket (matches interface of fwrite).
 Returns number of bytes successfully written.
 */

@@ -136,6 +136,18 @@ char *SockGets(char *buf, int len, FILE *sockfp)
     return buf;
 }
 
+int SockPeek(FILE *sockfp)
+/* peek at the next socket character without actually reading it */
+{
+    int n;
+    char ch;
+
+    if ((n = recv(fileno(sockfp), &ch, 1, MSG_PEEK)) == -1)
+	return -1;
+    else
+	return(ch);
+}
+
 #ifdef MAIN
 /*
  * Use the chargen service to test input beuffering directly.

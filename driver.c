@@ -329,7 +329,7 @@ char *realname;		/* real name of host */
     char buf [MSGBUFSIZE+1]; 
     char *bufp, *headers, *fromhdr,*tohdr,*cchdr,*bcchdr,*received_for,*envto;
     char *fromptr, *toptr;
-    int n, oldlen;
+    int n, oldlen, ch;
     int inheaders,lines,sizeticker;
     FILE *sinkfp;
     RETSIGTYPE (*sigchld)();
@@ -345,10 +345,17 @@ char *realname;		/* real name of host */
     oldlen = 0;
     while (delimited || len > 0)
     {
-	if (!SockGets(buf,sizeof(buf),sockfp))
-	    return(PS_SOCKET);
+	buf[0] = '\0';
+	do {
+	    if (!SockGets(buf+strlen(buf), sizeof(buf)-strlen(buf)-1, sockfp))
+		return(PS_SOCKET);
+	    vtalarm(ctl->server.timeout);
+	} while
+	    /* we may need to grab RFC822 continuations */
+	    (inheaders && (ch = SockPeek(sockfp)) == ' ' || ch == '\t');
+
+	/* compute length *before* squeezing out CRs */
 	n = strlen(buf);
-	vtalarm(ctl->server.timeout);
 
 	/* squeeze out all carriage returns */
 	for (fromptr = toptr = buf; *fromptr; fromptr++)
