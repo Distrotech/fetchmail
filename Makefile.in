@@ -43,7 +43,7 @@ extras = @LIBOBJS@
 EXTRASRC = @EXTRASRC@
 # EXTRASRC = $(srcdir)/strcasecmp.c $(srcdir)/getopt.c $(srcdir)/getopt1.c $(srcdir)/alloca.c	# QNX
 EXTRAOBJ = @EXTRAOBJ@
-# EXTRAOBJS = strcasecmp.o getopt.o getopt1.o alloca.o
+# EXTRAOBJ = strcasecmp.o getopt.o getopt1.o alloca.o
 
 # Common prefix for machine-independent installed files.
 prefix = @prefix@
