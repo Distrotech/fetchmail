@@ -9,6 +9,7 @@
   a different host than the one fetchmail runs on, and on using
   ssh for a secure passwordless connection.  Removed the FAQ entry
   on popclient.
+* Jun-ichiro itojun Hagino <itojun@iijlab.net> sent a fix for IPv6.
 
 fetchmail-5.3.0 (Tue Feb 22 08:53:31 PST 2000), 18618 lines:
 

@@ -501,13 +501,10 @@ fi])
 AC_ARG_WITH(hesiod,
 	[  --with-hesiod=DIR       point fetchmail compilation at a HESIOD directory])
 
-if test -n "$with_hesiod"
-then
-    # Path given
-    CEFLAGS="$CEFLAGS -DHESIOD -I$with_hesiod/include"
-    LDEFLAGS="$LDEFLAGS -L$with_hesiod/lib"
-    LIBS="$LIBS -lhesiod"
-else
+case "x$with_hesiod" in
+xno)
+    ;;
+x)
     for dir in /usr/athena /usr /usr/local
     do
       if test -f "$dir/include/hesiod.h"
@@ -519,7 +516,14 @@ else
         break
       fi
     done
-  fi
+    ;;
+*)
+    # Path given
+    CEFLAGS="$CEFLAGS -DHESIOD -I$with_hesiod/include"
+    LDEFLAGS="$LDEFLAGS -L$with_hesiod/lib"
+    LIBS="$LIBS -lhesiod"
+    ;;
+  esac
 fi
 
 ###	use option --with-gssapi=DIR to compile in GSSAPI support

@@ -121,7 +121,7 @@ int SockCheckOpen(int fd)
 int SockOpen(const char *host, const char *service, const char *options,
 	     const char *plugin)
 {
-    struct addrinfo *ai, req;
+    struct addrinfo *ai, *ai0, req;
     int i;
 #if NET_SECURITY
     void *request = NULL;
@@ -135,10 +135,10 @@ int SockOpen(const char *host, const char *service, const char *options,
     memset(&req, 0, sizeof(struct addrinfo));
     req.ai_socktype = SOCK_STREAM;
 
-    if (getaddrinfo(host, service, &req, &ai)) {
+    if (getaddrinfo(host, service, &req, &ai0)) {
 	report(stderr, _("fetchmail: getaddrinfo(%s.%s)\n"), host,service);
 	return -1;
-    };
+    }
 
 #if NET_SECURITY
     if (!options)
@@ -147,32 +147,36 @@ int SockOpen(const char *host, const char *service, const char *options,
 	if (net_security_strtorequest((char *)options, &request, &requestlen))
 	    goto ret;
 
-    i = inner_connect(ai, request, requestlen, NULL, NULL, "fetchmail", NULL);
+    i = inner_connect(ai0, request, requestlen, NULL, NULL, "fetchmail", NULL);
     if (request)
 	free(request);
 
  ret:
 #else /* NET_SECURITY */
 #ifdef HAVE_INNER_CONNECT
-    i = inner_connect(ai, NULL, 0, NULL, NULL, "fetchmail", NULL);
+    i = inner_connect(ai0, NULL, 0, NULL, NULL, "fetchmail", NULL);
+    if (i >= 0)
+	break;
 #else
-    i = socket(ai->ai_family, ai->ai_socktype, 0);
-    if (i < 0) {
-	freeaddrinfo(ai);
-	return -1;
-    }
-    if (connect(i, (struct sockaddr *) ai->ai_addr, ai->ai_addrlen) < 0) {
-	freeaddrinfo(ai);
-	close(i);	/* don't use SockClose, no traffic yet */
-	return -1;
+    i = -1;
+    for (ai = ai0; ai; ai = ai->ai_next) {
+	i = socket(ai->ai_family, ai->ai_socktype, 0);
+	if (i < 0)
+	    continue;
+	if (connect(i, (struct sockaddr *) ai->ai_addr, ai->ai_addrlen) < 0) {
+	    close(i);
+	    i = -1;
+	    continue;
+	}
+	break;
     }
 #endif
 #endif /* NET_SECURITY */
 
-    freeaddrinfo(ai);
+    freeaddrinfo(ai0);
 
     return i;
-};
+}
 #else /* INET6_ENABLE */
 #ifndef HAVE_INET_ATON
 #ifndef  INADDR_NONE
