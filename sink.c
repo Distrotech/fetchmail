@@ -837,12 +837,29 @@ int open_warning_by_mail(struct query *ctl)
     int	good, bad;
 
     /*
-     * We give a null address list as the recipients member because we
-     * actually *want* this message to go to run.postmaster.  The zero
-     * length arg 5 means we won't pass a SIZE option to ESMTP; the
-     * message length would be more trouble than it's worth to compute.
+     * Dispatching warning email is a little complicated.  The problem is
+     * that we have to deal with three distinct cases:
+     * 
+     * 1. Single-drop running from user account.  Warning mail should
+     * go to the local name for which we're collecting (coincides
+     * with calling user).
+     *
+     * 2. Single-drop running from root or other privileged ID, with rc
+     * file generated on the fly (Ken Estes's weird setup...)  Mail
+     * should go to the local name for which we're collecting (does not 
+     * coincide with calling user).
+     * 
+     * 3. Multidrop.  Mail must go to postmaster.  We leave the recipients
+     * member null so this message will fall through to run.postmaster.
+     *
+     * The zero in the reallen element means we won't pass a SIZE
+     * option to ESMTP; the message length would be more trouble than
+     * it's worth to compute.
      */
-    static struct msgblk msg = {NULL, NULL, "FETCHMAIL-DAEMON", 0};
+    struct msgblk msg = {NULL, NULL, "FETCHMAIL-DAEMON", 0};
+
+    if (!MULTIDROP(ctl))
+	msg.recipients = ctl->localnames;
 
     return(open_sink(ctl, &msg, &good, &bad));
 }
