@@ -11,7 +11,9 @@
 * Scott Gifford's dotted-quad patch.
 * Updated Danish translation.
 * RPM now built with SSL and IPv6 support, reflecting what's in RH 7.3.
-* Sunil Shetye's patch to send CAPA during POP3 sessions.
+* Sunil Shetye's patches to send CAPA during POP3 sessions and improve
+  the PS_RETAINED behavior slightly.
+* Yann Droneaud's fix to eliminate a socket leak on error.
 
 fetchmail-5.9.12 (Tue Jun  4 14:57:47 EDT 2002), 21669 lines:
 

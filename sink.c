@@ -237,13 +237,24 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
     strcat(daemon_name, host_fqdn());
 
     /* we need only SMTP for this purpose */
-    if ((sock = SockOpen("localhost", SMTP_PORT, NULL, NULL)) == -1
-    		|| SMTP_ok(sock) != SM_OK 
-		|| SMTP_helo(sock, fetchmailhost) != SM_OK
-		|| SMTP_from(sock, daemon_name, (char *)NULL) != SM_OK
-		|| SMTP_rcpt(sock, bounce_to) != SM_OK
-		|| SMTP_data(sock) != SM_OK)
+    if ((sock = SockOpen("localhost", SMTP_PORT, NULL, NULL)) == -1)
 	return(FALSE);
+
+    if (SMTP_ok(sock) != SM_OK)
+    {
+	SockClose(sock);
+	return FALSE;
+    }
+
+    if (SMTP_helo(sock, fetchmailhost) != SM_OK
+	|| SMTP_from(sock, daemon_name, (char *)NULL) != SM_OK
+	|| SMTP_rcpt(sock, bounce_to) != SM_OK
+	|| SMTP_data(sock) != SM_OK) 
+    {
+	SMTP_quit(sock);
+	SockClose(sock);
+	return(FALSE);
+    }
 
     /* our first duty is to keep the sacred foo counters turning... */
 #ifdef HAVE_SNPRINTF
@@ -334,7 +345,10 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
     SockPrintf(sock, "--%s--\r\n", boundary); 
 
     if (SMTP_eom(sock) != SM_OK || SMTP_quit(sock))
+    {
+	SockClose(sock);
 	return(FALSE);
+    }
 
     SockClose(sock);
 

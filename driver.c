@@ -495,7 +495,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	    err = readheaders(mailserver_socket, len, msgsizes[num-1],
 			     ctl, num);
 	    if (err == PS_RETAINED)
-		suppress_forward = retained = TRUE;
+		suppress_readbody = suppress_forward = suppress_delete = retained = TRUE;
 	    else if (err == PS_TRANSIENT)
 		suppress_delete = suppress_forward = TRUE;
 	    else if (err == PS_REFUSED)
@@ -631,7 +631,8 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 		ctl->errcount++;
 		suppress_delete = TRUE;
 	    }
-	    (*fetches)++;
+	    if (!retained)
+		(*fetches)++;
 	}
 
 	/*
