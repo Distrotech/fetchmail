@@ -152,7 +152,7 @@ int SockOpen(const char *host, int clientPort, const char *options,
 #ifndef HAVE_INET_ATON
     unsigned long inaddr;
 #endif /* HAVE_INET_ATON */
-    struct sockaddr_in ad;
+    struct sockaddr_in ad, **pptr;
     struct hostent *hp;
 
 #ifdef HAVE_SOCKETPAIR
@@ -195,30 +195,35 @@ int SockOpen(const char *host, int clientPort, const char *options,
 	    return -1;
 	}
 	/*
-	 * FIXME: make this work for multihomed hosts.
-	 * We're toast if we get back multiple addresses and h_addrs[0]
-	 * (aka h_addr) is not one we can actually connect to; this happens
-	 * with multi-homed boxen.
+	 * Try all addresses of a possibly multihomed host until we get
+	 * a successful connect or until we run out of addresses.
 	 */
-        memcpy(&ad.sin_addr, hp->h_addr, hp->h_length);
+	pptr = (struct sockaddr_in **)hp->h_addr_list;
+	for(; *pptr != NULL; pptr++)
+	{
+	    sock = socket(AF_INET, SOCK_STREAM, 0);
+	    if (sock < 0)
+	    {
+		h_errno = 0;
+		return -1;
+	    }
+	    ad.sin_port = htons(clientPort);
+	    memcpy(&ad.sin_addr, *pptr, sizeof(struct in_addr));
+	    if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) == 0)
+		break; /* success */
+	    close(sock);
+	    memset(&ad, 0, sizeof(ad));
+	    ad.sin_family = AF_INET;
+	}
+	if(*pptr == NULL)
+	{
+	    int olderr = errno;
+	    close(sock);
+	    h_errno = 0;
+	    errno = olderr;
+	    return -1;
+	}
     }
-    ad.sin_port = htons(clientPort);
-    
-    sock = socket(AF_INET, SOCK_STREAM, 0);
-    if (sock < 0)
-    {
-	h_errno = 0;
-        return -1;
-    }
-    if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) < 0)
-    {
-	int olderr = errno;
-	close(sock);
-	h_errno = 0;
-	errno = olderr;
-        return -1;
-    }
-
     return(sock);
 }
 #endif /* INET6 */
