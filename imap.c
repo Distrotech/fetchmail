@@ -168,6 +168,12 @@ int socket;
 struct hostrec *queryctl;
 int number;
 {
+    /*
+     * I think the SILENT modifier here is the only thing keeping this code
+     * from being IMAP2 (RFC 1176-compliant), rather than IMAP2bis.  It's
+     * important for places where phone service is expensive to cut the
+     * IMAP protocol overhead as much as possible.
+     */
     return(gen_transact(socket, "STORE %d +FLAGS.SILENT (\\Deleted)", number));
 }
 
