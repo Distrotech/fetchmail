@@ -5,13 +5,13 @@ Test RPOP feature against a server that has it.
 Support IMAP4 extensions for secure challenge-response, once they're actually
 standardized.
 
-Inflict pain on the person(s) responsible for removing LAST from POP3.
+Inflict severe pain on the person(s) responsible for removing LAST from POP3.
 
 			Release Notes:
 
-fetchmail-1.4 ():
+fetchmail-1.4 (Wed Oct  2 09:22:37 1996):
 
-* Man page improvements.
+* More man page improvements.
 
 * Lexer changes to work around bison's "feature" of silently ignoring 0-value
   tokens (caused options nokeep, norewrite, nofetchall, noskip to be no-ops).
@@ -34,6 +34,8 @@ fetchmail-1.2 (Sat Sep 28 15:40:50 EDT 1996):
 * The great option massacre.  Remove --stdout, --limit, --local, --mda.
   We get a significant code and complexity shrinkage this way (a lot of the
   configuration machinery goes away too).  These things are your MDA's job.
+  (This also kills off the lose-mail-on-disk-full bug, which I've never 
+  seen but two users reported.)
 
 * Link APOP support by default.
 
