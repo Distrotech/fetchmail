@@ -451,10 +451,15 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
     }
 #endif /* __UNUSED__ */
 
-    /* we're stuck with sending the password en clair */
-    if ((ctl->server.authenticate == A_ANY 
- 	 || ctl->server.authenticate == A_PASSWORD) 
- 	&& !strstr (capabilities, "LOGINDISABLED"))
+    /* 
+     * We're stuck with sending the password en clair.
+     * The reason for this odd-looking logic is that some
+     * servers return LOGINDISABLED even though login 
+     * actually works.  So arrange things in such a way that
+     * setting auth passwd makes it ignore this capability.
+     */
+    if((ctl->server.authenticate==A_ANY&&!strstr(capabilities,"LOGINDISABLED"))
+	|| ctl->server.authenticate == A_PASSWORD)
     {
 	/* these sizes guarantee no buffer overflow */
 	char	remotename[NAMELEN*2+1], password[PASSWORDLEN*2+1];
