@@ -554,7 +554,7 @@ class ConfigurationEdit(Frame):
 	lf.pack(fill=X)
 
     def editSite(self, site):
-	ServerEdit(site, self.configuration.servers, Toplevel())
+	ServerEdit(self.mode, site, self.configuration.servers, Toplevel())
 
     def nosave(self):
 	if ConfirmQuit(self, self.mode + " configuration editor"):
@@ -706,7 +706,7 @@ def dispose_window(master, legend, help):
     return dispose
 
 class ServerEdit(Frame):
-    def __init__(self, host, servers, master=None):
+    def __init__(self, mode, host, servers, master=None):
 	Frame.__init__(self, master)
 	Pack.config(self)
 	self.master.title('Fetchmail host ' + host);
@@ -723,7 +723,7 @@ class ServerEdit(Frame):
 		servers.append(self.server)
 
 	self.post()
-	self.makeWidgets(host)
+	self.makeWidgets(host, mode)
 #	self.grab_set()
 #	self.focus_set()
 #	self.wait_window()
@@ -763,31 +763,33 @@ class ServerEdit(Frame):
 	self.port.set(defaultports[proto])
 	if not proto in ("POP3", "APOP", "KPOP"): self.uidl = FALSE
 
-    def makeWidgets(self, host):
+    def makeWidgets(self, host, mode):
 	topwin = dispose_window(self, "Server options for " + host, serverhelp)
 
 	leftwin = Frame(self);
 	leftwidth = '25';
 
-	ctlwin = Frame(leftwin, relief=RAISED, bd=5)
-	Label(ctlwin, text="Run Controls").pack(side=TOP)
-	Checkbutton(ctlwin, text='Poll ' + host + ' normally?', variable=self.active).pack(side=TOP)
-	LabeledEntry(ctlwin, 'True name of ' + host + ':',
+        if mode != 'novice':
+            ctlwin = Frame(leftwin, relief=RAISED, bd=5)
+            Label(ctlwin, text="Run Controls").pack(side=TOP)
+            Checkbutton(ctlwin, text='Poll ' + host + ' normally?', variable=self.active).pack(side=TOP)
+            LabeledEntry(ctlwin, 'True name of ' + host + ':',
 		      self.via, leftwidth).pack(side=TOP, fill=X)
-	LabeledEntry(ctlwin, 'Cycles to skip between polls:',
+            LabeledEntry(ctlwin, 'Cycles to skip between polls:',
 		      self.interval, leftwidth).pack(side=TOP, fill=X)
-	LabeledEntry(ctlwin, 'Server timeout (seconds):',
+            LabeledEntry(ctlwin, 'Server timeout (seconds):',
 		      self.timeout, leftwidth).pack(side=TOP, fill=X)
-	Button(ctlwin, text='Help', fg='blue',
+            Button(ctlwin, text='Help', fg='blue',
 	       command=lambda: helpwin(controlhelp)).pack(side=RIGHT)
-	ctlwin.pack(fill=X)
+            ctlwin.pack(fill=X)
 
 	protwin = Frame(leftwin, relief=RAISED, bd=5)
-	Label(protwin, text="Protocol and Port").pack(side=TOP)
+	Label(protwin, text="Protocol").pack(side=TOP)
 	pb = ButtonBar(protwin, '', self.protocol, protolist, 2, self.refreshPort) 
-	LabeledEntry(protwin, 'On server TCP/IP port:',
+        if mode != 'novice':
+            LabeledEntry(protwin, 'On server TCP/IP port:',
 		      self.port, leftwidth).pack(side=TOP, fill=X)
-	Checkbutton(protwin,
+            Checkbutton(protwin,
 		text="POP3: track `seen' with client-side UIDLs?",
 		variable=self.uidl).pack(side=TOP)   
 	Button(protwin, text='Help', fg='blue',
@@ -802,40 +804,42 @@ class ServerEdit(Frame):
 	userwin.pack(fill=X)
 
 	leftwin.pack(side=LEFT, anchor=N, fill=X);
-	rightwin = Frame(self);
 
-	mdropwin = Frame(rightwin, relief=RAISED, bd=5)
-	Label(mdropwin, text="Multidrop options").pack(side=TOP)
-	LabeledEntry(mdropwin, 'Envelope address header:',
+        if mode != 'novice':
+            rightwin = Frame(self);
+
+            mdropwin = Frame(rightwin, relief=RAISED, bd=5)
+            Label(mdropwin, text="Multidrop options").pack(side=TOP)
+            LabeledEntry(mdropwin, 'Envelope address header:',
 		      self.envelope, '22').pack(side=TOP, fill=X)
-	LabeledEntry(mdropwin, 'Envelope headers to skip:',
+            LabeledEntry(mdropwin, 'Envelope headers to skip:',
 		      self.envskip, '22').pack(side=TOP, fill=X)
-	LabeledEntry(mdropwin, 'Name prefix to strip:',
+            LabeledEntry(mdropwin, 'Name prefix to strip:',
 		      self.qvirtual, '22').pack(side=TOP, fill=X)
-	Checkbutton(mdropwin, text="Enable multidrop DNS lookup?",
+            Checkbutton(mdropwin, text="Enable multidrop DNS lookup?",
 		    variable=self.dns).pack(side=TOP)
-	Label(mdropwin, text="DNS aliases").pack(side=TOP)
-	ListEdit("New alias: ", self.server.aka, None, mdropwin, None)
-	Label(mdropwin, text="Domains to be considered local").pack(side=TOP)
-	ListEdit("New domain: ",
+            Label(mdropwin, text="DNS aliases").pack(side=TOP)
+            ListEdit("New alias: ", self.server.aka, None, mdropwin, None)
+            Label(mdropwin, text="Domains to be considered local").pack(side=TOP)
+            ListEdit("New domain: ",
 		 self.server.localdomains, None, mdropwin, multihelp)
-	mdropwin.pack(fill=X)
+            mdropwin.pack(fill=X)
 
-	secwin = Frame(rightwin, relief=RAISED, bd=5)
-	Label(secwin, text="Security").pack(side=TOP)
-	# Don't actually let users set this.  KPOP sets it implicitly
-#	ButtonBar(secwin, 'Authorization mode:',
-#		  self.auth, authlist, 1, None).pack(side=TOP)
-	if os.popen("uname").readlines()[0] == 'Linux\n':
-	    LabeledEntry(secwin, 'Interface to check before poll:',
+            secwin = Frame(rightwin, relief=RAISED, bd=5)
+            Label(secwin, text="Security").pack(side=TOP)
+            # Don't actually let users set this.  KPOP sets it implicitly
+            #	ButtonBar(secwin, 'Authorization mode:',
+            #		  self.auth, authlist, 1, None).pack(side=TOP)
+            if os.popen("uname").readlines()[0] == 'Linux\n':
+                LabeledEntry(secwin, 'Interface to check before poll:',
 			 self.interface, leftwidth).pack(side=TOP, fill=X)
-	    LabeledEntry(secwin, 'IP range to monitor:',
+                LabeledEntry(secwin, 'IP range to monitor:',
 			 self.monitor, leftwidth).pack(side=TOP, fill=X)
-	Button(secwin, text='Help', fg='blue',
+            Button(secwin, text='Help', fg='blue',
 	       command=lambda: helpwin(sechelp)).pack(side=RIGHT)
-	secwin.pack(fill=X)
+            secwin.pack(fill=X)
 
-	rightwin.pack(side=LEFT, anchor=N);
+            rightwin.pack(side=LEFT, anchor=N);
 
     def edituser(self, user):
 	UserEdit(user, self.server, Toplevel())
@@ -1095,10 +1099,8 @@ if __name__ == '__main__':
 
     # Read the existing configuration
     tmpfile = "/tmp/fetchmailconf." + `os.getpid()`
-    sys.stdout.write("Reading configuration...")
     os.system("fetchmail --configdump >" + tmpfile)
     execfile(tmpfile)
-    sys.stdout.write("Done.\n")
     os.remove(tmpfile)
 
     # The tricky part -- initializing objects from the configuration global
