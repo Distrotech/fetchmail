@@ -2,10 +2,14 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
-* Fix insecure tempfile creation bug in fetchmailconf, thanks 
-  to Colin Phipps <cph@cph.demon.co.uk>
+fetchmail-5.7.4 (Mon Mar 12 00:02:23 EST 2001), 20323 lines:
+
+* SECURITY FIX: insecure tempfile creation bug in fetchmailconf, thanks 
+  to Colin Phipps <cph@cph.demon.co.uk> for popinting this out.
 * Configure cleanup from HMH.
 * Documentation refresh.
+
+There are 295 people on fetchmail-friends and 563 on fetchmail-announce.
 
 fetchmail-5.7.3 (Sun Mar 11 17:01:56 EST 2001), 20323 lines:
 
