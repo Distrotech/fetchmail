@@ -5,6 +5,8 @@
 * Grant Edwards's patch to correct NTLM behavior.
 * James Brister's fix for IP-address hostnames.
 * Updated config.guess and config.sub.
+* Backed out the 5.1.0 change to quote usernames with embedded spaces.
+  It actually breaks things.
 
 fetchmail-5.1.2 (Thu Oct  7 09:46:07 EDT 1999), 17906 lines:
 * Joe Loughry <loughry@uswest.net> sent a patch to handle multihomed machines.

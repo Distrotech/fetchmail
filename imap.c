@@ -749,7 +749,6 @@ static int do_cram_md5 (int sock, struct query *ctl)
 {
     int result;
     int len;
-    int quot;
     unsigned char buf1[1024];
     unsigned char msg_id[768];
     unsigned char response[16];
@@ -787,28 +786,19 @@ static int do_cram_md5 (int sock, struct query *ctl)
      * computed by applying the keyed MD5 algorithm from [KEYED-MD5] where
      * the key is a shared secret and the digested text is the timestamp
      * (including angle-brackets).
-     *
-     * If the usename has a space in it, it's surrounded by string quotes 
-     * before being shipped.  This is not in conformance with the CRAM-MD5
-     * RFCs (which don't describe any kind of quoting and imply that the
-     * username must be a single token), but at least one server accepts
-     * it anyway (the greeting line says "InterChange IMAP4 Server v3.51.06").
-     * If this doesn't work, sending the unquoted name wouldn't have worked
-     * either, so we lost nothing.
      */
 
     hmac_md5 (ctl->password, strlen (ctl->password),
               msg_id, strlen (msg_id),
               response, sizeof (response));
 
-    quot = (int) strpbrk (ctl->remotename, " ");
 #ifdef HAVE_SNPRINTF
     snprintf (reply, sizeof (reply),
 #else
     sprintf(reply,
 #endif
-              "%s%s%s %02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x", 
-              quot ? "\"" : "", ctl->remotename, quot ? "\"" : "",
+              "%s %02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x", 
+              ctl->remotename,
               response[0], response[1], response[2], response[3],
               response[4], response[5], response[6], response[7],
               response[8], response[9], response[10], response[11],
@@ -1268,8 +1258,8 @@ static int imap_trail(int sock, struct query *ctl, int number)
 				: "STORE %d +FLAGS (\\Seen)", 
 			number)))
 		return(ok);
-    }
 #endif /* __UNUSED__ */
+    }
 
     return(PS_SUCCESS);
 }
