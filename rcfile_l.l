@@ -19,7 +19,18 @@ int prc_lineno = 1;
 %a 4000
 %p 3000
 
+%s NAME
+
 %%
+
+<NAME>[^=;:, \t\r\n\"\']+	{
+			char buf[MSGBUFSIZE];
+
+			escapes(yytext, buf);
+			yylval.sval = (char *) xstrdup(buf);
+                        BEGIN(0);
+			return STRING;
+		}
 
 set		{ return SET; }
 logfile		{ return LOGFILE; }
@@ -50,8 +61,8 @@ timeout		{ return TIMEOUT;}
 envelope	{ return ENVELOPE; }
 qvirtual	{ return QVIRTUAL; }
 
-user(name)?	{ return USERNAME; }
-pass(word)?	{ return PASSWORD; }
+user(name)?	{BEGIN(NAME); return USERNAME; }
+pass(word)?	{BEGIN(NAME); return PASSWORD; }
 folder(s)? 	{ return FOLDER; }
 smtp(host)?	{ return SMTPHOST; }
 smtpaddress	{ return SMTPADDRESS; }
@@ -71,12 +82,12 @@ fetchlimit	{ return FETCHLIMIT; }
 expunge		{ return EXPUNGE; }
 properties	{ return PROPERTIES; }
 
-is		{ return IS; }
+is		{ BEGIN(NAME); return IS; }
 here		{ return HERE; }
 there		{ return THERE; }
-to		{ return TO; }
-=		{ return MAP; }
-"*"		{ return WILDCARD; }
+to		{ BEGIN(NAME); return TO; }
+=		{ BEGIN(NAME); return MAP; }
+"*"		{ BEGIN(0); return WILDCARD; }
 
 nobouncemail	|
 nouidl		|

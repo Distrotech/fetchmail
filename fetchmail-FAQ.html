@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/07/31 20:44:54 $
+<td width="30%" align=right>$Date: 1999/07/31 21:41:50 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -666,26 +666,25 @@ Do similarly for any `<CODE>monitor</CODE>' or `<CODE>batchlimit</CODE>' options
 <hr>
 <h2><a name="F2">F2. The .fetchmailrc parser won't accept my all-numeric user name.</a></h2>
 
-So put string quotes around it. :-)<p>
+Either upgrade to a post-5.0.5 fetchmail or put string quotes around it. :-)<p>
 
-The configuration file parser treats any all-numeric token as a
-number, which will confuse it when it's expecting a name.  String
-quoting forces the token's class.<p>
+The configuration file parser in older fetchmail versions treated any
+all-numeric token as a number, which confused it when it was
+expecting a name.  String quoting forces the token's class.<p>
+
+The lexical analyzer in 5.0.6 and beyond is smarter and assumes
+any token following "username" or "password" is a string.
 
 <hr>
 <h2><a name="F3">F3. The .fetchmailrc parser won't accept my host or username beginning with `no'.</a></h2>
 
-You're caught in an unfortunate crack between the newer-style syntax
-for negated options (`no keep', `no rewrite' etc.) and the older style
-run-on syntax (`nokeep', `norewrite' etc.).<p>
+See <a href="#F2">F2</a> You're caught in an unfortunate crack between
+the newer-style syntax for negated options (`no keep', `no rewrite'
+etc.) and the older style run-on syntax (`nokeep', `norewrite'
+etc.).<p>
 
-You can work around this easily.  Just put string quotes around your
+Upgrade to a 5.0.6 or later fetchmail, or put string quotes around your
 token.<p>
-
-I haven't fixed this because there is no good fix for it short of
-implementing a token pushback stack in the lexer.  That's more
-additional complexity than I'm willing to add to banish a very
-marginal bug with an easy workaround.<p>
 
 <hr>
 <h2><a name="F4">F4. I'm migrating from popclient.  How do I need to modify my .poprc?</a></h2>
@@ -2428,7 +2427,7 @@ inactivity timeout.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/07/31 20:44:54 $
+<td width="30%" align=right>$Date: 1999/07/31 21:41:50 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
