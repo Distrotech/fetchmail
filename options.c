@@ -63,10 +63,6 @@ static struct option longoptions[] = {
   {"syslog",	no_argument,	   (int *) 0, LA_SYSLOG      },
   {"fetchmailrc",required_argument,(int *) 0, LA_RCFILE      },
   {"idfile",	required_argument, (int *) 0, LA_IDFILE      },
-#ifdef	linux
-  {"interface",	required_argument, (int *) 0, LA_INTERFACE   },
-  {"monitor",	required_argument, (int *) 0, LA_MONITOR     },
-#endif
 
   {"protocol",	required_argument, (int *) 0, LA_PROTOCOL    },
   {"proto",	required_argument, (int *) 0, LA_PROTOCOL    },
@@ -91,8 +87,10 @@ static struct option longoptions[] = {
   {"fetchlimit",required_argument, (int *) 0, LA_FETCHLIMIT  },
   {"mda",	required_argument, (int *) 0, LA_MDA         },
 
-  {"interface", required_argument, (int *) 0, LA_INTERFACE   },
-  {"monitor",   required_argument, (int *) 0, LA_MONITOR     },
+#ifdef	linux
+  {"interface",	required_argument, (int *) 0, LA_INTERFACE   },
+  {"monitor",	required_argument, (int *) 0, LA_MONITOR     },
+#endif
 
   {"yydebug",	no_argument,	   (int *) 0, LA_YYDEBUG     },
 
