@@ -8,10 +8,10 @@
 #define		P_POP3		3
 #define		P_IMAP		4
 #define		P_IMAP_K4	5
-#define		P_APOP		6
-#define		P_RPOP		7
-#define		P_ETRN		8
-#define		P_IMAP_GSS	9
+#define		P_IMAP_GSS	6
+#define		P_APOP		7
+#define		P_RPOP		8
+#define		P_ETRN		9
 
 #if INET6
 #define		KPOP_PORT	"kpop"

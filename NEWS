@@ -9,6 +9,7 @@
 * Read from /etc/fetchmailrc before ~/.fetchmailrc?
 * Do is_host_alias checks by comparing IP addresses rather than names?
 * Make the antispam response configurable.
+* Handle multi-homed hosts correctly.
 
 				Other TO-DO items:
 

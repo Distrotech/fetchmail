@@ -42,11 +42,9 @@
  * not respond to the request for a UID listing.
  *
  * Each time a message is fetched, we can check its UID against the
- * `oldsaved' list to see if it is old.  If not, it should be downloaded
- * (and possibly deleted).  It should be downloaded anyway if --all
- * is on.  It should not be deleted if --keep is on.
+ * `oldsaved' list to see if it is old.
  *
- * Each time a message is deleted, we mark its id UID_DELETED from the
+ * Each time a message is deleted, we mark its id UID_DELETED in the
  * `newsaved' member.  When we want to assert that an expunge has been
  * done on the server, we call expunge_uid() to register that all
  * deleted messages are gone by marking them UID_EXPUNGED.
