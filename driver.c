@@ -669,8 +669,6 @@ static int readheaders(int sock,
 	 * 
 	 * This is to avoid false mail loops messages when delivering
 	 * local messages to and from a Postfix/qmail mailserver. 
-	 * 
-	 * Should be controlled by an option
 	 */
 	if (ctl->dropdelivered && !strncasecmp(line, "Delivered-To:", 13)) 
 	{
