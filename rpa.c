@@ -8,6 +8,9 @@
   description:  RPA authorisation code for POP3 client
 
   The sole entry point is POP3_auth_rpa()
+
+  For license terms, see the file COPYING in this directory.
+
  ***********************************************************************/
 
 #include  "config.h"
