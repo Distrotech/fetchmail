@@ -26,25 +26,29 @@ EOF
 
 # OK, now write the event labels
 (
-	echo "count=0"
-	echo "breakheight=510"
+	count=0
+	lastday=0
+        breakheight=510
 	while read version legend
 	do
 		if [ "$version" = '%' ]
 		then
 			echo "# Associate $lastday to '$legend'"
-			echo "count = count + 1"
-			echo "lastday = $lastday - 5"
-			echo "lasttotal = $lasttotal"
-			echo "endy = breakheight + 50 + count * 50"
-			echo "if (endy > lasttotal) arrowhead = lasttotal+50"
-			echo "if (endy <= lasttotal) arrowhead = lasttotal-5"
+			count=$((count+1))
+		        lastday=$(($lastday-5))
+			endy=$((breakheight+50+count*50))
+			if ((endy>lasttotal))
+			then
+			    arrowhead=$((lasttotal+50))
+			    echo "set label '$legend' at $lastday-10, $endy+15"
+			else
+			    arrowhead=$((lasttotal-5))
+			    echo "set label '$legend' at $lastday-475, $endy-15"
+			fi
 			echo set arrow \
-				from lastday, endy \
-				to lastday, arrowhead \
+				from $lastday, $endy \
+				to $lastday, $arrowhead \
 				head
-			echo "if (endy > lasttotal) set label '$legend' at lastday-10, endy+15"
-			echo "if (endy <= lasttotal) set label '$legend' at lastday-475, endy-15"
 		else
 			set -- $legend
 			size=$1 
