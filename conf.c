@@ -33,10 +33,19 @@ static void indent(char ic)
     if (ic == ')' || ic == ']' || ic == '}')
 	indent_level--;
 
-    for (i = 0; i < indent_level / 2; i++)
-	putc('\t', stdout);
-    if (indent_level % 2)
-	fputs("    ", stdout);
+    /*
+     * The guard here is a kluge.  It depends on the fact that in the
+     * particular structure we're dumping, opening [s are always
+     * initializers for dictionary members and thus will be preceded
+     * by a member name.
+     */
+    if (ic != '[')
+    {
+	for (i = 0; i < indent_level / 2; i++)
+	    putc('\t', stdout);
+	if (indent_level % 2)
+	    fputs("    ", stdout);
+    }
 
     if (ic)
     {
@@ -86,7 +95,7 @@ static void listdump(const char *name, struct idlist *list)
     fprintf(stdout, "'%s':", name);
 
     if (!list)
-	fputs("nil,\n", stdout);
+	fputs("None,\n", stdout);
     else
     {
 	struct idlist *idp;
@@ -117,7 +126,11 @@ void dump_config(struct runctl *runp, struct query *querylist)
     struct idlist *idp;
 
     indent_level = 0;
+
+    fputs("from Tkinter import *\t# for FALSE\n\n", stdout);
+
     fputs("# Start of initializer\n", stdout);
+    fputs("configuration = ", stdout);
     indent('{');
 
     numdump("poll_interval", runp->poll_interval);
@@ -127,13 +140,12 @@ void dump_config(struct runctl *runp, struct query *querylist)
     booldump("invisible", runp->invisible);
 
     if (!querylist)
-    {
-	indent('}'); 
-	return;
-    }
+	goto alldone;
 
     indent(0);
     fputs("# List of server entries begins here\n", stdout);
+    indent(0);
+    fputs("'servers': ", stdout);
     indent('[');
 
     for (ctl = querylist; ctl; ctl = ctl->next)
@@ -147,6 +159,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	{
 	    indent(']');
 	    indent('}');
+	    indent('\0'); putc(',', stdout);
 	}
 
 	indent(0);
@@ -194,6 +207,8 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	    stringdump("monitor", ctl->server.monitor);
 #endif /* linux */
 
+	    indent(0);
+	    fputs("'users': ", stdout);
 	    indent('[');
 	}
 
@@ -203,7 +218,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	stringdump("password", ctl->password);
 
 	indent('\0');
-	fprintf(stdout, "`localnames':[");
+	fprintf(stdout, "'localnames':[");
 	for (idp = ctl->localnames; idp; idp = idp->next)
 	{
 	    if (idp->val.id2)
@@ -252,6 +267,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
     /* end array of servers */
     indent(']');
 
+ alldone:
     /* end top-level dictionary */
     indent('}');
     fputs("# End of initializer\n", stdout);
