@@ -27,6 +27,10 @@
 #include "fetchmail.h"
 
 #include "i18n.h"
+#if defined(HAVE_SETLOCALE) && defined(ENABLE_NLS) && defined(HAVE_STRFTIME)
+#include <time.h>
+#include <locale.h>
+#endif
 
 extern char *getenv();	/* needed on sysV68 R3V7.1. */
 
@@ -181,10 +185,14 @@ char *rfc822timestamp(void)
      * weird multibyte i18n characters (such as kanji) for showing up
      * in your Received headers.
      */
+#if defined(HAVE_SETLOCALE) && defined(ENABLE_NLS) && defined(HAVE_STRFTIME)
     setlocale (LC_TIME, "C");
+#endif
     strftime(buf, sizeof(buf)-1, 
 	     "%a, %d %b %Y %H:%M:%S XXXXX (%Z)", localtime(&now));
+#if defined(HAVE_SETLOCALE) && defined(ENABLE_NLS) && defined(HAVE_STRFTIME)
     setlocale (LC_TIME, "");
+#endif
     strncpy(strstr(buf, "XXXXX"), tzoffset(&now), 5);
 #else
     /*
