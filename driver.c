@@ -711,7 +711,11 @@ char *realname;		/* real name of host */
 	    ctt_offs = (line - headers);
 
 #ifdef HAVE_RES_SEARCH
-	else if (MULTIDROP(ctl) && !received_for && !strncasecmp("Received:", line, 9))
+	/*
+	 * The `no envelope' option should also disable parsing of Received
+	 * lines.
+	 */
+	else if (MULTIDROP(ctl) && ctl->server.envelope != STRING_DISABLED && !received_for && !strncasecmp("Received:", line, 9))
 	    received_for = parse_received(ctl, line);
 #endif /* HAVE_RES_SEARCH */
     }

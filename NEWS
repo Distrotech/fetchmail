@@ -21,6 +21,7 @@
 ------------------------------------------------------------------------------
 fetchmail-4.0.4 ()
 * Overhauled the build machinery.
+* The `no envelope' option now suppresses parsing or Received lines.
 * Added Al Youngwerth as a backup maintainer.
 
 fetchmail-4.0.3 (Mon Jul 28 16:39:17 EDT 1997)
