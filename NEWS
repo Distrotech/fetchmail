@@ -234,6 +234,7 @@ fetchmail-4.6.7 (Sat Nov 21 13:59:47 EST 1998):
 * Postmaster option fix from Bill Metzenthen <billm@melbpc.org.au>.
 * Socks library support from Guiseppe Guerini.
 * Notification mail is now sent to the user on 20 consecutive timeouts.
+* Try to cope with the InterMail server's "wait a few minutes" error.
 
 There are 247 people on fetchmail-friends and 308 on fetchmail-announce.
 

@@ -79,15 +79,27 @@ int pop3_ok (int sock, char *argbuf)
 		ok = PS_PROTOCOL;
 	    /*
 	     * We're checking for "lock busy", "unable to lock", 
-	     * "already locked" etc. here.  This indicates that we
-	     * have to wait for the server to clean up before we
-	     * can poll again.
+	     * "already locked", "wait a few minutes" etc. here. 
+	     * This indicates that we have to wait for the server to
+	     * unwedge itself before we can poll again.
 	     *
 	     * PS_LOCKBUSY check empirically verified with two recent
-	     * versions the Berkeley popper;	QPOP (version 2.2)  and
+	     * versions of the Berkeley popper; QPOP (version 2.2)  and
 	     * QUALCOMM Pop server derived from UCB (version 2.1.4-R3)
+	     * These are caught by the case-indifferent "lock" check.
+	     * The "wait" catches "mail storage services unavailable,
+	     * wait a few minutes and try again" on the InterMail server.
+	     *
+	     * If these aren't picked up on correctly, fetchmail will 
+	     * think there is an authentication failure and wedge the
+	     * connection in order to prevent futile polls.
+	     *
+	     * Gad, what a kluge.
 	     */
-	    else if (strstr(bufp,"lock")||strstr(bufp,"Lock")||strstr(bufp,"LOCK"))
+	    else if (strstr(bufp,"lock")
+		     || strstr(bufp,"Lock")
+		     || strstr(bufp,"LOCK")
+		     || strstr(bufp,"wait"))
 		ok = PS_LOCKBUSY;
 	    else
 		ok = PS_AUTHFAIL;
