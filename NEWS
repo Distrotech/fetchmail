@@ -6,6 +6,9 @@
 
 			Release Notes:
 
+pl 2.0.1 ():
+* Include Nalin Dahyabhai's patch for MIT Kerberos support.
+
 fetchmail-2.0 (Mon Nov 18 00:32:17 EST 1996):
 
 * Fix typo in setitimer call setup that caused obscure bugs under FreeBSD.

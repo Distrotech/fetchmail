@@ -57,6 +57,14 @@ then
   LIBS="$LIBS -lkrb -ldes"
 fi
 
+if test -f "/usr/athena/include/krb.h"
+then
+  CFLAGS="$CFLAGS -DKERBEROS_V4 -I/usr/athena/include"
+  LDFLAGS="$LDFLAGS -L/usr/athena/lib"
+  LIBS="$LIBS -lkrb -ldes"
+fi
+
+
 dnl All AC_CHECK_FUNCs must precede the following AC_SUBSTs
 
 AC_SUBST(EXTRASRC)

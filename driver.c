@@ -613,7 +613,7 @@ struct query *ctl;	/* query control record */
 
 #ifdef KERBEROS_V4
 int
-kerberos_auth (int socket, canonical) 
+kerberos_auth (socket, canonical) 
 /* authenticate to the server host using Kerberos V4 */
 int socket;		/* socket to server host */
 const char *canonical;	/* server name */
