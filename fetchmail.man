@@ -341,7 +341,7 @@ it - every time you add or modify a certificate in the directory, you need
 to use the \fBc_rehash\fR tool (which comes with OpenSSL in the tools/
 subdirectory).
 .TP
-.B \-\-sslfingerprint
+.B \-\-sslfingerprint <fingerprint>
 (Keyword: sslfingerprint)
 Specify the fingerprint of the server key (an MD5 hash of the key) in
 hexadecimal notation with colons separating groups of two digits. The letter
