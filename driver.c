@@ -1556,6 +1556,7 @@ const struct method *proto;	/* protocol method table */
 	/* now iterate over each folder selected */
 	for (idp = ctl->mailboxes; idp; idp = idp->next)
 	{
+	    pass = 0;
 	    do {
 		dispatches = 0;
 		++pass;
