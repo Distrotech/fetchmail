@@ -171,7 +171,7 @@ static int pop3_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
 		int	num;
 
 		*newp = 0;
- 		while (!gen_recv(sockfp, buf, sizeof(buf)))
+ 		while ((ok = gen_recv(sockfp, buf, sizeof(buf))) == 0)
 		{
  		    if (buf[0] == '.')
  			break;
@@ -202,7 +202,7 @@ static int pop3_getsizes(FILE *sockfp, int count, int *sizes)
     {
 	char buf [POPBUFSIZE+1];
 
-	while (!gen_recv(sockfp, buf, sizeof(buf)))
+	while ((ok = gen_recv(sockfp, buf, sizeof(buf))) == 0)
 	{
 	    int num, size;
 
@@ -214,7 +214,7 @@ static int pop3_getsizes(FILE *sockfp, int count, int *sizes)
 		sizes[num - 1] = -1;
 	}
 
-	return(0);
+	return(ok);
     }
 }
 
