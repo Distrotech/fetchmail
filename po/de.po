@@ -873,7 +873,7 @@ msgstr "erweckt um %s\n"
 #: fetchmail.c:786
 #, c-format
 msgid "normal termination, status %d\n"
-msgstr "normaler Beendigung, Status %d\n"
+msgstr "normale Beendigung, Status %d\n"
 
 #: fetchmail.c:939
 msgid "couldn't time-check the run-control file\n"
