@@ -544,8 +544,7 @@ Legal user options are
     syslog
 .PP
 All options correspond to the obvious command-line arguments except
-the following: `aka', `is', `to', `password', `envelope',
-`preconnect', and `syslog'.
+the following: `aka', `is', `to', `password', `envelope', and `preconnect'.
 .PP
 The `aka' option is for use with multidrop mailboxes.  It allows you
 to pre-declare a list of DNS aliases for a server.  This is an
