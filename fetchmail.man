@@ -461,7 +461,7 @@ every fifteen minutes.
 It is possible to set a polling interval 
 in your
 .I ~/.fetchmailrc
-file by saying `set demon <interval>', where <interval> is an
+file by saying `set daemon <interval>', where <interval> is an
 integer number of seconds.  If you do this, fetchmail will always
 start in daemon mode unless you override it with the command-line
 option --daemon 0 or -d0.
