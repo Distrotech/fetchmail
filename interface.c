@@ -218,7 +218,7 @@ void interface_note_activity(struct hostdata *hp)
 		}
 
 #ifdef	ACTIVITY_DEBUG
-	(void) error(0, 0, _("activity on %s -noted- as %d"), 
+	(void) progress(0, 0, _("activity on %s -noted- as %d"), 
 		hp->monitor, hp->monitor_io);
 #endif
 }
@@ -232,7 +232,7 @@ int interface_approve(struct hostdata *hp)
 	if (hp->interface) {
 		/* get interface info */
 		if (!get_ifinfo(hp->interface, &ifinfo)) {
-			(void) error(0, 0, _("skipping poll of %s, %s down"),
+			(void) progress(0, 0, _("skipping poll of %s, %s down"),
 				hp->pollname, hp->interface);
 			return(FALSE);
 		}
@@ -240,7 +240,7 @@ int interface_approve(struct hostdata *hp)
 		if ((ifinfo.addr.s_addr &
 				hp->interface_pair->interface_mask.s_addr) !=
 				hp->interface_pair->interface_address.s_addr) {
-			(void) error(0, 0,
+			(void) progress(0, 0,
 				_("skipping poll of %s, %s IP address excluded"),
 				hp->pollname, hp->interface);
 			return(FALSE);
@@ -252,14 +252,14 @@ int interface_approve(struct hostdata *hp)
 		return(TRUE);
 
 #ifdef	ACTIVITY_DEBUG
-	(void) error(0, 0, _("activity on %s checked as %d"), 
+	(void) progress(0, 0, _("activity on %s checked as %d"), 
 		hp->monitor, hp->monitor_io);
 #endif
 	/* if monitoring, check link for activity if it is up */
 	if (get_ifinfo(hp->monitor, &ifinfo) &&
 			hp->monitor_io == ifinfo.rx_packets +
 				ifinfo.tx_packets) {
-		(void) error(0, 0, _("skipping poll of %s, %s inactive"),
+		(void) progress(0, 0, _("skipping poll of %s, %s inactive"),
 			hp->pollname, hp->monitor);
 		return(FALSE);
 	}

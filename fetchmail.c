@@ -464,7 +464,7 @@ int main (int argc, char **argv)
     {
 	if (!nodetach)
 	    daemonize(run.logfile, termhook);
-	error( 0, 0, _("starting fetchmail %s daemon "), VERSION);
+	progress( 0, 0, _("starting fetchmail %s daemon "), VERSION);
 
 	/*
 	 * We'll set up a handler for these when we're sleeping,
@@ -537,7 +537,7 @@ int main (int argc, char **argv)
 		    if (ctl->server.poll_count++ % ctl->server.interval) 
 		    {
 			if (outlevel >= O_VERBOSE)
-			    error(0, -1,
+			    progress(0, -1,
 				    _("interval not reached, not querying %s"),
 				    ctl->server.pollname);
 			continue;
@@ -565,13 +565,13 @@ int main (int argc, char **argv)
 		    {
 			write_saved_lists(querylist, run.idfile);
 			if (outlevel >= O_DEBUG)
-			    error(0, 0, _("saved UID List"));
+			    progress(0, 0, _("saved UID List"));
 		    }
 #endif  /* POP3_ENABLE */
 		}
 		else if (!check_only && 
 			 ((querystatus!=PS_NOMAIL) || (outlevel==O_DEBUG)))
-		    error(0, 0, _("Query status=%d"), querystatus);
+		    progress(0, 0, _("Query status=%d"), querystatus);
 
 #if defined(linux) && !INET6
 		if (ctl->server.monitor)
@@ -633,7 +633,7 @@ int main (int argc, char **argv)
 	    }
 
 	    if (outlevel >= O_VERBOSE)
-		error(0, -1, _("fetchmail: sleeping at %s"), rfc822timestamp());
+		progress(0, -1, _("fetchmail: sleeping at %s"), rfc822timestamp());
 
 	    /*
 	     * With this simple hack, we make it possible for a foreground 
@@ -728,9 +728,9 @@ int main (int argc, char **argv)
 			|| ((run.poll_interval && !getuid()) && lastsig == SIGHUP))
 		{
 #ifdef SYS_SIGLIST_DECLARED
-		    error(0, 0, _("awakened by %s"), sys_siglist[lastsig]);
+		    progress(0, 0, _("awakened by %s"), sys_siglist[lastsig]);
 #else
-		    error(0, 0, _("awakened by signal %d"), lastsig);
+		    progress(0, 0, _("awakened by signal %d"), lastsig);
 #endif
 		    /* received a wakeup - unwedge all servers in case */
 		    /* the problem has been manually repaired          */
@@ -745,13 +745,13 @@ int main (int argc, char **argv)
 		signal(SIGHUP, SIG_IGN);
 
 	    if (outlevel >= O_VERBOSE)
-		error(0, -1, _("awakened at %s"), rfc822timestamp());
+		progress(0, -1, _("awakened at %s"), rfc822timestamp());
 	}
     } while
 	(run.poll_interval);
 
     if (outlevel >= O_VERBOSE)
-	error(0, -1, _("normal termination, status %d"),
+	progress(0, -1, _("normal termination, status %d"),
 		successes ? PS_SUCCESS : querystatus);
 
     termhook(0);
@@ -1167,7 +1167,7 @@ static void termhook(int sig)
      */
 
     if (sig != 0)
-        error(0, 0, _("terminated with signal %d"), sig);
+        progress(0, 0, _("terminated with signal %d"), sig);
     else
 	/* terminate all SMTP connections cleanly */
 	for (ctl = querylist; ctl; ctl = ctl->next)
@@ -1227,7 +1227,7 @@ static int query_host(struct query *ctl)
 	time_t now;
 
 	time(&now);
-	error(0, -1, _("%s querying %s (protocol %s) at %s"),
+	progress(0, -1, _("%s querying %s (protocol %s) at %s"),
 	    VERSION,
 	    ctl->server.pollname, showproto(ctl->server.protocol), ctime(&now));
     }

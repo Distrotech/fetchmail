@@ -69,18 +69,18 @@ static int etrn_getrange(int sock, struct query *ctl, const char *id,
 	{
 	case 250:	/* OK, queuing for node <x> started */
 	    if (outlevel >= O_SILENT)
-		error(0, 0, _("Queuing for %s started"), qnp->id);
+		progress(0, 0, _("Queuing for %s started"), qnp->id);
 	    break;
 
 	case 251:	/* OK, no messages waiting for node <x> */
 	    if (outlevel >= O_SILENT)
-		error(0, 0, _("No messages waiting for %s"), qnp->id);
+		progress(0, 0, _("No messages waiting for %s"), qnp->id);
 	    return(PS_NOMAIL);
 
 	case 252:	/* OK, pending messages for node <x> started */
 	case 253:	/* OK, <n> pending messages for node <x> started */
 	    if (outlevel >= O_SILENT)
-		error(0, 0, _("Pending messages for %s started"), qnp->id);
+		progress(0, 0, _("Pending messages for %s started"), qnp->id);
 	    break;
 
 	case 458:	/* Unable to queue messages for node <x> */

@@ -137,15 +137,15 @@ int is_host_alias(const char *name, struct query *ctl)
         else if (((he_st = gethostbyname(ctl->server.truename)) != (struct hostent *)NULL) && ctl->server.checkalias)
 	{
 	    if (outlevel >= O_DEBUG)
-		error(0, 0, _("Checking if %s is really the same node as %s"),ctl->server.truename,name);
+		progress(0, 0, _("Checking if %s is really the same node as %s"),ctl->server.truename,name);
 	    if (is_ip_alias(ctl->server.truename,name) == TRUE)
 	    {
 		if (outlevel >= O_DEBUG)
-		    error(0, 0, _("Yes, their IP addresses match"));
+		    progress(0, 0, _("Yes, their IP addresses match"));
 		goto match;
 	    }
 	    if (outlevel >= O_DEBUG)
-		error(0, 0, _("No, their IP addresses don't match"));
+		progress(0, 0, _("No, their IP addresses don't match"));
 	}
 	else
 	    return(FALSE);

@@ -120,7 +120,7 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     SockPrintf(socket,"AUTH RPA\r\n");
 
     if (outlevel >= O_MONITOR)
-	error(0, 0, "> AUTH RPA\n");
+	progress(0, 0, "> AUTH RPA\n");
 
     /* Create unicode user name in Nu.              */
     /* Create MD5 digest of user's passphrase in Pu */
@@ -134,7 +134,7 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     if ((ok = POP3_rpa_resp(buf,socket)) != 0)
     {
 	if (outlevel > O_SILENT && outlevel < O_MONITOR)
-	    error(0, 0, "%s\n",buf);
+	    progress(0, 0, "%s\n",buf);
 
 	return(ok);
     }
@@ -156,11 +156,11 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     SockPrintf(socket,"%s\r\n",buf);
 #endif
     if (outlevel >= O_MONITOR)
-	error(0, 0, "> %s\n",buf);
+	progress(0, 0, "> %s\n",buf);
     if ((ok = POP3_rpa_resp(buf,socket)) != 0)
     {
 	if (outlevel > O_SILENT && outlevel < O_MONITOR)
-	    error(0, 0, "%s\n",buf);
+	    progress(0, 0, "%s\n",buf);
 	return(ok);
     }
     if ((rxlen = DecBase64(buf)) == 0)
@@ -177,22 +177,22 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
 
     verh = *(bufp++); verl = *(bufp++);
     if (outlevel >= O_DEBUG)
-	error(0, 0, _("Service chose RPA version %d.%d\n"),verh,verl);
+	progress(0, 0, _("Service chose RPA version %d.%d\n"),verh,verl);
     Csl  = *(bufp++);
     memcpy(Cs, bufp, Csl);
     bufp += Csl;
     if (outlevel >= O_DEBUG)
     {
-	error(0, 0, _("Service challenge (l=%d):"),Csl);
+	progress(0, 0, _("Service challenge (l=%d):"),Csl);
 	for (i=0; i<Csl; i++)
-	    error_build("%02X ",Cs[i]);
-	error_complete(0, 0, "");
+	    progress_build("%02X ",Cs[i]);
+	progress_complete(0, 0, "");
     }
     memcpy(Ts, bufp, Tsl);
     Ts[Tsl] = 0;
     bufp += Tsl;
     if (outlevel >= O_DEBUG)
-	error(0, 0, _("Service timestamp %s\n"),Ts);
+	progress(0, 0, _("Service timestamp %s\n"),Ts);
     rll = *(bufp++) << 8; rll = rll | *(bufp++);
     if ((bufp-buf+rll) != rxlen)
     {
@@ -201,7 +201,7 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
 	return(PS_RPA);
     }
     if (outlevel >= O_DEBUG)
-	error(0, 0, _("Realm list: %s\n"),bufp);
+	progress(0, 0, _("Realm list: %s\n"),bufp);
     if (SetRealmService(bufp) != 0)
     {
 	if (outlevel > O_SILENT)
@@ -232,11 +232,11 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     SockPrintf(socket,"%s\r\n",buf);
 #endif
     if (outlevel >= O_MONITOR)
-	error(0, 0, "> %s\n",buf);
+	progress(0, 0, "> %s\n",buf);
     if ((ok = POP3_rpa_resp(buf,socket)) != 0)
     {
 	if (outlevel > O_SILENT && outlevel < O_MONITOR)
-	    error(0, 0, "%s\n",buf);
+	    progress(0, 0, "%s\n",buf);
 	return(ok);
     }
     if ((rxlen = DecBase64(buf)) == 0)
@@ -253,10 +253,10 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     aulin = *(bufp++);
     if (outlevel >= O_DEBUG)
     {
-	error(0, 0, _("User authentication (l=%d):"),aulin);
+	progress(0, 0, _("User authentication (l=%d):"),aulin);
 	for (i=0; i<aulin; i++)
-	    error_build("%02X ",bufp[i]);
-	error_complete(0, 0, "");
+	    progress_build("%02X ",bufp[i]);
+	progress_complete(0, 0, "");
     }
     if (aulin == Aul) memcpy(Au, bufp, Aul);
     bufp += aulin;
@@ -267,7 +267,7 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     {
 	status = *(bufp++);
 	if (outlevel >= O_DEBUG)
-	    error(0, 0, _("RPA status: %02X\n"),status);
+	    progress(0, 0, _("RPA status: %02X\n"),status);
     }
     else status = 0;
     if ((bufp - buf) != rxlen)
@@ -303,10 +303,10 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     }
     if (outlevel >= O_DEBUG)
     {
-	error(0, 0, _("Session key established:"));
+	progress(0, 0, _("Session key established:"));
 	for (i=0; i<Kusl; i++)
-	    error_build("%02X ",Kus[i]);
-	error_complete(0, 0, "");
+	    progress_build("%02X ",Kus[i]);
+	progress_complete(0, 0, "");
     }
 
     /* Assemble Token 5 in buf and send (not in ver 2 though)  */
@@ -324,17 +324,17 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
 	SockPrintf(socket,"%s\r\n",buf);
 #endif
 	if (outlevel >= O_MONITOR)
-	    error(0, 0, "> %s\n",buf);
+	    progress(0, 0, "> %s\n",buf);
 	if ((ok = POP3_rpa_resp(buf,socket)) != 0)
 	{
 	    if (outlevel > O_SILENT && outlevel < O_MONITOR)
-		error(0, 0, "%s\n",buf);
+		progress(0, 0, "%s\n",buf);
 	    return(ok);
 	}
     }
 
     if (outlevel > O_SILENT)
-	error(0, 0, _("RPA authorisation complete\n"));
+	progress(0, 0, _("RPA authorisation complete\n"));
 
     return(PS_SUCCESS);
 }
@@ -363,7 +363,7 @@ int socket;
     int sockrc;
 
     if (outlevel >= O_DEBUG)
-	error(0, 0,  _("Get response\n"));
+	progress(0, 0,  _("Get response\n"));
 #ifndef TESTMODE
     sockrc = gen_recv(socket, buf, sizeof(buf));
 #else
@@ -371,7 +371,7 @@ int socket;
     if (linecount == 1) strcpy(buf,line1);
     if (linecount == 2) strcpy(buf,line2);
     if (linecount == 3) strcpy(buf,line3);
-/*  error(0, 0, "--> "); fflush(stderr);  */
+/*  progress(0, 0, "--> "); fflush(stderr);  */
 /*  scanf("%s",&buf)                         */
     sockrc = PS_SUCCESS;
 #endif
@@ -393,7 +393,7 @@ int socket;
     else
 	ok = PS_SOCKET;
     if (outlevel >= O_DEBUG)
-	error(0, 0,  _("Get response return %d [%s]\n"), ok, buf);
+	progress(0, 0,  _("Get response return %d [%s]\n"), ok, buf);
     buf[sockrc] = 0;
     return(ok);
 }
@@ -539,12 +539,12 @@ unsigned char *bufp;
     }
     if (outlevel >= O_MONITOR)
     {
-	error(0, 0, _("Inbound binary data:\n"));
+	progress(0, 0, _("Inbound binary data:\n"));
 	for (i=0; i<cnt; i++)
 	{
-	    error_build("%02X ",bufp[i]);
+	    progress_build("%02X ",bufp[i]);
 	    if (((i % 16)==15) || (i==(cnt-1)))
-		error_complete(0, 0, "");
+		progress_complete(0, 0, "");
 	}
     }
     return(cnt);
@@ -577,12 +577,12 @@ int  len;
 
     if (outlevel >= O_MONITOR)
     {
-	error(0, 0, _("Outbound data:\n"));
+	progress(0, 0, _("Outbound data:\n"));
 	for (i=0; i<len; i++)
 	{
-	    error_build("%02X ",bufp[i]);
+	    progress_build("%02X ",bufp[i]);
 	    if (((i % 16)==15) || (i==(len-1)))
-		error_complete(0, 0, "");
+		progress_complete(0, 0, "");
 	}
     }
     outp = bufp + (((len-1)/3)*4);
@@ -648,12 +648,12 @@ int conv;
     }
     if (outlevel >= O_DEBUG)
     {
-	error(0, 0, _("Unicode:"));
+	progress(0, 0, _("Unicode:"));
 	for (i=0; i<(*plen); i++)
 	{
-	    error_build("%02X ",buf[i]);
+	    progress_build("%02X ",buf[i]);
 	    if (((i % 16)==15) || (i==((*plen)-1)))
-		error_complete(0, 0, "");
+		progress_complete(0, 0, "");
 	}
     }
 }
@@ -710,11 +710,11 @@ int  len;
     devrandom = fopen("/dev/urandom","rb");
     if (devrandom == NULL && outlevel > O_SILENT)
     {
-	error(0, 0, _("RPA Failed open of /dev/urandom. This shouldn't\n"));
-	error(0, 0, _("    prevent you logging in, but means you\n"));
-	error(0, 0, _("    cannot be sure you are talking to the\n"));
-	error(0, 0, _("    service that you think you are (replay\n"));
-	error(0, 0, _("    attacks by a dishonest service are possible.)\n"));
+	progress(0, 0, _("RPA Failed open of /dev/urandom. This shouldn't\n"));
+	progress(0, 0, _("    prevent you logging in, but means you\n"));
+	progress(0, 0, _("    cannot be sure you are talking to the\n"));
+	progress(0, 0, _("    service that you think you are (replay\n"));
+	progress(0, 0, _("    attacks by a dishonest service are possible.)\n"));
     }
 
     for(i=0; i<len; i++)
@@ -725,12 +725,12 @@ int  len;
 
     if (outlevel >= O_DEBUG)
     {
-	error(0, 0, _("User challenge:"));
+	progress(0, 0, _("User challenge:"));
 	for (i=0; i<len; i++)
 	  {
-	  error_build("%02X ",buf[i]);
+	  progress_build("%02X ",buf[i]);
 	  if (((i % 16)==15) || (i==(len-1)))
-	    error_complete(0, 0, "");
+	    progress_complete(0, 0, "");
 	  }
     }
 }
@@ -883,12 +883,12 @@ unsigned char*    out;
 
     if (outlevel >= O_DEBUG)
     {
-	error(0, 0, _("MD5 being applied to data block:\n"));
+	progress(0, 0, _("MD5 being applied to data block:\n"));
 	for (i=0; i<len; i++)
 	{
-	    error_build("%02X ",in[i]);
+	    progress_build("%02X ",in[i]);
 	    if (((i % 16)==15) || (i==(len-1)))
-		error_complete(0, 0, "");
+		progress_complete(0, 0, "");
 	}
     }
     MD5Init(   &md5context );
@@ -896,12 +896,12 @@ unsigned char*    out;
     MD5Final(  out, &md5context );
     if (outlevel >= O_DEBUG)
     {
-	error(0, 0, _("MD5 result is: "));
+	progress(0, 0, _("MD5 result is: "));
 	for (i=0; i<16; i++)
 	{
-	    error_build("%02X ",out[i]);
+	    progress_build("%02X ",out[i]);
 	}
-	error_complete(0, 0, "");
+	progress_complete(0, 0, "");
     }
 }
 #endif /* POP3_ENABLE && RPA_ENABLE */

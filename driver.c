@@ -132,7 +132,7 @@ static void map_name(const char *name, struct query *ctl, struct idlist **xmit_n
     if (lname != (char *)NULL)
     {
 	if (outlevel >= O_DEBUG)
-	    error(0, 0, _("mapped %s to local %s"), name, lname);
+	    progress(0, 0, _("mapped %s to local %s"), name, lname);
 	save_str(xmit_names, lname, XMIT_ACCEPT);
 	accept_count++;
     }
@@ -189,7 +189,7 @@ static void find_server_names(const char *hdr,
 			strcasecmp(rhs, idp->id) == 0)
 		    {
 			if (outlevel >= O_DEBUG)
-			    error(0, 0, _("passed through %s matching %s"), 
+			    progress(0, 0, _("passed through %s matching %s"), 
 				  cp, idp->id);
 			save_str(xmit_names, cp, XMIT_ACCEPT);
 			accept_count++;
@@ -243,7 +243,7 @@ static char *parse_received(struct query *ctl, char *bufp)
      * does this when the mail has a single recipient.
      */
     if (outlevel >= O_DEBUG)
-	error(0, 0, _("analyzing Received line:\n%s"), bufp);
+	progress(0, 0, _("analyzing Received line:\n%s"), bufp);
 
     /* search for whitepace-surrounded "by" followed by xxxx.yyyy */
     for (base = bufp;  ; base = ok + 2)
@@ -281,13 +281,13 @@ static char *parse_received(struct query *ctl, char *bufp)
 	if (is_host_alias(rbuf, ctl))
 	{
 	    if (outlevel >= O_DEBUG)
-		error(0, 0, 
+		progress(0, 0, 
 		      _("line accepted, %s is an alias of the mailserver"), rbuf);
 	}
 	else
 	{
 	    if (outlevel >= O_DEBUG)
-		error(0, 0, 
+		progress(0, 0, 
 		      _("line rejected, %s is not an alias of the mailserver"), 
 		      rbuf);
 	    return(NULL);
@@ -359,7 +359,7 @@ static char *parse_received(struct query *ctl, char *bufp)
     if (!ok)
     {
 	if (outlevel >= O_DEBUG)
-	    error(0, 0, _("no Received address found"));
+	    progress(0, 0, _("no Received address found"));
 	return(NULL);
     }
     else
@@ -368,7 +368,7 @@ static char *parse_received(struct query *ctl, char *bufp)
 	    char *lf = rbuf + strlen(rbuf)-1;
 	    *lf = '\0';
 	    if (outlevel >= O_DEBUG)
-		error(0, 0, _("found Received address `%s'"), rbuf+2);
+		progress(0, 0, _("found Received address `%s'"), rbuf+2);
 	    *lf = '\n';
 	}
 	return(rbuf);
@@ -499,7 +499,7 @@ static int readheaders(int sock,
 	    sizeticker += linelen;
 	    while (sizeticker >= SIZETICKER)
 	    {
-		error_build(".");
+		progress_build(".");
 		sizeticker -= SIZETICKER;
 	    }
 	}
@@ -731,7 +731,7 @@ static int readheaders(int sock,
     if (!headers_ok)
     {
 	if (outlevel > O_SILENT)
-	    error(0,0,_("message delimiter found while scanning headers"));
+	    progress(0,0,_("message delimiter found while scanning headers"));
     }
 
     /*
@@ -854,7 +854,7 @@ static int readheaders(int sock,
 	    no_local_matches = TRUE;
 	    save_str(&msgblk.recipients, run.postmaster, XMIT_ACCEPT);
 	    if (outlevel >= O_DEBUG)
-		error(0, 0, 
+		progress(0, 0, 
 		      _("no local matches, forwarding to %s"),
 		      run.postmaster);
 	}
@@ -869,7 +869,7 @@ static int readheaders(int sock,
     if (ctl->errcount > olderrs)	/* there were DNS errors above */
     {
 	if (outlevel >= O_DEBUG)
-	    error(0,0, _("forwarding and deletion suppressed due to DNS errors"));
+	    progress(0,0, _("forwarding and deletion suppressed due to DNS errors"));
 	free(msgblk.headers);
 	free_str_list(&msgblk.recipients);
 	return(PS_TRANSIENT);
@@ -966,7 +966,7 @@ static int readheaders(int sock,
 
     if (n == -1)
     {
-	error(0, errno, _("writing RFC822 msgblk.headers"));
+	progress(0, errno, _("writing RFC822 msgblk.headers"));
 	release_sink(ctl);
 	free(msgblk.headers);
 	free_str_list(&msgblk.recipients);
@@ -1074,7 +1074,7 @@ static int readbody(int sock, struct query *ctl, flag forward, int len)
 	    while (sizeticker >= SIZETICKER)
 	    {
 		if (!run.use_syslog && outlevel > O_SILENT)
-		    error_build(".");
+		    progress_build(".");
 		sizeticker -= SIZETICKER;
 	    }
 	}
@@ -1122,7 +1122,7 @@ static int readbody(int sock, struct query *ctl, flag forward, int len)
 
 	    if (n < 0)
 	    {
-		error(0, errno, _("writing message text"));
+		progress(0, errno, _("writing message text"));
 		release_sink(ctl);
 		return(PS_IOERR);
 	    }
@@ -1419,23 +1419,23 @@ const struct method *proto;	/* protocol method table */
 #endif /* HAVE_SIGPROCMASK */
 
 	if (phase == OPEN_WAIT)
-	    error(0, 0,
+	    progress(0, 0,
 		  _("timeout after %d seconds waiting to connect to server %s."),
 		  ctl->server.timeout, ctl->server.pollname);
 	else if (phase == SERVER_WAIT)
-	    error(0, 0,
+	    progress(0, 0,
 		  _("timeout after %d seconds waiting for server %s."),
 		  ctl->server.timeout, ctl->server.pollname);
 	else if (phase == FORWARDING_WAIT)
-	    error(0, 0,
+	    progress(0, 0,
 		  _("timeout after %d seconds waiting for %s."),
 		  ctl->server.timeout,
 		  ctl->mda ? "MDA" : "SMTP");
 	else if (phase == LISTENER_WAIT)
-	    error(0, 0,
+	    progress(0, 0,
 		  _("timeout after %d seconds waiting for listener to respond."));
 	else
-	    error(0, 0, _("timeout after %d seconds."), ctl->server.timeout);
+	    progress(0, 0, _("timeout after %d seconds."), ctl->server.timeout);
 
 	release_sink(ctl);
 	if (ctl->smtp_socket != -1)
@@ -1485,8 +1485,7 @@ const struct method *proto;	/* protocol method table */
 	/* execute pre-initialization command, if any */
 	if (ctl->preconnect && (ok = system(ctl->preconnect)))
 	{
-	    sprintf(buf, _("pre-connection command failed with status %d"), ok);
-	    error(0, 0, buf);
+	    error(0, 0, _("pre-connection command failed with status %d"), ok);
 	    ok = PS_SYNTAX;
 	    goto closeUp;
 	}
@@ -1641,9 +1640,9 @@ const struct method *proto;	/* protocol method table */
 
 		if (outlevel >= O_DEBUG)
 		    if (idp->id)
-			error(0, 0, _("selecting or re-polling folder %s"), idp->id);
+			progress(0, 0, _("selecting or re-polling folder %s"), idp->id);
 		    else
-			error(0, 0, _("selecting or re-polling default folder"));
+			progress(0, 0, _("selecting or re-polling default folder"));
 
 		/* compute # of messages and number of new messages waiting */
 		ok = (protocol->getrange)(sock, ctl, idp->id, &count, &new, &bytes);
@@ -1659,28 +1658,28 @@ const struct method *proto;	/* protocol method table */
 				   ctl->remotename, ctl->server.truename);
 		if (outlevel > O_SILENT)
 		    if (count == -1)		/* only used for ETRN */
-			error(0, 0, _("Polling %s"), ctl->server.truename);
+			progress(0, 0, _("Polling %s"), ctl->server.truename);
 		    else if (count != 0)
 		    {
 			if (new != -1 && (count - new) > 0)
-			    error_build(_("%d %s (%d seen) for %s"),
+			    progress_build(_("%d %s (%d seen) for %s"),
 				  count, count > 1 ? _("messages") :
 				                     _("message"),
 				  count-new, buf);
 			else
-			    error_build(_("%d %s for %s"), 
+			    progress_build(_("%d %s for %s"), 
 				  count, count > 1 ? _("messages") :
 				                     _("message"), buf);
 			if (bytes == -1)
-			    error_complete(0, 0, ".");
+			    progress_complete(0, 0, ".");
 			else
-			    error_complete(0, 0, _(" (%d octets)."), bytes);
+			    progress_complete(0, 0, _(" (%d octets)."), bytes);
 		    }
 		    else
 		    {
 			/* these are pointless in normal daemon mode */
 			if (pass == 1 && (run.poll_interval == 0 || outlevel >= O_VERBOSE))
-			    error(0, 0, _("No mail for %s"), buf); 
+			    progress(0, 0, _("No mail for %s"), buf); 
 		    }
 
 		/* very important, this is where we leave the do loop */ 
@@ -1780,7 +1779,7 @@ const struct method *proto;	/* protocol method table */
 			if (msgsizes && msgsizes[num-1] == -1)
 			{
 			    if (outlevel >= O_VERBOSE)
-				error(0, 0, 
+				progress(0, 0, 
 				      _("Skipping message %d, length -1"),
 				      num - 1);
 			    continue;
@@ -1791,7 +1790,7 @@ const struct method *proto;	/* protocol method table */
 			{
 			    if (outlevel > O_SILENT)
 			    {
-				error_build(_("skipping message %d"), num);
+				progress_build(_("skipping message %d"), num);
 				if (toolarge && !check_only) 
 				{
 				    char size[32];
@@ -1836,7 +1835,7 @@ const struct method *proto;	/* protocol method table */
 					tmp->val.status.num = cnt;
 				    }
 
-				    error_build(_(" (oversized, %d octets)"),
+				    progress_build(_(" (oversized, %d octets)"),
 						msgsizes[num-1]);
 				}
 			    }
@@ -1859,16 +1858,16 @@ const struct method *proto;	/* protocol method table */
 
 			    if (outlevel > O_SILENT)
 			    {
-				error_build(_("reading message %d of %d"),
+				progress_build(_("reading message %d of %d"),
 					    num,count);
 
 				if (len > 0)
-				    error_build(_(" (%d %soctets)"),
+				    progress_build(_(" (%d %soctets)"),
 					len, wholesize ? "" : _("header "));
 				if (outlevel >= O_VERBOSE)
-				    error_complete(0, 0, "");
+				    progress_complete(0, 0, "");
 				else
-				    error_build(" ");
+				    progress_build(" ");
 			    }
 
 			    /* 
@@ -1909,7 +1908,7 @@ const struct method *proto;	/* protocol method table */
 				    if ((ok=(protocol->fetch_body)(sock,ctl,num,&len)))
 					goto cleanUp;
 				    if (outlevel > O_SILENT && !wholesize)
-					error_build(_(" (%d body octets) "), len);
+					progress_build(_(" (%d body octets) "), len);
 				}
 			    }
 
@@ -1977,7 +1976,7 @@ const struct method *proto;	/* protocol method table */
 			    if (msgsizes && msglen != msgsizes[num-1])
 			    {
 				if (outlevel >= O_DEBUG)
-				    error(0, 0,
+				    progress(0, 0,
 					  _("message %d was not the expected length (%d actual != %d expected)"),
 					  num, msglen, msgsizes[num-1]);
 			    }
@@ -2016,7 +2015,7 @@ const struct method *proto;	/* protocol method table */
 			if (retained)
 			{
 			    if (outlevel > O_SILENT) 
-				error_complete(0, 0, _(" retained"));
+				progress_complete(0, 0, _(" retained"));
 			}
 			else if (protocol->delete
 				 && !suppress_delete
@@ -2024,7 +2023,7 @@ const struct method *proto;	/* protocol method table */
 			{
 			    deletions++;
 			    if (outlevel > O_SILENT) 
-				error_complete(0, 0, _(" flushed"));
+				progress_complete(0, 0, _(" flushed"));
 			    ok = (protocol->delete)(sock, ctl, num);
 			    if (ok != 0)
 				goto cleanUp;
@@ -2033,13 +2032,13 @@ const struct method *proto;	/* protocol method table */
 #endif /* POP3_ENABLE */
 			}
 			else if (outlevel > O_SILENT) 
-			    error_complete(0, 0, _(" not flushed"));
+			    progress_complete(0, 0, _(" not flushed"));
 
 			/* perhaps this as many as we're ready to handle */
 			if (NUM_NONZERO(ctl->fetchlimit)
 					&& ctl->fetchlimit <= fetches)
 			{
-			    error(0, 0, _("fetchlimit reached; %d messages left on server"),
+			    progress(0, 0, _("fetchlimit reached; %d messages left on server"),
 				  count - fetches);
 			    goto no_error;
 			}
@@ -2122,10 +2121,7 @@ closeUp:
     /* execute post-initialization command, if any */
     if (ctl->postconnect && (ok = system(ctl->postconnect)))
     {
-	char buf[80];
-
-	sprintf(buf, _("post-connection command failed with status %d"), ok);
-	error(0, 0, buf);
+	error(0, 0, _("post-connection command failed with status %d"), ok);
 	if (ok == PS_SUCCESS)
 	    ok = PS_SYNTAX;
     }
@@ -2182,7 +2178,7 @@ va_dcl
 	    *cp = '\0';
 	}
 	buf[strlen(buf)-2] = '\0';
-	error(0, 0, "%s> %s", protocol->name, buf);
+	progress(0, 0, "%s> %s", protocol->name, buf);
     }
 }
 
@@ -2210,7 +2206,7 @@ int size;	/* length of buffer */
 	if (buf[strlen(buf)-1] == '\r')
 	    buf[strlen(buf)-1] = '\0';
 	if (outlevel >= O_MONITOR)
-	    error(0, 0, "%s< %s", protocol->name, buf);
+	    progress(0, 0, "%s< %s", protocol->name, buf);
 	phase = oldphase;
 	return(PS_SUCCESS);
     }
@@ -2268,7 +2264,7 @@ va_dcl
 	    *cp = '\0';
 	}
 	buf[strlen(buf)-1] = '\0';
-	error(0, 0, "%s> %s", protocol->name, buf);
+	progress(0, 0, "%s> %s", protocol->name, buf);
     }
 
     /* we presume this does its own response echoing */

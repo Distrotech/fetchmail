@@ -58,7 +58,7 @@ void exit ();
 #define MALLOC(n)	xmalloc(n)	
 #define REALLOC(n,s)	xrealloc(n,s)	
 
-/* If NULL, error will flush stdout, then print on stderr the program
+/* If NULL, error will flush stderr, then print on stderr the program
    name, a colon and a space.  Otherwise, error will call this
    function without parameters instead.  */
 void (*error_print_progname) (
@@ -77,6 +77,8 @@ static unsigned int use_syslog;
 /* This variable is incremented each time `error' is called.  */
 unsigned int error_message_count;
 
+/* for now, send all error messages to stderr */
+#define errfp	stderr
 
 #ifdef _LIBC
 /* In the GNU C library, there is a predefined variable for this.  */
@@ -198,38 +200,38 @@ error (status, errnum, message, va_alist)
 	(*error_print_progname) ();
       else
 	{
-	  fflush (stdout);
+	  fflush (errfp);
 	  if ( *message == '\n' )
 	    {
-	      fputc( '\n', stderr );
+	      fputc( '\n', errfp );
 	      ++message;
 	    }
-	  fprintf (stderr, "%s: ", program_name);
+	  fprintf (errfp, "%s: ", program_name);
 	}
 
 #ifdef VA_START
       VA_START (args, message);
 # if HAVE_VPRINTF || _LIBC
-      vfprintf (stderr, message, args);
+      vfprintf (errfp, message, args);
 # else
-      _doprnt (message, args, stderr);
+      _doprnt (message, args, errfp);
 # endif
       va_end (args);
 #else
-      fprintf (stderr, message, a1, a2, a3, a4, a5, a6, a7, a8);
+      fprintf (errfp, message, a1, a2, a3, a4, a5, a6, a7, a8);
 #endif
 
       if (errnum && errnum != -1) {
 	char *tmps = strerror(errnum);
 	if (tmps) {
-	  fprintf (stderr, ": %s", tmps);
+	  fprintf (errfp, ": %s", tmps);
 	}
 	else {
-	  fprintf (stderr, _(": Error %d"), errnum);
+	  fprintf (errfp, _(": Error %d"), errnum);
 	}
       }
-      putc ('\n', stderr);
-      fflush (stderr);
+      putc ('\n', errfp);
+      fflush (errfp);
     }
   ++error_message_count;
   if (status)
@@ -238,20 +240,20 @@ error (status, errnum, message, va_alist)
 
 /*
  * Calling error_init(1) causes error_build and error_complete to write
- * to stderr without buffering.  This is needed for the ticker dots to
+ * to errfp without buffering.  This is needed for the ticker dots to
  * work correctly.
  */
 void error_init(int mode)
 {
     switch(mode)
     {
-    case 0:			/* stderr, buffered */
+    case 0:			/* errfp, buffered */
     default:
 	use_stderr = FALSE;
 	use_syslog = FALSE;
 	break;
 
-    case 1:			/* stderr, unbuffered */
+    case 1:			/* errfp, unbuffered */
 	use_stderr = TRUE;
 	use_syslog = FALSE;
 	break;
@@ -365,7 +367,7 @@ error_build (message, va_alist)
   if (use_stderr && partial_message_size_used != 0)
     {
       partial_message_size_used = 0;
-      fputs(partial_message, stderr);
+      fputs(partial_message, errfp);
     }
 }
 
@@ -469,13 +471,13 @@ error_complete (status, errnum, message, va_alist)
 
   if (use_stderr)
     {
-      fputs(partial_message, stderr);
+      fputs(partial_message, errfp);
 
       if (errnum)
-	fprintf (stderr, ": %s", strerror (errnum));
+	fprintf (errfp, ": %s", strerror (errnum));
 
-      putc ('\n', stderr);
-      fflush (stderr);
+      putc ('\n', errfp);
+      fflush (errfp);
 
       ++error_message_count;
 
@@ -526,35 +528,35 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
     (*error_print_progname) ();
   else
     {
-      fflush (stdout);
+      fflush (errfp);
       if ( *message == '\n' )
 	{
-	  fputc( '\n', stderr );
+	  fputc( '\n', errfp );
 	  ++message;
 	}
-      fprintf (stderr, "%s:", program_name);
+      fprintf (errfp, "%s:", program_name);
     }
 
   if (file_name != NULL)
-    fprintf (stderr, "%s:%d: ", file_name, line_number);
+    fprintf (errfp, "%s:%d: ", file_name, line_number);
 
 #ifdef VA_START
   VA_START (args, message);
 # if HAVE_VPRINTF || _LIBC
-  vfprintf (stderr, message, args);
+  vfprintf (errfp, message, args);
 # else
-  _doprnt (message, args, stderr);
+  _doprnt (message, args, errfp);
 # endif
   va_end (args);
 #else
-  fprintf (stderr, message, a1, a2, a3, a4, a5, a6, a7, a8);
+  fprintf (errfp, message, a1, a2, a3, a4, a5, a6, a7, a8);
 #endif
 
   ++error_message_count;
   if (errnum)
-    fprintf (stderr, ": %s", strerror (errnum));
-  putc ('\n', stderr);
-  fflush (stderr);
+    fprintf (errfp, ": %s", strerror (errnum));
+  putc ('\n', errfp);
+  fflush (errfp);
   if (status)
     exit (status);
 }

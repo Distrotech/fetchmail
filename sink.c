@@ -162,7 +162,7 @@ static int smtp_open(struct query *ctl)
     ctl->destaddr = ctl->smtpaddress ? ctl->smtpaddress : ( ctl->smtphost ? ctl->smtphost : "localhost");
 
     if (outlevel >= O_DEBUG && ctl->smtp_socket != -1)
-	error(0, 0, _("forwarding to %s"), ctl->smtphost);
+	progress(0, 0, _("forwarding to %s"), ctl->smtphost);
 
     return(ctl->smtp_socket);
 }
@@ -284,7 +284,7 @@ static int send_bouncemail(struct msgblk *msg, int userclass,
     ts = rfc822timestamp();
 
     if (outlevel >= O_VERBOSE)
-	error(0, 0, "SMTP: (bounce-message body)");
+	progress(0, 0, "SMTP: (bounce-message body)");
 
     /* bouncemail headers */
     SockPrintf(sock, "Return-Path: <>");
@@ -637,7 +637,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 
 
 	if (outlevel >= O_DEBUG)
-	    error(0, 0, _("about to deliver with: %s"), before);
+	    progress(0, 0, _("about to deliver with: %s"), before);
 
 #ifdef HAVE_SETEUID
 	/*

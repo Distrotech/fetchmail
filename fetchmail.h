@@ -349,6 +349,12 @@ void error_complete ();
 void error_at_line ();
 #endif
 
+/* for now, send progress messages to stderr */
+#define progress	error
+#define progress_build	error_build
+#define progress_complete	error_complete
+#define progress_at_line	error_at_line
+
 /* driver.c: transaction support */
 void set_timeout(int);
 #if defined(HAVE_STDARG_H)
