@@ -291,7 +291,7 @@ SMTP listener is impossible.  If \fIfetchmail\fR is running as root,
 it sets its userid to that of the target user while delivering mail
 through an MDA.  Some possible MDAs are "/usr/sbin/sendmail -oem -f %F
 %T", "/usr/bin/deliver" and "/usr/bin/procmail -d %T" (but the latter
-is usually redundant as).  it's what SMTP listeners usually forward
+is usually redundant as it's what SMTP listeners usually forward
 to).  Local delivery addresses will be inserted into the MDA command
 wherever you place a %T; the mail message's From address will be
 inserted where you place an %F.  Do \fInot\fR use an MDA invocation
