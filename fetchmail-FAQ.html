@@ -10,7 +10,7 @@
 <H1>Frequently Asked Questions About Fetchmail</H1>
 
 The current version of fetchmail is 3.9.3.  New in the FAQ: <a
-href="#T2">T2</a> on using fetchmail with exim.<p>
+href="#T3">T3</a> on using fetchmail with smail.<p>
 
 Before reporting any bug, please read <a href="#G3">G3</a> for advice
 on how to include diagnostic information that will get your bug fixed
@@ -61,6 +61,7 @@ when I may have multiple login sessions going?</a><br>
 
 <a href="#T1">T1. How can I use fetchmail with qmail?</a><br>
 <a href="#T2">T2. How can I use fetchmail with exim?</a><br>
+<a href="#T3">T3. How can I use fetchmail with smail?</a><br>
 
 <h1>Runtime fatal errors:</h1>
 
@@ -657,6 +658,22 @@ if you're running a fetchmail version prior to 3.9.3.  Otherwise
 you're all set.<p>
 
 <hr>
+<h2><a name="T3">T3. How can I use fetchmail with smail?</a></h2>
+
+Smail 3.2 is very nearly plug-compatible with sendmail, and will work
+fine out of the box.<P>
+
+We have one report that when processing multiple messages from a
+single SMTP session, smail sometimes delivers them in an order other
+than received-date order.  This can be annoying because it scrambles
+conversational threads.<P>
+
+If you don't have a mail user agent like elm that can sort your
+mailbox by date, you can prevent this symptom (at the cost of a slight
+loss of efficiency) by using the option `batchlimit 1' to force a
+separate SMTP connnect to your listener for each message.<P>
+
+<hr>
 <h2><a name="R1">R1. I think I've set up fetchmail correctly, but I'm not getting any mail.</a></h2>
 
 Maybe you have a .forward or alias set up that you've forgotten about.  You
@@ -947,7 +964,7 @@ without hacking potentially fragile startup scripts.  To get around
 it, just touch(1) the logfile before you run fetchmail (this will have
 no effect on the contents of the logfile if it already exists).<P>
 
-$Id: fetchmail-FAQ.html,v 1.11 1997/05/07 15:49:28 esr Exp $<p>
+$Id: fetchmail-FAQ.html,v 1.12 1997/05/10 14:57:34 esr Exp $<p>
 
 <HR>
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
