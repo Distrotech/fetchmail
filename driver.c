@@ -309,7 +309,7 @@ char *realname;		/* real name of host */
     char *bufp, *headers, *fromhdr,*tohdr,*cchdr,*bcchdr,*received_for,*envto;
     char *fromptr, *toptr;
     int n, oldlen, ch;
-    int inheaders,lines,sizeticker;
+    int inheaders, sizeticker;
     FILE *sinkfp;
     RETSIGTYPE (*sigchld)();
 #ifdef HAVE_GETHOSTBYNAME
@@ -319,7 +319,6 @@ char *realname;		/* real name of host */
     /* read the message content from the server */
     inheaders = 1;
     headers = fromhdr = tohdr = cchdr = bcchdr = received_for = envto = NULL;
-    lines = 0;
     sizeticker = 0;
     oldlen = 0;
     while (delimited || len > 0)
@@ -362,7 +361,7 @@ char *realname;		/* real name of host */
 	    if (!ctl->norewrite)
 		reply_hack(bufp, realname);
 
-	    if (!lines)
+	    if (!headers)
 	    {
 		oldlen = strlen(bufp);
 		headers = xmalloc(oldlen + 1);
@@ -466,7 +465,7 @@ char *realname;		/* real name of host */
 	    }
 #endif /* HAVE_RES_SEARCH */
 
-	    goto skipwrite;
+	    continue;
 	}
 	else if (headers)	/* OK, we're at end of headers now */
 	{
@@ -726,9 +725,6 @@ char *realname;		/* real name of host */
 	}
 	else if (outlevel == O_VERBOSE)
 	    fputc('*', stderr);
-
-    skipwrite:;
-	lines++;
     }
 
     if (outlevel == O_VERBOSE)
