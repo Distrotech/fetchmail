@@ -161,7 +161,11 @@ char **argv;
 
     /* perhaps we just want to check options? */
     if (versioninfo) {
-	printf("Taking options from command line and %s\n", rcfile);
+	    printf("Taking options from command line");
+	if (access(rcfile, 0))
+	    printf("\n");
+	else
+	    printf("and %s\n", rcfile);
 	for (hostp = hostlist; hostp; hostp = hostp->next) {
 	    printf("Options for host %s:\n", hostp->servername);
 	    dump_params(hostp);
