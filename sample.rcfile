@@ -84,14 +84,14 @@ defaults
 	fetchall
 
 # Use this for production
-poll locke.ccil.org with protocol APOP:
-	no dns, aka snark.thyrsus.com thyrsus.com locke.ccil.org ccil.org 
-	password my_apop_secret;
-
-# Use this to test IMAP
-skip locke protocol IMAP:
+poll imap.ccil.org protocol IMAP:
 	no dns, aka snark.thyrsus.com thyrsus.com locke.ccil.org ccil.org 
 	password my_remote_password;
+
+# Use this to test POP3
+skip pop3.ccil.org with protocol APOP:
+	no dns, aka snark.thyrsus.com thyrsus.com locke.ccil.org ccil.org 
+	password my_apop_secret;
 
 # Use this to test against a different server
 skip pop3.netaxs.com:
