@@ -8,20 +8,22 @@
 #include  <stdio.h>
 #include  <ctype.h>
 #include  <string.h>
-#if defined(STDC_HEADERS)
 #include  <stdlib.h>
-#endif
 
-#include "config.h"
 #include "fetchmail.h"
 #include "i18n.h"
 
+#ifndef TRUE
+#define TRUE 1
+#define FALSE 0
+#endif
+
 #define HEADER_END(p)	((p)[0] == '\n' && ((p)[1] != ' ' && (p)[1] != '\t'))
 
-#ifdef TESTMAIN
+#ifdef MAIN
 static int verbose;
 char *program_name = "rfc822";
-#endif /* TESTMAIN */
+#endif /* MAIN */
 
 unsigned char *reply_hack(buf, host)
 /* hack message headers so replies will work properly */
@@ -30,9 +32,9 @@ const unsigned char *host;	/* server hostname */
 {
     unsigned char *from, *cp, last_nws = '\0', *parens_from = NULL;
     int parendepth, state, has_bare_name_part, has_host_part;
-#ifndef TESTMAIN
+#ifndef MAIN
     int addresscount = 1;
-#endif /* TESTMAIN */
+#endif /* MAIN */
 
     if (strncasecmp("From:", buf, 5)
 	&& strncasecmp("To:", buf, 3)
@@ -52,7 +54,7 @@ const unsigned char *host;	/* server hostname */
 	return(buf);
     }
 
-#ifndef TESTMAIN
+#ifndef MAIN
     if (outlevel >= O_DEBUG)
 	report_build(stdout, GT_("About to rewrite %s"), buf);
 
@@ -61,7 +63,7 @@ const unsigned char *host;	/* server hostname */
 	if (*cp == ',' || isspace(*cp))
 	    addresscount++;
     buf = (unsigned char *)xrealloc(buf, strlen(buf) + addresscount * strlen(host) + 1);
-#endif /* TESTMAIN */
+#endif /* MAIN */
 
     /*
      * This is going to foo up on some ill-formed addresses.
@@ -73,13 +75,13 @@ const unsigned char *host;	/* server hostname */
     has_host_part = has_bare_name_part = FALSE;
     for (from = buf; *from; from++)
     {
-#ifdef TESTMAIN
+#ifdef MAIN
 	if (verbose)
 	{
 	    printf("state %d: %s", state, buf);
 	    printf("%*s^\n", from - buf + 10, " ");
 	}
-#endif /* TESTMAIN */
+#endif /* MAIN */
 	if (state != 2)
 	{
 	    if (*from == '(')
@@ -188,10 +190,10 @@ const unsigned char *host;	/* server hostname */
 	}
     }
 
-#ifndef TESTMAIN
+#ifndef MAIN
     if (outlevel >= O_DEBUG)
 	report_complete(stdout, GT_("Rewritten version is %s\n"), buf);
-#endif /* TESTMAIN */
+#endif /* MAIN */
     return(buf);
 }
 
@@ -203,9 +205,9 @@ const unsigned char *hdr;	/* header to be parsed, NUL to continue previous hdr *
     static int tp;
     static const unsigned char *hp;
     static int	state, oldstate;
-#ifdef TESTMAIN
+#ifdef MAIN
     static const unsigned char *orighdr;
-#endif /* TESTMAIN */
+#endif /* MAIN */
     int parendepth = 0;
 
 #define START_HDR	0	/* before header colon */
@@ -222,21 +224,21 @@ const unsigned char *hdr;	/* header to be parsed, NUL to continue previous hdr *
     {
 	hp = hdr;
 	state = START_HDR;
-#ifdef TESTMAIN
+#ifdef MAIN
 	orighdr = hdr;
-#endif /* TESTMAIN */
+#endif /* MAIN */
 	tp = 0;
     }
 
     for (; *hp; hp++)
     {
-#ifdef TESTMAIN
+#ifdef MAIN
 	if (verbose)
 	{
 	    printf("state %d: %s", state, orighdr);
 	    printf("%*s^\n", hp - orighdr + 10, " ");
 	}
-#endif /* TESTMAIN */
+#endif /* MAIN */
 
 	if (state == ENDIT_ALL)		/* after last address */
 	    return(NULL);
@@ -370,7 +372,7 @@ const unsigned char *hdr;	/* header to be parsed, NUL to continue previous hdr *
     return(NULL);
 }
 
-#ifdef TESTMAIN
+#ifdef MAIN
 static void parsebuf(unsigned char *longbuf, int reply)
 {
     unsigned char	*cp;
@@ -433,6 +435,6 @@ main(int argc, char *argv[])
 	parsebuf(longbuf, reply);
     }
 }
-#endif /* TESTMAIN */
+#endif /* MAIN */
 
 /* rfc822.c end */
