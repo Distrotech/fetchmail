@@ -2,8 +2,17 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.9.4 (Wed Oct  3 07:47:45 EDT 2001), 21104 lines:
+
 * Finished license cleanup, all licenses in the distribution are now
   officially GPL-compatible.
+* Added a length check to from64tobits() after receiving a warning that
+  it might create buffer overflows.  No exploitable overflows were found by
+  a careful case-by-case audit, and at minimum an exploit would have required 
+  that the mailserver be subverted.
+
+There are 371 people on fetchmail-friends and 623 on fetchmail-announce.
+% Mailing list cleaned
 
 fetchmail-5.9.3 (Sun Sep 30 12:08:52 EDT 2001), 21075 lines:
 
