@@ -22,6 +22,9 @@ every user entry in a multi-user poll declaration.
 
 ------------------------------------------------------------------------------
 
+pl 3.9.5 ():
+* Add an error notification when an incoming message has embedded NULs.
+
 pl 3.9.4 (Wed May 14 12:27:22 EDT 1997):
 * Fixed a compilation glitch for systems like SunOS & others without atexit(3).
 * Fixed a compilation glitch in daemonize for HP-UX.
