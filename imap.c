@@ -95,11 +95,11 @@ int imap_ok (int sock,  char *argbuf)
 
 #ifdef KERBEROS_V4
 #if SIZEOF_INT = 4
-typedef	int32	int;
+typedef	int	int32;
 #elif SIZEOF_SHORT = 4
-typedef	int32	short;
+typedef	short	int32;
 #elif SIZEOF_LONG = 4
-typedef	int32	long;
+typedef	long	int32;
 #else
 #error Cannot deduce a 32-bit-type
 #endif
