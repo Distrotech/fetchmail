@@ -167,7 +167,7 @@ class Server:
 
     def __delitem__(self, name):
         for ui in range(len(self.users)):
-            if self.users[ui].pollname == name:
+            if self.users[ui].remote == name:
                 del self.users[ui]
                 break
 
@@ -624,7 +624,8 @@ class ConfigurationEdit(Frame, MyWidget):
 	self.subwidgets[sitename] = ServerEdit(sitename, self).edit(self.mode, Toplevel())
 
     def server_delete(self, sitename):
-        del self.configuration[sitename]
+        if self.configuration.has_keys(sitename):
+            del self.configuration[sitename]
 
     def edit(self, mode):
         self.mode = mode
@@ -911,7 +912,9 @@ class ServerEdit(Frame, MyWidget):
         self.subwidgets[username] = UserEdit(username, self).edit(mode, Toplevel())
 
     def user_delete(self, username):
-        del self.subwidgets[username]
+        if self.subwidgets.has_key(username):
+            del self.subwidgets[username]
+        del self.server[username]
 
     def makeWidgets(self, host, mode):
 	topwin = dispose_window(self, "Server options for querying " + host, serverhelp)
