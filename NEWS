@@ -10,7 +10,7 @@ fetchmail-4.7.6 (Sat Jan 30 19:44:24 EST 1999):
 * Henrik Storner's fix for mimedecode
 * ' now works as a string quote in. fetchmailrc syntax, just like ".
 * All bounce messages now use FQDN return paths.
-* Check for background nmode before generating oversized-message mail.  Duh!
+* Check for background mode before generating oversized-message mail.  Duh!
 * Paul Murphy's improvements for SDPS.
 * Message deletion on miscellaneous 5xx SMTP errors is suppressed unless a
   bounce can be sent.
