@@ -749,7 +749,7 @@ char *realname;		/* real name of host */
 	char	*ap, *ctt, options[MSGBUFSIZE];
 
 	/* build a connection to the SMTP listener */
-	if (!ctl->mda && (smtp_open(ctl) == -1))
+	if ((smtp_open(ctl) == -1))
 	{
 	    free_str_list(&xmit_names);
 	    error(0, -1, "SMTP connect to %s failed",
