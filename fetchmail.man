@@ -1791,6 +1791,13 @@ The RFC822 address parser used in multidrop mode chokes on some
 @-addresses that are technically legal but bizarre.  Strange uses of
 quoting and embedded comments are likely to confuse it.
 .PP
+Two users have reported that daemon-mode fetchmails leak memory.
+This may be associated with use of UIDL, or it may mean your TCP/IP
+layer is failing to garbage-collect closed sockets generated on 
+protocol errors properly; most installations do not have this
+problem. If you observe it, please report a bug.  The workaround is
+to do a fetchmail -q and restart occasionally.
+.PP
 In a message with multiple envelope headers, only the last one
 processed will be visible to fetchmail.  To get around this, use a
 mailserver-side filter that consolidates the contents of all envelope
