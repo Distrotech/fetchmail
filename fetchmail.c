@@ -1038,6 +1038,27 @@ static int load_params(int argc, char **argv, int optind)
     /* use localhost if we never fetch the FQDN of this host */
     fetchmailhost = "localhost";
 
+    /* here's where we override globals */
+    if (cmd_run.logfile)
+	run.logfile = cmd_run.logfile;
+    if (cmd_run.idfile)
+	run.idfile = cmd_run.idfile;
+    /* do this before the keep/fetchall test below, otherwise -d0 may fail */
+    if (cmd_run.poll_interval >= 0)
+	run.poll_interval = cmd_run.poll_interval;
+    if (cmd_run.invisible)
+	run.invisible = cmd_run.invisible;
+    if (cmd_run.use_syslog)
+	run.use_syslog = (cmd_run.use_syslog == FLAG_TRUE);
+    if (cmd_run.postmaster)
+	run.postmaster = cmd_run.postmaster;
+    if (cmd_run.bouncemail)
+	run.bouncemail = cmd_run.bouncemail;
+
+    /* check and daemon options are not compatible */
+    if (check_only && run.poll_interval)
+	run.poll_interval = 0;
+
     /* merge in wired defaults, do sanity checks and prepare internal fields */
     for (ctl = querylist; ctl; ctl = ctl->next)
     {
@@ -1258,26 +1279,6 @@ static int load_params(int argc, char **argv, int optind)
 	    }
 	}
     }
-
-    /* here's where we override globals */
-    if (cmd_run.logfile)
-	run.logfile = cmd_run.logfile;
-    if (cmd_run.idfile)
-	run.idfile = cmd_run.idfile;
-    if (cmd_run.poll_interval >= 0)
-	run.poll_interval = cmd_run.poll_interval;
-    if (cmd_run.invisible)
-	run.invisible = cmd_run.invisible;
-    if (cmd_run.use_syslog)
-	run.use_syslog = (cmd_run.use_syslog == FLAG_TRUE);
-    if (cmd_run.postmaster)
-	run.postmaster = cmd_run.postmaster;
-    if (cmd_run.bouncemail)
-	run.bouncemail = cmd_run.bouncemail;
-
-    /* check and daemon options are not compatible */
-    if (check_only && run.poll_interval)
-	run.poll_interval = 0;
 
 #ifdef POP3_ENABLE
     /* initialize UID handling */
