@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/02/18 22:05:12 $
+<td width="30%" align=right>$Date: 1998/02/19 07:30:18 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -917,7 +917,7 @@ error, hostname not recognized as local</code>". The problem is that
 fetchmail normally feeds sendmail with the client machine's host
 address in the MAIL FROM line.  These sendmails think this means
 they're seeing the result of a mail loop and suppress the mail.  You
-may be able to work around this by running in <code>--invisible</code> mode.
+may be able to work around this by running in <code>--invisible</code> mode.<P>
 
 <hr>
 <h2><a name="T2">T2. How can I use fetchmail with qmail?</a></h2>
@@ -1103,12 +1103,12 @@ As with M$ Exchange, the only real fix for these problems is to get a
 POP server that isn't brain-dead.<P>
 
 <hr>
-<h2><a name="#T10>T10. How can I use fetchmail with SOCKS?</a></h2>
+<h2><a name="#T10">T10. How can I use fetchmail with SOCKS?</a></h2>
 
 Daniel Sobral &lt<a href="mailto:dcs@gns.com.br">dcs@gns.com.br</a>
 gave us the following recipe:<P>
 
-<NL>
+<OL>
 <LI> Install socks5. You don't need to have a socks server, you just
      want the "runsocks" program.
 <LI> Set the environment variable SOCKS_SERVER to the server you'll be
@@ -1116,26 +1116,53 @@ gave us the following recipe:<P>
      SOCKS5_SERVER. Eg: 
 <pre>
 	export SOCKS5_SERVER=socks.my.domain.com
-</pre>.
+</pre>
 <LI> Set SOCKS5_USER and SOCKS5_PASSWD if needed.
 <LI> Run fetchmail through runsocks. Just like this:
 <pre>
 	runsocks fetchmail [parameters to fetchmail]
 </pre>
-</NL>
+</OL>
 
 It wasn't that hard, was it? :-)<P>
 
 <hr>
-<h2><a name="T11>T11. How can I use fetchmail with IPv6 and IPsec?</a></h2>
+<h2><a name="T11">T11. How can I use fetchmail with IPv6 and IPsec?</a></h2>
 
-Craig Metz tells us: The only currently released IPsec implementation
-fetchmai's  works with is the NRL IPv6+IPsec implementation (for BSD/OS and
-NetBSD), which is available from "http://web.mit.edu/network/isakmp".<P>
+To use fetchmail with IPv6, you need a system that supports IPv6, the "Basic
+Socket Interface Extensions for IPv6" (RFC 2133), and the inet6-apps kit.
+This currently means that you need to have a BSD/OS or NetBSD system with
+the NRL IPv6+IPsec software distribution or a Linux system with the latest
+experimental kernel and net-tools. It should not be hard to build fetchmail on
+other IPv6 implementations if you can port the inet6-apps kit.<P>
 
-You will also need the latest inet6-apps kit built with NETSEC_EMULATE
-enabled.  There will, of course, be a Linux implementation appearing
-someday that will support the standards-track IPv6 API.<P>
+To use fetchmail with network security (read: IPsec), you need a system that
+supports IPsec, the API described in the "Network Security API for Sockets"
+(draft-metz-net-security-api-01.txt), and the inet6-apps kit. This currently
+means that you need to have a BSD/OS or NetBSD system with the NRL IPv6+IPsec
+software distribution. A Linux IPsec implementation supporting this API will
+probably appear in the coming months.<P>
+
+The NRL IPv6+IPsec software distribution can be obtained from: <a
+href="http://web.mit.edu/network/isakmp">http://web.mit.edu/network/isakmp</a>
+<P>
+
+The inet6-apps kit can be obtained from <a 
+href="ftp://ftp.ipv6.inner.net/pub/ipv6">ftp://ftp.ipv6.inner.net/pub/ipv6</a>
+(via IPv6) or <a href="ftp://ftp.inner.net/pub/ipv6">
+ftp://ftp.inner.net/pub/ipv6</a> (via IPv4).<P>
+
+More information on using IPv6 with Linux can be obtained from:
+<UL>
+<LI>
+<a href="http://www.bieringer.de/linux/IPv6/IPv6-HOWTO/IPv6-HOWTO.html">
+http://www.bieringer.de/linux/IPv6/IPv6-HOWTO/IPv6-HOWTO.html</a>
+<LI>
+<a href="http://www.ipv6.inner.net/ipv6">http://www.ipv6.inner.net/ipv6</a>
+(via IPv6)
+<LI>
+<a href="http://www.inner.net/ipv6">http://www.inner.net/ipv6</a> (via IPv4)
+</UL>
 
 <hr>
 <h2><a name="R1">R1. Fetchmail's initial gethostbyname call fails on my host.</a></h2>
@@ -1789,7 +1816,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/02/18 22:05:12 $
+<td width="30%" align=right>$Date: 1998/02/19 07:30:18 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
