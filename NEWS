@@ -7,6 +7,7 @@
 * Updated cs.po by Jiri Pavlovsky.
 * Michael Kjorling's patch to add server ID to authantication success/failure 
   bugmail.
+* Kerberos build patch by HH.
 
 fetchmail-5.8.1 (Tue Apr 10 09:32:04 EDT 2001), 20511 lines:
 
