@@ -29,288 +29,6 @@ char tag[TAGLEN];
 static int tagnum;
 #define GENSYM	(sprintf(tag, "a%04d", ++tagnum), tag)
 
-#ifdef HAVE_PROTOTYPES
-static int gen_readmsg (int socket, int mboxfd, long len, int delimited,
-       char *user, char *host, int topipe, int rewrite);
-#endif /* HAVE_PROTOTYPES */
-
-/*********************************************************************
-  function:      do_protocol
-  description:   retrieve messages from the specified mail server
-                 using a given set of methods
-
-  arguments:     
-    queryctl     fully-specified options (i.e. parsed, defaults invoked,
-                 etc).
-    proto        protocol method pointer
-
-  return value:  exit code from the set of PS_.* constants defined in 
-                 fetchmail.h
-  calls:
-  globals:       reads outlevel.
- *********************************************************************/
-
-int do_protocol(queryctl, proto)
-struct hostrec *queryctl;
-struct method *proto;
-{
-    int ok, len;
-    int mboxfd;
-    char buf [POPBUFSIZE+1], host[HOSTLEN+1];
-    int socket;
-    int first,number,count;
-
-    tagnum = 0;
-    protocol = proto;
-
-    /* open the output sink, locking it if it is a folder */
-    if (queryctl->output == TO_FOLDER || queryctl->output == TO_STDOUT) {
-	if ((mboxfd = openuserfolder(queryctl)) < 0) 
-	    return(PS_IOERR);
-    } else if (queryctl->output == TO_SMTP) {
-	if ((mboxfd = Socket(queryctl->smtphost, SMTP_PORT)) < 0) 
-	    return(PS_SOCKET);
-
-	/* eat the greeting message */
-	if (SMTP_ok(mboxfd, NULL) != SM_OK) {
-	    close(mboxfd);
-	    mboxfd = 0;
-	    return(PS_SMTP);
-	}
-    
-	/* make it look like mail is coming from the server */
-	if (SMTP_helo(mboxfd,queryctl->servername) != SM_OK) {
-	    close(mboxfd);
-	    mboxfd = 0;
-	    return(PS_SMTP);
-	}
-    }
-
-    /* open a socket to the mail server */
-    if ((socket = Socket(queryctl->servername,
-			 queryctl->port ? queryctl->port : protocol->port))<0)
-    {
-	perror("do_protocol: socket");
-	ok = PS_SOCKET;
-	goto closeUp;
-    }
-
-    /* accept greeting message from mail server */
-    ok = (protocol->parse_response)(buf, socket);
-    if (ok != 0) {
-	if (ok != PS_SOCKET)
-	    gen_transact(socket, protocol->exit_cmd);
-	close(socket);
-	goto closeUp;
-    }
-
-    /* try to get authorized to fetch mail */
-    ok = (protocol->getauth)(socket, queryctl, buf);
-    if (ok == PS_ERROR)
-	ok = PS_AUTHFAIL;
-    if (ok != 0)
-	goto cleanUp;
-
-    /* compute count and first */
-    if ((*protocol->getrange)(socket, queryctl, &count, &first) != 0)
-	goto cleanUp;
-
-    /* show them how many messages we'll be downloading */
-    if (outlevel > O_SILENT && outlevel < O_VERBOSE)
-	if (count == 0)
-	    fprintf(stderr, "No mail from %s\n", queryctl->servername);
-	else if (first > 1) 
-	    fprintf(stderr,
-		    "%d message%s from %s, %d new messages.\n", 
-		    count, count > 1 ? "s" : "", 
-		    queryctl->servername, count - first + 1);
-	else
-	    fprintf(stderr,
-		    "%d %smessage%s from %s.\n",
-		    count, ok ? "" : "new ", 
-		    count > 1 ? "s" : "", 
-		    queryctl->servername);
-
-    if (count > 0) { 
-	for (number = queryctl->flush ? 1 : first;  number<=count; number++) {
-
-	    char *cp;
-
-	    /* open the mail pipe if we're using an MDA */
-	    if (queryctl->output == TO_MDA
-		&& (queryctl->fetchall || number >= first)) {
-		ok = (mboxfd = openmailpipe(queryctl)) < 0 ? -1 : 0;
-		if (ok != 0)
-		    goto cleanUp;
-	    }
-           
-	    if (queryctl->flush && number < first && !queryctl->fetchall) 
-		ok = 0;  /* no command to send here, will delete message below */
-	    else
-	    {
-		(*protocol->fetch)(socket, number, linelimit, &len);
-		if (outlevel == O_VERBOSE)
-		    if (protocol->delimited)
-			fprintf(stderr,"fetching message %d (delimited)\n",number);
-		    else
-			fprintf(stderr,"fetching message %d (%d bytes)\n",number,len);
-		ok = gen_readmsg(socket,mboxfd,len,protocol->delimited,
-				 queryctl->localname,
-				 queryctl->servername,
-				 queryctl->output, 
-				 !queryctl->norewrite);
-		if (protocol->trail)
-		    (*protocol->trail)(socket, queryctl, number);
-		if (ok != 0)
-		    goto cleanUp;
-	    }
-
-	    /* maybe we delete this message now? */
-	    if (protocol->delete_cmd)
-	    {
-		if ((number < first && queryctl->flush) || !queryctl->keep) {
-		    if (outlevel > O_SILENT && outlevel < O_VERBOSE) 
-			fprintf(stderr,"flushing message %d\n", number);
-		    else
-			;
-		    ok = gen_transact(socket, protocol->delete_cmd, number);
-		    if (ok != 0)
-			goto cleanUp;
-		}
-	    }
-
-	    /* close the mail pipe, we'll reopen before next message */
-	    if (queryctl->output == TO_MDA
-		&& (queryctl->fetchall || number >= first)) {
-		ok = closemailpipe(mboxfd);
-		if (ok != 0)
-		    goto cleanUp;
-	    }
-	}
-
-	/* remove all messages flagged for deletion */
-        if (!queryctl->keep && protocol->expunge_cmd)
-	{
-	    ok = gen_transact(socket, protocol->expunge_cmd);
-	    if (ok != 0)
-		goto cleanUp;
-        }
-
-	ok = gen_transact(socket, protocol->exit_cmd);
-	if (ok == 0)
-	    ok = PS_SUCCESS;
-	close(socket);
-	goto closeUp;
-    }
-    else {
-	ok = gen_transact(socket, protocol->exit_cmd);
-	if (ok == 0)
-	    ok = PS_NOMAIL;
-	close(socket);
-	goto closeUp;
-    }
-
-cleanUp:
-    if (ok != 0 && ok != PS_SOCKET)
-	gen_transact(socket, protocol->exit_cmd);
-
-closeUp:
-    if (queryctl->output == TO_FOLDER)
-    {
-	if (closeuserfolder(mboxfd) < 0 && ok == 0)
-	    ok = PS_IOERR;
-    }
-    else if (queryctl->output == TO_SMTP && mboxfd > 0) {
-	SMTP_quit(mboxfd);
-	close(mboxfd);
-    }
-
-    if (ok == PS_IOERR || ok == PS_SOCKET) 
-	perror("do_protocol: cleanUp");
-
-    return(ok);
-}
-
-/*********************************************************************
-  function:      gen_send
-  description:   Assemble command in print style and send to the server
-
-  arguments:     
-    socket       socket to which the server is connected.
-    fmt          printf-style format
-
-  return value:  none.
-  calls:         SockPuts.
-  globals:       reads outlevel.
- *********************************************************************/
-
-void gen_send(socket, fmt, va_alist)
-int socket;
-const char *fmt;
-va_dcl {
-
-  char buf [POPBUFSIZE+1];
-  va_list ap;
-
-  if (protocol->tagged)
-      (void) sprintf(buf, "%s ", GENSYM);
-  else
-      buf[0] = '\0';
-
-  va_start(ap);
-  vsprintf(buf + strlen(buf), fmt, ap);
-  va_end(ap);
-
-  SockPuts(socket, buf);
-
-  if (outlevel == O_VERBOSE)
-    fprintf(stderr,"> %s\n", buf);
-}
-
-/*********************************************************************
-  function:      gen_transact
-  description:   Assemble command in print style and send to the server.
-                 then accept a protocol-dependent response.
-
-  arguments:     
-    socket       socket to which the server is connected.
-    fmt          printf-style format
-
-  return value:  none.
-  calls:         SockPuts, imap_ok.
-  globals:       reads outlevel.
- *********************************************************************/
-
-int gen_transact(socket, fmt, va_alist)
-int socket;
-const char *fmt;
-va_dcl {
-
-  int ok;
-  char buf [POPBUFSIZE+1];
-  va_list ap;
-
-  if (protocol->tagged)
-      (void) sprintf(buf, "%s ", GENSYM);
-  else
-      buf[0] = '\0';
-
-  va_start(ap);
-  vsprintf(buf + strlen(buf), fmt, ap);
-  va_end(ap);
-
-  SockPuts(socket, buf);
-
-  if (outlevel == O_VERBOSE)
-    fprintf(stderr,"> %s\n", buf);
-
-  ok = (protocol->parse_response)(buf,socket);
-  if (ok != 0 && outlevel > O_SILENT && outlevel <= O_VERBOSE)
-    fprintf(stderr,"%s\n",buf);
-
-  return(ok);
-}
-
 /*********************************************************************
   function:      
   description:   hack message headers so replies will work properly
@@ -800,3 +518,281 @@ int rewrite;
 	;
     return(0);
 }
+
+/*********************************************************************
+  function:      do_protocol
+  description:   retrieve messages from the specified mail server
+                 using a given set of methods
+
+  arguments:     
+    queryctl     fully-specified options (i.e. parsed, defaults invoked,
+                 etc).
+    proto        protocol method pointer
+
+  return value:  exit code from the set of PS_.* constants defined in 
+                 fetchmail.h
+  calls:
+  globals:       reads outlevel.
+ *********************************************************************/
+
+int do_protocol(queryctl, proto)
+struct hostrec *queryctl;
+struct method *proto;
+{
+    int ok, len;
+    int mboxfd;
+    char buf [POPBUFSIZE+1], host[HOSTLEN+1];
+    int socket;
+    int first,number,count;
+
+    tagnum = 0;
+    protocol = proto;
+
+    /* open the output sink, locking it if it is a folder */
+    if (queryctl->output == TO_FOLDER || queryctl->output == TO_STDOUT) {
+	if ((mboxfd = openuserfolder(queryctl)) < 0) 
+	    return(PS_IOERR);
+    } else if (queryctl->output == TO_SMTP) {
+	if ((mboxfd = Socket(queryctl->smtphost, SMTP_PORT)) < 0) 
+	    return(PS_SOCKET);
+
+	/* eat the greeting message */
+	if (SMTP_ok(mboxfd, NULL) != SM_OK) {
+	    close(mboxfd);
+	    mboxfd = 0;
+	    return(PS_SMTP);
+	}
+    
+	/* make it look like mail is coming from the server */
+	if (SMTP_helo(mboxfd,queryctl->servername) != SM_OK) {
+	    close(mboxfd);
+	    mboxfd = 0;
+	    return(PS_SMTP);
+	}
+    }
+
+    /* open a socket to the mail server */
+    if ((socket = Socket(queryctl->servername,
+			 queryctl->port ? queryctl->port : protocol->port))<0)
+    {
+	perror("do_protocol: socket");
+	ok = PS_SOCKET;
+	goto closeUp;
+    }
+
+    /* accept greeting message from mail server */
+    ok = (protocol->parse_response)(buf, socket);
+    if (ok != 0) {
+	if (ok != PS_SOCKET)
+	    gen_transact(socket, protocol->exit_cmd);
+	close(socket);
+	goto closeUp;
+    }
+
+    /* try to get authorized to fetch mail */
+    ok = (protocol->getauth)(socket, queryctl, buf);
+    if (ok == PS_ERROR)
+	ok = PS_AUTHFAIL;
+    if (ok != 0)
+	goto cleanUp;
+
+    /* compute count and first */
+    if ((*protocol->getrange)(socket, queryctl, &count, &first) != 0)
+	goto cleanUp;
+
+    /* show them how many messages we'll be downloading */
+    if (outlevel > O_SILENT && outlevel < O_VERBOSE)
+	if (count == 0)
+	    fprintf(stderr, "No mail from %s\n", queryctl->servername);
+	else if (first > 1) 
+	    fprintf(stderr,
+		    "%d message%s from %s, %d new messages.\n", 
+		    count, count > 1 ? "s" : "", 
+		    queryctl->servername, count - first + 1);
+	else
+	    fprintf(stderr,
+		    "%d %smessage%s from %s.\n",
+		    count, ok ? "" : "new ", 
+		    count > 1 ? "s" : "", 
+		    queryctl->servername);
+
+    if (count > 0) { 
+	for (number = queryctl->flush ? 1 : first;  number<=count; number++) {
+
+	    char *cp;
+
+	    /* open the mail pipe if we're using an MDA */
+	    if (queryctl->output == TO_MDA
+		&& (queryctl->fetchall || number >= first)) {
+		ok = (mboxfd = openmailpipe(queryctl)) < 0 ? -1 : 0;
+		if (ok != 0)
+		    goto cleanUp;
+	    }
+           
+	    if (queryctl->flush && number < first && !queryctl->fetchall) 
+		ok = 0;  /* no command to send here, will delete message below */
+	    else
+	    {
+		(*protocol->fetch)(socket, number, linelimit, &len);
+		if (outlevel == O_VERBOSE)
+		    if (protocol->delimited)
+			fprintf(stderr,"fetching message %d (delimited)\n",number);
+		    else
+			fprintf(stderr,"fetching message %d (%d bytes)\n",number,len);
+		ok = gen_readmsg(socket,mboxfd,len,protocol->delimited,
+				 queryctl->localname,
+				 queryctl->servername,
+				 queryctl->output, 
+				 !queryctl->norewrite);
+		if (protocol->trail)
+		    (*protocol->trail)(socket, queryctl, number);
+		if (ok != 0)
+		    goto cleanUp;
+	    }
+
+	    /* maybe we delete this message now? */
+	    if (protocol->delete_cmd)
+	    {
+		if ((number < first && queryctl->flush) || !queryctl->keep) {
+		    if (outlevel > O_SILENT && outlevel < O_VERBOSE) 
+			fprintf(stderr,"flushing message %d\n", number);
+		    else
+			;
+		    ok = gen_transact(socket, protocol->delete_cmd, number);
+		    if (ok != 0)
+			goto cleanUp;
+		}
+	    }
+
+	    /* close the mail pipe, we'll reopen before next message */
+	    if (queryctl->output == TO_MDA
+		&& (queryctl->fetchall || number >= first)) {
+		ok = closemailpipe(mboxfd);
+		if (ok != 0)
+		    goto cleanUp;
+	    }
+	}
+
+	/* remove all messages flagged for deletion */
+        if (!queryctl->keep && protocol->expunge_cmd)
+	{
+	    ok = gen_transact(socket, protocol->expunge_cmd);
+	    if (ok != 0)
+		goto cleanUp;
+        }
+
+	ok = gen_transact(socket, protocol->exit_cmd);
+	if (ok == 0)
+	    ok = PS_SUCCESS;
+	close(socket);
+	goto closeUp;
+    }
+    else {
+	ok = gen_transact(socket, protocol->exit_cmd);
+	if (ok == 0)
+	    ok = PS_NOMAIL;
+	close(socket);
+	goto closeUp;
+    }
+
+cleanUp:
+    if (ok != 0 && ok != PS_SOCKET)
+	gen_transact(socket, protocol->exit_cmd);
+
+closeUp:
+    if (queryctl->output == TO_FOLDER)
+    {
+	if (closeuserfolder(mboxfd) < 0 && ok == 0)
+	    ok = PS_IOERR;
+    }
+    else if (queryctl->output == TO_SMTP && mboxfd > 0) {
+	SMTP_quit(mboxfd);
+	close(mboxfd);
+    }
+
+    if (ok == PS_IOERR || ok == PS_SOCKET) 
+	perror("do_protocol: cleanUp");
+
+    return(ok);
+}
+
+/*********************************************************************
+  function:      gen_send
+  description:   Assemble command in print style and send to the server
+
+  arguments:     
+    socket       socket to which the server is connected.
+    fmt          printf-style format
+
+  return value:  none.
+  calls:         SockPuts.
+  globals:       reads outlevel.
+ *********************************************************************/
+
+void gen_send(socket, fmt, va_alist)
+int socket;
+const char *fmt;
+va_dcl {
+
+  char buf [POPBUFSIZE+1];
+  va_list ap;
+
+  if (protocol->tagged)
+      (void) sprintf(buf, "%s ", GENSYM);
+  else
+      buf[0] = '\0';
+
+  va_start(ap);
+  vsprintf(buf + strlen(buf), fmt, ap);
+  va_end(ap);
+
+  SockPuts(socket, buf);
+
+  if (outlevel == O_VERBOSE)
+    fprintf(stderr,"> %s\n", buf);
+}
+
+/*********************************************************************
+  function:      gen_transact
+  description:   Assemble command in print style and send to the server.
+                 then accept a protocol-dependent response.
+
+  arguments:     
+    socket       socket to which the server is connected.
+    fmt          printf-style format
+
+  return value:  none.
+  calls:         SockPuts, imap_ok.
+  globals:       reads outlevel.
+ *********************************************************************/
+
+int gen_transact(socket, fmt, va_alist)
+int socket;
+const char *fmt;
+va_dcl {
+
+  int ok;
+  char buf [POPBUFSIZE+1];
+  va_list ap;
+
+  if (protocol->tagged)
+      (void) sprintf(buf, "%s ", GENSYM);
+  else
+      buf[0] = '\0';
+
+  va_start(ap);
+  vsprintf(buf + strlen(buf), fmt, ap);
+  va_end(ap);
+
+  SockPuts(socket, buf);
+
+  if (outlevel == O_VERBOSE)
+    fprintf(stderr,"> %s\n", buf);
+
+  ok = (protocol->parse_response)(buf,socket);
+  if (ok != 0 && outlevel > O_SILENT && outlevel <= O_VERBOSE)
+    fprintf(stderr,"%s\n",buf);
+
+  return(ok);
+}
+
