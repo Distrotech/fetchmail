@@ -818,6 +818,7 @@ static int load_params(int argc, char **argv, int optind)
 		ctl = hostalloc((struct query *)NULL);
 		ctl->server.via =
 		    ctl->server.pollname = xstrdup(argv[optind]);
+		ctl->active = TRUE;
 	    }
 	}
 
