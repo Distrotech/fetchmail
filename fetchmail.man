@@ -728,8 +728,9 @@ poll mailhost.net via localhost port 1234 with pop3:
 This will override the argument of poll, which can simply be a
 distinct label for the configuration.  The poll name will still be the
 one you would give on the command line to explicitly query this host.
-It will also still be used as a possible match in multidrop mode, in
-case it is (as in this case) the real host name.
+If the `via' name is `localhost', the poll name will also still be
+used as a possible match in multidrop mode; otherwise the `via' name
+will be used instead and the poll name will be purely a label.
 .PP
 The `interval' option (which takes a numeric argument) allows you to poll a
 server less frequently than the basic poll interval.  If you say
@@ -752,12 +753,13 @@ never does DNS lookups.
 When there is more than one local name (or name mapping) the
 \fIfetchmail\fR code does look at the Received, To, Cc, and Bcc
 headers of retrieved mail (this is `multidrop mode').  It looks for
-addresses with hostname parts that match your `aka' or `localdomains'
-options, and usually also for hostname parts which DNS tells it are
-aliases of the mailserver.  See the discussion of `dns',
-`localdomains', and `aka' for details on how matching addresses are
-handled.  If \fIfetchmail\fR cannot match any mailserver usernames or
-localdomain addresses, the default recipient is the calling user.
+addresses with hostname parts that match your poll name or your `via',
+`aka' or `localdomains' options, and usually also for hostname parts
+which DNS tells it are aliases of the mailserver.  See the discussion
+of `dns', `localdomains', and `aka' for details on how matching
+addresses are handled.  If \fIfetchmail\fR cannot match any mailserver
+usernames or localdomain addresses, the default recipient is the
+calling user.
 .PP
 The `dns' option (normally on) controls the way addresses from
 multidrop mailboxes are checked.  On, it enables logic to check each

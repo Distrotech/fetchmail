@@ -114,35 +114,25 @@ static int is_host_alias(const char *name, struct query *ctl)
 	ctl->server.lead_server ? ctl->server.lead_server : &ctl->server;
 
     /*
-     * The first three checks are optimizations that will catch a good
+     * The first two checks are optimizations that will catch a good
      * many cases.
      *
-     * (1) check against the poll label the user specified.  Odds are
-     * good this will either be the mailserver's FQDN or a suffix of
+     * (1) check against the `true name' deduced from the poll label
+     * and the via option (if present) at the beginning of the poll cycle.  
+     * Odds are good this will either be the mailserver's FQDN or a suffix of
      * it with the mailserver's domain's default host name omitted.
      *
      * (2) Then check the rest of the `also known as'
      * cache accumulated by previous DNS checks.  This cache is primed
      * by the aka list option.
      *
-     * (3) Check the `via' or true host name if present, just in case
-     * the poll name is a label for one of a couple of different 
-     * configurations and the real server name is here.
-     *
-     * (4) Finally check against the mailserver's FQDN, in case
-     * it's not the same as the declared hostname.
-     *
      * Any of these on a mail address is definitive.  Only if the
      * name doesn't match any is it time to call the bind library.
      * If this happens odds are good we're looking at an MX name.
      */
-    if (strcmp(lead_server->pollname, name) == 0)
+    if (strcmp(lead_server->truename, name) == 0)
 	return(TRUE);
     else if (str_in_list(&lead_server->akalist, name))
-	return(TRUE);
-    else if (ctl->server.via && strcmp(name, ctl->server.via) == 0)
-	return(TRUE);
-    else if (strcmp(name, ctl->server.truename) == 0)
 	return(TRUE);
     else if (!ctl->server.dns)
 	return(FALSE);
@@ -397,6 +387,13 @@ int smtp_open(struct query *ctl)
 	 * In fact this code relies on the RFC1123 requirement that the
 	 * SMTP listener must accept messages even if verification of the
 	 * HELO name fails (RFC1123 section 5.2.5, paragraph 2).
+	 *
+	 * How we compute the true mailhost name to pass to the
+	 * listener doesn't affect behavior on RFC1123- violating
+	 * listener that check for name match; we're going to lose
+	 * on those anyway because we can never give them a name
+	 * that matches the local machine fetchmail is running on.
+	 * What it will affect is the listener's logging.
 	 */
 
 	/* if no socket to this host is already set up, try to open ESMTP */

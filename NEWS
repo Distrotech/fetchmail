@@ -19,10 +19,18 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.0.6 ()
+* Changed semantics of `via' and `poll <name>' to be more orthogonal.
+
+WARNING: If you are running multidrop, READ FAQ ITEM F1 NOW!
+There are 255 people on the fetchmail-friends list.
+
 fetchmail-4.0.5 (Wed Jul 30 10:27:25 EDT 1997)
 * Increased %o in the Lex source to cope with Ultrix lex.
 * RPMs are now built with --without-OPIE to avoid validation problems.
 * Channge in computation of true name to avoid HELO (null) bug.
+
+There are 255 people on the fetchmail-friends list.
 
 fetchmail-4.0.4 (Mon Jul 28 23:38:20 EDT 1997)
 * Overhauled the build machinery.

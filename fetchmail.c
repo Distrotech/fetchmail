@@ -356,37 +356,34 @@ int main (int argc, char **argv)
 		    continue;
 #endif /* linux */
 
-	    /*
-	     * How we compute the true mailhost name to pass to the
-	     * listener doesn't affect behavior on RFC1123- violating
-	     * listener that check for name match; we're going to lose
-	     * on those anyway because we can never give them a name
-	     * that matches the local machine fetchmail is running on.
-	     * What it will affect is the listener's logging.
-	     *
-	     * If we have the mailserver's canonical FQDN that is clearly
-	     * the right thing to log.  If we don't life is more complicated.
-	     * The problem is there are two clashing cases:
-	     *
-	     * (1) The poll name is a label.  In that case we want the
-	     * log to show the via or true mailserver name.
-	     *
-	     * (2) The poll name is the true one, the via name is localhost.
-	     * This is going to be typical for ssh-using configurations.
-	     *
-	     * We're going to assume the via name is true unless it's
-	     * localhost.
-	     */
-	    if (ctl->server.via && strcmp(ctl->server.via, "localhost"))
-		ctl->server.truename = xstrdup(ctl->server.via);
-	    else
-		ctl->server.truename = xstrdup(ctl->server.pollname);
+		/*
+		 *
+		 * Compute the true name of the mailserver host.  
+		 * There are two clashing cases here:
+		 *
+		 * (1) The poll name is a label, possibly on one of several
+		 *     poll configurations for the same host.  In this case 
+		 *     the `via' option will be present and give the true name.
+		 *
+		 * (2) The poll name is the true one, the via name is 
+		 *     localhost.   This is going to be typical for ssh-using
+		 *     configurations.
+		 *
+		 * We're going to assume the via name is true unless it's
+		 * localhost.
+		 *
+		 * Then, if we've got DNS, we'll try to canonicalize the name.
+		 */
+		if (ctl->server.via && strcmp(ctl->server.via, "localhost"))
+		    ctl->server.truename = xstrdup(ctl->server.via);
+		else
+		    ctl->server.truename = xstrdup(ctl->server.pollname);
 
 #ifdef HAVE_GETHOSTBYNAME
 		/*
-		 * This functions partly as an optimization and partly
-		 * as a probe to make sure our nameserver is still up.
-		 * The multidrop case (especially) needs it.
+		 * This functions partly as a probe to make sure our
+		 * nameserver is still up.  The multidrop case
+		 * (especially) needs it.
 		 */
 		if (ctl->server.preauthenticate==A_KERBEROS_V4 || MULTIDROP(ctl))
 		{
