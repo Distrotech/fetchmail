@@ -87,6 +87,7 @@ int pass;		/* how many times have we re-polled? */
 int stage;		/* where are we? */
 int phase;		/* where are we, for error-logging purposes? */
 int mytimeout;		/* value of nonreponse timeout */
+int suppress_tags;	/* emit tags? */
 
 static const struct method *protocol;
 static jmp_buf	restart;
@@ -2537,7 +2538,7 @@ va_dcl
     char buf [MSGBUFSIZE+1];
     va_list ap;
 
-    if (protocol->tagged)
+    if (protocol->tagged && !suppress_tags)
 	(void) sprintf(buf, "%s ", GENSYM);
     else
 	buf[0] = '\0';
@@ -2623,7 +2624,7 @@ va_dcl
 
     phase = SERVER_WAIT;
 
-    if (protocol->tagged)
+    if (protocol->tagged && !suppress_tags)
 	(void) sprintf(buf, "%s ", GENSYM);
     else
 	buf[0] = '\0';
