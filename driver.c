@@ -394,6 +394,8 @@ static int smtp_open(struct query *ctl)
 	 */
 	struct idlist	*idp;
 
+	errno = 0;
+
 	/* run down the SMTP hunt list looking for a server that's up */
 	for (idp = ctl->smtphunt; idp; idp = idp->next)
 	{
@@ -891,9 +893,9 @@ int num;		/* index of message */
 	/* build a connection to the SMTP listener */
 	if ((smtp_open(ctl) == -1))
 	{
-	    free_str_list(&xmit_names);
 	    error(0, errno, "SMTP connect to %s failed",
 		  ctl->smtphost ? ctl->smtphost : "localhost");
+	    free_str_list(&xmit_names);
 	    return(PS_SMTP);
 	}
 
