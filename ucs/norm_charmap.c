@@ -24,6 +24,8 @@
  *   http://www.cl.cam.ac.uk/~mgk25/ucs/norm_charmap.c
  */
 
+#include "config.h" /* import AC_C_CONST effects */
+
 #include <string.h>
 
 #ifdef TEST
@@ -36,7 +38,7 @@
 
 static char buf[16];
 
-char *norm_charmap(char *name)
+const char *norm_charmap(const char *name)
 {
   char *p;
   
