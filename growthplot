@@ -12,8 +12,9 @@ sed '/^4.2.9/,$d' </tmp/growthnumbers$$ >/tmp/growthannounce$$
 cat >/tmp/growthimage$$ <<EOF
 set title "Fetchmail project growth history"
 set xlabel 'Days since baseline'
-set ylabel 'Participants' 6	# Put it right over the Y axis
+set ylabel 'Participants'
 set key bottom right box
+set terminal gif
 
 EOF
 
@@ -56,24 +57,18 @@ EOF
 ) </tmp/growthmajors$$ >>/tmp/growthimage$$ 
 
 cat >>/tmp/growthimage$$ <<EOF
-# First, plot total participants
 plot [] [0:] '/tmp/growthnumbers$$' using 5:4 \
-		title "Both lists" with points 3
-
-# Then, plot announce-list only starting from the Julian date of the split
-replot '/tmp/growthannounce$$' using 5:3 \
-		title "fetchmail-announce" with points 4
-
-# Finally, plot the developer list
-replot '/tmp/growthannounce$$' using 5:2 \
+		title "Both lists" with points 3, \
+     '/tmp/growthannounce$$' using 5:3 \
+		title "fetchmail-announce" with points 4, \
+     '/tmp/growthannounce$$' using 5:2 \
 		title "fetchmail-friends" with points 2
 EOF
 
-echo "pause 9999" >>/tmp/growthimage$$
-
-gnuplot /tmp/growthimage$$
+# The gnuplot driver for PNG doesn't do color
+gnuplot /tmp/growthimage$$ >growth.gif
+gif2png -s -d -qq growth.gif
 
 rm -f /tmp/growth*
 
-# The gnuplot drivers for GIF and PNG are deficient.  To capture this image,
-# use the xv middle-button grab and save to PNG.
+# growthplot ends here
