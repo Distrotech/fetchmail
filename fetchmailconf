@@ -45,6 +45,7 @@ class Server:
 	self.auth = 'password'		# Default to password authentication
 	self.timeout = 300		# 5-minute timeout
 	self.envelope = 'Received'	# Envelope-address header
+	self.envskip = 0		# Number of envelope headers to skip
 	self.qvirtual = ''		# Name prefix to strip
 	self.aka = []			# List of DNS aka names
 	self.dns = TRUE			# Enable DNS lookup on multidrop
@@ -64,6 +65,7 @@ class Server:
 	    ('auth',      'String'),
 	    ('timeout',   'Int'),
 	    ('envelope',  'String'),
+	    ('envskip',   'Int'),
 	    ('qvirtual',  'String'),
 	    # leave aka out
 	    ('dns',       'Boolean'),
@@ -86,8 +88,11 @@ class Server:
 	    str = str + " timeout " + `self.timeout`
 	if self.interval != ServerDefaults.interval: 
 	    str = str + " interval " + `self.interval` 
-	if self.envelope != ServerDefaults.envelope:
-	    str = str + " envelope " + self.envelope
+	if self.envelope != ServerDefaults.envelope or self.envskip != ServerDefaults.envskip:
+	    if self.envskip:
+		str = str + " envelope " + self.envskip + " " + self.envelope
+	    else:
+		str = str + " envelope " + self.envelope
 	if self.qvirtual != ServerDefaults.qvirtual:
 	    str = str + " qvirtual " + self.qvirtual
 	if self.auth != ServerDefaults.auth:
@@ -720,6 +725,8 @@ class ServerEdit(Frame):
 	Label(mdropwin, text="Multidrop options").pack(side=TOP)
 	LabeledEntry(mdropwin, 'Envelope address header:',
 		      self.envelope, '22').pack(side=TOP, fill=X)
+	LabeledEntry(mdropwin, 'Envelope headers to skip:',
+		      self.envskip, '22').pack(side=TOP, fill=X)
 	LabeledEntry(mdropwin, 'Name prefix to strip:',
 		      self.qvirtual, '22').pack(side=TOP, fill=X)
 	Checkbutton(mdropwin, text="Enable multidrop DNS lookup?",
