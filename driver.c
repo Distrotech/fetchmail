@@ -72,7 +72,9 @@
 
 #define	SMTP_PORT	25	/* standard SMTP service port */
 
+#ifndef strstr		/* glibc-2.1 declares this as a macro */
 extern char *strstr();	/* needed on sysV68 R3V7.1. */
+#endif /* strstr */
 
 int fetchlimit;		/* how often to tear down the server connection */
 int batchcount;		/* count of messages sent in current batch */

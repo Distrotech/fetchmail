@@ -26,7 +26,9 @@
 #include <krb.h>
 #endif /* KERBEROS_V4 */
 
+#ifndef strstr		/* glibc-2.1 declares this as a macro */
 extern char *strstr();	/* needed on sysV68 R3V7.1. */
+#endif /* strstr */
 
 /* imap_version values */
 #define IMAP2		-1	/* IMAP2 or IMAP2BIS, RFC1176 */

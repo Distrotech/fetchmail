@@ -1,4 +1,8 @@
 '\" t
+.\" ** The above line should force tbl to be used as a preprocessor **
+.\"
+.\" Man page for fetchmail
+.\"
 .\" For license terms, see the file COPYING in this directory.
 .TH fetchmail 1
 .SH NAME
@@ -172,9 +176,9 @@ machine in the server's queue of undelivered mail.
 .B \-U, --uidl
 (Keyword: uidl)
 Force UIDL use (effective only with POP3).  Force client-side tracking
-of `newness' of messages.  Use with `keep' to use a mailbox as a baby
-news drop for a group of users; if the mailbox is periodically purged,
-every member will get a chance to read the message.
+of `newness' of messages (UIDL stands for ``unique ID listing'' and is
+described in RFC1725).  Use with `keep' to use a mailbox as a baby
+news drop for a group of users.
 .TP
 .B \-P, --port
 (Keyword: port)

@@ -23,7 +23,9 @@
 #include  <opie.h>
 #endif /* HAVE_LIBOPIE */
 
+#ifndef strstr		/* glibc-2.1 declares this as a macro */
 extern char *strstr();	/* needed on sysV68 R3V7.1. */
+#endif /* strstr */
 
 static int last;
 
