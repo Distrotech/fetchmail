@@ -428,29 +428,32 @@ int readheaders(int sock,
 	linelen = 0;
 	line[0] = '\0';
 	do {
-	    char	*sp, *tp;
+	    do {
+		char	*sp, *tp;
 
-	    set_timeout(mytimeout);
-	    if ((n = SockRead(sock, buf, sizeof(buf)-1)) == -1) {
+		set_timeout(mytimeout);
+		if ((n = SockRead(sock, buf, sizeof(buf)-1)) == -1) {
+		    set_timeout(0);
+		    free(line);
+		    free(msgblk.headers);
+		    msgblk.headers = NULL;
+		    return(PS_SOCKET);
+		}
 		set_timeout(0);
-		free(line);
-		free(msgblk.headers);
-		msgblk.headers = NULL;
-		return(PS_SOCKET);
-	    }
-	    set_timeout(0);
 
-	    /*
-	     * Smash out any medial NULs, they could wreak havoc later on.
-	     * Some network stacks seem to generate these at random,
-	     * always (according to reports) at the beginning of the
-	     * first read.  NUls are illegal in RFC822 format.
-	     */
-	    for (sp = tp = buf; sp < buf + n; sp++)
-		if (*sp)
-		    *tp++ = *sp;
-	    *tp = '\0';
-	    n = tp - buf;
+		/*
+		 * Smash out any NULs, they could wreak havoc later on.
+		 * Some network stacks seem to generate these at random,
+		 * especially (according to reports) at the beginning of the
+		 * first read.  NULs are illegal in RFC822 format.
+		 */
+		for (sp = tp = buf; sp < buf + n; sp++)
+		    if (*sp)
+			*tp++ = *sp;
+		*tp = '\0';
+		n = tp - buf;
+	    } while
+		  (n == 0);
 
 	    remaining -= n;
 	    linelen += n;
