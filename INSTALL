@@ -142,8 +142,8 @@ configuration steps that may be necessary.
 
 5. SET UP A RUN CONTROL FILE
 
-See the man page and the file sample.rcfile for a description of how to
-configure your individual preferences.
+See the man page for a description of how to configure your individual
+preferences.
 
 If you're upgrading from popclient, see question F4 in the FAQ file.
 
