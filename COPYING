@@ -9,9 +9,11 @@ fetchmail.  The relevant files are smb*.[ch] and ntlm.h.
 
 The following files are public-domain: acconfig.h, alloca.c, md5c.c, md5.h.
 
-The following file is under the InnerNet Version 2 license: ipv6_connect.c.
+The following file is under a variant of the InnerNet Version 2 license
+(with the advertising clause removed for GPL compatibility) supplied
+by its author: ipv6_connect.c.
 
-The following files are explicitly GPL-licensed: getopt1.c, getopt.c, error.c.
+The following files are explicitly GPL-licensed: getopt1.c, getopt.c, getopt.h.
 
 All other code in the distribution incorporates the copy of GPL version 2 
 below by reference.
