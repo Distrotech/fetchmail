@@ -618,7 +618,7 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
     char		**from_responses;
 #endif /* EXPLICIT_BOUNCE_ON_BAD_ADDRESS */
     int		total_addresses;
-    int		force_transient_error;
+    int		force_transient_error = 0;
 
     /*
      * Compute ESMTP options.
