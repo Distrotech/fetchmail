@@ -222,6 +222,9 @@ int main(int argc, char **argv)
 #ifdef INET6_ENABLE
 	printf("+INET6");
 #endif /* INET6_ENABLE */
+#ifdef HAVE_PKG_hesiod
+	printf("+HESIOD");
+#endif
 #ifdef NET_SECURITY
 	printf("+NETSEC");
 #endif /* NET_SECURITY */

@@ -14,6 +14,12 @@ by its author, Craig Metz: ipv6_connect.c.
 
 The following files are explicitly GPL-licensed: getopt1.c, getopt.c, getopt.h.
 
+The file m4-local/ac_ma_search_package.m4 is copyright by Caolan
+McNamara <caolan@skynet.ie> with fixes from Alexandre Duret-Lutz
+<duret_g@lrde.epita.fr>, Matthew Mueller <donut@azstarnet.com> and
+Matthias Andree <matthias.andree@gmx.de>
+The license is detailed in m4-local/ac-archive-license.txt.
+
 All other code in the distribution incorporates the copy of GPL version 2 
 below by reference.
 

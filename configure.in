@@ -626,34 +626,7 @@ then
 fi])
 
 ###	use option --with-hesiod=DIR to point at a HESIOD directory
-AC_ARG_WITH(hesiod,
-	[  --with-hesiod=DIR       point fetchmail compilation at a HESIOD directory])
-
-case "x$with_hesiod" in
-xno)
-    ;;
-x)
-    for dir in /usr/athena /usr /usr/local
-    do
-      if test -f "$dir/include/hesiod.h"
-      then
-        CEFLAGS="$CEFLAGS -DHESIOD"
-        test "$dir" != "/usr" && CEFLAGS="$CEFLAGS -I$dir/include"
-        LDEFLAGS="$LDEFLAGS -L$dir/lib"
-        LIBS="$LIBS -lhesiod"
-        with_hesiod=$dir
-        break
-      fi
-    done
-    ;;
-*)
-    # Path given
-    CEFLAGS="$CEFLAGS -DHESIOD"
-    test "$with_hesiod" != "/usr" && CEFLAGS="$CEFLAGS -I$with_hesiod/include"
-    LDEFLAGS="$LDEFLAGS -L$with_hesiod/lib"
-    LIBS="$LIBS -lhesiod"
-    ;;
-esac
+AC_ma_SEARCH_PACKAGE(hesiod, hesiod_getmailhost, /usr/athena /usr /usr/local,hesiod, hesiod.h)
 
 ###	use option --with-gssapi=DIR to compile in GSSAPI support
 AC_ARG_WITH(gssapi,
@@ -700,7 +673,8 @@ AC_SUBST(CPFLAGS)
 AC_SUBST(CEFLAGS)
 AC_SUBST(LDEFLAGS)
 
-AC_CONFIG_FILES([Makefile po/Makefile.in  m4/Makefile intl/Makefile ])
+AC_CONFIG_FILES([Makefile m4/Makefile m4-local/Makefile
+		 po/Makefile.in intl/Makefile])
 AC_OUTPUT
 
 dnl Local Variables:

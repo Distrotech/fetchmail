@@ -32,7 +32,7 @@
 #ifdef HAVE_NET_SOCKET_H
 #include <net/socket.h>
 #endif
-#ifdef HESIOD
+#ifdef HAVE_PKG_hesiod
 #include <hesiod.h>
 #endif
 
@@ -954,7 +954,7 @@ static int do_session(
 #endif
 #endif /* !INET6_ENABLE */
 
-#ifdef HESIOD
+#ifdef HAVE_PKG_hesiod
 	/* If either the pollname or vianame are "hesiod" we want to
 	   lookup the user's hesiod pobox host */
 	if (!strcasecmp(ctl->server.queryname, "hesiod")) {
