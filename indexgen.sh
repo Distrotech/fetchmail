@@ -169,6 +169,9 @@ there seems to be little more that needs doing."  This turned out to
 be not quite true, I've added some minor option switches since, mostly
 to deal with weird configuration situations. <P>
 
+There's also a hang problem with Cyrus IMAP servers that we haven't
+figured out yet (UW IMAP works fine).<P>
+
 The present TO-DO list reads:<P>
 
 <UL>
