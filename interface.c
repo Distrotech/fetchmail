@@ -56,6 +56,8 @@ struct interface_pair_s {
 
 static char *netdevfmt;
 
+#if defined(linux)
+
 void interface_init(void)
 /* figure out which /roc/dev/net format to use */
 {
@@ -78,9 +80,6 @@ void interface_init(void)
 	    netdevfmt = "%d %d %*d %*d %*d %d %*d %*d %*d %*d %d %*d %d";
     }
 }
-
-
-#if defined(linux)
 
 static int _get_ifinfo_(int socket_fd, FILE *stats_file, const char *ifname,
 		ifinfo_t *ifinfo)
