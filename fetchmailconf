@@ -675,7 +675,7 @@ class ConfigurationEdit(Frame, MyWidget):
 	self.master.iconname('fetchmail ' + self.mode + ' configurator');
         self.master.protocol('WM_DELETE_WINDOW', self.nosave)
         self.keepalive = []	# Use this to anchor the PhotoImage object
-        make_icon_window(self, fetchmail_gif)
+        make_icon_window(self, fetchmail_icon)
 	Pack.config(self)
         self.post(Configuration, 'configuration')
 
@@ -935,7 +935,7 @@ class ServerEdit(Frame, MyWidget):
 	self.post(Server, 'server')
 	self.makeWidgets(self.server.pollname, mode)
         self.keepalive = []	# Use this to anchor the PhotoImage object
-        make_icon_window(self, fetchmail_gif)
+        make_icon_window(self, fetchmail_icon)
 #	self.grab_set()
 #	self.focus_set()
 #	self.wait_window()
@@ -1379,7 +1379,7 @@ class UserEdit(Frame, MyWidget):
 	self.post(User, 'user')
 	self.makeWidgets(mode, self.parent.server.pollname)
         self.keepalive = []	# Use this to anchor the PhotoImage object
-        make_icon_window(self, fetchmail_gif)
+        make_icon_window(self, fetchmail_icon)
 #	self.grab_set()
 #	self.focus_set()
 #	self.wait_window()
@@ -1528,7 +1528,7 @@ class Configurator(Frame):
 	self.master.iconname('fetchmail configurator');
 	Pack.config(self)
         self.keepalive = []	# Use this to anchor the PhotoImage object
-        make_icon_window(self, fetchmail_gif)
+        make_icon_window(self, fetchmail_icon)
 
 	Message(self, text="""
 Use `Novice Configuration' for basic fetchmail setup;
@@ -1577,7 +1577,7 @@ class RunWindow(Frame):
 		text="Running "+command, 
 		bd=2).pack(side=TOP, pady=10)
         self.keepalive = []	# Use this to anchor the PhotoImage object
-        make_icon_window(self, fetchmail_gif)
+        make_icon_window(self, fetchmail_icon)
 
         # This is a scrolling text window
 	textframe = Frame(self)
@@ -1619,7 +1619,7 @@ class MainWindow(Frame):
 		text='Fetchmailconf ' + version, 
 		bd=2).pack(side=TOP, pady=10)
         self.keepalive = []	# Use this to anchor the PhotoImage object
-        make_icon_window(self, fetchmail_gif)
+        make_icon_window(self, fetchmail_icon)
         self.debug = 0
 
 	Message(self, text="""
@@ -1740,7 +1740,7 @@ if __name__ == '__main__':
         print "fetchmailconf must be run under X"
         sys.exit(1)
 
-    fetchmail_gif = """
+    fetchmail_icon = """
 R0lGODdhPAAoAPcAAP///wgICBAQEISEhIyMjJSUlKWlpa2trbW1tcbGxs7Ozufn5+/v7//39yEY
 GNa9tUoxKZyEe1o5KTEQAN7OxpyMhIRjUvfn3pxSKYQ5EO/Wxv/WvWtSQrVzSmtCKWspAMatnP/e
 xu+1jIxSKaV7Wt6ca5xSGK2EY8aUa72MY86UY617UsaMWrV7SpRjOaVrOZRaKYxSIXNCGGs5EIRC
@@ -1778,7 +1778,7 @@ gUSiYASJpMEHhilJTEnhAlGoQqYAZQ1AiqEMZ0jDGtqQImhwwA13yMMevoQAGvGhEAWHGMOAAAA7
 #
 # import base64
 # data = open("fetchmail.gif", "rb").read()
-# print "fetchmail_gif =\\"
+# print "fetchmail_icon =\\"
 # print repr(base64.encodestring(data))
 #
 
