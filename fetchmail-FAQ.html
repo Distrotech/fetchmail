@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/12/29 00:11:13 $
+<td width="30%" align=right>$Date: 1998/12/30 18:15:59 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1317,10 +1317,14 @@ fetchmail.  This can solve problems if your MUA interprets Received
 continuations as body lines and doesn't parse any of the following
 headers.<P>
 
-Workaround: 
+Workaround is to use "mda" keyword or "-mda" switch:
 <pre>
-mda "sed -e1,2D | formail | /usr/bin/procmail -d &lt;user&gt;"
+mda "sed -e '1s/^\t/Received: /' | formail | /usr/bin/procmail -d &lt;user&gt;"
 </pre>
+Replace \t with exactly one tabulation character.
+
+You should also consider using "fetchall" option because Geocities' servers
+sometimes think that the first 45 messages have already been read.<P>
 
 Fix: Get an email provider that doesn't suck.  Geocities' pop-up adds
 are lame, you should boycott them anyway.<P>
@@ -2240,7 +2244,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/12/29 00:11:13 $
+<td width="30%" align=right>$Date: 1998/12/30 18:15:59 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
