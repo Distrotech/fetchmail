@@ -331,7 +331,7 @@ struct hostrec *queryctl;
 	break;
     case P_POP3:
     case P_APOP:
-	return(doPOP3(queryctl));
+	return(doPOP3bis(queryctl));
 	break;
     case P_IMAP:
 	return(doIMAP(queryctl));

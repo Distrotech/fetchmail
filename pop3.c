@@ -41,6 +41,232 @@ int POP3_BuildDigest (char *buf, struct hostrec *options);
 
 
 /*********************************************************************
+
+ Method declarations for POP3 
+
+ *********************************************************************/
+
+int pop3_ok (argbuf,socket)
+/* parse command response */
+char *argbuf;
+int socket;
+{
+  int ok;
+  char buf [POPBUFSIZE];
+  char *bufp;
+
+  if (SockGets(socket, buf, sizeof(buf)) >= 0) {
+    if (outlevel == O_VERBOSE)
+      fprintf(stderr,"%s\n",buf);
+
+    bufp = buf;
+    if (*bufp == '+' || *bufp == '-')
+      bufp++;
+    else
+      return(PS_PROTOCOL);
+
+    while (isalpha(*bufp))
+      bufp++;
+    *(bufp++) = '\0';
+
+    if (strcmp(buf,"+OK") == 0)
+      ok = 0;
+    else if (strcmp(buf,"-ERR") == 0)
+      ok = PS_ERROR;
+    else
+      ok = PS_PROTOCOL;
+
+    if (argbuf != NULL)
+      strcpy(argbuf,bufp);
+  }
+  else 
+    ok = PS_SOCKET;
+
+  return(ok);
+}
+
+int pop3_getauth(socket, queryctl, greeting)
+/* apply for connection authorization */
+int socket;
+struct hostrec *queryctl;
+char *greeting;
+{
+  char buf [POPBUFSIZE];
+
+#if defined(HAVE_APOP_SUPPORT)
+  /* build MD5 digest from greeting timestamp + password */
+  if (queryctl->whichpop == P_APOP) 
+    if (POP3_BuildDigest(greeting,queryctl) != 0) {
+      return(PS_AUTHFAIL);
+    }
+#endif
+
+  switch (queryctl->protocol) {
+    case P_POP3:
+      SockPrintf(socket,"USER %s\r\n",queryctl->remotename);
+      if (outlevel == O_VERBOSE)
+        fprintf(stderr,"> USER %s\n",queryctl->remotename);
+      if (pop3_ok(buf,socket) != 0)
+        goto badAuth;
+
+      SockPrintf(socket,"PASS %s\r\n",queryctl->password);
+      if (outlevel == O_VERBOSE)
+        fprintf(stderr,"> PASS password\n");
+      if (pop3_ok(buf,socket) != 0)
+        goto badAuth;
+    
+      break;
+
+#if defined(HAVE_APOP_SUPPORT)
+    case P_APOP:
+      SockPrintf(socket,"APOP %s %s\r\n", 
+                 queryctl->remotename, queryctl->digest);
+      if (outlevel == O_VERBOSE)
+        fprintf(stderr,"> APOP %s %s\n",queryctl->remotename, queryctl->digest);
+      if (pop3_ok(buf,socket) != 0) 
+        goto badAuth;
+      break;
+#endif  /* HAVE_APOP_SUPPORT */
+
+#if defined(HAVE_RPOP_SUPPORT)
+    case P_RPOP:
+      SockPrintf(socket, "RPOP %s\r\n", queryctl->remotename);
+      if (pop3_ok(buf,socket) != 0)
+         goto badAuth;
+      if (outlevel == O_VERBOSE)
+        fprintf(stderr,"> RPOP %s %s\n",queryctl->remotename);
+      break;
+#endif  /* HAVE_RPOP_SUPPORT */
+
+    default:
+      fprintf(stderr,"Undefined protocol request in POP3_auth\n");
+  }
+
+  /* we're approved */
+  return(0);
+
+  /*NOTREACHED*/
+
+badAuth:
+  if (outlevel > O_SILENT && outlevel < O_VERBOSE)
+    fprintf(stderr,"%s\n",buf);
+  else
+    ; /* say nothing */
+
+  return(PS_ERROR);
+}
+
+static int use_uidl;
+
+static pop3_getrange(socket, queryctl, countp, firstp)
+/* get range of messages to be fetched */
+int socket;
+struct hostrec *queryctl;
+int *countp;
+int *firstp;
+{
+  int ok;
+
+  ok = POP3_sendSTAT(countp,socket);
+  if (ok != 0) {
+    return(ok);
+  }
+
+  /*
+   * Ask for number of last message retrieved.  
+   * Newer, RFC-1760-conformant POP servers may not have the LAST command.
+   * Therefore we don't croak if we get a nonzero return.  Instead, send
+   * UIDL and try to find the last received ID stored for this host in
+   * the list we get back.
+   */
+  *firstp = 1;
+  use_uidl = 0;
+  if (!queryctl->fetchall) {
+    char buf [POPBUFSIZE];
+    char id [IDLEN];
+    int num;
+
+    /* try LAST first */
+    ok = POP3_sendLAST(firstp, socket);
+    use_uidl = (ok != 0); 
+
+    /* otherwise, if we have a stored last ID for this host,
+     * send UIDL and search the returned list for it
+     */ 
+    if (use_uidl && queryctl->lastid[0]) {
+      if ((ok = POP3_sendUIDL(-1, socket, 0)) == 0) {
+          while (SockGets(socket, buf, sizeof(buf)) >= 0) {
+	    if (outlevel == O_VERBOSE)
+	      fprintf(stderr,"%s\n",buf);
+	    if (strcmp(buf, ".\n") == 0) {
+              break;
+	    }
+            if (sscanf(buf, "%d %s\n", &num, id) == 2)
+		if (strcmp(id, queryctl->lastid) == 0)
+		    *firstp = num;
+          }
+       }
+    }
+
+    if (ok == 0)
+      (*firstp)++;
+  }
+
+  return(0);
+}
+
+static int pop3_fetch(socket, number, limit, lenp)
+/* request nth message */
+int socket;
+int number;
+int limit;
+int *lenp; 
+{
+    *lenp = 0;
+    if (limit) 
+        return(gen_transact(socket, "TOP %d %d", number, limit));
+      else 
+        return(gen_transact(socket, "RETR %d", number));
+}
+
+static pop3_trail(socket, queryctl, number)
+/* update the last-seen field for this host */
+int socket;
+struct hostrec *queryctl;
+int number;
+{
+    char *cp;
+    int	ok = 0;
+
+    if (use_uidl && (ok = POP3_sendUIDL(number, socket, &cp)) == 0)
+	(void) strcpy(queryctl->lastid, cp);
+    return(ok);
+}
+
+static struct method pop3 =
+{
+    "POP3",				/* Post Office Protocol v3 */
+    110,				/* standard POP3 port */
+    0,					/* this is not a tagged protocol */
+    1,					/* this uses a message delimiter */
+    pop3_ok,				/* parse command response */
+    pop3_getauth,			/* get authorization */
+    pop3_getrange,			/* query range of messages */
+    pop3_fetch,				/* request given message */
+    pop3_trail,				/* eat message trailer */
+    "DELE %d",				/* set POP3 delete flag */
+    NULL,				/* the POP3 expunge command */
+    "QUIT",				/* the POP3 exit command */
+};
+
+int doPOP3bis (queryctl)
+/* retrieve messages using POP3 */
+struct hostrec *queryctl;
+{
+    return(do_protocol(queryctl, &pop3));
+}
+
+/*********************************************************************
   function:      POP3_sendSTAT
   description:   send the STAT command to the POP3 server to find
                  out how many messages are waiting.

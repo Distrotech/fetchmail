@@ -46,7 +46,8 @@
 #define		TO_STDOUT	2	/* use stdout */
 #define		TO_MDA		3	/* use agent */
 
-struct hostrec {
+struct hostrec
+{
   char servername [HOSTLEN];
   char localname [USERNAMELEN];
   char remotename [USERNAMELEN];
@@ -73,6 +74,25 @@ struct hostrec {
 #endif
 };
 
+struct method
+{
+    char *name;			/* protocol name */
+    int	port;			/* service port */
+    int tagged;			/* if true, generate & expect command tags */
+    int delimited;		/* if true, accept "." message delimiter */
+    int (*parse_response)();	/* response_parsing function */
+    int (*getauth)();		/* authorization fetcher */
+    int (*getrange)();		/* get message range to fetch */
+    int (*fetch)();		/* fetch a given message */
+    int (*trail)();		/* eat trailer of a message */
+    char *delete_cmd;		/* delete command */
+    char *expunge_cmd;		/* expunge command */
+    char *exit_cmd;		/* exit command */
+};
+
+#define TAGLEN	5
+extern char tag[TAGLEN];
+
 /* controls the detail level of status/progress messages written to stderr */
 extern int outlevel;    	/* see the O_.* constants above */
 extern int yydebug;		/* enable parse debugging */
@@ -89,6 +109,12 @@ extern int linelimit;		/* limit # lines retrieved per site */
 extern int versioninfo;		/* emit only version info */
 
 #ifdef HAVE_PROTOTYPES
+
+int gen_ok (char *buf, int socket);
+void gen_send ();
+int gen_transact ();
+int gen_readmsg (int socket, int mboxfd, long len, int delimited,
+       char *host, int topipe, int rewrite);
 
 /* prototypes for globally callable functions */
 int doPOP2 (struct hostrec *); 
