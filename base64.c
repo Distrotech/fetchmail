@@ -7,6 +7,7 @@
  * "Base64 Content-Transfer-Encoding", but lines must not be broken in the
  * scheme used here.
  */
+#include "config.h"
 #include <ctype.h>
 
 static const char base64digits[] =
