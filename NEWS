@@ -8,6 +8,16 @@ not after it.
 			Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-2.9 ()
+
+features -- 
+
+bugs --
+
+* Stricter parsing of greeting message for the host name; eliminates some
+  minor errors when using IMAP and the hostname is something like jet.es.
+
+------------------------------------------------------------------------------
 fetchmail-2.8 (Sat Jan 11 15:48:33 EST 1997)
 
 features -- 
