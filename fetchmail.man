@@ -9,16 +9,16 @@
 fetchmail \- fetch mail from a POP, IMAP, or ETRN-capable server
 
 .SH SYNOPSIS
-\fBfetchmail\fR [\fIoptions\fR] [\fImailserver...\fR]
+\fBfetchmail\fR [\fIoption...\fR] [\fImailserver...\fR]
 .br
 \fBfetchmailconf\fR
 
 .SH DESCRIPTION
 .I fetchmail
-is a mail-retrieval and forwarding utility; it fetches
-mail from remote mailservers and forwards it to your local (client)
-machine's delivery system.  You can then handle the retrieved mail
-using normal mail user agents such as \fIelm\fR(1) or \fIMail\fR(1).
+is a mail-retrieval and forwarding utility; it fetches mail from
+remote mailservers and forwards it to your local (client) machine's
+delivery system.  You can then handle the retrieved mail using normal
+mail user agents such as \fImutt\fR(1), \fIelm\fR(1) or \fIMail\fR(1).
 The \fIfetchmail\fR utility can be run in a daemon mode to repeatedly
 poll one or more systems at a specified interval.
 .PP
