@@ -6,6 +6,7 @@ Release: 1
 Source: locke.ccil.org:/pub/esr/fetchmail/fetchmail-${1}.tar.gz
 Copyright: freely redistributable
 Group: Mail
+Requires: smtpdaemon
 
 %prep
 %setup
