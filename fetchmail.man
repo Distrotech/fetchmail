@@ -160,7 +160,7 @@ What you probably want is the default setting: if you don't specify `-k', then
 fetchmail will automatically delete messages after successful delivery.
 .SS Protocol and Query Options
 .TP
-.B \-p, \--protocol proto
+.B \-p, \--protocol <proto>
 (Keyword: proto[col])
 Specify the protocol to use when communicating with the remote 
 mailserver.  If no protocol is specified, the default is AUTO.
@@ -216,13 +216,13 @@ of `newness' of messages (UIDL stands for ``unique ID listing'' and is
 described in RFC1725).  Use with `keep' to use a mailbox as a baby
 news drop for a group of users.
 .TP
-.B \-P, --port
+.B \-P, --port <nnn>
 (Keyword: port)
 The port option permits you to specify a TCP/IP port to connect on. 
 This option will seldom be necessary as all the supported protocols have
 well-established default port numbers.
 .TP 
-.B \-t, --timeout
+.B \-t, --timeout <nnn>
 (Keyword: timeout)
 The timeout option allows you to set a server-nonresponse
 timeout in seconds.  If a mailserver does not send a greeting message
@@ -235,7 +235,7 @@ will report.  If a given connection receives too many timeouts in
 succession, fetchmail will consider it wedged and stop retrying,
 the calkling user will be notified by email if this happens.
 .TP
-.B \--plugin
+.B \--plugin <command>
 (Keyword: plugin)
 The plugin option allows you to use an external program to establish the
 TCP connection.  This is useful if you want to use socks or need some
@@ -244,13 +244,13 @@ it will be passed two arguments: the name of the server and the name of
 the port.  Fetchmail will write to the plugin's stdin and read from
 the plugin's stdout.
 .TP
-.B \--plugout
+.B \--plugout <command>
 (Keyword: plugout)
 Identical to the plugin option above, but this one is used for the SMTP
 connections (which will probably not need it, so it has been separated
 from plugin).
 .TP
-.B \-r folder, --folder folder
+.B \-r <folder>, --folder <folder>
 (Keyword: folder[s])
 Causes a specified non-default mail folder on the mailserver (or
 comma-separated list of folders) to be retrieved.  The syntax of the
@@ -258,7 +258,7 @@ folder name is server-dependent.  This option is not available under
 POP3 or ETRN.
 .SS Delivery Control Options
 .TP
-.B \-S hosts, --smtphost hosts
+.B \-S <hosts>, --smtphost <hosts>
 (Keyword: smtp[host])
 Specify a hunt list of hosts to forward mail to (one or more
 hostnames, comma-separated).  In ETRN mode, set the host that the
@@ -275,20 +275,20 @@ Example:
 	--smtphost server1,server2/2525,server3
 
 .TP
-.B \-D domain, --smtpaddress domain
+.B \-D <domain>, --smtpaddress <domain>
 (Keyword: smtpaddress) 
 Specify the domain to be put in RCPT TO lines shipped to SMTP. The
 name of the SMTP server (as specified by --smtphost, or defaulted to
 "localhost") is used when this is not specified.
 .TP
-.B \-Z nnn, --antispam nnn[,nnn[,nnn...]]
+.B \-Z nnn, --antispam <nnn>[, <nnn>]...
 (Keyword: antispam) 
 Specifies the list of numeric SMTP errors that are to be interpreted
 as a spam-block response from the listener.  A value of -1 disables
 this option.  For the command-line option, the list values should
 be comma-separated.
 .TP
-.B \-m, \--mda
+.B \-m, \--mda <command>
 (Keyword: mda)
 You can force mail to be passed to an MDA directly (rather than
 forwarded to port 25) with the -mda or -m option.  Be aware that this
@@ -324,7 +324,7 @@ correct; the caveats discussed under THE USE AND ABUSE OF MULTIDROP
 MAILBOXES below apply.
 .SS Resource Limit Control Options
 .TP
-.B \-l, --limit
+.B \-l, --limit <nnn>
 (Keyword: limit)
 Takes a maximum octet size argument.  Messages larger than this size
 will not be fetched, not be marked seen, and will be left on the
@@ -336,7 +336,7 @@ phone rates.  In daemon mode, oversize notifications are mailed to the
 calling user (see the --warnings option).  This option does not work
 with ETRN.
 .TP
-.B \-w, --warnings
+.B \-w, --warnings <nnn>
 (Keyword: warnings)
 Takes an interval in seconds.  When you call
 .I fetchmail
@@ -348,7 +348,7 @@ the oversized message is detected.  Thereafter, renotification is
 suppressed until after the warning interval elapses (it will take
 place at the end of the first following poll).
 .TP
-.B -b, --batchlimit
+.B -b, --batchlimit <nnn>
 (Keyword: batchlimit)
 Specify the maximum number of messages that will be shipped to an SMTP
 listener before the connection is deliberately torn down and rebuilt
@@ -364,14 +364,14 @@ is processing very large batches.  Setting the batch limit to some
 nonzero size will prevent these delays.
 This option does not work with ETRN.
 .TP
-.B -B, --fetchlimit
+.B -B, --fetchlimit <nnn>
 (Keyword: fetchlimit)
 Limit the number of messages accepted from a given server in a single
 poll.  By default there is no limit. An explicit --fetchlimit of 0
 overrides any limits set in your run control file.
 This option does not work with ETRN.
 .TP
-.B -e, --expunge
+.B -e, --expunge <nnn>
 (keyword: expunge) 
 Arrange for deletions to be made final after a given number of
 messages.  Under POP2 or POP3, fetchmail cannot make deletions final
@@ -395,7 +395,7 @@ suppresses expunges entirely (so no expunges at all will be done until
 the end of run).  This option does not work with ETRN.
 .SS Authentication Options
 .TP
-.B \-u name, --username name
+.B \-u <name>, --username <name>
 (Keyword: user[name])
 Specifies the user identification to be used when logging in to the mailserver.
 The appropriate user identification is both server and user-dependent.  
@@ -403,7 +403,7 @@ The default is your login name on the client machine that is running
 .I fetchmail.
 See USER AUTHENTICATION below for a complete description.
 .TP
-.B \-I specification, --interface specification
+.B \-I <specification>, --interface <specification>
 (Keyword: interface)
 Require that a specific interface device be up and have a specific local
 IP address (or range) before polling.  Frequently
@@ -429,7 +429,7 @@ under Linux and FreeBSD. Please see the
 .B monitor 
 section for below for FreeBSD specific information.
 .TP
-.B \-M interface, --monitor interface
+.B \-M <interface>, --monitor <interface>
 (Keyword: monitor)
 Daemon mode can cause transient links which are automatically taken down
 after a period of inactivity (e.g. PPP links) to remain up
@@ -447,7 +447,7 @@ fetchmail runs with the effective GID set to that of the kmem group
 .I only
 when interface data is being collected.
 .TP
-.B \-A, --preauth
+.B \-A, --preauth <type>
 (Keyword: preauth[enticate]) 
 This option permits you to specify a preauthentication type (see USER
 AUTHENTICATION below for details).  The possible values are
@@ -460,7 +460,7 @@ password and IMAP-K4 uses RFC1731 Kerberos v4 authentication).  This
 option does not work with ETRN.
 .SS Miscellaneous Options
 .TP
-.B \-f pathname, --fetchmailrc pathname
+.B \-f <pathname>, --fetchmailrc <pathname>
 Specify a non-default name for the 
 .I .fetchmailrc
 run control file.  The pathname argument must be either "-" (a single
@@ -469,7 +469,7 @@ filename.  Unless the --version option is also on, a named file
 argument must have permissions no more open than 0600 (u=rw,g=,o=) or
 else be /dev/null.
 .TP
-.B \-i pathname, --idfile pathname
+.B \-i <pathname>, --idfile <pathname>
 (Keyword: idfile)
 Specify an alternate name for the .fetchids file used to save POP3
 UIDs. 
@@ -489,7 +489,7 @@ mail headers and want to know they can prevent it, but it is generally
 not a good idea to actually turn off rewrite.)
 When using ETRN, the rewrite option is ineffective.
 .TP
-.B -E, --envelope
+.B -E, --envelope <line>
 (Keyword: envelope)
 This option changes the header 
 .I fetchmail
@@ -501,7 +501,7 @@ Received lines.  This is the default, and it should not be necessary
 unless you have globally disabled Received parsing with `no envelope'
 in the \fI.fetchmailrc\fR file.
 .TP
-.B -Q, --qvirtual
+.B -Q, --qvirtual <prefix>
 (Keyword: qvirtual)
 The string prefix assigned to this option will be removed from the user
 name found in the header specified with the \fIenvelope\fR option
