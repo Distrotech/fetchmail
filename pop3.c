@@ -67,7 +67,7 @@ int pop3_ok (int sock, char *argbuf)
 #endif /* OPIE */
 	    ok = 0;
 	}
-	else if (strcmp(buf,"-ERR") == 0)
+	else if (strncmp(buf,"-ERR", 4) == 0)
 	{
 	    if (phase > PHASE_GETAUTH) 
 		ok = PS_PROTOCOL;

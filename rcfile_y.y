@@ -333,7 +333,7 @@ const flag securecheck;
 
     /* special cases useful for debugging purposes */
     if (strcmp("/dev/null", pathname) == 0)
-	return(0);
+	return(PS_SUCCESS);
 
     /* the run control file must have the same uid as the REAL uid of this 
        process, it must have permissions no greater than 600, and it must not 
@@ -341,7 +341,7 @@ const flag securecheck;
 
     if (lstat(pathname, &statbuf) < 0) {
 	if (errno == ENOENT) 
-	    return(0);
+	    return(PS_SUCCESS);
 	else {
 	    error(0, errno, "lstat: %s", pathname);
 	    return(PS_IOERR);
@@ -350,23 +350,26 @@ const flag securecheck;
 
     if (!securecheck)	return 0;
 
-    if ((statbuf.st_mode & S_IFLNK) == S_IFLNK) {
+    if ((statbuf.st_mode & S_IFLNK) == S_IFLNK)
+    {
 	fprintf(stderr, "File %s must not be a symbolic link.\n", pathname);
 	return(PS_AUTHFAIL);
     }
 
-    if (statbuf.st_mode & ~(S_IFREG | S_IREAD | S_IWRITE)) {
-	fprintf(stderr, "File %s must have no more than -rw------ (0600) permissions.\n", 
+    if (statbuf.st_mode & ~(S_IFREG | S_IREAD | S_IWRITE | S_IEXEC | S_IXGRP))
+    {
+	fprintf(stderr, "File %s must have no more than -rwx--x--- (0710) permissions.\n", 
 		pathname);
 	return(PS_AUTHFAIL);
     }
 
-    if (statbuf.st_uid != getuid()) {
+    if (statbuf.st_uid != getuid())
+    {
 	fprintf(stderr, "File %s must be owned by you.\n", pathname);
 	return(PS_AUTHFAIL);
     }
 #endif
-    return(0);
+    return(PS_SUCCESS);
 }
 
 int prc_parse_file (const char *pathname, const flag securecheck)
@@ -382,7 +385,7 @@ int prc_parse_file (const char *pathname, const flag securecheck)
 	return(prc_errflag);
 
     if (errno == ENOENT)
-	return(0);
+	return(PS_SUCCESS);
 
     /* Open the configuration and feed it to the lexer. */
     if ((yyin = fopen(pathname,"r")) == (FILE *)NULL) {
@@ -397,7 +400,7 @@ int prc_parse_file (const char *pathname, const flag securecheck)
     if (prc_errflag) 
 	return(PS_SYNTAX);
     else
-	return(0);
+	return(PS_SUCCESS);
 }
 
 static void reset_server(char *name, int skip)

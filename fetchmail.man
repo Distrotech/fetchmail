@@ -111,9 +111,9 @@ tell kept messages from new ones.  This means it will work with IMAP,
 not work with POP2, and may occasionally flake out under POP3.
 .TP
 .B \-s, --silent
-Silent mode.  Suppresses all progress/status messages that are normally
-echoed to standard error during a fetch.  The --verbose option
-overrides this.
+Silent mode.  Suppresses all progress/status messages that are
+normally echoed to standard error during a fetch (but does not
+suppress actual error messages).  The --verbose option overrides this.
 .TP
 .B \-v, --verbose
 Verbose mode.  All control messages passed between 
