@@ -1678,10 +1678,8 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		    report(stderr, _("Lock-busy error on %s@%s\n"),
 			  ctl->remotename,
 			  ctl->server.truename);
-		else
+		else if (ok == PS_AUTHFAIL)
 		{
-		    if (ok == PS_ERROR)
-			ok = PS_AUTHFAIL;
 		    report(stderr, _("Authorization failure on %s@%s\n"), 
 			  ctl->remotename,
 			  ctl->server.truename);
@@ -1711,6 +1709,11 @@ const int maxfetch;		/* maximum number of messages to fetch */
 			ctl->wedged = TRUE;
 		    }
 		}
+		else
+		    report(stderr, _("Unknown login or authentication error on %s@%s\n"),
+			  ctl->remotename,
+			  ctl->server.truename);
+		    
 		goto cleanUp;
 	    }
 	}
