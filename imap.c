@@ -19,13 +19,6 @@
 
 #include  "i18n.h"
 
-#ifdef OPIE_ENABLE
-#endif /* OPIE_ENABLE */
-
-#ifndef strstr		/* glibc-2.1 declares this as a macro */
-extern char *strstr(const char *, const char *);	/* needed on sysV68 R3V7.1. */
-#endif /* strstr */
-
 /* imap_version values */
 #define IMAP2		-1	/* IMAP2 or IMAP2BIS, RFC1176 */
 #define IMAP4		0	/* IMAP4 rev 0, RFC1730 */

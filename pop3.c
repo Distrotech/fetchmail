@@ -25,10 +25,6 @@
 #include <opie.h>
 #endif /* OPIE_ENABLE */
 
-#ifndef strstr		/* glibc-2.1 declares this as a macro */
-extern char *strstr(const char *, const char *);	/* needed on sysV68 R3V7.1. */
-#endif /* strstr */
-
 static int last;
 #ifdef SDPS_ENABLE
 char *sdps_envfrom;
@@ -46,12 +42,12 @@ static char lastok[POPBUFSIZE+1];
 #if defined(KERBEROS_V4) || defined(KERBEROS_V5)
     flag has_kerberos = FALSE;
 #endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
-    flag has_cram = FALSE;
+    static flag has_cram = FALSE;
 #ifdef OPIE_ENABLE
     flag has_otp = FALSE;
 #endif /* OPIE_ENABLE */
 #ifdef SSL_ENABLE
-    flag has_ssl = FALSE;
+    static flag has_ssl = FALSE;
 #endif /* SSL_ENABLE */
 
 #ifdef NTLM_ENABLE

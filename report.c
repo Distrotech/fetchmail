@@ -41,7 +41,7 @@
 /* If NULL, report will flush stderr, then print on stderr the program
    name, a colon and a space.  Otherwise, report will call this
    function without parameters instead.  */
-void (*report_print_progname) (
+static void (*report_print_progname) (
 #if __STDC__ - 0
 			      void
 #endif

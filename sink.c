@@ -30,6 +30,7 @@
 #include  <varargs.h>
 #endif
 #include  <ctype.h>
+#include  <langinfo.h>
 
 /* for W* macros after pclose() */
 #define _USE_BSD

@@ -22,16 +22,9 @@
 
 #include <stdio.h>
 
-/* We need this for time_t */
-#if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
+/* We need this for strstr */
+#if !defined(HAVE_STRSTR) && !defined(strstr)
+char *strstr(const char *, const char *);
 #endif
 
 /* constants designating the various supported protocols */
@@ -518,6 +511,7 @@ extern int mytimeout;
 
 /* idle.c */
 int interruptible_idle(int interval);
+extern volatile int lastsig;
 
 /* sink.c: forwarding */
 void smtp_close(struct query *, int);

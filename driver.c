@@ -35,6 +35,8 @@
 #include <hesiod.h>
 #endif
 
+#include <langinfo.h>
+
 #if defined(HAVE_RES_SEARCH) || defined(HAVE_GETHOSTBYNAME)
 #include <netdb.h>
 #include "mx.h"
@@ -312,7 +314,6 @@ static void send_size_warnings(struct query *ctl)
     int msg_to_send = FALSE;
     struct idlist *head=NULL, *current=NULL;
     int max_warning_poll_count;
-    char *tmp;
 
     head = ctl->skipped;
     if (!head)
@@ -333,7 +334,7 @@ static void send_size_warnings(struct query *ctl)
     if (open_warning_by_mail(ctl, (struct msgblk *)NULL))
 	return;
     stuff_warning(ctl,
-	    tmp = rfc2047e(
+	    rfc2047e(
 	   GT_("Subject: Fetchmail oversized-messages warning"), nl_langinfo(CODESET)));
     stuff_warning(ctl, "");
     stuff_warning(ctl,

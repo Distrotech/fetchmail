@@ -507,7 +507,7 @@ va_dcl {
 static	SSL_CTX *_ctx = NULL;
 static	SSL *_ssl_context[FD_SETSIZE];
 
-SSL	*SSLGetContext( int );
+static SSL	*SSLGetContext( int );
 #endif /* SSL_ENABLE */
 
 int SockWrite(int sock, char *buf, int len)
@@ -538,7 +538,9 @@ int SockRead(int sock, char *buf, int len)
 {
     char *newline, *bp = buf;
     int n;
+#ifdef	FORCE_STUFFING
     int maxavailable = 0;
+#endif
 #ifdef	SSL_ENABLE
     SSL *ssl;
 #endif
@@ -578,7 +580,9 @@ int SockRead(int sock, char *buf, int len)
 			(void)SSL_get_error(ssl, n);
 			return(-1);
 		}
+#ifdef FORCE_STUFFING
 		maxavailable = n;
+#endif
 		if( 0 == n ) {
 			/* SSL_peek says no data...  Does he mean no data
 			or did the connection blow up?  If we got an error
@@ -622,7 +626,9 @@ int SockRead(int sock, char *buf, int len)
 	    if ((n = fm_peek(sock, bp, len)) <= 0)
 #endif
 		return (-1);
+#ifdef FORCE_STUFFING
 	    maxavailable = n;
+#endif
 	    if ((newline = memchr(bp, '\n', n)) != NULL)
 		n = newline - bp + 1;
 #ifndef __BEOS__

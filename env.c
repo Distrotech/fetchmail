@@ -32,8 +32,6 @@
 
 extern char *getenv(const char *);	/* needed on sysV68 R3V7.1. */
 
-extern char *program_name;
-
 void envquery(int argc, char **argv)
 /* set up basic stuff from the environment (including the rc file name) */
 {

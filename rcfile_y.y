@@ -157,7 +157,7 @@ serv_option	: AKA alias_list
 #else
 		    				current.server.authenticate = A_KERBEROS_V4;
 #endif /* KERBEROS_V5 */
-#if INET6_ENABLE
+#ifdef INET6_ENABLE
 					    current.server.service = KPOP_PORT;
 #else /* INET6_ENABLE */
 					    current.server.port = KPOP_PORT;
@@ -179,12 +179,12 @@ serv_option	: AKA alias_list
 		| CHECKALIAS            {current.server.checkalias = FLAG_TRUE;}
 		| NO CHECKALIAS         {current.server.checkalias  = FLAG_FALSE;}
 		| SERVICE STRING	{
-#if INET6_ENABLE
+#ifdef INET6_ENABLE
 					current.server.service = $2;
 #endif /* INET6_ENABLE */
 					}
 		| PORT NUMBER		{
-#if INET6_ENABLE
+#ifdef INET6_ENABLE
 					int port = $2;
 					char buf[10];
 					sprintf(buf, "%d", port);
@@ -603,5 +603,3 @@ char *prependdir (const char *file, const char *dir)
 int yywrap(void) {return 1;}
 
 /* rcfile_y.y ends here */
-
-

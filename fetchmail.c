@@ -116,7 +116,6 @@ static char *timestamp (void)
 
 static RETSIGTYPE donothing(int sig) 
 {
-    extern volatile int lastsig;	/* declared in idle.c */
     set_signal_handler(sig, donothing);
     lastsig = sig;
 }
@@ -124,7 +123,7 @@ static RETSIGTYPE donothing(int sig)
 int main(int argc, char **argv)
 {
     int bkgd = FALSE;
-    int parsestatus, implicitmode = FALSE;
+    int implicitmode = FALSE;
     struct query *ctl;
     netrc_entry *netrc_list;
     char *netrc_file, *tmpbuf;
@@ -180,7 +179,7 @@ int main(int argc, char **argv)
     }
 #endif
 
-    if ((parsestatus = parsecmdline(argc,argv, &cmd_run, &cmd_opts)) < 0)
+    if ((parsecmdline(argc,argv, &cmd_run, &cmd_opts)) < 0)
 	exit(PS_SYNTAX);
 
     if (versioninfo)
@@ -461,10 +460,8 @@ int main(int argc, char **argv)
 			GT_("fetchmail: can't find a password for %s@%s.\n"),
 			ctl->remotename, ctl->server.pollname);
 		return(PS_AUTHFAIL);
-	    }
-	    else
-	    {
-		char* password_prompt = GT_("Enter password for %s@%s: ");
+	    } else {
+		const char* password_prompt = GT_("Enter password for %s@%s: ");
 
 		xalloca(tmpbuf, char *, strlen(password_prompt) +
 			strlen(ctl->remotename) +

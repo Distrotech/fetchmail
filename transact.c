@@ -35,10 +35,6 @@
 #include "socket.h"
 #include "fetchmail.h"
 
-#ifndef strstr		/* glibc-2.1 declares this as a macro */
-extern char *strstr(const char *, const char *);	/* needed on sysV68 R3V7.1. */
-#endif /* strstr */
-
 int mytimeout;		/* value of nonreponse timeout */
 int suppress_tags;	/* emit tags? */
 char shroud[PASSWORDLEN*2+3];	/* string to shroud in debug output */
@@ -422,7 +418,7 @@ int readheaders(int sock,
     for (remaining = fetchlen; remaining > 0 || protocol->delimited; )
     {
 	char *line, *rline;
-	int overlong = FALSE;
+	int overlong = FALSE; /* XXX FIXME: this is unused */
 
 	line = xmalloc(sizeof(buf));
 	linelen = 0;
