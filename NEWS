@@ -2,6 +2,9 @@
 
 ------------------------------------------------------------------------------
 
+pl 3.3.2 (Mon Feb  3 12:59:33 EST 1997):
+* Minor fixes to stripcr and password-shrouding logic.
+
 pl 3.3.1 (Sun Feb  2 02:17:07 EST 1997):
 * Fix incorrect stripcr processing
 * Unapply a patch that broke error logging to files.

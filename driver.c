@@ -1479,7 +1479,7 @@ va_dcl
 	    *cp++ = '*';
 	    while (*sp)
 		*cp++ = *sp++;
-	    *sp = '\0';
+	    *cp = '\0';
 	}
 	buf[strlen(buf)-2] = '\0';
 	error(0, 0, "%s> %s", protocol->name, buf);

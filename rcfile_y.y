@@ -301,6 +301,7 @@ static void prc_reset(void)
     save = current.server;
 
     memset(&current, '\0', sizeof(current));
+    current.stripcr = -1;
 
     current.server = save;
 }
