@@ -134,7 +134,7 @@ int SMTP_eom(int socket)
 
   SockPuts(socket,".");
   if (outlevel == O_VERBOSE)
-      fprintf(stderr, "SMTP> .\n");
+      fprintf(stderr, "SMTP> (EOM)\n");
   ok = SMTP_ok(socket,NULL);
   return ok;
 }

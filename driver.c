@@ -657,6 +657,8 @@ int rewrite;
 		    return(PS_SMTP);
 #endif /* SMTP_RESEND */
 		SMTP_data(mboxfd);
+		if (outlevel == O_VERBOSE)
+		    fputs("SMTP> ", stderr);
 		break;
 
 	    case TO_FOLDER:
@@ -691,6 +693,8 @@ int rewrite;
 		perror("gen_readmsg: writing RFC822 headers");
 		return(PS_IOERR);
 	    }
+	    else if (outlevel == O_VERBOSE)
+		fputs("#", stderr);
 	    free(headers);
 	    headers = NULL;
 	}
@@ -701,6 +705,8 @@ int rewrite;
 	    perror("gen_readmsg: writing message text");
 	    return(PS_IOERR);
 	}
+	else if (outlevel == O_VERBOSE)
+	    fputc('*', stderr);
 
     skipwrite:;
 
@@ -713,6 +719,9 @@ int rewrite;
 	}
 	lines++;
     }
+
+    if (outlevel == O_VERBOSE)
+	fputc('\n', stderr);
 
     /* write message terminator, if any */
     switch (output)
