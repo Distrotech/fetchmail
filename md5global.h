@@ -17,7 +17,7 @@ The following makes PROTOTYPES default to 0 if it has not already
  */
 
 #ifndef PROTOTYPES
-#define PROTOTYPES HAVE_PROTOTYPES
+#define PROTOTYPES 1
 #endif
 
 /* POINTER defines a generic pointer type */

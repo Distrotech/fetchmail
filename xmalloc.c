@@ -19,26 +19,24 @@
 #endif
 
 XMALLOCTYPE *
-xmalloc (n)
-int n;
+xmalloc (int n)
 {
-  XMALLOCTYPE *p;
+    XMALLOCTYPE *p;
 
-  p = (XMALLOCTYPE *) malloc(n);
-  if (p == (XMALLOCTYPE *) 0) {
-    fputs("fetchmail: malloc failed\n",stderr);
-    exit(PS_UNDEFINED);
-  }
-  return(p);
+    p = (XMALLOCTYPE *) malloc(n);
+    if (p == (XMALLOCTYPE *) 0) {
+	fputs("fetchmail: malloc failed\n",stderr);
+	exit(PS_UNDEFINED);
+    }
+    return(p);
 }
 
-char *xstrdup(s)
-char *s;
-{ 
-  char *p;
-  p = (char *) xmalloc(strlen(s)+1);
-  strcpy(p,s);
-  return p;
+char *xstrdup(char *s)
+{
+    char *p;
+    p = (char *) xmalloc(strlen(s)+1);
+    strcpy(p,s);
+    return p;
 }
 
 /* xmalloc.c ends here */

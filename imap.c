@@ -18,10 +18,8 @@
 
 static int count, seen, recent, unseen;
 
-int imap_ok (sockfp, argbuf)
+int imap_ok (FILE *sockfp,  char *argbuf)
 /* parse command response */
-char *argbuf;
-FILE *sockfp;
 {
     char buf [POPBUFSIZE+1];
 
@@ -72,11 +70,8 @@ FILE *sockfp;
     }
 }
 
-int imap_getauth(sockfp, ctl, buf)
+int imap_getauth(FILE *sockfp, struct query *ctl, char *buf)
 /* apply for connection authorization */
-FILE *sockfp;
-struct query *ctl;
-char *buf;
 {
     /* try to get authorized */
     return(gen_transact(sockfp,
@@ -84,11 +79,8 @@ char *buf;
 		  ctl->remotename, ctl->password));
 }
 
-static int imap_getrange(sockfp, ctl, countp, newp)
+static int imap_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
 /* get range of messages to be fetched */
-FILE *sockfp;
-struct query *ctl;
-int *countp, *newp;
 {
     int ok;
 
@@ -112,11 +104,8 @@ int *countp, *newp;
     return(0);
 }
 
-static int imap_getsizes(sockfp, count, sizes)
+static int imap_getsizes(FILE *sockfp, int count, int *sizes)
 /* capture the sizes of all messages */
-FILE	*sockfp;
-int	count;
-int	*sizes;
 {
     char buf [POPBUFSIZE+1];
 
@@ -138,11 +127,8 @@ int	*sizes;
     return(0);
 }
 
-static int imap_is_old(sockfp, ctl, num)
+static int imap_is_old(FILE *sockfp, struct query *ctl, int num)
 /* is the given message old? */
-FILE *sockfp;
-struct query *ctl;
-int num;
 {
     int ok;
 
@@ -152,11 +138,8 @@ int num;
     return(seen);
 }
 
-static int imap_fetch(sockfp, number, lenp)
+static int imap_fetch(FILE *sockfp, int number, int *lenp)
 /* request nth message */
-FILE *sockfp;
-int number;
-int *lenp; 
 {
     char buf [POPBUFSIZE+1];
     int	num;
@@ -176,11 +159,8 @@ int *lenp;
 	return(0);
 }
 
-static int imap_trail(sockfp, ctl, number)
+static int imap_trail(FILE *sockfp, struct query *ctl, int number)
 /* discard tail of FETCH response after reading message text */
-FILE *sockfp;
-struct query *ctl;
-int number;
 {
     char buf [POPBUFSIZE+1];
 
@@ -190,11 +170,8 @@ int number;
 	return(0);
 }
 
-static int imap_delete(sockfp, ctl, number)
+static int imap_delete(FILE *sockfp, struct query *ctl, int number)
 /* set delete flag for given message */
-FILE *sockfp;
-struct query *ctl;
-int number;
 {
     return(gen_transact(sockfp, "STORE %d +FLAGS (\\Deleted)", number));
 }
@@ -217,9 +194,8 @@ const static struct method imap =
     "LOGOUT",		/* the IMAP exit command */
 };
 
-int doIMAP(ctl)
+int doIMAP(struct query *ctl)
 /* retrieve messages using IMAP Version 2bis or Version 4 */
-struct query *ctl;
 {
     return(do_protocol(ctl, &imap));
 }

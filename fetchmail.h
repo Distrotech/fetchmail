@@ -148,8 +148,6 @@ extern int linelimit;		/* limit # lines retrieved per site */
 extern int versioninfo;		/* emit only version info */
 extern char *user;		/* name of invoking user */
 
-#ifdef HAVE_PROTOTYPES
-
 /* prototypes for globally callable functions */
 #if defined(HAVE_STDARG_H)
 void gen_send (FILE *sockfp, char *, ... );
@@ -198,16 +196,8 @@ char *getpassword(char *);
 
 void escapes(const char *, char *);
 
-void yyerror(char *);
-int yylex();
-
-#else
-
-struct query *hostinit(); 
-char *MD5Digest ();
-void optmerge();
-
-#endif
+void yyerror(const char *);
+int yylex(void);
 
 #define FALSE	0
 #define TRUE	1

@@ -153,9 +153,8 @@ extern FILE *yyin;
 
 static struct query *hosttail;	/* where to add new elements */
 
-void yyerror (s)
+void yyerror (const char *s)
 /* report a syntax error */
-char *s;	/* error string */
 {
     fprintf(stderr,"%s line %d: %s at %s\n", rcfile, prc_lineno, s, yytext);
     prc_errflag++;
@@ -231,7 +230,7 @@ const char *pathname;		/* pathname for the configuration file */
 	return(0);
 }
 
-static void prc_reset()
+static void prc_reset(void)
 /* clear the global current record (server parameters) used by the parser */
 {
     char	savename[HOSTLEN+1];
@@ -278,7 +277,7 @@ struct query *init;	/* pointer to block containing initial values */
     return(node);
 }
 
-static void prc_register()
+static void prc_register(void)
 /* register current parameters and append to the host list */
 {
 #define STR_FORCE(fld, len) if (cmd_opts.fld[0]) \
@@ -306,10 +305,8 @@ static void prc_register()
     (void) hostalloc(&current);
 }
 
-void optmerge(h2, h1)
+void optmerge(struct query *h2, struct query *h1)
 /* merge two options records; empty fields in h2 are filled in from h1 */
-struct query *h1;
-struct query *h2;
 {
     append_uid_list(&h2->localnames, &h1->localnames);
 
@@ -337,6 +334,6 @@ struct query *h2;
 }
 
 /* easier to do this than cope with variations in where the library lives */
-int yywrap() {return 1;}
+int yywrap(void) {return 1;}
 
 /* rcfile_y.y ends here */

@@ -76,9 +76,8 @@ int count;	/* length of src */
   return len;
 }
 
-static void vtalarm(timeleft)
+static void vtalarm(int timeleft)
 /* reset the nonresponse-timeout */
-int	timeleft;
 {
     struct itimerval ntimeout;
 
@@ -97,10 +96,8 @@ static void vtalarm_handler (int signal)
 #ifdef HAVE_RES_SEARCH
 #define MX_RETRIES	3
 
-static int is_host_alias(name, ctl)
+static int is_host_alias(const char *name, struct query *ctl)
 /* determine whether name is a DNS alias of the hostname */
-const char *name;
-struct query	*ctl;
 {
     struct hostent	*he;
     int			i;
@@ -202,9 +199,8 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 }
 #endif /* HAVE_RES_SEARCH */
 
-static FILE *smtp_open(ctl)
+static FILE *smtp_open(struct query *ctl)
 /* try to open a socket to the appropriate SMTP server for this query */ 
-struct query *ctl;
 {
     ctl = ctl->leader; /* go to the SMTP leader for this query */
 
@@ -234,9 +230,9 @@ struct query *ctl;
 
 static int gen_readmsg (sockfp, len, delimited, ctl)
 /* read message content and ship to SMTP or MDA */
-FILE *sockfp;	/* to which the server is connected */
-long len;	/* length of message */
-int delimited;	/* does the protocol use a message delimiter? */
+FILE *sockfp;		/* to which the server is connected */
+long len;		/* length of message */
+int delimited;		/* does the protocol use a message delimiter? */
 struct query *ctl;	/* query control record */
 {
     char buf [MSGBUFSIZE+1]; 
@@ -535,10 +531,10 @@ struct query *ctl;	/* query control record */
 
 #ifdef KERBEROS_V4
 int
-kerberos_auth (socket, canonical) 
+kerberos_auth (int socket, canonical) 
 /* authenticate to the server host using Kerberos V4 */
 int socket;		/* socket to server host */
-char *canonical;	/* server name */
+const char *canonical;	/* server name */
 {
     char * host_primary;
     KTEXT ticket;

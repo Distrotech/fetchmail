@@ -34,7 +34,7 @@
 #include "fetchmail.h"
 
 RETSIGTYPE
-sigchld_handler ()
+sigchld_handler (int sig)
 /* process SIGCHLD/SIGCLD to obtain the exit code of the terminating process */
 {
   pid_t pid;
@@ -58,10 +58,8 @@ sigchld_handler ()
 }
 
 int
-daemonize (logfile, termhook)
+daemonize (const char *logfile, void (*termhook)(int))
 /* detach from control TTY, become process group leader, catch SIGCHLD */
-const char *logfile;
-void (*termhook)(int);
 {
   int fd;
   pid_t childpid;

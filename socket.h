@@ -9,7 +9,6 @@
 #ifndef SOCKET__
 #define SOCKET__
 
-#if defined(HAVE_PROTOTYPES)
 /*
 Create a new client socket 
 returns (FILE *)NULL on error 
@@ -41,6 +40,4 @@ int SockPrintf(FILE *sockfp, char *format, ...) ;
 int SockPrintf();
 #endif
  
-#endif /* defined(HAVE_PROTOTYPES) */
-
 #endif /* SOCKET__ */

@@ -82,7 +82,7 @@ static struct option longoptions[] = {
   {(char *) 0,  no_argument,       (int *) 0, 0              }
 };
 
-int parsecmdline (argc,argv,ctl)
+int parsecmdline (argc, argv,ctl)
 /* parse and validate the command line options */
 int argc;			/* argument count */
 char **argv;			/* argument strings */

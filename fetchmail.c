@@ -27,13 +27,11 @@
 
 #define DROPDEAD	6	/* maximum bad socket opens */
 
-#ifdef HAVE_PROTOTYPES
 /* prototypes for internal functions */
 static int load_params(int, char **, int);
 static void dump_params (struct query *);
 static int query_host(struct query *);
 static char *visbuf(const char *);
-#endif
 
 /* controls the detail level of status/progress messages written to stderr */
 int outlevel;    	/* see the O_.* constants above */
@@ -59,16 +57,14 @@ static int lastsig;
 
 RETSIGTYPE donothing(sig) int sig; {signal(sig, donothing); lastsig = sig;}
 
-static void unlockit()
+static void unlockit(void)
 /* must-do actions for exit (but we can't count on being able to do malloc) */
 {
     unlink(lockfile);
 }
 
-int main (argc,argv)
-int argc;
-char **argv;
-{ 
+int main (int argc, char **argv)
+{
     int st, bkgd = FALSE;
     int parsestatus, implicitmode;
     char *home, *tmpdir, tmpbuf[BUFSIZ]; 
@@ -384,10 +380,7 @@ char **argv;
     exit(popstatus);
 }
 
-static int load_params(argc, argv, optind)
-int	argc;
-char	**argv;
-int	optind;
+static int load_params(int argc, char **argv, int optind)
 {
     int	implicitmode, st;
     struct passwd *pw;
@@ -588,9 +581,8 @@ void termhook(int sig)
     exit(popstatus);
 }
 
-static char *showproto(proto)
+static char *showproto(int proto)
 /* protocol index to protocol name mapping */
-int proto;
 {
     switch (proto)
     {
@@ -608,9 +600,8 @@ int proto;
  */
 static const int autoprobe[] = {P_IMAP, P_POP3, P_POP2};
 
-static int query_host(ctl)
+static int query_host(struct query *ctl)
 /* perform fetch transaction with single host */
-struct query *ctl;
 {
     int i, st;
 
@@ -649,9 +640,8 @@ struct query *ctl;
     }
 }
 
-void dump_params (ctl)
+void dump_params (struct query *ctl)
 /* display query parameters in English */
-struct query *ctl;	/* query parameter block */
 {
     printf("Options for retrieving from %s@%s:\n",
 	   ctl->remotename, visbuf(ctl->servername));
@@ -755,9 +745,8 @@ struct query *ctl;	/* query parameter block */
 	}
 }
 
-int openmailpipe (argv)
+int openmailpipe (char **argv)
 /* open a one-way pipe to a mail delivery agent */
-char *argv[];
 {
     int pipefd [2];
     int childpid;
@@ -884,9 +873,8 @@ char		*tp;	/* target buffer for digested string */
     *tp = '\0';
 }
 
-static char *visbuf(buf)
+static char *visbuf(const char *buf)
 /* visibilize a given string */
-const char *buf;
 {
     static char vbuf[BUFSIZ];
     char *tp = vbuf;

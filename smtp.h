@@ -14,7 +14,6 @@
 #define         SM_ERROR           128
 #define         SM_UNRECOVERABLE   129
 
-#ifdef HAVE_PROTOTYPES
 int SMTP_helo(FILE *sockfp,char *host);
 int SMTP_from(FILE *sockfp,char *from);
 int SMTP_rcpt(FILE *sockfp,char *to);
@@ -23,6 +22,5 @@ int SMTP_eom(FILE *sockfp);
 int SMTP_quit(FILE *sockfp);
 int SMTP_ok(FILE *sockfp,char *argbuf);
 void SMTP_rset(FILE *sockfp);
-#endif /* HAVE_PROTOTYPES */
 
 #endif

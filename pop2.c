@@ -16,10 +16,8 @@
 
 static int pound_arg, equal_arg;
 
-int pop2_ok (sockfp, argbuf)
+int pop2_ok (FILE *sockfp, char *argbuf)
 /* parse POP2 command response */
-FILE *sockfp;
-char *argbuf;
 {
     int ok;
     char buf [POPBUFSIZE+1];
@@ -55,22 +53,16 @@ char *argbuf;
     return(ok);
 }
 
-int pop2_getauth(sockfp, ctl, buf)
+int pop2_getauth(FILE *sockfp, struct query *ctl, char *buf)
 /* apply for connection authorization */
-FILE *sockfp;
-struct query *ctl;
-char *buf;
 {
     return(gen_transact(sockfp,
 		  "HELO %s %s",
 		  ctl->remotename, ctl->password));
 }
 
-static int pop2_getrange(sockfp, ctl, countp, newp)
+static int pop2_getrange(FILE *sockfp, struct query *ctl, int*countp, int*newp)
 /* get range of messages to be fetched */
-FILE *sockfp;
-struct query *ctl;
-int *countp, *newp;
 {
     /*
      * We should have picked up a count of messages in the user's
@@ -96,11 +88,8 @@ int *countp, *newp;
     return(0);
 }
 
-static int pop2_fetch(sockfp, number, lenp)
+static int pop2_fetch(FILE *sockfp, int number, int *lenp)
 /* request nth message */
-FILE *sockfp;
-int number;
-int *lenp; 
 {
     int	ok;
 
@@ -115,11 +104,8 @@ int *lenp;
     return(ok);
 }
 
-static int pop2_trail(sockfp, ctl, number)
+static int pop2_trail(FILE *sockfp, struct query *ctl, int number)
 /* send acknowledgement for message data */
-FILE *sockfp;
-struct query *ctl;
-int number;
 {
     return(gen_transact(sockfp, ctl->keep ? "ACKS" : "ACKD"));
 }
@@ -142,9 +128,8 @@ const static struct method pop2 =
     "QUIT",				/* the POP2 exit command */
 };
 
-int doPOP2 (ctl)
+int doPOP2 (struct query *ctl)
 /* retrieve messages using POP2 */
-struct query *ctl;
 {
     return(do_protocol(ctl, &pop2));
 }

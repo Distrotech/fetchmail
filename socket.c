@@ -34,9 +34,7 @@
 #endif
 #endif
 
-FILE *Socket(host, clientPort)
-char *host;
-int clientPort;
+FILE *Socket(char *host, int clientPort)
 {
     int sock;
     unsigned long inaddr;
@@ -116,10 +114,7 @@ va_dcl {
  *
  */
 
-int SockWrite(buf,len,sockfp)
-char *buf;
-int len;
-FILE *sockfp;
+int SockWrite(char *buf, int len, FILE *sockfp)
 {
     int n, wrlen = 0;
     
@@ -135,10 +130,7 @@ FILE *sockfp;
     return wrlen;
 }
 
-int SockGets(buf, len, sockfp)
-char *buf;
-int len;
-FILE *sockfp;
+int SockGets(char *buf, int len, FILE *sockfp)
 {
     int rdlen = 0;
 
