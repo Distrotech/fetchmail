@@ -479,7 +479,7 @@ class MyWidget:
 
     def fetch(self, template, field):
 	for x in template.typemap:
-	    setattr(eval("self." + field), x[0], getattr(self, x[0]).get())
+	    setattr(getattr(self, field), x[0], getattr(self, x[0]).get())
 
 #
 # First, code to set the global fetchmail run controls.
