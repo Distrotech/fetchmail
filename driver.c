@@ -470,7 +470,7 @@ static int smtp_open(struct query *ctl)
 	 * What it will affect is the listener's logging.
 	 */
 	struct idlist	*idp;
-	char *id_me = use_invisible ? ctl->server.truename : fetchmailhost;
+	char *id_me = run.invisible ? ctl->server.truename : fetchmailhost;
 	int oldphase = phase;
 
 	errno = 0;
@@ -1410,7 +1410,7 @@ int num;		/* index of message */
 	n = stuffline(ctl, headers);
 	*rcv = 'R';
     }
-    if (!use_invisible && n != -1)
+    if (!run.invisible && n != -1)
     {
 	/* utter any per-message Received information we need here */
 	sprintf(buf, "Received: from %s\n", ctl->server.truename);
@@ -2037,7 +2037,7 @@ const struct method *proto;	/* protocol method table */
 		    else
 		    {
 			/* these are pointless in normal daemon mode */
-			if (pass == 1 && (poll_interval == 0 || outlevel == O_VERBOSE))
+			if (pass == 1 && (run.poll_interval == 0 || outlevel == O_VERBOSE))
 			    error(0, 0, "No mail for %s", buf); 
 		    }
 

@@ -89,6 +89,15 @@ typedef	char	flag;
 #define FLAG_TRUE	2
 #define FLAG_FALSE	1
 
+struct runctl
+{
+    char	*logfile;
+    char	*idfile;
+    int		poll_interval;
+    flag	use_syslog;
+    flag	invisible;
+};
+
 struct idlist
 {
     char *id;
@@ -250,31 +259,23 @@ extern void envquery(int, char **);
 extern int outlevel;    	/* see the O_.* constants above */
 extern int yydebug;		/* enable parse debugging */
 
-/* daemon mode control */
-extern int poll_interval;	/* poll interval in seconds */
-extern flag nodetach;		/* if TRUE, don't detach daemon process */
-extern char *logfile;		/* log file for daemon mode */
-extern flag errors_to_syslog;	/* if syslog was set */
-extern flag use_invisible;	/* if invisible was set */
-extern flag quitmode;		/* if --quit was set */
-extern flag check_only;		/* if --check was set */
-extern char *cmd_logfile;	/* if --logfile was set */
-extern char *cmd_idfile;	/* if --idfile was set */
-extern int cmd_daemon;		/* if --daemon was set */
-
 /* these get computed */
 extern int batchcount;		/* count of messages sent in current batch */
 extern flag peek_capable;	/* can we read msgs without setting seen? */
 
 /* miscellaneous global controls */
+extern struct runctl run;	/* global controls for this run */
+extern flag nodetach;		/* if TRUE, don't detach daemon process */
+extern flag quitmode;		/* if --quit was set */
+extern flag check_only;		/* if --check was set */
 extern char *rcfile;		/* path name of rc file */
-extern char *idfile;		/* path name of UID file */
 extern int linelimit;		/* limit # lines retrieved per site */
 extern flag versioninfo;	/* emit only version info */
 extern char *user;		/* name of invoking user */
 extern char *home;		/* home directory of invoking user */
 extern char *fetchmailhost;	/* the name of the host running fetchmail */
 extern int pass;		/* number of re-polling pass */
+extern flag pythondump;		/* dump control blocks as Python dictionary */
 
 /* prototypes for globally callable functions */
 
@@ -368,7 +369,7 @@ int doETRN (struct query *);
 
 /* miscellanea */
 struct query *hostalloc(struct query *); 
-int parsecmdline (int, char **, struct query *);
+int parsecmdline (int, char **, struct runctl *, struct query *);
 void optmerge(struct query *, struct query *);
 char *MD5Digest (unsigned char *);
 int POP3_auth_rpa(unsigned char *, unsigned char *, int socket);

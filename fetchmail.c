@@ -51,27 +51,23 @@
 
 /* prototypes for internal functions */
 static int load_params(int, char **, int);
-static void dump_params (struct query *);
+static void dump_params (struct runctl *runp, struct query *, flag implicit);
 static int query_host(struct query *);
 
 /* controls the detail level of status/progress messages written to stderr */
 int outlevel;    	/* see the O_.* constants above */
 
-/* daemon mode control */
+/* miscellaneous global controls */
+struct runctl run;	/* global controls for this run */
 flag nodetach;		/* if TRUE, don't detach daemon process */
 flag quitmode;		/* if --quit was set */
 flag check_only;	/* if --probe was set */
-char *cmd_logfile;	/* if --logfile was set */
-char *cmd_idfile;	/* if --idfile was set */
-int cmd_daemon; 	/* if --daemon was set */
-
-/* miscellaneous global controls */
-char *idfile;		/* UID list file */
 flag versioninfo;	/* emit only version info */
 char *user;		/* the name of the invoking user */
-char *home;
+char *home;		/* invoking user's home directory */
 char *fetchmailhost;	/* the name of the host running fetchmail */
 char *program_name;	/* the name to prefix error messages with */
+flag pythondump;	/* dump control blocks as Python dictionary */
 
 #if NET_SECURITY
 void *request = NULL;
@@ -82,6 +78,7 @@ static char *lockfile;		/* name of lockfile */
 static int querystatus;		/* status of query */
 static int successes;		/* count number of successful polls */
 static int lastsig;		/* last signal received */
+static struct runctl cmd_run;	/* global options set from command line */
 
 static void termhook();		/* forward declaration of exit hook */
 
@@ -129,8 +126,8 @@ int main (int argc, char **argv)
 {
     int st, bkgd = FALSE;
     int parsestatus, implicitmode = FALSE;
-    struct query *ctl;
     FILE	*lockfp;
+    struct query *ctl;
     netrc_entry *netrc_list;
     char *netrc_file, *tmpbuf;
     pid_t pid;
@@ -138,14 +135,14 @@ int main (int argc, char **argv)
     envquery(argc, argv);
 
 #define IDFILE_NAME	".fetchids"
-    idfile = (char *) xmalloc(strlen(home)+strlen(IDFILE_NAME)+2);
-    strcpy(idfile, home);
-    strcat(idfile, "/");
-    strcat(idfile, IDFILE_NAME);
+    run.idfile = (char *) xmalloc(strlen(home)+strlen(IDFILE_NAME)+2);
+    strcpy(run.idfile, home);
+    strcat(run.idfile, "/");
+    strcat(run.idfile, IDFILE_NAME);
   
     outlevel = O_NORMAL;
 
-    if ((parsestatus = parsecmdline(argc,argv,&cmd_opts)) < 0)
+    if ((parsestatus = parsecmdline(argc,argv, &cmd_run, &cmd_opts)) < 0)
 	exit(PS_SYNTAX);
 
     /* this hint to stdio should help messages come out in the right order */
@@ -201,31 +198,28 @@ int main (int argc, char **argv)
 #undef FETCHMAIL_PIDFILE
 
     /* perhaps we just want to check options? */
-    if (versioninfo) {
+    if (versioninfo)
+    {
 	printf("Taking options from command line");
 	if (access(rcfile, 0))
 	    printf("\n");
 	else
 	    printf(" and %s\n", rcfile);
-	if (poll_interval)
-	    printf("Poll interval is %d seconds\n", poll_interval);
 	if (outlevel == O_VERBOSE)
 	    printf("Lockfile at %s\n", tmpbuf);
-	if (logfile)
-	    printf("Logfile is %s\n", logfile);
-#if defined(HAVE_SYSLOG)
-	if (errors_to_syslog)
-	    printf("Progress messages will be logged via syslog\n");
-#endif
-	if (use_invisible)
-	    printf("Fetchmail will masquerade and will not generate Received\n");
-	for (ctl = querylist; ctl; ctl = ctl->next) {
-	    if (ctl->active && !(implicitmode && ctl->server.skip))
-		dump_params(ctl);
-	}
+
 	if (querylist == NULL)
 	    (void) fprintf(stderr,
 		"No mailservers set up -- perhaps %s is missing?\n", rcfile);
+	else
+	    dump_params(&run, querylist, implicitmode);
+	exit(0);
+    }
+
+    /* dump options as a Python dictionary, for configurator use */
+    if (pythondump)
+    {
+	/* this feature is not yet implemented */
 	exit(0);
     }
 
@@ -384,19 +378,19 @@ int main (int argc, char **argv)
      * Maybe time to go to demon mode...
      */
 #if defined(HAVE_SYSLOG)
-    if (errors_to_syslog)
+    if (run.use_syslog)
     {
     	openlog(program_name, LOG_PID, LOG_MAIL);
 	error_init(-1);
     }
     else
 #endif
-	error_init(poll_interval == 0 && !logfile);
+	error_init(run.poll_interval == 0 && !run.logfile);
 
-    if (poll_interval)
+    if (run.poll_interval)
     {
 	if (!nodetach)
-	    daemonize(logfile, termhook);
+	    daemonize(run.logfile, termhook);
 	error( 0, 0, "starting fetchmail %s daemon ", RELEASE_ID);
 
 	/*
@@ -404,7 +398,7 @@ int main (int argc, char **argv)
 	 * but ignore them otherwise so as not to interrupt a poll.
 	 */
 	signal(SIGUSR1, SIG_IGN);
-	if (poll_interval && !getuid())
+	if (run.poll_interval && !getuid())
 	    signal(SIGHUP, SIG_IGN);
     }
 
@@ -420,8 +414,8 @@ int main (int argc, char **argv)
     /* here's the exclusion lock */
     if ((lockfp = fopen(lockfile,"w")) != NULL) {
 	fprintf(lockfp,"%d",getpid());
-	if (poll_interval)
-	    fprintf(lockfp," %d", poll_interval);
+	if (run.poll_interval)
+	    fprintf(lockfp," %d", run.poll_interval);
 	fclose(lockfp);
 
 #ifdef HAVE_ATEXIT
@@ -457,7 +451,7 @@ int main (int argc, char **argv)
 	    if (ctl->active && !(implicitmode && ctl->server.skip))
 	    {
 		/* check skip interval first so that it counts all polls */
-		if (poll_interval && ctl->server.interval) 
+		if (run.poll_interval && ctl->server.interval) 
 		{
 		    if (ctl->server.poll_count++ % ctl->server.interval) 
 		    {
@@ -560,7 +554,7 @@ int main (int argc, char **argv)
 	/*
 	 * OK, we've polled.  Now sleep.
 	 */
-	if (poll_interval)
+	if (run.poll_interval)
 	{
 	    if (outlevel == O_VERBOSE)
 	    {
@@ -637,7 +631,7 @@ int main (int argc, char **argv)
 		 */
                 struct timeval timeout;
 
-                timeout.tv_sec = poll_interval;
+                timeout.tv_sec = run.poll_interval;
                 timeout.tv_usec = 0;
 		lastsig = 0;
                 select(0,0,0,0, &timeout);
@@ -652,7 +646,7 @@ int main (int argc, char **argv)
 		signal(SIGALRM, SIG_IGN);
 #endif /* ! EMX */
 		if (lastsig == SIGUSR1
-			|| ((poll_interval && !getuid()) && lastsig == SIGHUP))
+			|| ((run.poll_interval && !getuid()) && lastsig == SIGHUP))
 		{
 #ifdef SYS_SIGLIST_DECLARED
 		    error(0, 0, "awakened by %s", sys_siglist[lastsig]);
@@ -676,7 +670,7 @@ int main (int argc, char **argv)
 	    }
 	}
     } while
-	(poll_interval);
+	(run.poll_interval);
 
     if (outlevel == O_VERBOSE)
 	fprintf(stderr,"fetchmail: normal termination, status %d\n",
@@ -762,7 +756,7 @@ static int load_params(int argc, char **argv, int optind)
 		save_str(&ctl->smtphunt, fetchmailhost, FALSE);
 
 	    /* keep lusers from shooting themselves in the foot :-) */
-	    if (poll_interval && ctl->limit)
+	    if (run.poll_interval && ctl->limit)
 	    {
 		fprintf(stderr,"fetchmail: you'd never see large messages!\n");
 		exit(PS_SYNTAX);
@@ -860,28 +854,28 @@ static int load_params(int argc, char **argv, int optind)
     }
 
     /* initialize UID handling */
-    if (!versioninfo && (st = prc_filecheck(idfile, !versioninfo)) != 0)
+    if (!versioninfo && (st = prc_filecheck(run.idfile, !versioninfo)) != 0)
 	exit(st);
 #ifdef POP3_ENABLE
     else
-	initialize_saved_lists(querylist, idfile);
+	initialize_saved_lists(querylist, run.idfile);
 #endif /* POP3_ENABLE */
 
-    /* if cmd_logfile was explicitly set, use it to override logfile */
-    if (cmd_logfile)
-	logfile = cmd_logfile;
-
-    /* if cmd_idfile was explicitly set, use it to override idfile */
-    if (cmd_idfile)
-	logfile = cmd_idfile;
-
-    /* likewise for poll_interval */
-    if (cmd_daemon >= 0)
-	poll_interval = cmd_daemon;
+    /* here's where we override globals */
+    if (cmd_run.logfile)
+	run.logfile = cmd_run.logfile;
+    if (cmd_run.idfile)
+	run.logfile = cmd_run.idfile;
+    if (cmd_run.poll_interval >= 0)
+	run.poll_interval = cmd_run.poll_interval;
+    if (cmd_run.invisible)
+	run.invisible = cmd_run.invisible;
+    if (cmd_run.use_syslog)
+	run.use_syslog = cmd_run.use_syslog;
 
     /* check and daemon options are not compatible */
-    if (check_only && poll_interval)
-	poll_interval = 0;
+    if (check_only && run.poll_interval)
+	run.poll_interval = 0;
     return(implicitmode);
 }
 
@@ -910,7 +904,7 @@ void termhook(int sig)
 
 #ifdef POP3_ENABLE
     if (!check_only)
-	write_saved_lists(querylist, idfile);
+	write_saved_lists(querylist, run.idfile);
 #endif /* POP3_ENABLE */
 
     /* 
@@ -1022,255 +1016,276 @@ static int query_host(struct query *ctl)
     }
 }
 
-void dump_params (struct query *ctl)
+void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 /* display query parameters in English */
 {
-    printf("Options for retrieving from %s@%s:\n",
-	   ctl->remotename, visbuf(ctl->server.pollname));
+    struct query *ctl;
 
-    if (ctl->server.via)
-	printf("  Mail will be retrieved via %s\n", ctl->server.via);
-
-    if (ctl->server.interval)
-	printf("  Poll of this server will occur every %d intervals.\n",
-	       ctl->server.interval);
-    if (ctl->server.truename)
-	printf("  True name of server is %s.\n", ctl->server.truename);
-    if (ctl->server.skip || outlevel == O_VERBOSE)
-	printf("  This host will%s be queried when no host is specified.\n",
-	       ctl->server.skip ? " not" : "");
-    if (!ctl->password)
-	printf("  Password will be prompted for.\n");
-    else if (outlevel == O_VERBOSE)
-	if (ctl->server.protocol == P_APOP)
-	    printf("  APOP secret = '%s'.\n", visbuf(ctl->password));
-	else if (ctl->server.protocol == P_RPOP)
-	    printf("  RPOP id = '%s'.\n", visbuf(ctl->password));
-        else
-	    printf("  Password = '%s'.\n", visbuf(ctl->password));
-    if (ctl->server.protocol == P_POP3 
-#if INET6
-		&& !strcmp(ctl->server.service, KPOP_PORT)
-#else /* INET6 */
-		&& ctl->server.port == KPOP_PORT
-#endif /* INET6 */
-		&& (ctl->server.preauthenticate == A_KERBEROS_V4 ||
-		    ctl->server.preauthenticate == A_KERBEROS_V5))
-	printf("  Protocol is KPOP");
-    else
-	printf("  Protocol is %s", showproto(ctl->server.protocol));
-#if INET6
-    if (ctl->server.service)
-	printf(" (using service %s)", ctl->server.service);
-    if (ctl->server.netsec)
-	printf(" (using network security options %s)", ctl->server.netsec);
-#else /* INET6 */
-    if (ctl->server.port)
-	printf(" (using port %d)", ctl->server.port);
-#endif /* INET6 */
-    else if (outlevel == O_VERBOSE)
-	printf(" (using default port)");
-    if (ctl->server.uidl)
-	printf(" (forcing UIDL use)");
-    putchar('.');
-    putchar('\n');
-    if (ctl->server.preauthenticate == A_KERBEROS_V4)
-	    printf("  Kerberos V4 preauthentication enabled.\n");
-    if (ctl->server.preauthenticate == A_KERBEROS_V5)
-	    printf("  Kerberos V5 preauthentication enabled.\n");
-    if (ctl->server.timeout > 0)
-	printf("  Server nonresponse timeout is %d seconds", ctl->server.timeout);
-    if (ctl->server.timeout ==  CLIENT_TIMEOUT)
-	printf(" (default).\n");
-    else
-	printf(".\n");
-
-    if (!ctl->mailboxes->id)
-	printf("  Default mailbox selected.\n");
-    else
-    {
-	struct idlist *idp;
-
-	printf("  Selected mailboxes are:");
-	for (idp = ctl->mailboxes; idp; idp = idp->next)
-	    printf(" %s", idp->id);
-	printf("\n");
-    }
-    printf("  %s messages will be retrieved (--all %s).\n",
-	   ctl->fetchall ? "All" : "Only new",
-	   ctl->fetchall ? "on" : "off");
-    printf("  Fetched messages will%s be kept on the server (--keep %s).\n",
-	   ctl->keep ? "" : " not",
-	   ctl->keep ? "on" : "off");
-    printf("  Old messages will%s be flushed before message retrieval (--flush %s).\n",
-	   ctl->flush ? "" : " not",
-	   ctl->flush ? "on" : "off");
-    printf("  Rewrite of server-local addresses is %sabled (--norewrite %s).\n",
-	   ctl->rewrite ? "en" : "dis",
-	   ctl->rewrite ? "off" : "on");
-    printf("  Carriage-return stripping is %sabled (stripcr %s).\n",
-	   ctl->stripcr ? "en" : "dis",
-	   ctl->stripcr ? "on" : "off");
-    printf("  Carriage-return forcing is %sabled (forcecr %s).\n",
-	   ctl->forcecr ? "en" : "dis",
-	   ctl->forcecr ? "on" : "off");
-    printf("  Interpretation of Content-Transfer-Encoding is %sabled (pass8bits %s).\n",
-	   ctl->pass8bits ? "dis" : "en",
-	   ctl->pass8bits ? "on" : "off");
-    printf("  MIME decoding is %sabled (mimedecode %s).\n",
-	   ctl->mimedecode ? "dis" : "en",
-	   ctl->mimedecode ? "on" : "off");
-    printf("  Nonempty Status lines will be %s (dropstatus %s)\n",
-	   ctl->dropstatus ? "discarded" : "kept",
-	   ctl->dropstatus ? "on" : "off");
-    if (NUM_NONZERO(ctl->limit))
-	printf("  Message size limit is %d bytes (--limit %d).\n", 
-	       ctl->limit, ctl->limit);
-    else if (outlevel == O_VERBOSE)
-	printf("  No message size limit (--limit 0).\n");
-    if (NUM_NONZERO(ctl->fetchlimit))
-	printf("  Received-message limit is %d (--fetchlimit %d).\n",
-	       ctl->fetchlimit, ctl->fetchlimit);
-    else if (outlevel == O_VERBOSE)
-	printf("  No received-message limit (--fetchlimit 0).\n");
-    if (NUM_NONZERO(ctl->batchlimit))
-	printf("  SMTP message batch limit is %d.\n", ctl->batchlimit);
-    else if (outlevel == O_VERBOSE)
-	printf("  No SMTP message batch limit (--batchlimit 0).\n");
-    if (ctl->server.protocol == P_IMAP)
-	if (NUM_NONZERO(ctl->expunge))
-	    printf("  Deletion interval between expunges is %d (--expunge %d).\n", ctl->expunge, ctl->expunge);
-	else if (outlevel == O_VERBOSE)
-	    printf("  No expunges (--expunge 0).\n");
-    if (ctl->mda)
-	printf("  Messages will be delivered with '%s.'\n", visbuf(ctl->mda));
-    else
-    {
-	struct idlist *idp;
-
-	printf("  Messages will be SMTP-forwarded to:");
-	for (idp = ctl->smtphunt; idp; idp = idp->next)
-	    if (ctl->server.protocol != P_ETRN || idp->val.status.mark)
-	    {
-		printf(" %s", idp->id);
-		if (!idp->val.status.mark)
-	    	    printf(" (default)");
-	    }
-	printf("\n");
-	if (ctl->smtpaddress)
-	    printf("  Host part of MAIL FROM line will be %s\n",
-		   ctl->smtpaddress);
-    }
-    if (ctl->antispam != -1)
-	printf("  Listener SMTP reponse %d will be treated as a spam block\n",
-	       ctl->antispam);
-    else if (outlevel == O_VERBOSE)
-	printf("  Spam-blocking disabled\n");
-    if (ctl->preconnect)
-	printf("  Server connection will be brought up with '%s.'\n",
-	       visbuf(ctl->preconnect));
-    else if (outlevel == O_VERBOSE)
-	printf("  No pre-connection command.\n");
-    if (ctl->postconnect)
-	printf("  Server connection will be taken down with '%s.'\n",
-	       visbuf(ctl->postconnect));
-    else if (outlevel == O_VERBOSE)
-	printf("  No post-connection command.\n");
-    if (!ctl->localnames)
-	printf("  No localnames declared for this host.\n");
-    else
-    {
-	struct idlist *idp;
-	int count = 0;
-
-	for (idp = ctl->localnames; idp; idp = idp->next)
-	    ++count;
-
-	if (count > 1 || ctl->wildcard)
-	    printf("  Multi-drop mode: ");
-	else
-	    printf("  Single-drop mode: ");
-
-	printf("%d local name(s) recognized.\n", count);
-	if (outlevel == O_VERBOSE)
-	{
-	    for (idp = ctl->localnames; idp; idp = idp->next)
-		if (idp->val.id2)
-		    printf("\t%s -> %s\n", idp->id, idp->val.id2);
-		else
-		    printf("\t%s\n", idp->id);
-	    if (ctl->wildcard)
-		fputs("*\n", stdout);
-	}
-
-	if (count > 1 || ctl->wildcard)
-	{
-	    printf("  DNS lookup for multidrop addresses is %sabled.\n",
-		   ctl->server.dns ? "en" : "dis");
-
-	    if (ctl->server.envelope == STRING_DISABLED)
-		printf("  Envelope-address routing is disabled\n");
-	    else
-	    {
-		printf("  Envelope header is assumed to be: %s\n",
-		       ctl->server.envelope ? ctl->server.envelope:"Received");
-		if (ctl->server.envskip > 1 || outlevel >= O_VERBOSE)
-		    printf("  Number of envelope header to be parsed: %d\n",
-			   ctl->server.envskip);
-		if (ctl->server.qvirtual)
-		    printf("  Prefix %s will be removed from user id\n",
-			   ctl->server.qvirtual);
-		else if (outlevel >= O_VERBOSE) 
-		    printf("  No prefix stripping\n");
-	    }
-
-	    if (ctl->server.akalist)
-	    {
-		struct idlist *idp;
-
-		printf("  Predeclared mailserver aliases:");
-		for (idp = ctl->server.akalist; idp; idp = idp->next)
-		    printf(" %s", idp->id);
-		putchar('\n');
-	    }
-	    if (ctl->server.localdomains)
-	    {
-		struct idlist *idp;
-
-		printf("  Local domains:");
-		for (idp = ctl->server.localdomains; idp; idp = idp->next)
-		    printf(" %s", idp->id);
-		putchar('\n');
-	    }
-	}
-    }
-#ifdef	linux
-    if (ctl->server.interface)
-	printf("  Connection must be through interface %s.\n", ctl->server.interface);
-    else if (outlevel == O_VERBOSE)
-	printf("  No interface requirement specified.\n");
-    if (ctl->server.monitor)
-	printf("  Polling loop will monitor %s.\n", ctl->server.monitor);
-    else if (outlevel == O_VERBOSE)
-	printf("  No monitor interface specified.\n");
+    if (runp->poll_interval)
+	printf("Poll interval is %d seconds\n", runp->poll_interval);
+    if (runp->logfile)
+	printf("Logfile is %s\n", runp->logfile);
+    if (strcmp(runp->idfile, IDFILE_NAME))
+	printf("Idfile is %s\n", runp->idfile);
+#if defined(HAVE_SYSLOG)
+    if (runp->use_syslog)
+	printf("Progress messages will be logged via syslog\n");
 #endif
+    if (runp->invisible)
+	printf("Fetchmail will masquerade and will not generate Received\n");
 
-    if (ctl->server.protocol > P_POP2)
-	if (!ctl->oldsaved)
-	    printf("  No UIDs saved from this host.\n");
+    for (ctl = querylist; ctl; ctl = ctl->next)
+    {
+	if (!ctl->active || (implicit && ctl->server.skip))
+	    continue;
+
+	printf("Options for retrieving from %s@%s:\n",
+	       ctl->remotename, visbuf(ctl->server.pollname));
+
+	if (ctl->server.via)
+	    printf("  Mail will be retrieved via %s\n", ctl->server.via);
+
+	if (ctl->server.interval)
+	    printf("  Poll of this server will occur every %d intervals.\n",
+		   ctl->server.interval);
+	if (ctl->server.truename)
+	    printf("  True name of server is %s.\n", ctl->server.truename);
+	if (ctl->server.skip || outlevel == O_VERBOSE)
+	    printf("  This host will%s be queried when no host is specified.\n",
+		   ctl->server.skip ? " not" : "");
+	if (!ctl->password)
+	    printf("  Password will be prompted for.\n");
+	else if (outlevel == O_VERBOSE)
+	    if (ctl->server.protocol == P_APOP)
+		printf("  APOP secret = '%s'.\n", visbuf(ctl->password));
+	    else if (ctl->server.protocol == P_RPOP)
+		printf("  RPOP id = '%s'.\n", visbuf(ctl->password));
+	    else
+		printf("  Password = '%s'.\n", visbuf(ctl->password));
+	if (ctl->server.protocol == P_POP3 
+#if INET6
+	    && !strcmp(ctl->server.service, KPOP_PORT)
+#else /* INET6 */
+	    && ctl->server.port == KPOP_PORT
+#endif /* INET6 */
+	    && (ctl->server.preauthenticate == A_KERBEROS_V4 ||
+		ctl->server.preauthenticate == A_KERBEROS_V5))
+	    printf("  Protocol is KPOP");
+	else
+	    printf("  Protocol is %s", showproto(ctl->server.protocol));
+#if INET6
+	if (ctl->server.service)
+	    printf(" (using service %s)", ctl->server.service);
+	if (ctl->server.netsec)
+	    printf(" (using network security options %s)", ctl->server.netsec);
+#else /* INET6 */
+	if (ctl->server.port)
+	    printf(" (using port %d)", ctl->server.port);
+#endif /* INET6 */
+	else if (outlevel == O_VERBOSE)
+	    printf(" (using default port)");
+	if (ctl->server.uidl)
+	    printf(" (forcing UIDL use)");
+	putchar('.');
+	putchar('\n');
+	if (ctl->server.preauthenticate == A_KERBEROS_V4)
+	    printf("  Kerberos V4 preauthentication enabled.\n");
+	if (ctl->server.preauthenticate == A_KERBEROS_V5)
+	    printf("  Kerberos V5 preauthentication enabled.\n");
+	if (ctl->server.timeout > 0)
+	    printf("  Server nonresponse timeout is %d seconds", ctl->server.timeout);
+	if (ctl->server.timeout ==  CLIENT_TIMEOUT)
+	    printf(" (default).\n");
+	else
+	    printf(".\n");
+
+	if (!ctl->mailboxes->id)
+	    printf("  Default mailbox selected.\n");
+	else
+	{
+	    struct idlist *idp;
+
+	    printf("  Selected mailboxes are:");
+	    for (idp = ctl->mailboxes; idp; idp = idp->next)
+		printf(" %s", idp->id);
+	    printf("\n");
+	}
+	printf("  %s messages will be retrieved (--all %s).\n",
+	       ctl->fetchall ? "All" : "Only new",
+	       ctl->fetchall ? "on" : "off");
+	printf("  Fetched messages will%s be kept on the server (--keep %s).\n",
+	       ctl->keep ? "" : " not",
+	       ctl->keep ? "on" : "off");
+	printf("  Old messages will%s be flushed before message retrieval (--flush %s).\n",
+	       ctl->flush ? "" : " not",
+	       ctl->flush ? "on" : "off");
+	printf("  Rewrite of server-local addresses is %sabled (--norewrite %s).\n",
+	       ctl->rewrite ? "en" : "dis",
+	       ctl->rewrite ? "off" : "on");
+	printf("  Carriage-return stripping is %sabled (stripcr %s).\n",
+	       ctl->stripcr ? "en" : "dis",
+	       ctl->stripcr ? "on" : "off");
+	printf("  Carriage-return forcing is %sabled (forcecr %s).\n",
+	       ctl->forcecr ? "en" : "dis",
+	       ctl->forcecr ? "on" : "off");
+	printf("  Interpretation of Content-Transfer-Encoding is %sabled (pass8bits %s).\n",
+	       ctl->pass8bits ? "dis" : "en",
+	       ctl->pass8bits ? "on" : "off");
+	printf("  MIME decoding is %sabled (mimedecode %s).\n",
+	       ctl->mimedecode ? "dis" : "en",
+	       ctl->mimedecode ? "on" : "off");
+	printf("  Nonempty Status lines will be %s (dropstatus %s)\n",
+	       ctl->dropstatus ? "discarded" : "kept",
+	       ctl->dropstatus ? "on" : "off");
+	if (NUM_NONZERO(ctl->limit))
+	    printf("  Message size limit is %d bytes (--limit %d).\n", 
+		   ctl->limit, ctl->limit);
+	else if (outlevel == O_VERBOSE)
+	    printf("  No message size limit (--limit 0).\n");
+	if (NUM_NONZERO(ctl->fetchlimit))
+	    printf("  Received-message limit is %d (--fetchlimit %d).\n",
+		   ctl->fetchlimit, ctl->fetchlimit);
+	else if (outlevel == O_VERBOSE)
+	    printf("  No received-message limit (--fetchlimit 0).\n");
+	if (NUM_NONZERO(ctl->batchlimit))
+	    printf("  SMTP message batch limit is %d.\n", ctl->batchlimit);
+	else if (outlevel == O_VERBOSE)
+	    printf("  No SMTP message batch limit (--batchlimit 0).\n");
+	if (ctl->server.protocol == P_IMAP)
+	    if (NUM_NONZERO(ctl->expunge))
+		printf("  Deletion interval between expunges is %d (--expunge %d).\n", ctl->expunge, ctl->expunge);
+	    else if (outlevel == O_VERBOSE)
+		printf("  No expunges (--expunge 0).\n");
+	if (ctl->mda)
+	    printf("  Messages will be delivered with '%s.'\n", visbuf(ctl->mda));
+	else
+	{
+	    struct idlist *idp;
+
+	    printf("  Messages will be SMTP-forwarded to:");
+	    for (idp = ctl->smtphunt; idp; idp = idp->next)
+		if (ctl->server.protocol != P_ETRN || idp->val.status.mark)
+		{
+		    printf(" %s", idp->id);
+		    if (!idp->val.status.mark)
+			printf(" (default)");
+		}
+	    printf("\n");
+	    if (ctl->smtpaddress)
+		printf("  Host part of MAIL FROM line will be %s\n",
+		       ctl->smtpaddress);
+	}
+	if (ctl->antispam != -1)
+	    printf("  Listener SMTP reponse %d will be treated as a spam block\n",
+		   ctl->antispam);
+	else if (outlevel == O_VERBOSE)
+	    printf("  Spam-blocking disabled\n");
+	if (ctl->preconnect)
+	    printf("  Server connection will be brought up with '%s.'\n",
+		   visbuf(ctl->preconnect));
+	else if (outlevel == O_VERBOSE)
+	    printf("  No pre-connection command.\n");
+	if (ctl->postconnect)
+	    printf("  Server connection will be taken down with '%s.'\n",
+		   visbuf(ctl->postconnect));
+	else if (outlevel == O_VERBOSE)
+	    printf("  No post-connection command.\n");
+	if (!ctl->localnames)
+	    printf("  No localnames declared for this host.\n");
 	else
 	{
 	    struct idlist *idp;
 	    int count = 0;
 
-	    for (idp = ctl->oldsaved; idp; idp = idp->next)
+	    for (idp = ctl->localnames; idp; idp = idp->next)
 		++count;
 
-	    printf("  %d UIDs saved.\n", count);
+	    if (count > 1 || ctl->wildcard)
+		printf("  Multi-drop mode: ");
+	    else
+		printf("  Single-drop mode: ");
+
+	    printf("%d local name(s) recognized.\n", count);
 	    if (outlevel == O_VERBOSE)
-		for (idp = ctl->oldsaved; idp; idp = idp->next)
-		    fprintf(stderr, "\t%s\n", idp->id);
+	    {
+		for (idp = ctl->localnames; idp; idp = idp->next)
+		    if (idp->val.id2)
+			printf("\t%s -> %s\n", idp->id, idp->val.id2);
+		    else
+			printf("\t%s\n", idp->id);
+		if (ctl->wildcard)
+		    fputs("*\n", stdout);
+	    }
+
+	    if (count > 1 || ctl->wildcard)
+	    {
+		printf("  DNS lookup for multidrop addresses is %sabled.\n",
+		       ctl->server.dns ? "en" : "dis");
+
+		if (ctl->server.envelope == STRING_DISABLED)
+		    printf("  Envelope-address routing is disabled\n");
+		else
+		{
+		    printf("  Envelope header is assumed to be: %s\n",
+			   ctl->server.envelope ? ctl->server.envelope:"Received");
+		    if (ctl->server.envskip > 1 || outlevel >= O_VERBOSE)
+			printf("  Number of envelope header to be parsed: %d\n",
+			       ctl->server.envskip);
+		    if (ctl->server.qvirtual)
+			printf("  Prefix %s will be removed from user id\n",
+			       ctl->server.qvirtual);
+		    else if (outlevel >= O_VERBOSE) 
+			printf("  No prefix stripping\n");
+		}
+
+		if (ctl->server.akalist)
+		{
+		    struct idlist *idp;
+
+		    printf("  Predeclared mailserver aliases:");
+		    for (idp = ctl->server.akalist; idp; idp = idp->next)
+			printf(" %s", idp->id);
+		    putchar('\n');
+		}
+		if (ctl->server.localdomains)
+		{
+		    struct idlist *idp;
+
+		    printf("  Local domains:");
+		    for (idp = ctl->server.localdomains; idp; idp = idp->next)
+			printf(" %s", idp->id);
+		    putchar('\n');
+		}
+	    }
 	}
+#ifdef	linux
+	if (ctl->server.interface)
+	    printf("  Connection must be through interface %s.\n", ctl->server.interface);
+	else if (outlevel == O_VERBOSE)
+	    printf("  No interface requirement specified.\n");
+	if (ctl->server.monitor)
+	    printf("  Polling loop will monitor %s.\n", ctl->server.monitor);
+	else if (outlevel == O_VERBOSE)
+	    printf("  No monitor interface specified.\n");
+#endif
+
+	if (ctl->server.protocol > P_POP2)
+	    if (!ctl->oldsaved)
+		printf("  No UIDs saved from this host.\n");
+	    else
+	    {
+		struct idlist *idp;
+		int count = 0;
+
+		for (idp = ctl->oldsaved; idp; idp = idp->next)
+		    ++count;
+
+		printf("  %d UIDs saved.\n", count);
+		if (outlevel == O_VERBOSE)
+		    for (idp = ctl->oldsaved; idp; idp = idp->next)
+			fprintf(stderr, "\t%s\n", idp->id);
+	    }
+    }
 }
 
 /* fetchmail.c ends here */

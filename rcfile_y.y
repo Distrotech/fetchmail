@@ -87,11 +87,11 @@ statement_list	: statement
 optmap		: MAP | /* EMPTY */;
 
 /* future global options should also have the form SET <name> optmap <value> */
-statement	: SET LOGFILE optmap STRING	{logfile = xstrdup($4);}
-		| SET IDFILE optmap STRING	{idfile = xstrdup($4);}
-		| SET DAEMON optmap NUMBER	{poll_interval = $4;}
-		| SET SYSLOG			{errors_to_syslog = TRUE;}
-		| SET INVISIBLE			{use_invisible = TRUE;}
+statement	: SET LOGFILE optmap STRING	{run.logfile = xstrdup($4);}
+		| SET IDFILE optmap STRING	{run.idfile = xstrdup($4);}
+		| SET DAEMON optmap NUMBER	{run.poll_interval = $4;}
+		| SET SYSLOG			{run.use_syslog = TRUE;}
+		| SET INVISIBLE			{run.invisible = TRUE;}
 
 /* 
  * The way the next two productions are written depends on the fact that

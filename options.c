@@ -54,7 +54,8 @@
 #define LA_NETSEC	36
 #define LA_INTERFACE    37
 #define LA_MONITOR      38
-#define LA_YYDEBUG	39
+#define LA_PYTHONDUMP	39
+#define LA_YYDEBUG	40
 
 /* options still left: CgGhHjJoORUwWxXYz */
 static const char *shortoptions = 
@@ -114,15 +115,18 @@ static const struct option longoptions[] = {
   {"monitor",	required_argument, (int *) 0, LA_MONITOR     },
 #endif /* defined(linux) && !INET6 */
 
+  {"pythondump",no_argument,	   (int *) 0, LA_PYTHONDUMP  },
+
   {"yydebug",	no_argument,	   (int *) 0, LA_YYDEBUG     },
 
   {(char *) 0,  no_argument,       (int *) 0, 0              }
 };
 
-int parsecmdline (argc, argv, ctl)
+int parsecmdline (argc, argv, rctl, ctl)
 /* parse and validate the command line options */
 int argc;		/* argument count */
 char **argv;		/* argument strings */
+struct runctl *rctl;	/* global run controls to modify */
 struct query *ctl;	/* option record to be initialized */
 {
     /*
@@ -139,7 +143,7 @@ struct query *ctl;	/* option record to be initialized */
     int option_index;
     char buf[BUFSIZ], *cp;
 
-    cmd_daemon = -1;
+    rctl->poll_interval = -1;
 
     memset(ctl, '\0', sizeof(struct query));    /* start clean */
     ctl->smtp_socket = -1;
@@ -167,7 +171,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'd':
 	case LA_DAEMON:
-	    cmd_daemon = atoi(optarg);
+	    rctl->poll_interval = atoi(optarg);
 	    break;
 	case 'N':
 	case LA_NODETACH:
@@ -179,10 +183,10 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'L':
 	case LA_LOGFILE:
-	    cmd_logfile = optarg;
+	    rctl->logfile = optarg;
 	    break;
 	case LA_INVISIBLE:
-	    use_invisible = TRUE;
+	    rctl->invisible = TRUE;
 	    break;
 	case 'f':
 	case LA_RCFILE:
@@ -191,8 +195,8 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'i':
 	case LA_IDFILE:
-	    cmd_idfile = (char *) xmalloc(strlen(optarg)+1);
-	    strcpy(cmd_idfile,optarg);
+	    rctl->idfile = (char *) xmalloc(strlen(optarg)+1);
+	    strcpy(rctl->idfile,optarg);
 	    break;
 	case 'p':
 	case LA_PROTOCOL:
@@ -381,8 +385,12 @@ struct query *ctl;	/* option record to be initialized */
 	    yydebug = TRUE;
 	    break;
 
+	case LA_PYTHONDUMP:
+	    pythondump = TRUE;
+	    break;
+
 	case LA_SYSLOG:
-	    errors_to_syslog = TRUE;
+	    rctl->use_syslog = TRUE;
 	    break;
 
 	case '?':
