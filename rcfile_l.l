@@ -24,6 +24,7 @@ int prc_lineno = 1;
 %o 7000
 %a 4000
 %p 3000
+%option nounput
 
 %s NAME AUTH
 
