@@ -923,7 +923,7 @@ char *realname;		/* real name of host */
 		for (idp = xmit_names; idp; idp = idp->next)
 		    if (idp->val.num == XMIT_REJECT)
 			break;
-		sprintf(errhd, "recipient address %s didn't match any local name", idp->id);
+		sprintf(errhd+strlen(errhd), "recipient address %s didn't match any local name", idp->id);
 	    }
 
 	    if (bad_addresses)
