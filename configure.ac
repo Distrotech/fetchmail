@@ -558,6 +558,7 @@ then
       /usr \
       /local/ssl \
       /opt/ssl \
+      /opt/csw \
       ; \
     do
         if test -r "$ac_dir/include/openssl/ssl.h" ; then
