@@ -6,6 +6,8 @@
 * Documented known IDLE bug in the todo.html file.
 * Sunil Shetye's fix for a timeout/reconnect bug.
 * LMTP fix from Toshiro HIKITA <toshi@sodan.org>.
+* The duplicate-killer doesn't try to operate if we can get an actual
+  recipient address from the trace headers.
 
 fetchmail-5.9.5 (Thu Nov  8 14:14:35 EST 2001), 21162 lines:
 

@@ -377,6 +377,11 @@ int readheaders(int sock,
     if (msgblk.headers)
        free(msgblk.headers);
 
+    /* initially, no message ID */
+    if (ctl->thisid)
+	free(ctl->thisid);
+    ctl->thisid = NULL;
+
     msgblk.headers = received_for = delivered_to = NULL;
     from_offs = reply_to_offs = resent_from_offs = app_from_offs = 
 	sender_offs = resent_sender_offs = env_offs = -1;
@@ -514,44 +519,9 @@ int readheaders(int sock,
 	/* we see an ordinary (non-header, non-message-delimiter line */
 	has_nuls = (linelen != strlen(line));
 
-	/*
-	 * When mail delivered to a multidrop mailbox on the server is
-	 * addressed to multiple people on the client machine, there
-	 * will be one copy left in the box for each recipient.  Thus,
-	 * if the mail is addressed to N people, each recipient will
-	 * get N copies.  This is bad when N > 1.
-	 *
-	 * Foil this by suppressing all but one copy of a message with
-	 * a given Message-ID.  The accept_count test ensures that
-	 * multiple pieces of email with the same Message-ID, each
-	 * with a *single* addressee (the N == 1 case), won't be 
-	 * suppressed.
-	 *
-	 * Note: This implementation only catches runs of successive
-	 * messages with the same ID, but that should be good
-	 * enough. A more general implementation would have to store
-	 * ever-growing lists of seen message-IDs; in a long-running
-	 * daemon this would turn into a memory leak even if the 
-	 * implementation were perfect.
-	 * 
-	 * Don't mess with this code casually.  It would be way too easy
-	 * to break it in a way that blackholed mail.  Better to pass
-	 * the occasional duplicate than to do that...
-	 */
+	/* save the message's ID, we may use it for killing duplicates later */
 	if (MULTIDROP(ctl) && !strncasecmp(line, "Message-ID:", 11))
-	{
-	    if (ctl->lastid && !strcasecmp(ctl->lastid, line))
-	    {
-		if (accept_count > 1)
-		    return(PS_REFUSED);
-	    }
-	    else
-	    {
-		if (ctl->lastid)
-		    free(ctl->lastid);
-		ctl->lastid = xstrdup(line);
-	    }
-	}
+	    ctl->thisid = xstrdup(line);
 
 	/*
 	 * The University of Washington IMAP server (the reference
@@ -811,7 +781,52 @@ int readheaders(int sock,
 	}
     }
 
- process_headers:
+ process_headers:    
+    /*
+     * When mail delivered to a multidrop mailbox on the server is
+     * addressed to multiple people on the client machine, there will
+     * be one copy left in the box for each recipient.  This is not a
+     * problem if we have the actual recipient address to dispatch on
+     * (e.g. because we've mined it out of sendmail trace headers, or
+     * a qmail Delivered-To line, or a declared sender envelope line).
+     *
+     * But if we're mining addressees out of the To/Cc/Bcc fields, and
+     * if the mail is addressed to N people, each recipient will
+     * get N copies.  This is bad when N > 1.
+     *
+     * Foil this by suppressing all but one copy of a message with
+     * a given Message-ID.  The accept_count test ensures that
+     * multiple pieces of email with the same Message-ID, each
+     * with a *single* addressee (the N == 1 case), won't be 
+     * suppressed.
+     *
+     * Note: This implementation only catches runs of successive
+     * messages with the same ID, but that should be good
+     * enough. A more general implementation would have to store
+     * ever-growing lists of seen message-IDs; in a long-running
+     * daemon this would turn into a memory leak even if the 
+     * implementation were perfect.
+     * 
+     * Don't mess with this code casually.  It would be way too easy
+     * to break it in a way that blackholed mail.  Better to pass
+     * the occasional duplicate than to do that...
+     */
+    if (!received_for && env_offs == -1 && !delivered_to)
+    {
+	if (ctl->lastid && ctl->thisid && !strcasecmp(ctl->lastid, ctl->thisid))
+	{
+	    if (accept_count > 1)
+		return(PS_REFUSED);
+	}
+	else
+	{
+	    if (ctl->lastid)
+		free(ctl->lastid);
+	    ctl->lastid = ctl->thisid;
+	    ctl->thisid = NULL;
+	}
+    }
+
     /*
      * We want to detect this early in case there are so few headers that the
      * dispatch logic barfs.

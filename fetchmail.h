@@ -308,6 +308,7 @@ struct query
     struct idlist *skipped;	/* messages skipped on the mail server */
     struct idlist *oldsaved, *newsaved;
     char *lastid;		/* last Message-ID seen on this connection */
+    char *thisid;		/* Message-ID of current message */
 
     /* internal use -- per-message state */
     int mimemsg;		/* bitmask indicating MIME body-type */
