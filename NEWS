@@ -1,6 +1,6 @@
 				Release Notes:
 
-fetchmail-4.6.1 ():
+fetchmail-4.6.1 (Wed Oct 14 18:46:58 EDT 1998):
 * Fixed a minor memory leak in the IP-address-comparison code.
 * Mark Staveley's patch to suppress progress dots from non-detached daemon
   fetchmails.
@@ -8,8 +8,10 @@ fetchmail-4.6.1 ():
 * Major update of SDPS FAQ material from B.Candler@pobox.com.
 * Fetchmailconf can deal with zsh now.
 * Append "@localhost" to MAIL FROM if it's not an FQDN.
+* Fix minor bug in processing postconnect option.
+* Corrected contrib/fetchspool script as suggested by William Boughton.
 
-There are 255 people on fetchmail-friends and 296 on fetchmail-announce.
+There are 257 people on fetchmail-friends and 296 on fetchmail-announce.
 
 fetchmail-4.6.0 (Fri Sep 18 13:17:17 EDT 1998):
 * Added Bill Adams's mailqueue.pl to the contrib directory.
