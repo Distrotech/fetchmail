@@ -1,8 +1,7 @@
 #!/bin/sh
 
 user=${FM_USER:=`whoami`}
-name=${FM_NAME:=`grep "^${user}:" /etc/passwd | cut -d: -f5|sed -e
-'s/^.*,//'`}
+name=${FM_NAME:=`grep "^${user}:" /etc/passwd | cut -d: -f5|sed -e 's/^.*,//'`}
 domain=${FM_DOMAIN:=mail.berlios.de}
 email="$user@$domain"
 packager="$name <$email>"
