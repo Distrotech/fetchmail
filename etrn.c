@@ -120,7 +120,6 @@ const static struct method etrn =
     NULL,		/* no way to fetch body */
     NULL,		/* no message trailer */
     NULL,		/* how to delete a message */
-    NULL,		/* no retained-header check */
     "QUIT",		/* the ETRN exit command */
 };
 

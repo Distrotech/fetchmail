@@ -586,9 +586,24 @@ int num;		/* index of message */
 	    break;
 	}
      
-	/* maybe this is a special message that holds mailbox annotations? */ 
-	if (protocol->retain_hdr && protocol->retain_hdr(num, line))
-	    return(PS_RETAINED);
+	/*
+	 * The University of Washington IMAP server (the reference
+	 * implementation of IMAP4 written by Mark Crispin) relies
+	 * on being able to keep base-UID information in a special
+	 * message at the head of the mailbox.  This message should
+	 * neither be deleted nor forwarded.
+	 */
+#ifdef POP2_ENABLE
+	/*
+	 * We disable this check under POP2 because there's no way to
+	 * prevent deletion of the message.  So at least we ought to 
+	 * forward it to the user so he or she will have some clue
+	 * that things have gone awry.
+	 */
+	if (protocol != pop2)
+#endif /* POP2_ENABLE */
+	    if (num == 1 && !strncasecmp(line, "X-IMAP:", 7))
+		return(PS_RETAINED);
 
 	/*
 	 * This code prevents fetchmail from becoming an accessory after

@@ -169,7 +169,6 @@ struct method
     int (*fetch_body)();	/* fetch a given message */
     int (*trail)();		/* eat trailer of a message */
     int (*delete)();		/* delete method */
-    flag (*retain_hdr)();	/* if this returns TRUE, retain message */
     char *exit_cmd;		/* exit command */
 };
 
