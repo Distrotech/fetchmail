@@ -676,11 +676,13 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     }
 #endif /* KERBEROS_V4 */
 
+#ifdef __UNUSED__	/* The Cyrus IMAP4rev1 server chokes on this */
     /* this handles either AUTH=LOGIN or AUTH-LOGIN */
     if ((imap_version >= IMAP4rev1) && (!strstr(capabilities, "LOGIN"))) {
       error(0,-1, "Required LOGIN capability not supported by server");
       return PS_AUTHFAIL;
     };
+#endif /* __UNUSED__ */
 
     /* try to get authorized in the ordinary (AUTH=LOGIN) way */
     {

@@ -24,8 +24,9 @@ fetchmail-4.4.0 (Mon Mar 16 14:57:38 EST 1998):
 * Allow spaces in IMAP usernames (thank Juerg Wanner <juerg.wanner@ubs.com>).
 * Handle empty Return-Path (thank Dmitry Yaitskov <dyaitskov@insystems.com>).
 * Improvements in UID handling; should be a cleaner fix for Dick van den Burg.
+* Remove the LOGIN capability check for IMAPrev1 servers; Cyrus chokes on it.
 
-There are 272 people on fetchmail-friends and 160 on fetchmail-announce.
+There are 273 people on fetchmail-friends and 160 on fetchmail-announce.
 
 fetchmail-4.3.9 (Fri Mar  6 10:45:32 EST 1998):
 * Relax the LOGIN capability check in IMAP.
