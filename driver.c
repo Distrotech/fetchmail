@@ -410,21 +410,27 @@ char *realname;		/* real name of host */
     char *bufp, *headers, *fromhdr,*tohdr,*cchdr,*bcchdr,*received_for,*envto;
     char *fromptr, *toptr, *ctthdr, *line;
     int n, oldlen, ch;
-    int inheaders, sizeticker, delete_ok;
+    int sizeticker, delete_ok;
     FILE *sinkfp;
     RETSIGTYPE (*sigchld)();
 #ifdef HAVE_GETHOSTBYNAME
     char rbuf[HOSTLEN + USERNAMELEN + 4]; 
 #endif /* HAVE_GETHOSTBYNAME */
+    char		*cp;
+    struct idlist 	*idp, *xmit_names;
+    int			good_addresses, bad_addresses;
+#ifdef HAVE_RES_SEARCH
+    int			no_local_matches = FALSE;
+#endif /* HAVE_RES_SEARCH */
 
-    /* read the message content from the server */
-    inheaders = delete_ok = TRUE;
-    headers = fromhdr = tohdr = cchdr = bcchdr = received_for = envto = ctthdr = NULL;
     sizeticker = 0;
+    delete_ok = TRUE;
+
+    /* read message headers */
+    headers = fromhdr = tohdr = cchdr = bcchdr = received_for = envto = ctthdr = NULL;
     oldlen = 0;
     line = (char *)NULL;
-    while (delimited || len > 0)
-    {
+    do {
 	if (line)
 	    free(line);
 	line = xmalloc(sizeof(buf));
@@ -438,7 +444,7 @@ char *realname;		/* real name of host */
 	    strcat(line, buf);
 	} while
 	    /* we may need to grab RFC822 continuations */
-	    (inheaders && (ch = SockPeek(sockfp)) == ' ' || ch == '\t');
+	    ((ch = SockPeek(sockfp)) == ' ' || ch == '\t');
 
 	/* write the message size dots */
 	if ((n = strlen(line)) > 0)
@@ -451,415 +457,436 @@ char *realname;		/* real name of host */
 		sizeticker -= SIZETICKER;
 	    }
 	}
+	len -= n;
 
 	bufp = line;
-	len -= n;
-	if (bufp[0] == '\r' && bufp[1] == '\n')
-	    inheaders = FALSE;
-	if (delimited && *bufp == '.') {
+	if (delimited && *bufp == '.')
+	{
 	    if (bufp[1] == '\r' && bufp[2] == '\n')
 		break;  /* end of message */
 	}
      
-	if (inheaders)
-        {
-	    if (!ctl->no_rewrite)
-		reply_hack(bufp, realname);
+	if (!ctl->no_rewrite)
+	    reply_hack(bufp, realname);
 
-	    if (!headers)
-	    {
-		oldlen = strlen(bufp);
-		headers = xmalloc(oldlen + 1);
-		(void) strcpy(headers, bufp);
-		bufp = headers;
-	    }
-	    else
-	    {
-		int	newlen;
-
-		newlen = oldlen + strlen(bufp);
-		headers = realloc(headers, newlen + 1);
-		if (headers == NULL)
-		    return(PS_IOERR);
-		strcpy(headers + oldlen, bufp);
-		bufp = headers + oldlen;
-		oldlen = newlen;
-	    }
-
-	    if (!fromhdr && !strncasecmp("From:", bufp, 5))
-		fromhdr = bufp;
-	    else if (!fromhdr && !strncasecmp("Resent-From:", bufp, 12))
-		fromhdr = bufp;
-	    else if (!fromhdr && !strncasecmp("Apparently-From:", bufp, 16))
-		fromhdr = bufp;
-
-	    else if (!strncasecmp("To:", bufp, 3))
-		tohdr = bufp;
-
-	    else if (!envto && !strncasecmp("Apparently-To:", bufp, 14))
-		envto = bufp;
-	    else if (!envto && !strncasecmp(ctl->server.envelope, bufp, 14))
-		envto = bufp;
-
-	    else if (!strncasecmp("Cc:", bufp, 3))
-		cchdr = bufp;
-
-	    else if (!strncasecmp("Bcc:", bufp, 4))
-		bcchdr = bufp;
-
-	    else if (!strncasecmp("Content-Transfer-Encoding:", bufp, 26))
-		ctthdr = bufp;
-
-#ifdef HAVE_RES_SEARCH
-	    else if (MULTIDROP(ctl) && !strncasecmp("Received:", bufp, 9))
-		received_for = parse_received(ctl, bufp);
-#endif /* HAVE_RES_SEARCH */
-
- 	    if (len > 0)
- 	        continue;
- 	} /* if (inheaders) */
-
- 	if (headers && (!inheaders || len == 0))    /* at end of headers now */
+	if (!headers)
 	{
-	    char		*cp;
-	    struct idlist 	*idp, *xmit_names;
-	    int			good_addresses, bad_addresses;
-#ifdef HAVE_RES_SEARCH
-	    int			no_local_matches = FALSE;
-#endif /* HAVE_RES_SEARCH */
+	    oldlen = strlen(bufp);
+	    headers = xmalloc(oldlen + 1);
+	    (void) strcpy(headers, bufp);
+	    bufp = headers;
+	}
+	else
+	{
+	    int	newlen;
 
-	    /* cons up a list of local recipients */
-	    xmit_names = (struct idlist *)NULL;
-	    bad_addresses = good_addresses = 0;
-#ifdef HAVE_RES_SEARCH
-	    /* is this a multidrop box? */
-	    if (MULTIDROP(ctl))
-	    {
-		if (envto)	    /* We have the actual envelope addressee */
-		    find_server_names(envto, ctl, &xmit_names);
-		else if (received_for)
-		    /*
-		     * We have the Received for addressee.  
-		     * It has to be a mailserver address, or we
-		     * wouldn't have got here.
-		     */
-		    map_name(received_for, ctl, &xmit_names);
-		else
-		{
-		    /*
-		     * We haven't extracted the envelope address.
-		     * So check all the header addresses.
-		     */
-		    find_server_names(tohdr,  ctl, &xmit_names);
-		    find_server_names(cchdr,  ctl, &xmit_names);
-		    find_server_names(bcchdr, ctl, &xmit_names);
-		}
-		if (!xmit_names)
-		{
-		    no_local_matches = TRUE;
-		    save_str(&xmit_names, -1, user);
-		    if (outlevel == O_VERBOSE)
-			error(0, 0, 
-				"no local matches, forwarding to %s",
-				user);
-		}
-	    }
-	    else	/* it's a single-drop box, use first localname */
-#endif /* HAVE_RES_SEARCH */
-		save_str(&xmit_names, -1, ctl->localnames->id);
-
-	    /* time to address the message */
-	    if (ctl->mda)	/* we have a declared MDA */
-	    {
-		int	length = 0;
-		char	*names, *cmd;
-
-		/*
-		 * We go through this in order to be able to handle very
-		 * long lists of users and (re)implement %s.
-		 */
-		for (idp = xmit_names; idp; idp = idp->next)
-		    length += (strlen(idp->id) + 1);
-		names = (char *)alloca(length);
-		names[0] = '\0';
-		for (idp = xmit_names; idp; idp = idp->next)
-		{
-		    strcat(names, idp->id);
-		    strcat(names, " ");
-		}
-		cmd = (char *)alloca(strlen(ctl->mda) + length);
-		sprintf(cmd, ctl->mda, names);
-		if (outlevel == O_VERBOSE)
-		    error(0, 0, "about to deliver with: %s", cmd);
-
-#ifdef HAVE_SETEUID
-		/*
-		 * Arrange to run with user's permissions if we're root.
-		 * This will initialize the ownership of any files the
-		 * MDA creates properly.  (The seteuid call is available
-		 * under all BSDs and Linux)
-		 */
-		seteuid(ctl->uid);
-#endif /* HAVE_SETEUID */
-
-		sinkfp = popen(cmd, "w");
-
-#ifdef HAVE_SETEUID
-		/* this will fail quietly if we didn't start as root */
-		seteuid(0);
-#endif /* HAVE_SETEUID */
-
-		if (!sinkfp)
-		{
-		    error(0, 0, "MDA open failed");
-		    return(PS_IOERR);
-		}
-
-		sigchld = signal(SIGCHLD, SIG_DFL);
-	    }
-	    else
-	    {
-		char	*ap, *ctt, options[MSGBUFSIZE];
-		int	smtperr;
-
-		/* build a connection to the SMTP listener */
-		if (!ctl->mda && ((sinkfp = smtp_open(ctl)) == NULL))
-		{
-		    free_str_list(&xmit_names);
-		    error(0, 0, "SMTP connect failed");
-		    return(PS_SMTP);
-		}
-
-		/*
-		 * Compute ESMTP options.  It's a kluge to use nxtaddr()
-		 * here because the contents of the Content-Transfer-Encoding
-		 * headers isn't semantically an address.  But it has the
-		 * desired tokenizing effect.
-		 */
-		options[0] = '\0';
-		if ((ctl->server.esmtp_options & ESMTP_8BITMIME)
-			&& ctthdr
-			&& (ctt = nxtaddr(ctthdr)))
-		    if (!strcasecmp(ctt,"7BIT"))
-			sprintf(options, " BODY=7BIT", ctt);
-		    else if (!strcasecmp(ctt,"8BIT"))
-			sprintf(options, " BODY=8BITMIME", ctt);
-		if ((ctl->server.esmtp_options & ESMTP_SIZE) && !delimited)
-		    sprintf(options + strlen(options), " SIZE=%d", len);
-
-		/*
-		 * Try to get the SMTP listener to take the header
-		 * From address as MAIL FROM (this makes the logging
-		 * nicer).  If it won't, fall back on the calling-user
-		 * ID.  This won't affect replies, which use the header
-		 * From address anyway.
-		 *
-		 * RFC 1123 requires that the domain name part of the
-		 * MAIL FROM address be "canonicalized", that is a
-		 * FQDN or MX but not a CNAME.  We'll assume the From
-		 * header is already in this form here (it certainly
-		 * is if rewrite is on).  RFC 1123 is silent on whether
-		 * a nonexistent hostname part is considered canonical.
-		 *
-		 * This is a potential problem if the MTAs further
-		 * upstream didn't pass canonicalized From lines, *and*
-		 * the local SMTP listener insists on them.
-		 */
-		if (!fromhdr || !(ap = nxtaddr(fromhdr)))
-		    ap = user;
-		if (SMTP_from(sinkfp, ap, options) != SM_OK)
-		{
-		    int smtperr = atoi(smtp_response);
-
-		    if (smtperr >= 400)
-			error(0, 0, "SMTP error: %s", smtp_response);
-
-		    /*
-		     * There'a one problem with this flow of control;
-		     * there's no way to avoid reading the whole message
-		     * off the server, even if the MAIL FROM response 
-		     * tells us that it's just to be discarded.  We could
-		     * fix this under IMAP by reading headers first, then
-		     * trying to issue the MAIL FROM, and *then* reading
-		     * the body...but POP3 can't do this.
-		     */
-
-		    switch (smtperr)
-		    {
-		    case 571: /* unsolicited email refused */
-			/*
-			 * SMTP listener explicitly refuses to deliver
-			 * mail coming from this address, probably due
-			 * to an anti-spam domain exclusion.  Respect
-			 * this.  Don't try to ship the message, and
-			 * don't prevent it from being deleted.
-			 */
-			sinkfp = (FILE *)NULL;
-			goto skiptext;
-
-		    case 452: /* insufficient system storage */
-			/*
-			 * Temporary out-of-queue-space condition on the
-			 * ESMTP server.  Don't try to ship the message, 
-			 * and suppress deletion so it can be retried on
-			 * a future retrieval cycle.
-			 */
-			delete_ok = FALSE;
-			sinkfp = (FILE *)NULL;
-			SMTP_rset(sockfp);	/* required by RFC1870 */
-			goto skiptext;
-
-		    case 552: /* message exceeds fixed maximum message size */
-			/*
-			 * Permanent no-go condition on the
-			 * ESMTP server.  Don't try to ship the message, 
-			 * and allow it to be deleted.
-			 */
-			sinkfp = (FILE *)NULL;
-			SMTP_rset(sockfp);	/* required by RFC1870 */
-			goto skiptext;
-
-		    default:	/* retry with invoking user's address */
-			if (SMTP_from(sinkfp, user, options) != SM_OK)
-			{
-			    error(0,0,"SMTP error: %s", smtp_response);
-			    return(PS_SMTP);	/* should never happen */
-			}
-		    }
-		}
-
-		/*
-		 * Now list the recipient addressees
-		 *
-		 * RFC 1123 requires that the domain name part of the
-		 * RCPT TO address be "canonicalized", that is a FQDN
-		 * or MX but not a CNAME.  RFC1123 doesn't say whether
-		 * the FQDN part can be null (as it frequently will be
-		 * here), but it's hard to see how this could cause a
-		 * problem.
-		 */
-		for (idp = xmit_names; idp; idp = idp->next)
-		    if (SMTP_rcpt(sinkfp, idp->id) == SM_OK)
-			good_addresses++;
-		    else
-		    {
-			bad_addresses++;
-			idp->val.num = 0;
-			error(0, 0, 
-				"SMTP listener doesn't like recipient address `%s'", idp->id);
-		    }
-		if (!good_addresses && SMTP_rcpt(sinkfp, user) != SM_OK)
-		{
-		    error(0, 0, 
-			    "can't even send to calling user!");
-		    return(PS_SMTP);
-		}
-
-		/* tell it we're ready to send data */
-		SMTP_data(sinkfp);
-
-	    skiptext:;
-	    }
-
-	    /* write all the headers */
-	    if (ctl->mda)
-		n = fwrite(headers, 1, oldlen, sinkfp);
-	    else if (sinkfp)
-		n = SockWrite(headers, 1, oldlen, sinkfp);
-
-	    if (n < 0)
-	    {
-		free(headers);
-		headers = NULL;
-		error(0, errno, "writing RFC822 headers");
-		if (ctl->mda)
-		{
-		    pclose(sinkfp);
-		    signal(SIGCHLD, sigchld);
-		}
+	    newlen = oldlen + strlen(bufp);
+	    headers = realloc(headers, newlen + 1);
+	    if (headers == NULL)
 		return(PS_IOERR);
-	    }
-	    else if (outlevel == O_VERBOSE)
-		fputs("#", stderr);
-	    free(headers);
-	    headers = NULL;
-
-	    /* write error notifications */
-#ifdef HAVE_RES_SEARCH
-	    if (no_local_matches || bad_addresses)
-#else
-	    if (bad_addresses)
-#endif /* HAVE_RES_SEARCH */
-	    {
-		int	errlen = 0;
-		char	errhd[USERNAMELEN + POPBUFSIZE], *errmsg;
-
-		errmsg = errhd;
-		(void) strcpy(errhd, "X-Fetchmail-Warning: ");
-#ifdef HAVE_RES_SEARCH
-		if (no_local_matches)
-		{
-		    strcat(errhd, "no recipient addresses matched declared local names");
-		    if (bad_addresses)
-			strcat(errhd, "; ");
-		}
-#endif /* HAVE_RES_SEARCH */
-
-		if (bad_addresses)
-		{
-		    strcat(errhd, "SMTP listener rejected local recipient addresses: ");
-		    errlen = strlen(errhd);
-		    for (idp = xmit_names; idp; idp = idp->next)
-			if (!idp->val.num)
-			    errlen += strlen(idp->id) + 2;
-
-		    errmsg = alloca(errlen+3);
-		    (void) strcpy(errmsg, errhd);
-		    for (idp = xmit_names; idp; idp = idp->next)
-			if (!idp->val.num)
-			{
-			    strcat(errmsg, idp->id);
-			    if (idp->next)
-				strcat(errmsg, ", ");
-			}
-		}
-
-		strcat(errmsg, "\n");
-
-		/* ship out the error line */
-		if (ctl->mda)
-		    fwrite(errmsg, 1, strlen(errmsg), sinkfp);
-		else if (sinkfp)
-		    SockWrite(errmsg, 1, strlen(errmsg), sinkfp);
-	    }
-
-	    free_str_list(&xmit_names);
-	} /* else if (headers) */
-
-	/* output a crlf if zero length message body */
-	if (!len && inheaders)
-	{
-	    if (ctl->mda[0])
-		fputs("\r\n", sinkfp);
-	    else if (sinkfp)
-		SockWrite("\r\n", 1, 2, sinkfp);
-	    continue;
+	    strcpy(headers + oldlen, bufp);
+	    bufp = headers + oldlen;
+	    oldlen = newlen;
 	}
 
-	/* following code is executed on non-header lines only */
+	if (!fromhdr && !strncasecmp("From:", bufp, 5))
+	    fromhdr = bufp;
+	else if (!fromhdr && !strncasecmp("Resent-From:", bufp, 12))
+	    fromhdr = bufp;
+	else if (!fromhdr && !strncasecmp("Apparently-From:", bufp, 16))
+	    fromhdr = bufp;
+
+	else if (!strncasecmp("To:", bufp, 3))
+	    tohdr = bufp;
+
+	else if (!envto && !strncasecmp("Apparently-To:", bufp, 14))
+	    envto = bufp;
+	else if (!envto && !strncasecmp(ctl->server.envelope, bufp, 14))
+	    envto = bufp;
+
+	else if (!strncasecmp("Cc:", bufp, 3))
+	    cchdr = bufp;
+
+	else if (!strncasecmp("Bcc:", bufp, 4))
+	    bcchdr = bufp;
+
+	else if (!strncasecmp("Content-Transfer-Encoding:", bufp, 26))
+	    ctthdr = bufp;
+
+#ifdef HAVE_RES_SEARCH
+	else if (MULTIDROP(ctl) && !strncasecmp("Received:", bufp, 9))
+	    received_for = parse_received(ctl, bufp);
+#endif /* HAVE_RES_SEARCH */
+    } while
+	(len > 0 && (bufp[0] != '\r' || bufp[1] != '\n'));
+
+    if (line)
+	free(line);
+
+    /*
+     * We can now process message headers before reading the text.
+     * In fact we have to, as this will tell us where to forward to.
+     */
+
+    /* cons up a list of local recipients */
+    xmit_names = (struct idlist *)NULL;
+    bad_addresses = good_addresses = 0;
+#ifdef HAVE_RES_SEARCH
+    /* is this a multidrop box? */
+    if (MULTIDROP(ctl))
+    {
+	if (envto)	    /* We have the actual envelope addressee */
+	    find_server_names(envto, ctl, &xmit_names);
+	else if (received_for)
+	    /*
+	     * We have the Received for addressee.  
+	     * It has to be a mailserver address, or we
+	     * wouldn't have got here.
+	     */
+	    map_name(received_for, ctl, &xmit_names);
+	else
+	{
+	    /*
+	     * We haven't extracted the envelope address.
+	     * So check all the header addresses.
+	     */
+	    find_server_names(tohdr,  ctl, &xmit_names);
+	    find_server_names(cchdr,  ctl, &xmit_names);
+	    find_server_names(bcchdr, ctl, &xmit_names);
+	}
+	if (!xmit_names)
+	{
+	    no_local_matches = TRUE;
+	    save_str(&xmit_names, -1, user);
+	    if (outlevel == O_VERBOSE)
+		error(0, 0, 
+		      "no local matches, forwarding to %s",
+		      user);
+	}
+    }
+    else	/* it's a single-drop box, use first localname */
+#endif /* HAVE_RES_SEARCH */
+	save_str(&xmit_names, -1, ctl->localnames->id);
+
+    /* time to address the message */
+    if (ctl->mda)	/* we have a declared MDA */
+    {
+	int	length = 0;
+	char	*names, *cmd;
+
+	/*
+	 * We go through this in order to be able to handle very
+	 * long lists of users and (re)implement %s.
+	 */
+	for (idp = xmit_names; idp; idp = idp->next)
+	    length += (strlen(idp->id) + 1);
+	names = (char *)alloca(length);
+	names[0] = '\0';
+	for (idp = xmit_names; idp; idp = idp->next)
+	{
+	    strcat(names, idp->id);
+	    strcat(names, " ");
+	}
+	cmd = (char *)alloca(strlen(ctl->mda) + length);
+	sprintf(cmd, ctl->mda, names);
+	if (outlevel == O_VERBOSE)
+	    error(0, 0, "about to deliver with: %s", cmd);
+
+#ifdef HAVE_SETEUID
+	/*
+	 * Arrange to run with user's permissions if we're root.
+	 * This will initialize the ownership of any files the
+	 * MDA creates properly.  (The seteuid call is available
+	 * under all BSDs and Linux)
+	 */
+	seteuid(ctl->uid);
+#endif /* HAVE_SETEUID */
+
+	sinkfp = popen(cmd, "w");
+
+#ifdef HAVE_SETEUID
+	/* this will fail quietly if we didn't start as root */
+	seteuid(0);
+#endif /* HAVE_SETEUID */
+
+	if (!sinkfp)
+	{
+	    error(0, 0, "MDA open failed");
+	    return(PS_IOERR);
+	}
+
+	sigchld = signal(SIGCHLD, SIG_DFL);
+    }
+    else
+    {
+	char	*ap, *ctt, options[MSGBUFSIZE];
+	int	smtperr;
+
+	/* build a connection to the SMTP listener */
+	if (!ctl->mda && ((sinkfp = smtp_open(ctl)) == NULL))
+	{
+	    free_str_list(&xmit_names);
+	    error(0, 0, "SMTP connect failed");
+	    return(PS_SMTP);
+	}
+
+	/*
+	 * Compute ESMTP options.  It's a kluge to use nxtaddr()
+	 * here because the contents of the Content-Transfer-Encoding
+	 * headers isn't semantically an address.  But it has the
+	 * desired tokenizing effect.
+	 */
+	options[0] = '\0';
+	if ((ctl->server.esmtp_options & ESMTP_8BITMIME)
+	    && ctthdr
+	    && (ctt = nxtaddr(ctthdr)))
+	    if (!strcasecmp(ctt,"7BIT"))
+		sprintf(options, " BODY=7BIT", ctt);
+	    else if (!strcasecmp(ctt,"8BIT"))
+		sprintf(options, " BODY=8BITMIME", ctt);
+	if ((ctl->server.esmtp_options & ESMTP_SIZE) && !delimited)
+	    sprintf(options + strlen(options), " SIZE=%d", len);
+
+	/*
+	 * Try to get the SMTP listener to take the header
+	 * From address as MAIL FROM (this makes the logging
+	 * nicer).  If it won't, fall back on the calling-user
+	 * ID.  This won't affect replies, which use the header
+	 * From address anyway.
+	 *
+	 * RFC 1123 requires that the domain name part of the
+	 * MAIL FROM address be "canonicalized", that is a
+	 * FQDN or MX but not a CNAME.  We'll assume the From
+	 * header is already in this form here (it certainly
+	 * is if rewrite is on).  RFC 1123 is silent on whether
+	 * a nonexistent hostname part is considered canonical.
+	 *
+	 * This is a potential problem if the MTAs further
+	 * upstream didn't pass canonicalized From lines, *and*
+	 * the local SMTP listener insists on them.
+	 */
+	if (!fromhdr || !(ap = nxtaddr(fromhdr)))
+	    ap = user;
+	if (SMTP_from(sinkfp, ap, options) != SM_OK)
+	{
+	    int smtperr = atoi(smtp_response);
+
+	    if (smtperr >= 400)
+		error(0, 0, "SMTP error: %s", smtp_response);
+
+	    /*
+	     * There'a one problem with this flow of control;
+	     * there's no way to avoid reading the whole message
+	     * off the server, even if the MAIL FROM response 
+	     * tells us that it's just to be discarded.  We could
+	     * fix this under IMAP by reading headers first, then
+	     * trying to issue the MAIL FROM, and *then* reading
+	     * the body...but POP3 can't do this.
+	     */
+
+	    switch (smtperr)
+	    {
+	    case 571: /* unsolicited email refused */
+		/*
+		 * SMTP listener explicitly refuses to deliver
+		 * mail coming from this address, probably due
+		 * to an anti-spam domain exclusion.  Respect
+		 * this.  Don't try to ship the message, and
+		 * don't prevent it from being deleted.
+		 */
+		sinkfp = (FILE *)NULL;
+		goto skiptext;
+
+	    case 452: /* insufficient system storage */
+		/*
+		 * Temporary out-of-queue-space condition on the
+		 * ESMTP server.  Don't try to ship the message, 
+		 * and suppress deletion so it can be retried on
+		 * a future retrieval cycle.
+		 */
+		delete_ok = FALSE;
+		sinkfp = (FILE *)NULL;
+		SMTP_rset(sockfp);	/* required by RFC1870 */
+		goto skiptext;
+
+	    case 552: /* message exceeds fixed maximum message size */
+		/*
+		 * Permanent no-go condition on the
+		 * ESMTP server.  Don't try to ship the message, 
+		 * and allow it to be deleted.
+		 */
+		sinkfp = (FILE *)NULL;
+		SMTP_rset(sockfp);	/* required by RFC1870 */
+		goto skiptext;
+
+	    default:	/* retry with invoking user's address */
+		if (SMTP_from(sinkfp, user, options) != SM_OK)
+		{
+		    error(0,0,"SMTP error: %s", smtp_response);
+		    return(PS_SMTP);	/* should never happen */
+		}
+	    }
+	}
+
+	/*
+	 * Now list the recipient addressees
+	 *
+	 * RFC 1123 requires that the domain name part of the
+	 * RCPT TO address be "canonicalized", that is a FQDN
+	 * or MX but not a CNAME.  RFC1123 doesn't say whether
+	 * the FQDN part can be null (as it frequently will be
+	 * here), but it's hard to see how this could cause a
+	 * problem.
+	 */
+	for (idp = xmit_names; idp; idp = idp->next)
+	    if (SMTP_rcpt(sinkfp, idp->id) == SM_OK)
+		good_addresses++;
+	    else
+	    {
+		bad_addresses++;
+		idp->val.num = 0;
+		error(0, 0, 
+		      "SMTP listener doesn't like recipient address `%s'", idp->id);
+	    }
+	if (!good_addresses && SMTP_rcpt(sinkfp, user) != SM_OK)
+	{
+	    error(0, 0, 
+		  "can't even send to calling user!");
+	    return(PS_SMTP);
+	}
+
+	/* tell it we're ready to send data */
+	SMTP_data(sinkfp);
+
+    skiptext:;
+    }
+
+    /* write all the headers */
+    if (ctl->mda)
+	n = fwrite(headers, 1, oldlen, sinkfp);
+    else if (sinkfp)
+	n = SockWrite(headers, 1, oldlen, sinkfp);
+
+    if (n < 0)
+    {
+	free(headers);
+	headers = NULL;
+	error(0, errno, "writing RFC822 headers");
+	if (ctl->mda)
+	{
+	    pclose(sinkfp);
+	    signal(SIGCHLD, sigchld);
+	}
+	return(PS_IOERR);
+    }
+    else if (outlevel == O_VERBOSE)
+	fputs("#", stderr);
+    free(headers);
+    headers = NULL;
+
+    /* write error notifications */
+#ifdef HAVE_RES_SEARCH
+    if (no_local_matches || bad_addresses)
+#else
+    if (bad_addresses)
+#endif /* HAVE_RES_SEARCH */
+    {
+	int	errlen = 0;
+	char	errhd[USERNAMELEN + POPBUFSIZE], *errmsg;
+
+	errmsg = errhd;
+	(void) strcpy(errhd, "X-Fetchmail-Warning: ");
+#ifdef HAVE_RES_SEARCH
+	if (no_local_matches)
+	{
+	    strcat(errhd, "no recipient addresses matched declared local names");
+	    if (bad_addresses)
+		strcat(errhd, "; ");
+	}
+#endif /* HAVE_RES_SEARCH */
+
+	if (bad_addresses)
+	{
+	    strcat(errhd, "SMTP listener rejected local recipient addresses: ");
+	    errlen = strlen(errhd);
+	    for (idp = xmit_names; idp; idp = idp->next)
+		if (!idp->val.num)
+		    errlen += strlen(idp->id) + 2;
+
+	    errmsg = alloca(errlen+3);
+	    (void) strcpy(errmsg, errhd);
+	    for (idp = xmit_names; idp; idp = idp->next)
+		if (!idp->val.num)
+		{
+		    strcat(errmsg, idp->id);
+		    if (idp->next)
+			strcat(errmsg, ", ");
+		}
+	}
+
+	strcat(errmsg, "\n");
+
+	/* ship out the error line */
+	if (ctl->mda)
+	    fwrite(errmsg, 1, strlen(errmsg), sinkfp);
+	else if (sinkfp)
+	    SockWrite(errmsg, 1, strlen(errmsg), sinkfp);
+    }
+
+    free_str_list(&xmit_names);
+
+#ifdef STUFFBLANK
+    /* output a crlf if zero length message body */
+    if (!len)
+    {
+	if (ctl->mda[0])
+	    fputs("\r\n", sinkfp);
+	else if (sinkfp)
+	    SockWrite("\r\n", 1, 2, sinkfp);
+    }
+#endif
+
+    /*
+     *  Body processing starts here
+     */
+
+    /* pass through the text lines */
+    while (delimited || len > 0)
+    {
+	if (!SockGets(buf, sizeof(buf)-1, sockfp))
+	    return(PS_SOCKET);
+	vtalarm(ctl->server.timeout);
+
+	/* write the message size dots */
+	if ((n = strlen(buf)) > 0)
+	{
+	    sizeticker += n;
+	    while (sizeticker >= SIZETICKER)
+	    {
+		if (outlevel > O_SILENT)
+		    error_build(".");
+		sizeticker -= SIZETICKER;
+	    }
+	}
+	len -= n;
+
+	/* check for end of message */
+	if (delimited && *buf == '.')
+	    if (buf[1] == '\r' && buf[2] == '\n')
+		break;
 
 	/* SMTP byte-stuffing */
-	if (*bufp == '.')
+	if (*buf == '.')
 	    if (ctl->mda)
 		fputs(".", sinkfp);
 	    else if (sinkfp)
-		SockWrite(bufp, 1, 1, sinkfp);
+		SockWrite(buf, 1, 1, sinkfp);
 
 	/* ship out the text line */
 	if (ctl->mda)
-	    n = fwrite(bufp, 1, strlen(bufp), sinkfp);
+	    n = fwrite(buf, 1, strlen(buf), sinkfp);
 	else if (sinkfp)
-	    n = SockWrite(bufp, 1, strlen(bufp), sinkfp);
+	    n = SockWrite(buf, 1, strlen(buf), sinkfp);
 
 	if (n < 0)
 	{
@@ -875,8 +902,9 @@ char *realname;		/* real name of host */
 	    fputc('*', stderr);
     }
 
-    if (line)
-	free(line);
+    /*
+     * End-of-message processing starts here
+     */
 
     if (outlevel == O_VERBOSE)
 	fputc('\n', stderr);
