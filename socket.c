@@ -742,6 +742,7 @@ static	int _check_fp;
 static	char *_check_digest;
 static 	char *_server_label;
 static	int _depth0ck;
+static	int _prev_err;
 
 SSL *SSLGetContext( int sock )
 {
@@ -755,6 +756,9 @@ SSL *SSLGetContext( int sock )
 }
 
 
+/* ok_return (preverify_ok) is 1 if this stage of certificate verification
+   passed, or 0 if it failed. This callback lets us display informative
+   errors, and perform additional validation (e.g. CN matches) */
 static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 {
 	char buf[257];
@@ -773,7 +777,7 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 	subj = X509_get_subject_name(x509_cert);
 	issuer = X509_get_issuer_name(x509_cert);
 
-	if (depth == 0) {
+	if (depth == 0 && !_depth0ck) {
 		_depth0ck = 1;
 		
 		if (outlevel == O_VERBOSE) {
@@ -817,9 +821,9 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 					if (ok_return && strict)
 						return (0);
 				}
-			} else if (ok_return && strict) {
+			} else if (ok_return) {
 				report(stderr, GT_("Server name not set, could not verify certificate!\n"));
-				return (0);
+				if (strict) return (0);
 			}
 		} else {
 			if (outlevel == O_VERBOSE)
@@ -871,14 +875,15 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 		}
 	}
 
-	if (err != X509_V_OK && (strict || outlevel == O_VERBOSE)) {
-		report(strict ? stderr : stdout, GT_("Warning: server certificate verification: %s\n"), X509_verify_cert_error_string(err));
+	if (err != X509_V_OK && err != _prev_err) {
+        	_prev_err = err;
+		report(stderr, GT_("Server certificate verification error: %s\n"), X509_verify_cert_error_string(err));
 		/* We gave the error code, but maybe we can add some more details for debugging */
 		switch (err) {
 		case X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT:
 			X509_NAME_oneline(issuer, buf, sizeof(buf));
 			buf[sizeof(buf) - 1] = '\0';
-			report(stdout, GT_("unknown issuer (first %d characters): %s\n"), sizeof(buf), buf);
+			report(stderr, GT_("unknown issuer (first %d characters): %s\n"), sizeof(buf)-1, buf);
 			break;
 		}
 	}
@@ -983,6 +988,7 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char
 	_check_fp = 1;
 	_check_digest = fingerprint;
 	_depth0ck = 0;
+	_prev_err = -1;
 
 	if( mycert || mykey ) {
 
@@ -1006,15 +1012,17 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char
 	}
 
 	/* Paranoia: was the callback not called as we expected? */
-	if ((fingerprint != NULL || certck) && !_depth0ck) {
+	if (!_depth0ck) {
 		report(stderr, GT_("Certificate/fingerprint verification was somehow skipped!\n"));
-		
-		if( NULL != SSLGetContext( sock ) ) {
-			/* Clean up the SSL stack */
-			SSL_free( _ssl_context[sock] );
-			_ssl_context[sock] = NULL;
+
+		if (fingerprint != NULL || certck) {
+			if( NULL != SSLGetContext( sock ) ) {
+				/* Clean up the SSL stack */
+				SSL_free( _ssl_context[sock] );
+				_ssl_context[sock] = NULL;
+			}
+			return(-1);
 		}
-		return(-1);
 	}
 
 	return(0);

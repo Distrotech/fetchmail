@@ -32,6 +32,10 @@
   than one server is configured. Patch by Brian Candler.
 * Honor sslcertpath setting even if sslcertck is unset. Patch by Brian
   Candler.
+* SSL certificate checking fixes, don't display same error message twice
+  in succession, make sure that Common Name and fingerprint checking are
+  only done once. Print all validation warnings/errors even if not in
+  verbose mode. Patch by Brian Candler.
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
