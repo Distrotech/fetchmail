@@ -9,7 +9,9 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/file.h>
+#if defined(HAVE_SYS_WAIT_H)
 #include <sys/wait.h>
+#endif
 #include <sys/stat.h>
 #include <errno.h>
 #if defined(STDC_HEADERS)

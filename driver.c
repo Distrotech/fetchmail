@@ -38,6 +38,11 @@
 #include  <sys/time.h>
 #include  <signal.h>
 
+#ifndef HAVE_STRFTIME /* For ctime prototype */
+#include  <sys/types.h>
+#include  <time.h>
+#endif
+
 #ifdef HAVE_GETHOSTBYNAME
 #include <netdb.h>
 #include "mx.h"

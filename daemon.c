@@ -10,7 +10,9 @@
 #include <errno.h>
 #include <signal.h>
 #include <sys/types.h>
+#ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>
+#endif
 #ifdef HAVE_FCNTL_H
 #include <fcntl.h>
 #else /* !HAVE_FCNTL_H */
@@ -71,6 +73,8 @@ sigchld_handler (int sig)
     while ((pid = wait3(&status, WNOHANG, 0)) > 0)
 	continue; /* swallow 'em up. */
 #else	/* Zooks! Nothing to do but wait(), and hope we don't block... */
+    int status;
+
     wait(&status);
 #endif
 }
