@@ -30,17 +30,16 @@
 #define LA_PROTOCOL	10
 #define LA_DAEMON	11
 #define LA_RCFILE	12
-#define	LA_IDFILE	13
-#define LA_USERNAME	14
-#define LA_REMOTEFILE	15
-#define	LA_LOCALFILE	16
-#define LA_MDA		17
-#define LA_PORT		18
-#define LA_SMTPHOST	19
-#define LA_LOGFILE	20
-#define LA_QUIT		21
-#define LA_NOREWRITE	22
-#define LA_YYDEBUG	23
+#define LA_USERNAME	13
+#define LA_REMOTEFILE	14
+#define	LA_LOCALFILE	15
+#define LA_MDA		16
+#define LA_PORT		17
+#define LA_SMTPHOST	18
+#define LA_LOGFILE	19
+#define LA_QUIT		20
+#define LA_NOREWRITE	21
+#define LA_YYDEBUG	22
  
 static char *shortoptions = "23PVaKkvS:scl:Fd:f:u:r:o:m:L:qN";
 static struct option longoptions[] = {
@@ -65,7 +64,6 @@ static struct option longoptions[] = {
   {"port",	required_argument, (int *) 0, LA_PORT       },
   {"smtphost",	required_argument, (int *) 0, LA_SMTPHOST   },
   {"logfile",	required_argument, (int *) 0, LA_LOGFILE    },
-  {"idfile",	required_argument, (int *) 0, LA_IDFILE     },
   {"quit",	no_argument,	   (int *) 0, LA_QUIT       },
   {"norewrite",	no_argument,	   (int *) 0, LA_NOREWRITE  },
   {"yydebug",	no_argument,	   (int *) 0, LA_YYDEBUG    },
@@ -193,11 +191,6 @@ struct hostrec *queryctl;
       case LA_RCFILE:
         rcfile = (char *) xmalloc(strlen(optarg)+1);
         strcpy(rcfile,optarg);
-        break;
-      case 'i':
-      case LA_IDFILE:
-        idfile = (char *) xmalloc(strlen(optarg)+1);
-        strcpy(idfile,optarg);
         break;
       case 'u':
       case LA_USERNAME:
@@ -354,13 +347,6 @@ struct hostrec *queryctl;
     strcpy(rcfile, home);
     strcat(rcfile, "/");
     strcat(rcfile, RCFILE_NAME);
-
-    idfile = 
-	(char *) xmalloc(strlen(home)+strlen(IDFILE_NAME)+2);
-
-    strcpy(idfile, home);
-    strcat(idfile, "/");
-    strcat(idfile, IDFILE_NAME);
 
     outlevel = O_NORMAL;
 

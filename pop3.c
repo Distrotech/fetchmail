@@ -142,8 +142,6 @@ badAuth:
     return(PS_ERROR);
 }
 
-static int use_uidl;
-
 static pop3_getrange(socket, queryctl, countp, firstp)
 /* get range of messages to be fetched */
 int socket;
@@ -164,76 +162,24 @@ int *firstp;
 
     /*
      * Newer, RFC-1725-conformant POP servers may not have the LAST command.
-     * Try LAST first as it simplifies life.  If it fails, go through the
-     * contortions with UID lists required.
-     *
-     * We could reverse this order (checking for UID capabilities first),
-     * but if LAST works we can finish faster and do fewer mallocs.
      */
     *firstp = 1;
-    use_uidl = 0;
-    if (*countp > 0 && !queryctl->fetchall) {
+    if (*countp > 0 && !queryctl->fetchall)
+    {
 	char id [IDLEN+1];
 	int num;
 
-	/* try LAST first */
 	gen_send(socket,"LAST");
 	ok = pop3_ok(buf,socket);
 	if (ok == 0 && sscanf(buf, "%d", &num) == 0)
 	    return(PS_ERROR);
 
 	/* crucial fork in the road here */
-	use_uidl = (ok != 0); 
-
-	if (!use_uidl)
+	if (ok != 0)
 	    *firstp = num + 1;
-	else
-	{
-	    /* grab the mailbox's UID list */
-	    gen_send(socket, "UIDL");
-	    if ((ok = pop3_ok(buf, socket)) == 0) {
-		while (SockGets(socket, buf, sizeof(buf)) >= 0) {
-		    if (outlevel == O_VERBOSE)
-			fprintf(stderr,"%s\n",buf);
-		    if (strcmp(buf, ".\n") == 0) {
-			break;
-		    }
-		    if (sscanf(buf, "%d %s\n", &num, id) == 2)
-			save_uid(&queryctl->mailbox, num, id);
-		}
-	    }
-	}
     }
 
     return(0);
-}
-
-static pop3_is_old(socket, queryctl, number)
-/* check a given message for age by UID */
-int socket;
-struct hostrec *queryctl;
-int number;
-{
-    if (!use_uidl)
-	return(0);
-    else
-    {
-	char buf [POPBUFSIZE+1];
-	int ok;
-
-	gen_send(socket, "UIDL %d", number);
-	if ((ok = pop3_ok(socket, buf)) != 0)
-	    return(ok);
-	else
-	{
-	    char	id[IDLEN+1];
-
-	    if (sscanf(buf, "%*d %s", id) == 2)
-		return(uid_in_list(&queryctl->saved, id));
-	    else
-		return(0);
-	}
-    }
 }
 
 static int pop3_fetch(socket, number, limit, lenp)
@@ -261,28 +207,6 @@ int number;
     /* send the deletion request */
     if ((ok = gen_transact(socket, "DELE %d", number)) != 0)
 	return(ok);
-
-    /* we may need to nuke the message's UID out of the mailbox list */
-    if (use_uidl)
-    {
-	char buf [POPBUFSIZE+1];
-
-	/*
-	 * This isn't strictly necessary.  We should probably just
-	 * stash the UID result from the last is_old call.
-	 */
-	gen_send(socket, "UIDL %d", number);
-	if ((ok = pop3_ok(socket, buf)) != 0)
-	    return(ok);
-	else
-	{
-	    char	id[IDLEN+1];
-
-	    if (sscanf(buf, "%*d %s", id) == 2)
-		delete_uid(&queryctl->mailbox, id); 
-	    return(0);
-	}
-    }
 }
 
 static struct method pop3 =
@@ -294,7 +218,7 @@ static struct method pop3 =
     pop3_ok,		/* parse command response */
     pop3_getauth,	/* get authorization */
     pop3_getrange,	/* query range of messages */
-    pop3_is_old,	/* check for age by UID */
+    NULL,		/* can't check for recent */
     pop3_fetch,		/* request given message */
     NULL,		/* no message trailer */
     pop3_delete,	/* how to delete a message */

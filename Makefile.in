@@ -72,7 +72,7 @@ ETAGS = etags -tw
 CTAGS = ctags -tw
 
 popobjs = socket.o getpass.o pop2.o pop3.o imap.o fetchmail.o options.o	\
-       rcfile_l.o rcfile_y.o rcfile.o daemon.o driver.o smtp.o xmalloc.o uid.o
+       rcfile_l.o rcfile_y.o rcfile.o daemon.o driver.o smtp.o xmalloc.o
 
 objs = $(popobjs) $(EXTRAOBJ) $(extras)
 
@@ -80,7 +80,7 @@ srcs = $(srcdir)/socket.c $(srcdir)/getpass.c $(srcdir)/pop2.c 		\
        $(srcdir)/pop3.c $(srcdir)/imap.c $(srcdir)/fetchmail.c		\
        $(srcdir)/options.c $(srcdir)/rcfile.c $(srcdir)/daemon.c 	\
        $(srcdir)/driver.c $(srcdir)/smtp.c $(srcdir)/xmalloc.c 		\
-       $(srcdir)/uid.c $(EXTRASRC)
+       $(EXTRASRC)
 
 .SUFFIXES:
 .SUFFIXES: .o .c .h .y .l .ps .dvi .info .texi

@@ -87,9 +87,6 @@ before retrieving new messages.
 .B \-f pathname, --fetchmailrc pathname
 Specify an alternate name for the .fetchmailrc run control file.
 .TP
-.B \-i pathname, --idfile pathname
-Specify an alternate name for the .fetchids file.
-.TP
 .B \-k, --keep
 Keep retrieved messages in folder on remote mailserver.  Normally, messages 
 are deleted from the folder on the mailserver after they have been retrieved
@@ -586,11 +583,6 @@ created by the new SMTP forwarding default.
 .TP 5
 ~/.fetchmailrc
 default run control file
-.TP 5
-~/.fetchids
-default location of file associating hosts with last message IDs seen
-(used only with newer RFC1725-compliant POP3 servers supporting the
-UIDL command).
 .TP 5
 ${TMPDIR}/fetchmail-${HOST}-${USER}
 lock file to help prevent concurrent runs.

@@ -145,12 +145,6 @@ char **argv;
 	strcat(tmpbuf, user);
     }
 
-    /* initialize UID handling */
-    if ((st = prc_filecheck(idfile)) != 0)
-	exit(st);
-    else
-	initialize_saved_lists(hostlist, idfile);
-
     /* perhaps we just want to check options? */
     if (versioninfo) {
 	printf("Taking options from command line and %s\n", rcfile);
@@ -247,10 +241,7 @@ char **argv;
     do {
 	for (hostp = hostlist; hostp; hostp = hostp->next) {
 	    if (!implicitmode || !hostp->skip)
-	    {
 		popstatus = query_host(hostp);
-		update_uid_lists(hostp);
-	    }
 	}
 
 	sleep(poll_interval);
@@ -269,8 +260,6 @@ void termhook(int sig)
 {
     if (sig != 0)
 	fprintf(stderr, "terminated with signal %d\n", sig);
-
-    write_saved_lists(hostlist, idfile);
 
     unlink(lockfile);
     exit(popstatus);
@@ -453,22 +442,6 @@ struct hostrec *queryctl;
     else
 	printf("  Text retrieved per message will be at most %d bytes.\n",
 	       linelimit);
-    if (queryctl->protocol > P_POP2)
-	if (!queryctl->saved)
-	    printf("  No UIDs saved from this host.\n");
-	else
-	{
-	    struct idlist *idp;
-	    int count = 0;
-
-	    for (idp = hostp->saved; idp; idp = idp->next)
-		++count;
-
-	    printf("  %d UIDs saved.\n", count);
-	    if (outlevel == O_VERBOSE)
-		for (idp = hostp->saved; idp; idp = idp->next)
-		    fprintf(stderr, "\t%s %s\n", hostp->servername, idp->id);
-	}
 }
 
 /*********************************************************************

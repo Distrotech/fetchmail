@@ -1,18 +1,22 @@
 			To-do list:
 
-Torture-test RPOP and RFC1725 POP UIDL features against a server that has them.
+Test RPOP feature against a server that has it.
 
 Support IMAP4 extensions for secure challenge-response, once they're actually
 standardized.  Also, use the CAPABILITY command to detect when we're talking
 to a true IMAP4 server and use SEARCH UNSEEN.
 
+Inflict pain on the person(s) responsible for removing LAST from POP3.
+
 			Release Notes:
 
-fetchmail-1.0 ():
+fetchmail-1.1 (Sat Sep 28 09:21:10 EDT 1996):
 
 * In POP3, don't send LAST if STAT shows count of waiting messages to be zero.
 
 * Document APOP better, we know it works now.
+
+* Lose the .fetchids file and give up on POP3 UIDs, they're a dead loss.
 
 fetchmail-1.0 (Thu Sep 26 11:59:38 EDT 1996):
 
@@ -25,7 +29,7 @@ fetchmail-1.0 (Thu Sep 26 11:59:38 EDT 1996):
   server greeting message; add the server host being queried to the
   message count information line).
 
-* `skip' option to make it easier to set up test entries.
+* Add `skip' option to make it easier to set up test entries.
 
 * Name change (it ain't just for POP any more).
 
