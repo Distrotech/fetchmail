@@ -20,7 +20,7 @@
 
 char *
 MD5Digest (s)
-char *s;
+unsigned char *s;
 {
   int i;
   MD5_CTX context;

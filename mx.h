@@ -2,11 +2,11 @@
 
 struct mxentry
 {
-    char	*name;
-    int		pref;
+    unsigned char	*name;
+    int			pref;
 };
 
-extern struct mxentry * getmxrecords(const char *);
+extern struct mxentry * getmxrecords(const unsigned char *);
 
 /* some versions of FreeBSD should declare this but don't */
 extern int h_errno;

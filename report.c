@@ -124,7 +124,7 @@ error (int status, int errnum, const char *message, ...)
 error (status, errnum, message, va_alist)
      int status;
      int errnum;
-     char *message;
+     const char *message;
      va_dcl
 #endif
 {
@@ -267,7 +267,7 @@ void
 error_build (const char *message, ...)
 #else
 error_build (message, va_alist)
-     char *message;
+     const char *message;
      va_dcl
 #endif
 {
@@ -369,7 +369,7 @@ error_complete (int status, int errnum, const char *message, ...)
 error_complete (status, errnum, message, va_alist)
      int status;
      int errnum;
-     char *message;
+     const char *message;
      va_dcl
 #endif
 {
@@ -487,7 +487,7 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
      int errnum;
      const char *file_name;
      unsigned int line_number;
-     char *message;
+     const char *message;
      va_dcl
 #endif
 {

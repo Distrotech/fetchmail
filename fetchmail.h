@@ -290,7 +290,7 @@ int doETRN (struct query *);
 struct query *hostalloc(struct query *); 
 int parsecmdline (int, char **, struct query *);
 void optmerge(struct query *, struct query *);
-char *MD5Digest (char *);
+char *MD5Digest (unsigned char *);
 int daemonize(const char *, void (*)(int));
 char *getpassword(char *);
 void escapes(const char *, char *);
