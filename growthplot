@@ -8,7 +8,7 @@ timeseries >/tmp/growthplot$$
 grep "^[0-9]" /tmp/growthplot$$ >/tmp/growthnumbers$$
 sed '/^4.2.9/,$d' </tmp/growthnumbers$$ >/tmp/growthannounce$$
 
-cat >IMAGE <<EOF
+cat >/tmp/growthimage$$ <<EOF
 set title "Fetchmail project growth history"
 set xlabel 'Days since project start'
 set ylabel 'Participants' 6	# Put it right over the Y axis
@@ -43,9 +43,9 @@ EOF
 			lasttotal=$total
 		fi
 	done
-) </tmp/growthplot$$ >>IMAGE
+) </tmp/growthplot$$ >>/tmp/growthimage$$
 
-cat >>IMAGE <<EOF
+cat >>/tmp/growthimage$$ <<EOF
 # First, plot total participants
 plot [] [0:] '/tmp/growthnumbers$$' using 5:4 \
 		title "Both lists" with points 3
@@ -59,8 +59,8 @@ replot '/tmp/growthannounce$$' using 5:2 \
 		title "fetchmail-friends" with points 2
 EOF
 
-echo "pause 9999" >>IMAGE
+echo "pause 9999" >>/tmp/growthimage$$
 
-gnuplot IMAGE
+gnuplot /tmp/growthimage$$
 
 rm -f /tmp/growth*
