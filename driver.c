@@ -22,6 +22,7 @@
 
 #ifdef HAVE_GETHOSTBYNAME
 #include <netdb.h>
+#include "mx.h"
 #endif /* HAVE_GETHOSTBYNAME */
 
 #ifdef KERBEROS_V4
@@ -300,14 +301,17 @@ char *hdr;	/* header line to be parsed, NUL to continue in previous hdr */
 }
 
 #ifdef HAVE_GETHOSTBYNAME
-static int is_host_alias(name, host, canonical)
-/* determine whether name is a DNS alias of either following hostname */
-const char *name, *host, *canonical;
+#define MX_RETRIES	3
+
+static int is_host_alias(name, queryctl)
+/* determine whether name is a DNS alias of the hostname */
+const char *name;
+struct hostrec	*queryctl;
 {
     struct hostent	*he;
+    int			i, n;
 
     /*
-
      * The first two checks are optimizations that will catch a good
      * many cases.  First, check against the hostname the user specified.
      * Odds are good this will either be the mailserver's FQDN or a
@@ -319,24 +323,46 @@ const char *name, *host, *canonical;
      * name doesn't match either is it time to call the bind library.
      * If this happens odds are good we're looking at an MX name.
      */
-    if (strcmp(name, host) == 0)
-	return(1);
-    else if (strcmp(name, canonical) == 0)
-	return(1);
-    else if ((he = gethostbyname(name)) == (struct hostent *)NULL)
+    if (strcmp(name, queryctl->servername) == 0)
+	return(TRUE);
+    else if (strcmp(name, queryctl->canonical_name) == 0)
+	return(TRUE);
+
+    /*
+     * We treat DNS lookup failure as a negative on the theory that
+     * the mailserver's DNS server is `nearby' and should be able
+     * to respond quickly and reliably.  Ergo if we get failure,
+     * the name isn't a mailserver alias.
+     */
+    else if ((he = gethostbyname(name)) && strcmp(queryctl->canonical_name, he->h_name) == 0)
+	return(TRUE);
+
+    /*
+     * Search for a name match on MX records pointing to the server
+     * site.  These may live far away, so allow a couple of retries.
+     */
+    for (i = 0; i < MX_RETRIES; i++)
     {
-	/*
-	 * We treat lookup failure as a negative on the theory that
-	 * the mailserver's DNS server is `nearby' and should be able
-	 * to respond quickly and reliably.  Ergo if we get failure,
-	 * the name isn't a mailserver alias.
-	 */
-	if (outlevel == O_VERBOSE)
-	    fprintf(stderr, "fetchmail: DNS lookup of %s failed\n", name);
-	return(FALSE);
+	struct mxentry mxresp[32];
+	int j;
+
+	n = getmxrecords(name, sizeof(mxresp)/sizeof(struct mxentry), mxresp);
+
+	if (n == -1)
+	    if (h_errno == TRY_AGAIN)
+	    {
+		sleep(1);
+		continue;
+	    }
+	    else
+		break;
+
+	for (j = 0; j < n; j++)
+	    if (strcmp(name, mxresp[i].name) == 0)
+		return(TRUE);
     }
-    else
-	return(strcmp(name, he->h_name) == 0);
+
+    return(FALSE);
 }
 
 void find_server_names(hdr, queryctl, xmit_names)
@@ -360,9 +386,7 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 			continue;
 		    else
 		    {
-			if (!is_host_alias(atsign+1, 
-					   queryctl->servername,
-					   queryctl->canonical_name))
+			if (!is_host_alias(atsign+1, queryctl))
 			    continue;
 			atsign[0] = '\0';
 		    }
