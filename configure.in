@@ -271,7 +271,7 @@ AC_ARG_WITH(kerberos5,
 
 # The "then" arm (nonempty $with_kerberos5) is kind of a crock.  It works for
 # configuring the BSD/OS Kerberos IV support, though. 
-if test "$with_kerberos5" != "yes"
+if test -n "$with_kerberos5"
 then
     # Path given
     CEFLAGS="$CEFLAGS -DKERBEROS_V5 -I$with_kerberos5/include"
