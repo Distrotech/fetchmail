@@ -1,5 +1,8 @@
 			Release Notes:
 
+pl 1.9.5 ():
+* Added -N, --nodetach option for debugging purposes.
+
 pl 1.9.4 (Mon Oct 28 20:58:48 EST 1994):
 * Correct status interpretation in closemailpipe() (thanks to Neil Harkins).
 * Tweak SMTP forwarding to only open one listener per SMTP host in daemon mode.

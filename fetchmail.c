@@ -50,6 +50,7 @@ int yydebug;		/* enable parse debugging */
 
 /* daemon mode control */
 int poll_interval;	/* poll interval in seconds */
+int nodetach;		/* if TRUE, don't detach daemon process */
 char *logfile;		/* log file for daemon mode */
 int quitmode;		/* if --quit was set */
 int check_only;		/* if --probe was set */
@@ -434,7 +435,7 @@ char **argv;
     /*
      * Maybe time to go to demon mode...
      */
-    if (poll_interval)
+    if (poll_interval && !nodetach)
 	daemonize(logfile, termhook);
 
     /* beyond here we don't want more than one fetchmail running per user */
@@ -511,8 +512,22 @@ char **argv;
 	endhostent();		/* release TCP/IP connection to nameserver */
 #endif /* HAVE_GETHOSTBYNAME */
 
+	if (outlevel == O_VERBOSE)
+	{
+	    time_t	now;
+
+	    time(&now);
+	    fprintf(stderr, "fetchmail: sleeping at %s", ctime(&now));
+	}
 	if (sleep(poll_interval))
 	    (void) fputs("fetchmail: awakened by SIGHUP\n", stderr);
+	if (outlevel == O_VERBOSE)
+	{
+	    time_t	now;
+
+	    time(&now);
+	    fprintf(stderr, "fetchmail: awakened at %s", ctime(&now));
+	}
     } while
 	(poll_interval);
 

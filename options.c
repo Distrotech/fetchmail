@@ -21,27 +21,28 @@
 #define LA_SILENT	4 
 #define LA_VERBOSE	5 
 #define LA_DAEMON	6
-#define LA_QUIT		7
-#define LA_LOGFILE	8
-#define LA_RCFILE	9
-#define LA_IDFILE	10
-#define LA_PROTOCOL	11
-#define LA_PORT		12
-#define LA_AUTHENTICATE	13
-#define LA_TIMEOUT	14
-#define LA_USERNAME	15
-#define LA_ALL          16
-#define LA_KILL		17
-#define	LA_KEEP		18
-#define LA_FLUSH        19
-#define LA_NOREWRITE	20
-#define LA_LIMIT	21
-#define LA_REMOTEFILE	22
-#define LA_SMTPHOST	23
-#define LA_MDA		24
-#define LA_YYDEBUG	25
+#define LA_NODETACH	7
+#define LA_QUIT		8
+#define LA_LOGFILE	9
+#define LA_RCFILE	10
+#define LA_IDFILE	11
+#define LA_PROTOCOL	12
+#define LA_PORT		13
+#define LA_AUTHENTICATE	14
+#define LA_TIMEOUT	15
+#define LA_USERNAME	16
+#define LA_ALL          17
+#define LA_KILL		18
+#define	LA_KEEP		19
+#define LA_FLUSH        20
+#define LA_NOREWRITE	21
+#define LA_LIMIT	22
+#define LA_REMOTEFILE	23
+#define LA_SMTPHOST	24
+#define LA_MDA		25
+#define LA_YYDEBUG	26
 
-static char *shortoptions = "?Vcsvd:qL:f:i:p:P:A:t:u:akKFnl:r:S:m:y";
+static char *shortoptions = "?Vcsvd:NqL:f:i:p:P:A:t:u:akKFnl:r:S:m:y";
 static struct option longoptions[] = {
   {"help",	no_argument,	   (int *) 0, LA_HELP        },
   {"version",   no_argument,       (int *) 0, LA_VERSION     },
@@ -49,6 +50,7 @@ static struct option longoptions[] = {
   {"silent",    no_argument,       (int *) 0, LA_SILENT      },
   {"verbose",   no_argument,       (int *) 0, LA_VERBOSE     },
   {"daemon",	required_argument, (int *) 0, LA_DAEMON      },
+  {"nodetach",	no_argument,	   (int *) 0, LA_NODETACH    },
   {"quit",	no_argument,	   (int *) 0, LA_QUIT        },
   {"logfile",	required_argument, (int *) 0, LA_LOGFILE     },
   {"fetchmailrc",required_argument,(int *) 0, LA_RCFILE      },
@@ -124,6 +126,10 @@ struct query *ctl;	/* option record to be initialized */
 	case 'd':
 	case LA_DAEMON:
 	    poll_interval = atoi(optarg);
+	    break;
+	case 'N':
+	case LA_NODETACH:
+	    nodetach = TRUE;
 	    break;
 	case 'q':
 	case LA_QUIT:
@@ -255,6 +261,7 @@ struct query *ctl;	/* option record to be initialized */
 	fputs("  -s, --silent      work silently\n", stderr);
 	fputs("  -v, --verbose     work noisily (diagnostic output)\n", stderr);
 	fputs("  -d, --daemon      run as a daemon once per n seconds\n", stderr);
+	fputs("  -N, --nodetach    don't detach daemon process\n", stderr);
 	fputs("  -q, --quit        kill daemon process\n", stderr);
 	fputs("  -L, --logfile     specify logfile name\n", stderr);
 	fputs("  -f, --fetchmailrc specify alternate run control file\n", stderr);

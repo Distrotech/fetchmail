@@ -134,6 +134,7 @@ extern int yydebug;		/* enable parse debugging */
 
 /* daemon mode control */
 extern int poll_interval;	/* poll interval in seconds */
+extern int nodetach;		/* if TRUE, don't detach daemon process */
 extern char *logfile;		/* log file for daemon mode */
 extern int quitmode;		/* if --quit was set */
 extern int check_only;		/* if --check was set */
