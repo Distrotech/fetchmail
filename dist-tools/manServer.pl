@@ -2462,12 +2462,20 @@ sub doEqn1
 
 sub initialise
 {
+	# Determine groff version if possible
+	my $groffver = `groff -v`;
+	$groffver =~ /^GNU groff version (\S+)/;
+	$groffver = $1;
+
 	# Parse the macro definition file for section names
 	if (open(MACRO, "/usr/lib/tmac/tmac.an") ||
 		open(MACRO, "/usr/lib/tmac/an") ||
 		open(MACRO, "/usr/lib/groff/tmac/tmac.an") ||
+		open(MACRO, "/usr/lib/groff/tmac/an.tmac") ||
 		open(MACRO, "/usr/share/tmac/tmac.an") ||
-		open(MACRO, "/usr/share/groff/tmac/tmac.an") )
+		open(MACRO, "/usr/share/groff/tmac/tmac.an") ||
+		open(MACRO, "/usr/share/groff/tmac/an.tmac") ||
+		open(MACRO, "/usr/share/groff/$groffver/tmac/an.tmac") )
 	{
 		while (<MACRO>)
 		{
