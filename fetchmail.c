@@ -600,12 +600,7 @@ int main (int argc, char **argv)
 	    }
 
 	    if (outlevel >= O_VERBOSE)
-	    {
-		time_t	now;
-
-		time(&now);
-		error(0, -1, "fetchmail: sleeping at %s", ctime(&now));
-	    }
+		error(0, -1, "fetchmail: sleeping at %s", rfc822timestamp());
 
 	    /*
 	     * With this simple hack, we make it possible for a foreground 
@@ -712,12 +707,7 @@ int main (int argc, char **argv)
 		signal(SIGHUP, SIG_IGN);
 
 	    if (outlevel >= O_VERBOSE)
-	    {
-		time_t	now;
-
-		time(&now);
-		error(0, -1, "awakened at %s", ctime(&now));
-	    }
+		error(0, -1, "awakened at %s", rfc822timestamp());
 	}
     } while
 	(run.poll_interval);

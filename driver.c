@@ -31,11 +31,6 @@
 #include  <sys/time.h>
 #include  <signal.h>
 
-#ifndef HAVE_STRFTIME /* For ctime prototype */
-#include  <sys/types.h>
-#include  <time.h>
-#endif
-
 #ifdef HAVE_RES_SEARCH
 #include <netdb.h>
 #include "mx.h"
@@ -866,8 +861,6 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 	    n = stuffline(ctl, buf);
 	    if (n != -1)
 	    {
-		time_t	now;
-
 		buf[0] = '\t';
 		if (good_addresses == 0)
 		{
@@ -890,24 +883,8 @@ static int readheaders(int sock, long fetchlen, long reallen, struct query *ctl,
 		else
 		    buf[1] = '\0';
 
-		time(&now);
-#ifdef HAVE_STRFTIME
-		/*
-		 * Conform to RFC822.  This is typically going to emit
-		 * a three-letter timezone for %Z, which is going to
-		 * be marked "obsolete syntax" in 822bis.  Note that we
-		 * generate a 4-digit year here.
-		 */
-		strftime(buf + strlen(buf), sizeof(buf) - strlen(buf), 
-			 "%a, %d %b %Y %H:%M:%S %Z\r\n", localtime(&now));
-#else
-		/*
-		 * This is really just a portability fallback, as the
-		 * date format ctime(3) emits is not RFC822
-		 * conformant.
-		 */
-		strcat(buf, ctime(&now));
-#endif /* HAVE_STRFTIME */
+		strcat(buf, rfc822timestamp());
+		strcat(buf, "\r\n");
 		n = stuffline(ctl, buf);
 	    }
 	}

@@ -19,6 +19,10 @@
 #ifdef HAVE_GETHOSTBYNAME
 #include <netdb.h>
 #endif /* HAVE_GETHOSTBYNAME */
+#ifndef HAVE_STRFTIME /* For ctime prototype */
+#include  <sys/types.h>
+#include  <time.h>
+#endif
 #include "fetchmail.h"
 
 extern char *getenv();	/* needed on sysV68 R3V7.1. */
@@ -99,6 +103,36 @@ char *host_fqdn(void)
 	return(xstrdup(tmpbuf));
 }
 
+char *rfc822timestamp(void)
+/* return a timestamp in RFC822 form */
+{
+    time_t	now;
+    static char buf[40];
+
+    time(&now);
+#ifdef HAVE_STRFTIME
+    /*
+     * Conform to RFC822.  This is typically going to emit
+     * a three-letter timezone for %Z, which is going to
+     * be marked "obsolete syntax" in 822bis.  Note that we
+     * generate a 4-digit year here, avoiding Y2K hassles.
+     * Note: max length of this timestamp in an English locale
+     * should be 29 chars, assuming a 3-character timezone.
+     */
+    strftime(buf, sizeof(buf)-1, 
+	     "%a, %d %b %Y %H:%M:%S %Z", localtime(&now));
+#else
+    /*
+     * This is really just a portability fallback, as the
+     * date format ctime(3) emits is not RFC822
+     * conformant.
+     */
+    strcpy(buf, ctime(&now));
+    buf[strlen(buf)-1] = '\0';	/* remove trailing \n */
+#endif /* HAVE_STRFTIME */
+
+    return(buf);
+}
 
 const char *showproto(int proto)
 /* protocol index to protocol name mapping */
