@@ -10,7 +10,8 @@
 <H1>Frequently Asked Questions About Fetchmail</H1>
 
 The current version of fetchmail is 4.0.  New in the FAQ: <a
-href="#O5">O5</a>, on what to do if your progress messages look garbled.<p>
+href="#O5">O5</a>, on what to do if your progress messages look
+garbled, and <a href="#T5">T5</a> on the Microsoft Exchange Server.<p>
 
 Before reporting any bug, please read <a href="#G3">G3</a> for advice
 on how to include diagnostic information that will get your bug fixed
@@ -66,6 +67,7 @@ when I may have multiple login sessions going?</a><br>
 <a href="#T2">T2. How can I use fetchmail with exim?</a><br>
 <a href="#T3">T3. How can I use fetchmail with smail?</a><br>
 <a href="#T4">T4. How can I use fetchmail with Lotus Notes?</a><br>
+<a href="#T5">T5. How can I use fetchmail with Microsoft Exchange Server?</a><br>
 
 <h1>Runtime fatal errors:</h1>
 
@@ -699,6 +701,16 @@ The Lotus Notes SMTP gateway tries to deduce when it should convert \n
 to \r\n, but its rules are not intuitive.  Use `forcecr'.<P>
 
 <hr>
+<h2><a name="T5">T5. How can I use fetchmail with Microsoft Exchange Server?</a></h2><p>
+
+Only single-drop mode is reliable; multi-drop is likely to give you
+problems with mailing-list mail.<P>
+
+The problem is that Microsoft Exchange Server seems to like to break
+up long To lists into multiple headers, and the multi-drop code only
+sees the last one.<P>
+
+<hr>
 <h2><a name="R1">R1. I think I've set up fetchmail correctly, but I'm not getting any mail.</a></h2>
 
 Maybe you have a .forward or alias set up that you've forgotten about.  You
@@ -1024,7 +1036,7 @@ To fix this problem, install a better POP3 server like qpopper.  Or
 better yet, install an <a href="http://www.washington.edu/imap">IMAP</a>
 server and chuck POP3 entirely.<p>
 
-$Id: fetchmail-FAQ.html,v 1.30 1997/06/13 04:26:32 esr Exp $<p>
+$Id: fetchmail-FAQ.html,v 1.31 1997/06/14 17:28:11 esr Exp $<p>
 
 <HR>
 <ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
