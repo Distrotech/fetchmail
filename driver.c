@@ -422,22 +422,40 @@ struct query *ctl;	/* query control record */
 		 * Try to extract the real envelope addressee.  We look here
 		 * specifically for the mailserver's Received line.
 		 * Note: this will only work for sendmail, or an MTA that
-		 * shares sendmail's convention of embedding the envelope
-		 * address in the Received line.
+		 * shares sendmail's convention for embedding the envelope
+		 * address in the Received line.  Sendmail itself only
+		 * does this when the mail has a single recipient.
 		 */
-		strcpy(rbuf, "by ");
-		strcat(rbuf, ctl->canonical_name);
-		if ((ok = strstr(bufp, rbuf)))
-		    ok = strstr(ok, "for <");
-		else
+		if ((ok = strstr(bufp, "by ")) == (char *)NULL)
 		    ok = (char *)NULL;
+		else
+		{
+		    char	*sp, *tp;
+
+		    /* extract space-delimited token after "by " */
+		    tp = rbuf;
+		    for (sp = ok + 3; !isspace(*sp); sp++)
+			*tp++ = *sp;
+		    *tp = '\0';
+
+		    /*
+		     * If it's a DNS name of the mail server, look for the
+		     * recipient name after a following "for".  Otherwise
+		     * punt.
+		     */
+		    if (is_host_alias(rbuf, ctl))
+			ok = strstr(sp, "for ");
+		    else
+			ok = (char *)NULL;
+		}
+
 		if (ok != 0)
 		{
 		    char	*sp, *tp;
 
 		    tp = rbuf;
 		    sp = ok + 4;
-		    if (*sp == '<')
+		    if (*ok == '<')
 			sp++;
 		    while (*sp && *sp != '>' && *sp != '@' && *sp != ';')
 			if (!isspace(*sp))
