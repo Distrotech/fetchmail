@@ -39,7 +39,7 @@
 #include "fetchmail.h"
 
 /* release info */
-#define         RELEASE_TAG	"3.1"
+#define         RELEASE_TAG	"1.0"
 
 #ifdef HAVE_PROTOTYPES
 /* prototypes for internal functions */
