@@ -1,25 +1,13 @@
-/* error.c -- error handler for noninteractive utilities
-   Copyright (C) 1990, 91, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
-
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2, or (at your option)
-any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
-
-/* Written by David MacKenzie <djm@gnu.ai.mit.edu>.
- * Heavily modified by Dave Bodenstab and ESR.
- * Bludgeoned into submission for SunOS 4.1.3 by
- *     Chris Cheyney <cheyney@netcom.com>.
- * Now it works even when the return from vprintf is unreliable.
+/* report.c -- report function for noninteractive utilities
+ *
+ * For license terms, see the file COPYING in this directory.
+ *
+ * This code is distantly descended from the error.c module written by
+ * David MacKenzie <djm@gnu.ai.mit.edu>.  It was redesigned and
+ * rewritten by Dave Bodenstab, then reseedesigned again by ESR, then
+ * bludgeoned into submission for SunOS 4.1.3 by Chris Cheyney
+ * <cheyney@netcom.com>.  It works even when the return from
+ * vprintf(3) is unreliable.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -58,24 +46,24 @@ void exit ();
 #define MALLOC(n)	xmalloc(n)	
 #define REALLOC(n,s)	xrealloc(n,s)	
 
-/* If NULL, error will flush stderr, then print on stderr the program
-   name, a colon and a space.  Otherwise, error will call this
+/* If NULL, report will flush stderr, then print on stderr the program
+   name, a colon and a space.  Otherwise, report will call this
    function without parameters instead.  */
-void (*error_print_progname) (
+void (*report_print_progname) (
 #if __STDC__ - 0
 			      void
 #endif
 			      );
 
-/* Used by error_build() and error_complete() to accumulate partial messages.  */
+/* Used by report_build() and report_complete() to accumulate partial messages.  */
 static unsigned int partial_message_size = 0;
 static unsigned int partial_message_size_used = 0;
 static char *partial_message;
 static unsigned use_stderr;
 static unsigned int use_syslog;
 
-/* This variable is incremented each time `error' is called.  */
-unsigned int error_message_count;
+/* This variable is incremented each time `report' is called.  */
+unsigned int report_message_count;
 
 #ifdef _LIBC
 /* In the GNU C library, there is a predefined variable for this.  */
@@ -161,8 +149,8 @@ report (FILE *errfp, message, va_alist)
   else
 #endif
     {
-      if (error_print_progname)
-	(*error_print_progname) ();
+      if (report_print_progname)
+	(*report_print_progname) ();
       else
 	{
 	  fflush (errfp);
@@ -187,7 +175,7 @@ report (FILE *errfp, message, va_alist)
 #endif
       fflush (errfp);
     }
-  ++error_message_count;
+  ++report_message_count;
 }
 
 /*
@@ -219,10 +207,10 @@ void report_init(int mode)
     }
 }
 
-/* Build an error message by appending MESSAGE, which is a printf-style
-   format string with optional args, to the existing error message (which may
-   be empty.)  The completed error message is finally printed (and reset to
-   empty) by calling error_complete().
+/* Build an report message by appending MESSAGE, which is a printf-style
+   format string with optional args, to the existing report message (which may
+   be empty.)  The completed report message is finally printed (and reset to
+   empty) by calling report_complete().
    If an intervening call to report() occurs when a partially constructed
    message exists, then, in an attempt to keep the messages in their proper
    sequence, the partial message will be printed as-is (with a trailing 
@@ -323,9 +311,9 @@ report_build (FILE *errfp, message, va_alist)
     }
 }
 
-/* Complete an error message by appending MESSAGE, which is a printf-style
-   format string with optional args, to the existing error message (which may
-   be empty.)  The completed error message is then printed (and reset to
+/* Complete an report message by appending MESSAGE, which is a printf-style
+   format string with optional args, to the existing report message (which may
+   be empty.)  The completed report message is then printed (and reset to
    empty.) */
 /* VARARGS */
 
@@ -424,7 +412,7 @@ report_complete (FILE *errfp, message, va_alist)
       fputs(partial_message, errfp);
       fflush (errfp);
 
-      ++error_message_count;
+      ++report_message_count;
     }
   else
     report(errfp, "%s", partial_message);
@@ -465,8 +453,8 @@ report_at_line (FILE *errfp, errnum, file_name, line_number, message, va_alist)
       old_line_number = line_number;
     }
 
-  if (error_print_progname)
-    (*error_print_progname) ();
+  if (report_print_progname)
+    (*report_print_progname) ();
   else
     {
       fflush (errfp);
@@ -493,7 +481,7 @@ report_at_line (FILE *errfp, errnum, file_name, line_number, message, va_alist)
   fprintf (errfp, message, a1, a2, a3, a4, a5, a6, a7, a8);
 #endif
 
-  ++error_message_count;
+  ++report_message_count;
   if (errnum)
     fprintf (errfp, ": %s", strerror (errnum));
   putc ('\n', errfp);
