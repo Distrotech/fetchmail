@@ -5,6 +5,7 @@ fetchmail-4.6.9 ():
 * Corrected MIME generation of bounce mail.
 * Prevent core dumps on 'for' and 'by' in names (bug introduced in 4.6.8).
 * Peter Hamlen's fix for bounce-message generation.
+* Silent mode now suppresses progress messages from 2xx responses in ETRN.
 
 There are 247 people on fetchmail-friends and 309 on fetchmail-announce.
 
