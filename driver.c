@@ -464,8 +464,21 @@ static int stuffline(struct query *ctl, char *buf)
      * use .<CR><LF> as EOM.  If it does, the server will already have
      * decorated any . lines it sends back up.
      */
-    if (!protocol->delimited && *buf == '.' && ctl->smtp_socket != -1)
-	SockWrite(ctl->smtp_socket, buf, 1);
+    if (*buf == '.')
+	if (protocol->delimited)	/* server has already byte-stuffed */
+	{
+	    if (ctl->mda)
+		++buf;
+	    else
+		/* writing to SMTP, leave the byte-stuffing in place */;
+	}
+        else /* if (!protocol->delimited)	/* not byte-stuffed already */
+	{
+	    if (!ctl->mda)
+		SockWrite(ctl->smtp_socket, buf, 1);	/* byte-stuff it */
+	    else
+		/* leave it alone */;
+	}
 
     /* we may need to strip carriage returns */
     if (ctl->stripcr)
