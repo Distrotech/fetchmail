@@ -22,6 +22,9 @@
 #else
 #include  <varargs.h>
 #endif
+#if defined(HAVE_ALLOCA_H)
+#include <alloca.h>
+#endif
 #include  <sys/time.h>
 #include  <signal.h>
 

@@ -14,6 +14,9 @@
 #if defined(HAVE_UNISTD_H)
 #include <unistd.h>
 #endif
+#if defined(HAVE_ALLOCA_H)
+#include <alloca.h>
+#endif
 #include <string.h>
 #include <signal.h>
 #include <pwd.h>
