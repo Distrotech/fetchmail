@@ -1,6 +1,13 @@
 			Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-3.3 ()
+
+features --
+
+* Correction to length-extraction code for servers that return (nnn octets).
+
+------------------------------------------------------------------------------
 fetchmail-3.2 (Mon Jan 27 02:51:10 EST 1997)
 
 features --
