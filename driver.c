@@ -42,6 +42,8 @@
 
 #define	SMTP_PORT	25	/* standard SMTP service port */
 
+int batchlimit;		/* how often to tear down the delivery connection */
+
 static const struct method *protocol;
 static jmp_buf	restart;
 
@@ -203,7 +205,17 @@ static FILE *smtp_open(ctl)
 /* try to open a socket to the appropriate SMTP server for this query */ 
 struct query *ctl;
 {
+    static int batchcount;
+
     ctl = ctl->leader; /* go to the SMTP leader for this query */
+
+    /* maybe it's time to close the socket in order to force delivery */
+    if (batchlimit && ctl->smtp_sockfp && batchcount++ == batchlimit)
+    {
+	fclose(ctl->smtp_sockfp);
+	ctl->smtp_sockfp = (FILE *)NULL;
+	batchcount = 0;
+    }
 
     /* if no socket to this host is already set up, try to open one */
     if (ctl->smtp_sockfp == (FILE *)NULL)
