@@ -910,8 +910,8 @@ static int load_params(int argc, char **argv, int optind)
     def_opts.listener = SMTP_MODE;
 
     /* this builds the host list */
-    if (prc_parse_file(rcfile, !versioninfo) != 0)
-	exit(PS_SYNTAX);
+    if ((st = prc_parse_file(rcfile, !versioninfo)) != 0)
+	exit(st);
 
     if ((implicitmode = (optind >= argc)))
     {

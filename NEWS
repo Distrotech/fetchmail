@@ -14,6 +14,7 @@ fetchmail-5.0.9 ():
   and works with at least one server.
 * Federico G. Schwindt's fix for NetBSD/OpenBSD --with-kerberos.
 * auth keyword and option changed to preauth.
+* Correct the exit value when .fetchmailrc permissions are wrong.
 
 There are 264 people on fetchmail-friends and 441 on fetchmail-announce.
 

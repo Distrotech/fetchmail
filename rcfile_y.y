@@ -387,14 +387,14 @@ int prc_filecheck(const char *pathname, const flag securecheck)
     if ((statbuf.st_mode & S_IFLNK) == S_IFLNK)
     {
 	fprintf(stderr, "File %s must not be a symbolic link.\n", pathname);
-	return(PS_AUTHFAIL);
+	return(PS_IOERR);
     }
 
     if (statbuf.st_mode & ~(S_IFREG | S_IREAD | S_IWRITE | S_IEXEC | S_IXGRP))
     {
 	fprintf(stderr, "File %s must have no more than -rwx--x--- (0710) permissions.\n", 
 		pathname);
-	return(PS_AUTHFAIL);
+	return(PS_IOERR);
     }
 
 #ifdef HAVE_GETEUID
@@ -404,7 +404,7 @@ int prc_filecheck(const char *pathname, const flag securecheck)
 #endif /* HAVE_GETEUID */
     {
 	fprintf(stderr, "File %s must be owned by you.\n", pathname);
-	return(PS_AUTHFAIL);
+	return(PS_IOERR);
     }
 #endif
     return(PS_SUCCESS);
