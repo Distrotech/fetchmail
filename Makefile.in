@@ -3,6 +3,9 @@
 #	Carl Harris, ceharris@mal.com
 #
 #	$Log: Makefile.in,v $
+#	Revision 1.4  1996/06/28 15:07:11  esr
+#	Gotcha.
+#
 #	Revision 1.3  1996/06/28 14:53:20  esr
 #	Licensing and copyright changes pursuant to Carl Harris handing me the
 #	baton.
@@ -242,9 +245,9 @@ headers = $(srcdir)/popclient.h $(srcdir)/socket.h $(srcdir)/poproto.h
 extra = $(srcdir)/alloca.c $(srcdir)/bzero.[ch] $(srcdir)/errorcodes \
 	$(srcdir)/getopt.[ch] $(srcdir)/getopt1.c $(srcdir)/md5*.[ch] \
 	$(srcdir)/strcasecmp.c $(srcdir)/strdup.c
-docs = $(srcdir)/README $(srcdir)/INSTALL $(srcdir)/RFC/*.txt \
-	$(srcdir)/*.man $(srcdir)/*.texi $(srcdir)/*.info \
-	$(srcdir)/sample.poprc $(srcdir)/NEWS
+docs = $(srcdir)/COPYING $(srcdir)/README $(srcdir)/INSTALL $(srcdir)/NEWS \
+	$(srcdir)/RFC/*.txt \
+	$(srcdir)/*.man	$(srcdir)/sample.poprc
 config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/config.guess \
 	$(srcdir)/config.h.in $(srcdir)/config.sub
 scripts = $(srcdir)/install.sh $(srcdir)/mkinstalldirs
