@@ -808,23 +808,19 @@ char *realname;		/* real name of host */
 	{
 	    int smtperr = atoi(smtp_response);
 
-	    if (smtperr >= 400 && smtperr != 571 || smtperr != 501)
-		error(0, -1, "SMTP error: %s", smtp_response);
-
 	    /*
-	     * There's one problem with this flow of control;
-	     * there's no way to avoid reading the whole message
-	     * off the server, even if the MAIL FROM response 
-	     * tells us that it's just to be discarded.  We could
-	     * fix this under IMAP by reading headers first, then
-	     * trying to issue the MAIL FROM, and *then* reading
-	     * the body...but POP3 can't do this.
+	     * Suppress error message only if the response specifically 
+	     * means `excluded for policy reasons'.  We *should* see
+	     * an error when the return code is less specific.
 	     */
+	    if (smtperr >= 400 && smtperr != 571)
+		error(0, -1, "SMTP error: %s", smtp_response);
 
 	    switch (smtperr)
 	    {
-	    case 571:	/* unsolicited email refused */
-	    case 501:	/* exim's antispam response (temporary) */
+	    case 571:	/* sendmail's "unsolicited email refused" */
+	    case 501:	/* exim's old antispam response */
+	    case 550:	/* exim's new antispam response (temporary) */
 		/*
 		 * SMTP listener explicitly refuses to deliver
 		 * mail coming from this address, probably due
