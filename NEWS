@@ -13,6 +13,7 @@ fetchmail-5.1.1 ():
 * Fix lexer to permit `antispam -1'.
 * Added workaround, fetchmailconf warning, and FAQ about Novell GroupWise.
 * John Cigas's delay patch to avoid a timing problem with plugins.
+* Canonicalize both name and password.
 
 There are 266 people on fetchmail-friends and 444 on fetchmail-announce.
 

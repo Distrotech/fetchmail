@@ -53,6 +53,7 @@
  */
 #define		MSGBUFSIZE	8192
 
+#define		NAMELEN		64	/* max username length */
 #define		PASSWORDLEN	64	/* max password length */
 #define		DIGESTLEN	33	/* length of MD5 digest */
 

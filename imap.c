@@ -837,17 +837,17 @@ static int do_cram_md5 (int sock, struct query *ctl)
     }
 }
 
-int imap_canonicalize(char *result, char *passwd)
+int imap_canonicalize(char *result, char *raw, int maxlen)
 /* encode an IMAP password as per RFC1730's quoting conventions */
 {
     int i, j;
 
     j = 0;
-    for (i = 0; i < strlen(passwd); i++)
+    for (i = 0; i < strlen(raw) && i < maxlen; i++)
     {
-	if ((passwd[i] == '\\') || (passwd[i] == '"'))
+	if ((raw[i] == '\\') || (raw[i] == '"'))
 	    result[j++] = '\\';
-	result[j++] = passwd[i];
+	result[j++] = raw[i];
     }
     result[j] = '\0';
 
@@ -858,7 +858,6 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
 /* apply for connection authorization */
 {
     int ok = 0;
-    char	password[PASSWORDLEN*2];
 
     /* probe to see if we're running IMAP4 and can use RFC822.PEEK */
     capabilities[0] = '\0';
@@ -1002,8 +1001,15 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     };
 #endif /* __UNUSED__ */
 
-    imap_canonicalize(password, ctl->password);
-    ok = gen_transact(sock, "LOGIN \"%s\" \"%s\"", ctl->remotename, password);
+    {
+	/* these sizes guarantee no buffer overflow */
+	char	remotename[NAMELEN*2+1], password[PASSWORDLEN*2+1];
+
+	imap_canonicalize(remotename, ctl->remotename, NAMELEN);
+	imap_canonicalize(password, ctl->password, PASSWORDLEN);
+	ok = gen_transact(sock, "LOGIN \"%s\" \"%s\"", remotename, password);
+    }
+
     if (ok)
 	return(ok);
     
