@@ -48,6 +48,7 @@ static int _get_ifinfo_(int socket_fd, FILE *stats_file, const char *ifname,
 	struct ifreq request;
 	char *cp, buffer[256];
 	int found = 0;
+	int counts[4];
 
 	/* initialize result */
 	memset((char *) ifinfo, 0, sizeof(ifinfo_t));
@@ -58,8 +59,17 @@ static int _get_ifinfo_(int socket_fd, FILE *stats_file, const char *ifname,
 		if (!strncmp(cp, ifname, namelen) &&
 				cp[namelen] == ':') {
 			cp += namelen + 1;
-			sscanf(cp, "%d %*d %*d %*d %*d %d %*d %*d %*d %*d %*d",
-				&ifinfo->rx_packets, &ifinfo->tx_packets);
+			if (sscanf(cp, "%d %d %*d %*d %*d %d %*d %d %*d %*d"
+			       " %*d %*d %d",counts, counts+1, counts+2, 
+				   counts+3,&found)>4) { /* found = dummy */
+			        /* newer kernel with byte counts */
+			        ifinfo->rx_packets=counts[1];
+			        ifinfo->tx_packets=counts[3];
+			} else {
+			        /* older kernel, no byte counts */
+			        ifinfo->rx_packets=counts[0];
+			        ifinfo->tx_packets=counts[2];
+			}
                         found = 1;
 		}
 	}

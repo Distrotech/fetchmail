@@ -15,6 +15,7 @@ fetchmail-4.3.2 ()
 * More slow-UIDL patches from Wolfgang Wander.
 * Yet another attempt to fix IMAP-K4.  This one, my beta-testers say, works.
 * Only re-poll on actual dispatches (not just fetches).
+* kwrohrer's patch for interface option on newer Linux kernels.
 
 There are 262 people on fetchmail-friends and 54 on fetchmail-announce.
 
