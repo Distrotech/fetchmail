@@ -101,7 +101,7 @@ const unsigned char *host;	/* server hostname */
 		    last_nws = *from;
 		if (*from == '<')
 		    state = 3;
-		else if (*from == '@')
+		else if (*from == '@' || *from == '!')
 		    has_host_part = TRUE;
 		else if (*from == '"')
 		    state = 2;
@@ -158,7 +158,7 @@ const unsigned char *host;	/* server hostname */
 		break;
 
 	    case 3:	/* we're in a <>-enclosed address */
-		if (*from == '@')
+		if (*from == '@' || *from == '!')
 		    has_host_part = TRUE;
 		else if (*from == '>' && from[-1] != '<')
 		{
