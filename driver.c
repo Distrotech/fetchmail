@@ -1741,7 +1741,7 @@ const struct method *proto;	/* protocol method table */
 		    {
 			flag toolarge = NUM_NONZERO(ctl->limit)
 			    && msgsizes && (msgsizes[num-1] > ctl->limit);
-			flag oldmsg = (protocol->is_old && (protocol->is_old)(sock,ctl,num));
+			flag oldmsg = (!new) || (protocol->is_old && (protocol->is_old)(sock,ctl,num));
 			flag fetch_it = !toolarge 
 			    && (ctl->fetchall || force_retrieval || !oldmsg);
 			flag suppress_delete = FALSE;
