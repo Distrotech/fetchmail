@@ -70,7 +70,7 @@ statement	: SET BATCHLIMIT MAP NUMBER	{batchlimit = $4;}
 
 /* 
  * The way the next two productions are written depends on the fact that
- * userspecs cannot be empty.  It's a kluge to deal with files that sset
+ * userspecs cannot be empty.  It's a kluge to deal with files that set
  * up a load of defaults and then have poll statements following with no
  * user options at all. 
  */
@@ -78,7 +78,8 @@ statement	: SET BATCHLIMIT MAP NUMBER	{batchlimit = $4;}
 		| define_server serverspecs userspecs
 		;
 
-define_server	: POLL STRING	{strcpy(current.servername, $2);}
+define_server	: POLL STRING	{strcpy(current.servername, $2);
+						current.skip = FALSE;}
 		| SKIP STRING	{strcpy(current.servername, $2);
 						current.skip = TRUE;}
 		| DEFAULTS	{strcpy(current.servername,"defaults");}

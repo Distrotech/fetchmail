@@ -30,6 +30,8 @@ bugs --
 
 * Fixed a fencepost error in the APOP code that was causing a core dump.
 
+* Skip flag wasn't getting reset on poll hosts following a skipped one.
+
 fetchmail-2.0 (Mon Nov 18 00:32:17 EST 1996):
 
 * Fix typo in setitimer call setup that caused obscure bugs under FreeBSD.
