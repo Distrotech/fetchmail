@@ -35,6 +35,7 @@ AC_SUBST(CEFLAGS)
 AC_SUBST(LDEFLAGS)
 AC_SUBST(LIBOBJS)
 AC_SUBST(POMAKE)
+AC_SUBST(LOCALE_DIR)
 
 PACKAGE=`sed -n '/PACKAGE *= *\(.*\)/s//\1/p' <$srcdir/Makefile.in`
 AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
@@ -226,7 +227,13 @@ AC_CHECK_SIZEOF(long)
 if test "$USE_NLS" = "yes"
 then
 	echo 'Enabling internationalization support...'
-	POMAKE='$(MAKE) -C po'
+	POMAKE='cd po; $(MAKE)'
+  	if test "x$prefix" != xNONE; then
+		LOCALE_DIR=$prefix/share/locale
+  	else
+		LOCALE_DIR=$ac_default_prefix/share/locale
+	fi
+	EXTRADEFS="$EXTRADEFS -DLOCALEDIR='\"${LOCALE_DIR}\"'"
 else
 	echo 'Disabling internationalization support...'
 	POMAKE="@echo '(NLS support disabled)'; #"
