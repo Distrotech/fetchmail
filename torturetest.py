@@ -173,6 +173,9 @@ class TortureGUI:
                 self.site = site
                 self.display(self.site)
                 break
+    def on_test_button_activate(self, obj):
+        self.site.fetch()
+        print site.output
 
 if __name__ == "__main__":
     # Start by reading in the sitelist
