@@ -440,7 +440,7 @@ class ListEdit(Frame):
 	if not select:
 	    helpwin(listboxhelp)
 	else:
-	    index = select[0]
+	    index = string.atoi(select[0])
 	    if index:
 		self.listwidget.delete(index)
 		if self.list != None: del self.list[index]
