@@ -195,7 +195,7 @@ char *id;
 {
     if (*idl == (struct idlist *) 0)
 	return((char *) 0);
-    else if (strcmp(id, (*idl)->id))
+    else if (strcmp(id, (*idl)->id) == 0)
 	return((*idl)->val.id2 ? (*idl)->val.id2 : (*idl)->id);
     else
 	return(idpair_find(&(*idl)->next, id));
