@@ -4,7 +4,7 @@
 # So just uncomment all the lines marked QNX.
 
 PACKAGE = fetchmail
-VERSION = 4.7.3
+VERSION = 4.7.4
 
 SUBDIRS = @INTLSUB@ @POSUB@  
 

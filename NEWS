@@ -1,6 +1,6 @@
 				Release Notes:
 
-fetchmail-4.7.4 ():
+fetchmail-4.7.4 (Mon Jan  4 13:26:32 EST 1999):
 * Error message cleanup.
 * HTML cleanup in design notes and FAQ, thanks to Byrial Jensen.
 * Don't get message sizes when --check is on.
@@ -15,7 +15,7 @@ fetchmail-4.7.4 ():
   on all dependent frames.
 * Source distribution now includes Debian package data under debian/
 
-There are 249 people on fetchmail-friends and 335 on fetchmail-announce.
+There are 249 people on fetchmail-friends and 334 on fetchmail-announce.
 
 fetchmail-4.7.3 (Thu Dec 31 11:54:01 EST 1998):
 * Added new FAQ item G11 and added material to R1.
