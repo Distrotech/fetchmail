@@ -1814,6 +1814,10 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		strcpy(shroud, ctl->password);
 
 	    ok = (protocol->getauth)(mailserver_socket, ctl, buf);
+
+	    /* prevent shrouding later on -- it might backfire */
+	    shroud[0] = '\0';
+
 	    if (ok != 0)
 	    {
 		if (ok == PS_LOCKBUSY)
@@ -2617,7 +2621,7 @@ va_dcl
     {
 	char *cp;
 
-	if (shroud && shroud[0] && (cp = strstr(buf, shroud)))
+	if (shroud[0] && (cp = strstr(buf, shroud)))
 	{
 	    char	*sp;
 
