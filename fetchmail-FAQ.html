@@ -16,7 +16,7 @@ content="Frequently asked questions about fetchmail."/>
 Page</a></td>
 <td width="30%" align="center">To <a href="/~esr/sitemap.html">Site
 Map</a></td>
-<td width="30%" align="right">$Date: 2002/12/26 22:06:03 $</td>
+<td width="30%" align="right">$Date: 2003/01/14 13:11:32 $</td>
 </tr>
 </table>
 
@@ -1822,7 +1822,7 @@ accept mail sent to user@my-company.co.uk)</p>
 
 <p>Note that Demon may delete mail on the server which is more than
 30 days old; see their <a
-href="http://www.demon.net/helpdesk/products/mail/sdps-tech.shtm">POP3
+href="http://www.demon.net/helpdesk/products/mail/sdps-tech.shtml">POP3
 page</a> for details.</p>
 
 <h3>The SDPS extension</h3>
@@ -3442,13 +3442,12 @@ rejected if a dns server is unreachable or down.</p>
 
 <p>A permanent reject response is of the form 5xx (like 550).</p>
 
-<p>You could tell your smtp server to not lookup any addresses if you are
+<p>You could tell your SMTP server to not lookup any addresses if you are
 not keen on checking the sender addresses. This problem typically
 occurs if your mail server is not checking the sender addresses, but
 your local server is.</p>
 
-<p>Or, you could change the response code to a permanent reject for
-lookup failures if you want the previous situation to continue.</p>
+<p>Or you could declare <code>antispam 451<code></p>
 
 <p>Or, you could check your nameserver configuration and query logs for
 dns errors.</p>
@@ -3462,7 +3461,7 @@ dns errors.</p>
 Page</a></td>
 <td width="30%" align="center">To <a href="/~esr/sitemap.html">Site
 Map</a></td>
-<td width="30%" align="right">$Date: 2002/12/26 22:06:03 $</td>
+<td width="30%" align="right">$Date: 2003/01/14 13:11:32 $</td>
 </tr>
 </table>
 
