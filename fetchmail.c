@@ -759,6 +759,8 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(server.interface_pair);
 #endif /* linux */
 
+    FLAG_MERGE(server.plugin);
+    FLAG_MERGE(server.plugout);
     FLAG_MERGE(wildcard);
     FLAG_MERGE(remotename);
     FLAG_MERGE(password);
@@ -1490,6 +1492,15 @@ void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
 	else if (outlevel >= O_VERBOSE)
 	    printf("  No monitor interface specified.\n");
 #endif
+
+	if (ctl->server.plugin)
+	    printf("  Server connections will be mode via plugin %s (--plugin %s).\n", ctl->server.plugin, ctl->server.plugin);
+	else if (outlevel >= O_VERBOSE)
+	    printf("  No plugin command specified.\n");
+	if (ctl->server.plugout)
+	    printf("  Listener connections will be mode via plugout %s (--plugout %s).\n", ctl->server.plugout, ctl->server.plugout);
+	else if (outlevel >= O_VERBOSE)
+	    printf("  No plugout command specified.\n");
 
 	if (ctl->server.protocol > P_POP2 && (ctl->server.protocol != P_ETRN))
 	    if (!ctl->oldsaved)

@@ -1446,9 +1446,10 @@ const struct method *proto;	/* protocol method table */
 #if INET6
 	if ((sock = SockOpen(realhost, 
 			     ctl->server.service ? ctl->server.service : protocol->service,
-			     ctl->server.netsec)) == -1)
+			     ctl->server.netsec)) == -1, ctl->server.plugin
+	    )
 #else /* INET6 */
-	if ((sock = SockOpen(realhost, port, NULL)) == -1)
+	if ((sock = SockOpen(realhost, port, NULL, ctl->server.plugin)) == -1)
 #endif /* INET6 */
 	{
 #if !INET6

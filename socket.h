@@ -9,9 +9,11 @@
 
 /* Create a new client socket; returns (FILE *)NULL on error */
 #if INET6
-int SockOpen(const char *host, const char *service, const char *options);
+int SockOpen(const char *host, const char *service, const char *options,
+	     const char *plugin);
 #else /* INET6 */
-int SockOpen(const char *host, int clientPort, const char *options);
+int SockOpen(const char *host, int clientPort, const char *options,
+	     const char *plugin);
 #endif /* INET6 */
 
 /* 

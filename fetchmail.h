@@ -199,6 +199,8 @@ struct hostdata		/* shared among all user connections to given server */
     struct interface_pair_s *interface_pair;
 #endif /* linux */
 
+    char *plugin,*plugout;
+
     /* computed for internal use */
     const struct method *base_protocol;	/* relevant protocol method table */
     int poll_count;			/* count of polls so far */

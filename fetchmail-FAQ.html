@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/10/29 18:21:39 $
+<td width="30%" align=right>$Date: 1998/11/02 16:25:06 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -81,6 +81,7 @@ IP address?</a><br>
 <a href="#K2">K2. How can I use fetchmail with IPv6 and IPsec?</a><br>
 <a href="#K3">K3. How can I get fetchmail to work with ssh?</a><br>
 <a href="#K4">K4. What do I have to do to use the IMAP-GSS protocol?</a><br>
+<a href="#K5">K5. How can I use fetchmail with SSL?</a><br>
 
 <h1>Runtime fatal errors:</h1>
 
@@ -1468,6 +1469,31 @@ Now you don't have to worry about your password appearing in cleartext in
 your .fetchmailrc, or across the network.<p>
 
 <hr>
+<h2><a name="K5">K5. How can I use fetchmail with SSL?</a></h2>
+
+The U.S. government's never-to-be-sufficiently-damned EAR regulations
+prevent me from including SSL library hooks in the distribution.
+However, the First Amendment of the U.S. Constitution hasn't been
+eviscerated (not yet, anyway -- our would-be totalitarians are still
+working on trashing the Second Amendment).<P>
+
+I can therefore <em>tell</em> you, in documentation, that there
+appears to be a way to set up an SSL command chain using the `plugin'
+option (originally designed for handling proxy connections across
+firewalls).<P>
+
+Get your hands on the <a
+href="http://www.psy.uq.edu.au:8080/~ftp/Crypto/">SSLEay</a> code.
+Now make yourself a script called `ssl_connect' that calls the SSLeay
+utility `s_client' as follows:<P>
+
+<pre>
+/usr/local/ssl/bin/s_client -quiet -ssl2 -connect $1:$2
+</pre>
+
+Now add `plugin ssl_connect' to the server options for your connection.<P>
+
+<hr>
 <h2><a name="R1">R1. Fetchmail isn't working, and -v shows `SMTP connect failed' messages.</a></h2>
 
 Fetchmail itself is probably working, but your SMTP port 25 listener
@@ -2184,7 +2210,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/10/29 18:21:39 $
+<td width="30%" align=right>$Date: 1998/11/02 16:25:06 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

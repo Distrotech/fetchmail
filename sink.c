@@ -111,7 +111,8 @@ static int smtp_open(struct query *ctl)
 #endif /* INET6 */
 	    }
 
-	    if ((ctl->smtp_socket = SockOpen(parsed_host,portnum,NULL)) == -1)
+	    if ((ctl->smtp_socket = SockOpen(parsed_host,portnum,NULL,
+					     ctl->server.plugout)) == -1)
 		continue;
 
 	    /* first, probe for ESMTP */
@@ -128,7 +129,8 @@ static int smtp_open(struct query *ctl)
 	    ctl->smtp_socket = -1;
 
 	    /* if opening for ESMTP failed, try SMTP */
-	    if ((ctl->smtp_socket = SockOpen(parsed_host,portnum,NULL)) == -1)
+	    if ((ctl->smtp_socket = SockOpen(parsed_host,portnum,NULL,
+					     ctl->server.plugout)) == -1)
 		continue;
 
 	    if (SMTP_ok(ctl->smtp_socket) == SM_OK && 

@@ -59,11 +59,13 @@
 #define LA_EXPUNGE	37
 #define LA_MDA		38
 #define LA_BSMTP	39
-#define LA_NETSEC	40
-#define LA_INTERFACE    41
-#define LA_MONITOR      42
-#define LA_CONFIGDUMP	43
-#define LA_YYDEBUG	44
+#define LA_PLUGIN	40
+#define LA_PLUGOUT	41
+#define LA_NETSEC	42
+#define LA_INTERFACE    43
+#define LA_MONITOR      44
+#define LA_CONFIGDUMP	45
+#define LA_YYDEBUG	46
 
 /* options still left: CDgGhHjJoORwWxXYz */
 static const char *shortoptions = 
@@ -126,6 +128,8 @@ static const struct option longoptions[] = {
   {"interface",	required_argument, (int *) 0, LA_INTERFACE   },
   {"monitor",	required_argument, (int *) 0, LA_MONITOR     },
 #endif /* defined(linux) && !INET6 */
+  {"plugin",	required_argument, (int *) 0, LA_PLUGIN      },
+  {"plugout",	required_argument, (int *) 0, LA_PLUGOUT     },
 
   {"configdump",no_argument,	   (int *) 0, LA_CONFIGDUMP  },
 
@@ -495,6 +499,12 @@ struct query *ctl;	/* option record to be initialized */
 	    ctl->server.monitor = xstrdup(optarg);
 	    break;
 #endif /* defined(linux) && !INET6 */
+	case LA_PLUGIN:
+	    ctl->server.plugin = xstrdup(optarg);
+	    break;
+	case LA_PLUGOUT:
+	    ctl->server.plugout = xstrdup(optarg);
+	    break;
 
 	case 'y':
 	case LA_YYDEBUG:
@@ -550,6 +560,8 @@ struct query *ctl;	/* option record to be initialized */
 	P("  -I, --interface   interface required specification\n");
 	P("  -M, --monitor     monitor interface for activity\n");
 #endif
+	P("      --plugin      specify external command to open connection\n");
+	P("      --plugout     specify external command to open smtp connection\n");
 
 	P("  -p, --protocol    specify retrieval protocol (see man page)\n");
 	P("  -U, --uidl        force the use of UIDLs (pop3 only)\n");

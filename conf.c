@@ -270,6 +270,9 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	    stringdump("monitor", ctl->server.monitor);
 #endif /* linux */
 
+	    stringdump("plugin", ctl->server.plugin);
+	    stringdump("plugout", ctl->server.plugout);
+
 	    indent(0);
 	    fputs("'users': ", stdout);
 	    indent('[');

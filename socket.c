@@ -42,43 +42,73 @@ static int h_errno;
 #include <net/security.h>
 #endif /* NET_SECURITY */
 
-#if INET6
-int SockOpen(const char *host, const char *service, const char *options)
+static int handle_plugin(const char *host,
+			 const char *service, const char *plugin)
+/* get a socket mediated through a given external command */
 {
-  int i;
-  struct addrinfo *ai, req;
+    if (plugin) 
+    {
+	int fds[2];
+	if (socketpair(AF_UNIX,SOCK_STREAM,0,fds))
+	{
+	    error(0, 0, "fetchmail: socketpair failed: %s(%d)",strerror(errno),errno);
+	    return -1;
+	}
+	if (!fork())
+	{
+	    dup2(fds[0],0);
+	    dup2(fds[0],1);
+	    if (outlevel >= O_VERBOSE)
+		error(0, 0, "running %s %s %s", plugin, host, service);
+	    execlp(plugin,plugin,host,service,0);
+	    error(0, 0, "execl(%s) failed: %s (%d)",
+		  plugin, strerror(errno), errno);
+	    exit(0);
+	}
+	return fds[1];
+    }
+}
+
+#if INET6
+int SockOpen(const char *host, const char *service, const char *options,
+	     const char *plugin)
+{
+    int i;
+    struct addrinfo *ai, req;
 #if NET_SECURITY
-  void *request = NULL;
-  int requestlen;
+    void *request = NULL;
+    int requestlen;
 #endif /* NET_SECURITY */
 
-  memset(&req, 0, sizeof(struct addrinfo));
-  req.ai_socktype = SOCK_STREAM;
+    if (plugin)
+	return handle_plugin(host,service,plugin);
+    memset(&req, 0, sizeof(struct addrinfo));
+    req.ai_socktype = SOCK_STREAM;
 
-  if (i = getaddrinfo(host, service, &req, &ai)) {
-    error(0, 0, "fetchmail: getaddrinfo(%s.%s): %s(%d)", host, service, gai_strerror(i), i);
-    return -1;
-  };
+    if (i = getaddrinfo(host, service, &req, &ai)) {
+	error(0, 0, "fetchmail: getaddrinfo(%s.%s): %s(%d)", host, service, gai_strerror(i), i);
+	return -1;
+    };
 
 #if NET_SECURITY
-  if (!options)
-    requestlen = 0;
-  else
-    if (net_security_strtorequest((char *)options, &request, &requestlen))
-      goto ret;
+    if (!options)
+	requestlen = 0;
+    else
+	if (net_security_strtorequest((char *)options, &request, &requestlen))
+	    goto ret;
 
-  i = inner_connect(ai, request, requestlen, NULL, NULL, "fetchmail", NULL);
-  if (request)
-    free(request);
+    i = inner_connect(ai, request, requestlen, NULL, NULL, "fetchmail", NULL);
+    if (request)
+	free(request);
 
-ret:
+ ret:
 #else /* NET_SECURITY */
-  i = inner_connect(ai, NULL, 0, NULL, NULL, "fetchmail", NULL);
+    i = inner_connect(ai, NULL, 0, NULL, NULL, "fetchmail", NULL);
 #endif /* NET_SECURITY */
 
-  freeaddrinfo(ai);
+    freeaddrinfo(ai);
 
-  return i;
+    return i;
 };
 #else /* INET6 */
 #ifndef HAVE_INET_ATON
@@ -91,7 +121,8 @@ ret:
 #endif
 #endif /* HAVE_INET_ATON */
 
-int SockOpen(const char *host, int clientPort, const char *options)
+int SockOpen(const char *host, int clientPort, const char *options,
+	     const char *plugin)
 {
     int sock;
 #ifndef HAVE_INET_ATON
@@ -99,6 +130,12 @@ int SockOpen(const char *host, int clientPort, const char *options)
 #endif /* HAVE_INET_ATON */
     struct sockaddr_in ad;
     struct hostent *hp;
+
+    if (plugin) {
+      char buf[10];
+      sprintf(buf,"%d",clientPort);
+      return handle_plugin(host,buf,plugin);
+    }
 
     memset(&ad, 0, sizeof(ad));
     ad.sin_family = AF_INET;

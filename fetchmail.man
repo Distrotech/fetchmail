@@ -223,6 +223,20 @@ down host.  This would be particularly annoying for a \fIfetchmail\fR
 running in background.  There is a default timeout which fetchmail -V
 will report.
 .TP
+.B \--plugin
+(Keyword: plugin)
+The plugin option allows you to use an external program to establish the
+TCP connection.  This is useful if you want to use socks or need some
+special firewalling setup.  The program will be looked up in $PATH and
+it will be passed two arguments: the name of the server and the name of
+the port.
+.TP
+.B \--plugout
+(Keyword: plugout)
+Identical to the plugin option above, but this one is used for the SMTP
+connections (which will probably not need it, so it has been separated
+from plugin).
+.TP
 .B \-r folder, --folder folder
 (Keyword: folder[s])
 Causes a specified non-default mail folder on the mailserver (or
@@ -898,7 +912,7 @@ Turn off error logging through syslog(3).
 T}
 .TE
 
-Here are the legal user options:
+Here are the legal server options:
 
 .TS
 l l lw34.
@@ -937,6 +951,12 @@ specify IP interface(s) that must be up for server poll to take place
 T}
 monitor   	-M	T{
 Specify IP address to monitor for activity
+T}
+plugin   	\&	T{
+Specify command through which to make server connections.
+T}
+plugout   	\&	T{
+Specify command through which to make listener connections.
 T}
 dns     	\&	T{
 Enable DNS lookup for multidrop (default)

@@ -71,6 +71,8 @@ class Server:
 	self.localdomains = []		# Domains to be considered local
 	self.interface = None		# IP address and range
 	self.monitor = None		# IP address and range
+	self.plugin = None		# Plugin command for going to server
+	self.plugout = None		# Plugin command for going to listener
 	self.netsec = None		# IPV6 security options
 	self.users = []			# List of user entries for site
 	Server.typemap = (
@@ -92,6 +94,8 @@ class Server:
 	    # leave localdomains out
 	    ('interface', 'String'),
 	    ('monitor',   'String'),
+	    ('plugin',   'String'),
+	    ('plugout',  'String'),
 	    ('netsec',   'String'))
 
     def dump(self, folded):

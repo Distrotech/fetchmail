@@ -36,6 +36,8 @@
 #   localdomains              -- must be followed by one or more domain names
 #   interface                 -- must be followed by device/IP address/mask
 #   monitor                   -- must be followed by device
+#   plugin                    -- must be followed by a string command name
+#   plugout                   -- must be followed by a string command name
 #   dns
 #   no dns
 #   checkalias                -- do multidrop address comparison by IP address

@@ -62,6 +62,8 @@ post(connect)?	{ return POSTCONNECT; }
 netsec		{ return NETSEC; }
 interface	{ return INTERFACE; }
 monitor		{ return MONITOR; }
+plugin		{ return PLUGIN; }
+plugout		{ return PLUGIN; }
 batchlimit	{ return BATCHLIMIT; }
 fetchlimit	{ return FETCHLIMIT; }
 expunge		{ return EXPUNGE; }

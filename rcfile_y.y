@@ -61,7 +61,7 @@ extern char * yytext;
 %token AUTHENTICATE TIMEOUT KPOP SDPS KERBEROS4 KERBEROS5 KERBEROS
 %token ENVELOPE QVIRTUAL USERNAME PASSWORD FOLDER SMTPHOST MDA BSMTP
 %token SMTPADDRESS SPAMRESPONSE PRECONNECT POSTCONNECT LIMIT
-%token NETSEC INTERFACE MONITOR
+%token NETSEC INTERFACE MONITOR PLUGIN PLUGOUT
 %token IS HERE THERE TO MAP WILDCARD
 %token BATCHLIMIT FETCHLIMIT EXPUNGE PROPERTIES
 %token SET LOGFILE DAEMON SYSLOG IDFILE INVISIBLE POSTMASTER WARNINGS
@@ -219,6 +219,8 @@ serv_option	: AKA alias_list
 					fprintf(stderr, "fetchmail: monitor option is only supported under Linux\n");
 #endif /* defined(linux) && !defined(INET6) */
 					}
+		| PLUGIN STRING		{ current.server.plugin = xstrdup($2); }
+		| PLUGOUT STRING	{ current.server.plugout = xstrdup($2); }
 		| DNS			{current.server.dns = FLAG_TRUE;}
 		| NO DNS		{current.server.dns = FLAG_FALSE;}
 		| NO ENVELOPE		{current.server.envelope = STRING_DISABLED;}
