@@ -118,7 +118,7 @@ static int handle_plugin(const char *host,
 /* get a socket mediated through a given external command */
 {
     int fds[2];
-    const char **argvec;
+    char **argvec;
     if (socketpair(AF_UNIX,SOCK_STREAM,0,fds))
     {
 	report(stderr, _("fetchmail: socketpair failed\n"));
