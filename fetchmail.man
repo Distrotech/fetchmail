@@ -387,6 +387,16 @@ RFCs.  If you ever trip over a server that doesn't, the symptom will
 be that messages you have already read on your host will look new to
 the server.  In this (unlikely) case, only messages you fetched with
 \fIfetchmail --keep\fR will be both undeleted and marked old.
+.SH SPAM FILTERING
+Newer versions of
+.I sendmail
+allow administrators to set up `spam filters' that block unsolicited email
+from specified domains.  A MAIL FROM line that triggers this feature
+will elicit an SMTP response with an error code of 571.  The
+.I fetchmail
+code recognizes this error and discards the message.  This is the
+.I only
+circumstance under which fetchmail ever discards mail.
 .SH THE RUN CONTROL FILE
 The preferred way to set up fetchmail (and the only way if you want to
 avoid specifying passwords each time it runs) is to write a
