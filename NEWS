@@ -1,7 +1,7 @@
 			Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-3.4 ()
+fetchmail-3.4 (Wed Feb 12 13:57:00 EST 1997)
 
 features --
 
@@ -21,7 +21,10 @@ bugs --
   some alarming but harmless "(message incomplete)" messages from the
   error-logging machinery.
 
-There are 220 people on the fetchmail-friends list.
+* A core dump in save_str_pair() that only showed up on some systems has
+  been fixed.
+
+There are 223 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------\
 
