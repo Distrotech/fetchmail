@@ -766,7 +766,7 @@ char *realname;		/* real name of host */
     skiptext:;
     }
 
-    /* write all the headers */
+    /* we may need to strip carriage returns */
     if (ctl->stripcr)
     {
 	char	*sp, *tp;
@@ -846,7 +846,7 @@ char *realname;		/* real name of host */
 
 	strcat(errmsg, "\n");
 
-	/* ship out the error line */
+	/* we may need to strip carriage returns */
 	if (ctl->stripcr)
 	{
 	    char	*sp, *tp;
@@ -857,6 +857,7 @@ char *realname;		/* real name of host */
 	    *tp = '\0';
 	}
 
+	/* ship out the error line */
 	if (sinkfp)
 	{
 	    if (ctl->mda)
@@ -916,6 +917,7 @@ char *realname;		/* real name of host */
 		else
 		    SockWrite(buf, 1, 1, sinkfp);
 
+	    /* we may need to strip carriage returns */
 	    if (ctl->stripcr)
 	    {
 		char	*sp, *tp;
@@ -926,6 +928,7 @@ char *realname;		/* real name of host */
 		*tp = '\0';
 	    }
 
+	    /* ship the text line */
 	    if (ctl->mda)
 		n = fwrite(buf, 1, strlen(buf), sinkfp);
 	    else if (sinkfp)
