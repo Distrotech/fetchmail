@@ -23,7 +23,7 @@ OTP-enabled.  To test this, telnet to the server port and give it
 a valid USER id.  If the OK response includes the string "otp-",
 you should install OPIE.  You need version 2.32 or better.
 
-The OPIE library sources are available at ftp://ftp.inner.net/pub/opie.
+The OPIE library sources are available at http://www.inner.net/pub/opie/
 You can also find OPIE and IPV6-capable servers there.
 
 Building in IPv6 support *requires* glibc 2.1.1 (or newer) or 

@@ -1675,7 +1675,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		verification.  We may want to make this configurable */
 	if (ctl->use_ssl && SSLOpen(mailserver_socket,ctl->sslkey,ctl->sslcert,realhost) == -1) 
 	{
-	    report(stderr, "SSL connection failed.");
+	    report(stderr, "SSL connection failed.\n");
 	    goto closeUp;
 	}
 #endif

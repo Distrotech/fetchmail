@@ -922,7 +922,7 @@ static int load_params(int argc, char **argv, int optind)
 			|| str_in_list(&ctl->server.akalist, argv[optind], TRUE))
 		{
 		    /* Is this correct? */
-		    if(predeclared)
+		    if (predeclared && outlevel == O_VERBOSE)
 			fprintf(stderr,_("Warning: multiple mentions of host %s in config file\n"),argv[optind]);
 		    ctl->active = TRUE;
 		    predeclared = TRUE;
@@ -1175,8 +1175,9 @@ static int load_params(int argc, char **argv, int optind)
 		       namerec->h_addr_list[0],
 		       namerec->h_length);
 	      }
-#endif /* HAVE_GETHOSTBYNAME */
+#else
 	      ctl->server.truename = xstrdup(ctl->server.queryname);
+#endif /* HAVE_GETHOSTBYNAME */
 	    }
 
 	    /* if no folders were specified, set up the null one as default */

@@ -602,7 +602,7 @@ int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx )
 				report(stdout, "Server CommonName: %s\n", cbuf );
 			/* Should we have some wildcarding here? */
 			if ( NULL != _ssl_server_cname
-			     && 0 != strcmp( cbuf, _ssl_server_cname ) ) {
+			     && 0 != strcasemp( cbuf, _ssl_server_cname ) ) {
 				report(stdout,
 				       "Server CommonName mismatch: %s != %s\n",
 				       cbuf, _ssl_server_cname );
