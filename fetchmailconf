@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.12"
+version = "1.13"
 
 from Tkinter import *
 from Dialog import *
@@ -610,11 +610,12 @@ This will take you to a site configuration dialogue.
 
 
 class ConfigurationEdit(Frame, MyWidget):
-    def __init__(self, configuration, outfile, master=None):
+    def __init__(self, configuration, outfile, master, onexit):
         self.subwidgets = {}
 	self.configuration = configuration
         self.outfile = outfile
         self.container = master
+        self.onexit = onexit
         ConfigurationEdit.mode_to_help = {
             'novice':configure_novice_help, 'expert':configure_expert_help
             }
@@ -695,6 +696,7 @@ class ConfigurationEdit(Frame, MyWidget):
         for sitename in self.subwidgets.keys():
             self.subwidgets[sitename].destruct()        
         self.master.destroy()
+        self.onexit()
 
     def nosave(self):
 	if ConfirmQuit(self, self.mode + " configuration editor"):
@@ -1353,9 +1355,10 @@ class UserEdit(Frame, MyWidget):
 #
 
 class Configurator(Frame):
-    def __init__(self, outfile, master, parent):
+    def __init__(self, outfile, master, onexit, parent):
 	Frame.__init__(self, master)
         self.outfile = outfile
+        self.onexit = onexit
         self.parent = parent
 	self.master.title('fetchmail configurator');
 	self.master.iconname('fetchmail configurator');
@@ -1383,19 +1386,18 @@ Or you can just select `Quit' to leave the configurator now and
 return to the main panel.
 """, width=600).pack(side=TOP)
 	Button(self, text='Quit', fg='blue', command=self.leave).pack()
-        self.parent.configuration_active = 1
 
     def novice(self):
 	self.master.destroy()
-	ConfigurationEdit(Fetchmailrc, self.outfile, Toplevel()).edit('novice')
+	ConfigurationEdit(Fetchmailrc, self.outfile, Toplevel(), self.onexit).edit('novice')
 
     def expert(self):
 	self.master.destroy()
-	ConfigurationEdit(Fetchmailrc, self.outfile, Toplevel()).edit('expert')
+	ConfigurationEdit(Fetchmailrc, self.outfile, Toplevel(), self.onexit).edit('expert')
 
     def leave(self):
         self.master.destroy()
-        self.parent.configuration_active = 0
+        self.onexit()
 
 # Run a command an a scrolling text widget, displaying its output
 
@@ -1445,7 +1447,6 @@ class MainWindow(Frame):
     def __init__(self, outfile, master=None):
 	Frame.__init__(self, master)
         self.outfile = outfile
-        self.configuration_active = 0
 	self.master.title('fetchmail launcher');
 	self.master.iconname('fetchmail launcher');
 	Pack.config(self)
@@ -1462,21 +1463,20 @@ servers it should poll (the host name, your username there,
 whether to use POP or IMAP, and so forth).
 """, width=600).pack(side=TOP)
 	self.configbutton = Button(self, text='Configure fetchmail',
-				fg='blue', command=self.configure).pack()
+				fg='blue', command=self.configure)
+        self.configbutton.pack()
 
 	Message(self, text="""
 Use `Test fetchmail' to run fetchmail with debugging enabled.
 This is a good way to test out a new configuration.
 """, width=600).pack(side=TOP)
-	self.configbutton = Button(self, text='Test fetchmail',
-				fg='blue', command=self.test).pack()
+	Button(self, text='Test fetchmail',fg='blue', command=self.test).pack()
 
 	Message(self, text="""
 Use `Run fetchmail' to run fetchmail in foreground.
 Progress  messages will be shown, but not debug messages.
 """, width=600).pack(side=TOP)
-	self.configbutton = Button(self, text='Run fetchmail',
-				fg='blue', command=self.run).pack()
+	Button(self, text='Run fetchmail', fg='blue', command=self.run).pack()
 
 	Message(self, text="""
 Or you can just select `Quit' to exit the launcher now.
@@ -1484,9 +1484,10 @@ Or you can just select `Quit' to exit the launcher now.
 	Button(self, text='Quit', fg='blue', command=self.leave).pack()
 
     def configure(self):
-        # FIXME: We really want to disable the button temporarily
-        if not self.configuration_active:
-            Configurator(self.outfile, Toplevel(), self)
+        self.configbutton.configure(state=DISABLED)
+        Configurator(self.outfile, Toplevel(),
+                     lambda self=self: self.configbutton.configure(state=NORMAL),
+                     self)
 
     def test(self):
     	RunWindow("fetchmail -d0 -v --nosyslog", Toplevel(), self)
