@@ -787,6 +787,14 @@ static int do_cram_md5 (int sock, struct query *ctl)
      * computed by applying the keyed MD5 algorithm from [KEYED-MD5] where
      * the key is a shared secret and the digested text is the timestamp
      * (including angle-brackets).
+     *
+     * If the usename has a space in it, it's surrounded by string quotes 
+     * before being shipped.  This is not in conformance with the CRAM-MD5
+     * RFCs (which don't describe any kind of quoting and imply that the
+     * username must be a single token), but at least one server accepts
+     * it anyway (the greeting line says "InterChange IMAP4 Server v3.51.06").
+     * If this doesn't work, sending the unquoted name wouldn't have worked
+     * either, so we lost nothing.
      */
 
     hmac_md5 (ctl->password, strlen (ctl->password),
