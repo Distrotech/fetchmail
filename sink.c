@@ -282,14 +282,19 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
 		|| SMTP_data(sock) != SM_OK)
 	return(FALSE);
 
+    /* our first duty is to keep the sacred foo counters turning... */
     sprintf(boundary, 
-	    "om-mani-padme-hum-%d-%d-%ld", 
+	    "foo-mani-padme-hum-%d-%d-%ld", 
 	    (int)getpid(), (int)getppid(), time((time_t *)NULL));
 
     ts = rfc822timestamp();
 
     if (outlevel >= O_VERBOSE)
 	report(stdout, "SMTP: (bounce-message body)\n");
+    else
+	/* this will usually go to sylog... */
+	report(stderr, "mail from %s bounced to %s\n",
+	       daemon_name, bounce_to);
 
     /* bouncemail headers */
     SockPrintf(sock, "Return-Path: <>\r\n");

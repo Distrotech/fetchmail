@@ -574,7 +574,8 @@ int main(int argc, char **argv)
     signal(SIGQUIT, terminate_run);
 
     /* here's the exclusion lock */
-    if ((st = open(lockfile, O_WRONLY | O_CREAT | O_EXCL, 0666)) != -1) {
+    if ((st = open(lockfile, O_WRONLY|O_CREAT|O_EXCL|O_SYNC, 0666)) != -1)
+    {
 	sprintf(tmpbuf,"%d", getpid());
 	write(st, tmpbuf, strlen(tmpbuf));
 	if (run.poll_interval)
@@ -582,7 +583,7 @@ int main(int argc, char **argv)
 	    sprintf(tmpbuf," %d", run.poll_interval);
 	    write(st, tmpbuf, strlen(tmpbuf));
 	}
-	close(st);	/* should be safe, previous write was atomic */
+	close(st);	/* should be safe, fd was opened with O_SYNC */
 	lock_acquired = TRUE;
     }
 

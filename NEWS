@@ -1,10 +1,8 @@
 				Things to do:
 
-Scrollbars on fetchmailconf help windows (Debian bug #51770). 
+Scrollbars on fetchmailconf help windows (Debian normal bug #51770). 
 
-Log bounced messages via syslog (Debian bug #50184).
-
-Notify user by mail when pop server nonexistent (Debian bug #47143).
+Notify user by mail when pop server nonexistent (Debian wishlist #47143).
 
 In the SSL support, we need to add server certificate validation (In
 other words, does the certificate match the system we are trying to
@@ -17,14 +15,21 @@ worried with copies of it, GPG/PGP offers more security than MD5. I
 don't know exactly, but I think you can sign it both ways so that your
 package will have two security verifications instead of one...
 
+The Debian bug-tracking page for fetchmail is:
+
+	http://cgi.debian.org/cgi-bin/pkgreport.cgi?archive=no&pkg=fetchmail
+
 				Release Notes:
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
 * Close down sockets using shutdown(2) and discarding read data until we
   get a TCP FIN.  With any luck this will squash our socket leak.
+* Open the lockfile with O_SYNC, so we know the file has been written
+  before close (sigh...NFS might still betray us...).
 * Added Martijn Lievaart's sendmail hacks for multidrop to the contrib 
   directory.
+* Log bounced messages via syslog (Debian bug #50184).
 * Debian buglist cleanup.
 
 fetchmail-5.2.5 (Mon Jan 31 02:02:48 EST 2000), 18445 lines:
