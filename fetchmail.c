@@ -226,50 +226,51 @@ int main(int argc, char **argv)
 
     if (versioninfo)
     {
-	report(stdout, _("This is fetchmail release %s"), VERSION);
+	printf(_("This is fetchmail release %s"), VERSION);
 #ifdef POP2_ENABLE
-	report(stdout, "+POP2");
+	printf("+POP2");
 #endif /* POP2_ENABLE */
 #ifndef POP3_ENABLE
-	report(stdout, "-POP3");
+	printf("-POP3");
 #endif /* POP3_ENABLE */
 #ifndef IMAP_ENABLE
-	report(stdout, "-IMAP");
+	printf("-IMAP");
 #endif /* IMAP_ENABLE */
 #ifdef GSSAPI
-	report(stdout, "+IMAP-GSS");
+	printf("+IMAP-GSS");
 #endif /* GSSAPI */
 #ifdef RPA_ENABLE
-	report(stdout, "+RPA");
+	printf("+RPA");
 #endif /* RPA_ENABLE */
 #ifdef NTLM_ENABLE
-	report(stdout, "+NTLM");
+	printf("+NTLM");
 #endif /* NTLM_ENABLE */
 #ifdef SDPS_ENABLE
-	report(stdout, "+SDPS");
+	printf("+SDPS");
 #endif /* SDPS_ENABLE */
 #ifndef ETRN_ENABLE
-	report(stdout, "-ETRN");
+	printf("-ETRN");
 #endif /* ETRN_ENABLE */
 #ifdef SSL_ENABLE
-	report(stdout, "+SSL");
+	printf("+SSL");
 #endif
 #if OPIE_ENABLE
-	report(stdout, "+OPIE");
+	printf("+OPIE");
 #endif /* OPIE_ENABLE */
 #if INET6_ENABLE
-	report(stdout, "+INET6");
+	printf("+INET6");
 #endif /* INET6_ENABLE */
 #if NET_SECURITY
-	report(stdout, "+NETSEC");
+	printf("+NETSEC");
 #endif /* NET_SECURITY */
 #ifdef HAVE_SOCKS
-	report(stdout, "+SOCKS");
+	printf("+SOCKS");
 #endif /* HAVE_SOCKS */
 #if ENABLE_NLS
-	report(stdout, "+NLS");
+	printf("+NLS");
 #endif /* ENABLE_NLS */
 	putchar('\n');
+	fflush(stdout);
 
 	/* this is an attempt to help remote debugging */
 	system("uname -a");
@@ -370,16 +371,17 @@ int main(int argc, char **argv)
     {
 	int havercfile = access(rcfile, 0);
 
-	report(stdout, _("Taking options from command line%s%s\n"),
+	printf(_("Taking options from command line%s%s\n"),
 				havercfile ? "" :  _(" and "),
 				havercfile ? "" : rcfile);
 
 	if (outlevel >= O_VERBOSE)
-	    report(stdout, _("Lockfile at %s\n"), tmpbuf);
+	    printf(_("Lockfile at %s\n"), tmpbuf);
 
 	if (querylist == NULL)
-	    (void) report(stderr,
-		_("No mailservers set up -- perhaps %s is missing?\n"), rcfile);
+	    fprintf(stderr,
+		    _("No mailservers set up -- perhaps %s is missing?\n"),
+		    rcfile);
 	else
 	    dump_params(&run, querylist, implicitmode);
 	exit(0);
