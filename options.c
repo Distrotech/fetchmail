@@ -84,7 +84,8 @@ static struct option longoptions[] = {
 		 if negative, the command line is has one or more
 	   	 syntax errors.
   calls:         none.  
-  globals:       outlevel.  
+  globals:       writes outlevel, versioninfo, yydebug, logfile, 
+		 poll_interval, quitmode, poprcfile.  
  *********************************************************************/
 
 int parsecmdline (argc,argv,options)
@@ -272,7 +273,7 @@ struct optrec *options;
   return value:  zero if defaults were successfully set, else non-zero
                  (indicates a problem reading /etc/passwd).
   calls:         none.
-  globals:       writes outlevel.
+  globals:       writes outlevel, poprcfile.
  *********************************************************************/
 
 int setdefaults (options)
@@ -309,7 +310,7 @@ struct optrec *options;
 
   (void) sprintf(options->mda, DEF_MDA, options->localname);
 
-   poprcfile = 
+  poprcfile = 
       (char *) xmalloc(strlen(pw->pw_dir)+strlen(POPRC_NAME)+2);
 
   strcpy(poprcfile, pw->pw_dir);
