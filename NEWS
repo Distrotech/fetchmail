@@ -7,6 +7,7 @@
 fetchmail-4.7.5 ():
 * Issue proper logout after running fetchmail -c
 * Fix prefix problem with internationalized version.
+* Attempted fix for Harry McGavran's VPATH bug.
 
 There are 249 people on fetchmail-friends and 334 on fetchmail-announce.
 

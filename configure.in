@@ -35,11 +35,11 @@ AC_SUBST(LDEFLAGS)
 AC_SUBST(LIBOBJS)
 AC_SUBST(POMAKE)
 
-PACKAGE=`sed -n '/PACKAGE *= *\(.*\)/s//\1/p' <Makefile.in`
+PACKAGE=`sed -n '/PACKAGE *= *\(.*\)/s//\1/p' <$srcdir/Makefile.in`
 AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
 AC_SUBST(PACKAGE)
 
-VERSION=`sed -n '/VERSION *= *\(.*\)/s//\1/p' <Makefile.in`
+VERSION=`sed -n '/VERSION *= *\(.*\)/s//\1/p' <$srcdir/Makefile.in`
 AC_DEFINE_UNQUOTED(VERSION, "$VERSION")
 AC_SUBST(VERSION)
 
