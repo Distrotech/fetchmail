@@ -101,7 +101,7 @@ dnl Port hack for Sparc/NetBSD-1.5
 AC_CHECK_LIB(intl, gettext,
 		[LIBS="$LIBS -lintl"])
 
-AC_REPLACE_FUNCS([strstr strcasecmp memmove])
+AC_REPLACE_FUNCS([strstr strcasecmp memmove stpcpy])
 
 AC_CHECK_FUNC(MD5Init, AC_DEFINE(HAVE_MD5,1,Define if you have md5 in libc),
 	      [AC_LIBSOURCE(md5c.c)

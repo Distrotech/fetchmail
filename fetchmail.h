@@ -686,6 +686,10 @@ char *strerror (int);
 #endif
 #endif
 
+#ifndef HAVE_STPCPY
+char *stpcpy(char *, const char*);
+#endif
+
 #ifdef FETCHMAIL_DEBUG
 #define exit(e) do { \
        FILE *out; \
