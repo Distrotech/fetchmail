@@ -2,12 +2,16 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-6.1.2 (Thu Oct 31 11:41:02 EST 2002), 22135 lines:
+
 * Jan Klaverstijn's verbosity-lowering patch.
 * Updated Turkish, German, Catalan, and Danish translation files.
 * Fix processing of POP3 messages with missing bodies.
 * Minor fixes by Sunil Shetye: fix generation of auth fail note, handle
   unexpected SIGALRM, plug memory leak, handle lines beginning with '\0',
   try to bulletproof error handling against read failures.
+
+There are 535 people on fetchmail-friends and 696 on fetchmail-announce.
 
 fetchmail-6.1.1 (Fri Oct 18 14:53:51 EDT 2002), 22087 lines:
 
