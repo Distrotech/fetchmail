@@ -432,6 +432,15 @@ static int smtp_open(struct query *ctl)
 	phase = oldphase;
     }
 
+    /*
+     * RFC 1123 requires that the domain name part of the
+     * RCPT TO address be "canonicalized", that is a FQDN
+     * or MX but not a CNAME.  Some listeners (like exim)
+     * enforce this.  Now that we have the actual hostname,
+     * compute what we should canonicalize with.
+     */
+    ctl->destaddr = ctl->smtpaddress ? ctl->smtpaddress : ( ctl->smtphost ? ctl->smtphost : "localhost");
+
     if (outlevel >= O_VERBOSE && ctl->smtp_socket != -1)
 	error(0, 0, "forwarding to %s", ctl->smtphost);
 
@@ -525,7 +534,7 @@ static void sanitize(char *s)
 }
 
 int open_sink(struct query *ctl, 
-	      char *return_path, char *destaddr, 
+	      char *return_path,
 	      struct idlist *xmit_names,
 	      long reallen,
 	      int *good_addresses, int *bad_addresses)
@@ -539,6 +548,8 @@ int open_sink(struct query *ctl,
     {
 	int	length = 0, fromlen = 0, nameslen = 0;
 	char	*names = NULL, *before, *after, *from = NULL;
+
+	ctl->destaddr = "localhost";
 
 	for (idp = xmit_names; idp; idp = idp->next)
 	    if (idp->val.status.mark == XMIT_ACCEPT)
@@ -811,9 +822,9 @@ int open_sink(struct query *ctl,
 		    strcpy(addr, idp->id);
 		else
 #ifdef HAVE_SNPRINTF
-		    snprintf(addr, sizeof(addr)-1, "%s@%s", idp->id, destaddr);
+		    snprintf(addr, sizeof(addr)-1, "%s@%s", idp->id, ctl->destaddr);
 #else
-		    sprintf(addr, "%s@%s", idp->id, destaddr);
+		    sprintf(addr, "%s@%s", idp->id, ctl->destaddr);
 #endif /* HAVE_SNPRINTF */
 
 		if (SMTP_rcpt(ctl->smtp_socket, addr) == SM_OK)
@@ -830,9 +841,9 @@ int open_sink(struct query *ctl,
 	if (!(*good_addresses))
 	{
 #ifdef HAVE_SNPRINTF
-	    snprintf(addr, sizeof(addr)-1, "%s@%s", run.postmaster, destaddr);
+	    snprintf(addr, sizeof(addr)-1, "%s@%s", run.postmaster, ctl->destaddr);
 #else
-	    sprintf(addr, "%s@%s", run.postmaster, destaddr);
+	    sprintf(addr, "%s@%s", run.postmaster, ctl->destaddr);
 #endif /* HAVE_SNPRINTF */
 
 	    if (SMTP_rcpt(ctl->smtp_socket, addr) != SM_OK)
@@ -923,7 +934,7 @@ int num;		/* index of message */
     int			from_offs, reply_to_offs, resent_from_offs;
     int			app_from_offs, sender_offs, resent_sender_offs;
     int			env_offs;
-    char		*headers, *destaddr, *received_for, *rcv, *cp;
+    char		*headers, *received_for, *rcv, *cp;
     int 		n, linelen, oldlen, ch, remaining, skipcount;
     struct idlist 	*idp, *xmit_names;
     flag		no_local_matches = FALSE;
@@ -1392,19 +1403,8 @@ int num;		/* index of message */
     }
     else
     {
-	if (ctl->mda)
-	    destaddr = "localhost";
-	else
-	    /*
-	     * RFC 1123 requires that the domain name part of the
-	     * RCPT TO address be "canonicalized", that is a FQDN
-	     * or MX but not a CNAME.  Some listeners (like exim)
-	     * enforce this.
-	     */
-	    destaddr = ctl->smtpaddress ? ctl->smtpaddress : ( ctl->smtphost ? ctl->smtphost : "localhost");
-
 	/* set up sinkfp so we can deliver the message body through it */ 
-	if ((n = open_sink(ctl, return_path, destaddr, xmit_names, reallen,
+	if ((n = open_sink(ctl, return_path, xmit_names, reallen,
 			   &good_addresses, &bad_addresses)) != PS_SUCCESS)
 	{
 	    free(headers);
@@ -1457,7 +1457,7 @@ int num;		/* index of message */
 		{
 		    sprintf(buf+1, 
 			    "for <%s@%s> (by default); ",
-			    user, destaddr);
+			    user, ctl->destaddr);
 		}
 		else if (good_addresses == 1)
 		{
@@ -1467,7 +1467,7 @@ int num;		/* index of message */
 		    if (strchr(idp->id, '@'))
 			sprintf(buf+1, "for <%s>", idp->id);
 		    else
-			sprintf(buf+1, "for <%s/%s>", idp->id, destaddr);
+			sprintf(buf+1, "for <%s/%s>", idp->id, ctl->destaddr);
 		    sprintf(buf+strlen(buf), " (%s); ",
 			    MULTIDROP(ctl) ? "multi-drop" : "single-drop");
 		}
@@ -1841,9 +1841,11 @@ static void send_warning(struct query *ctl,
      * be deleted.
      *
      * We give a null address list here because we actually *want*
-     * this message to go to run.postmaster.
+     * this message to go to run.postmaster.  The zero length means
+     * we won't pass a SIZE option to ESMTP; the message length would
+     * be more trouble than it's worth to compute.
      */
-    if (open_sink(ctl, "FETCHMAIL-DAEMON", "localhost", NULL, 0, &good, &bad))
+    if (open_sink(ctl, "FETCHMAIL-DAEMON", NULL, 0, &good, &bad))
 	return;
 
     /* stuffline() requires its input to be writeable for CR stripping */
@@ -1864,7 +1866,7 @@ static void send_warning(struct query *ctl,
 	    nbr = current->val.status.mark;
 	    size = atoi(current->id);
 	    sprintf(buf, 
-		    "\t%d msg of %d bytes skipped by fetchmail.\n",
+		    "\t%d msg %d octets long skipped by fetchmail.\n",
 		    nbr, size);
 	    stuffline(ctl, buf);
 	}
@@ -2165,7 +2167,7 @@ const struct method *proto;	/* protocol method table */
 			if (bytes == -1)
 			    error_complete(0, 0, ".");
 			else
-			    error_complete(0, 0, " (%d bytes).", bytes);
+			    error_complete(0, 0, " (%d octets).", bytes);
 		    }
 		    else
 		    {
@@ -2301,7 +2303,7 @@ const struct method *proto;	/* protocol method table */
 
 #endif /* POP3_ENABLE */
 
-				    error_build(" (oversized, %d bytes)",
+				    error_build(" (oversized, %d octets)",
 						msgsizes[num-1]);
 				}
 			    }
@@ -2328,7 +2330,7 @@ const struct method *proto;	/* protocol method table */
 					    num,count);
 
 				if (len > 0)
-				    error_build(" (%d %sbytes)",
+				    error_build(" (%d %soctets)",
 					len, wholesize ? "" : "header ");
 				if (outlevel == O_VERBOSE)
 				    error_complete(0, 0, "");
@@ -2374,7 +2376,7 @@ const struct method *proto;	/* protocol method table */
 				    if ((ok=(protocol->fetch_body)(sock,ctl,num,&len)))
 					goto cleanUp;
 				    if (outlevel > O_SILENT && !wholesize)
-					error_build(" (%d body bytes) ", len);
+					error_build(" (%d body octets) ", len);
 				}
 			    }
 

@@ -205,6 +205,7 @@ struct query
 
     /* internal use */
     flag active;		/* should we actually poll this server? */
+    char *destaddr;		/* destination host for this query */
     int errcount;		/* count transient errors in last pass */
     int smtp_socket;		/* socket descriptor for SMTP connection */
     unsigned int uid;		/* UID of user to deliver to */
