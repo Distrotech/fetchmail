@@ -371,6 +371,7 @@ int readheaders(int sock,
     flag		no_local_matches = FALSE;
     flag		headers_ok, has_nuls;
     int			olderrs, good_addresses, bad_addresses;
+    int			retain_mail = 0;
 
     sizeticker = 0;
     has_nuls = headers_ok = FALSE;
@@ -559,9 +560,8 @@ int readheaders(int sock,
 #endif /* POP2_ENABLE */
 	    if (num == 1 && !strncasecmp(line, "X-IMAP:", 7)) {
 		free(line);
-		free(msgblk.headers);
-		msgblk.headers = NULL;
-		return(PS_RETAINED);
+		retain_mail = 1;
+		continue;
 	    }
 
 	/*
@@ -799,6 +799,13 @@ int readheaders(int sock,
     }
 
  process_headers:    
+
+    if (retain_mail)
+    {
+	free(msgblk.headers);
+	msgblk.headers = NULL;
+	return(PS_RETAINED);
+    }
     /*
      * When mail delivered to a multidrop mailbox on the server is
      * addressed to multiple people on the client machine, there will
