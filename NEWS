@@ -2,11 +2,18 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.4.2 (Sun Jul  2 14:24:28 EDT 2000), 19080 lines:
+
 * Fixed Debian bug #63667, fetchmailconf: doesn't write .fetchmailrc properly.
 * RFC2177 IDLE should now be done even when there are no messages.
 * Joerg Plate's SSL typo fix.
 * Try to limit the damage bad UIDL handling can do by refusing to mess with
   the UIDL state if there has been an error.
+* Better isafile test -- bizarrely enough, Linux ptys have S_ISBLK.
+* Includes for SSL now use the openssl directory, which has been standard 
+  since OpenSSL 0.9.3.  If this breaks your build, upgrade your SSL.
+
+There are 286 people on fetchmail-friends and 535 on fetchmail-announce.
 
 fetchmail-5.4.2 (Wed Jun 28 07:21:04 EDT 2000), 19069 lines:
 
