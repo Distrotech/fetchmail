@@ -1208,6 +1208,9 @@ isn't a SunOS 4.1.4 machine; cucipop tickles a bug in SunOS realloc()
 under that version, and doesn't cope with the result gracefully.  Newer
 SunOS and Solaris machines run cucipop OK.
 
+Also, some versions of cucipop don't assert an exclusive lock on your
+mailbox when it's being queried.  This means that if you have more than
+one fetchmail query running against the same mailbox, bad things can happen.
 """
 	    if string.find(greetline, "David POP3 Server") > 0:
                 warnings = warnings + """
