@@ -143,19 +143,27 @@ int SockWrite(char *buf, int size, int len, FILE *sockfp)
 
 char *SockGets(char *buf, int len, FILE *sockfp)
 {
-    int rdlen = 0;
-    char *cp = buf;
+    char *p, *bp = buf;
+    int n;
 
-    while (--len)
-    {
-        if (read(fileno(sockfp), cp, 1) != 1)
-            return((char *)NULL);
-        else
-	    rdlen++;
-        if (*cp++ == '\n')
-            break;
-    }
-    *cp = 0;
+    if (--len < 1)
+	return NULL;
+    do {
+	if ((n = recv(fileno(sockfp), bp, len, MSG_PEEK)) == -1)
+	    return NULL;
+	if ((p = memchr(bp, '\n', n)) != NULL)
+	{
+	    if (read(fileno(sockfp), bp, ++p - bp) == -1)
+		return NULL;
+	    *p = '\0';
+	    return buf;
+	}
+	if ((n = read(fileno(sockfp), bp, n)) == -1)
+	    return NULL;
+	bp += n;
+	len -= n;
+    } while (len);
+    *bp = '\0';
     return buf;
 }
 
