@@ -163,8 +163,8 @@ $(infodir)/fetchmail.info: fetchmail.info
 $(mandir)/$(instname).$(manext): fetchmail.man
 	$(INSTALL_DATA) $(srcdir)/fetchmail.man $@
 
-fetchmail.spec: Makefile.in
-	$(srcdir)/specgen.sh $(VERS) >fetchmail.spec
+fetchmail.spec: $(srcdir)/Makefile.in $(srcdir)/specgen.sh
+	$(srcdir)/specgen.sh $(VERS) $(PL) >fetchmail.spec
 
 .PHONY: clean realclean distclean mostlyclean
 clean: 
