@@ -257,8 +257,8 @@ should be readily portable to other Unix variants (it requires only
 POSIX plus BSD sockets, and uses GNU autoconf).<P>
 
 Fetchmail is supported only for Unix by its official maintainers.
-However, it is reported to build and run correctly under AmigaOS,
-Rhapsody, and QNX as well. <p>
+However, it is reported to build and run correctly under BeOS,
+AmigaOS, Rhapsody, and QNX as well. <p>
 
 <H1>Related resources</H1>
 
