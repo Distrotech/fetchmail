@@ -527,12 +527,19 @@ struct query *ctl;	/* query control record */
     oldlen = 0;
     while (delimited || len > 0)
     {
-	if ((n = strip_gets(buf,sizeof(buf),sockfp)) < 0)
+	char	*sp, *tp;
+
+	if (fgets(buf,sizeof(buf),sockfp) == (char *)NULL)
 	    return(PS_SOCKET);
 	vtalarm(ctl->timeout);
 
+	for (tp = sp = buf; *sp; sp++)
+	    if (*sp != '\r' && *sp != '\n')
+		*tp++ = *sp;
+	*tp++ = '\0';
+
 	/* write the message size dots */
-	if (n > 0)
+	if ((n = strlen(buf)) > 0)
 	{
 	    sizeticker += n;
 	    while (sizeticker >= SIZETICKER)
@@ -575,7 +582,7 @@ struct query *ctl;	/* query control record */
 		 * We deal with RFC822 continuation lines here.
 		 * Replace previous '\n' with '\r' so nxtaddr 
 		 * and reply_hack will be able to see past it.
-		 * (We know this is safe because SocketGets stripped
+		 * (We know this is safe because we stripped
 		 * out all carriage returns in the read loop above
 		 * and we haven't reintroduced any since then.)
 		 * We'll undo this before writing the header.
