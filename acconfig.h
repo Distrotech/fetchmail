@@ -55,6 +55,9 @@
 /* Define if you want POP2 support compiled in */
 #undef POP2_ENABLE
 
+/* Define if you want RPA support compiled in */
+#undef RPA_ENABLE
+
 /* Define if you want OPIE support compiled in */
 #undef OPIE_ENABLE
 

@@ -23,8 +23,6 @@
 #include  <opie.h>
 #endif /* HAVE_LIBOPIE */
 
-#define PROTOCOL_ERROR	{error(0, 0, "protocol error"); return(PS_ERROR);}
-
 extern char *strstr();	/* needed on sysV68 R3V7.1. */
 
 static int last;
@@ -102,24 +100,59 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 
     switch (ctl->server.protocol) {
     case P_POP3:
-	if ((gen_transact(sock, "USER %s", ctl->remotename)) != 0)
-	    PROTOCOL_ERROR
+	if ((ok = gen_transact(sock, "USER %s", ctl->remotename)) != 0)
+	    break;
 
 #if defined(HAVE_LIBOPIE) && defined(OPIE_ENABLE)
 	/* see RFC1938: A One-Time Password System */
-	if (challenge = strstr(lastok, "otp-"))
+	if (challenge = strstr(greeting, "otp-"))
 	{
 	    char response[OPIE_RESPONSE_MAX+1];
 
 	    if (opiegenerator(challenge, ctl->password, response))
-		 PROTOCOL_ERROR
+	    {
+		ok = PS_ERROR;
+		break;
+	    }
 
 	    ok = gen_transact(sock, "PASS %s", response);
+	    break;
 	}
-	else
 #endif /* defined(HAVE_LIBOPIE) && defined(OPIE_ENABLE) */
-	    /* ordinary validation, no one-time password */ 
-	    ok = gen_transact(sock, "PASS %s", ctl->password);
+
+#ifdef ENABLE_RPA
+	/* if we're talking to CompuServe, try RPA */
+	if (strstr(greeting, "csi.com"))
+	{
+	    /* AUTH command should return a list of available mechanisms */
+	    if (gen_transact(sock, "AUTH") == 0)
+	    {
+		char buffer[10];
+		flag authenticated = FALSE;
+
+		while ((ok = gen_recv(sock, buffer, sizeof(buffer))) == 0)
+		{
+		    if (buffer[0] == '.')
+			break;
+		    if (strncasecmp(buffer, "rpa", 3) == 0)
+		    {
+			if (POP3_auth_rpa(ctl->remotename,
+					  ctl->password, sock) == PS_SUCCEED)
+			{
+			    authenticated = TRUE;
+			    break;
+			}
+		    }
+		}
+
+		if (authenticated)
+		    break;
+	    }
+	}
+#endif /* ENABLE_RPA */
+
+	/* ordinary validation, no one-time password or RPA */ 
+	ok = gen_transact(sock, "PASS %s", ctl->password);
 	break;
 
     case P_APOP:
@@ -154,10 +187,8 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	break;
 
     case P_RPOP:
-	if ((gen_transact(sock,"USER %s", ctl->remotename)) != 0)
-	    PROTOCOL_ERROR
-
-	ok = gen_transact(sock, "RPOP %s", ctl->password);
+	if ((ok = gen_transact(sock,"USER %s", ctl->remotename)) == 0)
+	    ok = gen_transact(sock, "RPOP %s", ctl->password);
 	break;
 
     default:
@@ -173,7 +204,6 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	    error(0, 0, "lock busy!  Is another session active?"); 
 	    return(PS_LOCKBUSY);
 	}
-	PROTOCOL_ERROR
     }
 
     /*
@@ -342,7 +372,10 @@ static int pop3_getrange(int sock,
 	if (ok == 0)
 	{
 	    if (sscanf(buf, "%d", &last) == 0)
-		PROTOCOL_ERROR
+	    {
+		error(0, 0, "protocol error");
+		return(PS_ERROR);
+	    }
 	    *newp = (*countp - last);
 	}
  	else
@@ -352,7 +385,10 @@ static int pop3_getrange(int sock,
 	    {
 		/* don't worry, yet! do it the slow way */
 		if((ok = pop3_slowuidl( sock, ctl, countp, newp))!=0)
-		    PROTOCOL_ERROR
+		{
+		    error(0, 0, "protocol error while fetching UIDLs");
+		    return(PS_ERROR);
+		}
 	    }
 	    else
 	    {

@@ -451,6 +451,12 @@ If you are using POP3, and the server issues a one-time-password
 challenge conforming to RFC1938, \fIfetchmail\fR will use your
 password as a pass phrase to generate the required response. This
 avoids sending secrets over the net unencrypted.
+.PP
+Compuserve's RPA authentication (similar to APOP) is supported.  If
+you are using POP3, and the RPA code has been compiled into your
+binary, and you query a server in the Compuserve csi.com domain,
+\fIfetchmail\fR will try to perform an RPA pass-phrase authentication
+instead of sending over the password en clair.
 
 .SH DAEMON MODE
 The 
@@ -1371,7 +1377,7 @@ The RFC822 parser used in multidrop mode chokes on some @-addresses that
 are technically legal but bizarre.  Strange uses of quoting and
 embedded comments are likely to confuse it.
 .PP
-Use of any of the supported protocols other than POP3 with OTP, APOP,
+Use of any of the supported protocols other than POP3 with OTP or RPA, APOP,
 KPOP, IMAP-K4, or ETRN requires that the program send unencrypted
 passwords over the TCP/IP connection to the mailserver.  This creates
 a risk that name/password pairs might be snaffled with a packet

@@ -8,6 +8,9 @@
   description:  RPA authorisation code for POP3 client
  ***********************************************************************/
 
+#include  "config.h"
+
+#ifdef RPA_ENABLE
 #include  <stdio.h>
 #include  <unistd.h>
 #include  <ctype.h>
@@ -15,8 +18,6 @@
 #include  "socket.h"
 #include  "fetchmail.h"
 #include  "md5.h"
-
-
 
 #ifdef TESTMODE
 extern unsigned char line1[];
@@ -880,3 +881,6 @@ unsigned char*    out;
     fprintf(stderr,"\n");
     }
 }
+#endif /* RPA_ENABLE */
+
+/* rpa.c ends here */
