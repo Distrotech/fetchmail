@@ -1108,72 +1108,11 @@ static int load_params(int argc, char **argv, int optind)
 #endif /* HESIOD */
 
 	    /*
-	     * We may have to canonicalize the server truename for later use.
-	     * Do this just once for each lead server, if necessary, in order
-	     * to minimize DNS round trips.
+	     * We no longer do DNS lookups at startup.
+	     * This is a kluge.  It enables users to edit their
+	     * configurations when DNS isn't available.
 	     */
-	    if (ctl->server.lead_server)
-	    {
-		char	*leadname = ctl->server.lead_server->truename;
-
-		/* prevent core dump from ill-formed or duplicate entry */
-		if (!leadname)
-		{
-		    report(stderr, _("Lead server has no name.\n"));
-		    exit(PS_SYNTAX);
-		}
-
-		ctl->server.truename = xstrdup(leadname);
-	    }
-	    else if (ctl->active && ctl->server.dns && !configdump)
-	    {
-#ifndef HAVE_GETHOSTBYNAME
-		ctl->server.truename = xstrdup(ctl->server.queryname);
-		ctl->server.trueaddr = NULL;
-#else
-		struct hostent	*namerec;
-		    
-		/* 
-		 * Get the host's IP, so we can report it like this:
-		 *
-		 * Received: from hostname [10.0.0.1]
-		 *
-		 * For ultra-efficiency, we should find the IP later, when
-		 * we are actually resolving the hostname for a connection.
-		 * Problem is this would have to be done inside SockOpen
-		 * and there's no way to do that that wouldn't both (a)
-		 * be horribly complicated, and (b) blow a couple of
-		 * layers of modularity all to hell.
-		 */
-		errno = 0;
-		namerec = gethostbyname(ctl->server.queryname);
-		if (namerec == (struct hostent *)NULL)
-		{
-		    report(stderr,
-			   _("couldn't find canonical DNS name of %s\n"),
-			   ctl->server.pollname);
-		    ctl->server.truename = xstrdup(ctl->server.queryname);
-		    ctl->server.trueaddr = NULL;
-		    ctl->active = FALSE;
-		    /* use this initially to flag DNS errors */
-		    ctl->wedged = TRUE;
-		}
-		else {
-		    ctl->server.truename=xstrdup((char *)namerec->h_name);
-		    ctl->server.trueaddr=xmalloc(namerec->h_length);
-		    memcpy(ctl->server.trueaddr, 
-			   namerec->h_addr_list[0],
-			   namerec->h_length);
-		    ctl->wedged = FALSE;
-		}
-#endif /* HAVE_GETHOSTBYNAME */
-	    }
-	    else
-		/*
-		 * This is a kluge.  It enables users to edit their
-		 * configurations when DNS isn't available.
-		 */
-		ctl->server.truename = xstrdup(ctl->server.queryname);
+	    ctl->server.truename = xstrdup(ctl->server.queryname);
 
 	    /* if no folders were specified, set up the null one as default */
 	    if (!ctl->mailboxes)
@@ -1250,24 +1189,6 @@ static int load_params(int argc, char **argv, int optind)
 	    run.postmaster = user;
 	else					/* root */
 	    run.postmaster = "postmaster";
-    }
-
-    /*
-     * If all connections are wedged due to DNS errors, quit.  This is
-     * important for the common case that you just have one connection.
-     */
-    if (querylist)
-    {
-	st = PS_DNS;
-	for (ctl = querylist; ctl; ctl = ctl->next)
-	    if (!ctl->wedged)
-		st = 0;
-	if (st == PS_DNS)
-	{
-	    (void) fprintf(stderr,
-			   _("all mailserver name lookups failed, exiting\n"));
-	    exit(PS_DNS);
-	}
     }
 
     return(implicitmode);

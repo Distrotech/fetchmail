@@ -805,6 +805,65 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	port = ctl->server.port ? ctl->server.port : ctl->server.base_protocol->port;
 #endif
 #endif /* !INET6_ENABLE */
+
+#ifdef HAVE_GETHOSTBYNAME
+	/*
+	 * Canonicalize the server truename for later use.  This also
+	 * functions as a probe for whether the mailserver is accessible.
+	 * We try it on each poll cycle until we get a result.  This way,
+	 * fetchmail won't fail if started up when the network is inaccessible.
+	 */
+	if (ctl->server.dns && !ctl->server.trueaddr)
+	{
+	    if (ctl->server.lead_server)
+	    {
+		char	*leadname = ctl->server.lead_server->truename;
+
+		/* prevent core dump from ill-formed or duplicate entry */
+		if (!leadname)
+		{
+		    report(stderr, _("Lead server has no name.\n"));
+		    err = PS_DNS;
+		    set_timeout(0);
+		    phase = oldphase;
+		    goto closeUp;
+		}
+
+		ctl->server.truename = xstrdup(leadname);
+	    }
+	    else
+	    {
+		struct hostent	*namerec;
+		    
+		/* 
+		 * Get the host's IP, so we can report it like this:
+		 *
+		 * Received: from hostname [10.0.0.1]
+		 */
+		errno = 0;
+		namerec = gethostbyname(ctl->server.queryname);
+		if (namerec == (struct hostent *)NULL)
+		{
+		    report(stderr,
+			   _("couldn't find canonical DNS name of %s\n"),
+			   ctl->server.pollname);
+		    err = PS_DNS;
+		    set_timeout(0);
+		    phase = oldphase;
+		    goto closeUp;
+		}
+		else 
+		{
+		    ctl->server.truename=xstrdup((char *)namerec->h_name);
+		    ctl->server.trueaddr=xmalloc(namerec->h_length);
+		    memcpy(ctl->server.trueaddr, 
+			   namerec->h_addr_list[0],
+			   namerec->h_length);
+		}
+	    }
+	}
+#endif /* HAVE_GETHOSTBYNAME */
+
 	realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;
 
 	/* allow time for the port to be set up if we have a plugin */
@@ -894,7 +953,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	/* perform initial SSL handshake on open connection */
 	/* Note:  We pass the realhost name over for certificate
 		verification.  We may want to make this configurable */
-	if (ctl->use_ssl && SSLOpen(mailserver_socket,ctl->sslkey,ctl->sslcert,ctl->sslproto,ctl->sslcertck,
+	if (ctl->use_ssl && SSLOpen(mailserver_socket,ctl->sslcert,ctl->sslkey,ctl->sslproto,ctl->sslcertck,
 	    ctl->sslcertpath,ctl->sslfingerprint,realhost,ctl->server.pollname) == -1) 
 	{
 	    report(stderr, _("SSL connection failed.\n"));
