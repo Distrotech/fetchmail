@@ -718,7 +718,7 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
      * Motorola.
      *
      * Also, if the hostname is a dotted quad, wrap it in square brackets.
-     * Apparently this is required by some RFC I wot not of.
+     * Apparently this is required by RFC2821, section 4.1.3.
      */
     if (!msg->return_path[0] || (0 == strcmp(msg->return_path, "@")))
     {
