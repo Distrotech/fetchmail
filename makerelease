@@ -131,12 +131,12 @@ print "Diff size:";
 system("wc <DIFFS.$$");
 
 if ($diffs) {
-	system "metasend -b -D 'fetchmail-$rcsid announcement' -m 'text/plain' -e 7bit -f PREAMBLE.$$ -n -D 'diff -u between -$oldrcs $rcsid' -m 'text/plain' -e 7bit -f DIFFS.$$ -o RELEASE.NOTES";
+	system "metasend -b -D 'fetchmail-$rcsid announcement' -m 'text/plain' -e 7bit -f PREAMBLE.$$ -n -D 'diff -u between -$oldrcs $rcsid' -m 'text/plain' -e 7bit -f DIFFS.$$ -o ANNOUNCE.EMAIL";
 } else {
 	rename("PREAMBLE.$$", "ANNOUNCE.EMAIL");
 }
-system("chown esr RELEASE.NOTES");
-chmod(0700, "RELEASE.NOTES");
+system("chown esr ANNOUNCE.EMAIL");
+chmod(0700, "ANNOUNCE.EMAIL");
 
 #unlink("PREAMBLE.$$");
 unlink("DIFFS.$$");
