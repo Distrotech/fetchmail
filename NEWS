@@ -3,6 +3,7 @@
 pl 1.9.10 ():
 * Better error messages on SMTP failure. 
 * Accept Resent-From & Apparently-From a la RFC822.
+* Include file fixes for Solaris 2.5 and FreeBSD 2.2.
 
 pl 1.9.8 (Wed Nov  6 16:40:34 EST 1996):
 * Don't append spurious NUL to the headers, qmail actually notices it.

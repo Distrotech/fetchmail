@@ -12,6 +12,7 @@
 #include <sys/stat.h>
 #include <sys/file.h>
 #include <sys/wait.h>
+#include <sys/fcntl.h>	/* Solaris 2.5 requires this */
 
 #if defined(HAVE_UNISTD_H)
 #include <unistd.h>
