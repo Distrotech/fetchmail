@@ -172,7 +172,7 @@ class User:
 	self.password = None		# Password for mail account access
 	self.mailboxes = []		# Remote folders to retrieve from
 	self.smtphunt = []		# Hosts to forward to
-	self.smtpaddress = None;	# Append this to MAIL FROM line
+	self.smtpaddress = None		# Append this to MAIL FROM line
 	self.preconnect = None		# Connection setup
 	self.postconnect = None		# Connection wrapup
 	self.mda = None			# Mail Delivery Agent
