@@ -4,7 +4,7 @@
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.21"
+version = "1.22"
 
 from Tkinter import *
 from Dialog import *
@@ -111,69 +111,69 @@ class Server:
 	    ('netsec',   'String'))
 
     def dump(self, folded):
-	str = ""
-	if self.active:   str = str + "poll"
-	else:             str = str + "skip"
-	str = str + (" " + self.pollname)
+	res = ""
+	if self.active:   res = res + "poll"
+	else:             res = res + "skip"
+	res = res + (" " + self.pollname)
 	if self.via:
-	    str = str + (" via " + str(self.via) + "\n");
+	    res = res + (" via " + str(self.via) + "\n");
 	if self.protocol != ServerDefaults.protocol:
-	    str = str + " with proto " + self.protocol 
+	    res = res + " with proto " + self.protocol 
 	if self.port != defaultports[self.protocol] and self.port != 0:
-	    str = str + " port " + `self.port`
+	    res = res + " port " + `self.port`
 	if self.timeout != ServerDefaults.timeout:
-	    str = str + " timeout " + `self.timeout`
+	    res = res + " timeout " + `self.timeout`
 	if self.interval != ServerDefaults.interval: 
-	    str = str + " interval " + `self.interval`
+	    res = res + " interval " + `self.interval`
 	if self.envelope != ServerDefaults.envelope or self.envskip != ServerDefaults.envskip:
 	    if self.envskip:
-		str = str + " envelope " + self.envskip + " " + self.envelope
+		res = res + " envelope " + self.envskip + " " + self.envelope
 	    else:
-		str = str + " envelope " + self.envelope
+		res = res + " envelope " + self.envelope
 	if self.qvirtual:
-	    str = str + (" qvirtual " + str(self.qvirtual) + "\n");
+	    res = res + (" qvirtual " + str(self.qvirtual) + "\n");
 	if self.preauth != ServerDefaults.preauth:
-	    str = str + " preauth " + self.preauth
+	    res = res + " preauth " + self.preauth
 	if self.dns != ServerDefaults.dns or self.uidl != ServerDefaults.uidl:
-	    str = str + " and options"
+	    res = res + " and options"
 	if self.dns != ServerDefaults.dns:
-	    str = str + flag2str(self.dns, 'dns')
+	    res = res + flag2str(self.dns, 'dns')
 	if self.uidl != ServerDefaults.uidl:
-	    str = str + flag2str(self.uidl, 'uidl')
-	if folded:        str = str + "\n    "
-	else:             str = str + " "
+	    res = res + flag2str(self.uidl, 'uidl')
+	if folded:        res = res + "\n    "
+	else:             res = res + " "
 
 	if self.aka:
-	     str = str + "aka"
+	     res = res + "aka"
 	     for x in self.aka:
-		str = str + " " + x
-	if self.aka and self.localdomains: str = str + " "
+		res = res + " " + x
+	if self.aka and self.localdomains: res = res + " "
 	if self.localdomains:
-	     str = str + ("localdomains")
+	     res = res + ("localdomains")
 	     for x in self.localdomains:
-		str = str + " " + x
+		res = res + " " + x
         if (self.aka or self.localdomains):
 	    if folded:
-		str = str + "\n    "
+		res = res + "\n    "
 	    else:
-		str = str + " "
+		res = res + " "
 
 	if self.interface:
-            str = str + "interface " + str(self.interface)
+            res = res + "interface " + str(self.interface)
 	if self.monitor:
-            str = str + "monitor " + str(self.monitor)
+            res = res + "monitor " + str(self.monitor)
 	if self.netsec:
-            str = str + "netsec " + str(self.netsec)
+            res = res + "netsec " + str(self.netsec)
 	if self.interface or self.monitor or self.netsec:
 	    if folded:
-		str = str + "\n"
+		res = res + "\n"
 
-	if str[-1] == " ": str = str[0:-1]
+	if res[-1] == " ": res = res[0:-1]
 
 	for user in self.users:
-	    str = str + repr(user)
-	str = str + "\n"
-	return str;
+	    res = res + repr(user)
+	res = res + "\n"
+	return res;
 
     def __delitem__(self, name):
         for ui in range(len(self.users)):
