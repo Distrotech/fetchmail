@@ -23,6 +23,9 @@
 /* Define if your C compiler allows void * as a function result */
 #undef HAVE_VOIDPOINTER
 
+/* Define if your C compiler allows ANSI volatile */
+#undef HAVE_VOLATILE
+
 /* Define if `union wait' is the type of the first arg to wait functions.  */
 #undef HAVE_UNION_WAIT
 

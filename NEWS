@@ -7,6 +7,7 @@ fetchmail-4.6.3 ():
   compile-time options have been enabled, and uses it to control
   the choices in various panels.
 * Added `properties' option for extension scripts.
+* gcc -Wall cleanup
 
 There are 250 people on fetchmail-friends and 294 on fetchmail-announce.
 

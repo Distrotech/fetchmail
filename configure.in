@@ -108,6 +108,13 @@ AC_TRY_COMPILE([],
  [AC_DEFINE(HAVE_VOIDPOINTER) AC_MSG_RESULT(yes)],
  AC_MSG_RESULT(no))
 
+dnl Check for ANSI volatile
+AC_MSG_CHECKING(for ANSI volatile)
+AC_TRY_COMPILE([],
+   [volatile int n;],
+ [AC_DEFINE(HAVE_VOLATILE) AC_MSG_RESULT(yes)],
+ AC_MSG_RESULT(no))
+
 dnl Check out the wait reality.  We have to assume sys/wait.h is present.
 AC_CHECK_FUNCS(waitpid wait3)
 AC_MSG_CHECKING(for union wait);

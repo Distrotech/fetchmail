@@ -1305,7 +1305,12 @@ int do_protocol(ctl, proto)
 struct query *ctl;		/* parsed options with merged-in defaults */
 const struct method *proto;	/* protocol method table */
 {
-    int ok, js, sock = -1;
+    int ok, js;
+#ifdef HAVE_VOLATILE
+    volatile int sock = -1;	/* pacifies -Wall */
+#else
+    int sock = -1;
+#endif /* HAVE_VOLATILE */
     char *msg;
     void (*sigsave)();
     struct idlist *current=NULL, *tmp=NULL;
