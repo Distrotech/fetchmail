@@ -36,9 +36,10 @@
 #define LA_LOGFILE	16
 #define LA_QUIT		17
 #define LA_NOREWRITE	18
-#define LA_YYDEBUG	19
+#define LA_HELP		19
+#define LA_YYDEBUG	20
 
-static char *shortoptions = "23PVaKkvS:sFd:f:u:r:L:qN";
+static char *shortoptions = "PVaKkvS:sFd:f:u:r:L:qN?";
 static struct option longoptions[] = {
   {"version",   no_argument,       (int *) 0, LA_VERSION    },
   {"all",	no_argument,       (int *) 0, LA_ALL        },
@@ -59,6 +60,7 @@ static struct option longoptions[] = {
   {"logfile",	required_argument, (int *) 0, LA_LOGFILE    },
   {"quit",	no_argument,	   (int *) 0, LA_QUIT       },
   {"norewrite",	no_argument,	   (int *) 0, LA_NOREWRITE  },
+  {"help",	no_argument,	   (int *) 0, LA_HELP       },
   {"yydebug",	no_argument,	   (int *) 0, LA_YYDEBUG    },
   {(char *) 0,  no_argument,       (int *) 0, 0             }
 };
@@ -81,7 +83,7 @@ static struct option longoptions[] = {
 	   	 syntax errors.
   calls:         none.  
   globals:       writes outlevel, versioninfo, yydebug, logfile, 
-		 poll_interval, quitmode, rcfile, idfile.  
+		 poll_interval, quitmode, rcfile
  *********************************************************************/
 
 int parsecmdline (argc,argv,queryctl)
@@ -105,12 +107,6 @@ struct hostrec *queryctl;
                           longoptions,&option_index)) != -1) {
 
     switch (c) {
-      case '2':
-        queryctl->protocol = P_POP2;
-        break;
-      case '3':
-        queryctl->protocol = P_POP3;
-        break;
       case 'V':
       case LA_VERSION:
         versioninfo = !0;
@@ -204,6 +200,8 @@ struct hostrec *queryctl;
       case LA_YYDEBUG:
 	yydebug = 1;
         break;
+      case '?':
+      case LA_HELP:
       default:
         errflag++;
     }
@@ -212,9 +210,8 @@ struct hostrec *queryctl;
   if (errflag) {
     /* squawk if syntax errors were detected */
     fputs("usage:  fetchmail [options] [server ...]\n", stderr);
-    fputs("  options\n",stderr);
-    fputs("  -2                use POP2 protocol\n", stderr);
-    fputs("  -3                use POP3 protocol\n", stderr);
+    fputs("  Options are as follows:\n",stderr);
+    fputs("  -?, --help        display this option help\n", stderr);
     fputs("  -p, --protocol    specify pop2, pop3, imap, apop\n", stderr);
     fputs("  -V, --version     display version info\n", stderr);
     fputs("  -a, --all         retrieve old and new messages\n", stderr);
@@ -227,8 +224,7 @@ struct hostrec *queryctl;
     fputs("  -v, --verbose     work noisily (diagnostic output)\n", stderr);
     fputs("  -d, --daemon      run as a daemon once per n seconds\n", stderr);
     fputs("  -f, --fetchmailrc specify alternate run control file\n", stderr);
-    fputs("  -i, --idfile      specify alternate ID database\n", stderr);
-    fputs("  -u, --username    specify server user ID\n", stderr);
+    fputs("  -u, --username    specify users's login on server\n", stderr);
     fputs("  -r, --remote      specify remote folder name\n", stderr);
     fputs("  -L, --logfile     specify logfile name\n", stderr);
     return(-1);
@@ -248,7 +244,7 @@ struct hostrec *queryctl;
   return value:  zero if defaults were successfully set, else non-zero
                  (indicates a problem reading /etc/passwd).
   calls:         none.
-  globals:       writes outlevel, rcfile, idfile.
+  globals:       writes outlevel, rcfile.
  *********************************************************************/
 #include <stdlib.h>
 

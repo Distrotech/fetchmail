@@ -51,16 +51,6 @@ The following options modify the behavior of \fIfetchmail\fR.  It is
 seldom necessary to specify any of these once you have a
 working \fI.fetchmailrc\fR file set up.
 .TP
-.B \-2
-Use Post Office Protocol version 2 (POP2).  See also the 
-.B \--protocol
-option, below.
-.TP
-.B \-3
-Use Post Office Protocol version 3 (POP3).  See also the
-.B \--protocol
-option, below.
-.TP
 .B \-a, --all
 Retrieve both old (seen) and new messages from the mailserver.  The
 default is to fetch only messages the server has not marked seen.  Note
