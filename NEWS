@@ -12,7 +12,7 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.2.6 ()
+fetchmail-4.2.6 (Wed Sep 24 17:37:13 EDT 1997)
 * Prevent bad matches on Received line due to hostnames ending "for" and "by".
 * Improved bug-tracking header, now also emitted when using an MDA.
 * Cope with Post Office/NT's brain-dead habit of prepending bogus LIST items
@@ -54,7 +54,7 @@ fetchmail-4.2.2 (Wed Sep 17 22:56:05 EDT 1997)
 
 There are 289 people on the fetchmail-friends list.
 
-fetchmail-4.2.1 (Sun Sep 14 16:31:58 EDT 1997)
+fetchmail-4.2.1 (Tue Sep 16 12:26:57 EDT 1997)
 * Type and inclusion changes to eliminate warnings on weird Unixes.
 * Detect and warn about servers like M$ Exchange that get lengths wrong.
 
