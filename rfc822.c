@@ -17,6 +17,10 @@
 
 #define HEADER_END(p)	((p)[0] == '\n' && ((p)[1] != ' ' && (p)[1] != '\t'))
 
+#ifdef TESTMAIN
+static int verbose;
+#endif /* TESTMAIN */
+
 void reply_hack(buf, host)
 /* hack message headers so replies will work properly */
 char *buf;		/* header to be hacked */
@@ -38,8 +42,11 @@ const char *host;	/* server hostname */
     for (from = buf; *from; from++)
     {
 #ifdef TESTMAIN
-	printf("state %d: %s", state, buf);
-	printf("%*s^\n", from - buf + 10, " ");
+	if (verbose)
+	{
+	    printf("state %d: %s", state, buf);
+	    printf("%*s^\n", from - buf + 10, " ");
+	}
 #endif /* TESTMAIN */
 	if (state != 2)
 	    if (*from == '(')
@@ -111,6 +118,9 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
     static char *tp, address[POPBUFSIZE+1];
     static const char *hp;
     static int	state, oldstate;
+#ifdef TESTMAIN
+    static const char *orighdr;
+#endif /* TESTMAIN */
     int parendepth;
 
 #define START_HDR	0	/* before header colon */
@@ -125,13 +135,19 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
     {
 	hp = hdr;
 	state = START_HDR;
+#ifdef TESTMAIN
+	orighdr = hdr;
+#endif /* TESTMAIN */
     }
 
     for (; *hp; hp++)
     {
 #ifdef TESTMAIN
-	printf("state %d: %s", state, hdr);
-	printf("%*s^\n", hp - hdr + 10, " ");
+	if (verbose)
+	{
+	    printf("state %d: %s", state, orighdr);
+	    printf("%*s^\n", hp - orighdr + 10, " ");
+	}
 #endif /* TESTMAIN */
 
 	if (state == ENDIT_ALL)		/* after last address */
@@ -176,7 +192,7 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 		state = INSIDE_BRACKETS;
 		tp = address;
 	    }
-	    else if (!isspace(*hp))	/* ignore space */
+	    else if (*hp != ',' && !isspace(*hp))
 	    {
 		--hp;
 	        state = BARE_ADDRESS;
@@ -252,35 +268,66 @@ const char *hdr;	/* header to be parsed, NUL to continue previous hdr */
 }
 
 #ifdef TESTMAIN
+static void parsebuf(char *longbuf, int reply)
+{
+    char	*cp;
+
+    if (reply)
+    {
+	reply_hack(longbuf, "HOSTNAME.NET");
+	printf("Rewritten buffer: %s", longbuf);
+    }
+    else
+	if ((cp = nxtaddr(longbuf)) != (char *)NULL)
+	    do {
+		printf("\t-> \"%s\"\n", cp);
+	    } while
+		((cp = nxtaddr((char *)NULL)) != (char *)NULL);
+}
+
+
+
 main(int argc, char *argv[])
 {
-    char	buf[MSGBUFSIZE], *cp;
-    int		reply =  (argc > 1 && !strcmp(argv[1], "-r"));
+    char	buf[MSGBUFSIZE], longbuf[BUFSIZ];
+    int		ch, reply;
+    
+    verbose = reply = FALSE;
+    while ((ch = getopt(argc, argv, "rv")) != EOF)
+	switch(ch)
+	{
+	case 'r':
+	    reply = TRUE;
+	    break;
+
+	case 'v':
+	    verbose = TRUE;
+	    break;
+	}
 
     while (fgets(buf, sizeof(buf)-1, stdin))
     {
-	if (strncmp("From: ", buf, 6)
-		    && strncmp("To: ", buf, 4)
-		    && strncmp("Reply-", buf, 6)
-		    && strncmp("Cc: ", buf, 4)
-		    && strncmp("Bcc: ", buf, 5))
-	    continue;
-	else
+	if (buf[0] == ' ' || buf[0] == '\t')
+	    strcat(longbuf, buf);
+	else if (!strncmp("From: ", buf, 6)
+		    || !strncmp("To: ", buf, 4)
+		    || !strncmp("Reply-", buf, 6)
+		    || !strncmp("Cc: ", buf, 4)
+		    || !strncmp("Bcc: ", buf, 5))
+	    strcpy(longbuf, buf);	
+	else if (longbuf[0])
 	{
-	    fputs(buf, stdout);
-	    if (reply)
-	    {
-		reply_hack(buf, "HOSTNAME.NET");
-		printf("Rewritten buffer: %s", buf);
-	    }
-	    else
-		if ((cp = nxtaddr(buf)) != (char *)NULL)
-		    do {
-			printf("\t\"%s\"\n", cp);
-		    } while
-			((cp = nxtaddr((char *)NULL)) != (char *)NULL);
+	    if (verbose)
+		fputs(longbuf, stdout);
+	    parsebuf(longbuf, reply);
+	    longbuf[0] = '\0';
 	}
-
+    }
+    if (longbuf[0])
+    {
+	if (verbose)
+	    fputs(longbuf, stdout);
+	parsebuf(longbuf, reply);
     }
 }
 #endif /* TESTMAIN */
