@@ -1,5 +1,9 @@
 			Release Notes:
 
+pl 1.9.10 ():
+* Better error messages on SMTP failure. 
+* Accept Resent-From & Apparently-From a la RFC822.
+
 pl 1.9.8 (Wed Nov  6 16:40:34 EST 1996):
 * Don't append spurious NUL to the headers, qmail actually notices it.
 * Fatal bug in multidrop code fixed.

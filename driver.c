@@ -307,6 +307,12 @@ struct query *ctl;	/* query control record */
 
 	    if (!strncasecmp("From:", bufp, 5))
 		fromhdr = bufp;
+	    else if (!fromhdr && !strncasecmp("Resent-From:", bufp, 12))
+		fromhdr = bufp;
+	    else if (!fromhdr && !strncasecmp("Apparently-From:", bufp, 16))
+		fromhdr = bufp;
+	    else if (!strncasecmp("To:", bufp, 3))
+		tohdr = bufp;
 	    else if (!strncasecmp("To:", bufp, 3))
 		tohdr = bufp;
 	    else if (!strncasecmp("Cc:", bufp, 3))
@@ -393,6 +399,8 @@ struct query *ctl;	/* query control record */
 	    }
 	    else
 	    {
+		char	*ap;
+
 		if (ctl->mda[0] == '\0'	&& ((sinkfp = smtp_open(ctl)) < 0))
 		{
 		    free_uid_list(&xmit_names);
@@ -406,16 +414,17 @@ struct query *ctl;	/* query control record */
 		    return(PS_SMTP);
 		}
 
-		if (SMTP_from(sinkfp, nxtaddr(fromhdr)) != SM_OK)
+		if (SMTP_from(sinkfp, ap = nxtaddr(fromhdr)) != SM_OK)
 		{
-		    fprintf(stderr, "fetchmail: SMTP listener is confused\n");
+		    fprintf(stderr, "fetchmail: SMTP listener doesn't like the From address `%s'\n", ap);
 		    return(PS_SMTP);
 		}
 
 		for (idp = xmit_names; idp; idp = idp->next)
 		    if (SMTP_rcpt(sinkfp, idp->id) != SM_OK)
 		    {
-			fprintf(stderr, "fetchmail: SMTP listener is upset\n");
+			fprintf(stderr, 
+				"fetchmail: SMTP listener doesn't like the To address `%s'\n", idp->id);
 			return(PS_SMTP);
 		    }
 
