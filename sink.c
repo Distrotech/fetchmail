@@ -51,7 +51,7 @@ static int smtp_open(struct query *ctl)
     /* maybe it's time to close the socket in order to force delivery */
     if (NUM_NONZERO(ctl->batchlimit) && (ctl->smtp_socket != -1) && ++batchcount == ctl->batchlimit)
     {
-	close(ctl->smtp_socket);
+	SockClose(ctl->smtp_socket);
 	ctl->smtp_socket = -1;
 	batchcount = 0;
     }

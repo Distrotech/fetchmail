@@ -1537,7 +1537,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	/* try to clean up all streams */
 	release_sink(ctl);
 	if (ctl->smtp_socket != -1)
-	    close(ctl->smtp_socket);
+	    SockClose(ctl->smtp_socket);
 	if (mailserver_socket != -1)
 	    SockClose(mailserver_socket);
     }

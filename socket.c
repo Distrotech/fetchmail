@@ -163,7 +163,7 @@ int SockOpen(const char *host, const char *service, const char *options,
     }
     if (connect(i, (struct sockaddr *) ai->ai_addr, ai->ai_addrlen) < 0) {
 	freeaddrinfo(ai);
-	close(i);
+	SockClose(i);
 	return -1;
     }
 #endif
@@ -226,7 +226,7 @@ int SockOpen(const char *host, int clientPort, const char *options,
         if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) < 0)
         {
             int olderr = errno;
-            close(sock);
+            SockClose(sock);
             h_errno = 0;
             errno = olderr;
             return -1;
@@ -272,14 +272,14 @@ int SockOpen(const char *host, int clientPort, const char *options,
 	    memcpy(&ad.sin_addr, *pptr, sizeof(struct in_addr));
 	    if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) == 0)
 		break; /* success */
-	    close(sock);
+	    SockClose(sock);
 	    memset(&ad, 0, sizeof(ad));
 	    ad.sin_family = AF_INET;
 	}
 	if(*pptr == NULL)
 	{
 	    int olderr = errno;
-	    close(sock);
+	    SockClose(sock);
 	    h_errno = 0;
 	    errno = olderr;
 	    return -1;
@@ -651,8 +651,9 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *servercname )
 #endif
 
 int SockClose(int sock)
-/* close a socket (someday we may do other cleanup here) */
+/* close a socket gracefully */
 {
+    char ch;
 #ifdef	SSL_ENABLE
     SSL *ssl;
 
@@ -662,15 +663,35 @@ int SockClose(int sock)
         _ssl_context[sock] = NULL;
     }
 #endif
-    return(close(sock));
+
+    /* Half-close the connection first so the other end gets notified.
+     *
+     * This stops sends but allows receives (effectively, it sends a
+     * TCP <FIN>).  We ignore the return from this function because
+     * some older BSD-based implementations fail shutdown() if a TCP
+     * reset has been recieved.  In any case, if it fails it means the
+     * connection is already closed anyway, so it doesn't matter.
+     */
+    shutdown(sock, 1);
+
+    /* If there is any data still waiting in the queue, discard it.
+     * Call recv() until either it returns 0 (meaning we received a FIN)
+     * or any error occurs.  This makes sure all data sent by the other
+     * side is acknowledged at the TCP level.
+     */
+    if (recv(sock, &ch, 1, MSG_PEEK) > 0)
+	while (recv(sock, &ch, 1, MSG_NOSIGNAL) > 0)
+	    continue;
+
+    /* if there's an error closing at this point, not much we can do */
+    return(close(sock));	/* this is guarded */
 }
 
 #ifdef MAIN
 /*
  * Use the chargen service to test input buffering directly.
  * You may have to uncomment the `chargen' service description in your
- * inetd.conf (and then SIGHUP inetd) for this to work. 
- */
+ * inetd.conf (and then SIGHUP inetd) for this to work.  */
 main()
 {
     int	 	sock = SockOpen("localhost", 19, NULL);

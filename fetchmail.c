@@ -1322,7 +1322,7 @@ static void terminate_poll(int sig)
 	    if (ctl->smtp_socket != -1)
 	    {
 		SMTP_quit(ctl->smtp_socket);
-		close(ctl->smtp_socket);
+		SockClose(ctl->smtp_socket);
 		ctl->smtp_socket = -1;
 	    }
     }
