@@ -59,7 +59,17 @@ at version 3.0b6 or later, do this
 
 (cd ~; mv ~/.poprc ~/.fetchmailrc)
 
-in order to migrate.
+in order to migrate.  Be aware that some of popclient's unnecessary 
+options have been removed (see the NOTES file for explanation).  You
+can't deliver to a local mail file anymore, and using an MDA for delivery
+is discouraged.  If you throw those options away, fetchmail will now forward
+your mail into your system's normal Internet-mail delivery path.
+
+If you use an MDA with popclient or an older version of fetchmail that
+requires %s in the MDA string in order to substitute in a local
+delivery address, remove it.  One consequences of the internal changes
+to support multi-drop mailboxes is that local delivery addresses will
+be appended to the end of the command in the obvious way.
 
 5. TEST
 

@@ -11,6 +11,11 @@ features --
   lists and multidrop mailboxes.  See the man page for details (and note
   the caveat in the BUGS AND KNOWN PROBLEMS section).
 
+* If you use an MDA, the internal changes to support multi-drop mailboxes
+  require that you *remove* the %s at the end of your MDA string.  Local 
+  delivery addresses will be appended to the end of the command in the
+  obvious way.
+
 * The first message from a query now includes the number of old messages
   when this can be determined (that is not under POP2).
 
