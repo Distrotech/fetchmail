@@ -1606,7 +1606,7 @@ static void dump_params (struct runctl *runp,
 	switch (ctl->server.authenticate)
 	{
 	case A_ANY:
-	    printf(_("  All authentication methods will be tried.\n"));
+	    printf(_("  All available authentication methods will be tried.\n"));
 	    break;
 	case A_PASSWORD:
 	    printf(_("  Password authentication will be forced.\n"));
