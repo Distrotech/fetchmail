@@ -18,12 +18,13 @@ fetchmail-4.2.2 ()
 * Autoconfigure root-mode PID-file directory to /etc if no /var/run.
 * ETRN mode no longer tries to flush queue for "localhost".
 * Introduced new DNS error return 11 to indicate DNS failure at startup.
+* More portation tweaks for unusual Unixes.
 
-There are 285 people on the fetchmail-friends list.
+There are 286 people on the fetchmail-friends list.
 
 fetchmail-4.2.1 (Sun Sep 14 16:31:58 EDT 1997)
 * Type and inclusion changes to eliminate warnings on weird Unixes.
-* Detect and warn about servers like M$ Exchange that get lengths now.
+* Detect and warn about servers like M$ Exchange that get lengths wrong.
 
 There are 285 people on the fetchmail-friends list.
 
