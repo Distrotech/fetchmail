@@ -86,7 +86,7 @@ EOF
 close(NEWS);
 
 close(REPORT);
-system("~/bin/fortune.pl ~/.randsig >>PREAMBLE.$$");
+system("(echo '--'; ~/bin/fortune.pl) ~/.randsig >>PREAMBLE.$$");
 
 if ($rcsid eq '<workfile>') {
     system("rcsdiff -u -r$oldid          RCS/* 2>/dev/null >DIFFS.$$");
