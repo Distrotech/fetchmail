@@ -177,10 +177,14 @@ char *rfc822timestamp(void)
      * Conform to RFC822.  We generate a 4-digit year here, avoiding
      * Y2K hassles.  Max length of this timestamp in an English locale
      * should be 29 chars.  The only things that should vary by locale
-     * are the day and month abbreviations.
+     * are the day and month abbreviations.  The set_locale calls prevent
+     * weird multibyte i18n characters (such as kanji) for showing up
+     * in your Received headers.
      */
+    setlocale (LC_TIME, "C");
     strftime(buf, sizeof(buf)-1, 
 	     "%a, %d %b %Y %H:%M:%S XXXXX (%Z)", localtime(&now));
+    setlocale (LC_TIME, "");
     strncpy(strstr(buf, "XXXXX"), tzoffset(&now), 5);
 #else
     /*
