@@ -13,14 +13,13 @@ every user entry in a multi-user poll declaration.
   form "foo"@bar.com are not parsed correctly, even though they are
   technically RFC822 legal. The general problem is mentioned on the man page.
 
-* fetchmail has been reported to break when processing 0-length (bodyless)
-  messages retrieved via IMAP.  (Such messages are sometimes issued by the
-  INN suite as status notifications.)
-
 * Dave Holland <dave@zenda.demon.co.uk> thinks it's a misfeature that
   --fetchall overrides --limit.  He may have a point.   Perhaps I should
   re-code this so --limit is still operative with --fetchall on, but you
   can turn off the size limit with --limit 0.
+
+* When using the IMAP protocol, fetchmail will hang if your messages have
+  embedded NUL characters.  This is mentioned on the man page.
 
 				Release Notes:
 
@@ -33,7 +32,7 @@ pl 3.9.4 ():
 * Changes to forbid duplicate server names in the rc file.
 * Do caseblind comparisons of host and user names everywhere.
 
-There are 239 people on the fetchmail-friends list.
+There are 248 people on the fetchmail-friends list.
 
 pl 3.9.3 (Wed May  7 11:40:47 EDT 1997):
 * Fix for -I option from George Sipe.

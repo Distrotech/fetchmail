@@ -735,10 +735,10 @@ Specifying `kpop' sets POP3 protocol over port 1109 with Kerberos V4
 authentication.  These defaults may be overridden by later options.
 .PP
 You can use the noise keywords `and', `with',
-`has', `wants', and `options' anywhere in an entry to make
+\&`has', `wants', and `options' anywhere in an entry to make
 it resemble English.  They're ignored, but but can make entries much
 easier to read at a glance.  The punctuation characters ':', ';' and
-',' are also ignored.
+\&',' are also ignored.
 .PP
 The words `here' and `there' have useful English-like
 significance.  Normally `user eric is esr' would mean that 
@@ -1069,6 +1069,9 @@ entry from your user ID.
 The RFC822 parser used in multidrop mode chokes on some @-addresses that
 are technically legal but bizarre.  Strange uses of quoting and
 embedded comments are likely to confuse it.
+.PP
+Retrieval using IMAP will hang if a message has embedded NUL
+characters.  (This will be fixed in a future release.)
 .PP
 Use of any of the supported protocols other than APOP, KPOP, or ETRN requires
 that the program send unencrypted passwords over the TCP/IP connection
