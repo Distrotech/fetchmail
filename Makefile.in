@@ -137,7 +137,7 @@ MAKE = make
 
 FORCE:
 
-tagsrcs = $(srcs) $(srcdir)/rcfile_l.c $(srcdir)/rcfile_y.c
+tagsrcs = $(srcs) rcfile_l.c rcfile_y.c
 TAGS: $(tagsrcs)
 	$(ETAGS) $(tagsrcs)
 tags: $(tagsrcs)
@@ -193,8 +193,8 @@ config.h.in: acconfig.h configure.in
 .NOEXPORT:
 
 # Special dependencies, not easily handled without explicit rules
-$(srcdir)/rcfile_l.c $(srcdir)/rcfile_l.h: $(srcdir)/rcfile_l.l
-$(srcdir)/rcfile_y.c $(srcdir)/rcfile_y.h: $(srcdir)/rcfile_y.y
+rcfile_l.c rcfile_l.h: $(srcdir)/rcfile_l.l
+rcfile_y.c rcfile_y.h: $(srcdir)/rcfile_y.y
 
 parser = $(srcdir)/rcfile_l.l $(srcdir)/rcfile_y.y
 headers = $(srcdir)/fetchmail.h $(srcdir)/socket.h $(srcdir)/smtp.h \
