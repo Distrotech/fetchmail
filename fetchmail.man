@@ -49,7 +49,11 @@ If the program
 .I fetchmailconf
 is available, it will assist you in setting up and editing a
 fetchmailrc configuration.  It runs under X and requires that the
-language Python and the Tk toolkit be present on your system.
+language Python and the Tk toolkit be present on your system.  If
+you are first setting up fetchmail for single-user mode, it is
+recommended that you use Novice mode.  Expert mode provides
+complete control of fetchmail configuration, including the
+multidrop features.
 
 .SH GENERAL OPERATION
 The behavior of
