@@ -7,9 +7,10 @@
 #define		P_POP2		2
 #define		P_POP3		3
 #define		P_IMAP		4
-#define		P_APOP		5
-#define		P_RPOP		6
-#define		P_ETRN		7
+#define		P_IMAP_K4	5
+#define		P_APOP		6
+#define		P_RPOP		7
+#define		P_ETRN		8
 
 #define		KPOP_PORT	1109
 

@@ -299,7 +299,7 @@ int main (int argc, char **argv)
     for (ctl = querylist; ctl; ctl = ctl->next)
 	if (ctl->active && !(implicitmode && ctl->server.skip)&&!ctl->password)
 	{
-	    if (ctl->server.authenticate == A_KERBEROS_V4)
+	    if (ctl->server.authenticate == A_KERBEROS_V4 || ctl->server.protocol == P_IMAP_K4)
 		/* Server won't care what the password is, but there
 		   must be some non-null string here.  */
 		ctl->password = ctl->remotename;
@@ -315,7 +315,7 @@ int main (int argc, char **argv)
 		    ctl->password = xstrdup(p->password);
 	    }
 
-	    if (ctl->server.protocol != P_ETRN && !ctl->password)
+	    if (ctl->server.protocol != P_ETRN && ctl->server.protocol != P_IMAP_K4 && !ctl->password)
 	    {
 		(void) sprintf(tmpbuf, "Enter password for %s@%s: ",
 			       ctl->remotename, ctl->server.names->id);
@@ -731,6 +731,7 @@ static char *showproto(int proto)
     case P_POP2: return("POP2"); break;
     case P_POP3: return("POP3"); break;
     case P_IMAP: return("IMAP"); break;
+    case P_IMAP_K4: return("IMAP-K4"); break;
     case P_APOP: return("APOP"); break;
     case P_RPOP: return("RPOP"); break;
     case P_ETRN: return("ETRN"); break;
@@ -777,6 +778,7 @@ static int query_host(struct query *ctl)
 	return(doPOP3(ctl));
 	break;
     case P_IMAP:
+    case P_IMAP_K4:
 	return(doIMAP(ctl));
 	break;
     case P_ETRN:

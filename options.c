@@ -177,8 +177,6 @@ struct query *ctl;	/* option record to be initialized */
 		ctl->server.protocol = P_POP2;
 	    else if (strcasecmp(optarg,"pop3") == 0)
 		ctl->server.protocol = P_POP3;
-	    else if (strcasecmp(optarg,"imap") == 0)
-		ctl->server.protocol = P_IMAP;
 	    else if (strcasecmp(optarg,"apop") == 0)
 		ctl->server.protocol = P_APOP;
 	    else if (strcasecmp(optarg,"rpop") == 0)
@@ -189,6 +187,12 @@ struct query *ctl;	/* option record to be initialized */
 		ctl->server.port = KPOP_PORT;
 		ctl->server.authenticate =  A_KERBEROS_V4;
 	    }
+	    else if (strcasecmp(optarg,"imap") == 0)
+		ctl->server.protocol = P_IMAP;
+#ifdef KERBEROS_V4
+	    else if (strcasecmp(optarg,"imap-k4") == 0)
+		ctl->server.protocol = P_IMAP_K4;
+#endif /* KERBEROS_V4 */
 	    else if (strcasecmp(optarg,"etrn") == 0)
 		ctl->server.protocol = P_ETRN;
 	    else {

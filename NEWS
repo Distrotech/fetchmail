@@ -24,6 +24,10 @@ every user entry in a multi-user poll declaration.
 
 ------------------------------------------------------------------------------
 
+pl 3.9.6 ():
+* Fix the libc6 configuration stuff (thanks to Jesse Thilo).
+* Support for Kerberos-v4-authenticated IMAP.
+
 pl 3.9.5 (Sun May 18 01:05:13 EDT 1997):
 * Add an error notification when an incoming message has embedded NULs.
 * Throw out >From lines in headers to prevent getting hosed by upstream

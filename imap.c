@@ -16,6 +16,11 @@
 #include  "fetchmail.h"
 #include  "socket.h"
 
+#ifdef KERBEROS_V4
+#include <krb.h>
+#include "base64.h"
+#endif /* KERBEROS_V4 */
+
 extern char *strstr();	/* needed on sysV68 R3V7.1. */
 
 /* imap_version values */
@@ -76,45 +81,307 @@ int imap_ok (int sock,  char *argbuf)
     }
 }
 
+#ifdef KERBEROS_V4
+static int do_rfc1731(int sock, struct query *ctl, char *buf)
+/* authenticate as per RFC1731
+ * note 32-bit integer requirement here...
+ * sizeof int must be 4!
+ *
+ * Note: Base64 conversion routines come from Cyrus IMAPd and have
+ * possibly too-restrictive redistribution requirements.  See base64.c
+ * for details.  Base64 is defined in RFC2045 section 6.8, "Base64
+ * Content-Transfer-Encoding", but lines must not be broken in the
+ * scheme used here.
+ */
+{
+    int result = 0, len;
+    char buf1[4096], buf2[4096];
+    union {
+      int cint;
+      char cstr[4];
+    } challenge1, challenge2;
+    char srvinst[INST_SZ];
+    char *p;
+    char srvrealm[REALM_SZ];
+    KTEXT_ST authenticator;
+    CREDENTIALS credentials;
+    char tktuser[MAX_K_NAME_SZ+1+INST_SZ+1+REALM_SZ+1];
+    char tktinst[INST_SZ];
+    char tktrealm[REALM_SZ];
+    des_cblock session;
+    des_key_schedule schedule;
+
+    gen_send(sock, "AUTHENTICATE KERBEROS_V4");
+
+    /* The data encoded in the first ready response contains a random
+     * 32-bit number in network byte order.  The client should respond
+     * with a Kerberos ticket and an authenticator for the principal
+     * "imap.hostname@realm", where "hostname" is the first component
+     * of the host name of the server with all letters in lower case
+     * and where "realm" is the Kerberos realm of the server.  The
+     * encrypted checksum field included within the Kerberos
+     * authenticator should contain the server provided 32-bit number
+     * in network byte order.
+     */
+
+    if (result = gen_recv(sock, buf1, sizeof buf1)) {
+	return result;
+    }
+
+    len = from64(challenge1.cstr, buf1);
+    if (len < 0) {
+	error(0, -1, "could not decode initial BASE64 challenge");
+	return PS_AUTHFAIL;
+    }
+
+    /* Client responds with a Kerberos ticket and an authenticator for
+     * the principal "imap.hostname@realm" where "hostname" is the
+     * first component of the host name of the server with all letters
+     * in lower case and where "realm" is the Kerberos realm of the
+     * server.  The encrypted checksum field included within the
+     * Kerberos authenticator should contain the server-provided
+     * 32-bit number in network byte order.
+     */
+
+    strncpy(srvinst, ctl->server.names->id, (sizeof srvinst)-1);
+    srvinst[(sizeof srvinst)-1] = '\0';
+    for (p = srvinst; *p; p++) {
+      if (isupper(*p)) {
+	*p = tolower(*p);
+      }
+    }
+
+    strncpy(srvrealm, krb_realmofhost(srvinst), (sizeof srvrealm)-1);
+    srvrealm[(sizeof srvrealm)-1] = '\0';
+    if (p = strchr(srvinst, '.')) {
+      *p = '\0';
+    }
+
+    result = krb_mk_req(&authenticator, "imap", srvinst, srvrealm, 0);
+    if (result) {
+	error(0, -1, "krb_mq_req: %s", krb_get_err_text(result));
+	return PS_AUTHFAIL;
+    }
+
+    result = krb_get_cred("imap", srvinst, srvrealm, &credentials);
+    if (result) {
+	error(0, -1, "krb_get_cred: %s", krb_get_err_text(result));
+	return PS_AUTHFAIL;
+    }
+
+    memcpy(session, credentials.session, sizeof session);
+    memset(&credentials, 0, sizeof credentials);
+    des_key_sched(session, schedule);
+
+    result = krb_get_tf_fullname(TKT_FILE, tktuser, tktinst, tktrealm);
+    if (result) {
+	error(0, -1, "krb_get_tf_fullname: %s", krb_get_err_text(result));
+	return PS_AUTHFAIL;
+    }
+
+    if (strcmp(tktuser, user) != 0) {
+	error(0, -1, "principal %s in ticket does not match -u %s", tktuser,
+		user);
+	return PS_AUTHFAIL;
+    }
+
+    if (tktinst[0]) {
+	error(0, 0, "non-null instance (%s) might cause strange behavior",
+		tktinst);
+	strcat(tktuser, ".");
+	strcat(tktuser, tktinst);
+    }
+
+    if (strcmp(tktrealm, srvrealm) != 0) {
+	strcat(tktuser, "@");
+	strcat(tktuser, tktrealm);
+    }
+
+    result = krb_mk_req(&authenticator, "imap", srvinst, srvrealm,
+	    challenge1.cint);
+    if (result) {
+	error(0, -1, "krb_mq_req: %s", krb_get_err_text(result));
+	return PS_AUTHFAIL;
+    }
+
+    to64(buf1, authenticator.dat, authenticator.length);
+    if (outlevel == O_VERBOSE) {
+	error(0, 0, "IMAP> %s", buf1);
+    }
+    SockWrite(sock, buf1, strlen(buf1));
+    SockWrite(sock, "\r\n", 2);
+
+    /* Upon decrypting and verifying the ticket and authenticator, the
+     * server should verify that the contained checksum field equals
+     * the original server provided random 32-bit number.  Should the
+     * verification be successful, the server must add one to the
+     * checksum and construct 8 octets of data, with the first four
+     * octets containing the incremented checksum in network byte
+     * order, the fifth octet containing a bit-mask specifying the
+     * protection mechanisms supported by the server, and the sixth
+     * through eighth octets containing, in network byte order, the
+     * maximum cipher-text buffer size the server is able to receive.
+     * The server must encrypt the 8 octets of data in the session key
+     * and issue that encrypted data in a second ready response.  The
+     * client should consider the server authenticated if the first
+     * four octets the un-encrypted data is equal to one plus the
+     * checksum it previously sent.
+     */
+    
+    if (result = gen_recv(sock, buf1, sizeof buf1))
+	return result;
+
+    /* The client must construct data with the first four octets
+     * containing the original server-issued checksum in network byte
+     * order, the fifth octet containing the bit-mask specifying the
+     * selected protection mechanism, the sixth through eighth octets
+     * containing in network byte order the maximum cipher-text buffer
+     * size the client is able to receive, and the following octets
+     * containing a user name string.  The client must then append
+     * from one to eight octets so that the length of the data is a
+     * multiple of eight octets. The client must then PCBC encrypt the
+     * data with the session key and respond to the second ready
+     * response with the encrypted data.  The server decrypts the data
+     * and verifies the contained checksum.  The username field
+     * identifies the user for whom subsequent IMAP operations are to
+     * be performed; the server must verify that the principal
+     * identified in the Kerberos ticket is authorized to connect as
+     * that user.  After these verifications, the authentication
+     * process is complete.
+     */
+
+    len = from64(buf2, buf1);
+    if (len < 0) {
+	error(0, -1, "could not decode BASE64 ready response");
+	return PS_AUTHFAIL;
+    }
+
+    des_ecb_encrypt((des_cblock *)buf2, (des_cblock *)buf2, schedule, 0);
+    memcpy(challenge2.cstr, buf2, 4);
+    if (ntohl(challenge2.cint) != challenge1.cint + 1) {
+	error(0, -1, "challenge mismatch");
+	return PS_AUTHFAIL;
+    }	    
+
+    memset(authenticator.dat, 0, sizeof authenticator.dat);
+
+    result = htonl(challenge1.cint);
+    memcpy(authenticator.dat, &result, sizeof result);
+
+    /* The protection mechanisms and their corresponding bit-masks are as
+     * follows:
+     *
+     * 1 No protection mechanism
+     * 2 Integrity (krb_mk_safe) protection
+     * 4 Privacy (krb_mk_priv) protection
+     */
+    authenticator.dat[4] = 1;
+
+    len = strlen(tktuser);
+    strncpy(authenticator.dat+8, tktuser, len);
+    authenticator.length = len + 8 + 1;
+    while (authenticator.length & 7) {
+	authenticator.length++;
+    }
+    des_pcbc_encrypt((des_cblock *)authenticator.dat,
+	    (des_cblock *)authenticator.dat, authenticator.length, schedule,
+	    &session, 1);
+
+    to64(buf1, authenticator.dat, authenticator.length);
+    if (outlevel == O_VERBOSE) {
+	error(0, 0, "IMAP> %s", buf1);
+    }
+    SockWrite(sock, buf1, strlen(buf1));
+    SockWrite(sock, "\r\n", 2);
+
+    if (result = gen_recv(sock, buf1, sizeof buf1))
+	return result;
+
+    if (strstr(buf1, "OK")) {
+        return PS_SUCCESS;
+    }
+    else {
+	return PS_AUTHFAIL;
+    }
+}
+#endif /* KERBEROS_V4 */
+
 int imap_getauth(int sock, struct query *ctl, char *buf)
 /* apply for connection authorization */
 {
     char rbuf [POPBUFSIZE+1];
+    int ok = 0;
+#ifdef KERBEROS_V4
+    int kerbok = 0;
 
-    /* try to get authorized */
-    int ok = gen_transact(sock,
-		  "LOGIN %s \"%s\"",
-		  ctl->remotename, ctl->password);
+    if (ctl->server.protocol != P_IMAP_K4) 
+#endif /* KERBEROS_V4 */
+	/* try to get authorized */
+	ok = gen_transact(sock,
+			"LOGIN %s \"%s\"", ctl->remotename, ctl->password);
 
-    if (ok)
-	return(ok);
+     if (ok)
+	 return(ok);
 
-    /* probe to see if we're running IMAP4 and can use RFC822.PEEK */
-    gen_send(sock, "CAPABILITY");
-    if ((ok = gen_recv(sock, rbuf, sizeof(rbuf))))
-	return(ok);
-    if (strstr(rbuf, "BAD"))
-    {
-	imap_version = IMAP2;
-	if (outlevel == O_VERBOSE)
-	    error(0, 0, "Protocol identified as IMAP2 or IMAP2BIS");
-    }
-    else if (strstr(rbuf, "IMAP4rev1"))
-    {
-	imap_version = IMAP4rev1;
-	if (outlevel == O_VERBOSE)
-	    error(0, 0, "Protocol identified as IMAP4 rev 1");
-    }
-    else
-    {
-	imap_version = IMAP4;
-	if (outlevel == O_VERBOSE)
-	    error(0, 0, "Protocol identified as IMAP4 rev 0");
-    }
+     /* probe to see if we're running IMAP4 and can use RFC822.PEEK */
+     gen_send(sock, "CAPABILITY");
+     if ((ok = gen_recv(sock, rbuf, sizeof(rbuf))))
+	 return(ok);
+     if (strstr(rbuf, "BAD"))
+     {
+	 imap_version = IMAP2;
+	 if (outlevel == O_VERBOSE)
+	     error(0, 0, "Protocol identified as IMAP2 or IMAP2BIS");
+     }
+     else if (strstr(rbuf, "IMAP4rev1"))
+     {
+	 imap_version = IMAP4rev1;
+	 if (outlevel == O_VERBOSE)
+	     error(0, 0, "Protocol identified as IMAP4 rev 1");
+     }
+     else
+     {
+	 imap_version = IMAP4;
+	 if (outlevel == O_VERBOSE)
+	     error(0, 0, "Protocol identified as IMAP4 rev 0");
+     }
 
-    peek_capable = (imap_version >= IMAP4);
+     peek_capable = (imap_version >= IMAP4);
 
-    return(PS_SUCCESS);
+#ifdef KERBEROS_V4
+     if (strstr(rbuf, "AUTH=KERBEROS_V4"))
+     {
+	 kerbok++;
+	 if (outlevel == O_VERBOSE)
+		error(0, 0, "KERBEROS_V4 authentication is supported");
+     }
+
+     /* eat OK response */
+     if ((ok = gen_recv(sock, rbuf, sizeof(rbuf))))
+	 return(ok);
+
+     if (!strstr(rbuf, "OK"))
+ 	 return(PS_AUTHFAIL);
+ 
+     if ((imap_version >= IMAP4) && (ctl->server.protocol == P_IMAP_K4))
+     {
+	 if (!kerbok)
+	 {
+	     error(0, -1, "Required KERBEROS_V4 capability not supported by server");
+	     return(PS_AUTHFAIL);
+	 }
+
+	 if ((ok = do_rfc1731(sock, ctl, buf)))
+	 {
+	     if (outlevel == O_VERBOSE)
+		 error(0, 0, "IMAP> *");
+	     SockWrite(sock, "*\r\n", 3);
+	     return(ok);
+	 }
+     }
+#endif /* KERBEROS_V4 */
+
+     return(PS_SUCCESS);
 }
 
 static int imap_getrange(int sock, 

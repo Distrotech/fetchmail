@@ -142,6 +142,9 @@ Use POP3 with RPOP authentication.
 Use POP3 with Kerberos V4 authentication on port 1109.
 .IP IMAP
 IMAP2bis, IMAP4, or IMAP4rev1 (\fIfetchmail\fR autodetects their capabilities).
+.IP IMAP-K4
+IMAP4, or IMAP4rev1 (\fIfetchmail\fR autodetects their capabilities)
+with RFC 1731 Kerberos v4 authentication.
 .IP ETRN
 Use the ESMTP ETRN option.
 .RE
@@ -266,7 +269,7 @@ exactness, `\fBkerberos_v4\fR').  This option is provided
 primarily for developers; choosing KPOP protocol automatically selects
 Kerberos preauthentication, and all other alternatives use ordinary
 password authentication (though APOP uses a generated one-time
-key as the password).
+key as the password and IMAP-K4 uses RFC1731 Kerberos v4 authentication).
 This option does not work with ETRN.
 .SS Miscellaneous Options
 .TP
@@ -391,6 +394,9 @@ If your \fIfetchmail\fR was built with Kerberos support and you specify
 Kerberos preauthentication (either with --auth or the \fI.fetchmailrc\fR
 option \fBauthenticate kerberos_v4\fR) it will try to get a Kerberos
 ticket from the mailserver at the start of each query. 
+.PP
+If you use IMAP-K4 the code will expect the IMAP server to have
+RFC1731-conformant AUTHENTICATE KERBEROS_V4 capability.
 
 .SH DAEMON MODE
 The 
@@ -1082,15 +1088,16 @@ The RFC822 parser used in multidrop mode chokes on some @-addresses that
 are technically legal but bizarre.  Strange uses of quoting and
 embedded comments are likely to confuse it.
 .PP
-Use of any of the supported protocols other than APOP, KPOP, or ETRN requires
-that the program send unencrypted passwords over the TCP/IP connection
-to the mailserver.  This creates a risk that name/password pairs
-might be snaffled with a packet sniffer or more sophisticated
-monitoring software.  Under Linux, the --interface option can be used
-to restrict polling to availability of a specific interface device with
-a specific local IP address, but snooping is still possible if (a)
-either host has a network device that can be opened in promiscuous mode,
-or (b) the intervening network link can be tapped.
+Use of any of the supported protocols other than APOP, KPOP, IMAP-K4,
+or ETRN requires that the program send unencrypted passwords over the
+TCP/IP connection to the mailserver.  This creates a risk that
+name/password pairs might be snaffled with a packet sniffer or more
+sophisticated monitoring software.  Under Linux, the --interface
+option can be used to restrict polling to availability of a specific
+interface device with a specific local IP address, but snooping is
+still possible if (a) either host has a network device that can be
+opened in promiscuous mode, or (b) the intervening network link can be
+tapped.
 .PP
 Send comments, bug reports, gripes, and the like to Eric S. Raymond
 <esr@thyrsus.com>.
