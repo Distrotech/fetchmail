@@ -5,7 +5,6 @@
 * Allow an explicit "append" option to specify what rewrite appends?  (For
   when user's pop3 host isn't the same as his SMTP host.)
 * Allow -c -F to work to flush messages without retrieval.
-* Read from /etc/fetchmailrc before ~/.fetchmailrc?
 * Do is_host_alias checks by comparing IP addresses rather than names?
 * Handle multi-homed hosts correctly.
 * Add an "ident" per-user option for debugging that produces an 
@@ -18,8 +17,10 @@
 ------------------------------------------------------------------------------
 fetchmail-4.4.1 ():
 * We now properly shroud IMAP passwords containing ", \, and SP.
+* Checked for Y2K safety.  No 2-digit dates anywhere, so we're safe.
+* Added mimedecode option by Henrik Storner.
 
-There are 273 people on fetchmail-friends and 160 on fetchmail-announce.
+There are 274 people on fetchmail-friends and 164 on fetchmail-announce.
 
 ------------------------------------------------------------------------------
 fetchmail-4.4.0 (Mon Mar 16 14:57:38 EST 1998):

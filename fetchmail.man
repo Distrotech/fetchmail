@@ -418,7 +418,7 @@ Every mode except ETRN requires authentication of the client.
 Normal user authentication in 
 .I fetchmail
 is very much like the authentication mechanism of 
-.I ftp(1).
+.IR ftp (1).
 The correct user-id and password depend upon the underlying security
 system at the mailserver.  
 .PP
@@ -912,6 +912,9 @@ T}
 dropstatus	\&	T{
 Strip Status and X-Mozilla-Status lines out of incoming mail
 T}
+mimedecode	\&	T{
+Convert quoted-printable to 8-bit in MIME messages (default)
+T}
 no keep  	-K	T{
 Delete seen messages from server (default)
 T}
@@ -935,6 +938,9 @@ Don't force BODY=8BITMIME to ESMTP listener (default)
 T}
 no dropstatus	\&	T{
 Don't drop Status headers (default)
+T}
+no mimedecode	\&	T{
+Don't convert quoted-printable to 8-bit in MIME messages
 T}
 limit   	-l	T{
 Set message size limit
@@ -971,7 +977,8 @@ All options correspond to the obvious command-line arguments, except
 the following: `via', `interval', `aka', `is', `to', `dns'/`no dns',
 \&`password', \&`preconnect', \&`postconnect', `localdomains',
 \&`stripcr'/`no stripcr', \&`forcecr'/`no forcecr', `pass8bits'/`no
-pass8bits' `dropstatus/no dropstatus', and `no envelope'.
+pass8bits' `dropstatus/no dropstatus', `mimedecode/no mimedecode',
+and `no envelope'.
 .PP
 The `via' option is for use with ssh, or if you want to have more
 than one configuration pointing at the same site.  If it is present,
@@ -1094,6 +1101,15 @@ any) were marked seen on the server.  On the other hand, it can
 confuse some new-mail notifiers, which assume that anything with a
 Status line in it has been seen.  (Note: the empty Status lines
 inserted by some buggy POP servers are unconditionally discarded.)
+.PP
+The `mimedecode' option controls whether MIME messages using the
+quoted-printable encoding are automatically converted into pure
+8-bit data. If you are delivering mail to an ESMTP-capable,
+8-bit-clean listener (that includes all of the major programs
+like sendmail), then this will automatically convert quoted-printable
+message headers and data into 8-bit data, making it easier to
+understand when reading mail. If your e-mail programs know how to
+deal with MIME messages, then this option is not needed.
 .PP
 .SS Miscellaneous Run Control Options
 The words `here' and `there' have useful English-like
@@ -1524,9 +1540,9 @@ in foreground while a background fetchmail is running will do
 whichever of these is appropriate to wake it up.
 
 .SH BUGS AND KNOWN PROBLEMS
-The RFC822 parser used in multidrop mode chokes on some @-addresses that
-are technically legal but bizarre.  Strange uses of quoting and
-embedded comments are likely to confuse it.
+The RFC822 address parser used in multidrop mode chokes on some
+@-addresses that are technically legal but bizarre.  Strange uses of
+quoting and embedded comments are likely to confuse it.
 .PP
 Use of any of the supported protocols other than POP3 with OTP or RPA, APOP,
 KPOP, IMAP-K4, IMAP-GSS, or ETRN requires that the program send unencrypted

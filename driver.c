@@ -108,6 +108,7 @@ static int tagnum;
 static char shroud[PASSWORDLEN];	/* string to shroud in debug output */
 static int mytimeout;			/* value of nonreponse timeout */
 static int msglen;			/* actual message length */
+static int mimemsg;			/* bitmask indicating MIME body-type */
 
 /* use these to track what was happening when the nonresponse timer fired */
 #define GENERAL_WAIT	0	/* unknown wait type */
@@ -639,7 +640,7 @@ int num;		/* index of message */
     char		return_path[HOSTLEN + USERNAMELEN + 4]; 
     int			from_offs, reply_to_offs, resent_from_offs;
     int			app_from_offs, sender_offs, resent_sender_offs;
-    int			ctt_offs, env_offs;
+    int			env_offs;
     char		*headers, *received_for, *destaddr, *rcv, *cp;
     int 		n, linelen, oldlen, ch, remaining, skipcount;
     struct idlist 	*idp, *xmit_names;
@@ -656,10 +657,11 @@ int num;		/* index of message */
     /* read message headers */
     headers = received_for = NULL;
     from_offs = reply_to_offs = resent_from_offs = app_from_offs = 
-	sender_offs = resent_sender_offs = ctt_offs = env_offs = -1;
+	sender_offs = resent_sender_offs = env_offs = -1;
     oldlen = 0;
     msglen = 0;
     skipcount = 0;
+    mimemsg = 0;
 
     for (remaining = fetchlen; remaining > 0 || protocol->delimited; remaining -= linelen)
     {
@@ -880,8 +882,6 @@ int num;		/* index of message */
 	else if (!strncasecmp("Resent_Sender:", line, 14))
 	    resent_sender_offs = (line - headers);
 
-	else if (!strncasecmp("Content-Transfer-Encoding:", line, 26))
-	    ctt_offs = (line - headers);
  	else if (!strncasecmp("Message-Id:", buf, 11))
 	{
 	    if (ctl->server.uidl)
@@ -981,6 +981,16 @@ int num;		/* index of message */
      * We can now process message headers before reading the text.
      * In fact we have to, as this will tell us where to forward to.
      */
+
+    /* Decode MIME encoded headers. We MUST do this before
+     * looking at the Content-Type / Content-Transfer-Encoding
+     * headers (RFC 2046).
+     */
+    if (ctl->mimedecode) {
+	UnMimeHeader(headers);
+    }
+    /* Check for MIME headers indicating possible 8-bit data */
+    mimemsg = MimeBodyType(headers);
 
     /*
      * If there is a Return-Path address on the message, this was
@@ -1197,7 +1207,7 @@ int num;		/* index of message */
     }
     else
     {
-	char	*ap, *ctt, options[MSGBUFSIZE], addr[128];
+	char	*ap, options[MSGBUFSIZE], addr[128];
 
 	/* build a connection to the SMTP listener */
 	if ((smtp_open(ctl) == -1))
@@ -1210,22 +1220,16 @@ int num;		/* index of message */
 	}
 
 	/*
-	 * Compute ESMTP options.  It's a kluge to use nxtaddr()
-	 * here because the contents of the Content-Transfer-Encoding
-	 * headers isn't semantically an address.  But it has the
-	 * desired tokenizing effect.
+	 * Compute ESMTP options.
 	 */
 	options[0] = '\0';
-	if (ctl->server.esmtp_options & ESMTP_8BITMIME)
-	    if (ctl->pass8bits)
+	if (ctl->server.esmtp_options & ESMTP_8BITMIME) {
+             if (ctl->pass8bits || (mimemsg & MSG_IS_8BIT))
 		strcpy(options, " BODY=8BITMIME");
-	    else if ((ctt_offs >= 0) && (ctt = nxtaddr(headers + ctt_offs)))
-	    {
-		if (!strcasecmp(ctt,"7BIT"))
-		    strcpy(options, " BODY=7BIT");
-		else if (!strcasecmp(ctt,"8BIT"))
-		    strcpy(options, " BODY=8BITMIME");
-	    }
+             else if (mimemsg & MSG_IS_7BIT)
+		strcpy(options, " BODY=7BIT");
+        }
+
 	if ((ctl->server.esmtp_options & ESMTP_SIZE) && reallen > 0)
 	    sprintf(options + strlen(options), " SIZE=%ld", reallen);
 
@@ -1258,12 +1262,13 @@ int num;		/* index of message */
 		 * coming from this address, probably due to an
 		 * anti-spam domain exclusion.  Respect this.  Don't
 		 * try to ship the message, and don't prevent it from
-		 * being deleted.  Typical values.
+		 * being deleted.  Typical values:
 		 *
 		 * 571 = sendmail's "unsolicited email refused"
 		 * 501 = exim's old antispam response
 		 * 550 = exim's new antispam response (temporary)
 		 */
+		SMTP_rset(ctl->smtp_socket);	/* required by RFC1870 */
 		free(headers);
 		free_str_list(&xmit_names);
 		return(PS_REFUSED);
@@ -1292,6 +1297,7 @@ int num;		/* index of message */
 		return(PS_TRANSIENT);
 
 	    case 552: /* message exceeds fixed maximum message size */
+	    case 553: /* invalid sending domain */
 		/*
 		 * Permanent no-go condition on the
 		 * ESMTP server.  Don't try to ship the message, 
@@ -1543,13 +1549,15 @@ int len;		/* length of message */
 flag forward;		/* TRUE to forward */
 {
     int	linelen;
-    char buf[MSGBUFSIZE+1];
+    unsigned char buf[MSGBUFSIZE+1];
+    unsigned char *inbufp = buf;
+    flag issoftline = FALSE;
 
     /* pass through the text lines */
     while (protocol->delimited || len > 0)
     {
 	set_timeout(ctl->server.timeout);
-	if ((linelen = SockRead(sock, buf, sizeof(buf)-1)) == -1)
+	if ((linelen = SockRead(sock, inbufp, sizeof(buf)-1-(inbufp-buf)))==-1)
 	{
 	    set_timeout(0);
 	    if (ctl->mda)
@@ -1576,20 +1584,35 @@ flag forward;		/* TRUE to forward */
 	len -= linelen;
 
 	/* check for end of message */
-	if (protocol->delimited && *buf == '.')
-	    if (buf[1] == '\r' && buf[2] == '\n' && buf[3] == '\0')
+	if (protocol->delimited && *inbufp == '.')
+	    if (inbufp[1] == '\r' && inbufp[2] == '\n' && inbufp[3] == '\0')
 		break;
-	    else if (buf[1] == '\n' && buf[2] == '\0')
+	    else if (inbufp[1] == '\n' && inbufp[2] == '\0')
 		break;
 	    else
 		msglen--;	/* subtract the size of the dot escape */
 
 	msglen += linelen;
 
+	if (ctl->mimedecode && (mimemsg & MSG_NEEDS_DECODE)) {
+	    issoftline = UnMimeBodyline(&inbufp, (protocol->delimited && issoftline));
+	    if (issoftline && (sizeof(buf)-1-(inbufp-buf) < 200)) {
+		/* Soft linebreak, but less than 200 bytes left in
+		 * input buffer. Rather than doing a buffer overrun,
+		 * ignore the soft linebreak, NL-terminate data and
+		 * deliver what we have now.
+		 * (Who writes lines longer than 2K anyway?)
+		 */
+		*inbufp = '\n'; *(inbufp+1) = '\0';
+		issoftline = 0;
+	    }
+	}
+
 	/* ship out the text line */
-	if (forward)
+	if (forward && (!issoftline))
 	{
 	    int	n = stuffline(ctl, buf);
+	    inbufp = buf;
 
 	    if (n < 0)
 	    {

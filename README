@@ -25,6 +25,8 @@ under AmigaOS.
 A beta OS/2 port of fetchmail is available from Jason F. McBrayer at 
 http://studentweb.tulane.edu/%7Ejmcbray/os2.
 
+Fetchmail is Y2K safe.
+
 See the distribution files FEATURES for a full list of features, NEWS
 for detailed information on recent changes and NOTES for design notes.
 
