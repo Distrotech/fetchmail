@@ -156,7 +156,7 @@ static int inet_aton(const char *cp, struct in_addr *inp) {
     memcpy(inp, &addr, sizeof(addr));
     return 1;
 }
-#endif HAVE_INET_ATON
+#endif /* HAVE_INET_ATON */
 
 void interface_parse(char *buf, struct hostdata *hp)
 /* parse 'interface' specification */

@@ -222,7 +222,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	strcpy(msg,start);
 	strcat(msg,ctl->password);
 
-	strcpy(ctl->digest, MD5Digest(msg));
+	strcpy(ctl->digest, MD5Digest((unsigned char *)msg));
 
 	ok = gen_transact(sock, "APOP %s %s", ctl->remotename, ctl->digest);
 	break;
@@ -561,7 +561,7 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
             if (linecount == 5)
             {
                 /* Wrap address with To: <> so nxtaddr() likes it */
-                sdps_envto = malloc(strlen(buf)+7);
+                sdps_envto = xmalloc(strlen(buf)+7);
                 sprintf(sdps_envto,"To: <%s>",buf);
             }
 	} while

@@ -1127,7 +1127,7 @@ static int load_params(int argc, char **argv, int optind)
     return(implicitmode);
 }
 
-void termhook(int sig)
+static void termhook(int sig)
 /* to be executed on normal or signal-induced termination */
 {
     struct query	*ctl;
@@ -1266,7 +1266,8 @@ static int query_host(struct query *ctl)
     }
 }
 
-void dump_params (struct runctl *runp, struct query *querylist, flag implicit)
+static void dump_params (struct runctl *runp,
+			 struct query *querylist, flag implicit)
 /* display query parameters in English */
 {
     struct query *ctl;
