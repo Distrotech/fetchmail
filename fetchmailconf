@@ -486,6 +486,7 @@ class ListEdit(Frame):
 	if item and (not entire) or (not item in self.listwidget.get(0, self.listwidget.index('end'))):
 	    self.listwidget.insert('end', item)
 	    if self.list != None: self.list.append(item)
+            apply(self.editor, (item,))
 	self.newval.set('')
 
     def editItem(self):

@@ -10,6 +10,8 @@
   ssh for a secure passwordless connection.  Removed the FAQ entry
   on popclient.
 * Jun-ichiro itojun Hagino <itojun@iijlab.net> sent a fix for IPv6.
+* Fix Red Hat bug 9982: fetchmail now automatically pups up an edit panel
+  whenever a new user or site is created.
 
 fetchmail-5.3.0 (Tue Feb 22 08:53:31 PST 2000), 18618 lines:
 
