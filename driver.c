@@ -409,7 +409,7 @@ struct query *ctl;	/* query control record */
 char *realname;		/* real name of host */
 {
     char buf [MSGBUFSIZE+1]; 
-    int	from_offs, to_offs, cc_offs, bcc_offs, ctt_offs, env_offs;
+    int	from_offs, to_offs, cc_offs, bcc_offs, ctt_offs, env_offs, rtp_offs;
     char *headers, *received_for;
     int n, oldlen, ch, sizeticker, delete_ok;
     FILE *sinkfp;
@@ -429,7 +429,7 @@ char *realname;		/* real name of host */
 
     /* read message headers */
     headers = received_for = NULL;
-    from_offs = to_offs = cc_offs = bcc_offs = ctt_offs = env_offs = -1;
+    from_offs = to_offs = cc_offs = bcc_offs = ctt_offs = env_offs = rtp_offs = -1;
     oldlen = 0;
     for (;;)
     {
@@ -501,10 +501,14 @@ char *realname;		/* real name of host */
 	else if (from_offs == -1 && !strncasecmp("Apparently-From:", line, 16))
 	    from_offs = (line - headers);
 
+	else if (rtp_offs == -1 && !strncasecmp("Return-Path:", line, 12))
+	    rtp_offs = (line - headers);
+
 	else if (!strncasecmp("To:", line, 3))
 	    to_offs = (line - headers);
 
-	else if (env_offs == -1 && !strncasecmp(ctl->server.envelope,
+	else if (ctl->server.received && env_offs == -1
+		 && !strncasecmp(ctl->server.envelope,
 						line,
 						strlen(ctl->server.envelope)))
 	    env_offs = (line - headers);
@@ -669,11 +673,16 @@ char *realname;		/* real name of host */
 	    sprintf(options + strlen(options), " SIZE=%d", len);
 
 	/*
-	 * Try to get the SMTP listener to take the header
-	 * From address as MAIL FROM (this makes the logging
-	 * nicer).  If it won't, fall back on the calling-user
-	 * ID.  This won't affect replies, which use the header
-	 * From address anyway.
+	 * If there is a Return-Path address on the message, this was
+	 * almost certainly the MAIL FROM address given the originating
+	 * sendmail.  This is the best things to use for logging the
+	 * message origin (it sets up the right behavior for bounces and
+	 * mailing lists).  Otherwise, take the From address.
+	 *
+	 * Try to get the SMTP listener to take the Return-Path or
+	 * From address as MAIL FROM .  If it won't, fall back on the
+	 * calling-user ID.  This won't affect replies, which use the
+	 * header From address anyway.
 	 *
 	 * RFC 1123 requires that the domain name part of the
 	 * MAIL FROM address be "canonicalized", that is a
@@ -682,11 +691,14 @@ char *realname;		/* real name of host */
 	 * is if rewrite is on).  RFC 1123 is silent on whether
 	 * a nonexistent hostname part is considered canonical.
 	 *
-	 * This is a potential problem if the MTAs further
-	 * upstream didn't pass canonicalized From lines, *and*
-	 * the local SMTP listener insists on them.
-	 */
-	if (from_offs == -1 || !(ap = nxtaddr(headers + from_offs)))
+	 * This is a potential problem if the MTAs further upstream
+	 * didn't pass canonicalized From/Return-Path lines, *and* the
+	 * local SMTP listener insists on them.  */
+	ap = (char *)NULL;
+	if (rtp_offs == -1 || !(ap = nxtaddr(headers + rtp_offs)))
+	    if (from_offs == -1 || !(ap = nxtaddr(headers + from_offs)))
+		/* empty */;
+	if (ap == (char *)NULL)
 	    ap = user;
 	if (SMTP_from(sinkfp, ap, options) != SM_OK)
 	{

@@ -5,6 +5,9 @@ fetchmail-3.6 ()
 
 features --
 
+* Use Return-Path for RCPT FROM if possible for better behavior on mailing
+  lists and bouncemail.
+
 * New Makefile production to generate an RPM.
 
 bugs --
