@@ -145,6 +145,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 #endif /* OPIE_ENABLE */
 #ifdef SSL_ENABLE
     flag has_ssl = FALSE;
+    flag did_stls = FALSE;
 #endif /* SSL_ENABLE */
 
 #ifdef SDPS_ENABLE
@@ -249,18 +250,29 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 #ifdef SSL_ENABLE
 	if (has_ssl
 	    && !ctl->use_ssl
-	    && (ctl->server.authenticate == A_ANY))
+	    && (!ctl->sslproto || !strcmp(ctl->sslproto,"tls1")))
 	{
 	    char *realhost;
 
 	   realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;
            gen_transact(sock, "STLS");
-	   if (SSLOpen(sock,ctl->sslcert,ctl->sslkey,ctl->sslproto,ctl->sslcertck, ctl->sslcertpath,ctl->sslfingerprint,realhost,ctl->server.pollname) == -1)
+
+           /* We use "tls1" instead of ctl->sslproto, as we want STLS,
+            * not other SSL protocols
+            */
+	   if (SSLOpen(sock,ctl->sslcert,ctl->sslkey,"tls1",ctl->sslcertck, ctl->sslcertpath,ctl->sslfingerprint,realhost,ctl->server.pollname) == -1)
 	   {
+	       if (!ctl->sslproto && !ctl->wehaveauthed)
+	       {
+		   ctl->sslproto = xstrdup("");
+		   /* repoll immediately */
+		   return(PS_REPOLL);
+	       }
 	       report(stderr,
 		       GT_("SSL connection failed.\n"));
 		return(PS_AUTHFAIL);
 	    }
+	   did_stls = TRUE;
 	}
 #endif /* SSL_ENABLE */
 
@@ -350,6 +362,16 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	strcpy(shroud, ctl->password);
 	ok = gen_transact(sock, "PASS %s", ctl->password);
 	shroud[0] = '\0';
+#ifdef SSL_ENABLE
+	/* this is for servers which claim to support TLS, but actually
+	 * don't! */
+	if (did_stls && ok == PS_SOCKET && !ctl->sslproto && !ctl->wehaveauthed)
+	{
+	    ctl->sslproto = xstrdup("");
+	    /* repoll immediately */
+	    ok = PS_REPOLL;
+	}
+#endif
 	break;
 
     case P_APOP:

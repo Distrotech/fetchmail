@@ -876,6 +876,8 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char
 				_ctx = SSL_CTX_new(SSLv3_client_method());
 			} else if(!strcmp("tls1",myproto)) {
 				_ctx = SSL_CTX_new(TLSv1_client_method());
+			} else if (!strcmp("ssl23",myproto)) {
+				myproto = NULL;
 			} else {
 				fprintf(stderr,GT_("Invalid SSL protocol '%s' specified, using default (SSLv23).\n"), myproto);
 				myproto = NULL;

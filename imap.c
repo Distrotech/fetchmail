@@ -252,6 +252,9 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 /* apply for connection authorization */
 {
     int ok = 0;
+#ifdef SSL_ENABLE
+    flag did_stls = FALSE;
+#endif /* SSL_ENABLE */
 
     /* probe to see if we're running IMAP4 and can use RFC822.PEEK */
     capabilities[0] = '\0';
@@ -359,7 +362,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 #endif /* KERBEROS_V4 */
 
 #ifdef SSL_ENABLE
-    if ((ctl->server.authenticate == A_ANY)
+    if ((!ctl->sslproto || !strcmp(ctl->sslproto,"tls1"))
         && !ctl->use_ssl
         && strstr(capabilities, "STARTTLS"))
     {
@@ -373,10 +376,17 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
             */
            if (SSLOpen(sock,ctl->sslcert,ctl->sslkey,"tls1",ctl->sslcertck, ctl->sslcertpath,ctl->sslfingerprint,realhost,ctl->server.pollname) == -1)
            {
+	       if (!ctl->sslproto && !ctl->wehaveauthed)
+	       {
+		   ctl->sslproto = xstrdup("");
+		   /* repoll immediately */
+		   return(PS_REPOLL);
+	       }
                report(stderr,
                       GT_("SSL connection failed.\n"));
                return(PS_AUTHFAIL);
            }
+	   did_stls = TRUE;
     }
 #endif /* SSL_ENABLE */
 
@@ -471,6 +481,16 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	strcpy(shroud, password);
 	ok = gen_transact(sock, "LOGIN \"%s\" \"%s\"", remotename, password);
 	shroud[0] = '\0';
+#ifdef SSL_ENABLE
+	/* this is for servers which claim to support TLS, but actually
+	 * don't! */
+	if (did_stls && ok == PS_SOCKET && !ctl->sslproto && !ctl->wehaveauthed)
+	{
+	    ctl->sslproto = xstrdup("");
+	    /* repoll immediately */
+	    ok = PS_REPOLL;
+	}
+#endif
 	if (ok)
 	{
 	    /* SASL cancellation of authentication */

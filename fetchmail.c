@@ -1356,7 +1356,9 @@ static int query_host(struct query *ctl)
 	break;
     case P_IMAP:
 #ifdef IMAP_ENABLE
-	st = doIMAP(ctl);
+	do {
+	    st = doIMAP(ctl);
+	} while (st == PS_REPOLL);
 #else
 	report(stderr, GT_("IMAP support is not configured.\n"));
 	st = PS_PROTOCOL;
@@ -1537,6 +1539,8 @@ static void dump_params (struct runctl *runp,
 #ifdef	SSL_ENABLE
 	if (ctl->use_ssl)
 	    printf(GT_("  SSL encrypted sessions enabled.\n"));
+	if (ctl->sslproto)
+	    printf(GT_("  SSL protocol: %s.\n"), ctl->sslproto);
 	if (ctl->sslcertck) {
 	    printf(GT_("  SSL server certificate checking enabled.\n"));
 	    if (ctl->sslcertpath != NULL)
