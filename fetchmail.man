@@ -1,13 +1,13 @@
 .\" For license terms, see the file COPYING in this directory.
 .TH fetchmail LOCAL
 .SH NAME
-fetchmail \- deliver mail fetched from a POP or IMAP server
+fetchmail \- fetch mail from a POP or IMAP server
 .SH SYNOPSIS
 .B fetchmail
-[\fI options \fR] \fI [server-host...]\fR
+[\fI options \fR] \fI [mailserver...]\fR
 .SH DESCRIPTION
 .I fetchmail
-is a batch mail-retrieval/forwarding utility; it fetches
+is a mail-retrieval and forwarding utility; it fetches
 mail from remote mailservers and forwards it to your local (client)
 machine's delivery system.  You can then handle the retrieved mail
 using normal mail user agents such as \fIelm\fR(1) or \fIMail\fR(1).
@@ -33,7 +33,7 @@ As each message is retrieved \fIfetchmail\fR normally delivers it via SMTP to
 port 25 on the machine it is running on (localhost), just as though it
 were being passed in over a normal TCP/IP link.  The mail will then be
 delivered locally via your system's MDA (Mail Delivery Agent, usually
-\fI/usr/lib/sendmail\fR but your system may use a different one such
+\fIsendmail\fR(8) but your system may use a different one such
 as \fIsmail\fR, \fImmdf\fR, or \fIqmail\fR).  All the delivery-control
 mechanisms (such as \fI.forward\fR files) normally available through
 your system MDA will therefore work.
@@ -58,9 +58,8 @@ working \fI.fetchmailrc\fR file set up.
 .B \-a, --all
 Retrieve both old (seen) and new messages from the mailserver.  The
 default is to fetch only messages the server has not marked seen.
-Note that POP2 retrieval, and POP3 retrieval on servers without the
-LAST command, behaves as though --all is always on (see RETRIEVAL
-FAILURE MODES below).
+Note that POP2 retrieval behaves as though --all is always on (see
+RETRIEVAL FAILURE MODES below).
 .TP
 .B \-l, --limit
 Takes a maximum octet size argument.  Messages larger than this size
@@ -72,18 +71,19 @@ in interactive mode.  It may not be used with daemon mode,
 as users would never receive a notification that messages were waiting.
 .TP
 .B \-S host, --smtphost host
-Specify an host to forward mail to (other than localhost).
+Specify a host to forward mail to (other than localhost).
 .TP
 .B \-m, \--mda
 You can force mail to be passed to an MDA directly (rather than
-forwarded to port 25) with the -mda or -m
-option (this can be useful if you don't want to run sendmail as an
-SMTP listener for security or other reasons).  
-Some possible MDAs are "/usr/sbin/sendmail -oem",
-"/usr/lib/sendmail -oem", "/usr/bin/formail", and "/usr/bin/deliver". 
-Local delivery addresses will be appended to the MDA command. 
-If \fIfetchmail\fR is running as root, it sets its userid to
-that of the target user while delivering mail through an MDA.
+forwarded to port 25) with the -mda or -m option.  If \fIfetchmail\fR
+is running as root, it sets its userid to that of the target user
+while delivering mail through an MDA.  Some possible MDAs are
+"/usr/sbin/sendmail -oem", "/usr/lib/sendmail -oem",
+"/usr/bin/formail", and "/usr/bin/deliver".  Local delivery addresses
+will be appended to the MDA command.  Do \fInot\fR use an MDA like
+"sendmail -oem -t" that dispatches on the contents of To/Cc/Bcc, it
+will create mail loops and bring the just wrath of many postmasters
+down upon your head.
 .TP
 .B \-F, --flush
 POP3/IMAP only.  Delete old (previously retrieved) messages from the mailserver
@@ -106,7 +106,7 @@ Specify an alternate name for the .fetchids file used to save POP3
 UIDs. 
 .TP
 .B \-k, --keep
-Keep retrieved messages in folder on remote mailserver.  Normally, messages 
+Keep retrieved messages on the remote mailserver.  Normally, messages 
 are deleted from the folder on the mailserver after they have been retrieved.
 Specifying the 
 .B keep 
@@ -146,7 +146,7 @@ well-established default port numbers.
 .B \-A, --auth
 This option permits you to specify an authentication type (see USER
 AUTHENTICATION below for details).  The possible values are
-\&`\fBpassword\fR and `\fBkerberos\fR'.  This option is provided
+\&`\fBpassword\fR' and `\fBkerberos\fR'.  This option is provided
 primarily for developers; choosing KPOP protocol automatically selects
 Kerberos authentication, and all other alternatives use ordinary
 password authentication (though APOP uses a generated one-time
@@ -155,32 +155,25 @@ key as the password).
 .B \-r folder, --remote folder
 Causes a specified non-default mail folder on the mailserver to be retrieved.
 The syntax of the folder name is server dependent, as is the default
-behavior when no folder is specified.
+behavior when no folder is specified.  This option is not available
+under POP3.
 .TP
 .B \-s, --silent
 Silent mode.  Suppresses all progress/status messages that are normally
-echoed to standard error during a fetch.  If both the 
-.B silent
-and
-.B verbose
-options are specified, the 
-.B verbose
-option takes precedence.
-.TP
-.B \-u name, --username name
-Specifies the user idenfication to be used when logging-in to the mailserver.
-The appropriate user identification is both server and user-dependent.  
-The default is your login name on the machine that is running 
-.I fetchmail.
-See USER AUTHENTICATION below for a complete description.
+echoed to standard error during a fetch.  The --verbose option
+overrides this.
 .TP
 .B \-v, --verbose
 Verbose mode.  All control messages passed between 
 .I fetchmail
-and the mailserver are echoed to stderr.  Specifying
-.B verbose
-causes normal progress/status messages which would be redundant or meaningless
-to be modified or omitted.
+and the mailserver are echoed to stderr.  Overrides --silent.
+.TP
+.B \-u name, --username name
+Specifies the user identification to be used when logging in to the mailserver.
+The appropriate user identification is both server and user-dependent.  
+The default is your login name on the client machine that is running 
+.I fetchmail.
+See USER AUTHENTICATION below for a complete description.
 .TP
 .B \-n, --norewrite
 Normally,
@@ -195,7 +188,7 @@ client machine).  This option disables the rewrite.
 .B \-V, --version
 Displays the version information for your copy of 
 .I fetchmail.
-No POP connection is made.
+No mail fetch is performed.
 Instead, for each server specified, all option information
 that would be computed if
 .I fetchmail.
@@ -285,9 +278,10 @@ Simply invoking
 .IP
 fetchmail -d 900
 .PP
-will, therefore, poll the hosts described in your 
+will, therefore, poll all the hosts described in your 
 .I ~/.fetchmailrc
-file once every fifteen minutes.
+file (except those explicitly excluded with the `skip' option) once
+every fifteen minutes.
 .PP
 Only one daemon process is permitted per user; in daemon mode,
 .I fetchmail
@@ -320,7 +314,7 @@ This is primarily useful for debugging configurations.
 The protocols \fIfetchmail\fR uses to talk to mailservers are next to
 bulletproof.  In normal operation forwarding to port 25, no message is
 ever deleted (or even marked for deletion) on the host until the SMTP
-listener on the client has acknowledged to \fIfetchmail\fRthat the
+listener on the client has acknowledged to \fIfetchmail\fR that the
 message has been accepted for delivery.  When forwarding to an MDA,
 however, there is more possibility of error (because there's no way
 for fetchmail to get a reliable positive acknowledgement from the MDA).
@@ -344,8 +338,9 @@ and watching the response to LAST early in the query).  The
 \fIfetchmail\fR code tries to compensate by using POP3's UID feature,
 storing the identifiers of messages seen in each session until the
 next session, in the \fI.fetchids\fR file.  But this doesn't track
-messages seen with other clients, or read but not deleted directly with
-a mailer on the host.  A better solution would be to switch to IMAP.
+messages seen with other clients, or read directly with a mailer on
+the host but not deleted afterward.  A better solution would be to
+switch to IMAP.
 .PP
 Another potential POP3 problem might be servers that insert messages
 in the middle of mailboxes (some VMS implementations of mail are
@@ -374,16 +369,16 @@ will complain and exit otherwise.
 .PP
 Comments begin with a '#' and extend through the end of the line.
 Otherwise the file consists of a series of free-format server entries.
-Any amount of whitespace separates keywords, tokens, or strings 
-in server entries but is otherwise ignored (but whitespace enclosed
-in double quotes is treated as part of the string).
-Keywords and identifiers are case sensitive.
-You may use standard C-style escapes (\en, \et, \eb, octal, and hex)
-to embed non-printable characters or string delimiters in strings.
-When there is a conflict between the command-line arguments and the
-arguments in this file, the command-line arguments take precedence.
+Any amount of whitespace separates keywords, tokens, or strings in
+server entries, but is otherwise ignored (except that whitespace
+enclosed in double quotes is treated as part of the string).  Keywords
+and identifiers are case sensitive.  You may use standard C-style
+escapes (\en, \et, \eb, octal, and hex) to embed non-printable
+characters or string delimiters in strings.  When there is a conflict
+between the command-line arguments and the arguments in this file, the
+command-line arguments take precedence.
 .PP
-Each server entry consists of the keyword \fBserver\fR, followed by a
+Each server entry consists of the keyword `server', followed by a
 server name, followed by server options, followed by any number of
 user descriptions.
 .PP
@@ -416,9 +411,9 @@ Legal user options are
     norewrite
 .PP
 All options correspond to the obvious command-line arguments except
-five: \fBis\fR, \fBto\fR, \fBpassword\fR, and \fBskip\fR.
+five: `is', `to', `password', and `skip'.
 .PP
-The \fBis\fR or \fIto\fR keywords associate the following local (client)
+The `is' or `to' keywords associate the following local (client)
 name(s) (or server-name to client-name mappings separated by =) with
 the mailserver user name in the entry.
 .PP
@@ -442,7 +437,7 @@ The \fBaliases\fR option declares names that are recognized as OK for
 local delivery.  Your local name is automatically one of these; the
 aliases directive can be used to declare others.   
 .PP
-The \fBskip\fR option tells
+The `skip' option tells
 .I fetchmail 
 not to query this host unless it is explicitly named on the command
 line.  A host entry with this flag will be skipped when
@@ -468,23 +463,23 @@ as in APOP); the second tells \fIfetchmail\fR to try to get a Kerberos
 ticket at the start of each query instead, and send an arbitrary
 string as the password.
 .PP
-Specifying \fBkpop\fR sets POP3 protocol over port 1109 with Kerberos
+Specifying `kpop' sets POP3 protocol over port 1109 with Kerberos
 authentication.  These defaults may be overridden by later options.
 .PP
-You can use the `noise' keywords \fBand\fR, \fBwith\fR,
-\fBhas\fR, \fBwants\fR, and \fBoptions\fR anywhere in an entry to make
+You can use the noise keywords `and', `with',
+`has', `wants', and `options' anywhere in an entry to make
 it resemble English.  They're ignored, but but can make entries much
 easier to read at a glance.  The punctuation characters ':', ';' and
 ',' are also ignored.
 .PP
-The words \fBhere\fR and \fBthere\fR have useful English-like
-significance.  Normally `\fBuser eric is esr\fR' would mean that 
-mail for the remote user \fBeric\fR is to be delivered to \fBesr\fR,
-but you can make this clearer by saying `\fBuser eric there is esr here\fR',
-or reverse it by saying `\fBuser esr here is eric there\fR'
+The words `here' and `there' have useful English-like
+significance.  Normally `user eric is esr' would mean that 
+mail for the remote user `eric' is to be delivered to `esr',
+but you can make this clearer by saying `user eric there is esr here',
+or reverse it by saying `user esr here is eric there'
 .PP
-Finally, instead of saying `\fBserver fubar.com skip\fR ...' you can say
-\&`\fBskip server fubar.com\fR ...'
+Finally, instead of saying `server fubar.com skip ...' you can say
+\&`skip server fubar.com ...'
 .PP
 Basic format is:
 
@@ -549,9 +544,9 @@ by individual server descriptions.  So, you could write:
 
 It's possible to specify more than one user per server (this is only
 likely to be useful when running fetchmail in daemon mode as root).
-The \fBuser\fR keyword leads off a user description, and every user
+The `user' keyword leads off a user description, and every user
 description except optionally the first one must include it.  (If the
-first description lacks the \fBuser\fR keyword, the name of the
+first description lacks the `user' keyword, the name of the
 invoking user is used.) Here's a contrived example:
 
 .nf
@@ -569,10 +564,10 @@ username `jjones'.
 .PP
 This example is contrived because, in practice, you are very unlikely
 to be specifying multiple users per server unless running it as root
-(thus the \fBpass gumshoe\fR would try to fetch root's mail on
+(thus the `pass gumshoe' would try to fetch root's mail on
 pop-provider.net, which is probably not what you want).
 In any case, we strongly recommend always having an explicit
-\fBuser\fR clause when specifying multiple users for server.
+\&`user' clause when specifying multiple users for server.
 .PP
 Here's what a simple retrieval configuration for a multi-drop mailbox
 looks like:
@@ -659,7 +654,7 @@ created by the new SMTP forwarding default.
 .SH BACKWARD COMPATIBILITY
 If called through a link named `popclient', \fIfetchmail\fR will
 look in ~/.poprc for its run control file.  As long as the file does
-not use the removed \fBlimit\fR or \fBlocalfolder\fR options, this
+not use the removed `limit' or `localfolder' options, this
 will often work.  (The new run control file syntax also has to be a
 little stricter about the order of options than the old, in order to
 support multiple user desriptions per server; thus you may have to
@@ -694,8 +689,8 @@ as reliable as your mail server host's DNS service.  Each host address
 part in each message of a multi-drop mailbox is looked up through DNS
 to see if it's an alias of the mail server.  If it is, but the lookup
 fails due to network congestion or a crashed server, forwarding will
-not get done correctly.  Yes, this check \fIwill\fR catch equivalences
-created by MX records!
+not get done correctly.  This check \fIwill\fR catch equivalences
+created by MX records.
 .PP
 The multi-drop mailbox code was hard to test thoroughly and may have obscure
 failure modes, especially in the presence of DNS flakiness.
