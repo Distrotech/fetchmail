@@ -189,7 +189,7 @@ int SockOpen(const char *host, int clientPort, const char *options,
 	if(hp->h_length != 4 && hp->h_length != 8)
 	{
 	    h_errno = errno = 0;
-	    error(0, 0, _("fetchmail: illegal address length received for host %s"));
+	    error(0, 0, _("fetchmail: illegal address length received for host %s"),host);
 	    return -1;
 	}
 	/*

@@ -1476,7 +1476,7 @@ const struct method *proto;	/* protocol method table */
 	char buf[POPBUFSIZE+1], *realhost;
 	int len, num, count, new, bytes, deletions = 0, *msgsizes = NULL;
 #if INET6
-	int fetches, dispatches;
+	int fetches, dispatches, oldphase;
 #else /* INET6 */
 	int port, fetches, dispatches, oldphase;
 #endif /* INET6 */
@@ -1502,8 +1502,7 @@ const struct method *proto;	/* protocol method table */
 #if INET6
 	if ((sock = SockOpen(realhost, 
 			     ctl->server.service ? ctl->server.service : protocol->service,
-			     ctl->server.netsec)) == -1, ctl->server.plugin
-	    )
+			     ctl->server.netsec, ctl->server.plugin)) == -1)
 #else /* INET6 */
 	if ((sock = SockOpen(realhost, port, NULL, ctl->server.plugin)) == -1)
 #endif /* INET6 */

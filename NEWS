@@ -7,8 +7,9 @@ fetchmail-4.7.4 ():
 * Supply our own strerror() if system doesn't have one.
 * Gunther Leber's cleanup for the plugin/plugout code.
 * Hajimu UMEMOTO's code for localtime in timestamps.
+* Michael Warfield's IPv6 fixes.
 
-There are 248 people on fetchmail-friends and 336 on fetchmail-announce.
+There are 249 people on fetchmail-friends and 335 on fetchmail-announce.
 
 fetchmail-4.7.3 (Thu Dec 31 11:54:01 EST 1998):
 * Added new FAQ item G11 and added material to R1.
