@@ -1261,10 +1261,10 @@ same messages will be downloaded over and over.
                 warnings = warnings + """
 The InterChange IMAP server screws up on mail with attachments.  It
 doesn't fetch them if you give it a BODY[TEXT] request, though it
-does if you request RFC822.TEXT (according to the IMAP RFCs and their
-maintainer these should be equivalent).  We have worked around this
-bug, but suspect InterChange is likely to be broken in other ways.
-You should get rid of it. 
+does if you request RFC822.TEXT.  According to the IMAP RFCs and their
+maintainer these should be equivalent -- and we can't drop the
+BODY[TEXT] form because M$ Exchange (quite legally under RFC2062)
+rejects it.
 
 """
             if string.find(greetline, "Imail") > 0:

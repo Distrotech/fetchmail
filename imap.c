@@ -1262,20 +1262,20 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
      * The server is InterChange, and the fool who implemented this
      * misfeature ought to be strung up by his thumbs.  
      *
-     * To work around this, we disable use of the 4rev1 form.  It's
-     * all too easy to imagine other clever idiots deciding that the
-     * message body doesn't include attachments.
+     * When I tried working around this by disable use of the 4rev1 form,
+     * I found that doing this breaks operation with M$ Exchange.
+     * Annoyingly enough, Exchange's refusal to cope is technically legal
+     * under RFC2062.  Trust Microsoft, the Great Enemy of interoperability
+     * standards, to find a way to make standards compliance irritating....
      */
     switch (imap_version)
     {
     case IMAP4rev1:	/* RFC 2060 */
-#ifdef __UNUSED__
 	if (!ctl->keep)
 	    gen_send(sock, "FETCH %d BODY.PEEK[TEXT]", number);
 	else
 	    gen_send(sock, "FETCH %d BODY[TEXT]", number);
 	break;
-#endif /* UNUSED -- FALL THROGH */
 
     case IMAP4:		/* RFC 1730 */
 	if (!ctl->keep)
