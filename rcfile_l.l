@@ -12,6 +12,12 @@
 #include "rcfile_y.h"
 
 int prc_lineno = 1;
+
+#ifdef LEXDEBUG
+#define SETSTATE(n)	if (yydebug) do {BEGIN(n); fprintf(stderr, "Entering lexer state %d\n", n);} while (0)
+#else
+#define SETSTATE(n)	BEGIN(n)
+#endif /* LEXDEBUG */
 %}
 
 /* this doesn't work with Linux lex, see the INSTALL file */
@@ -29,7 +35,7 @@ int prc_lineno = 1;
 			yytext[strlen(yytext)-1] = '\0';
 			escapes(yytext+1, buf);
 			yylval.sval = (char *) xstrdup(buf);
-                        BEGIN(0);
+                        SETSTATE(0);
 			return STRING;
 		}
 \'[^\']*\'	{
@@ -38,7 +44,7 @@ int prc_lineno = 1;
 			yytext[strlen(yytext)-1] = '\0';
 			escapes(yytext+1, buf);
 			yylval.sval = (char *) xstrdup(buf);
-                        BEGIN(0);
+                        SETSTATE(0);
 			return STRING;
 		}
 
@@ -49,7 +55,7 @@ int prc_lineno = 1;
 
 			escapes(yytext, buf);
 			yylval.sval = (char *) xstrdup(buf);
-                        BEGIN(0);
+                        SETSTATE(0);
 			return STRING;
 		}
 
@@ -74,17 +80,17 @@ proto(col)? 	{ return PROTOCOL; }
 service		{ return SERVICE; }
 port		{ return PORT; }
 interval	{ return INTERVAL; }
-preauth(enticate)?	{ BEGIN(PREAUTH); return PREAUTHENTICATE; }
-kerberos(_v)?4	{ BEGIN(0); return KERBEROS4; }
-kerberos(_v)?5	{ BEGIN(0); return KERBEROS5; }
-kerberos	{ BEGIN(0); return KERBEROS; }
-<PREAUTH>password { BEGIN(0); return PASSWORD; }
+preauth(enticate)?	{ SETSTATE(PREAUTH); return PREAUTHENTICATE; }
+kerberos(_v)?4	{ SETSTATE(0); return KERBEROS4; }
+kerberos(_v)?5	{ SETSTATE(0); return KERBEROS5; }
+kerberos	{ SETSTATE(0); return KERBEROS; }
+<PREAUTH>password { SETSTATE(0); return PASSWORD; }
 timeout		{ return TIMEOUT;}
 envelope	{ return ENVELOPE; }
 qvirtual	{ return QVIRTUAL; }
 
-user(name)?	{BEGIN(NAME); return USERNAME; }
-pass(word)?	{BEGIN(NAME); return PASSWORD; }
+user(name)?	{SETSTATE(NAME); return USERNAME; }
+pass(word)?	{SETSTATE(NAME); return PASSWORD; }
 folder(s)? 	{ return FOLDER; }
 smtp(host)?	{ return SMTPHOST; }
 smtpaddress	{ return SMTPADDRESS; }
@@ -104,11 +110,11 @@ fetchlimit	{ return FETCHLIMIT; }
 expunge		{ return EXPUNGE; }
 properties	{ return PROPERTIES; }
 
-is		{ BEGIN(NAME); return IS; }
+is		{ SETSTATE(NAME); return IS; }
 here		{ return HERE; }
 there		{ return THERE; }
-to		{ BEGIN(NAME); return TO; }
-=		{ BEGIN(NAME); return MAP; }
+to		{ SETSTATE(NAME); return TO; }
+=		{ SETSTATE(NAME); return MAP; }
 
 nobouncemail	|
 nouidl		|
