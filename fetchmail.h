@@ -20,6 +20,8 @@
 # endif
 #endif
 
+#include <stdio.h>
+
 /* constants designating the various supported protocols */
 #define		P_AUTO		1
 #define		P_POP2		2
@@ -659,7 +661,7 @@ void itimerthread(void*);
 
 # if HAVE_STRERROR
 #  ifndef strerror		/* On some systems, strerror is a macro */
-char *strerror ();
+char *strerror (int);
 #  endif
 # endif /* HAVE_STRERROR */
 
