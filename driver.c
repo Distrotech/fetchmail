@@ -581,7 +581,11 @@ static int readheaders(int sock,
 	 * forward it to the user so he or she will have some clue
 	 * that things have gone awry.
 	 */
+#if INET6_ENABLE
+	if (strncmp(protocol->service, "pop2", 4))
+#else /* INET6_ENABLE */
 	if (protocol->port != 109)
+#endif /* INET6_ENABLE */
 #endif /* POP2_ENABLE */
 	    if (num == 1 && !strncasecmp(line, "X-IMAP:", 7)) {
 		free(line);

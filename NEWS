@@ -11,6 +11,9 @@ a Certifying Authority we recognize?).
 
 * Ken Estes's patch to check for unreachable UIDL file due to bad NFS mount.
 * Jorge Godoy's replacement pt_BR.po and various minor translation fixes.
+* Javier Kohen's replacement for es.po.
+* Munechika SUMIKAWA's patch to make IPv6 version build when POP2 is enabled.
+* Russian translation removed; it was badly garbled.
 
 fetchmail-5.2.2 (Sun Dec 26 09:31:07 EST 1999), 18365 lines:
 * Arrange for fetchmail to restart itself quietly when the rc file is touched.
