@@ -1,11 +1,11 @@
-# .poprc sample
+# .fetchrc sample
 #
 # This file (or one of your own creation, rather) should be located 
-# in your home directory with the name .poprc.  Permissions on this
+# in your home directory with the name .fetchrc.  Permissions on this
 # file may be no greater than -rw-------, or fetchmail will refuse to
 # use it.
 #
-# To see what effect your ~/.poprc file has, do 
+# To see what effect your ~/.fetchrc file has, do 
 #
 #	fetchmail --version
 #
@@ -23,15 +23,20 @@
 #   protocol (or proto)
 #   username (or user)
 #   password (or pass)
+#   rpopid
 #   remotefolder (or remote)
 #   localfolder (or local)
 #   mda
+#   smtphost (or smtp)
 #   keep
 #   flush
 #   fetchall
+#   rewrite
 #   nokeep
 #   noflush
 #   nofetchall
+#   norewrite
+#   port
 #
 # Legal protocol identifiers are
 #   pop2 (or POP2)
