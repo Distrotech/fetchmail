@@ -15,7 +15,7 @@ fetchmail-5.0.0 ():
 * Danish summary and description for specgen.sh.
 * Henrik Storner's fix for the PGP/mimedecode problem.
 
-There are 263 people on fetchmail-friends and 361 on fetchmail-announce.
+There are 267 people on fetchmail-friends and 365 on fetchmail-announce.
 
 fetchmail-4.7.9 (Tue Mar  9 13:25:01 EST 1999):
 * Patch by Dan Root to solve an endianness problem in IMAP-K4.
