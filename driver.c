@@ -267,30 +267,32 @@ struct idlist **xmit_names;	/* list of recipient names parsed out */
 static FILE *smtp_open(struct query *ctl)
 /* try to open a socket to the appropriate SMTP server for this query */ 
 {
-    ctl = ctl->lead_smtp; /* go to the SMTP leader for this query */
+    struct query *lead;
+
+    lead = ctl->lead_smtp; /* go to the SMTP leader for this query */
 
     /* maybe it's time to close the socket in order to force delivery */
-    if (batchlimit && ctl->smtp_sockfp && batchcount++ == batchlimit)
+    if (batchlimit && lead->smtp_sockfp && batchcount++ == batchlimit)
     {
-	fclose(ctl->smtp_sockfp);
-	ctl->smtp_sockfp = (FILE *)NULL;
+	fclose(lead->smtp_sockfp);
+	lead->smtp_sockfp = (FILE *)NULL;
 	batchcount = 0;
     }
 
     /* if no socket to this host is already set up, try to open one */
-    if (ctl->smtp_sockfp == (FILE *)NULL)
+    if (lead->smtp_sockfp == (FILE *)NULL)
     {
-	if ((ctl->smtp_sockfp = SockOpen(ctl->smtphost, SMTP_PORT)) == (FILE *)NULL)
+	if ((lead->smtp_sockfp = SockOpen(lead->smtphost, SMTP_PORT)) == (FILE *)NULL)
 	    return((FILE *)NULL);
-	else if (SMTP_ok(ctl->smtp_sockfp) != SM_OK
-		 || SMTP_helo(ctl->smtp_sockfp, ctl->servernames->id) != SM_OK)
+	else if (SMTP_ok(lead->smtp_sockfp) != SM_OK
+		 || SMTP_helo(lead->smtp_sockfp, ctl->servernames->id) != SM_OK)
 	{
-	    fclose(ctl->smtp_sockfp);
-	    ctl->smtp_sockfp = (FILE *)NULL;
+	    fclose(lead->smtp_sockfp);
+	    lead->smtp_sockfp = (FILE *)NULL;
 	}
     }
 
-    return(ctl->smtp_sockfp);
+    return(lead->smtp_sockfp);
 }
 
 static int gen_readmsg (sockfp, len, delimited, ctl)

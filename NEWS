@@ -20,6 +20,9 @@ bugs --
 
 * Fixed bug in SMTP forwarding of msg lines with leading dot.
 
+* Fixed a bug that generated incorrect HELO for second and subsequent
+  poll entries attached to the same SMTP host.
+
 There are 176 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
