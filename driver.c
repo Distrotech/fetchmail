@@ -238,6 +238,8 @@ static char *parse_received(struct query *ctl, char *bufp)
     char *ok = (char *)NULL;
     static char rbuf[HOSTLEN + USERNAMELEN + 4]; 
 
+    if (outlevel >= O_VERBOSE)
+	error(0, 0, "analyzing Received line:\n%s", bufp);
     /*
      * Try to extract the real envelope addressee.  We look here
      * specifically for the mailserver's Received line.
@@ -263,9 +265,22 @@ static char *parse_received(struct query *ctl, char *bufp)
 	 * recipient name after a following "for".  Otherwise
 	 * punt.
 	 */
-	if (is_host_alias(rbuf, ctl) &&
-	    (ok = strstr(sp, "for ")) && 
-	    isspace(ok[-1]))
+	if (is_host_alias(rbuf, ctl))
+	{
+	    if (outlevel >= O_VERBOSE)
+		error(0, 0, 
+		      "line accepted, %s is an alias of the mailserver", rbuf);
+	}
+	else
+	{
+	    if (outlevel >= O_VERBOSE)
+		error(0, 0, 
+		      "line rejected, %s is not an alias of the mailserver", 
+		      rbuf);
+	    return(NULL);
+	}
+
+	if ((ok = strstr(sp, "for ")) && isspace(ok[-1]))
 	{
 	    flag	want_gt = FALSE;
 
@@ -301,13 +316,18 @@ static char *parse_received(struct query *ctl, char *bufp)
     }
 
     if (!ok)
+    {
+	if (outlevel >= O_VERBOSE)
+	    error(0, 0, "no Received address found");
 	return(NULL);
+    }
     else
     {
 	if (outlevel == O_VERBOSE) {
 	    char *lf = rbuf + strlen(rbuf)-1;
 	    *lf = '\0';
-	    error(0, 0, "found Received address `%s'", rbuf+2);
+	    if (outlevel >= O_VERBOSE)
+		error(0, 0, "found Received address `%s'", rbuf+2);
 	    *lf = '\n';
 	}
 	return(rbuf);
