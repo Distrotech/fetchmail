@@ -1102,6 +1102,8 @@ int num;		/* index of message */
 	    if (idp->val.status.mark == XMIT_ACCEPT)
 		good_addresses++;
 
+	destaddr = "localhost";
+
 	length = strlen(ctl->mda) + 1;
 	before = xstrdup(ctl->mda);
 
