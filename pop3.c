@@ -19,9 +19,9 @@
 #include  "fetchmail.h"
 #include  "socket.h"
 
-#if HAVE_LIBOPIE
-#include  <opie.h>
-#endif /* HAVE_LIBOPIE */
+#if OPIE
+#include <opie.h>
+#endif /* OPIE */
 
 #ifndef strstr		/* glibc-2.1 declares this as a macro */
 extern char *strstr();	/* needed on sysV68 R3V7.1. */
@@ -35,9 +35,9 @@ static int phase;
 #define PHASE_LOGOUT	4
 static int last;
 
-#if HAVE_LIBOPIE
+#if OPIE
 static char lastok[POPBUFSIZE+1];
-#endif /* HAVE_LIBOPIE */
+#endif /* OPIE */
 
 int pop3_ok (int sock, char *argbuf)
 /* parse command response */
@@ -62,9 +62,9 @@ int pop3_ok (int sock, char *argbuf)
 
 	if (strcmp(buf,"+OK") == 0)
 	{
-#if HAVE_LIBOPIE
+#if OPIE
 	    strcpy(lastok, bufp);
-#endif /* HAVE_LIBOPIE */
+#endif /* OPIE */
 	    ok = 0;
 	}
 	else if (strcmp(buf,"-ERR") == 0)
@@ -104,9 +104,9 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
     int ok;
     char *start,*end;
     char *msg;
-#if HAVE_LIBOPIE
+#if OPIE
     char *challenge;
-#endif /* HAVE_LIBOPIE */
+#endif /* OPIE */
 
     phase = PHASE_GETAUTH;
 
@@ -146,22 +146,31 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	 }
 #endif /* RPA_ENABLE */
 
-#if defined(HAVE_LIBOPIE) && defined(OPIE_ENABLE)
+#if OPIE
 	/* see RFC1938: A One-Time Password System */
-	if (challenge = strstr(lastok, "otp-"))
-	{
-	    char response[OPIE_RESPONSE_MAX+1];
+	if (challenge = strstr(lastok, "otp-")) {
+	  char response[OPIE_RESPONSE_MAX+1];
+	  int i;
 
-	    if (opiegenerator(challenge, ctl->password, response))
-	    {
-		ok = PS_ERROR;
-		break;
-	    }
+	  i = opiegenerator(challenge, !strcmp(ctl->password, "opie") ? "" : ctl->password, response);
+	  if ((i == -2) && (cmd_daemon == -1)) {
+	    char secret[OPIE_SECRET_MAX+1];
+	    fprintf(stderr, "Secret pass phrase: ");
+	    if (opiereadpass(secret, sizeof(secret), 0)) {
+	      i = opiegenerator(challenge,  secret, response);
+	      memset(secret, 0, sizeof(secret));
+	    };
+	  };
 
-	    ok = gen_transact(sock, "PASS %s", response);
+	  if (i) {
+	    ok = PS_ERROR;
 	    break;
+	  };
+
+	  ok = gen_transact(sock, "PASS %s", response);
+	  break;
 	}
-#endif /* defined(HAVE_LIBOPIE) && defined(OPIE_ENABLE) */
+#endif /* OPIE */
 
 	/* ordinary validation, no one-time password or RPA */ 
 	ok = gen_transact(sock, "PASS %s", ctl->password);

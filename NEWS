@@ -16,6 +16,9 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.4.0 ()
+* Corrected OTP support from Craig Metz.
+
 fetchmail-4.3.6 (Fri Jan 23 00:25:57 EST 1998)
 * Improved RPM packaging with correct grouping and an icon.
 * Fixed another minor bug in handling of `expunge 0'.
