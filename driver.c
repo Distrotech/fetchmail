@@ -848,7 +848,7 @@ char *realname;		/* real name of host */
 	    {
 		char	*sp, *tp;
 
-		for (sp = tp = headers; *sp; sp++)
+		for (sp = tp = errmsg; *sp; sp++)
 		    if (*sp != '\r')
 			*tp++ =  *sp;
 		*tp = '\0';
@@ -913,7 +913,7 @@ char *realname;		/* real name of host */
 	    {
 		char	*sp, *tp;
 
-		for (sp = tp = headers; *sp; sp++)
+		for (sp = tp = buf; *sp; sp++)
 		    if (*sp != '\r')
 			*tp++ =  *sp;
 		*tp = '\0';
