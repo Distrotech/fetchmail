@@ -222,7 +222,11 @@ int main (int argc, char **argv)
     if (pid != -1)
     {
 	if (check_only)
+	{
+	    fprintf(stderr,
+		 "fetchmail: can't check mail while another fetchmail to same host is running.");
 	    return(PS_EXCLUDE);
+        }
 	else if (!implicitmode)
 	{
 	    fprintf(stderr,
