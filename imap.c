@@ -392,7 +392,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
     if ((ctl->server.authenticate == A_ANY 
 	 || ctl->server.authenticate == A_GSSAPI)
 	&& strstr(capabilities, "AUTH=GSSAPI"))
-	if(ok = do_gssauth(sock, "AUTHENTICATE", ctl->server.truename, ctl->remotename))
+	if(ok = do_gssauth(sock, "AUTHENTICATE", "imap", ctl->server.truename, ctl->remotename))
 	{
 	    /* SASL cancellation of authentication */
 	    gen_send(sock, "*");

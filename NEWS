@@ -5,7 +5,9 @@
 * Sunil Shetye's fix to force fetchsizelimit to 1 for APOP and RPOP.
 * PopDel.py removed from contrib at author's request.
 * Matthias Andree's fix for Sunil Shetye's fetvh-split patch
-* include James Stone's moldremover.py script.
+* Include James Stone's moldremover.py script.
+* Enable .fetchmailrc permissions checking under Cygwin.
+* Nalin Dahyabai's fix for POP3 strong authentication.
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 

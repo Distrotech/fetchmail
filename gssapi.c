@@ -38,7 +38,7 @@
 #define GSSAUTH_P_INTEGRITY 2
 #define GSSAUTH_P_PRIVACY   4
 
-int do_gssauth(int sock, char *command, char *hostname, char *username)
+int do_gssauth(int sock, char *command, char *service, char *hostname, char *username)
 {
     gss_buffer_desc request_buf, send_token;
     gss_buffer_t sec_token;
@@ -53,7 +53,7 @@ int do_gssauth(int sock, char *command, char *hostname, char *username)
     int result;
 
     /* first things first: get an imap ticket for host */
-    sprintf(buf1, "imap@%s", hostname);
+    sprintf(buf1, "%s@%s", service, hostname);
     request_buf.value = buf1;
     request_buf.length = strlen(buf1) + 1;
     maj_stat = gss_import_name(&min_stat, &request_buf, GSS_C_NT_HOSTBASED_SERVICE,

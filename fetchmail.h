@@ -600,7 +600,7 @@ int doODMR (struct query *);
 /* authentication functions */
 int do_cram_md5(int sock, char *command, struct query *ctl, char *strip);
 int do_rfc1731(int sock, char *command, char *truename);
-int do_gssauth(int sock, char *command, char *hostname, char *username);
+int do_gssauth(int sock, char *command, char *service, char *hostname, char *username);
 int do_otp(int sock, char *command, struct query *ctl);
 
 /* miscellanea */

@@ -365,7 +365,12 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	 * These authentication methods are blessed by RFC1734,
 	 * describing the POP3 AUTHentication command.
 	 */
-	if (ctl->server.authenticate == A_ANY)
+	if ((ctl->use_ssl != FLAG_FALSE) ||
+	    (ctl->server.authenticate == A_ANY) ||
+	    (ctl->server.authenticate == A_GSSAPI) ||
+	    (ctl->server.authenticate == A_KERBEROS_V4) ||
+	    (ctl->server.authenticate == A_OTP) ||
+	    (ctl->server.authenticate == A_CRAM_MD5))
 	{
 	    if ((ok = capa_probe(sock)) != PS_SUCCESS)
 	    /* we are in STAGE_GETAUTH! */
@@ -455,7 +460,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	    (ctl->server.authenticate == A_GSSAPI ||
 	     ctl->server.authenticate == A_ANY))
 	{
-	    ok = do_gssauth(sock,"AUTH",ctl->server.truename,ctl->remotename);
+	    ok = do_gssauth(sock,"AUTH","pop",ctl->server.truename,ctl->remotename);
 	    if (ok == PS_SUCCESS || ctl->server.authenticate != A_ANY)
 		break;
 	}
