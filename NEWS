@@ -25,6 +25,9 @@ features --
 * All pretensions to RPOP support have been dropped.  Yes, this is a feature,
   RPOP is very vulnerable to spoofing!  Use APOP instead.
 
+* Normal start-of-read message now displays the byte (excuse me, "octet")
+  size of the message.  Yes, 3schwend, you can stop noodging me now :-).
+
 bugs --
 
 * Fix buggy getopt specification of P and p options.
