@@ -925,12 +925,12 @@ const struct method *proto;	/* protocol method table */
 				     len, 
 				     protocol->delimited,
 				     ctl);
+		    if (ok != 0)
+			goto cleanUp;
 
 		    /* tell the server we got it OK and resynchronize */
 		    if (protocol->trail)
 			(protocol->trail)(socket, ctl, num);
-		    if (ok != 0)
-			goto cleanUp;
 		}
 
 		/*
