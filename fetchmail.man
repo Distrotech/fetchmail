@@ -1129,7 +1129,8 @@ Delete the message from the server.  Send bounce-mail to the
 originator.
 .TP 5
 553 (invalid sending domain)
-Delete the message from the server.  Send bounce-mail to the originator.
+Delete the message from the server.  Don't even try to send
+bounce-mail to the originator.
 .PP
 Other errors trigger bounce mail back to the originator.
 
