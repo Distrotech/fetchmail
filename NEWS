@@ -4,7 +4,7 @@ To-do list:
 
 Why doesn't sendmail delivery work in daemon mode?  In daemon mode
 (but not in normal run-to-completion mode) popclient croaks after
-its first delivery  (there's a kluge in options.c to deal with this). 
+its first delivery  (there's a kluge in popclient.c to deal with this). 
 
 Option to enable EMACS-like user folder versioning on each run.
 
