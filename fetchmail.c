@@ -1346,7 +1346,7 @@ static int load_params(int argc, char **argv, int optind)
 }
 
 static void terminate_poll(int sig)
-/* to be executed at the nd of a poll cycle */
+/* to be executed at the end of a poll cycle */
 {
     /*
      * Close all SMTP delivery sockets.  For optimum performance
