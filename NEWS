@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-6.2.2 (Fri Feb 28 21:34:26 EST 2003), 22345 lines:
+
 * Sunil Shetye's patch to imprive behavior in empty messages.
 * Conform to RFC2595; reissue capability probes after successful 
   STARTTLS negotiation.
@@ -10,8 +12,12 @@
 * Christophe GIAUME <christophe@giaume.com> finished the implementation
   of RFC2177 IDLE.
 * Jason Tishler's fix patch for Cygwin.
-* Spanish and Polish translations updated.
 * Support ssh-style authentication in POP3
+* Fix for Debian bug #108977, clean up config file evaluation,
+  by Benjamin Drieu.
+* Warning! Internationalization support is broken in this release,
+
+There are 554 people on fetchmail-friends and 727 on fetchmail-announce.
 
 fetchmail-6.2.1 (Tue Jan 14 08:17:19 EST 2003), 22219 lines:
 
