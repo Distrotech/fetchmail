@@ -306,3 +306,7 @@ struct hostrec *h2;
 #undef FLAG_MERGE
 }
 
+/* easier to do this than cope with variations in where the library lives */
+int yywrap() {return 1;}
+
+/* rcfile_y.y ends here */
