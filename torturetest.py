@@ -109,7 +109,7 @@ if __name__ == "__main__":
                 print "Error on line %d" % linect
                 sys.exit(0)
 
-    (options, arguments) = getopt.getopt(sys.argv[1:], "dfp:tigv")
+    (options, arguments) = getopt.getopt(sys.argv[1:], "dfp:tigvs")
     verbose = 0
     for (switch, value) in options:
         if switch == "-d":
@@ -148,6 +148,10 @@ if __name__ == "__main__":
         elif switch == "-v":
             # Display the test output
             verbose = 1
+        elif switch == "-s":
+            # Dump version strings of all tested servers as a Python tuple
+            print "(" + ",\n".join(map(lambda x: repr(x.version), filter(lambda x: x.version, sitelist))) + ")"
+            sys.exit(0)
 
     # If no options, run the torture test
     try:
