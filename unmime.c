@@ -259,8 +259,8 @@ static unsigned char MultipartDelimiter[MAX_DELIM_LEN+3];
 
 
 /* This string replaces the "Content-Transfer-Encoding: quoted-printable"
- * string in all headers, including those in body-parts. It must be
- * no longer than the original string.
+ * string in all headers, including those in body-parts. The replacement
+ * must be no longer than the original string.
  */
 static const char ENC8BIT[] = "Content-Transfer-Encoding: 8bit";
 static void SetEncoding8bit(unsigned char *XferEncOfs)
@@ -273,6 +273,53 @@ static void SetEncoding8bit(unsigned char *XferEncOfs)
      /* If anything left, in this header, replace with whitespace */
      for (p=XferEncOfs+strlen(ENC8BIT); (*p >= ' '); p++) *p=' ';
   }
+}
+
+static char *GetBoundary(char *CntType)
+{
+  char *p1, *p2;
+  int flag;
+
+  /* Find the "boundary" delimiter. It must be preceded with a ';'
+   * and optionally some whitespace.
+   */
+  p1 = CntType;
+  do {
+    p2 = strchr(p1, ';'); 
+    if (p2)
+      for (p2++; isspace(*p2); p2++);
+
+    p1 = p2;
+  } while ((p1) && (strncasecmp(p1, "boundary", 8) != 0));
+
+  if (p1 == NULL)
+    /* No boundary delimiter */
+    return NULL;
+
+  /* Skip "boundary", whitespace and '='; check that we do have a '=' */
+  for (p1+=8, flag=0; (isspace(*p1) || (*p1 == '=')); p1++)
+    flag |= (*p1 == '=');
+  if (!flag)
+    return NULL;
+
+  /* Find end of boundary delimiter string */
+  if (*p1 == '\"') {
+    /* The delimiter is inside quotes */
+    p1++;
+    p2 = strchr(p1, '\"');
+    if (p2 == NULL)
+      return NULL;  /* No closing '"' !?! */
+  }
+  else {
+    /* There might be more text after the "boundary" string. */
+    p2 = strchr(p1, ';');  /* Safe - delimiter with ';' must be in quotes */
+  }
+
+  /* Zero-terminate the boundary string */
+  if (p2 != NULL)
+    *p2 = '\0';
+
+  return (p1 && strlen(p1)) ? p1 : NULL;
 }
 
 
@@ -370,34 +417,18 @@ int MimeBodyType(unsigned char *hdrs)
   if ((MimeVer != NULL) && (strcmp(MimeVer, "1.0") == 0)) {
 
     /* Check Content-Type to see if this is a multipart message */
-    if (CntType != NULL) {
-      if ((strncasecmp(CntType, "multipart/", 10) == 0) ||
-	  (strncasecmp(CntType, "message/", 8) == 0)) {
+    if ( (CntType != NULL) &&
+         ((strncasecmp(CntType, "multipart/", 10) == 0) ||
+	  (strncasecmp(CntType, "message/", 8) == 0)) ) {
 
-	char *p1, *p2;
+      char *p1 = GetBoundary(CntType);
 
-	/* Search for "boundary=" */
-	p1 = strchr(CntType, '=');
-	if (p1 != NULL) {
-	  /* Skip the '=' and any whitespace after it */
-	  for (p1++; (isspace(*p1)); p1++); 
-              
-	  /* The delimiter might be inside quotes */
-	  if (*p1 == '\"') {
-	    p1++;
-	    p2 = strchr(p1, '\"');
-	    if (p2 != NULL)
-	      *p2 = '\0';
-	  }
-
-	  if (strlen(p1) > 0) {
-	    /* The actual delimiter is "--" followed by 
-	       the boundary string */
-	    strcpy(MultipartDelimiter, "--");
-	    strncat(MultipartDelimiter, p1, MAX_DELIM_LEN);
-	    BodyType = (MSG_IS_8BIT | MSG_NEEDS_DECODE);
-	  }
-	}
+      if (p1 != NULL) {
+	/* The actual delimiter is "--" followed by 
+	   the boundary string */
+	strcpy(MultipartDelimiter, "--");
+	strncat(MultipartDelimiter, p1, MAX_DELIM_LEN);
+	BodyType = (MSG_IS_8BIT | MSG_NEEDS_DECODE);
       }
     }
 
