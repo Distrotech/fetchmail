@@ -466,8 +466,9 @@ software.
 .pp
 Running more than one concurrent instance of
 .I fetchmail
-on the same mailbox may cause messages to be lost or remain unfetched.
-(This is a design problem of the POP2, POP3 and IMAP2bis protocols.)
+in POP2 or POP3 mode pointed at the same mailbox may cause messages to
+be lost or remain unfetched. (This is a design problem of the POP2 and
+POP3 protocols; IMAP is less vulnerable.)
 .PP
 If, using POP3, you find that messages you've already read on the
 server are being fetched even when you don't specify --all, blame
