@@ -224,7 +224,8 @@ to its page.<P>
 Fetchmail is now sufficiently stable and effective that I'm getting
 very little pressure to fix things or add features.  Development has
 slowed way down, release frequency has dropped off, and we're
-basically in maintainance mode.<p>
+basically in maintainance mode.  Barring any urgent bug fixes, my 
+intention is to leave 5.0.0 alone for several months.<p>
 
 Major changes or additions therefore seem unlikely until there are
 significant changes in or additions to the related protocol RFCs.  One
