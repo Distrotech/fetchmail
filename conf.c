@@ -311,6 +311,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	    stringdump("plugin", ctl->server.plugin);
 	    stringdump("plugout", ctl->server.plugout);
 	    stringdump("principal", ctl->server.principal);
+	    booldump("tracepolls", ctl->tracepolls);
 
 	    indent(0);
 	    fputs("'users': ", stdout);
@@ -384,7 +385,6 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	listdump("smtphunt", ctl->smtphunt);
 	stringdump("smtpaddress", ctl->smtpaddress);
 	stringdump("smtpname", ctl->smtpname);
-        booldump("tracepolls", ctl->tracepolls);
 
 	indent('\0');
 	fprintf(stdout, "'antispam':'");
