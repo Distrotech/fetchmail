@@ -489,4 +489,10 @@ void itimerthread(void*);
 #define STRING_DISABLED	(char *)-1
 #define STRING_DUMMY	""
 
+#ifdef NeXT
+#ifndef S_IXGRP
+#define S_IXGRP 0000010
+#endif
+#endif
+
 /* fetchmail.h ends here */
