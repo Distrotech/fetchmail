@@ -404,21 +404,21 @@ Legal keywords are:
     flush
     fetchall
     rewrite
-    explicit
+    skip
     nokeep
     noflush
     nofetchall
     norewrite
-    noexplicit
+    noskip
     port
 .PP
 All these correspond to the obvuious command-line arguments except
-two: \fBpassword\fR and \fBexplicit\fR.
+two: \fBpassword\fR and \fBskip\fR.
 .PP
 The \fBpassword\fR option requires a string argument, which is the password
 to be used with the entry's server.
 .PP
-The \fBexplicit\fR option tells
+The \fBskip\fR option tells
 .I fetchmail 
 not to query this host unless it is explicitly named on the command
 line.  A host entry with this flag will be skipped when

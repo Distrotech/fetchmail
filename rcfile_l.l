@@ -38,12 +38,12 @@ keep		{ yylval.flag = TRUE; return KW_KEEP; }
 flush		{ yylval.flag = TRUE; return KW_FLUSH; }
 fetchall	{ yylval.flag = TRUE; return KW_FETCHALL; }
 rewrite		{ yylval.flag = TRUE; return KW_REWRITE; }
-explicit	{ yylval.flag = TRUE; return KW_EXPLICIT; }
+skip		{ yylval.flag = TRUE; return KW_SKIP; }
 nokeep		{ yylval.flag = FALSE; return KW_KEEP; }
 noflush		{ yylval.flag = FALSE; return KW_FLUSH; }
 nofetchall	{ yylval.flag = FALSE; return KW_FETCHALL; }
 norewrite	{ yylval.flag = FALSE; return KW_REWRITE; }
-noexplicit	{ yylval.flag = FALSE; return KW_EXPLICIT; }
+noskip		{ yylval.flag = FALSE; return KW_SKIP; }
 port		{ return KW_PORT; }
 
 (auto)|(AUTO)	{ yylval.proto = P_AUTO;  return PROTO_AUTO; }

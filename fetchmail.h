@@ -70,7 +70,7 @@ struct hostrec
   int fetchall;
   int flush;
   int norewrite;
-  int explicit;
+  int skip;
   int port;
 
   /* state used for tracking UIDL ids */

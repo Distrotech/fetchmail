@@ -32,12 +32,12 @@
 #   flush
 #   fetchall
 #   rewrite
-#   explicit
+#   skip
 #   nokeep
 #   noflush
 #   nofetchall
 #   norewrite
-#   noexplicit
+#   noskip
 #   port
 #
 # Legal protocol identifiers are

@@ -225,7 +225,7 @@ char **argv;
 
     /* pick up interactively any passwords we need but don't have */ 
     for (hostp = hostlist; hostp; hostp = hostp->next)
-	if (!(implicitmode && hostp->explicit)
+	if (!(implicitmode && hostp->skip)
 	    && !hostp->password[0] && !hostp->rpopid[0])
 	{
 	    char prompt[BUFSIZ];
@@ -261,7 +261,7 @@ char **argv;
      */
     do {
 	for (hostp = hostlist; hostp; hostp = hostp->next) {
-	    if (!implicitmode || !hostp->explicit)
+	    if (!implicitmode || !hostp->skip)
 		popstatus = query_host(hostp);
 	}
 
@@ -405,9 +405,9 @@ struct hostrec *queryctl;
 {
     char *cp;
 
-    if (queryctl->explicit || outlevel == O_VERBOSE)
+    if (queryctl->skip || outlevel == O_VERBOSE)
 	printf("  This host will%s be queried when no host is specified.\n",
-	       queryctl->explicit ? " not" : "");
+	       queryctl->skip ? " not" : "");
     printf("  Username = '%s'\n", queryctl->remotename);
     if (queryctl->password[0] == '\0')
 	printf("  Password will be prompted for.\n");
