@@ -869,7 +869,6 @@ const static struct method imap =
 #else /* INET6 */
     143,                /* standard IMAP2bis/IMAP4 port */
 #endif /* INET6 */
-    TRUE,               /* this is a tagged protocol */
     TRUE,		/* this is a tagged protocol */
     FALSE,		/* no message delimiter */
     imap_ok,		/* parse command response */
