@@ -111,7 +111,7 @@ typedef	long	int32;
 #error Cannot deduce a 32-bit-type
 #endif
 
-static int do_rfc1731(int sock, struct query *ctl, char *buf)
+static int do_rfc1731(int sock, char *truename)
 /* authenticate as per RFC1731 -- note 32-bit integer requirement here */
 {
     int result = 0, len;
@@ -163,7 +163,7 @@ static int do_rfc1731(int sock, struct query *ctl, char *buf)
      * 32-bit number in network byte order.
      */
 
-    strncpy(srvinst, ctl->server.truename, (sizeof srvinst)-1);
+    strncpy(srvinst, truename, (sizeof srvinst)-1);
     srvinst[(sizeof srvinst)-1] = '\0';
     for (p = srvinst; *p; p++) {
       if (isupper(*p)) {
@@ -326,86 +326,73 @@ static int do_rfc1731(int sock, struct query *ctl, char *buf)
 }
 #endif /* KERBEROS_V4 */
 
-int imap_getauth(int sock, struct query *ctl, char *buf)
+int imap_getauth(int sock, struct query *ctl, char *greeting)
 /* apply for connection authorization */
 {
-    char rbuf [POPBUFSIZE+1];
+    char capabilities[POPBUFSIZE+1];
     int ok = 0;
-#ifdef KERBEROS_V4
-    int kerbok = 0;
 
-    if (ctl->server.protocol != P_IMAP_K4) 
-#endif /* KERBEROS_V4 */
-	/* try to get authorized */
-	ok = gen_transact(sock,
-			"LOGIN %s \"%s\"", ctl->remotename, ctl->password);
+    /* probe to see if we're running IMAP4 and can use RFC822.PEEK */
+    gen_send(sock, "CAPABILITY");
+    if ((ok = gen_recv(sock, capabilities, sizeof(capabilities))))
+	return(ok);
+    if (strstr(capabilities, "BAD"))
+    {
+	imap_version = IMAP2;
+	if (outlevel == O_VERBOSE)
+	    error(0, 0, "Protocol identified as IMAP2 or IMAP2BIS");
+    }
+    /* UW-IMAP server 10.173 notifies in all caps */
+    else if (strstr(capabilities, "IMAP4rev1") || strstr(capabilities, "IMAP4REV1"))
+    {
+	imap_version = IMAP4rev1;
+	if (outlevel == O_VERBOSE)
+	    error(0, 0, "Protocol identified as IMAP4 rev 1");
+    }
+    else
+    {
+	imap_version = IMAP4;
+	if (outlevel == O_VERBOSE)
+	    error(0, 0, "Protocol identified as IMAP4 rev 0");
+    }
 
-     if (ok)
-	 return(ok);
-
-     /* probe to see if we're running IMAP4 and can use RFC822.PEEK */
-     gen_send(sock, "CAPABILITY");
-     if ((ok = gen_recv(sock, rbuf, sizeof(rbuf))))
-	 return(ok);
-     if (strstr(rbuf, "BAD"))
-     {
-	 imap_version = IMAP2;
-	 if (outlevel == O_VERBOSE)
-	     error(0, 0, "Protocol identified as IMAP2 or IMAP2BIS");
-     }
-     /* UW-IMAP server 10.173 notifies in all caps */
-     else if (strstr(rbuf, "IMAP4rev1") || strstr(rbuf, "IMAP4REV1"))
-     {
-	 imap_version = IMAP4rev1;
-	 if (outlevel == O_VERBOSE)
-	     error(0, 0, "Protocol identified as IMAP4 rev 1");
-     }
-     else
-     {
-	 imap_version = IMAP4;
-	 if (outlevel == O_VERBOSE)
-	     error(0, 0, "Protocol identified as IMAP4 rev 0");
-     }
-
-     /* eat the tail of the CAPABILITY response (if any) */
-     if ((peek_capable = (imap_version >= IMAP4)))
-	 if ((ok = imap_ok(sock, (char *)NULL)))
-	     return(ok);
+    /* eat the tail of the CAPABILITY response (if any) */
+    if ((peek_capable = (imap_version >= IMAP4)))
+	if ((ok = imap_ok(sock, (char *)NULL)))
+	    return(ok);
 
 #ifdef KERBEROS_V4
-     if (strstr(rbuf, "AUTH=KERBEROS_V4"))
-     {
-	 kerbok++;
-	 if (outlevel == O_VERBOSE)
-		error(0, 0, "KERBEROS_V4 authentication is supported");
-     }
+    if (strstr(capabilities, "AUTH=KERBEROS_V4"))
+    {
+	if (outlevel == O_VERBOSE)
+	    error(0, 0, "KERBEROS_V4 authentication is supported");
 
-     /* eat OK response */
-     if ((ok = gen_recv(sock, rbuf, sizeof(rbuf))))
-	 return(ok);
-
-     if (!strstr(rbuf, "OK"))
- 	 return(PS_AUTHFAIL);
- 
-     if ((imap_version >= IMAP4) && (ctl->server.protocol == P_IMAP_K4))
-     {
-	 if (!kerbok)
-	 {
-	     error(0, -1, "Required KERBEROS_V4 capability not supported by server");
-	     return(PS_AUTHFAIL);
-	 }
-
-	 if ((ok = do_rfc1731(sock, ctl, buf)))
-	 {
-	     if (outlevel == O_VERBOSE)
-		 error(0, 0, "IMAP> *");
-	     SockWrite(sock, "*\r\n", 3);
-	     return(ok);
-	 }
-     }
+	if (ctl->server.protocol == P_IMAP_K4)
+	{
+	    if ((ok = do_rfc1731(sock, ctl->server.truename)))
+	    {
+		if (outlevel == O_VERBOSE)
+		    error(0, 0, "IMAP> *");
+		SockWrite(sock, "*\r\n", 3);
+	    }
+	    
+	    return(ok);
+	}
+	/* else fall through to ourdinary AUTH=LOGIN case */
+    }
+    else if (ctl->server.protocol == P_IMAP_K4))
+    {
+	error(0,-1, "Required KERBEROS_V4 capability not supported by server");
+	return(PS_AUTHFAIL);
+    }
 #endif /* KERBEROS_V4 */
 
-     return(PS_SUCCESS);
+    /* try to get authorized in the ordinary (AUTH=LOGIN) way */
+    ok = gen_transact(sock, "LOGIN %s \"%s\"", ctl->remotename, ctl->password);
+    if (ok)
+	return(ok);
+
+    return(PS_SUCCESS);
 }
 
 static int imap_getrange(int sock, 
