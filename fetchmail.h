@@ -28,6 +28,9 @@
 #define		USERNAMELEN	40	/* max POP3 arg length (RFC1939) */
 #define		IDLEN		128	/* max length of UID (RFC1939) */
 
+/* clear a netbsd kernel parameter out of the way */ 
+#undef		MSGBUFSIZE
+
 #define		MSGBUFSIZE	2048   	/* size of message read buffer */
 #define		PASSWORDLEN	64	/* max password length */
 #define		DIGESTLEN	33	/* length of MD5 digest */
