@@ -10,6 +10,7 @@
 * Plug another hole that was letting zombies through.
 * SA_RESDTART portability fix for SunOS.
 * Ignore Sender and Resent-Sender headers unless they contain @.
+* Makefile no longer requires GNU make.
 
 fetchmail-5.8.2 (Tue May  8 17:07:53 EDT 2001), 20481 lines:
 
