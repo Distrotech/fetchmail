@@ -137,6 +137,9 @@
 /* Define if you have a fallback MDA installed */
 #undef FALLBACK_MDA
 
+/* Define if `sys_siglist' is declared by <signal.h>.  */
+#undef SYS_SIGLIST_DECLARED
+
 
 /* Leave that blank line there!!  Autoheader needs it.
    If you're adding to this file, keep in mind:
