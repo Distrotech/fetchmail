@@ -463,14 +463,15 @@ int main(int argc, char **argv)
     SOCKSinit("fetchmail");
 #endif /* HAVE_SOCKS */
 
+    /* avoid zombies from plugins */
+    deal_with_sigchld();
+
     /*
      * Maybe time to go to demon mode...
      */
     if (run.poll_interval)
     {
-	if (nodetach)
-	    deal_with_sigchld();
-	else
+	if (!nodetach)
 	    daemonize(run.logfile, terminate_run);
 	report(stdout, GT_("starting fetchmail %s daemon \n"), VERSION);
 
@@ -484,7 +485,6 @@ int main(int argc, char **argv)
     }
     else
     {
-	deal_with_sigchld();  /* or else we may accumulate too many zombies */
 	if (run.logfile && access(run.logfile, F_OK) == 0)
     	{
 	    freopen(run.logfile, "a", stdout);
