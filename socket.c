@@ -93,18 +93,8 @@ va_dcl {
 }
 
 /*
- * FIXME: This needs to be recoded to use stdio, if that's possible.
- *
- * If you think these functions are too slow and inefficient, you're
- * absolutely right.  I wish I could figure out what to do about it.
- * The ancestral popclient used static buffering here to cut down on the
- * number of read(2) calls, but we can't do that because we can have
- * two or more sockets open at a time.
- *
- * The right thing to do would be to use stdio for internal per-socket
- * buffering here (which is why Socket() returns a file pointer) but 
- * this causes mysterious lossage.  In case someone ever finds a way
- * around this, a note on Carl Harris's original implementation said:
+ * In case we ever optimize this further,
+ * a note on Carl Harris's original implementation said:
  *
  * Size of buffer for internal buffering read function 
  * don't increase beyond the maximum atomic read/write size for
@@ -116,18 +106,11 @@ va_dcl {
 
 int SockWrite(char *buf, int len, FILE *sockfp)
 {
-    int n, wrlen = 0;
+    int n;
     
-    while (len)
-    {
-        n = write(fileno(sockfp), buf, len);
-        if (n <= 0)
-            return -1;
-        len -= n;
-	wrlen += n;
-	buf += n;
-    }
-    return wrlen;
+    if ((n = fwrite(buf, 1, len, sockfp)) < 1)
+	return -1;
+    return n;
 }
 
 int SockGets(char *buf, int len, FILE *sockfp)
@@ -136,7 +119,7 @@ int SockGets(char *buf, int len, FILE *sockfp)
 
     while (--len)
     {
-        if (read(fileno(sockfp), buf, 1) != 1)
+        if ((*buf = fgetc(sockfp)) == EOF)
             return -1;
         else
 	    rdlen++;
