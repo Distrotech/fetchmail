@@ -63,9 +63,7 @@ struct query
 {
     /* per-host data */
     struct idlist *servernames;		/* servername first, then akas */
-    struct idlist *localnames;		/* including calling user's name */
     struct idlist *localdomains;	/* list of pass-through domains */
-    int wildcard;		/* should unmatched names be passed through */
     int protocol;
     int port;
     int authenticate;
@@ -74,6 +72,8 @@ struct query
     int skip;
 
     /* per-user data */
+    struct idlist *localnames;		/* including calling user's name */
+    int wildcard;		/* should unmatched names be passed through */
     char remotename [USERNAMELEN+1];
     char password [PASSWORDLEN+1];
     char mailbox [FOLDERLEN+1];

@@ -272,8 +272,7 @@ const char *pathname;		/* pathname for the configuration file */
 static void prc_reset(void)
 /* clear the global current record (server parameters) used by the parser */
 {
-    int		saveport, saveproto, saveauth, saveskip;
-    struct idlist *saveservernames;
+    struct query save;
 
     /*
      * Purpose of this code is to initialize the new server block, but
@@ -281,18 +280,18 @@ static void prc_reset(void)
      * preserve server options unless the command-line explicitly
      * overrides them.
      */
-    saveport = current.port;
-    saveproto = current.protocol;
-    saveauth = current.authenticate;
-    saveskip = current.skip;
-    saveservernames = current.servernames;
+    save = current;
 
     memset(&current, '\0', sizeof(current));
 
-    current.protocol = saveproto;
-    current.authenticate = saveauth;
-    current.skip = saveskip;
-    current.servernames = saveservernames;
+    current.servernames = save.servernames;
+    current.localdomains = save.localdomains;
+    current.protocol = save.protocol;
+    current.port = save.port;
+    current.authenticate = save.authenticate;
+    current.timeout = save.timeout;
+    current.envelope = save.envelope;
+    current.skip = save.skip;
 }
 
 struct query *hostalloc(init)
@@ -331,14 +330,16 @@ static void prc_register(void)
     
 #define FLAG_FORCE(fld) if (cmd_opts.fld) current.fld = cmd_opts.fld
     FLAG_FORCE(protocol);
+    FLAG_FORCE(port);
+    FLAG_FORCE(authenticate);
+    FLAG_FORCE(timeout);
+    FLAG_FORCE(envelope);	/* yes, even though this is a string */
+    FLAG_FORCE(skip);
+
     FLAG_FORCE(keep);
     FLAG_FORCE(flush);
     FLAG_FORCE(fetchall);
     FLAG_FORCE(norewrite);
-    FLAG_FORCE(skip);
-    FLAG_FORCE(port);
-    FLAG_FORCE(authenticate);
-    FLAG_FORCE(timeout);
     FLAG_FORCE(limit);
     FLAG_FORCE(fetchlimit);
 #undef FLAG_FORCE
@@ -350,6 +351,7 @@ void optmerge(struct query *h2, struct query *h1)
 /* merge two options records; empty fields in h2 are filled in from h1 */
 {
     append_str_list(&h2->localnames, &h1->localnames);
+    append_str_list(&h2->localdomains, &h1->localdomains);
 
 #define STR_MERGE(fld, len) if (*(h2->fld) == '\0') strcpy(h2->fld, h1->fld)
     STR_MERGE(remotename, USERNAMELEN);
@@ -362,14 +364,16 @@ void optmerge(struct query *h2, struct query *h1)
 
 #define FLAG_MERGE(fld) if (!h2->fld) h2->fld = h1->fld
     FLAG_MERGE(protocol);
+    FLAG_MERGE(port);
+    FLAG_MERGE(authenticate);
+    FLAG_MERGE(timeout);
+    FLAG_MERGE(envelope);	/* yes, even though this is a string */
+    FLAG_MERGE(skip);
+
     FLAG_MERGE(keep);
     FLAG_MERGE(flush);
     FLAG_MERGE(fetchall);
     FLAG_MERGE(norewrite);
-    FLAG_MERGE(skip);
-    FLAG_MERGE(port);
-    FLAG_MERGE(authenticate);
-    FLAG_MERGE(timeout);
     FLAG_MERGE(limit);
     FLAG_MERGE(fetchlimit);
 #undef FLAG_MERGE
