@@ -962,13 +962,13 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char
 
 	if (certck) {
 		SSL_CTX_set_verify(_ctx, SSL_VERIFY_PEER, SSL_ck_verify_callback);
-		if (certpath)
-			SSL_CTX_load_verify_locations(_ctx, NULL, certpath);
 	} else {
 		/* In this case, we do not fail if verification fails. However,
 		 *  we provide the callback for output and possible fingerprint checks. */
 		SSL_CTX_set_verify(_ctx, SSL_VERIFY_PEER, SSL_nock_verify_callback);
 	}
+	if (certpath)
+		SSL_CTX_load_verify_locations(_ctx, NULL, certpath);
 	
 	_ssl_context[sock] = SSL_new(_ctx);
 	
