@@ -8,6 +8,12 @@ Option to enable EMACS-like user folder versioning on each run.
 
 S/key for secure challenge-response.
 
+Recode POP2 to use the same driver/method strategy as POP3/IMAP, so 
+all three protocols will be able to forward messages through the
+generic driver.  (This requires that we find a POP2 server to test with.)
+
+Support SMTP forwarding.
+
 3.1:
 
 * MDA arguments are now dumped when using the -V option.
