@@ -878,17 +878,8 @@ static int load_params(int argc, char **argv, int optind)
 	    if ((ctl->server.protocol == P_ETRN
 			 || ctl->server.preauthenticate == A_KERBEROS_V4
 			 || ctl->server.preauthenticate == A_KERBEROS_V5))
-		if (ctl->server.dns)
-		{
-		    if (strcmp(fetchmailhost, "localhost") == 0)
+		if (strcmp(fetchmailhost, "localhost") == 0)
 			fetchmailhost = host_fqdn();
-		}
-		else
-		{
-		    fprintf(stderr, "DNS is required for %s protocol",
-			    showproto(ctl->server.protocol));
-		    exit(PS_DNS);
-		}
 
 	    /*
 	     * Make sure we have a nonempty host list to forward to.
