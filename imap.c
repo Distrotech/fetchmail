@@ -325,7 +325,8 @@ int imap_getauth(int sock, struct query *ctl, char *buf)
 	 if (outlevel == O_VERBOSE)
 	     error(0, 0, "Protocol identified as IMAP2 or IMAP2BIS");
      }
-     else if (strstr(rbuf, "IMAP4rev1"))
+     /* UW-IMAP server 10.173 notifies in all caps */
+     else if (strstr(rbuf, "IMAP4rev1") || strstr(rbuf, "IMAP4REV1"))
      {
 	 imap_version = IMAP4rev1;
 	 if (outlevel == O_VERBOSE)
