@@ -89,10 +89,8 @@ your local delivery configuration or your port 25 listener.  Also,
 beware of aliases that direct your local mail back to the server host!
 
 This software is known to work with the qpop/popper series of
-freeware POP3 servers; also with the imapd servers that are
-distributed with Pine from the University of Washington.  Other
-POP3 servers have been known to give it indigestion.  Test carefully!
-If you have problems, try to switch to IMAP.
+freeware POP3 servers; also with the IMAP2bis and IMAP4 servers that are
+distributed with Pine from the University of Washington.  
 
 A couple of users have reported that some recent (post-2.7.2) versions
 of gcc seem to have an optimizer bug that affects fetchmail.  If your
