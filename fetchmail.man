@@ -72,7 +72,7 @@ option (this can be useful if you don't want to run sendmail as an
 SMTP listener for security or other reasons).  
 Some possible MDAs are "/usr/sbin/sendmail -oem %s",
 "/usr/lib/sendmail -oem %s",
-"/usr/formail", and "/usr/bin/deliver %s" (if the MDA command contains
+"/usr/bin/formail", and "/usr/bin/deliver %s" (if the MDA command contains
 %s, that escape will be expanded into your username on the client
 machine).
 .TP
