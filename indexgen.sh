@@ -274,6 +274,10 @@ MDA) called <a
 href="http://www.trestle.com/linux/trestlemail/">trestlemail</a> that
 helps redirect multidrop mail.<p>
 
+Donncha O Caoihm has written a Perl script called 
+<a href="http://cork.linux.ie/projects/install-sendmail/">install-sendmail</a>
+that assists you in installing sendmail and fetchmail together/<p>
+
 Hugo Rabson has written a script called \`hotmole' that can retrieve
 Hotmail mail via the web using Lynx.  The script was available on <a
 href="http://www.jin-sei-kai.demon.co.uk/hugo/linux.html"> Hugo
