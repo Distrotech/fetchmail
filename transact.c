@@ -92,6 +92,13 @@ static void find_server_names(const char *hdr,
 	{
 	    char	*atsign;
 
+	    /* 
+	     * Handle empty address from a To: header containing only 
+	     * a comment.
+	     */
+	    if (!*cp)
+		continue;
+
 	    /*
 	     * If the name of the user begins with a qmail virtual
 	     * domain prefix, ignore the prefix.  Doing this here
@@ -474,6 +481,7 @@ int readheaders(int sock,
 	     */
 	    if (protocol->delimited && line[0] == '.' && EMPTYLINE(line+1))
 	    {
+		headers_ok = FALSE;
 		has_nuls = (linelen != strlen(line));
 		free(line);
 		goto process_headers;
