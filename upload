@@ -37,7 +37,7 @@ scp history.html $dest
 echo "Upload to ${WWWVIRTUAL} complete"
 
 echo "Beginning FTP upload..."
-rpm2lsm -k ${keywords} *.rpm >fetchmail.lsm
+rpm2lsm -v $version -k ${keywords} fetchmail-${version}-1.i386.rpm >fetchmail.lsm
 lftp <<EOF
   # Copy to FTP site
   open $FTPHOST
