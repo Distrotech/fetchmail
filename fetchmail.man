@@ -705,7 +705,7 @@ option \fBuser\fR.
 .PP
 If your IMAP daemon returns the PREAUTH response in its greeting line, 
 fetchmail will notice this and skip the normal authentication step.
-This could be useful, e.g. if you start imapd explicitly using ssh.
+This can be useful, e.g. if you start imapd explicitly using ssh.
 In this case you can declare the authentication value `ssh' on that
 site entry to stop \fI.fetchmail\fR from asking you for a password
 when it starts up.
@@ -1633,6 +1633,12 @@ person referred by the To: address has already received the original
 copy of the mail).
 
 .SH CONFIGURATION EXAMPLES
+Note that although there are password declarations in a good many
+of the examples below, this is mainly for illustrative purposes.
+We recommend stashing account/password pairs in your $HOME/.netrc
+file, where they can be used not just by fetchmail but by ftp(1) and
+other programs.
+
 Basic format is:
 
 .nf
@@ -1756,8 +1762,8 @@ imapd via ssh.  Note that in this setup, IMAP authentication can be
 skipped.
 
 .nf
-poll mailhost.net with proto imap and auth ssh:
-        plugin "ssh %h /usr/sbin/imapd";
+poll mailhost.net with proto imap:
+        plugin "ssh %h /usr/sbin/imapd" auth ssh;
 	user esr is esr here
 .fi
 
@@ -2094,7 +2100,7 @@ http://www.tuxedo.org/~esr/fetchmail or do a WWW search for pages with
 `fetchmail' in their titles.
 
 .SH SEE ALSO
-mutt(1), elm(1), mail(1), sendmail(8), popd(8), imapd(8)
+mutt(1), elm(1), mail(1), sendmail(8), popd(8), imapd(8), netrc(5)
 .SH APPLICABLE STANDARDS
 .TP 5
 SMTP/ESMTP:

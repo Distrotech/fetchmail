@@ -2,6 +2,9 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Restore ability to build with NLS.
+* FreeBSD port fixes.
+
 ------------------------------------------------------------------------------
 fetchmail-5.7.0 (Thu Mar  1 18:00:08 EST 2001), 20131 lines:
 

@@ -56,11 +56,11 @@ then
   CPFLAGS="-I/usr/include"
 fi
 
-# Check for FreeBSD special case: -lkvm needed
+# Check for FreeBSD special case: more libs needed
 if test `uname` = "FreeBSD" 
 then
-   echo "Adding -lkvm to standard libraries"
-   LIBS="$LIBS -lkvm"
+   echo "Adding -lmd -lkvm -lcom_err to standard libraries"
+   LIBS="$LIBS -lmd -lkvm -lcom_err"
 fi
  
 # Check for Rhapsody special case: it doesn't like -s
