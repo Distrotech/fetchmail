@@ -15,7 +15,7 @@ fetchmail-5.9.1 (Mon Sep 24 19:01:57 EDT 2001), 21120 lines:
   (resolves Debian bug #109796).
 * HMH's fix for the LMTP localhost/foo problem.
 * Mike Warfield's fix for using a combined SSL cert and key in a single file.
-* DNS lookups moved to just before te mailserver socket open, so fetchmail
+* DNS lookups moved to just before the mailserver socket open, so fetchmail
   now works OK even if started up without Internet access.
 * Switched from _( to GT_( as a gettext macro, in order to avoid a 
   conflict with the SSL library.
@@ -28,6 +28,7 @@ fetchmail-5.9.0 (Sun Aug 12 23:52:16 EDT 2001), 21062 lines:
 * Matthias Andree's patch to correct parsing of spaces in quoted usernames.
 
 There are 371 people on fetchmail-friends and 610 on fetchmail-announce.
+% Release 5.9.0
 
 fetchmail-5.8.17 (Tue Aug  7 20:05:36 EDT 2001), 21056 lines:
 
