@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/09/23 12:48:32 $
+<td width="30%" align=right>$Date: 1999/09/23 20:54:37 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -329,17 +329,18 @@ Here's a longer answer: <P>
 
 Fetchmail will work with any POP, IMAP, or ESMTP/ETRN server that
 conforms to the relevant RFCs (and even some outright broken ones like
-<a href="#S2">Microsoft Exchange</a>).  This doesn't mean it works
-equally well with all, however.  POP2 servers, and POP3 servers
-without LAST, limit fetchmail's capabilities in various ways described
-on the manual page.<P>
+<a href="#S2">Microsoft Exchange</a> and <a href="#S12">Novell
+GroupWise</a>).  This doesn't mean it works equally well with all,
+however.  POP2 servers, and POP3 servers without LAST, limit
+fetchmail's capabilities in various ways described on the manual
+page.<P>
 
 Most modern Unixes (and effectively all Linux/*BSD systems) come with
 POP3 support preconfigured (but beware of the horribly broken POP3
 server mentioned in <a href="#D2">D2</a>).  An increasing minority
 also feature IMAP (you can detect IMAP support by running fetchmail in
-AUTO mode, or by using the `Probe for a server' function in the
-fetchmailconf utility).<P>
+AUTO mode, or by using the `Probe for supported protocols' function in
+the fetchmailconf utility).<P>
 
 If you have the option, we recommend using or installing an IMAP4rev1
 server; it has the best facilities for tracking message `seen' states.
@@ -365,8 +366,7 @@ Source for a high-quality supported implementation of POP is available
 from the <a href="ftp://ftp.qualcomm.com/eudora/servers/unix/popper/">Eudora
 FTP site</a>.  Don't use 2.5, which has a rather restrictive license.
 The 2.5.2 version appears to restore the open-source license of
-previous versions.
-<P>
+previous versions.<P>
 
 <hr>
 <h2><a name="G8">G8. How can I avoid sending my password en clair?</a></h2>
@@ -430,7 +430,8 @@ AUTH=KERBEROS_V4 in the CAPABILITY response.<P>
 
 If you are fetching mail from a CompuServe POP3 account, you can use
 their RPA authentication (which works much like APOP).  See <a
-href="#S3">S3</a> for details.<P>
+href="#S3">S3</a> for details.  If you are fetching mail from
+Microsoft Exchange, you will be able to use NTLM.<P>
 
 Your POP3 server may have the RFC1938 OTP capability to use one-time
 passwords (if it doesn't, you can get OTP patches for the 2.2 version
@@ -440,7 +441,7 @@ and your fetchmail was built with OPIE support compiled in (see the
 distribution INSTALL file), fetchmail will detect it also.  When using
 OTP, you will specify a password but it will not be sent en clair.<P>
 
-Sadly, there is at present (July 1998) no OTP or APOP-like
+Sadly, there is at present (September 1999) no OTP or APOP-like
 facility generally available on IMAP servers.  However, there do exist
 patches which will OTP-enable the University of Washington IMAP
 daemon, version 4.2-FINAL.  And we have a report that the GSSAPI
@@ -459,7 +460,8 @@ not currently a standard way to do this; fetchmail also uses this method, so
 the two will interoperate happily.  They better, because this is how Craig gets
 his mail ;-)<P>
 
-(One important win of OTP is that it's not subject to EAR restrictions.)<P>
+(One important win of OTP is that it's not subject to U.S. export
+restrictions.)<P>
 
 <hr>
 <h2><a name="G9">G9. Is any special configuration needed to use a dynamic IP address?</a></h2>
@@ -567,9 +569,10 @@ connection, this will ensure that the mail gets out.<P>
 
 Fetchmail is fully Y2K-compliant.<P> 
 
-Fetchmail could theoretically have problems when the 32-bit time_t's roll
-over in 2038, but I doubt it.  Timestamps aren't used for anything but 
-log entry generation.<P>
+Fetchmail could theoretically have problems when the 32-bit time_t
+counters roll over in 2038, but I doubt it.  Timestamps aren't used
+for anything but log entry generation.  Anyway, if you aren't running
+on a 64-bit machine by then, you deserve to lose.<P>
 
 <hr>
 <h2><a name="G13">G13. Is there a way in fetchmail to support disconnected IMAP mode?</a></H2>
@@ -1412,7 +1415,7 @@ headers.<P>
 
 As with M$ Exchange, the only real fix for these problems is to get a
 POP (or preferably IMAP) server that isn't brain-dead. OpenMail's
-project manager claims these bugs have been fixed in 6.0<P>
+project manager claims these bugs have been fixed in 6.0.<P>
 
 <hr>
 <h2><a name="S8">S8. How can I use fetchmail with Hotmail?</a></h2>
@@ -1506,8 +1509,8 @@ Replace \t with exactly one tabulation character.
 You should also consider using "fetchall" option because Geocities' servers
 sometimes think that the first 45 messages have already been read.<P>
 
-Fix: Get an email provider that doesn't suck.  Geocities' pop-up adds
-are lame, you should boycott them anyway.<P>
+Fix: Get an email provider that doesn't suck. The pop-up ads on
+Geocities are lame, you should boycott them anyway.<P>
 
 <hr>
 <h2><a name="K2">K2. How can I use fetchmail with IPv6 and IPsec?</a></h2>
@@ -2493,7 +2496,7 @@ inactivity timeout.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1999/09/23 12:48:32 $
+<td width="30%" align=right>$Date: 1999/09/23 20:54:37 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
