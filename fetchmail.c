@@ -1606,10 +1606,19 @@ static void dump_params (struct runctl *runp,
 	switch (ctl->server.authenticate)
 	{
 	case A_ANY:
-	    printf(_("  All authentication methods will be described.\n"));
+	    printf(_("  All authentication methods will be tried.\n"));
 	    break;
 	case A_PASSWORD:
 	    printf(_("  Password authentication will be forced.\n"));
+	    break;
+	case A_NTLM:
+	    printf(_("  NTLM authentication will be forced.\n"));
+	    break;
+	case A_OTP:
+	    printf(_("  OTP authentication will be forced.\n"));
+	    break;
+	case A_CRAM_MD5:
+	    printf(_("  CRAM-Md5 authentication will be forced.\n"));
 	    break;
 	case A_GSSAPI:
 	    printf(_("  GSSAPI authentication will be forced.\n"));
