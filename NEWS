@@ -1,8 +1,9 @@
 			To-do list:
 
 At this point, the fetchmail code appears to be stable and free of
-bugs affecting normal operation.  It will probably undergo substantial
-change only if and when support for a new retrieval protocol is added.
+bugs affecting normal operation (that is, forwarding to SMTP from a
+single server host).  It will probably undergo substantial change only
+if and when support for a new retrieval protocol is added.
 
 Test RPOP feature against a Unix server that has it.  The protocol
 transactions are certainly OK, the question is whether the rresvport() 
@@ -25,6 +26,8 @@ fetchmail-1.6 ():
 
 * Restore --mda, seems some people either can't run a port 25 listener
   due to bizarre dynamic-SLIP problems, or won't for security reasons.
+
+* Fix bug that prevented SMTP from being specified on the defaults line.
 
 fetchmail-1.5 (Thu Oct  3 04:35:15 EDT 1996):
 
