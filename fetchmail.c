@@ -1480,9 +1480,6 @@ static int query_host(struct query *ctl)
 #endif /* POP3_ENABLE */
 	break;
     case P_IMAP:
-#ifdef GSSAPI
-    case P_IMAP_GSS:
-#endif /* GSSAPI */
 #ifdef IMAP_ENABLE
 	return(doIMAP(ctl));
 #else
