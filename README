@@ -87,7 +87,7 @@ protocol or authentication mode is added.  See the distribution files
 NEWS for detailed information on recent changes and NOTES for design
 notes.
 
-You can easily fetch the latest version of fetchmail  via FTP from the
+You can easily fetch the latest version of fetchmail via FTP from the
 following FTP directory:
 
 	ftp://ftp.ccil.org/pub/esr/fetchmail
