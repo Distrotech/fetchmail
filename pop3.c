@@ -17,19 +17,6 @@
 #include  "socket.h"
 #include  "fetchmail.h"
 
-#ifdef HAVE_PROTOTYPES
-/* prototypes for internal functions */
-int POP3_sendUIDL (int num, int socket, char **cp);
-int POP3_BuildDigest (char *buf, struct hostrec *options);
-#endif
-
-
-/*********************************************************************
-
- Method declarations for POP3 
-
- *********************************************************************/
-
 int pop3_ok (argbuf,socket)
 /* parse command response */
 char *argbuf;
@@ -80,41 +67,54 @@ char *greeting;
 #if defined(HAVE_APOP_SUPPORT)
     /* build MD5 digest from greeting timestamp + password */
     if (queryctl->protocol == P_APOP) 
-	if (POP3_BuildDigest(greeting,queryctl) != 0) {
+    {
+	char *start,*end;
+	char *msg;
+
+	/* find start of timestamp */
+	for (start = greeting;  *start != 0 && *start != '<';  start++)
+	    continue;
+	if (*start == 0) {
+	    fprintf(stderr,"Required APOP timestamp not found in greeting\n");
 	    return(PS_AUTHFAIL);
 	}
+
+	/* find end of timestamp */
+	for (end = start;  *end != 0  && *end != '>';  end++)
+	    continue;
+	if (*end == 0 || (end - start - 1) == 1) {
+	    fprintf(stderr,"Timestamp syntax error in greeting\n");
+	    return(PS_AUTHFAIL);
+	}
+
+	/* copy timestamp and password into digestion buffer */
+	msg = (char *) malloc((end-start-1) + strlen(queryctl->password) + 1);
+	*(++end) = 0;
+	strcpy(msg,start);
+	strcat(msg,queryctl->password);
+
+	strcpy(queryctl->digest, MD5Digest(msg));
+	free(msg);
+    }
 #endif  /* HAVE_APOP_SUPPORT */
 
     switch (queryctl->protocol) {
     case P_POP3:
-	SockPrintf(socket,"USER %s\r\n",queryctl->remotename);
-	if (outlevel == O_VERBOSE)
-	    fprintf(stderr,"> USER %s\n",queryctl->remotename);
+	gen_send(socket,"USER %s", queryctl->remotename);
 	if (pop3_ok(buf,socket) != 0)
 	    goto badAuth;
 
 	if (queryctl->rpopid[0])
-	{
-	    SockPrintf(socket, "RPOP %s\r\n", queryctl->rpopid);
-	    if (outlevel == O_VERBOSE)
-		fprintf(stderr,"> RPOP %s %s\n",queryctl->rpopid);
-	}
+	    gen_send(socket, "RPOP %s", queryctl->rpopid);
 	else
-	{
-	    SockPrintf(socket,"PASS %s\r\n",queryctl->password);
-	    if (outlevel == O_VERBOSE)
-		fprintf(stderr,"> PASS password\n");
-	}
+	    gen_send(socket, "PASS %s", queryctl->password);
 	if (pop3_ok(buf,socket) != 0)
 	    goto badAuth;
 	break;
 
 #if defined(HAVE_APOP_SUPPORT)
     case P_APOP:
-	SockPrintf(socket,"APOP %s %s\r\n", 
-		   queryctl->remotename, queryctl->digest);
-	if (outlevel == O_VERBOSE)
-	    fprintf(stderr,"> APOP %s %s\n",queryctl->remotename, queryctl->digest);
+	gen_send(socket,"APOP %s %s", queryctl->remotename, queryctl->digest);
 	if (pop3_ok(buf,socket) != 0) 
 	    goto badAuth;
 	break;
@@ -132,9 +132,6 @@ char *greeting;
 badAuth:
     if (outlevel > O_SILENT && outlevel < O_VERBOSE)
 	fprintf(stderr,"%s\n",buf);
-    else
-	; /* say nothing */
-
     return(PS_ERROR);
 }
 
@@ -176,13 +173,15 @@ int *firstp;
     ok = pop3_ok(buf,socket);
     if (ok == 0 && sscanf(buf, "%d", firstp) == 0)
 	return(PS_ERROR);
+
     use_uidl = (ok != 0); 
 
     /* otherwise, if we have a stored last ID for this host,
      * send UIDL and search the returned list for it
      */ 
     if (use_uidl && queryctl->lastid[0]) {
-      if ((ok = POP3_sendUIDL(-1, socket, 0)) == 0) {
+      gen_send("UIDL");
+      if ((ok = pop3_ok(buf, socket)) == 0) {
           while (SockGets(socket, buf, sizeof(buf)) >= 0) {
 	    if (outlevel == O_VERBOSE)
 	      fprintf(stderr,"%s\n",buf);
@@ -223,12 +222,22 @@ int socket;
 struct hostrec *queryctl;
 int number;
 {
-    char *cp;
-    int	ok = 0;
+    if (!use_uidl)
+	return(0);
+    else
+    {
+	char buf [POPBUFSIZE+1];
+	int	ok;
 
-    if (use_uidl && (ok = POP3_sendUIDL(number, socket, &cp)) == 0)
-	(void) strcpy(queryctl->lastid, cp);
-    return(ok);
+	gen_send(socket, "UIDL %d", number);
+	if ((ok = pop3_ok(socket, buf)) != 0)
+	    return(ok);
+	else
+	{
+	    sscanf(buf, "%*d %s", queryctl->lastid);
+	    return(0);
+	}
+    }
 }
 
 static struct method pop3 =
@@ -259,95 +268,4 @@ struct hostrec *queryctl;
     return(do_protocol(queryctl, &pop3));
 }
 
-/******************************************************************
-  function:	POP3_sendUIDL
-  description:	send the UIDL command to the server, 
-
-  arguments:
-    num 	number of message to query (may be -1)
-
-  ret. value:	zero if success, else status code.
-  globals:	SockPrintf, pop3_ok.
-  calls:	reads outlevel.
- *****************************************************************/
-
-int POP3_sendUIDL (num, socket, cp)
-int num;
-int socket;
-char **cp;
-{
-  int ok;
-  char buf [POPBUFSIZE];
-  static char id[IDLEN];
-
-  (void) strcpy(buf, "UIDL\r\n");
-  if (num > -1)
-    (void) sprintf(buf, "UIDL %d\r\n", num);
- 
-  SockPrintf(socket, buf);
-  if (outlevel == O_VERBOSE)
-    fprintf(stderr,"> %s", buf);
-
-  ok = pop3_ok(buf,socket);
-  if (ok != 0 && outlevel > O_SILENT) 
-    fprintf(stderr,"Server says '%s' to UIDL command.\n",buf);
-
-  if (cp) {
-    sscanf(buf, "%*d %s\n", id);
-    *cp = id;
-  }
-  return(ok);
-}
-
-
-/******************************************************************
-  function:	POP3_BuildDigest
-  description:	Construct the MD5 digest for the current session,
-	        using the user-specified password, and the time
-                stamp in the POP3 greeting.
-  arguments:
-    buf		greeting string
-    queryctl	merged options record.
-
-  ret. value:	zero on success, nonzero if no timestamp found in
-	        greeting.
-  globals:	none.
-  calls:	MD5Digest.
- *****************************************************************/
-
-#if defined(HAVE_APOP_SUPPORT)
-POP3_BuildDigest (buf,queryctl)
-char *buf;
-struct hostrec *queryctl;
-{
-  char *start,*end;
-  char *msg;
-
-  /* find start of timestamp */
-  for (start = buf;  *start != 0 && *start != '<';  start++)
-    ;
-  if (*start == 0) {
-    fprintf(stderr,"Required APOP timestamp not found in greeting\n");
-    return(-1);
-  }
-
-  /* find end of timestamp */
-  for (end = start;  *end != 0  && *end != '>';  end++)
-    ;
-  if (*end == 0 || (end - start - 1) == 1) {
-    fprintf(stderr,"Timestamp syntax error in greeting\n");
-    return(-1);
-  }
-
-  /* copy timestamp and password into digestion buffer */
-  msg = (char *) malloc((end-start-1) + strlen(queryctl->password) + 1);
-  *(++end) = 0;
-  strcpy(msg,start);
-  strcat(msg,queryctl->password);
-
-  strcpy(queryctl->digest, MD5Digest(msg));
-  free(msg);
-  return(0);
-}
-#endif  /* HAVE_APOP_SUPPORT */
 
