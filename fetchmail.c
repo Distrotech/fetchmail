@@ -43,8 +43,6 @@
 #include "getopt.h"
 #include "netrc.h"
 
-#define DROPDEAD	6	/* maximum bad socket opens */
-
 #ifndef ENETUNREACH
 #define ENETUNREACH   128       /* Interactive doesn't know this */
 #endif /* ENETUNREACH */
@@ -585,7 +583,6 @@ static int load_params(int argc, char **argv, int optind)
     def_opts.server.timeout = CLIENT_TIMEOUT;
     def_opts.remotename = user;
     def_opts.expunge = 1;
-    def_opts.server.envskip = 0;
 
     /* this builds the host list */
     if (prc_parse_file(rcfile, !versioninfo) != 0)
