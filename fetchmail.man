@@ -693,13 +693,19 @@ monitoring software.
 Retrieval and forwarding from multi-drop server mailboxes is at most
 as reliable as your mail server host's DNS service.  Each host address
 part in each message of a multi-drop mailbox is looked up through DNS
-to see if it's an alias of the mail server.  If it is, but the lookup
-fails due to network congestion or a crashed server, forwarding will
-not get done correctly.  This check \fIwill\fR catch equivalences
-created by MX records.
+to see if it's an alias of the mail server (the method \fIwill\fR
+catch equivalences created by MX records).  If it is an alias of the
+server, but the lookup fails due to network congestion or a crashed
+server, forwarding will not get done correctly.
 .PP
 The multi-drop mailbox code was hard to test thoroughly and may have obscure
 failure modes, especially in the presence of DNS flakiness.
+.PP
+The configuration file grammar is ugly and tricky.  This is an
+unfortunate result of trying to stay compatible with the old popclient
+syntax.  The way it is most likely to bite is if you try to declare
+a `defaults' entry with no user options.  This should work, but does
+not.  To work around this problem, add a redundant `user' declaration.
 .PP
 Under Linux, if fetchmail is run in daemon mode with the network
 inaccessible, each poll leaves a socket allocated but in CLOSE state
