@@ -1199,6 +1199,12 @@ T}
 interval   	\&	T{
 Only check this site every N poll cycles; N is a numeric argument.
 T}
+netsec   	\&	T{
+Pass in IPsec security option request.
+T}
+principal   	\&	T{
+Set Kerberos principal (only useful with imap-k4)
+T}
 .TE
 
 Here are the legal user options:
