@@ -1164,11 +1164,7 @@ static int load_params(int argc, char **argv, int optind)
 		    char	*cp;
 
 		    if (!(cp = strrchr(idp->id, '/')) ||
-#ifdef INET6 
-				(strcmp(++cp, SMTP_PORT) == 0))
-#else
 				(atoi(++cp) == SMTP_PORT))
-#endif /* INET6 */
 		    {
 			(void) fprintf(stderr,
 				       _("%s configuration invalid, LMTP can't use default SMTP port\n"),
@@ -1178,6 +1174,17 @@ static int load_params(int argc, char **argv, int optind)
 		}
 	    }
 #endif /* !INET6 */
+
+	    /*
+	     * "I beg to you, have mercy on the week minds like myself."
+	     * wrote Pehr Anderson.  Your petition is granted.
+	     */
+	    if (ctl->fetchall && ctl->keep && run.poll_interval && !nodetach)
+	    {
+		(void) fprintf(stderr,
+			       _("Both fetchall and keep on in daemon mode is a mistake!\n"));
+		exit(PS_SYNTAX);
+	    }
 	}
     }
 

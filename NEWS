@@ -1,11 +1,3 @@
-				To do:
-
-* Warn user that fetchmailconf autoprobe may take a while?  (It can hang for
-  10 or 12 minutes if it hits a firewall that drops SYN packets sent to denied
-  ports.)
-
-* --all option that forces poll of skipped entries?
-
 				Release Notes:
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
@@ -17,8 +9,9 @@ fetchmail-5.1.1 ():
 * John Cigas's delay patch to avoid a timing problem with plugins.
 * During IMAP authentication, canonicalize both name and password.
 * -A has been retired (goes with authenticate -> preauthenticate change).
+* Check for both fetchall and keep on in daemon mode; reject this.
 
-There are 259 people on fetchmail-friends and 440 on fetchmail-announce.
+There are 259 people on fetchmail-friends and 445 on fetchmail-announce.
 
 ------------------------------------------------------------------------------
 fetchmail-5.1.0 (Wed Sep 22 01:27:42 EDT 1999), 17767 lines:
