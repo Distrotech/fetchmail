@@ -1197,6 +1197,8 @@ class UserEdit(Frame, MyWidget):
 		     self.bsmtp, '26').pack(side=TOP, fill=X)
             LabeledEntry(targwin, 'Listener spam-block codes:',
 		     self.antispam, '26').pack(side=TOP, fill=X)
+            LabeledEntry(targwin, 'Pass-through properties:',
+		     self.properties, '26').pack(side=TOP, fill=X)
             targwin.pack(fill=X, anchor=N)
 
         if mode != 'novice':

@@ -310,6 +310,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	booldump("mimedecode", ctl->mimedecode);
 
 	stringdump("mda", ctl->mda);
+	stringdump("bsmtp", ctl->bsmtp);
 #ifdef INET6
 	stringdump("netsec", ctl->netsec);
 #endif /* INET6 */
