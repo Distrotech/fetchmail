@@ -51,7 +51,9 @@ int imap_ok (int sock,  char *argbuf)
 	    char	*cp;
 
 	    /*
-	     * Handle both "* 42 UNSEEN" and "* OK [UNSEEN 42] 42".
+	     * Handle both "* 42 UNSEEN" (if tha ever happens) and 
+	     * "* OK [UNSEEN 42] 42". Note that what this gets us is
+	     * a minimum index, not a count.
 	     */
 	    unseen = 0;
 	    for (cp = buf; *cp && !isdigit(*cp); cp++)
@@ -398,7 +400,7 @@ static int imap_getrange(int sock,
     int ok;
 
     /* find out how many messages are waiting */
-    recent = unseen = 0;
+    recent = unseen = -1;
     ok = gen_transact(sock, "SELECT %s", folder ? folder : "INBOX");
     if (ok != 0)
     {
@@ -408,12 +410,19 @@ static int imap_getrange(int sock,
 
     *countp = count;
 
-    if (unseen)		/* optional response, but better if we see it */
-	*newp = unseen;
-    else if (recent)	/* mandatory */
+    /*
+     * Note: because IMAP has an is_old method, this number is used
+     * only for the "X messages (Y unseen)" notification.  Accordingly
+     * it doesn't matter much that it can be wrong (e.g. if we see an
+     * UNSEEN response but not all messages above the first UNSEEN one
+     * are likewise).
+     */
+    if (unseen >= 0)		/* optional, but better if we see it */
+	*newp = count - unseen + 1;
+    else if (recent >= 0)	/* mandatory */
 	*newp = recent;
     else
-	*newp = -1;	/* should never happen, RECENT is mandatory */ 
+	*newp = -1;		/* should never happen, RECENT is mandatory */ 
 
     deletecount = 0;
 
