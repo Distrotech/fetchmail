@@ -846,37 +846,69 @@ int num;		/* index of message */
     else if (ctl->mda)		/* we have a declared MDA */
     {
 	int	length = 0;
-	char	*names, *cmd;
+	char	*names, *before, *after;
+
+	for (idp = xmit_names; idp; idp = idp->next)
+	    if (idp->val.num == XMIT_ACCEPT)
+		good_addresses++;
 
 	desthost = "localhost";
 
-	/*
-	 * We go through this in order to be able to handle very
-	 * long lists of users and (re)implement %s.
-	 */
-	for (idp = xmit_names; idp; idp = idp->next)
-	    if (idp->val.num == XMIT_ACCEPT)
-	    {
-		length += (strlen(idp->id) + 1);
-		good_addresses++;
-	    }
-	names = (char *)alloca(++length);
-	names[0] = '\0';
-	for (idp = xmit_names; idp; idp = idp->next)
-	    if (idp->val.num == XMIT_ACCEPT)
-	    {
-		strcat(names, idp->id);
-		strcat(names, " ");
-	    }
-	length += strlen(ctl->mda);
-	cmd = (char *)alloca(length);
+	length = strlen(ctl->mda) + 1;
+	before = strdup(ctl->mda);
+
+	/* sub user addresses for %T (or %s for backward compatibility) */
+	cp = (char *)NULL;
+	if (strstr(before, "%s") || (cp = strstr(before, "%T")))
+	{
+	    if (cp && cp[1] == 'T')
+		cp[1] = 's';
+
+	    /*
+	     * We go through this in order to be able to handle very
+	     * long lists of users and (re)implement %s.
+	     */
+	    for (idp = xmit_names; idp; idp = idp->next)
+		if (idp->val.num == XMIT_ACCEPT)
+		    length += (strlen(idp->id) + 1);
+
+	    names = (char *)alloca(++length);
+	    names[0] = '\0';
+	    for (idp = xmit_names; idp; idp = idp->next)
+		if (idp->val.num == XMIT_ACCEPT)
+		{
+		    strcat(names, idp->id);
+		    strcat(names, " ");
+		}
+	    after = (char *)alloca(length);
 #ifdef SNPRINTF
-	snprintf(cmd, length, ctl->mda, names);
+	    snprintf(after, length, before, names);
 #else
-	sprintf(cmd, ctl->mda, names);
+	    sprintf(after, before, names);
 #endif /* SNPRINTF */
+	    free(before);
+	    before = after;
+	}
+
+	/* substitute From address for %F */
+	if ((cp = strstr(before, "%F")))
+	{
+	    char *from = nxtaddr(headers + from_offs);
+
+	    length += strlen(from);
+	    after = alloca(length);
+	    cp[1] = 's';
+#ifdef SNPRINTF
+	    snprintf(after, length, before, from);
+#else
+	    sprintf(after, before, from);
+#endif /* SNPRINTF */
+	    free(before);
+	    before = after;
+	}
+
 	if (outlevel == O_VERBOSE)
-	    error(0, 0, "about to deliver with: %s", cmd);
+	    error(0, 0, "about to deliver with: %s", before);
 
 #ifdef HAVE_SETEUID
 	/*
@@ -888,7 +920,7 @@ int num;		/* index of message */
 	seteuid(ctl->uid);
 #endif /* HAVE_SETEUID */
 
-	sinkfp = popen(cmd, "w");
+	sinkfp = popen(before, "w");
 
 #ifdef HAVE_SETEUID
 	/* this will fail quietly if we didn't start as root */
