@@ -14,7 +14,7 @@ int prc_lineno = 1;
 %}
 
 /* this doesn't work with Linux lex, see the INSTALL file */
-%o 5000
+%o 6000
 %a 4000
 
 %%

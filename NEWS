@@ -19,6 +19,9 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.0.5 ()
+* Increased %o in the Lex source to cope with Ultrix lex.
+
 fetchmail-4.0.4 (Mon Jul 28 23:38:20 EDT 1997)
 * Overhauled the build machinery.
 * The `no envelope' option now suppresses parsing of Received lines.
