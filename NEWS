@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Handle ! in RFC2821 Return-Path addresses properly.
+
 fetchmail-5.8.15 (Tue Jul 31 02:07:03 EDT 2001), 21075 lines:
 
 * Refuse mail that has no good addresses and can't be sent to postmaster.
