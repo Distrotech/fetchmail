@@ -118,7 +118,7 @@ static int handle_plugin(const char *host,
 /* get a socket mediated through a given external command */
 {
     int fds[2];
-    char **argvec;
+    char *const *argvec;
     if (socketpair(AF_UNIX,SOCK_STREAM,0,fds))
     {
 	report(stderr, _("fetchmail: socketpair failed\n"));
@@ -142,7 +142,7 @@ static int handle_plugin(const char *host,
 		(void) close(fds[0]);
 		if (outlevel >= O_VERBOSE)
 		    report(stderr, _("running %s %s %s\n"), plugin, host, service);
-		argvec = parse_plugin(plugin,host,service);
+		argvec = (char *const *)parse_plugin(plugin,host,service);
 		execvp(*argvec, argvec);
 		report(stderr, _("execvp(%s) failed\n"), *argvec);
 		exit(0);
