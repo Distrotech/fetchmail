@@ -276,7 +276,7 @@ struct query *ctl;	/* option record to be initialized */
     ctl->smtp_socket = -1;
 
     while (!errflag && 
-#ifdef HAVE_GETOPTLONG
+#ifdef HAVE_GETOPT_LONG
 	   (c = getopt_long(argc,argv,shortoptions,
 			    longoptions, &option_index)) != -1)
 #else
