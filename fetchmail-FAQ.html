@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/11/05 15:36:00 $
+<td width="30%" align=right>$Date: 1997/11/18 18:25:52 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -57,16 +57,17 @@ IP address?</a><br>
 <a href="#C6">C6. How can I do automatic startup/shutdown of fetchmail
 when I may have multiple login sessions going?</a><br>
 
-<h1>Configuration tips for non-sendmail MTAs and unusual servers.</h1>
+<h1>Configuration tips for various MTAs and servers.</h1>
 
-<a href="#T1">T1. How can I use fetchmail with qmail?</a><br>
-<a href="#T2">T2. How can I use fetchmail with exim?</a><br>
-<a href="#T3">T3. How can I use fetchmail with smail?</a><br>
-<a href="#T4">T4. How can I use fetchmail with SCO's MMDF?</a><br>
-<a href="#T5">T5. How can I use fetchmail with Lotus Notes?</a><br>
-<a href="#T6">T6. How can I use fetchmail with Microsoft Exchange?</a><br>
-<a href="#T7">T7. How can I use fetchmail with Compuserve RPA?</a><br>
-<a href="#T8">T8. How can I use fetchmail with HP OpenMail?</a><br>
+<a href="#T1">T1. How can I use fetchmail with sendmail?</a><br>
+<a href="#T2">T2. How can I use fetchmail with qmail?</a><br>
+<a href="#T3">T3. How can I use fetchmail with exim?</a><br>
+<a href="#T4">T4. How can I use fetchmail with smail?</a><br>
+<a href="#T5">T5. How can I use fetchmail with SCO's MMDF?</a><br>
+<a href="#T6">T6. How can I use fetchmail with Lotus Notes?</a><br>
+<a href="#T7">T7. How can I use fetchmail with Microsoft Exchange?</a><br>
+<a href="#T8">T8. How can I use fetchmail with Compuserve RPA?</a><br>
+<a href="#T9">T9. How can I use fetchmail with HP OpenMail?</a><br>
 
 <h1>Runtime fatal errors:</h1>
 
@@ -853,7 +854,14 @@ profiles that will accomplish this.  Thank James Laferriere
 &lt;babydr@nwrain.net&gt; for it.<p>
 
 <hr>
-<h2><a name="T1">T1. How can I use fetchmail with qmail?</a></h2>
+<h2><a name="T1">T1. How can I use fetchmail with sendmail?</a></h2>
+
+No special configuration is required.  Eric Allman tells me that if
+<code>FEATURE(always_add_domain)</code> is included in sendmail's
+configuration, you can leave the <code>rewrite</code> option off.
+
+<hr>
+<h2><a name="T2">T2. How can I use fetchmail with qmail?</a></h2>
 
 Turn on the <CODE>forcecr</CODE> option; qmail's listener mode doesn't like 
 header or message lines terminated with bare linefeeds.<p>
@@ -922,7 +930,7 @@ alias mechanism described above, you can use the option `<code>qvirtual
 from the local user name.<p>
 
 <hr>
-<h2><a name="T2">T2. How can I use fetchmail with exim?</a></h2><p>
+<h2><a name="T3">T3. How can I use fetchmail with exim?</a></h2><p>
 
 By default, the exim listener enforces the the RFC1123 requirement
 that MAIL FROM and RCPT TO addresses you pass to it have to be canonical
@@ -955,7 +963,7 @@ to their return address (your SMTP listener's hostname rather than
 that of the remote mail server). <p>
 
 <hr>
-<h2><a name="T3">T3. How can I use fetchmail with smail?</a></h2><p>
+<h2><a name="T4">T4. How can I use fetchmail with smail?</a></h2><p>
 
 Smail 3.2 is very nearly plug-compatible with sendmail, and may work
 fine out of the box.<P>
@@ -976,20 +984,20 @@ mismatch, so smail's new behavior (introduced sometime between
 3.2.0.90 and 3.2.0.95) is a bug.<P>
 
 <hr>
-<h2><a name="T4">T4. How can I use fetchmail with SCO's MMDF?</a></h2><p>
+<h2><a name="T5">T5. How can I use fetchmail with SCO's MMDF?</a></h2><p>
 
 We're told this is possible, but difficult and tricky (and we don't
 have the recipe for it).  Our informant suggests dropping MMDF and
 using sendmail instead.<P>
 
 <hr>
-<h2><a name="T5">T5. How can I use fetchmail with Lotus Notes?</a></h2><p>
+<h2><a name="T6">T6. How can I use fetchmail with Lotus Notes?</a></h2><p>
 
 The Lotus Notes SMTP gateway tries to deduce when it should convert \n
 to \r\n, but its rules are not intuitive.  Use `forcecr'.<P>
 
 <hr>
-<h2><a name="T6">T6. How can I use fetchmail with Microsoft Exchange?</a></h2><p>
+<h2><a name="T7">T7. How can I use fetchmail with Microsoft Exchange?</a></h2><p>
 
 M$ Exchange violates the POP3 RFCs.  Its LIST command does not reveal
 the real sizes of mail in the pop mailbox, but the sizes of the
@@ -1008,7 +1016,7 @@ If you want these fixed, go bug the Evil Empire.  Or, better yet,
 install a real operating system on your server and run IMAP.<P>
 
 <hr>
-<h2><a name="T7">T7. How can I use fetchmail with CompuServe RPA?</a></h2>
+<h2><a name="T8">T8. How can I use fetchmail with CompuServe RPA?</a></h2>
 
 First, make sure your fetchmail has the RPA support compiled in.
 Stock fetchmail binaries (such as you might get from an RPM) don't.
@@ -1024,7 +1032,7 @@ RPA-capable, and if so do an RPA transaction rather than a plain-text
 password handshake.<P>
 
 <hr>
-<h2><a name="T8">T8. How can I use fetchmail with HP OpenMail?</a></h2>
+<h2><a name="T9">T9. How can I use fetchmail with HP OpenMail?</a></h2>
 
 No special configuration is required, but OpenMail has an annoying bug
 similar to the big one in <a href="#T6">Microsoft Exchange</a>.
@@ -1625,7 +1633,7 @@ will look right.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/11/05 15:36:00 $
+<td width="30%" align=right>$Date: 1997/11/18 18:25:52 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
