@@ -120,6 +120,8 @@ int do_gssauth(int sock, char *command, char *hostname, char *username)
 	        return result;
 	    }
 	    request_buf.length = from64tobits(buf2, buf1 + 2, sizeof(buf2));
+	    if (request_buf.length == -1)	/* in case of bad data */
+		request_buf.length = 0
 	    request_buf.value = buf2;
 	    sec_token = &request_buf;
         }
@@ -132,6 +134,8 @@ int do_gssauth(int sock, char *command, char *hostname, char *username)
         return result;
 
     request_buf.length = from64tobits(buf2, buf1 + 2, sizeof(buf2));
+    if (request_buf.length == -1)	/* in case of bad data */
+	request_buf.length = 0
     request_buf.value = buf2;
 
     maj_stat = gss_unwrap(&min_stat, context, 
