@@ -1,0 +1,31 @@
+#!/bin/sh
+#
+# growthplot -- plot the fetchmail population's growth as a function of time
+#
+
+# Get data from the NEWS file
+timeseries >/tmp/growthplot$$
+grep "^[0-9]" /tmp/growthplot$$ >/tmp/growthnumbers$$
+sed '/^4.2.9/,$d' </tmp/growthnumbers$$ >/tmp/growthannounce$$
+
+gnuplot <<EOF
+set title "Fetchmail project growth history"
+set xlabel 'Days since project start'
+set ylabel 'Participants' 6	# Put it right over the Y axis
+set key top left box
+
+# First, plot total participants
+plot [] [0:] '/tmp/growthnumbers$$' using 5:4 title "Both lists" with points 3
+
+# Then, plot announce-list only starting from the Julian date of the split
+replot '/tmp/growthannounce$$' using 5:3 title "fetchmail-announce" with points 1
+
+# Finally, plot the developer list
+replot '/tmp/growthannounce$$' using 5:2 title "fetchmail-friends" with points 2
+
+pause 9999
+EOF
+
+rm -f /tmp/growth*
+
+
