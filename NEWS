@@ -4,6 +4,7 @@ fetchmail-4.5.6 ():
 * SDPS support, experimental version 2.  Requires configure --enable-SDPS.
 * Major FAQ update.  Added geocities warning.
 * Fix --configdump so embedded single and double quotes are handled.
+* Fix fetchmailconf that prevented deletion of first items in lists.
 
 There are 254 people on fetchmail-friends and 267 on fetchmail-announce.
 
