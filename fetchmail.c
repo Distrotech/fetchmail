@@ -561,17 +561,11 @@ int main (int argc, char **argv)
 	     */
 	    {
 #ifndef __EMX__
-#ifndef SLEEP_WITH_ALARM	/* not normally on */
-                struct timeval timeout;
-
-                timeout.tv_sec = poll_interval;
-                timeout.tv_usec = 0;
-		lastsig = 0;
-                select(0,0,0,0, &timeout);
-#else
+#ifdef SLEEP_WITH_ALARM		/* not normally on */
 		/* 
-		 * This code is flaky under Red Hat Linux 5.0, and possibly
-		 * elsewhere.  John Stracke <francis@netscape.com> writes:
+		 * This code stops working under glibc-2, apparently due
+		 * to the change in signal(2) semantics.  John Stracke
+		 * <francis@netscape.com> writes:
 		 *
 		 * The problem seems to be that, after hitting the interval
 		 * timer while talking to the server, the process no longer
@@ -585,14 +579,7 @@ int main (int argc, char **argv)
 		 * to repoll--but, when the dummy server didn't respond, it
 		 * never timed out, and SIGALRM wouldn't make it.
 		 *
-		 * So the workaround I used is to make it sleep by using
-		 * select() instead of setitimer()/pause().  select() is
-		 * perfectly happy being called with a timeout and
-		 * no file descriptors; it just sleeps until it hits the
-		 * timeout.  The only concern I had was that it might
-		 * implement its timeout with SIGALRM--there are some
-		 * Unices where this is done, because select() is a library
-		 * function--but apparently not.
+		 * (continued below...)
 		 */
 		struct itimerval ntimeout;
 
@@ -604,6 +591,23 @@ int main (int argc, char **argv)
 		signal(SIGALRM, donothing);
 		pause();
 		signal(SIGALRM, SIG_IGN);
+#else
+		/* 
+		 * So the workaround I used is to make it sleep by using
+		 * select() instead of setitimer()/pause().  select() is
+		 * perfectly happy being called with a timeout and
+		 * no file descriptors; it just sleeps until it hits the
+		 * timeout.  The only concern I had was that it might
+		 * implement its timeout with SIGALRM--there are some
+		 * Unices where this is done, because select() is a library
+		 * function--but apparently not.
+		 */
+                struct timeval timeout;
+
+                timeout.tv_sec = poll_interval;
+                timeout.tv_usec = 0;
+		lastsig = 0;
+                select(0,0,0,0, &timeout);
 #endif
 #else /* EMX */
 		signal(SIGALRM, donothing);
