@@ -368,14 +368,9 @@ void expunge_uids(struct query *ctl)
 	    idl->val.status.mark = UID_EXPUNGED;
 }
 
-void write_saved_lists(struct query *hostlist, const char *idfile)
-/* perform end-of-run write of seen-messages list */
+void uid_end_query(struct query *ctl) 
+/* finish a query */
 {
-    int		idcount;
-    FILE	*tmpfp;
-    struct query *ctl;
-    struct idlist *idp;
-
     /* old state of mailbox is now irrelevant */
     free_str_list(&ctl->oldsaved);
     free_str_list(&scratchlist);
@@ -394,6 +389,15 @@ void write_saved_lists(struct query *hostlist, const char *idfile)
 	    report_build(stdout, " <empty>");
 	report_complete(stdout, "\n");
     }
+}
+
+void write_saved_lists(struct query *hostlist, const char *idfile)
+/* perform end-of-run write of seen-messages list */
+{
+    int		idcount;
+    FILE	*tmpfp;
+    struct query *ctl;
+    struct idlist *idp;
 
     /* if all lists are empty, nuke the file */
     idcount = 0;

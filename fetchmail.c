@@ -80,12 +80,14 @@ int requestlen = 0;
 #endif /* NET_SECURITY */
 
 static char *lockfile;		/* name of lockfile */
+static int lock_acquired;	/* have we acquired a lock */
 static int querystatus;		/* status of query */
 static int successes;		/* count number of successful polls */
 static struct runctl cmd_run;	/* global options set from command line */
 static time_t parsetime;	/* time of last parse */
 
-static void termhook(int);		/* forward declaration of exit hook */
+static void terminate_run(int);
+static void terminate_poll(int);
 
 #ifdef SLEEP_WITH_ALARM
 /*
@@ -122,7 +124,7 @@ static void unlockit(void)
 #endif
 /* must-do actions for exit (but we can't count on being able to do malloc) */
 {
-    if (lockfile[0])
+    if (lockfile && lock_acquired)
 	unlink(lockfile);
 }
 
@@ -443,7 +445,9 @@ int main(int argc, char **argv)
 	else if (argc > 1)
 	{
 	    /* this test enables re-execing on a changed rcfile */
-	    if (getpid() != pid)
+	    if (getpid() == pid)
+		lock_acquired = TRUE;
+	    else
 	    {
 		fprintf(stderr,
 			_("fetchmail: can't accept options while a background fetchmail is running.\n"));
@@ -518,7 +522,7 @@ int main(int argc, char **argv)
     if (run.poll_interval)
     {
 	if (!nodetach)
-	    daemonize(run.logfile, termhook);
+	    daemonize(run.logfile, terminate_run);
 	report(stdout, _("starting fetchmail %s daemon \n"), VERSION);
 
 	/*
@@ -536,12 +540,12 @@ int main(int argc, char **argv)
 
     /* beyond here we don't want more than one fetchmail running per user */
     umask(0077);
-    signal(SIGABRT, termhook);
-    signal(SIGINT, termhook);
-    signal(SIGTERM, termhook);
-    signal(SIGALRM, termhook);
-    signal(SIGPIPE, termhook);
-    signal(SIGQUIT, termhook);
+    signal(SIGABRT, terminate_run);
+    signal(SIGINT, terminate_run);
+    signal(SIGTERM, terminate_run);
+    signal(SIGALRM, terminate_run);
+    signal(SIGPIPE, terminate_run);
+    signal(SIGQUIT, terminate_run);
 
     /* here's the exclusion lock */
     if ((st = open(lockfile, O_WRONLY | O_CREAT | O_EXCL, 0666)) != -1) {
@@ -553,6 +557,7 @@ int main(int argc, char **argv)
 	    write(st, tmpbuf, strlen(tmpbuf));
 	}
 	close(st);
+	lock_acquired = TRUE;
     }
 
     /*
@@ -628,11 +633,7 @@ int main(int argc, char **argv)
 
 #ifdef POP3_ENABLE
 		if (!check_only)
-		{
-		    write_saved_lists(querylist, run.idfile);
-		    if (outlevel >= O_DEBUG)
-			report(stdout, _("saved UID lists\n"));
-		}
+		    uid_end_query(ctl);
 #endif  /* POP3_ENABLE */
 
 		if (querystatus == PS_SUCCESS)
@@ -660,21 +661,8 @@ int main(int argc, char **argv)
 	endhostent();		/* release TCP/IP connection to nameserver */
 #endif /* HAVE_RES_SEARCH */
 
-	/*
-	 * Close all SMTP delivery sockets.  For optimum performance
-	 * we'd like to hold them open til end of run, but (1) this
-	 * loses if our poll interval is longer than the MTA's inactivity
-	 * timeout, and (2) some MTAs (like smail) don't deliver after
-	 * each message, but rather queue up mail and wait to actually
-	 * deliver it until the input socket is closed. 
-	 */
-	for (ctl = querylist; ctl; ctl = ctl->next)
-	    if (ctl->smtp_socket != -1)
-	    {
-		SMTP_quit(ctl->smtp_socket);
-		close(ctl->smtp_socket);
-		ctl->smtp_socket = -1;
-	    }
+	/* close connections cleanly */
+	terminate_poll(0);
 
 	/*
 	 * OK, we've polled.  Now sleep.
@@ -828,7 +816,7 @@ int main(int argc, char **argv)
 	report(stdout, _("normal termination, status %d\n"),
 		successes ? PS_SUCCESS : querystatus);
 
-    termhook(0);
+    terminate_run(0);
     exit(successes ? PS_SUCCESS : querystatus);
 }
 
@@ -1275,12 +1263,17 @@ static int load_params(int argc, char **argv, int optind)
     return(implicitmode);
 }
 
-static void termhook(int sig)
-/* to be executed on normal or signal-induced termination */
+static void terminate_poll(int sig)
+/* to be executed at the nd of a poll cycle */
 {
-    struct query	*ctl;
-
     /*
+     * Close all SMTP delivery sockets.  For optimum performance
+     * we'd like to hold them open til end of run, but (1) this
+     * loses if our poll interval is longer than the MTA's inactivity
+     * timeout, and (2) some MTAs (like smail) don't deliver after
+     * each message, but rather queue up mail and wait to actually
+     * deliver it until the input socket is closed. 
+     *
      * Sending SMTP QUIT on signal is theoretically nice, but led to a 
      * subtle bug.  If fetchmail was terminated by signal while it was 
      * shipping message text, it would hang forever waiting for a
@@ -1293,15 +1286,36 @@ static void termhook(int sig)
     if (sig != 0)
         report(stdout, _("terminated with signal %d\n"), sig);
     else
+    {
+	struct query *ctl;
+
 	/* terminate all SMTP connections cleanly */
 	for (ctl = querylist; ctl; ctl = ctl->next)
 	    if (ctl->smtp_socket != -1)
+	    {
 		SMTP_quit(ctl->smtp_socket);
+		close(ctl->smtp_socket);
+		ctl->smtp_socket = -1;
+	    }
+    }
 
 #ifdef POP3_ENABLE
+    /*
+     * Update UID information at end of each poll, rather than at end
+     * of run, because that way we don't lose all UIDL information since
+     * the beginning of time if fetchmail crashes.
+     */
     if (!check_only)
 	write_saved_lists(querylist, run.idfile);
 #endif /* POP3_ENABLE */
+}
+
+static void terminate_run(int sig)
+/* to be executed on normal or signal-induced termination */
+{
+    struct query	*ctl;
+
+    terminate_poll(sig);
 
     /* 
      * Craig Metz, the RFC1938 one-time-password guy, points out:
