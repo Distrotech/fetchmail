@@ -28,16 +28,19 @@ EOF
 			echo "# Associate $lastday to '$legend'"
 			echo "count = count + 1"
 			echo "lastday = $lastday - 5"
+			echo "lasttotal = $lasttotal"
 			echo set arrow \
-				from lastday, 0 to lastday, breakheight \
-				nohead
+				from lastday, breakheight \
+				to lastday, lasttotal+50 \
+				head
 			echo "endx = lastday + 50 + count * 25"
 			echo "endy = breakheight + 50 + count * 50"
 			echo "set arrow \
-				from lastday, breakheight to endx, endy"
+				from lastday, breakheight to endx, endy nohead"
 			echo "set label '$legend' at endx+10, endy"
 		else
 			lastday=$days
+			lasttotal=$total
 		fi
 	done
 ) </tmp/growthplot$$ >>IMAGE
