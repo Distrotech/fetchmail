@@ -32,6 +32,7 @@
 #include <unix.h>
 #endif
 
+#if !defined(HAVE_SETSID) && defined(SIGTSTP)
 #if defined(HAVE_TERMIOS_H)
 #  include <termios.h>		/* for TIOCNOTTY under Linux */
 #endif
@@ -39,6 +40,7 @@
 #if !defined(TIOCNOTTY) && defined(HAVE_SGTTY_H)
 #  include <sgtty.h>		/* for TIOCNOTTY under NEXTSTEP */
 #endif
+#endif /* !defined(HAVE_SETSID) && defined(SIGTSTP) */
 
 /* BSD portability hack */
 #if !defined(SIGCHLD) && defined(SIGCLD)
