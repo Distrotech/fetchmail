@@ -832,7 +832,16 @@ int main(int argc, char **argv)
 		successes ? PS_SUCCESS : querystatus);
 
     terminate_run(0);
-    exit(successes ? PS_SUCCESS : querystatus);
+
+    if (successes)
+	exit(PS_SUCCESS);
+    else if (querystatus)
+	exit(querystatus);
+    else
+	/* in case we interrupted before a successful fetch */
+	exit(PS_NOMAIL);
+
+    exit(successes ?  : querystatus);
 }
 
 static void list_merge(struct idlist **dstl, struct idlist **srcl, int force)
