@@ -293,8 +293,6 @@ static int send_bouncemail(struct msgblk *msg, int userclass,
     SockPrintf(sock, "MIME-Version: 1.0\r\n");
     SockPrintf(sock, "Content-Type: multipart/report; report-type=delivery-status;\r\n\tboundary=\"%s\"\r\n", boundary);
     SockPrintf(sock, "\r\n");
-    SockPrintf(sock, "Content-Transfer-Encoding: 7bit\r\n");
-    SockPrintf(sock, "\r\n");
 
     /* RFC1892 part 1 -- human-readable message */
     SockPrintf(sock, "--%s\r\n", boundary); 
