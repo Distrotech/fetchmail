@@ -46,10 +46,10 @@ delivery-control mechanisms (such as \fI.forward\fR files) normally
 available through your system MDA and local delivery agents will
 therefore work.
 .PP
-If no port 25 listener is available, but your fetchmail compilation
-detected or was told about a reliable local MDA, it will use that MDA
-for local delivery instead.  At build time, fetchmail normally looks
-for executable 
+If no port 25 listener is available, but your fetchmail configuration
+was told about a reliable local MDA, it will use that MDA for local
+delivery instead.  At build time, fetchmail normally looks for
+executable
 .IR procmail (1)
 and 
 .IR sendmail (1)
@@ -375,7 +375,8 @@ between the ODMR server and SMTP or LMTP receiver.
 (Keyword: fetchdomains)
 In ETRN or ODMR mode, this option specifies the list of domains the
 server should ship mail for once the connection is turned around.  The
-default is the FQDN of the machine running fetchmail.
+default is the FQDN of the machine running 
+.IR fetchmail .
 .TP
 .B \-D <domain> | \-\-smtpaddress <domain>
 (Keyword: smtpaddress) Specify the domain to be appended to addresses
@@ -965,7 +966,8 @@ The
 .B \-\-postmaster <name>
 option (keyword: set postmaster) specifies the last-resort username to
 which multidrop mail is to be forwarded if no matching local recipient
-can be found.  Normally this is just the user who invoked fetchmail.
+can be found.  Normally this is just the user who invoked 
+.IR fetchmail .
 If the invoking user is root, then the default of this option is
 the user `postmaster'.  Setting postmaster to the empty string causes
 such mail to be discarded.
@@ -2036,7 +2038,7 @@ missing password.
 Some sort of fatal protocol error was detected.
 .IP 5
 There was a syntax error in the arguments to 
-.I fetchmail.
+.IR fetchmail .
 .IP 6
 The run control file had bad permissions.
 .IP 7
