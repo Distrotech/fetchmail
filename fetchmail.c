@@ -1001,6 +1001,8 @@ static int load_params(int argc, char **argv, int optind)
 	run.poll_interval = cmd_run.poll_interval;
     if (cmd_run.invisible)
 	run.invisible = cmd_run.invisible;
+    if (cmd_run.showdots)
+	run.showdots = cmd_run.showdots;
     if (cmd_run.use_syslog)
 	run.use_syslog = (cmd_run.use_syslog == FLAG_TRUE);
     if (cmd_run.postmaster)
@@ -1484,7 +1486,7 @@ static void dump_params (struct runctl *runp,
     if (runp->invisible)
 	printf(_("Fetchmail will masquerade and will not generate Received\n"));
     if (runp->showdots)
-	printf(_("Fetchmail will show progress dots even in logfiles\n"));
+	printf(_("Fetchmail will show progress dots even in logfiles.\n"));
     if (runp->postmaster)
 	printf(_("Fetchmail will forward misaddressed multidrop messages to %s.\n"),
 	       runp->postmaster);
