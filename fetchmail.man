@@ -56,7 +56,7 @@ recommended that you use Novice mode.  Expert mode provides
 complete control of fetchmail configuration, including the
 multidrop features.  In either case, the `Autoprobe' button
 will tell you the most capable protocol a given mailserver
-supported, and warn you of potential problems with that server.
+supports, and warn you of potential problems with that server.
 
 .SH GENERAL OPERATION
 The behavior of
@@ -168,8 +168,8 @@ mailserver.  If no protocol is specified, the default is AUTO.
 may be one of the following:
 .RS
 .IP AUTO
-Tries each of the supported protocols in turn, terminating after
-any successful attempt.
+Tries IMAP, POP3, and POP2 (skipping any of these for which support
+has not been compiled in).
 .IP POP2
 Post Office Protocol 2
 .IP POP3
@@ -216,13 +216,13 @@ of `newness' of messages (UIDL stands for ``unique ID listing'' and is
 described in RFC1725).  Use with `keep' to use a mailbox as a baby
 news drop for a group of users.
 .TP
-.B \-P, --port <nnn>
+.B \-P, --port <portnumber>
 (Keyword: port)
 The port option permits you to specify a TCP/IP port to connect on. 
 This option will seldom be necessary as all the supported protocols have
 well-established default port numbers.
 .TP 
-.B \-t, --timeout <nnn>
+.B \-t, --timeout <seconds>
 (Keyword: timeout)
 The timeout option allows you to set a server-nonresponse
 timeout in seconds.  If a mailserver does not send a greeting message
@@ -250,7 +250,7 @@ Identical to the plugin option above, but this one is used for the SMTP
 connections (which will probably not need it, so it has been separated
 from plugin).
 .TP
-.B \-r <folder>, --folder <folder>
+.B \-r <name>, --folder <name>
 (Keyword: folder[s])
 Causes a specified non-default mail folder on the mailserver (or
 comma-separated list of folders) to be retrieved.  The syntax of the
@@ -281,7 +281,7 @@ Specify the domain to be put in RCPT TO lines shipped to SMTP. The
 name of the SMTP server (as specified by --smtphost, or defaulted to
 "localhost") is used when this is not specified.
 .TP
-.B \-Z nnn, --antispam <nnn>[, <nnn>]...
+.B \-Z <nnn>, --antispam <nnn[, nnn]...>
 (Keyword: antispam) 
 Specifies the list of numeric SMTP errors that are to be interpreted
 as a spam-block response from the listener.  A value of -1 disables
@@ -324,7 +324,7 @@ correct; the caveats discussed under THE USE AND ABUSE OF MULTIDROP
 MAILBOXES below apply.
 .SS Resource Limit Control Options
 .TP
-.B \-l, --limit <nnn>
+.B \-l, --limit <maxbytes>
 (Keyword: limit)
 Takes a maximum octet size argument.  Messages larger than this size
 will not be fetched, not be marked seen, and will be left on the
@@ -336,7 +336,7 @@ phone rates.  In daemon mode, oversize notifications are mailed to the
 calling user (see the --warnings option).  This option does not work
 with ETRN.
 .TP
-.B \-w, --warnings <nnn>
+.B \-w, --warnings <interval>
 (Keyword: warnings)
 Takes an interval in seconds.  When you call
 .I fetchmail
@@ -348,7 +348,7 @@ the oversized message is detected.  Thereafter, renotification is
 suppressed until after the warning interval elapses (it will take
 place at the end of the first following poll).
 .TP
-.B -b, --batchlimit <nnn>
+.B -b, --batchlimit <count>
 (Keyword: batchlimit)
 Specify the maximum number of messages that will be shipped to an SMTP
 listener before the connection is deliberately torn down and rebuilt
@@ -364,14 +364,14 @@ is processing very large batches.  Setting the batch limit to some
 nonzero size will prevent these delays.
 This option does not work with ETRN.
 .TP
-.B -B, --fetchlimit <nnn>
+.B -B, --fetchlimit <number>
 (Keyword: fetchlimit)
 Limit the number of messages accepted from a given server in a single
 poll.  By default there is no limit. An explicit --fetchlimit of 0
 overrides any limits set in your run control file.
 This option does not work with ETRN.
 .TP
-.B -e, --expunge <nnn>
+.B -e, --expunge <count>
 (keyword: expunge) 
 Arrange for deletions to be made final after a given number of
 messages.  Under POP2 or POP3, fetchmail cannot make deletions final
@@ -672,9 +672,9 @@ function of the inet6_apps library.
 
 .SH DAEMON MODE
 The 
-.B --daemon <nnn>
+.B --daemon <interval>
 or
-.B -d <nnn>
+.B -d <interval>
 option runs 
 .I fetchmail
 in daemon mode.  You must specify a numeric argument which is a
@@ -757,7 +757,7 @@ assuming it's turned on in the
 file, or that the
 .B -L
 or
-.B --logfile
+.B --logfile <file>
 option was used.
 .PP
 The 
@@ -1383,6 +1383,8 @@ Legal protocol identifiers for use with the `protocol' keyword are:
     imap (or IMAP)
     imap-k4 (or IMAP-K4)
     imap-gss (or IMAP-GSS)
+    imap-crammd5 (or IMAP-CRAMMD5)
+    imap-login (or IMAP-LOGIN)
     apop (or APOP)
     kpop (or KPOP)
 
@@ -1397,13 +1399,14 @@ string as the password.
 Specifying `kpop' sets POP3 protocol over port 1109 with Kerberos V4
 preauthentication.  These defaults may be overridden by later options.
 .PP
-There are currently three global option statements; `set logfile'
+There are currently four global option statements; `set logfile'
 followed by a string sets the same global specified by --logfile.  A
 command-line --logfile option will override this.  Also, `set daemon'
-sets the poll interval as --daemon does.  This can be overridden by
-a command-line --daemon option; in particular --daemon 0 can be used 
-to force foreground operation. Finally, `set syslog' sends log
-messages to syslogd(8).
+sets the poll interval as --daemon does.  This can be overridden by a
+command-line --daemon option; in particular --daemon 0 can be used to
+force foreground operation. The `set postmater' statement sets the
+address to which multidrop mail defaults if there are no local
+matches.  Finally, `set syslog' sends log messages to syslogd(8).
 
 .SH INTERACTION WITH RFC 822
 When trying to determine the originating address of a message,
@@ -1788,7 +1791,7 @@ lock file to help prevent concurrent runs (root mode, systems without /var/run).
 If either the LOGNAME or USER and the variable is correctly set
 (e.g. the corresponding UID matches the session user ID) then that
 name is used as the default local name.  Otherwise \fBgetpwuid\fR(3)
-mudst be able to retrieve a password entry for the session ID (this
+must be able to retrieve a password entry for the session ID (this
 elaborate logic is designed to handle the case of multiple names per
 userid gracefully).
 
@@ -1821,15 +1824,15 @@ headers into a single one (procmail, mailagent, or maildrop can be
 orogrammed to do this fairly easily).
 .PP
 Use of any of the supported protocols other than POP3 with OTP or RPA,
-APOP, KPOP, IMAP-K4, IMAP-GSS, or ETRN requires that the program send
-unencrypted passwords over the TCP/IP connection to the mailserver.
-This creates a risk that name/password pairs might be snaffled with a
-packet sniffer or more sophisticated monitoring software.  Under Linux
-and FreeBSD, the --interface option can be used to restrict polling to
-availability of a specific interface device with a specific local IP
-address, but snooping is still possible if (a) either host has a
-network device that can be opened in promiscuous mode, or (b) the
-intervening network link can be tapped.
+APOP, KPOP, IMAP-K4, IMAP-GSS, IMAP-CRAMMD5, or ETRN requires that the
+program send unencrypted passwords over the TCP/IP connection to the
+mailserver.  This creates a risk that name/password pairs might be
+snaffled with a packet sniffer or more sophisticated monitoring
+software.  Under Linux and FreeBSD, the --interface option can be used
+to restrict polling to availability of a specific interface device
+with a specific local IP address, but snooping is still possible if
+(a) either host has a network device that can be opened in promiscuous
+mode, or (b) the intervening network link can be tapped.
 .PP
 Use of the %F or %T escapes in an mda option could open a security
 hole, because they pass text manipulable by an attacker to a shell
