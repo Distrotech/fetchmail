@@ -433,6 +433,8 @@ struct query *ctl;	/* query control record */
 	    }
 	    else
 	    {
+		char	*ap;
+
 		/* build a connection to the SMTP listener */
 		if (ctl->mda[0] == '\0'	&& ((sinkfp = smtp_open(ctl)) == NULL))
 		{
@@ -441,15 +443,17 @@ struct query *ctl;	/* query control record */
 		    return(PS_SMTP);
 		}
 
-		/* 
-		 * We used to try parsing the From header address and using
-		 * it here, but listeners were apt to think we were trying to
-		 * forge mail or something.  Screw it.  The only place this
-		 * will ever make a difference is in the Received headers,
-		 * anyway.
+		/*
+		 * Try to get the SMTP listener to take the header
+		 * From address as MAIL FROM (this makes the logging
+		 * nicer).  If it won't, fall back on the calling-user
+		 * ID.  This won't affect replies, which use the header
+		 * From address anyway.
 		 */
-		if (SMTP_from(sinkfp, user) != SM_OK)
-		    return(PS_SMTP);	/* shouldn't happen */
+		if (!fromhdr || !(ap = nxtaddr(fromhdr)) 
+					|| SMTP_from(sinkfp, ap) != SM_OK)
+		    if (SMTP_from(sinkfp, user) != SM_OK)
+			return(PS_SMTP);	/* should never happen */
 
 		/* now list the recipient addressees */
 		for (idp = xmit_names; idp; idp = idp->next)
