@@ -224,6 +224,7 @@ dist: Makefile.in
 	make fetchmail-$(VERS).tar.gz 
 	lsmgen.sh $(VERS) `wc -c fetchmail-$(VERS).tar.gz` >fetchmail.lsm
 	make fetchmail-$(VERS).tar.gz
+	ls -l fetchmail-$(VERS).tar.gz
 
 fetchmail-$(VERS).tar: $(all)
 	(cd ..; tar -cf fetchmail-$(VERS).tar `cat fetchmail-$(VERS)/MANIFEST`)
