@@ -1467,7 +1467,7 @@ const struct method *proto;	/* protocol method table */
     {
 	char buf [POPBUFSIZE+1], *realhost;
 	int *msgsizes, len, num, count, new, deletions = 0;
-	int port, fetches;
+	int port, fetches, dispatches;
 	struct idlist *idp;
 
 	/* execute pre-initialization command, if any */
@@ -1555,6 +1555,7 @@ const struct method *proto;	/* protocol method table */
 	for (idp = ctl->mailboxes; idp; idp = idp->next)
 	{
 	    do {
+		dispatches = 0;
 		++pass;
 
 		if (outlevel >= O_VERBOSE)
@@ -1797,6 +1798,10 @@ const struct method *proto;	/* protocol method table */
 				}
 			    }
 
+			    /* count # messages forwarded on this pass */
+			    if (!suppress_forward)
+				dispatches++;
+
 			    /*
 			     * Check to see if the numbers matched?
 			     *
@@ -1898,15 +1903,20 @@ const struct method *proto;	/* protocol method table */
 		}
 	    } while
 		  /*
-		   * Only re-poll if we allowed deletions and had no errors.
+		   * Only re-poll if we had some actual forwards, allowed
+		   * deletions and had no errors.
 		   * Otherwise it is far too easy to get into infinite loops.
 		   */
-		  (fetches && protocol->retry && !ctl->keep && !ctl->errcount);
+		  (dispatches && protocol->retry && !ctl->keep && !ctl->errcount);
 	}
 
    no_error:
 	set_timeout(ctl->server.timeout);
 	ok = (protocol->logout_cmd)(sock, ctl);
+	/*
+	 * Hmmmm...arguably this would be incorrect if we had fetches but
+	 * no dispatches (due to oversized messages, etc.)
+	 */
 	if (ok == 0)
 	    ok = (fetches > 0) ? PS_SUCCESS : PS_NOMAIL;
 	set_timeout(0);
