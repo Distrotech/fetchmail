@@ -719,7 +719,7 @@ int main(int argc, char **argv)
 		       _("fetchmail: sleeping at %s\n"), timestamp());
 
 	    /*
-	     * OK, now pause util it's time for the next poll cycle.
+	     * OK, now pause until it's time for the next poll cycle.
 	     * A nonzero return indicates we received a wakeup signal;
 	     * unwedge all servers in case the problem has been
 	     * manually repaired.
