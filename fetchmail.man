@@ -653,9 +653,14 @@ The 'remotefolder' and 'smtphost' options can take a space- or
 comma-separated list of names following them.
 .PP
 All options correspond to the obvious command-line arguments, except
-the following: `aka', `is', `to', `dns'/`no dns', `password',
+the following: `interval', `aka', `is', `to', `dns'/`no dns', `password',
 \&`preconnect', `localdomains', `stripcr'/`no stripcr' ,
 \&`forcecr'/`no forcecr' and `no received'.
+.PP
+The `interval' option (which takes a numeric argument) allows you to poll a
+server less frequently than the basic poll interval.  If you say
+\&`interval N' the server this option is attached to will only be
+queried every N poll intervals. 
 .PP
 The `is' or `to' keywords associate the following local (client)
 name(s) (or server-name to client-name mappings separated by =) with

@@ -21,6 +21,7 @@
 # Legal keywords are
 #   poll                      -- must be followed by a mailserver name
 #   skip                      -- must be followed by a mailserver name
+#   interval                  -- must be followed by an interval skip count
 #   protocol (or proto)       -- must be followed by a protocol ID
 #   uidl
 #   port                      -- must be followed by a TCP/IP port number

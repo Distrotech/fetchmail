@@ -72,6 +72,7 @@ struct hostdata		/* shared among all user connections to given server */
     struct idlist *localdomains;	/* list of pass-through domains */
     int protocol;
     int port;
+    int interval;
     int authenticate;
     int timeout;
     char *envelope;
@@ -87,6 +88,7 @@ struct hostdata		/* shared among all user connections to given server */
 #endif /* linux */
 
     /* computed for internal use */
+    int poll_count;			/* count of polls so far */
 #ifdef HAVE_GETHOSTBYNAME
     char *canonical_name;		/* DNS canonical name of server host */
 #endif /* HAVE_GETHOSTBYNAME */

@@ -49,7 +49,7 @@ static int reset_server(char *name, int skip);
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
-%token NO KEEP FLUSH FETCHALL REWRITE FORCECR STRIPCR DNS PORT UIDL
+%token NO KEEP FLUSH FETCHALL REWRITE FORCECR STRIPCR DNS PORT UIDL INTERVAL
 
 %%
 
@@ -121,6 +121,7 @@ serv_option	: AKA alias_list
 		| UIDL			{current.server.uidl = FLAG_TRUE;}
 		| NO UIDL		{current.server.uidl  = FLAG_FALSE;}
 		| PORT NUMBER		{current.server.port = $2;}
+		| INTERVAL NUMBER		{current.server.interval = $2;}
 		| AUTHENTICATE PASSWORD	{current.server.authenticate = A_PASSWORD;}
 		| AUTHENTICATE KERBEROS4	{current.server.authenticate = A_KERBEROS_V4;}
 		| TIMEOUT NUMBER	{current.server.timeout = $2;}
@@ -387,6 +388,7 @@ static void record_current(void)
 #define FLAG_FORCE(fld) if (cmd_opts.fld) current.fld = cmd_opts.fld
     FLAG_FORCE(server.protocol);
     FLAG_FORCE(server.port);
+    FLAG_FORCE(server.interval);
     FLAG_FORCE(server.authenticate);
     FLAG_FORCE(server.timeout);
     FLAG_FORCE(server.envelope);
@@ -434,6 +436,7 @@ void optmerge(struct query *h2, struct query *h1)
 #define FLAG_MERGE(fld) if (!h2->fld) h2->fld = h1->fld
     FLAG_MERGE(server.protocol);
     FLAG_MERGE(server.port);
+    FLAG_MERGE(server.interval);
     FLAG_MERGE(server.authenticate);
     FLAG_MERGE(server.timeout);
     FLAG_MERGE(server.envelope);

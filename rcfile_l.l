@@ -33,6 +33,7 @@ aka		{ return AKA; }
 local(domains)	{ return LOCALDOMAINS; }
 proto(col)? 	{ return PROTOCOL; }
 port		{ return PORT; }
+interval		{ return INTERVAL; }
 auth(enticate)?	{ return AUTHENTICATE; }
 kerberos_v4	{ return KERBEROS4; }
 kerberos	{ return KERBEROS4; }

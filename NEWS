@@ -29,6 +29,7 @@ pl 3.9.6 ():
 * Support for Kerberos-v4-authenticated IMAP.
 * Don't choke on RFC822 group names.
 * More improvements in RFC822 name parsing.
+* Interval skip feature, courtesy of Hal DeVore.
 
 pl 3.9.5 (Sun May 18 01:05:13 EDT 1997):
 * Add an error notification when an incoming message has embedded NULs.

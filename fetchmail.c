@@ -750,6 +750,18 @@ static int query_host(struct query *ctl)
 {
     int i, st;
 
+    if (poll_interval && ctl->server.interval) 
+    {
+	if (ctl->server.poll_count++ % ctl->server.interval) 
+	{
+	    if (outlevel == O_VERBOSE)
+		fprintf(stderr,
+		    "fetchmail: interval not reached, not querying %s\n",
+		    ctl->server.names->id);
+	    return PS_NOMAIL;
+	}
+    }
+
     if (outlevel == O_VERBOSE)
     {
 	time_t now;
@@ -800,6 +812,9 @@ void dump_params (struct query *ctl)
 	printf("  Logfile is %s\n", logfile);
     if (poll_interval)
 	printf("  Poll interval is %d seconds\n", poll_interval);
+    if (ctl->server.interval)
+	printf("  Poll of this server will occur every %d intervals.\n",
+	       ctl->server.interval);
 #ifdef HAVE_GETHOSTBYNAME
     if (ctl->server.canonical_name)
 	printf("  Canonical DNS name of server is %s.\n", ctl->server.canonical_name);
