@@ -1,11 +1,19 @@
 				NEWS
 
+3.01:
+
+* Fixed a bug in dump_options that cauded username to be displayed incorrectly.
+
+* The lock assertion code was in the wrong place relative to the daemonize()
+  call.  
 
 3.0:
 
 Eric S. Raymond <esr@thyrsus.com> hacked extensively on 3.0b6 and took over
-the package with the consent of Clark Harris, the original implementor.
-Here are my (Eric's) change notes:
+the package with the consent of Carl Harris, the original implementor.
+Some of the 3.0 feature additions were inspired by Sean Oh's fetchpop 1.8
+code, and a few use code directly lifted from fetchpop. Here are my (Eric's)
+change notes:
 
 CONFIGURATION AND BUILDING
 

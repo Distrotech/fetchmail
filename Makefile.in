@@ -21,7 +21,7 @@ RANLIB = @RANLIB@
 defines = @DEFS@
 
 # If your system needs extra libraries loaded in, define them here.
-LOADLIBES = @LIBS@ @LEXLIB@
+LOADLIBS = @LIBS@ @LEXLIB@
 
 # Any extra object files your system needs.
 extras = @LIBOBJS@
@@ -81,22 +81,11 @@ depend:
 	test -f poprc_y.h || touch poprc_y.h
 	makedepend -fMakefile.in *.c
 
-info: popclient.info
-dvi: popclient.dvi
 # Some makes apparently use .PHONY as the default goal is it is before `all'.
-.PHONY: all check info dvi
-
-popclient.info: popclient.texi
-	$(MAKEINFO) -I$(srcdir) $(srcdir)/popclient.texi -o popclient.info
-
-popclient.dvi: popclient.texi
-	$(TEXI2DVI) $(srcdir)/popclient.texi
-
-popclient.ps: popclient.dvi
-	dvi2ps popclient.dvi > popclient.ps
+.PHONY: all check
 
 popclient: $(srcdir)/poprc_l.c $(srcdir)/poprc_y.c $(objs)
-	$(CC) $(LDFLAGS) $(objs) $(LOADLIBES) -o popclient
+	$(CC) $(LDFLAGS) $(objs) $(LOADLIBS) -o popclient
 
 
 # -I. is needed to find config.h in the build directory.
@@ -202,7 +191,7 @@ extra = $(srcdir)/alloca.c $(srcdir)/bzero.[ch] $(srcdir)/errorcodes \
 	$(srcdir)/getopt.[ch] $(srcdir)/getopt1.c $(srcdir)/md5*.[ch] \
 	$(srcdir)/strcasecmp.c $(srcdir)/strdup.c
 docs = $(srcdir)/COPYING $(srcdir)/README $(srcdir)/INSTALL $(srcdir)/NEWS \
-	$(srcdir)/RFC/*.txt \
+	$(srcdir)/popclient.lsm $(srcdir)/RFC/*.txt \
 	$(srcdir)/*.man	$(srcdir)/sample.poprc
 config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/configure \
 	$(srcdir)/config.guess $(srcdir)/config.h.in $(srcdir)/config.sub

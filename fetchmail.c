@@ -82,6 +82,7 @@ char *mda_argv [32];
 
 static void termhook();
 static char *lockfile;
+static int popstatus;
 
 main (argc,argv)
 int argc;
@@ -89,7 +90,6 @@ char **argv;
 { 
   int mboxfd;
   struct optrec cmd_opts, def_opts, merged_opts;
-  int popstatus;
   int parsestatus;
   char *servername; 
   struct hostrec *hostp, *hostlist = (struct hostrec *)NULL;
@@ -145,7 +145,7 @@ char **argv;
     exit(PS_SYNTAX);
   }
 
-  /* beyond here we don't want more than one popclient running per user */
+  /* set up to do lock protocol */
   umask(0077);
   if ((lockfile = (char *) malloc( strlen(getenv("HOME")) + strlen("/.lockfetch-") + HOSTLEN)) == NULL) {
     fprintf(stderr,"popclient: cannot allocate memory for .lockfetch, exiting.\n");
@@ -155,31 +155,8 @@ char **argv;
   strcat(lockfile,"/.lockfetch-");
   gethostname(lockfile+strlen(lockfile),HOSTLEN);
 
-  /* check the lock, maybe remove it */
-  if (!quitmode)
-    {
-      /* check the lock */
-      if ( (tmpfp = fopen(lockfile, "r")) != NULL ) {
-	fscanf(tmpfp,"%d",&pid);
-	fprintf(stderr,"Another session appears to be running at pid %d.\nIf you are sure that this is incorrect, remove %s file.\n",pid,lockfile);
-	fclose(tmpfp);
-	return(PS_EXCLUDE);
-      }
-
-      /* if not locked, assert a lock */
-      else if ( (tmpfp = fopen(lockfile,"w")) != NULL ) {
-	signal(SIGABRT, termhook);
-	signal(SIGINT, termhook);
-	signal(SIGTERM, termhook);
-	signal(SIGALRM, termhook);
-	signal(SIGHUP, termhook);
-	signal(SIGPIPE, termhook);
-	signal(SIGQUIT, termhook);
-	fprintf(tmpfp,"%d",getpid());
-	fclose(tmpfp);
-      }
-    }
-  else
+  /* perhaps user asked us to remove a lock */
+  if (quitmode)
     {
       FILE* fp;
 
@@ -200,11 +177,33 @@ char **argv;
       exit(0);
     }
 
+
+  /* beyond here we don't want more than one popclient running per user */
+  if ( (tmpfp = fopen(lockfile, "r")) != NULL ) {
+    fscanf(tmpfp,"%d",&pid);
+    fprintf(stderr,"Another session appears to be running at pid %d.\nIf you are sure that this is incorrect, remove %s file.\n",pid,lockfile);
+    fclose(tmpfp);
+    return(PS_EXCLUDE);
+  }
+
   /*
    * Maybe time to go to demon mode...
    */
   if (poll_interval)
     daemonize(logfile, termhook);
+
+  /* if not locked, assert a lock */
+  signal(SIGABRT, termhook);
+  signal(SIGINT, termhook);
+  signal(SIGTERM, termhook);
+  signal(SIGALRM, termhook);
+  signal(SIGHUP, termhook);
+  signal(SIGPIPE, termhook);
+  signal(SIGQUIT, termhook);
+  if ( (tmpfp = fopen(lockfile,"w")) != NULL ) {
+      fprintf(tmpfp,"%d",getpid());
+      fclose(tmpfp);
+  }
 
   /*
    * Query all hosts. If there's only one, the error return will
@@ -226,6 +225,7 @@ char **argv;
 void termhook()
 {
     unlink(lockfile);
+    exit(popstatus);
 }
 
 int query_host(servername, options)
@@ -280,7 +280,7 @@ struct optrec *options;
   if (!options->loginid[0])
     printf("  No password set\n");
   else
-    printf("  Username = '%s'\n", options->loginid);
+    printf("  Username = '%s'\n", options->username);
   printf("  Password = '%s'\n", options->password);
 
   printf("  Protocol is ");
