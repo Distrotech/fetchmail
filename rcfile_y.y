@@ -327,11 +327,11 @@ user_option	: TO localnames HERE
 		| NO DROPSTATUS		{current.dropstatus  = FLAG_FALSE;}
 		| NO MIMEDECODE		{current.mimedecode  = FLAG_FALSE;}
 
-		| LIMIT NUMBER		{current.limit       = NUM_VALUE($2);}
-		| WARNINGS NUMBER	{current.warnings    = NUM_VALUE($2);}
-		| FETCHLIMIT NUMBER	{current.fetchlimit  = NUM_VALUE($2);}
-		| BATCHLIMIT NUMBER	{current.batchlimit  = NUM_VALUE($2);}
-		| EXPUNGE NUMBER	{current.expunge     = NUM_VALUE($2);}
+		| LIMIT NUMBER		{current.limit       = NUM_VALUE_IN($2);}
+		| WARNINGS NUMBER	{current.warnings    = NUM_VALUE_IN($2);}
+		| FETCHLIMIT NUMBER	{current.fetchlimit  = NUM_VALUE_IN($2);}
+		| BATCHLIMIT NUMBER	{current.batchlimit  = NUM_VALUE_IN($2);}
+		| EXPUNGE NUMBER	{current.expunge     = NUM_VALUE_IN($2);}
 
 		| PROPERTIES STRING	{current.properties  = xstrdup($2);}
 		;

@@ -365,8 +365,14 @@ overrides any limits set in your run control file.
 This option does not work with ETRN.
 .TP
 .B -e, --expunge
-(keyword: expunge)
-When talking to an IMAP server, 
+(keyword: expunge) 
+Arrange for deletions to be made final after a given number of
+messages.  Under POP2 or POP3, fetchmail cannot make deletions final
+without sending QUIT and ending the session -- with this option on,
+fetchmail will break a long mail retrieval session into multiple
+subsessions, sending QUIT after each sub-session. This is a good
+defense against line drops on POP3 servers that do not do the
+equivalent of a QUIT on hangup.  Under IMAP,
 .I fetchmail
 normally issues an EXPUNGE command after each deletion in order to
 force the deletion to be done immediately.  This is safest when your
@@ -377,10 +383,9 @@ server pretty hard, so if your connection is reliable it is good to do
 expunges less frequently.  If you specify this option to an integer N,
 it tells
 .I fetchmail
-to only issue expunges on every Nth delete.  An argument
-of zero suppresses expunges entirely (so no expunges at all will be
-done until the end of run). 
-This option does not work with ETRN, POP2, or POP3.
+to only issue expunges on every Nth delete.  An argument of zero
+suppresses expunges entirely (so no expunges at all will be done until
+the end of run).  This option does not work with ETRN.
 .SS Authentication Options
 .TP
 .B \-u name, --username name

@@ -885,7 +885,6 @@ static int load_params(int argc, char **argv, int optind)
     def_opts.server.timeout = CLIENT_TIMEOUT;
     def_opts.warnings = WARNING_INTERVAL;
     def_opts.remotename = user;
-    def_opts.expunge = 1;
     def_opts.listener = SMTP_MODE;
 
     /* this builds the host list */
@@ -1493,9 +1492,9 @@ static void dump_params (struct runctl *runp,
 		    printf(_("  No SMTP message batch limit (--batchlimit 0).\n"));
 		if (ctl->server.protocol == P_IMAP)
 		    if (NUM_NONZERO(ctl->expunge))
-			printf(_("  Deletion interval between expunges is %d (--expunge %d).\n"), ctl->expunge, ctl->expunge);
+			printf(_("  Deletion interval between expunges forced to %d (--expunge %d).\n"), ctl->expunge, ctl->expunge);
 		    else if (outlevel >= O_VERBOSE)
-			printf(_("  No expunges (--expunge 0).\n"));
+			printf(_("  No forced expunges (--expunge 0).\n"));
 	}
 	if (ctl->bsmtp)
 	    printf(_("  Messages will be appended to %s as BSMTP\n"), visbuf(ctl->bsmtp));

@@ -50,7 +50,8 @@ extern char *strstr();	/* needed on sysV68 R3V7.1. */
 #define IMAP4		0	/* IMAP4 rev 0, RFC1730 */
 #define IMAP4rev1	1	/* IMAP4 rev 1, RFC2060 */
 
-static int count, seen, recent, unseen, deletions, expunged, imap_version;
+static int count, seen, recent, unseen, deletions, imap_version; 
+static int expunged, expunge_period;
 static char capabilities[MSGBUFSIZE+1];
 
 int imap_ok(int sock, char *argbuf)
@@ -708,6 +709,15 @@ int imap_getauth(int sock, struct query *ctl, char *greeting)
     if (ok)
 	return(ok);
     
+    /* 
+     * Assumption: expunges are cheap, so we want to do them
+     * after every message unless user said otherwise.
+     */
+    if (NUM_SPECIFIED(ctl->expunge))
+	expunge_period = NUM_VALUE_OUT(ctl->expunge);
+    else
+	expunge_period = 1;
+
     return(PS_SUCCESS);
 }
 
@@ -747,7 +757,7 @@ static int imap_getrange(int sock,
 	 * infinite-loop picking up un-expunged message.
 	 */
 	ok = 0;
-	if (deletions && ctl->expunge > 1)
+	if (deletions && expunge_period > 1)
 	    internal_expunge(sock);
 	count = -1;
 	if (ok || gen_transact(sock, "NOOP"))
@@ -973,12 +983,12 @@ static int imap_delete(int sock, struct query *ctl, int number)
 	deletions++;
 
     /*
-     * We do an expunge after ctl->expunge messages, rather than
+     * We do an expunge after expunge_period messages, rather than
      * just before quit, so that a line hit during a long session
      * won't result in lots of messages being fetched again during
      * the next session.
      */
-    if (NUM_NONZERO(ctl->expunge) && (deletions % ctl->expunge) == 0)
+    if (NUM_NONZERO(expunge_period) && (deletions % expunge_period) == 0)
 	internal_expunge(sock);
 
     return(PS_SUCCESS);
@@ -988,7 +998,7 @@ static int imap_logout(int sock, struct query *ctl)
 /* send logout command */
 {
     /* if expunges after deletion have been suppressed, ship one now */
-    if (NUM_SPECIFIED(ctl->expunge) && NUM_ZERO(ctl->expunge) && deletions)
+    if (NUM_SPECIFIED(expunge_period) && NUM_ZERO(expunge_period) && deletions)
 	internal_expunge(sock);
 
     return(gen_transact(sock, "LOGOUT"));

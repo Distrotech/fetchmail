@@ -74,6 +74,7 @@
 #define		PS_REFUSED	25	/* mail refused (internal use) */
 #define		PS_RETAINED	26	/* message retained (internal use) */
 #define		PS_TRUNCATED	27	/* headers incomplete (internal use) */
+#define		PS_MAXFETCH	28	/* poll ended by fetch limit */
 
 /* output noise level */
 #define         O_SILENT	0	/* mute, max squelch, etc. */
@@ -285,9 +286,12 @@ struct msgblk			/* message header parsed for open_sink() */
 
 /*
  * Numeric option handling.  Numeric option value of zero actually means
- * it's unspecified.  Value less than zero is zero.
+ * it's unspecified.  Value less than zero is zero.  The reason for this
+ * screwy encoding is so we can zero out an option block in order to set the
+ * numeric flags in it to unspecified.
  */
-#define NUM_VALUE(n)		(((n) == 0) ? -1 : (n))
+#define NUM_VALUE_IN(n)		(((n) == 0) ? -1 : (n))
+#define NUM_VALUE_OUT(n)	(((n) < 0) ? 0 : (n))
 #define NUM_NONZERO(n)		((n) > 0)
 #define NUM_ZERO(n)		((n) < 0)
 #define NUM_SPECIFIED(n)	((n) != 0)

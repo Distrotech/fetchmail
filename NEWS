@@ -12,8 +12,9 @@ fetchmail-5.0.1 ():
 * Try to discover user/home via getpwuid(getuid()) before using LOGNAME/HOME.
 * Mike Pearce's fix for buggy DEFAULT handling in .netrc.
 * Keep validation errors from generating message lines that qmail will reject.
+* Can now use expunge option to chop POP3 retrievals into subsessions.
 
-There are 255 people on fetchmail-friends and 369 on fetchmail-announce.
+There are 253 people on fetchmail-friends and 370 on fetchmail-announce.
 
 ------------------------------------------------------------------------------
 fetchmail-5.0.0 (Mon Apr  5 11:00:24 EDT 1999):

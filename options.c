@@ -426,7 +426,7 @@ struct query *ctl;	/* option record to be initialized */
 	case 'l':
 	case LA_LIMIT:
 	    c = xatoi(optarg, &errflag);
-	    ctl->limit = NUM_VALUE(c);
+	    ctl->limit = NUM_VALUE_IN(c);
 	    break;
 	case 'r':
 	case LA_FOLDER:
@@ -468,17 +468,17 @@ struct query *ctl;	/* option record to be initialized */
 	case 'b':
 	case LA_BATCHLIMIT:
 	    c = xatoi(optarg, &errflag);
-	    ctl->batchlimit = NUM_VALUE(c);
+	    ctl->batchlimit = NUM_VALUE_IN(c);
 	    break;
 	case 'B':
 	case LA_FETCHLIMIT:
 	    c = xatoi(optarg, &errflag);
-	    ctl->fetchlimit = NUM_VALUE(c);
+	    ctl->fetchlimit = NUM_VALUE_IN(c);
 	    break;
 	case 'e':
 	case LA_EXPUNGE:
 	    c = xatoi(optarg, &errflag);
-	    ctl->expunge = NUM_VALUE(c);
+	    ctl->expunge = NUM_VALUE_IN(c);
 	    break;
 	case 'm':
 	case LA_MDA:
@@ -528,7 +528,7 @@ struct query *ctl;	/* option record to be initialized */
 	case 'w':
 	case LA_WARNINGS:
 	    c = xatoi(optarg, &errflag);
-	    ctl->warnings = NUM_VALUE(c);
+	    ctl->warnings = NUM_VALUE_IN(c);
 	    break;
 
 	case LA_CONFIGDUMP:

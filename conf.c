@@ -74,7 +74,7 @@ static void numdump(const char *name, const int num)
 /* dump a numeric quantity at current indent */
 {
     indent('\0');
-    fprintf(stdout, "'%s':%d,\n", name, num);
+    fprintf(stdout, "'%s':%d,\n", name, NUM_VALUE_OUT(num));
 }
 
 static void booldump(const char *name, const int onoff)

@@ -220,7 +220,7 @@ class User:
         self.warnings = 0		# Size warning interval
 	self.fetchlimit = 0		# Max messages fetched per batch
 	self.batchlimit = 0		# Max message forwarded per batch
-	self.expunge = 1		# Interval between expunges (IMAP)
+	self.expunge = 0		# Interval between expunges (IMAP)
         self.properties = None		# Extension properties
 	User.typemap = (
 	    ('remote',      'String'),

@@ -73,7 +73,6 @@
 extern char *strstr();	/* needed on sysV68 R3V7.1. */
 #endif /* strstr */
 
-int fetchlimit;		/* how often to tear down the server connection */
 int batchcount;		/* count of messages sent in current batch */
 flag peek_capable;	/* can we peek for better error recovery? */
 int pass;		/* how many times have we re-polled? */
@@ -1354,10 +1353,11 @@ static void send_size_warnings(struct query *ctl)
 #undef OVERHD
 }
 
-int do_protocol(ctl, proto)
+static int do_session(ctl, proto, maxfetch)
 /* retrieve messages from server using given protocol method table */
 struct query *ctl;		/* parsed options with merged-in defaults */
 const struct method *proto;	/* protocol method table */
+const int maxfetch;		/* maximum number of messages to fetch */
 {
     int ok, js;
 #ifdef HAVE_VOLATILE
@@ -1371,47 +1371,6 @@ const struct method *proto;	/* protocol method table */
 
     protocol = proto;
     ctl->server.base_protocol = protocol;
-
-#ifndef KERBEROS_V4
-    if (ctl->server.preauthenticate == A_KERBEROS_V4)
-    {
-	report(stderr, _("Kerberos V4 support not linked.\n"));
-	return(PS_ERROR);
-    }
-#endif /* KERBEROS_V4 */
-
-#ifndef KERBEROS_V5
-    if (ctl->server.preauthenticate == A_KERBEROS_V5)
-    {
-	report(stderr, _("Kerberos V5 support not linked.\n"));
-	return(PS_ERROR);
-    }
-#endif /* KERBEROS_V5 */
-
-    /* lacking methods, there are some options that may fail */
-    if (!proto->is_old)
-    {
-	/* check for unsupported options */
-	if (ctl->flush) {
-	    report(stderr,
-		    _("Option --flush is not supported with %s\n"),
-		    proto->name);
-	    return(PS_SYNTAX);
-	}
-	else if (ctl->fetchall) {
-	    report(stderr,
-		    _("Option --all is not supported with %s\n"),
-		    proto->name);
-	    return(PS_SYNTAX);
-	}
-    }
-    if (!proto->getsizes && NUM_SPECIFIED(ctl->limit))
-    {
-	report(stderr,
-		_("Option --limit is not supported with %s\n"),
-		proto->name);
-	return(PS_SYNTAX);
-    }
 
     pass = 0;
     tagnum = 0;
@@ -2067,12 +2026,12 @@ const struct method *proto;	/* protocol method table */
 			    report_complete(stdout, _(" not flushed\n"));
 
 			/* perhaps this as many as we're ready to handle */
-			if (NUM_NONZERO(ctl->fetchlimit)
-					&& ctl->fetchlimit <= fetches)
+			if (maxfetch && maxfetch <= fetches && fetches < count)
 			{
-			    report(stdout, _("fetchlimit reached; %d messages left on server\n"),
-				  count - fetches);
-			    goto no_error;
+			    report(stdout, _("fetchlimit %d reached; %d messages left on server\n"),
+				  maxfetch, count - fetches);
+			    ok = PS_MAXFETCH;
+			    goto cleanUp;
 			}
 		    }
 
@@ -2145,6 +2104,7 @@ const struct method *proto;	/* protocol method table */
 	report(stderr, _("undefined error\n"));
 	break;
     }
+    /* no report on PS_MAXFETCH or PS_UNDEFINED */
     if (ok==PS_SOCKET || ok==PS_AUTHFAIL || ok==PS_SYNTAX 
 		|| ok==PS_IOERR || ok==PS_ERROR || ok==PS_PROTOCOL 
 		|| ok==PS_LOCKBUSY || ok==PS_SMTP || ok==PS_DNS)
@@ -2161,6 +2121,84 @@ closeUp:
 
     signal(SIGALRM, sigsave);
     return(ok);
+}
+
+int do_protocol(ctl, proto)
+/* retrieve messages from server using given protocol method table */
+struct query *ctl;		/* parsed options with merged-in defaults */
+const struct method *proto;	/* protocol method table */
+{
+    int	ok;
+
+#ifndef KERBEROS_V4
+    if (ctl->server.preauthenticate == A_KERBEROS_V4)
+    {
+	report(stderr, _("Kerberos V4 support not linked.\n"));
+	return(PS_ERROR);
+    }
+#endif /* KERBEROS_V4 */
+
+#ifndef KERBEROS_V5
+    if (ctl->server.preauthenticate == A_KERBEROS_V5)
+    {
+	report(stderr, _("Kerberos V5 support not linked.\n"));
+	return(PS_ERROR);
+    }
+#endif /* KERBEROS_V5 */
+
+    /* lacking methods, there are some options that may fail */
+    if (!proto->is_old)
+    {
+	/* check for unsupported options */
+	if (ctl->flush) {
+	    report(stderr,
+		    _("Option --flush is not supported with %s\n"),
+		    proto->name);
+	    return(PS_SYNTAX);
+	}
+	else if (ctl->fetchall) {
+	    report(stderr,
+		    _("Option --all is not supported with %s\n"),
+		    proto->name);
+	    return(PS_SYNTAX);
+	}
+    }
+    if (!proto->getsizes && NUM_SPECIFIED(ctl->limit))
+    {
+	report(stderr,
+		_("Option --limit is not supported with %s\n"),
+		proto->name);
+	return(PS_SYNTAX);
+    }
+
+    /*
+     * If no expunge limit or we do expunges within the driver,
+     * then just do one session, passing in any fetchlimit.
+     */
+    if (proto->retry || !NUM_SPECIFIED(ctl->expunge))
+	return(do_session(ctl, proto, NUM_VALUE_OUT(ctl->fetchlimit)));
+    /*
+     * There's an expunge limit, and it isn't handled in the driver itself.
+     * OK; do multiple sessions, each fetching a limited # of messages.
+     * Stop if the total count of retrieved messages exceeds ctl->fetchlimit
+     * (if it was nonzero).
+     */
+    else
+    {
+	int totalcount = 0; 
+	int expunge    = NUM_VALUE_OUT(ctl->expunge);
+	int fetchlimit = NUM_VALUE_OUT(ctl->fetchlimit);
+
+	do {
+	    ok = do_session(ctl, proto, expunge);
+	    totalcount += expunge;
+	    if (NUM_SPECIFIED(ctl->fetchlimit) && totalcount >= fetchlimit)
+		break;
+	} while
+	    (ok == PS_MAXFETCH);
+
+	return(ok);
+    }
 }
 
 #if defined(HAVE_STDARG_H)
