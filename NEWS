@@ -33,7 +33,7 @@ pl 3.9.2 (Wed Apr 23 14:07:03 EDT 1997):
 * Add logic for X-Fetchmail-Warning emission of \r\n to pacify qmail.
 * Yet another try at getting error.c to play nice with AIX.
 
-There are 223 people on the fetchmail-friends list.
+There are 224 people on the fetchmail-friends list.
 
 pl 3.9.1 (Thu Apr 17 11:37:14 EDT 1997):
 * Hypertext FAQ added to distribution manifest.
