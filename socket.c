@@ -127,7 +127,6 @@ int SockOpen(const char *host, const char *service, const char *options,
     void *request = NULL;
     int requestlen;
 #endif /* NET_SECURITY */
-    int i;
 
 #ifdef HAVE_SOCKETPAIR
     if (plugin)
@@ -154,7 +153,20 @@ int SockOpen(const char *host, const char *service, const char *options,
 
  ret:
 #else /* NET_SECURITY */
+#ifdef HAVE_INNER_CONNECT
     i = inner_connect(ai, NULL, 0, NULL, NULL, "fetchmail", NULL);
+#else
+    i = socket(ai->ai_family, ai->ai_socktype, 0);
+    if (i < 0) {
+	freeaddrinfo(ai);
+	return -1;
+    }
+    if (connect(i, (struct sockaddr *) ai->ai_addr, ai->ai_addrlen) < 0) {
+	freeaddrinfo(ai);
+	close(i);
+	return -1;
+    }
+#endif
 #endif /* NET_SECURITY */
 
     freeaddrinfo(ai);
