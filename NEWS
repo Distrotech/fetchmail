@@ -8,6 +8,11 @@
 
 				Release Notes:
 
+fetchmail-5.1.0 ():
+* Merged in official OpenBSD port patches.
+
+There are 261 people on fetchmail-friends and 408 on fetchmail-announce.
+
 fetchmail-5.0.4 (Fri Jun 11 18:32:58 EDT 1999):
 * Fixed compilation error on systems without vnsprintf.
 * No more GIFs!  RPM is now patent-encumbrance-free.

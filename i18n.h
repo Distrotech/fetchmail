@@ -1,5 +1,6 @@
 /* Dummy header for libintl.h */
 
+#undef _
 #ifdef ENABLE_NLS
 #undef __OPTIMIZE__
 #include <libintl.h>

@@ -1160,7 +1160,7 @@ int
 kerberos_auth (socket, canonical) 
 /* authenticate to the server host using Kerberos V4 */
 int socket;		/* socket to server host */
-#ifdef __FreeBSD__
+#if defined(__FreeBSD__) || defined(__OpenBSD__)
 char *canonical;	/* server name */
 #else
 const char *canonical;	/* server name */
