@@ -3,7 +3,7 @@
 # If you're running QNX, we can't assume a working autoconf.
 # So just uncomment all the lines marked QNX.
 
-VERS=4.3.8
+VERS=4.3.9
 
 # Ultrix 2.2 make doesn't expand the value of VPATH.
 srcdir = @srcdir@
@@ -132,9 +132,11 @@ installdirs:
 	$(SHELL) ${srcdir}/mkinstalldirs $(bindir) $(mandir)
 
 $(bindir)/$(instname): fetchmail
+	@echo "Installing binary..."
 	$(INSTALL_PROGRAM) fetchmail $@
 
 $(mandir)/$(instname).$(manext): fetchmail.man
+	@echo "Installing manual page..."
 	$(INSTALL_DATA) $(srcdir)/fetchmail.man $@
 
 uninstall:

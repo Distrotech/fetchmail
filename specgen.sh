@@ -9,7 +9,6 @@ Group:		Applications/Mail
 Copyright:	GPL
 Icon:		fetchmail.gif
 Requires:	smtpdaemon
-BuildRoot:      /tmp/fetchmail-%{version}-root
 
 %description
 fetchmail is a free, full-featured, robust, and well-documented remote
@@ -27,16 +26,13 @@ CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=/usr
 make
 
 %install
-rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT/usr/{bin,man/man1}
-make prefix=$RPM_BUILD_ROOT/usr install
+make install
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%attr(-,root,root) %doc README NEWS NOTES fetchmail-FAQ.html FAQ COPYING INSTALL
-sample.rcfile
-%attr(-,root,root) /usr/bin/fetchmail
-%attr(-,root,root) /usr/man/man1/fetchmail.1
+%doc README NEWS NOTES fetchmail-FAQ.html FAQ COPYING INSTALL sample.rcfile
+/usr/bin/fetchmail
+/usr/man/man1/fetchmail.1
 EOF

@@ -2,21 +2,22 @@
 
 * Generate bounce messages when delivery is refused.  See RFC1891, RFC1892.
 * Use the libmd functions for md5 under Free BSD?  (Low priority.)
-* More log levels?
 * Allow an explicit "append" option to specify what rewrite appends?  (For
   when user's pop3 host isn't the same as his SMTP host.)
 * Allow -c -F to work to flush messages without retrieval.
 * Read from /etc/fetchmailrc before ~/.fetchmailrc?
 * Do is_host_alias checks by comparing IP addresses rather than names?
 * Handle multi-homed hosts correctly.
+* Add an "ident" per-user option for debugging that produces an 
+  "X-Fetchmail-ID" header in fetched messages for debugging.
 
 				Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-4.4.0 ():
+fetchmail-4.3.9 (Fri Mar  6 10:45:32 EST 1998):
 * Relax the LOGIN capability check in IMAP.
 * John Stracke <francis@netscape.com> sent a workaround for SIGALRM flakiness
-  under Red Hat 5.0.
+  under glibc6 over Linux.
 * Kerberos V support from Jon Dugan <jdugan@ncsa.uiuc.edu> and
   Von Welch <vwelch@ncsa.uiuc.edu>.
 * Ron Kaminsky <kam@Orbotech.Co.IL> sent a patch to RFC1730-encode passwords
@@ -25,7 +26,7 @@ fetchmail-4.4.0 ():
 * Made the antispam response configurable.
 * UID-handling fix from Dick van den Burg <burg@is.ge.com>,
 
-There are 269 people on fetchmail-friends and 144 on fetchmail-announce.
+There are 275 people on fetchmail-friends and 153 on fetchmail-announce.
 
 fetchmail-4.3.8 (Tue Feb 24 15:47:13 EST 1998):
 * Documentation cleanup.
