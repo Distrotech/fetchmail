@@ -82,6 +82,7 @@ flag peek_capable;	/* can we peek for better error recovery? */
 int pass;		/* how many times have we re-polled? */
 int stage;		/* where are we? */
 int phase;		/* where are we, for error-logging purposes? */
+int mytimeout;		/* value of nonreponse timeout */
 
 static const struct method *protocol;
 static jmp_buf	restart;
@@ -91,7 +92,6 @@ static int tagnum;
 #define GENSYM	(sprintf(tag, "A%04d", ++tagnum % TAGMOD), tag)
 
 static char shroud[PASSWORDLEN];	/* string to shroud in debug output */
-static int mytimeout;			/* value of nonreponse timeout */
 static int timeoutcount;		/* count consecutive timeouts */
 static int msglen;			/* actual message length */
 
@@ -1513,8 +1513,10 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	    /*
 	     * If we've exceeded our threshold for consecutive timeouts, 
 	     * try to notify the user, then mark the connection wedged.
+	     * Don't do this if the connection can idle, though; idle
+	     * timeouts just mean the frequency of mail is low.
 	     */
-	    if (timeoutcount > MAX_TIMEOUTS 
+	    if (!ctl->idle && timeoutcount > MAX_TIMEOUTS 
 		&& !open_warning_by_mail(ctl, (struct msgblk *)NULL))
 	    {
 		stuff_warning(ctl,
@@ -1754,6 +1756,9 @@ const int maxfetch;		/* maximum number of messages to fetch */
 	    do {
 		dispatches = 0;
 		++pass;
+
+		/* reset timeout, in case we did an IDLE */
+		mytimeout = ctl->server.timeout;
 
 		if (outlevel >= O_DEBUG)
 		{
@@ -2196,11 +2201,11 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		}
 	    } while
 		  /*
-		   * Only re-poll if we had some actual forwards, allowed
-		   * deletions and had no errors.
+		   * Only re-poll if we either had some actual forwards or, 
+		   * are idling, and allowed deletions and had no errors.
 		   * Otherwise it is far too easy to get into infinite loops.
 		   */
-		  (dispatches && protocol->retry && !ctl->keep && !ctl->errcount);
+		  ((dispatches || ctl->idle) && protocol->retry && !ctl->keep && !ctl->errcount);
 	}
 
    no_error:

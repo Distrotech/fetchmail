@@ -100,7 +100,11 @@ int imap_ok(int sock, char *argbuf)
 	     */
 	    if (idling)
 	    {
-		gen_send(sock, "DONE");
+		/* we do our own write and report here to disable tagging */
+		SockWrite(sock, "DONE\r\n", 6);
+		if (outlevel >= O_MONITOR)
+		    report(stdout, "IMAP> DONE\n");
+
 		idling = FALSE;
 	    }
 	}
@@ -1081,6 +1085,9 @@ static int imap_getrange(int sock,
 	    ok = internal_expunge(sock);
 	count = -1;
 	idling = do_idle;
+	if (idling)
+	    /* this is the RFC2177-recommended timeout for an IDLE */
+	    mytimeout = 29 * 60;
 	if (ok || gen_transact(sock, do_idle ? "IDLE" : "NOOP"))
 	{
 	    report(stderr, _("re-poll failed\n"));

@@ -404,6 +404,8 @@ extern int phase;
 #define STAGE_LOGOUT	4
 extern int stage;
 
+extern int mytimeout;
+
 /* mark values for name lists */
 #define XMIT_ACCEPT	1	/* accepted; matches local domain or name */
 #define XMIT_REJECT	2	/* rejected; no match */
