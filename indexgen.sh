@@ -218,7 +218,7 @@ fetchmail-announce@lists.ccil.org</a>.</p>
 
 <p>Note: before submitting a question to the list, <strong>please read
 the <a href="fetchmail-FAQ.html">FAQ</a></strong> (especially item <a
-href="http:fetchmail-FAQ.html#G3">G3</a> on how to report bugs).  We
+href="fetchmail-FAQ.html#G3">G3</a> on how to report bugs).  We
 tend to get the same three newbie questions over and over again.  The
 FAQ covers them like a blanket.</p>
 
@@ -329,9 +329,9 @@ helps redirect multidrop mail.</p>
 that assists you in installing sendmail and fetchmail together.</p>
 
 <p>Peter Hawkins has written a script called <a
-href="http://www.hawkins.emu.id.au/gotmail/">gotmail</a>
-that can retrieve Hotmail. Another script, 
-<a href="http://yosucker.sourceforge.net">yosucker</a>, can retrieve
+href="http://linux.cudeso.be/linuxdoc/gotmail.php">gotmail</a> that
+can retrieve Hotmail. Another script, <a
+href="http://yosucker.sourceforge.net">yosucker</a>, can retrieve
 Yahoo webmail.</p>
 
 <p>A hacker identifying himself simply as \`Steines' has written a
