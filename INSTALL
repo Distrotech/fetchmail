@@ -38,7 +38,11 @@ Run
 
 	make
 
-This will compile fetchmail for your system.
+This should compile fetchmail for your system.
+
+Some makes (on AIX and HPUX and possibly elsewhere) choke on the YACC
+grammar dependencies.  If this happens to you, install the free GNU
+make program and throw away your native one, it's broken.
 
 If linking fails to resolve atexit(), go find a compiler that isn't lying
 about being ANSI-compliant (such as gcc).  Some SunOS users have had this
