@@ -417,7 +417,7 @@ int readheaders(int sock,
     skipcount = 0;
     ctl->mimemsg = 0;
 
-    for (remaining = fetchlen; remaining > 0 || protocol->delimited; remaining -= linelen)
+    for (remaining = fetchlen; remaining > 0 || protocol->delimited; )
     {
 	char *line;
 	int overlong = FALSE;
@@ -435,6 +435,8 @@ int readheaders(int sock,
 		return(PS_SOCKET);
 	    }
 	    set_timeout(0);
+
+	    remaining -= n;
 	    linelen += n;
 	    msgblk.msglen += n;
 
@@ -443,47 +445,33 @@ int readheaders(int sock,
 		 * line exceeds MSGBUFSIZE.
 		 */
 		if ( n && buf[n-1] != '\n' ) {
-			unsigned int llen = strlen(line);
 			overlong = TRUE;
-			line = realloc(line, llen + n + 1);
-			strcpy(line + llen, buf);
+			line = realloc(line, linelen);
+			memcpy(line + linelen - n, buf, n);
 			ch = ' '; /* So the next iteration starts */
 			continue;
 		}
 
+
 	    /* lines may not be properly CRLF terminated; fix this for qmail */
-	    if (ctl->forcecr)
+		/* we don't want to overflow the buffer here */
+	    if (ctl->forcecr && buf[n-1] == '\n' && (n == 1 || buf[n-2] != '\r'))
 	    {
-		cp = buf + strlen(buf) - 1;
-		if (*cp == '\n' && (cp == buf || cp[-1] != '\r'))
-		{
-		    *cp++ = '\r';
-		    *cp++ = '\n';
-		    *cp++ = '\0';
-		}
+		char * tcp;
+		line = (char *) realloc(line, linelen + 2);
+		memcpy(line + linelen - n, buf, n - 1);
+		tcp = line + linelen - 1;
+		*tcp++ = '\r';
+		*tcp++ = '\n';
+		*tcp++ = '\0';
+		n++;
+		linelen++;
 	    }
-
-		/*
-		 * Decode MIME encoded headers. We MUST do this before
-		 * looking at the Content-Type / Content-Transfer-Encoding
-		 * headers (RFC 2046).
-		 */
-		if ( ctl->mimedecode && overlong ) {
-			/*
-			 * If we received an overlong line, we have to decode the
-			 * whole line at once.
-			 */
-			line = (char *) realloc(line, strlen(line) + strlen(buf) +1);
-			strcat(line, buf);
-			UnMimeHeader(line);
-		}
-		else {
-			if ( ctl->mimedecode )
-				UnMimeHeader(buf);
-
-			line = (char *) realloc(line, strlen(line) + strlen(buf) +1);
-			strcat(line, buf);
-		}
+	    else
+	    {
+		line = (char *) realloc(line, linelen + 1);
+		memcpy(line + linelen - n, buf, n + 1);
+	    }
 
 	    /* check for end of headers */
 	    if (end_of_header(line))
@@ -545,6 +533,22 @@ int readheaders(int sock,
 		sizeticker -= SIZETICKER;
 	    }
 	}
+		/*
+		 * Decode MIME encoded headers. We MUST do this before
+		 * looking at the Content-Type / Content-Transfer-Encoding
+		 * headers (RFC 2046).
+		 */
+		if ( ctl->mimedecode )
+		{
+		    char *tcp;
+		    UnMimeHeader(line);
+		    /* the line is now shorter. So we retrace back till we find our terminating
+		     * combination \n\0, we move backwards to make sure that we don't catch som
+		     * \n\0 stored in the decoded part of the message */
+		    for(tcp = line + linelen - 1; tcp > line && (*tcp != 0 || tcp[-1] != '\n'); tcp--);
+		    if(tcp > line) linelen = tcp - line;
+		}
+
 
 	/* we see an ordinary (non-header, non-message-delimiter line */
 	has_nuls = (linelen != strlen(line));
