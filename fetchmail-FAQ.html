@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/09/16 21:02:32 $
+<td width="30%" align=right>$Date: 1997/09/18 07:09:58 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -55,7 +55,8 @@ when I may have multiple login sessions going?</a><br>
 <a href="#T1">T1. How can I use fetchmail with qmail?</a><br>
 <a href="#T2">T2. How can I use fetchmail with exim?</a><br>
 <a href="#T3">T3. How can I use fetchmail with smail?</a><br>
-<a href="#T4">T4. How can I use fetchmail with Lotus Notes?</a><br>
+<a href="#T4">T4. How can I use fetchmail with SCO's MMDF?</a><br>
+<a href="#T5">T5. How can I use fetchmail with Lotus Notes?</a><br>
 
 <h1>Runtime fatal errors:</h1>
 
@@ -817,7 +818,14 @@ mismatch, so smail's new behavior (introduced sometime between
 3.2.0.90 and 3.2.0.95) is a bug.<P>
 
 <hr>
-<h2><a name="T4">T4. How can I use fetchmail with Lotus Notes?</a></h2><p>
+<h2><a name="T4">T4. How can I use fetchmail with SCO's MMDF?</a></h2><p>
+
+We're told this is possible, but difficult and tricky (and we don't
+have the recipe for it).  Our informant suggests dropping MMDF and
+using sendmail instead.<P>
+
+<hr>
+<h2><a name="T5">T5. How can I use fetchmail with Lotus Notes?</a></h2><p>
 
 The Lotus Notes SMTP gateway tries to deduce when it should convert \n
 to \r\n, but its rules are not intuitive.  Use `forcecr'.<P>
@@ -1328,7 +1336,7 @@ template string in fetchmail.c.
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/09/16 21:02:32 $
+<td width="30%" align=right>$Date: 1997/09/18 07:09:58 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
