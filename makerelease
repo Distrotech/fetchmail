@@ -38,6 +38,28 @@ if (system("su -c 'make >/dev/null' esr")) {
 	die("Compilation failure\n");
 }
 
+# Update the Debian logfile
+open(DEBLOG, "debian/changelog");
+$firstline = <DEBLOG>;
+close(DEBLOG);
+$firstline =~ /fetchmail \(*([^-]*)/;
+$logvers = $1;
+if ($version eq $logvers) {
+    print "No change to Debian logfile...\n";
+} else {
+    print "Updating the Debian logfile ($logvers -> $version)...\n";
+    open(DEBLOG, ">>debian/changelog");
+    print DEBLOG <<EOF;
+fetchmail (${version}-1) unstable; urgency=low
+
+  * new upstream version
+  
+-- Eric S. Raymond <esr\@ccil.org>  ${date}
+  
+EOF
+    close(DEBLOG);
+}
+
 print "Building the distribution...\n";
 if (system("su -c 'make dist >/dev/null' esr")) {
 	die("Distribution-build failure\n");
