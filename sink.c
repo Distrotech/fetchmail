@@ -662,8 +662,22 @@ int open_sink(struct query *ctl, struct msgblk *msg,
 		    char	errbuf[POPBUFSIZE];
 		    int res;
 
+#ifdef __UNUSED__
+		    /*
+		     * I don't remember how this got in here, but it doesn't
+		     * work.  The obvious symptom is that no bounce message
+		     * is sent for a nonexistent user.  Less obviously
+		     * Forwarding to postmaster also does not work. The body is
+		     * discarded.
+		     *
+		     * If a mail is sent to one valid and one invalid
+		     * user, the mail does not go to the valid user
+		     * also as the body is discarded after calling
+		     * RSET!
+		     */
 		    if ((res = handle_smtp_report(ctl, msg))==PS_REFUSED)
 			return(PS_REFUSED);
+#endif /* __UNUSED__ */
 
 		    strcpy(errbuf, idp->id);
 		    strcat(errbuf, ": ");
