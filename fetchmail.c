@@ -584,7 +584,6 @@ static int load_params(int argc, char **argv, int optind)
     def_opts.server.protocol = P_AUTO;
     def_opts.server.timeout = CLIENT_TIMEOUT;
     def_opts.remotename = user;
-    save_str(&def_opts.smtphunt, FALSE, fetchmailhost);
     def_opts.expunge = 1;
     def_opts.server.envskip = 0;
 
@@ -637,6 +636,10 @@ static int load_params(int argc, char **argv, int optind)
 	{
 	    /* merge in defaults */
 	    optmerge(ctl, &def_opts);
+
+	    /* make sure we have a nonempty host list to forward to */
+	    if (!ctl->smtphunt)
+		save_str(&ctl->smtphunt, FALSE, fetchmailhost);
 
 	    /* keep lusers from shooting themselves in the foot :-) */
 	    if (poll_interval && ctl->limit)
