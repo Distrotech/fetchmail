@@ -1,7 +1,7 @@
 			Release Notes:
 
 ------------------------------------------------------------------------------
-fetchmail-3.1 ()
+fetchmail-3.1 (Fri Jan 24 12:45:18 EST 1997)
 
 features --
 
@@ -22,7 +22,7 @@ bugs --
 
 * Compilation fixes for non-Linux machines.
 
-There are 202 people on the fetchmail-friends list.
+There are 205 people on the fetchmail-friends list.
 
 ------------------------------------------------------------------------------
 fetchmail-3.0 (Tue Jan 21 16:44:56 EST 1997)
