@@ -707,13 +707,13 @@ static void optmerge(struct query *h2, struct query *h1, int force)
      * as defaults).  If force is on, modify each h2 field whenever h1
      * is nonempty (treat h1 as an override).  
      */
-
-#define LIST_MERGE(fld) if (force ? !!h1->fld : !h2->fld) \
-					append_str_list(&h2->fld, &h1->fld)
-    LIST_MERGE(server.localdomains);
-    LIST_MERGE(localnames);
-    LIST_MERGE(mailboxes);
-    LIST_MERGE(smtphunt);
+#define LIST_MERGE(dstl, srcl) if (force ? !!srcl : !dstl) \
+    						free_str_list(&dstl), \
+						append_str_list(&dstl, &srcl)
+    LIST_MERGE(h2->server.localdomains, h1->server.localdomains);
+    LIST_MERGE(h2->localnames, h1->localnames);
+    LIST_MERGE(h2->mailboxes, h1->mailboxes);
+    LIST_MERGE(h2->smtphunt, h1->smtphunt);
 #undef LIST_MERGE
 
 #define FLAG_MERGE(fld) if (force ? !!h1->fld : !h2->fld) h2->fld = h1->fld
@@ -741,6 +741,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(server.interface_pair);
 #endif /* linux */
 
+    FLAG_MERGE(wildcard);
     FLAG_MERGE(remotename);
     FLAG_MERGE(password);
     FLAG_MERGE(mda);
