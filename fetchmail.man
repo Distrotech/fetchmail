@@ -542,8 +542,6 @@ default location of file associating hosts with last message IDs seen
 (used only with newer RFC1725-compliant servers supporting the UIDL command).
 .SH BUGS
 .PP
-The --version option doesn't display MDA arguments.
-.PP
 Delivery via
 .IR sendmail (8)
 doesn't work in daemon mode;

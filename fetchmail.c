@@ -327,6 +327,8 @@ int showversioninfo()
 int dump_params (queryctl)
 struct hostrec *queryctl;
 {
+  char *cp;
+
   printf("  Username = '%s'\n", queryctl->remotename);
   printf("  Password = '%s'\n", queryctl->password);
 
@@ -357,7 +359,11 @@ struct hostrec *queryctl;
     printf("  Messages will be appended to '%s'\n", queryctl->userfolder);
     break;
   case TO_MDA:
-    printf("  Messages will be delivered with %s\n", queryctl->mda);
+    printf("  Messages will be delivered with");
+    for (cp = queryctl->mda; *cp; cp += strlen(cp) + 1) {
+	printf(" %s", cp);
+    }
+    putchar('\n');
     break;
   case TO_STDOUT:
     printf("  Messages will be dumped to standard output\n");
@@ -369,7 +375,13 @@ struct hostrec *queryctl;
       if (queryctl->output != TO_FOLDER)
 	printf("  (Mail folder would have been '%s')\n", queryctl->userfolder);
       if (queryctl->output != TO_MDA)
-	printf("  (MDA would have been '%s')\n", queryctl->mda);
+      {
+	printf("  (MDA would have been");
+	for (cp = queryctl->mda; *cp; cp += strlen(cp) + 1) {
+	  printf(" %s", cp);
+	}
+	printf(")\n");
+      }
     }
 
   if (linelimit == 0)
