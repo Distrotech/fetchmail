@@ -404,6 +404,19 @@ def ConfirmQuit(frame, context):
 		 strings = ('Yes', 'No'),
 		 default = 1)
     return ans.num == 0
+
+def dispose_window(master, legend, help):
+    dispose = Frame(master, relief=RAISED, bd=5)
+    Label(dispose, text=legend).pack(side=TOP,pady=10)
+    Button(dispose, text='Save', fg='blue',
+           command=master.save).pack(side=LEFT)
+    Button(dispose, text='Quit', fg='blue',
+           command=master.nosave).pack(side=LEFT)
+    Button(dispose, text='Help', fg='blue',
+           command=lambda x=help: helpwin(x)).pack(side=RIGHT)
+    dispose.pack(fill=X)
+    return dispose
+
 #
 # First, code to set the global fetchmail run controls.
 #
@@ -486,14 +499,14 @@ This will take you to a site configuration dialogue.
 class ConfigurationEdit(Frame):
     def __init__(self, configuration, master=None):
 	self.configuration = configuration
-        self.master = master
+        self.container = master
         ConfigurationEdit.mode_to_help = {
             'novice':configure_novice_help, 'expert':configure_expert_help
             }
 
     def edit(self, mode):
         self.mode = mode
-	Frame.__init__(self, self.master)
+	Frame.__init__(self, self.container)
 	self.master.title('fetchmail ' + self.mode + ' configurator');
 	self.master.iconname('fetchmail ' + self.mode + ' configurator');
 	Pack.config(self)
@@ -553,7 +566,7 @@ class ConfigurationEdit(Frame):
 	ListEdit('New Server:', 
 		map(lambda x: x.pollname, self.configuration.servers),
 		lambda site, m=self.mode, s=self.configuration.servers:
-                 ServerEdit(m, site, s, Toplevel()),
+                 ServerEdit(site, s, Toplevel()).edit(m),
                 lf, remotehelp)
 	lf.pack(fill=X)
 
@@ -695,25 +708,9 @@ you will open a window to configure the
 user's options on that site.
 """}
 
-def dispose_window(master, legend, help):
-    dispose = Frame(master, relief=RAISED, bd=5)
-    Label(dispose, text=legend).pack(side=TOP,pady=10)
-    Button(dispose, text='Save', fg='blue',
-           command=master.save).pack(side=LEFT)
-    Button(dispose, text='Quit', fg='blue',
-           command=master.nosave).pack(side=LEFT)
-    Button(dispose, text='Help', fg='blue',
-           command=lambda x=help: helpwin(x)).pack(side=RIGHT)
-    dispose.pack(fill=X)
-    return dispose
-
 class ServerEdit(Frame):
-    def __init__(self, mode, host, servers, master=None):
-	Frame.__init__(self, master)
-	Pack.config(self)
-	self.master.title('Fetchmail host ' + host);
-	self.master.iconname('Fetchmail host ' + host);
-
+    def __init__(self, host, servers, master=None):
+        self.container = master
 	self.server = None
 	for site in servers:
 	    if site.pollname == host:
@@ -724,8 +721,13 @@ class ServerEdit(Frame):
 		self.server.via = host
 		servers.append(self.server)
 
+    def edit(self, mode):
+	Frame.__init__(self, self.container)
+	Pack.config(self)
+	self.master.title('Fetchmail host ' + self.server.pollname);
+	self.master.iconname('Fetchmail host ' + self.server.pollname);
 	self.post()
-	self.makeWidgets(host, mode)
+	self.makeWidgets(self.server.pollname, mode)
 #	self.grab_set()
 #	self.focus_set()
 #	self.wait_window()
