@@ -22,6 +22,11 @@
 
 #include <stdio.h>
 
+/* Import Trio if needed */
+#if !defined(HAVE_SNPRINTF) || !defined(HAVE_VSNPRINTF)
+#  include "trio/trio.h"
+#endif
+
 /* We need this for strstr */
 #if !defined(HAVE_STRSTR) && !defined(strstr)
 char *strstr(const char *, const char *);

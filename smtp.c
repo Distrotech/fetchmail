@@ -8,14 +8,15 @@
  * For license terms, see the file COPYING in this directory.
  */
 
+#include "config.h"
+#include "fetchmail.h"
+
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
 #include <signal.h>
-#include "fetchmail.h"
 #include "socket.h"
 #include "smtp.h"
-#include "config.h"
 #include "i18n.h"
 
 struct opt
@@ -105,11 +106,7 @@ static void SMTP_auth(int sock, char *username, char *password, char *buf)
 			report(stdout, GT_("Challenge decoded: %s\n"), b64buf);
 		hmac_md5(password, strlen(password),
 			 b64buf, strlen(b64buf), digest, sizeof(digest));
-#ifdef HAVE_SNPRINTF
 		snprintf(tmp, sizeof(tmp),
-#else
-		sprintf(tmp,
-#endif /* HAVE_SNPRINTF */
 		"%s %02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
 		username,  digest[0], digest[1], digest[2], digest[3],
 		digest[4], digest[5], digest[6], digest[7], digest[8],
@@ -124,12 +121,7 @@ static void SMTP_auth(int sock, char *username, char *password, char *buf)
 		int len;
 		if (outlevel >= O_MONITOR)
 			report(stdout, GT_("ESMTP PLAIN Authentication...\n"));
-#ifdef HAVE_SNPRINTF
-		snprintf(tmp, sizeof(tmp),
-#else
-		sprintf(tmp,
-#endif /* HAVE_SNPRINTF */
-		"^%s^%s", username, password);
+		snprintf(tmp, sizeof(tmp), "^%s^%s", username, password);
 
 		len = strlen(tmp);
 		for (c = len - 1; c >= 0; c--)
@@ -233,25 +225,11 @@ int SMTP_from(int sock, const char *from, const char *opts)
     char buf[MSGBUFSIZE];
 
     if (from[0]=='<')
-#ifdef HAVE_SNPRINTF
-	snprintf(buf, sizeof(buf),
-#else
-	sprintf(buf,
-#endif /* HAVE_SNPRINTF */
-		"MAIL FROM:%s", from);
+	snprintf(buf, sizeof(buf), "MAIL FROM:%s", from);
     else
-#ifdef HAVE_SNPRINTF
-    snprintf(buf, sizeof(buf),
-#else
-    sprintf(buf,
-#endif /* HAVE_SNPRINTF */
-	    "MAIL FROM:<%s>", from);
+	snprintf(buf, sizeof(buf), "MAIL FROM:<%s>", from);
     if (opts)
-#ifdef HAVE_SNPRINTF
 	snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), "%s", opts);
-#else
-	strcat(buf, opts);
-#endif /* HAVE_SNPRINTF */
     SockPrintf(sock,"%s\r\n", buf);
     if (outlevel >= O_MONITOR)
 	report(stdout, "%cMTP> %s\n", smtp_mode, buf);

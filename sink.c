@@ -264,27 +264,15 @@ char *rcpt_address(struct query *ctl, const char *id,
     static char addr[HOSTLEN+USERNAMELEN+1];
     if (strchr(id, '@'))
     {
-#ifdef HAVE_SNPRINTF
 	snprintf(addr, sizeof (addr), "%s", id);
-#else
-	sprintf(addr, "%s", id);
-#endif /* HAVE_SNPRINTF */
     }
     else if (usesmtpname && ctl->smtpname)
     {
-#ifdef HAVE_SNPRINTF
 	snprintf(addr, sizeof (addr), "%s", ctl->smtpname);
-#else
-	sprintf(addr, "%s", ctl->smtpname);
-#endif /* HAVE_SNPRINTF */
     }
     else
     {
-#ifdef HAVE_SNPRINTF
 	snprintf(addr, sizeof (addr), "%s@%s", id, ctl->destaddr);
-#else
-	sprintf(addr, "%s@%s", id, ctl->destaddr);
-#endif /* HAVE_SNPRINTF */
     }
     return addr;
 }
@@ -337,12 +325,7 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
     }
 
     /* our first duty is to keep the sacred foo counters turning... */
-#ifdef HAVE_SNPRINTF
-    snprintf(boundary, sizeof(boundary),
-#else
-    sprintf(boundary,
-#endif /* HAVE_SNPRINTF */
-	    "foo-mani-padme-hum-%d-%d-%ld", 
+    snprintf(boundary, sizeof(boundary), "foo-mani-padme-hum-%d-%d-%ld", 
 	    (int)getpid(), (int)getppid(), time((time_t *)NULL));
 
     if (outlevel >= O_VERBOSE)
@@ -524,11 +507,7 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	if (run.spambounce)
      {
        char rejmsg[160];
-#ifdef HAVE_SNPRINTF
        snprintf(rejmsg, sizeof(rejmsg),
-#else
-       sprintf(rejmsg,
-#endif /* HAVE_SNPRINTF */
 		"spam filter or virus scanner rejected message because:\r\n"
 		"%s\r\n", responses[0]);
 	  
@@ -900,20 +879,12 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
     {
       if (is_dottedquad(ctl->server.truename))
       {
-#ifdef HAVE_SNPRINTF
-	snprintf(addr, sizeof(addr),
-#else
-                 sprintf(addr,
-#endif /* HAVE_SNPRINTF */
-	      "%s@[%s]", ctl->remotename, ctl->server.truename);
+	snprintf(addr, sizeof(addr), "%s@[%s]", ctl->remotename,
+		ctl->server.truename);
       }
       else
       {
-#ifdef HAVE_SNPRINTF
 	snprintf(addr, sizeof(addr),
-#else
-	sprintf(addr,
-#endif /* HAVE_SNPRINTF */
 	      "%s@%s", ctl->remotename, ctl->server.truename);
       }
 	ap = addr;
@@ -927,21 +898,13 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
     {
       if (is_dottedquad(ctl->server.truename))
       {
-#ifdef HAVE_SNPRINTF
-	snprintf(addr, sizeof(addr),
-#else
-	sprintf(addr,
-#endif /* HAVE_SNPRINTF */
-		"%s@[%s]", msg->return_path, ctl->server.truename);
+	snprintf(addr, sizeof(addr), "%s@[%s]", msg->return_path,
+		ctl->server.truename);
       }
       else
       {
-#ifdef HAVE_SNPRINTF
-	snprintf(addr, sizeof(addr),
-#else
-	sprintf(addr,
-#endif /* HAVE_SNPRINTF */
-		"%s@%s", msg->return_path, ctl->server.truename);
+	snprintf(addr, sizeof(addr), "%s@%s",
+		msg->return_path, ctl->server.truename);
       }
 	ap = addr;
     }
@@ -1573,18 +1536,10 @@ va_dcl
 #else
     va_start(ap);
 #endif
-#ifdef HAVE_VSNPRINTF
     vsnprintf(buf, sizeof(buf), fmt, ap);
-#else
-    vsprintf(buf, fmt, ap);
-#endif
     va_end(ap);
 
-#ifdef HAVE_SNPRINTF
     snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), "\r\n");
-#else
-    strcat(buf, "\r\n");
-#endif /* HAVE_SNPRINTF */
 
     /* guard against very long lines */
     buf[MSGBUFSIZE+1] = '\r';

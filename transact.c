@@ -941,12 +941,10 @@ int readheaders(int sock,
      */
     if (msgblk.headers == (char *)NULL)
     {
-#ifdef HAVE_SNPRINTF
 	snprintf(buf, sizeof(buf),
-#else
-	sprintf(buf, 
-#endif /* HAVE_SNPRINTF */
-	"From: FETCHMAIL-DAEMON\r\nTo: %s@%s\r\nSubject: Headerless mail from %s's mailbox on %s\r\n",
+		"From: FETCHMAIL-DAEMON\r\n"
+		"To: %s@%s\r\n"
+		"Subject: Headerless mail from %s's mailbox on %s\r\n",
 		user, fetchmailhost, ctl->remotename, ctl->server.truename);
 	msgblk.headers = xstrdup(buf);
     }
@@ -1125,11 +1123,7 @@ int readheaders(int sock,
     {
 	/* utter any per-message Received information we need here */
         if (ctl->server.trueaddr) {
-#ifdef HAVE_SNPRINTF
 	    snprintf(buf, sizeof(buf),
-#else
-	    sprintf(buf, 
-#endif /* HAVE_SNPRINTF */
 		    "Received: from %s [%u.%u.%u.%u]\r\n", 
 		    ctl->server.truename,
 		    (unsigned int)(unsigned char)ctl->server.trueaddr[0],
@@ -1137,11 +1131,7 @@ int readheaders(int sock,
 		    (unsigned int)(unsigned char)ctl->server.trueaddr[2],
 		    (unsigned int)(unsigned char)ctl->server.trueaddr[3]);
 	} else {
-#ifdef HAVE_SNPRINTF
 	  snprintf(buf, sizeof(buf),
-#else                       
-	  sprintf(buf,
-#endif /* HAVE_SNPRINTF */
 		  "Received: from %s\r\n", ctl->server.truename);
 	}
 	n = stuffline(ctl, buf);
@@ -1151,11 +1141,7 @@ int readheaders(int sock,
 	     * This header is technically invalid under RFC822.
 	     * POP3, IMAP, etc. are not legal mail-parameter values.
 	     */
-#ifdef HAVE_SNPRINTF
 	    snprintf(buf, sizeof(buf),
-#else
-	    sprintf(buf,
-#endif /* HAVE_SNPRINTF */
 		    "\tby %s with %s (fetchmail-%s",
 		    fetchmailhost,
 		    protocol->name,
@@ -1166,23 +1152,14 @@ int readheaders(int sock,
 			ctl->server.pollname, 
 			ctl->remotename);
 	    }
-#ifdef HAVE_SNPRINTF
 	    snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), ")\r\n");
-#else
-	    strcat(buf, ")\r\n");
-#endif /* HAVE_SNPRINTF */
 	    n = stuffline(ctl, buf);
 	    if (n != -1)
 	    {
 		buf[0] = '\t';
 		if (good_addresses == 0)
 		{
-#ifdef HAVE_SNPRINTF
-		    snprintf(buf+1, sizeof(buf)-1,
-#else
-		    sprintf(buf+1,
-#endif /* HAVE_SNPRINTF */
-			    "for %s (by default); ",
+		    snprintf(buf+1, sizeof(buf)-1, "for %s (by default); ",
 			    rcpt_address (ctl, run.postmaster, 0));
 		}
 		else if (good_addresses == 1)
@@ -1190,25 +1167,17 @@ int readheaders(int sock,
 		    for (idp = msgblk.recipients; idp; idp = idp->next)
 			if (idp->val.status.mark == XMIT_ACCEPT)
 			    break;	/* only report first address */
-#ifdef HAVE_SNPRINTF
 		    snprintf(buf+1, sizeof(buf)-1,
-#else                       
-		    sprintf(buf+1,
-#endif /* HAVE_SNPRINTF */
 			    "for %s", rcpt_address (ctl, idp->id, 1));
-		    sprintf(buf+strlen(buf), " (%s); ",
+		    snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf)-1,
+			    " (%s); ",
 			    MULTIDROP(ctl) ? "multi-drop" : "single-drop");
 		}
 		else
 		    buf[1] = '\0';
 
-#ifdef HAVE_SNPRINTF
 		snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), "%s\r\n",
 			rfc822timestamp());
-#else
-		strcat(buf, rfc822timestamp());
-		strcat(buf, "\r\n");
-#endif /* HAVE_SNPRINTF */
 		n = stuffline(ctl, buf);
 	    }
 	}
@@ -1246,11 +1215,7 @@ int readheaders(int sock,
 		for (idp = msgblk.recipients; idp; idp = idp->next)
 		    if (idp->val.status.mark == XMIT_REJECT)
 			break;
-#ifdef HAVE_SNPRINTF
 		snprintf(errhd+strlen(errhd), sizeof(errhd)-strlen(errhd),
-#else
-		sprintf(errhd+strlen(errhd),
-#endif /* HAVE_SNPRINTF */
 			GT_("recipient address %s didn't match any local name"), idp->id);
 	    }
 	}
@@ -1258,26 +1223,16 @@ int readheaders(int sock,
 	if (has_nuls)
 	{
 	    if (errhd[sizeof("X-Fetchmail-Warning: ")])
-#ifdef HAVE_SNPRINTF
 		snprintf(errhd+strlen(errhd), sizeof(errhd)-strlen(errhd), "; ");
 	    snprintf(errhd+strlen(errhd), sizeof(errhd)-strlen(errhd),
-#else
-		strcat(errhd, "; ");
-	    strcat(errhd,
-#endif /* HAVE_SNPRINTF */
 			GT_("message has embedded NULs"));
 	}
 
 	if (bad_addresses)
 	{
 	    if (errhd[sizeof("X-Fetchmail-Warning: ")])
-#ifdef HAVE_SNPRINTF
 		snprintf(errhd+strlen(errhd), sizeof(errhd)-strlen(errhd), "; ");
 	    snprintf(errhd+strlen(errhd), sizeof(errhd)-strlen(errhd),
-#else
-		strcat(errhd, "; ");
-	    strcat(errhd,
-#endif /* HAVE_SNPRINTF */
 			GT_("SMTP listener rejected local recipient addresses: "));
 	    errlen = strlen(errhd);
 	    for (idp = msgblk.recipients; idp; idp = idp->next)
@@ -1466,18 +1421,10 @@ va_dcl
 #else
     va_start(ap);
 #endif
-#ifdef HAVE_VSNPRINTF
     vsnprintf(buf + strlen(buf), sizeof(buf)-strlen(buf), fmt, ap);
-#else
-    vsprintf(buf + strlen(buf), fmt, ap);
-#endif
     va_end(ap);
 
-#ifdef HAVE_SNPRINTF
     snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), "\r\n");
-#else
-    strcat(buf, "\r\n");
-#endif /* HAVE_SNPRINTF */
     SockWrite(sock, buf, strlen(buf));
 
     if (outlevel >= O_MONITOR)
@@ -1551,18 +1498,10 @@ va_dcl
 #else
     va_start(ap);
 #endif
-#ifdef HAVE_VSNPRINTF
     vsnprintf(buf + strlen(buf), sizeof(buf)-strlen(buf), fmt, ap);
-#else
-    vsprintf(buf + strlen(buf), fmt, ap);
-#endif
     va_end(ap);
 
-#ifdef HAVE_SNPRINTF
     snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), "\r\n");
-#else
-    strcat(buf, "\r\n");
-#endif /* HAVE_SNPRINTF */
     SockWrite(sock, buf, strlen(buf));
 
     if (outlevel >= O_MONITOR)

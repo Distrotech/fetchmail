@@ -351,12 +351,7 @@ int SockOpen(const char *host, int clientPort, const char *options,
 #ifdef HAVE_SOCKETPAIR
     if (plugin) {
       char buf[10];
-#ifdef HAVE_SNPRINTF
-      snprintf(buf, sizeof(buf),  /* Yeah, paranoic. So what? :P */
-#else
-      sprintf(buf,
-#endif /* HAVE_SNPRINTF */
-	      "%d",clientPort);
+      snprintf(buf, sizeof(buf), "%d", clientPort);
       return handle_plugin(host,buf,plugin);
     }
 #endif /* HAVE_SOCKETPAIR */
@@ -487,11 +482,7 @@ va_dcl {
 #else
     va_start(ap);
 #endif
-#ifdef HAVE_VSNPRINTF
     vsnprintf(buf, sizeof(buf), format, ap);
-#else
-    vsprintf(buf, format, ap);
-#endif
     va_end(ap);
     return SockWrite(sock, buf, strlen(buf));
 
@@ -849,11 +840,7 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 			tp = text;
 			te = text + sizeof(text);
 			for (i = 0; i < dsz; i++) {
-#ifdef HAVE_SNPRINTF
 				esz = snprintf(tp, te - tp, i > 0 ? ":%02X" : "%02X", digest[i]);
-#else
-				esz = sprintf(tp, i > 0 ? ":%02X" : "%02X", digest[i]);
-#endif
 				if (esz >= te - tp) {
 					report(stderr, GT_("Digest text buffer too small!\n"));
 					return (0);

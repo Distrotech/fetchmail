@@ -36,6 +36,11 @@
   in succession, make sure that Common Name and fingerprint checking are
   only done once. Print all validation warnings/errors even if not in
   verbose mode. Patch by Brian Candler.
+* Import Bjorn Reese and Daniel Stenberg's MIT-licensed Trio 1.10 from
+  http://daniel.haxx.se/projects/trio/ for systems that do not support
+  snprintf or vsnprintf.
+* Clean up the horrible #ifdef HAVE_[V]SNPRINTF that made the code
+  unreadable. Use Trio where [v]snprintf is/are missing. Matthias Andree.
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 

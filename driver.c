@@ -378,12 +378,7 @@ static void mark_oversized(struct query *ctl, int num, int size)
     int cnt;
 
     /* convert size to string */
-#ifdef HAVE_SNPRINTF
-    snprintf(sizestr, sizeof(sizestr),
-#else
-    sprintf(sizestr,
-#endif /* HAVE_SNPRINTF */
-      "%d", size);
+    snprintf(sizestr, sizeof(sizestr), "%d", size);
 
     /* build a list of skipped messages
      * val.id = size of msg (string cnvt)
@@ -1085,16 +1080,8 @@ static int do_session(
 		    else if (h_errno == TRY_AGAIN)
 			strcpy(errbuf, GT_("temporary name server error."));
 		    else
-#ifdef HAVE_SNPRINTF
-			snprintf
-#else
-			sprintf
-#endif /* HAVE_SNPRINTF */
-			(errbuf,
-#ifdef HAVE_SNPRINTF
-			 sizeof(errbuf),
-#endif
-			  GT_("unknown DNS error %d."), h_errno);
+			snprintf (errbuf, sizeof(errbuf),
+				GT_("unknown DNS error %d."), h_errno);
 		}
 		else
 #endif /* HAVE_RES_SEARCH */
@@ -1352,20 +1339,11 @@ is restored."));
 
 		/* show user how many messages we downloaded */
 		if (idp->id)
-#ifdef HAVE_SNPRINTF
 		    (void) snprintf(buf, sizeof(buf),
-#else
-		    (void) sprintf(buf,
-#endif /* HAVE_SNPRINTF */
 				   GT_("%s at %s (folder %s)"),
 				   ctl->remotename, ctl->server.pollname, idp->id);
 		else
-#ifdef HAVE_SNPRINTF
-		    (void) snprintf(buf, sizeof(buf),
-#else
-		    (void) sprintf(buf,
-#endif /* HAVE_SNPRINTF */
-			       GT_("%s at %s"),
+		    (void) snprintf(buf, sizeof(buf), GT_("%s at %s"),
 				   ctl->remotename, ctl->server.pollname);
 		if (outlevel > O_SILENT)
 		{

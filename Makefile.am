@@ -25,6 +25,19 @@ libfm_a_DEPENDENCIES=	$(EXTRAOBJ)
 LDADD	=		libfm.a @LIBINTL@ $(LIBOBJS)
 DEPENDENCIES=		libfm.a $(LIBOBJS)
 
+check_PROGRAMS=
+
+if NEED_TRIO
+noinst_LIBRARIES+=	libtrio.a
+libtrio_a_SOURCES=	trio/triostr.c trio/trio.c trio/trionan.c \
+			trio/trio.h trio/triop.h trio/triodef.h \
+			trio/trionan.h trio/triostr.h
+check_PROGRAMS+=	regression
+regression_SOURCES=	trio/regression.c
+LDADD +=		libtrio.a -lm
+TESTS=			regression
+endif
+
 fetchmail_SOURCES=	fetchmail.h getopt.h \
 		i18n.h kerberos.h md5.h mx.h netrc.h ntlm.h \
 		smbbyteorder.h smbdes.h smbmd4.h smbencrypt.h smtp.h \
@@ -38,7 +51,7 @@ fetchmail_SOURCES=	fetchmail.h getopt.h \
 		smbmd4.c smbutil.c ipv6-connect.c lock.c \
 		rcfile_l.l rcfile_y.y ucs/norm_charmap.c
 
-check_PROGRAMS=	rfc822 unmime netrc rfc2047e
+check_PROGRAMS +=	rfc822 unmime netrc rfc2047e
 
 rfc2047e_CFLAGS=	-DTEST
 
@@ -64,7 +77,8 @@ DISTDOCS=	FAQ FEATURES NOTES fetchmail-man.html fetchmail-FAQ.html \
 # extra directories to ship
 distdirs = rh-config contrib beos
 
-EXTRA_DIST= $(DISTDOCS) fetchmail.spec $(distdirs) ucs/README.svn
+EXTRA_DIST= $(DISTDOCS) fetchmail.spec $(distdirs) ucs/README.svn \
+	    trio/CHANGES trio/README
 
 FAQ: fetchmail-FAQ.html
 	AWK=$(AWK) $(SHELL) $(srcdir)/html2txt.sh $(srcdir)/fetchmail-FAQ.html >$@ || { rm -f $@ ; exit 1 ; }

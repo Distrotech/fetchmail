@@ -510,13 +510,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	imap_canonicalize(remotename, ctl->remotename, NAMELEN);
 	imap_canonicalize(password, ctl->password, PASSWORDLEN);
 
-#ifdef HAVE_SNPRINTF
 	snprintf(shroud, sizeof (shroud), "\"%s\"", password);
-#else
-	strcpy(shroud, "\"");
-	strcat(shroud, password);
-	strcat(shroud, "\"");
-#endif
 	ok = gen_transact(sock, "LOGIN \"%s\" \"%s\"", remotename, password);
 	shroud[0] = '\0';
 #ifdef SSL_ENABLE
