@@ -35,7 +35,7 @@ static flag do_idle;
 static char capabilities[MSGBUFSIZE+1];
 static unsigned int *unseen_messages;
 
-int imap_ok(int sock, char *argbuf)
+static int imap_ok(int sock, char *argbuf)
 /* parse command response */
 {
     char buf[MSGBUFSIZE+1];
@@ -210,7 +210,7 @@ static int do_imap_ntlm(int sock, struct query *ctl)
 }
 #endif /* NTLM */
 
-int imap_canonicalize(char *result, char *raw, int maxlen)
+static int imap_canonicalize(char *result, char *raw, int maxlen)
 /* encode an IMAP password as per RFC1730's quoting conventions */
 {
     int i, j;
@@ -227,7 +227,7 @@ int imap_canonicalize(char *result, char *raw, int maxlen)
     return(i);
 }
 
-int imap_getauth(int sock, struct query *ctl, char *greeting)
+static int imap_getauth(int sock, struct query *ctl, char *greeting)
 /* apply for connection authorization */
 {
     int ok = 0;

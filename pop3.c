@@ -41,7 +41,7 @@ static char lastok[POPBUFSIZE+1];
 
 #define DOTLINE(s)	(s[0] == '.' && (s[1]=='\r'||s[1]=='\n'||s[1]=='\0'))
 
-int pop3_ok (int sock, char *argbuf)
+static int pop3_ok (int sock, char *argbuf)
 /* parse command response */
 {
     int ok;
@@ -49,8 +49,7 @@ int pop3_ok (int sock, char *argbuf)
     char *bufp;
 
     if ((ok = gen_recv(sock, buf, sizeof(buf))) == 0)
-    {
-	bufp = buf;
+    {	bufp = buf;
 	if (*bufp == '+' || *bufp == '-')
 	    bufp++;
 	else
@@ -123,7 +122,7 @@ int pop3_ok (int sock, char *argbuf)
     return(ok);
 }
 
-int pop3_getauth(int sock, struct query *ctl, char *greeting)
+static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 /* apply for connection authorization */
 {
     int ok;
@@ -346,8 +345,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
     return(PS_SUCCESS);
 }
 
-static int
-pop3_gettopid( int sock, int num , char *id)
+static int pop3_gettopid( int sock, int num , char *id)
 {
     int ok;
     int got_it;
@@ -370,8 +368,7 @@ pop3_gettopid( int sock, int num , char *id)
     return 0;
 }
 
-static int
-pop3_slowuidl( int sock,  struct query *ctl, int *countp, int *newp)
+static int pop3_slowuidl( int sock,  struct query *ctl, int *countp, int *newp)
 {
     /* This approach tries to get the message headers from the
      * remote hosts and compares the message-id to the already known

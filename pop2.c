@@ -17,7 +17,7 @@
 
 static int pound_arg, equal_arg;
 
-int pop2_ok (int sock, char *argbuf)
+static int pop2_ok (int sock, char *argbuf)
 /* parse POP2 command response */
 {
     int ok;
@@ -51,7 +51,7 @@ int pop2_ok (int sock, char *argbuf)
     return(ok);
 }
 
-int pop2_getauth(int sock, struct query *ctl, char *buf)
+static int pop2_getauth(int sock, struct query *ctl, char *buf)
 /* apply for connection authorization */
 {
     return(gen_transact(sock,
