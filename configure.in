@@ -667,7 +667,7 @@ x)
     do
       if test -f "$dir/include/hesiod.h"
       then
-        CEFLAGS="$CEFLAGS -DHESIOD -I$dir/include"
+        test "$dir" != "/usr" && CEFLAGS="$CEFLAGS -DHESIOD -I$dir/include"
         LDEFLAGS="$LDEFLAGS -L$dir/lib"
         LIBS="$LIBS -lhesiod"
         with_hesiod=$dir
