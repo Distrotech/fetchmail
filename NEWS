@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-5.6.3 (Wed Feb  7 10:56:21 EST 2001), 19901 lines:
+
 * VPATH build fixed (thanks to Harry McGavran).
 * Danny O'Brien's patch allowing preauth and idle to work together.
 * Fixed a bug in configure.in that was resulting in KERBEROS_IV being
@@ -9,6 +11,8 @@
 * FAQ change: mailing lists have moved to MailMan.
 * Deal with brain-dead netmind mail missing the RFC822 delimiter line.
 * ODMR (RFC 2645) support -- untested and probably buggy!
+
+There are 276 people on fetchmail-friends and 558 on fetchmail-announce.
 
 fetchmail-5.6.2 (Fri Jan  5 16:45:47 EST 2001), 19744 lines:
 
