@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/09/23 16:13:02 $
+<td width="30%" align=right>$Date: 1997/09/23 21:16:09 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -165,7 +165,7 @@ reconfigure with <p>
 CFLAGS=-g LDFLAGS=" " ./configure
 </LISTING>
 
-and then rebuild in order to generate a version that can br gdb-traced.<p>
+and then rebuild in order to generate a version that can be gdb-traced.<p>
 
 Best of all is a mail file which, when fetched, will reproduce the
 bug under the latest (current) version.<p>
@@ -249,10 +249,13 @@ also feature IMAP (you can detect IMAP support by running fetchmail in
 AUTO mode).<P>
 
 If you have the option, we recommend using or installing IMAP4; it has
-the best facilities for tracking message "seen" states.  You can find
-sources for IMAP software at <a href="http://www.imap.org">The IMAP
-Connection</a>; we like the freeware UW IMAP and Cyrus products. UW
-IMAP is the reference implementation of IMAP.<P>
+the best facilities for tracking message "seen" states.  It also
+recovers from interrupted connections more gracefully than POP3.<P>
+
+You can find sources for IMAP software at <a
+href="http://www.imap.org"> The IMAP Connection</a>; we like the
+freeware UW IMAP and Cyrus products. UW IMAP is the reference
+implementation of IMAP.<P>
 
 <hr>
 <h2><a name="B1">B1. I get link failures when I try to build fetchmail.</a></h2>
@@ -1358,7 +1361,7 @@ template string in fetchmail.c.
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1997/09/23 16:13:02 $
+<td width="30%" align=right>$Date: 1997/09/23 21:16:09 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
