@@ -241,36 +241,43 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	    && (ctl->server.authenticate == A_KERBEROS_V4
 	     || ctl->server.authenticate == A_KERBEROS_V5
 	     || ctl->server.authenticate == A_ANY))
-	    if(ok = do_rfc1731(sock, "AUTH", ctl->server.truename))
-	        if(ctl->server.authenticate != A_ANY)
-                    break;
+	{
+	    ok = do_rfc1731(sock, "AUTH", ctl->server.truename);
+	    if (ok == PS_SUCCESS || ctl->server.authenticate != A_ANY)
+		break;
+	}
 #endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
 
 #if defined(GSSAPI)
 	if (has_gssapi &&
 	    (ctl->server.authenticate == A_GSSAPI ||
 	     ctl->server.authenticate == A_ANY))
-	    if(ok = do_gssauth(sock, "AUTH", 
-			       ctl->server.truename, ctl->remotename))
-	        if(ctl->server.authenticate != A_ANY)
-                    break;
+	{
+	    ok = do_gssauth(sock,"AUTH",ctl->server.truename,ctl->remotename);
+	    if (ok == PS_SUCCESS || ctl->server.authenticate != A_ANY)
+		break;
+	}
 #endif /* defined(GSSAPI) */
 
 #ifdef OPIE_ENABLE
 	if (has_otp &&
 	    (ctl->server.authenticate == A_OTP ||
 	     ctl->server.authenticate == A_ANY))
-	    if(ok = do_otp(sock, "AUTH", ctl))
-	        if(ctl->server.authenticate != A_ANY)
-                    break;
+	{
+	    ok = do_otp(sock, "AUTH", ctl);
+	    if (ok == PS_SUCCESS || ctl->server.authenticate != A_ANY)
+		break;
+	}
 #endif /* OPIE_ENABLE */
 
 	if (has_cram &&
 	    (ctl->server.authenticate == A_CRAM_MD5 ||
 	     ctl->server.authenticate == A_ANY))
-	    if(ok = do_cram_md5(sock, "AUTH", ctl))
-	        if(ctl->server.authenticate != A_ANY)
-                    break;
+	{
+	    ok = do_cram_md5(sock, "AUTH", ctl);
+	    if (ok == PS_SUCCESS || ctl->server.authenticate != A_ANY)
+		break;
+	}
 
 	/* ordinary validation, no one-time password or RPA */ 
 	gen_transact(sock, "USER %s", ctl->remotename);
