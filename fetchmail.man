@@ -266,7 +266,7 @@ to the server using the specified base protocol over a connection secured
 by SSL.  SSL support must be present at the server.  If no port is
 specified, the connection is attempted to the well known port of the SSL
 version of the base protocol.  This is generally a different port than the
-port used by the base protocol.  For imap, this is port 143 for the clear
+port used by the base protocol.  For IMAP, this is port 143 for the clear
 protocol and port 993 for the SSL secured protocol.
 .TP
 .B \--sslcert <name>
@@ -511,7 +511,7 @@ doesn't support any of those will it ship your password en clair.
 Other values may be used to force various authentication methods
 (\fBssh\fR suppresses authentication).  Any value other than
 \fIpassword\fR, \fIcram-md5\fR, \fIntlm\fR or \fIotp\fR suppresses fetchmail's
-normal inquiry for a password.  Specify \fBssh\fR when you are using
+normal inquiry for a password.  Specify \fIssh\fR when you are using
 an end-to-end secure connection such as an ssh tunnel; specify
 \fRgssapi\fR or \fBkerberos_v4\fR if you are using a protocol variant
 that employs GSSAPI or K4.  Choosing KPOP protocol automatically
