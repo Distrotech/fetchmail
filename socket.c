@@ -70,11 +70,55 @@ static int h_errno;
 #endif /* NET_SECURITY */
 
 #ifdef HAVE_SOCKETPAIR
+const char **parse_plugin(const char *plugin, const char *host, const char *service)
+{	const char **argvec;
+	char *c, *p, *plugin_copy;
+	unsigned int s = 2 * sizeof(char*), i;
+
+	plugin_copy = strdup(plugin);
+	if (!plugin_copy)
+	{
+		report(stderr, _("fetchmail: malloc failed\n"));
+		return NULL;
+	}
+	for (c = p = plugin_copy; *c; c++)
+	{	if (isspace(*c) && !isspace(*p))
+			s += sizeof(char*);
+		p = c;
+	}
+	argvec = malloc(s);
+	if (!argvec)
+	{
+		report(stderr, _("fetchmail: malloc failed\n"));
+		return NULL;
+	}
+	memset(argvec, 0, s);
+	for (c = p = plugin_copy, i = 0; *c; c++)
+	{	if ((!isspace(*c)) && (c == p ? 1 : isspace(*p))) {
+			argvec[i] = c;
+			i++;
+		}
+		p = c;
+	}
+	for (c = plugin_copy; *c; c++)
+	{	if (isspace(*c))
+			*c = 0;
+	}
+	for (i = 0; argvec[i]; i++)
+	{	if (strcmp(argvec[i], "%h") == 0)
+			argvec[i] = host;
+		if (strcmp(argvec[i], "%p") == 0)
+			argvec[i] = service;
+	}
+	return argvec;
+}
+
 static int handle_plugin(const char *host,
 			 const char *service, const char *plugin)
 /* get a socket mediated through a given external command */
 {
     int fds[2];
+    const char **argvec;
     if (socketpair(AF_UNIX,SOCK_STREAM,0,fds))
     {
 	report(stderr, _("fetchmail: socketpair failed\n"));
@@ -98,8 +142,9 @@ static int handle_plugin(const char *host,
 		(void) close(fds[0]);
 		if (outlevel >= O_VERBOSE)
 		    report(stderr, _("running %s %s %s\n"), plugin, host, service);
-		execlp(plugin,plugin,host,service,0);
-		report(stderr, _("execl(%s) failed\n"), plugin);
+		argvec = parse_plugin(plugin,host,service);
+		execvp(*argvec, argvec);
+		report(stderr, _("execvp(%s) failed\n"), *argvec);
 		exit(0);
 		break;
 	default:	/* parent */

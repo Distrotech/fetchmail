@@ -653,7 +653,8 @@ int main(int argc, char **argv)
 
 #ifdef POP3_ENABLE
 		    /* leave the UIDL state alone if there have been any errors */
-		    if (!check_only && !querystatus)
+		    if (!check_only &&
+				((querystatus==PS_SUCCESS) || (querystatus==PS_NOMAIL)))
 			uid_swap_lists(ctl);
 #endif  /* POP3_ENABLE */
 

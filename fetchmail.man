@@ -238,11 +238,11 @@ the calkling user will be notified by email if this happens.
 .B \--plugin <command>
 (Keyword: plugin)
 The plugin option allows you to use an external program to establish the
-TCP connection.  This is useful if you want to use socks or need some
-special firewalling setup.  The program will be looked up in $PATH and
-it will be passed two arguments: the name of the server and the name of
-the port.  Fetchmail will write to the plugin's stdin and read from
-the plugin's stdout.
+TCP connection.  This is useful if you want to use socks, SSL, ssh, or
+need some special firewalling setup.  The program will be looked up in
+$PATH and can optionally be passed the hostname and port as arguments
+using "%h" and "%p" respectively.  Fetchmail will write to the plugin's
+stdin and read from the plugin's stdout.
 .TP
 .B \--plugout <command>
 (Keyword: plugout)
@@ -1710,6 +1710,16 @@ preconnect command sets up the ssh.
 poll mailhost.net via localhost port 1234 with proto pop3:
         preconnect "ssh -f -L 1234:mailhost.net:110
 		mailhost.net sleep 20 </dev/null >/dev/null";
+.fi
+
+.PP
+Here's an another example configuration using ssh and the plugin option.
+The queries are made directly on the stdin and stdout of imapd via ssh.
+Note that in this setup, IMAP authentication can be skipped.
+
+.nf
+poll mailhost.net with proto imap and preauth ssh:
+        plugin "ssh %h /usr/sbin/imapd";
 .fi
 
 .SH THE USE AND ABUSE OF MULTIDROP MAILBOXES

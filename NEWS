@@ -2,11 +2,14 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+* Dave Zarzycki's patch to enhance plugins, adding %h and %p.
 * Vitezslav Samel's patch to fix a Y2K bug in lsmgen.sh.
 * Fixed a fatal typo in fetchmailconf.
 * Resolved Debian bug #67559. It was a misdiagnosis.
 * Resolved Debian bugs #62115, #61983.
 * Return PS_NOMAIL when no server entries are active.
+* pt_BR Update from George Godoy.
+* David Taylor's fixes for the UIDL code.
 
 fetchmail-5.4.4 (Sun Jul 23 15:56:16 EDT 2000), 19172 lines:
 

@@ -470,8 +470,10 @@ void write_saved_lists(struct query *hostlist, const char *idfile)
     /* if all lists are empty, nuke the file */
     idcount = 0;
     for (ctl = hostlist; ctl; ctl = ctl->next) {
-	if (ctl->oldsaved)
-	    idcount++;
+        for (idp = ctl->oldsaved; idp; idp = idp->next)
+            if (idp->val.status.mark == UID_SEEN
+	    			|| idp->val.status.mark == UID_DELETED)
+                idcount++;
     }
 
     /* either nuke the file or write updated last-seen IDs */

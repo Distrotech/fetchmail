@@ -2201,7 +2201,8 @@ const int maxfetch;		/* maximum number of messages to fetch */
 			    struct idlist	*sdp;
 
 			    for (sdp = ctl->newsaved; sdp; sdp = sdp->next)
-				if (sdp->val.status.num == num)
+				if ((sdp->val.status.num == num)
+						&& (!toolarge || oldmsg))
 				    sdp->val.status.mark = UID_SEEN;
 			}
 
