@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/07/25 18:15:58 $
+<td width="30%" align=right>$Date: 1998/07/31 20:56:28 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -55,7 +55,7 @@ IP address?</a><br>
 <a href="#C1">C1. Why do I need a .fetchmailrc when running as root on my own machine?</a><br>
 <a href="#C2">C2. How can I arrange for a fetchmail daemon to get killed when I log out?</a><br>
 <a href="#C3">C3. How do I know what interface and address to use with --interface?</a><br>
-<a href="#C4">C4. How can I set up support for sendmail's anti-spam 571 response?</a><br>
+<a href="#C4">C4. How can I set up support for sendmail's anti-spam features?</a><br>
 
 <h1>How to make fetchmail play nice with other software:</h1>
 
@@ -831,72 +831,47 @@ would work.  To range over any value of the last two octets
 </pre>
 
 <hr>
-<h2><a name="C4">C4. How can I set up support for sendmail's anti-spam 571 response?</a></h2>
+<h2><a name="C4">C4. How can I set up support for sendmail's anti-spam features?</a></h2>
 
-Rachel Polanskis <r.polanskis@nepean.uws.edu.au> writes:<p>
+This answer covers versions of sendmail from 8.8.7 (the version
+installed in Red Hat 5.1) upwards.  If you have an older version,
+upgrade to sendmail 8.9.<P>
 
-Basically you need to use the "check_*" rules in sendmail.
-These are rules introduced since version 8.8.2<p>
+Stock sendmails can now do anti-spam exclusions based on a database of
+filter rules.  The human-readable form of the database is at
+<tt>/etc/mail/deny</tt>. The database itself is at
+<tt>/etc/mail/deny.db</tt>.<P>
 
-The idea is to generate a list of domains and addresses that are placed into 
-a file - I call mine "sendmail.rej" and you place just one domain 
-or email address on each line.   During the SMTP transaction, this file
-is checked and if there is a match, the message is refused, with
-a suitable "Service not available" message sent back to the sender.<p>
+<P>The table itself uses email addresses, domain names, and network
+numbers as keys.  For example,</P>
+<PRE>
+spammer@aol.com         REJECT
+cyberspammer.com        REJECT
+192.168.212             REJECT
+</PRE>
+<P>would refuse mail from spammer@aol.com, any user from
+cyberspammer.com (or any host within the cyberspammer.com domain), and
+any host on the 192.168.212.* network.  (This feature can be used to
+do other things as well; see the <a
+href="http://www.sendmail.org/m4/anti-spam.html">sendmail
+documentattion</a> for details)</P>
 
-With the feature enabled in fetchmail, the mail is simply deleted, 
-with no further processing.<p>
-
-The only drawback when blocking spam with fetchmail is that you 
-do not get the satisfaction of sending an error back to the sender.<p>
-
-To actually use the check_mail rules in sendmail 8.8.2 or better, 
-you need to know how to generate a sendmail.cf file from the m4 
-config files distributed with sendmail.<p>
-
-The actual rules can be found at the following URLS:<p>
-
-<a href="http://www.informatik.uni-kiel.de/%7Eca/email/check.html">
-http://www.informatik.uni-kiel.de/%7Eca/email/check.html</a><p>
-
-This one is by Claus A&szlig;man, who has documented more of sendmail then
-I can digest!
-
-Remember, when copying these rulesets off the web, that there are tabs 
-embedded in them, that may not be preserved.  You <em>must</em> reintroduce
-these tabs into the rules to make them work properly.  <p>
-
-Once you have your ruleset in place, and have generated a nice sendmail.cf
-file, and the list of blocked sites,  try telneting to your
-SMTP port to test it, and send a message with a blocked address in it.<p>
-
-You should see a message similar to:<p>
+To actually set up the database, run 
 
 <pre>
-     "571 unsolicited email is refused"
+makemap hash deny &lt;deny
 </pre>
+in /etc/mail.<P>
 
-Next, if you have access to a host that you can send mail from, that
-is <em>not</em> your mail host, add that host to your spamlist and
-restart sendmail.<p>
-
-Send a message to your mailing address from that host and then pop off
-the message with fetchmail, using the -v argument.  You can monitor
-the SMTP transaction, and when the FROM address is parsed, if sendmail
-sees that it is an address in spamlist, fetchmail will flush and
-delete it.<p>
+To test, send a message to your mailing address from that host and
+then pop off the message with fetchmail, using the -v argument.  You
+can monitor the SMTP transaction, and when the FROM address is parsed,
+if sendmail sees that it is an address in spamlist, fetchmail will
+flush and delete it.<p>
 
 Under no circumstances put your <strong>mailhost</strong> or <strong>any host
 you accept mail from</strong> using fetchmail into your reject file.  You
 <strong>will</strong> lose mail if you do this!!!<p>
-
-The check_ rules work, and they work well. Coupled with fetchmail's
-ability to respond to the appropriate error messages, you can be assured
-of never seeing a spam from any address you put in the reject list.<p>
-
-The only thing that is missing, as mentioned previously, is the ability
-to allow sendmail to process the message further and generate an error
-message to the sender.  <p>
 
 <hr>
 <h2><a name="T1">T1. How can I use fetchmail with sendmail?</a></h2>
@@ -2089,7 +2064,7 @@ Re-ordering messages is a user-agent function, anyway.<P>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 1998/07/25 18:15:58 $
+<td width="30%" align=right>$Date: 1998/07/31 20:56:28 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

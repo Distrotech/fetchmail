@@ -5,6 +5,7 @@ fetchmail-4.5.5 ():
 * Andrew Cagney's improvement to Received-line parsing.
 * Kent Robotti sent an updated version of fetchsetup.
 * Fixed the spam-block code that I broke in 4.5.3 :-(.
+* Updated the entry on setting up sendmail spam blocks.
 
 There are 260 people on fetchmail-friends and 252 on fetchmail-announce.
 
