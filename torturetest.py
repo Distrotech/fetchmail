@@ -148,7 +148,7 @@ if __name__ == "__main__":
             site.fetch()
             if verbose:
                 print site.output
-            if not site.failed():
+            if site.failed():
                 failures += 1
             else:
                 successes += 1
