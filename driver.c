@@ -332,10 +332,14 @@ struct query *ctl;	/* query control record */
 	else if (headers)	/* OK, we're at end of headers now */
 	{
 	    char		*cp;
-	    struct idlist 	*idp, *xmit_names;
+	    struct idlist 	*idp, *xmit_names, *bad_addresses;
+#ifdef HAVE_RES_SEARCH
+	    int			no_local_matches = FALSE;
+#endif /* HAVE_RES_SEARCH */
 
 	    /* cons up a list of local recipients */
 	    xmit_names = (struct idlist *)NULL;
+	    bad_addresses = (struct idlist *)NULL;
 #ifdef HAVE_RES_SEARCH
 	    /* is this a multidrop box? */
 	    if (MULTIDROP(ctl))
@@ -344,6 +348,8 @@ struct query *ctl;	/* query control record */
 		find_server_names(tohdr,  ctl, &xmit_names);
 		find_server_names(cchdr,  ctl, &xmit_names);
 		find_server_names(bcchdr, ctl, &xmit_names);
+		if (!xmit_names)
+		    no_local_matches = TRUE;
 	    }
 	    else	/* it's a single-drop box, use first localname */
 #endif /* HAVE_RES_SEARCH */
@@ -432,9 +438,9 @@ struct query *ctl;	/* query control record */
 		for (idp = xmit_names; idp; idp = idp->next)
 		    if (SMTP_rcpt(sinkfp, idp->id) != SM_OK)
 		    {
+			save_uid(&bad_addresses, -1, idp->id);
 			fprintf(stderr, 
-				"fetchmail: SMTP listener doesn't like the To address `%s'\n", idp->id);
-			return(PS_SMTP);
+				"fetchmail: SMTP listener doesn't like recipient address `%s'\n", idp->id);
 		    }
 
 		SMTP_data(sinkfp);
@@ -475,6 +481,47 @@ struct query *ctl;	/* query control record */
 		fputs("#", stderr);
 	    free(headers);
 	    headers = NULL;
+
+	    /* write error notifications */
+#ifdef HAVE_RES_SEARCH
+	    if (no_local_matches || bad_addresses)
+#endif /* HAVE_RES_SEARCH */
+	    if (bad_addresses)
+	    {
+		int	errlen = 0;
+		char	errhd[USERNAMELEN + POPBUFSIZE], *errmsg;
+
+		(void) strcpy(errmsg, "X-Fetchmail-Error: ");
+#ifdef HAVE_RES_SEARCH
+		if (no_local_matches)
+		{
+		    strcat(errhd, "no declared local names matched recipient addresses");
+		    if (bad_addresses)
+			strcat(errhd, "; ");
+		}
+#endif /* HAVE_RES_SEARCH */
+		strcat(errhd, "SMTP listener rejected recipient addresses: ");
+		errlen = strlen(errhd);
+		for (idp = bad_addresses; idp; idp = idp->next)
+		    errlen += strlen(idp->id) + 2;
+
+		errmsg = alloca(errlen+1);
+		(void) strcpy(errmsg, errhd);
+		for (idp = bad_addresses; idp; idp = idp->next)
+		{
+		    strcat(errmsg, idp->id);
+		    if (idp->next)
+			strcat(errmsg, ", ");
+		}
+		free_uid_list(&bad_addresses);
+
+		strcat(errmsg, "\n");
+
+		if (ctl->mda[0])
+		    write(mboxfd, errmsg, strlen(errmsg));
+		else
+		    SockWrite(errmsg, strlen(errmsg), sinkfp);
+	    }
 	}
 
 	/* SMTP byte-stuffing */
