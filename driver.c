@@ -1042,31 +1042,43 @@ int num;		/* index of message */
 	    }
 	}
 
+	/* utter any per-message Received information we need here */
+	{
+	    time_t	now;
+
+	    /* write a line describing fetchmail's processing of the message */
+	    sprintf(buf,
+    "Received: from %s\r\n\tby %s (fetchmail-%s/%s) running as %s\r\n",
+		    ctl->server.truename, 
+		    fetchmailhost, 
+		    RELEASE_ID,
+		    protocol->name,
+		    ctl->remotename);
+	    if (!good_addresses)
+		sprintf(buf + strlen(buf), 
+			"\tfor <%s@%s> (by default); ",
+			user, desthost);
+	    if (good_addresses == 1)
+	    {
+		for (idp = xmit_names; idp; idp = idp->next)
+		    if (idp->val.num == XMIT_ACCEPT)
+		    {
+			sprintf(buf + strlen(buf),
+				"\tfor <%s@%s>; ", idp->id, desthost);
+			break;
+		    }
+	    }
+	    time(&now);
+	    strcat(buf, ctime(&now));
+	    strcpy(buf + strlen(buf) - 1, "\r\n");
+	}
+
 	/* tell it we're ready to send data */
 	SMTP_data(ctl->smtp_socket);
     }
 
-    /* we may need to strip carriage returns */
-    if (ctl->stripcr)
-    {
-	char	*sp, *tp;
-
-	for (sp = tp = headers; *sp; sp++)
-	    if (*sp != '\r')
-		*tp++ =  *sp;
-	*tp = '\0';
-
-    }
-
-    /* write all the headers */
-    n = 0;
-    if (ctl->mda && sinkfp)
-	n = fwrite(headers, 1, strlen(headers), sinkfp);
-    else if (ctl->smtp_socket != -1)
-	n = SockWrite(ctl->smtp_socket, headers, strlen(headers));
-    free(headers);
-
-    if (n < 0)
+    /* ship out the synthetic Received line and the headers */
+    if (stuffline(ctl, buf) < 0 || stuffline(ctl, headers) < 0)
     {
 	error(0, errno, "writing RFC822 headers");
 	if (ctl->mda)
