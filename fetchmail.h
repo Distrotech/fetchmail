@@ -124,7 +124,6 @@ int doPOP3 (struct hostrec *);
 int doIMAP (struct hostrec *);
 
 int parsecmdline (int, char **, struct hostrec *);
-int setdefaults (struct hostrec *);
 char *getnextserver (int argc, char **, int *);
 char *MD5Digest (char *);
 int openmailpipe (struct hostrec *);

@@ -238,65 +238,6 @@ struct hostrec *queryctl;
 
   return(optind);
 }
-         
-
-/*********************************************************************
-  function:      setdefaults
-  description:   set reasonable default values for unspecified options.
-  arguments:     
-    options      option values parsed from the command-line; unspeci-
-                 fied options must be filled with zero.
-
-  return value:  zero if defaults were successfully set, else non-zero
-                 (indicates a problem reading /etc/passwd).
-  calls:         none.
-  globals:       writes outlevel, rcfile.
- *********************************************************************/
-#include <stdlib.h>
-
-int setdefaults (queryctl)
-struct hostrec *queryctl;
-{
-    char *user, *home;
-
-    memset(queryctl, '\0', sizeof(*queryctl));
-
-    if ((user = getenv("USER")) == (char *)NULL
-		|| (home = getenv("HOME")) == (char *)NULL)
-    {
-	struct passwd *pw;
-
-	if ((pw = getpwuid(getuid())) != NULL)
-	{
-	    user = pw->pw_name;
-	    home = pw->pw_dir;
-	}
-	else
-	{
-	    fprintf(stderr,"I can't find your name and home directory!\n");
-	    return(-1);
-	}
-    }
-
-    queryctl->protocol = P_AUTO;
-    queryctl->keep = 0;
-    queryctl->norewrite = 0;
-
-    strcpy(queryctl->remotename, user);
-    strcpy(queryctl->smtphost, "localhost");
-
-    rcfile = 
-	(char *) xmalloc(strlen(home)+strlen(RCFILE_NAME)+2);
-    strcpy(rcfile, home);
-    strcat(rcfile, "/");
-    strcat(rcfile, RCFILE_NAME);
-
-    outlevel = O_NORMAL;
-
-    return(0);
-}
-
-
 
 /******************************************************************
   function:	getnextserver

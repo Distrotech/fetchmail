@@ -83,12 +83,43 @@ char **argv;
     int mboxfd, st, sargc;
     struct hostrec cmd_opts, def_opts;
     int parsestatus, implicitmode;
-    char *servername, *user, *tmpdir, tmpbuf[BUFSIZ], *sargv[64]; 
+    char *servername, *user, *home, *tmpdir, tmpbuf[BUFSIZ], *sargv[64]; 
     FILE	*tmpfp;
     pid_t pid;
 
-    if (setdefaults(&def_opts) != 0)
-	exit(PS_UNDEFINED);
+    memset(&def_opts, '\0', sizeof(struct hostrec));
+
+    if ((user = getenv("USER")) == (char *)NULL)
+        user = getenv("LOGNAME");
+
+    if ((user == (char *)NULL) || (home = getenv("HOME")) == (char *)NULL)
+    {
+	struct passwd *pw;
+
+	if ((pw = getpwuid(getuid())) != NULL)
+	{
+	    user = pw->pw_name;
+	    home = pw->pw_dir;
+	}
+	else
+	{
+	    fprintf(stderr,"I can't find your name and home directory!\n");
+	    exit(PS_UNDEFINED);
+	}
+    }
+
+    def_opts.protocol = P_AUTO;
+
+    strcpy(def_opts.remotename, user);
+    strcpy(def_opts.smtphost, "localhost");
+
+    rcfile = 
+	(char *) xmalloc(strlen(home)+strlen(RCFILE_NAME)+2);
+    strcpy(rcfile, home);
+    strcat(rcfile, "/");
+    strcat(rcfile, RCFILE_NAME);
+
+    outlevel = O_NORMAL;
 
     if (argc > sizeof(sargv))
 	exit(PS_SYNTAX);
@@ -153,11 +184,8 @@ char **argv;
     strcpy(tmpbuf, tmpdir);
     strcat(tmpbuf, "/fetchmail-");
     gethostname(tmpbuf + strlen(tmpbuf), HOSTLEN+1);
-    if ((user = getenv("USER")) != (char *)NULL)
-    {
-	strcat(tmpbuf, "-");
-	strcat(tmpbuf, user);
-    }
+    strcat(tmpbuf, "-");
+    strcat(tmpbuf, user);
 
     /* perhaps we just want to check options? */
     if (versioninfo) {
