@@ -860,8 +860,8 @@ int do_protocol(ctl, proto)
 struct query *ctl;		/* parsed options with merged-in defaults */
 const struct method *proto;	/* protocol method table */
 {
-    int ok, js;
-    char *msg;
+    int ok, js, pst;
+    char *msg, *sp, *cp, realname[HOSTLEN];
     void (*sigsave)();
 
 #ifndef KERBEROS_V4
@@ -959,6 +959,67 @@ const struct method *proto;	/* protocol method table */
 	    goto cleanUp;
 	vtalarm(ctl->timeout);
 
+	/*
+	 * Try to parse the host's actual name out of the greeting message.
+	 * We do this so that the progress messages will make sense even
+	 * if the connection is indirected through ssh --- *don't* use
+	 * this for error logging as the names in that should correlate
+	 * directly back to rc file entries.
+	 *
+	 * This assumes that the first space-delimited token found
+	 * that contains at least two dots (with the characters on
+	 * each side of the dot alphanumeric to exclude version
+	 * numbers) is the hostname.  If no such token is found, fall
+	 * back on the .fetchmailrc id.
+	 */
+	pst = 0;
+	for (cp = buf; *cp; cp++)
+	{
+	    switch (pst)
+	    {
+	    case 0:		/* looking for blank-delimited token */
+		if (*cp != ' ')
+		{
+		    sp = cp;
+		    pst = 1;
+		}
+		break;
+
+	    case 1:		/* looking for first dot */
+		if (*cp == ' ')
+		    pst = 0;
+		else if (*cp == '.' && isalpha(cp[1]) && isalpha(cp[-1]))
+		    pst = 2;
+		break;
+
+	    case 2:		/* looking for second dot */
+		if (*cp == ' ')
+		    pst = 0;
+		else if (*cp == '.' && isalpha(cp[1]) && isalpha(cp[-1]))
+		    pst = 3;
+		break;
+
+	    case 3:		/* looking for trailing space */
+		if (*cp == ' ')
+		{
+		    pst = 4;
+		    goto done;
+		}
+		break;
+	    }
+	}
+    done:
+	if (pst == 4)
+	{
+	    char	*tp = realname;
+
+	    while (sp < cp)
+		*tp++ = *sp++;
+	    *tp = '\0';
+	}
+	else
+	    strcpy(realname, ctl->servernames->id);
+
 	/* try to get authorized to fetch mail */
 	shroud = ctl->password;
 	ok = (protocol->getauth)(sockfp, ctl, buf);
@@ -980,18 +1041,18 @@ const struct method *proto;	/* protocol method table */
 	    if (count == 0)
 		error(0, 0, "No mail from %s@%s", 
 			ctl->remotename,
-			ctl->servernames->id);
+			realname);
 	    else
 	    {
 		if (new != -1 && (count - new) > 0)
 		    error(0, 0, "%d message%s (%d seen) from %s@%s.",
 		    		count, count > 1 ? "s" : "", count-new,
 				ctl->remotename,
-				ctl->servernames->id);
+				realname);
 		else
 		    error(0, 0, "%d message%s from %s@%s.", count, count > 1 ? "s" : "",
 				ctl->remotename,
-				ctl->servernames->id);
+				realname);
 	    }
 
 	/* we may need to get sizes in order to check message limits */

@@ -5,6 +5,10 @@ fetchmail-2.8 ()
 
 features -- 
 
+* We now get the hostname used for progress messages from the server greeting.
+  This means you'll get sensible-looking progress messages even when using
+  ssh to redirect secure connections.
+
 * Reorganized and improved man page.
 
 bugs --
