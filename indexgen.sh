@@ -161,8 +161,8 @@ Compuserve RPA, or GNU gettext internationalization support compiled
 in.  To get any of these you will have to build from sources.)<p>
 
 The latest version of fetchmail is also carried in the 
-<a href="http://sunsite.unc.edu/pub/Linux/system/mail/pop/!INDEX.html">
-Sunsite remote mail tools directory</a>.
+<a href="http://metalab.unc.edu/pub/Linux/system/mail/pop/!INDEX.html">
+Metalab remote mail tools directory</a>.
 
 <H1>Getting help with fetchmail:</H1>
 
