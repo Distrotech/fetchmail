@@ -633,7 +633,7 @@ debugging configurations.
 .PP
 The
 .B --syslog
-option (keyword: syslog) allows you to redirect status and error
+option (keyword: set syslog) allows you to redirect status and error
 messages emitted to the
 .IR syslog (3)
 system daemon if available.
@@ -651,13 +651,14 @@ option was used.
 .PP
 The 
 .B --invisible
-option tries to make fetchmail invisible.  Normally, fetchmail behaves
-like any other MTA would -- it generates a Received header into each
-message describing its place in the chain of transmission, and tells
-the MTA it forwards to that the mail came from the machine fetchmail
-itself is running on.  If the invisible option is on, the Received
-header is suppressed and fetchmail tries to spoof the MTA it forwards
-to into thinking it came directly from the mailserver host.
+option (keyword: set invisible) tries to make fetchmail invisible.
+Normally, fetchmail behaves like any other MTA would -- it generates a
+Received header into each message describing its place in the chain of
+transmission, and tells the MTA it forwards to that the mail came from
+the machine fetchmail itself is running on.  If the invisible option
+is on, the Received header is suppressed and fetchmail tries to spoof
+the MTA it forwards to into thinking it came directly from the
+mailserver host.
 .PP
 The 
 .B \-N

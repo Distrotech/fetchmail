@@ -985,7 +985,7 @@ knows all about qpopper.
 It appears you're talking to CompuServe.  You can use their special RPA
 service for authentication, but only if your fetchmail -V output's first
 line contains the string "RPA".  This is not included in stock fetchmail
-binsries; to compile it in, rebuild from sources with the configure
+binaries; to compile it in, rebuild from sources with the configure
 option --enable-RPA.
 """
             if string.find(greetline, "IMAP2bis") > 0:
