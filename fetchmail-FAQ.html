@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/07/27 20:24:24 $
+<td width="30%" align=right>$Date: 2000/08/21 03:35:41 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1054,7 +1054,7 @@ If you want to support multidrop mode, and you can get access to your
 mailserver's sendmail.cf file, it's a good idea to add this rule:<P>
 
 <pre>
-H?l?Delivered-To: $u
+H?l?Delivered-To: $h
 </pre>
 
 and declare `<CODE>envelope "Delivered-To:"</CODE>'. This will cause the
@@ -1659,7 +1659,7 @@ http://www.bieringer.de/linux/IPv6/IPv6-HOWTO/IPv6-HOWTO.html</a>
 <hr>
 <h2><a name="K3">K3. How can I get fetchmail to work with ssh?</a></h2>
 
-We have four recipes for this.<P>
+We have five recipes for this.<P>
 
 <h3>Single-User POP3</h3>
 
@@ -1840,6 +1840,20 @@ described in your FAQ.  ssh port forwarding often keeps the local port
 bound for along timeout and has timing issues requiring tricks like
 sleep, etc.  I use this method for fetching all the mail for
 mimique.com"<P>
+
+<h3>Using plugin</h3>
+
+Since 5.4.5, there's been a very simple recipe.  Use the following option:
+
+<TT>
+	plugin "ssh %h /usr/sbin/rimapd"
+</TT>
+
+You may have to use a different absolute pathname. This option tells
+fetchmail that instead of opening a connection on the server's port
+143 and doing standard IMAP authentication, fetchmail should ssh to
+the server and run rimapd, using the more secure ssh authentication
+(as well as getting ssh's encryption).<p>
 
 <hr>
 <h2><a name="K4">K4. What do I have to do to use the IMAP-GSS protocol?</a></h2>
@@ -2878,7 +2892,7 @@ install Linux on your server...<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/07/27 20:24:24 $
+<td width="30%" align=right>$Date: 2000/08/21 03:35:41 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>

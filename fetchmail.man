@@ -1122,6 +1122,9 @@ proto[col]	-p	T{
 Specify protocol (case insensitive):
 POP2, POP3, IMAP, IMAP-K4, IMAP-GSS, APOP, KPOP
 T}
+local[domains]	\&	T{
+Specify domain(s) to be regarded as local
+T}
 port    	-P	T{
 Specify TCP/IP service port
 T}

@@ -157,7 +157,7 @@ int pop3_getauth(int sock, struct query *ctl, char *greeting)
 
 		while ((ok = gen_recv(sock, buffer, sizeof(buffer))) == 0)
 		{
-		    if (DOTLINE([0]))
+		    if (DOTLINE(buffer))
 			break;
 		    if (strncasecmp(buffer, "rpa", 3) == 0)
 			has_rpa = TRUE;
