@@ -37,8 +37,9 @@ here, please consider lending me a test account.  Note that I do <em>not</em>
 need shell access, just the permissions to send mail to a mailbox the server
 looks at and to fetch mail off of it.<P>
 <p>
-I'd like to have weird things like a POP2 server and broken things like
-Microsoft Exchange on here. These are the real robustness tests.
+I'd like to have weird things like a POP2 server on here.  Also more
+closed-source servers because they tend to be broken in odd
+ways. These are the real robustness tests.
 <HR>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="/~esr">Eric's Home Page</a>

@@ -324,7 +324,7 @@ helps redirect multidrop mail.</P>
 
 <P>Donncha O Caoihm has written a Perl script called 
 <a href="http://cork.linux.ie/projects/install-sendmail/">install-sendmail</a>
-that assists you in installing sendmail and fetchmail together/</P>
+that assists you in installing sendmail and fetchmail together.</P>
 
 <P>Peter Hawkins has written a script called <a
 href="http://www.hawkins.emu.id.au/gotmail/">gotmail</a>
@@ -335,8 +335,8 @@ Yahoo webmail.</P>
 <P>A hacker identifying himself simply as \`Steines' has written a
 filter which rewrites the to-line with a line which only includes
 receipients for a given domain and renames the old to-line. It also
-rewrites the domainpart of addresses if the offical domain is
-different to local domain. You can find it <a 
+rewrites the domain-part of addresses if the offical domain is
+different from the local domain. You can find it <a 
 href="http://www.steines.com/mailf/">here</a>.</P>
 
 <H1>Fetchmail's funniest fan letter:</H1>
