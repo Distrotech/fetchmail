@@ -15,6 +15,11 @@
 				Release Notes:
 
 ------------------------------------------------------------------------------
+fetchmail-4.2.5 ()
+* Alexander Kourakos corrected his patch to avoid a buffer overrun.
+
+There are 287 people on the fetchmail-friends list.
+
 fetchmail-4.2.4 (Fri Sep 19 19:48:50 EDT 1997)
 * Small compilation cleanups, thanks to Florian laRoche.
 * Removed the length consistency check, it mysteriously fails under POP3.
