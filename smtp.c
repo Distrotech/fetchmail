@@ -168,6 +168,8 @@ int SMTP_eom(int sock)
    */
   if (smtp_mode == 'S')
       ok = SMTP_ok(sock);
+  else
+      ok = SM_OK;
 
   return ok;
 }
