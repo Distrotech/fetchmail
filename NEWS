@@ -8,7 +8,7 @@
 
 				Release Notes:
 
-fetchmail-5.1.0 ():
+fetchmail-5.0.4 (Fri Jun 11 18:32:58 EDT 1999):
 * Fixed compilation error on systems without vnsprintf.
 * No more GIFs!  RPM is now patent-encumbrance-free.
 * Fix yet another annoying qmail \n bug (thanks to Paul Gilmore).
@@ -16,8 +16,10 @@ fetchmail-5.1.0 ():
 * Added qpopper 2.53 warning to the FAQ and fetchmailconf.
 * Fix fetchmailconf to handle window-manager destroy notifications.
 * Todd <tastas@home.com> Sabin's RFC2195 support for AUTH=CRAM-MD5 under IMAP.
+* New FAQ material on single-drop use with Daemon, thanks to Phil Hunt.
+* Fix memory leak triggered by UIDL usage, and a .fetchids-trashing bug.
 
-There are 260 people on fetchmail-friends and 387 on fetchmail-announce.
+There are 261 people on fetchmail-friends and 407 on fetchmail-announce.
 
 fetchmail-5.0.3 (Sun May  2 23:39:22 EDT 1999):
 * Added FAQ item about things to check if --monitor fails with pppd.

@@ -207,10 +207,7 @@ machine in the server's queue of undelivered mail.
 Force UIDL use (effective only with POP3).  Force client-side tracking
 of `newness' of messages (UIDL stands for ``unique ID listing'' and is
 described in RFC1725).  Use with `keep' to use a mailbox as a baby
-news drop for a group of users.  Note: the implementation of this
-feature is fragile.  If you poll with a host specified on the command line,
-your saved data about seen-message UIDLs on \fIother\fR hosts is liable 
-to get clobbered. 
+news drop for a group of users.
 .TP
 .B \-P, --port
 (Keyword: port)
@@ -1793,13 +1790,6 @@ whichever of these is appropriate to wake it up.
 The RFC822 address parser used in multidrop mode chokes on some
 @-addresses that are technically legal but bizarre.  Strange uses of
 quoting and embedded comments are likely to confuse it.
-.PP
-Two users have reported that daemon-mode fetchmails leak memory.
-This may be associated with use of UIDL, or it may mean your TCP/IP
-layer is failing to garbage-collect closed sockets generated on 
-protocol errors properly; most installations do not have this
-problem. If you observe it, please report a bug.  The workaround is
-to do a fetchmail -q and restart occasionally.
 .PP
 In a message with multiple envelope headers, only the last one
 processed will be visible to fetchmail.  To get around this, use a

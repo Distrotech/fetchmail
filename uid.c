@@ -332,6 +332,7 @@ void update_str_lists(struct query *ctl)
 /* perform end-of-query actions on UID lists */
 {
     free_str_list(&ctl->oldsaved);
+    free_str_list(&scratchlist);
     ctl->oldsaved = ctl->newsaved;
     ctl->newsaved = (struct idlist *) NULL;
 
@@ -364,7 +365,7 @@ void write_saved_lists(struct query *hostlist, const char *idfile)
     }
 
     /* either nuke the file or write updated last-seen IDs */
-    if (!idcount)
+    if (!idcount && !scratchlist)
     {
 	if (outlevel >= O_DEBUG)
 	    report(stdout, "Deleting fetchids file.\n");
