@@ -1,166 +1,26 @@
-Popclient README
+			README for popclient 3.0
 
-	$Log: README,v $
-	Revision 1.3  1996/06/27 19:22:31  esr
-	Sent to ceharris.
+popclient is a full-featured, robust, well-documented POP2, POP3 and
+APOP client originally developed by Carl Harris <ceharris@mal.com> and
+now maintained by Eric S. Raymond <esr@thyrsus.com>.
 
-	Revision 1.2  1996/06/26 19:08:55  esr
-	This is what I sent Harris.
+You can find the latest version of popclient from Eric's home page
 
-	Revision 1.1  1996/06/26 15:27:06  esr
-	Initial revision
+	http://www.ccil.org/~esr
 
-	Revision 1.3  1995/09/07 22:40:58  ceharris
-	Final 3.0b4 release
+Features of POP include:
 
-	Revision 1.2  1995/08/09 01:22:47  ceharris
-	Final preparation for 3.0b2 release.
+	* POP2, POP3 and APOP support
 
-	Revision 1.1  1995/08/07 21:09:19  ceharris
-	Final preparation for popclient 3.0b1 release
+	* Easy configuration via command line or free-format .poprc file.
 
-This is a BETA release of popclient version 3.  Little if any user support
-is provided for this version of popclient.  Consider this BETA version to
-be a "developer/tester" release only.
+	* Daemon mode --  popmail can be run in background to poll
+	  one or more hosts at a specified interval.
 
-Release History
+	* Delivery via either file-append with mandatory locking or an
+	  MDA you specify.
 
-3.0b7:
+There is a man page at popclient.man.  A sample rc file is at sample.poprc.
+For a release history, see the file NEWS.
+							-- esr
 
-Eric S. Raymond <esr@thyrsus.com> hacked on 3.0b6.  Here are his change notes:
-
-CONFIGURATION AND BUILDING
-
-* The autoconfigure script incorrectly assumed that all Linuxes use
-  /usr/bin/deliver.  Under Linux it now checks for both /usr/bin/delivermail
-  and /bin/mail.
-
-* I added a distribution-maker production to Makefile.in.
-
-OPTIONS AND COMMAND LINE
-
-* I have removed the -p command-line option. Given that there's a .poprc
-  facility there is no excuse for encouraging users to put plaintext passwords
-  in scripts which might be readable.
-
-* Calling popclient with no arguments now causes it to query or operate
-  on every host in the .poprc file.
-
-* I have made --version more useful by having it dump the computed
-  connection options for each server specified.
-
-* The user can now explicitly set an MDA (such as procmail) with the
-  new option -m or -mda.  Various possible MDAs are listed on the man page.
-
-POPRC FILE SYNTAX
-
-* The .poprc lexer now supports "-enclosed strings which may contain
-  whitespace.
-
-* I added a --yydebug option to enable .poprc parser debugging at runtime
-  if the parser was generated with --debug.  It's not documented.
-
-* You may now have a `defaults' entry in .poprc which sets overrideable
-  values for other entries.  See the man page for details.
-
-* It is now possible to set keep, flush and fetchall in your .poprc file.
-
-* Fixed incorrect numbering of source lines in .poprc parse error messages.
-
-* The configure.in specification no longer uses the obsolete AC_TRY_COMPILE
-  macro (it uses AC_TRY_LINK instead).
-
-MAILBOX LOCKING
-
-* I have added mandatory locking of mailbox files where supported.
-  This will cover Linux systems, in particular.
-
-* The default behavior is now to do lock-protected append on the user's
-  system mailbox rather than using delivermail or some other MDA.
-  (This is a performance hack.)
-
-* The autoconfigure script now looks for standard mail locations.  The
-  default mail delivery agent is used only if it can't find a mail spool
-  directory in the standard places.
-
-FUNCTIONAL ENHANCEMENTS
-
-* When using POP3, message headers are edited so that replies won't foo up.
-  Anything that looks like a mail ID local to the POP host gets @ and the
-  pop servername attached to it before being appended to the user's
-  mailbox or passed to an MDA.
-
-* I have implemented daemon mode.
-
-* I have added a lock check to ensure that there is only one popclient
-  running per user, and a --quit option to kill the currently running
-  one.
-
-DOCUMENTATION
-
-* All changes and feature additions have been tested in actual use and are
-  documented on the man page.
-
-* I have turned the comments in the sample.poprc into a new manual
-  section documenting the .poprc format.
-
-MISCELLANEOUS BUG FIXES
-
-* I fixed some de-initialization bugs in pop2.c and pop3.c that led to
-  fd leaks (these became painfully obvious when I tested daemon mode!).
-
-* I've fixed the flaky parser error messages. They turned out to be due 
-  to a misdeclaration of yytext.
-
-There's only one feature I haven't been able to add successfully.  I
-want a --logfile option that redirects the daemon-mode output to a
-given file, but the code (in daemon.c near 200) unaccountably doesn't
-work (so I haven't documented it yet).
-
-3.0b5
-o	"From " header fix in pop2.c and pop3.c
-o	Surpress "..." output when --stdout option specified in pop3.c
-
-3.0b4
-o	alloca fix.
-o	various diagnostic/informational message fixes.
-
-3.0b3
-o	Support for retrieving only new messages from maildrop when
-	using POP3.  
-o	Support for retrieving only the first n lines of each message
-	when using POP3.
-o	APOP authentication support.
-o	Buffered socket input.
-
-3.0b2
-	This is a "new features" release.
-o	support for .poprc file.
-o	GNU-style long options.
-o	fixed passwords appearing in 'ps' output
-o	support for multiple servers on one command line
-
-3.0b1
-	This is mostly a test of the autoconfigure integration.
-Among the functions performed by the new configure script, is
-the ability to detect known system types, configures the mail
-delivery agent (MDA) correctly.  This should permanently solve
-the problem of using something other than an MDA for mail
-delivery (which continues to plague Linux slackware 1.2.9).
-For this beta, please check the values of MDA_PATH and MDA_ARGS
-carefully.  They should match the values found in your
-sendmail.cf file on the line which begins with "Mlocal".
-
-	Other changes from popclient version 2.21:
-
-o       no longer uses getpass() from the C library.  The
-	internal getpassword() function allows the use of long
-	passwords.
-
-o	integrated GNU getopt() for long options.  Long option	
-	names will appear in a future beta.
-
-o	Several compiler warnings fixed.
-
-o	Fixed problems related to missing include files in
-	Solaris port.
