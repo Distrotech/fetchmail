@@ -220,6 +220,9 @@ parse_netrc (file)
 		else if (!strcmp (tok, "login"))
 		    last_token = tok_login;
 
+		else if (!strcmp (tok, "user"))
+		    last_token = tok_login;
+
 		else if (!strcmp (tok, "macdef"))
 		    last_token = tok_macdef;
 
