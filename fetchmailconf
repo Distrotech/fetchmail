@@ -1036,8 +1036,9 @@ class ServerEdit(Frame, MyWidget):
             self.subwidgets[username].save()        
         self.destruct()
 
-    def refreshPort(self):
+    def defaultPort(self):
         proto = self.protocol.get()
+	# Callback to reset the port number whenever the protocol type changes.
         # We used to only reset the port if it had a default (zero) value.
         # This turns out to be a bad idea especially in Novice mode -- if
         # you set POP3 and then set IMAP, the port invisibly remained 110.
@@ -1094,11 +1095,11 @@ class ServerEdit(Frame, MyWidget):
         Label(protwin, text="Protocol").pack(side=TOP)
         ButtonBar(protwin, '',
                   self.protocol, protolist, 2,
-                  self.refreshPort) 
+                  self.defaultPort) 
         if mode != 'novice':
             LabeledEntry(protwin, 'On server TCP/IP port:',
                       self.port, leftwidth).pack(side=TOP, fill=X)
-            self.refreshPort()
+            self.defaultPort()
             Checkbutton(protwin,
                 text="POP3: track `seen' with client-side UIDLs?",
                 variable=self.uidl).pack(side=TOP)   
