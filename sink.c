@@ -40,6 +40,9 @@
 #define SIGCHLD	SIGCLD
 #endif
 
+/* makes the open_sink()/close_sink() pair non-reentrant */
+static lmtp_responses;
+
 static int smtp_open(struct query *ctl)
 /* try to open a socket to the appropriate SMTP server for this query */ 
 {
@@ -714,7 +717,7 @@ int open_sink(struct query *ctl, struct msgblk *msg,
      * We need to stash this away in order to know how many
      * response lines to expect after the LMTP end-of-message.
      */
-    msg->lmtp_responses = *good_addresses;
+    lmtp_responses = *good_addresses;
 
     return(PS_SUCCESS);
 }
@@ -789,7 +792,7 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 	 * to people who got it the first time.
 	 */
 	if (ctl->listener == LMTP_MODE)
-	    if (msg->lmtp_responses == 0)
+	    if (lmtp_responses == 0)
 	    {
 		SMTP_ok(ctl->smtp_socket); 
 
@@ -821,8 +824,8 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 		char	**responses;
 
 		/* eat the RFC2033-required responses, saving errors */ 
-		xalloca(responses, char **, sizeof(char *) * msg->lmtp_responses);
-		for (errors = i = 0; i < msg->lmtp_responses; i++)
+		xalloca(responses, char **, sizeof(char *) * lmtp_responses);
+		for (errors = i = 0; i < lmtp_responses; i++)
 		{
 		    if (SMTP_ok(ctl->smtp_socket) == SM_OK)
 			responses[i] = (char *)NULL;
