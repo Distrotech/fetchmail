@@ -10,7 +10,7 @@
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/02/26 08:20:05 $
+<td width="30%" align=right>$Date: 2000/03/02 08:32:04 $
 </table>
 <HR>
 <H1>Frequently Asked Questions About Fetchmail</H1>
@@ -1646,6 +1646,8 @@ http://www.bieringer.de/linux/IPv6/IPv6-HOWTO/IPv6-HOWTO.html</a>
 We have three recipes for this.  The first is easy to set up,
 but only supports one user at a time.<P>
 
+<h3>Single-User POP3</h3>
+
 First, a lightly edited version of a recipe from Masafumi NAKANE:<p>
 
 1. You must have ssh (the ssh client) on the local host and sshd (ssh
@@ -1684,11 +1686,18 @@ preconnect "ssh -f -L 1234:mailhost:110 sshdhost sleep 20 &lt;/dev/null &gt;/dev
 </pre>
 
 You can work this trick with IMAP too, but the port number 110 in the
-above would need to become 143.<p>
+above would need to become 143.  In either case you'll have to specify
+a password but the password will not be sent in clear.<p>
+
+There is an explanation of a similar recipe at <a
+href="http://sunsite.unc.edu/LDP/HOWTO/mini/Secure-POP+SSH.html">Secure
+POP via SSH mini-HOWTO</a>.<P>
+
+<h3>Multi-User POP3</h3>
 
 Second, a recipe from Charlie Brady &lt;cbrady@ind.tansu.com.au&gt;:<p>
 
-Charlie says: "The [previous] recipe certainly works, but
+Charlie says: "The recipe [from Masafume NAKANE] certainly works, but
 the solution I post here is better in a few respects":
 
 <UL>
@@ -1741,7 +1750,36 @@ Send a HUP signal to your inetd.
 
 Now just use localhost:1234 to access your POP server.<P>
 
-For yet a third recipe, see <a href="http://sunsite.unc.edu/LDP/HOWTO/mini/Secure-POP+SSH.html">Secure POP via SSH mini-HOWTO</a>.<P>
+<h3>Multi-User IMAP</h3>
+
+This is the preferred method.  It comes to us from Joerg Dorchain.
+He writes:<p>
+
+I have set up a special ssh-identity with no password and RSA-only
+authentication, which executes /usr/sbin/imapd when authenticated (for
+security reasons exeverything else, i.e. other commands, escape chars,
+..., are disabled). The imapd I use sees that it is not running as
+root and goes into preauthenticated mode. The only magic to to is have
+fetchmail talk to stdin of of ssh-command. This goes via the plugin
+keyword. In practise, this looks as follows:
+
+<pre>
+poll mail.dorchain.net options proto imap plugin fetchmail-imap-wrapper 
+</pre>
+
+The wrapper script looks like this:<p>
+
+<pre>
+#!/bin/sh
+exec ssh -i $HOME/.ssh/identity-imap $1 /usr/sbin/imapd
+</pre>
+
+This gives a bidirectional socket connection:<p>
+
+<pre>
+fetchmail <--> ssh <---> sshd <--> imapd
+ \---local side--/        \---remote side/
+</pre>
 
 <hr>
 <h2><a name="K4">K4. What do I have to do to use the IMAP-GSS protocol?</a></h2>
@@ -2614,7 +2652,7 @@ terminate it.<p>
 <table width="100%" cellpadding=0><tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home Page</a>
 <td width="30%" align=center>To <a href="/~esr/sitemap.html">Site Map</a>
-<td width="30%" align=right>$Date: 2000/02/26 08:20:05 $
+<td width="30%" align=right>$Date: 2000/03/02 08:32:04 $
 </table>
 
 <P><ADDRESS>Eric S. Raymond <A HREF="mailto:esr@thyrsus.com">&lt;esr@snark.thyrsus.com&gt;</A></ADDRESS>
