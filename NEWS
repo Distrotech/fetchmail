@@ -22,8 +22,9 @@ features --
 * True stdio buffering of sockets at last, thanks to Cameron McPherson.
   This should be good for a significant throughput increase.
 
-* Almost all error messages now go through the error() subroutine.  This is a
-  first step towards allowing a daemon-mode fetchmail to use syslog.
+* Almost all error messages that might be emitted in daemon mode now go
+  through the error() subroutine.  This is a first step towards allowing
+  a daemon-mode fetchmail to use syslog.
 
 bugs --
 
