@@ -196,8 +196,9 @@ clean:
 distclean: clean 
 	-$(MAKE) -C intl distclean
 	-$(MAKE) -C po distclean
-	-rm -f Makefile config.h TAGS tags
-	-rm -f config.cache config.status config.log stamp-config
+	-rm -f TAGS tags
+	# Can't do these, it messes up RPM build
+	#-rm -f config.h config.cache config.status config.log stamp-config
 
 realclean: distclean
 	-rm -f FAQ FEATURES NOTES MANIFEST 
@@ -306,8 +307,7 @@ fetchmail-man.html: fetchmail.man
 # Make distribution, update LSM with proper size, remake distribution
 # (Making fetchmail-man.html is a kluge to ensure that it will be
 # available when I upload the distribution.)
-dist: distclean Makefile.in distdocs
-	rm -f MANIFEST; make MANIFEST;
+dist: distclean MANIFEST Makefile.in distdocs
 	touch fetchmail.lsm
 	make fetchmail-$(VERSION).tar.gz 
 	lsmgen.sh $(VERSION) `wc -c fetchmail-$(VERSION).tar.gz` >fetchmail.lsm
