@@ -21,8 +21,6 @@ int prc_lineno = 1;
 %%
 
 set		{ return SET; }
-batchlimit	{ return BATCHLIMIT; }
-fetchlimit	{ return FETCHLIMIT; }
 logfile		{ return LOGFILE; }
 daemon		{ return DAEMON; }
 syslog		{ return SYSLOG; }
@@ -52,6 +50,9 @@ pre(connect)?	{ return PRECONNECT; }
 post(connect)?	{ return POSTCONNECT; }
 interface	{ return INTERFACE; }
 monitor		{ return MONITOR; }
+batchlimit	{ return BATCHLIMIT; }
+fetchlimit	{ return FETCHLIMIT; }
+expunge		{ return EXPUNGE; }
 
 is		{ return IS; }
 here		{ return HERE; }

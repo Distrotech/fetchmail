@@ -45,14 +45,15 @@
 #define LA_SMTPHOST	27
 #define LA_BATCHLIMIT	28
 #define LA_FETCHLIMIT	29
-#define LA_MDA		30
-#define LA_INTERFACE    31
-#define LA_MONITOR      32
-#define LA_YYDEBUG	33
+#define LA_EXPUNGE	30
+#define LA_MDA		31
+#define LA_INTERFACE    32
+#define LA_MONITOR      33
+#define LA_YYDEBUG	34
 
-/* options still left: CDegGhHjJoOqQRTUwWxXYzZ */
+/* options still left: CDgGhHjJoOqQRTUwWxXYzZ */
 static const char *shortoptions = 
-	"?Vcsvd:NqL:f:i:p:UP:A:t:E:u:akKFnl:r:S:b:B:m:I:M:y";
+	"?Vcsvd:NqL:f:i:p:UP:A:t:E:u:akKFnl:r:S:b:B:e:m:I:M:y";
 
 static const struct option longoptions[] = {
 /* this can be const because all flag fields are 0 and will never get set */
@@ -91,6 +92,7 @@ static const struct option longoptions[] = {
   {"smtphost",	required_argument, (int *) 0, LA_SMTPHOST    },
   {"batchlimit",required_argument, (int *) 0, LA_BATCHLIMIT  },
   {"fetchlimit",required_argument, (int *) 0, LA_FETCHLIMIT  },
+  {"expunge",   required_argument, (int *) 0, LA_EXPUNGE     },
   {"mda",	required_argument, (int *) 0, LA_MDA         },
 
 #ifdef	linux
@@ -105,8 +107,8 @@ static const struct option longoptions[] = {
 
 int parsecmdline (argc, argv, ctl)
 /* parse and validate the command line options */
-int argc;			/* argument count */
-char **argv;			/* argument strings */
+int argc;		/* argument count */
+char **argv;		/* argument strings */
 struct query *ctl;	/* option record to be initialized */
 {
     /*
@@ -298,6 +300,12 @@ struct query *ctl;	/* option record to be initialized */
 	    if (ctl->fetchlimit == 0)
 		ctl->fetchlimit = -1;
 	    break;
+	case 'e':
+	case LA_EXPUNGE:
+	    ctl->expunge = atoi(optarg);
+	    if (ctl->expunge == 0)
+		ctl->expunge = -1;
+	    break;
 	case 'm':
 	case LA_MDA:
 	    ctl->mda = xstrdup(optarg);
@@ -375,6 +383,7 @@ struct query *ctl;	/* option record to be initialized */
 	fputs("  -S, --smtphost    set SMTP forwarding host\n", stderr);
 	fputs("  -b, --batchlimit  set batch limit for SMTP connections\n", stderr);
 	fputs("  -B, --fetchlimit  set fetch limit for server connections\n", stderr);
+	fputs("  -e, --expunge     set max deletions between expunges\n", stderr);
 	fputs("  -r, --folder      specify remote folder name\n", stderr);
 	return(-1);
     }

@@ -114,6 +114,12 @@ static int pop2_trail(int sock, struct query *ctl, int number)
     return(gen_transact(sock, ctl->keep ? "ACKS" : "ACKD"));
 }
 
+static int pop2_logout(int sock, struct query *ctl)
+/* send logout command */
+{
+    return(gen_transact(sock, "QUIT"));
+}
+
 const static struct method pop2 =
 {
     "POP2",				/* Post Office Protocol v2 */
@@ -129,7 +135,7 @@ const static struct method pop2 =
     NULL,				/* no way to fetch body alone */
     pop2_trail,				/* eat message trailer */
     NULL,				/* no POP2 delete method */
-    "QUIT",				/* the POP2 exit command */
+    pop2_logout,			/* log out, we're done */
 };
 
 int doPOP2 (struct query *ctl)

@@ -1848,7 +1848,7 @@ const struct method *proto;	/* protocol method table */
 
    no_error:
 	set_timeout(ctl->server.timeout);
-	ok = gen_transact(sock, protocol->exit_cmd);
+	ok = (protocol->logout_cmd)(sock, ctl);
 	if (ok == 0)
 	    ok = (fetches > 0) ? PS_SUCCESS : PS_NOMAIL;
 	set_timeout(0);
@@ -1858,7 +1858,7 @@ const struct method *proto;	/* protocol method table */
     cleanUp:
 	set_timeout(ctl->server.timeout);
 	if (ok != 0 && ok != PS_SOCKET)
-	    gen_transact(sock, protocol->exit_cmd);
+	    (protocol->logout_cmd)(sock, ctl);
 	set_timeout(0);
 	close(sock);
     }

@@ -66,6 +66,7 @@
 #   limit                     -- must be followed by numeric size limit
 #   fetchlimit                -- must be followed by numeric msg fetch limit
 #   batchlimit                -- must be followed by numeric SMTP batch limit
+#   expunge                   -- must be followed by numeric delete count
 #
 # Legal protocol identifiers are
 #   pop2 (or POP2)

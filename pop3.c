@@ -443,6 +443,12 @@ static int pop3_delete(int sock, struct query *ctl, int number)
     return(gen_transact(sock, "DELE %d", number));
 }
 
+static int pop3_logout(int sock, struct query *ctl)
+/* send logout command */
+{
+    return(gen_transact(sock, "QUIT"));
+}
+
 const static struct method pop3 =
 {
     "POP3",		/* Post Office Protocol v3 */
@@ -458,7 +464,7 @@ const static struct method pop3 =
     NULL,		/* no way to fetch body alone */
     NULL,		/* no message trailer */
     pop3_delete,	/* how to delete a message */
-    "QUIT",		/* the POP3 exit command */
+    pop3_logout,	/* log out, we're done */
 };
 
 int doPOP3 (struct query *ctl)

@@ -138,6 +138,7 @@ struct query
     int	limit;			/* limit size of retrieved messages */
     int	fetchlimit;		/* max # msgs to get in single poll */
     int	batchlimit;		/* max # msgs to pass in single SMTP session */
+    int	expunge;		/* max # msgs to pass between expunges */
 
     /* unseen, previous state of mailbox (initially from .fetchids) */
     struct idlist *oldsaved, *newsaved;
@@ -169,7 +170,7 @@ struct method
     int (*fetch_body)();	/* fetch a given message */
     int (*trail)();		/* eat trailer of a message */
     int (*delete)();		/* delete method */
-    char *exit_cmd;		/* exit command */
+    int (*logout_cmd)();	/* logout command */
 };
 
 #define TAGLEN	6

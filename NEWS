@@ -17,6 +17,7 @@ fetchmail-4.2.8 ()
 * Only emit length-mismatch messages in verbose mode.
 * POP3 lock busy error is now treated as authorization failure (Greg Stark)
 * Kerberos error is now treated as authorization failure (Greg Stark)
+* New --expunge option allows you to better control resource use under IMAP.
 
 There are 284 people on the fetchmail-friends list.
 

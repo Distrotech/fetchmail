@@ -105,6 +105,12 @@ static int etrn_getrange(int sock, struct query *ctl, char *id, int *countp,
     return(0);
 }
 
+static int etrn_logout(int sock, struct query *ctl)
+/* send logout command */
+{
+    return(gen_transact(sock, "QUIT"));
+}
+
 const static struct method etrn =
 {
     "ETRN",		/* ESMTP ETRN extension */
@@ -120,7 +126,7 @@ const static struct method etrn =
     NULL,		/* no way to fetch body */
     NULL,		/* no message trailer */
     NULL,		/* how to delete a message */
-    "QUIT",		/* the ETRN exit command */
+    etrn_logout,	/* log out, we're done */
 };
 
 int doETRN (struct query *ctl)

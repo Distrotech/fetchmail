@@ -245,6 +245,24 @@ Limit the number of messages accepted from a given server in a single
 poll.  By default there is no limit. An explicit --fetchlimit of 0
 overrides any limits set in your run control file.
 This option does not work with ETRN.
+.TP
+.B -e, --expunge
+(keyword: expunge)
+When talking to an IMAP server, 
+.I fetchmail
+normally issues an EXPUNGE command after each deletion in order to
+force the deletion to be done immediately.  This is safest when your
+connection to the server is flaky and expensive, as it avoids
+resending duplicate mail after a line hit.  However, on large
+mailboxes the overhead of re-indexing after every message can slam the
+server pretty hard, so if your connection is reliable it is good to do
+expunges less frequently.  If you specify this option to an integer N,
+it tells
+.I fetchmail
+to only issue expunges on every Nth delete.  An argument
+of zero suppresses expunges entirely (so no expunges at all will be
+done until the end of run). 
+This option does not work with ETRN, POP2, or POP3.
 .SS Authentication Options
 .TP
 .B \-u name, --username name
@@ -816,6 +834,9 @@ Max # messages to fetch in single connect
 T}
 fetchlimit	-B	T{
 Max # messages to forward in single connect
+T}
+expunge 	-e	T{
+Perform an expunge on every #th message (IMAP only)
 T}
 syslog  	\&	T{
 Do error logging through syslog(3).

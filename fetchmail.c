@@ -527,6 +527,7 @@ static int load_params(int argc, char **argv, int optind)
     def_opts.remotename = user;
     save_str(&def_opts.smtphunt, TRUE, fetchmailhost);
     save_str(&def_opts.smtphunt, FALSE, "localhost");
+    def_opts.expunge = 1;
 
     /* this builds the host list */
     if (prc_parse_file(rcfile, !versioninfo) != 0)
@@ -928,7 +929,12 @@ void dump_params (struct query *ctl)
     if (ctl->batchlimit > 0)
 	printf("  SMTP message batch limit is %d.\n", ctl->batchlimit);
     else if (outlevel == O_VERBOSE)
-	printf("  No SMTP message batch limit.\n");
+	printf("  No SMTP message batch limit (--batchlimit 0).\n");
+    if (ctl->server.protocol == P_IMAP)
+	if (ctl->expunge > 0)
+	    printf("  Max deletions between expunges is %d (--expunge %d).\n", ctl->expunge, ctl->expunge);
+	else if (outlevel == O_VERBOSE)
+	    printf("  No deletion limit between expunges (--expunge 0).\n");
     if (ctl->mda)
 	printf("  Messages will be delivered with '%s.'\n", visbuf(ctl->mda));
     else
@@ -979,7 +985,8 @@ void dump_params (struct query *ctl)
 	    if (ctl->server.envelope == STRING_DISABLED)
 		printf("  Envelope-address routing is disabled\n");
 	    else
-		printf("  Envelope header is assumed to be: %s\n", ctl->server.envelope);
+		printf("  Envelope header is assumed to be: %s\n",
+		       ctl->server.envelope ? ctl->server.envelope : "Received");
     }
 #ifdef	linux
     if (ctl->server.interface)

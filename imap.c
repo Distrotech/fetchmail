@@ -33,7 +33,7 @@ extern char *strstr();	/* needed on sysV68 R3V7.1. */
 #define IMAP4		0	/* IMAP4 rev 0, RFC1730 */
 #define IMAP4rev1	1	/* IMAP4 rev 1, RFC2060 */
 
-static int count, seen, recent, unseen, deletecount, imap_version;
+static int count, seen, recent, unseen, deletions, expunged, imap_version;
 
 int imap_ok(int sock, char *argbuf)
 /* parse command response */
@@ -441,7 +441,7 @@ static int imap_getrange(int sock,
     else
 	*newp = -1;		/* should never happen, RECENT is mandatory */ 
 
-    deletecount = 0;
+    expunged = deletions = 0;
 
     return(PS_SUCCESS);
 }
@@ -474,8 +474,8 @@ static int imap_is_old(int sock, struct query *ctl, int number)
 {
     int ok;
 
-    /* expunges change the fetch numbers */
-    number -= deletecount;
+    /* expunged change the fetch numbers */
+    number -= expunged;
 
     if ((ok = gen_transact(sock, "FETCH %d FLAGS", number)) != 0)
 	return(PS_ERROR);
@@ -489,8 +489,8 @@ static int imap_fetch_headers(int sock, struct query *ctl,int number,int *lenp)
     char buf [POPBUFSIZE+1];
     int	num;
 
-    /* expunges change the fetch numbers */
-    number -= deletecount;
+    /* expunged change the fetch numbers */
+    number -= expunged;
 
     /*
      * This is blessed by RFC 1176, RFC1730, RFC2060.
@@ -519,8 +519,8 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
     char buf [POPBUFSIZE+1], *cp;
     int	num;
 
-    /* expunges change the fetch numbers */
-    number -= deletecount;
+    /* expunged change the fetch numbers */
+    number -= expunged;
 
     /*
      * If we're using IMAP4, we can fetch the message without setting its
@@ -577,8 +577,8 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
 static int imap_trail(int sock, struct query *ctl, int number)
 /* discard tail of FETCH response after reading message text */
 {
-    /* expunges change the fetch numbers */
-    /* number -= deletecount; */
+    /* expunged change the fetch numbers */
+    /* number -= expunged; */
 
     for (;;)
     {
@@ -601,8 +601,8 @@ static int imap_delete(int sock, struct query *ctl, int number)
 {
     int	ok;
 
-    /* expunges change the fetch numbers */
-    number -= deletecount;
+    /* expunged change the fetch numbers */
+    number -= expunged;
 
     /*
      * Use SILENT if possible as a minor throughput optimization.
@@ -616,16 +616,35 @@ static int imap_delete(int sock, struct query *ctl, int number)
 	return(ok);
 
     /*
-     * We do an expunge after each message, rather than just before quit,
-     * so that a line hit during a long session won't result in lots of
-     * messages being fetched again during the next session.
+     * We do an expunge after ctl->expunge messages, rather than
+     * just before quit, so that a line hit during a long session
+     * won't result in lots of messages being fetched again during
+     * the next session.
      */
-    if ((ok = gen_transact(sock, "EXPUNGE")))
-	return(ok);
+    if (ctl->expunge > 0 && (++deletions % ctl->expunge) == 0)
+    {
+	if ((ok = gen_transact(sock, "EXPUNGE")))
+	    return(ok);
 
-    deletecount++;
+	expunged = deletions;;
+    }
 
     return(PS_SUCCESS);
+}
+
+static int imap_logout(int sock, struct query *ctl)
+/* send logout command */
+{
+    /* if expunges after deletion have been suppressed, ship one now */
+    if (ctl->expunge <= 0 && deletions)
+    {
+	int	ok;
+
+	if ((ok = gen_transact(sock, "EXPUNGE")))
+	    return(ok);
+    }
+
+    return(gen_transact(sock, "LOGOUT"));
 }
 
 const static struct method imap =
@@ -643,7 +662,7 @@ const static struct method imap =
     imap_fetch_body,	/* request given message body */
     imap_trail,		/* eat message trailer */
     imap_delete,	/* delete the message */
-    "LOGOUT",		/* the IMAP exit command */
+    imap_logout,	/* expunge and exit */
 };
 
 int doIMAP(struct query *ctl)

@@ -59,7 +59,8 @@ extern char * yytext;
 %token ENVELOPE USERNAME PASSWORD FOLDER SMTPHOST MDA
 %token PRECONNECT POSTCONNECT LIMIT
 %token IS HERE THERE TO MAP WILDCARD
-%token SET BATCHLIMIT FETCHLIMIT LOGFILE DAEMON SYSLOG INTERFACE MONITOR
+%token BATCHLIMIT FETCHLIMIT EXPUNGE
+%token SET LOGFILE DAEMON SYSLOG INTERFACE MONITOR
 %token <proto> PROTO
 %token <sval>  STRING
 %token <number> NUMBER
@@ -229,6 +230,7 @@ user_option	: TO localnames HERE
 		| LIMIT NUMBER		{current.limit      = $2;}
 		| FETCHLIMIT NUMBER	{current.fetchlimit = $2;}
 		| BATCHLIMIT NUMBER	{current.batchlimit = $2;}
+		| EXPUNGE NUMBER	{current.expunge    = $2;}
 		;
 %%
 
@@ -425,6 +427,7 @@ static void record_current(void)
     FLAG_FORCE(limit);
     FLAG_FORCE(fetchlimit);
     FLAG_FORCE(batchlimit);
+    FLAG_FORCE(expunge);
 
 #undef FLAG_FORCE
 
@@ -475,6 +478,7 @@ void optmerge(struct query *h2, struct query *h1)
     FLAG_MERGE(limit);
     FLAG_MERGE(fetchlimit);
     FLAG_MERGE(batchlimit);
+    FLAG_MERGE(expunge);
 #undef FLAG_MERGE
 }
 
