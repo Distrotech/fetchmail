@@ -7,6 +7,11 @@ features --
 
 * The host that ETRN specifies is now set by the smtphost option.
 
+bugs --
+
+* The counter referred to by the batchlimit option used to count not only 
+  fetched messages but skipped ones.  This has been fixed.
+
 ------------------------------------------------------------------------------
 fetchmail-3.4 (Wed Feb 12 19:23:06 EST 1997)
 

@@ -1284,6 +1284,8 @@ const struct method *proto;	/* protocol method table */
 	}
 	else if (count > 0)
 	{    
+	    int	force_retrieval, fetches;
+
 	    /*
 	     * What forces this code is that in POP3 and IMAP2BIS you can't
 	     * fetch a message without having it marked `seen'.  In IMAP4,
@@ -1306,9 +1308,9 @@ const struct method *proto;	/* protocol method table */
 	     * previous pass and forcing all messages to be considered new
 	     * if it's nonzero.
 	     */
-	    int	force_retrieval = !peek_capable && (ctl->errcount > 0);
+	    force_retrieval = !peek_capable && (ctl->errcount > 0);
 
-	    ctl->errcount = 0;
+	    ctl->errcount = fetches = 0;
 
 	    /* read, forward, and delete messages */
 	    for (num = 1; num <= count; num++)
@@ -1367,6 +1369,8 @@ const struct method *proto;	/* protocol method table */
 			    goto cleanUp;
 			vtalarm(ctl->server.timeout);
 		    }
+
+		    fetches++;
 		}
 
 		/*
@@ -1396,7 +1400,7 @@ const struct method *proto;	/* protocol method table */
 		    error_complete(0, 0, " not flushed");
 
 		/* perhaps this as many as we're ready to handle */
-		if (ctl->fetchlimit && ctl->fetchlimit <= num)
+		if (ctl->fetchlimit && ctl->fetchlimit <= fetches)
 		    break;
 	    }
 
