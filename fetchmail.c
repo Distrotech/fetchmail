@@ -1221,10 +1221,12 @@ static int load_params(int argc, char **argv, int optind)
      * multidrop mail, set an appropriate default here.
      */
     if (!run.postmaster)
+    {
 	if (getuid())				/* ordinary user */
 	    run.postmaster = user;
 	else					/* root */
 	    run.postmaster = "postmaster";
+    }
 
     return(implicitmode);
 }
@@ -1430,6 +1432,7 @@ static void dump_params (struct runctl *runp,
 		if (!ctl->password)
 			printf(_("  Password will be prompted for.\n"));
 		else if (outlevel >= O_VERBOSE)
+		{
 			if (ctl->server.protocol == P_APOP)
 				printf(_("  APOP secret = \"%s\".\n"),
 							visbuf(ctl->password));
@@ -1439,6 +1442,7 @@ static void dump_params (struct runctl *runp,
 			else
 				printf(_("  Password = \"%s\".\n"),
 							visbuf(ctl->password));
+		}
 	}
 
 	if (ctl->server.protocol == P_POP3 
@@ -1541,10 +1545,12 @@ static void dump_params (struct runctl *runp,
 		else if (outlevel >= O_VERBOSE)
 		    printf(_("  No SMTP message batch limit (--batchlimit 0).\n"));
 		if (ctl->server.protocol == P_IMAP)
+		{
 		    if (NUM_NONZERO(ctl->expunge))
 			printf(_("  Deletion interval between expunges forced to %d (--expunge %d).\n"), ctl->expunge, ctl->expunge);
 		    else if (outlevel >= O_VERBOSE)
 			printf(_("  No forced expunges (--expunge 0).\n"));
+		}
 	}
 	if (ctl->bsmtp)
 	    printf(_("  Messages will be appended to %s as BSMTP\n"), visbuf(ctl->bsmtp));
@@ -1688,6 +1694,7 @@ static void dump_params (struct runctl *runp,
 	    printf(_("  No plugout command specified.\n"));
 
 	if (ctl->server.protocol > P_POP2 && (ctl->server.protocol != P_ETRN))
+	{
 	    if (!ctl->oldsaved)
 		printf(_("  No UIDs saved from this host.\n"));
 	    else
@@ -1703,6 +1710,7 @@ static void dump_params (struct runctl *runp,
 		    for (idp = ctl->oldsaved; idp; idp = idp->next)
 			printf("\t%s\n", idp->id);
 	    }
+	}
 
 	if (ctl->properties)
 	    printf(_("  Pass-through properties \"%s\".\n"),

@@ -765,7 +765,7 @@ static int do_cram_md5 (int sock, struct query *ctl)
      * [RFC822] as described in [POP3].
      */
 
-    if (result = gen_recv (sock, buf1, sizeof (buf1))) {
+    if ((result = gen_recv (sock, buf1, sizeof (buf1)))) {
 	return result;
     }
 
@@ -827,7 +827,7 @@ static int do_cram_md5 (int sock, struct query *ctl)
     strcat (buf1, "\r\n");
     SockWrite (sock, buf1, strlen (buf1));
 
-    if (result = gen_recv (sock, buf1, sizeof (buf1)))
+    if ((result = gen_recv (sock, buf1, sizeof (buf1))))
 	return result;
 
     if (strstr (buf1, "OK")) {

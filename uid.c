@@ -70,7 +70,6 @@ static struct idlist *scratchlist;
 void initialize_saved_lists(struct query *hostlist, const char *idfile)
 /* read file of saved IDs and attach to each host */
 {
-    int	st;
     FILE	*tmpfp;
     struct query *ctl;
 
@@ -82,14 +81,14 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
     if ((tmpfp = fopen(idfile, "r")) != (FILE *)NULL)
     {
 	char buf[POPBUFSIZE+1];
-	char *host;
+	char *host = NULL;	/* pacify -Wall */
 	char *user;
 	char *id;
 	char *atsign;	/* temp pointer used in parsing user and host */
 	char *delimp1;
 	char saveddelim1;
 	char *delimp2;
-	char saveddelim2;
+	char saveddelim2 = '\0';	/* pacify -Wall */
 
 	while (fgets(buf, POPBUFSIZE, tmpfp) != (char *)NULL)
 	{

@@ -80,10 +80,12 @@ const char *host;	/* server hostname */
 	}
 #endif /* TESTMAIN */
 	if (state != 2)
+	{
 	    if (*from == '(')
 		++parendepth;
 	    else if (*from == ')')
 		--parendepth;
+	}
 
 	if (!parendepth && !has_host_part)
 	    switch (state)

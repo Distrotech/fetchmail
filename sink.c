@@ -43,7 +43,7 @@
 #endif
 
 /* makes the open_sink()/close_sink() pair non-reentrant */
-static lmtp_responses;
+static int lmtp_responses;
 
 static int smtp_open(struct query *ctl)
 /* try to open a socket to the appropriate SMTP server for this query */ 
@@ -204,6 +204,7 @@ int stuffline(struct query *ctl, char *buf)
      * decorated any . lines it sends back up.
      */
     if (*buf == '.')
+    {
 	if (ctl->server.base_protocol->delimited)	/* server has already byte-stuffed */
 	{
 	    if (ctl->mda)
@@ -218,6 +219,7 @@ int stuffline(struct query *ctl, char *buf)
 	    else
 		/* leave it alone */;
 	}
+    }
 
     /* we may need to strip carriage returns */
     if (ctl->stripcr)
@@ -896,6 +898,7 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 	 * to people who got it the first time.
 	 */
 	if (ctl->listener == LMTP_MODE)
+	{
 	    if (lmtp_responses == 0)
 	    {
 		SMTP_ok(ctl->smtp_socket); 
@@ -958,6 +961,7 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 					 "LSMTP partial delivery failure.\r\n",
 					 errors, responses));
 	    }
+	}
     }
 
     return(TRUE);

@@ -1145,12 +1145,14 @@ static int readbody(int sock, struct query *ctl, flag forward, int len)
 
 	/* check for end of message */
 	if (protocol->delimited && *inbufp == '.')
+	{
 	    if (inbufp[1] == '\r' && inbufp[2] == '\n' && inbufp[3] == '\0')
 		break;
 	    else if (inbufp[1] == '\n' && inbufp[2] == '\0')
 		break;
 	    else
 		msglen--;	/* subtract the size of the dot escape */
+	}
 
 	msglen += linelen;
 
@@ -1408,11 +1410,11 @@ struct query *ctl;		/* parsed options with merged-in defaults */
 const struct method *proto;	/* protocol method table */
 const int maxfetch;		/* maximum number of messages to fetch */
 {
-    int ok, js;
+    int js;
 #ifdef HAVE_VOLATILE
-    volatile int mailserver_socket = -1;	/* pacifies -Wall */
+    volatile int ok, mailserver_socket = -1;	/* pacifies -Wall */
 #else
-    int mailserver_socket = -1;
+    int ok, mailserver_socket = -1;
 #endif /* HAVE_VOLATILE */
     const char *msg;
     void (*pipesave)(int);
@@ -1689,10 +1691,12 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		++pass;
 
 		if (outlevel >= O_DEBUG)
+		{
 		    if (idp->id)
 			report(stdout, _("selecting or re-polling folder %s\n"), idp->id);
 		    else
 			report(stdout, _("selecting or re-polling default folder\n"));
+		}
 
 		/* compute # of messages and number of new messages waiting */
 		ok = (protocol->getrange)(mailserver_socket, ctl, idp->id, &count, &new, &bytes);
@@ -1707,6 +1711,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 		    (void) sprintf(buf, _("%s at %s"),
 				   ctl->remotename, ctl->server.truename);
 		if (outlevel > O_SILENT)
+		{
 		    if (count == -1)		/* only used for ETRN */
 			report(stdout, _("Polling %s\n"), ctl->server.truename);
 		    else if (count != 0)
@@ -1731,6 +1736,7 @@ const int maxfetch;		/* maximum number of messages to fetch */
 			if (pass == 1 && (run.poll_interval == 0 || outlevel >= O_VERBOSE))
 			    report(stdout, _("No mail for %s\n"), buf); 
 		    }
+		}
 
 		/* very important, this is where we leave the do loop */ 
 		if (count == 0)
