@@ -154,7 +154,7 @@ clean:
 	-rm -f fetchmail *.o core fetchmail.dvi \
 	       rcfile_l.c rcfile_y.h rcfile_y.c \
 	       fetchmail.tar fetchmail.tar.gz \
-	       rfc822
+	       rfc822 FAQ
 
 distclean: clean 
 	-rm -f Makefile config.h TAGS tags
@@ -207,6 +207,9 @@ all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) \
 
 MANIFEST: $(srcdir)
 	@echo $(all) | tr "[ \t]" '\n' | sort | sed "s/\\./fetchmail-$(VERS)/" >MANIFEST
+
+FAQ: fetchmail-FAQ.html
+	lynx -dump -nolist fetchmail-FAQ.html >FAQ
 
 dist: fetchmail-$(VERS).tar.gz
 	ls -l fetchmail-$(VERS).tar.gz
