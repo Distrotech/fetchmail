@@ -1826,7 +1826,7 @@ const struct method *proto;	/* protocol method table */
     else
     {
 	char buf [POPBUFSIZE+1], *realhost;
-	int *msgsizes, len, num, count, new, deletions = 0;
+	int *msgsizes, len, num, count, new, bytes, deletions = 0;
 #if INET6
 	int fetches, dispatches;
 #else /* INET6 */
@@ -1955,7 +1955,7 @@ const struct method *proto;	/* protocol method table */
 			error(0, 0, "selecting or re-polling default folder");
 
 		/* compute # of messages and number of new messages waiting */
-		ok = (protocol->getrange)(sock, ctl, idp->id, &count, &new);
+		ok = (protocol->getrange)(sock, ctl, idp->id, &count, &new, &bytes);
 		if (ok != 0)
 		    goto cleanUp;
 
@@ -1964,18 +1964,23 @@ const struct method *proto;	/* protocol method table */
 		    (void) sprintf(buf, "%s at %s (folder %s)",
 				   ctl->remotename, ctl->server.truename, idp->id);
 		else
-		    (void) sprintf(buf, "%s at %s", ctl->remotename, ctl->server.truename);
+		    (void) sprintf(buf, "%s at %s",
+				   ctl->remotename, ctl->server.truename);
 		if (outlevel > O_SILENT)
 		    if (count == -1)		/* only used for ETRN */
 			error(0, 0, "Polling %s", ctl->server.truename);
 		    else if (count != 0)
 		    {
 			if (new != -1 && (count - new) > 0)
-			    error(0, 0, "%d message%s (%d seen) for %s.",
+			    error_build("%d message%s (%d seen) for %s",
 				  count, count > 1 ? "s" : "", count-new, buf);
 			else
-			    error(0, 0, "%d message%s for %s.", 
+			    error_build("%d message%s for %s", 
 				  count, count > 1 ? "s" : "", buf);
+			if (bytes == -1)
+			    error_complete(0, 0, ".");
+			else
+			    error_complete(0, 0, " (%d bytes).", bytes);
 		    }
 		    else
 		    {

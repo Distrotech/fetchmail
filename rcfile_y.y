@@ -72,7 +72,7 @@ extern char * yytext;
 %token <sval>  STRING
 %token <number> NUMBER
 %token NO KEEP FLUSH FETCHALL REWRITE FORCECR STRIPCR PASS8BITS DROPSTATUS
-%token DNS SERVICE PORT UIDL INTERVAL
+%token DNS SERVICE PORT UIDL INTERVAL MIMEDECODE
 
 %%
 
@@ -283,6 +283,7 @@ user_option	: TO localnames HERE
 		| STRIPCR		{current.stripcr    = FLAG_TRUE;}
 		| PASS8BITS		{current.pass8bits  = FLAG_TRUE;}
 		| DROPSTATUS		{current.dropstatus = FLAG_TRUE;}
+		| MIMEDECODE		{current.mimedecode = FLAG_TRUE;}
 
 		| NO KEEP		{current.keep       = FLAG_FALSE;}
 		| NO FLUSH		{current.flush      = FLAG_FALSE;}
@@ -292,6 +293,7 @@ user_option	: TO localnames HERE
 		| NO STRIPCR		{current.stripcr    = FLAG_FALSE;}
 		| NO PASS8BITS		{current.pass8bits  = FLAG_FALSE;}
 		| NO DROPSTATUS		{current.dropstatus = FLAG_FALSE;}
+		| NO MIMEDECODE		{current.mimedecode = FLAG_FALSE;}
 
 		| LIMIT NUMBER		{current.limit      = NUM_VALUE($2);}
 		| FETCHLIMIT NUMBER	{current.fetchlimit = NUM_VALUE($2);}
@@ -500,6 +502,7 @@ static void record_current(void)
     FLAG_FORCE(stripcr);
     FLAG_FORCE(pass8bits);
     FLAG_FORCE(dropstatus);
+    FLAG_FORCE(mimedecode);
     FLAG_FORCE(limit);
     FLAG_FORCE(fetchlimit);
     FLAG_FORCE(batchlimit);
@@ -560,6 +563,7 @@ void optmerge(struct query *h2, struct query *h1)
     FLAG_MERGE(stripcr);
     FLAG_MERGE(pass8bits);
     FLAG_MERGE(dropstatus);
+    FLAG_MERGE(mimedecode);
     FLAG_MERGE(limit);
     FLAG_MERGE(fetchlimit);
     FLAG_MERGE(batchlimit);

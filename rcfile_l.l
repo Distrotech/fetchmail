@@ -79,6 +79,7 @@ forcecr		{ return FORCECR; }
 stripcr		{ return STRIPCR; }
 pass8(bits)?	{ return PASS8BITS; }
 dropstatus?	{ return DROPSTATUS; }
+mimedec(ode)?   { return MIMEDECODE; }
 dns		{ return DNS; }
 uidl		{ return UIDL; }
 

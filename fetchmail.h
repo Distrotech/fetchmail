@@ -169,6 +169,7 @@ struct query
     flag forcecr;		/* if TRUE, force CRs before LFs in text */
     flag pass8bits;		/* if TRUE, ignore Content-Transfer-Encoding */
     flag dropstatus;		/* if TRUE, drop Status lines in mail */
+    flag mimedecode;		/* if TRUE, decode MIME-coded headers/coded printable*/
     int	limit;			/* limit size of retrieved messages */
     int	fetchlimit;		/* max # msgs to get in single poll */
     int	batchlimit;		/* max # msgs to pass in single SMTP session */
@@ -325,6 +326,15 @@ int prc_filecheck(const char *);
 /* base64.c */
 void to64frombits(unsigned char *, const unsigned char *, int);
 int from64tobits(char *, const char *);
+
+/* unmime.c */
+/* Bit-mask returned by MimeBodyType */
+#define MSG_IS_7BIT       0x01
+#define MSG_IS_8BIT       0x02
+#define MSG_NEEDS_DECODE  0x80
+extern void UnMimeHeader(unsigned char *buf);
+extern int  MimeBodyType(unsigned char *hdrs);
+extern int  UnMimeBodyline(unsigned char **buf, int collapsedoubledot);
 
 /* interface.c */
 void interface_parse(char *, struct hostdata *);

@@ -709,13 +709,13 @@ static int internal_expunge(int sock)
 static int imap_getrange(int sock, 
 			 struct query *ctl, 
 			 const char *folder, 
-			 int *countp, int *newp)
+			 int *countp, int *newp, int *bytes)
 /* get range of messages to be fetched */
 {
     int ok;
 
     /* find out how many messages are waiting */
-    recent = unseen = -1;
+    *bytes, recent = unseen = -1;
 
     if (pass > 1)
     {

@@ -59,7 +59,8 @@ int pop2_getauth(int sock, struct query *ctl, char *buf)
 		  ctl->remotename, ctl->password));
 }
 
-static int pop2_getrange(int sock, struct query *ctl, const char *folder, int*countp, int*newp)
+static int pop2_getrange(int sock, struct query *ctl, const char *folder, 
+			 int *countp, int *newp, int *bytes)
 /* get range of messages to be fetched */
 {
     /* maybe the user wanted a non-default folder */
@@ -87,7 +88,7 @@ static int pop2_getrange(int sock, struct query *ctl, const char *folder, int*co
 	    return(PS_ERROR);
 
     *countp = pound_arg;
-    *newp = -1;
+    *bytes = *newp = -1;
 
     return(0);
 }

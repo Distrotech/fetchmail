@@ -28,8 +28,8 @@ static int etrn_ok (int sock, char *argbuf)
 	return(ok);
 }
 
-static int etrn_getrange(int sock, struct query *ctl, char *id, int *countp,
-                                                                    int *newp)
+static int etrn_getrange(int sock, struct query *ctl, char *id, 
+			 int *countp, int *newp, int *bytes)
 /* send ETRN and interpret the response */
 {
     int ok, opts;
@@ -49,7 +49,8 @@ static int etrn_getrange(int sock, struct query *ctl, char *id, int *countp,
 	return(PS_PROTOCOL);
     }
 
-    *countp = *newp = -1;	/* make sure we don't enter the fetch loop */
+    /* make sure we don't enter the fetch loop */
+    *bytes = *countp = *newp = -1;
 
     /*
      * By default, the hostlist has a single entry, the fetchmail host's

@@ -353,7 +353,7 @@ pop3_slowuidl( int sock,  struct query *ctl, int *countp, int *newp)
 static int pop3_getrange(int sock, 
 			 struct query *ctl,
 			 const char *folder,
-			 int *countp, int *newp)
+			 int *countp, int *newp, int *bytes)
 /* get range of messages to be fetched */
 {
     int ok;
@@ -375,7 +375,7 @@ static int pop3_getrange(int sock,
     gen_send(sock, "STAT");
     ok = pop3_ok(sock, buf);
     if (ok == 0)
-	sscanf(buf,"%d %*d", countp);
+	sscanf(buf,"%d %d", countp, bytes);
     else
 	return(ok);
 
@@ -445,7 +445,7 @@ static int pop3_getrange(int sock,
  	}
     }
 
-    return(0);
+    return(PS_SUCCESS);
 }
 
 static int pop3_getsizes(int sock, int count, int *sizes)
