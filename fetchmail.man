@@ -224,7 +224,9 @@ or respond to commands for the given number of seconds,
 \fIfetchmail\fR might hang up indefinitely trying to fetch mail from a
 down host.  This would be particularly annoying for a \fIfetchmail\fR
 running in background.  There is a default timeout which fetchmail -V
-will report.
+will report.  If a given connection receives too many timeouts in 
+succession, fetchmail will consider it wedged and stop retrying,
+the calkling user will be notified by email if this happens.
 .TP
 .B \--plugin
 (Keyword: plugin)
@@ -670,7 +672,9 @@ makes a per-user lockfile to guarantee this.
 Normally, calling fetchmail with a daemon in the background sends a
 wakeup signal to the daemon, forcing it to poll mailservers
 immediately.  (The wakeup signal is SIGHUP if fetchmail is running as
-root, SIGUSR1 otherwise.)
+root, SIGUSR1 otherwise.)  The wakeup action also clears any `wedged'
+flags indicating that connections have wedged due to failed 
+authentication or multiple timeouts.
 .PP
 The option
 .B --quit

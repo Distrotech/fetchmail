@@ -722,6 +722,10 @@ int main (int argc, char **argv)
 #else
 		    error(0, 0, _("awakened by signal %d"), lastsig);
 #endif
+		    /* received a wakeup - unwedge all servers in case */
+		    /* the problem has been manually repaired          */
+		    for (ctl = querylist; ctl; ctl = ctl->next)
+		        ctl->wedged = FALSE;
 		}
 	    }
 
