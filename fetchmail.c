@@ -1117,10 +1117,8 @@ static int load_params(int argc, char **argv, int optind)
 	    DEFAULT(ctl->idle, FALSE);
 	    DEFAULT(ctl->server.dns, TRUE);
 	    DEFAULT(ctl->server.uidl, FALSE);
-#ifdef	SSL_ENABLE
 	    DEFAULT(ctl->use_ssl, FALSE);
 	    DEFAULT(ctl->sslcertck, FALSE);
-#endif
 	    DEFAULT(ctl->server.checkalias, FALSE);
 #ifndef SSL_ENABLE
 	    /*
@@ -1157,12 +1155,23 @@ static int load_params(int argc, char **argv, int optind)
 
 #if !defined(HAVE_GETHOSTBYNAME) || !defined(HAVE_RES_SEARCH)
 	    /* can't handle multidrop mailboxes unless we can do DNS lookups */
-	    if (ctl->localnames && ctl->localnames->next && ctl->server.dns)
+	    if (MULTIDROP(ctl) && ctl->server.dns)
 	    {
 		ctl->server.dns = FALSE;
 		report(stderr, GT_("fetchmail: warning: no DNS available to check multidrop fetches from %s\n"), ctl->server.pollname);
 	    }
 #endif /* !HAVE_GETHOSTBYNAME || !HAVE_RES_SEARCH */
+
+	    /*
+	     * can't handle multidrop mailboxes without "envelope"
+	     * option, this causes truckloads full of support complaints
+	     * "all mail forwarded to postmaster"
+	     */
+	    if (MULTIDROP(ctl) && !ctl->server.envelope)
+	    {
+		report(stderr, GT_("warning: multidrop for %s requires envelope option!\n"), ctl->server.pollname);
+		report(stderr, GT_("warning: Do not ask for support if all mail goes to postmaster!\n"));
+	    }
 
 	    /* if no folders were specified, set up the null one as default */
 	    if (!ctl->mailboxes)
