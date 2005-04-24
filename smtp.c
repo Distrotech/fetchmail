@@ -185,7 +185,7 @@ int SMTP_ehlo(int sock, const char *host, char *name, char *password, int *opt)
   if (outlevel >= O_MONITOR)
       report(stdout, "%cMTP> %cHLO %s\n", 
 	    smtp_mode, (smtp_mode == 'S') ? 'E' : smtp_mode, host);
-  
+
   *opt = 0;
   while ((SockRead(sock, smtp_response, sizeof(smtp_response)-1)) != -1)
   {
@@ -199,12 +199,12 @@ int SMTP_ehlo(int sock, const char *host, char *name, char *password, int *opt)
 	  return SM_ERROR;
       smtp_response[n] = '\0';
       if (outlevel >= O_MONITOR)
-	  report(stdout, "SMTP< %s\n", smtp_response);
+	  report(stdout, "%cMTP< %s\n", smtp_mode, smtp_response);
       for (hp = extensions; hp->name; hp++)
 	  if (!strncasecmp(hp->name, smtp_response+4, strlen(hp->name))) {
 	      *opt |= hp->value;
 	      if (strncmp(hp->name, "AUTH ", 5) == 0)
-	      	strncpy(auth_response, smtp_response, sizeof(auth_response));
+		strncpy(auth_response, smtp_response, sizeof(auth_response));
 		auth_response[sizeof(auth_response)-1] = '\0';
 	  }
       if ((smtp_response[0] == '1' || smtp_response[0] == '2' || smtp_response[0] == '3') && smtp_response[3] == ' ') {
