@@ -1450,7 +1450,7 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 		     * re-forwarded on subsequent poll cycles.
 		     */
  		  return(send_bouncemail(ctl, msg, XMIT_ACCEPT,
-					 "LSMTP partial delivery failure.\r\n",
+					 "LMTP partial delivery failure.\r\n",
 					 errors, responses));
 	    }
 	}
