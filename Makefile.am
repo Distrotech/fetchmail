@@ -70,9 +70,9 @@ SHELL = /bin/sh
 fetchmail.spec: Makefile.in specgen.sh
 	$(srcdir)/specgen.sh $(VERSION) >fetchmail.spec
 
-DISTDOCS=	FAQ FEATURES NOTES fetchmail-man.html fetchmail-FAQ.html \
-		design-notes.html todo.html fetchmail-features.html \
-		README.SSL README.NTLM
+DISTDOCS=	FAQ FEATURES NOTES OLDNEWS fetchmail-man.html \
+		fetchmail-FAQ.html design-notes.html todo.html \
+		fetchmail-features.html README.SSL README.NTLM
 
 # extra directories to ship
 distdirs = rh-config contrib beos
