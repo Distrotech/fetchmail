@@ -15,6 +15,8 @@
 * Sunil Shetye's fix for SSL configuration.
 * Simon Josefsson's patch for GSS library support.
 * Added Andrey Lelikov's recupe for Hotmail and Lycos Webmail.
+* Remove blank between MAIL FROM: and <, which causes Cyrus to complain.
+  Patch by Phil Endecott. (Rob Funk)
 * Switched to automake. (Matthias Andree)
 * Build fixes for HESIOD and resolv.h trouble on FreeBSD. (Matthias Andree)
 * Fabrice Bellet's fix for Red Hat bug #113492, fetchmail hangs in IMAP
@@ -30,26 +32,29 @@
   Andree), limiting the header to 7 bits.
 * Normalize most locale codesets to IANA codesets, based on
   norm_charmap.c by Markus Kuhn. (Matthias Andree)
-* Remove sleep(3) after POP3 login, patch by Brian Candler.
+* Remove sleep(3) after POP3 login, patch by Brian Candler. (Matthias
+  Andree)
 * Fix option parsing bug that trashes the showdots setting when more
-  than one server is configured. Patch by Brian Candler.
+  than one server is configured. Patch by Brian Candler. (Matthias
+  Andree)
 * Honor sslcertpath setting even if sslcertck is unset. Patch by Brian
-  Candler.
+  Candler. (Matthias Andree)
 * SSL certificate checking fixes, don't display same error message twice
   in succession, make sure that Common Name and fingerprint checking are
   only done once. Print all validation warnings/errors even if not in
-  verbose mode. Patch by Brian Candler.
+  verbose mode. Patch by Brian Candler. (Matthias Andree)
 * Import Bjorn Reese and Daniel Stenberg's MIT-licensed Trio 1.10 from
   http://daniel.haxx.se/projects/trio/ for systems that do not support
-  snprintf or vsnprintf.
+  snprintf or vsnprintf. (Matthias Andree)
 * Clean up the horrible #ifdef HAVE_[V]SNPRINTF that made the code
-  unreadable. Use Trio where [v]snprintf is/are missing. Matthias Andree.
+  unreadable. Use Trio where [v]snprintf is/are missing. (Matthias Andree)
 * Default to Linux 2.2 /proc/net/dev format, and use uname(2) to determine the
   kernel version instead of calling uname(1). Thanks to Paul Slootman.
+  (Matthias Andree)
 * Be more careful when swapping UID lists or writing the .fetchids file,
-  requested by Manfred Weihs.
+  requested by Manfred Weihs. (Matthias Andree)
 * Print a warning if multidrop configuration is attempted without
-  envelope option.
+  envelope option. (Matthias Andree)
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
