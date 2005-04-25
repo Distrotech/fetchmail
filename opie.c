@@ -23,7 +23,6 @@
 int do_otp(int sock, char *command, struct query *ctl)
 {
     int i, rval;
-    int result;
     char buffer[128];
     char challenge[OPIE_CHALLENGE_MAX+1+8];
     char response[OPIE_RESPONSE_MAX+1];
@@ -73,10 +72,7 @@ int do_otp(int sock, char *command, struct query *ctl)
     if ((rval = gen_recv(sock, buffer, sizeof(buffer))))
 	return rval;
 
-    if (result)
-	return PS_SUCCESS;
-    else
-	return PS_AUTHFAIL;
+    return PS_SUCCESS;
 };
 #endif /* OPIE_ENABLE */
 
