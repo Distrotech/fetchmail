@@ -56,7 +56,9 @@
 * Print a warning if multidrop configuration is attempted without
   envelope option. (Matthias Andree)
 * Split information on fetchmail versions before 6.0.0 to a separate
-  OLDNEWS file.
+  OLDNEWS file. (Matthias Andree)
+* Merge SuSE patches: (sent by Stanislav Brabec, merged by Matthias Andree)
+  - fetchmail-6.2.5-declaration.patch (double sigint_handler decl)
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
