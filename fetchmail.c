@@ -30,6 +30,10 @@
 #endif /* HAVE_SETRLIMIT */
 #include <sys/utsname.h>
 
+#ifdef HAVE_SOCKS
+#include <socks.h> /* SOCKSinit() */
+#endif /* HAVE_SOCKS */
+
 #ifdef HAVE_LANGINFO_H
 #include <langinfo.h>
 #endif
