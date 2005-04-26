@@ -19,6 +19,8 @@ NORMAL
 POP3 hang when polling mail with NUL char that is rejected (David Greaves)
 https://lists.berlios.de/pipermail/fetchmail-devel/2004-October/000154.html
 
+Remove spaces after MAIL FROM: or RCPT TO: et al. in BSMTP output (sink.c)
+
 
 COSMETIC
 ========
