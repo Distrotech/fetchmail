@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: fetchmail 6.2.5.992\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2005-04-25 19:21+0200\n"
-"PO-Revision-Date: 2005-04-26 17:57+0200\n"
+"PO-Revision-Date: 2005-04-27 17:31+0200\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -2514,7 +2514,7 @@ msgstr "B³±d podczas dorêczania LMTP w momencie wykonywania komendy EOM\n"
 #: sink.c:1404
 #, c-format
 msgid "Unexpected non-503 response to LMTP EOM: %s\n"
-msgstr "Niespodziewana odpowied¼ inna ni¿ 503 na LSTMP EOM: %s\n"
+msgstr "Niespodziewana odpowied¼ inna ni¿ 503 na LMTP EOM: %s\n"
 
 #: sink.c:1555
 msgid ""
