@@ -1776,7 +1776,7 @@ static void dump_params (struct runctl *runp,
 		    else
 			printf(GT_("  Single-drop mode: "));
 
-		    printf(GT_("%d local name(s) recognized.\n"), count);
+		    printf(ngettext("%d local name recognized.\n", "%d local names recognized.\n", count), count);
 		    if (outlevel >= O_VERBOSE)
 		    {
 			for (idp = ctl->localnames; idp; idp = idp->next)
