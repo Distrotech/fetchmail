@@ -1981,7 +1981,9 @@ msgstr "      --sslcertpath répertoire des certificats SSL\n"
 msgid ""
 "      --sslfingerprint fingerprint that must match that of the server's "
 "cert.\n"
-msgstr "      --sslfingerprint empreinte digital qui doit concerter de celle du serveur.\n"
+msgstr ""
+"      --sslfingerprint empreinte digital qui doit concerter de celle du "
+"serveur.\n"
 
 #: options.c:688
 msgid "      --sslproto    force ssl protocol (ssl2/ssl3/tls1)\n"
