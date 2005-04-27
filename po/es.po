@@ -2108,7 +2108,7 @@ msgstr "  -D, --smtpaddress configurar el dominio de entrega de SMTP a usar\n"
 #: options.c:718
 msgid "      --smtpname    set SMTP full name username@domain\n"
 msgstr ""
-"      --smtpname    usar nombreusuario@dominio como nombre completo para "
+"      --smtpname    usar nombre usuario@dominio como nombre completo para "
 "SMTP\n"
 
 #: options.c:719
