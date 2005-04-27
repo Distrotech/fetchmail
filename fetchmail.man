@@ -2251,7 +2251,7 @@ The `principal' option only handles Kerberos IV, not V.
 Send comments, bug reports, gripes, and the like to the
 fetchmail-friends list <fetchmail-friends@lists.ccil.org>.  An HTML FAQ is
 available at the fetchmail home page; surf to
-http://www.catb.org/~esr/fetchmail or do a WWW search for pages with
+http://fetchmail.berlios.de/ or do a WWW search for pages with
 `fetchmail' in their titles.
 
 .SH AUTHOR
@@ -2262,6 +2262,8 @@ This program is descended from and replaces
 by Carl Harris <ceharris@mal.com>; the internals have become quite different, 
 but some of its interface design is directly traceable to that
 ancestral program.
+.PP
+Fetchmail is currently maintained by Matthias Andree and Rob Funk.
 
 .SH SEE ALSO
 mutt(1), elm(1), mail(1), sendmail(8), popd(8), imapd(8), netrc(5)
