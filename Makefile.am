@@ -92,10 +92,8 @@ NOTES: design-notes.html
 TODO: todo.html
 	AWK=$(AWK) $(SHELL) $(srcdir)/dist-tools/html2txt $(srcdir)/todo.html >$@ || { rm -f $@ ; exit 1 ; }
 
-# man2html no longer chokes and dies on this man page,
-# but manServer.pl does a much better job. 
 fetchmail-man.html: fetchmail.man
-	env - PATH=$$PATH $(srcdir)/dist-tools/manServer.pl fetchmail.man >$@ \
+	env - PATH=$$PATH $(srcdir)/dist-tools/manServer.pl $(srcdir)/fetchmail.man >$@ \
 	|| { rm -f $@ ; exit 1 ; }
 
 dist-hook:
