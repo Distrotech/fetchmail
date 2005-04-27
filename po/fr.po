@@ -1967,7 +1967,7 @@ msgstr "      --ssl         permettre les sessions cryptées SSL\n"
 
 #: options.c:684
 msgid "      --sslkey      ssl private key file\n"
-msgstr "      --sslkey       fichier de clé SSL privée\n"
+msgstr "      --sslkey      fichier de clé SSL privée\n"
 
 #: options.c:685
 msgid "      --sslcert     ssl client certificate\n"
