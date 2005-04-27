@@ -26,3 +26,7 @@ COSMETIC
 ========
 
 SSL validation prints CommonName mismatch more than once.
+
+Alan Munday suggests message change MULTIDROP without ENVELOPE:
+| fetchmail: warning: MULTIDROP configuration for pop.example.org requires the envelope option to be set!
+| fetchmail: warning: Check ENVELOPE option if fetchmail sends all mail to postmaster!
