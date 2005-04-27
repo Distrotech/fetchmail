@@ -2,7 +2,7 @@ I maintain an open-source POP and IMAP client called fetchmail.  It is
 widely used in the Linux and open-source community, and is probably
 the single most popular remote-mail client in that world.  You can
 find out more about this project at
-<http://www.catb.org/~esr/fetchmail>.
+<http://fetchmail.berlios.de/>.
 
 In order to be able to do thorough regression testing before each release,
 I collect test accounts on as many different kinds of POP3, IMAP, and
