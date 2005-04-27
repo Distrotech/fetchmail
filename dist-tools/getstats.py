@@ -5,7 +5,7 @@
 import commands, os, string, ftplib
 
 # Get version and date
-date = commands.getoutput("date")
+date = commands.getoutput("LC_TIME=C date -u")
 pid = os.getpid()
 # this is a fast variant using the base of the current working directory
 # (ignores uncommitted modifications)
