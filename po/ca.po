@@ -1393,11 +1393,11 @@ msgid "  Single-drop mode: "
 msgstr "  Mode single-drop: "
 
 #: fetchmail.c:1779
-#, fuzzy, c-format
+#, c-format
 msgid "%d local name recognized.\n"
 msgid_plural "%d local names recognized.\n"
-msgstr[0] "S'ha(n) reconegut %d nom(s) local(s).\n"
-msgstr[1] "S'ha(n) reconegut %d nom(s) local(s).\n"
+msgstr[0] "S'ha reconegut %d nom local.\n"
+msgstr[1] "S'han reconegut %d noms locals.\n"
 
 #: fetchmail.c:1793
 #, c-format
