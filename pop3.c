@@ -264,6 +264,16 @@ static int capa_probe(int sock)
     return(ok);
 }
 
+static void set_peek_capable(struct query *ctl)
+{
+    /* we're peek-capable means that the use of TOP is enabled,
+     * see pop3_fetch for details - short story, we can use TOP if
+     * we have a means of reliably tracking which mail we need to
+     * refetch should the connection abort in the middle.
+     * fetchall forces RETR, as does keep without UIDL */
+    peek_capable = !ctl->fetchall && (!ctl->keep || ctl->server.uidl);
+}
+
 static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 /* apply for connection authorization */
 {
@@ -578,7 +588,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
  * accepted by Matthias Andree.
  *
  * Rationale: the server must have locked the spool before returning +OK;
- * this sleep just wastes time and hence, for modem and CSD users, money. */
+ * this sleep just wastes time and hence, for modem and GSM CSD users, money. */
 #ifdef WANT_BOGUS
     /*
      * Empirical experience shows some server/OS combinations
@@ -590,8 +600,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
     sleep(3); /* to be _really_ safe, probably need sleep(5)! */
 #endif
 
-    /* we're peek-capable if use of TOP is enabled */
-    peek_capable = !(ctl->fetchall || (ctl->keep && !ctl->server.uidl));
+    set_peek_capable(ctl);
 
     /* we're approved */
     return(PS_SUCCESS);
@@ -1090,11 +1099,11 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
      * In that case, marking the seen flag is the only way to prevent the
      * message from being re-fetched on subsequent runs.
      *
-     * Also use RETR if fetchall is on.  This gives us a workaround
-     * for servers like usa.net's that bungle TOP.  It's pretty
-     * harmless because fetchall guarantees that any message dropped
-     * by an interrupted RETR will be picked up on the next poll of the
-     * site.
+     * Also use RETR (that means no TOP, no peek) if fetchall is on.
+     * This gives us a workaround for servers like usa.net's that bungle
+     * TOP.  It's pretty harmless because fetchall guarantees that any
+     * message dropped by an interrupted RETR will be picked up on the
+     * next poll of the site.
      *
      * We take advantage here of the fact that, according to all the
      * POP RFCs, "if the number of lines requested by the POP3 client
@@ -1217,7 +1226,8 @@ int doPOP3 (struct query *ctl)
 	return(PS_SYNTAX);
     }
 #endif /* MBOX */
-    peek_capable = !ctl->fetchall;
+    set_peek_capable(ctl); /* XXX FIXME: is this needed or do we always
+			      call this from pop3_getauth anyways? */
     return(do_protocol(ctl, &pop3));
 }
 #endif /* POP3_ENABLE */
