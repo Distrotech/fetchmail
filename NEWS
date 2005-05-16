@@ -61,6 +61,10 @@
   - fetchmail-6.2.5-declaration.patch (double sigint_handler decl/getpass.c)
   - fetchmail-6.2.5-implicit-declaration.patch (missing #include)
   - fetchmail-6.2.5-random-result.patch (uninitialized variable/opie.c)
+* Revised some bogus assertions about POP3 LAST and UIDL use in the
+  manual page. UIDL isn't flaky as the man page suggested, but a
+  reliability feature. In fact, IMAP4 code is flaky in that it relies on
+  the upstream seen flags. (Matthias Andree)
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
