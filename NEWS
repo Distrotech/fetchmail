@@ -65,6 +65,9 @@
   manual page. UIDL isn't flaky as the man page suggested, but a
   reliability feature. In fact, IMAP4 code is flaky in that it relies on
   the upstream seen flags. (Matthias Andree)
+* Miloslav Trmac's patch for fetchmailconf to support string-type values
+  of the "port" variable, avoiding "port None" corruption in .fetchmailrc.
+  To fix Redhat Bug #55623 (Matthias Andree)
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 

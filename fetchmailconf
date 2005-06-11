@@ -133,7 +133,7 @@ class Server:
 	    res = res + (" via " + str(self.via) + "\n");
 	if self.protocol != ServerDefaults.protocol:
 	    res = res + " with proto " + self.protocol 
-	if self.port != defaultports[self.protocol] and self.port != 0:
+	if self.port != defaultports[self.protocol] and self.port:
 	    res = res + " port " + `self.port`
 	if self.timeout != ServerDefaults.timeout:
 	    res = res + " timeout " + `self.timeout`
