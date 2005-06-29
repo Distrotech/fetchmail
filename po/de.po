@@ -634,7 +634,7 @@ msgstr "Dies ist fetchmail Version %s"
 #: fetchmail.c:346
 #, c-format
 msgid "Taking options from command line%s%s\n"
-msgstr "Erhalte Optinen von Kommandozeile%s%s\n"
+msgstr "Erhalte Optionen von Kommandozeile%s%s\n"
 
 #: fetchmail.c:347
 msgid " and "
@@ -885,7 +885,7 @@ msgstr ""
 #: fetchmail.c:1193
 #, c-format
 msgid "%s configuration invalid, port number cannot be negative\n"
-msgstr "%s-Konfiguration ungültig, Portnummber kann nicht negativ sein\n"
+msgstr "%s-Konfiguration ungültig, Portnummer kann nicht negativ sein\n"
 
 #: fetchmail.c:1200
 #, c-format
@@ -1327,12 +1327,12 @@ msgstr " (Voreinstellung)"
 #: fetchmail.c:1713
 #, c-format
 msgid "  Messages will be appended to %s as BSMTP\n"
-msgstr "  Nachrichetn werden an %s als BSMTP angehängt\n"
+msgstr "  Nachrichten werden an %s als BSMTP angehängt\n"
 
 #: fetchmail.c:1715
 #, c-format
 msgid "  Messages will be delivered with \"%s\".\n"
-msgstr "  Nachrichetn werden mit „%s“ ausgeliefert.\n"
+msgstr "  Nachrichten werden mit „%s“ ausgeliefert.\n"
 
 #: fetchmail.c:1722
 #, c-format
@@ -1415,7 +1415,7 @@ msgstr "des Namens.\n"
 
 #: fetchmail.c:1804
 msgid "  Envelope-address routing is disabled\n"
-msgstr "  Umschlag-Adress-Routing is deaktiviert\n"
+msgstr "  Umschlag-Adress-Routing ist deaktiviert\n"
 
 #: fetchmail.c:1807
 #, c-format
@@ -1570,7 +1570,7 @@ msgstr "Ermittelte Sicherheitsstufen-Flags: %s%s%s\n"
 #: gssapi.c:170
 #, c-format
 msgid "Maximum GSS token size is %ld\n"
-msgstr "Maximale GSS-Tokengröße is %ld\n"
+msgstr "Maximale GSS-Tokengröße ist %ld\n"
 
 #: gssapi.c:183
 msgid "Error creating security level request\n"
@@ -1786,7 +1786,7 @@ msgstr "%s:%d: Warnung: unbekanntes Token „%s“\n"
 #: odmr.c:64
 #, c-format
 msgid "%s's SMTP listener does not support ATRN\n"
-msgstr "%ss SMPT-Lauscher unterstützt ATRN nicht\n"
+msgstr "%ss SMTP-Lauscher unterstützt ATRN nicht\n"
 
 #: odmr.c:102
 msgid "Turnaround now...\n"
@@ -1853,7 +1853,7 @@ msgstr "Zeichkette „%s“ ist keine gültige Zahl.\n"
 #: options.c:210
 #, c-format
 msgid "Value of string '%s' is %s than %d.\n"
-msgstr "Wert der Zeichnkette „%s“ ist %s als %d.\n"
+msgstr "Wert der Zeichenkette „%s“ ist %s als %d.\n"
 
 #: options.c:211
 msgid "smaller"
@@ -2365,7 +2365,7 @@ msgstr "Ausgehende Daten:\n"
 
 #: rpa.c:651
 msgid "RPA String too long\n"
-msgstr "RPA Zeichnkette zu lang\n"
+msgstr "RPA Zeichenkette zu lang\n"
 
 #: rpa.c:656
 msgid "Unicode:\n"
