@@ -195,7 +195,7 @@ msgid ""
 msgstr ""
 "Esto puede significar que su servidor de correo se trabó, o que su\n"
 "servidor SMTP se colgó, o que su casilla de correo en el servidor ha\n"
-"sido corrupta por un error de servidor. Puede ejecutar ‘fetchmail -v -v’\n"
+"sido corrompida por un error de servidor. Puede ejecutar ‘fetchmail -v -v’\n"
 "para diagnosticar el problema.\n"
 "Fetchmail no inquirirá esta casilla hasta que lo reinicie.\n"
 
@@ -1445,11 +1445,11 @@ msgstr "  Número del encabezado de la envoltura a ser procesado: %d\n"
 #: fetchmail.c:1813
 #, c-format
 msgid "  Prefix %s will be removed from user id\n"
-msgstr "  El prefijo %s será removido del nombre de usuario\n"
+msgstr "  El prefijo %s será eliminado del nombre de usuario\n"
 
 #: fetchmail.c:1816
 msgid "  No prefix stripping\n"
-msgstr "  Ningún prefijo será removido\n"
+msgstr "  Ningún prefijo será eliminado\n"
 
 #: fetchmail.c:1823
 msgid "  Predeclared mailserver aliases:"
@@ -1773,7 +1773,7 @@ msgstr "desafío no coincidente\n"
 
 #: lock.c:83
 msgid "fetchmail: removing stale lockfile\n"
-msgstr "fetchmail: removiendo archivo de bloqueo viejo\n"
+msgstr "fetchmail: eliminando archivo de bloqueo viejo\n"
 
 #: lock.c:124
 msgid "fetchmail: lock creation failed.\n"
@@ -2042,7 +2042,7 @@ msgstr "  -E, --envelope    envolver encabezados de dirección\n"
 #: options.c:699
 msgid "  -Q, --qvirtual    prefix to remove from local user id\n"
 msgstr ""
-"  -Q, --qvirtual    prefijo a remover de la identificación local del "
+"  -Q, --qvirtual    prefijo a eliminar de la identificación local del "
 "usuario\n"
 
 #: options.c:700
