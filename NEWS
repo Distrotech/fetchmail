@@ -68,6 +68,11 @@
 * Miloslav Trmac's patch for fetchmailconf to support string-type values
   of the "port" variable, avoiding "port None" corruption in .fetchmailrc.
   To fix Redhat Bug #55623 (Matthias Andree)
+* de.po fixes from Nico Golde (Matthias Andree)
+* es.po fixes from Jesus Roncero, Debian bug #286044 (Matthias Andree)
+* sink.c fix from Cesar Eduardo Barros, to avoid double @ in address
+  when username contains an @ and the envelope sender is null, Debian
+  bug #272289 (Matthias Andree)
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 

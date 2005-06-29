@@ -877,7 +877,11 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
      */
     if (!msg->return_path[0] || (msg->return_path[0] == '@'))
     {
-      if (is_dottedquad(ctl->server.truename))
+      if (strchr(ctl->remotename,'@') || strchr(ctl->remotename,'!'))
+      {
+	snprintf(addr, sizeof(addr), "%s", ctl->remotename);
+      }
+      else if (is_dottedquad(ctl->server.truename))
       {
 	snprintf(addr, sizeof(addr), "%s@[%s]", ctl->remotename,
 		ctl->server.truename);
