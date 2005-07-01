@@ -91,7 +91,7 @@ void interface_init(void)
 	int major, minor;
 
 	if (sscanf(utsname.release, "%d.%d.%*d", &major, &minor) >= 2
-					&& !(major >= 2 && minor >= 2))
+					&& (major < 2 || (major == 2 && minor < 2)))
 	    /* pre-linux-2.2 format -- transmit packet count in 8th field */
 	    netdevfmt = "%d %d %*d %*d %*d %d %*d %d %*d %*d %*d %*d %d";
     }
