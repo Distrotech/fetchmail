@@ -12,6 +12,9 @@ SERIOUS
 SSL trust model violation: (Brian Candler)
 http://lists.ccil.org/pipermail/fetchmail-friends/2004-April/008516.html
 
+Let IMAP code use UID and UIDVALIDITY rather than relying on flags that
+everyone can alter.
+
 
 NORMAL
 ======
