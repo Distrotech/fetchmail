@@ -85,6 +85,8 @@ fetchmail 6.3.0 (not yet released officially):
   possibly fixing Red Hat bug #114470. (Matthias Andree).
 * Nalin Dahyabhai's patch to use the krb5-config script, if present.
   Sent by Miloslav Trmac. (Matthias Andree)
+* Nalin Dahyabhai's fix to make rpa.c compile. Sent by Miloslav Trmac.
+  (Matthias Andree)
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 

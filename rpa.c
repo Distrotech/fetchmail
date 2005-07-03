@@ -114,10 +114,10 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     unsigned char buf [POPBUFSIZE];
     unsigned char *bufp;
     int      status,aulin,kuslin;
-    char* stdec[4] = { NGT_("Success") ,
-		       NGT_("Restricted user (something wrong with account)") ,
-		       NGT_("Invalid userid or passphrase") ,
-		       NGT_("Deity error") };
+    char* stdec[4] = { N_("Success") ,
+		       N_("Restricted user (something wrong with account)") ,
+		       N_("Invalid userid or passphrase") ,
+		       N_("Deity error") };
 
     /* Initiate RPA authorisation */
 
