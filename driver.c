@@ -211,7 +211,6 @@ const char *canonical;  /* server name */
     krb5_auth_context auth_context = NULL;
 
     krb5_init_context(&context);
-    krb5_init_ets(context);
     krb5_auth_con_init(context, &auth_context);
 
     if (retval = krb5_cc_default(context, &ccdef)) {
