@@ -303,6 +303,7 @@ int main(int argc, char **argv)
     /* parse the ~/.netrc file (if present) for future password lookups. */
     netrc_file = prependdir (NETRC_FILE, home);
     netrc_list = parse_netrc(netrc_file);
+    free(netrc_file);
 #undef NETRC_FILE
 
     /* pick up passwords where we can */ 
