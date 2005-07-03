@@ -44,7 +44,7 @@ char *program_name = "rfc822";
 unsigned char *reply_hack(
 	unsigned char *buf		/* header to be hacked */,
 	const unsigned char *host	/* server hostname */,
-        int *length)
+	size_t *length)
 /* hack message headers so replies will work properly */
 {
     unsigned char *from, *cp, last_nws = '\0', *parens_from = NULL;
@@ -393,7 +393,7 @@ unsigned char *nxtaddr(const unsigned char *hdr /* header to be parsed, NUL to c
 static void parsebuf(unsigned char *longbuf, int reply)
 {
     unsigned char	*cp;
-    int			dummy;
+    size_t		dummy;
 
     if (reply)
     {

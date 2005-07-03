@@ -542,7 +542,7 @@ void stuff_warning();
 void close_warning_by_mail(struct query *, struct msgblk *);
 
 /* rfc822.c: RFC822 header parsing */
-unsigned char *reply_hack(unsigned char *, const unsigned char *, int *);
+unsigned char *reply_hack(unsigned char *, const unsigned char *, size_t *);
 unsigned char *nxtaddr(const unsigned char *);
 
 /* uid.c: UID support */

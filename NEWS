@@ -76,6 +76,8 @@ fetchmail 6.3.0 (not yet released officially):
   when username contains an @ and the envelope sender is null, Debian
   bug #272289 (Matthias Andree)
 * configure.ac cleanups by Miloslav Trmac (Matthias Andree)
+* Miloslav Trmac's fix to reply_hack() type, for systems where
+  sizeof(int) != sizeof(size_t). (Matthias Andree)
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
