@@ -31,7 +31,7 @@ int prc_lineno = 1;
 %%
 
 \"[^\"]*\"	{
-			yytext[strlen(yytext)-1] = '\0';
+			yytext[yyleng-1] = '\0';
 			escapes(yytext+1, yytext);
 			yyleng = strlen(yytext);
 			yylval.sval = yytext;
@@ -39,7 +39,7 @@ int prc_lineno = 1;
 			return STRING;
 		}
 \'[^\']*\'	{
-			yytext[strlen(yytext)-1] = '\0';
+			yytext[yyleng-1] = '\0';
 			escapes(yytext+1, yytext);
 			yyleng = strlen(yytext);
 			yylval.sval = yytext;
@@ -50,9 +50,18 @@ int prc_lineno = 1;
 "*"		{ BEGIN(0); return WILDCARD; }
 
 <NAME>[^=;:, \t\r\n]+	{
-			escapes(yytext, yytext);
-			yyleng = strlen(yytext);
-			yylval.sval = yytext;
+			static char *in;
+			static size_t ins;
+
+			if (yyleng + 1 > ins) {
+			    ins = yyleng + 1;
+			    in = xrealloc(in, ins);
+			}
+			memcpy(in, yytext, yyleng);
+			in[yyleng] = '\0';
+			escapes(in, in);
+			yyleng = strlen(in);
+			yylval.sval = in;
                         SETSTATE(0);
 			return STRING;
 		}
