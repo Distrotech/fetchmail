@@ -1012,7 +1012,7 @@ static int do_session(
 		struct addrinfo hints, *res;
 		int error;
 
-		memset(&hints, sizeof(hints), 0);
+		memset(&hints, 0, sizeof(hints));
 		hints.ai_socktype = SOCK_STREAM;
 		hints.ai_family = AF_UNSPEC;
 		hints.ai_flags = AI_CANONNAME;
