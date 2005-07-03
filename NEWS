@@ -93,8 +93,12 @@ fetchmail 6.3.0 (not yet released officially):
   (Matthias Andree).
 * Internationalization (i18n) updates by Miloslav Trmac. (Matthias
   Andree)
-* Matthias Andree's fix for "couldn't find canonical DNS name of NN
-  (MM)" for hosts that have only IPv6 addresses.
+* Fix "couldn't find canonical DNS name of NN (MM)" for hosts that have
+  only IPv6 addresses. Matthias Andree.
+* Revised INSTALL after question from Brian Candler, inet6-apps is no
+  longer available: remove inet6-apps hints for IPv6, and add some
+  apologetic message for IPsec. Note the code may be removed in a future
+  version. Matthias Andree.
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
