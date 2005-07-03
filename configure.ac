@@ -120,10 +120,10 @@ fi
 AC_SUBST(EXTRAOBJ)
 
 AC_CHECK_FUNCS(tcsetattr stty setsid geteuid seteuid gethostbyname \
-  res_search herror strrchr strerror setlinebuf syslog \
+  res_search strerror syslog \
   snprintf vprintf vsnprintf vsyslog \
   atexit inet_aton strftime setrlimit socketpair sigprocmask sigaction \
-  getopt_long strdup)
+  strdup)
 
 # Under Red Hat 4.0 (and many other Linuxes) -lresolv is seriously flaky
 # and breaks gethostbyname(2).  It's better to use the bind stuff in the C
