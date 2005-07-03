@@ -411,6 +411,17 @@ then
   AC_DEFINE(KERBEROS_V5,1,Define if you have Kerberos V5)
   CEFLAGS="$CEFLAGS -I/usr/include/kerberosV"
   LIBS="$LIBS -lasn1 -lkrb5 -lcom_err -lkafs"
+elif krb5-config 2> /dev/null >/dev/null ; then
+  krb5_prefix=`krb5-config --prefix krb5`
+  AC_MSG_RESULT([krb5-config points to kerberosV under $krb5_prefix])
+  if test -f ${krb5_prefix}/include/et/com_err.h && \
+   ! test -f ${krb5_prefix}/include/com_err.h  ; then
+    CEFLAGS="$CEFLAGS -I${krb5_prefix}/include/et"
+  fi
+  unset krb5_prefix
+  CEFLAGS="$CEFLAGS `krb5-config --cflags krb5`"
+  LIBS="$LIBS `krb5-config --libs krb5`"
+  AC_DEFINE(KERBEROS_V5)
 else
   if test "$with_kerberos5" != "yes" 
   then
@@ -486,6 +497,23 @@ then
   AC_DEFINE(KERBEROS_V4,1,Define if you have Kerberos V4)
   CEFLAGS="$CEFLAGS -I/usr/include/kerberosIV"
   LIBS="$LIBS -lkrb -ldes"
+elif krb4-config 2> /dev/null >/dev/null ; then
+  krb4_prefix=`krb4-config --prefix`
+  AC_MSG_RESULT([krb4-config points to kerberosIV under $krb4_prefix])
+  unset krb4_prefix
+  CEFLAGS="$CEFLAGS `krb4-config --cflags`"
+  LIBS="$LIBS `krb4-config --libs`"
+  AC_DEFINE(KERBEROS_V4)
+elif krb5-config 2> /dev/null >/dev/null ; then
+  krb4_prefix=`krb5-config --prefix krb4`
+  AC_MSG_RESULT([krb5-config points to kerberosIV under $krb4_prefix])
+  if test -f ${krb4_prefix}/include/kerberosIV/krb.h ; then
+    AC_DEFINE(KERBEROS_V4_V5,1,Define if you have Kerberos V4 headers under a kerberosIV directory)
+  fi
+  unset krb4_prefix
+  CEFLAGS="$CEFLAGS `krb5-config --cflags krb4`"
+  LIBS="$LIBS `krb5-config --libs krb4`"
+  AC_DEFINE(KERBEROS_V4)
 else
   #we need to detect when we're building under a kerberosV compatibility
   #layer, btw...
