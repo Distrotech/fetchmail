@@ -28,7 +28,6 @@
 #ifdef HAVE_SETRLIMIT
 #include <sys/resource.h>
 #endif /* HAVE_SETRLIMIT */
-#include <sys/utsname.h>
 
 #ifdef HAVE_SOCKS
 #include <socks.h> /* SOCKSinit() */
