@@ -28,6 +28,9 @@
 #include <sys/wait.h>
 #endif
 
+#ifdef HAVE_SYS_SOCKET_H
+#include <sys/socket.h>
+#endif
 #ifdef HAVE_NET_SOCKET_H
 #include <net/socket.h>
 #endif
@@ -1005,8 +1008,35 @@ static int do_session(
 	    }
 	    else
 	    {
+#ifdef INET6_ENABLE
+		struct addrinfo hints, *res;
+		int error;
+
+		memset(&hints, sizeof(hints), 0);
+		hints.ai_socktype = SOCK_STREAM;
+		hints.ai_family = AF_UNSPEC;
+		hints.ai_flags = AI_CANONNAME;
+
+		error = getaddrinfo(ctl->server.queryname, NULL, &hints, &res);
+		if (error)
+		{
+		    report(stderr,
+			   GT_("couldn't find canonical DNS name of %s (%s)\n"),
+			   ctl->server.pollname, ctl->server.queryname);
+		    err = PS_DNS;
+		    set_timeout(0);
+		    phase = oldphase;
+		    goto closeUp;
+		}
+		else
+		{
+		    ctl->server.truename=xstrdup(res->ai_canonname);
+		    ctl->server.trueaddr=xmalloc(res->ai_addrlen);
+		    memcpy(ctl->server.trueaddr, res->ai_addr, res->ai_addrlen);
+		}
+#else
 		struct hostent	*namerec;
-		    
+ 
 		/* 
 		 * Get the host's IP, so we can report it like this:
 		 *
@@ -1032,6 +1062,7 @@ static int do_session(
 			   namerec->h_addr_list[0],
 			   namerec->h_length);
 		}
+#endif
 	    }
 	}
 #endif /* HAVE_GETHOSTBYNAME */

@@ -4,7 +4,7 @@ dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl
 
-AC_INIT([fetchmail],[6.2.6])
+AC_INIT([fetchmail],[6.2.6.alpha2])
 AC_CONFIG_SRCDIR([fetchmail.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_LIBOBJ_DIR([.])
@@ -29,7 +29,7 @@ AC_TYPE_SIGNAL
 AC_CHECK_HEADERS([unistd.h termios.h termio.h sgtty.h stdarg.h \
 	alloca.h sys/itimer.h fcntl.h sys/fcntl.h memory.h sys/wait.h \
 	arpa/inet.h arpa/nameser.h netinet/in.h net/socket.h \
-	sys/select.h sys/time.h langinfo.h])
+	sys/select.h sys/socket.h sys/time.h langinfo.h])
 AC_CHECK_HEADERS([resolv.h],,,[
 #include <sys/types.h>
 #ifdef HAVE_NETINET_IN_H
@@ -345,8 +345,13 @@ AC_ARG_ENABLE(opie,
 	[with_opie=no])
 test "$with_opie" = "yes" && AC_DEFINE(OPIE_ENABLE,1,Define if you want OPIE support compiled in)
 
+### XXX FIXME: the inet6-apps library is no longer available,
+### http://www.inner.net/pub/ipv6/ states, as of 2005-07-03:
+### "/pub/ipv6
+### Our IPv6 software is now long defunct. Please find a more modern
+### source."
 AC_ARG_ENABLE(inet6,
-	[  --enable-inet6          support IPv6 (requires the inet6-apps library)],
+	[  --enable-inet6          support IPv6],
 
 	[ AC_CHECK_FUNC(getaddrinfo, [with_inet6=yes],
 	  [ LDFLAGS="$LDFLAGS -L/usr/inet6/lib";
