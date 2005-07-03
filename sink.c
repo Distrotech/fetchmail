@@ -1540,7 +1540,7 @@ va_dcl
 #else
     va_start(ap);
 #endif
-    vsnprintf(buf, sizeof(buf), fmt, ap);
+    vsnprintf(buf, sizeof(buf) - 2, fmt, ap);
     va_end(ap);
 
     snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), "\r\n");

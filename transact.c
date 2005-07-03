@@ -1413,7 +1413,7 @@ va_dcl
     va_list ap;
 
     if (protocol->tagged && !suppress_tags)
-	(void) sprintf(buf, "%s ", GENSYM);
+        snprintf(buf, sizeof(buf) - 2, "%s ", GENSYM);
     else
 	buf[0] = '\0';
 
@@ -1422,7 +1422,7 @@ va_dcl
 #else
     va_start(ap);
 #endif
-    vsnprintf(buf + strlen(buf), sizeof(buf)-strlen(buf), fmt, ap);
+    vsnprintf(buf + strlen(buf), sizeof(buf)-2-strlen(buf), fmt, ap);
     va_end(ap);
 
     snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), "\r\n");
@@ -1490,7 +1490,7 @@ va_dcl
     phase = SERVER_WAIT;
 
     if (protocol->tagged && !suppress_tags)
-	(void) sprintf(buf, "%s ", GENSYM);
+	snprintf(buf, sizeof(buf) - 2, "%s ", GENSYM);
     else
 	buf[0] = '\0';
 
@@ -1499,7 +1499,7 @@ va_dcl
 #else
     va_start(ap);
 #endif
-    vsnprintf(buf + strlen(buf), sizeof(buf)-strlen(buf), fmt, ap);
+    vsnprintf(buf + strlen(buf), sizeof(buf)-2-strlen(buf), fmt, ap);
     va_end(ap);
 
     snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), "\r\n");

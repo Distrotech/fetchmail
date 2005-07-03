@@ -80,6 +80,9 @@ fetchmail 6.3.0 (not yet released officially):
   sizeof(int) != sizeof(size_t). (Matthias Andree)
 * Nalin Dahyabhai's fix for driver.c to not call the private Kerberos
   krb5_init_ets() function. Sent by Miloslav Trmac. (Matthias Andree)
+* Nalin Dahyabhai's fix for sink.c/transact.c to reserve sufficient
+  space for \r\n trailers in snprintf calls. Sent by Miloslav Trmac,
+  possibly fixing Red Hat bug #114470. (Matthias Andree).
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
