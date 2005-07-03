@@ -1501,13 +1501,15 @@ static void dump_params (struct runctl *runp,
 	    printf(GT_("  Mail will be retrieved via %s\n"), ctl->server.via);
 
 	if (ctl->server.interval)
-	    printf(GT_("  Poll of this server will occur every %d intervals.\n"),
-		   ctl->server.interval);
+	    printf(ngettext("  Poll of this server will occur every %d interval.\n",
+			    "  Poll of this server will occur every %d intervals.\n",
+			    ctl->server.interval), ctl->server.interval);
 	if (ctl->server.truename)
 	    printf(GT_("  True name of server is %s.\n"), ctl->server.truename);
 	if (ctl->server.skip || outlevel >= O_VERBOSE)
-	    printf(GT_("  This host %s be queried when no host is specified.\n"),
-		   ctl->server.skip ? GT_("will not") : GT_("will"));
+	    printf(ctl->server.skip
+		   ? GT_("  This host will not be queried when no host is specified.\n")
+		   : GT_("  This host will be queried when no host is specified.\n"));
 	if (!NO_PASSWORD(ctl))
 	{
 	    if (!ctl->password)
@@ -1618,40 +1620,39 @@ static void dump_params (struct runctl *runp,
 		    printf(" %s", (char *)idp->id);
 		printf("\n");
 	    }
-	    printf(GT_("  %s messages will be retrieved (--all %s).\n"),
-		   ctl->fetchall ? GT_("All") : GT_("Only new"),
-		   ctl->fetchall ? "on" : "off");
-	    printf(GT_("  Fetched messages %s be kept on the server (--keep %s).\n"),
-		   ctl->keep ? GT_("will") : GT_("will not"),
-		   ctl->keep ? "on" : "off");
-	    printf(GT_("  Old messages %s be flushed before message retrieval (--flush %s).\n"),
-		   ctl->flush ? GT_("will") : GT_("will not"),
-		   ctl->flush ? "on" : "off");
-	    printf(GT_("  Rewrite of server-local addresses is %s (--norewrite %s).\n"),
-		   ctl->rewrite ? GT_("enabled") : GT_("disabled"),
-		   ctl->rewrite ? "off" : "on");
-	    printf(GT_("  Carriage-return stripping is %s (stripcr %s).\n"),
-		   ctl->stripcr ? GT_("enabled") : GT_("disabled"),
-		   ctl->stripcr ? "on" : "off");
-	    printf(GT_("  Carriage-return forcing is %s (forcecr %s).\n"),
-		   ctl->forcecr ? GT_("enabled") : GT_("disabled"),
-		   ctl->forcecr ? "on" : "off");
-	    printf(GT_("  Interpretation of Content-Transfer-Encoding is %s (pass8bits %s).\n"),
-		   ctl->pass8bits ? GT_("disabled") : GT_("enabled"),
-		   ctl->pass8bits ? "on" : "off");
-	    printf(GT_("  MIME decoding is %s (mimedecode %s).\n"),
-		   ctl->mimedecode ? GT_("enabled") : GT_("disabled"),
-		   ctl->mimedecode ? "on" : "off");
-	    printf(GT_("  Idle after poll is %s (idle %s).\n"),
-		   ctl->idle ? GT_("enabled") : GT_("disabled"),
-		   ctl->idle ? "on" : "off");
-	    printf(GT_("  Nonempty Status lines will be %s (dropstatus %s)\n"),
-		   ctl->dropstatus ? GT_("discarded") : GT_("kept"),
-		   ctl->dropstatus ? "on" : "off");
-	    printf(GT_("  Delivered-To lines will be %s (dropdelivered %s)\n"),
-		   ctl->dropdelivered ? GT_("discarded") : GT_("kept"),
-		   ctl->dropdelivered ? "on" : "off");
-	    if (NUM_NONZERO(ctl->limit))
+	    printf(ctl->fetchall
+		   ? GT_("  All messages will be retrieved (--all on).\n")
+		   : GT_("  Only new messages will be retrieved (--all off).\n"));
+	    printf(ctl->keep
+		   ? GT_("  Fetched messages will be kept on the server (--keep on).\n")
+		   : GT_("  Fetched messages will not be kept on the server (--keep off).\n"));
+	    printf(ctl->flush
+		   ? GT_("  Old messages will be flushed before message retrieval (--flush on).\n")
+		   : GT_("  Old messages will not be flushed before message retrieval (--flush off).\n"));
+	    printf(ctl->rewrite
+		   ? GT_("  Rewrite of server-local addresses is enabled (--norewrite off).\n")
+		   : GT_("  Rewrite of server-local addresses is disabled (--norewrite on).\n"));
+	    printf(ctl->stripcr
+		   ? GT_("  Carriage-return stripping is enabled (stripcr on).\n")
+		   : GT_("  Carriage-return stripping is disabled (stripcr off).\n"));
+	    printf(ctl->forcecr
+		   ? GT_("  Carriage-return forcing is enabled (forcecr on).\n")
+		   : GT_("  Carriage-return forcing is disabled (forcecr off).\n"));
+	    printf(ctl->pass8bits
+		   ? GT_("  Interpretation of Content-Transfer-Encoding is disabled (pass8bits on).\n")
+		   : GT_("  Interpretation of Content-Transfer-Encoding is enabled (pass8bits off).\n"));
+	    printf(ctl->mimedecode
+		   ? GT_("  MIME decoding is enabled (mimedecode on).\n")
+		   : GT_("  MIME decoding is disabled (mimedecode off).\n"));
+	    printf(ctl->idle
+		   ? GT_("  Idle after poll is enabled (idle on).\n")
+		   : GT_("  Idle after poll is diabled (idle off).\n"));
+	    printf(ctl->dropstatus
+		   ? GT_("  Nonempty Status lines will be discarded (dropstatus on)\n")
+		   : GT_("  Nonempty Status lines will be kept (dropstatus off)\n"));
+	    printf(ctl->dropdelivered
+		   ? GT_("  Delivered-To lines will be discarded (dropdelivered on)\n")
+		   : GT_("  Delivered-To lines will be kept (dropdelivered off)\n"));	    if (NUM_NONZERO(ctl->limit))
 	    {
 		if (NUM_NONZERO(ctl->limit))
 		    printf(GT_("  Message size limit is %d octets (--limit %d).\n"), 
@@ -1789,15 +1790,15 @@ static void dump_params (struct runctl *runp,
 
 		    if (count > 1 || ctl->wildcard)
 		    {
-			printf(GT_("  DNS lookup for multidrop addresses is %s.\n"),
-			       ctl->server.dns ? GT_("enabled") : GT_("disabled"));
+			printf(ctl->server.dns
+			       ? GT_("  DNS lookup for multidrop addresses is enabled.\n")
+			       : GT_("  DNS lookup for multidrop addresses is disabled.\n"));
 			if (ctl->server.dns)
 			{
-			    printf(GT_("  Server aliases will be compared with multidrop addresses by "));
 	       		    if (ctl->server.checkalias)
-				printf(GT_("IP address.\n"));
+				printf(GT_("  Server aliases will be compared with multidrop addresses by IP address.\n"));
 			    else
-				printf(GT_("name.\n"));
+				printf(GT_("  Server aliases will be compared with multidrop addresses by name.\n"));
 			}
 			if (ctl->server.envelope == STRING_DISABLED)
 			    printf(GT_("  Envelope-address routing is disabled\n"));

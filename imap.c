@@ -667,7 +667,9 @@ static int imap_getrange(int sock,
 	if (recentcount == 0)
 		count = 0;
 	if (outlevel >= O_DEBUG)
-	    report(stdout, GT_("%d messages waiting after re-poll\n"), count);
+	    report(stdout, ngettext("%d message waiting after re-poll\n",
+				    "%d messages waiting after re-poll\n",
+				    count), count);
     }
     else
     {
@@ -681,7 +683,9 @@ static int imap_getrange(int sock,
 	    return(ok);
 	}
 	else if (outlevel >= O_DEBUG)
-	    report(stdout, GT_("%d messages waiting after first poll\n"), count);
+	    report(stdout, ngettext("%d message waiting after first poll\n",
+				    "%d messages waiting after first poll\n",
+				    count), count);
 
 	/* no messages?  then we may need to idle until we get some */
 	while (count == 0 && do_idle) {
@@ -707,7 +711,9 @@ static int imap_getrange(int sock,
 		return(ok);
 	    }
 	    if (outlevel >= O_DEBUG)
-		report(stdout, GT_("%d messages waiting after expunge\n"), count);
+		report(stdout, ngettext("%d message waiting after expunge\n",
+					"%d messages waiting after expunge\n",
+					count), count);
 	}
     }
 

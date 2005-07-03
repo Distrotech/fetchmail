@@ -89,6 +89,10 @@ fetchmail 6.3.0 (not yet released officially):
   (Matthias Andree)
 * Trivial fetchmailconf.man to redirect to fetchmail.1.
   Reported by Miloslav Trmac. (Matthias Andree)
+* Updated and re-enabled Czech translation, by Miloslav Trmac
+  (Matthias Andree).
+* Internationalization (i18n) updates by Miloslav Trmac. (Matthias
+  Andree)
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 

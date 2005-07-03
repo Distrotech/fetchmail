@@ -601,12 +601,9 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 			     ctl->remotename, ctl->server.truename,
 			     num, count);
 
-		/* XXX FIXME: the gettext stuff needs to list "octets" or
-		 * "header octets" as a unit, and also provide for
-		 * proper plural form */
 		if (len > 0)
-		    report_build(stdout, GT_(" (%d %soctets)"),
-				 len, wholesize ? "" : GT_("header "));
+		    report_build(stdout, wholesize ? GT_(" (%d octets)")
+				 : GT_(" (%d header octets)"), len);
 		if (outlevel >= O_VERBOSE)
 		    report_complete(stdout, "\n");
 		else
@@ -809,7 +806,9 @@ flagthemail:
 	/* perhaps this as many as we're ready to handle */
 	if (maxfetch && maxfetch <= *fetches && num < count)
 	{
-	    report(stdout, GT_("fetchlimit %d reached; %d messages left on server %s account %s\n"),
+	    report(stdout,
+		   ngettext("fetchlimit %d reached; %d message left on server %s account %s\n",
+			    "fetchlimit %d reached; %d messages left on server %s account %s\n", count - *fetches),
 		   maxfetch, count - *fetches, ctl->server.truename, ctl->remotename);
 	    return(PS_MAXFETCH);
 	}
