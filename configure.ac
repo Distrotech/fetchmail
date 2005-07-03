@@ -103,11 +103,11 @@ AC_CHECK_LIB(intl, gettext,
 
 AC_REPLACE_FUNCS([strstr strcasecmp memmove stpcpy])
 
-AC_CHECK_FUNC(MD5Init, AC_DEFINE(HAVE_MD5,1,Define if you have md5 in libc),
+AC_CHECK_FUNC(MD5Init, [],
 	      [AC_LIBSOURCE(md5c.c)
                EXTRAOBJ="$EXTRAOBJ md5c.\$(OBJEXT)"])
 
-AC_CHECK_FUNC(getopt_long, AC_DEFINE(HAVE_GETOPT_LONG),
+AC_CHECK_FUNC(getopt_long, [],
               [AC_LIBSOURCES([getopt.c, getopt1.c])
 	       EXTRAOBJ="$EXTRAOBJ getopt.\$(OBJEXT) getopt1.\$(OBJEXT)"])
 
