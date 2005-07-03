@@ -12,7 +12,7 @@ BUILT_SOURCES=		rcfile_y.h
 bin_PROGRAMS=		fetchmail
 dist_bin_SCRIPTS=	fetchmailconf
 dist_noinst_SCRIPTS=	specgen.sh
-dist_man1_MANS=		fetchmail.man
+dist_man1_MANS=		fetchmail.man fetchmailconf.man
 
 # for gettext (used by fetchmail.c, NOT by GNU gettext)
 localedir=		$(datadir)/locale
