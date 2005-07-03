@@ -2,6 +2,8 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail 6.3.0 (not yet released officially):
+
 * Sunil Shetye's fix to force fetchsizelimit to 1 for APOP and RPOP.
 * PopDel.py removed from contrib at author's request.
 * Matthias Andree's fix for Sunil Shetye's fetch-split patch
@@ -73,6 +75,7 @@
 * sink.c fix from Cesar Eduardo Barros, to avoid double @ in address
   when username contains an @ and the envelope sender is null, Debian
   bug #272289 (Matthias Andree)
+* configure.ac cleanups by Miloslav Trmac (Matthias Andree)
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
@@ -214,6 +217,6 @@ fetchmail-6.0.0 (Tue Sep 17 19:48:25 EDT 2002), 21972 lines:
 * Nerijus Baliunas's patch to support STARTTLS over IMAP.
 * More cleanups and minor bugfixes from Sunil Shetye.
 * Default antispam-response list is now empty.
-* Updated de and po translations,
+* Updated de and po translations.
 
 There are 520 people on fetchmail-friends and 683 on fetchmail-announce.
