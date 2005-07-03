@@ -1977,8 +1977,8 @@ Geocities are lame, you should boycott them anyway.</p>
 webmail with the help of the <a
 href='http://people.freenet.de/courierdave/'>HotWayDaemon</a>
 daemon. You don't even need to install hotwayd as a daemon in
-<filename>inetd.conf</filename> but can use it as a plugin. Your
-configuration should look like this:<p>
+<samp>inetd.conf</samp> but can use it as a plugin. Your
+configuration should look like this:</p>
 
 <pre>
 poll localhost protocol pop3 tracepolls
@@ -2043,13 +2043,14 @@ IPsec?</a></h2>
 
 <p>To use fetchmail with IPv6, you need a system that supports
 IPv6, the "Basic Socket Interface Extensions for IPv6" (RFC 2133).
-This currently means that you need to have a BSD/OS or NetBSD
-system with the NRL IPv6+IPsec software distribution or a Linux
-system with a 2.2 or later kernel and net-tools. It should not be
-hard to build fetchmail on other IPv6 implementations if you can
-port the inet6-apps kit.</p>
+</p>
 
-<p>To use fetchmail with networking security (read: IPsec), you
+<p><strong>Note that the inet6-apps library is no longer available, so
+    we're sorry to say that IPsec support is no longer available at this
+    time. The IPsec information in the next three paragraphs is obsolete
+    and only included here for historic reasons and no longer
+    accurate.</strong></p> <p>To use fetchmail with networking
+security (read: IPsec), you
 need a system that supports IPsec, the API described in the
 "Network Security API for Sockets"
 (draft-metz-net-security-api-01.txt), and the inet6-apps kit. This
@@ -2062,7 +2063,7 @@ coming months.</p>
 <a
 href="http://web.mit.edu/network/isakmp">http://web.mit.edu/network/isakmp</a></p>
 
-<p>The inet6-apps kit can be obtained from <a
+<p>The inet6-apps kit used to be available from <a
 href="http://ftp.ps.pl/pub/linux/IPv6/inet6-apps/">http://ftp.ps.pl/pub/linux/IPv6/inet6-apps/</a>.</p>
 
 <p>More information on using IPv6 with Linux can be obtained
@@ -2072,14 +2073,6 @@ from:</p>
 <li><a
 href="http://www.bieringer.de/linux/IPv6/IPv6-HOWTO/IPv6-HOWTO.html">
 http://www.bieringer.de/linux/IPv6/IPv6-HOWTO/IPv6-HOWTO.html</a></li>
-
-<li><a
-href="http://www.ipv6.inner.net/ipv6">http://www.ipv6.inner.net/ipv6</a>
-(via IPv6)</li>
-
-<li><a
-href="http://www.inner.net/ipv6">http://www.inner.net/ipv6</a> (via
-IPv4)</li>
 </ul>
 
 <hr/>
@@ -3449,7 +3442,8 @@ the received date from the last Received header.</p>
 immediately" in my logs.</a></h2>
 
 <p>This is your server barfing on the CAPA probe that fetchmail sends.</p>
-If you run fetchmail in daemon mode (say "set daemon 600"), you will
+
+<p>If you run fetchmail in daemon mode (say "set daemon 600"), you will
 get the message only once per run.</p>
 
 <p>If you set an authentication method explicitly (say, with
@@ -3472,7 +3466,7 @@ not keen on checking the sender addresses. This problem typically
 occurs if your mail server is not checking the sender addresses, but
 your local server is.</p>
 
-<p>Or you could declare <code>antispam 451<code></p>
+<p>Or you could declare <code>antispam 451</code>.</p>
 
 <p>Or, you could check your nameserver configuration and query logs for
 dns errors.</p>
@@ -3482,8 +3476,8 @@ dns errors.</p>
 <hr />
 <h2><a name="O13">O13. I want timestamp information in my fetchmail logs.</a></h2>
 
-<p>Write a <code>preconnect</connect> command in your configuration file that
-does something like "date >> $HOME/Procmail/fetchmail.log".</p>
+<p>Write a <code>preconnect</code> command in your configuration file that
+does something like "date &gt;&gt; $HOME/Procmail/fetchmail.log".</p>
 
 <hr/>
 <table width="100%" cellpadding="0" summary="Canned page footer">
