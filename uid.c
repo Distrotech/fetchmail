@@ -610,7 +610,7 @@ void write_saved_lists(struct query *hostlist, const char *idfile)
     {
 	if (outlevel >= O_DEBUG)
 	    report(stdout, GT_("Deleting fetchids file.\n"));
-	if (unlink(idfile))
+	if (unlink(idfile) && errno != ENOENT)
 	    report(stderr, GT_("Error deleting %s: %s\n"), strerror(errno));
     } else {
 	char *newnam = xmalloc(strlen(idfile) + 2);
