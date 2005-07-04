@@ -1082,7 +1082,7 @@ msgstr " (erzwungene UIDL-Benutzung)"
 
 #: fetchmail.c:1561
 msgid "  All available authentication methods will be tried.\n"
-msgstr "  Alle vefügbaren Authentifikationsmethoden werden versucht.\n"
+msgstr "  Alle verfügbaren Authentifikationsmethoden werden versucht.\n"
 
 #: fetchmail.c:1564
 msgid "  Password authentication will be forced.\n"
