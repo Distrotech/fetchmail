@@ -1,6 +1,8 @@
 				Release Notes:
 
-(The `lines' figures total .c, .h, .l, and .y files under version control.)
+(The `lines' figures total .c, .h, .l, and .y files under version control.
+Names in parentheses are the maintainers who handled the respective change.
+Abbreviations: MA = Matthias Andree, RF = Rob Funk)
 
 fetchmail 6.3.0 (not yet released officially):
 
@@ -10,55 +12,53 @@ fetchmail 6.3.0 (not yet released officially):
 * Include James Stone's moldremover.py script.
 * Enable .fetchmailrc permissions checking under Cygwin.
 * Nalin Dahyabai's fix for POP3 strong authentication.
-* Revised Nalin Dahyabai's fix for POP3 strong authentication (Matthias
-  Andree, the original version would go into an infinite loop when CAPA
-  failed; found by David Greaves.)
+* Revised Nalin Dahyabai's fix for POP3 strong authentication (the
+  original version would go into an infinite loop when CAPA failed;
+  found by David Greaves.) (MA)
 * HOME_ETC patch for PLD Linux.
 * Sunil Shetye's fix for SSL configuration.
 * Simon Josefsson's patch for GSS library support.
-* Added Andrey Lelikov's recupe for Hotmail and Lycos Webmail.
+* Added Andrey Lelikov's recipe for Hotmail and Lycos Webmail.
 * Remove blank between MAIL FROM: and <, which causes Cyrus to complain.
-  Patch by Phil Endecott. (Rob Funk)
-* Switched to automake. (Matthias Andree)
-* Build fixes for HESIOD and resolv.h trouble on FreeBSD. (Matthias Andree)
+  Patch by Phil Endecott. (RF)
+* Switched to automake. (MA)
+* Build fixes for HESIOD and resolv.h trouble on FreeBSD. (MA)
 * Fabrice Bellet's fix for Red Hat bug #113492, fetchmail hangs in IMAP
   mode after EXPUNGE when the server (Dovecot 0.99.10) doesn't update
-  RECENT and EXISTS counts. (Matthias Andree)
+  RECENT and EXISTS counts. (MA)
 * Holger Mauermann's bounce patch, to use a NULL envelope from, not
   write a Return-Path header (both to meet RFC-2821), changed From,
-  added Subject header, rewording the human readable part. (Matthias Andree)
-* Merge Sunil Shetye's time.h handling fix. (Matthias Andree)
+  added Subject header, rewording the human readable part. (MA)
+* Merge Sunil Shetye's time.h handling fix. (MA)
 * Merge Gerd von Egidy's patch to avoid a segfault in multidrop/received
-  mode when the Received: headers are malformatted. (Matthias Andree)
-* MIME-encode bodies and Subject headers of warning messages (Matthias
-  Andree), limiting the header to 7 bits.
+  mode when the Received: headers are malformatted. (MA)
+* MIME-encode bodies and Subject headers of warning messages, limiting
+  the header to 7 bits. (MA)
 * Normalize most locale codesets to IANA codesets, based on
-  norm_charmap.c by Markus Kuhn. (Matthias Andree)
-* Remove sleep(3) after POP3 login, patch by Brian Candler. (Matthias
-  Andree)
+  norm_charmap.c by Markus Kuhn. (MA)
+* Remove sleep(3) after POP3 login, patch by Brian Candler. (MA)
 * Fix option parsing bug that trashes the showdots setting when more
-  than one server is configured. Patch by Brian Candler. (Matthias
-  Andree)
+  than one server is configured. Patch by Brian Candler. (MA)
 * Honor sslcertpath setting even if sslcertck is unset. Patch by Brian
-  Candler. (Matthias Andree)
+  Candler. (MA)
 * SSL certificate checking fixes, don't display same error message twice
   in succession, make sure that Common Name and fingerprint checking are
   only done once. Print all validation warnings/errors even if not in
-  verbose mode. Patch by Brian Candler. (Matthias Andree)
+  verbose mode. Patch by Brian Candler. (MA)
 * Import Bjorn Reese and Daniel Stenberg's MIT-licensed Trio 1.10 from
   http://daniel.haxx.se/projects/trio/ for systems that do not support
-  snprintf or vsnprintf. (Matthias Andree)
+  snprintf or vsnprintf. (MA)
 * Clean up the horrible #ifdef HAVE_[V]SNPRINTF that made the code
-  unreadable. Use Trio where [v]snprintf is/are missing. (Matthias Andree)
+  unreadable. Use Trio where [v]snprintf is/are missing. (MA)
 * Default to Linux 2.2 /proc/net/dev format, and use uname(2) to determine the
   kernel version instead of calling uname(1). Thanks to Paul Slootman.
-  (Matthias Andree)
+  (MA)
 * Be more careful when swapping UID lists or writing the .fetchids file,
-  requested by Manfred Weihs. (Matthias Andree)
+  requested by Manfred Weihs. (MA)
 * Print a warning if multidrop configuration is attempted without
-  envelope option. (Matthias Andree)
+  envelope option. (MA)
 * Split information on fetchmail versions before 6.0.0 to a separate
-  OLDNEWS file. (Matthias Andree)
+  OLDNEWS file. (MA)
 * Merge SuSE patches: (sent by Stanislav Brabec, merged by Matthias Andree)
   - fetchmail-6.2.5-declaration.patch (double sigint_handler decl/getpass.c)
   - fetchmail-6.2.5-implicit-declaration.patch (missing #include)
@@ -66,33 +66,32 @@ fetchmail 6.3.0 (not yet released officially):
 * Revised some bogus assertions about POP3 LAST and UIDL use in the
   manual page. UIDL isn't flaky as the man page suggested, but a
   reliability feature. In fact, IMAP4 code is flaky in that it relies on
-  the upstream seen flags. (Matthias Andree)
+  the upstream seen flags. (MA)
 * Miloslav Trmac's patch for fetchmailconf to support string-type values
   of the "port" variable, avoiding "port None" corruption in .fetchmailrc.
-  To fix Redhat Bug #55623 (Matthias Andree)
-* de.po fixes from Nico Golde (Matthias Andree)
-* es.po fixes from Jesus Roncero, Debian bug #286044 (Matthias Andree)
+  To fix Redhat Bug #55623 (MA)
+* de.po fixes from Nico Golde (MA)
+* es.po fixes from Jesus Roncero, Debian bug #286044 (MA)
 * sink.c fix from Cesar Eduardo Barros, to avoid double @ in address
   when username contains an @ and the envelope sender is null, Debian
-  bug #272289 (Matthias Andree)
-* configure.ac cleanups by Miloslav Trmac (Matthias Andree)
+  bug #272289 (MA)
+* configure.ac cleanups by Miloslav Trmac (MA)
 * Miloslav Trmac's fix to reply_hack() type, for systems where
-  sizeof(int) != sizeof(size_t). (Matthias Andree)
+  sizeof(int) != sizeof(size_t). (MA)
 * Nalin Dahyabhai's fix for driver.c to not call the private Kerberos
-  krb5_init_ets() function. Sent by Miloslav Trmac. (Matthias Andree)
+  krb5_init_ets() function. Sent by Miloslav Trmac. (MA)
 * Nalin Dahyabhai's fix for sink.c/transact.c to reserve sufficient
   space for \r\n trailers in snprintf calls. Sent by Miloslav Trmac,
-  possibly fixing Red Hat bug #114470. (Matthias Andree).
+  possibly fixing Red Hat bug #114470. (MA).
 * Nalin Dahyabhai's patch to use the krb5-config script, if present.
-  Sent by Miloslav Trmac. (Matthias Andree)
+  Sent by Miloslav Trmac. (MA)
 * Nalin Dahyabhai's fix to make rpa.c compile. Sent by Miloslav Trmac.
-  (Matthias Andree)
+  (MA)
 * Trivial fetchmailconf.man to redirect to fetchmail.1.
-  Reported by Miloslav Trmac. (Matthias Andree)
+  Reported by Miloslav Trmac. (MA)
 * Updated and re-enabled Czech translation, by Miloslav Trmac
-  (Matthias Andree).
-* Internationalization (i18n) updates by Miloslav Trmac. (Matthias
-  Andree)
+  (MA).
+* Internationalization (i18n) updates by Miloslav Trmac. (MA)
 * Fix "couldn't find canonical DNS name of NN (MM)" for hosts that have
   only IPv6 addresses. Matthias Andree.
 * Revised INSTALL after question from Brian Candler, inet6-apps is no
