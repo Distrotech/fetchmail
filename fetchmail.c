@@ -1647,7 +1647,7 @@ static void dump_params (struct runctl *runp,
 		   : GT_("  MIME decoding is disabled (mimedecode off).\n"));
 	    printf(ctl->idle
 		   ? GT_("  Idle after poll is enabled (idle on).\n")
-		   : GT_("  Idle after poll is diabled (idle off).\n"));
+		   : GT_("  Idle after poll is disabled (idle off).\n"));
 	    printf(ctl->dropstatus
 		   ? GT_("  Nonempty Status lines will be discarded (dropstatus on)\n")
 		   : GT_("  Nonempty Status lines will be kept (dropstatus off)\n"));
