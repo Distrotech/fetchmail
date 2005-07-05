@@ -2183,6 +2183,68 @@ poll MYSERVER port 993 plugin "openssl s_client -connect %h:%p"
         protocol imap username MYUSERNAME password MYPASSWORD
 </pre>
 
+<p>You should note that SSL is only secure against a "man-in-the-middle"
+attack if the client is able to verify that the peer's public key is the
+correct one, and has not been substituted by an attacker. fetchmail can do
+this in one of two ways: by verifying the SSL certificate, or by checking
+the fingerprint of the peer's public key.</p>
+
+<p>There are three parts to SSL certificate verification: checking that the
+domain name in the certificate matches the hostname you asked to connect to;
+checking that the certificate expiry date has not passed; and checking that
+the certificate has been signed by a known Certificate Authority (CA). This
+last step takes some preparation, as you need to install the root
+certificates of all the CA's which you might come across.</p>
+
+<p>The easiest way to do this is using the root CA keys supplied in the
+OpenSSL distribution, which means you need to download and unpack the
+source tarball from www.openssl.org. Once you have done that:</p>
+
+<ol>
+<li><code>mkdir /etc/ssl/certs</code></li>
+<li>in the openssl-x.x.x/certs directory: <code>cp *.pem /etc/ssl/certs/</code></li>
+<li>in the openssl-x.x.x/tools directory: edit c_rehash and set
+<code>$dir="/etc/ssl"</code></li>
+<li>run "perl c_rehash". This generates a number of symlinks within the
+/etc/ssl/certs/ directory</li>
+</ol>
+
+<p>Now in .fetchmailrc, set option sslcertpath to point to this
+directory:</p>
+
+<pre>
+poll pop3.example.com proto pop3 uidl no dns
+  user foobar@example.com password xyzzy is foobar ssl sslcertpath /etc/ssl/certs
+</pre>
+
+<p>If the server certificate has not been signed by a known CA (e.g. it is a
+self-signed certificate), then this certificate validation will always
+fail.</p>
+
+<p>Certificate verification is always attempted. If it fails, by default a
+warning is printed but the connection carries on (which means you are not
+protected against attack). If your server's certificate has been properly
+set up and verifies correctly, then add the "sslcertck" option to enforce
+validation. If your server doesn't have a valid certificate though (e.g. it
+has a self-signed certificate) then it will never verify, and the only way
+you can protect yourself is by checking the fingerprint.</p>
+
+<p>To check the peer fingerprint: first use fetchmail -v once to connect to
+the host, at a time when you are pretty sure that there is no attack in
+progress (e.g. you are not traversing any untrusted network to reach the
+server). Make a note of the fingerprint shown. Now embed this in your
+.fetchmailrc using the sslfingerprint option: e.g.</p>
+
+<pre>
+poll pop3.example.com proto pop3 uidl no dns
+  user foobar@example.com password xyzzy is foobar ssl sslfingerprint "67:3E:02:94:D3:5B:C3:16:86:71:37:01:B1:3B:BC:E2"
+</pre>
+
+<p>When you next connect, the public key presented by the server will be
+verified against the fingerprint given. If it's different, it may mean that
+a man-in-the-middle attack is in progress - or it might just mean that the
+server changed its key. It's up to you to determine which has happened.</p>
+
 <hr/>
 <h2><a id="R1" name="R1">R1. Fetchmail isn't working, and -v shows
 `SMTP connect failed' messages.</a></h2>
