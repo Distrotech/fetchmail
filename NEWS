@@ -89,8 +89,7 @@ fetchmail 6.3.0 (not yet released officially):
   (MA)
 * Trivial fetchmailconf.man to redirect to fetchmail.1.
   Reported by Miloslav Trmac. (MA)
-* Updated and re-enabled Czech translation, by Miloslav Trmac
-  (MA).
+* Updated and re-enabled Czech translation, by Miloslav Trmac (MA).
 * Internationalization (i18n) updates by Miloslav Trmac. (MA)
 * Fix "couldn't find canonical DNS name of NN (MM)" for hosts that have
   only IPv6 addresses. Matthias Andree.
