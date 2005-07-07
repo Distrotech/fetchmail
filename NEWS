@@ -101,6 +101,8 @@ fetchmail 6.3.0 (not yet released officially):
 * Brian Candler's FAQ update about SSL certificate verification. (MA)
 * Nico Golde's patch to support "proto RPOP" in the configuration file,
   reported by Dr. Andreas Krüger, Debian bug #242384 (MA)
+* Added Russian translation, courtesy of Pavel Maryanov of the
+  Russian translation team. (MA)
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
