@@ -1733,7 +1733,7 @@ Legal protocol identifiers for use with the `protocol' keyword are:
 .fi
 .sp
 .PP
-Legal authentication types are `any', `password', `kerberos', 'kereberos_v5' 
+Legal authentication types are `any', `password', `kerberos', 'kerberos_v5'
 and `gssapi', `cram-md5', `otp', `ntlm', `ssh`.
 The `password' type specifies authentication by normal transmission of a
 password (the password may be plaintext or subject to
