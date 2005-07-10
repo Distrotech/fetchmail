@@ -106,6 +106,9 @@ fetchmail 6.3.0 (not yet released officially):
   translations which have more than 10% (61+) untranslated or fuzzy
   messages. Matthias Andree.
 * Skip sending POP3 PASS command when USER command failed. Matthias Andree.
+* Run fetchmail.man through automatic spell checker. Matthias Andree.
+* Major fetchmail(1) manual page overhaul by R. Hannes Beinert, to
+  clarify singledrop vs. multidrop operation. (MA)
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
