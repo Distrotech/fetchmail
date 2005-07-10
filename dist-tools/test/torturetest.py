@@ -1,17 +1,20 @@
 #!/usr/bin/env python
 
 import sys, getopt, os, smtplib, commands, time, gtk, gtk.glade
+os.environ['LC_ALL'] = 'C'
 
 ### CUSTOMIZE THESE!
 # Mail address to use in From: header, user@host.domain format
-fromaddr = "esr@thyrsus.com"
+fromaddr = "ma+fetchmail@dt.e-technik.uni-dortmund.de"
 # local user name to receive mail as
-localuser = "esr"
+localuser = "emma"
 # server to inject mail into
 smtpserver = "localhost"
 # delay after sending mail
-delay = 5
+delay = 30
+### END OF REQUIRED CUSTOMIZATION
 
+# only used for the GUI:
 protocols = ('POP3', 'APOP', 'IMAP',)
 
 class TestSite:
@@ -107,7 +110,7 @@ class TestSite:
         try:
             ofp = open(TestSite.temp, "w")
             if logfile:
-                mda = "(echo; echo \'From torturetest\' `date`;cat) >>TEST.LOG"
+		mda = "(echo \'From torturetest\'  `date`;cat -;echo) >>TEST.LOG"
             else:
                 mda = 'cat'
             ofp.write('defaults mda "%s"\n' % mda)
@@ -291,9 +294,9 @@ if __name__ == "__main__":
                 site.testmail(i)
                 i+= 1
             # Send test mail to each site
-            sys.stdout.write("Delaying to give the test mail time to land...")
+            print "Delaying to give the test mail time to land..."
             time.sleep(delay)
-            sys.stdout.write("here we go:\n")
+            print "Here we go:"
             # Fall through
         elif switch == "-v":
             # Display the test output
