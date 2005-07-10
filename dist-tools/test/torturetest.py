@@ -1,6 +1,16 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
 import sys, getopt, os, smtplib, commands, time, gtk, gtk.glade
+
+### CUSTOMIZE THESE!
+# Mail address to use in From: header, user@host.domain format
+fromaddr = "esr@thyrsus.com"
+# local user name to receive mail as
+localuser = "esr"
+# server to inject mail into
+smtpserver = "localhost"
+# delay after sending mail
+delay = 5
 
 protocols = ('POP3', 'APOP', 'IMAP',)
 
@@ -57,8 +67,8 @@ class TestSite:
     def entryprint(self):
         "Print a .fetchmailrc entry corresponding to a site entry."
         rep = "poll %s-%s via %s with proto %s %s\n" \
-               "   user %s there with password '%s' is esr here" \
-               % (self.host,self.protocol,self.host,self.protocol,self.options,self.username,self.password)
+               "   user %s there with password '%s' is %s here" \
+               % (self.host,self.protocol,self.host,self.protocol,self.options,self.username,self.password,localuser)
         if self.ssl and self.ssl != 'False':
             rep += " options ssl"
         rep += "\n\n"
@@ -80,8 +90,7 @@ class TestSite:
 
     def testmail(self, n=None):
         "Send test mail to the site."
-        server = smtplib.SMTP("localhost")
-        fromaddr = "esr@thyrsus.com"
+        server = smtplib.SMTP(smtpserver)
         if self.mailaddr.find("@") > -1:
             toaddr = self.mailaddr
         else:
@@ -283,7 +292,7 @@ if __name__ == "__main__":
                 i+= 1
             # Send test mail to each site
             sys.stdout.write("Delaying to give the test mail time to land...")
-            time.sleep(5)
+            time.sleep(delay)
             sys.stdout.write("here we go:\n")
             # Fall through
         elif switch == "-v":
