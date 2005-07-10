@@ -491,7 +491,8 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	}
 
 	/* ordinary validation, no one-time password or RPA */ 
-	gen_transact(sock, "USER %s", ctl->remotename);
+	if ((ok = gen_transact(sock, "USER %s", ctl->remotename)))
+	    break;
 
 #ifdef OPIE_ENABLE
 	/* see RFC1938: A One-Time Password System */

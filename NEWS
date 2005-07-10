@@ -105,6 +105,7 @@ fetchmail 6.3.0 (not yet released officially):
 * Dropped da=Danish, el=Greek, ja=Japanese, sq=Albanian and tr=Turkish
   translations which have more than 10% (61+) untranslated or fuzzy
   messages. Matthias Andree.
+* Skip sending POP3 PASS command when USER command failed. Matthias Andree.
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
