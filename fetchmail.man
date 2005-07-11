@@ -2292,6 +2292,8 @@ by Carl Harris <ceharris@mal.com>; the internals have become quite different,
 but some of its interface design is directly traceable to that
 ancestral program.
 .PP
+This manual page has been improved by R.\ Hannes Beinert.
+.PP
 Fetchmail is currently maintained by Matthias Andree and Rob Funk.
 
 .SH SEE ALSO
@@ -2342,4 +2344,3 @@ RFC 1508.
 .TP 5
 TLS
 RFC 2595.
-
