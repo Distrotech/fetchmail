@@ -18,21 +18,26 @@ Release:	1
 Vendor:		The Community Fetchmail Project
 Packager:	$packager
 URL:		http://developer.berlios.de/projects/fetchmail
-Source:         %{name}-%{version}.tar.gz
+Source:		%{name}-%{version}.tar.gz
 Group:		Applications/Mail
 Group(pt_BR):   Aplicações/Correio Eletrônico
 License:	GPL
 Icon:		fetchmail.xpm
+%if "%{_vendor}" == "suse"
+Requires:	smtp_daemon
+%else
 Requires:	smtpdaemon
+%endif
+BuildPrereq:	gettext-devel openssl-devel
 BuildRoot:	/var/tmp/%{name}-%{version}
 Summary:	Full-featured POP/IMAP mail retrieval daemon
-Summary(fr):    Collecteur (POP/IMAP) de courrier électronique
-Summary(de):    Program zum Abholen von E-Mail via POP/IMAP
-Summary(pt):    Busca mensagens de um servidor usando POP ou IMAP
-Summary(es):    Recolector de correo via POP/IMAP
-Summary(pl):    Zdalny demon pocztowy do protoko³ów POP2, POP3, APOP, IMAP
-Summary(tr):    POP2, POP3, APOP, IMAP protokolleri ile uzaktan mektup alma yazýlýmý
-Summary(da):    Alsidig POP/IMAP post-afhentnings dæmon
+Summary(fr):	Collecteur (POP/IMAP) de courrier électronique
+Summary(de):	Program zum Abholen von E-Mail via POP/IMAP
+Summary(pt):	Busca mensagens de um servidor usando POP ou IMAP
+Summary(es):	Recolector de correo via POP/IMAP
+Summary(pl):	Zdalny demon pocztowy do protoko³ów POP2, POP3, APOP, IMAP
+Summary(tr):	POP2, POP3, APOP, IMAP protokolleri ile uzaktan mektup alma yazýlýmý
+Summary(da):	Alsidig POP/IMAP post-afhentnings dæmon
 BuildRoot: %{_tmppath}/%{name}-root
 #Keywords: mail, client, POP, POP2, POP3, APOP, RPOP, KPOP, IMAP, ETRN, ODMR, SMTP, ESMTP, GSSAPI, RPA, NTLM, CRAM-MD5, SASL
 #Destinations:	fetchmail-users@lists.berlios.de, fetchmail-announce@lists.berlios.de
@@ -55,14 +60,14 @@ serveur SMTP local (habituellement sendmail).
 
 %description -l de
 Fetchmail ist ein freies, vollständiges, robustes und
-wohldokumentiertes Werkzeug zum Abholen und Weiterreichen von E-Mail,
-gedacht zum Gebrauch über temporäre TCP/IP-Verbindungen (wie
-z.B. SLIP- oder PPP-Verbindungen).  Es holt E-Mail von (weit)
+wohldokumentiertes Werkzeug zum Abholen und Weiterleiten von E-Mail,
+zur Verwendung über temporäre TCP/IP-Verbindungen (wie
+z.B. SLIP- oder PPP-Verbindungen).  Es holt E-Mail von
 entfernten Mail-Servern ab und reicht sie an das Auslieferungssystem
 der lokalen Client-Maschine weiter, damit sie dann von normalen MUAs
 ("mail user agents") wie mutt, elm, pine, (x)emacs/gnus oder mailx
-gelesen werden können.  Ein interaktiver GUI-Konfigurator auch gut
-geeignet zum Gebrauch durch Endbenutzer wird mitgeliefert.
+gelesen werden können.  Ein interaktiver GUI-Konfigurator für
+Endbenutzer wird mitgeliefert.
 
 %description -l pt
 Fetchmail é um programa que é usado para recuperar mensagens de um
@@ -100,18 +105,23 @@ eller mailx. Der medfølger også et interaktivt GUI-baseret
 konfigurations-program, som kan bruges af almindelige brugere.
 
 %package -n fetchmailconf
-Summary:        A GUI configurator for generating fetchmail configuration files
-Summary(pl):    GUI konfigurator do fetchmaila
+Summary:	A GUI configurator for generating fetchmail configuration files
+Summary(de):	GUI-Konfigurator für fetchmail
+Summary(pl):	GUI konfigurator do fetchmaila
 Summary(fr):	GUI configurateur pour fetchmail
 Summary(es):	Configurador GUI interactivo para fetchmail
 Summary(pt):	Um configurador gráfico para o fetchmail
-Group:          Utilities/System
-Group(pt):		Utilitários/Sistema
-Requires:       %{name} = %{version}, python
+Group:		Utilities/System
+Group(pt):	Utilitários/Sistema
+Requires:	%{name} = %{version}, python
 
 %description -n fetchmailconf
 A GUI configurator for generating fetchmail configuration file written in
-python
+Python.
+
+%description -n fetchmailconf -l de
+Ein in Python geschriebenes Programm mit graphischer Oberfläche zur
+Erzeugung von Fetchmail-Konfigurationsdateien.
 
 %description -n fetchmailconf -l pt
 Um configurador gráfico para a geração de arquivos de configuração do
@@ -132,7 +142,8 @@ GUI konfigurator do fetchmaila napisany w pythonie.
 %build
 LDFLAGS="-s"
 export CFLAGS LDFLAGS
-./configure --prefix=/usr --disable-nls --without-kerberos --mandir=%{_mandir} --with-SSL --enable-inet6
+#./configure --prefix=/usr --disable-nls --without-kerberos --mandir=%{_mandir} --with-SSL --enable-inet6
+./configure --prefix=/usr --without-included-gettext --without-kerberos --mandir=%{_mandir} --with-ssl --enable-inet6
                          # Remove --disable-nls, add --without-included-gettext
                          # for internationalization. Also look below.
 make
@@ -140,33 +151,37 @@ make
 %install
 if [ -d \$RPM_BUILD_ROOT ]; then rm -rf \$RPM_BUILD_ROOT; fi
 mkdir -p \$RPM_BUILD_ROOT/{etc/X11/wmconfig,usr/lib/rhs/control-panel}
-make install prefix=\$RPM_BUILD_ROOT/usr mandir=\$RPM_BUILD_ROOT%{_mandir}/man1
+make install-strip prefix=\$RPM_BUILD_ROOT/usr mandir=\$RPM_BUILD_ROOT%{_mandir}
 cp rh-config/*.{xpm,init} \$RPM_BUILD_ROOT/usr/lib/rhs/control-panel
 rm -rf contrib/RCS
 chmod 644 contrib/*
 cp rh-config/fetchmailconf.wmconfig \$RPM_BUILD_ROOT/etc/X11/wmconfig/fetchmailconf
-cd \$RPM_BUILD_ROOT%{_mandir}/man1
-ln -sf fetchmail.1 fetchmailconf.1
+#cd \$RPM_BUILD_ROOT%{_mandir}/man1
+#ln -sf fetchmail.1 fetchmailconf.1
 
 %clean
 rm -rf \$RPM_BUILD_ROOT
 
 %files
 %defattr (644, root, root, 755)
-%doc README NEWS NOTES OLDNEWS FAQ COPYING FEATURES THANKS contrib
+%doc ABOUT-NLS FAQ COPYING FEATURES NEWS
+%doc NOTES OLDNEWS README README.SSL
+%doc contrib
 %doc fetchmail-features.html fetchmail-FAQ.html design-notes.html
-%attr(644, root, man) %{_mandir}/man1/*.1*
+%attr(644, root, man) %{_mandir}/man1/fetchmail.1*
 %attr(755, root, root) /usr/bin/fetchmail
 # Uncomment the following to support internationalization
-# %attr(644,root,root) /usr/share/locale/*/LC_MESSAGES/fetchmail.mo
+%attr(644,root,root) /usr/share/locale/*/LC_MESSAGES/fetchmail.mo
 # Uncomment the following to make split fetchmail and fetchmailconf packages
-# %files -n fetchmailconf
+%files -n fetchmailconf
+%defattr (644, root, root, 755)
 %attr(644,root,root) /etc/X11/wmconfig/fetchmailconf
 %attr(755,root,root) /usr/bin/fetchmailconf
+%attr(644, root, man) %{_mandir}/man1/fetchmailconf.1*
 /usr/lib/rhs/control-panel/fetchmailconf.xpm
 /usr/lib/rhs/control-panel/fetchmailconf.init
 
 %changelog
 * `date '+%a %b %d %Y'` <$email> ${version}
-- See the project news file for recent changes.
+- See the project NEWS file for recent changes.
 EOF
