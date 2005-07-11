@@ -88,24 +88,19 @@ therefore work automatically.
 .PP
 If no port 25 listener is available, but your fetchmail configuration
 was told about a reliable local MDA, it will use that MDA for local
-delivery instead.  At build time, fetchmail normally looks for
-executable
-.IR procmail (1)
-and 
-.IR sendmail (1)
-binaries.
+delivery instead.
 .PP
 If the program
 .I fetchmailconf
 is available, it will assist you in setting up and editing a
-fetchmailrc configuration.  It runs under X and requires that the
-language Python and the Tk toolkit be present on your system.  If
-you are first setting up fetchmail for single-user mode, it is
-recommended that you use Novice mode.  Expert mode provides
-complete control of fetchmail configuration, including the
-multidrop features.  In either case, the `Autoprobe' button
-will tell you the most capable protocol a given mailserver
-supports, and warn you of potential problems with that server.
+fetchmailrc configuration.  It runs under the X window system and
+requires that the language Python and the Tk toolkit be present on your
+system.  If you are first setting up fetchmail for single-user mode, it
+is recommended that you use Novice mode.  Expert mode provides complete
+control of fetchmail configuration, including the multidrop features.
+In either case, the `Autoprobe' button will tell you the most capable
+protocol a given mailserver supports, and warn you of potential problems
+with that server.
 
 .SH GENERAL OPERATION
 The behavior of
@@ -256,7 +251,7 @@ a static DNS.
 (Keyword: uidl)
 Force UIDL use (effective only with POP3).  Force client-side tracking
 of `newness' of messages (UIDL stands for ``unique ID listing'' and is
-described in RFC1725).  Use with `keep' to use a mailbox as a baby
+described in RFC1939).  Use with `keep' to use a mailbox as a baby
 news drop for a group of users. The fact that seen messages are skipped
 is logged, unless error logging is done through syslog while running in
 daemon mode.
@@ -1006,8 +1001,13 @@ option was used.
 The 
 .B \-N
 or --nodetach option suppresses backgrounding and detachment of the
-daemon process from its control terminal.  This is primarily useful
-for debugging.  Note that this also causes the logfile option to be
+daemon process from its control terminal.  This is useful
+for debugging or when fetchmail runs as the child of a supervisor
+process such as
+.IR init (8)
+or Gerrit Pape's
+.I runit.
+Note that this also causes the logfile option to be
 ignored (though perhaps it shouldn't).
 .PP
 Note that while running in daemon mode polling a POP2 or IMAP2bis server,
@@ -1153,8 +1153,7 @@ triggers this feature will elicit an SMTP response which
 .PP
 Newer versions of 
 .I sendmail
-return an error code of 571.  This return value
-is blessed by RFC1893 as "Delivery not authorized, message refused".
+return an error code of 571.
 .PP
 According to RFC2821, the correct thing to return in this situation is
 550 "Requested action not taken: mailbox unavailable" (the draft adds
@@ -1169,7 +1168,7 @@ The
 .I postfix
 MTA runs 554 as an antispam response.
 .PP
-.I Zmailer 
+.I Zmailer
 may reject code with a 500 response (followed by an enhanced status
 code that contains more information).
 .PP
@@ -2168,7 +2167,7 @@ default run control file
 .TP 5
 ~/.fetchids
 default location of file associating hosts with last message IDs seen
-(used only with newer RFC1725-compliant POP3 servers supporting the
+(used only with newer RFC1939-compliant POP3 servers supporting the
 UIDL command).
 .TP 5
 ~/.fetchmail.pid
@@ -2278,7 +2277,7 @@ with the plugin option.
 The `principal' option only handles Kerberos IV, not V.
 .PP
 Send comments, bug reports, gripes, and the like to the
-fetchmail-friends list <fetchmail-friends@lists.ccil.org>.  An HTML FAQ is
+fetchmail-devel list <fetchmail-devel@lists.berlios.de>.  An HTML FAQ is
 available at the fetchmail home page; surf to
 http://fetchmail.berlios.de/ or do a WWW search for pages with
 `fetchmail' in their titles.
@@ -2342,5 +2341,5 @@ RFC 2033.
 GSSAPI:
 RFC 1508.
 .TP 5
-TLS
+TLS:
 RFC 2595.
