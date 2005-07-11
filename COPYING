@@ -1,4 +1,4 @@
-This collective work is Copyright (C)2002 by Eric S. Raymond.
+This collective work is Copyright (C) 2002, 2003 by Eric S. Raymond.
 Portions are copyrighted by Carl E. Harris and George M. Sipe.
 
 The support for SMB authentication is copyright by Andrew Tridgell and
@@ -20,7 +20,24 @@ McNamara <caolan@skynet.ie> with fixes from Alexandre Duret-Lutz
 Matthias Andree <matthias.andree@gmx.de>
 The license is detailed in m4-local/ac-archive-license.txt.
 
-All other code in the distribution incorporates the copy of GPL version 2 
+The *.c files in the ucs/ directory are Copyright (C) 2002, 2003 by
+Markus Kuhn, with a liberal license as follows:
+ | Permission to use, copy, modify, and distribute this software
+ | for any purpose and without fee is hereby granted. The author
+ | disclaims all warranties with regard to this software.
+
+The trio/ code is Copyright (C) 1998-2001 by Bjorn Reese and Daniel
+Stenberg and also under a liberal license:
+ | Permission to use, copy, modify, and distribute this software for any
+ | purpose with or without fee is hereby granted, provided that the above
+ | copyright notice and this permission notice appear in all copies.
+ |
+ | THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED
+ | WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF
+ | MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE AUTHORS AND
+ | CONTRIBUTORS ACCEPT NO RESPONSIBILITY IN ANY CONCEIVABLE MANNER.
+
+All other code in the distribution incorporates the copy of GPL version 2
 below by reference.
 
 Specific permission is granted for the GPLed code in this distribition to
