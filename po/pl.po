@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.2.6-pre3\n"
+"Project-Id-Version: fetchmail 6.2.6-pre4\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2005-07-04 02:01+0200\n"
-"PO-Revision-Date: 2005-07-05 18:01+0200\n"
+"POT-Creation-Date: 2005-07-11 00:38+0200\n"
+"PO-Revision-Date: 2005-07-11 18:05+0200\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -1189,7 +1189,7 @@ msgid "  Idle after poll is enabled (idle on).\n"
 msgstr "  Zw³oka po odpytaniu jest w³±czona (idle w³±czone).\n"
 
 #: fetchmail.c:1650
-msgid "  Idle after poll is diabled (idle off).\n"
+msgid "  Idle after poll is disabled (idle off).\n"
 msgstr "  Zw³oka po odpytaniu jest wy³±czona (idle wy³±czone).\n"
 
 #: fetchmail.c:1652
@@ -1611,12 +1611,12 @@ msgstr[2] "%d listów oczekuj±cych po usuwaniu\n"
 msgid "search for unseen messages failed\n"
 msgstr "poszukiwanie nie przeczytanych listów nie powiod³o siê\n"
 
-#: imap.c:769 pop3.c:674 pop3.c:686 pop3.c:903 pop3.c:910
+#: imap.c:769 pop3.c:675 pop3.c:687 pop3.c:904 pop3.c:911
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u jest nie przeczytany\n"
 
-#: imap.c:781 pop3.c:695
+#: imap.c:781 pop3.c:696
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u jest pierwszym nie przeczytanym\n"
@@ -1804,7 +1804,7 @@ msgstr "recv z serwera nie powiod³o siê\n"
 msgid "Could not decode OTP challenge\n"
 msgstr "Rozkodowanie wyzwania OTP by³o niemo¿liwe\n"
 
-#: opie.c:58 pop3.c:505
+#: opie.c:58 pop3.c:506
 msgid "Secret pass phrase: "
 msgstr "Tajne has³o: "
 
@@ -2080,40 +2080,40 @@ msgstr "  -r, --folder      okre¶la nazwê skrzynki na serwerze\n"
 msgid "      --showdots    show progress dots even in logfiles\n"
 msgstr "      --showdots    pokazuje kropki oznaczaj±ce postêp tak¿e w logach\n"
 
-#: pop3.c:543
+#: pop3.c:544
 msgid "Required APOP timestamp not found in greeting\n"
 msgstr "W powitaniu serwera brakuje wymaganego znacznika czasu APOP\n"
 
-#: pop3.c:552
+#: pop3.c:553
 msgid "Timestamp syntax error in greeting\n"
 msgstr "B³±d sk³adni znacznika czasu w powitaniu\n"
 
-#: pop3.c:574
+#: pop3.c:575
 msgid "Undefined protocol request in POP3_auth\n"
 msgstr "Pro¶ba o nieznany protokó³ w POP3_auth\n"
 
-#: pop3.c:582
+#: pop3.c:583
 msgid "lock busy!  Is another session active?\n"
 msgstr "plik zablokowany! Czy inna sesja nie jest aktywna?\n"
 
-#: pop3.c:665 pop3.c:894
+#: pop3.c:666 pop3.c:895
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) zosta³ skasowany, ale nadal istnieje!\n"
 
-#: pop3.c:767
+#: pop3.c:768
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr "Przesy³ki zosta³y dodane do listy na serwerze. Nie mogê tego obs³u¿yæ.\n"
 
-#: pop3.c:853
+#: pop3.c:854
 msgid "protocol error\n"
 msgstr "b³±d protoko³u\n"
 
-#: pop3.c:868
+#: pop3.c:869
 msgid "protocol error while fetching UIDLs\n"
 msgstr "b³±d protoko³u podczas pobierania UIDL\n"
 
-#: pop3.c:1225
+#: pop3.c:1226
 msgid "Option --remote is not supported with POP3\n"
 msgstr "Opcja --remote nie dzia³a z POP3\n"
 
