@@ -3,7 +3,7 @@
 # A GUI configurator for generating fetchmail configuration files.
 # by Eric S. Raymond, <esr@snark.thyrsus.com>.
 # Requires Python with Tkinter, and the following OS-dependent services:
-#       posix, posixpath, socket
+#	posix, posixpath, socket
 version = "1.43"
 
 from Tkinter import *
@@ -26,15 +26,15 @@ class Configuration:
 	self.syslog = FALSE		# Use syslogd for logging?
 	self.servers = []		# List of included sites
 	Configuration.typemap = (
-	    ('poll_interval',   'Int'),
+	    ('poll_interval',	'Int'),
 	    ('logfile',	 'String'),
 	    ('idfile',	  'String'),
-	    ('postmaster',      'String'),
-	    ('bouncemail',      'Boolean'),
-	    ('spambounce',      'Boolean'),
-	    ('properties',      'String'),
+	    ('postmaster',	'String'),
+	    ('bouncemail',	'Boolean'),
+	    ('spambounce',	'Boolean'),
+	    ('properties',	'String'),
 	    ('syslog',	  'Boolean'),
-	    ('invisible',       'Boolean'))
+	    ('invisible',	'Boolean'))
 
     def __repr__(self):
 	str = "";
@@ -73,54 +73,54 @@ class Configuration:
 
 class Server:
     def __init__(self):
-	self.pollname = None	        # Poll label
-	self.via = None		        # True name of host
-	self.active = TRUE	        # Poll status
-	self.interval = 0	        # Skip interval
-	self.protocol = 'auto'	        # Default to auto protocol
-	self.port = 0		        # Port number to use
-	self.uidl = FALSE	        # Don't use RFC1725 UIDLs by default
-	self.auth = 'any'	        # Default to password authentication
-	self.timeout = 300	        # 5-minute timeout
-	self.envelope = 'Received'      # Envelope-address header
-	self.envskip = 0	        # Number of envelope headers to skip
-	self.qvirtual = None	        # Name prefix to strip
-	self.aka = []		        # List of DNS aka names
-	self.dns = TRUE		        # Enable DNS lookup on multidrop
-	self.localdomains = []	        # Domains to be considered local
-	self.interface = None	        # IP address and range
-	self.monitor = None	        # IP address and range
-	self.plugin = None	        # Plugin command for going to server
-	self.plugout = None	        # Plugin command for going to listener
-	self.netsec = None	        # IPV6 security options
-	self.principal = None	        # Kerberos principal
-        self.esmtpname = None	        # ESMTP 2554 name
-        self.esmtppassword = None	# ESMTP 2554 password
-	self.tracepolls = FALSE	        # Add trace-poll info to headers
-	self.users = []		        # List of user entries for site
+	self.pollname = None		# Poll label
+	self.via = None			# True name of host
+	self.active = TRUE		# Poll status
+	self.interval = 0		# Skip interval
+	self.protocol = 'auto'		# Default to auto protocol
+	self.port = 0			# Port number to use
+	self.uidl = FALSE		# Don't use RFC1725 UIDLs by default
+	self.auth = 'any'		# Default to password authentication
+	self.timeout = 300		# 5-minute timeout
+	self.envelope = 'Received'	# Envelope-address header
+	self.envskip = 0		# Number of envelope headers to skip
+	self.qvirtual = None		# Name prefix to strip
+	self.aka = []			# List of DNS aka names
+	self.dns = TRUE			# Enable DNS lookup on multidrop
+	self.localdomains = []		# Domains to be considered local
+	self.interface = None		# IP address and range
+	self.monitor = None		# IP address and range
+	self.plugin = None		# Plugin command for going to server
+	self.plugout = None		# Plugin command for going to listener
+	self.netsec = None		# IPV6 security options
+	self.principal = None		# Kerberos principal
+	self.esmtpname = None		# ESMTP 2554 name
+	self.esmtppassword = None	# ESMTP 2554 password
+	self.tracepolls = FALSE		# Add trace-poll info to headers
+	self.users = []			# List of user entries for site
 	Server.typemap = (
 	    ('pollname',  'String'),
-	    ('via',       'String'),
-	    ('active',    'Boolean'),
+	    ('via',	  'String'),
+	    ('active',	  'Boolean'),
 	    ('interval',  'Int'),
 	    ('protocol',  'String'),
-	    ('port',      'Int'),
-	    ('uidl',      'Boolean'),
-	    ('auth',      'String'),
+	    ('port',	  'Int'),
+	    ('uidl',	  'Boolean'),
+	    ('auth',	  'String'),
 	    ('timeout',   'Int'),
 	    ('envelope',  'String'),
 	    ('envskip',   'Int'),
 	    ('qvirtual',  'String'),
 	    # leave aka out
-	    ('dns',       'Boolean'),
+	    ('dns',	  'Boolean'),
 	    # leave localdomains out
 	    ('interface', 'String'),
 	    ('monitor',   'String'),
-	    ('plugin',    'String'),
+	    ('plugin',	  'String'),
 	    ('plugout',   'String'),
-            ('esmtpname', 'String'),
-            ('esmtppassword', 'String'),
-	    ('netsec',    'String'),
+	    ('esmtpname', 'String'),
+	    ('esmtppassword', 'String'),
+	    ('netsec',	  'String'),
 	    ('principal', 'String'),
 	    ('tracepolls','Boolean'))
 
@@ -217,7 +217,7 @@ class Server:
 class User:
     def __init__(self):
 	if os.environ.has_key("USER"):
-	    self.remote = os.environ["USER"]    # Remote username
+	    self.remote = os.environ["USER"]	# Remote username
 	elif os.environ.has_key("LOGNAME"):
 	    self.remote = os.environ["LOGNAME"]
 	else:
@@ -239,7 +239,7 @@ class User:
 	self.keep = FALSE	# Keep messages
 	self.flush = FALSE	# Flush messages
 	self.fetchall = FALSE	# Fetch old messages
-	self.rewrite = TRUE     # Rewrite message headers
+	self.rewrite = TRUE	# Rewrite message headers
 	self.forcecr = FALSE	# Force LF -> CR/LF
 	self.stripcr = FALSE	# Strip CR
 	self.pass8bits = FALSE	# Force BODY=7BIT
@@ -260,10 +260,10 @@ class User:
 	self.sslproto = None	# Force SSL?
 	self.sslcertck = 0	# Enable strict SSL cert checking
 	self.sslcertpath = None	# Path to trusted certificates
-	self.sslfingerprint = None      # SSL key fingerprint to check
+	self.sslfingerprint = None	# SSL key fingerprint to check
 	self.properties = None	# Extension properties
 	User.typemap = (
-	    ('remote',      'String'),
+	    ('remote',	    'String'),
 	    # leave out mailboxes and localnames
 	    ('password',    'String'),
 	    # Leave out smtphunt, fetchdomains
@@ -272,11 +272,11 @@ class User:
 	    ('preconnect',  'String'),
 	    ('postconnect', 'String'),
 	    ('mda',	 'String'),
-	    ('bsmtp',       'String'),
+	    ('bsmtp',	    'String'),
 	    ('lmtp',	'Boolean'),
 	    ('antispam',    'String'),
 	    ('keep',	'Boolean'),
-	    ('flush',       'Boolean'),
+	    ('flush',	    'Boolean'),
 	    ('fetchall',    'Boolean'),
 	    ('rewrite',     'Boolean'),
 	    ('forcecr',     'Boolean'),
@@ -286,15 +286,15 @@ class User:
 	    ('dropstatus',  'Boolean'),
 	    ('dropdelivered', 'Boolean'),
 	    ('idle',	'Boolean'),
-	    ('limit',       'Int'),
+	    ('limit',	    'Int'),
 	    ('warnings',    'Int'),
 	    ('fetchlimit',  'Int'),
-	    ('fetchsizelimit',  'Int'),
+	    ('fetchsizelimit',	'Int'),
 	    ('fastuidl',    'Int'),
 	    ('batchlimit',  'Int'),
 	    ('expunge',     'Int'),
 	    ('ssl',	 'Boolean'),
-	    ('sslkey',      'String'),
+	    ('sslkey',	    'String'),
 	    ('sslcert',     'String'),
 	    ('sslcertck',   'Boolean'),
 	    ('sslcertpath', 'String'),
@@ -754,7 +754,7 @@ class ConfigurationEdit(Frame, MyWidget):
 	self.master.title('fetchmail ' + self.mode + ' configurator');
 	self.master.iconname('fetchmail ' + self.mode + ' configurator');
 	self.master.protocol('WM_DELETE_WINDOW', self.nosave)
-	self.keepalive = []     # Use this to anchor the PhotoImage object
+	self.keepalive = []	# Use this to anchor the PhotoImage object
 	make_icon_window(self, fetchmail_icon)
 	Pack.config(self)
 	self.post(Configuration, 'configuration')
@@ -774,7 +774,7 @@ class ConfigurationEdit(Frame, MyWidget):
 	ff = Frame(df)
 	if self.mode != 'novice':
 	    # Set the postmaster
-	    log = LabeledEntry(ff, '     Postmaster:', self.postmaster, '14')
+	    log = LabeledEntry(ff, '	 Postmaster:', self.postmaster, '14')
 	    log.pack(side=RIGHT, anchor=E)
 
 	# Set the poll interval
@@ -804,7 +804,7 @@ class ConfigurationEdit(Frame, MyWidget):
 		{'text':'Log to syslog?',
 		'variable':self.syslog,
 		'relief':GROOVE}).pack(side=LEFT, anchor=W)
-	    log = LabeledEntry(sf, '     Logfile:', self.logfile, '14')
+	    log = LabeledEntry(sf, '	 Logfile:', self.logfile, '14')
 	    log.pack(side=RIGHT, anchor=E)
 	    sf.pack(fill=X)
 
@@ -813,7 +813,7 @@ class ConfigurationEdit(Frame, MyWidget):
 		'variable':self.invisible,
 		 'relief':GROOVE}).pack(side=LEFT, anchor=W)
 	    # Set the idfile
-	    log = LabeledEntry(gf, '     Idfile:', self.idfile, '14')
+	    log = LabeledEntry(gf, '	 Idfile:', self.idfile, '14')
 	    log.pack(side=RIGHT, anchor=E)
 
 	gf.pack(fill=X)
@@ -941,7 +941,7 @@ protocols; fortunately these are the most
 frequently supported.
 
 The `Protocol' button bar offers you a choice of
-all the different protocols available.  The `auto'
+all the different protocols available.	The `auto'
 protocol is the default mode; it probes the host
 ports for POP3 and IMAP to see if either is
 available.
@@ -1030,11 +1030,11 @@ class ServerEdit(Frame, MyWidget):
 	self.master.iconname('Fetchmail host ' + self.server.pollname);
 	self.post(Server, 'server')
 	self.makeWidgets(self.server.pollname, mode)
-	self.keepalive = []     # Use this to anchor the PhotoImage object
+	self.keepalive = []	# Use this to anchor the PhotoImage object
 	make_icon_window(self, fetchmail_icon)
-#       self.grab_set()
-#       self.focus_set()
-#       self.wait_window()
+#	self.grab_set()
+#	self.focus_set()
+#	self.wait_window()
 	return self
 
     def destruct(self):
@@ -1161,7 +1161,7 @@ class ServerEdit(Frame, MyWidget):
 		secwin = Frame(rightwin, relief=RAISED, bd=5)
 		Label(secwin, text="Security").pack(side=TOP)
 		# Don't actually let users set this.  KPOP sets it implicitly
-		#       ButtonBar(secwin, 'Authorization mode:',
+		#	ButtonBar(secwin, 'Authorization mode:',
 		#		 self.auth, authlist, 1, None).pack(side=TOP)
 		if os_type == 'linux' or os_type == 'freebsd'  or 'interface' in dictmembers:
 		    LabeledEntry(secwin, 'IP range to check before poll:',
@@ -1176,11 +1176,11 @@ class ServerEdit(Frame, MyWidget):
 		if 'kerberos' in feature_options:
 		    LabeledEntry(secwin, 'Principal:',
 			 self.principal, '12').pack(side=TOP, fill=X)
-                # ESMTP authentication
-                LabeledEntry(secwin, 'ESMTP name:',
-                             self.esmtpname, '12').pack(side=TOP, fill=X)
-                LabeledEntry(secwin, 'ESMTP password:',
-                             self.esmtppassword, '12').pack(side=TOP, fill=X)
+		# ESMTP authentication
+		LabeledEntry(secwin, 'ESMTP name:',
+			     self.esmtpname, '12').pack(side=TOP, fill=X)
+		LabeledEntry(secwin, 'ESMTP password:',
+			     self.esmtppassword, '12').pack(side=TOP, fill=X)
 		Button(secwin, text='Help', fg='blue',
 		       command=lambda: helpwin(sechelp)).pack(side=RIGHT)
 		secwin.pack(fill=X)
@@ -1199,7 +1199,7 @@ class ServerEdit(Frame, MyWidget):
 	for (protocol, port) in (("IMAP",143), ("POP3",110), ("POP2",109)):
 	    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	    try:
-                sock.connect((realhost, port))
+		sock.connect((realhost, port))
 		greetline = sock.recv(1024)
 		sock.close()
 	    except:
@@ -1240,7 +1240,7 @@ This appears to be an old version of the UC Davis POP server.  These are
 dangerously unreliable (among other problems, they may drop your mailbox
 on the floor if your connection is interrupted during the session).
 
-It is strongly recommended that you find a better POP3 server.  The fetchmail
+It is strongly recommended that you find a better POP3 server.	The fetchmail
 FAQ includes pointers to good ones.
 
 """
@@ -1297,7 +1297,7 @@ Its response to RETR is normal, so use the `fetchall' option.
 """
 	    if string.find(greetline, " geonet.de") > 0:
 		warnings = warnings + """
-You appear to be using geonet.  As of late 2002, the TOP command on
+You appear to be using geonet.	As of late 2002, the TOP command on
 geonet's POP3 is broken.  Use the fetchall option.
 
 """
@@ -1404,7 +1404,7 @@ You may have to use the fetchall option.
 Some servers issuing the greeting line 'IMS POP3' have been known to
 do byte-stuffing incorrectly.  This means that if a message you receive
 has a . (period) at start of line, fetchmail will become confused and
-probably wedge itself.  (This bug was recorded on IMS POP3 0.86.)
+probably wedge itself.	(This bug was recorded on IMS POP3 0.86.)
 
 """
 
@@ -1463,7 +1463,7 @@ POP3 facility is enabled, we recommend you fall back on it.
 ### Checks for protocol variants start here
 
 	    closebrak = string.find(greetline, ">")
-	    if  closebrak > 0 and greetline[closebrak+1] == "\r":
+	    if	closebrak > 0 and greetline[closebrak+1] == "\r":
 		warnings = warnings + """
 It looks like you could use APOP on this server and avoid sending it your
 password in clear.  You should talk to the mailserver administrator about
@@ -1486,8 +1486,8 @@ a pointer to an open-source implementation.
 """
 	    if string.find(greetline, "IMAP4rev1") > 0:
 		warnings = warnings + """
-I see an IMAP4rev1 server.  Excellent.  This is (a) the best kind of
-remote-mail server, and (b) the one the fetchmail author uses.  Fetchmail
+I see an IMAP4rev1 server.  Excellent.	This is (a) the best kind of
+remote-mail server, and (b) the one the fetchmail author uses.	Fetchmail
 has therefore been extremely well tested with this class of server.
 
 """
@@ -1570,11 +1570,11 @@ class UserEdit(Frame, MyWidget):
 	self.master.iconname('Fetchmail user ' + self.user.remote);
 	self.post(User, 'user')
 	self.makeWidgets(mode, self.parent.server.pollname)
-	self.keepalive = []     # Use this to anchor the PhotoImage object
+	self.keepalive = []	# Use this to anchor the PhotoImage object
 	make_icon_window(self, fetchmail_icon)
-#       self.grab_set()
-#       self.focus_set()
-#       self.wait_window()
+#	self.grab_set()
+#	self.focus_set()
+#	self.wait_window()
 	return self
 
     def destruct(self):
@@ -1750,7 +1750,7 @@ class Configurator(Frame):
 	self.master.title('fetchmail configurator');
 	self.master.iconname('fetchmail configurator');
 	Pack.config(self)
-	self.keepalive = []     # Use this to anchor the PhotoImage object
+	self.keepalive = []	# Use this to anchor the PhotoImage object
 	make_icon_window(self, fetchmail_icon)
 
 	Message(self, text="""
@@ -1799,7 +1799,7 @@ class RunWindow(Frame):
 	Label(self,
 		text="Running "+command, 
 		bd=2).pack(side=TOP, pady=10)
-	self.keepalive = []     # Use this to anchor the PhotoImage object
+	self.keepalive = []	# Use this to anchor the PhotoImage object
 	make_icon_window(self, fetchmail_icon)
 
 	# This is a scrolling text window
@@ -1815,10 +1815,10 @@ class RunWindow(Frame):
 
 	Button(self, text='Quit', fg='blue', command=self.leave).pack()
 
-	self.update()   # Draw widget before executing fetchmail
+	self.update()	# Draw widget before executing fetchmail
 
 	# Always look for a runnable command in the directory we're running in
-        # first. This avoids some obscure version-skew errors that can occur
+	# first. This avoids some obscure version-skew errors that can occur
 	# if you pick up an old fetchmail from the standard system locations.
 	os.environ["PATH"] = os.path.dirname(sys.argv[0]) + ":" + os.environ["PATH"]
 	child_stdout = os.popen(command + " 2>&1", "r")
@@ -1845,7 +1845,7 @@ class MainWindow(Frame):
 	Label(self,
 		text='Fetchmailconf ' + version, 
 		bd=2).pack(side=TOP, pady=10)
-	self.keepalive = []     # Use this to anchor the PhotoImage object
+	self.keepalive = []	# Use this to anchor the PhotoImage object
 	make_icon_window(self, fetchmail_icon)
 	self.debug = 0
 
@@ -1933,8 +1933,8 @@ def copy_instance(toclass, fromdict):
 	class_sig.remove('typemap')
     if tuple(class_sig) != tuple(dict_keys):
 	print "Fields don't match what fetchmailconf expected:"
-#       print "Class signature: " + `class_sig`
-#       print "Dictionary keys: " + `dict_keys`
+#	print "Class signature: " + `class_sig`
+#	print "Dictionary keys: " + `dict_keys`
 	diff = setdiff(class_sig, common)
 	if diff:
 	    print "Not matched in class `" + toclass.__class__.__name__ + "' signature: " + `diff`
