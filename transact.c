@@ -1146,7 +1146,7 @@ int readheaders(int sock,
 		    fetchmailhost,
 		    protocol->name,
 		    VERSION);
-	    if (ctl->tracepolls)
+	    if (ctl->server.tracepolls)
 	    {
 		snprintf(buf + strlen(buf), sizeof(buf) - strlen(buf),
 			" polling %s account %s",

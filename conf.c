@@ -317,7 +317,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	        stringdump("esmtpname",ctl->server.esmtp_name);
 	    if (ctl->server.esmtp_password)
 	        stringdump("esmtppassword",ctl->server.esmtp_password);
-	    booldump("tracepolls", ctl->tracepolls);
+	    booldump("tracepolls", ctl->server.tracepolls);
 
 	    indent(0);
 	    fputs("'users': ", stdout);

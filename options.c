@@ -643,9 +643,9 @@ struct query *ctl;	/* option record to be initialized */
 	    rctl->use_syslog = FLAG_FALSE;
 	    break;
 
-        case LA_TRACEPOLLS:
-            ctl->tracepolls = FLAG_TRUE;
-            break;
+	case LA_TRACEPOLLS:
+	    ctl->server.tracepolls = FLAG_TRUE;
+	    break;
 
 	case '?':
 	case LA_HELP:

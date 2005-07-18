@@ -866,6 +866,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
 
     FLAG_MERGE(server.plugin);
     FLAG_MERGE(server.plugout);
+    FLAG_MERGE(server.tracepolls);
 
     FLAG_MERGE(wildcard);
     FLAG_MERGE(remotename);
@@ -906,7 +907,6 @@ static void optmerge(struct query *h2, struct query *h1, int force)
 #endif
     FLAG_MERGE(expunge);
 
-    FLAG_MERGE(tracepolls);
     FLAG_MERGE(properties);
 #undef FLAG_MERGE
 }
@@ -1877,7 +1877,7 @@ static void dump_params (struct runctl *runp,
 	    }
 	}
 
-        if (ctl->tracepolls)
+        if (ctl->server.tracepolls)
             printf(GT_("  Poll trace information will be added to the Received header.\n"));
         else if (outlevel >= O_VERBOSE)
             printf(GT_("  No poll trace information will be added to the Received header.\n.\n"));

@@ -251,7 +251,8 @@ struct hostdata		/* shared among all user connections to given server */
 #ifdef SDPS_ENABLE
     flag sdps;				/* use Demon Internet SDPS *ENV */
 #endif /* SDPS_ENABLE */
-    flag checkalias;                  	/* resolve aliases by comparing IPs? */
+    flag checkalias;			/* resolve aliases by comparing IPs? */
+    flag tracepolls;			/* if TRUE, add poll trace info to Received */
     char *principal;			/* Kerberos principal for mail service */
     char *esmtp_name, *esmtp_password;	/* ESMTP AUTH information */
 
@@ -328,7 +329,6 @@ struct query
     flag sslcertck;		/* Strictly check the server cert. */
     char *sslfingerprint;	/* Fingerprint to check against */
     char *properties;		/* passthrough properties for extensions */
-    flag tracepolls;		/* if TRUE, add poll trace info to Received */
 
     /* internal use -- per-poll state */
     flag active;		/* should we actually poll this server? */

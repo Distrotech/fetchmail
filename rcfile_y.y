@@ -155,7 +155,7 @@ serv_option	: AKA alias_list
 #ifdef KERBEROS_V5
 						current.server.authenticate = A_KERBEROS_V5;
 #else
-		    				current.server.authenticate = A_KERBEROS_V4;
+						current.server.authenticate = A_KERBEROS_V4;
 #endif /* KERBEROS_V5 */
 #ifdef INET6_ENABLE
 					    current.server.service = KPOP_PORT;
@@ -218,7 +218,7 @@ serv_option	: AKA alias_list
 					    void *request;
 					    int requestlen;
 
-		    			    if (net_security_strtorequest($2, &request, &requestlen))
+					    if (net_security_strtorequest($2, &request, &requestlen))
 						yyerror(GT_("invalid security request"));
 					    else {
 						current.server.netsec = xstrdup($2);
@@ -247,8 +247,8 @@ serv_option	: AKA alias_list
 		| DNS			{current.server.dns = FLAG_TRUE;}
 		| NO DNS		{current.server.dns = FLAG_FALSE;}
 		| NO ENVELOPE		{current.server.envelope = STRING_DISABLED;}
-		| TRACEPOLLS		{current.tracepolls = FLAG_TRUE;}
-		| NO TRACEPOLLS		{current.tracepolls = FLAG_FALSE;}
+		| TRACEPOLLS		{current.server.tracepolls = FLAG_TRUE;}
+		| NO TRACEPOLLS		{current.server.tracepolls = FLAG_FALSE;}
 		;
 
 userspecs	: user1opts		{record_current(); user_reset();}
