@@ -132,12 +132,12 @@ class Server:
 	if self.via:
 	    res = res + (" via " + str(self.via) + "\n");
 	if self.protocol != ServerDefaults.protocol:
-	    res = res + " with proto " + self.protocol 
+	    res = res + " with proto " + self.protocol
 	if self.port != defaultports[self.protocol] and self.port:
 	    res = res + " port " + `self.port`
 	if self.timeout != ServerDefaults.timeout:
 	    res = res + " timeout " + `self.timeout`
-	if self.interval != ServerDefaults.interval: 
+	if self.interval != ServerDefaults.interval:
 	    res = res + " interval " + `self.interval`
 	if self.envelope != ServerDefaults.envelope or self.envskip != ServerDefaults.envskip:
 	    if self.envskip:
@@ -314,9 +314,9 @@ class User:
 	if (self.keep != UserDefaults.keep
 		or self.flush != UserDefaults.flush
 		or self.fetchall != UserDefaults.fetchall
-		or self.rewrite != UserDefaults.rewrite 
-		or self.forcecr != UserDefaults.forcecr 
-		or self.stripcr != UserDefaults.stripcr 
+		or self.rewrite != UserDefaults.rewrite
+		or self.forcecr != UserDefaults.forcecr
+		or self.stripcr != UserDefaults.stripcr
 		or self.pass8bits != UserDefaults.pass8bits
 		or self.mimedecode != UserDefaults.mimedecode
 		or self.dropstatus != UserDefaults.dropstatus
@@ -414,7 +414,7 @@ class User:
 #
 
 defaultports = {"auto":0,
-		"POP2":109, 
+		"POP2":109,
 		"POP3":110,
 		"APOP":110,
 		"KPOP":1109,
@@ -428,7 +428,7 @@ listboxhelp = {
     'title' : 'List Selection Help',
     'banner': 'List Selection',
     'text' : """
-You must select an item in the list box (by clicking on it). 
+You must select an item in the list box (by clicking on it).
 """}
 
 def flag2str(value, string):
@@ -464,7 +464,7 @@ def ButtonBar(frame, legend, ref, alternatives, depth, command):
 	    ind = width * row + column
 	    if ind < len(alternatives):
 		Radiobutton(subframe,
-			{'text':alternatives[ind], 
+			{'text':alternatives[ind],
 			 'variable':ref,
 			 'value':alternatives[ind],
 			 'command':command}).pack(side=TOP, anchor=W)
@@ -479,7 +479,7 @@ def ButtonBar(frame, legend, ref, alternatives, depth, command):
 def helpwin(helpdict):
 # help message window with a self-destruct button
     helpwin = Toplevel()
-    helpwin.title(helpdict['title']) 
+    helpwin.title(helpdict['title'])
     helpwin.iconname(helpdict['title'])
     Label(helpwin, text=helpdict['banner']).pack()
     textframe = Frame(helpwin)
@@ -491,7 +491,7 @@ def helpwin(helpdict):
     scroll.config(command=helpwin.textwidget.yview)
     scroll.pack(side=RIGHT, fill=BOTH)
     helpwin.textwidget.insert(END, helpdict['text']);
-    Button(helpwin, text='Done', 
+    Button(helpwin, text='Done',
 	   command=lambda x=helpwin: x.destroy(), bd=2).pack()
     textframe.pack(side=TOP)
 
@@ -510,7 +510,7 @@ def make_icon_window(base, image):
 	pass
 
 class ListEdit(Frame):
-# edit a list of values (duplicates not allowed) with a supplied editor hook 
+# edit a list of values (duplicates not allowed) with a supplied editor hook
     def __init__(self, newlegend, list, editor, deletor, master, helptxt):
 	self.editor = editor
 	self.deletor = deletor
@@ -591,7 +591,7 @@ class ListEdit(Frame):
 		apply(self.deletor, (label,))
 
 def ConfirmQuit(frame, context):
-    ans = Dialog(frame, 
+    ans = Dialog(frame,
 		 title = 'Quit?',
 		 text = 'Really quit ' + context + ' without saving?',
 		 bitmap = 'question',
@@ -766,7 +766,7 @@ class ConfigurationEdit(Frame, MyWidget):
 
 	gf = Frame(self, relief=RAISED, bd = 5)
 	Label(gf,
-		text='Fetchmail Run Controls', 
+		text='Fetchmail Run Controls',
 		bd=2).pack(side=TOP, pady=10)
 
 	df = Frame(gf)
@@ -821,9 +821,9 @@ class ConfigurationEdit(Frame, MyWidget):
 	# Expert mode allows us to edit multiple sites
 	lf = Frame(self, relief=RAISED, bd=5)
 	Label(lf,
-	      text='Remote Mail Server Configurations', 
+	      text='Remote Mail Server Configurations',
 	      bd=2).pack(side=TOP, pady=10)
-	ListEdit('New Server:', 
+	ListEdit('New Server:',
 		map(lambda x: x.pollname, self.configuration.servers),
 		lambda site, self=self: self.server_edit(site),
 		lambda site, self=self: self.server_delete(site),
@@ -832,7 +832,7 @@ class ConfigurationEdit(Frame, MyWidget):
 
     def destruct(self):
 	for sitename in self.subwidgets.keys():
-	    self.subwidgets[sitename].destruct()	
+	    self.subwidgets[sitename].destruct()
 	self.master.destroy()
 	self.onexit()
 
@@ -847,7 +847,7 @@ class ConfigurationEdit(Frame, MyWidget):
 	fm = None
 	if not self.outfile:
 	    fm = sys.stdout
-	elif not os.path.isfile(self.outfile) or Dialog(self, 
+	elif not os.path.isfile(self.outfile) or Dialog(self,
 		 title = 'Overwrite existing run control file?',
 		 text = 'Really overwrite existing run control file?',
 		 bitmap = 'question',
@@ -875,7 +875,7 @@ remotehelp = {
     'title' : 'Remote site help',
     'banner': 'Remote sites',
     'text' : """
-When you add a site name to the list here, 
+When you add a site name to the list here,
 you initialize an entry telling fetchmail
 how to poll a new site.
 
@@ -890,7 +890,7 @@ serverhelp = {
     'title' : 'Server options help',
     'banner': 'Server Options',
     'text' : """
-The server options screen controls fetchmail 
+The server options screen controls fetchmail
 options that apply to one of your mailservers.
 
 Once you have a mailserver configuration set
@@ -898,7 +898,7 @@ up as you like it, you can select `OK' to
 store it in the server list maintained in
 the main configuration window.
 
-If you wish to discard changes to a server 
+If you wish to discard changes to a server
 configuration, select `Quit'.
 """}
 
@@ -914,7 +914,7 @@ a command-line argument.
 The `True name of server' box should specify the actual DNS name
 to query. By default this is the same as the poll name.
 
-Normally each host described in the file is queried once each 
+Normally each host described in the file is queried once each
 poll cycle. If `Cycles to skip between polls' is greater than 0,
 that's the number of poll cycles that are skipped between the
 times this post is actually polled.
@@ -946,7 +946,7 @@ protocol is the default mode; it probes the host
 ports for POP3 and IMAP to see if either is
 available.
 
-Normally the TCP/IP service port to use is 
+Normally the TCP/IP service port to use is
 dictated by the protocol choice.  The `Port'
 field (only present in expert mode) lets you
 set a non-standard port.
@@ -998,7 +998,7 @@ suserhelp = {
     'title' : 'User list help',
     'banner': 'User list',
     'text' : """
-When you add a user name to the list here, 
+When you add a user name to the list here,
 you initialize an entry telling fetchmail
 to poll the site on behalf of the new user.
 
@@ -1039,7 +1039,7 @@ class ServerEdit(Frame, MyWidget):
 
     def destruct(self):
 	for username in self.subwidgets.keys():
-	    self.subwidgets[username].destruct()	
+	    self.subwidgets[username].destruct()
 	del self.parent.subwidgets[self.server.pollname]
 	self.master.destroy()
 
@@ -1050,7 +1050,7 @@ class ServerEdit(Frame, MyWidget):
     def save(self):
 	self.fetch(Server, 'server')
 	for username in self.subwidgets.keys():
-	    self.subwidgets[username].save()	
+	    self.subwidgets[username].save()
 	self.destruct()
 
     def defaultPort(self):
@@ -1063,7 +1063,7 @@ class ServerEdit(Frame, MyWidget):
 	# a custom port number you should be in expert mode and playing
 	# close enough attention to notice this...
 	self.port.set(defaultports[proto])
-	if not proto in ("POP3", "APOP", "KPOP"): self.uidl.state = DISABLED 
+	if not proto in ("POP3", "APOP", "KPOP"): self.uidl.state = DISABLED
 
     def user_edit(self, username, mode):
 	self.subwidgets[username] = UserEdit(username, self).edit(mode, Toplevel())
@@ -1112,14 +1112,14 @@ class ServerEdit(Frame, MyWidget):
 	Label(protwin, text="Protocol").pack(side=TOP)
 	ButtonBar(protwin, '',
 		  self.protocol, protolist, 2,
-		  self.defaultPort) 
+		  self.defaultPort)
 	if mode != 'novice':
 	    LabeledEntry(protwin, 'On server TCP/IP port:',
 		      self.port, leftwidth).pack(side=TOP, fill=X)
 	    self.defaultPort()
 	    Checkbutton(protwin,
 		text="POP3: track `seen' with client-side UIDLs?",
-		variable=self.uidl).pack(side=TOP)   
+		variable=self.uidl).pack(side=TOP)
 	Button(protwin, text='Probe for supported protocols', fg='blue',
 	       command=self.autoprobe).pack(side=LEFT)
 	Button(protwin, text='Help', fg='blue',
@@ -1259,14 +1259,14 @@ message retrieved with TOP. Its response to RETR is normal, so use the
 # that internally cucipop does allocate a certain data structure in
 # multiples of 16, using realloc() to bump it up to the next
 # multiple if it needs more.
-# 
+#
 # The distinctive symptom is that when there are 16 messages in the
 # inbox, you can RETR and DELE all 16 messages successfully, but on
 # QUIT cucipop returns something like "-ERR Error locking your
 # mailbox" and aborts without updating it.
-# 
+#
 # The cucipop banner looks like:
-# 
+#
 # +OK Cubic Circle's v1.31 1998/05/13 POP3 ready <6229000062f95036@wakko>
 #
 	    if string.find(greetline, "Cubic Circle") > 0:
@@ -1307,7 +1307,7 @@ You appear to be using some version of HP OpenMail.  Many versions of
 OpenMail do not process the "TOP" command correctly; the symptom is that
 only the header and first line of each message is retrieved.  To work
 around this bug, turn on `fetchall' on all user entries associated with
-this server.  
+this server.
 
 """
 	    if string.find(greetline, "Escape character is") > 0:
@@ -1357,7 +1357,7 @@ it has been observed with fetchpop.  The fix is to upgrade to qpopper
 You appear to be using a SpryNet server.  In mid-1999 it was reported that
 the SpryNet TOP command marks messages seen.  Therefore, for proper error
 recovery in the event of a line drop, it is strongly recommended that you
-turn on `fetchall' on all user entries associated with this server.  
+turn on `fetchall' on all user entries associated with this server.
 
 """
 	    if string.find(greetline, "TEMS POP3") > 0:
@@ -1389,7 +1389,7 @@ They also botch the TOP command the fetchmail normally uses for retrieval
 Turning on fetchall will disable the use of TOP.
 
 Therefore, it is strongly recommended that you turn on `fetchall' on all
-user entries associated with this server.  
+user entries associated with this server.
 
 """
 	    if string.find(greetline, " Novonyx POP3") > 0:
@@ -1473,7 +1473,7 @@ this.
 	    if string.find(greetline, "IMAP2bis") > 0:
 		warnings = warnings + """
 IMAP2bis servers have a minor problem; they can't peek at messages without
-marking them seen.  If you take a line hit during the retrieval, the 
+marking them seen.  If you take a line hit during the retrieval, the
 interrupted message may get left on the server, marked seen.
 
 To work around this, it is recommended that you set the `fetchall'
@@ -1501,13 +1501,13 @@ Fetchmail doesn't know anything special about this server type.
 	    title = "Autoprobe of " + realhost + " succeeded"
 	    confirm = "The " + protocol + " server said:\n\n" + greetline + warnings
 	    self.protocol.set(protocol)
-	confwin.title(title) 
+	confwin.title(title)
 	confwin.iconname(title)
 	Label(confwin, text=title).pack()
 	Message(confwin, text=confirm, width=600).pack()
-	Button(confwin, text='Done', 
+	Button(confwin, text='Done',
 		   command=lambda x=confwin: x.destroy(), bd=2).pack()
-	
+
 #
 # User editing stuff
 #
@@ -1590,9 +1590,9 @@ class UserEdit(Frame, MyWidget):
     def save(self):
 	ok = 0
 	for x in self.user.localnames: ok = ok + (string.find(x, '@') != -1)
-	if ok == 0 or  Dialog(self, 
+	if ok == 0 or  Dialog(self,
 	    title = "Really accept an embedded '@' ?",
-	    text = "Local names with an embedded '@', such as in foo@bar " 
+	    text = "Local names with an embedded '@', such as in foo@bar "
 		   "might result in your mail being sent to foo@bar.com "
 		   "instead of your local system.\n Are you sure you want "
 		   "a local user name with an '@' in it?",
@@ -1682,9 +1682,9 @@ class UserEdit(Frame, MyWidget):
 	Checkbutton(optwin, text="Fetch old messages as well as new",
 		    variable=self.fetchall).pack(side=TOP, anchor=W)
 	if mode != 'novice':
-	    Checkbutton(optwin, text="Flush seen messages before retrieval", 
+	    Checkbutton(optwin, text="Flush seen messages before retrieval",
 		    variable=self.flush).pack(side=TOP, anchor=W)
-	    Checkbutton(optwin, text="Rewrite To/Cc/Bcc messages to enable reply", 
+	    Checkbutton(optwin, text="Rewrite To/Cc/Bcc messages to enable reply",
 		    variable=self.rewrite).pack(side=TOP, anchor=W)
 	    Checkbutton(optwin, text="Force CR/LF at end of each line",
 		    variable=self.forcecr).pack(side=TOP, anchor=W)
@@ -1694,9 +1694,9 @@ class UserEdit(Frame, MyWidget):
 		    variable=self.pass8bits).pack(side=TOP, anchor=W)
 	    Checkbutton(optwin, text="Undo MIME armoring on header and body",
 		    variable=self.mimedecode).pack(side=TOP, anchor=W)
-	    Checkbutton(optwin, text="Drop Status lines from forwarded messages", 
+	    Checkbutton(optwin, text="Drop Status lines from forwarded messages",
 		    variable=self.dropstatus).pack(side=TOP, anchor=W)
-	    Checkbutton(optwin, text="Drop Delivered-To lines from forwarded messages", 
+	    Checkbutton(optwin, text="Drop Delivered-To lines from forwarded messages",
 		    variable=self.dropdelivered).pack(side=TOP, anchor=W)
 	optwin.pack(fill=X)
 
@@ -1719,7 +1719,7 @@ class UserEdit(Frame, MyWidget):
 	    if self.parent.server.protocol not in ('ETRN', 'ODMR'):
 		LabeledEntry(limwin, 'Interval between expunges:',
 			     self.expunge, '30').pack(side=TOP, fill=X)
-	    Checkbutton(limwin, text="Idle after each poll (IMAP only)", 
+	    Checkbutton(limwin, text="Idle after each poll (IMAP only)",
 		    variable=self.idle).pack(side=TOP, anchor=W)
 	    limwin.pack(fill=X)
 
@@ -1797,7 +1797,7 @@ class RunWindow(Frame):
 	self.master.iconname('fetchmail run window');
 	Pack.config(self)
 	Label(self,
-		text="Running "+command, 
+		text="Running "+command,
 		bd=2).pack(side=TOP, pady=10)
 	self.keepalive = []	# Use this to anchor the PhotoImage object
 	make_icon_window(self, fetchmail_icon)
@@ -1843,7 +1843,7 @@ class MainWindow(Frame):
 	self.master.iconname('fetchmail launcher');
 	Pack.config(self)
 	Label(self,
-		text='Fetchmailconf ' + version, 
+		text='Fetchmailconf ' + version,
 		bd=2).pack(side=TOP, pady=10)
 	self.keepalive = []	# Use this to anchor the PhotoImage object
 	make_icon_window(self, fetchmail_icon)
@@ -1929,7 +1929,7 @@ def copy_instance(toclass, fromdict):
     dict_keys = setdiff(fromdict.keys(), optional)
     dict_keys.sort()
     common = intersect(class_sig, dict_keys)
-    if 'typemap' in class_sig: 
+    if 'typemap' in class_sig:
 	class_sig.remove('typemap')
     if tuple(class_sig) != tuple(dict_keys):
 	print "Fields don't match what fetchmailconf expected:"
@@ -1947,7 +1947,7 @@ def copy_instance(toclass, fromdict):
 	    setattr(toclass, x, fromdict[x])
 
 #
-# And this is the main sequence.  How it works:  
+# And this is the main sequence.  How it works:
 #
 # First, call `fetchmail --configdump' and trap the output in a tempfile.
 # This should fill it with a Python initializer for a variable `fetchmailrc'.
@@ -1969,7 +1969,7 @@ def copy_instance(toclass, fromdict):
 #     the edited result to stdout as well.
 # -f: specify the run control file to read.
 
-if __name__ == '__main__': 
+if __name__ == '__main__':
 
     if not os.environ.has_key("DISPLAY"):
 	print "fetchmailconf must be run under X"
@@ -2040,7 +2040,7 @@ gUSiYASJpMEHhilJTEnhAlGoQqYAZQ1AiqEMZ0jDGtqQImhwwA13yMMevoQAGvGhEAWHGMOAAAA7
 	cmd = "umask 077; fetchmail -f " + rcfile + " --configdump --nosyslog >" + tmpfile
     else:
 	cmd = "umask 077; fetchmail --configdump --nosyslog >" + tmpfile
-	
+
     try:
 	s = os.system(cmd)
 	if s != 0:
@@ -2057,7 +2057,7 @@ gUSiYASJpMEHhilJTEnhAlGoQqYAZQ1AiqEMZ0jDGtqQImhwwA13yMMevoQAGvGhEAWHGMOAAAA7
 	print "Can't read configuration output of fetchmail --configdump."
 	os.remove(tmpfile)
 	sys.exit(1)
-	
+
     os.remove(tmpfile)
 
     # The tricky part -- initializing objects from the configuration global
