@@ -716,4 +716,8 @@ char *stpcpy(char *, const char*);
 extern int mailserver_socket_temp;
 extern char *program_name;
 
+/* POSIX space characters,
+ * <tab>;<newline>;<vertical-tab>;<form-feed>;<carriage-return>;<space> */
+#define POSIX_space "\t\n\v\f\r "
+
 /* fetchmail.h ends here */
