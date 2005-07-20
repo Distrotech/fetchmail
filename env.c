@@ -149,6 +149,7 @@ char *host_fqdn(void)
     {
 	struct hostent *hp;
 
+	/** XXX FIXME: use getaddrinfo instead? */
 	/* if we got a basename (as we do in Linux) make a FQDN of it */
 	hp = gethostbyname(tmpbuf);
 	if (hp == (struct hostent *) NULL)
@@ -263,43 +264,32 @@ const char *showproto(int proto)
 char *visbuf(const char *buf)
 /* visibilize a given string */
 {
-    static char vbuf[BUFSIZ];
-    char *tp = vbuf;
+    static char *vbuf;
+    static size_t vbufs;
+    char *tp;
+    size_t needed;
+
+    needed = strlen(buf) * 5 + 1; /* worst case: HEX, plus NUL byte */
+
+    if (needed > vbufs) {
+	vbufs = needed;
+	vbuf = xrealloc(vbuf, vbufs);
+    }
+
+    tp = vbuf;
 
     while (*buf)
     {
-	if (*buf == '"')
-	{
-	    *tp++ = '\\'; *tp++ = '"';
-	    buf++;
-	}
-	else if (*buf == '\\')
-	{
-	    *tp++ = '\\'; *tp++ = '\\';
-	    buf++;
-	}
-	else if (isprint((unsigned char)*buf) || *buf == ' ')
-	    *tp++ = *buf++;
-	else if (*buf == '\n')
-	{
-	    *tp++ = '\\'; *tp++ = 'n';
-	    buf++;
-	}
-	else if (*buf == '\r')
-	{
-	    *tp++ = '\\'; *tp++ = 'r';
-	    buf++;
-	}
-	else if (*buf == '\b')
-	{
-	    *tp++ = '\\'; *tp++ = 'b';
-	    buf++;
-	}
-	else if (*buf < ' ')
-	{
-	    *tp++ = '\\'; *tp++ = '^'; *tp++ = '@' + *buf;
-	    buf++;
-	}
+	     if (*buf == '"')  { *tp++ = '\\'; *tp++ = '"'; buf++; }
+	else if (*buf == '\\') { *tp++ = '\\'; *tp++ = '\\'; buf++; }
+	else if (isprint((unsigned char)*buf) || *buf == ' ') *tp++ = *buf++;
+	else if (*buf == '\a') { *tp++ = '\\'; *tp++ = 'a'; buf++; }
+	else if (*buf == '\b') { *tp++ = '\\'; *tp++ = 'b'; buf++; }
+	else if (*buf == '\f') { *tp++ = '\\'; *tp++ = 'f'; buf++; }
+	else if (*buf == '\n') { *tp++ = '\\'; *tp++ = 'n'; buf++; }
+	else if (*buf == '\r') { *tp++ = '\\'; *tp++ = 'r'; buf++; }
+	else if (*buf == '\t') { *tp++ = '\\'; *tp++ = 't'; buf++; }
+	else if (*buf == '\v') { *tp++ = '\\'; *tp++ = 'v'; buf++; }
 	else
 	{
 	    const char hex[] = "0123456789abcdef";
@@ -312,5 +302,4 @@ char *visbuf(const char *buf)
     *tp++ = '\0';
     return(vbuf);
 }
-
 /* env.c ends here */
