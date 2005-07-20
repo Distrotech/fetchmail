@@ -71,7 +71,7 @@ fetchmail.spec: Makefile.in specgen.sh
 	$(srcdir)/specgen.sh $(VERSION) >fetchmail.spec
 
 DISTDOCS=	FAQ FEATURES NOTES OLDNEWS fetchmail-man.html \
-		fetchmail-FAQ.html design-notes.html todo.html \
+		fetchmail-FAQ.html esrs-design-notes.html todo.html \
 		fetchmail-features.html README.SSL README.NTLM
 
 # extra directories to ship
@@ -86,8 +86,8 @@ FAQ: fetchmail-FAQ.html
 FEATURES: fetchmail-features.html
 	AWK=$(AWK) $(SHELL) $(srcdir)/dist-tools/html2txt $(srcdir)/fetchmail-features.html >$@ || { rm -f $@ ; exit 1 ; }
 
-NOTES: design-notes.html
-	AWK=$(AWK) $(SHELL) $(srcdir)/dist-tools/html2txt $(srcdir)/design-notes.html >$@ || { rm -f $@ ; exit 1 ; }
+NOTES: esrs-design-notes.html
+	AWK=$(AWK) $(SHELL) $(srcdir)/dist-tools/html2txt $(srcdir)/esrs-design-notes.html >$@ || { rm -f $@ ; exit 1 ; }
 
 TODO: todo.html
 	AWK=$(AWK) $(SHELL) $(srcdir)/dist-tools/html2txt $(srcdir)/todo.html >$@ || { rm -f $@ ; exit 1 ; }
