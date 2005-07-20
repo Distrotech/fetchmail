@@ -21,14 +21,15 @@ fetchmail 6.3.0 (not yet released officially):
 * Added Andrey Lelikov's recipe for Hotmail and Lycos Webmail.
 * Remove blank between MAIL FROM: and <, which causes Cyrus to complain.
   Patch by Phil Endecott. (RF)
-* Switched to automake. (MA)
+* Switched to automake. Matthias Andree.
 * Build fixes for HESIOD and resolv.h trouble on FreeBSD. (MA)
 * Fabrice Bellet's fix for Red Hat bug #113492, fetchmail hangs in IMAP
   mode after EXPUNGE when the server (Dovecot 0.99.10) doesn't update
   RECENT and EXISTS counts. (MA)
 * Holger Mauermann's bounce patch, to use a NULL envelope from, not
   write a Return-Path header (both to meet RFC-2821), changed From,
-  added Subject header, rewording the human readable part. (MA)
+  added Subject header, rewording the human readable part.  Fixes Debian
+  bug #316446. (MA)
 * Merge Sunil Shetye's time.h handling fix. (MA)
 * Merge Gerd von Egidy's patch to avoid a segfault in multidrop/received
   mode when the Received: headers are malformatted. (MA)
