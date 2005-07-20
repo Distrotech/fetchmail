@@ -155,6 +155,10 @@ int main(int argc, char **argv)
     iana_charset = "US-ASCII";
 #endif
 
+    if (getuid() == 0) {
+	report(stderr, GT_("WARNING: Running as root is discouraged.\n"));
+    }
+
     /*
      * Note: because we can't initialize reporting before we  know whether
      * syslog is supposed to be on, this message will go to stdout and
