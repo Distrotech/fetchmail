@@ -1824,12 +1824,12 @@ recipient address. If the mail is addressed to more than one recipient,
 the Received line won't contain any information regarding recipient addresses.
 
 Then fetchmail looks for the Resent-To:, Resent-Cc:, and Resent-Bcc:
-lines.  If they exists, they should contain the final recipients and
+lines.  If they exist, they should contain the final recipients and
 have precedence over their To:/Cc:/Bcc: counterparts.  If the Resent-*
-lines doesn't exist, the To:, Cc:, Bcc: and Apparently-To: lines are
+lines don't exist, the To:, Cc:, Bcc: and Apparently-To: lines are
 looked for. (The presence of a Resent-To: is taken to imply that the
 person referred by the To: address has already received the original
-copy of the mail).
+copy of the mail.)
 
 .SH CONFIGURATION EXAMPLES
 Note that although there are password declarations in a good many
