@@ -723,7 +723,7 @@ extern char *program_name;
 /* strlcpy/strlcat prototypes */
 #ifndef HAVE_STRLCAT
 size_t
-strlcat(chat *dst, const char *src, size_t siz);
+strlcat(char *dst, const char *src, size_t siz);
 #endif
 #ifndef HAVE_STRLCPY
 size_t
