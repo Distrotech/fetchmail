@@ -90,7 +90,7 @@ NOTES: design-notes.html esrs-design-notes.html
 	   echo "This file contains two articles reformatted from HTML." > $@ \
 	&& echo "------------------------------------------------------" >> $@ \
 	&& echo "" >> $@ \
-	&& AWK=$(AWK) $(SHELL) $(srcdir)/dist-tools/html2txtx $(srcdir)/design-notes.html >>$@ \
+	&& AWK=$(AWK) $(SHELL) $(srcdir)/dist-tools/html2txt $(srcdir)/design-notes.html >>$@ \
 	&& AWK=$(AWK) $(SHELL) $(srcdir)/dist-tools/html2txt $(srcdir)/esrs-design-notes.html >>$@ \
 	|| { rm -f $@ ; exit 1 ; }
 
