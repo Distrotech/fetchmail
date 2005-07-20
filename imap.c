@@ -53,8 +53,7 @@ static int imap_ok(int sock, char *argbuf)
 	/* interpret untagged status responses */
 	if (strstr(buf, "* CAPABILITY"))
 	{
-	    strncpy(capabilities, buf + 12, sizeof(capabilities));
-	    capabilities[sizeof(capabilities)-1] = '\0';
+	    strlcpy(capabilities, buf + 12, sizeof(capabilities));
 	}
 	else if (strstr(buf, "EXISTS"))
 	{
@@ -68,7 +67,7 @@ static int imap_ok(int sock, char *argbuf)
 	     */
 	    if (count > INT_MAX/sizeof(int))
 	    {
-		report(stderr, "bogus message count!");
+		report(stderr, GT_("bogus message count!"));
 		return(PS_PROTOCOL);
 	    }
 
@@ -166,7 +165,7 @@ static int imap_ok(int sock, char *argbuf)
 #ifdef NTLM_ENABLE
 #include "ntlm.h"
 
-static tSmbNtlmAuthRequest   request;		   
+static tSmbNtlmAuthRequest   request;
 static tSmbNtlmAuthChallenge challenge;
 static tSmbNtlmAuthResponse  response;
 
@@ -185,7 +184,7 @@ static int do_imap_ntlm(int sock, struct query *ctl)
 {
     char msgbuf[2048];
     int result,len;
-  
+
     gen_send(sock, "AUTHENTICATE NTLM");
 
     if ((result = gen_recv(sock, msgbuf, sizeof msgbuf)))
