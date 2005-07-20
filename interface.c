@@ -227,9 +227,9 @@ openkvm(void)
 static int 
 get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
 {
-	char            	tname[16];
+	char			tname[16];
 	char			iname[16];
-	struct ifnet   	        ifnet;
+	struct ifnet		ifnet;
 	unsigned long   	ifnet_addr = ifnet_savedaddr;
 #if __FreeBSD_version >= 300001
 	struct ifnethead	ifnethead;
@@ -244,7 +244,7 @@ get_ifinfo(const char *ifname, ifinfo_t *ifinfo)
 	if (if_egid)
 		setegid(if_egid);
 	
-	for (i = 0; ifname[i] && ifname[i] != '/'; i++)
+	for (i = 0; ifname[i] && ifname[i] != '/' && i < sizeof(iname) - 1; i++)
 		iname[i] = ifname[i];
 		
 	iname[i] = '\0';
