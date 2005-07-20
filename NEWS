@@ -113,6 +113,12 @@ fetchmail 6.3.0 (not yet released officially):
 since -pre4:
 * Make tracepolls a server option, as documented. Fixes Debian bug
   #156094. Matthias Andree.
+* Updated some translations. (MA)
+* Fix some minor inaccuracies (RFC-1893 related, grammar/spelling) in
+  the manual page.
+* Rename ESR's design notes to esrs-design-notes.html and add a new
+  design-notes.html document. The NOTES file will contain both of them.
+  Matthias Andree.
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 

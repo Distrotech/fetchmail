@@ -168,6 +168,7 @@ rm -rf \$RPM_BUILD_ROOT
 %doc NOTES OLDNEWS README README.SSL
 %doc contrib
 %doc fetchmail-features.html fetchmail-FAQ.html esrs-design-notes.html
+%doc design-notes.html
 %attr(644, root, man) %{_mandir}/man1/fetchmail.1*
 %attr(755, root, root) /usr/bin/fetchmail
 # Uncomment the following to support internationalization
