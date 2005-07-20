@@ -102,7 +102,7 @@ parse_netrc (file)
     premature_token = NULL;
 
     /* While there are lines in the file... */
-    while (fgets(buf, POPBUFSIZE, fp))
+    while (fgets(buf, sizeof(buf) - 1, fp))
     {
 	ln++;
 
