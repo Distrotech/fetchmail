@@ -70,7 +70,7 @@ SHELL = /bin/sh
 fetchmail.spec: Makefile.in specgen.sh
 	$(srcdir)/specgen.sh $(VERSION) >fetchmail.spec
 
-DISTDOCS=	FAQ FEATURES NOTES OLDNEWS fetchmail-man.html \
+DISTDOCS=	BUGS FAQ FEATURES NOTES OLDNEWS fetchmail-man.html \
 		fetchmail-FAQ.html design-notes.html esrs-design-notes.html todo.html \
 		fetchmail-features.html README.SSL README.NTLM
 

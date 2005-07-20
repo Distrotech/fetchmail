@@ -1,0 +1,49 @@
+1 = critical/showstopper
+2 = severe/grave/important
+3 = normal
+4 = minor/cosmetic
+5 = wishlist
+
+NEW = not yet reviewed
+OPEN = bug persists
+FDBK = feedback required
+INVA = invalid (not a bug, won't fix, etc.)
+---------------------------------------------------------------------------
+Own
+
+OPEN 3		sink.c leaks memory of ctl->destaddr
+
+---------------------------------------------------------------------------
+Debian: http://bugs.debian.org/
+
+OPEN 2 #146306	fetchmail: so called "bouncing" of mail is braindead
+
+OPEN 2 #150137	Fetchmail does not use smtphost on bounces
+
+NEW  2 #186739	SSL-POP3 closes connection when feeding to local SMTP takes
+		too long -> fetchmail dies with signal 13
+
+FDBK 2 #312415	fetchmail: does not implement IMAP correctly
+		apparently fetchmail emits protocol data when the server
+		doesn't use {LENGTH} prefix on the body.
+
+FDBK 2 #317761	fetchmail: Stops on underscore in domain part of email
+
+OPEN 3 #212240	fetchmail: Option -l (--limit) 120000 doesn't cooperates
+		with -F (--flush) after upgrade.
+
+FDBK 3 #286899	fetchmail: Problem with PID file
+
+FDBK 3 #294547	fetchmail: has to be manually restarted after a while
+		NOTE: appears to be regular network problem?
+		but might also be a FD leak (check lsof?)
+
+FDBK 3 #314509	fetchmail: lost mail, or only calculation error?
+		Perhaps the server cannot count.
+		NOTE: need to review if this causes buffer overrun
+		problems.
+
+FDBK 3 #155827	fetchmail: transposes Delivered-To header
+
+OPEN 3 #201113	PATCH fetchmail is missing a check for Subject Alternative Name (TLS cert.)
+		delayed - feature patch
