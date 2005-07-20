@@ -1161,7 +1161,7 @@ static int do_session(
 	{
 	    report(stderr, GT_("SSL connection failed.\n"));
 	    err = PS_AUTHFAIL;
-	    goto closeUp;
+	    goto cleanUp;
 	}
 	
 	/* Fetchmail didn't hang on SSLOpen, 

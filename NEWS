@@ -109,8 +109,6 @@ fetchmail 6.3.0 (not yet released officially):
 * Run fetchmail.man through automatic spell checker. Matthias Andree.
 * Major fetchmail(1) manual page overhaul by R. Hannes Beinert, to
   clarify singledrop vs. multidrop operation. (MA)
-
-since -pre4:
 * Make tracepolls a server option, as documented. Fixes Debian bug
   #156094. Matthias Andree.
 * Updated some translations. (MA)
@@ -119,6 +117,8 @@ since -pre4:
 * Rename ESR's design notes to esrs-design-notes.html and add a new
   design-notes.html document. The NOTES file will contain both of them.
   Matthias Andree.
+* Fix Debian bug #301964, fetchmail leaks sockets when SSL negotiation
+  fails. Fix suggested Goswin Brederlow. (MA)
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
