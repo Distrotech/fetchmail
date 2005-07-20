@@ -720,4 +720,14 @@ extern char *program_name;
  * <tab>;<newline>;<vertical-tab>;<form-feed>;<carriage-return>;<space> */
 #define POSIX_space "\t\n\v\f\r "
 
+/* strlcpy/strlcat prototypes */
+#ifndef HAVE_STRLCAT
+size_t
+strlcat(chat *dst, const char *src, size_t siz);
+#endif
+#ifndef HAVE_STRLCPY
+size_t
+strlcpy(char *dst, const char *src, size_t siz);
+#endif
+
 /* fetchmail.h ends here */
