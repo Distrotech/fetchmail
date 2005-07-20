@@ -207,6 +207,9 @@ static int pop3_ok (int sock, char *argbuf)
 	else
 	    ok = PS_PROTOCOL;
 
+#if POPBUFSIZE > MSGBUFSIZE
+#error "POPBUFSIZE must not be larger than MSGBUFSIZE"
+#endif
 	if (argbuf != NULL)
 	    strcpy(argbuf,bufp);
     }
