@@ -78,7 +78,7 @@ DISTDOCS=	BUGS FAQ FEATURES NOTES OLDNEWS fetchmail-man.html \
 distdirs = rh-config contrib beos
 
 EXTRA_DIST= $(DISTDOCS) fetchmail.spec $(distdirs) ucs/README.svn \
-	    trio/CHANGES trio/README
+	    trio/CHANGES trio/README strlcpy.3
 
 FAQ: fetchmail-FAQ.html
 	AWK=$(AWK) $(SHELL) $(srcdir)/dist-tools/html2txt $(srcdir)/fetchmail-FAQ.html >$@ || { rm -f $@ ; exit 1 ; }

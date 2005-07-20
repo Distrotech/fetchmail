@@ -4,7 +4,7 @@ dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl
 
-AC_INIT([fetchmail],[6.2.6-pre4])
+AC_INIT([fetchmail],[6.2.6-pre5])
 AC_CONFIG_SRCDIR([fetchmail.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_LIBOBJ_DIR([.])
@@ -101,7 +101,7 @@ dnl Port hack for Sparc/NetBSD-1.5
 AC_CHECK_LIB(intl, gettext,
 		[LIBS="$LIBS -lintl"])
 
-AC_REPLACE_FUNCS([strstr strcasecmp memmove stpcpy])
+AC_REPLACE_FUNCS([strstr strcasecmp memmove stpcpy strlcpy strlcat])
 
 AC_CHECK_FUNC(MD5Init, [],
 	      [AC_LIBSOURCE(md5c.c)

@@ -17,27 +17,9 @@
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#if HAVE_NBTOOL_CONFIG_H
-#include "nbtool_config.h"
-#endif
-
-#include <sys/cdefs.h>
-#if defined(LIBC_SCCS) && !defined(lint)
-__RCSID("$NetBSD: strlcpy.c,v 1.14 2003/10/27 00:12:42 lukem Exp $");
-#endif /* LIBC_SCCS and not lint */
-
-#ifdef _LIBC
-#include "namespace.h"
-#endif
 #include <sys/types.h>
 #include <assert.h>
 #include <string.h>
-
-#ifdef _LIBC
-# ifdef __weak_alias
-__weak_alias(strlcpy, _strlcpy)
-# endif
-#endif
 
 #if !HAVE_STRLCPY
 /*
@@ -46,11 +28,7 @@ __weak_alias(strlcpy, _strlcpy)
  * Returns strlen(src); if retval >= siz, truncation occurred.
  */
 size_t
-#ifdef _LIBC
-_strlcpy(dst, src, siz)
-#else
 strlcpy(dst, src, siz)
-#endif
 	char *dst;
 	const char *src;
 	size_t siz;
@@ -58,9 +36,6 @@ strlcpy(dst, src, siz)
 	char *d = dst;
 	const char *s = src;
 	size_t n = siz;
-
-	_DIAGASSERT(dst != NULL);
-	_DIAGASSERT(src != NULL);
 
 	/* Copy as many bytes as will fit */
 	if (n != 0 && --n != 0) {
