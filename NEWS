@@ -120,12 +120,16 @@ fetchmail 6.3.0 (not yet released officially):
   Matthias Andree.
 * Fix Debian bug #301964, fetchmail leaks sockets when SSL negotiation
   fails. Fix suggested Goswin Brederlow. (MA)
+* Really fix #207919, patch by Tobias Diedrich.
+  The 6.2.5 NEWS claimed Gregan's patch had fixed #207919 but it had
+  fixed #212484 instead and #207919 remained unfixed in 6.2.5. The entry
+  below has been corrected to read #212484 now.
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
 * Updated Spanish, Turkish, and German translation files.
 * Matthew Gregan's patch to handle garbage lengths from dbmail;
-  closes Debian bug #207919.
+  closes Debian bug #212484.
 * Fix IMAP query so new-message count doesn't include deleted messages.
 * Man page typo fix, closes Debian bug #205892.
 * OpenSSL cleanup patches from levinedl@acm.org.

@@ -226,8 +226,7 @@ int smtp_open(struct query *ctl)
 	    {
 	      /* As an alternate port for smtphost is specified, we
 		 need to strip it from domain name. */
-	      char *smtpname;
-	      xalloca(smtpname, char *, cp - ctl->smtphost + 1);
+	      char *smtpname = xmalloc(cp - ctl->smtphost + 1);
 	      strncpy(smtpname, ctl->smtphost, cp - ctl->smtphost +1);
 	      cp = strchr(smtpname, '/');
 	      *cp = 0;
