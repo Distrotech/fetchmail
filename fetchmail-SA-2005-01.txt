@@ -1,0 +1,91 @@
+fetchmail-SA-2005-01: security announcement
+
+Topic:		remote code injection vulnerability in fetchmail
+
+Author:		Matthias Andree
+Version:	1.00
+Announced:	2005-07-21
+Type:		buffer overrun/stack corruption/code injection
+Impact:		account or system compromise possible through malicious
+		or compromised POP3 servers
+Danger:		high: in sensitive configurations, a full system
+		compromise is possible
+CVE Name:	CAN-2005-2335
+URL:		http://fetchmail.berlios.de/fetchmail-SA-2005-01.txt
+		http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=212762
+		http://www.vuxml.org/freebsd/3497d7be-2fef-45f4-8162-9063751b573a.html
+		http://www.freebsd.org/cgi/query-pr.cgi?pr=83805
+
+Affects:	fetchmail version 6.2.5
+		fetchmail version 6.2.0
+		(other versions have not been checked)
+
+Not affected:	fetchmail 6.2.5.1
+		fetchmail 6.2.6-pre5 (not released yet)
+		fetchmail 6.3.0      (not released yet)
+
+		Older versions may not have THIS bug, but had been found
+		to contain other security-relevant bugs.
+
+Corrected:	2005-07-20 15:22 UTC (SVN) - committed bugfix (r4143)
+		2005-07-20                   fetchmail-patch-6.2.5.1 released
+
+0. Release history
+
+2005-07-20	1.00 initial announcement
+
+1. Background
+
+fetchmail is a software package to retrieve mail from remote POP2, POP3,
+IMAP, ETRN or ODMR servers and forward it to local SMTP, LMTP servers or
+message delivery agents.
+
+2. Problem description
+
+The POP3 code that deals with UIDs (from the UIDL) reads the responses
+returned by the POP3 server into fixed-size buffers allocated on the
+stack, without limiting the input length to the buffer size. A
+compromised or malicious POP3 server can thus overrun fetchmail's stack.
+This affects POP3 and all of its variants, for instance but not limited
+to APOP.
+
+3. Impact
+
+Very long UIDs can cause fetchmail to crash, or potentially make it
+execute code placed on the stack. In some configurations, fetchmail
+is run by the root user to download mail for multiple accounts.
+
+4. Workaround
+
+No reasonable workaround can be offered at this time.
+
+5. Solution
+
+Upgrade your fetchmail package to version 6.2.5.1.
+This requires the download of the fetchmail-6.2.5.tar.gz tarball and the
+fetchmail-patch-6.2.5.1.gz from BerliOS:
+
+<http://developer.berlios.de/project/showfiles.php?group_id=1824>
+
+Note that the files may be hidden from view later as new releases become
+available.
+
+Instructions for patching are given at
+<http://developer.berlios.de/forum/forum.php?forum_id=13104>
+
+A. References
+
+fetchmail home page: <http://fetchmail.berlios.de/>
+
+B. Copyright and License
+
+(C) Copyright 2005 by Matthias Andree, <matthias.andree@gmx.de>.
+Some rights reserved.
+
+This work is licensed under the Creative Commons
+Attribution-NonCommercial-NoDerivs German License. To view a copy of
+this license, visit http://creativecommons.org/licenses/by-nc-nd/2.0/de/
+or send a letter to Creative Commons; 559 Nathan Abbott Way;
+Stanford, California 94305; USA.
+
+END OF fetchmail-SA-2005-01.txt
