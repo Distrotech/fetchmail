@@ -11,7 +11,7 @@ SECURITY FIX:
   length, so a (malicious or compromised) server that sends UIDs longer
   than 128 bytes can corrupt fetchmail's stack and crash fetchmail.
   This vulnerability is remotely exploitable to inject code run in a
-  root shell. CVE Name: CAN-2005-XXXX (not yet assigned)
+  root shell. This is tracked under the CVE Name: CAN-2005-2335
 
 OTHER CHANGES:
 * Sunil Shetye's fix to force fetchsizelimit to 1 for APOP and RPOP.
