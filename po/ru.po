@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail-6.2.6-pre3\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2005-07-22 05:12+0200\n"
+"POT-Creation-Date: 2005-07-22 12:38+0200\n"
 "PO-Revision-Date: 2005-07-06 19:33+0300\n"
 "Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -1673,12 +1673,12 @@ msgstr[1] "ожидается %d сообщений после удаления\n"
 msgid "search for unseen messages failed\n"
 msgstr "поиск не просмотренных сообщений завершился неудачей\n"
 
-#: imap.c:768 pop3.c:715 pop3.c:727 pop3.c:949 pop3.c:956
+#: imap.c:768 pop3.c:716 pop3.c:728 pop3.c:950 pop3.c:957
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u не просмотрено\n"
 
-#: imap.c:780 pop3.c:736
+#: imap.c:780 pop3.c:737
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u первое не просмотренное\n"
@@ -2185,32 +2185,32 @@ msgstr "Неопределенный запрос протокола в POP3_auth\n"
 msgid "lock busy!  Is another session active?\n"
 msgstr "блокировка занятости!  Может активен другой сеанс?\n"
 
-#: pop3.c:658
+#: pop3.c:659
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr ""
 
-#: pop3.c:679
+#: pop3.c:680
 msgid "Server responded with UID for wrong message.\n"
 msgstr ""
 
-#: pop3.c:706 pop3.c:940
+#: pop3.c:707 pop3.c:941
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (номер=%d) было удалено, но все еще присутствует!\n"
 
-#: pop3.c:808
+#: pop3.c:809
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr "Сообщения добавлены в список на сервере. Обработка невозможна.\n"
 
-#: pop3.c:894
+#: pop3.c:895
 msgid "protocol error\n"
 msgstr "ошибка протокола\n"
 
-#: pop3.c:909
+#: pop3.c:910
 msgid "protocol error while fetching UIDLs\n"
 msgstr "ошибка протокола при выборке UIDL'ов\n"
 
-#: pop3.c:1271
+#: pop3.c:1273
 msgid "Option --remote is not supported with POP3\n"
 msgstr "Опция --remote не поддерживается с POP3\n"
 

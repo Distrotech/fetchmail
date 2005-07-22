@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.6.a\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2005-07-22 05:12+0200\n"
+"POT-Creation-Date: 2005-07-22 12:38+0200\n"
 "PO-Revision-Date: 2005-07-11 13:46+0200\n"
 "Last-Translator: Ernest Adrogué Calveras <eadrogue@gmx.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
@@ -1681,12 +1681,12 @@ msgstr[1] "hi ha %d missatges esperant després de la supressió\n"
 msgid "search for unseen messages failed\n"
 msgstr "la recerca de missatges no llegits ha fallat\n"
 
-#: imap.c:768 pop3.c:715 pop3.c:727 pop3.c:949 pop3.c:956
+#: imap.c:768 pop3.c:716 pop3.c:728 pop3.c:950 pop3.c:957
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u és no llegit\n"
 
-#: imap.c:780 pop3.c:736
+#: imap.c:780 pop3.c:737
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u és el primer missatge no llegit\n"
@@ -2193,33 +2193,33 @@ msgstr "Petició de protocol indefinida a POP3_auth\n"
 msgid "lock busy!  Is another session active?\n"
 msgstr "bloqueig temporal! Hi ha alguna altra sessió activa?\n"
 
-#: pop3.c:658
+#: pop3.c:659
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr ""
 
-#: pop3.c:679
+#: pop3.c:680
 msgid "Server responded with UID for wrong message.\n"
 msgstr ""
 
-#: pop3.c:706 pop3.c:940
+#: pop3.c:707 pop3.c:941
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (núm=%d) s'ha esborrat, però encara està present!\n"
 
-#: pop3.c:808
+#: pop3.c:809
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "Els missatges estan inserits a la llista del servidor. No es pot continuar.\n"
 
-#: pop3.c:894
+#: pop3.c:895
 msgid "protocol error\n"
 msgstr "error de protocol\n"
 
-#: pop3.c:909
+#: pop3.c:910
 msgid "protocol error while fetching UIDLs\n"
 msgstr "error de protocol quan es rebien els UIDLs\n"
 
-#: pop3.c:1271
+#: pop3.c:1273
 msgid "Option --remote is not supported with POP3\n"
 msgstr "L'opció --remote no està suportada amb POP3\n"
 
