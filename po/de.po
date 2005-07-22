@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.6\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2005-07-21 12:50+0200\n"
+"POT-Creation-Date: 2005-07-22 05:12+0200\n"
 "PO-Revision-Date: 2005-07-20 17:19+0200\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -1677,12 +1677,12 @@ msgstr[1] "%d Nachrichten warten nach dem Löschen\n"
 msgid "search for unseen messages failed\n"
 msgstr "Suche nach ungesehenen Nachrichten fehlgeschlagen\n"
 
-#: imap.c:768 pop3.c:705 pop3.c:717 pop3.c:939 pop3.c:946
+#: imap.c:768 pop3.c:715 pop3.c:727 pop3.c:949 pop3.c:956
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u ist ungesehen\n"
 
-#: imap.c:780 pop3.c:726
+#: imap.c:780 pop3.c:736
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u ist erste ungesehene\n"
@@ -2177,32 +2177,32 @@ msgstr "Anfrage nach undefiniertem Protokoll in POP3_auth\n"
 msgid "lock busy!  Is another session active?\n"
 msgstr "Lock beschäftigt!  Ist eine weitere Sitzung aktiv?\n"
 
-#: pop3.c:649
+#: pop3.c:658
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "Kann die UIDL-Antwort des Servers nicht verarbeiten.\n"
 
-#: pop3.c:669
+#: pop3.c:679
 msgid "Server responded with UID for wrong message.\n"
 msgstr "Server hat mit UID der falschen Nachricht geantwortet.\n"
 
-#: pop3.c:696 pop3.c:930
+#: pop3.c:706 pop3.c:940
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (numm=%d) wurde gelöscht, ist aber immer noch da!\n"
 
-#: pop3.c:798
+#: pop3.c:808
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr "Nachrichten in Liste auf Server eingefügt. Kann damit nicht umgehen.\n"
 
-#: pop3.c:884
+#: pop3.c:894
 msgid "protocol error\n"
 msgstr "Protokollfehler\n"
 
-#: pop3.c:899
+#: pop3.c:909
 msgid "protocol error while fetching UIDLs\n"
 msgstr "Protokollfehler beim Holen der UIDLs\n"
 
-#: pop3.c:1261
+#: pop3.c:1271
 msgid "Option --remote is not supported with POP3\n"
 msgstr "Option --remote wird mit POP3 nicht unterstützt\n"
 

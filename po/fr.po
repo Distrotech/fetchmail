@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.6\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2005-07-21 12:50+0200\n"
+"POT-Creation-Date: 2005-07-22 05:12+0200\n"
 "PO-Revision-Date: 2005-07-06 01:31+0200\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: French <fr@li.org>\n"
@@ -1688,12 +1688,12 @@ msgstr[1] "%d messages en attente après la purge\n"
 msgid "search for unseen messages failed\n"
 msgstr "échec de la recherche des messages non-vus\n"
 
-#: imap.c:768 pop3.c:705 pop3.c:717 pop3.c:939 pop3.c:946
+#: imap.c:768 pop3.c:715 pop3.c:727 pop3.c:949 pop3.c:956
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u n'est pas vu\n"
 
-#: imap.c:780 pop3.c:726
+#: imap.c:780 pop3.c:736
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u est le premier a n'avoir pas été vu\n"
@@ -2199,32 +2199,32 @@ msgstr "Requête de protocole indéfinie dans POP3_auth\n"
 msgid "lock busy!  Is another session active?\n"
 msgstr "Fichier verrou en service. Y'a-t-il une autre session active ?\n"
 
-#: pop3.c:649
+#: pop3.c:658
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr ""
 
-#: pop3.c:669
+#: pop3.c:679
 msgid "Server responded with UID for wrong message.\n"
 msgstr ""
 
-#: pop3.c:696 pop3.c:930
+#: pop3.c:706 pop3.c:940
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) a été effacé, mais est toujours présent !\n"
 
-#: pop3.c:798
+#: pop3.c:808
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr "Messages insérés dans une liste du serveur. Impossible de gérer ça.\n"
 
-#: pop3.c:884
+#: pop3.c:894
 msgid "protocol error\n"
 msgstr "erreur de protocole\n"
 
-#: pop3.c:899
+#: pop3.c:909
 msgid "protocol error while fetching UIDLs\n"
 msgstr "erreur de protocole durant la réception des UIDLs\n"
 
-#: pop3.c:1261
+#: pop3.c:1271
 msgid "Option --remote is not supported with POP3\n"
 msgstr "L'option --remote n'est pas supportée avec POP3\n"
 

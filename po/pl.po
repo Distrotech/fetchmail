@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.6-pre4\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2005-07-21 12:50+0200\n"
+"POT-Creation-Date: 2005-07-22 05:12+0200\n"
 "PO-Revision-Date: 2005-07-11 18:05+0200\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -1688,12 +1688,12 @@ msgstr[2] "%d listów oczekuj±cych po usuwaniu\n"
 msgid "search for unseen messages failed\n"
 msgstr "poszukiwanie nie przeczytanych listów nie powiod³o siê\n"
 
-#: imap.c:768 pop3.c:705 pop3.c:717 pop3.c:939 pop3.c:946
+#: imap.c:768 pop3.c:715 pop3.c:727 pop3.c:949 pop3.c:956
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u jest nie przeczytany\n"
 
-#: imap.c:780 pop3.c:726
+#: imap.c:780 pop3.c:736
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u jest pierwszym nie przeczytanym\n"
@@ -2202,33 +2202,33 @@ msgstr "Pro¶ba o nieznany protokó³ w POP3_auth\n"
 msgid "lock busy!  Is another session active?\n"
 msgstr "plik zablokowany! Czy inna sesja nie jest aktywna?\n"
 
-#: pop3.c:649
+#: pop3.c:658
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr ""
 
-#: pop3.c:669
+#: pop3.c:679
 msgid "Server responded with UID for wrong message.\n"
 msgstr ""
 
-#: pop3.c:696 pop3.c:930
+#: pop3.c:706 pop3.c:940
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) zosta³ skasowany, ale nadal istnieje!\n"
 
-#: pop3.c:798
+#: pop3.c:808
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "Przesy³ki zosta³y dodane do listy na serwerze. Nie mogê tego obs³u¿yæ.\n"
 
-#: pop3.c:884
+#: pop3.c:894
 msgid "protocol error\n"
 msgstr "b³±d protoko³u\n"
 
-#: pop3.c:899
+#: pop3.c:909
 msgid "protocol error while fetching UIDLs\n"
 msgstr "b³±d protoko³u podczas pobierania UIDL\n"
 
-#: pop3.c:1261
+#: pop3.c:1271
 msgid "Option --remote is not supported with POP3\n"
 msgstr "Opcja --remote nie dzia³a z POP3\n"
 
