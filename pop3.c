@@ -916,7 +916,7 @@ static int pop3_getrange(int sock,
 		unsigned long unum;
 
 		*newp = 0;
-		while ((ok = gen_recv(sock, buf, sizeof(buf))) == 0)
+		while ((ok = gen_recv(sock, buf, sizeof(buf))) == PS_SUCCESS)
 		{
 		    if (DOTLINE(buf))
 			break;
@@ -962,7 +962,8 @@ static int pop3_getrange(int sock,
 			    old = save_str(&ctl->oldsaved, id, UID_UNSEEN);
 			    old->val.status.num = unum;
 			}
-		    }
+		    } else
+			return PS_ERROR;
 		}
 	    }
 	}
