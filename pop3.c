@@ -611,6 +611,12 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
     return(PS_SUCCESS);
 }
 
+/* cut off C string at first POSIX space */
+static void trim(char *s) {
+    s += strcspn(s, POSIX_space);
+    s[0] = '\0';
+}
+
 static int pop3_gettopid(int sock, int num , char *id, size_t idsize)
 {
     int ok;
@@ -626,31 +632,35 @@ static int pop3_gettopid(int sock, int num , char *id, size_t idsize)
 	    break;
 	if (!got_it && 0 == strncasecmp("Message-Id:", buf, 11)) {
 	    char *p = buf + 11;
+	    got_it = 1;
 	    p += strspn(p, POSIX_space);
-	    p = strtok(p, POSIX_space);
 	    strlcpy(id, p, idsize);
+	    trim(id);
 	}
     }
     return 0;
 }
 
-/** Parse destructively the UID response (leading +OK must have been
+/** Parse the UID response (leading +OK must have been
  * stripped off) in buf, store the number in gotnum, and store the ID
  * into the caller-provided buffer "id" of size "idsize".
  * Returns PS_SUCCESS or PS_PROTOCOL for failure. */
-static int parseuid(char *buf, unsigned long *gotnum, char *id, size_t idsize)
+static int parseuid(const char *buf, unsigned long *gotnum, char *id, size_t idsize)
 {
-    char *i, *j;
+    const char *i;
+    char *j;
 
-    i = strtok(buf, POSIX_space);
+    /* skip leading blanks ourselves */
+    i = buf + strspn(i, POSIX_space);
     errno = 0;
     *gotnum = strtoul(i, &j, 10);
-    if (*j != '\0' || j == i || errno) {
+    if (j == i || !*j || errno || NULL == strchr(POSIX_space, *j)) {
 	report(stderr, GT_("Cannot handle UIDL response from upstream server.\n"));
 	return PS_PROTOCOL;
     }
-    i = strtok(NULL, POSIX_space);
-    strlcpy(id, i, idsize);
+    j += strspn(j, POSIX_space);
+    strlcpy(id, j, idsize);
+    trim(id);
     return PS_SUCCESS;
 }
 
