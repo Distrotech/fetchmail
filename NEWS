@@ -2,7 +2,7 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.
 Names in parentheses are the maintainers who handled the respective change.
-Abbreviations: MA = Matthias Andree, RF = Rob Funk)
+Abbreviations: MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk)
 
 fetchmail 6.3.0 (not yet released officially):
 
@@ -14,19 +14,19 @@ SECURITY FIX:
   root shell. This is tracked under the CVE Name: CAN-2005-2335
 
 OTHER CHANGES:
-* Sunil Shetye's fix to force fetchsizelimit to 1 for APOP and RPOP.
-* PopDel.py removed from contrib at author's request.
-* Matthias Andree's fix for Sunil Shetye's fetch-split patch
-* Include James Stone's moldremover.py script.
-* Enable .fetchmailrc permissions checking under Cygwin.
-* Nalin Dahyabai's fix for POP3 strong authentication.
+* Sunil Shetye's fix to force fetchsizelimit to 1 for APOP and RPOP. (ESR)
+* PopDel.py removed from contrib at author's request. (ESR)
+* Matthias Andree's fix for Sunil Shetye's fetch-split patch. (ESR)
+* Include James Stone's moldremover.py script. (ESR)
+* Enable .fetchmailrc permissions checking under Cygwin. (ESR)
+* Nalin Dahyabai's fix for POP3 strong authentication. (ESR)
 * Revised Nalin Dahyabai's fix for POP3 strong authentication (the
   original version would go into an infinite loop when CAPA failed;
   found by David Greaves.) (MA)
-* HOME_ETC patch for PLD Linux.
-* Sunil Shetye's fix for SSL configuration.
-* Simon Josefsson's patch for GSS library support.
-* Added Andrey Lelikov's recipe for Hotmail and Lycos Webmail.
+* HOME_ETC patch for PLD Linux. (ESR)
+* Sunil Shetye's fix for SSL configuration. (ESR)
+* Simon Josefsson's patch for GSS library support. (ESR)
+* Added Andrey Lelikov's recipe for Hotmail and Lycos Webmail. (ESR)
 * Remove blank between MAIL FROM: and <, which causes Cyrus to complain.
   Patch by Phil Endecott. (RF)
 * Switched to automake. Matthias Andree.
