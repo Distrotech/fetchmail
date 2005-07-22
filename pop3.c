@@ -651,7 +651,8 @@ static int parseuid(const char *buf, unsigned long *gotnum, char *id, size_t ids
     char *j;
 
     /* skip leading blanks ourselves */
-    i = buf + strspn(i, POSIX_space);
+    i = buf;
+    i += strspn(i, POSIX_space);
     errno = 0;
     *gotnum = strtoul(i, &j, 10);
     if (j == i || !*j || errno || NULL == strchr(POSIX_space, *j)) {
