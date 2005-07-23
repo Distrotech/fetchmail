@@ -144,6 +144,9 @@ OTHER CHANGES:
   Debian Bug#304701. Matthias Andree.
 * Delete oversized messages with --flush when daemon mode isn't used.
   Debian Bug#212240. Matthias Andree.
+* Put *BOLD* text into the manual page near --mda to state unmistakably that
+  the --mda %T and %F substitutions add single quotes, hoping to avoid bogus
+  bug reports such as Debian Bug #224564. Matthias Andree
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
@@ -288,3 +291,5 @@ fetchmail-6.0.0 (Tue Sep 17 19:48:25 EDT 2002), 21972 lines:
 * Updated de and po translations.
 
 There are 520 people on fetchmail-friends and 683 on fetchmail-announce.
+
+ vim:tw=79 com=bf\:* ts=8 sts=8 sw=8 ai:

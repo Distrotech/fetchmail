@@ -439,7 +439,7 @@ be comma-separated.
 .B \-m <command> | \-\-mda <command>
 (Keyword: mda) You can force mail to be passed to an MDA directly
 (rather than forwarded to port 25) with the --mda or -m option.  To
-avoid losing mail, use this option only with MDAs like procmail or
+avoid losing mail, use this option only with MDAs like maildrop, procmail or
 sendmail that return a nonzero status on disk-full and other
 resource-exhaustion errors; the nonzero status tells fetchmail that
 delivery failed and prevents the message from being deleted off the
@@ -450,14 +450,15 @@ and "/usr/bin/procmail -d %T" (but the latter is usually redundant as
 it's what SMTP listeners normally forward to).  Local delivery
 addresses will be inserted into the MDA command wherever you place a
 %T; the mail message's From address will be inserted where you place
-an %F.  In both cases the addresses are enclosed in single quotes ('),
+an %F. \fBDO NOT ENCLOSE THE %F OR %T STRING IN SINGLE QUOTES!\fR For
+both %T and %F, fetchmail encloses the addresses in single quotes ('),
 after removing any single quotes they may contain, before the MDA
-command is passed to the shell.  Do \fInot\fR use an MDA invocation
+command is passed to the shell.  Do \fINOT\fR use an MDA invocation
 like "sendmail -i -t" that dispatches on the contents of To/Cc/Bcc, it
 will create mail loops and bring the just wrath of many postmasters
 down upon your head.  Also, do \fInot\fR try to combine multidrop
-mode with an MDA such as procmail that can only accept one addressee;
-you will lose.
+mode with an MDA such as procmail that can only accept one address;
+you will lose mail.
 .TP 
 .B \-\-lmtp
 (Keyword: lmtp)
