@@ -772,6 +772,12 @@ flagthemail:
 	else if (ctl->server.base_protocol->delete
 		 && !suppress_delete
 		 && ((msgcode >= 0 && !ctl->keep)
+		     /* XXX FIXME: Debian's patch uses here:
+		      * 
+		      * (msgcode == MSGLEN_OLD || msgcode ==
+		      * MSGLEN_TOOLARGE) && ctl->flush
+		      *
+		      * do we want to flush oversized messages? */
 		     || (msgcode == MSGLEN_OLD && ctl->flush)))
 	{
 	    (*deletions)++;
