@@ -1502,6 +1502,8 @@ int open_warning_by_mail(struct query *ctl, struct msgblk *msg)
     else				/* send to postmaster  */
 	status = open_sink(ctl, &reply, &good, &bad);
     if (status == 0) {
+	stuff_warning(NULL, ctl, "From: FETCHMAIL-DAEMON@%s",
+		ctl->smtpaddress ? ctl->smtpaddress : fetchmailhost);
 	stuff_warning(NULL, ctl, "Date: %s", rfc822timestamp());
 	stuff_warning(NULL, ctl, "MIME-Version: 1.0");
 	stuff_warning(NULL, ctl, "Content-Transfer-Encoding: 8bit");
