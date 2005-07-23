@@ -254,7 +254,9 @@ of `newness' of messages (UIDL stands for ``unique ID listing'' and is
 described in RFC1939).  Use with `keep' to use a mailbox as a baby
 news drop for a group of users. The fact that seen messages are skipped
 is logged, unless error logging is done through syslog while running in
-daemon mode.
+daemon mode.  Note that fetchmail may automatically enable this option
+depending on upstream server capabilities.  Note also that this option
+may be removed and forced enabled in a future fetchmail version.
 
 .TP
 .B \-P <portnumber> | \-\-port <portnumber>
