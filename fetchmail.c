@@ -1062,16 +1062,15 @@ static int load_params(int argc, char **argv, int optind)
      * If we're using Kerberos for authentication, we need 
      * the FQDN in order to generate capability keys.
      */
-    if (strcmp(fetchmailhost, "localhost") == 0)
-	for (ctl = querylist; ctl; ctl = ctl->next)
-	    if (ctl->active && 
+    for (ctl = querylist; ctl; ctl = ctl->next)
+	if (ctl->active && 
 		(ctl->server.protocol==P_ETRN || ctl->server.protocol==P_ODMR
 		 || ctl->server.authenticate == A_KERBEROS_V4
 		 || ctl->server.authenticate == A_KERBEROS_V5))
-	    {
-		fetchmailhost = host_fqdn();
-		break;
-	    }
+	{
+	    fetchmailhost = host_fqdn();
+	    break;
+	}
 
     /* this code enables flags to be turned off */
 #define DEFAULT(flag, dflt)	if (flag == FLAG_TRUE)\
