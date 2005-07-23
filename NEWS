@@ -147,6 +147,8 @@ OTHER CHANGES:
 * Put *BOLD* text into the manual page near --mda to state unmistakably that
   the --mda %T and %F substitutions add single quotes, hoping to avoid bogus
   bug reports such as Debian Bug #224564. Matthias Andree
+* Rename lock_release to fm_lock_release, to avoid namespace collision on
+  Darwin. NetBSD PR#28543 (pkg/28543). Matthias Andree.
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
