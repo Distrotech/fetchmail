@@ -142,6 +142,8 @@ OTHER CHANGES:
   Matthias Andree
 * Document that fetchmail may automatically enable UIDL option.
   Debian Bug#304701. Matthias Andree.
+* Delete oversized messages with --flush when daemon mode isn't used.
+  Debian Bug#212240. Matthias Andree.
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 

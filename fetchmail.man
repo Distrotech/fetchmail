@@ -487,9 +487,10 @@ marked seen. An explicit --limit of 0 overrides any limits set in your
 run control file. This option is intended for those needing to
 strictly control fetch time due to expensive and variable phone rates.
 Combined with --flush, it can be used to delete oversized messages
-waiting on a server.  In daemon mode, oversize notifications are
-mailed to the calling user (see the --warnings option).  This option
-does not work with ETRN or ODMR.
+waiting on a server UNLESS in daemon mode.  In daemon mode, oversize
+notifications are mailed to the calling user (see the --warnings
+option) and the messages remain on the server.
+This option does not work with ETRN or ODMR.
 .TP
 .B \-w <interval> | \-\-warnings <interval>
 (Keyword: warnings)

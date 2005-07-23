@@ -543,7 +543,10 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	    if ((msgcode == MSGLEN_TOOLARGE) && !check_only)
 	    {
 		mark_oversized(ctl, num, msgsize);
-		suppress_delete = TRUE;
+		/* we do not want to delete oversized messages in daemon
+		 * mode, but allow deletions in single-pass mode. */
+		if (run.poll_interval)
+		    suppress_delete = TRUE;
 	    }
 	    if (outlevel > O_SILENT)
 	    {
@@ -772,13 +775,7 @@ flagthemail:
 	else if (ctl->server.base_protocol->delete
 		 && !suppress_delete
 		 && ((msgcode >= 0 && !ctl->keep)
-		     /* XXX FIXME: Debian's patch uses here:
-		      * 
-		      * (msgcode == MSGLEN_OLD || msgcode ==
-		      * MSGLEN_TOOLARGE) && ctl->flush
-		      *
-		      * do we want to flush oversized messages? */
-		     || (msgcode == MSGLEN_OLD && ctl->flush)))
+		     || ((msgcode == MSGLEN_OLD || msgcode == MSGLEN_TOOLARGE) && ctl->flush)))
 	{
 	    (*deletions)++;
 	    if (outlevel > O_SILENT) 
