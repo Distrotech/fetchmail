@@ -137,6 +137,9 @@ OTHER CHANGES:
 * Make ODMR really silent, suppress "fetchmail: receiving message
   data". Fixes Debian Bug#296163. Matthias Andree.
 * Add From: header to warning emails. Debian Bug#244828. Matthias Andree.
+* Fix IMAP code to use password of arbitrary length from configuration
+  file (although not when read interactively). Debian Bug#276424.
+  Matthias Andree
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 

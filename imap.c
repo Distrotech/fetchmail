@@ -504,14 +504,21 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	|| ctl->server.authenticate == A_PASSWORD)
     {
 	/* these sizes guarantee no buffer overflow */
-	char	remotename[NAMELEN*2+1], password[PASSWORDLEN*2+1];
+	char *remotename, *password;
+	size_t rnl, pwl;
+	rnl = 2 * strlen(ctl->remotename) + 1;
+	pwl = 2 * strlen(ctl->password) + 1;
+	remotename = xmalloc(rnl);
+	password = xmalloc(pwl);
 
-	imap_canonicalize(remotename, ctl->remotename, NAMELEN);
-	imap_canonicalize(password, ctl->password, PASSWORDLEN);
+	imap_canonicalize(remotename, ctl->remotename, rnl);
+	imap_canonicalize(password, ctl->password, pwl);
 
 	snprintf(shroud, sizeof (shroud), "\"%s\"", password);
 	ok = gen_transact(sock, "LOGIN \"%s\" \"%s\"", remotename, password);
 	shroud[0] = '\0';
+	free(password);
+	free(remotename);
 #ifdef SSL_ENABLE
 	/* this is for servers which claim to support TLS, but actually
 	 * don't! */
