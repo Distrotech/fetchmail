@@ -183,7 +183,8 @@ static int odmr_getrange(int sock, struct query *ctl, const char *id,
                if (!doing_smtp_data && !strncmp(buf, "354", 3))
                {
                    doing_smtp_data = 1;
-                   report(stdout, "receiving message data\n");
+		   if (outlevel > O_SILENT)
+		       report(stdout, GT_("receiving message data\n"));
                }
                else if (doing_smtp_data)
                    doing_smtp_data = 0;

@@ -134,6 +134,8 @@ OTHER CHANGES:
   below has been corrected to read #212484 now. (MA)
 * When writing the PID file, write a FHS 2.3 compliant PID file.
   Fixes Debian bug #230615. Matthias Andree.
+* Make ODMR really silent, suppress "fetchmail: receiving message
+  data". Fixes Debian Bug#296163. Matthias Andree.
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
