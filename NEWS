@@ -128,10 +128,10 @@ OTHER CHANGES:
   Matthias Andree.
 * Fix Debian bug #301964, fetchmail leaks sockets when SSL negotiation
   fails. Fix suggested Goswin Brederlow. (MA)
-* Really fix #207919, patch by Tobias Diedrich.
-  The 6.2.5 NEWS claimed Gregan's patch had fixed #207919 but it had
-  fixed #212484 instead and #207919 remained unfixed in 6.2.5. The entry
-  below has been corrected to read #212484 now. (MA)
+* Really fix Debian Bug#207919 (garbage in Received: lines when smtphost set),
+  patch by Tobias Diedrich.  The 6.2.5 NEWS claimed Gregan's patch had fixed
+  #207919 but it had fixed #212484 instead and #207919 remained unfixed in
+  6.2.5. The entry below has been corrected to read #212484 now. (MA)
 * When writing the PID file, write a FHS 2.3 compliant PID file.
   Fixes Debian bug #230615. Matthias Andree.
 * Make ODMR really silent, suppress "fetchmail: receiving message
