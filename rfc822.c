@@ -264,7 +264,8 @@ unsigned char *nxtaddr(const unsigned char *hdr /* header to be parsed, NUL to c
 	    state = ENDIT_ALL;
 	    if (tp)
 	    {
-		while (isspace(address[--tp]))
+		--tp;
+		while (tp >= 0 && isspace(address[tp--]))
 		    continue;
 		address[++tp] = '\0';
 		tp = 0;
