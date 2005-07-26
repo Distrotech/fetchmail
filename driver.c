@@ -818,7 +818,7 @@ flagthemail:
 		   maxfetch, count - *fetches, ctl->server.truename, ctl->remotename);
 	    return(PS_MAXFETCH);
 	}
-    }
+    } /* for (num = 1; num <= count; num++) */
 
     return(PS_SUCCESS);
 }
