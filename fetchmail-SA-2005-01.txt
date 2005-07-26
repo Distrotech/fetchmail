@@ -3,21 +3,25 @@ fetchmail-SA-2005-01: security announcement
 Topic:		remote code injection vulnerability in fetchmail
 
 Author:		Matthias Andree
-Version:	1.01
+Version:	1.02
 Announced:	2005-07-21
 Type:		buffer overrun/stack corruption/code injection
 Impact:		account or system compromise possible through malicious
 		or compromised POP3 servers
 Danger:		high: in sensitive configurations, a full system
 		compromise is possible
+		(for 6.2.5.1: denial of service for the whole fetchmail
+		system is possible)
 CVE Name:	CAN-2005-2335
 URL:		http://fetchmail.berlios.de/fetchmail-SA-2005-01.txt
 		http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=212762
 		http://www.vuxml.org/freebsd/3497d7be-2fef-45f4-8162-9063751b573a.html
+		http://www.vuxml.org/freebsd/3f4ac724-fa8b-11d9-afcf-0060084a00e5.html
 		http://www.freebsd.org/cgi/query-pr.cgi?pr=83805
+		http://www.heise.de/security/news/meldung/62070
 Thanks:		Edward J. Shornock (located the bug in UIDL code)
 		Miloslav Trmac (pointed out 6.2.5.1 was faulty)
-		Ludwig Nussel (provided minimal fix)
+		Ludwig Nussel (provided minimal correct fix)
 
 Affects:	fetchmail version 6.2.5.1 (denial of service)
 		fetchmail version 6.2.5 (code injection)
@@ -33,6 +37,7 @@ Not affected:	fetchmail 6.2.5.2
 
 Corrected:	2005-07-22 01:37 UTC (SVN) - committed bugfix (r4157)
 		2005-07-22                   fetchmail-patch-6.2.5.2 released
+		2005-07-23                   fetchmail-6.2.5.2 tarball released
 
 0. Release history
 
@@ -40,11 +45,16 @@ Corrected:	2005-07-22 01:37 UTC (SVN) - committed bugfix (r4157)
 2005-07-22	1.01 - Withdrew 6.2.5.1 and 6.2.6-pre5, the fix was buggy
 		       and susceptible to denial of service through
 		       single-byte read from 0 when either a Message-ID:
-		       header was empty or the UIDL response did not
-		       contain an URL.
+		       header was empty (in violation of RFC-822/2822)
+		       or the UIDL response did not contain an UID (in
+		       violation of RFC-1939).
 		     - Add Credits.
 		     - Add 6.2.5.1 failure details to sections 2 and 3
 		     - Revise section 5 and B.
+2005-07-26	1.02 - Revise section 0.
+		     - Add FreeBSD VuXML URL for 6.2.5.1.
+		     - Add heise security URL.
+		     - Mention release of 6.2.5.2 tarball.
 
 1. Background
 
@@ -85,8 +95,9 @@ No reasonable workaround can be offered at this time.
 
 Upgrade your fetchmail package to version 6.2.5.2.
 
-This requires the download of the fetchmail-6.2.5.tar.gz tarball and the
-fetchmail-patch-6.2.5.2.gz from BerliOS:
+You can either download a complete tarball of fetchmail-6.2.5.2.tar.gz,
+or you can download a patch against fetchmail-6.2.5 if you already have
+the 6.2.5 tarball. Either is available from:
 
 <http://developer.berlios.de/project/showfiles.php?group_id=1824>
 
