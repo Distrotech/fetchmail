@@ -106,10 +106,12 @@ static void dropprivs(void)
 
 #if defined(HAVE_SETLOCALE) && defined(ENABLE_NLS) && defined(HAVE_STRFTIME)
 #include <locale.h>
+/** returns timestamp in current locale,
+ * and resets LC_TIME locale to POSIX. */
 static char *timestamp (void)
 {
     time_t      now;
-    static char buf[60];
+    static char buf[60]; /* RATS: ignore */
 
     time (&now);
     setlocale (LC_TIME, "");
@@ -203,55 +205,56 @@ int main(int argc, char **argv)
     if (versioninfo)
     {
 	printf(GT_("This is fetchmail release %s"), VERSION);
+	printf(
 #ifdef POP2_ENABLE
-	printf("+POP2");
+	"+POP2"
 #endif /* POP2_ENABLE */
 #ifndef POP3_ENABLE
-	printf("-POP3");
+	"-POP3"
 #endif /* POP3_ENABLE */
 #ifndef IMAP_ENABLE
-	printf("-IMAP");
+	"-IMAP"
 #endif /* IMAP_ENABLE */
 #ifdef GSSAPI
-	printf("+IMAP-GSS");
+	"+IMAP-GSS"
 #endif /* GSSAPI */
 #ifdef RPA_ENABLE
-	printf("+RPA");
+	"+RPA"
 #endif /* RPA_ENABLE */
 #ifdef NTLM_ENABLE
-	printf("+NTLM");
+	"+NTLM"
 #endif /* NTLM_ENABLE */
 #ifdef SDPS_ENABLE
-	printf("+SDPS");
+	"+SDPS"
 #endif /* SDPS_ENABLE */
 #ifndef ETRN_ENABLE
-	printf("-ETRN");
+	"-ETRN"
 #endif /* ETRN_ENABLE */
 #ifndef ODMR_ENABLE
-	printf("-ODMR");
+	"-ODMR"
 #endif /* ODMR_ENABLE */
 #ifdef SSL_ENABLE
-	printf("+SSL");
+	"+SSL"
 #endif
 #ifdef OPIE_ENABLE
-	printf("+OPIE");
+	"+OPIE"
 #endif /* OPIE_ENABLE */
 #ifdef INET6_ENABLE
-	printf("+INET6");
+	"+INET6"
 #endif /* INET6_ENABLE */
 #ifdef HAVE_PKG_hesiod
-	printf("+HESIOD");
+	"+HESIOD"
 #endif
 #ifdef NET_SECURITY
-	printf("+NETSEC");
+	"+NETSEC"
 #endif /* NET_SECURITY */
 #ifdef HAVE_SOCKS
-	printf("+SOCKS");
+	"+SOCKS"
 #endif /* HAVE_SOCKS */
 #ifdef ENABLE_NLS
-	printf("+NLS");
+	"+NLS"
 #endif /* ENABLE_NLS */
-	putchar('\n');
+	"\n");
 	fputs("Fallback MDA: ", stdout);
 #ifdef FALLBACK_MDA
 	fputs(FALLBACK_MDA, stdout);
@@ -481,12 +484,11 @@ int main(int argc, char **argv)
 		return(PS_AUTHFAIL);
 	    } else {
 		const char* password_prompt = GT_("Enter password for %s@%s: ");
+		size_t pplen = strlen(password_prompt) + strlen(ctl->remotename) + strlen(ctl->server.pollname) + 1;
 
-		xalloca(tmpbuf, char *, strlen(password_prompt) +
-			strlen(ctl->remotename) +
-			strlen(ctl->server.pollname) + 1);
-		(void) sprintf(tmpbuf, password_prompt,
-			       ctl->remotename, ctl->server.pollname);
+		xalloca(tmpbuf, char *, pplen);
+		snprintf(tmpbuf, pplen, password_prompt,
+			ctl->remotename, ctl->server.pollname);
 		ctl->password = xstrdup((char *)fm_getpassword(tmpbuf));
 	    }
 	}
