@@ -146,13 +146,13 @@ int do_rfc1731(int sock, char *command, char *truename)
 	report(stderr, 
 	       GT_("non-null instance (%s) might cause strange behavior\n"),
 		tktinst);
-	strcat(tktuser, ".");
-	strcat(tktuser, tktinst);
+	strlcat(tktuser, ".", sizeof(tktuser));
+	strlcat(tktuser, tktinst, sizeof(tktuser));
     }
 
     if (strcmp(tktrealm, srvrealm) != 0) {
-	strcat(tktuser, "@");
-	strcat(tktuser, tktrealm);
+	strlcat(tktuser, "@", sizeof(tktuser));
+	strlcat(tktuser, tktrealm, sizeof(tktuser));
     }
 
     result = krb_mk_req(&authenticator, "imap", srvinst, srvrealm,

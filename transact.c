@@ -963,7 +963,7 @@ int readheaders(int sock,
 	/* We have the real envelope return-path, stored out of band by
 	 * SDPS - that's more accurate than any header is going to be.
 	 */
-	strcpy(msgblk.return_path, sdps_envfrom);
+	strlcpy(msgblk.return_path, sdps_envfrom, sizeof(msgblk.return_path));
 	free(sdps_envfrom);
     } else
 #endif /* SDPS_ENABLE */
@@ -1206,11 +1206,11 @@ int readheaders(int sock,
 	char	errhd[USERNAMELEN + POPBUFSIZE], *errmsg;
 
 	errmsg = errhd;
-	(void) strcpy(errhd, "X-Fetchmail-Warning: ");
+	strlcpy(errhd, "X-Fetchmail-Warning: ", sizeof(errhd));
 	if (no_local_matches)
 	{
 	    if (reject_count != 1)
-		strcat(errhd, GT_("no recipient addresses matched declared local names"));
+		strlcat(errhd, GT_("no recipient addresses matched declared local names"), sizeof(errhd));
 	    else
 	    {
 		for (idp = msgblk.recipients; idp; idp = idp->next)
@@ -1241,7 +1241,7 @@ int readheaders(int sock,
 		    errlen += strlen(idp->id) + 2;
 
 	    xalloca(errmsg, char *, errlen+3);
-	    (void) strcpy(errmsg, errhd);
+	    strcpy(errmsg, errhd);
 	    for (idp = msgblk.recipients; idp; idp = idp->next)
 		if (idp->val.status.mark == XMIT_RCPTBAD)
 		{

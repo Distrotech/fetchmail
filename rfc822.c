@@ -432,13 +432,13 @@ int main(int argc, char *argv[])
     while (fgets(buf, sizeof(buf)-1, stdin))
     {
 	if (buf[0] == ' ' || buf[0] == '\t')
-	    strcat(longbuf, buf);
+	    strlcat(longbuf, buf, sizeof(longbuf));
 	else if (!strncasecmp("From: ", buf, 6)
 		    || !strncasecmp("To: ", buf, 4)
 		    || !strncasecmp("Reply-", buf, 6)
 		    || !strncasecmp("Cc: ", buf, 4)
 		    || !strncasecmp("Bcc: ", buf, 5))
-	    strcpy(longbuf, buf);	
+	    strlcpy(longbuf, buf, sizeof(longbuf));
 	else if (longbuf[0])
 	{
 	    if (verbose)

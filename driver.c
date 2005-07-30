@@ -1104,22 +1104,22 @@ static int do_session(
 		if (h_errno != 0)
 		{
 		    if (h_errno == HOST_NOT_FOUND)
-			strcpy(errbuf, GT_("host is unknown."));
+			strlcpy(errbuf, GT_("host is unknown."), sizeof(errbuf));
 #ifndef __BEOS__
 		    else if (h_errno == NO_ADDRESS)
-			strcpy(errbuf, GT_("name is valid but has no IP address."));
+			strlcpy(errbuf, GT_("name is valid but has no IP address."), sizeof(errbuf));
 #endif
 		    else if (h_errno == NO_RECOVERY)
-			strcpy(errbuf, GT_("unrecoverable name server error."));
+			strlcpy(errbuf, GT_("unrecoverable name server error."), sizeof(errbuf));
 		    else if (h_errno == TRY_AGAIN)
-			strcpy(errbuf, GT_("temporary name server error."));
+			strlcpy(errbuf, GT_("temporary name server error."), sizeof(errbuf));
 		    else
 			snprintf (errbuf, sizeof(errbuf),
 				GT_("unknown DNS error %d."), h_errno);
 		}
 		else
 #endif /* HAVE_RES_SEARCH */
-		    strcpy(errbuf, strerror(err_no));
+		    strlcpy(errbuf, strerror(err_no), sizeof(errbuf));
 		report_complete(stderr, ": %s\n", errbuf);
 
 #ifdef __UNUSED

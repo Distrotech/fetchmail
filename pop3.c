@@ -523,7 +523,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	}
 #endif /* OPIE_ENABLE */
 
-	strcpy(shroud, ctl->password);
+	strlcpy(shroud, ctl->password, sizeof(shroud));
 	ok = gen_transact(sock, "PASS %s", ctl->password);
 	shroud[0] = '\0';
 #ifdef SSL_ENABLE

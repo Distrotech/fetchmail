@@ -944,7 +944,7 @@ static int load_params(int argc, char **argv, int optind)
     p = strrchr (rcfile, '/');
     if (p && (p - rcfile) < sizeof (rcfiledir)) {
 	*p = 0;			/* replace '/' by '0' */
-	strcpy (rcfiledir, rcfile);
+	strlcpy (rcfiledir, rcfile, sizeof(rcfiledir));
 	*p = '/';		/* restore '/' */
 	if (!rcfiledir[0])	/* "/.fetchmailrc" case */
 	    strcpy (rcfiledir, "/");

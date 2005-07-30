@@ -174,7 +174,7 @@ int do_gssauth(int sock, char *command, char *service, char *hostname, char *use
     buf_size = htonl(buf_size); /* do as they do... only matters if we do enc */
     memcpy(buf1, &buf_size, 4);
     buf1[0] = GSSAUTH_P_NONE;
-    strcpy(buf1+4, username); /* server decides if princ is user */
+    strlcpy(buf1+4, username, sizeof(buf) - 4); /* server decides if princ is user */
     request_buf.length = 4 + strlen(username) + 1;
     request_buf.value = buf1;
     maj_stat = gss_wrap(&min_stat, context, 0, GSS_C_QOP_DEFAULT, &request_buf,

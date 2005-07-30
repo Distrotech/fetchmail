@@ -227,7 +227,7 @@ char *rfc822timestamp(void)
      * date format ctime(3) emits is not RFC822
      * conformant.
      */
-    strcpy(buf, ctime(&now));
+    strlcpy(buf, ctime(&now), sizeof(buf));
     buf[strlen(buf)-1] = '\0';	/* remove trailing \n */
 #endif /* HAVE_STRFTIME */
 
