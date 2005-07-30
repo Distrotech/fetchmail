@@ -467,7 +467,7 @@ int MimeBodyType(unsigned char *hdrs, int WantDecode)
 	/* The actual delimiter is "--" followed by 
 	   the boundary string */
 	strcpy(MultipartDelimiter, "--");
-	strncat(MultipartDelimiter, p1, MAX_DELIM_LEN);
+	strlcat(MultipartDelimiter, p1, sizeof(MultipartDelimiter));
 	MultipartDelimiter[sizeof(MultipartDelimiter)-1] = '\0';
 	BodyType = (MSG_IS_8BIT | MSG_NEEDS_DECODE);
       }
