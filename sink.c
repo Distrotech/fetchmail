@@ -127,13 +127,13 @@ int smtp_open(struct query *ctl)
 	    int		portnum = SMTP_PORT;
 #endif /* INET6_ENABLE */
 
-	    xalloca(parsed_host, char *, strlen(idp->id) + 1);
-
 	    ctl->smtphost = idp->id;  /* remember last host tried. */
 	    if(ctl->smtphost[0]=='/')
 		ctl->listener = LMTP_MODE;
 
+	    xalloca(parsed_host, char *, strlen(idp->id) + 1);
 	    strcpy(parsed_host, idp->id);
+
 	    if ((cp = strrchr(parsed_host, '/')))
 	    {
 		*cp++ = 0;
@@ -301,7 +301,7 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
     /* can't just use fetchmailhost here, it might be localhost */
     if (fqdn_of_host == NULL)
 	fqdn_of_host = host_fqdn();
-    strcat(daemon_name, fqdn_of_host);
+    strlcat(daemon_name, fqdn_of_host, sizeof(daemon_name));
 
     /* we need only SMTP for this purpose */
     if ((sock = SockOpen("localhost", SMTP_PORT, NULL, NULL)) == -1)
@@ -444,7 +444,8 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
 
 static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 /* handle SMTP errors based on the content of SMTP_response */
-/* return of PS_REFUSED deletes mail from the server; PS_TRANSIENT keeps it */
+/* returns either PS_REFUSED (to delete message from the server),
+ *             or PS_TRANSIENT (keeps the message on the server) */
 {
     int smtperr = atoi(smtp_response);
     char *responses[1];
@@ -919,7 +920,7 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
     }
     if (smtp_err != SM_OK)
     {
-	int err = handle_smtp_report(ctl, msg);
+	int err = handle_smtp_report(ctl, msg); /* map to PS_TRANSIENT or PS_REFUSED */
 
 	SMTP_rset(ctl->smtp_socket);    /* stay on the safe side */
 	return(err);
@@ -1490,8 +1491,8 @@ int open_warning_by_mail(struct query *ctl, struct msgblk *msg)
     struct msgblk reply = {NULL, NULL, "FETCHMAIL-DAEMON@", 0, 0};
     int status;
 
-    strcat(reply.return_path, ctl->smtpaddress ? ctl->smtpaddress :
-	    fetchmailhost);
+    strlcat(reply.return_path, ctl->smtpaddress ? ctl->smtpaddress :
+	    fetchmailhost, sizeof(reply.return_path));
 
     if (!MULTIDROP(ctl))		/* send to calling user */
     {
