@@ -149,47 +149,47 @@ void dump_config(struct runctl *runp, struct query *querylist)
      * This should be approximately in sync with the -V option dumping 
      * in fetchmail.c.
      */
-    printf("feature_options = (");
+    printf("feature_options = ("
 #ifdef POP2_ENABLE
-    printf("'pop2',");
+    "'pop2',"
 #endif /* POP2_ENABLE */
 #ifdef POP3_ENABLE
-    printf("'pop3',");
+    "'pop3',"
 #endif /* POP3_ENABLE */
 #ifdef IMAP_ENABLE
-    printf("'imap',");
+    "'imap',"
 #endif /* IMAP_ENABLE */
 #ifdef GSSAPI
-    printf("'gssapi',");
+    "'gssapi',"
 #endif /* GSSAPI */
 #if defined(KERBEROS_V4)
-    printf("'kerberos',");
+    "'kerberos',"
 #endif /* defined(IMAP4) */
 #ifdef RPA_ENABLE
-    printf("'rpa',");
+    "'rpa',"
 #endif /* RPA_ENABLE */
 #ifdef SDPS_ENABLE
-    printf("'sdps',");
+    "'sdps',"
 #endif /* SDPS_ENABLE */
 #ifdef ETRN_ENABLE
-    printf("'etrn',");
+    "'etrn',"
 #endif /* ETRN_ENABLE */
 #ifdef ODMR_ENABLE
-    printf("'odmr',");
+    "'odmr',"
 #endif /* ODMR_ENABLE */
 #ifdef SSL_ENABLE
-    printf("'ssl',");
+    "'ssl',"
 #endif /* SSL_ENABLE */
 #ifdef OPIE_ENABLE
-    printf("'opie',");
+    "'opie',"
 #endif /* OPIE_ENABLE */
 #ifdef INET6_ENABLE
-    printf("'inet6',");
+    "'inet6',"
 #endif /* INET6_ENABLE */
 #ifdef NET_SECURITY
-    printf("'netsec',");
+    "'netsec',"
 #endif /* NET_SECURITY */
-    printf(")\n");
+    ")\n");
 
     fputs("# Start of configuration initializer\n", stdout);
     fputs("fetchmailrc = ", stdout);
