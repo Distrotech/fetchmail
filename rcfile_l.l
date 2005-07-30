@@ -123,7 +123,6 @@ bsmtp		{ return BSMTP; }
 lmtp		{ return LMTP; }
 pre(connect)?	{ return PRECONNECT; }
 post(connect)?	{ return POSTCONNECT; }
-netsec		{ return NETSEC; }
 interface	{ return INTERFACE; }
 monitor		{ return MONITOR; }
 plugin		{ return PLUGIN; }

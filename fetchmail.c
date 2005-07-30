@@ -69,11 +69,6 @@ char *program_name;	    /* the name to prefix error messages with */
 flag configdump;	    /* dump control blocks for configurator */
 char *fetchmailhost;	    /* either `localhost' or the host's FQDN */
 
-#ifdef NET_SECURITY
-void *request = NULL;
-int requestlen = 0;
-#endif /* NET_SECURITY */
-
 static int querystatus;		/* status of query */
 static int successes;		/* count number of successful polls */
 static int activecount;		/* count number of active entries */
@@ -245,9 +240,6 @@ int main(int argc, char **argv)
 #ifdef HAVE_PKG_hesiod
 	"+HESIOD"
 #endif
-#ifdef NET_SECURITY
-	"+NETSEC"
-#endif /* NET_SECURITY */
 #ifdef HAVE_SOCKS
 	"+SOCKS"
 #endif /* HAVE_SOCKS */
@@ -848,7 +840,6 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(server.protocol);
 #ifdef INET6_ENABLE
     FLAG_MERGE(server.service);
-    FLAG_MERGE(server.netsec);
 #else /* INET6_ENABLE */
     FLAG_MERGE(server.port);
 #endif /* INET6_ENABLE */
@@ -1549,8 +1540,6 @@ static void dump_params (struct runctl *runp,
 #ifdef INET6_ENABLE
 	if (ctl->server.service)
 	    printf(GT_(" (using service %s)"), ctl->server.service);
-	if (ctl->server.netsec)
-	    printf(GT_(" (using network security options %s)"), ctl->server.netsec);
 #else /* INET6_ENABLE */
 	if (ctl->server.port)
 	    printf(GT_(" (using port %d)"), ctl->server.port);

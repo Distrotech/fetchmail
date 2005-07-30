@@ -148,7 +148,7 @@ int smtp_open(struct query *ctl)
 		if ((ctl->smtp_socket = UnixOpen(ctl->smtphost))==-1)
 		    continue;
 	    } else
-		if ((ctl->smtp_socket = SockOpen(parsed_host,portnum,NULL,
+		if ((ctl->smtp_socket = SockOpen(parsed_host,portnum,
 					     ctl->server.plugout)) == -1)
 		    continue;
 
@@ -177,7 +177,7 @@ int smtp_open(struct query *ctl)
 	    smtp_close(ctl, 0);
 
 	    /* if opening for ESMTP failed, try SMTP */
-	    if ((ctl->smtp_socket = SockOpen(parsed_host,portnum,NULL,
+	    if ((ctl->smtp_socket = SockOpen(parsed_host,portnum,
 					     ctl->server.plugout)) == -1)
 		continue;
 
@@ -304,7 +304,7 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
     strlcat(daemon_name, fqdn_of_host, sizeof(daemon_name));
 
     /* we need only SMTP for this purpose */
-    if ((sock = SockOpen("localhost", SMTP_PORT, NULL, NULL)) == -1)
+    if ((sock = SockOpen("localhost", SMTP_PORT, NULL)) == -1)
 	return(FALSE);
 
     if (SMTP_ok(sock) != SM_OK)

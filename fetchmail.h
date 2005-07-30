@@ -235,7 +235,6 @@ struct hostdata		/* shared among all user connections to given server */
     int protocol;			/* protocol type */
 #ifdef INET6_ENABLE
     char *service;			/* IPv6 service name */
-    void *netsec;			/* IPv6 security request */
 #else /* INET6_ENABLE */
     int port;				/* TCP/IP service port number */
 #endif /* INET6_ENABLE */

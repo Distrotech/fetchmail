@@ -365,26 +365,6 @@ test "$with_inet6" = "yes" && AC_DEFINE(INET6_ENABLE,1,Define if you want IPv6 s
 
 AC_CHECK_FUNCS(inner_connect)
 
-AC_ARG_ENABLE(netsec,
-	[  --enable-netsec         support network security (requires inet6-apps library)],
-        [ unset ac_cv_lib_inet6_net_security_strtorequest; AC_CHECK_LIB(inet6, net_security_strtorequest,,
-	  [ unset ac_cv_lib_inet6_net_security_strtorequest;
-            LDFLAGS="$LDFLAGS -L/usr/inet6/lib"; 
-            AC_CHECK_LIB(inet6, net_security_strtorequest,,
-            [ echo 'configure: cannot find net_security_strtorequest in libinet6, which is required';
-              echo '           for network security support. Either it does not exist, or it was';
-              echo '           not built with network security support enabled.';
-              exit 1]) ])
-        unset ac_cv_header_net_security_h; AC_CHECK_HEADER(net/security.h,,
-        [ unset ac_cv_header_net_security_h; 
-	CPPFLAGS="$CPPFLAGS -I/usr/inet6/include"; 
-	CFLAGS="$CFLAGS -I/usr/inet6/include"; AC_CHECK_HEADER(net/security.h,,
-	  [ echo 'configure: cannot find <net/security.h>, which is required';
-          echo '             for network security support.';
-          exit 1]) ]) ]
-	[with_netsec=no])
-test "$with_netsec" = "yes" && AC_DEFINE(NET_SECURITY,1,Define if you want network security support compiled in)
-
 # This version of the Kerberos 4 and 5 options addresses the follwing issues:
 # 
 # * Build correctly under Heimdal kerberos if it is compiled with db2 and

@@ -1078,9 +1078,9 @@ static int do_session(
 #ifdef INET6_ENABLE
 	if ((mailserver_socket = SockOpen(realhost, 
 			     ctl->server.service ? ctl->server.service : ( ctl->use_ssl ? ctl->server.base_protocol->sslservice : ctl->server.base_protocol->service ),
-			     ctl->server.netsec, ctl->server.plugin)) == -1)
+			     ctl->server.plugin)) == -1)
 #else /* INET6_ENABLE */
-	if ((mailserver_socket = SockOpen(realhost, port, NULL, ctl->server.plugin)) == -1)
+	if ((mailserver_socket = SockOpen(realhost, port, ctl->server.plugin)) == -1)
 #endif /* INET6_ENABLE */
 	{
 	    char	errbuf[BUFSIZ];

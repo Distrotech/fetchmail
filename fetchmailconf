@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 #
 # A GUI configurator for generating fetchmail configuration files.
-# by Eric S. Raymond, <esr@snark.thyrsus.com>.
+# by Eric S. Raymond, <esr@snark.thyrsus.com>,
+# Matthias Andree <matthias.andree@gmx.de>
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.43"
+version = "1.44"
 
 from Tkinter import *
 from Dialog import *
@@ -92,7 +93,6 @@ class Server:
 	self.monitor = None		# IP address and range
 	self.plugin = None		# Plugin command for going to server
 	self.plugout = None		# Plugin command for going to listener
-	self.netsec = None		# IPV6 security options
 	self.principal = None		# Kerberos principal
 	self.esmtpname = None		# ESMTP 2554 name
 	self.esmtppassword = None	# ESMTP 2554 password
@@ -120,7 +120,6 @@ class Server:
 	    ('plugout',   'String'),
 	    ('esmtpname', 'String'),
 	    ('esmtppassword', 'String'),
-	    ('netsec',	  'String'),
 	    ('principal', 'String'),
 	    ('tracepolls','Boolean'))
 
@@ -183,15 +182,13 @@ class Server:
 	    res = res + " plugin " + `self.plugin`
 	if self.plugout:
 	    res = res + " plugout " + `self.plugout`
-	if self.netsec:
-	    res = res + " netsec " + str(self.netsec)
 	if self.principal:
 	    res = res + " principal " + `self.principal`
 	if self.esmtpname:
 	    res = res + " esmtpname " + `self.esmtpname`
 	if self.esmtppassword:
 	    res = res + " esmtppassword " + `self.esmtppassword`
-	if self.interface or self.monitor or self.netsec or self.principal or self.plugin or self.plugout:
+	if self.interface or self.monitor or self.principal or self.plugin or self.plugout:
 	    if folded:
 		res = res + "\n"
 
@@ -980,10 +977,6 @@ The sslcertck option enables strict checking of SSL server
 certificates (and sslcertpath gives trusted certificate
 directory). With sslfingerprint, you can specify a finger-
 print the server's key is checked against.
-
-The `netsec' option will be configurable only if fetchmail
-was compiled with IPV6 support.  If you need to use it,
-you probably know what to do.
 """}
 
 multihelp = {
@@ -1157,7 +1150,7 @@ class ServerEdit(Frame, MyWidget):
 		 self.server.localdomains, None, None, mdropwin, multihelp)
 	    mdropwin.pack(fill=X)
 
-	    if os_type in ('linux', 'freebsd') or 'netsec' in feature_options:
+	    if os_type in ('linux', 'freebsd'):
 		secwin = Frame(rightwin, relief=RAISED, bd=5)
 		Label(secwin, text="Security").pack(side=TOP)
 		# Don't actually let users set this.  KPOP sets it implicitly
@@ -1169,9 +1162,6 @@ class ServerEdit(Frame, MyWidget):
 		if os_type == 'linux' or os_type == 'freebsd' or 'monitor' in dictmembers:
 		    LabeledEntry(secwin, 'Interface to monitor:',
 			 self.monitor, leftwidth).pack(side=TOP, fill=X)
-		if 'netsec' in feature_options or 'netsec' in dictmembers:
-		    LabeledEntry(secwin, 'IPV6 security options:',
-			 self.netsec, leftwidth).pack(side=TOP, fill=X)
 		# Someday this should handle Kerberos 5 too
 		if 'kerberos' in feature_options:
 		    LabeledEntry(secwin, 'Principal:',
@@ -1921,7 +1911,7 @@ def copy_instance(toclass, fromdict):
 # conformability checking; they'll still get copied if they are
 # present in the dictionary.
     optional = ('interface', 'monitor',
-		'netsec', 'esmtpname', 'esmtppassword',
+		'esmtpname', 'esmtppassword',
 		'ssl', 'sslkey', 'sslcert', 'sslproto', 'sslcertck',
 		'sslcertpath', 'sslfingerprint', 'showdots')
     class_sig = setdiff(toclass.__dict__.keys(), optional)
@@ -2064,7 +2054,7 @@ gUSiYASJpMEHhilJTEnhAlGoQqYAZQ1AiqEMZ0jDGtqQImhwwA13yMMevoQAGvGhEAWHGMOAAAA7
     # `Configuration' is the top level of the object tree we're going to mung.
     # The dictmembers list is used to track the set of fields the dictionary
     # contains; in particular, we can use it to tell whether things like the
-    # monitor, interface, netsec, ssl, sslkey, or sslcert fields are present.
+    # monitor, interface, ssl, sslkey, or sslcert fields are present.
     dictmembers = []
     Fetchmailrc = Configuration()
     copy_instance(Fetchmailrc, fetchmailrc)

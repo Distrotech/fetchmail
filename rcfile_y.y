@@ -22,10 +22,6 @@
 #endif
 #include <string.h>
 
-#if NET_SECURITY
-#include <net/security.h>
-#endif /* NET_SECURITY */
-
 #if defined(__CYGWIN__)
 #include <sys/cygwin.h>
 #endif /* __CYGWIN__ */
@@ -69,7 +65,7 @@ extern char * yytext;
 %token AUTHENTICATE TIMEOUT KPOP SDPS ENVELOPE QVIRTUAL
 %token USERNAME PASSWORD FOLDER SMTPHOST FETCHDOMAINS MDA BSMTP LMTP
 %token SMTPADDRESS SMTPNAME SPAMRESPONSE PRECONNECT POSTCONNECT LIMIT WARNINGS
-%token NETSEC INTERFACE MONITOR PLUGIN PLUGOUT
+%token INTERFACE MONITOR PLUGIN PLUGOUT
 %token IS HERE THERE TO MAP WILDCARD
 %token BATCHLIMIT FETCHLIMIT FETCHSIZELIMIT FASTUIDL EXPUNGE PROPERTIES
 %token SET LOGFILE DAEMON SYSLOG IDFILE INVISIBLE POSTMASTER BOUNCEMAIL 
@@ -213,21 +209,6 @@ serv_option	: AKA alias_list
 					}
 
 		| QVIRTUAL STRING	{current.server.qvirtual=xstrdup($2);}
-		| NETSEC STRING		{
-#ifdef NET_SECURITY
-					    void *request;
-					    int requestlen;
-
-					    if (net_security_strtorequest($2, &request, &requestlen))
-						yyerror(GT_("invalid security request"));
-					    else {
-						current.server.netsec = xstrdup($2);
-					        free(request);
-					    }
-#else
-					    yyerror(GT_("network-security support disabled"));
-#endif /* NET_SECURITY */
-					}
 		| INTERFACE STRING	{
 #if (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__)
 					interface_parse($2, &current.server);

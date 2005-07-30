@@ -66,7 +66,6 @@
 #define LA_LMTP		42
 #define LA_PLUGIN	43
 #define LA_PLUGOUT	44
-#define LA_NETSEC	45
 #define LA_INTERFACE    46
 #define LA_MONITOR      47
 #define LA_CONFIGDUMP	48
@@ -148,10 +147,6 @@ static const struct option longoptions[] = {
   {"mda",	required_argument, (int *) 0, LA_MDA         },
   {"bsmtp",	required_argument, (int *) 0, LA_BSMTP       },
   {"lmtp",	no_argument,       (int *) 0, LA_LMTP        },
-
-#ifdef INET6_ENABLE
-  {"netsec",	required_argument, (int *) 0, LA_NETSEC      },
-#endif /* INET6_ENABLE */
 
 #ifdef SSL_ENABLE
   {"ssl",       no_argument,       (int *) 0, LA_SSL        },
@@ -559,16 +554,6 @@ struct query *ctl;	/* option record to be initialized */
 	    ctl->listener = LMTP_MODE;
 	    break;
 
-	case 'T':
-	case LA_NETSEC:
-#ifdef NET_SECURITY
-	    ctl->server.netsec = (void *)optarg;
-#else
-	    fprintf(stderr, GT_("fetchmail: network security support is disabled\n"));
-	    errflag++;
-#endif /* NET_SECURITY */
-	    break;
-
 #if (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__)
 	case 'I':
 	case LA_INTERFACE:
@@ -709,9 +694,6 @@ struct query *ctl;	/* option record to be initialized */
 	P(GT_("  -l, --limit       don't fetch messages over given size\n"));
 	P(GT_("  -w, --warnings    interval between warning mail notification\n"));
 
-#ifdef NET_SECURITY
-	P(GT_("  -T, --netsec      set IP security request\n"));
-#endif /* NET_SECURITY */
 	P(GT_("  -S, --smtphost    set SMTP forwarding host\n"));
 	P(GT_("      --fetchdomains fetch mail for specified domains\n"));
 	P(GT_("  -D, --smtpaddress set SMTP delivery domain to use\n"));

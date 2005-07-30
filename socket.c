@@ -84,10 +84,6 @@ static int h_errno;
 
 #endif /* ndef h_errno */
 
-#ifdef NET_SECURITY
-#include <net/security.h>
-#endif /* NET_SECURITY */
-
 #ifdef HAVE_SOCKETPAIR
 static char *const *parse_plugin(const char *plugin, const char *host, const char *service)
 {	const char **argvec;
@@ -267,15 +263,11 @@ int UnixOpen(const char *path)
 }
 
 #ifdef INET6_ENABLE
-int SockOpen(const char *host, const char *service, const char *options,
+int SockOpen(const char *host, const char *service,
 	     const char *plugin)
 {
     struct addrinfo *ai, *ai0, req;
     int i;
-#ifdef NET_SECURITY
-    void *request = NULL;
-    int requestlen;
-#endif /* NET_SECURITY */
 
 #ifdef HAVE_SOCKETPAIR
     if (plugin)
@@ -289,19 +281,6 @@ int SockOpen(const char *host, const char *service, const char *options,
 	return -1;
     }
 
-#if NET_SECURITY
-    if (!options)
-	requestlen = 0;
-    else
-	if (net_security_strtorequest((char *)options, &request, &requestlen))
-	    goto ret;
-
-    i = inner_connect(ai0, request, requestlen, NULL, NULL, "fetchmail", NULL);
-    if (request)
-	free(request);
-
- ret:
-#else /* NET_SECURITY */
 #ifdef HAVE_INNER_CONNECT
     i = inner_connect(ai0, NULL, 0, NULL, NULL, "fetchmail", NULL);
     if (i >= 0)
@@ -332,7 +311,6 @@ int SockOpen(const char *host, const char *service, const char *options,
     }
 
 #endif
-#endif /* NET_SECURITY */
 
     freeaddrinfo(ai0);
 
@@ -349,7 +327,7 @@ int SockOpen(const char *host, const char *service, const char *options,
 #endif
 #endif /* HAVE_INET_ATON */
 
-int SockOpen(const char *host, int clientPort, const char *options,
+int SockOpen(const char *host, int clientPort,
 	     const char *plugin)
 {
     int sock = -1;	/* pacify -Wall */

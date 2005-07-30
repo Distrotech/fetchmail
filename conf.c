@@ -186,9 +186,6 @@ void dump_config(struct runctl *runp, struct query *querylist)
 #ifdef INET6_ENABLE
     "'inet6',"
 #endif /* INET6_ENABLE */
-#ifdef NET_SECURITY
-    "'netsec',"
-#endif /* NET_SECURITY */
     ")\n");
 
     fputs("# Start of configuration initializer\n", stdout);
@@ -367,9 +364,6 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	else
 	    fputs("'lmtp':FALSE,\n", stdout);
 	    
-#ifdef INET6_ENABLE
-	stringdump("netsec", ctl->server.netsec);
-#endif /* INET6_ENABLE */
 	stringdump("preconnect", ctl->preconnect);
 	stringdump("postconnect", ctl->postconnect);
 	numdump("limit", ctl->limit);

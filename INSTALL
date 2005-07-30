@@ -28,11 +28,6 @@ Building in IPv6 support *requires* an up-to-date operating system.
 Recent Linux versions with glibc 2.1.1 or newer, FreeBSD, Solaris should
 be fine.
 
-The IPsec code *requires* the inet6-apps kit, which used to be available
-from ftp.ipv6.inner.net:/pub/ipv6 (via IPv6) or ftp.inner.net /pub/ipv6
-(via IPv4), but the software has been withdrawn, so we're sorry, no
-advanced IPsec support at this time.
-
 If you have trouble with intl or gettext functions, try using the
 configure option `--with-included-gettext'.
 

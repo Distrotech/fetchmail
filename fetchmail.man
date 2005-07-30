@@ -862,13 +862,6 @@ capability response. Specify a user option value that looks like
 `user@domain': the part to the left of the @ will be passed as the
 username and the part to the right as the NTLM domain.
 .PP
-If you are using IPsec, the -T (--netsec) option can be used to pass
-an IP security request to be used when outgoing IP connections are
-initialized.  You can also do this using the `netsec' server option
-in the .fetchmailrc file.  In either case, the option value is a
-string in the format accepted by the net_security_strtorequest() 
-function of the inet6_apps library.
-.PP
 You can access SSL encrypted services by specifying the --ssl option.
 You can also do this using the "ssl" server option in the .fetchmailrc
 file.  With SSL encryption enabled, queries are initiated over a connection
@@ -1385,9 +1378,6 @@ Only check this site every N poll cycles; N is a numeric argument.
 T}
 tracepolls	\&	\&	T{
 Add poll tracing information to the Received header
-T}
-netsec   	\&	\&	T{
-Pass in IPsec security option request.
 T}
 principal   	\&	\&	T{
 Set Kerberos principal (only useful with imap and kerberos)

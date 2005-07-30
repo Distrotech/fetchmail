@@ -13,6 +13,10 @@ SECURITY FIX:
   This vulnerability is remotely exploitable to inject code run in a
   root shell. This is tracked under the CVE Name: CAN-2005-2335
 
+MAJOR INCOMPATIBLE CHANGES:
+* Remove support for --netsec/-T options, the required inet6_apps library is no
+  longer available. Matthias Andree
+
 OTHER CHANGES:
 * Sunil Shetye's fix to force fetchsizelimit to 1 for APOP and RPOP. (ESR)
 * PopDel.py removed from contrib at author's request. (ESR)
