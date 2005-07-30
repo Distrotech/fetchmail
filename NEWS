@@ -153,6 +153,8 @@ OTHER CHANGES:
   bug reports such as Debian Bug #224564. Matthias Andree
 * Rename lock_release to fm_lock_release, to avoid namespace collision on
   Darwin. NetBSD PR#28543 (pkg/28543). Matthias Andree.
+* The RFC-822 parser no longer strips the last character of bare addresses.
+  Matthias Andree
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 

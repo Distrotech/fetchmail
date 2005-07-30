@@ -264,7 +264,6 @@ unsigned char *nxtaddr(const unsigned char *hdr /* header to be parsed, NUL to c
 	    state = ENDIT_ALL;
 	    if (tp)
 	    {
-		--tp;
 		while (tp >= 0 && isspace(address[tp--]))
 		    continue;
 		address[++tp] = '\0';
@@ -346,13 +345,9 @@ unsigned char *nxtaddr(const unsigned char *hdr /* header to be parsed, NUL to c
 	    break;
 
 	case INSIDE_DQUOTE:	/* we're in a quoted string, copy verbatim */
-	    if (*hp != '"')
-	        address[NEXTTP()] = *hp;
-	    else
-	    {
-	        address[NEXTTP()] = *hp;
+	    address[NEXTTP()] = *hp;
+	    if (*hp == '"')
 		state = oldstate;
-	    }
 	    break;
 
 	case INSIDE_PARENS:	/* we're in a parenthesized comment, ignore */
