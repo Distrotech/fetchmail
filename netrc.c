@@ -213,15 +213,9 @@ parse_netrc (file)
 
 	    if (premature_token)
 	    {
-#ifdef HAVE_ERROR
-		error_at_line (0, file, ln,
-			       GT_("warning: found \"%s\" before any host names"),
-			       premature_token);
-#else
 		fprintf (stderr,
 			 GT_("%s:%d: warning: found \"%s\" before any host names\n"),
 			 file, ln, premature_token);
-#endif
 		premature_token = NULL;
 	    }
 
