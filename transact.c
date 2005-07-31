@@ -1240,7 +1240,7 @@ int readheaders(int sock,
 		if (idp->val.status.mark == XMIT_RCPTBAD)
 		    errlen += strlen(idp->id) + 2;
 
-	    xalloca(errmsg, char *, errlen+3);
+	    errmsg = xmalloc(errlen + 3);
 	    strcpy(errmsg, errhd);
 	    for (idp = msgblk.recipients; idp; idp = idp->next)
 		if (idp->val.status.mark == XMIT_RCPTBAD)
@@ -1256,6 +1256,9 @@ int readheaders(int sock,
 
 	/* ship out the error line */
 	stuffline(ctl, errmsg);
+
+	if (errmsg != errhd)
+	    free(errmsg);
     }
 
     /* issue the delimiter line */
