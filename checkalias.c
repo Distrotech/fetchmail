@@ -26,6 +26,25 @@
 
 #define MX_RETRIES	3
 
+typedef unsigned char address_t[sizeof (struct in_addr)];
+
+typedef struct _address_e
+{
+    struct _address_e *next;
+    address_t address;
+} address_e;
+
+static void free_addrlst(address_e *lst)
+{
+    address_e *i;
+    while(lst) {
+	i = lst->next;
+	free(lst);
+	lst = i;
+    }
+}
+
+/* XXX FIXME: This junk isn't IPv6 aware */
 static int is_ip_alias(const char *name1,const char *name2)
 /*
  * Given two hostnames as arguments, returns TRUE if they
@@ -34,61 +53,56 @@ static int is_ip_alias(const char *name1,const char *name2)
  * the calling function does them.
  */
 {
-    typedef unsigned char address_t[sizeof (struct in_addr)]; 
-    typedef struct _address_e
-    {
-	struct _address_e *next;
-	address_t address;
-    } 
-    address_e;
-    address_e *host_a_addr=0, *host_b_addr=0;	/* assignments pacify -Wall */
-    address_e *dummy_addr;
+    address_e *host_a_addr=0, *host_b_addr=0;
+    address_e *dummy_addr, *ii, *ij;
 
-    int i;
+    int rc = FALSE;
     struct hostent *hp;
     char **p;
- 
+
     hp = gethostbyname((char*)name1);
- 
+
     dummy_addr = (address_e *)NULL;
 
-    for (i=0,p = hp->h_addr_list; *p != 0; i++,p++)
-    {
-	struct in_addr in;
-	(void) memcpy(&in.s_addr, *p, sizeof (in.s_addr));
-	xalloca(host_a_addr, address_e *, sizeof (address_e));
-	memset (host_a_addr,0, sizeof (address_e));
-	host_a_addr->next = dummy_addr;
-	(void) memcpy(&host_a_addr->address, *p, sizeof (in.s_addr));
-	dummy_addr = host_a_addr;
-    }
+    if (hp)
+	for (p = hp->h_addr_list; *p != 0; p++) {
+	    struct in_addr in;
+
+	    host_a_addr = xmalloc(sizeof (address_e));
+	    memset (host_a_addr,0, sizeof (address_e));
+	    host_a_addr->next = dummy_addr;
+	    (void) memcpy(&host_a_addr->address, *p, sizeof (in.s_addr));
+	    dummy_addr = host_a_addr;
+	}
 
     hp = gethostbyname((char*)name2);
 
     dummy_addr = (address_e *)NULL;
-    for (i=0,p = hp->h_addr_list; *p != 0; i++,p++)
-    {
-	struct in_addr in;
-	(void) memcpy(&in.s_addr, *p, sizeof (in.s_addr));
-	xalloca(host_b_addr, address_e *, sizeof (address_e));
-	memset (host_b_addr,0, sizeof (address_e));
-	host_b_addr->next = dummy_addr;
-	(void) memcpy(&host_b_addr->address, *p, sizeof (in.s_addr));
-	dummy_addr = host_b_addr;
-    }
 
-    while (host_a_addr)
-    {
-	while (host_b_addr)
-	{
-	    if (!memcmp(host_b_addr->address,host_a_addr->address, sizeof (address_t)))
-		return (TRUE);
+    if (hp)
+	for (p = hp->h_addr_list; *p != 0; p++) {
+	    struct in_addr in;
 
-	    host_b_addr = host_b_addr->next;
+	    host_b_addr = xmalloc(sizeof (address_e));
+	    memset (host_b_addr,0, sizeof (address_e));
+	    host_b_addr->next = dummy_addr;
+	    (void) memcpy(&host_b_addr->address, *p, sizeof (in.s_addr));
+	    dummy_addr = host_b_addr;
 	}
-	host_a_addr = host_a_addr->next;
+
+    for (ii = host_a_addr ; ii ; ii = ii -> next) {
+	for (ij = host_b_addr ; ij ; ij = ij -> next) {
+	    if (!memcmp(ii->address, ij->address, sizeof (address_t))) {
+		rc = TRUE;
+		goto found;
+	    }
+	}
     }
-    return (FALSE);
+
+found:
+    free_addrlst(host_b_addr);
+    free_addrlst(host_a_addr);
+    return rc;
 }
 
 int is_host_alias(const char *name, struct query *ctl)
@@ -99,7 +113,7 @@ int is_host_alias(const char *name, struct query *ctl)
     struct idlist	*idl;
     int			namelen;
 
-    struct hostdata *lead_server = 
+    struct hostdata *lead_server =
 	ctl->server.lead_server ? ctl->server.lead_server : &ctl->server;
 
     /*
@@ -107,7 +121,7 @@ int is_host_alias(const char *name, struct query *ctl)
      * many cases.
      *
      * (1) check against the `true name' deduced from the poll label
-     * and the via option (if present) at the beginning of the poll cycle.  
+     * and the via option (if present) at the beginning of the poll cycle.
      * Odds are good this will either be the mailserver's FQDN or a suffix of
      * it with the mailserver's domain's default host name omitted.
      *
@@ -230,7 +244,8 @@ int is_host_alias(const char *name, struct query *ctl)
     else
     {
 	for (mxp = mxrecords; mxp->name; mxp++)
-	    if (strcasecmp(ctl->server.truename, mxp->name) == 0)
+	    if (strcasecmp(ctl->server.truename, mxp->name) == 0
+		    || is_ip_alias(ctl->server.truename, mxp->name) == TRUE)
 		goto match;
 	return(FALSE);
     match:;

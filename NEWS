@@ -155,6 +155,10 @@ OTHER CHANGES:
   Darwin. NetBSD PR#28543 (pkg/28543). Matthias Andree.
 * The RFC-822 parser no longer strips the last character of bare addresses.
   Matthias Andree
+* The IP address matching code was broken and 
+  1. didn't search exhaustively, but matched only the first IP address of the
+  server's queryname against the IP addresses of the server name to match.
+  2. didn't match IP aliases versus MX hosts.  Matthias Andree
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
