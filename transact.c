@@ -1196,8 +1196,8 @@ int readheaders(int sock,
 	free_str_list(&msgblk.recipients);
 	return(PS_IOERR);
     }
-    else if ((run.poll_interval == 0 || nodetach) && outlevel >= O_VERBOSE && !isafile(2))
-	fputs("#", stdout);
+    else if ((run.poll_interval == 0 || nodetach) && outlevel >= O_VERBOSE && !isafile(1) && !run.use_syslog)
+	fputc('#', stdout);
 
     /* write error notifications */
     if (no_local_matches || has_nuls || bad_addresses)
@@ -1366,7 +1366,7 @@ int readbody(int sock, struct query *ctl, flag forward, int len)
 		release_sink(ctl);
 		return(PS_IOERR);
 	    }
-	    else if (outlevel >= O_VERBOSE && !isafile(1))
+	    else if (outlevel >= O_VERBOSE && !isafile(1) && !run.use_syslog)
 	    {
 		fputc('*', stdout);
 		fflush(stdout);
