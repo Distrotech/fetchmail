@@ -43,6 +43,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <errno.h>
 #include <netdb.h>
 #include <signal.h>
+#include <string.h>
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
 
 /* This patch, supplying SA_LEN if it's undefined, is from Red Hat */
 #ifndef SA_LEN
