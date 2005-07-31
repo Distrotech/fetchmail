@@ -665,7 +665,9 @@ static int parseuid(const char *buf, unsigned long *gotnum, char *id, size_t ids
     return PS_SUCCESS;
 }
 
-static int pop3_getuidl(int sock, int num , char *id, size_t idsize)
+/** request UIDL for single message \a num and stuff the result into the
+ * buffer \a id which can hold \a idsize bytes */
+static int pop3_getuidl(int sock, int num, char *id /** output */, size_t idsize)
 {
     int ok;
     char buf [POPBUFSIZE+1];
