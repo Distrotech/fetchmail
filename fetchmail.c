@@ -478,10 +478,11 @@ int main(int argc, char **argv)
 		const char* password_prompt = GT_("Enter password for %s@%s: ");
 		size_t pplen = strlen(password_prompt) + strlen(ctl->remotename) + strlen(ctl->server.pollname) + 1;
 
-		xalloca(tmpbuf, char *, pplen);
+		tmpbuf = xmalloc(pplen);
 		snprintf(tmpbuf, pplen, password_prompt,
 			ctl->remotename, ctl->server.pollname);
 		ctl->password = xstrdup((char *)fm_getpassword(tmpbuf));
+		free(tmpbuf);
 	    }
 	}
     }
