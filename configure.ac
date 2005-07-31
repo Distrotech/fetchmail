@@ -28,7 +28,7 @@ AC_TYPE_SIZE_T
 AC_TYPE_PID_T
 AC_TYPE_SIGNAL
 AC_CHECK_HEADERS([unistd.h termios.h termio.h sgtty.h stdarg.h \
-	alloca.h sys/itimer.h fcntl.h sys/fcntl.h memory.h sys/wait.h \
+	sys/itimer.h fcntl.h sys/fcntl.h memory.h sys/wait.h \
 	arpa/inet.h arpa/nameser.h netinet/in.h net/socket.h \
 	sys/select.h sys/socket.h sys/time.h langinfo.h])
 AC_CHECK_HEADERS([resolv.h],,,[
@@ -46,8 +46,6 @@ AC_C_CONST			dnl getopt needs this.
 AM_PROG_LEX
 AC_PROG_MAKE_SET
 AC_PROG_YACC
-
-AC_FUNC_ALLOCA
 
 # Check for LynxOS special case: -lbsd needed (at least on 2.3.0) and -s
 # not working.
@@ -113,10 +111,6 @@ AC_CHECK_FUNC(getopt_long, [],
 	       EXTRAOBJ="$EXTRAOBJ getopt.\$(OBJEXT) getopt1.\$(OBJEXT)"])
 
 AC_FUNC_VPRINTF
-if test -n "$ALLOCA"
-then
-  EXTRAOBJ="$EXTRAOBJ alloca.\$(OBJEXT)"
-fi
 
 AC_SUBST(EXTRAOBJ)
 

@@ -6,7 +6,7 @@ is under GPL version 2.  Tridge has granted a specific exemption for
 his GPL-licensed code to be linked with non-GPL-compliant code in
 fetchmail.  The relevant files are smb*.[ch] and ntlm.h.
 
-The following files are public-domain: acconfig.h, alloca.c, md5c.c, md5.h.
+The following files are public-domain: acconfig.h, md5c.c, md5.h.
 
 The following file is under a variant of the InnerNet Version 2 license
 (with the advertising clause removed for GPL compatibility) supplied

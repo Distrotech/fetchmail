@@ -605,22 +605,6 @@ XMALLOCTYPE *xmalloc(size_t);
 XMALLOCTYPE *xrealloc(/*@null@*/ XMALLOCTYPE *, size_t);
 #define xfree(p) { if (p) { free(p); } (p) = 0; }
 char *xstrdup(const char *);
-#if defined(HAVE_ALLOCA_H)
-#include <alloca.h>
-#else
-#ifdef _AIX
-#pragma alloca
-#endif
-#endif
-#define	xalloca(ptr, t, n)	if (!(ptr = (t) alloca(n)))\
-       {report(stderr, GT_("alloca failed")); exit(PS_UNDEFINED);}
-#if 0
-/*
- * This is a hack to help xgettext which cannot find strings in
- * macro definitions like the one for xalloca above.
- */
-static char *dummy = gettext_noop("alloca failed");
-#endif
 
 /* protocol driver and methods */
 int doPOP2 (struct query *); 

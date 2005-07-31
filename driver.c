@@ -174,7 +174,7 @@ char *principal;
 	}
     }
   
-    xalloca(ticket, KTEXT, sizeof (KTEXT_ST));
+    ticket = xmalloc(sizeof (KTEXT_ST));
     rem = (krb_sendauth (0L, socket, ticket,
 			 prin ? prin : "pop",
 			 inst ? inst : canonical,
@@ -186,6 +186,7 @@ char *principal;
 			 ((struct sockaddr_in *) 0),
 			 ((struct sockaddr_in *) 0),
 			 "KPOPV0.1"));
+    free(ticket);
     if (prin_copy)
     {
         free(prin_copy);
@@ -418,7 +419,7 @@ static void mark_oversized(struct query *ctl, int num, int size)
 }
 
 static int fetch_messages(int mailserver_socket, struct query *ctl, 
-			  int count, int *msgsizes, int maxfetch,
+			  int count, int **msgsizes, int maxfetch,
 			  int *fetches, int *dispatches, int *deletions)
 /* fetch messages in lockstep mode */
 {
@@ -439,7 +440,8 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	}
 
 	/* Time to allocate memory to store the sizes */
-	xalloca(msgsizes, int *, sizeof(int) * fetchsizelimit);
+	xfree(*msgsizes);
+	*msgsizes = xmalloc(sizeof(int) * fetchsizelimit);
     }
 
     /*
@@ -521,16 +523,17 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	    if (lastnum > count)
 		lastnum = count;
 	    for (i = 0; i < fetchsizelimit; i++)
-		msgsizes[i] = 0;
+		(*msgsizes)[i] = 0;
 
 	    stage = STAGE_GETSIZES;
-	    err = (ctl->server.base_protocol->getpartialsizes)(mailserver_socket, num, lastnum, msgsizes);
-	    if (err != 0)
+	    err = (ctl->server.base_protocol->getpartialsizes)(mailserver_socket, num, lastnum, *msgsizes);
+	    if (err != 0) {
 		return err;
+	    }
 	    stage = oldstage;
 	}
 
-	msgsize = msgsizes ? msgsizes[num-firstnum] : 0;
+	msgsize = *msgsizes ? (*msgsizes)[num-firstnum] : 0;
 
 	/* check if the message is oversized */
 	if (NUM_NONZERO(ctl->limit) && (msgsize > ctl->limit))
@@ -1458,7 +1461,7 @@ is restored."));
 		    if (proto->getsizes &&
 			!(proto->getpartialsizes && NUM_NONZERO(ctl->fetchsizelimit)))
 		    {
-			xalloca(msgsizes, int *, sizeof(int) * count);
+			msgsizes = xmalloc(sizeof(int) * count);
 			for (i = 0; i < count; i++)
 			    msgsizes[i] = 0;
 
@@ -1480,7 +1483,7 @@ is restored."));
 
 		    /* fetch in lockstep mode */
 		    err = fetch_messages(mailserver_socket, ctl, 
-					 count, msgsizes,
+					 count, &msgsizes,
 					 maxfetch,
 					 &fetches, &dispatches, &deletions);
 		    if (err)
@@ -1538,7 +1541,8 @@ is restored."));
 	}
     }
 
-    msg = (const char *)NULL;	/* sacrifice to -Wall */
+    /* no report on PS_MAXFETCH or PS_UNDEFINED or PS_AUTHFAIL */
+    msg = NULL;
     switch (err)
     {
     case PS_SOCKET:
@@ -1569,11 +1573,7 @@ is restored."));
 	report(stderr, GT_("undefined error\n"));
 	break;
     }
-    /* no report on PS_MAXFETCH or PS_UNDEFINED or PS_AUTHFAIL */
-    if (err==PS_SOCKET || err==PS_SYNTAX
-		|| err==PS_IOERR || err==PS_ERROR || err==PS_PROTOCOL 
-		|| err==PS_LOCKBUSY || err==PS_SMTP || err==PS_DNS)
-    {
+    if (msg) {
 	char	*stem;
 
 	if (phase == FORWARDING_WAIT || phase == LISTENER_WAIT)
@@ -1584,6 +1584,8 @@ is restored."));
     }
 
 closeUp:
+    xfree(msgsizes);
+
     /* execute wrapup command, if any */
     if (ctl->postconnect && (err = system(ctl->postconnect)))
     {

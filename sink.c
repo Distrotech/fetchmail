@@ -131,8 +131,7 @@ int smtp_open(struct query *ctl)
 	    if(ctl->smtphost[0]=='/')
 		ctl->listener = LMTP_MODE;
 
-	    xalloca(parsed_host, char *, strlen(idp->id) + 1);
-	    strcpy(parsed_host, idp->id);
+	    parsed_host = xstrdup(idp->id);
 
 	    if ((cp = strrchr(parsed_host, '/')))
 	    {
@@ -157,6 +156,7 @@ int smtp_open(struct query *ctl)
 	    {
 	       set_timeout(0);
 	       phase = oldphase;
+	       xfree(parsed_host);
                return(ctl->smtp_socket); /* success */
 	    }
 
@@ -245,6 +245,7 @@ int smtp_open(struct query *ctl)
     if (outlevel >= O_DEBUG && ctl->smtp_socket != -1)
 	report(stdout, GT_("forwarding to %s\n"), ctl->smtphost);
 
+    xfree(parsed_host);
     return(ctl->smtp_socket);
 }
 
@@ -452,8 +453,7 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
     struct idlist *walk;
     int found = 0;
 
-    xalloca(responses[0], char *, strlen(smtp_response)+1);
-    strcpy(responses[0], smtp_response);
+    responses[0] = xstrdup(smtp_response);
 
 #ifdef __UNUSED__
     /*
@@ -505,15 +505,16 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	 *
 	 */
 	if (run.spambounce)
-     {
-       char rejmsg[160];
-       snprintf(rejmsg, sizeof(rejmsg),
-		"spam filter or virus scanner rejected message because:\r\n"
-		"%s\r\n", responses[0]);
-	  
-		send_bouncemail(ctl, msg, XMIT_ACCEPT,
-		       rejmsg, 1, responses);
-     }
+	{
+	    char rejmsg[160];
+	    snprintf(rejmsg, sizeof(rejmsg),
+		    "spam filter or virus scanner rejected message because:\r\n"
+		    "%s\r\n", responses[0]);
+
+	    send_bouncemail(ctl, msg, XMIT_ACCEPT,
+		    rejmsg, 1, responses);
+	}
+	free(responses[0]);
 	return(PS_REFUSED);
     }
 
@@ -539,6 +540,7 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	    send_bouncemail(ctl, msg, XMIT_ACCEPT,
 			"This message was too large (SMTP error 552).\r\n", 
 			1, responses);
+	free(responses[0]);
 	return(PS_REFUSED);
   
     case 553: /* invalid sending domain */
@@ -555,6 +557,7 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 			"Invalid address in MAIL FROM (SMTP error 553).\r\n", 
 			1, responses);
 #endif /* __DONT_FEED_THE_SPAMMERS__ */
+	free(responses[0]);
 	return(PS_REFUSED);
 
     default:
@@ -564,6 +567,7 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	    send_bouncemail(ctl, msg, XMIT_ACCEPT,
 				"General SMTP/ESMTP error.\r\n", 
 				1, responses);
+	    free(responses[0]);
 	    return(PS_REFUSED);
 	}
 	/*
@@ -583,6 +587,7 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	 * these are not actual failures, we're very likely to be
 	 * able to recover on the next cycle.
 	 */
+	free(responses[0]);
 	return(PS_TRANSIENT);
     }
 }
@@ -818,7 +823,7 @@ static int is_dottedquad(const char *hostname)
 }
 
 static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
-	      int *good_addresses, int *bad_addresses)
+	      int *good_addresses, int *bad_addresses /* this must be signed, to prevent endless loop in from_addresses */)
 /* open an SMTP stream */
 {
     const char	*ap;
@@ -933,7 +938,7 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
     for (idp = msg->recipients; idp; idp = idp->next)
 	total_addresses++;
 #ifdef EXPLICIT_BOUNCE_ON_BAD_ADDRESS
-    xalloca(from_responses, char **, sizeof(char *) * total_addresses);
+    from_responses = xmalloc(sizeof(char *) * total_addresses);
 #endif /* EXPLICIT_BOUNCE_ON_BAD_ADDRESS */
     for (idp = msg->recipients; idp; idp = idp->next)
 	if (idp->val.status.mark == XMIT_ACCEPT)
@@ -943,6 +948,12 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
 	    if ((smtp_err = SMTP_rcpt(ctl->smtp_socket, address)) == SM_UNRECOVERABLE)
 	    {
 		smtp_close(ctl, 0);
+transient:
+#ifdef EXPLICIT_BOUNCE_ON_BAD_ADDRESS
+		while (*bad_addresses)
+		    free(from_responses[*--bad_addresses]);
+		free(from_responses);
+#endif /* EXPLICIT_BOUNCE_ON_BAD_ADDRESS */
 		return(PS_TRANSIENT);
 	    }
 	    if (smtp_err == SM_OK)
@@ -957,9 +968,7 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
 
 		    case PS_SUCCESS:
 #ifdef EXPLICIT_BOUNCE_ON_BAD_ADDRESS
-		    xalloca(from_responses[*bad_addresses],
-			    char *,
-			    strlen(smtp_response)+1);
+		    from_responses[*bad_addresses] = xstrdup(smtp_response);
 		    strcpy(from_responses[*bad_addresses], smtp_response);
 #endif /* EXPLICIT_BOUNCE_ON_BAD_ADDRESS */
 
@@ -987,7 +996,7 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
 	     * we return exactly that.
 	     */
 	    SMTP_rset(ctl->smtp_socket);        /* required by RFC1870 */
-	    return(PS_TRANSIENT);
+	    goto transient;
     }
 #ifdef EXPLICIT_BOUNCE_ON_BAD_ADDRESS
     /*
@@ -998,6 +1007,9 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
 	send_bouncemail(ctl, msg, XMIT_RCPTBAD,
 			"Some addresses were rejected by the MDA fetchmail forwards to.\r\n",
 			*bad_addresses, from_responses);
+    while (*bad_addresses)
+	free(from_responses[*--bad_addresses]);
+    free(from_responses);
 #endif /* EXPLICIT_BOUNCE_ON_BAD_ADDRESS */
 
     /*
@@ -1418,32 +1430,27 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 	    }
 	    else
 	    {
-		int	i, errors;
+		int	i, errors, rc = FALSE;
 		char	**responses;
 
 		/* eat the RFC2033-required responses, saving errors */ 
-		xalloca(responses, char **, sizeof(char *) * lmtp_responses);
+		responses = xmalloc(sizeof(char *) * lmtp_responses);
 		for (errors = i = 0; i < lmtp_responses; i++)
 		{
 		    if ((smtp_err = SMTP_ok(ctl->smtp_socket)) == SM_UNRECOVERABLE)
 		    {
 			smtp_close(ctl, 0);
-			return(FALSE);
+			goto unrecov;
 		    }
-		    if (smtp_err == SM_OK)
-			responses[i] = (char *)NULL;
-		    else
+		    if (smtp_err != SM_OK)
 		    {
-			xalloca(responses[errors], 
-				char *, 
-				strlen(smtp_response)+1);
-			strcpy(responses[errors], smtp_response);
+			responses[errors] = xstrdup(smtp_response);
 			errors++;
 		    }
 		}
 
 		if (errors == 0)
-		    return(TRUE);	/* all deliveries succeeded */
+		    rc = TRUE;	/* all deliveries succeeded */
 		else
 		    /*
 		     * One or more deliveries failed.
@@ -1453,9 +1460,15 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 		     * message from the server so it won't be
 		     * re-forwarded on subsequent poll cycles.
 		     */
- 		  return(send_bouncemail(ctl, msg, XMIT_ACCEPT,
-					 "LMTP partial delivery failure.\r\n",
-					 errors, responses));
+		    rc = send_bouncemail(ctl, msg, XMIT_ACCEPT,
+			    "LMTP partial delivery failure.\r\n",
+			    errors, responses);
+
+unrecov:
+		for (i = 0; i < errors; i++)
+		    free(responses[i]);
+		free(responses);
+		return rc;
 	    }
 	}
     }

@@ -161,6 +161,7 @@ OTHER CHANGES:
   2. didn't match IP aliases versus MX hosts.  Matthias Andree
 * gettext has been removed from the fetchmail package. Install GNU gettext
   0.14 separately for NLS (i18n).  Matthias Andree
+* Got rid of alloca() in fetchmail proper.  Matthias Andree
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
