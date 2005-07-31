@@ -2764,7 +2764,7 @@ msgstr "Cygwin-Socket-Lese-Wiederholung fehlgeschlagen!\n"
 #: transact.c:66
 #, c-format
 msgid "mapped %s to local %s\n"
-msgstr "%s auf lokal %s abegebildet\n"
+msgstr "%s auf lokal %s abgebildet\n"
 
 #: transact.c:130
 #, c-format
