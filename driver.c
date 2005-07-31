@@ -1007,6 +1007,7 @@ static int do_session(
 		    goto closeUp;
 		}
 
+		xfree(ctl->server.truename);
 		ctl->server.truename = xstrdup(leadname);
 	    }
 	    else
@@ -1033,9 +1034,11 @@ static int do_session(
 		}
 		else
 		{
+		    xfree(ctl->server.truename);
 		    ctl->server.truename=xstrdup(res->ai_canonname);
 		    ctl->server.trueaddr=xmalloc(res->ai_addrlen);
 		    memcpy(ctl->server.trueaddr, res->ai_addr, res->ai_addrlen);
+		    freeaddrinfo(res);
 		}
 #else
 		struct hostent	*namerec;

@@ -322,6 +322,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'f':
 	case LA_RCFILE:
+	    xfree(rcfile);
 	    rcfile = prependdir (optarg, currentwd);
 	    break;
 	case 'i':
