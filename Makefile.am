@@ -1,6 +1,6 @@
 # Makefile for fetchmail
 
-SUBDIRS=		m4 m4-local po
+SUBDIRS=		m4 po
 
 AM_CFLAGS=		@CEFLAGS@
 AM_CPPFLAGS=		@CPFLAGS@
@@ -79,7 +79,8 @@ DISTDOCS=	BUGS FAQ FEATURES NOTES OLDNEWS fetchmail-man.html \
 distdirs = rh-config contrib beos
 
 EXTRA_DIST= $(DISTDOCS) fetchmail.spec $(distdirs) ucs/README.svn \
-	    trio/CHANGES trio/README strlcpy.3
+	    trio/CHANGES trio/README strlcpy.3 \
+	    m4-local/ac-archive-license.txt m4-local/ac_ma_search_package.m4
 
 FAQ: fetchmail-FAQ.html
 	AWK=$(AWK) $(SHELL) $(srcdir)/dist-tools/html2txt $(srcdir)/fetchmail-FAQ.html >$@ || { rm -f $@ ; exit 1 ; }
