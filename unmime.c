@@ -379,125 +379,129 @@ static int CheckContentType(char *CntType)
  */
 int MimeBodyType(unsigned char *hdrs, int WantDecode)
 {
-  unsigned char *NxtHdr = hdrs;
-  unsigned char *XferEnc, *XferEncOfs, *CntType, *MimeVer, *p;
-  int  HdrsFound = 0;     /* We only look for three headers */
-  int  BodyType;          /* Return value */ 
+    unsigned char *NxtHdr = hdrs;
+    unsigned char *XferEnc, *XferEncOfs, *CntType, *MimeVer, *p;
+    int  HdrsFound = 0;     /* We only look for three headers */
+    int  BodyType;          /* Return value */ 
 
-  /* Setup for a standard (no MIME, no QP, 7-bit US-ASCII) message */
-  MultipartDelimiter[0] = '\0';
-  CurrEncodingIsQP = CurrTypeNeedsDecode = 0;
-  BodyState = S_BODY_DATA;
-  BodyType = 0;
+    /* Setup for a standard (no MIME, no QP, 7-bit US-ASCII) message */
+    MultipartDelimiter[0] = '\0';
+    CurrEncodingIsQP = CurrTypeNeedsDecode = 0;
+    BodyState = S_BODY_DATA;
+    BodyType = 0;
 
-  /* Just in case ... */
-  if (hdrs == NULL)
+    /* Just in case ... */
+    if (hdrs == NULL)
+	return BodyType;
+
+    XferEnc = XferEncOfs = CntType = MimeVer = NULL;
+
+    do {
+	if (strncasecmp("Content-Transfer-Encoding:", NxtHdr, 26) == 0) {
+	    XferEncOfs = NxtHdr;
+	    p = nxtaddr(NxtHdr);
+	    if (p != NULL) {
+		xfree(XferEnc);
+		XferEnc = xstrdup(p);
+		HdrsFound++;
+	    }
+	}
+	else if (strncasecmp("Content-Type:", NxtHdr, 13) == 0) {
+	    /*
+	     * This one is difficult. We cannot use the standard
+	     * nxtaddr() routine, since the boundary-delimiter is
+	     * (probably) enclosed in quotes - and thus appears
+	     * as an rfc822 comment, and nxtaddr() "eats" up any
+	     * spaces in the delimiter. So, we have to do this
+	     * by hand.
+	     */
+
+	    /* Skip the "Content-Type:" part and whitespace after it */
+	    for (NxtHdr += 13; ((*NxtHdr == ' ') || (*NxtHdr == '\t')); NxtHdr++);
+
+	    /* 
+	     * Get the full value of the Content-Type header;
+	     * it might span multiple lines. So search for
+	     * a newline char, but ignore those that have a
+	     * have a TAB or space just after the NL (continued
+	     * lines).
+	     */
+	    p = NxtHdr-1;
+	    do {
+		p=strchr((p+1),'\n'); 
+	    } while ( (p != NULL) && ((*(p+1) == '\t') || (*(p+1) == ' ')) );
+	    if (p == NULL) p = NxtHdr + strlen(NxtHdr);
+
+	    xfree(CntType);
+	    CntType = xmalloc(p-NxtHdr+1);
+	    strlcpy(CntType, NxtHdr, p-NxtHdr+1);
+	    HdrsFound++;
+	}
+	else if (strncasecmp("MIME-Version:", NxtHdr, 13) == 0) {
+	    p = nxtaddr(NxtHdr);
+	    if (p != NULL) {
+		xfree(MimeVer);
+		MimeVer = xstrdup(p);
+		HdrsFound++;
+	    }
+	}
+
+	NxtHdr = (strchr(NxtHdr, '\n'));
+	if (NxtHdr != NULL) NxtHdr++;
+    } while ((NxtHdr != NULL) && (*NxtHdr) && (HdrsFound != 3));
+
+
+    /* Done looking through the headers, now check what they say */
+    if ((MimeVer != NULL) && (strcmp(MimeVer, "1.0") == 0)) {
+
+	CurrTypeNeedsDecode = CheckContentType(CntType);
+
+	/* Check Content-Type to see if this is a multipart message */
+	if ( (CntType != NULL) &&
+		((strncasecmp(CntType, "multipart/mixed", 16) == 0) ||
+		 (strncasecmp(CntType, "message/", 8) == 0)) ) {
+
+	    char *p1 = GetBoundary(CntType);
+
+	    if (p1 != NULL) {
+		/* The actual delimiter is "--" followed by 
+		   the boundary string */
+		strcpy(MultipartDelimiter, "--");
+		strlcat(MultipartDelimiter, p1, sizeof(MultipartDelimiter));
+		MultipartDelimiter[sizeof(MultipartDelimiter)-1] = '\0';
+		BodyType = (MSG_IS_8BIT | MSG_NEEDS_DECODE);
+	    }
+	}
+
+	/* 
+	 * Check Content-Transfer-Encoding, but
+	 * ONLY for non-multipart messages (BodyType == 0).
+	 */
+	if ((XferEnc != NULL) && (BodyType == 0)) {
+	    if (strcasecmp(XferEnc, "quoted-printable") == 0) {
+		CurrEncodingIsQP = 1;
+		BodyType = (MSG_IS_8BIT | MSG_NEEDS_DECODE);
+		if (WantDecode && CurrTypeNeedsDecode) {
+		    SetEncoding8bit(XferEncOfs);
+		}
+	    }
+	    else if (strcasecmp(XferEnc, "7bit") == 0) {
+		CurrEncodingIsQP = 0;
+		BodyType = (MSG_IS_7BIT);
+	    }
+	    else if (strcasecmp(XferEnc, "8bit") == 0) {
+		CurrEncodingIsQP = 0;
+		BodyType = (MSG_IS_8BIT);
+	    }
+	}
+
+    }
+
+    xfree(XferEnc);
+    xfree(CntType);
+    xfree(MimeVer);
+
     return BodyType;
-
-  XferEnc = XferEncOfs = CntType = MimeVer = NULL;
-
-  do {
-    if (strncasecmp("Content-Transfer-Encoding:", NxtHdr, 26) == 0) {
-      XferEncOfs = NxtHdr;
-      p = nxtaddr(NxtHdr);
-      if (p != NULL) {
-	xalloca(XferEnc, char *, strlen(p) + 1);
-	strcpy(XferEnc, p);
-	HdrsFound++;
-      }
-    }
-    else if (strncasecmp("Content-Type:", NxtHdr, 13) == 0) {
-      /*
-       * This one is difficult. We cannot use the standard
-       * nxtaddr() routine, since the boundary-delimiter is
-       * (probably) enclosed in quotes - and thus appears
-       * as an rfc822 comment, and nxtaddr() "eats" up any
-       * spaces in the delimiter. So, we have to do this
-       * by hand.
-       */
-
-      /* Skip the "Content-Type:" part and whitespace after it */
-      for (NxtHdr += 13; ((*NxtHdr == ' ') || (*NxtHdr == '\t')); NxtHdr++);
-
-      /* 
-       * Get the full value of the Content-Type header;
-       * it might span multiple lines. So search for
-       * a newline char, but ignore those that have a
-       * have a TAB or space just after the NL (continued
-       * lines).
-       */
-      p = NxtHdr-1;
-      do {
-        p=strchr((p+1),'\n'); 
-      } while ( (p != NULL) && ((*(p+1) == '\t') || (*(p+1) == ' ')) );
-      if (p == NULL) p = NxtHdr + strlen(NxtHdr);
-
-      xalloca(CntType, char *, p-NxtHdr+2);
-      strncpy(CntType, NxtHdr, (p-NxtHdr));
-      *(CntType+(p-NxtHdr)) = '\0';
-      HdrsFound++;
-    }
-    else if (strncasecmp("MIME-Version:", NxtHdr, 13) == 0) {
-      p = nxtaddr(NxtHdr);
-      if (p != NULL) {
-	xalloca(MimeVer, char *, strlen(p) + 1);
-	strcpy(MimeVer, p);
-	HdrsFound++;
-      }
-    }
-
-    NxtHdr = (strchr(NxtHdr, '\n'));
-    if (NxtHdr != NULL) NxtHdr++;
-  } while ((NxtHdr != NULL) && (*NxtHdr) && (HdrsFound != 3));
-
-
-  /* Done looking through the headers, now check what they say */
-  if ((MimeVer != NULL) && (strcmp(MimeVer, "1.0") == 0)) {
-
-    CurrTypeNeedsDecode = CheckContentType(CntType);
-
-    /* Check Content-Type to see if this is a multipart message */
-    if ( (CntType != NULL) &&
-         ((strncasecmp(CntType, "multipart/mixed", 16) == 0) ||
-	  (strncasecmp(CntType, "message/", 8) == 0)) ) {
-
-      char *p1 = GetBoundary(CntType);
-
-      if (p1 != NULL) {
-	/* The actual delimiter is "--" followed by 
-	   the boundary string */
-	strcpy(MultipartDelimiter, "--");
-	strlcat(MultipartDelimiter, p1, sizeof(MultipartDelimiter));
-	MultipartDelimiter[sizeof(MultipartDelimiter)-1] = '\0';
-	BodyType = (MSG_IS_8BIT | MSG_NEEDS_DECODE);
-      }
-    }
-
-    /* 
-     * Check Content-Transfer-Encoding, but
-     * ONLY for non-multipart messages (BodyType == 0).
-     */
-    if ((XferEnc != NULL) && (BodyType == 0)) {
-      if (strcasecmp(XferEnc, "quoted-printable") == 0) {
-	CurrEncodingIsQP = 1;
-	BodyType = (MSG_IS_8BIT | MSG_NEEDS_DECODE);
-	if (WantDecode && CurrTypeNeedsDecode) {
-           SetEncoding8bit(XferEncOfs);
-        }
-      }
-      else if (strcasecmp(XferEnc, "7bit") == 0) {
-	CurrEncodingIsQP = 0;
-	BodyType = (MSG_IS_7BIT);
-      }
-      else if (strcasecmp(XferEnc, "8bit") == 0) {
-	CurrEncodingIsQP = 0;
-	BodyType = (MSG_IS_8BIT);
-      }
-    }
-
-  }
-
-  return BodyType;
 }
 
 
