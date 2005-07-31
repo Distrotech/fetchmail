@@ -561,11 +561,11 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	    *++end = '\0';
 
 	/* copy timestamp and password into digestion buffer */
-	xalloca(msg, char *, (end-start+1) + strlen(ctl->password) + 1);
+	msg = xmalloc((end-start+1) + strlen(ctl->password) + 1);
 	strcpy(msg,start);
 	strcat(msg,ctl->password);
-
 	strcpy(ctl->digest, MD5Digest((unsigned char *)msg));
+	free(msg);
 
 	ok = gen_transact(sock, "APOP %s %s", ctl->remotename, ctl->digest);
 	break;
