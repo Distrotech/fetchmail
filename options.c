@@ -472,33 +472,33 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'r':
 	case LA_FOLDER:
-	    xalloca(buf, char *, strlen(optarg) + 1);
-	    strcpy(buf, optarg);
+	    buf = xstrdup(optarg);
 	    cp = strtok(buf, ",");
 	    do {
 		save_str(&ctl->mailboxes, cp, 0);
 	    } while
 		((cp = strtok((char *)NULL, ",")));
+	    free(buf);
 	    break;
 	case 'S':
 	case LA_SMTPHOST:
-	    xalloca(buf, char *, strlen(optarg) + 1);
-	    strcpy(buf, optarg);
+	    buf = xstrdup(optarg);
 	    cp = strtok(buf, ",");
 	    do {
 		save_str(&ctl->smtphunt, cp, TRUE);
 	    } while
 		((cp = strtok((char *)NULL, ",")));
+	    free(buf);
 	    ocount++;
 	    break;
 	case LA_FETCHDOMAINS:
-	    xalloca(buf, char *, strlen(optarg) + 1);
-	    strcpy(buf, optarg);
+	    buf = xstrdup(optarg);
 	    cp = strtok(buf, ",");
 	    do {
 		save_str(&ctl->domainlist, cp, TRUE);
 	    } while
 		((cp = strtok((char *)NULL, ",")));
+	    free(buf);
 	    break;
 	case 'D':
 	case LA_SMTPADDR:
@@ -509,8 +509,7 @@ struct query *ctl;	/* option record to be initialized */
 	  break;
 	case 'Z':
 	case LA_ANTISPAM:
-	    xalloca(buf, char *, strlen(optarg) + 1);
-	    strcpy(buf, optarg);
+	    buf = xstrdup(optarg);
 	    cp = strtok(buf, ",");
 	    do {
 		struct idlist	*idp = save_str(&ctl->antispam, NULL, 0);;
@@ -518,6 +517,7 @@ struct query *ctl;	/* option record to be initialized */
 		idp->val.status.num = xatoi(cp, &errflag);
 	    } while
 		((cp = strtok((char *)NULL, ",")));
+	    free(buf);
 	    break;
 	case 'b':
 	case LA_BATCHLIMIT:
