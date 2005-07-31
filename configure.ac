@@ -4,7 +4,7 @@ dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl
 
-AC_INIT([fetchmail],[6.2.6-pre8])
+AC_INIT([fetchmail],[6.2.6-pre9])
 AC_CONFIG_SRCDIR([fetchmail.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_LIBOBJ_DIR([.])
@@ -17,6 +17,7 @@ AC_PROG_AWK
 AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_CPP			dnl Later checks need this.
+AC_PROG_RANLIB
 AM_PROG_CC_C_O
 AC_AIX
 AC_ISC_POSIX
@@ -74,7 +75,7 @@ then
 fi
  
 dnl i18n
-AM_GNU_GETTEXT(no-libtool, need-ngettext)
+AM_GNU_GETTEXT([external], [need-ngettext])
 AM_GNU_GETTEXT_VERSION(0.14.1)
 dnl end i18n
 
@@ -749,7 +750,7 @@ fi
 dnl ----------------------------------------------------------------'
 
 AC_CONFIG_FILES([Makefile m4/Makefile m4-local/Makefile
-                po/Makefile.in intl/Makefile])
+                po/Makefile.in])
 AC_OUTPUT
 
 dnl Local Variables:

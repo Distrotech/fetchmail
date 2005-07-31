@@ -1,9 +1,9 @@
 # Makefile for fetchmail
 
-SUBDIRS=		intl m4 m4-local po
+SUBDIRS=		m4 m4-local po
 
 AM_CFLAGS=		@CEFLAGS@
-AM_CPPFLAGS=		@CPFLAGS@ -I$(top_srcdir)/intl -I$(top_builddir)/intl
+AM_CPPFLAGS=		@CPFLAGS@
 AM_LDFLAGS=		@LDEFLAGS@
 ACLOCAL_AMFLAGS=	-I m4 -I m4-local
 AM_YFLAGS=		-d
@@ -103,8 +103,8 @@ fetchmail-man.html: fetchmail.man
 	|| { rm -f $@ ; exit 1 ; }
 
 dist-hook:
-	cd $(distdir) && find $(distdirs) intl po -name .svn -type d -prune -exec rm -rf '{}' ';'
-	cd $(distdir) && find $(distdirs) intl po -name '*~' -exec rm -f '{}' ';'
+	cd $(distdir) && find $(distdirs) po -name .svn -type d -prune -exec rm -rf '{}' ';'
+	cd $(distdir) && find $(distdirs) po -name '*~' -exec rm -f '{}' ';'
 
 # The following sets edit modes for GNU EMACS.
 # Local Variables:
