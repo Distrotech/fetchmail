@@ -989,7 +989,7 @@ int readheaders(int sock,
 	else if (resent_from_offs >= 0 && (ap = nxtaddr(msgblk.headers + resent_from_offs)));
 	else if (from_offs >= 0 && (ap = nxtaddr(msgblk.headers + from_offs)));
 	else if (reply_to_offs >= 0 && (ap = nxtaddr(msgblk.headers + reply_to_offs)));
-	else if (app_from_offs >= 0 && (ap = nxtaddr(msgblk.headers + app_from_offs)));
+	else if (app_from_offs >= 0 && (ap = nxtaddr(msgblk.headers + app_from_offs))) {}
 	/* multi-line MAIL FROM addresses confuse SMTP terribly */
 	if (ap && !strchr(ap, '\n')) {
 	    strncpy(msgblk.return_path, ap, sizeof(msgblk.return_path));
