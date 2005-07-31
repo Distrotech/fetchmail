@@ -282,8 +282,9 @@ void initialize_saved_lists(struct query *hostlist, const char *idfile)
 	continue;
 
     *end = (struct idlist *)xmalloc(sizeof(struct idlist));
-    (*end)->val.status.mark = status;
     (*end)->id = (unsigned char *)str;
+    (*end)->val.status.mark = status;
+    (*end)->val.status.num = 0;
     (*end)->next = NULL;
 
     return end;
