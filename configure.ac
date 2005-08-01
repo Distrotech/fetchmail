@@ -340,11 +340,6 @@ AC_ARG_ENABLE(opie,
 	[with_opie=no])
 test "$with_opie" = "yes" && AC_DEFINE(OPIE_ENABLE,1,Define if you want OPIE support compiled in)
 
-### XXX FIXME: the inet6-apps library is no longer available,
-### http://www.inner.net/pub/ipv6/ states, as of 2005-07-03:
-### "/pub/ipv6
-### Our IPv6 software is now long defunct. Please find a more modern
-### source."
 AC_ARG_ENABLE(inet6,
 	[  --enable-inet6          support IPv6],
 

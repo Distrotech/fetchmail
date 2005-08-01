@@ -15,7 +15,10 @@ SECURITY FIX:
 
 MAJOR INCOMPATIBLE CHANGES:
 * Remove support for --netsec/-T options, the required inet6_apps library is no
-  longer available. Matthias Andree
+  longer available.
+  http://www.inner.net/pub/ipv6/ states, as of 2005-07-03: "/pub/ipv6
+  Our IPv6 software is now long defunct. Please find a more modern source."
+  I haven't been able to find a more modern source.  Matthias Andree
 
 OTHER CHANGES:
 * Sunil Shetye's fix to force fetchsizelimit to 1 for APOP and RPOP. (ESR)
