@@ -123,6 +123,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 {
     struct query *ctl;
     struct idlist *idp;
+    const char *features;
 
     indent_level = 0;
 
@@ -149,7 +150,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
      * This should be approximately in sync with the -V option dumping 
      * in fetchmail.c.
      */
-    printf("feature_options = ("
+    features = "feature_options = ("
 #ifdef POP2_ENABLE
     "'pop2',"
 #endif /* POP2_ENABLE */
@@ -186,7 +187,8 @@ void dump_config(struct runctl *runp, struct query *querylist)
 #ifdef INET6_ENABLE
     "'inet6',"
 #endif /* INET6_ENABLE */
-    ")\n");
+    ")\n";
+    fputs(features, stdout);
 
     fputs("# Start of configuration initializer\n", stdout);
     fputs("fetchmailrc = ", stdout);

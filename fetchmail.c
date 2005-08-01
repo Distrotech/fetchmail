@@ -199,8 +199,7 @@ int main(int argc, char **argv)
 
     if (versioninfo)
     {
-	printf(GT_("This is fetchmail release %s"), VERSION);
-	printf(
+	const char *features = 
 #ifdef POP2_ENABLE
 	"+POP2"
 #endif /* POP2_ENABLE */
@@ -246,7 +245,9 @@ int main(int argc, char **argv)
 #ifdef ENABLE_NLS
 	"+NLS"
 #endif /* ENABLE_NLS */
-	"\n");
+	"\n";
+	printf(GT_("This is fetchmail release %s"), VERSION);
+	fputs(features, stdout);
 	fputs("Fallback MDA: ", stdout);
 #ifdef FALLBACK_MDA
 	fputs(FALLBACK_MDA, stdout);
