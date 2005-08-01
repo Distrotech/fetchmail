@@ -48,7 +48,7 @@ fetchmail_SOURCES=	fetchmail.h getopt.h \
 		uid.c mxget.c md5ify.c cram.c kerberos.c gssapi.c \
 		opie.c rpa.c interface.c netrc.c \
 		unmime.c conf.c checkalias.c smbdes.c smbencrypt.c \
-		smbmd4.c smbutil.c ipv6-connect.c lock.c \
+		smbmd4.c smbutil.c lock.c \
 		rcfile_l.l rcfile_y.y ucs/norm_charmap.c
 
 check_PROGRAMS +=	rfc822 unmime netrc rfc2047e

@@ -281,12 +281,6 @@ int SockOpen(const char *host, const char *service,
 	return -1;
     }
 
-#ifdef HAVE_INNER_CONNECT
-    i = inner_connect(ai0, NULL, 0, NULL, NULL, "fetchmail", NULL);
-    if (i >= 0)
-	break;
-#else
-
     i = -1;
     for (ai = ai0; ai; ai = ai->ai_next) {
 	i = socket(ai->ai_family, ai->ai_socktype, 0);
@@ -309,8 +303,6 @@ int SockOpen(const char *host, const char *service,
 	
 	break;
     }
-
-#endif
 
     freeaddrinfo(ai0);
 

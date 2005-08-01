@@ -353,8 +353,6 @@ AC_ARG_ENABLE(inet6,
 	[with_inet6=no])
 test "$with_inet6" = "yes" && AC_DEFINE(INET6_ENABLE,1,Define if you want IPv6 support compiled in)
 
-AC_CHECK_FUNCS(inner_connect)
-
 # This version of the Kerberos 4 and 5 options addresses the follwing issues:
 # 
 # * Build correctly under Heimdal kerberos if it is compiled with db2 and
