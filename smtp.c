@@ -59,7 +59,7 @@ int SMTP_helo(int sock,const char *host)
   return ok;
 }
 
-static void SMTP_auth_error(int sock, char *msg)
+static void SMTP_auth_error(int sock, const char *msg)
 {
     SockPrintf(sock, "*\r\n");
     SockRead(sock, smtp_response, sizeof(smtp_response) - 1);
