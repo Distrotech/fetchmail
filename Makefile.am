@@ -7,10 +7,11 @@ AM_CPPFLAGS=		@CPFLAGS@
 AM_LDFLAGS=		@LDEFLAGS@
 ACLOCAL_AMFLAGS=	-I m4 -I m4-local
 AM_YFLAGS=		-d
-BUILT_SOURCES=		rcfile_y.h
+BUILT_SOURCES=		rcfile_y.h fetchmailconf
 
 bin_PROGRAMS=		fetchmail
-dist_bin_SCRIPTS=	fetchmailconf
+nodist_bin_SCRIPTS=	fetchmailconf
+python_PYTHON=		fetchmailconf.py
 dist_noinst_SCRIPTS=	specgen.sh
 dist_man1_MANS=		fetchmail.man fetchmailconf.man
 

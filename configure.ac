@@ -13,6 +13,9 @@ dnl we may need a newer automake version - the oldest tested is 1.7
 AC_PREREQ(2.59)
 AM_INIT_AUTOMAKE(1.5 foreign no-installinfo)
 
+dnl the : states that python is optional
+AM_PATH_PYTHON(2.0,,:)
+
 AC_PROG_AWK
 AC_PROG_CC
 AC_PROG_INSTALL
@@ -736,7 +739,7 @@ if test "$needtrio" = 1 ; then
 fi
 dnl ----------------------------------------------------------------'
 
-AC_CONFIG_FILES([Makefile m4/Makefile
+AC_CONFIG_FILES([Makefile m4/Makefile fetchmailconf
                 po/Makefile.in])
 AC_OUTPUT
 
