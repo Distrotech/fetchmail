@@ -18,7 +18,7 @@ Release:	1
 Vendor:		The Community Fetchmail Project
 Packager:	$packager
 URL:		http://developer.berlios.de/projects/fetchmail
-Source:		%{name}-%{version}.tar.gz
+Source:		%{name}-%{version}.tar.bz2
 Group:		Applications/Mail
 Group(pt_BR):   Aplicações/Correio Eletrônico
 License:	GPL
@@ -113,6 +113,7 @@ Summary(es):	Configurador GUI interactivo para fetchmail
 Summary(pt):	Um configurador gráfico para o fetchmail
 Group:		Utilities/System
 Group(pt):	Utilitários/Sistema
+BuildPrereq:	python
 Requires:	%{name} = %{version}, python
 
 %description -n fetchmailconf
@@ -179,6 +180,7 @@ rm -rf \$RPM_BUILD_ROOT
 %attr(644,root,root) /etc/X11/wmconfig/fetchmailconf
 %attr(755,root,root) /usr/bin/fetchmailconf
 %attr(644, root, man) %{_mandir}/man1/fetchmailconf.1*
+%attr(755,root,root) %{_prefix}/lib/python*/site-packages/fetchmailconf.py*
 /usr/lib/rhs/control-panel/fetchmailconf.xpm
 /usr/lib/rhs/control-panel/fetchmailconf.init
 
