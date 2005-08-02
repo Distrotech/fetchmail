@@ -6,21 +6,21 @@ Abbreviations: MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk)
 
 fetchmail 6.3.0 (not yet released officially):
 
-SECURITY FIX:
+# SECURITY FIX
 * The POP3 UIDL code doesn't sufficiently validate/truncate the input
   length, so a (malicious or compromised) server that sends UIDs longer
   than 128 bytes can corrupt fetchmail's stack and crash fetchmail.
   This vulnerability is remotely exploitable to inject code run in a
   root shell. This is tracked under the CVE Name: CAN-2005-2335
 
-MAJOR INCOMPATIBLE CHANGES:
+# MAJOR INCOMPATIBLE CHANGES
 * Remove support for --netsec/-T options, the required inet6_apps library is no
   longer available.
   http://www.inner.net/pub/ipv6/ states, as of 2005-07-03: "/pub/ipv6
   Our IPv6 software is now long defunct. Please find a more modern source."
   I haven't been able to find a more modern source.  Matthias Andree
 
-OTHER CHANGES:
+# OTHER USER-VISIBLE CHANGES
 * Sunil Shetye's fix to force fetchsizelimit to 1 for APOP and RPOP. (ESR)
 * PopDel.py removed from contrib at author's request. (ESR)
 * Matthias Andree's fix for Sunil Shetye's fetch-split patch. (ESR)
@@ -36,7 +36,6 @@ OTHER CHANGES:
 * Added Andrey Lelikov's recipe for Hotmail and Lycos Webmail. (ESR)
 * Remove blank between MAIL FROM: and <, which causes Cyrus to complain.
   Patch by Phil Endecott. (RF)
-* Switched to automake. Matthias Andree.
 * Build fixes for HESIOD and resolv.h trouble on FreeBSD. (MA)
 * Fabrice Bellet's fix for Red Hat bug #113492, fetchmail hangs in IMAP
   mode after EXPUNGE when the server (Dovecot 0.99.10) doesn't update
@@ -67,8 +66,7 @@ OTHER CHANGES:
 * Clean up the horrible #ifdef HAVE_[V]SNPRINTF that made the code
   unreadable. Use Trio where [v]snprintf is/are missing. (MA)
 * Default to Linux 2.2 /proc/net/dev format, and use uname(2) to determine the
-  kernel version instead of calling uname(1). Thanks to Paul Slootman.
-  (MA)
+  kernel version instead of calling uname(1). Thanks to Paul Slootman.  (MA)
 * Be more careful when swapping UID lists or writing the .fetchids file,
   requested by Manfred Weihs. (MA)
 * Print a warning if multidrop configuration is attempted without
@@ -164,7 +162,16 @@ OTHER CHANGES:
   2. didn't match IP aliases versus MX hosts.  Matthias Andree
 * gettext (intl/) has been removed from the fetchmail package. Install GNU
   gettext 0.14 separately for NLS (i18n).  Matthias Andree
+* fetchmailconf is now a shell wrapper that calls the byte-compiled
+  fetchmailconf.py script, which is now installed in the regular python
+  directory.
+* The "port" option, while still understood, is being replaced by the "service"
+  option, which is now supported even without --enable-inet6.
+
+# INTERNAL CHANGES
+* Switched to automake. Matthias Andree.
 * Got rid of alloca() in fetchmail proper.  Matthias Andree
+* Got rid of ipv6-connect, inner_connect and thereabouts.  Matthias Andree
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
