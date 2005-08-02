@@ -1,6 +1,7 @@
 # Makefile for fetchmail
 
 SUBDIRS=		m4 po
+AUTOMAKE_OPTIONS=	foreign no-dist-gzip dist-bzip2
 
 AM_CFLAGS=		@CEFLAGS@
 AM_CPPFLAGS=		@CPFLAGS@

@@ -167,6 +167,7 @@ fetchmail 6.3.0 (not yet released officially):
   directory.
 * The "port" option, while still understood, is being replaced by the "service"
   option, which is now supported even without --enable-inet6.
+* The default distribution format is now bzip2.
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.
