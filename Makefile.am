@@ -83,6 +83,9 @@ EXTRA_DIST= $(DISTDOCS) fetchmail.spec $(distdirs) ucs/README.svn \
 	    trio/CHANGES trio/README strlcpy.3 \
 	    m4-local/ac-archive-license.txt m4-local/ac_ma_search_package.m4
 
+fetchmailconf:
+	( echo '#! /bin/sh' && echo 'exec @PYTHON@ @pythondir@/fetchmailconf.py "$$@"' ) >$@ || { rm -f $@ ; exit 1; }
+
 FAQ: fetchmail-FAQ.html
 	AWK=$(AWK) $(SHELL) $(srcdir)/dist-tools/html2txt $(srcdir)/fetchmail-FAQ.html >$@ || { rm -f $@ ; exit 1 ; }
 

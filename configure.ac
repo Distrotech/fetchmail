@@ -739,8 +739,7 @@ if test "$needtrio" = 1 ; then
 fi
 dnl ----------------------------------------------------------------'
 
-AC_CONFIG_FILES([Makefile m4/Makefile fetchmailconf
-                po/Makefile.in])
+AC_CONFIG_FILES([Makefile m4/Makefile po/Makefile.in])
 AC_OUTPUT
 
 dnl Local Variables:
