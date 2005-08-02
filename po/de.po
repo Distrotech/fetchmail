@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.6\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2005-08-02 03:56+0200\n"
+"POT-Creation-Date: 2005-08-02 04:50+0200\n"
 "PO-Revision-Date: 2005-07-24 00:07+0200\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -2435,14 +2435,13 @@ msgstr "MD5 wird auf Datenblock angewandt:\n"
 msgid "MD5 result is: \n"
 msgstr "MD5-Resultat ist: \n"
 
-#: servport.c:59
+#: servport.c:60
 #, c-format
 msgid ""
 "Cannot resolve service %s to port.  Please specify the service as decimal "
 "port number.\n"
 msgstr ""
-"Kann keinen Port für Dienst %s finden, geben Sie bitte eine Portnummer"
-"an.\n"
+"Kann keinen Port für Dienst %s finden, geben Sie bitte eine Portnummer an.\n"
 
 #: sink.c:238
 #, c-format
