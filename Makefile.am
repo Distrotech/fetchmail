@@ -8,13 +8,15 @@ AM_CPPFLAGS=		@CPFLAGS@
 AM_LDFLAGS=		@LDEFLAGS@
 ACLOCAL_AMFLAGS=	-I m4 -I m4-local
 AM_YFLAGS=		-d
-BUILT_SOURCES=		rcfile_y.h fetchmailconf
+BUILT_SOURCES=		rcfile_y.h
 
 bin_PROGRAMS=		fetchmail
 nodist_bin_SCRIPTS=	fetchmailconf
 python_PYTHON=		fetchmailconf.py
 dist_noinst_SCRIPTS=	specgen.sh
 dist_man1_MANS=		fetchmail.man fetchmailconf.man
+
+CLEANFILES=		$(nodist_bin_SCRIPTS)
 
 # for gettext (used by fetchmail.c, NOT by GNU gettext)
 localedir=		$(datadir)/locale
