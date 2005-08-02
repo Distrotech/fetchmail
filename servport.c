@@ -12,10 +12,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <netdb.h>
+#if defined(HAVE_NETINET_IN_H)
+#include <netinet/in.h>
+#endif
 #ifdef HAVE_ARPA_INET_H
 #include <arpa/inet.h>
-#elif defined(HAVE_NETINET_IN_H)
-#include <netinet/in.h>
 #endif
 
 int servport(const char *service) {
