@@ -211,13 +211,8 @@ static int odmr_logout(int sock, struct query *ctl)
 static const struct method odmr =
 {
     "ODMR",		/* ODMR protocol */
-#ifdef INET6_ENABLE
-    "odmr",		/* standard SMTP port */
-    "odmrs",		/* ssl SMTP port */
-#else /* INET6_ENABLE */
-    366,		/* standard SMTP port */
-    2366,		/* ssl SMTP port (BOGUS! RANDOM VALUE) */
-#endif /* INET6_ENABLE */
+    "odmr",		/* standard ODMR port */
+    "odmrs",		/* ssl ODMR port */
     FALSE,		/* this is not a tagged protocol */
     FALSE,		/* this does not use a message delimiter */
     odmr_ok,		/* parse command response */

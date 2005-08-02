@@ -449,11 +449,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	 * rather than doing SASL.
 	 */
 	if (has_kerberos &&
-#ifdef INET6_ENABLE
 	    ctl->server.service && (strcmp(ctl->server.service, KPOP_PORT)!=0)
-#else /* INET6_ENABLE */
-	    ctl->server.port != KPOP_PORT
-#endif /* INET6_ENABLE */
 	    && (ctl->server.authenticate == A_KERBEROS_V4
 	     || ctl->server.authenticate == A_KERBEROS_V5
 	     || ctl->server.authenticate == A_ANY))
@@ -1243,13 +1239,8 @@ static int pop3_logout(int sock, struct query *ctl)
 static const struct method pop3 =
 {
     "POP3",		/* Post Office Protocol v3 */
-#ifdef INET6_ENABLE
     "pop3",		/* standard POP3 port */
     "pop3s",		/* ssl POP3 port */
-#else /* INET6_ENABLE */
-    110,		/* standard POP3 port */
-    995,		/* ssl POP3 port */
-#endif /* INET6_ENABLE */
     FALSE,		/* this is not a tagged protocol */
     TRUE,		/* this uses a message delimiter */
     pop3_ok,		/* parse command response */

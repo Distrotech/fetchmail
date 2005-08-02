@@ -7,14 +7,8 @@
 #ifndef SOCKET__
 #define SOCKET__
 
-/* Create a new client socket; returns (FILE *)NULL on error */
-#ifdef INET6_ENABLE
-int SockOpen(const char *host, const char *service,
-	     const char *plugin);
-#else /* INET6_ENABLE */
-int SockOpen(const char *host, int clientPort,
-	     const char *plugin);
-#endif /* INET6_ENABLE */
+/* Create a new client socket; returns -1 on error */
+int SockOpen(const char *host, const char *service, const char *plugin);
 
 /* Returns 1 if this socket is OK, 0 if it isn't select()able
  * on - probably because it's been closed. You should

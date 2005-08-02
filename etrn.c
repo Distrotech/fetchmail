@@ -122,13 +122,8 @@ static int etrn_logout(int sock, struct query *ctl)
 static const struct method etrn =
 {
     "ETRN",		/* ESMTP ETRN extension */
-#ifdef INET6_ENABLE
     "smtp",		/* standard SMTP port */
     "smtps",		/* ssl SMTP port */
-#else /* INET6_ENABLE */
-    25,			/* standard SMTP port */
-    465,			/* ssl SMTP port */
-#endif /* INET6_ENABLE */
     FALSE,		/* this is not a tagged protocol */
     FALSE,		/* this does not use a message delimiter */
     etrn_ok,		/* parse command response */

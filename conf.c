@@ -246,11 +246,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 
 	    using_kpop =
 		(ctl->server.protocol == P_POP3 &&
-#ifndef INET6_ENABLE
-		 ctl->server.port == KPOP_PORT &&
-#else
 		 ctl->server.service && !strcmp(ctl->server.service, KPOP_PORT ) &&
-#endif
 		 ctl->server.authenticate == A_KERBEROS_V4);
 
 	    stringdump("pollname", ctl->server.pollname); 
@@ -258,11 +254,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	    stringdump("via", ctl->server.via); 
 	    stringdump("protocol", 
 		       using_kpop ? "KPOP" : showproto(ctl->server.protocol));
-#ifndef INET6_ENABLE
-	    numdump("port",  ctl->server.port);
-#else
-	    stringdump("port",  ctl->server.service);
-#endif
+	    stringdump("service",  ctl->server.service);
 	    numdump("timeout",  ctl->server.timeout);
 	    numdump("interval", ctl->server.interval);
 

@@ -611,15 +611,11 @@ int readheaders(int sock,
 #ifdef POP2_ENABLE
 	/*
 	 * We disable this check under POP2 because there's no way to
-	 * prevent deletion of the message.  So at least we ought to 
+	 * prevent deletion of the message.  So at least we ought to
 	 * forward it to the user so he or she will have some clue
 	 * that things have gone awry.
 	 */
-#if INET6_ENABLE
-	if (strncmp(protocol->service, "pop2", 4))
-#else /* INET6_ENABLE */
-	if (protocol->port != 109)
-#endif /* INET6_ENABLE */
+	if (servport("pop2") != servport(protocol->service))
 #endif /* POP2_ENABLE */
 	    if (num == 1 && !strncasecmp(line, "X-IMAP:", 7)) {
 		free(line);

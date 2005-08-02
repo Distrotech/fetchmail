@@ -939,11 +939,7 @@ static int do_session(
 	/* setjmp returned zero -> normal operation */
 	char buf[MSGBUFSIZE+1], *realhost;
 	int count, new, bytes;
-#ifdef INET6_ENABLE
 	int fetches, dispatches, oldphase;
-#else /* INET6_ENABLE */
-	int port, fetches, dispatches, oldphase;
-#endif /* INET6_ENABLE */
 	struct idlist *idp;
 
 	/* execute pre-initialization command, if any */
@@ -959,13 +955,6 @@ static int do_session(
 	oldphase = phase;
 	phase = OPEN_WAIT;
 	set_timeout(mytimeout);
-#ifndef INET6_ENABLE
-#ifdef SSL_ENABLE
-	port = ctl->server.port ? ctl->server.port : ( ctl->use_ssl ? ctl->server.base_protocol->sslport : ctl->server.base_protocol->port );
-#else
-	port = ctl->server.port ? ctl->server.port : ctl->server.base_protocol->port;
-#endif
-#endif /* !INET6_ENABLE */
 
 #ifdef HAVE_PKG_hesiod
 	/* If either the pollname or vianame are "hesiod" we want to
@@ -1081,13 +1070,9 @@ static int do_session(
 	/* allow time for the port to be set up if we have a plugin */
 	if (ctl->server.plugin)
 	    (void)sleep(1);
-#ifdef INET6_ENABLE
 	if ((mailserver_socket = SockOpen(realhost, 
 			     ctl->server.service ? ctl->server.service : ( ctl->use_ssl ? ctl->server.base_protocol->sslservice : ctl->server.base_protocol->service ),
 			     ctl->server.plugin)) == -1)
-#else /* INET6_ENABLE */
-	if ((mailserver_socket = SockOpen(realhost, port, ctl->server.plugin)) == -1)
-#endif /* INET6_ENABLE */
 	{
 	    char	errbuf[BUFSIZ];
 #ifndef INET6_ENABLE
@@ -1574,7 +1559,7 @@ is restored."));
 	break;
     }
     if (msg) {
-	char	*stem;
+	const char *stem;
 
 	if (phase == FORWARDING_WAIT || phase == LISTENER_WAIT)
 	    stem = GT_("%s error while delivering to SMTP host %s\n");

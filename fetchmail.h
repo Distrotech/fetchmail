@@ -42,13 +42,9 @@ char *strstr(const char *, const char *);
 #define		P_ETRN		7
 #define		P_ODMR		8
 
-#ifdef INET6_ENABLE
 #define		SMTP_PORT	"smtp"
+#define		SMTP_PORT_NUM	25
 #define		KPOP_PORT	"kpop"
-#else /* INET6_ENABLE */
-#define		SMTP_PORT	25
-#define		KPOP_PORT	1109
-#endif /* INET6_ENABLE */
 
 #ifdef SSL_ENABLE
 #define		SIMAP_PORT	993
@@ -189,13 +185,8 @@ struct query;
 struct method		/* describe methods for protocol state machine */
 {
     const char *name;		/* protocol name */
-#ifdef INET6_ENABLE
-    const char *service;
-    const char *sslservice;
-#else /* INET6_ENABLE */
-    int	port;			/* service port */
-    int	sslport;		/* service port for ssl */
-#endif /* INET6_ENABLE */
+    const char *service;	/* service port (unencrypted) */
+    const char *sslservice;	/* service port (SSL) */
     flag tagged;		/* if true, generate & expect command tags */
     flag delimited;		/* if true, accept "." message delimiter */
     int (*parse_response)(int, char *);
@@ -233,11 +224,7 @@ struct hostdata		/* shared among all user connections to given server */
     struct idlist *akalist;		/* server name first, then akas */
     struct idlist *localdomains;	/* list of pass-through domains */
     int protocol;			/* protocol type */
-#ifdef INET6_ENABLE
-    char *service;			/* IPv6 service name */
-#else /* INET6_ENABLE */
-    int port;				/* TCP/IP service port number */
-#endif /* INET6_ENABLE */
+    char *service;			/* service name */
     int interval;			/* # cycles to skip between polls */
     int authenticate;			/* authentication mode to try */
     int timeout;			/* inactivity timout in seconds */
@@ -715,5 +702,9 @@ strlcat(char *dst, const char *src, size_t siz);
 size_t
 strlcpy(char *dst, const char *src, size_t siz);
 #endif
+
+/** Resolve the a TCP service name or a string containing only a decimal
+ * positive integer to a port number. Returns -1 for error. */
+int servport(const char *service);
 
 /* fetchmail.h ends here */

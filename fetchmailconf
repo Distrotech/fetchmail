@@ -79,7 +79,7 @@ class Server:
 	self.active = TRUE		# Poll status
 	self.interval = 0		# Skip interval
 	self.protocol = 'auto'		# Default to auto protocol
-	self.port = 0			# Port number to use
+	self.service = None		# Service name to use
 	self.uidl = FALSE		# Don't use RFC1725 UIDLs by default
 	self.auth = 'any'		# Default to password authentication
 	self.timeout = 300		# 5-minute timeout
@@ -104,7 +104,7 @@ class Server:
 	    ('active',	  'Boolean'),
 	    ('interval',  'Int'),
 	    ('protocol',  'String'),
-	    ('port',	  'Int'),
+	    ('service',	  'String'),
 	    ('uidl',	  'Boolean'),
 	    ('auth',	  'String'),
 	    ('timeout',   'Int'),
@@ -132,8 +132,8 @@ class Server:
 	    res = res + (" via " + str(self.via) + "\n");
 	if self.protocol != ServerDefaults.protocol:
 	    res = res + " with proto " + self.protocol
-	if self.port != defaultports[self.protocol] and self.port:
-	    res = res + " port " + `self.port`
+	if self.service and self.service != defaultports[self.protocol] and self.service != ianaservices[defaultports[self.protocol]]:
+	    res = res + " service " + self.service
 	if self.timeout != ServerDefaults.timeout:
 	    res = res + " timeout " + `self.timeout`
 	if self.interval != ServerDefaults.interval:
@@ -410,14 +410,23 @@ class User:
 # Helper code
 #
 
-defaultports = {"auto":0,
-		"POP2":109,
-		"POP3":110,
-		"APOP":110,
-		"KPOP":1109,
-		"IMAP":143,
-		"ETRN":25,
-		"ODMR":366}
+# IANA port assignments and bogus 1109 entry
+ianaservices = {"pop2":109,
+		"pop3":110,
+		"1109":1109,
+		"imap":143,
+		"smtp":25,
+		"odmr":366}
+
+# fetchmail protocol to IANA service name
+defaultports = {"auto":None,
+		"POP2":"pop2",
+		"POP3":"pop3",
+		"APOP":"pop3",
+		"KPOP":"1109",
+		"IMAP":"imap",
+		"ETRN":"smtp",
+		"ODMR":"odmr"}
 
 authlist = ("any", "password", "gssapi", "kerberos", "ssh", "otp")
 
@@ -944,9 +953,9 @@ ports for POP3 and IMAP to see if either is
 available.
 
 Normally the TCP/IP service port to use is
-dictated by the protocol choice.  The `Port'
+dictated by the protocol choice.  The `Service'
 field (only present in expert mode) lets you
-set a non-standard port.
+set a non-standard service (port).
 """}
 
 sechelp = {
@@ -1055,7 +1064,7 @@ class ServerEdit(Frame, MyWidget):
 	# Now we reset unconditionally on the theory that if you're setting
 	# a custom port number you should be in expert mode and playing
 	# close enough attention to notice this...
-	self.port.set(defaultports[proto])
+	self.service.set(defaultports[proto])
 	if not proto in ("POP3", "APOP", "KPOP"): self.uidl.state = DISABLED
 
     def user_edit(self, username, mode):
@@ -1107,8 +1116,8 @@ class ServerEdit(Frame, MyWidget):
 		  self.protocol, protolist, 2,
 		  self.defaultPort)
 	if mode != 'novice':
-	    LabeledEntry(protwin, 'On server TCP/IP port:',
-		      self.port, leftwidth).pack(side=TOP, fill=X)
+	    LabeledEntry(protwin, 'On server TCP/IP service:',
+		      self.service, leftwidth).pack(side=TOP, fill=X)
 	    self.defaultPort()
 	    Checkbutton(protwin,
 		text="POP3: track `seen' with client-side UIDLs?",
@@ -1186,10 +1195,11 @@ class ServerEdit(Frame, MyWidget):
 	else:
 	    realhost = self.server.pollname
 	greetline = None
-	for (protocol, port) in (("IMAP",143), ("POP3",110), ("POP2",109)):
+	for protocol in ("IMAP","POP3","POP2"):
+	    service = defaultports[protocol]
 	    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	    try:
-		sock.connect((realhost, port))
+		sock.connect((realhost, ianaservices[service]))
 		greetline = sock.recv(1024)
 		sock.close()
 	    except:

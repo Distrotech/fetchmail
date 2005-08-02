@@ -840,11 +840,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
 #define FLAG_MERGE(fld) if (force ? !!h1->fld : !h2->fld) h2->fld = h1->fld
     FLAG_MERGE(server.via);
     FLAG_MERGE(server.protocol);
-#ifdef INET6_ENABLE
     FLAG_MERGE(server.service);
-#else /* INET6_ENABLE */
-    FLAG_MERGE(server.port);
-#endif /* INET6_ENABLE */
     FLAG_MERGE(server.interval);
     FLAG_MERGE(server.authenticate);
     FLAG_MERGE(server.timeout);
@@ -1180,24 +1176,27 @@ static int load_params(int argc, char **argv, int optind)
 		save_str(&ctl->mailboxes, (char *)NULL, 0);
 
 	    /* maybe user overrode timeout on command line? */
-	    if (ctl->server.timeout == -1)	
+	    if (ctl->server.timeout == -1)
 		ctl->server.timeout = CLIENT_TIMEOUT;
 
 #ifndef INET6_ENABLE
 	    /* sanity checks */
-	    if (ctl->server.port < 0)
-	    {
-		(void) fprintf(stderr,
-			       GT_("%s configuration invalid, port number cannot be negative\n"),
-			       ctl->server.pollname);
-		exit(PS_SYNTAX);
-	    }
-	    if (ctl->server.protocol == P_RPOP && ctl->server.port >= 1024)
-	    {
-		(void) fprintf(stderr,
-			       GT_("%s configuration invalid, RPOP requires a privileged port\n"),
-			       ctl->server.pollname);
-		exit(PS_SYNTAX);
+	    if (ctl->server.service) {
+		int port = servport(ctl->server.service);
+		if (port < 0)
+		{
+		    (void) fprintf(stderr,
+				   GT_("%s configuration invalid, port number cannot be negative\n"),
+				   ctl->server.pollname);
+		    exit(PS_SYNTAX);
+		}
+		if (ctl->server.protocol == P_RPOP && port >= 1024)
+		{
+		    (void) fprintf(stderr,
+				   GT_("%s configuration invalid, RPOP requires a privileged port\n"),
+				   ctl->server.pollname);
+		    exit(PS_SYNTAX);
+		}
 	    }
 	    if (ctl->listener == LMTP_MODE)
 	    {
@@ -1208,7 +1207,8 @@ static int load_params(int argc, char **argv, int optind)
 		    char	*cp;
 
 		    if (!(cp = strrchr(idp->id, '/')) ||
-				(atoi(++cp) == SMTP_PORT))
+			    ++cp, (0 == strcmp(cp, SMTP_PORT))
+				|| servport(cp) == SMTP_PORT_NUM)
 		    {
 			(void) fprintf(stderr,
 				       GT_("%s configuration invalid, LMTP can't use default SMTP port\n"),
@@ -1528,24 +1528,15 @@ static void dump_params (struct runctl *runp,
 	}
 
 	if (ctl->server.protocol == P_POP3 
-#ifdef INET6_ENABLE
 	    && ctl->server.service && !strcmp(ctl->server.service, KPOP_PORT)
-#else /* INET6_ENABLE */
-	    && ctl->server.port == KPOP_PORT
-#endif /* INET6_ENABLE */
 	    && (ctl->server.authenticate == A_KERBEROS_V4 ||
 		ctl->server.authenticate == A_KERBEROS_V5))
 	    printf(GT_("  Protocol is KPOP with Kerberos %s authentication"),
 		   ctl->server.authenticate == A_KERBEROS_V5 ? "V" : "IV");
 	else
 	    printf(GT_("  Protocol is %s"), showproto(ctl->server.protocol));
-#ifdef INET6_ENABLE
 	if (ctl->server.service)
 	    printf(GT_(" (using service %s)"), ctl->server.service);
-#else /* INET6_ENABLE */
-	if (ctl->server.port)
-	    printf(GT_(" (using port %d)"), ctl->server.port);
-#endif /* INET6_ENABLE */
 	else if (outlevel >= O_VERBOSE)
 	    printf(GT_(" (using default port)"));
 	if (ctl->server.uidl && MAILBOX_PROTOCOL(ctl))

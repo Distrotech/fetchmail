@@ -121,11 +121,7 @@ int smtp_open(struct query *ctl)
 	for (idp = ctl->smtphunt; idp; idp = idp->next)
 	{
 	    char	*cp;
-#ifdef INET6_ENABLE 
 	    char	*portnum = SMTP_PORT;
-#else
-	    int		portnum = SMTP_PORT;
-#endif /* INET6_ENABLE */
 
 	    ctl->smtphost = idp->id;  /* remember last host tried. */
 	    if(ctl->smtphost[0]=='/')
@@ -136,11 +132,7 @@ int smtp_open(struct query *ctl)
 	    if ((cp = strrchr(parsed_host, '/')))
 	    {
 		*cp++ = 0;
-#ifdef INET6_ENABLE 
 		portnum = cp;
-#else
-		portnum = atoi(cp);
-#endif /* INET6_ENABLE */
 	    }
 
 	    if (ctl->smtphost[0]=='/'){

@@ -319,7 +319,7 @@ int SockOpen(const char *host, const char *service,
 #endif
 #endif /* HAVE_INET_ATON */
 
-int SockOpen(const char *host, int clientPort,
+int SockOpen(const char *host, const char *service,
 	     const char *plugin)
 {
     int sock = -1;	/* pacify -Wall */
@@ -328,6 +328,7 @@ int SockOpen(const char *host, int clientPort,
 #endif /* HAVE_INET_ATON */
     struct sockaddr_in ad, **pptr;
     struct hostent *hp;
+    int clientPort = servport(service);
 
 #ifdef HAVE_SOCKETPAIR
     if (plugin) {
@@ -336,6 +337,9 @@ int SockOpen(const char *host, int clientPort,
       return handle_plugin(host,buf,plugin);
     }
 #endif /* HAVE_SOCKETPAIR */
+
+    if (clientPort < 0)
+	return sock;
 
     memset(&ad, 0, sizeof(ad));
     ad.sin_family = AF_INET;
@@ -359,11 +363,11 @@ int SockOpen(const char *host, int clientPort,
             return -1;
         }
 
-		/* Socket opened saved. Usefull if connect timeout because
-		 * it can be closed
-		 */
-		mailserver_socket_temp = sock;
-		
+	/* Socket opened saved. Usefull if connect timeout because
+	 * it can be closed
+	 */
+	mailserver_socket_temp = sock;
+
         if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) < 0)
         {
             int olderr = errno;
@@ -1072,7 +1076,7 @@ static ssize_t cygwin_read(int sock, void *buf, size_t count)
  * inetd.conf (and then SIGHUP inetd) for this to work.  */
 main()
 {
-    int	 	sock = SockOpen("localhost", 19, NULL);
+    int	 	sock = SockOpen("localhost", "chargen", NULL);
     char	buf[80];
 
     while (SockRead(sock, buf, sizeof(buf)-1))

@@ -153,11 +153,7 @@ serv_option	: AKA alias_list
 #else
 						current.server.authenticate = A_KERBEROS_V4;
 #endif /* KERBEROS_V5 */
-#ifdef INET6_ENABLE
 					    current.server.service = KPOP_PORT;
-#else /* INET6_ENABLE */
-					    current.server.port = KPOP_PORT;
-#endif /* INET6_ENABLE */
 					}
 		| PRINCIPAL STRING	{current.server.principal = xstrdup($2);}
 		| ESMTPNAME STRING	{current.server.esmtp_name = xstrdup($2);}
@@ -175,19 +171,13 @@ serv_option	: AKA alias_list
 		| CHECKALIAS            {current.server.checkalias = FLAG_TRUE;}
 		| NO CHECKALIAS         {current.server.checkalias  = FLAG_FALSE;}
 		| SERVICE STRING	{
-#ifdef INET6_ENABLE
 					current.server.service = $2;
-#endif /* INET6_ENABLE */
 					}
 		| PORT NUMBER		{
-#ifdef INET6_ENABLE
 					int port = $2;
 					char buf[10];
-					sprintf(buf, "%d", port);
+					snprintf(buf, sizeof buf, "%d", port);
 					current.server.service = xstrdup(buf);
-#else
-					current.server.port = $2;
-#endif /* INET6_ENABLE */
 		}
 		| INTERVAL NUMBER
 			{current.server.interval = $2;}

@@ -358,11 +358,7 @@ struct query *ctl;	/* option record to be initialized */
 	    else if (strcasecmp(optarg,"kpop") == 0)
 	    {
 		ctl->server.protocol = P_POP3;
-#ifdef INET6_ENABLE
 		ctl->server.service = KPOP_PORT;
-#else /* INET6_ENABLE */
-		ctl->server.port = KPOP_PORT;
-#endif /* INET6_ENABLE */
 #ifdef KERBEROS_V5
 		ctl->server.authenticate =  A_KERBEROS_V5;
 #else
@@ -386,11 +382,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'P':
 	case LA_PORT:
-#ifdef INET6_ENABLE
 	    ctl->server.service = optarg;
-#else /* INET6_ENABLE */
-	    ctl->server.port = xatoi(optarg, &errflag);
-#endif /* INET6_ENABLE */
 	    break;
 	case LA_AUTH:
 	    if (strcmp(optarg, "password") == 0)

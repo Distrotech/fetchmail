@@ -1124,13 +1124,8 @@ static int imap_logout(int sock, struct query *ctl)
 static const struct method imap =
 {
     "IMAP",		/* Internet Message Access Protocol */
-#ifdef INET6_ENABLE
     "imap",
     "imaps",
-#else /* INET6_ENABLE */
-    143,                /* standard IMAP2bis/IMAP4 port */
-    993,                /* ssl IMAP2bis/IMAP4 port */
-#endif /* INET6_ENABLE */
     TRUE,		/* this is a tagged protocol */
     FALSE,		/* no message delimiter */
     imap_ok,		/* parse command response */
