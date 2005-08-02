@@ -41,7 +41,7 @@ endif
 fetchmail_SOURCES=	fetchmail.h getopt.h \
 		i18n.h kerberos.h md5.h mx.h netrc.h ntlm.h \
 		smbbyteorder.h smbdes.h smbmd4.h smbencrypt.h smtp.h \
-		socket.h tunable.h \
+		socket.h tunable.h servport.c \
 		socket.c getpass.c pop2.c pop3.c imap.c etrn.c \
 		odmr.c fetchmail.c env.c idle.c options.c daemon.c \
 		driver.c transact.c sink.c smtp.c \
