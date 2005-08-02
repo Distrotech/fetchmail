@@ -2044,9 +2044,9 @@ Usage: fetchmailconf [-d] [-f fetchmailrc]
     # want crackers to snoop password information out of the tempfile.
     tmpfile = tempfile.mktemp()
     if rcfile:
-	cmd = "umask 077; fetchmail -f " + rcfile + " --configdump --nosyslog >" + tmpfile
+	cmd = "umask 077 && fetchmail -f " + rcfile + " --configdump --nosyslog >" + tmpfile
     else:
-	cmd = "umask 077; fetchmail --configdump --nosyslog >" + tmpfile
+	cmd = "umask 077 && fetchmail --configdump --nosyslog >" + tmpfile
 
     try:
 	s = os.system(cmd)
