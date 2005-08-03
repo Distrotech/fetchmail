@@ -332,9 +332,7 @@ int SockOpen(const char *host, const char *service,
 
 #ifdef HAVE_SOCKETPAIR
     if (plugin) {
-      char buf[10];
-      snprintf(buf, sizeof(buf), "%d", clientPort);
-      return handle_plugin(host,buf,plugin);
+      return handle_plugin(host,service,plugin);
     }
 #endif /* HAVE_SOCKETPAIR */
 
