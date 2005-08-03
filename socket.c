@@ -380,11 +380,7 @@ int SockOpen(const char *host, const char *service,
 		/* No connect timeout, then no need to set mailserver_socket_temp */
 		mailserver_socket_temp = -1;
 		
-#ifndef HAVE_INET_ATON
     }
-#else
-    }
-#endif /* HAVE_INET_ATON */
     else {
         hp = gethostbyname((char*)host);
 
