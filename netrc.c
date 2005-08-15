@@ -1,11 +1,14 @@
-/* netrc.c -- parse the .netrc file to get hosts, accounts, and passwords
-
+/*
+ * netrc.c -- parse the .netrc file to get hosts, accounts, and passwords
+ *
    Gordon Matzigkeit <gord@gnu.ai.mit.edu>, 1996
    Copyright assigned to Eric S. Raymond, October 2001.
 
    For license terms, see the file COPYING in this directory.
 
-   Compile with -DSTANDALONE to test this module. */
+   Compile with -DSTANDALONE to test this module.
+   (Makefile.am should have a rule so you can just type "make netrc")
+*/
 
 #include <stdio.h>
 #include <ctype.h>
@@ -325,6 +328,15 @@ int main (int argc, char **argv)
     host = argv[2];
     login = argv[3];
 
+    switch (argc) {
+	case 2:
+	case 4:
+	    break;
+	default:
+	    fprintf (stderr, "Usage: %s <file> [<host> <login>]\n", argv[0]);
+	    exit(EXIT_FAILURE);
+    }
+
     if (stat (file, &sb))
     {
 	fprintf (stderr, "%s: cannot stat %s: %s\n", argv[0], file,
@@ -342,7 +354,7 @@ int main (int argc, char **argv)
     if (host && login)
     {
 	int status;
-	status = 0;
+	status = EXIT_SUCCESS;
 
 	printf("Host: %s, Login: %s\n", host, login);
 	    
@@ -352,10 +364,10 @@ int main (int argc, char **argv)
 	    /* Print out the password (if any). */
 	    if (a->password)
 	    {
-		fputc (' ', stdout);
-		fputs (a->password, stdout);
+		printf("Password: %s\n", a->password);
 	    }
-	}
+	} else
+	    status = EXIT_FAILURE;
 	fputc ('\n', stdout);
 
 	exit (status);
