@@ -713,6 +713,7 @@ static int open_bsmtp_sink(struct query *ctl, struct msgblk *msg,
 /* open a BSMTP stream */
 {
     struct	idlist *idp;
+    int		need_anglebrs;
 
     if (strcmp(ctl->bsmtp, "-") == 0)
 	sinkfp = stdout;
@@ -720,8 +721,12 @@ static int open_bsmtp_sink(struct query *ctl, struct msgblk *msg,
 	sinkfp = fopen(ctl->bsmtp, "a");
 
     /* see the ap computation under the SMTP branch */
-    fprintf(sinkfp, 
-	    "MAIL FROM:%s", (msg->return_path[0]) ? msg->return_path : user);
+    need_anglebrs = (msg->return_path[0] != '<');
+    fprintf(sinkfp,
+	    "MAIL FROM:%s%s%s",
+	    need_anglebrs ? "<" : "",
+	    (msg->return_path[0]) ? msg->return_path : user,
+	    need_anglebrs ? ">" : "");
 
     if (ctl->pass8bits || (ctl->mimemsg & MSG_IS_8BIT))
 	fputs(" BODY=8BITMIME", sinkfp);
@@ -746,7 +751,7 @@ static int open_bsmtp_sink(struct query *ctl, struct msgblk *msg,
     for (idp = msg->recipients; idp; idp = idp->next)
 	if (idp->val.status.mark == XMIT_ACCEPT)
 	{
-	    fprintf(sinkfp, "RCPT TO: %s\r\n",
+	    fprintf(sinkfp, "RCPT TO:<%s>\r\n",
 		rcpt_address (ctl, idp->id, 1));
 	    (*good_addresses)++;
 	}

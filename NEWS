@@ -173,6 +173,7 @@ fetchmail 6.3.0 (not yet released officially):
 * Switched to automake. Matthias Andree.
 * Got rid of alloca() in fetchmail proper.  Matthias Andree
 * Got rid of ipv6-connect, inner_connect and thereabouts.  Matthias Andree
+* Write RFC-compliant BSMTP envelopes. Reported by Nico Golde. Matthias Andree.
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
