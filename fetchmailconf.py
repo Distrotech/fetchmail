@@ -5,7 +5,7 @@
 # Matthias Andree <matthias.andree@gmx.de>
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.46"
+version = "1.47"
 
 from Tkinter import *
 from Dialog import *
@@ -1821,7 +1821,7 @@ class RunWindow(Frame):
 	# first. This avoids some obscure version-skew errors that can occur
 	# if you pick up an old fetchmail from the standard system locations.
 	os.environ["PATH"] = os.path.dirname(sys.argv[0]) + ":" + os.environ["PATH"]
-	child_stdout = os.popen(command + " 2>&1", "r")
+	child_stdout = os.popen(command + " 2>&1 </dev/null", "r")
 	while 1:
 	    ch = child_stdout.read(1)
 	    if not ch:
@@ -1886,10 +1886,16 @@ Or you can just select `Quit' to exit the launcher now.
 		     lambda self=self: self.configbutton.configure(state=NORMAL),
 		     self)
     def test(self):
-	RunWindow("fetchmail -d0 -v --nosyslog", Toplevel(), self)
+	cmd = "fetchmail -N -d0 --nosyslog -v"
+	if rcfile:
+	    cmd = cmd + " -f " + rcfile
+	RunWindow(cmd, Toplevel(), self)
 
     def run(self):
-	RunWindow("fetchmail -d0", Toplevel(), self)
+	cmd = "fetchmail -N -d0"
+	if rcfile:
+	    cmd = cmd + " -f " + rcfile
+	RunWindow(cmd, Toplevel(), self)
 
     def leave(self):
 	self.quit()
@@ -2044,9 +2050,9 @@ Usage: fetchmailconf [-d] [-f fetchmailrc]
     # want crackers to snoop password information out of the tempfile.
     tmpfile = tempfile.mktemp()
     if rcfile:
-	cmd = "umask 077 && fetchmail -f " + rcfile + " --configdump --nosyslog >" + tmpfile
+	cmd = "umask 077 && fetchmail </dev/null -f " + rcfile + " --configdump --nosyslog >" + tmpfile
     else:
-	cmd = "umask 077 && fetchmail --configdump --nosyslog >" + tmpfile
+	cmd = "umask 077 && fetchmail </dev/null --configdump --nosyslog >" + tmpfile
 
     try:
 	s = os.system(cmd)
