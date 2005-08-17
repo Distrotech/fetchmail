@@ -164,16 +164,19 @@ fetchmail 6.3.0 (not yet released officially):
   gettext 0.14 separately for NLS (i18n).  Matthias Andree
 * fetchmailconf is now a shell wrapper that calls the byte-compiled
   fetchmailconf.py script, which is now installed in the regular python
-  directory.
+  directory. Matthias Andree.
 * The "port" option, while still understood, is being replaced by the "service"
-  option, which is now supported even without --enable-inet6.
-* The default distribution format is now bzip2.
+  option, which is now supported even without --enable-inet6. Matthias Andree.
+* The default distribution format is now bzip2. Matthias Andree.
+* fetchmailconf redirects fetchmail's input from /dev/null so it doesn't
+  wait for the user to enter a password when the user doesn't even see
+  the prompt. Reported by Michal Marek. Matthias Andree.
+* Write RFC-compliant BSMTP envelopes. Reported by Nico Golde. Matthias Andree.
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.
 * Got rid of alloca() in fetchmail proper.  Matthias Andree
 * Got rid of ipv6-connect, inner_connect and thereabouts.  Matthias Andree
-* Write RFC-compliant BSMTP envelopes. Reported by Nico Golde. Matthias Andree.
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
