@@ -251,7 +251,7 @@ a static DNS.
 .B \-U | \-\-uidl
 (Keyword: uidl)
 Force UIDL use (effective only with POP3).  Force client-side tracking
-of 'newness' of messages (UIDL stands for ''unique ID listing'' and is
+of 'newness' of messages (UIDL stands for "unique ID listing" and is
 described in RFC1939).  Use with 'keep' to use a mailbox as a baby
 news drop for a group of users. The fact that seen messages are skipped
 is logged, unless error logging is done through syslog while running in
@@ -404,7 +404,7 @@ default.  However, when using Kerberos authentication, the FQDN of the
 machine running fetchmail is added to the end of the list as an
 invisible default. Each hostname may have a port number following the
 host name.  The port number is separated from the host name by a
-slash; the default port is 25 (or ''smtp'' under IPv6).  If you
+slash; the default port is 25 (or "smtp" under IPv6).  If you
 specify an absolute path name (beginning with a /), it will be
 interpreted as the name of a UNIX socket accepting LMTP connections
 (such as is supported by the Cyrus IMAP daemon) Example:
