@@ -358,8 +358,9 @@ server.  This can cause some complications in daemon mode.
 .TP
 .B \-\-sslproto <name>
 (Keyword: sslproto)
-Forces an SSL protocol. Possible values are '\fBssl2\fR', '\fBssl3\fR' and
-\&'\fBtls1\fR'. Try this if the default handshake does not work for your server.
+Forces an SSL protocol. Possible values are '\fBnone\fR', '\fBssl2\fR',
+\&'\fBssl3\fR' and '\fBtls1\fR'. Try this if the default handshake does
+not work for your server.
 .TP
 .B \-\-sslcertck
 (Keyword: sslcertck)
