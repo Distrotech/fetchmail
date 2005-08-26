@@ -1119,6 +1119,7 @@ int readheaders(int sock,
     {
 	/* utter any per-message Received information we need here */
         if (ctl->server.trueaddr) {
+	    /* XXX FIXME: IPv6 */
 	    snprintf(buf, sizeof(buf),
 		    "Received: from %s [%u.%u.%u.%u]\r\n", 
 		    ctl->server.truename,
