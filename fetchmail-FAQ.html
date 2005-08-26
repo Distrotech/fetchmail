@@ -121,6 +121,8 @@ methods:</h1>
 <a href="#K3">K3. How can I get fetchmail to work with ssh?</a><br/>
 <a href="#K4">K4. What do I have to do to use the IMAP-GSS protocol?</a><br/>
 <a href="#K5">K5. How can I use fetchmail with SSL?</a><br/>
+<a href="#K6">K6. How can I tell fetchmail not to try TLS if the server
+    advertises it?</a><br/>
 
 <h1>Runtime fatal errors:</h1>
 
@@ -2226,6 +2228,25 @@ poll pop3.example.com proto pop3 uidl no dns
 verified against the fingerprint given. If it's different, it may mean that
 a man-in-the-middle attack is in progress - or it might just mean that the
 server changed its key. It's up to you to determine which has happened.</p>
+
+<hr/>
+<h2><a id="K6" name="K6">K6. How can I tell fetchmail not to use TLS
+	if the server advertises it?</a></h2>
+
+<p>Some servers advertise STLS (POP3) or STARTTLS (IMAP), and fetchmail
+will automatically attempt TLS negotiation if SSL was enabled at compile
+time.  This can however cause problems if the upstream didn't configure
+his certificates properly.</p>
+
+<p>In order to prevent fetchmail from trying TLS (STLS, STARTTLS)
+negotiation, add this option:</p>
+
+<pre>sslproto ssl23</pre>
+
+<p>This restricts fetchmail's SSL/TLS protocol choice from the default
+"SSLv2, SSLv3, TLSv1" to the two SSL variants, disabling TLSv1. Note
+however that this causes the connection to be unencrypted unless an
+encrypting &quot;plugin&quot; is used or SSL is requested explicitly.</p>
 
 <hr/>
 <h2><a id="R1" name="R1">R1. Fetchmail isn't working, and -v shows
