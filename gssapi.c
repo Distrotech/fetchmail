@@ -77,9 +77,9 @@ int do_gssauth(int sock, char *command, char *service, char *hostname, char *use
 
     /* upon receipt of the GSSAPI authentication request, server returns
      * null data ready response. */
-    if (result = gen_recv(sock, buf1, sizeof buf1)) {
-        return result;
-    }
+    result = gen_recv(sock, buf1, sizeof buf1);
+    if (result)
+	return result;
 
     /* now start the security context initialisation loop... */
     sec_token = GSS_C_NO_BUFFER;
@@ -102,24 +102,26 @@ int do_gssauth(int sock, char *command, char *service, char *hostname, char *use
 					&send_token, 
 					NULL, 
 					NULL);
-        if (maj_stat!=GSS_S_COMPLETE && maj_stat!=GSS_S_CONTINUE_NEEDED) {
-            report(stderr, GT_("Error exchanging credentials\n"));
-            gss_release_name(&min_stat, &target_name);
-            /* wake up server and await NO response */
-            SockWrite(sock, "\r\n", 2);
-            if (result = gen_recv(sock, buf1, sizeof buf1))
-                return result;
-            return PS_AUTHFAIL;
-        }
-        to64frombits(buf1, send_token.value, send_token.length);
-        gss_release_buffer(&min_stat, &send_token);
+	if (maj_stat!=GSS_S_COMPLETE && maj_stat!=GSS_S_CONTINUE_NEEDED) {
+	    report(stderr, GT_("Error exchanging credentials\n"));
+	    gss_release_name(&min_stat, &target_name);
+	    /* wake up server and await NO response */
+	    SockWrite(sock, "\r\n", 2);
+	    result = gen_recv(sock, buf1, sizeof buf1);
+	    if (result)
+		return result;
+	    return PS_AUTHFAIL;
+	}
+	to64frombits(buf1, send_token.value, send_token.length);
+	gss_release_buffer(&min_stat, &send_token);
 
 	suppress_tags = TRUE;
 	gen_send(sock, buf1, strlen(buf1));
 	suppress_tags = FALSE;
 
         if (maj_stat == GSS_S_CONTINUE_NEEDED) {
-	    if (result = gen_recv(sock, buf1, sizeof buf1)) {
+	    result = gen_recv(sock, buf1, sizeof buf1);
+	    if (result) {
 	        gss_release_name(&min_stat, &target_name);
 	        return result;
 	    }
@@ -134,7 +136,8 @@ int do_gssauth(int sock, char *command, char *service, char *hostname, char *use
     gss_release_name(&min_stat, &target_name);
 
     /* get security flags and buffer size */
-    if (result = gen_recv(sock, buf1, sizeof buf1))
+    result = gen_recv(sock, buf1, sizeof buf1);
+    if (result)
         return result;
 
     request_buf.length = from64tobits(buf2, buf1 + 2, sizeof(buf2));
