@@ -172,6 +172,7 @@ fetchmail 6.3.0 (not yet released officially):
   wait for the user to enter a password when the user doesn't even see
   the prompt. Reported by Michal Marek. Matthias Andree.
 * Write RFC-compliant BSMTP envelopes. Reported by Nico Golde. Matthias Andree.
+* Fix --with-gssapi compilation problem. Simon Josefsson. (MA)
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.
