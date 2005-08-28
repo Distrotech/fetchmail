@@ -19,6 +19,16 @@ fetchmail 6.3.0 (not yet released officially):
   http://www.inner.net/pub/ipv6/ states, as of 2005-07-03: "/pub/ipv6
   Our IPv6 software is now long defunct. Please find a more modern source."
   I haven't been able to find a more modern source.  Matthias Andree
+* Operating systems that do not conform to the Single Unix Specification v2
+  (1997) or v3 (2001, aka IEEE Std 1003.1-2001) are no longer supported. They
+  may continue to work and non-intrusive patches to support them may be
+  accepted.  Matthias Andree
+
+# OBSOLETION WARNINGS
+* The MX and host alias lookups that fetchmail performs in multidrop mode are
+  obsolete, deprecated and may be removed from a future fetchmail version
+  without further notice. Their support for IPv6 (including IPv6-mapped IPv4)
+  is unspecified.  Matthias Andree
 
 # OTHER USER-VISIBLE CHANGES
 * Sunil Shetye's fix to force fetchsizelimit to 1 for APOP and RPOP. (ESR)
