@@ -24,6 +24,9 @@
 
 /* Structure and prototypes aken from RFC 2553 */
 
+#include <config.h>
+#ifndef HAVE_GETADDRINFO
+
 struct addrinfo
   {
     int ai_flags;  	  	/* AI_PASSIVE, AI_CANONNAME, AI_NUMERICHOST */
@@ -53,6 +56,7 @@ struct addrinfo
 #define EAI_SERVICE    9   /* servname not supported for ai_socktype */
 #define EAI_SOCKTYPE   10  /* ai_socktype not supported */
 #define EAI_SYSTEM     11  /* system error returned in errno */
+#define EAI_OVERFLOW   12  /* argument buffer too small */
 
 /* RFC 2553 / Posix resolver */
 int getaddrinfo (const char *nodename, const char *servname,
@@ -64,4 +68,5 @@ void freeaddrinfo (struct addrinfo *ai);
 /* Convert error return from getaddrinfo() to string */
 const char *gai_strerror (int code);
 
+#endif
 #endif

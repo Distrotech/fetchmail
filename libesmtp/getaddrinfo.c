@@ -27,6 +27,8 @@
 #include <config.h>
 #endif
 
+#ifndef HAVE_GETADDRINFO
+
 /* Need to turn off Posix features in glibc to build this */
 #undef _POSIX_C_SOURCE
 #undef _XOPEN_SOURCE
@@ -89,26 +91,29 @@ getaddrinfo (const char *nodename, const char *servname,
       hints = &hint;
     }
 
-  /* servname must not be NULL in this implementation */
+  if (servname == NULL && nodename == NULL)
+    return EAI_NONAME;
+
   if (servname == NULL)
-    return EAI_NONAME;
+    port = 0;
+  else {
+    /* check for tcp or udp sockets only */
+    if (hints->ai_socktype == SOCK_STREAM)
+      socktype = "tcp";
+    else if (hints->ai_socktype == SOCK_DGRAM)
+      socktype = "udp";
+    else
+      return EAI_SERVICE;
+    result.ai_socktype = hints->ai_socktype;
 
-  /* check for tcp or udp sockets only */
-  if (hints->ai_socktype == SOCK_STREAM)
-    socktype = "tcp";
-  else if (hints->ai_socktype == SOCK_DGRAM)
-    socktype = "udp";
-  else
-    return EAI_SERVICE;
-  result.ai_socktype = hints->ai_socktype;
-
-  /* Note: maintain port in host byte order to make debugging easier */
-  if (isdigit (*servname))
-    port = strtol (servname, NULL, 10);
-  else if ((servent = getservbyname (servname, socktype)) != NULL)
-    port = ntohs (servent->s_port);
-  else
-    return EAI_NONAME;
+    /* Note: maintain port in host byte order to make debugging easier */
+    if (isdigit (*servname))
+      port = strtol (servname, NULL, 10);
+    else if ((servent = getservbyname (servname, socktype)) != NULL)
+      port = ntohs (servent->s_port);
+    else
+      return EAI_NONAME;
+  }
 
   /* if nodename == NULL refer to the local host for a client or any
      for a server */
@@ -305,6 +310,7 @@ gai_strerror (int ecode)
       "servname not supported for ai_socktype",		/* EAI_SERVICE */
       "ai_socktype not supported",			/* EAI_SOCKTYPE */
       "system error returned in errno",			/* EAI_SYSTEM */
+      "argument buffer overflow",			/* EAI_OVERFLOW */
     };
 
   if (ecode < 0 || ecode > (int) (sizeof eai_descr/ sizeof eai_descr[0]))
@@ -312,3 +318,4 @@ gai_strerror (int ecode)
   return eai_descr[ecode];
 }
 
+#endif
