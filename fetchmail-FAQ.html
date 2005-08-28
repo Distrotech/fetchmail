@@ -60,8 +60,8 @@ at <a href="mailto:esr@thyrsus.com">esr@thyrsus.com</a>.</p>
 
 <a href="#F1">F1. Why does my old .fetchmailrc no longer work?</a><br/>
 <a href="#F2">F2. The .fetchmailrc parser won't accept my all-numeric user name.</a><br/>
-<a href="#F3">F3. The .fetchmailrc parser won't accept my host or username beginning with `no'.</a><br/>
-<a href="#F4">F4. I'm getting a `parse error' message I don't understand.</a><br/>
+<a href="#F3">F3. The .fetchmailrc parser won't accept my host or username beginning with 'no'.</a><br/>
+<a href="#F4">F4. I'm getting a 'parse error' message I don't understand.</a><br/>
 
 <h1>Configuration questions:</h1>
 
@@ -126,7 +126,7 @@ methods:</h1>
 
 <h1>Runtime fatal errors:</h1>
 
-<a href="#R1">R1. Fetchmail isn't working, and -v shows `SMTP
+<a href="#R1">R1. Fetchmail isn't working, and -v shows 'SMTP
 connect failed' messages.</a><br/>
 <a href="#R2">R2. When I try to configure an MDA, fetchmail doesn't
 work.</a><br/>
@@ -501,12 +501,12 @@ described on the manual page.</p>
 with POP3 support preconfigured (but beware of the horribly broken
 POP3 server mentioned in <a href="#D2">D2</a>). An increasing
 minority also feature IMAP (you can detect IMAP support by running
-fetchmail in AUTO mode, or by using the `Probe for supported
+fetchmail in AUTO mode, or by using the 'Probe for supported
 protocols' function in the fetchmailconf utility).</p>
 
 <p>If you have the option, we recommend using or installing an
 IMAP4rev1 server; it has the best facilities for tracking message
-`seen' states. It also recovers from interrupted connections more
+'seen' states. It also recovers from interrupted connections more
 gracefully than POP3, and enables some significant performance
 optimizations. The new <a
 href="ftp://ftp.cac.washington.edu/imap/imap.tar.Z">IMAP 2000</a>
@@ -682,11 +682,11 @@ mail to the wrong machine!</p>
 
 <p>Use the <code>smtpaddress</code> option to force the appended
 hostname to one with a (fixed) IP address of 127.0.0.1 in your
-<code>/etc/hosts</code>. (The name `localhost' will usually work;
+<code>/etc/hosts</code>. (The name 'localhost' will usually work;
 or you can use the IP address itself).</p>
 
 <p>Only one fetchmail option interacts directly with your IP
-address, `<code>interface</code>'. This option can be used to set
+address, '<code>interface</code>'. This option can be used to set
 the gateway device and restrict the IP address range fetchmail will
 use. Such a restriction is sometimes useful for security reasons,
 especially on multihomed sites. See <a href="#C3">C3</a>.</p>
@@ -823,10 +823,10 @@ to run GNU make and better things will happen.</p>
 fetchmail lexer.</a></h2>
 
 <p>In the immortal words of Alan Cox the last time this came up:
-``Take the Solaris lex and stick it up the backside of a passing
+"Take the Solaris lex and stick it up the backside of a passing
 Sun salesman, then install <a
 href="ftp://ftp.gnu.org/pub/non-gnu/flex/">flex</a> and use that.
-All will be happier.''</p>
+All will be happier."</p>
 
 <p>I couldn't have put it better myself, and ain't going to try
 now.</p>
@@ -841,28 +841,28 @@ build fetchmail.</a></h2>
 <p>If you get errors resembling these</p>
 
 <pre>
-mxget.o(.text+0x35): undefined referenceto `__res_search' 
-mxget.o(.text+0x99): undefined reference to`__dn_skipname' 
-mxget.o(.text+0x11c): undefined reference to`__dn_expand' 
-mxget.o(.text+0x187): undefined reference to`__dn_expand' 
+mxget.o(.text+0x35): undefined referenceto '__res_search'
+mxget.o(.text+0x99): undefined reference to '__dn_skipname'
+mxget.o(.text+0x11c): undefined reference to '__dn_expand'
+mxget.o(.text+0x187): undefined reference to '__dn_expand'
 make: *** [fetchmail] Error 1
 </pre>
 
 <p>then you must add "-lresolv" to the LOADLIBS line in your
-Makefile once you have installed the `bind' package.</p>
+Makefile once you have installed the 'bind' package.</p>
 
 <p>If you get link errors involving <tt>dcgettext</tt>, like
 this:</p>
 
 <pre>
-rcfile_y.o: In function `yyparse':
-rcfile_y.o(.text+0x3aa): undefined reference to `dcgettext__'
-rcfile_y.o(.text+0x4f2): undefined reference to `dcgettext__'
-rcfile_y.o(.text+0x5ee): undefined reference to `dcgettext__'
-rcfile_y.o: In function `yyerror':
-rcfile_y.o(.text+0xc7c): undefined reference to `dcgettext__'
-rcfile_y.o(.text+0xcc8): undefined reference to `dcgettext__'
-rcfile_y.o(.text+0xdf9): more undefined references to `dcgettext__' follow
+rcfile_y.o: In function 'yyparse':
+rcfile_y.o(.text+0x3aa): undefined reference to 'dcgettext__'
+rcfile_y.o(.text+0x4f2): undefined reference to 'dcgettext__'
+rcfile_y.o(.text+0x5ee): undefined reference to 'dcgettext__'
+rcfile_y.o: In function 'yyerror':
+rcfile_y.o(.text+0xc7c): undefined reference to 'dcgettext__'
+rcfile_y.o(.text+0xcc8): undefined reference to 'dcgettext__'
+rcfile_y.o(.text+0xdf9): more undefined references to 'dcgettext__' follow
 </pre>
 
 <p>reconfigure with <tt>configure --with-included-gettext</tt>.
@@ -890,7 +890,7 @@ option to a <tt>fetchdomains</tt> option.</p>
 
 <h3>If your file predates 5.8.3</h3>
 
-<p>The `via localhost' special case for use with ssh tunnelling is
+<p>The 'via localhost' special case for use with ssh tunnelling is
 gone. Use the %h feature of <tt>plugin</tt> instead.</p>
 
 <h3>If your file predates 5.6.8</h3>
@@ -914,7 +914,7 @@ password (CRAM-MD5, X-OTP); and only if it the server doesn't
 support any of those will it ship your password en clair.</p>
 
 <p>Setting the <tt>preauth</tt> option to any value other than
-`password' will prevent from looking for a password in your
+'password' will prevent from looking for a password in your
 <tt>.netrc</tt> file or querying for it at startup time.</p>
 
 <h3>If your file predates 5.1.0</h3>
@@ -933,9 +933,9 @@ startup.</p>
 
 <h3>If your file predates 4.0.6:</h3>
 
-<p>Just after the `<code>via</code>' option was introduced, I
-realized that the interactions between the `<code>via</code>',
-`<code>aka</code>', and `<code>localdomains</code>' options were
+<p>Just after the '<code>via</code>' option was introduced, I
+realized that the interactions between the '<code>via</code>',
+'<code>aka</code>', and '<code>localdomains</code>' options were
 out of control. Their behavior had become complex and confusing, so
 much so that I was no longer sure I understood it myself. Users
 were being unpleasantly surprised.</p>
@@ -946,9 +946,9 @@ orthogonal, but may have broken some complex multidrop
 configurations.</p>
 
 <p>Any multidrop configurations that depended on the name just
-after the `<code>poll</code>' or `<code>skip</code>' keyword being
+after the '<code>poll</code>' or '<code>skip</code>' keyword being
 still interpreted as a DNS name for address-matching purposes, even
-in the presence of a `<code>via</code>' option, will break.</p>
+in the presence of a '<code>via</code>' option, will break.</p>
 
 <p>It is theoretically possible that other unusual configurations
 (such as those using a non-FQDN poll name to generate Kerberos IV
@@ -958,19 +958,19 @@ contact the maintainer.</p>
 
 <h3>If your file predates 3.9.5:</h3>
 
-<p>The `<code>remote</code>' keyword has been changed to
-`<code>folder</code>'. If you try to use the old keyword, the
+<p>The '<code>remote</code>' keyword has been changed to
+'<code>folder</code>'. If you try to use the old keyword, the
 parser will utter a warning.</p>
 
 <h3>If your file predates 3.9:</h3>
 
 <p>It could be because you're using a .fetchmailrc that's written
 in the old popclient syntax without an explicit
-`<code>username</code>' keyword leading the first user entry
+'<code>username</code>' keyword leading the first user entry
 attached to a server entry.</p>
 
 <p>This error can be triggered by having a user option such as
-`<code>keep</code>' or `<code>fetchall</code>' before the first
+'<code>keep</code>' or '<code>fetchall</code>' before the first
 explicit username. For example, if you write</p>
 
 <pre>
@@ -978,7 +978,7 @@ poll openmail protocol pop3
     keep user "Hal DeVore" there is hdevore here
 </pre>
 
-<p>the `<code>keep</code>' option will generate an entire user
+<p>the '<code>keep</code>' option will generate an entire user
 entry with the default username (the name of fetchmail's invoking
 user).</p>
 
@@ -987,12 +987,12 @@ complicated the configuration file grammar and confused users.</p>
 
 <h3>If your file predates 2.8:</h3>
 
-<p>The `<code>interface</code>', `<code>monitor</code>' and
-`<code>batchlimit</code>' options changed after 2.8.</p>
+<p>The '<code>interface</code>', '<code>monitor</code>' and
+'<code>batchlimit</code>' options changed after 2.8.</p>
 
-<p>They used to be global options with `<code>set</code>' syntax
+<p>They used to be global options with '<code>set</code>' syntax
 like the batchlimit and logfile options. Now they're per-server
-options, like `<code>protocol</code>'.</p>
+options, like '<code>protocol</code>'.</p>
 
 <p>If you had something like</p>
 
@@ -1001,11 +1001,11 @@ options, like `<code>protocol</code>'.</p>
 </pre>
 
 <p>in your .fetchmailrc file, simply delete that line and insert
-`interface sl0/10.0.2.15' in the server options part of your
-`defaults' declaration.</p>
+'interface sl0/10.0.2.15' in the server options part of your
+'defaults' declaration.</p>
 
-<p>Do similarly for any `<code>monitor</code>' or
-`<code>batchlimit</code>' options.</p>
+<p>Do similarly for any '<code>monitor</code>' or
+'<code>batchlimit</code>' options.</p>
 
 <hr/>
 <h2><a id="F2" name="F2">F2. The .fetchmailrc parser won't accept
@@ -1024,27 +1024,27 @@ any token following "username" or "password" is a string.</p>
 
 <hr/>
 <h2><a id="F3" name="F3">F3. The .fetchmailrc parser won't accept
-my host or username beginning with `no'.</a></h2>
+my host or username beginning with 'no'.</a></h2>
 
 <p>See <a href="#F2">F2</a>. You're caught in an unfortunate crack
-between the newer-style syntax for negated options (`no keep', `no
-rewrite' etc.) and the older style run-on syntax (`nokeep',
-`norewrite' etc.).</p>
+between the newer-style syntax for negated options ('no keep', 'no
+rewrite' etc.) and the older style run-on syntax ('nokeep',
+'norewrite' etc.).</p>
 
 <p>Upgrade to a 5.0.6 or later fetchmail, or put string quotes
 around your token.</p>
 
 <hr/>
-<h2><a id="F4" name="F4">F4. I'm getting a `parse error' message I
+<h2><a id="F4" name="F4">F4. I'm getting a 'parse error' message I
 don't understand.</a></h2>
 
 <p>The most common cause of mysterious parse errors is putting a
 server option after a user option. Check the manual page; you'll
 probably find that by moving one or more options closer to the
-`poll' keyword you can eliminate the problem.</p>
+'poll' keyword you can eliminate the problem.</p>
 
 <p>Yes, I know these ordering restrictions are hard to understand.
-Unfortunately, they're necessary in order to allow the `defaults'
+Unfortunately, they're necessary in order to allow the 'defaults'
 feature to work.</p>
 
 <hr/>
@@ -1074,9 +1074,9 @@ containing:</p>
 <p>It won't work if the second line is just "<code>user
 itz</code>". This is silly.</p>
 
-<p>It seems fetchmail decides to RECP the `default local user'
+<p>It seems fetchmail decides to RECP the 'default local user'
 (i.e. the uid running fetchmail) unless there are local aliases,
-and the `default' aliases (itz-&gt;itz) don't count. They
+and the 'default' aliases (itz-&gt;itz) don't count. They
 should.</p>
 
 <p>Answer:</p>
@@ -1084,7 +1084,7 @@ should.</p>
 <p>No they shouldn't. I thought about this for a while, and I don't
 much like the conclusion I reached, but it's unavoidable. The
 problem is that fetchmail has no way to know, in general, that a
-local user `itz' actually exists.</p>
+local user 'itz' actually exists.</p>
 
 <p>"Ah!" you say, "Why doesn't it check the password file to see if
 the remote name matches a local one?" Well, there are two
@@ -1111,9 +1111,9 @@ daemon to get killed when I log out?</a></h2>
 
 <p>The easiest way to dispatch fetchmail on logout (which will work
 reliably only if you have just one login going at any time) is to
-arrange for the command `fetchmail -q' to be called on logout.
-Under bash, you can arrange this by putting `fetchmail -q' in the
-file `~/.bash_logout'. Most csh variants execute `~/.logout' on
+arrange for the command 'fetchmail -q' to be called on logout.
+Under bash, you can arrange this by putting 'fetchmail -q' in the
+file '~/.bash_logout'. Most csh variants execute '~/.logout' on
 logout. For other shells, consult your shell manual page.</p>
 
 <p>Automatic startup/shutdown of fetchmail is a little harder to
@@ -1163,9 +1163,9 @@ sl0.</li>
 ppp0.</li>
 
 <li>If you're using a direct connection over a local network such
-as an ethernet, use the command `netstat -r' to look at your
+as an ethernet, use the command 'netstat -r' to look at your
 routing table. Try to match your mailserver name to a destination
-entry; if you don't see it in the first column, use the `default'
+entry; if you don't see it in the first column, use the 'default'
 entry. The device name will be in the rightmost column.</li>
 </ol>
 
@@ -1176,7 +1176,7 @@ entry. The device name will be in the rightmost column.</li>
 10.0.2.15, with no netmask specified. (It's possible to configure
 slirp to present other addresses, but that's the default.)</li>
 
-<li>If you have a static IP address, run `ifconfig &lt;device&gt;',
+<li>If you have a static IP address, run 'ifconfig &lt;device&gt;',
 where &lt;device&gt; is whichever one you've determined. Use the IP
 address given after "inet addr:". That is the IP address for your
 end of the link, and is what you need. You won't need to specify a
@@ -1303,16 +1303,16 @@ Allman tells me that if <code>FEATURE(always_add_domain)</code> is
 included in sendmail's configuration, you can leave the
 <code>rewrite</code> option off.</p>
 
-<p>If your sendmail complains ``sendmail does not relay'', make
+<p>If your sendmail complains "sendmail does not relay", make
 sure your sendmail.cf file says <code>Cwlocalhost</code> so that
-sendmail recognizes `localhost' as a name of its host.</p>
+sendmail recognizes 'localhost' as a name of its host.</p>
 
 <p>If you're mailing from another machine on your local network,
 also ensure that its IP address is listed in ip_allow or name in
 name_allow (usually in /etc/mail/)</p>
 
 <p>If you find that your sendmail doesn't like the address
-`FETCHMAIL-DAEMON@localhost' (which is used in the bouncemail that
+'FETCHMAIL-DAEMON@localhost' (which is used in the bouncemail that
 fetchmail generates), you may have to set
 <code>FEATURE(accept_unqualified_senders)</code>.</p>
 
@@ -1354,18 +1354,18 @@ Mmdrop, P=/usr/bin/procmail, F=lsDFMqSPfhnu9J,
     A=procmail -Y -a $u -d $h
 </pre>
 
-<p>For both hacks, you have to declare `<code>envelope
+<p>For both hacks, you have to declare '<code>envelope
 "Delivered-To:"</code>' on the fetchmail side, to put the virtual
-domain (e.g. `domain.com') with RELAY permission into your access
-file and to add a line reading `<code>domain.com
-local:local-pop-user</code>' for the first and `<code>domain.com
+domain (e.g. 'domain.com') with RELAY permission into your access
+file and to add a line reading '<code>domain.com
+local:local-pop-user</code>' for the first and '<code>domain.com
 mdrop:local-pop-user</code>' for the second hack to your
 mailertable.</p>
 
 <p>You will notice that if the mail already has a Delivered-To
 header, sendmail will not add another.&#160; Further, editing
 sendmail.cf directly is not very comfortable.&#160; Solutions for
-both problems can be found in Peter `Rattacresh' Backes' `hybrid'
+both problems can be found in Peter 'Rattacresh' Backes' 'hybrid'
 patch against sendmail.&#160; Have a look at it, you can find it in
 the contrib subdirectory.</p>
 
@@ -1398,14 +1398,14 @@ then, providing the local hosts are also using qmail, it is
 possible to set up one fetchmail link to be reliably collect the
 mail for an entire domain.</p>
 
-<p>One of the basic features of qmail is the `Delivered-To:'
+<p>One of the basic features of qmail is the 'Delivered-To:'
 message header. Whenever qmail delivers a message to a local
 mailbox it puts the username and hostname of the envelope recipient
 on this line. The major reason for this is to prevent mail
 loops.</p>
 
 <p>To set up qmail to batch mail for a disconnected site the
-ISP-mailhost will have normally put that site in its `virtualhosts'
+ISP-mailhost will have normally put that site in its 'virtualhosts'
 control file so it will add a prefix to all mail addresses for this
 site. This results in mail sent to
 'username@userhost.userdom.dom.com' having a 'Delivered-To:' line
@@ -1427,11 +1427,11 @@ but a string matching the user host name is likely.</p>
 <p>To use this line you must:</p>
 
 <ol>
-<li>Ensure the option `envelope Delivered-To:' is in the fetchmail
+<li>Ensure the option 'envelope Delivered-To:' is in the fetchmail
 config file.</li>
 
 <li>Ensure you have a localdomains containing 'userdom.dom.com' or
-`userhost.dom.com' respectively.</li>
+'userhost.dom.com' respectively.</li>
 </ol>
 
 <p>So far this reliably delivers messages to the correct machine of
@@ -1450,17 +1450,17 @@ local machine. Simply create a dot-qmail file called
 
 <p>Peter Wilson adds:</p>
 
-<p>``My ISP uses "alias-unzzippedcom-" as the prefix, which means
+<p>"My ISP uses "alias-unzzippedcom-" as the prefix, which means
 that I need to name my file ".qmail-unzzippedcom-default". This is
 due to qmail's assumption that a message sent to user-xyz is
 handled by the file ~user/.qmail-xyz (or
-~user/.qmail-default).''</p>
+~user/.qmail-default)."</p>
 
 <p>Luca Olivetti adds:</p>
 
 <p>If you aren't using qmail locally, or you don't want to set up
 the alias mechanism described above, you can use the option
-`<code>qvirtual "mbox-userstr-"</code>' in your fetchmail config
+'<code>qvirtual "mbox-userstr-"</code>' in your fetchmail config
 file to strip the prefix from the local user name.</p>
 
 <hr/>
@@ -1473,9 +1473,9 @@ exim?</a></h2>
 addresses you pass to it have to be canonical (e.g. with a fully
 qualified hostname part). Therefore fetchmail tries to pass fully
 qualified RCPT TO addresses. But exim does not by default accept
-`localhost' as a fully qualified domain. This can be fixed.</p>
+'localhost' as a fully qualified domain. This can be fixed.</p>
 
-<p>In exim.conf, add `localhost' to your local_domains declaration
+<p>In exim.conf, add 'localhost' to your local_domains declaration
 if it's not already present. For example, the author's site at
 thyrsus.com would have a line reading:</p>
 
@@ -1523,7 +1523,7 @@ work fine out of the box.</p>
 single fetchmail session, smail sometimes delivers them in an order
 other than received-date order. This can be annoying because it
 scrambles conversational threads. This is not fetchmail's problem,
-it is an smail `feature' and has been reported to the maintainers
+it is an smail 'feature' and has been reported to the maintainers
 as a bug.</p>
 
 <p>Very recent smail versions require an
@@ -1556,7 +1556,7 @@ Notes?</a></h2>
 
 <p>The Lotus Notes SMTP gateway tries to deduce when it should
 convert \n to \r\n, but its rules are not the intuitive and
-correct-for-RFC822 ones. Use `forcecr'.</p>
+correct-for-RFC822 ones. Use 'forcecr'.</p>
 
 <hr/>
 <h2><a id="T7" name="T7">T7. How can I use fetchmail with Courier
@@ -1625,7 +1625,7 @@ as a known bug and apparently has no plans to fix it.</p>
 <p>Fetchmail using IMAP supports the proprietary NTLM mode used
 with M$ Exchange servers. To enable this, configure fetchmail with
 the --enable-NTLM option and recompile it. Specify a user option
-value that looks like `user@domain': the part to the left of the @
+value that looks like 'user@domain': the part to the left of the @
 will be passed as the username and the part to the right as the
 NTLM domain.</p>
 
@@ -1821,12 +1821,12 @@ good to go, otherwise you'll have to build your own from sources
 directions).</p>
 
 <p>Give your CompuServe pass-phrase in lower case as your password.
-Add `@compuserve.com' to your user ID so that it looks like `user
+Add '@compuserve.com' to your user ID so that it looks like 'user
 &lt;UserID&gt;@compuserve.com', where &lt;UserID&gt; can be either
 your numerical userID or your E-mail nickname. An RPA-enabled
 fetchmail will automatically check for csi.com in the POP server's
 greeting line. If that's found, and your user ID ends with
-`@compuserve.com', it will query the server to see if it is
+'@compuserve.com', it will query the server to see if it is
 RPA-capable, and if so do an RPA transaction rather than a
 plain-text password handshake.</p>
 
@@ -1925,9 +1925,9 @@ it may fail. To force SDPS mode, pick "sdps" as your protocol.</p>
 <h2><a id="I3" name="I3">I3. How can I use fetchmail with usa.net's
 servers?</a></h2>
 
-<p>Enable `<code>fetchall</code>'. A user reports that the 2.2
+<p>Enable '<code>fetchall</code>'. A user reports that the 2.2
 version of USA.NET's POP server reports that you must use the
-`<code>fetchall</code>' option to make sure that all of the mail is
+'<code>fetchall</code>' option to make sure that all of the mail is
 retrieved, otherwise some may be left on the server. This is almost
 certainly a server bug.</p>
 
@@ -1935,7 +1935,7 @@ certainly a server bug.</p>
 don't handle the TOP command properly, either. Regardless of the
 argument you give it, they retrieve only about 10 lines of the
 message. Fetchmail normally uses TOP for message retrieval in order
-to avoid marking messages seen, but `<code>fetchall</code>' forces
+to avoid marking messages seen, but '<code>fetchall</code>' forces
 it to use RETR instead.</p>
 
 <p>Also, we're told USA.NET adds a ton of hops to your messages.
@@ -2031,7 +2031,7 @@ fetchmail bug. (Reported July 2003.)</p>
 
 <p>Giuseppe Guerini added a --with-socks option that supports
 linking with socks library. If you specify the value of this option
-as ``yes'', the configure script will try to find the Rconnect
+as "yes", the configure script will try to find the Rconnect
 library and set the makefile up to link it. You can also specify a
 directory containing the Rconnect library.</p>
 
@@ -2250,13 +2250,13 @@ encrypting &quot;plugin&quot; is used or SSL is requested explicitly.</p>
 
 <hr/>
 <h2><a id="R1" name="R1">R1. Fetchmail isn't working, and -v shows
-`SMTP connect failed' messages.</a></h2>
+'SMTP connect failed' messages.</a></h2>
 
 <p>Fetchmail itself is probably working, but your SMTP port 25
 listener is down or inaccessible.</p>
 
 <p>The first thing to check is if you can telnet to port 25 on your
-smtp host (which is normally `localhost' unless you've specified an
+smtp host (which is normally 'localhost' unless you've specified an
 smtp option in your .fetchmailrc or on the command line) and get a
 greeting line from the listener. If the SMTP host is inaccessible
 or the listener is down, fix that first.</p>
@@ -2270,7 +2270,7 @@ most benign and typical problem is that the listener had a
 momentary seizure due to resource exhaustion while fetchmail was
 polling it -- process table full or some other problem that stopped
 the listener process from forking. If your SMTP host is not
-`localhost' or something else in /etc/hosts, the fetchmail glitch
+'localhost' or something else in /etc/hosts, the fetchmail glitch
 could also have been caused by transient nameserver failure.</p>
 
 <p>Try running fetchmail -v again; if it succeeds, you had one of
@@ -2335,7 +2335,7 @@ fetchmail doesn't work.</a></h2>
 problem in <a href="#X1">X1</a>.)</p>
 
 <p>Try sending yourself test mail and retrieving it using the
-command-line options `<code>-k -m cat</code>'. This will dump
+command-line options '<code>-k -m cat</code>'. This will dump
 exactly what fetchmail retrieves to standard output (plus the
 Received line fetchmail itself adds to the headers).</p>
 
@@ -2505,9 +2505,9 @@ declaration <tt>auth password</tt> in your .fetchmailrc.</p>
 <h2><a id="H1" name="H1">H1. Fetchmail hangs when used with
 pppd.</a></h2>
 
-<p>Your problem may be with pppd's `demand' option. We have a
+<p>Your problem may be with pppd's 'demand' option. We have a
 report that fetchmail doesn't play well with it, but works with
-pppd if `demand' is turned off. We have no idea why this is.</p>
+pppd if 'demand' is turned off. We have no idea why this is.</p>
 
 <hr/>
 <h2><a id="H2" name="H2">H2. Fetchmail hangs during the MAIL FROM
@@ -2626,7 +2626,7 @@ violation of the POP3 RFCs, but a good idea in a world of flaky
 phone lines). Then it will re-queue any message that was being
 downloaded at hangup time. Still, qpopper may require a noticeable
 amount of time to do deletions and clean up its queue. (Fetchmail
-waits a bit before retrying in order to avoid a `lock busy'
+waits a bit before retrying in order to avoid a 'lock busy'
 error.)</p>
 
 <hr/>
@@ -2640,14 +2640,14 @@ description of the <code>antispam&gt;</code> option) from the
 listener. No interrupt can cause it to lose mail.</p>
 
 <p>However, IMAP2bis has a design problem in that its normal fetch
-command marks a message `seen' as soon as the fetch command to get
+command marks a message 'seen' as soon as the fetch command to get
 it is sent down. If for some reason the message isn't actually
 delivered (you take a line hit during the download, or your port 25
 listener can't find enough free disk space, or you interrupt the
-delivery in mid-message) that `seen' message can lurk invisibly in
+delivery in mid-message) that 'seen' message can lurk invisibly in
 your server mailbox forever.</p>
 
-<p>Workaround: add the `<code>fetchall</code>' keyword to your
+<p>Workaround: add the '<code>fetchall</code>' keyword to your
 fetch options.</p>
 
 <p>Solution: switch to an <a href="http://www.imap.org">IMAP4</a>
@@ -2661,15 +2661,15 @@ multidrop mail is going to root anyway.</a></h2>
 recipient names it parses out of To/Cc/envelope-header lines as
 matching the name of the mailserver machine. To check this, run
 fetchmail in foreground with -v -v on. You will probably see a lot
-of messages with the format ``line rejected, %s is not an alias of
-the mailserver'' or ``no address matches; forwarding to %s.''</p>
+of messages with the format "line rejected, %s is not an alias of
+the mailserver" or "no address matches; forwarding to %s."</p>
 
 <p>These errors usually indicate some kind of DNS configuration
 problem either on the server or your client machine.</p>
 
-<p>The easiest workaround is to add a `<code>via</code>' option (if
+<p>The easiest workaround is to add a '<code>via</code>' option (if
 necessary) and add enough aka declarations to cover all of your
-mailserver's aliases, then say `<code>no dns</code>'. This will
+mailserver's aliases, then say '<code>no dns</code>'. This will
 take DNS out of the picture (though it means mail may be
 uncollected if it's sent to an alias of the mailserver that you
 don't have listed).</p>
@@ -2702,7 +2702,7 @@ setting up a UUCP feed.</p>
 may do (though you <em>are</em> going to get hurt by some mailing
 list software; see the caveats under THE USE AND ABUSE OF MULTIDROP
 MAILBOXES on the man page). If you want to try it, the way to do it
-is with the `<code>localdomains</code>' option.</p>
+is with the '<code>localdomains</code>' option.</p>
 
 <p>In general, if you use localdomains you need to make sure of two
 other things:</p>
@@ -2710,12 +2710,12 @@ other things:</p>
 <p><strong>1. You've actually set up your .fetchmailrc entry to
 invoke multidrop mode.</strong></p>
 
-<p>Many people set a `<code>localdomains</code>' list and then
+<p>Many people set a '<code>localdomains</code>' list and then
 forget that fetchmail wants to see more than one name (or the
-wildcard `*') in a `<code>here</code>' list before it will do
+wildcard '*') in a '<code>here</code>' list before it will do
 multidrop routing.</p>
 
-<p><strong>2. You may have to set `no envelope'.</strong></p>
+<p><strong>2. You may have to set 'no envelope'.</strong></p>
 
 <p>Normally, multidrop mode tries to deduce an envelope address
 from a message before parsing the To/Cc/Bcc lines (this enables it
@@ -2725,7 +2725,7 @@ recipient address in the To lines).</p>
 <p>Some ways of accumulating a whole domain's messages in a single
 server mailbox mean it all ends up with a single envelope address
 that is useless for rerouting purposes. You may have to set
-`<code>no envelope</code>' to prevent fetchmail from being
+'<code>no envelope</code>' to prevent fetchmail from being
 bamboozled by this.</p>
 
 <p>Check also answer <a href="#T1">T1</a> on a reliable way to do
@@ -2762,13 +2762,13 @@ won't be, and this problem should go away.</p>
 <h2><a id="M5" name="M5">M5. I'm seeing long DNS delays before each
 message is processed.</a></h2>
 
-<p>Use the `<code>aka</code>' option to pre-declare as many of your
+<p>Use the '<code>aka</code>' option to pre-declare as many of your
 mailserver's DNS names as you can. When an address's host part
 matches an aka name, no DNS lookup needs to be done to check
 it.</p>
 
 <p>If you're sure you've pre-declared all of your mailserver's DNS
-names, you can use the `<code>no dns</code>' option to prevent
+names, you can use the '<code>no dns</code>' option to prevent
 other hostname parts from being looked up at all.</p>
 
 <p>Sometimes delays are unavoidable. Some SMTP listeners try to
@@ -2845,11 +2845,11 @@ mailserver's theory of who the message was addressed to.</p>
 
 <p>Some (unusual) mailserver configurations will generate extra
 Received lines which you need to skip. To arrange this, use the
-optional skip prefix argument of the `envelope' option; you may
-need to say something like `<code>envelope 1 Received</code>' or
-`<code>envelope 2 Received</code>'.</p>
+optional skip prefix argument of the 'envelope' option; you may
+need to say something like '<code>envelope 1 Received</code>' or
+'<code>envelope 2 Received</code>'.</p>
 
-<h3>The `by' clause doesn't contain a mailserver alias:</h3>
+<h3>The 'by' clause doesn't contain a mailserver alias:</h3>
 
 <p>When fetchmail parses a Received line that looks like</p>
 
@@ -2859,10 +2859,10 @@ Received: from send103.yahoomail.com (send103.yahoomail.com [205.180.60.92])
     for &lt;ksturgeon@fbceg.org&gt;; Wed, 9 Sep 1998 17:01:59 -0700
 </pre>
 
-<p>it checks to see if `iserv.ttns.net' is a DNS alias of your
-mailserver before accepting `ksturgeon@fbceg.org' as an envelope
+<p>it checks to see if 'iserv.ttns.net' is a DNS alias of your
+mailserver before accepting 'ksturgeon@fbceg.org' as an envelope
 address. This check might fail if your DNS were misconfigured, or
-if you were using `no dns' and had failed to declare iserv.ttns.net
+if you were using 'no dns' and had failed to declare iserv.ttns.net
 as an alias of your server.</p>
 
 <hr/>
@@ -2904,7 +2904,7 @@ installing a current version of <em>deliver</em>. If this doesn't
 work, try to figure out which other program in your mail path is
 inserting the blank line and replace that. If you can't do either
 of these things, pick a different MDA (such as procmail) and
-declare it with the `<code>mda</code>' option.</p>
+declare it with the '<code>mda</code>' option.</p>
 
 <hr/>
 <h2><a id="X2" name="X2">X2. My mail client can't see a Subject
@@ -2934,7 +2934,7 @@ messages on From lines. We have one report that the 2.1 version of
 the BSD popper program (as distributed on Solaris 2.5 and
 elsewhere) is broken this way.</p>
 
-<p>You can test this. Declare an mda of `cat' and send yourself one
+<p>You can test this. Declare an mda of 'cat' and send yourself one
 piece of mail containing "From" at start of a line. If you see a
 split message, your POP/IMAP server is at fault. Upgrade to a more
 recent version.</p>
@@ -2955,7 +2955,7 @@ sendmail.cf file. There will likely be a line something like</p>
 Mlocal, P=/usr/bin/procmail, F=lsDFMShP, S=10, R=20/40, A=procmail -Y -d $u
 </pre>
 
-<p>describing your local delivery agent. Try inserting the `E'
+<p>describing your local delivery agent. Try inserting the 'E'
 option in the flags part (the F= string). This will make sendmail
 turn each dangerous start-of-line From into a &gt;From, preventing
 programs further downstream from acting up.</p>
@@ -3297,7 +3297,7 @@ the header is dumped to all my terminal sessions.</a></h2>
 <p>Fetchmail uses the local sendmail to perform final delivery,
 which Netscape and other clients doesn't do; the announcement of
 new messages is done by a daemon that sendmail pokes. There should
-be a ``biff'' command to control this. Type</p>
+be a "biff" command to control this. Type</p>
 
 <pre>
 biff n
@@ -3306,11 +3306,11 @@ biff n
 <p>to turn it off. If this doesn't work, try the command</p>
 
 <pre>
-chmod -x `tty`
+chmod -x $(tty)
 </pre>
 
 <p>which is essentially what <code>biff -n</code> will do. If this
-doesn't work, comment out any reference to ``comsat'' in your
+doesn't work, comment out any reference to "comsat" in your
 /etc/inetd.conf file and restart inetd.</p>
 
 <p>In Slackware Linux distributions, the last line in /etc/profile
