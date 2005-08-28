@@ -144,6 +144,8 @@ messages but before deleting them</a><br/>
 <a href="#R9">R9. Fetchmail is timing out during message fetches</a><br/>
 <a href="#R10">R10. Fetchmail is dying with SIGPIPE.</a><br/>
 <a href="#R11">R11. My server is hanging or emitting errors on CAPA.</a><br/>
+<a href="#R12">R12. Fetchmail isn't working and reports getaddrinfo
+    errors.</a>
 <h1>Hangs and lockups:</h1>
 
 <a href="#H1">H1. Fetchmail hangs when used with pppd.</a><br/>
@@ -2501,6 +2503,23 @@ errors on CAPA.</a></h2>
 <p>Your POP3 server is broken. You can work around this with the
 declaration <tt>auth password</tt> in your .fetchmailrc.</p>
 
+<hr/>
+<h2><a id="R12" name="R12">R12. Fetchmail isn't working and reports
+	getaddrinfo errors.</a></h2>
+<ol><li>Make sure you haven't mistyped the host name or address, and that
+    your DNS is working. If you cannot fix DNS, give the numeric host
+    literal, for instance, 192.168.0.1</li>
+    <li>Make sure your <code>/etc/services</code> file (or other
+    services database) contains the necessary service entries. If you
+    cannot fix the services database, use the --port option and give the
+    numeric port address. Common port addresses
+    are:<table>
+	<tr><th>service</th><th>port</th></tr>
+	<tr><td>IMAP</td><td>143</td></tr>
+	<tr><td>IMAP+SSL</td><td>993</td></tr>
+	<tr><td>POP3</td><td>110</td></tr>
+	<tr><td>POP3+SSL</td><td>995</td></tr>
+</table></li></ol>
 <hr/>
 <h2><a id="H1" name="H1">H1. Fetchmail hangs when used with
 pppd.</a></h2>
