@@ -264,7 +264,11 @@ may be removed and forced enabled in a future fetchmail version.
 (Keyword: port)
 The port option permits you to specify a TCP/IP port to connect on.
 This option will seldom be necessary as all the supported protocols have
-well-established default port numbers.
+well-established default port numbers. On some older machines, however,
+the protocol <\-\-> port mappings are missing from the services database
+(often /etc/services), and this port can make fetchmail work for you
+even if you don't have system administrator privileges. See the FAQ item
+R12 for details.
 .TP
 .B \-\-principal <principal>
 (Keyword: principal)
