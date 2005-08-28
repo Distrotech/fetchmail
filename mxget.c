@@ -117,11 +117,18 @@ struct mxentry *getmxrecords(const char *name)
 }
 #endif /* HAVE_RES_SEARCH */
 
-#ifdef TESTMAIN
-main(int argc, char *argv[])
+#ifdef STANDALONE
+#include <stdlib.h>
+
+int main(int argc, char *argv[])
 {
     int	count, i;
     struct mxentry *responses;
+
+    if (argc != 2 || 0 == strcmp(argv[1], "-h")) {
+	fprintf(stderr, "Usage: %s domain\n", argv[0]);
+	exit(1);
+    }
 
     responses = getmxrecords(argv[1]);
     if (responses == (struct mxentry *)NULL)
