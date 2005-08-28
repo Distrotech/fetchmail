@@ -55,7 +55,7 @@ fetchmail_SOURCES=	fetchmail.h getopt.h \
 		smbmd4.c smbutil.c lock.c \
 		rcfile_l.l rcfile_y.y ucs/norm_charmap.c
 
-check_PROGRAMS +=	rfc822 unmime netrc rfc2047e
+check_PROGRAMS +=	rfc822 unmime netrc rfc2047e mxget
 
 rfc2047e_CFLAGS=	-DTEST
 
@@ -66,6 +66,9 @@ unmime_CFLAGS=	-DSTANDALONE -DHAVE_CONFIG_H -I$(builddir)
 
 netrc_SOURCES=	netrc.c xmalloc.c report.c
 netrc_CFLAGS=	-DSTANDALONE -DHAVE_CONFIG_H -I$(builddir)
+
+mxget_SOURCES=	mxget.c
+mxget_CFLAGS=	-DSTANDALONE -DHAVE_CONFIG_H -I$(builddir)
 
 # For some losing Unix makes.
 SHELL = /bin/sh
