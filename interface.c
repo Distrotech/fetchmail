@@ -11,6 +11,10 @@
  *
  * For license terms, see the file COPYING in this directory.
  */
+
+#include "fetchmail.h"
+#ifdef CAN_MONITOR
+
 #include <sys/types.h>
 #include <sys/param.h>
 
@@ -18,9 +22,6 @@
 #include <sys/utsname.h>
 #endif
 
-#if (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__)
-
-#include "config.h"
 #include <stdio.h>
 #include <string.h>
 #if defined(STDC_HEADERS)
@@ -48,8 +49,6 @@
 #include <net/if_dl.h>
 #endif
 #endif
-#include "config.h"
-#include "fetchmail.h"
 #include "socket.h"
 #include "i18n.h"
 #include "tunable.h"
@@ -74,7 +73,7 @@ static char *netdevfmt;
  */
 #define MONITOR_SLOP		5
 
-#if defined(linux)
+#ifdef linux
 
 void interface_init(void)
 /* figure out which /proc/net/dev format to use */
@@ -545,7 +544,11 @@ get_ifinfo_end:
 
 #endif /* __FREEBSD_USE_SYSCTL_GET_IFFINFO */
 
-#endif /* defined __FreeBSD__ */
+#else
+
+void interface_init(void) {};
+
+#endif
 
 
 #ifndef HAVE_INET_ATON
@@ -734,4 +737,4 @@ int interface_approve(struct hostdata *hp, flag domonitor)
 
 	return(TRUE);
 }
-#endif /* (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__) */
+#endif /* CAN_MONITOR */

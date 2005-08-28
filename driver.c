@@ -34,16 +34,12 @@
 #ifdef HAVE_NET_SOCKET_H
 #include <net/socket.h>
 #endif
+#include <netdb.h>
 #ifdef HAVE_PKG_hesiod
 #include <hesiod.h>
 #endif
 
 #include <langinfo.h>
-
-#if defined(HAVE_RES_SEARCH) || defined(HAVE_GETHOSTBYNAME)
-#include <netdb.h>
-#include "mx.h"
-#endif /* defined(HAVE_RES_SEARCH) || defined(HAVE_GETHOSTBYNAME) */
 
 #include "kerberos.h"
 #ifdef KERBEROS_V4
@@ -54,6 +50,7 @@
 #include "socket.h"
 
 #include "fetchmail.h"
+#include "getaddrinfo.h"
 #include "tunable.h"
 
 /* throw types for runtime errors */
@@ -92,7 +89,7 @@ void resetidletimeout(void)
 void set_timeout(int timeleft)
 /* reset the nonresponse-timeout */
 {
-#if !defined(__EMX__) && !defined(__BEOS__) 
+#if !defined(__EMX__) && !defined(__BEOS__)
     struct itimerval ntimeout;
 
     if (timeleft == 0)
@@ -338,12 +335,12 @@ static void send_size_warnings(struct query *ctl)
 	return;
     stuff_warning(iana_charset, ctl,
 	   GT_("Subject: Fetchmail oversized-messages warning"));
-    stuff_warning(NULL, ctl, "");
+    stuff_warning(NULL, ctl, "%s", "");
     stuff_warning(NULL, ctl,
 	    GT_("The following oversized messages remain on the mail server %s:"),
 	    ctl->server.pollname);
 
-    stuff_warning(NULL, ctl, "");
+    stuff_warning(NULL, ctl, "%s", "");
 
     if (run.poll_interval == 0)
 	max_warning_poll_count = 0;
@@ -368,7 +365,7 @@ static void send_size_warnings(struct query *ctl)
 	    current->val.status.num = 0;
     }
 
-    stuff_warning(NULL, ctl, "");
+    stuff_warning(NULL, ctl, "%s", "");
 
     close_warning_by_mail(ctl, (struct msgblk *)NULL);
 }
@@ -915,7 +912,7 @@ static int do_session(
 	    {
 		stuff_warning(iana_charset, ctl,
 			      GT_("Subject: fetchmail sees repeated timeouts"));
-		stuff_warning(NULL, ctl, "");
+		stuff_warning(NULL, ctl, "%s", "");
 		stuff_warning(NULL, ctl,
 			      GT_("Fetchmail saw more than %d timeouts while attempting to get mail from %s@%s.\n"), 
 			      MAX_TIMEOUTS,
@@ -976,7 +973,6 @@ static int do_session(
 	}
 #endif /* HESIOD */
 
-#ifdef HAVE_GETHOSTBYNAME
 	/*
 	 * Canonicalize the server truename for later use.  This also
 	 * functions as a probe for whether the mailserver is accessible.
@@ -1004,7 +1000,6 @@ static int do_session(
 	    }
 	    else
 	    {
-#ifdef INET6_ENABLE
 		struct addrinfo hints, *res;
 		int error;
 
@@ -1027,43 +1022,14 @@ static int do_session(
 		else
 		{
 		    xfree(ctl->server.truename);
-		    ctl->server.truename=xstrdup(res->ai_canonname);
-		    ctl->server.trueaddr=xmalloc(res->ai_addrlen);
+		    ctl->server.truename = xstrdup(res->ai_canonname);
+		    ctl->server.trueaddr = xmalloc(res->ai_addrlen);
+		    ctl->server.trueaddr_len = res->ai_addrlen;
 		    memcpy(ctl->server.trueaddr, res->ai_addr, res->ai_addrlen);
 		    freeaddrinfo(res);
 		}
-#else
-		struct hostent	*namerec;
- 
-		/* 
-		 * Get the host's IP, so we can report it like this:
-		 *
-		 * Received: from hostname [10.0.0.1]
-		 */
-		errno = 0;
-		namerec = gethostbyname(ctl->server.queryname);
-		if (namerec == (struct hostent *)NULL)
-		{
-		    report(stderr,
-			   GT_("couldn't find canonical DNS name of %s (%s)\n"),
-			   ctl->server.pollname, ctl->server.queryname);
-		    err = PS_DNS;
-		    set_timeout(0);
-		    phase = oldphase;
-		    goto closeUp;
-		}
-		else 
-		{
-		    ctl->server.truename=xstrdup((char *)namerec->h_name);
-		    ctl->server.trueaddr=xmalloc(namerec->h_length);
-		    memcpy(ctl->server.trueaddr, 
-			   namerec->h_addr_list[0],
-			   namerec->h_length);
-		}
-#endif
 	    }
 	}
-#endif /* HAVE_GETHOSTBYNAME */
 
 	realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;
 
@@ -1075,12 +1041,7 @@ static int do_session(
 			     ctl->server.plugin)) == -1)
 	{
 	    char	errbuf[BUFSIZ];
-#ifndef INET6_ENABLE
 	    int err_no = errno;
-#ifdef HAVE_RES_SEARCH
-	    if (err_no != 0 && h_errno != 0)
-		report(stderr, GT_("internal inconsistency\n"));
-#endif
 	    /*
 	     * Avoid generating a bogus error every poll cycle when we're
 	     * in daemon mode but the connection to the outside world
@@ -1091,25 +1052,6 @@ static int do_session(
 	    {
 		report_build(stderr, GT_("%s connection to %s failed"), 
 			     ctl->server.base_protocol->name, ctl->server.pollname);
-#ifdef HAVE_RES_SEARCH
-		if (h_errno != 0)
-		{
-		    if (h_errno == HOST_NOT_FOUND)
-			strlcpy(errbuf, GT_("host is unknown."), sizeof(errbuf));
-#ifndef __BEOS__
-		    else if (h_errno == NO_ADDRESS)
-			strlcpy(errbuf, GT_("name is valid but has no IP address."), sizeof(errbuf));
-#endif
-		    else if (h_errno == NO_RECOVERY)
-			strlcpy(errbuf, GT_("unrecoverable name server error."), sizeof(errbuf));
-		    else if (h_errno == TRY_AGAIN)
-			strlcpy(errbuf, GT_("temporary name server error."), sizeof(errbuf));
-		    else
-			snprintf (errbuf, sizeof(errbuf),
-				GT_("unknown DNS error %d."), h_errno);
-		}
-		else
-#endif /* HAVE_RES_SEARCH */
 		    strlcpy(errbuf, strerror(err_no), sizeof(errbuf));
 		report_complete(stderr, ": %s\n", errbuf);
 
@@ -1133,7 +1075,6 @@ static int do_session(
 		}
 #endif
 	    }
-#endif /* INET6_ENABLE */
 	    err = PS_SOCKET;
 	    set_timeout(0);
 	    phase = oldphase;
@@ -1241,7 +1182,7 @@ static int do_session(
 			stuff_warning(iana_charset, ctl,
 				      GT_("Subject: fetchmail authentication failed on %s@%s"),
 			    ctl->remotename, ctl->server.truename);
-			stuff_warning(NULL, ctl, "");
+			stuff_warning(NULL, ctl, "%s", "");
 			stuff_warning(NULL, ctl,
 				      GT_("Fetchmail could not get mail from %s@%s.\n"), 
 				      ctl->remotename,
@@ -1314,7 +1255,7 @@ is restored."));
 			stuff_warning(iana_charset, ctl,
 			      GT_("Subject: fetchmail authentication OK on %s@%s"), 
 				      ctl->remotename, ctl->server.truename);
-			stuff_warning(NULL, ctl, "");
+			stuff_warning(NULL, ctl, "%s", "");
 			stuff_warning(NULL, ctl,
 			      GT_("Fetchmail was able to log into %s@%s.\n"), 
 				      ctl->remotename,

@@ -1,3 +1,5 @@
+#ifndef _FETCHMAIL_H
+#define _FETCHMAIL_H
 /*
  * For license terms, see the file COPYING in this directory.
  */
@@ -243,11 +245,15 @@ struct hostdata		/* shared among all user connections to given server */
     char *esmtp_name, *esmtp_password;	/* ESMTP AUTH information */
 
 #if defined(linux) || defined(__FreeBSD__)
+#define CAN_MONITOR
+#endif
+
+#ifdef CAN_MONITOR
     char *interface;
     char *monitor;
     int  monitor_io;
     struct interface_pair_s *interface_pair;
-#endif /* linux */
+#endif
 
     char *plugin,*plugout;
 
@@ -256,7 +262,8 @@ struct hostdata		/* shared among all user connections to given server */
     int poll_count;			/* count of polls so far */
     char *queryname;			/* name to attempt DNS lookup on */
     char *truename;			/* "true name" of server host */
-    char *trueaddr;                     /* IP address of truename, as char */
+    struct sockaddr *trueaddr;		/* IP address of truename */
+    size_t trueaddr_len;		/* size of trueaddr data */
     struct hostdata *lead_server;	/* ptr to lead query for this server */
     int esmtp_options;
 };
@@ -707,4 +714,13 @@ strlcpy(char *dst, const char *src, size_t siz);
  * positive integer to a port number. Returns -1 for error. */
 int servport(const char *service);
 
+#ifndef HAVE_GETNAMEINFO
+# define NI_NUMERICHOST	1
+# define NI_NUMERICSERV	2
+# define NI_NOFQDN	4
+# define NI_NAMEREQD	8
+# define NI_DGRAM	16
+#endif
+
+#endif
 /* fetchmail.h ends here */

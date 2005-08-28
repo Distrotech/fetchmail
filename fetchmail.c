@@ -233,9 +233,6 @@ int main(int argc, char **argv)
 #ifdef OPIE_ENABLE
 	"+OPIE"
 #endif /* OPIE_ENABLE */
-#ifdef INET6_ENABLE
-	"+INET6"
-#endif /* INET6_ENABLE */
 #ifdef HAVE_PKG_hesiod
 	"+HESIOD"
 #endif
@@ -528,9 +525,7 @@ int main(int argc, char **argv)
     	}
     }
 
-#ifdef linux
     interface_init();
-#endif /* linux */
 
     /* beyond here we don't want more than one fetchmail running per user */
     umask(0077);
@@ -645,14 +640,14 @@ int main(int argc, char **argv)
 			}
 		    }
 
-#if (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__)
+#ifdef CAN_MONITOR
 		    /*
 		     * Don't do monitoring if we were woken by a signal.
 		     * Note that interface_approve() does its own error logging.
 		     */
 		    if (!interface_approve(&ctl->server, !lastsig))
 			continue;
-#endif /* (defined(linux) && !INET6_ENABLE) || defined(__FreeBSD__) */
+#endif /* CAN_MONITOR */
 
 		    dofastuidl = 0; /* this is reset in the driver if required */
 
@@ -709,7 +704,7 @@ int main(int argc, char **argv)
 			    break;
 			}
 
-#if (defined(linux) && !defined(INET6_ENABLE)) || defined (__FreeBSD__)
+#ifdef CAN_MONITOR
 		    if (ctl->server.monitor)
 		    {
 			/*
@@ -720,7 +715,7 @@ int main(int argc, char **argv)
 			sleep(3);
 			interface_note_activity(&ctl->server);
 		    }
-#endif /* (defined(linux) && !INET6_ENABLE) || defined(__FreeBSD__) */
+#endif /* CAN_MONITOR */
 		}
 	    }
 
@@ -853,11 +848,11 @@ static void optmerge(struct query *h2, struct query *h1, int force)
     FLAG_MERGE(server.uidl);
     FLAG_MERGE(server.principal);
 
-#if defined(linux) || defined(__FreeBSD__)
+#ifdef CAN_MONITOR
     FLAG_MERGE(server.interface);
-    FLAG_MERGE(server.monitor);
     FLAG_MERGE(server.interface_pair);
-#endif /* linux || defined(__FreeBSD__) */
+    FLAG_MERGE(server.monitor);
+#endif
 
     FLAG_MERGE(server.plugin);
     FLAG_MERGE(server.plugout);
@@ -1151,14 +1146,14 @@ static int load_params(int argc, char **argv, int optind)
 	    if (!ctl->localnames)	/* for local delivery via SMTP */
 		save_str_pair(&ctl->localnames, user, NULL);
 
-#if !defined(HAVE_GETHOSTBYNAME) || !defined(HAVE_RES_SEARCH)
+#ifndef HAVE_RES_SEARCH
 	    /* can't handle multidrop mailboxes unless we can do DNS lookups */
 	    if (MULTIDROP(ctl) && ctl->server.dns)
 	    {
 		ctl->server.dns = FALSE;
 		report(stderr, GT_("fetchmail: warning: no DNS available to check multidrop fetches from %s\n"), ctl->server.pollname);
 	    }
-#endif /* !HAVE_GETHOSTBYNAME || !HAVE_RES_SEARCH */
+#endif /* !HAVE_RES_SEARCH */
 
 	    /*
 	     * can't handle multidrop mailboxes without "envelope"
@@ -1179,7 +1174,6 @@ static int load_params(int argc, char **argv, int optind)
 	    if (ctl->server.timeout == -1)
 		ctl->server.timeout = CLIENT_TIMEOUT;
 
-#ifndef INET6_ENABLE
 	    /* sanity checks */
 	    if (ctl->server.service) {
 		int port = servport(ctl->server.service);
@@ -1217,10 +1211,9 @@ static int load_params(int argc, char **argv, int optind)
 		    }
 		}
 	    }
-#endif /* !INET6_ENABLE */
 
 	    /*
-	     * "I beg to you, have mercy on the week minds like myself."
+	     * "I beg to you, have mercy on the we[a]k minds like myself."
 	     * wrote Pehr Anderson.  Your petition is granted.
 	     */
 	    if (ctl->fetchall && ctl->keep && run.poll_interval && !nodetach)
@@ -1417,12 +1410,7 @@ static int query_host(struct query *ctl)
 	report(stderr, GT_("ETRN support is not configured.\n"));
 	st = PS_PROTOCOL;
 #else
-#ifdef HAVE_GETHOSTBYNAME
 	st = doETRN(ctl);
-#else
-	report(stderr, GT_("Cannot support ETRN without gethostbyname(2).\n"));
-	st = PS_PROTOCOL;
-#endif /* HAVE_GETHOSTBYNAME */
 	break;
 #endif /* ETRN_ENABLE */
     case P_ODMR:
@@ -1430,12 +1418,7 @@ static int query_host(struct query *ctl)
 	report(stderr, GT_("ODMR support is not configured.\n"));
 	st = PS_PROTOCOL;
 #else
-#ifdef HAVE_GETHOSTBYNAME
 	st = doODMR(ctl);
-#else
-	report(stderr, GT_("Cannot support ODMR without gethostbyname(2).\n"));
-	st = PS_PROTOCOL;
-#endif /* HAVE_GETHOSTBYNAME */
 #endif /* ODMR_ENABLE */
 	break;
     default:
@@ -1825,7 +1808,7 @@ static void dump_params (struct runctl *runp,
 		    }
 		}
 	}
-#if defined(linux) || defined(__FreeBSD__)
+#ifdef CAN_MONITOR
 	if (ctl->server.interface)
 	    printf(GT_("  Connection must be through interface %s.\n"), ctl->server.interface);
 	else if (outlevel >= O_VERBOSE)

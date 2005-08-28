@@ -1,10 +1,11 @@
 dnl Autoconfigure input file for fetchmail
 dnl Eric S. Raymond <esr@thyrsus.com>
+dnl Matthias Andree <matthias.andree@gmx.de>
 dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl
 
-AC_INIT([fetchmail],[6.2.9-rc1])
+AC_INIT([fetchmail],[6.2.9-rc2])
 AC_CONFIG_SRCDIR([fetchmail.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_LIBOBJ_DIR([.])
@@ -30,6 +31,7 @@ AC_HEADER_TIME
 AC_TYPE_SIZE_T
 AC_TYPE_PID_T
 AC_TYPE_SIGNAL
+AC_CHECK_TYPE(u_int32_t,unsigned int)
 AC_CHECK_HEADERS([unistd.h termios.h termio.h sgtty.h stdarg.h \
 	sys/itimer.h fcntl.h sys/fcntl.h memory.h sys/wait.h \
 	arpa/inet.h arpa/nameser.h netinet/in.h net/socket.h \
@@ -117,11 +119,10 @@ AC_FUNC_VPRINTF
 
 AC_SUBST(EXTRAOBJ)
 
-AC_CHECK_FUNCS(tcsetattr stty setsid geteuid seteuid gethostbyname \
-  res_search strerror syslog \
-  snprintf vprintf vsnprintf vsyslog \
-  atexit inet_aton strftime setrlimit socketpair sigprocmask sigaction \
-  strdup)
+AC_CHECK_FUNCS(tcsetattr stty setsid geteuid seteuid dnl
+  res_search strerror syslog snprintf vprintf vsnprintf vsyslog dnl
+  atexit inet_aton strftime setrlimit socketpair sigprocmask dnl
+  sigaction strdup setlocale)
 
 # Under Red Hat 4.0 (and many other Linuxes) -lresolv is seriously flaky
 # and breaks gethostbyname(2).  It's better to use the bind stuff in the C
@@ -343,18 +344,8 @@ AC_ARG_ENABLE(opie,
 	[with_opie=no])
 test "$with_opie" = "yes" && AC_DEFINE(OPIE_ENABLE,1,Define if you want OPIE support compiled in)
 
-AC_ARG_ENABLE(inet6,
-	[  --enable-inet6          support IPv6],
-
-	[ AC_CHECK_FUNC(getaddrinfo, [with_inet6=yes],
-	  [ LDFLAGS="$LDFLAGS -L/usr/inet6/lib";
-	    AC_CHECK_LIB(inet6, getaddrinfo, [with_inet6=yes
-	    LIBS="$LIBS -linet6"],
-	    [ echo 'configure: cannot find proper glibc version or libinet6,';
-	      echo '           which is required for IPv6 support.';
-	      exit 1]) ] )],
-	[with_inet6=no])
-test "$with_inet6" = "yes" && AC_DEFINE(INET6_ENABLE,1,Define if you want IPv6 support compiled in)
+AC_SEARCH_LIBS(getaddrinfo, inet6, [AC_DEFINE(HAVE_GETADDRINFO,1,[define to 1 if you have the getaddrinfo function])])
+AC_CHECK_FUNCS(getnameinfo)
 
 # This version of the Kerberos 4 and 5 options addresses the follwing issues:
 # 
@@ -638,6 +629,8 @@ then
   AC_CHECK_FUNC(SOCKSfclose, [CFLAGS="$CFLAGS -Dfclose=SOCKSfclose"])
   LDFLAGS="$ac_savedLDFLAGS"
 fi])
+
+ACX_WHICH_GETHOSTBYNAME_R
 
 ###	use option --with-hesiod=DIR to point at a HESIOD directory
 AC_ma_SEARCH_PACKAGE(hesiod, hesiod_getmailhost, /usr/athena /usr /usr/local,hesiod, hesiod.h)

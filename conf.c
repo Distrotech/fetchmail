@@ -184,9 +184,6 @@ void dump_config(struct runctl *runp, struct query *querylist)
 #ifdef OPIE_ENABLE
     "'opie',"
 #endif /* OPIE_ENABLE */
-#ifdef INET6_ENABLE
-    "'inet6',"
-#endif /* INET6_ENABLE */
     ")\n";
     fputs(features, stdout);
 
@@ -288,18 +285,18 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	    else if (ctl->server.authenticate == A_OTP)
 		stringdump("auth", "otp");
 
-#if defined(HAVE_GETHOSTBYNAME) && defined(HAVE_RES_SEARCH)
+#ifdef HAVE_RES_SEARCH
 	    booldump("dns", ctl->server.dns);
-#endif /* HAVE_GETHOSTBYNAME && HAVE_RES_SEARCH */
+#endif /* HAVE_RES_SEARCH */
 	    booldump("uidl", ctl->server.uidl);
 
 	    listdump("aka", ctl->server.akalist);
 	    listdump("localdomains", ctl->server.localdomains);
 
-#if defined(linux) || defined(__FreeBSD__)
+#ifdef CAN_MONITOR
 	    stringdump("interface", ctl->server.interface);
 	    stringdump("monitor", ctl->server.monitor);
-#endif /* linux || __FreeBSD__ */
+#endif
 
 	    stringdump("plugin", ctl->server.plugin);
 	    stringdump("plugout", ctl->server.plugout);

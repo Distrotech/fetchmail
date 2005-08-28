@@ -200,18 +200,18 @@ serv_option	: AKA alias_list
 
 		| QVIRTUAL STRING	{current.server.qvirtual=xstrdup($2);}
 		| INTERFACE STRING	{
-#if (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__)
+#ifdef CAN_MONITOR
 					interface_parse($2, &current.server);
-#else /* (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__) */
+#else
 					fprintf(stderr, GT_("fetchmail: interface option is only supported under Linux (without IPv6) and FreeBSD\n"));
-#endif /* (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__) */
+#endif
 					}
 		| MONITOR STRING	{
-#if (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__)
+#ifdef CAN_MONITOR
 					current.server.monitor = xstrdup($2);
-#else /* (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__) */
+#else
 					fprintf(stderr, GT_("fetchmail: monitor option is only supported under Linux (without IPv6) and FreeBSD\n"));
-#endif /* (defined(linux) && !defined(INET6_ENABLE) || defined(__FreeBSD__)) */
+#endif
 					}
 		| PLUGIN STRING		{ current.server.plugin = xstrdup($2); }
 		| PLUGOUT STRING	{ current.server.plugout = xstrdup($2); }

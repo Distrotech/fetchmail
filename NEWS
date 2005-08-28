@@ -29,6 +29,8 @@ fetchmail 6.3.0 (not yet released officially):
   obsolete, deprecated and may be removed from a future fetchmail version
   without further notice. Their support for IPv6 (including IPv6-mapped IPv4)
   is unspecified.  Matthias Andree
+* The monitor and interface options may also be removed from a future fetchmail
+  version as they are not sufficiently portable.
 
 # OTHER USER-VISIBLE CHANGES
 * Sunil Shetye's fix to force fetchsizelimit to 1 for APOP and RPOP. (ESR)
@@ -183,6 +185,15 @@ fetchmail 6.3.0 (not yet released officially):
   the prompt. Reported by Michal Marek. Matthias Andree.
 * Write RFC-compliant BSMTP envelopes. Reported by Nico Golde. Matthias Andree.
 * Fix --with-gssapi compilation problem. Simon Josefsson. (MA)
+* Foster protocol-independence to support IPv6 better, for instance, providing
+  IPv6 addresses in Received: headers. Matthias Andree.
+* The --enable-inet6 configure option was removed. The code is mostly protocol
+  agnostic, a fully IPv6 aware OS is expected to provide getaddrinfo(),
+  getnameinfo() and the macro AF_INET6.  Matthias Andree.
+* Received: headers now enclose the for <...> destination address in angle
+  brackets for consistency with Postfix.  Matthias Andree.
+* Operating systems that do not support at least one of gethostbyname,
+  gethostbyname_r, getipnodebyname are no longer supported.  Matthias Andree.
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.

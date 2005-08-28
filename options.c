@@ -160,10 +160,10 @@ static const struct option longoptions[] = {
 
   {"principal", required_argument, (int *) 0, LA_PRINCIPAL },
 
-#if (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__)
+#ifdef CAN_MONITOR
   {"interface",	required_argument, (int *) 0, LA_INTERFACE   },
   {"monitor",	required_argument, (int *) 0, LA_MONITOR     },
-#endif /* (defined(linux) && !INET6_ENABLE) || defined(__FreeBSD__) */
+#endif /* CAN_MONITOR */
   {"plugin",	required_argument, (int *) 0, LA_PLUGIN      },
   {"plugout",	required_argument, (int *) 0, LA_PLUGOUT     },
 
@@ -547,7 +547,7 @@ struct query *ctl;	/* option record to be initialized */
 	    ctl->listener = LMTP_MODE;
 	    break;
 
-#if (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__)
+#ifdef CAN_MONITOR
 	case 'I':
 	case LA_INTERFACE:
 	    interface_parse(optarg, &ctl->server);
@@ -556,7 +556,7 @@ struct query *ctl;	/* option record to be initialized */
 	case LA_MONITOR:
 	    ctl->server.monitor = xstrdup(optarg);
 	    break;
-#endif /* (defined(linux) && !INET6_ENABLE) || defined(__FreeBSD__) */
+#endif /* CAN_MONITOR */
 	case LA_PLUGIN:
 	    ctl->server.plugin = xstrdup(optarg);
 	    break;
@@ -653,7 +653,7 @@ struct query *ctl;	/* option record to be initialized */
 	P(GT_("  -i, --idfile      specify alternate UIDs file\n"));
 	P(GT_("      --postmaster  specify recipient of last resort\n"));
 	P(GT_("      --nobounce    redirect bounces from user to postmaster.\n"));
-#if (defined(linux) && !defined(INET6_ENABLE)) || defined(__FreeBSD__)
+#ifdef CAN_MONITOR
 	P(GT_("  -I, --interface   interface required specification\n"));
 	P(GT_("  -M, --monitor     monitor interface for activity\n"));
 #endif

@@ -4,7 +4,7 @@ SUBDIRS=		m4 po
 AUTOMAKE_OPTIONS=	foreign no-dist-gzip dist-bzip2
 
 AM_CFLAGS=		@CEFLAGS@
-AM_CPPFLAGS=		@CPFLAGS@
+AM_CPPFLAGS=		@CPFLAGS@ -I$(srcdir)/libesmtp
 AM_LDFLAGS=		@LDEFLAGS@
 ACLOCAL_AMFLAGS=	-I m4 -I m4-local
 AM_YFLAGS=		-d
@@ -23,7 +23,8 @@ localedir=		$(datadir)/locale
 DEFS=			@DEFS@ -DLOCALEDIR=\"$(localedir)\"
 
 noinst_LIBRARIES=	libfm.a
-libfm_a_SOURCES=	xmalloc.c base64.c rfc822.c report.c rfc2047e.c servport.c
+libfm_a_SOURCES=	xmalloc.c base64.c rfc822.c report.c rfc2047e.c servport.c \
+			libesmtp/gethostbyname.h libesmtp/gethostbyname.c
 libfm_a_LIBADD=		$(EXTRAOBJ)
 libfm_a_DEPENDENCIES=	$(EXTRAOBJ)
 LDADD	=		libfm.a @LIBINTL@ $(LIBOBJS)
@@ -53,7 +54,9 @@ fetchmail_SOURCES=	fetchmail.h getopt.h \
 		opie.c rpa.c interface.c netrc.c \
 		unmime.c conf.c checkalias.c smbdes.c smbencrypt.c \
 		smbmd4.c smbutil.c lock.c \
-		rcfile_l.l rcfile_y.y ucs/norm_charmap.c
+		rcfile_l.l rcfile_y.y ucs/norm_charmap.c \
+		libesmtp/getaddrinfo.h libesmtp/getaddrinfo.c \
+		KAME/getnameinfo.c
 
 check_PROGRAMS +=	rfc822 unmime netrc rfc2047e mxget
 

@@ -29,6 +29,8 @@
 #ifdef HAVE_NET_SOCKET_H
 #include <net/socket.h>
 #endif
+#include <sys/socket.h>
+#include <netdb.h>
 #include "md5.h"
 
 #include "i18n.h"
@@ -1119,16 +1121,19 @@ int readheaders(int sock,
     {
 	/* utter any per-message Received information we need here */
         if (ctl->server.trueaddr) {
-	    /* XXX FIXME: IPv6 */
+	    char saddr[50];
+	    int e;
+
+	    e = getnameinfo(ctl->server.trueaddr, ctl->server.trueaddr_len,
+		    saddr, sizeof(saddr), NULL, 0,
+		    NI_NUMERICHOST);
+	    if (e)
+		snprintf(saddr, sizeof(saddr), "(%-.*s)", sizeof(saddr) - 3, gai_strerror(e));
 	    snprintf(buf, sizeof(buf),
-		    "Received: from %s [%u.%u.%u.%u]\r\n", 
-		    ctl->server.truename,
-		    (unsigned int)(unsigned char)ctl->server.trueaddr[0],
-		    (unsigned int)(unsigned char)ctl->server.trueaddr[1],
-		    (unsigned int)(unsigned char)ctl->server.trueaddr[2],
-		    (unsigned int)(unsigned char)ctl->server.trueaddr[3]);
+		    "Received: from %s [%s]\r\n", 
+		    ctl->server.truename, saddr);
 	} else {
-	  snprintf(buf, sizeof(buf),
+	    snprintf(buf, sizeof(buf),
 		  "Received: from %s\r\n", ctl->server.truename);
 	}
 	n = stuffline(ctl, buf);
@@ -1157,7 +1162,7 @@ int readheaders(int sock,
 		buf[0] = '\t';
 		if (good_addresses == 0)
 		{
-		    snprintf(buf+1, sizeof(buf)-1, "for %s (by default); ",
+		    snprintf(buf+1, sizeof(buf)-1, "for <%s> (by default); ",
 			    rcpt_address (ctl, run.postmaster, 0));
 		}
 		else if (good_addresses == 1)
@@ -1166,7 +1171,7 @@ int readheaders(int sock,
 			if (idp->val.status.mark == XMIT_ACCEPT)
 			    break;	/* only report first address */
 		    snprintf(buf+1, sizeof(buf)-1,
-			    "for %s", rcpt_address (ctl, idp->id, 1));
+			    "for <%s>", rcpt_address (ctl, idp->id, 1));
 		    snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf)-1,
 			    " (%s); ",
 			    MULTIDROP(ctl) ? "multi-drop" : "single-drop");

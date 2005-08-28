@@ -6,11 +6,13 @@
  * For license terms, see the file COPYING in this directory.
  */
 #include "fetchmail.h"
+#include "getaddrinfo.h"
 #include "i18n.h"
 
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
 #include <netdb.h>
 #if defined(HAVE_NETINET_IN_H)
 #include <netinet/in.h>
@@ -18,6 +20,7 @@
 #ifdef HAVE_ARPA_INET_H
 #include <arpa/inet.h>
 #endif
+#include <sys/socket.h>
 
 int servport(const char *service) {
     int port;
@@ -34,20 +37,30 @@ int servport(const char *service) {
     errno = 0;
     u = strtoul(service, &end, 10);
     if (errno || end[strspn(end, POSIX_space)] != '\0') {
-	struct servent *se;
+	struct addrinfo hints, *res;
 
 	/* hardcode kpop to port 1109 as per fetchmail(1)
 	 * manual page, it's not a IANA registered service */
 	if (strcmp(service, "kpop") == 0)
 	    return 1109;
 
-	se = getservbyname(service, "tcp");
-	if (se == NULL) {
-	    endservent();
+	memset(&hints, 0, sizeof hints);
+	hints.ai_family = AF_UNSPEC;
+	hints.ai_socktype = SOCK_STREAM;
+	if (getaddrinfo(NULL, service, &hints, &res)) {
 	    goto err;
 	} else {
-	    port = ntohs(se->s_port);
-	    endservent();
+	    switch(res->ai_addr->sa_family) {
+		case AF_INET:
+		    port = ntohs(((struct sockaddr_in *)res->ai_addr)->sin_port);
+#ifdef AF_INET6
+		case AF_INET6:
+		    port = ntohs(((struct sockaddr_in6 *)res->ai_addr)->sin6_port);
+#endif
+		default:
+		    goto err;
+	    }
+	    freeaddrinfo(res);
 	}
     } else {
 	if (u == 0 || u > 65535)

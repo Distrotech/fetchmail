@@ -5,7 +5,6 @@
  * For license terms, see the file COPYING in this directory.
  */
 #include "config.h"
-#ifdef HAVE_GETHOSTBYNAME
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -23,28 +22,32 @@
 #include "i18n.h"
 #include "mx.h"
 #include "fetchmail.h"
+#include "getaddrinfo.h"
 
 #define MX_RETRIES	3
 
 typedef unsigned char address_t[sizeof (struct in_addr)];
 
-typedef struct _address_e
+static int getaddresses(struct addrinfo **result, const char *name)
 {
-    struct _address_e *next;
-    address_t address;
-} address_e;
+    struct addrinfo hints, *res;
 
-static void free_addrlst(address_e *lst)
-{
-    address_e *i;
-    while(lst) {
-	i = lst->next;
-	free(lst);
-	lst = i;
-    }
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_socktype=SOCK_STREAM;
+    hints.ai_protocol=PF_UNSPEC;
+    hints.ai_family=AF_UNSPEC;
+    return getaddrinfo(name, NULL, &hints, result);
 }
 
-/* XXX FIXME: This junk isn't IPv6 aware */
+/* XXX FIXME: doesn't detect if an IPv6-mapped IPv4 address
+ * matches a real IPv4 address */
+static int compareaddr(const struct addrinfo *a1, const struct addrinfo *a2)
+{
+    if (a1->ai_family != a2->ai_family) return FALSE;
+    if (a1->ai_addrlen != a2->ai_addrlen) return FALSE;
+    return (!memcmp(a1->ai_addr, a2->ai_addr, a1->ai_addrlen));
+}
+
 static int is_ip_alias(const char *name1,const char *name2)
 /*
  * Given two hostnames as arguments, returns TRUE if they
@@ -53,46 +56,21 @@ static int is_ip_alias(const char *name1,const char *name2)
  * the calling function does them.
  */
 {
-    address_e *host_a_addr=0, *host_b_addr=0;
-    address_e *dummy_addr, *ii, *ij;
-
     int rc = FALSE;
     struct hostent *hp;
     char **p;
 
-    hp = gethostbyname((char*)name1);
+    struct addrinfo *res1 = NULL, *res2 = NULL, *ii, *ij;
 
-    dummy_addr = (address_e *)NULL;
+    if (getaddresses(&res1, name1))
+	goto found;
 
-    if (hp)
-	for (p = hp->h_addr_list; *p != 0; p++) {
-	    struct in_addr in;
+    if (getaddresses(&res2, name2))
+	goto found;
 
-	    host_a_addr = xmalloc(sizeof (address_e));
-	    memset (host_a_addr,0, sizeof (address_e));
-	    host_a_addr->next = dummy_addr;
-	    (void) memcpy(&host_a_addr->address, *p, sizeof (in.s_addr));
-	    dummy_addr = host_a_addr;
-	}
-
-    hp = gethostbyname((char*)name2);
-
-    dummy_addr = (address_e *)NULL;
-
-    if (hp)
-	for (p = hp->h_addr_list; *p != 0; p++) {
-	    struct in_addr in;
-
-	    host_b_addr = xmalloc(sizeof (address_e));
-	    memset (host_b_addr,0, sizeof (address_e));
-	    host_b_addr->next = dummy_addr;
-	    (void) memcpy(&host_b_addr->address, *p, sizeof (in.s_addr));
-	    dummy_addr = host_b_addr;
-	}
-
-    for (ii = host_a_addr ; ii ; ii = ii -> next) {
-	for (ij = host_b_addr ; ij ; ij = ij -> next) {
-	    if (!memcmp(ii->address, ij->address, sizeof (address_t))) {
+    for (ii = res1 ; ii ; ii = ii -> ai_next) {
+	for (ij = res2 ; ij ; ij = ij -> ai_next) {
+	    if (compareaddr(ii, ij)) {
 		rc = TRUE;
 		goto found;
 	    }
@@ -100,18 +78,20 @@ static int is_ip_alias(const char *name1,const char *name2)
     }
 
 found:
-    free_addrlst(host_b_addr);
-    free_addrlst(host_a_addr);
+    if (res2)
+	freeaddrinfo(res2);
+    if (res1)
+	freeaddrinfo(res1);
     return rc;
 }
 
 int is_host_alias(const char *name, struct query *ctl)
 /* determine whether name is a DNS alias of the mailserver for this query */
 {
-    struct hostent	*he,*he_st;
     struct mxentry	*mxp, *mxrecords;
     struct idlist	*idl;
-    int			namelen;
+    int			namelen, e;
+    struct addrinfo	hints, *res, *res_st;
 
     struct hostdata *lead_server =
 	ctl->server.lead_server ? ctl->server.lead_server : &ctl->server;
@@ -175,12 +155,21 @@ int is_host_alias(const char *name, struct query *ctl)
      * delivering the current message or anything else from the
      * current server until it's back up.
      */
-    if ((he = gethostbyname((char*)name)) != (struct hostent *)NULL)
+    memset(&hints, 0, sizeof hints);
+    hints.ai_family=AF_UNSPEC;
+    hints.ai_protocol=PF_UNSPEC;
+    hints.ai_socktype=SOCK_STREAM;
+
+    e = getaddrinfo(name, NULL, &hints, &res);
+    if (e == 0)
     {
-	if (strcasecmp(ctl->server.truename, he->h_name) == 0)
+	int rr = (strcasecmp(ctl->server.truename, res->ai_canonname) == 0);
+	freeaddrinfo(res);
+	if (rr)
 	    goto match;
-        else if (((he_st = gethostbyname(ctl->server.truename)) != (struct hostent *)NULL) && ctl->server.checkalias)
+        else if (ctl->server.checkalias && 0 == getaddrinfo(ctl->server.truename, NULL, &hints, &res_st))
 	{
+	    freeaddrinfo(res_st);
 	    if (outlevel >= O_DEBUG)
 		report(stdout, GT_("Checking if %s is really the same node as %s\n"),ctl->server.truename,name);
 	    if (is_ip_alias(ctl->server.truename,name) == TRUE)
@@ -192,28 +181,24 @@ int is_host_alias(const char *name, struct query *ctl)
 	    if (outlevel >= O_DEBUG)
 		report(stdout, GT_("No, their IP addresses don't match\n"));
 	    return(FALSE);
-	}
-	else
+	} else {
 	    return(FALSE);
+	}
     }
     else
-	switch (h_errno)
+	switch (e)
 	{
-	case HOST_NOT_FOUND:	/* specified host is unknown */
-#ifndef __BEOS__
-	case NO_ADDRESS:	/* valid, but does not have an IP address */
-	    break;
-#endif
-	case NO_RECOVERY:	/* non-recoverable name server error */
-	case TRY_AGAIN:		/* temporary error on authoritative server */
-	default:
-	    if (outlevel != O_SILENT)
-		report_complete(stdout, "\n");	/* terminate the progress message */
-	    report(stderr,
-		GT_("nameserver failure while looking for `%s' during poll of %s.\n"),
-		name, ctl->server.pollname);
-	    ctl->errcount++;
-	    break;
+	    case EAI_NONAME:	/* specified host is unknown */
+		break;
+
+	    default:
+		if (outlevel != O_SILENT)
+		    report_complete(stdout, "\n");	/* terminate the progress message */
+		report(stderr,
+			GT_("nameserver failure while looking for '%s' during poll of %s: %s\n"),
+			name, ctl->server.pollname, gai_strerror(e));
+		ctl->errcount++;
+		break;
 	}
 
     /*
@@ -227,7 +212,7 @@ int is_host_alias(const char *name, struct query *ctl)
 	switch (h_errno)
 	{
 	case HOST_NOT_FOUND:	/* specified host is unknown */
-#ifndef __BEOS__
+#ifdef NO_ADDRESS
 	case NO_ADDRESS:	/* valid, but does not have an IP address */
 	    return(FALSE);
 #endif
@@ -240,9 +225,7 @@ int is_host_alias(const char *name, struct query *ctl)
 	    ctl->errcount++;
 	    break;
 	}
-    }
-    else
-    {
+    } else {
 	for (mxp = mxrecords; mxp->name; mxp++)
 	    if (strcasecmp(ctl->server.truename, mxp->name) == 0
 		    || is_ip_alias(ctl->server.truename, mxp->name) == TRUE)
@@ -256,6 +239,5 @@ int is_host_alias(const char *name, struct query *ctl)
     return(TRUE);
 #endif /* HAVE_RES_SEARCH */
 }
-#endif /* HAVE_GETHOSTBYNAME */
 
 /* checkalias.c ends here */

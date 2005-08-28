@@ -19,11 +19,11 @@
 #ifdef HAVE_NET_SOCKET_H
 #include <net/socket.h>
 #endif
-#ifdef HAVE_GETHOSTBYNAME
 #include <netdb.h>
-#endif /* HAVE_GETHOSTBYNAME */
-#include  <sys/types.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 #include "fetchmail.h"
+#include "getaddrinfo.h"
 
 #include "i18n.h"
 #if defined(HAVE_SETLOCALE) && defined(ENABLE_NLS) && defined(HAVE_STRFTIME)
@@ -135,7 +135,8 @@ void envquery(int argc, char **argv)
 char *host_fqdn(void)
 /* get the FQDN of the machine we're running */
 {
-    char	tmpbuf[HOSTLEN+1];
+    char tmpbuf[HOSTLEN+1];
+    char *result;
 
     if (gethostname(tmpbuf, sizeof(tmpbuf)))
     {
@@ -143,27 +144,35 @@ char *host_fqdn(void)
 		program_name);
 	exit(PS_DNS);
     }
-#ifdef HAVE_GETHOSTBYNAME
+
     /* if we got a . in the hostname assume it is a FQDN */
     if (strchr(tmpbuf, '.') == NULL)
     {
-	struct hostent *hp;
-
-	/** XXX FIXME: use getaddrinfo instead? */
 	/* if we got a basename (as we do in Linux) make a FQDN of it */
-	hp = gethostbyname(tmpbuf);
-	if (hp == (struct hostent *) NULL)
-	{
+	struct addrinfo hints, *res, *res0;
+	int e;
+
+	memset(&hints, 0, sizeof hints);
+	hints.ai_family = AF_UNSPEC;
+	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_flags=AI_CANONNAME;
+
+	e = getaddrinfo(tmpbuf, NULL, &hints, &res);
+	if (e) {
 	    /* exit with error message */
 	    fprintf(stderr,
 		    GT_("gethostbyname failed for %s\n"), tmpbuf);
+	    fprintf(stderr, "%s", gai_strerror(e));
 	    exit(PS_DNS);
 	}
-	return(xstrdup(hp->h_name));
+
+	result = xstrdup(res->ai_canonname);
+	freeaddrinfo(res);
     }
     else
-#endif /* HAVE_GETHOSTBYNAME */
-	return(xstrdup(tmpbuf));
+	result = xstrdup(tmpbuf);
+
+    return result;
 }
 
 static char *tzoffset(time_t *now)

@@ -596,8 +596,8 @@ See USER AUTHENTICATION below for a complete description.
 .B \-I <specification> | \-\-interface <specification>
 (Keyword: interface)
 Require that a specific interface device be up and have a specific local
-or remote IP address (or range) before polling.  Frequently
-.I fetchmail
+or remote IPv4 (IPv6 is not supported by this option yet) address (or
+range) before polling.  Frequently \fIfetchmail\fP
 is used over a transient point-to-point TCP/IP link established directly
 to a mailserver via SLIP or PPP.  That is a relatively secure channel.
 But when other TCP/IP routes to the mailserver exist (e.g. when the link
@@ -609,7 +609,7 @@ the specified link is not up or is not connected to a matching IP
 address, polling will be skipped.  The format is:
 .sp
 .nf
-	interface/iii.iii.iii.iii/mmm.mmm.mmm.mmm
+	interface/iii.iii.iii.iii[/mmm.mmm.mmm.mmm]
 .fi
 .sp
 The field before the first slash is the interface name (i.e. sl0, ppp0
@@ -620,6 +620,8 @@ assumed (i.e. an exact match).  This option is currently only supported
 under Linux and FreeBSD. Please see the
 .B monitor
 section for below for FreeBSD specific information.
+.sp
+Note that this option may be removed from a future fetchmail version.
 .TP
 .B \-M <interface> | \-\-monitor <interface>
 (Keyword: monitor)
@@ -640,6 +642,8 @@ must be installed SGID kmem. This would be a security hole, but
 fetchmail runs with the effective GID set to that of the kmem group
 .I only
 when interface data is being collected.
+.sp
+Note that this option may be removed from a future fetchmail version.
 .TP
 .B \-\-auth <type>
 (Keyword: auth[enticate])
@@ -2101,7 +2105,8 @@ This is a convenient but also slow method.  To speed
 it up, pre-declare mailserver aliases with 'aka'; these are checked
 before DNS lookups are done.  If you're certain your aka list contains
 .B all
-DNS aliases of the mailserver (and all MX names pointing at it)
+DNS aliases of the mailserver (and all MX names pointing at it - note
+this may change in a future version)
 you can declare 'no dns' to suppress DNS lookups entirely and
 \fIonly\fR match against the aka list.
 
@@ -2241,9 +2246,11 @@ in foreground while a background fetchmail is running will do
 whichever of these is appropriate to wake it up.
 
 .SH BUGS AND KNOWN PROBLEMS
+.PP
 The assumptions that the DNS and in particular the checkalias options
 make are not often sustainable. For instance, it has become uncommon for
-an MX server to be a POP3 or IMAP server at the same time.
+an MX server to be a POP3 or IMAP server at the same time. Therefore the
+MX lookups may go away in a future release.
 .PP
 The mda and plugin options interact badly.  In order to collect error
 status from the MDA, fetchmail has to change its normal signal
@@ -2251,6 +2258,10 @@ handling so that dead plugin processes don't get reaped until the end
 of the poll cycle.  This can cause resource starvation if too many
 zombies accumulate.  So either don't deliver to a MDA using plugins or
 risk being overrun by an army of undead.
+.PP
+The --interface option does not support IPv6 and it is doubtful if it
+ever will, since there is no portable way to query interface IPv6
+addresses.
 .PP
 The RFC822 address parser used in multidrop mode chokes on some
 @-addresses that are technically legal but bizarre.  Strange uses of

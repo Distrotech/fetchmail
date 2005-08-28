@@ -50,6 +50,7 @@
 
 #include "socket.h"
 #include "fetchmail.h"
+#include "getaddrinfo.h"
 #include "i18n.h"
 
 /* Defines to allow BeOS and Cygwin to play nice... */
@@ -262,7 +263,6 @@ int UnixOpen(const char *path)
     return sock;
 }
 
-#ifdef INET6_ENABLE
 int SockOpen(const char *host, const char *service,
 	     const char *plugin)
 {
@@ -276,8 +276,10 @@ int SockOpen(const char *host, const char *service,
     memset(&req, 0, sizeof(struct addrinfo));
     req.ai_socktype = SOCK_STREAM;
 
-    if (getaddrinfo(host, service, &req, &ai0)) {
-	report(stderr, GT_("fetchmail: getaddrinfo(%s.%s)\n"), host,service);
+    i = getaddrinfo(host, service, &req, &ai0);
+    if (i) {
+	report(stderr, GT_("fetchmail: getaddrinfo(\"%s\",\"%s\") error: %s\n"),
+		host, service, gai_strerror(i));
 	return -1;
     }
 
@@ -308,139 +310,6 @@ int SockOpen(const char *host, const char *service,
 
     return i;
 }
-#else /* INET6_ENABLE */
-#ifndef HAVE_INET_ATON
-#ifndef  INADDR_NONE
-#ifdef   INADDR_BROADCAST
-#define  INADDR_NONE	INADDR_BROADCAST
-#else
-#define	 INADDR_NONE	-1
-#endif
-#endif
-#endif /* HAVE_INET_ATON */
-
-int SockOpen(const char *host, const char *service,
-	     const char *plugin)
-{
-    int sock = -1;	/* pacify -Wall */
-#ifndef HAVE_INET_ATON
-    unsigned long inaddr;
-#endif /* HAVE_INET_ATON */
-    struct sockaddr_in ad, **pptr;
-    struct hostent *hp;
-    int clientPort = servport(service);
-
-#ifdef HAVE_SOCKETPAIR
-    if (plugin) {
-      return handle_plugin(host,service,plugin);
-    }
-#endif /* HAVE_SOCKETPAIR */
-
-    if (clientPort < 0)
-	return sock;
-
-    memset(&ad, 0, sizeof(ad));
-    ad.sin_family = AF_INET;
-
-    /* we'll accept a quad address */
-#ifndef HAVE_INET_ATON
-    inaddr = inet_addr((char*)host);
-    if (inaddr != INADDR_NONE)
-    {
-        memcpy(&ad.sin_addr, &inaddr, sizeof(inaddr));
-#else
-    if (inet_aton(host, &ad.sin_addr))
-    {
-#endif /* HAVE_INET_ATON */
-        ad.sin_port = htons(clientPort);
-
-        sock = socket(AF_INET, SOCK_STREAM, 0);
-        if (sock < 0)
-        {
-            h_errno = 0;
-            return -1;
-        }
-
-	/* Socket opened saved. Usefull if connect timeout because
-	 * it can be closed
-	 */
-	mailserver_socket_temp = sock;
-
-        if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) < 0)
-        {
-            int olderr = errno;
-            fm_close(sock);	/* don't use SockClose, no traffic yet */
-            h_errno = 0;
-            errno = olderr;
-            return -1;
-        }
-
-		/* No connect timeout, then no need to set mailserver_socket_temp */
-		mailserver_socket_temp = -1;
-		
-    }
-    else {
-        hp = gethostbyname((char*)host);
-
-        if (hp == NULL)
-	{
-	    errno = 0;
-	    return -1;
-	}
-	/*
-	 * Add a check to make sure the address has a valid IPv4 or IPv6
-	 * length.  This prevents buffer spamming by a broken DNS.
-	 */
-	if(hp->h_length != 4 && hp->h_length != 8)
-	{
-	    h_errno = errno = 0;
-	    report(stderr, 
-		   GT_("fetchmail: illegal address length received for host %s\n"),host);
-	    return -1;
-	}
-	/*
-	 * Try all addresses of a possibly multihomed host until we get
-	 * a successful connect or until we run out of addresses.
-	 */
-	pptr = (struct sockaddr_in **)hp->h_addr_list;
-	for(; *pptr != NULL; pptr++)
-	{
-	    sock = socket(AF_INET, SOCK_STREAM, 0);
-	    if (sock < 0)
-	    {
-		h_errno = 0;
-		return -1;
-	    }
-
-		/* Socket opened saved. Usefull if connect timeout because
-		 * it can be closed
-		 */
-		mailserver_socket_temp = sock;
-		
-	    ad.sin_port = htons(clientPort);
-	    memcpy(&ad.sin_addr, *pptr, sizeof(struct in_addr));
-	    if (connect(sock, (struct sockaddr *) &ad, sizeof(ad)) == 0) {
-			/* No connect timeout, then no need to set mailserver_socket_temp */
-			mailserver_socket_temp = -1;
-			break; /* success */
-		}	
-	    fm_close(sock);	/* don't use SockClose, no traffic yet */
-	    memset(&ad, 0, sizeof(ad));
-	    ad.sin_family = AF_INET;
-	}
-	if(*pptr == NULL)
-	{
-	    int olderr = errno;
-	    fm_close(sock);	/* don't use SockClose, no traffic yet */
-	    h_errno = 0;
-	    errno = olderr;
-	    return -1;
-	}
-    }
-
-    return(sock);
-}
-#endif /* INET6_ENABLE */
 
 
 #if defined(HAVE_STDARG_H)
