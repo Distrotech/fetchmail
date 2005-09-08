@@ -71,13 +71,14 @@ you can direct the build to look for GSSAPI support under DIR.
 
 Hooks for the OpenSSL library (see http://www.openssl.org/) are
 included in the distribution.  To enable these, configure with
---with-ssl; they are not included in the standard build.
-
-If you want to build for debugging,
-
-	CFLAGS=-g LDFLAGS=" " ./configure
-
-will do that.
+--with-ssl; they are not included in the standard build. Fetchmail's
+configure script will probe some default locations for the
+include/openssl/ssl.h file. If this doesn't work (i. e. configure prints
+"SSL support enabled, but OpenSSL not found" and aborts), you need to
+give the explicit prefix of your OpenSSL installation (specify the
+directory that contains OpenSSL's "include" subdirectory), for instance:
+"--with-ssl=/example/path" would assume that you have an
+/example/path/include/openssl/ssl.h header file.
 
 To specify a fallback MUA in case local port 25 doesn't respond, this is
 not recommended, because you'll usually see differences between MTA and
