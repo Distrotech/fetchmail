@@ -62,17 +62,20 @@ if test "${with_$1}" != no ; then
 	    $1_libdir=$i/lib
 	fi
 
+	if ! test -f "${$1_include}/$5" -a -d "${$1_libdir}" ; then
+	    continue
+	fi
+
 	OLD_LIBS=$LIBS
 	OLD_LDFLAGS=$LDFLAGS
 	OLD_CFLAGS=$CFLAGS
 	OLD_CPPFLAGS=$CPPFLAGS
 
-	if test "${$1_libdir}" ; then
+	if test -n "${$1_libdir}" -a "${$1_libdir}" != /usr/lib ; then
 		LDFLAGS="$LDFLAGS -L${$1_libdir}"
 	fi
-	if test "${$1_include}" ; then
+	if test -n "${$1_include}" -a "${$1_include}" != /usr/include ; then
 		CPPFLAGS="$CPPFLAGS -I${$1_include}"
-		CFLAGS="$CFLAGS -I${$1_include}"
 	fi
 
 	success=no

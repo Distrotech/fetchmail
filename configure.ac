@@ -487,7 +487,7 @@ else
   if test "$with_kerberos" != "yes" ; then
      searchdirs="$with_kerberos"
   else
-     searchdirs="$with_kerberos5 /usr/kerberos /usr/kerberosIV /usr/athena/usr"
+     searchdirs="$with_kerberos5 /usr/kerberos /usr/kerberosIV /usr/athena /usr"
   fi
   with_kerberos=
   ac_saveLDFLAGS="$LDFLAGS"

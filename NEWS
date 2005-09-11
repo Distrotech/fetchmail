@@ -194,6 +194,7 @@ fetchmail 6.3.0 (not yet released officially):
   brackets for consistency with Postfix.  Matthias Andree.
 * Operating systems that do not support at least one of gethostbyname,
   gethostbyname_r, getipnodebyname are no longer supported.  Matthias Andree.
+* Fixes to --with-hesiod option. Sunil Shetye. (MA)
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.
