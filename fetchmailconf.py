@@ -235,6 +235,7 @@ class User:
 	self.antispam = ""	# Listener's spam-block code
 	self.keep = FALSE	# Keep messages
 	self.flush = FALSE	# Flush messages
+	self.limitflush = FALSE	# Flush oversized messages
 	self.fetchall = FALSE	# Fetch old messages
 	self.rewrite = TRUE	# Rewrite message headers
 	self.forcecr = FALSE	# Force LF -> CR/LF
@@ -274,6 +275,7 @@ class User:
 	    ('antispam',    'String'),
 	    ('keep',	'Boolean'),
 	    ('flush',	    'Boolean'),
+	    ('limitflush',  'Boolean'),
 	    ('fetchall',    'Boolean'),
 	    ('rewrite',     'Boolean'),
 	    ('forcecr',     'Boolean'),
@@ -310,6 +312,7 @@ class User:
 	    res = res + " here"
 	if (self.keep != UserDefaults.keep
 		or self.flush != UserDefaults.flush
+		or self.limitflush != UserDefaults.limitflush
 		or self.fetchall != UserDefaults.fetchall
 		or self.rewrite != UserDefaults.rewrite
 		or self.forcecr != UserDefaults.forcecr
@@ -324,6 +327,8 @@ class User:
 	    res = res + flag2str(self.keep, 'keep')
 	if self.flush != UserDefaults.flush:
 	    res = res + flag2str(self.flush, 'flush')
+	if self.limitflush != UserDefaults.limitflush:
+	    res = res + flag2str(self.limitflush, 'limitflush')
 	if self.fetchall != UserDefaults.fetchall:
 	    res = res + flag2str(self.fetchall, 'fetchall')
 	if self.rewrite != UserDefaults.rewrite:
@@ -1684,6 +1689,8 @@ class UserEdit(Frame, MyWidget):
 	if mode != 'novice':
 	    Checkbutton(optwin, text="Flush seen messages before retrieval",
 		    variable=self.flush).pack(side=TOP, anchor=W)
+	    Checkbutton(optwin, text="Flush oversized messages before retrieval",
+		    variable=self.limitflush).pack(side=TOP, anchor=W)
 	    Checkbutton(optwin, text="Rewrite To/Cc/Bcc messages to enable reply",
 		    variable=self.rewrite).pack(side=TOP, anchor=W)
 	    Checkbutton(optwin, text="Force CR/LF at end of each line",

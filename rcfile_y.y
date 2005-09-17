@@ -73,7 +73,7 @@ extern char * yytext;
 %token <proto> PROTO AUTHTYPE
 %token <sval>  STRING
 %token <number> NUMBER
-%token NO KEEP FLUSH FETCHALL REWRITE FORCECR STRIPCR PASS8BITS 
+%token NO KEEP FLUSH LIMITFLUSH FETCHALL REWRITE FORCECR STRIPCR PASS8BITS 
 %token DROPSTATUS DROPDELIVERED
 %token DNS SERVICE PORT UIDL INTERVAL MIMEDECODE IDLE CHECKALIAS 
 %token SSL SSLKEY SSLCERT SSLPROTO SSLCERTCK SSLCERTPATH SSLFINGERPRINT
@@ -308,6 +308,7 @@ user_option	: TO localnames HERE
 
 		| KEEP			{current.keep        = FLAG_TRUE;}
 		| FLUSH			{current.flush       = FLAG_TRUE;}
+		| LIMITFLUSH		{current.limitflush  = FLAG_TRUE;}
 		| FETCHALL		{current.fetchall    = FLAG_TRUE;}
 		| REWRITE		{current.rewrite     = FLAG_TRUE;}
 		| FORCECR		{current.forcecr     = FLAG_TRUE;}
@@ -334,6 +335,7 @@ user_option	: TO localnames HERE
 
 		| NO KEEP		{current.keep        = FLAG_FALSE;}
 		| NO FLUSH		{current.flush       = FLAG_FALSE;}
+		| NO LIMITFLUSH		{current.limitflush  = FLAG_FALSE;}
 		| NO FETCHALL		{current.fetchall    = FLAG_FALSE;}
 		| NO REWRITE		{current.rewrite     = FLAG_FALSE;}
 		| NO FORCECR		{current.forcecr     = FLAG_FALSE;}

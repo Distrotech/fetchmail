@@ -298,6 +298,7 @@ struct query
     flag keep;			/* if TRUE, leave messages undeleted */
     flag fetchall;		/* if TRUE, fetch all (not just unseen) */
     flag flush;			/* if TRUE, delete messages already seen */
+    flag limitflush;		/* if TRUE, delete oversized mails */
     flag rewrite;		/* if TRUE, canonicalize recipient addresses */
     flag stripcr;		/* if TRUE, strip CRs in text */
     flag forcecr;		/* if TRUE, force CRs before LFs in text */

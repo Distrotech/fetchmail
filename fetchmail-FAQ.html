@@ -229,7 +229,9 @@ same?</a><br/>
 <a href="#O11">O11. I keep getting messages that say "Repoll
 immediately" in my logs.</a><br/>
 <a href="#O12">O12. Fetchmail no longer expunges mail on a 451 SMTP response.</a><br/>
-<a href="#O13">O13. I want timestamp information in my fetchmail logs.</a>
+<a href="#O13">O13. I want timestamp information in my fetchmail logs.</a><br/>
+<a href="#O14">O14. Fetchmail no longer deletes oversized mails with
+--flush.</a><br/>
 
 <h1>Answers:</h1>
 
@@ -3567,6 +3569,24 @@ dns errors.</p>
 
 <p>Write a <code>preconnect</code> command in your configuration file that
 does something like "date &gt;&gt; $HOME/Procmail/fetchmail.log".</p>
+
+<hr/>
+<h2><a name="O14">O14. Fetchmail no longer deletes oversized mails with
+--flush.</a></h2>
+
+<p>Use <code>--limitflush</code> to delete oversized mails along with
+the <code>--limit</code> option. If you are already having
+<code>flush</code> in your rcfile to delete oversized mails,
+<em>replace</em> it with <code>limitflush</code> to avoid losing mails
+unintentionally.</p>
+
+<p>The <code>--flush</code> option is primarily designed to delete
+mails which have been read/downloaded but not deleted yet. This option
+cannot be overloaded to delete oversized mails as it cannot be guessed
+whether the user wants to delete only read/downloaded mails or only
+oversized mails or both when a user specifies both
+<code>--limit</code> and <code>--flush</code>. Hence, a separate
+<code>--limitflush</code> has been added to resolve the ambiguity.</p>
 
 <hr/>
 <table width="100%" cellpadding="0" summary="Canned page footer">

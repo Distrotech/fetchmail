@@ -338,6 +338,7 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	booldump("fetchall", ctl->fetchall);
 	booldump("keep", ctl->keep);
 	booldump("flush", ctl->flush);
+	booldump("limitflush", ctl->limitflush);
 	booldump("rewrite", ctl->rewrite);
 	booldump("stripcr", ctl->stripcr); 
 	booldump("forcecr", ctl->forcecr);

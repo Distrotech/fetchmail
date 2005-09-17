@@ -198,13 +198,23 @@ you have specified a default of \fBkeep\fR in your
 \&\fI.fetchmailrc\fR.  This option is forced on with ETRN and ODMR.
 .TP
 .B \-F | \-\-flush
-POP3/IMAP only.  Delete old (previously retrieved) messages from the
-mailserver before retrieving new messages. This option does not work
-with ETRN or ODMR.  Warning: if your local MTA hangs and fetchmail is
-aborted, the next time you run fetchmail, it will delete mail that was
-never delivered to you.  What you probably want is the default
-setting: if you don't specify '-k', then fetchmail will automatically
-delete messages after successful delivery.
+POP3/IMAP only.  This is a dangerous option and can cause mail loss when
+used improperly. It deletes old (seen) messages from the mailserver
+before retrieving new messages.  Warning: This can cause mail loss if
+you check your mail with other clients than fetchmail, and cause
+fetchmail to delete a message it had never fetched before. Similarly, if
+your local MTA hangs and fetchmail is aborted, the next time you run
+fetchmail, it will delete mail that was never delivered to you.  You
+should probably not use this option in your configuration file. What you
+probably want is the default setting: if you don't specify '-k', then
+fetchmail will automatically delete messages after successful
+delivery. This option does not work with ETRN and ODMR.
+.TP
+.B \-\-limitflush
+POP3/IMAP only.  Delete oversized messages from the
+mailserver before retrieving new messages. The size limit should be
+separately sepecified with the --limit option.  This option does not
+work with ETRN or ODMR.
 .SS Protocol and Query Options
 .TP
 .B \-p <proto> | \-\-protocol <proto>
@@ -493,14 +503,16 @@ than this size will not be fetched and will be left on the server (in
 foreground sessions, the progress messages will note that they are
 "oversized").  If the fetch protocol permits (in particular, under
 IMAP or POP3 without the fetchall option) the message will not be
-marked seen. An explicit --limit of 0 overrides any limits set in your
+marked seen.
+.sp
+An explicit --limit of 0 overrides any limits set in your
 run control file. This option is intended for those needing to
 strictly control fetch time due to expensive and variable phone rates.
-Combined with --flush, it can be used to delete oversized messages
-waiting on a server UNLESS in daemon mode.  In daemon mode, oversize
-notifications are mailed to the calling user (see the --warnings
-option) and the messages remain on the server.
-This option does not work with ETRN or ODMR.
+.sp
+Combined with --limitflush, it can be used to delete oversized
+messages waiting on a server.  In daemon mode, oversize notifications
+are mailed to the calling user (see the --warnings option). This
+option does not work with ETRN or ODMR.
 .TP
 .B \-w <interval> | \-\-warnings <interval>
 (Keyword: warnings)
@@ -1485,7 +1497,10 @@ keep     	-k	\&	T{
 Don't delete seen messages from server
 T}
 flush   	-F	\&	T{
-Flush all seen messages before querying
+Flush all seen messages before querying (DANGEROUS)
+T}
+limitflush   	\&	\&	T{
+Flush all oversized messages before querying
 T}
 fetchall	-a	\&	T{
 Fetch all messages whether seen or not

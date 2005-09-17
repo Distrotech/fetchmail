@@ -88,6 +88,10 @@
 #define LA_FETCHSIZELIMIT	61
 #define LA_FASTUIDL	62
 
+/* don't use 63-122: they could clash with short options */
+
+#define LA_LIMITFLUSH	128
+
 /* options still left: CDgGhHjJoORwWxXYz */
 static const char *shortoptions = 
 	"?Vcsvd:NqL:f:i:p:UP:A:t:E:Q:u:akKFnl:r:S:Z:b:B:e:m:T:I:M:yw:D:";
@@ -128,6 +132,7 @@ static const struct option longoptions[] = {
   {"nokeep",	no_argument,	   (int *) 0, LA_NOKEEP      },
   {"keep",	no_argument,       (int *) 0, LA_KEEP        },
   {"flush",	no_argument,	   (int *) 0, LA_FLUSH       },
+  {"limitflush",	no_argument, (int *) 0, LA_LIMITFLUSH       },
   {"norewrite",	no_argument,	   (int *) 0, LA_NOREWRITE   },
   {"limit",	required_argument, (int *) 0, LA_LIMIT       },
   {"warnings",	required_argument, (int *) 0, LA_WARNINGS    },
@@ -453,6 +458,9 @@ struct query *ctl;	/* option record to be initialized */
 	case LA_FLUSH:
 	    ctl->flush = FLAG_TRUE;
 	    break;
+	case LA_LIMITFLUSH:
+	    ctl->limitflush = FLAG_TRUE;
+	    break;
 	case 'n':
 	case LA_NOREWRITE:
 	    ctl->rewrite = FLAG_FALSE;
@@ -683,6 +691,7 @@ struct query *ctl;	/* option record to be initialized */
 	P(GT_("  -K, --nokeep      delete new messages after retrieval\n"));
 	P(GT_("  -k, --keep        save new messages after retrieval\n"));
 	P(GT_("  -F, --flush       delete old messages from server\n"));
+	P(GT_("      --limitflush  delete oversized messages\n"));
 	P(GT_("  -n, --norewrite   don't rewrite header addresses\n"));
 	P(GT_("  -l, --limit       don't fetch messages over given size\n"));
 	P(GT_("  -w, --warnings    interval between warning mail notification\n"));

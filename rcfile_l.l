@@ -147,6 +147,7 @@ nodns		|
 noenvelope	|
 nokeep		|
 noflush		|
+nolimitflush	|
 nofetchall	|
 norewrite	|
 noforcecr	|
@@ -165,6 +166,7 @@ no		{return NO;}
 
 keep		{ return KEEP; }
 flush		{ return FLUSH; }
+limitflush	{ return LIMITFLUSH; }
 fetchall	{ return FETCHALL; }
 rewrite		{ return REWRITE; }
 forcecr		{ return FORCECR; }

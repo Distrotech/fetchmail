@@ -159,8 +159,6 @@ fetchmail 6.3.0 (not yet released officially):
   Matthias Andree
 * Document that fetchmail may automatically enable UIDL option.
   Debian Bug#304701. Matthias Andree.
-* Delete oversized messages with --flush when daemon mode isn't used.
-  Debian Bug#212240. Matthias Andree.
 * Put *BOLD* text into the manual page near --mda to state unmistakably that
   the --mda %T and %F substitutions add single quotes, hoping to avoid bogus
   bug reports such as Debian Bug #224564. Matthias Andree
@@ -195,6 +193,8 @@ fetchmail 6.3.0 (not yet released officially):
 * Operating systems that do not support at least one of gethostbyname,
   gethostbyname_r, getipnodebyname are no longer supported.  Matthias Andree.
 * Fixes to --with-hesiod option. Sunil Shetye. (MA)
+* Delete oversized messages with the news --limitflush option. Debian
+  Bug#212240. Sunil Shetye. (MA)
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.

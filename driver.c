@@ -336,9 +336,14 @@ static void send_size_warnings(struct query *ctl)
     stuff_warning(iana_charset, ctl,
 	   GT_("Subject: Fetchmail oversized-messages warning"));
     stuff_warning(NULL, ctl, "%s", "");
-    stuff_warning(NULL, ctl,
-	    GT_("The following oversized messages remain on the mail server %s:"),
-	    ctl->server.pollname);
+    if (ctl->limitflush)
+	stuff_warning(NULL, ctl,
+		GT_("The following oversized messages were deleted on the mail server %s:"),
+		ctl->server.pollname);
+    else
+	stuff_warning(NULL, ctl,
+		GT_("The following oversized messages remain on the mail server %s:"),
+		ctl->server.pollname);
 
     stuff_warning(NULL, ctl, "%s", "");
 
@@ -354,9 +359,14 @@ static void send_size_warnings(struct query *ctl)
 	{
 	    nbr = current->val.status.mark;
 	    size = atoi(current->id);
-	    stuff_warning(NULL, ctl,
-		    GT_("  %d msg %d octets long skipped by fetchmail."),
-		    nbr, size);
+	    if (ctl->limitflush)
+		stuff_warning(NULL, ctl,
+			GT_("  %d msg %d octets long deleted by fetchmail."),
+			nbr, size);
+	    else
+		stuff_warning(NULL, ctl,
+			GT_("  %d msg %d octets long skipped by fetchmail."),
+			nbr, size);
 	}
 	current->val.status.num++;
 	current->val.status.mark = 0;
@@ -395,16 +405,9 @@ static void mark_oversized(struct query *ctl, int num, int size)
     cnt = current ? current->val.status.num : 0;
 
     /* if entry exists, increment the count */
-    if (current && str_in_list(&current, sizestr, FALSE))
+    if (current && (tmp = str_in_list(&current, sizestr, FALSE)))
     {
-	for ( ; current; current = current->next)
-	{
-	    if (strcmp(current->id, sizestr) == 0)
-	    {
-		current->val.status.mark++;
-		break;
-	    }
-	}
+	tmp->val.status.mark++;
     }
     /* otherwise, create a new entry */
     /* initialise with current poll count */
@@ -540,12 +543,10 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 
 	if (msgcode < 0)
 	{
-	    if ((msgcode == MSGLEN_TOOLARGE) && !check_only)
+	    if (msgcode == MSGLEN_TOOLARGE)
 	    {
 		mark_oversized(ctl, num, msgsize);
-		/* we do not want to delete oversized messages in daemon
-		 * mode, but allow deletions in single-pass mode. */
-		if (run.poll_interval)
+		if (!ctl->limitflush)
 		    suppress_delete = TRUE;
 	    }
 	    if (outlevel > O_SILENT)
@@ -775,7 +776,8 @@ flagthemail:
 	else if (ctl->server.base_protocol->delete
 		 && !suppress_delete
 		 && ((msgcode >= 0 && !ctl->keep)
-		     || ((msgcode == MSGLEN_OLD || msgcode == MSGLEN_TOOLARGE) && ctl->flush)))
+		     || (msgcode == MSGLEN_OLD && ctl->flush)
+		     || (msgcode == MSGLEN_TOOLARGE && ctl->limitflush)))
 	{
 	    (*deletions)++;
 	    if (outlevel > O_SILENT) 
@@ -1566,7 +1568,8 @@ const struct method *proto;	/* protocol method table */
 	    return(PS_SYNTAX);
 	}
     }
-    if (!proto->getsizes && NUM_SPECIFIED(ctl->limit))
+    if (!(proto->getsizes || proto->getpartialsizes)
+	    && NUM_SPECIFIED(ctl->limit))
     {
 	report(stderr,
 		GT_("Option --limit is not supported with %s\n"),

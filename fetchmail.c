@@ -871,6 +871,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
 
     FLAG_MERGE(keep);
     FLAG_MERGE(flush);
+    FLAG_MERGE(limitflush);
     FLAG_MERGE(fetchall);
     FLAG_MERGE(rewrite);
     FLAG_MERGE(forcecr);
@@ -1100,6 +1101,7 @@ static int load_params(int argc, char **argv, int optind)
 	    DEFAULT(ctl->keep, FALSE);
 	    DEFAULT(ctl->fetchall, FALSE);
 	    DEFAULT(ctl->flush, FALSE);
+	    DEFAULT(ctl->limitflush, FALSE);
 	    DEFAULT(ctl->rewrite, TRUE);
 	    DEFAULT(ctl->stripcr, (ctl->mda != (char *)NULL)); 
 	    DEFAULT(ctl->forcecr, FALSE);
@@ -1600,6 +1602,9 @@ static void dump_params (struct runctl *runp,
 	    printf(ctl->flush
 		   ? GT_("  Old messages will be flushed before message retrieval (--flush on).\n")
 		   : GT_("  Old messages will not be flushed before message retrieval (--flush off).\n"));
+	    printf(ctl->limitflush
+		   ? GT_("  Oversized messages will be flushed before message retrieval (--limitflush on).\n")
+		   : GT_("  Oversized messages will not be flushed before message retrieval (--limitflush off).\n"));
 	    printf(ctl->rewrite
 		   ? GT_("  Rewrite of server-local addresses is enabled (--norewrite off).\n")
 		   : GT_("  Rewrite of server-local addresses is disabled (--norewrite on).\n"));
@@ -1623,7 +1628,8 @@ static void dump_params (struct runctl *runp,
 		   : GT_("  Nonempty Status lines will be kept (dropstatus off)\n"));
 	    printf(ctl->dropdelivered
 		   ? GT_("  Delivered-To lines will be discarded (dropdelivered on)\n")
-		   : GT_("  Delivered-To lines will be kept (dropdelivered off)\n"));	    if (NUM_NONZERO(ctl->limit))
+		   : GT_("  Delivered-To lines will be kept (dropdelivered off)\n"));
+	    if (NUM_NONZERO(ctl->limit))
 	    {
 		if (NUM_NONZERO(ctl->limit))
 		    printf(GT_("  Message size limit is %d octets (--limit %d).\n"), 
