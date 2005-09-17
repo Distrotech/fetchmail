@@ -74,6 +74,7 @@ static char *netdevfmt;
 #define MONITOR_SLOP		5
 
 #ifdef linux
+#define have_interface_init
 
 void interface_init(void)
 /* figure out which /proc/net/dev format to use */
@@ -544,10 +545,10 @@ get_ifinfo_end:
 
 #endif /* __FREEBSD_USE_SYSCTL_GET_IFFINFO */
 
-#else
+#endif
 
+#ifndef have_interface_init
 void interface_init(void) {};
-
 #endif
 
 
