@@ -547,11 +547,6 @@ get_ifinfo_end:
 
 #endif
 
-#ifndef have_interface_init
-void interface_init(void) {};
-#endif
-
-
 #ifndef HAVE_INET_ATON
 /*
  * Note: This is not a true replacement for inet_aton(), as it won't
@@ -739,3 +734,7 @@ int interface_approve(struct hostdata *hp, flag domonitor)
 	return(TRUE);
 }
 #endif /* CAN_MONITOR */
+
+#ifndef have_interface_init
+void interface_init(void) {};
+#endif
