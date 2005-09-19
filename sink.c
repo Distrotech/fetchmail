@@ -32,14 +32,14 @@
 #include  <ctype.h>
 #include  <langinfo.h>
 
+#include  "fetchmail.h"
+
 /* for W* macros after pclose() */
 #define _USE_BSD
 #include <sys/types.h>
 #include <sys/resource.h>
 #include <sys/wait.h>
 
-
-#include  "fetchmail.h"
 #include  "socket.h"
 #include  "smtp.h"
 #include  "i18n.h"

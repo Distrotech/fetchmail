@@ -195,6 +195,8 @@ fetchmail 6.3.0 (not yet released officially):
 * Fixes to --with-hesiod option. Sunil Shetye. (MA)
 * Delete oversized messages with the news --limitflush option. Debian
   Bug#212240. Sunil Shetye. (MA)
+* Fix MacOS X compilation failures in sink.c (ru_*time has incomplete type).
+  Berlios Bug #4725. Matthias Andree.
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.
