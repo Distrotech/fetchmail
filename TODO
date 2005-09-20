@@ -1,0 +1,20 @@
+Fix Berlios Bug #4725 (doesn't build on Darwin, incomplete types in
+sink.c - timeval missing; trying to shuffle fetchmail.h before
+sys/resource.h). (possibly fixed in SVN r4296)
+
+Fix Yves Boisjoly's AUTH NTLM problem without breaking AUTH MSN.
+
+Fix Jim Correia's MacOS X arpa/nameser.h|res_search vs. HEADER|-lresolv
+
+RFC2047 encode X-Fetchmail-Warning?
+X-Fetchmail-Warning: Empfängeradresse root@example.org stimmt mit keinem lokalen Namen überein
+X-Virus-Scanned: amavisd-new at m2a2.dyndns.org
+X-Amavis-Alert: BAD HEADER Non-encoded 8-bit data (char C3 hex) in message header 'X-Fetchmail-Warning': X-Fetchmail-Warning: +Empf\303\244ngeradresse ro...
+
+check if --monitor still works properly
+and complete CAN_MONITOR vs. interface checks
+complete CAN_MONITOR replacement
+
+put all getaddrinfo compat cruft into an easy-to-use m4 macro for
+autoconf and Makefile.am snippet for automake, so people can just use it
+without further hassle.
