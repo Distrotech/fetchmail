@@ -418,6 +418,8 @@ struct query *ctl;	/* option record to be initialized */
 		ctl->server.authenticate = A_GSSAPI;
 	    else if (strcmp(optarg, "any") == 0)
 		ctl->server.authenticate = A_ANY;
+	    else if (strcmp(optarg, "msn") == 0)
+		ctl->server.authenticate = A_MSN;
 	    else {
 		fprintf(stderr,GT_("Invalid authentication `%s' specified.\n"), optarg);
 		errflag++;

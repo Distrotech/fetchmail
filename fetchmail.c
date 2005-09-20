@@ -1536,6 +1536,9 @@ static void dump_params (struct runctl *runp,
 	case A_PASSWORD:
 	    printf(GT_("  Password authentication will be forced.\n"));
 	    break;
+	case A_MSN:
+	    printf(GT_("  MSN authentication will be forced.\n"));
+	    break;
 	case A_NTLM:
 	    printf(GT_("  NTLM authentication will be forced.\n"));
 	    break;

@@ -284,6 +284,8 @@ void dump_config(struct runctl *runp, struct query *querylist)
 		stringdump("auth", "ssh");
 	    else if (ctl->server.authenticate == A_OTP)
 		stringdump("auth", "otp");
+	    else if (ctl->server.authenticate == A_MSN)
+		stringdump("auth", "msn");
 
 #ifdef HAVE_RES_SEARCH
 	    booldump("dns", ctl->server.dns);

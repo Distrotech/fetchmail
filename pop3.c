@@ -69,12 +69,13 @@ static tSmbNtlmAuthResponse  response;
  * Much source (ntlm.h, smb*.c smb*.h) was borrowed from Samba.
  */
 
-static int do_pop3_ntlm(int sock, struct query *ctl)
+static int do_pop3_ntlm(int sock, struct query *ctl,
+	int msn_instead /** if true, send AUTH MSN, else send AUTH NTLM */)
 {
     char msgbuf[2048];
     int result,len;
   
-    gen_send(sock, "AUTH MSN");
+    gen_send(sock, msn_instead ? "AUTH MSN" : "AUTH NTLM");
 
     if ((result = gen_recv(sock, msgbuf, sizeof msgbuf)))
 	return result;
@@ -318,25 +319,20 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
     if (!(ctl->server.sdps) && MULTIDROP(ctl) && strstr(greeting, "demon."))
         ctl->server.sdps = TRUE;
 #endif /* SDPS_ENABLE */
+
 #ifdef NTLM_ENABLE
-	/* MSN servers require the use of NTLM (MSN) authentication */
-	if (!strcasecmp(ctl->server.pollname, "pop3.email.msn.com") ||
-	    ctl->server.authenticate == A_NTLM)
-	{
-	    if (!do_pop3_ntlm(sock, ctl))
-	    {
-		return(PS_SUCCESS);
-	    }
-	    else
-	    {
-		return(PS_AUTHFAIL);
-	    }
-	}
+    /* MSN servers require the use of NTLM (MSN) authentication */
+    if (!strcasecmp(ctl->server.pollname, "pop3.email.msn.com") ||
+	    ctl->server.authenticate == A_MSN)
+	return (do_pop3_ntlm(sock, ctl, 1) == 0) ? PS_SUCCESS : PS_AUTHFAIL;
+    if (ctl->server.authenticate == A_NTLM)
+	return (do_pop3_ntlm(sock, ctl, 0) == 0) ? PS_SUCCESS : PS_AUTHFAIL;
 #endif
 
     switch (ctl->server.protocol) {
     case P_POP3:
 #ifdef RPA_ENABLE
+	/* XXX FIXME: AUTH probing (RFC1734) should become global */
 	/* CompuServe POP3 Servers as of 990730 want AUTH first for RPA */
 	if (strstr(ctl->remotename, "@compuserve.com"))
 	{

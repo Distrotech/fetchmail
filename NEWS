@@ -197,6 +197,8 @@ fetchmail 6.3.0 (not yet released officially):
   Bug#212240. Sunil Shetye. (MA)
 * Fix MacOS X compilation failures in sink.c (ru_*time has incomplete type).
   Berlios Bug #4725. Matthias Andree.
+* Fix "auth ntlm" to send AUTH NTLM (rather than AUTH MSN). Add "auth msn"
+  officially. Reported by Yves Boisjoly. Matthias Andree
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.

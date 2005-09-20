@@ -70,9 +70,17 @@ char *strstr(const char *, const char *);
 #define		A_KERBEROS_V5	6	/* authenticate w/ Kerberos V5 */
 #define 	A_GSSAPI	7	/* authenticate with GSSAPI */
 #define		A_SSH		8	/* authentication at session level */
+#define		A_MSN		9	/* same as NTLM with keyword MSN */
 
-/* some protocols (KERBEROS, GSSAPI, SSH) don't require a password */
-#define NO_PASSWORD(ctl)	((ctl)->server.authenticate > A_OTP || (ctl)->server.protocol == P_ETRN)
+/* some protocols or authentication types (KERBEROS, GSSAPI, SSH) don't
+ * require a password */
+#define NO_PASSWORD(ctl) \
+    ((ctl)->server.authenticate == A_OTP \
+     || (ctl)->server.authenticate == A_KERBEROS_V4 \
+     || (ctl)->server.authenticate == A_KERBEROS_V5 \
+     || (ctl)->server.authenticate == A_GSSAPI \
+     || (ctl)->server.authenticate == A_SSH \
+     || (ctl)->server.protocol == P_ETRN)
 
 /*
  * Definitions for buffer sizes.  We get little help on setting maxima
