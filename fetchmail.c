@@ -1182,14 +1182,14 @@ static int load_params(int argc, char **argv, int optind)
 		if (port < 0)
 		{
 		    (void) fprintf(stderr,
-				   GT_("%s configuration invalid, port number cannot be negative\n"),
+				   GT_("fetchmail: %s configuration invalid, specify positive port number for service or port\n"),
 				   ctl->server.pollname);
 		    exit(PS_SYNTAX);
 		}
 		if (ctl->server.protocol == P_RPOP && port >= 1024)
 		{
 		    (void) fprintf(stderr,
-				   GT_("%s configuration invalid, RPOP requires a privileged port\n"),
+				   GT_("fetchmail: %s configuration invalid, RPOP requires a privileged port\n"),
 				   ctl->server.pollname);
 		    exit(PS_SYNTAX);
 		}

@@ -70,7 +70,8 @@ int servport(const char *service) {
 
     return port;
 err:
-    report(stderr, GT_("Cannot resolve service %s to port.  Please specify the service as decimal port number.\n"), service);
+    report(stderr, GT_("Cannot resolve service %s to port number.\n"), service);
+    report(stderr, GT_("Please specify the service as decimal port number.\n"));
     return -1;
 }
 /* end of servport.c */
