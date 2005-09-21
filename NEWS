@@ -199,6 +199,9 @@ fetchmail 6.3.0 (not yet released officially):
   Berlios Bug #4725. Matthias Andree.
 * Fix "auth ntlm" to send AUTH NTLM (rather than AUTH MSN). Add "auth msn"
   officially. Reported by Yves Boisjoly. Matthias Andree
+* Expunge between IMAP folders when polling multiple folders.
+  Sunil Shetye. (MA)
+* Fix IMAP expunged message counting. Sunil Shetye. (MA)
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.

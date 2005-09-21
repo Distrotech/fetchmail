@@ -221,6 +221,8 @@ struct method		/* describe methods for protocol state machine */
 				/* delete method */
     int (*mark_seen)(int, struct query *, int);
 				/* mark as seen method */
+    int (*end_mailbox_poll)(int, struct query *);
+				/* end-of-mailbox processing */
     int (*logout_cmd)(int, struct query *);
 				/* logout command */
     flag retry;			/* can getrange poll for new messages? */

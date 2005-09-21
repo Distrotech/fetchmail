@@ -1250,6 +1250,7 @@ static const struct method pop3 =
     NULL,		/* no message trailer */
     pop3_delete,	/* how to delete a message */
     pop3_mark_seen,	/* how to mark a message as seen */
+    NULL,		/* no action at end of mailbox */
     pop3_logout,	/* log out, we're done */
     FALSE,		/* no, we can't re-poll */
 };

@@ -1424,6 +1424,14 @@ is restored."));
 			send_size_warnings(ctl);
 		    }
 		}
+
+		/* end-of-mailbox processing before we repoll or switch to another one */
+		if (ctl->server.base_protocol->end_mailbox_poll)
+		{
+		    err = (ctl->server.base_protocol->end_mailbox_poll)(mailserver_socket, ctl);
+		    if (err)
+			goto cleanUp;
+		}
 	    } while
 		  /*
 		   * Only re-poll if we either had some actual forwards and 

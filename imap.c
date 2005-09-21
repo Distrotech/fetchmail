@@ -101,7 +101,10 @@ static int imap_ok(int sock, char *argbuf)
 	}
         else if (strstr(buf, "EXPUNGE") && !strstr(buf, "OK"))
         {
-            count -= atoi(buf+2);
+	    /* the response "* 10 EXPUNGE" means that the currently
+	     * tenth (i.e. only one) message has been deleted */
+	    if (atoi(buf+2) > 0)
+		count--;
             if (count < 0)
                 count = 0;
         }
@@ -639,29 +642,14 @@ static int imap_getrange(int sock,
 
     if (pass > 1)
     {
-	/* 
-	 * We have to have an expunge here, otherwise the re-poll will
-	 * infinite-loop picking up un-expunged messages -- unless the
-	 * expunge period is one and we've been nuking each message 
-	 * just after deletion.
-	 */
-	ok = 0;
-	if (deletions) {
-	    ok = internal_expunge(sock);
-	    if (ok)
-	    {
-		report(stderr, GT_("expunge failed\n"));
-		return(ok);
-	    }
-	}
-
-	/*
+	/* deleted mails have already been expunged by
+	 * end_mailbox_poll().
+	 *
 	 * recentcount is already set here by the last imap command which
 	 * returned RECENT on detecting new mail. if recentcount is 0, wait
 	 * for new mail.
-	 */
-
-	/* this is a while loop because imap_idle() might return on other
+	 *
+	 * this is a while loop because imap_idle() might return on other
 	 * mailbox changes also */
 	while (recentcount == 0 && do_idle) {
 	    smtp_close(ctl, 1);
@@ -792,7 +780,6 @@ static int imap_getrange(int sock,
 	unseen = -1;
 
     *newp = unseen;
-    count = 0;
     expunged = 0;
     deletions = 0;
 
@@ -1108,6 +1095,14 @@ static int imap_mark_seen(int sock, struct query *ctl, int number)
 	number));
 }
 
+static int imap_end_mailbox_poll(int sock, struct query *ctl)
+/* cleanup mailbox before we idle or switch to another one */
+{
+    if (deletions)
+	internal_expunge(sock);
+    return(PS_SUCCESS);
+}
+
 static int imap_logout(int sock, struct query *ctl)
 /* send logout command */
 {
@@ -1142,6 +1137,7 @@ static const struct method imap =
     imap_trail,		/* eat message trailer */
     imap_delete,	/* delete the message */
     imap_mark_seen,	/* how to mark a message as seen */
+    imap_end_mailbox_poll,	/* end-of-mailbox processing */
     imap_logout,	/* expunge and exit */
     TRUE,		/* yes, we can re-poll */
 };
