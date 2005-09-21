@@ -278,8 +278,10 @@ int SockOpen(const char *host, const char *service,
 
     i = getaddrinfo(host, service, &req, &ai0);
     if (i) {
-	report(stderr, GT_("fetchmail: getaddrinfo(\"%s\",\"%s\") error: %s\n"),
+	report(stderr, GT_("getaddrinfo(\"%s\",\"%s\") error: %s\n"),
 		host, service, gai_strerror(i));
+	if (i == EAI_SERVICE)
+	    report(stderr, GT_("Try adding the --port option, see FAQ item R12.\n"));
 	return -1;
     }
 
