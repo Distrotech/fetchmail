@@ -23,7 +23,7 @@
 #include <sys/socket.h>
 
 int servport(const char *service) {
-    int port;
+    int port, e;
     unsigned long u;
     char *end;
 
@@ -47,7 +47,10 @@ int servport(const char *service) {
 	memset(&hints, 0, sizeof hints);
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
-	if (getaddrinfo(NULL, service, &hints, &res)) {
+	e = getaddrinfo(NULL, service, &hints, &res);
+	if (e) {
+	    report(stderr, GT_("getaddrinfo(NULL, \"%s\") error: %s\n"),
+		    service, gai_strerror(e));
 	    goto err;
 	} else {
 	    switch(res->ai_addr->sa_family) {
