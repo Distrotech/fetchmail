@@ -2,8 +2,6 @@ Fix Berlios Bug #4725 (doesn't build on Darwin, incomplete types in
 sink.c - timeval missing; trying to shuffle fetchmail.h before
 sys/resource.h). (possibly fixed in SVN r4296)
 
-Fix Yves Boisjoly's AUTH NTLM problem without breaking AUTH MSN.
-
 Fix Jim Correia's MacOS X arpa/nameser.h|res_search vs. HEADER|-lresolv
 
 Review Solaris gettext stuff.
@@ -20,3 +18,8 @@ complete CAN_MONITOR replacement
 put all getaddrinfo compat cruft into an easy-to-use m4 macro for
 autoconf and Makefile.am snippet for automake, so people can just use it
 without further hassle.
+
+clean up options.c, instead of LA_* options, use the corresponding short
+option letter where possible. Saves some LA_* values.
+
+pkg-config for OpenSSL? -ldl problem
