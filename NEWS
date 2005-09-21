@@ -207,6 +207,8 @@ fetchmail 6.3.0 (not yet released officially):
   Bug#329342, Takeshi Hamasaki. (MA)
 * When getaddrinfo() fails resolving a service, log getaddrinfo() error. (MA)
 * Fix bogus "cannot resolve service * to port number" error. Simon Barner. (MA)
+* Failure to set up SSL connections now results in PS_SOCKET. Suggested by
+  Thomas Wolff. Matthias Andree.
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.

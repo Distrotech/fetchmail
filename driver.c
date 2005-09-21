@@ -1097,7 +1097,7 @@ static int do_session(
 	    ctl->sslcertpath,ctl->sslfingerprint,realhost,ctl->server.pollname) == -1) 
 	{
 	    report(stderr, GT_("SSL connection failed.\n"));
-	    err = PS_AUTHFAIL;
+	    err = PS_SOCKET;
 	    goto cleanUp;
 	}
 	

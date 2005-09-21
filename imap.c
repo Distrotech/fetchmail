@@ -367,7 +367,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	       }
                report(stderr,
                       GT_("SSL connection failed.\n"));
-               return(PS_AUTHFAIL);
+               return PS_SOCKET;
            }
 	   did_stls = TRUE;
 
