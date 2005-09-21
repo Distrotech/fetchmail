@@ -206,6 +206,7 @@ fetchmail 6.3.0 (not yet released officially):
 * Fix Japanese translation of "no other fetchmail is running". Debian
   Bug#329342, Takeshi Hamasaki. (MA)
 * When getaddrinfo() fails resolving a service, log getaddrinfo() error. (MA)
+* Fix bogus "cannot resolve service * to port number" error. Simon Barner. (MA)
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.

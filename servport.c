@@ -56,9 +56,11 @@ int servport(const char *service) {
 	    switch(res->ai_addr->sa_family) {
 		case AF_INET:
 		    port = ntohs(((struct sockaddr_in *)res->ai_addr)->sin_port);
+		break;
 #ifdef AF_INET6
 		case AF_INET6:
 		    port = ntohs(((struct sockaddr_in6 *)res->ai_addr)->sin6_port);
+		break;
 #endif
 		default:
 		    goto err;
