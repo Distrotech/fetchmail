@@ -202,6 +202,7 @@ fetchmail 6.3.0 (not yet released officially):
 * Expunge between IMAP folders when polling multiple folders.
   Sunil Shetye. (MA)
 * Fix IMAP expunged message counting. Sunil Shetye. (MA)
+* Add full support for --service option. Matthias Andree
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.

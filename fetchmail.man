@@ -270,15 +270,18 @@ depending on upstream server capabilities.  Note also that this option
 may be removed and forced enabled in a future fetchmail version.
 
 .TP
+.B \-\-service <servicename>
+(Keyword: service)
+The service option permits you to specify a service name to connect to.
+You can specify a decimal port number here, if your services database
+lacks the required service-port assignments. See the FAQ item R12 for
+details. This replaces the older \-\-port option.
+.TP
 .B \-P <portnumber> | \-\-port <portnumber>
 (Keyword: port)
-The port option permits you to specify a TCP/IP port to connect on.
-This option will seldom be necessary as all the supported protocols have
-well-established default port numbers. On some older machines, however,
-the protocol <\-\-> port mappings are missing from the services database
-(often /etc/services), and this port can make fetchmail work for you
-even if you don't have system administrator privileges. See the FAQ item
-R12 for details.
+Obsolete version of \-\-service that does not take service names.
+.B Note:
+this option may be removed from a future version.
 .TP
 .B \-\-principal <principal>
 (Keyword: principal)

@@ -87,10 +87,9 @@
 
 #define LA_FETCHSIZELIMIT	61
 #define LA_FASTUIDL	62
-
 /* don't use 63-122: they could clash with short options */
-
 #define LA_LIMITFLUSH	128
+#define LA_SERVICE	129
 
 /* options still left: CDgGhHjJoORwWxXYz */
 static const char *shortoptions = 
@@ -120,6 +119,7 @@ static const struct option longoptions[] = {
   {"proto",	required_argument, (int *) 0, LA_PROTOCOL    },
   {"uidl",	no_argument,	   (int *) 0, LA_UIDL	     },
   {"port",	required_argument, (int *) 0, LA_PORT        },
+  {"service",	required_argument, (int *) 0, LA_SERVICE     },
   {"auth",	required_argument, (int *) 0, LA_AUTH},
   {"timeout",	required_argument, (int *) 0, LA_TIMEOUT     },
   {"envelope",	required_argument, (int *) 0, LA_ENVELOPE    },
@@ -387,6 +387,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'P':
 	case LA_PORT:
+	case LA_SERVICE:
 	    ctl->server.service = optarg;
 	    break;
 	case LA_AUTH:
@@ -680,7 +681,8 @@ struct query *ctl;	/* option record to be initialized */
 
 	P(GT_("  -p, --protocol    specify retrieval protocol (see man page)\n"));
 	P(GT_("  -U, --uidl        force the use of UIDLs (pop3 only)\n"));
-	P(GT_("  -P, --port        TCP/IP service port to connect to\n"));
+	P(GT_("  -P, --port        TCP port to connect to (obsolete, use --service)\n"));
+	P(GT_("      --service     TCP service to connect to (can be numeric TCP port)\n"));
 	P(GT_("      --auth        authentication type (password/kerberos/ssh/otp)\n"));
 	P(GT_("  -t, --timeout     server nonresponse timeout\n"));
 	P(GT_("  -E, --envelope    envelope address header\n"));

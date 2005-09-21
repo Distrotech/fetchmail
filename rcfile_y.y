@@ -173,6 +173,12 @@ serv_option	: AKA alias_list
 		| SERVICE STRING	{
 					current.server.service = $2;
 					}
+		| SERVICE NUMBER	{
+					int port = $2;
+					char buf[10];
+					snprintf(buf, sizeof buf, "%d", port);
+					current.server.service = xstrdup(buf);
+		}
 		| PORT NUMBER		{
 					int port = $2;
 					char buf[10];
