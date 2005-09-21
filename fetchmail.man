@@ -336,11 +336,17 @@ received from.
 (Keyword: ssl)
 Causes the connection to the mail server to be encrypted via SSL.  Connect
 to the server using the specified base protocol over a connection secured
-by SSL.  SSL support must be present at the server.  If no port is
-specified, the connection is attempted to the well known port of the SSL
-version of the base protocol.  This is generally a different port than the
-port used by the base protocol.  For IMAP, this is port 143 for the clear
-protocol and port 993 for the SSL secured protocol.
+by SSL.  SSL support must be present at the server.
+.sp
+If no port is specified, the connection is attempted to the well known
+port of the SSL version of the base protocol.  This is generally a
+different port than the port used by the base protocol.  For IMAP, this
+is port 143 for the clear protocol and port 993 for the SSL secured
+protocol, for POP3, it is port 110 for the cleartext and port 995 for
+the encrypted variant.
+.sp
+If your system lacks the corresponding entries from /etc/services, see
+the \-\-port option.
 .TP
 .B \-\-sslcert <name>
 (Keyword: sslcert)
