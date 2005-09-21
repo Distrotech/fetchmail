@@ -23,3 +23,9 @@ clean up options.c, instead of LA_* options, use the corresponding short
 option letter where possible. Saves some LA_* values.
 
 pkg-config for OpenSSL? -ldl problem
+
+Thomas Wolff: AUTHFAIL doesn't quite fit
+(server resets connection immediately)
+$ ./fetchmail --ssl --service 993
+fetchmail: SSL connection failed.
+fetchmail: Query status=3 (AUTHFAIL)
