@@ -6,6 +6,8 @@ Fix Yves Boisjoly's AUTH NTLM problem without breaking AUTH MSN.
 
 Fix Jim Correia's MacOS X arpa/nameser.h|res_search vs. HEADER|-lresolv
 
+Review Solaris gettext stuff.
+
 RFC2047 encode X-Fetchmail-Warning?
 X-Fetchmail-Warning: Empfängeradresse root@example.org stimmt mit keinem lokalen Namen überein
 X-Virus-Scanned: amavisd-new at m2a2.dyndns.org
