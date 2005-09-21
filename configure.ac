@@ -5,7 +5,7 @@ dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl
 
-AC_INIT([fetchmail],[6.2.9-rc4])
+AC_INIT([fetchmail],[6.2.9-rc5])
 AC_CONFIG_SRCDIR([fetchmail.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_LIBOBJ_DIR([.])
@@ -507,7 +507,11 @@ else
        AC_CHECK_LIB(45, krb_mk_req)
      fi
      LDFLAGS="-L$dir/lib $ac_saveLDFLAGS"
-     AC_SEARCH_LIBS(des_string_to_key, [des425 des crypto], [], continue)
+     if test `uname` = "FreeBSD"; then
+        AC_SEARCH_LIBS(_ossl_old_des_string_to_key, [des425 des crypto], [], continue)
+     else
+        AC_SEARCH_LIBS(des_string_to_key, [crypto], [], continue)
+     fi
      AC_SEARCH_LIBS(krb_realmofhost, [krb4 krb], [], continue)
      with_kerberos="$dir"
      if test -f "$dir/include/kerberosIV/krb.h" ; then

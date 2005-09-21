@@ -209,6 +209,7 @@ fetchmail 6.3.0 (not yet released officially):
 * Fix bogus "cannot resolve service * to port number" error. Simon Barner. (MA)
 * Failure to set up SSL connections now results in PS_SOCKET. Suggested by
   Thomas Wolff. Matthias Andree.
+* Kerberos IV detection fix for FreeBSD 4. Simon Barner. (MA)
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.
