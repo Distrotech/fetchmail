@@ -281,7 +281,7 @@ int SockOpen(const char *host, const char *service,
 	report(stderr, GT_("getaddrinfo(\"%s\",\"%s\") error: %s\n"),
 		host, service, gai_strerror(i));
 	if (i == EAI_SERVICE)
-	    report(stderr, GT_("Try adding the --port option, see FAQ item R12.\n"));
+	    report(stderr, GT_("Try adding the --service option, see FAQ item R12.\n"));
 	return -1;
     }
 
