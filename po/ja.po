@@ -670,7 +670,7 @@ msgstr "fetchmail: メールサーバが指定されておりません。\n"
 
 #: fetchmail.c:382 fetchmail.c:391
 msgid "fetchmail: no other fetchmail is running\n"
-msgstr "fetchmail: 他の fetchmail が実行中です。\n"
+msgstr "fetchmail: 実行中の fetchmail は存在しません。\n"
 
 #: fetchmail.c:397
 #, c-format

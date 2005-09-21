@@ -203,6 +203,8 @@ fetchmail 6.3.0 (not yet released officially):
   Sunil Shetye. (MA)
 * Fix IMAP expunged message counting. Sunil Shetye. (MA)
 * Add full support for --service option. Matthias Andree
+* Fix Japanese translation of "no other fetchmail is running". Debian
+  Bug#329342, Takeshi Hamasaki. (MA)
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.
