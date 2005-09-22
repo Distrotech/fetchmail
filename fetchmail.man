@@ -720,6 +720,11 @@ When using ETRN or ODMR, the rewrite option is ineffective.
 .TP
 .B \-E <line> | \-\-envelope <line>
 (Keyword: envelope; Multidrop only)
+.br
+In the configuration file, an enhanced syntax is used:
+.br
+.B envelope [<count>] <line>
+.sp
 This option changes the header
 .I fetchmail
 assumes will carry a copy of the mail's envelope address.  Normally
@@ -729,6 +734,11 @@ special case, 'envelope "Received"' enables parsing of sendmail-style
 Received lines.  This is the default, and it should not be necessary
 unless you have globally disabled Received parsing with 'no envelope'
 in the \fI.fetchmailrc\fR file.
+.sp
+The optional count argument (only available in the configuration file)
+determines how many header lines of this kind are skipped. A count of 1
+means: skip the first, take the second. A count of 2 means: skip the
+first and second, take the third, and so on.
 .TP
 .B \-Q <prefix> | \-\-qvirtual <prefix>
 (Keyword: qvirtual; Multidrop only)
@@ -1603,10 +1613,11 @@ Remember that all user options must \fIfollow\fR all server options.
 .PP
 In the .fetchmailrc file, the 'envelope' string argument may be
 preceded by a whitespace-separated number.  This number, if specified,
-is the number of such headers to skip (that is, an argument of 1
+is the number of such headers to skip over (that is, an argument of 1
 selects the second header of the given type).  This is sometime useful
-for ignoring bogus Received headers created by an ISP's local delivery
-agent.
+for ignoring bogus envelope headers created by an ISP's local delivery
+agent or internal forwards (through mail inspection systems, for
+instance).
 .SS Keywords Not Corresponding To Option Switches
 .PP
 The 'folder' and 'smtphost' options (unlike their command-line
@@ -2018,8 +2029,9 @@ The fundamental problem is that by having your mailserver toss several
 peoples' mail in a single maildrop box, you may have thrown away
 potentially vital information about who each piece of mail was
 actually addressed to (the 'envelope address', as opposed to the
-header addresses in the RFC822 To/Cc/Bcc headers).  This 'envelope
-address' is the address you need in order to reroute mail properly.
+header addresses in the RFC822 To/Cc headers - the Bcc is not available
+at the receiving end).  This 'envelope address' is the address you need
+in order to reroute mail properly.
 .PP
 Sometimes
 .I fetchmail
@@ -2032,38 +2044,57 @@ more than one recipient.  By default, \fIfetchmail\fR looks for
 envelope addresses in these lines; you can restore this default with
 -E "Received" or \&'envelope Received'.
 .PP
-Alternatively, some SMTP listeners and/or mail servers insert a header
+.B As a better alternative,
+some SMTP listeners and/or mail servers insert a header
 in each message containing a copy of the envelope addresses.  This
-header (when it exists) is often 'X-Envelope-To'.  Fetchmail's
-assumption about this can be changed with the -E or 'envelope' option.
-Note that writing an envelope header of this kind exposes the names of
-recipients (including blind-copy recipients) to all receivers of the
-messages; it is therefore regarded by some administrators as a
-security/privacy problem.
+header (when it exists) is often 'X-Original-To', 'Delivered-To' or
+'X-Envelope-To'.  Fetchmail's assumption about this can be changed with
+the -E or 'envelope' option.  Note that writing an envelope header of
+this kind exposes the names of recipients (including blind-copy
+recipients) to all receivers of the messages, so the upstream must store
+one copy of the message per recipient to avoid becoming a privacy problem.
 .PP
-A slight variation of the 'X-Envelope-To' header is the 'Delivered-To' put
-by qmail to avoid mail loops. It will probably prefix the user name with a
-string that normally matches the user's domain. To remove this prefix you
-can use the -Q or 'qvirtual' option.
+Postfix, since version 2.0, writes an X-Original-To: header which
+contains a copy of the envelope as it was received.
 .PP
-Sometimes, unfortunately, neither of these methods works.  When they
-all fail, fetchmail must fall back on the contents of To/Cc/Bcc
-headers to try to determine recipient addressees -- and these are not
-reliable.  In particular, mailing-list software often ships mail with
-only the list broadcast address in the To header.
+Qmail and Postfix generally write a 'Delivered-To' header upon
+delivering the message to the mail spool and use it to avoid mail loops.
+Qmail virtual domains however will prefix the user name with a string
+that normally matches the user's domain. To remove this prefix you can
+use the -Q or 'qvirtual' option.
+.PP
+Sometimes, unfortunately, neither of these methods works.  That is the
+point when you should contact your ISP and ask them to provide such an
+envelope header, and you should not use multidrop in this situation.
+When they all fail, fetchmail must fall back on the contents of To/Cc
+headers (Bcc headers are not available - see below) to try to determine
+recipient addressees -- and these are unreliable.
+In particular, mailing-list software often ships mail with only
+the list broadcast address in the To header.
+.PP
+.B Note that a future version of fetchmail may remove To/Cc parsing!
 .PP
 When
 .I fetchmail
 cannot deduce a recipient address that is local, and the intended
 recipient address was anyone other than fetchmail's invoking user,
-mail will get lost.  This is what makes the multidrop feature risky.
+.B mail will get lost.
+This is what makes the multidrop feature risky without proper envelope
+information.
 .PP
 A related problem is that when you blind-copy a mail message, the Bcc
-information is carried \fIonly\fR as envelope address (it's not put
-in the headers fetchmail can see unless there is an X-Envelope
-header).  Thus, blind-copying to someone who gets mail over a
-fetchmail link will fail unless the the mailserver host routinely
-writes X-Envelope or an equivalent header into messages in your maildrop.
+information is carried \fIonly\fR as envelope address (it's removed from
+the headers by the sending mail server, so fetchmail can see it only if
+there is an X-Envelope-To header).  Thus, blind-copying to someone who
+gets mail over a fetchmail multidrop link will fail unless the the
+mailserver host routinely writes X-Envelope-To or an equivalent header
+into messages in your maildrop.
+.PP
+\fBIn conclusion, mailing lists and Bcc'd mail can only work if the
+server you're fetching from (1) stores one copy of the message per
+recipient in \fBIyour\fP domain and (2) records the envelope
+information in a special header (X-Original-To, Delivered-To,
+X-Envelope-To).\fR
 
 .SS Good Ways To Use Multidrop Mailboxes
 Multiple local names can be used to administer a mailing list from the

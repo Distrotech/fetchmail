@@ -210,6 +210,7 @@ fetchmail 6.3.0 (not yet released officially):
 * Failure to set up SSL connections now results in PS_SOCKET. Suggested by
   Thomas Wolff. Matthias Andree.
 * Kerberos IV detection fix for FreeBSD 4. Simon Barner. (MA)
+* Fix display and documentation of --envelope option. Matthias Andree
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.

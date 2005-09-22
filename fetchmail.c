@@ -1786,8 +1786,8 @@ static void dump_params (struct runctl *runp,
 			{
 			    printf(GT_("  Envelope header is assumed to be: %s\n"),
 				   ctl->server.envelope ? ctl->server.envelope : "Received");
-			    if (ctl->server.envskip > 1 || outlevel >= O_VERBOSE)
-				printf(GT_("  Number of envelope header to be parsed: %d\n"),
+			    if (ctl->server.envskip || outlevel >= O_VERBOSE)
+				printf(GT_("  Number of envelope headers to be skipped over: %d\n"),
 				       ctl->server.envskip);
 			    if (ctl->server.qvirtual)
 				printf(GT_("  Prefix %s will be removed from user id\n"),
