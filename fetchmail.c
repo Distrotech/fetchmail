@@ -1785,7 +1785,7 @@ static void dump_params (struct runctl *runp,
 			else
 			{
 			    printf(GT_("  Envelope header is assumed to be: %s\n"),
-				   ctl->server.envelope ? ctl->server.envelope:GT_("Received"));
+				   ctl->server.envelope ? ctl->server.envelope : "Received");
 			    if (ctl->server.envskip > 1 || outlevel >= O_VERBOSE)
 				printf(GT_("  Number of envelope header to be parsed: %d\n"),
 				       ctl->server.envskip);
