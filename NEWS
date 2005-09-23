@@ -211,6 +211,7 @@ fetchmail 6.3.0 (not yet released officially):
   Thomas Wolff. Matthias Andree.
 * Kerberos IV detection fix for FreeBSD 4. Simon Barner. (MA)
 * Fix display and documentation of --envelope option. Matthias Andree
+* Make "envelope 'Delivered-To'" work with dropdelivered. Timothy Lee. (MA)
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.
@@ -254,7 +255,7 @@ fetchmail-6.2.3 (Thu Jul 17 14:53:00 EDT 2003), 22490 lines:
 * Brian Sammon's patch to deal with malformed message lines containing NULs.
 * Fai's patch to ignore all but the first Return-Path (some spams have
   more than one of these).
-* Benjamin Drieu's patch to properly byte-stuff when talking to BSNTP.
+* Benjamin Drieu's patch to properly byte-stuff when talking to BSMTP.
   Fixes Debian bug #184469.
 * Benjamin Drieu's patch to enable auth=cram-md5.
   Fixes Debian bug #185232.

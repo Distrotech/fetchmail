@@ -379,6 +379,7 @@ int readheaders(int sock,
     static char		*delivered_to = NULL;
     int 		n, oldlen, ch, remaining, skipcount;
     size_t		linelen;
+    int			delivered_to_count;
     struct idlist 	*idp;
     flag		no_local_matches = FALSE;
     flag		has_nuls;
@@ -415,6 +416,7 @@ int readheaders(int sock,
     oldlen = 0;
     msgblk.msglen = 0;
     skipcount = 0;
+    delivered_to_count = 0;
     ctl->mimemsg = 0;
 
     for (remaining = fetchlen; remaining > 0 || protocol->delimited; )
@@ -653,17 +655,24 @@ int readheaders(int sock,
 	}
 
 	/*
-	 * We remove all Delivered-To: headers.
-	 * 
-	 * This is to avoid false mail loops messages when delivering
-	 * local messages to and from a Postfix/qmail mailserver. 
+	 * We remove all Delivered-To: headers if dropdelivered is set
+	 * - special care must be taken if Delivered-To: is also used
+	 * as envelope at the same time.
+	 *
+	 * This is to avoid false mail loops errors when delivering
+	 * local messages to and from a Postfix or qmail mailserver.
 	 */
 	if (ctl->dropdelivered && !strncasecmp(line, "Delivered-To:", 13)) 
 	{
-	    if (delivered_to)
+	    if (delivered_to ||
+	    	ctl->server.envelope == STRING_DISABLED ||
+		!ctl->server.envelope ||
+		strcasecmp(ctl->server.envelope, "Delivered-To") ||
+		delivered_to_count != ctl->server.envskip)
 		free(line);
 	    else 
 		delivered_to = line;
+	    delivered_to_count++;
 	    continue;
 	}
 
