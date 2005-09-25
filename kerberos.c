@@ -96,8 +96,8 @@ int do_rfc1731(int sock, char *command, char *truename)
     strncpy(srvinst, truename, (sizeof srvinst)-1);
     srvinst[(sizeof srvinst)-1] = '\0';
     for (p = srvinst; *p; p++) {
-      if (isupper(*p)) {
-	*p = tolower(*p);
+      if (isupper((unsigned char)*p)) {
+	*p = tolower((unsigned char)*p);
       }
     }
 

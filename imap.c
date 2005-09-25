@@ -272,7 +272,7 @@ static void capa_probe(int sock, struct query *ctl)
 
 	/* capability checks are supposed to be caseblind */
 	for (cp = capabilities; *cp; cp++)
-	    *cp = toupper(*cp);
+	    *cp = toupper((unsigned char)*cp);
 
 	/* UW-IMAP server 10.173 notifies in all caps, but RFC2060 says we
 	   should expect a response in mixed-case */
@@ -846,7 +846,7 @@ static int imap_getpartialsizes(int sock, int first, int last, int *sizes)
 	    return(ok);
 	/* we want response matching to be case-insensitive */
 	for (cp = buf; *cp; cp++)
-	    *cp = toupper(*cp);
+	    *cp = toupper((unsigned char)*cp);
 	/* an untagged NO means that a message was not readable */
 	if (strstr(buf, "* NO"))
 	    ;
