@@ -106,8 +106,13 @@ AC_CHECK_LIB(cposix, strchr,
 		LIBS="$LIBS -lcposix"])
 
 dnl Port hack for Sparc/NetBSD-1.5
-AC_CHECK_LIB(intl, gettext,
-		[LIBS="$LIBS -lintl"])
+dnl
+dnl NB: this has been disabled as it causes the unconditional
+dnl addition of libintl to the build, which is both undesired
+dnl and breaks on Solaris/Blastwave.org machines.
+dnl
+dnl AC_CHECK_LIB(intl, gettext,
+dnl 		[LIBS="$LIBS -lintl"])
 
 AC_REPLACE_FUNCS([strstr strcasecmp memmove stpcpy strlcpy strlcat])
 
