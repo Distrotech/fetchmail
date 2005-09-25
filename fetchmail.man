@@ -211,7 +211,7 @@ fetchmail will automatically delete messages after successful
 delivery. This option does not work with ETRN and ODMR.
 .TP
 .B \-\-limitflush
-POP3/IMAP only.  Delete oversized messages from the
+POP3/IMAP only, since version 6.3.0.  Delete oversized messages from the
 mailserver before retrieving new messages. The size limit should be
 separately sepecified with the --limit option.  This option does not
 work with ETRN or ODMR.
@@ -271,7 +271,7 @@ may be removed and forced enabled in a future fetchmail version.
 
 .TP
 .B \-\-service <servicename>
-(Keyword: service)
+(Keyword: service) Since version 6.3.0.
 The service option permits you to specify a service name to connect to.
 You can specify a decimal port number here, if your services database
 lacks the required service-port assignments. See the FAQ item R12 for
@@ -783,6 +783,11 @@ is meant to be used with an interactive
 editor like
 .IR fetchmailconf ,
 written in Python.
+.SS Removed Options
+.TP
+.B -T | --netsec
+Removed before version 6.3.0, the required underlying inet6_apps library
+had been discontinued and is no longer available.
 
 .SH USER AUTHENTICATION AND ENCRYPTION
 All modes except ETRN require authentication of the client to the server.
