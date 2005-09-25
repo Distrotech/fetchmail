@@ -215,6 +215,8 @@ fetchmail 6.3.0 (not yet released officially):
 * Add -DBIND_8_COMPAT to Darwin (MacOS X) compiles, to fix build problems on
   newer Darwin versions. Matthias Andree.
 * fetchmail should now automatically detect if OpenSSL requires -ldl.
+  Matthias Andree.
+* Fix Solaris build with --disable-nls (blastwave.org). Matthias Andree.
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.
