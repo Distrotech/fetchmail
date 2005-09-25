@@ -568,59 +568,59 @@ struct query *ctl;	/* option record to be initialized */
 
     if (errflag || ocount > 1 || helpflag) {
 	/* squawk if syntax errors were detected */
-#define P(s)	fputs(s, helpflag ? stdout : stderr)
+#define P(s)    fputs(s, helpflag ? stdout : stderr)
 	P(GT_("usage:  fetchmail [options] [server ...]\n"));
 	P(GT_("  Options are as follows:\n"));
-	P(GT_("  -?, --help	   display this option help\n"));
-	P(GT_("  -V, --version	   display version info\n"));
+	P(GT_("  -?, --help        display this option help\n"));
+	P(GT_("  -V, --version     display version info\n"));
 
-	P(GT_("  -c, --check	   check for messages without fetching\n"));
-	P(GT_("  -s, --silent	   work silently\n"));
-	P(GT_("  -v, --verbose	   work noisily (diagnostic output)\n"));
-	P(GT_("  -d, --daemon	   run as a daemon once per n seconds\n"));
+	P(GT_("  -c, --check       check for messages without fetching\n"));
+	P(GT_("  -s, --silent      work silently\n"));
+	P(GT_("  -v, --verbose     work noisily (diagnostic output)\n"));
+	P(GT_("  -d, --daemon      run as a daemon once per n seconds\n"));
 	P(GT_("  -N, --nodetach    don't detach daemon process\n"));
-	P(GT_("  -q, --quit	   kill daemon process\n"));
-	P(GT_("  -L, --logfile	   specify logfile name\n"));
-	P(GT_("      --syslog	   use syslog(3) for most messages when running as a daemon\n"));
+	P(GT_("  -q, --quit        kill daemon process\n"));
+	P(GT_("  -L, --logfile     specify logfile name\n"));
+	P(GT_("      --syslog      use syslog(3) for most messages when running as a daemon\n"));
 	P(GT_("      --invisible   don't write Received & enable host spoofing\n"));
 	P(GT_("  -f, --fetchmailrc specify alternate run control file\n"));
-	P(GT_("  -i, --idfile	   specify alternate UIDs file\n"));
+	P(GT_("  -i, --idfile      specify alternate UIDs file\n"));
 	P(GT_("      --postmaster  specify recipient of last resort\n"));
 	P(GT_("      --nobounce    redirect bounces from user to postmaster.\n"));
 #ifdef CAN_MONITOR
 	P(GT_("  -I, --interface   interface required specification\n"));
-	P(GT_("  -M, --monitor	   monitor interface for activity\n"));
+	P(GT_("  -M, --monitor     monitor interface for activity\n"));
 #endif
 #if defined( SSL_ENABLE )
-	P(GT_("      --ssl	   enable ssl encrypted session\n"));
-	P(GT_("      --sslkey	   ssl private key file\n"));
-	P(GT_("      --sslcert	   ssl client certificate\n"));
+	P(GT_("      --ssl         enable ssl encrypted session\n"));
+	P(GT_("      --sslkey      ssl private key file\n"));
+	P(GT_("      --sslcert     ssl client certificate\n"));
 	P(GT_("      --sslcertpath path to ssl certificates\n"));
 	P(GT_("      --sslfingerprint fingerprint that must match that of the server's cert.\n"));
 	P(GT_("      --sslproto    force ssl protocol (ssl2/ssl3/tls1)\n"));
 #endif
-	P(GT_("      --plugin	   specify external command to open connection\n"));
-	P(GT_("      --plugout	   specify external command to open smtp connection\n"));
+	P(GT_("      --plugin      specify external command to open connection\n"));
+	P(GT_("      --plugout     specify external command to open smtp connection\n"));
 
 	P(GT_("  -p, --protocol    specify retrieval protocol (see man page)\n"));
-	P(GT_("  -U, --uidl	   force the use of UIDLs (pop3 only)\n"));
-	P(GT_("  -P, --port	   TCP port to connect to (obsolete, use --service)\n"));
-	P(GT_("      --service	   TCP service to connect to (can be numeric TCP port)\n"));
-	P(GT_("      --auth	   authentication type (password/kerberos/ssh/otp)\n"));
-	P(GT_("  -t, --timeout	   server nonresponse timeout\n"));
+	P(GT_("  -U, --uidl        force the use of UIDLs (pop3 only)\n"));
+	P(GT_("  -P, --port        TCP port to connect to (obsolete, use --service)\n"));
+	P(GT_("      --service     TCP service to connect to (can be numeric TCP port)\n"));
+	P(GT_("      --auth        authentication type (password/kerberos/ssh/otp)\n"));
+	P(GT_("  -t, --timeout     server nonresponse timeout\n"));
 	P(GT_("  -E, --envelope    envelope address header\n"));
 	P(GT_("  -Q, --qvirtual    prefix to remove from local user id\n"));
 	P(GT_("      --principal   mail service principal\n"));
 	P(GT_("      --tracepolls  add poll-tracing information to Received header\n"));
 
 	P(GT_("  -u, --username    specify users's login on server\n"));
-	P(GT_("  -a, --all	   retrieve old and new messages\n"));
-	P(GT_("  -K, --nokeep	   delete new messages after retrieval\n"));
-	P(GT_("  -k, --keep	   save new messages after retrieval\n"));
-	P(GT_("  -F, --flush	   delete old messages from server\n"));
+	P(GT_("  -a, --all         retrieve old and new messages\n"));
+	P(GT_("  -K, --nokeep      delete new messages after retrieval\n"));
+	P(GT_("  -k, --keep        save new messages after retrieval\n"));
+	P(GT_("  -F, --flush       delete old messages from server\n"));
 	P(GT_("      --limitflush  delete oversized messages\n"));
 	P(GT_("  -n, --norewrite   don't rewrite header addresses\n"));
-	P(GT_("  -l, --limit	   don't fetch messages over given size\n"));
+	P(GT_("  -l, --limit       don't fetch messages over given size\n"));
 	P(GT_("  -w, --warnings    interval between warning mail notification\n"));
 
 	P(GT_("  -S, --smtphost    set SMTP forwarding host\n"));
@@ -632,11 +632,11 @@ struct query *ctl;	/* option record to be initialized */
 	P(GT_("  -B, --fetchlimit  set fetch limit for server connections\n"));
 	P(GT_("      --fetchsizelimit set fetch message size limit\n"));
 	P(GT_("      --fastuidl    do a binary search for UIDLs\n"));
-	P(GT_("  -e, --expunge	   set max deletions between expunges\n"));
-	P(GT_("  -m, --mda	   set MDA to use for forwarding\n"));
-	P(GT_("      --bsmtp	   set output BSMTP file\n"));
-	P(GT_("      --lmtp	   use LMTP (RFC2033) for delivery\n"));
-	P(GT_("  -r, --folder	   specify remote folder name\n"));
+	P(GT_("  -e, --expunge     set max deletions between expunges\n"));
+	P(GT_("  -m, --mda         set MDA to use for forwarding\n"));
+	P(GT_("      --bsmtp       set output BSMTP file\n"));
+	P(GT_("      --lmtp        use LMTP (RFC2033) for delivery\n"));
+	P(GT_("  -r, --folder      specify remote folder name\n"));
 	P(GT_("      --showdots    show progress dots even in logfiles\n"));
 #undef P
 
