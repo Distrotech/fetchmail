@@ -1,9 +1,3 @@
-Fix Berlios Bug #4725 (doesn't build on Darwin, incomplete types in
-sink.c - timeval missing; trying to shuffle fetchmail.h before
-sys/resource.h). (possibly fixed in SVN r4296)
-
-Fix Jim Correia's MacOS X arpa/nameser.h|res_search vs. HEADER|-lresolv
-
 Review Solaris gettext stuff.
 
 RFC2047 encode X-Fetchmail-Warning?
@@ -19,13 +13,4 @@ put all getaddrinfo compat cruft into an easy-to-use m4 macro for
 autoconf and Makefile.am snippet for automake, so people can just use it
 without further hassle.
 
-clean up options.c, instead of LA_* options, use the corresponding short
-option letter where possible. Saves some LA_* values.
-
 pkg-config for OpenSSL? -ldl problem
-
-Thomas Wolff: AUTHFAIL doesn't quite fit
-(server resets connection immediately)
-$ ./fetchmail --ssl --service 993
-fetchmail: SSL connection failed.
-fetchmail: Query status=3 (AUTHFAIL)

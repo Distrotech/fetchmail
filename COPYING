@@ -1,5 +1,6 @@
 This collective work is Copyright (C) 2002, 2003 by Eric S. Raymond.
-Portions are copyrighted by Carl E. Harris and George M. Sipe.
+Portions are copyrighted by Carl E. Harris, George M. Sipe, Matthias
+Andree and Sunil Shetye.
 
 The support for SMB authentication is copyright by Andrew Tridgell and
 is under GPL version 2.  Tridge has granted a specific exemption for
