@@ -23,7 +23,9 @@ localedir=		$(datadir)/locale
 DEFS=			@DEFS@ -DLOCALEDIR=\"$(localedir)\"
 
 noinst_LIBRARIES=	libfm.a
-libfm_a_SOURCES=	xmalloc.c base64.c rfc822.c report.c rfc2047e.c servport.c \
+libfm_a_SOURCES=	xmalloc.c base64.c rfc822.c report.c rfc2047e.c \
+			servport.c ntlm.h smbbyteorder.h smbdes.h smbmd4.h \
+			smbencrypt.h smbdes.c smbencrypt.c smbmd4.c smbutil.c \
 			libesmtp/gethostbyname.h libesmtp/gethostbyname.c
 libfm_a_LIBADD=		$(EXTRAOBJ)
 libfm_a_DEPENDENCIES=	$(EXTRAOBJ)
@@ -44,16 +46,14 @@ TESTS=			regression
 endif
 
 fetchmail_SOURCES=	fetchmail.h getopt.h \
-		i18n.h kerberos.h md5.h mx.h netrc.h ntlm.h \
-		smbbyteorder.h smbdes.h smbmd4.h smbencrypt.h smtp.h \
+		i18n.h kerberos.h md5.h mx.h netrc.hsmtp.h \
 		socket.h tunable.h \
 		socket.c getpass.c pop2.c pop3.c imap.c etrn.c \
 		odmr.c fetchmail.c env.c idle.c options.c daemon.c \
 		driver.c transact.c sink.c smtp.c \
 		uid.c mxget.c md5ify.c cram.c kerberos.c gssapi.c \
 		opie.c rpa.c interface.c netrc.c \
-		unmime.c conf.c checkalias.c smbdes.c smbencrypt.c \
-		smbmd4.c smbutil.c lock.c \
+		unmime.c conf.c checkalias.c lock.c \
 		rcfile_l.l rcfile_y.y ucs/norm_charmap.c \
 		libesmtp/getaddrinfo.h libesmtp/getaddrinfo.c \
 		KAME/getnameinfo.c
