@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.6\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2005-09-21 10:45+0200\n"
-"PO-Revision-Date: 2005-07-06 01:31+0200\n"
+"POT-Creation-Date: 2005-09-25 13:01+0200\n"
+"PO-Revision-Date: 2005-09-22 11:07+0200\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -71,11 +71,10 @@ msgid "Subject: Fetchmail oversized-messages warning"
 msgstr "Subject: Alerte de Fetchmail: messages trop grands."
 
 #: driver.c:341
-#, fuzzy, c-format
+#, c-format
 msgid "The following oversized messages were deleted on the mail server %s:"
 msgstr ""
-"Les messages suivants, qui sont trop grands, restent sur le serveur\n"
-"de mail %s :"
+"Les messages suivants sont trop grands et restent sur le serveur de mail %s :"
 
 #: driver.c:345
 #, c-format
@@ -387,7 +386,7 @@ msgstr "sélection ou re-réception du dossier par défaut\n"
 msgid "%s at %s (folder %s)"
 msgstr "%s dans %s (dossier %s)"
 
-#: driver.c:1314 rcfile_y.y:374
+#: driver.c:1314 rcfile_y.y:380
 #, c-format
 msgid "%s at %s"
 msgstr "%s dans %s"
@@ -619,6 +618,7 @@ msgstr "L'option --check n'est pas supportée avec ETRN\n"
 #: fetchmail.c:156
 msgid "WARNING: Running as root is discouraged.\n"
 msgstr ""
+"Avertissement: appeler fetchmail avec privilèges root est déconseille.\n"
 
 #: fetchmail.c:168
 msgid "fetchmail: invoked with"
@@ -892,13 +892,18 @@ msgstr ""
 
 #: fetchmail.c:1185
 #, c-format
-msgid "%s configuration invalid, port number cannot be negative\n"
-msgstr "configuration de %s invalide, le numéro de port ne peut être négatif\n"
+msgid ""
+"fetchmail: %s configuration invalid, specify positive port number for "
+"service or port\n"
+msgstr ""
+"fetchmail: configuration de %s invalide, service requiert un numéro de port "
+"positif\n"
 
 #: fetchmail.c:1192
 #, c-format
-msgid "%s configuration invalid, RPOP requires a privileged port\n"
-msgstr "configuration de %s invalide, RPOP requiert un port privilégié\n"
+msgid "fetchmail: %s configuration invalid, RPOP requires a privileged port\n"
+msgstr ""
+"fetchmail: configuration de %s invalide, RPOP requiert un port privilégié\n"
 
 #: fetchmail.c:1210
 #, c-format
@@ -1003,11 +1008,10 @@ msgid "  Mail will be retrieved via %s\n"
 msgstr "  Le courrier sera reçu via %s\n"
 
 #: fetchmail.c:1488
-#, fuzzy, c-format
+#, c-format
 msgid "  Poll of this server will occur every %d interval.\n"
 msgid_plural "  Poll of this server will occur every %d intervals.\n"
-msgstr[0] ""
-"  La réception depuis ce serveur s'opérera tous les %d intervalles.\n"
+msgstr[0] "  La réception depuis ce serveur s'opérera tout %d intervalle.\n"
 msgstr[1] ""
 "  La réception depuis ce serveur s'opérera tous les %d intervalles.\n"
 
@@ -1075,9 +1079,8 @@ msgid "  Password authentication will be forced.\n"
 msgstr "Authentification par mot de passe forcé.\n"
 
 #: fetchmail.c:1540
-#, fuzzy
 msgid "  MSN authentication will be forced.\n"
-msgstr "L'authentification NTLM forcée.\n"
+msgstr "L'authentification MSN forcée.\n"
 
 #: fetchmail.c:1543
 msgid "  NTLM authentication will be forced.\n"
@@ -1182,21 +1185,20 @@ msgstr ""
 "off).\n"
 
 #: fetchmail.c:1609
-#, fuzzy
 msgid ""
 "  Oversized messages will be flushed before message retrieval (--limitflush "
 "on).\n"
 msgstr ""
-"  Tout ancien message sera éliminé avant relève du courrier (--flush on).\n"
+"  Tout message trop grand sera éliminé avant relève du courrier (--"
+"limitflush on).\n"
 
 #: fetchmail.c:1610
-#, fuzzy
 msgid ""
 "  Oversized messages will not be flushed before message retrieval (--"
 "limitflush off).\n"
 msgstr ""
-"  Tout ancien message ne sera pas éliminé avant relève du courrier (--flush "
-"off).\n"
+"  Tout ancien trop grand ne sera pas éliminé avant relève du courrier (--"
+"limitflush off).\n"
 
 #: fetchmail.c:1612
 msgid "  Rewrite of server-local addresses is enabled (--norewrite off).\n"
@@ -1458,13 +1460,9 @@ msgstr "  Le routage vers l'adresse d'enveloppe est inactivé\n"
 msgid "  Envelope header is assumed to be: %s\n"
 msgstr "  L'en-tête d'enveloppe est pris comme étant : %s\n"
 
-#: fetchmail.c:1788
-msgid "Received"
-msgstr "Received"
-
 #: fetchmail.c:1790
 #, c-format
-msgid "  Number of envelope header to be parsed: %d\n"
+msgid "  Number of envelope headers to be skipped over: %d\n"
 msgstr "  Numéro de l'en-tête d'enveloppe devant être traité : %d\n"
 
 #: fetchmail.c:1793
@@ -1794,18 +1792,18 @@ msgid "challenge mismatch\n"
 msgstr "non coïncidence du challenge\n"
 
 #: lock.c:84
-#, fuzzy, c-format
+#, c-format
 msgid "fetchmail: error reading lockfile \"%s\": %s\n"
-msgstr "fetchmail: suppression de l'ancien fichier verrou\n"
+msgstr "fetchmail: échec de lecture du fichier verrou \"%s\": %s\n"
 
 #: lock.c:88
 msgid "fetchmail: removing stale lockfile\n"
 msgstr "fetchmail: suppression de l'ancien fichier verrou\n"
 
 #: lock.c:97
-#, fuzzy, c-format
+#, c-format
 msgid "fetchmail: error opening lockfile \"%s\": %s\n"
-msgstr "fetchmail: suppression de l'ancien fichier verrou\n"
+msgstr "fetchmail: échec d'ouverture du fichier verrou \"%s\": %s\n"
 
 #: lock.c:134
 msgid "fetchmail: lock creation failed.\n"
@@ -1856,9 +1854,8 @@ msgid "Unknown ODMR error %d\n"
 msgstr "Erreur ODMR inconnue %d\n"
 
 #: odmr.c:187
-#, fuzzy
 msgid "receiving message data\n"
-msgstr "écriture du texte du message\n"
+msgstr "lecture des données du message\n"
 
 #: odmr.c:240
 msgid "Option --keep is not supported with ODMR\n"
@@ -1888,131 +1885,131 @@ msgstr "Impossible de décoder le challenge OTP\n"
 msgid "Secret pass phrase: "
 msgstr "Phrase de passe secrète : "
 
-#: options.c:201 options.c:245
+#: options.c:161 options.c:205
 #, c-format
 msgid "String '%s' is not a valid number string.\n"
 msgstr "La chaîne de caractères «%s» n'est pas un nombre valide.\n"
 
-#: options.c:210
+#: options.c:170
 #, c-format
 msgid "Value of string '%s' is %s than %d.\n"
 msgstr "La valeur de la chaîne de caractères «%s» est %s que %d.\n"
 
-#: options.c:211
+#: options.c:171
 msgid "smaller"
 msgstr "moins"
 
-#: options.c:211
+#: options.c:171
 msgid "larger"
 msgstr "plus"
 
-#: options.c:380
+#: options.c:329
 #, c-format
 msgid "Invalid protocol `%s' specified.\n"
 msgstr "Le protocole «%s» spécifié est invalide.\n"
 
-#: options.c:424
+#: options.c:371
 #, c-format
 msgid "Invalid authentication `%s' specified.\n"
 msgstr "La authentification «%s» spécifiée est invalide.\n"
 
-#: options.c:648
+#: options.c:572
 msgid "usage:  fetchmail [options] [server ...]\n"
 msgstr "usage:  fetchmail [options] [serveur ...]\n"
 
-#: options.c:649
+#: options.c:573
 msgid "  Options are as follows:\n"
 msgstr "  Les options sont les suivantes :\n"
 
-#: options.c:650
+#: options.c:574
 msgid "  -?, --help        display this option help\n"
 msgstr "  -?, --help        afficher la présente aide\n"
 
-#: options.c:651
+#: options.c:575
 msgid "  -V, --version     display version info\n"
 msgstr "  -V, --version     informations sur la version courante\n"
 
-#: options.c:653
+#: options.c:577
 msgid "  -c, --check       check for messages without fetching\n"
 msgstr "  -c, --check       vérifier les messages sans les récupérer\n"
 
-#: options.c:654
+#: options.c:578
 msgid "  -s, --silent      work silently\n"
 msgstr "  -s, --silent      travailler silencieusement\n"
 
-#: options.c:655
+#: options.c:579
 msgid "  -v, --verbose     work noisily (diagnostic output)\n"
 msgstr "  -v, --verbose     travail verbeux (information de diagnostic)\n"
 
-#: options.c:656
+#: options.c:580
 msgid "  -d, --daemon      run as a daemon once per n seconds\n"
 msgstr "  -d, --daemon      démarrer en démon toutes les n secondes\n"
 
-#: options.c:657
+#: options.c:581
 msgid "  -N, --nodetach    don't detach daemon process\n"
 msgstr "  -N, --nodetach    ne pas lancer de processus démon\n"
 
-#: options.c:658
+#: options.c:582
 msgid "  -q, --quit        kill daemon process\n"
 msgstr "  -q, --quit        terminer le processus démon\n"
 
-#: options.c:659
+#: options.c:583
 msgid "  -L, --logfile     specify logfile name\n"
 msgstr "  -L, --logfile     spécifier le nom du fichier de traces\n"
 
-#: options.c:660
+#: options.c:584
 msgid ""
 "      --syslog      use syslog(3) for most messages when running as a "
 "daemon\n"
 msgstr ""
 "      --syslog      utiliser syslog(3) pour les messages, en mode démon\n"
 
-#: options.c:661
+#: options.c:585
 msgid "      --invisible   don't write Received & enable host spoofing\n"
 msgstr ""
 "      --invisible   ne pas écrire de `Received' y activer le spoofing\n"
 
-#: options.c:662
+#: options.c:586
 msgid "  -f, --fetchmailrc specify alternate run control file\n"
 msgstr "  -f, --fetchmailrc spécifier un autre fichier de contrôle\n"
 
-#: options.c:663
+#: options.c:587
 msgid "  -i, --idfile      specify alternate UIDs file\n"
 msgstr "  -i, --idfile      spécifier un autre fichier contenant les UIDs\n"
 
-#: options.c:664
+#: options.c:588
 msgid "      --postmaster  specify recipient of last resort\n"
 msgstr "      --postmaster  spécifier le destinataire en dernier ressort\n"
 
-#: options.c:665
+#: options.c:589
 msgid "      --nobounce    redirect bounces from user to postmaster.\n"
 msgstr "      --nobounce    redirige les rebonds vers le maître de poste.\n"
 
-#: options.c:667
+#: options.c:591
 msgid "  -I, --interface   interface required specification\n"
 msgstr "  -I, --interface   spécifier l'interface requise\n"
 
-#: options.c:668
+#: options.c:592
 msgid "  -M, --monitor     monitor interface for activity\n"
 msgstr "  -M, --monitor     surveiller l'activité d'une interface\n"
 
-#: options.c:671
+#: options.c:595
 msgid "      --ssl         enable ssl encrypted session\n"
 msgstr "      --ssl         permettre les sessions cryptées SSL\n"
 
-#: options.c:672
+#: options.c:596
 msgid "      --sslkey      ssl private key file\n"
 msgstr "      --sslkey      fichier de clé SSL privée\n"
 
-#: options.c:673
+#: options.c:597
 msgid "      --sslcert     ssl client certificate\n"
 msgstr "      --sslcert     certificat de session SSL\n"
 
-#: options.c:674
+#: options.c:598
 msgid "      --sslcertpath path to ssl certificates\n"
 msgstr "      --sslcertpath répertoire des certificats SSL\n"
 
-#: options.c:675
+#: options.c:599
 msgid ""
 "      --sslfingerprint fingerprint that must match that of the server's "
 "cert.\n"
@@ -2020,165 +2017,173 @@ msgstr ""
 "      --sslfingerprint empreinte digital qui doit concerter de celle du "
 "serveur.\n"
 
-#: options.c:676
+#: options.c:600
 msgid "      --sslproto    force ssl protocol (ssl2/ssl3/tls1)\n"
 msgstr "      --sslproto    force le protocole ssl (ssl2/ssl3/tls1)\n"
 
-#: options.c:678
+#: options.c:602
 msgid "      --plugin      specify external command to open connection\n"
 msgstr ""
 "      --plugin      spécifier la commande externe pour ouvrir la connexion\n"
 
-#: options.c:679
+#: options.c:603
 msgid "      --plugout     specify external command to open smtp connection\n"
 msgstr ""
 "      --plugout     spécifier la commande externe pour ouvrir la connexion "
 "smtp\n"
 
-#: options.c:681
+#: options.c:605
 msgid "  -p, --protocol    specify retrieval protocol (see man page)\n"
 msgstr ""
 "  -p, --protocol    spécifier le protocole de récupération (voir la page "
 "man)\n"
 
-#: options.c:682
+#: options.c:606
 msgid "  -U, --uidl        force the use of UIDLs (pop3 only)\n"
 msgstr "  -U, --uidl        forcer l'utilisation des UIDLs (uniquement pop3)\n"
 
-#: options.c:683
-msgid "  -P, --port        TCP/IP service port to connect to\n"
-msgstr "  -P, --port        port TCP/IP auquel se connecter\n"
+#: options.c:607
+msgid "  -P, --port        TCP port to connect to (obsolete, use --service)\n"
+msgstr ""
+"  -P, --port        port TCP auquel se connecter (obsolète, utilisez --"
+"service)\n"
 
-#: options.c:684
+#: options.c:608
+msgid ""
+"      --service     TCP service to connect to (can be numeric TCP port)\n"
+msgstr ""
+"      --service      service TCP auquel se connecter (peut être port "
+"numérique)\n"
+
+#: options.c:609
 msgid "      --auth        authentication type (password/kerberos/ssh/otp)\n"
 msgstr ""
 "      --auth        type d'authentification (mot de passe/kerberos/ssh/otp)\n"
 
-#: options.c:685
+#: options.c:610
 msgid "  -t, --timeout     server nonresponse timeout\n"
 msgstr "  -t, --timeout     temps d'attente d'une réponse du serveur\n"
 
-#: options.c:686
+#: options.c:611
 msgid "  -E, --envelope    envelope address header\n"
 msgstr "  -E, --envelope    en-tête de l'adresse d'enveloppe\n"
 
-#: options.c:687
+#: options.c:612
 msgid "  -Q, --qvirtual    prefix to remove from local user id\n"
 msgstr "  -Q, --qvirtual    préfixer à soustraire à l'id local d'utilisateur\n"
 
-#: options.c:688
+#: options.c:613
 msgid "      --principal   mail service principal\n"
 msgstr "      --principal   principal service mail\n"
 
-#: options.c:689
+#: options.c:614
 msgid "      --tracepolls  add poll-tracing information to Received header\n"
 msgstr ""
 "      --tracepolls  ajoute des informations de tracage de la réception\n"
 "                    aux en-testes Received\n"
 
-#: options.c:691
+#: options.c:616
 msgid "  -u, --username    specify users's login on server\n"
 msgstr ""
 "  -u, --username    spécifier le `login' de l'utilisateur sur le serveur\n"
 
-#: options.c:692
+#: options.c:617
 msgid "  -a, --all         retrieve old and new messages\n"
 msgstr "  -a, --all         récupérer anciens et nouveaux messages\n"
 
-#: options.c:693
+#: options.c:618
 msgid "  -K, --nokeep      delete new messages after retrieval\n"
 msgstr ""
 "  -K, --nokeep      supprimer les nouveaux messages après récupération\n"
 
-#: options.c:694
+#: options.c:619
 msgid "  -k, --keep        save new messages after retrieval\n"
 msgstr ""
 "  -k, --keep        conserver les nouveaux messages après récupération\n"
 
-#: options.c:695
+#: options.c:620
 msgid "  -F, --flush       delete old messages from server\n"
 msgstr "  -F, --flush       supprimer les anciens messages du serveur\n"
 
-#: options.c:696
-#, fuzzy
+#: options.c:621
 msgid "      --limitflush  delete oversized messages\n"
-msgstr "  -F, --flush       supprimer les anciens messages du serveur\n"
+msgstr "      --limitflush  eliminer les messages qui sont trop grands\n"
 
-#: options.c:697
+#: options.c:622
 msgid "  -n, --norewrite   don't rewrite header addresses\n"
 msgstr "  -n, --norewrite   ne pas récrire les adresses d'en-tête\n"
 
-#: options.c:698
+#: options.c:623
 msgid "  -l, --limit       don't fetch messages over given size\n"
 msgstr ""
 "  -l, --limit       limite maximale de la taille des messages à récupérer\n"
 
-#: options.c:699
+#: options.c:624
 msgid "  -w, --warnings    interval between warning mail notification\n"
 msgstr "  -w, --warnings    intervalle entre les notifications de courrier\n"
 
-#: options.c:701
+#: options.c:626
 msgid "  -S, --smtphost    set SMTP forwarding host\n"
 msgstr "  -S, --smtphost    spécifier l'hôte SMTP pour la réexpédition\n"
 
-#: options.c:702
+#: options.c:627
 msgid "      --fetchdomains fetch mail for specified domains\n"
 msgstr "      --fetchdomains récupère le mail pour les domaines indiqués\n"
 
-#: options.c:703
+#: options.c:628
 msgid "  -D, --smtpaddress set SMTP delivery domain to use\n"
 msgstr ""
 "  -D, --smtpaddress spécifier le domaine de délivrance SMTP à utiliser\n"
 
-#: options.c:704
+#: options.c:629
 msgid "      --smtpname    set SMTP full name username@domain\n"
 msgstr "      --smtpname    force le nom complet SMTP nom@domaine\n"
 
-#: options.c:705
+#: options.c:630
 msgid "  -Z, --antispam,   set antispam response values\n"
 msgstr "  -Z, --antispam    configurer les valeurs de réponse anti`spam'\n"
 
-#: options.c:706
+#: options.c:631
 msgid "  -b, --batchlimit  set batch limit for SMTP connections\n"
 msgstr ""
 "  -b, --batchlimit  limite du nombre de messages pour chaque connexion SMTP\n"
 
-#: options.c:707
+#: options.c:632
 msgid "  -B, --fetchlimit  set fetch limit for server connections\n"
 msgstr ""
 "  -B, --fetchlimit  limite des récupérations pour les connexions au serveur\n"
 
-#: options.c:708
+#: options.c:633
 msgid "      --fetchsizelimit set fetch message size limit\n"
 msgstr ""
 "      --fetchsizelimit indique la tialle limite des messages récupérés\n"
 
-#: options.c:709
+#: options.c:634
 msgid "      --fastuidl    do a binary search for UIDLs\n"
 msgstr "      --fastuidl    effectue une recherche binaire des UIDLs\n"
 
-#: options.c:710
+#: options.c:635
 msgid "  -e, --expunge     set max deletions between expunges\n"
 msgstr ""
 "  -e, --expunge     limite du nombre des suppressions entre deux purges\n"
 
-#: options.c:711
+#: options.c:636
 msgid "  -m, --mda         set MDA to use for forwarding\n"
 msgstr "  -m, --mda         spécifier le MDA à utiliser pour la réexpédition\n"
 
-#: options.c:712
+#: options.c:637
 msgid "      --bsmtp       set output BSMTP file\n"
 msgstr "      --bsmtp       spécifier le fichier de sortie BSMTP\n"
 
-#: options.c:713
+#: options.c:638
 msgid "      --lmtp        use LMTP (RFC2033) for delivery\n"
 msgstr "      --lmtp        utiliser LMTP (RFC2033) pour la délivrance\n"
 
-#: options.c:714
+#: options.c:639
 msgid "  -r, --folder      specify remote folder name\n"
 msgstr "  -r, --folder      spécifier le nom du dossier distant\n"
 
-#: options.c:715
+#: options.c:640
 msgid "      --showdots    show progress dots even in logfiles\n"
 msgstr ""
 "      --showdots    affiche des points de progression, même dans le journal\n"
@@ -2201,11 +2206,11 @@ msgstr "Fichier verrou en service. Y'a-t-il une autre session active ?\n"
 
 #: pop3.c:651
 msgid "Cannot handle UIDL response from upstream server.\n"
-msgstr ""
+msgstr "Ne peux pas manier la réponse UIDL du serveur.\n"
 
 #: pop3.c:674
 msgid "Server responded with UID for wrong message.\n"
-msgstr ""
+msgstr "Serveur répondait avec UID d'un faux message.\n"
 
 #: pop3.c:701 pop3.c:935
 #, c-format
@@ -2236,7 +2241,7 @@ msgstr "une option serveur est placée après les options utilisateur"
 msgid "SDPS not enabled."
 msgstr "le support de SDPS est désactivé"
 
-#: rcfile_y.y:206
+#: rcfile_y.y:212
 msgid ""
 "fetchmail: interface option is only supported under Linux (without IPv6) and "
 "FreeBSD\n"
@@ -2245,7 +2250,7 @@ msgstr ""
 "et \n"
 "FreeBSD\n"
 
-#: rcfile_y.y:213
+#: rcfile_y.y:219
 msgid ""
 "fetchmail: monitor option is only supported under Linux (without IPv6) and "
 "FreeBSD\n"
@@ -2253,25 +2258,25 @@ msgstr ""
 "fetchmail: l'option monitor n'est supportée que sous Linux (sans IPv6) et \n"
 "FreeBSD\n"
 
-#: rcfile_y.y:326
+#: rcfile_y.y:332
 msgid "SSL is not enabled"
 msgstr "le support de SSL n'est pas activé"
 
-#: rcfile_y.y:375
+#: rcfile_y.y:381
 msgid "end of input"
 msgstr "fin de l'entrée"
 
-#: rcfile_y.y:412
+#: rcfile_y.y:418
 #, c-format
 msgid "File %s must be a regular file.\n"
 msgstr "Le fichier %s doit etre un fichier normal.\n"
 
-#: rcfile_y.y:422
+#: rcfile_y.y:428
 #, c-format
 msgid "File %s must have no more than -rwx--x--- (0710) permissions.\n"
 msgstr "Le fichier %s doit avoir au moins les permissions -rwx--x--- (0710)\n"
 
-#: rcfile_y.y:434
+#: rcfile_y.y:440
 #, c-format
 msgid "File %s must be owned by you.\n"
 msgstr "Le fichier %s doit vous appartenir.\n"
@@ -2472,12 +2477,19 @@ msgstr "Application de MD5 au bloc de données :\n"
 msgid "MD5 result is: \n"
 msgstr "Le résultat de MD5 est : \n"
 
-#: servport.c:73
+#: servport.c:52
 #, c-format
-msgid ""
-"Cannot resolve service %s to port.  Please specify the service as decimal "
-"port number.\n"
-msgstr ""
+msgid "getaddrinfo(NULL, \"%s\") error: %s\n"
+msgstr "échec getaddrinfo(NULL, \"%s\") : %s\n"
+
+#: servport.c:78
+#, c-format
+msgid "Cannot resolve service %s to port number.\n"
+msgstr "Ne peux pas résoudre service %s dans un numéro de port.\n"
+
+#: servport.c:79
+msgid "Please specify the service as decimal port number.\n"
+msgstr "Prière d'indiquer le service comme numéro décimal.\n"
 
 #: sink.c:238
 #, c-format
@@ -2648,122 +2660,126 @@ msgstr "échec de execvp(%s)\n"
 
 #: socket.c:281
 #, c-format
-msgid "fetchmail: getaddrinfo(\"%s\",\"%s\") error: %s\n"
-msgstr "fetchmail: échec getaddrinfo(\"%s\",\"%s\"): %s\n"
+msgid "getaddrinfo(\"%s\",\"%s\") error: %s\n"
+msgstr "échec getaddrinfo(\"%s\",\"%s\") : %s\n"
 
-#: socket.c:624
+#: socket.c:284
+msgid "Try adding the --service option (see also FAQ item R12).\n"
+msgstr "Essaiez ajouter l'option --service (voir aussi FAQ R12).\n"
+
+#: socket.c:626
 #, c-format
 msgid "Issuer Organization: %s\n"
 msgstr "Organisation de l'expéditeur: %s\n"
 
-#: socket.c:626
+#: socket.c:628
 msgid "Warning: Issuer Organization Name too long (possibly truncated).\n"
 msgstr ""
 "Avertissement: le nom de l'organisation de l'expéditeur est tros long (et "
 "peut etre tronqué).\n"
 
-#: socket.c:628
+#: socket.c:630
 msgid "Unknown Organization\n"
 msgstr "Organisation inconnue\n"
 
-#: socket.c:630
+#: socket.c:632
 #, c-format
 msgid "Issuer CommonName: %s\n"
 msgstr "Nom commun de l'émetteur : %s\n"
 
-#: socket.c:632
+#: socket.c:634
 msgid "Warning: Issuer CommonName too long (possibly truncated).\n"
 msgstr ""
 "Avertissement: le nom de l'expéditeur est tros long (et peut etre tronqué).\n"
 
-#: socket.c:634
+#: socket.c:636
 msgid "Unknown Issuer CommonName\n"
 msgstr "Nom commun de l'expéditeur inconnu\n"
 
-#: socket.c:638
+#: socket.c:640
 #, c-format
 msgid "Server CommonName: %s\n"
 msgstr "Nom commun du serveur: %s\n"
 
-#: socket.c:642
+#: socket.c:644
 msgid "Bad certificate: Subject CommonName too long!\n"
 msgstr "Certificat erroni: Sujet nom commun trop long!\n"
 
-#: socket.c:658
+#: socket.c:660
 #, c-format
 msgid "Server CommonName mismatch: %s != %s\n"
 msgstr "Pas de concordance du nom commun du serveur: %s != %s\n"
 
-#: socket.c:664
+#: socket.c:666
 msgid "Server name not set, could not verify certificate!\n"
 msgstr ""
 "Le nom du serveur n'est pas spécifié, impossible de vérifier le certificat!\n"
 
-#: socket.c:669
+#: socket.c:671
 msgid "Unknown Server CommonName\n"
 msgstr "Nom commun du serveur inconnu\n"
 
-#: socket.c:671
+#: socket.c:673
 msgid "Server name not specified in certificate!\n"
 msgstr "Le nom du serveur n'est pas présent dans le certificat!\n"
 
-#: socket.c:681
+#: socket.c:683
 msgid "EVP_md5() failed!\n"
 msgstr "échec de EVP_md5()\n"
 
-#: socket.c:685
+#: socket.c:687
 msgid "Out of memory!\n"
 msgstr "Plus de mémoire!\n"
 
-#: socket.c:693
+#: socket.c:695
 msgid "Digest text buffer too small!\n"
 msgstr "Le tampon résumé est trop court!\n"
 
-#: socket.c:699
+#: socket.c:701
 #, c-format
 msgid "%s key fingerprint: %s\n"
 msgstr "signature de la clé %s : %s\n"
 
-#: socket.c:703
+#: socket.c:705
 #, c-format
 msgid "%s fingerprints match.\n"
 msgstr "La signature %s correspond.\n"
 
-#: socket.c:706
+#: socket.c:708
 #, c-format
 msgid "%s fingerprints do not match!\n"
 msgstr "La signature %s ne correspond pas!\n"
 
-#: socket.c:715
+#: socket.c:717
 #, c-format
 msgid "Server certificate verification error: %s\n"
 msgstr "Erreur de vérification du certificat du serveur : %s\n"
 
-#: socket.c:721
+#: socket.c:723
 #, c-format
 msgid "unknown issuer (first %d characters): %s\n"
 msgstr "expéditeur inconnu (%d premiers caractères) : %s\n"
 
-#: socket.c:773
+#: socket.c:775
 msgid "File descriptor out of range for SSL"
 msgstr "Descripteur de fichier inaccessible pour SSL"
 
-#: socket.c:790
+#: socket.c:792
 #, c-format
 msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
 msgstr ""
 "Le protocole SSL «%s» spécifié est invalide, le protocole par défaut "
 "(SSLv23) est utilisé.\n"
 
-#: socket.c:851
+#: socket.c:853
 msgid "Certificate/fingerprint verification was somehow skipped!\n"
 msgstr "La vérification du certificat ou de la signature n'a pas été faite!\n"
 
-#: socket.c:923
+#: socket.c:925
 msgid "Cygwin socket read retry\n"
 msgstr "Nouvel essai de lecture sur la socket Cygwin\n"
 
-#: socket.c:926
+#: socket.c:928
 msgid "Cygwin socket read retry failed!\n"
 msgstr "Le nouvel essai de lecture sur la socket Cygwin a échoué!\n"
 
@@ -2805,50 +2821,50 @@ msgstr "aucune adresse trouvée dans «Received»\n"
 msgid "found Received address `%s'\n"
 msgstr "adresse `%s' trouvée dans «Received»\n"
 
-#: transact.c:530
+#: transact.c:532
 msgid "message delimiter found while scanning headers\n"
 msgstr "délimiteur de message trouvé durant l'analyse des en-têtes\n"
 
-#: transact.c:551
+#: transact.c:553
 msgid "incorrect header line found while scanning headers\n"
 msgstr "ligne d'en-tête incorrecte trouvée lors du scan des en-têtes\n"
 
-#: transact.c:553
+#: transact.c:555
 #, c-format
 msgid "line: %s"
 msgstr "ligne: %s"
 
-#: transact.c:1067
+#: transact.c:1076
 #, c-format
 msgid "no local matches, forwarding to %s\n"
 msgstr "aucune correspondance locale, réexpédition vers %s\n"
 
-#: transact.c:1082
+#: transact.c:1091
 msgid "forwarding and deletion suppressed due to DNS errors\n"
 msgstr "réexpédition et effacement supprimés suite à des erreurs de DNS\n"
 
-#: transact.c:1194
+#: transact.c:1203
 msgid "writing RFC822 msgblk.headers\n"
 msgstr "écriture d'en-têtes RFC822\n"
 
-#: transact.c:1215
+#: transact.c:1224
 msgid "no recipient addresses matched declared local names"
 msgstr "aucune adresse de destination ne correspond aux noms locaux déclarés"
 
-#: transact.c:1222
+#: transact.c:1231
 #, c-format
 msgid "recipient address %s didn't match any local name"
 msgstr "l'adresse de destination %s ne correspond à aucun nom local"
 
-#: transact.c:1231
+#: transact.c:1240
 msgid "message has embedded NULs"
 msgstr "le message contient des caractères NULs"
 
-#: transact.c:1239
+#: transact.c:1248
 msgid "SMTP listener rejected local recipient addresses: "
 msgstr "Le serveur SMTP rejette les adresses locales de destination : "
 
-#: transact.c:1367
+#: transact.c:1376
 msgid "writing message text\n"
 msgstr "écriture du texte du message\n"
 
