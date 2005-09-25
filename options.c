@@ -22,143 +22,103 @@
 #include "fetchmail.h"
 #include "i18n.h"
 
-#define LA_HELP		1
-#define LA_VERSION	2 
-#define LA_CHECK	3
-#define LA_SILENT	4 
-#define LA_VERBOSE	5 
-#define LA_DAEMON	6
-#define LA_NODETACH	7
-#define LA_QUIT		8
-#define LA_LOGFILE	9
-#define LA_INVISIBLE	10
-#define LA_SYSLOG	11
-#define LA_NOSYSLOG	12
-#define LA_RCFILE	13
-#define LA_IDFILE	14
-#define LA_POSTMASTER	15
-#define LA_NOBOUNCE	16
-#define LA_PROTOCOL	17
-#define LA_UIDL		18
-#define LA_PORT		19
-#define LA_AUTH		20
-#define LA_TIMEOUT	21
-#define LA_ENVELOPE	22
-#define LA_QVIRTUAL     23
-#define LA_USERNAME	24
-#define LA_ALL          25
-#define LA_NOKEEP	26
-#define	LA_KEEP		27
-#define LA_FLUSH        28
-#define LA_NOREWRITE	29
-#define LA_LIMIT	30
-#define LA_WARNINGS	31
-#define LA_FOLDER	32
-#define LA_SMTPHOST	33
-#define LA_FETCHDOMAINS	34
-#define LA_SMTPADDR     35
-#define LA_ANTISPAM	36
-#define LA_BATCHLIMIT	37
-#define LA_FETCHLIMIT	38
-#define LA_EXPUNGE	39
-#define LA_MDA		40
-#define LA_BSMTP	41
-#define LA_LMTP		42
-#define LA_PLUGIN	43
-#define LA_PLUGOUT	44
-#define LA_INTERFACE    46
-#define LA_MONITOR      47
-#define LA_CONFIGDUMP	48
-#define LA_YYDEBUG	49
-#define LA_SMTPNAME     50
-#define LA_SHOWDOTS	51
-#define LA_PRINCIPAL	52
-#define LA_TRACEPOLLS	53
+enum {
+    LA_INVISIBLE = 256,
+		 LA_SYSLOG,
+		 LA_NOSYSLOG,
+		 LA_POSTMASTER,
+		 LA_NOBOUNCE,
+		 LA_AUTH,
+		 LA_FETCHDOMAINS,
+		 LA_BSMTP,
+		 LA_LMTP,
+		 LA_PLUGIN,
+		 LA_PLUGOUT,
+		 LA_CONFIGDUMP,
+		 LA_SMTPNAME,
+		 LA_SHOWDOTS,
+		 LA_PRINCIPAL,
+		 LA_TRACEPOLLS,
+		 LA_SSL,
+		 LA_SSLKEY,
+		 LA_SSLCERT,
+		 LA_SSLPROTO,
+		 LA_SSLCERTCK,
+		 LA_SSLCERTPATH,
+		 LA_SSLFINGERPRINT,
+		 LA_FETCHSIZELIMIT,
+		 LA_FASTUIDL,
+		 LA_LIMITFLUSH,
+};
 
-#ifdef SSL_ENABLE
-#define LA_SSL		54
-#define LA_SSLKEY	55
-#define LA_SSLCERT	56
-#define LA_SSLPROTO 	57
-#define LA_SSLCERTCK	58
-#define LA_SSLCERTPATH	59
-#define LA_SSLFINGERPRINT	60
-#endif
-
-#define LA_FETCHSIZELIMIT	61
-#define LA_FASTUIDL	62
-/* don't use 63-122: they could clash with short options */
-#define LA_LIMITFLUSH	128
-#define LA_SERVICE	129
-
-/* options still left: CDgGhHjJoORwWxXYz */
+/* options still left: CgGhHjJoORTWxXYz */
 static const char *shortoptions = 
-	"?Vcsvd:NqL:f:i:p:UP:A:t:E:Q:u:akKFnl:r:S:Z:b:B:e:m:T:I:M:yw:D:";
+	"?Vcsvd:NqL:f:i:p:UP:A:t:E:Q:u:akKFnl:r:S:Z:b:B:e:m:I:M:yw:D:";
 
 static const struct option longoptions[] = {
 /* this can be const because all flag fields are 0 and will never get set */
-  {"help",	no_argument,	   (int *) 0, LA_HELP        },
-  {"version",	no_argument,       (int *) 0, LA_VERSION     },
-  {"check",	no_argument,	   (int *) 0, LA_CHECK       },
-  {"silent",	no_argument,       (int *) 0, LA_SILENT      },
-  {"verbose",	no_argument,       (int *) 0, LA_VERBOSE     },
-  {"daemon",	required_argument, (int *) 0, LA_DAEMON      },
-  {"nodetach",	no_argument,	   (int *) 0, LA_NODETACH    },
-  {"quit",	no_argument,	   (int *) 0, LA_QUIT        },
-  {"logfile",	required_argument, (int *) 0, LA_LOGFILE     },
-  {"invisible",	no_argument,	   (int *) 0, LA_INVISIBLE   },
-  {"showdots",	no_argument,	   (int *) 0, LA_SHOWDOTS    },
-  {"syslog",	no_argument,	   (int *) 0, LA_SYSLOG      },
-  {"nosyslog",	no_argument,	   (int *) 0, LA_NOSYSLOG    },
-  {"fetchmailrc",required_argument,(int *) 0, LA_RCFILE      },
-  {"idfile",	required_argument, (int *) 0, LA_IDFILE      },
-  {"postmaster",required_argument, (int *) 0, LA_POSTMASTER  },
-  {"nobounce",  no_argument,       (int *) 0, LA_NOBOUNCE    },
+  {"help",	no_argument,	   (int *) 0, '?' },
+  {"version",	no_argument,	   (int *) 0, 'V' },
+  {"check",	no_argument,	   (int *) 0, 'c' },
+  {"silent",	no_argument,	   (int *) 0, 's' },
+  {"verbose",	no_argument,	   (int *) 0, 'v' },
+  {"daemon",	required_argument, (int *) 0, 'd' },
+  {"nodetach",	no_argument,	   (int *) 0, 'N' },
+  {"quit",	no_argument,	   (int *) 0, 'q' },
+  {"logfile",	required_argument, (int *) 0, 'L' },
+  {"invisible",	no_argument,	   (int *) 0, LA_INVISIBLE },
+  {"showdots",	no_argument,	   (int *) 0, LA_SHOWDOTS },
+  {"syslog",	no_argument,	   (int *) 0, LA_SYSLOG },
+  {"nosyslog",	no_argument,	   (int *) 0, LA_NOSYSLOG },
+  {"fetchmailrc",required_argument,(int *) 0, 'f' },
+  {"idfile",	required_argument, (int *) 0, 'i' },
+  {"postmaster",required_argument, (int *) 0, LA_POSTMASTER },
+  {"nobounce",	no_argument,	   (int *) 0, LA_NOBOUNCE },
 
-  {"protocol",	required_argument, (int *) 0, LA_PROTOCOL    },
-  {"proto",	required_argument, (int *) 0, LA_PROTOCOL    },
-  {"uidl",	no_argument,	   (int *) 0, LA_UIDL	     },
-  {"port",	required_argument, (int *) 0, LA_PORT        },
-  {"service",	required_argument, (int *) 0, LA_SERVICE     },
+  {"protocol",	required_argument, (int *) 0, 'p' },
+  {"proto",	required_argument, (int *) 0, 'p' },
+  {"uidl",	no_argument,	   (int *) 0, 'U' },
+  {"port",	required_argument, (int *) 0, 'P' },
+  {"service",	required_argument, (int *) 0, 'P' },
   {"auth",	required_argument, (int *) 0, LA_AUTH},
-  {"timeout",	required_argument, (int *) 0, LA_TIMEOUT     },
-  {"envelope",	required_argument, (int *) 0, LA_ENVELOPE    },
-  {"qvirtual",	required_argument, (int *) 0, LA_QVIRTUAL    },
+  {"timeout",	required_argument, (int *) 0, 't' },
+  {"envelope",	required_argument, (int *) 0, 'E' },
+  {"qvirtual",	required_argument, (int *) 0, 'Q' },
 
-  {"user",	required_argument, (int *) 0, LA_USERNAME    },
-  {"username",	required_argument, (int *) 0, LA_USERNAME    },
+  {"user",	required_argument, (int *) 0, 'u' },
+  {"username",	required_argument, (int *) 0, 'u' },
 
-  {"all",	no_argument,       (int *) 0, LA_ALL         },
-  {"nokeep",	no_argument,	   (int *) 0, LA_NOKEEP      },
-  {"keep",	no_argument,       (int *) 0, LA_KEEP        },
-  {"flush",	no_argument,	   (int *) 0, LA_FLUSH       },
-  {"limitflush",	no_argument, (int *) 0, LA_LIMITFLUSH       },
-  {"norewrite",	no_argument,	   (int *) 0, LA_NOREWRITE   },
-  {"limit",	required_argument, (int *) 0, LA_LIMIT       },
-  {"warnings",	required_argument, (int *) 0, LA_WARNINGS    },
+  {"all",	no_argument,	   (int *) 0, 'a' },
+  {"nokeep",	no_argument,	   (int *) 0, 'K' },
+  {"keep",	no_argument,	   (int *) 0, 'k' },
+  {"flush",	no_argument,	   (int *) 0, 'F' },
+  {"limitflush",	no_argument, (int *) 0, LA_LIMITFLUSH },
+  {"norewrite",	no_argument,	   (int *) 0, 'n' },
+  {"limit",	required_argument, (int *) 0, 'l' },
+  {"warnings",	required_argument, (int *) 0, 'w' },
 
-  {"folder",	required_argument, (int *) 0, LA_FOLDER	     },
-  {"smtphost",	required_argument, (int *) 0, LA_SMTPHOST    },
-  {"fetchdomains",	required_argument, (int *) 0, LA_FETCHDOMAINS    },
-  {"smtpaddress", required_argument, (int *) 0, LA_SMTPADDR  },
-  {"smtpname",  required_argument, (int *) 0, LA_SMTPNAME    },
-  {"antispam",	required_argument, (int *) 0, LA_ANTISPAM    },
-  
-  {"batchlimit",required_argument, (int *) 0, LA_BATCHLIMIT  },
-  {"fetchlimit",required_argument, (int *) 0, LA_FETCHLIMIT  },
-  {"fetchsizelimit",required_argument, (int *) 0, LA_FETCHSIZELIMIT  },
-  {"fastuidl",	required_argument, (int *) 0, LA_FASTUIDL    },
-  {"expunge",	required_argument, (int *) 0, LA_EXPUNGE     },
-  {"mda",	required_argument, (int *) 0, LA_MDA         },
-  {"bsmtp",	required_argument, (int *) 0, LA_BSMTP       },
-  {"lmtp",	no_argument,       (int *) 0, LA_LMTP        },
+  {"folder",	required_argument, (int *) 0, 'r' },
+  {"smtphost",	required_argument, (int *) 0, 'S' },
+  {"fetchdomains",	required_argument, (int *) 0, LA_FETCHDOMAINS },
+  {"smtpaddress", required_argument, (int *) 0, 'D' },
+  {"smtpname",	required_argument, (int *) 0, LA_SMTPNAME },
+  {"antispam",	required_argument, (int *) 0, 'Z' },
+
+  {"batchlimit",required_argument, (int *) 0, 'b' },
+  {"fetchlimit",required_argument, (int *) 0, 'B' },
+  {"fetchsizelimit",required_argument, (int *) 0, LA_FETCHSIZELIMIT },
+  {"fastuidl",	required_argument, (int *) 0, LA_FASTUIDL },
+  {"expunge",	required_argument, (int *) 0, 'e' },
+  {"mda",	required_argument, (int *) 0, 'm' },
+  {"bsmtp",	required_argument, (int *) 0, LA_BSMTP },
+  {"lmtp",	no_argument,	   (int *) 0, LA_LMTP },
 
 #ifdef SSL_ENABLE
-  {"ssl",       no_argument,       (int *) 0, LA_SSL        },
-  {"sslkey",    required_argument, (int *) 0, LA_SSLKEY     },
-  {"sslcert",   required_argument, (int *) 0, LA_SSLCERT    },
-  {"sslproto",   required_argument, (int *) 0, LA_SSLPROTO    },
-  {"sslcertck", no_argument,       (int *) 0, LA_SSLCERTCK  },
+  {"ssl",	no_argument,	   (int *) 0, LA_SSL },
+  {"sslkey",	required_argument, (int *) 0, LA_SSLKEY },
+  {"sslcert",	required_argument, (int *) 0, LA_SSLCERT },
+  {"sslproto",	 required_argument, (int *) 0, LA_SSLPROTO },
+  {"sslcertck", no_argument,	   (int *) 0, LA_SSLCERTCK },
   {"sslcertpath",   required_argument, (int *) 0, LA_SSLCERTPATH },
   {"sslfingerprint",   required_argument, (int *) 0, LA_SSLFINGERPRINT },
 #endif
@@ -166,19 +126,19 @@ static const struct option longoptions[] = {
   {"principal", required_argument, (int *) 0, LA_PRINCIPAL },
 
 #ifdef CAN_MONITOR
-  {"interface",	required_argument, (int *) 0, LA_INTERFACE   },
-  {"monitor",	required_argument, (int *) 0, LA_MONITOR     },
+  {"interface",	required_argument, (int *) 0, 'I' },
+  {"monitor",	required_argument, (int *) 0, 'M' },
 #endif /* CAN_MONITOR */
-  {"plugin",	required_argument, (int *) 0, LA_PLUGIN      },
-  {"plugout",	required_argument, (int *) 0, LA_PLUGOUT     },
+  {"plugin",	required_argument, (int *) 0, LA_PLUGIN },
+  {"plugout",	required_argument, (int *) 0, LA_PLUGOUT },
 
-  {"configdump",no_argument,	   (int *) 0, LA_CONFIGDUMP  },
+  {"configdump",no_argument,	   (int *) 0, LA_CONFIGDUMP },
 
-  {"yydebug",	no_argument,	   (int *) 0, LA_YYDEBUG     },
+  {"yydebug",	no_argument,	   (int *) 0, 'y' },
 
-  {"tracepolls",no_argument,       (int *) 0, LA_TRACEPOLLS  },
+  {"tracepolls",no_argument,	   (int *) 0, LA_TRACEPOLLS },
 
-  {(char *) 0,  no_argument,       (int *) 0, 0              }
+  {(char *) 0,	no_argument,	   (int *) 0, 0 }
 };
 
 static int xatoi(char *s, int *errflagptr)
@@ -228,7 +188,7 @@ static int xatoi(char *s, int *errflagptr)
 
     len = strlen(s);
     /* check for leading white spaces */
-    for (i = 0; (i < len) && isspace(s[i]); i++)
+    for (i = 0; (i < len) && isspace((unsigned char)s[i]); i++)
     	;
 
     dp = &s[i];
@@ -237,7 +197,7 @@ static int xatoi(char *s, int *errflagptr)
     if (i < len && (s[i] == '+' || s[i] == '-'))	i++;
 
     /* skip over digits */
-    for ( /* no init */ ; (i < len) && isdigit(s[i]); i++)
+    for ( /* no init */ ; (i < len) && isdigit((unsigned char)s[i]); i++)
     	;
 
     /* check for trailing garbage */
@@ -285,38 +245,30 @@ struct query *ctl;	/* option record to be initialized */
     {
 	switch (c) {
 	case 'V':
-	case LA_VERSION:
 	    versioninfo = TRUE;
 	    break;
 	case 'c':
-	case LA_CHECK:
 	    check_only = TRUE;
 	    break;
 	case 's':
-	case LA_SILENT:
 	    outlevel = O_SILENT;
 	    break;
 	case 'v':
-	case LA_VERBOSE:
 	    if (outlevel == O_VERBOSE)
 		outlevel = O_DEBUG;
 	    else
 		outlevel = O_VERBOSE;
 	    break;
 	case 'd':
-	case LA_DAEMON:
 	    rctl->poll_interval = xatoi(optarg, &errflag);
 	    break;
 	case 'N':
-	case LA_NODETACH:
 	    nodetach = TRUE;
 	    break;
 	case 'q':
-	case LA_QUIT:
 	    quitmode = TRUE;
 	    break;
 	case 'L':
-	case LA_LOGFILE:
 	    rctl->logfile = prependdir (optarg, currentwd);
 	    break;
 	case LA_INVISIBLE:
@@ -326,12 +278,10 @@ struct query *ctl;	/* option record to be initialized */
 	    rctl->showdots = FLAG_TRUE;
 	    break;
 	case 'f':
-	case LA_RCFILE:
 	    xfree(rcfile);
 	    rcfile = prependdir (optarg, currentwd);
 	    break;
 	case 'i':
-	case LA_IDFILE:
 	    rctl->idfile = prependdir (optarg, currentwd);
 	    break;
 	case LA_POSTMASTER:
@@ -341,7 +291,6 @@ struct query *ctl;	/* option record to be initialized */
 	    run.bouncemail = FALSE;
 	    break;
 	case 'p':
-	case LA_PROTOCOL:
 	    /* XXX -- should probably use a table lookup here */
 	    if (strcasecmp(optarg,"auto") == 0)
 		ctl->server.protocol = P_AUTO;
@@ -350,8 +299,8 @@ struct query *ctl;	/* option record to be initialized */
 #ifdef SDPS_ENABLE
 	    else if (strcasecmp(optarg,"sdps") == 0)
 	    {
-	        ctl->server.protocol = P_POP3; 
-                ctl->server.sdps = TRUE;
+		ctl->server.protocol = P_POP3; 
+		ctl->server.sdps = TRUE;
 	    }
 #endif /* SDPS_ENABLE */
 	    else if (strcasecmp(optarg,"pop3") == 0)
@@ -382,12 +331,9 @@ struct query *ctl;	/* option record to be initialized */
 	    }
 	    break;
 	case 'U':
-	case LA_UIDL:
 	    ctl->server.uidl = FLAG_TRUE;
 	    break;
 	case 'P':
-	case LA_PORT:
-	case LA_SERVICE:
 	    ctl->server.service = optarg;
 	    break;
 	case LA_AUTH:
@@ -427,54 +373,43 @@ struct query *ctl;	/* option record to be initialized */
 	    }
 	    break;
 	case 't':
-	case LA_TIMEOUT:
 	    ctl->server.timeout = xatoi(optarg, &errflag);
 	    if (ctl->server.timeout == 0)
 		ctl->server.timeout = -1;
 	    break;
 	case 'E':
-	case LA_ENVELOPE:
 	    ctl->server.envelope = xstrdup(optarg);
 	    break;
 	case 'Q':    
-	case LA_QVIRTUAL:
 	    ctl->server.qvirtual = xstrdup(optarg);
 	    break;
 
 	case 'u':
-	case LA_USERNAME:
 	    ctl->remotename = xstrdup(optarg);
 	    break;
 	case 'a':
-	case LA_ALL:
 	    ctl->fetchall = FLAG_TRUE;
 	    break;
 	case 'K':
-	case LA_NOKEEP:
 	    ctl->keep = FLAG_FALSE;
 	    break;
 	case 'k':
-	case LA_KEEP:
 	    ctl->keep = FLAG_TRUE;
 	    break;
 	case 'F':
-	case LA_FLUSH:
 	    ctl->flush = FLAG_TRUE;
 	    break;
 	case LA_LIMITFLUSH:
 	    ctl->limitflush = FLAG_TRUE;
 	    break;
 	case 'n':
-	case LA_NOREWRITE:
 	    ctl->rewrite = FLAG_FALSE;
 	    break;
 	case 'l':
-	case LA_LIMIT:
 	    c = xatoi(optarg, &errflag);
 	    ctl->limit = NUM_VALUE_IN(c);
 	    break;
 	case 'r':
-	case LA_FOLDER:
 	    buf = xstrdup(optarg);
 	    cp = strtok(buf, ",");
 	    do {
@@ -484,7 +419,6 @@ struct query *ctl;	/* option record to be initialized */
 	    free(buf);
 	    break;
 	case 'S':
-	case LA_SMTPHOST:
 	    buf = xstrdup(optarg);
 	    cp = strtok(buf, ",");
 	    do {
@@ -504,14 +438,12 @@ struct query *ctl;	/* option record to be initialized */
 	    free(buf);
 	    break;
 	case 'D':
-	case LA_SMTPADDR:
 	    ctl->smtpaddress = xstrdup(optarg);
 	    break;
 	case LA_SMTPNAME:
 	  ctl->smtpname = xstrdup(optarg);
 	  break;
 	case 'Z':
-	case LA_ANTISPAM:
 	    buf = xstrdup(optarg);
 	    cp = strtok(buf, ",");
 	    do {
@@ -523,12 +455,10 @@ struct query *ctl;	/* option record to be initialized */
 	    free(buf);
 	    break;
 	case 'b':
-	case LA_BATCHLIMIT:
 	    c = xatoi(optarg, &errflag);
 	    ctl->batchlimit = NUM_VALUE_IN(c);
 	    break;
 	case 'B':
-	case LA_FETCHLIMIT:
 	    c = xatoi(optarg, &errflag);
 	    ctl->fetchlimit = NUM_VALUE_IN(c);
 	    break;
@@ -541,12 +471,10 @@ struct query *ctl;	/* option record to be initialized */
 	    ctl->fastuidl = NUM_VALUE_IN(c);
 	    break;
 	case 'e':
-	case LA_EXPUNGE:
 	    c = xatoi(optarg, &errflag);
 	    ctl->expunge = NUM_VALUE_IN(c);
 	    break;
 	case 'm':
-	case LA_MDA:
 	    ctl->mda = xstrdup(optarg);
 	    ocount++;
 	    break;
@@ -560,11 +488,9 @@ struct query *ctl;	/* option record to be initialized */
 
 #ifdef CAN_MONITOR
 	case 'I':
-	case LA_INTERFACE:
 	    interface_parse(optarg, &ctl->server);
 	    break;
 	case 'M':
-	case LA_MONITOR:
 	    ctl->server.monitor = xstrdup(optarg);
 	    break;
 #endif /* CAN_MONITOR */
@@ -610,12 +536,10 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 
 	case 'y':
-	case LA_YYDEBUG:
 	    yydebug = TRUE;
 	    break;
 
 	case 'w':
-	case LA_WARNINGS:
 	    c = xatoi(optarg, &errflag);
 	    ctl->warnings = NUM_VALUE_IN(c);
 	    break;
@@ -637,7 +561,6 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 
 	case '?':
-	case LA_HELP:
 	default:
 	    helpflag++;
 	}
@@ -648,56 +571,56 @@ struct query *ctl;	/* option record to be initialized */
 #define P(s)	fputs(s, helpflag ? stdout : stderr)
 	P(GT_("usage:  fetchmail [options] [server ...]\n"));
 	P(GT_("  Options are as follows:\n"));
-	P(GT_("  -?, --help        display this option help\n"));
-	P(GT_("  -V, --version     display version info\n"));
+	P(GT_("  -?, --help	   display this option help\n"));
+	P(GT_("  -V, --version	   display version info\n"));
 
-	P(GT_("  -c, --check       check for messages without fetching\n"));
-	P(GT_("  -s, --silent      work silently\n"));
-	P(GT_("  -v, --verbose     work noisily (diagnostic output)\n"));
-	P(GT_("  -d, --daemon      run as a daemon once per n seconds\n"));
+	P(GT_("  -c, --check	   check for messages without fetching\n"));
+	P(GT_("  -s, --silent	   work silently\n"));
+	P(GT_("  -v, --verbose	   work noisily (diagnostic output)\n"));
+	P(GT_("  -d, --daemon	   run as a daemon once per n seconds\n"));
 	P(GT_("  -N, --nodetach    don't detach daemon process\n"));
-	P(GT_("  -q, --quit        kill daemon process\n"));
-	P(GT_("  -L, --logfile     specify logfile name\n"));
-	P(GT_("      --syslog      use syslog(3) for most messages when running as a daemon\n"));
+	P(GT_("  -q, --quit	   kill daemon process\n"));
+	P(GT_("  -L, --logfile	   specify logfile name\n"));
+	P(GT_("      --syslog	   use syslog(3) for most messages when running as a daemon\n"));
 	P(GT_("      --invisible   don't write Received & enable host spoofing\n"));
 	P(GT_("  -f, --fetchmailrc specify alternate run control file\n"));
-	P(GT_("  -i, --idfile      specify alternate UIDs file\n"));
+	P(GT_("  -i, --idfile	   specify alternate UIDs file\n"));
 	P(GT_("      --postmaster  specify recipient of last resort\n"));
 	P(GT_("      --nobounce    redirect bounces from user to postmaster.\n"));
 #ifdef CAN_MONITOR
 	P(GT_("  -I, --interface   interface required specification\n"));
-	P(GT_("  -M, --monitor     monitor interface for activity\n"));
+	P(GT_("  -M, --monitor	   monitor interface for activity\n"));
 #endif
 #if defined( SSL_ENABLE )
-	P(GT_("      --ssl         enable ssl encrypted session\n"));
-	P(GT_("      --sslkey      ssl private key file\n"));
-	P(GT_("      --sslcert     ssl client certificate\n"));
+	P(GT_("      --ssl	   enable ssl encrypted session\n"));
+	P(GT_("      --sslkey	   ssl private key file\n"));
+	P(GT_("      --sslcert	   ssl client certificate\n"));
 	P(GT_("      --sslcertpath path to ssl certificates\n"));
 	P(GT_("      --sslfingerprint fingerprint that must match that of the server's cert.\n"));
 	P(GT_("      --sslproto    force ssl protocol (ssl2/ssl3/tls1)\n"));
 #endif
-	P(GT_("      --plugin      specify external command to open connection\n"));
-	P(GT_("      --plugout     specify external command to open smtp connection\n"));
+	P(GT_("      --plugin	   specify external command to open connection\n"));
+	P(GT_("      --plugout	   specify external command to open smtp connection\n"));
 
 	P(GT_("  -p, --protocol    specify retrieval protocol (see man page)\n"));
-	P(GT_("  -U, --uidl        force the use of UIDLs (pop3 only)\n"));
-	P(GT_("  -P, --port        TCP port to connect to (obsolete, use --service)\n"));
-	P(GT_("      --service     TCP service to connect to (can be numeric TCP port)\n"));
-	P(GT_("      --auth        authentication type (password/kerberos/ssh/otp)\n"));
-	P(GT_("  -t, --timeout     server nonresponse timeout\n"));
+	P(GT_("  -U, --uidl	   force the use of UIDLs (pop3 only)\n"));
+	P(GT_("  -P, --port	   TCP port to connect to (obsolete, use --service)\n"));
+	P(GT_("      --service	   TCP service to connect to (can be numeric TCP port)\n"));
+	P(GT_("      --auth	   authentication type (password/kerberos/ssh/otp)\n"));
+	P(GT_("  -t, --timeout	   server nonresponse timeout\n"));
 	P(GT_("  -E, --envelope    envelope address header\n"));
 	P(GT_("  -Q, --qvirtual    prefix to remove from local user id\n"));
 	P(GT_("      --principal   mail service principal\n"));
-        P(GT_("      --tracepolls  add poll-tracing information to Received header\n"));
+	P(GT_("      --tracepolls  add poll-tracing information to Received header\n"));
 
 	P(GT_("  -u, --username    specify users's login on server\n"));
-	P(GT_("  -a, --all         retrieve old and new messages\n"));
-	P(GT_("  -K, --nokeep      delete new messages after retrieval\n"));
-	P(GT_("  -k, --keep        save new messages after retrieval\n"));
-	P(GT_("  -F, --flush       delete old messages from server\n"));
+	P(GT_("  -a, --all	   retrieve old and new messages\n"));
+	P(GT_("  -K, --nokeep	   delete new messages after retrieval\n"));
+	P(GT_("  -k, --keep	   save new messages after retrieval\n"));
+	P(GT_("  -F, --flush	   delete old messages from server\n"));
 	P(GT_("      --limitflush  delete oversized messages\n"));
 	P(GT_("  -n, --norewrite   don't rewrite header addresses\n"));
-	P(GT_("  -l, --limit       don't fetch messages over given size\n"));
+	P(GT_("  -l, --limit	   don't fetch messages over given size\n"));
 	P(GT_("  -w, --warnings    interval between warning mail notification\n"));
 
 	P(GT_("  -S, --smtphost    set SMTP forwarding host\n"));
@@ -709,11 +632,11 @@ struct query *ctl;	/* option record to be initialized */
 	P(GT_("  -B, --fetchlimit  set fetch limit for server connections\n"));
 	P(GT_("      --fetchsizelimit set fetch message size limit\n"));
 	P(GT_("      --fastuidl    do a binary search for UIDLs\n"));
-	P(GT_("  -e, --expunge     set max deletions between expunges\n"));
-        P(GT_("  -m, --mda         set MDA to use for forwarding\n"));
-        P(GT_("      --bsmtp       set output BSMTP file\n"));
-        P(GT_("      --lmtp        use LMTP (RFC2033) for delivery\n"));
-	P(GT_("  -r, --folder      specify remote folder name\n"));
+	P(GT_("  -e, --expunge	   set max deletions between expunges\n"));
+	P(GT_("  -m, --mda	   set MDA to use for forwarding\n"));
+	P(GT_("      --bsmtp	   set output BSMTP file\n"));
+	P(GT_("      --lmtp	   use LMTP (RFC2033) for delivery\n"));
+	P(GT_("  -r, --folder	   specify remote folder name\n"));
 	P(GT_("      --showdots    show progress dots even in logfiles\n"));
 #undef P
 
