@@ -75,7 +75,7 @@ static volatile int idletimeout = 0;	/* timeout occured in idle stage? */
 
 static jmp_buf	restart;
 
-int isidletimeout(void)
+int is_idletimeout(void)
 /* last timeout occured in idle stage? */
 {
     return idletimeout;
@@ -640,7 +640,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	    /* tell server we got it OK and resynchronize */
 	    if (separatefetchbody && ctl->server.base_protocol->trail)
 	    {
-		if (outlevel >= O_VERBOSE && !isafile(1))
+		if (outlevel >= O_VERBOSE && !is_a_file(1))
 		{
 		    fputc('\n', stdout);
 		    fflush(stdout);
@@ -698,7 +698,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 		/* tell server we got it OK and resynchronize */
 		if (ctl->server.base_protocol->trail)
 		{
-		    if (outlevel >= O_VERBOSE && !isafile(1))
+		    if (outlevel >= O_VERBOSE && !is_a_file(1))
 		    {
 			fputc('\n', stdout);
 			fflush(stdout);

@@ -259,7 +259,7 @@ nottyDetach:
   return(0);
 }
 
-flag isafile(int fd)
+flag is_a_file(int fd)
 /* is the given fd attached to a file? (used to control logging) */
 {
     struct stat stbuf;

@@ -10,7 +10,7 @@
 #include  "config.h"
 #include  <stdio.h>
 #include  <string.h>
-#include  <ctype.h> /* isspace() */
+#include  <ctype.h>
 #ifdef HAVE_MEMORY_H
 #include  <memory.h>
 #endif /* HAVE_MEMORY_H */
@@ -1207,7 +1207,7 @@ int readheaders(int sock,
 	free_str_list(&msgblk.recipients);
 	return(PS_IOERR);
     }
-    else if ((run.poll_interval == 0 || nodetach) && outlevel >= O_VERBOSE && !isafile(1) && !run.use_syslog)
+    else if ((run.poll_interval == 0 || nodetach) && outlevel >= O_VERBOSE && !is_a_file(1) && !run.use_syslog)
 	fputc('#', stdout);
 
     /* write error notifications */
@@ -1377,7 +1377,7 @@ int readbody(int sock, struct query *ctl, flag forward, int len)
 		release_sink(ctl);
 		return(PS_IOERR);
 	    }
-	    else if (outlevel >= O_VERBOSE && !isafile(1) && !run.use_syslog)
+	    else if (outlevel >= O_VERBOSE && !is_a_file(1) && !run.use_syslog)
 	    {
 		fputc('*', stdout);
 		fflush(stdout);
@@ -1464,7 +1464,7 @@ int size;	/* length of buffer */
     {
 	set_timeout(0);
 	phase = oldphase;
-	if(isidletimeout())
+	if(is_idletimeout())
 	{
 	  resetidletimeout();
 	  return(PS_IDLETIMEOUT);
