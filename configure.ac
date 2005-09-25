@@ -10,6 +10,8 @@ AC_CONFIG_SRCDIR([fetchmail.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_LIBOBJ_DIR([.])
 
+AC_CANONICAL_TARGET
+
 dnl we may need a newer automake version - the oldest tested is 1.7
 AC_PREREQ(2.59)
 AM_INIT_AUTOMAKE(1.5 foreign no-installinfo)
@@ -52,31 +54,33 @@ AM_PROG_LEX
 AC_PROG_MAKE_SET
 AC_PROG_YACC
 
+# Check for OS special cases
+case $target_os in
+darwin*)
+    AC_MSG_NOTICE(found Darwin - Adding -DBIND_8_COMPAT to CFLAGS)
+    CPFLAGS="-DBIND_8_COMPAT"
+    ;;
+# Check for FreeBSD special case: more libs needed
+freebsd*)
+    AC_MSG_NOTICE(found FreeBSD - Adding -lmd -lkvm -lcom_err to standard libraries)
+    LIBS="$LIBS -lmd -lkvm -lcom_err"
+    ;;
 # Check for LynxOS special case: -lbsd needed (at least on 2.3.0) and -s
 # not working.
-if test `uname` = "LynxOS" 
-then
-  echo "Adding -lbsd to standard libraries"
-  LIBS="$LIBS -lbsd"
-  LDFLAGS=""
-  echo "Prepending standard include path to gcc flags"
-  CPFLAGS="-I/usr/include"
-fi
-
-# Check for FreeBSD special case: more libs needed
-if test `uname` = "FreeBSD" 
-then
-   echo "Adding -lmd -lkvm -lcom_err to standard libraries"
-   LIBS="$LIBS -lmd -lkvm -lcom_err"
-fi
- 
+lynxos*)
+    AC_MSG_NOTICE(found LynxOS - Adding -lbsd to standard libraries)
+    LIBS="$LIBS -lbsd"
+    LDFLAGS=`echo $LDFLAGS | sed "s/-s //"`
+    AC_MSG_NOTICE(found LynxOS - Prepending standard include path to gcc flags)
+    CPFLAGS="-I/usr/include"
+    ;;
 # Check for Rhapsody special case: it doesn't like -s
-if test `uname` = "Rhapsody" 
-then
-   echo "Removing -s load flag"
-   LDFLAGS=`echo $LDFLAGS | sed "s/-s //"`
-fi
- 
+rhapsody*)
+    AC_MSG_NOTICE(found Rhapsody - Removing -s load flag)
+    LDFLAGS=`echo $LDFLAGS | sed "s/-s //"`
+    ;;
+esac
+
 dnl i18n
 AM_GNU_GETTEXT([external], [need-ngettext])
 AM_GNU_GETTEXT_VERSION(0.14.1)
@@ -591,6 +595,16 @@ then
   fi
   LDEFLAGS="$LDEFLAGS -L$with_ssl/lib"
   LIBS="$LIBS -lssl -lcrypto"
+  dnl check if -ldl is needed!
+  AC_MSG_CHECKING([for additional library dependencies of SSL])
+  for i in "" "-ldl" ; do
+      save_LIBS="$LIBS"
+      LIBS="$LIBS $i"
+      AC_LINK_IFELSE([AC_LANG_PROGRAM(,[SSL_library_init()])],break,LIBS="$save_LIBS")
+  done
+  if test "$i" = "" ; then i="(none)" ; fi
+  AC_MSG_RESULT($i)
+  dnl XXX FIXME: use pkg-config if available!
   AC_DEFINE(SSL_ENABLE)
 else
   echo 'Disabling SSL support...'

@@ -212,6 +212,9 @@ fetchmail 6.3.0 (not yet released officially):
 * Kerberos IV detection fix for FreeBSD 4. Simon Barner. (MA)
 * Fix display and documentation of --envelope option. Matthias Andree
 * Make "envelope 'Delivered-To'" work with dropdelivered. Timothy Lee. (MA)
+* Add -DBIND_8_COMPAT to Darwin (MacOS X) compiles, to fix build problems on
+  newer Darwin versions. Matthias Andree.
+* fetchmail should now automatically detect if OpenSSL requires -ldl.
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.
