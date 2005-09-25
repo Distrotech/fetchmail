@@ -217,7 +217,7 @@ separately sepecified with the --limit option.  This option does not
 work with ETRN or ODMR.
 .SS Protocol and Query Options
 .TP
-.B \-p <proto> | \-\-protocol <proto>
+.B \-p <proto> | \-\-proto <proto> | \-\-protocol <proto>
 (Keyword: proto[col])
 Specify the protocol to use when communicating with the remote
 mailserver.  If no protocol is specified, the default is AUTO.
@@ -606,7 +606,7 @@ suppresses expunges entirely (so no expunges at all will be done until
 the end of run).  This option does not work with ETRN or ODMR.
 .SS Authentication Options
 .TP
-.B \-u <name> | \-\-username <name>
+.B \-u <name> | \-\-user <name> | \-\-username <name>
 (Keyword: user[name])
 Specifies the user identification to be used when logging in to the mailserver.
 The appropriate user identification is both server and user-dependent.
