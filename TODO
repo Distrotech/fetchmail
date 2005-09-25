@@ -1,5 +1,3 @@
-Review Solaris gettext stuff.
-
 RFC2047 encode X-Fetchmail-Warning?
 X-Fetchmail-Warning: Empfängeradresse root@example.org stimmt mit keinem lokalen Namen überein
 X-Virus-Scanned: amavisd-new at m2a2.dyndns.org
@@ -12,5 +10,3 @@ complete CAN_MONITOR replacement
 put all getaddrinfo compat cruft into an easy-to-use m4 macro for
 autoconf and Makefile.am snippet for automake, so people can just use it
 without further hassle.
-
-pkg-config for OpenSSL? -ldl problem
