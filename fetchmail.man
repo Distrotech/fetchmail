@@ -274,8 +274,9 @@ may be removed and forced enabled in a future fetchmail version.
 (Keyword: service) Since version 6.3.0.
 The service option permits you to specify a service name to connect to.
 You can specify a decimal port number here, if your services database
-lacks the required service-port assignments. See the FAQ item R12 for
-details. This replaces the older \-\-port option.
+lacks the required service-port assignments. See the FAQ item R12 and
+the \-\-ssl documentation for details. This replaces the older \-\-port
+option.
 .TP
 .B \-P <portnumber> | \-\-port <portnumber>
 (Keyword: port)
@@ -349,7 +350,9 @@ protocol, for POP3, it is port 110 for the cleartext and port 995 for
 the encrypted variant.
 .sp
 If your system lacks the corresponding entries from /etc/services, see
-the \-\-port option.
+the \-\-service option and specify the numeric port number as given in
+the previous paragraph (unless your ISP had directed you to different
+ports, which is uncommon however).
 .TP
 .B \-\-sslcert <name>
 (Keyword: sslcert)
