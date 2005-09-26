@@ -327,6 +327,12 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	return (do_pop3_ntlm(sock, ctl, 1) == 0) ? PS_SUCCESS : PS_AUTHFAIL;
     if (ctl->server.authenticate == A_NTLM)
 	return (do_pop3_ntlm(sock, ctl, 0) == 0) ? PS_SUCCESS : PS_AUTHFAIL;
+#else
+    if (ctl->server.authenticate == A_NTLM || ctl->server.authenticate == A_MSN)
+    {
+	report(stderr,
+	   GT_("Required NTLM capability not compiled into fetchmail\n"));
+    }
 #endif
 
     switch (ctl->server.protocol) {
