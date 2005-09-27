@@ -1,3 +1,13 @@
+For 6.3.0:
+==========
+
+Yves Boisjoly reports that NTLM auth needs to use the real Wks field
+rather than duplicating the user name (see l. 211 in smbutil.c).
+
+
+For later:
+==========
+
 RFC2047 encode X-Fetchmail-Warning?
 X-Fetchmail-Warning: Empfängeradresse root@example.org stimmt mit keinem lokalen Namen überein
 X-Virus-Scanned: amavisd-new at m2a2.dyndns.org
