@@ -9,8 +9,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2005-09-25 13:01+0200\n"
 "PO-Revision-Date: 2005-09-26 10:44+0200\n"
-"Last-Translator: Matthias Andree <matthias.andree>\n"
-"Language-Team: Deutsch <de@li.org>\n"
+"Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
+"Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -40,7 +40,8 @@ msgstr ""
 #: checkalias.c:223
 #, c-format
 msgid "nameserver failure while looking for `%s' during poll of %s.\n"
-msgstr "Nameserver versagt beim Nachschlagen von „%s“ während der Abfrage von %s.\n"
+msgstr ""
+"Nameserver versagt beim Nachschlagen von „%s“ während der Abfrage von %s.\n"
 
 #: cram.c:95
 msgid "could not decode BASE64 challenge\n"
@@ -68,12 +69,14 @@ msgstr "Subject: Fetchmail-Warnung: übergroße Nachrichten"
 #: driver.c:341
 #, c-format
 msgid "The following oversized messages were deleted on the mail server %s:"
-msgstr "Die folgenden übergroßen Nachrichten verbleiben auf dem Mail-Server %s:"
+msgstr ""
+"Die folgenden übergroßen Nachrichten verbleiben auf dem Mail-Server %s:"
 
 #: driver.c:345
 #, c-format
 msgid "The following oversized messages remain on the mail server %s:"
-msgstr "Die folgenden übergroßen Nachrichten verbleiben auf dem Mail-Server %s:"
+msgstr ""
+"Die folgenden übergroßen Nachrichten verbleiben auf dem Mail-Server %s:"
 
 #: driver.c:364
 #, c-format
@@ -106,7 +109,8 @@ msgstr " (übergroß)"
 #: driver.c:590
 #, c-format
 msgid "couldn't fetch headers, message %s@%s:%d (%d octets)\n"
-msgstr "Kopfzeilen konnten nicht geholt werden, Nachricht %s@%s:%d (%d Bytes)\n"
+msgstr ""
+"Kopfzeilen konnten nicht geholt werden, Nachricht %s@%s:%d (%d Bytes)\n"
 
 #: driver.c:607
 #, c-format
@@ -130,7 +134,8 @@ msgstr " (%d Bytes im Nachrichtenkörper) "
 
 #: driver.c:743
 #, c-format
-msgid "message %s@%s:%d was not the expected length (%d actual != %d expected)\n"
+msgid ""
+"message %s@%s:%d was not the expected length (%d actual != %d expected)\n"
 msgstr ""
 "Nachricht %s@%s:%d hatte nicht die erwartete Länge (%d tatsächlich != %d "
 "erwartet\n"
@@ -150,9 +155,12 @@ msgstr " nicht gelöscht\n"
 #: driver.c:818
 #, c-format
 msgid "fetchlimit %d reached; %d message left on server %s account %s\n"
-msgid_plural "fetchlimit %d reached; %d messages left on server %s account %s\n"
-msgstr[0] "fetchlimit %d erreicht; %d Nachricht auf Server %s Konto %s verblieben\n"
-msgstr[1] "fetchlimit %d erreicht; %d Nachrichten auf Server %s Konto %s verblieben\n"
+msgid_plural ""
+"fetchlimit %d reached; %d messages left on server %s account %s\n"
+msgstr[0] ""
+"fetchlimit %d erreicht; %d Nachricht auf Server %s Konto %s verblieben\n"
+msgstr[1] ""
+"fetchlimit %d erreicht; %d Nachrichten auf Server %s Konto %s verblieben\n"
 
 #: driver.c:881
 msgid "SIGPIPE thrown from an MDA or a stream socket error\n"
@@ -178,7 +186,9 @@ msgstr "Zeitüberschreitung nach %d Sekunden beim Warten auf %s.\n"
 #: driver.c:901
 #, c-format
 msgid "timeout after %d seconds waiting for listener to respond.\n"
-msgstr "Zeitüberschreitung nach %d Sekunden beim Warten Antwort des SMTP/LMTP-Servers.\n"
+msgstr ""
+"Zeitüberschreitung nach %d Sekunden beim Warten Antwort des SMTP/LMTP-"
+"Servers.\n"
 
 #: driver.c:904
 #, c-format
@@ -677,7 +687,8 @@ msgstr ""
 
 #: fetchmail.c:422
 #, c-format
-msgid "fetchmail: can't poll specified hosts with another fetchmail running at %d.\n"
+msgid ""
+"fetchmail: can't poll specified hosts with another fetchmail running at %d.\n"
 msgstr ""
 "fetchmail: kann spezifizierte Hosts nicht abfragen, solange ein weiteres "
 "fetchmail läuft bei %d.\n"
@@ -688,7 +699,8 @@ msgid "fetchmail: another foreground fetchmail is running at %d.\n"
 msgstr "fetchmail: ein weiteres Vordergrund-fetchmail läuft bei %d.\n"
 
 #: fetchmail.c:439
-msgid "fetchmail: can't accept options while a background fetchmail is running.\n"
+msgid ""
+"fetchmail: can't accept options while a background fetchmail is running.\n"
 msgstr ""
 "fetchmail: kann keine Optionen akzeptieren, solange Hintergrund-fetchmail "
 "läuft.\n"
@@ -860,7 +872,8 @@ msgstr "SSL-Unterstützung ist nicht einkompiliert.\n"
 
 #: fetchmail.c:1156
 #, c-format
-msgid "fetchmail: warning: no DNS available to check multidrop fetches from %s\n"
+msgid ""
+"fetchmail: warning: no DNS available to check multidrop fetches from %s\n"
 msgstr ""
 "fetchmail: Warnung: Kein DNS verfügbar, um Multidrop-Abholung von %s zu "
 "überprüfen\n"
@@ -872,7 +885,8 @@ msgstr "Warnung: multidrop für %s erfordert envelope-Option!\n"
 
 #: fetchmail.c:1168
 msgid "warning: Do not ask for support if all mail goes to postmaster!\n"
-msgstr "Warnung: Fragen Sie nicht nach Hilfe, wenn alle Mail zum Postmaster geht!\n"
+msgstr ""
+"Warnung: Fragen Sie nicht nach Hilfe, wenn alle Mail zum Postmaster geht!\n"
 
 #: fetchmail.c:1185
 #, c-format
@@ -893,7 +907,8 @@ msgstr ""
 #: fetchmail.c:1210
 #, c-format
 msgid "%s configuration invalid, LMTP can't use default SMTP port\n"
-msgstr "%s-Konfiguration ungültig, LMTP kann nicht den Standard-SMTP-Port benutzen\n"
+msgstr ""
+"%s-Konfiguration ungültig, LMTP kann nicht den Standard-SMTP-Port benutzen\n"
 
 #: fetchmail.c:1224
 msgid "Both fetchall and keep on in daemon mode is a mistake!\n"
@@ -970,7 +985,8 @@ msgstr "Fetchmail wird Fortschrittspunkte auch in Log-Dateien zeigen.\n"
 #: fetchmail.c:1468
 #, c-format
 msgid "Fetchmail will forward misaddressed multidrop messages to %s.\n"
-msgstr "Fetchmail wird fehladressierte Multidrop-Nachricht an %s weiterleiten.\n"
+msgstr ""
+"Fetchmail wird fehladressierte Multidrop-Nachricht an %s weiterleiten.\n"
 
 #: fetchmail.c:1472
 msgid "Fetchmail will direct error mail to the postmaster.\n"
@@ -1151,7 +1167,8 @@ msgstr "  Abgeholte Nachrichten werden auf dem Server belassen (--keep on).\n"
 
 #: fetchmail.c:1604
 msgid "  Fetched messages will not be kept on the server (--keep off).\n"
-msgstr "  Abgeholte Nachrichten werden nicht auf dem Server belassen (--keep off).\n"
+msgstr ""
+"  Abgeholte Nachrichten werden nicht auf dem Server belassen (--keep off).\n"
 
 #: fetchmail.c:1606
 msgid "  Old messages will be flushed before message retrieval (--flush on).\n"
@@ -1160,7 +1177,8 @@ msgstr ""
 "on).\n"
 
 #: fetchmail.c:1607
-msgid "  Old messages will not be flushed before message retrieval (--flush off).\n"
+msgid ""
+"  Old messages will not be flushed before message retrieval (--flush off).\n"
 msgstr ""
 "  Alte Nachrichten werden vor der Nachrichtenabholung nicht gelöscht (--"
 "flush off).\n"
@@ -1206,12 +1224,16 @@ msgid "  Carriage-return forcing is disabled (forcecr off).\n"
 msgstr "  Erzwingen von Carriage-Return-Zeichen ist aus (forcecr off).\n"
 
 #: fetchmail.c:1621
-msgid "  Interpretation of Content-Transfer-Encoding is disabled (pass8bits on).\n"
-msgstr "  Interpretation von Content-Transfer-Encoding ist aus (pass8bits on).\n"
+msgid ""
+"  Interpretation of Content-Transfer-Encoding is disabled (pass8bits on).\n"
+msgstr ""
+"  Interpretation von Content-Transfer-Encoding ist aus (pass8bits on).\n"
 
 #: fetchmail.c:1622
-msgid "  Interpretation of Content-Transfer-Encoding is enabled (pass8bits off).\n"
-msgstr "  Interpretation von Content-Transfer-Encoding ist ein (pass8bits off).\n"
+msgid ""
+"  Interpretation of Content-Transfer-Encoding is enabled (pass8bits off).\n"
+msgstr ""
+"  Interpretation von Content-Transfer-Encoding ist ein (pass8bits off).\n"
 
 #: fetchmail.c:1624
 msgid "  MIME decoding is enabled (mimedecode on).\n"
@@ -1257,7 +1279,8 @@ msgstr "  Keine Beschränkung der Nachrichtengröße (--limit 0).\n"
 #: fetchmail.c:1643
 #, c-format
 msgid "  Message size warning interval is %d seconds (--warnings %d).\n"
-msgstr "  Nachrichtengröße-Warnungsintervall ist %d Sekunden (--warnings %d).\n"
+msgstr ""
+"  Nachrichtengröße-Warnungsintervall ist %d Sekunden (--warnings %d).\n"
 
 #: fetchmail.c:1646
 msgid "  Size warnings on every poll (--warnings 0).\n"
@@ -1275,7 +1298,8 @@ msgstr "  Kein Limit für erhaltene Nachrichten (--fetchlimit 0).\n"
 #: fetchmail.c:1654
 #, c-format
 msgid "  Fetch message size limit is %d (--fetchsizelimit %d).\n"
-msgstr "  Limit für die Größe erhaltener Nachrichten ist %d (--fetchsizelimit %d).\n"
+msgstr ""
+"  Limit für die Größe erhaltener Nachrichten ist %d (--fetchsizelimit %d).\n"
 
 #: fetchmail.c:1657
 msgid "  No fetch message size limit (--fetchsizelimit 0).\n"
@@ -1283,7 +1307,8 @@ msgstr "  Keine Beschränkung der Nachrichtengröße (--fetchsizelimit 0).\n"
 
 #: fetchmail.c:1661
 msgid "  Do binary search of UIDs during each poll (--fastuidl 1).\n"
-msgstr "  Bei jeder Abfrage binäre Suche nach UIDs durchführen (--fastuidl 1).\n"
+msgstr ""
+"  Bei jeder Abfrage binäre Suche nach UIDs durchführen (--fastuidl 1).\n"
 
 #: fetchmail.c:1663
 #, c-format
@@ -1294,7 +1319,8 @@ msgstr ""
 
 #: fetchmail.c:1666
 msgid "   Do linear search of UIDs during each poll (--fastuidl 0).\n"
-msgstr "  Bei jeder Abfrage lineare Suche nach UIDs durchführen (--fastuidl 0).\n"
+msgstr ""
+"  Bei jeder Abfrage lineare Suche nach UIDs durchführen (--fastuidl 0).\n"
 
 #: fetchmail.c:1668
 #, c-format
@@ -1405,12 +1431,15 @@ msgid "  DNS lookup for multidrop addresses is disabled.\n"
 msgstr "  DNS-Suche für Multi-Drop-Adressen ist aus.\n"
 
 #: fetchmail.c:1779
-msgid "  Server aliases will be compared with multidrop addresses by IP address.\n"
-msgstr "  Server-Aliase werden mit multidrop-Adressen verglichen anhand der IP.\n"
+msgid ""
+"  Server aliases will be compared with multidrop addresses by IP address.\n"
+msgstr ""
+"  Server-Aliase werden mit multidrop-Adressen verglichen anhand der IP.\n"
 
 #: fetchmail.c:1781
 msgid "  Server aliases will be compared with multidrop addresses by name.\n"
-msgstr "  Server-Aliase werden mit multidrop-Adressen verglichen anhand des Namens.\n"
+msgstr ""
+"  Server-Aliase werden mit multidrop-Adressen verglichen anhand des Namens.\n"
 
 #: fetchmail.c:1784
 msgid "  Envelope-address routing is disabled\n"
@@ -1464,7 +1493,8 @@ msgstr "  Kein Überwachungsinterface angegeben.\n"
 #: fetchmail.c:1832
 #, c-format
 msgid "  Server connections will be made via plugin %s (--plugin %s).\n"
-msgstr "  Serververbindungen werden mittels Plugin %s durchgeführt (--plugin %s).\n"
+msgstr ""
+"  Serververbindungen werden mittels Plugin %s durchgeführt (--plugin %s).\n"
 
 #: fetchmail.c:1834
 msgid "  No plugin command specified.\n"
@@ -1474,8 +1504,8 @@ msgstr "  Kein Plugin-Befehl angegeben.\n"
 #, c-format
 msgid "  Listener connections will be made via plugout %s (--plugout %s).\n"
 msgstr ""
-"  SMTP/LMTP-Server-Verbindungen werden mittels Plugout %s durchgeführt (--plugout %"
-"s).\n"
+"  SMTP/LMTP-Server-Verbindungen werden mittels Plugout %s durchgeführt (--"
+"plugout %s).\n"
 
 #: fetchmail.c:1838
 msgid "  No plugout command specified.\n"
@@ -1932,7 +1962,8 @@ msgstr ""
 
 #: options.c:585
 msgid "      --invisible   don't write Received & enable host spoofing\n"
-msgstr "      --invisible   Received nicht schreiben und Host-Spoofing erlauben\n"
+msgstr ""
+"      --invisible   Received nicht schreiben und Host-Spoofing erlauben\n"
 
 #: options.c:586
 msgid "  -f, --fetchmailrc specify alternate run control file\n"
@@ -2006,17 +2037,20 @@ msgstr "  -U, --uidl        Benutzung von UIDL erzwingen (nur POP3)\n"
 
 #: options.c:607
 msgid "  -P, --port        TCP port to connect to (obsolete, use --service)\n"
-msgstr "  -P, --port        TCP-Port für Verbindung (veraltet, siehe --service)\n"
+msgstr ""
+"  -P, --port        TCP-Port für Verbindung (veraltet, siehe --service)\n"
 
 #: options.c:608
-msgid "      --service     TCP service to connect to (can be numeric TCP port)\n"
+msgid ""
+"      --service     TCP service to connect to (can be numeric TCP port)\n"
 msgstr ""
 "      --service     TCP-Dienst für die Verbindung (kann eine Portnummer "
 "sein)\n"
 
 #: options.c:609
 msgid "      --auth        authentication type (password/kerberos/ssh/otp)\n"
-msgstr "      --auth        Authentifikations-Typ (Passwort/Kerberos/SSH/OTP)\n"
+msgstr ""
+"      --auth        Authentifikations-Typ (Passwort/Kerberos/SSH/OTP)\n"
 
 #: options.c:610
 msgid "  -t, --timeout     server nonresponse timeout\n"
@@ -2028,7 +2062,8 @@ msgstr "  -E, --envelope    Umschlag-Adress-Header\n"
 
 #: options.c:612
 msgid "  -Q, --qvirtual    prefix to remove from local user id\n"
-msgstr "  -Q, --qvirtual    Präfix, der von lokaler Nutzerkennung entfernt wird\n"
+msgstr ""
+"  -Q, --qvirtual    Präfix, der von lokaler Nutzerkennung entfernt wird\n"
 
 #: options.c:613
 msgid "      --principal   mail service principal\n"
@@ -2036,7 +2071,8 @@ msgstr "      --principal   Prinzipal des Mailservice\n"
 
 #: options.c:614
 msgid "      --tracepolls  add poll-tracing information to Received header\n"
-msgstr "      --tracepolls  Poll-Tracing-Information zum Received-Header hinzufügen\n"
+msgstr ""
+"      --tracepolls  Poll-Tracing-Information zum Received-Header hinzufügen\n"
 
 #: options.c:616
 msgid "  -u, --username    specify users's login on server\n"
@@ -2519,7 +2555,8 @@ msgstr "MDA gab Status %d ungleich Null zurück\n"
 #: sink.c:1342
 #, c-format
 msgid "Strange: MDA pclose returned %d, cannot handle at %s:%d\n"
-msgstr "Merkwürdig: MDA pclose gab %d zurück, kann das nicht behandeln bei %s:%d\n"
+msgstr ""
+"Merkwürdig: MDA pclose gab %d zurück, kann das nicht behandeln bei %s:%d\n"
 
 #: sink.c:1363
 msgid "Message termination or close of BSMTP file failed\n"
@@ -2632,7 +2669,8 @@ msgstr "Herausgeber-CommonName: %s\n"
 
 #: socket.c:634
 msgid "Warning: Issuer CommonName too long (possibly truncated).\n"
-msgstr "Warnung: Herausgeber-CommonName zu lang (möglicherweise beschnitten).\n"
+msgstr ""
+"Warnung: Herausgeber-CommonName zu lang (möglicherweise beschnitten).\n"
 
 #: socket.c:636
 msgid "Unknown Issuer CommonName\n"
@@ -2708,7 +2746,8 @@ msgstr "Datei-Deskriptor außerhalb des Bereichs für SSL"
 #: socket.c:792
 #, c-format
 msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
-msgstr "Ungültiges SSL-Protokoll „%s“ angegeben, benutze Voreinstellung (SSLv23).\n"
+msgstr ""
+"Ungültiges SSL-Protokoll „%s“ angegeben, benutze Voreinstellung (SSLv23).\n"
 
 #: socket.c:853
 msgid "Certificate/fingerprint verification was somehow skipped!\n"
@@ -2836,7 +2875,8 @@ msgstr "UID-Listen werden ausgetauscht\n"
 
 #: uid.c:553
 msgid "not swapping UID lists, no UIDs seen this query\n"
-msgstr "UID-Listen werden nicht ausgetauscht, in dieser Abfrage keine UIDS gesehen\n"
+msgstr ""
+"UID-Listen werden nicht ausgetauscht, in dieser Abfrage keine UIDS gesehen\n"
 
 #: uid.c:578
 msgid "discarding new UID list\n"
@@ -2877,4 +2917,3 @@ msgstr "malloc fehlgeschlagen\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "realloc fehlgeschlagen\n"
-
