@@ -217,15 +217,18 @@ fetchmail 6.3.0 (not yet released officially):
 * fetchmail should now automatically detect if OpenSSL requires -ldl.
   Matthias Andree.
 * Fix Solaris build with --disable-nls (blastwave.org). Matthias Andree.
+* Missed --port/--service/--ssl cleanups in the manual. Reminder from Thomas
+  Wolff. (MA)
+* Complain in POP3 if NTLM/MSN auth is requested but had not been enabled at
+  compile time. This configuration mismatch now causes an error message and
+  authentication failure. Found by Yves Boisjoly.  Matthias Andree
+* fetchmailconf now allows expert users to choose the authorization type and
+  also offers MSN and NTLM, suggested by Yves Boisjoly. Matthias Andree
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.
 * Got rid of alloca() in fetchmail proper.  Matthias Andree
 * Got rid of ipv6-connect, inner_connect and thereabouts.  Matthias Andree
-* Missed --port/--service/--ssl cleanups. Reminder from Thomas Wolff. (MA)
-* Complain in POP3 if NTLM/MSN auth is requested but had not been enabled at
-  compile time. This configuration mismatch now causes an error message and
-  authentication failure. Found by Yves Boisjoly.  Matthias Andree
 
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 

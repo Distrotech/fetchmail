@@ -5,7 +5,7 @@
 # Matthias Andree <matthias.andree@gmx.de>
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.47"
+version = "1.48"
 
 from Tkinter import *
 from Dialog import *
@@ -433,7 +433,8 @@ defaultports = {"auto":None,
 		"ETRN":"smtp",
 		"ODMR":"odmr"}
 
-authlist = ("any", "password", "gssapi", "kerberos", "ssh", "otp")
+authlist = ("any", "password", "gssapi", "kerberos", "ssh", "otp",
+	"msn", "ntlm")
 
 listboxhelp = {
     'title' : 'List Selection Help',
@@ -967,7 +968,12 @@ sechelp = {
     'title' : 'Security option help',
     'banner': 'Security',
     'text' : """
-The `interface' option allows you to specify a range
+The 'authorization mode' allows you to choose the
+mode that fetchmail uses to log in to your server. You
+can usually leave this at 'any', but you will have to pick
+'NTLM' and 'MSN' manually for the nonce.
+
+The 'interface' option allows you to specify a range
 of IP addresses to monitor for activity.  If these
 addresses are not active, fetchmail will not poll.
 Specifying this may protect you from a spoofing attack
@@ -1168,8 +1174,8 @@ class ServerEdit(Frame, MyWidget):
 		secwin = Frame(rightwin, relief=RAISED, bd=5)
 		Label(secwin, text="Security").pack(side=TOP)
 		# Don't actually let users set this.  KPOP sets it implicitly
-		#	ButtonBar(secwin, 'Authorization mode:',
-		#		 self.auth, authlist, 1, None).pack(side=TOP)
+		ButtonBar(secwin, 'Authorization mode:',
+			 self.auth, authlist, 1, None).pack(side=TOP)
 		if os_type == 'linux' or os_type == 'freebsd'  or 'interface' in dictmembers:
 		    LabeledEntry(secwin, 'IP range to check before poll:',
 			 self.interface, leftwidth).pack(side=TOP, fill=X)
