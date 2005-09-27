@@ -20,3 +20,5 @@ complete CAN_MONITOR replacement
 put all getaddrinfo compat cruft into an easy-to-use m4 macro for
 autoconf and Makefile.am snippet for automake, so people can just use it
 without further hassle.
+
+fetchmail -vvvv --syslog prints blank lines on the screen.
