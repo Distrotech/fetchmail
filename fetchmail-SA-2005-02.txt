@@ -6,10 +6,9 @@ Author:		Matthias Andree
 Version:	1.00
 Announced:	2005-XX-XX
 Type:		insecure creation of file
-Impact:		passwords can be world readable if the run control file
-		is larger than Python default write buffer
-Danger:		low: only happens on large files and the time window
-		during which the passwords are exposed is small.
+Impact:		passwords are written to a world-readable file
+Danger:		low: the time window during which the passwords are
+		readable is small.
 CVE Name:	CAN-2005-XXXX
 URL:		http://fetchmail.berlios.de/fetchmail-SA-2005-02.txt
 
