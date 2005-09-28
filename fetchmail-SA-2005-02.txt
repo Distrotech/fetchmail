@@ -1,0 +1,115 @@
+fetchmail-SA-2005-02: security announcement
+
+Topic:		password exposure in fetchmailconf
+
+Author:		Matthias Andree
+Version:	1.00
+Announced:	2005-XX-XX
+Type:		insecure creation of file
+Impact:		passwords can be world readable if the run control file
+		is larger than Python default write buffer
+Danger:		low: only happens on large files and the time window
+		during which the passwords are exposed is small.
+CVE Name:	CAN-2005-XXXX
+URL:		http://fetchmail.berlios.de/fetchmail-SA-2005-02.txt
+
+Affects:	fetchmail version 6.2.5.2
+		fetchmail version 6.2.5
+		fetchmail version 6.2.0
+		fetchmailconf 1.43 (shipped with 6.2.0, 6.2.5 and 6.2.5.2)
+		(other versions have not been checked)
+
+Not affected:	fetchmail 6.2.9-rc6  (XX not released yet)
+		fetchmail 6.3.0      (not released yet)
+		fetchmailconf 1.43.1
+
+Corrected:	2005-09-28 01:14 UTC (SVN) - committed bugfix (r4351)
+		2005-09-28                 - released fetchmailconf-1.43.1
+		XX (add date of 6.2.9-rc6 release here)
+
+0. Release history
+
+2005-XX-XX	1.00 - Initial announcement
+
+1. Background
+
+fetchmail is a software package to retrieve mail from remote POP2, POP3,
+IMAP, ETRN or ODMR servers and forward it to local SMTP, LMTP servers or
+message delivery agents.
+
+fetchmail ships with a graphical, Python/Tkinter based configuration
+utility named "fetchmailconf" to help the user create configuration (run
+control) files for fetchmail.
+
+2. Problem description and Impact
+
+The fetchmailconf program before and excluding version 1.49 opened the
+run control file, wrote the configuration to it, and only then changed
+the mode to 0600 (rw-------). Writing the file, which usually contains
+passwords, before making it unreadable to other users, can expose
+sensitive password information.
+
+3. Workaround
+
+Run "umask 077", then run "fetchmailconf" from the same shell.
+
+4. Solution
+
+Download fetchmailconf-1.43.1.gz from fetchmail's project site
+<https://developer.berlios.de/project/showfiles.php?group_id=1824&release_id=6617>,
+gunzip it, then replace your existing fetchmailconf with it.
+
+Alternatively, apply this patch (you need to save this announcement
+unaltered to a file unless you are sure that your system preserves HTAB
+characters on copy and paste operations) to fetchmailconf and install
+the patched version:
+
+*** ./fetchmailconf.orig	Wed Sep 28 03:28:58 2005
+--- ./fetchmailconf	Wed Sep 28 03:33:11 2005
+***************
+*** 860,871 ****
+  		pass
+  	    fm = open(self.outfile, 'w')
+  	if fm:
+  	    fm.write("# Configuration created %s by fetchmailconf\n" % time.ctime(time.time()))
+  	    fm.write(`self.configuration`)
+  	    if self.outfile:
+  		fm.close()
+- 	    if fm != sys.stdout:
+- 		os.chmod(self.outfile, 0600)
+  	    self.destruct()
+  
+  #
+--- 860,871 ----
+  		pass
+  	    fm = open(self.outfile, 'w')
+  	if fm:
++ 	    if fm != sys.stdout:
++ 		os.chmod(self.outfile, 0600)
+  	    fm.write("# Configuration created %s by fetchmailconf\n" % time.ctime(time.time()))
+  	    fm.write(`self.configuration`)
+  	    if self.outfile:
+  		fm.close()
+  	    self.destruct()
+  
+  #
+
+A. References
+
+fetchmail home page: <http://fetchmail.berlios.de/>
+
+B. Copyright, License and Warranty
+
+(C) Copyright 2005 by Matthias Andree, <matthias.andree@gmx.de>.
+Some rights reserved.
+
+This work is licensed under the Creative Commons
+Attribution-NonCommercial-NoDerivs German License. To view a copy of
+this license, visit http://creativecommons.org/licenses/by-nc-nd/2.0/de/
+or send a letter to Creative Commons; 559 Nathan Abbott Way;
+Stanford, California 94305; USA.
+
+THIS WORK IS PROVIDED FREE OF CHARGE AND WITHOUT ANY WARRANTIES.
+Use the information herein at your own risk.
+
+END OF fetchmail-SA-2005-02.txt
