@@ -132,7 +132,7 @@ class Server:
 	    res = res + (" via " + str(self.via) + "\n");
 	if self.protocol != ServerDefaults.protocol:
 	    res = res + " with proto " + self.protocol
-	if self.protocol and self.service != defaultports[self.protocol] and defaultports[self.protocol] and self.service != ianaservices[defaultports[self.protocol]]:
+	if self.service and self.protocol and self.service != defaultports[self.protocol] and defaultports[self.protocol] and self.service != ianaservices[defaultports[self.protocol]]:
 	    res = res + " service " + self.service
 	if self.timeout != ServerDefaults.timeout:
 	    res = res + " timeout " + `self.timeout`
