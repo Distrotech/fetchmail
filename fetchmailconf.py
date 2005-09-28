@@ -5,7 +5,7 @@
 # Matthias Andree <matthias.andree@gmx.de>
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.48"
+version = "1.49"
 
 from Tkinter import *
 from Dialog import *
@@ -132,7 +132,7 @@ class Server:
 	    res = res + (" via " + str(self.via) + "\n");
 	if self.protocol != ServerDefaults.protocol:
 	    res = res + " with proto " + self.protocol
-	if self.service and self.service != defaultports[self.protocol] and self.service != ianaservices[defaultports[self.protocol]]:
+	if self.protocol and self.service != defaultports[self.protocol] and defaultports[self.protocol] and self.service != ianaservices[defaultports[self.protocol]]:
 	    res = res + " service " + self.service
 	if self.timeout != ServerDefaults.timeout:
 	    res = res + " timeout " + `self.timeout`
@@ -434,7 +434,7 @@ defaultports = {"auto":None,
 		"ODMR":"odmr"}
 
 authlist = ("any", "password", "gssapi", "kerberos", "ssh", "otp",
-	"msn", "ntlm")
+	    "msn", "ntlm")
 
 listboxhelp = {
     'title' : 'List Selection Help',
@@ -870,14 +870,17 @@ class ConfigurationEdit(Frame, MyWidget):
 	    # Pre-1.5.2 compatibility...
 	    except os.error:
 		pass
+	    oldumask = os.umask(077)
 	    fm = open(self.outfile, 'w')
+	    os.umask(oldumask)
 	if fm:
-	    fm.write("# Configuration created %s by fetchmailconf\n" % time.ctime(time.time()))
+	    # be paranoid
+	    if fm != sys.stdout:
+		os.chmod(self.outfile, 0600)
+	    fm.write("# Configuration created %s by fetchmailconf %s\n" % (time.ctime(time.time()), version))
 	    fm.write(`self.configuration`)
 	    if self.outfile:
 		fm.close()
-	    if fm != sys.stdout:
-		os.chmod(self.outfile, 0600)
 	    self.destruct()
 
 #
@@ -1175,7 +1178,7 @@ class ServerEdit(Frame, MyWidget):
 		Label(secwin, text="Security").pack(side=TOP)
 		# Don't actually let users set this.  KPOP sets it implicitly
 		ButtonBar(secwin, 'Authorization mode:',
-			 self.auth, authlist, 1, None).pack(side=TOP)
+			 self.auth, authlist, 2, None).pack(side=TOP)
 		if os_type == 'linux' or os_type == 'freebsd'  or 'interface' in dictmembers:
 		    LabeledEntry(secwin, 'IP range to check before poll:',
 			 self.interface, leftwidth).pack(side=TOP, fill=X)
