@@ -16,7 +16,8 @@ Affects:	fetchmail version 6.2.5.2
 		fetchmail version 6.2.5
 		fetchmail version 6.2.0
 		fetchmailconf 1.43 (shipped with 6.2.0, 6.2.5 and 6.2.5.2)
-		(other versions have not been checked)
+		(other versions have not been checked but are presumed
+		affected)
 
 Not affected:	fetchmail 6.2.9-rc6  (XX not released yet)
 		fetchmail 6.3.0      (not released yet)
@@ -55,13 +56,14 @@ Run "umask 077", then run "fetchmailconf" from the same shell.
 4. Solution
 
 Download fetchmailconf-1.43.1.gz from fetchmail's project site
-<https://developer.berlios.de/project/showfiles.php?group_id=1824&release_id=6617>,
+<http://developer.berlios.de/project/showfiles.php?group_id=1824&release_id=6617>,
 gunzip it, then replace your existing fetchmailconf with it.
 
 Alternatively, apply this patch (you need to save this announcement
 unaltered to a file unless you are sure that your system preserves HTAB
 characters on copy and paste operations) to fetchmailconf and install
-the patched version:
+the patched version: (the patch, with modified version number and in
+unified format, is also available from the URL above).
 
 *** ./fetchmailconf.orig	Wed Sep 28 03:28:58 2005
 --- ./fetchmailconf	Wed Sep 28 03:33:11 2005
