@@ -1,14 +1,14 @@
-# Translation of fetchmail-6.2.9-rc3.po to Russian
+# Translation of fetchmail-6.2.9-rc5.po to Russian
 # Copyright (C) 2005 Eric S. Raymond
 # This file is distributed under the same license as the fetchmail package.
 # Pavel Maryanov <acid_jack@ukr.net>, 2003, 2005.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.2.9-rc3\n"
+"Project-Id-Version: fetchmail-6.2.9-rc5\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2005-09-25 13:01+0200\n"
-"PO-Revision-Date: 2005-09-19 19:14+0300\n"
+"POT-Creation-Date: 2005-09-27 10:42+0200\n"
+"PO-Revision-Date: 2005-09-29 13:02+0300\n"
 "Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -255,7 +255,7 @@ msgstr "Тема: Предупреждение Fetchmail о недоступности сервера."
 msgid "Fetchmail could not reach the mail server %s:"
 msgstr "Fetchmail не смог установить связь с почтовым сервером %s:"
 
-#: driver.c:1099 imap.c:369 pop3.c:420
+#: driver.c:1099 imap.c:369 pop3.c:426
 msgid "SSL connection failed.\n"
 msgstr "Подключение через SSL завершилось неудачей.\n"
 
@@ -888,16 +888,20 @@ msgstr ""
 "отправляются постмастеру!\n"
 
 #: fetchmail.c:1185
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "fetchmail: %s configuration invalid, specify positive port number for "
 "service or port\n"
-msgstr "Конфигурация %s не верна, номер порта не может быть отрицательным\n"
+msgstr ""
+"fetchmail: конфигурация %s не верна, укажите положительный номер порта для "
+"службы\n"
 
 #: fetchmail.c:1192
-#, fuzzy, c-format
+#, c-format
 msgid "fetchmail: %s configuration invalid, RPOP requires a privileged port\n"
-msgstr "конфигурация %s не верна, для RPOP требуется привилегированный порт\n"
+msgstr ""
+"fetchmail: конфигурация %s не верна, для RPOP требуется привилегированный "
+"порт\n"
 
 #: fetchmail.c:1210
 #, c-format
@@ -1070,9 +1074,8 @@ msgid "  Password authentication will be forced.\n"
 msgstr "  Будет использована принудительная аутентификация с паролем.\n"
 
 #: fetchmail.c:1540
-#, fuzzy
 msgid "  MSN authentication will be forced.\n"
-msgstr "  Будет использована принудительная аутентификация NTLM.\n"
+msgstr "  Будет использована принудительная аутентификация MSN.\n"
 
 #: fetchmail.c:1543
 msgid "  NTLM authentication will be forced.\n"
@@ -1441,9 +1444,9 @@ msgid "  Envelope header is assumed to be: %s\n"
 msgstr "  Охватывающий заголовок должен быть: %s\n"
 
 #: fetchmail.c:1790
-#, fuzzy, c-format
+#, c-format
 msgid "  Number of envelope headers to be skipped over: %d\n"
-msgstr "  Количество охватывающих заголовков для парсинга: %d\n"
+msgstr "  Количество пропускаемых охватывающих заголовков: %d\n"
 
 #: fetchmail.c:1793
 #, c-format
@@ -1617,7 +1620,7 @@ msgstr "будет приостановлен после опроса\n"
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "Fetchmail откомпилирован без требуемой поддержки OTP\n"
 
-#: imap.c:489
+#: imap.c:489 pop3.c:334
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "Fetchmail откомпилирован без требуемой поддержки NTLM\n"
 
@@ -1662,12 +1665,12 @@ msgstr[1] "ожидается %d сообщений после удаления\n"
 msgid "search for unseen messages failed\n"
 msgstr "поиск не просмотренных сообщений завершился неудачей\n"
 
-#: imap.c:766 pop3.c:710 pop3.c:722 pop3.c:944 pop3.c:951
+#: imap.c:766 pop3.c:716 pop3.c:728 pop3.c:950 pop3.c:957
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u не просмотрено\n"
 
-#: imap.c:778 pop3.c:731
+#: imap.c:778 pop3.c:737
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u первое не просмотренное\n"
@@ -1864,7 +1867,7 @@ msgstr "сервер прекратил получение\n"
 msgid "Could not decode OTP challenge\n"
 msgstr "Невозможно было декодировать запрос OTP\n"
 
-#: opie.c:58 pop3.c:502
+#: opie.c:58 pop3.c:508
 msgid "Secret pass phrase: "
 msgstr "Секретная идентификационная фраза:"
 
@@ -2028,14 +2031,17 @@ msgstr ""
 "  -U, --uidl        принудительное использование UIDL'ов (только pop3)\n"
 
 #: options.c:607
-#, fuzzy
 msgid "  -P, --port        TCP port to connect to (obsolete, use --service)\n"
-msgstr "  -P, --port        порт службы TCP/IP для подключения\n"
+msgstr ""
+"  -P, --port        TCP-порт для подключения (устарел, используйте --"
+"service)\n"
 
 #: options.c:608
 msgid ""
 "      --service     TCP service to connect to (can be numeric TCP port)\n"
 msgstr ""
+"      --service     служба TCP для подключения (может быть числовым TCP-"
+"портом)\n"
 
 #: options.c:609
 msgid "      --auth        authentication type (password/kerberos/ssh/otp)\n"
@@ -2169,48 +2175,48 @@ msgid "      --showdots    show progress dots even in logfiles\n"
 msgstr ""
 "      --showdots    отображение точечной строки прогресса даже в log-файлах\n"
 
-#: pop3.c:540
+#: pop3.c:546
 msgid "Required APOP timestamp not found in greeting\n"
 msgstr "В приветствии не найдена требуемая временная метка APOP\n"
 
-#: pop3.c:549
+#: pop3.c:555
 msgid "Timestamp syntax error in greeting\n"
 msgstr "В приветствии ошибка синтаксиса временной метки\n"
 
-#: pop3.c:571
+#: pop3.c:577
 msgid "Undefined protocol request in POP3_auth\n"
 msgstr "Неопределенный запрос протокола в POP3_auth\n"
 
-#: pop3.c:579
+#: pop3.c:585
 msgid "lock busy!  Is another session active?\n"
 msgstr "блокировка занятости!  Может активен другой сеанс?\n"
 
-#: pop3.c:651
+#: pop3.c:657
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "Невозможно обработать UIDL-ответ upstream-сервера.\n"
 
-#: pop3.c:674
+#: pop3.c:680
 msgid "Server responded with UID for wrong message.\n"
 msgstr "Сервер возвратил ответ с UID для неверного сообщения.\n"
 
-#: pop3.c:701 pop3.c:935
+#: pop3.c:707 pop3.c:941
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (номер=%d) было удалено, но все еще присутствует!\n"
 
-#: pop3.c:803
+#: pop3.c:809
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr "Сообщения добавлены в список на сервере. Обработка невозможна.\n"
 
-#: pop3.c:889
+#: pop3.c:895
 msgid "protocol error\n"
 msgstr "ошибка протокола\n"
 
-#: pop3.c:904
+#: pop3.c:910
 msgid "protocol error while fetching UIDLs\n"
 msgstr "ошибка протокола при выборке UIDL'ов\n"
 
-#: pop3.c:1263
+#: pop3.c:1269
 msgid "Option --remote is not supported with POP3\n"
 msgstr "Опция --remote не поддерживается с POP3\n"
 
@@ -2456,23 +2462,18 @@ msgid "MD5 result is: \n"
 msgstr "Результат MD5: \n"
 
 #: servport.c:52
-#, fuzzy, c-format
+#, c-format
 msgid "getaddrinfo(NULL, \"%s\") error: %s\n"
-msgstr "fetchmail: ошибка getaddrinfo(\"%s\",\"%s\"): %s\n"
+msgstr "ошибка getaddrinfo(NULL, \"%s\"): %s\n"
 
 #: servport.c:78
-#, fuzzy, c-format
+#, c-format
 msgid "Cannot resolve service %s to port number.\n"
-msgstr ""
-"Невозможно определить тип службы %s по порту. Пожалуйста, укажите службу в "
-"виде десятичного номера порта.\n"
+msgstr "Невозможно определить тип службы %s по номеру порта.\n"
 
 #: servport.c:79
-#, fuzzy
 msgid "Please specify the service as decimal port number.\n"
-msgstr ""
-"Невозможно определить тип службы %s по порту. Пожалуйста, укажите службу в "
-"виде десятичного номера порта.\n"
+msgstr "Пожалуйста, укажите службу в виде десятичного номера порта.\n"
 
 #: sink.c:238
 #, c-format
@@ -2641,13 +2642,13 @@ msgid "execvp(%s) failed\n"
 msgstr "execvp(%s) завершился неудачей\n"
 
 #: socket.c:281
-#, fuzzy, c-format
+#, c-format
 msgid "getaddrinfo(\"%s\",\"%s\") error: %s\n"
-msgstr "fetchmail: ошибка getaddrinfo(\"%s\",\"%s\"): %s\n"
+msgstr "ошибка getaddrinfo(\"%s\",\"%s\"): %s\n"
 
 #: socket.c:284
 msgid "Try adding the --service option (see also FAQ item R12).\n"
-msgstr ""
+msgstr "Попробуйте добавить опцию --service (см. FAQ, пункт R12).\n"
 
 #: socket.c:626
 #, c-format
@@ -2919,6 +2920,3 @@ msgstr "malloc завершился неудачей\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "realloc завершился неудачей\n"
-
-#~ msgid "Received"
-#~ msgstr "Received"
