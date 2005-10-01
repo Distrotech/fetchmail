@@ -12,6 +12,9 @@ fetchmail 6.3.0 (not yet released officially):
   than 128 bytes can corrupt fetchmail's stack and crash fetchmail.
   This vulnerability is remotely exploitable to inject code run in a
   root shell. This is tracked under the CVE Name: CAN-2005-2335
+* fetchmailconf now changes the output file to mode 0600 BEFORE writing to it,
+  so there is no window where passwords could be read by the world.
+  Matthias Andree.
 
 # MAJOR INCOMPATIBLE CHANGES
 * Remove support for --netsec/-T options, the required inet6_apps library is no
@@ -224,6 +227,8 @@ fetchmail 6.3.0 (not yet released officially):
   authentication failure. Found by Yves Boisjoly.  Matthias Andree
 * fetchmailconf now allows expert users to choose the authorization type and
   also offers MSN and NTLM, suggested by Yves Boisjoly. Matthias Andree
+* fetchmailconf now (as of 1.49) writes its version to the comment of the
+  saved run control file. Matthias Andree
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.
