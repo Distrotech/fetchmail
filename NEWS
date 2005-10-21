@@ -1,4 +1,7 @@
-				Release Notes:
+Fetchmail Release Notes
+=======================
+
+This file is in Unicode charset with UTF-8 encoding.
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.
 Names in parentheses are the maintainers who handled the respective change.
