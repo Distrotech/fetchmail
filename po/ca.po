@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.9-rc3\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2005-09-25 13:01+0200\n"
+"POT-Creation-Date: 2005-10-21 13:54+0200\n"
 "PO-Revision-Date: 2005-09-19 21:24+0200\n"
 "Last-Translator: Ernest Adrogué Calveras <eadrogue@gmx.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
@@ -15,27 +15,27 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: checkalias.c:174
+#: checkalias.c:172
 #, c-format
 msgid "Checking if %s is really the same node as %s\n"
 msgstr "Comprovant si realment %s és el mateix node que %s\n"
 
-#: checkalias.c:178
+#: checkalias.c:176
 msgid "Yes, their IP addresses match\n"
 msgstr "Afirmatiu, les adreces IP coincideixen\n"
 
-#: checkalias.c:182
+#: checkalias.c:180
 msgid "No, their IP addresses don't match\n"
 msgstr "Negatiu, les adreces IP no coincideixen\n"
 
 # poll of
-#: checkalias.c:198
+#: checkalias.c:196
 #, c-format
 msgid "nameserver failure while looking for '%s' during poll of %s: %s\n"
 msgstr "no s'ha pogut resoldre el nom `%s' durant la consulta de %s: %s\n"
 
 # poll of
-#: checkalias.c:223
+#: checkalias.c:221
 #, c-format
 msgid "nameserver failure while looking for `%s' during poll of %s.\n"
 msgstr "no s'ha pogut resoldre el nom `%s' quan es consultava %s.\n"
@@ -254,7 +254,7 @@ msgstr "Subject: fetchmail: Servidor inaccessible."
 msgid "Fetchmail could not reach the mail server %s:"
 msgstr "El fetchmail no ha pogut contactar amb el servidor %s:"
 
-#: driver.c:1099 imap.c:369 pop3.c:420
+#: driver.c:1099 imap.c:384 pop3.c:433
 msgid "SSL connection failed.\n"
 msgstr "La conexió SSL ha fallat.\n"
 
@@ -419,7 +419,7 @@ msgstr " (%d octets).\n"
 msgid "No mail for %s\n"
 msgstr "No hi ha correu per a %s\n"
 
-#: driver.c:1375 imap.c:70
+#: driver.c:1375 imap.c:85
 msgid "bogus message count!"
 msgstr "recompte de missatges erroni!"
 
@@ -1604,77 +1604,77 @@ msgstr "Error quan s'enviaven les credencials GSS\n"
 msgid "fetchmail: thread sleeping for %d sec.\n"
 msgstr "fetchmail: procés dormint durant %d segons.\n"
 
-#: imap.c:283
+#: imap.c:298
 msgid "Protocol identified as IMAP4 rev 1\n"
 msgstr "S'ha identificat el protocol com a IMAP4 rev 1\n"
 
-#: imap.c:289
+#: imap.c:304
 msgid "Protocol identified as IMAP4 rev 0\n"
 msgstr "S'ha identificat el protocol com a IMAP4 rev 0\n"
 
-#: imap.c:296
+#: imap.c:311
 msgid "Protocol identified as IMAP2 or IMAP2BIS\n"
 msgstr "S'ha identificat el protocol com a IMAP2 o IMAP2BIS\n"
 
-#: imap.c:311
+#: imap.c:326
 msgid "will idle after poll\n"
 msgstr "es farà una pausa després de l'obtenció\n"
 
-#: imap.c:467
+#: imap.c:482
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "Es requereix capacitat per OTP no compilada en el fetchmail\n"
 
-#: imap.c:489
+#: imap.c:504 pop3.c:341
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "Es requereix capacitat per NTLM no compilada en el fetchmail\n"
 
-#: imap.c:498
+#: imap.c:513
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "El servidor no suporta la capacitat per LOGIN requerida\n"
 
-#: imap.c:659 imap.c:692
+#: imap.c:674 imap.c:707
 msgid "re-poll failed\n"
 msgstr "la re-obtenció ha fallat\n"
 
-#: imap.c:667
+#: imap.c:682
 #, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
 msgstr[0] "hi ha %d missatge esperant després de la re-obtenció\n"
 msgstr[1] "hi ha %d missatges esperant després de la re-obtenció\n"
 
-#: imap.c:679
+#: imap.c:694
 msgid "mailbox selection failed\n"
 msgstr "ha fallat la selecció de bústia\n"
 
-#: imap.c:683
+#: imap.c:698
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
 msgstr[0] "hi ha %d missatge esperant després de la primera obtenció\n"
 msgstr[1] "hi ha %d missatges esperant després de la primera obtenció\n"
 
-#: imap.c:707
+#: imap.c:722
 msgid "expunge failed\n"
 msgstr "la supressió de missatges ha fallat\n"
 
-#: imap.c:711
+#: imap.c:726
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
 msgstr[0] "hi ha %d missatge esperant després de la supressió\n"
 msgstr[1] "hi ha %d missatges esperant després de la supressió\n"
 
-#: imap.c:736
+#: imap.c:751
 msgid "search for unseen messages failed\n"
 msgstr "la recerca de missatges no llegits ha fallat\n"
 
-#: imap.c:766 pop3.c:710 pop3.c:722 pop3.c:944 pop3.c:951
+#: imap.c:781 pop3.c:723 pop3.c:735 pop3.c:957 pop3.c:964
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u és no llegit\n"
 
-#: imap.c:778 pop3.c:731
+#: imap.c:793 pop3.c:744
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u és el primer missatge no llegit\n"
@@ -1873,7 +1873,7 @@ msgstr "recv fatal del servidor\n"
 msgid "Could not decode OTP challenge\n"
 msgstr "No s'ha pogut desxifrar la codificació OTP\n"
 
-#: opie.c:58 pop3.c:502
+#: opie.c:58 pop3.c:515
 msgid "Secret pass phrase: "
 msgstr "Contrasenya secreta: "
 
@@ -2176,49 +2176,49 @@ msgstr ""
 "registre\n"
 
 # timestamp: marca horària
-#: pop3.c:540
+#: pop3.c:553
 msgid "Required APOP timestamp not found in greeting\n"
 msgstr "No s'ha trobat la marca horària APOP requerida a la salutació\n"
 
-#: pop3.c:549
+#: pop3.c:562
 msgid "Timestamp syntax error in greeting\n"
 msgstr "Error de sintaxi en la marca horària de la salutació\n"
 
-#: pop3.c:571
+#: pop3.c:584
 msgid "Undefined protocol request in POP3_auth\n"
 msgstr "Petició de protocol indefinida a POP3_auth\n"
 
-#: pop3.c:579
+#: pop3.c:592
 msgid "lock busy!  Is another session active?\n"
 msgstr "bloqueig temporal! Hi ha alguna altra sessió activa?\n"
 
-#: pop3.c:651
+#: pop3.c:664
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "No s'ha pogut administrar la resposta UIDL del servidor remot.\n"
 
-#: pop3.c:674
+#: pop3.c:687
 msgid "Server responded with UID for wrong message.\n"
 msgstr "El servidor ha respost amb un UID pel missatge equivocat.\n"
 
-#: pop3.c:701 pop3.c:935
+#: pop3.c:714 pop3.c:948
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (núm=%d) s'ha esborrat, però encara està present!\n"
 
-#: pop3.c:803
+#: pop3.c:816
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "Els missatges estan inserits a la llista del servidor. No es pot continuar.\n"
 
-#: pop3.c:889
+#: pop3.c:902
 msgid "protocol error\n"
 msgstr "error de protocol\n"
 
-#: pop3.c:904
+#: pop3.c:917
 msgid "protocol error while fetching UIDLs\n"
 msgstr "error de protocol quan es rebien els UIDLs\n"
 
-#: pop3.c:1263
+#: pop3.c:1276
 msgid "Option --remote is not supported with POP3\n"
 msgstr "L'opció --remote no està suportada amb POP3\n"
 
@@ -2769,26 +2769,26 @@ msgstr "El protocol SSL especificat `%s' no és vàlid, s'usa SSLv23.\n"
 msgid "Certificate/fingerprint verification was somehow skipped!\n"
 msgstr "La verificació del certificat o de l'empremta s'ha omès!\n"
 
-#: socket.c:925
+#: socket.c:927
 msgid "Cygwin socket read retry\n"
 msgstr "Es torna a intentar llegir el socket Cygwin\n"
 
-#: socket.c:928
+#: socket.c:930
 msgid "Cygwin socket read retry failed!\n"
 msgstr "El reintent de llegir el socket Cygwin ha fallat!\n"
 
-#: transact.c:68
+#: transact.c:74
 #, c-format
 msgid "mapped %s to local %s\n"
 msgstr "%s s'ha assignat al nom local %s\n"
 
 # què significa?
-#: transact.c:132
+#: transact.c:138
 #, c-format
 msgid "passed through %s matching %s\n"
 msgstr "passat per %s encaixa amb %s\n"
 
-#: transact.c:201
+#: transact.c:207
 #, c-format
 msgid ""
 "analyzing Received line:\n"
@@ -2797,70 +2797,70 @@ msgstr ""
 "analitzant la línea Received:\n"
 "%s"
 
-#: transact.c:240
+#: transact.c:246
 #, c-format
 msgid "line accepted, %s is an alias of the mailserver\n"
 msgstr "línia acceptada, %s és un àlies del servidor de correu\n"
 
-#: transact.c:246
+#: transact.c:252
 #, c-format
 msgid "line rejected, %s is not an alias of the mailserver\n"
 msgstr "línia rebutjada, %s no és un àlies del servidor de correu\n"
 
-#: transact.c:320
+#: transact.c:326
 msgid "no Received address found\n"
 msgstr "no s'ha trobat cap adreça a la capçalera Received\n"
 
-#: transact.c:329
+#: transact.c:335
 #, c-format
 msgid "found Received address `%s'\n"
 msgstr "s'ha trobat l'adreça `%s' a la capçalera Received\n"
 
-#: transact.c:532
+#: transact.c:538
 msgid "message delimiter found while scanning headers\n"
 msgstr ""
 "s'ha trobat un delimitador de missatge quan s'analitzava l'encapçalament\n"
 
-#: transact.c:553
+#: transact.c:559
 msgid "incorrect header line found while scanning headers\n"
 msgstr "s'ha trobat una línia incorrecta quan s'analitzava l'encapçalament\n"
 
-#: transact.c:555
+#: transact.c:561
 #, c-format
 msgid "line: %s"
 msgstr "línia: %s"
 
-#: transact.c:1076
+#: transact.c:1082
 #, c-format
 msgid "no local matches, forwarding to %s\n"
 msgstr "cap conincidència local, reenviant a %s\n"
 
-#: transact.c:1091
+#: transact.c:1097
 msgid "forwarding and deletion suppressed due to DNS errors\n"
 msgstr "reenviament i eliminació omesos a causa d'errors de DNS\n"
 
-#: transact.c:1203
+#: transact.c:1209
 msgid "writing RFC822 msgblk.headers\n"
 msgstr "escrivint capçaleres msgblk RFC822\n"
 
-#: transact.c:1224
+#: transact.c:1230
 msgid "no recipient addresses matched declared local names"
 msgstr "cap adreça de destinatari coincideix amb els noms locals declarats"
 
-#: transact.c:1231
+#: transact.c:1237
 #, c-format
 msgid "recipient address %s didn't match any local name"
 msgstr "l'adreça del destinatari %s no lliga amb cap nom local"
 
-#: transact.c:1240
+#: transact.c:1246
 msgid "message has embedded NULs"
 msgstr "el missatge conté caràcters NUL"
 
-#: transact.c:1248
+#: transact.c:1254
 msgid "SMTP listener rejected local recipient addresses: "
 msgstr "el receptor SMTP ha rebutjat les adreces locals de destinació: "
 
-#: transact.c:1376
+#: transact.c:1382
 msgid "writing message text\n"
 msgstr "escrivint el text del missatge\n"
 
