@@ -5,7 +5,7 @@
 # Matthias Andree <matthias.andree@gmx.de>
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.49"
+version = "1.50"
 
 from Tkinter import *
 from Dialog import *
@@ -2038,7 +2038,7 @@ gUSiYASJpMEHhilJTEnhAlGoQqYAZQ1AiqEMZ0jDGtqQImhwwA13yMMevoQAGvGhEAWHGMOAAAA7
 #
 
     # Process options
-    (options, arguments) = getopt.getopt(sys.argv[1:], "df:h")
+    (options, arguments) = getopt.getopt(sys.argv[1:], "df:hV")
     dump = rcfile = None;
     for (switch, val) in options:
 	if (switch == '-d'):
@@ -2047,10 +2047,15 @@ gUSiYASJpMEHhilJTEnhAlGoQqYAZQ1AiqEMZ0jDGtqQImhwwA13yMMevoQAGvGhEAWHGMOAAAA7
 	    rcfile = val
 	elif (switch == '-h'):
 	    print """
-Usage: fetchmailconf [-d] [-f fetchmailrc]
+Usage: fetchmailconf {[-d] [-f fetchmailrc]|-h|-V}
 -d       - dump configuration (for debugging)
 -f fmrc  - read alternate fetchmailrc file
+-h       - print this help text and quit
+-V       - print fetchmailconf version and quit
 """
+	    sys.exit(0)
+	elif (switch == '-V'):
+	    print "fetchmailconf %s" % version
 	    sys.exit(0)
 
     # Get client host's FQDN

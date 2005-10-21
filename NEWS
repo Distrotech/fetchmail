@@ -236,6 +236,8 @@ fetchmail 6.3.0 (not yet released officially):
   Miśkiewicz. (MA)
 * Global variable cleanup, to fix daemon mode reinitialization problems. Patch
   by Sunil Shetye. (MA)
+* fetchmailconf -h documents the fetchmailconf -h option. Matthias Andree
+* fetchmailconf -V now prints the fetchmailconf version. Matthias Andree
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.
