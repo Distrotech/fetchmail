@@ -855,6 +855,7 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char
 		if (fingerprint != NULL || certck) {
 			if( NULL != SSLGetContext( sock ) ) {
 				/* Clean up the SSL stack */
+				SSL_shutdown( _ssl_context[sock] );
 				SSL_free( _ssl_context[sock] );
 				_ssl_context[sock] = NULL;
 			}
@@ -872,6 +873,7 @@ int SockClose(int sock)
 #ifdef	SSL_ENABLE
     if( NULL != SSLGetContext( sock ) ) {
         /* Clean up the SSL stack */
+        SSL_shutdown( _ssl_context[sock] );
         SSL_free( _ssl_context[sock] );
         _ssl_context[sock] = NULL;
     }

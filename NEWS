@@ -229,6 +229,8 @@ fetchmail 6.3.0 (not yet released officially):
   also offers MSN and NTLM, suggested by Yves Boisjoly. Matthias Andree
 * fetchmailconf now (as of 1.49) writes its version to the comment of the
   saved run control file. Matthias Andree
+* Properly shut down SSL connections. Berlios Patch #647 by Arkadiusz
+  Miśkiewicz. (MA)
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.
