@@ -234,6 +234,8 @@ fetchmail 6.3.0 (not yet released officially):
   saved run control file. Matthias Andree
 * Properly shut down SSL connections. Berlios Patch #647 by Arkadiusz
   Miśkiewicz. (MA)
+* Global variable cleanup, to fix daemon mode reinitialization problems. Patch
+  by Sunil Shetye. (MA)
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.

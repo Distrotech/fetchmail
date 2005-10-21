@@ -24,14 +24,29 @@
 #define IMAP4		0	/* IMAP4 rev 0, RFC1730 */
 #define IMAP4rev1	1	/* IMAP4 rev 1, RFC2060 */
 
-static int count = 0, recentcount = 0, unseen = 0, deletions = 0;
-static int recentcount_ok = 0;
-static unsigned int startcount = 1;
-static int expunged, expunge_period, saved_timeout = 0;
-static int imap_version, preauth;
-static flag do_idle, has_idle;
+/* global variables: please reinitialize them explicitly for proper
+ * working in daemon mode */
+
+/* TODO: session variables to be initialized before server greeting */
+static int preauth = FALSE;
+
+/* session variables initialized in capa_probe() or imap_getauth() */
 static char capabilities[MSGBUFSIZE+1];
+static int imap_version = IMAP4;
+static flag do_idle = FALSE, has_idle = FALSE;
+static int expunge_period = 1;
+
+/* mailbox variables initialized in imap_getrange() */
+static int count = 0, recentcount = 0, unseen = 0, deletions = 0;
+static unsigned int startcount = 1;
+static int expunged = 0;
 static unsigned int *unseen_messages;
+
+/* for "IMAP> EXPUNGE" */
+static int recentcount_ok = 0;
+
+/* for "IMAP> IDLE" */
+static int saved_timeout = 0;
 
 static int imap_ok(int sock, char *argbuf)
 /* parse command response */
@@ -168,10 +183,6 @@ static int imap_ok(int sock, char *argbuf)
 #ifdef NTLM_ENABLE
 #include "ntlm.h"
 
-static tSmbNtlmAuthRequest   request;
-static tSmbNtlmAuthChallenge challenge;
-static tSmbNtlmAuthResponse  response;
-
 /*
  * NTLM support by Grant Edwards.
  *
@@ -185,6 +196,10 @@ static tSmbNtlmAuthResponse  response;
 
 static int do_imap_ntlm(int sock, struct query *ctl)
 {
+    tSmbNtlmAuthRequest request;
+    tSmbNtlmAuthChallenge challenge;
+    tSmbNtlmAuthResponse response;
+
     char msgbuf[2048];
     int result,len;
 
@@ -300,13 +315,13 @@ static void capa_probe(int sock, struct query *ctl)
      * Handle idling.  We depend on coming through here on startup
      * and after each timeout (including timeouts during idles).
      */
+    do_idle = ctl->idle;
     if (ctl->idle)
     {
-	do_idle = TRUE;
 	if (strstr(capabilities, "IDLE"))
-	{
 	    has_idle = TRUE;
-	}
+	else
+	    has_idle = FALSE;
 	if (outlevel >= O_VERBOSE)
 	    report(stdout, GT_("will idle after poll\n"));
     }

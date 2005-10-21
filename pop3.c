@@ -26,37 +26,40 @@
 #include <opie.h>
 #endif /* OPIE_ENABLE */
 
+/* global variables: please reinitialize them explicitly for proper
+ * working in daemon mode */
+
+/* TODO: session variables to be initialized before server greeting */
+#ifdef OPIE_ENABLE
+static char lastok[POPBUFSIZE+1];
+#endif /* OPIE_ENABLE */
+
+/* session variables initialized in capa_probe() or pop3_getauth() */
+#if defined(GSSAPI)
+flag has_gssapi = FALSE;
+#endif /* defined(GSSAPI) */
+#if defined(KERBEROS_V4) || defined(KERBEROS_V5)
+flag has_kerberos = FALSE;
+#endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
+static flag has_cram = FALSE;
+#ifdef OPIE_ENABLE
+flag has_otp = FALSE;
+#endif /* OPIE_ENABLE */
+#ifdef SSL_ENABLE
+static flag has_ssl = FALSE;
+#endif /* SSL_ENABLE */
+
+/* mailbox variables initialized in pop3_getrange() */
 static int last;
+
+/* mail variables initialized in pop3_fetch() */
 #ifdef SDPS_ENABLE
 char *sdps_envfrom;
 char *sdps_envto;
 #endif /* SDPS_ENABLE */
 
-#ifdef OPIE_ENABLE
-static char lastok[POPBUFSIZE+1];
-#endif /* OPIE_ENABLE */
-
-/* these variables are shared between the CAPA probe and the authenticator */
-#if defined(GSSAPI)
-    flag has_gssapi = FALSE;
-#endif /* defined(GSSAPI) */
-#if defined(KERBEROS_V4) || defined(KERBEROS_V5)
-    flag has_kerberos = FALSE;
-#endif /* defined(KERBEROS_V4) || defined(KERBEROS_V5) */
-    static flag has_cram = FALSE;
-#ifdef OPIE_ENABLE
-    flag has_otp = FALSE;
-#endif /* OPIE_ENABLE */
-#ifdef SSL_ENABLE
-    static flag has_ssl = FALSE;
-#endif /* SSL_ENABLE */
-
 #ifdef NTLM_ENABLE
 #include "ntlm.h"
-
-static tSmbNtlmAuthRequest   request;		   
-static tSmbNtlmAuthChallenge challenge;
-static tSmbNtlmAuthResponse  response;
 
 /*
  * NTLM support by Grant Edwards.
@@ -72,6 +75,10 @@ static tSmbNtlmAuthResponse  response;
 static int do_pop3_ntlm(int sock, struct query *ctl,
 	int msn_instead /** if true, send AUTH MSN, else send AUTH NTLM */)
 {
+    tSmbNtlmAuthRequest request;
+    tSmbNtlmAuthChallenge challenge;
+    tSmbNtlmAuthResponse response;
+
     char msgbuf[2048];
     int result,len;
   

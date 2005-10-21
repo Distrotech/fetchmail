@@ -149,7 +149,7 @@ char *host_fqdn(void)
     if (strchr(tmpbuf, '.') == NULL)
     {
 	/* if we got a basename (as we do in Linux) make a FQDN of it */
-	struct addrinfo hints, *res, *res0;
+	struct addrinfo hints, *res;
 	int e;
 
 	memset(&hints, 0, sizeof hints);

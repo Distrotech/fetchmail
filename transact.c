@@ -37,17 +37,23 @@
 #include "socket.h"
 #include "fetchmail.h"
 
-int mytimeout;		/* value of nonreponse timeout */
-int suppress_tags;	/* emit tags? */
-char shroud[PASSWORDLEN*2+3];	/* string to shroud in debug output */
-struct msgblk msgblk;
+/* global variables: please reinitialize them explicitly for proper
+ * working in daemon mode */
 
+/* session variables initialized in init_transact() */
+int suppress_tags = FALSE;	/* emit tags? */
 char tag[TAGLEN];
 static int tagnum;
 #define GENSYM	(sprintf(tag, "A%04d", ++tagnum % TAGMOD), tag)
-
-static int accept_count, reject_count;
 static struct method *protocol;
+char shroud[PASSWORDLEN*2+3];	/* string to shroud in debug output */
+
+/* session variables initialized in do_session() */
+int mytimeout;		/* value of nonreponse timeout */
+
+/* mail variables initialized in readheaders() */
+struct msgblk msgblk;
+static int accept_count, reject_count;
 
 static void map_name(const char *name, struct query *ctl, struct idlist **xmit_names)
 /* add given name to xmit_names if it matches declared localnames */
@@ -1391,9 +1397,11 @@ int readbody(int sock, struct query *ctl, flag forward, int len)
 void init_transact(const struct method *proto)
 /* initialize state for the send and receive functions */
 {
+    suppress_tags = FALSE;
     tagnum = 0;
     tag[0] = '\0';	/* nuke any tag hanging out from previous query */
     protocol = (struct method *)proto;
+    shroud[0] = '\0';
 }
 
 static void enshroud(char *buf)

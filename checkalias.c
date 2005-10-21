@@ -30,7 +30,7 @@ typedef unsigned char address_t[sizeof (struct in_addr)];
 
 static int getaddresses(struct addrinfo **result, const char *name)
 {
-    struct addrinfo hints, *res;
+    struct addrinfo hints;
 
     memset(&hints, 0, sizeof(hints));
     hints.ai_socktype=SOCK_STREAM;
@@ -57,8 +57,6 @@ static int is_ip_alias(const char *name1,const char *name2)
  */
 {
     int rc = FALSE;
-    struct hostent *hp;
-    char **p;
 
     struct addrinfo *res1 = NULL, *res2 = NULL, *ii, *ij;
 
