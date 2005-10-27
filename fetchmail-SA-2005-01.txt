@@ -3,7 +3,7 @@ fetchmail-SA-2005-01: security announcement
 Topic:		remote code injection vulnerability in fetchmail
 
 Author:		Matthias Andree
-Version:	1.02
+Version:	1.03
 Announced:	2005-07-21
 Type:		buffer overrun/stack corruption/code injection
 Impact:		account or system compromise possible through malicious
@@ -12,7 +12,7 @@ Danger:		high: in sensitive configurations, a full system
 		compromise is possible
 		(for 6.2.5.1: denial of service for the whole fetchmail
 		system is possible)
-CVE Name:	CAN-2005-2335
+CVE Name:	CVE-2005-2335
 URL:		http://fetchmail.berlios.de/fetchmail-SA-2005-01.txt
 		http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=212762
 		http://www.vuxml.org/freebsd/3497d7be-2fef-45f4-8162-9063751b573a.html
@@ -55,6 +55,7 @@ Corrected:	2005-07-22 01:37 UTC (SVN) - committed bugfix (r4157)
 		     - Add FreeBSD VuXML URL for 6.2.5.1.
 		     - Add heise security URL.
 		     - Mention release of 6.2.5.2 tarball.
+2005-10-27	1.03 - Update CVE Name after CVE naming change
 
 1. Background
 
