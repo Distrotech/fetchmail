@@ -8,6 +8,10 @@ rather than duplicating the user name (see l. 211 in smbutil.c).
 For later:
 ==========
 
+Check if fetchmail's notion of \Recent vs. * <n> RECENT is a working
+model at all. In concurrent sessions, fetchmail might not be notified of
+\Recent and will have to check UID instead.
+
 RFC2047 encode X-Fetchmail-Warning?
 X-Fetchmail-Warning: Empfängeradresse root@example.org stimmt mit keinem lokalen Namen überein
 X-Virus-Scanned: amavisd-new at m2a2.dyndns.org
