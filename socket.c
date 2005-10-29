@@ -342,7 +342,7 @@ va_dcl {
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 #include <openssl/pem.h>
-#include <openssl/x509.h>
+#include <openssl/x509v3.h>
 #include <openssl/rand.h>
 
 static	SSL_CTX *_ctx = NULL;
@@ -648,14 +648,44 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 				char *p1 = buf;
 				char *p2 = _ssl_server_cname;
 				int n;
+				int matched = 0;
+				STACK_OF(GENERAL_NAME) *gens;
 				
+				/* RFC 2595 section 2.4: find a matching name
+				 * first find a match among alternative names */
+				gens = X509_get_ext_d2i(x509_cert, NID_subject_alt_name, NULL, NULL);
+				if (gens) {
+					int i, r;
+					for (i = 0, r = sk_GENERAL_NAME_num(gens); i < r; ++i) {
+						const GENERAL_NAME *gn = sk_GENERAL_NAME_value(gens, i);
+						if (gn->type == GEN_DNS) {
+							char *p1 = gn->d.ia5->data;
+							char *p2 = _ssl_server_cname;
+							if (outlevel == O_VERBOSE)
+								report(stderr, "Subject Alternative Name: %s\n", p1);
+							if (*p1 == '*') {
+								++p1;
+								n = strlen(p2) - strlen(p1);
+								if (n >= 0)
+									p2 += n;
+							}
+							if (0 == strcasecmp(p1, p2)) {
+								matched = 1;
+							}
+						}
+					}
+					sk_GENERAL_NAME_free(gens);
+				}
 				if (*p1 == '*') {
 					++p1;
 					n = strlen(p2) - strlen(p1);
 					if (n >= 0)
 						p2 += n;
 				}	
-				if (0 != strcasecmp(p1, p2)) {
+				if (0 == strcasecmp(p1, p2)) {
+				  matched = 1;
+				}
+				if (!matched) {
 					report(stderr,
 					    GT_("Server CommonName mismatch: %s != %s\n"),
 					    buf, _ssl_server_cname );
