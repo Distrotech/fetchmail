@@ -9,15 +9,15 @@ Abbreviations: MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk)
 
 fetchmail 6.3.0 (not yet released officially):
 
-# SECURITY FIX
-* The POP3 UIDL code doesn't sufficiently validate/truncate the input
+# SECURITY FIXES IN THIS RELEASE
+* CVE-2005-2335: The POP3 UIDL code doesn't sufficiently validate/truncate the input
   length, so a (malicious or compromised) server that sends UIDs longer
   than 128 bytes can corrupt fetchmail's stack and crash fetchmail.
   This vulnerability is remotely exploitable to inject code run in a
-  root shell. This is tracked under the CVE Name: CAN-2005-2335
-* fetchmailconf now changes the output file to mode 0600 BEFORE writing to it,
-  so there is no window where passwords could be read by the world.
-  Matthias Andree.
+  root shell. Edward J. Shornock, Ludwig Nussel. fetchmail-SA-2005-01.txt
+* CVE-2005-3088: fetchmailconf now changes the output file to mode 0600 BEFORE
+  writing to it, so there is no window where passwords could be read by the
+  world. Matthias Andree. fetchmail-SA-2005-02.txt
 
 # MAJOR INCOMPATIBLE CHANGES
 * Remove support for --netsec/-T options, the required inet6_apps library is no
