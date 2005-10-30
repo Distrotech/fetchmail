@@ -402,14 +402,23 @@ int main(int argc, char **argv)
 	}
 	else
 	{
+	    int maxwait;
+
 	    if (outlevel > O_SILENT)
 		fprintf(stderr,GT_("fetchmail: %s fetchmail at %d killed.\n"),
 			bkgd ? GT_("background") : GT_("foreground"), pid);
-	    fm_lock_release();
+	    /* We used to nuke the other process's lock here, with
+	     * fm_lock_release(), which is broken. The other process
+	     * needs to clear its lock by itself. */
 	    if (quitonly)
 		exit(0);
-	    else
-		pid = 0; 
+
+	    /* wait for other process to exit */
+	    maxwait = 10; /* seconds */
+	    while (kill(pid, 0) == 0 && --maxwait >= 0) {
+		sleep(1);
+	    }
+	    pid = 0;
 	}
     }
 
