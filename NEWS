@@ -250,6 +250,8 @@ fetchmail 6.3.0 (not yet released officially):
 * Bury on_exit officially - the necessary code had been missing from 6.0.0,
   6.2.0, 6.2.5.  Matthias Andree
 * Exit with error if the lock file cannot be read.  Matthias Andree
+* Exit with error if the lock file cannot be created exclusively, this got
+  broken in a 6.2.6-pre, 6.2.5.2 and older were fine.  Matthias Andree
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.

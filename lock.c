@@ -123,6 +123,8 @@ void lock_or_die(void)
 	    }
 	    if (fsync(fd)) e = 1;
 	    if (close(fd)) e = 1;
+	} else {
+	    e = 1;
 	}
 	if (e == 0) {
 	    lock_acquired = TRUE;
