@@ -1021,16 +1021,13 @@ flags indicating that connections have wedged due to failed
 authentication or multiple timeouts.
 .PP
 The option
-.B --quit
+.B \-\-quit
 will kill a running daemon process instead of waking it up (if there
-is no such process,
-.I fetchmail
-notifies you).  If the --quit option is the only command-line option,
-that's all there is to it.
-.PP
-The quit option may also be mixed with other command-line options; its
-effect is to kill any running daemon before doing what the other
-options specify in combination with the fetchmailrc file.
+is no such process, \fIfetchmail\fP will notify you.
+If the \-\-quit option appears last on the command line, \fIfetchmail\fP
+will kill the running daemon process and then quit. Otherwise,
+\fIfetchmail\fP will first kill a running daemon process and then
+continue running with the other options.
 .PP
 The
 .B \-L <filename>
@@ -1069,7 +1066,9 @@ option was used.
 .PP
 The
 .B \-N
-or --nodetach option suppresses backgrounding and detachment of the
+or
+.B --nodetach
+option suppresses backgrounding and detachment of the
 daemon process from its control terminal.  This is useful
 for debugging or when fetchmail runs as the child of a supervisor
 process such as

@@ -267,6 +267,7 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'q':
 	    quitmode = TRUE;
+	    quitind = optind;
 	    break;
 	case 'L':
 	    rctl->logfile = prependdir (optarg, currentwd);

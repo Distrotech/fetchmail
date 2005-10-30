@@ -412,6 +412,7 @@ extern flag peek_capable;	/* can we read msgs without setting seen? */
 extern struct runctl run;	/* global controls for this run */
 extern flag nodetach;		/* if TRUE, don't detach daemon process */
 extern flag quitmode;		/* if --quit was set */
+extern int  quitind;		/* optind after position of last --quit option */
 extern flag check_only;		/* if --check was set */
 extern char *rcfile;		/* path name of rc file */
 extern int linelimit;		/* limit # lines retrieved per site */

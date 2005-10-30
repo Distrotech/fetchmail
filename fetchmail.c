@@ -60,6 +60,7 @@ int outlevel;    	    /* see the O_.* constants above */
 struct runctl run;	    /* global controls for this run */
 flag nodetach;		    /* if TRUE, don't detach daemon process */
 flag quitmode;		    /* if --quit was set */
+int  quitind;		    /* optind after position of last --quit option */
 flag check_only;	    /* if --probe was set */
 flag versioninfo;	    /* emit only version info */
 char *user;		    /* the name of the invoking user */
@@ -68,6 +69,8 @@ char *fmhome;		    /* fetchmail's home directory */
 char *program_name;	    /* the name to prefix error messages with */
 flag configdump;	    /* dump control blocks for configurator */
 char *fetchmailhost;	    /* either `localhost' or the host's FQDN */
+
+static int quitonly;	    /* if we should quit after killing the running daemon */
 
 static int querystatus;		/* status of query */
 static int successes;		/* count number of successful polls */
@@ -194,8 +197,16 @@ int main(int argc, char **argv)
     }
 #endif
 
-    if ((parsecmdline(argc,argv, &cmd_run, &cmd_opts)) < 0)
-	exit(PS_SYNTAX);
+    {
+	int i;
+
+	i = parsecmdline(argc, argv, &cmd_run, &cmd_opts);
+	if (i < 0)
+	    exit(PS_SYNTAX);
+
+	if (quitmode && quitind == argc)
+	    quitonly = 1;
+    }
 
     if (versioninfo)
     {
@@ -258,8 +269,8 @@ int main(int argc, char **argv)
 	system("uname -a");
     }
 
-    /* avoid parsing the config file if all we're doing is killing a daemon */ 
-    if (!(quitmode && argc == 2))
+    /* avoid parsing the config file if all we're doing is killing a daemon */
+    if (!quitonly)
 	implicitmode = load_params(argc, argv, optind);
 
 #if defined(HAVE_SYSLOG)
@@ -366,7 +377,7 @@ int main(int argc, char **argv)
     pid = bkgd ? -pid : pid;
 
     /* if no mail servers listed and nothing in background, we're done */
-    if (!(quitmode && argc == 2) && pid == 0 && querylist == NULL) {
+    if (!quitonly && pid == 0 && querylist == NULL) {
 	(void)fputs(GT_("fetchmail: no mailservers have been specified.\n"),stderr);
 	exit(PS_SYNTAX);
     }
@@ -374,17 +385,11 @@ int main(int argc, char **argv)
     /* perhaps user asked us to kill the other fetchmail */
     if (quitmode)
     {
-	if (pid == 0) 
+	if (pid == 0 || pid == getpid())
+	    /* this test enables re-execing on a changed rcfile
+	     * for pid == getpid() */
 	{
-	    fprintf(stderr,GT_("fetchmail: no other fetchmail is running\n"));
-	    if (argc == 2)
-		exit(PS_EXCLUDE);
-	}
-	else if (getpid() == pid)
-	{
-	    /* this test enables re-execing on a changed rcfile */
-	    if (argc == 2)
-	    {
+	    if (quitonly) {
 		fprintf(stderr,GT_("fetchmail: no other fetchmail is running\n"));
 		exit(PS_EXCLUDE);
 	    }
@@ -397,10 +402,11 @@ int main(int argc, char **argv)
 	}
 	else
 	{
-	    fprintf(stderr,GT_("fetchmail: %s fetchmail at %d killed.\n"),
-		    bkgd ? GT_("background") : GT_("foreground"), pid);
+	    if (outlevel > O_SILENT)
+		fprintf(stderr,GT_("fetchmail: %s fetchmail at %d killed.\n"),
+			bkgd ? GT_("background") : GT_("foreground"), pid);
 	    fm_lock_release();
-	    if (argc == 2)
+	    if (quitonly)
 		exit(0);
 	    else
 		pid = 0; 
@@ -902,6 +908,9 @@ static void optmerge(struct query *h2, struct query *h1, int force)
 #undef FLAG_MERGE
 }
 
+/** Load configuration files.
+ * \return - true if no servers found on the command line
+ *         - false if servers found on the command line */
 static int load_params(int argc, char **argv, int optind)
 {
     int	implicitmode, st;
@@ -1006,9 +1015,12 @@ static int load_params(int argc, char **argv, int optind)
     }
 
     /* don't allow a defaults record after the first */
-    for (ctl = querylist; ctl; ctl = ctl->next)
-	if (ctl != querylist && strcmp(ctl->server.pollname, "defaults") == 0)
+    for (ctl = querylist; ctl; ctl = ctl->next) {
+	if (ctl != querylist && strcmp(ctl->server.pollname, "defaults") == 0) {
+	    fprintf(stderr, GT_("fetchmail: Error: multiple \"defaults\" records in config file.\n"));
 	    exit(PS_SYNTAX);
+	}
+    }
 
     /* use localhost if we never fetch the FQDN of this host */
     fetchmailhost = "localhost";

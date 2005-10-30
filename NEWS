@@ -240,6 +240,13 @@ fetchmail 6.3.0 (not yet released officially):
 * fetchmailconf -V now prints the fetchmailconf version. Matthias Andree
 * Add support for SubjectAltName (RFC-2595 or 2818), to avoid bogus certificate
   mismatch errors. Patch by Roland Stigge, Debian Bug#201113. (MA)
+* make fetchmail --silent --quit really silent, Debian Bug #229014 by Dr.
+  Andreas Krüger.  Matthias Andree
+* cleanup --quit handling again (so that --silent --quit just kills the
+  existing daemon, rather than continue running), and document it more clearly.
+  Matthias Andree
+* Print an error message if multiple "defaults" records are found in the
+  configuration file.  Matthias Andree
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.
