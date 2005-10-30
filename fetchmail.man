@@ -1420,10 +1420,10 @@ T}
 local[domains]	\&	m	T{
 Specify domain(s) to be regarded as local
 T}
-port    	-P	\&	T{
-Specify TCP/IP service port (obsolete, use service instead).
+port    		\&	T{
+Specify TCP/IP service port (obsolete, use 'service' instead).
 T}
-port    	-P	\&	T{
+service 	-P	\&	T{
 Specify service name (a numeric value is also allowed and
 considered a TCP/IP port number).
 T}
