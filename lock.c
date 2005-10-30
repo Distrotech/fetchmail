@@ -47,11 +47,7 @@ void lock_setup(void)
 #undef FETCHMAIL_PIDFILE
 }
 
-#ifdef HAVE_ON_EXIT
-static void unlockit(int n, void *p)
-#else
 static void unlockit(void)
-#endif
 /* must-do actions for exit (but we can't count on being able to do malloc) */
 {
     if (lockfile && lock_acquired)
@@ -63,9 +59,6 @@ void lock_dispose(void)
 {
 #ifdef HAVE_ATEXIT
     atexit(unlockit);
-#endif
-#ifdef HAVE_ON_EXIT
-    on_exit(unlockit, (char *)NULL);
 #endif
 }
 

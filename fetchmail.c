@@ -1331,7 +1331,7 @@ static RETSIGTYPE terminate_run(int sig)
 	if (ctl->password)
 	  memset(ctl->password, '\0', strlen(ctl->password));
 
-#if !defined(HAVE_ATEXIT) && !defined(HAVE_ON_EXIT)
+#if !defined(HAVE_ATEXIT)
     fm_lock_release();
 #endif
 
