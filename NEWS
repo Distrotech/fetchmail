@@ -249,6 +249,7 @@ fetchmail 6.3.0 (not yet released officially):
   configuration file.  Matthias Andree
 * Bury on_exit officially - the necessary code had been missing from 6.0.0,
   6.2.0, 6.2.5.  Matthias Andree
+* Exit with error if the lock file cannot be read.  Matthias Andree
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.

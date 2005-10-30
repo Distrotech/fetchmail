@@ -73,9 +73,11 @@ int lock_state(void)
 	int args = fscanf(lockfp, "%d %d", &pid, &st);
 	bkgd = (args == 2);
 
-	if (ferror(lockfp))
+	if (ferror(lockfp)) {
 	    fprintf(stderr, GT_("fetchmail: error reading lockfile \"%s\": %s\n"),
 		    lockfile, strerror(errno));
+	    exit(PS_EXCLUDE);
+	}
 
 	if (args == 0 || kill(pid, 0) == -1) {
 	    fprintf(stderr,GT_("fetchmail: removing stale lockfile\n"));
@@ -86,9 +88,11 @@ int lock_state(void)
 	fclose(lockfp); /* not checking should be safe, file mode was "r" */
     } else {
 	pid = 0;
-	if (errno != ENOENT)
+	if (errno != ENOENT) {
 	    fprintf(stderr, GT_("fetchmail: error opening lockfile \"%s\": %s\n"),
 		    lockfile, strerror(errno));
+	    exit(PS_EXCLUDE);
+	}
     }
 
     return(bkgd ? -pid : pid);
