@@ -418,6 +418,16 @@ and the one fetchmail uses to report the fingerprint when an SSL connection
 is established. When this is specified, fetchmail will compare the server key
 fingerprint with the given one, and the connection will fail if they do not
 match. This can be used to prevent man-in-the-middle attacks.
+.IP
+To obtain the fingerprint of a certificate stored in the file cert.pem,
+try:
+.sp
+.nf
+	openssl x509 -in cert.pem -noout -fingerprint
+.fi
+.sp
+For details, see
+.BR x509 (1ssl).
 .SS Delivery Control Options
 .TP
 .B \-S <hosts> | \-\-smtphost <hosts>

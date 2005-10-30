@@ -254,6 +254,8 @@ fetchmail 6.3.0 (not yet released officially):
   broken in a 6.2.6-pre, 6.2.5.2 and older were fine.  Matthias Andree
 * Do not break some other process's lockfile in "-q" mode, but wait for the
   other process's exit.  Matthias Andree
+* Man page: --sslfingerprint points user to x509(1ssl) and gives an example
+  how to use it. Debian Bug#213484, Eduard Bloch. (MA)
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.
