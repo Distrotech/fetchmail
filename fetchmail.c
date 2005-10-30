@@ -1076,9 +1076,12 @@ static int load_params(int argc, char **argv, int optind)
 		 || ctl->server.authenticate == A_KERBEROS_V4
 		 || ctl->server.authenticate == A_KERBEROS_V5))
 	{
-	    fetchmailhost = host_fqdn();
+	    fetchmailhost = host_fqdn(1);
 	    break;
 	}
+
+    if (!ctl) /* list exhausted */
+	fetchmailhost = host_fqdn(0);
 
     /* this code enables flags to be turned off */
 #define DEFAULT(flag, dflt)	if (flag == FLAG_TRUE)\

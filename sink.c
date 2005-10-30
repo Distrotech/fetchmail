@@ -293,10 +293,13 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
 
     /* can't just use fetchmailhost here, it might be localhost */
     if (fqdn_of_host == NULL)
-	fqdn_of_host = host_fqdn();
+	fqdn_of_host = host_fqdn(0); /* can't afford to bail out and
+					lose the NDN here */
     strlcat(daemon_name, fqdn_of_host, sizeof(daemon_name));
 
     /* we need only SMTP for this purpose */
+    /* XXX FIXME: hardcoding localhost is nonsense if smtphost can be
+     * configured */
     if ((sock = SockOpen("localhost", SMTP_PORT, NULL)) == -1)
 	return(FALSE);
 

@@ -256,6 +256,10 @@ fetchmail 6.3.0 (not yet released officially):
   other process's exit.  Matthias Andree
 * Man page: --sslfingerprint points user to x509(1ssl) and gives an example
   how to use it. Debian Bug#213484, Eduard Bloch. (MA)
+* Try to obtain FQDN as our own host by default, rather than using "localhost".
+  If hostname cannot be qualified, complain noisily and continue, unless
+  Kerberos, ODMR or ETRN are used (these require a FQDN).
+  Partial fix of Debian Bug#150137. Fixes Debian Bug#316454.  Matthias Andree
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.
