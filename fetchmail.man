@@ -1270,7 +1270,7 @@ By default, the list of antispam responses is empty.
 .PP
 If the \fIspambounce\fR option is on, mail that is spam-blocked
 triggers an RFC1892 bounce message informing the originator that we do
-not accept mail from it.
+not accept mail from it. See also BUGS.
 
 .SH SMTP/ESMTP ERROR HANDLING
 Besides the spam-blocking described above, fetchmail takes special
@@ -1287,7 +1287,7 @@ originator.
 Delete the message from the server.  Don't even try to send
 bounce-mail to the originator.
 .PP
-Other errors trigger bounce mail back to the originator.
+Other errors trigger bounce mail back to the originator. See also BUGS.
 
 .SH THE RUN CONTROL FILE
 The preferred way to set up fetchmail is to write a
@@ -1689,7 +1689,7 @@ If \fIfetchmail\fR cannot match any mailserver usernames or
 localdomain addresses, the mail will be bounced.
 Normally it will be bounced to the sender, but if 'nobounce' is on
 it will go to the postmaster (which in turn defaults to being the
-calling user).
+calling user). See also BUGS.
 .PP
 The 'dns' option (normally on) controls the way addresses from
 multidrop mailboxes are checked.  On, it enables logic to check each
