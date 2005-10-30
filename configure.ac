@@ -374,8 +374,7 @@ AC_CHECK_FUNCS(getnameinfo)
 ###    use option --with-kerberos5=DIR to point at a Kerberos 5 directory
 ### make sure --with-ssl is run before --with-kerberos* !
 AC_ARG_WITH(kerberos5,
-       [  --with-kerberos5=DIR    point fetchmail compilation at a Kerberos 5
-directory],
+       [  --with-kerberos5=DIR    point fetchmail compilation at a Kerberos 5 directory],
 [
 if test "$with_kerberos5" != "no"
 then
@@ -461,8 +460,7 @@ fi
 
 ###    use option --with-kerberos=DIR to point at a Kerberos 4 directory
 AC_ARG_WITH(kerberos,
-       [  --with-kerberos=DIR     point fetchmail compilation at a Kerberos 4
-directory],
+       [  --with-kerberos=DIR     point fetchmail compilation at a Kerberos 4 directory],
 [
 if test "$with_kerberos" != "no"
 then
