@@ -647,7 +647,7 @@ char *visbuf(const char *);
 const char *showproto(int);
 void dump_config(struct runctl *runp, struct query *querylist);
 int is_host_alias(const char *, struct query *);
-char *host_fqdn(void);
+char *host_fqdn(int required);
 char *rfc822timestamp(void);
 flag is_a_file(int);
 char *rfc2047e(const char*, const char *);
