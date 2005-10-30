@@ -605,8 +605,8 @@ struct query *ctl;	/* option record to be initialized */
 
 	P(GT_("  -p, --protocol    specify retrieval protocol (see man page)\n"));
 	P(GT_("  -U, --uidl        force the use of UIDLs (pop3 only)\n"));
-	P(GT_("  -P, --port        TCP port to connect to (obsolete, use --service)\n"));
-	P(GT_("      --service     TCP service to connect to (can be numeric TCP port)\n"));
+	P(GT_("      --port        TCP port to connect to (obsolete, use --service)\n"));
+	P(GT_("  -P, --service     TCP service to connect to (can be numeric TCP port)\n"));
 	P(GT_("      --auth        authentication type (password/kerberos/ssh/otp)\n"));
 	P(GT_("  -t, --timeout     server nonresponse timeout\n"));
 	P(GT_("  -E, --envelope    envelope address header\n"));
