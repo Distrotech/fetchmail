@@ -5,7 +5,7 @@
 # Matthias Andree <matthias.andree@gmx.de>
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.50"
+version = "1.51 $Revision$"
 
 from Tkinter import *
 from Dialog import *
@@ -1515,6 +1515,7 @@ Fetchmail doesn't know anything special about this server type.
 	    title = "Autoprobe of " + realhost + " succeeded"
 	    confirm = "The " + protocol + " server said:\n\n" + greetline + warnings
 	    self.protocol.set(protocol)
+	    self.service.set(defaultports[protocol])
 	confwin.title(title)
 	confwin.iconname(title)
 	Label(confwin, text=title).pack()

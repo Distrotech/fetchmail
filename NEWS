@@ -260,6 +260,8 @@ fetchmail 6.3.0 (not yet released officially):
   If hostname cannot be qualified, complain noisily and continue, unless
   Kerberos, ODMR or ETRN are used (these require a FQDN).
   Partial fix of Debian Bug#150137. Fixes Debian Bug#316454.  Matthias Andree
+* fetchmailconf now sets the service properly after autoprobe. Fixes Debian
+  Bug#320645.  Matthias Andree
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.
