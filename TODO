@@ -8,6 +8,9 @@ rather than duplicating the user name (see l. 211 in smbutil.c).
 For later:
 ==========
 
+Re-exec ourselves if the executable file changes? Security vs.
+convenience.
+
 Check if fetchmail's notion of \Recent vs. * <n> RECENT is a working
 model at all. In concurrent sessions, fetchmail might not be notified of
 \Recent and will have to check UID instead.
