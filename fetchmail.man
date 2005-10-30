@@ -1115,17 +1115,21 @@ The
 .B \-\-postmaster <name>
 option (keyword: set postmaster) specifies the last-resort username to
 which multidrop mail is to be forwarded if no matching local recipient
-can be found.  Normally this is just the user who invoked
+can be found. It is also used as destination of undeliverable mail if
+the 'bouncemail' global option is off and additionally for spam-blocked
+mail if the 'bouncemail' global option is off and the 'spambounce'
+global option is on. This option defaults to the user who invoked
 .IR fetchmail .
 If the invoking user is root, then the default of this option is
 the user 'postmaster'.  Setting postmaster to the empty string causes
-such mail to be discarded.
+such mail as described above to be discarded - this however is usually a
+bad idea.
+See also the description of the 'FETCHMAILUSER' environment variable in
+the ENVIRONMENT section below.
 .PP
 The
 .B \-\-nobounce
-option suppresses the normal action of bouncing errors back to the
-sender in an RFC1894-conformant error message.  If nobounce is on, the
-message will go to the postmaster instead.
+behaves like the "set no bouncemail" global option, which see.
 .PP
 The
 .B \-\-invisible
@@ -1268,9 +1272,9 @@ spam message bodies.
 .PP
 By default, the list of antispam responses is empty.
 .PP
-If the \fIspambounce\fR option is on, mail that is spam-blocked
-triggers an RFC1892 bounce message informing the originator that we do
-not accept mail from it. See also BUGS.
+If the \fIspambounce\fR global option is on, mail that is spam-blocked
+triggers an RFC1892/RFC1894 bounce message informing the originator that
+we do not accept mail from it. See also BUGS.
 
 .SH SMTP/ESMTP ERROR HANDLING
 Besides the spam-blocking described above, fetchmail takes special
@@ -1347,10 +1351,10 @@ safely, or easily disable entries for hosts that are temporarily down.)
 .PP
 .SS Keyword/Option Summary
 Here are the legal options.  Keyword suffixes enclosed in
-square brackets are optional.  Those corresponding to command-line
-options are followed by '-' and the appropriate option letter.
-If option is only relevant to a single mode of operation, it is noted
-as 's' or 'm' for singledrop- or multidrop-mode, respectively.
+square brackets are optional.  Those corresponding to short command-line
+options are followed by '-' and the appropriate option letter.  If
+option is only relevant to a single mode of operation, it is noted as
+'s' or 'm' for singledrop- or multidrop-mode, respectively.
 
 Here are the legal global options:
 
@@ -1358,32 +1362,45 @@ Here are the legal global options:
 l l l lw34.
 Keyword  	Opt	Mode	Function
 _
-set daemon  	\&	\&	T{
-Set a background poll interval in seconds
+set daemon  	-d	\&	T{
+Set a background poll interval in seconds.
 T}
 set postmaster  	\&	\&	T{
-Give the name of the last-resort mail recipient
+Give the name of the last-resort mail recipient (default: user running
+fetchmail, "postmaster" if run by the root user)
+T}
+set    bouncemail	\&	\&	T{
+Direct error mail to the sender (default)
 T}
 set no bouncemail	\&	\&	T{
-Direct error mail to postmaster rather than sender
+Direct error mail to the local postmaster (as per the 'postmaster'
+global option above).
 T}
 set no spambounce	\&	\&	T{
-Send spam bounces
+Do not bounce spam-blocked mail (default).
 T}
-set logfile  	\&	\&	T{
-Name of a file to dump error and status messages to
+set    spambounce	\&	\&	T{
+Bounce blocked spam-blocked mail (as per the 'antispam' user option)
+back to the destination as indicated by the 'bouncemail' global option.
+Warning: Do not use this to bounce spam back to the sender - most spam
+is sent with false sender address and thus this option hurts innocent
+bystanders.
 T}
-set idfile  	\&	\&	T{
-Name of the file to store UID lists in
+set logfile  	-L	\&	T{
+Name of a file to append error and status messages to.
 T}
-set syslog  	\&	\&	T{
+set idfile  	-i	\&	T{
+Name of the file to store UID lists in.
+T}
+set    syslog	\&	\&	T{
 Do error logging through syslog(3).
 T}
 set no syslog  	\&	\&	T{
-Turn off error logging through syslog(3).
+Turn off error logging through syslog(3). (default)
 T}
 set properties 	\&	\&	T{
-String value is ignored by fetchmail (may be used by extension scripts)
+String value that is ignored by fetchmail (may be used by extension
+scripts).
 T}
 .TE
 
@@ -1404,7 +1421,11 @@ local[domains]	\&	m	T{
 Specify domain(s) to be regarded as local
 T}
 port    	-P	\&	T{
-Specify TCP/IP service port
+Specify TCP/IP service port (obsolete, use service instead).
+T}
+port    	-P	\&	T{
+Specify service name (a numeric value is also allowed and
+considered a TCP/IP port number).
 T}
 auth[enticate]	\&	\&	T{
 Set authentication type (default 'any')
@@ -1436,7 +1457,7 @@ T}
 plugout   	\&	\&	T{
 Specify command through which to make listener connections.
 T}
-dns     	\&	m	T{
+dns   	\&	m	T{
 Enable DNS lookup for multidrop (default)
 T}
 no dns   	\&	m	T{
@@ -1449,7 +1470,7 @@ no checkalias	\&	m	T{
 Do comparison by name for multidrop (default)
 T}
 uidl    	-U	\&	T{
-Force POP3 to use client-side UIDLs
+Force POP3 to use client-side UIDLs (recommended)
 T}
 no uidl   	\&	\&	T{
 Turn off POP3 use of client-side UIDLs (default)
@@ -1687,9 +1708,9 @@ matching addresses are handled.
 .PP
 If \fIfetchmail\fR cannot match any mailserver usernames or
 localdomain addresses, the mail will be bounced.
-Normally it will be bounced to the sender, but if 'nobounce' is on
-it will go to the postmaster (which in turn defaults to being the
-calling user). See also BUGS.
+Normally it will be bounced to the sender, but if the 'bouncemail'
+global option is off, the mail will go to the local postmaster instead.
+(see the 'postmaster' global option). See also BUGS.
 .PP
 The 'dns' option (normally on) controls the way addresses from
 multidrop mailboxes are checked.  On, it enables logic to check each
@@ -1866,7 +1887,7 @@ See the description of the 'auth' keyword for more.
 Specifying 'kpop' sets POP3 protocol over port 1109 with Kerberos V4
 authentication.  These defaults may be overridden by later options.
 .PP
-There are currently four global option statements; 'set logfile'
+There are some global option statements: 'set logfile'
 followed by a string sets the same global specified by --logfile.  A
 command-line --logfile option will override this.  Also, 'set daemon'
 sets the poll interval as --daemon does.  This can be overridden by a
@@ -2369,8 +2390,9 @@ temporarily discards any suid privileges it may have while running the
 MDA.  For maximum safety, however, don't use an mda command containing
 %F or %T when fetchmail is run from the root account itself.
 .PP
-Fetchmail's method of sending bouncemail and spam bounces requires that
-port 25 of localhost be available for sending mail via SMTP.
+Fetchmail's method of sending bounces due to errors or spam-blocking and
+spam bounces requires that port 25 of localhost be available for sending
+mail via SMTP.
 .PP
 If you modify a
 .I ~/.fetchmailrc

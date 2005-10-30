@@ -262,6 +262,8 @@ fetchmail 6.3.0 (not yet released officially):
   Partial fix of Debian Bug#150137. Fixes Debian Bug#316454.  Matthias Andree
 * fetchmailconf now sets the service properly after autoprobe. Fixes Debian
   Bug#320645.  Matthias Andree
+* fetchmail.man: Fix Debian Bug#241883, making global options more clear. Matt
+  Swift, Matthias Andree.
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.
