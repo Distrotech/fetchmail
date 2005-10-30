@@ -80,10 +80,14 @@ int lock_state(void)
 	}
 
 	if (args == 0 || kill(pid, 0) == -1) {
-	    fprintf(stderr,GT_("fetchmail: removing stale lockfile\n"));
 	    pid = 0;
-	    if (unlink(lockfile))
-		perror(lockfile);
+	    if (unlink(lockfile)) {
+	       if (errno != ENOENT) {
+		   perror(lockfile);
+	       }
+	    } else {
+		fprintf(stderr,GT_("fetchmail: removing stale lockfile\n"));
+	    }
 	}
 	fclose(lockfp); /* not checking should be safe, file mode was "r" */
     } else {
