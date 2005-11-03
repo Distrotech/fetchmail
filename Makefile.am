@@ -83,6 +83,7 @@ fetchmail.spec: Makefile.in specgen.sh
 DISTDOCS=	BUGS FAQ FEATURES NOTES OLDNEWS fetchmail-man.html \
 		fetchmail-FAQ.html design-notes.html esrs-design-notes.html todo.html \
 		fetchmail-features.html README.SSL README.NTLM \
+		README.packaging \
 		fetchmail-SA-2005-01.txt \
 		fetchmail-SA-2005-02.txt
 
