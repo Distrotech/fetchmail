@@ -20,7 +20,8 @@ which are given as headwords below.
 
 - the Makefile generates a two-line "fetchmailconf" /bin/sh wrapper
   script that executes the actual fetchmailconf.py with the python
-  installation found at configuration time.
+  installation found at configuration time, so that users can still type
+  "fetchmailconf" rather than "python fetchmailconf"
 
 - note that fetchmailconf.py supports a few command line arguments, so
   it you use local wrapper scripts, be sure they pass on their own
