@@ -117,7 +117,7 @@ static int pop2_fetch(int sock, struct query *ctl, int number, int *lenp)
     return(ok);
 }
 
-static int pop2_trail(int sock, struct query *ctl, int number)
+static int pop2_trail(int sock, struct query *ctl, int number, const char *tag)
 /* send acknowledgement for message data */
 {
     return(gen_transact(sock, ctl->keep ? "ACKS" : "ACKD"));

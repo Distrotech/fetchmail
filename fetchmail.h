@@ -215,7 +215,7 @@ struct method		/* describe methods for protocol state machine */
 				/* fetch FROM headera given message */
     int (*fetch_body)(int, struct query *, int, int *);
 				/* fetch a given message */
-    int (*trail)(int, struct query *, int);
+    int (*trail)(int, struct query *, int, const char *);
 				/* eat trailer of a message */
     int (*delete)(int, struct query *, int);
 				/* delete method */
