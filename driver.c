@@ -646,7 +646,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 		    fflush(stdout);
 		}
 
-		if ((err = (ctl->server.base_protocol->trail)(mailserver_socket, ctl, num)))
+		if ((err = (ctl->server.base_protocol->trail)(mailserver_socket, ctl, num, tag)))
 		    return(err);
 	    }
 
@@ -704,7 +704,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 			fflush(stdout);
 		    }
 
-		    err = (ctl->server.base_protocol->trail)(mailserver_socket, ctl, num);
+		    err = (ctl->server.base_protocol->trail)(mailserver_socket, ctl, num, tag);
 		    if (err != 0)
 			return(err);
 		}
