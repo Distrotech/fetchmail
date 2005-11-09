@@ -1039,7 +1039,7 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
     return(PS_SUCCESS);
 }
 
-static int imap_trail(int sock, struct query *ctl, int number)
+static int imap_trail(int sock, struct query *ctl, int number, const char *tag)
 /* discard tail of FETCH response after reading message text */
 {
     /* expunges change the fetch numbers */
@@ -1047,15 +1047,18 @@ static int imap_trail(int sock, struct query *ctl, int number)
 
     for (;;)
     {
-	char buf[MSGBUFSIZE+1];
+	char buf[MSGBUFSIZE+1], *t;
 	int ok;
 
 	if ((ok = gen_recv(sock, buf, sizeof(buf))))
 	    return(ok);
 
 	/* UW IMAP returns "OK FETCH", Cyrus returns "OK Completed" */
-	if (strstr(buf, "OK"))
-	    break;
+	if (strncmp(buf, tag, strlen(tag)) == 0) {
+	    t = buf + strspn(t, " \t");
+	    if (strncmp(t, "OK", 2))
+		break;
+	}
     }
 
     return(PS_SUCCESS);

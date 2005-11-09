@@ -264,6 +264,9 @@ fetchmail 6.3.0 (not yet released officially):
   Bug#320645.  Matthias Andree
 * fetchmail.man: Fix Debian Bug#241883, making global options more clear. Matt
   Swift, Matthias Andree.
+* When eating IMAP message trailer, don't see any line containing "OK" as the
+  end of the trailer, but wait for the proper tagged OK line. To work around
+  the qmail + Courier-IMAP problem in Debian Bug#338007. Matthias Andree
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.
