@@ -26,7 +26,8 @@ poll one or more systems at a specified interval.
 The
 .I fetchmail
 program can gather mail from servers supporting any of the common
-mail-retrieval protocols: POP2, POP3, IMAP2bis, IMAP4, and IMAP4rev1.
+mail-retrieval protocols: POP2 (legacy, to be removed from future
+release), POP3, IMAP2bis, IMAP4, and IMAP4rev1.
 It can also use the ESMTP ETRN extension and ODMR.  (The RFCs describing all
 these protocols are listed at the end of this manual page.)
 .PP
@@ -228,7 +229,7 @@ may be one of the following:
 Tries IMAP, POP3, and POP2 (skipping any of these for which support
 has not been compiled in).
 .IP POP2
-Post Office Protocol 2
+Post Office Protocol 2 (legacy, to be removed from future release)
 .IP POP3
 Post Office Protocol 3
 .IP APOP
@@ -693,14 +694,14 @@ KERBEROS\ 5); then it looks for methods that mask your password
 and MSN is only supported for POP3); and only if the server doesn't
 support any of those will it ship your password en clair.  Other values
 may be used to force various authentication methods
-(\fBssh\fR suppresses authentication).  Any value other than
-\&\fBpassword\fR, \fBcram-md5\fR, \fBntlm\fR, \fBmsn\fR or \fBotp\fR
-suppresses fetchmail's normal inquiry for a password.  Specify \fBssh\fR
-when you are using an end-to-end secure connection such as an ssh
-tunnel; specify \fBgssapi\fR or \fBkerberos_v4\fR if you are using a
-protocol variant that employs GSSAPI or K4.  Choosing KPOP protocol
-automatically selects Kerberos authentication.  This option does not
-work with ETRN.
+(\fBssh\fR suppresses authentication and is thus good for IMAP PREAUTH).
+Any value other than \fBpassword\fR, \fBcram-md5\fR, \fBntlm\fR,
+\&\fBmsn\fR or \fBotp\fR suppresses fetchmail's normal inquiry for a
+password.  Specify \fBssh\fR when you are using an end-to-end secure
+connection such as an ssh tunnel; specify \fBgssapi\fR or
+\&\fBkerberos_v4\fR if you are using a protocol variant that employs
+GSSAPI or K4.  Choosing KPOP protocol automatically selects Kerberos
+authentication.  This option does not work with ETRN.
 .SS Miscellaneous Options
 .TP
 .B \-f <pathname> | \-\-fetchmailrc <pathname>
@@ -1865,7 +1866,7 @@ Legal protocol identifiers for use with the 'protocol' keyword are:
 .sp
 .nf
     auto (or AUTO)
-    pop2 (or POP2)
+    pop2 (or POP2) (legacy, to be removed from future release)
     pop3 (or POP3)
     sdps (or SDPS)
     imap (or IMAP)

@@ -34,9 +34,11 @@ fetchmail 6.3.0 (not yet released officially):
 * The MX and host alias lookups that fetchmail performs in multidrop mode are
   obsolete, deprecated and may be removed from a future fetchmail version
   without further notice. Their support for IPv6 (including IPv6-mapped IPv4)
-  is unspecified.  Matthias Andree
+  is unspecified. (MA)
 * The monitor and interface options may also be removed from a future fetchmail
-  version as they are not sufficiently portable.
+  version as they are not sufficiently portable. (MA)
+* POP2 is obsolete. Support for POP2 may be removed from a future fetchmail
+  version without further notice. (MA)
 
 # OTHER USER-VISIBLE CHANGES
 * Sunil Shetye's fix to force fetchsizelimit to 1 for APOP and RPOP. (ESR)
