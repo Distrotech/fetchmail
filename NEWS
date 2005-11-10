@@ -264,7 +264,7 @@ fetchmail 6.3.0 (not yet released officially):
   Partial fix of Debian Bug#150137. Fixes Debian Bug#316454.  Matthias Andree
 * fetchmailconf now sets the service properly after autoprobe. Fixes Debian
   Bug#320645.  Matthias Andree
-* fetchmail.man: Fix Debian Bug#241883, making global options more clear. Matt
+* Man page: Fix Debian Bug#241883, making global options more clear. Matt
   Swift, Matthias Andree.
 * When eating IMAP message trailer, don't see any line containing "OK" as the
   end of the trailer, but wait for the proper tagged OK line. To work around
@@ -274,6 +274,7 @@ fetchmail 6.3.0 (not yet released officially):
   Instead, pass the buck on to the SMTP server and use our own unqualified
   hostname. Matthias Andree
 * Revise some error messages so they are less confusing. Sunil Shetye.
+* Man page: update --smtphost documentation. Matthias Andree
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.

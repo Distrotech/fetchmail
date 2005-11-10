@@ -436,15 +436,17 @@ For details, see
 Specify a hunt list of hosts to forward mail to (one or more
 hostnames, comma-separated). Hosts are tried in list order; the first
 one that is up becomes the forwarding target for the current run.
-Normally, 'localhost' is added to the end of the list as an invisible
-default.  However, when using Kerberos authentication, the FQDN of the
-machine running fetchmail is added to the end of the list as an
-invisible default. Each hostname may have a port number following the
-host name.  The port number is separated from the host name by a
-slash; the default port is 25 (or "smtp" under IPv6).  If you
+The default depends on the authentication methods and protocols used on
+the active servers. If Kerberos is used for authentication or the ODMR
+or ETRN protocol is used for any active server, the FQDN of the machine
+running fetchmail is used as a default for smtphost. Otherwise,
+'localhost' is used as a default.  Each hostname may have a port number
+following the host name.  The port number is separated from the host
+name by a slash; the default port is 25 (or "smtp" under IPv6).  If you
 specify an absolute path name (beginning with a /), it will be
 interpreted as the name of a UNIX socket accepting LMTP connections
-(such as is supported by the Cyrus IMAP daemon) Example:
+(such as is supported by the Cyrus IMAP daemon)
+Example:
 .sp
 .nf
 	--smtphost server1,server2/2525,server3,/var/imap/socket/lmtp
@@ -2408,6 +2410,9 @@ The -f - option (reading a configuration from stdin) is incompatible
 with the plugin option.
 .PP
 The 'principal' option only handles Kerberos IV, not V.
+.PP
+The --smtphost defaults may not be adequate for your system. In doubt,
+specify this option explicitly to set your forward destination.
 .PP
 Send comments, bug reports, gripes, and the like to the
 fetchmail-devel list <fetchmail-devel@lists.berlios.de>.  An HTML FAQ is
