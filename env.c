@@ -132,8 +132,7 @@ void envquery(int argc, char **argv)
     strcat(rcfile, RCFILE_NAME);
 }
 
-char *host_fqdn(int required /** barf if the name cannot be resolved */)
-/* get the FQDN of the machine we're running */
+char *host_fqdn(int required)
 {
     char tmpbuf[HOSTLEN+1];
     char *result;
@@ -168,7 +167,7 @@ char *host_fqdn(int required /** barf if the name cannot be resolved */)
 		exit(PS_DNS);
 	    else {
 		fprintf(stderr, GT_("Trying to continue with unqualified hostname.\nDO NOT report broken Received: headers, HELO/EHLO lines or similar problems!\nDO repair your /etc/hosts, DNS, NIS or LDAP instead.\n"));
-		return 0;
+		return xstrdup(tmpbuf);
 	    }
 	}
 
