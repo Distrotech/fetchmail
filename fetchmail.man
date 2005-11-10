@@ -1046,11 +1046,11 @@ The
 .B \-L <filename>
 or
 .B \-\-logfile <filename>
-option (keyword: set logfile) allows you to redirect status messages
-emitted while detached into a specified logfile (follow the
-option with the logfile name).  The logfile is opened for append, so
-previous messages aren't deleted.  This is primarily useful for
-debugging configurations.
+option (keyword: set logfile) is only effective when fetchmail is
+detached. This option allows you to redirect status messages
+into a specified logfile (follow the option with the logfile name).  The
+logfile is opened for append, so previous messages aren't deleted.  This
+is primarily useful for debugging configurations.
 .PP
 The
 .B \-\-syslog
@@ -1892,12 +1892,14 @@ authentication.  These defaults may be overridden by later options.
 .PP
 There are some global option statements: 'set logfile'
 followed by a string sets the same global specified by --logfile.  A
-command-line --logfile option will override this.  Also, 'set daemon'
-sets the poll interval as --daemon does.  This can be overridden by a
-command-line --daemon option; in particular --daemon 0 can be used to
-force foreground operation. The 'set postmaster' statement sets the
-address to which multidrop mail defaults if there are no local
-matches.  Finally, 'set syslog' sends log messages to syslogd(8).
+command-line --logfile option will override this. Note that --logfile is
+only effective if fetchmail detaches itself from the terminal.  Also,
+'set daemon' sets the poll interval as --daemon does.  This can be
+overridden by a command-line --daemon option; in particular --daemon 0
+can be used to force foreground operation. The 'set postmaster'
+statement sets the address to which multidrop mail defaults if there are
+no local matches.  Finally, 'set syslog' sends log messages to
+syslogd(8).
 
 .SH INTERACTION WITH RFC 822
 When trying to determine the originating address of a message,
