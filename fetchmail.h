@@ -1,3 +1,4 @@
+/** \file fetchmail.h  header file for fetchmail */
 #ifndef _FETCHMAIL_H
 #define _FETCHMAIL_H
 /*
@@ -647,7 +648,16 @@ char *visbuf(const char *);
 const char *showproto(int);
 void dump_config(struct runctl *runp, struct query *querylist);
 int is_host_alias(const char *, struct query *);
-char *host_fqdn(int required);
+
+/** Try to obtain fully qualified hostname of current host. Exit with
+ * PS_DNS if \a required is true and there is a DNS error. Exit with
+ * PS_DNS if gethostname() fails, independent of the value of \a
+ * required.
+ * \return
+ * - fully qualified hostname if \a required is non-zero.
+ * - unqualified or fully qualified hostname if \a required is zero (0).
+ */
+char *host_fqdn(int required /** exit with PS_DNS if the name cannot be qualified */);
 char *rfc822timestamp(void);
 flag is_a_file(int);
 char *rfc2047e(const char*, const char *);
