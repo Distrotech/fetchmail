@@ -201,7 +201,7 @@ fetchmail 6.3.0 (not yet released officially):
 * Operating systems that do not support at least one of gethostbyname,
   gethostbyname_r, getipnodebyname are no longer supported.  Matthias Andree.
 * Fixes to --with-hesiod option. Sunil Shetye. (MA)
-* Delete oversized messages with the news --limitflush option. Debian
+* Delete oversized messages with the new --limitflush option. Debian
   Bug#212240. Sunil Shetye. (MA)
 * Fix MacOS X compilation failures in sink.c (ru_*time has incomplete type).
   Berlios Bug #4725. Matthias Andree.
