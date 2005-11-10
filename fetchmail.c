@@ -922,7 +922,7 @@ static void optmerge(struct query *h2, struct query *h1, int force)
  *         - false if servers found on the command line */
 static int load_params(int argc, char **argv, int optind)
 {
-    int	implicitmode, st, use_kerberos;
+    int	implicitmode, st;
     struct passwd *pw;
     struct query def_opts, *ctl;
     struct stat rcstat;
@@ -1070,20 +1070,18 @@ static int load_params(int argc, char **argv, int optind)
      * If we're using Kerberos for authentication, we need 
      * the FQDN in order to generate capability keys.
      */
-    use_kerberos = 0;
-    /* use_kerberos is saved until later to properly set the invisible
-     * --smtphost (aka. smtphunt) default */
     for (ctl = querylist; ctl; ctl = ctl->next)
 	if (ctl->active && 
 		(ctl->server.protocol==P_ETRN || ctl->server.protocol==P_ODMR
 		 || ctl->server.authenticate == A_KERBEROS_V4
 		 || ctl->server.authenticate == A_KERBEROS_V5))
 	{
-	    use_kerberos = 1;
+	    fetchmailhost = host_fqdn(1);
 	    break;
 	}
 
-    fetchmailhost = host_fqdn(use_kerberos);
+    if (!ctl) /* list exhausted */
+	fetchmailhost = host_fqdn(0);
 
     /* this code enables flags to be turned off */
 #define DEFAULT(flag, dflt)	if (flag == FLAG_TRUE)\
@@ -1158,7 +1156,7 @@ static int load_params(int argc, char **argv, int optind)
 	     * Make sure we have a nonempty host list to forward to.
 	     */
 	    if (!ctl->smtphunt)
-		save_str(&ctl->smtphunt, use_kerberos ? fetchmailhost : "localhost", FALSE);
+		save_str(&ctl->smtphunt, "localhost", FALSE);
 
 	    /*
 	     * Make sure we have a nonempty list of domains to fetch from.

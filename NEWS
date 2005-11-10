@@ -29,6 +29,10 @@ fetchmail 6.3.0 (not yet released officially):
   (1997) or v3 (2001, aka IEEE Std 1003.1-2001) are no longer supported. They
   may continue to work and non-intrusive patches to support them may be
   accepted.  Matthias Andree
+* The default for --smtphost is now always "localhost" regardless of
+  authentication types and protocols, so as to simplify configurations for
+  workstations where the SMTP daemon only listens on the loopback interface.
+  Sunil Shetye & Matthias Andree
 
 # OBSOLETION WARNINGS
 * The MX and host alias lookups that fetchmail performs in multidrop mode are

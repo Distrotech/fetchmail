@@ -437,15 +437,13 @@ Specify a hunt list of hosts to forward mail to (one or more
 hostnames, comma-separated). Hosts are tried in list order; the first
 one that is up becomes the forwarding target for the current run.
 The default depends on the authentication methods and protocols used on
-the active servers. If Kerberos is used for authentication or the ODMR
-or ETRN protocol is used for any active server, the FQDN of the machine
-running fetchmail is used as a default for smtphost. Otherwise,
-'localhost' is used as a default.  Each hostname may have a port number
-following the host name.  The port number is separated from the host
-name by a slash; the default port is 25 (or "smtp" under IPv6).  If you
-specify an absolute path name (beginning with a /), it will be
-interpreted as the name of a UNIX socket accepting LMTP connections
-(such as is supported by the Cyrus IMAP daemon)
+the active servers. If this option is not specified, 'localhost' is used
+as a default.  Each hostname may have a port number following the host
+name.  The port number is separated from the host name by a slash; the
+default port is 25 (or "smtp" under IPv6).  If you specify an absolute
+path name (beginning with a /), it will be interpreted as the name of a
+UNIX socket accepting LMTP connections (such as is supported by the
+Cyrus IMAP daemon)
 Example:
 .sp
 .nf
@@ -465,8 +463,7 @@ default is the FQDN of the machine running
 .B \-D <domain> | \-\-smtpaddress <domain>
 (Keyword: smtpaddress) Specify the domain to be appended to addresses
 in RCPT TO lines shipped to SMTP. The name of the SMTP server (as
-specified by --smtphost, or defaulted to "localhost") is used when
-this is not specified.
+specified by --smtphost, which see) is used when this is not specified.
 .TP
 .B \-\-smtpname <user@domain>
 (Keyword: smtpname)
@@ -507,9 +504,9 @@ you will lose mail.
 .B \-\-lmtp
 (Keyword: lmtp)
 Cause delivery via LMTP (Local Mail Transfer Protocol).  A service
-port \fImust\fR be explicitly specified (with a slash suffix) on each
-host in the smtphost hunt list if this option is selected; the
-default port 25 will (in accordance with RFC 2033) not be accepted.
+host and port \fBmust\fR be explicitly specified on each host in the
+smtphost hunt list (see above) if this option is selected; the default
+port 25 will (in accordance with RFC 2033) not be accepted.
 .TP
 .B \-\-bsmtp <filename>
 (keyword: bsmtp)
@@ -2412,9 +2409,6 @@ The -f - option (reading a configuration from stdin) is incompatible
 with the plugin option.
 .PP
 The 'principal' option only handles Kerberos IV, not V.
-.PP
-The --smtphost defaults may not be adequate for your system. In doubt,
-specify this option explicitly to set your forward destination.
 .PP
 Send comments, bug reports, gripes, and the like to the
 fetchmail-devel list <fetchmail-devel@lists.berlios.de>.  An HTML FAQ is
