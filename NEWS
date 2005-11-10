@@ -273,6 +273,7 @@ fetchmail 6.3.0 (not yet released officially):
   if we cannot qualify our own hostname, so we aren't losing the bounce.
   Instead, pass the buck on to the SMTP server and use our own unqualified
   hostname. Matthias Andree
+* Revise some error messages so they are less confusing. Sunil Shetye.
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.

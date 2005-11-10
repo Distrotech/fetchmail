@@ -1510,13 +1510,14 @@ is restored."));
 	break;
     }
     if (msg) {
-	const char *stem;
-
-	if (phase == FORWARDING_WAIT || phase == LISTENER_WAIT)
-	    stem = GT_("%s error while delivering to SMTP host %s\n");
+	if (phase == FORWARDING_WAIT || phase == LISTENER_WAIT
+		|| err == PS_SMTP)
+	    report(stderr, GT_("%s error while fetching from %s@%s and delivering to SMTP host %s\n"),
+		    msg, ctl->remotename, ctl->server.pollname,
+		    ctl->smtphost ? ctl->smtphost : GT_("unknown"));
 	else
-	    stem = GT_("%s error while fetching from %s\n");
-	report(stderr, stem, msg, ctl->server.pollname);
+	    report(stderr, GT_("%s error while fetching from %s@%s\n"),
+		    msg, ctl->remotename, ctl->server.pollname);
     }
 
 closeUp:

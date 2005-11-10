@@ -1273,7 +1273,7 @@ int doPOP3 (struct query *ctl)
 {
 #ifndef MBOX
     if (ctl->mailboxes->id) {
-	fprintf(stderr,GT_("Option --remote is not supported with POP3\n"));
+	fprintf(stderr,GT_("Option --folder is not supported with POP3\n"));
 	return(PS_SYNTAX);
     }
 #endif /* MBOX */

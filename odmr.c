@@ -245,7 +245,7 @@ int doODMR (struct query *ctl)
 	return(PS_SYNTAX);
     }
     if (ctl->mailboxes->id) {
-	fprintf(stderr, GT_("Option --remote is not supported with ODMR\n"));
+	fprintf(stderr, GT_("Option --folder is not supported with ODMR\n"));
 	return(PS_SYNTAX);
     }
     if (check_only) {

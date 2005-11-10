@@ -156,7 +156,7 @@ int doETRN (struct query *ctl)
 	return(PS_SYNTAX);
     }
     if (ctl->mailboxes->id) {
-	fprintf(stderr, GT_("Option --remote is not supported with ETRN\n"));
+	fprintf(stderr, GT_("Option --folder is not supported with ETRN\n"));
 	return(PS_SYNTAX);
     }
     if (check_only) {
