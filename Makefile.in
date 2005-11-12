@@ -3,8 +3,8 @@
 # If you're running QNX, we can't assume a working autoconf.
 # So just uncomment all the lines marked QNX.
 
-PACKAGE = fetchmail
-VERSION = 6.2.5.2
+PACKAGE = @PACKAGE_NAME@
+VERSION = @PACKAGE_VERSION@
 
 # Ultrix 2.2 make doesn't expand the value of VPATH.
 srcdir = @srcdir@
@@ -41,7 +41,7 @@ defines = $(DEFS)
 
 # If your system needs extra libraries loaded in, define them here.
 # In particular, add -lresolv if you are running bind 4.9.5
-LOADLIBS = @LIBS@ @INTLLIBS@ @LEXLIB@
+LOADLIBS = @LIBS@ @LIBINTL@ @LEXLIB@
 # LOADLIBS = -lsocket3r -lunix3r	# QNX
 
 # Extra sources/objects for library functions not provided on the host system.
@@ -122,14 +122,12 @@ all: fetchmail po
 fetchmail: $(objs) @INTLDEPS@
 	$(CC) $(LDEFLAGS) $(LDFLAGS) $(objs) $(LOADLIBS) -o fetchmail
 
-intl:
-@INTLDEPS@:	dummy
-	cd intl; $(MAKE)
+.PHONY: intl po
+@INTLDEPS@ intl:
+	cd intl && $(MAKE)
 
-po:	dummy
-	cd po; $(MAKE) top_builddir=..
-
-dummy:
+po:
+	cd po && $(MAKE) top_builddir=..
 
 # Tester for address parsing
 rfc822: rfc822.c

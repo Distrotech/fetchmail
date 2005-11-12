@@ -4,17 +4,15 @@ dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl
 
-AC_INIT([fetchmail], [6.1.2])
+AC_INIT([fetchmail],[6.2.5.3])
 AC_CONFIG_SRCDIR([fetchmail.h])
 AC_CONFIG_HEADERS([config.h])
+dnl obtain ACLOCAL and other substitutions
+AM_INIT_AUTOMAKE
 
 dnl We want these before the checks, so the checks can modify their values.
 test -z "$CFLAGS" && CFLAGS="-O" AC_SUBST(CFLAGS)
-test -z "$LDFLAGS" && LDFLAGS=AC_SUBST(LDFLAGS)
-
-PACKAGE=`sed -n '/PACKAGE *= *\(.*\)/s//\1/p' <$srcdir/Makefile.in`
-VERSION=`sed -n '/VERSION *= *\(.*\)/s//\1/p' <$srcdir/Makefile.in`
-AM_INIT_AUTOMAKE("$PACKAGE", "$VERSION")
+test -z "$LDFLAGS" && LDFLAGS=   AC_SUBST(LDFLAGS)
 
 AC_CANONICAL_HOST
 AC_PROG_CC
@@ -725,9 +723,6 @@ then
   fi
 fi])
 
-INTLDEPS="intl/libintl.a"
-AC_SUBST(INTLDEPS)
-
 AC_CONFIG_FILES([Makefile intl/Makefile po/Makefile.in])
 AC_CONFIG_COMMANDS([default],[
 	# The reason for this odd makedepend line is that we want
@@ -736,6 +731,13 @@ AC_CONFIG_COMMANDS([default],[
 	echo "You can ignore any makedepend error messages:";
 	echo timestamp > stamp-h;
 	(cd $srcdir; makedepend -f - *.c) >>Makefile])
+
+if test $BUILD_INCLUDED_LIBINTL = yes ; then
+    INTLDEPS='$(top_builddir)/intl/libintl.a'
+else
+    INTLDEPS=
+fi
+AC_SUBST(INTLDEPS)
 
 AC_OUTPUT
 dnl Local Variables:

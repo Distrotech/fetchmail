@@ -6,6 +6,9 @@ fetchmail-6.2.5.3  2005-11-12
 
 * SECURITY FIX CVE-2005-3088: fetchmailconf: fix password exposure: use
   umask 077 before opening output file and restore umask later.
+* Build environment: Update included gettext. Fix
+  --with-included-gettext. Fix parallel build (make -j). Fix "always
+  rebuild fetchmail" syndrome.
 
 fetchmail-6.2.5.2
 (patch Fri Jul 22 01:52 GMT 2005,
