@@ -18,7 +18,7 @@ odmr.c
 opie.c
 options.c
 pop3.c
-rcfile_y.c
+rcfile_y.y
 report.c
 rfc822.c
 rpa.c

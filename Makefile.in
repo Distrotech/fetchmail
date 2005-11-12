@@ -127,7 +127,7 @@ intl:
 	cd intl; $(MAKE)
 
 po:	dummy
-	cd po; $(MAKE)
+	cd po; $(MAKE) top_builddir=..
 
 dummy:
 
@@ -230,7 +230,7 @@ config.status: configure
 	./config.status --recheck
 
 $(srcdir)/aclocal.m4: configure.in
-	cd $(srcdir) && @ACLOCAL@
+	cd $(srcdir) && @ACLOCAL@ -I m4
 
 # This tells versions [3.59,3.63) of GNU make not to export all variables.
 .NOEXPORT:
@@ -268,7 +268,7 @@ docs = $(srcdir)/COPYING $(srcdir)/FEATURES $(srcdir)/fetchmail-features.html \
 	$(srcdir)/*.man	$(srcdir)/FAQ $(srcdir)/fetchmail-FAQ.html
 config = $(srcdir)/Makefile.in $(srcdir)/configure.in $(srcdir)/configure \
 	$(srcdir)/config.guess $(srcdir)/config.h.in $(srcdir)/config.sub \
-	$(srcdir)/acconfig.h $(srcdir)/aclocal.m4
+	$(srcdir)/acconfig.h $(srcdir)/aclocal.m4 $(srcdir)/config.rpath
 scripts = $(srcdir)/install-sh $(srcdir)/missing $(srcdir)/mkinstalldirs \
 	$(srcdir)/specgen.sh $(srcdir)/fetchmailconf
 all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) \
@@ -276,7 +276,7 @@ all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) \
 	$(srcdir)/po/* $(srcdir)/intl $(srcdir)/beos/* ABOUT-NLS $(srcdir)/MANIFEST
 
 MANIFEST: $(srcdir) Makefile.in
-	@echo $(all) | tr "[ \t]" '\n' | sed -e '/^\.\//s///' | sort >MANIFEST
+	@echo $(all) | tr "[ \t]" '\n' | sed -e '/^\.\//s///' | grep -vE '~$$|po/Makefile(\.in)?$$|po/POTFILES$$' | sort >MANIFEST
 	@wc -l MANIFEST
 
 distdocs: FAQ FEATURES NOTES fetchmail-man.html
@@ -313,7 +313,7 @@ dist: distclean MANIFEST Makefile.in distdocs
 # Firewall against the lossage in autoconf that keeps breaking our build.
 EX = --exclude "fetchmail-$(VERSION)/intl/libintl.h"
 fetchmail-$(VERSION).tar.gz: $(all)
-	(cd ..; ln -sf fetchmail fetchmail-$(VERSION))
+	(ln -sfn $$(pwd) ../fetchmail-$(VERSION))
 	(cd ..; tar $(EX) -czf fetchmail-$(VERSION).tar.gz `sed <fetchmail-$(VERSION)/MANIFEST s:^:fetchmail-$(VERSION)/:`)
 	mv -f ../fetchmail-$(VERSION).tar.gz .
 	rm ../fetchmail-$(VERSION)

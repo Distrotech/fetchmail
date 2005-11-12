@@ -5,24 +5,20 @@
 #
 set -e
 
-#
-# Refresh GNU gettext, but do not allow symlinks
-#
-rm -f po/Makefile.in.in po/ChangeLog po/ChangeLog~ || true
-gettextize -c -f || true
-
 # The idea is that we make sure we're always using an up-to-date
 # version of all the auto* script chain for the build. The GNU autotools
 # are rather badly designed in that area.
 
-aclocal
+autopoint
+aclocal -I m4
 autoheader
 #automake --verbose --foreign --add-missing
 
 #we don't use symlinks because of debian's build system,
 #but they would be a better choice.
-for i in config.guess config.sub missing install-sh mkinstalldirs ; do
-	test -r /usr/share/automake/${i} && cp -f /usr/share/automake/${i} .
+AM=/usr/share/automake-1.9
+for i in config.guess config.sub missing install-sh ; do
+	test -r ${AM}/${i} && cp -f ${AM}/${i} .
 	chmod 755 ${i}
 done
 

@@ -68,7 +68,6 @@ then
 fi
  
 dnl i18n
-ALL_LINGUAS="ca cs da de el es fr gl ja pl pt_BR tr sk"
 AM_GNU_GETTEXT
 dnl end i18n
 
@@ -724,6 +723,9 @@ then
     AC_EGREP_HEADER(GSS_C_NT_HOSTBASED_SERVICE, gssapi/gssapi.h, AC_DEFINE(HAVE_GSS_C_NT_HOSTBASED_SERVICE))
   fi
 fi])
+
+INTLDEPS="intl/libintl.a"
+AC_SUBST(INTLDEPS)
 
 AC_CONFIG_FILES([Makefile intl/Makefile po/Makefile.in])
 AC_CONFIG_COMMANDS([default],[
