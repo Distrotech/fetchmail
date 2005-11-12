@@ -41,7 +41,7 @@ defines = $(DEFS)
 
 # If your system needs extra libraries loaded in, define them here.
 # In particular, add -lresolv if you are running bind 4.9.5
-LOADLIBS = @LIBS@ @LIBINTL@ @LEXLIB@
+LOADLIBS = @LIBS@ @LIBINTL@ # @LEXLIB@
 # LOADLIBS = -lsocket3r -lunix3r	# QNX
 
 # Extra sources/objects for library functions not provided on the host system.
@@ -123,7 +123,7 @@ fetchmail: $(objs) @INTLDEPS@
 	$(CC) $(LDEFLAGS) $(LDFLAGS) $(objs) $(LOADLIBS) -o fetchmail
 
 .PHONY: intl po
-@INTLDEPS@ intl:
+intl @INTLDEPS@:
 	cd intl && $(MAKE)
 
 po:
@@ -272,7 +272,8 @@ scripts = $(srcdir)/install-sh $(srcdir)/missing $(srcdir)/mkinstalldirs \
 	$(srcdir)/specgen.sh $(srcdir)/fetchmailconf
 all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) \
 	$(srcdir)/rh-config/* $(srcdir)/contrib/*[A-Za-uw-z] \
-	$(srcdir)/po/* $(srcdir)/intl $(srcdir)/beos/* ABOUT-NLS $(srcdir)/MANIFEST
+	$(srcdir)/po/* $(srcdir)/intl $(srcdir)/beos/* ABOUT-NLS $(srcdir)/MANIFEST \
+	rcfile_l.c
 
 MANIFEST: $(srcdir) Makefile.in
 	@echo $(all) | tr "[ \t]" '\n' | sed -e '/^\.\//s///' | grep -vE '~$$|po/Makefile(\.in)?$$|po/POTFILES$$' | sort >MANIFEST

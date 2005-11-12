@@ -9,6 +9,8 @@ fetchmail-6.2.5.3  2005-11-12
 * Build environment: Update included gettext. Fix
   --with-included-gettext. Fix parallel build (make -j). Fix "always
   rebuild fetchmail" syndrome.
+* Ship pre-built rcfile_l.c for systems that don't have flex.
+* Do not link against -ll or -lfl (not needed).
 
 fetchmail-6.2.5.2
 (patch Fri Jul 22 01:52 GMT 2005,
