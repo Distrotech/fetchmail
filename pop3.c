@@ -613,6 +613,8 @@ static int pop3_gettopid( int sock, int num , char *id)
     return 0;
 }
 
+#define str(s) #s
+#define UIDLFMT(n) "%d %" str(n) "s"
 static int pop3_getuidl( int sock, int num , char *id)
 {
     int ok;
@@ -620,7 +622,7 @@ static int pop3_getuidl( int sock, int num , char *id)
     gen_send(sock, "UIDL %d", num);
     if ((ok = pop3_ok(sock, buf)) != 0)
 	return(ok);
-    if (sscanf(buf, "%d %s", &num, id) != 2)
+    if (sscanf(buf, UIDLFMT(IDLEN), &num, id) != 2)
 	return(PS_PROTOCOL);
     return(PS_SUCCESS);
 }
@@ -862,7 +864,7 @@ static int pop3_getrange(int sock,
 		{
  		    if (DOTLINE(buf))
  			break;
- 		    else if (sscanf(buf, "%d %s", &num, id) == 2)
+ 		    else if (sscanf(buf, UIDLFMT(IDLEN), &num, id) == 2)
 		    {
  			struct idlist	*old, *new;
 

@@ -61,6 +61,7 @@ static int pop2_getauth(int sock, struct query *ctl, char *buf)
 		  "HELO %s %s",
 		  ctl->remotename, ctl->password);
     shroud[0] = '\0';
+    return status;
 }
 
 static int pop2_getrange(int sock, struct query *ctl, const char *folder, 

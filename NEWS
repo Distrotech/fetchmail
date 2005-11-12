@@ -2,6 +2,22 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-6.2.5.2
+(patch Fri Jul 22 01:52 GMT 2005,
+ tarball Sat Jul 23 21:34 GMT 2005)
+
+* README: Added a note about release status - READ IT!
+* Note: Due to a Makefile.in bug, you may need to use GNU make.
+* SECURITY FIX: truncate UIDL replies, lest malicious or compromised
+  POP3 servers overflow fetchmail's stack. Debian bug #212762.
+  This is a remote root exploit. CVE Name: CAN-2005-2335.
+  Thanks: Miloslav Trmac for pointing out the fix in 6.2.5.1 was buggy.
+  Thanks: Ludwig Nussel for a much simpler fix.
+* Critical fix: omit blank between MAIL FROM: and <user@example.org>,
+  as this causes mail loss with some listeners.
+* Fix: POP2 driver wouldn't properly check authentication failure.
+* Sunil Shetye's fix to force fetchsizelimit to 1 for APOP and RPOP.
+
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
 * Updated Spanish, Turkish, and German translation files.

@@ -1986,16 +1986,16 @@ writes X-Envelope or an equivalent header into messages in your maildrop.
 Multiple local names can be used to administer a mailing list from the
 client side of a \fIfetchmail\fR collection.  Suppose your name is
 \&`esr', and you want to both pick up your own mail and maintain a mailing
-list called (say) "fetchmail-friends", and you want to keep the alias
+list called (say) "fetchmail-users", and you want to keep the alias
 list on your client machine.
 .PP
-On your server, you can alias \&`fetchmail-friends' to `esr'; then, in
-your \fI.fetchmailrc\fR, declare \&`to esr fetchmail-friends here'.
-Then, when mail including `fetchmail-friends' as a local address
+On your server, you can alias \&`fetchmail-users' to `esr'; then, in
+your \fI.fetchmailrc\fR, declare \&`to esr fetchmail-users here'.
+Then, when mail including `fetchmail-users' as a local address
 gets fetched, the list name will be appended to the list of
 recipients your SMTP listener sees.  Therefore it will undergo alias
 expansion locally.  Be sure to include `esr' in the local alias
-expansion of fetchmail-friends, or you'll never see mail sent only to
+expansion of fetchmail-users, or you'll never see mail sent only to
 the list.  Also be sure that your listener has the "me-too" option set
 (sendmail's -oXm command-line option or OXm declaration) so your name
 isn't removed from alias expansions in messages you send.
@@ -2245,9 +2245,9 @@ you, switch to IMAP4.
 The `principal' option only handles Kerberos IV, not V.
 .PP
 Send comments, bug reports, gripes, and the like to the
-fetchmail-friends list <fetchmail-friends@lists.ccil.org>.  An HTML FAQ is
+fetchmail-users list <fetchmail-users@lists.berlios.de>.  An HTML FAQ is
 available at the fetchmail home page; surf to
-http://www.catb.org/~esr/fetchmail or do a WWW search for pages with
+http://fetchmail.berlios.de or do a WWW search for pages with
 `fetchmail' in their titles.
 
 .SH AUTHOR

@@ -1,3 +1,29 @@
+-----------------------------------------------------------------------
+  fetchmail-6.2.5.2 README
+
+  NOTE that this package is not a full release, but an emergency
+  security rollup release. It is mainly 6.2.5.2 with the security bug
+  CAN-2005-2335 fixed, and a few other important bugs that hurt many
+  people fixed.
+
+  fetchmail is now maintained by
+  Matthias Andree <matthias.andree@gmx.de> and
+  Rob Funk <rfunk@funknet.net>.
+
+  The web site has moved to http://fetchmail.berlios.de/.
+
+  Lots of bugs have NOT been fixed in this release. Please go to
+  the fetchmail home page and see if newer releases are available.
+
+  The documents have NOT been proofread after the switch, there has just
+  been a rough copy & replace procedure to update the links. They may
+  not have caught every link or address, and few documents have been
+  updated to reflect the new maintainers.
+
+  The 6.2.6-pre releases, if they are still available, or the 6.3.X
+  releases should have fewer bugs than this 6.2.5.2 release.
+-----------------------------------------------------------------------
+
 			 fetchmail README
 
 Fetchmail is a free, full-featured, robust, well-documented remote
@@ -40,7 +66,7 @@ can be found in the file todo.html.
 
 You can get the code from the fetchmail home page:
 
-	http://www.catb.org/~esr/fetchmail
+	http://fetchmail.berlios.de
 
 Enjoy!
 
