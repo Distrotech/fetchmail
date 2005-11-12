@@ -2,15 +2,20 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-6.2.5.3  2005-11-12
+
+* SECURITY FIX CVE-2005-3088: fetchmailconf: fix password exposure: use
+  umask 077 before opening output file and restore umask later.
+
 fetchmail-6.2.5.2
 (patch Fri Jul 22 01:52 GMT 2005,
  tarball Sat Jul 23 21:34 GMT 2005)
 
 * README: Added a note about release status - READ IT!
 * Note: Due to a Makefile.in bug, you may need to use GNU make.
-* SECURITY FIX: truncate UIDL replies, lest malicious or compromised
-  POP3 servers overflow fetchmail's stack. Debian bug #212762.
-  This is a remote root exploit. CVE Name: CAN-2005-2335.
+* SECURITY FIX CVE-2005-2335: truncate UIDL replies, lest malicious or
+  compromised POP3 servers overflow fetchmail's stack. Debian bug
+  #212762.  This is a remote root exploit.
   Thanks: Miloslav Trmac for pointing out the fix in 6.2.5.1 was buggy.
   Thanks: Ludwig Nussel for a much simpler fix.
 * Critical fix: omit blank between MAIL FROM: and <user@example.org>,
