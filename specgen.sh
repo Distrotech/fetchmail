@@ -11,7 +11,11 @@ Group:		Applications/Mail
 Group(pt_BR):   Aplicações/Correio Eletrônico
 License:	GPL
 Icon:		fetchmail.xpm
+%if %{_vendor} == "suse"
+Requires:	smtp_daemon
+%else
 Requires:	smtpdaemon
+%endif
 BuildRoot:	/var/tmp/%{name}-%{version}
 Summary:	Full-featured POP/IMAP mail retrieval daemon
 Summary(fr):    Collecteur (POP/IMAP) de courrier électronique
@@ -117,7 +121,7 @@ GUI konfigurator do fetchmaila napisany w pythonie.
 %build
 LDFLAGS="-s"
 export CFLAGS LDFLAGS
-./configure --prefix=/usr --disable-nls --without-kerberos --mandir=%{_mandir} --with-SSL --enable-inet6
+./configure --prefix=/usr --enable-nls --without-kerberos --mandir=%{_mandir} --with-ssl --enable-inet6
                          # Remove --disable-nls, add --without-included-gettext
                          # for internationalization. Also look below.
 make
@@ -140,10 +144,10 @@ rm -rf \$RPM_BUILD_ROOT
 %defattr (644, root, root, 755)
 %doc README NEWS NOTES FAQ COPYING FEATURES contrib
 %doc fetchmail-features.html fetchmail-FAQ.html design-notes.html
-%attr(644, root, man) %{_mandir}/man1/*.1*
+%attr(644, root, root) %{_mandir}/man1/*.1*
 %attr(755, root, root) /usr/bin/fetchmail
-# Uncomment the following to support internationalization
-# %attr(644,root,root) /usr/share/locale/*/LC_MESSAGES/fetchmail.mo
+# Comment the following to disable i18n (internationalization)
+%attr(644,root,root) /usr/share/locale/*/LC_MESSAGES/fetchmail.mo
 # Uncomment the following to make split fetchmail and fetchmailconf packages
 # %files -n fetchmailconf
 %attr(644,root,root) /etc/X11/wmconfig/fetchmailconf
