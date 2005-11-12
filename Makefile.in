@@ -319,13 +319,13 @@ fetchmail-$(VERSION).tar.gz: $(all)
 	rm ../fetchmail-$(VERSION)
 
 # Make RPMs.  You need to be root to make this work
-RPMROOT=/usr/src/redhat
+RPMROOT=/usr/src/packages
 RPM = rpmbuild
 RPMFLAGS = -ba
 rpm: dist
 	cp fetchmail-$(VERSION).tar.gz fetchmail.xpm $(RPMROOT)/SOURCES;
 	$(srcdir)/specgen.sh $(VERSION) >$(RPMROOT)/SPECS/fetchmail.spec
-	cd $(RPMROOT)/SPECS; $(RPM) $(RPMFLAGS) fetchmail.spec	
+	cd $(RPMROOT)/SPECS; $(RPM) $(RPMFLAGS) --target=`arch|sed 's/i[4-9]86/i386/'` fetchmail.spec
 	cp $(RPMROOT)/RPMS/`arch|sed 's/i[4-9]86/i386/'`/fetchmail*-$(VERSION)*.rpm $(srcdir)
 	cp $(RPMROOT)/SRPMS/fetchmail*-$(VERSION)*.src.rpm $(srcdir)
 
