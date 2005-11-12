@@ -199,7 +199,7 @@ distclean: clean
 		config.cache stamp-h stamp-h.in # config.status Makefile
 
 realclean: distclean
-	-rm -f FAQ FEATURES NOTES MANIFEST 
+	-rm -f FAQ FEATURES NOTES MANIFEST TODO
 	-rm -f config.cache config.log Makefile
 	-rm -f fetchmail-*.tar.gz fetchmail-*.i386.rpm 
 
@@ -236,20 +236,21 @@ $(srcdir)/aclocal.m4: configure.in
 .NOEXPORT:
 
 # Special dependencies, not easily handled portably without explicit rules
-rcfile_l.c rcfile_l.h: $(srcdir)/rcfile_l.l
+rcfile_l.c: $(srcdir)/rcfile_l.l rcfile_y.h
 	$(LEX) $(LEXFLAGS) $(srcdir)/rcfile_l.l
 	sed <lex.yy.c >rcfile_l.c -e "/lex\\.yy\\.c/s//rcfile_l.c/"
 	rm -f lex.yy.c
-rcfile_y.c rcfile_y.h: $(srcdir)/rcfile_y.y
+rcfile_y.h: $(srcdir)/rcfile_y.y
 	@echo "expect conflicts:  2 shift/reduce"
-	$(YACC) $(YACCFLAGS) $(srcdir)/rcfile_y.y
-	mv y.tab.c rcfile_y.c
-	mv -f y.tab.h rcfile_y.h
+	$(YACC) $(YACCFLAGS) $(srcdir)/rcfile_y.y && mv y.tab.c rcfile_y.c && mv -f y.tab.h rcfile_y.h
+rcfile_y.c: rcfile_y.h
+	@true
 
 # These must be explicit, because the .c files often don't exist at
 # makefile build time. 
 rcfile_l.o: rcfile_l.c config.h fetchmail.h
 rcfile_y.o: rcfile_y.c config.h fetchmail.h
+fetchmail.h: config.h
 
 parser = $(srcdir)/rcfile_l.l $(srcdir)/rcfile_y.y
 headers = $(srcdir)/fetchmail.h $(srcdir)/socket.h $(srcdir)/smtp.h \
