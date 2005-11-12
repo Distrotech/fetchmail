@@ -6,10 +6,12 @@ fetchmail-6.2.5.3  2005-11-12
 
 * SECURITY FIX CVE-2005-3088: fetchmailconf: fix password exposure: use
   umask 077 before opening output file and restore umask later.
+* Critical fix: fix IMAP timeouts, counting message count down on
+  servers that do not send EXISTS counts after EXPUNGE. Debian Bug#314509.
+* Ship pre-built rcfile_l.c for systems that don't have flex.
 * Build environment: Update included gettext. Fix
   --with-included-gettext. Fix parallel build (make -j). Fix "always
   rebuild fetchmail" syndrome.
-* Ship pre-built rcfile_l.c for systems that don't have flex.
 * Do not link against -ll or -lfl (not needed).
 
 fetchmail-6.2.5.2
