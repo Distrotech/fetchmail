@@ -68,7 +68,8 @@ then
 fi
  
 dnl i18n
-AM_GNU_GETTEXT([0.14])
+AM_GNU_GETTEXT
+AM_GNU_GETTEXT_VERSION([0.14])
 dnl end i18n
 
 # Under sysV68, socket and friends are provided by the C library.
