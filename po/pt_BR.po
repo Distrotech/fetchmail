@@ -1,0 +1,1820 @@
+# pt_BR translation for fetchmail 5.4.4
+# Copyright (C) 1999 Free Software Foundation, Inc.
+# Tradução e revisão
+# Jorge Godoy <godoy@conectiva.com.br>, 1998
+# Marcia Norie Nakaza <norie@conectiva.com.br>, 2000 
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: fetchmail-5.4.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-11-12 14:37+0100\n"
+"PO-Revision-Date: 2000-07-28 09:40-03:00\n"
+"Last-Translator: Marcia Norie Nakaza <norie@conectiva.com.br>\n"
+"Language-Team: pt_BR <ldp-br@bazar.conectiva.com.br>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: fetchmail.h:590
+#, fuzzy
+msgid "alloca failed"
+msgstr "malloc falhou\n"
+
+#~ msgid "Checking if %s is really the same node as %s\n"
+#~ msgstr "Checando se %s é realmente o mesmo nó que %s\n"
+
+#~ msgid "Yes, their IP addresses match\n"
+#~ msgstr "Sim, o endereço IP deles bate\n"
+
+#~ msgid "No, their IP addresses don't match\n"
+#~ msgstr "Não, o endereço IP deles não bate\n"
+
+#~ msgid "nameserver failure while looking for `%s' during poll of %s.\n"
+#~ msgstr ""
+#~ "falha na resolução de nomes ao procurar por `%s' durante a consulta de %"
+#~ "s.\n"
+
+#~ msgid "could not decode BASE64 challenge\n"
+#~ msgstr "não foi possível decodificar o desafio BASE64\n"
+
+#, fuzzy
+#~ msgid "decoded as %s\n"
+#~ msgstr "acordado em %s\n"
+
+#~ msgid "kerberos error %s\n"
+#~ msgstr "erro kerberos %s\n"
+
+#~ msgid "krb5_sendauth: %s [server says '%*s'] \n"
+#~ msgstr "krb5_sendauth: %s [servidor informa '%*s'] \n"
+
+#~ msgid "\t%d msg %d octets long skipped by fetchmail.\n"
+#~ msgstr "\t%d mensagem %d octetos de tamanho pulada pelo fetchmail.\n"
+
+#, fuzzy
+#~ msgid "skipping message %s@%s:%d"
+#~ msgstr "pulando a mensagem %d (%d octetos)"
+
+#, fuzzy
+#~ msgid "skipping message %s@%s:%d (%d octets)"
+#~ msgstr "pulando a mensagem %d (%d octetos)"
+
+#, fuzzy
+#~ msgid " (oversized)"
+#~ msgstr " (muito grande, %d octetos)"
+
+#, fuzzy
+#~ msgid "reading message %s@%s:%d of %d"
+#~ msgstr "lendo mensagem %d de %d"
+
+#~ msgid " (%d %soctets)"
+#~ msgstr " (%d %soctetos)"
+
+#~ msgid "header "
+#~ msgstr "cabeçalho "
+
+#~ msgid " (%d body octets) "
+#~ msgstr " (%d octetos no corpo da mensagem) "
+
+#, fuzzy
+#~ msgid ""
+#~ "message %s@%s:%d was not the expected length (%d actual != %d expected)\n"
+#~ msgstr ""
+#~ "mensagem %d não possui o tamanho esperado (%d atual != %d esperado)\n"
+
+#~ msgid " retained\n"
+#~ msgstr " retida\n"
+
+#~ msgid " flushed\n"
+#~ msgstr " eliminada\n"
+
+#~ msgid " not flushed\n"
+#~ msgstr " não eliminada\n"
+
+#, fuzzy
+#~ msgid "fetchlimit %d reached; %d messages left on server %s account %s\n"
+#~ msgstr ""
+#~ "limite de %d mensagens a recuperar atingido; %d mensagens mantidas no "
+#~ "servidor\n"
+
+#~ msgid "SIGPIPE thrown from an MDA or a stream socket error\n"
+#~ msgstr "Um MDA enviou um SIGPIPE ou houve um erro de socket\n"
+
+#~ msgid "timeout after %d seconds waiting to connect to server %s.\n"
+#~ msgstr ""
+#~ "tempo esgotado após %d segundos esperando para conectar ao servidor %s.\n"
+
+#~ msgid "timeout after %d seconds waiting for server %s.\n"
+#~ msgstr "tempo esgotado após %d segundos esperando pelo servidor %s.\n"
+
+#~ msgid "timeout after %d seconds waiting for %s.\n"
+#~ msgstr "tempo esgotado após %d segundos esperando por %s.\n"
+
+#~ msgid "timeout after %d seconds waiting for listener to respond.\n"
+#~ msgstr ""
+#~ "tempo esgotado após %d segundos esperando pelo receptor responder.\n"
+
+#~ msgid "timeout after %d seconds.\n"
+#~ msgstr "tempo esgotado após %d segundos.\n"
+
+#~ msgid "Subject: fetchmail sees repeated timeouts\n"
+#~ msgstr ""
+#~ "Assunto: o fetchmail tem notado repetidos vencimentos de temporização\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "Fetchmail saw more than %d timeouts while attempting to get mail from %s@%"
+#~ "s.\n"
+#~ msgstr ""
+#~ "Fetchmail notou mais que %d vencimentos de temporização enquanto tentava "
+#~ "baixar mensagens de %s@%s.\n"
+
+#~ msgid ""
+#~ "This could mean that your mailserver is stuck, or that your SMTP\n"
+#~ "server is wedged, or that your mailbox file on the server has been\n"
+#~ "corrupted by a server error.  You can run `fetchmail -v -v' to\n"
+#~ "diagnose the problem.\n"
+#~ "\n"
+#~ "Fetchmail won't poll this mailbox again until you restart it.\n"
+#~ msgstr ""
+#~ "Isto pode significar que seu servidor de email está travado, ou\n"
+#~ "que seu servidor SMTP está emperrado, ou que seu arquivo de caixa postal\n"
+#~ "no servidor foi corrompido por um erro do servidor. Você pode rodar\n"
+#~ "`fetchmail -v -v' para diagnosticar o problema.\n"
+#~ "\n"
+#~ "Fetchmail não vai consultar mais esta caixa postal até que seja "
+#~ "reiniciado.\n"
+
+#~ msgid "pre-connection command failed with status %d\n"
+#~ msgstr "comando de pré-conexão falhou com status %d\n"
+
+#~ msgid "couldn't find HESIOD pobox for %s\n"
+#~ msgstr "não foi possível encontrar caixa postal HESIOD para %s\n"
+
+#~ msgid "Lead server has no name.\n"
+#~ msgstr "Servidor líder não possui nome.\n"
+
+#, fuzzy
+#~ msgid "couldn't find canonical DNS name of %s (%s)\n"
+#~ msgstr "não foi possível encontrar o nome de DNS canônico para %s\n"
+
+#, fuzzy
+#~ msgid "internal inconsistency\n"
+#~ msgstr "fetchmail: inconsistência interna\n"
+
+#, fuzzy
+#~ msgid "%s connection to %s failed"
+#~ msgstr "Conexão %cMTP com %s falhou\n"
+
+#~ msgid "host is unknown."
+#~ msgstr "a máquina é desconhecida."
+
+#~ msgid "name is valid but has no IP address."
+#~ msgstr "o nome válido mas sem endereço IP."
+
+#~ msgid "unrecoverable name server error."
+#~ msgstr "erro irrecuperável no servidor de nomes."
+
+#~ msgid "temporary name server error."
+#~ msgstr "erro temporário no servidor de nomes."
+
+#~ msgid "unknown DNS error %d."
+#~ msgstr "erro desconhecido de DNS %d."
+
+#, fuzzy
+#~ msgid "SSL connection failed.\n"
+#~ msgstr "Conexão %cMTP com %s falhou\n"
+
+#~ msgid "Lock-busy error on %s@%s\n"
+#~ msgstr "Erro de travamento (lock-busy) para %s@%s\n"
+
+#, fuzzy
+#~ msgid "Server busy error on %s@%s\n"
+#~ msgstr "Erro de travamento (lock-busy) para %s@%s\n"
+
+#, fuzzy
+#~ msgid "Authorization failure on %s@%s%s\n"
+#~ msgstr "Falha de autorização para %s@%s\n"
+
+#, fuzzy
+#~ msgid "Subject: fetchmail authentication failed on %s@%s\n"
+#~ msgstr ""
+#~ "Assunto: falha de autenticação do fetchmail\n"
+#~ "\n"
+
+#~ msgid "Fetchmail could not get mail from %s@%s.\n"
+#~ msgstr "O fetchmail não pôde receber o correio eletrônico de %s@%s.\n"
+
+#, fuzzy
+#~ msgid ""
+#~ "The attempt to get authorization failed.\n"
+#~ "This probably means your password is invalid, but some servers have\n"
+#~ "other failure modes that fetchmail cannot distinguish from this\n"
+#~ "because they don't send useful error messages on login failure.\n"
+#~ "\n"
+#~ "The fetchmail daemon will continue running and attempt to connect\n"
+#~ "at each cycle.  No future notifications will be sent until service\n"
+#~ "is restored."
+#~ msgstr ""
+#~ "A tentativa de obter autorização falhou.\n"
+#~ "Isto provavelmente indica que sua senha é inválida, mas servidores POP3\n"
+#~ "possuem outros tipos de falhas que fetchmail não consegue distinguir "
+#~ "desta\n"
+#~ "pois eles não enviam mensagens de erro úteis durante a falha no login.\n"
+
+#~ msgid "Unknown login or authentication error on %s@%s\n"
+#~ msgstr "Erro desconhecido de login ou autenticação em %s@%s\n"
+
+#, fuzzy
+#~ msgid "Authorization OK on %s@%s\n"
+#~ msgstr "Falha de autorização para %s@%s\n"
+
+#, fuzzy
+#~ msgid "Subject: fetchmail authentication OK on %s@%s\n"
+#~ msgstr ""
+#~ "Assunto: falha de autenticação do fetchmail\n"
+#~ "\n"
+
+#, fuzzy
+#~ msgid "Fetchmail was able to log into %s@%s.\n"
+#~ msgstr "O fetchmail não pôde receber o correio eletrônico de %s@%s.\n"
+
+#, fuzzy
+#~ msgid "Service has been restored.\n"
+#~ msgstr "Serviço escolheu a versão %d.%d do RPA\n"
+
+#~ msgid "selecting or re-polling folder %s\n"
+#~ msgstr "selecionando ou tentando novamente baixar mensagens da pasta %s\n"
+
+#~ msgid "selecting or re-polling default folder\n"
+#~ msgstr ""
+#~ "selecionando ou tentando novamente baixar mensagens da pasta padrão\n"
+
+#~ msgid "%s at %s (folder %s)"
+#~ msgstr "%s em %s (pasta %s)"
+
+#~ msgid "%s at %s"
+#~ msgstr "%s em %s"
+
+#~ msgid "Polling %s\n"
+#~ msgstr "Baixando %s\n"
+
+#, fuzzy
+#~ msgid "%d %s (%d %s) for %s"
+#~ msgstr "%d %s (%d visualizadas) para %s"
+
+#~ msgid "messages"
+#~ msgstr "mensagens"
+
+#~ msgid "message"
+#~ msgstr "mensagem"
+
+#~ msgid "%d %s for %s"
+#~ msgstr "%d %s para %s"
+
+#~ msgid " (%d octets).\n"
+#~ msgstr " (%d octetos).\n"
+
+#~ msgid "No mail for %s\n"
+#~ msgstr "Nenhuma mensagem para %s\n"
+
+#~ msgid "socket"
+#~ msgstr "socket"
+
+#~ msgid "missing or bad RFC822 header"
+#~ msgstr "cabeçalho RFC822 ruim ou faltando"
+
+#~ msgid "MDA"
+#~ msgstr "MDA"
+
+#~ msgid "client/server synchronization"
+#~ msgstr "sincronização cliente/servidor"
+
+#~ msgid "client/server protocol"
+#~ msgstr "protocolo cliente/servidor"
+
+#~ msgid "lock busy on server"
+#~ msgstr "arquivo de lock existente no servidor"
+
+#~ msgid "SMTP transaction"
+#~ msgstr "Transação SMTP"
+
+#~ msgid "DNS lookup"
+#~ msgstr "Busca no DNS"
+
+#~ msgid "undefined error\n"
+#~ msgstr "erro não definido\n"
+
+#, fuzzy
+#~ msgid "%s error while delivering to SMTP host %s\n"
+#~ msgstr "erro %s enquanto baixando mensagens de %s\n"
+
+#~ msgid "%s error while fetching from %s\n"
+#~ msgstr "erro %s enquanto baixando mensagens de %s\n"
+
+#~ msgid "post-connection command failed with status %d\n"
+#~ msgstr "comando de pós-conexão falhou com status %d\n"
+
+#~ msgid "Kerberos V4 support not linked.\n"
+#~ msgstr "Suporte a Kerberos V4 não incluído (linkado).\n"
+
+#~ msgid "Kerberos V5 support not linked.\n"
+#~ msgstr "Suporte a Kerberos V5 não incluído (linkado).\n"
+
+#~ msgid "Option --flush is not supported with %s\n"
+#~ msgstr "Opção --flush não é suportada com %s\n"
+
+#~ msgid "Option --all is not supported with %s\n"
+#~ msgstr "Opção --all não é suportada com %s\n"
+
+#~ msgid "Option --limit is not supported with %s\n"
+#~ msgstr "Opção --limit não é suportada com %s\n"
+
+#~ msgid "%s: You don't exist.  Go away.\n"
+#~ msgstr "%s: Você não existe. Vá embora.\n"
+
+#~ msgid "%s: can't determine your host!"
+#~ msgstr "%s: não foi possível determinar sua máquina!"
+
+#~ msgid "gethostbyname failed for %s\n"
+#~ msgstr "gethostbyname falhou para %s\n"
+
+#~ msgid "%s's SMTP listener does not support ESMTP\n"
+#~ msgstr "Servidor SMTP de %s não suporta ESMTP\n"
+
+#~ msgid "%s's SMTP listener does not support ETRN\n"
+#~ msgstr "Servidor SMTP de %s não suporta ETRN\n"
+
+#~ msgid "Queuing for %s started\n"
+#~ msgstr "Armazenamento para %s iniciado\n"
+
+#~ msgid "No messages waiting for %s\n"
+#~ msgstr "Nenhuma mensagem esperando para %s\n"
+
+#~ msgid "Pending messages for %s started\n"
+#~ msgstr "Mensagens pendentes para %s iniciadas\n"
+
+#~ msgid "Unable to queue messages for node %s\n"
+#~ msgstr "Incapaz de armazenar mensagens para o nó %s\n"
+
+#~ msgid "Node %s not allowed: %s\n"
+#~ msgstr "Nó %s não permitido: %s\n"
+
+#~ msgid "ETRN syntax error\n"
+#~ msgstr "Erro de sintaxe ETRN\n"
+
+#~ msgid "ETRN syntax error in parameters\n"
+#~ msgstr "Erro de sintaxe nos parâmetros ETRN\n"
+
+#~ msgid "Unknown ETRN error %d\n"
+#~ msgstr "Erro ETRN desconhecido %d\n"
+
+#~ msgid "Option --keep is not supported with ETRN\n"
+#~ msgstr "Opção --keep não é compatível com ETRN\n"
+
+#~ msgid "Option --flush is not supported with ETRN\n"
+#~ msgstr "Opção --flush não é compatível com ETRN\n"
+
+#~ msgid "Option --remote is not supported with ETRN\n"
+#~ msgstr "Opção --remote não é compatível com ETRN\n"
+
+#~ msgid "Option --check is not supported with ETRN\n"
+#~ msgstr "Opção --check não é compatível com ETRN\n"
+
+#, fuzzy
+#~ msgid "fetchmail: invoked with"
+#~ msgstr "fetchmail: fork falhou\n"
+
+#~ msgid "This is fetchmail release %s"
+#~ msgstr "Este é o fetchmail versão %s"
+
+#~ msgid "Taking options from command line%s%s\n"
+#~ msgstr "Utilizando opções da linha de comando%s%s\n"
+
+#~ msgid " and "
+#~ msgstr " e "
+
+#~ msgid "No mailservers set up -- perhaps %s is missing?\n"
+#~ msgstr ""
+#~ "Nenhum servidor de correio eletrônico configurado -- talvez %s esteja "
+#~ "faltando?\n"
+
+#~ msgid "fetchmail: no mailservers have been specified.\n"
+#~ msgstr ""
+#~ "fetchmail: nenhum servidor de correio eletrônico foi especificado.\n"
+
+#~ msgid "fetchmail: no other fetchmail is running\n"
+#~ msgstr "fetchmail: nenhum outro fetchmail está rodando\n"
+
+#~ msgid "fetchmail: error killing %s fetchmail at %d; bailing out.\n"
+#~ msgstr "fetchmail: erro eliminando %s fetchmail em %d; desistindo.\n"
+
+#~ msgid "background"
+#~ msgstr "segundo plano"
+
+#~ msgid "foreground"
+#~ msgstr "primeiro plano"
+
+#~ msgid "fetchmail: %s fetchmail at %d killed.\n"
+#~ msgstr "fetchmail: %s fetchmail em %d terminado.\n"
+
+#~ msgid ""
+#~ "fetchmail: can't check mail while another fetchmail to same host is "
+#~ "running.\n"
+#~ msgstr ""
+#~ "fetchmail: não é possível checar por mensagens enquanto outro fetchmail "
+#~ "está rodando para a mesma máquina.\n"
+
+#~ msgid ""
+#~ "fetchmail: can't poll specified hosts with another fetchmail running at %"
+#~ "d.\n"
+#~ msgstr ""
+#~ "fetchmail: não é possível receber mensagens das máquinas especificadas\n"
+#~ "enquanto houver outro fetchmail rodando em %d.\n"
+
+#~ msgid "fetchmail: another foreground fetchmail is running at %d.\n"
+#~ msgstr "fetchmail: outro fetchmail está rodando em primeiro plano em %d.\n"
+
+#~ msgid ""
+#~ "fetchmail: can't accept options while a background fetchmail is running.\n"
+#~ msgstr ""
+#~ "fetchmail: não é possível aceitar opções com outro fetchmail rodando em \n"
+#~ "segundo plano.\n"
+
+#~ msgid "fetchmail: background fetchmail at %d awakened.\n"
+#~ msgstr "fetchmail: fetchmail rodando em segundo plano em %d despertado.\n"
+
+#~ msgid "fetchmail: elder sibling at %d died mysteriously.\n"
+#~ msgstr ""
+#~ "fetchmail: processo mais antigo rodando em %d morreu misteriosamente.\n"
+
+#, fuzzy
+#~ msgid "fetchmail: can't find a password for %s@%s.\n"
+#~ msgstr "fetchmail: não é possível encontrar uma senha para %s@s.\n"
+
+#~ msgid "Enter password for %s@%s: "
+#~ msgstr "Digite a senha para %s@%s: "
+
+#~ msgid "starting fetchmail %s daemon \n"
+#~ msgstr "iniciando fetchmail %s como daemon \n"
+
+#~ msgid "couldn't time-check %s (error %d)\n"
+#~ msgstr "não foi possível fazer checagem de horário de %s (erro %d)\n"
+
+#~ msgid "restarting fetchmail (%s changed)\n"
+#~ msgstr "reiniciando fetchmail (%s mudou) \n"
+
+#~ msgid "attempt to re-exec fetchmail failed\n"
+#~ msgstr "tentativa de re-executar fetchmail falhou.\n"
+
+#~ msgid "poll of %s skipped (failed authentication or too many timeouts)\n"
+#~ msgstr ""
+#~ "consulta de %s pulada (falha de autenticação ou muitos vencimentos de "
+#~ "temporização)\n"
+
+#~ msgid "interval not reached, not querying %s\n"
+#~ msgstr "intervalo não atingido, não consultando %s\n"
+
+#, fuzzy
+#~ msgid "Query status=0 (SUCCESS)\n"
+#~ msgstr "Situação da consulta=%d\n"
+
+#, fuzzy
+#~ msgid "Query status=1 (NOMAIL)\n"
+#~ msgstr "Situação da consulta=%d\n"
+
+#, fuzzy
+#~ msgid "Query status=2 (SOCKET)\n"
+#~ msgstr "Situação da consulta=%d\n"
+
+#, fuzzy
+#~ msgid "Query status=3 (AUTHFAIL)\n"
+#~ msgstr "Situação da consulta=%d\n"
+
+#, fuzzy
+#~ msgid "Query status=4 (PROTOCOL)\n"
+#~ msgstr "Situação da consulta=%d\n"
+
+#, fuzzy
+#~ msgid "Query status=5 (SYNTAX)\n"
+#~ msgstr "Situação da consulta=%d\n"
+
+#, fuzzy
+#~ msgid "Query status=6 (IOERR)\n"
+#~ msgstr "Situação da consulta=%d\n"
+
+#, fuzzy
+#~ msgid "Query status=7 (ERROR)\n"
+#~ msgstr "Situação da consulta=%d\n"
+
+#, fuzzy
+#~ msgid "Query status=8 (EXCLUDE)\n"
+#~ msgstr "Situação da consulta=%d\n"
+
+#, fuzzy
+#~ msgid "Query status=9 (LOCKBUSY)\n"
+#~ msgstr "Situação da consulta=%d\n"
+
+#, fuzzy
+#~ msgid "Query status=10 (SMTP)\n"
+#~ msgstr "Situação da consulta=%d\n"
+
+#, fuzzy
+#~ msgid "Query status=11 (DNS)\n"
+#~ msgstr "Situação da consulta=%d\n"
+
+#, fuzzy
+#~ msgid "Query status=12 (BSMTP)\n"
+#~ msgstr "Situação da consulta=%d\n"
+
+#, fuzzy
+#~ msgid "Query status=13 (MAXFETCH)\n"
+#~ msgstr "Situação da consulta=%d\n"
+
+#~ msgid "Query status=%d\n"
+#~ msgstr "Situação da consulta=%d\n"
+
+#~ msgid "All connections are wedged.  Exiting.\n"
+#~ msgstr "Todas as conexões estão travadas. Encerrando.\n"
+
+#, fuzzy
+#~ msgid "sleeping at %s\n"
+#~ msgstr "fetchmail: `dormindo' em %s\n"
+
+#~ msgid "awakened by %s\n"
+#~ msgstr "acordado por %s\n"
+
+#~ msgid "awakened by signal %d\n"
+#~ msgstr "acordado pelo sinal %d\n"
+
+#~ msgid "awakened at %s\n"
+#~ msgstr "acordado em %s\n"
+
+#~ msgid "normal termination, status %d\n"
+#~ msgstr "encerramento normal, status %d\n"
+
+#~ msgid "couldn't time-check the run-control file\n"
+#~ msgstr ""
+#~ "não foi possível checar o horário do arquivo de controle de execução\n"
+
+#~ msgid "Warning: multiple mentions of host %s in config file\n"
+#~ msgstr ""
+#~ "Atenção: múltiplas entradas para a máquina %s no arquivo de configuração\n"
+
+#, fuzzy
+#~ msgid "SSL support is not compiled in.\n"
+#~ msgstr "O suporte a POP2 não está configurado.\n"
+
+#~ msgid ""
+#~ "fetchmail: warning: no DNS available to check multidrop fetches from %s\n"
+#~ msgstr ""
+#~ "fetchmail: warning: nenhum DNS disponível para checar buscas com "
+#~ "múltiplas\n"
+#~ "entregas de %s\n"
+
+#~ msgid "%s configuration invalid, port number cannot be negative\n"
+#~ msgstr ""
+#~ "configuração de %s inválida, número da porta não pode ser negativo\n"
+
+#~ msgid "%s configuration invalid, RPOP requires a privileged port\n"
+#~ msgstr "configuração de %s inválida, o RPOP exige uma porta privilegiada\n"
+
+#~ msgid "%s configuration invalid, LMTP can't use default SMTP port\n"
+#~ msgstr ""
+#~ "configuração de %s inválida, LMTP não pode usar a porta SMTP padrão\n"
+
+#~ msgid "Both fetchall and keep on in daemon mode is a mistake!\n"
+#~ msgstr "fetchall e modo daemon juntos está errado!\n"
+
+#~ msgid "terminated with signal %d\n"
+#~ msgstr "encerrado com o sinal %d\n"
+
+#, fuzzy
+#~ msgid "%s querying %s (protocol %s) at %s: poll started\n"
+#~ msgstr "%s consultando %s (protocolo %s) em %s\n"
+
+#~ msgid "POP2 support is not configured.\n"
+#~ msgstr "O suporte a POP2 não está configurado.\n"
+
+#~ msgid "POP3 support is not configured.\n"
+#~ msgstr "O suporte a POP3 não está configurado.\n"
+
+#~ msgid "IMAP support is not configured.\n"
+#~ msgstr "O suporte a IMAP não está configurado.\n"
+
+#~ msgid "ETRN support is not configured.\n"
+#~ msgstr "O suporte a ETRN não está configurado.\n"
+
+#~ msgid "Cannot support ETRN without gethostbyname(2).\n"
+#~ msgstr "Não é possível usar ETRN sem a função gethostbyname(2).\n"
+
+#, fuzzy
+#~ msgid "ODMR support is not configured.\n"
+#~ msgstr "O suporte a POP2 não está configurado.\n"
+
+#, fuzzy
+#~ msgid "Cannot support ODMR without gethostbyname(2).\n"
+#~ msgstr "Não é possível usar ETRN sem a função gethostbyname(2).\n"
+
+#~ msgid "unsupported protocol selected.\n"
+#~ msgstr "protocolo não suportado escolhido.\n"
+
+#, fuzzy
+#~ msgid "%s querying %s (protocol %s) at %s: poll completed\n"
+#~ msgstr "%s consultando %s (protocolo %s) em %s\n"
+
+#~ msgid "Poll interval is %d seconds\n"
+#~ msgstr "Intervalo de consulta é %d segundos\n"
+
+#~ msgid "Logfile is %s\n"
+#~ msgstr "Arquivo de registro é %s\n"
+
+#~ msgid "Idfile is %s\n"
+#~ msgstr "Arquivo de identificação é %s\n"
+
+#~ msgid "Progress messages will be logged via syslog\n"
+#~ msgstr "Mensagens de progresso serão gravadas pelo syslog\n"
+
+#~ msgid "Fetchmail will masquerade and will not generate Received\n"
+#~ msgstr "Fetchmail fará mascaramento e não gerará `Received'\n"
+
+#~ msgid "Fetchmail will forward misaddressed multidrop messages to %s.\n"
+#~ msgstr "Fetchmail reenviará mensagens multidrop mal endereçadas para %s.\n"
+
+#~ msgid "Fetchmail will direct error mail to the postmaster.\n"
+#~ msgstr ""
+#~ "Fetchmail irá enviar mensagens de correio de erro para o postmaster.\n"
+
+#~ msgid "Fetchmail will direct error mail to the sender.\n"
+#~ msgstr ""
+#~ "Fetchmail irá enviar mensagens de correio de erro para o remetente.\n"
+
+#~ msgid "Options for retrieving from %s@%s:\n"
+#~ msgstr "Opções para consulta de %s@%s:\n"
+
+#~ msgid "  Mail will be retrieved via %s\n"
+#~ msgstr "  Mensagens serão recuperadas via %s\n"
+
+#~ msgid "  Poll of this server will occur every %d intervals.\n"
+#~ msgstr "  Consulta deste servidor irá ocorrer a cada %d intervalos.\n"
+
+#~ msgid "  True name of server is %s.\n"
+#~ msgstr "  O verdadeiro nome do servidor é %s.\n"
+
+#~ msgid "  This host %s be queried when no host is specified.\n"
+#~ msgstr ""
+#~ "  Esta máquina %s será consultada quando nenhuma máquina for\n"
+#~ "especificada.\n"
+
+#~ msgid "will not"
+#~ msgstr "não"
+
+#~ msgid "will"
+#~ msgstr " "
+
+#~ msgid "  Password will be prompted for.\n"
+#~ msgstr "  A senha será solicitada.\n"
+
+#~ msgid "  APOP secret = \"%s\".\n"
+#~ msgstr "  Segredo APOP = \"%s\".\n"
+
+#~ msgid "  RPOP id = \"%s\".\n"
+#~ msgstr "  Identificação RPOP = \"%s\".\n"
+
+#~ msgid "  Password = \"%s\".\n"
+#~ msgstr "   Senha = \"%s\".\n"
+
+#~ msgid "  Protocol is KPOP with Kerberos %s authentication"
+#~ msgstr "  Protocolo é KPOP com autenticação Kerberos %s"
+
+#~ msgid "  Protocol is %s"
+#~ msgstr "  Protocolo é %s"
+
+#~ msgid " (using service %s)"
+#~ msgstr " (usando serviço %s)"
+
+#~ msgid " (using network security options %s)"
+#~ msgstr " (usando opções de segurança de rede %s)"
+
+#~ msgid " (using port %d)"
+#~ msgstr " (usando porta %d)"
+
+#~ msgid " (using default port)"
+#~ msgstr " (usando porta padrão)"
+
+#~ msgid " (forcing UIDL use)"
+#~ msgstr " (forçando o uso de UIDL)"
+
+#, fuzzy
+#~ msgid "  Password authentication will be forced.\n"
+#~ msgstr "Autenticação OTP é suportada\n"
+
+#, fuzzy
+#~ msgid "  NTLM authentication will be forced.\n"
+#~ msgstr "Autenticação NTLM é suportada\n"
+
+#, fuzzy
+#~ msgid "  OTP authentication will be forced.\n"
+#~ msgstr "Autenticação OTP é suportada\n"
+
+#, fuzzy
+#~ msgid "  CRAM-Md5 authentication will be forced.\n"
+#~ msgstr "Autenticação CRAM-MD5 é suportada\n"
+
+#, fuzzy
+#~ msgid "  GSSAPI authentication will be forced.\n"
+#~ msgstr "Autenticação GSS é suportada\n"
+
+#, fuzzy
+#~ msgid "  Kerberos V4 authentication will be forced.\n"
+#~ msgstr "  Pré-autenticação Kerberos V4 ativada.\n"
+
+#, fuzzy
+#~ msgid "  Kerberos V5 authentication will be forced.\n"
+#~ msgstr "  Pré-autenticação Kerberos V5 ativada.\n"
+
+#~ msgid "  End-to-end encryption assumed.\n"
+#~ msgstr "  Criptografia end-to-end assumida.\n"
+
+#, fuzzy
+#~ msgid "  SSL protocol: %s.\n"
+#~ msgstr "  Protocolo é %s"
+
+#~ msgid "  Server nonresponse timeout is %d seconds"
+#~ msgstr ""
+#~ "  O tempo máximo para não obtenção de resposta do servidor é %d segundos"
+
+#~ msgid " (default).\n"
+#~ msgstr " (padrão).\n"
+
+#~ msgid "  Default mailbox selected.\n"
+#~ msgstr "  Caixa de correio padrão selecionada.\n"
+
+#~ msgid "  Selected mailboxes are:"
+#~ msgstr "  As caixas de correio selecionadas são:"
+
+#~ msgid "  %s messages will be retrieved (--all %s).\n"
+#~ msgstr "  %s mensagens serão recuperadas (--all %s).\n"
+
+#~ msgid "All"
+#~ msgstr "Todas as"
+
+#~ msgid "Only new"
+#~ msgstr "Apenas as novas"
+
+#~ msgid "  Fetched messages %s be kept on the server (--keep %s).\n"
+#~ msgstr ""
+#~ "  As Mensagens baixadas %s serão mantidas no servidor (--keep %s).\n"
+
+#~ msgid ""
+#~ "  Old messages %s be flushed before message retrieval (--flush %s).\n"
+#~ msgstr ""
+#~ "  Mensagens antigas %s serão eliminadas antes da recuperação de "
+#~ "mensagens \n"
+#~ "(--flush %s).\n"
+
+#~ msgid "  Rewrite of server-local addresses is %s (--norewrite %s).\n"
+#~ msgstr ""
+#~ "  A reescrita de endereços no servidor local está %s (--norewrite %s).\n"
+
+#~ msgid "enabled"
+#~ msgstr "ativada"
+
+#~ msgid "disabled"
+#~ msgstr "desativada"
+
+#~ msgid "  Carriage-return stripping is %s (stripcr %s).\n"
+#~ msgstr "  A eliminação do retorno de carro (CR) está %s (stripcr %s).\n"
+
+#~ msgid "  Carriage-return forcing is %s (forcecr %s).\n"
+#~ msgstr "  Forçar retorno de carro (CR) está %s (forcecr %s).\n"
+
+#~ msgid ""
+#~ "  Interpretation of Content-Transfer-Encoding is %s (pass8bits %s).\n"
+#~ msgstr ""
+#~ "  A interpretação de Content-Transfer-Encoding está %s (pass8bits %s).\n"
+
+#~ msgid "  MIME decoding is %s (mimedecode %s).\n"
+#~ msgstr "  A decodificação MIME está %s (mimedecode %s).\n"
+
+#~ msgid "  Idle after poll is %s (idle %s).\n"
+#~ msgstr "  Inatividade após consulta é %s (inatividade %s).\n"
+
+#~ msgid "  Nonempty Status lines will be %s (dropstatus %s)\n"
+#~ msgstr "  As linhas de status não vazias serão %s (dropstatus %s)\n"
+
+#~ msgid "discarded"
+#~ msgstr "descartadas"
+
+#~ msgid "kept"
+#~ msgstr "mantidas"
+
+#, fuzzy
+#~ msgid "  Delivered-To lines will be %s (dropdelivered %s)\n"
+#~ msgstr "  As linhas de status não vazias serão %s (dropstatus %s)\n"
+
+#~ msgid "  Message size limit is %d octets (--limit %d).\n"
+#~ msgstr "  O tamanho limite por mensagem é %d octetos (--limit %d).\n"
+
+#~ msgid "  No message size limit (--limit 0).\n"
+#~ msgstr "  Nenhum limite para tamanho de mensagens (--limit 0).\n"
+
+#~ msgid "  Message size warning interval is %d seconds (--warnings %d).\n"
+#~ msgstr ""
+#~ "  O intervalo de aviso de tamanho de mensagem é de %d segundos (--"
+#~ "warnings \n"
+#~ "%d).\n"
+
+#~ msgid "  Size warnings on every poll (--warnings 0).\n"
+#~ msgstr "  Avisos de tamanho a cada recebimento (--warnings 0).\n"
+
+#~ msgid "  Received-message limit is %d (--fetchlimit %d).\n"
+#~ msgstr "  O limite de mensagem recebida é %d (--fetchlimit %d).\n"
+
+#~ msgid "  No received-message limit (--fetchlimit 0).\n"
+#~ msgstr "  Nenhum limite para mensagem recebida (--fetchlimit 0).\n"
+
+#, fuzzy
+#~ msgid "  Fetch message size limit is %d (--fetchsizelimit %d).\n"
+#~ msgstr "  O limite de mensagem recebida é %d (--fetchlimit %d).\n"
+
+#, fuzzy
+#~ msgid "  No fetch message size limit (--fetchsizelimit 0).\n"
+#~ msgstr "  Nenhum limite para tamanho de mensagens (--limit 0).\n"
+
+#~ msgid "  SMTP message batch limit is %d.\n"
+#~ msgstr "  O limite de lote de mensagens SMTP é %d.\n"
+
+#~ msgid "  No SMTP message batch limit (--batchlimit 0).\n"
+#~ msgstr "  Nenhum limite de lote de mensagens SMTP (--batchlimit 0).\n"
+
+#~ msgid "  Deletion interval between expunges forced to %d (--expunge %d).\n"
+#~ msgstr "  O intervalo de deleção entre eliminações é %d (--expunge %d).\n"
+
+#~ msgid "  No forced expunges (--expunge 0).\n"
+#~ msgstr "  Nenhuma eliminação (--expunge 0).\n"
+
+#~ msgid " (default)"
+#~ msgstr " (padrão)"
+
+#~ msgid "  Messages will be appended to %s as BSMTP\n"
+#~ msgstr "  As mensagens serão anexadas a %s como BSMTP\n"
+
+#~ msgid "  Messages will be delivered with \"%s\".\n"
+#~ msgstr "  As mensagens serão entregues com \"%s\".\n"
+
+#~ msgid "  Messages will be %cMTP-forwarded to:"
+#~ msgstr "  As mensagens serão re-enviadas via %cMTP para:"
+
+#~ msgid "  Host part of MAIL FROM line will be %s\n"
+#~ msgstr "  O nome da máquina na linha MAIL FROM será %s\n"
+
+#~ msgid "  Recognized listener spam block responses are:"
+#~ msgstr "  As respostas reconhecidas de blocos spam são:"
+
+#~ msgid "  Spam-blocking disabled\n"
+#~ msgstr "  Bloqueio de spam desabilitado\n"
+
+#~ msgid "  Server connection will be brought up with \"%s\".\n"
+#~ msgstr "  A conexão do servidor será efetuada com \"%s\".\n"
+
+#~ msgid "  No pre-connection command.\n"
+#~ msgstr "  Nenhum comando de pré-conexão.\n"
+
+#~ msgid "  Server connection will be taken down with \"%s\".\n"
+#~ msgstr "  A conexão com o servidor será derrubada com \"%s\".\n"
+
+#~ msgid "  No post-connection command.\n"
+#~ msgstr "  Nenhum comando de pós-conexão.\n"
+
+#~ msgid "  No localnames declared for this host.\n"
+#~ msgstr "  Nenhum nome local declarado para esta máquina.\n"
+
+#~ msgid "  Multi-drop mode: "
+#~ msgstr "  Modo de múltipla entrega (multi-drop): "
+
+#~ msgid "  Single-drop mode: "
+#~ msgstr "  Modo de entrega simples (single-drop): "
+
+#~ msgid "%d local name(s) recognized.\n"
+#~ msgstr "%d nome(s) local(is) reconhecido(s).\n"
+
+#~ msgid "  DNS lookup for multidrop addresses is %s.\n"
+#~ msgstr "  A busca no DNS por endereços de múltipla entrega está %s.\n"
+
+#~ msgid "  Server aliases will be compared with multidrop addresses by "
+#~ msgstr ""
+#~ "  Os apelidos de servidores serão comparados com endereços de múltipla\n"
+#~ "entrega por "
+
+#~ msgid "IP address.\n"
+#~ msgstr "endereço IP.\n"
+
+#~ msgid "name.\n"
+#~ msgstr "nome.\n"
+
+#~ msgid "  Envelope-address routing is disabled\n"
+#~ msgstr "  O roteamento de endereços de envelope está desabilitado\n"
+
+#~ msgid "  Envelope header is assumed to be: %s\n"
+#~ msgstr "  Assume-se que o cabeçalho do envelope esteja: %s\n"
+
+#~ msgid "Received"
+#~ msgstr "Recebido"
+
+#~ msgid "  Number of envelope header to be parsed: %d\n"
+#~ msgstr "  Número de cabeçalhos de envelope  a serem processados: %d\n"
+
+#~ msgid "  Prefix %s will be removed from user id\n"
+#~ msgstr "  O prefixo %s será removido da identificação do usuário\n"
+
+#~ msgid "  No prefix stripping\n"
+#~ msgstr "  Nenhuma remoção de prefixo\n"
+
+#~ msgid "  Predeclared mailserver aliases:"
+#~ msgstr "  Apelidos pré-declarados do servidor de correio eletrônico:"
+
+#~ msgid "  Local domains:"
+#~ msgstr "  Domínios locais:"
+
+#~ msgid "  Connection must be through interface %s.\n"
+#~ msgstr "  A conexão precisa se dar pela interface %s.\n"
+
+#~ msgid "  No interface requirement specified.\n"
+#~ msgstr "  Não foi especificada nenhuma exigência de interface.\n"
+
+#~ msgid "  Polling loop will monitor %s.\n"
+#~ msgstr "  Ciclo de consultas monitorará %s.\n"
+
+#~ msgid "  No monitor interface specified.\n"
+#~ msgstr "  Nenhuma interface de monitoramento foi especificada.\n"
+
+#~ msgid "  Server connections will be made via plugin %s (--plugin %s).\n"
+#~ msgstr ""
+#~ "  As conexões com o servidor se darão via plugin %s (--plugin %s).\n"
+
+#~ msgid "  No plugin command specified.\n"
+#~ msgstr "  Nenhum comando \"plugin\" especificado.\n"
+
+#~ msgid "  Listener connections will be made via plugout %s (--plugout %s).\n"
+#~ msgstr ""
+#~ "  As conexões com o cliente se darão via \"plugout\" %s (--plugout %s).\n"
+
+#~ msgid "  No plugout command specified.\n"
+#~ msgstr "  Nenhum comando \"plugout\" especificado.\n"
+
+#~ msgid "  No UIDs saved from this host.\n"
+#~ msgstr ""
+#~ "  Nenhuma identificação de usuário gravada a partir desta máquina.\n"
+
+#~ msgid "  %d UIDs saved.\n"
+#~ msgstr "  %d identificações de usuários gravadas.\n"
+
+#~ msgid "  Pass-through properties \"%s\".\n"
+#~ msgstr "  Propriedades de passagem \"%s\".\n"
+
+#~ msgid "ERROR: no support for getpassword() routine\n"
+#~ msgstr "ERRO: não há suporte à rotina getpassword()\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Caught SIGINT... bailing out.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Sinal SIGINT recebido... saindo.\n"
+
+#~ msgid "Couldn't get service name for [%s]\n"
+#~ msgstr "Não foi possível obter nome do serviço para [%s]\n"
+
+#~ msgid "Using service name [%s]\n"
+#~ msgstr "Usando nome do serviço [%s]\n"
+
+#~ msgid "Sending credentials\n"
+#~ msgstr "Enviando credenciais\n"
+
+#~ msgid "Error exchanging credentials\n"
+#~ msgstr "Erro na troca de credenciais\n"
+
+#~ msgid "Couldn't unwrap security level data\n"
+#~ msgstr "Não foi possível desempacotar dados do nível de segurança\n"
+
+#~ msgid "Credential exchange complete\n"
+#~ msgstr "Troca de credenciais completa\n"
+
+#~ msgid "Server requires integrity and/or privacy\n"
+#~ msgstr "Servidor requer integridade e/ou privacidade\n"
+
+#~ msgid "Unwrapped security level flags: %s%s%s\n"
+#~ msgstr "Desempacotadas marcas de nível de segurança: %s%s%s\n"
+
+#~ msgid "Maximum GSS token size is %ld\n"
+#~ msgstr "Tamanho máximo do símbolo GSS é %ld\n"
+
+#~ msgid "Error creating security level request\n"
+#~ msgstr "Erro criando solicitação de nível de segurança\n"
+
+#~ msgid "Releasing GSS credentials\n"
+#~ msgstr "Liberando credenciais GSS\n"
+
+#~ msgid "Error releasing credentials\n"
+#~ msgstr "Erro na liberação de credenciais\n"
+
+#, fuzzy
+#~ msgid "fetchmail: thread sleeping for %d sec.\n"
+#~ msgstr ""
+#~ "fetchmail: tarefa aguardando por %d segundos.\n"
+#~ "\n"
+
+#~ msgid "Protocol identified as IMAP4 rev 1\n"
+#~ msgstr "Protocolo identificado como IMAP4 rev 1\n"
+
+#~ msgid "Protocol identified as IMAP4 rev 0\n"
+#~ msgstr "Protocolo identificado como IMAP4 rev 0\n"
+
+#~ msgid "Protocol identified as IMAP2 or IMAP2BIS\n"
+#~ msgstr "Protocolo identificado como IMAP2 ou IMAP2BIS\n"
+
+#, fuzzy
+#~ msgid "Required OTP capability not compiled into fetchmail\n"
+#~ msgstr "Capacidade de LOGIN exigida não é suportada pelo servidor\n"
+
+#, fuzzy
+#~ msgid "Required NTLM capability not compiled into fetchmail\n"
+#~ msgstr "Capacidade de LOGIN exigida não é suportada pelo servidor\n"
+
+#~ msgid "Required LOGIN capability not supported by server\n"
+#~ msgstr "Capacidade de LOGIN exigida não é suportada pelo servidor\n"
+
+#, fuzzy
+#~ msgid "expunge failed\n"
+#~ msgstr "execl(%s) falhou\n"
+
+#~ msgid "re-poll failed\n"
+#~ msgstr "nova tentativa de baixar mensagens falhou\n"
+
+#, fuzzy
+#~ msgid "%d messages waiting after re-poll\n"
+#~ msgstr "Nenhuma mensagem esperando para %s\n"
+
+#~ msgid "mailbox selection failed\n"
+#~ msgstr "seleção de caixa postal falhou\n"
+
+#, fuzzy
+#~ msgid "%d messages waiting after first poll\n"
+#~ msgstr "Nenhuma mensagem esperando para %s\n"
+
+#, fuzzy
+#~ msgid "%d messages waiting after expunge\n"
+#~ msgstr "Nenhuma mensagem esperando para %s\n"
+
+#~ msgid "search for unseen messages failed\n"
+#~ msgstr "falha na busca por mensagens não vistas\n"
+
+#~ msgid "%u is unseen\n"
+#~ msgstr "%u é não vista\n"
+
+#, fuzzy
+#~ msgid "%u is first unseen\n"
+#~ msgstr "%u é não vista\n"
+
+#~ msgid "Unable to open kvm interface. Make sure fetchmail is SGID kmem."
+#~ msgstr ""
+#~ "Não foi possível abrir a interface kvm. Certifique-se que fetchmail está "
+#~ "SGID kmem."
+
+#, fuzzy
+#~ msgid "get_ifinfo: malloc failed"
+#~ msgstr "malloc falhou\n"
+
+#, fuzzy
+#~ msgid "No IP address found for %s"
+#~ msgstr "nenhum endereço Received encontrado\n"
+
+#~ msgid "missing IP interface address\n"
+#~ msgstr "faltando endereço IP da interface\n"
+
+#~ msgid "invalid IP interface address\n"
+#~ msgstr "endereço IP da interface inválido\n"
+
+#~ msgid "invalid IP interface mask\n"
+#~ msgstr "máscara IP da interface inválida\n"
+
+#~ msgid "activity on %s -noted- as %d\n"
+#~ msgstr "atividade em %s -percebida- como %d\n"
+
+#~ msgid "skipping poll of %s, %s down\n"
+#~ msgstr "pulando mensagens de %s, %s está parado\n"
+
+#~ msgid "skipping poll of %s, %s IP address excluded\n"
+#~ msgstr "pulando mensagens de %s, endereço IP de %s excluído\n"
+
+#~ msgid "activity on %s checked as %d\n"
+#~ msgstr "atividade em %s checada como %d\n"
+
+#~ msgid "skipping poll of %s, %s inactive\n"
+#~ msgstr "pulando mensagens de %s, %s inativo\n"
+
+#~ msgid "activity on %s was %d, is %d\n"
+#~ msgstr "atividade em %s foi %d, é %d\n"
+
+#~ msgid "could not decode initial BASE64 challenge\n"
+#~ msgstr "não foi possível decodificar o desafio BASE64 inicial\n"
+
+#~ msgid "principal %s in ticket does not match -u %s\n"
+#~ msgstr "%s no bilhete não combina com -u %s\n"
+
+#~ msgid "non-null instance (%s) might cause strange behavior\n"
+#~ msgstr "instância não nula (%s) pode causar comportamento estranho\n"
+
+#~ msgid "could not decode BASE64 ready response\n"
+#~ msgstr "não foi possível decodificar resposta \"pronto\" de BASE64\n"
+
+#~ msgid "challenge mismatch\n"
+#~ msgstr "erro no desafio\n"
+
+#~ msgid "fetchmail: removing stale lockfile\n"
+#~ msgstr "fetchmail: removendo arquivos de trava antigos\n"
+
+#, fuzzy
+#~ msgid "fetchmail: lock creation failed.\n"
+#~ msgstr "fetchmail: socketpair falhou\n"
+
+#~ msgid "warning: found \"%s\" before any host names"
+#~ msgstr "atenção: encontrado \"%s\" antes de qualquer nome de máquina"
+
+#~ msgid "%s:%d: warning: found \"%s\" before any host names\n"
+#~ msgstr ""
+#~ "%s:%d: atenção: encontrado \"%s\" antes de qualquer nome de máquina\n"
+
+#~ msgid "%s:%d: warning: unknown token \"%s\"\n"
+#~ msgstr "%s:%d: warning: símbolo desconhecido \"%s\"\n"
+
+#, fuzzy
+#~ msgid "%s's SMTP listener does not support ATRN\n"
+#~ msgstr "Servidor SMTP de %s não suporta ETRN\n"
+
+#, fuzzy
+#~ msgid "Authentication required.\n"
+#~ msgstr "Autenticação OTP é suportada\n"
+
+#, fuzzy
+#~ msgid "Unknown ODMR error %d\n"
+#~ msgstr "Erro ETRN desconhecido %d\n"
+
+#, fuzzy
+#~ msgid "Option --keep is not supported with ODMR\n"
+#~ msgstr "Opção --keep não é compatível com ETRN\n"
+
+#, fuzzy
+#~ msgid "Option --flush is not supported with ODMR\n"
+#~ msgstr "Opção --flush não é compatível com ETRN\n"
+
+#, fuzzy
+#~ msgid "Option --remote is not supported with ODMR\n"
+#~ msgstr "Opção --remote não é compatível com ETRN\n"
+
+#, fuzzy
+#~ msgid "Option --check is not supported with ODMR\n"
+#~ msgstr "Opção --check não é compatível com ETRN\n"
+
+#~ msgid "Could not decode OTP challenge\n"
+#~ msgstr "Não foi possível decodificar o desafio OTP\n"
+
+#~ msgid "Secret pass phrase: "
+#~ msgstr "Frase-senha secreta: "
+
+#~ msgid "String '%s' is not a valid number string.\n"
+#~ msgstr "Cadeia '%s' não é uma cadeia de números válidos.\n"
+
+#~ msgid "Value of string '%s' is %s than %d.\n"
+#~ msgstr "Valor da cadeia '%s' é %s que %d.\n"
+
+#~ msgid "smaller"
+#~ msgstr "menor"
+
+#~ msgid "larger"
+#~ msgstr "maior"
+
+#~ msgid "Invalid protocol `%s' specified.\n"
+#~ msgstr "Protocolo `%s' inválido foi especificado.\n"
+
+#, fuzzy
+#~ msgid "Invalid authentication `%s' specified.\n"
+#~ msgstr "Pré-autenticação `%s' inválida foi especificada.\n"
+
+#~ msgid "fetchmail: network security support is disabled\n"
+#~ msgstr "fetchmail: suporte a segurança na rede está desativado\n"
+
+#~ msgid "usage:  fetchmail [options] [server ...]\n"
+#~ msgstr "uso: fetchmail [opções] [servidor ...]\n"
+
+#~ msgid "  Options are as follows:\n"
+#~ msgstr "  As opções são:\n"
+
+#~ msgid "  -?, --help        display this option help\n"
+#~ msgstr "  -?, --help        mostra esta tela de ajuda\n"
+
+#~ msgid "  -V, --version     display version info\n"
+#~ msgstr "  -V, --version     mostra informações sobre a versão\n"
+
+#~ msgid "  -c, --check       check for messages without fetching\n"
+#~ msgstr "  -c, --check       checa por mensagens sem baixá-las\n"
+
+#~ msgid "  -s, --silent      work silently\n"
+#~ msgstr "  -s, --silent      trabalha silenciosamente\n"
+
+#~ msgid "  -v, --verbose     work noisily (diagnostic output)\n"
+#~ msgstr ""
+#~ "  -v, --verbose     trabalha barulhentamente (saídas para diagnóstico)\n"
+
+#~ msgid "  -d, --daemon      run as a daemon once per n seconds\n"
+#~ msgstr ""
+#~ "  -d, --daemon      roda como um servidor uma vez a cada n segundos\n"
+
+#~ msgid "  -N, --nodetach    don't detach daemon process\n"
+#~ msgstr ""
+#~ "  -N, --nodetach    não desconecta o processo servidor do seu terminal\n"
+
+#~ msgid "  -q, --quit        kill daemon process\n"
+#~ msgstr "  -q, --quit        elimina processo servidor\n"
+
+#~ msgid "  -L, --logfile     specify logfile name\n"
+#~ msgstr "  -L, --logfile     especifica o nome do arquivo de log\n"
+
+#~ msgid ""
+#~ "      --syslog      use syslog(3) for most messages when running as a "
+#~ "daemon\n"
+#~ msgstr ""
+#~ "      --syslog      usa o syslog(3) para a maioria das mensagens quando\n"
+#~ "                    estiver rodando como servidor\n"
+
+#~ msgid "      --invisible   don't write Received & enable host spoofing\n"
+#~ msgstr ""
+#~ "      --invisible   não escreve `Received' & ativa mascaramento da "
+#~ "máquina\n"
+
+#~ msgid "  -f, --fetchmailrc specify alternate run control file\n"
+#~ msgstr ""
+#~ "  -f, --fetchmailrc especifica arquivo de controle de execução "
+#~ "alternativo\n"
+
+#~ msgid "  -i, --idfile      specify alternate UIDs file\n"
+#~ msgstr ""
+#~ "  -i, --idfile      especifica arquivo de identidades de usuários \n"
+#~ "                    alternativo\n"
+
+#~ msgid "      --postmaster  specify recipient of last resort\n"
+#~ msgstr ""
+#~ "      --postmaster  especifica o destinatário usado em último caso\n"
+
+#~ msgid "      --nobounce    redirect bounces from user to postmaster.\n"
+#~ msgstr ""
+#~ "      --nobounce    redireciona mensagens erradas para o postmaster.\n"
+
+#~ msgid "  -I, --interface   interface required specification\n"
+#~ msgstr "  -I, --interface   especificação de interface exigida\n"
+
+#~ msgid "  -M, --monitor     monitor interface for activity\n"
+#~ msgstr "  -M, --monitor     monitora a atividade na interface\n"
+
+#~ msgid "      --ssl         enable ssl encrypted session\n"
+#~ msgstr "      --ssl         habilita sessão ssl criptografada\n"
+
+#~ msgid "      --sslkey      ssl private key file\n"
+#~ msgstr "      --sslkey      arquivo contendo a chave ssl privada\n"
+
+#~ msgid "      --sslcert     ssl client certificate\n"
+#~ msgstr "      --sslcert     certificado ssl do cliente\n"
+
+#~ msgid "      --plugin      specify external command to open connection\n"
+#~ msgstr ""
+#~ "      --plugin      especifica um comando externo para abrir uma conexão\n"
+
+#~ msgid ""
+#~ "      --plugout     specify external command to open smtp connection\n"
+#~ msgstr ""
+#~ "      --plugout     especifica um comando externo para abrir uma conexão "
+#~ "smtp\n"
+
+#~ msgid "  -p, --protocol    specify retrieval protocol (see man page)\n"
+#~ msgstr ""
+#~ "  -p, --protocol    especifica o protocolo de retirada (ver página de \n"
+#~ "                    manual)\n"
+
+#~ msgid "  -U, --uidl        force the use of UIDLs (pop3 only)\n"
+#~ msgstr "  -U, --uidl        força o uso de UIDLs (somente para pop3)\n"
+
+#~ msgid "  -P, --port        TCP/IP service port to connect to\n"
+#~ msgstr "  -P, --port        Porta TCP para conexão\n"
+
+#, fuzzy
+#~ msgid ""
+#~ "      --auth        authentication type (password/kerberos/ssh/otp)\n"
+#~ msgstr "      --preauth     tipo de pré-autenticação (senha/kerberos/ssh)\n"
+
+#~ msgid "  -t, --timeout     server nonresponse timeout\n"
+#~ msgstr ""
+#~ "  -t, --timeout     tempo limite para não obtenção de resposta do "
+#~ "servidor\n"
+
+#~ msgid "  -E, --envelope    envelope address header\n"
+#~ msgstr "  -E, --envelope    cabeçalho do endereço de envelope\n"
+
+#~ msgid "  -Q, --qvirtual    prefix to remove from local user id\n"
+#~ msgstr ""
+#~ "  -Q, --qvirtual    prefixo para remover da identificação de um usuário "
+#~ "local\n"
+
+#~ msgid "  -u, --username    specify users's login on server\n"
+#~ msgstr ""
+#~ "  -u, --username    especifica a identificação do usuário no servidor\n"
+
+#~ msgid "  -a, --all         retrieve old and new messages\n"
+#~ msgstr "  -a, --all         recupera mensagens antigas e novas\n"
+
+#~ msgid "  -K, --nokeep      delete new messages after retrieval\n"
+#~ msgstr "  -K, --nokeep      apaga novas mensagens após a recuperação\n"
+
+#~ msgid "  -k, --keep        save new messages after retrieval\n"
+#~ msgstr "  -k, --keep        não apaga novas mensagens após recuperação\n"
+
+#~ msgid "  -F, --flush       delete old messages from server\n"
+#~ msgstr "  -F, --flush       apaga mensagens antigas do servidor\n"
+
+#~ msgid "  -n, --norewrite   don't rewrite header addresses\n"
+#~ msgstr "  -n, --norewrite   não reescreve os cabeçalhos das mensagens\n"
+
+#~ msgid "  -l, --limit       don't fetch messages over given size\n"
+#~ msgstr ""
+#~ "  -l, --limit       não recupera mensagens acima de um dado tamanho\n"
+
+#~ msgid "  -w, --warnings    interval between warning mail notification\n"
+#~ msgstr ""
+#~ "  -w, --warnings    intervalo entre avisos de notificação de e-mail\n"
+
+#~ msgid "  -T, --netsec      set IP security request\n"
+#~ msgstr "  -T, --netsec      ativa solicitação de segurança IP\n"
+
+#~ msgid "  -S, --smtphost    set SMTP forwarding host\n"
+#~ msgstr "  -S, --smtphost    configura a máquina SMTP para reenvio\n"
+
+#, fuzzy
+#~ msgid "      --fetchdomains fetch mail for specified domains\n"
+#~ msgstr ""
+#~ "  -B, --fetchlimit  configura o limite de recepção para conexões com o\n"
+#~ "                    servidor\n"
+
+#~ msgid "  -D, --smtpaddress set SMTP delivery domain to use\n"
+#~ msgstr ""
+#~ "  -D, --smtpaddress configura o domínio de entrega do SMTP a ser usado\n"
+
+#~ msgid "  -Z, --antispam,   set antispam response values\n"
+#~ msgstr "  -Z, --antispam    configura o valor das respostas anti-spam\n"
+
+#~ msgid "  -b, --batchlimit  set batch limit for SMTP connections\n"
+#~ msgstr "  -b, --batchlimit  configura o limite de lote para conexões SMTP\n"
+
+#~ msgid "  -B, --fetchlimit  set fetch limit for server connections\n"
+#~ msgstr ""
+#~ "  -B, --fetchlimit  configura o limite de recepção para conexões com o\n"
+#~ "                    servidor\n"
+
+#, fuzzy
+#~ msgid "      --fetchsizelimit set fetch message size limit\n"
+#~ msgstr ""
+#~ "  -B, --fetchlimit  configura o limite de recepção para conexões com o\n"
+#~ "                    servidor\n"
+
+#~ msgid "  -e, --expunge     set max deletions between expunges\n"
+#~ msgstr ""
+#~ "  -e, --expunge     configura o máximo de deleções entre eliminações\n"
+
+#~ msgid "  -m, --mda         set MDA to use for forwarding\n"
+#~ msgstr "      --mda         configura o MDA a ser usado para reenvio\n"
+
+#~ msgid "      --bsmtp       set output BSMTP file\n"
+#~ msgstr "      --bsmtp       configura o arquivo de saída BSMTP\n"
+
+#~ msgid "      --lmtp        use LMTP (RFC2033) for delivery\n"
+#~ msgstr "      --lmtp        usa LMTP (RFC2033) para entrega\n"
+
+#~ msgid "  -r, --folder      specify remote folder name\n"
+#~ msgstr "  -r, --folder      especifica o nome da pasta remota\n"
+
+#~ msgid "Required APOP timestamp not found in greeting\n"
+#~ msgstr "Data/horário APOP exigidos não encontrados na saudação\n"
+
+#~ msgid "Timestamp syntax error in greeting\n"
+#~ msgstr "Erro de sintaxe na data/horário da saudação\n"
+
+#~ msgid "Undefined protocol request in POP3_auth\n"
+#~ msgstr "Solicitação de protocolo não definida em POP3_auth\n"
+
+#~ msgid "lock busy!  Is another session active?\n"
+#~ msgstr "arquivo de travamento presente! Há outra sessão ativa?\n"
+
+#~ msgid "Messages inserted into list on server. Cannot handle this.\n"
+#~ msgstr ""
+#~ "Mensagens inseridas numa lista no servidor. Não posso tratar isso.\n"
+
+#~ msgid "protocol error\n"
+#~ msgstr "erro de protocolo\n"
+
+#~ msgid "protocol error while fetching UIDLs\n"
+#~ msgstr "erro de protocolo durante a obtenção de UIDLs\n"
+
+#~ msgid "Option --remote is not supported with POP3\n"
+#~ msgstr "Opção --remote não é compatível com POP3\n"
+
+#, fuzzy
+#~ msgid "invalid security request"
+#~ msgstr "Erro criando solicitação de nível de segurança\n"
+
+#, fuzzy
+#~ msgid "network-security support disabled"
+#~ msgstr "fetchmail: suporte a segurança na rede está desativado\n"
+
+#~ msgid "Unknown system error"
+#~ msgstr "Erro desconhecido do sistema"
+
+#~ msgid "%s (log message incomplete)"
+#~ msgstr "%s (mensagem de registro incompleta)"
+
+#~ msgid "partial error message buffer overflow"
+#~ msgstr "erro parcial sobrecarga no buffer de mensagem"
+
+#, fuzzy
+#~ msgid "About to rewrite %s"
+#~ msgstr "prestes a entregar para: %s\n"
+
+#~ msgid "Success"
+#~ msgstr "Sucesso"
+
+#~ msgid "Restricted user (something wrong with account)"
+#~ msgstr "Usuário restrito (algo errado com a conta)"
+
+#~ msgid "Invalid userid or passphrase"
+#~ msgstr "Identificação de usuário ou frase-senha inválidos"
+
+#~ msgid "Deity error"
+#~ msgstr "Erro fatal"
+
+#~ msgid "RPA token 2: Base64 decode error\n"
+#~ msgstr "RPA token 2: Erro de decodificação Base64\n"
+
+#~ msgid "Service chose RPA version %d.%d\n"
+#~ msgstr "Serviço escolheu a versão %d.%d do RPA\n"
+
+#~ msgid "Service challenge (l=%d):\n"
+#~ msgstr "Desafio de serviço (l=%d):\n"
+
+#~ msgid "Service timestamp %s\n"
+#~ msgstr "Data/horário do serviço %s\n"
+
+#~ msgid "RPA token 2 length error\n"
+#~ msgstr "Erro no comprimento do token 2 RPA\n"
+
+#~ msgid "Realm list: %s\n"
+#~ msgstr "Lista de domínios: %s\n"
+
+#~ msgid "RPA error in service@realm string\n"
+#~ msgstr "Erro RPA na cadeia serviço@domínio\n"
+
+#~ msgid "RPA token 4: Base64 decode error\n"
+#~ msgstr "RPA token 4: Erro de decodificação Base64\n"
+
+#~ msgid "User authentication (l=%d):\n"
+#~ msgstr "Autenticação de usuário (l=%d):\n"
+
+#~ msgid "RPA status: %02X\n"
+#~ msgstr "status RPA: %02X\n"
+
+#~ msgid "RPA token 4 length error\n"
+#~ msgstr "Erro no comprimento do símbolo 4 RPA\n"
+
+#~ msgid "RPA rejects you: %s\n"
+#~ msgstr "Você foi rejeitado pelo RPA: %s\n"
+
+#~ msgid "RPA rejects you, reason unknown\n"
+#~ msgstr "Você foi rejeitado pelo RPA por motivos desconhecidos\n"
+
+#~ msgid "RPA User Authentication length error: %d\n"
+#~ msgstr "Erro no comprimento da autenticação de usuário RPA: %d\n"
+
+#~ msgid "RPA Session key length error: %d\n"
+#~ msgstr "Erro no comprimento da chave da sessão RPA: %d\n"
+
+#~ msgid "RPA _service_ auth fail. Spoof server?\n"
+#~ msgstr "Autenticação de _serviço_ RPA falhou. Enganar o servidor?\n"
+
+#~ msgid "Session key established:\n"
+#~ msgstr "Chave de sessão estabelecida:\n"
+
+#~ msgid "RPA authorisation complete\n"
+#~ msgstr "Autorização RPA completa\n"
+
+#~ msgid "Get response\n"
+#~ msgstr "Resposta recebida\n"
+
+#~ msgid "Get response return %d [%s]\n"
+#~ msgstr "Recebido retorno de resposta %d [%s]\n"
+
+#~ msgid "Hdr not 60\n"
+#~ msgstr "Hdr não é 60\n"
+
+#~ msgid "Token length error\n"
+#~ msgstr "Erro no comprimento do Token\n"
+
+#~ msgid "Token Length %d disagrees with rxlen %d\n"
+#~ msgstr "Comprimento do símbolo %d não combina com rxlen %d\n"
+
+#~ msgid "Mechanism field incorrect\n"
+#~ msgstr "Campo mecanismo incorreto\n"
+
+#~ msgid "dec64 error at char %d: %x\n"
+#~ msgstr "erro dec64 no caractere %d: %x\n"
+
+#~ msgid "Inbound binary data:\n"
+#~ msgstr "Entrada de dados binários:\n"
+
+#~ msgid "Outbound data:\n"
+#~ msgstr "Saída de dados:\n"
+
+#~ msgid "RPA String too long\n"
+#~ msgstr "Cadeia RPA muito longa\n"
+
+#~ msgid "Unicode:\n"
+#~ msgstr "Unicode:\n"
+
+#~ msgid "RPA Failed open of /dev/urandom. This shouldn't\n"
+#~ msgstr "RPA falhou na abertura de /dev/urandom. Isto não deveria\n"
+
+#~ msgid "    prevent you logging in, but means you\n"
+#~ msgstr "    impedi-lo de se conectar, mas significa que\n"
+
+#~ msgid "    cannot be sure you are talking to the\n"
+#~ msgstr "    você não pode ter certeza de estar falando com\n"
+
+#~ msgid "    service that you think you are (replay\n"
+#~ msgstr "    o serviço que você pensa estar (ataques\n"
+
+#~ msgid "    attacks by a dishonest service are possible.)\n"
+#~ msgstr ""
+#~ "    de re-tentativa por parte de um serviço desonesto são possíveis.)\n"
+
+#~ msgid "User challenge:\n"
+#~ msgstr "Desafio de usuário:\n"
+
+#~ msgid "MD5 being applied to data block:\n"
+#~ msgstr "MD5 está sendo aplicado ao bloco de dados:\n"
+
+#~ msgid "MD5 result is: \n"
+#~ msgstr "O resultado MD5 é: \n"
+
+#~ msgid "forwarding to %s\n"
+#~ msgstr "repassando para %s\n"
+
+#~ msgid "%cMTP error: %s\n"
+#~ msgstr "Erro %cMTP: %s\n"
+
+#~ msgid "BSMTP file open or preamble write failed\n"
+#~ msgstr "Abertura de arquivo BSMTP ou escrita de preâmbulo falhou\n"
+
+#~ msgid "%cMTP listener doesn't like recipient address `%s'\n"
+#~ msgstr "Cliente %cMTP não gosta do endereço do destinatário `%s'\n"
+
+#, fuzzy
+#~ msgid "%cMTP listener doesn't really like recipient address `%s'\n"
+#~ msgstr "Cliente %cMTP não gosta do endereço do destinatário `%s'\n"
+
+#, fuzzy
+#~ msgid "no address matches; no postmaster set.\n"
+#~ msgstr "não combina com nada localmente, repassando para %s\n"
+
+#~ msgid "can't even send to %s!\n"
+#~ msgstr "não é possível nem mandar para %s!\n"
+
+#~ msgid "no address matches; forwarding to %s.\n"
+#~ msgstr "não combina com nada localmente, repassando para %s\n"
+
+#~ msgid "about to deliver with: %s\n"
+#~ msgstr "prestes a entregar para: %s\n"
+
+#~ msgid "MDA open failed\n"
+#~ msgstr "Abertura MDA falhou\n"
+
+#~ msgid "%cMTP connect to %s failed\n"
+#~ msgstr "Conexão %cMTP com %s falhou\n"
+
+#, fuzzy
+#~ msgid "MDA died of signal %d\n"
+#~ msgstr "acordado pelo sinal %d\n"
+
+#, fuzzy
+#~ msgid "MDA returned nonzero status %d\n"
+#~ msgstr ""
+#~ "O MDA foi encerrado anormalmente ou retornou status diferente de zero\n"
+
+#~ msgid "Message termination or close of BSMTP file failed\n"
+#~ msgstr "Encerramento de mensagem ou fechamento de arquivo BSMTP falhou\n"
+
+#~ msgid "SMTP listener refused delivery\n"
+#~ msgstr "Cliente SMTP recusou a entrega\n"
+
+#~ msgid "LMTP delivery error on EOM\n"
+#~ msgstr "Erro na entrega LMTP no EOM\n"
+
+#~ msgid "Unexpected non-503 response to LMTP EOM: %s\n"
+#~ msgstr "Resposta não-503 para o EOM LMTP: %s\n"
+
+#, fuzzy
+#~ msgid "ESMTP CRAM-MD5 Authentication...\n"
+#~ msgstr "Autenticação CRAM-MD5 é suportada\n"
+
+#, fuzzy
+#~ msgid "smtp listener protocol error\n"
+#~ msgstr "erro de protocolo\n"
+
+#, fuzzy
+#~ msgid "fetchmail: malloc failed\n"
+#~ msgstr "fetchmail: fork falhou\n"
+
+#~ msgid "fetchmail: socketpair failed\n"
+#~ msgstr "fetchmail: socketpair falhou\n"
+
+#~ msgid "fetchmail: fork failed\n"
+#~ msgstr "fetchmail: fork falhou\n"
+
+#~ msgid "dup2 failed\n"
+#~ msgstr "dup2 falhou\n"
+
+#, fuzzy
+#~ msgid "running %s (host %s service %s)\n"
+#~ msgstr "rodando %s %s %s\n"
+
+#, fuzzy
+#~ msgid "execvp(%s) failed\n"
+#~ msgstr "execl(%s) falhou\n"
+
+#~ msgid "fetchmail: getaddrinfo(%s.%s)\n"
+#~ msgstr "fetchmail: getaddrinfo(%s.%s)\n"
+
+#~ msgid "fetchmail: illegal address length received for host %s\n"
+#~ msgstr ""
+#~ "fetchmail: comprimento de endereço ilegal recebido para máquina %s\n"
+
+#, fuzzy
+#~ msgid "Server CommonName: %s\n"
+#~ msgstr "Data/horário do serviço %s\n"
+
+#, fuzzy
+#~ msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
+#~ msgstr "Protocolo `%s' inválido foi especificado.\n"
+
+#~ msgid "mapped %s to local %s\n"
+#~ msgstr "%s mapeado localmente para %s\n"
+
+#~ msgid "passed through %s matching %s\n"
+#~ msgstr "passou por %s combinando com %s\n"
+
+#~ msgid ""
+#~ "analyzing Received line:\n"
+#~ "%s"
+#~ msgstr ""
+#~ "analisando linha Received:\n"
+#~ "%s"
+
+#~ msgid "line accepted, %s is an alias of the mailserver\n"
+#~ msgstr "linha aceita, %s é um apelido do servidor de email\n"
+
+#~ msgid "line rejected, %s is not an alias of the mailserver\n"
+#~ msgstr "linha rejeitada, %s não é um apelido do servidor de email\n"
+
+#~ msgid "no Received address found\n"
+#~ msgstr "nenhum endereço Received encontrado\n"
+
+#~ msgid "found Received address `%s'\n"
+#~ msgstr "encontrado endereço Received `%s'\n"
+
+#~ msgid "message delimiter found while scanning headers\n"
+#~ msgstr ""
+#~ "encontrado o delimitador de mensagens durante varredura de cabeçalhos\n"
+
+#, fuzzy
+#~ msgid "incorrect header line found while scanning headers\n"
+#~ msgstr ""
+#~ "encontrado o delimitador de mensagens durante varredura de cabeçalhos\n"
+
+#, fuzzy
+#~ msgid "line: %s"
+#~ msgstr "Baixando %s\n"
+
+#~ msgid "no local matches, forwarding to %s\n"
+#~ msgstr "não combina com nada localmente, repassando para %s\n"
+
+#~ msgid "forwarding and deletion suppressed due to DNS errors\n"
+#~ msgstr "reenvio e remoção suprimidos devido a erro de DNS\n"
+
+#~ msgid "writing RFC822 msgblk.headers\n"
+#~ msgstr "escrevendo cabeçalhos RFC822\n"
+
+#~ msgid "no recipient addresses matched declared local names"
+#~ msgstr "nenhum endereço de destino combina com o valor local declarado"
+
+#~ msgid "recipient address %s didn't match any local name"
+#~ msgstr "endereço do destinatário %s não combina com nenhum nome local"
+
+#~ msgid "message has embedded NULs"
+#~ msgstr "a mensagem possui NULs inseridos"
+
+#~ msgid "SMTP listener rejected local recipient addresses: "
+#~ msgstr "Cliente SMTP rejeitou o endereço do destinatário: "
+
+#~ msgid "writing message text\n"
+#~ msgstr "escrevendo o texto da mensagem\n"
+
+#, fuzzy
+#~ msgid "swapping UID lists\n"
+#~ msgstr "lista de UID gravada\n"
+
+#, fuzzy
+#~ msgid "discarding new UID list\n"
+#~ msgstr "lista de UID gravada\n"
+
+#, fuzzy
+#~ msgid "Writing fetchids file.\n"
+#~ msgstr "iniciando fetchmail %s como daemon \n"
+
+#~ msgid "malloc failed\n"
+#~ msgstr "malloc falhou\n"
+
+#~ msgid "realloc failed\n"
+#~ msgstr "realloc falhou\n"
+
+#~ msgid "fetchmail: %s connection to %s failed"
+#~ msgstr "fetchmail: conexão de %s com %s falhou"
+
+#~ msgid "Skipping message %d, length -1\n"
+#~ msgstr "Pulando a mensagem %d, tamanho -1\n"
+
+#~ msgid "authorization"
+#~ msgstr "autorização"
+
+#~ msgid "%s: can't find your name and home directory!\n"
+#~ msgstr "%s: não foi possível encontrar seu nome e diretório pessoal!\n"
+
+#~ msgid "Lockfile at %s\n"
+#~ msgstr "Arquivo de trava em %s\n"
+
+#~ msgid "fetchmail: cannot allocate memory for lock name.\n"
+#~ msgstr ""
+#~ "fetchmail: não foi possível alocar memória para o nome do arquivo de "
+#~ "trava.\n"
+
+#~ msgid "Could not decode initial BASE64 challenge\n"
+#~ msgstr "Não foi possível decodificar o desafio BASE64 inicial\n"
+
+#~ msgid "Requesting authorization as %s\n"
+#~ msgstr "Solicitando autorização como %s\n"
+
+#~ msgid "Required GSS capability not supported by server\n"
+#~ msgstr "Capacidades GSS exigidas não é suportada pelo servidor\n"
+
+#~ msgid "KERBEROS_V4 authentication is supported\n"
+#~ msgstr "Autenticação KERBEROS_V4 é suportada\n"
+
+#~ msgid "Required KERBEROS_V4 capability not supported by server\n"
+#~ msgstr "Capacidade KERBEROS_V4 exigida não é suportada pelo servidor\n"
+
+#~ msgid "Required CRAM-MD5 capability not supported by server\n"
+#~ msgstr "Capacidade CRAM-MD5 exigida não é suportada pelo servidor\n"
+
+#~ msgid ""
+#~ "This could mean that your mailserver is stuck, or that your SMTP "
+#~ "listener\n"
+#~ msgstr ""
+#~ "Isso pode significar que seu servidor de correio eletrônico está "
+#~ "travado \n"
+#~ "ou que o cliente SMTP\n"
+
+#~ msgid ""
+#~ "is wedged, or that your mailbox file on the server has been corrupted by\n"
+#~ msgstr ""
+#~ "está travado, ou que seu arquivo de caixa de correio foi corrompido por\n"
+
+#~ msgid ""
+#~ "a server error.  You can run `fetchmail -v -v' to diagnose the problem.\n"
+#~ msgstr ""
+#~ "um erro no servidor. Você pode executar `fetchmail -v -v' para \n"
+#~ "diagnosticar o problema.\n"
+
+#~ msgid "Fetchmail won't poll this mailbox again until you restart it.\n"
+#~ msgstr ""
+#~ "O fetchmail não vai receber dessa caixa postal novamente até que \n"
+#~ "você o reinicie.\n"
+
+#~ msgid "This probably means your password is invalid.\n"
+#~ msgstr "Isso significa, provavelmente, que sua senha está incorreta.\n"
+
+#~ msgid ": Error %d\n"
+#~ msgstr ": Erro %d\n"
