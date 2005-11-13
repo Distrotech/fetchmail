@@ -197,9 +197,10 @@ distclean: clean
 		config.cache stamp-h stamp-h.in # config.status Makefile
 
 realclean: distclean
-	-rm -f FAQ FEATURES NOTES MANIFEST TODO
-	-rm -f config.cache config.log Makefile
-	-rm -f fetchmail-*.tar.gz fetchmail-*.i386.rpm 
+	rm -f FAQ FEATURES NOTES MANIFEST TODO
+	rm -f config.cache config.log config.status Makefile
+	rm -f stamp-h1 po/stamp-h po/config.log
+	rm -f fetchmail-*.tar.gz fetchmail-*.`arch|sed s/i[4-9]86/i386/`.rpm
 
 mostlyclean: clean
 
@@ -272,8 +273,8 @@ scripts = $(srcdir)/install-sh $(srcdir)/missing $(srcdir)/mkinstalldirs \
 	$(srcdir)/specgen.sh $(srcdir)/fetchmailconf
 all = $(docs) $(config) $(srcs) $(parser) $(headers) $(extra) $(scripts) \
 	$(srcdir)/rh-config/* $(srcdir)/contrib/*[A-Za-uw-z] \
-	$(srcdir)/po/* $(srcdir)/intl $(srcdir)/beos/* ABOUT-NLS $(srcdir)/MANIFEST \
-	rcfile_l.c
+	$(srcdir)/po/* $(srcdir)/intl $(srcdir)/beos/* $(srcdir)/ABOUT-NLS $(srcdir)/MANIFEST \
+	rcfile_l.c rcfile_y.h rcfile_y.c
 
 MANIFEST: $(srcdir) Makefile.in
 	@echo $(all) | tr "[ \t]" '\n' | sed -e '/^\.\//s///' | grep -vE '~$$|po/Makefile(\.in)?$$|po/POTFILES$$' | sort >MANIFEST
@@ -313,6 +314,8 @@ dist: distclean MANIFEST Makefile.in distdocs
 # Firewall against the lossage in autoconf that keeps breaking our build.
 EX = --exclude "fetchmail-$(VERSION)/intl/libintl.h"
 fetchmail-$(VERSION).tar.gz: $(all)
+	@test $(srcdir) = . || test $(srcdir) = $$(pwd) || \
+	{ echo >&2 '###' ; echo >&2 '### building tarball only supported from srcdir ###' ; echo >&2 '###' ; exit 1; }
 	(ln -sfn $$(pwd) ../fetchmail-$(VERSION))
 	(cd ..; tar $(EX) -czf fetchmail-$(VERSION).tar.gz `sed <fetchmail-$(VERSION)/MANIFEST s:^:fetchmail-$(VERSION)/:`)
 	mv -f ../fetchmail-$(VERSION).tar.gz .

@@ -2,6 +2,14 @@
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.)
 
+fetchmail-6.2.5.4  2005-11-13
+
+* Also ship pre-built rcfile_y.[ch] for systems that don't have flex,
+  yacc or bison.
+* On FreeBSD, add /usr/local/include to CPPFLAGS so that libintl.h is found.
+* Avoid automatically picking up HESIOD implementations that lack
+  hesiod_getmailhost, such as the one in FreeBSD's base system.
+
 fetchmail-6.2.5.3  2005-11-12
 
 * SECURITY FIX CVE-2005-3088: fetchmailconf: fix password exposure: use

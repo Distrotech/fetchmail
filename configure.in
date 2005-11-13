@@ -4,7 +4,7 @@ dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl
 
-AC_INIT([fetchmail],[6.2.5.3])
+AC_INIT([fetchmail],[6.2.5.4],[fetchmail-devel@lists.berlios.de])
 AC_CONFIG_SRCDIR([fetchmail.h])
 AC_CONFIG_HEADERS([config.h])
 dnl obtain ACLOCAL and other substitutions
@@ -26,9 +26,19 @@ AC_HEADER_STDC
 AC_TYPE_SIZE_T
 AC_TYPE_PID_T
 AC_TYPE_SIGNAL
-AC_CHECK_HEADERS(unistd.h termios.h termio.h sgtty.h stdarg.h alloca.h)
-AC_CHECK_HEADERS(sys/itimer.h fcntl.h sys/fcntl.h memory.h sys/wait.h sys/shm.h)
-AC_CHECK_HEADERS(arpa/inet.h arpa/nameser.h resolv.h net/socket.h sys/select.h)
+AC_CHECK_HEADERS(unistd.h termios.h termio.h sgtty.h stdarg.h alloca.h dnl
+sys/itimer.h fcntl.h sys/fcntl.h memory.h sys/wait.h sys/shm.h dnl
+arpa/inet.h arpa/nameser.h net/socket.h sys/select.h netinet/in.h)
+AC_CHECK_HEADERS([resolv.h],,,[
+#include <sys/types.h>
+#ifdef HAVE_NETINET_IN_H
+#include <netinet/in.h>
+#endif
+#ifdef HAVE_ARPA_NAMESER_H
+#include <arpa/nameser.h>
+#endif
+])
+
 
 AC_C_CONST			dnl getopt needs this.
 
@@ -52,10 +62,13 @@ then
 fi
 
 # Check for FreeBSD special case: more libs needed
+# and also need to add /usr/local/include for GNU gettext
 if test `uname` = "FreeBSD" 
 then
-   echo "Adding -lmd -lkvm -lcom_err to standard libraries"
-   LIBS="$LIBS -lmd -lkvm -lcom_err"
+   AC_MSG_NOTICE([Running on FreeBSD: adding -I${LOCALBASE:=/usr/local}/include to CPFLAGS])
+   CPFLAGS="-I${LOCALBASE}/include"
+   AC_MSG_NOTICE([Running on FreeBSD: adding -lmd -lkvm -lcom_err to standard libraries])
+   LIBS="-L${LOCALBASE}/lib $LIBS -lmd -lkvm -lcom_err"
 fi
  
 # Check for Rhapsody special case: it doesn't like -s
@@ -664,16 +677,18 @@ case "x$with_hesiod" in
 xno)
     ;;
 x)
-    for dir in /usr/athena /usr /usr/local
+    for dir in /usr/athena /usr/local /usr
     do
       if test -f "$dir/include/hesiod.h"
       then
+	AC_CHECK_LIB([hesiod], [hesiod_getmailhost], [
         CEFLAGS="$CEFLAGS -DHESIOD"
         test "$dir" != "/usr" && CEFLAGS="$CEFLAGS -I$dir/include"
         LDEFLAGS="$LDEFLAGS -L$dir/lib"
         LIBS="$LIBS -lhesiod"
         with_hesiod=$dir
         break
+	])
       fi
     done
     ;;
@@ -685,6 +700,12 @@ x)
     LIBS="$LIBS -lhesiod"
     ;;
 esac
+
+if test "x$with_hesiod" = x ; then
+    AC_MSG_NOTICE([disabling HESIOD support])
+else
+    AC_MSG_NOTICE([enabling HESIOD support from $with_hesiod])
+fi
 
 ###	use option --with-gssapi=DIR to compile in GSSAPI support
 AC_ARG_WITH(gssapi,
@@ -730,7 +751,7 @@ AC_CONFIG_COMMANDS([default],[
 	# and let VPATH do all the dirty work when we build remotely
 	echo "You can ignore any makedepend error messages:";
 	echo timestamp > stamp-h;
-	(cd $srcdir; makedepend -f - *.c) >>Makefile])
+	(makedepend -f - $srcdir/*.c) >>Makefile])
 
 if test $BUILD_INCLUDED_LIBINTL = yes ; then
     INTLDEPS='$(top_builddir)/intl/libintl.a'

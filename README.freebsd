@@ -1,6 +1,0 @@
-To build on FreeBSD
-===================
-
-./configure -C --with-ssl --with-included-gettext --without-hesiod
-make intl
-make all
