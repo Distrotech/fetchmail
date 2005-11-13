@@ -43,15 +43,14 @@ Protocol) et délivre le courrier électronique a travers le
 serveur SMTP local (habituellement sendmail).
 
 %description -l de
-Fetchmail ist ein freies, vollständiges, robustes und
-wohldokumentiertes Werkzeug zum Abholen und Weiterreichen von E-Mail,
-gedacht zum Gebrauch über temporäre TCP/IP-Verbindungen (wie
-z.B. SLIP- oder PPP-Verbindungen).  Es holt E-Mail von (weit)
-entfernten Mail-Servern ab und reicht sie an das Auslieferungssystem
-der lokalen Client-Maschine weiter, damit sie dann von normalen MUAs
-("mail user agents") wie mutt, elm, pine, (x)emacs/gnus oder mailx
-gelesen werden können.  Ein interaktiver GUI-Konfigurator auch gut
-geeignet zum Gebrauch durch Endbenutzer wird mitgeliefert.
+Fetchmail ist ein freies, vollständiges, robustes und wohldokumentiertes
+Werkzeug zum Abholen und Weiterreichen von E-Mail, zur Verwendung über
+temporäre TCP/IP-Verbindungen (wie z.B. SLIP- oder PPP-Verbindungen).
+Es holt E-Mail von entfernten Mail-Servern ab und reicht sie an das
+Auslieferungssystem des lokalen Computers weiter, damit sie dann von
+normalen MUAs ("mail user agents") wie mutt, elm, pine, (x)emacs/gnus
+oder mailx gelesen werden können.  Ein interaktiver GUI-Konfigurator
+für Endbenutzer (nur englisch) wird mitgeliefert.
 
 %description -l pt
 Fetchmail é um programa que é usado para recuperar mensagens de um
