@@ -1,8 +1,25 @@
-				Release Notes:
+Release Notes
+=============
 
-(The `lines' figures total .c, .h, .l, and .y files under version control.)
+fetchmail-6.2.5.X is a security fix branch that forked off
+fetchmail-6.2.5. It does not change for anything but security and the
+most severe bug fixes. Note that no 6.2.5.X security audits are planned
+except when a particular bug is reported, and that 6.2.5.X is unsafe to
+use on some systems, particularly those that lack a *working and secure*
+snprintf implementation.
 
-fetchmail-6.2.5.4  2005-11-13
+This 6.2.5.X branch is ONLY intended for packages for systems that
+cannot move forward to a newer version for stability policies, such
+as Debian stable.  Note that this branch may be discontinued alongside
+the official 6.3.0 release without further notice.
+
+End users and all other systems should therefore use a current
+fetchmail-6.2.9-rc* release candidate or, if available, 6.3.X or newer release.
+
+
+These are the relevant changes (the line counts have been discontinued):
+
+fetchmail-6.2.5.4  2005-11-13  Matthias Andree
 
 * Also ship pre-built rcfile_y.[ch] for systems that don't have flex,
   yacc or bison.
@@ -13,8 +30,9 @@ fetchmail-6.2.5.4  2005-11-13
   the source directory), but prevent packaging from separated build, it
   yields bogus results.
 * Fix resolv.h autodetection.
+* Add +HESIOD to version printout if appropriate.
 
-fetchmail-6.2.5.3  2005-11-12
+fetchmail-6.2.5.3  2005-11-12  Matthias Andree
 
 * SECURITY FIX CVE-2005-3088: fetchmailconf: fix password exposure: use
   umask 077 before opening output file and restore umask later.
