@@ -233,6 +233,9 @@ int main(int argc, char **argv)
 #if ENABLE_NLS
 	printf("+NLS");
 #endif /* ENABLE_NLS */
+#ifdef HESIOD
+	printf("+HESIOD");
+#endif /* HESIOD */
 	putchar('\n');
 	fputs("Fallback MDA: ", stdout);
 #ifdef FALLBACK_MDA
