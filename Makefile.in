@@ -200,7 +200,9 @@ realclean: distclean
 	rm -f FAQ FEATURES NOTES MANIFEST TODO
 	rm -f config.cache config.log config.status Makefile
 	rm -f stamp-h1 po/stamp-h po/config.log
-	rm -f fetchmail-*.tar.gz fetchmail-*.`arch|sed s/i[4-9]86/i386/`.rpm
+	rm -f fetchmail-*.tar.gz
+	rm -f fetchmail-*.`arch|sed s/i[4-9]86/i386/`.rpm
+	rm -f fetchmail-*.src.rpm
 
 mostlyclean: clean
 
