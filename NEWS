@@ -9,6 +9,10 @@ fetchmail-6.2.5.4  2005-11-13
 * On FreeBSD, add /usr/local/include to CPPFLAGS so that libintl.h is found.
 * Avoid automatically picking up HESIOD implementations that lack
   hesiod_getmailhost, such as the one in FreeBSD's base system.
+* Fix makedepend for separated build (where the build is not run from
+  the source directory), but prevent packaging from separated build, it
+  yields bogus results.
+* Fix resolv.h autodetection.
 
 fetchmail-6.2.5.3  2005-11-12
 
