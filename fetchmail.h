@@ -337,7 +337,7 @@ struct query
 
     /* internal use -- per-poll state */
     flag active;		/* should we actually poll this server? */
-    const char *destaddr;	/* destination host for this query */
+    char *destaddr;		/* destination host for this query */
     int errcount;		/* count transient errors in last pass */
     int authfailcount;		/* count of authorization failures */
     int wehaveauthed;		/* We've managed to logon at least once! */

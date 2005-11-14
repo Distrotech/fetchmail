@@ -127,21 +127,28 @@ int smtp_open(struct query *ctl)
 	    if(ctl->smtphost[0]=='/')
 		ctl->listener = LMTP_MODE;
 
-	    parsed_host = xstrdup(idp->id);
-
-	    if ((cp = strrchr(parsed_host, '/')))
+	    if (ctl->smtphost[0]=='/')
 	    {
-		*cp++ = 0;
-		portnum = cp;
-	    }
-
-	    if (ctl->smtphost[0]=='/'){
+		parsed_host = NULL;
 		if ((ctl->smtp_socket = UnixOpen(ctl->smtphost))==-1)
 		    continue;
-	    } else
+	    }
+	    else
+	    {
+		parsed_host = xstrdup(idp->id);
+		if ((cp = strrchr(parsed_host, '/')))
+		{
+		    *cp++ = 0;
+		    if (cp[0])
+			portnum = cp;
+		}
 		if ((ctl->smtp_socket = SockOpen(parsed_host,portnum,
 					     ctl->server.plugout)) == -1)
+		{
+		    xfree(parsed_host);
 		    continue;
+		}
+	    }
 
 	    /* return immediately for ODMR */
 	    if (ctl->server.protocol == P_ODMR)
@@ -169,9 +176,20 @@ int smtp_open(struct query *ctl)
 	    smtp_close(ctl, 0);
 
 	    /* if opening for ESMTP failed, try SMTP */
-	    if ((ctl->smtp_socket = SockOpen(parsed_host,portnum,
+	    if (ctl->smtphost[0]=='/')
+	    {
+		if ((ctl->smtp_socket = UnixOpen(ctl->smtphost))==-1)
+		    continue;
+	    }
+	    else
+	    {
+		if ((ctl->smtp_socket = SockOpen(parsed_host,portnum,
 					     ctl->server.plugout)) == -1)
-		continue;
+		{
+		    xfree(parsed_host);
+		    continue;
+		}
+	    }
 
 	    if (SMTP_ok(ctl->smtp_socket) == SM_OK && 
 		    SMTP_helo(ctl->smtp_socket, id_me) == SM_OK)
@@ -189,50 +207,17 @@ int smtp_open(struct query *ctl)
      * or MX but not a CNAME.  Some listeners (like exim)
      * enforce this.  Now that we have the actual hostname,
      * compute what we should canonicalize with.
-     * 
-     * make sure we do not forget to drop the /port if
-     * using LMTP (hmh)
      */
-    if (ctl->listener == LMTP_MODE && !ctl->smtpaddress) 
-    {
-	if (parsed_host && parsed_host[0] != 0)
-		ctl->destaddr = xstrdup(parsed_host);
-	else 
-		ctl->destaddr = (ctl->smtphost && ctl->smtphost[0] != '/') ? ctl->smtphost : "localhost";
-    } 
-    else 
-      {
-	/* 
-	 * Here we try to find a correct domain name part for the RCPT
-	 * TO address.  If smtpaddress is set, no need to guestimate
-	 * it.  Otherwise, using ctl->smtphost as a base is a good
-	 * base, although we may have to strip any port appended to
-	 * communicate with SMTP servers that do not listen on the
-	 * SMTP port.  (benj) */
-	if (ctl->smtpaddress)
-	  ctl->destaddr = ctl->smtpaddress;
-	else if (ctl->smtphost && ctl->smtphost[0] != '/')
-	  {
-	    char * cp;
-	    if ((cp = strchr (ctl->smtphost, '/')))
-	    {
-	      /* As an alternate port for smtphost is specified, we
-		 need to strip it from domain name. */
-	      char *smtpname = xmalloc(cp - ctl->smtphost + 1);
-	      strncpy(smtpname, ctl->smtphost, cp - ctl->smtphost +1);
-	      cp = strchr(smtpname, '/');
-	      *cp = 0;
-	      ctl->destaddr = smtpname;
-	    }
-	    else
-	      /* No need to strip port, domain name is smtphost. */
-	      ctl->destaddr = ctl->smtphost;
-	  }
-	/* No smtphost is specified or it is a UNIX socket, then use
-	   localhost as a domain part. */
-	else
-	  ctl->destaddr = "localhost";
-      }
+    xfree(ctl->destaddr);
+    if (ctl->smtpaddress)
+	ctl->destaddr = xstrdup(ctl->smtpaddress);
+    /* parsed_host is smtphost without the /port */
+    else if (parsed_host && parsed_host[0] != 0)
+	ctl->destaddr = xstrdup(parsed_host);
+    /* No smtphost is specified or it is a UNIX socket, then use
+       localhost as a domain part. */
+    else
+	ctl->destaddr = xstrdup("localhost");
 
     if (outlevel >= O_DEBUG && ctl->smtp_socket != -1)
 	report(stdout, GT_("forwarding to %s\n"), ctl->smtphost);
@@ -748,7 +733,8 @@ static int open_bsmtp_sink(struct query *ctl, struct msgblk *msg,
      * enforce this.  Now that we have the actual hostname,
      * compute what we should canonicalize with.
      */
-    ctl->destaddr = ctl->smtpaddress ? ctl->smtpaddress : "localhost";
+    xfree(ctl->destaddr);
+    ctl->destaddr = xstrdup(ctl->smtpaddress ? ctl->smtpaddress : "localhost");
 
     *bad_addresses = 0;
     for (idp = msg->recipients; idp; idp = idp->next)
@@ -1081,7 +1067,8 @@ static int open_mda_sink(struct query *ctl, struct msgblk *msg,
     int	length = 0, fromlen = 0, nameslen = 0;
     char	*names = NULL, *before, *after, *from = NULL;
 
-    ctl->destaddr = "localhost";
+    xfree(ctl->destaddr);
+    ctl->destaddr = xstrdup("localhost");
 
     for (idp = msg->recipients; idp; idp = idp->next)
 	if (idp->val.status.mark == XMIT_ACCEPT)
