@@ -283,6 +283,7 @@ fetchmail 6.3.0 (not yet released officially):
 * Man page: update --smtpaddress documentation. Sunil Shetye.
 * Fix several memory leaks and bugs in the SMTP/LMTP retry logic where
   fetchmail confused UNIX and Internet domain sockets. Sunil Shetye.
+* Man page (BUGS): document that passwords are length limited. Matthias Andree
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.

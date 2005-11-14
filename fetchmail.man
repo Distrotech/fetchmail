@@ -2409,6 +2409,10 @@ with the plugin option.
 .PP
 The 'principal' option only handles Kerberos IV, not V.
 .PP
+Interactively entered passwords are truncated after 63 characters. If
+you really need to use a longer password, you will have to use a
+configuration file.
+.PP
 Send comments, bug reports, gripes, and the like to the
 fetchmail-devel list <fetchmail-devel@lists.berlios.de>.  An HTML FAQ is
 available at the fetchmail home page; surf to
