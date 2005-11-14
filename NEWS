@@ -278,8 +278,9 @@ fetchmail 6.3.0 (not yet released officially):
   Instead, pass the buck on to the SMTP server and use our own unqualified
   hostname. Matthias Andree
 * Revise some error messages so they are less confusing. Sunil Shetye.
-* Man page: update --smtphost documentation. Matthias Andree
+* Man page: update --smtphost documentation. Sunil Shetye, Matthias Andree.
 * Man page: clarify --loghost works only while detached. Matthias Andree
+* Man page: update --smtpaddress documentation. Sunil Shetye.
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.

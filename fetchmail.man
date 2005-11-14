@@ -435,15 +435,13 @@ For details, see
 (Keyword: smtp[host])
 Specify a hunt list of hosts to forward mail to (one or more
 hostnames, comma-separated). Hosts are tried in list order; the first
-one that is up becomes the forwarding target for the current run.
-The default depends on the authentication methods and protocols used on
-the active servers. If this option is not specified, 'localhost' is used
-as a default.  Each hostname may have a port number following the host
-name.  The port number is separated from the host name by a slash; the
-default port is 25 (or "smtp" under IPv6).  If you specify an absolute
-path name (beginning with a /), it will be interpreted as the name of a
-UNIX socket accepting LMTP connections (such as is supported by the
-Cyrus IMAP daemon)
+one that is up becomes the forwarding target for the current run.  If
+this option is not specified, 'localhost' is used as the default.
+Each hostname may have a port number following the host name.  The
+port number is separated from the host name by a slash; the default
+port is "smtp".  If you specify an absolute path name (beginning with
+a /), it will be interpreted as the name of a UNIX socket accepting
+LMTP connections (such as is supported by the Cyrus IMAP daemon)
 Example:
 .sp
 .nf
@@ -462,8 +460,9 @@ default is the FQDN of the machine running
 .TP
 .B \-D <domain> | \-\-smtpaddress <domain>
 (Keyword: smtpaddress) Specify the domain to be appended to addresses
-in RCPT TO lines shipped to SMTP. The name of the SMTP server (as
-specified by --smtphost, which see) is used when this is not specified.
+in RCPT TO lines shipped to SMTP. When this is not specified, the name
+of the SMTP server (as specified by --smtphost) is used for SMTP/LMTP
+and 'localhost' is used for UNIX socket/BSMTP.
 .TP
 .B \-\-smtpname <user@domain>
 (Keyword: smtpname)
