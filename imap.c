@@ -1055,8 +1055,9 @@ static int imap_trail(int sock, struct query *ctl, int number, const char *tag)
 
 	/* UW IMAP returns "OK FETCH", Cyrus returns "OK Completed" */
 	if (strncmp(buf, tag, strlen(tag)) == 0) {
-	    t = buf + strspn(t, " \t");
-	    if (strncmp(t, "OK", 2))
+	    t = buf + strlen(tag);
+	    t += strspn(t, " \t");
+	    if (strncmp(t, "OK", 2) == 0)
 		break;
 	}
     }
