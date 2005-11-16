@@ -284,6 +284,10 @@ fetchmail 6.3.0 (not yet released officially):
 * Fix several memory leaks and bugs in the SMTP/LMTP retry logic where
   fetchmail confused UNIX and Internet domain sockets. Sunil Shetye.
 * Man page (BUGS): document that passwords are length limited. Matthias Andree
+* Man page: Document that quoted strings that run across line boundaries
+  contain the control characters (CR or LF). Document explicitly the backslash
+  escape sequences and their differences from the escape sequences used in the
+  C programming language.  Matthias Andree
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.

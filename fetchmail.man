@@ -1318,14 +1318,28 @@ option statements in a free-format, token-oriented syntax.
 There are four kinds of tokens: grammar keywords, numbers
 (i.e. decimal digit sequences), unquoted strings, and quoted strings.
 A quoted string is bounded by double quotes and may contain
-whitespace (and quoted digits are treated as a string).  An unquoted
-string is any whitespace-delimited token that is neither numeric, string
-quoted nor contains the special characters ',', ';', ':', or '='.
+whitespace (and quoted digits are treated as a string).  Note that
+quoted strings will also contain line feed characters if they run across
+two or more lines - so be sure that your strings are not word-wrapped
+unless you want the embedded CR or LF characters.
+An unquoted string is any whitespace-delimited token that is neither
+numeric, string quoted nor contains the special characters ',', ';',
+':', or '='.
 .PP
 Any amount of whitespace separates tokens in server entries, but is
-otherwise ignored. You may use standard C-style escapes (\en, \et,
-\eb, octal, and hex) to embed non-printable characters or string
-delimiters in strings.
+otherwise ignored. You may use escapes (\en for LF, \et for HT,
+\&\eb for BS, \er for CR, \e\fInnn\fP for decimal (where nnn cannot start
+with a 0), \e0\fIooo\fP for octal, and \ex\fIhh\fP for hex) to embed
+non-printable characters or string delimiters in strings.
+.PP
+.B Warning:
+while these resemble C-style escape sequences, fetchmail only supports
+these seven styles. C supports more escape sequences that consist of
+backslash (\e) and a single character, but does not support decimal
+codes and does not require the leading 0 in octal notation.  Example:
+fetchmail interprets \e233 the same as \exE9 (Latin small letter e
+with acute), where C would interpret \e233 as octal 0233 = \ex9B (CSI,
+control sequence introducer).
 .PP
 Each server entry consists of one of the keywords 'poll' or 'skip',
 followed by a server name, followed by server options, followed by any
