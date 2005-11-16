@@ -288,6 +288,10 @@ fetchmail 6.3.0 (not yet released officially):
   contain the control characters (CR or LF). Document explicitly the backslash
   escape sequences and their differences from the escape sequences used in the
   C programming language.  Matthias Andree
+* Fix segfault when run control file ends with a backslash inside an
+  unterminated quoted string. Matthias Andree.
+* In quoted strings, support backslash as last character on a line to join the
+  following line to the current. Matthias Andree.
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.

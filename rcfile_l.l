@@ -234,26 +234,30 @@ char		*tp;	/* target buffer for digested string */
     {
 	int	cval = 0;
 
-	if (*cp == '\\' && strchr("0123456789xX", cp[1]))
+	/* we MUST check for NUL explicitly, as strchr(string, 0) will
+	 * always succeed! */
+	if (*cp == '\\' && cp[1] && strchr("0123456789xX", cp[1]))
 	{
 	    char *dp;
 	    const char *hex = "00112233445566778899aAbBcCdDeEfF";
 	    int dcount = 0;
 
 	    if (*++cp == 'x' || *cp == 'X')
-		for (++cp; (dp = strchr(hex, *cp)) && (dcount++ < 2); cp++)
+		for (++cp; *cp && (dp = strchr(hex, *cp)) && (dcount++ < 2); cp++)
 		    cval = (cval * 16) + (dp - hex) / 2;
 	    else if (*cp == '0')
-		while (strchr("01234567",*cp) != (char*)NULL && (dcount++ < 3))
+		while (*cp && strchr("01234567",*cp) != (char*)NULL && (dcount++ < 3))
 		    cval = (cval * 8) + (*cp++ - '0');
 	    else
-		while ((strchr("0123456789",*cp)!=(char*)NULL)&&(dcount++ < 3))
+		while (*cp && (strchr("0123456789",*cp)!=(char*)NULL)&&(dcount++ < 3))
 		    cval = (cval * 10) + (*cp++ - '0');
 	}
 	else if (*cp == '\\')		/* C-style character escapes */
 	{
 	    switch (*++cp)
 	    {
+	    case '\n': cp++; continue;	/* backslash before LF to join lines */
+	    case '\0': goto done;	   /* ignore backslash at file end */
 	    case '\\': cval = '\\'; break;
 	    case 'n': cval = '\n'; break;
 	    case 't': cval = '\t'; break;
@@ -267,5 +271,6 @@ char		*tp;	/* target buffer for digested string */
 	    cval = *cp++;
 	*tp++ = cval;
     }
+done:
     *tp = '\0';
 }
