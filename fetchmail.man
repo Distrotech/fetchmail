@@ -479,15 +479,14 @@ be comma-separated.
 .B \-m <command> | \-\-mda <command>
 (Keyword: mda) You can force mail to be passed to an MDA directly
 (rather than forwarded to port 25) with the --mda or -m option.  To
-avoid losing mail, use this option only with MDAs like maildrop, procmail or
-sendmail that return a nonzero status on disk-full and other
+avoid losing mail, use this option only with MDAs like maildrop or
+MTAs like sendmail that return a nonzero status on disk-full and other
 resource-exhaustion errors; the nonzero status tells fetchmail that
 delivery failed and prevents the message from being deleted off the
 server.  If \fIfetchmail\fR is running as root, it sets its user id to
 that of the target user while delivering mail through an MDA.  Some
 possible MDAs are "/usr/sbin/sendmail -i -f %F %T", "/usr/bin/deliver"
-and "/usr/bin/procmail -d %T" (but the latter is usually redundant as
-it's what SMTP listeners normally forward to).  Local delivery
+and "/usr/bin/maildrop -d %T".  Local delivery
 addresses will be inserted into the MDA command wherever you place a
 %T; the mail message's From address will be inserted where you place
 an %F. \fBDO NOT ENCLOSE THE %F OR %T STRING IN SINGLE QUOTES!\fR For
@@ -497,8 +496,21 @@ command is passed to the shell.  Do \fINOT\fR use an MDA invocation
 like "sendmail -i -t" that dispatches on the contents of To/Cc/Bcc, it
 will create mail loops and bring the just wrath of many postmasters
 down upon your head.  Also, do \fInot\fR try to combine multidrop
-mode with an MDA such as procmail that can only accept one address;
-you will lose mail.
+mode with an MDA such as maildrop or procmail that can only accept one
+address; you will lose mail.
+
+A word of warning: the well-known
+.BR procmail (1)
+package is very hard to configure properly, it has a very nasty "fall
+through to the next rule" behavior on delivery errors (even temporary
+ones, such as out of disk space if another user's mail daemon copies the
+mailbox around to purge old messages), so your mail will end up in the
+wrong mailbox sooner or later. The proper procmail configuration is
+outside the scope of this document though. Using
+.BR maildrop (1)
+is usually much easier, and many users find the filter syntax used by
+maildrop easier to understand.
+
 .TP
 .B \-\-lmtp
 (Keyword: lmtp)
@@ -1174,12 +1186,12 @@ spam block.
 When forwarding to an MDA, however, there is more possibility
 of error.  Some MDAs are 'safe' and reliably return a nonzero status
 on any delivery error, even one due to temporary resource limits.
-The well-known
-.IR procmail (1)
+The
+.IR maildrop (1)
 program is like this; so are most programs designed as mail transport
 agents, such as
 .IR sendmail (1),
-and
+including the sendmail wrapper of Postfix and
 .IR exim (1).
 These programs give back a reliable positive acknowledgement and
 can be used with the mda option with no risk of mail loss.  Unsafe
@@ -2449,10 +2461,7 @@ The RFC822 address parser used in multidrop mode chokes on some
 quoting and embedded comments are likely to confuse it.
 .PP
 In a message with multiple envelope headers, only the last one
-processed will be visible to fetchmail.  To get around this, use a
-mailserver-side filter that consolidates the contents of all envelope
-headers into a single one (procmail, mailagent, or maildrop can be
-programmed to do this fairly easily).
+processed will be visible to fetchmail.
 .PP
 Use of some of these protocols requires that the program send
 unencrypted passwords over the TCP/IP connection to the mailserver.
@@ -2507,8 +2516,13 @@ http://fetchmail.berlios.de/ or do a WWW search for pages with
 \&'fetchmail' in their titles.
 
 .SH AUTHOR
-Eric S. Raymond <esr@snark.thyrsus.com>.  Too many other people to
-name here have contributed code and patches.
+Fetchmail is currently maintained by Matthias Andree and Rob Funk with
+major assistance from Sunil Shetye (for code) and Rob McGregor (for the
+mailing lists).
+.PP
+Most of the code is from Eric S. Raymond <esr@snark.thyrsus.com>.  Too
+many other people to name here have contributed code and patches.
+.PP
 This program is descended from and replaces
 .IR popclient ,
 by Carl Harris <ceharris@mal.com>; the internals have become quite different,
@@ -2516,11 +2530,13 @@ but some of its interface design is directly traceable to that
 ancestral program.
 .PP
 This manual page has been improved by R.\ Hannes Beinert.
-.PP
-Fetchmail is currently maintained by Matthias Andree and Rob Funk.
 
 .SH SEE ALSO
 mutt(1), elm(1), mail(1), sendmail(8), popd(8), imapd(8), netrc(5)
+
+The fetchmail home page: <http://fetchmail.berlios.de/>
+
+The maildrop home page: <http://www.courier-mta.org/maildrop/>
 .SH APPLICABLE STANDARDS
 .TP 5
 SMTP/ESMTP:

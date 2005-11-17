@@ -293,6 +293,9 @@ fetchmail 6.3.0 (not yet released officially):
 * In quoted strings, support backslash as last character on a line to join the
   following line to the current. Matthias Andree.
 * Parsing untagged IMAP responses is more robust now. Matthias Andree.
+* Man page: Remove some procmail praises in --mda documentation, suggest
+  maildrop instead, warn of procmail fallthrough behavior. Matthias Andree.
+* Man page: Revise AUTHORS and SEE ALSO sections. Matthias Andree.
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.
