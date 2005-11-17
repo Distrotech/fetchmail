@@ -292,6 +292,7 @@ fetchmail 6.3.0 (not yet released officially):
   unterminated quoted string. Matthias Andree.
 * In quoted strings, support backslash as last character on a line to join the
   following line to the current. Matthias Andree.
+* Parsing untagged IMAP responses is more robust now. Matthias Andree.
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.
