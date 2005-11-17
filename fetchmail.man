@@ -1914,6 +1914,73 @@ statement sets the address to which multidrop mail defaults if there are
 no local matches.  Finally, 'set syslog' sends log messages to
 syslogd(8).
 
+.SH DEBUGGING FETCHMAIL
+.SS Fetchmail crashing
+There are various ways in that fetchmail may "crash", i. e. stop
+operation suddenly and unexpectedly. A "crash" usually refers to an
+error condition that the software did not handle by itself. A well-known
+failure mode is the "segmentation fault" or "signal 11" or "SIGSEGV" or
+just "segfault" for short. These can be caused by hardware or by software
+problems. Software-induced segfaults can usually be reproduced easily
+and in the same place, whereas hardware-induced segfaults can go away if
+the computer is rebooted, or powered off for a few hours, and can happen
+in random locations even if you use the software the same way.
+
+For solving hardware-induced segfaults, find the faulty component and repair or
+relace it. <http://www.bitwizard.nl/sig11/> may help you with details.
+
+For solving software-induced segfaults, the developers may need a "stack
+backtrace".
+
+.SS Enabling fetchmail core dumps
+By default, fetchmail suppresses core dumps as these might contain
+passwords and other sensitive information. For debugging fetchmail
+crashes, obtaining a "stack backtrace" from a core dump is often the
+quickest way to solve the problem, and when posting your problem on a
+mailing list, the developers may ask you for a "backtrace".
+
+1. To get useful backtraces, fetchmail needs to be installed without
+getting stripped of its compilation symbols.  Unfortunately, most
+binary packages that are installed are stripped, and core files from
+symbol-stripped programs are worthless. So you may need to recompile
+fetchmail. On many systems, you can type
+.sp
+.nf
+        file `which fetchmail`
+.fi
+.sp
+to find out if fetchmail was symbol-stripped or not. If yours was
+unstripped, fine, proceed, if it was stripped, you need to recompile the
+source code first. You do not usually need to install fetchmail in order
+to debug it.
+
+2. The shell environment that starts fetchmail needs to enable core
+dumps. The key is the "maximum core (file) size" that can usually be
+configured with a tool named "limit" or "ulimit". See the documentation
+for your shell for details. In the popular bash shell, "ulimit -Sc
+unlimited" will allow the core dump.
+
+3. You need to tell fetchmail, too, to allow core dumps. To do
+this, run fetchmail with the \fB\-d0 \-v\fP options.  It is often easier
+to also add \fB\-\-nosyslog \-N\fR as well.
+
+Finally, you need to reproduce the crash. You can just start fetchmail
+from the directory where you compiled it by typing \fB./fetchmail\fR,
+so the complete command line will start with \fB./fetchmail \-Nvd0
+\&\-\-nosyslog\fR and perhaps list your other options.
+
+After the crash, run your debugger to obtain the core dump.  The
+debugger will often be GNU GDB, you can then type (adjust paths as
+necessary) \fBgdb ./fetchmail fetchmail.core\fR and then, after GDB
+has started up and read all its files, type \fBbacktrace full\fR, save
+the output (copy & paste will do, the backtrace will be read by a human)
+and then type \fBquit\fR to leave gdb.
+.B Note:
+on some systems, the core
+files have different names, they might contain a number instead of the
+program name, or number and name, but it will usually have "core" as
+part of their name.
+
 .SH INTERACTION WITH RFC 822
 When trying to determine the originating address of a message,
 fetchmail looks through headers in the following order:
