@@ -140,7 +140,7 @@ fetchmail 6.3.0 (not yet released officially):
   reported by Dr. Andreas Krüger, Debian bug #242384 (MA)
 * Added Russian translation, courtesy of Pavel Maryanov of the
   Russian translation team. (MA)
-* Dropped da=Danish, el=Greek, ja=Japanese, sq=Albanian and tr=Turkish
+* Dropped da=Danish, el=Greek, ja=Japanese and tr=Turkish
   translations which have more than 10% (61+) untranslated or fuzzy
   messages. Matthias Andree.
 * Skip sending POP3 PASS command when USER command failed. Matthias Andree.
@@ -149,7 +149,6 @@ fetchmail 6.3.0 (not yet released officially):
   clarify singledrop vs. multidrop operation. (MA)
 * Make tracepolls a server option, as documented. Fixes Debian bug
   #156094. Matthias Andree.
-* Updated some translations. (MA)
 * Fix some minor inaccuracies (RFC-1893 related, grammar/spelling) in
   the manual page.
 * Rename ESR's design notes to esrs-design-notes.html and add a new
@@ -296,6 +295,10 @@ fetchmail 6.3.0 (not yet released officially):
 * Man page: Remove some procmail praises in --mda documentation, suggest
   maildrop instead, warn of procmail fallthrough behavior. Matthias Andree.
 * Man page: Revise AUTHORS and SEE ALSO sections. Matthias Andree.
+* Updated translations: Albanian [sq] (Besnik Bleta), Catalan [ca] (Ernest
+  Adrogué Calveras), Czech [cs] (Miloslav Trmac), German [de] (MA),
+  Spanish (Castilian) [es] (Javier Kohen), French [fr] (MA),
+  Polish [pl] (Jakub Bogusz), Russian [ru] (Pavel Maryanov).
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.
