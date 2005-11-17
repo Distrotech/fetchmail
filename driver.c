@@ -338,12 +338,12 @@ static void send_size_warnings(struct query *ctl)
     stuff_warning(NULL, ctl, "%s", "");
     if (ctl->limitflush)
 	stuff_warning(NULL, ctl,
-		GT_("The following oversized messages were deleted on the mail server %s:"),
-		ctl->server.pollname);
+		GT_("The following oversized messages were deleted on server %s account %s:"),
+		ctl->server.pollname, ctl->remotename);
     else
 	stuff_warning(NULL, ctl,
-		GT_("The following oversized messages remain on the mail server %s:"),
-		ctl->server.pollname);
+		GT_("The following oversized messages remain on server %s account %s:"),
+		ctl->server.pollname, ctl->remotename);
 
     stuff_warning(NULL, ctl, "%s", "");
 

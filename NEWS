@@ -4,8 +4,8 @@ Fetchmail Release Notes
 This file is in Unicode charset with UTF-8 encoding.
 
 (The `lines' figures total .c, .h, .l, and .y files under version control.
-Names in parentheses are the maintainers who handled the respective change.
-Abbreviations: MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk)
+Abbreviations in parentheses are the maintainers who committed the respective
+change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 
 fetchmail 6.3.0 (not yet released officially):
 
@@ -123,8 +123,7 @@ fetchmail 6.3.0 (not yet released officially):
   possibly fixing Red Hat bug #114470. (MA).
 * Nalin Dahyabhai's patch to use the krb5-config script, if present.
   Sent by Miloslav Trmac. (MA)
-* Nalin Dahyabhai's fix to make rpa.c compile. Sent by Miloslav Trmac.
-  (MA)
+* Nalin Dahyabhai's fix to make rpa.c compile. Sent by Miloslav Trmac. (MA)
 * Trivial fetchmailconf.man to redirect to fetchmail.1.
   Reported by Miloslav Trmac. (MA)
 * Updated and re-enabled Czech translation, by Miloslav Trmac (MA).
@@ -299,6 +298,8 @@ fetchmail 6.3.0 (not yet released officially):
   Adrogué Calveras), Czech [cs] (Miloslav Trmac), German [de] (MA),
   Spanish (Castilian) [es] (Javier Kohen), French [fr] (MA),
   Polish [pl] (Jakub Bogusz), Russian [ru] (Pavel Maryanov).
+* In oversized warning messages, print the account name, too. Fixes Debian
+  Bug#213299. Sunil Shetye (MA).
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.
