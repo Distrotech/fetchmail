@@ -1,6 +1,10 @@
 For 6.3.0:
 ==========
 
+Add FAQ entry about procmail configuration with 1. ORGMAIL/DEFAULT, 2.
+:0e { EXITCODE=75 HOST }, 3. explicit default recipe, 4. LOGFILE
+location?
+
 Yves Boisjoly reports that NTLM auth needs to use the real Wks field
 rather than duplicating the user name (see l. 211 in smbutil.c).
 
