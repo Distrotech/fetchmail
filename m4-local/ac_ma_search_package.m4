@@ -62,7 +62,7 @@ if test "${with_$1}" != no ; then
 	    $1_libdir=$i/lib
 	fi
 
-	if ! test -f "${$1_include}/$5" -a -d "${$1_libdir}" ; then
+	if test ! -f "${$1_include}/$5" -o ! -d "${$1_libdir}" ; then
 	    continue
 	fi
 
