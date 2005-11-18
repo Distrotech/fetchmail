@@ -1,13 +1,12 @@
 # translation of fetchmail-6.2.9-rc8.sq.po to Albanian
-# This file is distributed under the same license as the PACKAGE package.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
-# Besnik Bleta <besnik@spymac.com>, 2004.
+# This file is distributed under the same license as the fetchmail package.
+# Copyright (C) 2005 Besnik Bleta <besnik@spymac.com>, 2004, 2005.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.9-rc8\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2005-11-18 00:25+0100\n"
+"POT-Creation-Date: 2005-11-18 00:37+0100\n"
 "PO-Revision-Date: 2005-11-17 19:17+0200\n"
 "Last-Translator: Besnik Bleta <besnik@spymac.com>\n"
 "Language-Team: Albanian <translation-team-sq@lists.sourceforge.net>\n"
@@ -65,13 +64,13 @@ msgid "Subject: Fetchmail oversized-messages warning"
 msgstr "Subjekt: Sinjalizim nga Fetchmail rreth mesazhesh tej mase"
 
 #: driver.c:341
-#, c-format
-msgid "The following oversized messages were deleted on the mail server %s:"
+#, fuzzy, c-format
+msgid "The following oversized messages were deleted on server %s account %s:"
 msgstr "Mesazhet vijues tej mase u fshinë prej shërbyesit të postës %s:"
 
 #: driver.c:345
-#, c-format
-msgid "The following oversized messages remain on the mail server %s:"
+#, fuzzy, c-format
+msgid "The following oversized messages remain on server %s account %s:"
 msgstr "Mesazhet vijues tej mase mbesin në shërbyesin e postës %s:"
 
 #: driver.c:364
