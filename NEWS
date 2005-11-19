@@ -300,6 +300,7 @@ fetchmail 6.3.0 (not yet released officially):
   Polish [pl] (Jakub Bogusz), Russian [ru] (Pavel Maryanov).
 * In oversized warning messages, print the account name, too. Fixes Debian
   Bug#213299. Sunil Shetye (MA).
+* Fix installation without Python. Sunil Shetye, reported by Peter Church. (MA)
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.

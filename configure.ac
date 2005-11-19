@@ -18,6 +18,7 @@ AM_INIT_AUTOMAKE(1.5 foreign no-installinfo)
 
 dnl the : states that python is optional
 AM_PATH_PYTHON(2.0,,:)
+AM_CONDITIONAL([HAVE_PYTHON], [test "$PYTHON" != :])
 
 AC_PROG_AWK
 AC_PROG_CC
