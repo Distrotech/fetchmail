@@ -1,0 +1,52 @@
+This file contains any messages produced by compilers while
+running configure, to aid debugging if configure makes a mistake.
+
+configure:529: checking for gcc
+configure:642: checking whether the C compiler (gcc  ) works
+configure:658: gcc -o conftest    conftest.c  1>&5
+configure:684: checking whether the C compiler (gcc  ) is a cross-compiler
+configure:689: checking whether we are using GNU C
+configure:698: gcc -E conftest.c
+configure:717: checking whether gcc accepts -g
+configure:788: checking for a BSD compatible install
+configure:843: checking for ranlib
+configure:873: checking for IEEE compilation options
+configure:890: gcc -c -g -O2  conftest.c 1>&5
+configure:884:3: #error "Option needed"
+configure: failed program was:
+#line 879 "configure"
+#include "confdefs.h"
+
+int main() {
+
+#if !(defined(__alpha) && (defined(__DECC) || defined(__DECCXX) || (defined(__osf__) && defined(__LANGUAGE_C__))) && (defined(VMS) || defined(__VMS)))
+# error "Option needed"
+#endif
+
+; return 0; }
+configure:909: gcc -c -g -O2  conftest.c 1>&5
+configure:903:3: #error "Option needed"
+configure: failed program was:
+#line 898 "configure"
+#include "confdefs.h"
+
+int main() {
+
+#if !(defined(__alpha) && (defined(__DECC) || defined(__DECCXX) || (defined(__osf__) && defined(__LANGUAGE_C__))) && !(defined(VMS) || defined(__VMS)) && !defined(_CFE))
+# error "Option needed"
+#endif
+
+; return 0; }
+configure:928: gcc -c -g -O2  conftest.c 1>&5
+configure:922:3: #error "Option needed"
+configure: failed program was:
+#line 917 "configure"
+#include "confdefs.h"
+
+int main() {
+
+#if !(defined(__alpha) && (defined(__GNUC__) && (defined(__osf__) || defined(__linux__))))
+# error "Option needed"
+#endif
+
+; return 0; }

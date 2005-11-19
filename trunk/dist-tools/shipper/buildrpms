@@ -1,0 +1,42 @@
+#!/bin/sh
+#
+#  Build RPMs from the source in the current directory.  This script sets
+#  up an RPM "_topdir" and builds the RPMs under there, then copies the
+#  binary and source RPMs to the current directory.
+#
+#  Written by Sean Reifschneider <jafo-rpms@tummy.com>, 2003
+
+TARBALL=$1		#  tarball to build from
+
+#  set up temporary directory
+TMPDIR=`pwd`/rpm-build.$$
+[ ! -z "$TMPDIR" -a "$TMPDIR" != / ] && rm -rf "$TMPDIR"
+mkdir -p "$TMPDIR"/BUILD
+mkdir -p "$TMPDIR"/RPMS
+mkdir -p "$TMPDIR"/SOURCES
+mkdir -p "$TMPDIR"/SPECS
+mkdir -p "$TMPDIR"/SRPMS
+
+#  set up rpmmacros file
+MACROFILE="$TMPDIR"/rpmmacros
+RCFILE="$TMPDIR"/rpmrc
+sed "s|~/.rpmmacros|$MACROFILE|" /usr/lib/rpm/rpmrc >"$RCFILE"
+echo "%_topdir $TMPDIR" >"$MACROFILE"
+echo "%_topdir $TMPDIR" >"$MACROFILE"
+
+#  build RPMs
+rpmbuild --rcfile "$RCFILE" $ARCH -ta $TARBALL \
+|| rpm --rcfile "$RCFILE" $ARCH -ta $TARBALL
+status=$?
+
+if [ $status = '0' ]
+then
+    # copy RPMs to this directory
+    cp "$TMPDIR"/RPMS/*/*.rpm .
+    cp "$TMPDIR"/SRPMS/*.rpm .
+fi
+
+#  clean up build directory
+[ ! -z "$TMPDIR" -a "$TMPDIR" != / ] && rm -rf "$TMPDIR"
+
+exit $status

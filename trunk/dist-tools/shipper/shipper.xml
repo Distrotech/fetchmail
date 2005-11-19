@@ -1,0 +1,752 @@
+<!DOCTYPE refentry PUBLIC 
+   "-//OASIS//DTD DocBook XML V4.1.2//EN"
+   "docbook/docbookx.dtd">
+<refentry id='shipper.1'>
+<refmeta>
+<refentrytitle>shipper</refentrytitle>
+<manvolnum>1</manvolnum>
+</refmeta>
+<refnamediv id='name'>
+<refname> shipper</refname>
+<refpurpose>automatic drop-shipping of project releases</refpurpose>
+</refnamediv>
+<refsynopsisdiv id='synopsis'>
+
+<cmdsynopsis>
+  <command>shipper</command>  
+  <arg choice='opt'>-h</arg>
+  <arg choice='opt'>-n</arg>
+  <arg choice='opt'>-N</arg>
+  <arg choice='opt'>-f</arg>
+  <arg choice='opt'>-v</arg>
+</cmdsynopsis>
+<cmdsynopsis>
+  <command>buildrpms</command>
+  <arg choice='req'><replaceable>tarball</replaceable></arg>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1><title>Description</title>
+
+<para><application>shipper</application> is a tool for shipping
+project releases.  Its job is to make it possible for you to run the
+command <command>shipper</command> in the top-level directory of a
+project and have a release be properly exported to all the places that
+you normally deliver it &mdash; your personal website, Linux source
+code archive sites, and distribution submission queues. A second goal
+is to arrange your shipping process in such a way that metadata like
+your project version only have to be kept in one place and modified
+once per release. The overall goal is to reduce the friction cost
+of shipping releases to as near zero as possible.</para>
+
+<para><application>buildrpms</application> is a helper script that
+builds source and binary RPMs from a specified tarball with a
+BuildRoot field. <application>shipper</application> also calls
+<citerefentry>
+<refentrytitle>rpm2lsm</refentrytitle>
+<manvolnum>1</manvolnum></citerefentry> to do part of its work.</para>
+
+<para>As much as possible, <application>shipper</application> tries to
+deduce what it should do rather than requiring you to tell it.  In
+order to do this, it relies on your project obeying standard GNU-like
+naming conventions.  It also relies on being able to mine project
+metadata out of a package specfile.  (Presently the only variety of
+package specfile supported is an RPM spec; this may change in the future,
+when we fully support shipping Debian packages.)</para>
+
+<para>In normal use, you need set only one configuration variable,
+which is the list of private destinations to ship to.  You may also
+want to add some magic <quote>Keywords</quote> comments to your
+project specfiles.  Once you have <application>shipper</application>
+up and running, you can experiment with more advanced features
+such as having the program generate project web pages for you.</para>
+</refsect1>
+
+<refsect1><title>Theory of Operation</title>
+
+<para><application>shipper</application> pushes
+<emphasis>deliverables</emphasis> out to
+<emphasis>destinations</emphasis>.  Deliverables include: source tarballs,
+source zip archives, source RPMs, binary RPMs, ChangeLog files, README
+files, LSM files, and various other project metadata files.  Destinations
+include both <emphasis>private destinations</emphasis> like websites, FTP
+archive sites and mailing lists, and <emphasis>public
+channels</emphasis> like ibiblio, freshmeat.net, and the submission
+queues for various well-known operating-system distributions. The
+shipper framework is extensible and it is relatively easy to add new
+channel types and new deliverables; in the future, we hope to support
+(for example) Debian packages as deliverables and SourceForge as a
+channel.</para>
+
+<para><application>shipper</application>'s first step is to find the
+project name and version, then to check that the minimum set of files that
+<application>shipper</application> requires to continue is in place.
+To start with, <application>shipper</application> needs a source
+tarball and a specfile. Once it knows those are in place, it
+can extract various pieces of information it will need to do its
+real work. It also reads in a handful of configuration variables.
+The -N (nobuild) option causes it to dump all configuration values and
+stop there.</para>
+
+<para>The first real work that gets done is finding or building local
+deliverables.  These are either <emphasis>generated
+deliverables</emphasis> (like RPMs) that can be rebuilt automatically,
+or or <emphasis>stock deliverables</emphasis> (like a README file)
+that have to be changed by hand.  <application>shipper</application>
+rebuilds any generated deliverable that doesn't exist when it starts
+up.  Building local deliverables is separated from uploading because
+it means that you can stop and inspect what you're going to ship
+before committing to an upload.</para>
+
+<para>The -n (noupload) option stops before uploading, leaving all
+local deliverables in place but displaying the exact upload commands
+that would have been used to ship them.  The -f (force) option forces
+a rebuild of all generated deliverables, even those that already
+exist.  The command <command>shipper -f -n</command> will show you
+exactly what <application>shipper</application> would do for a real
+upload.</para>
+
+<para>Once all local deliverables have been built,
+<application>shipper</application> can begin uploading files and
+posting announcements. It does private destinations first, then public
+channels.  This means, for example, that if you give
+<application>shipper</application> your personal website as a destination, the
+website will get updated each time <emphasis>before</emphasis>
+any submissions or announcements are sent to public sites like 
+ibiblio.org or freshmeat.net.</para>
+
+<para>When uploads are complete, <application>shipper</application>
+cleans up after itself by deleting any deliverables it created for
+this run.  Deliverables that were found and up to date are not
+removed.</para>
+
+<para>Finally, note that <application>shipper</application> makes one
+important assumption about the structure of your website(s).  Beneath
+each directory in your <varname>destinations</varname> list, there
+will be one subdirectory for each project, with the directory leaf
+name being the same as the project.  Thus, for example, if you have
+three projects named ruby, diamond and sapphire, and your personal
+site is at <filename>gemstones.net:/public/www/precious/</filename>,
+<application>shipper</application> will expect to be able to drop
+deliverables in three directories
+<filename>gemstones.net:/public/www/precious/ruby</filename>,
+<filename>gemstones.net:/public/www/precious/diamond/</filename>, and
+<filename>gemstones.net:/public/www/precious/sapphire/</filename>.
+Note that <application>shipper</application> will not create these
+project directories for you if they're missing; this is deliberate, so
+that uploads to sites that are not prepared for them will fail
+noisily.</para>
+
+</refsect1>
+
+<refsect1><title>How Shipper Deduces What To Do</title>
+
+<para>The behavior of shipper depends on a handful of internal
+variables.  Some of these variables have defaults computed at startup
+time.  All can be set or overridden in the per-user
+<filename>~/.shipper</filename> file, and overridden in any
+per-project <filename>.shipper</filename> file.  Both files are Python
+code and the syntax of variable settings is Python's.</para>
+
+<para>If a variable is set in a config file, that value is locked in
+(except for the <varname>destinations</varname> variable which can be
+appended to from a specfile, see below) Variables that are
+<emphasis>not</emphasis> set in a config file may be set by the values
+of fields in your project specfile.</para>
+
+<para>For basic use, it is only necessary to set one such variable:
+<varname>destinations</varname>, the list of destinations to ship to.
+Normally you'll set this globally, pointing all your projects at your
+main distribution website, in your <filename>~/.shipper</filename>
+file; it is also possible to add destinations on a per-project basis
+by giving a comma-separated list in a #Destinations: comment in the
+specfile.  You can set the variable in a per-project
+<filename>.shipper</filename> to ignore your global destination
+list.</para>
+
+<para>The first thing shipper looks for is a specfile in the
+current directory; there must be exactly one.  It extracts the project
+name from the Name field.  Next step is to find the project version
+(the variable <varname>package</varname>).  This is extracted from the
+specfile, or by looking for a makefile macro with a name
+beginning with VERS; if the value of that macro is a shell command
+wrapped in $(shell ...), it is executed and the output is captured to
+yield the version.  If both versions are present, they are
+consistency-checked.</para>
+
+<para><application>shipper</application> gets most of the rest of the
+data it uses to decide what to do from headers in the specfile.
+The following table lists all the variables and their corresponding
+specfile fields. <application>shipper</application> uses the RPM spec
+file fields: the Debian entries are informational only.</para>
+
+<informaltable>
+<tgroup cols="4">
+<thead>
+<row>
+<entry>Variable</entry>
+<entry>RPM specfile field</entry>
+<entry>Debian specfile field</entry>
+<entry>Meaning</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry><varname>destinations</varname></entry>
+<entry>#Destinations:</entry>
+<entry>XBS-Destinations:</entry>
+<entry>
+<para>A list of remote directories to ship to using
+<citerefentry>
+<refentrytitle>scp</refentrytitle> <manvolnum>1</manvolnum>
+</citerefentry>.  Each location is a place to drop deliverables:
+either a [user@]site:path destination that
+<citerefentry>
+<refentrytitle>scp</refentrytitle> <manvolnum>1</manvolnum>
+</citerefentry> can use, or an FTP url that
+<citerefentry>
+<refentrytitle>lftp</refentrytitle> <manvolnum>1</manvolnum>
+</citerefentry>
+can use. Note that actual project directories are computed by
+appending the value of <varname>package</varname> to
+the destination you're shipping to.</para>
+
+<para><emphasis role='bold'>There is no default.</emphasis>.  If you
+do not set this variable, <application>shipper</application> will
+ship only to public channels.</para>
+</entry>
+</row>
+<row>
+<entry><varname>channels</varname></entry>
+<entry align='center'>-</entry>
+<entry align='center'>-</entry>
+<entry>
+<para>The list of public channels to be shipped to after the private
+channels in the <varname>destination</varname> list. You can disable
+one or more of these in a config file by calling the function
+<function>disable()</function>; for example with
+<command>disable('freshmeat')</command>.</para>
+</entry>
+</row>
+<row>
+<entry><varname>whoami</varname></entry>
+<entry align='center'>-</entry>
+<entry align='center'>-</entry>
+<entry>
+<para>A plausible email address for the user.  If not specified in the
+config file, it's generated from
+<envar>$USERNAME</envar> and <envar>$HOSTNAME</envar>.</para>
+</entry>
+</row>
+<row>
+<entry><varname>date</varname></entry>
+<entry align='center'>-</entry>
+<entry align='center'>-</entry>
+<entry>
+<para>The program's startup time. This can be used in the web page and
+email announcement templates.</para>
+
+<para>You can use the Python function time.strftime("...") in your
+<filename>~/.shipper</filename> file to format this date to your
+taste.  If you don't set this in the config file, the program will
+set it for you.</para>
+</entry>
+</row>
+<row>
+<entry><varname>indextemplate</varname></entry>
+<entry align='center'>-</entry>
+<entry align='center'>-</entry>
+<entry>
+<para>Template HTML from which to generate index.html for shipping.  There is a
+default which generates a very simple page containing a title, a 
+date, and a table listing downloadable resources.  This is used when
+shipping to a web directory, if no index page exists when shipper
+is run.</para>
+</entry>
+</row>
+<row>
+<entry><varname>mailtemplate</varname></entry>
+<entry align='center'>-</entry>
+<entry align='center'>-</entry>
+<entry>
+<para>Template text from which to generate the file ANNOUNCE.EMAIL to be
+shipped to destinations that are mailto URLs.  There is a default which
+generates a very simple email containing a subject, a pointer to the 
+project web page, and the last entry in the project changelog.</para>
+</entry>
+</row>
+<row>
+<entry><varname>package</varname></entry>
+<entry>Name:</entry>
+<entry>Package:</entry>
+<entry>
+<para>Project name, used to generate the stem part of the names of RPMs and
+other deliverables that <application>shipper</application>
+builds. If the specfile is a Debian control file, the Debian-specific
+part of the version number (after the dash) is removed.</para>
+</entry>
+</row>
+<row>
+<entry><varname>version</varname></entry>
+<entry>Version:</entry>
+<entry>Version:</entry>
+<entry>
+<para>Project version, used in generating the names of RPMs and
+other deliverables that <application>shipper</application>
+builds.</para>
+</entry>
+</row>
+<row>
+<entry><varname>homepage</varname></entry>
+<entry>URL:</entry>
+<entry>XBS-Home-Page:</entry>
+<entry>
+<para>Project home page URL. Used when generating project 
+announcements.</para>
+</entry>
+</row>
+<row>
+<entry><varname>arch</varname></entry>
+<entry>BuildArch:</entry>
+<entry>Architecture:</entry>
+<entry>
+<para>Build architecture.  If this field is <quote>noarch</quote>, 
+noarch rather than binary RPMs will be built.</para>
+</entry>
+</row>
+<row>
+<entry><varname>keywords</varname></entry>
+<entry>#Keywords:</entry>
+<entry>XBS-Keywords:</entry>
+<entry>
+<para>Topic keywords. Used when generating LSM files.</para>
+</entry>
+</row>
+<row>
+<entry><varname>freshmeat_name</varname></entry>
+<entry>#Freshmeat-Name:</entry>
+<entry>XBS-Freshmeat-Name:</entry>
+<entry>
+<para>Freshmeat shortname, used in generating freshmeat.net
+announcements. If this isn't present, it defaults to the project
+name; you only need to set it if they differ.</para>
+</entry>
+</row>
+<row>
+<entry><varname>summary</varname></entry>
+<entry>Summary</entry>
+<entry>Description:</entry>
+<entry>
+<para>The one-line project summary field from your specfile.</para>
+</entry>
+</row>
+<row>
+<entry><varname>description</varname></entry>
+<entry>%description</entry>
+<entry>Description:</entry>
+<entry>
+<para>The Description field from your specfile.</para>
+</entry>
+</row>
+<row>
+<entry><varname>changelog</varname></entry>
+<entry>ChangeLog or %changelog</entry>
+<entry align='center'>-</entry>
+<entry>
+<para>If a <filename>ChangeLog</filename> file exists in the project
+directory, its entire contents.  Otherwise, if it exists,
+the entire changelog section from the specfile.</para>
+</entry>
+</row>
+<row>
+<entry><varname>lastchange</varname></entry>
+<entry>ChangeLog or %changelog</entry>
+<entry align='center'>-</entry>
+<entry>
+<para>
+If the source of your changlog was your specfile, this is the
+most recent entry from your changelog without
+its date/author/release header.  If the source was Changelog, a 
+line of text directing the user to see the ChangeLog file. 
+This becomes the Changes field in your freshmeat.net announcement,
+and freshmeat.net doesn't like the bulleted format of GNU ChangeLog
+entries.</para>
+</entry>
+</row>
+<row>
+<entry><varname>resourcetable</varname></entry> <entry
+align='center'>-</entry> <entry align='center'>-</entry>
+<entry>
+<para>The HTML table of links to downloadable resources.  This
+variable is only computed if the index page is built.  Any setting
+of it in the startup files is ignored.</para>
+</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>All these variables are available for substitution at the time a
+web page or email announcement is generated. In general, any variable
+you set in your <filename>~/.shipper</filename> file will be available
+at the time the web page or email announcement is generated.  Use the
+Python "%(variable)s" syntax, not shell-substitution syntax.</para>
+
+</refsect1>
+
+<refsect1><title>Finding and Building Local Deliverables</title>
+
+<para>The following files are considered stock deliverables and may be
+shipped if they are present when <application>shipper</application>
+starts up:</para>
+
+<informaltable>
+<tgroup cols="2">
+<thead>
+<row>
+<entry>File</entry>
+<entry>Explanation</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>README</entry>
+<entry>
+<para>Project roadmap file.</para>
+</entry>
+</row>
+<row>
+<entry>tarball</entry>
+<entry>
+<para>The current source tarball, that is the file named ${package}-${version}.tar.gz.</para>
+</entry>
+</row>
+<row>
+<entry>zipfile</entry>
+<entry>
+<para>The current source zip archive, that is the file named ${package}-${version}.zip.</para>
+</entry>
+</row>
+<row>
+<entry>NEWS</entry>
+<entry>
+<para>Project news file.</para>
+</entry>
+</row>
+<row>
+<entry>ChangeLog</entry>
+<entry>
+<para>Project change log.</para>
+</entry>
+</row>
+<row>
+<entry>HISTORY</entry>
+<entry>
+<para>Project history file.</para>
+</entry>
+</row>
+<row>
+<entry>BUGS</entry>
+<entry>
+<para>Project bug list.</para>
+</entry>
+</row>
+<row>
+<entry>TODO</entry>
+<entry>
+<para>Current to-do list.</para>
+</entry>
+</row>
+<row>
+<entry>*.html</entry>
+<entry>
+<para>Any files with an .html extension will be shipped to all 
+website destinations.</para>
+</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<para>Here are the generated deliverables that
+<application>shipper</application> will build and ship, if they don't
+exist when it starts up.  Any of these that are created will be 
+deleted after a successful upload.</para>
+
+<informaltable>
+<tgroup cols="2">
+<thead>
+<row>
+<entry>Type</entry>
+<entry>Explanation</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>index.html</entry>
+<entry>
+<para>An index web page, to be shipped to any website destination.</para>
+</entry>
+</row>
+<row>
+<entry>RPMs</entry>
+<entry>
+<para>Source and either binary or noarch RPMs.</para>
+</entry>
+</row>
+<row>
+<entry>LSM</entry>
+<entry>
+<para>If the ibiblio channel is enabled,
+<application>shipper</application> will generate a Linux Software Map
+file for it.</para>
+</entry>
+</row>
+<row>
+<entry>CHANGES</entry>
+<entry>
+<para>If there is no ChangeLog file but there was a %changelog in your
+specfile, <application>shipper</application> will generate a CHANGES
+from the changelog entries in the specfile and ship that.</para>
+</entry>
+</row>
+<row>
+<entry>ANNOUNCE.FRESHMEAT</entry>
+<entry>
+<para>If there is no ANNOUNCE.FRESHMEAT file,
+<application>shipper</application> will generate one. It will be a
+job card that can be fed to freshmeat.net's XML-RPC interface via
+<citerefentry><refentrytitle>freshmeat-submit</refentrytitle><manvolnum>1</manvolnum></citerefentry>.
+</para>
+</entry>
+</row>
+<row>
+<entry>ANNOUNCE.EMAIL</entry>
+<entry>
+<para>If there is no ANNOUNCE.EMAIL file, <application>shipper</application>
+will generate one to be emailed to destinations that are mailto URLs.</para>
+</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+
+<refsect1><title>Shipping to Destinations</title>
+<para>In operation, <application>shipper</application> walks through a
+list of destinations, building the required deliverables for each one and
+performing the required shipping actions to push them out to the
+destination.  Here are the channel types
+<application>shipper</application> knows about:</para>
+
+<informaltable>
+<tgroup cols="4">
+<colspec align='left'/>
+<colspec align='left'/>
+<colspec align='center'/>
+<colspec align='left'/>
+<thead>
+<row>
+<entry>Channel Type</entry>
+<entry>Deliverables</entry>
+<entry>Specified by</entry>
+<entry>Explanation</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>ibiblio</entry>
+<entry>tarball, RPMs, LSM file</entry>
+<entry>-</entry>
+<entry>
+<para>If the ibiblio channel is enabled (it is by default),
+<application>shipper</application> will attempt to ship a source
+tarball, RPMs, and an an LSM file to ibiblio.org via FTP.  The LSM
+file will be automatically generated.</para>
+</entry>
+</row>
+<row>
+<entry>redhat</entry>
+<entry>RPMs</entry>
+<entry>-</entry>
+<entry>
+<para>If the Red Hat channel is enabled (it is by default),
+<application>shipper</application> will attempt to ship source
+and binary RPMs to the Red Hat submission directory via FTP.</para>
+</entry>
+</row>
+<row>
+<entry>freshmeat</entry>
+<entry>ANNOUNCE.FRESHMEAT</entry>
+<entry>-</entry>
+<entry>
+<para>If the freshmeat channel is enabled (it is by default),
+<application>shipper</application> will attempt to post a release
+announcement on freshmeat.net using
+<citerefentry><refentrytitle>freshmeat-submit</refentrytitle><manvolnum>1</manvolnum></citerefentry>.
+The
+announcement will include URLs for whichever of the following
+deliverables are shipped, using the URL field from your specfile: tarball,
+zipfile, RPMs, CHANGES.  The user will be
+prompted for a Freshmeat release-focus.  This announcement is
+generated into the local deliverable ANNOUNCE.FRESHMEAT.</para>
+</entry>
+</row>
+<row>
+<entry>Generic Web site</entry>
+<entry>README, tarball, zipfile, RPMs, CHANGES, NEWS, HISTORY, *.html, 
+BUGS, TODO.</entry>
+<entry>scp destination ([user@]host:dir)</entry>
+<entry>
+<para>This channel type represents a website.
+<application>shipper</application> uses
+<citerefentry><refentrytitle>scp</refentrytitle><manvolnum>1</manvolnum></citerefentry>
+to put deliverables on websites.  If the user part of the scp
+destination is absent, it will be taken from the environment variable
+<envar>USERNAME</envar>.</para>
+
+<para>No generic Web sites are shipped to by default. You must declare
+them by putting scp destinations in the <varname>destinations</varname>
+variable.</para>
+</entry>
+</row>
+<row>
+<entry>Generic FTP site</entry>
+<entry>tarball, RPMs</entry>
+<entry>FTP URL</entry>
+<entry>
+<para>Old-fashioned FTP site with no metadata.  The FTP URL is parsed
+to get the sitename and directory where deliverables should be dropped.  The
+FTP username to be used will be taken from the environment variable
+<envar>USERNAME</envar>.  The FTP password will be looked up in your
+<filename>~/.netrc</filename> file.</para>
+
+<para>No generic FTP sites are shipped to by default.  You must
+declare them by putting FTP urls in the
+<varname>destinations</varname> variable.</para>
+</entry>
+</row>
+<row>
+<entry>Email address</entry>
+<entry>ANNOUNCE.EMAIL</entry>
+<entry>mailto URL</entry>
+<entry>
+<para>The contents of the generated ANNOUNCE.EMAIL file is emailed to
+each email address specified as a channel.</para>
+
+<para>No email channels are set up by default.  You must
+declare them by putting mailto: urls in the
+<varname>destinations</varname> variable.</para>
+</entry>
+</row>
+<row>
+<entry>rsync unit</entry>
+<entry>SRPM</entry>
+<entry>rsync address ([user@]host::unit)</entry>
+<entry>
+<para>An SRPM is shipped to each destination that is rcognized as 
+an rsync address (by the double colon).</para>
+
+<para>No rsync channels are set up by default.  You must
+declare them by putting rsync addresses in the
+<varname>destinations</varname> variable.</para>
+</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+
+<refsect1><title>Command-line Options</title>
+
+<para>The -n option of <application>shipper</application> suppresses
+uploads, just building all deliverables locally.  The -N option
+suppresses both uploads and builds, generating a configuration dumop
+instead.  The -f option forces rebuilding of local deliverables even
+if they already exist.  The -v option makes
+<application>shipper</application> chatty about what it's doing.  The
+-h option prints a usage message and exits.</para>
+
+</refsect1>
+
+<refsect1><title>Hints and Tips</title>
+<para>The following variable definition in your makefile will ensure
+that the makefile version is derived from (and thus always consistent
+with) the specfile version.</para>
+
+<programlisting>
+VERS=$(shell sed &lt;*.spec -n -e '/Version: \(.*\)/s//\1/p')
+</programlisting>
+
+<para>A makefile production like the following will allow
+you to type <command>make release</command> and be sure that all
+the deliverables <application>shipper</application> knows about
+will be rebuilt before being shipped.</para>
+
+<programlisting>
+release: <emphasis>package</emphasis>-$(VERS).tar.gz <emphasis>package</emphasis>.html 
+	shipper -f
+</programlisting>
+
+<para>You will want to change <emphasis>package</emphasis> to your 
+project name.  Note that you should not use this recipe if your
+project  has its own (non-generated) index page, as the -f option will
+overwrite <filename>index.html</filename>.</para>
+
+<para>To make
+<citerefentry>
+<refentrytitle>rpm</refentrytitle><manvolnum>1</manvolnum>
+</citerefentry>
+build noarch rather than binary RPMs, insert the following header in
+your specfile:</para>
+
+<programlisting>
+BuildArch: noarch
+</programlisting>
+</refsect1>
+
+<refsect1><title>Author</title>
+<para>Eric S. Raymond <email>esr@thyrsus.com</email>.  The buildrpms
+script was originally by Sean Reifschneider.</para>
+
+<para>There is a project web page at
+<ulink
+url="http://www.catb.org/~esr/shipper/">http://www.catb.org/~esr/shipper/</ulink>.</para>
+</refsect1>
+
+<refsect1><title>Bugs</title>
+<para>The rsync channel type is untested.  Shipping Debian packages 
+should be supported.</para>
+</refsect1>
+
+<refsect1><title>See Also</title>
+
+<para>
+<citerefentry>
+<refentrytitle>freshmeat-submit</refentrytitle>
+<manvolnum>1</manvolnum>
+</citerefentry>,
+<citerefentry>
+<refentrytitle>lftp</refentrytitle>
+<manvolnum>1</manvolnum>
+</citerefentry>,
+<citerefentry>
+<refentrytitle>rpm2lsm</refentrytitle>
+<manvolnum>1</manvolnum>
+</citerefentry>,
+<citerefentry>
+<refentrytitle>scp</refentrytitle>
+<manvolnum>1</manvolnum>
+</citerefentry>,
+<citerefentry>
+<refentrytitle>ssh</refentrytitle>
+<manvolnum>1</manvolnum>
+</citerefentry>.</para>
+</refsect1>
+</refentry>
+
+<!--
+Local Variables:
+compile-command: "make shipper.html"
+End:
+-->

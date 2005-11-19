@@ -1,0 +1,10 @@
+#!/bin/sh
+# Test MDA for debugging fetchmail configurations.
+echo "[testmda called with the following arguments: $*]"
+
+# Display the input
+cat >/tmp/testmda$$
+echo "[text is "`wc -c </tmp/testmda$$`" bytes long]"
+cat /tmp/testmda$$
+rm /tmp/testmda$$
+

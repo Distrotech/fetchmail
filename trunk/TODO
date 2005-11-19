@@ -1,0 +1,35 @@
+For 6.3.0:
+==========
+
+Add FAQ entry about procmail configuration with 1. ORGMAIL/DEFAULT, 2.
+:0e { EXITCODE=75 HOST }, 3. explicit default recipe, 4. LOGFILE
+location?
+
+Yves Boisjoly reports that NTLM auth needs to use the real Wks field
+rather than duplicating the user name (see l. 211 in smbutil.c).
+
+
+For later:
+==========
+
+Re-exec ourselves if the executable file changes? Security vs.
+convenience.
+
+Check if fetchmail's notion of \Recent vs. * <n> RECENT is a working
+model at all. In concurrent sessions, fetchmail might not be notified of
+\Recent and will have to check UID instead.
+
+RFC2047 encode X-Fetchmail-Warning?
+X-Fetchmail-Warning: Empfängeradresse root@example.org stimmt mit keinem lokalen Namen überein
+X-Virus-Scanned: amavisd-new at m2a2.dyndns.org
+X-Amavis-Alert: BAD HEADER Non-encoded 8-bit data (char C3 hex) in message header 'X-Fetchmail-Warning': X-Fetchmail-Warning: +Empf\303\244ngeradresse ro...
+
+check if --monitor still works properly
+and complete CAN_MONITOR vs. interface checks
+complete CAN_MONITOR replacement
+
+put all getaddrinfo compat cruft into an easy-to-use m4 macro for
+autoconf and Makefile.am snippet for automake, so people can just use it
+without further hassle.
+
+fetchmail -vvvv --syslog prints blank lines on the screen.

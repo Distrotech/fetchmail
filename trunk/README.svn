@@ -1,0 +1,33 @@
+In order to be able to build from the subversion repository (working
+directory), some files need to be (re-)generated.
+
+Note that these generated files will be shipped with "make dist",
+so the end user will not need these packages.
+
+The prerequisite packages are:
+
+- GNU autoconf >= 2.54
+- GNU automake >= 1.7
+- GNU gettext >= 0.13
+- GNU m4
+- bison or yacc
+- flex or lex
+
+On FreeBSD, install the gnu-autoconf and gnu-automake ports
+and add /usr/local/gnu-autotools/bin to your PATH.
+
+After you have these installed, type:
+
+$ ./autogen.sh
+
+This will take a while and may print a lot of messages containing
+"warning: unquoted definition of..." which are harmless.
+
+After that, build as usual, with
+
+$ ./configure --with-options
+$ make
+(become root)
+# make install-strip
+
+-- Matthias Andree, 2005-09-25

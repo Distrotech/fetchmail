@@ -1,0 +1,10 @@
+#!/bin/sh
+size=${1:-0}
+
+(
+echo "This mail was generated on "`date`"."
+
+) | mail -s "${size}k test mail from process $$" esr@ccil.org
+
+ <<EOF
+EOF

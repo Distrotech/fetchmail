@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+                   "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<refentry id='rpm2lsm.1'>
+<refmeta>
+<refentrytitle>rpm2lsm</refentrytitle>
+<manvolnum>1</manvolnum>
+</refmeta>
+<refnamediv id='name'>
+<refname>rpm2lsm</refname>
+<refpurpose>generate Linux Software Map entries from RPMs</refpurpose>
+</refnamediv>
+<refsynopsisdiv id='synopsis'>
+
+<cmdsynopsis>
+  <command>rpm2lsm</command>
+  <arg choice='opt'>-a <replaceable>author</replaceable></arg>
+  <arg choice='opt'>-k <replaceable>keywords</replaceable></arg>
+  <arg choice='opt'>-p <replaceable>platforms</replaceable></arg>
+  <arg choice='opt'>-m <replaceable>maintainer</replaceable></arg>
+  <arg choice='plain'><replaceable>rpmfile</replaceable></arg>
+</cmdsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1 id='description'><title>DESCRIPTION</title>
+<para>This tool extracts tag information from an RPM file to generate a
+Linux Software Map (version 3) entry on standard output.  Command-line
+switches support adding LSM fields that have no equivalents in RPMs.
+Here are the field-generation rules:</para>
+<variablelist remap='TP'>
+<varlistentry>
+<term>Title:</term>
+<listitem>
+<para>Taken straight from the RPM Name field.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>Version:</term>
+<listitem>
+<para>Taken straight from the RPM Version field.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>Entered-Date:</term>
+<listitem>
+<para>LSM-generation time in YYYY-MM-DD format.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>Description:</term>
+<listitem>
+<para>Taken straight from the RPM Description field.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>Keywords:</term>
+<listitem>
+<para>Taken from the value of the <option>-k</option> command-line option.
+If no such option is given, it is omitted.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>Author:</term>
+<listitem>
+<para>Taken from the value of the <option>-a</option> command-line
+option.  If no such option is given, it looks for an AUTHORS file in
+the current directory (GNU convention) and uses that.  If no AUTHORS
+file is present, your email addess and full name from the password
+file</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>Maintained-By:</term>
+<listitem>
+<para>Taken from the value of the <option>-m</option> command-line
+option.  If that was not given, taken from the RPM Packager field.  
+If that was not given, fill in the Author name.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>Primary-Site:</term>
+<listitem>
+<para>The first (site) line is taken from the RPM URL field.  Second
+and subsequent lines list tarballs and RPMs that match on name, version
+number, and release number with the RPM algument.  For each file,
+size in 1K blocks is filled in.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>Alternate-Site:</term>
+<listitem>
+<para>This field is not generated.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>Original-Site:</term>
+<listitem>
+<para>This field is not generated.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>Platforms:</term>
+<listitem>
+<para>Taken from the value of the <option>-p</option> command-line option.
+If no such option is given, 'All' is filled in.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>Copying-Policy:</term>
+<listitem>
+<para>Taken straight from the RPM License field.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para>These are all the fields supported in LSM version 3.  You can see the 
+<ulink url='http://ibiblio.org/pub/Linux/LSM-TEMPLATE'>
+LSM template
+</ulink>
+for full details.</para>
+</refsect1>
+
+<refsect1 id='author'><title>AUTHOR</title>
+<para>Eric S. Raymond <email>esr@thyrsus.com</email>.
+For updates, see <ulink url="http://www.catb.org/~esr/software.html">
+http://www.catb.org/~esr/software.html</ulink>.</para>
+</refsect1>
+
+<refsect1 id='see_also'><title>SEE ALSO</title>
+<para><citerefentry><refentrytitle>rpm</refentrytitle><manvolnum>8</manvolnum></citerefentry>.</para>
+</refsect1>
+</refentry>
+

@@ -1,0 +1,583 @@
+#!/usr/bin/env python
+#
+# shipper -- a tool for shipping software
+
+import sys, os, readline, re, commands, time, glob, optparse, stat
+
+#
+# State variables
+#
+destinations = []	# List of remote directories to update
+channels = ['ibiblio', 'redhat', 'freshmeat']
+whoami = None		# Who am I? (Used for FTP logins)
+date = None		# User has not yet set a date
+package = None   	# Nor a package name
+homepage = None		# Nor a home page
+arch = None       	# The machine architecture
+keywords = None  	# Keywords for LSMs
+freshmeat_name = None	# Name of the project ob Freshmeat
+changelog = None	# Project changelog
+lastchange = None  	# Last entry in changelog
+summary = None   	# One-line summary of the package
+description = None	# Nor a description
+
+indextemplate = """
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN'
+    'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
+<html>
+<head>
+<link rel='stylesheet' href='/~esr/sitestyle.css' type='text/css' />
+<meta name='description' content='Resource page for %(package)s' />
+<meta name='generator' content='shipper' />
+<meta name='MSSmartTagsPreventParsing' content='TRUE' />
+<title>Resource page for %(package)s %(version)s</title>
+</head>
+<body>
+
+<h1>Resource page for %(package)s %(version)s</td></h1>
+
+<p>%(description)s</p>
+
+<br />
+%(resourcetable)s
+<br />
+
+<p>Last modified %(date)s.</p>
+
+</div>
+</body>
+</html>
+"""
+mailtemplate = """Subject: Announcing release %(version)s of %(package)s
+
+Release %(version)s of %(package)s is now available at:
+
+	%(homepage)s
+
+Here are the most recent changes:
+
+%(lastchange)s
+--
+                             shipper, acting for %(whoami)s
+"""
+
+# It's unpleasant that we have to include these here, but
+# the freshmeat release focus has to be validated even if the
+# user is offline and the XML-RPC service not accessible.
+freshmeat_focus_types = (
+"N/A",
+"Initial freshmeat announcement",
+"Documentation",
+"Code cleanup",
+"Minor feature enhancements",
+"Major feature enhancements",
+"Minor bugfixes",
+"Major bugfixes",
+"Minor security fixes",
+"Major security fixes",
+)
+
+def croak(msg):
+    sys.stderr.write("shipper: " + msg + "\n")
+    sys.exit(1)
+
+#
+# Shipping methods
+#
+
+def do_or_die(cmd):
+    "Wither execute a command or fail noisily"
+    if options.verbose:
+        print "***", cmd
+    if os.system(cmd):
+        croak("command '%s' failed!" % cmd)
+
+def upload_or_die(cmd):
+    if options.noupload:
+        print cmd
+    else:
+        do_or_die(cmd)
+
+def upload(destination, files):
+    # Upload a file via ftp or sftp, handles 
+    print "# Uploading to %s" % destination
+    files = filter(os.path.exists, files)
+    if destination.startswith("ftp://"):
+        destination = destination[6:].split("/")
+        host = destination.pop(0)
+        directory = "/".join(destination)
+        commands = ["lftp", "open -u anonymous," + whoami + " " + host + "\n"]
+        if directory:
+            commands.append("cd " + directory + "\n")
+        commands.append("mput " + " ".join(files) + "\n")
+        commands.append("close\n")
+        if options.noupload:
+            print "".join(commands)
+        else:
+            pfp = os.popen(commands.pop(0), "w")
+            pfp.writelines(commands)
+            pfp.close()
+    elif destination.find("::") > -1:
+        upload_or_die("rsync " + " ".join(files) + " " + destination)
+    elif destination.find(":") > -1:
+        (host, directory) = destination.split(":")
+        for file in files:
+            # This is a really ugly way to deal with the problem
+            # of write-protected files in the remote directory.
+            # Unfortunately, sftp(1) is rather brain-dead -- no
+            # way to ignore failure on a remove, and refuses to
+            # do renames with an obscure error message.
+            remote = os.path.join(directory, package, file)
+            upload_or_die("scp " + file + " " + host + ":" + remote+".new;")
+            upload_or_die("ssh %s 'mv -f %s.new %s'" % (host, remote, remote))
+    else:
+        sys.stderr.write("Don't know what to do with destination %s!")
+
+def freshmeat_ship(manifest):
+    "Ship a specified update to freshmeat."
+    if options.verbose:
+        print "Announcing to freshmeat..."
+    upload_or_die("freshmeat-submit <" + manifest[0])
+
+#
+# Metadata extraction
+#
+
+def grep(pattern, file):
+    "Mine for a specified pattern in a file."
+    fp = open(file)
+    try:
+        while True:
+            line = fp.readline()
+            if not line:
+                return None
+            m = re.search(pattern, line)
+            if m:
+                return m.group(1)
+    finally:
+        fp.close()
+    return None
+
+class Specfile:
+    def __init__(self, filename):
+        self.filename = filename
+        self.type = None
+        if filename.endswith(".spec"):
+            self.type = "RPM"
+            self.package = self.extract("Name")
+            self.version = self.extract("Version")
+            self.homepage = self.extract("URL")
+            self.summary = self.extract("Summary")
+            self.arch = self.extract("BuildArch") or commands.getoutput("rpm --showrc | sed -n '/^build arch/s/.* //p'")
+            self.description = self.rpm_get_multiline("description")
+            self.changelog = self.rpm_get_multiline("changelog")
+        elif filename == "control":
+            self.type = "deb"
+            self.name = self.extract("Package")
+            self.version = self.extract("Version").split("-")[0]
+            self.homepage = self.extract("XBS-Home-Page")
+            self.summary = self.extract("Description")
+            self.arch = self.extract("Architecture")
+            if not self.arch:
+                croak("this control file lacks an Architecture field")
+            # FIXME: parse Debian description entries and changelog file
+            self.description = self.changelog = None
+    def extract(self, fld):
+        "Extract a one-line field, possibly embedded as a magic comment."
+        if self.type == "RPM":
+            return grep("^#?"+fld+":\s*(.*)", self.filename)
+        elif self.type == "deb":
+            return grep("^(?:XBS-)?"+fld+": (.*)", self.filename)
+    def rpm_get_multiline(self, fieldname):
+        "Grab everything from leader line to just before the next leader line."
+        global desc
+        fp = open(self.filename)
+        desc = ""
+        gather = False
+        while True:
+            line = fp.readline()
+            if not line:
+                break
+            # Pick up fieldnames *without* translation options.
+            if line.strip() == "%" + fieldname:
+                gather = True
+                continue
+            elif line[0] == "%":
+                gather = False
+            if gather:
+                desc += line
+        fp.close()
+        if desc:
+            return desc.strip() + "\n"
+        else:
+            return None
+#
+# Main sequence
+#
+
+try:
+    #
+    # Process options
+    #
+
+    parser = optparse.OptionParser(usage="%prog: [-h] [-n] [-f] [-v]")
+    parser.add_option("-v", "--verbose",
+                      action="store_true", dest="verbose", default=False,
+                      help="print progress messages to stdout")
+    parser.add_option("-n", "--noupload",
+                      action="store_true", dest="noupload", default=False,
+                      help="don't do uploads, just build deliverables")
+    parser.add_option("-N", "--nobuild",
+                      action="store_true", dest="nobuild", default=False,
+                      help="dump configuration only, no builds or uploads")
+    parser.add_option("-f", "--force",
+                      action="store_true", dest="force", default=False,
+                      help="force rebuilding of all local deliverables")
+    (options, args) = parser.parse_args()
+
+    #
+    # Extract metadata and compute control information
+    #
+
+    def disable(s): channels.remove(s)
+
+    # Security check, don't let an attacker elevate privileges 
+    def securecheck(file):
+        if stat.S_IMODE(os.stat(file).st_mode) & 00002:
+            croak("%s must not be world-writeable!" % file)
+
+    # Read in variable overrides
+    securecheck(".")
+    home_profile = os.path.join(os.getenv('HOME'), ".shipper")
+    if os.path.exists(home_profile):
+        securecheck(home_profile)
+        execfile(home_profile)
+    here_profile = ".shipper"
+    if os.path.exists(here_profile):
+        securecheck(here_profile)
+        execfile(here_profile)
+
+    # Set various sensible defaults
+    if not whoami:
+        whoami = os.getenv('USERNAME') + "@" + os.getenv('HOSTNAME')
+
+    # Where to get the metadata
+    specfiles = glob.glob("*.spec")
+    if len(specfiles) == 1:
+        metadata = Specfile(specfiles[0])
+    elif os.path.exists("control"):
+        metadata = Specfile("control")
+    else:
+        croak("must be exactly one RPM or dpkg specfile in the directory!")
+
+    # Get the package name
+    if not package:
+        package = metadata.package
+    if not package:
+        croak("can't get package name!")
+
+    # Extract the package vers from the specfile or Makefile
+    specvers = metadata.version
+    makevers = None
+    if os.path.exists("Makefile"):
+        makevers = grep("^VERS[A-Z]* *= *(.*)", "Makefile")
+        # Maybe it's a shell command intended to extract version from specfile
+        if makevers and makevers[0] == '$':
+            makevers = commands.getoutput(makevers[7:-1])
+    if specvers != makevers:
+        croak("specfile version %s != Makefile version %s"%(specvers,makevers))
+    elif specvers == None:
+        croak("can't get package version")
+    elif specvers[0] not in "0123456789":
+        croak("package version %s appears garbled" % specvers)
+    else:
+        version = specvers
+
+    # Specfiles may set their own destinations
+    local_destinations = metadata.extract("Destinations")
+    if local_destinations:
+        local_destinations = map(lambda x: x.strip(), local_destinations.split(","))
+        destinations += local_destinations
+    if not destinations:
+        print "warning: destinations empty, shipping to public channels only."
+
+    print"# Uploading version %s of %s" % (version, package)
+
+    # Extract remaining variables for templating
+    if not homepage:
+        homepage = metadata.homepage
+    if not date:
+        date = time.asctime()
+    if not summary:
+        summary = metadata.summary
+    if not description:
+        description = metadata.description
+    if not arch:
+        arch = metadata.arch
+    if not keywords:
+        keywords = metadata.extract("Keywords")
+    if not freshmeat_name:
+        freshmeat_name = metadata.extract("Freshmeat-Name")
+
+    # Finally, derive the change log and lastchange entry;
+    # we'll need the latter for freshmeat.net
+    freshmeat_lastchange = lastchange = changelog = None
+    # ChangeLog, if present, takes precedence;
+    # we assume if both are present that the specfile log is about packaging.
+    if os.path.exists("ChangeLog"):
+        ifp = open("ChangeLog", "r")
+        changelog = ifp.read()
+        ifp.close()
+        lastchange = ""
+        for line in changelog.split("\n"):
+            while line.strip() or not "*" in lastchange:
+                lastchange += line + "\n"
+            else:
+                break
+        # freshmeat.net doesn't like bulleted items in a changes field.
+        freshmeat_lastchange = "See the ChangeLog file for recent changes."
+    elif metadata.changelog:
+        changelog = metadata.changelog
+        lastchange = ""
+        for line in changelog.split("\n"):
+            if not lastchange and (not line.strip() or line[0] == '*'):
+                continue
+            elif line.strip():
+                lastchange += line + "\n"
+            else:
+                break
+        # This usually produces a lastchange entry that freshmeat will take.
+        freshmeat_lastchange = lastchange
+
+    #
+    # Now compute the names of deliverables
+    #
+
+    # These are all potential deliverable files that include the version number
+    tarball   = package + "-" + version + ".tar.gz"
+    srcrpm    = package + "-" + version + "-1.src.rpm"
+    binrpm    = package + "-" + version + "-1." + arch + ".rpm"
+    zip       = package + "-" + version + ".zip"
+    lsm       = package + "-" + version + ".lsm"
+
+    # Map web deliverables to explanations for the resource table
+    # Stuff not included here: ANNOUNCE.EMAIL, ANNOUNCE.FRESHMEAT, lsm.
+    stock_deliverables = [
+        ("README",	"roadmap file"),
+        (tarball,	"source tarball"),
+        (zip,   	"ZIP archive"),
+        (binrpm,	"installable RPM"),	# Generated
+        (srcrpm,	"source RPM"),		# Generated
+        ("ChangeLog",	"change log"),
+        ("CHANGES",	"change log"),		# Generated
+        ("NEWS",	"Project news"),
+        ("HISTORY",	"Project history"),
+        ("BUGS",	"Known bugs"),
+        ("TODO",	"To-do file"),
+        ]
+
+    #
+    # Might be time to dump
+    #
+    if options.nobuild:
+        for variable in ('destinations', 'channels', 'whoami', 'date', 
+                         'package', 'homepage', 'arch', 'keywords', \
+                         'freshmeat_name', 'summary'):
+            print "%s = %s" % (variable, `eval(variable)`)
+        for variable in ('description', 'changelog', 'lastchange', 'mailtemplate', 'indextemplate'):
+            if not eval(variable):
+                print "No %s" % variable
+            else:
+                print "%s = <<EOF\n%sEOF" % (variable, eval(variable))
+        sys.exit(0)
+    #
+    # Build deliverables
+    #
+
+    suppress = " >/dev/null 2>&1"
+    if options.verbose:
+        suppress = ""
+
+    # Sanity checks
+    if not os.path.exists(tarball):
+        croak("no tarball %s!" % tarball)
+    if metadata.type == "RPM" and not metadata.extract("BuildRoot"):
+        croak("specfile %s doesn't have a BuildRoot!" % metadata.filename)
+
+    def newer(f1, f2):
+        return os.path.exists(f1) and (os.stat(f1).st_mtime > os.stat(f2).st_mtime)
+
+    # Compute the deliverables, we need this even if not rebuilding the index
+    web_deliverables = []
+    # Anything in the list of standard deliverables is eligible.
+    for (file, explanation) in stock_deliverables:
+        if os.path.exists(file):
+            web_deliverables.append((file, explanation))
+    # So is anything with an HTML extendion
+    for file in glob.glob('*.html'):
+        if file == 'index.html':
+            continue
+        stem = file[:-4]
+        for ext in ("man", "1", "2", "3", "4", "5", "6", "7", "8", "9", "xml"):
+            if os.path.exists(stem + ext):
+                explanation = "HTML rendering of " + stem + ext
+                break
+        else:
+            explanation = "HTML page."
+        web_deliverables.append((file, explanation))
+    # Compute final deliverables
+    deliverables = map(lambda x: x[0], web_deliverables)+["index.html"]
+
+    try:
+        delete_at_end = []
+
+        # RPMs first.
+        if options.force or \
+               (not os.path.exists(binrpm) or not os.path.exists(srcrpm)):
+            print "# Building RPMs..."
+            if newer(srcrpm, tarball) and newer(binrpm, tarball):
+                print "RPMs are up to date"
+            else:
+                do_or_die("buildrpms %s %s" % (tarball, suppress))
+                delete_at_end.append(srcrpm)
+                delete_at_end.append(binrpm)
+
+        # Next, the LSM if needed
+        if 'ibiblio' in channels and \
+               (options.force or not os.path.exists(lsm)):
+            print "# Building LSM..."
+            if keywords:
+                do_or_die("rpm2lsm -k '"+keywords+"' "+binrpm+" >"+lsm)
+            else:
+                print "# Warning: LSM being built with no keywords." 
+                do_or_die("rpm2lsm " + binrpm + ">" + lsm)
+            delete_at_end.append(lsm)
+
+        # Next the index page if it doesn't exist.
+        if homepage and (options.force or not os.path.exists("index.html")):
+            print "# Building index page..."
+            # Now build the resource table
+            resourcetable = '<table border="1" align="center" summary="Downloadable resources">\n'
+            for (file, explanation) in web_deliverables:
+                resourcetable += "<tr><td><a href='%s'>%s</a></td><td>%s</td></tr>\n" % (file,file,explanation)
+            resourcetable += "</table>"
+            # OK, now build the index page itself
+            ofp = open("index.html", "w")
+            ofp.write(indextemplate % globals())
+            ofp.close()
+            delete_at_end.append("index.html")
+
+        # Next the CHANGES file.  Build this only if (a) there is no ChangeLog,
+        # and (b) there is a specfile %changelog.
+        if not os.path.exists("ChangeLog") and \
+               (options.force or not os.path.exists("CHANGES")) and changelog:
+            print "# Building CHANGES..."
+            ofp = open("CHANGES", "w")
+            ofp.write("                     Changelog for " + package + "\n\n")
+            ofp.write(changelog)
+            ofp.close()
+            delete_at_end.append("CHANGES")
+
+        # The freshmeat announcement
+        if 'freshmeat' in channels \
+               and options.force or not os.path.exists("ANNOUNCE.FRESHMEAT"):
+            print "# Building ANNOUNCE.FRESHMEAT..."
+            if not homepage:
+                print "# Can't announce to freshmeat without a primary website!"
+            elif not lastchange:
+                print "# Can't announce to freshmeat without a changes field!"
+            else:
+                while True:
+                    focus = raw_input("# freshmeat.net release focus (? for list): ")
+                    if focus == '?':
+                        i = 0
+                        for f in freshmeat_focus_types:
+                            print "%d: %s" % (i, f)
+                            i += 1
+                    elif focus in "0123456789":
+                        print "# OK:", freshmeat_focus_types[int(focus)]
+                        break
+                    elif focus.lower() in map(lambda x: x.lower(), freshmeat_focus_types):
+                        break
+                    else:
+                        croak("not a valid freshmeat.net release focus!")
+                ofp = open("ANNOUNCE.FRESHMEAT", "w")
+                ofp.write("Project: %s\n"%(freshmeat_name or package))
+                ofp.write("Version: %s\n"% version)
+                ofp.write("Release-Focus: %s\n" % focus)
+                ofp.write("Home-Page-URL: %s\n" % homepage)
+                if os.path.exists(tarball):
+                    ofp.write("Gzipped-Tar-URL: %s\n" % os.path.join(homepage,tarball))
+                if os.path.exists(zip):
+                    ofp.write("Zipped-Tar-URL: %s\n" % os.path.join(homepage, zip))
+                if os.path.exists("CHANGES"):
+                    ofp.write("Changelog-URL: %s\n" % os.path.join(homepage, "CHANGES"))
+                if os.path.exists(binrpm):
+                    ofp.write("RPM-URL: %s\n" % os.path.join(homepage, binrpm))
+                # freshmeat.net doesn't like bulleted entries.
+                freshmeatlog = lastchange[2:].replace("\n  ", "\n")
+                ofp.write("\n" + freshmeatlog)
+                ofp.close()
+                delete_at_end.append("ANNOUNCE.FRESHMEAT")
+
+        # Finally, email notification
+        if filter(lambda x: x.startswith("mailto:"), destinations) \
+               and (options.force or not os.path.exists("ANNOUNCE.EMAIL")):
+            print "# Building ANNOUNCE.EMAIL..."
+            ofp = open("ANNOUNCE.EMAIL", "w")
+            ofp.write(mailtemplate % globals())
+            ofp.close()
+            delete_at_end.append("ANNOUNCE.FRESHMEAT")
+
+        #
+        # Now actually ship
+        #
+
+        # Shipping methods, locations, and deliverables for public channels.
+        hardwired = {
+            'freshmeat'	: (lambda: freshmeat_ship(("ANNOUNCE.FRESHMEAT",))),
+            'ibiblio'	: (lambda: upload("ftp://ibiblio.org/incoming/linux",
+                                          (tarball, binrpm, srcrpm, lsm))),
+            'redhat'	: (lambda: upload("ftp://incoming.redhat.com/libc6", 
+                                          (tarball, binrpm, srcrpm))),
+        }
+
+
+        # First ship to private channels.  Order is important here, we
+        # need to hit the user's primary website first so everything
+        # will be in place when announcements are generated.
+        for destination in destinations:
+            if destination.startswith("ftp:"):
+                upload(destination, (tarball, binrpm, srcrpm,))
+            elif destination.startswith("mailto:"):
+                print "# Mailing to %s" % destination
+                command = "sendmail -i -oem -f %s %s <ANNOUNCE.EMAIL" % (whoami, destination[7:])
+                if options.noupload:
+                    print command
+                else:
+                    do_or_die(command)
+            else:
+                upload(destination, deliverables)
+
+        # Now ship to public channels
+        for channel in channels:
+            print "# Shipping to public channel", channel
+            apply(hardwired[channel])
+    finally:
+        cleanup = "rm -f " + " ".join(delete_at_end)
+        if options.noupload:
+            print cleanup
+        else:
+            for file in delete_at_end:
+                os.system(cleanup)
+    print "# Done"
+except KeyboardInterrupt:
+    print "# Bye!"
+
+
+
+# The following sets edit modes for GNU EMACS
+# Local Variables:
+# mode:python
+# End:

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rev="made" href="mailto:esr@snark.thyrsus.com" />
+<meta name="description"
+content="Fetchmail participation statistics" />
+<meta name="keywords" content="fetchmail, growth, analysis" />
+<title>Trends in the fetchmail project's growth</title>
+<style type="text/css">
+/*<![CDATA[*/
+ span.c6 {color: brown}
+ span.c5 {color: red}
+ span.c4 {color: lime}
+ span.c3 {color: blue}
+ div.c2 {text-align: center}
+ h1.c1 {text-align: center}
+/*]]>*/
+</style>
+</head>
+<body>
+<table width="100%" cellpadding="0" summary="Canned page header">
+<tr>
+<td width="30%" align="right">$Date$</td>
+</tr>
+</table>
+
+<hr />
+<h1 class="c1">Trends in the fetchmail project's growth</h1>
+
+<p>The scattergram below was made with Gnuplot 3.7 from data pulled
+directly out of the project NEWS file using two custom
+shellscripts, <a href="timeseries">timeseries</a> and <a
+href="growthplot">growthplot</a>. If you see a broken-image icon,
+upgrade to a <a
+href="http://www.libpng.org/pub/png/pngapbr.html">browser that can
+view PNGs</a>.</p>
+
+<div class="c2"><img src="growth.png"
+alt="Fetchmail trends graph" /></div>
+
+<p>The graph shows the population growth of the fetchmail project.
+The horizontal scale is days since baseline, which is when I
+started collecting statistics in October 1996 at version 1.9.0.
+Left vertical scale is number of participants. There is one data
+point for each release; therefore, the changes in density of marks
+indicate release frequency.</p>
+
+<p>The peak in the earliest part of the graph (before the note "Bad
+addresses dropped") seems to be an artifact; I was not regularly
+dropping addresses that became invalid at the time. Turnover on the
+list seems to be about 5% per month (but that's just my estimate, I
+don't have numbers on this).</p>
+
+<p>The <span class="c3">blue scatter of squares</span> is total
+participants. The <span class="c4">green scatter of crosses</span>
+is the count of people on fetchmail-friends after I split the list.
+The <span class="c5">cyan scatter of diamonds</span> is the
+population of fetchmail-announce after the split.</p>
+
+<p>The <span class="c6">brown scatter of diamonds</span> tracks
+project size in lines of code (right vertical axis). The scale
+relationship between this scatter and the other three is
+arbitrary.</p>
+
+<p>This graph is quite revealing. Several trends stand out:</p>
+
+<ul>
+<li>
+<p>Over time, the project population displays rather consistent
+linear growth.</p>
+</li>
+
+<li>
+<p>The key event in the project's lifetime was release 4.3.0 in
+October 1997, when I declared the code to be out of development and
+in maintainance mode, and split the fetchmail list.</p>
+</li>
+
+<li>
+<p>The run-up to 4.3.0 saw the most intensive spate of releases in
+the project's history (the gap in that run happened when I took a
+two-week vacation). It was followed by a significant slowdown.</p>
+</li>
+
+<li>
+<p>After 4.3.0, the developer population remained fairly stable
+around an average of about 250 participants.</p>
+</li>
+
+<li>
+<p>Essentially all population growth after 4.3.0 happened on the
+announce list, among people using fetchmail but not active
+co-developers.</p>
+</li>
+
+<li>
+<p>The growth trend in code size looks sublinear, perhaps
+logarithmic.</p>
+</li>
+</ul>
+
+<p>The linear growth trend in population is particularly
+interesting; a priori we might expect geometric or logistic growth,
+given that the project spreads by word of mouth.</p>
+
+<p>It has been suggested that the linear growth rate is the result
+of a situation in which both number of projects and the population
+of eligible programmers are rising on trend curves of the same
+(probably exponential) rate.</p>
+
+<hr />
+<table width="100%" cellpadding="0" summary="Canned page header">
+<tr>
+<td width="30%" align="right">$Date$</td>
+</tr>
+</table>
+
+<br clear="left" />
+<address>Eric S. Raymond <a
+href="mailto:esr@thyrsus.com">&lt;esr@thyrsus.com&gt;</a></address>
+</body>
+</html>
+

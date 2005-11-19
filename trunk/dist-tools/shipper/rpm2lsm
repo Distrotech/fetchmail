@@ -1,0 +1,108 @@
+#/bin/sh
+#
+# rpm2lsm -- generate Linux Software Map file from RPM meta information
+#
+# Author:       Eric S. Raymond <esr@thyrsus.com>, 31 July 2002
+# Project page: http://www.catb.org/~esr/
+#
+# Requires fmt(1), awk(1), and rpm(8).
+
+while getopts a:m:k:p: c;
+do
+  case $c in
+   'a') author=$OPTARG;;
+   'm') maintainer=$OPTARG;;
+   'k') keywords=$OPTARG;;
+   'p') platforms=$OPTARG;;
+   '?') echo "rpm2lsm: invalid switch specified - aborting."; exit 1;;
+  esac
+done
+shift `expr $OPTIND - 1`
+
+# If no RPM was given, look in the current directory and pick the last
+# one in sort order.  That's likely to be the most recent.
+if [ -z "$1" ]
+then
+	set -- *.rpm
+	while [ "$2" ]
+	do
+		shift
+	done
+fi
+
+# Mine out all the single-token fields we'll need
+rpm=$1
+set -- `rpm --queryformat="%{name} %{version} %{release}" -qp $rpm`
+name=$1
+version=$2
+release=$3
+
+# Extract and reformat the desciption
+description=`rpm --queryformat="%{description}" -qp $rpm | fmt -w 65 | sed '2,$s/^/                /'`
+
+# Who am I?
+fullname=`cat /etc/passwd | awk -F : "/^${USER}/ "'{print $5}'`
+fullname="${USER}@${HOSTNAME} ($fullname)"
+
+if [ -z "$author" ]
+then 
+    if [ -f AUTHORS ]
+    then
+	author=`cat AUTHORS`
+    else
+	author=$fullname
+    fi
+fi
+
+# Fill in keywords if present
+if [ -n "$keywords" ]
+then
+    keywords="Keywords:       $keywords\n"
+fi
+
+# Default the maintainer field properly
+if [ -z "$maintainer" ]
+then
+    maintainer=`rpm --queryformat="%{packager}" -qp $rpm`
+    if [ "$maintainer" = "(none)" ]
+    then
+        maintainer=$author
+    fi
+fi
+
+# The date
+date=`date '+%Y-%m-%d'`
+
+cat >/usr/tmp/rpm2lsm.$$ <<EOF
+Begin3
+Title:		%{name}
+Version:	%{version}
+Entered-date:	${date}
+Description:	${description}
+${keywords}Author: 	${author}
+Maintained-by:	${maintainer}
+Primary-site:	%{url}
+EOF
+
+# File patterns that we ship 
+tarballs="${name}-${version}.tar.gz ${name}-${version}.tgz"
+rpms=${name}-${version}-${release}.*.rpm
+
+trap "rm -f /usr/tmp/rpm2lsm.$$"  0 2 15
+for file in $tarballs $rpms
+do
+    if [ -f $file ]
+    then
+        set -- `du $file`; size=$1
+        echo "		${size}	${file}" >>/usr/tmp/rpm2lsm.$$
+    fi
+done
+
+cat >>/usr/tmp/rpm2lsm.$$ <<EOF
+Platforms:      ${platforms:-All}
+Copying-policy:	%{license}
+End
+EOF
+
+format=`cat /usr/tmp/rpm2lsm.$$`
+rpm --queryformat="$format" -qp $rpm
