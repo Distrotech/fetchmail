@@ -1,10 +1,24 @@
 #!/bin/sh
 
-user=${FM_USER:=`whoami`}
-name=${FM_NAME:=`grep "^${user}:" /etc/passwd | cut -d: -f5|sed -e 's/^.*,//'`}
-domain=${FM_DOMAIN:=mail.berlios.de}
-email="$user@$domain"
-packager="$name <$email>"
+version="$1"
+
+set -e
+
+if [ -z "$version" ] ; then
+    echo >&2 "Usage: $0 <version>"
+    exit 1
+fi
+
+email="fetchmail-devel@lists.berlios.de"
+packager="Fetchmail Developers <$email>"
+rpmver=`echo "$version" | sed 's/-/./g'`
+if test $rpmver = $version ; then
+    vervar="%{version}"
+    setupargs=
+else
+    vervar="${version}"
+    setupargs="-n %{name}-${vervar}"
+fi
 
 LANG=C
 LC_TIME=C
@@ -17,12 +31,12 @@ cat <<EOF
 %define have_python 1
 
 Name:		fetchmail
-Version:	$1
+Version:	$rpmver
 Release:	1
 Vendor:		The Community Fetchmail Project
 Packager:	$packager
 URL:		http://developer.berlios.de/projects/fetchmail
-Source:		%{name}-%{version}.tar.bz2
+Source:		%{name}-${vervar}.tar.bz2
 Group:		Applications/Mail
 Group(pt_BR):   Aplicações/Correio Eletrônico
 License:	GPL
@@ -144,10 +158,10 @@ GUI konfigurator do fetchmaila napisany w pythonie.
 %endif
 
 %prep
-%setup -q
+%setup -q $setupargs
 
 %build
-%configure --without-included-gettext --without-kerberos --with-ssl --enable-inet6
+%configure --without-included-gettext --without-kerberos --with-ssl
 make
 
 %install
@@ -189,6 +203,6 @@ rm -rf \$RPM_BUILD_ROOT
 %endif
 
 %changelog
-* `date '+%a %b %d %Y'` <$email> ${version}
+* `date '+%a %b %d %Y'` <$email> ${rpmver}
 - See the project NEWS file for recent changes.
 EOF
