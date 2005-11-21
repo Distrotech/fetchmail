@@ -15,10 +15,17 @@ bin_PROGRAMS=		fetchmail
 dist_noinst_SCRIPTS=	specgen.sh
 dist_man1_MANS=		fetchmail.man
 
+pys=			fetchmailconf.py
+pym=			fetchmailconf.man
+
 if HAVE_PYTHON
 nodist_bin_SCRIPTS=	fetchmailconf
-python_PYTHON=		fetchmailconf.py
-dist_man1_MANS+=	fetchmailconf.man
+python_PYTHON=		$(pys)
+dist_man1_MANS+=	$(pym)
+EXTRA_DIST=
+else
+noinst_PYTHON=		$(pys)
+EXTRA_DIST=		$(pym)
 endif
 
 CLEANFILES=		$(nodist_bin_SCRIPTS)
@@ -95,14 +102,14 @@ DISTDOCS=	BUGS FAQ FEATURES NOTES OLDNEWS fetchmail-man.html \
 # extra directories to ship
 distdirs = rh-config contrib beos
 
-EXTRA_DIST= $(DISTDOCS) fetchmail.spec $(distdirs) ucs/README.svn \
-	    trio/CHANGES trio/README strlcpy.3 \
-	    m4-local/ac-archive-license.txt m4-local/ac_ma_search_package.m4
+EXTRA_DIST+=	$(DISTDOCS) fetchmail.spec $(distdirs) ucs/README.svn \
+		trio/CHANGES trio/README \
+		strlcpy.3 \
+		m4-local/ac-archive-license.txt \
+		m4-local/ac_ma_search_package.m4
 
-if HAVE_PYTHON
 fetchmailconf:
 	( echo '#! /bin/sh' && echo 'exec @PYTHON@ @pythondir@/fetchmailconf.py "$$@"' ) >$@ || { rm -f $@ ; exit 1; }
-endif
 
 FAQ: fetchmail-FAQ.html
 	AWK=$(AWK) $(SHELL) $(srcdir)/dist-tools/html2txt $(srcdir)/fetchmail-FAQ.html >$@ || { rm -f $@ ; exit 1 ; }
