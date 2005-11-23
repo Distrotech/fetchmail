@@ -205,6 +205,22 @@ void report_init(int mode)
    newline) before report() prints its message. */
 /* VARARGS */
 
+static void rep_ensuresize(void) {
+    /* Make an initial guess for the size of any single message fragment.  */
+    if (partial_message_size == 0)
+    {
+	partial_message_size_used = 0;
+	partial_message_size = 2048;
+	partial_message = MALLOC (partial_message_size);
+    }
+    else
+	if (partial_message_size - partial_message_size_used < 1024)
+	{
+	    partial_message_size += 2048;
+	    partial_message = REALLOC (partial_message, partial_message_size);
+	}
+}
+
 void
 #ifdef HAVE_STDARG_H
 report_build (FILE *errfp, const char *message, ...)
@@ -219,19 +235,7 @@ report_build (FILE *errfp, message, va_alist)
     int n;
 #endif
 
-    /* Make an initial guess for the size of any single message fragment.  */
-    if (partial_message_size == 0)
-    {
-	partial_message_size_used = 0;
-	partial_message_size = 2048;
-	partial_message = MALLOC (partial_message_size);
-    }
-    else
-	if (partial_message_size - partial_message_size_used < 1024)
-	{
-	    partial_message_size += 2048;
-	    partial_message = REALLOC (partial_message, partial_message_size);
-	}
+    rep_ensuresize();
 
 #if defined(VA_START)
     VA_START (args, message);
@@ -296,19 +300,7 @@ report_complete (FILE *errfp, message, va_alist)
     int n;
 #endif
 
-    /* Make an initial guess for the size of any single message fragment.  */
-    if (partial_message_size == 0)
-    {
-	partial_message_size_used = 0;
-	partial_message_size = 2048;
-	partial_message = MALLOC (partial_message_size);
-    }
-    else
-	if (partial_message_size - partial_message_size_used < 1024)
-	{
-	    partial_message_size += 2048;
-	    partial_message = REALLOC (partial_message, partial_message_size);
-	}
+    rep_ensuresize();
 
 #if defined(VA_START)
     VA_START (args, message);
