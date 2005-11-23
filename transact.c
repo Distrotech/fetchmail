@@ -617,6 +617,29 @@ int readheaders(int sock,
 	 * on being able to keep base-UID information in a special
 	 * message at the head of the mailbox.  This message should
 	 * neither be deleted nor forwarded.
+	 *
+	 * An example for such a message is (keep this in so people
+	 * find it when looking where the special code is to handle the
+	 * data):
+	 *
+	 *   From MAILER-DAEMON Wed Nov 23 11:38:42 2005
+	 *   Date: 23 Nov 2005 11:38:42 +0100
+	 *   From: Mail System Internal Data <MAILER-DAEMON@mail.example.org>
+	 *   Subject: DON'T DELETE THIS MESSAGE -- FOLDER INTERNAL DATA
+	 *   Message-ID: <1132742322@mail.example.org>
+	 *   X-IMAP: 1132742306 0000000001
+	 *   Status: RO
+	 *
+	 *   This text is part of the internal format of your mail folder, and is not
+	 *   a real message.  It is created automatically by the mail system software.
+	 *   If deleted, important folder data will be lost, and it will be re-created
+	 *   with the data reset to initial values.
+	 *
+	 * This message is only visible if a POP3 server that is unaware
+	 * of these UWIMAP messages is used besides UWIMAP or PINE.
+	 *
+	 * We will just check if the first message in the mailbox has an
+	 * X-IMAP: header.
 	 */
 #ifdef POP2_ENABLE
 	/*
