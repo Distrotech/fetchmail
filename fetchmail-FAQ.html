@@ -231,7 +231,9 @@ immediately" in my logs.</a><br/>
 <a href="#O12">O12. Fetchmail no longer expunges mail on a 451 SMTP response.</a><br/>
 <a href="#O13">O13. I want timestamp information in my fetchmail logs.</a><br/>
 <a href="#O14">O14. Fetchmail no longer deletes oversized mails with
---flush.</a><br/>
+    --flush.</a><br/>
+<a href="#O15">O15. Fetchmail always retains the first message in the
+    mailbox.</a><br/>
 
 <h1>Answers:</h1>
 
@@ -3588,6 +3590,41 @@ oversized mails or both when a user specifies both
 <code>--limitflush</code> has been added to resolve the ambiguity.</p>
 
 <hr/>
+<h2><a name="O15">O15. Fetchmail always retains the first message in the
+    mailbox.</a></h2>
+
+<p>This happens when fetchmail sees an "X-IMAP:" header in the very
+first message in your mailbox. This usually stems from a message like
+the one shown below, which is automatically created on your server. This
+message shows up if the University of Washington IMAP or PINE software
+is used on the server together with a POP2 or POP3 daemon that is not
+aware of these messages, such as some versions of Qualcomm Popper
+(QPOP):</p>
+
+<blockquote>
+<pre>
+From MAILER-DAEMON Wed Nov 23 11:38:42 2005
+Date: 23 Nov 2005 11:38:42 +0100
+From: Mail System Internal Data &lt;MAILER-DAEMON@imap.example.org&gt;
+Subject: DON'T DELETE THIS MESSAGE -- FOLDER INTERNAL DATA
+Message-ID: &lt;1132742322@imap.example.org&gt;
+X-IMAP: 1132742306 0000000001
+Status: RO
+
+This text is part of the internal format of your mail folder, and is not
+a real message.  It is created automatically by the mail system software.
+If deleted, important folder data will be lost, and it will be re-created
+with the data reset to initial values.
+</pre>
+</blockquote>
+
+<p>As this message does not contain useful information, fetchmail is not
+retrieving it. And deleting it might slow down the server if you are
+keeping messages on the server, and the server would recreate it
+anyways, that's why fetchmail does not bother to delete it either.</p>
+
+<hr/>
+
 <table width="100%" cellpadding="0" summary="Canned page footer">
 <tr>
 <td width="30%">Back to <a href="index.html">Fetchmail Home
