@@ -138,6 +138,8 @@ int main(int argc, char *argv[])
 	    printf("%s %d\n", responses->name, responses->pref);
 	} while
 	    ((++responses)->name);
+
+    return 0;
 }
 #endif /* TESTMAIN */
 
