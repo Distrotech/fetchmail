@@ -24,6 +24,11 @@ Page</a></td>
 advice on how to include diagnostic information that will get your
 bug fixed as quickly as possible.</p>
 
+<p>Note that this FAQ is occasionally updated from the SVN repository
+and speaks in the past tense ("since") about a fetchmail release that is
+not yet available. Please try a release candidate for that version in
+case you need the new option.</p>
+
 <p>If you have a question or answer you think ought to be added to
 this FAQ list, file it to one of the trackers at <a
     href="http://developer.berlios.de/projects/fetchmail/">our BerliOS
@@ -3575,11 +3580,11 @@ does something like "date &gt;&gt; $HOME/Procmail/fetchmail.log".</p>
 <h2><a name="O14">O14. Fetchmail no longer deletes oversized mails with
 --flush.</a></h2>
 
-<p>Use <code>--limitflush</code> to delete oversized mails along with
-the <code>--limit</code> option. If you are already having
-<code>flush</code> in your rcfile to delete oversized mails,
-<em>replace</em> it with <code>limitflush</code> to avoid losing mails
-unintentionally.</p>
+<p>Use <code>--limitflush</code> (available since release 6.3.0) to
+delete oversized mails along with the <code>--limit</code> option. If
+you are already having <code>flush</code> in your rcfile to delete
+oversized mails, <em>replace</em> it with <code>limitflush</code> to
+avoid losing mails unintentionally.</p>
 
 <p>The <code>--flush</code> option is primarily designed to delete
 mails which have been read/downloaded but not deleted yet. This option
