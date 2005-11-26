@@ -139,9 +139,8 @@ fetchmail 6.3.0 (not yet released officially):
   reported by Dr. Andreas Krüger, Debian bug #242384 (MA)
 * Added Russian translation, courtesy of Pavel Maryanov of the
   Russian translation team. (MA)
-* Dropped da=Danish, el=Greek, ja=Japanese and tr=Turkish
-  translations which have more than 10% (61+) untranslated or fuzzy
-  messages. Matthias Andree.
+* Dropped da=Danish, el=Greek and tr=Turkish translations which have more than
+  10% (61+) untranslated or fuzzy messages.  Matthias Andree.
 * Skip sending POP3 PASS command when USER command failed. Matthias Andree.
 * Run fetchmail.man through automatic spell checker. Matthias Andree.
 * Major fetchmail(1) manual page overhaul by R. Hannes Beinert, to
@@ -213,8 +212,6 @@ fetchmail 6.3.0 (not yet released officially):
   Sunil Shetye. (MA)
 * Fix IMAP expunged message counting. Sunil Shetye. (MA)
 * Add full support for --service option. Matthias Andree
-* Fix Japanese translation of "no other fetchmail is running". Debian
-  Bug#329342, Takeshi Hamasaki. (MA)
 * When getaddrinfo() fails resolving a service, log getaddrinfo() error. (MA)
 * Fix bogus "cannot resolve service * to port number" error. Simon Barner. (MA)
 * Failure to set up SSL connections now results in PS_SOCKET. Suggested by
@@ -301,6 +298,7 @@ fetchmail 6.3.0 (not yet released officially):
 * In oversized warning messages, print the account name, too. Fixes Debian
   Bug#213299. Sunil Shetye (MA).
 * Fix installation without Python. Sunil Shetye, reported by Peter Church. (MA)
+* Update Japanese translation. Fixes Bug#329342, Takeshi Hamasaki. (MA)
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.
