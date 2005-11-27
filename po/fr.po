@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.9-rc9\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2005-11-18 00:37+0100\n"
+"POT-Creation-Date: 2005-11-26 15:50+0100\n"
 "PO-Revision-Date: 2005-09-22 11:07+0200\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -2860,37 +2860,37 @@ msgstr "ligne d'en-tête incorrecte trouvée lors du scan des en-têtes\n"
 msgid "line: %s"
 msgstr "ligne: %s"
 
-#: transact.c:1082
+#: transact.c:1105
 #, c-format
 msgid "no local matches, forwarding to %s\n"
 msgstr "aucune correspondance locale, réexpédition vers %s\n"
 
-#: transact.c:1097
+#: transact.c:1120
 msgid "forwarding and deletion suppressed due to DNS errors\n"
 msgstr "réexpédition et effacement supprimés suite à des erreurs de DNS\n"
 
-#: transact.c:1209
+#: transact.c:1232
 msgid "writing RFC822 msgblk.headers\n"
 msgstr "écriture d'en-têtes RFC822\n"
 
-#: transact.c:1230
+#: transact.c:1253
 msgid "no recipient addresses matched declared local names"
 msgstr "aucune adresse de destination ne correspond aux noms locaux déclarés"
 
-#: transact.c:1237
+#: transact.c:1260
 #, c-format
 msgid "recipient address %s didn't match any local name"
 msgstr "l'adresse de destination %s ne correspond à aucun nom local"
 
-#: transact.c:1246
+#: transact.c:1269
 msgid "message has embedded NULs"
 msgstr "le message contient des caractères NULs"
 
-#: transact.c:1254
+#: transact.c:1277
 msgid "SMTP listener rejected local recipient addresses: "
 msgstr "Le serveur SMTP rejette les adresses locales de destination : "
 
-#: transact.c:1382
+#: transact.c:1405
 msgid "writing message text\n"
 msgstr "écriture du texte du message\n"
 

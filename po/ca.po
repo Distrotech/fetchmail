@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.9-rc3\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2005-11-18 00:37+0100\n"
+"POT-Creation-Date: 2005-11-26 15:50+0100\n"
 "PO-Revision-Date: 2005-09-19 21:24+0200\n"
 "Last-Translator: Ernest Adrogué Calveras <eadrogue@gmx.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
@@ -2856,37 +2856,37 @@ msgstr "s'ha trobat una línia incorrecta quan s'analitzava l'encapçalament\n"
 msgid "line: %s"
 msgstr "línia: %s"
 
-#: transact.c:1082
+#: transact.c:1105
 #, c-format
 msgid "no local matches, forwarding to %s\n"
 msgstr "cap conincidència local, reenviant a %s\n"
 
-#: transact.c:1097
+#: transact.c:1120
 msgid "forwarding and deletion suppressed due to DNS errors\n"
 msgstr "reenviament i eliminació omesos a causa d'errors de DNS\n"
 
-#: transact.c:1209
+#: transact.c:1232
 msgid "writing RFC822 msgblk.headers\n"
 msgstr "escrivint capçaleres msgblk RFC822\n"
 
-#: transact.c:1230
+#: transact.c:1253
 msgid "no recipient addresses matched declared local names"
 msgstr "cap adreça de destinatari coincideix amb els noms locals declarats"
 
-#: transact.c:1237
+#: transact.c:1260
 #, c-format
 msgid "recipient address %s didn't match any local name"
 msgstr "l'adreça del destinatari %s no lliga amb cap nom local"
 
-#: transact.c:1246
+#: transact.c:1269
 msgid "message has embedded NULs"
 msgstr "el missatge conté caràcters NUL"
 
-#: transact.c:1254
+#: transact.c:1277
 msgid "SMTP listener rejected local recipient addresses: "
 msgstr "el receptor SMTP ha rebutjat les adreces locals de destinació: "
 
-#: transact.c:1382
+#: transact.c:1405
 msgid "writing message text\n"
 msgstr "escrivint el text del missatge\n"
 
