@@ -46,6 +46,9 @@ DEPENDENCIES=		libfm.a $(LIBOBJS)
 
 check_PROGRAMS=
 
+TESTS=			t.smoke
+TESTS_ENVIRONMENT=	srcdir="@srcdir@" LC_ALL=C TZ=UTC
+
 if NEED_TRIO
 noinst_LIBRARIES+=	libtrio.a
 libtrio_a_SOURCES=	trio/triostr.c trio/trio.c trio/trionan.c \
@@ -54,7 +57,7 @@ libtrio_a_SOURCES=	trio/triostr.c trio/trio.c trio/trionan.c \
 check_PROGRAMS+=	regression
 regression_SOURCES=	trio/regression.c
 LDADD +=		libtrio.a -lm
-TESTS=			regression
+TESTS+=			regression
 endif
 
 fetchmail_SOURCES=	fetchmail.h getopt.h \
@@ -106,7 +109,9 @@ EXTRA_DIST+=	$(DISTDOCS) fetchmail.spec $(distdirs) ucs/README.svn \
 		trio/CHANGES trio/README \
 		strlcpy.3 \
 		m4-local/ac-archive-license.txt \
-		m4-local/ac_ma_search_package.m4
+		m4-local/ac_ma_search_package.m4 \
+		m4-local/autobuild.m4 \
+		t.smoke t.rc
 
 fetchmailconf:
 	( echo '#! /bin/sh' && echo 'exec @PYTHON@ @pythondir@/fetchmailconf.py "$$@"' ) >$@ || { rm -f $@ ; exit 1; }
