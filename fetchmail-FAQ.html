@@ -29,7 +29,7 @@ Page</a></td>
 </table>
 
 <hr/>
-<h1>Frequently Asked Questions About Fetchmail</h1>
+<h1 id="FAQ">Frequently Asked Questions About Fetchmail</h1>
 
 <p>Before reporting any bug, please read <a href="#G3">G3</a> for
 advice on how to include diagnostic information that will get your
@@ -46,9 +46,27 @@ this FAQ list, file it to one of the trackers at <a
     project site</a> or post to one of the fetchmail mailing lists (see
 below).</p>
 
-<h1>Contents</h1>
+<h1 id="Contents">Contents</h1>
 
-<h2>General problems</h2>
+<a href="#Contentdetail">Detailed Contents</a><br/>
+<a href="#C_G">G. General problems</a><br/>
+<a href="#C_B">B. Build-time problems</a><br/>
+<a href="#C_F">F. Fetchmail configuration file grammar questions</a><br/>
+<a href="#C_C">C. Configuration questions</a><br/>
+<a href="#C_T">T. How to make fetchmail play nice with various MTAs</a><br/>
+<a href="#C_S">S. How to make fetchmail work with various servers</a><br/>
+<a href="#C_I">I. How to fetchmail work with specific ISPs</a><br/>
+<a href="#C_K">K. How to set up well-known security and authentication</a><br/>
+<a href="#C_R">R. Runtime fatal errors</a><br/>
+<a href="#C_H">H. Hangs and lockups</a><br/>
+<a href="#C_D">D. Disappearing mail</a><br/>
+<a href="#C_M">M. Multidrop-mode problems</a><br/>
+<a href="#C_X">X. Mangled mail</a><br/>
+<a href="#C_O">O. Other problems</a><br/>
+
+<h1 id="Contentdetail">Detailed Contents</h1>
+
+<h2 id="C_G">General problems</h2>
 
 <a href="#G1">G1. What is fetchmail and why should I bother?</a><br/>
 <a href="#G2">G2. Where do I find the latest FAQ and fetchmail sources?</a><br/>
@@ -68,21 +86,21 @@ below).</p>
 <a href="#G16">G16. How will fetchmail perform under heavy loads?</a><br/>
 
 
-<h2>Build-time problems</h2>
+<h2 id="C_B">Build-time problems</h2>
 
 <a href="#B1"><strike>B1. Make coughs and dies when building on FreeBSD.</strike></a><br/>
 <a href="#B2">B2. Lex bombs out while building the fetchmail lexer.</a><br/>
 <a href="#B3">B3. I get link failures when I try to build fetchmail.</a><br/>
 <a href="#B4">B4. I get build failures in the intl directory.</a><br/>
 
-<h2>Fetchmail configuration file grammar questions</h2>
+<h2 id="C_F">Fetchmail configuration file grammar questions</h2>
 
 <a href="#F1">F1. Why does my old .fetchmailrc no longer work?</a><br/>
 <a href="#F2">F2. The .fetchmailrc parser won't accept my all-numeric user name.</a><br/>
 <a href="#F3">F3. The .fetchmailrc parser won't accept my host or username beginning with 'no'.</a><br/>
 <a href="#F4">F4. I'm getting a 'parse error' message I don't understand.</a><br/>
 
-<h2>Configuration questions</h2>
+<h2 id="C_C">Configuration questions</h2>
 
 <a href="#C1">C1. Why do I need a .fetchmailrc when running as root
 on my own machine?</a><br/>
@@ -100,7 +118,7 @@ from an init script.</a><br/>
 host?.</a><br/>
 
 
-<h2>How to make fetchmail play nice with various MTAs</h2>
+<h2 id="C_T">How to make fetchmail play nice with various MTAs</h2>
 
 <a href="#T1">T1. How can I use fetchmail with sendmail?</a><br/>
 <a href="#T2">T2. How can I use fetchmail with qmail?</a><br/>
@@ -111,7 +129,7 @@ host?.</a><br/>
 <a href="#T7">T7. How can I use fetchmail with Courier IMAP?</a><br/>
 <a href="#T8">T8. How can I use fetchmail with vbmailshield?</a><br/>
 
-<h2>How to make fetchmail work with various servers</h2>
+<h2 id="C_S">How to make fetchmail work with various servers</h2>
 
 <a href="#S1">S1. How can I use fetchmail with qpopper?</a><br/>
 <a href="#S2">S2. How can I use fetchmail with Microsoft Exchange?</a><br/>
@@ -121,7 +139,7 @@ host?.</a><br/>
 <a href="#S6">S6. How can I use fetchmail with MailMax?</a><br/>
 <a href="#S7">S7. How can I use fetchmail with FTGate?</a><br/>
 
-<h2>How to fetchmail work with specific ISPs</h2>
+<h2 id="C_I">How to fetchmail work with specific ISPs</h2>
 
 <a href="#I1">I1. How can I use fetchmail with Compuserve RPA?</a><br/>
 <a href="#I2">I2. How can I use fetchmail with Demon Internet's SDPS?</a><br/>
@@ -132,7 +150,7 @@ host?.</a><br/>
 <a href="#I7">I7. How can I use fetchmail with SpryNet?</a><br/>
 <a href="#I8">I8. How can I use fetchmail with comcast.net?</a><br/>
 
-<h2>How to set up well-known security and authentication
+<h2 id="C_K">How to set up well-known security and authentication
 methods</h2>
 
 <a href="#K1">K1. How can I use fetchmail with SOCKS?</a><br/>
@@ -143,7 +161,7 @@ methods</h2>
 <a href="#K6">K6. How can I tell fetchmail not to try TLS if the server
     advertises it?</a><br/>
 
-<h2>Runtime fatal errors</h2>
+<h2 id="C_R">Runtime fatal errors</h2>
 
 <a href="#R1">R1. Fetchmail isn't working, and -v shows 'SMTP
 connect failed' messages.</a><br/>
@@ -166,7 +184,7 @@ messages but before deleting them</a><br/>
 <a href="#R12">R12. Fetchmail isn't working and reports getaddrinfo
     errors.</a>
 
-<h2>Hangs and lockups</h2>
+<h2 id="C_H">Hangs and lockups</h2>
 
 <a href="#H1">H1. Fetchmail hangs when used with pppd.</a><br/>
 <a href="#H2">H2. Fetchmail hangs during the MAIL FROM
@@ -174,7 +192,7 @@ exchange.</a><br/>
 <a href="#H3">H3. Fetchmail hangs while fetching mail.</a><br/>
 
 
-<h2>Disappearing mail</h2>
+<h2 id="C_D">Disappearing mail</h2>
 
 <a href="#D1">D1. I think I've set up fetchmail correctly, but I'm
 not getting any mail.</a><br/>
@@ -184,7 +202,7 @@ connection.</a><br/>
 fetchmail seems to have been vanished.</a><br/>
 
 
-<h2>Multidrop-mode problems</h2>
+<h2 id="C_M">Multidrop-mode problems</h2>
 
 <a href="#M1">M1. I've declared local names, but all my multidrop
 mail is going to root anyway.</a><br/>
@@ -204,7 +222,7 @@ from my Received headers as it should.</a><br/>
 messages.</a><br/>
 
 
-<h2>Mangled mail</h2>
+<h2 id="C_X">Mangled mail</h2>
 
 <a href="#X1">X1. Spurious blank lines are appearing in the headers
 of fetched mail.</a><br/>
@@ -223,7 +241,7 @@ fetchmail.</a><br/>
 <a href="#X8">X8. A spurious ) is being appended to my
 messages.</a><br/>
 
-<h2>Other problems</h2>
+<h2 id="C_O">Other problems</h2>
 
 <a href="#O1">O1. The --logfile option doesn't work if the logfile
 doesn't exist.</a><br/>
@@ -253,10 +271,12 @@ immediately" in my logs.</a><br/>
     --flush.</a><br/>
 <a href="#O15">O15. Fetchmail always retains the first message in the
     mailbox.</a><br/>
-
+<a href="#O16">O16. Why is the Fetchmail FAQ only available in
+	ISO-216 A4 format? How do I get the FAQ in Letter
+	format?</a><br/>
 
 <hr/>
-<h1>General problems</h1>
+<h1 id="G">General problems</h1>
 <h2><a id="G1" name="G1">G1. What is fetchmail and why should I
 bother?</a></h2>
 
@@ -3540,6 +3560,36 @@ with the data reset to initial values.
 retrieving it. And deleting it might slow down the server if you are
 keeping messages on the server, and the server would recreate it
 anyways, that's why fetchmail does not bother to delete it either.</p>
+
+<h2><a name="O16">O16. Why is the Fetchmail FAQ only available in
+	ISO-216 A4 format? How do I get the FAQ in Letter format?</a></h2>
+
+<p>All the world uses ISO-216:1975 "A4" paper except for North America.
+Using A4 format reaches far more people than (formerly known as DIN A4,
+from DIN&nbsp;476) format. Besides that, A4 paper <em>is</em> available in North
+America.
+For further information on the Letter-vs-A4 story, see:</p>
+<ul><li><a href="http://www.cl.cam.ac.uk/~mgk25/iso-paper.html">Markus
+	Kuhn: "International standard paper sizes"</a></li>
+    <li><a
+	href="http://betweenborders.com/wordsmithing/a4-vs-us-letter/">Brian
+	Forte: "A4 vs US Letter"</a></li></ul>
+
+<p>Offering the document formatted for two different paper sizes would
+bloat the package beyond reason, and formatting in a way that fits A4
+and Letter paper formats would be a waste of paper in most parts of the
+world. For that reason, fetchmail only ships with an A4 formatted PDF
+document.</p>
+
+<p>To create a letter-sized PDF, install <a
+    href="http://www.htmldoc.org/">HTMLDOC</a>, edit
+<code>fetchmail-FAQ.book</code> in the source directory with your
+favorite text editor, replace <samp>--size A4</samp> by <samp>--size
+    letter</samp>, and type:
+</p>
+<pre>
+make fetchmail-FAQ.pdf
+</pre>
 
 <hr/>
 
