@@ -1038,7 +1038,7 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
     if ((cp = strchr(buf, '{'))) {
         errno = 0;
 	*lenp = (int)strtol(cp + 1, (char **)NULL, 10);
-        if (errno == ERANGE && (*lenp == LONG_MAX || *lenp == LONG_MIN))
+        if (errno == ERANGE || *lenp < 0)
             *lenp = -1;    /* length is too big/small for us to handle */
     }
     else
