@@ -108,7 +108,7 @@ distdirs = rh-config contrib beos
 
 EXTRA_DIST+=	$(DISTDOCS) fetchmail.spec $(distdirs) ucs/README.svn \
 		trio/CHANGES trio/README \
-		strlcpy.3 \
+		strlcpy.3 bighand.png \
 		m4-local/ac-archive-license.txt \
 		m4-local/ac_ma_search_package.m4 \
 		m4-local/autobuild.m4 \
