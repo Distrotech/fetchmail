@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# Make a fetchmail release.  Must be run as root, to make RPMs.
+# Make a fetchmail release.
 # Dumps a release notice and diffs as a MIME multipart message 
 # in RELEASE_NOTES
 #
@@ -9,7 +9,7 @@ $timezone = strftime('%z', localtime) || "-0500";
 $tmp = $ENV{TMPDIR} || $ENV{TMP} || $ENV{TEMP} || "/tmp";
 
 $project = "fetchmail";
-$svnrepos = "svn://svn.berlios.de/$project";
+$svnrepos = "https://decoy.wox.org/svn/$project";
 $website = "http://developer.berlios.de/projects/$project";
 $mailfrom = "<$project-devel-owner\@lists.berlios.de> (Fetchmail Development Team)";
 
@@ -37,21 +37,21 @@ while ($i = shift @ARGV)
 }
 
 # extract version from source
-$version=`grep 'AC_INIT' configure.in`;
-$version =~ /AC_INIT\([^,]*,\[?([0-9.]+)\]?\)/;
+$version=`grep 'AC_INIT' configure.ac`;
+$version =~ /AC_INIT\([^,]*,\[?([0-9.rc-]+)\]?\)/;
 $version = $1;
 die "cannot determine version" unless defined $1;
 $tag = "RELEASE_$version";
 $tag =~ tr/./-/;
 
 # extract existing tags
-open(ID, "svn ls $svnrepos/tags|");
+open(ID, "-|", "svn", "ls", $svnrepos . "/tags") || die "cannot run svn ls: $!\naborting";
 while (<ID>) {
     if (m{^(RELEASE_.*)/}) {
 	unshift(@versions, $1);
     }
 }
-close(ID);
+close ID || die "svn ls  failed, aborting";
 
 if ($versions[0] eq $tag) {
     $tag = $versions[0];
@@ -79,7 +79,7 @@ if (system("./configure && make clean && make -C po update-po && make clean")) {
 }
 
 print "### Test-building the software...\n";
-if (system("./configure && make clean && make all check")) {
+if (system("./configure && make clean && make distcheck")) {
 	die("Compilation failure\n");
 }
 
