@@ -12,6 +12,14 @@ rather than duplicating the user name (see l. 211 in smbutil.c).
 For later:
 ==========
 
+IDN
+
+Pipeline commands
+
+Allow to query multiple servers simultaneously.
+
+Privilege separation model for added security.
+
 Re-exec ourselves if the executable file changes? Security vs.
 convenience.
 
