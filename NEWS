@@ -300,6 +300,8 @@ fetchmail 6.3.0 (not yet released officially):
 * Fix installation without Python. Sunil Shetye, reported by Peter Church. (MA)
 * Update Japanese translation. Fixes Bug#329342, Takeshi Hamasaki. (MA)
 * Fix imap.c size safeguard that broke on x86_64 architecture. Matthias Andree
+* The FAQ is now available for duplex DIN A4 printing in PDF format.
+  Don't bother to ask for a Letter version, I don't care.  Matthias Andree
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.

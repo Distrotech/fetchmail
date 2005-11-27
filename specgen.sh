@@ -187,6 +187,7 @@ rm -rf \$RPM_BUILD_ROOT
 %doc contrib
 %doc fetchmail-features.html fetchmail-FAQ.html esrs-design-notes.html
 %doc design-notes.html
+%doc fetchmail-FAQ.pdf
 %attr(644, root, man) %{_mandir}/man1/fetchmail.1*
 %attr(755, root, root) %{_bindir}/fetchmail
 %attr(644,root,root) %{_datadir}/locale/*/LC_MESSAGES/fetchmail.mo

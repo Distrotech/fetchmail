@@ -96,9 +96,10 @@ fetchmail.spec: Makefile.in specgen.sh
 	$(srcdir)/specgen.sh $(VERSION) >fetchmail.spec
 
 DISTDOCS=	BUGS FAQ FEATURES NOTES OLDNEWS fetchmail-man.html \
-		fetchmail-FAQ.html design-notes.html esrs-design-notes.html todo.html \
+		design-notes.html esrs-design-notes.html todo.html \
 		fetchmail-features.html README.SSL README.NTLM \
 		README.packaging \
+		fetchmail-FAQ.book fetchmail-FAQ.pdf fetchmail-FAQ.html \
 		fetchmail-SA-2005-01.txt \
 		fetchmail-SA-2005-02.txt
 
@@ -118,6 +119,11 @@ fetchmailconf:
 
 FAQ: fetchmail-FAQ.html
 	AWK=$(AWK) $(SHELL) $(srcdir)/dist-tools/html2txt $(srcdir)/fetchmail-FAQ.html >$@ || { rm -f $@ ; exit 1 ; }
+
+fetchmail-FAQ.pdf: fetchmail-FAQ.html fetchmail-FAQ.book bighand.png
+	$(AWK) '/^[ \t]*<h1/ {sec++; } {if (sec < 2 || sec > 3) print $0;}' <$(srcdir)/fetchmail-FAQ.html >fetchmail-FAQ-print.html
+	htmldoc --logoimage $(srcdir)/bighand.png --batch $(srcdir)/fetchmail-FAQ.book
+	rm -f fetchmail-FAQ-print.html
 
 FEATURES: fetchmail-features.html
 	AWK=$(AWK) $(SHELL) $(srcdir)/dist-tools/html2txt $(srcdir)/fetchmail-features.html >$@ || { rm -f $@ ; exit 1 ; }
