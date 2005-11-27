@@ -214,7 +214,7 @@ delivery. This option does not work with ETRN and ODMR.
 .B \-\-limitflush
 POP3/IMAP only, since version 6.3.0.  Delete oversized messages from the
 mailserver before retrieving new messages. The size limit should be
-separately sepecified with the \-\-limit option.  This option does not
+separately specified with the \-\-limit option.  This option does not
 work with ETRN or ODMR.
 .SS Protocol and Query Options
 .TP
@@ -241,7 +241,7 @@ Use POP3 with Kerberos V4 authentication on port 1109.
 .IP SDPS
 Use POP3 with Demon Internet's SDPS extensions.
 .IP IMAP
-IMAP2bis, IMAP4, or IMAP4rev1 (\fIfetchmail\fR autodetects their capabilities).
+IMAP2bis, IMAP4, or IMAP4rev1 (\fIfetchmail\fR automatically detects their capabilities).
 .IP ETRN
 Use the ESMTP ETRN option.
 .IP ODMR
@@ -345,13 +345,13 @@ by SSL.  SSL support must be present at the server.
 .sp
 Note that fetchmail may still try to negotiate TLS even if this option
 is not given. You can use the \-\-sslproto option to defeat this
-behavior or tell fetchmail to negotiate a particular SSL protol.
+behavior or tell fetchmail to negotiate a particular SSL protocol.
 .sp
 If no port is specified, the connection is attempted to the well known
 port of the SSL version of the base protocol.  This is generally a
 different port than the port used by the base protocol.  For IMAP, this
 is port 143 for the clear protocol and port 993 for the SSL secured
-protocol, for POP3, it is port 110 for the cleartext and port 995 for
+protocol, for POP3, it is port 110 for the clear text and port 995 for
 the encrypted variant.
 .sp
 If your system lacks the corresponding entries from /etc/services, see
@@ -559,7 +559,7 @@ with a 'limit' option in daemon mode, this controls the interval at
 which warnings about oversized messages are mailed to the calling user
 (or the user specified by the 'postmaster' option).  One such
 notification is always mailed at the end of the the first poll that
-the oversized message is detected.  Thereafter, renotification is
+the oversized message is detected.  Thereafter, re-notification is
 suppressed until after the warning interval elapses (it will take
 place at the end of the first following poll).
 .TP
@@ -925,7 +925,7 @@ either the pollname or via name is 'hesiod', fetchmail will try to use
 Hesiod to look up the mailserver.
 .PP
 If you use POP3 or IMAP with GSSAPI authentication, \fIfetchmail\fR will
-expect the server to have RFC1731- or RFC1734-conformant GSSAPI
+expect the server to have RFC1731- or RFC1734-conforming GSSAPI
 capability, and will use it.  Currently this has only been tested over
 Kerberos V, so you're expected to already have a ticket-granting
 ticket. You may pass a username different from your principal name
@@ -1943,7 +1943,7 @@ the computer is rebooted, or powered off for a few hours, and can happen
 in random locations even if you use the software the same way.
 
 For solving hardware-induced segfaults, find the faulty component and repair or
-relace it. <http://www.bitwizard.nl/sig11/> may help you with details.
+replace it. <http://www.bitwizard.nl/sig11/> may help you with details.
 
 For solving software-induced segfaults, the developers may need a "stack
 backtrace".
@@ -2521,7 +2521,7 @@ http://fetchmail.berlios.de/ or do a WWW search for pages with
 
 .SH AUTHOR
 Fetchmail is currently maintained by Matthias Andree and Rob Funk with
-major assistance from Sunil Shetye (for code) and Rob McGregor (for the
+major assistance from Sunil Shetye (for code) and Rob MacGregor (for the
 mailing lists).
 .PP
 Most of the code is from Eric S. Raymond <esr@snark.thyrsus.com>.  Too
