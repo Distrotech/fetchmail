@@ -299,6 +299,7 @@ fetchmail 6.3.0 (not yet released officially):
   Bug#213299. Sunil Shetye (MA).
 * Fix installation without Python. Sunil Shetye, reported by Peter Church. (MA)
 * Update Japanese translation. Fixes Bug#329342, Takeshi Hamasaki. (MA)
+* Fix imap.c size safeguard that broke on x86_64 architecture. Matthias Andree
 
 # INTERNAL CHANGES
 * Switched to automake. Matthias Andree.
