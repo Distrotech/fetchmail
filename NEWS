@@ -7,7 +7,7 @@ This file is in Unicode charset with UTF-8 encoding.
 Abbreviations in parentheses are the maintainers who committed the respective
 change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 
-fetchmail 6.3.0 (not yet released officially):
+fetchmail 6.3.0 (released 2005-11-30):
 
 # SECURITY FIXES IN THIS RELEASE
 * CVE-2005-2335: The POP3 UIDL code doesn't sufficiently validate/truncate the input
