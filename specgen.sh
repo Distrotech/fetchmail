@@ -133,7 +133,6 @@ Summary(pt):	Um configurador gráfico para o fetchmail
 Group:		Utilities/System
 Group(pt):	Utilitários/Sistema
 BuildPrereq:	python
-BuildArch:	noarch
 Requires:	%{name} = %{version}, python
 
 %description -n fetchmailconf
