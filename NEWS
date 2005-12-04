@@ -298,7 +298,7 @@ fetchmail 6.3.0 (released 2005-11-30):
 * In oversized warning messages, print the account name, too. Fixes Debian
   Bug#213299. Sunil Shetye (MA).
 * Fix installation without Python. Sunil Shetye, reported by Peter Church. (MA)
-* Update Japanese translation. Fixes Bug#329342, Takeshi Hamasaki. (MA)
+* Update Japanese translation. Fixes Debian Bug#329342, Takeshi Hamasaki. (MA)
 * Fix imap.c size safeguard that broke on x86_64 architecture. Matthias Andree
 * The FAQ is now available for duplex DIN A4 printing in PDF format.
   Don't bother to ask for a Letter version, I don't care.  Matthias Andree
