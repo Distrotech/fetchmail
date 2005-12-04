@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# WARNING:
+# WARNING: If you change the description, also change genlsm.sh.in!
+# WARNING:
 version="$1"
 
 set -e

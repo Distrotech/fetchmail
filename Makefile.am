@@ -147,6 +147,10 @@ dist-hook:
 	cd $(distdir) && find $(distdirs) po -name .svn -type d -prune -exec rm -rf '{}' ';'
 	cd $(distdir) && find $(distdirs) po -name '*~' -exec rm -f '{}' ';'
 
+.PHONY: lsm
+lsm: genlsm.sh dist
+	$(SHELL) genlsm.sh >$(PACKAGE)-$(VERSION).lsm
+
 # The following sets edit modes for GNU EMACS.
 # Local Variables:
 # compile-command:"configure"
