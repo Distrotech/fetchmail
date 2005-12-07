@@ -91,7 +91,7 @@ esac
 
 dnl i18n
 AM_GNU_GETTEXT([external], [need-ngettext])
-AM_GNU_GETTEXT_VERSION(0.14.1)
+AM_GNU_GETTEXT_VERSION(0.14.3)
 dnl end i18n
 
 # Under sysV68, socket and friends are provided by the C library.

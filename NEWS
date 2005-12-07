@@ -10,12 +10,14 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 fetchmail 6.3.1 (not yet released):
 
 * Fix broken default port in POP2. Patch by Stanislav Brabec, SUSE [CZ]. (MA)
+* Fix manual page, some lines starting with ' were escaped by \&. (MA)
+* Ship with gettext-0.14.3 again, as 6.2.9-rc10 did. Found by Sunil Shetye. (MA)
 
 fetchmail 6.3.0 (released 2005-11-30):
 
 # SECURITY FIXES IN THIS RELEASE
-* CVE-2005-2335: The POP3 UIDL code doesn't sufficiently validate/truncate the input
-  length, so a (malicious or compromised) server that sends UIDs longer
+* CVE-2005-2335: The POP3 UIDL code doesn't sufficiently validate/truncate the
+  input length, so a (malicious or compromised) server that sends UIDs longer
   than 128 bytes can corrupt fetchmail's stack and crash fetchmail.
   This vulnerability is remotely exploitable to inject code run in a
   root shell. Edward J. Shornock, Ludwig Nussel. fetchmail-SA-2005-01.txt
@@ -458,4 +460,4 @@ fetchmail-6.0.0 (Tue Sep 17 19:48:25 EDT 2002), 21972 lines:
 
 There are 520 people on fetchmail-friends and 683 on fetchmail-announce.
 
- vim:tw=79 com=bf\:* ts=8 sts=8 sw=8 ai:
+ vim:tw=80 com=bf\:* ts=8 sts=8 sw=8 ai:
