@@ -841,6 +841,8 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char
 	}
 	if (certpath)
 		SSL_CTX_load_verify_locations(_ctx, NULL, certpath);
+	else
+		SSL_CTX_set_default_verify_paths(_ctx);
 	
 	_ssl_context[sock] = SSL_new(_ctx);
 	

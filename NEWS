@@ -12,6 +12,8 @@ fetchmail 6.3.1 (not yet released):
 * Fix broken default port in POP2. Patch by Stanislav Brabec, SUSE [CZ]. (MA)
 * Fix manual page, some lines starting with ' were escaped by \&. (MA)
 * Ship with gettext-0.14.3 again, as 6.2.9-rc10 did. Found by Sunil Shetye. (MA)
+* Actually set default SSL certificate path if --sslcertpath is unset.
+  Reported by Heino Tiedemann and Rob MacGregor. (MA)
 
 fetchmail 6.3.0 (released 2005-11-30):
 
