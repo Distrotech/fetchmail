@@ -17,6 +17,8 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
   Support for POP2 may be removed from a future fetchmail version. (MA)
 * --sslcertck may become a default setting in a future fetchmail version. (MA)
 
+--------------------------------------------------------------------------------
+
 fetchmail 6.3.1 (not yet released):
 
 * Fix broken default port in POP2. Patch by Stanislav Brabec, SUSE [CZ]. (MA)
@@ -320,6 +322,8 @@ fetchmail 6.3.0 (released 2005-11-30):
 * Got rid of alloca() in fetchmail proper.  Matthias Andree
 * Got rid of ipv6-connect, inner_connect and thereabouts.  Matthias Andree
 
+--------------------------------------------------------------------------------
+
 fetchmail-6.2.5 (Wed Oct 15 18:39:22 EDT 2003), 23079 lines:
 
 * Updated Spanish, Turkish, and German translation files.
@@ -403,6 +407,8 @@ fetchmail-6.2.0 (Fri Dec 13 00:10:07 EST 2002), 22235 lines:
 
 There are 538 people on fetchmail-friends and 701 on fetchmail-announce.
 
+--------------------------------------------------------------------------------
+
 fetchmail-6.1.3 (Thu Nov 28 05:35:15 EST 2002), 22203 lines:
 
 * Updated Turkish, Danish, German, Spanish, Catalan po files.
@@ -454,6 +460,8 @@ fetchmail-6.1.0 (Sun Sep 22 18:31:23 EDT 2002), 21999 lines:
 
 There are 519 people on fetchmail-friends and 680 on fetchmail-announce.
 
+--------------------------------------------------------------------------------
+
 fetchmail-6.0.0 (Tue Sep 17 19:48:25 EDT 2002), 21972 lines:
 
 * Applied Matt Kraai's fix for minor Debian bug #144539.
@@ -462,6 +470,10 @@ fetchmail-6.0.0 (Tue Sep 17 19:48:25 EDT 2002), 21972 lines:
 * Default antispam-response list is now empty.
 * Updated de and po translations.
 
+--------------------------------------------------------------------------------
+
 There are 520 people on fetchmail-friends and 683 on fetchmail-announce.
+
+--------------------------------------------------------------------------------
 
  vim:tw=80 com=bf\:* ts=8 sts=8 sw=8 ai:
