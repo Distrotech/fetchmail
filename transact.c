@@ -407,16 +407,14 @@ int readheaders(int sock,
      * condition the code for sending bouncemail will actually look
      * at the freed storage and coredump...
      */
-    if (msgblk.headers)
-       free(msgblk.headers);
+    xfree(msgblk.headers);
     free_str_list(&msgblk.recipients);
-    if (delivered_to)
-	free(delivered_to);
+    xfree(delivered_to);
 
     /* initially, no message digest */
     memset(ctl->digest, '\0', sizeof(ctl->digest));
 
-    msgblk.headers = received_for = delivered_to = NULL;
+    received_for = NULL;
     from_offs = reply_to_offs = resent_from_offs = app_from_offs = 
 	sender_offs = resent_sender_offs = env_offs = -1;
     oldlen = 0;
@@ -441,8 +439,6 @@ int readheaders(int sock,
 		if ((n = SockRead(sock, buf, sizeof(buf)-1)) == -1) {
 		    set_timeout(0);
 		    free(line);
-		    free(msgblk.headers);
-		    msgblk.headers = NULL;
 		    return(PS_SOCKET);
 		}
 		set_timeout(0);
@@ -911,8 +907,6 @@ int readheaders(int sock,
 
     if (retain_mail)
     {
-	free(msgblk.headers);
-	msgblk.headers = NULL;
 	return(PS_RETAINED);
     }
     if (refuse_mail)
@@ -944,8 +938,13 @@ int readheaders(int sock,
      * Don't mess with this code casually.  It would be way too easy
      * to break it in a way that blackholed mail.  Better to pass
      * the occasional duplicate than to do that...
+     *
+     * Matthias Andree:
+     * The real fix however is to insist on Delivered-To: or similar
+     * headers and require that one copy per recipient be dropped.
+     * Everything else breaks sooner or later.
      */
-    if (MULTIDROP(ctl))
+    if (MULTIDROP(ctl) && msgblk.headers)
     {
 	MD5_CTX context;
 
@@ -1055,8 +1054,7 @@ int readheaders(int sock,
       ctl->server.envelope && !strcasecmp(ctl->server.envelope, "Delivered-To"))
    {
 	    find_server_names(delivered_to, ctl, &msgblk.recipients);
-       free(delivered_to);
-       delivered_to = NULL;
+	    xfree(delivered_to);
    }
 	else if (received_for)
 	    /*
@@ -1118,9 +1116,6 @@ int readheaders(int sock,
 	if (outlevel >= O_DEBUG)
 	    report(stdout,
 		   GT_("forwarding and deletion suppressed due to DNS errors\n"));
-	free(msgblk.headers);
-	msgblk.headers = NULL;
-	free_str_list(&msgblk.recipients);
 	return(PS_TRANSIENT);
     }
     else
@@ -1129,9 +1124,6 @@ int readheaders(int sock,
 	if ((n = open_sink(ctl, &msgblk,
 			   &good_addresses, &bad_addresses)) != PS_SUCCESS)
 	{
-	    free(msgblk.headers);
-	    msgblk.headers = NULL;
-	    free_str_list(&msgblk.recipients);
 	    return(n);
 	}
     }
@@ -1231,9 +1223,6 @@ int readheaders(int sock,
     {
 	report(stdout, GT_("writing RFC822 msgblk.headers\n"));
 	release_sink(ctl);
-	free(msgblk.headers);
-	msgblk.headers = NULL;
-	free_str_list(&msgblk.recipients);
 	return(PS_IOERR);
     }
     else if ((run.poll_interval == 0 || nodetach) && outlevel >= O_VERBOSE && !is_a_file(1) && !run.use_syslog)

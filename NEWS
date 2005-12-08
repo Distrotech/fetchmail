@@ -30,6 +30,8 @@ fetchmail 6.3.1 (not yet released):
   that we are not using. Patch by Sunil Shetye. (MA)
 * Plug potential memory and socket leak when polling multiple folders or when
   the upstream sends bogus message sizes.  Patch by Sunil Shetye. (MA)
+* Fix segfault in multidrop mode with headerless email.
+  Reported by Daniel Drake, patch by Sunil Shetye. (MA)
 
 fetchmail 6.3.0 (released 2005-11-30):
 
