@@ -3,7 +3,7 @@ fetchmail-SA-2005-01: security announcement
 Topic:		remote code injection vulnerability in fetchmail
 
 Author:		Matthias Andree
-Version:	1.03
+Version:	1.04
 Announced:	2005-07-21
 Type:		buffer overrun/stack corruption/code injection
 Impact:		account or system compromise possible through malicious
@@ -29,8 +29,8 @@ Affects:	fetchmail version 6.2.5.1 (denial of service)
 		(other versions have not been checked)
 
 Not affected:	fetchmail 6.2.5.2
-		fetchmail 6.2.6-pre7
-		fetchmail 6.3.0      (not released yet)
+		fetchmail 6.2.5.4
+		fetchmail 6.3.0
 
 		Older versions may not have THIS bug, but had been found
 		to contain other security-relevant bugs.
@@ -38,6 +38,8 @@ Not affected:	fetchmail 6.2.5.2
 Corrected:	2005-07-22 01:37 UTC (SVN) - committed bugfix (r4157)
 		2005-07-22                   fetchmail-patch-6.2.5.2 released
 		2005-07-23                   fetchmail-6.2.5.2 tarball released
+		2005-11-13                   fetchmail-6.2.5.4 tarball released
+		2005-11-30                   fetchmail-6.3.0 tarball released
 
 0. Release history
 
@@ -56,6 +58,8 @@ Corrected:	2005-07-22 01:37 UTC (SVN) - committed bugfix (r4157)
 		     - Add heise security URL.
 		     - Mention release of 6.2.5.2 tarball.
 2005-10-27	1.03 - Update CVE Name after CVE naming change
+2005-12-08	1.04 - Mention 6.2.5.4 and 6.3.0 releases "not affected"
+		     - remove patch information
 
 1. Background
 
@@ -94,23 +98,9 @@ No reasonable workaround can be offered at this time.
 
 5. Solution
 
-Upgrade your fetchmail package to version 6.2.5.2.
-
-You can either download a complete tarball of fetchmail-6.2.5.2.tar.gz,
-or you can download a patch against fetchmail-6.2.5 if you already have
-the 6.2.5 tarball. Either is available from:
+Upgrade your fetchmail package to version 6.3.0 or newer.
 
 <http://developer.berlios.de/project/showfiles.php?group_id=1824>
-
-To use the patch:
-
-  1. download fetchmail-6.2.5.tar.gz (or retrieve the version you already
-     had downloaded) and fetchmail-patch-6.2.5.2.tar.gz
-  2. unpack the tarball: gunzip -c fetchmail-6.2.5.tar.gz | tar xf -
-  3. unpack the patch: gunzip fetchmail-patch-6.2.5.2.gz
-  4. apply the patch: cd fetchmail-6.2.5 ; patch -p1 <../fetchmail-patch-6.2.5.2
-  5. now configure and build as usual - detailed instructions in the file
-     named "INSTALL".
 
 A. References
 

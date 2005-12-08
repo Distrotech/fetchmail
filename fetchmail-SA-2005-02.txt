@@ -3,7 +3,7 @@ fetchmail-SA-2005-02: security announcement
 Topic:		password exposure in fetchmailconf
 
 Author:		Matthias Andree
-Version:	1.02
+Version:	1.03
 Announced:	2005-10-21
 Type:		insecure creation of file
 Impact:		passwords are written to a world-readable file
@@ -20,14 +20,14 @@ Affects:	fetchmail version 6.2.5.2
 		fetchmailconf 1.43.1 (shipped separately, now withdrawn)
 		(other versions have not been checked but are presumed affected)
 
-Not affected:	fetchmail 6.2.9-rc6
-		fetchmailconf 1.43.2 (use this for fetchmail-6.2.5.2)
-		fetchmailconf 1.49   (shipped with 6.2.9-rc6)
-		fetchmail 6.3.0      (not released yet)
+Not affected:	fetchmailconf 1.43.2 (use this for fetchmail-6.2.5.2)
+		fetchmail 6.2.5.4
+		fetchmail 6.3.0
 
 Corrected:	2005-09-28 01:14 UTC (SVN) - committed bugfix (r4351)
 		2005-10-21                 - released fetchmailconf-1.43.2
-		2005-10-21                 - released fetchmail 6.2.9-rc6
+		2005-11-13                 - released fetchmail 6.2.5.4
+		2005-11-30                 - released fetchmail 6.3.0
 
 0. Release history
 ==================
@@ -38,6 +38,7 @@ Corrected:	2005-09-28 01:14 UTC (SVN) - committed bugfix (r4351)
 		     - added Credits
 2005-10-27	1.02 - reformatted section 0
 		     - updated CVE Name to new naming scheme
+2005-12-08	1.03 - update version information and solution
 
 1. Background
 =============
@@ -68,16 +69,9 @@ fetchmailconf has finished, you can restore your old umask.
 4. Solution
 ===========
 
-For users of fetchmail-6.2.5.2:
--------------------------------
-Download fetchmailconf-1.43.2.gz from fetchmail's project site
-<http://developer.berlios.de/project/showfiles.php?group_id=1824&release_id=6617>,
-gunzip it, then replace your existing fetchmailconf with it.
-
-For users of fetchmail-6.2.6* or 6.2.9* before 6.2.9-rc6:
----------------------------------------------------------
-update to the latest fetchmail-devel package, 6.2.9-rc6 on 2005-10-21.
-<https://developer.berlios.de/project/showfiles.php?group_id=1824>
+Download and install fetchmail 6.3.0 or a newer stable release from
+fetchmail's project site at
+<http://developer.berlios.de/project/showfiles.php?group_id=1824&release_id=6617>.
 
 A. References
 =============
