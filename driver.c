@@ -1373,7 +1373,8 @@ is restored."));
 		    if (count > INT_MAX/sizeof(int))
 		    {
 			report(stderr, GT_("bogus message count!"));
-			return(PS_PROTOCOL);
+			err = PS_PROTOCOL;
+			goto cleanUp;
 		    }
 
 		    /* 
@@ -1389,6 +1390,7 @@ is restored."));
 		    if (proto->getsizes &&
 			!(proto->getpartialsizes && NUM_NONZERO(ctl->fetchsizelimit)))
 		    {
+			xfree(msgsizes);
 			msgsizes = xmalloc(sizeof(int) * count);
 			for (i = 0; i < count; i++)
 			    msgsizes[i] = 0;

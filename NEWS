@@ -28,6 +28,8 @@ fetchmail 6.3.1 (not yet released):
   Reported by Heino Tiedemann and Rob MacGregor. (MA)
 * Remove bogus Netscape IMAP4rev1 Service >= 3.6 warning about BODY[TEXT]
   that we are not using. Patch by Sunil Shetye. (MA)
+* Plug potential memory and socket leak when polling multiple folders or when
+  the upstream sends bogus message sizes.  Patch by Sunil Shetye. (MA)
 
 fetchmail 6.3.0 (released 2005-11-30):
 
