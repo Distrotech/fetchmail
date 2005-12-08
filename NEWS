@@ -16,13 +16,16 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 * POP2 is obsolete.
   Support for POP2 may be removed from a future fetchmail version. (MA)
 * --sslcertck may become a default setting in a future fetchmail version. (MA)
+* The multidrop To/Cc guessing code along with the fragile duplicate suppressor
+  is deprecated and may be removed from a future release. (MA)
 
 --------------------------------------------------------------------------------
 
 fetchmail 6.3.1 (not yet released):
 
 * Fix broken default port in POP2. Patch by Stanislav Brabec, SUSE [CZ]. (MA)
-* Fix manual page, some lines starting with ' were escaped by \&. (MA)
+* Fix manual page, some lines starting with ' were escaped by \&.
+  Reported by Simon Barner. (MA)
 * Ship with gettext-0.14.3 again, as 6.2.9-rc10 did. Found by Sunil Shetye. (MA)
 * Actually set default SSL certificate path if --sslcertpath is unset.
   Reported by Heino Tiedemann and Rob MacGregor. (MA)
