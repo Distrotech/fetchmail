@@ -1437,13 +1437,6 @@ with code as shoddy as GroupWise seems to be, you will probably pay
 for it with other problems.<p>
 
 """
-	    if string.find(greetline, "Netscape IMAP4rev1 Service 3.6") > 0:
-		warnings = warnings + """
-This server violates the RFC2060 requirement that a BODY[TEXT] fetch should
-set the messages's Seen flag.  As a result, if you use the keep option the
-same messages will be downloaded over and over.
-
-"""
 	    if string.find(greetline, "InterChange") > 0:
 		warnings = warnings + """
 
