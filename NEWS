@@ -8,8 +8,8 @@ Abbreviations in parentheses are the maintainers who committed the respective
 change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 
 # DEPRECATED FEATURES AND MAJOR INCOMPATIBLE CHANGE ADVANCE WARNINGS
-* The MX and host alias lookups that fetchmail performs in multidrop mode are
-  obsolete, deprecated and may be removed from a future fetchmail version.
+* The MX and host alias DNS lookups that fetchmail performs in multidrop mode
+  are obsolete, deprecated and may be removed from a future fetchmail version.
   They have never supported IPv6 (including IPv6-mapped IPv4) anyhow. (MA)
 * The monitor and interface options may be removed from a future fetchmail
   version as they are not sufficiently portable. (MA)
@@ -33,9 +33,12 @@ fetchmail 6.3.1 (not yet released):
   that we are not using. Patch by Sunil Shetye. (MA)
 * Plug potential memory and socket leak when polling multiple folders or when
   the upstream sends bogus message sizes.  Patch by Sunil Shetye. (MA)
-* Fix segfault in multidrop mode with headerless email.
-  Reported by Daniel Drake, patch by Sunil Shetye. (MA)
+* Fix segfault (null pointer dereference) in multidrop mode with headerless
+  email.  Reported by Daniel Drake, patch by Sunil Shetye. (MA)
 * Update Catalan translation, by Ernest Adrogué Calveras. (MA)
+* Fix segfault (null pointer dereference) on some operating systems with
+  fetchmail's obsolete DNS MX/host alias lookups in multidrop mode.
+  Patch by Dr.-Ing. Andreas Haakh. (MA)
 
 fetchmail 6.3.0 (released 2005-11-30):
 

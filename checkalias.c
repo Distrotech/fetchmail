@@ -157,6 +157,7 @@ int is_host_alias(const char *name, struct query *ctl)
     hints.ai_family=AF_UNSPEC;
     hints.ai_protocol=PF_UNSPEC;
     hints.ai_socktype=SOCK_STREAM;
+    hints.ai_flags=AI_CANONNAME;
 
     e = getaddrinfo(name, NULL, &hints, &res);
     if (e == 0)
