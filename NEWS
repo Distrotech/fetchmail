@@ -35,6 +35,7 @@ fetchmail 6.3.1 (not yet released):
   the upstream sends bogus message sizes.  Patch by Sunil Shetye. (MA)
 * Fix segfault in multidrop mode with headerless email.
   Reported by Daniel Drake, patch by Sunil Shetye. (MA)
+* Update Catalan translation, by Ernest Adrogué Calveras. (MA)
 
 fetchmail 6.3.0 (released 2005-11-30):
 
