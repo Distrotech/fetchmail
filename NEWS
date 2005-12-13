@@ -15,6 +15,7 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
   version as they are not sufficiently portable. (MA)
 * POP2 is obsolete.
   Support for POP2 may be removed from a future fetchmail version. (MA)
+* RPOP is obsolete, support may be removed from a future fetchmail release. (MA)
 * --sslcertck may become a default setting in a future fetchmail version. (MA)
 * The multidrop To/Cc guessing code along with the fragile duplicate suppressor
   is deprecated and may be removed from a future release. (MA)
