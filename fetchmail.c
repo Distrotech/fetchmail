@@ -1277,38 +1277,9 @@ static int load_params(int argc, char **argv, int optind)
 static RETSIGTYPE terminate_poll(int sig)
 /* to be executed at the end of a poll cycle */
 {
-    /*
-     * Close all SMTP delivery sockets.  For optimum performance
-     * we'd like to hold them open til end of run, but (1) this
-     * loses if our poll interval is longer than the MTA's inactivity
-     * timeout, and (2) some MTAs (like smail) don't deliver after
-     * each message, but rather queue up mail and wait to actually
-     * deliver it until the input socket is closed. 
-     *
-     * Sending SMTP QUIT on signal is theoretically nice, but led to a 
-     * subtle bug.  If fetchmail was terminated by signal while it was 
-     * shipping message text, it would hang forever waiting for a
-     * command acknowledge.  In theory we could enable the QUIT
-     * only outside of the message send.  In practice, we don't
-     * care.  All mailservers hang up on a dropped TCP/IP connection
-     * anyway.
-     */
 
     if (sig != 0)
         report(stdout, GT_("terminated with signal %d\n"), sig);
-    else
-    {
-	struct query *ctl;
-
-	/* terminate all SMTP connections cleanly */
-	for (ctl = querylist; ctl; ctl = ctl->next)
-	    if (ctl->smtp_socket != -1)
-	    {
-		/* don't send QUIT for ODMR case because we're acting
-		   as a proxy between the SMTP server and client. */
-		smtp_close(ctl, ctl->server.protocol != P_ODMR);
-	    }
-    }
 
 #ifdef POP3_ENABLE
     /*

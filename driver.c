@@ -427,6 +427,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
     int num, firstnum = 1, lastnum = 0, err, len;
     int fetchsizelimit = ctl->fetchsizelimit;
     int msgsize;
+    int initialfetches = *fetches;
 
     if (ctl->server.base_protocol->getpartialsizes && NUM_NONZERO(fetchsizelimit))
     {
@@ -814,10 +815,11 @@ flagthemail:
 	/* perhaps this as many as we're ready to handle */
 	if (maxfetch && maxfetch <= *fetches && num < count)
 	{
+	    int remcount = count - (*fetches - initialfetches);
 	    report(stdout,
 		   ngettext("fetchlimit %d reached; %d message left on server %s account %s\n",
-			    "fetchlimit %d reached; %d messages left on server %s account %s\n", count - *fetches),
-		   maxfetch, count - *fetches, ctl->server.truename, ctl->remotename);
+			    "fetchlimit %d reached; %d messages left on server %s account %s\n", remcount),
+		   maxfetch, remcount, ctl->server.truename, ctl->remotename);
 	    return(PS_MAXFETCH);
 	}
     } /* for (num = 1; num <= count; num++) */
@@ -836,6 +838,7 @@ static int do_session(
 {
     static int *msgsizes;
     volatile int err, mailserver_socket = -1;	/* pacifies -Wall */
+    int tmperr;
     int deletions = 0, js;
     const char *msg;
     SIGHANDLERTYPE pipesave;
@@ -1136,6 +1139,7 @@ static int do_session(
 #endif /* KERBEROS_V5 */
 
 	/* accept greeting message from mail server */
+	stage = STAGE_PREAUTH;
 	err = (ctl->server.base_protocol->parse_response)(mailserver_socket, buf);
 	if (err != 0)
 	    goto cleanUp;
@@ -1416,7 +1420,7 @@ is restored."));
 					 count, &msgsizes,
 					 maxfetch,
 					 &fetches, &dispatches, &deletions);
-		    if (err)
+		    if (err != PS_SUCCESS && err != PS_MAXFETCH)
 			goto cleanUp;
 
 		    if (!check_only && ctl->skipped
@@ -1434,6 +1438,9 @@ is restored."));
 		    if (err)
 			goto cleanUp;
 		}
+		/* Return now if we have reached the fetchlimit */
+		if (maxfetch && maxfetch <= fetches)
+		    goto no_error;
 	    } while
 		  /*
 		   * Only re-poll if we either had some actual forwards and 
@@ -1443,15 +1450,33 @@ is restored."));
 		  (dispatches && ctl->server.base_protocol->retry && !ctl->keep && !ctl->errcount);
 	}
 
-    /* no_error: */
-	/* ordinary termination with no errors -- officially log out */
-	err = (ctl->server.base_protocol->logout_cmd)(mailserver_socket, ctl);
+	/* XXX: From this point onwards, preserve err unless a new error has occurred */
+
+    no_error:
+	/* PS_SUCCESS, PS_MAXFETCH: ordinary termination with no errors -- officially log out */
+	stage = STAGE_LOGOUT;
+	tmperr = (ctl->server.base_protocol->logout_cmd)(mailserver_socket, ctl);
+	if (tmperr != PS_SUCCESS)
+	    err = tmperr;
 	/*
 	 * Hmmmm...arguably this would be incorrect if we had fetches but
 	 * no dispatches (due to oversized messages, etc.)
 	 */
-	if (err == 0)
-	    err = (fetches > 0) ? PS_SUCCESS : PS_NOMAIL;
+	else if (err == PS_SUCCESS && fetches == 0)
+	    err = PS_NOMAIL;
+	/*
+	 * Close all SMTP delivery sockets.  For optimum performance
+	 * we'd like to hold them open til end of run, but (1) this
+	 * loses if our poll interval is longer than the MTA's
+	 * inactivity timeout, and (2) some MTAs (like smail) don't
+	 * deliver after each message, but rather queue up mail and
+	 * wait to actually deliver it until the input socket is
+	 * closed.
+	 *
+	 * don't send QUIT for ODMR case because we're acting as a
+	 * proxy between the SMTP server and client.
+	 */
+	smtp_close(ctl, ctl->server.protocol != P_ODMR);
 	cleanupSockClose(mailserver_socket);
 	goto closeUp;
 
@@ -1465,6 +1490,15 @@ is restored."));
 
 	/* try to clean up all streams */
 	release_sink(ctl);
+	/*
+	 * Sending SMTP QUIT on signal is theoretically nice, but led
+	 * to a subtle bug.  If fetchmail was terminated by signal
+	 * while it was shipping message text, it would hang forever
+	 * waiting for a command acknowledge.  In theory we could
+	 * enable the QUIT only outside of the message send.  In
+	 * practice, we don't care.  All mailservers hang up on a
+	 * dropped TCP/IP connection anyway.
+	 */
 	smtp_close(ctl, 0);
 	if (mailserver_socket != -1) {
 	    cleanupSockClose(mailserver_socket);
@@ -1479,7 +1513,7 @@ is restored."));
 	}
     }
 
-    /* no report on PS_MAXFETCH or PS_UNDEFINED or PS_AUTHFAIL */
+    /* no report on PS_AUTHFAIL */
     msg = NULL;
     switch (err)
     {
@@ -1508,7 +1542,7 @@ is restored."));
 	msg = GT_("DNS lookup");
 	break;
     case PS_UNDEFINED:
-	report(stderr, GT_("undefined error\n"));
+	msg = GT_("undefined");
 	break;
     }
     if (msg) {
@@ -1526,9 +1560,9 @@ closeUp:
     xfree(msgsizes);
 
     /* execute wrapup command, if any */
-    if (ctl->postconnect && (err = system(ctl->postconnect)))
+    if (ctl->postconnect && (tmperr = system(ctl->postconnect)))
     {
-	report(stderr, GT_("post-connection command failed with status %d\n"), err);
+	report(stderr, GT_("post-connection command failed with status %d\n"), tmperr);
 	if (err == PS_SUCCESS)
 	    err = PS_SYNTAX;
     }

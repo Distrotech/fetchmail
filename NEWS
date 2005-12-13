@@ -39,6 +39,14 @@ fetchmail 6.3.1 (not yet released):
 * Fix segfault (null pointer dereference) on some operating systems with
   fetchmail's obsolete DNS MX/host alias lookups in multidrop mode.
   Patch by Dr.-Ing. Andreas Haakh. (MA)
+* Close SMTP sockets early, to reduce resource usage, trigger earlier delivery
+  with some MTAs and avoid SIGPIPE (SIG 13) when the SMTP listener gets bored
+  and drops the connection after timeout.  Patch by Sunil Shetye. (MA)
+* Don't treat hitting a fetch limit as error.  Patch by Sunil Shetye. (MA)
+* Fix negative "messages left on server" on idle/repoll with fetchlimit.
+  Patch by Sunil Shetye. (MA)
+* Properly track logout stage.  Patch by Sunil Shetye. (MA)
+* Preserve error conditions across postconnect script.  Sunil Shetye. (MA)
 
 fetchmail 6.3.0 (released 2005-11-30):
 
