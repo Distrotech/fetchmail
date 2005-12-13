@@ -124,12 +124,10 @@ int smtp_open(struct query *ctl)
 	    char	*portnum = SMTP_PORT;
 
 	    ctl->smtphost = idp->id;  /* remember last host tried. */
-	    if(ctl->smtphost[0]=='/')
-		ctl->listener = LMTP_MODE;
-
 	    if (ctl->smtphost[0]=='/')
 	    {
-		parsed_host = NULL;
+		ctl->listener = LMTP_MODE;
+		xfree(parsed_host);
 		if ((ctl->smtp_socket = UnixOpen(ctl->smtphost))==-1)
 		    continue;
 	    }
@@ -143,7 +141,7 @@ int smtp_open(struct query *ctl)
 			portnum = cp;
 		}
 		if ((ctl->smtp_socket = SockOpen(parsed_host,portnum,
-					     ctl->server.plugout)) == -1)
+				ctl->server.plugout)) == -1)
 		{
 		    xfree(parsed_host);
 		    continue;
@@ -153,10 +151,10 @@ int smtp_open(struct query *ctl)
 	    /* return immediately for ODMR */
 	    if (ctl->server.protocol == P_ODMR)
 	    {
-	       set_timeout(0);
-	       phase = oldphase;
-	       xfree(parsed_host);
-               return(ctl->smtp_socket); /* success */
+		set_timeout(0);
+		phase = oldphase;
+		xfree(parsed_host);
+		return(ctl->smtp_socket); /* success */
 	    }
 
 	    /* are we doing SMTP or LMTP? */
@@ -165,9 +163,9 @@ int smtp_open(struct query *ctl)
 	    /* first, probe for ESMTP */
 	    if (SMTP_ok(ctl->smtp_socket) == SM_OK &&
 		    SMTP_ehlo(ctl->smtp_socket, id_me, 
-			      ctl->server.esmtp_name, ctl->server.esmtp_password,
-			      &ctl->server.esmtp_options) == SM_OK)
-	       break;  /* success */
+			ctl->server.esmtp_name, ctl->server.esmtp_password,
+			&ctl->server.esmtp_options) == SM_OK)
+		break;  /* success */
 
 	    /*
 	     * RFC 1869 warns that some listeners hang up on a failed EHLO,
@@ -184,7 +182,7 @@ int smtp_open(struct query *ctl)
 	    else
 	    {
 		if ((ctl->smtp_socket = SockOpen(parsed_host,portnum,
-					     ctl->server.plugout)) == -1)
+				ctl->server.plugout)) == -1)
 		{
 		    xfree(parsed_host);
 		    continue;
@@ -199,30 +197,31 @@ int smtp_open(struct query *ctl)
 	}
 	set_timeout(0);
 	phase = oldphase;
-    }
 
-    /*
-     * RFC 1123 requires that the domain name part of the
-     * RCPT TO address be "canonicalized", that is a FQDN
-     * or MX but not a CNAME.  Some listeners (like exim)
-     * enforce this.  Now that we have the actual hostname,
-     * compute what we should canonicalize with.
-     */
-    xfree(ctl->destaddr);
-    if (ctl->smtpaddress)
-	ctl->destaddr = xstrdup(ctl->smtpaddress);
-    /* parsed_host is smtphost without the /port */
-    else if (parsed_host && parsed_host[0] != 0)
-	ctl->destaddr = xstrdup(parsed_host);
-    /* No smtphost is specified or it is a UNIX socket, then use
-       localhost as a domain part. */
-    else
-	ctl->destaddr = xstrdup("localhost");
+	/*
+	 * RFC 1123 requires that the domain name part of the
+	 * RCPT TO address be "canonicalized", that is a FQDN
+	 * or MX but not a CNAME.  Some listeners (like exim)
+	 * enforce this.  Now that we have the actual hostname,
+	 * compute what we should canonicalize with.
+	 */
+	xfree(ctl->destaddr);
+	if (ctl->smtpaddress)
+	    ctl->destaddr = xstrdup(ctl->smtpaddress);
+	/* parsed_host is smtphost without the /port */
+	else if (parsed_host && parsed_host[0] != 0)
+	    ctl->destaddr = xstrdup(parsed_host);
+	/* No smtphost is specified or it is a UNIX socket, then use
+	   localhost as a domain part. */
+	else
+	    ctl->destaddr = xstrdup("localhost");
+	xfree(parsed_host);
+    }
+    /* end if (ctl->smtp_socket == -1) */
 
     if (outlevel >= O_DEBUG && ctl->smtp_socket != -1)
 	report(stdout, GT_("forwarding to %s\n"), ctl->smtphost);
 
-    xfree(parsed_host);
     return(ctl->smtp_socket);
 }
 

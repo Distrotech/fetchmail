@@ -48,6 +48,8 @@ fetchmail 6.3.1 (not yet released):
   Patch by Sunil Shetye. (MA)
 * Properly track logout stage.  Patch by Sunil Shetye. (MA)
 * Preserve error conditions across postconnect script.  Sunil Shetye. (MA)
+* Do not trash destination domain if multiple messages are forwarded into the
+  same SMTP/LMTP connection. Reported by Joachim Feise, Berlios Bug #5849. (MA)
 
 fetchmail 6.3.0 (released 2005-11-30):
 
