@@ -1139,7 +1139,6 @@ static int do_session(
 #endif /* KERBEROS_V5 */
 
 	/* accept greeting message from mail server */
-	stage = STAGE_PREAUTH;
 	err = (ctl->server.base_protocol->parse_response)(mailserver_socket, buf);
 	if (err != 0)
 	    goto cleanUp;
