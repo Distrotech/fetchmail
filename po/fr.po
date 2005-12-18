@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.9-rc9\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2005-12-13 01:49+0100\n"
-"PO-Revision-Date: 2005-09-22 11:07+0200\n"
+"POT-Creation-Date: 2005-12-18 11:42+0100\n"
+"PO-Revision-Date: 2005-12-18 11:50+0100\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -1715,6 +1715,11 @@ msgstr "%u n'est pas vu\n"
 msgid "%u is first unseen\n"
 msgstr "%u est le premier a n'avoir pas été vu\n"
 
+#: imap.c:892
+msgid ""
+"Warning: ignoring bogus data for message sizes returned by the server.\n"
+msgstr ""
+
 #: interface.c:256
 msgid "Unable to open kvm interface. Make sure fetchmail is SGID kmem."
 msgstr ""
@@ -2965,9 +2970,3 @@ msgstr "échec malloc\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "échec realloc\n"
-
-#~ msgid "Option --remote is not supported with ETRN\n"
-#~ msgstr "L'option --remote n'est pas supportée avec ETRN\n"
-
-#~ msgid "Option --remote is not supported with ODMR\n"
-#~ msgstr "L'option --remote n'est pas supportée avec ODMR\n"
