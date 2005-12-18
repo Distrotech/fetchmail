@@ -50,6 +50,8 @@ fetchmail 6.3.1 (not yet released):
 * Preserve error conditions across postconnect script.  Sunil Shetye. (MA)
 * Do not trash destination domain if multiple messages are forwarded into the
   same SMTP/LMTP connection. Reported by Joachim Feise, Berlios Bug #5849. (MA)
+* Manual page: Add "-md5" to "openssl x509" example in --sslfingerprint
+  documentation.  Suggested by Jason White. (MA)
 
 fetchmail 6.3.0 (released 2005-11-30):
 

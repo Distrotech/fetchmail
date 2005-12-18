@@ -428,7 +428,7 @@ To obtain the fingerprint of a certificate stored in the file cert.pem,
 try:
 .sp
 .nf
-	openssl x509 \-in cert.pem \-noout \-fingerprint
+	openssl x509 \-in cert.pem \-noout \-md5 \-fingerprint
 .fi
 .sp
 For details, see
