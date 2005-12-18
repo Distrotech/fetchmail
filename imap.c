@@ -875,12 +875,21 @@ static int imap_getpartialsizes(int sock, int first, int last, int *sizes)
 	    ;
 	else if (strstr(buf, "OK") || strstr(buf, "NO"))
 	    break;
-	else if (sscanf(buf, "* %u FETCH (RFC822.SIZE %u)", &num, &size) == 2) 
+	else if (sscanf(buf, "* %u FETCH (RFC822.SIZE %u)", &num, &size) == 2
+	/* some servers (like mail.internode.on.net bld-mail04) return UID information here
+	 *
+	 * IMAP> A0005 FETCH 1 RFC822.SIZE
+	 * IMAP< * 1 FETCH (UID 16 RFC822.SIZE 1447)
+	 * IMAP< A0005 OK FETCH completed
+	 *
+	 */
+		|| sscanf(buf, "* %u FETCH (UID %*s RFC822.SIZE %u)", &num, &size) == 2)
 	{
 	    if (num >= first && num <= last)
-	        sizes[num - first] = size;
+		sizes[num - first] = size;
 	    else
-		report(stderr, "Warning: ignoring bogus data for message sizes returned by the server.\n");
+		report(stderr,
+			GT_("Warning: ignoring bogus data for message sizes returned by the server.\n"));
 	}
     }
 
@@ -948,8 +957,18 @@ static int imap_fetch_headers(int sock, struct query *ctl,int number,int *lenp)
 	if ((ok = gen_recv(sock, buf, sizeof(buf))))
 	    return(ok);
  	ptr = skip_token(buf);	/* either "* " or "AXXXX " */
- 	if (sscanf(ptr, "%d FETCH (%*s {%d}", &num, lenp) == 2)
-  	    break;
+	if (sscanf(ptr, "%d FETCH (RFC822.HEADER {%d}", &num, lenp) == 2
+	/* some servers (like mail.internode.on.net bld-mail04) return UID information here
+	 *
+	 * IMAP> A0006 FETCH 1 RFC822.HEADER
+	 * IMAP< * 1 FETCH (UID 16 RFC822.HEADER {1360}
+	 * ...
+	 * IMAP< )
+	 * IMAP< A0006 OK FETCH completed
+	 *
+	 */
+		|| sscanf(ptr, "%d FETCH (UID %*s RFC822.HEADER {%d}", &num, lenp) == 2)
+	    break;
 	/* try to recover from chronically fucked-up M$ Exchange servers */
  	else if (!strncmp(ptr, "NO", 2))
 	{
