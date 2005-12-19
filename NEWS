@@ -22,7 +22,7 @@ These are the relevant changes (the line counts have been discontinued):
 fetchmail-6.2.5.5  2005-XXXXX  Matthias Andree
 
 * Fix Debian bug #301964, fetchmail leaks sockets when SSL negotiation
-  fails. Fix suggested Goswin Brederlow.
+  fails. Fix suggested by Goswin Brederlow.
 
 fetchmail-6.2.5.4  2005-11-13  Matthias Andree
 
