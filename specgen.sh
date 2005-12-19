@@ -6,7 +6,7 @@ Release:	1
 Vendor:		Eric Conspiracy Secret Labs
 Packager:	Eric S. Raymond <esr@thyrsus.com>
 URL:		http://fetchmail.berlios.de/
-Source:         %{name}-%{version}.tar.gz
+Source:		%{name}-%{version}.tar.gz
 Group:		Applications/Mail
 Group(pt_BR):   Aplicações/Correio Eletrônico
 License:	GPL
@@ -137,7 +137,7 @@ cd \$RPM_BUILD_ROOT%{_mandir}/man1
 ln -sf fetchmail.1 fetchmailconf.1
 
 %clean
-rm -rf \$RPM_BUILD_ROOT
+rm -rf \$RPM_BUILD_ROOT \$RPM_BUILD_DIR/%{name}-%{version}
 
 %files
 %defattr (644, root, root, 755)
