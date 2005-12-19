@@ -27,6 +27,7 @@ fetchmail-6.2.5.5  2005-12-19  Matthias Andree
   (Debian Bug #343836). Fix by Sunil Shetye.
 * Fix Debian bug #301964, fetchmail leaks sockets when SSL negotiation
   fails. Fix suggested by Goswin Brederlow.
+* Add fetchmail-SA-2005-{01,02,03}.txt
 
 fetchmail-6.2.5.4  2005-11-13  Matthias Andree
 
