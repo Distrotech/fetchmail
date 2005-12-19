@@ -1,5 +1,7 @@
-For 6.3.0:
+For 6.3.X:
 ==========
+
+Fix SMTP/LMTP messup (no way back from LMTP problem)
 
 Add FAQ entry about procmail configuration with 1. ORGMAIL/DEFAULT, 2.
 :0e { EXITCODE=75 HOST }, 3. explicit default recipe, 4. LOGFILE
