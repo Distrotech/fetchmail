@@ -22,8 +22,14 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 
 --------------------------------------------------------------------------------
 
-fetchmail 6.3.1 (not yet released):
+fetchmail 6.3.1 (released 2005-12-19):
 
+# SECURITY FIX IN THIS RELEASE
+* CVE-2005-4348 Fix segmentation fault (null pointer dereference) in
+  multidrop mode with headerless email.  See fetchmail-SA-2005-03.txt.
+  Reported by Daniel Drake, patch by Sunil Shetye. (MA)
+
+# OTHER BUG FIXES, DOCUMENTATION AND TRANSLATION UPDATES
 * Fix broken default port in POP2. Patch by Stanislav Brabec, SUSE [CZ]. (MA)
 * Fix manual page, some lines starting with ' were escaped by \&.
   Reported by Simon Barner. (MA)
@@ -34,8 +40,6 @@ fetchmail 6.3.1 (not yet released):
   that we are not using. Patch by Sunil Shetye. (MA)
 * Plug potential memory and socket leak when polling multiple folders or when
   the upstream sends bogus message sizes.  Patch by Sunil Shetye. (MA)
-* Fix segfault (null pointer dereference) in multidrop mode with headerless
-  email.  Reported by Daniel Drake, patch by Sunil Shetye. (MA)
 * Update Catalan translation, by Ernest Adrogué Calveras. (MA)
 * Fix segfault (null pointer dereference) on some operating systems with
   fetchmail's obsolete DNS MX/host alias lookups in multidrop mode.
@@ -51,7 +55,8 @@ fetchmail 6.3.1 (not yet released):
 * Do not trash destination domain if multiple messages are forwarded into the
   same SMTP/LMTP connection. Reported by Joachim Feise, Berlios Bug #5849. (MA)
 * Manual page: Add "-md5" to "openssl x509" example in --sslfingerprint
-  documentation.  Suggested by Jason White. (MA)
+  documentation, since OpenSSL 0.9.8 changed the default to SHA1.
+  Suggested by Jason White. (MA)
 * Cope with servers that return UID information in response to non-UID
   RFC822.{SIZE|HEADER} requests. Reported by Jason White.
   Patch suggestion by by Sunil Shetye, simplified by MA.
