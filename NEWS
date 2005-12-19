@@ -19,8 +19,12 @@ fetchmail-6.2.9-rc* release candidate or, if available, 6.3.X or newer release.
 
 These are the relevant changes (the line counts have been discontinued):
 
-fetchmail-6.2.5.5  2005-XXXXX  Matthias Andree
+fetchmail-6.2.5.5  2005-12-19  Matthias Andree
 
+* SECURITY FIX CVE-2005-4348: fix null pointer dereference in
+  multidrop mode when the message is empty. Reported by Daniel Drake
+  <http://article.gmane.org/gmane.mail.fetchmail.user/7573> and others
+  (Debian Bug #343836). Fix by Sunil Shetye.
 * Fix Debian bug #301964, fetchmail leaks sockets when SSL negotiation
   fails. Fix suggested by Goswin Brederlow.
 
