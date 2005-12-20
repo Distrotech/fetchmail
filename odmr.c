@@ -35,7 +35,7 @@ static int odmr_ok (int sock, char *argbuf)
 {
     int ok;
 
-    ok = SMTP_ok(sock);
+    ok = SMTP_ok(sock, SMTP_MODE);
     if (ok == SM_UNRECOVERABLE)
 	return(PS_PROTOCOL);
     else
@@ -51,7 +51,7 @@ static int odmr_getrange(int sock, struct query *ctl, const char *id,
     char buf [MSGBUFSIZE+1];
     struct idlist *qnp;		/* pointer to Q names */
 
-    if ((ok = SMTP_ehlo(sock, fetchmailhost, 
+    if ((ok = SMTP_ehlo(sock, SMTP_MODE, fetchmailhost, 
 			ctl->server.esmtp_name, ctl->server.esmtp_password,
 			&opts)))
     {

@@ -22,6 +22,14 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 
 --------------------------------------------------------------------------------
 
+fetchmail 6.3.2 (to be released):
+
+* SMTP/LMTP cleanup to fix these two bugs:
+  - switch back to SMTP after having tried LMTP hosts (multiple smtphost hosts)
+  - switch back to LMTP after sending a bounce.
+  The patch removes the global state variable that was the root of this problem.
+  Patch by Sunil Shetye. (MA)
+
 fetchmail 6.3.1 (released 2005-12-19):
 
 # SECURITY FIX IN THIS RELEASE

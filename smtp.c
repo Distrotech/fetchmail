@@ -39,23 +39,15 @@ static struct opt extensions[] =
 
 char smtp_response[MSGBUFSIZE];
 
-static char smtp_mode = 'S';
-
-void SMTP_setmode(char sl)
-/* set whether we are speaking SMTP or LMTP */
-{
-    smtp_mode = sl;
-}
-
-int SMTP_helo(int sock,const char *host)
+int SMTP_helo(int sock, char smtp_mode, const char *host)
 /* send a "HELO" message to the SMTP listener */
 {
   int ok;
 
   SockPrintf(sock,"HELO %s\r\n", host);
   if (outlevel >= O_MONITOR)
-      report(stdout, "SMTP> HELO %s\n", host);
-  ok = SMTP_ok(sock);
+      report(stdout, "%cMTP> HELO %s\n", smtp_mode, host);
+  ok = SMTP_ok(sock, smtp_mode);
   return ok;
 }
 
@@ -66,7 +58,7 @@ static void SMTP_auth_error(int sock, const char *msg)
     if (outlevel >= O_MONITOR) report(stdout, msg);
 }
 
-static void SMTP_auth(int sock, char *username, char *password, char *buf)
+static void SMTP_auth(int sock, char smtp_mode, char *username, char *password, char *buf)
 /* ESMTP Authentication support for fetchmail by Wojciech Polak */
 {	
 	int c;
@@ -115,7 +107,7 @@ static void SMTP_auth(int sock, char *username, char *password, char *buf)
 
 		to64frombits(b64buf, tmp, strlen(tmp));
 		SockPrintf(sock, "%s\r\n", b64buf);
-		SMTP_ok(sock);
+		SMTP_ok(sock, smtp_mode);
 	}
 	else if (strstr(buf, "PLAIN")) {
 		int len;
@@ -131,7 +123,7 @@ static void SMTP_auth(int sock, char *username, char *password, char *buf)
 		}
 		to64frombits(b64buf, tmp, len);
 		SockPrintf(sock, "AUTH PLAIN %s\r\n", b64buf);
-		SMTP_ok(sock);
+		SMTP_ok(sock, smtp_mode);
 	}
 	else if (strstr(buf, "LOGIN")) {
 		if (outlevel >= O_MONITOR)
@@ -170,12 +162,12 @@ static void SMTP_auth(int sock, char *username, char *password, char *buf)
 		}
 		to64frombits(b64buf, password, strlen(password));
 		SockPrintf(sock, "%s\r\n", b64buf);
-		SMTP_ok(sock);
+		SMTP_ok(sock, smtp_mode);
 	}
 	return;
 }
 
-int SMTP_ehlo(int sock, const char *host, char *name, char *password, int *opt)
+int SMTP_ehlo(int sock, char smtp_mode, const char *host, char *name, char *password, int *opt)
 /* send a "EHLO" message to the SMTP listener, return extension status bits */
 {
   struct opt *hp;
@@ -209,7 +201,7 @@ int SMTP_ehlo(int sock, const char *host, char *name, char *password, int *opt)
 	  }
       if ((smtp_response[0] == '1' || smtp_response[0] == '2' || smtp_response[0] == '3') && smtp_response[3] == ' ') {
 	  if (*opt & ESMTP_AUTH)
-		SMTP_auth(sock, name, password, auth_response);
+		SMTP_auth(sock, smtp_mode, name, password, auth_response);
 	  return SM_OK;
       }
       else if (smtp_response[3] != '-')
@@ -218,7 +210,7 @@ int SMTP_ehlo(int sock, const char *host, char *name, char *password, int *opt)
   return SM_UNRECOVERABLE;
 }
 
-int SMTP_from(int sock, const char *from, const char *opts)
+int SMTP_from(int sock, char smtp_mode, const char *from, const char *opts)
 /* send a "MAIL FROM:" message to the SMTP listener */
 {
     int ok;
@@ -233,11 +225,11 @@ int SMTP_from(int sock, const char *from, const char *opts)
     SockPrintf(sock,"%s\r\n", buf);
     if (outlevel >= O_MONITOR)
 	report(stdout, "%cMTP> %s\n", smtp_mode, buf);
-    ok = SMTP_ok(sock);
+    ok = SMTP_ok(sock, smtp_mode);
     return ok;
 }
 
-int SMTP_rcpt(int sock, const char *to)
+int SMTP_rcpt(int sock, char smtp_mode, const char *to)
 /* send a "RCPT TO:" message to the SMTP listener */
 {
   int ok;
@@ -245,11 +237,11 @@ int SMTP_rcpt(int sock, const char *to)
   SockPrintf(sock,"RCPT TO:<%s>\r\n", to);
   if (outlevel >= O_MONITOR)
       report(stdout, "%cMTP> RCPT TO:<%s>\n", smtp_mode, to);
-  ok = SMTP_ok(sock);
+  ok = SMTP_ok(sock, smtp_mode);
   return ok;
 }
 
-int SMTP_data(int sock)
+int SMTP_data(int sock, char smtp_mode)
 /* send a "DATA" message to the SMTP listener */
 {
   int ok;
@@ -257,11 +249,11 @@ int SMTP_data(int sock)
   SockPrintf(sock,"DATA\r\n");
   if (outlevel >= O_MONITOR)
       report(stdout, "%cMTP> DATA\n", smtp_mode);
-  ok = SMTP_ok(sock);
+  ok = SMTP_ok(sock, smtp_mode);
   return ok;
 }
 
-int SMTP_rset(int sock)
+int SMTP_rset(int sock, char smtp_mode)
 /* send a "RSET" message to the SMTP listener */
 {
   int ok;
@@ -269,11 +261,11 @@ int SMTP_rset(int sock)
   SockPrintf(sock,"RSET\r\n");
   if (outlevel >= O_MONITOR)
       report(stdout, "%cMTP> RSET\n", smtp_mode);
-  ok = SMTP_ok(sock);
+  ok = SMTP_ok(sock, smtp_mode);
   return ok;
 }
 
-int SMTP_quit(int sock)
+int SMTP_quit(int sock, char smtp_mode)
 /* send a "QUIT" message to the SMTP listener */
 {
   int ok;
@@ -281,11 +273,11 @@ int SMTP_quit(int sock)
   SockPrintf(sock,"QUIT\r\n");
   if (outlevel >= O_MONITOR)
       report(stdout, "%cMTP> QUIT\n", smtp_mode);
-  ok = SMTP_ok(sock);
+  ok = SMTP_ok(sock, smtp_mode);
   return ok;
 }
 
-int SMTP_eom(int sock)
+int SMTP_eom(int sock, char smtp_mode)
 /* send a message data terminator to the SMTP listener */
 {
   int ok;
@@ -298,7 +290,7 @@ int SMTP_eom(int sock)
    * When doing LMTP, must process many of these at the outer level. 
    */
   if (smtp_mode == 'S')
-      ok = SMTP_ok(sock);
+      ok = SMTP_ok(sock, smtp_mode);
   else
       ok = SM_OK;
 
@@ -307,7 +299,7 @@ int SMTP_eom(int sock)
 
 time_t last_smtp_ok = 0;
 
-int SMTP_ok(int sock)
+int SMTP_ok(int sock, char smtp_mode)
 /* returns status of SMTP connection */
 {
     SIGHANDLERTYPE alrmsave;

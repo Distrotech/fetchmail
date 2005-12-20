@@ -344,6 +344,7 @@ struct query
     int wehavesentauthnote;	/* We've sent an authorization failure note */
     int wedged;			/* wedged by auth failures or timeouts? */
     char *smtphost;		/* actual SMTP host we connected to */
+    char smtphostmode;		/* what's the actual SMTP host's wire protocol? */
     int smtp_socket;		/* socket descriptor for SMTP connection */
     unsigned int uid;		/* UID of user to deliver to */
     struct idlist *skipped;	/* messages skipped on the mail server */
