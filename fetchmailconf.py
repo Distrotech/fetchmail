@@ -666,9 +666,12 @@ needed to create a simple fetchmail setup.  These include:
 
 4. A protocol to use (POP, IMAP, ETRN, etc.)
 
-5. A polling interval.
+5. A poll interval in seconds.
+   If 0, fetchmail will run in the foreground once when started.
+   If > 0, fetchmail will run in the background and start a new poll
+   cycle after the interval has elapsed.
 
-6. Options to fetch old messages as well as new, uor to suppress
+6. Options to fetch old messages as well as new, or to suppress
    deletion of fetched message.
 
 The novice-configuration code will assume that you want to forward mail
