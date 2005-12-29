@@ -1242,11 +1242,10 @@ static int load_params(int argc, char **argv, int optind)
 	     * "I beg to you, have mercy on the we[a]k minds like myself."
 	     * wrote Pehr Anderson.  Your petition is granted.
 	     */
-	    if (ctl->fetchall && ctl->keep && run.poll_interval && !nodetach)
+	    if (ctl->fetchall && ctl->keep && run.poll_interval && !nodetach && !configdump)
 	    {
 		(void) fprintf(stderr,
 			       GT_("Both fetchall and keep on in daemon mode is a mistake!\n"));
-		exit(PS_SYNTAX);
 	    }
 	}
     }

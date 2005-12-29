@@ -29,6 +29,8 @@ fetchmail 6.3.2 (to be released):
   - switch back to LMTP after sending a bounce.
   The patch removes the global state variable that was the root of this problem.
   Patch by Sunil Shetye. (MA)
+* Don't complain about fetchall keep in --dumpconfig mode. Bug introduced in
+  6.3.0.  Matthias Andree.
 
 fetchmail 6.3.1 (released 2005-12-19):
 
