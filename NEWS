@@ -19,6 +19,11 @@ fetchmail-6.2.9-rc* release candidate or, if available, 6.3.X or newer release.
 
 These are the relevant changes (the line counts have been discontinued):
 
+post 6.2.5.5
+
+* Fetchmailconf: Fix typos and clarify sections 6 and 5 of novice help.
+  Reported by Justin Pryzby, Debian Bug #344978. Matthias Andree.
+
 fetchmail-6.2.5.5  2005-12-19  Matthias Andree
 
 * SECURITY FIX CVE-2005-4348: fix null pointer dereference in
