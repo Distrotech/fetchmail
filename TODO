@@ -14,6 +14,8 @@ rather than duplicating the user name (see l. 211 in smbutil.c).
 For later:
 ==========
 
+Add a warning when mda contains sendmail but not -i, -oi, -O IgnoreDots
+
 IDN
 
 Pipeline commands
