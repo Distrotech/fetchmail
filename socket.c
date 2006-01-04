@@ -621,7 +621,7 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 	if (depth == 0 && !_depth0ck) {
 		_depth0ck = 1;
 		
-		if (outlevel == O_VERBOSE) {
+		if (outlevel >= O_VERBOSE) {
 			if ((i = X509_NAME_get_text_by_NID(issuer, NID_organizationName, buf, sizeof(buf))) != -1) {
 				report(stdout, GT_("Issuer Organization: %s\n"), buf);
 				if (i >= sizeof(buf) - 1)
@@ -636,7 +636,7 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 				report(stdout, GT_("Unknown Issuer CommonName\n"));
 		}
 		if ((i = X509_NAME_get_text_by_NID(subj, NID_commonName, buf, sizeof(buf))) != -1) {
-			if (outlevel == O_VERBOSE)
+			if (outlevel >= O_VERBOSE)
 				report(stdout, GT_("Server CommonName: %s\n"), buf);
 			if (i >= sizeof(buf) - 1) {
 				/* Possible truncation. In this case, this is a DNS name, so this
@@ -661,7 +661,7 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 						if (gn->type == GEN_DNS) {
 							char *p1 = gn->d.ia5->data;
 							char *p2 = _ssl_server_cname;
-							if (outlevel == O_VERBOSE)
+							if (outlevel >= O_VERBOSE)
 								report(stderr, "Subject Alternative Name: %s\n", p1);
 							if (*p1 == '*') {
 								++p1;
@@ -697,7 +697,7 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 				if (strict) return (0);
 			}
 		} else {
-			if (outlevel == O_VERBOSE)
+			if (outlevel >= O_VERBOSE)
 				report(stdout, GT_("Unknown Server CommonName\n"));
 			if (ok_return && strict) {
 				report(stderr, GT_("Server name not specified in certificate!\n"));

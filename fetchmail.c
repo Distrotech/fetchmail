@@ -992,7 +992,7 @@ static int load_params(int argc, char **argv, int optind)
 			|| str_in_list(&ctl->server.akalist, argv[optind], TRUE))
 		{
 		    /* Is this correct? */
-		    if (predeclared && outlevel == O_VERBOSE)
+		    if (predeclared && outlevel >= O_VERBOSE)
 			fprintf(stderr,GT_("Warning: multiple mentions of host %s in config file\n"),argv[optind]);
 		    ctl->active = TRUE;
 		    predeclared = TRUE;

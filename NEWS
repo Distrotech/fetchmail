@@ -33,6 +33,10 @@ fetchmail 6.3.2 (to be released):
   6.3.0.  Matthias Andree.
 * fetchmailconf.py: Fix novice help for Poll interval and fetchall.
   Reported by Justin Pryzby, Debian Bug #344978.  Matthias Andree
+* Some verbose output disappeared in debug mode. Adding further -v options would
+  alternate between verbose and debug mode. debug mode now comprises all verbose
+  output, and adding more -v options does not switch back from debug to verbose
+  mode.  Matthias Andree
 
 fetchmail 6.3.1 (released 2005-12-19):
 

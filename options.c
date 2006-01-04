@@ -254,7 +254,7 @@ struct query *ctl;	/* option record to be initialized */
 	    outlevel = O_SILENT;
 	    break;
 	case 'v':
-	    if (outlevel == O_VERBOSE)
+	    if (outlevel >= O_VERBOSE)
 		outlevel = O_DEBUG;
 	    else
 		outlevel = O_VERBOSE;
