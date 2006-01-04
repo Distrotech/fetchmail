@@ -754,6 +754,10 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 			break;
 		}
 	}
+	/*
+	 * If not in strict checking mode (--sslcertck), override this
+	 * and pretend that verification had succeeded.
+	 */
 	if (!strict)
 		ok_return = 1;
 	return (ok_return);
