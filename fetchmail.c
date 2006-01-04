@@ -1226,7 +1226,7 @@ static int load_params(int argc, char **argv, int optind)
 		{
 		    char	*cp;
 
-		    if (!(cp = strrchr(idp->id, '/')) ||
+		    if (!(cp = strrchr((char *)idp->id, '/')) ||
 			    ++cp, (0 == strcmp(cp, SMTP_PORT))
 				|| servport(cp) == SMTP_PORT_NUM)
 		    {
