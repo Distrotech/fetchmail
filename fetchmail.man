@@ -268,7 +268,8 @@ news drop for a group of users. The fact that seen messages are skipped
 is logged, unless error logging is done through syslog while running in
 daemon mode.  Note that fetchmail may automatically enable this option
 depending on upstream server capabilities.  Note also that this option
-may be removed and forced enabled in a future fetchmail version.
+may be removed and forced enabled in a future fetchmail version. See
+also: \-\-idfile.
 
 .TP
 .B \-P <portnumber> | \-\-service <servicename>
@@ -730,7 +731,11 @@ else be /dev/null.
 .B \-i <pathname> | \-\-idfile <pathname>
 (Keyword: idfile)
 Specify an alternate name for the .fetchids file used to save POP3
-UIDs.
+UIDs. NOTE: since fetchmail 6.3.0, write access to the directory
+containing the idfile is required, as fetchmail writes a temporary file
+and renames it into the place of the real idfile only if the temporary
+file has been written successfully. This avoids the truncation of
+idfiles when running out of disk space.
 .TP
 .B \-n | \-\-norewrite
 (Keyword: no rewrite)
