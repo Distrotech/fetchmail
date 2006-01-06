@@ -24,6 +24,12 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 
 fetchmail 6.3.2 (to be released):
 
+# INCOMPATIBLE CHANGE:
+* fetchmail, since 6.3.0, requires write permission to the directory holding the
+  idfile. See the amendment in the 6.3.0 MAJOR INCOMPATIBLE CHANGES section
+  below for details. The manual page was updated.  Matthias Andree
+
+# BUG FIXES:
 * SMTP/LMTP cleanup to fix these two bugs:
   - switch back to SMTP after having tried LMTP hosts (multiple smtphost hosts)
   - switch back to LMTP after sending a bounce.
@@ -103,6 +109,14 @@ fetchmail 6.3.0 (released 2005-11-30):
   authentication types and protocols, so as to simplify configurations for
   workstations where the SMTP daemon only listens on the loopback interface.
   Sunil Shetye & Matthias Andree
+Amendment, 2006-01-04:
+* fetchmail's idfile (.fetchids) is no longer written directly, but the ids are
+  written to a temporary file which is renamed into place after being written
+  completely. This is to avoid writing incomplete idfiles when running out of
+  space, which would cause excessive duplicate refetches of messages, this might
+  make matters even worse. This means that fetchmail requires write permission
+  on the directory holding the idfile. This will usually affect system-global
+  daemons only, for instance, Debian. Found by Dan Jacobson. Matthias Andree.
 
 # OTHER USER-VISIBLE CHANGES
 * Sunil Shetye's fix to force fetchsizelimit to 1 for APOP and RPOP. (ESR)
