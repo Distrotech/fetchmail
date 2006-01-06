@@ -2004,12 +2004,17 @@ next cycle.</p>
 <h2><a id="I8" name="I8">I8. How can I use fetchmail with comcast.net?</a></h2>
 
 <p>Stock fetchmail will work with a comcast.net server...<em>but</em>
-the Maillennium POP3 server comcat uses seems to have an 80K limit on
+the Maillennium POP3 server comcast use seems to have an 80&nbsp;kB limit on
 the length of downloaded messages if you use POP3 TOP to retrieve.
 Anything larger is silently truncated.  Don't mistake this for a
 fetchmail bug. (Reported July 2003.)</p>
 
-<p>Workaround: use the <tt>fetchall</tt> option.</p>
+<p>Beginning with version 6.3.2, fetchmail will fall back to the RETR
+command if the greeting string contains "Maillennium POP3/PROXY server",
+and print a warning message. This means however that fetchmail has no
+means to prevent the "seen" flag from being set on the server.</p>
+
+<p>Workaround for older versions: use the <tt>fetchall</tt> option.</p>
 
 <hr/>
 <h1>How to set up well-known security and authentication

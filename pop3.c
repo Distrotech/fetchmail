@@ -611,6 +611,12 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 #endif
 
     set_peek_capable(ctl);
+    /* comcast's Maillennium POP3/PROXY is full of bugs and truncates
+     * TOP replies after c. 80 kByte, so disable TOP. */
+    if (peek_capable && strstr(greeting, "Maillennium POP3/PROXY server")) {
+	report(stdout, GT_("Warning: Maillennium POP3/PROXY server found, using RETR command.\n"));
+	peek_capable = 0;
+    }
 
     /* we're approved */
     return(PS_SUCCESS);

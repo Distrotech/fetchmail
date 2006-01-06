@@ -25,6 +25,14 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 fetchmail 6.3.2 (to be released):
 
 # INCOMPATIBLE CHANGE:
+* Automatically disable the POP3 TOP command if the greeting string contains
+  "Maillennium POP3/PROXY server", which is used by comcast and known to
+  truncate messages after 80 kByte. Fall back to RETR, and complain if we had
+  used TOP otherwise.  Suggested by Ed Wilts.
+  *Note* that this means messages are marked read on these servers, which is a
+  deviation from how 6.3.1 behaved, but we have no alternative, comcast haven't
+  fixed this bug in years.  Preventing the loss of the remainder of the message
+  justifies this incompatible fix.  Matthias Andree
 * fetchmail, since 6.3.0, requires write permission to the directory holding the
   idfile. See the amendment in the 6.3.0 MAJOR INCOMPATIBLE CHANGES section
   below for details. The manual page was updated.  Matthias Andree
