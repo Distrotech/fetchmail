@@ -2421,14 +2421,16 @@ session ID (this elaborate logic is designed to handle the case of
 multiple names per userid gracefully).
 
 If the environment variable FETCHMAILHOME is set to a valid and
-existing directory name, the .fetchmailrc and .fetchids and
-\&.fetchmail.pid files are put there instead of in the invoking user's
-home directory (and lose the leading dots on their names).  The
-\&.netrc file is looked for in the the invoking user's home directory
-regardless of FETCHMAILHOME's setting.
+existing directory name, fetchmail will read $FETCHMAILHOME/fetchmailrc
+(the dot is missing in this case), $FETCHMAILHOME/.fetchids and
+$FETCHMAILHOME/.fetchmail.pid rather than from the user's home
+directory.  The .netrc file is always looked for in the the invoking
+user's home directory regardless of FETCHMAILHOME's setting.
 
-If the HOME_ETC variable is set, file $HOME_ETC/.fetchmailrc is used
-instead of ~/.fetchmailrc.
+If the HOME_ETC variable is set, fetchmail will read
+$HOME_ETC/.fetchmailrc instead of ~/.fetchmailrc.
+
+If HOME_ETC and FETCHMAILHOME are set, HOME_ETC will be ignored.
 
 .SH SIGNALS
 If a
