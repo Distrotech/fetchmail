@@ -148,7 +148,8 @@ host?.</a><br/>
 <a href="#I5">I5. How can I use fetchmail with Hotmail or Lycos Webmail?</a><br/>
 <a href="#I6">I6. How can I use fetchmail with MSN?</a><br/>
 <a href="#I7">I7. How can I use fetchmail with SpryNet?</a><br/>
-<a href="#I8">I8. How can I use fetchmail with comcast.net?</a><br/>
+<a href="#I8">I8. How can I use fetchmail with comcast.net or other
+    Maillennium servers?</a><br/>
 
 <h2 id="C_K">How to set up well-known security and authentication
 methods</h2>
@@ -2001,18 +2002,24 @@ may end up invisibly stuck on your mail spool. Use the
 <code>fetchall</code> flag to ensure that it's recovered on the
 next cycle.</p>
 
-<h2><a id="I8" name="I8">I8. How can I use fetchmail with comcast.net?</a></h2>
+<h2><a id="I8" name="I8">I8. How can I use fetchmail with comcast.net or
+	other Maillennium servers?</a></h2>
 
-<p>Stock fetchmail will work with a comcast.net server...<em>but</em>
-the Maillennium POP3 server comcast use seems to have an 80&nbsp;kB limit on
-the length of downloaded messages if you use POP3 TOP to retrieve.
-Anything larger is silently truncated.  Don't mistake this for a
-fetchmail bug. (Reported July 2003.)</p>
+<p>Stock fetchmail will work with a
+Maillennium&nbsp;POP3/PROXY&nbsp;server... <em>but</em> this server will
+truncate "TOP" responses after 64&dots;82 kB (we have varying reports),
+in violation of Internet Standard #53 aka. RFC-1939 (POP3). Don't
+mistake this for a fetchmail bug. (Reported July 2003.) Comcast
+documented they haven't understood what this is about in <a
+    href="http://lists.ccil.org/pipermail/fetchmail-friends/2004-April/008523.html">two
+messages from April 2004.</a></p>
 
 <p>Beginning with version 6.3.2, fetchmail will fall back to the RETR
 command if the greeting string contains "Maillennium POP3/PROXY server",
 and print a warning message. This means however that fetchmail has no
-means to prevent the "seen" flag from being set on the server.</p>
+means to prevent the "seen" flag from being set on the server (Note that
+officially, POP3 has no notion of seen tracking, but it works for some
+sites.)</p>
 
 <p>Workaround for older versions: use the <tt>fetchall</tt> option.</p>
 
