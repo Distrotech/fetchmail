@@ -277,7 +277,15 @@ struct hostdata		/* shared among all user connections to given server */
     size_t trueaddr_len;		/* size of trueaddr data */
     struct hostdata *lead_server;	/* ptr to lead query for this server */
     int esmtp_options;
+    int workarounds;			/* track which workarounds the user was warned about */
 };
+
+/*
+ * bit flags to set in workarounds after the corresponding warning,
+ * which we assume to be server-specific, has been printed,
+ * so we don't spam our users in daemon mode.
+ */
+#define WKA_TOP (1L << 0)		/* Maillennium TOP -> RETR override warning */
 
 struct query
 {

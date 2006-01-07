@@ -611,10 +611,27 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 #endif
 
     set_peek_capable(ctl);
-    /* comcast's Maillennium POP3/PROXY is full of bugs and truncates
-     * TOP replies after c. 80 kByte, so disable TOP. */
+    /*
+     * The "Maillennium POP3/PROXY server" deliberately truncates
+     * TOP replies after c. 64 or 80 kByte (we have varying reports), so
+     * disable TOP. Comcast once spewed marketing babble to the extent
+     * of protecting Outlook -- pretty overzealous to break a protocol
+     * for that that Microsoft could have read, too. Comcast aren't
+     * alone in using this software though.
+     * <http://lists.ccil.org/pipermail/fetchmail-friends/2004-April/008523.html>
+     * (Thanks to Ed Wilts for reminding me of that.)
+     *
+     * The warning is printed once per server, until fetchmail exits.
+     * It will be suppressed when --fetchall or other circumstances make
+     * us use RETR anyhow.
+     *
+     * Matthias Andree
+     */
     if (peek_capable && strstr(greeting, "Maillennium POP3/PROXY server")) {
-	report(stdout, GT_("Warning: Maillennium POP3/PROXY server found, using RETR command.\n"));
+	if (ctl->server.workarounds & WKA_TOP == 0) {
+	    report(stdout, GT_("Warning: Maillennium POP3/PROXY server found, using RETR command.\n"));
+	    ctl->server.workarounds |= WKA_TOP;
+	}
 	peek_capable = 0;
     }
 
