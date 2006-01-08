@@ -313,6 +313,31 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
     has_ssl = FALSE;
 #endif /* SSL_ENABLE */
 
+    /* Set this up before authentication quits early. */
+    set_peek_capable(ctl);
+    /*
+     * The "Maillennium POP3/PROXY server" deliberately truncates
+     * TOP replies after c. 64 or 80 kByte (we have varying reports), so
+     * disable TOP. Comcast once spewed marketing babble to the extent
+     * of protecting Outlook -- pretty overzealous to break a protocol
+     * for that that Microsoft could have read, too. Comcast aren't
+     * alone in using this software though.
+     * <http://lists.ccil.org/pipermail/fetchmail-friends/2004-April/008523.html>
+     * (Thanks to Ed Wilts for reminding me of that.)
+     *
+     * The warning is printed once per server, until fetchmail exits.
+     * It will be suppressed when --fetchall or other circumstances make
+     * us use RETR anyhow.
+     *
+     * Matthias Andree
+     */
+    if (peek_capable && strstr(greeting, "Maillennium POP3/PROXY server")) {
+	if ((ctl->server.workarounds & WKA_TOP) == 0) {
+	    report(stdout, GT_("Warning: Maillennium POP3/PROXY server found, using RETR command.\n"));
+	    ctl->server.workarounds |= WKA_TOP;
+	}
+	peek_capable = 0;
+    }
     if (ctl->server.authenticate == A_SSH) {
         return PS_SUCCESS;
     }
@@ -609,31 +634,6 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
      */
     sleep(3); /* to be _really_ safe, probably need sleep(5)! */
 #endif
-
-    set_peek_capable(ctl);
-    /*
-     * The "Maillennium POP3/PROXY server" deliberately truncates
-     * TOP replies after c. 64 or 80 kByte (we have varying reports), so
-     * disable TOP. Comcast once spewed marketing babble to the extent
-     * of protecting Outlook -- pretty overzealous to break a protocol
-     * for that that Microsoft could have read, too. Comcast aren't
-     * alone in using this software though.
-     * <http://lists.ccil.org/pipermail/fetchmail-friends/2004-April/008523.html>
-     * (Thanks to Ed Wilts for reminding me of that.)
-     *
-     * The warning is printed once per server, until fetchmail exits.
-     * It will be suppressed when --fetchall or other circumstances make
-     * us use RETR anyhow.
-     *
-     * Matthias Andree
-     */
-    if (peek_capable && strstr(greeting, "Maillennium POP3/PROXY server")) {
-	if (ctl->server.workarounds & WKA_TOP == 0) {
-	    report(stdout, GT_("Warning: Maillennium POP3/PROXY server found, using RETR command.\n"));
-	    ctl->server.workarounds |= WKA_TOP;
-	}
-	peek_capable = 0;
-    }
 
     /* we're approved */
     return(PS_SUCCESS);
@@ -1300,8 +1300,7 @@ int doPOP3 (struct query *ctl)
 	return(PS_SYNTAX);
     }
 #endif /* MBOX */
-    set_peek_capable(ctl); /* XXX FIXME: is this needed or do we always
-			      call this from pop3_getauth anyways? */
+
     return(do_protocol(ctl, &pop3));
 }
 #endif /* POP3_ENABLE */
