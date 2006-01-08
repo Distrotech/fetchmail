@@ -28,7 +28,8 @@ fetchmail 6.3.2 (to be released):
 * Automatically disable the POP3 TOP command if the greeting string contains
   "Maillennium POP3/PROXY server", which is used by comcast and known to
   truncate messages after 80 kByte. Fall back to RETR, and complain if we had
-  used TOP otherwise.  Suggested by Ed Wilts.
+  used TOP otherwise (the warning is printed only once per server in daemon
+  mode).  Suggested by Ed Wilts.
   *Note* that this means messages are marked read on these servers, which is a
   deviation from how 6.3.1 behaved, but we have no alternative, comcast haven't
   fixed this bug in years.  Preventing the loss of the remainder of the message
