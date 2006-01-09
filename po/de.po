@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.2-pre1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-01-06 14:21+0100\n"
+"POT-Creation-Date: 2006-01-09 11:23+0100\n"
 "PO-Revision-Date: 2006-01-06 14:24+0100\n"
 "Last-Translator: Matthias Andree <matthias.andree>\n"
 "Language-Team: Deutsch <de@li.org>\n"
@@ -261,7 +261,7 @@ msgstr "Subject: Fetchmail-Warnung: Server nicht erreichbar."
 msgid "Fetchmail could not reach the mail server %s:"
 msgstr "Fetchmail konnte keine Mail von %s erhalten:"
 
-#: driver.c:1102 imap.c:392 pop3.c:433
+#: driver.c:1102 imap.c:392 pop3.c:458
 msgid "SSL connection failed.\n"
 msgstr "SSL-Verbindung fehlgeschlagen.\n"
 
@@ -1659,7 +1659,7 @@ msgstr "werde nach Abfrage untätig sein\n"
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "Benötigte OTP-Fähigkeit nicht in fetchmail einkompiliert\n"
 
-#: imap.c:512 pop3.c:341
+#: imap.c:512 pop3.c:366
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "Benötigte NTLM-Fähigkeit nicht in fetchmail einkompiliert\n"
 
@@ -1704,12 +1704,12 @@ msgstr[1] "%d Nachrichten warten nach dem Löschen\n"
 msgid "search for unseen messages failed\n"
 msgstr "Suche nach ungesehenen Nachrichten fehlgeschlagen\n"
 
-#: imap.c:789 pop3.c:729 pop3.c:741 pop3.c:963 pop3.c:970
+#: imap.c:789 pop3.c:746 pop3.c:758 pop3.c:980 pop3.c:987
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u ist ungesehen\n"
 
-#: imap.c:801 pop3.c:750
+#: imap.c:801 pop3.c:767
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u ist erste ungesehene\n"
@@ -1911,7 +1911,7 @@ msgstr "Server recv fatal\n"
 msgid "Could not decode OTP challenge\n"
 msgstr "Konnte OTP-Herausforderung nicht dekodieren\n"
 
-#: opie.c:58 pop3.c:515
+#: opie.c:58 pop3.c:540
 msgid "Secret pass phrase: "
 msgstr "Geheime Passphrase: "
 
@@ -2205,52 +2205,53 @@ msgstr "  -r, --folder      Namen des entfernten Ordners angeben\n"
 msgid "      --showdots    show progress dots even in logfiles\n"
 msgstr "      --showdots    Fortschrittspunkte auch in Log-Dateien zeigen\n"
 
-#: pop3.c:553
+#: pop3.c:336
+msgid "Warning: Maillennium POP3/PROXY server found, using RETR command.\n"
+msgstr ""
+"Warnung: Maillennium POP3/PROXY-Server gefunden, benutze RETR-Befehl.\n"
+
+#: pop3.c:578
 msgid "Required APOP timestamp not found in greeting\n"
 msgstr "Erforderlicher APOP-Zeitstempel nicht in Begrüßung gefunden\n"
 
-#: pop3.c:562
+#: pop3.c:587
 msgid "Timestamp syntax error in greeting\n"
 msgstr "Zeitstempel-Syntax-Fehler in Begrüßung\n"
 
-#: pop3.c:584
+#: pop3.c:609
 msgid "Undefined protocol request in POP3_auth\n"
 msgstr "Anfrage nach undefiniertem Protokoll in POP3_auth\n"
 
-#: pop3.c:592
+#: pop3.c:617
 msgid "lock busy!  Is another session active?\n"
 msgstr "Lock beschäftigt!  Ist eine weitere Sitzung aktiv?\n"
 
-#: pop3.c:617
-msgid "Warning: Maillennium POP3/PROXY server found, using RETR command.\n"
-msgstr "Warnung: Maillennium POP3/PROXY-Server gefunden, benutze RETR-Befehl.\n"
-
-#: pop3.c:670
+#: pop3.c:687
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "Kann die UIDL-Antwort des Servers nicht verarbeiten.\n"
 
-#: pop3.c:693
+#: pop3.c:710
 msgid "Server responded with UID for wrong message.\n"
 msgstr "Server hat mit UID der falschen Nachricht geantwortet.\n"
 
-#: pop3.c:720 pop3.c:954
+#: pop3.c:737 pop3.c:971
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (id=%d) wurde gelöscht, ist aber immer noch da!\n"
 
-#: pop3.c:822
+#: pop3.c:839
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr "Nachrichten in Liste auf Server eingefügt. Kann damit nicht umgehen.\n"
 
-#: pop3.c:908
+#: pop3.c:925
 msgid "protocol error\n"
 msgstr "Protokollfehler\n"
 
-#: pop3.c:923
+#: pop3.c:940
 msgid "protocol error while fetching UIDLs\n"
 msgstr "Protokollfehler beim Holen der UIDL\n"
 
-#: pop3.c:1282
+#: pop3.c:1299
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Option --folder wird mit POP3 nicht unterstützt\n"
 

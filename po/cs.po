@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail-6.2.6.alpha1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-01-06 14:21+0100\n"
+"POT-Creation-Date: 2006-01-09 11:23+0100\n"
 "PO-Revision-Date: 2005-07-03 03:57+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -246,7 +246,7 @@ msgstr "Subject: Varování fetchmailu o nedostupnosti serveru."
 msgid "Fetchmail could not reach the mail server %s:"
 msgstr "Fetchmail nemohl kontaktovat poštovní server %s:"
 
-#: driver.c:1102 imap.c:392 pop3.c:433
+#: driver.c:1102 imap.c:392 pop3.c:458
 msgid "SSL connection failed.\n"
 msgstr "Spojení SSL selhalo.\n"
 
@@ -1618,7 +1618,7 @@ msgstr "po stahování budu nečinný\n"
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "Fetchmail byl přeložen bez podpory pro požadovanou schopnost OTP\n"
 
-#: imap.c:512 pop3.c:341
+#: imap.c:512 pop3.c:366
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "Fetchmail byl přeložen bez podpory pro požadovanou schopnost NTLM\n"
 
@@ -1667,12 +1667,12 @@ msgstr[2] "%d zpráv čeká po vyčištění\n"
 msgid "search for unseen messages failed\n"
 msgstr "hledání nepřečtených zpráv selhalo\n"
 
-#: imap.c:789 pop3.c:729 pop3.c:741 pop3.c:963 pop3.c:970
+#: imap.c:789 pop3.c:746 pop3.c:758 pop3.c:980 pop3.c:987
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u nebyla přečtena\n"
 
-#: imap.c:801 pop3.c:750
+#: imap.c:801 pop3.c:767
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u je první nepřečtená\n"
@@ -1874,7 +1874,7 @@ msgstr "od serveru přijato fatální\n"
 msgid "Could not decode OTP challenge\n"
 msgstr "Nemohu dekódovat výzvu OTP\n"
 
-#: opie.c:58 pop3.c:515
+#: opie.c:58 pop3.c:540
 msgid "Secret pass phrase: "
 msgstr "Tajné heslo: "
 
@@ -2168,52 +2168,52 @@ msgid "      --showdots    show progress dots even in logfiles\n"
 msgstr ""
 "      --showdots    zobrazovat tečky průběhu i v souborech se záznamy\n"
 
-#: pop3.c:553
-msgid "Required APOP timestamp not found in greeting\n"
-msgstr "Požadovaný časový údaj APOP nebyl v pozdravu nalezen\n"
-
-#: pop3.c:562
-msgid "Timestamp syntax error in greeting\n"
-msgstr "Syntaktická chyba v časovém údaji z pozdravu\n"
-
-#: pop3.c:584
-msgid "Undefined protocol request in POP3_auth\n"
-msgstr "Žádost o nedefinovaný protokol v POP3_auth\n"
-
-#: pop3.c:592
-msgid "lock busy!  Is another session active?\n"
-msgstr "zamčeno! Je aktivní jiné sezení?\n"
-
-#: pop3.c:617
+#: pop3.c:336
 msgid "Warning: Maillennium POP3/PROXY server found, using RETR command.\n"
 msgstr ""
 
-#: pop3.c:670
+#: pop3.c:578
+msgid "Required APOP timestamp not found in greeting\n"
+msgstr "Požadovaný časový údaj APOP nebyl v pozdravu nalezen\n"
+
+#: pop3.c:587
+msgid "Timestamp syntax error in greeting\n"
+msgstr "Syntaktická chyba v časovém údaji z pozdravu\n"
+
+#: pop3.c:609
+msgid "Undefined protocol request in POP3_auth\n"
+msgstr "Žádost o nedefinovaný protokol v POP3_auth\n"
+
+#: pop3.c:617
+msgid "lock busy!  Is another session active?\n"
+msgstr "zamčeno! Je aktivní jiné sezení?\n"
+
+#: pop3.c:687
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr ""
 
-#: pop3.c:693
+#: pop3.c:710
 msgid "Server responded with UID for wrong message.\n"
 msgstr ""
 
-#: pop3.c:720 pop3.c:954
+#: pop3.c:737 pop3.c:971
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) bylo odstraněno, ale je stále přítomno!\n"
 
-#: pop3.c:822
+#: pop3.c:839
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr "Zprávy vloženy do seznamu na serveru. To neumím zpracovat.\n"
 
-#: pop3.c:908
+#: pop3.c:925
 msgid "protocol error\n"
 msgstr "chyba protokolu\n"
 
-#: pop3.c:923
+#: pop3.c:940
 msgid "protocol error while fetching UIDLs\n"
 msgstr "chyba protokolu při stahování UIDL\n"
 
-#: pop3.c:1282
+#: pop3.c:1299
 #, fuzzy
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Přepínač --remote není s POP3 podporován\n"

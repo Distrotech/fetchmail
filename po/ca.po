@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.0\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-01-06 14:21+0100\n"
+"POT-Creation-Date: 2006-01-09 11:23+0100\n"
 "PO-Revision-Date: 2005-12-06 17:53+0100\n"
 "Last-Translator: Ernest Adrogué Calveras <eadrogue@gmx.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
@@ -254,7 +254,7 @@ msgstr "Subject: fetchmail: Servidor inaccessible."
 msgid "Fetchmail could not reach the mail server %s:"
 msgstr "El fetchmail no ha pogut contactar amb el servidor %s:"
 
-#: driver.c:1102 imap.c:392 pop3.c:433
+#: driver.c:1102 imap.c:392 pop3.c:458
 msgid "SSL connection failed.\n"
 msgstr "La conexió SSL ha fallat.\n"
 
@@ -1653,7 +1653,7 @@ msgstr "es farà una pausa després de l'obtenció\n"
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "Es requereix capacitat per OTP no compilada en el fetchmail\n"
 
-#: imap.c:512 pop3.c:341
+#: imap.c:512 pop3.c:366
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "Es requereix capacitat per NTLM no compilada en el fetchmail\n"
 
@@ -1698,12 +1698,12 @@ msgstr[1] "hi ha %d missatges esperant després de la supressió\n"
 msgid "search for unseen messages failed\n"
 msgstr "la recerca de missatges no llegits ha fallat\n"
 
-#: imap.c:789 pop3.c:729 pop3.c:741 pop3.c:963 pop3.c:970
+#: imap.c:789 pop3.c:746 pop3.c:758 pop3.c:980 pop3.c:987
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u és no llegit\n"
 
-#: imap.c:801 pop3.c:750
+#: imap.c:801 pop3.c:767
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u és el primer missatge no llegit\n"
@@ -1907,7 +1907,7 @@ msgstr "recv fatal del servidor\n"
 msgid "Could not decode OTP challenge\n"
 msgstr "No s'ha pogut desxifrar la codificació OTP\n"
 
-#: opie.c:58 pop3.c:515
+#: opie.c:58 pop3.c:540
 msgid "Secret pass phrase: "
 msgstr "Contrasenya secreta: "
 
@@ -2212,54 +2212,54 @@ msgstr ""
 "      --showdots    mostra punts de progressió àdhuc als fitxers de "
 "registre\n"
 
-# timestamp: marca horària
-#: pop3.c:553
-msgid "Required APOP timestamp not found in greeting\n"
-msgstr "No s'ha trobat la marca horària APOP requerida a la salutació\n"
-
-#: pop3.c:562
-msgid "Timestamp syntax error in greeting\n"
-msgstr "Error de sintaxi en la marca horària de la salutació\n"
-
-#: pop3.c:584
-msgid "Undefined protocol request in POP3_auth\n"
-msgstr "Petició de protocol indefinida a POP3_auth\n"
-
-#: pop3.c:592
-msgid "lock busy!  Is another session active?\n"
-msgstr "bloqueig temporal! Hi ha alguna altra sessió activa?\n"
-
-#: pop3.c:617
+#: pop3.c:336
 msgid "Warning: Maillennium POP3/PROXY server found, using RETR command.\n"
 msgstr ""
 
-#: pop3.c:670
+# timestamp: marca horària
+#: pop3.c:578
+msgid "Required APOP timestamp not found in greeting\n"
+msgstr "No s'ha trobat la marca horària APOP requerida a la salutació\n"
+
+#: pop3.c:587
+msgid "Timestamp syntax error in greeting\n"
+msgstr "Error de sintaxi en la marca horària de la salutació\n"
+
+#: pop3.c:609
+msgid "Undefined protocol request in POP3_auth\n"
+msgstr "Petició de protocol indefinida a POP3_auth\n"
+
+#: pop3.c:617
+msgid "lock busy!  Is another session active?\n"
+msgstr "bloqueig temporal! Hi ha alguna altra sessió activa?\n"
+
+#: pop3.c:687
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "No s'ha pogut administrar la resposta UIDL del servidor remot.\n"
 
-#: pop3.c:693
+#: pop3.c:710
 msgid "Server responded with UID for wrong message.\n"
 msgstr "El servidor ha respost amb un UID pel missatge equivocat.\n"
 
-#: pop3.c:720 pop3.c:954
+#: pop3.c:737 pop3.c:971
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (núm=%d) s'ha esborrat, però encara està present!\n"
 
-#: pop3.c:822
+#: pop3.c:839
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "Els missatges estan inserits a la llista del servidor. No es pot continuar.\n"
 
-#: pop3.c:908
+#: pop3.c:925
 msgid "protocol error\n"
 msgstr "error de protocol\n"
 
-#: pop3.c:923
+#: pop3.c:940
 msgid "protocol error while fetching UIDLs\n"
 msgstr "error de protocol quan es rebien els UIDLs\n"
 
-#: pop3.c:1282
+#: pop3.c:1299
 msgid "Option --folder is not supported with POP3\n"
 msgstr "L'opció --folder no està suportada per POP3\n"
 

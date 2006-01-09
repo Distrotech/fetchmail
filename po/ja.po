@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.9-rc9\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-01-06 14:21+0100\n"
+"POT-Creation-Date: 2006-01-09 11:23+0100\n"
 "PO-Revision-Date: 2005-11-26 01:20+0900\n"
 "Last-Translator: Takeshi Hamasaki <hma@syd.odn.ne.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
@@ -259,7 +259,7 @@ msgstr "Subject: Fetchmail 警告 : サーバと交信不能"
 msgid "Fetchmail could not reach the mail server %s:"
 msgstr "Fetchmail 実行中にメールサーバ %s と交信できませんでした:"
 
-#: driver.c:1102 imap.c:392 pop3.c:433
+#: driver.c:1102 imap.c:392 pop3.c:458
 msgid "SSL connection failed.\n"
 msgstr "SSL による接続に失敗しました。\n"
 
@@ -1638,7 +1638,7 @@ msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr ""
 "OTP が要求されましたが、fetchmail が OTP 対応でコンパイルされていません。\n"
 
-#: imap.c:512 pop3.c:341
+#: imap.c:512 pop3.c:366
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "要求された NTLM 処理能力は fetchmail に組み込まれていません。\n"
 
@@ -1683,12 +1683,12 @@ msgstr[1] "削除の後、%d 通のメッセージが残っています。\n"
 msgid "search for unseen messages failed\n"
 msgstr "未読メッセージの検索に失敗しました。\n"
 
-#: imap.c:789 pop3.c:729 pop3.c:741 pop3.c:963 pop3.c:970
+#: imap.c:789 pop3.c:746 pop3.c:758 pop3.c:980 pop3.c:987
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u は未読です。\n"
 
-#: imap.c:801 pop3.c:750
+#: imap.c:801 pop3.c:767
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u は最初の未読メッセージです。\n"
@@ -1891,7 +1891,7 @@ msgstr "server recv fatal\n"
 msgid "Could not decode OTP challenge\n"
 msgstr "OTP challenge のデコードが出来ませんでした。\n"
 
-#: opie.c:58 pop3.c:515
+#: opie.c:58 pop3.c:540
 msgid "Secret pass phrase: "
 msgstr "Secret pass phrase: "
 
@@ -2192,53 +2192,53 @@ msgstr "  -r, --folder      サーバのメールフォルダを指定します\
 msgid "      --showdots    show progress dots even in logfiles\n"
 msgstr "      --showdots    ログファイルにも進行状況を示す . を書き込みます\n"
 
-#: pop3.c:553
-msgid "Required APOP timestamp not found in greeting\n"
-msgstr "greeting 中に APOP timestamp が存在しません。\n"
-
-#: pop3.c:562
-msgid "Timestamp syntax error in greeting\n"
-msgstr "greeting 中の timestamp が不正です。\n"
-
-#: pop3.c:584
-msgid "Undefined protocol request in POP3_auth\n"
-msgstr "POP3_auth 中で定義されていないプロトコルが要求されました。\n"
-
-#: pop3.c:592
-msgid "lock busy!  Is another session active?\n"
-msgstr "lock busy 状態です。別の交信が行われていないか確認して下さい。\n"
-
-#: pop3.c:617
+#: pop3.c:336
 msgid "Warning: Maillennium POP3/PROXY server found, using RETR command.\n"
 msgstr ""
 
-#: pop3.c:670
+#: pop3.c:578
+msgid "Required APOP timestamp not found in greeting\n"
+msgstr "greeting 中に APOP timestamp が存在しません。\n"
+
+#: pop3.c:587
+msgid "Timestamp syntax error in greeting\n"
+msgstr "greeting 中の timestamp が不正です。\n"
+
+#: pop3.c:609
+msgid "Undefined protocol request in POP3_auth\n"
+msgstr "POP3_auth 中で定義されていないプロトコルが要求されました。\n"
+
+#: pop3.c:617
+msgid "lock busy!  Is another session active?\n"
+msgstr "lock busy 状態です。別の交信が行われていないか確認して下さい。\n"
+
+#: pop3.c:687
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "上流サーバからの UIDL 応答に対応できません。\n"
 
-#: pop3.c:693
+#: pop3.c:710
 msgid "Server responded with UID for wrong message.\n"
 msgstr "サーバが誤ったメッセージの UID に応答しました。\n"
 
-#: pop3.c:720 pop3.c:954
+#: pop3.c:737 pop3.c:971
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) は削除されましたが、まだ存在しています!\n"
 
-#: pop3.c:822
+#: pop3.c:839
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "サーバリストにメッセージが挿入されています。取り扱うことができません。\n"
 
-#: pop3.c:908
+#: pop3.c:925
 msgid "protocol error\n"
 msgstr "プロトコルエラーです。\n"
 
-#: pop3.c:923
+#: pop3.c:940
 msgid "protocol error while fetching UIDLs\n"
 msgstr "UIDL を取り込み中にプロトコルエラーが発生しました。\n"
 
-#: pop3.c:1282
+#: pop3.c:1299
 msgid "Option --folder is not supported with POP3\n"
 msgstr "POP3 では --folder オプションは利用できません。\n"
 
