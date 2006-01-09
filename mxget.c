@@ -130,14 +130,18 @@ int main(int argc, char *argv[])
 	exit(1);
     }
 
+#ifdef HAVE_RES_SEARCH
     responses = getmxrecords(argv[1]);
-    if (responses == (struct mxentry *)NULL)
+    if (responses == (struct mxentry *)NULL) {
 	puts("No MX records found");
-    else
+    } else {
 	do {
 	    printf("%s %d\n", responses->name, responses->pref);
-	} while
-	    ((++responses)->name);
+	} while ((++responses)->name);
+    }
+#else
+    puts("This program was compiled without HAS_RES_SEARCH and does nothing.");
+#endif
 
     return 0;
 }
