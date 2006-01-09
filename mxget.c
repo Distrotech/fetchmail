@@ -6,8 +6,8 @@
  */
 
 #include "config.h"
-#ifdef HAVE_RES_SEARCH
 #include <stdio.h>
+#ifdef HAVE_RES_SEARCH
 #include <string.h>
 #ifdef HAVE_NET_SOCKET_H
 #include <net/socket.h>
