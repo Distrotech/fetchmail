@@ -1,15 +1,15 @@
 # Polish translation for fetchmail.
 # Copyright (C) 1998, 2002, 2003, 2005 Eric S. Raymond
 # Pawe³ Krawczyk <kravietz@ceti.pl>, 1998-1999.
-# Jakub Bogusz <qboosh@pld-linux.org>, 2002-2005.
+# Jakub Bogusz <qboosh@pld-linux.org>, 2002-2006.
 # Thanks for few updates to Adam Go³êbiowski, 2003.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.2.9-rc9\n"
+"Project-Id-Version: fetchmail 6.3.2-rc2\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2006-01-09 11:23+0100\n"
-"PO-Revision-Date: 2005-11-18 20:54+0100\n"
+"PO-Revision-Date: 2006-01-10 18:18+0100\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -459,9 +459,8 @@ msgid "DNS lookup"
 msgstr "DNS-u"
 
 #: driver.c:1544
-#, fuzzy
 msgid "undefined"
-msgstr "niezdefiniowany b³±d\n"
+msgstr "nieokre¶lony"
 
 #: driver.c:1550
 #, c-format
@@ -1719,6 +1718,8 @@ msgstr "%u jest pierwszym nie przeczytanym\n"
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""
+"Uwaga: zignorowano nieprawdziwe dane o rozmiarze wiadomo¶ci zwrócone przez "
+"serwer.\n"
 
 #: interface.c:256
 msgid "Unable to open kvm interface. Make sure fetchmail is SGID kmem."
@@ -2224,7 +2225,7 @@ msgstr ""
 
 #: pop3.c:336
 msgid "Warning: Maillennium POP3/PROXY server found, using RETR command.\n"
-msgstr ""
+msgstr "Uwaga: Odkryto serwer POP3/PROXY Maillennium, u¿ycie polecenia RERT.\n"
 
 #: pop3.c:578
 msgid "Required APOP timestamp not found in greeting\n"
