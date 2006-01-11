@@ -643,7 +643,7 @@ extern char currentwd[1024], rcfiledir[1024];
 struct query *hostalloc(struct query *); 
 int parsecmdline (int, char **, struct runctl *, struct query *);
 char *prependdir (const char *, const char *);
-char *MD5Digest (unsigned char *);
+char *MD5Digest (unsigned const char *);
 void hmac_md5 (unsigned char *, size_t, unsigned char *, size_t, unsigned char *, size_t);
 int POP3_auth_rpa(unsigned char *, unsigned char *, int socket);
 typedef RETSIGTYPE (*SIGHANDLERTYPE) (int);

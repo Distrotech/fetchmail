@@ -358,7 +358,7 @@ static void send_size_warnings(struct query *ctl)
 	if (current->val.status.num == 0 && current->val.status.mark)
 	{
 	    nbr = current->val.status.mark;
-	    size = atoi(current->id);
+	    size = atoi((const char *)current->id);
 	    if (ctl->limitflush)
 		stuff_warning(NULL, ctl,
 			GT_("  %d msg %d octets long deleted by fetchmail."),
@@ -1304,7 +1304,7 @@ is restored."));
 
 		/* compute # of messages and number of new messages waiting */
 		stage = STAGE_GETRANGE;
-		err = (ctl->server.base_protocol->getrange)(mailserver_socket, ctl, idp->id, &count, &new, &bytes);
+		err = (ctl->server.base_protocol->getrange)(mailserver_socket, ctl, (const char *)idp->id, &count, &new, &bytes);
 		if (err != 0)
 		    goto cleanUp;
 

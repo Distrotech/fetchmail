@@ -659,7 +659,7 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 					for (i = 0, r = sk_GENERAL_NAME_num(gens); i < r; ++i) {
 						const GENERAL_NAME *gn = sk_GENERAL_NAME_value(gens, i);
 						if (gn->type == GEN_DNS) {
-							char *p1 = gn->d.ia5->data;
+							char *p1 = (char *)gn->d.ia5->data;
 							char *p2 = _ssl_server_cname;
 							if (outlevel >= O_VERBOSE)
 								report(stderr, "Subject Alternative Name: %s\n", p1);
