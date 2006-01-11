@@ -1,8 +1,6 @@
 For 6.3.X:
 ==========
 
-Fix SMTP/LMTP messup (no way back from LMTP problem)
-
 Add FAQ entry about procmail configuration with 1. ORGMAIL/DEFAULT, 2.
 :0e { EXITCODE=75 HOST }, 3. explicit default recipe, 4. LOGFILE
 location?
@@ -23,9 +21,6 @@ Pipeline commands
 Allow to query multiple servers simultaneously.
 
 Privilege separation model for added security.
-
-Re-exec ourselves if the executable file changes? Security vs.
-convenience.
 
 Check if fetchmail's notion of \Recent vs. * <n> RECENT is a working
 model at all. In concurrent sessions, fetchmail might not be notified of
