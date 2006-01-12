@@ -1,15 +1,15 @@
 # Japanese messages for fetchmail.
-# Copyright (C) 2005 Eric S. Raymond
+# Copyright (C) 2005-2006 Eric S. Raymond
 # Copyright (C) 2002 Free Software Foundation, Inc.
-# Takeshi Hamasaki <hma@syd.odn.ne.jp>, 2005
+# Takeshi Hamasaki <hma@syd.odn.ne.jp>, 2005-2006
 #   based on the work by Jumpei Baba <jbaba@wb3.so-net.ne.jp>, 2002 
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.2.9-rc9\n"
+"Project-Id-Version: fetchmail 6.3.2-rc2\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2006-01-09 11:23+0100\n"
-"PO-Revision-Date: 2005-11-26 01:20+0900\n"
+"PO-Revision-Date: 2006-01-11 22:38+0900\n"
 "Last-Translator: Takeshi Hamasaki <hma@syd.odn.ne.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -155,13 +155,14 @@ msgid " not flushed\n"
 msgstr " サーバからメッセージを削除しませんでした。\n"
 
 #: driver.c:820
-#, fuzzy, c-format
+#, c-format
 msgid "fetchlimit %d reached; %d message left on server %s account %s\n"
 msgid_plural ""
 "fetchlimit %d reached; %d messages left on server %s account %s\n"
 msgstr[0] ""
 "最大取り込み数である %d 通に達しました; メッセージが %d 通、サーバ %s にアカ"
 "ウント %s 宛で残されています。\n"
+msgstr[1] ""
 "最大取り込み数である %d 通に達しました; メッセージが %d 通、サーバ %s にアカ"
 "ウント %s 宛で残されています。\n"
 
@@ -464,9 +465,8 @@ msgid "DNS lookup"
 msgstr "DNS 参照"
 
 #: driver.c:1544
-#, fuzzy
 msgid "undefined"
-msgstr "不明なエラー\n"
+msgstr "不明なエラー"
 
 #: driver.c:1550
 #, c-format
@@ -1697,6 +1697,8 @@ msgstr "%u は最初の未読メッセージです。\n"
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""
+"警告: サーバからメッセージサイズとして報告された数値が不適切だったので無視し"
+"ます。\n"
 
 #: interface.c:256
 msgid "Unable to open kvm interface. Make sure fetchmail is SGID kmem."
@@ -2195,6 +2197,7 @@ msgstr "      --showdots    ログファイルにも進行状況を示す . を�
 #: pop3.c:336
 msgid "Warning: Maillennium POP3/PROXY server found, using RETR command.\n"
 msgstr ""
+"警告: Maillennium POP3/プロクシサーバです。RETR コマンドを使用します。\n"
 
 #: pop3.c:578
 msgid "Required APOP timestamp not found in greeting\n"
