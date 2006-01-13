@@ -38,6 +38,9 @@ fetchmail 6.3.2 (to be released):
   idfile. See the amendment in the 6.3.0 MAJOR INCOMPATIBLE CHANGES section
   below for details. The manual page was updated.  Matthias Andree
 
+# CHANGES RELEVANT TO PACKAGERS:
+* The outdated BUGS document was removed from the distribution. Matthias Andree
+
 # BUG FIXES:
 * SMTP/LMTP cleanup to fix these two bugs:
   - switch back to SMTP after having tried LMTP hosts (multiple smtphost hosts)
