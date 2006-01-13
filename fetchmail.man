@@ -2540,8 +2540,8 @@ by Carl Harris <ceharris@mal.com>; the internals have become quite different,
 but some of its interface design is directly traceable to that
 ancestral program.
 .PP
-This manual page has been improved by R.\ Hannes Beinert and Héctor
-García.
+This manual page has been improved by R.\ Hannes Beinert and H\['e]ctor
+Garc\['i]a.
 
 .SH SEE ALSO
 mutt(1), elm(1), mail(1), sendmail(8), popd(8), imapd(8), netrc(5)

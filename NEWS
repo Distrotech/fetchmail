@@ -52,6 +52,8 @@ fetchmail 6.3.2 (to be released):
   alternate between verbose and debug mode. debug mode now comprises all verbose
   output, and adding more -v options does not switch back from debug to verbose
   mode.  Matthias Andree
+* fetchmail.man: Fix accented characters in Héctor García's name. Merged from
+  downstream debian/patches/01_man_page.dpatch. Matthias Andree.
 
 fetchmail 6.3.1 (released 2005-12-19):
 
