@@ -2,7 +2,7 @@ For 6.3.X:
 ==========
 
 Validate --mda/mda option so that single quotes (') around the
-placeholders are rejected Debian Bug #224564
+placeholders are rejected Debian Bug #347909
 
 Add FAQ entry about procmail configuration with 1. ORGMAIL/DEFAULT, 2.
 :0e { EXITCODE=75 HOST }, 3. explicit default recipe, 4. LOGFILE
