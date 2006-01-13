@@ -131,6 +131,26 @@ Amendment, 2006-01-04:
   make matters even worse. This means that fetchmail requires write permission
   on the directory holding the idfile. This will usually affect system-global
   daemons only, for instance, Debian. Found by Dan Jacobson. Matthias Andree.
+Escalated to "incompatible", 2006-01-13:
+* Try to obtain FQDN as our own host by default, rather than using "localhost".
+  If hostname cannot be qualified, complain noisily and continue, unless
+  Kerberos, ODMR or ETRN are used (these have always required an FQDN).
+  Partial fix of Debian Bug#150137. Fixes Debian Bug#316454.  Matthias Andree
+
+# CHANGES RELEVANT TO PACKAGERS AND USERS
+* fetchmailconf is now a shell wrapper that calls the byte-compiled
+  fetchmailconf.py script, which is now installed in the regular python
+  directory. Matthias Andree.
+* The --enable-inet6 configure option was removed. The code is mostly protocol
+  agnostic, a fully IPv6 aware OS is expected to provide getaddrinfo(),
+  getnameinfo() and the macro AF_INET6.  Matthias Andree.
+* gettext (intl/) has been removed from the fetchmail package. Install GNU
+  gettext 0.14 separately for NLS (i18n).  Matthias Andree
+* Added Russian translation, courtesy of Pavel Maryanov of the
+  Russian translation team. (MA)
+* Updated and re-enabled Czech translation, by Miloslav Trmac (MA).
+* Dropped da=Danish, el=Greek and tr=Turkish translations which have more than
+  10% (61+) untranslated or fuzzy messages.  Matthias Andree.
 
 # OTHER USER-VISIBLE CHANGES
 * Sunil Shetye's fix to force fetchsizelimit to 1 for APOP and RPOP. (ESR)
@@ -214,7 +234,6 @@ Amendment, 2006-01-04:
 * Nalin Dahyabhai's fix to make rpa.c compile. Sent by Miloslav Trmac. (MA)
 * Trivial fetchmailconf.man to redirect to fetchmail.1.
   Reported by Miloslav Trmac. (MA)
-* Updated and re-enabled Czech translation, by Miloslav Trmac (MA).
 * Internationalization (i18n) updates by Miloslav Trmac. (MA)
 * Fix "couldn't find canonical DNS name of NN (MM)" for hosts that have
   only IPv6 addresses. Matthias Andree.
@@ -225,10 +244,6 @@ Amendment, 2006-01-04:
 * Brian Candler's FAQ update about SSL certificate verification. (MA)
 * Nico Golde's patch to support "proto RPOP" in the configuration file,
   reported by Dr. Andreas Krüger, Debian bug #242384 (MA)
-* Added Russian translation, courtesy of Pavel Maryanov of the
-  Russian translation team. (MA)
-* Dropped da=Danish, el=Greek and tr=Turkish translations which have more than
-  10% (61+) untranslated or fuzzy messages.  Matthias Andree.
 * Skip sending POP3 PASS command when USER command failed. Matthias Andree.
 * Run fetchmail.man through automatic spell checker. Matthias Andree.
 * Major fetchmail(1) manual page overhaul by R. Hannes Beinert, to
@@ -241,7 +256,7 @@ Amendment, 2006-01-04:
   design-notes.html document. The NOTES file will contain both of them.
   Matthias Andree.
 * Fix Debian bug #301964, fetchmail leaks sockets when SSL negotiation
-  fails. Fix suggested Goswin Brederlow. (MA)
+  fails. Fix suggested by Goswin Brederlow. (MA)
 * Really fix Debian Bug#207919 (garbage in Received: lines when smtphost set),
   patch by Tobias Diedrich.  The 6.2.5 NEWS claimed Gregan's patch had fixed
   #207919 but it had fixed #212484 instead and #207919 remained unfixed in
@@ -267,11 +282,6 @@ Amendment, 2006-01-04:
   1. didn't search exhaustively, but matched only the first IP address of the
   server's queryname against the IP addresses of the server name to match.
   2. didn't match IP aliases versus MX hosts.  Matthias Andree
-* gettext (intl/) has been removed from the fetchmail package. Install GNU
-  gettext 0.14 separately for NLS (i18n).  Matthias Andree
-* fetchmailconf is now a shell wrapper that calls the byte-compiled
-  fetchmailconf.py script, which is now installed in the regular python
-  directory. Matthias Andree.
 * The "port" option, while still understood, is being replaced by the "service"
   option, which is now supported even without --enable-inet6. Matthias Andree.
 * The default distribution format is now bzip2. Matthias Andree.
@@ -282,9 +292,6 @@ Amendment, 2006-01-04:
 * Fix --with-gssapi compilation problem. Simon Josefsson. (MA)
 * Foster protocol-independence to support IPv6 better, for instance, providing
   IPv6 addresses in Received: headers. Matthias Andree.
-* The --enable-inet6 configure option was removed. The code is mostly protocol
-  agnostic, a fully IPv6 aware OS is expected to provide getaddrinfo(),
-  getnameinfo() and the macro AF_INET6.  Matthias Andree.
 * Received: headers now enclose the for <...> destination address in angle
   brackets for consistency with Postfix.  Matthias Andree.
 * Operating systems that do not support at least one of gethostbyname,
@@ -345,10 +352,6 @@ Amendment, 2006-01-04:
   other process's exit.  Matthias Andree
 * Man page: --sslfingerprint points user to x509(1ssl) and gives an example
   how to use it. Debian Bug#213484, Eduard Bloch. (MA)
-* Try to obtain FQDN as our own host by default, rather than using "localhost".
-  If hostname cannot be qualified, complain noisily and continue, unless
-  Kerberos, ODMR or ETRN are used (these require a FQDN).
-  Partial fix of Debian Bug#150137. Fixes Debian Bug#316454.  Matthias Andree
 * fetchmailconf now sets the service properly after autoprobe. Fixes Debian
   Bug#320645.  Matthias Andree
 * Man page: Fix Debian Bug#241883, making global options more clear. Matt
