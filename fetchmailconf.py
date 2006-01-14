@@ -5,7 +5,7 @@
 # Matthias Andree <matthias.andree@gmx.de>
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.51 $Revision$"
+version = "1.52 $Revision$"
 
 from Tkinter import *
 from Dialog import *
@@ -2035,24 +2035,31 @@ gUSiYASJpMEHhilJTEnhAlGoQqYAZQ1AiqEMZ0jDGtqQImhwwA13yMMevoQAGvGhEAWHGMOAAAA7
 #
 
     # Process options
-    (options, arguments) = getopt.getopt(sys.argv[1:], "df:hV")
+    (options, arguments) = getopt.getopt(sys.argv[1:], "df:hV", ["help",
+	    "version"])
     dump = rcfile = None;
     for (switch, val) in options:
 	if (switch == '-d'):
 	    dump = TRUE
 	elif (switch == '-f'):
 	    rcfile = val
-	elif (switch == '-h'):
+	elif (switch == '-h' or switch == '--help'):
 	    print """
-Usage: fetchmailconf {[-d] [-f fetchmailrc]|-h|-V}
--d       - dump configuration (for debugging)
--f fmrc  - read alternate fetchmailrc file
--h       - print this help text and quit
--V       - print fetchmailconf version and quit
+Usage: fetchmailconf {[-d] [-f fetchmailrc]|-h|--help|-V|--version}
+           -d      - dump configuration (for debugging)
+           -f fmrc - read alternate fetchmailrc file
+--help,    -h      - print this help text and quit
+--version, -V      - print fetchmailconf version and quit
 """
 	    sys.exit(0)
-	elif (switch == '-V'):
+	elif (switch == '-V' or switch == '--version'):
 	    print "fetchmailconf %s" % version
+	    print """
+Copyright (C) 1997 - 2003 Eric S. Raymond
+Copyright (C) 2005 - 2006 Matthias Andree
+fetchmailconf comes with ABSOLUTELY NO WARRANTY.  This is free software, you are
+welcome to redistribute it under certain conditions.  Please see the file
+COPYING in the source or documentation directory for details.  """
 	    sys.exit(0)
 
     # Get client host's FQDN
