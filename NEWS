@@ -59,6 +59,7 @@ fetchmail 6.3.2 (to be released):
   downstream debian/patches/01_man_page.dpatch. Matthias Andree.
 * Add missing --help text for "--sslcertck" option. Matthias Andree.
 * fetchmailconf.py: Accept --help and --version. Matthias Andree.
+* fetchmail --version  now prints the copyright notice. Matthias Andree.
 
 fetchmail 6.3.1 (released 2005-12-19):
 

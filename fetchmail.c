@@ -127,6 +127,16 @@ static RETSIGTYPE donothing(int sig)
     lastsig = sig;
 }
 
+static void printcopyright(FILE *fp) {
+	fprintf(fp, GT_("Copyright (C) 2002, 2003 Eric S. Raymond\n"
+		   "Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Rob F. Funk, Graham Wilson\n"
+		   "Copyright (C) 2005 Matthias Andree, Sunil Shetye\n"
+		   "Copyright (C) 2006 Matthias Andree\n"));
+	fprintf(fp, GT_("Fetchmail comes with ABSOLUTELY NO WARRANTY. This is free software, and you\n"
+		   "are welcome to redistribute it under certain conditions. For details,\n"
+		   "please see the file COPYING in the source or documentation directory.\n"));
+}
+
 const char *iana_charset;
 
 int main(int argc, char **argv)
@@ -253,9 +263,12 @@ int main(int argc, char **argv)
 #ifdef ENABLE_NLS
 	"+NLS"
 #endif /* ENABLE_NLS */
-	"\n";
+	".\n";
 	printf(GT_("This is fetchmail release %s"), VERSION);
 	fputs(features, stdout);
+	puts("");
+	printcopyright(stdout);
+	puts("");
 	fputs("Fallback MDA: ", stdout);
 #ifdef FALLBACK_MDA
 	fputs(FALLBACK_MDA, stdout);
