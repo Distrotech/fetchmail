@@ -57,6 +57,7 @@ fetchmail 6.3.2 (to be released):
   mode.  Matthias Andree
 * fetchmail.man: Fix accented characters in Héctor García's name. Merged from
   downstream debian/patches/01_man_page.dpatch. Matthias Andree.
+* Add missing --help text for "--sslcertck" option. Matthias Andree.
 
 fetchmail 6.3.1 (released 2005-12-19):
 

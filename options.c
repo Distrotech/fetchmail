@@ -596,6 +596,7 @@ struct query *ctl;	/* option record to be initialized */
 	P(GT_("      --ssl         enable ssl encrypted session\n"));
 	P(GT_("      --sslkey      ssl private key file\n"));
 	P(GT_("      --sslcert     ssl client certificate\n"));
+	P(GT_("      --sslcertck   strict client certificate check (recommended)\n"));
 	P(GT_("      --sslcertpath path to ssl certificates\n"));
 	P(GT_("      --sslfingerprint fingerprint that must match that of the server's cert.\n"));
 	P(GT_("      --sslproto    force ssl protocol (ssl2/ssl3/tls1)\n"));
@@ -640,6 +641,10 @@ struct query *ctl;	/* option record to be initialized */
 	P(GT_("  -r, --folder      specify remote folder name\n"));
 	P(GT_("      --showdots    show progress dots even in logfiles\n"));
 #undef P
+	/* undocumented:
+	 * --configdump (internal use by fetchmailconf, dumps
+	 *               configuration as Python source code)
+	 * --yydebug    (developer use, enables parser debugging) */
 
 	if (helpflag)
 	    exit(PS_SUCCESS);
