@@ -333,7 +333,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
      */
     if (peek_capable && strstr(greeting, "Maillennium POP3/PROXY server")) {
 	if ((ctl->server.workarounds & WKA_TOP) == 0) {
-	    report(stdout, GT_("Warning: Maillennium POP3/PROXY server found, using RETR command.\n"));
+	    report(stdout, GT_("Warning: \"Maillennium POP3/PROXY server\" found, using RETR command.\n"));
 	    ctl->server.workarounds |= WKA_TOP;
 	}
 	peek_capable = 0;
