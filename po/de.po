@@ -2240,7 +2240,8 @@ msgid ""
 "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
 "of TOP.\n"
 msgstr ""
-"Warnung: „Maillennium POP3/PROXY-Server” gefunden, benutze RETR-Befehl statt TOP.\n"
+"Warnung: „Maillennium POP3/PROXY-Server” gefunden, benutze RETR-Befehl statt "
+"TOP.\n"
 
 #: pop3.c:578
 msgid "Required APOP timestamp not found in greeting\n"
