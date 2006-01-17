@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.9-rc9\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-01-17 14:01+0100\n"
+"POT-Creation-Date: 2006-01-17 14:18+0100\n"
 "PO-Revision-Date: 2005-12-18 11:50+0100\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -2259,10 +2259,12 @@ msgstr ""
 "      --showdots    affiche des points de progression, même dans le journal\n"
 
 #: pop3.c:336
-msgid "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command.\n"
+msgid ""
+"Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
+"of TOP.\n"
 msgstr ""
 "Avertissement: trouvé «Maillennium POP3/PROXY server», la commande RETR est "
-"utilisé.\n"
+"utilisé au lieu de TOP.\n"
 
 #: pop3.c:578
 msgid "Required APOP timestamp not found in greeting\n"
