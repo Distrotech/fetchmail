@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.2-rc2\n"
+"Project-Id-Version: fetchmail 6.3.2-rc3\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2006-01-17 14:18+0100\n"
-"PO-Revision-Date: 2006-01-11 22:38+0900\n"
+"PO-Revision-Date: 2006-01-18 19:57+0900\n"
 "Last-Translator: Takeshi Hamasaki <hma@syd.odn.ne.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -649,6 +649,11 @@ msgid ""
 "Copyright (C) 2005 Matthias Andree, Sunil Shetye\n"
 "Copyright (C) 2006 Matthias Andree\n"
 msgstr ""
+"Copyright (C) 2002, 2003 Eric S. Raymond\n"
+"Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Rob F. Funk, Graham "
+"Wilson\n"
+"Copyright (C) 2005 Matthias Andree, Sunil Shetye\n"
+"Copyright (C) 2006 Matthias Andree\n"
 
 #: fetchmail.c:135
 msgid ""
@@ -656,6 +661,9 @@ msgid ""
 "are welcome to redistribute it under certain conditions. For details,\n"
 "please see the file COPYING in the source or documentation directory.\n"
 msgstr ""
+"Fetchmail はまったくの無保証です。これはフリーソフトウェアで、\n"
+"いくつかの条件を満たせば再配布は大歓迎です。\n"
+"詳しくは、COPYING ファイルを見てください。\n"
 
 #: fetchmail.c:169
 msgid "WARNING: Running as root is discouraged.\n"
@@ -2035,9 +2043,8 @@ msgid "      --sslcert     ssl client certificate\n"
 msgstr "      --sslcert     SSL の client certificate ファイルを指定します\n"
 
 #: options.c:599
-#, fuzzy
 msgid "      --sslcertck   do strict server certificate check (recommended)\n"
-msgstr "      --sslcert     SSL の client certificate ファイルを指定します\n"
+msgstr "      --sslcertck   厳密なサーバ証明書チェックを行います(推奨)\n"
 
 #: options.c:600
 msgid "      --sslcertpath path to ssl certificates\n"
@@ -2216,12 +2223,12 @@ msgid "      --showdots    show progress dots even in logfiles\n"
 msgstr "      --showdots    ログファイルにも進行状況を示す . を書き込みます\n"
 
 #: pop3.c:336
-#, fuzzy
 msgid ""
 "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
 "of TOP.\n"
 msgstr ""
-"警告: Maillennium POP3/プロクシサーバです。RETR コマンドを使用します。\n"
+"警告: Maillennium POP3/プロクシサーバです。TOP の代わりに RETR コマンドを使用"
+"します。\n"
 
 #: pop3.c:578
 msgid "Required APOP timestamp not found in greeting\n"
