@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.2-rc2\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-01-09 11:23+0100\n"
+"POT-Creation-Date: 2006-01-17 14:18+0100\n"
 "PO-Revision-Date: 2006-01-17 13:36+0200\n"
 "Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -34,7 +34,8 @@ msgstr "Нет, их IP-адреса не совпадают\n"
 #: checkalias.c:197
 #, c-format
 msgid "nameserver failure while looking for '%s' during poll of %s: %s\n"
-msgstr "Выполняя поиск `%s', nameserver возвратил ошибку во время опроса %s: %s.\n"
+msgstr ""
+"Выполняя поиск `%s', nameserver возвратил ошибку во время опроса %s: %s.\n"
 
 #: checkalias.c:222
 #, c-format
@@ -67,12 +68,16 @@ msgstr "Тема: Предупреждение Fetchmail о превышении размера сообщений"
 #: driver.c:341
 #, c-format
 msgid "The following oversized messages were deleted on server %s account %s:"
-msgstr "Следующие сообщения завышенного размера были удалены с почтового сервера %s, учётная запись %s:"
+msgstr ""
+"Следующие сообщения завышенного размера были удалены с почтового сервера %s, "
+"учётная запись %s:"
 
 #: driver.c:345
 #, c-format
 msgid "The following oversized messages remain on server %s account %s:"
-msgstr "Следующие сообщения завышенного размера находятся на почтовом сервере %s, учётная запись %s:"
+msgstr ""
+"Следующие сообщения завышенного размера находятся на почтовом сервере %s, "
+"учётная запись %s:"
 
 #: driver.c:364
 #, c-format
@@ -129,8 +134,11 @@ msgstr " (%d октетов в теле) "
 
 #: driver.c:744
 #, c-format
-msgid "message %s@%s:%d was not the expected length (%d actual != %d expected)\n"
-msgstr "длина сообщения %s@%s:%d не совпала с ожидаемой (%d на самом деле != %d ожидалось)\n"
+msgid ""
+"message %s@%s:%d was not the expected length (%d actual != %d expected)\n"
+msgstr ""
+"длина сообщения %s@%s:%d не совпала с ожидаемой (%d на самом деле != %d "
+"ожидалось)\n"
 
 #: driver.c:775
 msgid " retained\n"
@@ -147,9 +155,14 @@ msgstr " не пропущено\n"
 #: driver.c:820
 #, c-format
 msgid "fetchlimit %d reached; %d message left on server %s account %s\n"
-msgid_plural "fetchlimit %d reached; %d messages left on server %s account %s\n"
-msgstr[0] "Достигнут предел извлечения %d; осталось %d сообщение, сервер %s, учётная запись %s\n"
-msgstr[1] "Достигнут предел извлечения %d; осталось %d сообщений, сервер %s, учётная запись %s\n"
+msgid_plural ""
+"fetchlimit %d reached; %d messages left on server %s account %s\n"
+msgstr[0] ""
+"Достигнут предел извлечения %d; осталось %d сообщение, сервер %s, учётная "
+"запись %s\n"
+msgstr[1] ""
+"Достигнут предел извлечения %d; осталось %d сообщений, сервер %s, учётная "
+"запись %s\n"
 
 #: driver.c:884
 msgid "SIGPIPE thrown from an MDA or a stream socket error\n"
@@ -186,8 +199,12 @@ msgstr "Тема: fetchmail наблюдает повторяющиеся тайм-ауты"
 
 #: driver.c:922
 #, c-format
-msgid "Fetchmail saw more than %d timeouts while attempting to get mail from %s@%s.\n"
-msgstr "Fetchmail обнаружил более %d тайм-аутов при попытке получения почты из %s@%s.\n"
+msgid ""
+"Fetchmail saw more than %d timeouts while attempting to get mail from %s@%"
+"s.\n"
+msgstr ""
+"Fetchmail обнаружил более %d тайм-аутов при попытке получения почты из %s@%"
+"s.\n"
 
 #: driver.c:926
 msgid ""
@@ -210,7 +227,8 @@ msgstr ""
 #: driver.c:951
 #, c-format
 msgid "pre-connection command failed with status %d\n"
-msgstr "команда, выполняемая до соединения, завершилась неудачей со статусом %d\n"
+msgstr ""
+"команда, выполняемая до соединения, завершилась неудачей со статусом %d\n"
 
 #: driver.c:975
 #, c-format
@@ -468,7 +486,8 @@ msgstr "Ошибка %s при выборке из %s@%s\n"
 #: driver.c:1564
 #, c-format
 msgid "post-connection command failed with status %d\n"
-msgstr "команда, выполняемая после соединения, завершилась неудачей со статусом %d\n"
+msgstr ""
+"команда, выполняемая после соединения, завершилась неудачей со статусом %d\n"
 
 #: driver.c:1585
 msgid "Kerberos V4 support not linked.\n"
@@ -514,7 +533,8 @@ msgstr ""
 msgid ""
 "%s: The NULLMAILER_FLAGS environment variable is set.\n"
 "This is dangerous as it can make nullmailer-inject or nullmailer's\n"
-"sendmail wrapper tamper with your From:, Message-ID: or Return-Path: headers.\n"
+"sendmail wrapper tamper with your From:, Message-ID: or Return-Path: "
+"headers.\n"
 "Try \"env NULLMAILER_FLAGS= %s YOUR ARGUMENTS HERE\"\n"
 "%s: Abort.\n"
 msgstr ""
@@ -542,16 +562,20 @@ msgstr "gethostbyname завершился неудачей %s\n"
 
 #: env.c:165
 msgid "Cannot find my own host in hosts database to qualify it!\n"
-msgstr "Невозможно найти свой собственный хост в базе данных хостов, чтобы определить его!\n"
+msgstr ""
+"Невозможно найти свой собственный хост в базе данных хостов, чтобы "
+"определить его!\n"
 
 #: env.c:169
 msgid ""
 "Trying to continue with unqualified hostname.\n"
-"DO NOT report broken Received: headers, HELO/EHLO lines or similar problems!\n"
+"DO NOT report broken Received: headers, HELO/EHLO lines or similar "
+"problems!\n"
 "DO repair your /etc/hosts, DNS, NIS or LDAP instead.\n"
 msgstr ""
 "Пытаемся продолжить с неопределённым именем хоста.\n"
-"НЕ СООБЩАЙТЕ о нарушенных заголовках Received:, строках HELO/EHLO или подобных проблемах!\n"
+"НЕ СООБЩАЙТЕ о нарушенных заголовках Received:, строках HELO/EHLO или "
+"подобных проблемах!\n"
 "Вместо этого ИСПРАВЬТЕ свой /etc/hosts, DNS, NIS или LDAP.\n"
 
 #: etrn.c:47 odmr.c:58
@@ -618,853 +642,929 @@ msgstr "Опция --folder не поддерживается с ETRN\n"
 msgid "Option --check is not supported with ETRN\n"
 msgstr "Опция --check не поддерживается с ETRN\n"
 
-#: fetchmail.c:159
+#: fetchmail.c:131
+msgid ""
+"Copyright (C) 2002, 2003 Eric S. Raymond\n"
+"Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Rob F. Funk, Graham "
+"Wilson\n"
+"Copyright (C) 2005 Matthias Andree, Sunil Shetye\n"
+"Copyright (C) 2006 Matthias Andree\n"
+msgstr ""
+
+#: fetchmail.c:135
+msgid ""
+"Fetchmail comes with ABSOLUTELY NO WARRANTY. This is free software, and you\n"
+"are welcome to redistribute it under certain conditions. For details,\n"
+"please see the file COPYING in the source or documentation directory.\n"
+msgstr ""
+
+#: fetchmail.c:169
 msgid "WARNING: Running as root is discouraged.\n"
 msgstr "ПРЕДУПРЕЖДЕНИЕ: Запуск под root'ом не приветствуется.\n"
 
-#: fetchmail.c:171
+#: fetchmail.c:181
 msgid "fetchmail: invoked with"
 msgstr "fetchmail: запущен с"
 
-#: fetchmail.c:195
+#: fetchmail.c:205
 msgid "could not get current working directory\n"
 msgstr "невозможно было получить текущий рабочий каталог\n"
 
-#: fetchmail.c:257
+#: fetchmail.c:267
 #, c-format
 msgid "This is fetchmail release %s"
 msgstr "Это fetchmail версии %s"
 
-#: fetchmail.c:354
+#: fetchmail.c:367
 #, c-format
 msgid "Taking options from command line%s%s\n"
 msgstr "Опции берутся из командной строки %s%s\n"
 
-#: fetchmail.c:355
+#: fetchmail.c:368
 msgid " and "
 msgstr " и "
 
-#: fetchmail.c:360
+#: fetchmail.c:373
 #, c-format
 msgid "No mailservers set up -- perhaps %s is missing?\n"
 msgstr "Нет настроенных почтовых серверов -- может отсутствует %s?\n"
 
-#: fetchmail.c:381
+#: fetchmail.c:394
 msgid "fetchmail: no mailservers have been specified.\n"
 msgstr "fetchmail: не были указаны почтовые серверы.\n"
 
-#: fetchmail.c:393
+#: fetchmail.c:406
 msgid "fetchmail: no other fetchmail is running\n"
 msgstr "fetchmail: другие запущенные fetchmail отсутствуют\n"
 
-#: fetchmail.c:399
+#: fetchmail.c:412
 #, c-format
 msgid "fetchmail: error killing %s fetchmail at %d; bailing out.\n"
-msgstr "fetchmail: ошибка остановки %s fetchmail на %d; вынужденное завершение.\n"
+msgstr ""
+"fetchmail: ошибка остановки %s fetchmail на %d; вынужденное завершение.\n"
 
-#: fetchmail.c:400 fetchmail.c:409
+#: fetchmail.c:413 fetchmail.c:422
 msgid "background"
 msgstr "фоновый режим"
 
-#: fetchmail.c:400 fetchmail.c:409
+#: fetchmail.c:413 fetchmail.c:422
 msgid "foreground"
 msgstr "приоритетный режим"
 
-#: fetchmail.c:408
+#: fetchmail.c:421
 #, c-format
 msgid "fetchmail: %s fetchmail at %d killed.\n"
 msgstr "fetchmail: %s fetchmail на %d остановлен.\n"
 
-#: fetchmail.c:431
-msgid "fetchmail: can't check mail while another fetchmail to same host is running.\n"
-msgstr "fetchmail: невозможно проверить почту, пока на том же хосте запущен другой fetchmail.\n"
-
-#: fetchmail.c:437
-#, c-format
-msgid "fetchmail: can't poll specified hosts with another fetchmail running at %d.\n"
-msgstr "fetchmail: невозможно опросить указанные хосты из-за другого fetchmail, запущенного на %d.\n"
-
 #: fetchmail.c:444
+msgid ""
+"fetchmail: can't check mail while another fetchmail to same host is "
+"running.\n"
+msgstr ""
+"fetchmail: невозможно проверить почту, пока на том же хосте запущен другой "
+"fetchmail.\n"
+
+#: fetchmail.c:450
+#, c-format
+msgid ""
+"fetchmail: can't poll specified hosts with another fetchmail running at %d.\n"
+msgstr ""
+"fetchmail: невозможно опросить указанные хосты из-за другого fetchmail, "
+"запущенного на %d.\n"
+
+#: fetchmail.c:457
 #, c-format
 msgid "fetchmail: another foreground fetchmail is running at %d.\n"
 msgstr "fetchmail: на %d запущен другой приоритетный fetchmail.\n"
 
-#: fetchmail.c:454
-msgid "fetchmail: can't accept options while a background fetchmail is running.\n"
-msgstr "fetchmail: невозможно применить опции, пока запущен фоновый fetchmail.\n"
+#: fetchmail.c:467
+msgid ""
+"fetchmail: can't accept options while a background fetchmail is running.\n"
+msgstr ""
+"fetchmail: невозможно применить опции, пока запущен фоновый fetchmail.\n"
 
-#: fetchmail.c:460
+#: fetchmail.c:473
 #, c-format
 msgid "fetchmail: background fetchmail at %d awakened.\n"
 msgstr "fetchmail: на %d из фонового режима вернулся  fetchmail.\n"
 
-#: fetchmail.c:472
+#: fetchmail.c:485
 #, c-format
 msgid "fetchmail: elder sibling at %d died mysteriously.\n"
-msgstr "fetchmail: на %d неожиданно завершился более старший процесс того же уровня.\n"
+msgstr ""
+"fetchmail: на %d неожиданно завершился более старший процесс того же "
+"уровня.\n"
 
-#: fetchmail.c:487
+#: fetchmail.c:500
 #, c-format
 msgid "fetchmail: can't find a password for %s@%s.\n"
 msgstr "fetchmail: невозможно найти пароль для %s@%s.\n"
 
-#: fetchmail.c:491
+#: fetchmail.c:504
 #, c-format
 msgid "Enter password for %s@%s: "
 msgstr "Введите пароль для %s@%s: "
 
-#: fetchmail.c:522
+#: fetchmail.c:535
 #, c-format
 msgid "starting fetchmail %s daemon \n"
 msgstr "запускается демон fetchmail %s\n"
 
-#: fetchmail.c:537 fetchmail.c:539
+#: fetchmail.c:550 fetchmail.c:552
 #, c-format
 msgid "could not open %s to append logs to \n"
 msgstr "невозможно было открыть %s для присоединения к нему логов\n"
 
-#: fetchmail.c:575
+#: fetchmail.c:588
 #, c-format
 msgid "couldn't time-check %s (error %d)\n"
 msgstr "невозможно было проверить время %s (ошибка %d)\n"
 
-#: fetchmail.c:580
+#: fetchmail.c:593
 #, c-format
 msgid "restarting fetchmail (%s changed)\n"
 msgstr "перезапускается fetchmail (%s изменен)\n"
 
-#: fetchmail.c:585
+#: fetchmail.c:598
 msgid "attempt to re-exec may fail as directory has not been restored\n"
-msgstr "попытка перезапуска может завершиться неудачей, т.к. каталог не был восстановлен\n"
+msgstr ""
+"попытка перезапуска может завершиться неудачей, т.к. каталог не был "
+"восстановлен\n"
 
-#: fetchmail.c:612
+#: fetchmail.c:625
 msgid "attempt to re-exec fetchmail failed\n"
 msgstr "попытка перезапустить  fetchmail завершилась неудачей\n"
 
-#: fetchmail.c:640
+#: fetchmail.c:653
 #, c-format
 msgid "poll of %s skipped (failed authentication or too many timeouts)\n"
-msgstr "опрос %s пропущен (ошибка аутентификации или слишком много тайм-аутов)\n"
+msgstr ""
+"опрос %s пропущен (ошибка аутентификации или слишком много тайм-аутов)\n"
 
-#: fetchmail.c:652
+#: fetchmail.c:665
 #, c-format
 msgid "interval not reached, not querying %s\n"
 msgstr "интервал не достигнут, %s не запрашивается\n"
 
-#: fetchmail.c:690
+#: fetchmail.c:703
 msgid "Query status=0 (SUCCESS)\n"
 msgstr "Статус запроса=0 (SUCCESS)\n"
 
-#: fetchmail.c:692
+#: fetchmail.c:705
 msgid "Query status=1 (NOMAIL)\n"
 msgstr "Статус запроса=1 (NOMAIL)\n"
 
-#: fetchmail.c:694
+#: fetchmail.c:707
 msgid "Query status=2 (SOCKET)\n"
 msgstr "Статус запроса=2 (SOCKET)\n"
 
-#: fetchmail.c:696
+#: fetchmail.c:709
 msgid "Query status=3 (AUTHFAIL)\n"
 msgstr "Статус запроса=3 (AUTHFAIL)\n"
 
-#: fetchmail.c:698
+#: fetchmail.c:711
 msgid "Query status=4 (PROTOCOL)\n"
 msgstr "Статус запроса=4 (PROTOCOL)\n"
 
-#: fetchmail.c:700
+#: fetchmail.c:713
 msgid "Query status=5 (SYNTAX)\n"
 msgstr "Статус запроса=5 (SYNTAX)\n"
 
-#: fetchmail.c:702
+#: fetchmail.c:715
 msgid "Query status=6 (IOERR)\n"
 msgstr "Статус запроса=6 (IOERR)\n"
 
-#: fetchmail.c:704
+#: fetchmail.c:717
 msgid "Query status=7 (ERROR)\n"
 msgstr "Статус запроса=7 (ERROR)\n"
 
-#: fetchmail.c:706
+#: fetchmail.c:719
 msgid "Query status=8 (EXCLUDE)\n"
 msgstr "Статус запроса=8 (EXCLUDE)\n"
 
-#: fetchmail.c:708
+#: fetchmail.c:721
 msgid "Query status=9 (LOCKBUSY)\n"
 msgstr "Статус запроса=9 (LOCKBUSY)\n"
 
-#: fetchmail.c:710
+#: fetchmail.c:723
 msgid "Query status=10 (SMTP)\n"
 msgstr "Статус запроса=10 (SMTP)\n"
 
-#: fetchmail.c:712
+#: fetchmail.c:725
 msgid "Query status=11 (DNS)\n"
 msgstr "Статус запроса=11 (DNS)\n"
 
-#: fetchmail.c:714
+#: fetchmail.c:727
 msgid "Query status=12 (BSMTP)\n"
 msgstr "Статус запроса=12 (BSMTP)\n"
 
-#: fetchmail.c:716
+#: fetchmail.c:729
 msgid "Query status=13 (MAXFETCH)\n"
 msgstr "Статус запроса=13 (MAXFETCH)\n"
 
-#: fetchmail.c:718
+#: fetchmail.c:731
 #, c-format
 msgid "Query status=%d\n"
 msgstr "Статус запроса=%d\n"
 
-#: fetchmail.c:764
+#: fetchmail.c:777
 msgid "All connections are wedged.  Exiting.\n"
 msgstr "Все соединения перегружены.  Завершение работы.\n"
 
-#: fetchmail.c:771
+#: fetchmail.c:784
 #, c-format
 msgid "sleeping at %s\n"
 msgstr "в спящем режиме на %s\n"
 
-#: fetchmail.c:795
+#: fetchmail.c:808
 #, c-format
 msgid "awakened by %s\n"
 msgstr "разбужен %s'ом\n"
 
-#: fetchmail.c:798
+#: fetchmail.c:811
 #, c-format
 msgid "awakened by signal %d\n"
 msgstr "разбужен по сигналу %d\n"
 
-#: fetchmail.c:805
+#: fetchmail.c:818
 #, c-format
 msgid "awakened at %s\n"
 msgstr "разбужен на %s\n"
 
-#: fetchmail.c:811
+#: fetchmail.c:824
 #, c-format
 msgid "normal termination, status %d\n"
 msgstr "нормальное завершение, статус %d\n"
 
-#: fetchmail.c:963
+#: fetchmail.c:976
 msgid "couldn't time-check the run-control file\n"
 msgstr "невозможно было проверить время файла контроля запуска\n"
 
-#: fetchmail.c:996
+#: fetchmail.c:1009
 #, c-format
 msgid "Warning: multiple mentions of host %s in config file\n"
 msgstr "Предупреждение: многократные ссылки на хост %s в файле настройки\n"
 
-#: fetchmail.c:1029
+#: fetchmail.c:1042
 msgid "fetchmail: Error: multiple \"defaults\" records in config file.\n"
-msgstr "fetchmail: Ошибка: многократные записи \"defaults\" в файле настройки.\n"
+msgstr ""
+"fetchmail: Ошибка: многократные записи \"defaults\" в файле настройки.\n"
 
-#: fetchmail.c:1149
+#: fetchmail.c:1162
 msgid "SSL support is not compiled in.\n"
 msgstr "Поддержка SSL не была включена при компиляции.\n"
 
-#: fetchmail.c:1180
+#: fetchmail.c:1193
 #, c-format
-msgid "fetchmail: warning: no DNS available to check multidrop fetches from %s\n"
-msgstr "fetchmail: предупреждение: не доступен DNS для проверки многоканальной выборки из %s\n"
+msgid ""
+"fetchmail: warning: no DNS available to check multidrop fetches from %s\n"
+msgstr ""
+"fetchmail: предупреждение: не доступен DNS для проверки многоканальной "
+"выборки из %s\n"
 
-#: fetchmail.c:1191
+#: fetchmail.c:1204
 #, c-format
 msgid "warning: multidrop for %s requires envelope option!\n"
 msgstr "предупреждение: multidrop для %s требует опцию envelope!\n"
 
-#: fetchmail.c:1192
+#: fetchmail.c:1205
 msgid "warning: Do not ask for support if all mail goes to postmaster!\n"
-msgstr "предупреждение: Не просите технической поддержки, если все сообщения отправляются постмастеру!\n"
+msgstr ""
+"предупреждение: Не просите технической поддержки, если все сообщения "
+"отправляются постмастеру!\n"
 
-#: fetchmail.c:1209
+#: fetchmail.c:1222
 #, c-format
-msgid "fetchmail: %s configuration invalid, specify positive port number for service or port\n"
-msgstr "fetchmail: конфигурация %s не верна, укажите положительный номер порта для службы\n"
+msgid ""
+"fetchmail: %s configuration invalid, specify positive port number for "
+"service or port\n"
+msgstr ""
+"fetchmail: конфигурация %s не верна, укажите положительный номер порта для "
+"службы\n"
 
-#: fetchmail.c:1216
+#: fetchmail.c:1229
 #, c-format
 msgid "fetchmail: %s configuration invalid, RPOP requires a privileged port\n"
-msgstr "fetchmail: конфигурация %s не верна, для RPOP требуется привилегированный порт\n"
+msgstr ""
+"fetchmail: конфигурация %s не верна, для RPOP требуется привилегированный "
+"порт\n"
 
-#: fetchmail.c:1234
+#: fetchmail.c:1247
 #, c-format
 msgid "%s configuration invalid, LMTP can't use default SMTP port\n"
-msgstr "конфигурация %s не верна, LMTP не может использовать порт SMTP по умолчанию\n"
+msgstr ""
+"конфигурация %s не верна, LMTP не может использовать порт SMTP по умолчанию\n"
 
-#: fetchmail.c:1248
+#: fetchmail.c:1261
 msgid "Both fetchall and keep on in daemon mode is a mistake!\n"
 msgstr "Запускать fetchall, оставляя его при этом в режиме демона, нельзя!\n"
 
-#: fetchmail.c:1281
+#: fetchmail.c:1294
 #, c-format
 msgid "terminated with signal %d\n"
 msgstr "завершен по сигналу %d\n"
 
-#: fetchmail.c:1353
+#: fetchmail.c:1366
 #, c-format
 msgid "%s querying %s (protocol %s) at %s: poll started\n"
 msgstr "%s запрашивает %s (протокол %s) на %s: опрос начат\n"
 
-#: fetchmail.c:1378
+#: fetchmail.c:1391
 msgid "POP2 support is not configured.\n"
 msgstr "Поддержка POP2 не настроена.\n"
 
-#: fetchmail.c:1390
+#: fetchmail.c:1403
 msgid "POP3 support is not configured.\n"
 msgstr "Поддержка POP3 не настроена.\n"
 
-#: fetchmail.c:1400
+#: fetchmail.c:1413
 msgid "IMAP support is not configured.\n"
 msgstr "Поддержка IMAP не настроена.\n"
 
-#: fetchmail.c:1406
+#: fetchmail.c:1419
 msgid "ETRN support is not configured.\n"
 msgstr "Поддержка ETRN не настроена.\n"
 
-#: fetchmail.c:1414
+#: fetchmail.c:1427
 msgid "ODMR support is not configured.\n"
 msgstr "Поддержка ODMR не настроена.\n"
 
-#: fetchmail.c:1421
+#: fetchmail.c:1434
 msgid "unsupported protocol selected.\n"
 msgstr "выбран неподдерживаемый протокол.\n"
 
-#: fetchmail.c:1431
+#: fetchmail.c:1444
 #, c-format
 msgid "%s querying %s (protocol %s) at %s: poll completed\n"
 msgstr "%s запрашивает %s (протокол %s) на %s: опрос завершен\n"
 
-#: fetchmail.c:1448
+#: fetchmail.c:1461
 #, c-format
 msgid "Poll interval is %d seconds\n"
 msgstr "Интервал опроса - %d секунд\n"
 
-#: fetchmail.c:1450
+#: fetchmail.c:1463
 #, c-format
 msgid "Logfile is %s\n"
 msgstr "Лог-файл - %s\n"
 
-#: fetchmail.c:1452
+#: fetchmail.c:1465
 #, c-format
 msgid "Idfile is %s\n"
 msgstr "ID-файл - %s\n"
 
-#: fetchmail.c:1455
+#: fetchmail.c:1468
 msgid "Progress messages will be logged via syslog\n"
 msgstr "Обработка сообщений будет регистрироваться через syslog\n"
 
-#: fetchmail.c:1458
+#: fetchmail.c:1471
 msgid "Fetchmail will masquerade and will not generate Received\n"
 msgstr "Fetchmail сымитирует и не создаст Received\n"
 
-#: fetchmail.c:1460
+#: fetchmail.c:1473
 msgid "Fetchmail will show progress dots even in logfiles.\n"
-msgstr "Fetchmail будет отображать точечную строку прогресса даже в log-файлах.\n"
+msgstr ""
+"Fetchmail будет отображать точечную строку прогресса даже в log-файлах.\n"
 
-#: fetchmail.c:1462
+#: fetchmail.c:1475
 #, c-format
 msgid "Fetchmail will forward misaddressed multidrop messages to %s.\n"
 msgstr "Fetchmail переадресует многоканальные сообщения без адреса на %s.\n"
 
-#: fetchmail.c:1466
+#: fetchmail.c:1479
 msgid "Fetchmail will direct error mail to the postmaster.\n"
 msgstr "Fetchmail направит ошибочное письмо постмастеру.\n"
 
-#: fetchmail.c:1468
+#: fetchmail.c:1481
 msgid "Fetchmail will direct error mail to the sender.\n"
 msgstr "Fetchmail направит ошибочное письмо отправителю.\n"
 
-#: fetchmail.c:1475
+#: fetchmail.c:1488
 #, c-format
 msgid "Options for retrieving from %s@%s:\n"
 msgstr "Параметры для получения из %s@%s:\n"
 
-#: fetchmail.c:1479
+#: fetchmail.c:1492
 #, c-format
 msgid "  Mail will be retrieved via %s\n"
 msgstr "  Почта будет получена через %s\n"
 
-#: fetchmail.c:1482
+#: fetchmail.c:1495
 #, c-format
 msgid "  Poll of this server will occur every %d interval.\n"
 msgid_plural "  Poll of this server will occur every %d intervals.\n"
 msgstr[0] "  Опрос этого сервера будет выполняться с интервалом %d.\n"
 msgstr[1] "  Опрос этого сервера будет выполняться с интервалами %d.\n"
 
-#: fetchmail.c:1486
+#: fetchmail.c:1499
 #, c-format
 msgid "  True name of server is %s.\n"
 msgstr "  Настоящее имя севера - %s.\n"
 
-#: fetchmail.c:1489
+#: fetchmail.c:1502
 msgid "  This host will not be queried when no host is specified.\n"
 msgstr "  Когда хост не указан, этот хост не будет запрошен.\n"
 
-#: fetchmail.c:1490
+#: fetchmail.c:1503
 msgid "  This host will be queried when no host is specified.\n"
 msgstr "  Когда хост не указан, будет запрошен этот хост.\n"
 
-#: fetchmail.c:1494
+#: fetchmail.c:1507
 msgid "  Password will be prompted for.\n"
 msgstr "  Будет затребован пароль.\n"
 
-#: fetchmail.c:1498
+#: fetchmail.c:1511
 #, c-format
 msgid "  APOP secret = \"%s\".\n"
 msgstr "  Секрет APOP = \"%s\".\n"
 
-#: fetchmail.c:1501
+#: fetchmail.c:1514
 #, c-format
 msgid "  RPOP id = \"%s\".\n"
 msgstr "  RPOP id = \"%s\".\n"
 
-#: fetchmail.c:1504
+#: fetchmail.c:1517
 #, c-format
 msgid "  Password = \"%s\".\n"
 msgstr "  Пароль = \"%s\".\n"
 
-#: fetchmail.c:1513
+#: fetchmail.c:1526
 #, c-format
 msgid "  Protocol is KPOP with Kerberos %s authentication"
 msgstr "  Протокол - KPOP с аутентификацией Kerberos %s"
 
-#: fetchmail.c:1516
+#: fetchmail.c:1529
 #, c-format
 msgid "  Protocol is %s"
 msgstr "  Протокол - %s"
 
-#: fetchmail.c:1518
+#: fetchmail.c:1531
 #, c-format
 msgid " (using service %s)"
 msgstr " (используется служба %s)"
 
-#: fetchmail.c:1520
+#: fetchmail.c:1533
 msgid " (using default port)"
 msgstr " (используется порт по умолчанию)"
 
-#: fetchmail.c:1522
+#: fetchmail.c:1535
 msgid " (forcing UIDL use)"
 msgstr " (принудительно используется UIDL)"
 
-#: fetchmail.c:1528
+#: fetchmail.c:1541
 msgid "  All available authentication methods will be tried.\n"
 msgstr "  Будут испробованы все доступные способы аутентификации.\n"
 
-#: fetchmail.c:1531
+#: fetchmail.c:1544
 msgid "  Password authentication will be forced.\n"
 msgstr "  Будет использована принудительная аутентификация с паролем.\n"
 
-#: fetchmail.c:1534
+#: fetchmail.c:1547
 msgid "  MSN authentication will be forced.\n"
 msgstr "  Будет использована принудительная аутентификация MSN.\n"
 
-#: fetchmail.c:1537
+#: fetchmail.c:1550
 msgid "  NTLM authentication will be forced.\n"
 msgstr "  Будет использована принудительная аутентификация NTLM.\n"
 
-#: fetchmail.c:1540
+#: fetchmail.c:1553
 msgid "  OTP authentication will be forced.\n"
 msgstr "  Будет использована принудительная аутентификация OTP.\n"
 
-#: fetchmail.c:1543
+#: fetchmail.c:1556
 msgid "  CRAM-Md5 authentication will be forced.\n"
 msgstr "  Будет использована принудительная аутентификация CRAM-Md5.\n"
 
-#: fetchmail.c:1546
+#: fetchmail.c:1559
 msgid "  GSSAPI authentication will be forced.\n"
 msgstr "  Будет использована принудительная аутентификация GSSAPI.\n"
 
-#: fetchmail.c:1549
+#: fetchmail.c:1562
 msgid "  Kerberos V4 authentication will be forced.\n"
 msgstr "  Будет использована принудительная аутентификация Kerberos V4.\n"
 
-#: fetchmail.c:1552
+#: fetchmail.c:1565
 msgid "  Kerberos V5 authentication will be forced.\n"
 msgstr "  Будет использована принудительная аутентификация Kerberos V5.\n"
 
-#: fetchmail.c:1555
+#: fetchmail.c:1568
 msgid "  End-to-end encryption assumed.\n"
 msgstr "  Допускается оперативное шифрование.\n"
 
-#: fetchmail.c:1559
+#: fetchmail.c:1572
 #, c-format
 msgid "  Mail service principal is: %s\n"
 msgstr "  Принципал почтовой службы: %s\n"
 
-#: fetchmail.c:1562
+#: fetchmail.c:1575
 msgid "  SSL encrypted sessions enabled.\n"
 msgstr "  Включены сессии, зашифрованные SSL.\n"
 
-#: fetchmail.c:1564
+#: fetchmail.c:1577
 #, c-format
 msgid "  SSL protocol: %s.\n"
 msgstr "  Протокол SSL: %s.\n"
 
-#: fetchmail.c:1566
+#: fetchmail.c:1579
 msgid "  SSL server certificate checking enabled.\n"
 msgstr "  Включена проверка сертификата сервера SSL.\n"
 
-#: fetchmail.c:1568
+#: fetchmail.c:1581
 #, c-format
 msgid "  SSL trusted certificate directory: %s\n"
 msgstr "  Каталог доверенных сертификатов SSL: %s\n"
 
-#: fetchmail.c:1571
+#: fetchmail.c:1584
 #, c-format
 msgid "  SSL key fingerprint (checked against the server key): %s\n"
 msgstr "  Отпечаток ключа SSL (сверенный с ключом сервера): %s\n"
 
-#: fetchmail.c:1574
+#: fetchmail.c:1587
 #, c-format
 msgid "  Server nonresponse timeout is %d seconds"
 msgstr "  Таймаут молчания сервера - %d секунд"
 
-#: fetchmail.c:1576
+#: fetchmail.c:1589
 msgid " (default).\n"
 msgstr " (по умолчанию).\n"
 
-#: fetchmail.c:1583
+#: fetchmail.c:1596
 msgid "  Default mailbox selected.\n"
 msgstr "  Выбран почтовый ящик по умолчанию.\n"
 
-#: fetchmail.c:1588
+#: fetchmail.c:1601
 msgid "  Selected mailboxes are:"
 msgstr "  Выбранные почтовые ящики:"
 
-#: fetchmail.c:1594
+#: fetchmail.c:1607
 msgid "  All messages will be retrieved (--all on).\n"
 msgstr "  Будут получены все сообщения (--all on).\n"
 
-#: fetchmail.c:1595
+#: fetchmail.c:1608
 msgid "  Only new messages will be retrieved (--all off).\n"
 msgstr "  Будут получены только новые сообщения (--all off).\n"
 
-#: fetchmail.c:1597
+#: fetchmail.c:1610
 msgid "  Fetched messages will be kept on the server (--keep on).\n"
 msgstr "  Выбранные сообщения будут оставлены на сервере (--keep on).\n"
 
-#: fetchmail.c:1598
+#: fetchmail.c:1611
 msgid "  Fetched messages will not be kept on the server (--keep off).\n"
 msgstr "  Выбранные сообщения будут удалены с сервера (--keep off).\n"
 
-#: fetchmail.c:1600
+#: fetchmail.c:1613
 msgid "  Old messages will be flushed before message retrieval (--flush on).\n"
-msgstr "  Старые сообщения будут удалены перед получением сообщения (--flush on).\n"
+msgstr ""
+"  Старые сообщения будут удалены перед получением сообщения (--flush on).\n"
 
-#: fetchmail.c:1601
-msgid "  Old messages will not be flushed before message retrieval (--flush off).\n"
-msgstr "  Старые сообщения не будут удалены перед получением сообщения (--flush off).\n"
+#: fetchmail.c:1614
+msgid ""
+"  Old messages will not be flushed before message retrieval (--flush off).\n"
+msgstr ""
+"  Старые сообщения не будут удалены перед получением сообщения (--flush "
+"off).\n"
 
-#: fetchmail.c:1603
-msgid "  Oversized messages will be flushed before message retrieval (--limitflush on).\n"
-msgstr "  Сообщения завышенного размера будут удалены перед получением сообщения (--limitflush on).\n"
+#: fetchmail.c:1616
+msgid ""
+"  Oversized messages will be flushed before message retrieval (--limitflush "
+"on).\n"
+msgstr ""
+"  Сообщения завышенного размера будут удалены перед получением сообщения (--"
+"limitflush on).\n"
 
-#: fetchmail.c:1604
-msgid "  Oversized messages will not be flushed before message retrieval (--limitflush off).\n"
-msgstr "  Сообщения завышенного размера не будут удалены перед получением сообщения (--limitflush  off).\n"
+#: fetchmail.c:1617
+msgid ""
+"  Oversized messages will not be flushed before message retrieval (--"
+"limitflush off).\n"
+msgstr ""
+"  Сообщения завышенного размера не будут удалены перед получением сообщения "
+"(--limitflush  off).\n"
 
-#: fetchmail.c:1606
+#: fetchmail.c:1619
 msgid "  Rewrite of server-local addresses is enabled (--norewrite off).\n"
 msgstr "  Перезапись локальных адресов сервера включена (--norewrite off).\n"
 
-#: fetchmail.c:1607
+#: fetchmail.c:1620
 msgid "  Rewrite of server-local addresses is disabled (--norewrite on).\n"
 msgstr "  Перезапись локальных адресов сервера выключена (--norewrite on).\n"
 
-#: fetchmail.c:1609
+#: fetchmail.c:1622
 msgid "  Carriage-return stripping is enabled (stripcr on).\n"
 msgstr "  Удаление возврата каретки включено (stripcr on).\n"
 
-#: fetchmail.c:1610
+#: fetchmail.c:1623
 msgid "  Carriage-return stripping is disabled (stripcr off).\n"
 msgstr "  Удаление возврата каретки выключено (stripcr off).\n"
 
-#: fetchmail.c:1612
+#: fetchmail.c:1625
 msgid "  Carriage-return forcing is enabled (forcecr on).\n"
 msgstr "  Принудительный возврат каретки включен (forcecr on).\n"
 
-#: fetchmail.c:1613
+#: fetchmail.c:1626
 msgid "  Carriage-return forcing is disabled (forcecr off).\n"
 msgstr "  Принудительный возврат каретки выключен (forcecr off).\n"
 
-#: fetchmail.c:1615
-msgid "  Interpretation of Content-Transfer-Encoding is disabled (pass8bits on).\n"
-msgstr "  Интерпретация кодировки передаваемого контента выключена (pass8bits on).\n"
+#: fetchmail.c:1628
+msgid ""
+"  Interpretation of Content-Transfer-Encoding is disabled (pass8bits on).\n"
+msgstr ""
+"  Интерпретация кодировки передаваемого контента выключена (pass8bits on).\n"
 
-#: fetchmail.c:1616
-msgid "  Interpretation of Content-Transfer-Encoding is enabled (pass8bits off).\n"
-msgstr "  Интерпретация кодировки передаваемого контента включена (pass8bits off).\n"
+#: fetchmail.c:1629
+msgid ""
+"  Interpretation of Content-Transfer-Encoding is enabled (pass8bits off).\n"
+msgstr ""
+"  Интерпретация кодировки передаваемого контента включена (pass8bits off).\n"
 
-#: fetchmail.c:1618
+#: fetchmail.c:1631
 msgid "  MIME decoding is enabled (mimedecode on).\n"
 msgstr "  MIME-декодирование включено (mimedecode on).\n"
 
-#: fetchmail.c:1619
+#: fetchmail.c:1632
 msgid "  MIME decoding is disabled (mimedecode off).\n"
 msgstr "  MIME-декодирование выключено (mimedecode off).\n"
 
-#: fetchmail.c:1621
+#: fetchmail.c:1634
 msgid "  Idle after poll is enabled (idle on).\n"
 msgstr "  Простой после опроса включен (idle on).\n"
 
-#: fetchmail.c:1622
+#: fetchmail.c:1635
 msgid "  Idle after poll is disabled (idle off).\n"
 msgstr "  Простой после опроса выключен (idle off).\n"
 
-#: fetchmail.c:1624
+#: fetchmail.c:1637
 msgid "  Nonempty Status lines will be discarded (dropstatus on)\n"
 msgstr "  Непустые строки состояния будут удалены (dropstatus on)\n"
 
-#: fetchmail.c:1625
+#: fetchmail.c:1638
 msgid "  Nonempty Status lines will be kept (dropstatus off)\n"
 msgstr "  Непустые строки состояния будут сохранены (dropstatus off)\n"
 
-#: fetchmail.c:1627
+#: fetchmail.c:1640
 msgid "  Delivered-To lines will be discarded (dropdelivered on)\n"
 msgstr "  Строки Delivered-To будут удалены (dropdelivered on)\n"
 
-#: fetchmail.c:1628
+#: fetchmail.c:1641
 msgid "  Delivered-To lines will be kept (dropdelivered off)\n"
 msgstr "  Строки Delivered-To будут сохранены (dropdelivered off)\n"
 
-#: fetchmail.c:1632
+#: fetchmail.c:1645
 #, c-format
 msgid "  Message size limit is %d octets (--limit %d).\n"
 msgstr "  Ограничение на размер сообщения - %d октетов (--limit %d).\n"
 
-#: fetchmail.c:1635
+#: fetchmail.c:1648
 msgid "  No message size limit (--limit 0).\n"
 msgstr "  Нет ограничения на размер сообщения (--limit 0).\n"
 
-#: fetchmail.c:1637
+#: fetchmail.c:1650
 #, c-format
 msgid "  Message size warning interval is %d seconds (--warnings %d).\n"
-msgstr "  Интервал между предупреждениями о размере сообщения - %d секунд (--warnings %d).\n"
+msgstr ""
+"  Интервал между предупреждениями о размере сообщения - %d секунд (--"
+"warnings %d).\n"
 
-#: fetchmail.c:1640
+#: fetchmail.c:1653
 msgid "  Size warnings on every poll (--warnings 0).\n"
 msgstr "  Предупреждения о размере при каждом опросе (--warnings 0).\n"
 
-#: fetchmail.c:1643
+#: fetchmail.c:1656
 #, c-format
 msgid "  Received-message limit is %d (--fetchlimit %d).\n"
 msgstr "  Ограничение на полученные сообщения - %d (--fetchlimit %d).\n"
 
-#: fetchmail.c:1646
+#: fetchmail.c:1659
 msgid "  No received-message limit (--fetchlimit 0).\n"
 msgstr "  Нет ограничения на полученные сообщения (--fetchlimit 0).\n"
 
-#: fetchmail.c:1648
+#: fetchmail.c:1661
 #, c-format
 msgid "  Fetch message size limit is %d (--fetchsizelimit %d).\n"
-msgstr "  Ограничение на размер выборки сообщений - %d (--fetchsizelimit %d).\n"
+msgstr ""
+"  Ограничение на размер выборки сообщений - %d (--fetchsizelimit %d).\n"
 
-#: fetchmail.c:1651
+#: fetchmail.c:1664
 msgid "  No fetch message size limit (--fetchsizelimit 0).\n"
 msgstr "  Нет ограничения на размер выборки сообщений (--fetchsizelimit 0).\n"
 
-#: fetchmail.c:1655
+#: fetchmail.c:1668
 msgid "  Do binary search of UIDs during each poll (--fastuidl 1).\n"
-msgstr "  Выполнять двоичный поиск UID'ов во время каждого опроса (--fastuidl -1).\n"
+msgstr ""
+"  Выполнять двоичный поиск UID'ов во время каждого опроса (--fastuidl -1).\n"
 
-#: fetchmail.c:1657
+#: fetchmail.c:1670
 #, c-format
 msgid "  Do binary search of UIDs during %d out of %d polls (--fastuidl %d).\n"
-msgstr "  Выполнять двоичный поиск UID'ов во время %d из %d опросов (--fastuidl %d).\n"
+msgstr ""
+"  Выполнять двоичный поиск UID'ов во время %d из %d опросов (--fastuidl %"
+"d).\n"
 
-#: fetchmail.c:1660
+#: fetchmail.c:1673
 msgid "   Do linear search of UIDs during each poll (--fastuidl 0).\n"
-msgstr "   Выполнять линейный поиск UID'ов во время каждого опроса (--fastuidl 0).\n"
+msgstr ""
+"   Выполнять линейный поиск UID'ов во время каждого опроса (--fastuidl 0).\n"
 
-#: fetchmail.c:1662
+#: fetchmail.c:1675
 #, c-format
 msgid "  SMTP message batch limit is %d.\n"
 msgstr "  Ограничение на пакет SMTP-сообщений - %d.\n"
 
-#: fetchmail.c:1664
+#: fetchmail.c:1677
 msgid "  No SMTP message batch limit (--batchlimit 0).\n"
 msgstr "  Нет ограничения на пакет SMTP-сообщений (--batchlimit 0).\n"
 
-#: fetchmail.c:1668
+#: fetchmail.c:1681
 #, c-format
 msgid "  Deletion interval between expunges forced to %d (--expunge %d).\n"
-msgstr "  Интервал между удалениями принудительно установлен в %d (--expunge %d).\n"
+msgstr ""
+"  Интервал между удалениями принудительно установлен в %d (--expunge %d).\n"
 
-#: fetchmail.c:1670
+#: fetchmail.c:1683
 msgid "  No forced expunges (--expunge 0).\n"
 msgstr "  Нет принудительных удалений (--expunge 0).\n"
 
-#: fetchmail.c:1677
+#: fetchmail.c:1690
 msgid "  Domains for which mail will be fetched are:"
 msgstr "  Домены, для которых будет выполняться выборка почты:"
 
-#: fetchmail.c:1682 fetchmail.c:1702
+#: fetchmail.c:1695 fetchmail.c:1715
 msgid " (default)"
 msgstr " (по умолчанию)"
 
-#: fetchmail.c:1687
+#: fetchmail.c:1700
 #, c-format
 msgid "  Messages will be appended to %s as BSMTP\n"
 msgstr "  Сообщения будут прикреплены к %s как BSMTP\n"
 
-#: fetchmail.c:1689
+#: fetchmail.c:1702
 #, c-format
 msgid "  Messages will be delivered with \"%s\".\n"
 msgstr "  Сообщения будут доставлены с \"%s\".\n"
 
-#: fetchmail.c:1696
+#: fetchmail.c:1709
 #, c-format
 msgid "  Messages will be %cMTP-forwarded to:"
 msgstr "  Сообщения будут переадресованы по %cMTP на:"
 
-#: fetchmail.c:1707
+#: fetchmail.c:1720
 #, c-format
 msgid "  Host part of MAIL FROM line will be %s\n"
 msgstr "  Часть хоста из строки MAIL FROM будет %s\n"
 
-#: fetchmail.c:1710
+#: fetchmail.c:1723
 #, c-format
 msgid "  Address to be put in RCPT TO lines shipped to SMTP will be %s\n"
-msgstr "  Адрес, вставляемый в строки RCPT TO, отправляемые по SMTP, будет %s\n"
+msgstr ""
+"  Адрес, вставляемый в строки RCPT TO, отправляемые по SMTP, будет %s\n"
 
-#: fetchmail.c:1719
+#: fetchmail.c:1732
 msgid "  Recognized listener spam block responses are:"
 msgstr "  Ответные действия на распознанные слушателем спам-блоки:"
 
-#: fetchmail.c:1725
+#: fetchmail.c:1738
 msgid "  Spam-blocking disabled\n"
 msgstr "  Блокировка спама отключена\n"
 
-#: fetchmail.c:1728
+#: fetchmail.c:1741
 #, c-format
 msgid "  Server connection will be brought up with \"%s\".\n"
 msgstr "  Подключение к серверу будет установлено с \"%s\".\n"
 
-#: fetchmail.c:1731
+#: fetchmail.c:1744
 msgid "  No pre-connection command.\n"
 msgstr "  Нет команды, выполняемой до соединения.\n"
 
-#: fetchmail.c:1733
+#: fetchmail.c:1746
 #, c-format
 msgid "  Server connection will be taken down with \"%s\".\n"
 msgstr "  Подключение к серверу будет разорвано с \"%s\".\n"
 
-#: fetchmail.c:1736
+#: fetchmail.c:1749
 msgid "  No post-connection command.\n"
 msgstr "  Нет команды, выполняемой после соединения.\n"
 
-#: fetchmail.c:1739
+#: fetchmail.c:1752
 msgid "  No localnames declared for this host.\n"
 msgstr "  Нет локальных имен, объявленных для этого хоста.\n"
 
-#: fetchmail.c:1749
+#: fetchmail.c:1762
 msgid "  Multi-drop mode: "
 msgstr "  Многоканальный режим:"
 
-#: fetchmail.c:1751
+#: fetchmail.c:1764
 msgid "  Single-drop mode: "
 msgstr "  Одноканальный режим: "
 
-#: fetchmail.c:1753
+#: fetchmail.c:1766
 #, c-format
 msgid "%d local name recognized.\n"
 msgid_plural "%d local names recognized.\n"
 msgstr[0] "распознано %d локальное имя.\n"
 msgstr[1] "распознано %d локальных имён.\n"
 
-#: fetchmail.c:1768
+#: fetchmail.c:1781
 msgid "  DNS lookup for multidrop addresses is enabled.\n"
 msgstr "  DNS-запрос для многоканальных адресов включен.\n"
 
-#: fetchmail.c:1769
+#: fetchmail.c:1782
 msgid "  DNS lookup for multidrop addresses is disabled.\n"
 msgstr "  DNS-запрос для многоканальных адресов выключен.\n"
 
-#: fetchmail.c:1773
-msgid "  Server aliases will be compared with multidrop addresses by IP address.\n"
-msgstr "  Алисы сервера будут сравнены с многоканальными адресами по IP-адресу.\n"
+#: fetchmail.c:1786
+msgid ""
+"  Server aliases will be compared with multidrop addresses by IP address.\n"
+msgstr ""
+"  Алисы сервера будут сравнены с многоканальными адресами по IP-адресу.\n"
 
-#: fetchmail.c:1775
+#: fetchmail.c:1788
 msgid "  Server aliases will be compared with multidrop addresses by name.\n"
 msgstr "  Алисы сервера будут сравнены с многоканальными адресами по имени.\n"
 
-#: fetchmail.c:1778
+#: fetchmail.c:1791
 msgid "  Envelope-address routing is disabled\n"
 msgstr "  Маршрутизация охватывающего адреса отключена\n"
 
-#: fetchmail.c:1781
+#: fetchmail.c:1794
 #, c-format
 msgid "  Envelope header is assumed to be: %s\n"
 msgstr "  Охватывающий заголовок должен быть: %s\n"
 
-#: fetchmail.c:1784
+#: fetchmail.c:1797
 #, c-format
 msgid "  Number of envelope headers to be skipped over: %d\n"
 msgstr "  Количество пропускаемых охватывающих заголовков: %d\n"
 
-#: fetchmail.c:1787
+#: fetchmail.c:1800
 #, c-format
 msgid "  Prefix %s will be removed from user id\n"
 msgstr "  Префикс %s будет удален из id пользователя\n"
 
-#: fetchmail.c:1790
+#: fetchmail.c:1803
 msgid "  No prefix stripping\n"
 msgstr "  Нет разборки префикса\n"
 
-#: fetchmail.c:1797
+#: fetchmail.c:1810
 msgid "  Predeclared mailserver aliases:"
 msgstr "  Ранее объявленные алиасы почтового сервера:"
 
-#: fetchmail.c:1806
+#: fetchmail.c:1819
 msgid "  Local domains:"
 msgstr "  Локальные домены:"
 
-#: fetchmail.c:1816
+#: fetchmail.c:1829
 #, c-format
 msgid "  Connection must be through interface %s.\n"
 msgstr "  Подключение должно быть через интерфейс %s.\n"
 
-#: fetchmail.c:1818
+#: fetchmail.c:1831
 msgid "  No interface requirement specified.\n"
 msgstr "  Не указаны требования интерфейса.\n"
 
-#: fetchmail.c:1820
+#: fetchmail.c:1833
 #, c-format
 msgid "  Polling loop will monitor %s.\n"
 msgstr "  Цикл опроса будет наблюдать за %s.\n"
 
-#: fetchmail.c:1822
+#: fetchmail.c:1835
 msgid "  No monitor interface specified.\n"
 msgstr "  Не указан интерфейс монитора.\n"
 
-#: fetchmail.c:1826
+#: fetchmail.c:1839
 #, c-format
 msgid "  Server connections will be made via plugin %s (--plugin %s).\n"
-msgstr "  Подключения к серверу будут выполняться посредством плагина %s (--plugin %s).\n"
+msgstr ""
+"  Подключения к серверу будут выполняться посредством плагина %s (--plugin %"
+"s).\n"
 
-#: fetchmail.c:1828
+#: fetchmail.c:1841
 msgid "  No plugin command specified.\n"
 msgstr "  Не указана команда плагина.\n"
 
-#: fetchmail.c:1830
+#: fetchmail.c:1843
 #, c-format
 msgid "  Listener connections will be made via plugout %s (--plugout %s).\n"
-msgstr "  Подключения слушателя будут выполняться через plugout %s (--plugout %s).\n"
+msgstr ""
+"  Подключения слушателя будут выполняться через plugout %s (--plugout %s).\n"
 
-#: fetchmail.c:1832
+#: fetchmail.c:1845
 msgid "  No plugout command specified.\n"
 msgstr "  Не указана команда plugout'а.\n"
 
-#: fetchmail.c:1837
+#: fetchmail.c:1850
 msgid "  No UIDs saved from this host.\n"
 msgstr "  С этого хоста нет сохраненных UID'ов.\n"
 
-#: fetchmail.c:1846
+#: fetchmail.c:1859
 #, c-format
 msgid "  %d UIDs saved.\n"
 msgstr "  Сохранено %d UID'ов.\n"
 
-#: fetchmail.c:1854
+#: fetchmail.c:1867
 msgid "  Poll trace information will be added to the Received header.\n"
-msgstr "  Информация с трассировкой опроса будет добавлена в заголовок Received.\n"
+msgstr ""
+"  Информация с трассировкой опроса будет добавлена в заголовок Received.\n"
 
-#: fetchmail.c:1856
+#: fetchmail.c:1869
 msgid ""
 "  No poll trace information will be added to the Received header.\n"
 ".\n"
@@ -1472,7 +1572,7 @@ msgstr ""
 "  Информация с трассировкой опроса не будет добавлена в заголовок Received.\n"
 ".\n"
 
-#: fetchmail.c:1859
+#: fetchmail.c:1872
 #, c-format
 msgid "  Pass-through properties \"%s\".\n"
 msgstr "  Свойства ретрансляции \"%s\".\n"
@@ -1622,12 +1722,17 @@ msgid "%u is first unseen\n"
 msgstr "%u первое не просмотренное\n"
 
 #: imap.c:892
-msgid "Warning: ignoring bogus data for message sizes returned by the server.\n"
-msgstr "Предупреждение: игнорируются некорректные данные о размерах сообщений, возвращённые сервером.\n"
+msgid ""
+"Warning: ignoring bogus data for message sizes returned by the server.\n"
+msgstr ""
+"Предупреждение: игнорируются некорректные данные о размерах сообщений, "
+"возвращённые сервером.\n"
 
 #: interface.c:256
 msgid "Unable to open kvm interface. Make sure fetchmail is SGID kmem."
-msgstr "Невозможно открыть интерфейс kvm. Убедитесь, что fetchmail является SGID kmem."
+msgstr ""
+"Невозможно открыть интерфейс kvm. Убедитесь, что fetchmail является SGID "
+"kmem."
 
 #: interface.c:396
 #, c-format
@@ -1873,7 +1978,8 @@ msgstr "  -s, --silent      работа без лишней информации\n"
 
 #: options.c:580
 msgid "  -v, --verbose     work noisily (diagnostic output)\n"
-msgstr "  -v, --verbose     работа с подробным выводом диагностических данных\n"
+msgstr ""
+"  -v, --verbose     работа с подробным выводом диагностических данных\n"
 
 #: options.c:581
 msgid "  -d, --daemon      run as a daemon once per n seconds\n"
@@ -1892,8 +1998,12 @@ msgid "  -L, --logfile     specify logfile name\n"
 msgstr "  -L, --logfile     указание имени log-файла\n"
 
 #: options.c:585
-msgid "      --syslog      use syslog(3) for most messages when running as a daemon\n"
-msgstr "      --syslog      использование syslog(3) для большинства сообщений, когда запущен как демон\n"
+msgid ""
+"      --syslog      use syslog(3) for most messages when running as a "
+"daemon\n"
+msgstr ""
+"      --syslog      использование syslog(3) для большинства сообщений, когда "
+"запущен как демон\n"
 
 #: options.c:586
 msgid "      --invisible   don't write Received & enable host spoofing\n"
@@ -1913,7 +2023,8 @@ msgstr "      --postmaster  указание получателя на крайний случай\n"
 
 #: options.c:590
 msgid "      --nobounce    redirect bounces from user to postmaster.\n"
-msgstr "      --nobounce    перенаправление рикошетов пользователей к постмастеру.\n"
+msgstr ""
+"      --nobounce    перенаправление рикошетов пользователей к постмастеру.\n"
 
 #: options.c:592
 msgid "  -I, --interface   interface required specification\n"
@@ -1936,164 +2047,200 @@ msgid "      --sslcert     ssl client certificate\n"
 msgstr "      --sslcert     сертификат клиента ssl\n"
 
 #: options.c:599
+#, fuzzy
+msgid "      --sslcertck   do strict server certificate check (recommended)\n"
+msgstr "      --sslcert     сертификат клиента ssl\n"
+
+#: options.c:600
 msgid "      --sslcertpath path to ssl certificates\n"
 msgstr "      --sslcertpath путь к сертификатам ssl\n"
 
-#: options.c:600
-msgid "      --sslfingerprint fingerprint that must match that of the server's cert.\n"
-msgstr "      --sslfingerprint отпечаток, который должен соответствовать сертификату сервера.\n"
-
 #: options.c:601
-msgid "      --sslproto    force ssl protocol (ssl2/ssl3/tls1)\n"
-msgstr "      --sslproto    принудительное использование протокола ssl (ssl2/ssl3/tls1)\n"
+msgid ""
+"      --sslfingerprint fingerprint that must match that of the server's "
+"cert.\n"
+msgstr ""
+"      --sslfingerprint отпечаток, который должен соответствовать сертификату "
+"сервера.\n"
 
-#: options.c:603
-msgid "      --plugin      specify external command to open connection\n"
-msgstr "      --plugin      указание внешней команды для установки соединения\n"
+#: options.c:602
+msgid "      --sslproto    force ssl protocol (ssl2/ssl3/tls1)\n"
+msgstr ""
+"      --sslproto    принудительное использование протокола ssl (ssl2/ssl3/"
+"tls1)\n"
 
 #: options.c:604
-msgid "      --plugout     specify external command to open smtp connection\n"
-msgstr "      --plugout     указание внешней команды для установки соединения smtp\n"
+msgid "      --plugin      specify external command to open connection\n"
+msgstr ""
+"      --plugin      указание внешней команды для установки соединения\n"
 
-#: options.c:606
+#: options.c:605
+msgid "      --plugout     specify external command to open smtp connection\n"
+msgstr ""
+"      --plugout     указание внешней команды для установки соединения smtp\n"
+
+#: options.c:607
 msgid "  -p, --protocol    specify retrieval protocol (see man page)\n"
 msgstr "  -p, --protocol    указание протокола поиска (см. man page)\n"
 
-#: options.c:607
-msgid "  -U, --uidl        force the use of UIDLs (pop3 only)\n"
-msgstr "  -U, --uidl        принудительное использование UIDL'ов (только pop3)\n"
-
 #: options.c:608
-msgid "      --port        TCP port to connect to (obsolete, use --service)\n"
-msgstr "      --port        TCP-порт для подключения (устарел, используйте --service)\n"
+msgid "  -U, --uidl        force the use of UIDLs (pop3 only)\n"
+msgstr ""
+"  -U, --uidl        принудительное использование UIDL'ов (только pop3)\n"
 
 #: options.c:609
-msgid "  -P, --service     TCP service to connect to (can be numeric TCP port)\n"
-msgstr "  -P, --service     служба TCP для подключения (может быть числовым TCP-портом)\n"
+msgid "      --port        TCP port to connect to (obsolete, use --service)\n"
+msgstr ""
+"      --port        TCP-порт для подключения (устарел, используйте --"
+"service)\n"
 
 #: options.c:610
+msgid ""
+"  -P, --service     TCP service to connect to (can be numeric TCP port)\n"
+msgstr ""
+"  -P, --service     служба TCP для подключения (может быть числовым TCP-"
+"портом)\n"
+
+#: options.c:611
 msgid "      --auth        authentication type (password/kerberos/ssh/otp)\n"
 msgstr "      --auth        тип аутентификации (password/kerberos/ssh/otp)\n"
 
-#: options.c:611
+#: options.c:612
 msgid "  -t, --timeout     server nonresponse timeout\n"
 msgstr "  -t, --timeout     таймаут молчания сервера\n"
 
-#: options.c:612
+#: options.c:613
 msgid "  -E, --envelope    envelope address header\n"
 msgstr "  -E, --envelope    заголовок охватывающего адреса\n"
 
-#: options.c:613
+#: options.c:614
 msgid "  -Q, --qvirtual    prefix to remove from local user id\n"
 msgstr "  -Q, --qvirtual    префикс, удаляемый из id локального пользователя\n"
 
-#: options.c:614
+#: options.c:615
 msgid "      --principal   mail service principal\n"
 msgstr "      --principal   принципал почтовой службы\n"
 
-#: options.c:615
+#: options.c:616
 msgid "      --tracepolls  add poll-tracing information to Received header\n"
-msgstr "      --tracepolls  добавление информации трассировки опроса в заголовок Received\n"
+msgstr ""
+"      --tracepolls  добавление информации трассировки опроса в заголовок "
+"Received\n"
 
-#: options.c:617
+#: options.c:618
 msgid "  -u, --username    specify users's login on server\n"
 msgstr "  -u, --username    указание логина пользователя на сервере\n"
 
-#: options.c:618
+#: options.c:619
 msgid "  -a, --all         retrieve old and new messages\n"
 msgstr "  -a, --all         получение старых и новых сообщений\n"
 
-#: options.c:619
+#: options.c:620
 msgid "  -K, --nokeep      delete new messages after retrieval\n"
 msgstr "  -K, --nokeep      удаление новых сообщений после получения\n"
 
-#: options.c:620
+#: options.c:621
 msgid "  -k, --keep        save new messages after retrieval\n"
 msgstr "  -k, --keep        сохранение новых сообщений после получения\n"
 
-#: options.c:621
+#: options.c:622
 msgid "  -F, --flush       delete old messages from server\n"
 msgstr "  -F, --flush       удаление старых сообщений с сервера\n"
 
-#: options.c:622
+#: options.c:623
 msgid "      --limitflush  delete oversized messages\n"
 msgstr "      --limitflush  удаление сообщений завышенного размера\n"
 
-#: options.c:623
+#: options.c:624
 msgid "  -n, --norewrite   don't rewrite header addresses\n"
 msgstr "  -n, --norewrite   не перезаписывать адреса заголовка\n"
 
-#: options.c:624
-msgid "  -l, --limit       don't fetch messages over given size\n"
-msgstr "  -l, --limit       не делать выборку сообщений больше заданного размера\n"
-
 #: options.c:625
-msgid "  -w, --warnings    interval between warning mail notification\n"
-msgstr "  -w, --warnings    промежутки между предупреждающими почтовыми уведомлениями\n"
+msgid "  -l, --limit       don't fetch messages over given size\n"
+msgstr ""
+"  -l, --limit       не делать выборку сообщений больше заданного размера\n"
 
-#: options.c:627
+#: options.c:626
+msgid "  -w, --warnings    interval between warning mail notification\n"
+msgstr ""
+"  -w, --warnings    промежутки между предупреждающими почтовыми "
+"уведомлениями\n"
+
+#: options.c:628
 msgid "  -S, --smtphost    set SMTP forwarding host\n"
 msgstr "  -S, --smtphost    установка хоста переадресации SMTP\n"
 
-#: options.c:628
+#: options.c:629
 msgid "      --fetchdomains fetch mail for specified domains\n"
 msgstr "      --fetchdomains выборка почты для указанных доменов\n"
 
-#: options.c:629
-msgid "  -D, --smtpaddress set SMTP delivery domain to use\n"
-msgstr "  -D, --smtpaddress установка домена, используемого для доставки SMTP\n"
-
 #: options.c:630
-msgid "      --smtpname    set SMTP full name username@domain\n"
-msgstr "      --smtpname    установка полного (пользователь@домен) имени SMTP\n"
+msgid "  -D, --smtpaddress set SMTP delivery domain to use\n"
+msgstr ""
+"  -D, --smtpaddress установка домена, используемого для доставки SMTP\n"
 
 #: options.c:631
-msgid "  -Z, --antispam,   set antispam response values\n"
-msgstr "  -Z, --antispam,   установка значений антиспамерских ответных действий\n"
+msgid "      --smtpname    set SMTP full name username@domain\n"
+msgstr ""
+"      --smtpname    установка полного (пользователь@домен) имени SMTP\n"
 
 #: options.c:632
-msgid "  -b, --batchlimit  set batch limit for SMTP connections\n"
-msgstr "  -b, --batchlimit  установка ограничения на пакет для SMTP-соединений\n"
+msgid "  -Z, --antispam,   set antispam response values\n"
+msgstr ""
+"  -Z, --antispam,   установка значений антиспамерских ответных действий\n"
 
 #: options.c:633
-msgid "  -B, --fetchlimit  set fetch limit for server connections\n"
-msgstr "  -B, --fetchlimit  установка ограничения на выборку для соединений сервера\n"
+msgid "  -b, --batchlimit  set batch limit for SMTP connections\n"
+msgstr ""
+"  -b, --batchlimit  установка ограничения на пакет для SMTP-соединений\n"
 
 #: options.c:634
-msgid "      --fetchsizelimit set fetch message size limit\n"
-msgstr "      --fetchsizelimit установка ограничения на размер выборки сообщений\n"
+msgid "  -B, --fetchlimit  set fetch limit for server connections\n"
+msgstr ""
+"  -B, --fetchlimit  установка ограничения на выборку для соединений сервера\n"
 
 #: options.c:635
+msgid "      --fetchsizelimit set fetch message size limit\n"
+msgstr ""
+"      --fetchsizelimit установка ограничения на размер выборки сообщений\n"
+
+#: options.c:636
 msgid "      --fastuidl    do a binary search for UIDLs\n"
 msgstr "      --fastuidl    выполнить двоичный поиск UIDL'ов\n"
 
-#: options.c:636
+#: options.c:637
 msgid "  -e, --expunge     set max deletions between expunges\n"
 msgstr "  -e, --expunge     установка максимального количества удалений\n"
 
-#: options.c:637
+#: options.c:638
 msgid "  -m, --mda         set MDA to use for forwarding\n"
 msgstr "  -m, --mda         установка MDA, используемого для переадресации\n"
 
-#: options.c:638
+#: options.c:639
 msgid "      --bsmtp       set output BSMTP file\n"
 msgstr "      --bsmtp       установка файла вывода BSMTP\n"
 
-#: options.c:639
+#: options.c:640
 msgid "      --lmtp        use LMTP (RFC2033) for delivery\n"
 msgstr "      --lmtp        использование для доставки LMTP (RFC2033)\n"
 
-#: options.c:640
+#: options.c:641
 msgid "  -r, --folder      specify remote folder name\n"
 msgstr "  -r, --folder      указание имени удаленного каталога\n"
 
-#: options.c:641
+#: options.c:642
 msgid "      --showdots    show progress dots even in logfiles\n"
-msgstr "      --showdots    отображение точечной строки прогресса даже в log-файлах\n"
+msgstr ""
+"      --showdots    отображение точечной строки прогресса даже в log-файлах\n"
 
 #: pop3.c:336
-msgid "Warning: Maillennium POP3/PROXY server found, using RETR command.\n"
-msgstr "Предупреждение: найден POP3/PROXY-сервер Maillennium, используется команда RETR.\n"
+#, fuzzy
+msgid ""
+"Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
+"of TOP.\n"
+msgstr ""
+"Предупреждение: найден POP3/PROXY-сервер Maillennium, используется команда "
+"RETR.\n"
 
 #: pop3.c:578
 msgid "Required APOP timestamp not found in greeting\n"
@@ -2149,12 +2296,19 @@ msgid "SDPS not enabled."
 msgstr "SDPS не включен."
 
 #: rcfile_y.y:212
-msgid "fetchmail: interface option is only supported under Linux (without IPv6) and FreeBSD\n"
-msgstr "fetchmail: опция interface поддерживается только в Linux (без IPv6) и FreeBSD\n"
+msgid ""
+"fetchmail: interface option is only supported under Linux (without IPv6) and "
+"FreeBSD\n"
+msgstr ""
+"fetchmail: опция interface поддерживается только в Linux (без IPv6) и "
+"FreeBSD\n"
 
 #: rcfile_y.y:219
-msgid "fetchmail: monitor option is only supported under Linux (without IPv6) and FreeBSD\n"
-msgstr "fetchmail: опция monitor поддерживается только в Linux (без IPv6) и FreeBSD\n"
+msgid ""
+"fetchmail: monitor option is only supported under Linux (without IPv6) and "
+"FreeBSD\n"
+msgstr ""
+"fetchmail: опция monitor поддерживается только в Linux (без IPv6) и FreeBSD\n"
 
 #: rcfile_y.y:332
 msgid "SSL is not enabled"
@@ -2570,7 +2724,9 @@ msgstr "Запрашивающая организация: %s\n"
 
 #: socket.c:628
 msgid "Warning: Issuer Organization Name too long (possibly truncated).\n"
-msgstr "Предупреждение: имя запрашивающей организации слишком длинное (возможно укорочено).\n"
+msgstr ""
+"Предупреждение: имя запрашивающей организации слишком длинное (возможно "
+"укорочено).\n"
 
 #: socket.c:630
 msgid "Unknown Organization\n"
@@ -2583,7 +2739,8 @@ msgstr "Общепринятое имя: %s\n"
 
 #: socket.c:634
 msgid "Warning: Issuer CommonName too long (possibly truncated).\n"
-msgstr "Предупреждение: общепринятое имя слишком длинное (возможно укорочено).\n"
+msgstr ""
+"Предупреждение: общепринятое имя слишком длинное (возможно укорочено).\n"
 
 #: socket.c:636
 msgid "Unknown Issuer CommonName\n"
@@ -2659,7 +2816,9 @@ msgstr "Дескриптор файла вне диапазона SSL"
 #: socket.c:826
 #, c-format
 msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
-msgstr "Указан неверный протокол SSL '%s', используется протокол по умолчанию (SSLv23).\n"
+msgstr ""
+"Указан неверный протокол SSL '%s', используется протокол по умолчанию "
+"(SSLv23).\n"
 
 #: socket.c:889
 msgid "Certificate/fingerprint verification was somehow skipped!\n"
