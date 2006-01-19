@@ -310,6 +310,18 @@ search_netrc (list, host, login)
     return list;
 }
 
+void
+free_netrc(netrc_entry *a) {
+    while(a) {
+	netrc_entry *n = a->next;
+	memset(a->password, 0x55, strlen(a->password));
+	xfree(a->password);
+	xfree(a->login);
+	xfree(a->host);
+	xfree(a);
+	a = n;
+    }
+}
 
 #ifdef STANDALONE
 #include <sys/types.h>
@@ -398,6 +410,8 @@ int main (int argc, char **argv)
 	fputc ('\n', stdout);
 	a = a->next;
     }
+
+    free_netrc(head);
 
     exit (0);
 }
