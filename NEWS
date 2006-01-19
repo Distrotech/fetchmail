@@ -60,6 +60,9 @@ fetchmail 6.3.2 (to be released):
 * Add missing --help text for "--sslcertck" option. Matthias Andree.
 * fetchmailconf.py: Accept --help and --version. Matthias Andree.
 * fetchmail --version  now prints the copyright notice. Matthias Andree.
+* Fix segfault or bus error after bouncing a message.  This bug was introduced
+  into 6.3.0 when removing alloca(); it caused fetchmail to free random memory.
+  Reported by Nathaniel W. Turner, Debian Bug#348747. Fix: Matthias Andree.
 
 fetchmail 6.3.1 (released 2005-12-19):
 

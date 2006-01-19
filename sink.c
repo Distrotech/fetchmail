@@ -984,14 +984,19 @@ transient:
 #ifdef EXPLICIT_BOUNCE_ON_BAD_ADDRESS
     /*
      * This should not be necessary, because the SMTP listener itself
-     * should genrate a bounce for the bad address.
+     * should generate a bounce for the bad address.
+     *
+     * XXX FIXME 2006-01-19: is this comment true? I don't think
+     * it is, because the SMTP listener isn't required to accept bogus
+     * messages. There appears to be general SMTP<->MDA and
+     * responsibility confusion.
      */
     if (*bad_addresses)
 	send_bouncemail(ctl, msg, XMIT_RCPTBAD,
 			"Some addresses were rejected by the MDA fetchmail forwards to.\r\n",
 			*bad_addresses, from_responses);
     while (*bad_addresses)
-	free(from_responses[*--bad_addresses]);
+	free(from_responses[--*bad_addresses]);
     free(from_responses);
 #endif /* EXPLICIT_BOUNCE_ON_BAD_ADDRESS */
 
