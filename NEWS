@@ -27,7 +27,7 @@ fetchmail 6.3.2 (to be released):
 Unless otherwise noted, changes to this release were made by Matthias Andree.
 
 # SECURITY FIX IN THIS RELEASE
-* CVE-2006-XXXX: Fix segfault or bus error after bouncing a message.  This bug
+* CVE-2006-0321: Fix segfault or bus error after bouncing a message.  This bug
   was introduced into 6.3.0 when removing alloca(); it caused fetchmail to free
   random memory.  Reported by Nathaniel W. Turner, Debian Bug#348747.
   See fetchmail-SA-2006-01.txt

@@ -10,7 +10,7 @@ Type:		free() with bogus pointer
 Impact:		fetchmail crashes
 Danger:		low
 Credits:	Nathaniel W. Turner (bug report)
-CVE Name:	XXX
+CVE Name:	CVE-2006-0321
 URL:		http://fetchmail.berlios.de/fetchmail-SA-2006-01.txt
 		http://bugs.debian.org/348747
 Project URL:	http://fetchmail.berlios.de/
@@ -23,13 +23,14 @@ Not affected:	fetchmail 6.3.2
 		other versions not mentioned here or in the previous
 		sections have not been checked
 
-Corrected:	XXX
+Corrected:	2006-01-19 fetchmail 6.3.2-rc4
 
 
 0. Release history
 ==================
 
 2006-01-19	internal review draft
+2006-01-20	add CVE ID
 
 
 1. Background
