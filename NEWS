@@ -24,6 +24,14 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 
 fetchmail 6.3.2 (to be released):
 
+Unless otherwise noted, changes to this release were made by Matthias Andree.
+
+# SECURITY FIX IN THIS RELEASE
+* CVE-2006-XXXX: Fix segfault or bus error after bouncing a message.  This bug
+  was introduced into 6.3.0 when removing alloca(); it caused fetchmail to free
+  random memory.  Reported by Nathaniel W. Turner, Debian Bug#348747.
+  See fetchmail-SA-2006-01.txt
+
 # INCOMPATIBLE CHANGE:
 * Automatically disable the POP3 TOP command if the greeting string contains
   "Maillennium POP3/PROXY server", which is used by comcast and known to
@@ -33,13 +41,14 @@ fetchmail 6.3.2 (to be released):
   *Note* that this means messages are marked read on these servers, which is a
   deviation from how 6.3.1 behaved, but we have no alternative, comcast haven't
   fixed this bug in years.  Preventing the loss of the remainder of the message
-  justifies this incompatible fix.  Matthias Andree
+  justifies this incompatible fix.
 * fetchmail, since 6.3.0, requires write permission to the directory holding the
   idfile. See the amendment in the 6.3.0 MAJOR INCOMPATIBLE CHANGES section
-  below for details. The manual page was updated.  Matthias Andree
+  below for details. The manual page was updated.
 
 # CHANGES RELEVANT TO PACKAGERS:
-* The outdated BUGS document was removed from the distribution. Matthias Andree
+* The outdated BUGS document was removed from the distribution.
+* Added fetchmail-SA-2006-01.txt to the distribution.
 
 # BUG FIXES:
 * SMTP/LMTP cleanup to fix these two bugs:
@@ -48,21 +57,18 @@ fetchmail 6.3.2 (to be released):
   The patch removes the global state variable that was the root of this problem.
   Patch by Sunil Shetye. (MA)
 * Don't complain about fetchall keep in --configdump mode. Bug introduced in
-  6.3.0.  Matthias Andree.
+  6.3.0.
 * fetchmailconf.py: Fix novice help for Poll interval and fetchall.
-  Reported by Justin Pryzby, Debian Bug #344978.  Matthias Andree
+  Reported by Justin Pryzby, Debian Bug #344978.
 * Some verbose output disappeared in debug mode. Adding further -v options would
   alternate between verbose and debug mode. debug mode now comprises all verbose
   output, and adding more -v options does not switch back from debug to verbose
-  mode.  Matthias Andree
+  mode.
 * fetchmail.man: Fix accented characters in Héctor García's name. Merged from
-  downstream debian/patches/01_man_page.dpatch. Matthias Andree.
-* Add missing --help text for "--sslcertck" option. Matthias Andree.
-* fetchmailconf.py: Accept --help and --version. Matthias Andree.
-* fetchmail --version  now prints the copyright notice. Matthias Andree.
-* Fix segfault or bus error after bouncing a message.  This bug was introduced
-  into 6.3.0 when removing alloca(); it caused fetchmail to free random memory.
-  Reported by Nathaniel W. Turner, Debian Bug#348747. Fix: Matthias Andree.
+  downstream debian/patches/01_man_page.dpatch.
+* Add missing --help text for "--sslcertck" option.
+* fetchmailconf.py: Accept --help and --version.
+* fetchmail --version  now prints the copyright notice.
 
 fetchmail 6.3.1 (released 2005-12-19):
 
