@@ -934,7 +934,7 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
 transient:
 #ifdef EXPLICIT_BOUNCE_ON_BAD_ADDRESS
 		while (*bad_addresses)
-		    free(from_responses[*--bad_addresses]);
+		    free(from_responses[--*bad_addresses]);
 		free(from_responses);
 #endif /* EXPLICIT_BOUNCE_ON_BAD_ADDRESS */
 		return(PS_TRANSIENT);
