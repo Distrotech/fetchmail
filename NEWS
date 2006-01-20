@@ -69,6 +69,8 @@ Unless otherwise noted, changes to this release were made by Matthias Andree.
 * Add missing --help text for "--sslcertck" option.
 * fetchmailconf.py: Accept --help and --version.
 * fetchmail --version  now prints the copyright notice.
+* don't complain about READ-ONLY IMAP folders in --fetchall --keep mode.
+  Reported Alexander Zangerl, Debian Bug#348964.
 
 fetchmail 6.3.1 (released 2005-12-19):
 

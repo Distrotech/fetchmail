@@ -697,6 +697,11 @@ static int imap_getrange(int sock,
 	ok = gen_transact(sock, 
 			  check_only ? "EXAMINE \"%s\"" : "SELECT \"%s\"",
 			  folder ? folder : "INBOX");
+	/* imap_ok returns PS_LOCKBUSY for READ-ONLY folders,
+	 * which we can safely use in fetchall keep only */
+	if (ok == PS_LOCKBUSY && ctl->fetchall && ctl-> keep)
+	    ok = 0;
+
 	if (ok != 0)
 	{
 	    report(stderr, GT_("mailbox selection failed\n"));
