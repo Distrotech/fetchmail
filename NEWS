@@ -10,19 +10,21 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 # DEPRECATED FEATURES AND MAJOR INCOMPATIBLE CHANGE ADVANCE WARNINGS
 * The MX and host alias DNS lookups that fetchmail performs in multidrop mode
   are obsolete, deprecated and may be removed from a future fetchmail version.
-  They have never supported IPv6 (including IPv6-mapped IPv4) anyhow. (MA)
+  They have never supported IPv6 (including IPv6-mapped IPv4) anyhow.
 * The monitor and interface options may be removed from a future fetchmail
-  version as they are not sufficiently portable. (MA)
+  version as they are not sufficiently portable.
 * POP2 is obsolete.
-  Support for POP2 may be removed from a future fetchmail version. (MA)
-* RPOP is obsolete, support may be removed from a future fetchmail release. (MA)
-* --sslcertck may become a default setting in a future fetchmail version. (MA)
+  Support for POP2 may be removed from a future fetchmail version.
+* RPOP is obsolete, support may be removed from a future fetchmail release.
+* --sslcertck may become a default setting in a future fetchmail version.
 * The multidrop To/Cc guessing code along with the fragile duplicate suppressor
-  is deprecated and may be removed from a future release. (MA)
+  is deprecated and may be removed from a future release.
+* The --enable-fallback (fall back to MDA if MTA unavailable) may be removed
+  from a future fetchmail release.
 
 --------------------------------------------------------------------------------
 
-fetchmail 6.3.2 (to be released):
+fetchmail 6.3.2 (released 2006-01-22):
 
 Unless otherwise noted, changes to this release were made by Matthias Andree.
 
