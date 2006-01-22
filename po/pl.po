@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.2-rc3\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-01-19 04:30+0100\n"
+"POT-Creation-Date: 2006-01-22 12:50+0100\n"
 "PO-Revision-Date: 2006-01-18 18:53+0100\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -1689,7 +1689,7 @@ msgstr "Wymagana metoda uwierzytelnienia NTLM nie wkompilowana w fetchmaila\n"
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "Serwer nie obs³uguje wymaganej metody uwierzytelnienia LOGIN\n"
 
-#: imap.c:682 imap.c:715
+#: imap.c:682 imap.c:720
 msgid "re-poll failed\n"
 msgstr "ponowne po³±czenie nie powiod³o siê\n"
 
@@ -1701,11 +1701,11 @@ msgstr[0] "%d list oczekuj±cy po ponownym pobraniu\n"
 msgstr[1] "%d listy oczekuj±ce po ponownym pobraniu\n"
 msgstr[2] "%d listów oczekuj±cych po ponownym pobraniu\n"
 
-#: imap.c:702
+#: imap.c:707
 msgid "mailbox selection failed\n"
 msgstr "wybór skrzynki zakoñczy³ siê niepowodzeniem\n"
 
-#: imap.c:706
+#: imap.c:711
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
@@ -1713,11 +1713,11 @@ msgstr[0] "%d list oczekuj±cy po pierwszym pobraniu\n"
 msgstr[1] "%d listy oczekuj±ce po pierwszym pobraniu\n"
 msgstr[2] "%d listów oczekuj±cych po pierwszym pobraniu\n"
 
-#: imap.c:730
+#: imap.c:735
 msgid "expunge failed\n"
 msgstr "usuwanie nie powiod³o siê\n"
 
-#: imap.c:734
+#: imap.c:739
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
@@ -1725,21 +1725,21 @@ msgstr[0] "%d list oczekuj±cy po usuwaniu\n"
 msgstr[1] "%d listy oczekuj±ce po usuwaniu\n"
 msgstr[2] "%d listów oczekuj±cych po usuwaniu\n"
 
-#: imap.c:759
+#: imap.c:764
 msgid "search for unseen messages failed\n"
 msgstr "poszukiwanie nie przeczytanych listów nie powiod³o siê\n"
 
-#: imap.c:789 pop3.c:746 pop3.c:758 pop3.c:980 pop3.c:987
+#: imap.c:794 pop3.c:746 pop3.c:758 pop3.c:980 pop3.c:987
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u jest nie przeczytany\n"
 
-#: imap.c:801 pop3.c:767
+#: imap.c:806 pop3.c:767
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u jest pierwszym nie przeczytanym\n"
 
-#: imap.c:892
+#: imap.c:897
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.0\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-01-19 04:30+0100\n"
+"POT-Creation-Date: 2006-01-22 12:50+0100\n"
 "PO-Revision-Date: 2005-12-06 17:53+0100\n"
 "Last-Translator: Ernest Adrogué Calveras <eadrogue@gmx.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
@@ -1677,7 +1677,7 @@ msgstr "Es requereix capacitat per NTLM no compilada en el fetchmail\n"
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "El servidor no suporta la capacitat per LOGIN requerida\n"
 
-#: imap.c:682 imap.c:715
+#: imap.c:682 imap.c:720
 msgid "re-poll failed\n"
 msgstr "la re-obtenció ha fallat\n"
 
@@ -1688,43 +1688,43 @@ msgid_plural "%d messages waiting after re-poll\n"
 msgstr[0] "hi ha %d missatge esperant després de la re-obtenció\n"
 msgstr[1] "hi ha %d missatges esperant després de la re-obtenció\n"
 
-#: imap.c:702
+#: imap.c:707
 msgid "mailbox selection failed\n"
 msgstr "ha fallat la selecció de bústia\n"
 
-#: imap.c:706
+#: imap.c:711
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
 msgstr[0] "hi ha %d missatge esperant després de la primera obtenció\n"
 msgstr[1] "hi ha %d missatges esperant després de la primera obtenció\n"
 
-#: imap.c:730
+#: imap.c:735
 msgid "expunge failed\n"
 msgstr "la supressió de missatges ha fallat\n"
 
-#: imap.c:734
+#: imap.c:739
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
 msgstr[0] "hi ha %d missatge esperant després de la supressió\n"
 msgstr[1] "hi ha %d missatges esperant després de la supressió\n"
 
-#: imap.c:759
+#: imap.c:764
 msgid "search for unseen messages failed\n"
 msgstr "la recerca de missatges no llegits ha fallat\n"
 
-#: imap.c:789 pop3.c:746 pop3.c:758 pop3.c:980 pop3.c:987
+#: imap.c:794 pop3.c:746 pop3.c:758 pop3.c:980 pop3.c:987
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u és no llegit\n"
 
-#: imap.c:801 pop3.c:767
+#: imap.c:806 pop3.c:767
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u és el primer missatge no llegit\n"
 
-#: imap.c:892
+#: imap.c:897
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""

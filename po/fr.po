@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.9-rc9\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-01-19 04:30+0100\n"
+"POT-Creation-Date: 2006-01-22 12:50+0100\n"
 "PO-Revision-Date: 2005-12-18 11:50+0100\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -1700,7 +1700,7 @@ msgstr "La fonctionnalité NTLM requise n'est pas supportée par fetchmail.\n"
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "La fonction LOGIN requise n'est pas supportée par le serveur\n"
 
-#: imap.c:682 imap.c:715
+#: imap.c:682 imap.c:720
 msgid "re-poll failed\n"
 msgstr "échec durant la re-réception\n"
 
@@ -1711,43 +1711,43 @@ msgid_plural "%d messages waiting after re-poll\n"
 msgstr[0] "%d message en attente après le nouveau poll\n"
 msgstr[1] "%d messages en attente après le nouveau poll\n"
 
-#: imap.c:702
+#: imap.c:707
 msgid "mailbox selection failed\n"
 msgstr "échec de la sélection de boîte aux lettres\n"
 
-#: imap.c:706
+#: imap.c:711
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
 msgstr[0] "%d message en attente après le premier poll\n"
 msgstr[1] "%d messages en attente après le premier poll\n"
 
-#: imap.c:730
+#: imap.c:735
 msgid "expunge failed\n"
 msgstr "échec de la purge\n"
 
-#: imap.c:734
+#: imap.c:739
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
 msgstr[0] "%d message en attente après la purge\n"
 msgstr[1] "%d messages en attente après la purge\n"
 
-#: imap.c:759
+#: imap.c:764
 msgid "search for unseen messages failed\n"
 msgstr "échec de la recherche des messages non-vus\n"
 
-#: imap.c:789 pop3.c:746 pop3.c:758 pop3.c:980 pop3.c:987
+#: imap.c:794 pop3.c:746 pop3.c:758 pop3.c:980 pop3.c:987
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u n'est pas vu\n"
 
-#: imap.c:801 pop3.c:767
+#: imap.c:806 pop3.c:767
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u est le premier a n'avoir pas été vu\n"
 
-#: imap.c:892
+#: imap.c:897
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""
