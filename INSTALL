@@ -61,6 +61,11 @@ configure option '--with-included-gettext'.
 
 Installing fetchmail is easy.  From within this directory, type:
 
+	./configure --with-ssl
+
+if you have OpenSSL (and its developer packages, if separate) installed
+on your system, or if you don't or do not need SSL/TLS support:
+
 	./configure
 
 The autoconfiguration script will spend a bit of time figuring out the
@@ -82,7 +87,7 @@ APOP) is available but also not included in the standard build.  You
 can compile it in with 'configure --enable-RPA'.
 
 Support for Microsoft's NTLM authentication method is also available
-but also not included in the standard build.  You can compile it in
+but not included in the standard build either.  You can compile it in
 with 'configure --enable-NTLM'.
 
 Support for authentication using RFC1731 GSSAPI is available
@@ -101,16 +106,6 @@ give the explicit prefix of your OpenSSL installation (specify the
 directory that contains OpenSSL's "include" subdirectory), for instance:
 "--with-ssl=/example/path" would assume that you have an
 /example/path/include/openssl/ssl.h header file.
-
-To specify a fallback MUA in case local port 25 doesn't respond, this is
-not recommended, because you'll usually see differences between MTA and
-MDA use. If you wish to proceed nonetheless, do one of:
-
-	configure --enable-fallback=procmail
-	configure --enable-fallback=sendmail
-
-A disadvantage of using procmail is that local alias expansion
-according to /etc/aliases won't get done if we fall back to it.
 
 2.2 Advanced options
 
