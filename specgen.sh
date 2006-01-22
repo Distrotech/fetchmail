@@ -160,6 +160,8 @@ Ein interaktiver GUI-Konfigurator für fetchmail in python
 GUI konfigurator do fetchmaila napisany w pythonie.
 %endif
 
+%{?debugpackage}
+
 %prep
 %setup -q $setupargs
 
@@ -186,7 +188,7 @@ rm -rf \$RPM_BUILD_ROOT
 %files
 %defattr (644, root, root, 755)
 %doc ABOUT-NLS FAQ COPYING FEATURES NEWS
-%doc NOTES OLDNEWS README README.SSL BUGS
+%doc NOTES OLDNEWS README README.SSL
 %doc contrib
 %doc fetchmail-features.html fetchmail-FAQ.html esrs-design-notes.html
 %doc design-notes.html
