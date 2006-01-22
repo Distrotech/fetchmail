@@ -160,7 +160,7 @@ Ein interaktiver GUI-Konfigurator für fetchmail in python
 GUI konfigurator do fetchmaila napisany w pythonie.
 %endif
 
-%{?debugpackage}
+%{?debug_package}
 
 %prep
 %setup -q $setupargs
@@ -171,7 +171,7 @@ make
 
 %install
 rm -rf \$RPM_BUILD_ROOT
-make install-strip DESTDIR=\$RPM_BUILD_ROOT
+make install DESTDIR=\$RPM_BUILD_ROOT
 
 %if %{have_python}
 mkdir -p \$RPM_BUILD_ROOT/usr/lib/rhs/control-panel
