@@ -183,7 +183,7 @@ cp rh-config/fetchmailconf.wmconfig \$RPM_BUILD_ROOT/etc/X11/wmconfig/fetchmailc
 chmod 644 contrib/*
 
 %clean
-rm -rf \$RPM_BUILD_ROOT
+rm -rf \$RPM_BUILD_ROOT %{_builddir}/%name-%version
 
 %files
 %defattr (644, root, root, 755)
