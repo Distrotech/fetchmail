@@ -73,11 +73,12 @@ suffer. ESR is right in stating that the POP3 UID tracks which messages
 have been read <em>by this client</em> &ndash; and that is exactly what
 we need to do.</p>
 
-<p>If fetchmail is supposed to retrieve all
-mail from a mailbox reliably, without being disturbed by someone
-occasionally using another client on another host, or a webmailer, or
-similar, then <em>client</em>-side tracking of the state is
-indispensable. This is also needed to match behavior to ETRN and ODMR.</p>
+<p>If fetchmail is supposed to retrieve all mail from a mailbox
+reliably, without being disturbed by someone occasionally using another
+client on another host, or a webmailer, or similar, then
+<em>client</em>-side tracking of the state is indispensable. This is
+also needed to match behavior to ETRN and ODMR or to support read-only
+mailboxes in --keep mode.</p>
 
 <h3>Present and future</h3>
 
