@@ -4,7 +4,7 @@ Topics:		#1 crash when bouncing a message
 		#2 fetchmail 6.2.5.X end of life
 
 Author:		Matthias Andree
-Version:	1.0
+Version:	1.1
 Announced:	2006-01-22
 Type:		free() with bogus pointer
 Impact:		fetchmail crashes
@@ -20,6 +20,7 @@ Affects:	fetchmail release >= 6.3.0
 		fetchmail release candidates 6.3.2-rc1, -rc2 and -rc3
 
 Not affected:	fetchmail release candidate 6.3.2-rc4
+		fetchmail release 6.3.2
 		other versions not mentioned here or in the previous
 		sections have not been checked
 
@@ -33,6 +34,7 @@ Corrected:	2006-01-19 fetchmail 6.3.2-rc4
 2006-01-19	internal review draft
 2006-01-20	add CVE ID
 2006-01-22	release 1.0
+2006-01-25	release 1.1, add fetchmail 6.3.2 to "Not affected" above.
 
 
 1. Background
