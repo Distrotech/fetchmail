@@ -28,8 +28,10 @@ fetchmail 6.3.3 (not yet released):
 
 # BUG FIXES:
 * Do not attempt to overwrite the netrc password if none has been specified.
-  This fixes a segmentation fault. BerliOS bug #6234. BerliOS patch #804 by
-  Craig Leres.
+  This fixes a segmentation fault bug introduced into 6.3.2.
+  Fixes BerliOS bug #6234.  BerliOS patch #804 by Craig Leres.
+  The patch, as accepted into fetchmail, was available separately from
+  <http://download.berlios.de/fetchmail/patch-6.3.2.1-fix-netrc-SIGSEGV.diff>
 
 fetchmail 6.3.2 (released 2006-01-22):
 
