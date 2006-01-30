@@ -24,6 +24,13 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 
 --------------------------------------------------------------------------------
 
+fetchmail 6.3.3 (not yet released):
+
+# BUG FIXES:
+* Do not attempt to overwrite the netrc password if none has been specified.
+  This fixes a segmentation fault. BerliOS bug #6234. BerliOS patch #804 by
+  Craig Leres.
+
 fetchmail 6.3.2 (released 2006-01-22):
 
 Unless otherwise noted, changes to this release were made by Matthias Andree.
