@@ -6,9 +6,12 @@ so the end user will not need these packages.
 
 The prerequisite packages are:
 
-- GNU autoconf >= 2.54
-- GNU automake >= 1.7
-- GNU gettext >= 0.13
+- GNU autoconf >= 2.59
+- GNU automake >= 1.8
+  (editing Makefile.am to remove unsupported options may
+   work with automake-1.7, but this is neither tested nor supported)
+- GNU gettext >= 0.14.3
+  (>= 0.13 may also work, but has not been tested in a while)
 - GNU m4
 - bison or yacc
 - flex or lex
@@ -25,9 +28,9 @@ This will take a while and may print a lot of messages containing
 
 After that, build as usual, with
 
-$ ./configure --with-options
+$ ./configure --with-ssl           # pick options as needed
 $ make
 (become root)
 # make install-strip
 
--- Matthias Andree, 2005-09-25
+-- Matthias Andree, 2006-02-17
