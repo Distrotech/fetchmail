@@ -12,9 +12,9 @@ AC_CONFIG_LIBOBJ_DIR([.])
 
 AC_CANONICAL_TARGET
 
-dnl we may need a newer automake version - the oldest tested is 1.7
+dnl automake options are in Makefile.am
 AC_PREREQ(2.59)
-AM_INIT_AUTOMAKE(1.5 foreign no-installinfo)
+AM_INIT_AUTOMAKE
 
 dnl autobuild support, see <http://josefsson.org/autobuild/>
 (
