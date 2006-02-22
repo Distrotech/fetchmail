@@ -1129,8 +1129,9 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
 
 #ifdef SDPS_ENABLE
     /*
-     * See http://www.demon.net/services/mail/sdps-tech.html
+     * See http://www.demon.net/helpdesk/producthelp/mail/sdps-tech.html/
      * for a description of what we're parsing here.
+     * -- updated 2006-02-22
      */
     if (ctl->server.sdps)
     {
@@ -1148,6 +1149,11 @@ static int pop3_fetch(int sock, struct query *ctl, int number, int *lenp)
 	    switch (linecount) {
 	    case 4:
 		/* No need to wrap envelope from address */
+		/* FIXME: some parts of fetchmail don't handle null
+		 * envelope senders, so use <> to mark null sender
+		 * as a workaround. */
+		if (strspn(buf, " \t") == strlen(buf))
+		    strcpy(buf, "<>");
 		sdps_envfrom = xmalloc(strlen(buf)+1);
 		strcpy(sdps_envfrom,buf);
 		break;
