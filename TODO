@@ -5,6 +5,9 @@ Casper Gripenberg's 6.3.2 no-IDLE/NOOP hang with EXISTS (see full trace
 and patch on fetchmail-devel).
 
 Roger Lynn's Debian Bug#353575 and Bug#316446 comment.
+Quick SDPS-specific workaround is implemented but needs testing.
+
+Use Errors-To: as envelope sender fallback?
 
 20060213T122015 [  53: Frederic Marchal] [fetchmail-users] Incorrect header line and lost mails
 
