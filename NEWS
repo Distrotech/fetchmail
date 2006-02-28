@@ -32,6 +32,8 @@ fetchmail 6.3.3 (not yet released):
   Fixes BerliOS bug #6234.  BerliOS patch #804 by Craig Leres.
   The patch, as accepted into fetchmail, was available separately from
   <http://download.berlios.de/fetchmail/patch-6.3.2.1-fix-netrc-SIGSEGV.diff>
+* "ssl" is a user option rather than a server option. Patch by Nico Golde.
+  Fixes Debian Bug#354661, reported by Keith Hellman.
 
 fetchmail 6.3.2 (released 2006-01-22):
 

@@ -964,7 +964,7 @@ username and the part to the right as the NTLM domain.
 .SS Secure Socket Layers (SSL)
 .PP
 You can access SSL encrypted services by specifying the \-\-ssl option.
-You can also do this using the "ssl" server option in the .fetchmailrc
+You can also do this using the "ssl" user option in the .fetchmailrc
 file.  With SSL encryption enabled, queries are initiated over a connection
 after negotiating an SSL session.  Some services, such as POP3 and IMAP,
 have different well known ports defined for the SSL encrypted services.
