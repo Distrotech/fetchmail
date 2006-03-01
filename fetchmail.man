@@ -490,8 +490,9 @@ resource-exhaustion errors; the nonzero status tells fetchmail that
 delivery failed and prevents the message from being deleted off the
 server.  If \fIfetchmail\fR is running as root, it sets its user id to
 that of the target user while delivering mail through an MDA.  Some
-possible MDAs are "/usr/sbin/sendmail \-i \-f %F \-\- %T", "/usr/bin/deliver"
-and "/usr/bin/maildrop \-d %T".  Local delivery
+possible MDAs are "/usr/sbin/sendmail \-i \-f %F \-\- %T" (\fBNote:\fR
+with several original sendmail versions, you must omit the \-\-),
+"/usr/bin/deliver" and "/usr/bin/maildrop \-d %T".  Local delivery
 addresses will be inserted into the MDA command wherever you place a
 %T; the mail message's From address will be inserted where you place
 an %F. \fBDO NOT ENCLOSE THE %F OR %T STRING IN SINGLE QUOTES!\fR For
