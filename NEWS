@@ -36,6 +36,10 @@ fetchmail 6.3.3 (not yet released):
   Fixes Debian Bug#354661, reported by Keith Hellman.
 * The manual page now suggests -- before the addresses in the sendmail MDA
   example.
+* Handle other clients concurrently accessing IMAP mailboxes better.
+  Fetchmail quits the poll if the EXPUNGE count does not match expectations, and
+  servers not updating RECENT counts after EXPUNGE are handled in a better way.
+  (Patch by Sunil Shetye.)
 
 fetchmail 6.3.2 (released 2006-01-22):
 

@@ -43,7 +43,7 @@ static int expunged = 0;
 static unsigned int *unseen_messages;
 
 /* for "IMAP> EXPUNGE" */
-static int recentcount_ok = 0;
+static int actual_deletions = 0;
 
 /* for "IMAP> IDLE" */
 static int saved_timeout = 0;
@@ -114,7 +114,6 @@ static int imap_ok(int sock, char *argbuf)
 	    }
 	    else if (strstr(buf, " RECENT"))
 	    {
-		recentcount_ok = 1;
 		recentcount = atoi(buf+2);
 	    }
 	    else if (strstr(buf, " EXPUNGE"))
@@ -122,9 +121,18 @@ static int imap_ok(int sock, char *argbuf)
 		/* the response "* 10 EXPUNGE" means that the currently
 		 * tenth (i.e. only one) message has been deleted */
 		if (atoi(buf+2) > 0)
-		    count--;
-		if (count < 0)
-		    count = 0;
+		{
+		    if (count > 0)
+			count--;
+		    /* Some servers do not report RECENT after an EXPUNGE.
+		     * For such servers, assume that the mail being
+		     * expunged is a recent one. For other servers, we
+		     * should get an updated RECENT report later and this
+		     * assumption will have no effect. */
+		    if (recentcount > 0)
+			recentcount--;
+		    actual_deletions++;
+		}
 	    }
 	    else if (strstr(buf, " PREAUTH"))
 	    {
@@ -577,15 +585,26 @@ static int internal_expunge(int sock)
 {
     int	ok;
 
-    recentcount_ok = 0;
+    actual_deletions = 0;
 
     if ((ok = gen_transact(sock, "EXPUNGE")))
 	return(ok);
 
-    /* some servers do not report RECENT after an EXPUNGE. in this case, 
-     * the previous value of recentcount is just ignored. */
-    if (!recentcount_ok)
-        recentcount = 0;
+    /* if there is a mismatch between the number of mails which should
+     * have been expunged and the number of mails actually expunged,
+     * another email client may be deleting mails. Quit here,
+     * otherwise fetchmail gets out-of-sync with the imap server,
+     * reports the wrong size to the SMTP server on MAIL FROM: and
+     * triggers a "message ... was not the expected length" error on
+     * every subsequent mail */
+    if (deletions > 0 && deletions != actual_deletions)
+    {
+	report(stderr,
+		GT_("mail expunge mismatch (%d actual != %d expected)\n"),
+		actual_deletions, deletions);
+	deletions = 0;
+	return(PS_ERROR);
+    }
 
     expunged += deletions;
     deletions = 0;
@@ -1131,7 +1150,10 @@ static int imap_delete(int sock, struct query *ctl, int number)
      * the next session.
      */
     if (NUM_NONZERO(expunge_period) && (deletions % expunge_period) == 0)
-	internal_expunge(sock);
+    {
+	if ((ok = internal_expunge(sock)))
+	    return(ok);
+    }
 
     return(PS_SUCCESS);
 }
