@@ -40,6 +40,9 @@ fetchmail 6.3.3 (not yet released):
   Fetchmail quits the poll if the EXPUNGE count does not match expectations, and
   servers not updating RECENT counts after EXPUNGE are handled in a better way.
   (Patch by Sunil Shetye.)
+* fetchmail no longer replaces the local user ID for an empty envelope sender
+  when using the proprietary SDPS extension for POP3. Fixes Debian Bug#353575,
+  reported by Roger Lynn.
 
 fetchmail 6.3.2 (released 2006-01-22):
 
