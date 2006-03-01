@@ -49,6 +49,7 @@ enum {
     LA_FETCHSIZELIMIT,
     LA_FASTUIDL,
     LA_LIMITFLUSH,
+    LA_IDLE,
 };
 
 /* options still left: CgGhHjJoORTWxXYz */
@@ -78,6 +79,7 @@ static const struct option longoptions[] = {
   {"protocol",	required_argument, (int *) 0, 'p' },
   {"proto",	required_argument, (int *) 0, 'p' },
   {"uidl",	no_argument,	   (int *) 0, 'U' },
+  {"idle",	no_argument,	   (int *) 0, LA_IDLE},
   {"port",	required_argument, (int *) 0, 'P' },
   {"service",	required_argument, (int *) 0, 'P' },
   {"auth",	required_argument, (int *) 0, LA_AUTH},
@@ -333,6 +335,9 @@ struct query *ctl;	/* option record to be initialized */
 	    break;
 	case 'U':
 	    ctl->server.uidl = FLAG_TRUE;
+	    break;
+	case LA_IDLE:
+	    ctl->idle = FLAG_TRUE;
 	    break;
 	case 'P':
 	    ctl->server.service = optarg;

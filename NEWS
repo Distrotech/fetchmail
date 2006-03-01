@@ -43,6 +43,7 @@ fetchmail 6.3.3 (not yet released):
 * fetchmail no longer replaces the local user ID for an empty envelope sender
   when using the proprietary SDPS extension for POP3. Fixes Debian Bug#353575,
   reported by Roger Lynn.
+* --idle can now be specified on the command line, too.
 
 fetchmail 6.3.2 (released 2006-01-22):
 
