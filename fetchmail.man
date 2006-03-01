@@ -270,7 +270,11 @@ daemon mode.  Note that fetchmail may automatically enable this option
 depending on upstream server capabilities.  Note also that this option
 may be removed and forced enabled in a future fetchmail version. See
 also: \-\-idfile.
-
+.TP
+.B \-\-idle
+(Keyword: idle)
+Enable IDLE use (effective only with IMAP). Note that this works with
+only one folder at a given time.
 .TP
 .B \-P <portnumber> | \-\-service <servicename>
 (Keyword: service) Since version 6.3.0.
@@ -1706,8 +1710,8 @@ the following: 'via', 'interval', 'aka', 'is', 'to', 'dns'/'no dns',
 \&'checkalias'/'no checkalias', 'password', 'preconnect', 'postconnect',
 \&'localdomains', 'stripcr'/'no stripcr', 'forcecr'/'no forcecr',
 \&'pass8bits'/'no pass8bits' 'dropstatus/no dropstatus',
-\&'dropdelivered/no dropdelivered', 'mimedecode/no mimedecode', 'idle/no
-idle', and 'no envelope'.
+\&'dropdelivered/no dropdelivered', 'mimedecode/no mimedecode', 'no idle',
+and 'no envelope'.
 .PP
 The 'via' option is for if you want to have more
 than one configuration pointing at the same site.  If it is present,
