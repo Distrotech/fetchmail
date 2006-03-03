@@ -21,6 +21,7 @@ These are the relevant changes (the line counts have been discontinued):
 
 post 6.2.5.5
 
+* configure: Mark this version unsupported and bail out with error.
 * Fetchmailconf: Fix typos and clarify sections 6 and 5 of novice help.
   Reported by Justin Pryzby, Debian Bug #344978. Matthias Andree.
 

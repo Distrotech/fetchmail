@@ -5,6 +5,7 @@ dnl Process this file with autoconf to produce a configure script.
 dnl
 
 AC_INIT([fetchmail],[6.2.5.5+svn],[fetchmail-devel@lists.berlios.de])
+AC_MSG_ERROR([This fetchmail 6.2.* branch is no longer supported or maintained.])
 AC_CONFIG_SRCDIR([fetchmail.h])
 AC_CONFIG_HEADERS([config.h])
 dnl obtain ACLOCAL and other substitutions
