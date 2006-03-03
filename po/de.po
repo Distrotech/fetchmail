@@ -968,7 +968,7 @@ msgstr ""
 #: fetchmail.c:1264
 msgid "Both fetchall and keep on in daemon mode is a mistake!\n"
 msgstr ""
-"Sowohl „fetchall“ als auch „keep“ anzuschalten ist im Dämon-Modus ein "
+"Sowohl „fetchall“ als auch „keep“ anzuschalten, ist im Dämon-Modus ein "
 "Fehler!\n"
 
 #: fetchmail.c:1297
