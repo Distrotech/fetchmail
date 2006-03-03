@@ -42,6 +42,7 @@ fetchmail 6.3.3 (not yet released):
 
 # CHANGES:
 * --idle can now be specified on the command line, too.
+* --fetchall is now supported on the command-line.
 
 # DOCUMENTATION:
 * "ssl" is a user option rather than a server option. Patch by Nico Golde.

@@ -91,6 +91,7 @@ static const struct option longoptions[] = {
   {"username",	required_argument, (int *) 0, 'u' },
 
   {"all",	no_argument,	   (int *) 0, 'a' },
+  {"fetchall",	no_argument,	   (int *) 0, 'a' },
   {"nokeep",	no_argument,	   (int *) 0, 'K' },
   {"keep",	no_argument,	   (int *) 0, 'k' },
   {"flush",	no_argument,	   (int *) 0, 'F' },

@@ -173,14 +173,16 @@ Doubling this option (\-v \-v) causes extra diagnostic information
 to be printed.
 .SS Disposal Options
 .TP
-.B \-a | \-\-all
+.B \-a | \-\-all | (since v6.3.3) \-\-fetchall
 (Keyword: fetchall)
 Retrieve both old (seen) and new messages from the mailserver.  The
 default is to fetch only messages the server has not marked seen.
 Under POP3, this option also forces the use of RETR rather than TOP.
 Note that POP2 retrieval behaves as though \-\-all is always on (see
 RETRIEVAL FAILURE MODES below) and this option does not work with ETRN
-or ODMR.
+or ODMR.  While the \-a and \-\-all command-line and fetchall rcfile
+options have been supported for a long time, the \-\-fetchall
+command-line option was added in v6.3.3.
 .TP
 .B \-k | \-\-keep
 (Keyword: keep)
@@ -271,10 +273,12 @@ depending on upstream server capabilities.  Note also that this option
 may be removed and forced enabled in a future fetchmail version. See
 also: \-\-idfile.
 .TP
-.B \-\-idle
+.B \-\-idle (since 6.3.3)
 (Keyword: idle)
 Enable IDLE use (effective only with IMAP). Note that this works with
-only one folder at a given time.
+only one folder at a given time.  While the idle rcfile keyword had been
+supported for a long time, the \-\-idle command-line option was added in
+version 6.3.3.
 .TP
 .B \-P <portnumber> | \-\-service <servicename>
 (Keyword: service) Since version 6.3.0.
