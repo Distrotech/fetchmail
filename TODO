@@ -1,32 +1,5 @@
-For 6.3.X:
+For 6.3.3:
 ==========
 
 Casper Gripenberg's 6.3.2 no-IDLE/NOOP hang with EXISTS (see full trace
 and patch on fetchmail-devel).
-
-20060213T122015 [  53: Frederic Marchal] [fetchmail-users] Incorrect header line and lost mails
-
-See if fetchmail still segfaults (see quotes of Frederic Marchal
-2006-02-17):
-> In fetchmail, the problem is clearly located in transact.c (I wouldn't
-> call it a bug until I get some clarification from the one who wrote
-> it). The part of the code that rejects the mail is preceded by a comment
-> stating
->
->         * At least one brain-dead website (netmind.com) is known to
->         * send out robotmail that's missing the RFC822 delimiter blank
->         * line before the body! Without this check fetchmail segfaults.
->         * With it, we treat such messages as spam and refuse them.
->
-> But the test after this comment doesn't test for the beginning of the
-> body but for a header line not starting with a blank and not containing
-> a colon.
-
-Yves Boisjoly reports that NTLM auth needs to use the real Wks field
-rather than duplicating the user name (see l. 211 in smbutil.c).
-
-Make fetchmailconf a noarch RPM (needs %ifarch hacks and running
-rpmbuild twice).
-
-fetchmail -vvvv --syslog prints blank lines on the screen.
-Probably uid.c lines 254 and 265.
