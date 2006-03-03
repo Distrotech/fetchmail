@@ -241,7 +241,8 @@ mangled.</a><br/>
 fetchmail.</a><br/>
 <a href="#X8">X8. A spurious ) is being appended to my
 messages.</a><br/>
-
+<a href="#X9">X9. Missing "Content-Transfer-Encoding" header
+with Domino IMAP</a><br/>
 <h2 id="C_O">Other problems</h2>
 
 <a href="#O1">O1. The --logfile option doesn't work if the logfile
@@ -3268,6 +3269,20 @@ on, you'll get a message about actual != expected.</p>
 
 <p>There is no fix for this. The nuke mentioned in <a
 href="#S2">S2</a> looks more tempting all the time.</p>
+
+<h2><a id="X9" name="X9">X9. Missing "Content-Transfer-Encoding" header
+	with Domino IMAP</a></h2>
+
+<p>Domino 6 IMAP was found by Anthony Kim in February 2006 to
+erroneously omit the "Content-Transfer-Encoding" header in messages
+downloaded through IMAP, causing messages to display improperly. This
+happened with Domino's incoming mail format configured to "Prefers
+MIME". Solution: switch Domino to "Keep in Sender's format".</p>
+
+<p>Reference: <a
+    href="http://lists.ccil.org/pipermail/fetchmail-friends/2006-March/010015.html">Anthony
+    Kim's list post</a>
+</p>
 
 <hr/>
 <h1>Other problems</h1>

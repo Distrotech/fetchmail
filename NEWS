@@ -45,6 +45,11 @@ fetchmail 6.3.3 (not yet released):
   reported by Roger Lynn.
 * --idle can now be specified on the command line, too.
 
+# DOCUMENTATION:
+* The FAQ item X9, Domino IMAP omits Content-Transfer-Encoding header, was
+  added. Information provided by Anthony Kim on the fetchmail-friends list
+  in March 2006.
+
 fetchmail 6.3.2 (released 2006-01-22):
 
 Unless otherwise noted, changes to this release were made by Matthias Andree.
