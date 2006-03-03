@@ -24,10 +24,6 @@ of these will be cheerfully accepted.</p>
 
 <h2>Serious</h2>
 
-<p>SSL trust model violation: (Brian Candler)
-<a
-	href="http://lists.ccil.org/pipermail/fetchmail-friends/2004-April/008516.html">http://lists.ccil.org/pipermail/fetchmail-friends/2004-April/008516.html</a></p>
-
 <p>Let IMAP code use UID and UIDVALIDITY rather than relying on flags
 that everyone can alter.</p>
 
@@ -37,18 +33,11 @@ that everyone can alter.</p>
 Greaves) <a
 	href="https://lists.berlios.de/pipermail/fetchmail-devel/2004-October/000154.html">https://lists.berlios.de/pipermail/fetchmail-devel/2004-October/000154.html</a></p>
 
-<p>Remove spaces after MAIL FROM: or RCPT TO: et al. in BSMTP output
-(sink.c)</p>
-
 <p>It has been reported that multidrop name matching fails when the
 name to be matched contains a Latin-1 umlaut. Dollars to doughnuts
 this is some kind of character sign-extension problem. Trouble is,
 it's very likely in the BIND libraries. Someone should go in with a
 debugger and check this.</p>
-
-<p>Move everything to using service strings rather that port
-numbers, so we can get rid of ENABLE_INET6 everywhere but in
-SockOpen (this will get rid of the kluge in rcfile_y.y).</p>
 
 <p>The <a
 href="http://bugs.debian.org/cgi-bin/pkgreport.cgi?pkg=fetchmail&amp;archive=no">
@@ -56,8 +45,6 @@ Debian bug-tracking page for fetchmail</a> lists other bug
 reports.</p>
 
 <h2>Cosmetic</h2>
-
-<p>SSL validation prints CommonName mismatch more than once.</p>
 
 <p>Alan Munday suggests message change MULTIDROP without ENVELOPE:</p>
 <pre>
@@ -78,8 +65,6 @@ for bounce messages."</p>
 
 <p>In the SSL support, add authentication of Certifying Authority
 (Is this a Certifying Authority we recognize?).</p>
-
-<p>Debian wishlist item 181157: ssl key learning for self-signed certificates.</p>
 
 <p>Laszlo Vecsey writes: "I believe qmail uses a technique of
 writing temporary files to nfs, and then moving them into place to
