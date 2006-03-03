@@ -302,6 +302,18 @@ int main(int argc, char **argv)
 #endif
 	report_init((run.poll_interval == 0 || nodetach) && !run.logfile);
 
+#ifdef POP3_ENABLE
+    /* initialize UID handling */
+    {
+	int st;
+
+	if (!versioninfo && (st = prc_filecheck(run.idfile, !versioninfo)) != 0)
+	    exit(st);
+	else
+	    initialize_saved_lists(querylist, run.idfile);
+    }
+#endif /* POP3_ENABLE */
+
     /* construct the lockfile */
     lock_setup();
 
@@ -1265,14 +1277,6 @@ static int load_params(int argc, char **argv, int optind)
 	    }
 	}
     }
-
-#ifdef POP3_ENABLE
-    /* initialize UID handling */
-    if (!versioninfo && (st = prc_filecheck(run.idfile, !versioninfo)) != 0)
-	exit(st);
-    else
-	initialize_saved_lists(querylist, run.idfile);
-#endif /* POP3_ENABLE */
 
     /*
      * If the user didn't set a last-resort user to get misaddressed
