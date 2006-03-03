@@ -32,10 +32,6 @@ fetchmail 6.3.3 (not yet released):
   Fixes BerliOS bug #6234.  BerliOS patch #804 by Craig Leres.
   The patch, as accepted into fetchmail, was available separately from
   <http://download.berlios.de/fetchmail/patch-6.3.2.1-fix-netrc-SIGSEGV.diff>
-* "ssl" is a user option rather than a server option. Patch by Nico Golde.
-  Fixes Debian Bug#354661, reported by Keith Hellman.
-* The manual page now suggests -- before the addresses in the sendmail MDA
-  example.
 * Handle other clients concurrently accessing IMAP mailboxes better.
   Fetchmail quits the poll if the EXPUNGE count does not match expectations, and
   servers not updating RECENT counts after EXPUNGE are handled in a better way.
@@ -43,9 +39,15 @@ fetchmail 6.3.3 (not yet released):
 * fetchmail no longer replaces the local user ID for an empty envelope sender
   when using the proprietary SDPS extension for POP3. Fixes Debian Bug#353575,
   reported by Roger Lynn.
+
+# CHANGES:
 * --idle can now be specified on the command line, too.
 
 # DOCUMENTATION:
+* "ssl" is a user option rather than a server option. Patch by Nico Golde.
+  Fixes Debian Bug#354661, reported by Keith Hellman.
+* The manual page now suggests "--" before the addresses in the sendmail MDA
+  example, for safety.
 * The FAQ item X9, Domino IMAP omits Content-Transfer-Encoding header, was
   added. Information provided by Anthony Kim on the fetchmail-friends list
   in March 2006.
