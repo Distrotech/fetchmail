@@ -54,6 +54,10 @@ fetchmail 6.3.3 (not yet released):
 * The FAQ item X9, Domino IMAP omits Content-Transfer-Encoding header, was
   added. Information provided by Anthony Kim on the fetchmail-friends list
   in March 2006.
+* Credit Chris Boyle with the NOOP emulation code for IDLE in fetchmail 6.2.4.
+  Eric forgot to credit Chris, thanks to Sunil Shetye for providing these links:
+  http://lists.ccil.org/pipermail/fetchmail-friends/2003-July/007705.html
+  http://lists.ccil.org/pipermail/fetchmail-friends/2003-July/007713.html
 
 fetchmail 6.3.2 (released 2006-01-22):
 
@@ -472,8 +476,8 @@ There are 599 people on fetchmail-friends and 748 on fetchmail-announce.
 fetchmail-6.2.4 (Wed Aug 13 04:27:35 EDT 2003), 22625 lines:
 
 * Updated German, Spanish, Catalan, and Turkish translations.
-* IDLE is now supported using no-ops even if the server doesn't support
-  the IMAP IDLE extension.
+* IDLE is now supported using NOOP commands even if the server doesn't support
+  the IMAP IDLE extension. Patch by Chris Boyle.
 * Sunil Shetye's patch to do better password shrouding.
 * Sunil Shetye's bug-fix rollup patch.
 * Introduce a translation item for the word "seen".
