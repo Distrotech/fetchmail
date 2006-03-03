@@ -426,7 +426,6 @@ int readheaders(int sock,
     for (remaining = fetchlen; remaining > 0 || protocol->delimited; )
     {
 	char *line, *rline;
-	int overlong = FALSE; /* XXX FIXME: this is unused */
 
 	line = xmalloc(sizeof(buf));
 	linelen = 0;
@@ -467,7 +466,6 @@ int readheaders(int sock,
 	     */
 	    if (n && buf[n-1] != '\n') 
 	    {
-		overlong = TRUE;
 		rline = (char *) realloc(line, linelen + 1);
 		if (rline == NULL)
 		{
@@ -545,6 +543,16 @@ int readheaders(int sock,
 	     * send out robotmail that's missing the RFC822 delimiter blank
 	     * line before the body! Without this check fetchmail segfaults.
 	     * With it, we treat such messages as spam and refuse them.
+	     *
+	     * Frederic Marchal reported in February 2006 that hotmail
+	     * or something improperly wrapped a very long TO header
+	     * (wrapped without inserting whitespace in the continuation
+	     * line) and found that this code thus refused a message
+	     * that should have been delivered.
+	     *
+	     * XXX FIXME: we should probably wrap the message up as
+	     * message/rfc822 attachment and forward to postmaster (Rob
+	     * MacGregor)
 	     */
 	    if (!refuse_mail && !isspace((unsigned char)line[0]) && !strchr(line, ':'))
 	    {
@@ -603,7 +611,7 @@ int readheaders(int sock,
 	    continue;
 	}
 
-	/* we see an ordinary (non-header, non-message-delimiter line */
+	/* we see an ordinary (non-header, non-message-delimiter) line */
 	if (linelen != strlen (line))
 	    has_nuls = TRUE;
 
