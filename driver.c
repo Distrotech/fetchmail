@@ -641,7 +641,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	    /* tell server we got it OK and resynchronize */
 	    if (separatefetchbody && ctl->server.base_protocol->trail)
 	    {
-		if (outlevel >= O_VERBOSE && !is_a_file(1))
+		if (outlevel >= O_VERBOSE && !is_a_file(1) && !run.use_syslog)
 		{
 		    fputc('\n', stdout);
 		    fflush(stdout);
@@ -699,7 +699,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 		/* tell server we got it OK and resynchronize */
 		if (ctl->server.base_protocol->trail)
 		{
-		    if (outlevel >= O_VERBOSE && !is_a_file(1))
+		    if (outlevel >= O_VERBOSE && !is_a_file(1) && !run.use_syslog)
 		    {
 			fputc('\n', stdout);
 			fflush(stdout);
