@@ -888,12 +888,14 @@ static int pop3_getrange(int sock,
 	return(ok);
 
     /*
-     * Newer, RFC-1725-conformant POP servers may not have the LAST command.
-     * We work as hard as possible to hide this ugliness, but it makes
+     * Newer, RFC-1725/1939-conformant POP servers may not have the LAST command.
+     * We work as hard as possible to hide this, but it makes
      * counting new messages intrinsically quadratic in the worst case.
      */
     last = 0;
     *newp = -1;
+    /* if there are messages, and UIDL is desired, use UIDL
+     * also use UIDL if fetchall is unset */
     if (*countp > 0 && (!ctl->fetchall || ctl->server.uidl))
     {
 	int fastuidl;
@@ -919,8 +921,10 @@ static int pop3_getrange(int sock,
 	    ok = pop3_ok(sock, buf);
 	} else
 	    ok = 1;
+
 	if (ok == 0)
 	{
+	    /* scan LAST reply */
 	    if (sscanf(buf, "%d", &last) == 0)
 	    {
 		report(stderr, GT_("protocol error\n"));
@@ -930,6 +934,7 @@ static int pop3_getrange(int sock,
 	}
 	else
 	{
+	    /* do UIDL */
 	    if (dofastuidl)
 		return(pop3_fastuidl( sock, ctl, *countp, newp));
 	    /* grab the mailbox's UID list */
@@ -944,6 +949,7 @@ static int pop3_getrange(int sock,
 	    }
 	    else
 	    {
+		/* UIDL worked - parse reply */
 		unsigned long unum;
 
 		*newp = 0;
@@ -995,9 +1001,9 @@ static int pop3_getrange(int sock,
 			}
 		    } else
 			return PS_ERROR;
-		}
-	    }
-	}
+		} /* multi-line loop for UIDL reply */
+	    } /* UIDL parser */
+	} /* do UIDL */
     }
 
     return(PS_SUCCESS);
