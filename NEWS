@@ -41,6 +41,9 @@ fetchmail 6.3.3 (not yet released):
   reported by Roger Lynn.
 * fetchmail no longer prints empty lines in verbose mode when using syslog.
 * fetchmail no longer prints UID lists in verbose mode when using syslog.
+* POP3: fetchmail can now use UIDL in fetchall keep mode, to avoid re-fetching
+  the same messages again when the fetchall keyword is removed. Patch by
+  Sunil Shetye.
 
 # CHANGES:
 * --idle can now be specified on the command line, too.

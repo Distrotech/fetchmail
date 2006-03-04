@@ -894,7 +894,7 @@ static int pop3_getrange(int sock,
      */
     last = 0;
     *newp = -1;
-    if (*countp > 0 && !ctl->fetchall)
+    if (*countp > 0 && (!ctl->fetchall || ctl->server.uidl))
     {
 	int fastuidl;
 	char id [IDLEN+1];
@@ -902,6 +902,7 @@ static int pop3_getrange(int sock,
 	/* should we do fast uidl this time? */
 	fastuidl = ctl->fastuidl;
 	if (*countp > 7 &&		/* linear search is better if there are few mails! */
+	    !ctl->fetchall &&		/* with fetchall, all uids are required */
 	    !ctl->flush &&		/* with flush, it is safer to disable fastuidl */
 	    NUM_NONZERO (fastuidl))
 	{
