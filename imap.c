@@ -621,7 +621,6 @@ static int imap_idle(int sock)
 {
     int ok;
 
-    stage = STAGE_IDLE;
     saved_timeout = mytimeout;
 
     if (has_idle) {
@@ -629,6 +628,7 @@ static int imap_idle(int sock)
 	 * at least every 28 minutes:
 	 * (the server may have an inactivity timeout) */
 	mytimeout = 1680; /* 28 min */
+	stage = STAGE_IDLE;
 	/* enter IDLE mode */
 	ok = gen_transact(sock, "IDLE");
 
@@ -637,37 +637,43 @@ static int imap_idle(int sock)
 	    SockWrite(sock, "DONE\r\n", 6);
 	    if (outlevel >= O_MONITOR)
 		report(stdout, "IMAP> DONE\n");
-	} else
-	    /* not idle timeout */
-	    return ok;
+	    /* reset stage and timeout here: we are not idling any more */
+	    mytimeout = saved_timeout;
+	    stage = STAGE_FETCH;
+	    /* get OK IDLE message */
+	    ok = imap_ok(sock, NULL);
+	}
     } else {  /* no idle support, fake it */
-	/* when faking an idle, we can't assume the server will
-	 * send us the new messages out of the blue (RFC2060);
-	 * this timeout is potentially the delay before we notice
-	 * new mail (can be small since NOOP checking is cheap) */
-	mytimeout = 28;
+	/* Note: stage and timeout have not been changed here as NOOP
+	 * does not idle */
 	ok = gen_transact(sock, "NOOP");
-	/* if there's an error (not likely) or we just found mail (stage 
-	 * has changed, timeout has also been restored), we're done */
-	if (ok != 0 || stage != STAGE_IDLE)
-	    return(ok);
 
-	/* wait (briefly) for an unsolicited status update */
-	ok = imap_ok(sock, NULL);
-	/* again, this is new mail or an error */
-	if (ok != PS_IDLETIMEOUT)
-	    return(ok);
+	/* no error, but no new mail either */
+	if (ok == PS_SUCCESS && recentcount == 0)
+	{
+	    /* There are some servers who do send new mail
+	     * notification out of the blue. This is in compliance
+	     * with RFC 2060 section 5.3. Wait for that with a low
+	     * timeout */
+	    mytimeout = 28;
+	    stage = STAGE_IDLE;
+	    /* We are waiting for notification; no tag needed */
+	    tag[0] = '\0';
+	    /* wait (briefly) for an unsolicited status update */
+	    ok = imap_ok(sock, NULL);
+	    if (ok == PS_IDLETIMEOUT) {
+		/* no notification came; ok */
+		ok = PS_SUCCESS;
+	    }
+	}
     }
 
     /* restore normal timeout value */
+    set_timeout(0);
     mytimeout = saved_timeout;
     stage = STAGE_FETCH;
 
-    /* get OK IDLE message */
-    if (has_idle)
-        return imap_ok(sock, NULL);
-
-    return PS_SUCCESS;
+    return(ok);
 }
 
 static int imap_getrange(int sock, 

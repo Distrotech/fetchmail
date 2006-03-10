@@ -45,6 +45,9 @@ fetchmail 6.3.3 (not yet released):
   the same messages again when the fetchall keyword is removed. Patch by
   Sunil Shetye. For details, please see
   <http://lists.berlios.de/pipermail/fetchmail-users/2006-March/000308.html>
+* IMAP: fix hangs in NOOP-based IDLE emulation. Reported by Casper Gripenberg
+  and Brendan Lynch, fix by Sunil Shetye (his patch was merged) and Brendan
+  Lynch.
 
 # CHANGES:
 * --idle can now be specified on the command line, too.
