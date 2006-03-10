@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.9-rc9\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-01-22 12:50+0100\n"
+"POT-Creation-Date: 2006-03-10 11:56+0100\n"
 "PO-Revision-Date: 2005-12-18 11:50+0100\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -266,7 +266,7 @@ msgstr "Subject: avertissement de serveur non accessible par Fetchmail."
 msgid "Fetchmail could not reach the mail server %s:"
 msgstr "Fetchmail n'a pas pu recevoir le courrier de %s:"
 
-#: driver.c:1102 imap.c:392 pop3.c:458
+#: driver.c:1102 imap.c:400 pop3.c:458
 msgid "SSL connection failed.\n"
 msgstr "Échec de la connexion SSL\n"
 
@@ -642,12 +642,12 @@ msgid "Option --check is not supported with ETRN\n"
 msgstr "L'option --check n'est pas supportée avec ETRN\n"
 
 #: fetchmail.c:131
+#, fuzzy
 msgid ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
 "Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Rob F. Funk, Graham "
 "Wilson\n"
-"Copyright (C) 2005 Matthias Andree, Sunil Shetye\n"
-"Copyright (C) 2006 Matthias Andree\n"
+"Copyright (C) 2005-2006 Matthias Andree, Sunil Shetye\n"
 msgstr ""
 "Copyright © 2002, 2003 Eric S. Raymond\n"
 "Copyright © 2004 Matthias Andree, Eric S. Raymond, Rob F. Funk, Graham "
@@ -685,47 +685,47 @@ msgstr "impossible de trouver le répertoire de travail courrant\n"
 msgid "This is fetchmail release %s"
 msgstr "Ceci est fetchmail, version %s"
 
-#: fetchmail.c:370
+#: fetchmail.c:382
 #, c-format
 msgid "Taking options from command line%s%s\n"
 msgstr "Lecture des options sur la ligne de commande %s%s\n"
 
-#: fetchmail.c:371
+#: fetchmail.c:383
 msgid " and "
 msgstr " et "
 
-#: fetchmail.c:376
+#: fetchmail.c:388
 #, c-format
 msgid "No mailservers set up -- perhaps %s is missing?\n"
 msgstr "Pas de serveur de courrier paramétré -- %s est peut-être manquant ?\n"
 
-#: fetchmail.c:397
+#: fetchmail.c:409
 msgid "fetchmail: no mailservers have been specified.\n"
 msgstr "fetchmail: aucun serveur de courrier n'a été spécifié.\n"
 
-#: fetchmail.c:409
+#: fetchmail.c:421
 msgid "fetchmail: no other fetchmail is running\n"
 msgstr "fetchmail: aucun autre fetchmail n'est en cours d'exécution\n"
 
-#: fetchmail.c:415
+#: fetchmail.c:427
 #, c-format
 msgid "fetchmail: error killing %s fetchmail at %d; bailing out.\n"
 msgstr "fetchmail: erreur en terminant %s fetchmail (%d); abandon.\n"
 
-#: fetchmail.c:416 fetchmail.c:425
+#: fetchmail.c:428 fetchmail.c:437
 msgid "background"
 msgstr "tâche de fond"
 
-#: fetchmail.c:416 fetchmail.c:425
+#: fetchmail.c:428 fetchmail.c:437
 msgid "foreground"
 msgstr "premier plan"
 
-#: fetchmail.c:424
+#: fetchmail.c:436
 #, c-format
 msgid "fetchmail: %s fetchmail at %d killed.\n"
 msgstr "fetchmail: %s fetchmail (%d) terminé.\n"
 
-#: fetchmail.c:447
+#: fetchmail.c:459
 msgid ""
 "fetchmail: can't check mail while another fetchmail to same host is "
 "running.\n"
@@ -733,7 +733,7 @@ msgstr ""
 "fetchmail: impossible de vérifier le courrier lorsqu'un autre fetchmail est "
 "exécuté sur le même hôte\n"
 
-#: fetchmail.c:453
+#: fetchmail.c:465
 #, c-format
 msgid ""
 "fetchmail: can't poll specified hosts with another fetchmail running at %d.\n"
@@ -741,193 +741,193 @@ msgstr ""
 "fetchmail: impossible de récupérer le courrier si un autre fetchmail est "
 "exécuté sur %d.\n"
 
-#: fetchmail.c:460
+#: fetchmail.c:472
 #, c-format
 msgid "fetchmail: another foreground fetchmail is running at %d.\n"
 msgstr ""
 "fetchmail: un autre fetchmail, au premier plan, est en exécution sur %d.\n"
 
-#: fetchmail.c:470
+#: fetchmail.c:482
 msgid ""
 "fetchmail: can't accept options while a background fetchmail is running.\n"
 msgstr ""
 "fetchmail: les options ne sont pas disponibles lorsque fetchmail fonctionne "
 "en tâche de fond.\n"
 
-#: fetchmail.c:476
+#: fetchmail.c:488
 #, c-format
 msgid "fetchmail: background fetchmail at %d awakened.\n"
 msgstr "fetchmail: fetchmail en tâche de fond (%d) a été réactivé.\n"
 
-#: fetchmail.c:488
+#: fetchmail.c:500
 #, c-format
 msgid "fetchmail: elder sibling at %d died mysteriously.\n"
 msgstr "fetchmail: processus fils plus ancien (%d) terminé mystérieusement.\n"
 
-#: fetchmail.c:503
+#: fetchmail.c:515
 #, c-format
 msgid "fetchmail: can't find a password for %s@%s.\n"
 msgstr "fetchmail: ne trouve pas de mot de passe pour %s@%s.\n"
 
-#: fetchmail.c:507
+#: fetchmail.c:519
 #, c-format
 msgid "Enter password for %s@%s: "
 msgstr "Entrez le mot de passe pour %s@%s : "
 
-#: fetchmail.c:538
+#: fetchmail.c:550
 #, c-format
 msgid "starting fetchmail %s daemon \n"
 msgstr "démarrage de fetchmail %s en tâche de fond \n"
 
-#: fetchmail.c:553 fetchmail.c:555
+#: fetchmail.c:565 fetchmail.c:567
 #, c-format
 msgid "could not open %s to append logs to \n"
 msgstr "impossible d'ouvrir %s pour y ajouter les messages\n"
 
-#: fetchmail.c:591
+#: fetchmail.c:603
 #, c-format
 msgid "couldn't time-check %s (error %d)\n"
 msgstr "«time-check» %s impossible (erreur %d)\n"
 
-#: fetchmail.c:596
+#: fetchmail.c:608
 #, c-format
 msgid "restarting fetchmail (%s changed)\n"
 msgstr "redémarrage de fetchmail (%s  a changé)\n"
 
-#: fetchmail.c:601
+#: fetchmail.c:613
 msgid "attempt to re-exec may fail as directory has not been restored\n"
 msgstr ""
 "la tentative de réexécution peut échouer car le répertoire n'a pas été "
 "recréé\n"
 
-#: fetchmail.c:628
+#: fetchmail.c:640
 msgid "attempt to re-exec fetchmail failed\n"
 msgstr "la tentative d'exécuter à nouveau fetchmail a échoué\n"
 
-#: fetchmail.c:656
+#: fetchmail.c:668
 #, c-format
 msgid "poll of %s skipped (failed authentication or too many timeouts)\n"
 msgstr ""
 "réception de %s ignorée (authentification échouée ou dépassements de "
 "délais)\n"
 
-#: fetchmail.c:668
+#: fetchmail.c:680
 #, c-format
 msgid "interval not reached, not querying %s\n"
 msgstr "intervalle non atteint, pas de requête vers %s\n"
 
-#: fetchmail.c:706
+#: fetchmail.c:718
 msgid "Query status=0 (SUCCESS)\n"
 msgstr "État de la requête=0 (SUCCES)\n"
 
-#: fetchmail.c:708
+#: fetchmail.c:720
 msgid "Query status=1 (NOMAIL)\n"
 msgstr "État de la requête=1 (PAS DE MAIL)\n"
 
-#: fetchmail.c:710
+#: fetchmail.c:722
 msgid "Query status=2 (SOCKET)\n"
 msgstr "État de la requête=2 (SOCKET)\n"
 
-#: fetchmail.c:712
+#: fetchmail.c:724
 msgid "Query status=3 (AUTHFAIL)\n"
 msgstr "État de la requête=3 (ECHEC DE L'AUTHENTIFICATION)\n"
 
-#: fetchmail.c:714
+#: fetchmail.c:726
 msgid "Query status=4 (PROTOCOL)\n"
 msgstr "État de la requête=4 (PROTOCOLE)\n"
 
-#: fetchmail.c:716
+#: fetchmail.c:728
 msgid "Query status=5 (SYNTAX)\n"
 msgstr "État de la requête=5 (SYNTAXE)\n"
 
-#: fetchmail.c:718
+#: fetchmail.c:730
 msgid "Query status=6 (IOERR)\n"
 msgstr "État de la requête=6 (ERREUR E/S)\n"
 
-#: fetchmail.c:720
+#: fetchmail.c:732
 msgid "Query status=7 (ERROR)\n"
 msgstr "État de la requête=7 (ERREUR)\n"
 
-#: fetchmail.c:722
+#: fetchmail.c:734
 msgid "Query status=8 (EXCLUDE)\n"
 msgstr "État de la requête=8 (EXCLU)\n"
 
-#: fetchmail.c:724
+#: fetchmail.c:736
 msgid "Query status=9 (LOCKBUSY)\n"
 msgstr "État de la requête=9 (verrou déjà pris)\n"
 
-#: fetchmail.c:726
+#: fetchmail.c:738
 msgid "Query status=10 (SMTP)\n"
 msgstr "État de la requête=10 (SMTP)\n"
 
-#: fetchmail.c:728
+#: fetchmail.c:740
 msgid "Query status=11 (DNS)\n"
 msgstr "État de la requête=11 (DNS)\n"
 
-#: fetchmail.c:730
+#: fetchmail.c:742
 msgid "Query status=12 (BSMTP)\n"
 msgstr "État de la requête=12 (BSMTP)\n"
 
-#: fetchmail.c:732
+#: fetchmail.c:744
 msgid "Query status=13 (MAXFETCH)\n"
 msgstr "État de la requête=13 (NOMBRE MAXIMUM DE MESSAGES ATTEINT)\n"
 
-#: fetchmail.c:734
+#: fetchmail.c:746
 #, c-format
 msgid "Query status=%d\n"
 msgstr "État de la requête=%d\n"
 
-#: fetchmail.c:780
+#: fetchmail.c:792
 msgid "All connections are wedged.  Exiting.\n"
 msgstr "Toutes les connexions sont établies. Terminé.\n"
 
-#: fetchmail.c:787
+#: fetchmail.c:799
 #, c-format
 msgid "sleeping at %s\n"
 msgstr "mise en sommeil à %s\n"
 
-#: fetchmail.c:811
+#: fetchmail.c:823
 #, c-format
 msgid "awakened by %s\n"
 msgstr "réveillé par %s\n"
 
-#: fetchmail.c:814
+#: fetchmail.c:826
 #, c-format
 msgid "awakened by signal %d\n"
 msgstr "réveillé par un signal %d\n"
 
-#: fetchmail.c:821
+#: fetchmail.c:833
 #, c-format
 msgid "awakened at %s\n"
 msgstr "réveillé à %s\n"
 
-#: fetchmail.c:827
+#: fetchmail.c:839
 #, c-format
 msgid "normal termination, status %d\n"
 msgstr "terminaison normale, état %d\n"
 
-#: fetchmail.c:979
+#: fetchmail.c:991
 msgid "couldn't time-check the run-control file\n"
 msgstr "impossible de «time-check» le fichier run-control\n"
 
-#: fetchmail.c:1012
+#: fetchmail.c:1024
 #, c-format
 msgid "Warning: multiple mentions of host %s in config file\n"
 msgstr ""
 "Attention : plusieurs mentions de l'hôte %s dans le fichier de "
 "configuration\n"
 
-#: fetchmail.c:1045
+#: fetchmail.c:1057
 msgid "fetchmail: Error: multiple \"defaults\" records in config file.\n"
 msgstr ""
 "fetchmail: Erreur: plusieurs blocs \"defaults\" dans le fichier de "
 "configuration\n"
 
-#: fetchmail.c:1165
+#: fetchmail.c:1177
 msgid "SSL support is not compiled in.\n"
 msgstr "Le support de SSL n'est pas été activé à la compilation.\n"
 
-#: fetchmail.c:1196
+#: fetchmail.c:1208
 #, c-format
 msgid ""
 "fetchmail: warning: no DNS available to check multidrop fetches from %s\n"
@@ -935,20 +935,20 @@ msgstr ""
 "fetchmail: attention: aucun DNS disponible pour vérifier les réceptions "
 "«multidrop» depuis %s\n"
 
-#: fetchmail.c:1207
+#: fetchmail.c:1219
 #, c-format
 msgid "warning: multidrop for %s requires envelope option!\n"
 msgstr ""
 "attention: des réceptions «multidrop» depuis %s exigent l'option "
 "«envelope»!\n"
 
-#: fetchmail.c:1208
+#: fetchmail.c:1220
 msgid "warning: Do not ask for support if all mail goes to postmaster!\n"
 msgstr ""
 "attention: Ne chercher pas de l'aide si tout mail est expédié au "
 "postmaster!\n"
 
-#: fetchmail.c:1225
+#: fetchmail.c:1237
 #, c-format
 msgid ""
 "fetchmail: %s configuration invalid, specify positive port number for "
@@ -957,115 +957,115 @@ msgstr ""
 "fetchmail: configuration de %s invalide, service requiert un numéro de port "
 "positif\n"
 
-#: fetchmail.c:1232
+#: fetchmail.c:1244
 #, c-format
 msgid "fetchmail: %s configuration invalid, RPOP requires a privileged port\n"
 msgstr ""
 "fetchmail: configuration de %s invalide, RPOP requiert un port privilégié\n"
 
-#: fetchmail.c:1250
+#: fetchmail.c:1262
 #, c-format
 msgid "%s configuration invalid, LMTP can't use default SMTP port\n"
 msgstr ""
 "configuration de %s invalide, LMTP ne peut utiliser le port SMTP par défaut\n"
 
-#: fetchmail.c:1264
+#: fetchmail.c:1276
 msgid "Both fetchall and keep on in daemon mode is a mistake!\n"
 msgstr "Utiliser «fetchall» et «keep» ensemble en mode démon est une erreur!\n"
 
-#: fetchmail.c:1297
+#: fetchmail.c:1301
 #, c-format
 msgid "terminated with signal %d\n"
 msgstr "terminé par un signal %d\n"
 
-#: fetchmail.c:1369
+#: fetchmail.c:1373
 #, c-format
 msgid "%s querying %s (protocol %s) at %s: poll started\n"
 msgstr "%s interroge %s (protocole %s) à %s : récupération en cours\n"
 
-#: fetchmail.c:1394
+#: fetchmail.c:1398
 msgid "POP2 support is not configured.\n"
 msgstr "Le support de POP2 n'est pas configuré.\n"
 
-#: fetchmail.c:1406
+#: fetchmail.c:1410
 msgid "POP3 support is not configured.\n"
 msgstr "Le support de POP3 n'est pas configuré.\n"
 
-#: fetchmail.c:1416
+#: fetchmail.c:1420
 msgid "IMAP support is not configured.\n"
 msgstr "Le support d'IMAP n'est pas configuré.\n"
 
-#: fetchmail.c:1422
+#: fetchmail.c:1426
 msgid "ETRN support is not configured.\n"
 msgstr "Le support d'ETRN n'est pas configuré.\n"
 
-#: fetchmail.c:1430
+#: fetchmail.c:1434
 msgid "ODMR support is not configured.\n"
 msgstr "Le support de ODMR n'est pas configuré.\n"
 
-#: fetchmail.c:1437
+#: fetchmail.c:1441
 msgid "unsupported protocol selected.\n"
 msgstr "protocole sélectionné non supporté.\n"
 
-#: fetchmail.c:1447
+#: fetchmail.c:1451
 #, c-format
 msgid "%s querying %s (protocol %s) at %s: poll completed\n"
 msgstr "%s interroge %s (protocole %s) à %s : interrogation finie\n"
 
-#: fetchmail.c:1464
+#: fetchmail.c:1468
 #, c-format
 msgid "Poll interval is %d seconds\n"
 msgstr "L'intervalle entre les réceptions est de %d secondes\n"
 
-#: fetchmail.c:1466
+#: fetchmail.c:1470
 #, c-format
 msgid "Logfile is %s\n"
 msgstr "Le fichier de traces est %s\n"
 
-#: fetchmail.c:1468
+#: fetchmail.c:1472
 #, c-format
 msgid "Idfile is %s\n"
 msgstr "Le fichier des identificateurs est %s\n"
 
-#: fetchmail.c:1471
+#: fetchmail.c:1475
 msgid "Progress messages will be logged via syslog\n"
 msgstr "Les messages de progression sont enregistrés via syslog\n"
 
-#: fetchmail.c:1474
+#: fetchmail.c:1478
 msgid "Fetchmail will masquerade and will not generate Received\n"
 msgstr "Fetchmail va se masquer et ne générer aucun «Received»\n"
 
-#: fetchmail.c:1476
+#: fetchmail.c:1480
 msgid "Fetchmail will show progress dots even in logfiles.\n"
 msgstr "Fetchmail affichera des points de progression, même dans le journal\n"
 
-#: fetchmail.c:1478
+#: fetchmail.c:1482
 #, c-format
 msgid "Fetchmail will forward misaddressed multidrop messages to %s.\n"
 msgstr ""
 "Fetchmail réexpédiera les messages «multidrop» mal aiguillés vers %s.\n"
 
-#: fetchmail.c:1482
+#: fetchmail.c:1486
 msgid "Fetchmail will direct error mail to the postmaster.\n"
 msgstr ""
 "Fetchmail expédiera les erreurs de messagerie\n"
 "au maître de poste.\n"
 
-#: fetchmail.c:1484
+#: fetchmail.c:1488
 msgid "Fetchmail will direct error mail to the sender.\n"
 msgstr "Fetchmail expédiera les erreur de messagerie à l'envoyeur\n"
 
-#: fetchmail.c:1491
+#: fetchmail.c:1495
 #, c-format
 msgid "Options for retrieving from %s@%s:\n"
 msgstr "Options pour la réception depuis %s@%s :\n"
 
-#: fetchmail.c:1495
+#: fetchmail.c:1499
 #, c-format
 msgid "  Mail will be retrieved via %s\n"
 msgstr "  Le courrier sera reçu via %s\n"
 
-#: fetchmail.c:1498
+#: fetchmail.c:1502
 #, c-format
 msgid "  Poll of this server will occur every %d interval.\n"
 msgid_plural "  Poll of this server will occur every %d intervals.\n"
@@ -1073,176 +1073,176 @@ msgstr[0] "  La réception depuis ce serveur s'opérera tout %d intervalle.\n"
 msgstr[1] ""
 "  La réception depuis ce serveur s'opérera tous les %d intervalles.\n"
 
-#: fetchmail.c:1502
+#: fetchmail.c:1506
 #, c-format
 msgid "  True name of server is %s.\n"
 msgstr "  Le vrai nom du serveur est %s.\n"
 
-#: fetchmail.c:1505
+#: fetchmail.c:1509
 msgid "  This host will not be queried when no host is specified.\n"
 msgstr "  Cet hôte ne sera pas interrogé lorsqu'aucun hôte n'est spécifié.\n"
 
-#: fetchmail.c:1506
+#: fetchmail.c:1510
 msgid "  This host will be queried when no host is specified.\n"
 msgstr "  Cet hôte sera interrogé lorsqu'aucun hôte n'est spécifié.\n"
 
-#: fetchmail.c:1510
+#: fetchmail.c:1514
 msgid "  Password will be prompted for.\n"
 msgstr "  Le mot de passe sera requis.\n"
 
-#: fetchmail.c:1514
+#: fetchmail.c:1518
 #, c-format
 msgid "  APOP secret = \"%s\".\n"
 msgstr "  Secret APOP = \"%s\".\n"
 
-#: fetchmail.c:1517
+#: fetchmail.c:1521
 #, c-format
 msgid "  RPOP id = \"%s\".\n"
 msgstr "  Identification RPOP = \"%s\".\n"
 
-#: fetchmail.c:1520
+#: fetchmail.c:1524
 #, c-format
 msgid "  Password = \"%s\".\n"
 msgstr "  Mot de passe = \"%s\".\n"
 
-#: fetchmail.c:1529
+#: fetchmail.c:1533
 #, c-format
 msgid "  Protocol is KPOP with Kerberos %s authentication"
 msgstr "  Le protocole est KPOP avec authentification Kerberos %s"
 
-#: fetchmail.c:1532
+#: fetchmail.c:1536
 #, c-format
 msgid "  Protocol is %s"
 msgstr "  Le protocole est %s"
 
-#: fetchmail.c:1534
+#: fetchmail.c:1538
 #, c-format
 msgid " (using service %s)"
 msgstr " (utilisant le service %s)"
 
-#: fetchmail.c:1536
+#: fetchmail.c:1540
 msgid " (using default port)"
 msgstr " (utilisant le port par défaut)"
 
-#: fetchmail.c:1538
+#: fetchmail.c:1542
 msgid " (forcing UIDL use)"
 msgstr " (forçant l'usage des UIDL)"
 
-#: fetchmail.c:1544
+#: fetchmail.c:1548
 msgid "  All available authentication methods will be tried.\n"
 msgstr "  Toutes les méthodes d'authentification vont être essayées.\n"
 
-#: fetchmail.c:1547
+#: fetchmail.c:1551
 msgid "  Password authentication will be forced.\n"
 msgstr "Authentification par mot de passe forcé.\n"
 
-#: fetchmail.c:1550
+#: fetchmail.c:1554
 msgid "  MSN authentication will be forced.\n"
 msgstr "L'authentification MSN forcée.\n"
 
-#: fetchmail.c:1553
+#: fetchmail.c:1557
 msgid "  NTLM authentication will be forced.\n"
 msgstr "L'authentification NTLM forcée.\n"
 
-#: fetchmail.c:1556
+#: fetchmail.c:1560
 msgid "  OTP authentication will be forced.\n"
 msgstr "  Authentification OTP forcée.\n"
 
-#: fetchmail.c:1559
+#: fetchmail.c:1563
 msgid "  CRAM-Md5 authentication will be forced.\n"
 msgstr "  Authentification CRAM-Md5 forcée.\n"
 
-#: fetchmail.c:1562
+#: fetchmail.c:1566
 msgid "  GSSAPI authentication will be forced.\n"
 msgstr "  Authentification GSSAPI forcée.\n"
 
-#: fetchmail.c:1565
+#: fetchmail.c:1569
 msgid "  Kerberos V4 authentication will be forced.\n"
 msgstr "  Authentification de Kerberos V4 forcée.\n"
 
-#: fetchmail.c:1568
+#: fetchmail.c:1572
 msgid "  Kerberos V5 authentication will be forced.\n"
 msgstr " Authentification de Kerberos V5 forcée.\n"
 
-#: fetchmail.c:1571
+#: fetchmail.c:1575
 msgid "  End-to-end encryption assumed.\n"
 msgstr "  cryptage «End-to-end» assumé.\n"
 
-#: fetchmail.c:1575
+#: fetchmail.c:1579
 #, c-format
 msgid "  Mail service principal is: %s\n"
 msgstr "  Le principal service de mail est: %s\n"
 
-#: fetchmail.c:1578
+#: fetchmail.c:1582
 msgid "  SSL encrypted sessions enabled.\n"
 msgstr "  Les sessions encryptée SSL sont supportées.\n"
 
-#: fetchmail.c:1580
+#: fetchmail.c:1584
 #, c-format
 msgid "  SSL protocol: %s.\n"
 msgstr "  Protocole SSL: %s\n"
 
-#: fetchmail.c:1582
+#: fetchmail.c:1586
 msgid "  SSL server certificate checking enabled.\n"
 msgstr "  Activation de la vérification des certificats du serveur SSL.\n"
 
-#: fetchmail.c:1584
+#: fetchmail.c:1588
 #, c-format
 msgid "  SSL trusted certificate directory: %s\n"
 msgstr "  Répertoire des certificats SSL surs: %s\n"
 
-#: fetchmail.c:1587
+#: fetchmail.c:1591
 #, c-format
 msgid "  SSL key fingerprint (checked against the server key): %s\n"
 msgstr "  Signature de la clé SSL (vérifié via le serveur de clés): %s\n"
 
-#: fetchmail.c:1590
+#: fetchmail.c:1594
 #, c-format
 msgid "  Server nonresponse timeout is %d seconds"
 msgstr "  Le délai d'attente d'une réponse du serveur est de %d secondes"
 
-#: fetchmail.c:1592
+#: fetchmail.c:1596
 msgid " (default).\n"
 msgstr " (par défaut).\n"
 
-#: fetchmail.c:1599
+#: fetchmail.c:1603
 msgid "  Default mailbox selected.\n"
 msgstr "  La boîte aux lettres par défaut est sélectionnée.\n"
 
-#: fetchmail.c:1604
+#: fetchmail.c:1608
 msgid "  Selected mailboxes are:"
 msgstr "  Les boîtes aux lettres sélectionnées sont :"
 
-#: fetchmail.c:1610
+#: fetchmail.c:1614
 msgid "  All messages will be retrieved (--all on).\n"
 msgstr "  Tous les messages seront reçus (--all on).\n"
 
-#: fetchmail.c:1611
+#: fetchmail.c:1615
 msgid "  Only new messages will be retrieved (--all off).\n"
 msgstr "  Seulement des messages nouveaux seront reçus (--all off).\n"
 
-#: fetchmail.c:1613
+#: fetchmail.c:1617
 msgid "  Fetched messages will be kept on the server (--keep on).\n"
 msgstr "  Tout message récupéré sera conservé sur le serveur (--keep on).\n"
 
-#: fetchmail.c:1614
+#: fetchmail.c:1618
 msgid "  Fetched messages will not be kept on the server (--keep off).\n"
 msgstr ""
 "  Tout message récupéré ne sera pas conservé sur le serveur (--keep off).\n"
 
-#: fetchmail.c:1616
+#: fetchmail.c:1620
 msgid "  Old messages will be flushed before message retrieval (--flush on).\n"
 msgstr ""
 "  Tout ancien message sera éliminé avant relève du courrier (--flush on).\n"
 
-#: fetchmail.c:1617
+#: fetchmail.c:1621
 msgid ""
 "  Old messages will not be flushed before message retrieval (--flush off).\n"
 msgstr ""
 "  Tout ancien message ne sera pas éliminé avant relève du courrier (--flush "
 "off).\n"
 
-#: fetchmail.c:1619
+#: fetchmail.c:1623
 msgid ""
 "  Oversized messages will be flushed before message retrieval (--limitflush "
 "on).\n"
@@ -1250,7 +1250,7 @@ msgstr ""
 "  Tout message trop grand sera éliminé avant relève du courrier (--"
 "limitflush on).\n"
 
-#: fetchmail.c:1620
+#: fetchmail.c:1624
 msgid ""
 "  Oversized messages will not be flushed before message retrieval (--"
 "limitflush off).\n"
@@ -1258,339 +1258,339 @@ msgstr ""
 "  Tout ancien trop grand ne sera pas éliminé avant relève du courrier (--"
 "limitflush off).\n"
 
-#: fetchmail.c:1622
+#: fetchmail.c:1626
 msgid "  Rewrite of server-local addresses is enabled (--norewrite off).\n"
 msgstr "  La ré-écriture des adresses locales est activée (--norewrite off).\n"
 
-#: fetchmail.c:1623
+#: fetchmail.c:1627
 msgid "  Rewrite of server-local addresses is disabled (--norewrite on).\n"
 msgstr ""
 "  La ré-écriture des adresses locales est inactivée (--norewrite on).\n"
 
-#: fetchmail.c:1625
+#: fetchmail.c:1629
 msgid "  Carriage-return stripping is enabled (stripcr on).\n"
 msgstr "  La suppression des retour-chariots est activé (stripcr on).\n"
 
-#: fetchmail.c:1626
+#: fetchmail.c:1630
 msgid "  Carriage-return stripping is disabled (stripcr off).\n"
 msgstr "  La suppression des retour-chariots est inactivée (stripcr off).\n"
 
-#: fetchmail.c:1628
+#: fetchmail.c:1632
 msgid "  Carriage-return forcing is enabled (forcecr on).\n"
 msgstr "  Le forçage des retour-chariots est activé (forcecr on).\n"
 
-#: fetchmail.c:1629
+#: fetchmail.c:1633
 msgid "  Carriage-return forcing is disabled (forcecr off).\n"
 msgstr "  Le forçage des retour-chariots est inactivé (forcecr off).\n"
 
-#: fetchmail.c:1631
+#: fetchmail.c:1635
 msgid ""
 "  Interpretation of Content-Transfer-Encoding is disabled (pass8bits on).\n"
 msgstr ""
 "  L'interprétation des «Content-Transfer-Encoding» est inactivée (pass8bits "
 "on).\n"
 
-#: fetchmail.c:1632
+#: fetchmail.c:1636
 msgid ""
 "  Interpretation of Content-Transfer-Encoding is enabled (pass8bits off).\n"
 msgstr ""
 "  L'interprétation des «Content-Transfer-Encoding» est activée (pass8bits "
 "off).\n"
 
-#: fetchmail.c:1634
+#: fetchmail.c:1638
 msgid "  MIME decoding is enabled (mimedecode on).\n"
 msgstr "  Le décodage MIME est activé (mimedecode on).\n"
 
-#: fetchmail.c:1635
+#: fetchmail.c:1639
 msgid "  MIME decoding is disabled (mimedecode off).\n"
 msgstr "  Le décodage MIME est inactivé (mimedecode off).\n"
 
-#: fetchmail.c:1637
+#: fetchmail.c:1641
 msgid "  Idle after poll is enabled (idle on).\n"
 msgstr "  L'inoccupation après la réception est activé (idle on).\n"
 
-#: fetchmail.c:1638
+#: fetchmail.c:1642
 msgid "  Idle after poll is disabled (idle off).\n"
 msgstr "  L'inoccupation après la réception est inactivé (idle off).\n"
 
-#: fetchmail.c:1640
+#: fetchmail.c:1644
 msgid "  Nonempty Status lines will be discarded (dropstatus on)\n"
 msgstr "  Les lignes «Status» non vides seront ignorés (dropstatus on).\n"
 
-#: fetchmail.c:1641
+#: fetchmail.c:1645
 msgid "  Nonempty Status lines will be kept (dropstatus off)\n"
 msgstr "  Les lignes «Status» non vides seront conservées (dropstatus off).\n"
 
-#: fetchmail.c:1643
+#: fetchmail.c:1647
 msgid "  Delivered-To lines will be discarded (dropdelivered on)\n"
 msgstr ""
 "  Les lignes «Delivered-To» non vides seront ignorées (dropdelivered on).\n"
 
-#: fetchmail.c:1644
+#: fetchmail.c:1648
 msgid "  Delivered-To lines will be kept (dropdelivered off)\n"
 msgstr ""
 "  Les lignes «Delivered-To» non vides seront conservées (dropdelivered "
 "off).\n"
 
-#: fetchmail.c:1648
+#: fetchmail.c:1652
 #, c-format
 msgid "  Message size limit is %d octets (--limit %d).\n"
 msgstr "  La taille des messages est limitée à %d octets (--limit %d).\n"
 
-#: fetchmail.c:1651
+#: fetchmail.c:1655
 msgid "  No message size limit (--limit 0).\n"
 msgstr "  La taille des messages n'est pas limitée (--limit 0).\n"
 
-#: fetchmail.c:1653
+#: fetchmail.c:1657
 #, c-format
 msgid "  Message size warning interval is %d seconds (--warnings %d).\n"
 msgstr ""
 "  Alertes sur la taille des messages toutes les %d secondes (--warnings %"
 "d).\n"
 
-#: fetchmail.c:1656
+#: fetchmail.c:1660
 msgid "  Size warnings on every poll (--warnings 0).\n"
 msgstr ""
 "  Alertes sur la taille des messages à chaque réception (--warnings 0).\n"
 
-#: fetchmail.c:1659
+#: fetchmail.c:1663
 #, c-format
 msgid "  Received-message limit is %d (--fetchlimit %d).\n"
 msgstr "  Le nombre de messages reçu est limité à %d (--fetchlimit %d).\n"
 
-#: fetchmail.c:1662
+#: fetchmail.c:1666
 msgid "  No received-message limit (--fetchlimit 0).\n"
 msgstr "  Le nombre de messages reçu n'est pas limité (--fetchlimit 0).\n"
 
-#: fetchmail.c:1664
+#: fetchmail.c:1668
 #, c-format
 msgid "  Fetch message size limit is %d (--fetchsizelimit %d).\n"
 msgstr ""
 "  La limite de taille de récupération de messages est %d (--fetchsizelimit %"
 "d)\n"
 
-#: fetchmail.c:1667
+#: fetchmail.c:1671
 msgid "  No fetch message size limit (--fetchsizelimit 0).\n"
 msgstr ""
 "  Aucune limite de taille de récupération de messages (--fetchsizelimit 0)\n"
 
-#: fetchmail.c:1671
+#: fetchmail.c:1675
 msgid "  Do binary search of UIDs during each poll (--fastuidl 1).\n"
 msgstr ""
 "  Effectue la recherche binaire des UIDs à chaque sondage (--fastuidl 1).\n"
 
-#: fetchmail.c:1673
+#: fetchmail.c:1677
 #, c-format
 msgid "  Do binary search of UIDs during %d out of %d polls (--fastuidl %d).\n"
 msgstr ""
 "  Effectue la recherche binaire des UIDs durant %d sondages sur %d (--"
 "fastuidl %d).\n"
 
-#: fetchmail.c:1676
+#: fetchmail.c:1680
 msgid "   Do linear search of UIDs during each poll (--fastuidl 0).\n"
 msgstr ""
 "  Effectue la recherche linéaire des UIDs à chaque sondage (--fastuidl 0).\n"
 
-#: fetchmail.c:1678
+#: fetchmail.c:1682
 #, c-format
 msgid "  SMTP message batch limit is %d.\n"
 msgstr "  Le nombre de messages expédiés est limité à %d.\n"
 
-#: fetchmail.c:1680
+#: fetchmail.c:1684
 msgid "  No SMTP message batch limit (--batchlimit 0).\n"
 msgstr "  Le nombre de messages expédiés n'est pas limité (--batchlimit 0).\n"
 
-#: fetchmail.c:1684
+#: fetchmail.c:1688
 #, c-format
 msgid "  Deletion interval between expunges forced to %d (--expunge %d).\n"
 msgstr ""
 "  Purge à chaque fois que %d messages ont été éliminés (--expunge %d).\n"
 
-#: fetchmail.c:1686
+#: fetchmail.c:1690
 msgid "  No forced expunges (--expunge 0).\n"
 msgstr "  Aucune purge forcée n'aura lieu (--expunge 0).\n"
 
-#: fetchmail.c:1693
+#: fetchmail.c:1697
 msgid "  Domains for which mail will be fetched are:"
 msgstr "  Domaines pour lesquels le mail est récupéré :"
 
-#: fetchmail.c:1698 fetchmail.c:1718
+#: fetchmail.c:1702 fetchmail.c:1722
 msgid " (default)"
 msgstr " (par défaut)"
 
-#: fetchmail.c:1703
+#: fetchmail.c:1707
 #, c-format
 msgid "  Messages will be appended to %s as BSMTP\n"
 msgstr "  Les messages seront ajoutés après %s en tant que BSMTP\n"
 
-#: fetchmail.c:1705
+#: fetchmail.c:1709
 #, c-format
 msgid "  Messages will be delivered with \"%s\".\n"
 msgstr "  Les messages seront acheminés avec \"%s\".\n"
 
-#: fetchmail.c:1712
+#: fetchmail.c:1716
 #, c-format
 msgid "  Messages will be %cMTP-forwarded to:"
 msgstr "  Les messages seront réexpédiés via %cMTP vers :"
 
-#: fetchmail.c:1723
+#: fetchmail.c:1727
 #, c-format
 msgid "  Host part of MAIL FROM line will be %s\n"
 msgstr "  Le nom de la machine sur la ligne «MAIL FROM» sera %s\n"
 
-#: fetchmail.c:1726
+#: fetchmail.c:1730
 #, c-format
 msgid "  Address to be put in RCPT TO lines shipped to SMTP will be %s\n"
 msgstr "  L'adresse placée après la commande SMTP 'RCPT TO' sera %s\n"
 
-#: fetchmail.c:1735
+#: fetchmail.c:1739
 msgid "  Recognized listener spam block responses are:"
 msgstr "  Les réponses du serveur reconnaissant des blocs de «spam» sont :"
 
-#: fetchmail.c:1741
+#: fetchmail.c:1745
 msgid "  Spam-blocking disabled\n"
 msgstr "  Le blocage du «spam» est inactivé\n"
 
-#: fetchmail.c:1744
+#: fetchmail.c:1748
 #, c-format
 msgid "  Server connection will be brought up with \"%s\".\n"
 msgstr "  La connexion au serveur sera initiée avec \"%s\".\n"
 
-#: fetchmail.c:1747
+#: fetchmail.c:1751
 msgid "  No pre-connection command.\n"
 msgstr "  Aucune commande de pré-connexion définie.\n"
 
-#: fetchmail.c:1749
+#: fetchmail.c:1753
 #, c-format
 msgid "  Server connection will be taken down with \"%s\".\n"
 msgstr "  La connexion au serveur sera terminée avec \"%s\".\n"
 
-#: fetchmail.c:1752
+#: fetchmail.c:1756
 msgid "  No post-connection command.\n"
 msgstr "  Aucune commande de post-connexion définie.\n"
 
-#: fetchmail.c:1755
+#: fetchmail.c:1759
 msgid "  No localnames declared for this host.\n"
 msgstr "  Aucun nom local déclaré pour cet hôte.\n"
 
-#: fetchmail.c:1765
+#: fetchmail.c:1769
 msgid "  Multi-drop mode: "
 msgstr "  Mode «multi-drop»: "
 
-#: fetchmail.c:1767
+#: fetchmail.c:1771
 msgid "  Single-drop mode: "
 msgstr "  Mode «single-drop»: "
 
-#: fetchmail.c:1769
+#: fetchmail.c:1773
 #, c-format
 msgid "%d local name recognized.\n"
 msgid_plural "%d local names recognized.\n"
 msgstr[0] "%d nom local reconnu.\n"
 msgstr[1] "%d noms locaux reconnus.\n"
 
-#: fetchmail.c:1784
+#: fetchmail.c:1788
 msgid "  DNS lookup for multidrop addresses is enabled.\n"
 msgstr "  La requête DNS des adresses «multidrop» est activée.\n"
 
-#: fetchmail.c:1785
+#: fetchmail.c:1789
 msgid "  DNS lookup for multidrop addresses is disabled.\n"
 msgstr "  La requête DNS des adresses «multidrop» est inactivée.\n"
 
-#: fetchmail.c:1789
+#: fetchmail.c:1793
 msgid ""
 "  Server aliases will be compared with multidrop addresses by IP address.\n"
 msgstr ""
 "  Les alias du serveur seront comparés avec les adresses «multidrop» par "
 "leurs adresses IP.\n"
 
-#: fetchmail.c:1791
+#: fetchmail.c:1795
 msgid "  Server aliases will be compared with multidrop addresses by name.\n"
 msgstr ""
 "  Les alias du serveur seront comparés avec les adresses «multidrop» par "
 "leurs noms.\n"
 
-#: fetchmail.c:1794
+#: fetchmail.c:1798
 msgid "  Envelope-address routing is disabled\n"
 msgstr "  Le routage vers l'adresse d'enveloppe est inactivé\n"
 
-#: fetchmail.c:1797
+#: fetchmail.c:1801
 #, c-format
 msgid "  Envelope header is assumed to be: %s\n"
 msgstr "  L'en-tête d'enveloppe est pris comme étant : %s\n"
 
-#: fetchmail.c:1800
+#: fetchmail.c:1804
 #, c-format
 msgid "  Number of envelope headers to be skipped over: %d\n"
 msgstr "  Numéro de l'en-tête d'enveloppe devant être traité : %d\n"
 
-#: fetchmail.c:1803
+#: fetchmail.c:1807
 #, c-format
 msgid "  Prefix %s will be removed from user id\n"
 msgstr "  Le préfixe %s sera soustrait des id d'utilisateur\n"
 
-#: fetchmail.c:1806
+#: fetchmail.c:1810
 msgid "  No prefix stripping\n"
 msgstr "  Aucun préfixe ne sera soustrait\n"
 
-#: fetchmail.c:1813
+#: fetchmail.c:1817
 msgid "  Predeclared mailserver aliases:"
 msgstr "  Alias pré-déclarés du serveur de courrier :"
 
-#: fetchmail.c:1822
+#: fetchmail.c:1826
 msgid "  Local domains:"
 msgstr "  Domaines locaux :"
 
-#: fetchmail.c:1832
+#: fetchmail.c:1836
 #, c-format
 msgid "  Connection must be through interface %s.\n"
 msgstr "  La connexion se fera via l'interface %s.\n"
 
-#: fetchmail.c:1834
+#: fetchmail.c:1838
 msgid "  No interface requirement specified.\n"
 msgstr "  Aucun choix d'interface n'a été spécifié.\n"
 
-#: fetchmail.c:1836
+#: fetchmail.c:1840
 #, c-format
 msgid "  Polling loop will monitor %s.\n"
 msgstr "  La boucle de réception observera %s.\n"
 
-#: fetchmail.c:1838
+#: fetchmail.c:1842
 msgid "  No monitor interface specified.\n"
 msgstr "  Aucune interface à observer n'a été spécifiée.\n"
 
-#: fetchmail.c:1842
+#: fetchmail.c:1846
 #, c-format
 msgid "  Server connections will be made via plugin %s (--plugin %s).\n"
 msgstr "  Connexions au serveur à travers le «plugin» %s (--plugin %s).\n"
 
-#: fetchmail.c:1844
+#: fetchmail.c:1848
 msgid "  No plugin command specified.\n"
 msgstr "  Aucune commande de «plugin» n'a été spécifiée.\n"
 
-#: fetchmail.c:1846
+#: fetchmail.c:1850
 #, c-format
 msgid "  Listener connections will be made via plugout %s (--plugout %s).\n"
 msgstr "  Connexions au client à travers le «plugout» %s (--plugout %s).\n"
 
-#: fetchmail.c:1848
+#: fetchmail.c:1852
 msgid "  No plugout command specified.\n"
 msgstr "  Aucune commande de «plugout» n'a été spécifiée.\n"
 
-#: fetchmail.c:1853
+#: fetchmail.c:1857
 msgid "  No UIDs saved from this host.\n"
 msgstr "  Aucun UID n'a été enregistré sur cet hôte.\n"
 
-#: fetchmail.c:1862
+#: fetchmail.c:1866
 #, c-format
 msgid "  %d UIDs saved.\n"
 msgstr "  %d UIDs enregistrés.\n"
 
-#: fetchmail.c:1870
+#: fetchmail.c:1874
 msgid "  Poll trace information will be added to the Received header.\n"
 msgstr ""
 "  Information de traçage de la réception ajoutée aux en-têtes Received.\n"
 
-#: fetchmail.c:1872
+#: fetchmail.c:1876
 msgid ""
 "  No poll trace information will be added to the Received header.\n"
 ".\n"
@@ -1598,7 +1598,7 @@ msgstr ""
 "  Aucune ajout d'information de traçage de la réception aux en-têtes "
 "Received.\n"
 
-#: fetchmail.c:1875
+#: fetchmail.c:1879
 #, c-format
 msgid "  Pass-through properties \"%s\".\n"
 msgstr "  Propriétés du passage \"%s\".\n"
@@ -1672,82 +1672,89 @@ msgstr "Erreur de relarguage des credentials\n"
 msgid "fetchmail: thread sleeping for %d sec.\n"
 msgstr "fetchmail: mise en sommeil du thread pour %d secondes.\n"
 
-#: imap.c:306
+#: imap.c:314
 msgid "Protocol identified as IMAP4 rev 1\n"
 msgstr "Protocole identifié comme étant IMAP4 rev \n"
 
-#: imap.c:312
+#: imap.c:320
 msgid "Protocol identified as IMAP4 rev 0\n"
 msgstr "Protocole identifié comme étant IMAP4 rev 0\n"
 
-#: imap.c:319
+#: imap.c:327
 msgid "Protocol identified as IMAP2 or IMAP2BIS\n"
 msgstr "Protocole identifié comme étant IMAP2 ou IMAP2BIS\n"
 
-#: imap.c:334
+#: imap.c:342
 msgid "will idle after poll\n"
 msgstr "attendra après la réception\n"
 
-#: imap.c:490
+#: imap.c:498
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "La fonctionnalité OTP requise n'est pas supportée par fetchmail\n"
 
-#: imap.c:512 pop3.c:366
+#: imap.c:520 pop3.c:366
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "La fonctionnalité NTLM requise n'est pas supportée par fetchmail.\n"
 
-#: imap.c:521
+#: imap.c:529
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "La fonction LOGIN requise n'est pas supportée par le serveur\n"
 
-#: imap.c:682 imap.c:720
+#: imap.c:603
+#, fuzzy, c-format
+msgid "mail expunge mismatch (%d actual != %d expected)\n"
+msgstr ""
+"le message %s@%s:%d n'est pas de la longueur attendue (%d actuelle != %d "
+"attendue)\n"
+
+#: imap.c:707 imap.c:745
 msgid "re-poll failed\n"
 msgstr "échec durant la re-réception\n"
 
-#: imap.c:690
+#: imap.c:715
 #, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
 msgstr[0] "%d message en attente après le nouveau poll\n"
 msgstr[1] "%d messages en attente après le nouveau poll\n"
 
-#: imap.c:707
+#: imap.c:732
 msgid "mailbox selection failed\n"
 msgstr "échec de la sélection de boîte aux lettres\n"
 
-#: imap.c:711
+#: imap.c:736
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
 msgstr[0] "%d message en attente après le premier poll\n"
 msgstr[1] "%d messages en attente après le premier poll\n"
 
-#: imap.c:735
+#: imap.c:760
 msgid "expunge failed\n"
 msgstr "échec de la purge\n"
 
-#: imap.c:739
+#: imap.c:764
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
 msgstr[0] "%d message en attente après la purge\n"
 msgstr[1] "%d messages en attente après la purge\n"
 
-#: imap.c:764
+#: imap.c:789
 msgid "search for unseen messages failed\n"
 msgstr "échec de la recherche des messages non-vus\n"
 
-#: imap.c:794 pop3.c:746 pop3.c:758 pop3.c:980 pop3.c:987
+#: imap.c:819 pop3.c:746 pop3.c:758 pop3.c:987 pop3.c:994
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u n'est pas vu\n"
 
-#: imap.c:806 pop3.c:767
+#: imap.c:831 pop3.c:767
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u est le premier a n'avoir pas été vu\n"
 
-#: imap.c:897
+#: imap.c:922
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""
@@ -1949,137 +1956,137 @@ msgstr "Impossible de décoder le challenge OTP\n"
 msgid "Secret pass phrase: "
 msgstr "Phrase de passe secrète : "
 
-#: options.c:161 options.c:205
+#: options.c:164 options.c:208
 #, c-format
 msgid "String '%s' is not a valid number string.\n"
 msgstr "La chaîne de caractères «%s» n'est pas un nombre valide.\n"
 
-#: options.c:170
+#: options.c:173
 #, c-format
 msgid "Value of string '%s' is %s than %d.\n"
 msgstr "La valeur de la chaîne de caractères «%s» est %s que %d.\n"
 
-#: options.c:171
+#: options.c:174
 msgid "smaller"
 msgstr "moins"
 
-#: options.c:171
+#: options.c:174
 msgid "larger"
 msgstr "plus"
 
-#: options.c:330
+#: options.c:333
 #, c-format
 msgid "Invalid protocol `%s' specified.\n"
 msgstr "Le protocole «%s» spécifié est invalide.\n"
 
-#: options.c:372
+#: options.c:378
 #, c-format
 msgid "Invalid authentication `%s' specified.\n"
 msgstr "La authentification «%s» spécifiée est invalide.\n"
 
-#: options.c:573
+#: options.c:579
 msgid "usage:  fetchmail [options] [server ...]\n"
 msgstr "usage:  fetchmail [options] [serveur ...]\n"
 
-#: options.c:574
+#: options.c:580
 msgid "  Options are as follows:\n"
 msgstr "  Les options sont les suivantes :\n"
 
-#: options.c:575
+#: options.c:581
 msgid "  -?, --help        display this option help\n"
 msgstr "  -?, --help        afficher la présente aide\n"
 
-#: options.c:576
+#: options.c:582
 msgid "  -V, --version     display version info\n"
 msgstr "  -V, --version     informations sur la version courante\n"
 
-#: options.c:578
+#: options.c:584
 msgid "  -c, --check       check for messages without fetching\n"
 msgstr "  -c, --check       vérifier les messages sans les récupérer\n"
 
-#: options.c:579
+#: options.c:585
 msgid "  -s, --silent      work silently\n"
 msgstr "  -s, --silent      travailler silencieusement\n"
 
-#: options.c:580
+#: options.c:586
 msgid "  -v, --verbose     work noisily (diagnostic output)\n"
 msgstr "  -v, --verbose     travail verbeux (information de diagnostic)\n"
 
-#: options.c:581
+#: options.c:587
 msgid "  -d, --daemon      run as a daemon once per n seconds\n"
 msgstr "  -d, --daemon      démarrer en démon toutes les n secondes\n"
 
-#: options.c:582
+#: options.c:588
 msgid "  -N, --nodetach    don't detach daemon process\n"
 msgstr "  -N, --nodetach    ne pas lancer de processus démon\n"
 
-#: options.c:583
+#: options.c:589
 msgid "  -q, --quit        kill daemon process\n"
 msgstr "  -q, --quit        terminer le processus démon\n"
 
-#: options.c:584
+#: options.c:590
 msgid "  -L, --logfile     specify logfile name\n"
 msgstr "  -L, --logfile     spécifier le nom du fichier de traces\n"
 
-#: options.c:585
+#: options.c:591
 msgid ""
 "      --syslog      use syslog(3) for most messages when running as a "
 "daemon\n"
 msgstr ""
 "      --syslog      utiliser syslog(3) pour les messages, en mode démon\n"
 
-#: options.c:586
+#: options.c:592
 msgid "      --invisible   don't write Received & enable host spoofing\n"
 msgstr ""
 "      --invisible   ne pas écrire de `Received' y activer le spoofing\n"
 
-#: options.c:587
+#: options.c:593
 msgid "  -f, --fetchmailrc specify alternate run control file\n"
 msgstr "  -f, --fetchmailrc spécifier un autre fichier de contrôle\n"
 
-#: options.c:588
+#: options.c:594
 msgid "  -i, --idfile      specify alternate UIDs file\n"
 msgstr "  -i, --idfile      spécifier un autre fichier contenant les UIDs\n"
 
-#: options.c:589
+#: options.c:595
 msgid "      --postmaster  specify recipient of last resort\n"
 msgstr "      --postmaster  spécifier le destinataire en dernier ressort\n"
 
-#: options.c:590
+#: options.c:596
 msgid "      --nobounce    redirect bounces from user to postmaster.\n"
 msgstr "      --nobounce    redirige les rebonds vers le maître de poste.\n"
 
-#: options.c:592
+#: options.c:598
 msgid "  -I, --interface   interface required specification\n"
 msgstr "  -I, --interface   spécifier l'interface requise\n"
 
-#: options.c:593
+#: options.c:599
 msgid "  -M, --monitor     monitor interface for activity\n"
 msgstr "  -M, --monitor     surveiller l'activité d'une interface\n"
 
-#: options.c:596
+#: options.c:602
 msgid "      --ssl         enable ssl encrypted session\n"
 msgstr "      --ssl         permettre les sessions cryptées SSL\n"
 
-#: options.c:597
+#: options.c:603
 msgid "      --sslkey      ssl private key file\n"
 msgstr "      --sslkey      fichier de clé SSL privée\n"
 
-#: options.c:598
+#: options.c:604
 msgid "      --sslcert     ssl client certificate\n"
 msgstr "      --sslcert     certificat de session SSL\n"
 
-#: options.c:599
+#: options.c:605
 msgid "      --sslcertck   do strict server certificate check (recommended)\n"
 msgstr ""
 "      --sslcertck   vérification stricte des certificats du serveur "
 "(recommandé)\n"
 
-#: options.c:600
+#: options.c:606
 msgid "      --sslcertpath path to ssl certificates\n"
 msgstr "      --sslcertpath répertoire des certificats SSL\n"
 
-#: options.c:601
+#: options.c:607
 msgid ""
 "      --sslfingerprint fingerprint that must match that of the server's "
 "cert.\n"
@@ -2087,173 +2094,173 @@ msgstr ""
 "      --sslfingerprint empreinte digital qui doit concerter de celle du "
 "serveur.\n"
 
-#: options.c:602
+#: options.c:608
 msgid "      --sslproto    force ssl protocol (ssl2/ssl3/tls1)\n"
 msgstr "      --sslproto    force le protocole ssl (ssl2/ssl3/tls1)\n"
 
-#: options.c:604
+#: options.c:610
 msgid "      --plugin      specify external command to open connection\n"
 msgstr ""
 "      --plugin      spécifier la commande externe pour ouvrir la connexion\n"
 
-#: options.c:605
+#: options.c:611
 msgid "      --plugout     specify external command to open smtp connection\n"
 msgstr ""
 "      --plugout     spécifier la commande externe pour ouvrir la connexion "
 "smtp\n"
 
-#: options.c:607
+#: options.c:613
 msgid "  -p, --protocol    specify retrieval protocol (see man page)\n"
 msgstr ""
 "  -p, --protocol    spécifier le protocole de récupération (voir la page "
 "man)\n"
 
-#: options.c:608
+#: options.c:614
 msgid "  -U, --uidl        force the use of UIDLs (pop3 only)\n"
 msgstr "  -U, --uidl        forcer l'utilisation des UIDLs (uniquement pop3)\n"
 
-#: options.c:609
+#: options.c:615
 msgid "      --port        TCP port to connect to (obsolete, use --service)\n"
 msgstr ""
 "      --port        port TCP auquel se connecter (obsolète, utilisez --"
 "service)\n"
 
-#: options.c:610
+#: options.c:616
 msgid ""
 "  -P, --service     TCP service to connect to (can be numeric TCP port)\n"
 msgstr ""
 "  -P, --service      service TCP auquel se connecter (peut être port "
 "numérique)\n"
 
-#: options.c:611
+#: options.c:617
 msgid "      --auth        authentication type (password/kerberos/ssh/otp)\n"
 msgstr ""
 "      --auth        type d'authentification (mot de passe/kerberos/ssh/otp)\n"
 
-#: options.c:612
+#: options.c:618
 msgid "  -t, --timeout     server nonresponse timeout\n"
 msgstr "  -t, --timeout     temps d'attente d'une réponse du serveur\n"
 
-#: options.c:613
+#: options.c:619
 msgid "  -E, --envelope    envelope address header\n"
 msgstr "  -E, --envelope    en-tête de l'adresse d'enveloppe\n"
 
-#: options.c:614
+#: options.c:620
 msgid "  -Q, --qvirtual    prefix to remove from local user id\n"
 msgstr "  -Q, --qvirtual    préfixer à soustraire à l'id local d'utilisateur\n"
 
-#: options.c:615
+#: options.c:621
 msgid "      --principal   mail service principal\n"
 msgstr "      --principal   principal service mail\n"
 
-#: options.c:616
+#: options.c:622
 msgid "      --tracepolls  add poll-tracing information to Received header\n"
 msgstr ""
 "      --tracepolls  ajoute des informations de tracage de la réception\n"
 "                    aux en-testes Received\n"
 
-#: options.c:618
+#: options.c:624
 msgid "  -u, --username    specify users's login on server\n"
 msgstr ""
 "  -u, --username    spécifier le `login' de l'utilisateur sur le serveur\n"
 
-#: options.c:619
+#: options.c:625
 msgid "  -a, --all         retrieve old and new messages\n"
 msgstr "  -a, --all         récupérer anciens et nouveaux messages\n"
 
-#: options.c:620
+#: options.c:626
 msgid "  -K, --nokeep      delete new messages after retrieval\n"
 msgstr ""
 "  -K, --nokeep      supprimer les nouveaux messages après récupération\n"
 
-#: options.c:621
+#: options.c:627
 msgid "  -k, --keep        save new messages after retrieval\n"
 msgstr ""
 "  -k, --keep        conserver les nouveaux messages après récupération\n"
 
-#: options.c:622
+#: options.c:628
 msgid "  -F, --flush       delete old messages from server\n"
 msgstr "  -F, --flush       supprimer les anciens messages du serveur\n"
 
-#: options.c:623
+#: options.c:629
 msgid "      --limitflush  delete oversized messages\n"
 msgstr "      --limitflush  eliminer les messages qui sont trop grands\n"
 
-#: options.c:624
+#: options.c:630
 msgid "  -n, --norewrite   don't rewrite header addresses\n"
 msgstr "  -n, --norewrite   ne pas récrire les adresses d'en-tête\n"
 
-#: options.c:625
+#: options.c:631
 msgid "  -l, --limit       don't fetch messages over given size\n"
 msgstr ""
 "  -l, --limit       limite maximale de la taille des messages à récupérer\n"
 
-#: options.c:626
+#: options.c:632
 msgid "  -w, --warnings    interval between warning mail notification\n"
 msgstr "  -w, --warnings    intervalle entre les notifications de courrier\n"
 
-#: options.c:628
+#: options.c:634
 msgid "  -S, --smtphost    set SMTP forwarding host\n"
 msgstr "  -S, --smtphost    spécifier l'hôte SMTP pour la réexpédition\n"
 
-#: options.c:629
+#: options.c:635
 msgid "      --fetchdomains fetch mail for specified domains\n"
 msgstr "      --fetchdomains récupère le mail pour les domaines indiqués\n"
 
-#: options.c:630
+#: options.c:636
 msgid "  -D, --smtpaddress set SMTP delivery domain to use\n"
 msgstr ""
 "  -D, --smtpaddress spécifier le domaine de délivrance SMTP à utiliser\n"
 
-#: options.c:631
+#: options.c:637
 msgid "      --smtpname    set SMTP full name username@domain\n"
 msgstr "      --smtpname    force le nom complet SMTP nom@domaine\n"
 
-#: options.c:632
+#: options.c:638
 msgid "  -Z, --antispam,   set antispam response values\n"
 msgstr "  -Z, --antispam    configurer les valeurs de réponse anti`spam'\n"
 
-#: options.c:633
+#: options.c:639
 msgid "  -b, --batchlimit  set batch limit for SMTP connections\n"
 msgstr ""
 "  -b, --batchlimit  limite du nombre de messages pour chaque connexion SMTP\n"
 
-#: options.c:634
+#: options.c:640
 msgid "  -B, --fetchlimit  set fetch limit for server connections\n"
 msgstr ""
 "  -B, --fetchlimit  limite des récupérations pour les connexions au serveur\n"
 
-#: options.c:635
+#: options.c:641
 msgid "      --fetchsizelimit set fetch message size limit\n"
 msgstr ""
 "      --fetchsizelimit indique la tialle limite des messages récupérés\n"
 
-#: options.c:636
+#: options.c:642
 msgid "      --fastuidl    do a binary search for UIDLs\n"
 msgstr "      --fastuidl    effectue une recherche binaire des UIDLs\n"
 
-#: options.c:637
+#: options.c:643
 msgid "  -e, --expunge     set max deletions between expunges\n"
 msgstr ""
 "  -e, --expunge     limite du nombre des suppressions entre deux purges\n"
 
-#: options.c:638
+#: options.c:644
 msgid "  -m, --mda         set MDA to use for forwarding\n"
 msgstr "  -m, --mda         spécifier le MDA à utiliser pour la réexpédition\n"
 
-#: options.c:639
+#: options.c:645
 msgid "      --bsmtp       set output BSMTP file\n"
 msgstr "      --bsmtp       spécifier le fichier de sortie BSMTP\n"
 
-#: options.c:640
+#: options.c:646
 msgid "      --lmtp        use LMTP (RFC2033) for delivery\n"
 msgstr "      --lmtp        utiliser LMTP (RFC2033) pour la délivrance\n"
 
-#: options.c:641
+#: options.c:647
 msgid "  -r, --folder      specify remote folder name\n"
 msgstr "  -r, --folder      spécifier le nom du dossier distant\n"
 
-#: options.c:642
+#: options.c:648
 msgid "      --showdots    show progress dots even in logfiles\n"
 msgstr ""
 "      --showdots    affiche des points de progression, même dans le journal\n"
@@ -2290,7 +2297,7 @@ msgstr "Ne peux pas manier la réponse UIDL du serveur.\n"
 msgid "Server responded with UID for wrong message.\n"
 msgstr "Serveur répondait avec UID d'un faux message.\n"
 
-#: pop3.c:737 pop3.c:971
+#: pop3.c:737 pop3.c:978
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) a été effacé, mais est toujours présent !\n"
@@ -2299,15 +2306,15 @@ msgstr "id=%s (num=%d) a été effacé, mais est toujours présent !\n"
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr "Messages insérés dans une liste du serveur. Impossible de gérer ça.\n"
 
-#: pop3.c:925
+#: pop3.c:930
 msgid "protocol error\n"
 msgstr "erreur de protocole\n"
 
-#: pop3.c:940
+#: pop3.c:946
 msgid "protocol error while fetching UIDLs\n"
 msgstr "erreur de protocole durant la réception des UIDLs\n"
 
-#: pop3.c:1299
+#: pop3.c:1312
 msgid "Option --folder is not supported with POP3\n"
 msgstr "L'option --folder n'est pas supportée avec POP3\n"
 
@@ -2899,50 +2906,50 @@ msgstr "aucune adresse trouvée dans «Received»\n"
 msgid "found Received address `%s'\n"
 msgstr "adresse `%s' trouvée dans «Received»\n"
 
-#: transact.c:534
+#: transact.c:532
 msgid "message delimiter found while scanning headers\n"
 msgstr "délimiteur de message trouvé durant l'analyse des en-têtes\n"
 
-#: transact.c:555
+#: transact.c:563
 msgid "incorrect header line found while scanning headers\n"
 msgstr "ligne d'en-tête incorrecte trouvée lors du scan des en-têtes\n"
 
-#: transact.c:557
+#: transact.c:565
 #, c-format
 msgid "line: %s"
 msgstr "ligne: %s"
 
-#: transact.c:1103
+#: transact.c:1111
 #, c-format
 msgid "no local matches, forwarding to %s\n"
 msgstr "aucune correspondance locale, réexpédition vers %s\n"
 
-#: transact.c:1118
+#: transact.c:1126
 msgid "forwarding and deletion suppressed due to DNS errors\n"
 msgstr "réexpédition et effacement supprimés suite à des erreurs de DNS\n"
 
-#: transact.c:1224
+#: transact.c:1232
 msgid "writing RFC822 msgblk.headers\n"
 msgstr "écriture d'en-têtes RFC822\n"
 
-#: transact.c:1242
+#: transact.c:1250
 msgid "no recipient addresses matched declared local names"
 msgstr "aucune adresse de destination ne correspond aux noms locaux déclarés"
 
-#: transact.c:1249
+#: transact.c:1257
 #, c-format
 msgid "recipient address %s didn't match any local name"
 msgstr "l'adresse de destination %s ne correspond à aucun nom local"
 
-#: transact.c:1258
+#: transact.c:1266
 msgid "message has embedded NULs"
 msgstr "le message contient des caractères NULs"
 
-#: transact.c:1266
+#: transact.c:1274
 msgid "SMTP listener rejected local recipient addresses: "
 msgstr "Le serveur SMTP rejette les adresses locales de destination : "
 
-#: transact.c:1394
+#: transact.c:1402
 msgid "writing message text\n"
 msgstr "écriture du texte du message\n"
 

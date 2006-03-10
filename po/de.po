@@ -1693,8 +1693,7 @@ msgstr "Benötigte LOGIN-Fähigkeit nicht vom Server unterstützt\n"
 #: imap.c:603
 #, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
-msgstr ""
-"unerwartete Expunge-Bestätigung (%d tatsächlich != %d erwartet)\n"
+msgstr "unerwartete Expunge-Bestätigung (%d tatsächlich != %d erwartet)\n"
 
 #: imap.c:707 imap.c:745
 msgid "re-poll failed\n"
