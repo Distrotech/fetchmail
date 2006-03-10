@@ -43,7 +43,8 @@ fetchmail 6.3.3 (not yet released):
 * fetchmail no longer prints UID lists in verbose mode when using syslog.
 * POP3: fetchmail can now use UIDL in fetchall keep mode, to avoid re-fetching
   the same messages again when the fetchall keyword is removed. Patch by
-  Sunil Shetye.
+  Sunil Shetye. For details, please see
+  <http://lists.berlios.de/pipermail/fetchmail-users/2006-March/000308.html>
 
 # CHANGES:
 * --idle can now be specified on the command line, too.
