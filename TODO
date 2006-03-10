@@ -1,5 +1,0 @@
-For 6.3.3:
-==========
-
-Casper Gripenberg's 6.3.2 no-IDLE/NOOP hang with EXISTS (see full trace
-and patch on fetchmail-devel).
