@@ -5,7 +5,7 @@ dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl
 
-AC_INIT([fetchmail],[6.3.2],[fetchmail-users@lists.berlios.de])
+AC_INIT([fetchmail],[6.3.3.rc1],[fetchmail-users@lists.berlios.de])
 AC_CONFIG_SRCDIR([fetchmail.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_LIBOBJ_DIR([.])
@@ -261,30 +261,30 @@ case "$enable_fallback" in
 				#not reached
 			fi
 			AC_DEFINE_UNQUOTED(FALLBACK_MDA, "$sendmail -i %T", Fallback MTA to use if defined)
-			echo "Will use $sendmail as fallback MDA."
+			AC_MSG_NOTICE(Will use $sendmail as fallback MDA.)
 			;;
 	procmail)	if test -z "$procmail" ; then
 				AC_MSG_ERROR([procmail selected as fallback, but not found])
 				#not reached
 			fi
 			AC_DEFINE_UNQUOTED(FALLBACK_MDA, "$procmail -d %T")
-			echo "Will use $procmail as fallback MDA."
+			AC_MSG_NOTICE(Will use $procmail as fallback MDA.)
 			;;
 	maildrop)	if test -z "$maildrop" ; then
 				AC_MSG_ERROR([maildrop selected as fallback, but not found])
 				#not reached
 			fi
 			AC_DEFINE_UNQUOTED(FALLBACK_MDA, "$maildrop -d %T")
-			echo "Will use $maildrop as fallback MDA."
+			AC_MSG_NOTICE(Will use $maildrop as fallback MDA.)
 			;;
-	no|unset)	echo "Will not use a fallback MDA"
+	no|unset)	AC_MSG_NOTICE(Will not use a fallback MDA.)
 			;;
 	auto|yes|set)	if test -n "$sendmail" ; then
 				AC_DEFINE_UNQUOTED(FALLBACK_MDA,"$sendmail -i %T")
-				echo "Will use $sendmail as fallback MDA."
+				AC_MSG_NOTICE(Will use $sendmail as fallback MDA.)
 			else
-				echo "No fallback MDA available. procmail and maildrop are not eligible"
-				echo "for automatic fallback MDA configuration for reliability reasons."
+				AC_MSG_WARN(No fallback MDA available.  procmail and maildrop are not eligible)
+				AC_MSG_WARN(for automatic fallback MDA configuration for reliability reasons.)
 			fi
 			;;
 	*)		AC_MSG_ERROR([unkown value for --enable-fallback given: $enable_fallback])
@@ -355,8 +355,8 @@ test "$with_SDPS" = "yes" && AC_DEFINE(SDPS_ENABLE,1,Define if you want SDPS sup
 ###	use option --enable-opie to compile in the OPIE support
 AC_ARG_ENABLE(opie,
 	[  --enable-opie           support OTP through the OPIE library],
-	[ AC_CHECK_HEADER(opie.h,, [echo 'configure: cannot find <opie.h>, which is required for OPIE support.'; exit 1])
-          AC_CHECK_LIB(opie,opiegenerator,, [echo 'configure: cannot find libopie, which is required for OPIE support.'; exit 1])
+	[ AC_CHECK_HEADER(opie.h,, [AC_MSG_ERROR(cannot find <opie.h>, which is required for OPIE support.)])
+          AC_CHECK_LIB(opie,opiegenerator,, [AC_MSG_ERROR(cannot find libopie, which is required for OPIE support.)])
           with_opie=$enableval],
 	[with_opie=no])
 test "$with_opie" = "yes" && AC_DEFINE(OPIE_ENABLE,1,Define if you want OPIE support compiled in)
@@ -595,7 +595,7 @@ then
   if test -r $with_ssl/include/openssl/ssl.h
   then
     ###	ssl.h found under openssl.  Use openssl configuration preferentially,
-    echo "Enabling OpenSSL support in $with_ssl"
+    AC_MSG_NOTICE(Enabling OpenSSL support in $with_ssl.)
     test "$with_ssl" != "/usr" && CEFLAGS="$CEFLAGS -I$with_ssl/include"
     ### In Red Hat 9, this file includes a reference to <krb5.h>, so we
     ### force the Kerberos direcory onto the include path so it will build.
@@ -624,7 +624,7 @@ then
   dnl XXX FIXME: use pkg-config if available!
   AC_DEFINE(SSL_ENABLE)
 else
-  echo 'Disabling SSL support...'
+  AC_MSG_NOTICE(Disabling SSL support.)
 fi
 
 ###	use option --with-socks=DIR to point at SOCKS library
