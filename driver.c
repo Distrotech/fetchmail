@@ -774,7 +774,7 @@ flagthemail:
 	    if (outlevel > O_SILENT) 
 		report(stdout, GT_(" retained\n"));
 	}
-	else if (ctl->server.base_protocol->delete
+	else if (ctl->server.base_protocol->delete_msg
 		 && !suppress_delete
 		 && ((msgcode >= 0 && !ctl->keep)
 		     || (msgcode == MSGLEN_OLD && ctl->flush)
@@ -783,7 +783,7 @@ flagthemail:
 	    (*deletions)++;
 	    if (outlevel > O_SILENT) 
 		report_complete(stdout, GT_(" flushed\n"));
-	    err = (ctl->server.base_protocol->delete)(mailserver_socket, ctl, num);
+	    err = (ctl->server.base_protocol->delete_msg)(mailserver_socket, ctl, num);
 	    if (err != 0)
 		return(err);
 	}
@@ -940,7 +940,7 @@ static int do_session(
     {
 	/* setjmp returned zero -> normal operation */
 	char buf[MSGBUFSIZE+1], *realhost;
-	int count, new, bytes;
+	int count, newm, bytes;
 	int fetches, dispatches, oldphase;
 	struct idlist *idp;
 
@@ -1304,7 +1304,7 @@ is restored."));
 
 		/* compute # of messages and number of new messages waiting */
 		stage = STAGE_GETRANGE;
-		err = (ctl->server.base_protocol->getrange)(mailserver_socket, ctl, (const char *)idp->id, &count, &new, &bytes);
+		err = (ctl->server.base_protocol->getrange)(mailserver_socket, ctl, (const char *)idp->id, &count, &newm, &bytes);
 		if (err != 0)
 		    goto cleanUp;
 
@@ -1322,11 +1322,11 @@ is restored."));
 			report(stdout, GT_("Polling %s\n"), ctl->server.truename);
 		    else if (count != 0)
 		    {
-			if (new != -1 && (count - new) > 0)
+			if (newm != -1 && (count - newm) > 0)
 			    report_build(stdout, ngettext("%d message (%d %s) for %s", "%d messages (%d %s) for %s", (unsigned long)count),
 				  count,
-				  count-new, 
-				  ngettext("seen", "seen", (unsigned long)count-new),
+				  count - newm, 
+				  ngettext("seen", "seen", (unsigned long)count-newm),
 				  buf);
 			else
 			    report_build(stdout, ngettext("%d message for %s",
@@ -1352,9 +1352,9 @@ is restored."));
 
 		if (check_only)
 		{
-		    if (new == -1 || ctl->fetchall)
-			new = count;
-		    fetches = new;	/* set error status correctly */
+		    if (newm == -1 || ctl->fetchall)
+			newm = count;
+		    fetches = newm;	/* set error status correctly */
 		    /*
 		     * There used to be a `goto noerror' here, but this
 		     * prevented checking of multiple folders.  This

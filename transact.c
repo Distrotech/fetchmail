@@ -856,8 +856,8 @@ int readheaders(int sock,
  		sscanf(line+12, "%s", id);
  	        if (!str_find( &ctl->newsaved, num))
 		{
- 		    struct idlist *new = save_str(&ctl->newsaved,id,UID_SEEN);
-		    new->val.status.num = num;
+ 		    struct idlist *newl = save_str(&ctl->newsaved,id,UID_SEEN);
+		    newl->val.status.num = num;
 		}
  	    }
  	}

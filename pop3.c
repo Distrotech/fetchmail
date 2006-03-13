@@ -723,20 +723,20 @@ static int pop3_fastuidl( int sock,  struct query *ctl, unsigned int count, int 
     last_nr = count + 1;
     while (first_nr < last_nr - 1)
     {
-	struct idlist	*new;
+	struct idlist	*newl;
 
 	try_nr = (first_nr + last_nr) / 2;
 	if ((ok = pop3_getuidl(sock, try_nr, id, sizeof(id))) != 0)
 	    return ok;
-	if ((new = str_in_list(&ctl->oldsaved, id, FALSE)))
+	if ((newl = str_in_list(&ctl->oldsaved, id, FALSE)))
 	{
-	    flag mark = new->val.status.mark;
+	    flag mark = newl->val.status.mark;
 	    if (mark == UID_DELETED || mark == UID_EXPUNGED)
 	    {
 		if (outlevel >= O_VERBOSE)
 		    report(stderr, GT_("id=%s (num=%d) was deleted, but is still present!\n"), id, try_nr);
 		/* just mark it as seen now! */
-		new->val.status.mark = mark = UID_SEEN;
+		newl->val.status.mark = mark = UID_SEEN;
 	    }
 
 	    /* narrow the search region! */
@@ -750,7 +750,7 @@ static int pop3_fastuidl( int sock,  struct query *ctl, unsigned int count, int 
 		first_nr = try_nr;
 
 	    /* save the number */
-	    new->val.status.num = try_nr;
+	    newl->val.status.num = try_nr;
 	}
 	else
 	{
@@ -759,8 +759,8 @@ static int pop3_fastuidl( int sock,  struct query *ctl, unsigned int count, int 
 	    last_nr = try_nr;
 
 	    /* save it */
-	    new = save_str(&ctl->oldsaved, id, UID_UNSEEN);
-	    new->val.status.num = try_nr;
+	    newl = save_str(&ctl->oldsaved, id, UID_UNSEEN);
+	    newl->val.status.num = try_nr;
 	}
     }
     if (outlevel >= O_DEBUG && last_nr <= count)
@@ -844,10 +844,10 @@ static int pop3_slowuidl( int sock,  struct query *ctl, int *countp, int *newp)
     /* the first try_id messages are known -> copy them to the newsaved list */
     for( num = first_nr; num < list_len; num++ )
     {
-	struct idlist	*new = save_str(&ctl->newsaved, 
+	struct idlist	*newl = save_str(&ctl->newsaved, 
 				str_from_nr_list(&ctl->oldsaved, num),
 				UID_UNSEEN);
-	new->val.status.num = num - first_nr + 1;
+	newl->val.status.num = num - first_nr + 1;
     }
 
     if( nolinear ) {
@@ -960,10 +960,10 @@ static int pop3_getrange(int sock,
 
 		    if (parseuid(buf, &unum, id, sizeof(id)) == PS_SUCCESS)
 		    {
-			struct idlist	*old, *new;
+			struct idlist	*old, *newl;
 
-			new = save_str(&ctl->newsaved, id, UID_UNSEEN);
-			new->val.status.num = unum;
+			newl = save_str(&ctl->newsaved, id, UID_UNSEEN);
+			newl->val.status.num = unum;
 
 			if ((old = str_in_list(&ctl->oldsaved, id, FALSE)))
 			{
@@ -979,7 +979,7 @@ static int pop3_getrange(int sock,
 				/* just mark it as seen now! */
 				old->val.status.mark = mark = UID_SEEN;
 			    }
-			    new->val.status.mark = mark;
+			    newl->val.status.mark = mark;
 			    if (mark == UID_UNSEEN)
 			    {
 				(*newp)++;
@@ -1067,7 +1067,7 @@ static int pop3_getsizes(int sock, int count, int *sizes)
 static int pop3_is_old(int sock, struct query *ctl, int num)
 /* is the given message old? */
 {
-    struct idlist *new;
+    struct idlist *newl;
     if (!ctl->oldsaved)
 	return (num <= last);
     else if (dofastuidl)
@@ -1079,30 +1079,30 @@ static int pop3_is_old(int sock, struct query *ctl, int num)
 
 	/* in fast uidl, we manipulate the old list only! */
 
-	if ((new = id_find(&ctl->oldsaved, num)))
+	if ((newl = id_find(&ctl->oldsaved, num)))
 	{
 	    /* we already have the id! */
-	    return(new->val.status.mark != UID_UNSEEN);
+	    return(newl->val.status.mark != UID_UNSEEN);
 	}
 
 	/* get the uidl first! */
 	if (pop3_getuidl(sock, num, id, sizeof(id)) != PS_SUCCESS)
 	    return(TRUE);
 
-	if ((new = str_in_list(&ctl->oldsaved, id, FALSE))) {
+	if ((newl = str_in_list(&ctl->oldsaved, id, FALSE))) {
 	    /* we already have the id! */
-	    new->val.status.num = num;
-	    return(new->val.status.mark != UID_UNSEEN);
+	    newl->val.status.num = num;
+	    return(newl->val.status.mark != UID_UNSEEN);
 	}
 
 	/* save it */
-	new = save_str(&ctl->oldsaved, id, UID_UNSEEN);
-	new->val.status.num = num;
+	newl = save_str(&ctl->oldsaved, id, UID_UNSEEN);
+	newl->val.status.num = num;
 	return(FALSE);
     }
     else
-        return ((new = id_find(&ctl->newsaved, num)) != NULL &&
-	    new->val.status.mark != UID_UNSEEN);
+        return ((newl = id_find(&ctl->newsaved, num)) != NULL &&
+	    newl->val.status.mark != UID_UNSEEN);
 }
 
 #ifdef UNUSED

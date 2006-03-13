@@ -518,7 +518,7 @@ int rxlen;
 static int DecBase64(bufp)
 unsigned char *bufp;
 {
-    unsigned int   new, bits=0, cnt=0, i, part=0;
+    unsigned int   newx, bits=0, cnt=0, i, part=0;
     unsigned char  ch;
     unsigned char* outp=bufp;
     unsigned char* inp=bufp;
@@ -526,16 +526,16 @@ unsigned char *bufp;
     {
 	if ((ch != '=') && (ch != ' ') && (ch != '\n') && (ch != '\r'))
 	{
-	    if      ((ch>='A') && (ch <= 'Z'))   new = ch - 'A';
-	    else if ((ch>='a') && (ch <= 'z'))   new = ch - 'a' + 26;
-	    else if ((ch>='0') && (ch <= '9'))   new = ch - '0' + 52;
-	    else if ( ch=='+'                )   new = 62;
-	    else if ( ch=='/'                )   new = 63;
+	    if      ((ch>='A') && (ch <= 'Z'))   newx = ch - 'A';
+	    else if ((ch>='a') && (ch <= 'z'))   newx = ch - 'a' + 26;
+	    else if ((ch>='0') && (ch <= '9'))   newx = ch - '0' + 52;
+	    else if ( ch=='+'                )   newx = 62;
+	    else if ( ch=='/'                )   newx = 63;
 	    else {
 		report(stderr,  GT_("dec64 error at char %d: %x\n"), inp - bufp, ch);
 		return(0);
 	    }
-	    part=((part & 0x3F)*64) + new;
+	    part=((part & 0x3F)*64) + newx;
 	    bits += 6;
 	    if (bits >= 8)
 	    {

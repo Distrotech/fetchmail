@@ -218,7 +218,7 @@ struct method		/* describe methods for protocol state machine */
 				/* fetch a given message */
     int (*trail)(int, struct query *, int, const char *);
 				/* eat trailer of a message */
-    int (*delete)(int, struct query *, int);
+    int (*delete_msg)(int, struct query *, int);
 				/* delete method */
     int (*mark_seen)(int, struct query *, int);
 				/* mark as seen method */
