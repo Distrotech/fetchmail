@@ -1254,9 +1254,9 @@ static int load_params(int argc, char **argv, int optind)
 		{
 		    char	*cp;
 
-		    if (!(cp = strrchr((char *)idp->id, '/')) ||
-			    ++cp, (0 == strcmp(cp, SMTP_PORT))
-				|| servport(cp) == SMTP_PORT_NUM)
+		    if (!(cp = strrchr((char *)idp->id, '/'))
+			|| (0 == strcmp(cp + 1, SMTP_PORT))
+			|| servport(cp + 1) == SMTP_PORT_NUM)
 		    {
 			(void) fprintf(stderr,
 				       GT_("%s configuration invalid, LMTP can't use default SMTP port\n"),

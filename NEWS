@@ -49,6 +49,7 @@ fetchmail 6.3.3 (not yet released):
   and Brendan Lynch, fix by Sunil Shetye (his patch was merged) and Brendan
   Lynch.
 * ./configure --quiet is now quieter (no SSL and fallback-related output).
+* fix bug in LMTP port validation (patch by Miloslav Trmac).
 
 # CHANGES:
 * --idle can now be specified on the command line, too.
