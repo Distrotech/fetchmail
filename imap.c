@@ -736,16 +736,6 @@ static int imap_getrange(int sock,
 				    "%d messages waiting after first poll\n",
 				    count), count);
 
-	/* no messages?  then we may need to idle until we get some */
-	while (count == 0 && do_idle) {
-	    ok = imap_idle(sock);
-	    if (ok)
-	    {
-		report(stderr, GT_("re-poll failed\n"));
-		return(ok);
-	    }
-	}
-
 	/*
 	 * We should have an expunge here to
 	 * a) avoid fetching deleted mails during 'fetchall'
@@ -762,6 +752,23 @@ static int imap_getrange(int sock,
 	    if (outlevel >= O_DEBUG)
 		report(stdout, ngettext("%d message waiting after expunge\n",
 					"%d messages waiting after expunge\n",
+					count), count);
+	}
+
+	if (count == 0 && do_idle)
+	{
+	    /* no messages?  then we may need to idle until we get some */
+	    while (count == 0) {
+		ok = imap_idle(sock);
+		if (ok)
+		{
+		    report(stderr, GT_("re-poll failed\n"));
+		    return(ok);
+		}
+	    }
+	    if (outlevel >= O_DEBUG)
+		report(stdout, ngettext("%d message waiting after re-poll\n",
+					"%d messages waiting after re-poll\n",
 					count), count);
 	}
     }
