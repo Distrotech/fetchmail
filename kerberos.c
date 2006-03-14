@@ -65,7 +65,7 @@ int do_rfc1731(int sock, char *command, char *truename)
      * in network byte order.
      */
 
-    if (result = gen_recv(sock, buf1, sizeof buf1)) {
+    if ((result = gen_recv(sock, buf1, sizeof buf1)) != 0) {
 	return result;
     }
 
@@ -103,7 +103,7 @@ int do_rfc1731(int sock, char *command, char *truename)
 
     strncpy(srvrealm, (char *)krb_realmofhost(srvinst), (sizeof srvrealm)-1);
     srvrealm[(sizeof srvrealm)-1] = '\0';
-    if (p = strchr(srvinst, '.')) {
+    if ((p = strchr(srvinst, '.')) != NULL) {
       *p = '\0';
     }
 
@@ -186,7 +186,7 @@ int do_rfc1731(int sock, char *command, char *truename)
      * checksum it previously sent.
      */
     
-    if (result = gen_recv(sock, buf1, sizeof buf1))
+    if ((result = gen_recv(sock, buf1, sizeof buf1)) != 0)
 	return result;
 
     /* The client must construct data with the first four octets

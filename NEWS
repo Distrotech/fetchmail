@@ -52,6 +52,7 @@ fetchmail 6.3.3 (not yet released):
 * fix bug in LMTP port validation (patch by Miloslav Trmac).
 * Miloslav Trmac's patch (with minor changes) to fix char * sign consistency.
 * Warn and disable SDPS if POP3 is disabled to avoid compilation errors.
+* More signedness, unused argument/variable and other warning fixes.
 
 # CHANGES:
 * --idle can now be specified on the command line, too.

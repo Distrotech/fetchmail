@@ -105,6 +105,7 @@ void set_timeout(int timeleft)
 static RETSIGTYPE timeout_handler (int signal)
 /* handle SIGALRM signal indicating a server timeout */
 {
+    (void)signal;
     if(stage != STAGE_IDLE) {
 	timeoutcount++;
 	longjmp(restart, THROW_TIMEOUT);
@@ -115,6 +116,7 @@ static RETSIGTYPE timeout_handler (int signal)
 static RETSIGTYPE sigpipe_handler (int signal)
 /* handle SIGPIPE signal indicating a broken stream socket */
 {
+    (void)signal;
     longjmp(restart, THROW_SIGPIPE);
 }
 
@@ -140,7 +142,6 @@ int socket;		/* socket to server host */
 char *canonical;	/* server name */
 char *principal;
 {
-    char * host_primary;
     KTEXT ticket;
     MSG_DAT msg_data;
     CREDENTIALS cred;
@@ -214,19 +215,19 @@ const char *canonical;  /* server name */
     krb5_init_context(&context);
     krb5_auth_con_init(context, &auth_context);
 
-    if (retval = krb5_cc_default(context, &ccdef)) {
+    if ((retval = krb5_cc_default(context, &ccdef))) {
         report(stderr, "krb5_cc_default: %s\n", error_message(retval));
         return(PS_ERROR);
     }
 
-    if (retval = krb5_cc_get_principal(context, ccdef, &client)) {
+    if ((retval = krb5_cc_get_principal(context, ccdef, &client))) {
         report(stderr, "krb5_cc_get_principal: %s\n", error_message(retval));
         return(PS_ERROR);
     }
 
-    if (retval = krb5_sname_to_principal(context, canonical, "pop",
+    if ((retval = krb5_sname_to_principal(context, canonical, "pop",
            KRB5_NT_UNKNOWN,
-           &server)) {
+           &server))) {
         report(stderr, "krb5_sname_to_principal: %s\n", error_message(retval));
         return(PS_ERROR);
     }
@@ -331,7 +332,7 @@ static void send_size_warnings(struct query *ctl)
      * but it's not a disaster, either, since the skipped mail will not
      * be deleted.
      */
-    if (open_warning_by_mail(ctl, (struct msgblk *)NULL))
+    if (open_warning_by_mail(ctl))
 	return;
     stuff_warning(iana_charset, ctl,
 	   GT_("Subject: Fetchmail oversized-messages warning"));
@@ -380,7 +381,7 @@ static void send_size_warnings(struct query *ctl)
     close_warning_by_mail(ctl, (struct msgblk *)NULL);
 }
 
-static void mark_oversized(struct query *ctl, int num, int size)
+static void mark_oversized(struct query *ctl, int size)
 /* mark a message oversized */
 {
     struct idlist *current=NULL, *tmp=NULL;
@@ -546,7 +547,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	{
 	    if (msgcode == MSGLEN_TOOLARGE)
 	    {
-		mark_oversized(ctl, num, msgsize);
+		mark_oversized(ctl, msgsize);
 		if (!ctl->limitflush)
 		    suppress_delete = TRUE;
 	    }
@@ -647,7 +648,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 		    fflush(stdout);
 		}
 
-		if ((err = (ctl->server.base_protocol->trail)(mailserver_socket, ctl, num, tag)))
+		if ((err = (ctl->server.base_protocol->trail)(mailserver_socket, ctl, tag)))
 		    return(err);
 	    }
 
@@ -705,7 +706,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 			fflush(stdout);
 		    }
 
-		    err = (ctl->server.base_protocol->trail)(mailserver_socket, ctl, num, tag);
+		    err = (ctl->server.base_protocol->trail)(mailserver_socket, ctl, tag);
 		    if (err != 0)
 			return(err);
 		}
@@ -913,7 +914,7 @@ static int do_session(
 	     * timeouts just mean the frequency of mail is low.
 	     */
 	    if (timeoutcount > MAX_TIMEOUTS 
-		&& !open_warning_by_mail(ctl, (struct msgblk *)NULL))
+		&& !open_warning_by_mail(ctl))
 	    {
 		stuff_warning(iana_charset, ctl,
 			      GT_("Subject: fetchmail sees repeated timeouts"));
@@ -1068,7 +1069,7 @@ static int do_session(
 		 * where your SLIP or PPP link is down...
 		 */
 		/* warn the system administrator */
-		if (open_warning_by_mail(ctl, (struct msgblk *)NULL) == 0)
+		if (open_warning_by_mail(ctl) == 0)
 		{
 		    stuff_warning(iana_charset, ctl,
 			 GT_("Subject: Fetchmail unreachable-server warning."));
@@ -1181,7 +1182,7 @@ static int do_session(
 			&& !ctl->wehavesentauthnote
 			&& ((ctl->wehaveauthed && ++ctl->authfailcount >= 10)
 			    || (!ctl->wehaveauthed && ++ctl->authfailcount >= 3))
-			&& !open_warning_by_mail(ctl, (struct msgblk *)NULL))
+			&& !open_warning_by_mail(ctl))
 		    {
 			ctl->wehavesentauthnote = 1;
 			stuff_warning(iana_charset, ctl,
@@ -1192,13 +1193,14 @@ static int do_session(
 				      GT_("Fetchmail could not get mail from %s@%s.\n"), 
 				      ctl->remotename,
 				      ctl->server.truename);
-			if (ctl->wehaveauthed)
+			if (ctl->wehaveauthed) {
 			    stuff_warning(NULL, ctl, GT_("\
 The attempt to get authorization failed.\n\
 Since we have already succeeded in getting authorization for this\n\
 connection, this is probably another failure mode (such as busy server)\n\
 that fetchmail cannot distinguish because the server didn't send a useful\n\
-error message.\n\
+error message."));
+			    stuff_warning(NULL, ctl, GT_("\
 \n\
 However, if you HAVE changed your account details since starting the\n\
 fetchmail daemon, you need to stop the daemon, change your configuration\n\
@@ -1207,7 +1209,7 @@ of fetchmail, and then restart the daemon.\n\
 The fetchmail daemon will continue running and attempt to connect\n\
 at each cycle.  No future notifications will be sent until service\n\
 is restored."));
-			else
+			} else {
 			    stuff_warning(NULL, ctl, GT_("\
 The attempt to get authorization failed.\n\
 This probably means your password is invalid, but some servers have\n\
@@ -1217,6 +1219,7 @@ because they don't send useful error messages on login failure.\n\
 The fetchmail daemon will continue running and attempt to connect\n\
 at each cycle.  No future notifications will be sent until service\n\
 is restored."));
+			}
 			close_warning_by_mail(ctl, (struct msgblk *)NULL);
 		    }
 		}
@@ -1255,7 +1258,7 @@ is restored."));
 			   GT_("Authorization OK on %s@%s\n"),
 			   ctl->remotename,
 			   ctl->server.truename);
-		    if (!open_warning_by_mail(ctl, (struct msgblk *)NULL))
+		    if (!open_warning_by_mail(ctl))
 		    {
 			stuff_warning(iana_charset, ctl,
 			      GT_("Subject: fetchmail authentication OK on %s@%s"), 
@@ -1372,7 +1375,7 @@ is restored."));
 		     * count, and allocate a malloc area that would overlap
 		     * a portion of the stack.
 		     */
-		    if (count > INT_MAX/sizeof(int))
+		    if ((unsigned)count > INT_MAX/sizeof(int))
 		    {
 			report(stderr, GT_("bogus message count!"));
 			err = PS_PROTOCOL;

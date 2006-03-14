@@ -546,7 +546,7 @@ int main(int argc, char **argv)
     if (run.poll_interval)
     {
 	if (!nodetach)
-	    daemonize(run.logfile, terminate_run);
+	    daemonize(run.logfile);
 	report(stdout, GT_("starting fetchmail %s daemon \n"), VERSION);
 
 	/*

@@ -61,7 +61,8 @@ char *StrnCpy(char *dest,const char *src, size_t n)
 
 size_t skip_multibyte_char(char c)
 {
-return 0;
+    (void)c;
+    return 0;
 }
 
 

@@ -706,7 +706,7 @@ static int pop3_getuidl(int sock, int num, char *id /** output */, size_t idsize
 	return(ok);
     if ((ok = parseuid(buf, &gotnum, id, idsize)))
 	return ok;
-    if (gotnum != num) {
+    if (gotnum != (unsigned long)num) {
 	report(stderr, GT_("Server responded with UID for wrong message.\n"));
 	return PS_PROTOCOL;
     }
@@ -869,6 +869,7 @@ static int pop3_getrange(int sock,
     int ok;
     char buf [POPBUFSIZE+1];
 
+    (void)folder;
     /* Ensure that the new list is properly empty */
     ctl->newsaved = (struct idlist *)NULL;
 
@@ -1012,15 +1013,15 @@ static int pop3_getrange(int sock,
 static int pop3_getpartialsizes(int sock, int first, int last, int *sizes)
 /* capture the size of message #first */
 {
-    int	ok = 0, i;
+    int	ok = 0, i, num;
     char buf [POPBUFSIZE+1];
-    unsigned int num, size;
+    unsigned int size;
 
     for (i = first; i <= last; i++) {
 	gen_send(sock, "LIST %d", i);
 	if ((ok = pop3_ok(sock, buf)) != 0)
 	    return(ok);
-	if (sscanf(buf, "%u %u", &num, &size) == 2) {
+	if (sscanf(buf, "%d %u", &num, &size) == 2) {
 	    if (num == i)
 		sizes[i - first] = size;
 	    else
@@ -1052,7 +1053,7 @@ static int pop3_getsizes(int sock, int count, int *sizes)
 	    if (DOTLINE(buf))
 		break;
 	    else if (sscanf(buf, "%u %u", &num, &size) == 2) {
-		if (num > 0 && num <= count)
+		if (num > 0 && num <= (unsigned)count)
 		    sizes[num - 1] = size;
 		else
 		    /* warn about possible attempt to induce buffer overrun */
@@ -1247,6 +1248,7 @@ static int pop3_delete(int sock, struct query *ctl, int number)
 static int pop3_mark_seen(int sock, struct query *ctl, int number)
 /* mark a given message as seen */
 {
+    (void)sock;
     mark_uid_seen(ctl, number);
     return(PS_SUCCESS);
 }

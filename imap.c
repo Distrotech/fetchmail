@@ -84,7 +84,7 @@ static int imap_ok(int sock, char *argbuf)
 		 * count, and allocate a malloc area that would overlap
 		 * a portion of the stack.
 		 */
-		if (count > INT_MAX/sizeof(int))
+		if ((unsigned)count > INT_MAX/sizeof(int))
 		{
 		    report(stderr, GT_("bogus message count!"));
 		    return(PS_PROTOCOL);
@@ -351,6 +351,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
     flag did_stls = FALSE;
 #endif /* SSL_ENABLE */
 
+    (void)greeting;
     /*
      * Assumption: expunges are cheap, so we want to do them
      * after every message unless user said otherwise.
@@ -804,17 +805,15 @@ static int imap_getrange(int sock,
 			cp++;
 		    if (*cp) 
 		    {
-			unsigned int um;
-			/*
-			 * Message numbers are between 1 and 2^32 inclusive,
-			 * so unsigned int is large enough.
-			 */
-			um=(unsigned int)strtol(cp,&ep,10);
-			if (um <= count)
+			unsigned long um;
+
+			errno = 0;
+			um = strtoul(cp,&ep,10);
+			if (errno == 0 && um <= UINT_MAX && um <= (unsigned)count)
 			{
 			    unseen_messages[unseen++] = um;
 			    if (outlevel >= O_DEBUG)
-				report(stdout, GT_("%u is unseen\n"), um);
+				report(stdout, GT_("%lu is unseen\n"), um);
 			    if (startcount > um)
 				startcount = um;
 			}
@@ -889,8 +888,8 @@ static int imap_getpartialsizes(int sock, int first, int last, int *sizes)
 	return(PS_SUCCESS);
     for (;;)
     {
-	unsigned int num, size;
-	int ok;
+	unsigned int size;
+	int ok, num;
 	char *cp;
 
 	if ((ok = gen_recv(sock, buf, sizeof(buf))))
@@ -903,7 +902,7 @@ static int imap_getpartialsizes(int sock, int first, int last, int *sizes)
 	    ;
 	else if (strstr(buf, "OK") || strstr(buf, "NO"))
 	    break;
-	else if (sscanf(buf, "* %u FETCH (RFC822.SIZE %u)", &num, &size) == 2
+	else if (sscanf(buf, "* %d FETCH (RFC822.SIZE %u)", &num, &size) == 2
 	/* some servers (like mail.internode.on.net bld-mail04) return UID information here
 	 *
 	 * IMAP> A0005 FETCH 1 RFC822.SIZE
@@ -911,7 +910,7 @@ static int imap_getpartialsizes(int sock, int first, int last, int *sizes)
 	 * IMAP< A0005 OK FETCH completed
 	 *
 	 */
-		|| sscanf(buf, "* %u FETCH (UID %*s RFC822.SIZE %u)", &num, &size) == 2)
+		|| sscanf(buf, "* %d FETCH (UID %*s RFC822.SIZE %u)", &num, &size) == 2)
 	{
 	    if (num >= first && num <= last)
 		sizes[num - first] = size;
@@ -936,6 +935,8 @@ static int imap_is_old(int sock, struct query *ctl, int number)
     flag seen = TRUE;
     int i;
 
+    (void)sock;
+    (void)ctl;
     /* 
      * Expunges change the fetch numbers, but unseen_messages contains
      * indices from before any expungees were done.  So neither the
@@ -944,7 +945,7 @@ static int imap_is_old(int sock, struct query *ctl, int number)
 
     seen = TRUE;
     for (i = 0; i < unseen; i++)
-	if (unseen_messages[i] == number)
+	if (unseen_messages[i] == (unsigned)number)
 	{
 	    seen = FALSE;
 	    break;
@@ -967,6 +968,7 @@ static int imap_fetch_headers(int sock, struct query *ctl,int number,int *lenp)
     char buf [MSGBUFSIZE+1];
     int	num;
 
+    (void)ctl;
     /* expunges change the fetch numbers */
     number -= expunged;
 
@@ -1026,6 +1028,7 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
     char buf [MSGBUFSIZE+1], *cp;
     int	num;
 
+    (void)ctl;
     /* expunges change the fetch numbers */
     number -= expunged;
 
@@ -1094,12 +1097,13 @@ static int imap_fetch_body(int sock, struct query *ctl, int number, int *lenp)
     return(PS_SUCCESS);
 }
 
-static int imap_trail(int sock, struct query *ctl, int number, const char *tag)
+static int imap_trail(int sock, struct query *ctl, const char *tag)
 /* discard tail of FETCH response after reading message text */
 {
     /* expunges change the fetch numbers */
     /* number -= expunged; */
 
+    (void)ctl;
     for (;;)
     {
 	char buf[MSGBUFSIZE+1], *t;
@@ -1125,6 +1129,7 @@ static int imap_delete(int sock, struct query *ctl, int number)
 {
     int	ok;
 
+    (void)ctl;
     /* expunges change the fetch numbers */
     number -= expunged;
 
@@ -1165,6 +1170,7 @@ static int imap_delete(int sock, struct query *ctl, int number)
 static int imap_mark_seen(int sock, struct query *ctl, int number)
 /* mark the given message as seen */
 {
+    (void)ctl;
     return(gen_transact(sock,
 	imap_version == IMAP4
 	? "STORE %d +FLAGS.SILENT (\\Seen)"
@@ -1175,6 +1181,7 @@ static int imap_mark_seen(int sock, struct query *ctl, int number)
 static int imap_end_mailbox_poll(int sock, struct query *ctl)
 /* cleanup mailbox before we idle or switch to another one */
 {
+    (void)ctl;
     if (deletions)
 	internal_expunge(sock);
     return(PS_SUCCESS);
@@ -1183,6 +1190,7 @@ static int imap_end_mailbox_poll(int sock, struct query *ctl)
 static int imap_logout(int sock, struct query *ctl)
 /* send logout command */
 {
+    (void)ctl;
     /* if any un-expunged deletions remain, ship an expunge now */
     if (deletions)
 	internal_expunge(sock);

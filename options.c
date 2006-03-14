@@ -49,7 +49,7 @@ enum {
     LA_FETCHSIZELIMIT,
     LA_FASTUIDL,
     LA_LIMITFLUSH,
-    LA_IDLE,
+    LA_IDLE
 };
 
 /* options still left: CgGhHjJoORTWxXYz */

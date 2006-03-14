@@ -53,7 +53,7 @@ int prc_lineno = 1;
 			static char *in;
 			static size_t ins;
 
-			if (yyleng + 1 > ins) {
+			if ((size_t)yyleng + 1 > ins) {
 			    ins = yyleng + 1;
 			    in = xrealloc(in, ins);
 			}

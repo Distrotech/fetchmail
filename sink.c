@@ -1070,6 +1070,7 @@ static int open_mda_sink(struct query *ctl, struct msgblk *msg,
     int	length = 0, fromlen = 0, nameslen = 0;
     char	*names = NULL, *before, *after, *from = NULL;
 
+    (void)bad_addresses;
     xfree(ctl->destaddr);
     ctl->destaddr = xstrdup("localhost");
 
@@ -1468,7 +1469,7 @@ unrecov:
     return(TRUE);
 }
 
-int open_warning_by_mail(struct query *ctl, struct msgblk *msg)
+int open_warning_by_mail(struct query *ctl)
 /* set up output sink for a mailed warning to calling user */
 {
     int	good, bad;

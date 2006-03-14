@@ -189,6 +189,7 @@ static void restore_tty_state(void)
 
 static RETSIGTYPE sigint_handler(int signum)
 {
+    (void)signum;
     restore_tty_state();
     report(stderr, GT_("\nCaught SIGINT... bailing out.\n"));
     exit(1);

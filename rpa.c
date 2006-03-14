@@ -419,10 +419,12 @@ int socket;
   globals:       none
  *********************************************************************/
 
-static void LenAppend(pptr,len)
-char **pptr;
+static void LenAppend(pptr_,len)
+char **pptr_;
 int  len;
 {
+    unsigned char **pptr = (unsigned char **)pptr_;
+
     if (len < 0x80)
     {
 	**pptr = len; (*pptr)++;

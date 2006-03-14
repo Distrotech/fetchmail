@@ -37,6 +37,9 @@ void envquery(int argc, char **argv)
 {
     struct passwd by_name, by_uid, *pwp;
 
+    (void)argc;
+
+    (void)argc;
     if (!(user = getenv("FETCHMAILUSER")))
     {
 	if (!(user = getenv("LOGNAME")))

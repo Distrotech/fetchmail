@@ -25,6 +25,7 @@ static int etrn_ok (int sock, char *argbuf)
 {
     int ok;
 
+    (void)argbuf;
     ok = SMTP_ok(sock, SMTP_MODE);
     if (ok == SM_UNRECOVERABLE)
 	return(PS_PROTOCOL);
@@ -40,6 +41,7 @@ static int etrn_getrange(int sock, struct query *ctl, const char *id,
     char buf [MSGBUFSIZE+1];
     struct idlist *qnp;		/* pointer to Q names */
 
+    (void)id;
     if ((ok = SMTP_ehlo(sock, SMTP_MODE, fetchmailhost,
 			ctl->server.esmtp_name, ctl->server.esmtp_password,
 			&opts)))
@@ -116,6 +118,7 @@ static int etrn_getrange(int sock, struct query *ctl, const char *id,
 static int etrn_logout(int sock, struct query *ctl)
 /* send logout command */
 {
+    (void)ctl;
     return(gen_transact(sock, "QUIT"));
 }
 

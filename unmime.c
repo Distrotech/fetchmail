@@ -701,7 +701,7 @@ int main(int argc, char *argv[])
     }
 
     buf_p++;
-    if ((buf_p - buffer) == BufSize) {
+    if ((unsigned)(buf_p - buffer) == BufSize) {
        /* Buffer is full! Get more room. */
        buffer = xrealloc(buffer, BufSize+BUFSIZE_INCREMENT);
        buf_p = buffer + BufSize;

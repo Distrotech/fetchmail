@@ -58,7 +58,6 @@ sigchld_handler (int sig)
 /* process SIGCHLD to obtain the exit code of the terminating process */
 {
     pid_t pid;
-
 #if 	defined(HAVE_WAITPID)				/* the POSIX way */
     int status;
 
@@ -79,9 +78,10 @@ sigchld_handler (int sig)
     wait(&status);
 #endif
     lastsig = SIGCHLD;
+    (void)sig;
 }
 
-RETSIGTYPE null_signal_handler(int sig) { }
+RETSIGTYPE null_signal_handler(int sig) { (void)sig; }
 
 SIGHANDLERTYPE set_signal_handler(int sig, SIGHANDLERTYPE handler)
 /* 
@@ -132,7 +132,7 @@ void deal_with_sigchld(void)
 }
 
 int
-daemonize (const char *logfile, void (*termhook)(int))
+daemonize (const char *logfile)
 /* detach from control TTY, become process group leader, catch SIGCHLD */
 {
   int fd;

@@ -73,7 +73,7 @@ int do_otp(int sock, char *command, struct query *ctl)
 	return rval;
 
     return PS_SUCCESS;
-};
+}
 #endif /* OPIE_ENABLE */
 
 /* opie.c ends here */

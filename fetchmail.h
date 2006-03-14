@@ -216,7 +216,7 @@ struct method		/* describe methods for protocol state machine */
 				/* fetch FROM headera given message */
     int (*fetch_body)(int, struct query *, int, int *);
 				/* fetch a given message */
-    int (*trail)(int, struct query *, int, const char *);
+    int (*trail)(int, struct query *, const char *);
 				/* eat trailer of a message */
     int (*delete_msg)(int, struct query *, int);
 				/* delete method */
@@ -548,7 +548,7 @@ int stuffline(struct query *, char *);
 int open_sink(struct query*, struct msgblk *, int*, int*);
 void release_sink(struct query *);
 int close_sink(struct query *, struct msgblk *, flag);
-int open_warning_by_mail(struct query *, struct msgblk *);
+int open_warning_by_mail(struct query *);
 #if defined(HAVE_STDARG_H)
 void stuff_warning(const char *, struct query *, const char *, ... )
     __attribute__ ((format (printf, 3, 4)))
@@ -650,7 +650,7 @@ typedef RETSIGTYPE (*SIGHANDLERTYPE) (int);
 void deal_with_sigchld(void);
 RETSIGTYPE null_signal_handler(int sig);
 SIGHANDLERTYPE set_signal_handler(int sig, SIGHANDLERTYPE handler);
-int daemonize(const char *, void (*)(int));
+int daemonize(const char *);
 char *fm_getpassword(char *);
 void escapes(const char *, char *);
 char *visbuf(const char *);

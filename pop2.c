@@ -59,6 +59,7 @@ static int pop2_getauth(int sock, struct query *ctl, char *buf)
 {
     int status;
 
+    (void)buf;
     strlcpy(shroud, ctl->password, sizeof(shroud));
     status = gen_transact(sock,
 		  "HELO %s %s",
@@ -71,6 +72,8 @@ static int pop2_getrange(int sock, struct query *ctl, const char *folder,
 			 int *countp, int *newp, int *bytes)
 /* get range of messages to be fetched */
 {
+    (void)ctl;
+
     /* maybe the user wanted a non-default folder */
     if (folder)
     {
@@ -106,6 +109,7 @@ static int pop2_fetch(int sock, struct query *ctl, int number, int *lenp)
 {
     int	ok;
 
+    (void)ctl;
     *lenp = 0;
     ok = gen_transact(sock, "READ %d", number);
     if (ok)
@@ -117,15 +121,18 @@ static int pop2_fetch(int sock, struct query *ctl, int number, int *lenp)
     return(ok);
 }
 
-static int pop2_trail(int sock, struct query *ctl, int number, const char *tag)
+static int pop2_trail(int sock, struct query *ctl, const char *tag)
 /* send acknowledgement for message data */
 {
+    (void)ctl;
+    (void)tag;
     return(gen_transact(sock, ctl->keep ? "ACKS" : "ACKD"));
 }
 
 static int pop2_logout(int sock, struct query *ctl)
 /* send logout command */
 {
+    (void)ctl;
     return(gen_transact(sock, "QUIT"));
 }
 
@@ -147,8 +154,9 @@ static const struct method pop2 =
     pop2_trail,				/* eat message trailer */
     NULL,				/* no POP2 delete method */
     NULL,				/* how to mark a message as seen */
+    NULL,				/* how to end mailbox processing */
     pop2_logout,			/* log out, we're done */
-    FALSE,				/* no, we can't re-poll */
+    FALSE				/* no, we can't re-poll */
 };
 
 int doPOP2 (struct query *ctl)
