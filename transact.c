@@ -91,9 +91,7 @@ static void find_server_names(const char *hdr,
     {
 	char	*cp;
 
-	for (cp = nxtaddr((const unsigned char *)hdr);
-	     cp != NULL;
-	     cp = nxtaddr(NULL))
+	for (cp = nxtaddr(hdr); cp != NULL; cp = nxtaddr(NULL))
 	{
 	    char	*atsign;
 
@@ -129,10 +127,10 @@ static void find_server_names(const char *hdr,
 		for (idp = ctl->server.localdomains; idp; idp = idp->next) {
 		    char	*rhs;
 
-		    rhs = atsign + (strlen(atsign) - strlen((char *)idp->id));
+		    rhs = atsign + (strlen(atsign) - strlen(idp->id));
 		    if (rhs > atsign &&
 			(rhs[-1] == '.' || rhs[-1] == '@') &&
-			strcasecmp(rhs, (char *)idp->id) == 0)
+			strcasecmp(rhs, idp->id) == 0)
 		    {
 			if (outlevel >= O_DEBUG)
 			    report(stdout, GT_("passed through %s matching %s\n"), 
@@ -1316,8 +1314,8 @@ int readbody(int sock, struct query *ctl, flag forward, int len)
 /*   forward:		TRUE to forward */
 {
     int	linelen;
-    unsigned char buf[MSGBUFSIZE+4];
-    unsigned char *inbufp = buf;
+    char buf[MSGBUFSIZE+4];
+    char *inbufp = buf;
     flag issoftline = FALSE;
 
     /*
@@ -1545,7 +1543,8 @@ va_dcl
     va_end(ap);
 
     snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), "\r\n");
-    if (SockWrite(sock, buf, strlen(buf)) < strlen(buf)) {
+    ok = SockWrite(sock, buf, strlen(buf));
+    if (ok == -1 || (size_t)ok != strlen(buf)) {
 	/* short write, bail out */
 	return PS_SOCKET;
     }

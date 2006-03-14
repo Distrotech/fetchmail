@@ -118,12 +118,18 @@ void lock_or_die(void)
 	int e = 0;
 
 	if ((fd = open(lockfile, O_WRONLY|O_CREAT|O_EXCL, 0666)) != -1) {
+	    ssize_t wr;
+
 	    snprintf(tmpbuf, sizeof(tmpbuf), "%ld\n", (long)getpid());
-	    if (write(fd, tmpbuf, strlen(tmpbuf)) < strlen(tmpbuf)) e = 1;
+	    wr = write(fd, tmpbuf, strlen(tmpbuf));
+	    if (wr == -1 || (size_t)wr != strlen(tmpbuf))
+	        e = 1;
 	    if (run.poll_interval)
 	    {
 		snprintf(tmpbuf, sizeof(tmpbuf), "%d\n", run.poll_interval);
-		if (write(fd, tmpbuf, strlen(tmpbuf)) < strlen(tmpbuf)) e = 1;
+		wr = write(fd, tmpbuf, strlen(tmpbuf));
+		if (wr == -1 || (size_t)wr != strlen(tmpbuf))
+		    e = 1;
 	    }
 	    if (fsync(fd)) e = 1;
 	    if (close(fd)) e = 1;

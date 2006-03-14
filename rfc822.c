@@ -41,13 +41,13 @@ char *program_name = "rfc822";
 
 #define HEADER_END(p)	((p)[0] == '\n' && ((p)[1] != ' ' && (p)[1] != '\t'))
 
-unsigned char *reply_hack(
-	unsigned char *buf		/* header to be hacked */,
-	const unsigned char *host	/* server hostname */,
+char *reply_hack(
+	char *buf		/* header to be hacked */,
+	const char *host	/* server hostname */,
 	size_t *length)
 /* hack message headers so replies will work properly */
 {
-    unsigned char *from, *cp, last_nws = '\0', *parens_from = NULL;
+    char *from, *cp, last_nws = '\0', *parens_from = NULL;
     int parendepth, state, has_bare_name_part, has_host_part;
 #ifndef MAIN
     int addresscount = 1;
@@ -77,9 +77,9 @@ unsigned char *reply_hack(
 
     /* make room to hack the address; buf must be malloced */
     for (cp = buf; *cp; cp++)
-	if (*cp == ',' || isspace(*cp))
+	if (*cp == ',' || isspace((unsigned char)*cp))
 	    addresscount++;
-    buf = (unsigned char *)xrealloc(buf, strlen(buf) + addresscount * (strlen(host) + 1) + 1);
+    buf = xrealloc(buf, strlen(buf) + addresscount * (strlen(host) + 1) + 1);
 #endif /* MAIN */
 
     /*
@@ -95,7 +95,7 @@ unsigned char *reply_hack(
 #ifdef MAIN
 	if (verbose)
 	{
-	    printf("state %d: %s", state, (char *)buf);
+	    printf("state %d: %s", state, buf);
 	    printf("%*s^\n", from - buf + 10, " ");
 	}
 #endif /* MAIN */
@@ -116,7 +116,7 @@ unsigned char *reply_hack(
 		break;
 
 	    case 1:	/* we've seen the colon, we're looking for addresses */
-		if (!isspace(*from))
+		if (!isspace((unsigned char)*from))
 		    last_nws = *from;
 		if (*from == '<')
 		    state = 3;
@@ -135,12 +135,12 @@ unsigned char *reply_hack(
 			 && last_nws != ';')
 		{
 		    int hostlen;
-		    unsigned char *p;
+		    char *p;
 
 		    p = from;
 		    if (parens_from)
 			from = parens_from;
-		    while (isspace(*from) || (*from == ','))
+		    while (isspace((unsigned char)*from) || (*from == ','))
 			--from;
 		    from++;
 		    hostlen = strlen(host);
@@ -158,7 +158,7 @@ unsigned char *reply_hack(
 		{
 		    parens_from = from;
 		} 
-		else if (!isspace(*from))
+		else if (!isspace((unsigned char)*from))
 		    has_bare_name_part = TRUE;
 		break;
 
@@ -215,15 +215,15 @@ unsigned char *reply_hack(
     return(buf);
 }
 
-unsigned char *nxtaddr(const unsigned char *hdr /* header to be parsed, NUL to continue previous hdr */)
+char *nxtaddr(const char *hdr /* header to be parsed, NUL to continue previous hdr */)
 /* parse addresses in succession out of a specified RFC822 header */
 {
-    static unsigned char address[BUFSIZ];
-    static int tp;
-    static const unsigned char *hp;
+    static char address[BUFSIZ];
+    static size_t tp;
+    static const char *hp;
     static int	state, oldstate;
 #ifdef MAIN
-    static const unsigned char *orighdr;
+    static const char *orighdr;
 #endif /* MAIN */
     int parendepth = 0;
 
@@ -252,7 +252,7 @@ unsigned char *nxtaddr(const unsigned char *hdr /* header to be parsed, NUL to c
 #ifdef MAIN
 	if (verbose)
 	{
-	    printf("state %d: %s", state, (char *)orighdr);
+	    printf("state %d: %s", state, orighdr);
 	    printf("%*s^\n", hp - orighdr + 10, " ");
 	}
 #endif /* MAIN */
@@ -264,13 +264,13 @@ unsigned char *nxtaddr(const unsigned char *hdr /* header to be parsed, NUL to c
 	    state = ENDIT_ALL;
 	    if (tp)
 	    {
-		while (tp >= 0 && isspace(address[tp--]))
-		    continue;
-		address[++tp] = '\0';
+		while (tp > 0 && isspace((unsigned char)address[tp - 1]))
+		    tp--;
+		address[tp] = '\0';
 		tp = 0;
 		return (address);
 	    }
-	    return((unsigned char *)NULL);
+	    return(NULL);
 	}
 	else if (*hp == '\\')		/* handle RFC822 escaping */
 	{
@@ -305,7 +305,7 @@ unsigned char *nxtaddr(const unsigned char *hdr /* header to be parsed, NUL to c
 		state = INSIDE_BRACKETS;
 		tp = 0;
 	    }
-	    else if (*hp != ',' && !isspace(*hp))
+	    else if (*hp != ',' && !isspace((unsigned char)*hp))
 	    {
 		--hp;
 	        state = BARE_ADDRESS;
@@ -340,7 +340,7 @@ unsigned char *nxtaddr(const unsigned char *hdr /* header to be parsed, NUL to c
 		state = INSIDE_DQUOTE;
                 address[NEXTTP()] = *hp;
             }
-	    else if (!isspace(*hp)) 	/* just take it, ignoring whitespace */
+	    else if (!isspace((unsigned char)*hp)) 	/* just take it, ignoring whitespace */
 		address[NEXTTP()] = *hp;
 	    break;
 
@@ -386,10 +386,10 @@ unsigned char *nxtaddr(const unsigned char *hdr /* header to be parsed, NUL to c
 }
 
 #ifdef MAIN
-static void parsebuf(unsigned char *longbuf, int reply)
+static void parsebuf(char *longbuf, int reply)
 {
-    unsigned char	*cp;
-    size_t		dummy;
+    char	*cp;
+    size_t	dummy;
 
     if (reply)
     {
@@ -397,19 +397,19 @@ static void parsebuf(unsigned char *longbuf, int reply)
 	printf("Rewritten buffer: %s", (char *)longbuf);
     }
     else
-	if ((cp = nxtaddr(longbuf)) != (unsigned char *)NULL)
+	if ((cp = nxtaddr(longbuf)) != (char *)NULL)
 	    do {
 		printf("\t-> \"%s\"\n", (char *)cp);
 	    } while
-		((cp = nxtaddr((unsigned char *)NULL)) != (unsigned char *)NULL);
+		((cp = nxtaddr((char *)NULL)) != (char *)NULL);
 }
 
 
 
 int main(int argc, char *argv[])
 {
-    unsigned char	buf[BUFSIZ], longbuf[BUFSIZ];
-    int			ch, reply;
+    char	buf[BUFSIZ], longbuf[BUFSIZ];
+    int		ch, reply;
     
     verbose = reply = FALSE;
     while ((ch = getopt(argc, argv, "rv")) != EOF)

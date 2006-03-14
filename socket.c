@@ -604,11 +604,11 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 {
 	char buf[257];
 	X509 *x509_cert;
-	int err, depth;
+	int err, depth, i;
 	unsigned char digest[EVP_MAX_MD_SIZE];
 	char text[EVP_MAX_MD_SIZE * 3 + 1], *tp, *te;
 	const EVP_MD *digest_tp;
-	unsigned int dsz, i, esz;
+	unsigned int dsz, esz;
 	X509_NAME *subj, *issuer;
 
 	x509_cert = X509_STORE_CTX_get_current_cert(ctx);
@@ -624,13 +624,13 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 		if (outlevel >= O_VERBOSE) {
 			if ((i = X509_NAME_get_text_by_NID(issuer, NID_organizationName, buf, sizeof(buf))) != -1) {
 				report(stdout, GT_("Issuer Organization: %s\n"), buf);
-				if (i >= sizeof(buf) - 1)
+				if ((size_t)i >= sizeof(buf) - 1)
 					report(stdout, GT_("Warning: Issuer Organization Name too long (possibly truncated).\n"));
 			} else
 				report(stdout, GT_("Unknown Organization\n"));
 			if ((i = X509_NAME_get_text_by_NID(issuer, NID_commonName, buf, sizeof(buf))) != -1) {
 				report(stdout, GT_("Issuer CommonName: %s\n"), buf);
-				if (i >= sizeof(buf) - 1)
+				if ((size_t)i >= sizeof(buf) - 1)
 					report(stdout, GT_("Warning: Issuer CommonName too long (possibly truncated).\n"));
 			} else
 				report(stdout, GT_("Unknown Issuer CommonName\n"));
@@ -638,7 +638,7 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 		if ((i = X509_NAME_get_text_by_NID(subj, NID_commonName, buf, sizeof(buf))) != -1) {
 			if (outlevel >= O_VERBOSE)
 				report(stdout, GT_("Server CommonName: %s\n"), buf);
-			if (i >= sizeof(buf) - 1) {
+			if ((size_t)i >= sizeof(buf) - 1) {
 				/* Possible truncation. In this case, this is a DNS name, so this
 				 * is really bad. We do not tolerate this even in the non-strict case. */
 				report(stderr, GT_("Bad certificate: Subject CommonName too long!\n"));
@@ -707,6 +707,8 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 		/* Print the finger print. Note that on errors, we might print it more than once
 		 * normally; we kluge around that by using a global variable. */
 		if (_check_fp) {
+			unsigned dp;
+
 			_check_fp = 0;
 			digest_tp = EVP_md5();
 			if (digest_tp == NULL) {
@@ -719,9 +721,9 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 			}
 			tp = text;
 			te = text + sizeof(text);
-			for (i = 0; i < dsz; i++) {
-				esz = snprintf(tp, te - tp, i > 0 ? ":%02X" : "%02X", digest[i]);
-				if (esz >= te - tp) {
+			for (dp = 0; dp < dsz; dp++) {
+				esz = snprintf(tp, te - tp, dp > 0 ? ":%02X" : "%02X", digest[dp]);
+				if (esz >= (size_t)(te - tp)) {
 					report(stderr, GT_("Digest text buffer too small!\n"));
 					return (0);
 				}

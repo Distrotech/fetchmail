@@ -88,7 +88,8 @@ int is_host_alias(const char *name, struct query *ctl)
 {
     struct mxentry	*mxp, *mxrecords;
     struct idlist	*idl;
-    int			namelen, e;
+    size_t		namelen;
+    int			e;
     struct addrinfo	hints, *res, *res_st;
 
     struct hostdata *lead_server =

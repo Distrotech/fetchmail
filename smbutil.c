@@ -74,7 +74,7 @@ dumpRaw(fp,((unsigned char*)structPtr)+IVAL(&structPtr->header.offset,0),SVAL(&s
 
 static void dumpRaw(FILE *fp, unsigned char *buf, size_t len)
   {
-  int i;
+  size_t i;
   
   for (i=0; i<len; ++i)
     fprintf(fp,"%02x ",buf[i]);
@@ -84,7 +84,7 @@ static void dumpRaw(FILE *fp, unsigned char *buf, size_t len)
 
 static char *unicodeToString(char *p, size_t len)
   {
-  int i;
+  size_t i;
   static char buf[1024];
 
   assert(len+1 < sizeof buf);

@@ -68,7 +68,7 @@ struct mxentry *getmxrecords(const char *name)
     n = res_search(name, C_IN,T_MX, (unsigned char *)&answer, sizeof(answer));
     if (n == -1)
 	return((struct mxentry *)NULL);
-    if (n > sizeof(answer))
+    if ((size_t)n > sizeof(answer))
 	n = sizeof(answer);    	
 
     hp = (HEADER *)&answer;
@@ -76,7 +76,7 @@ struct mxentry *getmxrecords(const char *name)
     eom = answer + n;
     h_errno = 0;
     for (qdcount = ntohs(hp->qdcount); qdcount--; cp += n + QFIXEDSZ)
-	if ((n = dn_skipname(cp, eom)) < 0)
+      if ((n = dn_skipname((unsigned char *)cp, (unsigned char *)eom)) < 0)
 	    return((struct mxentry *)NULL);
     buflen = sizeof(MXHostBuf) - 1;
     bp = MXHostBuf;
@@ -84,7 +84,8 @@ struct mxentry *getmxrecords(const char *name)
     ancount = ntohs(hp->ancount);
     while (--ancount >= 0 && cp < eom)
     {
-	if ((n = dn_expand(answer, eom, cp, bp, buflen)) < 0)
+	if ((n = dn_expand((unsigned char *)answer, (unsigned char *)eom,
+			   (unsigned char *)cp, bp, buflen)) < 0)
 	    break;
 	cp += n;
 	GETSHORT(type, cp);
@@ -96,7 +97,8 @@ struct mxentry *getmxrecords(const char *name)
 	    continue;
 	}
 	GETSHORT(pref, cp);
-	if ((n = dn_expand(answer, eom, cp, bp, buflen)) < 0)
+	if ((n = dn_expand((unsigned char *)answer, (unsigned char *)eom,
+			   (unsigned char *)cp, bp, buflen)) < 0)
 	    break;
 	cp += n;
 

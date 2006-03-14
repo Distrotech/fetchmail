@@ -975,7 +975,7 @@ static int load_params(int argc, char **argv, int optind)
     /* get the location of rcfile */
     rcfiledir[0] = 0;
     p = strrchr (rcfile, '/');
-    if (p && (p - rcfile) < sizeof (rcfiledir)) {
+    if (p && (size_t)(p - rcfile) < sizeof (rcfiledir)) {
 	*p = 0;			/* replace '/' by '0' */
 	strlcpy (rcfiledir, rcfile, sizeof(rcfiledir));
 	*p = '/';		/* restore '/' */
@@ -1254,7 +1254,7 @@ static int load_params(int argc, char **argv, int optind)
 		{
 		    char	*cp;
 
-		    if (!(cp = strrchr((char *)idp->id, '/'))
+		    if (!(cp = strrchr(idp->id, '/'))
 			|| (0 == strcmp(cp + 1, SMTP_PORT))
 			|| servport(cp + 1) == SMTP_PORT_NUM)
 		    {
@@ -1362,7 +1362,8 @@ static const int autoprobe[] =
 static int query_host(struct query *ctl)
 /* perform fetch transaction with single host */
 {
-    int i, st = 0;
+    size_t i;
+    int st = 0;
 
     /*
      * If we're syslogging the progress messages are automatically timestamped.
@@ -1607,7 +1608,7 @@ static void dump_params (struct runctl *runp,
 
 		printf(GT_("  Selected mailboxes are:"));
 		for (idp = ctl->mailboxes; idp; idp = idp->next)
-		    printf(" %s", (char *)idp->id);
+		    printf(" %s", idp->id);
 		printf("\n");
 	    }
 	    printf(ctl->fetchall
@@ -1697,7 +1698,7 @@ static void dump_params (struct runctl *runp,
 	    printf(GT_("  Domains for which mail will be fetched are:"));
 	    for (idp = ctl->domainlist; idp; idp = idp->next)
 	    {
-		printf(" %s", (char *)idp->id);
+		printf(" %s", idp->id);
 		if (!idp->val.status.mark)
 		    printf(GT_(" (default)"));
 	    }
@@ -1717,7 +1718,7 @@ static void dump_params (struct runctl *runp,
 		       ctl->listener);
 		for (idp = ctl->smtphunt; idp; idp = idp->next)
 		{
-		    printf(" %s", (char *)idp->id);
+		    printf(" %s", idp->id);
 		    if (!idp->val.status.mark)
 			printf(GT_(" (default)"));
 		}
@@ -1775,9 +1776,9 @@ static void dump_params (struct runctl *runp,
 		    {
 			for (idp = ctl->localnames; idp; idp = idp->next)
 			    if (idp->val.id2)
-				printf("\t%s -> %s\n", (char *)idp->id, (char *)idp->val.id2);
+				printf("\t%s -> %s\n", idp->id, idp->val.id2);
 			    else
-				printf("\t%s\n", (char *)idp->id);
+				printf("\t%s\n", idp->id);
 			if (ctl->wildcard)
 			    fputs("\t*\n", stdout);
 		    }
@@ -1816,7 +1817,7 @@ static void dump_params (struct runctl *runp,
 
 			    printf(GT_("  Predeclared mailserver aliases:"));
 			    for (idp = ctl->server.akalist; idp; idp = idp->next)
-				printf(" %s", (char *)idp->id);
+				printf(" %s", idp->id);
 			    putchar('\n');
 			}
 			if (ctl->server.localdomains)
@@ -1825,7 +1826,7 @@ static void dump_params (struct runctl *runp,
 
 			    printf(GT_("  Local domains:"));
 			    for (idp = ctl->server.localdomains; idp; idp = idp->next)
-				printf(" %s", (char *)idp->id);
+				printf(" %s", idp->id);
 			    putchar('\n');
 			}
 		    }
@@ -1866,7 +1867,7 @@ static void dump_params (struct runctl *runp,
 		printf(GT_("  %d UIDs saved.\n"), count);
 		if (outlevel >= O_VERBOSE)
 		    for (idp = ctl->oldsaved; idp; idp = idp->next)
-			printf("\t%s\n", (char *)idp->id);
+			printf("\t%s\n", idp->id);
 	    }
 	}
 

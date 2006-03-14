@@ -233,7 +233,7 @@ static int do_imap_ntlm(int sock, struct query *ctl)
 	dumpSmbNtlmAuthRequest(stdout, &request);
 
     memset(msgbuf,0,sizeof msgbuf);
-    to64frombits (msgbuf, (unsigned char*)&request, SmbLength(&request));
+    to64frombits (msgbuf, &request, SmbLength(&request));
   
     if (outlevel >= O_MONITOR)
 	report(stdout, "IMAP> %s\n", msgbuf);
@@ -244,7 +244,7 @@ static int do_imap_ntlm(int sock, struct query *ctl)
     if ((gen_recv(sock, msgbuf, sizeof msgbuf)))
 	return result;
   
-    len = from64tobits ((char*)&challenge, msgbuf, sizeof(challenge));
+    len = from64tobits (&challenge, msgbuf, sizeof(challenge));
     
     if (outlevel >= O_DEBUG)
 	dumpSmbNtlmAuthChallenge(stdout, &challenge);
@@ -255,7 +255,7 @@ static int do_imap_ntlm(int sock, struct query *ctl)
 	dumpSmbNtlmAuthResponse(stdout, &response);
   
     memset(msgbuf,0,sizeof msgbuf);
-    to64frombits (msgbuf, (unsigned char*)&response, SmbLength(&response));
+    to64frombits (msgbuf, &response, SmbLength(&response));
 
     if (outlevel >= O_MONITOR)
 	report(stdout, "IMAP> %s\n", msgbuf);
@@ -273,10 +273,10 @@ static int do_imap_ntlm(int sock, struct query *ctl)
 }
 #endif /* NTLM */
 
-static int imap_canonicalize(char *result, char *raw, int maxlen)
+static void imap_canonicalize(char *result, char *raw, size_t maxlen)
 /* encode an IMAP password as per RFC1730's quoting conventions */
 {
-    int i, j;
+    size_t i, j;
 
     j = 0;
     for (i = 0; i < strlen(raw) && i < maxlen; i++)
@@ -286,8 +286,6 @@ static int imap_canonicalize(char *result, char *raw, int maxlen)
 	result[j++] = raw[i];
     }
     result[j] = '\0';
-
-    return(i);
 }
 
 static void capa_probe(int sock, struct query *ctl)

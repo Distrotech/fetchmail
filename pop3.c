@@ -96,7 +96,7 @@ static int do_pop3_ntlm(int sock, struct query *ctl,
 	dumpSmbNtlmAuthRequest(stdout, &request);
 
     memset(msgbuf,0,sizeof msgbuf);
-    to64frombits (msgbuf, (unsigned char*)&request, SmbLength(&request));
+    to64frombits (msgbuf, &request, SmbLength(&request));
   
     if (outlevel >= O_MONITOR)
 	report(stdout, "POP3> %s\n", msgbuf);
@@ -107,7 +107,7 @@ static int do_pop3_ntlm(int sock, struct query *ctl,
     if ((gen_recv(sock, msgbuf, sizeof msgbuf)))
 	return result;
   
-    len = from64tobits ((unsigned char*)&challenge, msgbuf, sizeof(msgbuf));
+    len = from64tobits (&challenge, msgbuf, sizeof(msgbuf));
     
     if (outlevel >= O_DEBUG)
 	dumpSmbNtlmAuthChallenge(stdout, &challenge);
@@ -118,7 +118,7 @@ static int do_pop3_ntlm(int sock, struct query *ctl,
 	dumpSmbNtlmAuthResponse(stdout, &response);
   
     memset(msgbuf,0,sizeof msgbuf);
-    to64frombits (msgbuf, (unsigned char*)&response, SmbLength(&response));
+    to64frombits (msgbuf, &response, SmbLength(&response));
 
     if (outlevel >= O_MONITOR)
 	report(stdout, "POP3> %s\n", msgbuf);

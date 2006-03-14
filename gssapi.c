@@ -69,7 +69,8 @@ int do_gssauth(int sock, char *command, char *service, char *hostname, char *use
     else if (outlevel >= O_DEBUG) {
         maj_stat = gss_display_name(&min_stat, target_name, &request_buf,
             &mech_name);
-        report(stderr, GT_("Using service name [%s]\n"),request_buf.value);
+        report(stderr, GT_("Using service name [%s]\n"),
+	       (char *)request_buf.value);
         maj_stat = gss_release_buffer(&min_stat, &request_buf);
     }
 
@@ -126,7 +127,7 @@ int do_gssauth(int sock, char *command, char *service, char *hostname, char *use
 	        return result;
 	    }
 	    request_buf.length = from64tobits(buf2, buf1 + 2, sizeof(buf2));
-	    if (request_buf.length == -1)	/* in case of bad data */
+	    if ((int)request_buf.length == -1)	/* in case of bad data */
 		request_buf.length = 0;
 	    request_buf.value = buf2;
 	    sec_token = &request_buf;
@@ -141,7 +142,7 @@ int do_gssauth(int sock, char *command, char *service, char *hostname, char *use
         return result;
 
     request_buf.length = from64tobits(buf2, buf1 + 2, sizeof(buf2));
-    if (request_buf.length == -1)	/* in case of bad data */
+    if ((int)request_buf.length == -1)	/* in case of bad data */
 	request_buf.length = 0;
     request_buf.value = buf2;
 

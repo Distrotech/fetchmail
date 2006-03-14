@@ -173,7 +173,7 @@ struct runctl
 
 struct idlist
 {
-    unsigned char *id;
+    char *id;
     union
     {
 	struct
@@ -186,7 +186,7 @@ struct idlist
 #define UID_EXPUNGED	3		/* this message has been expunged */ 
         }
 	status;
-	unsigned char *id2;
+	char *id2;
     } val;
     struct idlist *next;
 };
@@ -559,8 +559,8 @@ void stuff_warning();
 void close_warning_by_mail(struct query *, struct msgblk *);
 
 /* rfc822.c: RFC822 header parsing */
-unsigned char *reply_hack(unsigned char *, const unsigned char *, size_t *);
-unsigned char *nxtaddr(const unsigned char *);
+char *reply_hack(char *, const char *, size_t *);
+char *nxtaddr(const char *);
 
 /* uid.c: UID support */
 extern int dofastuidl;
@@ -593,17 +593,17 @@ int prc_parse_file(const char *, const flag);
 int prc_filecheck(const char *, const flag);
 
 /* base64.c */
-void to64frombits(unsigned char *, const unsigned char *, int);
-int from64tobits(char *, const char *, int maxlen);
+void to64frombits(char *, const void *, int);
+int from64tobits(void *, const char *, int maxlen);
 
 /* unmime.c */
 /* Bit-mask returned by MimeBodyType */
 #define MSG_IS_7BIT       0x01
 #define MSG_IS_8BIT       0x02
 #define MSG_NEEDS_DECODE  0x80
-extern void UnMimeHeader(unsigned char *buf);
-extern int  MimeBodyType(unsigned char *hdrs, int WantDecode);
-extern int  UnMimeBodyline(unsigned char **buf, flag delimited, flag issoftline);
+extern void UnMimeHeader(char *buf);
+extern int  MimeBodyType(char *hdrs, int WantDecode);
+extern int  UnMimeBodyline(char **buf, flag delimited, flag issoftline);
 
 /* interface.c */
 void interface_init(void);
@@ -644,8 +644,8 @@ struct query *hostalloc(struct query *);
 int parsecmdline (int, char **, struct runctl *, struct query *);
 char *prependdir (const char *, const char *);
 char *MD5Digest (unsigned const char *);
-void hmac_md5 (unsigned char *, size_t, unsigned char *, size_t, unsigned char *, size_t);
-int POP3_auth_rpa(unsigned char *, unsigned char *, int socket);
+void hmac_md5 (char *, size_t, char *, size_t, unsigned char *, size_t);
+int POP3_auth_rpa(char *, char *, int socket);
 typedef RETSIGTYPE (*SIGHANDLERTYPE) (int);
 void deal_with_sigchld(void);
 RETSIGTYPE null_signal_handler(int sig);

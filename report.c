@@ -241,11 +241,11 @@ report_build (FILE *errfp, message, va_alist)
     VA_START (args, message);
     for ( ; ; )
     {
-	n = vsnprintf (partial_message + partial_message_size_used,
-		       partial_message_size - partial_message_size_used,
+	n = vsnprintf (partial_message + partial_message_size_used, partial_message_size - partial_message_size_used,
 		       message, args);
 
-	if (n < partial_message_size - partial_message_size_used)
+	if (n >= 0
+	    && (unsigned)n < partial_message_size - partial_message_size_used)
         {
 	    partial_message_size_used += n;
 	    break;
@@ -262,7 +262,8 @@ report_build (FILE *errfp, message, va_alist)
 		      partial_message_size - partial_message_size_used,
 		      message, a1, a2, a3, a4, a5, a6, a7, a8);
 
-	if (n < partial_message_size - partial_message_size_used)
+	if (n >= 0
+	    && (unsigned)n < partial_message_size - partial_message_size_used)
         {
 	    partial_message_size_used += n;
 	    break;
@@ -310,7 +311,9 @@ report_complete (FILE *errfp, message, va_alist)
 		       partial_message_size - partial_message_size_used,
 		       message, args);
 
-	if (n < partial_message_size - partial_message_size_used)
+	/* old glibc versions return -1 for truncation */
+	if (n >= 0
+	    && (unsigned)n < partial_message_size - partial_message_size_used)
         {
 	    partial_message_size_used += n;
 	    break;
@@ -327,7 +330,8 @@ report_complete (FILE *errfp, message, va_alist)
 		      partial_message_size - partial_message_size_used,
 		      message, a1, a2, a3, a4, a5, a6, a7, a8);
 
-	if (n < partial_message_size - partial_message_size_used)
+	if (n >= 0
+	    && (unsigned)n < partial_message_size - partial_message_size_used)
         {
 	    partial_message_size_used += n;
 	    break;

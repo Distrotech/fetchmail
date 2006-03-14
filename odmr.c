@@ -80,11 +80,11 @@ static int odmr_getrange(int sock, struct query *ctl, const char *id,
      */
     buf[0] = '\0';
     for (qnp = ctl->domainlist; qnp; qnp = qnp->next)
-	if (strlen(buf) + strlen((const char *)qnp->id) + 1 >= sizeof(buf))
+	if (strlen(buf) + strlen(qnp->id) + 1 >= sizeof(buf))
 	    break;
 	else
 	{
-	    strcat(buf, (const char *)qnp->id);
+	    strcat(buf, qnp->id);
 	    strcat(buf, ",");
 	}
     buf[strlen(buf) - 1] = '\0';	/* nuke final comma */

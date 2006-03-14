@@ -33,7 +33,7 @@ static unsigned char unhex(unsigned char c)
       return 16;	/* invalid hex character */
 }
 
-static int qp_char(unsigned char c1, unsigned char c2, unsigned char *c_out)
+static int qp_char(unsigned char c1, unsigned char c2, char *c_out)
 {
   c1 = unhex(c1);
   c2 = unhex(c2);
@@ -59,7 +59,7 @@ static int qp_char(unsigned char c1, unsigned char c2, unsigned char *c_out)
 static const char MIMEHDR_INIT[]  = "=?";	/* Start of coded sequence */
 static const char MIMEHDR_END[]   = "?=";	/* End of coded sequence */
 
-void UnMimeHeader(unsigned char *hdr)
+void UnMimeHeader(char *hdr)
 {
   /* Decode a buffer containing data encoded according to RFC
    * 2047. This only handles content-transfer-encoding; conversion
@@ -75,8 +75,8 @@ void UnMimeHeader(unsigned char *hdr)
    */
 
   int  state = S_COPY_PLAIN;
-  unsigned char *p_in, *p_out, *p;
-  unsigned char enc = '\0';		/* initialization pacifies -Wall */
+  char *p_in, *p_out, *p;
+  char enc = '\0';		/* initialization pacifies -Wall */
   int  i;
 
   /* Speed up in case this is not a MIME-encoded header */
@@ -123,7 +123,7 @@ void UnMimeHeader(unsigned char *hdr)
 
 	/* *(p+1) is the transfer encoding, *(p+2) must be a '?' */
 	if (*(p+2) == '?') {
-	  enc = tolower(*(p+1));
+	  enc = tolower((unsigned char)*(p+1));
 	  p_in = p+3;
 	  state = S_COPY_MIME;
 	}
@@ -200,11 +200,11 @@ void UnMimeHeader(unsigned char *hdr)
 	 * There is more MIME data later on. Is there
          * whitespace  only before the delimiter? 
 	 */
-        unsigned char *q;
+        char *q;
         int  wsp_only = 1;
 
         for (q=p_in; (wsp_only && (q < p)); q++)
-          wsp_only = isspace(*q);
+          wsp_only = isspace((unsigned char)*q);
 
         if (wsp_only) {
 	  /* 
@@ -259,7 +259,7 @@ static int  CurrTypeNeedsDecode = 0;
  * at the beginning, and a terminating null.
  */
 #define MAX_DELIM_LEN 70
-static unsigned char MultipartDelimiter[MAX_DELIM_LEN+3];
+static char MultipartDelimiter[MAX_DELIM_LEN+3];
 
 
 /* This string replaces the "Content-Transfer-Encoding: quoted-printable"
@@ -267,15 +267,16 @@ static unsigned char MultipartDelimiter[MAX_DELIM_LEN+3];
  * must be no longer than the original string.
  */
 static const char ENC8BIT[] = "Content-Transfer-Encoding: 8bit";
-static void SetEncoding8bit(unsigned char *XferEncOfs)
+static void SetEncoding8bit(char *XferEncOfs)
 {
-  unsigned char *p;
+  char *p;
 
   if (XferEncOfs != NULL) {
      memcpy(XferEncOfs, ENC8BIT, sizeof(ENC8BIT) - 1);
 
      /* If anything left, in this header, replace with whitespace */
-     for (p=XferEncOfs+sizeof(ENC8BIT)-1; (*p >= ' '); p++) *p=' ';
+     for (p=XferEncOfs+sizeof(ENC8BIT)-1; ((unsigned char)*p >= ' '); p++)
+       *p=' ';
   }
 }
 
@@ -377,10 +378,10 @@ static int CheckContentType(char *CntType)
  *
  * The return value is a bitmask.
  */
-int MimeBodyType(unsigned char *hdrs, int WantDecode)
+int MimeBodyType(char *hdrs, int WantDecode)
 {
-    unsigned char *NxtHdr = hdrs;
-    unsigned char *XferEnc, *XferEncOfs, *CntType, *MimeVer, *p;
+    char *NxtHdr = hdrs;
+    char *XferEnc, *XferEncOfs, *CntType, *MimeVer, *p;
     int  HdrsFound = 0;     /* We only look for three headers */
     int  BodyType;          /* Return value */ 
 
@@ -510,10 +511,10 @@ int MimeBodyType(unsigned char *hdrs, int WantDecode)
  * Return flag set if this line ends with a soft line-break.
  * 'bufp' is modified to point to the end of the output buffer.
  */
-static int DoOneQPLine(unsigned char **bufp, flag delimited, flag issoftline)
+static int DoOneQPLine(char **bufp, flag delimited, flag issoftline)
 {
-  unsigned char *buf = *bufp;
-  unsigned char *p_in, *p_out, *p;
+  char *buf = *bufp;
+  char *p_in, *p_out, *p;
   int n;
   int ret = 0;
 
@@ -592,9 +593,9 @@ static int DoOneQPLine(unsigned char **bufp, flag delimited, flag issoftline)
  * 'bufp' is modified to point to the end of the output buffer.
  */
 
-int UnMimeBodyline(unsigned char **bufp, flag delimited, flag softline)
+int UnMimeBodyline(char **bufp, flag delimited, flag softline)
 {
-  unsigned char *buf = *bufp;
+  char *buf = *bufp;
   int ret = 0;
 
   switch (BodyState) {
@@ -664,7 +665,7 @@ int outlevel = 0;
 int main(int argc, char *argv[])
 {
   unsigned int BufSize;
-  unsigned char *buffer, *buf_p;
+  char *buffer, *buf_p;
   int nl_count, i, bodytype;
 
 #ifdef DEBUG
@@ -681,7 +682,7 @@ int main(int argc, char *argv[])
 #endif
 
   BufSize = BUFSIZE_INCREMENT;    /* Initial size of buffer */
-  buf_p = buffer = (unsigned char *) xmalloc(BufSize);
+  buf_p = buffer = (char *) xmalloc(BufSize);
   nl_count = 0;
 
   do {

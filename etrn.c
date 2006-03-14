@@ -65,7 +65,7 @@ static int etrn_getrange(int sock, struct query *ctl, const char *id,
     for (qnp = ctl->domainlist; qnp; qnp = qnp->next)
     {
 	/* ship the actual poll and get the response */
-	gen_send(sock, "ETRN %s", (char *)qnp->id);
+	gen_send(sock, "ETRN %s", qnp->id);
 	if ((ok = gen_recv(sock, buf, sizeof(buf))))
 	    return(ok);
 

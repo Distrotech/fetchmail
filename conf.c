@@ -103,7 +103,7 @@ static void listdump(const char *name, struct idlist *list)
 	for (idp = list; idp; idp = idp->next)
 	    if (idp->id)
 	    {
-		fprintf(stdout, "\"%s\"", visbuf((const char *)idp->id));
+		fprintf(stdout, "\"%s\"", visbuf(idp->id));
 		if (idp->next)
 		    fputs(", ", stdout);
 	    }
@@ -325,9 +325,9 @@ void dump_config(struct runctl *runp, struct query *querylist)
 	{
 	    char namebuf[USERNAMELEN + 1];
 
-	    strlcpy(namebuf, visbuf((const char *)idp->id), sizeof(namebuf));
+	    strlcpy(namebuf, visbuf(idp->id), sizeof(namebuf));
 	    if (idp->val.id2)
-		fprintf(stdout, "(\"%s\", %s)", namebuf, visbuf((const char *)idp->val.id2));
+		fprintf(stdout, "(\"%s\", %s)", namebuf, visbuf(idp->val.id2));
 	    else
 		fprintf(stdout, "\"%s\"", namebuf);
 	    if (idp->next)

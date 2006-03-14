@@ -27,9 +27,11 @@ static const char base64val[] = {
 };
 #define DECODE64(c)  (isascii((unsigned char)(c)) ? base64val[c] : BAD)
 
-void to64frombits(unsigned char *out, const unsigned char *in, int inlen)
+void to64frombits(char *out, const void *in_, int inlen)
 /* raw bytes in quasi-big-endian order to base 64 string (NUL-terminated) */
 {
+    const unsigned char *in = in_;
+
     for (; inlen >= 3; inlen -= 3)
     {
 	*out++ = base64digits[in[0] >> 2];
@@ -53,12 +55,13 @@ void to64frombits(unsigned char *out, const unsigned char *in, int inlen)
     *out = '\0';
 }
 
-int from64tobits(char *out, const char *in, int maxlen)
+int from64tobits(void *out_, const char *in, int maxlen)
 /* base 64 to raw bytes in quasi-big-endian order, returning count of bytes */
 /* maxlen limits output buffer size, set to zero to ignore */
 {
     int len = 0;
     register unsigned char digit1, digit2, digit3, digit4;
+    unsigned char *out = out_;
 
     if (in[0] == '+' && in[1] == ' ')
 	in += 2;

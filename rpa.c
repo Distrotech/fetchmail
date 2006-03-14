@@ -37,20 +37,20 @@ extern int linecount;
 
 #ifndef NO_PROTO
   /* prototypes for internal functions */
-  static int  POP3_rpa_resp(unsigned char* argbuf, int socket );
-  static void LenAppend(unsigned char** pptr, int len);
-  static int  LenSkip(unsigned char** pptr, int rxlen);
-  static int  DecBase64(unsigned char* bufp);
-  static void EncBase64(unsigned char* bufp, int len);
-  static void ToUnicode(unsigned char** pptr, unsigned char delim,
-			unsigned char* buf, int* plen, int conv);
-  static int  SetRealmService(unsigned char* bufp);
+  static int  POP3_rpa_resp(char* argbuf, int socket );
+  static void LenAppend(char** pptr, int len);
+  static int  LenSkip(char** pptr, int rxlen);
+  static int  DecBase64(char* bufp);
+  static void EncBase64(char* bufp, int len);
+  static void ToUnicode(char** pptr, char delim, unsigned char* buf, int* plen,
+			int conv);
+  static int  SetRealmService(char* bufp);
   static void GenChallenge(unsigned char* buf, int len);
-  static int  DigestPassphrase(unsigned char* passphrase,
+  static int  DigestPassphrase(char* passphrase,
 			       unsigned char* rbuf, int unicodeit);
   static void CompUserResp();
   static int  CheckUserAuth();
-  static void md5(unsigned char* in, int len, unsigned char* out);
+  static void md5(void* in, int len, unsigned char* out);
 #endif
 
 /* RPA protocol definitions */
@@ -108,11 +108,11 @@ unsigned char   Kus[Kusl];                  /* Session key           */
   globals:       read outlevel.
  *********************************************************************/
 
-int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
+int POP3_auth_rpa (char *userid, char *passphrase, int socket)
 {
     int      ok,rxlen,verh,verl,i,rll;
-    unsigned char buf [POPBUFSIZE];
-    unsigned char *bufp;
+    char buf [POPBUFSIZE];
+    char *bufp;
     int      status,aulin,kuslin;
     char* stdec[4] = { N_("Success") ,
 		       N_("Restricted user (something wrong with account)") ,
@@ -179,10 +179,10 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
 
     /* Interpret Token 2 */
 
-    verh = *(bufp++); verl = *(bufp++);
+    verh = (unsigned char)*(bufp++); verl = (unsigned char)*(bufp++);
     if (outlevel >= O_DEBUG)
 	report(stdout, GT_("Service chose RPA version %d.%d\n"),verh,verl);
-    Csl  = *(bufp++);
+    Csl  = (unsigned char)*(bufp++);
     memcpy(Cs, bufp, Csl);
     bufp += Csl;
     if (outlevel >= O_DEBUG)
@@ -197,7 +197,7 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
     bufp += Tsl;
     if (outlevel >= O_DEBUG)
 	report(stdout, GT_("Service timestamp %s\n"),Ts);
-    rll = *(bufp++) << 8; rll = rll | *(bufp++);
+    rll = (unsigned char)*(bufp++) << 8; rll = rll | (unsigned char)*(bufp++);
     if ((bufp-buf+rll) != rxlen)
     {
 	if (outlevel > O_SILENT)
@@ -254,7 +254,7 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
 
     /* Interpret Token 4 */
 
-    aulin = *(bufp++);
+    aulin = (unsigned char)*(bufp++);
     if (outlevel >= O_DEBUG)
     {
 	report(stdout, GT_("User authentication (l=%d):\n"),aulin);
@@ -361,7 +361,7 @@ int POP3_auth_rpa (unsigned char *userid, unsigned char *passphrase, int socket)
  *********************************************************************/
 
 static int POP3_rpa_resp (argbuf,socket)
-unsigned char *argbuf;
+char *argbuf;
 int socket;
 {
     int ok;
@@ -420,7 +420,7 @@ int socket;
  *********************************************************************/
 
 static void LenAppend(pptr,len)
-unsigned char **pptr;
+char **pptr;
 int  len;
 {
     if (len < 0x80)
@@ -454,30 +454,30 @@ int  len;
  *********************************************************************/
 
 int LenSkip(pptr,rxlen)
-unsigned char **pptr;
+char **pptr;
 int rxlen;
 {
     int len;
-    unsigned char *save;
+    char *save;
     save = *pptr;
-    if (**pptr != HDR)
+    if ((unsigned char)**pptr != HDR)
     {
 	if (outlevel > O_SILENT)
 	    report(stderr, GT_("Hdr not 60\n"));
 	return(0);
     }
     (*pptr)++;
-    if (((**pptr) & 0x80) == 0 )
+    if (((unsigned char)(**pptr) & 0x80) == 0 )
     {
-	len = **pptr; (*pptr)++;
+	len = (unsigned char)**pptr; (*pptr)++;
     }
-    else if ((**pptr) == 0x81)
+    else if ((unsigned char)(**pptr) == 0x81)
     {
-	len = *(*pptr+1); (*pptr) += 2;
+	len = (unsigned char)*(*pptr+1); (*pptr) += 2;
     }
-    else if ((**pptr) == 0x82)
+    else if ((unsigned char)(**pptr) == 0x82)
     {
-	len = ((*(*pptr+1)) << 8) | *(*pptr+2);
+	len = ((unsigned char)(*(*pptr+1)) << 8) | (unsigned char)*(*pptr+2);
 	(*pptr) += 3;
     }
     else len = 0;
@@ -516,13 +516,13 @@ int rxlen;
  *********************************************************************/
 
 static int DecBase64(bufp)
-unsigned char *bufp;
+char *bufp;
 {
     unsigned int   newx, bits=0, cnt=0, i, part=0;
     unsigned char  ch;
-    unsigned char* outp=bufp;
-    unsigned char* inp=bufp;
-    while((ch=*(inp++)) != 0)
+    char* outp=bufp;
+    char* inp=bufp;
+    while((ch=(unsigned char)*(inp++)) != 0)
     {
 	if ((ch != '=') && (ch != ' ') && (ch != '\n') && (ch != '\r'))
 	{
@@ -550,7 +550,7 @@ unsigned char *bufp;
 	report(stdout, GT_("Inbound binary data:\n"));
 	for (i=0; i<cnt; i++)
 	{
-	    report_build(stdout, "%02X ",bufp[i]);
+	    report_build(stdout, "%02X ",(unsigned char)bufp[i]);
 	    if (((i % 16)==15) || (i==(cnt-1)))
 		report_complete(stdout, "\n");
 	}
@@ -575,10 +575,10 @@ unsigned char *bufp;
  *********************************************************************/
 
 static void EncBase64(bufp,len)
-unsigned char *bufp;
+char *bufp;
 int  len;
 {
-    unsigned char* outp;
+    char* outp;
     unsigned char  c1,c2,c3;
     char x[]="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     int  i;
@@ -588,7 +588,7 @@ int  len;
 	report(stdout, GT_("Outbound data:\n"));
 	for (i=0; i<len; i++)
 	{
-	    report_build(stdout, "%02X ",bufp[i]);
+	    report_build(stdout, "%02X ",(unsigned char)bufp[i]);
 	    if (((i % 16)==15) || (i==(len-1)))
 		report_complete(stdout, "\n");
 	}
@@ -598,9 +598,9 @@ int  len;
     /* So we can do the update in place, start at the far end! */
     for (i=((len-1)/3)*3; i>=0; i-=3)
     {
-	c1 = bufp[i];
-	if ((i+1) < len) c2 = bufp[i+1]; else c2=0;
-	if ((i+2) < len) c3 = bufp[i+2]; else c3=0;
+	c1 = (unsigned char)bufp[i];
+	if ((i+1) < len) c2 = (unsigned char)bufp[i+1]; else c2=0;
+	if ((i+2) < len) c3 = (unsigned char)bufp[i+2]; else c3=0;
 	*(outp) = x[c1/4];
 	*(outp+1) = x[((c1 & 3)*16) + (c2/16)];
 	if ((i+1) < len) *(outp+2) = x[((c2 & 0x0F)*4) + (c3/64)];
@@ -628,8 +628,8 @@ int  len;
   globals:       reads outlevel;
  *********************************************************************/
 
-static void ToUnicode(unsigned char **pptr /* input string*/,
-	unsigned char delim, unsigned char *buf /* output buffer */,
+static void ToUnicode(char **pptr /* input string*/,
+	char delim, unsigned char *buf /* output buffer */,
 	int *plen, int conv)
 {
     unsigned char *p;
@@ -639,7 +639,7 @@ static void ToUnicode(unsigned char **pptr /* input string*/,
     {
 	*(p++) = 0;
 	if (conv)
-	    *(p++) = tolower(**pptr);
+	    *(p++) = tolower((unsigned char)**pptr);
 	else
 	    *(p++) = (**pptr);
 	(*plen) += 2;
@@ -676,7 +676,7 @@ static void ToUnicode(unsigned char **pptr /* input string*/,
                  writes Ns Nsl Nr Nrl
  *********************************************************************/
 
-static int SetRealmService(unsigned char *bufp)
+static int SetRealmService(char *bufp)
 {
     /* For the moment we pick the first available realm. It would */
     /* make more sense to verify that the realm which the user    */
@@ -753,12 +753,12 @@ static void GenChallenge(unsigned char *buf, int len)
                  writes Pu.
  *********************************************************************/
 
-static int DigestPassphrase(unsigned char *passphrase,unsigned char *rbuf,
+static int DigestPassphrase(char *passphrase,unsigned char *rbuf,
 	int unicodeit)
 {
     int   len;
     unsigned char  workarea[STRMAX];
-    unsigned char* ptr;
+    char* ptr;
 
     if (unicodeit)  /* Option in spec. Yuck. */
     {
@@ -766,14 +766,10 @@ static int DigestPassphrase(unsigned char *passphrase,unsigned char *rbuf,
 	ToUnicode(&ptr, '\0', workarea, &len, 0); /* No case conv here */
 	if (len == 0)
 	    return(PS_SYNTAX);
-	ptr = workarea;
+	md5(workarea,len,rbuf);
     }
     else
-    {
-	ptr = rbuf;
-	len = strlen(passphrase);
-    }
-    md5(ptr,len,rbuf);
+	md5(rbuf,strlen(passphrase),rbuf);
     return(0);
 }
 
@@ -873,10 +869,11 @@ static int CheckUserAuth(void)
   globals:       reads outlevel
  *********************************************************************/
 
-static void md5(unsigned char *in,int len,unsigned char *out)
+static void md5(void *in_,int len,unsigned char *out)
 {
     int      i;
     MD5_CTX  md5context;
+    unsigned char *in = in_;
 
     if (outlevel >= O_DEBUG)
     {
