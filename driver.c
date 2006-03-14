@@ -1308,6 +1308,7 @@ is restored."));
 		/* compute # of messages and number of new messages waiting */
 		stage = STAGE_GETRANGE;
 		err = (ctl->server.base_protocol->getrange)(mailserver_socket, ctl, idp->id, &count, &newm, &bytes);
+		if (err != 0)
 		    goto cleanUp;
 
 		/* show user how many messages we downloaded */
