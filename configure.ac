@@ -350,7 +350,14 @@ AC_ARG_ENABLE(SDPS,
 	[  --enable-SDPS           compile in SDPS protocol support],
 	[with_SDPS=$enableval],
 	[with_SDPS=no])
-test "$with_SDPS" = "yes" && AC_DEFINE(SDPS_ENABLE,1,Define if you want SDPS support compiled in)
+if test "$with_SDPS" = yes ; then
+   if test "$with_POP3" != yes ; then
+       AC_MSG_WARN([SDPS cannot be enabled with POP3 disabled. Disabling SDPS.])
+       with_SDPS=no
+   else
+       AC_DEFINE(SDPS_ENABLE,1,Define if you want SDPS support compiled in)
+   fi
+fi
 
 ###	use option --enable-opie to compile in the OPIE support
 AC_ARG_ENABLE(opie,

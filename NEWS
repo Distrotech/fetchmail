@@ -51,6 +51,7 @@ fetchmail 6.3.3 (not yet released):
 * ./configure --quiet is now quieter (no SSL and fallback-related output).
 * fix bug in LMTP port validation (patch by Miloslav Trmac).
 * Miloslav Trmac's patch (with minor changes) to fix char * sign consistency.
+* Warn and disable SDPS if POP3 is disabled to avoid compilation errors.
 
 # CHANGES:
 * --idle can now be specified on the command line, too.
