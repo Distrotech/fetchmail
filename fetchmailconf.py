@@ -249,7 +249,7 @@ class User:
 	self.warnings = 3600	# Size warning interval (see tunable.h)
 	self.fetchlimit = 0	# Max messages fetched per batch
 	self.fetchsizelimit = 100	# Max message sizes fetched per transaction
-	self.fastuidl = 10	# Do fast uidl 9 out of 10 times
+	self.fastuidl = 4	# Do fast uidl 3 out of 4 times
 	self.batchlimit = 0	# Max message forwarded per batch
 	self.expunge = 0	# Interval between expunges (IMAP)
 	self.ssl = 0		# Enable Seccure Socket Layer

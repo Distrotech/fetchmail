@@ -49,16 +49,18 @@ fetchmail 6.3.3 (not yet released):
   and Brendan Lynch, fix by Sunil Shetye (his patch was merged) and Brendan
   Lynch.
 * ./configure --quiet is now quieter (no SSL and fallback-related output).
-* fix bug in LMTP port validation (patch by Miloslav Trmac).
+* LMTP: fix bug in LMTP port validation (patch by Miloslav Trmac).
 * Miloslav Trmac's patch (with minor changes) to fix char * sign consistency,
   unused arguments and variables.
-* Warn and disable SDPS if POP3 is disabled to avoid compilation errors.
+* SDPS: Warn and disable SDPS if POP3 is disabled to avoid compilation errors.
 * More signedness, unused argument/variable and other warning fixes.
-* Stop sending EXPUNGE after NOOP-idling (patch by Sunil Shetye).
+* IMAP: Stop sending EXPUNGE after NOOP-idling (patch by Sunil Shetye).
 
 # CHANGES:
 * --idle can now be specified on the command line, too.
 * --fetchall is now supported on the command-line.
+* POP3: Lower default fastuidl span to 4 (i. e. every 4th run fetches the
+  whole UIDL list), patch by Sunil Shetye.
 
 # DOCUMENTATION:
 * "ssl" is a user option rather than a server option. Patch by Nico Golde.

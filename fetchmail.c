@@ -970,7 +970,7 @@ static int load_params(int argc, char **argv, int optind)
     def_opts.remotename = user;
     def_opts.listener = SMTP_MODE;
     def_opts.fetchsizelimit = 100;
-    def_opts.fastuidl = 10;
+    def_opts.fastuidl = 4;
 
     /* get the location of rcfile */
     rcfiledir[0] = 0;

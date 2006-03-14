@@ -615,7 +615,7 @@ a linear search should be done. In daemon mode, linear search is used
 once followed by binary searches in 'n-1' polls if 'n' is greater than
 1; binary search is always used if 'n' is 1; linear search is always
 used if 'n' is 0. In non-daemon mode, binary search is used if 'n' is
-1; otherwise linear search is used.
+1; otherwise linear search is used. The default value of 'n' is 4.
 This option works with POP3 only.
 .TP
 .B \-e <count> | \-\-expunge <count>
