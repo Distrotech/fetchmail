@@ -687,11 +687,11 @@ void itimerthread(void*);
 #define chdir _chdir2
 #endif /* _EMX_ */
 
-# if HAVE_STRERROR
-#  ifndef strerror		/* On some systems, strerror is a macro */
+#ifdef HAVE_STRERROR
+#  if !defined(strerror) && !defined(HAVE_DECL_STRERROR)	/* On some systems, strerror is a macro */
 char *strerror (int);
 #  endif
-# endif /* HAVE_STRERROR */
+#endif /* HAVE_STRERROR */
 
 #define STRING_DISABLED	(char *)-1
 #define STRING_DUMMY	""

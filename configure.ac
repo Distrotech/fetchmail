@@ -141,6 +141,8 @@ AC_CHECK_FUNCS(tcsetattr stty setsid geteuid seteuid dnl
   atexit inet_aton strftime setrlimit socketpair sigprocmask dnl
   sigaction strdup setlocale)
 
+AC_CHECK_DECLS(strerror)
+
 # Under Red Hat 4.0 (and many other Linuxes) -lresolv is seriously flaky
 # and breaks gethostbyname(2).  It's better to use the bind stuff in the C
 # library.  So don't add -lresolv to the link list unless it's necessary
