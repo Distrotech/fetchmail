@@ -85,7 +85,7 @@ gethostbyname_ctx (const char *host, struct ghbnctx *ctx)
 
   memset (ctx, 0, sizeof (struct ghbnctx));
   ctx->hostbuf_len = 2048;
-  if ((ctx->hostbuf = malloc (ctx->hostbuf_len)) == NULL)
+  if ((ctx->hostbuf = (char *)malloc (ctx->hostbuf_len)) == NULL)
     {
       errno = ENOMEM;
       return NULL;
@@ -95,7 +95,7 @@ gethostbyname_ctx (const char *host, struct ghbnctx *ctx)
   				 &hp, &ctx->h_err)) == ERANGE)
     {
       ctx->hostbuf_len += 1024;
-      if ((tmp = realloc (ctx->hostbuf, ctx->hostbuf_len)) == NULL)
+      if ((tmp = (char *)realloc (ctx->hostbuf, ctx->hostbuf_len)) == NULL)
 	{
 	  errno = ENOMEM;
 	  return NULL;

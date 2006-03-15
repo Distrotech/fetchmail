@@ -23,7 +23,13 @@
 #include  "i18n.h"
 
 #ifdef OPIE_ENABLE
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include <opie.h>
+#ifdef __cplusplus
+}
+#endif
 #endif /* OPIE_ENABLE */
 
 /* global variables: please reinitialize them explicitly for proper
@@ -533,8 +539,10 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	if ((challenge = strstr(lastok, "otp-"))) {
 	  char response[OPIE_RESPONSE_MAX+1];
 	  int i;
+	  char *n = xstrdup("");
 
-	  i = opiegenerator(challenge, !strcmp(ctl->password, "opie") ? "" : ctl->password, response);
+	  i = opiegenerator(challenge, !strcmp(ctl->password, "opie") ? n : ctl->password, response);
+	  free(n);
 	  if ((i == -2) && !run.poll_interval) {
 	    char secret[OPIE_SECRET_MAX+1];
 	    fprintf(stderr, GT_("Secret pass phrase: "));

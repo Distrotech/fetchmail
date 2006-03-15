@@ -18,7 +18,13 @@
 #include "md5.h"
 
 #ifdef OPIE_ENABLE
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include <opie.h>
+#ifdef __cplusplus
+}
+#endif
 
 int do_otp(int sock, char *command, struct query *ctl)
 {

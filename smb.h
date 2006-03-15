@@ -1,6 +1,4 @@
-typedef unsigned short uint16;
-typedef unsigned       uint32;
-typedef unsigned char  uint8;
+#include "smbtypes.h"
 
 typedef struct
 {

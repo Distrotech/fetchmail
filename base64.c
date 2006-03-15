@@ -30,7 +30,7 @@ static const char base64val[] = {
 void to64frombits(char *out, const void *in_, int inlen)
 /* raw bytes in quasi-big-endian order to base 64 string (NUL-terminated) */
 {
-    const unsigned char *in = in_;
+    const unsigned char *in = (const unsigned char *)in_;
 
     for (; inlen >= 3; inlen -= 3)
     {
@@ -61,7 +61,7 @@ int from64tobits(void *out_, const char *in, int maxlen)
 {
     int len = 0;
     register unsigned char digit1, digit2, digit3, digit4;
-    unsigned char *out = out_;
+    unsigned char *out = (unsigned char *)out_;
 
     if (in[0] == '+' && in[1] == ' ')
 	in += 2;

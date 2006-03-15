@@ -215,12 +215,11 @@ static int xatoi(char *s, int *errflagptr)
 #endif
 }
 
-int parsecmdline (argc, argv, rctl, ctl)
-/* parse and validate the command line options */
-int argc;		/* argument count */
-char **argv;		/* argument strings */
-struct runctl *rctl;	/* global run controls to modify */
-struct query *ctl;	/* option record to be initialized */
+/** parse and validate the command line options */
+int parsecmdline (int argc /** argument count */,
+		  char **argv /** argument strings */,
+		  struct runctl *rctl /** global run controls to modify */,
+		  struct query *ctl /** option record to initialize */)
 {
     /*
      * return value: if positive, argv index of last parsed option + 1

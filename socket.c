@@ -108,7 +108,7 @@ static char *const *parse_plugin(const char *plugin, const char *host, const cha
 	}
 
 	plugin_copy_len = plugin_len + host_len * host_count + service_len * service_count;
-	plugin_copy = malloc(plugin_copy_len + 1);
+	plugin_copy = (char *)malloc(plugin_copy_len + 1);
 	if (!plugin_copy)
 	{
 		report(stderr, GT_("fetchmail: malloc failed\n"));
@@ -134,7 +134,7 @@ static char *const *parse_plugin(const char *plugin, const char *host, const cha
 	}
 	plugin_copy[plugin_copy_len] = 0;
 
-	argvec = malloc(s);
+	argvec = (const char **)malloc(s);
 	if (!argvec)
 	{
 		report(stderr, GT_("fetchmail: malloc failed\n"));
@@ -470,7 +470,7 @@ int SockRead(int sock, char *buf, int len)
 #ifdef FORCE_STUFFING
 	    maxavailable = n;
 #endif
-	    if ((newline = memchr(bp, '\n', n)) != NULL)
+	    if ((newline = (char *)memchr(bp, '\n', n)) != NULL)
 		n = newline - bp + 1;
 #ifndef __BEOS__
 	    if ((n = fm_read(sock, bp, n)) == -1)

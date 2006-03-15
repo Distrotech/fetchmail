@@ -104,7 +104,7 @@ char *rfc2047e(const char *string, const char *charset) {
 	count++;
 	r += strspn(r, ws);
     }
-    words = xmalloc(sizeof(char *) * (count + 1));
+    words = (char **)xmalloc(sizeof(char *) * (count + 1));
 
     idx = 0;
     r = string;

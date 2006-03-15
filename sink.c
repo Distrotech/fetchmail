@@ -920,7 +920,7 @@ static int open_smtp_sink(struct query *ctl, struct msgblk *msg,
     for (idp = msg->recipients; idp; idp = idp->next)
 	total_addresses++;
 #ifdef EXPLICIT_BOUNCE_ON_BAD_ADDRESS
-    from_responses = xmalloc(sizeof(char *) * total_addresses);
+    from_responses = (char **)xmalloc(sizeof(char *) * total_addresses);
 #endif /* EXPLICIT_BOUNCE_ON_BAD_ADDRESS */
     for (idp = msg->recipients; idp; idp = idp->next)
 	if (idp->val.status.mark == XMIT_ACCEPT)
@@ -1426,7 +1426,7 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 		char	**responses;
 
 		/* eat the RFC2033-required responses, saving errors */ 
-		responses = xmalloc(sizeof(char *) * lmtp_responses);
+		responses = (char **)xmalloc(sizeof(char *) * lmtp_responses);
 		for (errors = i = 0; i < lmtp_responses; i++)
 		{
 		    if ((smtp_err = SMTP_ok(ctl->smtp_socket, ctl->smtphostmode))

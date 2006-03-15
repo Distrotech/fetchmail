@@ -869,7 +869,7 @@ int readheaders(int sock,
 		|| !strncasecmp("Bcc:", line, 4)
 		|| !strncasecmp("Apparently-To:", line, 14))
 	    {
-		*to_chainptr = xmalloc(sizeof(struct addrblk));
+		*to_chainptr = (struct addrblk *)xmalloc(sizeof(struct addrblk));
 		(*to_chainptr)->offset = (line - msgblk.headers);
 		to_chainptr = &(*to_chainptr)->next; 
 		*to_chainptr = NULL;
@@ -879,7 +879,7 @@ int readheaders(int sock,
 		     || !strncasecmp("Resent-Cc:", line, 10)
 		     || !strncasecmp("Resent-Bcc:", line, 11))
 	    {
-		*resent_to_chainptr = xmalloc(sizeof(struct addrblk));
+		*resent_to_chainptr = (struct addrblk *)xmalloc(sizeof(struct addrblk));
 		(*resent_to_chainptr)->offset = (line - msgblk.headers);
 		resent_to_chainptr = &(*resent_to_chainptr)->next; 
 		*resent_to_chainptr = NULL;
@@ -1476,11 +1476,10 @@ va_dcl
     }
 }
 
-int gen_recv(sock, buf, size)
-/* get one line of input from the server */
-int sock;	/* socket to which server is connected */
-char *buf;	/* buffer to receive input */
-int size;	/* length of buffer */
+/** get one line of input from the server */
+int gen_recv(int sock  /** socket to which server is connected */,
+	     char *buf /* buffer to receive input */,
+	     int size  /* length of buffer */)
 {
     int oldphase = phase;	/* we don't have to be re-entrant */
 

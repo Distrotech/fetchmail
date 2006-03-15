@@ -223,12 +223,11 @@ options		{/* EMPTY */}
 
 %%
 
-void escapes(cp, tp)
-/* process standard C-style escape sequences in a string,
+/** process standard C-style escape sequences in a string,
  * this can never lengthen the output, so cp and tp may overlap as long
  * as cp >= tp. */
-const char	*cp;	/* source string with escapes */
-char		*tp;	/* target buffer for digested string */
+void escapes(const char *cp /** source string with escapes */,
+	     char       *tp /** target buffer for digested string */)
 {
     while (*cp)
     {

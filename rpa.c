@@ -50,7 +50,7 @@ extern int linecount;
 			       unsigned char* rbuf, int unicodeit);
   static void CompUserResp();
   static int  CheckUserAuth();
-  static void md5(void* in, int len, unsigned char* out);
+  static void md5(const void* in, int len, unsigned char* out);
 #endif
 
 /* RPA protocol definitions */
@@ -360,9 +360,7 @@ int POP3_auth_rpa (char *userid, char *passphrase, int socket)
   globals:       reads outlevel.
  *********************************************************************/
 
-static int POP3_rpa_resp (argbuf,socket)
-char *argbuf;
-int socket;
+static int POP3_rpa_resp (char *argbuf, int socket)
 {
     int ok;
     char buf [POPBUFSIZE];
@@ -419,9 +417,7 @@ int socket;
   globals:       none
  *********************************************************************/
 
-static void LenAppend(pptr_,len)
-char **pptr_;
-int  len;
+static void LenAppend(char **pptr_, int len)
 {
     unsigned char **pptr = (unsigned char **)pptr_;
 
@@ -455,9 +451,7 @@ int  len;
   globals:       reads outlevel.
  *********************************************************************/
 
-int LenSkip(pptr,rxlen)
-char **pptr;
-int rxlen;
+int LenSkip(char **pptr, int rxlen)
 {
     int len;
     char *save;
@@ -517,8 +511,7 @@ int rxlen;
   globals:       reads outlevel.
  *********************************************************************/
 
-static int DecBase64(bufp)
-char *bufp;
+static int DecBase64(char *bufp)
 {
     unsigned int   newx, bits=0, cnt=0, i, part=0;
     unsigned char  ch;
@@ -576,9 +569,7 @@ char *bufp;
   globals:       reads outlevel;
  *********************************************************************/
 
-static void EncBase64(bufp,len)
-char *bufp;
-int  len;
+static void EncBase64(char *bufp, int len)
 {
     char* outp;
     unsigned char  c1,c2,c3;
@@ -871,11 +862,11 @@ static int CheckUserAuth(void)
   globals:       reads outlevel
  *********************************************************************/
 
-static void md5(void *in_,int len,unsigned char *out)
+static void md5(const void *in_,int len,unsigned char *out)
 {
     int      i;
     MD5_CTX  md5context;
-    unsigned char *in = in_;
+    const unsigned char *in = (const unsigned char *)in_;
 
     if (outlevel >= O_DEBUG)
     {

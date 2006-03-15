@@ -443,7 +443,7 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 
 	/* Time to allocate memory to store the sizes */
 	xfree(*msgsizes);
-	*msgsizes = xmalloc(sizeof(int) * fetchsizelimit);
+	*msgsizes = (int *)xmalloc(sizeof(int) * fetchsizelimit);
     }
 
     /*
@@ -1029,7 +1029,7 @@ static int do_session(
 		{
 		    xfree(ctl->server.truename);
 		    ctl->server.truename = xstrdup(res->ai_canonname);
-		    ctl->server.trueaddr = xmalloc(res->ai_addrlen);
+		    ctl->server.trueaddr = (struct sockaddr *)xmalloc(res->ai_addrlen);
 		    ctl->server.trueaddr_len = res->ai_addrlen;
 		    memcpy(ctl->server.trueaddr, res->ai_addr, res->ai_addrlen);
 		    freeaddrinfo(res);
@@ -1397,7 +1397,7 @@ is restored."));
 			!(proto->getpartialsizes && NUM_NONZERO(ctl->fetchsizelimit)))
 		    {
 			xfree(msgsizes);
-			msgsizes = xmalloc(sizeof(int) * count);
+			msgsizes = (int *)xmalloc(sizeof(int) * count);
 			for (i = 0; i < count; i++)
 			    msgsizes[i] = 0;
 
@@ -1575,10 +1575,9 @@ closeUp:
     return(err);
 }
 
-int do_protocol(ctl, proto)
-/* retrieve messages from server using given protocol method table */
-struct query *ctl;		/* parsed options with merged-in defaults */
-const struct method *proto;	/* protocol method table */
+/** retrieve messages from server using given protocol method table */
+int do_protocol(struct query *ctl /** parsed options with merged-in defaults */,
+		const struct method *proto /** protocol method table */)
 {
     int	err;
 

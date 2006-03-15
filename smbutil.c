@@ -197,8 +197,8 @@ void buildSmbNtlmAuthResponse(tSmbNtlmAuthChallenge *challenge, tSmbNtlmAuthResp
         *p = '\0';
       }
     
-    SMBencrypt(password,   challenge->challengeData, lmRespData);
-    SMBNTencrypt(password, challenge->challengeData, ntRespData);
+    SMBencrypt((uint8*)password,   challenge->challengeData, lmRespData);
+    SMBNTencrypt((uint8*)password, challenge->challengeData, ntRespData);
     
     response->bufIndex = 0;
     memcpy(response->ident,"NTLMSSP\0\0\0",8);

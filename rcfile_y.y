@@ -518,9 +518,9 @@ static void user_reset(void)
     current.server = save;
 }
 
-struct query *hostalloc(init)
-/* append a host record to the host list */
-struct query *init;	/* pointer to block containing initial values */
+/** append a host record to the host list */
+struct query *hostalloc(struct query *init /** pointer to block containing
+					       initial values */)
 {
     struct query *node;
 

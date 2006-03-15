@@ -76,8 +76,7 @@ maybe_add_to_list (netrc_entry **newentry, netrc_entry **list)
    list of entries.  NULL is returned if the file could not be
    parsed. */
 netrc_entry *
-parse_netrc (file)
-     char *file;
+parse_netrc (char *file)
 {
     FILE *fp;
     char buf[POPBUFSIZE+1], *p, *tok;
@@ -291,9 +290,7 @@ parse_netrc (file)
 /* Return the netrc entry from LIST corresponding to HOST.  NULL is
    returned if no such entry exists. */
 netrc_entry *
-search_netrc (list, host, login)
-     netrc_entry *list;
-     char *host, *login;
+search_netrc (netrc_entry *list, char *host, char *login)
 {
     /* Look for the HOST in LIST. */
     while (list)

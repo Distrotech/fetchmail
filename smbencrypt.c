@@ -30,13 +30,13 @@ extern int DEBUGLEVEL;
 #include <ctype.h>
 #include "smbbyteorder.h"
 #include "smbdes.h"
+#include "smbencrypt.h"
 #include "smbmd4.h"
 
 #ifndef _AIX
 typedef unsigned char uchar;
 #endif
 typedef signed short int16;
-typedef unsigned short uint16;
 typedef int BOOL;
 #define False 0
 #define True  1

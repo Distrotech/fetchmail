@@ -782,7 +782,7 @@ static int imap_getrange(int sock,
     {
 	if (unseen_messages)
 	    free(unseen_messages);
-	unseen_messages = xmalloc(count * sizeof(unsigned int));
+	unseen_messages = (unsigned int *)xmalloc(count * sizeof(unsigned int));
 	memset(unseen_messages, 0, count * sizeof(unsigned int));
 	unseen = 0;
 
