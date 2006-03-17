@@ -21,6 +21,8 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
   is deprecated and may be removed from a future release.
 * The --enable-fallback (fall back to MDA if MTA unavailable) may be removed
   from a future fetchmail release.
+* The "protocol auto" default inside fetchmail may be removed from a future
+  fetchmail release. Explicit configuration of the protocol is recommended.
 
 --------------------------------------------------------------------------------
 
