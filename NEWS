@@ -76,6 +76,8 @@ fetchmail 6.3.3 (not yet released):
   Eric forgot to credit Chris, thanks to Sunil Shetye for providing these links:
   http://lists.ccil.org/pipermail/fetchmail-friends/2003-July/007705.html
   http://lists.ccil.org/pipermail/fetchmail-friends/2003-July/007713.html
+* Added a section about RETR vs. TOP to the manual page.
+* Changed section/subsection levels in some areas.
 
 fetchmail 6.3.2 (released 2006-01-22):
 

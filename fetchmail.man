@@ -905,7 +905,7 @@ On mailservers that do not provide ordinary user accounts, your user-id and
 password are usually assigned by the server administrator when you apply for
 a mailbox on the server.  Contact your server administrator if you don't know
 the correct user-id and password for your mailbox account.
-.SS POP3 variants
+.SH POP3 VARIANTS
 .PP
 Early versions of POP3 (RFC1081, RFC1225) supported a crude form of
 independent authentication using the
@@ -917,7 +917,8 @@ server that it should do special checking.  RPOP is supported
 by
 .I fetchmail
 (you can specify 'protocol RPOP' to have the program send 'RPOP'
-rather than 'PASS') but its use is strongly discouraged.  This
+rather than 'PASS') but its use is strongly discouraged, and support
+will be removed from a future fetchmail version.  This
 facility was vulnerable to spoofing and was withdrawn in RFC1460.
 .PP
 RFC1460 introduced APOP authentication.  In this variant of POP3,
@@ -930,7 +931,39 @@ file.  Each time
 logs in, it sends a cryptographically secure hash of your password and
 the server greeting time to the server, which can verify it by
 checking its authorization database.
-.SS Alternate authentication forms
+.SS RETR or TOP
+.I fetchmail
+makes some efforts to make the server believe messages had not been
+retrieved, by using the TOP command with a large number of lines when
+possible.  TOP is a command that retrieves the full header and
+a \fIfetchmail\fP-specified amount of body lines. It is optional and
+therefore not implemented by all servers, and some are known to
+implement it improperly. On many servers however, the RETR command which
+retrieves the full message with header and body, sets the "seen" flag
+(for instance, in a web interface), whereas the TOP command does not do
+that.
+.PP
+.I fetchmail
+will always use the RETR command if "fetchall" is set.
+.I fetchmail
+will also use the RETR command if "keep" is set and "uidl" is unset.
+Finally,
+.I fetchmail
+will use the RETR command on Maillennium POP3/PROXY
+servers (used by Comcast) to avoid a deliberate TOP misinterpretation in
+this server that causes message corruption.
+.PP
+In all other cases,
+.I fetchmail
+will use the TOP command. This implies that in "keep" setups, "uidl"
+must be set if "TOP" is desired.
+.PP
+.B Note
+that this description is true for the current version of fetchmail, but
+the behavior may change in future versions. In particular, fetchmail may
+prefer the RETR command because the TOP command causes much grief on
+some servers and is only optional.
+.SH ALTERNATE AUTHENTICATION FORMS
 .PP
 If your \fIfetchmail\fR was built with Kerberos support and you specify
 Kerberos authentication (either with \-\-auth or the \fI.fetchmailrc\fR
@@ -971,7 +1004,7 @@ password en clair) whenever the server returns AUTH=NTLM in its
 capability response. Specify a user option value that looks like
 \&'user@domain': the part to the left of the @ will be passed as the
 username and the part to the right as the NTLM domain.
-.SS Secure Socket Layers (SSL)
+.SS Secure Socket Layers (SSL) and Transaction Layer Security (TLS)
 .PP
 You can access SSL encrypted services by specifying the \-\-ssl option.
 You can also do this using the "ssl" user option in the .fetchmailrc
@@ -1009,7 +1042,7 @@ attack is trivially possible (in particular with tools such as dsniff,
 http://www.monkey.org/~dugsong/dsniff/).  Use of an ssh tunnel (see
 below for some examples) is preferable if you care seriously about the
 security of your mailbox.
-.SS SMTP AUTH
+.SS ESMTP AUTH
 .PP
 .B fetchmail
 also supports authentication to the ESMTP server on the client side
@@ -1233,8 +1266,8 @@ A potential POP3 problem might be servers that insert messages
 in the middle of mailboxes (some VMS implementations of mail are
 rumored to do this).  The \fIfetchmail\fR code assumes that new
 messages are appended to the end of the mailbox; when this is not true
-it may treat some old messages as new and vice versa.  Using UIDL might
-fix this, otherwise, consider switching to IMAP.
+it may treat some old messages as new and vice versa.  Using UIDL whilst
+setting fastuidl 0 might fix this, otherwise, consider switching to IMAP.
 .PP
 Yet another POP3 problem is that if they can't make tempfiles in the
 user's home directory, some POP3 servers will hand back an
@@ -1911,7 +1944,7 @@ or reverse it by saying 'user esr here is eric there'
 Legal protocol identifiers for use with the 'protocol' keyword are:
 .sp
 .nf
-    auto (or AUTO)
+    auto (or AUTO) (legacy, to be removed from future release)
     pop2 (or POP2) (legacy, to be removed from future release)
     pop3 (or POP3)
     sdps (or SDPS)
@@ -2560,20 +2593,24 @@ The fetchmail home page: <http://fetchmail.berlios.de/>
 
 The maildrop home page: <http://www.courier-mta.org/maildrop/>
 .SH APPLICABLE STANDARDS
+.PP
+Note that this list is just a collection of references and not a
+statement as to the actual protocol conformance or requirements in
+fetchmail.
 .TP 5
 SMTP/ESMTP:
-RFC 821, RFC2821, RFC 1869, RFC 1652, RFC 1870, RFC 1983, RFC 1985,
+RFC 821, RFC 2821, RFC 1869, RFC 1652, RFC 1870, RFC 1983, RFC 1985,
 RFC 2554.
 .TP 5
 mail:
-RFC 822, RFC2822, RFC 1123, RFC 1892, RFC 1894.
+RFC 822, RFC 2822, RFC 1123, RFC 1892, RFC 1894.
 .TP 5
 POP2:
 RFC 937
 .TP 5
 POP3:
-RFC 1081, RFC 1225, RFC 1460, RFC 1725, RFC1734, RFC 1939, RFC 1957,
-RFC2195, RFC 2449.
+RFC 1081, RFC 1225, RFC 1460, RFC 1725, RFC 1734, RFC 1939, RFC 1957,
+RFC 2195, RFC 2449.
 .TP 5
 APOP:
 RFC 1460, RFC 1725, RFC 1939.
