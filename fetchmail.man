@@ -1004,7 +1004,7 @@ password en clair) whenever the server returns AUTH=NTLM in its
 capability response. Specify a user option value that looks like
 \&'user@domain': the part to the left of the @ will be passed as the
 username and the part to the right as the NTLM domain.
-.SS Secure Socket Layers (SSL) and Transaction Layer Security (TLS)
+.SS Secure Socket Layers (SSL) and Transport Layer Security (TLS)
 .PP
 You can access SSL encrypted services by specifying the \-\-ssl option.
 You can also do this using the "ssl" user option in the .fetchmailrc
