@@ -37,29 +37,29 @@ fetchmail 6.3.3 (not yet released):
 * SEGFAULT: Work around C libraries that return a NULL in getaddrinfo()'s
   ai_canonname record, to avoid a segfault. Affects, for instance, FreeBSD 4.11.
   Reported and patched by "Voldemar".
-* Handle other clients concurrently accessing IMAP mailboxes better.
+* IMAP: fix hangs in NOOP-based IDLE emulation. Reported by Casper Gripenberg
+  and Brendan Lynch, fix by Sunil Shetye (his patch was merged) and Brendan
+  Lynch.
+* IMAP: Handle other clients concurrently accessing IMAP mailboxes better.
   Fetchmail quits the poll if the EXPUNGE count does not match expectations, and
   servers not updating RECENT counts after EXPUNGE are handled in a better way.
   (Patch by Sunil Shetye.)
-* fetchmail no longer replaces the local user ID for an empty envelope sender
-  when using the proprietary SDPS extension for POP3. Fixes Debian Bug#353575,
-  reported by Roger Lynn.
-* fetchmail no longer prints empty lines in verbose mode when using syslog.
-* fetchmail no longer prints UID lists in verbose mode when using syslog.
+* IMAP: Stop sending EXPUNGE after NOOP-idling (patch by Sunil Shetye).
 * POP3: fetchmail can now use UIDL in fetchall keep mode, to avoid re-fetching
   the same messages again when the fetchall keyword is removed. Patch by
   Sunil Shetye. For details, please see
   <http://lists.berlios.de/pipermail/fetchmail-users/2006-March/000308.html>
-* IMAP: fix hangs in NOOP-based IDLE emulation. Reported by Casper Gripenberg
-  and Brendan Lynch, fix by Sunil Shetye (his patch was merged) and Brendan
-  Lynch.
-* ./configure --quiet is now quieter (no SSL and fallback-related output).
 * LMTP: fix bug in LMTP port validation (patch by Miloslav Trmac).
+* SDPS: fetchmail no longer replaces the local user ID for an empty envelope
+  sender when using the proprietary SDPS extension for POP3.
+  Fixes Debian Bug#353575, reported by Roger Lynn.
+* SDPS: Warn and disable SDPS if POP3 is disabled to avoid compilation errors.
+* fetchmail no longer prints empty lines in verbose mode when using syslog.
+* fetchmail no longer prints UID lists in verbose mode when using syslog.
+* ./configure --quiet is now quieter (no SSL and fallback-related output).
 * Miloslav Trmac's patch (with minor changes) to fix char * sign consistency,
   unused arguments and variables.
-* SDPS: Warn and disable SDPS if POP3 is disabled to avoid compilation errors.
 * More signedness, unused argument/variable and other warning fixes.
-* IMAP: Stop sending EXPUNGE after NOOP-idling (patch by Sunil Shetye).
 
 # CHANGES:
 * --idle can now be specified on the command line, too.
