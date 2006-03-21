@@ -29,11 +29,14 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 fetchmail 6.3.3 (not yet released):
 
 # BUG FIXES:
-* Do not attempt to overwrite the netrc password if none has been specified.
-  This fixes a segmentation fault bug introduced into 6.3.2.
+* SEGFAULT: Do not attempt to overwrite the netrc password if none has been
+  specified.  This fixes a segmentation fault bug introduced into 6.3.2.
   Fixes BerliOS bug #6234.  BerliOS patch #804 by Craig Leres.
   The patch, as accepted into fetchmail, was available separately from
   <http://download.berlios.de/fetchmail/patch-6.3.2.1-fix-netrc-SIGSEGV.diff>
+* SEGFAULT: Work around C libraries that return a NULL in getaddrinfo()'s
+  ai_canonname record, to avoid a segfault. Affects, for instance, FreeBSD 4.11.
+  Reported and patched by "Voldemar".
 * Handle other clients concurrently accessing IMAP mailboxes better.
   Fetchmail quits the poll if the EXPUNGE count does not match expectations, and
   servers not updating RECENT counts after EXPUNGE are handled in a better way.

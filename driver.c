@@ -1028,7 +1028,15 @@ static int do_session(
 		else
 		{
 		    xfree(ctl->server.truename);
-		    ctl->server.truename = xstrdup(res->ai_canonname);
+		    /* Older FreeBSD versions return NULL in ai_canonname
+		     * if they cannot canonicalize, rather than copying
+		     * the queryname here, as IEEE Std 1003.1-2001
+		     * requires. Work around NULL. */
+		    if (res->ai_canonname != NULL) {
+			ctl->server.truename = xstrdup(res->ai_canonname);
+		    } else {
+			ctl->server.truename = xstrdup(ctl->server.queryname);
+		    }
 		    ctl->server.trueaddr = (struct sockaddr *)xmalloc(res->ai_addrlen);
 		    ctl->server.trueaddr_len = res->ai_addrlen;
 		    memcpy(ctl->server.trueaddr, res->ai_addr, res->ai_addrlen);
