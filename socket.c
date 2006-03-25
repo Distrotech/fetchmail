@@ -591,7 +591,7 @@ SSL *SSLGetContext( int sock )
 	if( NULL == _ctx )
 		return NULL;
 
-	if( sock < 0 || sock > FD_SETSIZE )
+	if( sock < 0 || (unsigned)sock > FD_SETSIZE )
 		return NULL;
 	return _ssl_context[sock];
 }
@@ -807,7 +807,7 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char
 #endif /* SSL_ENABLE */
 
 
-	if( sock < 0 || sock > FD_SETSIZE ) {
+	if( sock < 0 || (unsigned)sock > FD_SETSIZE ) {
 		report(stderr, GT_("File descriptor out of range for SSL") );
 		return( -1 );
 	}

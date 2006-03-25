@@ -300,7 +300,7 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
 
     /* our first duty is to keep the sacred foo counters turning... */
     snprintf(boundary, sizeof(boundary), "foo-mani-padme-hum-%ld-%ld-%ld", 
-	    (long)getpid(), (long)getppid(), time(NULL));
+	    (long)getpid(), (long)getppid(), (long)time(NULL));
 
     if (outlevel >= O_VERBOSE)
 	report(stdout, GT_("SMTP: (bounce-message body)\n"));

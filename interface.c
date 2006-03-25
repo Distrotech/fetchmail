@@ -63,8 +63,6 @@ struct interface_pair_s {
 	struct in_addr interface_mask;
 } *interface_pair;
 
-static char *netdevfmt;
-
 /*
  * Count of packets to see on an interface before monitor considers it up.
  * Needed because when pppd shuts down the link, the packet counts go up
@@ -75,6 +73,8 @@ static char *netdevfmt;
 
 #ifdef linux
 #define have_interface_init
+
+static char *netdevfmt;
 
 void interface_init(void)
 /* figure out which /proc/net/dev format to use */
