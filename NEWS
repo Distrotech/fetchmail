@@ -37,10 +37,9 @@ fetchmail 6.3.3 (not yet released):
 * SEGFAULT: Work around C libraries that return a NULL in getaddrinfo()'s
   ai_canonname record, to avoid a segfault. Affects for instance FreeBSD 4.10,
   4.11 and 5.3 when dotted quads are given as server names.
-  Reported and patched by "Voldemar".
+  Analysis and fix by Vladimir Olegovich Ravodin (Владимир Олегович Раводин).
 * IMAP: fix hangs in NOOP-based IDLE emulation. Reported by Casper Gripenberg
-  and Brendan Lynch, fix by Sunil Shetye (his patch was merged) and Brendan
-  Lynch.
+  and Brendan Lynch, fix by Sunil Shetye (his patch was merged) and Brendan Lynch.
 * IMAP: Handle other clients concurrently accessing IMAP mailboxes better.
   Fetchmail quits the poll if the EXPUNGE count does not match expectations, and
   servers not updating RECENT counts after EXPUNGE are handled in a better way.
