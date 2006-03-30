@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.9-rc9\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-03-15 18:06+0100\n"
+"POT-Creation-Date: 2006-03-25 15:35+0100\n"
 "PO-Revision-Date: 2005-11-18 22:25+0200\n"
 "Last-Translator: Besnik Bleta <besnik@spymac.com>\n"
 "Language-Team: Albanian <translation-team-sq@lists.sourceforge.net>\n"
@@ -236,54 +236,54 @@ msgstr "Shërbyesi udhëheqës nuk ka emër.\n"
 msgid "couldn't find canonical DNS name of %s (%s)\n"
 msgstr "nuk munda të gjej emër DNS kanonikal të %s (%s)\n"
 
-#: driver.c:1059
+#: driver.c:1067
 #, c-format
 msgid "%s connection to %s failed"
 msgstr "lidhja %s me %s dështoi"
 
-#: driver.c:1075
+#: driver.c:1083
 msgid "Subject: Fetchmail unreachable-server warning."
 msgstr "Subjekt: Sinjalizim Fetchmail për shërbyes të pakapshëm."
 
-#: driver.c:1077
+#: driver.c:1085
 #, c-format
 msgid "Fetchmail could not reach the mail server %s:"
 msgstr "Fetchmail-i nuk mundi të lidhet me shërbyesin e postës %s:"
 
-#: driver.c:1103 imap.c:399 pop3.c:464
+#: driver.c:1111 imap.c:399 pop3.c:464
 msgid "SSL connection failed.\n"
 msgstr "Lidhja SSL dështoi.\n"
 
-#: driver.c:1156
+#: driver.c:1164
 #, c-format
 msgid "Lock-busy error on %s@%s\n"
 msgstr "Gabim duket-i-zënë te %s@%s\n"
 
-#: driver.c:1160
+#: driver.c:1168
 #, c-format
 msgid "Server busy error on %s@%s\n"
 msgstr "Gabim shërbyes i zënë te %s@%s\n"
 
-#: driver.c:1165
+#: driver.c:1173
 #, c-format
 msgid "Authorization failure on %s@%s%s\n"
 msgstr "Dështim autorizimi te %s@%s%s\n"
 
-#: driver.c:1168
+#: driver.c:1176
 msgid " (previously authorized)"
 msgstr " (autorizuar dikur)"
 
-#: driver.c:1189
+#: driver.c:1197
 #, c-format
 msgid "Subject: fetchmail authentication failed on %s@%s"
 msgstr "Subjekt: mirëfilltësimi fetchmail dështoi te %s@%s"
 
-#: driver.c:1193
+#: driver.c:1201
 #, c-format
 msgid "Fetchmail could not get mail from %s@%s.\n"
 msgstr "Fetchmail-i nuk mundi të marrë postë prej %s@%s.\n"
 
-#: driver.c:1197
+#: driver.c:1205
 #, fuzzy
 msgid ""
 "The attempt to get authorization failed.\n"
@@ -307,7 +307,7 @@ msgstr ""
 "në çdo cikël.  Nuk do të dërgohen njoftime në të ardhmen para se\n"
 " të rikthehet shërbimi."
 
-#: driver.c:1203
+#: driver.c:1211
 #, fuzzy
 msgid ""
 "\n"
@@ -334,7 +334,7 @@ msgstr ""
 "në çdo cikël.  Nuk do të dërgohen njoftime në të ardhmen para se\n"
 " të rikthehet shërbimi."
 
-#: driver.c:1213
+#: driver.c:1221
 msgid ""
 "The attempt to get authorization failed.\n"
 "This probably means your password is invalid, but some servers have\n"
@@ -355,169 +355,169 @@ msgstr ""
 "në çdo cikël.  Nuk do të dërgohen njoftime në të ardhmen para se\n"
 " të rikthehet shërbimi."
 
-#: driver.c:1229
+#: driver.c:1237
 #, c-format
 msgid "Repoll immediately on %s@%s\n"
 msgstr "Rivil menjëherë te %s@%s\n"
 
-#: driver.c:1234
+#: driver.c:1242
 #, c-format
 msgid "Unknown login or authentication error on %s@%s\n"
 msgstr "Gabim mirëfilltësimi ose hyrje e panjohur te %s@%s\n"
 
-#: driver.c:1258
+#: driver.c:1266
 #, c-format
 msgid "Authorization OK on %s@%s\n"
 msgstr "OK autorizimi te %s@%s\n"
 
-#: driver.c:1264
+#: driver.c:1272
 #, c-format
 msgid "Subject: fetchmail authentication OK on %s@%s"
 msgstr "Subjekt: OK mirëfilltësimi fetchmail-i te %s@%s"
 
-#: driver.c:1268
+#: driver.c:1276
 #, c-format
 msgid "Fetchmail was able to log into %s@%s.\n"
 msgstr "Fetchmail-i mundi të hyjë te %s@%s.\n"
 
-#: driver.c:1272
+#: driver.c:1280
 msgid "Service has been restored.\n"
 msgstr "Shërbimi është rivendosur.\n"
 
-#: driver.c:1303
+#: driver.c:1311
 #, c-format
 msgid "selecting or re-polling folder %s\n"
 msgstr "po përzgjedh ose vjel prej dosjes %s\n"
 
-#: driver.c:1305
+#: driver.c:1313
 msgid "selecting or re-polling default folder\n"
 msgstr "po përzgjedh ose vjel prej dosjes parazgjedhje\n"
 
-#: driver.c:1317
+#: driver.c:1325
 #, c-format
 msgid "%s at %s (folder %s)"
 msgstr "%s te %s (dosja %s)"
 
-#: driver.c:1320 rcfile_y.y:380
+#: driver.c:1328 rcfile_y.y:380
 #, c-format
 msgid "%s at %s"
 msgstr "%s te %s"
 
-#: driver.c:1325
+#: driver.c:1333
 #, c-format
 msgid "Polling %s\n"
 msgstr "Po mbledh %s\n"
 
-#: driver.c:1329
+#: driver.c:1337
 #, c-format
 msgid "%d message (%d %s) for %s"
 msgid_plural "%d messages (%d %s) for %s"
 msgstr[0] "%d mesazh (%d %s) për %s"
 msgstr[1] "%d mesazhe (%d %s) për %s"
 
-#: driver.c:1332
+#: driver.c:1340
 msgid "seen"
 msgid_plural "seen"
 msgstr[0] "parë"
 msgstr[1] "parë"
 
-#: driver.c:1335
+#: driver.c:1343
 #, c-format
 msgid "%d message for %s"
 msgid_plural "%d messages for %s"
 msgstr[0] "%d mesazh për %s"
 msgstr[1] "%d mesazhe për %s"
 
-#: driver.c:1342
+#: driver.c:1350
 #, c-format
 msgid " (%d octets).\n"
 msgstr " (%d oktete).\n"
 
-#: driver.c:1348
+#: driver.c:1356
 #, c-format
 msgid "No mail for %s\n"
 msgstr "Pa postë për %s\n"
 
-#: driver.c:1381 imap.c:89
+#: driver.c:1389 imap.c:89
 msgid "bogus message count!"
 msgstr "numërim i gabuar mesazhesh!"
 
-#: driver.c:1523
+#: driver.c:1531
 msgid "socket"
 msgstr "\"socket\""
 
-#: driver.c:1526
+#: driver.c:1534
 msgid "missing or bad RFC822 header"
 msgstr "titull RFC822 mungues ose i dëmtuar"
 
-#: driver.c:1529
+#: driver.c:1537
 msgid "MDA"
 msgstr "MDA"
 
-#: driver.c:1532
+#: driver.c:1540
 msgid "client/server synchronization"
 msgstr "njëkohësim klient/server"
 
-#: driver.c:1535
+#: driver.c:1543
 msgid "client/server protocol"
 msgstr "protokoll klient/server"
 
-#: driver.c:1538
+#: driver.c:1546
 msgid "lock busy on server"
 msgstr ""
 
-#: driver.c:1541
+#: driver.c:1549
 msgid "SMTP transaction"
 msgstr "shkëmbim SMTP"
 
-#: driver.c:1544
+#: driver.c:1552
 msgid "DNS lookup"
 msgstr "kërkim DNS"
 
-#: driver.c:1547
+#: driver.c:1555
 #, fuzzy
 msgid "undefined"
 msgstr "gabim i papërcaktuar\n"
 
-#: driver.c:1553
+#: driver.c:1561
 #, c-format
 msgid "%s error while fetching from %s@%s and delivering to SMTP host %s\n"
 msgstr ""
 "gabim %s gjatë prurjes prej %s@%s-së dhe shpërndarjes te strehë SMTP %s\n"
 
-#: driver.c:1555
+#: driver.c:1563
 msgid "unknown"
 msgstr "i/e panjohur"
 
-#: driver.c:1557
+#: driver.c:1565
 #, c-format
 msgid "%s error while fetching from %s@%s\n"
 msgstr "gabim %s gjatë sjelljes prej %s@%s\n"
 
-#: driver.c:1567
+#: driver.c:1575
 #, c-format
 msgid "post-connection command failed with status %d\n"
 msgstr "urdhër pas-lidhjeje dështoi me gjendje %d\n"
 
-#: driver.c:1587
+#: driver.c:1595
 msgid "Kerberos V4 support not linked.\n"
 msgstr ""
 
-#: driver.c:1595
+#: driver.c:1603
 msgid "Kerberos V5 support not linked.\n"
 msgstr ""
 
-#: driver.c:1606
+#: driver.c:1614
 #, c-format
 msgid "Option --flush is not supported with %s\n"
 msgstr "Mundësia --zbrazje nuk mbulohet me %s\n"
 
-#: driver.c:1612
+#: driver.c:1620
 #, c-format
 msgid "Option --all is not supported with %s\n"
 msgstr "Mundësia --all nuk mbulohet me %s\n"
 
-#: driver.c:1621
+#: driver.c:1629
 #, c-format
 msgid "Option --limit is not supported with %s\n"
 msgstr "Mundësi --limit nuk mbulohet me %s\n"
@@ -2294,7 +2294,7 @@ msgstr "gabim protokolli\n"
 msgid "protocol error while fetching UIDLs\n"
 msgstr "gabim protokolli gjatë sjelljes së UIDL-ve\n"
 
-#: pop3.c:1322
+#: pop3.c:1324
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Mundësia --dosje nuk mbulohet me POP3\n"
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail-6.2.6.alpha1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-03-15 18:06+0100\n"
+"POT-Creation-Date: 2006-03-25 15:35+0100\n"
 "PO-Revision-Date: 2005-07-03 03:57+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -232,54 +232,54 @@ msgstr "Vedoucí server nemá jméno.\n"
 msgid "couldn't find canonical DNS name of %s (%s)\n"
 msgstr "nemohu najít kanonické DNS jméno %s (%s)\n"
 
-#: driver.c:1059
+#: driver.c:1067
 #, c-format
 msgid "%s connection to %s failed"
 msgstr "spojení %s k %s selhalo"
 
-#: driver.c:1075
+#: driver.c:1083
 msgid "Subject: Fetchmail unreachable-server warning."
 msgstr "Subject: Varování fetchmailu o nedostupnosti serveru."
 
-#: driver.c:1077
+#: driver.c:1085
 #, c-format
 msgid "Fetchmail could not reach the mail server %s:"
 msgstr "Fetchmail nemohl kontaktovat poštovní server %s:"
 
-#: driver.c:1103 imap.c:399 pop3.c:464
+#: driver.c:1111 imap.c:399 pop3.c:464
 msgid "SSL connection failed.\n"
 msgstr "Spojení SSL selhalo.\n"
 
-#: driver.c:1156
+#: driver.c:1164
 #, c-format
 msgid "Lock-busy error on %s@%s\n"
 msgstr "Chyba \"zámek se používá\" na %s@%s\n"
 
-#: driver.c:1160
+#: driver.c:1168
 #, c-format
 msgid "Server busy error on %s@%s\n"
 msgstr "Chyba \"server zaneprázdněn\" na %s@%s\n"
 
-#: driver.c:1165
+#: driver.c:1173
 #, c-format
 msgid "Authorization failure on %s@%s%s\n"
 msgstr "Chyba autorizace na %s@%s%s\n"
 
-#: driver.c:1168
+#: driver.c:1176
 msgid " (previously authorized)"
 msgstr " (dříve autorizován)"
 
-#: driver.c:1189
+#: driver.c:1197
 #, c-format
 msgid "Subject: fetchmail authentication failed on %s@%s"
 msgstr "Předmět: autentizace fetchmailu selhala na %s@%s"
 
-#: driver.c:1193
+#: driver.c:1201
 #, c-format
 msgid "Fetchmail could not get mail from %s@%s.\n"
 msgstr "Fetchmail nemohl stáhnout poštu z %s@%s.\n"
 
-#: driver.c:1197
+#: driver.c:1205
 #, fuzzy
 msgid ""
 "The attempt to get authorization failed.\n"
@@ -300,7 +300,7 @@ msgstr ""
 "Démon fetchmail bude pokračovat v činnosti a při každém cyklu se pokusí\n"
 "připojit. Žádná další upozornění nebudou do obnovení služby zasílána."
 
-#: driver.c:1203
+#: driver.c:1211
 #, fuzzy
 msgid ""
 "\n"
@@ -324,7 +324,7 @@ msgstr ""
 "Démon fetchmail bude pokračovat v činnosti a při každém cyklu se pokusí\n"
 "připojit. Žádná další upozornění nebudou do obnovení služby zasílána."
 
-#: driver.c:1213
+#: driver.c:1221
 msgid ""
 "The attempt to get authorization failed.\n"
 "This probably means your password is invalid, but some servers have\n"
@@ -343,60 +343,60 @@ msgstr ""
 "Démon fetchmail bude pokračovat v činnosti a při každém cyklu se pokusí\n"
 "připojit. Žádná další upozornění nebudou do obnovení služby zasílána."
 
-#: driver.c:1229
+#: driver.c:1237
 #, c-format
 msgid "Repoll immediately on %s@%s\n"
 msgstr "Okamžitě znovu kontroluji %s@%s\n"
 
-#: driver.c:1234
+#: driver.c:1242
 #, c-format
 msgid "Unknown login or authentication error on %s@%s\n"
 msgstr "Neznámá chyba při přihlášení nebo autentizaci na %s@%s\n"
 
-#: driver.c:1258
+#: driver.c:1266
 #, c-format
 msgid "Authorization OK on %s@%s\n"
 msgstr "Úspěšná autorizace na %s@%s\n"
 
-#: driver.c:1264
+#: driver.c:1272
 #, c-format
 msgid "Subject: fetchmail authentication OK on %s@%s"
 msgstr "Předmět: Autentizace fetchmailu úspěšná na %s@%s"
 
-#: driver.c:1268
+#: driver.c:1276
 #, c-format
 msgid "Fetchmail was able to log into %s@%s.\n"
 msgstr "Fetchmail se úspěšně přihlásil k %s@%s.\n"
 
-#: driver.c:1272
+#: driver.c:1280
 msgid "Service has been restored.\n"
 msgstr "Služba byla obnovena.\n"
 
-#: driver.c:1303
+#: driver.c:1311
 #, c-format
 msgid "selecting or re-polling folder %s\n"
 msgstr "vybírám nebo znovu kontroluji složku %s\n"
 
-#: driver.c:1305
+#: driver.c:1313
 msgid "selecting or re-polling default folder\n"
 msgstr "vybírám nebo znovu kontroluji implicitní složku\n"
 
-#: driver.c:1317
+#: driver.c:1325
 #, c-format
 msgid "%s at %s (folder %s)"
 msgstr "%s na %s (složka %s)"
 
-#: driver.c:1320 rcfile_y.y:380
+#: driver.c:1328 rcfile_y.y:380
 #, c-format
 msgid "%s at %s"
 msgstr "%s na %s"
 
-#: driver.c:1325
+#: driver.c:1333
 #, c-format
 msgid "Polling %s\n"
 msgstr "Stahuji z %s\n"
 
-#: driver.c:1329
+#: driver.c:1337
 #, c-format
 msgid "%d message (%d %s) for %s"
 msgid_plural "%d messages (%d %s) for %s"
@@ -404,14 +404,14 @@ msgstr[0] "%d zpráva (%d %s) pro %s"
 msgstr[1] "%d zprávy (%d %s) pro %s"
 msgstr[2] "%d zpráv (%d %s) pro %s"
 
-#: driver.c:1332
+#: driver.c:1340
 msgid "seen"
 msgid_plural "seen"
 msgstr[0] "přečtena"
 msgstr[1] "přečteny"
 msgstr[2] "přečteno"
 
-#: driver.c:1335
+#: driver.c:1343
 #, c-format
 msgid "%d message for %s"
 msgid_plural "%d messages for %s"
@@ -419,96 +419,96 @@ msgstr[0] "%d zpráva pro %s"
 msgstr[1] "%d zprávy pro %s"
 msgstr[2] "%d zpráv pro %s"
 
-#: driver.c:1342
+#: driver.c:1350
 #, c-format
 msgid " (%d octets).\n"
 msgstr " (%d oktetů).\n"
 
-#: driver.c:1348
+#: driver.c:1356
 #, c-format
 msgid "No mail for %s\n"
 msgstr "Žádná pošta pro %s\n"
 
-#: driver.c:1381 imap.c:89
+#: driver.c:1389 imap.c:89
 msgid "bogus message count!"
 msgstr "nesmyslný počet zpráv!"
 
-#: driver.c:1523
+#: driver.c:1531
 msgid "socket"
 msgstr "socketu"
 
-#: driver.c:1526
+#: driver.c:1534
 msgid "missing or bad RFC822 header"
 msgstr "hlavičky RFC822"
 
-#: driver.c:1529
+#: driver.c:1537
 msgid "MDA"
 msgstr "MDA"
 
-#: driver.c:1532
+#: driver.c:1540
 msgid "client/server synchronization"
 msgstr "synchronizace mezi klientem a serverem"
 
-#: driver.c:1535
+#: driver.c:1543
 msgid "client/server protocol"
 msgstr "protokolu klient/server"
 
-#: driver.c:1538
+#: driver.c:1546
 msgid "lock busy on server"
 msgstr "zámku na serveru"
 
-#: driver.c:1541
+#: driver.c:1549
 msgid "SMTP transaction"
 msgstr "transakce SMTP"
 
-#: driver.c:1544
+#: driver.c:1552
 msgid "DNS lookup"
 msgstr "hledání v DNS"
 
-#: driver.c:1547
+#: driver.c:1555
 #, fuzzy
 msgid "undefined"
 msgstr "nedefinované\n"
 
-#: driver.c:1553
+#: driver.c:1561
 #, fuzzy, c-format
 msgid "%s error while fetching from %s@%s and delivering to SMTP host %s\n"
 msgstr "při odesílání počítači SMTP %2$s došlo k chybě %1$s\n"
 
-#: driver.c:1555
+#: driver.c:1563
 #, fuzzy
 msgid "unknown"
 msgstr "počítač není znám."
 
-#: driver.c:1557
+#: driver.c:1565
 #, fuzzy, c-format
 msgid "%s error while fetching from %s@%s\n"
 msgstr "při stahování z %2$s došlo k chybě %1$s\n"
 
-#: driver.c:1567
+#: driver.c:1575
 #, c-format
 msgid "post-connection command failed with status %d\n"
 msgstr "příkaz po spojení selhal se stavem %d\n"
 
-#: driver.c:1587
+#: driver.c:1595
 msgid "Kerberos V4 support not linked.\n"
 msgstr "Kerberos V4 není podporován.\n"
 
-#: driver.c:1595
+#: driver.c:1603
 msgid "Kerberos V5 support not linked.\n"
 msgstr "Kerberos V5 není podporován.\n"
 
-#: driver.c:1606
+#: driver.c:1614
 #, c-format
 msgid "Option --flush is not supported with %s\n"
 msgstr "Přepínač --flush není s %s podporován\n"
 
-#: driver.c:1612
+#: driver.c:1620
 #, c-format
 msgid "Option --all is not supported with %s\n"
 msgstr "Přepínač --all není s %s podporován\n"
 
-#: driver.c:1621
+#: driver.c:1629
 #, c-format
 msgid "Option --limit is not supported with %s\n"
 msgstr "Přepínač --limit nepodporuje argument %s\n"
@@ -2264,7 +2264,7 @@ msgstr "chyba protokolu\n"
 msgid "protocol error while fetching UIDLs\n"
 msgstr "chyba protokolu při stahování UIDL\n"
 
-#: pop3.c:1322
+#: pop3.c:1324
 #, fuzzy
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Přepínač --remote není s POP3 podporován\n"
