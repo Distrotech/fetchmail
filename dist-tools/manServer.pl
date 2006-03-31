@@ -3,9 +3,12 @@
 # manServer - Unix man page to HTML converter
 # Rolf Howarth, rolf@squarebox.co.uk
 # Version 1.07  16 July 2001
+# Version 1.07+ma1 2006-03-31 Matthias Andree
+#                             add trailing slash of URLs
+#                             support https, too
 
-$version = "1.07";
-$manServerUrl = "<A HREF=\"http://www.squarebox.co.uk/download/manServer.shtml\">manServer $version</A>";
+$version = "1.07+ma1";
+$manServerUrl = "<A HREF=\"http://www.squarebox.co.uk/users/rolf/download/manServer.shtml\">manServer $version</A>";
 
 use Socket;
 
@@ -623,7 +626,7 @@ sub outputLine
 	# Insert links for http, ftp and mailto URLs
 	# Recognised URLs are sequence of alphanumerics and special chars like / and ~
 	# but must finish with an alphanumeric rather than punctuation like "."
-	s,\b(http://[-\w/~:@.%#+$?=]+\w),<A HREF=\"\1\">\1</A>,g;
+	s,\b(https?://[-\w/~:@.%#+$?=]+[\w/]),<A HREF=\"\1\">\1</A>,g;
 	s,\b(ftp://[-\w/~:@.%#+$?=]+),<A HREF=\"\1\">\1</A>,g;
 	s,([-_A-Za-z0-9.]+@[A-Za-z][-_A-Za-z0-9]*\.[-_A-Za-z0-9.]+),<A HREF=\"mailto:\1\">\1</A>,g;
 

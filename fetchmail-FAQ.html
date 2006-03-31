@@ -304,7 +304,7 @@ multi-platform user community has shown that fetchmail is as near
 bulletproof as the underlying protocols permit.</p>
 
 <p>Fetchmail is licensed under the <a
-href="http://gnu.org//copyleft/gpl.html">GNU General Public
+href="http://www.gnu.org/copyleft/gpl.html">GNU General Public
 License</a>.</p>
 
 <p>If you found this FAQ in the distribution, see the README for
@@ -317,8 +317,8 @@ fetchmail sources?</a></h2>
 sources at the fetchmail home page: <a
 href="http://fetchmail.berlios.de/">http://fetchmail.berlios.de/</a>.
 You can also usually find both in the <a
-href="http://sunsite.unc.edu/pub/Linux/system/mail/pop/!INDEX.html">
-POP mail tools directory on Sunsite</a>.</p>
+href="http://www.ibiblio.org/pub/Linux/system/mail/pop/!INDEX.short.html">
+POP mail tools directory on iBiblio</a>.</p>
 
 <p>A text dump of this FAQ is included in the fetchmail
 distribution. Because it freezes at distribution release time, it
@@ -504,7 +504,7 @@ given at Atlanta Linux Expo, Linux Pro '97 in Warsaw, and the first
 Perl Conference, at UniForum '98, and was the basis of an invited
 presentation at Usenix '98. The folks at Netscape tell me it helped
 them decide to <a
-href="http://www.netscape.com/newsref/pr/newsrelease558.html">give
+href="http://wp.netscape.com/newsref/pr/newsrelease558.html">give
 away the source for Netscape Communicator</a>.</p>
 
 <p>If you're reading a non-HTML dump of this FAQ, you can find the
@@ -513,16 +513,12 @@ paper on the Web with a search for that title.</p>
 <h2><a id="G8" name="G8">G8. What is the best server to use with
 fetchmail?</a></h2>
 
-<p>The short answer: IMAP 2000 running over Unix.</p>
-
-<p>Here's a longer answer:</p>
-
 <p>Fetchmail will work with any POP, IMAP, ETRN, or ODMR server
 that conforms to the relevant RFCs (and even some outright broken
 ones like <a href="#S2">Microsoft Exchange</a> and <a
 href="#S6">Novell GroupWise</a>). This doesn't mean it works
 equally well with all, however. POP2 servers, and POP3 servers
-without LAST, limit fetchmail's capabilities in various ways
+without UIDL, limit fetchmail's capabilities in various ways
 described on the manual page.</p>
 
 <p>Most modern Unixes (and effectively all Linux/*BSD systems) come
@@ -536,12 +532,7 @@ protocols' function in the fetchmailconf utility).</p>
 IMAP4rev1 server; it has the best facilities for tracking message
 'seen' states. It also recovers from interrupted connections more
 gracefully than POP3, and enables some significant performance
-optimizations. The new <a
-href="ftp://ftp.cac.washington.edu/imap/imap.tar.Z">IMAP 2000</a>
-is particularly nice, as it supports CRAM-MD5 so you don't have to
-ship your mail password over the net en clair (fetchmail
-autodetects this capability). Older versions had support for GSSAPI
-giving a similar effect.</p>
+optimizations.</p>
 
 <p>Don't be fooled by NT/Exchange propaganda. M$ Exchange is just
 plain broken (see item <a href="#S2">S2</a>) and NT cannot handle
@@ -551,12 +542,11 @@ service runs over Solaris! For extended discussion, see John
 Kirch's excellent <a href="http://unix-vs-nt.org/kirch/">white
 paper</a> on Unix vs. NT performance.</p>
 
-<p>Source for a high-quality supported implementation of POP is
-available from the <a
-href="ftp://ftp.qualcomm.com/eudora/servers/unix/popper/">Eudora
-FTP site</a>. Don't use 2.5, which has a rather restrictive
-license. The 2.5.2 version appears to restore the open-source
-license of previous versions.</p>
+<p>A decent POP3/IMAP server that has recently become popular is <a
+    href="http://dovecot.org/">Dovecot</a>.</p>
+
+<p>Avoid <a href="http://home.pages.de/~mandree/qmail-bugs.html">qmail,
+    it's broken.</a></p>
 
 <h2><a id="G9" name="G9">G9. What is the best mail program to use
 with fetchmail?</a></h2>
@@ -566,19 +556,18 @@ transport programs</a>. It also doesn't care which user agent you
 use, and user agents are as a rule almost equally indifferent to
 how mail is delivered into your system mailbox. So any of the
 popular Unix mail agents -- <a
-href="http://www.myxa.com/old/elm.html">elm</a>, <a
+href="http://www.instinct.org/elm/">elm</a>, <a
 href="http://www.washington.edu/pine/">pine</a>, <a
 href="http://www.cs.indiana.edu/docproject/mail/mh.html">mh</a>, or
 <a href="http://www.mutt.org">mutt</a> -- will work fine with
 fetchmail.</p>
 
 <p>All this having been said, I can't resist putting in a discreet
-plug for <a href="http://www.mutt.org">mutt</a>. My own personal
-mail setup is sendmail plus fetchmail plus mutt. Mutt's interface
+plug for <a href="http://www.mutt.org">mutt</a>.  Mutt's interface
 is only a little different from that of its now-moribund ancestor
-elm, but its excellent handling of MIME and PGP put it in a class
-by itself. You won't need its built-in POP3 support, though; most
-of the mutt developers will cheerfully admit that fetchmail's is
+elm, but its flexibility and excellent handling of MIME and PGP put it
+in a class by itself. You won't need its built-in POP3 support, though;
+most of the mutt developers will cheerfully admit that fetchmail's is
 better :-).</p>
 
 <h2><a id="G10" name="G10">G10. How can I avoid sending my password
@@ -1238,7 +1227,7 @@ cyberspammer.com        REJECT
 cyberspammer.com (or any host within the cyberspammer.com domain),
 and any host on the 192.168.212.* network. (This feature can be
 used to do other things as well; see the <a
-href="http://www.sendmail.org/m4/anti-spam.html">sendmail
+href="http://www.sendmail.org/m4/anti_spam.html">sendmail
 documentation</a> for details)</p>
 
 <p>To actually set up the database, run</p>
@@ -1396,11 +1385,9 @@ linefeeds.</p>
 <p>(This information is thanks to Robert de Bath
 &lt;robert@mayday.cix.co.uk&gt;.)</p>
 
-<p>If a mailhost is using the qmail package (see <a
-href="http://pobox.com/~djb/qmail.html">http://pobox.com/~djb/qmail.html</a>)
-then, providing the local hosts are also using qmail, it is
-possible to set up one fetchmail link to be reliably collect the
-mail for an entire domain.</p>
+<p>If a mailhost is using the qmail package, then, providing the local
+hosts are also using qmail, it is possible to set up one fetchmail link
+to be reliably collect the mail for an entire domain.</p>
 
 <p>One of the basic features of qmail is the 'Delivered-To:'
 message header. Whenever qmail delivers a message to a local
@@ -1547,7 +1534,7 @@ MMDF?</a></h2>
 <p>MMDF itself is difficult to configure, but it turns out that
 connecting fetchmail to MMDF's SMTP channel isn't that hard. You
 can read an <a
-href="http://www.aplawrence.com/Unixart/uucptofetch.html">MMDF
+href="http://aplawrence.com/Unixart/uucptofetch.html">MMDF
 recipe</a> that describes replacing a UUCP link with fetchmail
 feeding MMDF.</p>
 
@@ -1889,7 +1876,7 @@ accept mail sent to user@my-company.co.uk)</p>
 
 <p>Note that Demon may delete mail on the server which is more than
 30 days old; see their <a
-href="http://www.demon.net/helpdesk/products/mail/sdps-tech.shtml">POP3
+href="http://www.demon.net/helpdesk/producthelp/mail/sdps-tech.html/">POP3
 page</a> for details.</p>
 
 <h3>The SDPS extension</h3>
@@ -2047,7 +2034,7 @@ IPv6, the "Basic Socket Interface Extensions for IPv6" (RFC 2133).
 
 <p>The NRL IPv6+IPsec software distribution can be obtained from:
 <a
-href="http://web.mit.edu/network/isakmp">http://web.mit.edu/network/isakmp</a></p>
+href="http://web.mit.edu/network/isakmp/">http://web.mit.edu/network/isakmp/</a></p>
 
 <p>More information on using IPv6 with Linux can be obtained
 from:</p>
@@ -2351,10 +2338,7 @@ building with an archaic version of lex.</p>
 <p>Workaround: fix the syntax of your .fetchmailrc file.</p>
 
 <p>Fix: build and install the latest version of <a
-href="ftp://prep.ai.mit.edu/~ftp/pub/gnu">flex</a> from the Free
-Software Foundation. An FSF <a
-href="http://www.gnu.ai.mit.edu/order/ftp.html">mirror site</a>
-will help you get it faster.</p>
+    href="http://flex.sourceforge.net/">flex</a>.</p>
 
 <h2><a id="R4" name="R4">R4. Fetchmail dumps core in -V mode, but
 operates normally otherwise.</a></h2>
