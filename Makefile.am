@@ -156,6 +156,13 @@ dist-hook:
 lsm: genlsm.sh dist
 	$(SHELL) genlsm.sh >$(PACKAGE)-$(VERSION).lsm
 
+# this target expects a .rsyncs file with lines of this format:
+# host:directory/
+# it will call rsync from its source directory to the destination for
+# each of them, running them in parallel
+rsync:  distdir $(srcdir)/.rsyncs
+	@( cat $(srcdir)/.rsyncs | sed -e 's}^}rsync -aH --delete-after $(PACKAGE)-$(VERSION)/ }; s/\($$\)/ \&/;' ; echo "wait" ) | $(SHELL) -x
+
 # The following sets edit modes for GNU EMACS.
 # Local Variables:
 # compile-command:"configure"
