@@ -147,7 +147,7 @@ AC_CHECK_DECLS(strerror)
 # and breaks gethostbyname(2).  It's better to use the bind stuff in the C
 # library.  So don't add -lresolv to the link list unless it's necessary
 # (It will be necessary when using GNU libc6).
-old_libs=$LIBS
+old_LIBS="$LIBS"
 for lib in '' -lresolv; do
     if test -z "$lib"; then
        AC_MSG_CHECKING([for res_search in libc])
@@ -170,8 +170,9 @@ extern int res_search();
 ]], [[res_search(0, 0, 0, 0, 0);]])],
     [AC_MSG_RESULT([found])
      AC_DEFINE(HAVE_RES_SEARCH, [1],
-	       [Define to 1 if you have the `res_search' function.])
+	       [Define to 1 if you have the 'res_search' function.])
      break], [AC_MSG_RESULT([not found])])
+     LIBS=$old_LIBS
 done
 
 dnl Check for libcrypt -- it may live in libc or libcrypt, as on IRIX
