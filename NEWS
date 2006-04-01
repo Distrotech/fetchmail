@@ -32,7 +32,7 @@ fetchmail 6.3.4 (not yet released):
 # BUG FIXES:
 * configure: detect res_* functions properly with newer glibc ABIs.
   Patch by Miloslav Trmac.
-
+* tracepolls: add folder information if available. Reported by Terry Brown.
 
 fetchmail 6.3.3 (released 2006-03-30):
 

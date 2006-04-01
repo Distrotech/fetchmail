@@ -1190,6 +1190,10 @@ int readheaders(int sock,
 			" polling %s account %s",
 			ctl->server.pollname,
 			ctl->remotename);
+		if (ctl->folder)
+		    snprintf(buf + strlen(buf), sizeof(buf) - strlen(buf),
+			    " folder %s",
+			    ctl->folder);
 	    }
 	    snprintf(buf+strlen(buf), sizeof(buf)-strlen(buf), ")\r\n");
 	    n = stuffline(ctl, buf);

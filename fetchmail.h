@@ -359,6 +359,7 @@ struct query
     struct idlist *oldsaved, *newsaved;
     struct idlist **oldsavedend;
     char lastdigest[DIGESTLEN];	/* last MD5 hash seen on this connection */
+    char *folder;		/* folder currently being polled */
 
     /* internal use -- per-message state */
     int mimemsg;		/* bitmask indicating MIME body-type */

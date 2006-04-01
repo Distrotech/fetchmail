@@ -1297,6 +1297,7 @@ is restored."));
 	/* now iterate over each folder selected */
 	for (idp = ctl->mailboxes; idp; idp = idp->next)
 	{
+	    ctl->folder = idp->id;
 	    pass = 0;
 	    do {
 		dispatches = 0;
@@ -1568,6 +1569,7 @@ is restored."));
 
 closeUp:
     xfree(msgsizes);
+    ctl->folder = NULL;
 
     /* execute wrapup command, if any */
     if (ctl->postconnect && (tmperr = system(ctl->postconnect)))
