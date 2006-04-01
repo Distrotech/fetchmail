@@ -137,7 +137,7 @@ AC_FUNC_VPRINTF
 AC_SUBST(EXTRAOBJ)
 
 AC_CHECK_FUNCS(tcsetattr stty setsid geteuid seteuid dnl
-  res_search strerror syslog snprintf vprintf vsnprintf vsyslog dnl
+  strerror syslog snprintf vprintf vsnprintf vsyslog dnl
   atexit inet_aton strftime setrlimit socketpair sigprocmask dnl
   sigaction strdup setlocale)
 
@@ -147,10 +147,32 @@ AC_CHECK_DECLS(strerror)
 # and breaks gethostbyname(2).  It's better to use the bind stuff in the C
 # library.  So don't add -lresolv to the link list unless it's necessary
 # (It will be necessary when using GNU libc6).
-AC_CHECK_FUNC(res_search,
-    AC_MSG_RESULT(using libc's resolver functions),
-    AC_CHECK_LIB(resolv,res_search, 
-	[AC_DEFINE(HAVE_RES_SEARCH) AC_MSG_RESULT(found resolver functions in libresolv); LIBS="$LIBS -lresolv"], AC_MSG_RESULT(no resolver calls found)))
+old_libs=$LIBS
+for lib in '' -lresolv; do
+    if test -z "$lib"; then
+       AC_MSG_CHECKING([for res_search in libc])
+    else
+       AC_MSG_CHECKING([for res_search in $lib])
+    fi
+    LIBS="$old_LIBS $lib"
+    AC_LINK_IFELSE([AC_LANG_PROGRAM([[
+#include <sys/types.h>
+#ifdef HAVE_NETINET_IN_H
+#include <netinet/in.h>
+#endif
+#ifdef HAVE_ARPA_NAMESER_H
+#include <arpa/nameser.h>
+#endif
+#ifdef HAVE_RESOLV_H
+#include <resolv.h>
+#endif
+extern int res_search();
+]], [[res_search(0, 0, 0, 0, 0);]])],
+    [AC_MSG_RESULT([found])
+     AC_DEFINE(HAVE_RES_SEARCH, [1],
+	       [Define to 1 if you have the `res_search' function.])
+     break], [AC_MSG_RESULT([not found])])
+done
 
 dnl Check for libcrypt -- it may live in libc or libcrypt, as on IRIX
 AC_CHECK_FUNC(crypt, , AC_CHECK_LIB(crypt,crypt))

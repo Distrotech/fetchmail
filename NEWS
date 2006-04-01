@@ -27,6 +27,13 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 
 --------------------------------------------------------------------------------
 
+fetchmail 6.3.4 (not yet released):
+
+# BUG FIXES:
+* configure: detect res_* functions properly with newer glibc ABIs.
+  Patch by Miloslav Trmac.
+
+
 fetchmail 6.3.3 (released 2006-03-30):
 
 # KNOWN BUGS:
