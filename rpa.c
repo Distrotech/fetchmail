@@ -527,7 +527,7 @@ static int DecBase64(char *bufp)
 	    else if ( ch=='+'                )   newx = 62;
 	    else if ( ch=='/'                )   newx = 63;
 	    else {
-		report(stderr,  GT_("dec64 error at char %d: %x\n"), inp - bufp, ch);
+	        report(stderr,  GT_("dec64 error at char %d: %x\n"), (int)(inp - bufp), ch);
 		return(0);
 	    }
 	    part=((part & 0x3F)*64) + newx;

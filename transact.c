@@ -1164,7 +1164,7 @@ int readheaders(int sock,
 		    saddr, sizeof(saddr), NULL, 0,
 		    NI_NUMERICHOST);
 	    if (e)
-		snprintf(saddr, sizeof(saddr), "(%-.*s)", sizeof(saddr) - 3, gai_strerror(e));
+		snprintf(saddr, sizeof(saddr), "(%-.*s)", (int)(sizeof(saddr) - 3), gai_strerror(e));
 	    snprintf(buf, sizeof(buf),
 		    "Received: from %s [%s]\r\n", 
 		    ctl->server.truename, saddr);

@@ -34,6 +34,7 @@ fetchmail 6.3.4 (not yet released):
   Patch by Miloslav Trmac.
 * tracepolls: add folder information if available. Reported by Terry Brown.
 * lexer: add %option noyywrap to avoid link errors about missing yywrap().
+* a few more type fixes for report/snprintf, patch by Miloslav Trmac.
 
 fetchmail 6.3.3 (released 2006-03-30):
 
