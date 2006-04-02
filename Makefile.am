@@ -69,7 +69,8 @@ fetchmail_SOURCES=	fetchmail.h getopt.h \
 		driver.c transact.c sink.c smtp.c \
 		uid.c mxget.c md5ify.c cram.c kerberos.c gssapi.c \
 		opie.c rpa.c interface.c netrc.c \
-		unmime.c conf.c checkalias.c lock.c \
+		unmime.c conf.c checkalias.c \
+		lock.h lock.c \
 		rcfile_l.l rcfile_y.y ucs/norm_charmap.c \
 		libesmtp/getaddrinfo.h libesmtp/getaddrinfo.c \
 		KAME/getnameinfo.c

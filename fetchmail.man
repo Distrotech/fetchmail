@@ -747,6 +747,11 @@ and renames it into the place of the real idfile only if the temporary
 file has been written successfully. This avoids the truncation of
 idfiles when running out of disk space.
 .TP
+.B \--pidfile <pathname>
+(Keyword: pidfile; since fetchmail v6.3.4)
+Override the default location of the PID file. Default: see
+"ENVIRONMENT" below.
+.TP
 .B \-n | \-\-norewrite
 (Keyword: no rewrite)
 Normally,

@@ -36,6 +36,12 @@ fetchmail 6.3.4 (not yet released):
 * lexer: add %option noyywrap to avoid link errors about missing yywrap().
 * a few more type fixes for report/snprintf, patch by Miloslav Trmac.
 
+# CHANGES:
+* pidfile: there is a new command-line (--pidfile PATH) and global option for
+  the rcfile (set pidfile [=] "/path/to/pidfile") option to allow overriding
+  the default location of the PID file.
+  Requested by Héctor García, Debian maintainer.
+
 fetchmail 6.3.3 (released 2006-03-30):
 
 # KNOWN BUGS:

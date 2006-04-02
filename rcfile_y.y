@@ -68,7 +68,7 @@ extern char * yytext;
 %token INTERFACE MONITOR PLUGIN PLUGOUT
 %token IS HERE THERE TO MAP WILDCARD
 %token BATCHLIMIT FETCHLIMIT FETCHSIZELIMIT FASTUIDL EXPUNGE PROPERTIES
-%token SET LOGFILE DAEMON SYSLOG IDFILE INVISIBLE POSTMASTER BOUNCEMAIL 
+%token SET LOGFILE DAEMON SYSLOG IDFILE PIDFILE INVISIBLE POSTMASTER BOUNCEMAIL
 %token SPAMBOUNCE SHOWDOTS
 %token <proto> PROTO AUTHTYPE
 %token <sval>  STRING
@@ -95,6 +95,7 @@ optmap		: MAP | /* EMPTY */;
 /* future global options should also have the form SET <name> optmap <value> */
 statement	: SET LOGFILE optmap STRING	{run.logfile = prependdir ($4, rcfiledir);}
 		| SET IDFILE optmap STRING	{run.idfile = prependdir ($4, rcfiledir);}
+		| SET PIDFILE optmap STRING	{run.pidfile = prependdir ($4, rcfiledir);}
 		| SET DAEMON optmap NUMBER	{run.poll_interval = $4;}
 		| SET POSTMASTER optmap STRING	{run.postmaster = xstrdup($4);}
 		| SET BOUNCEMAIL		{run.bouncemail = TRUE;}
@@ -577,8 +578,5 @@ char *prependdir (const char *file, const char *dir)
 	sprintf (newfile, "%s%s", dir, file);
     return newfile;
 }
-
-/* easier to do this than cope with variations in where the library lives */
-int yywrap(void) {return 1;}
 
 /* rcfile_y.y ends here */

@@ -43,6 +43,7 @@
 #include "smtp.h"
 #include "netrc.h"
 #include "i18n.h"
+#include "lock.h"
 
 #ifndef ENETUNREACH
 #define ENETUNREACH   128       /* Interactive doesn't know this */
@@ -315,7 +316,7 @@ int main(int argc, char **argv)
 #endif /* POP3_ENABLE */
 
     /* construct the lockfile */
-    lock_setup();
+    lock_setup(&run);
 
 #ifdef HAVE_SETRLIMIT
     /*
@@ -1067,6 +1068,8 @@ static int load_params(int argc, char **argv, int optind)
 	run.logfile = cmd_run.logfile;
     if (cmd_run.idfile)
 	run.idfile = cmd_run.idfile;
+    if (cmd_run.pidfile)
+	run.pidfile = cmd_run.pidfile;
     /* do this before the keep/fetchall test below, otherwise -d0 may fail */
     if (cmd_run.poll_interval >= 0)
 	run.poll_interval = cmd_run.poll_interval;

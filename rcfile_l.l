@@ -69,6 +69,7 @@ int prc_lineno = 1;
 set		{ return SET; }
 logfile		{ return LOGFILE; }
 idfile		{ return IDFILE; }
+pidfile		{ return PIDFILE; }
 daemon		{ return DAEMON; }
 syslog		{ return SYSLOG; }
 invisible	{ return INVISIBLE; }

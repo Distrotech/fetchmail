@@ -21,30 +21,39 @@
 
 #include "fetchmail.h"
 #include "i18n.h"
+#include "lock.h"
 
 static char *lockfile;		/* name of lockfile */
 static int lock_acquired;	/* have we acquired a lock */
 
-void lock_setup(void)
+void lock_setup(struct runctl *ctl)
 /* set up the global lockfile name */
 {
     /* set up to do lock protocol */
-#define	FETCHMAIL_PIDFILE	"fetchmail.pid"
+    const char *const FETCHMAIL_PIDFILE="fetchmail.pid";
+
+    /* command-line option override */
+    if (ctl->pidfile) {
+	lockfile = xstrdup(ctl->pidfile);
+	return;
+    }
+
+    /* defaults */
     if (getuid() == ROOT_UID) {
-	lockfile = (char *)xmalloc(
-		sizeof(PID_DIR) + sizeof(FETCHMAIL_PIDFILE) + 1);
+	lockfile = (char *)xmalloc(strlen(PID_DIR)
+		+ strlen(FETCHMAIL_PIDFILE) + 2); /* 2: "/" and NUL */
 	strcpy(lockfile, PID_DIR);
 	strcat(lockfile, "/");
 	strcat(lockfile, FETCHMAIL_PIDFILE);
     } else {
-	lockfile = (char *)xmalloc(strlen(fmhome)+sizeof(FETCHMAIL_PIDFILE)+2);
+	lockfile = (char *)xmalloc(strlen(fmhome)
+		+ strlen(FETCHMAIL_PIDFILE) + 3); /* 3: "/", "." and NUL */
 	strcpy(lockfile, fmhome);
 	strcat(lockfile, "/");
-        if (fmhome == home)
- 	   strcat(lockfile, ".");
+	if (fmhome == home)
+	   strcat(lockfile, ".");
 	strcat(lockfile, FETCHMAIL_PIDFILE);
     }
-#undef FETCHMAIL_PIDFILE
 }
 
 static void unlockit(void)

@@ -24,6 +24,7 @@
 
 enum {
     LA_INVISIBLE = 256,
+    LA_PIDFILE,
     LA_SYSLOG,
     LA_NOSYSLOG,
     LA_POSTMASTER,
@@ -73,6 +74,7 @@ static const struct option longoptions[] = {
   {"nosyslog",	no_argument,	   (int *) 0, LA_NOSYSLOG },
   {"fetchmailrc",required_argument,(int *) 0, 'f' },
   {"idfile",	required_argument, (int *) 0, 'i' },
+  {"pidfile",	required_argument, (int *) 0, LA_PIDFILE },
   {"postmaster",required_argument, (int *) 0, LA_POSTMASTER },
   {"nobounce",	no_argument,	   (int *) 0, LA_NOBOUNCE },
 
@@ -286,6 +288,9 @@ int parsecmdline (int argc /** argument count */,
 	    break;
 	case 'i':
 	    rctl->idfile = prependdir (optarg, currentwd);
+	    break;
+	case LA_PIDFILE:
+	    rctl->pidfile = prependdir (optarg, currentwd);
 	    break;
 	case LA_POSTMASTER:
 	    rctl->postmaster = (char *) xstrdup(optarg);
@@ -591,6 +596,7 @@ int parsecmdline (int argc /** argument count */,
 	P(GT_("      --invisible   don't write Received & enable host spoofing\n"));
 	P(GT_("  -f, --fetchmailrc specify alternate run control file\n"));
 	P(GT_("  -i, --idfile      specify alternate UIDs file\n"));
+	P(GT_("      --pidfile     specify alternate PID (lock) file\n"));
 	P(GT_("      --postmaster  specify recipient of last resort\n"));
 	P(GT_("      --nobounce    redirect bounces from user to postmaster.\n"));
 #ifdef CAN_MONITOR
@@ -621,7 +627,7 @@ int parsecmdline (int argc /** argument count */,
 	P(GT_("      --tracepolls  add poll-tracing information to Received header\n"));
 
 	P(GT_("  -u, --username    specify users's login on server\n"));
-	P(GT_("  -a, --all         retrieve old and new messages\n"));
+	P(GT_("  -a, --[fetch]all  retrieve old and new messages\n"));
 	P(GT_("  -K, --nokeep      delete new messages after retrieval\n"));
 	P(GT_("  -k, --keep        save new messages after retrieval\n"));
 	P(GT_("  -F, --flush       delete old messages from server\n"));

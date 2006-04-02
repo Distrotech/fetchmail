@@ -157,15 +157,17 @@ typedef	char	flag;
 #define FLAG_TRUE	2
 #define FLAG_FALSE	1
 
+/** run control data */
 struct runctl
 {
-    char	*logfile;
-    char	*idfile;
-    int		poll_interval;
+    char	*logfile;	/** where to write log information */
+    char	*idfile;	/** where to store UID data */
+    char	*pidfile;	/** where to record the PID of daemon mode processes */
     char	*postmaster;
+    char	*properties;
+    int		poll_interval;
     flag	bouncemail;
     flag	spambounce;
-    char	*properties;
     flag	use_syslog;
     flag	invisible;
     flag	showdots;
@@ -504,14 +506,6 @@ int gen_recv();
 int gen_transact();
 #endif
 extern struct msgblk msgblk;
-
-/* lock.c: concurrency locking */
-void lock_setup(void);
-void lock_assert(void);
-void lock_or_die(void);
-void fm_lock_release(void);
-int lock_state(void);
-void lock_dispose(void);
 
 /* use these to track what was happening when the nonresponse timer fired */
 #define GENERAL_WAIT	0	/* unknown wait type */
