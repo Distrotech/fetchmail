@@ -441,7 +441,7 @@ int SockRead(int sock, char *buf, int len)
 		} else if ((newline = memchr(bp, '\n', n)) != NULL)
 			n = newline - bp + 1;
 		/* Matthias Andree: SSL_read can return 0, in that case
-		 * we must cal SSL_get_error to figure if there was
+		 * we must call SSL_get_error to figure if there was
 		 * an error or just a "no data" condition */
 		if ((n = SSL_read(ssl, bp, n)) <= 0) {
 			if ((n = SSL_get_error(ssl, n))) {
