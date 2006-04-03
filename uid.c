@@ -1,5 +1,5 @@
-/*
- * uid.c -- UIDL handling for POP3 servers without LAST
+/**
+ * \file uid.c -- UIDL handling for POP3 servers without LAST
  *
  * For license terms, see the file COPYING in this directory.
  */
@@ -359,15 +359,16 @@ struct idlist *str_in_list(struct idlist **idl, const char *str, const flag case
     return NULL;
 }
 
-int str_nr_in_list( struct idlist **idl, const char *str )
-  /* return the position of str in idl */
+/** return the position of first occurrence of \a str in \a idl */
+int str_nr_in_list(struct idlist **idl, const char *str)
 {
     int nr;
     struct idlist *walk;
-    if ( !str )
+
+    if (!str)
         return -1;
-    for( walk = *idl, nr = 0; walk; nr ++, walk = walk->next )
-        if( strcmp( str, walk->id) == 0 )
+    for (walk = *idl, nr = 0; walk; nr ++, walk = walk->next)
+        if (strcmp(str, walk->id) == 0)
 	    return nr;
     return -1;
 }
