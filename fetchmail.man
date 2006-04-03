@@ -340,11 +340,12 @@ POP3, ETRN, or ODMR.
 .B \-\-tracepolls
 (Keyword: tracepolls)
 Tell fetchmail to poll trace information in the form 'polling %s
-account %s' to the Received line it generates, where the %s parts are
-replaced by the user's remote name and the poll label (the Received
-header also normally includes the server's true name).  This can be
-used to facilitate mail filtering based on the account it is being
-received from.
+account %s' and 'folder %s' to the Received line it generates,
+where the %s parts are replaced by the user's remote name, the poll
+label, and the folder (mailbox) where available (the Received header
+also normally includes the server's true name).  This can be used to
+facilitate mail filtering based on the account it is being received
+from. The folder information is written only since version 6.3.4.
 .TP
 .B \-\-ssl
 (Keyword: ssl)
@@ -2498,6 +2499,9 @@ in foreground while a background fetchmail is running will do
 whichever of these is appropriate to wake it up.
 
 .SH BUGS AND KNOWN PROBLEMS
+.PP
+Please check the \fBNEWS\fP file that shipped with fetchmail for more
+known bugs than those listed here.
 .PP
 The assumptions that the DNS and in particular the checkalias options
 make are not often sustainable. For instance, it has become uncommon for
