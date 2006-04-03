@@ -653,6 +653,13 @@ static void trim(char *s) {
     s[0] = '\0';
 }
 
+/* XXX FIXME: using the Message-ID is unsafe, some messages (spam,
+ * broken messages) do not have Message-ID headers, and messages without
+ * those appear to break this code and cause fetchmail (at least version
+ * 6.2.3) to not delete such messages properly after retrieval.
+ * See Sourceforge Bug #780933.
+ *
+ * The other problem is that the TOP command itself is optional, too... */
 static int pop3_gettopid(int sock, int num , char *id, size_t idsize)
 {
     int ok;
@@ -674,6 +681,8 @@ static int pop3_gettopid(int sock, int num , char *id, size_t idsize)
 	    trim(id);
 	}
     }
+    /* XXX FIXME: do not return success here if no Message-ID header was
+     * found. */
     return 0;
 }
 
@@ -782,6 +791,10 @@ static int pop3_fastuidl( int sock,  struct query *ctl, unsigned int count, int 
 
 static int pop3_slowuidl( int sock,  struct query *ctl, int *countp, int *newp)
 {
+    /* XXX FIXME: this code is severely broken. A Cc:d mailing list
+     * message will arrive twice with the same Message-ID, so this
+     * slowuidl code will break. Same goes for messages without
+     * Message-ID headers at all. This code would best be removed. */
     /* This approach tries to get the message headers from the
      * remote hosts and compares the message-id to the already known
      * ones:
@@ -897,8 +910,8 @@ static int pop3_getrange(int sock,
 	return(ok);
 
     /*
-     * Newer, RFC-1725/1939-conformant POP servers may not have the LAST command.
-     * We work as hard as possible to hide this, but it makes
+     * Newer, RFC-1725/1939-conformant POP servers may not have the LAST
+     * command.  We work as hard as possible to hide this, but it makes
      * counting new messages intrinsically quadratic in the worst case.
      */
     last = 0;
