@@ -29,6 +29,15 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 
 fetchmail 6.3.4 (not yet released):
 
+# KNOWN BUGS AND WORKAROUNDS:
+  (this section floats upwards through the NEWS to be on top of the list)
+* fetchmail does not handle messages without Message-ID header well
+  (See sourceforge.net bug #780933)
+* Sun Workshop 6 (SPARC) is known to miscompile the lexer in 64-bit mode.
+  Either compile 32-bit code or use GCC to compile 64-bit fetchmail.
+  Note that fetchmail doesn't take advantage of 64-bit code anyways,
+  so compiling 32-bit SPARC code should be fine.
+
 # BUG FIXES:
 * configure: detect res_* functions properly with newer glibc ABIs.
   Patch by Miloslav Trmac.
@@ -43,12 +52,6 @@ fetchmail 6.3.4 (not yet released):
   Requested by Héctor García, Debian maintainer.
 
 fetchmail 6.3.3 (released 2006-03-30):
-
-# KNOWN BUGS:
-* Sun Workshop 6 (SPARC) is known to miscompile the lexer in 64-bit mode.
-  Either compile 32-bit code or use GCC to compile 64-bit fetchmail.
-  Note that fetchmail doesn't take advantage of 64-bit code anyways,
-  so compiling 32-bit SPARC code should be fine.
 
 # BUG FIXES:
 * SEGFAULT: Do not attempt to overwrite the netrc password if none has been
