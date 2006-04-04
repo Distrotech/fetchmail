@@ -1,14 +1,19 @@
 # Fetchmail Spanish Translation
 # Copyright 1999, 2005 Free Software Foundation, Inc.
-# Javier Kohen <jkohen@users.sourceforge.net>, 1999.
+# Javier Kohen <jkohen@users.sourceforge.net>, 1999, 2005.
+# Héctor García <hector@el-mundo.net>, 2006
 #
+# I, Matthias Andree, maintainer of fetchmail,
+# hereby chose to use Héctor's batch because apparently
+# the translation project cannot be bothered to upload
+# new .POT files :-(
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.2.6-pre8\n"
+"Project-Id-Version: fetchmail 6.3.4-rc1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-04-02 12:40+0200\n"
-"PO-Revision-Date: 2005-07-26 15:56-0300\n"
-"Last-Translator: Javier Kohen <jkohen@users.sourceforge.net>\n"
+"POT-Creation-Date: 2006-04-04 13:16+0200\n"
+"PO-Revision-Date: 2006-04-04 12:58+0200\n"
+"Last-Translator: Héctor García <hector@el-mundo.net>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,10 +34,11 @@ msgid "No, their IP addresses don't match\n"
 msgstr "No, sus direcciones IP no coinciden\n"
 
 #: checkalias.c:198
-#, fuzzy, c-format
+#, c-format
 msgid "nameserver failure while looking for '%s' during poll of %s: %s\n"
 msgstr ""
-"fallo en la resolución de nombres buscando ‘%s’ durante la consulta de %s.\n"
+"fallo en la resolución de nombres buscando ‘%s’ durante la consulta de %s: %"
+"s\n"
 
 #: checkalias.c:223
 #, c-format
@@ -64,23 +70,23 @@ msgid "Subject: Fetchmail oversized-messages warning"
 msgstr "Subject: advertencia de fetchmail, mensajes excedidos en tamaño"
 
 #: driver.c:342
-#, fuzzy, c-format
+#, c-format
 msgid "The following oversized messages were deleted on server %s account %s:"
 msgstr ""
-"Los siguientes mensajes permanecen en el servidor de correo %s por estar "
-"excedidos en tamaño:"
+"Los siguientes mensajes demasiado grandes fueron borrados en el servidor %s "
+"cuenta %s:"
 
 #: driver.c:346
-#, fuzzy, c-format
+#, c-format
 msgid "The following oversized messages remain on server %s account %s:"
 msgstr ""
-"Los siguientes mensajes permanecen en el servidor de correo %s por estar "
-"excedidos en tamaño:"
+"Los siguientes mensajes demasiado grandes permanecen en el servidor %s "
+"cuenta %s:"
 
 #: driver.c:365
-#, fuzzy, c-format
+#, c-format
 msgid "  %d msg %d octets long deleted by fetchmail."
-msgstr "  %d mensajes de %d octetos de largo omitidos por fetchmail."
+msgstr "  %d mensajes de %d octetos de largo borrados por fetchmail."
 
 #: driver.c:369
 #, c-format
@@ -290,7 +296,6 @@ msgid "Fetchmail could not get mail from %s@%s.\n"
 msgstr "Fetchmail no pudo obtener correo de %s@%s.\n"
 
 #: driver.c:1205
-#, fuzzy
 msgid ""
 "The attempt to get authorization failed.\n"
 "Since we have already succeeded in getting authorization for this\n"
@@ -302,18 +307,9 @@ msgstr ""
 "Debido a que ya hemos tenido éxito al obtener autorización para esta\n"
 "conexión, esto probablemente sea otro modo de fallo (como un servidor\n"
 "ocupado) que fetchmail no puede distinguir porque el servido no envió\n"
-"un mensaje de error útil.\n"
-"\n"
-"Sin embargo, si cambiaste los detalles de tu cuenta tras haber iniciado\n"
-"el proceso fetchmail, necesitás detener el proceso, cambiar la configu-\n"
-"ración de fetchmail y reiniciarlo.\n"
-"\n"
-"El proceso fetchmail continuará corriendo e intentando establecer la\n"
-"conexión en cada ciclo. No se enviarán más notificaciones hasta que el\n"
-"servicio sea restablecido."
+"un mensaje de error útil"
 
 #: driver.c:1211
-#, fuzzy
 msgid ""
 "\n"
 "However, if you HAVE changed your account details since starting the\n"
@@ -324,15 +320,10 @@ msgid ""
 "at each cycle.  No future notifications will be sent until service\n"
 "is restored."
 msgstr ""
-"El intento de obtener autorización falló.\n"
-"Debido a que ya hemos tenido éxito al obtener autorización para esta\n"
-"conexión, esto probablemente sea otro modo de fallo (como un servidor\n"
-"ocupado) que fetchmail no puede distinguir porque el servido no envió\n"
-"un mensaje de error útil.\n"
 "\n"
 "Sin embargo, si cambiaste los detalles de tu cuenta tras haber iniciado\n"
-"el proceso fetchmail, necesitás detener el proceso, cambiar la configu-\n"
-"ración de fetchmail y reiniciarlo.\n"
+"el proceso fetchmail, necesitás detener el proceso, cambiar la\n"
+"configuración de fetchmail y reiniciarlo.\n"
 "\n"
 "El proceso fetchmail continuará corriendo e intentando establecer la\n"
 "conexión en cada ciclo. No se enviarán más notificaciones hasta que el\n"
@@ -479,24 +470,23 @@ msgid "DNS lookup"
 msgstr "búsqueda en DNS"
 
 #: driver.c:1556
-#, fuzzy
 msgid "undefined"
-msgstr "error indefinido\n"
+msgstr "no definido"
 
 #: driver.c:1562
-#, fuzzy, c-format
+#, c-format
 msgid "%s error while fetching from %s@%s and delivering to SMTP host %s\n"
-msgstr "error ‘%s’ durante el envío a la máquina SMTP %s\n"
+msgstr ""
+"error %s durante la recepción de %s@%s y la entrega al servidor SMTP %s\n"
 
 #: driver.c:1564
-#, fuzzy
 msgid "unknown"
-msgstr "máquina desconocida."
+msgstr "desconocido"
 
 #: driver.c:1566
-#, fuzzy, c-format
+#, c-format
 msgid "%s error while fetching from %s@%s\n"
-msgstr "error ‘%s’ recibiendo de %s\n"
+msgstr "error %s recibiendo de %s@%s\n"
 
 #: driver.c:1577
 #, c-format
@@ -576,6 +566,8 @@ msgstr "gethostbyname falló para %s\n"
 #: env.c:168
 msgid "Cannot find my own host in hosts database to qualify it!\n"
 msgstr ""
+"¡No puedo encontrar mi propio nombre de máquina en la base de datos para "
+"cualificarlo!\n"
 
 #: env.c:172
 msgid ""
@@ -584,6 +576,9 @@ msgid ""
 "problems!\n"
 "DO repair your /etc/hosts, DNS, NIS or LDAP instead.\n"
 msgstr ""
+"Intentando seguir con un nombre de máquina no cualificado.\n"
+"¡NO reporte lineas Received:, HELO/EHLO rotas o problemas similares!\n"
+"En su lugar repare su /etc/hosts, DNS, NIS o LDAP.\n"
 
 #: etrn.c:49 odmr.c:60
 #, c-format
@@ -642,9 +637,8 @@ msgid "Option --flush is not supported with ETRN\n"
 msgstr "La opción --keep no es soportada con ETRN\n"
 
 #: etrn.c:162
-#, fuzzy
 msgid "Option --folder is not supported with ETRN\n"
-msgstr "La opción --keep no es soportada con ETRN\n"
+msgstr "La opción --folder no está soportada con ETRN\n"
 
 #: etrn.c:166
 msgid "Option --check is not supported with ETRN\n"
@@ -657,6 +651,10 @@ msgid ""
 "Wilson\n"
 "Copyright (C) 2005-2006 Matthias Andree, Sunil Shetye\n"
 msgstr ""
+"Copyright (C) 2002, 2003 Eric S. Raymond\n"
+"Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Rob F. Funk, Graham "
+"Wilson\n"
+"Copyright (C) 2005-2006 Matthias Andree, Sunil Shetye\n"
 
 #: fetchmail.c:136
 msgid ""
@@ -664,10 +662,14 @@ msgid ""
 "are welcome to redistribute it under certain conditions. For details,\n"
 "please see the file COPYING in the source or documentation directory.\n"
 msgstr ""
+"Fetchmail viene sin NINGUNA GARANTIA. Esto es software libre, y eres\n"
+"bienvenido a redistribuirlo bajo ciertas condiciones. Para más detalles,\n"
+"por favor lee el archivo COPYING en el directorio de fuentes o "
+"documentación.\n"
 
 #: fetchmail.c:170
 msgid "WARNING: Running as root is discouraged.\n"
-msgstr "ADVERTENCIA: se recomienda no ejecutar esta aplicación como root.\n"
+msgstr "ADVERTENCIA: Se recomienda no ejecutar esta aplicación como root.\n"
 
 #: fetchmail.c:182
 msgid "fetchmail: invoked with"
@@ -913,10 +915,10 @@ msgstr ""
 "Cuidado: múltiple mención de la máquina %s en el archivo de configuración\n"
 
 #: fetchmail.c:1058
-#, fuzzy
 msgid "fetchmail: Error: multiple \"defaults\" records in config file.\n"
 msgstr ""
-"Cuidado: múltiple mención de la máquina %s en el archivo de configuración\n"
+"fetchmail: Error: múltiples entradas \"defaults\" en el archivo de "
+"configuración.\n"
 
 #: fetchmail.c:1180
 msgid "SSL support is not compiled in.\n"
@@ -942,17 +944,20 @@ msgstr ""
 "postmaster!\n"
 
 #: fetchmail.c:1240
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "fetchmail: %s configuration invalid, specify positive port number for "
 "service or port\n"
 msgstr ""
-"La configuración %s es inválida, el número de puerto no puede ser negativo\n"
+"fetchmail: La configuración %s es inválida, especifique un número de puerto "
+"positivo para el servicio o puerto\n"
 
 #: fetchmail.c:1247
-#, fuzzy, c-format
+#, c-format
 msgid "fetchmail: %s configuration invalid, RPOP requires a privileged port\n"
-msgstr "configuración de %s inválida, RPOP requiere un puerto privilegiado\n"
+msgstr ""
+"fetchmail: configuración de %s inválida, RPOP requiere un puerto "
+"privilegiado\n"
 
 #: fetchmail.c:1265
 #, c-format
@@ -1128,9 +1133,8 @@ msgid "  Password authentication will be forced.\n"
 msgstr "  Se forzará autenticación con clave.\n"
 
 #: fetchmail.c:1558
-#, fuzzy
 msgid "  MSN authentication will be forced.\n"
-msgstr "  Se forzará autenticación NTLM.\n"
+msgstr "  Se forzará autenticación MSN.\n"
 
 #: fetchmail.c:1561
 msgid "  NTLM authentication will be forced.\n"
@@ -1237,22 +1241,20 @@ msgstr ""
 "off).\n"
 
 #: fetchmail.c:1627
-#, fuzzy
 msgid ""
 "  Oversized messages will be flushed before message retrieval (--limitflush "
 "on).\n"
 msgstr ""
-"  Los mensajes viejos serán eliminados antes de recibir nuevos (--flush "
-"on).\n"
+"  Los mensajes demasiado grandes serán eliminados antes de recibir nuevos (--"
+"limitflush on).\n"
 
 #: fetchmail.c:1628
-#, fuzzy
 msgid ""
 "  Oversized messages will not be flushed before message retrieval (--"
 "limitflush off).\n"
 msgstr ""
-"  No se eliminarán los mensajes viejos antes de recibir nuevos (--flush "
-"off).\n"
+"  No se eliminarán los mensajes demasiado grandes antes de recibir nuevos (--"
+"limitflush off).\n"
 
 #: fetchmail.c:1630
 msgid "  Rewrite of server-local addresses is enabled (--norewrite off).\n"
@@ -1518,9 +1520,9 @@ msgid "  Envelope header is assumed to be: %s\n"
 msgstr "  Se asume que el encabezado de la envoltura es: %s\n"
 
 #: fetchmail.c:1808
-#, fuzzy, c-format
+#, c-format
 msgid "  Number of envelope headers to be skipped over: %d\n"
-msgstr "  Número del encabezado de la envoltura a ser procesado: %d\n"
+msgstr "  Número de cabeceras a saltar: %d\n"
 
 #: fetchmail.c:1811
 #, c-format
@@ -1705,11 +1707,9 @@ msgid "Required LOGIN capability not supported by server\n"
 msgstr "La capacidad LOGIN requerida no es soportada por el servidor\n"
 
 #: imap.c:602
-#, fuzzy, c-format
+#, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
-msgstr ""
-"el mensaje %s@%s:%d no tenía la longitud esperada (%d actual != %d "
-"esperada)\n"
+msgstr "inconsistencia en borrado de mensajes (%d actual != %d esperado)\n"
 
 #: imap.c:706 imap.c:765
 msgid "re-poll failed\n"
@@ -1749,11 +1749,11 @@ msgid "search for unseen messages failed\n"
 msgstr "la búsqueda de mensajes no visto falló\n"
 
 #: imap.c:823
-#, fuzzy, c-format
+#, c-format
 msgid "%lu is unseen\n"
-msgstr "%u no fue visto\n"
+msgstr "%lu no fue visto\n"
 
-#: imap.c:835 pop3.c:775
+#: imap.c:835 pop3.c:784
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u es el primero que no fue visto\n"
@@ -1762,6 +1762,8 @@ msgstr "%u es el primero que no fue visto\n"
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""
+"Aviso: ignorando información erronea acerca del tamaño de los mensajes, "
+"devuelta por el servidor\n"
 
 #: interface.c:256
 msgid "Unable to open kvm interface. Make sure fetchmail is SGID kmem."
@@ -1941,9 +1943,8 @@ msgid "Option --flush is not supported with ODMR\n"
 msgstr "La opción --flush no es soportada con ODMR\n"
 
 #: odmr.c:250
-#, fuzzy
 msgid "Option --folder is not supported with ODMR\n"
-msgstr "La opción --flush no es soportada con ODMR\n"
+msgstr "La opción --folder no es soportada con ODMR\n"
 
 #: odmr.c:254
 msgid "Option --check is not supported with ODMR\n"
@@ -2060,9 +2061,8 @@ msgid "  -i, --idfile      specify alternate UIDs file\n"
 msgstr "  -i, --idfile      especificar archivo de UIDs alterno\n"
 
 #: options.c:599
-#, fuzzy
 msgid "      --pidfile     specify alternate PID (lock) file\n"
-msgstr "  -i, --idfile      especificar archivo de UIDs alterno\n"
+msgstr "      --pidfile     especificar archivo de PID (bloqueo) alternativo\n"
 
 #: options.c:600
 msgid "      --postmaster  specify recipient of last resort\n"
@@ -2093,9 +2093,10 @@ msgid "      --sslcert     ssl client certificate\n"
 msgstr "      --sslcert     certificado ssl del cliente\n"
 
 #: options.c:610
-#, fuzzy
 msgid "      --sslcertck   do strict server certificate check (recommended)\n"
-msgstr "      --sslcert     certificado ssl del cliente\n"
+msgstr ""
+"      --sslcertck   comprobar estrictamente el certificado del servidor "
+"(recomendado)\n"
 
 #: options.c:611
 msgid "      --sslcertpath path to ssl certificates\n"
@@ -2134,15 +2135,16 @@ msgid "  -U, --uidl        force the use of UIDLs (pop3 only)\n"
 msgstr "  -U, --uidl        forzar el uso de UIDLs (sólo pop3)\n"
 
 #: options.c:620
-#, fuzzy
 msgid "      --port        TCP port to connect to (obsolete, use --service)\n"
-msgstr "  -P, --port        puerto TCP/IP al cual conectarse\n"
+msgstr ""
+"      --port        puerto TCP al cual conectarse (obsoleto, use --service)\n"
 
 #: options.c:621
-#, fuzzy
 msgid ""
 "  -P, --service     TCP service to connect to (can be numeric TCP port)\n"
-msgstr "  -P, --port        puerto TCP/IP al cual conectarse\n"
+msgstr ""
+"  -P, --service     puerto TCP al cual conectarse (puede ser un puerto TCP "
+"numérico)\n"
 
 #: options.c:622
 msgid "      --auth        authentication type (password/kerberos/ssh/otp)\n"
@@ -2178,9 +2180,8 @@ msgstr ""
 "  -u, --username    especificar el ‘login’ del usuario en el servidor\n"
 
 #: options.c:630
-#, fuzzy
 msgid "  -a, --[fetch]all  retrieve old and new messages\n"
-msgstr "  -a, --all         recibir mensajes viejos y nuevos\n"
+msgstr "  -a, --[fetch]all  recibir mensajes viejos y nuevos\n"
 
 #: options.c:631
 msgid "  -K, --nokeep      delete new messages after retrieval\n"
@@ -2195,9 +2196,8 @@ msgid "  -F, --flush       delete old messages from server\n"
 msgstr "  -F, --flush       borrar viejos mensajes del servidor\n"
 
 #: options.c:634
-#, fuzzy
 msgid "      --limitflush  delete oversized messages\n"
-msgstr "  -F, --flush       borrar viejos mensajes del servidor\n"
+msgstr "      --limitflush  borrar mensajes demasiado grandes\n"
 
 #: options.c:635
 msgid "  -n, --norewrite   don't rewrite header addresses\n"
@@ -2287,6 +2287,8 @@ msgid ""
 "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
 "of TOP.\n"
 msgstr ""
+"Aviso: encontrado \"Maillennium POP3/PROXY server\", usando el comando RETR "
+"en lugar de TOP.\n"
 
 #: pop3.c:586
 msgid "Required APOP timestamp not found in greeting\n"
@@ -2304,41 +2306,40 @@ msgstr "Pedido de protocolo indefinido en POP3_auth\n"
 msgid "lock busy!  Is another session active?\n"
 msgstr "¡bloqueo ocupado! ¿Hay otra sesión activa?\n"
 
-#: pop3.c:695
+#: pop3.c:704
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "No se puede manejar la respuesta UIDL proveniente del servidor.\n"
 
-#: pop3.c:718
+#: pop3.c:727
 msgid "Server responded with UID for wrong message.\n"
 msgstr "El servidor devolvió el UID de un mensaje incorrecto.\n"
 
-#: pop3.c:745 pop3.c:987
+#: pop3.c:754 pop3.c:1000
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) fue borrado, ¡pero aún se encuentra presente!\n"
 
-#: pop3.c:754 pop3.c:766 pop3.c:996 pop3.c:1003
+#: pop3.c:763 pop3.c:775 pop3.c:1009 pop3.c:1016
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u no fue visto\n"
 
-#: pop3.c:847
+#: pop3.c:860
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "Mensajes insertados en una lista en el servidor. No se puede manejar esto.\n"
 
-#: pop3.c:939
+#: pop3.c:952
 msgid "protocol error\n"
 msgstr "error de protocolo\n"
 
-#: pop3.c:955
+#: pop3.c:968
 msgid "protocol error while fetching UIDLs\n"
 msgstr "error de protocolo durante la recepción de UIDLs\n"
 
-#: pop3.c:1324
-#, fuzzy
+#: pop3.c:1337
 msgid "Option --folder is not supported with POP3\n"
-msgstr "La opción --remote no es soportada con POP3\n"
+msgstr "La opción --folder no está soportada con POP3\n"
 
 #: rcfile_y.y:124
 msgid "server option after user options"
@@ -2583,18 +2584,18 @@ msgid "MD5 result is: \n"
 msgstr "El resultado de MD5 es: \n"
 
 #: servport.c:52
-#, fuzzy, c-format
+#, c-format
 msgid "getaddrinfo(NULL, \"%s\") error: %s\n"
-msgstr "fetchmail: getaddrinfo(%s.%s)\n"
+msgstr "getaddrinfo(NULL, \"%s\") error: %s\n"
 
 #: servport.c:78
 #, c-format
 msgid "Cannot resolve service %s to port number.\n"
-msgstr ""
+msgstr "No se puede resolver el servicio %s al número de puerto.\n"
 
 #: servport.c:79
 msgid "Please specify the service as decimal port number.\n"
-msgstr ""
+msgstr "Por favor especifique el servicio como un numero de puerto decimal.\n"
 
 #: sink.c:220
 #, c-format
@@ -2765,13 +2766,14 @@ msgid "execvp(%s) failed\n"
 msgstr "execvp(%s) falló\n"
 
 #: socket.c:281
-#, fuzzy, c-format
+#, c-format
 msgid "getaddrinfo(\"%s\",\"%s\") error: %s\n"
-msgstr "fetchmail: getaddrinfo(%s.%s)\n"
+msgstr "getaddrinfo(\"%s\",\"%s\") error: %s\n"
 
 #: socket.c:284
 msgid "Try adding the --service option (see also FAQ item R12).\n"
 msgstr ""
+"Pruebe añadiendo la opción --service (vea también el elemento R12 del FAQ).\n"
 
 #: socket.c:626
 #, c-format
@@ -2981,7 +2983,7 @@ msgstr "escribiendo texto del mensaje\n"
 msgid "Old UID list from %s:"
 msgstr "Lista de UID viejas de %s:"
 
-#: uid.c:253 uid.c:264 uid.c:520 uid.c:570
+#: uid.c:253 uid.c:264 uid.c:521 uid.c:571
 msgid " <empty>"
 msgstr " <vacía>"
 
@@ -2989,56 +2991,56 @@ msgstr " <vacía>"
 msgid "Scratch list of UIDs:"
 msgstr "Lista borrador de UIDs:"
 
-#: uid.c:514 uid.c:566
+#: uid.c:515 uid.c:567
 #, c-format
 msgid "Merged UID list from %s:"
 msgstr "Se combinó la lista de UID de %s:"
 
-#: uid.c:516
+#: uid.c:517
 #, c-format
 msgid "New UID list from %s:"
 msgstr "Lista de UID nuevas de %s:"
 
-#: uid.c:545
+#: uid.c:546
 msgid "swapping UID lists\n"
 msgstr "se intercambian listas de UID\n"
 
-#: uid.c:553
+#: uid.c:554
 msgid "not swapping UID lists, no UIDs seen this query\n"
 msgstr ""
 "no se intercambian las listas de UID, no se encontraron UIDs en esta "
 "consulta\n"
 
-#: uid.c:578
+#: uid.c:579
 msgid "discarding new UID list\n"
 msgstr "descartando la nueva lista de UID\n"
 
-#: uid.c:613
+#: uid.c:614
 msgid "Deleting fetchids file.\n"
 msgstr "Borrando el archivo fetchids.\n"
 
-#: uid.c:615
+#: uid.c:616
 #, c-format
 msgid "Error deleting %s: %s\n"
 msgstr "Error borrando %s: %s\n"
 
-#: uid.c:621
+#: uid.c:622
 msgid "Writing fetchids file.\n"
 msgstr "Escribiendo el archivo fetchids.\n"
 
-#: uid.c:640
+#: uid.c:641
 #, c-format
 msgid "Error writing to fetchids file %s, old file left in place.\n"
 msgstr ""
 "Error escribiendo al archivo fetchids %s. Se dejó el archivo original "
 "intacto.\n"
 
-#: uid.c:644
+#: uid.c:645
 #, c-format
 msgid "Cannot rename fetchids file %s to %s: %s\n"
 msgstr "No se puede renombrar el archivo fetchids %s a %s: %s\n"
 
-#: uid.c:648
+#: uid.c:649
 #, c-format
 msgid "Cannot open fetchids file %s for writing: %s\n"
 msgstr "No se puede abrir el archivo fetchids %s para escritura: %s\n"
