@@ -44,6 +44,8 @@ fetchmail 6.3.4 (not yet released):
 * tracepolls: add folder information if available. Reported by Terry Brown.
 * lexer: add %option noyywrap to avoid link errors about missing yywrap().
 * a few more type fixes for report/snprintf, patch by Miloslav Trmac.
+* bouncing: fetchmail would still send "General SMTP/ESMTP error." bounces
+  in spite of "no bouncemail" configuration.
 
 # CHANGES:
 * pidfile: there is a new command-line (--pidfile PATH) and global option for

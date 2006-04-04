@@ -539,7 +539,8 @@ static int handle_smtp_report(struct query *ctl, struct msgblk *msg)
 	/* bounce non-transient errors back to the sender */
 	if (smtperr >= 500 && smtperr <= 599)
 	{
-	    send_bouncemail(ctl, msg, XMIT_ACCEPT,
+	    if (run.bouncemail)
+		send_bouncemail(ctl, msg, XMIT_ACCEPT,
 				"General SMTP/ESMTP error.\r\n", 
 				1, responses);
 	    free(responses[0]);
