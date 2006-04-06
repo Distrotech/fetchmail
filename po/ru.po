@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.2-rc2\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-04-02 12:40+0200\n"
+"POT-Creation-Date: 2006-04-04 13:16+0200\n"
 "PO-Revision-Date: 2006-01-17 13:36+0200\n"
 "Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -1743,7 +1743,7 @@ msgstr "поиск не просмотренных сообщений завершился неудачей\n"
 msgid "%lu is unseen\n"
 msgstr "%u не просмотрено\n"
 
-#: imap.c:835 pop3.c:775
+#: imap.c:835 pop3.c:784
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u первое не просмотренное\n"
@@ -2291,37 +2291,37 @@ msgstr "Неопределенный запрос протокола в POP3_auth\n"
 msgid "lock busy!  Is another session active?\n"
 msgstr "блокировка занятости!  Может активен другой сеанс?\n"
 
-#: pop3.c:695
+#: pop3.c:704
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "Невозможно обработать UIDL-ответ upstream-сервера.\n"
 
-#: pop3.c:718
+#: pop3.c:727
 msgid "Server responded with UID for wrong message.\n"
 msgstr "Сервер возвратил ответ с UID для неверного сообщения.\n"
 
-#: pop3.c:745 pop3.c:987
+#: pop3.c:754 pop3.c:1000
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (номер=%d) было удалено, но все еще присутствует!\n"
 
-#: pop3.c:754 pop3.c:766 pop3.c:996 pop3.c:1003
+#: pop3.c:763 pop3.c:775 pop3.c:1009 pop3.c:1016
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u не просмотрено\n"
 
-#: pop3.c:847
+#: pop3.c:860
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr "Сообщения добавлены в список на сервере. Обработка невозможна.\n"
 
-#: pop3.c:939
+#: pop3.c:952
 msgid "protocol error\n"
 msgstr "ошибка протокола\n"
 
-#: pop3.c:955
+#: pop3.c:968
 msgid "protocol error while fetching UIDLs\n"
 msgstr "ошибка протокола при выборке UIDL'ов\n"
 
-#: pop3.c:1324
+#: pop3.c:1337
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Опция --folder не поддерживается с POP3\n"
 
@@ -2960,7 +2960,7 @@ msgstr "записывается текст сообщения\n"
 msgid "Old UID list from %s:"
 msgstr "Старый список UID из %s:"
 
-#: uid.c:253 uid.c:264 uid.c:520 uid.c:570
+#: uid.c:253 uid.c:264 uid.c:521 uid.c:571
 msgid " <empty>"
 msgstr " <пусто>"
 
@@ -2968,52 +2968,52 @@ msgstr " <пусто>"
 msgid "Scratch list of UIDs:"
 msgstr "Временный список UID'ов:"
 
-#: uid.c:514 uid.c:566
+#: uid.c:515 uid.c:567
 #, c-format
 msgid "Merged UID list from %s:"
 msgstr "Объединенный список UID из %s:"
 
-#: uid.c:516
+#: uid.c:517
 #, c-format
 msgid "New UID list from %s:"
 msgstr "Новый список UID из %s:"
 
-#: uid.c:545
+#: uid.c:546
 msgid "swapping UID lists\n"
 msgstr "обмениваются списки UID\n"
 
-#: uid.c:553
+#: uid.c:554
 msgid "not swapping UID lists, no UIDs seen this query\n"
 msgstr "списки UID не обмениваются, в этом запросе нет UID'ов\n"
 
-#: uid.c:578
+#: uid.c:579
 msgid "discarding new UID list\n"
 msgstr "отбрасывается новый список UID\n"
 
-#: uid.c:613
+#: uid.c:614
 msgid "Deleting fetchids file.\n"
 msgstr "Удаляется файл fetchids.\n"
 
-#: uid.c:615
+#: uid.c:616
 #, c-format
 msgid "Error deleting %s: %s\n"
 msgstr "Ошибка удаления %s: %s\n"
 
-#: uid.c:621
+#: uid.c:622
 msgid "Writing fetchids file.\n"
 msgstr "Записывается файл fetchids.\n"
 
-#: uid.c:640
+#: uid.c:641
 #, c-format
 msgid "Error writing to fetchids file %s, old file left in place.\n"
 msgstr "Ошибка записи в fetchids-файл %s, старый файл остался на месте.\n"
 
-#: uid.c:644
+#: uid.c:645
 #, c-format
 msgid "Cannot rename fetchids file %s to %s: %s\n"
 msgstr "Невозможно переименовать fetchids-файл %s в %s: %s\n"
 
-#: uid.c:648
+#: uid.c:649
 #, c-format
 msgid "Cannot open fetchids file %s for writing: %s\n"
 msgstr "Невозможно открыть fetchids-файл %s для записи: %s\n"

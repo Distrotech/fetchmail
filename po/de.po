@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.2-pre1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-04-02 12:40+0200\n"
+"POT-Creation-Date: 2006-04-04 13:16+0200\n"
 "PO-Revision-Date: 2006-01-06 14:24+0100\n"
 "Last-Translator: Matthias Andree <matthias.andree>\n"
 "Language-Team: Deutsch <de@li.org>\n"
@@ -1742,7 +1742,7 @@ msgstr "Suche nach ungesehenen Nachrichten fehlgeschlagen\n"
 msgid "%lu is unseen\n"
 msgstr "%lu ist ungesehen\n"
 
-#: imap.c:835 pop3.c:775
+#: imap.c:835 pop3.c:784
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u ist erste ungesehene\n"
@@ -2271,37 +2271,37 @@ msgstr "Anfrage nach undefiniertem Protokoll in POP3_auth\n"
 msgid "lock busy!  Is another session active?\n"
 msgstr "Lock beschäftigt!  Ist eine weitere Sitzung aktiv?\n"
 
-#: pop3.c:695
+#: pop3.c:704
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "Kann die UIDL-Antwort des Servers nicht verarbeiten.\n"
 
-#: pop3.c:718
+#: pop3.c:727
 msgid "Server responded with UID for wrong message.\n"
 msgstr "Server hat mit UID der falschen Nachricht geantwortet.\n"
 
-#: pop3.c:745 pop3.c:987
+#: pop3.c:754 pop3.c:1000
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (id=%d) wurde gelöscht, ist aber immer noch da!\n"
 
-#: pop3.c:754 pop3.c:766 pop3.c:996 pop3.c:1003
+#: pop3.c:763 pop3.c:775 pop3.c:1009 pop3.c:1016
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u ist ungesehen\n"
 
-#: pop3.c:847
+#: pop3.c:860
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr "Nachrichten in Liste auf Server eingefügt. Kann damit nicht umgehen.\n"
 
-#: pop3.c:939
+#: pop3.c:952
 msgid "protocol error\n"
 msgstr "Protokollfehler\n"
 
-#: pop3.c:955
+#: pop3.c:968
 msgid "protocol error while fetching UIDLs\n"
 msgstr "Protokollfehler beim Holen der UIDL\n"
 
-#: pop3.c:1324
+#: pop3.c:1337
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Option --folder wird mit POP3 nicht unterstützt\n"
 
@@ -2941,7 +2941,7 @@ msgstr "Nachrichtentext wird geschrieben\n"
 msgid "Old UID list from %s:"
 msgstr "Alte UID-Liste aus %s:"
 
-#: uid.c:253 uid.c:264 uid.c:520 uid.c:570
+#: uid.c:253 uid.c:264 uid.c:521 uid.c:571
 msgid " <empty>"
 msgstr " <leer>"
 
@@ -2949,53 +2949,53 @@ msgstr " <leer>"
 msgid "Scratch list of UIDs:"
 msgstr "Leere UID-Liste:"
 
-#: uid.c:514 uid.c:566
+#: uid.c:515 uid.c:567
 #, c-format
 msgid "Merged UID list from %s:"
 msgstr "Vereinigte UID-Liste aus %s:"
 
-#: uid.c:516
+#: uid.c:517
 #, c-format
 msgid "New UID list from %s:"
 msgstr "Neue UID-Liste aus %s:"
 
-#: uid.c:545
+#: uid.c:546
 msgid "swapping UID lists\n"
 msgstr "UID-Listen werden ausgetauscht\n"
 
-#: uid.c:553
+#: uid.c:554
 msgid "not swapping UID lists, no UIDs seen this query\n"
 msgstr ""
 "UID-Listen werden nicht ausgetauscht, in dieser Abfrage keine UIDS gesehen\n"
 
-#: uid.c:578
+#: uid.c:579
 msgid "discarding new UID list\n"
 msgstr "verwerfe neue UID-Liste\n"
 
-#: uid.c:613
+#: uid.c:614
 msgid "Deleting fetchids file.\n"
 msgstr "Datei fetchids wird gelöscht.\n"
 
-#: uid.c:615
+#: uid.c:616
 #, c-format
 msgid "Error deleting %s: %s\n"
 msgstr "Fehler beim Löschen von %s: %s\n"
 
-#: uid.c:621
+#: uid.c:622
 msgid "Writing fetchids file.\n"
 msgstr "Datei fetchids wird geschrieben.\n"
 
-#: uid.c:640
+#: uid.c:641
 #, c-format
 msgid "Error writing to fetchids file %s, old file left in place.\n"
 msgstr "Fehler beim Schreiben in die UID-Datei %s, alte Datei belassen.\n"
 
-#: uid.c:644
+#: uid.c:645
 #, c-format
 msgid "Cannot rename fetchids file %s to %s: %s\n"
 msgstr "Kann UID-Datei %s nicht in %s umbennen: %s\n"
 
-#: uid.c:648
+#: uid.c:649
 #, c-format
 msgid "Cannot open fetchids file %s for writing: %s\n"
 msgstr "Kann UID-Datei %s nicht zum Schreiben öffnen: %s\n"

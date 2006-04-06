@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.2-rc3\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-04-02 12:40+0200\n"
+"POT-Creation-Date: 2006-04-04 13:16+0200\n"
 "PO-Revision-Date: 2006-01-18 18:53+0100\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -1759,7 +1759,7 @@ msgstr "poszukiwanie nie przeczytanych listów nie powiod³o siê\n"
 msgid "%lu is unseen\n"
 msgstr "%u jest nie przeczytany\n"
 
-#: imap.c:835 pop3.c:775
+#: imap.c:835 pop3.c:784
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u jest pierwszym nie przeczytanym\n"
@@ -2308,38 +2308,38 @@ msgstr "Pro¶ba o nieznany protokó³ w POP3_auth\n"
 msgid "lock busy!  Is another session active?\n"
 msgstr "plik zablokowany! Czy inna sesja nie jest aktywna?\n"
 
-#: pop3.c:695
+#: pop3.c:704
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "Nie mo¿na obs³u¿yæ odpowiedzi UIDL od serwera.\n"
 
-#: pop3.c:718
+#: pop3.c:727
 msgid "Server responded with UID for wrong message.\n"
 msgstr "Serwer odpowiedzia³ z UID-em dla niew³a¶ciwego listu.\n"
 
-#: pop3.c:745 pop3.c:987
+#: pop3.c:754 pop3.c:1000
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) zosta³ skasowany, ale nadal istnieje!\n"
 
-#: pop3.c:754 pop3.c:766 pop3.c:996 pop3.c:1003
+#: pop3.c:763 pop3.c:775 pop3.c:1009 pop3.c:1016
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u jest nie przeczytany\n"
 
-#: pop3.c:847
+#: pop3.c:860
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "Przesy³ki zosta³y dodane do listy na serwerze. Nie mogê tego obs³u¿yæ.\n"
 
-#: pop3.c:939
+#: pop3.c:952
 msgid "protocol error\n"
 msgstr "b³±d protoko³u\n"
 
-#: pop3.c:955
+#: pop3.c:968
 msgid "protocol error while fetching UIDLs\n"
 msgstr "b³±d protoko³u podczas pobierania UIDL\n"
 
-#: pop3.c:1324
+#: pop3.c:1337
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Opcja --folder nie dzia³a z POP3\n"
 
@@ -2974,7 +2974,7 @@ msgstr "zapisujê tre¶æ listu\n"
 msgid "Old UID list from %s:"
 msgstr "Stara lista UID-ów z %s:"
 
-#: uid.c:253 uid.c:264 uid.c:520 uid.c:570
+#: uid.c:253 uid.c:264 uid.c:521 uid.c:571
 msgid " <empty>"
 msgstr " <pusty>"
 
@@ -2982,54 +2982,54 @@ msgstr " <pusty>"
 msgid "Scratch list of UIDs:"
 msgstr "Pocz±tkowa lista UID-ów:"
 
-#: uid.c:514 uid.c:566
+#: uid.c:515 uid.c:567
 #, c-format
 msgid "Merged UID list from %s:"
 msgstr "Po³±czona lista UID-ów z %s:"
 
-#: uid.c:516
+#: uid.c:517
 #, c-format
 msgid "New UID list from %s:"
 msgstr "Nowa lista UID-ów z %s:"
 
-#: uid.c:545
+#: uid.c:546
 msgid "swapping UID lists\n"
 msgstr "prze³±czanie list UID-ów\n"
 
-#: uid.c:553
+#: uid.c:554
 msgid "not swapping UID lists, no UIDs seen this query\n"
 msgstr "brak prze³±czania list UID-ów, w zapytaniu nie wyst±pi³y UID-y\n"
 
-#: uid.c:578
+#: uid.c:579
 msgid "discarding new UID list\n"
 msgstr "odrzucam now± listê UID-ów\n"
 
-#: uid.c:613
+#: uid.c:614
 msgid "Deleting fetchids file.\n"
 msgstr "Kasujê plik fetchids.\n"
 
 # XXX
-#: uid.c:615
+#: uid.c:616
 #, c-format
 msgid "Error deleting %s: %s\n"
 msgstr "B³±d podczas usuwania %s: %s\n"
 
-#: uid.c:621
+#: uid.c:622
 msgid "Writing fetchids file.\n"
 msgstr "Zapisujê plik fetchids.\n"
 
-#: uid.c:640
+#: uid.c:641
 #, c-format
 msgid "Error writing to fetchids file %s, old file left in place.\n"
 msgstr ""
 "B³±d podczas zapisu pliku fetchids %s, stary plik pozostawiono na miejscu.\n"
 
-#: uid.c:644
+#: uid.c:645
 #, c-format
 msgid "Cannot rename fetchids file %s to %s: %s\n"
 msgstr "Nie mo¿na zmieniæ nazwy pliku fetchids %s na %s: %s\n"
 
-#: uid.c:648
+#: uid.c:649
 #, c-format
 msgid "Cannot open fetchids file %s for writing: %s\n"
 msgstr "Nie mo¿na otworzyæ pliku fetchids %s do zapisu: %s\n"

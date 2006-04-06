@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.9-rc9\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-04-02 12:40+0200\n"
+"POT-Creation-Date: 2006-04-04 13:16+0200\n"
 "PO-Revision-Date: 2005-11-18 22:25+0200\n"
 "Last-Translator: Besnik Bleta <besnik@spymac.com>\n"
 "Language-Team: Albanian <translation-team-sq@lists.sourceforge.net>\n"
@@ -1740,7 +1740,7 @@ msgstr "kërkimi për mesazhe të pavërejtur dështoi\n"
 msgid "%lu is unseen\n"
 msgstr "%u është i pavërejtur\n"
 
-#: imap.c:835 pop3.c:775
+#: imap.c:835 pop3.c:784
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u është i pari i pavërejtur\n"
@@ -2269,38 +2269,38 @@ msgstr "Kërkesë protokolli e papërcaktuar në POP3_auth\n"
 msgid "lock busy!  Is another session active?\n"
 msgstr ""
 
-#: pop3.c:695
+#: pop3.c:704
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr ""
 
-#: pop3.c:718
+#: pop3.c:727
 msgid "Server responded with UID for wrong message.\n"
 msgstr "Shërbyesi u përgjigj me UID për mesazh të gabuar.\n"
 
-#: pop3.c:745 pop3.c:987
+#: pop3.c:754 pop3.c:1000
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) qe fshirë, por është ende i pranishëm!\n"
 
-#: pop3.c:754 pop3.c:766 pop3.c:996 pop3.c:1003
+#: pop3.c:763 pop3.c:775 pop3.c:1009 pop3.c:1016
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u është i pavërejtur\n"
 
-#: pop3.c:847
+#: pop3.c:860
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "Mesazhe të futur në një listë te shërbyesi. Nuk mund ta bëj dot këtë.\n"
 
-#: pop3.c:939
+#: pop3.c:952
 msgid "protocol error\n"
 msgstr "gabim protokolli\n"
 
-#: pop3.c:955
+#: pop3.c:968
 msgid "protocol error while fetching UIDLs\n"
 msgstr "gabim protokolli gjatë sjelljes së UIDL-ve\n"
 
-#: pop3.c:1324
+#: pop3.c:1337
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Mundësia --dosje nuk mbulohet me POP3\n"
 
@@ -2941,7 +2941,7 @@ msgstr "po shkruaj tekst mesazhi\n"
 msgid "Old UID list from %s:"
 msgstr "Listë e vjetër UID prej %s:"
 
-#: uid.c:253 uid.c:264 uid.c:520 uid.c:570
+#: uid.c:253 uid.c:264 uid.c:521 uid.c:571
 msgid " <empty>"
 msgstr " <bosh>"
 
@@ -2949,53 +2949,53 @@ msgstr " <bosh>"
 msgid "Scratch list of UIDs:"
 msgstr "Skicim liste UID-sh:"
 
-#: uid.c:514 uid.c:566
+#: uid.c:515 uid.c:567
 #, c-format
 msgid "Merged UID list from %s:"
 msgstr "Listë UID-sh e përzjerë prej %s:"
 
-#: uid.c:516
+#: uid.c:517
 #, c-format
 msgid "New UID list from %s:"
 msgstr "Listë e re UID-sh prej %s:"
 
-#: uid.c:545
+#: uid.c:546
 msgid "swapping UID lists\n"
 msgstr "po shkëmbejmë lista UID-sh\n"
 
-#: uid.c:553
+#: uid.c:554
 msgid "not swapping UID lists, no UIDs seen this query\n"
 msgstr "nuk po shkëmbejmë lista UID-sh, asnjë UID nuk e pa këtë kërkesë\n"
 
-#: uid.c:578
+#: uid.c:579
 msgid "discarding new UID list\n"
 msgstr "po hedh tej listë të re UID-sh\n"
 
-#: uid.c:613
+#: uid.c:614
 msgid "Deleting fetchids file.\n"
 msgstr "Po fshij kartelë \"fetchids\".\n"
 
-#: uid.c:615
+#: uid.c:616
 #, c-format
 msgid "Error deleting %s: %s\n"
 msgstr "Gabim në fshirjen e kartelës \"%s\": %s\n"
 
-#: uid.c:621
+#: uid.c:622
 msgid "Writing fetchids file.\n"
 msgstr "Po shkruaj kartelë \"fetchids\".\n"
 
-#: uid.c:640
+#: uid.c:641
 #, c-format
 msgid "Error writing to fetchids file %s, old file left in place.\n"
 msgstr ""
 "Gabim gjatë shkrimit te kartela fetchids %s, u la në vend kartela e vjetër.\n"
 
-#: uid.c:644
+#: uid.c:645
 #, c-format
 msgid "Cannot rename fetchids file %s to %s: %s\n"
 msgstr "S'riemërtoj dot kartelën fetchids %s si %s: %s\n"
 
-#: uid.c:648
+#: uid.c:649
 #, c-format
 msgid "Cannot open fetchids file %s for writing: %s\n"
 msgstr "S'hap dot kartelën fetchids %s për shkrim në të: %s\n"

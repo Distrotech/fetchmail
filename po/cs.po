@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail-6.2.6.alpha1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-04-02 12:40+0200\n"
+"POT-Creation-Date: 2006-04-04 13:16+0200\n"
 "PO-Revision-Date: 2005-07-03 03:57+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -1711,7 +1711,7 @@ msgstr "hledání nepřečtených zpráv selhalo\n"
 msgid "%lu is unseen\n"
 msgstr "%u nebyla přečtena\n"
 
-#: imap.c:835 pop3.c:775
+#: imap.c:835 pop3.c:784
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u je první nepřečtená\n"
@@ -2240,37 +2240,37 @@ msgstr "Žádost o nedefinovaný protokol v POP3_auth\n"
 msgid "lock busy!  Is another session active?\n"
 msgstr "zamčeno! Je aktivní jiné sezení?\n"
 
-#: pop3.c:695
+#: pop3.c:704
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr ""
 
-#: pop3.c:718
+#: pop3.c:727
 msgid "Server responded with UID for wrong message.\n"
 msgstr ""
 
-#: pop3.c:745 pop3.c:987
+#: pop3.c:754 pop3.c:1000
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) bylo odstraněno, ale je stále přítomno!\n"
 
-#: pop3.c:754 pop3.c:766 pop3.c:996 pop3.c:1003
+#: pop3.c:763 pop3.c:775 pop3.c:1009 pop3.c:1016
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u nebyla přečtena\n"
 
-#: pop3.c:847
+#: pop3.c:860
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr "Zprávy vloženy do seznamu na serveru. To neumím zpracovat.\n"
 
-#: pop3.c:939
+#: pop3.c:952
 msgid "protocol error\n"
 msgstr "chyba protokolu\n"
 
-#: pop3.c:955
+#: pop3.c:968
 msgid "protocol error while fetching UIDLs\n"
 msgstr "chyba protokolu při stahování UIDL\n"
 
-#: pop3.c:1324
+#: pop3.c:1337
 #, fuzzy
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Přepínač --remote není s POP3 podporován\n"
@@ -2905,7 +2905,7 @@ msgstr "zapisuji text zprávy\n"
 msgid "Old UID list from %s:"
 msgstr "Starý seznam UID z %s:"
 
-#: uid.c:253 uid.c:264 uid.c:520 uid.c:570
+#: uid.c:253 uid.c:264 uid.c:521 uid.c:571
 msgid " <empty>"
 msgstr " <prázdný>"
 
@@ -2913,53 +2913,53 @@ msgstr " <prázdný>"
 msgid "Scratch list of UIDs:"
 msgstr "Pracovní seznam UID:"
 
-#: uid.c:514 uid.c:566
+#: uid.c:515 uid.c:567
 #, c-format
 msgid "Merged UID list from %s:"
 msgstr "Sloučený seznam UID z %s:"
 
-#: uid.c:516
+#: uid.c:517
 #, c-format
 msgid "New UID list from %s:"
 msgstr "Nový seznam UID z %s:"
 
-#: uid.c:545
+#: uid.c:546
 msgid "swapping UID lists\n"
 msgstr "prohazuji seznamy UID\n"
 
-#: uid.c:553
+#: uid.c:554
 msgid "not swapping UID lists, no UIDs seen this query\n"
 msgstr "neprohazuji seznamy UID, při tomto dotazu nebyla vidět žádná UID\n"
 
-#: uid.c:578
+#: uid.c:579
 msgid "discarding new UID list\n"
 msgstr "zahazuji nový seznam UID\n"
 
-#: uid.c:613
+#: uid.c:614
 msgid "Deleting fetchids file.\n"
 msgstr "Odstraňuji soubor fetchids.\n"
 
-#: uid.c:615
+#: uid.c:616
 #, c-format
 msgid "Error deleting %s: %s\n"
 msgstr "Chyba při odstraňování %s. %s\n"
 
-#: uid.c:621
+#: uid.c:622
 msgid "Writing fetchids file.\n"
 msgstr "Zapisuji soubor fetchids.\n"
 
-#: uid.c:640
+#: uid.c:641
 #, c-format
 msgid "Error writing to fetchids file %s, old file left in place.\n"
 msgstr ""
 "Chyba při zápisu do souboru fetchids %s, starý soubor ponechán na místě.\n"
 
-#: uid.c:644
+#: uid.c:645
 #, c-format
 msgid "Cannot rename fetchids file %s to %s: %s\n"
 msgstr "Nemohu přejmenovat soubor fetchids %s na %s: %s\n"
 
-#: uid.c:648
+#: uid.c:649
 #, c-format
 msgid "Cannot open fetchids file %s for writing: %s\n"
 msgstr "Nemohu otevřít soubor fetchids %s pro zápis: %s\n"
