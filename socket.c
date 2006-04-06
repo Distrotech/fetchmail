@@ -706,10 +706,10 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 		}
 		/* Print the finger print. Note that on errors, we might print it more than once
 		 * normally; we kluge around that by using a global variable. */
-		if (_check_fp) {
+		if (_check_fp == 1) {
 			unsigned dp;
 
-			_check_fp = 0;
+			_check_fp = -1;
 			digest_tp = EVP_md5();
 			if (digest_tp == NULL) {
 				report(stderr, GT_("EVP_md5() failed!\n"));
@@ -736,16 +736,15 @@ static int SSL_verify_callback( int ok_return, X509_STORE_CTX *ctx, int strict )
 				    if (outlevel > O_NORMAL)
 					report(stdout, GT_("%s fingerprints match.\n"), _server_label);
 				} else {
-				    if (outlevel > O_SILENT)
-					report(stderr, GT_("%s fingerprints do not match!\n"), _server_label);
+				    report(stderr, GT_("%s fingerprints do not match!\n"), _server_label);
 				    return (0);
 				}
-			}
-		}
-	}
+			} /* if (_check_digest != NULL) */
+		} /* if (_check_fp) */
+	} /* if (depth == 0 && !_depth0ck) */
 
-	if (err != X509_V_OK && err != _prev_err) {
-        	_prev_err = err;
+	if (err != X509_V_OK && err != _prev_err && !(_check_fp != 0 && _check_digest && !strict)) {
+		_prev_err = err;
 		report(stderr, GT_("Server certificate verification error: %s\n"), X509_verify_cert_error_string(err));
 		/* We gave the error code, but maybe we can add some more details for debugging */
 		switch (err) {

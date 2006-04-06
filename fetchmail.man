@@ -411,10 +411,14 @@ on context.
 Causes fetchmail to strictly check the server certificate against a set of
 local trusted certificates (see the \fBsslcertpath\fR option). If the server
 certificate is not signed by one of the trusted ones (directly or indirectly),
-the SSL connection will fail. This checking should prevent man-in-the-middle
-attacks against the SSL connection. Note that CRLs are seemingly not currently
-supported by OpenSSL in certificate verification! Your system clock should
-be reasonably accurate when using this option!
+the SSL connection will fail, regardless of the \fBsslfingerprint\fR
+option. This checking should prevent man-in-the-middle attacks against
+the SSL connection. Note that CRLs are seemingly not currently supported
+by OpenSSL in certificate verification! Your system clock should be
+reasonably accurate when using this option.
+.IP
+Note that this optional behavior may become default behavior in future
+fetchmail versions.
 .TP
 .B \-\-sslcertpath <directory>
 (Keyword: sslcertpath)
@@ -432,7 +436,14 @@ hex digits must be in upper case. This is the default format OpenSSL uses,
 and the one fetchmail uses to report the fingerprint when an SSL connection
 is established. When this is specified, fetchmail will compare the server key
 fingerprint with the given one, and the connection will fail if they do not
-match. This can be used to prevent man-in-the-middle attacks.
+match regardless of the \fBsslcertck\fR setting.
+This can be used to prevent man-in-the-middle attacks, but the finger
+print from the server needs to be obtained or verified over a secure
+channel, and certainly not over the same Internet connection that
+fetchmail would use.
+.IP
+Using this option will prevent printing certificate verification errors
+as long as \-\-sslcertck is unset.
 .IP
 To obtain the fingerprint of a certificate stored in the file cert.pem,
 try:

@@ -46,6 +46,11 @@ fetchmail 6.3.4 (not yet released):
 * a few more type fixes for report/snprintf, patch by Miloslav Trmac.
 * bouncing: fetchmail would still send "General SMTP/ESMTP error." bounces
   in spite of "no bouncemail" configuration.
+* SSL/TLS: if, for a certain server, an sslfingerprint is specified and
+  sslcertck is NOT set, suppress printing SSL certificate mismatch errors.
+  (Reported by Hannes Erven.)
+* SSL/TLS: always print if the sslfingerprint mismatches, even in silent
+  mode.  (This is for consistency with certificate verification errors.)
 
 # CHANGES:
 * pidfile: there is a new command-line (--pidfile PATH) and global option for
