@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.2-rc3\n"
+"Project-Id-Version: fetchmail 6.3.4-rc1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2006-04-06 11:48+0200\n"
-"PO-Revision-Date: 2006-01-18 18:53+0100\n"
+"PO-Revision-Date: 2006-04-06 18:20+0200\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -289,7 +289,6 @@ msgid "Fetchmail could not get mail from %s@%s.\n"
 msgstr "Fetchmail nie móg³ pobraæ poczty z %s@%s.\n"
 
 #: driver.c:1205
-#, fuzzy
 msgid ""
 "The attempt to get authorization failed.\n"
 "Since we have already succeeded in getting authorization for this\n"
@@ -298,20 +297,12 @@ msgid ""
 "error message."
 msgstr ""
 "Próba uzyskania autoryzacji nie powiod³a siê.\n"
-"Poniewa¿ wcze¶niej autoryzacja dla tego po³±czenia nie uda³a siê,\n"
+"Poniewa¿ wcze¶niej autoryzacja dla tego po³±czenia uda³a siê,\n"
 "prawdopodobnie jest to inny rodzaj awarii (typu przeci±¿ony serwer),\n"
 "którego fetchmail nie mo¿e rozró¿niæ, poniewa¿ serwer nie wys³a³\n"
-"przydatnego komunikatu o b³êdzie.\n"
-"\n"
-"Mimo to, je¶li dane o koncie ZOSTA£Y zmienione od uruchomienia demona\n"
-"fetchmaila, trzeba zatrzymaæ demona, zmieniæ konfiguracjê fetchmaila\n"
-"i zrestartowaæ demona.\n"
-"\n"
-"Demon fetchmaila bêdzie nadal próbowa³ siê po³±czyæ w ka¿dym cyklu.\n"
-"Dalsze powiadomienia do czasu odzyskania us³ugi nie bêd± wysy³ane."
+"przydatnego komunikatu o b³êdzie."
 
 #: driver.c:1211
-#, fuzzy
 msgid ""
 "\n"
 "However, if you HAVE changed your account details since starting the\n"
@@ -322,13 +313,8 @@ msgid ""
 "at each cycle.  No future notifications will be sent until service\n"
 "is restored."
 msgstr ""
-"Próba uzyskania autoryzacji nie powiod³a siê.\n"
-"Poniewa¿ wcze¶niej autoryzacja dla tego po³±czenia nie uda³a siê,\n"
-"prawdopodobnie jest to inny rodzaj awarii (typu przeci±¿ony serwer),\n"
-"którego fetchmail nie mo¿e rozró¿niæ, poniewa¿ serwer nie wys³a³\n"
-"przydatnego komunikatu o b³êdzie.\n"
 "\n"
-"Mimo to, je¶li dane o koncie ZOSTA£Y zmienione od uruchomienia demona\n"
+"Jednak je¶li dane o koncie ZOSTA£Y zmienione od uruchomienia demona\n"
 "fetchmaila, trzeba zatrzymaæ demona, zmieniæ konfiguracjê fetchmaila\n"
 "i zrestartowaæ demona.\n"
 "\n"
@@ -651,7 +637,6 @@ msgid "Option --check is not supported with ETRN\n"
 msgstr "Opcja --check nie dzia³a z ETRN\n"
 
 #: fetchmail.c:132
-#, fuzzy
 msgid ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
 "Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Rob F. Funk, Graham "
@@ -661,8 +646,7 @@ msgstr ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
 "Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Rob F. Funk, Graham "
 "Wilson\n"
-"Copyright (C) 2005 Matthias Andree, Sunil Shetye\n"
-"Copyright (C) 2006 Matthias Andree\n"
+"Copyright (C) 2005-2006 Matthias Andree, Sunil Shetye\n"
 
 #: fetchmail.c:136
 msgid ""
@@ -1708,11 +1692,9 @@ msgid "Required LOGIN capability not supported by server\n"
 msgstr "Serwer nie obs³uguje wymaganej metody uwierzytelnienia LOGIN\n"
 
 #: imap.c:602
-#, fuzzy, c-format
+#, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
-msgstr ""
-"d³ugo¶æ listu %s@%s:%d nie odpowiada d³ugo¶ci zg³oszonej przez serwer (%d != "
-"%d)\n"
+msgstr "niezgodno¶æ przy usuwaniu poczty (faktyczna %d != oczekiwana %d)\n"
 
 #: imap.c:706 imap.c:765
 msgid "re-poll failed\n"
@@ -1752,17 +1734,17 @@ msgstr[2] "%d listów oczekuj±cych po usuwaniu\n"
 
 #: imap.c:795
 msgid "search for unseen messages failed\n"
-msgstr "poszukiwanie nie przeczytanych listów nie powiod³o siê\n"
+msgstr "poszukiwanie nieprzeczytanych listów nie powiod³o siê\n"
 
 #: imap.c:823
-#, fuzzy, c-format
+#, c-format
 msgid "%lu is unseen\n"
-msgstr "%u jest nie przeczytany\n"
+msgstr "%lu jest nieprzeczytany\n"
 
 #: imap.c:835 pop3.c:784
 #, c-format
 msgid "%u is first unseen\n"
-msgstr "%u jest pierwszym nie przeczytanym\n"
+msgstr "%u jest pierwszym nieprzeczytanym\n"
 
 #: imap.c:926
 msgid ""
@@ -2062,9 +2044,8 @@ msgid "  -i, --idfile      specify alternate UIDs file\n"
 msgstr "  -i, --idfile      okre¶la alternatywny plik z UID-ami\n"
 
 #: options.c:599
-#, fuzzy
 msgid "      --pidfile     specify alternate PID (lock) file\n"
-msgstr "  -i, --idfile      okre¶la alternatywny plik z UID-ami\n"
+msgstr "      --pidfile     okre¶la alternatywny plik PID (blokady)\n"
 
 #: options.c:600
 msgid "      --postmaster  specify recipient of last resort\n"
@@ -2184,9 +2165,8 @@ msgid "  -u, --username    specify users's login on server\n"
 msgstr "  -u, --username    okre¶la login u¿ytkownika na serwerze\n"
 
 #: options.c:630
-#, fuzzy
 msgid "  -a, --[fetch]all  retrieve old and new messages\n"
-msgstr "  -a, --all         pobiera wszystkie listy, stare i nowe\n"
+msgstr "  -a, --[fetch]all  pobiera wszystkie listy, stare i nowe\n"
 
 #: options.c:631
 msgid "  -K, --nokeep      delete new messages after retrieval\n"
@@ -2324,7 +2304,7 @@ msgstr "id=%s (num=%d) zosta³ skasowany, ale nadal istnieje!\n"
 #: pop3.c:763 pop3.c:775 pop3.c:1009 pop3.c:1016
 #, c-format
 msgid "%u is unseen\n"
-msgstr "%u jest nie przeczytany\n"
+msgstr "%u jest nieprzeczytany\n"
 
 #: pop3.c:860
 msgid "Messages inserted into list on server. Cannot handle this.\n"

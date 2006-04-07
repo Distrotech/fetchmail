@@ -52,6 +52,10 @@ fetchmail 6.3.4 (not yet released):
 * SSL/TLS: always print if the sslfingerprint mismatches, even in silent
   mode.  (This is for consistency with certificate verification errors.)
 
+# TRANSLATION UPDATES:
+* German/de (Matthias Andree), French/fr (Matthias Andree), Spanish/es (Héctor
+  García), Polish/pl (Jakub Bogusz)
+
 # CHANGES:
 * pidfile: there is a new command-line (--pidfile PATH) and global option for
   the rcfile (set pidfile [=] "/path/to/pidfile") option to allow overriding
