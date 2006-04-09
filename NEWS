@@ -37,6 +37,9 @@ fetchmail 6.3.4 (not yet released):
   Either compile 32-bit code or use GCC to compile 64-bit fetchmail.
   Note that fetchmail doesn't take advantage of 64-bit code anyways,
   so compiling 32-bit SPARC code should be fine.
+* The code still isn't 100% ISO-C compliant, some configurations attempt to
+  compile files that are empty after preprocessing, which can cause compiler
+  diagnostics and perhaps jam the compilation on strict compilers.
 
 # BUG FIXES:
 * configure: detect res_* functions properly with newer glibc ABIs.
