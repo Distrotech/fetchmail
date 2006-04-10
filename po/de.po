@@ -249,7 +249,7 @@ msgstr "konnte kanonischen DNS-Namen von %s (%s) nicht finden\n"
 #: driver.c:1067
 #, c-format
 msgid "%s connection to %s failed"
-msgstr "%s Verbindung zu %s fehlgeschlagen"
+msgstr "%s-Verbindung zu %s fehlgeschlagen"
 
 #: driver.c:1083
 msgid "Subject: Fetchmail unreachable-server warning."
