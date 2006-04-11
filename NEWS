@@ -65,6 +65,7 @@ fetchmail 6.3.4 (not yet released):
   the rcfile (set pidfile [=] "/path/to/pidfile") option to allow overriding
   the default location of the PID file.
   Requested by Héctor García, Debian maintainer.
+* specgen.sh: Converted to UTF-8 to support translated texts better.
 
 fetchmail 6.3.3 (released 2006-03-30):
 
