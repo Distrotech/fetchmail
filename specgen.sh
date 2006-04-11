@@ -41,7 +41,7 @@ Packager:	$packager
 URL:		http://developer.berlios.de/projects/fetchmail
 Source:		%{name}-${vervar}.tar.bz2
 Group:		Applications/Mail
-Group(pt_BR):   Aplicações/Correio Eletrônico
+Group(pt_BR):   AplicaÃ§Ãµes/Correio EletrÃ´nico
 License:	GPL
 Icon:		fetchmail.xpm
 %if "%{_vendor}" == "suse"
@@ -52,13 +52,13 @@ Requires:	smtpdaemon
 BuildPrereq:	gettext-devel openssl-devel
 BuildRoot:	/var/tmp/%{name}-%{version}
 Summary:	Full-featured POP/IMAP mail retrieval daemon
-Summary(fr):	Collecteur (POP/IMAP) de courrier électronique
+Summary(fr):	Collecteur (POP/IMAP) de courrier Ã©lectronique
 Summary(de):	Program zum Abholen von E-Mail via POP/IMAP
 Summary(pt):	Busca mensagens de um servidor usando POP ou IMAP
 Summary(es):	Recolector de correo via POP/IMAP
-Summary(pl):	Zdalny demon pocztowy do protoko³ów POP2, POP3, APOP, IMAP
-Summary(tr):	POP2, POP3, APOP, IMAP protokolleri ile uzaktan mektup alma yazýlýmý
-Summary(da):	Alsidig POP/IMAP post-afhentnings dæmon
+Summary(pl):	Zdalny demon pocztowy do protokoÅ‚Ã³w POP2, POP3, APOP, IMAP
+Summary(tr):	POP2, POP3, APOP, IMAP protokolleri ile uzaktan mektup alma yazÄ±lÄ±mÄ±
+Summary(da):	Alsidig POP/IMAP post-afhentnings dÃ¦mon
 BuildRoot: %{_tmppath}/%{name}-root
 #Keywords: mail, client, POP, POP2, POP3, APOP, RPOP, KPOP, IMAP, ETRN, ODMR, SMTP, ESMTP, GSSAPI, RPA, NTLM, CRAM-MD5, SASL
 #Destinations:	fetchmail-users@lists.berlios.de, fetchmail-announce@lists.berlios.de
@@ -74,67 +74,67 @@ Comes with an interactive GUI configurator suitable for end-users.
 
 %description -l fr
 Fetchmail est un programme qui permet d'aller rechercher du courrier
-électronique sur un serveur de mail distant. Fetchmail connait les
+Ã©lectronique sur un serveur de mail distant. Fetchmail connait les
 protocoles POP (Post Office Protocol), IMAP (Internet Mail Access
-Protocol) et délivre le courrier électronique a travers le
+Protocol) et dÃ©livre le courrier Ã©lectronique a travers le
 serveur SMTP local (habituellement sendmail).
 
 %description -l de
-Fetchmail ist ein freies, vollständiges, robustes und
+Fetchmail ist ein freies, vollstÃ¤ndiges, robustes und
 wohldokumentiertes Werkzeug zum Abholen und Weiterleiten von E-Mail,
-zur Verwendung über temporäre TCP/IP-Verbindungen (wie
+zur Verwendung Ã¼ber temporÃ¤re TCP/IP-Verbindungen (wie
 z.B. SLIP- oder PPP-Verbindungen).  Es holt E-Mail von
 entfernten Mail-Servern ab und reicht sie an das Auslieferungssystem
 der lokalen Client-Maschine weiter, damit sie dann von normalen MUAs
 ("mail user agents") wie mutt, elm, pine, (x)emacs/gnus oder mailx
-gelesen werden können.  Ein interaktiver GUI-Konfigurator für
+gelesen werden kÃ¶nnen.  Ein interaktiver GUI-Konfigurator fÃ¼r
 Endbenutzer wird mitgeliefert.
 
 %description -l pt
-Fetchmail é um programa que é usado para recuperar mensagens de um
+Fetchmail Ã© um programa que Ã© usado para recuperar mensagens de um
 servidor de mail remoto. Ele pode usar Post Office Protocol (POP)
 ou IMAP (Internet Mail Access Protocol) para isso, e entrega o mail
-através do servidor local SMTP (normalmente sendmail).
-Vem com uma interface gráfica para sua configuração. 
+atravÃ©s do servidor local SMTP (normalmente sendmail).
+Vem com uma interface grÃ¡fica para sua configuraÃ§Ã£o.
 
 %description -l es
 Fetchmail es una utilidad gratis, completa, robusta y bien documentada
-para la recepción y reenvío de correo pensada para ser usada en
+para la recepciÃ³n y reenvÃ­o de correo pensada para ser usada en
 conexiones TCP/IP temporales (como SLIP y PPP). Recibe el correo de
-servidores remotos y lo reenvía al sistema de entrega local, siendo de
+servidores remotos y lo reenvÃ­a al sistema de entrega local, siendo de
 ese modo posible leerlo con programas como mutt, elm, pine, (x)emacs/gnus
 o mailx. Contiene un configurador GUI interactivo pensado para usuarios.
 
 %description -l pl
-Fetchmail jest programem do ¶ci±gania poczty ze zdalnych serwerów
-pocztowych. Do ¶ci±gania poczty mo¿e on uzywaæ protoko³ów POP (Post Office
-Protocol) lub IMAP (Internet Mail Access Protocol). ¦ci±gniêt± pocztê
-dostarcza do koñcowych odbiorców poprzez lokalny serwer SMTP.
+Fetchmail jest programem do Å›ciÄ…gania poczty ze zdalnych serwerÃ³w
+pocztowych. Do Å›ciÄ…gania poczty moÅ¼e on uzywaÄ‡ protokoÅ‚Ã³w POP (Post Office
+Protocol) lub IMAP (Internet Mail Access Protocol). ÅšciÄ…gniÄ™tÄ… pocztÄ™
+dostarcza do koÅ„cowych odbiorcÃ³w poprzez lokalny serwer SMTP.
 
 %description -l tr
-fetchmail yazýlýmý, POP veya IMAP desteði veren bir sunucuda yer alan
-mektuplarýnýzý alýr.
+fetchmail yazÄ±lÄ±mÄ±, POP veya IMAP desteÄŸi veren bir sunucuda yer alan
+mektuplarÄ±nÄ±zÄ± alÄ±r.
 
 %description -l da
-Fetchmail er et gratis, robust, alsidigt og vel-dokumenteret værktøj 
+Fetchmail er et gratis, robust, alsidigt og vel-dokumenteret vÃ¦rktÃ¸j
 til afhentning og videresending af elektronisk post via TCP/IP
-baserede opkalds-forbindelser (såsom SLIP eller PPP forbindelser).   
+baserede opkalds-forbindelser (sÃ¥som SLIP eller PPP forbindelser).
 Den henter post fra en ekstern post-server, og videresender den
-til din lokale klient-maskines post-system, så den kan læses af
-almindelige mail klienter såsom mutt, elm, pine, (x)emacs/gnus,
-eller mailx. Der medfølger også et interaktivt GUI-baseret
+til din lokale klient-maskines post-system, sÃ¥ den kan lÃ¦ses af
+almindelige mail klienter sÃ¥som mutt, elm, pine, (x)emacs/gnus,
+eller mailx. Der medfÃ¸lger ogsÃ¥ et interaktivt GUI-baseret
 konfigurations-program, som kan bruges af almindelige brugere.
 
 %if %{have_python}
 %package -n fetchmailconf
 Summary:	A GUI configurator for generating fetchmail configuration files
-Summary(de):	GUI-Konfigurator für fetchmail
+Summary(de):	GUI-Konfigurator fÃ¼r fetchmail
 Summary(pl):	GUI konfigurator do fetchmaila
 Summary(fr):	GUI configurateur pour fetchmail
 Summary(es):	Configurador GUI interactivo para fetchmail
-Summary(pt):	Um configurador gráfico para o fetchmail
+Summary(pt):	Um configurador grÃ¡fico para o fetchmail
 Group:		Utilities/System
-Group(pt):	Utilitários/Sistema
+Group(pt):	UtilitÃ¡rios/Sistema
 BuildPrereq:	python
 Requires:	%{name} = %{version}, python
 
@@ -143,21 +143,22 @@ A GUI configurator for generating fetchmail configuration file written in
 Python.
 
 %description -n fetchmailconf -l de
-Ein in Python geschriebenes Programm mit graphischer Oberfläche zur
+Ein in Python geschriebenes Programm mit graphischer OberflÃ¤che zur
 Erzeugung von Fetchmail-Konfigurationsdateien.
 
 %description -n fetchmailconf -l pt
-Um configurador gráfico para a geração de arquivos de configuração do
+Um configurador grÃ¡fico para a geraÃ§Ã£o de arquivos de configuraÃ§Ã£o do
 fetchmail. Feito em python.
 
 %description -n fetchmailconf -l es
-Configurador gráfico para fetchmail escrito en python
+Configurador grÃ¡fico para fetchmail escrito en python
 
 %description -n fetchmailconf -l de
-Ein interaktiver GUI-Konfigurator für fetchmail in python
+Ein interaktiver GUI-Konfigurator fÃ¼r fetchmail in python
 
 %description -n fetchmailconf -l pl
 GUI konfigurator do fetchmaila napisany w pythonie.
+
 %endif
 
 %{?debug_package}
