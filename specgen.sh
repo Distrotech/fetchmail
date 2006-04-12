@@ -41,7 +41,8 @@ Packager:	$packager
 URL:		http://developer.berlios.de/projects/fetchmail
 Source:		%{name}-${vervar}.tar.bz2
 Group:		Applications/Mail
-Group(pt_BR):   Aplicações/Correio Eletrônico
+Group(pt_BR):	Aplicações/Correio Eletrônico
+Group(vi):	Ứng dụng/Thư
 License:	GPL
 Icon:		fetchmail.xpm
 %if "%{_vendor}" == "suse"
@@ -52,13 +53,14 @@ Requires:	smtpdaemon
 BuildPrereq:	gettext-devel openssl-devel
 BuildRoot:	/var/tmp/%{name}-%{version}
 Summary:	Full-featured POP/IMAP mail retrieval daemon
-Summary(fr):	Collecteur (POP/IMAP) de courrier électronique
-Summary(de):	Program zum Abholen von E-Mail via POP/IMAP
-Summary(pt):	Busca mensagens de um servidor usando POP ou IMAP
-Summary(es):	Recolector de correo via POP/IMAP
-Summary(pl):	Zdalny demon pocztowy do protokołów POP2, POP3, APOP, IMAP
-Summary(tr):	POP2, POP3, APOP, IMAP protokolleri ile uzaktan mektup alma yazılımı
 Summary(da):	Alsidig POP/IMAP post-afhentnings dæmon
+Summary(de):	Program zum Abholen von E-Mail via POP/IMAP
+Summary(es):	Recolector de correo via POP/IMAP
+Summary(fr):	Collecteur (POP/IMAP) de courrier électronique
+Summary(pl):	Zdalny demon pocztowy do protokołów POP2, POP3, APOP, IMAP
+Summary(pt):	Busca mensagens de um servidor usando POP ou IMAP
+Summary(tr):	POP2, POP3, APOP, IMAP protokolleri ile uzaktan mektup alma yazılımı
+Summary(vi):	trình nền lấy thư POP/IMAP có tính năng đầy đủ
 BuildRoot: %{_tmppath}/%{name}-root
 #Keywords: mail, client, POP, POP2, POP3, APOP, RPOP, KPOP, IMAP, ETRN, ODMR, SMTP, ESMTP, GSSAPI, RPA, NTLM, CRAM-MD5, SASL
 #Destinations:	fetchmail-users@lists.berlios.de, fetchmail-announce@lists.berlios.de
@@ -71,6 +73,16 @@ retrieves mail from remote mail servers and forwards it to your local
 (client) machine's delivery system, so it can then be be read by
 normal mail user agents such as mutt, elm, pine, (x)emacs/gnus, or mailx.
 Comes with an interactive GUI configurator suitable for end-users.
+
+%description -l vi
+Fetchmail là tiện ích miễn phí có khả năng lấy và chuyển tiếp thư từ xa,
+có tính năng đầy đủ, rất mạnh và có nhiều tài liệu hướng dẫn. Nó đã được
+nhằm sử dụng qua liên kết TCP/IP khi-yeu-cầu (như sự kết nỗi SLIP hay
+PPP). Fetchmail lấy thư từ máy phục vụ thư ở xa và chuyển tiếp tới hệ
+thống phát thư của máy (khách) cục bộ, để cung cấp thư sẽ được đọc bởi
+tác nhân thư chuẩn như mutt, elm, pine, (x)emacs/gnus, hay mailx.
+Fetchmail có sẵn một bộ cấu hình giao diện người dùng đồ họa, thích hợp
+với người dùng cuối cùng.
 
 %description -l fr
 Fetchmail est un programme qui permet d'aller rechercher du courrier
@@ -133,14 +145,20 @@ Summary(pl):	GUI konfigurator do fetchmaila
 Summary(fr):	GUI configurateur pour fetchmail
 Summary(es):	Configurador GUI interactivo para fetchmail
 Summary(pt):	Um configurador gráfico para o fetchmail
+Summary(vi):	bộ cấu hình giao diện người dùng đồ họa để tạo ra tập tin cấu hình fetchmail
 Group:		Utilities/System
 Group(pt):	Utilitários/Sistema
+Group(vi):	Tiện ích/Hệ thống
 BuildPrereq:	python
 Requires:	%{name} = %{version}, python
 
 %description -n fetchmailconf
 A GUI configurator for generating fetchmail configuration file written in
 Python.
+
+%description -n fetchmailconf -l vi
+Một bộ cấu hình giao diện người dùng đồ họa để tạo ra tập tin cấu hình
+fetchmail, được ghi bằng Python.
 
 %description -n fetchmailconf -l de
 Ein in Python geschriebenes Programm mit graphischer Oberfläche zur
@@ -151,10 +169,10 @@ Um configurador gráfico para a geração de arquivos de configuração do
 fetchmail. Feito em python.
 
 %description -n fetchmailconf -l es
-Configurador gráfico para fetchmail escrito en python
+Configurador gráfico para fetchmail escrito en python.
 
 %description -n fetchmailconf -l de
-Ein interaktiver GUI-Konfigurator für fetchmail in python
+Ein interaktiver GUI-Konfigurator für fetchmail in Python.
 
 %description -n fetchmailconf -l pl
 GUI konfigurator do fetchmaila napisany w pythonie.
