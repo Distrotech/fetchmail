@@ -86,7 +86,7 @@ với người dùng cuối cùng.
 
 %description -l fr
 Fetchmail est un programme qui permet d'aller rechercher du courrier
-électronique sur un serveur de mail distant. Fetchmail connait les
+électronique sur un serveur de mail distant. Fetchmail connaît les
 protocoles POP (Post Office Protocol), IMAP (Internet Mail Access
 Protocol) et délivre le courrier électronique a travers le
 serveur SMTP local (habituellement sendmail).
