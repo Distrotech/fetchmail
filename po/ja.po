@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.2-rc3\n"
+"Project-Id-Version: fetchmail 6.3.4-rc1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2006-04-06 11:48+0200\n"
-"PO-Revision-Date: 2006-01-18 19:57+0900\n"
+"PO-Revision-Date: 2006-04-12 23:52+0900\n"
 "Last-Translator: Takeshi Hamasaki <hma@syd.odn.ne.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -294,7 +294,6 @@ msgid "Fetchmail could not get mail from %s@%s.\n"
 msgstr "Fetchmail 実行中に %s@%s 宛に届いたメールを取り出せませんでした。\n"
 
 #: driver.c:1205
-#, fuzzy
 msgid ""
 "The attempt to get authorization failed.\n"
 "Since we have already succeeded in getting authorization for this\n"
@@ -305,17 +304,9 @@ msgstr ""
 "認証に失敗しました。\n"
 "かつてこのサーバより接続認証を受けることができたので、サーバが busy など、\n"
 "他の要因によるものであると思われますが、何故 login に失敗したのか\n"
-"サーバから有益な情報が送信されていないため、fetchmail では判断しかねます。\n"
-"\n"
-"もし fetchmail デーモンを起動後にアカウントの情報を変更したのでしたら、\n"
-"一度デーモンを停止して、fetchmail の設定を正しく変更し、\n"
-"再度デーモンを立ち上げて下さい。\n"
-"\n"
-"fetchmail デーモンは引続き接続を試みます。\n"
-"サービスが復旧しない限り何も通知が出されないことを了承願います。"
+"サーバから有益な情報が送信されていないため、fetchmail では判断しかねます。"
 
 #: driver.c:1211
-#, fuzzy
 msgid ""
 "\n"
 "However, if you HAVE changed your account details since starting the\n"
@@ -326,10 +317,6 @@ msgid ""
 "at each cycle.  No future notifications will be sent until service\n"
 "is restored."
 msgstr ""
-"認証に失敗しました。\n"
-"かつてこのサーバより接続認証を受けることができたので、サーバが busy など、\n"
-"他の要因によるものであると思われますが、何故 login に失敗したのか\n"
-"サーバから有益な情報が送信されていないため、fetchmail では判断しかねます。\n"
 "\n"
 "もし fetchmail デーモンを起動後にアカウントの情報を変更したのでしたら、\n"
 "一度デーモンを停止して、fetchmail の設定を正しく変更し、\n"
@@ -659,7 +646,6 @@ msgid "Option --check is not supported with ETRN\n"
 msgstr "オプション --check は ETRN とは同時に利用できません。\n"
 
 #: fetchmail.c:132
-#, fuzzy
 msgid ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
 "Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Rob F. Funk, Graham "
@@ -669,8 +655,7 @@ msgstr ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
 "Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Rob F. Funk, Graham "
 "Wilson\n"
-"Copyright (C) 2005 Matthias Andree, Sunil Shetye\n"
-"Copyright (C) 2006 Matthias Andree\n"
+"Copyright (C) 2005-2006 Matthias Andree, Sunil Shetye\n"
 
 #: fetchmail.c:136
 msgid ""
@@ -1688,11 +1673,9 @@ msgid "Required LOGIN capability not supported by server\n"
 msgstr "要求された LOGIN 処理能力はサーバでサポートされていません。\n"
 
 #: imap.c:602
-#, fuzzy, c-format
+#, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
-msgstr ""
-"%s@%s 宛に届いた %d 番目のメッセージの大きさが合いません (%d (実際) != %d (予"
-"想)) \n"
+msgstr "メッセージの大きさが合いません (%d (実際) != %d (予想)) \n"
 
 #: imap.c:706 imap.c:765
 msgid "re-poll failed\n"
@@ -1732,9 +1715,9 @@ msgid "search for unseen messages failed\n"
 msgstr "未読メッセージの検索に失敗しました。\n"
 
 #: imap.c:823
-#, fuzzy, c-format
+#, c-format
 msgid "%lu is unseen\n"
-msgstr "%u は未読です。\n"
+msgstr "%lu は未読です。\n"
 
 #: imap.c:835 pop3.c:784
 #, c-format
@@ -2039,9 +2022,8 @@ msgid "  -i, --idfile      specify alternate UIDs file\n"
 msgstr "  -i, --idfile      UID ファイルを指定します\n"
 
 #: options.c:599
-#, fuzzy
 msgid "      --pidfile     specify alternate PID (lock) file\n"
-msgstr "  -i, --idfile      UID ファイルを指定します\n"
+msgstr "      --pidfile     代わりの PID (ロック) ファイルを指定する\n"
 
 #: options.c:600
 msgid "      --postmaster  specify recipient of last resort\n"
@@ -2151,9 +2133,8 @@ msgid "  -u, --username    specify users's login on server\n"
 msgstr "  -u, --username    サーバへのログイン名をしていします\n"
 
 #: options.c:630
-#, fuzzy
 msgid "  -a, --[fetch]all  retrieve old and new messages\n"
-msgstr "  -a, --all         新着及び既着のメールを全て取り出します\n"
+msgstr "  -a, --[fetch]all         新着及び既着のメールを全て取り出します\n"
 
 #: options.c:631
 msgid "  -K, --nokeep      delete new messages after retrieval\n"
@@ -3021,105 +3002,3 @@ msgstr "malloc できませんでした。\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "realloc できませんでした。\n"
-
-#~ msgid "Option --remote is not supported with ETRN\n"
-#~ msgstr "オプション --remote は ETRN とは同時に利用できません。\n"
-
-#~ msgid "Option --remote is not supported with ODMR\n"
-#~ msgstr "オプション --remote は ODMR では対応しておりません。\n"
-
-#~ msgid "Received"
-#~ msgstr "Received"
-
-#~ msgid "header "
-#~ msgstr " (ヘッダ) "
-
-#~ msgid "internal inconsistency\n"
-#~ msgstr "内部での不一致がありました。\n"
-
-#~ msgid "name is valid but has no IP address."
-#~ msgstr "名前は有効ですが IP アドレスがありません。"
-
-#~ msgid "unrecoverable name server error."
-#~ msgstr "ネームサーバの回復不能なエラーです。"
-
-#~ msgid "temporary name server error."
-#~ msgstr "一時的なネームサーバのエラーです。"
-
-#~ msgid "unknown DNS error %d."
-#~ msgstr "不明な DNS のエラー %d です。"
-
-#~ msgid "messages"
-#~ msgstr "通のメッセージ"
-
-#~ msgid "message"
-#~ msgstr "通のメッセージ"
-
-#~ msgid "Cannot support ETRN without gethostbyname(2).\n"
-#~ msgstr "gethostbyname(2) 無しで ETRN に対応できません。\n"
-
-#~ msgid "Cannot support ODMR without gethostbyname(2).\n"
-#~ msgstr "gethostbyname(2) 無しで ODMR に対応できません。\n"
-
-#~ msgid "will not"
-#~ msgstr "されません。"
-
-#~ msgid "will"
-#~ msgstr "されます。"
-
-#~ msgid " (using network security options %s)"
-#~ msgstr " (%s ネットワークセキュリティオプションを利用します)"
-
-#~ msgid " (using port %d)"
-#~ msgstr " (ポート %d を利用します)"
-
-#~ msgid "All"
-#~ msgstr "全てのメッセージを"
-
-#~ msgid "Only new"
-#~ msgstr "新規のメッセージのみ"
-
-#~ msgid "enabled"
-#~ msgstr "が行われます。"
-
-#~ msgid "disabled"
-#~ msgstr "は行われません。"
-
-#~ msgid "discarded"
-#~ msgstr "削除されます。"
-
-#~ msgid "kept"
-#~ msgstr "保持されます。"
-
-#~ msgid "IP address.\n"
-#~ msgstr "IP アドレス \n"
-
-#~ msgid "name.\n"
-#~ msgstr "名前 \n"
-
-#~ msgid "alloca failed"
-#~ msgstr "alloca が実行できませんでした。"
-
-#~ msgid "warning: found \"%s\" before any host names"
-#~ msgstr "警告: ホスト名の前に \"%s\" を検知しました"
-
-#~ msgid "fetchmail: network security support is disabled\n"
-#~ msgstr "fetchmail: ネットワークセキュリティ対応が無効にされました\n"
-
-#~ msgid "  -T, --netsec      set IP security request\n"
-#~ msgstr "  -T, --netsec      IP security request を指定します。\n"
-
-#~ msgid "invalid security request"
-#~ msgstr "無効なセキュリティー要求です。"
-
-#~ msgid "network-security support disabled"
-#~ msgstr "ネットワークセキュリティー対応はできない設定となっています。"
-
-#~ msgid "partial error message buffer overflow"
-#~ msgstr "部分的なエラーメッセージの容量超過です。"
-
-#~ msgid "fetchmail: illegal address length received for host %s\n"
-#~ msgstr "fetchmail: ホスト %s のアドレスの長さが不正です。\n"
-
-#~ msgid "lstat: %s: %s\n"
-#~ msgstr "lstat: %s: %s\n"
