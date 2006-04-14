@@ -56,7 +56,7 @@ Summary:	Full-featured POP/IMAP mail retrieval daemon
 Summary(da):	Alsidig POP/IMAP post-afhentnings dæmon
 Summary(de):	Program zum Abholen von E-Mail via POP/IMAP
 Summary(es):	Recolector de correo via POP/IMAP
-Summary(fr):	Daemon de récupération de courriers électroniques POP/IMAP complet
+Summary(fr):	Daemon de récupération de courrier électronique POP/IMAP complet
 Summary(pl):	Zdalny demon pocztowy do protokołów POP2, POP3, APOP, IMAP
 Summary(pt):	Busca mensagens de um servidor usando POP ou IMAP
 Summary(tr):	POP2, POP3, APOP, IMAP protokolleri ile uzaktan mektup alma yazılımı
@@ -85,15 +85,14 @@ Fetchmail có sẵn một bộ cấu hình giao diện người dùng đồ họ
 với người dùng cuối cùng.
 
 %description -l fr
-Fetchmail est un outil de récupération et de transfert de courriers
-électroniques distants. Il est libre, complet, robuste et bien
-documenté. Il est utilisé à travers des liens TCP/IP établis à la
-demande (telles que des connexions SLIP ou PPP). Il récupère les
-courriers électroniques sur des serveurs distants et les transfère sur
-la machine locale (client). Les courriers électroniques peuvent alors
-être lus à l'aide de clients standard, comme mutt, elm, pine,
-(x)emacs/gnus ou mailx. L'interface de configuration est adaptée à tout
-utilisateur.
+Fetchmail est un outil de récupération et de transfert de courrier
+électronique. Il est libre, complet, robuste et bien documenté. Il est
+utilisé à travers des liens TCP/IP établis à la demande (telles que des
+connexions SLIP ou PPP). Il récupère les courriers électroniques sur des
+serveurs distants et les transfère sur la machine locale (client). Les
+courriers électroniques peuvent alors être lus à l'aide de clients
+standard, comme mutt, elm, pine, (x)emacs/gnus ou mailx. L'interface de
+configuration est adaptée à tout utilisateur.
 
 %description -l de
 Fetchmail ist ein freies, vollständiges, robustes und
