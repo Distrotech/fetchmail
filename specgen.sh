@@ -88,9 +88,9 @@ với người dùng cuối cùng.
 Fetchmail est un outil de récupération et de transfert de courrier
 électronique. Il est libre, complet, robuste et bien documenté. Il est
 utilisé à travers des liens TCP/IP établis à la demande (telles que des
-connexions SLIP ou PPP). Il récupère les courriers électroniques sur des
-serveurs distants et les transfère sur la machine locale (client). Les
-courriers électroniques peuvent alors être lus à l'aide de clients
+connexions SLIP ou PPP). Il récupère le courrier électronique sur des
+serveurs distants et le transfère sur la machine locale (client). Le
+courrier électronique peut alors être lu à l'aide de clients
 standard, comme mutt, elm, pine, (x)emacs/gnus ou mailx. L'interface de
 configuration est adaptée à tout utilisateur.
 
