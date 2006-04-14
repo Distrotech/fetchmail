@@ -92,7 +92,7 @@ demande (telles que des connexions SLIP ou PPP). Il récupère les
 courriers électroniques sur des serveurs distants et les transfère sur
 la machine locale (client). Les courriers électroniques peuvent alors
 être lus à l'aide de clients standard, comme mutt, elm, pine,
-gnu/(x)emacs ou mailx. L'interface de configuration est adaptée à tout
+(x)emacs/gnus ou mailx. L'interface de configuration est adaptée à tout
 utilisateur.
 
 %description -l de
@@ -146,7 +146,7 @@ konfigurations-program, som kan bruges af almindelige brugere.
 Summary:	A GUI configurator for generating fetchmail configuration files
 Summary(de):	GUI-Konfigurator für fetchmail
 Summary(pl):	GUI konfigurator do fetchmaila
-Summary(fr):	Une interface de configuration qui permet d'engendrer des fichiers de configuration de fetchmail
+Summary(fr):	Une interface de configuration qui permet de créer les fichiers de configuration de fetchmail
 Summary(es):	Configurador GUI interactivo para fetchmail
 Summary(pt):	Um configurador gráfico para o fetchmail
 Summary(vi):	bộ cấu hình giao diện người dùng đồ họa để tạo ra tập tin cấu hình fetchmail
@@ -182,7 +182,7 @@ Ein interaktiver GUI-Konfigurator für fetchmail in Python.
 GUI konfigurator do fetchmaila napisany w pythonie.
 
 %description -n fetchmailconf -l fr
-Une interface de configuration pour engendrer des fichiers de
+Une interface de configuration pour créer les fichiers de
 configuration de fetchmail écrite en python.
 
 %endif
