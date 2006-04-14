@@ -59,6 +59,7 @@ fetchmail 6.3.4 (not yet released):
 * German/de (Matthias Andree), French/fr (Matthias Andree), Spanish/es (Héctor
   García), Polish/pl (Jakub Bogusz), Japanese/ja (Takeshi Hamasaki)
 * New Vietnamese/vi translation (Clytie Siddall).
+* Updated French descriptions for the .spec file (Stéphane Schildknecht)
 
 # CHANGES:
 * pidfile: there is a new command-line (--pidfile PATH) and global option for
