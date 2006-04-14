@@ -27,7 +27,7 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 
 --------------------------------------------------------------------------------
 
-fetchmail 6.3.4 (not yet released):
+fetchmail 6.3.4 (released 2006-04-14):
 
 # KNOWN BUGS AND WORKAROUNDS:
   (this section floats upwards through the NEWS to be on top of the list)
