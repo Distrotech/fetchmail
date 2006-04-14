@@ -56,7 +56,7 @@ Summary:	Full-featured POP/IMAP mail retrieval daemon
 Summary(da):	Alsidig POP/IMAP post-afhentnings dæmon
 Summary(de):	Program zum Abholen von E-Mail via POP/IMAP
 Summary(es):	Recolector de correo via POP/IMAP
-Summary(fr):	Démon de récupération de courriers électroniques POP/IMAP complet
+Summary(fr):	Daemon de récupération de courriers électroniques POP/IMAP complet
 Summary(pl):	Zdalny demon pocztowy do protokołów POP2, POP3, APOP, IMAP
 Summary(pt):	Busca mensagens de um servidor usando POP ou IMAP
 Summary(tr):	POP2, POP3, APOP, IMAP protokolleri ile uzaktan mektup alma yazılımı
