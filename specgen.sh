@@ -181,7 +181,7 @@ Ein interaktiver GUI-Konfigurator für fetchmail in Python.
 GUI konfigurator do fetchmaila napisany w pythonie.
 
 %description -n fetchmailconf -l fr
-Une interface de configuration pour créer les fichiers de
+Une interface graphique de configuration pour créer les fichiers de
 configuration de fetchmail écrite en python.
 
 %endif
