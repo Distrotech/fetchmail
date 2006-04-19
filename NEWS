@@ -12,6 +12,7 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 * The MX and host alias DNS lookups that fetchmail performs in multidrop mode
   are obsolete, deprecated and may be removed from a future fetchmail version.
   They have never supported IPv6 (including IPv6-mapped IPv4) anyhow.
+  Non-DNS based alias keywords such as "aka" will remain in fetchmail.
 * The monitor and interface options may be removed from a future fetchmail
   version as they are not sufficiently portable.
 * POP2 is obsolete.
