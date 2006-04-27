@@ -18,6 +18,8 @@
 # Joshua Crawford, April 2006:
 #	Display From: address.
 #	List every email, even if it has no Subject: header.
+#	  this also avoids indexing errors (that caused
+#	  deleting the wrong message)
 # Joshua Crawford, November 2004:
 # 	Out of range error fixed.
 #	Allow for all caps "SUBJECT:".
