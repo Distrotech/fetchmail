@@ -40,7 +40,7 @@ class PopDel:
 	BYE = "\n  PopDel Ver.0.1+jc2 by Richard Harris and Joshua Crawford\n" +\
 #		  "     site - http://emptydog.com/\n" +\
 		  "     email - Richard Harris <rover@emptydog.com>\n" +\
-		  "     email - Joshua Crawford <mortarn@softhome.net>\n"
+		  "     email - Joshua Crawford <jgcrawford@gmail.com>\n"
 	PROMPT1 = "Choose message number to delete or 'q' to quit: "
 	PROMPT2 = "Quit or abort: "
 	CHOICES = ["Save changes and quit.",
