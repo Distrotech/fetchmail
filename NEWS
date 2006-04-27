@@ -28,7 +28,7 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 
 --------------------------------------------------------------------------------
 
-fetchmail 6.3.4 (released 2006-04-14):
+fetchmail 6.3.5 (not yet released):
 
 # KNOWN BUGS AND WORKAROUNDS:
   (this section floats upwards through the NEWS to be on top of the list)
@@ -41,6 +41,13 @@ fetchmail 6.3.4 (released 2006-04-14):
 * The code still isn't 100% ISO-C compliant, some configurations attempt to
   compile files that are empty after preprocessing, which can cause compiler
   diagnostics and perhaps jam the compilation on strict compilers.
+
+# CONTRIBUTED SCRIPTS:
+* PopDel.py was revised by Joshua Crawford to display the From: address and
+  list every email, even if it has no Subject: header; and not delete the wrong
+  message in the presence of mail without Subject: headers.
+
+fetchmail 6.3.4 (released 2006-04-14):
 
 # BUG FIXES:
 * configure: detect res_* functions properly with newer glibc ABIs.

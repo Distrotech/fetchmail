@@ -109,7 +109,7 @@ downloads it and (if the rpm's not broken) rebuilds it.
 
 With fairly simple changes it can be used to download the latest i386 rpm
 or tar.gz.
- 
+
 Those who are addicted to having the latest of everything could filter mail
 from fetchmail announce through it and get new versions as they're
 announced. However, if we all did that, Eric's ftp server might feel a
@@ -176,4 +176,7 @@ A short python script to remove old read mail from a pop3 mailserver.
 Dovetails with fetchmail with keep option.
 Run it as a cron job...
 
+PopDel.py
 
+PopDel stands for Pop Delete; this program deletes selected email from a
+pop mail server. (By Richard Harris, improved by Joshua Crawford.)
