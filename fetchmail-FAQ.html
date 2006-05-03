@@ -396,18 +396,17 @@ mail mangling</a>. There are lots of ways for other programs in the
 mail chain to screw up that look like fetchmail's fault, but you
 may be able to fix these by tweaking your configuration.</p>
 
-<p>A transcript of the failed session with -v -v (yes, that's
-<em>two</em> -v options, enabling debug mode) will almost always be
-useful. It is very important that the transcript include your
-POP/IMAP server's greeting line, so I can identify it in case of
-server problems. This transcript will not reveal your passwords,
-which are specially masked out precisely so transcripts can be
-passed around.</p>
+<p>A transcript of the failed session with "--nosyslog --nodetach -vvv"
+(yes, that's <em>three</em> -v options, enabling debug mode) will almost
+always be useful. It is very important that the transcript include your
+POP/IMAP server's greeting line, so I can identify it in case of server
+problems. This transcript will not reveal your passwords, which are
+specially masked out precisely so transcripts can be passed around.</p>
 
 <p>If you upgraded your fetchmail and something broke, you should
-include session transcripts with -v -v of both the working and
-failing versions. Very often, the source of the problem can
-instantly identified by looking at the differences in protocol
+include session transcripts with "--nosyslog --nodetach -vvv" of both
+the working and failing versions. Very often, the source of the problem
+can instantly identified by looking at the differences in protocol
 transactions.</p>
 
 <p>If the bug involves a core dump or hang, a gdb stack trace is
