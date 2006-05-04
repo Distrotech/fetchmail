@@ -4,10 +4,10 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.4-rc1\n"
+"Project-Id-Version: fetchmail 6.3.4\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2006-04-06 11:48+0200\n"
-"PO-Revision-Date: 2006-04-10 21:05+0930\n"
+"PO-Revision-Date: 2006-04-23 22:00+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -1210,14 +1210,15 @@ msgid ""
 "  Oversized messages will be flushed before message retrieval (--limitflush "
 "on).\n"
 msgstr ""
-"Các thư quá lớn sẽ được xoá sạch trước khi lấy thư (« --limitflush » bật).\n"
+"  Các thư quá lớn sẽ được xoá sạch trước khi lấy thư (« --limitflush » "
+"bật).\n"
 
 #: fetchmail.c:1628
 msgid ""
 "  Oversized messages will not be flushed before message retrieval (--"
 "limitflush off).\n"
 msgstr ""
-"Các thư quá lớn sẽ không được xoá sạch trước khi lấy thư (« --limitflush » "
+"  Các thư quá lớn sẽ không được xoá sạch trước khi lấy thư (« --limitflush » "
 "tắt).\n"
 
 #: fetchmail.c:1630
@@ -1248,7 +1249,7 @@ msgstr "  Việc buộc ký tự về đầu dòng đã được bật (« force
 
 #: fetchmail.c:1637
 msgid "  Carriage-return forcing is disabled (forcecr off).\n"
-msgstr " Việc buộc ký tự về đầu dòng đã được tắt (« forcecr » tắt).\n"
+msgstr "  Việc buộc ký tự về đầu dòng đã được tắt (« forcecr » tắt).\n"
 
 #: fetchmail.c:1639
 msgid ""
@@ -1351,7 +1352,7 @@ msgstr ""
 #: fetchmail.c:1684
 msgid "   Do linear search of UIDs during each poll (--fastuidl 0).\n"
 msgstr ""
-"  Tìm kiếm tuyến các UID trong khi mỗi việc thăm dò (« --fastuidl » 0).\n"
+"   Tìm kiếm tuyến các UID trong khi mỗi việc thăm dò (« --fastuidl » 0).\n"
 
 #: fetchmail.c:1686
 #, c-format
@@ -1394,7 +1395,7 @@ msgstr "  Các thư sẽ được phát bằng « %s ».\n"
 #: fetchmail.c:1720
 #, c-format
 msgid "  Messages will be %cMTP-forwarded to:"
-msgstr " Các thư sẽ được chuyển tiếp %cMTP tới :"
+msgstr "  Các thư sẽ được chuyển tiếp %cMTP tới :"
 
 #: fetchmail.c:1731
 #, c-format
@@ -1958,11 +1959,11 @@ msgstr "  -c, --check       _kiểm tra_ có thư mới, không lấy gì\n"
 
 #: options.c:589
 msgid "  -s, --silent      work silently\n"
-msgstr " -s, --silent                 không xuất chi tiết (_im_)\n"
+msgstr "  -s, --silent                 không xuất chi tiết (_im_)\n"
 
 #: options.c:590
 msgid "  -v, --verbose     work noisily (diagnostic output)\n"
-msgstr " -v, --verbose                xuất _chi tiết_ chẩn đoán\n"
+msgstr "  -v, --verbose                xuất _chi tiết_ chẩn đoán\n"
 
 #: options.c:591
 msgid "  -d, --daemon      run as a daemon once per n seconds\n"
@@ -2041,7 +2042,7 @@ msgstr "      --sslkey      tập tin _khoá SSL_ riêng\n"
 
 #: options.c:609
 msgid "      --sslcert     ssl client certificate\n"
-msgstr "     --sslcert     _chứng nhận_ ứng dụng khách SSL\n"
+msgstr "      --sslcert     _chứng nhận_ ứng dụng khách SSL\n"
 
 #: options.c:610
 msgid "      --sslcertck   do strict server certificate check (recommended)\n"
@@ -2068,7 +2069,7 @@ msgstr "      --sslproto    buộc dùng _giao thức SSL_ (ssl2/ssl3/tls1)\n"
 #: options.c:615
 msgid "      --plugin      specify external command to open connection\n"
 msgstr ""
-"     --plugin      xác định lệnh bên ngoài để mở kết nối (_bộ cầm phít_)\n"
+"      --plugin      xác định lệnh bên ngoài để mở kết nối (_bộ cầm phít_)\n"
 
 #: options.c:616
 msgid "      --plugout     specify external command to open smtp connection\n"
@@ -2083,7 +2084,7 @@ msgstr ""
 
 #: options.c:619
 msgid "  -U, --uidl        force the use of UIDLs (pop3 only)\n"
-msgstr "   -U, --uidl        buộc dùng UIDL (chỉ pop3)\n"
+msgstr "  -U, --uidl        buộc dùng UIDL (chỉ pop3)\n"
 
 #: options.c:620
 msgid "      --port        TCP port to connect to (obsolete, use --service)\n"
@@ -2100,7 +2101,7 @@ msgstr ""
 
 #: options.c:622
 msgid "      --auth        authentication type (password/kerberos/ssh/otp)\n"
-msgstr "     --auth        kiểu _xác thực_ (mật khẩu/kerberos/ssh/otp)\n"
+msgstr "      --auth        kiểu _xác thực_ (mật khẩu/kerberos/ssh/otp)\n"
 
 #: options.c:623
 msgid "  -t, --timeout     server nonresponse timeout\n"
@@ -2170,7 +2171,8 @@ msgstr "  -S, --smtphost    đặt _máy_ chuyển tiếp SMTP\n"
 
 #: options.c:640
 msgid "      --fetchdomains fetch mail for specified domains\n"
-msgstr "     --fetchdomains \t_lấy_ thư chỉ cho _những miền_ đã xác định này\n"
+msgstr ""
+"      --fetchdomains \t_lấy_ thư chỉ cho _những miền_ đã xác định này\n"
 
 #: options.c:641
 msgid "  -D, --smtpaddress set SMTP delivery domain to use\n"
@@ -2199,7 +2201,7 @@ msgstr "      --fetchsizelimit \tđặt _hạn chế kích cỡ_ thư khi _lấy
 
 #: options.c:647
 msgid "      --fastuidl    do a binary search for UIDLs\n"
-msgstr "     --fastuidl    tìm kiếm UIDL một cách nhị phân (_nhanh_)\n"
+msgstr "      --fastuidl    tìm kiếm UIDL một cách nhị phân (_nhanh_)\n"
 
 #: options.c:648
 msgid "  -e, --expunge     set max deletions between expunges\n"
@@ -2216,7 +2218,7 @@ msgstr "      --bsmtp       đặt tập tin xuất BSMTP\n"
 
 #: options.c:651
 msgid "      --lmtp        use LMTP (RFC2033) for delivery\n"
-msgstr "    --lmtp        dùng LMTP (RFC2033) để phát thư\n"
+msgstr "      --lmtp        dùng LMTP (RFC2033) để phát thư\n"
 
 #: options.c:652
 msgid "  -r, --folder      specify remote folder name\n"
@@ -2505,19 +2507,19 @@ msgstr "RPA việc mở </dev/urandom> bị lỗi, mà không nên\n"
 
 #: rpa.c:709
 msgid "    prevent you logging in, but means you\n"
-msgstr "ngăn cản bạn đăng nhập, nhưng có nghĩa là\n"
+msgstr "    ngăn cản bạn đăng nhập, nhưng có nghĩa là\n"
 
 #: rpa.c:710
 msgid "    cannot be sure you are talking to the\n"
-msgstr "bạn không thể chắc là nói chuyện với\n"
+msgstr "    bạn không thể chắc là nói chuyện với\n"
 
 #: rpa.c:711
 msgid "    service that you think you are (replay\n"
-msgstr "dịch vụ đã giả sử (dịch vụ không lương thiện\n"
+msgstr "    dịch vụ đã giả sử (dịch vụ không lương thiện\n"
 
 #: rpa.c:712
 msgid "    attacks by a dishonest service are possible.)\n"
-msgstr "có thể tấn công kiểu phát lại).\n"
+msgstr "    có thể tấn công kiểu phát lại).\n"
 
 #: rpa.c:723
 msgid "User challenge:\n"

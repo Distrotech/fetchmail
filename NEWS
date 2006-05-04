@@ -49,6 +49,9 @@ fetchmail 6.3.5 (not yet released):
   diagnostics and perhaps jam the compilation on strict compilers.
 * fetchmail expects Received: headers in a particular format.
 
+# TRANSLATION UPDATES:
+* Russian/ru (Pavel Maryanov), Vietnamese/vi (Clytie Siddall)
+
 # CONTRIBUTED SCRIPTS:
 * PopDel.py was revised by Joshua Crawford to display the From: address and
   list every email, even if it has no Subject: header; and not delete the wrong

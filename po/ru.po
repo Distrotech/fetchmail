@@ -1,4 +1,4 @@
-# Translation of fetchmail-6.3.2-rc2.po to Russian
+# Translation of fetchmail-6.3.4.po to Russian
 # Copyright (C) 2005 Eric S. Raymond
 # This file is distributed under the same license as the fetchmail package.
 #
@@ -6,16 +6,16 @@
 # Pavel Maryanov <acid_jack@ukr.net>, 2003, 2005, 2006.
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.2-rc2\n"
+"Project-Id-Version: fetchmail-6.3.4\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2006-04-06 11:48+0200\n"
-"PO-Revision-Date: 2006-01-17 13:36+0200\n"
+"PO-Revision-Date: 2006-04-25 18:09+0300\n"
 "Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=KOI8-R\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.11\n"
+"X-Generator: KBabel 1.11.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: checkalias.c:174
@@ -292,7 +292,6 @@ msgid "Fetchmail could not get mail from %s@%s.\n"
 msgstr "Fetchmail не смог получить почту из %s@%s.\n"
 
 #: driver.c:1205
-#, fuzzy
 msgid ""
 "The attempt to get authorization failed.\n"
 "Since we have already succeeded in getting authorization for this\n"
@@ -301,23 +300,12 @@ msgid ""
 "error message."
 msgstr ""
 "Попытка авторизации завершилась неудачей.\n"
-"С тех пор как авторизация уже была успешно выполнена для\n"
-"этого подключения, возможно возникла другая ошибка\n"
-"(например, сервер занят), которую fetchmail не смог распознать\n"
-"из-за того, что сервер не отправил сообщение об ошибке.\n"
-"\n"
-"Однако, если изменили данные своей учетной записи ПОСЛЕ\n"
-"запуска демона fetchmail, то вам понадобится остановить\n"
-"демон, изменить свои настройки  fetchmail, а затем перезапустить\n"
-"демон.\n"
-"\n"
-"Демон fetchmail продолжит свою работу и будет пытаться\n"
-"подключиться в каждом цикле. В дальнейшем уведомления\n"
-"отправляться не будут до тех пор, пока служба не будет\n"
-"восстановлена."
+"Так как для этого подключения авторизация уже была успешно выполнена,\n"
+"возможно, возникла другая ошибка (например, сервер занят), которую\n"
+"fetchmail не смог распознать из-за того, что сервер не отправил\n"
+"сообщение об ошибке."
 
 #: driver.c:1211
-#, fuzzy
 msgid ""
 "\n"
 "However, if you HAVE changed your account details since starting the\n"
@@ -328,21 +316,14 @@ msgid ""
 "at each cycle.  No future notifications will be sent until service\n"
 "is restored."
 msgstr ""
-"Попытка авторизации завершилась неудачей.\n"
-"С тех пор как авторизация уже была успешно выполнена для\n"
-"этого подключения, возможно возникла другая ошибка\n"
-"(например, сервер занят), которую fetchmail не смог распознать\n"
-"из-за того, что сервер не отправил сообщение об ошибке.\n"
 "\n"
-"Однако, если изменили данные своей учетной записи ПОСЛЕ\n"
-"запуска демона fetchmail, то вам понадобится остановить\n"
-"демон, изменить свои настройки  fetchmail, а затем перезапустить\n"
-"демон.\n"
+"Однако, если изменили данные своей учётной записи ПОСЛЕ запуска\n"
+"демона fetchmail, то вам понадобится остановить демон, изменить\n"
+"настройки fetchmail, а затем перезапустить демон.\n"
 "\n"
-"Демон fetchmail продолжит свою работу и будет пытаться\n"
-"подключиться в каждом цикле. В дальнейшем уведомления\n"
-"отправляться не будут до тех пор, пока служба не будет\n"
-"восстановлена."
+"Демон fetchmail продолжит свою работу и будет периодически пытаться\n"
+"подключиться. В дальнейшем уведомления отправляться не будут до тех\n"
+"пор, пока служба не будет восстановлена."
 
 #: driver.c:1221
 msgid ""
@@ -670,6 +651,10 @@ msgid ""
 "Wilson\n"
 "Copyright (C) 2005-2006 Matthias Andree, Sunil Shetye\n"
 msgstr ""
+"Copyright (C) 2002, 2003 Eric S. Raymond\n"
+"Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Rob F. Funk, Graham "
+"Wilson\n"
+"Copyright (C) 2005-2006 Matthias Andree, Sunil Shetye\n"
 
 #: fetchmail.c:136
 msgid ""
@@ -677,6 +662,10 @@ msgid ""
 "are welcome to redistribute it under certain conditions. For details,\n"
 "please see the file COPYING in the source or documentation directory.\n"
 msgstr ""
+"Fetchmail поставляется АБСОЛЮТНО БЕЗО ВСЯКОЙ ГАРАНТИИ. Это свободное\n"
+"программное обеспечение и вы можете распространять его далее при\n"
+"соблюдении определённых условий. Подробности смотрите в файле COPYING\n"
+"в каталоге с документацией или исходными текстами.\n"
 
 #: fetchmail.c:170
 msgid "WARNING: Running as root is discouraged.\n"
@@ -1695,11 +1684,9 @@ msgid "Required LOGIN capability not supported by server\n"
 msgstr "Требуемая опция LOGIN не поддерживается сервером\n"
 
 #: imap.c:602
-#, fuzzy, c-format
+#, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
-msgstr ""
-"длина сообщения %s@%s:%d не совпала с ожидаемой (%d на самом деле != %d "
-"ожидалось)\n"
+msgstr "разногласие при удалений писем (%d на самом деле != %d ожидалось)\n"
 
 #: imap.c:706 imap.c:765
 msgid "re-poll failed\n"
@@ -1739,9 +1726,9 @@ msgid "search for unseen messages failed\n"
 msgstr "поиск не просмотренных сообщений завершился неудачей\n"
 
 #: imap.c:823
-#, fuzzy, c-format
+#, c-format
 msgid "%lu is unseen\n"
-msgstr "%u не просмотрено\n"
+msgstr "%lu не просмотрено\n"
 
 #: imap.c:835 pop3.c:784
 #, c-format
@@ -2045,9 +2032,8 @@ msgid "  -i, --idfile      specify alternate UIDs file\n"
 msgstr "  -i, --idfile      указание других UID'ов файла\n"
 
 #: options.c:599
-#, fuzzy
 msgid "      --pidfile     specify alternate PID (lock) file\n"
-msgstr "  -i, --idfile      указание других UID'ов файла\n"
+msgstr "      --pidfile     указание другого файла с PID'ом\n"
 
 #: options.c:600
 msgid "      --postmaster  specify recipient of last resort\n"
@@ -2079,9 +2065,9 @@ msgid "      --sslcert     ssl client certificate\n"
 msgstr "      --sslcert     сертификат клиента ssl\n"
 
 #: options.c:610
-#, fuzzy
 msgid "      --sslcertck   do strict server certificate check (recommended)\n"
-msgstr "      --sslcert     сертификат клиента ssl\n"
+msgstr ""
+"      --sslcertck   строгая проверка сертификата севера (рекомендуется)\n"
 
 #: options.c:611
 msgid "      --sslcertpath path to ssl certificates\n"
@@ -2164,9 +2150,8 @@ msgid "  -u, --username    specify users's login on server\n"
 msgstr "  -u, --username    указание логина пользователя на сервере\n"
 
 #: options.c:630
-#, fuzzy
 msgid "  -a, --[fetch]all  retrieve old and new messages\n"
-msgstr "  -a, --all         получение старых и новых сообщений\n"
+msgstr "  -a, --[fetch]all  получение старых и новых сообщений\n"
 
 #: options.c:631
 msgid "  -K, --nokeep      delete new messages after retrieval\n"
@@ -2267,13 +2252,12 @@ msgstr ""
 "      --showdots    отображение точечной строки прогресса даже в log-файлах\n"
 
 #: pop3.c:342
-#, fuzzy
 msgid ""
 "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
 "of TOP.\n"
 msgstr ""
-"Предупреждение: найден POP3/PROXY-сервер Maillennium, используется команда "
-"RETR.\n"
+"Предупреждение: найден POP3/PROXY-сервер Maillennium; вместо TOP "
+"используется команда RETR.\n"
 
 #: pop3.c:586
 msgid "Required APOP timestamp not found in greeting\n"
