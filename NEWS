@@ -21,6 +21,12 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 * --sslcertck may become a default setting in a future fetchmail version.
 * The multidrop To/Cc guessing code along with the fragile duplicate suppressor
   is deprecated and may be removed from a future release.
+* The "envelope Received" option may be removed from a future release, because
+  the Received header was never meant to be machine-readable, the format varies
+  widely, and various other differences in behavior make parsing Received an
+  unreliable undertaking. The enveloper option as such will remain though, in
+  order to support Delivered-To, X-Envelope-To, X-Original-To and similar.
+  See also <http://home.pages.de/~mandree/mail/multidrop>.
 * The --enable-fallback (fall back to MDA if MTA unavailable) may be removed
   from a future fetchmail release.
 * The "protocol auto" default inside fetchmail may be removed from a future
@@ -41,6 +47,7 @@ fetchmail 6.3.5 (not yet released):
 * The code still isn't 100% ISO-C compliant, some configurations attempt to
   compile files that are empty after preprocessing, which can cause compiler
   diagnostics and perhaps jam the compilation on strict compilers.
+* fetchmail expects Received: headers in a particular format.
 
 # CONTRIBUTED SCRIPTS:
 * PopDel.py was revised by Joshua Crawford to display the From: address and
