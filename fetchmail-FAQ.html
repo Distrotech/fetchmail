@@ -7,8 +7,8 @@
 WARNING!
 
 Be sure that <h1> tags are in the leftmost column so that the awk
-postprocessor can skip the Contents section that HTMLDOC will insert
-in a much better way.
+postprocessor can elide the Contents section - HTMLDOC will insert
+a much better one.
 ##########################################################################
 
 -->
@@ -284,11 +284,13 @@ bother?</a></h2>
 
 <p>Fetchmail is a one-stop solution to the remote mail retrieval
 problem for Unix machines, quite useful to anyone with an
-intermittent PPP or SLIP connection to a remote mailserver. It can
-collect mail using any variant of POP or IMAP and forwards via port
-25 to the local SMTP listener, enabling all the normal
-forwarding/filtering/aliasing mechanisms that would apply to local
-mail or mail arriving via a full-time TCP/IP connection.</p>
+intermittent or dynamic-IP connection to a remote mailserver, SLIP or
+PPP dialup, or leased line when SMTP isn't desired. Fetchmail can
+collect mail using any variant of POP or IMAP and forwards to a the
+local SMTP (via TCP socket) or LMTP (via TCP or Unix socket) listener or
+into an MDA program, enabling all the normal
+forwarding/filtering/aliasing mechanisms that would apply to local mail
+or mail arriving via a full-time TCP/IP connection.</p>
 
 <p>Fetchmail is not a toy or a coder's learning exercise, but an
 industrial-strength tool capable of transparently handling every
@@ -297,11 +299,17 @@ up to mail retrieval and rerouting for an entire client domain.
 Fetchmail is easy to configure, unobtrusive in operation, powerful,
 feature-rich, and well documented.</p>
 
-<p>Fetchmail is <a href="http://www.opensource.org">open-source</a>
-software. The openness of the sources is the strongest assurance of
-quality you can have. Extensive peer review by a large,
-multi-platform user community has shown that fetchmail is as near
-bulletproof as the underlying protocols permit.</p>
+<p>Fetchmail is <a href="http://www.opensource.org/">Open Source</a>
+Software. The openness of the sources enables you to review and
+customize the code, and contribute your changes.</p>
+
+<p>A former fetchmail maintainer once claimed that Open Source software
+were the strongest quality assurance, but the current maintainers do not
+believe that open source alone is a criterion for quality &ndash; <a
+    href="fetchmail-SA-2005-01.txt">the remotely exploitable POP3
+    vulnerability (CVE-2005-2335)</a> lingered undiscovered in
+fetchmail's code for years, which is a hint that open source code does
+not audit itself.</p>
 
 <p>Fetchmail is licensed under the <a
 href="http://www.gnu.org/copyleft/gpl.html">GNU General Public
@@ -315,7 +323,7 @@ fetchmail sources?</a></h2>
 
 <p>The latest HTML FAQ is available alongside the latest fetchmail
 sources at the fetchmail home page: <a
-href="http://fetchmail.berlios.de/">http://fetchmail.berlios.de/</a>.
+href="http://www.fetchmail.info/">http://www.fetchmail.info/</a>.
 You can also usually find both in the <a
 href="http://www.ibiblio.org/pub/Linux/system/mail/pop/!INDEX.short.html">
 POP mail tools directory on iBiblio</a>.</p>
@@ -332,7 +340,7 @@ fetchmail, and then see if the problem reproduces. So you'll probably
 save us both time if you upgrade and test with <a href="#G2">the latest
     version</a> <em>before</em> sending in a bug report.</p>
 
-<p>I will fix bugs, provided you include enough diagnostic information
+<p>Bugs will be fixed, provided you include enough diagnostic information
 for me to go on. Send bugs to <a
 href="mailto:fetchmail-users@lists.berlios.de">fetchmail-users</a>.
 When reporting bugs, please include the following:</p>
@@ -370,7 +378,7 @@ introduced in the upper half of the sequence; if it doesn't, the
 failure was introduced in the lower half. Now bisect that half in
 the same way. In a very few tries, you should be able to identify
 the exact adjacent pair of versions between which your bug was
-introduced -- and with information like that, I can usually come up
+introduced &ndash; and with information like that, I can usually come up
 with a fix very quickly.</p>
 
 <p>Another useful thing you can do, if you're using POP3, is to
@@ -379,7 +387,7 @@ function of fetchmailconf. If you have IMAP4, and fetchmailconf
 doesn't tell you it's broken, switch immediately. POP3 is a weak,
 poorly-designed protocol with chronic problems, and the later
 versions after RFC1725 actually get worse rather than better.
-Changing over to IMAP4 may well make your problem go away -- and if
+Changing over to IMAP4 may well make your problem go away &ndash; and if
 your ISP doesn't have IMAP4 support, bug them to supply it.</p>
 
 <p>It is helpful if you include your .fetchmailrc file, but not
@@ -419,18 +427,18 @@ CFLAGS=-g LDFLAGS=" " ./configure
 </pre>
 
 <p>Then rebuild in order to generate a version that can be
-gdb-traced.</p>
+traced with a debugger such as gdb, dbx or idb.</p>
 
 <p>Best of all is a mail file which, when fetched, will reproduce
 the bug under the latest (current) version.</p>
 
-<p>Any bug I can reproduce will usually get fixed very quickly,
-often within 48 hours. Bugs I can't reproduce are a crapshoot. If
-the solution isn't obvious when I first look, it may evade me for a
-long time (or to put it another way, fetchmail is well enough
-tested that the easy bugs have long since been found). So if you
-want your bug fixed rapidly, it is not just sufficient but nearly
-<em>necessary</em> that you give me a way to reproduce it.</p>
+<p>Any bug I can reproduce will usually get fixed quite quickly.
+Bugs I can't reproduce are a crapshoot. If the solution isn't obvious
+when I first look, it may evade me for a long time (or to put it another
+way, fetchmail is well enough tested that the easy bugs have long since
+been found). So if you want your bug fixed rapidly, it is not just
+sufficient but <em>necessary</em> that you give me a way to
+easily reproduce it.</p>
 
 <h2><a id="G4" name="G4">G4. I have this idea for a neat feature.
 Will you add it?</a></h2>
@@ -475,33 +483,34 @@ spare time of developers permitting.</p>
 <h2><a id="G6" name="G6">G6. Is there a mailing list for exchanging
 tips?</a></h2>
 
-<p>There is a fetchmail-users list (fetchmail-users@lists.berlios.de)
+<p>There is a fetchmail-users list
+&lt;fetchmail-users@lists.berlios.de&gt;
 for bug reports and people who want to discuss configuration issues of
 fetchmail. It's a Mailman list, see <a
     href="http://lists.berlios.de/mailman/listinfo/fetchmail-users">http://lists.berlios.de/mailman/listinfo/fetchmail-users</a>.</p>
 <p>There is a fetchmail-devel list
-(fetchmail-devel@lists.berlios.de) for people who want to discuss
+&lt;fetchmail-devel@lists.berlios.de&gt; for people who want to discuss
 fixes and improvements in fetchmail and help co-develop it. It's a
 Mailman list, which you can sign up for at <a
 href="http://lists.berlios.de/mailman/listinfo/fetchmail-devel">http://lists.berlios.de/mailman/listinfo/fetchmail-devel</a>.
 There is also an announcements-only list,
-fetchmail-announce@lists.berlios.de, which you can sign up for at <a
+&lt;fetchmail-announce@lists.berlios.de&gt;, which you can sign up for at <a
 href="http://lists.berlios.de/mailman/listinfo/fetchmail-announce">http://lists.berlios.de/mailman/listinfo/fetchmail-announce</a>.</p>
 
 <h2><a id="G7" name="G7">G7. So, what's this I hear about a
 fetchmail paper?</a></h2>
 
-<p>The fetchmail development was also a sociological experiment, an
-extended test to see if my theory about the critical features of
-the Linux development model is correct.</p>
+<p>Eric S. Raymond also considered fetchmail development a sociological
+experiment, an extended test to see if my theory about the critical
+features of the Linux development model is correct.</p>
 
-<p>The experiment was a success. I wrote a paper about it titled <a
+<p>He considers the experiment a success. He wrote a paper about it titled <a
 href="http://www.catb.org/~esr/writings/cathedral.html">The
 Cathedral and the Bazaar</a> which was first presented at Linux
 Kongress '97 in Bavaria and very well received there. It was also
 given at Atlanta Linux Expo, Linux Pro '97 in Warsaw, and the first
 Perl Conference, at UniForum '98, and was the basis of an invited
-presentation at Usenix '98. The folks at Netscape tell me it helped
+presentation at Usenix '98. The folks at Netscape told ESR it helped
 them decide to <a
 href="http://wp.netscape.com/newsref/pr/newsrelease558.html">give
 away the source for Netscape Communicator</a>.</p>
@@ -513,25 +522,23 @@ paper on the Web with a search for that title.</p>
 fetchmail?</a></h2>
 
 <p>Fetchmail will work with any POP, IMAP, ETRN, or ODMR server
-that conforms to the relevant RFCs (and even some outright broken
-ones like <a href="#S2">Microsoft Exchange</a> and <a
-href="#S6">Novell GroupWise</a>). This doesn't mean it works
-equally well with all, however. POP2 servers, and POP3 servers
-without UIDL, limit fetchmail's capabilities in various ways
-described on the manual page.</p>
+that conforms to the relevant standards/RFCs (and even some outright
+broken ones like <a href="#S2">Microsoft Exchange</a> and <a
+    href="#S6">Novell GroupWise</a>). This doesn't mean it works equally
+well with all, however. POP2 servers, and POP3 servers without UIDL,
+limit fetchmail's capabilities in various ways described on the manual
+page.</p>
 
 <p>Most modern Unixes (and effectively all Linux/*BSD systems) come
 with POP3 support preconfigured (but beware of the horribly broken
 POP3 server mentioned in <a href="#D2">D2</a>). An increasing
-minority also feature IMAP (you can detect IMAP support by running
-fetchmail in AUTO mode, or by using the 'Probe for supported
-protocols' function in the fetchmailconf utility).</p>
+minority also feature IMAP (you can detect IMAP support by using the
+'Probe for supported protocols' function in the fetchmailconf
+utility - unfortunately it does not detect SSL-wrapped variants).</p>
 
 <p>If you have the option, we recommend using or installing an
-IMAP4rev1 server; it has the best facilities for tracking message
-'seen' states. It also recovers from interrupted connections more
-gracefully than POP3, and enables some significant performance
-optimizations.</p>
+IMAP4rev1 or UIDL- and TOP-capable POP3 server. IMAP enables some
+significant performance optimizations.</p>
 
 <p>Don't be fooled by NT/Exchange propaganda. M$ Exchange is just
 plain broken (see item <a href="#S2">S2</a>) and NT cannot handle
@@ -545,7 +552,7 @@ paper</a> on Unix vs. NT performance.</p>
     href="http://dovecot.org/">Dovecot</a>.</p>
 
 <p>Avoid <a href="http://home.pages.de/~mandree/qmail-bugs.html">qmail,
-    it's broken.</a></p>
+    it's broken and unmaintained.</a></p>
 
 <h2><a id="G9" name="G9">G9. What is the best mail program to use
 with fetchmail?</a></h2>
@@ -554,20 +561,19 @@ with fetchmail?</a></h2>
 transport programs</a>. It also doesn't care which user agent you
 use, and user agents are as a rule almost equally indifferent to
 how mail is delivered into your system mailbox. So any of the
-popular Unix mail agents -- <a
+popular Unix mail agents &ndash; <a
 href="http://www.instinct.org/elm/">elm</a>, <a
 href="http://www.washington.edu/pine/">pine</a>, <a
 href="http://www.cs.indiana.edu/docproject/mail/mh.html">mh</a>, or
-<a href="http://www.mutt.org">mutt</a> -- will work fine with
+<a href="http://www.mutt.org">mutt</a> &ndash; will work fine with
 fetchmail.</p>
 
 <p>All this having been said, I can't resist putting in a discreet
 plug for <a href="http://www.mutt.org">mutt</a>.  Mutt's interface
 is only a little different from that of its now-moribund ancestor
 elm, but its flexibility and excellent handling of MIME and PGP put it
-in a class by itself. You won't need its built-in POP3 support, though;
-most of the mutt developers will cheerfully admit that fetchmail's is
-better :-).</p>
+in a class by itself. You won't need its built-in POP3 support, though.
+</p>
 
 <h2><a id="G10" name="G10">G10. How can I avoid sending my password
 en clair?</a></h2>
@@ -575,13 +581,6 @@ en clair?</a></h2>
 <p>Depending on what your mail server you are talking to, this
 ranges from trivial to impossible. It may even be next to
 useless.</p>
-
-<p>Most people use fetchmail over phone wires (whether plain old
-copper or DSL), which are hard to tap. Anybody with the skill and
-resources to do this could get into your server mailbox with much less
-effort by subverting the server host. So if your provider setup is
-phone-company wire going straight into a service box, you probably
-don't need to worry.</p>
 
 <p>In general there is little point in trying to secure your fetchmail
 transaction unless you trust the security of the server host you are
@@ -593,16 +592,16 @@ concentrator or DSL POP you dial in to and the mailserver host).</p>
 <p>Having realized this, you need to ask whether password
 encryption alone will really address your security exposure. If you
 think you might be snooped between server and client, it's better
-to use end-to-end encryption on your whole mail stream so none of
-it can be read. One of the advantages of fetchmail over
-conventional SMTP-push delivery is that you may be able to arrange
-this by using ssh(1); see <a href="#K3">K3</a>.</p>
+to use end-to-end encryption such as GnuPG (see below) on your whole
+mail stream so none of it can be read. One of the advantages of
+fetchmail over conventional SMTP-push delivery is that you may be able
+to arrange encryption by using ssh(1); see <a href="#K3">K3</a>.</p>
 
 <p>Note that ssh is not a complete privacy solution either, as your
 mail could have been snooped in transit to your POP server from
 wherever it originated. For best security, agree with your
 correspondents to use a tool such as <a
-href="http://www.gnupg.org/">GPG</a> (Gnu Privacy Guard) or PGP
+    href="http://www.gnupg.org/">GnuPG</a> (Gnu Privacy Guard) or PGP
 (Pretty Good Privacy).</p>
 
 <p>If ssh/sshd isn't available, or you find it too complicated for
@@ -617,7 +616,7 @@ to a CAPABILITY query). Do a <code>fetchmail -v</code> to see
 these, or telnet direct to the server port (110 for POP3, 143 for
 IMAP).</p>
 
-<p>If your mailserver is using IMAP 2000, you'll have CRAM-MD5
+<p>If your mailserver is using IMAP 2000, it'll have CRAM-MD5
 support built in. Fetchmail autodetects this; you can skip the rest
 of this section.</p>
 
@@ -676,8 +675,8 @@ end-to-end encryption if you have an SSL-enabled mailserver.</p>
 to use a dynamic IP address?</a></h2>
 
 <p>Yes. In order to avoid giving indigestion to certain picky MTAs
-(notably <a href="#T3">exim</a>), fetchmail always makes the RCPT
-TO address it feeds the MTA a fully qualified one with a hostname
+(notably <a href="#T3">exim</a>), fetchmail always makes the RCPT&nbsp;TO
+address it feeds the MTA a fully qualified one with a hostname
 part. Normally it does this by appending @ and "localhost", but
 when you are using Kerberos or ETRN mode it will append @ and your
 machine's fully-qualified domain name (FQDN).</p>
@@ -686,7 +685,7 @@ machine's fully-qualified domain name (FQDN).</p>
 in daemon mode and outlasts the dynamic IP address assignment your
 client machine had when it started up.</p>
 
-<p>Since the new IP address (looked up at RCPT TO interpretation
+<p>Since the new IP address (looked up at RCPT&nbsp;TO interpretation
 time) doesn't match the original, the most benign possible result
 is that your MTA thinks it's seeing a relaying attempt and refuses.
 More frequently, fetchmail will try to connect to a nonexistent
@@ -696,7 +695,7 @@ mail to the wrong machine!</p>
 <p>Use the <code>smtpaddress</code> option to force the appended
 hostname to one with a (fixed) IP address of 127.0.0.1 in your
 <code>/etc/hosts</code>. (The name 'localhost' will usually work;
-or you can use the IP address itself).</p>
+or you can use the IP address itself.)</p>
 
 <p>Only one fetchmail option interacts directly with your IP
 address, '<code>interface</code>'. This option can be used to set
@@ -705,7 +704,7 @@ use. Such a restriction is sometimes useful for security reasons,
 especially on multihomed sites. See <a href="#C3">C3</a>.</p>
 
 <p>I recommend against trying to set up the <code>interface</code>
-option when initially developing your poll configuration -- it's
+option when initially developing your poll configuration &ndash; it's
 never necessary to do this just to get a link working. Get the link
 working first, observe the actual address range you see on
 connections, and add an <code>interface</code> option (if you need
@@ -723,11 +722,11 @@ that case.</p>
 <p>You can use On-Demand Mail Relay (ODMR) with a dynamic IP
 address; that's what it was designed for, and it provides
 capabilities very similar to ETRN. Unfortunately ODMR servers are
-not yet widely deployed, as of early 2001.</p>
+still not yet widely deployed, as of 2006.</p>
 
 <p>If you're using a dynamic-IP configuration, one other
 (non-fetchmail) problem you may run into with outgoing mail is that
-some sites will bounce your email because the hostname your giving
+some sites will bounce your email because the hostname you're giving
 them isn't real (and doesn't match what they get doing a reverse
 DNS on your dynamically-assigned IP address). If this happens, you
 need to hack your sendmail so it masquerades as your host.
@@ -804,7 +803,9 @@ heavy loads?</a></h2>
 <p>Fetchmail streams message bodies line-by-line; the most core it
 ever requires per message is enough memory to hold the RFC822
 header, and that storage is freed when body processing begins. It
-is, accordingly, quite economical in its use of memory.</p>
+is, accordingly, quite economical in its use of memory. It will store
+the UID or UIDL data in core however, which can become considerable if
+you are keeping lots of messages on the server.</p>
 
 <p>After startup time, a fetchmail running in daemon mode stats its
 configuration file once per poll cycle to see whether it has
@@ -1377,38 +1378,49 @@ at start of a text line.</p>
 <h2><a id="T2" name="T2">T2. How can I use fetchmail with
 qmail?</a></h2>
 
+<h3>qmail as your local SMTP server</h3>
+
+<p>Avoid <a href="http://home.pages.de/~mandree/qmail-bugs.html">qmail,
+    it's broken and unmaintained.</a></p>
+
 <p>Turn on the <code>forcecr</code> option; qmail's listener mode
 doesn't like header or message lines terminated with bare
-linefeeds.</p>
-
-<p>(This information is thanks to Robert de Bath
+linefeeds.<br/>
+(This information contributed by Robert de Bath
 &lt;robert@mayday.cix.co.uk&gt;.)</p>
 
-<p>If a mailhost is using the qmail package, then, providing the local
-hosts are also using qmail, it is possible to set up one fetchmail link
-to be reliably collect the mail for an entire domain.</p>
+<h3>qmail as your ISP's POP3 server</h3>
+
+<p>Note that qmail's POP3 server, as of version 1.03 and netqmail 1.05,
+miscalculates the message sizes, so you may see size-related fetchmail
+warnings.</p>
+
+<p>If a mailhost is using the qmail package, then it is usually possible
+to set up one fetchmail link to reliably collect the mail for an entire
+domain.</p>
 
 <p>One of the basic features of qmail is the 'Delivered-To:'
 message header. Whenever qmail delivers a message to a local
 mailbox it puts the username and hostname of the envelope recipient
-on this line. The major reason for this is to prevent mail
-loops.</p>
+on this line. One major reason for this is to prevent mail
+loops, the other is to transport envelope information which is essential
+for multidrop (domain-in-a-mailbox) schemes.</p>
 
-<p>To set up qmail to batch mail for a disconnected site the
+<p>To set up qmail to batch mail for a disconnected site, the
 ISP-mailhost will have normally put that site in its 'virtualhosts'
 control file so it will add a prefix to all mail addresses for this
 site. This results in mail sent to
-'username@userhost.userdom.dom.com' having a 'Delivered-To:' line
+'username@userhost.userdom.example.com' having a 'Delivered-To:' line
 of the form:</p>
 
 <pre>
-       Delivered-To: mbox-userstr-username@userhost.userdom.dom.com
+       Delivered-To: mbox-userstr-username@userhost.userdom.example.com
 </pre>
 
 <p>A single host maildrop will be slightly simpler:</p>
 
 <pre>
-       Delivered-To: mbox-userstr-username@userhost.dom.com
+       Delivered-To: mbox-userstr-username@userhost.example.com
 </pre>
 
 <p>The ISP can make the 'mbox-userstr-' prefix anything they choose
@@ -1417,41 +1429,17 @@ but a string matching the user host name is likely.</p>
 <p>To use this line you must:</p>
 
 <ol>
-<li>Ensure the option 'envelope Delivered-To:' is in the fetchmail
+    <li>Ensure the option '<code>envelope "Delivered-To"</code>' is in the fetchmail
 config file.</li>
 
-<li>Ensure you have a localdomains containing 'userdom.dom.com' or
-'userhost.dom.com' respectively.</li>
+<li>Ensure the option '<code>qvirtual "mbox-userstr-"</code>' is
+in the fetchmail config file, in order to remove this prefix from the
+username. (added by Luca Olivetti)</li>
+
+<li>Ensure you have a <code>localdomains</code> option containing
+'<code>userdom.example.com</code>' or '<code>userhost.userdom.example.com</code>'
+respectively.</li>
 </ol>
-
-<p>So far this reliably delivers messages to the correct machine of
-the local network, to deliver to the correct user the
-'mbox-userstr-' prefix must be stripped off of the user name. This
-can be done by setting up an alias within the qmail MTA on each
-local machine. Simply create a dot-qmail file called
-'.qmail-mbox-userstr-default' in the alias directory (normally
-/var/qmail/alias) with the contents:</p>
-
-<pre>
-      | ../bin/qmail-inject -a -f"$SENDER" "${LOCAL#mbox-userstr-}@$HOST"
-</pre>
-
-<p>Note this <em>does</em> require a modern /bin/sh.</p>
-
-<p>Peter Wilson adds:</p>
-
-<p>"My ISP uses "alias-unzzippedcom-" as the prefix, which means
-that I need to name my file ".qmail-unzzippedcom-default". This is
-due to qmail's assumption that a message sent to user-xyz is
-handled by the file ~user/.qmail-xyz (or
-~user/.qmail-default)."</p>
-
-<p>Luca Olivetti adds:</p>
-
-<p>If you aren't using qmail locally, or you don't want to set up
-the alias mechanism described above, you can use the option
-'<code>qvirtual "mbox-userstr-"</code>' in your fetchmail config
-file to strip the prefix from the local user name.</p>
 
 <h2><a id="T3" name="T3">T3. How can I use fetchmail with
 exim?</a></h2>
@@ -3387,7 +3375,8 @@ reconfiguring with <code>FEATURE(nodns)</code>.</p>
 
 <p>Configuring your bind library to cache DNS lookups locally may
 help, and is a good idea for speeding up other services as well.
-Switching to a faster MTA like qmail or exim might help.</p>
+Switching to a faster MTA like <a
+    href="http://www.postfix.org/">Postfix</a> might help.</p>
 
 <h2><a id="O7" name="O7">O7. Why doesn't fetchmail deliver mail in
 date-sorted order?</a></h2>
