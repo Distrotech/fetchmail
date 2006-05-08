@@ -737,6 +737,9 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	     * It's unclear what is going on here, as the
 	     * QUALCOMM server (at least) seems to be
 	     * reporting the on-disk size correctly.
+	     *
+	     * qmail-pop3d also goofs up message sizes and does not
+	     * count the line end characters properly.
 	     */
 	    if (msgblk.msglen != msgsize)
 	    {
