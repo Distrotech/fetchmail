@@ -1072,7 +1072,7 @@ static int do_session(
 		    strlcpy(errbuf, strerror(err_no), sizeof(errbuf));
 		report_complete(stderr, ": %s\n", errbuf);
 
-#ifdef __UNUSED
+#ifdef __UNUSED__
 		/* 
 		 * Don't use this.  It was an attempt to address Debian bug
 		 * #47143 (Notify user by mail when pop server nonexistent).
