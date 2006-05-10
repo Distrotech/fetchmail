@@ -827,7 +827,7 @@ FreeBSD.</strike></a></h2>
 <p style="font-style:italic;">As of release 6.3.0, fetchmail's
 Makefile[.in] should work flawlessly with BSD's portable make used on
 FreeBSD. With older releases, use GNU make (usually installed as
-<code>gmake</code>).</p>
+<code>gmake</code>; otherwise try <kbd>pkg_add -r gmake</kbd>).</p>
 
 <h2><a id="B2" name="B2">B2. Lex bombs out while building the
 fetchmail lexer.</a></h2>
@@ -836,9 +836,9 @@ fetchmail lexer.</a></h2>
 formats, so you do not need to use lex unless you hacked the .l or .y
 files.</p>
 
-<p>fetchmail's lexer has been developed with GNU flex, and the lex tools
-shipped by some UNIX vendors (HP, SGI, Sun) are known to be incapable of
-compiling fetchmail's lexer.</p>
+<p>fetchmail's lexer has been developed with GNU flex and uses some of
+its specialties, so the lexer cannot be compiled with the lex tools
+shipped by some UNIX vendors (HP, SGI, Sun).</p>
 
 <h2><a id="B3" name="B3">B3. I get link failures when I try to
 build fetchmail.</a></h2>
@@ -884,6 +884,11 @@ directory.</a></h2>
 <h2><a id="F1" name="F1">F1. Why does my old .fetchmailrc file no
 longer work?</a></h2>
 
+<h3>If your file predates 6.3.0</h3>
+
+<p>The <tt>netsec</tt> option was discontinued and needs to be
+removed.</p>
+
 <h3>If your file predates 5.8.9</h3>
 
 <p>If you were using ETRN mode, change your <tt>smtphost</tt>
@@ -891,8 +896,8 @@ option to a <tt>fetchdomains</tt> option.</p>
 
 <h3>If your file predates 5.8.3</h3>
 
-<p>The 'via localhost' special case for use with ssh tunnelling is
-gone. Use the %h feature of <tt>plugin</tt> instead.</p>
+<p>The <tt>'via localhost'</tt> special case for use with ssh tunnelling is
+gone. Use the <tt>%h</tt> feature of <tt>plugin</tt> instead.</p>
 
 <h3>If your file predates 5.6.8</h3>
 
