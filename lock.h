@@ -2,11 +2,11 @@
 #define FM_LOCK_H
 
 /* lock.c: concurrency locking */
-void lock_setup(struct runctl *);
-void lock_assert(void);
-void lock_or_die(void);
+void fm_lock_setup(struct runctl *);
+void fm_lock_assert(void);
+void fm_lock_or_die(void);
 void fm_lock_release(void);
-int lock_state(void);
-void lock_dispose(void);
+int  fm_lock_state(void);
+void fm_lock_dispose(void);
 
 #endif

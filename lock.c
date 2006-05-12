@@ -26,7 +26,7 @@
 static char *lockfile;		/* name of lockfile */
 static int lock_acquired;	/* have we acquired a lock */
 
-void lock_setup(struct runctl *ctl)
+void fm_lock_setup(struct runctl *ctl)
 /* set up the global lockfile name */
 {
     /* set up to do lock protocol */
@@ -63,7 +63,7 @@ static void unlockit(void)
 	unlink(lockfile);
 }
 
-void lock_dispose(void)
+void fm_lock_dispose(void)
 /* arrange for a lock to be removed on process exit */
 {
 #ifdef HAVE_ATEXIT
@@ -71,7 +71,7 @@ void lock_dispose(void)
 #endif
 }
 
-int lock_state(void)
+int fm_lock_state(void)
 {
     int		pid, st;
     FILE	*lockfp;
@@ -111,13 +111,13 @@ int lock_state(void)
     return(bkgd ? -pid : pid);
 }
 
-void lock_assert(void)
+void fm_lock_assert(void)
 /* assert that we already posess a lock */
 {
     lock_acquired = TRUE;
 }
 
-void lock_or_die(void)
+void fm_lock_or_die(void)
 /* get a lock on a given host or exit */
 {
     int fd;

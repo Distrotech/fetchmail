@@ -59,6 +59,10 @@ fetchmail 6.3.5 (not yet released):
   completing NTLM handshake, for robustness and consistency.
   (Taken from the NetBSD portable packages collection, patch-ac.)
 
+# CHANGES:
+* Rename all fetchmail-internal lock_* functions to fm_lock_*. Obsoletes
+  NetBSD portable packages collection patch-ah, patch-ai and patch-aj.
+
 # TRANSLATION UPDATES:
 * Russian/ru (Pavel Maryanov), Vietnamese/vi (Clytie Siddall)
 

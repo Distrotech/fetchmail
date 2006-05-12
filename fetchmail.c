@@ -198,7 +198,7 @@ int main(int argc, char **argv)
      * call near the beginning of the polling loop for details).  We want
      * to be sure the lock gets nuked on any error exit, basically.
      */
-    lock_dispose();
+    fm_lock_dispose();
 
 #ifdef HAVE_GETCWD
     /* save the current directory */
@@ -316,7 +316,7 @@ int main(int argc, char **argv)
 #endif /* POP3_ENABLE */
 
     /* construct the lockfile */
-    lock_setup(&run);
+    fm_lock_setup(&run);
 
 #ifdef HAVE_SETRLIMIT
     /*
@@ -401,7 +401,7 @@ int main(int argc, char **argv)
     }
 
     /* check for another fetchmail running concurrently */
-    pid = lock_state();
+    pid = fm_lock_state();
     bkgd = (pid < 0);
     pid = bkgd ? -pid : pid;
 
@@ -476,7 +476,7 @@ int main(int argc, char **argv)
 	}
 	else if (getpid() == pid)
 	    /* this test enables re-execing on a changed rcfile */
-	    lock_assert();
+	    fm_lock_assert();
 	else if (argc > 1)
 	{
 	    fprintf(stderr,
@@ -581,7 +581,7 @@ int main(int argc, char **argv)
     set_signal_handler(SIGQUIT, terminate_run);
 
     /* here's the exclusion lock */
-    lock_or_die();
+    fm_lock_or_die();
 
     /*
      * Query all hosts. If there's only one, the error return will
