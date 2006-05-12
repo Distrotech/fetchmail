@@ -55,6 +55,9 @@ fetchmail 6.3.5 (not yet released):
   input buffer when the message has been completely read, to avoid taking
   trailing garbage into the message if the terminal CRLF is missing. Fixes
   Debian Bug#312415. (Patch suggested by Mike Jones, Manchester Univ.).
+* When using NTLM authentication, use regular IMAP response code handler after
+  completing NTLM handshake, for robustness and consistency.
+  (Taken from the NetBSD portable packages collection, patch-ac.)
 
 # TRANSLATION UPDATES:
 * Russian/ru (Pavel Maryanov), Vietnamese/vi (Clytie Siddall)

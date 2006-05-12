@@ -263,10 +263,8 @@ static int do_imap_ntlm(int sock, struct query *ctl)
     strcat(msgbuf,"\r\n");
     SockWrite (sock, msgbuf, strlen (msgbuf));
   
-    if ((result = gen_recv (sock, msgbuf, sizeof msgbuf)))
-	return result;
-  
-    if (strstr (msgbuf, "OK"))
+    result = imap_ok (sock, NULL);
+    if (result == PS_SUCCESS)
 	return PS_SUCCESS;
     else
 	return PS_AUTHFAIL;
