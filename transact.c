@@ -1335,6 +1335,9 @@ int readbody(int sock, struct query *ctl, flag forward, int len)
     while (protocol->delimited || len > 0)
     {
 	set_timeout(mytimeout);
+	/* XXX FIXME: for undelimited protocols that ship the size, such
+	 * as IMAP, we might want to use the count of remaining characters
+	 * instead of the buffer size -- not for fetchmail 6.3.X though */
 	if ((linelen = SockRead(sock, inbufp, sizeof(buf)-4-(inbufp-buf)))==-1)
 	{
 	    set_timeout(0);
@@ -1357,6 +1360,20 @@ int readbody(int sock, struct query *ctl, flag forward, int len)
 		sizeticker -= SIZETICKER;
 	    }
 	}
+
+	/* Mike Jones, Manchester University, 2006:
+	 * "To fix IMAP MIME Messages in which fetchmail adds the remainder of
+	 * the IMAP packet including the ')' character (part of the IMAP)
+	 * Protocol causing the addition of an extra MIME boundary locally."
+	 *
+	 * However, we shouldn't do this for delimited protocols:
+	 * many POP3 servers (Microsoft, qmail) goof up message sizes
+	 * so we might end truncating messages prematurely.
+	 */
+	if (!protocol->delimited && linelen > len) {
+	    inbufp[len] = '\0';
+	}
+
 	len -= linelen;
 
 	/* check for end of message */
