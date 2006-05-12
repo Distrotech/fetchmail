@@ -291,9 +291,8 @@ int SockOpen(const char *host, const char *service,
 	if (i < 0)
 	    continue;
 
-	/* Socket opened saved. Usefull if connect timeout 
-	 * because it can be closed.
-	 */
+	/* Save socket descriptor.
+	 * Used to close the socket after connect timeout. */
 	mailserver_socket_temp = i;
 
 	if (connect(i, (struct sockaddr *) ai->ai_addr, ai->ai_addrlen) < 0) {
