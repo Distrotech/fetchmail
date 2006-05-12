@@ -47,7 +47,8 @@ fetchmail 6.3.5 (not yet released):
 * The code still isn't 100% ISO-C compliant, some configurations attempt to
   compile files that are empty after preprocessing, which can cause compiler
   diagnostics and perhaps jam the compilation on strict compilers.
-* fetchmail expects Received: headers in a particular format.
+* fetchmail expects Received: headers in a particular format when parsing
+  envelopes.
 
 # TRANSLATION UPDATES:
 * Russian/ru (Pavel Maryanov), Vietnamese/vi (Clytie Siddall)
