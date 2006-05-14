@@ -65,6 +65,8 @@ fetchmail 6.3.5 (not yet released):
 * Drop #include <com_err.h> from Kerberos 5 header file, fixes compile error on
   SUSE Linux 10.0.
 * Fix des_pcbc_encrypt compile warnings in kerberos.c line 246.
+* If krb5-config provides gssapi library information, use that rather than
+  guessing.
 
 # CHANGES:
 * Rename all fetchmail-internal lock_* functions to fm_lock_*. Obsoletes

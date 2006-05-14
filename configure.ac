@@ -594,7 +594,7 @@ test "$with_ssl" != "no" && AC_DEFINE(SSL_ENABLE,1,Define if you want SSL suppor
 
 if test "$with_ssl" = "yes"
 then
-    #	He didn't specify an SSL location.  Let's look at some common
+    #	User didn't specify an SSL location.  Let's look at some common
     #	directories where SSL has been found in the past and try and auto
     #	configure for SSL.  OpenSSL determination will be made later.
     #	This will screw up if an OpenSSL install is located in a later
@@ -717,29 +717,39 @@ then
   then
     with_gssapi=$with_kerberos5
   fi
+
   if test "$with_gssapi" != "yes" -a -n "$with_gssapi"
   then
     CFLAGS="$CFLAGS -I$with_gssapi/include"
     LDFLAGS="$LDFLAGS -L$with_gssapi/lib"
   fi
 
-  AC_CHECK_LIB(gss, gss_check_version, LIBS="$LIBS -lgss", nogss=t)
-  if test -n "$nogss"
-  then
-  if test -f "$with_gssapi/include/roken.h"
-  then
-     LIBS="$LIBS -lkrb5 -lasn1 -ldes -lroken -ldb -ldl"
-     AC_CHECK_LIB(gssapi, gss_init_sec_context,LIBS="$LIBS -lgssapi",
-                  AC_MSG_ERROR([could not find libgssapi which is needed for GSSAPI support]), )
-     AC_DEFINE(HEIMDAL)
+  dnl obtain gssapi default libs
+  if krb5-config --libs gssapi 2>/dev/null >/dev/null ; then
+      LIBS="$LIBS `krb5-config --libs gssapi`"
   else
-     AC_CHECK_LIB(gssapi_krb5, gss_init_sec_context,LIBS="$LIBS -lgssapi_krb5",
-                  AC_MSG_ERROR([could not find libgssapi_krb5 which is needed for GSSAPI support]), -lkrb5)
-  fi
+    AC_CHECK_LIB(gss, gss_check_version, LIBS="$LIBS -lgss", nogss=t)
+    if test -n "$nogss"
+    then
+      # -lgss not found
+      if test -f "$with_gssapi/include/roken.h"
+      then
+         # have roken.h, assume Heimdal
+         LIBS="$LIBS -lkrb5 -lasn1 -ldes -lroken -ldb -ldl"
+         AC_CHECK_LIB(gssapi, gss_init_sec_context,LIBS="$LIBS -lgssapi",
+                      AC_MSG_ERROR([could not find libgssapi which is needed for GSSAPI support]), )
+         AC_DEFINE(HEIMDAL)
+      else
+         # no roken.h, assume MIT
+         AC_CHECK_LIB(gssapi_krb5, gss_init_sec_context,LIBS="$LIBS -lgssapi_krb5",
+                      AC_MSG_ERROR([could not find libgssapi_krb5 which is needed for GSSAPI support]), -lkrb5)
+      fi
+    fi
   fi
   AC_DEFINE(GSSAPI,1,Define if you want GSSAPI authentication)
-  save_CPPFLAGS=$CPPFLAGS
-  CPPFLAGS="-I$with_gssapi/include"
+  if test "$with_gssapi" != yes ; then
+    CPPFLAGS="-I$with_gssapi/include"
+  fi
   AC_CHECK_HEADERS(gss.h gssapi.h gssapi/gssapi.h gssapi/gssapi_generic.h)
   if test "$ac_cv_header_gssapi_h" = "yes"; then
     AC_EGREP_HEADER(GSS_C_NT_HOSTBASED_SERVICE, gssapi.h, AC_DEFINE(HAVE_GSS_C_NT_HOSTBASED_SERVICE,1,Define if you have MIT kerberos))
