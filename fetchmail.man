@@ -5,7 +5,7 @@
 .\"
 .\" For license terms, see the file COPYING in this directory.
 .\"
-.TH fetchmail 1 "fetchmail 6.3.2" "fetchmail" "fetchmail reference manual"
+.TH fetchmail 1 "fetchmail 6.3.4" "fetchmail" "fetchmail reference manual"
 .SH NAME
 fetchmail \- fetch mail from a POP, IMAP, ETRN, or ODMR-capable server
 
