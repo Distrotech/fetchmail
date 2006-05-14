@@ -60,6 +60,8 @@ fetchmail 6.3.5 (not yet released):
   completing NTLM handshake, for robustness and consistency.
   (Taken from the NetBSD portable packages collection, patch-ac.)
 * On NetBSD, link against -lroken -lcom_err if --with-kerberos is enabled.
+* Drop #include <com_err.h> from Kerberos 5 header file, fixes compile error on
+  SUSE Linux 10.0.
 
 # CHANGES:
 * Rename all fetchmail-internal lock_* functions to fm_lock_*. Obsoletes
