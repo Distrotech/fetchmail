@@ -59,6 +59,7 @@ fetchmail 6.3.5 (not yet released):
 * When using NTLM authentication, use regular IMAP response code handler after
   completing NTLM handshake, for robustness and consistency.
   (Taken from the NetBSD portable packages collection, patch-ac.)
+* On NetBSD, link against -lroken -lcom_err if --with-kerberos is enabled.
 
 # CHANGES:
 * Rename all fetchmail-internal lock_* functions to fm_lock_*. Obsoletes

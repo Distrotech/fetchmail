@@ -510,7 +510,10 @@ then
   AS_MESSAGE(checking kerberosIV for `uname`...)
   AC_DEFINE(KERBEROS_V4,1,Define if you have Kerberos V4)
   CEFLAGS="$CEFLAGS -I/usr/include/kerberosIV"
-  LIBS="$LIBS -lkrb -ldes"
+  case `uname` in
+      NetBSD)  LIBS="$LIBS -lkrb -ldes -lroken -lcom_err" ;;
+      OpenBSD) LIBS="$LIBS -lkrb -ldes" ;;
+  esac
 elif krb4-config 2> /dev/null >/dev/null ; then
   krb4_prefix=`krb4-config --prefix`
   AC_MSG_RESULT([krb4-config points to kerberosIV under $krb4_prefix])
