@@ -448,10 +448,11 @@ else
   with_kerberos5=
   for dir in $searchdirs
   do AC_MSG_CHECKING([for Kerberos V in $dir])
-     if test -f "$dir/include/krb5.h"
+     if test -f "$dir/include/krb5.h" || test -f "$dir/include/krb5/krb5.h"
      then
+	if test -d "$dir/include/krb5" ; then CPFLAGS="$CPFLAGS -I$dir/include/krb5" ; fi
         ac_krblibs=
-        if test -f "$dir/include/roken.h"
+        if test -f "$dir/include/roken.h" || test -f "$dir/include/krb5/roken.h"
         then
            ac_krblibs="-lasn1 -lroken -lcom_err"
            AC_MSG_RESULT([Heimdal found])

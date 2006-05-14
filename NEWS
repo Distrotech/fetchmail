@@ -59,6 +59,8 @@ fetchmail 6.3.5 (not yet released):
 * When using NTLM authentication, use regular IMAP response code handler after
   completing NTLM handshake, for robustness and consistency.
   (Taken from the NetBSD portable packages collection, patch-ac.)
+* Support Kerberos installations where krb5.h and perhaps roken.h are in
+  .../include/krb5.  Taken from NetBSD portable packages collection patch-ae.
 * On NetBSD, link against -lroken -lcom_err if --with-kerberos is enabled.
 * Drop #include <com_err.h> from Kerberos 5 header file, fixes compile error on
   SUSE Linux 10.0.
