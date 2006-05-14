@@ -267,7 +267,7 @@ int SockOpen(const char *host, const char *service,
 	     const char *plugin)
 {
     struct addrinfo *ai, *ai0, req;
-    int i;
+    int i, acterr = 0;
 
 #ifdef HAVE_SOCKETPAIR
     if (plugin)
@@ -287,27 +287,59 @@ int SockOpen(const char *host, const char *service,
 
     i = -1;
     for (ai = ai0; ai; ai = ai->ai_next) {
+	char buf[80];
+	int gnie;
+
+	gnie = getnameinfo(ai->ai_addr, ai->ai_addrlen, buf, sizeof(buf), NULL, 0, NI_NUMERICHOST);
+	if (gnie)
+	    snprintf(buf, sizeof(buf), GT_("unknown (%s)"), gai_strerror(gnie));
+
+	if (outlevel >= O_VERBOSE)
+	    report_build(stdout, GT_("Trying to connect to %s..."), buf);
 	i = socket(ai->ai_family, ai->ai_socktype, 0);
-	if (i < 0)
+	if (i < 0) {
+	    /* mask EAFNOSUPPORT errors, they confuse users for
+	     * multihomed hosts */
+	    if (errno != EAFNOSUPPORT)
+		acterr = errno;
+	    if (outlevel >= O_VERBOSE)
+		report_complete(stdout, GT_("cannot create socket: %s\n"), strerror(errno));
 	    continue;
+	}
 
 	/* Save socket descriptor.
 	 * Used to close the socket after connect timeout. */
 	mailserver_socket_temp = i;
 
 	if (connect(i, (struct sockaddr *) ai->ai_addr, ai->ai_addrlen) < 0) {
+	    int e = errno;
+
+	    /* additionally, suppress IPv4 network unreach errors */
+	    if (e != EAFNOSUPPORT)
+		acterr = errno;
+
+	    if (outlevel >= O_VERBOSE)
+		report_complete(stdout, GT_("connection failed.\n"));
+	    if (outlevel > O_SILENT)
+		report(stderr, GT_("connection to %s failed: %s.\n"), buf, strerror(e));
 	    fm_close(i);
 	    i = -1;
 	    continue;
+	} else {
+	    if (outlevel >= O_VERBOSE)
+		report_complete(stdout, GT_("connected.\n"));
 	}
-	
+
 	/* No connect timeout, then no need to set mailserver_socket_temp */
 	mailserver_socket_temp = -1;
-	
+
 	break;
     }
 
     freeaddrinfo(ai0);
+
+    if (i == -1)
+	errno = acterr;
 
     return i;
 }
