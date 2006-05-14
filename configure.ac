@@ -504,6 +504,7 @@ AC_ARG_WITH(kerberos,
 [
 if test "$with_kerberos" != "no"
 then
+    AC_MSG_WARN([Kerberos IV support is obsolete. Use --with-kerberos5 if possible.])
 # Check for a NetBSD/OpenBSD special case
 if test "$with_kerberos" = "yes" && ( test `uname` = "NetBSD" || test `uname` = "OpenBSD" )
 then

@@ -67,6 +67,7 @@ fetchmail 6.3.5 (not yet released):
 # CHANGES:
 * Rename all fetchmail-internal lock_* functions to fm_lock_*. Obsoletes
   NetBSD portable packages collection patch-ah, patch-ai and patch-aj.
+* Configure prints a warning (but proceeds) if Kerberos IV support is enabled.
 
 # TRANSLATION UPDATES:
 * Russian/ru (Pavel Maryanov), Vietnamese/vi (Clytie Siddall)
