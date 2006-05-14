@@ -732,10 +732,16 @@ then
     if test -n "$nogss"
     then
       # -lgss not found
-      if test -f "$with_gssapi/include/roken.h"
+      if test "$with_gssapi" = yes ; then
+	  with_gssapi=/usr
+      fi
+      if test -f "$with_gssapi/include/roken.h" -o -f "$with_gssapi/include/krb5/roken.h"
       then
          # have roken.h, assume Heimdal
-         LIBS="$LIBS -lkrb5 -lasn1 -ldes -lroken -ldb -ldl"
+	 case `uname` in
+	     NetBSD) LIBS="$LIBS -lkrb5" ;;
+	     *)      LIBS="$LIBS -lkrb5 -lasn1 -ldes -lroken -ldb -ldl" ;;
+	 esac
          AC_CHECK_LIB(gssapi, gss_init_sec_context,LIBS="$LIBS -lgssapi",
                       AC_MSG_ERROR([could not find libgssapi which is needed for GSSAPI support]), )
          AC_DEFINE(HEIMDAL)
