@@ -215,7 +215,7 @@ struct method		/* describe methods for protocol state machine */
     int (*is_old)(int, struct query *, int);
 				/* check for old message */
     int (*fetch_headers)(int, struct query *, int, int *);
-				/* fetch FROM headera given message */
+				/* fetch header from a given message */
     int (*fetch_body)(int, struct query *, int, int *);
 				/* fetch a given message */
     int (*trail)(int, struct query *, const char *);

@@ -1309,8 +1309,8 @@ static int pop3_logout(int sock, struct query *ctl)
 static const struct method pop3 =
 {
     "POP3",		/* Post Office Protocol v3 */
-    "pop3",		/* standard POP3 port */
-    "pop3s",		/* ssl POP3 port */
+    "pop3",		/* port for plain and TLS POP3 */
+    "pop3s",		/* port for SSL POP3 */
     FALSE,		/* this is not a tagged protocol */
     TRUE,		/* this uses a message delimiter */
     pop3_ok,		/* parse command response */
