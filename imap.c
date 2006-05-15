@@ -1212,8 +1212,8 @@ static int imap_logout(int sock, struct query *ctl)
 static const struct method imap =
 {
     "IMAP",		/* Internet Message Access Protocol */
-    "imap",
-    "imaps",
+    "imap",		/* service (plain and TLS) */
+    "imaps",		/* service (SSL) */
     TRUE,		/* this is a tagged protocol */
     FALSE,		/* no message delimiter */
     imap_ok,		/* parse command response */
