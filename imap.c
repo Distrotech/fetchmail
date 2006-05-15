@@ -679,7 +679,7 @@ static int imap_getrange(int sock,
 			 int *countp, int *newp, int *bytes)
 /* get range of messages to be fetched */
 {
-    int ok;
+    int ok, oldcount;
     char buf[MSGBUFSIZE+1], *cp;
 
     /* find out how many messages are waiting */
@@ -696,7 +696,9 @@ static int imap_getrange(int sock,
 	 *
 	 * this is a while loop because imap_idle() might return on other
 	 * mailbox changes also */
-	while (recentcount == 0 && do_idle) {
+	oldcount = count;
+	while (count <= oldcount && recentcount == 0 && do_idle) {
+	    oldcount = count;
 	    smtp_close(ctl, 1);
 	    ok = imap_idle(sock);
 	    if (ok)
@@ -706,7 +708,7 @@ static int imap_getrange(int sock,
 	    }
 	}
 	/* if recentcount is 0, return no mail */
-	if (recentcount == 0)
+	if (recentcount == 0 && count <= oldcount)
 		count = 0;
 	if (outlevel >= O_DEBUG)
 	    report(stdout, ngettext("%d message waiting after re-poll\n",

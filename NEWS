@@ -74,6 +74,8 @@ fetchmail 6.3.5 (not yet released):
 * Provide INET6 to KAME/getnameinfo.c (only useful on IPv6-enabled systems that
   lack getnameinfo, and there only visible in some Received: headers).
   Found by Dan Fandrich.
+* Make IMAP4 IDLE work on servers that do not update RECENT counts.
+  Reported by Lars Tewes.
 
 # CHANGES:
 * Rename all fetchmail-internal lock_* functions to fm_lock_*. Obsoletes
