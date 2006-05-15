@@ -142,6 +142,26 @@ AC_CHECK_FUNCS(tcsetattr stty setsid geteuid seteuid dnl
   sigaction strdup setlocale)
 
 AC_CHECK_DECLS(strerror)
+dnl INET6 is used by KAME/getnameinfo
+AC_CACHE_CHECK(for AF_INET6/PF_INET6,ac_cv_inet6,
+AC_COMPILE_IFELSE([
+  AC_LANG_PROGRAM([[
+    #ifdef HAVE_SYS_TYPES_H
+    #include <sys/types.h>
+    #endif
+    #ifdef HAVE_SYS_SOCKET_H
+    #include <sys/socket.h>
+    #endif
+  ]],[[
+    int foo = AF_INET6;
+    int bar = PF_INET6;
+  ]])],
+  ac_cv_inet6=yes , ac_cv_inet6=no
+))
+if test "x$ac_cv_inet6" = xyes
+then
+    AC_DEFINE(INET6,1,Define to 1 if your system defines AF_INET6 and PF_INET6.)
+fi
 
 # Under Red Hat 4.0 (and many other Linuxes) -lresolv is seriously flaky
 # and breaks gethostbyname(2).  It's better to use the bind stuff in the C
@@ -394,7 +414,7 @@ AC_ARG_ENABLE(opie,
 test "$with_opie" = "yes" && AC_DEFINE(OPIE_ENABLE,1,Define if you want OPIE support compiled in)
 
 AC_SEARCH_LIBS(getaddrinfo, inet6, [AC_DEFINE(HAVE_GETADDRINFO,1,[define to 1 if you have the getaddrinfo function])])
-AC_CHECK_FUNCS(getnameinfo)
+AC_CHECK_FUNCS(getnameinfo inet_ntop)
 
 # This version of the Kerberos 4 and 5 options addresses the follwing issues:
 # 
