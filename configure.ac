@@ -340,7 +340,7 @@ AC_ARG_ENABLE(IMAP,
 	[  --disable-IMAP          don't compile in IMAP protocol support],
 	[with_IMAP=$enableval],
 	[with_IMAP=yes])
-test "$with_IMAP" = "yes" && AC_DEFINE(IMAP_ENABLE,1,"Define if you want IMAP support compiled in")
+test "$with_IMAP" = "yes" && AC_DEFINE(IMAP_ENABLE,1,Define if you want IMAP support compiled in)
 
 ###	use option --disable-ETRN to omit the ETRN support
 AC_ARG_ENABLE(ETRN,
