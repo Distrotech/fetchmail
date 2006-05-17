@@ -184,8 +184,8 @@ struct idlist
 	    flag	mark;		/* UID-index information */
 #define UID_UNSEEN	0		/* hasn't been seen */
 #define UID_SEEN	1		/* seen, but not deleted */
-#define UID_DELETED	2		/* this message has been deleted */
-#define UID_EXPUNGED	3		/* this message has been expunged */ 
+#define UID_DELETED	2		/* this message has been marked deleted */
+#define UID_EXPUNGED	3		/* this message has been expunged */
         }
 	status;
 	char *id2;
