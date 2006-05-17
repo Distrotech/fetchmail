@@ -76,6 +76,8 @@ fetchmail 6.3.5 (not yet released):
   Found by Dan Fandrich.
 * Make IMAP4 IDLE work on servers that do not update RECENT counts.
   Reported by Lars Tewes.
+* Fix --flush description in the manual page, fetchmail does not mark messages
+  seen unless it has successfully delivered them. Suggested by Frederic Marchal.
 
 # CHANGES:
 * Rename all fetchmail-internal lock_* functions to fm_lock_*. Obsoletes

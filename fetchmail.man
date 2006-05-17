@@ -5,7 +5,7 @@
 .\"
 .\" For license terms, see the file COPYING in this directory.
 .\"
-.TH fetchmail 1 "fetchmail 6.3.4" "fetchmail" "fetchmail reference manual"
+.TH fetchmail 1 "fetchmail 6.3.5" "fetchmail" "fetchmail reference manual"
 .SH NAME
 fetchmail \- fetch mail from a POP, IMAP, ETRN, or ODMR-capable server
 
@@ -203,15 +203,15 @@ you have specified a default of \fBkeep\fR in your
 .B \-F | \-\-flush
 POP3/IMAP only.  This is a dangerous option and can cause mail loss when
 used improperly. It deletes old (seen) messages from the mailserver
-before retrieving new messages.  Warning: This can cause mail loss if
+before retrieving new messages.  \fBWarning:\fR This can cause mail loss if
 you check your mail with other clients than fetchmail, and cause
-fetchmail to delete a message it had never fetched before. Similarly, if
-your local MTA hangs and fetchmail is aborted, the next time you run
-fetchmail, it will delete mail that was never delivered to you.  You
-should probably not use this option in your configuration file. What you
-probably want is the default setting: if you don't specify '\-k', then
-fetchmail will automatically delete messages after successful
-delivery. This option does not work with ETRN and ODMR.
+fetchmail to delete a message it had never fetched before.  It can also
+cause mail loss if the mail server marks the message seen after
+retrieval (IMAP2 servers). You should probably not use this option in your
+configuration file. If you use it with POP3, you must use the 'uidl'
+option. What you probably want is the default setting: if you don't
+specify '\-k', then fetchmail will automatically delete messages after
+successful delivery.
 .TP
 .B \-\-limitflush
 POP3/IMAP only, since version 6.3.0.  Delete oversized messages from the
