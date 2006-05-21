@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.9-rc9\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-04-06 11:48+0200\n"
+"POT-Creation-Date: 2006-05-21 18:49+0200\n"
 "PO-Revision-Date: 2005-12-18 11:50+0100\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -139,7 +139,7 @@ msgstr " (%d octets dans l'en-tête)"
 msgid " (%d body octets) "
 msgstr " (%d octets dans le corps) "
 
-#: driver.c:745
+#: driver.c:748
 #, c-format
 msgid ""
 "message %s@%s:%d was not the expected length (%d actual != %d expected)\n"
@@ -147,19 +147,19 @@ msgstr ""
 "le message %s@%s:%d n'est pas de la longueur attendue (%d actuelle != %d "
 "attendue)\n"
 
-#: driver.c:776
+#: driver.c:779
 msgid " retained\n"
 msgstr " conservé\n"
 
-#: driver.c:786
+#: driver.c:789
 msgid " flushed\n"
 msgstr " éliminé\n"
 
-#: driver.c:803
+#: driver.c:806
 msgid " not flushed\n"
 msgstr " non éliminé\n"
 
-#: driver.c:821
+#: driver.c:824
 #, c-format
 msgid "fetchlimit %d reached; %d message left on server %s account %s\n"
 msgid_plural ""
@@ -169,44 +169,44 @@ msgstr[0] ""
 msgstr[1] ""
 "fetchlimit %d atteinte; %d messages demeurent sur le serveur %s (compte %s)\n"
 
-#: driver.c:885
+#: driver.c:888
 msgid "SIGPIPE thrown from an MDA or a stream socket error\n"
 msgstr "«SIGPIPE» envoyé par un MDA ou une erreur de «stream socket»\n"
 
-#: driver.c:892
+#: driver.c:895
 #, c-format
 msgid "timeout after %d seconds waiting to connect to server %s.\n"
 msgstr ""
 "délai dépassé après %d secondes d'attente d'une connexion avec le serveur %"
 "s.\n"
 
-#: driver.c:896
+#: driver.c:899
 #, c-format
 msgid "timeout after %d seconds waiting for server %s.\n"
 msgstr "délai dépassé après %d secondes d'attente du serveur %s.\n"
 
-#: driver.c:900
+#: driver.c:903
 #, c-format
 msgid "timeout after %d seconds waiting for %s.\n"
 msgstr "délai dépassé après %d secondes d'attente de %s.\n"
 
-#: driver.c:905
+#: driver.c:908
 #, c-format
 msgid "timeout after %d seconds waiting for listener to respond.\n"
 msgstr "délai dépassé après %d secondes d'attente de la réponse du client.\n"
 
-#: driver.c:908
+#: driver.c:911
 #, c-format
 msgid "timeout after %d seconds.\n"
 msgstr "délai d'attente dépassé après %d secondes.\n"
 
-#: driver.c:920
+#: driver.c:923
 msgid "Subject: fetchmail sees repeated timeouts"
 msgstr ""
 "Subject: fetchmail a rencontré des dépassements de délais à plusieurs "
 "reprises"
 
-#: driver.c:923
+#: driver.c:926
 #, c-format
 msgid ""
 "Fetchmail saw more than %d timeouts while attempting to get mail from %s@%"
@@ -215,7 +215,7 @@ msgstr ""
 "Fetchmail a rencontré plus de %d dépassements de délais en récupérant du "
 "courrier depuis %s@%s.\n"
 
-#: driver.c:927
+#: driver.c:930
 msgid ""
 "This could mean that your mailserver is stuck, or that your SMTP\n"
 "server is wedged, or that your mailbox file on the server has been\n"
@@ -233,74 +233,74 @@ msgstr ""
 "Fetchmail n'interrogera pas de nouveau cette boîte aux lettres\n"
 "tant que vous ne l'aurez pas redémarré.\n"
 
-#: driver.c:952
+#: driver.c:955
 #, c-format
 msgid "pre-connection command failed with status %d\n"
 msgstr "la commande de pré-connexion a échoué avec l'état %d\n"
 
-#: driver.c:976
+#: driver.c:979
 #, c-format
 msgid "couldn't find HESIOD pobox for %s\n"
 msgstr "impossible de trouver la boîte HESIOD pour %s\n"
 
-#: driver.c:997
+#: driver.c:1000
 msgid "Lead server has no name.\n"
 msgstr "Le serveur principal n'a pas de nom\n"
 
-#: driver.c:1021
+#: driver.c:1024
 #, c-format
 msgid "couldn't find canonical DNS name of %s (%s)\n"
 msgstr "impossible de trouver le nom canonique DNS de %s (%s)\n"
 
-#: driver.c:1067
+#: driver.c:1070
 #, c-format
 msgid "%s connection to %s failed"
 msgstr "Échec de connexion %s avec %s"
 
-#: driver.c:1083
+#: driver.c:1086
 msgid "Subject: Fetchmail unreachable-server warning."
 msgstr "Subject: avertissement de serveur non accessible par Fetchmail."
 
-#: driver.c:1085
+#: driver.c:1088
 #, c-format
 msgid "Fetchmail could not reach the mail server %s:"
 msgstr "Fetchmail n'a pas pu recevoir le courrier de %s:"
 
-#: driver.c:1111 imap.c:399 pop3.c:464
+#: driver.c:1114 imap.c:403 pop3.c:464
 msgid "SSL connection failed.\n"
 msgstr "Échec de la connexion SSL\n"
 
-#: driver.c:1164
+#: driver.c:1167
 #, c-format
 msgid "Lock-busy error on %s@%s\n"
 msgstr "Erreur «lock-busy» sur %s@%s\n"
 
-#: driver.c:1168
+#: driver.c:1171
 #, c-format
 msgid "Server busy error on %s@%s\n"
 msgstr "Erreur «busy» sur %s@%s\n"
 
-#: driver.c:1173
+#: driver.c:1176
 #, c-format
 msgid "Authorization failure on %s@%s%s\n"
 msgstr "Échec de l'autorisation sur %s@%s%s\n"
 
-#: driver.c:1176
+#: driver.c:1179
 msgid " (previously authorized)"
 msgstr " (précédemment autorisée)"
 
-#: driver.c:1197
+#: driver.c:1200
 #, c-format
 msgid "Subject: fetchmail authentication failed on %s@%s"
 msgstr "Subject: l'authentification de fetchmail a échoué sur %s@%s"
 
-#: driver.c:1201
+#: driver.c:1204
 #, c-format
 msgid "Fetchmail could not get mail from %s@%s.\n"
 msgstr "Fetchmail n'a pas pu recevoir le courrier de %s@%s.\n"
 
 # XXX FIXME
-#: driver.c:1205
+#: driver.c:1208
 msgid ""
 "The attempt to get authorization failed.\n"
 "Since we have already succeeded in getting authorization for this\n"
@@ -314,7 +314,7 @@ msgstr ""
 "de celle-ci car ils n'envoient pas de messages d'erreur utiles\n"
 "en cas d'échec du login."
 
-#: driver.c:1211
+#: driver.c:1214
 msgid ""
 "\n"
 "However, if you HAVE changed your account details since starting the\n"
@@ -334,7 +334,7 @@ msgstr ""
 "a chaque réveil. Il n'y aura plus d'autre notifications jusqu'à ce que\n"
 "le service soit réactivé."
 
-#: driver.c:1221
+#: driver.c:1224
 msgid ""
 "The attempt to get authorization failed.\n"
 "This probably means your password is invalid, but some servers have\n"
@@ -355,168 +355,168 @@ msgstr ""
 "a chaque réveil. Il n'y aura plus d'autre notifications jusqu'à ce que\n"
 "le service soit réactivé."
 
-#: driver.c:1237
+#: driver.c:1240
 #, c-format
 msgid "Repoll immediately on %s@%s\n"
 msgstr "Re-récupération immédiate sur %s@%s\n"
 
-#: driver.c:1242
+#: driver.c:1245
 #, c-format
 msgid "Unknown login or authentication error on %s@%s\n"
 msgstr "Erreur de login ou d'identification inconnue pour %s@%s\n"
 
-#: driver.c:1266
+#: driver.c:1269
 #, c-format
 msgid "Authorization OK on %s@%s\n"
 msgstr "Autorisation OK sur %s@%s\n"
 
-#: driver.c:1272
+#: driver.c:1275
 #, c-format
 msgid "Subject: fetchmail authentication OK on %s@%s"
 msgstr "Subject: l'authentification de fetchmail a réussie sur %s@%s"
 
-#: driver.c:1276
+#: driver.c:1279
 #, c-format
 msgid "Fetchmail was able to log into %s@%s.\n"
 msgstr "Fetchmail n'a pu enregistrer dans le journal (%s@%s).\n"
 
-#: driver.c:1280
+#: driver.c:1283
 msgid "Service has been restored.\n"
 msgstr "Le service a été réactivé\n"
 
-#: driver.c:1312
+#: driver.c:1315
 #, c-format
 msgid "selecting or re-polling folder %s\n"
 msgstr "sélection ou re-réception du dossier %s\n"
 
-#: driver.c:1314
+#: driver.c:1317
 msgid "selecting or re-polling default folder\n"
 msgstr "sélection ou re-réception du dossier par défaut\n"
 
-#: driver.c:1326
+#: driver.c:1329
 #, c-format
 msgid "%s at %s (folder %s)"
 msgstr "%s dans %s (dossier %s)"
 
-#: driver.c:1329 rcfile_y.y:381
+#: driver.c:1332 rcfile_y.y:381
 #, c-format
 msgid "%s at %s"
 msgstr "%s dans %s"
 
-#: driver.c:1334
+#: driver.c:1337
 #, c-format
 msgid "Polling %s\n"
 msgstr "Réception de %s\n"
 
-#: driver.c:1338
+#: driver.c:1341
 #, c-format
 msgid "%d message (%d %s) for %s"
 msgid_plural "%d messages (%d %s) for %s"
 msgstr[0] "%d message (%d %s) pour %s"
 msgstr[1] "%d messages (%d %s) pour %s"
 
-#: driver.c:1341
+#: driver.c:1344
 msgid "seen"
 msgid_plural "seen"
 msgstr[0] "déjà vu"
 msgstr[1] "déjà vus"
 
-#: driver.c:1344
+#: driver.c:1347
 #, c-format
 msgid "%d message for %s"
 msgid_plural "%d messages for %s"
 msgstr[0] "%d message pour %s"
 msgstr[1] "%d messages pour %s"
 
-#: driver.c:1351
+#: driver.c:1354
 #, c-format
 msgid " (%d octets).\n"
 msgstr " (%d octets).\n"
 
-#: driver.c:1357
+#: driver.c:1360
 #, c-format
 msgid "No mail for %s\n"
 msgstr "Aucun message pour %s\n"
 
-#: driver.c:1390 imap.c:89
+#: driver.c:1393 imap.c:89
 msgid "bogus message count!"
 msgstr "nombre de messages erroné !"
 
-#: driver.c:1532
+#: driver.c:1535
 msgid "socket"
 msgstr "socket"
 
-#: driver.c:1535
+#: driver.c:1538
 msgid "missing or bad RFC822 header"
 msgstr "l'en-tête RFC822 est manquant ou endommagé"
 
-#: driver.c:1538
+#: driver.c:1541
 msgid "MDA"
 msgstr "MDA"
 
-#: driver.c:1541
+#: driver.c:1544
 msgid "client/server synchronization"
 msgstr "synchronisation client/serveur"
 
-#: driver.c:1544
+#: driver.c:1547
 msgid "client/server protocol"
 msgstr "protocole client/serveur"
 
-#: driver.c:1547
+#: driver.c:1550
 msgid "lock busy on server"
 msgstr "verrou occupé sur le serveur"
 
-#: driver.c:1550
+#: driver.c:1553
 msgid "SMTP transaction"
 msgstr "Transaction SMTP"
 
-#: driver.c:1553
+#: driver.c:1556
 msgid "DNS lookup"
 msgstr "requête au DNS"
 
-#: driver.c:1556
+#: driver.c:1559
 msgid "undefined"
 msgstr "non définie"
 
-#: driver.c:1562
+#: driver.c:1565
 #, c-format
 msgid "%s error while fetching from %s@%s and delivering to SMTP host %s\n"
 msgstr ""
 "erreur %s durant la réception de %s@%s et l'envoi vers le serveur SMTP %s\n"
 
-#: driver.c:1564
+#: driver.c:1567
 msgid "unknown"
 msgstr "inconnu"
 
-#: driver.c:1566
+#: driver.c:1569
 #, c-format
 msgid "%s error while fetching from %s@%s\n"
 msgstr "erreur %s durant la réception de %s@%s\n"
 
-#: driver.c:1577
+#: driver.c:1580
 #, c-format
 msgid "post-connection command failed with status %d\n"
 msgstr "la commande de post-connexion a échoué avec l'état %d\n"
 
-#: driver.c:1597
+#: driver.c:1600
 msgid "Kerberos V4 support not linked.\n"
 msgstr "Support de Kerberos V4 non inclus.\n"
 
-#: driver.c:1605
+#: driver.c:1608
 msgid "Kerberos V5 support not linked.\n"
 msgstr "Support de Kerberos V5 non inclus.\n"
 
-#: driver.c:1616
+#: driver.c:1619
 #, c-format
 msgid "Option --flush is not supported with %s\n"
 msgstr "Option --flush non supportée avec %s\n"
 
-#: driver.c:1622
+#: driver.c:1625
 #, c-format
 msgid "Option --all is not supported with %s\n"
 msgstr "Option --all non supportée avec %s\n"
 
-#: driver.c:1631
+#: driver.c:1634
 #, c-format
 msgid "Option --limit is not supported with %s\n"
 msgstr "Option --limit non supportée avec %s\n"
@@ -977,8 +977,10 @@ msgstr ""
 "configuration de %s invalide, LMTP ne peut utiliser le port SMTP par défaut\n"
 
 #: fetchmail.c:1279
-msgid "Both fetchall and keep on in daemon mode is a mistake!\n"
-msgstr "Utiliser «fetchall» et «keep» ensemble en mode démon est une erreur!\n"
+msgid "Both fetchall and keep on in daemon or idle mode is a mistake!\n"
+msgstr ""
+"Utiliser «fetchall» et «keep» ensemble en mode démon ou mode idle est une "
+"erreur!\n"
 
 #: fetchmail.c:1304
 #, c-format
@@ -1679,88 +1681,88 @@ msgstr "Erreur de relarguage des credentials\n"
 msgid "fetchmail: thread sleeping for %d sec.\n"
 msgstr "fetchmail: mise en sommeil du thread pour %d secondes.\n"
 
-#: imap.c:312
+#: imap.c:316
 msgid "Protocol identified as IMAP4 rev 1\n"
 msgstr "Protocole identifié comme étant IMAP4 rev \n"
 
-#: imap.c:318
+#: imap.c:322
 msgid "Protocol identified as IMAP4 rev 0\n"
 msgstr "Protocole identifié comme étant IMAP4 rev 0\n"
 
-#: imap.c:325
+#: imap.c:329
 msgid "Protocol identified as IMAP2 or IMAP2BIS\n"
 msgstr "Protocole identifié comme étant IMAP2 ou IMAP2BIS\n"
 
-#: imap.c:340
+#: imap.c:344
 msgid "will idle after poll\n"
 msgstr "attendra après la réception\n"
 
-#: imap.c:497
+#: imap.c:501
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "La fonctionnalité OTP requise n'est pas supportée par fetchmail\n"
 
-#: imap.c:519 pop3.c:372
+#: imap.c:523 pop3.c:372
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "La fonctionnalité NTLM requise n'est pas supportée par fetchmail.\n"
 
-#: imap.c:528
+#: imap.c:532
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "La fonction LOGIN requise n'est pas supportée par le serveur\n"
 
-#: imap.c:602
+#: imap.c:606
 #, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
 msgstr ""
 "pas de concordance de la punge des messages (%d effectiv != %d attendue)\n"
 
-#: imap.c:706 imap.c:765
+#: imap.c:710 imap.c:769
 msgid "re-poll failed\n"
 msgstr "échec durant la re-réception\n"
 
-#: imap.c:714 imap.c:770
+#: imap.c:718 imap.c:774
 #, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
 msgstr[0] "%d message en attente après le nouveau poll\n"
 msgstr[1] "%d messages en attente après le nouveau poll\n"
 
-#: imap.c:731
+#: imap.c:735
 msgid "mailbox selection failed\n"
 msgstr "échec de la sélection de boîte aux lettres\n"
 
-#: imap.c:735
+#: imap.c:739
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
 msgstr[0] "%d message en attente après le premier poll\n"
 msgstr[1] "%d messages en attente après le premier poll\n"
 
-#: imap.c:749
+#: imap.c:753
 msgid "expunge failed\n"
 msgstr "échec de la purge\n"
 
-#: imap.c:753
+#: imap.c:757
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
 msgstr[0] "%d message en attente après la purge\n"
 msgstr[1] "%d messages en attente après la purge\n"
 
-#: imap.c:795
+#: imap.c:799
 msgid "search for unseen messages failed\n"
 msgstr "échec de la recherche des messages non-vus\n"
 
-#: imap.c:823
+#: imap.c:827
 #, c-format
 msgid "%lu is unseen\n"
 msgstr "%lu n'est pas vu\n"
 
-#: imap.c:835 pop3.c:784
+#: imap.c:839 pop3.c:784
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u est le premier a n'avoir pas été vu\n"
 
-#: imap.c:926
+#: imap.c:930
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""
@@ -2768,119 +2770,147 @@ msgstr "échec getaddrinfo(\"%s\",\"%s\") : %s\n"
 msgid "Try adding the --service option (see also FAQ item R12).\n"
 msgstr "Essaiez ajouter l'option --service (voir aussi FAQ R12).\n"
 
-#: socket.c:626
+#: socket.c:295
+#, c-format
+msgid "unknown (%s)"
+msgstr "inconnu (%s)"
+
+#: socket.c:298
+#, c-format
+msgid "Trying to connect to %s..."
+msgstr "Essai de connecter avec %s..."
+
+#: socket.c:306
+#, c-format
+msgid "cannot create socket: %s\n"
+msgstr "il n'est même pas possible d'expédier vers %s\n"
+
+#: socket.c:322
+msgid "connection failed.\n"
+msgstr "échec de connexion.\n"
+
+#: socket.c:324
+#, c-format
+msgid "connection to %s failed: %s.\n"
+msgstr "Échec de connexion avec %s: %s.\n"
+
+#: socket.c:330
+msgid "connected.\n"
+msgstr "connecté.\n"
+
+#: socket.c:657
 #, c-format
 msgid "Issuer Organization: %s\n"
 msgstr "Organisation de l'expéditeur: %s\n"
 
-#: socket.c:628
+#: socket.c:659
 msgid "Warning: Issuer Organization Name too long (possibly truncated).\n"
 msgstr ""
 "Avertissement: le nom de l'organisation de l'expéditeur est tros long (et "
 "peut etre tronqué).\n"
 
-#: socket.c:630
+#: socket.c:661
 msgid "Unknown Organization\n"
 msgstr "Organisation inconnue\n"
 
-#: socket.c:632
+#: socket.c:663
 #, c-format
 msgid "Issuer CommonName: %s\n"
 msgstr "Nom commun de l'émetteur : %s\n"
 
-#: socket.c:634
+#: socket.c:665
 msgid "Warning: Issuer CommonName too long (possibly truncated).\n"
 msgstr ""
 "Avertissement: le nom de l'expéditeur est tros long (et peut etre tronqué).\n"
 
-#: socket.c:636
+#: socket.c:667
 msgid "Unknown Issuer CommonName\n"
 msgstr "Nom commun de l'expéditeur inconnu\n"
 
-#: socket.c:640
+#: socket.c:671
 #, c-format
 msgid "Server CommonName: %s\n"
 msgstr "Nom commun du serveur: %s\n"
 
-#: socket.c:644
+#: socket.c:675
 msgid "Bad certificate: Subject CommonName too long!\n"
 msgstr "Certificat erroni: Sujet nom commun trop long!\n"
 
-#: socket.c:690
+#: socket.c:721
 #, c-format
 msgid "Server CommonName mismatch: %s != %s\n"
 msgstr "Pas de concordance du nom commun du serveur: %s != %s\n"
 
-#: socket.c:696
+#: socket.c:727
 msgid "Server name not set, could not verify certificate!\n"
 msgstr ""
 "Le nom du serveur n'est pas spécifié, impossible de vérifier le certificat!\n"
 
-#: socket.c:701
+#: socket.c:732
 msgid "Unknown Server CommonName\n"
 msgstr "Nom commun du serveur inconnu\n"
 
-#: socket.c:703
+#: socket.c:734
 msgid "Server name not specified in certificate!\n"
 msgstr "Le nom du serveur n'est pas présent dans le certificat!\n"
 
-#: socket.c:715
+#: socket.c:746
 msgid "EVP_md5() failed!\n"
 msgstr "échec de EVP_md5()\n"
 
-#: socket.c:719
+#: socket.c:750
 msgid "Out of memory!\n"
 msgstr "Plus de mémoire!\n"
 
-#: socket.c:727
+#: socket.c:758
 msgid "Digest text buffer too small!\n"
 msgstr "Le tampon résumé est trop court!\n"
 
-#: socket.c:733
+#: socket.c:764
 #, c-format
 msgid "%s key fingerprint: %s\n"
 msgstr "signature de la clé %s : %s\n"
 
-#: socket.c:737
+#: socket.c:768
 #, c-format
 msgid "%s fingerprints match.\n"
 msgstr "La signature %s correspond.\n"
 
-#: socket.c:739
+#: socket.c:770
 #, c-format
 msgid "%s fingerprints do not match!\n"
 msgstr "La signature %s ne correspond pas!\n"
 
-#: socket.c:748
+#: socket.c:779
 #, c-format
 msgid "Server certificate verification error: %s\n"
 msgstr "Erreur de vérification du certificat du serveur : %s\n"
 
-#: socket.c:754
+#: socket.c:785
 #, c-format
 msgid "unknown issuer (first %d characters): %s\n"
 msgstr "expéditeur inconnu (%d premiers caractères) : %s\n"
 
-#: socket.c:810
+#: socket.c:841
 msgid "File descriptor out of range for SSL"
 msgstr "Descripteur de fichier inaccessible pour SSL"
 
-#: socket.c:827
+#: socket.c:858
 #, c-format
 msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
 msgstr ""
 "Le protocole SSL «%s» spécifié est invalide, le protocole par défaut "
 "(SSLv23) est utilisé.\n"
 
-#: socket.c:890
+#: socket.c:921
 msgid "Certificate/fingerprint verification was somehow skipped!\n"
 msgstr "La vérification du certificat ou de la signature n'a pas été faite!\n"
 
-#: socket.c:964
+#: socket.c:995
 msgid "Cygwin socket read retry\n"
 msgstr "Nouvel essai de lecture sur la socket Cygwin\n"
 
-#: socket.c:967
+#: socket.c:998
 msgid "Cygwin socket read retry failed!\n"
 msgstr "Le nouvel essai de lecture sur la socket Cygwin a échoué!\n"
 
@@ -2965,70 +2995,70 @@ msgstr "le message contient des caractères NULs"
 msgid "SMTP listener rejected local recipient addresses: "
 msgstr "Le serveur SMTP rejette les adresses locales de destination : "
 
-#: transact.c:1404
+#: transact.c:1421
 msgid "writing message text\n"
 msgstr "écriture du texte du message\n"
 
-#: uid.c:248
+#: uid.c:250
 #, c-format
 msgid "Old UID list from %s:"
 msgstr "Ancienne liste d'UID depuis %s :"
 
-#: uid.c:253 uid.c:264 uid.c:521 uid.c:571
+#: uid.c:255 uid.c:266 uid.c:523 uid.c:573
 msgid " <empty>"
 msgstr " <vide>"
 
-#: uid.c:260
+#: uid.c:262
 msgid "Scratch list of UIDs:"
 msgstr "Liste brute des UIDs:"
 
-#: uid.c:515 uid.c:567
+#: uid.c:517 uid.c:569
 #, c-format
 msgid "Merged UID list from %s:"
 msgstr "Fusion de la Liste d'UIDs depuis %s :"
 
-#: uid.c:517
+#: uid.c:519
 #, c-format
 msgid "New UID list from %s:"
 msgstr "Nouvelle liste d'UID à partir de %s :"
 
-#: uid.c:546
+#: uid.c:548
 msgid "swapping UID lists\n"
 msgstr "échange des listes d'UIDs\n"
 
-#: uid.c:554
+#: uid.c:556
 msgid "not swapping UID lists, no UIDs seen this query\n"
 msgstr "ne permute pas les listes d'UIDs, aucun UID vu dans cette requête\n"
 
-#: uid.c:579
+#: uid.c:581
 msgid "discarding new UID list\n"
 msgstr "élimination la nouvelle liste d'UIDs\n"
 
-#: uid.c:614
+#: uid.c:616
 msgid "Deleting fetchids file.\n"
 msgstr "Effacement du fichier fetchids.\n"
 
-#: uid.c:616
+#: uid.c:618
 #, c-format
 msgid "Error deleting %s: %s\n"
 msgstr "Erreur d'effacement de %s : %s\n"
 
-#: uid.c:622
+#: uid.c:624
 msgid "Writing fetchids file.\n"
 msgstr "Ecriture du fichier fetchids.\n"
 
-#: uid.c:641
+#: uid.c:643
 #, c-format
 msgid "Error writing to fetchids file %s, old file left in place.\n"
 msgstr ""
 "Erreur d'écriture du fichier fetchids %s, vieux fichier laisséen place.\n"
 
-#: uid.c:645
+#: uid.c:647
 #, c-format
 msgid "Cannot rename fetchids file %s to %s: %s\n"
 msgstr "Impossible de renommer %s à %s : %s\n"
 
-#: uid.c:649
+#: uid.c:651
 #, c-format
 msgid "Cannot open fetchids file %s for writing: %s\n"
 msgstr "Impossible d'ouvrir le fichier fetchids %s pour l'écriture : %s\n"
