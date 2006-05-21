@@ -76,6 +76,9 @@ fetchmail 6.3.5 (not yet released):
   Found by Dan Fandrich.
 * Make IMAP4 IDLE work on servers that do not update RECENT counts.
   Reported by Lars Tewes.
+* IMAP4 patch by Sunil Shetye:
+  - do not depend on server updating RECENT counts at all
+  - also enter IDLE loop when messages are present on the server.
 * Fix --flush description in the manual page, fetchmail does not mark messages
   seen unless it has successfully delivered them. Suggested by Frederic Marchal.
 

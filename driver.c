@@ -1457,11 +1457,11 @@ is restored."));
 		    goto no_error;
 	    } while
 		  /*
-		   * Only re-poll if we either had some actual forwards and 
-		   * either allowed deletions and had no errors.
+		   * Only repoll if we either had some actual forwards
+		   * or are idling for new mails and had no errors.
 		   * Otherwise it is far too easy to get into infinite loops.
 		   */
-		  (dispatches && ctl->server.base_protocol->retry && !ctl->keep && !ctl->errcount);
+		  (ctl->server.base_protocol->retry && (dispatches || ctl->idle) && !ctl->errcount);
 	}
 
 	/* XXX: From this point onwards, preserve err unless a new error has occurred */

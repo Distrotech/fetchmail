@@ -37,7 +37,7 @@ static flag do_idle = FALSE, has_idle = FALSE;
 static int expunge_period = 1;
 
 /* mailbox variables initialized in imap_getrange() */
-static int count = 0, recentcount = 0, unseen = 0, deletions = 0;
+static int count = 0, oldcount = 0, recentcount = 0, unseen = 0, deletions = 0;
 static unsigned int startcount = 1;
 static int expunged = 0;
 static unsigned int *unseen_messages;
@@ -89,6 +89,8 @@ static int imap_ok(int sock, char *argbuf)
 		    report(stderr, GT_("bogus message count!"));
 		    return(PS_PROTOCOL);
 		}
+		if ((recentcount = count - oldcount) < 0)
+		    recentcount = 0;
 
 		/*
 		 * Nasty kluge to handle RFC2177 IDLE.  If we know we're idling
@@ -112,10 +114,14 @@ static int imap_ok(int sock, char *argbuf)
 		    stage = STAGE_FETCH;
 		}
 	    }
+	    /* we now compute recentcount as a difference between
+	     * new and old EXISTS, hence disable RECENT check */
+# if 0
 	    else if (strstr(buf, " RECENT"))
 	    {
 		recentcount = atoi(buf+2);
 	    }
+# endif
 	    else if (strstr(buf, " EXPUNGE"))
 	    {
 		/* the response "* 10 EXPUNGE" means that the currently
@@ -124,11 +130,11 @@ static int imap_ok(int sock, char *argbuf)
 		{
 		    if (count > 0)
 			count--;
-		    /* Some servers do not report RECENT after an EXPUNGE.
-		     * For such servers, assume that the mail being
-		     * expunged is a recent one. For other servers, we
-		     * should get an updated RECENT report later and this
-		     * assumption will have no effect. */
+		    if (oldcount > 0)
+			oldcount--;
+		    /* We do expect an EXISTS response immediately
+		     * after this, so this updation of recentcount is
+		     * just a precaution! */
 		    if (recentcount > 0)
 			recentcount--;
 		    actual_deletions++;
@@ -679,7 +685,7 @@ static int imap_getrange(int sock,
 			 int *countp, int *newp, int *bytes)
 /* get range of messages to be fetched */
 {
-    int ok, oldcount;
+    int ok;
     char buf[MSGBUFSIZE+1], *cp;
 
     /* find out how many messages are waiting */
@@ -691,14 +697,12 @@ static int imap_getrange(int sock,
 	 * end_mailbox_poll().
 	 *
 	 * recentcount is already set here by the last imap command which
-	 * returned RECENT on detecting new mail. if recentcount is 0, wait
+	 * returned EXISTS on detecting new mail. if recentcount is 0, wait
 	 * for new mail.
 	 *
 	 * this is a while loop because imap_idle() might return on other
 	 * mailbox changes also */
-	oldcount = count;
-	while (count <= oldcount && recentcount == 0 && do_idle) {
-	    oldcount = count;
+	while (recentcount == 0 && do_idle) {
 	    smtp_close(ctl, 1);
 	    ok = imap_idle(sock);
 	    if (ok)
@@ -708,7 +712,7 @@ static int imap_getrange(int sock,
 	    }
 	}
 	/* if recentcount is 0, return no mail */
-	if (recentcount == 0 && count <= oldcount)
+	if (recentcount == 0)
 		count = 0;
 	if (outlevel >= O_DEBUG)
 	    report(stdout, ngettext("%d message waiting after re-poll\n",
@@ -717,7 +721,7 @@ static int imap_getrange(int sock,
     }
     else
     {
-	count = 0;
+	oldcount = count = 0;
 	ok = gen_transact(sock, 
 			  check_only ? "EXAMINE \"%s\"" : "SELECT \"%s\"",
 			  folder ? folder : "INBOX");
@@ -773,7 +777,7 @@ static int imap_getrange(int sock,
 	}
     }
 
-    *countp = count;
+    *countp = oldcount = count;
     recentcount = 0;
     startcount = 1;
 
