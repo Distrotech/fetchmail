@@ -174,7 +174,7 @@ to be printed.
 .SS Disposal Options
 .TP
 .B \-a | \-\-all | (since v6.3.3) \-\-fetchall
-(Keyword: fetchall)
+(Keyword: fetchall, since v3.0)
 Retrieve both old (seen) and new messages from the mailserver.  The
 default is to fetch only messages the server has not marked seen.
 Under POP3, this option also forces the use of RETR rather than TOP.
@@ -274,11 +274,13 @@ may be removed and forced enabled in a future fetchmail version. See
 also: \-\-idfile.
 .TP
 .B \-\-idle (since 6.3.3)
-(Keyword: idle)
+(Keyword: idle, since before 6.0.0)
 Enable IDLE use (effective only with IMAP). Note that this works with
 only one folder at a given time.  While the idle rcfile keyword had been
 supported for a long time, the \-\-idle command-line option was added in
-version 6.3.3.
+version 6.3.3. IDLE use means that fetchmail tells the IMAP server to
+send notice of new messages, so they can be retrieved sooner than would
+be possible with regular polls.
 .TP
 .B \-P <portnumber> | \-\-service <servicename>
 (Keyword: service) Since version 6.3.0.
