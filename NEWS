@@ -89,6 +89,7 @@ fetchmail 6.3.5 (not yet released):
 * In verbose mode, log every IP fetchmail tries to connect to, to avoid
   misleading the user. Suppress EAFNOSUPPORT errors from socket() call, too.
   Fixes Debian Bug #361825, reported by Daniel Baur.
+* In idle mode, fetchmail complains about the fetchall option.
 
 # TRANSLATION UPDATES:
 * Russian/ru (Pavel Maryanov), Vietnamese/vi (Clytie Siddall)
