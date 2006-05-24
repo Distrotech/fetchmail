@@ -74,6 +74,7 @@ fetchmail 6.3.5 (not yet released):
 * Provide INET6 to KAME/getnameinfo.c (only useful on IPv6-enabled systems that
   lack getnameinfo, and there only visible in some Received: headers).
   Found by Dan Fandrich.
+* POP3: some UID flags may not be set properly on UIDL lists. (Sunil Shetye)
 * Make IMAP4 IDLE work on servers that do not update RECENT counts.
   Reported by Lars Tewes.
 * IMAP4 patch by Sunil Shetye:

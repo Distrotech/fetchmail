@@ -1019,8 +1019,9 @@ static int pop3_getrange(int sock,
 			     * the same mail will not be downloaded again.
 			     */
 			    old = save_str(&ctl->oldsaved, id, UID_UNSEEN);
-			    old->val.status.num = unum;
 			}
+			/* save the number */
+			old->val.status.num = unum;
 		    } else
 			return PS_ERROR;
 		} /* multi-line loop for UIDL reply */
