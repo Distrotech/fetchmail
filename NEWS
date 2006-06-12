@@ -82,6 +82,9 @@ fetchmail 6.3.5 (not yet released):
   - also enter IDLE loop when messages are present on the server.
 * Fix --flush description in the manual page, fetchmail does not mark messages
   seen unless it has successfully delivered them. Suggested by Frederic Marchal.
+* Fetchmail no longer attempts to stat the "-" file in daemon mode -- this is a
+  special name to read the RC file from stdin, and cannot always be re-read
+  anyways. BerliOS bug #7858.
 
 # CHANGES:
 * Rename all fetchmail-internal lock_* functions to fm_lock_*. Obsoletes

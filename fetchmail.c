@@ -597,8 +597,9 @@ int main(int argc, char **argv)
 	 */
 	struct stat	rcstat;
 
-	if (stat(rcfile, &rcstat) == -1)
-	{
+	if (strcmp(rcfile, "-") == 0) {
+	    /* do nothing */
+	} else if (stat(rcfile, &rcstat) == -1) {
 	    if (errno != ENOENT)
 		report(stderr, 
 		       GT_("couldn't time-check %s (error %d)\n"),
@@ -986,7 +987,7 @@ static int load_params(int argc, char **argv, int optind)
 
     /* note the parse time, so we can pick up on modifications */
     parsetime = 0;	/* foil compiler warnings */
-    if (stat(rcfile, &rcstat) != -1)
+    if (strcmp(rcfile, "-") == 0 || stat(rcfile, &rcstat) != -1)
 	parsetime = rcstat.st_mtime;
     else if (errno != ENOENT)
 	report(stderr, GT_("couldn't time-check the run-control file\n"));
