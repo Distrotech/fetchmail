@@ -85,6 +85,10 @@ fetchmail 6.3.5 (not yet released):
 * Fetchmail no longer attempts to stat the "-" file in daemon mode -- this is a
   special name to read the RC file from stdin, and cannot always be re-read
   anyways. BerliOS bug #7858.
+* When looking up ports for a service, the lookup succeeds and the returned
+  address family isn't IPv4 or IPv6, properly free the allocated memory from the
+  service lookup. Found by Uli Zappe.
+* When looking up ports for a service, only look up TCP ports.
 
 # CHANGES:
 * Rename all fetchmail-internal lock_* functions to fm_lock_*. Obsoletes
