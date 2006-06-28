@@ -1,0 +1,13 @@
+- Patterson: --logfile w/ ~/blah confuses fetchmail;
+  see thread [fetchmail-users] option -v not working...
+- Uli Zappe: [fetchmail-users] [BUG] fetchmail daemon does not resume
+  fetching after a network outage (has probable analysis)
+- check recent list mail
+- better logging (log all headers)
+- check strict envelope N Received parsing, mail from Admin Att on
+  fetchmail-users
+- document Received: parsing expectations
+- revise FAQ, continue in section T.
+- 6.3.4-pending-deletes.patch
+- Add info whether Keywords are global, server or user keywords
+- merge BerliOS IMAP AUTHENTICATE EXTERNAL patch
