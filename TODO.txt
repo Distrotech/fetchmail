@@ -6,6 +6,7 @@
 - Uli Zappe: [fetchmail-users] [BUG] fetchmail daemon does not resume
   fetching after a network outage (has probable analysis)
 - check recent list mail
+- check Debian BTS and other bug trackers
 - better logging (log all headers)
 - check strict envelope N Received parsing, mail from Admin Att on
   fetchmail-users
