@@ -45,9 +45,6 @@ fetchmail 6.3.5 (not yet released):
   Either compile 32-bit code or use GCC to compile 64-bit fetchmail.
   Note that fetchmail doesn't take advantage of 64-bit code anyways,
   so compiling 32-bit SPARC code should be fine.
-* The code still isn't 100% ISO-C compliant, some configurations attempt to
-  compile files that are empty after preprocessing, which can cause compiler
-  diagnostics and perhaps jam the compilation on strict compilers.
 * fetchmail expects Received: headers in a particular format when parsing
   envelopes.
 
@@ -89,6 +86,7 @@ fetchmail 6.3.5 (not yet released):
   address family isn't IPv4 or IPv6, properly free the allocated memory from the
   service lookup. Found by Uli Zappe.
 * When looking up ports for a service, only look up TCP ports.
+* Avoid compiling empty files, to avoid diagnostics from strict compilers.
 
 # CHANGES:
 * Rename all fetchmail-internal lock_* functions to fm_lock_*. Obsoletes

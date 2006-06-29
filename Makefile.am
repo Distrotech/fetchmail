@@ -64,16 +64,41 @@ endif
 fetchmail_SOURCES=	fetchmail.h getopt.h \
 		i18n.h kerberos.h md5.h mx.h netrc.h smtp.h \
 		socket.h tunable.h \
-		socket.c getpass.c pop2.c pop3.c imap.c etrn.c \
-		odmr.c fetchmail.c env.c idle.c options.c daemon.c \
+		socket.c getpass.c \
+		fetchmail.c env.c idle.c options.c daemon.c \
 		driver.c transact.c sink.c smtp.c \
-		uid.c mxget.c md5ify.c cram.c kerberos.c gssapi.c \
-		opie.c rpa.c interface.c netrc.c \
+		uid.c mxget.c md5ify.c cram.c gssapi.c \
+		opie.c interface.c netrc.c \
 		unmime.c conf.c checkalias.c \
 		lock.h lock.c \
-		rcfile_l.l rcfile_y.y ucs/norm_charmap.c \
-		libesmtp/getaddrinfo.h libesmtp/getaddrinfo.c \
-		KAME/getnameinfo.c
+		rcfile_l.l rcfile_y.y ucs/norm_charmap.c
+if POP2_ENABLE
+fetchmail_SOURCES += pop2.c
+endif
+if POP3_ENABLE
+fetchmail_SOURCES += pop3.c
+endif
+if IMAP_ENABLE
+fetchmail_SOURCES += imap.c
+endif
+if ETRN_ENABLE
+fetchmail_SOURCES += etrn.c
+endif
+if ODMR_ENABLE
+fetchmail_SOURCES += odmr.c
+endif
+if KERBEROS_V4_ENABLE
+fetchmail_SOURCES += kerberos.c
+endif
+if RPA_ENABLE
+fetchmail_SOURCES += rpa.c
+endif
+if NEED_GETNAMEINFO
+fetchmail_SOURCES += KAME/getnameinfo.c
+endif
+if NEED_GETADDRINFO
+fetchmail_SOURCES += libesmtp/getaddrinfo.h libesmtp/getaddrinfo.c
+endif
 
 check_PROGRAMS +=	rfc822 unmime netrc rfc2047e mxget
 

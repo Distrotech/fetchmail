@@ -347,6 +347,7 @@ AC_ARG_ENABLE(POP2,
 	[with_POP2=$enableval],
 	[with_POP2=no])
 test "$with_POP2" = "yes" && AC_DEFINE(POP2_ENABLE,1,Define if you want POP2 support compiled in)
+AM_CONDITIONAL(POP2_ENABLE, test "$with_POP2" = yes)
 
 ###	use option --disable-POP3 to omit the POP3 support
 AC_ARG_ENABLE(POP3,
@@ -354,6 +355,7 @@ AC_ARG_ENABLE(POP3,
 	[with_POP3=$enableval],
 	[with_POP3=yes])
 test "$with_POP3" = "yes" && AC_DEFINE(POP3_ENABLE,1,Define if you want POP3 support compiled in)
+AM_CONDITIONAL(POP3_ENABLE, test "$with_POP3" = yes)
 
 ###	use option --disable-IMAP to omit the IMAP support
 AC_ARG_ENABLE(IMAP,
@@ -361,6 +363,7 @@ AC_ARG_ENABLE(IMAP,
 	[with_IMAP=$enableval],
 	[with_IMAP=yes])
 test "$with_IMAP" = "yes" && AC_DEFINE(IMAP_ENABLE,1,Define if you want IMAP support compiled in)
+AM_CONDITIONAL(IMAP_ENABLE, test "$with_IMAP" = yes)
 
 ###	use option --disable-ETRN to omit the ETRN support
 AC_ARG_ENABLE(ETRN,
@@ -368,6 +371,7 @@ AC_ARG_ENABLE(ETRN,
 	[with_ETRN=$enableval],
 	[with_ETRN=yes])
 test "$with_ETRN" = "yes" && AC_DEFINE(ETRN_ENABLE,1,Define if you want ETRN support compiled in.)
+AM_CONDITIONAL(ETRN_ENABLE, test "$with_ETRN" = yes)
 
 ###	use option --disable-ODMR to omit the ODMR support
 AC_ARG_ENABLE(ODMR,
@@ -375,6 +379,7 @@ AC_ARG_ENABLE(ODMR,
 	[with_ODMR=$enableval],
 	[with_ODMR=yes])
 test "$with_ODMR" = "yes" && AC_DEFINE(ODMR_ENABLE,1,Define if you want ODMR support compiled in)
+AM_CONDITIONAL(ODMR_ENABLE, test "$with_ODMR" = yes)
 
 ###	use option --enable-RPA to compile in the RPA support
 AC_ARG_ENABLE(RPA,
@@ -382,6 +387,7 @@ AC_ARG_ENABLE(RPA,
 	[with_RPA=$enableval],
 	[with_RPA=no])
 test "$with_RPA" = "yes" && AC_DEFINE(RPA_ENABLE,1,Define if you want RPA support compiled in)
+AM_CONDITIONAL(RPA_ENABLE, test "$with_RPA" = yes)
 
 ###	use option --enable-NTLM to compile in the NTLM support
 AC_ARG_ENABLE(NTLM,
@@ -403,6 +409,10 @@ if test "$with_SDPS" = yes ; then
        AC_DEFINE(SDPS_ENABLE,1,Define if you want SDPS support compiled in)
    fi
 fi
+if test "$with_POP3" != yes && test "$with_POP2" != yes \
+    && test "$with_IMAP"  != yes ; then
+    AC_MSG_ERROR([You must enable at least one of POP2, POP3 and IMAP.])
+fi
 
 ###	use option --enable-opie to compile in the OPIE support
 AC_ARG_ENABLE(opie,
@@ -415,6 +425,8 @@ test "$with_opie" = "yes" && AC_DEFINE(OPIE_ENABLE,1,Define if you want OPIE sup
 
 AC_SEARCH_LIBS(getaddrinfo, inet6, [AC_DEFINE(HAVE_GETADDRINFO,1,[define to 1 if you have the getaddrinfo function])])
 AC_CHECK_FUNCS(getnameinfo inet_ntop)
+AM_CONDITIONAL(NEED_GETADDRINFO, test "$ac_cv_search_getaddrinfo" != "none required")
+AM_CONDITIONAL(NEED_GETNAMEINFO, test "$ac_cv_func_getnameinfo"   != yes)
 
 # This version of the Kerberos 4 and 5 options addresses the follwing issues:
 # 
@@ -520,6 +532,7 @@ fi
 ]) dnl --with-kerberos5=DIR
 
 ###    use option --with-kerberos=DIR to point at a Kerberos 4 directory
+KERBEROS_V4=0
 AC_ARG_WITH(kerberos,
        [  --with-kerberos=DIR     point fetchmail compilation at a Kerberos 4 directory],
 [
@@ -530,7 +543,7 @@ then
 if test "$with_kerberos" = "yes" && ( test `uname` = "NetBSD" || test `uname` = "OpenBSD" )
 then
   AS_MESSAGE(checking kerberosIV for `uname`...)
-  AC_DEFINE(KERBEROS_V4,1,Define if you have Kerberos V4)
+  KERBEROS_V4=1
   CEFLAGS="$CEFLAGS -I/usr/include/kerberosIV"
   case `uname` in
       NetBSD)  LIBS="$LIBS -lkrb -ldes -lroken -lcom_err" ;;
@@ -542,7 +555,7 @@ elif krb4-config 2> /dev/null >/dev/null ; then
   unset krb4_prefix
   CEFLAGS="$CEFLAGS `krb4-config --cflags`"
   LIBS="$LIBS `krb4-config --libs`"
-  AC_DEFINE(KERBEROS_V4)
+  KERBEROS_V4=1
 elif krb5-config 2> /dev/null >/dev/null ; then
   krb4_prefix=`krb5-config --prefix krb4`
   AC_MSG_RESULT([krb5-config points to kerberosIV under $krb4_prefix])
@@ -552,7 +565,7 @@ elif krb5-config 2> /dev/null >/dev/null ; then
   unset krb4_prefix
   CEFLAGS="$CEFLAGS `krb5-config --cflags krb4`"
   LIBS="$LIBS `krb5-config --libs krb4`"
-  AC_DEFINE(KERBEROS_V4)
+  KERBEROS_V4=1
 else
   #we need to detect when we're building under a kerberosV compatibility
   #layer, btw...
@@ -591,7 +604,7 @@ else
      else
        dir="$dir/include"
      fi
-     AC_DEFINE(KERBEROS_V4)
+     KERBEROS_V4=1
      test -f "$with_kerberos5/roken.h" && AC_DEFINE(HEIMDAL)
      test "$dir" != "/usr/include" && CEFLAGS="$CEFLAGS -I$dir"
      LDEFLAGS="$LDEFLAGS -L$with_kerberos/lib"
@@ -604,6 +617,10 @@ else
 fi
 fi
 ]) dnl --with-kerberos=DIR
+if test "$KERBEROS_V4" = 1 ; then
+    AC_DEFINE(KERBEROS_V4,1,Define if you have Kerberos V4)
+fi
+AM_CONDITIONAL(KERBEROS_V4_ENABLE, test "$KERBEROS_V4" = 1)
 
 ###	use option --with-ssl to compile in the SSL support
 AC_ARG_WITH(ssl,
