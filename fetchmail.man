@@ -2299,7 +2299,7 @@ into messages in your maildrop.
 .PP
 \fBIn conclusion, mailing lists and Bcc'd mail can only work if the
 server you're fetching from (1) stores one copy of the message per
-recipient in \fBIyour\fP domain and (2) records the envelope
+recipient in \fIyour\fP domain and (2) records the envelope
 information in a special header (X\-Original\-To, Delivered\-To,
 X\-Envelope\-To).\fR
 
