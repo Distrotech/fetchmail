@@ -85,20 +85,21 @@ int fm_lock_state(void)
 	if (ferror(lockfp)) {
 	    fprintf(stderr, GT_("fetchmail: error reading lockfile \"%s\": %s\n"),
 		    lockfile, strerror(errno));
+	    fclose(lockfp); /* not checking should be safe, file mode was "r" */
 	    exit(PS_EXCLUDE);
 	}
+	fclose(lockfp); /* not checking should be safe, file mode was "r" */
 
-	if (args == 0 || kill(pid, 0) == -1) {
+	if (args == EOF || args == 0 || kill(pid, 0) == -1) {
 	    pid = 0;
+
+	    fprintf(stderr,GT_("fetchmail: removing stale lockfile\n"));
 	    if (unlink(lockfile)) {
 	       if (errno != ENOENT) {
 		   perror(lockfile);
 	       }
-	    } else {
-		fprintf(stderr,GT_("fetchmail: removing stale lockfile\n"));
 	    }
 	}
-	fclose(lockfp); /* not checking should be safe, file mode was "r" */
     } else {
 	pid = 0;
 	if (errno != ENOENT) {
