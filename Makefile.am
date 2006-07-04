@@ -143,7 +143,8 @@ EXTRA_DIST+=	$(DISTDOCS) fetchmail.spec $(distdirs) ucs/README.svn \
 		m4-local/autobuild.m4 \
 		t.smoke t.rc \
 		dist-tools/html2txt \
-		dist-tools/manServer.pl
+		dist-tools/manServer.pl \
+		Doxyfile
 
 fetchmailconf:
 	( echo '#! /bin/sh' && echo 'exec @PYTHON@ @pythondir@/fetchmailconf.py "$$@"' ) >$@ || { rm -f $@ ; exit 1; }
