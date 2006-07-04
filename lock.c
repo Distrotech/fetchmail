@@ -1,5 +1,5 @@
-/*
- * lock.c -- cross-platform concurrency locking for fetchmail
+/**
+ * \file lock.c cross-platform concurrency locking for fetchmail
  *
  * For license terms, see the file COPYING in this directory.
  */
@@ -23,8 +23,8 @@
 #include "i18n.h"
 #include "lock.h"
 
-static char *lockfile;		/* name of lockfile */
-static int lock_acquired;	/* have we acquired a lock */
+static char *lockfile;		/** name of lockfile */
+static int lock_acquired;	/** flag if have we acquired a lock */
 
 void fm_lock_setup(struct runctl *ctl)
 /* set up the global lockfile name */
@@ -113,7 +113,7 @@ int fm_lock_state(void)
 }
 
 void fm_lock_assert(void)
-/* assert that we already posess a lock */
+/* assert that we already possess a lock */
 {
     lock_acquired = TRUE;
 }
