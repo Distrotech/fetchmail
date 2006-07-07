@@ -1,3 +1,4 @@
+- debian bug #377135/freeaddrinfo()?
 - allow full user@domain mappings in multidrop matching
   (is this perhaps a 6.4.0 issue?) see Andrew Longland-Meech's
   multidrop problems on fetchmail-users
