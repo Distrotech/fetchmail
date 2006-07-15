@@ -188,10 +188,10 @@ command-line option was added in v6.3.3.
 (Keyword: keep)
 Keep retrieved messages on the remote mailserver.  Normally, messages
 are deleted from the folder on the mailserver after they have been retrieved.
-Specifying the
-.B keep
-option causes retrieved messages to remain in your folder on the
-mailserver.  This option does not work with ETRN or ODMR.
+Specifying the \fBkeep\fR option causes retrieved messages to remain in
+your folder on the mailserver.  This option does not work with ETRN or
+ODMR. If used with POP3, it is recommended to also specify the \-\-uidl
+option or uidl keyword.
 .TP
 .B \-K | \-\-nokeep
 (Keyword: nokeep)
@@ -1272,9 +1272,9 @@ happens, you will lose mail.
 The normal mode of \fIfetchmail\fR is to try to download only 'new'
 messages, leaving untouched (and undeleted) messages you have already
 read directly on the server (or fetched with a previous \fIfetchmail
---keep\fR).  But you may find that messages you've already read on the
+\-\-keep\fR).  But you may find that messages you've already read on the
 server are being fetched (and deleted) even when you don't specify
---all.  There are several reasons this can happen.
+\-\-all.  There are several reasons this can happen.
 .PP
 One could be that you're using POP2.  The POP2 protocol includes no
 representation of 'new' or 'old' state in messages, so \fIfetchmail\fR
@@ -1653,7 +1653,7 @@ postconnect	\&	\&	T{
 Command to be executed after each connection
 T}
 keep     	\-k	\&	T{
-Don't delete seen messages from server
+Don't delete seen messages from server (for POP3, uidl is recommended)
 T}
 flush   	\-F	\&	T{
 Flush all seen messages before querying (DANGEROUS)
@@ -2515,7 +2515,7 @@ whichever of these is appropriate to wake it up.
 .PP
 Fetchmail cannot handle user names that contain blanks after a "@"
 character, for instance "demonstr@ti on". These are rather uncommon and
-only hurt when using UID-based --keep setups, so the 6.3.X versions of
+only hurt when using UID-based \-\-keep setups, so the 6.3.X versions of
 fetchmail won't be fixed.
 .PP
 Please check the \fBNEWS\fP file that shipped with fetchmail for more
