@@ -1176,8 +1176,8 @@ int readheaders(int sock,
 	if (n != -1)
 	{
 	    /*
-	     * This header is technically invalid under RFC822.
-	     * POP3, IMAP, etc. are not legal mail-parameter values.
+	     * We SHOULD (RFC-2821 sec. 4.4/p. 53) make sure to only use
+	     * IANA registered protocol names here.
 	     */
 	    snprintf(buf, sizeof(buf),
 		    "\tby %s with %s (fetchmail-%s",
@@ -1305,9 +1305,12 @@ int readheaders(int sock,
     *cp++ = '\r';
     *cp++ = '\n';
     *cp++ = '\0';
-    stuffline(ctl, buf);
+    n = stuffline(ctl, buf);
 
-    return(PS_SUCCESS);
+    if (n == strlen(buf))
+	return PS_SUCCESS;
+    else
+	return PS_SOCKET;
 }
 
 int readbody(int sock, struct query *ctl, flag forward, int len)
@@ -1418,7 +1421,7 @@ int readbody(int sock, struct query *ctl, flag forward, int len)
 
 	    if (n < 0)
 	    {
-		report(stdout, GT_("writing message text\n"));
+		report(stdout, GT_("error writing message text\n"));
 		release_sink(ctl);
 		return(PS_IOERR);
 	    }
