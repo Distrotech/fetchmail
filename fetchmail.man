@@ -1070,47 +1070,47 @@ used with the keywords 'esmtpname' and 'esmtppassword'; the former
 defaults to the username of the calling user.
 
 .SH DAEMON MODE
-The
-.B \-\-daemon <interval>
-or
-.B \-d <interval>
-option runs
-.I fetchmail
-in daemon mode.  You must specify a numeric argument which is a
-polling interval in seconds.
-.PP
+.SS Introducing the daemon mode
 In daemon mode,
 .I fetchmail
-puts itself in background and runs forever, querying each specified
-host and then sleeping for the given polling interval.
+puts itself into the background and runs forever, querying each
+specified host and then sleeping for a given polling interval.
+.SS Starting the daemon mode
+There are several ways to make fetchmail work in daemon mode. On the
+command line, \fB\-\-daemon\ <interval>\fR or \fB\-d\ <interval>\fR
+option runs \fIfetchmail\fR in daemon mode.  You must specify a numeric
+argument which is a polling interval in seconds.
 .PP
-Simply invoking
+Example: simply invoking
 .IP
 fetchmail \-d 900
 .PP
 will, therefore, poll all the hosts described in your
 .I ~/.fetchmailrc
 file (except those explicitly excluded with the 'skip' verb) once
-every fifteen minutes.
+every 15 minutes.
 .PP
-It is possible to set a polling interval
-in your
-.I ~/.fetchmailrc
-file by saying 'set daemon <interval>', where <interval> is an
-integer number of seconds.  If you do this, fetchmail will always
-start in daemon mode unless you override it with the command-line
-option \-\-daemon 0 or \-d0.
+It is also possible to set a polling interval
+in your \fI~/.fetchmailrc\fR file by saying 'set\ daemon\ <interval>',
+where <interval> is an integer number of seconds.  If you do this,
+fetchmail will always start in daemon mode unless you override it with
+the command-line option \-\-daemon 0 or \-d0.
 .PP
 Only one daemon process is permitted per user; in daemon mode,
-.I fetchmail
-makes a per-user lockfile to guarantee this.
+\fIfetchmail\fR sets up a per-user lockfile to guarantee this.
+(You can however cheat and set the FETCHMAILHOME environment variable to
+overcome this setting, but in that case, it is your responsibility to
+make sure you aren't polling the same server with two processes at the
+same time.)
+.SS Awakening the background daemon
 .PP
 Normally, calling fetchmail with a daemon in the background sends a
-wake-up signal to the daemon, forcing it to poll mailservers
-immediately.  (The wake-up signal is SIGHUP if fetchmail is running as
-root, SIGUSR1 otherwise.)  The wake-up action also clears any 'wedged'
-flags indicating that connections have wedged due to failed
+wake-up signal to the daemon and quits without output. The background
+daemon then starts its next poll cycle immediately.  The wake-up signal,
+SIGUSR1, can also be sent manually. The wake-up action also clears any
+'wedged' flags indicating that connections have wedged due to failed
 authentication or multiple timeouts.
+.SS Terminating the background daemon
 .PP
 The option
 .B \-\-quit
@@ -1120,6 +1120,7 @@ If the \-\-quit option appears last on the command line, \fIfetchmail\fP
 will kill the running daemon process and then quit. Otherwise,
 \fIfetchmail\fP will first kill a running daemon process and then
 continue running with the other options.
+.SS Useful options for daemon mode
 .PP
 The
 .B \-L <filename>
@@ -1185,8 +1186,8 @@ file while fetchmail is running in daemon mode, this will be detected
 at the beginning of the next poll cycle.  When a changed
 .I ~/.fetchmailrc
 is detected, fetchmail rereads it and restarts from scratch (using
-exec(2); no state information is retained in the new instance).  Note also
-that if you break the
+exec(2); no state information is retained in the new instance).
+Note also that if you break the
 .I ~/.fetchmailrc
 file's syntax, the new instance will softly and silently vanish away
 on startup.
@@ -2497,9 +2498,10 @@ If HOME_ETC and FETCHMAILHOME are set, HOME_ETC will be ignored.
 .SH SIGNALS
 If a
 .I fetchmail
-daemon is running as root, SIGHUP wakes it up from its sleep phase and
-forces a poll of all non-skipped servers (this is in accordance with
-the usual conventions for system daemons).
+daemon is running as root, SIGUSR1 wakes it up from its sleep phase and
+forces a poll of all non-skipped servers. For compatibility reasons,
+SIGHUP can also be used in 6.3.X but may not be available in future
+fetchmail versions.
 .PP
 If
 .I fetchmail
