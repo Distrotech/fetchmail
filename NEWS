@@ -32,6 +32,8 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 * The "protocol auto" default inside fetchmail may be removed from a future
   fetchmail release. Explicit configuration of the protocol is recommended.
 * Kerberos IV support may be removed from a future fetchmail release.
+* SIGHUP wakeup may be removed from a future fetchmail release and cause it
+  to terminate.
 
 --------------------------------------------------------------------------------
 
@@ -89,6 +91,11 @@ fetchmail 6.3.5 (not yet released):
 * Avoid compiling empty files, to avoid diagnostics from strict compilers.
 * If the lockfile ends before the process ID, treat it as stale and unlink it.
   Reported by Justin Pryzby, Debian Bug #376603.
+* SIGHUP wake-up behavior was broken since 5.9.13's Cygwin changes, in that for
+  non-root users, SIGHUP would abort the first poll and subsequently interfere
+  with new polls, and SIGHUP would be ignored for root users. SIGHUP now matches
+  documented behavior. SIGUSR1 has always been a wakeup signal for both root
+  (undocumented) and non-root users. See also the deprecation warning above.
 
 # CHANGES:
 * Rename all fetchmail-internal lock_* functions to fm_lock_*. Obsoletes

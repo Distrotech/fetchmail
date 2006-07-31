@@ -808,7 +808,7 @@ int main(int argc, char **argv)
 	     * for people who think all system daemons wake up on SIGHUP.
 	     */
 	    set_signal_handler(SIGUSR1, donothing);
-	    if (getuid() != ROOT_UID)
+	    if (getuid() == ROOT_UID)
 		set_signal_handler(SIGHUP, donothing);
 
 	    /*
