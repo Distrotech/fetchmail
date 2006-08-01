@@ -321,7 +321,7 @@ int SockOpen(const char *host, const char *service,
 	    if (outlevel >= O_VERBOSE)
 		report_complete(stdout, GT_("connection failed.\n"));
 	    if (outlevel > O_SILENT)
-		report(stderr, GT_("connection to %s failed: %s.\n"), buf, strerror(e));
+		report(stderr, GT_("connection to %s:%s [%s] failed: %s.\n"), host, service, buf, strerror(e));
 	    fm_close(i);
 	    i = -1;
 	    continue;

@@ -96,6 +96,8 @@ fetchmail 6.3.5 (not yet released):
   with new polls, and SIGHUP would be ignored for root users. SIGHUP now matches
   documented behavior. SIGUSR1 has always been a wakeup signal for both root
   (undocumented) and non-root users. See also the deprecation warning above.
+* When a connection fails, log not only the IP address, but also host and
+  service name.
 
 # CHANGES:
 * Rename all fetchmail-internal lock_* functions to fm_lock_*. Obsoletes
