@@ -97,7 +97,8 @@ fetchmail 6.3.5 (not yet released):
   documented behavior. SIGUSR1 has always been a wakeup signal for both root
   (undocumented) and non-root users. See also the deprecation warning above.
 * When a connection fails, log not only the IP address, but also host and
-  service name.
+  service name and the port number. Log the latter when trying to connect in
+  verbose mode, too.
 * Keep syslog output at one line per message (this works if no errors occur).
 
 # CHANGES:

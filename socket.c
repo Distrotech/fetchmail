@@ -287,15 +287,18 @@ int SockOpen(const char *host, const char *service,
 
     i = -1;
     for (ai = ai0; ai; ai = ai->ai_next) {
-	char buf[80];
+	char buf[80],pb[80];
 	int gnie;
 
 	gnie = getnameinfo(ai->ai_addr, ai->ai_addrlen, buf, sizeof(buf), NULL, 0, NI_NUMERICHOST);
 	if (gnie)
 	    snprintf(buf, sizeof(buf), GT_("unknown (%s)"), gai_strerror(gnie));
+	gnie = getnameinfo(ai->ai_addr, ai->ai_addrlen, NULL, 0, pb, sizeof(pb), NI_NUMERICSERV);
+	if (gnie)
+	    snprintf(pb, sizeof(pb), GT_("unknown (%s)"), gai_strerror(gnie));
 
 	if (outlevel >= O_VERBOSE)
-	    report_build(stdout, GT_("Trying to connect to %s..."), buf);
+	    report_build(stdout, GT_("Trying to connect to %s/%s..."), buf, pb);
 	i = socket(ai->ai_family, ai->ai_socktype, 0);
 	if (i < 0) {
 	    /* mask EAFNOSUPPORT errors, they confuse users for
@@ -321,7 +324,7 @@ int SockOpen(const char *host, const char *service,
 	    if (outlevel >= O_VERBOSE)
 		report_complete(stdout, GT_("connection failed.\n"));
 	    if (outlevel > O_SILENT)
-		report(stderr, GT_("connection to %s:%s [%s] failed: %s.\n"), host, service, buf, strerror(e));
+		report(stderr, GT_("connection to %s:%s [%s/%s] failed: %s.\n"), host, service, buf, pb, strerror(e));
 	    fm_close(i);
 	    i = -1;
 	    continue;
