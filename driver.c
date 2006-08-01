@@ -615,8 +615,6 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 				 : GT_(" (%d header octets)"), len);
 		if (outlevel >= O_VERBOSE)
 		    report_complete(stdout, "\n");
-		else
-		    report_complete(stdout, " ");
 	    }
 
 	    /* 
@@ -683,8 +681,8 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 		    if (len == -1)
 			len = msgsize - msgblk.msglen;
 		    if (outlevel > O_SILENT && !wholesize)
-			report_complete(stdout,
-					GT_(" (%d body octets) "), len);
+			report_build(stdout,
+					GT_(" (%d body octets)"), len);
 		}
 
 		/* process the body now */
@@ -776,7 +774,7 @@ flagthemail:
 	if (retained)
 	{
 	    if (outlevel > O_SILENT) 
-		report(stdout, GT_(" retained\n"));
+		report_complete(stdout, GT_(" retained\n"));
 	}
 	else if (ctl->server.base_protocol->delete_msg
 		 && !suppress_delete
