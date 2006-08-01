@@ -18,3 +18,5 @@
 - 6.3.4-pending-deletes.patch
 - Add info whether Keywords are global, server or user keywords
 - merge BerliOS IMAP AUTHENTICATE EXTERNAL patch
+- fetchmail -s with running daemon complains rather than silently
+  restarting daemon
