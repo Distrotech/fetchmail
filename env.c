@@ -147,10 +147,12 @@ char *host_fqdn(int required)
 	exit(PS_DNS);
     }
 
-    /* if we got a . in the hostname assume it is a FQDN */
+    /* if we got no . in the hostname, try to canonicalize it,
+     * else assume it is a FQDN */
     if (strchr(tmpbuf, '.') == NULL)
     {
-	/* if we got a basename (as we do in Linux) make a FQDN of it */
+	/* if we got a basename without dots, as we often do in Linux,
+	 * look up canonical name (make a FQDN of it) */
 	struct addrinfo hints, *res;
 	int e;
 
