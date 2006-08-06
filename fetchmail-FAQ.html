@@ -160,7 +160,7 @@ methods</h2>
 <a href="#K4">K4. What do I have to do to use the IMAP-GSS protocol?</a><br/>
 <a href="#K5">K5. How can I use fetchmail with SSL?</a><br/>
 <a href="#K6">K6. How can I tell fetchmail not to try TLS if the server
-    advertises it?</a><br/>
+    advertises it? Why does fetchmail use SSL even though not configured?</a><br/>
 
 <h2 id="C_R">Runtime fatal errors</h2>
 
@@ -183,7 +183,8 @@ messages but before deleting them</a><br/>
 <a href="#R10">R10. Fetchmail is dying with SIGPIPE.</a><br/>
 <a href="#R11">R11. My server is hanging or emitting errors on CAPA.</a><br/>
 <a href="#R12">R12. Fetchmail isn't working and reports getaddrinfo
-    errors.</a>
+    errors.</a><br />
+<a href="#R13">R13. What does "Interrupted system call" mean?</a>
 
 <h2 id="C_H">Hangs and lockups</h2>
 
@@ -2206,7 +2207,8 @@ a man-in-the-middle attack is in progress - or it might just mean that the
 server changed its key. It's up to you to determine which has happened.</p>
 
 <h2><a id="K6" name="K6">K6. How can I tell fetchmail not to use TLS
-	if the server advertises it?</a></h2>
+	if the server advertises it? Why does fetchmail use SSL even
+	though not configured?</a></h2>
 
 <p>Some servers advertise STLS (POP3) or STARTTLS (IMAP), and fetchmail
 will automatically attempt TLS negotiation if SSL was enabled at compile
@@ -2481,6 +2483,19 @@ declaration <tt>auth password</tt> in your .fetchmailrc.</p>
 	<tr><td>POP3</td><td>110</td></tr>
 	<tr><td>POP3+SSL</td><td>995</td></tr>
 </table></li></ol>
+
+<h2><a id="R13" name="R13">R13. What does "Interrupted system call"
+	mean?</a></h2>
+
+<p>Fetchmail 6.3.5 and newer gave up on the older timeout handling which
+could cause unstable behavior. Instead, timeouts now interrupt
+long-running functions and are reported as "Interrupted system
+call".</p>
+
+<p>While this loses accuracy of timeout reporting, there is
+unfortunately no safe way for C to make extensive use of error
+reporting, and the amount of code that would need to be added is too
+large for a stable series as 6.3.X is.</p>
 
 <hr/>
 <h1>Hangs and lockups</h1>
