@@ -650,6 +650,7 @@ int stuffline(struct query *ctl, char *buf)
 	if (ctl->server.base_protocol->delimited)	/* server has already byte-stuffed */
 	{
 	    if (ctl->mda) {
+		/* writing to MDA, undo byte-stuffing */
 		++buf;
 	    } else {
 		/* writing to SMTP, leave the byte-stuffing in place */;
@@ -657,14 +658,16 @@ int stuffline(struct query *ctl, char *buf)
 	}
         else /* if (!protocol->delimited)	-- not byte-stuffed already */
 	{
-	  if (!ctl->mda)      /* byte-stuff it */
-	    {
-	      if (!ctl->bsmtp)
-		SockWrite(ctl->smtp_socket, buf, 1);
-	      else
-		{
-		  fwrite(buf, 1, 1, sinkfp);
+	    /* byte-stuff it */
+	    if (!ctl->mda)  {
+		if (!ctl->bsmtp) {
+		    n = SockWrite(ctl->smtp_socket, buf, 1);
+		} else {
+		    n = fwrite(buf, 1, 1, sinkfp);
+		    if (ferror(sinkfp)) n = -1;
 		}
+		if (n < 0)
+		    return n;
 	    }
 	}
     }
@@ -682,9 +685,10 @@ int stuffline(struct query *ctl, char *buf)
     }
 
     n = 0;
-    if (ctl->mda || ctl->bsmtp)
+    if (ctl->mda || ctl->bsmtp) {
 	n = fwrite(buf, last - buf, 1, sinkfp);
-    else if (ctl->smtp_socket != -1)
+	if (ferror(sinkfp)) n = -1;
+    } else if (ctl->smtp_socket != -1)
 	n = SockWrite(ctl->smtp_socket, buf, last - buf);
 
     phase = oldphase;
@@ -1311,22 +1315,31 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
     int smtp_err;
     if (ctl->mda)
     {
-	int rc;
+	int rc,e,e2,err = 0;
+
+	if (ferror(sinkfp))
+	    err = 1, e2 = errno;
+	if ((fflush(sinkfp)))
+	    err = 1, e2 = errno;
 
 	/* close the delivery pipe, we'll reopen before next message */
 	if (sinkfp)
 	{
+	    errno = 0;
 	    rc = pclose(sinkfp);
+	    e = errno;
 	    sinkfp = (FILE *)NULL;
 	}
 	else
-	    rc = 0;
+	    rc = e = 0;
 
 	deal_with_sigchld(); /* Restore SIGCHLD handling to reap zombies */
 
-	if (rc)
+	if (rc || err)
 	{
-	    if (WIFSIGNALED(rc)) {
+	    if (err) {
+		report(stderr, GT_("Error writing to MDA: %s\n"), strerror(e2));
+	    } else if (WIFSIGNALED(rc)) {
 		report(stderr, 
 			GT_("MDA died of signal %d\n"), WTERMSIG(rc));
 	    } else if (WIFEXITED(rc)) {
@@ -1334,7 +1347,8 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
 			GT_("MDA returned nonzero status %d\n"), WEXITSTATUS(rc));
 	    } else {
 		report(stderr,
-			GT_("Strange: MDA pclose returned %d, cannot handle at %s:%d\n"), rc, __FILE__, __LINE__);
+			GT_("Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"),
+			rc, e, strerror(e), __FILE__, __LINE__);
 	    }
 
 	    return(FALSE);
