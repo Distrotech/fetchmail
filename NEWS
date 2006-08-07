@@ -104,6 +104,8 @@ fetchmail 6.3.5 (not yet released):
 * Keep syslog output at one line per message (this works if no errors occur).
 * Track getaddrinfo() results to properly free them after timeouts,
   reported by Uli Zappe.  This MIGHT fix Debian Bug#294547 and Bug#377135.
+* Fetchmail in verbose mode now logs if it opportunistically upgrades a POP3
+  or IMAP connection to TLS security with STLS/STARTTLS.
 
 # CHANGES:
 * Rename all fetchmail-internal lock_* functions to fm_lock_*. Obsoletes

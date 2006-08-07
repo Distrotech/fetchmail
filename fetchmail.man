@@ -401,12 +401,14 @@ server.  This can cause some complications in daemon mode.
 .TP
 .B \-\-sslproto <name>
 (Keyword: sslproto)
-Forces an SSL protocol. Possible values are '\fBssl2\fR',
+Forces an SSL or TLS protocol. Possible values are '\fBssl2\fR',
 \&'\fBssl3\fR', '\fBssl23\fR', and '\fBtls1\fR'. Try this if the default
 handshake does not work for your server. To defeat automatic TLSv1
 negotiation when the server advertises STARTTLS or STLS, use \fB''\fR or
-\&'\fBssl23\fR'. The default is to try appropriate protocols depending
-on context.
+\&'\fBssl23\fR'. This option, even if the argument is the empty string,
+will also suppress the diagnostic 'SERVER: opportunistic upgrade to
+TLS.' message in verbose mode. The default is to try appropriate
+protocols depending on context.
 .TP
 .B \-\-sslcertck
 (Keyword: sslcertck)

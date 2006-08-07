@@ -391,7 +391,9 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
             * not other SSL protocols
             */
            if (ok == PS_SUCCESS &&
-	       SSLOpen(sock,ctl->sslcert,ctl->sslkey,"tls1",ctl->sslcertck, ctl->sslcertpath,ctl->sslfingerprint,realhost,ctl->server.pollname) == -1)
+	       SSLOpen(sock,ctl->sslcert,ctl->sslkey,"tls1",ctl->sslcertck,
+		   ctl->sslcertpath,ctl->sslfingerprint,
+		   realhost,ctl->server.pollname) == -1)
            {
 	       if (!ctl->sslproto && !ctl->wehaveauthed)
 	       {
@@ -402,7 +404,10 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
                report(stderr,
                       GT_("SSL connection failed.\n"));
                return PS_SOCKET;
-           }
+           } else {
+	       if (outlevel >= O_VERBOSE && !ctl->sslproto)
+		   report(stdout, GT_("%s: opportunistic upgrade to TLS.\n"), realhost);
+	   }
 	   did_stls = TRUE;
 
 	   /*
