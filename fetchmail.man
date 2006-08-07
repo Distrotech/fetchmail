@@ -2380,7 +2380,7 @@ you can declare 'no dns' to suppress DNS lookups entirely and
 .SH EXIT CODES
 To facilitate the use of
 .I fetchmail
-in shell scripts, an exit code is returned to give an indication
+in shell scripts, an exit\ status code is returned to give an indication
 of what occurred during a given connection.
 .PP
 The exit codes returned by
