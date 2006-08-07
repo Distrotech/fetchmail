@@ -59,14 +59,15 @@ that the mail server account actually contains mail intended for any
 number of different recipients.  Therefore,
 .I fetchmail
 must attempt to deduce the proper "envelope recipient" from the mail
-headers of each message.  In this mode of operation
+headers of each message.  In this mode of operation,
 .I fetchmail
 almost resembles an MTA, however it is important to note that neither
 the POP nor IMAP protocols were intended for use in this fashion, and
-hence envelope information is not directly available.  Instead,
+hence envelope information is often not directly available.  Instead,
 .I fetchmail
 must resort to a process of informed guess-work in an attempt to
-discover the true envelope recipient of a message.  Even if this
+discover the true envelope recipient of a message, unless the ISP stores
+the envelope information in some header (not all do).  Even if this
 information is present in the headers, the process can
 be error-prone and is dependent upon the specific mail server used
 for mail retrieval.  Multidrop-mode is used when more than one local
@@ -76,7 +77,7 @@ multidrop-modes does not apply to the ESMTP ETRN or ODMR retrieval
 methods, since they are based upon the SMTP protocol which
 specifically provides the envelope recipient to \fIfetchmail\fR.
 .PP
-As each message is retrieved \fIfetchmail\fR normally delivers it via SMTP to
+As each message is retrieved, \fIfetchmail\fR normally delivers it via SMTP to
 port 25 on the machine it is running on (localhost), just as though it
 were being passed in over a normal TCP/IP link.  \fIfetchmail\fR provides
 the SMTP server with an envelope recipient derived in the manner described
@@ -527,7 +528,7 @@ command is passed to the shell.  Do \fINOT\fR use an MDA invocation
 like "sendmail \-i \-t" that dispatches on the contents of To/Cc/Bcc, it
 will create mail loops and bring the just wrath of many postmasters
 down upon your head.  Also, do \fInot\fR try to combine multidrop
-mode with an MDA such as maildrop or procmail that can only accept one
+mode with an MDA such as maildrop that can only accept one
 address; you will lose mail.
 
 A word of warning: the well-known
@@ -1785,28 +1786,36 @@ The 'interval' option (which takes a numeric argument) allows you to poll a
 server less frequently than the basic poll interval.  If you say
 \&'interval N' the server this option is attached to will only be
 queried every N poll intervals.
+.SS Singledrop vs. Multidrop options
 .PP
 The 'is' or 'to' keywords associate the following local (client)
 name(s) (or server-name to client-name mappings separated by =) with
 the mailserver user name in the entry.  If an is/to list has '*' as
-its last name, unrecognized names are simply passed through.
+its last name, unrecognized names are simply passed through. Note that
+until \fIfetchmail\fR version 6.3.4 inclusively, these lists could only
+contain local parts of user names (fetchmail would only look at the part
+before the @ sign). \fIfetchmail\fR versions 6.3.5 and
+newer support full addresses on the left hand side of these mappings,
+and they take precedence over any 'localdomains', 'aka', 'via' or
+similar mappings.
 .PP
 A single local name can be used to support redirecting your mail when
 your username on the client machine is different from your name on the
 mailserver.  When there is only a single local name, mail is forwarded
 to that local username regardless of the message's Received, To, Cc,
-and Bcc headers.  In this case
+and Bcc headers.  In this case,
 .I fetchmail
 never does DNS lookups.
 .PP
-When there is more than one local name (or name mapping) the
-\fIfetchmail\fR code does look at the Received, To, Cc, and Bcc
-headers of retrieved mail (this is 'multidrop mode').  It looks for
-addresses with hostname parts that match your poll name or your 'via',
-\&'aka' or 'localdomains' options, and usually also for hostname parts
-which DNS tells it are aliases of the mailserver.  See the discussion
-of 'dns', 'checkalias', 'localdomains', and 'aka' for details on how
-matching addresses are handled.
+When there is more than one local name (or name mapping),
+\fIfetchmail\fR looks at the envelope header, if configured, and
+otherwise at the Received, To, Cc, and Bcc headers of retrieved mail
+(this is 'multidrop mode').  It looks for addresses with hostname parts
+that match your poll name or your 'via', 'aka' or 'localdomains'
+options, and usually also for hostname parts which DNS tells it are
+aliases of the mailserver.  See the discussion of 'dns', 'checkalias',
+\&'localdomains', and 'aka' for details on how matching addresses are
+handled.
 .PP
 If \fIfetchmail\fR cannot match any mailserver usernames or
 localdomain addresses, the mail will be bounced.
@@ -2186,7 +2195,7 @@ username 'jsmith' and the local username 'jjones' with the
 pop.provider.net username 'jones'.  Mail for 'jones' is kept on the
 server after download.
 .PP
-Here's what a simple retrieval configuration for a multi-drop mailbox
+Here's what a simple retrieval configuration for a multidrop mailbox
 looks like:
 
 .nf
@@ -2195,11 +2204,18 @@ looks like:
 .fi
 
 This says that the mailbox of account 'maildrop' on the server is a
-multi-drop box, and that messages in it should be parsed for the
+multidrop box, and that messages in it should be parsed for the
 server user names 'golux', 'hurkle', and 'snark'.  It further
 specifies that 'golux' and 'snark' have the same name on the
 client as on the server, but mail for server user 'hurkle' should be
 delivered to client user 'happy'.
+
+.B Note
+that
+.I fetchmail,
+until version 6.3.4, did NOT allow full user@domain specifications here,
+these would never match. \fIFetchmail\fP 6.3.5 and newer support
+user@domain specifications on the left-hand side of a user mapping.
 .PP
 Here's an example of another kind of multidrop connection:
 
@@ -2209,7 +2225,7 @@ Here's an example of another kind of multidrop connection:
 .fi
 
 This also says that the mailbox of account 'maildrop' on the server is
-a multi-drop box.  It tells fetchmail that any address in the
+a multidrop box.  It tells fetchmail that any address in the
 loonytoons.org or toons.org domains (including sub-domain addresses like
 \&'joe@daffy.loonytoons.org') should be passed through to the local SMTP
 listener without modification.  Be careful of mail loops if you do this!
@@ -2282,7 +2298,7 @@ recipient addressees -- and these are unreliable.
 In particular, mailing-list software often ships mail with only
 the list broadcast address in the To header.
 .PP
-.B Note that a future version of fetchmail may remove To/Cc parsing!
+.B Note that a future version of \fIfetchmail\fP may remove To/Cc parsing!
 .PP
 When
 .I fetchmail

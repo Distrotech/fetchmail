@@ -55,18 +55,33 @@ int mytimeout;		/* value of nonreponse timeout */
 struct msgblk msgblk;
 static int accept_count, reject_count;
 
+/** add given address to xmit_names if it exactly matches a full address
+ * \returns nonzero if matched */
+static int map_address(const char *addr, struct query *ctl, struct idlist **xmit_names)
+{
+    const char	*lname;
+
+    lname = idpair_find(&ctl->localnames, addr);
+    if (lname) {
+	if (outlevel >= O_DEBUG)
+	    report(stdout, GT_("mapped address %s to local %s\n"), addr, lname);
+	save_str(xmit_names, lname, XMIT_ACCEPT);
+	accept_count++;
+    }
+    return lname != NULL;
+}
+
+/** add given name to xmit_names if it matches declared localnames */
 static void map_name(const char *name, struct query *ctl, struct idlist **xmit_names)
-/* add given name to xmit_names if it matches declared localnames */
 /*   name:	 name to map */
 /*   ctl:	 list of permissible aliases */
 /*   xmit_names: list of recipient names parsed out */
 {
     const char	*lname;
-    int off = 0;
-    
-    lname = idpair_find(&ctl->localnames, name+off);
+
+    lname = idpair_find(&ctl->localnames, name);
     if (!lname && ctl->wildcard)
-	lname = name+off;
+	lname = name;
 
     if (lname != (char *)NULL)
     {
@@ -118,6 +133,11 @@ static void find_server_names(const char *hdr,
 
 	    if ((atsign = strchr((char *)cp, '@'))) {
 		struct idlist	*idp;
+
+		/* try to match full address first, this takes
+		 * precedence over localdomains and alias mappings */
+		if (map_address(cp, ctl, xmit_names))
+		    goto nomap;
 
 		/*
 		 * Does a trailing segment of the hostname match something

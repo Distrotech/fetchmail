@@ -1,6 +1,3 @@
-- allow full user@domain mappings in multidrop matching
-  (is this perhaps a 6.4.0 issue?) see Andrew Longland-Meech's
-  multidrop problems on fetchmail-users
 - check recent list mail
 - check Debian BTS and other bug trackers
 - better logging (log all headers)
@@ -14,3 +11,7 @@
 - fetchmail -s with running daemon complains rather than silently
   restarting daemon
 - review sample.rcfile and document it
+- fetchmail: IMAP> A0002 AUTHENTICATE CRAM-MD5
+  fetchmail: IMAP< A0002 BAD Unsupported authentication mechanism.
+  fetchmail: could not decode BASE64 challenge
+- consolidate multidrop documentation
