@@ -541,13 +541,23 @@ int main(int argc, char **argv)
     /* avoid zombies from plugins */
     deal_with_sigchld();
 
+    if (run.logfile && run.use_syslog)
+	fprintf(stderr, GT_("fetchmail: Warning: syslog and logfile are set. Check both for logs!\n"));
+
     /*
      * Maybe time to go to demon mode...
      */
     if (run.poll_interval)
     {
-	if (!nodetach)
-	    daemonize(run.logfile);
+	if (!nodetach) {
+	    int rc;
+
+	    rc = daemonize(run.logfile);
+	    if (rc) {
+		report(stderr, GT_("fetchmail: Cannot detach into background. Aborting.\n"));
+		exit(rc);
+	    }
+	}
 	report(stdout, GT_("starting fetchmail %s daemon \n"), VERSION);
 
 	/*
@@ -560,12 +570,15 @@ int main(int argc, char **argv)
     }
     else
     {
+	/* not in daemon mode */
 	if (run.logfile && !nodetach && access(run.logfile, F_OK) == 0)
     	{
 	    if (!freopen(run.logfile, "a", stdout))
 		    report(stderr, GT_("could not open %s to append logs to \n"), run.logfile);
 	    if (!freopen(run.logfile, "a", stderr))
 		    report(stdout, GT_("could not open %s to append logs to \n"), run.logfile);
+	    if (run.use_syslog)
+		report(stdout, GT_("fetchmail: Warning: syslog and logfile are set. Check both for logs!\n"));
     	}
     }
 

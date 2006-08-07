@@ -106,6 +106,9 @@ fetchmail 6.3.5 (not yet released):
   reported by Uli Zappe.  This MIGHT fix Debian Bug#294547 and Bug#377135.
 * Fetchmail in verbose mode now logs if it opportunistically upgrades a POP3
   or IMAP connection to TLS security with STLS/STARTTLS.
+* --logfile is now handled more carefully, errors opening the logfile are
+  now reported to the TTY where fetchmail was started from.
+* fetchmail now complains and aborts when it cannot properly daemonize itself.
 
 # CHANGES:
 * Rename all fetchmail-internal lock_* functions to fm_lock_*. Obsoletes
