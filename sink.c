@@ -141,7 +141,7 @@ int smtp_open(struct query *ctl)
 			portnum = cp;
 		}
 		if ((ctl->smtp_socket = SockOpen(parsed_host,portnum,
-				ctl->server.plugout)) == -1)
+				ctl->server.plugout, &ai1)) == -1)
 		{
 		    xfree(parsed_host);
 		    continue;
@@ -179,7 +179,7 @@ int smtp_open(struct query *ctl)
 	    else
 	    {
 		if ((ctl->smtp_socket = SockOpen(parsed_host,portnum,
-				ctl->server.plugout)) == -1)
+				ctl->server.plugout, &ai1)) == -1)
 		{
 		    xfree(parsed_host);
 		    continue;
@@ -279,7 +279,7 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
     /* we need only SMTP for this purpose */
     /* XXX FIXME: hardcoding localhost is nonsense if smtphost can be
      * configured */
-    if ((sock = SockOpen("localhost", SMTP_PORT, NULL)) == -1)
+    if ((sock = SockOpen("localhost", SMTP_PORT, NULL, &ai1)) == -1)
 	return(FALSE);
 
     if (SMTP_ok(sock, SMTP_MODE) != SM_OK)

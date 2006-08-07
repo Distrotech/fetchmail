@@ -264,19 +264,20 @@ int UnixOpen(const char *path)
 }
 
 int SockOpen(const char *host, const char *service,
-	     const char *plugin)
+	     const char *plugin, struct addrinfo **ai0)
 {
-    struct addrinfo *ai, *ai0, req;
+    struct addrinfo *ai, req;
     int i, acterr = 0;
 
 #ifdef HAVE_SOCKETPAIR
     if (plugin)
 	return handle_plugin(host,service,plugin);
 #endif /* HAVE_SOCKETPAIR */
+
     memset(&req, 0, sizeof(struct addrinfo));
     req.ai_socktype = SOCK_STREAM;
 
-    i = getaddrinfo(host, service, &req, &ai0);
+    i = getaddrinfo(host, service, &req, ai0);
     if (i) {
 	report(stderr, GT_("getaddrinfo(\"%s\",\"%s\") error: %s\n"),
 		host, service, gai_strerror(i));
@@ -286,7 +287,7 @@ int SockOpen(const char *host, const char *service,
     }
 
     i = -1;
-    for (ai = ai0; ai; ai = ai->ai_next) {
+    for (ai = *ai0; ai; ai = ai->ai_next) {
 	char buf[80],pb[80];
 	int gnie;
 
@@ -339,7 +340,8 @@ int SockOpen(const char *host, const char *service,
 	break;
     }
 
-    freeaddrinfo(ai0);
+    freeaddrinfo(*ai0);
+    *ai0 = NULL;
 
     if (i == -1)
 	errno = acterr;

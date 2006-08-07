@@ -70,6 +70,8 @@ int batchcount;		/* count of messages sent in current batch */
 flag peek_capable;	/* can we peek for better error recovery? */
 int mailserver_socket_temp = -1;	/* socket to free if connect timeout */ 
 
+struct addrinfo *ai0, *ai1;	/* clean these up after signal */
+
 static volatile int timeoutcount = 0;	/* count consecutive timeouts */
 static volatile int idletimeout = 0;	/* timeout occured in idle stage? */
 
@@ -878,6 +880,14 @@ static int do_session(
 	sigfillset(&allsigs);
 	sigprocmask(SIG_UNBLOCK, &allsigs, NULL);
 #endif /* HAVE_SIGPROCMASK */
+
+	if (ai0) {
+	    freeaddrinfo(ai0); ai0 = NULL;
+	}
+
+	if (ai1) {
+	    freeaddrinfo(ai1); ai1 = NULL;
+	}
 	
 	if (js == THROW_SIGPIPE)
 	{
@@ -1053,7 +1063,7 @@ static int do_session(
 	    (void)sleep(1);
 	if ((mailserver_socket = SockOpen(realhost, 
 			     ctl->server.service ? ctl->server.service : ( ctl->use_ssl ? ctl->server.base_protocol->sslservice : ctl->server.base_protocol->service ),
-			     ctl->server.plugin)) == -1)
+			     ctl->server.plugin, &ai0)) == -1)
 	{
 	    char	errbuf[BUFSIZ];
 	    int err_no = errno;

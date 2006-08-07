@@ -150,7 +150,7 @@ static void find_server_names(const char *hdr,
 		     * not, skip this name.  If it is, we'll keep
 		     * going and try to find a mapping to a client name.
 		     */
-		    if (!is_host_alias(atsign+1, ctl))
+		    if (!is_host_alias(atsign+1, ctl, &ai0))
 		    {
 			save_str(xmit_names, cp, XMIT_REJECT);
 			reject_count++;
@@ -190,6 +190,7 @@ static char *parse_received(struct query *ctl, char *bufp)
 {
     char *base, *ok = (char *)NULL;
     static char rbuf[HOSTLEN + USERNAMELEN + 4]; 
+    struct addrinfo *ai0;
 
 #define RBUF_WRITE(value) if (tp < rbuf+sizeof(rbuf)-1) *tp++=value
 
@@ -237,7 +238,7 @@ static char *parse_received(struct query *ctl, char *bufp)
 	 * recipient name after a following "for".  Otherwise
 	 * punt.
 	 */
-	if (is_host_alias(rbuf, ctl))
+	if (is_host_alias(rbuf, ctl, &ai0))
 	{
 	    if (outlevel >= O_DEBUG)
 		report(stdout, 

@@ -34,6 +34,8 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 * Kerberos IV support may be removed from a future fetchmail release.
 * SIGHUP wakeup may be removed from a future fetchmail release and cause it
   to terminate.
+* Support for operating systems that are not sufficiently POSIX compliant may be
+  removed or operation on such systems may be suboptimal for future releases.
 
 --------------------------------------------------------------------------------
 
@@ -100,6 +102,8 @@ fetchmail 6.3.5 (not yet released):
   service name and the port number. Log the latter when trying to connect in
   verbose mode, too.
 * Keep syslog output at one line per message (this works if no errors occur).
+* Track getaddrinfo() results to properly free them after timeouts,
+  reported by Uli Zappe.  This MIGHT fix Debian Bug#294547 and Bug#377135.
 
 # CHANGES:
 * Rename all fetchmail-internal lock_* functions to fm_lock_*. Obsoletes

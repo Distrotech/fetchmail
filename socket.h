@@ -7,8 +7,16 @@
 #ifndef SOCKET__
 #define SOCKET__
 
+#include <config.h>
+#ifdef HAVE_SYS_SOCKET_H
+#include <sys/socket.h>
+#elif HAVE_NET_SOCKET_H
+#include <net/socket.h>
+#endif
+#include <netdb.h>
+
 /* Create a new client socket; returns -1 on error */
-int SockOpen(const char *host, const char *service, const char *plugin);
+int SockOpen(const char *host, const char *service, const char *plugin, struct addrinfo **);
 
 /* Returns 1 if this socket is OK, 0 if it isn't select()able
  * on - probably because it's been closed. You should

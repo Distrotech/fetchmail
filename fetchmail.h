@@ -23,6 +23,13 @@
 # endif
 #endif
 
+#ifdef HAVE_SYS_SOCKET_H
+#include <sys/socket.h>
+#endif
+#ifdef HAVE_NET_SOCKET_H
+#include <net/socket.h>
+#endif
+#include <netdb.h>
 #include <stdio.h>
 
 /* Import Trio if needed */
@@ -651,7 +658,9 @@ void escapes(const char *, char *);
 char *visbuf(const char *);
 const char *showproto(int);
 void dump_config(struct runctl *runp, struct query *querylist);
-int is_host_alias(const char *, struct query *);
+int is_host_alias(const char *, struct query *, struct addrinfo **);
+
+extern struct addrinfo *ai0, *ai1;
 
 /** Try to obtain fully qualified hostname of current host. Exit with
  * PS_DNS if \a required is true and there is a DNS error. Exit with

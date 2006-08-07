@@ -1,4 +1,3 @@
-- debian bug #377135/freeaddrinfo()?
 - log/print warning if fetchmail uses TLS without configuration,
   to avoid users being surprised (see Debian Bug#294547).
 - allow full user@domain mappings in multidrop matching
@@ -6,8 +5,6 @@
   multidrop problems on fetchmail-users
 - Patterson: --logfile w/ ~/blah confuses fetchmail;
   see thread [fetchmail-users] option -v not working...
-- Uli Zappe: [fetchmail-users] [BUG] fetchmail daemon does not resume
-  fetching after a network outage (has probable analysis)
 - check recent list mail
 - check Debian BTS and other bug trackers
 - better logging (log all headers)

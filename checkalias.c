@@ -83,14 +83,14 @@ found:
     return rc;
 }
 
-int is_host_alias(const char *name, struct query *ctl)
+int is_host_alias(const char *name, struct query *ctl, struct addrinfo **res)
 /* determine whether name is a DNS alias of the mailserver for this query */
 {
     struct mxentry	*mxp, *mxrecords;
     struct idlist	*idl;
     size_t		namelen;
     int			e;
-    struct addrinfo	hints, *res, *res_st;
+    struct addrinfo	hints, *res_st;
 
     struct hostdata *lead_server =
 	ctl->server.lead_server ? ctl->server.lead_server : &ctl->server;
@@ -160,11 +160,11 @@ int is_host_alias(const char *name, struct query *ctl)
     hints.ai_socktype=SOCK_STREAM;
     hints.ai_flags=AI_CANONNAME;
 
-    e = getaddrinfo(name, NULL, &hints, &res);
+    e = getaddrinfo(name, NULL, &hints, res);
     if (e == 0)
     {
-	int rr = (strcasecmp(ctl->server.truename, res->ai_canonname) == 0);
-	freeaddrinfo(res);
+	int rr = (strcasecmp(ctl->server.truename, (*res)->ai_canonname) == 0);
+	freeaddrinfo(*res); *res = NULL;
 	if (rr)
 	    goto match;
         else if (ctl->server.checkalias && 0 == getaddrinfo(ctl->server.truename, NULL, &hints, &res_st))

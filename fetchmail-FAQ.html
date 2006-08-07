@@ -2487,15 +2487,9 @@ declaration <tt>auth password</tt> in your .fetchmailrc.</p>
 <h2><a id="R13" name="R13">R13. What does "Interrupted system call"
 	mean?</a></h2>
 
-<p>Fetchmail 6.3.5 and newer gave up on the older timeout handling which
-could cause unstable behavior. Instead, timeouts now interrupt
-long-running functions and are reported as "Interrupted system
-call".</p>
-
-<p>While this loses accuracy of timeout reporting, there is
-unfortunately no safe way for C to make extensive use of error
-reporting, and the amount of code that would need to be added is too
-large for a stable series as 6.3.X is.</p>
+<p>Non-fatal signals (such as timers set by fetchmail itself) can
+interrupt long-running functions and will then be reported as
+"Interrupted system call". These can sometimes be timeouts.</p>
 
 <hr/>
 <h1>Hangs and lockups</h1>
