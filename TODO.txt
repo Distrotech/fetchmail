@@ -11,7 +11,4 @@
 - fetchmail -s with running daemon complains rather than silently
   restarting daemon
 - review sample.rcfile and document it
-- fetchmail: IMAP> A0002 AUTHENTICATE CRAM-MD5
-  fetchmail: IMAP< A0002 BAD Unsupported authentication mechanism.
-  fetchmail: could not decode BASE64 challenge
 - consolidate multidrop documentation
