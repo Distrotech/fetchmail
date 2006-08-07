@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.4-rc2\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-08-07 11:29+0200\n"
+"POT-Creation-Date: 2006-08-07 12:21+0200\n"
 "PO-Revision-Date: 2006-04-10 01:03+0200\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: German <translation-team-de@lists.sourceforge.net>\n"
@@ -2900,17 +2900,22 @@ msgstr "Cygwin-Socket-Lese-Wiederholung\n"
 msgid "Cygwin socket read retry failed!\n"
 msgstr "Cygwin-Socket-Lese-Wiederholung fehlgeschlagen!\n"
 
-#: transact.c:74
+#: transact.c:67
+#, c-format
+msgid "mapped address %s to local %s\n"
+msgstr "Adresse %s auf lokalen Benutzer %s abgebildet\n"
+
+#: transact.c:89
 #, c-format
 msgid "mapped %s to local %s\n"
-msgstr "%s auf lokal %s abgebildet\n"
+msgstr "%s auf lokalen Benutzer %s abgebildet\n"
 
-#: transact.c:136
+#: transact.c:156
 #, c-format
 msgid "passed through %s matching %s\n"
 msgstr "passierte %s und passte auf %s\n"
 
-#: transact.c:206
+#: transact.c:226
 #, c-format
 msgid ""
 "analyzing Received line:\n"
@@ -2919,69 +2924,69 @@ msgstr ""
 "Received-Zeile wird überprüft:\n"
 "%s"
 
-#: transact.c:245
+#: transact.c:265
 #, c-format
 msgid "line accepted, %s is an alias of the mailserver\n"
 msgstr "Zeile akzeptiert, %s ist ein Alias des Mailservers\n"
 
-#: transact.c:251
+#: transact.c:271
 #, c-format
 msgid "line rejected, %s is not an alias of the mailserver\n"
 msgstr "Zeile abgelehnt. %s ist kein Alias des Mailservers\n"
 
-#: transact.c:325
+#: transact.c:345
 msgid "no Received address found\n"
 msgstr "keine „Received“-Adresse gefunden\n"
 
-#: transact.c:334
+#: transact.c:354
 #, c-format
 msgid "found Received address `%s'\n"
 msgstr "„Received“-Adresse „%s“ gefunden\n"
 
-#: transact.c:531
+#: transact.c:551
 msgid "message delimiter found while scanning headers\n"
 msgstr "Nachrichtentrenner gefunden beim Scannen der Kopfzeilen\n"
 
-#: transact.c:562
+#: transact.c:582
 msgid "incorrect header line found while scanning headers\n"
 msgstr "inkorrekte Kopfzeile gefunden beim Scannen der Kopfzeilen\n"
 
-#: transact.c:564
+#: transact.c:584
 #, c-format
 msgid "line: %s"
 msgstr "Zeile: %s"
 
-#: transact.c:1110
+#: transact.c:1130
 #, c-format
 msgid "no local matches, forwarding to %s\n"
 msgstr "keine lokalen Übereinstimmungen, Weiterleitung an %s\n"
 
-#: transact.c:1125
+#: transact.c:1145
 msgid "forwarding and deletion suppressed due to DNS errors\n"
 msgstr "Weiterleiten und Löschen wegen DNS-Fehlern unterdrückt\n"
 
-#: transact.c:1235
+#: transact.c:1255
 msgid "writing RFC822 msgblk.headers\n"
 msgstr "schreibe RFC822 msgblk.headers\n"
 
-#: transact.c:1253
+#: transact.c:1273
 msgid "no recipient addresses matched declared local names"
 msgstr "keine Empfängeradresse stimmt mit deklarierten lokalen Namen überein"
 
-#: transact.c:1260
+#: transact.c:1280
 #, c-format
 msgid "recipient address %s didn't match any local name"
 msgstr "Empfängeradresse %s stimmt mit keinem lokalen Namen überein"
 
-#: transact.c:1269
+#: transact.c:1289
 msgid "message has embedded NULs"
 msgstr "Nachricht hat eingebettete NUL-Zeichen"
 
-#: transact.c:1277
+#: transact.c:1297
 msgid "SMTP listener rejected local recipient addresses: "
 msgstr "SMTP-Server lehnte Adressen mit lokalem Empfänger ab: "
 
-#: transact.c:1425
+#: transact.c:1445
 msgid "error writing message text\n"
 msgstr "Fehler beim Schreiben des Nachrichtentextes\n"
 
