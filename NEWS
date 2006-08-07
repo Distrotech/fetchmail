@@ -98,18 +98,11 @@ fetchmail 6.3.5 (not yet released):
   with new polls, and SIGHUP would be ignored for root users. SIGHUP now matches
   documented behavior. SIGUSR1 has always been a wakeup signal for both root
   (undocumented) and non-root users. See also the deprecation warning above.
-* When a connection fails, log not only the IP address, but also host and
-  service name and the port number. Log the latter when trying to connect in
-  verbose mode, too.
-* Keep syslog output at one line per message (this works if no errors occur).
 * Track getaddrinfo() results to properly free them after timeouts,
   reported by Uli Zappe.  This MIGHT fix Debian Bug#294547 and Bug#377135.
-* Fetchmail in verbose mode now logs if it opportunistically upgrades a POP3
-  or IMAP connection to TLS security with STLS/STARTTLS.
 * --logfile is now handled more carefully, errors opening the logfile are
   now reported to the TTY where fetchmail was started from.
 * fetchmail now complains and aborts when it cannot properly daemonize itself.
-* fetchmail now supports foo@example.org=bar user mappings for multidrop boxes.
 
 # CHANGES:
 * Rename all fetchmail-internal lock_* functions to fm_lock_*. Obsoletes
@@ -119,6 +112,13 @@ fetchmail 6.3.5 (not yet released):
   misleading the user. Suppress EAFNOSUPPORT errors from socket() call, too.
   Fixes Debian Bug #361825, reported by Daniel Baur.
 * In idle mode, fetchmail complains about the fetchall option.
+* When a connection fails, log not only the IP address, but also host and
+  service name and the port number. Log the latter when trying to connect in
+  verbose mode, too.
+* Keep syslog output at one line per message (this works if no errors occur).
+* Fetchmail in verbose mode now logs if it opportunistically upgrades a POP3
+  or IMAP connection to TLS security with STLS/STARTTLS.
+* fetchmail now supports foo@example.org=bar user mappings for multidrop boxes.
 
 # TRANSLATION UPDATES:
 * Russian/ru (Pavel Maryanov), Vietnamese/vi (Clytie Siddall)
