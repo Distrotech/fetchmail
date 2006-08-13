@@ -120,6 +120,7 @@ fetchmail 6.3.5 (not yet released):
 * Fetchmail in verbose mode now logs if it opportunistically upgrades a POP3
   or IMAP connection to TLS security with STLS/STARTTLS.
 * fetchmail now supports foo@example.org=bar user mappings for multidrop boxes.
+* switch setjmp/longjmp to sigsetjmp/siglongjmp
 
 # TRANSLATION UPDATES:
 * Russian/ru (Pavel Maryanov), Vietnamese/vi (Clytie Siddall)

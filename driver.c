@@ -75,7 +75,7 @@ struct addrinfo *ai0, *ai1;	/* clean these up after signal */
 static volatile int timeoutcount = 0;	/* count consecutive timeouts */
 static volatile int idletimeout = 0;	/* timeout occured in idle stage? */
 
-static jmp_buf	restart;
+static sigjmp_buf	restart;
 
 int is_idletimeout(void)
 /* last timeout occured in idle stage? */
@@ -110,7 +110,7 @@ static RETSIGTYPE timeout_handler (int signal)
     (void)signal;
     if(stage != STAGE_IDLE) {
 	timeoutcount++;
-	longjmp(restart, THROW_TIMEOUT);
+	siglongjmp(restart, THROW_TIMEOUT);
     } else
 	idletimeout = 1;
 }
@@ -119,7 +119,7 @@ static RETSIGTYPE sigpipe_handler (int signal)
 /* handle SIGPIPE signal indicating a broken stream socket */
 {
     (void)signal;
-    longjmp(restart, THROW_SIGPIPE);
+    siglongjmp(restart, THROW_SIGPIPE);
 }
 
 #define CLEANUP_TIMEOUT 60 /* maximum timeout during cleanup */
@@ -862,24 +862,13 @@ static int do_session(
     /* set up the broken-pipe timeout */
     pipesave = set_signal_handler(SIGPIPE, sigpipe_handler);
 
-    if ((js = setjmp(restart)))
+    if ((js = sigsetjmp(restart,1)))
     {
 	/* exception caught */
-#ifdef HAVE_SIGPROCMASK
-	/*
-	 * Don't rely on setjmp() to restore the blocked-signal mask.
-	 * It does this under BSD but is required not to under POSIX.
-	 *
-	 * If your Unix doesn't have sigprocmask, better hope it has
-	 * BSD-like behavior.  Otherwise you may see fetchmail get
-	 * permanently wedged after a second timeout on a bad read,
-	 * because alarm signals were blocked after the first.
-	 */
 	sigset_t	allsigs;
 
 	sigfillset(&allsigs);
 	sigprocmask(SIG_UNBLOCK, &allsigs, NULL);
-#endif /* HAVE_SIGPROCMASK */
 
 	if (ai0) {
 	    freeaddrinfo(ai0); ai0 = NULL;
