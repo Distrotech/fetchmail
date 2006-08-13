@@ -7,6 +7,8 @@
 #ifndef SOCKET__
 #define SOCKET__
 
+struct addrinfo;
+
 #include <config.h>
 #ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>

@@ -103,6 +103,7 @@ fetchmail 6.3.5 (not yet released):
 * --logfile is now handled more carefully, errors opening the logfile are
   now reported to the TTY where fetchmail was started from.
 * fetchmail now complains and aborts when it cannot properly daemonize itself.
+* fix compilation on systems that don't know struct addrinfo (Solaris 2.6).
 
 # CHANGES:
 * Rename all fetchmail-internal lock_* functions to fm_lock_*. Obsoletes

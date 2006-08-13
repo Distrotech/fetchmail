@@ -8,6 +8,8 @@
 /* We need this for HAVE_STDARG_H, etc */
 #include "config.h"
 
+struct addrinfo;
+
 /* We need this for size_t */
 #include <sys/types.h>
 
