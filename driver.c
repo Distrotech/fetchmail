@@ -862,11 +862,11 @@ static int do_session(
 	sigprocmask(SIG_UNBLOCK, &allsigs, NULL);
 
 	if (ai0) {
-	    freeaddrinfo(ai0); ai0 = NULL;
+	    fm_freeaddrinfo(ai0); ai0 = NULL;
 	}
 
 	if (ai1) {
-	    freeaddrinfo(ai1); ai1 = NULL;
+	    fm_freeaddrinfo(ai1); ai1 = NULL;
 	}
 	
 	if (js == THROW_TIMEOUT)
@@ -998,7 +998,7 @@ static int do_session(
 		hints.ai_family = AF_UNSPEC;
 		hints.ai_flags = AI_CANONNAME;
 
-		error = getaddrinfo(ctl->server.queryname, NULL, &hints, &res);
+		error = fm_getaddrinfo(ctl->server.queryname, NULL, &hints, &res);
 		if (error)
 		{
 		    report(stderr,
@@ -1024,7 +1024,7 @@ static int do_session(
 		    ctl->server.trueaddr = (struct sockaddr *)xmalloc(res->ai_addrlen);
 		    ctl->server.trueaddr_len = res->ai_addrlen;
 		    memcpy(ctl->server.trueaddr, res->ai_addr, res->ai_addrlen);
-		    freeaddrinfo(res);
+		    fm_freeaddrinfo(res);
 		}
 	    }
 	}

@@ -277,7 +277,7 @@ int SockOpen(const char *host, const char *service,
     memset(&req, 0, sizeof(struct addrinfo));
     req.ai_socktype = SOCK_STREAM;
 
-    i = getaddrinfo(host, service, &req, ai0);
+    i = fm_getaddrinfo(host, service, &req, ai0);
     if (i) {
 	report(stderr, GT_("getaddrinfo(\"%s\",\"%s\") error: %s\n"),
 		host, service, gai_strerror(i));
@@ -340,7 +340,7 @@ int SockOpen(const char *host, const char *service,
 	break;
     }
 
-    freeaddrinfo(*ai0);
+    fm_freeaddrinfo(*ai0);
     *ai0 = NULL;
 
     if (i == -1)

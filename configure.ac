@@ -5,7 +5,7 @@ dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl
 
-AC_INIT([fetchmail],[6.3.5-beta1],[fetchmail-users@lists.berlios.de])
+AC_INIT([fetchmail],[6.3.5-beta2],[fetchmail-users@lists.berlios.de])
 AC_CONFIG_SRCDIR([fetchmail.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_LIBOBJ_DIR([.])
@@ -138,7 +138,7 @@ AC_SUBST(EXTRAOBJ)
 
 AC_CHECK_FUNCS(tcsetattr stty setsid geteuid seteuid dnl
   strerror syslog snprintf vprintf vsnprintf vsyslog dnl
-  atexit inet_aton strftime setrlimit socketpair sigprocmask dnl
+  atexit inet_aton strftime setrlimit socketpair dnl
   sigaction strdup setlocale)
 
 AC_CHECK_DECLS(strerror)
@@ -427,6 +427,22 @@ AC_SEARCH_LIBS(getaddrinfo, inet6, [AC_DEFINE(HAVE_GETADDRINFO,1,[define to 1 if
 AC_CHECK_FUNCS(getnameinfo inet_ntop)
 AM_CONDITIONAL(NEED_GETADDRINFO, test "$ac_cv_search_getaddrinfo" != "none required")
 AM_CONDITIONAL(NEED_GETNAMEINFO, test "$ac_cv_func_getnameinfo"   != yes)
+
+dnl Check if getaddrinfo is async-signal-safe - most implementations aren't
+if test "$ac_cv_search_getaddrinfo" = "none required" ; then
+    AC_MSG_CHECKING(if your getaddrinfo is async-signal-safe)
+    gai_ts=no
+    dnl we have getaddrinfo() - check if the OS is known to have a async-signal-safe implementation
+    case $target_os in
+	linux*)					gai_ts=yes ;;
+	freebsd5.5|freebsd6*|freebsd7*)		gai_ts=yes ;;
+	solaris2.8|solaris2.9|solaris2.10)	gai_ts=yes ;;
+    esac
+    AC_MSG_RESULT($gai_ts)
+    if test $gai_ts = yes ; then
+	AC_DEFINE(GETADDRINFO_ASYNCSAFE, 1, [define to 1 if you know your getaddrinfo function is async-signal-safe])
+    fi
+fi
 
 # This version of the Kerberos 4 and 5 options addresses the follwing issues:
 # 

@@ -98,8 +98,9 @@ fetchmail 6.3.5 (not yet released):
   with new polls, and SIGHUP would be ignored for root users. SIGHUP now matches
   documented behavior. SIGUSR1 has always been a wakeup signal for both root
   (undocumented) and non-root users. See also the deprecation warning above.
-* Track getaddrinfo() results to properly free them after timeouts,
-  reported by Uli Zappe.  This MIGHT fix Debian Bug#294547 and Bug#377135.
+* Track getaddrinfo() results to properly free them after timeouts and make sure
+  that getaddrinfo() isn't interrupted by a timeout (which breaks on MacOS X),
+  reported by Uli Zappe.  This should fix Debian Bug#294547 and Bug#377135.
 * --logfile is now handled more carefully, errors opening the logfile are
   now reported to the TTY where fetchmail was started from.
 * fetchmail now complains and aborts when it cannot properly daemonize itself.

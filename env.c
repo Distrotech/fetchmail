@@ -161,7 +161,7 @@ char *host_fqdn(int required)
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_flags=AI_CANONNAME;
 
-	e = getaddrinfo(tmpbuf, NULL, &hints, &res);
+	e = fm_getaddrinfo(tmpbuf, NULL, &hints, &res);
 	if (e) {
 	    /* exit with error message */
 	    fprintf(stderr,
@@ -177,7 +177,7 @@ char *host_fqdn(int required)
 	}
 
 	result = xstrdup(res->ai_canonname);
-	freeaddrinfo(res);
+	fm_freeaddrinfo(res);
     }
     else
 	result = xstrdup(tmpbuf);

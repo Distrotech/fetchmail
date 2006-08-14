@@ -48,7 +48,7 @@ int servport(const char *service) {
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_protocol = IPPROTO_TCP;
-	e = getaddrinfo(NULL, service, &hints, &res);
+	e = fm_getaddrinfo(NULL, service, &hints, &res);
 	if (e) {
 	    report(stderr, GT_("getaddrinfo(NULL, \"%s\") error: %s\n"),
 		    service, gai_strerror(e));
@@ -64,10 +64,10 @@ int servport(const char *service) {
 		break;
 #endif
 		default:
-		    freeaddrinfo(res);
+		    fm_freeaddrinfo(res);
 		    goto err;
 	    }
-	    freeaddrinfo(res);
+	    fm_freeaddrinfo(res);
 	}
     } else {
 	if (u == 0 || u > 65535)

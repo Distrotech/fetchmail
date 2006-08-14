@@ -759,5 +759,8 @@ int servport(const char *service);
 # define NI_DGRAM	16
 #endif
 
+int fm_getaddrinfo(const char *node, const char *serv, const struct addrinfo *hints, struct addrinfo **res);
+void fm_freeaddrinfo(struct addrinfo *ai);
+
 #endif
 /* fetchmail.h ends here */
