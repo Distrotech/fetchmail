@@ -590,7 +590,7 @@ int main(int argc, char **argv)
     set_signal_handler(SIGINT, terminate_run);
     set_signal_handler(SIGTERM, terminate_run);
     set_signal_handler(SIGALRM, terminate_run);
-    set_signal_handler(SIGPIPE, terminate_run);
+    set_signal_handler(SIGPIPE, SIG_IGN);
     set_signal_handler(SIGQUIT, terminate_run);
 
     /* here's the exclusion lock */
