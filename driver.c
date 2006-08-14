@@ -55,7 +55,6 @@
 
 /* throw types for runtime errors */
 #define THROW_TIMEOUT	1		/* server timed out */
-#define THROW_SIGPIPE	2		/* SIGPIPE on stream socket */
 
 /* magic values for the message length array */
 #define MSGLEN_UNKNOWN	0		/* length unknown (0 is impossible) */
@@ -110,16 +109,12 @@ static RETSIGTYPE timeout_handler (int signal)
     (void)signal;
     if(stage != STAGE_IDLE) {
 	timeoutcount++;
+	/* XXX FIXME: this siglongjmp must die - it's not safe to be
+	 * called from a function handler and breaks, for instance,
+	 * getaddrinfo() */
 	siglongjmp(restart, THROW_TIMEOUT);
     } else
 	idletimeout = 1;
-}
-
-static RETSIGTYPE sigpipe_handler (int signal)
-/* handle SIGPIPE signal indicating a broken stream socket */
-{
-    (void)signal;
-    siglongjmp(restart, THROW_SIGPIPE);
 }
 
 #define CLEANUP_TIMEOUT 60 /* maximum timeout during cleanup */
@@ -845,7 +840,6 @@ static int do_session(
     int tmperr;
     int deletions = 0, js;
     const char *msg;
-    SIGHANDLERTYPE pipesave;
     SIGHANDLERTYPE alrmsave;
 
     ctl->server.base_protocol = proto;
@@ -858,9 +852,6 @@ static int do_session(
     /* set up the server-nonresponse timeout */
     alrmsave = set_signal_handler(SIGALRM, timeout_handler);
     mytimeout = ctl->server.timeout;
-
-    /* set up the broken-pipe timeout */
-    pipesave = set_signal_handler(SIGPIPE, sigpipe_handler);
 
     if ((js = sigsetjmp(restart,1)))
     {
@@ -878,14 +869,7 @@ static int do_session(
 	    freeaddrinfo(ai1); ai1 = NULL;
 	}
 	
-	if (js == THROW_SIGPIPE)
-	{
-	    set_signal_handler(SIGPIPE, SIG_IGN);
-	    report(stdout,
-		   GT_("SIGPIPE thrown from an MDA or a stream socket error\n"));
-	    wait(0);
-	}
-	else if (js == THROW_TIMEOUT)
+	if (js == THROW_TIMEOUT)
 	{
 	    if (phase == OPEN_WAIT)
 		report(stdout,
@@ -939,7 +923,7 @@ static int do_session(
     }
     else
     {
-	/* setjmp returned zero -> normal operation */
+	/* sigsetjmp returned zero -> normal operation */
 	char buf[MSGBUFSIZE+1], *realhost;
 	int count, newm, bytes;
 	int fetches, dispatches, oldphase;
@@ -1581,7 +1565,6 @@ closeUp:
 
     set_timeout(0); /* cancel any pending alarm */
     set_signal_handler(SIGALRM, alrmsave);
-    set_signal_handler(SIGPIPE, pipesave);
     return(err);
 }
 

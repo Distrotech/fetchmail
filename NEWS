@@ -104,6 +104,9 @@ fetchmail 6.3.5 (not yet released):
   now reported to the TTY where fetchmail was started from.
 * fetchmail now complains and aborts when it cannot properly daemonize itself.
 * fix compilation on systems that don't know struct addrinfo (Solaris 2.6).
+* ignore SIGPIPE signals and rely on functions to return EPIPE instead. This is
+  necessary because the former longjmp() from the signal handler is unsafe and
+  makes the whole fetchmail behavior undefined after the event.
 
 # CHANGES:
 * Rename all fetchmail-internal lock_* functions to fm_lock_*. Obsoletes
