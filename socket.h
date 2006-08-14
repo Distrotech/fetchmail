@@ -69,7 +69,7 @@ int UnixOpen(const char *path);
 
 #ifdef SSL_ENABLE
 int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char *certpath,
-    char *fingerprint, char *servercname, char *label);
+    char *fingerprint, char *servercname, char *label, char **remotename);
 #endif /* SSL_ENABLE */
 
 #endif /* SOCKET__ */

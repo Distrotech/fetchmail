@@ -81,6 +81,7 @@ char *strstr(const char *, const char *);
 #define 	A_GSSAPI	7	/* authenticate with GSSAPI */
 #define		A_SSH		8	/* authentication at session level */
 #define		A_MSN		9	/* same as NTLM with keyword MSN */
+#define		A_EXTERNAL	10	/* external authentication (client cert) */
 
 /* some protocols or authentication types (KERBEROS, GSSAPI, SSH) don't
  * require a password */
@@ -90,6 +91,7 @@ char *strstr(const char *, const char *);
      || (ctl)->server.authenticate == A_KERBEROS_V5 \
      || (ctl)->server.authenticate == A_GSSAPI \
      || (ctl)->server.authenticate == A_SSH \
+     || (ctl)->server.authenticate == A_EXTERNAL \
      || (ctl)->server.protocol == P_ETRN)
 
 /*
@@ -119,6 +121,8 @@ char *strstr(const char *, const char *);
 #define		DIGESTLEN	33	/* length of MD5 digest */
 
 /* exit code values */
+/* NOTE THAT PS_SUCCESS MUST ALWAYS BE 0 - SOME PARTS OF THE CODE
+ * RELY ON THIS VALUE! */
 #define		PS_SUCCESS	0	/* successful receipt of messages */
 #define		PS_NOMAIL       1	/* no mail available */
 #define		PS_SOCKET	2	/* socket I/O woes */

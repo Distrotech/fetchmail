@@ -347,6 +347,24 @@ static void capa_probe(int sock, struct query *ctl)
     peek_capable = (imap_version >= IMAP4);
 }
 
+static int do_authcert (int sock, char *command, const char *name)
+/* do authentication "external" (authentication provided by client cert) */
+{
+    char buf[256];
+
+    if (name && name[0])
+    {
+        size_t len = strlen(name);
+        if ((len / 3) + ((len % 3) ? 4 : 0)  < sizeof(buf))
+            to64frombits (buf, name, strlen(name));
+        else
+            return PS_AUTHFAIL; /* buffer too small. */
+    }
+    else
+        buf[0]=0;
+    return gen_transact(sock, "%s EXTERNAL %s",command,buf);
+}
+
 static int imap_getauth(int sock, struct query *ctl, char *greeting)
 /* apply for connection authorization */
 {
@@ -378,7 +396,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
     }
 
 #ifdef SSL_ENABLE
-    if ((!ctl->sslproto || !strcmp(ctl->sslproto,"tls1"))
+    if ((!ctl->sslproto || !strcasecmp(ctl->sslproto,"tls1"))
         && !ctl->use_ssl
         && strstr(capabilities, "STARTTLS"))
     {
@@ -393,7 +411,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
            if (ok == PS_SUCCESS &&
 	       SSLOpen(sock,ctl->sslcert,ctl->sslkey,"tls1",ctl->sslcertck,
 		   ctl->sslcertpath,ctl->sslfingerprint,
-		   realhost,ctl->server.pollname) == -1)
+		   realhost,ctl->server.pollname,&ctl->remotename) == -1)
            {
 	       if (!ctl->sslproto && !ctl->wehaveauthed)
 	       {
@@ -429,6 +447,22 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
      * Try the protocol variants that don't require passwords first.
      */
     ok = PS_AUTHFAIL;
+
+    if ((ctl->server.authenticate == A_ANY 
+         || ctl->server.authenticate == A_EXTERNAL)
+	&& strstr(capabilities, "AUTH=EXTERNAL"))
+    {
+        ok = do_authcert(sock, "AUTHENTICATE", ctl->remotename);
+	if (ok)
+        {
+            /* SASL cancellation of authentication */
+            gen_send(sock, "*");
+            if (ctl->server.authenticate != A_ANY)
+                return ok;
+        } else {
+            return ok;
+	}
+    }
 
 #ifdef GSSAPI
     if ((ctl->server.authenticate == A_ANY 

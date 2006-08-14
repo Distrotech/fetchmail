@@ -125,6 +125,10 @@ fetchmail 6.3.5 (not yet released):
   or IMAP connection to TLS security with STLS/STARTTLS.
 * fetchmail now supports foo@example.org=bar user mappings for multidrop boxes.
 * switch setjmp/longjmp to sigsetjmp/siglongjmp
+* IMAP now supports the EXTERNAL authentication method, courtesy of
+  Götz 'nimrill' Babin-Ebell, BerliOS patch #1095 with minor changes.
+* The sslproto keywords are now case insensitive, courtesy of
+  Götz 'nimrill' Babin-Ebell, BerliOS patch #1095.
 
 # TRANSLATION UPDATES:
 * Russian/ru (Pavel Maryanov), Vietnamese/vi (Clytie Siddall)

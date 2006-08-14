@@ -810,12 +810,43 @@ static int SSL_ck_verify_callback( int ok_return, X509_STORE_CTX *ctx )
 	return SSL_verify_callback(ok_return, ctx, 1);
 }
 
+
+/* get commonName from certificate set in file.
+ * commonName is stored in buffer namebuffer, limited with namebufferlen
+ */
+static const char *SSLCertGetCN(const char *mycert,
+                                char *namebuffer, size_t namebufferlen)
+{
+	const char *ret       = NULL;
+	BIO        *certBio   = NULL;
+	X509       *x509_cert = NULL;
+	X509_NAME  *certname  = NULL;
+
+	if (namebuffer && namebufferlen > 0) {
+		namebuffer[0] = 0x00;
+		certBio = BIO_new_file(mycert,"r");
+		if (certBio) {
+			x509_cert = PEM_read_bio_X509(certBio,NULL,NULL,NULL);
+			BIO_free(certBio);
+		}
+		if (x509_cert) {
+			certname = X509_get_subject_name(x509_cert);
+			if (certname &&
+			    X509_NAME_get_text_by_NID(certname, NID_commonName,
+						      namebuffer, namebufferlen) > 0)
+				ret = namebuffer;
+			X509_free(x509_cert);
+		}
+	}
+	return ret;
+}
+
 /* performs initial SSL handshake over the connected socket
  * uses SSL *ssl global variable, which is currently defined
  * in this file
  */
 int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char *certpath,
-    char *fingerprint, char *servercname, char *label)
+    char *fingerprint, char *servercname, char *label, char **remotename)
 {
         struct stat randstat;
         int i;
@@ -851,13 +882,13 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char
 		/* Be picky and make sure the memory is cleared */
 		memset( _ssl_context, 0, sizeof( _ssl_context ) );
 		if(myproto) {
-			if(!strcmp("ssl2",myproto)) {
+			if(!strcasecmp("ssl2",myproto)) {
 				_ctx = SSL_CTX_new(SSLv2_client_method());
-			} else if(!strcmp("ssl3",myproto)) {
+			} else if(!strcasecmp("ssl3",myproto)) {
 				_ctx = SSL_CTX_new(SSLv3_client_method());
-			} else if(!strcmp("tls1",myproto)) {
+			} else if(!strcasecmp("tls1",myproto)) {
 				_ctx = SSL_CTX_new(TLSv1_client_method());
-			} else if (!strcmp("ssl23",myproto)) {
+			} else if (!strcasecmp("ssl23",myproto)) {
 				myproto = NULL;
 			} else {
 				fprintf(stderr,GT_("Invalid SSL protocol '%s' specified, using default (SSLv23).\n"), myproto);
@@ -906,10 +937,17 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char
 	 * he does NOT have a separate certificate and private key file then
 	 * assume that it's a combined key and certificate file.
 	 */
+		char buffer[256];
+		
 		if( !mykey )
 			mykey = mycert;
 		if( !mycert )
 			mycert = mykey;
+
+		if (SSLCertGetCN(mycert, buffer, sizeof(buffer))) {
+			free(*remotename);
+			*remotename = xstrdup(buffer);
+		}
         	SSL_use_certificate_file(_ssl_context[sock], mycert, SSL_FILETYPE_PEM);
         	SSL_use_RSAPrivateKey_file(_ssl_context[sock], mykey, SSL_FILETYPE_PEM);
 	}

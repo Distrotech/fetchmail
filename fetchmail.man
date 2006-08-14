@@ -384,6 +384,10 @@ require it, some servers may request it but not require it, and some
 servers may not request it at all.  It may be the same file
 as the private key (combined key and certificate file) but this is not
 recommended.
+.sp
+.B NOTE:
+If you use client authentication, the user name is fetched from the
+certificate's CommonName and overrides the name set with \-\-user.
 .TP
 .B \-\-sslkey <name>
 (Keyword: sslkey)
@@ -402,11 +406,11 @@ server.  This can cause some complications in daemon mode.
 .TP
 .B \-\-sslproto <name>
 (Keyword: sslproto)
-Forces an SSL or TLS protocol. Possible values are '\fBssl2\fR',
-\&'\fBssl3\fR', '\fBssl23\fR', and '\fBtls1\fR'. Try this if the default
+Forces an SSL or TLS protocol. Possible values are '\fBSSL2\fR',
+\&'\fBSSL3\fR', '\fBSSL23\fR', and '\fBTLS1\fR'. Try this if the default
 handshake does not work for your server. To defeat automatic TLSv1
 negotiation when the server advertises STARTTLS or STLS, use \fB''\fR or
-\&'\fBssl23\fR'. This option, even if the argument is the empty string,
+\&'\fBSSL23\fR'. This option, even if the argument is the empty string,
 will also suppress the diagnostic 'SERVER: opportunistic upgrade to
 TLS.' message in verbose mode. The default is to try appropriate
 protocols depending on context.
@@ -728,19 +732,22 @@ This option permits you to specify an authentication type (see USER
 AUTHENTICATION below for details).  The possible values are \fBany\fR,
 \&\fBpassword\fR, \fBkerberos_v5\fR, \fBkerberos\fR (or, for
 excruciating exactness, \fBkerberos_v4\fR), \fBgssapi\fR,
-\fBcram\-md5\fR, \fBotp\fR, \fBntlm\fR, \fBmsn\fR (only for POP3) and
-\fBssh\fR.  When \fBany\fR (the default) is specified, fetchmail tries
-first methods that don't require a password (GSSAPI, KERBEROS\ IV,
+\fBcram\-md5\fR, \fBotp\fR, \fBntlm\fR, \fBmsn\fR (only for POP3),
+\fBexternal\fR (only IMAP) and \fBssh\fR.
+When \fBany\fR (the default) is specified, fetchmail tries
+first methods that don't require a password (EXTERNAL, GSSAPI, KERBEROS\ IV,
 KERBEROS\ 5); then it looks for methods that mask your password
 (CRAM-MD5, X\-OTP - note that NTLM and MSN are not autoprobed for POP3
 and MSN is only supported for POP3); and only if the server doesn't
 support any of those will it ship your password en clair.  Other values
 may be used to force various authentication methods
-(\fBssh\fR suppresses authentication and is thus good for IMAP PREAUTH).
+(\fBssh\fR suppresses authentication and is thus useful for IMAP PREAUTH).
+(\fBexternal\fR suppresses authentication and is thus useful for IMAP EXTERNAL).
 Any value other than \fBpassword\fR, \fBcram\-md5\fR, \fBntlm\fR,
 \&\fBmsn\fR or \fBotp\fR suppresses fetchmail's normal inquiry for a
 password.  Specify \fBssh\fR when you are using an end-to-end secure
-connection such as an ssh tunnel; specify \fBgssapi\fR or
+connection such as an ssh tunnel; specify \fBexternal\fR when you use
+TLS with client authentication and specify \fBgssapi\fR or
 \&\fBkerberos_v4\fR if you are using a protocol variant that employs
 GSSAPI or K4.  Choosing KPOP protocol automatically selects Kerberos
 authentication.  This option does not work with ETRN.
@@ -1007,6 +1014,13 @@ fetchmail will notice this and skip the normal authentication step.
 This can be useful, e.g. if you start imapd explicitly using ssh.
 In this case you can declare the authentication value 'ssh' on that
 site entry to stop \fI.fetchmail\fR from asking you for a password
+when it starts up.
+.PP
+If you use client authentication with \fITLS1\fR and your IMAP daemon
+returns the \fIAUTH=EXTERNAL\fR response, fetchmail will notice this
+and will use the authentication shortcut and will not send the
+passphrase. In this case you can declare the authentication value 'external'
+ on that site to stop \fIfetchmail\fR from asking you for a password
 when it starts up.
 .PP
 If you are using POP3, and the server issues a one-time-password
@@ -1585,7 +1599,7 @@ tracepolls	\&	\&	T{
 Add poll tracing information to the Received header
 T}
 principal   	\&	\&	T{
-Set Kerberos principal (only useful with imap and kerberos)
+Set Kerberos principal (only useful with IMAP and kerberos)
 T}
 esmtpname   	\&	\&	T{
 Set name for RFC2554 authentication to the ESMTP server.
@@ -1987,7 +2001,8 @@ Legal protocol identifiers for use with the 'protocol' keyword are:
 .PP
 Legal authentication types are 'any', 'password', 'kerberos',
 \&'kerberos_v4', 'kerberos_v5' and 'gssapi', 'cram\-md5', 'otp', 'msn'
-(only for POP3), 'ntlm', 'ssh'.  The 'password' type specifies
+(only for POP3), 'ntlm', 'ssh', 'external' (only IMAP).
+The 'password' type specifies
 authentication by normal transmission of a password (the password may be
 plain text or subject to protocol-specific encryption as in APOP);
 \&'kerberos' tells \fIfetchmail\fR to try to get a Kerberos ticket at the

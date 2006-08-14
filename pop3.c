@@ -441,7 +441,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 #ifdef SSL_ENABLE
 	if (has_ssl
 	    && !ctl->use_ssl
-	    && (!ctl->sslproto || !strcmp(ctl->sslproto,"tls1")))
+	    && (!ctl->sslproto || !strcasecmp(ctl->sslproto,"tls1")))
 	{
 	    char *realhost;
 
@@ -453,7 +453,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	   if (ok == PS_SUCCESS &&
 	       SSLOpen(sock,ctl->sslcert,ctl->sslkey,"tls1",ctl->sslcertck,
 		   ctl->sslcertpath,ctl->sslfingerprint,
-		   realhost,ctl->server.pollname) == -1)
+		   realhost,ctl->server.pollname,&ctl->remotename) == -1)
 	   {
 	       if (!ctl->sslproto && !ctl->wehaveauthed)
 	       {
