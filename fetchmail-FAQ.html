@@ -180,7 +180,7 @@ an OS upgrade</a><br/>
 <a href="#R8">R8. Fetchmail is timing out after fetching certain
 messages but before deleting them</a><br/>
 <a href="#R9">R9. Fetchmail is timing out during message fetches</a><br/>
-<a href="#R10">R10. Fetchmail is dying with SIGPIPE.</a><br/>
+<a href="#R10"><strike>R10. Fetchmail is dying with SIGPIPE.</strike></a><br/>
 <a href="#R11">R11. My server is hanging or emitting errors on CAPA.</a><br/>
 <a href="#R12">R12. Fetchmail isn't working and reports getaddrinfo
     errors.</a><br />
@@ -2391,22 +2391,16 @@ fetches</a></h2>
 <p>This is probably a general networking issue. Sending a "RETR"
 command will cause the server to start sending large amounts of
 data, which means large packets. If your networking layer has a
-packet-fragmentation problem, that's where you'll see it.</p>
+packet-fragmentation problem or improper firewall settings break Path
+MTU discovery (when for instance all ICMP traffic is blocked), that's
+where you'll see it.</p>
 
-<h2><a id="R10" name="R10">R10. Fetchmail is dying with
-SIGPIPE.</a></h2>
+<h2><a id="R10" name="R10"><strike>R10. Fetchmail is dying with
+	SIGPIPE.</strike></a></h2>
 
-<p>This probably means you have an <code>mda</code> option. Your
-MDA is croaking while being passed a message. Best fix is to remove
-the <code>mda</code> option and pass mail to your port 25 SMTP
-listener.</p>
-
-<p>If for some reason you are invoking sendmail via the
-<tt>mda</tt> option (rather than delivering to port 25 via smtp),
-don't forget to include the -i switch. Otherwise you will
-occasionally get mysterious delivery failures with a SIGPIPE as the
-sendmail instance dies. The problem is messages with a single dot
-at start of a text line.</p>
+<p><em>Fetchmail 6.3.5 and newer block SIGPIPE, and many older versions have
+  already handled this signal, so you shouldn't be seeing SIGPIPE
+at all.</em></p>
 
 <h2><a id="R11" name="R11">R11. My server is hanging or emitting
 errors on CAPA.</a></h2>
@@ -2542,29 +2536,18 @@ dropped connection.</a></h2>
 <p>One POP3 daemon used in the Berkeley Unix world that reports
 itself as POP3 version 1.004 actually throws the queue away. 1.005
 fixed that. If you're running this one, upgrade immediately. (It
-also truncates long lines at column 1024)</p>
+also truncates long lines at column 1024.)</p>
 
 <p>Many POP servers, if an interruption occurs, will restore the
-whole mail queue after about 10 minutes. Others will restore it
+whole mail queue after about 10 minutes. Better ones will restore it
 right away. If you have an interruption and don't see it right
 away, cross your fingers and wait ten minutes before retrying.</p>
 
-<p>Some servers (such as Microsoft's NTMail) are mis-designed to
-restore the entire queue, including messages you have deleted. If
-you have one of these and it flakes out on you a lot, try setting a
-small <code>--fetchlimit</code> value. This will result in more IP
-connects to the server, but will mean it actually executes changes
-to the queue more often.</p>
-
-<p>Qualcomm's qpopper, used at many BSD Unix sites, is better
-behaved. If its connection is dropped, it will first execute all
-DELE commands as though you had issued a QUIT (this is a technical
-violation of the POP3 RFCs, but a good idea in a world of flaky
-phone lines). Then it will re-queue any message that was being
-downloaded at hangup time. Still, qpopper may require a noticeable
-amount of time to do deletions and clean up its queue. (Fetchmail
-waits a bit before retrying in order to avoid a 'lock busy'
-error.)</p>
+<p>Good servers are designed to restore the entire queue, including
+messages you have deleted. If you have one of these and it flakes out on
+you a lot, try setting a small <code>--fetchlimit</code> value. This
+will result in more IP connects to the server, but will mean it actually
+executes changes to the queue more often.</p>
 
 <h2><a id="D3" name="D3">D3. Mail that was being fetched when I
 interrupted my fetchmail seems to have been vanished.</a></h2>
@@ -2586,7 +2569,7 @@ your server mailbox forever.</p>
 <p>Workaround: add the '<code>fetchall</code>' keyword to your
 fetch options.</p>
 
-<p>Solution: switch to an <a href="http://www.imap.org">IMAP4</a>
+<p>Solution: switch to an <a href="http://www.imap.org/">IMAP4</a>
 server.</p>
 
 <hr/>
@@ -2595,26 +2578,21 @@ server.</p>
 multidrop mail is going to root anyway.</a></h2>
 
 <p>Somehow your fetchmail is never recognizing the hostname part of
-recipient names it parses out of To/Cc/envelope-header lines as
-matching the name of the mailserver machine. To check this, run
+recipient names it parses out of Envelope-header lines (or these are
+improperly configured) as
+matching a name within the designated domains. To check this, run
 fetchmail in foreground with -v -v on. You will probably see a lot
 of messages with the format "line rejected, %s is not an alias of
 the mailserver" or "no address matches; forwarding to %s."</p>
 
-<p>These errors usually indicate some kind of DNS configuration
-problem either on the server or your client machine.</p>
+<p>These errors usually indicate some kind of configuration
+problem.</p>
 
 <p>The easiest workaround is to add a '<code>via</code>' option (if
-necessary) and add enough aka declarations to cover all of your
-mailserver's aliases, then say '<code>no dns</code>'. This will
-take DNS out of the picture (though it means mail may be
-uncollected if it's sent to an alias of the mailserver that you
-don't have listed).</p>
-
-<p>It would be better to fix your DNS, however. DNS problems can
-hurt you in lots of ways, for example by making your machines
-intermittently or permanently unreachable to the rest of the
-net.</p>
+necessary) and add enough '<code>aka</code>' declarations to cover all
+of your mailserver's aliases, then say '<code>no dns</code>'. This will
+take DNS out of the picture (though it means mail may be uncollected if
+it's sent to an alias of the mailserver that you don't have listed).</p>
 
 <p>Occasionally these errors indicate the sort of header-parsing
 problem described in <a href="#M7">M7</a>.</p>
@@ -2637,8 +2615,11 @@ setting up a UUCP feed.</p>
 <p>If neither of these alternatives is available, multidrop mode
 may do (though you <em>are</em> going to get hurt by some mailing
 list software; see the caveats under THE USE AND ABUSE OF MULTIDROP
-MAILBOXES on the man page). If you want to try it, the way to do it
-is with the '<code>localdomains</code>' option.</p>
+MAILBOXES on the man page, and check what is needed at <a
+    href="http://home.pages.de/~mandree/mail/multidrop">Matthias
+    Andree's &quot;Requisites for working multidrop
+    mailboxes&quot;</a>). If you want to try it, the way to do it is
+with the '<code>localdomains</code>' option.</p>
 
 <p>In general, if you use localdomains you need to make sure of two
 other things:</p>
@@ -2660,9 +2641,11 @@ recipient address in the To lines).</p>
 
 <p>Some ways of accumulating a whole domain's messages in a single
 server mailbox mean it all ends up with a single envelope address
-that is useless for rerouting purposes. You may have to set
+that is useless for rerouting purposes. In this particular case, sell
+your ISP a clue. If that does not work, you may have to set
 '<code>no envelope</code>' to prevent fetchmail from being
-bamboozled by this.</p>
+bamboozled by this, but a missing envelope makes multidrop routing
+unreliable.</p>
 
 <p>Check also answer <a href="#T1">T1</a> on a reliable way to do
 multidrop delivery if your ISP (or your mail redirection provider)
@@ -2688,7 +2671,7 @@ reference to -lresolv from his link line and relinking. Apparently
 in some older Linux distributions the libc5 bind library version
 works better.</p>
 
-<p>As of 2.2, the configure script has been hacked so the bind
+<p>As of fetchmail 2.2, the configure script has been hacked so the bind
 library is linked only if it is actually needed. So under Linux it
 won't be, and this problem should go away.</p>
 

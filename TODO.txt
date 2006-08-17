@@ -10,7 +10,7 @@ CODE:
 
 DOCUMENTATION:
 - document Received: parsing expectations
-- revise FAQ, continue in section R7.
+- revise FAQ, continue in section M.
 - Add info whether Keywords are global, server or user keywords
 - review sample.rcfile and document it
 - consolidate multidrop documentation
