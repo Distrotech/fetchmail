@@ -131,7 +131,7 @@ host?.</a><br/>
 
 <h2 id="C_S">How to make fetchmail work with various servers</h2>
 
-<a href="#S1">S1. How can I use fetchmail with qpopper?</a><br/>
+<a href="#S1"><strike>S1. How can I use fetchmail with qpopper?</strike></a><br/>
 <a href="#S2">S2. How can I use fetchmail with Microsoft Exchange?</a><br/>
 <a href="#S3">S3. How can I use fetchmail with HP OpenMail?</a><br/>
 <a href="#S4">S4. How can I use fetchmail with Novell GroupWise?</a><br/>
@@ -170,8 +170,8 @@ connect failed' messages.</a><br/>
 work.</a><br/>
 <a href="#R3">R3. Fetchmail dumps core when given an invalid rc
 file.</a><br/>
-<a href="#R4">R4. Fetchmail dumps core in -V mode, but operates
-normally otherwise.</a><br/>
+<a href="#R4"><strike>R4. Fetchmail dumps core in -V mode, but operates
+    normally otherwise.</strike></a><br/>
 <a href="#R5">R5. Running fetchmail in daemon mode doesn't
 work.</a><br/>
 <a href="#R6">R6. Fetchmail randomly dies with socket errors.</a><br/>
@@ -1553,38 +1553,10 @@ IMAP?</a></h2>
 
 <hr/>
 <h1>How to make fetchmail work with various servers</h1>
-<h2><a id="S1" name="S1">S1. How can I use fetchmail with
-qpopper?</a></h2>
+<h2><a id="S1" name="S1"><strike>S1. How can I use fetchmail with
+	qpopper?</strike></a></h2>
 
-<p>Qualcomm's qpopper is probably the best-of-breed among POP3
-servers, and is very widely deployed. Nevertheless, it has some
-problems which fetchmail exposes. We recommend using <a
-href="#G8">IMAP</a> instead if at all possible. If you must talk to
-qpopper, here are some problems to be aware of:</p>
-
-<h3>Problems with retrieving large messages from qpopper 2.53</h3>
-
-<p>Tony Tang <a
-href="mailto:tony@atn.com.hk">&lt;tony@atn.com.hk&gt;</a> reports
-that there is a bad intercation between fetchmail and qpopper 2.5.3
-under Red Hat Linux versions 5.0 to 5.2, kernels 2.0.34 to 2.0.35.
-When fetching very large messages (over 700K) from 2.5.3, fetchmail
-will hang with a socket error.</p>
-
-<p>This is probably not a fetchmail bug, but rather a symptom of
-some problem in the networking stack that qpopper's transmission
-pattern is tickling, as fetchpop (another Linux POP client) also
-displays the hang but Netscape running under Win95 does not. The
-problem can also be banished by <a
-href="http://www.eudora.com/freeware/qpop.html">upgrading to
-qpopper 3.0b1</a>.</p>
-
-<h3>Bad interaction with fetchmail 4.4.2 to 4.4.7</h3>
-
-<p>Versions of fetchmail from 4.4.2 through 4.4.7 had a bad
-interaction with Eudora qpopper versions 2.3 and later. See <a
-href="#X5">X5</a> for details. The solution is to upgrade your
-fetchmail.</p>
+<p><em>The information that used to be here was obsolete and dropped.</em></p>
 
 <h2><a id="S2" name="S2">S2. How can I use fetchmail with Microsoft
 Exchange?</a></h2>
@@ -1715,10 +1687,8 @@ usernames and mailbox names are the same.</li>
 explicitly to your mailbox name.</li>
 </ul>
 
-<p>But, the best option involves a tactical nuclear weapon (an old
-ASROC will do), pissing off a lot people who live downwind from
-Redmond, and your choice of any Linux, NetBSD, FreeBSD, or Solaris
-CD-ROM.</p>
+<p>But, the best option involves finding a server that runs better
+software.</p>
 
 <h2><a id="S3" name="S3">S3. How can I use fetchmail with HP
 OpenMail?</a></h2>
@@ -1736,7 +1706,7 @@ OpenMail's project manager claims these bugs have been fixed in
 6.0.</p>
 
 <p>We've had a more recent report (December 2001) that the TOP
-command fails, returning only one line regrardless of its argument,
+command fails, returning only one line regardless of its argument,
 on something identifying itself as "OpenMail POP3 interface".</p>
 
 <h2><a id="S4" name="S4">S4. How can I use fetchmail with Novell GroupWise?</a></h2>
@@ -1747,15 +1717,14 @@ broken. Among other things, it doesn't include a required content
 length in its BODY[TEXT] response.</p>
 
 <p>Fetchmail works around this problem, but we strongly recommend
-voting with your dollars for a server that isn't brain-dead. If you
-stick with code as shoddy as GroupWise seems to be, you will
-probably pay for it with other problems.</p>
+voting with your dollars for a server that isn't brain-dead.</p>
 
 <h2><a id="S5" name="S5">S5. How can I use fetchmail with
 InterChange?</a></h2>
 
 <p>You can't. At least not if you want to be able to see
-attachments. InterChange has a bug similar to the MailMax server;
+attachments. InterChange has a bug similar to the MailMax server (<a
+    href="#S6">see below</a>):
 it reports the message length with attachments but doesn't download
 them on TOP or RETR.</p>
 
@@ -1914,10 +1883,6 @@ it to use RETR instead.</p>
 You may need to raise the MaxHopCount parameter in your sendmail.cf
 to avoid having fetched mail rejected.</p>
 
-<p>(Note: Other failure modes have been reported on usa.net's
-servers. They seem to be chronically flaky. We recommend finding
-another provider.)</p>
-
 <h2><a id="I4" name="I4">I4. How can I use fetchmail with geocities
 POP3 servers?</a></h2>
 
@@ -1938,9 +1903,6 @@ mda "sed -e '1s/^\t/Received: /' | formail | /usr/bin/procmail -d &lt;user&gt;"
 <p>You should also consider using "fetchall" option because
 Geocities' servers sometimes think that the first 45 messages have
 already been read.</p>
-
-<p>Fix: Get an email provider that doesn't suck. The pop-up ads on
-Geocities are lame, you should boycott them anyway.</p>
 
 <h2><a id="I5" name="I5">I5. How can I use fetchmail with Hotmail or Lycos Webmail?</a></h2>
 
@@ -2066,15 +2028,11 @@ shouldn't be a problem.</p>
 IMAP-GSS protocol?</a></h2>
 
 <p>Fetchmail can use RFC1731 GSSAPI authorization to safely
-identify you to your IMAP server, as long as you can share Kerberos
-V credentials with your mail host and you have a GSSAPI-capable
-IMAP server. UW-IMAP (available via FTP at <a
-href="ftp://ftp.cac.washington.edu/mail/">ftp.cac.washington.edu</a>)
-is the only one I'm aware of and the one I recommend anyway for
-other reasons. You'll need version 4.1-FINAL or greater though, and
-it has to have GSS support compiled in.</p>
+identify you to your IMAP server, as long as you can share
+Kerberos&nbsp;V credentials with your mail host and you have a GSSAPI-capable
+IMAP server - those are few.</p>
 
-<p>Neither UW-IMAP nor fetchmail compile in support for GSS by
+<p>fetchmail does not compile in support for GSS by
 default, since it requires libraries from the Kerberos V
 distribution (available via FTP at <a
 href="ftp://athena-dist.mit.edu/pub/ATHENA/kerberos">athena-dist.mit.edu</a>).
@@ -2105,21 +2063,18 @@ cleartext in your .fetchmailrc, or across the network.</p>
 SSL?</a></h2>
 
 <p>You'll need to have the <a
-href="http://www.openssl.org/">OpenSSL</a> libraries installed.
+href="http://www.openssl.org/">OpenSSL</a> libraries installed, and they
+should at least be version 0.9.6.
 Configure with --with-ssl. If you have the OpenSSL libraries
 installed in the default location (/usr/local/ssl) ths will
 suffice. If you have them installed in a non-default location,
 you'll need to specify it as an argument to --with-ssl after an
 equal sign.</p>
 
-<p>Note that there is a known bug in the implementation of SSL_peek
-under OpenSSL versions 0.9.5 and older that fetchmail occasionally
-tripped over, causing hangs. It is recommended that you install
-0.9.6 or later.</p>
-
 <p>Fetchmail binaries built this way support <code>ssl</code>,
 <code>sslkey</code>, and <code>sslcert</code> options that control
-SSL encryption. You will need to have an SSL-enabled mailserver to
+SSL encryption, and will automatically use <code>tls</code> if the
+server offers it. You will need to have an SSL-enabled mailserver to
 use these options. See the manual page for details and some words
 of care on the limited security provided.</p>
 
@@ -2136,7 +2091,8 @@ fetchmail is primarily designed to run forever as a background
 daemon, that option is not available in this case.</p>
 
 <p>If you don't have the libraries installed, but do have the
-OpenSSL utility toolkit, something like this may work:</p>
+OpenSSL utility toolkit, something like this may work (but will not
+authenticate the server):</p>
 
 <pre>
 poll MYSERVER port 993 plugin "openssl s_client -connect %h:%p"
@@ -2324,6 +2280,10 @@ broken.</p>
 <h2><a id="R3" name="R3">R3. Fetchmail dumps core when given an
 invalid rc file.</a></h2>
 
+<p>Note that this bug should no longer occur when using prepackaged
+fetchmail versions or installing unmodified original tarballs, since
+these ship with a proper parser .c file.</p>
+
 <p>This is usually reported from AIX or Ultrix, but has even been
 known to happen on Linuxes without a recent version of
 <code>flex</code> installed. The problem appears to be a result of
@@ -2334,23 +2294,11 @@ building with an archaic version of lex.</p>
 <p>Fix: build and install the latest version of <a
     href="http://flex.sourceforge.net/">flex</a>.</p>
 
-<h2><a id="R4" name="R4">R4. Fetchmail dumps core in -V mode, but
-operates normally otherwise.</a></h2>
+<h2><a id="R4" name="R4"><strike>R4. Fetchmail dumps core in -V mode, but
+	operates normally otherwise.</strike></a></h2>
 
-<p>We've had this reported to us under Linux using libc-5.4.17 and
-gcc-2.7.2. It does not occur with libc-5.3.12 or earlier
-versions.</p>
-
-<p>Workaround: link with GNU malloc rather than the stock C library
-malloc.</p>
-
-<p>We're told there is some problem with the malloc() code in that
-version which makes it fragile in the presence of multiple free()
-calls on the same pointer (the malloc arena gets corrupted).
-Unfortunately it appears from doing gdb traces that whatever free()
-calls producing the problem are being made by the C library itself,
-not the fetchmail code (they're all from within fclose, and not an
-fclose called directly by fetchmail, either).</p>
+<p><em>The information that used to be here referred to bugs in Linux libc5
+    systems, which are deemed obsolete by now.</em></p>
 
 <h2><a id="R5" name="R5">R5. Running fetchmail in daemon mode
 doesn't work.</a><br/>
@@ -2360,7 +2308,7 @@ doesn't work.</a><br/>
 fetchmail in detached daemon mode doesn't work, but that using the
 same options with -N (nodetach) is OK. We have another report of
 similar behavior from one Linux user, but many other Linux users
-reportt no problem.</p>
+report no problem.</p>
 
 <p>If this happens, you have a specific portability problem with
 the code in daemon.c that detaches and backgrounds the daemon
