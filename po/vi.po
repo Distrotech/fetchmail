@@ -1,20 +1,19 @@
 # Vietnamese translation for Fetchmail.
-# Copyright © 2006 Eric S. Raymond
-# Clytie Siddall <clytie@riverland.net.au>, 2006.
+# Copyright © 2006  Clytie Siddall <clytie@riverland.net.au>
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.4\n"
+"Project-Id-Version: fetchmail 6.3.5-b1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2006-08-15 01:30+0200\n"
-"PO-Revision-Date: 2006-07-12 18:06+0930\n"
+"PO-Revision-Date: 2006-08-26 16:01+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0\n"
-"X-Generator: LocFactoryEditor 1.6b36\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: LocFactoryEditor 1.6fc1\n"
 
 #: checkalias.c:174
 #, c-format
@@ -124,9 +123,9 @@ msgid " (%d header octets)"
 msgstr " (%d octet dòng đầu)"
 
 #: driver.c:682
-#, fuzzy, c-format
+#, c-format
 msgid " (%d body octets)"
-msgstr " (%d octet thân) "
+msgstr " (%d octet thân)"
 
 #: driver.c:743
 #, c-format
@@ -744,16 +743,14 @@ msgid "Enter password for %s@%s: "
 msgstr "Hãy gõ mật khẩu cho %s@%s: "
 
 #: fetchmail.c:545 fetchmail.c:581
-#, fuzzy
 msgid "fetchmail: Warning: syslog and logfile are set. Check both for logs!\n"
 msgstr ""
-"fetchmail: cảnh báo : không có DNS sẵn sàng để kiểm tra việc lấy đa thả từ %"
-"s\n"
+"fetchmail: cảnh báo : cả syslog (bản ghi hệ thống) lẫn logfile (tập tin ghi "
+"lưu) đều đã được đặt. Hãy kiểm tra cả hai tìm tập tin ghi lưu.\n"
 
 #: fetchmail.c:557
-#, fuzzy
 msgid "fetchmail: Cannot detach into background. Aborting.\n"
-msgstr "fetchmail: không có thẻ hiện fetchmail khác đang chạy\n"
+msgstr "fetchmail: không thể tháo bỏ vào nền nên hủy bỏ.\n"
 
 #: fetchmail.c:561
 #, c-format
@@ -943,11 +940,10 @@ msgid "%s configuration invalid, LMTP can't use default SMTP port\n"
 msgstr "cấu hình %s không hợp lệ; LMTP không thể sử dụng cổng SMTP mặc định\n"
 
 #: fetchmail.c:1293
-#, fuzzy
 msgid "Both fetchall and keep on in daemon or idle mode is a mistake!\n"
 msgstr ""
-"Việc chạy fetchall (lấy hết) và tiếp tục trong chế độ trình nền là trường "
-"hợp xấu.\n"
+"Việc chạy fetchall (lấy hết) cùng với tiếp tục trong chế độ trình nền là "
+"trường hợp xấu.\n"
 
 #: fetchmail.c:1318
 #, c-format
@@ -1658,7 +1654,7 @@ msgstr "sẽ nghỉ sau khi thăm dò\n"
 #: imap.c:427 pop3.c:469
 #, c-format
 msgid "%s: opportunistic upgrade to TLS.\n"
-msgstr ""
+msgstr "%s: nâng cấp lên TLS một cách cơ hội chủ nghĩa.\n"
 
 #: imap.c:540
 msgid "Required OTP capability not compiled into fetchmail\n"
@@ -2077,9 +2073,8 @@ msgstr ""
 "\t\t\t\t\t\tcủa máy phục vụ\n"
 
 #: options.c:615
-#, fuzzy
 msgid "      --sslproto    force ssl protocol (SSL2/SSL3/TLS1)\n"
-msgstr "      --sslproto    buộc dùng _giao thức SSL_ (ssl2/ssl3/tls1)\n"
+msgstr "      --sslproto    buộc dùng _giao thức SSL_ (SSL2/SSL3/TLS1)\n"
 
 #: options.c:617
 msgid "      --plugin      specify external command to open connection\n"
@@ -2634,9 +2629,9 @@ msgid "can't raise the listener; falling back to %s"
 msgstr "không thể liên lạc với bộ lắng nghe nên dự trữ về %s"
 
 #: sink.c:1341
-#, fuzzy, c-format
+#, c-format
 msgid "Error writing to MDA: %s\n"
-msgstr "Gặp lỗi khi xoá bỏ %s: %s\n"
+msgstr "Gặp lỗi khi ghi vào MDA: %s\n"
 
 #: sink.c:1344
 #, c-format
@@ -2649,10 +2644,12 @@ msgid "MDA returned nonzero status %d\n"
 msgstr "MDA đã trả về trạng thái không phải số không %d\n"
 
 #: sink.c:1350
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
-msgstr "Lạ : việc pclose MDA đã trả về %d nên không thể xử lý tại %s:%d\n"
+msgstr ""
+"Lạ : việc pclose MDA đã trả lại %d và số hiệu lỗi %d/%s nên không thể xử lý "
+"tại %s:%d\n"
 
 #: sink.c:1372
 msgid "Message termination or close of BSMTP file failed\n"
@@ -2746,34 +2743,32 @@ msgstr ""
 "R12).\n"
 
 #: socket.c:296 socket.c:299
-#, fuzzy, c-format
+#, c-format
 msgid "unknown (%s)"
-msgstr "không rõ"
+msgstr "không rõ (%s)"
 
 #: socket.c:302
 #, c-format
 msgid "Trying to connect to %s/%s..."
-msgstr ""
+msgstr "Đang thử kết nối đến %s/%s..."
 
 #: socket.c:310
-#, fuzzy, c-format
+#, c-format
 msgid "cannot create socket: %s\n"
-msgstr "không thể gởi ngay cả cho %s.\n"
+msgstr "không thể tạo ổ cắm: %s.\n"
 
 #: socket.c:326
-#, fuzzy
 msgid "connection failed.\n"
-msgstr "Kết nối SSL đã thất bại.\n"
+msgstr "lỗi kết nối.\n"
 
 #: socket.c:328
-#, fuzzy, c-format
+#, c-format
 msgid "connection to %s:%s [%s/%s] failed: %s.\n"
-msgstr "kết nối %s đến %s bị lỗi"
+msgstr "lỗi kết nối đến %s:%s [%s/%s]: %s.\n"
 
 #: socket.c:334
-#, fuzzy
 msgid "connected.\n"
-msgstr "Kết nối SSL đã thất bại.\n"
+msgstr "đã kết nối.\n"
 
 #: socket.c:662
 #, c-format
@@ -2887,9 +2882,9 @@ msgid "Cygwin socket read retry failed!\n"
 msgstr "Việc cố lại đọc ổ cắm Cygwin bị lỗi.\n"
 
 #: transact.c:67
-#, fuzzy, c-format
+#, c-format
 msgid "mapped address %s to local %s\n"
-msgstr "đã ảnh xạ %s thành %s cục bộ\n"
+msgstr "đã ảnh xạ địa chỉ %s thành %s cục bộ\n"
 
 #: transact.c:89
 #, c-format
@@ -2973,9 +2968,8 @@ msgid "SMTP listener rejected local recipient addresses: "
 msgstr "Bộ lắng nghe SMTP đã từ chối các địa chỉ người nhận cục bộ : "
 
 #: transact.c:1445
-#, fuzzy
 msgid "error writing message text\n"
-msgstr "đang ghi thân thư...\n"
+msgstr "gặp lỗi khi ghi thân thư\n"
 
 #: uid.c:250
 #, c-format
@@ -3048,10 +3042,3 @@ msgstr "malloc (phân chia bộ nhớ) bị lỗi\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "realloc (phân chia lại bộ nhớ) bị lỗi\n"
-
-#~ msgid "SIGPIPE thrown from an MDA or a stream socket error\n"
-#~ msgstr "nhận SIGPIPE từ MDA hay lỗi ổ cắm luồng\n"
-
-#, fuzzy
-#~ msgid "MDA write error.\n"
-#~ msgstr "Lỗi deity"

@@ -2,14 +2,14 @@
 # Copyright (C) 2005-2006 Eric S. Raymond
 # Copyright (C) 2002 Free Software Foundation, Inc.
 # Takeshi Hamasaki <hma@syd.odn.ne.jp>, 2005-2006
-#   based on the work by Jumpei Baba <jbaba@wb3.so-net.ne.jp>, 2002 
+#   based on the work by Jumpei Baba <jbaba@wb3.so-net.ne.jp>, 2002
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.4-rc1\n"
+"Project-Id-Version: fetchmail 6.3.5-b1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2006-08-15 01:30+0200\n"
-"PO-Revision-Date: 2006-04-15 14:17+0900\n"
+"PO-Revision-Date: 2006-08-25 07:18+0900\n"
 "Last-Translator: Takeshi Hamasaki <hma@syd.odn.ne.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -130,9 +130,9 @@ msgid " (%d header octets)"
 msgstr " (%d バイト (ヘッダ) )"
 
 #: driver.c:682
-#, fuzzy, c-format
+#, c-format
 msgid " (%d body octets)"
-msgstr " (%d バイト (本体) )"
+msgstr " (本文 %d オクテット)"
 
 #: driver.c:743
 #, c-format
@@ -771,16 +771,14 @@ msgid "Enter password for %s@%s: "
 msgstr "%s@%s にログインするためのパスワードを入力して下さい : "
 
 #: fetchmail.c:545 fetchmail.c:581
-#, fuzzy
 msgid "fetchmail: Warning: syslog and logfile are set. Check both for logs!\n"
 msgstr ""
-"fetchmail: 警告 : %s より multidrop fetch を確認するための DNS が有効でありま"
-"せん。\n"
+"fetchmail: 警告 : syslog とログファイルが設定されました。ログはそちらを見てく"
+"ださい。\n"
 
 #: fetchmail.c:557
-#, fuzzy
 msgid "fetchmail: Cannot detach into background. Aborting.\n"
-msgstr "fetchmail: 他の fetchmail は実行されていません。\n"
+msgstr "fetchmail: バックグラウンドに移れません。終了します。\n"
 
 #: fetchmail.c:561
 #, c-format
@@ -972,9 +970,10 @@ msgstr ""
 "ん。\n"
 
 #: fetchmail.c:1293
-#, fuzzy
 msgid "Both fetchall and keep on in daemon or idle mode is a mistake!\n"
-msgstr "fetchall と keep オプションはデーモンモードで設定できません。\n"
+msgstr ""
+"fetchall と keep オプションはデーモンモード、休止モードでは同時に指定できませ"
+"ん。\n"
 
 #: fetchmail.c:1318
 #, c-format
@@ -1298,11 +1297,11 @@ msgstr "  MIME のデコードを行いません。 (mimedecode off)\n"
 
 #: fetchmail.c:1659
 msgid "  Idle after poll is enabled (idle on).\n"
-msgstr "  サーバアクセス後の待機を行います。 (idle on)\n"
+msgstr "  サーバアクセス後、休止します。 (idle on)\n"
 
 #: fetchmail.c:1660
 msgid "  Idle after poll is disabled (idle off).\n"
-msgstr "  サーバアクセス後の待機を行いません。 (idle off)\n"
+msgstr "  サーバアクセス後、休止しません。 (idle off)\n"
 
 #: fetchmail.c:1662
 msgid "  Nonempty Status lines will be discarded (dropstatus on)\n"
@@ -1671,7 +1670,7 @@ msgstr "接続の後、休止します。\n"
 #: imap.c:427 pop3.c:469
 #, c-format
 msgid "%s: opportunistic upgrade to TLS.\n"
-msgstr ""
+msgstr "%s: TLS へのアップグレードに適合。\n"
 
 #: imap.c:540
 msgid "Required OTP capability not compiled into fetchmail\n"
@@ -2082,10 +2081,9 @@ msgid ""
 msgstr "      --sslfingerprint サーバの証明書と一致するべき fingerprint\n"
 
 #: options.c:615
-#, fuzzy
 msgid "      --sslproto    force ssl protocol (SSL2/SSL3/TLS1)\n"
 msgstr ""
-"      --sslproto    SSL のプロトコルを強制的に指定します (ssl2/ssl3/tls1)\n"
+"      --sslproto    SSL のプロトコルを強制的に指定します (SSL2/SSL3/TLS1)\n"
 
 #: options.c:617
 msgid "      --plugin      specify external command to open connection\n"
@@ -2281,7 +2279,7 @@ msgid "Server responded with UID for wrong message.\n"
 msgstr "サーバが誤ったメッセージの UID に応答しました。\n"
 
 #: pop3.c:758 pop3.c:1004
-#, fuzzy, c-format
+#, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) は削除されましたが、まだ存在しています!\n"
 
@@ -2642,9 +2640,9 @@ msgid "can't raise the listener; falling back to %s"
 msgstr "通信先のアプリケーションと交信できません。%s と交信します。"
 
 #: sink.c:1341
-#, fuzzy, c-format
+#, c-format
 msgid "Error writing to MDA: %s\n"
-msgstr "エラーです。削除しています %s: %s\n"
+msgstr "MDAへの書き込みでエラーが発生しました: %s\n"
 
 #: sink.c:1344
 #, c-format
@@ -2657,10 +2655,12 @@ msgid "MDA returned nonzero status %d\n"
 msgstr "MDA が 0 以外のステータス %d を返して終了しました。\n"
 
 #: sink.c:1350
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
-msgstr "異常: MDA の pclose が %d を返しました。%s:%d\n"
+msgstr ""
+"異常: MDA の pclose が %d を返しました。エラー番号%d/%s 、どうしていいかわか"
+"りません。ファイル %s:%d 行\n"
 
 #: sink.c:1372
 msgid "Message termination or close of BSMTP file failed\n"
@@ -2753,34 +2753,32 @@ msgstr ""
 "オプション --service を足して試してください(FAQ の R12 も参照のこと)。\n"
 
 #: socket.c:296 socket.c:299
-#, fuzzy, c-format
+#, c-format
 msgid "unknown (%s)"
-msgstr "(不明なホスト)"
+msgstr "不明 (%s)"
 
 #: socket.c:302
 #, c-format
 msgid "Trying to connect to %s/%s..."
-msgstr ""
+msgstr "%s/%s へ接続しようとしています..."
 
 #: socket.c:310
-#, fuzzy, c-format
+#, c-format
 msgid "cannot create socket: %s\n"
-msgstr "%s に対してさえ送信できません。\n"
+msgstr "ソケット %s を作成できません\n"
 
 #: socket.c:326
-#, fuzzy
 msgid "connection failed.\n"
-msgstr "SSL による接続に失敗しました。\n"
+msgstr "接続に失敗しました。\n"
 
 #: socket.c:328
-#, fuzzy, c-format
+#, c-format
 msgid "connection to %s:%s [%s/%s] failed: %s.\n"
-msgstr "%s プロトコルを利用した %s への接続に失敗しました。"
+msgstr "%s:%s への接続に失敗しました。バッファ [%s/%s] : %s\n"
 
 #: socket.c:334
-#, fuzzy
 msgid "connected.\n"
-msgstr "SSL による接続に失敗しました。\n"
+msgstr "接続しました。\n"
 
 #: socket.c:662
 #, c-format
@@ -2896,9 +2894,9 @@ msgid "Cygwin socket read retry failed!\n"
 msgstr "Cygwin ソケット読み込み リトライ が失敗しました!\n"
 
 #: transact.c:67
-#, fuzzy, c-format
+#, c-format
 msgid "mapped address %s to local %s\n"
-msgstr "%s をローカルの %s に置換しました。\n"
+msgstr "%s をローカルの %s にマップしました。\n"
 
 #: transact.c:89
 #, c-format
@@ -2982,9 +2980,8 @@ msgid "SMTP listener rejected local recipient addresses: "
 msgstr "SMTP 受信プログラムが次のアドレスの受信を拒否しました : "
 
 #: transact.c:1445
-#, fuzzy
 msgid "error writing message text\n"
-msgstr "メッセージを書き込んでいます\n"
+msgstr "メッセージを書き込む際にエラーが発生しました\n"
 
 #: uid.c:250
 #, c-format
@@ -3062,7 +3059,3 @@ msgstr "realloc できませんでした。\n"
 
 #~ msgid "SIGPIPE thrown from an MDA or a stream socket error\n"
 #~ msgstr "MDA より SIGPIPE が発信されたか stream socket のエラーです。\n"
-
-#, fuzzy
-#~ msgid "MDA write error.\n"
-#~ msgstr "Deity エラー"

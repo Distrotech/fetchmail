@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.4-rc1\n"
+"Project-Id-Version: fetchmail 6.3.5-b1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2006-08-15 01:30+0200\n"
-"PO-Revision-Date: 2006-04-06 18:20+0200\n"
+"PO-Revision-Date: 2006-08-24 17:50+0200\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -126,9 +126,9 @@ msgid " (%d header octets)"
 msgstr " (%d bajtów nag³ówka)"
 
 #: driver.c:682
-#, fuzzy, c-format
+#, c-format
 msgid " (%d body octets)"
-msgstr " (%d bajtów tre¶ci) "
+msgstr " (%d bajtów tre¶ci)"
 
 #: driver.c:743
 #, c-format
@@ -763,14 +763,13 @@ msgid "Enter password for %s@%s: "
 msgstr "Podaj has³o dla %s@%s: "
 
 #: fetchmail.c:545 fetchmail.c:581
-#, fuzzy
 msgid "fetchmail: Warning: syslog and logfile are set. Check both for logs!\n"
-msgstr "fetchmail: uwaga: brak serwera DNS potrzebnego do sprawdzenia %s\n"
+msgstr ""
+"fetchmail: Uwaga: ustawiono sysloga i plik loga. Logów nale¿y szukaæ w obu!\n"
 
 #: fetchmail.c:557
-#, fuzzy
 msgid "fetchmail: Cannot detach into background. Aborting.\n"
-msgstr "fetchmail: nie dzia³a ¿aden inny proces fetchmaila\n"
+msgstr "fetchmail: Nie mo¿na przej¶æ w t³o. Zakoñczenie.\n"
 
 #: fetchmail.c:561
 #, c-format
@@ -957,9 +956,9 @@ msgstr ""
 "konfiguracja dla %s jest b³êdna - LMTP nie u¿ywa domy¶lnego portu SMTP\n"
 
 #: fetchmail.c:1293
-#, fuzzy
 msgid "Both fetchall and keep on in daemon or idle mode is a mistake!\n"
-msgstr "Jednoczesne fetchall i keep w trybie demona to b³±d!\n"
+msgstr ""
+"Jednoczesne fetchall i keep w trybie demona lub bezczynno¶ci to b³±d!\n"
 
 #: fetchmail.c:1318
 #, c-format
@@ -1689,7 +1688,7 @@ msgstr "przejdzie w stan bezczynno¶ci po odpytaniu\n"
 #: imap.c:427 pop3.c:469
 #, c-format
 msgid "%s: opportunistic upgrade to TLS.\n"
-msgstr ""
+msgstr "%s: zgodne przej¶cie na TLS.\n"
 
 #: imap.c:540
 msgid "Required OTP capability not compiled into fetchmail\n"
@@ -2105,9 +2104,8 @@ msgstr ""
 "serwera.\n"
 
 #: options.c:615
-#, fuzzy
 msgid "      --sslproto    force ssl protocol (SSL2/SSL3/TLS1)\n"
-msgstr "      --sslproto    wymusza protokó³ ssl (ssl2/ssl3/tls1)\n"
+msgstr "      --sslproto    wymusza protokó³ ssl (SSL2/SSL3/TLS1)\n"
 
 #: options.c:617
 msgid "      --plugin      specify external command to open connection\n"
@@ -2310,7 +2308,7 @@ msgid "Server responded with UID for wrong message.\n"
 msgstr "Serwer odpowiedzia³ z UID-em dla niew³a¶ciwego listu.\n"
 
 #: pop3.c:758 pop3.c:1004
-#, fuzzy, c-format
+#, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) zosta³ skasowany, ale nadal istnieje!\n"
 
@@ -2665,9 +2663,9 @@ msgstr "nie mo¿na podnie¶æ procesu s³uchaj±cego; powrót do %s"
 
 # XXX
 #: sink.c:1341
-#, fuzzy, c-format
+#, c-format
 msgid "Error writing to MDA: %s\n"
-msgstr "B³±d podczas usuwania %s: %s\n"
+msgstr "B³±d podczas pisania do MDA: %s\n"
 
 #: sink.c:1344
 #, c-format
@@ -2680,10 +2678,11 @@ msgid "MDA returned nonzero status %d\n"
 msgstr "MDA zwróci³ niezerowy kod b³êdu %d\n"
 
 #: sink.c:1350
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
-msgstr "Dziwne: MDA pclose zwróci³o %d, nie mo¿na obs³u¿yæ w %s:%d\n"
+msgstr ""
+"Dziwne: MDA pclose zwróci³o %d a errno %d/%s, nie mo¿na obs³u¿yæ w %s:%d\n"
 
 #: sink.c:1372
 msgid "Message termination or close of BSMTP file failed\n"
@@ -2775,34 +2774,32 @@ msgid "Try adding the --service option (see also FAQ item R12).\n"
 msgstr "Proszê spróbowaæ dodaæ opcjê --service (p. tak¿e punkt R12 FAQ).\n"
 
 #: socket.c:296 socket.c:299
-#, fuzzy, c-format
+#, c-format
 msgid "unknown (%s)"
-msgstr "nieznany"
+msgstr "nieznany (%s)"
 
 #: socket.c:302
 #, c-format
 msgid "Trying to connect to %s/%s..."
-msgstr ""
+msgstr "Próba po³±czenia z %s/%s..."
 
 #: socket.c:310
-#, fuzzy, c-format
+#, c-format
 msgid "cannot create socket: %s\n"
-msgstr "nie mogê wys³aæ poczty nawet do %s!\n"
+msgstr "nie mo¿na utworzyæ gniazda: %s\n"
 
 #: socket.c:326
-#, fuzzy
 msgid "connection failed.\n"
-msgstr "po³±czenie SSL nie powiod³o siê.\n"
+msgstr "po³±czenie nie powiod³o siê.\n"
 
 #: socket.c:328
-#, fuzzy, c-format
+#, c-format
 msgid "connection to %s:%s [%s/%s] failed: %s.\n"
-msgstr "po³±czenie %s z %s nie powiod³o siê"
+msgstr "po³±czenie z %s:%s [%s/%s] nie powiod³o siê: %s.\n"
 
 #: socket.c:334
-#, fuzzy
 msgid "connected.\n"
-msgstr "po³±czenie SSL nie powiod³o siê.\n"
+msgstr "po³±czono.\n"
 
 #: socket.c:662
 #, c-format
@@ -2915,9 +2912,9 @@ msgid "Cygwin socket read retry failed!\n"
 msgstr "Powtórzenie odczytu z gniazda cygwinowego nie powiod³o siê!\n"
 
 #: transact.c:67
-#, fuzzy, c-format
+#, c-format
 msgid "mapped address %s to local %s\n"
-msgstr "%s zamieniony na lokalny %s\n"
+msgstr "adres %s zamieniony na lokalny %s\n"
 
 #: transact.c:89
 #, c-format
@@ -3001,9 +2998,8 @@ msgid "SMTP listener rejected local recipient addresses: "
 msgstr "demon SMTP odrzuci³ adresy lokalnych odbiorców: '"
 
 #: transact.c:1445
-#, fuzzy
 msgid "error writing message text\n"
-msgstr "zapisujê tre¶æ listu\n"
+msgstr "b³±d podczas zapisu tre¶ci listu\n"
 
 #: uid.c:250
 #, c-format
@@ -3077,10 +3073,3 @@ msgstr "b³±d malloc\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "b³±d realloc\n"
-
-#~ msgid "SIGPIPE thrown from an MDA or a stream socket error\n"
-#~ msgstr "SIGPIPE otrzymany od MDA lub b³±d gniazda strumienia\n"
-
-#, fuzzy
-#~ msgid "MDA write error.\n"
-#~ msgstr "B³±d bosko¶ci"

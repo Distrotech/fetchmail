@@ -131,7 +131,8 @@ fetchmail 6.3.5 (not yet released):
   Götz 'nimrill' Babin-Ebell, BerliOS patch #1095.
 
 # TRANSLATION UPDATES:
-* Russian/ru (Pavel Maryanov), Vietnamese/vi (Clytie Siddall)
+* Japanese/ja (Takeshi Hamasaki), Polish/pl (Jakub Bogusz),
+  Russian/ru (Pavel Maryanov), Vietnamese/vi (Clytie Siddall)
 
 # CONTRIBUTED SCRIPTS:
 * PopDel.py was revised by Joshua Crawford to display the From: address and
