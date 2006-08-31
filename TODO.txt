@@ -7,6 +7,8 @@ CODE:
 - 6.3.4-pending-deletes.patch
 - fetchmail -s with running daemon complains rather than silently
   restarting daemon
+- send warning message when connection fails?
+- when logging to syslog, disable locale?
 
 DOCUMENTATION:
 - document Received: parsing expectations
