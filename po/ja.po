@@ -162,9 +162,6 @@ msgid_plural ""
 msgstr[0] ""
 "最大取り込み数である %d 通に達しました; メッセージが %d 通、サーバ %s にアカ"
 "ウント %s 宛で残されています。\n"
-msgstr[1] ""
-"最大取り込み数である %d 通に達しました; メッセージが %d 通、サーバ %s にアカ"
-"ウント %s 宛で残されています。\n"
 
 #: driver.c:876
 #, c-format
@@ -403,20 +400,17 @@ msgstr "%s にアクセスしています。\n"
 msgid "%d message (%d %s) for %s"
 msgid_plural "%d messages (%d %s) for %s"
 msgstr[0] "%d 通のメッセージ (そのうち %d 通は %s) が%s宛に届いています"
-msgstr[1] "%d 通のメッセージ (そのうち %d 通は %s ) が%s宛に届いています"
 
 #: driver.c:1325
 msgid "seen"
 msgid_plural "seen"
 msgstr[0] "既に読み込んでいます"
-msgstr[1] "既に読み込んでいます"
 
 #: driver.c:1328
 #, c-format
 msgid "%d message for %s"
 msgid_plural "%d messages for %s"
 msgstr[0] "%d 通のメッセージが %s 宛に届いています"
-msgstr[1] "%d 通のメッセージが %s 宛に届いています"
 
 #: driver.c:1335
 #, c-format
@@ -1072,7 +1066,6 @@ msgstr "  メールはホスト %s を介してやりとりされます。\n"
 msgid "  Poll of this server will occur every %d interval.\n"
 msgid_plural "  Poll of this server will occur every %d intervals.\n"
 msgstr[0] "  このサーバに対してのアクセスは %d の間隔で行われます。\n"
-msgstr[1] "  このサーバに対してのアクセスは %d の間隔で行われます。\n"
 
 #: fetchmail.c:1524
 #, c-format
@@ -1468,7 +1461,6 @@ msgstr "  `single-drop' モード: "
 msgid "%d local name recognized.\n"
 msgid_plural "%d local names recognized.\n"
 msgstr[0] "%d 個の localname が存在します。\n"
-msgstr[1] "%d 個の localname が存在します。\n"
 
 #: fetchmail.c:1806
 msgid "  DNS lookup for multidrop addresses is enabled.\n"
@@ -1699,7 +1691,6 @@ msgstr "再アクセスに失敗しました。\n"
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
 msgstr[0] "%d 通のメッセージが再アクセスの後に存在します。\n"
-msgstr[1] "%d 通のメッセージが再アクセスの後に存在します。\n"
 
 #: imap.c:774
 msgid "mailbox selection failed\n"
@@ -1710,7 +1701,6 @@ msgstr "メールボックスの選択に失敗しました\n"
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
 msgstr[0] "最初のアクセスから %d 通のメッセージがあります。\n"
-msgstr[1] "最初のアクセスから %d 通のメッセージがあります。\n"
 
 #: imap.c:792
 msgid "expunge failed\n"
@@ -1721,7 +1711,6 @@ msgstr "削除に失敗しました。\n"
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
 msgstr[0] "削除の後、%d 通のメッセージが残っています。\n"
-msgstr[1] "削除の後、%d 通のメッセージが残っています。\n"
 
 #: imap.c:838
 msgid "search for unseen messages failed\n"
