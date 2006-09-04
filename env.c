@@ -176,7 +176,7 @@ char *host_fqdn(int required)
 	    }
 	}
 
-	result = xstrdup(res->ai_canonname);
+	result = xstrdup(res->ai_canonname ? res->ai_canonname : tmpbuf);
 	fm_freeaddrinfo(res);
     }
     else

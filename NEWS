@@ -108,6 +108,8 @@ fetchmail 6.3.5 (not yet released):
 * ignore SIGPIPE signals and rely on functions to return EPIPE instead. This is
   necessary because the former longjmp() from the signal handler is unsafe and
   makes the whole fetchmail behavior undefined after the event.
+* Avoid crash in env.c/host_fqdn if we cannot canonicalize our own hostname.
+  Reported by Alexander Holler.
 
 # CHANGES:
 * Rename all fetchmail-internal lock_* functions to fm_lock_*. Obsoletes
