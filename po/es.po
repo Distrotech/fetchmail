@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: fetchmail 6.3.4-rc1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2006-08-15 01:30+0200\n"
-"PO-Revision-Date: 2006-04-04 12:58+0200\n"
+"PO-Revision-Date: 2006-09-15 11:52+0200\n"
 "Last-Translator: Héctor García <hector@el-mundo.net>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -133,9 +133,9 @@ msgid " (%d header octets)"
 msgstr " (%d octetos en la cabecera) "
 
 #: driver.c:682
-#, fuzzy, c-format
+#, c-format
 msgid " (%d body octets)"
-msgstr " (%d octetos en el cuerpo) "
+msgstr " (%d octetos en el cuerpo)"
 
 #: driver.c:743
 #, c-format
@@ -769,16 +769,14 @@ msgid "Enter password for %s@%s: "
 msgstr "Ingrese clave para %s@%s: "
 
 #: fetchmail.c:545 fetchmail.c:581
-#, fuzzy
 msgid "fetchmail: Warning: syslog and logfile are set. Check both for logs!\n"
 msgstr ""
-"fetchmail: cuidado: no hay DNS disponible para verificar recepciones "
-"‘multidrop’ de %s\n"
+"fetchmail: cuidado: están espeficicados tanto syslog como un archivo de "
+"registro.¡Compruebe ambos registros!\n"
 
 #: fetchmail.c:557
-#, fuzzy
 msgid "fetchmail: Cannot detach into background. Aborting.\n"
-msgstr "fetchmail: ningún otro fetchmail está siendo ejecutando\n"
+msgstr "fetchmail: no puedo pasar a asegundo plano. Abortando.\n"
 
 #: fetchmail.c:561
 #, c-format
@@ -974,10 +972,9 @@ msgstr ""
 "configuración de %s inválida, LMTP no puede usar el puerto SMTP por defecto\n"
 
 #: fetchmail.c:1293
-#, fuzzy
 msgid "Both fetchall and keep on in daemon or idle mode is a mistake!\n"
 msgstr ""
-"¡Usar ‘fetchall’ junto a ‘keep’ en modo de ejecución en segundo plano es un "
+"¡Usar «fetchall» junto a «keep» en modo demonio o en modo pausa es un "
 "error!\n"
 
 #: fetchmail.c:1318
@@ -1706,7 +1703,7 @@ msgstr "descansará después de inquirir\n"
 #: imap.c:427 pop3.c:469
 #, c-format
 msgid "%s: opportunistic upgrade to TLS.\n"
-msgstr ""
+msgstr "%s: actualización oportunista a TLS.\n"
 
 #: imap.c:540
 msgid "Required OTP capability not compiled into fetchmail\n"
@@ -2125,9 +2122,8 @@ msgstr ""
 "certificado del servidor.\n"
 
 #: options.c:615
-#, fuzzy
 msgid "      --sslproto    force ssl protocol (SSL2/SSL3/TLS1)\n"
-msgstr "      --sslproto    forzar protocolo ssl (ssl2/ssl3/tls1)\n"
+msgstr "      --sslproto    forzar protocolo ssl (SSL2/SSL3/TLS1)\n"
 
 #: options.c:617
 msgid "      --plugin      specify external command to open connection\n"
@@ -2330,7 +2326,7 @@ msgid "Server responded with UID for wrong message.\n"
 msgstr "El servidor devolvió el UID de un mensaje incorrecto.\n"
 
 #: pop3.c:758 pop3.c:1004
-#, fuzzy, c-format
+#, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) fue borrado, ¡pero aún se encuentra presente!\n"
 
@@ -2686,9 +2682,9 @@ msgid "can't raise the listener; falling back to %s"
 msgstr "no se puede despertar al servidor; recurriendo a %s"
 
 #: sink.c:1341
-#, fuzzy, c-format
+#, c-format
 msgid "Error writing to MDA: %s\n"
-msgstr "Error borrando %s: %s\n"
+msgstr "Error escribiendo a MDA: %s\n"
 
 #: sink.c:1344
 #, c-format
@@ -2701,10 +2697,12 @@ msgid "MDA returned nonzero status %d\n"
 msgstr "El MDA devolvió un estado distinto a cero %d\n"
 
 #: sink.c:1350
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
-msgstr "Extraño: pclose del MDA devolvió %d, no se puede manejar en %s:%d\n"
+msgstr ""
+"Curioso: pclose en el MDA devolvió %d y errno %d/%s, no se puede manejar en "
+"%s:%d\n"
 
 #: sink.c:1372
 msgid "Message termination or close of BSMTP file failed\n"
@@ -2797,34 +2795,32 @@ msgstr ""
 "Pruebe añadiendo la opción --service (vea también el elemento R12 del FAQ).\n"
 
 #: socket.c:296 socket.c:299
-#, fuzzy, c-format
+#, c-format
 msgid "unknown (%s)"
-msgstr "desconocido"
+msgstr "desconocido (%s)"
 
 #: socket.c:302
 #, c-format
 msgid "Trying to connect to %s/%s..."
-msgstr ""
+msgstr "Intentando conectar a %s/%s..."
 
 #: socket.c:310
-#, fuzzy, c-format
+#, c-format
 msgid "cannot create socket: %s\n"
-msgstr "¡ni siquiera es posible enviar a %s!\n"
+msgstr "no se puede crear la conexión: %s\n"
 
 #: socket.c:326
-#, fuzzy
 msgid "connection failed.\n"
-msgstr "Fallo en la conexión SSL.\n"
+msgstr "fallo la conexión.\n"
 
 #: socket.c:328
-#, fuzzy, c-format
+#, c-format
 msgid "connection to %s:%s [%s/%s] failed: %s.\n"
-msgstr "Fallo la conexión de %s a %s"
+msgstr "Fallo la conexión a %s:%s [%s/%s]: %s.\n"
 
 #: socket.c:334
-#, fuzzy
 msgid "connected.\n"
-msgstr "Fallo en la conexión SSL.\n"
+msgstr "conectado.\n"
 
 #: socket.c:662
 #, c-format
@@ -2944,9 +2940,9 @@ msgid "Cygwin socket read retry failed!\n"
 msgstr "¡Falló el reintento de lectura del ‘socket’ cygwin\n"
 
 #: transact.c:67
-#, fuzzy, c-format
+#, c-format
 msgid "mapped address %s to local %s\n"
-msgstr "%s mapeado al local %s\n"
+msgstr "mapeada la dirección %s a la local %s\n"
 
 #: transact.c:89
 #, c-format
@@ -3031,9 +3027,8 @@ msgid "SMTP listener rejected local recipient addresses: "
 msgstr "El servidor SMTP rechazó las direcciones locales de destino: "
 
 #: transact.c:1445
-#, fuzzy
 msgid "error writing message text\n"
-msgstr "escribiendo texto del mensaje\n"
+msgstr "error escribiendo mensaje de texto\n"
 
 #: uid.c:250
 #, c-format
