@@ -131,6 +131,7 @@ fetchmail 6.3.5 (not yet released):
   Götz 'nimrill' Babin-Ebell, BerliOS patch #1095 with minor changes.
 * The sslproto keywords are now case insensitive, courtesy of
   Götz 'nimrill' Babin-Ebell, BerliOS patch #1095.
+* When going to sleep, log for how long.  Suggested by Claudia Ludwig.
 
 # TRANSLATION UPDATES:
 * Catalan/ca (Ernest Adrogué Calveras), Japanese/ja (Takeshi Hamasaki) - also

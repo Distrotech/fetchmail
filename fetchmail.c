@@ -810,8 +810,8 @@ int main(int argc, char **argv)
 	    }
 
 	    if (outlevel > O_SILENT)
-		report(stdout, 
-		       GT_("sleeping at %s\n"), timestamp());
+		report(stdout,
+		       GT_("sleeping at %s for %d seconds\n"), timestamp(), run.poll_interval);
 
 	    /*
 	     * With this simple hack, we make it possible for a foreground 
