@@ -178,7 +178,7 @@ struct runctl
     char	*pidfile;	/** where to record the PID of daemon mode processes */
     char	*postmaster;
     char	*properties;
-    int		poll_interval;
+    int		poll_interval;	/** poll interval in seconds (daemon mode, 0 == off) */
     flag	bouncemail;
     flag	spambounce;
     flag	use_syslog;
