@@ -1,7 +1,7 @@
 CODE:
 - check recent list mail
 - check Debian BTS and other bug trackers
-- better logging (log all headers)
+- better logging (log all headers, log forward destination + method)
 - check strict envelope N Received parsing,
   see mail from Admin Att on fetchmail-users
 - 6.3.4-pending-deletes.patch
@@ -12,7 +12,7 @@ CODE:
 
 DOCUMENTATION:
 - document Received: parsing expectations
-- revise FAQ, continue in section M.
+- revise FAQ, continue in section O.
 - Add info whether Keywords are global, server or user keywords
 - review sample.rcfile and document it
 - consolidate multidrop documentation

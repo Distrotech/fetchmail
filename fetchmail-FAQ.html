@@ -212,8 +212,8 @@ mail is going to root anyway.</a><br/>
 domain properly.</a><br/>
 <a href="#M3">M3. I tried to run a mailing list using multidrop,
 and I have a mail loop!</a><br/>
-<a href="#M4">M4. My multidrop fetchmail seems to be having DNS
-problems.</a><br/>
+<a href="#M4"><strike>M4. My multidrop fetchmail seems to be having DNS
+    problems.</strike></a><br/>
 <a href="#M5">M5. I'm seeing long DNS delays before each message is
 processed.</a><br/>
 <a href="#M6">M6. How do I get multidrop mode to work with
@@ -234,8 +234,8 @@ line.</a><br/>
 being split.</a><br/>
 <a href="#X4">X4. My mail is being mangled in a new and different
 way.</a><br/>
-<a href="#X5">X5. Using POP3, retrievals seems to be fetching too
-much!</a><br/>
+<a href="#X5"><strike>X5. Using POP3, retrievals seems to be fetching too
+much!</strike></a><br/>
 <a href="#X6">X6. My mail attachments are being dropped or
 mangled.</a><br/>
 <a href="#X7">X7. Some mail attachments are hanging
@@ -2662,18 +2662,10 @@ chop the host part off any local addresses in the list.</p>
 <p>If you use sendmail, you can check the list expansion with
 <code>sendmail -bv</code>.</p>
 
-<h2><a id="M4" name="M4">M4. My multidrop fetchmail seems to be
-having DNS problems.</a></h2>
+<h2><a id="M4" name="M4"><strike>M4. My multidrop fetchmail seems to be
+having DNS problems.</strike></a></h2>
 
-<p>We have one report from a Linux user (not the same one as in <a
-href="#R1">R1</a>!) who solved this problem by removing the
-reference to -lresolv from his link line and relinking. Apparently
-in some older Linux distributions the libc5 bind library version
-works better.</p>
-
-<p>As of fetchmail 2.2, the configure script has been hacked so the bind
-library is linked only if it is actually needed. So under Linux it
-won't be, and this problem should go away.</p>
+<p>The answer that used to be here no longer applies to fetchmail.</p>
 
 <h2><a id="M5" name="M5">M5. I'm seeing long DNS delays before each
 message is processed.</a></h2>
@@ -2802,6 +2794,10 @@ that matches a seen mail ID. The trouble is that this is an O(N**2)
 operation that might significantly slow down the retrieval of large
 mail batches.</p>
 
+<p>The real solution however is to make sure that fetchmail can find the
+envelope recipient properly, which will reliably prevent this message
+duplication.</p>
+
 <hr/>
 <h1>Mangled mail</h1>
 <h2><a id="X1" name="X1">X1. Spurious blank lines are appearing in
@@ -2833,8 +2829,8 @@ process X- headers correctly. If this is your problem, all I can
 suggest is replacing IDA sendmail, because it's broken and not
 RFC822 conformant.</p>
 
-<h2><a id="X3" name="X3">X3. Messages containing "From" at start of
-line are being split.</a></h2>
+<h2><a id="X3" name="X3">X3. Messages containing "From" at the start of
+	line are being split.</a></h2>
 
 <p>If you know the messages aren't split in your server mailbox,
 then this is a problem with your POP/IMAP server, your client-side
@@ -2960,21 +2956,11 @@ Please include the session transcript of your manual fetchmail
 simulation along with the other things described in the FAQ entry
 on <a href="#G3">reporting bugs</a>.</p>
 
-<h2><a id="X5" name="X5">X5. Using POP3, retrievals seems to be
-fetching too much!</a></h2>
+<h2><a id="X5" name="X5"><strike>X5. Using POP3, retrievals seems to be
+	fetching too much!</strike></a></h2>
 
-<p>This may happen in versions of fetchmail after 4.4.1 and before
-4.4.8. Versions after 4.4.1 use POP3's TOP command rather than
-RETR, in order to avoid marking the message seen (leaving it unseen
-is helpful for later recovery if you lose your connection in the
-middle of a retrieval).</p>
-
-<p>Versions of fetchmail from 4.4.2 through 4.4.7 had a bad
-interaction with Eudora qpopper versions 2.3 and later. The TOP
-bounds check was fooled by an overflow condition in the TOP
-argument. Decrementing the TOP argument in 4.4.7 fixed this.</p>
-
-<p>Fix: Upgrade to a later version of fetchmail.</p>
+<p>The information that used to be here pertained to fetchmail 4.4.7 or
+older, which should not be used. Use a recent fetchmail version.</p>
 
 <p>Workaround: set the <code>fetchall</code> option. Under POP3
 this has the side effect of forcing RETR use.</p>
@@ -2998,7 +2984,7 @@ only effective solution.</p>
 <p>We've had sporadic reports of problems with Microsoft Exchange and
 Outlook servers.  These sometimes randomly fail to ship
 attachments to your client.  This is a known bug, acknowledged by
-Microsft.</p>
+Microsoft.</p>
 
 <p>They may also mangle the attachments they do pass through.  If you
 see unreadable attachments with a ContentType of "application/x-tnef",
@@ -3022,7 +3008,7 @@ generates MIME Content-type headers (observed on Lotus Domino
 Messenger and other clients use a FETCH BODY[] to grab the whole
 message. When fetchmail uses FETCH RFC822.HEADER and FETCH
 RFC822.TEXT to get first the header and then the body, Domino
-generates different Boundary tags for each part, .e.g. one tag is
+generates different Boundary tags for each part, e.g. one tag is
 declared in the Content-type header and another is used to separate
 the MIME parts in the body. This doesn't work. (I have heard a
 rumor that this bug is scheduled to be fixed in Domino release 6;
