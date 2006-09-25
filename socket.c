@@ -381,7 +381,7 @@ va_dcl {
 #include <openssl/x509v3.h>
 #include <openssl/rand.h>
 
-static	SSL_CTX *_ctx = NULL;
+static	SSL_CTX *_ctx[FD_SETSIZE];
 static	SSL *_ssl_context[FD_SETSIZE];
 
 static SSL	*SSLGetContext( int );
@@ -623,11 +623,9 @@ static	int _prev_err;
 
 SSL *SSLGetContext( int sock )
 {
-	/* If SSLOpen has never initialized - just return NULL */
-	if( NULL == _ctx )
-		return NULL;
-
 	if( sock < 0 || (unsigned)sock > FD_SETSIZE )
+		return NULL;
+	if( _ctx[sock] == NULL )
 		return NULL;
 	return _ssl_context[sock];
 }
@@ -878,48 +876,48 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char
 		return( -1 );
 	}
 
-	if( ! _ctx ) {
-		/* Be picky and make sure the memory is cleared */
-		memset( _ssl_context, 0, sizeof( _ssl_context ) );
-		if(myproto) {
-			if(!strcasecmp("ssl2",myproto)) {
-				_ctx = SSL_CTX_new(SSLv2_client_method());
-			} else if(!strcasecmp("ssl3",myproto)) {
-				_ctx = SSL_CTX_new(SSLv3_client_method());
-			} else if(!strcasecmp("tls1",myproto)) {
-				_ctx = SSL_CTX_new(TLSv1_client_method());
-			} else if (!strcasecmp("ssl23",myproto)) {
-				myproto = NULL;
-			} else {
-				fprintf(stderr,GT_("Invalid SSL protocol '%s' specified, using default (SSLv23).\n"), myproto);
-				myproto = NULL;
-			}
+	/* Make sure a connection referring to an older context is not left */
+	_ssl_context[sock] = NULL;
+	if(myproto) {
+		if(!strcasecmp("ssl2",myproto)) {
+			_ctx[sock] = SSL_CTX_new(SSLv2_client_method());
+		} else if(!strcasecmp("ssl3",myproto)) {
+			_ctx[sock] = SSL_CTX_new(SSLv3_client_method());
+		} else if(!strcasecmp("tls1",myproto)) {
+			_ctx[sock] = SSL_CTX_new(TLSv1_client_method());
+		} else if (!strcasecmp("ssl23",myproto)) {
+			myproto = NULL;
+		} else {
+			fprintf(stderr,GT_("Invalid SSL protocol '%s' specified, using default (SSLv23).\n"), myproto);
+			myproto = NULL;
 		}
-		if(!myproto) {
-			_ctx = SSL_CTX_new(SSLv23_client_method());
-		}
-		if(_ctx == NULL) {
-			ERR_print_errors_fp(stderr);
-			return(-1);
-		}
+	}
+	if(!myproto) {
+		_ctx[sock] = SSL_CTX_new(SSLv23_client_method());
+	}
+	if(_ctx[sock] == NULL) {
+		ERR_print_errors_fp(stderr);
+		return(-1);
 	}
 
 	if (certck) {
-		SSL_CTX_set_verify(_ctx, SSL_VERIFY_PEER, SSL_ck_verify_callback);
+		SSL_CTX_set_verify(_ctx[sock], SSL_VERIFY_PEER, SSL_ck_verify_callback);
 	} else {
 		/* In this case, we do not fail if verification fails. However,
 		 *  we provide the callback for output and possible fingerprint checks. */
-		SSL_CTX_set_verify(_ctx, SSL_VERIFY_PEER, SSL_nock_verify_callback);
+		SSL_CTX_set_verify(_ctx[sock], SSL_VERIFY_PEER, SSL_nock_verify_callback);
 	}
 	if (certpath)
-		SSL_CTX_load_verify_locations(_ctx, NULL, certpath);
+		SSL_CTX_load_verify_locations(_ctx[sock], NULL, certpath);
 	else
-		SSL_CTX_set_default_verify_paths(_ctx);
+		SSL_CTX_set_default_verify_paths(_ctx[sock]);
 	
-	_ssl_context[sock] = SSL_new(_ctx);
+	_ssl_context[sock] = SSL_new(_ctx[sock]);
 	
 	if(_ssl_context[sock] == NULL) {
 		ERR_print_errors_fp(stderr);
+		SSL_CTX_free(_ctx[sock]);
+		_ctx[sock] = NULL;
 		return(-1);
 	}
 	
@@ -956,6 +954,8 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char
 	
 	if(SSL_connect(_ssl_context[sock]) < 1) {
 		ERR_print_errors_fp(stderr);
+		SSL_CTX_free(_ctx[sock]);
+		_ctx[sock] = NULL;
 		return(-1);
 	}
 
@@ -969,6 +969,8 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char
 				SSL_shutdown( _ssl_context[sock] );
 				SSL_free( _ssl_context[sock] );
 				_ssl_context[sock] = NULL;
+				SSL_CTX_free(_ctx[sock]);
+				_ctx[sock] = NULL;
 			}
 			return(-1);
 		}
@@ -987,6 +989,8 @@ int SockClose(int sock)
         SSL_shutdown( _ssl_context[sock] );
         SSL_free( _ssl_context[sock] );
         _ssl_context[sock] = NULL;
+	SSL_CTX_free(_ctx[sock]);
+	_ctx[sock] = NULL;
     }
 #endif
 

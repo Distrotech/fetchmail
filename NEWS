@@ -110,6 +110,9 @@ fetchmail 6.3.5 (not yet released):
   makes the whole fetchmail behavior undefined after the event.
 * Avoid crash in env.c/host_fqdn if we cannot canonicalize our own hostname.
   Reported by Alexander Holler.
+* SSL fix by Miloslav Trmac (Red Hat): free the SSL contexts after the
+  connection, to avoid from growing SSL certpaths without bounds, avoid using
+  SSL contexts for unrelated connections, and to fix Red Hat Bug #206346.
 
 # CHANGES:
 * Rename all fetchmail-internal lock_* functions to fm_lock_*. Obsoletes
