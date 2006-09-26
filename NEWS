@@ -135,6 +135,7 @@ fetchmail 6.3.5 (not yet released):
 * The sslproto keywords are now case insensitive, courtesy of
   Götz 'nimrill' Babin-Ebell, BerliOS patch #1095.
 * When going to sleep, log for how long.  Suggested by Claudia Ludwig.
+* When the server name cannot be canonicalized, log the gai_strerror value.
 
 # TRANSLATION UPDATES:
 * Catalan/ca (Ernest Adrogué Calveras), Japanese/ja (Takeshi Hamasaki) - also

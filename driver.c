@@ -1002,8 +1002,9 @@ static int do_session(
 		if (error)
 		{
 		    report(stderr,
-			   GT_("couldn't find canonical DNS name of %s (%s)\n"),
-			   ctl->server.pollname, ctl->server.queryname);
+			   GT_("couldn't find canonical DNS name of %s (%s): %s\n"),
+			   ctl->server.pollname, ctl->server.queryname,
+			   gai_strerror(error));
 		    err = PS_DNS;
 		    set_timeout(0);
 		    phase = oldphase;
