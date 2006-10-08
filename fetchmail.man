@@ -646,8 +646,7 @@ messages.  Under POP2 or POP3, fetchmail cannot make deletions final
 without sending QUIT and ending the session -- with this option on,
 fetchmail will break a long mail retrieval session into multiple
 sub-sessions, sending QUIT after each sub-session. This is a good
-defense against line drops on POP3 servers that do not do the
-equivalent of a QUIT on hangup.  Under IMAP,
+defense against line drops on POP3 servers.  Under IMAP,
 .I fetchmail
 normally issues an EXPUNGE command after each deletion in order to
 force the deletion to be done immediately.  This is safest when your
