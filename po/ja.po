@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.5-b1\n"
+"Project-Id-Version: fetchmail 6.3.5-b3\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-09-26 00:29+0200\n"
-"PO-Revision-Date: 2006-08-25 07:18+0900\n"
+"POT-Creation-Date: 2006-09-27 00:05+0200\n"
+"PO-Revision-Date: 2006-09-29 07:29+0900\n"
 "Last-Translator: Takeshi Hamasaki <hma@syd.odn.ne.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -235,58 +235,58 @@ msgid "Lead server has no name.\n"
 msgstr "Lead server の名前がありません。\n"
 
 #: driver.c:1005
-#, c-format
-msgid "couldn't find canonical DNS name of %s (%s)\n"
+#, fuzzy, c-format
+msgid "couldn't find canonical DNS name of %s (%s): %s\n"
 msgstr "%s の canonical DNS 名(%s)を検索できませんでした。\n"
 
-#: driver.c:1051
+#: driver.c:1052
 #, c-format
 msgid "%s connection to %s failed"
 msgstr "%s プロトコルを利用した %s への接続に失敗しました。"
 
-#: driver.c:1067
+#: driver.c:1068
 msgid "Subject: Fetchmail unreachable-server warning."
 msgstr "Subject: Fetchmail 警告 : サーバと交信不能"
 
-#: driver.c:1069
+#: driver.c:1070
 #, c-format
 msgid "Fetchmail could not reach the mail server %s:"
 msgstr "Fetchmail 実行中にメールサーバ %s と交信できませんでした:"
 
-#: driver.c:1095 imap.c:423 pop3.c:465
+#: driver.c:1096 imap.c:423 pop3.c:465
 msgid "SSL connection failed.\n"
 msgstr "SSL による接続に失敗しました。\n"
 
-#: driver.c:1148
+#: driver.c:1149
 #, c-format
 msgid "Lock-busy error on %s@%s\n"
 msgstr "アカウント %s@%s が Lock-busy 状態です。\n"
 
-#: driver.c:1152
+#: driver.c:1153
 #, c-format
 msgid "Server busy error on %s@%s\n"
 msgstr "%s@%s のサーバが busy 状態です。\n"
 
-#: driver.c:1157
+#: driver.c:1158
 #, c-format
 msgid "Authorization failure on %s@%s%s\n"
 msgstr "%s@%s%s の認証に失敗しました\n"
 
-#: driver.c:1160
+#: driver.c:1161
 msgid " (previously authorized)"
 msgstr "(以前は認証されました)"
 
-#: driver.c:1181
+#: driver.c:1182
 #, c-format
 msgid "Subject: fetchmail authentication failed on %s@%s"
 msgstr "Subject: Fetchmail 実行中 %s@%s の認証に失敗"
 
-#: driver.c:1185
+#: driver.c:1186
 #, c-format
 msgid "Fetchmail could not get mail from %s@%s.\n"
 msgstr "Fetchmail 実行中に %s@%s 宛に届いたメールを取り出せませんでした。\n"
 
-#: driver.c:1189
+#: driver.c:1190
 msgid ""
 "The attempt to get authorization failed.\n"
 "Since we have already succeeded in getting authorization for this\n"
@@ -299,7 +299,7 @@ msgstr ""
 "他の要因によるものであると思われますが、何故 login に失敗したのか\n"
 "サーバから有益な情報が送信されていないため、fetchmail では判断しかねます。"
 
-#: driver.c:1195
+#: driver.c:1196
 msgid ""
 "\n"
 "However, if you HAVE changed your account details since starting the\n"
@@ -318,7 +318,7 @@ msgstr ""
 "fetchmail デーモンは引続き接続を試みます。\n"
 "サービスが復旧しない限り何も通知が出されないことを了承願います。"
 
-#: driver.c:1205
+#: driver.c:1206
 msgid ""
 "The attempt to get authorization failed.\n"
 "This probably means your password is invalid, but some servers have\n"
@@ -338,170 +338,170 @@ msgstr ""
 "fetchmail デーモンは引続き接続を試みます。\n"
 "サービスが復旧しない限り何も通知が出されないことを了承願います。"
 
-#: driver.c:1221
+#: driver.c:1222
 #, c-format
 msgid "Repoll immediately on %s@%s\n"
 msgstr "すぐに %s@%s 宛メッセージの再取得を試みます\n"
 
-#: driver.c:1226
+#: driver.c:1227
 #, c-format
 msgid "Unknown login or authentication error on %s@%s\n"
 msgstr "%s@%s に対する不明なログイン又は認証のエラーです。\n"
 
-#: driver.c:1250
+#: driver.c:1251
 #, c-format
 msgid "Authorization OK on %s@%s\n"
 msgstr "%s@%s に対する認証が行われました。\n"
 
-#: driver.c:1256
+#: driver.c:1257
 #, c-format
 msgid "Subject: fetchmail authentication OK on %s@%s"
 msgstr "Subject: fetchmail %s@%s 認証完了"
 
-#: driver.c:1260
+#: driver.c:1261
 #, c-format
 msgid "Fetchmail was able to log into %s@%s.\n"
 msgstr ""
 "%s@%s のログインが完了し fetchmail によるアクセスが可能となりました。\n"
 
-#: driver.c:1264
+#: driver.c:1265
 msgid "Service has been restored.\n"
 msgstr "サービスが復帰しました。\n"
 
-#: driver.c:1296
+#: driver.c:1297
 #, c-format
 msgid "selecting or re-polling folder %s\n"
 msgstr ""
 "選択をして下さい。選択されない場合はフォルダ %s に再度アクセスします。\n"
 
-#: driver.c:1298
+#: driver.c:1299
 msgid "selecting or re-polling default folder\n"
 msgstr ""
 "選択をして下さい。選択されない場合はデフォルトのフォルダに再度アクセスしま"
 "す。\n"
 
-#: driver.c:1310
+#: driver.c:1311
 #, c-format
 msgid "%s at %s (folder %s)"
 msgstr "アカウント %s , サーバ %s (フォルダ %s)"
 
-#: driver.c:1313 rcfile_y.y:381
+#: driver.c:1314 rcfile_y.y:381
 #, c-format
 msgid "%s at %s"
 msgstr "アカウント %s , サーバ %s"
 
-#: driver.c:1318
+#: driver.c:1319
 #, c-format
 msgid "Polling %s\n"
 msgstr "%s にアクセスしています。\n"
 
-#: driver.c:1322
+#: driver.c:1323
 #, c-format
 msgid "%d message (%d %s) for %s"
 msgid_plural "%d messages (%d %s) for %s"
 msgstr[0] "%d 通のメッセージ (そのうち %d 通は %s) が%s宛に届いています"
 
-#: driver.c:1325
+#: driver.c:1326
 msgid "seen"
 msgid_plural "seen"
 msgstr[0] "既に読み込んでいます"
 
-#: driver.c:1328
+#: driver.c:1329
 #, c-format
 msgid "%d message for %s"
 msgid_plural "%d messages for %s"
 msgstr[0] "%d 通のメッセージが %s 宛に届いています"
 
-#: driver.c:1335
+#: driver.c:1336
 #, c-format
 msgid " (%d octets).\n"
 msgstr " (%d バイト)\n"
 
-#: driver.c:1341
+#: driver.c:1342
 #, c-format
 msgid "No mail for %s\n"
 msgstr "%s 宛にメッセージは届いていません。\n"
 
-#: driver.c:1374 imap.c:89
+#: driver.c:1375 imap.c:89
 msgid "bogus message count!"
 msgstr "偽造されたメッセージ数!"
 
-#: driver.c:1516
+#: driver.c:1517
 msgid "socket"
 msgstr "socket"
 
-#: driver.c:1519
+#: driver.c:1520
 msgid "missing or bad RFC822 header"
 msgstr "RFC822 ヘッダの欠落か誤謬"
 
-#: driver.c:1522
+#: driver.c:1523
 msgid "MDA"
 msgstr "MDA"
 
-#: driver.c:1525
+#: driver.c:1526
 msgid "client/server synchronization"
 msgstr "クライアント/サーバ同期"
 
-#: driver.c:1528
+#: driver.c:1529
 msgid "client/server protocol"
 msgstr "クライアント/サーバプロトコル"
 
-#: driver.c:1531
+#: driver.c:1532
 msgid "lock busy on server"
 msgstr "サーバの lock busy"
 
-#: driver.c:1534
+#: driver.c:1535
 msgid "SMTP transaction"
 msgstr "SMTP 通信"
 
-#: driver.c:1537
+#: driver.c:1538
 msgid "DNS lookup"
 msgstr "DNS 参照"
 
-#: driver.c:1540
+#: driver.c:1541
 msgid "undefined"
 msgstr "不明なエラー"
 
-#: driver.c:1546
+#: driver.c:1547
 #, c-format
 msgid "%s error while fetching from %s@%s and delivering to SMTP host %s\n"
 msgstr ""
 "%sエラーが発生しました。%s@%sからメールを受信し SMTP サーバ %s へ送信している"
 "ところでした。\n"
 
-#: driver.c:1548
+#: driver.c:1549
 msgid "unknown"
 msgstr "(不明なホスト)"
 
-#: driver.c:1550
+#: driver.c:1551
 #, c-format
 msgid "%s error while fetching from %s@%s\n"
 msgstr "%sエラーが %s@%s よりメールを受信している最中に発生しました。\n"
 
-#: driver.c:1561
+#: driver.c:1562
 #, c-format
 msgid "post-connection command failed with status %d\n"
 msgstr "接続終了後に実行するコマンドがステータス %d を返しました。\n"
 
-#: driver.c:1580
+#: driver.c:1581
 msgid "Kerberos V4 support not linked.\n"
 msgstr "Kerberos V4 には対応しておりません。\n"
 
-#: driver.c:1588
+#: driver.c:1589
 msgid "Kerberos V5 support not linked.\n"
 msgstr "Kerberos V5 には対応しておりません。\n"
 
-#: driver.c:1599
+#: driver.c:1600
 #, c-format
 msgid "Option --flush is not supported with %s\n"
 msgstr "オプション --flush と %s は同時に設定できません。\n"
 
-#: driver.c:1605
+#: driver.c:1606
 #, c-format
 msgid "Option --all is not supported with %s\n"
 msgstr "オプション --all と %s は同時に設定できません。\n"
 
-#: driver.c:1614
+#: driver.c:1615
 #, c-format
 msgid "Option --limit is not supported with %s\n"
 msgstr "オプション --limit と %s は同時に設定できません。\n"
@@ -878,9 +878,9 @@ msgid "All connections are wedged.  Exiting.\n"
 msgstr "全ての接続が動作不全に陥ってしまいました。終了します。\n"
 
 #: fetchmail.c:814
-#, fuzzy, c-format
+#, c-format
 msgid "sleeping at %s for %d seconds\n"
-msgstr "%s に休眠状態となりました。\n"
+msgstr "%s に休眠状態となり %d秒経過しました。\n"
 
 #: fetchmail.c:838
 #, c-format
