@@ -9,10 +9,10 @@ CODE:
   restarting daemon
 - send warning message when connection fails?
 - when logging to syslog, disable locale?
+- check FAQ O5 - do we really prefer From: over envelope?!?
 
 DOCUMENTATION:
 - document Received: parsing expectations
-- revise FAQ, continue in section O.
 - Add info whether Keywords are global, server or user keywords
 - review sample.rcfile and document it
 - consolidate multidrop documentation

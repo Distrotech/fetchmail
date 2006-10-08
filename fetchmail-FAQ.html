@@ -264,8 +264,8 @@ order?</a><br/>
 working?</a><br/>
 <a href="#O9">O9. Why does fetchmail keep retrieving the same
 messages over and over?</a><br/>
-<a href="#O10">O10. Why is the received date on all my messages the
-same?</a><br/>
+<a href="#O10"><strike>O10. Why is the received date on all my messages the
+    same?</strike></a><br/>
 <a href="#O11">O11. I keep getting messages that say "Repoll
 immediately" in my logs.</a><br/>
 <a href="#O12">O12. Fetchmail no longer expunges mail on a 451 SMTP response.</a><br/>
@@ -3193,16 +3193,16 @@ the logfile doesn't exist.</a></h2>
 
 <p>This is a feature, not a bug. It's in line with normal practice
 for system daemons and allows you to suppress logging by removing
-the log, without hacking potentially fragile startup scripts. To
-get around it, just touch(1) the logfile before you run fetchmail
-(this will have no effect on the contents of the logfile if it
-already exists).</p>
+the log file, without hacking potentially fragile startup scripts.
+To get around it, just touch(1) the logfile before you run fetchmail
+(this will have no effect on the contents of the logfile if it already
+exists).</p>
 
-<h2><a id="O2" name="O2">O2. Every time I get a POP or IMAP message
+<h2><a id="O2" name="O2">O2. Every time I get a POP or IMAP message,
 the header is dumped to all my terminal sessions.</a></h2>
 
 <p>Fetchmail uses the local sendmail to perform final delivery,
-which Netscape and other clients doesn't do; the announcement of
+which Mozilla and other clients don't do; the announcement of
 new messages is done by a daemon that sendmail pokes. There should
 be a "biff" command to control this. Type</p>
 
@@ -3218,7 +3218,7 @@ chmod -x $(tty)
 
 <p>which is essentially what <code>biff -n</code> will do. If this
 doesn't work, comment out any reference to "comsat" in your
-/etc/inetd.conf file and restart inetd.</p>
+/etc/inetd.conf file and reload (or restart) inetd.</p>
 
 <p>In Slackware Linux distributions, the last line in /etc/profile
 is</p>
@@ -3239,28 +3239,21 @@ to solve the problem system-wide.
 every poll cycle?</a></h2>
 
 <p>No, but versions 5.2.2 and later will notice when you modify
-your rc file and restart, reading it.</p>
+your rc file and restart, reading it. Note that this causes troubles if
+you need to provide a password via the console, unless you're running in
+--nodetach mode.</p>
 
 <h2><a id="O4" name="O4">O4. Why do deleted messages show up again
 when I take a line hit while downloading?</a></h2>
 
-<p>Because you're using a POP3 other than Qualcomm qpopper, or an
-IMAP with a long expunge interval.</p>
-
 <p>According to the POP3 RFCs, deletes aren't actually performed
 until you issue the end-of-session QUIT command. Fetchmail cannot
-fix this, because doing it right takes cooperation from the server.
-There are two possible remedies:</p>
+fix this, but there is a workaround: use the --expunge option with a
+reasonably low figure that works for you. Try 10 for a start.</p>
 
-<p>One is to switch to qpopper (the free POP3 server from Qualcomm,
-the Eudora people). The qpopper software violates the POP3 RFCs by
-doing an expunge (removing deleted messages) on a line hangup, as
-well as on processing a QUIT command.</p>
-
-<p>The other (which we recommend) is to switch to <a
-href="http://www.imap.org">IMAP</a>. IMAP has an explicit expunge
-command and fetchmail normally uses it to delete messages
-immediately after they are downloaded.</p>
+<p>IMAP is less susceptible to this problem, because the "deleted"
+message marks are persistent, but they aren't in POP3. Note that the
+--expunge default for IMAP is different than the default for POP3.</p>
 
 <p>If you get very unlucky, you might take a line hit in the window
 between the delete and the expunge. If you've set a longer expunge
@@ -3295,14 +3288,16 @@ hangs near the start of each poll cycle.</a></h2>
 also each time it gets a HELO in listener mode.</p>
 
 <p>Your resolver configuration may be causing one of these lookups
-to fail and time out. Check <code>/etc/resolv.conf</code> and
-<code>/etc/hosts</code> file. Make sure your hostname and
-fully-qualified domain name are both in <code>/etc/hosts</code>,
-and that hosts is looked at before DNS is queried. You probably
-also want your remote mail server(s) to be in the hosts file.</p>
+to fail and time out. Check your <code>/etc/resolv.conf</code>,
+<code>/etc/host.conf</code>, <code>/etc/nsswitch.conf</code> (if you
+have the latter two) and you <code>/etc/hosts</code> files. Make sure
+your hostname and fully-qualified domain name are both in
+<code>/etc/hosts</code>, and that hosts is looked at before DNS is
+queried. You probably also want your remote mail server(s) to be in the
+hosts file.</p>
 
-<p>You can suppress the startup-time lookup if need to by
-reconfiguring with <code>FEATURE(nodns)</code>.</p>
+<p>You can suppress the startup-time lookup if need to by reconfiguring
+with <code>FEATURE(nodns)</code>.</p>
 
 <p>Configuring your bind library to cache DNS lookups locally may
 help, and is a good idea for speeding up other services as well.
@@ -3345,19 +3340,8 @@ same messages over and over?</a></h2>
 
 <p>First, check to see that you haven't enabled the
 <cite>keep</cite> and <cite>fetchall</cite> option. If you have,
-turn <cite>keep</cite> off.</p>
-
-<p>There are various forms of lossage involving the POP3 UIDL
-feature that can lead to all your old messages being seen again
-after a line drop. I have given up trying to fix these, as the UIDL
-code breaks worse every time I touch it. The problem is
-fundamental; maintaining and garbage-collecting the right kind of
-client-side state is just hard. Whoever put UIDLs in RFC1725 and
-removed LAST should be hung up by his thumbs and whipped with
-scorpions. The right answers are either (a) live with the
-occasional breakage, (b) switch to IMAP4, or (c) fix the code
-yourself and send me a patch. Unless you choose (c), I don't want
-to hear about it.</p>
+turn one of them off - which one, depends on why they have been set in
+the first place, and to a lesser degree on the upstream server.</p>
 
 <p>This can also happen when some other mail client is logged in to
 your mail server, if it uses a simple exclusive-locking scheme (and
@@ -3367,45 +3351,17 @@ is write-locked by the other instance yours can neither mark
 messages seen or delete them. The solution is to either (a) wait
 for the other client to finish, or (b) terminate it.</p>
 
-<p>James Stevens &lt;James.Stevens at kyzo.com&gt; writes:</p>
+<h2><a id="O10" name="O10"><strike>O10. Why is the received date on all my
+	messages the same?i</strike></a></h2>
 
-<p><em>We had a Linux box dialing the Net and collecting mail from
-an NT POP3 server. Fetchmail was correctly collecting and deleting
-each e-mail one by one. However,the dial-up connection was very
-unreliable and would often just drop out in the middle of a
-session.</em></p>
-
-<p><em>Interestingly, unless the TCP POP3 connection was terminated
-normally (I guess with a POP3 "QUIT" command) NT would then roll
-back all the deletes !!!</em></p>
-
-<p><em>This meant if the first e-mail was very large it might just
-end up continuously collecting it, basically jamming the queue. Or,
-if the queue became very full itmight never get a long enough phone
-connection to retrieve the entire mailbox, and NT would roll back
-any deletes, so it would end up collecting (and delivering) the
-first few e-mails again and again. As the POP3 mailbox became
-fuller and fuller the chances of getting a connection long enough
-to collect theentire mailbox became smaller and smaller.</em></p>
-
-<p><em>Our solution was to make fetchmail only collect a few (say 5
-or 10) e-mails at atime, thus trying to ensure that the POP3
-connection is terminated correctly.</em></p>
-
-<p>Unfortunately, this is exactly the way POP3 servers are supposed
-to behave on a line drop, according to the RFCs. I recommend
-switching to IMAP and using a short expunge interval.</p>
-
-<h2><a id="O10" name="O10">O10. Why is the received date on all my
-messages the same?</a></h2>
-
-<p>This is a design choice in your MTA, not fetchmail. It's taking
-the received date from the last Received header.</p>
+<p>The answer that used to be here made no sense.</p>
 
 <h2><a name="O11">O11. I keep getting messages that say "Repoll
 immediately" in my logs.</a></h2>
 
-<p>This is your server barfing on the CAPA probe that fetchmail sends.</p>
+<p>This is your server barfing on the CAPA probe that fetchmail sends.
+Because some servers like to drop the connection after that probe,
+fetchmail will re-poll immediately with this probe defeated.</p>
 
 <p>If you run fetchmail in daemon mode (say "set daemon 600"), you will
 get the message only once per run.</p>
@@ -3429,7 +3385,8 @@ not keen on checking the sender addresses. This problem typically
 occurs if your mail server is not checking the sender addresses, but
 your local server is.</p>
 
-<p>Or you could declare <code>antispam 451</code>.</p>
+<p>Or you could declare <code>antispam 451</code>, which is not
+recommended though, as it may cause mail loss.</p>
 
 <p>Or, you could check your nameserver configuration and query logs for
 dns errors.</p>
@@ -3439,7 +3396,7 @@ dns errors.</p>
 <h2><a name="O13">O13. I want timestamp information in my fetchmail logs.</a></h2>
 
 <p>Write a <code>preconnect</code> command in your configuration file that
-does something like "date &gt;&gt; $HOME/Procmail/fetchmail.log".</p>
+does something like "date &gt;&gt; $HOME/fetchmail.log".</p>
 
 <h2><a name="O14">O14. Fetchmail no longer deletes oversized mails with
 --flush.</a></h2>
