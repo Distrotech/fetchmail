@@ -218,10 +218,9 @@ nottyDetach:
       if ((logfd = open(logfile, O_CREAT|O_WRONLY|O_APPEND, 0666)) < 0) {	/* stdout */
 	  report(stderr, "cannot open %s: %s\n", logfile, strerror(errno));
 	  return PS_IOERR;
-      } else
-	  logfd = 0;	/* use /dev/null */
+      }
   } else
-      logfd = 0;    /* this is /dev/null */
+      logfd = 0;    /* else use /dev/null */
 
   /* Close any/all open file descriptors */
 #if 	defined(HAVE_GETDTABLESIZE)

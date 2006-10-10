@@ -39,7 +39,7 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 
 --------------------------------------------------------------------------------
 
-fetchmail 6.3.5 (released 2006-10-09):
+fetchmail 6.3.6 (not yet released):
 
 # KNOWN BUGS AND WORKAROUNDS:
   (this section floats upwards through the NEWS to be on top of the list)
@@ -56,6 +56,12 @@ fetchmail 6.3.5 (released 2006-10-09):
   fetchmail -s doesn't work with a running daemon
 * some of the logging output is not very helpful
 * some of the documentation is still not up to date
+
+# BUG FIXES:
+* Repair --logfile, broken in 6.3.5. BerliOS Bug #9059,
+  reported by Brian Harring.
+
+fetchmail 6.3.5 (released 2006-10-09):
 
 # BUG FIXES:
 * For protocols such as IMAP that are not delimited by "." lines, truncate the
