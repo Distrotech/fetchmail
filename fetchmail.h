@@ -352,7 +352,8 @@ struct query
     flag use_ssl;		/* use SSL encrypted session */
     char *sslkey;		/* optional SSL private key file */
     char *sslcert;		/* optional SSL certificate file */
-	char *sslproto;		/* force usage of protocol (ssl2|ssl3|tls1) - defaults to ssl23 */
+    char *sslproto;		/** force transport protocol (ssl2|ssl3|ssl23|tls1) - if NULL,
+				  use ssl23 for SSL and opportunistic tls1 for non-SSL connections. */
     char *sslcertpath;		/* Trusted certificate directory for checking the server cert */
     flag sslcertck;		/* Strictly check the server cert. */
     char *sslfingerprint;	/* Fingerprint to check against */
