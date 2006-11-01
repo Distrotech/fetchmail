@@ -303,6 +303,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 #endif /* OPIE_ENABLE */
 #ifdef SSL_ENABLE
     flag did_stls = FALSE;
+    flag using_tls = FALSE;
 #endif /* SSL_ENABLE */
 
 #if defined(GSSAPI)
@@ -432,7 +433,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 		    (ok == PS_SOCKET && !ctl->wehaveauthed))
 		{
 		    ctl->server.authenticate = A_PASSWORD;
-		    /* repoll immediately */
+		    /* repoll immediately with PASS authentication */
 		    ok = PS_REPOLL;
 		    break;
 		}
@@ -462,11 +463,12 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 		   return PS_REPOLL;
 	       }
 	       report(stderr,
-		       GT_("SSL connection failed.\n"));
+		       GT_("TLS connection failed.\n"));
 	       return PS_SOCKET;
 	   } else {
 	       if (outlevel >= O_VERBOSE && !ctl->sslproto)
 		   report(stdout, GT_("%s: opportunistic upgrade to TLS.\n"), realhost);
+	       using_tls = TRUE;
 	   }
 	   did_stls = TRUE;
 
@@ -482,6 +484,12 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	    */
 	   capa_probe(sock);
 	}
+	if ((ctl->sslproto && !strcasecmp(ctl->sslproto,"tls1")) && !ctl->use_ssl && !using_tls) {
+	    report(stderr,
+		    GT_("TLS connection failed.\n"));
+	    return PS_SOCKET;
+	}
+
 #endif /* SSL_ENABLE */
 
 	/*
@@ -574,7 +582,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	if (did_stls && ok == PS_SOCKET && !ctl->sslproto && !ctl->wehaveauthed)
 	{
 	    ctl->sslproto = xstrdup("");
-	    /* repoll immediately */
+	    /* repoll immediately without TLS */
 	    ok = PS_REPOLL;
 	}
 #endif

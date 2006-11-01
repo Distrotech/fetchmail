@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.9-rc9\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-09-27 00:05+0200\n"
+"POT-Creation-Date: 2006-11-01 23:48+0100\n"
 "PO-Revision-Date: 2005-11-18 22:25+0200\n"
 "Last-Translator: Besnik Bleta <besnik@spymac.com>\n"
 "Language-Team: Albanian <translation-team-sq@lists.sourceforge.net>\n"
@@ -246,7 +246,7 @@ msgstr "Subjekt: Sinjalizim Fetchmail për shërbyes të pakapshëm."
 msgid "Fetchmail could not reach the mail server %s:"
 msgstr "Fetchmail-i nuk mundi të lidhet me shërbyesin e postës %s:"
 
-#: driver.c:1096 imap.c:423 pop3.c:465
+#: driver.c:1096
 msgid "SSL connection failed.\n"
 msgstr "Lidhja SSL dështoi.\n"
 
@@ -1689,77 +1689,82 @@ msgstr "Protokoll i identifikuar si IMAP2 ose IMAP2BIS\n"
 msgid "will idle after poll\n"
 msgstr "do të rrijë bosh pas vjeljeje\n"
 
-#: imap.c:427 pop3.c:469
+#: imap.c:424 imap.c:447 pop3.c:466 pop3.c:489
+#, fuzzy
+msgid "TLS connection failed.\n"
+msgstr "Lidhja SSL dështoi.\n"
+
+#: imap.c:429 pop3.c:470
 #, c-format
 msgid "%s: opportunistic upgrade to TLS.\n"
 msgstr ""
 
-#: imap.c:540
+#: imap.c:547
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "Aftësi e nevojshme OTP e papërpiluar tek fetchmail-i\n"
 
-#: imap.c:562 pop3.c:372
+#: imap.c:569 pop3.c:373
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "Aftësi e nevojshme NTML e papërpiluar tek fetchmail-i\n"
 
-#: imap.c:571
+#: imap.c:578
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "Aftësi e nevojshme LOGIN e pambuluar prej shërbyesit\n"
 
-#: imap.c:645
+#: imap.c:652
 #, fuzzy, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
 msgstr ""
 "mesazhi %s@%s:%d nuk pat gjatësinë e pritur (%d aktualja != %d e pritshmja)\n"
 
-#: imap.c:749 imap.c:808
+#: imap.c:756 imap.c:815
 msgid "re-poll failed\n"
 msgstr "rivjelja dështoi\n"
 
-#: imap.c:757 imap.c:813
+#: imap.c:764 imap.c:820
 #, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
 msgstr[0] "%d mesazh në pritje pas rivjeljes\n"
 msgstr[1] "%d mesazhe në pritje pas rivjeljes\n"
 
-#: imap.c:774
+#: imap.c:781
 msgid "mailbox selection failed\n"
 msgstr "përzgjedhja e kutisë postare dështoi\n"
 
-#: imap.c:778
+#: imap.c:785
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
 msgstr[0] "%d mesazh në pritje pas vjeljes së parë\n"
 msgstr[1] "%d mesazhe në pritje pas vjeljes së parë\n"
 
-#: imap.c:792
+#: imap.c:799
 msgid "expunge failed\n"
 msgstr "shuarja dështoi\n"
 
-#: imap.c:796
+#: imap.c:803
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
 msgstr[0] "%d mesazh në pritje pas shuarjes\n"
 msgstr[1] "%d mesazhe në pritje pas shuarjes\n"
 
-#: imap.c:838
+#: imap.c:845
 msgid "search for unseen messages failed\n"
 msgstr "kërkimi për mesazhe të pavërejtur dështoi\n"
 
-#: imap.c:866
+#: imap.c:873
 #, fuzzy, c-format
 msgid "%lu is unseen\n"
 msgstr "%u është i pavërejtur\n"
 
-#: imap.c:878 pop3.c:788
+#: imap.c:885 pop3.c:796
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u është i pari i pavërejtur\n"
 
-#: imap.c:969
+#: imap.c:976
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""
@@ -1955,7 +1960,7 @@ msgstr ""
 msgid "Could not decode OTP challenge\n"
 msgstr ""
 
-#: opie.c:64 pop3.c:552
+#: opie.c:64 pop3.c:560
 msgid "Secret pass phrase: "
 msgstr "Frazë pass sekrete: "
 
@@ -2262,60 +2267,60 @@ msgstr "  -r, --folder      cakto emër dosjeje të largët\n"
 msgid "      --showdots    show progress dots even in logfiles\n"
 msgstr "      --showdots    shfaq pika përparimi edhe në kartela regjistrimi\n"
 
-#: pop3.c:342
+#: pop3.c:343
 msgid ""
 "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
 "of TOP.\n"
 msgstr ""
 
-#: pop3.c:590
+#: pop3.c:598
 msgid "Required APOP timestamp not found in greeting\n"
 msgstr "Nuk u gjet vulë kohore e nevojshme APOP në përshëndetje\n"
 
-#: pop3.c:599
+#: pop3.c:607
 msgid "Timestamp syntax error in greeting\n"
 msgstr "Gabim sintakse vule kohore në përshëndetje\n"
 
-#: pop3.c:621
+#: pop3.c:629
 msgid "Undefined protocol request in POP3_auth\n"
 msgstr "Kërkesë protokolli e papërcaktuar në POP3_auth\n"
 
-#: pop3.c:629
+#: pop3.c:637
 msgid "lock busy!  Is another session active?\n"
 msgstr ""
 
-#: pop3.c:708
+#: pop3.c:716
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr ""
 
-#: pop3.c:731
+#: pop3.c:739
 msgid "Server responded with UID for wrong message.\n"
 msgstr "Shërbyesi u përgjigj me UID për mesazh të gabuar.\n"
 
-#: pop3.c:758 pop3.c:1004
+#: pop3.c:766 pop3.c:1012
 #, fuzzy, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) qe fshirë, por është ende i pranishëm!\n"
 
-#: pop3.c:767 pop3.c:779 pop3.c:1013 pop3.c:1020
+#: pop3.c:775 pop3.c:787 pop3.c:1021 pop3.c:1028
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u është i pavërejtur\n"
 
-#: pop3.c:864
+#: pop3.c:872
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "Mesazhe të futur në një listë te shërbyesi. Nuk mund ta bëj dot këtë.\n"
 
-#: pop3.c:956
+#: pop3.c:964
 msgid "protocol error\n"
 msgstr "gabim protokolli\n"
 
-#: pop3.c:972
+#: pop3.c:980
 msgid "protocol error while fetching UIDLs\n"
 msgstr "gabim protokolli gjatë sjelljes së UIDL-ve\n"
 
-#: pop3.c:1342
+#: pop3.c:1350
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Mundësia --dosje nuk mbulohet me POP3\n"
 

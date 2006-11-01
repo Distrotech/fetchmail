@@ -354,7 +354,8 @@ from. The folder information is written only since version 6.3.4.
 (Keyword: ssl)
 Causes the connection to the mail server to be encrypted via SSL.  Connect
 to the server using the specified base protocol over a connection secured
-by SSL.  SSL support must be present at the server.
+by SSL. This option defeats TLS negotiation. Use \-\-sslcertck to
+validate the certificates presented by the server.
 .sp
 Note that fetchmail may still try to negotiate TLS even if this option
 is not given. You can use the \-\-sslproto option to defeat this
@@ -408,12 +409,13 @@ server.  This can cause some complications in daemon mode.
 (Keyword: sslproto)
 Forces an SSL or TLS protocol. Possible values are '\fBSSL2\fR',
 \&'\fBSSL3\fR', '\fBSSL23\fR', and '\fBTLS1\fR'. Try this if the default
-handshake does not work for your server. To defeat automatic TLSv1
-negotiation when the server advertises STARTTLS or STLS, use \fB''\fR or
-\&'\fBSSL23\fR'. This option, even if the argument is the empty string,
-will also suppress the diagnostic 'SERVER: opportunistic upgrade to
-TLS.' message in verbose mode. The default is to try appropriate
-protocols depending on context.
+handshake does not work for your server. Use this option with
+'\fBTLS1\fR' to enforce a TLS connection. To defeat opportunistic TLSv1
+negotiation when the server advertises STARTTLS or STLS, use \fB''\fR.
+This option, even if the argument is the empty string, will also
+suppress the diagnostic 'SERVER: opportunistic upgrade to TLS.' message
+in verbose mode. The default is to try appropriate protocols depending
+on context.
 .TP
 .B \-\-sslcertck
 (Keyword: sslcertck)
@@ -421,10 +423,11 @@ Causes fetchmail to strictly check the server certificate against a set of
 local trusted certificates (see the \fBsslcertpath\fR option). If the server
 certificate is not signed by one of the trusted ones (directly or indirectly),
 the SSL connection will fail, regardless of the \fBsslfingerprint\fR
-option. This checking should prevent man-in-the-middle attacks against
-the SSL connection. Note that CRLs are seemingly not currently supported
-by OpenSSL in certificate verification! Your system clock should be
-reasonably accurate when using this option.
+option. This checking is required, but not sufficient, to prevent
+man-in-the-middle attacks against the SSL connection. Use \-\-ssl or
+\-\-sslproto to enforce SSL or TLS. Note that CRLs are seemingly not
+currently supported by OpenSSL in certificate verification! Your system
+clock should be reasonably accurate when using this option.
 .IP
 Note that this optional behavior may become default behavior in future
 fetchmail versions.
@@ -1043,20 +1046,33 @@ username and the part to the right as the NTLM domain.
 .PP
 You can access SSL encrypted services by specifying the \-\-ssl option.
 You can also do this using the "ssl" user option in the .fetchmailrc
-file.  With SSL encryption enabled, queries are initiated over a connection
-after negotiating an SSL session.  Some services, such as POP3 and IMAP,
-have different well known ports defined for the SSL encrypted services.
-The encrypted ports will be selected automatically when SSL is enabled and
-no explicit port is specified.
+file. With SSL encryption enabled, queries are initiated over a connection
+after negotiating an SSL session, and the connection fails if SSL cannot
+be negotiated.  Some services, such as POP3 and IMAP, have different
+well known ports defined for the SSL encrypted services.  The encrypted
+ports will be selected automatically when SSL is enabled and no explicit
+port is specified. The \-\-sslproto option can be used to select the SSL
+protocols (default: v2 or v3).  The \-\-sslcertck command line or
+sslcertck run control file option should be used to force strict
+certificate checking - see below.
 .PP
-When connecting to an SSL encrypted server, the server presents a certificate
+If SSL is not configured, fetchmail may opportunistically try to use
+TLS. It can be forced to use TLS by using \-\-sslproto "TLS1". TLS
+connections use the same port as the unencrypted version of the
+protocol. The \-\-sslcertck command line or sslcertck run control file
+option should be used to force strict certificate checking - see below.
+.PP
+When connecting to an SSL or TLS encrypted server, the server presents a certificate
 to the client for validation.  The certificate is checked to verify that
 the common name in the certificate matches the name of the server being
 contacted and that the effective and expiration dates in the certificate
 indicate that it is currently valid.  If any of these checks fail, a warning
 message is printed, but the connection continues.  The server certificate
 does not need to be signed by any specific Certifying Authority and may
-be a "self-signed" certificate.
+be a "self-signed" certificate. If the \-\-sslcertck command line option
+or sslcertck run control file option is used, fetchmail will instead
+abort if any of these checks fail. Use of the sslcertck or \-\-sslcertck
+option is advised.
 .PP
 Some SSL encrypted servers may request a client side certificate.  A client
 side public SSL certificate and private SSL key may be specified.  If
@@ -1074,9 +1090,10 @@ can protect you from a passive eavesdropper it doesn't help against an
 active attacker. It's clearly an improvement over sending the
 passwords in clear but you should be aware that a man-in-the-middle
 attack is trivially possible (in particular with tools such as dsniff,
-http://monkey.org/~dugsong/dsniff/).  Use of an ssh tunnel (see
-below for some examples) is preferable if you care seriously about the
-security of your mailbox.
+http://monkey.org/~dugsong/dsniff/).  Use of strict certificate checking
+with a certification authority recognized by server and client, or
+perhaps of an ssh tunnel (see below for some examples) is preferable if
+you care seriously about the security of your mailbox and passwords.
 .SS ESMTP AUTH
 .PP
 .B fetchmail

@@ -371,6 +371,7 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
     int ok = 0;
 #ifdef SSL_ENABLE
     flag did_stls = FALSE;
+    flag using_tls = FALSE;
 #endif /* SSL_ENABLE */
 
     (void)greeting;
@@ -416,13 +417,14 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	       if (!ctl->sslproto && !ctl->wehaveauthed)
 	       {
 		   ctl->sslproto = xstrdup("");
-		   /* repoll immediately */
+		   /* repoll immediately with TLS disabled */
 		   return(PS_REPOLL);
 	       }
                report(stderr,
-                      GT_("SSL connection failed.\n"));
+                      GT_("TLS connection failed.\n"));
                return PS_SOCKET;
            } else {
+	       using_tls = TRUE;
 	       if (outlevel >= O_VERBOSE && !ctl->sslproto)
 		   report(stdout, GT_("%s: opportunistic upgrade to TLS.\n"), realhost);
 	   }
@@ -439,6 +441,11 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 	    * after STARTTLS."
 	    */
 	   capa_probe(sock, ctl);
+    }
+    /* Check if TLS was enforced. */
+    if ((ctl->sslproto && !strcasecmp(ctl->sslproto,"tls1")) && !ctl->use_ssl && !using_tls) {
+	report(stderr, GT_("TLS connection failed.\n"));
+	return PS_SOCKET;
     }
 #endif /* SSL_ENABLE */
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.5-b3\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-09-27 00:05+0200\n"
+"POT-Creation-Date: 2006-11-01 23:48+0100\n"
 "PO-Revision-Date: 2006-10-02 07:40+0200\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -251,7 +251,7 @@ msgstr "Subject: Ostrze¿enie fetchmaila o nieosi±galnym serwerze."
 msgid "Fetchmail could not reach the mail server %s:"
 msgstr "Fetchmail nie móg³ po³±czyæ siê z serwerem poczty %s:"
 
-#: driver.c:1096 imap.c:423 pop3.c:465
+#: driver.c:1096
 msgid "SSL connection failed.\n"
 msgstr "po³±czenie SSL nie powiod³o siê.\n"
 
@@ -1685,33 +1685,38 @@ msgstr "Protokó³ rozpoznany jako IMAP2 lub IMAP2BIS\n"
 msgid "will idle after poll\n"
 msgstr "przejdzie w stan bezczynno¶ci po odpytaniu\n"
 
-#: imap.c:427 pop3.c:469
+#: imap.c:424 imap.c:447 pop3.c:466 pop3.c:489
+#, fuzzy
+msgid "TLS connection failed.\n"
+msgstr "po³±czenie SSL nie powiod³o siê.\n"
+
+#: imap.c:429 pop3.c:470
 #, c-format
 msgid "%s: opportunistic upgrade to TLS.\n"
 msgstr "%s: zgodne przej¶cie na TLS.\n"
 
-#: imap.c:540
+#: imap.c:547
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "Wymagana metoda uwierzytelnienia OTP nie wkompilowana w fetchmaila\n"
 
-#: imap.c:562 pop3.c:372
+#: imap.c:569 pop3.c:373
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "Wymagana metoda uwierzytelnienia NTLM nie wkompilowana w fetchmaila\n"
 
-#: imap.c:571
+#: imap.c:578
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "Serwer nie obs³uguje wymaganej metody uwierzytelnienia LOGIN\n"
 
-#: imap.c:645
+#: imap.c:652
 #, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
 msgstr "niezgodno¶æ przy usuwaniu poczty (faktyczna %d != oczekiwana %d)\n"
 
-#: imap.c:749 imap.c:808
+#: imap.c:756 imap.c:815
 msgid "re-poll failed\n"
 msgstr "ponowne po³±czenie nie powiod³o siê\n"
 
-#: imap.c:757 imap.c:813
+#: imap.c:764 imap.c:820
 #, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
@@ -1719,11 +1724,11 @@ msgstr[0] "%d list oczekuj±cy po ponownym pobraniu\n"
 msgstr[1] "%d listy oczekuj±ce po ponownym pobraniu\n"
 msgstr[2] "%d listów oczekuj±cych po ponownym pobraniu\n"
 
-#: imap.c:774
+#: imap.c:781
 msgid "mailbox selection failed\n"
 msgstr "wybór skrzynki zakoñczy³ siê niepowodzeniem\n"
 
-#: imap.c:778
+#: imap.c:785
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
@@ -1731,11 +1736,11 @@ msgstr[0] "%d list oczekuj±cy po pierwszym pobraniu\n"
 msgstr[1] "%d listy oczekuj±ce po pierwszym pobraniu\n"
 msgstr[2] "%d listów oczekuj±cych po pierwszym pobraniu\n"
 
-#: imap.c:792
+#: imap.c:799
 msgid "expunge failed\n"
 msgstr "usuwanie nie powiod³o siê\n"
 
-#: imap.c:796
+#: imap.c:803
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
@@ -1743,21 +1748,21 @@ msgstr[0] "%d list oczekuj±cy po usuwaniu\n"
 msgstr[1] "%d listy oczekuj±ce po usuwaniu\n"
 msgstr[2] "%d listów oczekuj±cych po usuwaniu\n"
 
-#: imap.c:838
+#: imap.c:845
 msgid "search for unseen messages failed\n"
 msgstr "poszukiwanie nieprzeczytanych listów nie powiod³o siê\n"
 
-#: imap.c:866
+#: imap.c:873
 #, c-format
 msgid "%lu is unseen\n"
 msgstr "%lu jest nieprzeczytany\n"
 
-#: imap.c:878 pop3.c:788
+#: imap.c:885 pop3.c:796
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u jest pierwszym nieprzeczytanym\n"
 
-#: imap.c:969
+#: imap.c:976
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""
@@ -1957,7 +1962,7 @@ msgstr "recv z serwera nie powiod³o siê\n"
 msgid "Could not decode OTP challenge\n"
 msgstr "Rozkodowanie wyzwania OTP by³o niemo¿liwe\n"
 
-#: opie.c:64 pop3.c:552
+#: opie.c:64 pop3.c:560
 msgid "Secret pass phrase: "
 msgstr "Tajne has³o: "
 
@@ -2275,7 +2280,7 @@ msgid "      --showdots    show progress dots even in logfiles\n"
 msgstr ""
 "      --showdots    pokazuje kropki oznaczaj±ce postêp tak¿e w logach\n"
 
-#: pop3.c:342
+#: pop3.c:343
 msgid ""
 "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
 "of TOP.\n"
@@ -2283,54 +2288,54 @@ msgstr ""
 "Uwaga: Odkryto serwer \"POP3/PROXY Maillennium\", u¿ycie polecenia RETR "
 "zamiast TOP.\n"
 
-#: pop3.c:590
+#: pop3.c:598
 msgid "Required APOP timestamp not found in greeting\n"
 msgstr "W powitaniu serwera brakuje wymaganego znacznika czasu APOP\n"
 
-#: pop3.c:599
+#: pop3.c:607
 msgid "Timestamp syntax error in greeting\n"
 msgstr "B³±d sk³adni znacznika czasu w powitaniu\n"
 
-#: pop3.c:621
+#: pop3.c:629
 msgid "Undefined protocol request in POP3_auth\n"
 msgstr "Pro¶ba o nieznany protokó³ w POP3_auth\n"
 
-#: pop3.c:629
+#: pop3.c:637
 msgid "lock busy!  Is another session active?\n"
 msgstr "plik zablokowany! Czy inna sesja nie jest aktywna?\n"
 
-#: pop3.c:708
+#: pop3.c:716
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "Nie mo¿na obs³u¿yæ odpowiedzi UIDL od serwera.\n"
 
-#: pop3.c:731
+#: pop3.c:739
 msgid "Server responded with UID for wrong message.\n"
 msgstr "Serwer odpowiedzia³ z UID-em dla niew³a¶ciwego listu.\n"
 
-#: pop3.c:758 pop3.c:1004
+#: pop3.c:766 pop3.c:1012
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) zosta³ skasowany, ale nadal istnieje!\n"
 
-#: pop3.c:767 pop3.c:779 pop3.c:1013 pop3.c:1020
+#: pop3.c:775 pop3.c:787 pop3.c:1021 pop3.c:1028
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u jest nieprzeczytany\n"
 
-#: pop3.c:864
+#: pop3.c:872
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "Przesy³ki zosta³y dodane do listy na serwerze. Nie mogê tego obs³u¿yæ.\n"
 
-#: pop3.c:956
+#: pop3.c:964
 msgid "protocol error\n"
 msgstr "b³±d protoko³u\n"
 
-#: pop3.c:972
+#: pop3.c:980
 msgid "protocol error while fetching UIDLs\n"
 msgstr "b³±d protoko³u podczas pobierania UIDL\n"
 
-#: pop3.c:1342
+#: pop3.c:1350
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Opcja --folder nie dzia³a z POP3\n"
 

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.4-rc1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-09-27 00:05+0200\n"
+"POT-Creation-Date: 2006-11-01 23:48+0100\n"
 "PO-Revision-Date: 2006-09-15 11:52+0200\n"
 "Last-Translator: Héctor García <hector@el-mundo.net>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -258,7 +258,7 @@ msgstr "Subject: aviso de server fuera de alcance de fetchmail."
 msgid "Fetchmail could not reach the mail server %s:"
 msgstr "Fetchmail no puede alcanzar al servidor de correo %s:"
 
-#: driver.c:1096 imap.c:423 pop3.c:465
+#: driver.c:1096
 msgid "SSL connection failed.\n"
 msgstr "Fallo en la conexión SSL.\n"
 
@@ -1700,76 +1700,81 @@ msgstr "Protocolo identificado como IMAP2 o IMAP2BIS\n"
 msgid "will idle after poll\n"
 msgstr "descansará después de inquirir\n"
 
-#: imap.c:427 pop3.c:469
+#: imap.c:424 imap.c:447 pop3.c:466 pop3.c:489
+#, fuzzy
+msgid "TLS connection failed.\n"
+msgstr "Fallo en la conexión SSL.\n"
+
+#: imap.c:429 pop3.c:470
 #, c-format
 msgid "%s: opportunistic upgrade to TLS.\n"
 msgstr "%s: actualización oportunista a TLS.\n"
 
-#: imap.c:540
+#: imap.c:547
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "La capacidad OTP requerida no fue compilada en fetchmail\n"
 
-#: imap.c:562 pop3.c:372
+#: imap.c:569 pop3.c:373
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "La capacidad NTLM requerida no fue compilada en fetchmail\n"
 
-#: imap.c:571
+#: imap.c:578
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "La capacidad LOGIN requerida no es soportada por el servidor\n"
 
-#: imap.c:645
+#: imap.c:652
 #, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
 msgstr "inconsistencia en borrado de mensajes (%d actual != %d esperado)\n"
 
-#: imap.c:749 imap.c:808
+#: imap.c:756 imap.c:815
 msgid "re-poll failed\n"
 msgstr "falló el reintento de consulta\n"
 
-#: imap.c:757 imap.c:813
+#: imap.c:764 imap.c:820
 #, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
 msgstr[0] "Queda %d mensaje esperando tras reintentar la consulta\n"
 msgstr[1] "Quedan %d mensajes esperando tras reintentar la consulta\n"
 
-#: imap.c:774
+#: imap.c:781
 msgid "mailbox selection failed\n"
 msgstr "falló la selección de casilla\n"
 
-#: imap.c:778
+#: imap.c:785
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
 msgstr[0] "Queda %d mensaje esperando tras la consulta inicial\n"
 msgstr[1] "Quedan %d mensajes esperando tras la consulta inicial\n"
 
-#: imap.c:792
+#: imap.c:799
 msgid "expunge failed\n"
 msgstr "falló la eliminación\n"
 
-#: imap.c:796
+#: imap.c:803
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
 msgstr[0] "Queda %d mensaje esperando tras la eliminación\n"
 msgstr[1] "Quedan %d mensajes esperando tras la eliminación\n"
 
-#: imap.c:838
+#: imap.c:845
 msgid "search for unseen messages failed\n"
 msgstr "la búsqueda de mensajes no visto falló\n"
 
-#: imap.c:866
+#: imap.c:873
 #, c-format
 msgid "%lu is unseen\n"
 msgstr "%lu no fue visto\n"
 
-#: imap.c:878 pop3.c:788
+#: imap.c:885 pop3.c:796
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u es el primero que no fue visto\n"
 
-#: imap.c:969
+#: imap.c:976
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""
@@ -1969,7 +1974,7 @@ msgstr "fatal recv del server\n"
 msgid "Could not decode OTP challenge\n"
 msgstr "No fue posible decodificar el desafío OTP\n"
 
-#: opie.c:64 pop3.c:552
+#: opie.c:64 pop3.c:560
 msgid "Secret pass phrase: "
 msgstr "Frase clave secreta: "
 
@@ -2293,7 +2298,7 @@ msgstr ""
 "      --showdots    mostrar puntos de progreso incluso en los archivos de "
 "registro\n"
 
-#: pop3.c:342
+#: pop3.c:343
 msgid ""
 "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
 "of TOP.\n"
@@ -2301,54 +2306,54 @@ msgstr ""
 "Aviso: encontrado \"Maillennium POP3/PROXY server\", usando el comando RETR "
 "en lugar de TOP.\n"
 
-#: pop3.c:590
+#: pop3.c:598
 msgid "Required APOP timestamp not found in greeting\n"
 msgstr "Estampa de tiempo APOP requerida no encontrada en el saludo\n"
 
-#: pop3.c:599
+#: pop3.c:607
 msgid "Timestamp syntax error in greeting\n"
 msgstr "Error de sintaxis en la estampa de tiempo en el saludo\n"
 
-#: pop3.c:621
+#: pop3.c:629
 msgid "Undefined protocol request in POP3_auth\n"
 msgstr "Pedido de protocolo indefinido en POP3_auth\n"
 
-#: pop3.c:629
+#: pop3.c:637
 msgid "lock busy!  Is another session active?\n"
 msgstr "¡bloqueo ocupado! ¿Hay otra sesión activa?\n"
 
-#: pop3.c:708
+#: pop3.c:716
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "No se puede manejar la respuesta UIDL proveniente del servidor.\n"
 
-#: pop3.c:731
+#: pop3.c:739
 msgid "Server responded with UID for wrong message.\n"
 msgstr "El servidor devolvió el UID de un mensaje incorrecto.\n"
 
-#: pop3.c:758 pop3.c:1004
+#: pop3.c:766 pop3.c:1012
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) fue borrado, ¡pero aún se encuentra presente!\n"
 
-#: pop3.c:767 pop3.c:779 pop3.c:1013 pop3.c:1020
+#: pop3.c:775 pop3.c:787 pop3.c:1021 pop3.c:1028
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u no fue visto\n"
 
-#: pop3.c:864
+#: pop3.c:872
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "Mensajes insertados en una lista en el servidor. No se puede manejar esto.\n"
 
-#: pop3.c:956
+#: pop3.c:964
 msgid "protocol error\n"
 msgstr "error de protocolo\n"
 
-#: pop3.c:972
+#: pop3.c:980
 msgid "protocol error while fetching UIDLs\n"
 msgstr "error de protocolo durante la recepción de UIDLs\n"
 
-#: pop3.c:1342
+#: pop3.c:1350
 msgid "Option --folder is not supported with POP3\n"
 msgstr "La opción --folder no está soportada con POP3\n"
 
