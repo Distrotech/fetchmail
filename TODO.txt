@@ -1,3 +1,7 @@
+6.3.6:
+- fix TLS issue for good
+- investigate 6.3.5 regression on spam message (berlios bug)
+
 CODE:
 - check recent list mail
 - check Debian BTS and other bug trackers
