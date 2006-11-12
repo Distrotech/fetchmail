@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.5-b1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-11-01 23:48+0100\n"
+"POT-Creation-Date: 2006-11-12 23:14+0100\n"
 "PO-Revision-Date: 2006-08-31 19:22+0200\n"
 "Last-Translator: Ernest Adrogué Calveras <eadrogue@gmx.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
@@ -1682,81 +1682,86 @@ msgstr "S'ha identificat el protocol com a IMAP2 o IMAP2BIS\n"
 msgid "will idle after poll\n"
 msgstr "es farà una pausa després de l'obtenció\n"
 
-#: imap.c:424 imap.c:447 pop3.c:466 pop3.c:489
-#, fuzzy
-msgid "TLS connection failed.\n"
-msgstr "La conexió SSL ha fallat.\n"
-
-#: imap.c:429 pop3.c:470
-#, c-format
-msgid "%s: opportunistic upgrade to TLS.\n"
+#: imap.c:427 pop3.c:473
+#, fuzzy, c-format
+msgid "%s: upgrade to TLS succeeded.\n"
 msgstr "%s: actualització oportunista a TLS.\n"
 
-#: imap.c:547
+#: imap.c:435 pop3.c:481
+#, fuzzy, c-format
+msgid "%s: upgrade to TLS failed.\n"
+msgstr "%s: actualització oportunista a TLS.\n"
+
+#: imap.c:442
+#, fuzzy, c-format
+msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
+msgstr "%s: actualització oportunista a TLS.\n"
+
+#: imap.c:553
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "Es requereix capacitat per OTP no compilada en el fetchmail\n"
 
-#: imap.c:569 pop3.c:373
+#: imap.c:575 pop3.c:373
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "Es requereix capacitat per NTLM no compilada en el fetchmail\n"
 
-#: imap.c:578
+#: imap.c:584
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "El servidor no suporta la capacitat per LOGIN requerida\n"
 
-#: imap.c:652
+#: imap.c:648
 #, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
 msgstr "recompte de missatges eliminats incorrecte (%d real != %d esperat)\n"
 
-#: imap.c:756 imap.c:815
+#: imap.c:752 imap.c:811
 msgid "re-poll failed\n"
 msgstr "la re-obtenció ha fallat\n"
 
-#: imap.c:764 imap.c:820
+#: imap.c:760 imap.c:816
 #, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
 msgstr[0] "hi ha %d missatge esperant després de la re-obtenció\n"
 msgstr[1] "hi ha %d missatges esperant després de la re-obtenció\n"
 
-#: imap.c:781
+#: imap.c:777
 msgid "mailbox selection failed\n"
 msgstr "ha fallat la selecció de bústia\n"
 
-#: imap.c:785
+#: imap.c:781
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
 msgstr[0] "hi ha %d missatge esperant després de la primera obtenció\n"
 msgstr[1] "hi ha %d missatges esperant després de la primera obtenció\n"
 
-#: imap.c:799
+#: imap.c:795
 msgid "expunge failed\n"
 msgstr "la supressió de missatges ha fallat\n"
 
-#: imap.c:803
+#: imap.c:799
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
 msgstr[0] "hi ha %d missatge esperant després de la supressió\n"
 msgstr[1] "hi ha %d missatges esperant després de la supressió\n"
 
-#: imap.c:845
+#: imap.c:841
 msgid "search for unseen messages failed\n"
 msgstr "la recerca de missatges no llegits ha fallat\n"
 
-#: imap.c:873
+#: imap.c:869
 #, c-format
 msgid "%lu is unseen\n"
 msgstr "%lu és no llegit\n"
 
-#: imap.c:885 pop3.c:796
+#: imap.c:881 pop3.c:801
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u és el primer missatge no llegit\n"
 
-#: imap.c:976
+#: imap.c:972
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""
@@ -1957,7 +1962,7 @@ msgstr "recv fatal del servidor\n"
 msgid "Could not decode OTP challenge\n"
 msgstr "No s'ha pogut desxifrar la codificació OTP\n"
 
-#: opie.c:64 pop3.c:560
+#: opie.c:64 pop3.c:565
 msgid "Secret pass phrase: "
 msgstr "Contrasenya secreta: "
 
@@ -2280,55 +2285,60 @@ msgstr ""
 "Atenció: s'ha detectat un \"Maillennium POP3/PROXY server\", s'usa RETR en "
 "lloc de TOP.\n"
 
+#: pop3.c:494
+#, fuzzy, c-format
+msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
+msgstr "%s: actualització oportunista a TLS.\n"
+
 # timestamp: marca horària
-#: pop3.c:598
+#: pop3.c:603
 msgid "Required APOP timestamp not found in greeting\n"
 msgstr "No s'ha trobat la marca horària APOP requerida a la salutació\n"
 
-#: pop3.c:607
+#: pop3.c:612
 msgid "Timestamp syntax error in greeting\n"
 msgstr "Error de sintaxi en la marca horària de la salutació\n"
 
-#: pop3.c:629
+#: pop3.c:634
 msgid "Undefined protocol request in POP3_auth\n"
 msgstr "Petició de protocol indefinida a POP3_auth\n"
 
-#: pop3.c:637
+#: pop3.c:642
 msgid "lock busy!  Is another session active?\n"
 msgstr "bloqueig temporal! Hi ha alguna altra sessió activa?\n"
 
-#: pop3.c:716
+#: pop3.c:721
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "No s'ha pogut administrar la resposta UIDL del servidor remot.\n"
 
-#: pop3.c:739
+#: pop3.c:744
 msgid "Server responded with UID for wrong message.\n"
 msgstr "El servidor ha respost amb un UID pel missatge equivocat.\n"
 
-#: pop3.c:766 pop3.c:1012
+#: pop3.c:771 pop3.c:1017
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (núm=%d) s'ha esborrat, però encara està present!\n"
 
-#: pop3.c:775 pop3.c:787 pop3.c:1021 pop3.c:1028
+#: pop3.c:780 pop3.c:792 pop3.c:1026 pop3.c:1033
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u és no llegit\n"
 
-#: pop3.c:872
+#: pop3.c:877
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "Els missatges estan inserits a la llista del servidor. No es pot continuar.\n"
 
-#: pop3.c:964
+#: pop3.c:969
 msgid "protocol error\n"
 msgstr "error de protocol\n"
 
-#: pop3.c:980
+#: pop3.c:985
 msgid "protocol error while fetching UIDLs\n"
 msgstr "error de protocol quan es rebien els UIDLs\n"
 
-#: pop3.c:1350
+#: pop3.c:1355
 msgid "Option --folder is not supported with POP3\n"
 msgstr "L'opció --folder no està suportada per POP3\n"
 
@@ -3079,3 +3089,7 @@ msgstr "la rutina malloc ha fallat\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "la rutina realloc ha fallat\n"
+
+#, fuzzy
+#~ msgid "TLS connection failed.\n"
+#~ msgstr "La conexió SSL ha fallat.\n"

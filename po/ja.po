@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.5-b3\n"
+"Project-Id-Version: fetchmail 6.3.5\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-11-01 23:48+0100\n"
-"PO-Revision-Date: 2006-09-29 07:29+0900\n"
+"POT-Creation-Date: 2006-11-12 23:14+0100\n"
+"PO-Revision-Date: 2006-10-13 23:02+0900\n"
 "Last-Translator: Takeshi Hamasaki <hma@syd.odn.ne.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -235,9 +235,9 @@ msgid "Lead server has no name.\n"
 msgstr "Lead server の名前がありません。\n"
 
 #: driver.c:1005
-#, fuzzy, c-format
+#, c-format
 msgid "couldn't find canonical DNS name of %s (%s): %s\n"
-msgstr "%s の canonical DNS 名(%s)を検索できませんでした。\n"
+msgstr "%s の 公式 DNS 名(%s)を検索できませんでした: %s\n"
 
 #: driver.c:1052
 #, c-format
@@ -1659,79 +1659,84 @@ msgstr "プロトコルは IMAP2 又は IMAP2BIS と認識されました。\n"
 msgid "will idle after poll\n"
 msgstr "接続の後、休止します。\n"
 
-#: imap.c:424 imap.c:447 pop3.c:466 pop3.c:489
-#, fuzzy
-msgid "TLS connection failed.\n"
-msgstr "SSL による接続に失敗しました。\n"
-
-#: imap.c:429 pop3.c:470
-#, c-format
-msgid "%s: opportunistic upgrade to TLS.\n"
+#: imap.c:427 pop3.c:473
+#, fuzzy, c-format
+msgid "%s: upgrade to TLS succeeded.\n"
 msgstr "%s: TLS へのアップグレードに適合。\n"
 
-#: imap.c:547
+#: imap.c:435 pop3.c:481
+#, fuzzy, c-format
+msgid "%s: upgrade to TLS failed.\n"
+msgstr "%s: TLS へのアップグレードに適合。\n"
+
+#: imap.c:442
+#, fuzzy, c-format
+msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
+msgstr "%s: TLS へのアップグレードに適合。\n"
+
+#: imap.c:553
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr ""
 "OTP が要求されましたが、fetchmail が OTP 対応でコンパイルされていません。\n"
 
-#: imap.c:569 pop3.c:373
+#: imap.c:575 pop3.c:373
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "要求された NTLM 処理能力は fetchmail に組み込まれていません。\n"
 
-#: imap.c:578
+#: imap.c:584
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "要求された LOGIN 処理能力はサーバでサポートされていません。\n"
 
-#: imap.c:652
+#: imap.c:648
 #, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
 msgstr "メッセージの大きさが合いません (%d (実際) != %d (予想)) \n"
 
-#: imap.c:756 imap.c:815
+#: imap.c:752 imap.c:811
 msgid "re-poll failed\n"
 msgstr "再アクセスに失敗しました。\n"
 
-#: imap.c:764 imap.c:820
+#: imap.c:760 imap.c:816
 #, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
 msgstr[0] "%d 通のメッセージが再アクセスの後に存在します。\n"
 
-#: imap.c:781
+#: imap.c:777
 msgid "mailbox selection failed\n"
 msgstr "メールボックスの選択に失敗しました\n"
 
-#: imap.c:785
+#: imap.c:781
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
 msgstr[0] "最初のアクセスから %d 通のメッセージがあります。\n"
 
-#: imap.c:799
+#: imap.c:795
 msgid "expunge failed\n"
 msgstr "削除に失敗しました。\n"
 
-#: imap.c:803
+#: imap.c:799
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
 msgstr[0] "削除の後、%d 通のメッセージが残っています。\n"
 
-#: imap.c:845
+#: imap.c:841
 msgid "search for unseen messages failed\n"
 msgstr "未読メッセージの検索に失敗しました。\n"
 
-#: imap.c:873
+#: imap.c:869
 #, c-format
 msgid "%lu is unseen\n"
 msgstr "%lu は未読です。\n"
 
-#: imap.c:885 pop3.c:796
+#: imap.c:881 pop3.c:801
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u は最初の未読メッセージです。\n"
 
-#: imap.c:976
+#: imap.c:972
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""
@@ -1931,7 +1936,7 @@ msgstr "server recv fatal\n"
 msgid "Could not decode OTP challenge\n"
 msgstr "OTP challenge のデコードが出来ませんでした。\n"
 
-#: opie.c:64 pop3.c:560
+#: opie.c:64 pop3.c:565
 msgid "Secret pass phrase: "
 msgstr "Secret pass phrase: "
 
@@ -2248,54 +2253,59 @@ msgstr ""
 "警告: Maillennium POP3/プロクシサーバです。TOP の代わりに RETR コマンドを使用"
 "します。\n"
 
-#: pop3.c:598
+#: pop3.c:494
+#, fuzzy, c-format
+msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
+msgstr "%s: TLS へのアップグレードに適合。\n"
+
+#: pop3.c:603
 msgid "Required APOP timestamp not found in greeting\n"
 msgstr "greeting 中に APOP timestamp が存在しません。\n"
 
-#: pop3.c:607
+#: pop3.c:612
 msgid "Timestamp syntax error in greeting\n"
 msgstr "greeting 中の timestamp が不正です。\n"
 
-#: pop3.c:629
+#: pop3.c:634
 msgid "Undefined protocol request in POP3_auth\n"
 msgstr "POP3_auth 中で定義されていないプロトコルが要求されました。\n"
 
-#: pop3.c:637
+#: pop3.c:642
 msgid "lock busy!  Is another session active?\n"
 msgstr "lock busy 状態です。別の交信が行われていないか確認して下さい。\n"
 
-#: pop3.c:716
+#: pop3.c:721
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "上流サーバからの UIDL 応答に対応できません。\n"
 
-#: pop3.c:739
+#: pop3.c:744
 msgid "Server responded with UID for wrong message.\n"
 msgstr "サーバが誤ったメッセージの UID に応答しました。\n"
 
-#: pop3.c:766 pop3.c:1012
+#: pop3.c:771 pop3.c:1017
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) は削除されましたが、まだ存在しています!\n"
 
-#: pop3.c:775 pop3.c:787 pop3.c:1021 pop3.c:1028
+#: pop3.c:780 pop3.c:792 pop3.c:1026 pop3.c:1033
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u は未読です。\n"
 
-#: pop3.c:872
+#: pop3.c:877
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "サーバリストにメッセージが挿入されています。取り扱うことができません。\n"
 
-#: pop3.c:964
+#: pop3.c:969
 msgid "protocol error\n"
 msgstr "プロトコルエラーです。\n"
 
-#: pop3.c:980
+#: pop3.c:985
 msgid "protocol error while fetching UIDLs\n"
 msgstr "UIDL を取り込み中にプロトコルエラーが発生しました。\n"
 
-#: pop3.c:1350
+#: pop3.c:1355
 msgid "Option --folder is not supported with POP3\n"
 msgstr "POP3 では --folder オプションは利用できません。\n"
 
