@@ -4,10 +4,10 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.5-b3\n"
+"Project-Id-Version: fetchmail 6.3.5\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2006-11-12 23:14+0100\n"
-"PO-Revision-Date: 2006-09-30 22:55+0930\n"
+"PO-Revision-Date: 2006-10-14 14:33+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -219,9 +219,9 @@ msgid "Lead server has no name.\n"
 msgstr "Máy phục vụ đi trước không có tên.\n"
 
 #: driver.c:1005
-#, fuzzy, c-format
+#, c-format
 msgid "couldn't find canonical DNS name of %s (%s): %s\n"
-msgstr "không tìm thấy tên DNS đúng tiêu chuẩ của %s (%s)\n"
+msgstr "không tìm thấy tên DNS đúng tiêu chuẩn của %s (%s): %s\n"
 
 #: driver.c:1052
 #, c-format
@@ -1938,7 +1938,7 @@ msgstr "Chuỗi « %s » không phải là một chuỗi số hợp lệ.\n"
 #: options.c:175
 #, c-format
 msgid "Value of string '%s' is %s than %d.\n"
-msgstr "Giá trị của chuỗi « %1$s » là nhỏ hơn %3$d bằng %2$s.\n"
+msgstr "Giá trị của chuỗi « %s » là %s hơn %d.\n"
 
 #: options.c:176
 msgid "smaller"
@@ -3058,7 +3058,3 @@ msgstr "malloc (phân chia bộ nhớ) bị lỗi\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "realloc (phân chia lại bộ nhớ) bị lỗi\n"
-
-#, fuzzy
-#~ msgid "TLS connection failed.\n"
-#~ msgstr "Kết nối SSL đã thất bại.\n"
