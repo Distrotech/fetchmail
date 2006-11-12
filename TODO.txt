@@ -1,5 +1,4 @@
 6.3.6:
-- fix TLS issue for good
 - investigate 6.3.5 regression on spam message (berlios bug #9364)
 - bug #9412
 
@@ -15,6 +14,7 @@ CODE:
 - send warning message when connection fails?
 - when logging to syslog, disable locale?
 - check FAQ O5 - do we really prefer From: over envelope?!?
+- add code to allow safe authentication schemes if TLS fails
 
 DOCUMENTATION:
 - document Received: parsing expectations
