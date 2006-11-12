@@ -49,8 +49,8 @@ fetchmail 6.3.6 (not yet released):
 
   fetchmail 6.3.5 and older had no way to enforce TLS. With those older
   versions, TLS was always opportunistic, but fetchmail would happily transmit
-  the password in cleartext if STARTTLS failed. --ssl configurations however
-  have been safe.
+  the password in cleartext if STARTTLS failed. --ssl --sslcertck configurations
+  however have been safe.
 
   Reported by and fixed in cooperation with Isaac Wilcox.
 
