@@ -1,6 +1,7 @@
 6.3.6:
+WILL NOT DEBUG THESE WITHOUT BACKTRACE - CANNOT REPRODUCE:
 - investigate 6.3.5 regression on spam message (berlios bug #9364)
-- bug #9412
+- dito, bug #9412
 
 CODE:
 - check recent list mail
