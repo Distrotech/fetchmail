@@ -58,6 +58,9 @@ fetchmail 6.3.6 (not yet released):
 * Repair --logfile, broken in 6.3.5. BerliOS Bug #9059,
   reported by Brian Harring.
 
+# TRANSLATIONS:
+* New en_GB (British English) translation by David Lodge.
+
 # KNOWN BUGS AND WORKAROUNDS:
   (this section floats upwards through the NEWS to be on top of the list)
 * fetchmail does not handle messages without Message-ID header well
