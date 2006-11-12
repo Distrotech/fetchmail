@@ -63,7 +63,7 @@ static int pop2_getauth(int sock, struct query *ctl, char *buf)
     (void)buf;
     if (ctl->sslproto && !strcasecmp(ctl->sslproto, "tls1") && !ctl->use_ssl)
     {
-	report(stderr, GT_("POP2 does not support STARTTLS. Giving up.\n"));
+	report(stderr, GT_("POP2 does not support STLS. Giving up.\n"));
 	return PS_SOCKET;
     }
     strlcpy(shroud, ctl->password, sizeof(shroud));

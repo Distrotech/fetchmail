@@ -52,7 +52,7 @@ static flag has_cram = FALSE;
 flag has_otp = FALSE;
 #endif /* OPIE_ENABLE */
 #ifdef SSL_ENABLE
-static flag has_ssl = FALSE;
+static flag has_stls = FALSE;
 #endif /* SSL_ENABLE */
 
 /* mailbox variables initialized in pop3_getrange() */
@@ -261,7 +261,7 @@ static int capa_probe(int sock)
 		break;
 #ifdef SSL_ENABLE
 	    if (strstr(buffer, "STLS"))
-		has_ssl = TRUE;
+		has_stls = TRUE;
 #endif /* SSL_ENABLE */
 #if defined(GSSAPI)
 	    if (strstr(buffer, "GSSAPI"))
@@ -302,8 +302,8 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
     char *challenge;
 #endif /* OPIE_ENABLE */
 #ifdef SSL_ENABLE
-    flag did_stls = FALSE;
-    flag using_tls = FALSE;
+    char *realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;
+    flag connection_may_have_tls_errors = FALSE;
 #endif /* SSL_ENABLE */
 
 #if defined(GSSAPI)
@@ -317,7 +317,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
     has_otp = FALSE;
 #endif /* OPIE_ENABLE */
 #ifdef SSL_ENABLE
-    has_ssl = FALSE;
+    has_stls = FALSE;
 #endif /* SSL_ENABLE */
 
     /* Set this up before authentication quits early. */
@@ -440,56 +440,61 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	}
 
 #ifdef SSL_ENABLE
-	if (has_ssl
+	if (has_stls
 	    && !ctl->use_ssl
-	    && (!ctl->sslproto || !strcasecmp(ctl->sslproto,"tls1")))
+	    /* opportunistic   or    forced TLS */
+	    && (!ctl->sslproto || !strcasecmp(ctl->sslproto, "tls1")))
 	{
-	    char *realhost;
-
-	   realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;
-           ok = gen_transact(sock, "STLS");
-
-           /* We use "tls1" instead of ctl->sslproto, as we want STLS,
-            * not other SSL protocols */
-	   if (ok == PS_SUCCESS &&
-	       SSLOpen(sock,ctl->sslcert,ctl->sslkey,"tls1",ctl->sslcertck,
-		   ctl->sslcertpath,ctl->sslfingerprint,
-		   realhost,ctl->server.pollname,&ctl->remotename) == -1)
-	   {
-	       if (!ctl->sslproto && !ctl->wehaveauthed)
-	       {
-		   ctl->sslproto = xstrdup("");
-		   /* repoll immediately without TLS */
-		   return PS_REPOLL;
-	       }
-	       report(stderr,
-		       GT_("TLS connection failed.\n"));
-	       return PS_SOCKET;
-	   } else {
-	       if (outlevel >= O_VERBOSE && !ctl->sslproto)
-		   report(stdout, GT_("%s: opportunistic upgrade to TLS.\n"), realhost);
-	       using_tls = TRUE;
-	   }
-	   did_stls = TRUE;
-
-	   /*
-	    * RFC 2595 says this:
-	    *
-	    * "Once TLS has been started, the client MUST discard cached
-	    * information about server capabilities and SHOULD re-issue the
-	    * CAPABILITY command.  This is necessary to protect against
-	    * man-in-the-middle attacks which alter the capabilities list prior
-	    * to STARTTLS.  The server MAY advertise different capabilities
-	    * after STARTTLS."
-	    */
-	   capa_probe(sock);
+	    /* Use "tls1" rather than ctl->sslproto because tls1 is the only
+	     * protocol that will work with STARTTLS.  Don't need to worry
+	     * whether TLS is mandatory or opportunistic unless SSLOpen() fails
+	     * (see below). */
+	    if (gen_transact(sock, "STLS") == PS_SUCCESS
+		&& SSLOpen(sock, ctl->sslcert, ctl->sslkey, "tls1", ctl->sslcertck,
+			   ctl->sslcertpath, ctl->sslfingerprint, realhost,
+			   ctl->server.pollname, &ctl->remotename) != -1)
+	    {
+		/*
+		 * RFC 2595 says this:
+		 *
+		 * "Once TLS has been started, the client MUST discard cached
+		 * information about server capabilities and SHOULD re-issue the
+		 * CAPABILITY command.  This is necessary to protect against
+		 * man-in-the-middle attacks which alter the capabilities list prior
+		 * to STARTTLS.  The server MAY advertise different capabilities
+		 * after STARTTLS."
+		 *
+		 * Now that we're confident in our TLS connection we can
+		 * guarantee a secure capability re-probe.
+		 */
+		(void)capa_probe(sock);
+		if (outlevel >= O_VERBOSE)
+		{
+		    report(stdout, GT_("%s: upgrade to TLS succeeded.\n"), realhost);
+		}
+	    }
+	    else if (ctl->sslfingerprint || ctl->sslcertck
+		    || (ctl->sslproto && !strcasecmp(ctl->sslproto, "tls1")))
+	    {
+		/* Config required TLS but we couldn't guarantee it, so we must
+		 * stop. */
+		report(stderr, GT_("%s: upgrade to TLS failed.\n"), realhost);
+		return PS_SOCKET;
+	    }
+	    else
+	    {
+		/* We don't know whether the connection is usable, and there's
+		 * no command we can reasonably issue to test it (NOOP isn't
+		 * allowed til post-authentication), so leave it in an unknown
+		 * state, mark it as such, and check more carefully if things
+		 * go wrong when we try to authenticate. */
+		connection_may_have_tls_errors = TRUE;
+		if (outlevel >= O_VERBOSE)
+		{
+		    report(stdout, GT_("%s: opportunistic upgrade to TLS failed, trying to continue.\n"), realhost);
+		}
+	    }
 	}
-	if ((ctl->sslproto && !strcasecmp(ctl->sslproto,"tls1")) && !ctl->use_ssl && !using_tls) {
-	    report(stderr,
-		    GT_("TLS connection failed.\n"));
-	    return PS_SOCKET;
-	}
-
 #endif /* SSL_ENABLE */
 
 	/*
@@ -579,7 +584,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 #ifdef SSL_ENABLE
 	/* this is for servers which claim to support TLS, but actually
 	 * don't! */
-	if (did_stls && ok == PS_SOCKET && !ctl->sslproto && !ctl->wehaveauthed)
+	if (connection_may_have_tls_errors && ok == PS_SOCKET)
 	{
 	    ctl->sslproto = xstrdup("");
 	    /* repoll immediately without TLS */

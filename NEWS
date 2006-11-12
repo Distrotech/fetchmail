@@ -41,6 +41,23 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 
 fetchmail 6.3.6 (not yet released):
 
+# SECURITY FIX (INCOMPATIBLE):
+* Using at least one of the options "sslproto 'tls1'", "sslfingerprint" or
+  "sslcertck" enforces STARTTLS for POP3 and IMAP and terminates the connection
+  if unsuccessful. The same configuration causes permanent connection failure
+  with POP2 unless --ssl is used.
+
+  fetchmail 6.3.5 and older had no way to enforce TLS. With those older
+  versions, TLS was always opportunistic, but fetchmail would happily transmit
+  the password in cleartext if STARTTLS failed. --ssl configurations however
+  have been safe.
+
+  Reported by and fixed in cooperation with Isaac Wilcox.
+
+# BUG FIXES:
+* Repair --logfile, broken in 6.3.5. BerliOS Bug #9059,
+  reported by Brian Harring.
+
 # KNOWN BUGS AND WORKAROUNDS:
   (this section floats upwards through the NEWS to be on top of the list)
 * fetchmail does not handle messages without Message-ID header well
@@ -56,15 +73,6 @@ fetchmail 6.3.6 (not yet released):
   fetchmail -s doesn't work with a running daemon
 * some of the logging output is not very helpful
 * some of the documentation is still not up to date
-
-# IMPORTANT CHANGE:
-* sslproto 'tls1' enforces STARTTLS for POP3/IMAP and terminates the connection
-  if unsuccessful. The same configuration causes connection failure with POP2.
-  Reported by Isaac Wilcox.
-
-# BUG FIXES:
-* Repair --logfile, broken in 6.3.5. BerliOS Bug #9059,
-  reported by Brian Harring.
 
 fetchmail 6.3.5 (released 2006-10-09):
 

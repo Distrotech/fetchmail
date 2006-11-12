@@ -421,12 +421,10 @@ on context.
 (Keyword: sslcertck)
 Causes fetchmail to strictly check the server certificate against a set of
 local trusted certificates (see the \fBsslcertpath\fR option). If the server
-certificate is not signed by one of the trusted ones (directly or indirectly),
-the SSL connection will fail, regardless of the \fBsslfingerprint\fR
-option. This checking is required, but not sufficient, to prevent
-man-in-the-middle attacks against the SSL connection. Use \-\-ssl or
-\-\-sslproto to enforce SSL or TLS. Note that CRLs are seemingly not
-currently supported by OpenSSL in certificate verification! Your system
+certificate cannot be obtained or is not signed by one of the trusted ones
+(directly or indirectly), the SSL connection will fail, regardless of
+the \fBsslfingerprint\fR option.
+Note that CRL are only supported in OpenSSL 0.9.7 and newer! Your system
 clock should be reasonably accurate when using this option.
 .IP
 Note that this optional behavior may become default behavior in future
@@ -448,7 +446,8 @@ hex digits must be in upper case. This is the default format OpenSSL uses,
 and the one fetchmail uses to report the fingerprint when an SSL connection
 is established. When this is specified, fetchmail will compare the server key
 fingerprint with the given one, and the connection will fail if they do not
-match regardless of the \fBsslcertck\fR setting.
+match regardless of the \fBsslcertck\fR setting. The connection will
+also fail if fetchmail cannot obtain an SSL certificate from the server.
 This can be used to prevent man-in-the-middle attacks, but the finger
 print from the server needs to be obtained or verified over a secure
 channel, and certainly not over the same Internet connection that
@@ -1056,12 +1055,14 @@ protocols (default: v2 or v3).  The \-\-sslcertck command line or
 sslcertck run control file option should be used to force strict
 certificate checking - see below.
 .PP
-If SSL is not configured, fetchmail may opportunistically try to use
-TLS. It can be forced to use TLS by using \-\-sslproto "TLS1". TLS
+If SSL is not configured, fetchmail will usually opportunistically try to use
+TLS. TLS can be enforced by using \-\-sslproto "TLS1". TLS
 connections use the same port as the unencrypted version of the
-protocol. The \-\-sslcertck command line or sslcertck run control file
-option should be used to force strict certificate checking - see below.
+protocol and negotiate TLS via special parameter. The \-\-sslcertck
+command line or sslcertck run control file option should be used to
+force strict certificate checking - see below.
 .PP
+.B \-\-sslcheck recommended:
 When connecting to an SSL or TLS encrypted server, the server presents a certificate
 to the client for validation.  The certificate is checked to verify that
 the common name in the certificate matches the name of the server being
@@ -1086,13 +1087,13 @@ the certificate files is that required by the underlying SSL libraries
 .PP
 A word of care about the use of SSL: While above mentioned
 setup with self-signed server certificates retrieved over the wires
-can protect you from a passive eavesdropper it doesn't help against an
+can protect you from a passive eavesdropper, it doesn't help against an
 active attacker. It's clearly an improvement over sending the
-passwords in clear but you should be aware that a man-in-the-middle
+passwords in clear, but you should be aware that a man-in-the-middle
 attack is trivially possible (in particular with tools such as dsniff,
 http://monkey.org/~dugsong/dsniff/).  Use of strict certificate checking
 with a certification authority recognized by server and client, or
-perhaps of an ssh tunnel (see below for some examples) is preferable if
+perhaps of an SSH tunnel (see below for some examples) is preferable if
 you care seriously about the security of your mailbox and passwords.
 .SS ESMTP AUTH
 .PP
