@@ -1317,14 +1317,14 @@ int close_sink(struct query *ctl, struct msgblk *msg, flag forward)
     {
 	int rc,e,e2,err = 0;
 
-	if (ferror(sinkfp))
-	    err = 1, e2 = errno;
-	if ((fflush(sinkfp)))
-	    err = 1, e2 = errno;
-
 	/* close the delivery pipe, we'll reopen before next message */
 	if (sinkfp)
 	{
+	    if (ferror(sinkfp))
+		err = 1, e2 = errno;
+	    if ((fflush(sinkfp)))
+		err = 1, e2 = errno;
+
 	    errno = 0;
 	    rc = pclose(sinkfp);
 	    e = errno;

@@ -55,6 +55,9 @@ fetchmail 6.3.6 (not yet released):
   Reported by and fixed in cooperation with Isaac Wilcox.
 
 # BUG FIXES:
+* Repair regression in 6.3.5 that crashes fetchmail when a message with invalid
+  headers is found while fetchmail's mda option is in use. BerliOS bugs #9364,
+  #9412, #9449. Stack backtrace provided by Neil Hoggarth - thanks.
 * Repair --logfile, broken in 6.3.5. BerliOS Bug #9059,
   reported by Brian Harring.
 

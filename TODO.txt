@@ -1,9 +1,6 @@
 6.3.6:
 MUST DO:
 - enforce OpenSSL 0.9.7 for --sslcertck
-WILL NOT DEBUG THESE TWO WITHOUT BACKTRACE - CANNOT REPRODUCE:
-- investigate 6.3.5 regression on spam message (berlios bug #9364)
-- dito, bug #9412
 
 CODE:
 - check recent list mail
