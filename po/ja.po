@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.5\n"
+"Project-Id-Version: fetchmail 6.3.6-rc1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2006-11-12 23:14+0100\n"
-"PO-Revision-Date: 2006-10-13 23:02+0900\n"
+"PO-Revision-Date: 2006-11-15 00:04+0900\n"
 "Last-Translator: Takeshi Hamasaki <hma@syd.odn.ne.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -3060,6 +3060,9 @@ msgstr "malloc できませんでした。\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "realloc できませんでした。\n"
+
+#~ msgid "TLS connection failed.\n"
+#~ msgstr "TLS による接続に失敗しました。\n"
 
 #~ msgid "SIGPIPE thrown from an MDA or a stream socket error\n"
 #~ msgstr "MDA より SIGPIPE が発信されたか stream socket のエラーです。\n"
