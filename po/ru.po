@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail-6.3.6-rc1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-11-12 23:14+0100\n"
+"POT-Creation-Date: 2006-11-19 19:40+0100\n"
 "PO-Revision-Date: 2006-11-11 18:56+0200\n"
 "Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -1868,16 +1868,16 @@ msgstr "несовпадение запроса\n"
 msgid "fetchmail: error reading lockfile \"%s\": %s\n"
 msgstr "fetchmail: ошибка чтения файла блокировки \"%s\": %s\n"
 
-#: lock.c:96
+#: lock.c:97
 msgid "fetchmail: removing stale lockfile\n"
 msgstr "fetchmail: удаляется старый файл блокировки\n"
 
-#: lock.c:106
+#: lock.c:121
 #, c-format
 msgid "fetchmail: error opening lockfile \"%s\": %s\n"
 msgstr "fetchmail: ошибка открытия файла блокировки \"%s\": %s\n"
 
-#: lock.c:153
+#: lock.c:168
 msgid "fetchmail: lock creation failed.\n"
 msgstr "fetchmail: не удалось установить блокировку.\n"
 
@@ -3074,6 +3074,10 @@ msgstr "сбой malloc\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "сбой realloc\n"
+
+#, fuzzy
+#~ msgid "negative size for body: message %s@%s:%d (%d octets)\n"
+#~ msgstr "пропускается сообщение %s@%s:%d (%d октетов)"
 
 #~ msgid "TLS connection failed.\n"
 #~ msgstr "Сбой подключения через SSL.\n"

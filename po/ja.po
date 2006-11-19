@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.6-rc2\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-11-12 23:14+0100\n"
+"POT-Creation-Date: 2006-11-19 19:40+0100\n"
 "PO-Revision-Date: 2006-11-17 01:41+0900\n"
 "Last-Translator: Takeshi Hamasaki <hma@syd.odn.ne.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
@@ -1851,16 +1851,16 @@ msgstr "challenge の不一致です。\n"
 msgid "fetchmail: error reading lockfile \"%s\": %s\n"
 msgstr "fetchmail: ロックファイル \"%s\" の読み込みに失敗しました。: %s\n"
 
-#: lock.c:96
+#: lock.c:97
 msgid "fetchmail: removing stale lockfile\n"
 msgstr "fetchmail: 古いロックファイルを削除します。\n"
 
-#: lock.c:106
+#: lock.c:121
 #, c-format
 msgid "fetchmail: error opening lockfile \"%s\": %s\n"
 msgstr "fetchmail: ロックファイル \"%s\" を開けません。: %s\n"
 
-#: lock.c:153
+#: lock.c:168
 msgid "fetchmail: lock creation failed.\n"
 msgstr "fetchmail: ロックファイルの生成に失敗しました。\n"
 
@@ -3060,6 +3060,11 @@ msgstr "malloc できませんでした。\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "realloc できませんでした。\n"
+
+#, fuzzy
+#~ msgid "negative size for body: message %s@%s:%d (%d octets)\n"
+#~ msgstr ""
+#~ "%s@%s 宛に届いた %d 番目のメッセージ (%d バイト) を読み飛ばしています。"
 
 #~ msgid "TLS connection failed.\n"
 #~ msgstr "TLS による接続に失敗しました。\n"

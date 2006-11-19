@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.6-rc2\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-11-12 23:14+0100\n"
+"POT-Creation-Date: 2006-11-19 19:40+0100\n"
 "PO-Revision-Date: 2006-11-16 17:47+0100\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -1882,16 +1882,16 @@ msgstr "niezgodno¶æ wyzwania\n"
 msgid "fetchmail: error reading lockfile \"%s\": %s\n"
 msgstr "fetchmail: b³±d podczas odczytu pliku blokady \"%s\": %s\n"
 
-#: lock.c:96
+#: lock.c:97
 msgid "fetchmail: removing stale lockfile\n"
 msgstr "fetchmail: usuwam niewa¿ny plik blokady\n"
 
-#: lock.c:106
+#: lock.c:121
 #, c-format
 msgid "fetchmail: error opening lockfile \"%s\": %s\n"
 msgstr "fetchmail: b³±d podczas otwierania pliku blokady \"%s\": %s\n"
 
-#: lock.c:153
+#: lock.c:168
 msgid "fetchmail: lock creation failed.\n"
 msgstr "fetchmail: tworzenie blokady nie powiod³o siê.\n"
 
@@ -3088,3 +3088,7 @@ msgstr "b³±d malloc\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "b³±d realloc\n"
+
+#, fuzzy
+#~ msgid "negative size for body: message %s@%s:%d (%d octets)\n"
+#~ msgstr "pomijam list %s@%s:%d (%d bajtów)"

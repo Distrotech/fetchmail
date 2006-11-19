@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.6-rc2\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-11-12 23:14+0100\n"
+"POT-Creation-Date: 2006-11-19 19:40+0100\n"
 "PO-Revision-Date: 2006-11-19 13:45+1030\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
@@ -1842,16 +1842,16 @@ msgstr "yêu cầu không khớp\n"
 msgid "fetchmail: error reading lockfile \"%s\": %s\n"
 msgstr "fetchmail: gặp lỗi khi đọc tập tin khoá « %s »: %s\n"
 
-#: lock.c:96
+#: lock.c:97
 msgid "fetchmail: removing stale lockfile\n"
 msgstr "fetchmail: đang gỡ bỏ tập tin khoá cũ...\n"
 
-#: lock.c:106
+#: lock.c:121
 #, c-format
 msgid "fetchmail: error opening lockfile \"%s\": %s\n"
 msgstr "fetchmail:  gặp lỗi khi mở tập tin khoá « %s »: %s\n"
 
-#: lock.c:153
+#: lock.c:168
 msgid "fetchmail: lock creation failed.\n"
 msgstr "fetchmail: việc tạo khoá bị lỗi.\n"
 
@@ -3061,3 +3061,7 @@ msgstr "malloc (phân chia bộ nhớ) bị lỗi\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "realloc (phân chia lại bộ nhớ) bị lỗi\n"
+
+#, fuzzy
+#~ msgid "negative size for body: message %s@%s:%d (%d octets)\n"
+#~ msgstr "đang bỏ qua thư %s@%s:%d (%d octet)"

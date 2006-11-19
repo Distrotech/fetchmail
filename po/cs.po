@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail-6.2.6.alpha1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-11-12 23:14+0100\n"
+"POT-Creation-Date: 2006-11-19 19:40+0100\n"
 "PO-Revision-Date: 2005-07-03 03:57+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -1850,16 +1850,16 @@ msgstr "výzvy nesouhlasí\n"
 msgid "fetchmail: error reading lockfile \"%s\": %s\n"
 msgstr "fetchmail: odstraňuji starý soubor zámku\n"
 
-#: lock.c:96
+#: lock.c:97
 msgid "fetchmail: removing stale lockfile\n"
 msgstr "fetchmail: odstraňuji starý soubor zámku\n"
 
-#: lock.c:106
+#: lock.c:121
 #, fuzzy, c-format
 msgid "fetchmail: error opening lockfile \"%s\": %s\n"
 msgstr "fetchmail: odstraňuji starý soubor zámku\n"
 
-#: lock.c:153
+#: lock.c:168
 msgid "fetchmail: lock creation failed.\n"
 msgstr "fetchmail: tvorba zámku selhala.\n"
 
@@ -3043,6 +3043,10 @@ msgstr "malloc selhalo\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "realloc selhalo\n"
+
+#, fuzzy
+#~ msgid "negative size for body: message %s@%s:%d (%d octets)\n"
+#~ msgstr "přeskakuji zprávu %s@%s:%d (%d oktetů)"
 
 #, fuzzy
 #~ msgid "TLS connection failed.\n"

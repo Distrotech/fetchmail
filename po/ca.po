@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.5-b1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-11-12 23:14+0100\n"
+"POT-Creation-Date: 2006-11-19 19:40+0100\n"
 "PO-Revision-Date: 2006-08-31 19:22+0200\n"
 "Last-Translator: Ernest Adrogué Calveras <eadrogue@gmx.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
@@ -1877,16 +1877,16 @@ msgstr "el repte no encaixa\n"
 msgid "fetchmail: error reading lockfile \"%s\": %s\n"
 msgstr "fetchmail: error en llegir el fitxer de bloqueig \"%s\": %s\n"
 
-#: lock.c:96
+#: lock.c:97
 msgid "fetchmail: removing stale lockfile\n"
 msgstr "fetchmail: esborrant el fitxer de bloqueig antic\n"
 
-#: lock.c:106
+#: lock.c:121
 #, c-format
 msgid "fetchmail: error opening lockfile \"%s\": %s\n"
 msgstr "fetchmail: error en obrir el fitxer de bloqueig \"%s\": %s\n"
 
-#: lock.c:153
+#: lock.c:168
 msgid "fetchmail: lock creation failed.\n"
 msgstr "fetchmail: ha fallat la creació del bloqueig.\n"
 
@@ -3089,6 +3089,10 @@ msgstr "la rutina malloc ha fallat\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "la rutina realloc ha fallat\n"
+
+#, fuzzy
+#~ msgid "negative size for body: message %s@%s:%d (%d octets)\n"
+#~ msgstr "ometent el missatge %s@%s:%d (%d octets)"
 
 #, fuzzy
 #~ msgid "TLS connection failed.\n"
