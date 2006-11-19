@@ -5,7 +5,7 @@
 .\"
 .\" For license terms, see the file COPYING in this directory.
 .\"
-.TH fetchmail 1 "fetchmail 6.3.5" "fetchmail" "fetchmail reference manual"
+.TH fetchmail 1 "fetchmail 6.3.6" "fetchmail" "fetchmail reference manual"
 .SH NAME
 fetchmail \- fetch mail from a POP, IMAP, ETRN, or ODMR-capable server
 
@@ -425,7 +425,7 @@ certificate cannot be obtained or is not signed by one of the trusted ones
 (directly or indirectly), the SSL connection will fail, regardless of
 the \fBsslfingerprint\fR option.
 Note that CRL are only supported in OpenSSL 0.9.7 and newer! Your system
-clock should be reasonably accurate when using this option.
+clock should also be reasonably accurate when using this option.
 .IP
 Note that this optional behavior may become default behavior in future
 fetchmail versions.
