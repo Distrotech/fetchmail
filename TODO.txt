@@ -1,7 +1,3 @@
-6.3.6:
-MUST DO:
-- enforce OpenSSL 0.9.7 for --sslcertck
-
 CODE:
 - check recent list mail
 - check Debian BTS and other bug trackers
