@@ -41,23 +41,23 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 
 fetchmail 6.3.6 (not yet released):
 
-# SECURITY FIX (INCOMPATIBLE):
+# SECURITY FIX (CHANGES BEHAVIOR):
 * Using at least one of the options "sslproto 'tls1'", "sslfingerprint" or
   "sslcertck" enforces STARTTLS for POP3 and IMAP and terminates the connection
   if unsuccessful. The same configuration causes permanent connection failure
-  with POP2 unless --ssl is used.
+  with POP2, which is obsolete and does not support STLS.  fetchmail 6.3.5 and
+  older had no way to enforce TLS. With those older versions, TLS was always
+  opportunistic, but fetchmail would happily transmit the password in cleartext
+  if STARTTLS failed.  Reported by and fixed in cooperation with Isaac Wilcox.
 
-  fetchmail 6.3.5 and older had no way to enforce TLS. With those older
-  versions, TLS was always opportunistic, but fetchmail would happily transmit
-  the password in cleartext if STARTTLS failed. --ssl --sslcertck configurations
-  however have been safe.
+  Configurations using --ssl --sslcertck however have been safe.
 
-  Reported by and fixed in cooperation with Isaac Wilcox.
-
-# BUG FIXES:
+# SECURITY FIX:
 * Repair regression in 6.3.5 that crashes fetchmail when a message with invalid
   headers is found while fetchmail's mda option is in use. BerliOS bugs #9364,
   #9412, #9449. Stack backtrace provided by Neil Hoggarth - thanks.
+
+# BUG FIXES:
 * Repair --logfile, broken in 6.3.5. BerliOS Bug #9059,
   reported by Brian Harring.
 * Robustness: If a stale lockfile cannot be deleted, truncate it to avoid
