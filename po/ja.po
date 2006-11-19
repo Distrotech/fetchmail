@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.6-rc1\n"
+"Project-Id-Version: fetchmail 6.3.6-rc2\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2006-11-12 23:14+0100\n"
-"PO-Revision-Date: 2006-11-15 00:04+0900\n"
+"PO-Revision-Date: 2006-11-17 01:41+0900\n"
 "Last-Translator: Takeshi Hamasaki <hma@syd.odn.ne.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -1660,19 +1660,19 @@ msgid "will idle after poll\n"
 msgstr "接続の後、休止します。\n"
 
 #: imap.c:427 pop3.c:473
-#, fuzzy, c-format
+#, c-format
 msgid "%s: upgrade to TLS succeeded.\n"
-msgstr "%s: TLS へのアップグレードに適合。\n"
+msgstr "%s: TLS へのアップグレードに成功。\n"
 
 #: imap.c:435 pop3.c:481
-#, fuzzy, c-format
+#, c-format
 msgid "%s: upgrade to TLS failed.\n"
-msgstr "%s: TLS へのアップグレードに適合。\n"
+msgstr "%s: TLS へのアップグレードに失敗。\n"
 
 #: imap.c:442
-#, fuzzy, c-format
+#, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
-msgstr "%s: TLS へのアップグレードに適合。\n"
+msgstr "%s: TLS への適合的アップグレードに失敗、継続可能か試しています\n"
 
 #: imap.c:553
 msgid "Required OTP capability not compiled into fetchmail\n"
@@ -2254,9 +2254,9 @@ msgstr ""
 "します。\n"
 
 #: pop3.c:494
-#, fuzzy, c-format
+#, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
-msgstr "%s: TLS へのアップグレードに適合。\n"
+msgstr "%s: TLS への適合的アップグレードに失敗、継続可能か試しています。\n"
 
 #: pop3.c:603
 msgid "Required APOP timestamp not found in greeting\n"

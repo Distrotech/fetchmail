@@ -4,10 +4,10 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.5\n"
+"Project-Id-Version: fetchmail 6.3.6-rc2\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2006-11-12 23:14+0100\n"
-"PO-Revision-Date: 2006-10-14 14:33+0930\n"
+"PO-Revision-Date: 2006-11-19 13:45+1030\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 #: checkalias.c:174
 #, c-format
 msgid "Checking if %s is really the same node as %s\n"
-msgstr "Đang kiểm tra nếu %s thật sự là cùng một nút với %s...\n"
+msgstr "Đang kiểm tra nếu %s thật sự là cùng một nút với %s\n"
 
 #: checkalias.c:178
 msgid "Yes, their IP addresses match\n"
@@ -1653,19 +1653,20 @@ msgid "will idle after poll\n"
 msgstr "sẽ nghỉ sau khi thăm dò\n"
 
 #: imap.c:427 pop3.c:473
-#, fuzzy, c-format
+#, c-format
 msgid "%s: upgrade to TLS succeeded.\n"
-msgstr "%s: nâng cấp lên TLS một cách cơ hội chủ nghĩa.\n"
+msgstr "%s: việc nâng cấp lên TLS đã thành công.\n"
 
 #: imap.c:435 pop3.c:481
-#, fuzzy, c-format
+#, c-format
 msgid "%s: upgrade to TLS failed.\n"
-msgstr "%s: nâng cấp lên TLS một cách cơ hội chủ nghĩa.\n"
+msgstr "%s: việc nâng cấp lên TLS bị lỗi.\n"
 
 #: imap.c:442
-#, fuzzy, c-format
+#, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
-msgstr "%s: nâng cấp lên TLS một cách cơ hội chủ nghĩa.\n"
+msgstr ""
+"%s: việc nâng cấp lên TLS một cách cơ hội chủ nghĩa bị lỗi nên thử tiếp tục\n"
 
 #: imap.c:553
 msgid "Required OTP capability not compiled into fetchmail\n"
@@ -2259,9 +2260,11 @@ msgstr ""
 "thay vào TOP.\n"
 
 #: pop3.c:494
-#, fuzzy, c-format
+#, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
-msgstr "%s: nâng cấp lên TLS một cách cơ hội chủ nghĩa.\n"
+msgstr ""
+"%s: việc nâng cấp lên TLS một cách cơ hội chủ nghĩa bị lỗi nên thử tiếp "
+"tục.\n"
 
 #: pop3.c:603
 msgid "Required APOP timestamp not found in greeting\n"
