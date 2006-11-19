@@ -127,6 +127,8 @@ DISTDOCS=	FAQ FEATURES NOTES OLDNEWS fetchmail-man.html \
 		fetchmail-features.html README.SSL README.NTLM \
 		README.packaging \
 		fetchmail-FAQ.book fetchmail-FAQ.pdf fetchmail-FAQ.html \
+		fetchmail-SA-2006-03.txt \
+		fetchmail-SA-2006-02.txt \
 		fetchmail-SA-2006-01.txt \
 		fetchmail-SA-2005-01.txt \
 		fetchmail-SA-2005-02.txt \
