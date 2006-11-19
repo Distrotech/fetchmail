@@ -22,7 +22,8 @@ void fm_lock_release(void);
 
 /** Check the state of the lock file. If there is an error opening or
  * reading the lockfile, exit with PS_EXCLUDE. If a stale lock file
- * cannot be unlinked, complain, but continue.  \return
+ * cannot be unlinked, complain and try to truncate it to 0 size. If
+ * truncation fails, complain and exit with PS_EXCLUDE.  \return
  * -  0 if no lock is set
  * - >0 if a fetchmail is running, but not in daemon mode
  * - <0 if a fetchmail is running in daemon mode.

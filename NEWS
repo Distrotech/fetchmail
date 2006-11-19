@@ -60,6 +60,8 @@ fetchmail 6.3.6 (not yet released):
   #9412, #9449. Stack backtrace provided by Neil Hoggarth - thanks.
 * Repair --logfile, broken in 6.3.5. BerliOS Bug #9059,
   reported by Brian Harring.
+* Robustness: If a stale lockfile cannot be deleted, truncate it to avoid
+  trouble later if the PID is recycled by a non-fetchmail process.
 
 # TRANSLATIONS:
 * New en_GB (British English) translation by David Lodge.

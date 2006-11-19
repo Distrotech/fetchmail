@@ -91,12 +91,27 @@ int fm_lock_state(void)
 	fclose(lockfp); /* not checking should be safe, file mode was "r" */
 
 	if (args == EOF || args == 0 || kill(pid, 0) == -1) {
+	    /* ^ could not read PID  || process does not exist */
+	    /* => lockfile is stale, unlink it */
 	    pid = 0;
-
 	    fprintf(stderr,GT_("fetchmail: removing stale lockfile\n"));
 	    if (unlink(lockfile)) {
 	       if (errno != ENOENT) {
 		   perror(lockfile);
+		   /* we complain but we don't exit; it might be
+		    * writable for us, but in a directory we cannot
+		    * write to. This means we can write the new PID to
+		    * the file. Truncate to be safe in case the PID is
+		    * recycled by another process later.
+		    * \bug we should use fcntl() style locks or
+		    * something else instead in a future release. */
+		   if (truncate(lockfile, (off_t)0)) {
+		       /* but if we cannot truncate the file either,
+			* assume that we cannot write to it later,
+			* complain and quit. */
+		       perror(lockfile);
+		       exit(PS_EXCLUDE);
+		   }
 	       }
 	    }
 	}
