@@ -8,7 +8,7 @@ Announced:	2006-11-XX
 Type:		denial of service
 Impact:		fetchmail aborts prematurely
 Danger:		low
-Credits:	Neil Hoggart (bug report and analysis)
+Credits:	Neil Hoggarth (bug report and analysis)
 CVE Name:	CVE-2006-XXXX
 URL:		http://fetchmail.berlios.de/fetchmail-SA-2006-03.txt
 Project URL:	http://fetchmail.berlios.de/
