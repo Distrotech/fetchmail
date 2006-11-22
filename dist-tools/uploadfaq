@@ -1,5 +1,8 @@
 #!/bin/sh
 
+echo >&2 "this script $0 is outdated. Abort."
+exit 1
+
 version=`sed -n '/VERSION *= *\(.*\)/s//\1/p' <Makefile`
 echo "Uploading fetchmail version ${version} FAQ"
 
