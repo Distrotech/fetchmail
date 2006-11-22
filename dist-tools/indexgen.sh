@@ -2,6 +2,9 @@
 #
 # indexgen.sh -- generate current version of fetchmail home page.
 #
+echo "This script is hopelessly out of date. Abort." >&2
+exit 1
+
 goldvers="6.2.0"
 goldname="6.2.0"
 version=`sed -n <Makefile.in "/VERSION *= */s/VERSION *= *\([^ 	]*\)/\1/p"`
