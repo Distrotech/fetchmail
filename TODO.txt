@@ -1,3 +1,6 @@
+6.3.6:
+- move .html files from list archive to some doc directory
+
 CODE:
 - check recent list mail
 - check Debian BTS and other bug trackers
