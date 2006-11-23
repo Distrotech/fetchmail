@@ -65,9 +65,8 @@ fetchmail 6.3.6 (not yet released):
 
 # TRANSLATIONS:
 * New en_GB (British English) translation by David Lodge.
-* Update Japanese (Takeshi Hamasaki), Polish (Jakub Bogusz) and Vietnamese
-  (Clytie Siddall) translations.
-* Update (incompletely) Russian translation (Pavel Maryanov).
+* Update Japanese (Takeshi Hamasaki), Polish (Jakub Bogusz), Russian (Pavel
+  Maryanov) and Vietnamese (Clytie Siddall) translations.
 
 # KNOWN BUGS AND WORKAROUNDS:
   (this section floats upwards through the NEWS to be on top of the list)

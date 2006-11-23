@@ -1,4 +1,4 @@
-# Translation of fetchmail-6.3.6-rc1.po to Russian
+# Translation of fetchmail-6.3.6-rc3.po to Russian
 # Copyright (C) 2005 Eric S. Raymond
 # This file is distributed under the same license as the fetchmail package.
 #
@@ -6,10 +6,10 @@
 # Pavel Maryanov <acid_jack@ukr.net>, 2003, 2005, 2006.
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail-6.3.6-rc1\n"
+"Project-Id-Version: fetchmail 6.3.6-rc3\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2006-11-19 19:40+0100\n"
-"PO-Revision-Date: 2006-11-11 18:56+0200\n"
+"PO-Revision-Date: 2006-11-21 20:59+0200\n"
 "Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1676,19 +1676,21 @@ msgid "will idle after poll\n"
 msgstr "будет приостановлен после опроса\n"
 
 #: imap.c:427 pop3.c:473
-#, fuzzy, c-format
+#, c-format
 msgid "%s: upgrade to TLS succeeded.\n"
-msgstr "%s: обновление до TLS.\n"
+msgstr "%s: обновление до TLS выполнено успешно.\n"
 
 #: imap.c:435 pop3.c:481
-#, fuzzy, c-format
+#, c-format
 msgid "%s: upgrade to TLS failed.\n"
-msgstr "%s: обновление до TLS.\n"
+msgstr "%s: сбой обновления до TLS.\n"
 
 #: imap.c:442
-#, fuzzy, c-format
+#, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
-msgstr "%s: обновление до TLS.\n"
+msgstr ""
+"%s: сбой принудительного обновления до TLS; выполняется попытка продолжить "
+"работу\n"
 
 #: imap.c:553
 msgid "Required OTP capability not compiled into fetchmail\n"
@@ -2279,9 +2281,11 @@ msgstr ""
 "используется команда RETR.\n"
 
 #: pop3.c:494
-#, fuzzy, c-format
+#, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
-msgstr "%s: обновление до TLS.\n"
+msgstr ""
+"%s: сбой принудительного обновления до TLS; выполняется попытка продолжить "
+"работу.\n"
 
 #: pop3.c:603
 msgid "Required APOP timestamp not found in greeting\n"
@@ -3074,10 +3078,6 @@ msgstr "сбой malloc\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "сбой realloc\n"
-
-#, fuzzy
-#~ msgid "negative size for body: message %s@%s:%d (%d octets)\n"
-#~ msgstr "пропускается сообщение %s@%s:%d (%d октетов)"
 
 #~ msgid "TLS connection failed.\n"
 #~ msgstr "Сбой подключения через SSL.\n"
