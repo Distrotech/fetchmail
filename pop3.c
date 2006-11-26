@@ -41,6 +41,7 @@ static char lastok[POPBUFSIZE+1];
 #endif /* OPIE_ENABLE */
 
 /* session variables initialized in capa_probe() or pop3_getauth() */
+flag done_capa = FALSE;
 #if defined(GSSAPI)
 flag has_gssapi = FALSE;
 #endif /* defined(GSSAPI) */
@@ -238,6 +239,9 @@ static int capa_probe(int sock)
 {
     int	ok;
 
+    if (done_capa) {
+	return PS_SUCCESS;
+    }
 #if defined(GSSAPI)
     has_gssapi = FALSE;
 #endif /* defined(GSSAPI) */
@@ -278,6 +282,7 @@ static int capa_probe(int sock)
 	    if (strstr(buffer, "CRAM-MD5"))
 		has_cram = TRUE;
 	}
+	done_capa = TRUE;
     }
     return(ok);
 }
@@ -307,6 +312,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
     flag got_tls = FALSE;
 #endif /* SSL_ENABLE */
 
+    done_capa = FALSE;
 #if defined(GSSAPI)
     has_gssapi = FALSE;
 #endif /* defined(GSSAPI) */
@@ -441,6 +447,10 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	}
 
 #ifdef SSL_ENABLE
+	ok = capa_probe(sock);
+	if (ok != PS_SUCCESS) {
+	    return ok;
+	}
 	if (maybe_tls(ctl)) {
 	   if (has_stls)
 	   {
@@ -467,7 +477,11 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 		    * guarantee a secure capability re-probe.
 		    */
 		   got_tls = TRUE;
-		   (void)capa_probe(sock);
+		   done_capa = FALSE;
+		   ok = capa_probe(sock);
+		   if (ok != PS_SUCCESS) {
+		       return ok;
+		   }
 		   if (outlevel >= O_VERBOSE)
 		   {
 		       report(stdout, GT_("%s: upgrade to TLS succeeded.\n"), realhost);
