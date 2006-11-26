@@ -9,24 +9,25 @@ Type:		secret information disclosure
 Impact:		fetchmail can expose cleartext password over unsecure link
 		fetchmail may not detect man in the middle attacks
 Danger:		medium
-Credits:	Isaac Wilcox (bug report, collaboration on fix)
+Credits:	Isaac Wilcox (bug report, testing, collaboration on fix)
 CVE Name:	CVE-2006-5867
 URL:		http://fetchmail.berlios.de/fetchmail-SA-2006-02.txt
 Project URL:	http://fetchmail.berlios.de/
 
 Affects:	fetchmail releases <= 6.3.5
-		fetchmail release candidate 6.3.6-rc1
+		fetchmail release candidates 6.3.6-rc1, -rc2, -rc3
 
-Not affected:	fetchmail release candidate 6.3.6-rc2
+Not affected:	fetchmail release candidate 6.3.6-rc4
 		fetchmail release 6.3.6
 
-Corrected:	2006-11-12 fetchmail 6.3.6-rc2
+Corrected:	2006-11-26 fetchmail 6.3.6-rc4
 
 
 0. Release history
 ==================
 
-2006-11-12	internal review draft
+2006-11-16	v0.01 internal review draft
+2006-11-26	v0.02 revise failure cases, workaround, add acknowledgments
 
 
 1. Background
@@ -44,23 +45,42 @@ control) files for fetchmail.
 2. Problem description and Impact
 =================================
 
-Fetchmail has no configuration facility to enforce TLS connections.
-Configuring --sslproto 'tls1' does not cause connection aborts if TLS is
-not offered or the TLS handshake fails for POP3 or IMAP.
-Even if fetchmail is forced to validate an TLS certificate by means of
---sslfingerprint or --sslcertck, it may expose cleartext credentials
-over an unencrypted connection.
+Fetchmail has no configuration facility to enforce TLS connections. This
+can cause passwords to be sent over unencrypted channels in some cases:
 
-This can cause eavesdroppers to obtain the password without fetchmail's
-noticing.
+V1. sslcertck/sslfingerprint options should have implied "sslproto tls1"
+    in order to enforce TLS negotiation, but did not.
+
+V2. Even with "sslproto tls1" in the config, fetches would go ahead
+    in plain text if STLS/STARTTLS wasn't available (not advertised,
+    or advertised but rejected).
+
+V3. POP3 fetches would completely ignore all TLS options whether
+    available or not because it didn't issue CAPA before checking
+    for STLS support.
+
+This can cause eavesdroppers to obtain the password, depending on the
+authentication scheme that is configured or auto-selected, and
+subsequently impersonate somebody else when logging into the upstream
+server.
 
 
-3. Workaround
-=============
+3. Workarounds
+==============
 
-Use fetchmail --ssl --sslcertck --sslproto ssl3 (or equivalent in the
-run control file) if your upstream offers SSLv3-wrapped service on a
-dedicated port.
+W1. If your upstream offers SSLv3-wrapped service on a dedicated port,
+    use   fetchmail --ssl --sslcertck --sslproto ssl3   on the command line,
+    or equivalent in the run control file.  This encrypts the whole session.
+
+The next workarounds do not encrypt the channel, but get along without
+password or mask it:
+
+W2. If your upstream offers authentication schemes that don't require
+    cleartext credentials, use the --auth option to select a safe one, such
+    as Kerberos, GSSAPI, CRAM-MD5, or perhaps OTP.
+
+W3. For POP3, if the upstream server supports APOP, you can use
+    --protocol apop   to select APOP authentication.
 
 
 4. Solution
@@ -70,6 +90,12 @@ Download and install fetchmail 6.3.6 or a newer stable release from
 fetchmail's project site at
 <http://developer.berlios.de/project/showfiles.php?group_id=1824>.
 
+
+5. Acknowledgments
+==================
+
+Isaac Wilcox has been a great help with testing the fixes and getting
+them right.
 
 
 A. Copyright, License and Warranty
