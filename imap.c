@@ -369,6 +369,10 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 /* apply for connection authorization */
 {
     int ok = 0;
+#ifdef SSL_ENABLE
+    int got_tls = 0;
+    char *realhost;
+#endif
     (void)greeting;
 
     /*
@@ -393,64 +397,62 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
     }
 
 #ifdef SSL_ENABLE
-    if ((!ctl->sslproto || !strcasecmp(ctl->sslproto,"tls1"))
- 	&& !ctl->use_ssl
-	&& strstr(capabilities, "STARTTLS"))
-    {
-	char *realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;
+    realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;
 
-	/* Use "tls1" rather than ctl->sslproto because tls1 is the only
-	 * protocol that will work with STARTTLS.  Don't need to worry
-	 * whether TLS is mandatory or opportunistic unless SSLOpen() fails
-	 * (see below). */
-	if (gen_transact(sock, "STARTTLS") == PS_SUCCESS
-	    && SSLOpen(sock, ctl->sslcert, ctl->sslkey, "tls1", ctl->sslcertck,
-		       ctl->sslcertpath, ctl->sslfingerprint, realhost,
-		       ctl->server.pollname, &ctl->remotename) != -1)
+    if (maybe_tls(ctl)) {
+	if (strstr(capabilities, "STARTTLS"))
 	{
-	    /*
-	     * RFC 2595 says this:
-	     *
-	     * "Once TLS has been started, the client MUST discard cached
-	     * information about server capabilities and SHOULD re-issue the
-	     * CAPABILITY command.  This is necessary to protect against
-	     * man-in-the-middle attacks which alter the capabilities list prior
-	     * to STARTTLS.  The server MAY advertise different capabilities
-	     * after STARTTLS."
-	     *
-	     * Now that we're confident in our TLS connection we can
-	     * guarantee a secure capability re-probe.
-	     */
-	    capa_probe(sock, ctl);
-	    if (outlevel >= O_VERBOSE)
+	    /* Use "tls1" rather than ctl->sslproto because tls1 is the only
+	     * protocol that will work with STARTTLS.  Don't need to worry
+	     * whether TLS is mandatory or opportunistic unless SSLOpen() fails
+	     * (see below). */
+	    if (gen_transact(sock, "STARTTLS") == PS_SUCCESS
+		    && SSLOpen(sock, ctl->sslcert, ctl->sslkey, "tls1", ctl->sslcertck,
+			ctl->sslcertpath, ctl->sslfingerprint, realhost,
+			ctl->server.pollname, &ctl->remotename) != -1)
 	    {
-		report(stdout, GT_("%s: upgrade to TLS succeeded.\n"), realhost);
+		/*
+		 * RFC 2595 says this:
+		 *
+		 * "Once TLS has been started, the client MUST discard cached
+		 * information about server capabilities and SHOULD re-issue the
+		 * CAPABILITY command.  This is necessary to protect against
+		 * man-in-the-middle attacks which alter the capabilities list prior
+		 * to STARTTLS.  The server MAY advertise different capabilities
+		 * after STARTTLS."
+		 *
+		 * Now that we're confident in our TLS connection we can
+		 * guarantee a secure capability re-probe.
+		 */
+		got_tls = 1;
+		capa_probe(sock, ctl);
+		if (outlevel >= O_VERBOSE)
+		{
+		    report(stdout, GT_("%s: upgrade to TLS succeeded.\n"), realhost);
+		}
 	    }
 	}
-	else if (ctl->sslfingerprint || ctl->sslcertck
-		 || (ctl->sslproto && !strcasecmp(ctl->sslproto, "tls1")))
-	{
-	    /* Config required TLS but we couldn't guarantee it, so we must
-	     * stop. */
-	    report(stderr, GT_("%s: upgrade to TLS failed.\n"), realhost);
-	    return PS_SOCKET;
-	}
-	else
-	{
-	    if (outlevel >= O_VERBOSE)
-	    {
-		report(stdout, GT_("%s: opportunistic upgrade to TLS failed, trying to continue\n"), realhost);
+
+	if (!got_tls) {
+	    if (must_tls(ctl)) {
+		/* Config required TLS but we couldn't guarantee it, so we must
+		 * stop. */
+		report(stderr, GT_("%s: upgrade to TLS failed.\n"), realhost);
+		return PS_SOCKET;
+	    } else {
+		if (outlevel >= O_VERBOSE) {
+		    report(stdout, GT_("%s: opportunistic upgrade to TLS failed, trying to continue\n"), realhost);
+		}
+		/* We don't know whether the connection is in a working state, so
+		 * test by issuing a NOOP. */
+		if (gen_transact(sock, "NOOP") != PS_SUCCESS) {
+		    /* Not usable.  Empty sslproto to force an unencrypted
+		     * connection on the next attempt, and repoll. */
+		    ctl->sslproto = xstrdup("");
+		    return PS_REPOLL;
+		}
+		/* Usable.  Proceed with authenticating insecurely. */
 	    }
-	    /* We don't know whether the connection is in a working state, so
-	     * test by issuing a NOOP. */
-	    if (gen_transact(sock, "NOOP") != PS_SUCCESS)
-	    {
-		/* Not usable.  Empty sslproto to force an unencrypted
-		 * connection on the next attempt, and repoll. */
-		ctl->sslproto = xstrdup("");
-		return PS_REPOLL;
-	    }
-	    /* Usable.  Proceed with authenticating insecurely. */
 	}
     }
 #endif /* SSL_ENABLE */

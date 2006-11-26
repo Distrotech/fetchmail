@@ -304,6 +304,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 #ifdef SSL_ENABLE
     char *realhost = ctl->server.via ? ctl->server.via : ctl->server.pollname;
     flag connection_may_have_tls_errors = FALSE;
+    flag got_tls = FALSE;
 #endif /* SSL_ENABLE */
 
 #if defined(GSSAPI)
@@ -440,60 +441,59 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	}
 
 #ifdef SSL_ENABLE
-	if (has_stls
-	    && !ctl->use_ssl
-	    /* opportunistic   or    forced TLS */
-	    && (!ctl->sslproto || !strcasecmp(ctl->sslproto, "tls1")))
-	{
-	    /* Use "tls1" rather than ctl->sslproto because tls1 is the only
-	     * protocol that will work with STARTTLS.  Don't need to worry
-	     * whether TLS is mandatory or opportunistic unless SSLOpen() fails
-	     * (see below). */
-	    if (gen_transact(sock, "STLS") == PS_SUCCESS
-		&& SSLOpen(sock, ctl->sslcert, ctl->sslkey, "tls1", ctl->sslcertck,
+	if (maybe_tls(ctl)) {
+	   if (has_stls)
+	   {
+	       /* Use "tls1" rather than ctl->sslproto because tls1 is the only
+		* protocol that will work with STARTTLS.  Don't need to worry
+		* whether TLS is mandatory or opportunistic unless SSLOpen() fails
+		* (see below). */
+	       if (gen_transact(sock, "STLS") == PS_SUCCESS
+		       && SSLOpen(sock, ctl->sslcert, ctl->sslkey, "tls1", ctl->sslcertck,
 			   ctl->sslcertpath, ctl->sslfingerprint, realhost,
 			   ctl->server.pollname, &ctl->remotename) != -1)
-	    {
-		/*
-		 * RFC 2595 says this:
-		 *
-		 * "Once TLS has been started, the client MUST discard cached
-		 * information about server capabilities and SHOULD re-issue the
-		 * CAPABILITY command.  This is necessary to protect against
-		 * man-in-the-middle attacks which alter the capabilities list prior
-		 * to STARTTLS.  The server MAY advertise different capabilities
-		 * after STARTTLS."
-		 *
-		 * Now that we're confident in our TLS connection we can
-		 * guarantee a secure capability re-probe.
-		 */
-		(void)capa_probe(sock);
-		if (outlevel >= O_VERBOSE)
-		{
-		    report(stdout, GT_("%s: upgrade to TLS succeeded.\n"), realhost);
-		}
-	    }
-	    else if (ctl->sslfingerprint || ctl->sslcertck
-		    || (ctl->sslproto && !strcasecmp(ctl->sslproto, "tls1")))
-	    {
-		/* Config required TLS but we couldn't guarantee it, so we must
-		 * stop. */
-		report(stderr, GT_("%s: upgrade to TLS failed.\n"), realhost);
-		return PS_SOCKET;
-	    }
-	    else
-	    {
-		/* We don't know whether the connection is usable, and there's
-		 * no command we can reasonably issue to test it (NOOP isn't
-		 * allowed til post-authentication), so leave it in an unknown
-		 * state, mark it as such, and check more carefully if things
-		 * go wrong when we try to authenticate. */
-		connection_may_have_tls_errors = TRUE;
-		if (outlevel >= O_VERBOSE)
-		{
-		    report(stdout, GT_("%s: opportunistic upgrade to TLS failed, trying to continue.\n"), realhost);
-		}
-	    }
+	       {
+		   /*
+		    * RFC 2595 says this:
+		    *
+		    * "Once TLS has been started, the client MUST discard cached
+		    * information about server capabilities and SHOULD re-issue the
+		    * CAPABILITY command.  This is necessary to protect against
+		    * man-in-the-middle attacks which alter the capabilities list prior
+		    * to STARTTLS.  The server MAY advertise different capabilities
+		    * after STARTTLS."
+		    *
+		    * Now that we're confident in our TLS connection we can
+		    * guarantee a secure capability re-probe.
+		    */
+		   got_tls = TRUE;
+		   (void)capa_probe(sock);
+		   if (outlevel >= O_VERBOSE)
+		   {
+		       report(stdout, GT_("%s: upgrade to TLS succeeded.\n"), realhost);
+		   }
+	       }
+	   }
+
+	   if (!got_tls) {
+	       if (must_tls(ctl)) {
+		   /* Config required TLS but we couldn't guarantee it, so we must
+		    * stop. */
+		   report(stderr, GT_("%s: upgrade to TLS failed.\n"), realhost);
+		   return PS_SOCKET;
+	       } else {
+		   /* We don't know whether the connection is usable, and there's
+		    * no command we can reasonably issue to test it (NOOP isn't
+		    * allowed til post-authentication), so leave it in an unknown
+		    * state, mark it as such, and check more carefully if things
+		    * go wrong when we try to authenticate. */
+		   connection_may_have_tls_errors = TRUE;
+		   if (outlevel >= O_VERBOSE)
+		   {
+		       report(stdout, GT_("%s: opportunistic upgrade to TLS failed, trying to continue.\n"), realhost);
+		   }
+	       }
+	   }
 	}
 #endif /* SSL_ENABLE */
 
