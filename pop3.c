@@ -600,6 +600,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	 * don't! */
 	if (connection_may_have_tls_errors && ok == PS_SOCKET)
 	{
+	    xfree(ctl->sslproto);
 	    ctl->sslproto = xstrdup("");
 	    /* repoll immediately without TLS */
 	    ok = PS_REPOLL;
