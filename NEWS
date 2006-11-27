@@ -41,25 +41,40 @@ change.  MA = Matthias Andree, ESR = Eric S. Raymond, RF = Rob Funk.)
 
 fetchmail 6.3.6 (not yet released):
 
-# SECURITY FIX (CHANGES BEHAVIOR):
-* Using at least one of the options "sslproto 'tls1'", "sslfingerprint" or
-  "sslcertck" enforces STARTTLS for POP3 and IMAP and terminates the connection
-  if unsuccessful. The same configuration causes permanent connection failure
-  with POP2, which is obsolete and does not support STLS.  fetchmail 6.3.5 and
-  older had no way to enforce TLS. With those older versions, TLS was always
-  opportunistic, but fetchmail would happily transmit the password in cleartext
-  if STARTTLS failed.  Reported by and fixed in cooperation with Isaac Wilcox.
+# SECURITY FIXES (CHANGE BEHAVIOUR):
+* CVE-2006-5867, fetchmail-SA-2006-02.txt:
+  Password disclosure vulnerability. This has several aspects:
 
-  Configurations using --ssl --sslcertck however have been safe.
+  - Fetchmail now implies sslproto 'tls1' if the sslfingerprint or sslcertck
+    options are used, to be sure there is a certificate to check against.
+
+  - Fetchmail breaks the connection if the TLS negotiation (or verification, if
+    requested) fails with sslproto 'tls1' (also applies if this is implicit).
+
+  - POP3 connections ignored STLS altogether in many circumstances.
+
+  - POP3 connections could retry USER/PASS authentication even if strong
+    challenge-response schemes such as CRAM-MD5 had explicitly been requested,
+    if these were not advertised in the CAPA response.
+
+  - POP2 is obsolete and does not support STLS or anything beyond password-based
+    authentication. The attempt to use STLS or stronger authenticators causes
+    connection abort.
+
+  Configurations using --ssl --sslcertck however have been semi-safe in that
+  they would not expose the password over the wire.
 
 # SECURITY FIX:
-* Repair regression in 6.3.5 that crashes fetchmail when a message with invalid
+* CVE-2006-5974, fetchmail-SA-2006-03.txt:
+  Repair regression in 6.3.5 that crashes fetchmail when a message with invalid
   headers is found while fetchmail's mda option is in use. BerliOS bugs #9364,
   #9412, #9449. Stack backtrace provided by Neil Hoggarth - thanks.
 
 # BUG FIXES:
 * Repair --logfile, broken in 6.3.5. BerliOS Bug #9059,
   reported by Brian Harring.
+* POP3: Probe capabilities when Kerberos V5 is attempted.
+* RPOP: The password is now shrouded in the local logs.
 * Robustness: If a stale lockfile cannot be deleted, truncate it to avoid
   trouble later if the PID is recycled by a non-fetchmail process.
 

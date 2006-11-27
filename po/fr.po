@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.9-rc9\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-11-19 19:40+0100\n"
+"POT-Creation-Date: 2006-11-25 10:23+0100\n"
 "PO-Revision-Date: 2005-12-18 11:50+0100\n"
 "Last-Translator: Matthias Andree <matthias.andree@gmx.de>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -1703,87 +1703,87 @@ msgstr "Protocole identifié comme étant IMAP2 ou IMAP2BIS\n"
 msgid "will idle after poll\n"
 msgstr "attendra après la réception\n"
 
-#: imap.c:427 pop3.c:473
+#: imap.c:431 pop3.c:473
 #, c-format
 msgid "%s: upgrade to TLS succeeded.\n"
 msgstr ""
 
-#: imap.c:435 pop3.c:481
+#: imap.c:440 pop3.c:482
 #, c-format
 msgid "%s: upgrade to TLS failed.\n"
 msgstr ""
 
-#: imap.c:442
+#: imap.c:444
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
 msgstr ""
 
-#: imap.c:553
+#: imap.c:555
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "La fonctionnalité OTP requise n'est pas supportée par fetchmail\n"
 
-#: imap.c:575 pop3.c:373
+#: imap.c:577 pop3.c:374
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "La fonctionnalité NTLM requise n'est pas supportée par fetchmail.\n"
 
-#: imap.c:584
+#: imap.c:586
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "La fonction LOGIN requise n'est pas supportée par le serveur\n"
 
-#: imap.c:648
+#: imap.c:650
 #, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
 msgstr ""
 "pas de concordance de la punge des messages (%d effectiv != %d attendue)\n"
 
-#: imap.c:752 imap.c:811
+#: imap.c:754 imap.c:813
 msgid "re-poll failed\n"
 msgstr "échec durant la re-réception\n"
 
-#: imap.c:760 imap.c:816
+#: imap.c:762 imap.c:818
 #, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
 msgstr[0] "%d message en attente après le nouveau poll\n"
 msgstr[1] "%d messages en attente après le nouveau poll\n"
 
-#: imap.c:777
+#: imap.c:779
 msgid "mailbox selection failed\n"
 msgstr "échec de la sélection de boîte aux lettres\n"
 
-#: imap.c:781
+#: imap.c:783
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
 msgstr[0] "%d message en attente après le premier poll\n"
 msgstr[1] "%d messages en attente après le premier poll\n"
 
-#: imap.c:795
+#: imap.c:797
 msgid "expunge failed\n"
 msgstr "échec de la purge\n"
 
-#: imap.c:799
+#: imap.c:801
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
 msgstr[0] "%d message en attente après la purge\n"
 msgstr[1] "%d messages en attente après la purge\n"
 
-#: imap.c:841
+#: imap.c:843
 msgid "search for unseen messages failed\n"
 msgstr "échec de la recherche des messages non-vus\n"
 
-#: imap.c:869
+#: imap.c:871
 #, c-format
 msgid "%lu is unseen\n"
 msgstr "%lu n'est pas vu\n"
 
-#: imap.c:881 pop3.c:801
+#: imap.c:883 pop3.c:801
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u est le premier a n'avoir pas été vu\n"
 
-#: imap.c:972
+#: imap.c:974
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""
@@ -2299,7 +2299,7 @@ msgid "      --showdots    show progress dots even in logfiles\n"
 msgstr ""
 "      --showdots    affiche des points de progression, même dans le journal\n"
 
-#: pop3.c:343
+#: pop3.c:344
 msgid ""
 "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
 "of TOP.\n"
@@ -2307,7 +2307,7 @@ msgstr ""
 "Avertissement: trouvé «Maillennium POP3/PROXY server», la commande RETR est "
 "utilisé au lieu de TOP.\n"
 
-#: pop3.c:494
+#: pop3.c:493
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
 msgstr ""

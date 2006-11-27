@@ -45,8 +45,8 @@ control) files for fetchmail.
 2. Problem description and Impact
 =================================
 
-Fetchmail has no configuration facility to enforce TLS connections. This
-can cause passwords to be sent over unencrypted channels in some cases:
+Fetchmail has has several nasty password disclosure vulnerabilities for
+a long time. It was only recently that these have been found.
 
 V1. sslcertck/sslfingerprint options should have implied "sslproto tls1"
     in order to enforce TLS negotiation, but did not.
@@ -55,9 +55,16 @@ V2. Even with "sslproto tls1" in the config, fetches would go ahead
     in plain text if STLS/STARTTLS wasn't available (not advertised,
     or advertised but rejected).
 
-V3. POP3 fetches would completely ignore all TLS options whether
-    available or not because it didn't issue CAPA before checking
-    for STLS support.
+V3. POP3 fetches could completely ignore all TLS options whether
+    available or not because it didn't reliably issue CAPA before
+    checking for STLS support, and it would only try STLS if it had seen
+    the server's advertisement.
+
+V4. POP3 could fall back to using plain text passwords, even if strong
+    authentication had been configured.
+
+V5. POP2 would not complain if strong authentication or TLS had been
+    requested.
 
 This can cause eavesdroppers to obtain the password, depending on the
 authentication scheme that is configured or auto-selected, and
@@ -65,22 +72,12 @@ subsequently impersonate somebody else when logging into the upstream
 server.
 
 
-3. Workarounds
-==============
+3. Workaround
+=============
 
-W1. If your upstream offers SSLv3-wrapped service on a dedicated port,
-    use   fetchmail --ssl --sslcertck --sslproto ssl3   on the command line,
-    or equivalent in the run control file.  This encrypts the whole session.
-
-The next workarounds do not encrypt the channel, but get along without
-password or mask it:
-
-W2. If your upstream offers authentication schemes that don't require
-    cleartext credentials, use the --auth option to select a safe one, such
-    as Kerberos, GSSAPI, CRAM-MD5, or perhaps OTP.
-
-W3. For POP3, if the upstream server supports APOP, you can use
-    --protocol apop   to select APOP authentication.
+If your upstream offers SSLv3-wrapped service on a dedicated port,
+use   fetchmail --ssl --sslcertck --sslproto ssl3   on the command line,
+or equivalent in the run control file.  This encrypts the whole session.
 
 
 4. Solution

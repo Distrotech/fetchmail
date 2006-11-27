@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail-6.2.6.alpha1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-11-19 19:40+0100\n"
+"POT-Creation-Date: 2006-11-25 10:23+0100\n"
 "PO-Revision-Date: 2005-07-03 03:57+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -1655,45 +1655,45 @@ msgstr "Protokol rozpoznán jako IMAP2 nebo IMAP2BIS\n"
 msgid "will idle after poll\n"
 msgstr "po stahování budu nečinný\n"
 
-#: imap.c:427 pop3.c:473
+#: imap.c:431 pop3.c:473
 #, c-format
 msgid "%s: upgrade to TLS succeeded.\n"
 msgstr ""
 
-#: imap.c:435 pop3.c:481
+#: imap.c:440 pop3.c:482
 #, c-format
 msgid "%s: upgrade to TLS failed.\n"
 msgstr ""
 
-#: imap.c:442
+#: imap.c:444
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
 msgstr ""
 
-#: imap.c:553
+#: imap.c:555
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "Fetchmail byl přeložen bez podpory pro požadovanou schopnost OTP\n"
 
-#: imap.c:575 pop3.c:373
+#: imap.c:577 pop3.c:374
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "Fetchmail byl přeložen bez podpory pro požadovanou schopnost NTLM\n"
 
-#: imap.c:584
+#: imap.c:586
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "Server nepodporuje požadovanou schopnost LOGIN\n"
 
-#: imap.c:648
+#: imap.c:650
 #, fuzzy, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
 msgstr ""
 "zpráva %s@%s:%d nemá očekávanou velikost (%d ve skutečnosti != %d "
 "očekáváno)\n"
 
-#: imap.c:752 imap.c:811
+#: imap.c:754 imap.c:813
 msgid "re-poll failed\n"
 msgstr "opakované stahování selhalo\n"
 
-#: imap.c:760 imap.c:816
+#: imap.c:762 imap.c:818
 #, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
@@ -1701,12 +1701,12 @@ msgstr[0] "%d zpráva čeká po opětovném stahování\n"
 msgstr[1] "%d zprávy čekají po opětovném stahování\n"
 msgstr[2] "%d zpráv čeká po opětovném stahování\n"
 
-#: imap.c:777
+#: imap.c:779
 msgid "mailbox selection failed\n"
 msgstr "výběr poštovní schránky selhal\n"
 
 # c-format
-#: imap.c:781
+#: imap.c:783
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
@@ -1714,11 +1714,11 @@ msgstr[0] "%d zpráva čeká po prvním stahování\n"
 msgstr[1] "%d zprávy čekají po prvním stahování\n"
 msgstr[2] "%d zpráv čeká po prvním stahování\n"
 
-#: imap.c:795
+#: imap.c:797
 msgid "expunge failed\n"
 msgstr "čištění selhalo\n"
 
-#: imap.c:799
+#: imap.c:801
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
@@ -1726,21 +1726,21 @@ msgstr[0] "%d zpráva čeká po vyčištění\n"
 msgstr[1] "%d zprávy čekají po vyčištění\n"
 msgstr[2] "%d zpráv čeká po vyčištění\n"
 
-#: imap.c:841
+#: imap.c:843
 msgid "search for unseen messages failed\n"
 msgstr "hledání nepřečtených zpráv selhalo\n"
 
-#: imap.c:869
+#: imap.c:871
 #, fuzzy, c-format
 msgid "%lu is unseen\n"
 msgstr "%u nebyla přečtena\n"
 
-#: imap.c:881 pop3.c:801
+#: imap.c:883 pop3.c:801
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u je první nepřečtená\n"
 
-#: imap.c:972
+#: imap.c:974
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""
@@ -2243,13 +2243,13 @@ msgid "      --showdots    show progress dots even in logfiles\n"
 msgstr ""
 "      --showdots    zobrazovat tečky průběhu i v souborech se záznamy\n"
 
-#: pop3.c:343
+#: pop3.c:344
 msgid ""
 "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
 "of TOP.\n"
 msgstr ""
 
-#: pop3.c:494
+#: pop3.c:493
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
 msgstr ""

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.6-rc2\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-11-19 19:40+0100\n"
+"POT-Creation-Date: 2006-11-25 10:23+0100\n"
 "PO-Revision-Date: 2006-11-16 17:47+0100\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -1685,43 +1685,43 @@ msgstr "Protokó³ rozpoznany jako IMAP2 lub IMAP2BIS\n"
 msgid "will idle after poll\n"
 msgstr "przejdzie w stan bezczynno¶ci po odpytaniu\n"
 
-#: imap.c:427 pop3.c:473
+#: imap.c:431 pop3.c:473
 #, c-format
 msgid "%s: upgrade to TLS succeeded.\n"
 msgstr "%s: przej¶cie na TLS powiod³o siê.\n"
 
-#: imap.c:435 pop3.c:481
+#: imap.c:440 pop3.c:482
 #, c-format
 msgid "%s: upgrade to TLS failed.\n"
 msgstr "%s: przej¶cie na TLS nie powiod³o siê.\n"
 
-#: imap.c:442
+#: imap.c:444
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
 msgstr "%s: zgodne przej¶cie na TLS nie powiod³o siê, próba kontynuacji\n"
 
-#: imap.c:553
+#: imap.c:555
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "Wymagana metoda uwierzytelnienia OTP nie wkompilowana w fetchmaila\n"
 
-#: imap.c:575 pop3.c:373
+#: imap.c:577 pop3.c:374
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "Wymagana metoda uwierzytelnienia NTLM nie wkompilowana w fetchmaila\n"
 
-#: imap.c:584
+#: imap.c:586
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "Serwer nie obs³uguje wymaganej metody uwierzytelnienia LOGIN\n"
 
-#: imap.c:648
+#: imap.c:650
 #, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
 msgstr "niezgodno¶æ przy usuwaniu poczty (faktyczna %d != oczekiwana %d)\n"
 
-#: imap.c:752 imap.c:811
+#: imap.c:754 imap.c:813
 msgid "re-poll failed\n"
 msgstr "ponowne po³±czenie nie powiod³o siê\n"
 
-#: imap.c:760 imap.c:816
+#: imap.c:762 imap.c:818
 #, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
@@ -1729,11 +1729,11 @@ msgstr[0] "%d list oczekuj±cy po ponownym pobraniu\n"
 msgstr[1] "%d listy oczekuj±ce po ponownym pobraniu\n"
 msgstr[2] "%d listów oczekuj±cych po ponownym pobraniu\n"
 
-#: imap.c:777
+#: imap.c:779
 msgid "mailbox selection failed\n"
 msgstr "wybór skrzynki zakoñczy³ siê niepowodzeniem\n"
 
-#: imap.c:781
+#: imap.c:783
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
@@ -1741,11 +1741,11 @@ msgstr[0] "%d list oczekuj±cy po pierwszym pobraniu\n"
 msgstr[1] "%d listy oczekuj±ce po pierwszym pobraniu\n"
 msgstr[2] "%d listów oczekuj±cych po pierwszym pobraniu\n"
 
-#: imap.c:795
+#: imap.c:797
 msgid "expunge failed\n"
 msgstr "usuwanie nie powiod³o siê\n"
 
-#: imap.c:799
+#: imap.c:801
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
@@ -1753,21 +1753,21 @@ msgstr[0] "%d list oczekuj±cy po usuwaniu\n"
 msgstr[1] "%d listy oczekuj±ce po usuwaniu\n"
 msgstr[2] "%d listów oczekuj±cych po usuwaniu\n"
 
-#: imap.c:841
+#: imap.c:843
 msgid "search for unseen messages failed\n"
 msgstr "poszukiwanie nieprzeczytanych listów nie powiod³o siê\n"
 
-#: imap.c:869
+#: imap.c:871
 #, c-format
 msgid "%lu is unseen\n"
 msgstr "%lu jest nieprzeczytany\n"
 
-#: imap.c:881 pop3.c:801
+#: imap.c:883 pop3.c:801
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u jest pierwszym nieprzeczytanym\n"
 
-#: imap.c:972
+#: imap.c:974
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""
@@ -2285,7 +2285,7 @@ msgid "      --showdots    show progress dots even in logfiles\n"
 msgstr ""
 "      --showdots    pokazuje kropki oznaczaj±ce postêp tak¿e w logach\n"
 
-#: pop3.c:343
+#: pop3.c:344
 msgid ""
 "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
 "of TOP.\n"
@@ -2293,7 +2293,7 @@ msgstr ""
 "Uwaga: Odkryto serwer \"POP3/PROXY Maillennium\", u¿ycie polecenia RETR "
 "zamiast TOP.\n"
 
-#: pop3.c:494
+#: pop3.c:493
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
 msgstr "%s: zgodne przej¶cie na TLS nie powiod³o siê, próba kontynuacji.\n"

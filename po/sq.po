@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.9-rc9\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-11-19 19:40+0100\n"
+"POT-Creation-Date: 2006-11-25 10:23+0100\n"
 "PO-Revision-Date: 2005-11-18 22:25+0200\n"
 "Last-Translator: Besnik Bleta <besnik@spymac.com>\n"
 "Language-Team: Albanian <translation-team-sq@lists.sourceforge.net>\n"
@@ -1689,87 +1689,87 @@ msgstr "Protokoll i identifikuar si IMAP2 ose IMAP2BIS\n"
 msgid "will idle after poll\n"
 msgstr "do të rrijë bosh pas vjeljeje\n"
 
-#: imap.c:427 pop3.c:473
+#: imap.c:431 pop3.c:473
 #, c-format
 msgid "%s: upgrade to TLS succeeded.\n"
 msgstr ""
 
-#: imap.c:435 pop3.c:481
+#: imap.c:440 pop3.c:482
 #, c-format
 msgid "%s: upgrade to TLS failed.\n"
 msgstr ""
 
-#: imap.c:442
+#: imap.c:444
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
 msgstr ""
 
-#: imap.c:553
+#: imap.c:555
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "Aftësi e nevojshme OTP e papërpiluar tek fetchmail-i\n"
 
-#: imap.c:575 pop3.c:373
+#: imap.c:577 pop3.c:374
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "Aftësi e nevojshme NTML e papërpiluar tek fetchmail-i\n"
 
-#: imap.c:584
+#: imap.c:586
 msgid "Required LOGIN capability not supported by server\n"
 msgstr "Aftësi e nevojshme LOGIN e pambuluar prej shërbyesit\n"
 
-#: imap.c:648
+#: imap.c:650
 #, fuzzy, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
 msgstr ""
 "mesazhi %s@%s:%d nuk pat gjatësinë e pritur (%d aktualja != %d e pritshmja)\n"
 
-#: imap.c:752 imap.c:811
+#: imap.c:754 imap.c:813
 msgid "re-poll failed\n"
 msgstr "rivjelja dështoi\n"
 
-#: imap.c:760 imap.c:816
+#: imap.c:762 imap.c:818
 #, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
 msgstr[0] "%d mesazh në pritje pas rivjeljes\n"
 msgstr[1] "%d mesazhe në pritje pas rivjeljes\n"
 
-#: imap.c:777
+#: imap.c:779
 msgid "mailbox selection failed\n"
 msgstr "përzgjedhja e kutisë postare dështoi\n"
 
-#: imap.c:781
+#: imap.c:783
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
 msgstr[0] "%d mesazh në pritje pas vjeljes së parë\n"
 msgstr[1] "%d mesazhe në pritje pas vjeljes së parë\n"
 
-#: imap.c:795
+#: imap.c:797
 msgid "expunge failed\n"
 msgstr "shuarja dështoi\n"
 
-#: imap.c:799
+#: imap.c:801
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
 msgstr[0] "%d mesazh në pritje pas shuarjes\n"
 msgstr[1] "%d mesazhe në pritje pas shuarjes\n"
 
-#: imap.c:841
+#: imap.c:843
 msgid "search for unseen messages failed\n"
 msgstr "kërkimi për mesazhe të pavërejtur dështoi\n"
 
-#: imap.c:869
+#: imap.c:871
 #, fuzzy, c-format
 msgid "%lu is unseen\n"
 msgstr "%u është i pavërejtur\n"
 
-#: imap.c:881 pop3.c:801
+#: imap.c:883 pop3.c:801
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u është i pari i pavërejtur\n"
 
-#: imap.c:972
+#: imap.c:974
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""
@@ -2272,13 +2272,13 @@ msgstr "  -r, --folder      cakto emër dosjeje të largët\n"
 msgid "      --showdots    show progress dots even in logfiles\n"
 msgstr "      --showdots    shfaq pika përparimi edhe në kartela regjistrimi\n"
 
-#: pop3.c:343
+#: pop3.c:344
 msgid ""
 "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
 "of TOP.\n"
 msgstr ""
 
-#: pop3.c:494
+#: pop3.c:493
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
 msgstr ""
