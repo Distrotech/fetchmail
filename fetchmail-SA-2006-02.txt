@@ -3,7 +3,7 @@ fetchmail-SA-2006-02: TLS enforcement problem/MITM attack/password exposure
 Topics:		fetchmail cannot enforce TLS
 
 Author:		Matthias Andree
-Version:	1.0
+Version:	XXX
 Announced:	2006-11-XX
 Type:		secret information disclosure
 Impact:		fetchmail can expose cleartext password over unsecure link
@@ -28,6 +28,7 @@ Corrected:	2006-11-26 fetchmail 6.3.6-rc4
 
 2006-11-16	v0.01 internal review draft
 2006-11-26	v0.02 revise failure cases, workaround, add acknowledgments
+2006-11-27	v0.03 add more vulnerabilities
 
 
 1. Background
@@ -45,7 +46,7 @@ control) files for fetchmail.
 2. Problem description and Impact
 =================================
 
-Fetchmail has has several nasty password disclosure vulnerabilities for
+Fetchmail has had several nasty password disclosure vulnerabilities for
 a long time. It was only recently that these have been found.
 
 V1. sslcertck/sslfingerprint options should have implied "sslproto tls1"
