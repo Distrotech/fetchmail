@@ -232,7 +232,7 @@ int main(int argc, char **argv)
 	"-IMAP"
 #endif /* IMAP_ENABLE */
 #ifdef GSSAPI
-	"+IMAP-GSS"
+	"+GSS"
 #endif /* GSSAPI */
 #ifdef RPA_ENABLE
 	"+RPA"
