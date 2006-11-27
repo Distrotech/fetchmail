@@ -610,7 +610,9 @@ static int imap_getauth(int sock, struct query *ctl, char *greeting)
 
 	snprintf(shroud, sizeof (shroud), "\"%s\"", password);
 	ok = gen_transact(sock, "LOGIN \"%s\" \"%s\"", remotename, password);
+	memset(shroud, 0x55, sizeof(shroud));
 	shroud[0] = '\0';
+	memset(password, 0x55, strlen(password));
 	free(password);
 	free(remotename);
 	if (ok)

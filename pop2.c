@@ -70,6 +70,7 @@ static int pop2_getauth(int sock, struct query *ctl, char *buf)
     status = gen_transact(sock,
 		  "HELO %s %s",
 		  ctl->remotename, ctl->password);
+    memset(shroud, 0x55, sizeof(shroud));
     shroud[0] = '\0';
     return status;
 }
