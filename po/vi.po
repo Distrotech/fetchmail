@@ -4,17 +4,17 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.6-rc2\n"
+"Project-Id-Version: fetchmail 6.3.6-rc3\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-11-25 10:23+0100\n"
-"PO-Revision-Date: 2006-11-19 13:45+1030\n"
+"POT-Creation-Date: 2006-11-27 04:04+0100\n"
+"PO-Revision-Date: 2006-11-25 16:50+1030\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: LocFactoryEditor 1.6fc1\n"
+"X-Generator: Mac PO Editor 1.0a9\n"
 
 #: checkalias.c:174
 #, c-format
@@ -1652,12 +1652,12 @@ msgstr "Giao thức được phát hiện là IMAP2 hay IMAP2BIS\n"
 msgid "will idle after poll\n"
 msgstr "sẽ nghỉ sau khi thăm dò\n"
 
-#: imap.c:431 pop3.c:473
+#: imap.c:431 pop3.c:501
 #, c-format
 msgid "%s: upgrade to TLS succeeded.\n"
 msgstr "%s: việc nâng cấp lên TLS đã thành công.\n"
 
-#: imap.c:440 pop3.c:482
+#: imap.c:440 pop3.c:510
 #, c-format
 msgid "%s: upgrade to TLS failed.\n"
 msgstr "%s: việc nâng cấp lên TLS bị lỗi.\n"
@@ -1672,7 +1672,7 @@ msgstr ""
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "Khả năng OTP cần thiết không được biên dịch vào fetchmail\n"
 
-#: imap.c:577 pop3.c:374
+#: imap.c:577 pop3.c:380
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "Khả năng NTLM cần thiết không được biên dịch vào fetchmail\n"
 
@@ -1681,56 +1681,56 @@ msgid "Required LOGIN capability not supported by server\n"
 msgstr ""
 "Khả năng LOGIN (đăng nhập) cần thiết không được hỗ trợ bởi máy phục vụ\n"
 
-#: imap.c:650
+#: imap.c:652
 #, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
 msgstr "không khớp được khi xoá hẳn thư (%d thật != %d ngờ)\n"
 
-#: imap.c:754 imap.c:813
+#: imap.c:756 imap.c:815
 msgid "re-poll failed\n"
 msgstr "việc thăm dò lại bị lỗi\n"
 
-#: imap.c:762 imap.c:818
+#: imap.c:764 imap.c:820
 #, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
 msgstr[0] "%d thư đợi sau khi thăm dò lại\n"
 
-#: imap.c:779
+#: imap.c:781
 msgid "mailbox selection failed\n"
 msgstr "việc chọn hộp thư bị lỗi\n"
 
-#: imap.c:783
+#: imap.c:785
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
 msgstr[0] "%d thư đợi sau khi thăm dò lần thứ nhất\n"
 
-#: imap.c:797
+#: imap.c:799
 msgid "expunge failed\n"
 msgstr "việc xoá hẳn bị lỗi\n"
 
-#: imap.c:801
+#: imap.c:803
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
 msgstr[0] "%d thư đợi sau khi xoá hẳn\n"
 
-#: imap.c:843
+#: imap.c:845
 msgid "search for unseen messages failed\n"
 msgstr "việc tìm kiếm các thư chưa xem bị lỗi\n"
 
-#: imap.c:871
+#: imap.c:873
 #, c-format
 msgid "%lu is unseen\n"
 msgstr "%lu chưa xem\n"
 
-#: imap.c:883 pop3.c:801
+#: imap.c:885 pop3.c:842
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u là thư đầu chưa xem\n"
 
-#: imap.c:974
+#: imap.c:976
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
 msgstr ""
@@ -1927,7 +1927,7 @@ msgstr "recv (nhận) của máy phục vụ là nghiêm trọng\n"
 msgid "Could not decode OTP challenge\n"
 msgstr "Không thể giải mã yêu cầu OTP\n"
 
-#: opie.c:64 pop3.c:565
+#: opie.c:64 pop3.c:593
 msgid "Secret pass phrase: "
 msgstr "Cụm từ mật khẩu bí mật: "
 
@@ -2027,7 +2027,7 @@ msgstr ""
 #: options.c:600
 msgid "  -i, --idfile      specify alternate UIDs file\n"
 msgstr ""
-"   -i, --idfile      xác định _tập tin nhận diện_ người dùng (UID) xen kẽ\n"
+"  -i, --idfile      xác định _tập tin nhận diện_ người dùng (UID) xen kẽ\n"
 
 #: options.c:601
 msgid "      --pidfile     specify alternate PID (lock) file\n"
@@ -2251,7 +2251,7 @@ msgid "      --showdots    show progress dots even in logfiles\n"
 msgstr ""
 "      --showdots    _hiện các chấm_ tiến hành ngay cả trong tập tin ghi lưu\n"
 
-#: pop3.c:344
+#: pop3.c:350
 msgid ""
 "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
 "of TOP.\n"
@@ -2259,63 +2259,67 @@ msgstr ""
 "Cảnh báo : tìm thấy « Maillennium POP3/PROXY server » nên dùng lệnh RETR "
 "thay vào TOP.\n"
 
-#: pop3.c:493
+#: pop3.c:521
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
 msgstr ""
 "%s: việc nâng cấp lên TLS một cách cơ hội chủ nghĩa bị lỗi nên thử tiếp "
 "tục.\n"
 
-#: pop3.c:603
+#: pop3.c:615
+msgid "We've run out of allowed authenticators and cannot continue.\n"
+msgstr ""
+
+#: pop3.c:640
 msgid "Required APOP timestamp not found in greeting\n"
 msgstr "Không tìm thấy nhãn thời gian APOP cần thiết trong lời chào mừng\n"
 
-#: pop3.c:612
+#: pop3.c:649
 msgid "Timestamp syntax error in greeting\n"
 msgstr "Gặp lỗi cú pháp nhãn thời gian trong lời chào mừng\n"
 
-#: pop3.c:634
+#: pop3.c:675
 msgid "Undefined protocol request in POP3_auth\n"
 msgstr ""
 "Gặp yêu cầu giao thức không được xác định trong « POP3_auth » (xác thực)\n"
 
-#: pop3.c:642
+#: pop3.c:683
 msgid "lock busy!  Is another session active?\n"
 msgstr "khoá bận ! Có phiên chạy khác hoạt động không?\n"
 
-#: pop3.c:721
+#: pop3.c:762
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "Không thể xử lý đáp ứng UIDL từ máy phục vụ nguồn.\n"
 
-#: pop3.c:744
+#: pop3.c:785
 msgid "Server responded with UID for wrong message.\n"
 msgstr "Máy phục vụ đã đáp ứng UID cho thư không đúng.\n"
 
-#: pop3.c:771 pop3.c:1017
+#: pop3.c:812 pop3.c:1058
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (số=%d) đã được xoá bỏ, nhưng còn có.\n"
 
-#: pop3.c:780 pop3.c:792 pop3.c:1026 pop3.c:1033
+#: pop3.c:821 pop3.c:833 pop3.c:1067 pop3.c:1074
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u chưa xem\n"
 
-#: pop3.c:877
+#: pop3.c:918
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "Gặp thư được chèn vào danh sách trên máy phục vụ. Không thể xử lý trường hợp "
 "này.\n"
 
-#: pop3.c:969
+#: pop3.c:1010
 msgid "protocol error\n"
 msgstr "lỗi giao thức\n"
 
-#: pop3.c:985
+#: pop3.c:1026
 msgid "protocol error while fetching UIDLs\n"
 msgstr "gặp lỗi giao thức khi lấy các UIDL\n"
 
-#: pop3.c:1355
+#: pop3.c:1396
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Không hỗ trợ tùy chọn « --folder » (thư mục) với POP3\n"
 
@@ -3061,7 +3065,3 @@ msgstr "malloc (phân chia bộ nhớ) bị lỗi\n"
 #: xmalloc.c:47
 msgid "realloc failed\n"
 msgstr "realloc (phân chia lại bộ nhớ) bị lỗi\n"
-
-#, fuzzy
-#~ msgid "negative size for body: message %s@%s:%d (%d octets)\n"
-#~ msgstr "đang bỏ qua thư %s@%s:%d (%d octet)"
