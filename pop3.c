@@ -282,8 +282,8 @@ static int capa_probe(int sock)
 	    if (strstr(buffer, "CRAM-MD5"))
 		has_cram = TRUE;
 	}
-	done_capa = TRUE;
     }
+    done_capa = TRUE;
     return(ok);
 }
 
@@ -412,25 +412,29 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 
 	/*
 	 * CAPA command may return a list including available
-	 * authentication mechanisms.  if it doesn't, no harm done, we
-	 * just fall back to a plain login.  Note that this code 
-	 * latches the server's authentication type, so that in daemon mode
-	 * the CAPA check only needs to be done once at start of run.
+	 * authentication mechanisms and STLS capability.
 	 *
-	 * If CAPA fails, then force the authentication method to PASSORD
-	 * and repoll immediately.
+	 * If it doesn't, no harm done, we just fall back to a plain
+	 * login -- if the user allows it.
 	 *
-	 * These authentication methods are blessed by RFC1734,
-	 * describing the POP3 AUTHentication command.
+	 * Note that this code latches the server's authentication type,
+	 * so that in daemon mode the CAPA check only needs to be done
+	 * once at start of run.
+	 *
+	 * If CAPA fails, then force the authentication method to
+	 * PASSWORD, switch off opportunistic and repoll immediately.
+	 * If TLS is mandatory, fail up front.
 	 */
 	if ((ctl->server.authenticate == A_ANY) ||
-	    (ctl->server.authenticate == A_GSSAPI) ||
-	    (ctl->server.authenticate == A_KERBEROS_V4) ||
-	    (ctl->server.authenticate == A_OTP) ||
-	    (ctl->server.authenticate == A_CRAM_MD5))
+		(ctl->server.authenticate == A_GSSAPI) ||
+		(ctl->server.authenticate == A_KERBEROS_V4) ||
+		(ctl->server.authenticate == A_KERBEROS_V5) ||
+		(ctl->server.authenticate == A_OTP) ||
+		(ctl->server.authenticate == A_CRAM_MD5) ||
+		maybe_tls(ctl))
 	{
 	    if ((ok = capa_probe(sock)) != PS_SUCCESS)
-	    /* we are in STAGE_GETAUTH! */
+		/* we are in STAGE_GETAUTH => failure is PS_AUTHFAIL! */
 		if (ok == PS_AUTHFAIL ||
 		    /* Some servers directly close the socket. However, if we
 		     * have already authenticated before, then a previous CAPA
@@ -439,18 +443,28 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 		     */
 		    (ok == PS_SOCKET && !ctl->wehaveauthed))
 		{
-		    ctl->server.authenticate = A_PASSWORD;
-		    /* repoll immediately with PASS authentication */
-		    ok = PS_REPOLL;
-		    break;
+#ifdef SSL_ENABLE
+		    if (must_tls(ctl))
+			/* fail with mandatory STLS without repoll */
+			return ok;
+		    else {
+			/* defeat opportunistic STLS */
+			xfree(ctl->sslproto);
+			ctl->sslproto = xstrdup("");
+		    }
+#endif
+		    /* If strong authentication was opportunistic, retry
+		     * without, else fail. */
+		    if (ctl->server.authenticate == A_ANY) {
+			ctl->server.authenticate = A_PASSWORD;
+			return PS_REPOLL;
+		    } else {
+			return PS_AUTHFAIL;
+		    }
 		}
 	}
 
 #ifdef SSL_ENABLE
-	ok = capa_probe(sock);
-	if (ok != PS_SUCCESS) {
-	    return ok;
-	}
 	if (maybe_tls(ctl)) {
 	   if (has_stls)
 	   {
@@ -592,8 +606,16 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	}
 #endif /* OPIE_ENABLE */
 
-	strlcpy(shroud, ctl->password, sizeof(shroud));
-	ok = gen_transact(sock, "PASS %s", ctl->password);
+	/* check if we are actually allowed to send the password */
+	if (ctl->server.authenticate == A_ANY
+		|| ctl->server.authenticate == A_PASSWORD) {
+	    strlcpy(shroud, ctl->password, sizeof(shroud));
+	    ok = gen_transact(sock, "PASS %s", ctl->password);
+	} else {
+	    report(stderr, GT_("We've run out of allowed authenticators and cannot continue.\n"));
+	    ok = PS_AUTHFAIL;
+	}
+	memset(shroud, 0x55, sizeof(shroud));
 	shroud[0] = '\0';
 #ifdef SSL_ENABLE
 	/* this is for servers which claim to support TLS, but actually
