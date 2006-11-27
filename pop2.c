@@ -68,7 +68,7 @@ static int pop2_getauth(int sock, struct query *ctl, char *buf)
 	return PS_SOCKET;
     }
 
-    if (ctl->server.authentication != A_ANY && ctl->server.authentication != A_PASSWORD)
+    if (ctl->server.authenticate != A_ANY && ctl->server.authenticate != A_PASSWORD)
     {
 	report(stderr, GT_("POP2 only supports password authentication. Giving up.\n"));
 	return PS_AUTHFAIL;
