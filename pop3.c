@@ -640,8 +640,12 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	break;
 
     case P_RPOP:
-	if ((ok = gen_transact(sock,"USER %s", ctl->remotename)) == 0)
+	if ((ok = gen_transact(sock,"USER %s", ctl->remotename)) == 0) {
+	    strlcpy(shroud, ctl->password, sizeof(shroud));
 	    ok = gen_transact(sock, "RPOP %s", ctl->password);
+	    memset(shroud, 0x55, sizeof(shroud));
+	    shroud[0] = '\0';
+	}
 	break;
 
     default:
