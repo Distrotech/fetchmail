@@ -52,8 +52,8 @@ fetchmail 6.3.6 (not yet released):
     requested) fails with sslproto 'tls1' (also applies if this is implicit).
 
   - POP3 connections ignored STLS altogether in many circumstances, because
-    fetchmail did not probe server capabilities in all situations where it
-    should have done that.
+    fetchmail did not probe server capabilities for all values of "auth" - see
+    fetchmail-SA-2006-02.txt for details.
 
   - POP3 connections could retry USER/PASS authentication even if strong
     challenge-response schemes such as CRAM-MD5 had explicitly been requested,

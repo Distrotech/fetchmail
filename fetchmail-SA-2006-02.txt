@@ -60,7 +60,8 @@ V3. POP3 fetches could completely ignore all TLS options whether
     available or not because it didn't reliably issue CAPA before
     checking for STLS support - but CAPA is a requisite for STLS.
     Whether or not CAPAbilities were probed, depended on the "auth"
-    option.
+    option. (Fetchmail only tried CAPA if the auth option was not set at
+    all, was set to gssapi, kerberos, kerberos_v4, otp, or cram-md5.)
 
 V4. POP3 could fall back to using plain text passwords, even if strong
     authentication had been configured.
