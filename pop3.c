@@ -444,22 +444,26 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 		    (ok == PS_SOCKET && !ctl->wehaveauthed))
 		{
 #ifdef SSL_ENABLE
-		    if (must_tls(ctl))
+		    if (must_tls(ctl)) {
 			/* fail with mandatory STLS without repoll */
+			report(stderr, GT_("TLS is mandatory for this session, but server refused CAPA command.\n"));
+			report(stderr, GT_("The CAPA command is however necessary for TLS.\n"));
 			return ok;
-		    else {
+		    } else {
 			/* defeat opportunistic STLS */
 			xfree(ctl->sslproto);
 			ctl->sslproto = xstrdup("");
 		    }
 #endif
-		    /* If strong authentication was opportunistic, retry
-		     * without, else fail. */
-		    if (ctl->server.authenticate == A_ANY) {
-			ctl->server.authenticate = A_PASSWORD;
-			return PS_REPOLL;
-		    } else {
-			return PS_AUTHFAIL;
+		    /* If strong authentication was opportunistic, retry without, else fail. */
+		    switch (ctl->server.authenticate) {
+			case A_ANY:
+			    ctl->server.authenticate = A_PASSWORD;
+			    /* FALLTHROUGH */
+			case A_PASSWORD: /* this should only happen with TLS enabled */
+			    return PS_REPOLL;
+			default:
+			    return PS_AUTHFAIL;
 		    }
 		}
 	}
