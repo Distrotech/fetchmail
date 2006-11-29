@@ -85,6 +85,10 @@ fetchmail 6.3.6 (not yet released):
 * Update Japanese (Takeshi Hamasaki), Polish (Jakub Bogusz), Russian (Pavel
   Maryanov) and Vietnamese (Clytie Siddall) translations.
 
+# DOCUMENTATION:
+* Dropped exit status 15 from manual page, it's not used by fetchmail.
+  Reported by Isaac Wilcox.
+
 # KNOWN BUGS AND WORKAROUNDS:
   (this section floats upwards through the NEWS to be on top of the list)
 * fetchmail does not handle messages without Message-ID header well
@@ -183,6 +187,7 @@ fetchmail 6.3.5 (released 2006-10-09):
 * switch setjmp/longjmp to sigsetjmp/siglongjmp
 * IMAP now supports the EXTERNAL authentication method, courtesy of
   Götz 'nimrill' Babin-Ebell, BerliOS patch #1095 with minor changes.
+  Note that this change causes --sslcert to override --user.
 * The sslproto keywords are now case insensitive, courtesy of
   Götz 'nimrill' Babin-Ebell, BerliOS patch #1095.
 * When going to sleep, log for how long.  Suggested by Claudia Ludwig.

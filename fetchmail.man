@@ -2488,8 +2488,6 @@ BSMTP batch file could not be opened.
 Poll terminated by a fetch limit (see the \-\-fetchlimit option).
 .IP 14
 Server busy indication.
-.IP 15
-Server timed out during an IMAP IDLE.
 .IP 23
 Internal error.  You should see a message on standard error with
 details.
