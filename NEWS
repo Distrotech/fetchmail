@@ -51,7 +51,9 @@ fetchmail 6.3.6 (not yet released):
   - Fetchmail breaks the connection if the TLS negotiation (or verification, if
     requested) fails with sslproto 'tls1' (also applies if this is implicit).
 
-  - POP3 connections ignored STLS altogether in many circumstances.
+  - POP3 connections ignored STLS altogether in many circumstances, because
+    fetchmail did not probe server capabilities in all situations where it
+    should have done that.
 
   - POP3 connections could retry USER/PASS authentication even if strong
     challenge-response schemes such as CRAM-MD5 had explicitly been requested,

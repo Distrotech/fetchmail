@@ -58,8 +58,9 @@ V2. Even with "sslproto tls1" in the config, fetches would go ahead
 
 V3. POP3 fetches could completely ignore all TLS options whether
     available or not because it didn't reliably issue CAPA before
-    checking for STLS support, and it would only try STLS if it had seen
-    the server's advertisement.
+    checking for STLS support - but CAPA is a requisite for STLS.
+    Whether or not CAPAbilities were probed, depended on the "auth"
+    option.
 
 V4. POP3 could fall back to using plain text passwords, even if strong
     authentication had been configured.
