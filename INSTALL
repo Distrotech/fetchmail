@@ -43,7 +43,7 @@ Try after unpacking OpenSSL:
 
 Internationalization of fetchmail requires GNU gettext (libintl and
 libiconv). Fetchmail, as of version 6.3.0, no longer ships its own
-libintl copy.
+libintl copy.  Note that some systems include gettext in their libc.
 
 1.4 IPv6
 
