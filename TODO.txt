@@ -5,9 +5,6 @@
   Götz Nimrill's authenticate external patch.
 - check manpage/fetchmail.h and code which exit statuses are
   actually used and clean up
-- does libresolv or libc (glibc) or something cache resolver
-  addresses??? If so, that's a severe bug in the resp. lib.
-  Debian Bug #389270 (perhaps related to #391698).
 
 6.3.7:
 - more SMTP/LMTP error detail on message rejections even outside verbose mode.

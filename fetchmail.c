@@ -45,6 +45,11 @@
 #include "i18n.h"
 #include "lock.h"
 
+/* need these (and sys/types.h) for res_init() */
+#include <netinet/in.h>
+#include <arpa/nameser.h>
+#include <resolv.h>
+
 #ifndef ENETUNREACH
 #define ENETUNREACH   128       /* Interactive doesn't know this */
 #endif /* ENETUNREACH */
@@ -668,6 +673,22 @@ int main(int argc, char **argv)
 	 */
 	sethostent(TRUE);	/* use TCP/IP for mailserver queries */
 #endif /* HAVE_RES_SEARCH */
+
+#ifdef HAVE_RES_SEARCH
+	/* Boldly assume that we also have res_init() if we have
+	 * res_search(), and call res_init() to re-read the resolv.conf
+	 * file, so that we can pick up changes to that file that are
+	 * written by dhpccd, dhclient, pppd, openvpn and similar. */
+
+	/* NOTE: This assumes that /etc/resolv.conf is written
+	 * atomically (i. e. a temporary file is written, flushed and
+	 * then renamed into place). To fix Debian Bug#389270. */
+
+	/* NOTE: If this leaks memory or doesn't re-read
+	 * /etc/resolv.conf, we're in trouble. The res_init() interface
+	 * is only lightly documented :-( */
+	res_init();
+#endif
 
 	activecount = 0;
 	batchcount = 0;

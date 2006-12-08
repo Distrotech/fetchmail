@@ -79,6 +79,12 @@ fetchmail 6.3.6 (not yet released):
 * RPOP: The password is now shrouded in the local logs.
 * Robustness: If a stale lockfile cannot be deleted, truncate it to avoid
   trouble later if the PID is recycled by a non-fetchmail process.
+* On systems that have res_search(), assume we also have res_init() and call it
+  (suggested by Ulrich Drepper, glibc bug #3675) in order to make libc or
+  libresolv reread the resolver configuration at the beginning of a poll cycle.
+  This is important when fetchmail is in daemon mode and /etc/resolv.conf is
+  changed later by dhcpcd, dhclient, pppd, openvpn or other ip-up/ipchange
+  scripts.  Should fix Debian Bug#389270, Bug#391698.
 
 # TRANSLATIONS:
 * New en_GB (British English) translation by David Lodge.
