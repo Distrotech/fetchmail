@@ -1,5 +1,4 @@
 6.3.6:
-- move .html files from list archive to some doc directory
 - Zak's further minor issues
 - Debian Bug #400950: SSL cert CN overrides --user, since
   Götz Nimrill's authenticate external patch.

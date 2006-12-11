@@ -132,12 +132,7 @@ DISTDOCS=	FAQ FEATURES NOTES OLDNEWS fetchmail-man.html \
 		fetchmail-SA-2006-01.txt \
 		fetchmail-SA-2005-01.txt \
 		fetchmail-SA-2005-02.txt \
-		fetchmail-SA-2005-03.txt \
-		007705.html \
-		007713.html \
-		008523.html \
-		010015.html
-
+		fetchmail-SA-2005-03.txt
 
 # extra directories to ship
 distdirs = rh-config contrib beos

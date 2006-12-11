@@ -3,6 +3,10 @@ Note: you're on your own using these -- I don't really understand them,
 I'm just passing them along.
 								--esr
 
+0*.html:
+Messages from the archives of the old fetchmail-friends mailing list,
+for off-line reading.
+
 maildaemon:
 
 Larry Fahnoe wrote this for driving fetchmail from cron.  It may be useful if
