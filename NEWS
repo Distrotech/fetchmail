@@ -85,6 +85,8 @@ fetchmail 6.3.6 (not yet released):
   This is important when fetchmail is in daemon mode and /etc/resolv.conf is
   changed later by dhcpcd, dhclient, pppd, openvpn or other ip-up/ipchange
   scripts.  Should fix Debian Bug#389270, Bug#391698.
+* Fix crash on systems that do not provide strdup() in out-of-memory conditions.
+  Patch by Andreas Krennmair.
 
 # TRANSLATIONS:
 * New en_GB (British English) translation by David Lodge.

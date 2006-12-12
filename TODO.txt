@@ -10,6 +10,9 @@
   Ian D. Allen, fetchmail-users. Two messages with examples.
   What goes here? fetchmailrc location, server, port, user, folder, anything else?
 
+6.4:
+- remove dead replacement functions: strdup (Andreas Krennmair), ...
+
 CODE:
 - check recent list mail
 - check Debian BTS and other bug trackers
