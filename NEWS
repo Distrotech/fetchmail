@@ -88,6 +88,9 @@ fetchmail 6.3.6 (not yet released):
 * Fix crash on systems that do not provide strdup() in out-of-memory conditions.
   Patch by Andreas Krennmair.
 
+# CHANGES:
+* Remove excess no-op strcpy() after strdup() found by Andreas Krennmair.
+
 # TRANSLATIONS:
 * New en_GB (British English) translation by David Lodge.
 * Update Japanese (Takeshi Hamasaki), Polish (Jakub Bogusz), Russian (Pavel

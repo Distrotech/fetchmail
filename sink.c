@@ -957,7 +957,6 @@ transient:
 		    case PS_SUCCESS:
 #ifdef EXPLICIT_BOUNCE_ON_BAD_ADDRESS
 		    from_responses[*bad_addresses] = xstrdup(smtp_response);
-		    strcpy(from_responses[*bad_addresses], smtp_response);
 #endif /* EXPLICIT_BOUNCE_ON_BAD_ADDRESS */
 
 		    (*bad_addresses)++;
