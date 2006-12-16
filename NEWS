@@ -46,7 +46,8 @@ fetchmail 6.3.6 (not yet released):
   Password disclosure vulnerability. This has several aspects:
 
   - Fetchmail now implies sslproto 'tls1' if the sslfingerprint or sslcertck
-    options are used, to be sure there is a certificate to check against.
+    options are used, but ssl is not, to be sure that there is a certificate to
+    check against.
 
   - Fetchmail breaks the connection if the TLS negotiation (or verification, if
     requested) fails with sslproto 'tls1' (also applies if this is implicit).
@@ -60,7 +61,7 @@ fetchmail 6.3.6 (not yet released):
     if these were not advertised in the CAPA response.
 
   - POP2 is obsolete and does not support STLS or anything beyond password-based
-    authentication. The attempt to use STLS or stronger authenticators causes
+    authentication. The attempt to use STLS or strong authenticators causes
     connection abort.
 
   Configurations using --ssl --sslcertck however have been semi-safe in that
@@ -85,8 +86,8 @@ fetchmail 6.3.6 (not yet released):
   This is important when fetchmail is in daemon mode and /etc/resolv.conf is
   changed later by dhcpcd, dhclient, pppd, openvpn or other ip-up/ipchange
   scripts.  Should fix Debian Bug#389270, Bug#391698.
-* Fix crash on systems that do not provide strdup() in out-of-memory conditions.
-  Patch by Andreas Krennmair.
+* Fix crash on systems that do not provide strdup(), the crash then happens in
+  out-of-memory conditions.  Patch by Andreas Krennmair.
 
 # CHANGES:
 * Remove excess no-op strcpy() after strdup() found by Andreas Krennmair.
@@ -103,6 +104,7 @@ fetchmail 6.3.6 (not yet released):
 # DOCUMENTATION:
 * Dropped exit status 15 from manual page, it's not used by fetchmail.
   Reported by Isaac Wilcox.
+* Documented exit codes 24 - 29 as internal.
 
 # KNOWN BUGS AND WORKAROUNDS:
   (this section floats upwards through the NEWS to be on top of the list)
