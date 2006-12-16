@@ -90,6 +90,7 @@ fetchmail 6.3.6 (not yet released):
 
 # CHANGES:
 * Remove excess no-op strcpy() after strdup() found by Andreas Krennmair.
+* Remove handling for PS_TRUNCATED (code 27), which was never asserted.
 * Improve handling of IMAP IDLE, some servers do not reset their time counters
   after sending information asynchronously. Patch by Sunil Shetye, after report
   from Andrew Baumann.

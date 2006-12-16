@@ -629,8 +629,6 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 		suppress_delete = suppress_forward = TRUE;
 	    else if (err == PS_REFUSED)
 		suppress_forward = TRUE;
-	    else if (err == PS_TRUNCATED)
-		suppress_readbody = TRUE;
 	    else if (err)
 		return(err);
 

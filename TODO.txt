@@ -2,8 +2,6 @@
 - Zak's further minor issues
 - Debian Bug #400950: SSL cert CN overrides --user, since
   Götz Nimrill's authenticate external patch.
-- check manpage/fetchmail.h and code which exit statuses are
-  actually used and clean up
 
 6.3.7:
 - more SMTP/LMTP error detail on message rejections even outside verbose mode.
