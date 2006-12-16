@@ -46,7 +46,8 @@ static unsigned int *unseen_messages;
 static int actual_deletions = 0;
 
 /* for "IMAP> IDLE" */
-static int saved_timeout = 0;
+static int saved_timeout = 0, idle_timeout = 0;
+static time_t idle_start_time = 0;
 
 static int imap_ok(int sock, char *argbuf)
 /* parse command response */
@@ -162,6 +163,15 @@ static int imap_ok(int sock, char *argbuf)
 	    {
 		return(PS_LOCKBUSY);
 	    }
+	}
+
+	if (stage == STAGE_IDLE)
+	{
+	    /* reduce the timeout: servers may not reset their timeout
+	     * when they send some information asynchronously */
+	    mytimeout = idle_timeout - (time((time_t *) NULL) - idle_start_time);
+	    if (mytimeout <= 0)
+		return(PS_IDLETIMEOUT);
 	}
     } while
 	(tag[0] != '\0' && strncmp(buf, tag, strlen(tag)));
@@ -676,7 +686,8 @@ static int imap_idle(int sock)
 	/* special timeout to terminate the IDLE and re-issue it
 	 * at least every 28 minutes:
 	 * (the server may have an inactivity timeout) */
-	mytimeout = 1680; /* 28 min */
+	mytimeout = idle_timeout = 1680; /* 28 min */
+	time(&idle_start_time);
 	stage = STAGE_IDLE;
 	/* enter IDLE mode */
 	ok = gen_transact(sock, "IDLE");
@@ -704,7 +715,8 @@ static int imap_idle(int sock)
 	     * notification out of the blue. This is in compliance
 	     * with RFC 2060 section 5.3. Wait for that with a low
 	     * timeout */
-	    mytimeout = 28;
+	    mytimeout = idle_timeout = 28;
+	    time(&idle_start_time);
 	    stage = STAGE_IDLE;
 	    /* We are waiting for notification; no tag needed */
 	    tag[0] = '\0';
