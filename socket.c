@@ -942,7 +942,7 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char
 		if( !mycert )
 			mycert = mykey;
 
-		if (SSLCertGetCN(mycert, buffer, sizeof(buffer))) {
+		if ((!*remotename || !**remotename) && SSLCertGetCN(mycert, buffer, sizeof(buffer))) {
 			free(*remotename);
 			*remotename = xstrdup(buffer);
 		}

@@ -73,9 +73,15 @@ fetchmail 6.3.6 (not yet released):
   headers is found while fetchmail's mda option is in use. BerliOS bugs #9364,
   #9412, #9449. Stack backtrace provided by Neil Hoggarth - thanks.
 
-# BUG FIXES:
+# REGRESSION FIXES:
 * Repair --logfile, broken in 6.3.5. BerliOS Bug #9059,
   reported by Brian Harring.
+* In 6.3.5 (as a side effect of the authenticate external patch), using SSL
+  certificate/key authentication overrode the --user option. Now the latter
+  takes precedence, and only defaults to the certificate's common name.
+  Debian Bug #400950, reported by Jorgen Schaefer <forcer@debian.org>.
+
+# BUG FIXES:
 * POP3: Probe capabilities when Kerberos V5 is attempted.
 * RPOP: The password is now shrouded in the local logs.
 * Robustness: If a stale lockfile cannot be deleted, truncate it to avoid

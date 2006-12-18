@@ -1,7 +1,5 @@
 6.3.6:
 - Zak's further minor issues
-- Debian Bug #400950: SSL cert CN overrides --user, since
-  Götz Nimrill's authenticate external patch.
 
 6.3.7:
 - more SMTP/LMTP error detail on message rejections even outside verbose mode.
