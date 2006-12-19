@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.6-rc4\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-11-27 04:04+0100\n"
+"POT-Creation-Date: 2006-12-19 01:19+0100\n"
 "PO-Revision-Date: 2006-12-01 22:01+1030\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
@@ -32,12 +32,14 @@ msgstr "Không phải, hai địa chỉ IP không trùng\n"
 #: checkalias.c:198
 #, c-format
 msgid "nameserver failure while looking for '%s' during poll of %s: %s\n"
-msgstr "trình phục vụ tên thất bại trong khi tìm « %s »  trong việc thăm dò %s: %s\n"
+msgstr ""
+"trình phục vụ tên thất bại trong khi tìm « %s »  trong việc thăm dò %s: %s\n"
 
 #: checkalias.c:223
 #, c-format
 msgid "nameserver failure while looking for `%s' during poll of %s.\n"
-msgstr "trình phục vụ tên thất bại trong khi tìm « %s »  trong việc thăm dò %s.\n"
+msgstr ""
+"trình phục vụ tên thất bại trong khi tìm « %s »  trong việc thăm dò %s.\n"
 
 #: cram.c:95
 msgid "could not decode BASE64 challenge\n"
@@ -65,7 +67,8 @@ msgstr "Chủ đề : cảnh báo Fetchmail về thư quá lớn"
 #: driver.c:339
 #, c-format
 msgid "The following oversized messages were deleted on server %s account %s:"
-msgstr "Những thư quá lớn theo đây đã bị xoá bỏ trên máy phục vụ %s tài khoản %s:"
+msgstr ""
+"Những thư quá lớn theo đây đã bị xoá bỏ trên máy phục vụ %s tài khoản %s:"
 
 #: driver.c:343
 #, c-format
@@ -120,69 +123,73 @@ msgstr " (%d octet)"
 msgid " (%d header octets)"
 msgstr " (%d octet dòng đầu)"
 
-#: driver.c:682
+#: driver.c:680
 #, c-format
 msgid " (%d body octets)"
 msgstr " (%d octet thân)"
 
-#: driver.c:743
+#: driver.c:741
 #, c-format
-msgid "message %s@%s:%d was not the expected length (%d actual != %d expected)\n"
+msgid ""
+"message %s@%s:%d was not the expected length (%d actual != %d expected)\n"
 msgstr "thư %s@%s:%d không có độ dài đã ngờ (%d thật != %d đã ngờ)\n"
 
-#: driver.c:774
+#: driver.c:772
 msgid " retained\n"
 msgstr " vẫn giữ\n"
 
-#: driver.c:784
+#: driver.c:782
 msgid " flushed\n"
 msgstr " đã xoá sạch\n"
 
-#: driver.c:801
+#: driver.c:799
 msgid " not flushed\n"
 msgstr " chưa xoá sạch\n"
 
-#: driver.c:819
+#: driver.c:817
 #, c-format
 msgid "fetchlimit %d reached; %d message left on server %s account %s\n"
-msgid_plural "fetchlimit %d reached; %d messages left on server %s account %s\n"
+msgid_plural ""
+"fetchlimit %d reached; %d messages left on server %s account %s\n"
 msgstr[0] "tới hạn lấy %d; %d thư còn lại trên máy phục vụ %s tài khoản %s\n"
 
-#: driver.c:876
+#: driver.c:874
 #, c-format
 msgid "timeout after %d seconds waiting to connect to server %s.\n"
 msgstr "quá giờ sau %d giây đợi kết nối đến máy phục vụ %s.\n"
 
-#: driver.c:880
+#: driver.c:878
 #, c-format
 msgid "timeout after %d seconds waiting for server %s.\n"
 msgstr "quá giờ sau %d giây đợi máy phục vụ %s.\n"
 
-#: driver.c:884
+#: driver.c:882
 #, c-format
 msgid "timeout after %d seconds waiting for %s.\n"
 msgstr "quá giờ sau %d giây đợi %s.\n"
 
-#: driver.c:889
+#: driver.c:887
 #, c-format
 msgid "timeout after %d seconds waiting for listener to respond.\n"
 msgstr "quá giờ sau %d giây đợi bộ lắng nghe đáp ứng.\n"
 
-#: driver.c:892
+#: driver.c:890
 #, c-format
 msgid "timeout after %d seconds.\n"
 msgstr "quá giờ sau %d giây.\n"
 
-#: driver.c:904
+#: driver.c:902
 msgid "Subject: fetchmail sees repeated timeouts"
 msgstr "Chủ đề : fetchmail thấy nhiều việc quá giờ"
 
-#: driver.c:907
+#: driver.c:905
 #, c-format
-msgid "Fetchmail saw more than %d timeouts while attempting to get mail from %s@%s.\n"
+msgid ""
+"Fetchmail saw more than %d timeouts while attempting to get mail from %s@%"
+"s.\n"
 msgstr "Fetchmail thấy hơn %d việc quá giờ trong khi cố lấy thư từ %s@%s.\n"
 
-#: driver.c:911
+#: driver.c:909
 msgid ""
 "This could mean that your mailserver is stuck, or that your SMTP\n"
 "server is wedged, or that your mailbox file on the server has been\n"
@@ -191,77 +198,79 @@ msgid ""
 "\n"
 "Fetchmail won't poll this mailbox again until you restart it.\n"
 msgstr ""
-"Có thể nghĩa là trình phục vụ thư bế tắc, hoặc trình phục vụ SMTP không lối thoát, hoặc tập tin hôp thư trên máy phục vụ đã bị hỏng do lỗi trình phục vụ. Bạn có thể chạy lệnh « fetchmail -v -v » để chẩn đoán vấn đề này.\n"
+"Có thể nghĩa là trình phục vụ thư bế tắc, hoặc trình phục vụ SMTP không lối "
+"thoát, hoặc tập tin hôp thư trên máy phục vụ đã bị hỏng do lỗi trình phục "
+"vụ. Bạn có thể chạy lệnh « fetchmail -v -v » để chẩn đoán vấn đề này.\n"
 "\n"
 "Fetchmail sẽ không thăm dò hộp thư này cho đến khi bạn khởi động nó.\n"
 
-#: driver.c:936
+#: driver.c:934
 #, c-format
 msgid "pre-connection command failed with status %d\n"
 msgstr "lệnh tiền kết nối đã thất bại với trạng thái là %d\n"
 
-#: driver.c:960
+#: driver.c:958
 #, c-format
 msgid "couldn't find HESIOD pobox for %s\n"
 msgstr "không tìm thấy pobox HESIOD cho %s\n"
 
-#: driver.c:981
+#: driver.c:979
 msgid "Lead server has no name.\n"
 msgstr "Máy phục vụ đi trước không có tên.\n"
 
-#: driver.c:1005
+#: driver.c:1003
 #, c-format
 msgid "couldn't find canonical DNS name of %s (%s): %s\n"
 msgstr "không tìm thấy tên DNS đúng tiêu chuẩn của %s (%s): %s\n"
 
-#: driver.c:1052
+#: driver.c:1050
 #, c-format
 msgid "%s connection to %s failed"
 msgstr "kết nối %s đến %s bị lỗi"
 
-#: driver.c:1068
+#: driver.c:1066
 msgid "Subject: Fetchmail unreachable-server warning."
 msgstr "Chủ đề : cảnh báo Fetchmail về máy phục vụ không tới được"
 
-#: driver.c:1070
+#: driver.c:1068
 #, c-format
 msgid "Fetchmail could not reach the mail server %s:"
 msgstr "Fetchmail không thể tới máy phục vụ thư %s:"
 
-#: driver.c:1096
+#: driver.c:1094
 msgid "SSL connection failed.\n"
 msgstr "Kết nối SSL đã thất bại.\n"
 
-#: driver.c:1149
+#: driver.c:1147
 #, c-format
 msgid "Lock-busy error on %s@%s\n"
 msgstr "Gặp lỗi kiểu khoá-bận trên %s@%s\n"
 
-#: driver.c:1153
+#: driver.c:1151
 #, c-format
 msgid "Server busy error on %s@%s\n"
 msgstr "Gặp lỗi kiểu máy phục vụ bận trên %s@%s\n"
 
-#: driver.c:1158
+#: driver.c:1156
 #, c-format
 msgid "Authorization failure on %s@%s%s\n"
 msgstr "Việc xác thực bị lỗi trên %s@%s%s\n"
 
-#: driver.c:1161
+#: driver.c:1159
 msgid " (previously authorized)"
 msgstr " (đã cho quyền trước này)"
 
-#: driver.c:1182
+#: driver.c:1180
 #, c-format
 msgid "Subject: fetchmail authentication failed on %s@%s"
 msgstr "Chủ đề : việc xác thực fetchmail bị lỗi trên %s@%s"
 
-#: driver.c:1186
+#: driver.c:1184
 #, c-format
 msgid "Fetchmail could not get mail from %s@%s.\n"
 msgstr "Fetchmail không thể lấy thư từ %s@%s.\n"
 
-#: driver.c:1190
+#: driver.c:1188
 msgid ""
 "The attempt to get authorization failed.\n"
 "Since we have already succeeded in getting authorization for this\n"
@@ -274,7 +283,7 @@ msgstr ""
 "chế độ thất bại khác (v.d. máy phục vụ bận tạm) mà fetchmail\n"
 "không thể phân biệt vì máy phục vụ chưa gởi thông điệp lỗi hữu ích."
 
-#: driver.c:1196
+#: driver.c:1194
 msgid ""
 "\n"
 "However, if you HAVE changed your account details since starting the\n"
@@ -293,7 +302,7 @@ msgstr ""
 "Trình nền fetchmail sẽ tiếp tục chạy, và cố kết nối, trong mỗi chu kỳ.\n"
 "Không có thông báo sau sẽ được gởi đến khi dịch vụ được phục hồi."
 
-#: driver.c:1206
+#: driver.c:1204
 msgid ""
 "The attempt to get authorization failed.\n"
 "This probably means your password is invalid, but some servers have\n"
@@ -312,165 +321,165 @@ msgstr ""
 "Trình nền fetchmail sẽ tiếp tục chạy, và cố kết nối, trong mỗi chu kỳ.\n"
 "Không có thông báo sau sẽ được gởi đến khi dịch vụ được phục hồi."
 
-#: driver.c:1222
+#: driver.c:1220
 #, c-format
 msgid "Repoll immediately on %s@%s\n"
 msgstr "Thăm dò lại ngay trên %s@%s\n"
 
-#: driver.c:1227
+#: driver.c:1225
 #, c-format
 msgid "Unknown login or authentication error on %s@%s\n"
 msgstr "Lỗi đăng nhập hay xác thực không rõ trên %s@%s\n"
 
-#: driver.c:1251
+#: driver.c:1249
 #, c-format
 msgid "Authorization OK on %s@%s\n"
 msgstr "Đã được quyền trên %s@%s\n"
 
-#: driver.c:1257
+#: driver.c:1255
 #, c-format
 msgid "Subject: fetchmail authentication OK on %s@%s"
 msgstr "Chủ đề : fetchmail đã được quyền trên %s@%s"
 
-#: driver.c:1261
+#: driver.c:1259
 #, c-format
 msgid "Fetchmail was able to log into %s@%s.\n"
 msgstr "Fetchmail đã đăng nhập được vào %s@%s.\n"
 
-#: driver.c:1265
+#: driver.c:1263
 msgid "Service has been restored.\n"
 msgstr "Dịch vụ đã được phục hồi.\n"
 
-#: driver.c:1297
+#: driver.c:1295
 #, c-format
 msgid "selecting or re-polling folder %s\n"
 msgstr "đang chọn hoặc thăm dò thư mục %s\n"
 
-#: driver.c:1299
+#: driver.c:1297
 msgid "selecting or re-polling default folder\n"
 msgstr "đang chọn hoặc thăm dò thư mục mặc định\n"
 
-#: driver.c:1311
+#: driver.c:1309
 #, c-format
 msgid "%s at %s (folder %s)"
 msgstr "%s lúc %s (thư mục %s)"
 
-#: driver.c:1314 rcfile_y.y:381
+#: driver.c:1312 rcfile_y.y:381
 #, c-format
 msgid "%s at %s"
 msgstr "%s lúc %s"
 
-#: driver.c:1319
+#: driver.c:1317
 #, c-format
 msgid "Polling %s\n"
 msgstr "Đang thăm dò %s...\n"
 
-#: driver.c:1323
+#: driver.c:1321
 #, c-format
 msgid "%d message (%d %s) for %s"
 msgid_plural "%d messages (%d %s) for %s"
 msgstr[0] "%d thư (%d %s) cho %s"
 
-#: driver.c:1326
+#: driver.c:1324
 msgid "seen"
 msgid_plural "seen"
 msgstr[0] "đã thấy"
 
-#: driver.c:1329
+#: driver.c:1327
 #, c-format
 msgid "%d message for %s"
 msgid_plural "%d messages for %s"
 msgstr[0] "%d thư cho %s"
 
-#: driver.c:1336
+#: driver.c:1334
 #, c-format
 msgid " (%d octets).\n"
 msgstr " (%d octet).\n"
 
-#: driver.c:1342
+#: driver.c:1340
 #, c-format
 msgid "No mail for %s\n"
 msgstr "Không có thư cho %s\n"
 
-#: driver.c:1375 imap.c:89
+#: driver.c:1373 imap.c:90
 msgid "bogus message count!"
 msgstr "số đếm thư giả !"
 
-#: driver.c:1517
+#: driver.c:1515
 msgid "socket"
 msgstr "ổ cắm"
 
-#: driver.c:1520
+#: driver.c:1518
 msgid "missing or bad RFC822 header"
 msgstr "dòng đầu RFC822 xấu hay còn thiếu"
 
 # Name: don't translate / Tên: đừng dịch
-#: driver.c:1523
+#: driver.c:1521
 msgid "MDA"
 msgstr "MDA"
 
-#: driver.c:1526
+#: driver.c:1524
 msgid "client/server synchronization"
 msgstr "đồng bộ hoá ứng dụng khách/trình phục vụ"
 
-#: driver.c:1529
+#: driver.c:1527
 msgid "client/server protocol"
 msgstr "giao thức ứng dụng khách/trình phục vụ"
 
-#: driver.c:1532
+#: driver.c:1530
 msgid "lock busy on server"
 msgstr "khoá bận trên máy phục vụ"
 
-#: driver.c:1535
+#: driver.c:1533
 msgid "SMTP transaction"
 msgstr "giao tác SMTP"
 
-#: driver.c:1538
+#: driver.c:1536
 msgid "DNS lookup"
 msgstr "Tra cứu DNS"
 
-#: driver.c:1541
+#: driver.c:1539
 msgid "undefined"
 msgstr "chưa xác định"
 
-#: driver.c:1547
+#: driver.c:1545
 #, c-format
 msgid "%s error while fetching from %s@%s and delivering to SMTP host %s\n"
 msgstr "Gặp lỗi %s trong khi lấy từ %s@%s và phát cho máy SMTP %s\n"
 
-#: driver.c:1549
+#: driver.c:1547
 msgid "unknown"
 msgstr "không rõ"
 
-#: driver.c:1551
+#: driver.c:1549
 #, c-format
 msgid "%s error while fetching from %s@%s\n"
 msgstr "Gặp lỗi %s trong khi lấy từ %s@%s\n"
 
-#: driver.c:1562
+#: driver.c:1560
 #, c-format
 msgid "post-connection command failed with status %d\n"
 msgstr "lệnh cuối cùng kết nối đã thất bại với trạng thái là %d\n"
 
-#: driver.c:1581
+#: driver.c:1579
 msgid "Kerberos V4 support not linked.\n"
 msgstr "Chưa liên kết cách hỗ trợ Kerberos V4.\n"
 
-#: driver.c:1589
+#: driver.c:1587
 msgid "Kerberos V5 support not linked.\n"
 msgstr "Chưa liên kết cách hỗ trợ Kerberos V5.\n"
 
-#: driver.c:1600
+#: driver.c:1598
 #, c-format
 msgid "Option --flush is not supported with %s\n"
 msgstr "Không hỗ trợ tùy chọn « --flush » (xoá sạch) với %s\n"
 
-#: driver.c:1606
+#: driver.c:1604
 #, c-format
 msgid "Option --all is not supported with %s\n"
 msgstr "Không hỗ trợ tùy chọn « --all » (tất cả) với %s\n"
 
-#: driver.c:1615
+#: driver.c:1613
 #, c-format
 msgid "Option --limit is not supported with %s\n"
 msgstr "Không hỗ trợ tùy chọn « --limit » (hạn chế) với %s\n"
@@ -496,7 +505,8 @@ msgstr ""
 msgid ""
 "%s: The NULLMAILER_FLAGS environment variable is set.\n"
 "This is dangerous as it can make nullmailer-inject or nullmailer's\n"
-"sendmail wrapper tamper with your From:, Message-ID: or Return-Path: headers.\n"
+"sendmail wrapper tamper with your From:, Message-ID: or Return-Path: "
+"headers.\n"
 "Try \"env NULLMAILER_FLAGS= %s YOUR ARGUMENTS HERE\"\n"
 "%s: Abort.\n"
 msgstr ""
@@ -525,12 +535,14 @@ msgstr "Việc gethostbyname (lấy máy theo tên) bị lỗi cho %s\n"
 
 #: env.c:170
 msgid "Cannot find my own host in hosts database to qualify it!\n"
-msgstr "Không tìm thấy máy mình trong cơ sở dữ liệu máy để thêm đủ khả năng vào nó.\n"
+msgstr ""
+"Không tìm thấy máy mình trong cơ sở dữ liệu máy để thêm đủ khả năng vào nó.\n"
 
 #: env.c:174
 msgid ""
 "Trying to continue with unqualified hostname.\n"
-"DO NOT report broken Received: headers, HELO/EHLO lines or similar problems!\n"
+"DO NOT report broken Received: headers, HELO/EHLO lines or similar "
+"problems!\n"
 "DO repair your /etc/hosts, DNS, NIS or LDAP instead.\n"
 msgstr ""
 "Đang cố tiếp tục với tên máy không có đủ khả năng.\n"
@@ -602,17 +614,19 @@ msgstr "Không hỗ trợ tùy chọn « --folder » (thư mục) đối với E
 msgid "Option --check is not supported with ETRN\n"
 msgstr "Không hỗ trợ tùy chọn « --check » (kiểm tra) đối với ETRN\n"
 
-#: fetchmail.c:132
+#: fetchmail.c:137
 msgid ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
-"Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Rob F. Funk, Graham Wilson\n"
+"Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Rob F. Funk, Graham "
+"Wilson\n"
 "Copyright (C) 2005-2006 Matthias Andree, Sunil Shetye\n"
 msgstr ""
 "Bản quyền © năm 2002, 2003 của Eric S. Raymond\n"
-"Bản quyền © năm 2004 của Matthias Andree, Eric S. Raymond, Rob F. Funk, Graham Wilson\n"
+"Bản quyền © năm 2004 của Matthias Andree, Eric S. Raymond, Rob F. Funk, "
+"Graham Wilson\n"
 "Bản quyền © năm 2005-2006 của Matthias Andree, Sunil Shetye\n"
 
-#: fetchmail.c:136
+#: fetchmail.c:141
 msgid ""
 "Fetchmail comes with ABSOLUTELY NO WARRANTY. This is free software, and you\n"
 "are welcome to redistribute it under certain conditions. For details,\n"
@@ -623,865 +637,947 @@ msgstr ""
 "Để tìm thấy thông tin thêm thì hãy xem tập tin có tên COPYING (sao chép)\n"
 "trong thư mục nguồn hay tài liệu.\n"
 
-#: fetchmail.c:170
+#: fetchmail.c:175
 msgid "WARNING: Running as root is discouraged.\n"
 msgstr "CẢNH BÁO : khuyên bạn không chạy với tư cách người chủ (root).\n"
 
-#: fetchmail.c:182
+#: fetchmail.c:187
 msgid "fetchmail: invoked with"
 msgstr "fetchmail: được gọi bằng"
 
-#: fetchmail.c:206
+#: fetchmail.c:211
 msgid "could not get current working directory\n"
 msgstr "không thể lấy thư mục hoạt động hiện có\n"
 
-#: fetchmail.c:268
+#: fetchmail.c:279
 #, c-format
 msgid "This is fetchmail release %s"
 msgstr "Đây là fetchmail bản phát hành %s"
 
-#: fetchmail.c:383
+#: fetchmail.c:394
 #, c-format
 msgid "Taking options from command line%s%s\n"
 msgstr "Đang lấy các tùy chọn trên dòng lệnh%s%s\n"
 
-#: fetchmail.c:384
+#: fetchmail.c:395
 msgid " and "
 msgstr " và "
 
-#: fetchmail.c:389
+#: fetchmail.c:400
 #, c-format
 msgid "No mailservers set up -- perhaps %s is missing?\n"
 msgstr "Chưa thiết lập trình phục vụ thư nào — có lẽ còn thiếu %s ?\n"
 
-#: fetchmail.c:410
+#: fetchmail.c:421
 msgid "fetchmail: no mailservers have been specified.\n"
 msgstr "fetchmail: chưa xác định trình phục vụ thư.\n"
 
-#: fetchmail.c:422
+#: fetchmail.c:433
 msgid "fetchmail: no other fetchmail is running\n"
 msgstr "fetchmail: không có thẻ hiện fetchmail khác đang chạy\n"
 
-#: fetchmail.c:428
+#: fetchmail.c:439
 #, c-format
 msgid "fetchmail: error killing %s fetchmail at %d; bailing out.\n"
-msgstr "fetchmail: gặp lỗi khi buộc kết thúc của fetchmail %s tại %d nên hủy bỏ.\n"
+msgstr ""
+"fetchmail: gặp lỗi khi buộc kết thúc của fetchmail %s tại %d nên hủy bỏ.\n"
 
-#: fetchmail.c:429 fetchmail.c:438
+#: fetchmail.c:440 fetchmail.c:449
 msgid "background"
 msgstr "nền"
 
-#: fetchmail.c:429 fetchmail.c:438
+#: fetchmail.c:440 fetchmail.c:449
 msgid "foreground"
 msgstr "cảnh gần"
 
-#: fetchmail.c:437
+#: fetchmail.c:448
 #, c-format
 msgid "fetchmail: %s fetchmail at %d killed.\n"
 msgstr "fetchmail: fetchmail %s tại %d được buộc kết thúc.\n"
 
-#: fetchmail.c:460
-msgid "fetchmail: can't check mail while another fetchmail to same host is running.\n"
-msgstr "fetchmail: không thể kiểm tra có thư mới trong khi một thể hiện fetchmail khác đang chạy tới cùng một máy.\n"
+#: fetchmail.c:471
+msgid ""
+"fetchmail: can't check mail while another fetchmail to same host is "
+"running.\n"
+msgstr ""
+"fetchmail: không thể kiểm tra có thư mới trong khi một thể hiện fetchmail "
+"khác đang chạy tới cùng một máy.\n"
 
-#: fetchmail.c:466
+#: fetchmail.c:477
 #, c-format
-msgid "fetchmail: can't poll specified hosts with another fetchmail running at %d.\n"
-msgstr "fetchmail: không thể thăm dò các máy đã xác định khi có thể hiện fetchmail khác chạy tại %d\n"
+msgid ""
+"fetchmail: can't poll specified hosts with another fetchmail running at %d.\n"
+msgstr ""
+"fetchmail: không thể thăm dò các máy đã xác định khi có thể hiện fetchmail "
+"khác chạy tại %d\n"
 
-#: fetchmail.c:473
+#: fetchmail.c:484
 #, c-format
 msgid "fetchmail: another foreground fetchmail is running at %d.\n"
 msgstr "fetchmail: một thể hiện fetchmail cảnh gần khác đang chạy tại %d.\n"
 
-#: fetchmail.c:483
-msgid "fetchmail: can't accept options while a background fetchmail is running.\n"
-msgstr "fetchmail: không thể chấp nhận tùy chọn trong khi một thể hiện fetchmail nền đang chạy.\n"
+#: fetchmail.c:494
+msgid ""
+"fetchmail: can't accept options while a background fetchmail is running.\n"
+msgstr ""
+"fetchmail: không thể chấp nhận tùy chọn trong khi một thể hiện fetchmail nền "
+"đang chạy.\n"
 
-#: fetchmail.c:489
+#: fetchmail.c:500
 #, c-format
 msgid "fetchmail: background fetchmail at %d awakened.\n"
 msgstr "fetchmail: thể hiện fetchmail nền tại %d đã được kích hoạt.\n"
 
-#: fetchmail.c:501
+#: fetchmail.c:512
 #, c-format
 msgid "fetchmail: elder sibling at %d died mysteriously.\n"
 msgstr "fetchmail: tiến trình ngang hàng tại %d đã kết thúc bất thường.\n"
 
-#: fetchmail.c:516
+#: fetchmail.c:527
 #, c-format
 msgid "fetchmail: can't find a password for %s@%s.\n"
 msgstr "fetchmail: không tìm thấy mật khẩu cho %s@%s.\n"
 
-#: fetchmail.c:520
+#: fetchmail.c:531
 #, c-format
 msgid "Enter password for %s@%s: "
 msgstr "Hãy gõ mật khẩu cho %s@%s: "
 
-#: fetchmail.c:545 fetchmail.c:581
+#: fetchmail.c:556 fetchmail.c:592
 msgid "fetchmail: Warning: syslog and logfile are set. Check both for logs!\n"
-msgstr "fetchmail: cảnh báo : cả syslog (bản ghi hệ thống) lẫn logfile (tập tin ghi lưu) đều đã được đặt. Hãy kiểm tra cả hai tìm tập tin ghi lưu.\n"
+msgstr ""
+"fetchmail: cảnh báo : cả syslog (bản ghi hệ thống) lẫn logfile (tập tin ghi "
+"lưu) đều đã được đặt. Hãy kiểm tra cả hai tìm tập tin ghi lưu.\n"
 
-#: fetchmail.c:557
+#: fetchmail.c:568
 msgid "fetchmail: Cannot detach into background. Aborting.\n"
 msgstr "fetchmail: không thể tháo bỏ vào nền nên hủy bỏ.\n"
 
-#: fetchmail.c:561
+#: fetchmail.c:572
 #, c-format
 msgid "starting fetchmail %s daemon \n"
 msgstr "đang khởi chạy trình nền fetchmail %s...\n"
 
-#: fetchmail.c:577 fetchmail.c:579
+#: fetchmail.c:588 fetchmail.c:590
 #, c-format
 msgid "could not open %s to append logs to \n"
 msgstr "không thể mở %s để phụ thêm các bản ghi vào nó\n"
 
-#: fetchmail.c:618
+#: fetchmail.c:629
 #, c-format
 msgid "couldn't time-check %s (error %d)\n"
 msgstr "không thể kiểm tra giờ %s (lỗi %d)\n"
 
-#: fetchmail.c:623
+#: fetchmail.c:634
 #, c-format
 msgid "restarting fetchmail (%s changed)\n"
 msgstr "đang khởi chạy lại fetchmail (%s đã được thay đổi)\n"
 
-#: fetchmail.c:628
+#: fetchmail.c:639
 msgid "attempt to re-exec may fail as directory has not been restored\n"
 msgstr "việc cố thực hiện lại có thể thất bại vì thư mục chưa được phục hồi\n"
 
-#: fetchmail.c:655
+#: fetchmail.c:666
 msgid "attempt to re-exec fetchmail failed\n"
 msgstr "việc cố thực hiện lại fetchmail đã thất bại\n"
 
-#: fetchmail.c:683
+#: fetchmail.c:710
 #, c-format
 msgid "poll of %s skipped (failed authentication or too many timeouts)\n"
-msgstr "việc thăm dò %s bị bỏ qua (xác thực đã thất bại hoặc quá giờ quá nhiều lần)\n"
+msgstr ""
+"việc thăm dò %s bị bỏ qua (xác thực đã thất bại hoặc quá giờ quá nhiều lần)\n"
 
-#: fetchmail.c:695
+#: fetchmail.c:722
 #, c-format
 msgid "interval not reached, not querying %s\n"
 msgstr "Chưa tới khoảng nên không truy vấn %s\n"
 
-#: fetchmail.c:733
+#: fetchmail.c:760
 msgid "Query status=0 (SUCCESS)\n"
 msgstr "Trạng thái truy vấn=0 (THÀNH CÔNG)\n"
 
-#: fetchmail.c:735
+#: fetchmail.c:762
 msgid "Query status=1 (NOMAIL)\n"
 msgstr "Trạng thái truy vấn=1 (KHÔNG THƯ)\n"
 
-#: fetchmail.c:737
+#: fetchmail.c:764
 msgid "Query status=2 (SOCKET)\n"
 msgstr "Trạng thái truy vấn=2 (Ổ CẮM)\n"
 
-#: fetchmail.c:739
+#: fetchmail.c:766
 msgid "Query status=3 (AUTHFAIL)\n"
 msgstr "Trạng thái truy vấn=3 (XÁC THỰC THẤT BẠI)\n"
 
-#: fetchmail.c:741
+#: fetchmail.c:768
 msgid "Query status=4 (PROTOCOL)\n"
 msgstr "Trạng thái truy vấn=4 (GIAO THỨC)\n"
 
-#: fetchmail.c:743
+#: fetchmail.c:770
 msgid "Query status=5 (SYNTAX)\n"
 msgstr "Trạng thái truy vấn=5 (CÚ PHÁP)\n"
 
-#: fetchmail.c:745
+#: fetchmail.c:772
 msgid "Query status=6 (IOERR)\n"
 msgstr "Trạng thái truy vấn=6 (LỖI NHẬP/XUẤT)\n"
 
-#: fetchmail.c:747
+#: fetchmail.c:774
 msgid "Query status=7 (ERROR)\n"
 msgstr "Trạng thái truy vấn=7 (LỖI)\n"
 
-#: fetchmail.c:749
+#: fetchmail.c:776
 msgid "Query status=8 (EXCLUDE)\n"
 msgstr "Trạng thái truy vấn=8 (LOẠI TRỪ)\n"
 
-#: fetchmail.c:751
+#: fetchmail.c:778
 msgid "Query status=9 (LOCKBUSY)\n"
 msgstr "Trạng thái truy vấn=9 (KHOÁ BẬN)\n"
 
-#: fetchmail.c:753
+#: fetchmail.c:780
 msgid "Query status=10 (SMTP)\n"
 msgstr "Trạng thái truy vấn=10 (SMTP)\n"
 
-#: fetchmail.c:755
+#: fetchmail.c:782
 msgid "Query status=11 (DNS)\n"
 msgstr "Trạng thái truy vấn=11 (DNS)\n"
 
-#: fetchmail.c:757
+#: fetchmail.c:784
 msgid "Query status=12 (BSMTP)\n"
 msgstr "Trạng thái truy vấn=12 (BSMTP)\n"
 
-#: fetchmail.c:759
+#: fetchmail.c:786
 msgid "Query status=13 (MAXFETCH)\n"
 msgstr "Trạng thái truy vấn=13 (LẤY TỐI ĐA)\n"
 
-#: fetchmail.c:761
+#: fetchmail.c:788
 #, c-format
 msgid "Query status=%d\n"
 msgstr "Trạng thái truy vấn=%d\n"
 
-#: fetchmail.c:807
+#: fetchmail.c:834
 msgid "All connections are wedged.  Exiting.\n"
 msgstr "Mọi sự kết nối là bế tắc nên thoát.\n"
 
-#: fetchmail.c:814
+#: fetchmail.c:841
 #, c-format
 msgid "sleeping at %s for %d seconds\n"
 msgstr "đang ngủ tại %s trong %d giây\n"
 
-#: fetchmail.c:838
+#: fetchmail.c:865
 #, c-format
 msgid "awakened by %s\n"
 msgstr "bị %s kích hoạt lại\n"
 
-#: fetchmail.c:841
+#: fetchmail.c:868
 #, c-format
 msgid "awakened by signal %d\n"
 msgstr "bị tín hiệu %d kích hoạt lại\n"
 
-#: fetchmail.c:848
+#: fetchmail.c:875
 #, c-format
 msgid "awakened at %s\n"
 msgstr "được kích hoạt lại tại %s\n"
 
-#: fetchmail.c:854
+#: fetchmail.c:881
 #, c-format
 msgid "normal termination, status %d\n"
 msgstr "đã kết thúc chuẩn, trạng thái %d\n"
 
-#: fetchmail.c:1006
+#: fetchmail.c:1033
 msgid "couldn't time-check the run-control file\n"
 msgstr "không thể kiểm tra giờ của tập tin điều kiển việc chạy (run-control)\n"
 
-#: fetchmail.c:1039
+#: fetchmail.c:1066
 #, c-format
 msgid "Warning: multiple mentions of host %s in config file\n"
 msgstr "Cảnh báo : gặp tên máy %s nhiều lần trong tập tin cấu hình\n"
 
-#: fetchmail.c:1072
+#: fetchmail.c:1099
 msgid "fetchmail: Error: multiple \"defaults\" records in config file.\n"
-msgstr "fetchmail: lỗi : gặp nhiều mục ghi « mặc định » trong tập tin cấu hình.\n"
+msgstr ""
+"fetchmail: lỗi : gặp nhiều mục ghi « mặc định » trong tập tin cấu hình.\n"
 
-#: fetchmail.c:1194
+#: fetchmail.c:1221
 msgid "SSL support is not compiled in.\n"
 msgstr "Chưa biên dịch cách hỗ trợ SSL.\n"
 
-#: fetchmail.c:1225
-#, c-format
-msgid "fetchmail: warning: no DNS available to check multidrop fetches from %s\n"
-msgstr "fetchmail: cảnh báo : không có DNS sẵn sàng để kiểm tra việc lấy đa thả từ %s\n"
+#: fetchmail.c:1228
+#, fuzzy
+msgid "KERBEROS v4 support is configured, but not compiled in.\n"
+msgstr "Chưa biên dịch cách hỗ trợ SSL.\n"
 
-#: fetchmail.c:1236
+#: fetchmail.c:1234
+#, fuzzy
+msgid "KERBEROS v5 support is configured, but not compiled in.\n"
+msgstr "Chưa biên dịch cách hỗ trợ SSL.\n"
+
+#: fetchmail.c:1240
+#, fuzzy
+msgid "GSSAPI support is configured, but not compiled in.\n"
+msgstr "Chưa biên dịch cách hỗ trợ SSL.\n"
+
+#: fetchmail.c:1270
+#, c-format
+msgid ""
+"fetchmail: warning: no DNS available to check multidrop fetches from %s\n"
+msgstr ""
+"fetchmail: cảnh báo : không có DNS sẵn sàng để kiểm tra việc lấy đa thả từ %"
+"s\n"
+
+#: fetchmail.c:1281
 #, c-format
 msgid "warning: multidrop for %s requires envelope option!\n"
 msgstr "cảnh báo : việc đa thả cho %s cần thiết tùy chọn bao bọc (envelope).\n"
 
-#: fetchmail.c:1237
+#: fetchmail.c:1282
 msgid "warning: Do not ask for support if all mail goes to postmaster!\n"
-msgstr "cảnh báo : đừng yêu cầu sự hỗ trợ nếu mọi thư được phát cho postmaster (giám đốc sở bưu điện).\n"
+msgstr ""
+"cảnh báo : đừng yêu cầu sự hỗ trợ nếu mọi thư được phát cho postmaster (giám "
+"đốc sở bưu điện).\n"
 
-#: fetchmail.c:1254
+#: fetchmail.c:1299
 #, c-format
-msgid "fetchmail: %s configuration invalid, specify positive port number for service or port\n"
-msgstr "fetchmail: cấu hình %s không hợp lệ; hãy xác định số hiệu cổng dương cho dịch vụ hay cổng\n"
+msgid ""
+"fetchmail: %s configuration invalid, specify positive port number for "
+"service or port\n"
+msgstr ""
+"fetchmail: cấu hình %s không hợp lệ; hãy xác định số hiệu cổng dương cho "
+"dịch vụ hay cổng\n"
 
-#: fetchmail.c:1261
+#: fetchmail.c:1306
 #, c-format
 msgid "fetchmail: %s configuration invalid, RPOP requires a privileged port\n"
-msgstr "fetchmail: cấu hình %s không hợp lệ; RPOP cần thiết một cổng có quyền đặc biệt\n"
+msgstr ""
+"fetchmail: cấu hình %s không hợp lệ; RPOP cần thiết một cổng có quyền đặc "
+"biệt\n"
 
-#: fetchmail.c:1279
+#: fetchmail.c:1324
 #, c-format
 msgid "%s configuration invalid, LMTP can't use default SMTP port\n"
 msgstr "cấu hình %s không hợp lệ; LMTP không thể sử dụng cổng SMTP mặc định\n"
 
-#: fetchmail.c:1293
+#: fetchmail.c:1338
 msgid "Both fetchall and keep on in daemon or idle mode is a mistake!\n"
-msgstr "Việc chạy fetchall (lấy hết) cùng với tiếp tục trong chế độ trình nền là trường hợp xấu.\n"
+msgstr ""
+"Việc chạy fetchall (lấy hết) cùng với tiếp tục trong chế độ trình nền là "
+"trường hợp xấu.\n"
 
-#: fetchmail.c:1318
+#: fetchmail.c:1363
 #, c-format
 msgid "terminated with signal %d\n"
 msgstr "đã kết thúc với tín hiệu %d\n"
 
-#: fetchmail.c:1391
+#: fetchmail.c:1436
 #, c-format
 msgid "%s querying %s (protocol %s) at %s: poll started\n"
 msgstr "%s truy vấn %s (giao thức %s) tại %s: việc thăm dò đã khởi chạy\n"
 
-#: fetchmail.c:1416
+#: fetchmail.c:1461
 msgid "POP2 support is not configured.\n"
 msgstr "Chưa cấu hình cách hỗ trợ POP2.\n"
 
-#: fetchmail.c:1428
+#: fetchmail.c:1473
 msgid "POP3 support is not configured.\n"
 msgstr "Chưa cấu hình cách hỗ trợ POP3.\n"
 
-#: fetchmail.c:1438
+#: fetchmail.c:1483
 msgid "IMAP support is not configured.\n"
 msgstr "Chưa cấu hình cách hỗ trợ IMAP.\n"
 
-#: fetchmail.c:1444
+#: fetchmail.c:1489
 msgid "ETRN support is not configured.\n"
 msgstr "Chưa cấu hình cách hỗ trợ ETRN.\n"
 
-#: fetchmail.c:1452
+#: fetchmail.c:1497
 msgid "ODMR support is not configured.\n"
 msgstr "Chưa cấu hình cách hỗ trợ ODMR.\n"
 
-#: fetchmail.c:1459
+#: fetchmail.c:1504
 msgid "unsupported protocol selected.\n"
 msgstr "đã chọn giao thức không được hỗ trợ.\n"
 
-#: fetchmail.c:1469
+#: fetchmail.c:1514
 #, c-format
 msgid "%s querying %s (protocol %s) at %s: poll completed\n"
 msgstr "%s truy vấn %s (giao thức %s) tại %s: việc thăm dò đã chạy xong\n"
 
-#: fetchmail.c:1486
+#: fetchmail.c:1531
 #, c-format
 msgid "Poll interval is %d seconds\n"
 msgstr "Khoảng thăm dò là %d giây\n"
 
-#: fetchmail.c:1488
+#: fetchmail.c:1533
 #, c-format
 msgid "Logfile is %s\n"
 msgstr "Tập tin bản ghi là %s\n"
 
-#: fetchmail.c:1490
+#: fetchmail.c:1535
 #, c-format
 msgid "Idfile is %s\n"
 msgstr "Tập tin Id là %s\n"
 
-#: fetchmail.c:1493
+#: fetchmail.c:1538
 msgid "Progress messages will be logged via syslog\n"
-msgstr "Các thông điệp tiến hành sẽ được ghi lưu bằng syslog (bản ghi hệ thống)\n"
+msgstr ""
+"Các thông điệp tiến hành sẽ được ghi lưu bằng syslog (bản ghi hệ thống)\n"
 
-#: fetchmail.c:1496
+#: fetchmail.c:1541
 msgid "Fetchmail will masquerade and will not generate Received\n"
-msgstr "Fetchmail sẽ giả trang và sẽ không tạo ra dòng đầu « Received » (đã nhận)\n"
+msgstr ""
+"Fetchmail sẽ giả trang và sẽ không tạo ra dòng đầu « Received » (đã nhận)\n"
 
-#: fetchmail.c:1498
+#: fetchmail.c:1543
 msgid "Fetchmail will show progress dots even in logfiles.\n"
-msgstr "Fetchmail sẽ hiển thị các chấm tiến hành ngay cả trong tập tin ghi lưu.\n"
+msgstr ""
+"Fetchmail sẽ hiển thị các chấm tiến hành ngay cả trong tập tin ghi lưu.\n"
 
-#: fetchmail.c:1500
+#: fetchmail.c:1545
 #, c-format
 msgid "Fetchmail will forward misaddressed multidrop messages to %s.\n"
 msgstr "Fetchmail sẽ chuyển tiếp các thư đa thả có địa chỉ sai tới %s\n"
 
-#: fetchmail.c:1504
+#: fetchmail.c:1549
 msgid "Fetchmail will direct error mail to the postmaster.\n"
 msgstr "Fetchmail sẽ chỉ các thư lỗi tới postmaster (giám đốc sở bưu điện).\n"
 
-#: fetchmail.c:1506
+#: fetchmail.c:1551
 msgid "Fetchmail will direct error mail to the sender.\n"
 msgstr "Fetchmail sẽ chỉ các thư lỗi tới người gởi.\n"
 
-#: fetchmail.c:1513
+#: fetchmail.c:1558
 #, c-format
 msgid "Options for retrieving from %s@%s:\n"
 msgstr "Tùy chọn về việc lấy từ %s@%s:\n"
 
-#: fetchmail.c:1517
+#: fetchmail.c:1562
 #, c-format
 msgid "  Mail will be retrieved via %s\n"
 msgstr "  Thư sẽ được lấy bằng %s\n"
 
-#: fetchmail.c:1520
+#: fetchmail.c:1565
 #, c-format
 msgid "  Poll of this server will occur every %d interval.\n"
 msgid_plural "  Poll of this server will occur every %d intervals.\n"
 msgstr[0] "  Máy phục vụ này sẽ được thăm dò mỗi %d khoảng.\n"
 
-#: fetchmail.c:1524
+#: fetchmail.c:1569
 #, c-format
 msgid "  True name of server is %s.\n"
 msgstr "  Tên đúng của máy phục vụ là %s.\n"
 
-#: fetchmail.c:1527
+#: fetchmail.c:1572
 msgid "  This host will not be queried when no host is specified.\n"
 msgstr "  Máy này sẽ không được truy vấn khi chưa xác định máy nào.\n"
 
-#: fetchmail.c:1528
+#: fetchmail.c:1573
 msgid "  This host will be queried when no host is specified.\n"
 msgstr "  Máy này sẽ được truy vấn khi chưa xác định máy nào.\n"
 
-#: fetchmail.c:1532
+#: fetchmail.c:1577
 msgid "  Password will be prompted for.\n"
 msgstr "  Sẽ nhắc với mật khẩu.\n"
 
-#: fetchmail.c:1536
+#: fetchmail.c:1581
 #, c-format
 msgid "  APOP secret = \"%s\".\n"
 msgstr "  Bí mất APOP = « %s ».\n"
 
-#: fetchmail.c:1539
+#: fetchmail.c:1584
 #, c-format
 msgid "  RPOP id = \"%s\".\n"
 msgstr "  ID RPOP = « %s ».\n"
 
-#: fetchmail.c:1542
+#: fetchmail.c:1587
 #, c-format
 msgid "  Password = \"%s\".\n"
 msgstr "  Mật khẩu = « %s ».\n"
 
-#: fetchmail.c:1551
+#: fetchmail.c:1596
 #, c-format
 msgid "  Protocol is KPOP with Kerberos %s authentication"
 msgstr "  Giao thức là KPOP cùng với sự xác thực Kerberos %s"
 
-#: fetchmail.c:1554
+#: fetchmail.c:1599
 #, c-format
 msgid "  Protocol is %s"
 msgstr "  Giao thức là %s"
 
-#: fetchmail.c:1556
+#: fetchmail.c:1601
 #, c-format
 msgid " (using service %s)"
 msgstr " (dùng dịch vụ %s)"
 
-#: fetchmail.c:1558
+#: fetchmail.c:1603
 msgid " (using default port)"
 msgstr " (dùng cổng mặc định)"
 
-#: fetchmail.c:1560
+#: fetchmail.c:1605
 msgid " (forcing UIDL use)"
 msgstr " (buộc dùng UIDL)"
 
-#: fetchmail.c:1566
+#: fetchmail.c:1611
 msgid "  All available authentication methods will be tried.\n"
 msgstr "  Sẽ cố dùng mọi phương pháp xác thực sẵn sàng.\n"
 
-#: fetchmail.c:1569
+#: fetchmail.c:1614
 msgid "  Password authentication will be forced.\n"
 msgstr "  Sẽ buộc xác thức bằng mật khẩu.\n"
 
-#: fetchmail.c:1572
+#: fetchmail.c:1617
 msgid "  MSN authentication will be forced.\n"
 msgstr "  Sẽ buộc xác thức MSN.\n"
 
-#: fetchmail.c:1575
+#: fetchmail.c:1620
 msgid "  NTLM authentication will be forced.\n"
 msgstr "  Sẽ buộc xác thức NTLM.\n"
 
-#: fetchmail.c:1578
+#: fetchmail.c:1623
 msgid "  OTP authentication will be forced.\n"
 msgstr "  Sẽ buộc xác thức OTP.\n"
 
-#: fetchmail.c:1581
+#: fetchmail.c:1626
 msgid "  CRAM-Md5 authentication will be forced.\n"
 msgstr "  Sẽ buộc xác thức CRAM-Md5.\n"
 
-#: fetchmail.c:1584
+#: fetchmail.c:1629
 msgid "  GSSAPI authentication will be forced.\n"
 msgstr "  Sẽ buộc xác thức GSSAPI.\n"
 
-#: fetchmail.c:1587
+#: fetchmail.c:1632
 msgid "  Kerberos V4 authentication will be forced.\n"
 msgstr "  Sẽ buộc xác thức Kerberos V4.\n"
 
-#: fetchmail.c:1590
+#: fetchmail.c:1635
 msgid "  Kerberos V5 authentication will be forced.\n"
 msgstr "  Sẽ buộc xác thức Kerberos V5.\n"
 
-#: fetchmail.c:1593
+#: fetchmail.c:1638
 msgid "  End-to-end encryption assumed.\n"
 msgstr "  GIả sử sự mật mã cuối đến cuối.\n"
 
-#: fetchmail.c:1597
+#: fetchmail.c:1642
 #, c-format
 msgid "  Mail service principal is: %s\n"
 msgstr "  Điều chính trong dịch vụ thư là : %s\n"
 
-#: fetchmail.c:1600
+#: fetchmail.c:1645
 msgid "  SSL encrypted sessions enabled.\n"
 msgstr "  Phiên chạy đã mật mã bằng SSL đã được bật.\n"
 
-#: fetchmail.c:1602
+#: fetchmail.c:1647
 #, c-format
 msgid "  SSL protocol: %s.\n"
 msgstr "  Giao thức SSL: %s\n"
 
-#: fetchmail.c:1604
+#: fetchmail.c:1649
 msgid "  SSL server certificate checking enabled.\n"
 msgstr "  Khả năng kiểm tra chứng nhận máy phục vụ SSL đã được bật.\n"
 
-#: fetchmail.c:1606
+#: fetchmail.c:1651
 #, c-format
 msgid "  SSL trusted certificate directory: %s\n"
 msgstr "  Thư mục chứng nhận đáng tin SSL: %s\n"
 
-#: fetchmail.c:1609
+#: fetchmail.c:1654
 #, c-format
 msgid "  SSL key fingerprint (checked against the server key): %s\n"
 msgstr "  Vân tay khoá SSL (so sánh với khoá máy phục vụ): %s\n"
 
-#: fetchmail.c:1612
+#: fetchmail.c:1657
 #, c-format
 msgid "  Server nonresponse timeout is %d seconds"
 msgstr "  Thời hạn không đáp ứng của máy phục vụ là %d giây"
 
-#: fetchmail.c:1614
+#: fetchmail.c:1659
 msgid " (default).\n"
 msgstr " (mặc định).\n"
 
-#: fetchmail.c:1621
+#: fetchmail.c:1666
 msgid "  Default mailbox selected.\n"
 msgstr "  Hộp thư mặc định đã được chọn.\n"
 
-#: fetchmail.c:1626
+#: fetchmail.c:1671
 msgid "  Selected mailboxes are:"
 msgstr "  Các hộp thư đã chọn là :"
 
-#: fetchmail.c:1632
+#: fetchmail.c:1677
 msgid "  All messages will be retrieved (--all on).\n"
 msgstr "  Mọi thư sẽ được lấy (« --all » bật).\n"
 
-#: fetchmail.c:1633
+#: fetchmail.c:1678
 msgid "  Only new messages will be retrieved (--all off).\n"
 msgstr "  Chỉ thư mới sẽ được lấy (« --all » tắt).\n"
 
-#: fetchmail.c:1635
+#: fetchmail.c:1680
 msgid "  Fetched messages will be kept on the server (--keep on).\n"
 msgstr "  Các thư đã lấy sẽ được giữ lại trên máy phục vụ (« --keep » bật).\n"
 
-#: fetchmail.c:1636
+#: fetchmail.c:1681
 msgid "  Fetched messages will not be kept on the server (--keep off).\n"
-msgstr "  Các thư đã lấy sẽ không được giữ lại trên máy phục vụ (« --keep » tắt).\n"
+msgstr ""
+"  Các thư đã lấy sẽ không được giữ lại trên máy phục vụ (« --keep » tắt).\n"
 
-#: fetchmail.c:1638
+#: fetchmail.c:1683
 msgid "  Old messages will be flushed before message retrieval (--flush on).\n"
 msgstr "  Các thư cũ sẽ được xoá sạch trước khi lấy thư (« --flush » bật).\n"
 
-#: fetchmail.c:1639
-msgid "  Old messages will not be flushed before message retrieval (--flush off).\n"
-msgstr "  Các thư cũ sẽ không được xoá sạch trước khi lấy thư (« --flush » tắt).\n"
+#: fetchmail.c:1684
+msgid ""
+"  Old messages will not be flushed before message retrieval (--flush off).\n"
+msgstr ""
+"  Các thư cũ sẽ không được xoá sạch trước khi lấy thư (« --flush » tắt).\n"
 
-#: fetchmail.c:1641
-msgid "  Oversized messages will be flushed before message retrieval (--limitflush on).\n"
-msgstr "  Các thư quá lớn sẽ được xoá sạch trước khi lấy thư (« --limitflush » bật).\n"
+#: fetchmail.c:1686
+msgid ""
+"  Oversized messages will be flushed before message retrieval (--limitflush "
+"on).\n"
+msgstr ""
+"  Các thư quá lớn sẽ được xoá sạch trước khi lấy thư (« --limitflush » "
+"bật).\n"
 
-#: fetchmail.c:1642
-msgid "  Oversized messages will not be flushed before message retrieval (--limitflush off).\n"
-msgstr "  Các thư quá lớn sẽ không được xoá sạch trước khi lấy thư (« --limitflush » tắt).\n"
+#: fetchmail.c:1687
+msgid ""
+"  Oversized messages will not be flushed before message retrieval (--"
+"limitflush off).\n"
+msgstr ""
+"  Các thư quá lớn sẽ không được xoá sạch trước khi lấy thư (« --limitflush » "
+"tắt).\n"
 
-#: fetchmail.c:1644
+#: fetchmail.c:1689
 msgid "  Rewrite of server-local addresses is enabled (--norewrite off).\n"
-msgstr "  Khả năng ghi lại các địa chỉ cục bộ với máy phục vụ đã được bật (« --norewrite » tắt).\n"
+msgstr ""
+"  Khả năng ghi lại các địa chỉ cục bộ với máy phục vụ đã được bật (« --"
+"norewrite » tắt).\n"
 
-#: fetchmail.c:1645
+#: fetchmail.c:1690
 msgid "  Rewrite of server-local addresses is disabled (--norewrite on).\n"
-msgstr "  Khả năng ghi lại các địa chỉ cục bộ với máy phục vụ đã được tắt (« --norewrite » bật).\n"
+msgstr ""
+"  Khả năng ghi lại các địa chỉ cục bộ với máy phục vụ đã được tắt (« --"
+"norewrite » bật).\n"
 
-#: fetchmail.c:1647
+#: fetchmail.c:1692
 msgid "  Carriage-return stripping is enabled (stripcr on).\n"
-msgstr "  Khả năng gỡ bỏ mọi ký tự về đầu dòng đã được bật (« stripcr » bật).\n"
+msgstr ""
+"  Khả năng gỡ bỏ mọi ký tự về đầu dòng đã được bật (« stripcr » bật).\n"
 
-#: fetchmail.c:1648
+#: fetchmail.c:1693
 msgid "  Carriage-return stripping is disabled (stripcr off).\n"
-msgstr "  Khả năng gỡ bỏ mọi ký tự về đầu dòng đã được tắt (« stripcr » tắt).\n"
+msgstr ""
+"  Khả năng gỡ bỏ mọi ký tự về đầu dòng đã được tắt (« stripcr » tắt).\n"
 
-#: fetchmail.c:1650
+#: fetchmail.c:1695
 msgid "  Carriage-return forcing is enabled (forcecr on).\n"
 msgstr "  Việc buộc ký tự về đầu dòng đã được bật (« forcecr » bật).\n"
 
-#: fetchmail.c:1651
+#: fetchmail.c:1696
 msgid "  Carriage-return forcing is disabled (forcecr off).\n"
 msgstr "  Việc buộc ký tự về đầu dòng đã được tắt (« forcecr » tắt).\n"
 
-#: fetchmail.c:1653
-msgid "  Interpretation of Content-Transfer-Encoding is disabled (pass8bits on).\n"
-msgstr "  Khả năng giải thích Content-Transfer-Encoding (cách mã hoá nội dung được truyền) đã được tắt (« pass8bits » bật).\n"
+#: fetchmail.c:1698
+msgid ""
+"  Interpretation of Content-Transfer-Encoding is disabled (pass8bits on).\n"
+msgstr ""
+"  Khả năng giải thích Content-Transfer-Encoding (cách mã hoá nội dung được "
+"truyền) đã được tắt (« pass8bits » bật).\n"
 
-#: fetchmail.c:1654
-msgid "  Interpretation of Content-Transfer-Encoding is enabled (pass8bits off).\n"
-msgstr "  Khả năng giải thích Content-Transfer-Encoding (cách mã hoá nội dung được truyền) đã được bật (« pass8bits » tắt).\n"
+#: fetchmail.c:1699
+msgid ""
+"  Interpretation of Content-Transfer-Encoding is enabled (pass8bits off).\n"
+msgstr ""
+"  Khả năng giải thích Content-Transfer-Encoding (cách mã hoá nội dung được "
+"truyền) đã được bật (« pass8bits » tắt).\n"
 
-#: fetchmail.c:1656
+#: fetchmail.c:1701
 msgid "  MIME decoding is enabled (mimedecode on).\n"
 msgstr "  Khả năng giải mã MIME đã được bật (« mimedecode » bật).\n"
 
-#: fetchmail.c:1657
+#: fetchmail.c:1702
 msgid "  MIME decoding is disabled (mimedecode off).\n"
 msgstr "  Khả năng giải mã MIME đã được tắt (« mimedecode » tắt).\n"
 
-#: fetchmail.c:1659
+#: fetchmail.c:1704
 msgid "  Idle after poll is enabled (idle on).\n"
 msgstr "  Nghỉ sau khi việc thăm dò được bật (nghỉ bật).\n"
 
-#: fetchmail.c:1660
+#: fetchmail.c:1705
 msgid "  Idle after poll is disabled (idle off).\n"
 msgstr "  Nghỉ sau khi việc thăm dò được tắt (nghỉ tắt).\n"
 
-#: fetchmail.c:1662
+#: fetchmail.c:1707
 msgid "  Nonempty Status lines will be discarded (dropstatus on)\n"
 msgstr "  Các dòng Trạng thái sẽ được hủy (« dropstatus » bật).\n"
 
-#: fetchmail.c:1663
+#: fetchmail.c:1708
 msgid "  Nonempty Status lines will be kept (dropstatus off)\n"
 msgstr "  Các dòng Status (Trạng thái) sẽ được giữ (« dropstatus » tắt).\n"
 
-#: fetchmail.c:1665
+#: fetchmail.c:1710
 msgid "  Delivered-To lines will be discarded (dropdelivered on)\n"
-msgstr "  Các dòng Delivered-To (Được phát cho) sẽ được hủy (« dropdelivered » bật).\n"
+msgstr ""
+"  Các dòng Delivered-To (Được phát cho) sẽ được hủy (« dropdelivered » "
+"bật).\n"
 
-#: fetchmail.c:1666
+#: fetchmail.c:1711
 msgid "  Delivered-To lines will be kept (dropdelivered off)\n"
-msgstr "  Các dòng Delivered-To (Được phát cho) sẽ được giữ (« dropdelivered » tắt).\n"
+msgstr ""
+"  Các dòng Delivered-To (Được phát cho) sẽ được giữ (« dropdelivered » "
+"tắt).\n"
 
-#: fetchmail.c:1670
+#: fetchmail.c:1715
 #, c-format
 msgid "  Message size limit is %d octets (--limit %d).\n"
 msgstr "  Giới hạn kích cỡ thư là %d octet (« --limit » %d).\n"
 
-#: fetchmail.c:1673
+#: fetchmail.c:1718
 msgid "  No message size limit (--limit 0).\n"
 msgstr "  Không có giới hạn kích cỡ thư (« --limit » 0).\n"
 
-#: fetchmail.c:1675
+#: fetchmail.c:1720
 #, c-format
 msgid "  Message size warning interval is %d seconds (--warnings %d).\n"
 msgstr "  Khoảng cảnh báo kích cỡ thư là %d giây (« --warnings » %d).\n"
 
-#: fetchmail.c:1678
+#: fetchmail.c:1723
 msgid "  Size warnings on every poll (--warnings 0).\n"
 msgstr "  Cảnh báo về kích cỡ mỗi lần thăm dò (« --warnings » 0).\n"
 
-#: fetchmail.c:1681
+#: fetchmail.c:1726
 #, c-format
 msgid "  Received-message limit is %d (--fetchlimit %d).\n"
 msgstr "  Giới hạn thư đã nhận là %d (« --fetchlimit » %d).\n"
 
-#: fetchmail.c:1684
+#: fetchmail.c:1729
 msgid "  No received-message limit (--fetchlimit 0).\n"
 msgstr "  Không có giới hạn thư đã nhận (« --fetchlimit » 0).\n"
 
-#: fetchmail.c:1686
+#: fetchmail.c:1731
 #, c-format
 msgid "  Fetch message size limit is %d (--fetchsizelimit %d).\n"
 msgstr "  Giới hạn kích cỡ thư lấy là %d (« (--fetchsizelimit » %d).\n"
 
-#: fetchmail.c:1689
+#: fetchmail.c:1734
 msgid "  No fetch message size limit (--fetchsizelimit 0).\n"
 msgstr "  Không có giới hạn kích cỡ thư lấy (« (--fetchsizelimit » 0).\n"
 
-#: fetchmail.c:1693
+#: fetchmail.c:1738
 msgid "  Do binary search of UIDs during each poll (--fastuidl 1).\n"
-msgstr "  Tìm kiếm nhị phân các UID trong khi mỗi việc thăm dò (« --fastuidl » 1).\n"
+msgstr ""
+"  Tìm kiếm nhị phân các UID trong khi mỗi việc thăm dò (« --fastuidl » 1).\n"
 
-#: fetchmail.c:1695
+#: fetchmail.c:1740
 #, c-format
 msgid "  Do binary search of UIDs during %d out of %d polls (--fastuidl %d).\n"
-msgstr "  Tìm kiếm nhị phân các UID trong khi %d trên %d việc thăm dò (« --fastuidl » %d).\n"
+msgstr ""
+"  Tìm kiếm nhị phân các UID trong khi %d trên %d việc thăm dò (« --fastuidl "
+"» %d).\n"
 
-#: fetchmail.c:1698
+#: fetchmail.c:1743
 msgid "   Do linear search of UIDs during each poll (--fastuidl 0).\n"
-msgstr "   Tìm kiếm tuyến các UID trong khi mỗi việc thăm dò (« --fastuidl » 0).\n"
+msgstr ""
+"   Tìm kiếm tuyến các UID trong khi mỗi việc thăm dò (« --fastuidl » 0).\n"
 
-#: fetchmail.c:1700
+#: fetchmail.c:1745
 #, c-format
 msgid "  SMTP message batch limit is %d.\n"
 msgstr "  Giới hạn bó thư SMTP là %d.\n"
 
-#: fetchmail.c:1702
+#: fetchmail.c:1747
 msgid "  No SMTP message batch limit (--batchlimit 0).\n"
 msgstr "  Không có giới hạn bó thư SMTP (« --batchlimit » 0).\n"
 
-#: fetchmail.c:1706
+#: fetchmail.c:1751
 #, c-format
 msgid "  Deletion interval between expunges forced to %d (--expunge %d).\n"
-msgstr "  Khoảng xoá bỏ giữa hai lần xoá hẳn đã được buộc thành %d (« --expunge » %d).\n"
+msgstr ""
+"  Khoảng xoá bỏ giữa hai lần xoá hẳn đã được buộc thành %d (« --expunge » %"
+"d).\n"
 
-#: fetchmail.c:1708
+#: fetchmail.c:1753
 msgid "  No forced expunges (--expunge 0).\n"
 msgstr "  Không có việc xoá hẳn đã buộc) (« --expunge » 0).\n"
 
-#: fetchmail.c:1715
+#: fetchmail.c:1760
 msgid "  Domains for which mail will be fetched are:"
 msgstr "  Các miền cho đó sẽ lấy thư là :"
 
-#: fetchmail.c:1720 fetchmail.c:1740
+#: fetchmail.c:1765 fetchmail.c:1785
 msgid " (default)"
 msgstr " (mặc định)"
 
-#: fetchmail.c:1725
+#: fetchmail.c:1770
 #, c-format
 msgid "  Messages will be appended to %s as BSMTP\n"
 msgstr "  Các thư sẽ được phụ thêm vào %s là BSMTP\n"
 
-#: fetchmail.c:1727
+#: fetchmail.c:1772
 #, c-format
 msgid "  Messages will be delivered with \"%s\".\n"
 msgstr "  Các thư sẽ được phát bằng « %s ».\n"
 
-#: fetchmail.c:1734
+#: fetchmail.c:1779
 #, c-format
 msgid "  Messages will be %cMTP-forwarded to:"
 msgstr "  Các thư sẽ được chuyển tiếp %cMTP tới :"
 
-#: fetchmail.c:1745
+#: fetchmail.c:1790
 #, c-format
 msgid "  Host part of MAIL FROM line will be %s\n"
 msgstr "  Phần máy của dòng MAIL FROM (thư từ) sẽ là %s\n"
 
-#: fetchmail.c:1748
+#: fetchmail.c:1793
 #, c-format
 msgid "  Address to be put in RCPT TO lines shipped to SMTP will be %s\n"
 msgstr "  Địa chỉ cần chèn vào dòng RCPT TO được gởi cho SMTP sẽ là %s\n"
 
-#: fetchmail.c:1757
+#: fetchmail.c:1802
 msgid "  Recognized listener spam block responses are:"
 msgstr "  Các đáp ứng chặn thư rác đã nhận diện của bộ lắng nghe là :"
 
-#: fetchmail.c:1763
+#: fetchmail.c:1808
 msgid "  Spam-blocking disabled\n"
 msgstr "  Khả năng chặn thư rác được tắt\n"
 
-#: fetchmail.c:1766
+#: fetchmail.c:1811
 #, c-format
 msgid "  Server connection will be brought up with \"%s\".\n"
 msgstr "  Sự kết nối đến máy phục vụ sẽ được tạo bằng « %s ».\n"
 
-#: fetchmail.c:1769
+#: fetchmail.c:1814
 msgid "  No pre-connection command.\n"
 msgstr "  Không có lệnh tiền kết nối.\n"
 
-#: fetchmail.c:1771
+#: fetchmail.c:1816
 #, c-format
 msgid "  Server connection will be taken down with \"%s\".\n"
 msgstr "  Sự kết nối đến máy phục vụ sẽ được đóng bằng « %s ».\n"
 
-#: fetchmail.c:1774
+#: fetchmail.c:1819
 msgid "  No post-connection command.\n"
 msgstr "  Không có lệnh hậu kết nối.\n"
 
-#: fetchmail.c:1777
+#: fetchmail.c:1822
 msgid "  No localnames declared for this host.\n"
 msgstr "  Chưa xác định tên cục bộ (localname) cho máy này.\n"
 
-#: fetchmail.c:1787
+#: fetchmail.c:1832
 msgid "  Multi-drop mode: "
 msgstr "  Chế độ đa thả : "
 
-#: fetchmail.c:1789
+#: fetchmail.c:1834
 msgid "  Single-drop mode: "
 msgstr "  Chế độ thả đơn: "
 
-#: fetchmail.c:1791
+#: fetchmail.c:1836
 #, c-format
 msgid "%d local name recognized.\n"
 msgid_plural "%d local names recognized.\n"
 msgstr[0] "Chấp nhân %d tên cục bộ.\n"
 
-#: fetchmail.c:1806
+#: fetchmail.c:1851
 msgid "  DNS lookup for multidrop addresses is enabled.\n"
 msgstr "  Khả năng tra tìm DNS cho địa chỉ đa thả đã được bật.\n"
 
-#: fetchmail.c:1807
+#: fetchmail.c:1852
 msgid "  DNS lookup for multidrop addresses is disabled.\n"
 msgstr "  Khả năng tra tìm DNS cho địa chỉ đa thả đã được tắt.\n"
 
-#: fetchmail.c:1811
-msgid "  Server aliases will be compared with multidrop addresses by IP address.\n"
-msgstr "  Bí danh máy phục vụ sẽ được so sánh với địa chỉ đa thả theo địa chỉ IP.\n"
+#: fetchmail.c:1856
+msgid ""
+"  Server aliases will be compared with multidrop addresses by IP address.\n"
+msgstr ""
+"  Bí danh máy phục vụ sẽ được so sánh với địa chỉ đa thả theo địa chỉ IP.\n"
 
-#: fetchmail.c:1813
+#: fetchmail.c:1858
 msgid "  Server aliases will be compared with multidrop addresses by name.\n"
 msgstr "  Bí danh máy phục vụ sẽ được so sánh với địa chỉ đa thả theo tên.\n"
 
-#: fetchmail.c:1816
+#: fetchmail.c:1861
 msgid "  Envelope-address routing is disabled\n"
 msgstr "  Khả năng định tuyến phong bì-địa chỉ đã được tắt\n"
 
-#: fetchmail.c:1819
+#: fetchmail.c:1864
 #, c-format
 msgid "  Envelope header is assumed to be: %s\n"
 msgstr "  Giả sử dòng đầu phong bì là : %s\n"
 
-#: fetchmail.c:1822
+#: fetchmail.c:1867
 #, c-format
 msgid "  Number of envelope headers to be skipped over: %d\n"
 msgstr "  Số dòng đầu phong bì cần bỏ qua : %d\n"
 
-#: fetchmail.c:1825
+#: fetchmail.c:1870
 #, c-format
 msgid "  Prefix %s will be removed from user id\n"
 msgstr "  Tiền tố %s sẽ được gỡ bỏ ra ID người dùng\n"
 
-#: fetchmail.c:1828
+#: fetchmail.c:1873
 msgid "  No prefix stripping\n"
 msgstr "  Không gỡ bỏ tiền tố\n"
 
-#: fetchmail.c:1835
+#: fetchmail.c:1880
 msgid "  Predeclared mailserver aliases:"
 msgstr "  Các bí danh trình phục vụ thư xác định sẵn:"
 
-#: fetchmail.c:1844
+#: fetchmail.c:1889
 msgid "  Local domains:"
 msgstr "  Miền cục bộ :"
 
-#: fetchmail.c:1854
+#: fetchmail.c:1899
 #, c-format
 msgid "  Connection must be through interface %s.\n"
 msgstr "  Phải kết nối qua giao diện %s.\n"
 
-#: fetchmail.c:1856
+#: fetchmail.c:1901
 msgid "  No interface requirement specified.\n"
 msgstr "  Chưa xác định giao diện cần thiết.\n"
 
-#: fetchmail.c:1858
+#: fetchmail.c:1903
 #, c-format
 msgid "  Polling loop will monitor %s.\n"
 msgstr "  Vòng lặp thăm dò sẽ theo dõi %s.\n"
 
-#: fetchmail.c:1860
+#: fetchmail.c:1905
 msgid "  No monitor interface specified.\n"
 msgstr "  Chưa xác định giao diện theo dõi.\n"
 
-#: fetchmail.c:1864
+#: fetchmail.c:1909
 #, c-format
 msgid "  Server connections will be made via plugin %s (--plugin %s).\n"
 msgstr "  Sẽ kết nối đến máy phục vụ bằng bộ cầm phít %s (« --plugin » %s).\n"
 
-#: fetchmail.c:1866
+#: fetchmail.c:1911
 msgid "  No plugin command specified.\n"
 msgstr "  Chưa xác định lệnh bộ cầm phít.\n"
 
-#: fetchmail.c:1868
+#: fetchmail.c:1913
 #, c-format
 msgid "  Listener connections will be made via plugout %s (--plugout %s).\n"
 msgstr "  Sẽ kết nối lắng nghe bằng bộ kéo phít %s (« --plugout » %s).\n"
 
-#: fetchmail.c:1870
+#: fetchmail.c:1915
 msgid "  No plugout command specified.\n"
 msgstr "  Chưa xác định lệnh bộ kéo phít.\n"
 
-#: fetchmail.c:1875
+#: fetchmail.c:1920
 msgid "  No UIDs saved from this host.\n"
 msgstr "  Không có UID được lưu từ máy này.\n"
 
-#: fetchmail.c:1884
+#: fetchmail.c:1929
 #, c-format
 msgid "  %d UIDs saved.\n"
 msgstr "  %d UID đã được lưu.\n"
 
-#: fetchmail.c:1892
+#: fetchmail.c:1937
 msgid "  Poll trace information will be added to the Received header.\n"
 msgstr "  Thông tin vết thăm dò sẽ được thêm vào dòng đầu « Received ».\n"
 
-#: fetchmail.c:1894
+#: fetchmail.c:1939
 msgid ""
 "  No poll trace information will be added to the Received header.\n"
 ".\n"
-msgstr "  Không có thông tin vết thăm dò sẽ được thêm vào dòng đầu « Received ».\n"
+msgstr ""
+"  Không có thông tin vết thăm dò sẽ được thêm vào dòng đầu « Received ».\n"
 
-#: fetchmail.c:1897
+#: fetchmail.c:1942
 #, c-format
 msgid "  Pass-through properties \"%s\".\n"
 msgstr "  Tài sản gởi qua « %s ».\n"
@@ -1555,101 +1651,106 @@ msgstr "Gặp lỗi khi phát hành thông tin xác thực\n"
 msgid "fetchmail: thread sleeping for %d sec.\n"
 msgstr "fetchmail: nhánh ngủ trong %d giây\n"
 
-#: imap.c:316
+#: imap.c:326
 msgid "Protocol identified as IMAP4 rev 1\n"
 msgstr "Giao thức được phát hiện là IMAP4 rev 1\n"
 
-#: imap.c:322
+#: imap.c:332
 msgid "Protocol identified as IMAP4 rev 0\n"
 msgstr "Giao thức được phát hiện là IMAP4 rev 0\n"
 
-#: imap.c:329
+#: imap.c:339
 msgid "Protocol identified as IMAP2 or IMAP2BIS\n"
 msgstr "Giao thức được phát hiện là IMAP2 hay IMAP2BIS\n"
 
-#: imap.c:344
+#: imap.c:354
 msgid "will idle after poll\n"
 msgstr "sẽ nghỉ sau khi thăm dò\n"
 
-#: imap.c:431 pop3.c:501
+#: imap.c:441 pop3.c:505
 #, c-format
 msgid "%s: upgrade to TLS succeeded.\n"
 msgstr "%s: việc nâng cấp lên TLS đã thành công.\n"
 
-#: imap.c:440 pop3.c:510
+#: imap.c:450 pop3.c:514
 #, c-format
 msgid "%s: upgrade to TLS failed.\n"
 msgstr "%s: việc nâng cấp lên TLS bị lỗi.\n"
 
-#: imap.c:444
+#: imap.c:454
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue\n"
-msgstr "%s: việc nâng cấp lên TLS một cách cơ hội chủ nghĩa bị lỗi nên thử tiếp tục\n"
+msgstr ""
+"%s: việc nâng cấp lên TLS một cách cơ hội chủ nghĩa bị lỗi nên thử tiếp tục\n"
 
-#: imap.c:555
+#: imap.c:565
 msgid "Required OTP capability not compiled into fetchmail\n"
 msgstr "Khả năng OTP cần thiết không được biên dịch vào fetchmail\n"
 
-#: imap.c:577 pop3.c:380
+#: imap.c:587 pop3.c:380
 msgid "Required NTLM capability not compiled into fetchmail\n"
 msgstr "Khả năng NTLM cần thiết không được biên dịch vào fetchmail\n"
 
-#: imap.c:586
+#: imap.c:596
 msgid "Required LOGIN capability not supported by server\n"
-msgstr "Khả năng LOGIN (đăng nhập) cần thiết không được hỗ trợ bởi máy phục vụ\n"
+msgstr ""
+"Khả năng LOGIN (đăng nhập) cần thiết không được hỗ trợ bởi máy phục vụ\n"
 
-#: imap.c:652
+#: imap.c:662
 #, c-format
 msgid "mail expunge mismatch (%d actual != %d expected)\n"
 msgstr "không khớp được khi xoá hẳn thư (%d thật != %d ngờ)\n"
 
-#: imap.c:756 imap.c:815
+#: imap.c:768 imap.c:827
 msgid "re-poll failed\n"
 msgstr "việc thăm dò lại bị lỗi\n"
 
-#: imap.c:764 imap.c:820
+#: imap.c:776 imap.c:832
 #, c-format
 msgid "%d message waiting after re-poll\n"
 msgid_plural "%d messages waiting after re-poll\n"
 msgstr[0] "%d thư đợi sau khi thăm dò lại\n"
 
-#: imap.c:781
+#: imap.c:793
 msgid "mailbox selection failed\n"
 msgstr "việc chọn hộp thư bị lỗi\n"
 
-#: imap.c:785
+#: imap.c:797
 #, c-format
 msgid "%d message waiting after first poll\n"
 msgid_plural "%d messages waiting after first poll\n"
 msgstr[0] "%d thư đợi sau khi thăm dò lần thứ nhất\n"
 
-#: imap.c:799
+#: imap.c:811
 msgid "expunge failed\n"
 msgstr "việc xoá hẳn bị lỗi\n"
 
-#: imap.c:803
+#: imap.c:815
 #, c-format
 msgid "%d message waiting after expunge\n"
 msgid_plural "%d messages waiting after expunge\n"
 msgstr[0] "%d thư đợi sau khi xoá hẳn\n"
 
-#: imap.c:845
+#: imap.c:857
 msgid "search for unseen messages failed\n"
 msgstr "việc tìm kiếm các thư chưa xem bị lỗi\n"
 
-#: imap.c:873
+#: imap.c:885
 #, c-format
 msgid "%lu is unseen\n"
 msgstr "%lu chưa xem\n"
 
-#: imap.c:885 pop3.c:842
+#: imap.c:897 pop3.c:846
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u là thư đầu chưa xem\n"
 
-#: imap.c:976
-msgid "Warning: ignoring bogus data for message sizes returned by the server.\n"
-msgstr "Cảnh báo : đang bỏ qua dữ liệu giả về kích cỡ các thư bị máy phục vụ trả về.\n"
+#: imap.c:988
+msgid ""
+"Warning: ignoring bogus data for message sizes returned by the server.\n"
+msgstr ""
+"Cảnh báo : đang bỏ qua dữ liệu giả về kích cỡ các thư bị máy phục vụ trả "
+"về.\n"
 
 #: interface.c:256
 msgid "Unable to open kvm interface. Make sure fetchmail is SGID kmem."
@@ -1841,7 +1942,7 @@ msgstr "recv (nhận) của máy phục vụ là nghiêm trọng\n"
 msgid "Could not decode OTP challenge\n"
 msgstr "Không thể giải mã yêu cầu OTP\n"
 
-#: opie.c:64 pop3.c:593
+#: opie.c:64 pop3.c:597
 msgid "Secret pass phrase: "
 msgstr "Cụm từ mật khẩu bí mật: "
 
@@ -1918,32 +2019,41 @@ msgid "  -L, --logfile     specify logfile name\n"
 msgstr "  -L, --logfile     xác định tên _tập tin ghi lưu_\n"
 
 #: options.c:597
-msgid "      --syslog      use syslog(3) for most messages when running as a daemon\n"
+msgid ""
+"      --syslog      use syslog(3) for most messages when running as a "
+"daemon\n"
 msgstr ""
-"      --syslog      dùng syslog(3) (bản ghi hệ thống) để ghi lưu phần lớn thông điệp\n"
+"      --syslog      dùng syslog(3) (bản ghi hệ thống) để ghi lưu phần lớn "
+"thông điệp\n"
 "\t\t\t\ttrong khi chạy là trình nền\n"
 
 #: options.c:598
 msgid "      --invisible   don't write Received & enable host spoofing\n"
 msgstr ""
-"      --invisible   không ghi Received (dòng đầu Đã nhận) và bật khả năng ẩn máy đúng)\n"
+"      --invisible   không ghi Received (dòng đầu Đã nhận) và bật khả năng ẩn "
+"máy đúng)\n"
 "\t\t\t\t(_vô hình_)\n"
 
 #: options.c:599
 msgid "  -f, --fetchmailrc specify alternate run control file\n"
-msgstr "  -f, --fetchmailrc \t\txác định tập tin _điều khiển chạy_ (rc) xen kẽ\n"
+msgstr ""
+"  -f, --fetchmailrc \t\txác định tập tin _điều khiển chạy_ (rc) xen kẽ\n"
 
 #: options.c:600
 msgid "  -i, --idfile      specify alternate UIDs file\n"
-msgstr "  -i, --idfile      xác định _tập tin nhận diện_ người dùng (UID) xen kẽ\n"
+msgstr ""
+"  -i, --idfile      xác định _tập tin nhận diện_ người dùng (UID) xen kẽ\n"
 
 #: options.c:601
 msgid "      --pidfile     specify alternate PID (lock) file\n"
-msgstr "      --pidfile     xác định _tập tin nhận diện tiến trình_ (PID) (khoá) xen kẽ\n"
+msgstr ""
+"      --pidfile     xác định _tập tin nhận diện tiến trình_ (PID) (khoá) xen "
+"kẽ\n"
 
 #: options.c:602
 msgid "      --postmaster  specify recipient of last resort\n"
-msgstr "      --postmaster  xác định người nhận cuối cùng (_giám đốc sở bưu điện_)\n"
+msgstr ""
+"      --postmaster  xác định người nhận cuối cùng (_giám đốc sở bưu điện_)\n"
 
 #: options.c:603
 msgid "      --nobounce    redirect bounces from user to postmaster.\n"
@@ -1973,14 +2083,18 @@ msgstr "      --sslcert     _chứng nhận_ ứng dụng khách SSL\n"
 
 #: options.c:612
 msgid "      --sslcertck   do strict server certificate check (recommended)\n"
-msgstr "      --sslcertck   _kiểm tra_ chặt chẽ _chứng nhận SSL_ máy phục vụ (khuyên dùng)\n"
+msgstr ""
+"      --sslcertck   _kiểm tra_ chặt chẽ _chứng nhận SSL_ máy phục vụ (khuyên "
+"dùng)\n"
 
 #: options.c:613
 msgid "      --sslcertpath path to ssl certificates\n"
 msgstr "      --sslcertpath \t_đường dẫn đến các chứng nhận SSL_\n"
 
 #: options.c:614
-msgid "      --sslfingerprint fingerprint that must match that of the server's cert.\n"
+msgid ""
+"      --sslfingerprint fingerprint that must match that of the server's "
+"cert.\n"
 msgstr ""
 "      --sslfingerprint \t_vân tay SSL_ phải khớp điều trong chứng nhận\n"
 "\t\t\t\t\t\tcủa máy phục vụ\n"
@@ -1991,15 +2105,19 @@ msgstr "      --sslproto    buộc dùng _giao thức SSL_ (SSL2/SSL3/TLS1)\n"
 
 #: options.c:617
 msgid "      --plugin      specify external command to open connection\n"
-msgstr "      --plugin      xác định lệnh bên ngoài để mở kết nối (_bộ cầm phít_)\n"
+msgstr ""
+"      --plugin      xác định lệnh bên ngoài để mở kết nối (_bộ cầm phít_)\n"
 
 #: options.c:618
 msgid "      --plugout     specify external command to open smtp connection\n"
-msgstr "      --plugout     xác định lệnh bên ngoài để mở kết nối SMTP (_bộ kéo phít_)\n"
+msgstr ""
+"      --plugout     xác định lệnh bên ngoài để mở kết nối SMTP (_bộ kéo "
+"phít_)\n"
 
 #: options.c:620
 msgid "  -p, --protocol    specify retrieval protocol (see man page)\n"
-msgstr "  -p, --protocol    xác định _giao thức_ lấy thư (xem trang hướng dẫn)\n"
+msgstr ""
+"  -p, --protocol    xác định _giao thức_ lấy thư (xem trang hướng dẫn)\n"
 
 #: options.c:621
 msgid "  -U, --uidl        force the use of UIDLs (pop3 only)\n"
@@ -2007,11 +2125,16 @@ msgstr "  -U, --uidl        buộc dùng UIDL (chỉ pop3)\n"
 
 #: options.c:622
 msgid "      --port        TCP port to connect to (obsolete, use --service)\n"
-msgstr "      --port        _cổng_ TCP nơi cần kết nối (quá cũ, hãy dùng « --service »)\n"
+msgstr ""
+"      --port        _cổng_ TCP nơi cần kết nối (quá cũ, hãy dùng « --service "
+"»)\n"
 
 #: options.c:623
-msgid "  -P, --service     TCP service to connect to (can be numeric TCP port)\n"
-msgstr "  -P, --service     _dịch vụ_ TCP nơi cần kết nối (có thể có dạng cổng TCP số)\n"
+msgid ""
+"  -P, --service     TCP service to connect to (can be numeric TCP port)\n"
+msgstr ""
+"  -P, --service     _dịch vụ_ TCP nơi cần kết nối (có thể có dạng cổng TCP "
+"số)\n"
 
 #: options.c:624
 msgid "      --auth        authentication type (password/kerberos/ssh/otp)\n"
@@ -2028,7 +2151,8 @@ msgstr "  -E, --envelope    dòng đầu địa chỉ _phong bì_\n"
 #: options.c:627
 msgid "  -Q, --qvirtual    prefix to remove from local user id\n"
 msgstr ""
-"  -Q, --qvirtual    tiền tố cần gỡ bỏ ra mã nhận diện người dùng (UID) cục bộ\n"
+"  -Q, --qvirtual    tiền tố cần gỡ bỏ ra mã nhận diện người dùng (UID) cục "
+"bộ\n"
 "\t\t\t\t(_q ảo_)\n"
 
 #: options.c:628
@@ -2071,7 +2195,8 @@ msgstr "  -n, --norewrite   _không ghi lại_ các địa chỉ dòng đầu\n"
 
 #: options.c:638
 msgid "  -l, --limit       don't fetch messages over given size\n"
-msgstr "  -l, --limit       không lấy thư nào lớn hơn kích cỡ đưa ra (_hạn chế_)\n"
+msgstr ""
+"  -l, --limit       không lấy thư nào lớn hơn kích cỡ đưa ra (_hạn chế_)\n"
 
 #: options.c:639
 msgid "  -w, --warnings    interval between warning mail notification\n"
@@ -2083,7 +2208,8 @@ msgstr "  -S, --smtphost    đặt _máy_ chuyển tiếp SMTP\n"
 
 #: options.c:642
 msgid "      --fetchdomains fetch mail for specified domains\n"
-msgstr "      --fetchdomains \t_lấy_ thư chỉ cho _những miền_ đã xác định này\n"
+msgstr ""
+"      --fetchdomains \t_lấy_ thư chỉ cho _những miền_ đã xác định này\n"
 
 #: options.c:643
 msgid "  -D, --smtpaddress set SMTP delivery domain to use\n"
@@ -2103,7 +2229,8 @@ msgstr "  -b, --batchlimit  \tđặt _hạn chế bó_ thư cho sự kết nối
 
 #: options.c:647
 msgid "  -B, --fetchlimit  set fetch limit for server connections\n"
-msgstr "  -B, --fetchlimit  \tđặt _hạn chế lấy_ thư cho sự kết nối máy phục vụ\n"
+msgstr ""
+"  -B, --fetchlimit  \tđặt _hạn chế lấy_ thư cho sự kết nối máy phục vụ\n"
 
 #: options.c:648
 msgid "      --fetchsizelimit set fetch message size limit\n"
@@ -2115,7 +2242,8 @@ msgstr "      --fastuidl    tìm kiếm UIDL một cách nhị phân (_nhanh_)\n
 
 #: options.c:650
 msgid "  -e, --expunge     set max deletions between expunges\n"
-msgstr "  -e, --expunge     đặt số thư đã xoá bỏ tối đa giữa hai lần _xoá hẳn_\n"
+msgstr ""
+"  -e, --expunge     đặt số thư đã xoá bỏ tối đa giữa hai lần _xoá hẳn_\n"
 
 #: options.c:651
 msgid "  -m, --mda         set MDA to use for forwarding\n"
@@ -2135,68 +2263,86 @@ msgstr "  -r, --folder      xác định tên _thư mục_ từ xa\n"
 
 #: options.c:655
 msgid "      --showdots    show progress dots even in logfiles\n"
-msgstr "      --showdots    _hiện các chấm_ tiến hành ngay cả trong tập tin ghi lưu\n"
+msgstr ""
+"      --showdots    _hiện các chấm_ tiến hành ngay cả trong tập tin ghi lưu\n"
 
 #: pop3.c:350
-msgid "Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead of TOP.\n"
-msgstr "Cảnh báo : tìm thấy « Maillennium POP3/PROXY server » nên dùng lệnh RETR thay vào TOP.\n"
+msgid ""
+"Warning: \"Maillennium POP3/PROXY server\" found, using RETR command instead "
+"of TOP.\n"
+msgstr ""
+"Cảnh báo : tìm thấy « Maillennium POP3/PROXY server » nên dùng lệnh RETR "
+"thay vào TOP.\n"
 
-#: pop3.c:521
+#: pop3.c:449
+msgid "TLS is mandatory for this session, but server refused CAPA command.\n"
+msgstr ""
+
+#: pop3.c:450
+msgid "The CAPA command is however necessary for TLS.\n"
+msgstr ""
+
+#: pop3.c:525
 #, c-format
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
-msgstr "%s: việc nâng cấp lên TLS một cách cơ hội chủ nghĩa bị lỗi nên thử tiếp tục.\n"
+msgstr ""
+"%s: việc nâng cấp lên TLS một cách cơ hội chủ nghĩa bị lỗi nên thử tiếp "
+"tục.\n"
 
-#: pop3.c:615
+#: pop3.c:619
 msgid "We've run out of allowed authenticators and cannot continue.\n"
 msgstr "Hết các bộ xác thực được phép nên không thể tiếp tục.\n"
 
-#: pop3.c:640
+#: pop3.c:644
 msgid "Required APOP timestamp not found in greeting\n"
 msgstr "Không tìm thấy nhãn thời gian APOP cần thiết trong lời chào mừng\n"
 
-#: pop3.c:649
+#: pop3.c:653
 msgid "Timestamp syntax error in greeting\n"
 msgstr "Gặp lỗi cú pháp nhãn thời gian trong lời chào mừng\n"
 
-#: pop3.c:675
+#: pop3.c:679
 msgid "Undefined protocol request in POP3_auth\n"
-msgstr "Gặp yêu cầu giao thức không được xác định trong « POP3_auth » (xác thực)\n"
+msgstr ""
+"Gặp yêu cầu giao thức không được xác định trong « POP3_auth » (xác thực)\n"
 
-#: pop3.c:683
+#: pop3.c:687
 msgid "lock busy!  Is another session active?\n"
 msgstr "khoá bận ! Có phiên chạy khác hoạt động không?\n"
 
-#: pop3.c:762
+#: pop3.c:766
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "Không thể xử lý đáp ứng UIDL từ máy phục vụ nguồn.\n"
 
-#: pop3.c:785
+#: pop3.c:789
 msgid "Server responded with UID for wrong message.\n"
 msgstr "Máy phục vụ đã đáp ứng UID cho thư không đúng.\n"
 
-#: pop3.c:812 pop3.c:1058
+#: pop3.c:816 pop3.c:1062
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (số=%d) đã được xoá bỏ, nhưng còn có.\n"
 
-#: pop3.c:821 pop3.c:833 pop3.c:1067 pop3.c:1074
+#: pop3.c:825 pop3.c:837 pop3.c:1071 pop3.c:1078
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u chưa xem\n"
 
-#: pop3.c:918
+#: pop3.c:922
 msgid "Messages inserted into list on server. Cannot handle this.\n"
-msgstr "Gặp thư được chèn vào danh sách trên máy phục vụ. Không thể xử lý trường hợp này.\n"
+msgstr ""
+"Gặp thư được chèn vào danh sách trên máy phục vụ. Không thể xử lý trường hợp "
+"này.\n"
 
-#: pop3.c:1010
+#: pop3.c:1014
 msgid "protocol error\n"
 msgstr "lỗi giao thức\n"
 
-#: pop3.c:1026
+#: pop3.c:1030
 msgid "protocol error while fetching UIDLs\n"
 msgstr "gặp lỗi giao thức khi lấy các UIDL\n"
 
-#: pop3.c:1396
+#: pop3.c:1400
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Không hỗ trợ tùy chọn « --folder » (thư mục) với POP3\n"
 
@@ -2209,12 +2355,20 @@ msgid "SDPS not enabled."
 msgstr "Chưa bật SDPS."
 
 #: rcfile_y.y:213
-msgid "fetchmail: interface option is only supported under Linux (without IPv6) and FreeBSD\n"
-msgstr "fetchmail: tùy chọn giao diện chỉ được hỗ trợ dưới LInux (không có IPv6) và FreeBSD (kiểu UNIX)\n"
+msgid ""
+"fetchmail: interface option is only supported under Linux (without IPv6) and "
+"FreeBSD\n"
+msgstr ""
+"fetchmail: tùy chọn giao diện chỉ được hỗ trợ dưới LInux (không có IPv6) và "
+"FreeBSD (kiểu UNIX)\n"
 
 #: rcfile_y.y:220
-msgid "fetchmail: monitor option is only supported under Linux (without IPv6) and FreeBSD\n"
-msgstr "fetchmail: tùy chọn theo dõi chỉ được hỗ trợ dưới LInux (không có IPv6) và FreeBSD (kiểu UNIX)\n"
+msgid ""
+"fetchmail: monitor option is only supported under Linux (without IPv6) and "
+"FreeBSD\n"
+msgstr ""
+"fetchmail: tùy chọn theo dõi chỉ được hỗ trợ dưới LInux (không có IPv6) và "
+"FreeBSD (kiểu UNIX)\n"
 
 #: rcfile_y.y:333
 msgid "SSL is not enabled"
@@ -2232,7 +2386,8 @@ msgstr "Tập tin %s phải là một tập tin chuẩn.\n"
 #: rcfile_y.y:429
 #, c-format
 msgid "File %s must have no more than -rwx--x--- (0710) permissions.\n"
-msgstr "Không cho phép tập tin %s có quyền hạn lớn hơn « -rws--x--- » (0710).\n"
+msgstr ""
+"Không cho phép tập tin %s có quyền hạn lớn hơn « -rws--x--- » (0710).\n"
 
 #: rcfile_y.y:441
 #, c-format
@@ -2476,87 +2631,90 @@ msgstr "Lỗi  %cMTP: %s\n"
 msgid "BSMTP file open or preamble write failed\n"
 msgstr "Tập tin BSMTP đã mở, hoặc việc ghi lời mở đầu bị lỗi\n"
 
-#: sink.c:967
+#: sink.c:966
 #, c-format
 msgid "%cMTP listener doesn't like recipient address `%s'\n"
 msgstr "Bộ lắng nghe %cMTP không chấp nhận địa chỉ người nhận « %s »\n"
 
-#: sink.c:974
+#: sink.c:973
 #, c-format
 msgid "%cMTP listener doesn't really like recipient address `%s'\n"
 msgstr "Bộ lắng nghe %cMTP không thật chấp nhận địa chỉ người nhận « %s »\n"
 
-#: sink.c:1020
+#: sink.c:1019
 msgid "no address matches; no postmaster set.\n"
 msgstr "không có địa chỉ khớp; chưa đặt giám đốc sở bưu điện.\n"
 
-#: sink.c:1032
+#: sink.c:1031
 #, c-format
 msgid "can't even send to %s!\n"
 msgstr "không thể gởi ngay cả cho %s.\n"
 
-#: sink.c:1038
+#: sink.c:1037
 #, c-format
 msgid "no address matches; forwarding to %s.\n"
 msgstr "không có địa chỉ khớp; đang chuyển tiếp tới %s.\n"
 
-#: sink.c:1194
+#: sink.c:1193
 #, c-format
 msgid "about to deliver with: %s\n"
 msgstr "sắp phát với: %s\n"
 
-#: sink.c:1218
+#: sink.c:1217
 msgid "MDA open failed\n"
 msgstr "Việc mở MDA bị lỗi\n"
 
-#: sink.c:1255
+#: sink.c:1254
 #, c-format
 msgid "%cMTP connect to %s failed\n"
 msgstr "Việc kết nối %cMTP đến %s bị lỗi\n"
 
-#: sink.c:1279
+#: sink.c:1278
 #, c-format
 msgid "can't raise the listener; falling back to %s"
 msgstr "không thể liên lạc với bộ lắng nghe nên dự trữ về %s"
 
-#: sink.c:1341
+#: sink.c:1340
 #, c-format
 msgid "Error writing to MDA: %s\n"
 msgstr "Gặp lỗi khi ghi vào MDA: %s\n"
 
-#: sink.c:1344
+#: sink.c:1343
 #, c-format
 msgid "MDA died of signal %d\n"
 msgstr "MDA đã kết thúc vì tín hiệu %d\n"
 
-#: sink.c:1347
+#: sink.c:1346
 #, c-format
 msgid "MDA returned nonzero status %d\n"
 msgstr "MDA đã trả về trạng thái không phải số không %d\n"
 
-#: sink.c:1350
+#: sink.c:1349
 #, c-format
-msgid "Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
-msgstr "Lạ : việc pclose MDA đã trả lại %d và số hiệu lỗi %d/%s nên không thể xử lý tại %s:%d\n"
+msgid ""
+"Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
+msgstr ""
+"Lạ : việc pclose MDA đã trả lại %d và số hiệu lỗi %d/%s nên không thể xử lý "
+"tại %s:%d\n"
 
-#: sink.c:1372
+#: sink.c:1371
 msgid "Message termination or close of BSMTP file failed\n"
 msgstr "Việc kết thúc thư hay đóng tập tin BSMTP bị lỗi\n"
 
-#: sink.c:1394
+#: sink.c:1393
 msgid "SMTP listener refused delivery\n"
 msgstr "Bộ lắng nghe SMTP đã từ chối việc phát\n"
 
-#: sink.c:1424
+#: sink.c:1423
 msgid "LMTP delivery error on EOM\n"
 msgstr "Lỗi phát LMTP tại kết thúc thư\n"
 
-#: sink.c:1427
+#: sink.c:1426
 #, c-format
 msgid "Unexpected non-503 response to LMTP EOM: %s\n"
 msgstr "Gặp đáp ứng không phải 503 không mong đợi với kết thúc thư LMTP: %s\n"
 
-#: sink.c:1582
+#: sink.c:1581
 msgid ""
 "-- \n"
 "The Fetchmail Daemon"
@@ -2626,7 +2784,9 @@ msgstr "Lỗi getaddrinfo(\"%s\",\"%s\"): %s\n"
 
 #: socket.c:285
 msgid "Try adding the --service option (see also FAQ item R12).\n"
-msgstr "Hãy cố thêm tùy chọn « --service » (dịch vụ) (xem cũng mục FAQ [Hỏi Đáp] R12).\n"
+msgstr ""
+"Hãy cố thêm tùy chọn « --service » (dịch vụ) (xem cũng mục FAQ [Hỏi Đáp] "
+"R12).\n"
 
 #: socket.c:296 socket.c:299
 #, c-format
@@ -2752,7 +2912,8 @@ msgstr "Bộ mô tả tập tin ở ngoại phạm vị SSL"
 #: socket.c:891
 #, c-format
 msgid "Invalid SSL protocol '%s' specified, using default (SSLv23).\n"
-msgstr "Xác định giao thức SSL không hợp lệ « %s » nên dùng mặc định (SSLv23).\n"
+msgstr ""
+"Xác định giao thức SSL không hợp lệ « %s » nên dùng mặc định (SSLv23).\n"
 
 #: socket.c:964
 msgid "Certificate/fingerprint verification was somehow skipped!\n"
@@ -2907,7 +3068,8 @@ msgstr "Đang ghi tập tin fetchids (lấy các ID)...\n"
 #: uid.c:643
 #, c-format
 msgid "Error writing to fetchids file %s, old file left in place.\n"
-msgstr "Gặp lỗi khi ghi vào tập tin fetchids (lấy các ID) %s nên để lại tập tin cũ.\n"
+msgstr ""
+"Gặp lỗi khi ghi vào tập tin fetchids (lấy các ID) %s nên để lại tập tin cũ.\n"
 
 #: uid.c:647
 #, c-format
