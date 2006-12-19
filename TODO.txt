@@ -1,6 +1,3 @@
-6.3.6:
-- Zak's further minor issues
-
 6.3.7:
 - more SMTP/LMTP error detail on message rejections even outside verbose mode.
   Ian D. Allen, fetchmail-users. Two messages with examples.
