@@ -94,6 +94,8 @@ fetchmail 6.3.6 (not yet released):
   scripts.  Should fix Debian Bug#389270, Bug#391698.
 * Fix crash on systems that do not provide strdup(), the crash then happens in
   out-of-memory conditions.  Patch by Andreas Krennmair.
+* When HOME and FETCHMAILHOME are unset, be sure to copy user database
+  information, lest it be overwritten later. Patch by Jim Correia.
 
 # CHANGES:
 * Remove excess no-op strcpy() after strdup() found by Andreas Krennmair.

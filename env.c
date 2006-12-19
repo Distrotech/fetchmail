@@ -108,7 +108,7 @@ void envquery(int argc, char **argv)
     /* compute user's home directory */
     home = getenv("HOME_ETC");
     if (!home && !(home = getenv("HOME")))
-	home = pwp->pw_dir;
+	home = xstrdup(pwp->pw_dir);
 
     /* compute fetchmail's home directory */
     if (!(fmhome = getenv("FETCHMAILHOME")))
