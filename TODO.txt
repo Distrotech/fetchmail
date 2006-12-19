@@ -1,4 +1,5 @@
 6.3.7:
+- see if "AUTH SSH" can be made to work for POP3
 - more SMTP/LMTP error detail on message rejections even outside verbose mode.
   Ian D. Allen, fetchmail-users. Two messages with examples.
   What goes here? fetchmailrc location, server, port, user, folder, anything else?
