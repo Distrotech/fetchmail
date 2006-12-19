@@ -269,6 +269,12 @@ int main(int argc, char **argv)
 #ifdef ENABLE_NLS
 	"+NLS"
 #endif /* ENABLE_NLS */
+#ifdef KERBEROS_V4
+	"+KRB4"
+#endif /* KERBEROS_V4 */
+#ifdef KERBEROS_V5
+	"+KRB5"
+#endif /* KERBEROS_V5 */
 	".\n";
 	printf(GT_("This is fetchmail release %s"), VERSION);
 	fputs(features, stdout);
@@ -1217,6 +1223,24 @@ static int load_params(int argc, char **argv, int optind)
 	    }
 #endif /* SSL_ENABLE */
 #undef DEFAULT
+#ifndef KERBEROS_V4
+	    if (ctl->server.authenticate == A_KERBEROS_V4) {
+		report(stderr, GT_("KERBEROS v4 support is configured, but not compiled in.\n"));
+		exit(PS_SYNTAX);
+	    }
+#endif
+#ifndef KERBEROS_V5
+	    if (ctl->server.authenticate == A_KERBEROS_V5) {
+		report(stderr, GT_("KERBEROS v5 support is configured, but not compiled in.\n"));
+		exit(PS_SYNTAX);
+	    }
+#endif
+#ifndef GSSAPI
+	    if (ctl->server.authenticate == A_GSSAPI) {
+		report(stderr, GT_("GSSAPI support is configured, but not compiled in.\n"));
+		exit(PS_SYNTAX);
+	    }
+#endif
 
 	    /*
 	     * Make sure we have a nonempty host list to forward to.

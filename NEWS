@@ -101,6 +101,11 @@ fetchmail 6.3.6 (not yet released):
 * Improve handling of IMAP IDLE, some servers do not reset their time counters
   after sending information asynchronously. Patch by Sunil Shetye, after report
   from Andrew Baumann.
+* When requesting Kerberos V4, V5 or GSSAPI, complain and exit with syntax error
+  if any of these requested features has not been compiled in. Reported by Isaac
+  Wilcox.
+* --version will now add +KRB4 or +KRB5 if Kerberos v4 or v5, respectively, have
+  been compiled in. Reported by Isaac Wilcox.
 
 # TRANSLATIONS:
 * New en_GB (British English) translation by David Lodge.
