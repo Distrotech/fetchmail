@@ -76,38 +76,40 @@ fetchmail 6.3.6 (not yet released):
 # REGRESSION FIXES:
 * Repair --logfile, broken in 6.3.5. BerliOS Bug #9059,
   reported by Brian Harring.
-* In 6.3.5 (as a side effect of the authenticate external patch), using SSL
-  certificate/key authentication overrode the --user option. Now the latter
-  takes precedence, and only defaults to the certificate's common name.
-  Debian Bug #400950, reported by Jorgen Schaefer <forcer@debian.org>.
+* Repair --user, broken in 6.3.5 (as a side effect of the authenticate external
+  patch): using SSL certificate/key authentication overrode the --user option.
+  Now the latter takes precedence, and only defaults to the certificate's common
+  name.  Debian Bug #400950, reported by Jorgen Schaefer <forcer@debian.org>.
 
-# BUG FIXES:
-* POP3: Probe capabilities when Kerberos V5 is attempted.
+# BUG FIXES (long-standing bugs):
+* POP3: Probe capabilities when Kerberos V5 is enabled so that we can actually
+  try to use it.
 * RPOP: The password is now shrouded in the local logs.
 * Robustness: If a stale lockfile cannot be deleted, truncate it to avoid
   trouble later if the PID is recycled by a non-fetchmail process.
-* On systems that have res_search(), assume we also have res_init() and call it
-  (suggested by Ulrich Drepper, glibc bug #3675) in order to make libc or
-  libresolv reread the resolver configuration at the beginning of a poll cycle.
-  This is important when fetchmail is in daemon mode and /etc/resolv.conf is
-  changed later by dhcpcd, dhclient, pppd, openvpn or other ip-up/ipchange
-  scripts.  Should fix Debian Bug#389270, Bug#391698.
-* Fix crash on systems that do not provide strdup(), the crash then happens in
-  out-of-memory conditions.  Patch by Andreas Krennmair.
+* Detect /etc/resolv.conf changes: On systems that have res_search(), assume we
+  also have res_init() and call it (suggested by Ulrich Drepper, glibc bug
+  #3675) in order to make libc or libresolv reread the resolver configuration at
+  the beginning of a poll cycle.  This is important when fetchmail is in daemon
+  mode and /etc/resolv.conf is changed later by dhcpcd, dhclient, pppd, openvpn
+  or other ip-up/ipchange scripts.  Should fix Debian Bug#389270, Bug#391698.
+* Fix crash on systems that do not provide strdup(), the crash happens only in
+  out-of-memory conditions when fetchmail cannot proceed anyways.  Patch by
+  Andreas Krennmair.
 * When HOME and FETCHMAILHOME are unset, be sure to copy user database
-  information, lest it be overwritten later. Patch by Jim Correia.
+  information, so it is not trashed later. Patch by Jim Correia.
 
 # CHANGES:
 * Remove excess no-op strcpy() after strdup() found by Andreas Krennmair.
-* Remove handling for PS_TRUNCATED (code 27), which was never asserted.
+* Remove handling for PS_TRUNCATED (code 27), which was never returned.
 * Improve handling of IMAP IDLE, some servers do not reset their time counters
   after sending information asynchronously. Patch by Sunil Shetye, after report
   from Andrew Baumann.
 * When requesting Kerberos V4, V5 or GSSAPI, complain and exit with syntax error
-  if any of these requested features has not been compiled in. Reported by Isaac
-  Wilcox.
+  if any of these requested features has not been compiled in. This is to fail
+  early and with precise error message. Reported by Isaac Wilcox.
 * --version will now add +KRB4 or +KRB5 if Kerberos v4 or v5, respectively, have
-  been compiled in. Reported by Isaac Wilcox.
+  been compiled in. Reported missing by Isaac Wilcox.
 
 # TRANSLATIONS:
 * New en_GB (British English) translation by David Lodge.
