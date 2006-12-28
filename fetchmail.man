@@ -1164,7 +1164,10 @@ option (keyword: set logfile) is only effective when fetchmail is
 detached. This option allows you to redirect status messages
 into a specified logfile (follow the option with the logfile name).  The
 logfile is opened for append, so previous messages aren't deleted.  This
-is primarily useful for debugging configurations.
+is primarily useful for debugging configurations. Note that fetchmail
+does not detect if the logfile is rotated, the logfile is only opened
+once when fetchmail starts. You need to restart fetchmail after rotating
+the logfile and before compressing it (if applicable).
 .PP
 The
 .B \-\-syslog
