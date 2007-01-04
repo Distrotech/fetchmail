@@ -1,10 +1,10 @@
 fetchmail-SA-2006-03: crash when refusing message delivered through MDA
 
-Topics:		fetchmail crashes when refusing a message to an MDA
+Topics:		fetchmail crashes when refusing a message bound for an MDA
 
 Author:		Matthias Andree
 Version:	1.0
-Announced:	2006-11-XX
+Announced:	2007-01-04
 Type:		denial of service
 Impact:		fetchmail aborts prematurely
 Danger:		low
@@ -24,7 +24,8 @@ Corrected:	2006-11-14 fetchmail SVN
 0. Release history
 ==================
 
-2006-11-19	internal review draft
+2006-11-19 -	internal review draft
+2007-01-04 1.0	 ready for release
 
 
 1. Background
@@ -66,7 +67,7 @@ fetchmail's project site at
 A. Copyright, License and Warranty
 ==================================
 
-(C) Copyright 2006 by Matthias Andree, <matthias.andree@gmx.de>.
+(C) Copyright 2007 by Matthias Andree, <matthias.andree@gmx.de>.
 Some rights reserved.
 
 This work is licensed under the Creative Commons
