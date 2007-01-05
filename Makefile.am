@@ -156,7 +156,7 @@ FAQ: fetchmail-FAQ.html $(srcdir)/dist-tools/html2txt
 
 fetchmail-FAQ.pdf: fetchmail-FAQ.html fetchmail-FAQ.book bighand.png
 	$(AWK) '/^[ \t]*<h1/ {sec++; } {if (sec < 2 || sec > 3) print $0;}' <$(srcdir)/fetchmail-FAQ.html >fetchmail-FAQ-print.html
-	htmldoc --logoimage $(srcdir)/bighand.png --batch $(srcdir)/fetchmail-FAQ.book
+	htmldoc --logoimage $(srcdir)/bighand.png --batch $(srcdir)/fetchmail-FAQ.book || { rm -f $@ ; exit 1 ; }
 	rm -f fetchmail-FAQ-print.html
 
 FEATURES: fetchmail-features.html $(srcdir)/dist-tools/html2txt
