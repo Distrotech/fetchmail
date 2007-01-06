@@ -69,7 +69,7 @@ fetchmail 6.3.6 (released 2007-01-04):
 
   Configurations using both ssl and sslcertck however have been semi-safe in
   that they would send the password in the clear. The USER/PASS fallback
-  problem however applies to these too, so that the password was only change on
+  problem however applies to these too, so that the password was only safe on
   trustworthy servers.
 
 * CVE-2006-5974, fetchmail-SA-2006-03.txt:
