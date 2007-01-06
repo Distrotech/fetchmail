@@ -1,4 +1,7 @@
 6.3.7:
+- integrate Isaac Wilcox's test rig
+- look at Tony Earnshaw's .spec file
+- revisit BerliOS patches
 - see if "AUTH SSH" can be made to work for POP3
 - more SMTP/LMTP error detail on message rejections even outside verbose mode.
   Ian D. Allen, fetchmail-users. Two messages with examples.
