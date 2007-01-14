@@ -1,0 +1,7 @@
+Unless otherwise noted, these are Matthias Andree's ideas:
+
+- robustness: supervise fetch tasks so that crashes don't bring down
+  unrelated services
+
+- robustness: reorder messages so that "blocking" messages are fetched
+  last in order to obtain self-healing properties
