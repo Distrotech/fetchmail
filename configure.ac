@@ -27,6 +27,11 @@ dnl autobuild support, see <http://josefsson.org/autobuild/>
 )
 
 dnl python is optional
+#
+# you can pass PYTHON=: in environment or on the command line
+# to disable python detection and continue without building/installing
+# fetchmail.conf -- be sure to check README.packaging, too!
+#
 AM_PATH_PYTHON(2.0,,AC_MSG_WARN([Disabling fetchmailconf: python 2.0 or greater not found]))
 AM_CONDITIONAL([HAVE_PYTHON], [test "$PYTHON" != :])
 
