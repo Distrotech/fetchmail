@@ -610,13 +610,23 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	}
 #endif /* OPIE_ENABLE */
 
+	/* KPOP uses out-of-band authentication and does not check what
+	 * we send here, so send some random fixed string, to avoid
+	 * users switching *to* KPOP accidentally revealing their
+	 * password */
+	if ((ctl->server.authenticate == A_ANY
+		    || ctl->server.authenticate == A_KERBEROS_V4
+		    || ctl->server.authenticate == A_KERBEROS_V5)
+		&& (ctl->server.service != NULL
+		    && strcmp(ctl->server.service, KPOP_PORT) == 0))
+	{
+	    ok = gen_transact(sock, "PASS krb_ticket");
+	    break;
+	}
+
 	/* check if we are actually allowed to send the password */
 	if (ctl->server.authenticate == A_ANY
-	    || ctl->server.authenticate == A_PASSWORD
-	    || ((ctl->server.authenticate == A_KERBEROS_V4
-		 || ctl->server.authenticate == A_KERBEROS_V5)
-		&& ctl->server.service
-		&& strcmp(ctl->server.service, KPOP_PORT) == 0)) {
+		|| ctl->server.authenticate == A_PASSWORD) {
 	    strlcpy(shroud, ctl->password, sizeof(shroud));
 	    ok = gen_transact(sock, "PASS %s", ctl->password);
 	} else {
