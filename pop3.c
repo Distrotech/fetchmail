@@ -612,7 +612,11 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 
 	/* check if we are actually allowed to send the password */
 	if (ctl->server.authenticate == A_ANY
-		|| ctl->server.authenticate == A_PASSWORD) {
+	    || ctl->server.authenticate == A_PASSWORD
+	    || ((ctl->server.authenticate == A_KERBEROS_V4
+		 || ctl->server.authenticate == A_KERBEROS_V5)
+		&& ctl->server.service
+		&& strcmp(ctl->server.service, KPOP_PORT) == 0)) {
 	    strlcpy(shroud, ctl->password, sizeof(shroud));
 	    ok = gen_transact(sock, "PASS %s", ctl->password);
 	} else {

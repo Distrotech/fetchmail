@@ -42,6 +42,32 @@ be removed from a 6.4.0 or newer release.)
 
 --------------------------------------------------------------------------------
 
+fetchmail 6.3.7 (not yet released):
+
+# REGRESSION FIX
+* Fix KPOP, broken with the 6.3.6 security fix. Patch by Miroslav Trmac.
+
+# TRANSLATION UPDATES
+* Japanese (Takeshi Hamasaki), Polish (Jakub Bogusz)
+
+# KNOWN BUGS AND WORKAROUNDS:
+  (this section floats upwards through the NEWS file so it stays with the
+  current release information)
+* fetchmail does not handle messages without Message-ID header well
+  (See sourceforge.net bug #780933)
+* Sun Workshop 6 (SPARC) is known to miscompile the configuration file lexer in
+  64-bit mode.  Either compile 32-bit code or use GCC to compile 64-bit
+  fetchmail.  Note that fetchmail doesn't take advantage of 64-bit code,
+  so compiling 32-bit SPARC code should not cause any difficulties.
+* fetchmail expects Received: headers in a particular, but undocumented, format
+  when parsing envelopes.
+* fetchmail does not track pending deletes over crashes
+* the command line interface is a bit narrow-minded sometimes, for instance,
+  fetchmail -s doesn't work with a running daemon
+* some of the logging output is not very helpful
+* some of the documentation is still not up to date
+
+
 fetchmail 6.3.6 (released 2007-01-04):
 
 # SECURITY FIXES:
@@ -128,23 +154,6 @@ fetchmail 6.3.6 (released 2007-01-04):
 * Dropped exit status 15 from manual page, it's not used by fetchmail.
   Reported by Isaac Wilcox.
 * Documented exit codes 24 - 29 as internal.
-
-# KNOWN BUGS AND WORKAROUNDS:
-  (this section floats upwards through the NEWS file so it stays with the
-  current release information)
-* fetchmail does not handle messages without Message-ID header well
-  (See sourceforge.net bug #780933)
-* Sun Workshop 6 (SPARC) is known to miscompile the configuration file lexer in
-  64-bit mode.  Either compile 32-bit code or use GCC to compile 64-bit
-  fetchmail.  Note that fetchmail doesn't take advantage of 64-bit code,
-  so compiling 32-bit SPARC code should not cause any difficulties.
-* fetchmail expects Received: headers in a particular, but undocumented, format
-  when parsing envelopes.
-* fetchmail does not track pending deletes over crashes
-* the command line interface is a bit narrow-minded sometimes, for instance,
-  fetchmail -s doesn't work with a running daemon
-* some of the logging output is not very helpful
-* some of the documentation is still not up to date
 
 fetchmail 6.3.5 (released 2006-10-09):
 
