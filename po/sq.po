@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.9-rc9\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2006-12-19 01:19+0100\n"
+"POT-Creation-Date: 2007-02-03 01:17+0100\n"
 "PO-Revision-Date: 2005-11-18 22:25+0200\n"
 "Last-Translator: Besnik Bleta <besnik@spymac.com>\n"
 "Language-Team: Albanian <translation-team-sq@lists.sourceforge.net>\n"
@@ -653,76 +653,77 @@ msgid ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
 "Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Rob F. Funk, Graham "
 "Wilson\n"
-"Copyright (C) 2005-2006 Matthias Andree, Sunil Shetye\n"
+"Copyright (C) 2005-2006 Sunil Shetye\n"
+"Copyright (C) 2005-2007 Matthias Andree\n"
 msgstr ""
 
-#: fetchmail.c:141
+#: fetchmail.c:142
 msgid ""
 "Fetchmail comes with ABSOLUTELY NO WARRANTY. This is free software, and you\n"
 "are welcome to redistribute it under certain conditions. For details,\n"
 "please see the file COPYING in the source or documentation directory.\n"
 msgstr ""
 
-#: fetchmail.c:175
+#: fetchmail.c:176
 msgid "WARNING: Running as root is discouraged.\n"
 msgstr "KUJDES: Xhirimi si rrënjë nuk është i këshillueshëm.\n"
 
-#: fetchmail.c:187
+#: fetchmail.c:188
 msgid "fetchmail: invoked with"
 msgstr "fetchmail: thirrur me"
 
-#: fetchmail.c:211
+#: fetchmail.c:212
 msgid "could not get current working directory\n"
 msgstr "nuk munda të kem drejtori punuese të çastit\n"
 
-#: fetchmail.c:279
+#: fetchmail.c:280
 #, c-format
 msgid "This is fetchmail release %s"
 msgstr "Ky është versioni %s i fetchmail-it"
 
-#: fetchmail.c:394
+#: fetchmail.c:395
 #, c-format
 msgid "Taking options from command line%s%s\n"
 msgstr "Po marr mundësi prej rresht urdhrash%s%s\n"
 
-#: fetchmail.c:395
+#: fetchmail.c:396
 msgid " and "
 msgstr " dhe "
 
-#: fetchmail.c:400
+#: fetchmail.c:401
 #, c-format
 msgid "No mailservers set up -- perhaps %s is missing?\n"
 msgstr "Nuk ka shërbyesa poste të rregulluar -- mundet mungon %s?\n"
 
-#: fetchmail.c:421
+#: fetchmail.c:422
 msgid "fetchmail: no mailservers have been specified.\n"
 msgstr "fetchmail: nuk janë treguar shërbyesa poste.\n"
 
-#: fetchmail.c:433
+#: fetchmail.c:434
 msgid "fetchmail: no other fetchmail is running\n"
 msgstr "fetchmail: nuk po xhiron tjetër fetchmail\n"
 
-#: fetchmail.c:439
+#: fetchmail.c:440
 #, c-format
 msgid "fetchmail: error killing %s fetchmail at %d; bailing out.\n"
 msgstr ""
 "fetchmail: gabim gjatë asgjësimit të %s fetchmail te %d; po qërohem që "
 "këtej.\n"
 
-#: fetchmail.c:440 fetchmail.c:449
+#: fetchmail.c:441 fetchmail.c:450
 msgid "background"
 msgstr "prapaskenë"
 
-#: fetchmail.c:440 fetchmail.c:449
+#: fetchmail.c:441 fetchmail.c:450
 msgid "foreground"
 msgstr "paraskenë"
 
-#: fetchmail.c:448
+#: fetchmail.c:449
 #, c-format
 msgid "fetchmail: %s fetchmail at %d killed.\n"
 msgstr "fetchmail: %s fetchmail te %d u asgjësua.\n"
 
-#: fetchmail.c:471
+#: fetchmail.c:472
 msgid ""
 "fetchmail: can't check mail while another fetchmail to same host is "
 "running.\n"
@@ -730,7 +731,7 @@ msgstr ""
 "fetchmail: nuk mund kontrolloj për postë kur një tjetër fetchmail xhiron te "
 "e njëjta strehë.\n"
 
-#: fetchmail.c:477
+#: fetchmail.c:478
 #, c-format
 msgid ""
 "fetchmail: can't poll specified hosts with another fetchmail running at %d.\n"
@@ -738,214 +739,214 @@ msgstr ""
 "fetchmail: nuk mund të vjel prej strehëve të treguara me një tjetër "
 "fetchmail në xhirim e sipër në to %d.\n"
 
-#: fetchmail.c:484
+#: fetchmail.c:485
 #, c-format
 msgid "fetchmail: another foreground fetchmail is running at %d.\n"
 msgstr "fetchmail: një tjetër fetchmail xhiron në paraskenë te %d.\n"
 
-#: fetchmail.c:494
+#: fetchmail.c:495
 msgid ""
 "fetchmail: can't accept options while a background fetchmail is running.\n"
 msgstr ""
 "fetchmail: nuk mund të pranoj mundësira kur një fetchmail xhiron në "
 "prapaskenë.\n"
 
-#: fetchmail.c:500
+#: fetchmail.c:501
 #, c-format
 msgid "fetchmail: background fetchmail at %d awakened.\n"
 msgstr "fetchmail: fetchmail-i në prapaskenë te %d u përmend.\n"
 
-#: fetchmail.c:512
+#: fetchmail.c:513
 #, c-format
 msgid "fetchmail: elder sibling at %d died mysteriously.\n"
 msgstr "fetchmail: vëllam më i vjetër te %d vdiq misteriozisht.\n"
 
-#: fetchmail.c:527
+#: fetchmail.c:528
 #, c-format
 msgid "fetchmail: can't find a password for %s@%s.\n"
 msgstr "fetchmail: nuk mund të gjej fjalëkalim për %s@%s.\n"
 
-#: fetchmail.c:531
+#: fetchmail.c:532
 #, c-format
 msgid "Enter password for %s@%s: "
 msgstr "Jepni fjalëkalim për %s@%s: "
 
-#: fetchmail.c:556 fetchmail.c:592
+#: fetchmail.c:557 fetchmail.c:593
 #, fuzzy
 msgid "fetchmail: Warning: syslog and logfile are set. Check both for logs!\n"
 msgstr ""
 "fetchmail: sinjalizim: pa DNS të mundshëm nga i cili të kotrollohen prurje "
 "shpërndarjesh të shumëfishta %s\n"
 
-#: fetchmail.c:568
+#: fetchmail.c:569
 #, fuzzy
 msgid "fetchmail: Cannot detach into background. Aborting.\n"
 msgstr "fetchmail: nuk po xhiron tjetër fetchmail\n"
 
-#: fetchmail.c:572
+#: fetchmail.c:573
 #, c-format
 msgid "starting fetchmail %s daemon \n"
 msgstr "po nis demon fetchmail-i %s\n"
 
-#: fetchmail.c:588 fetchmail.c:590
+#: fetchmail.c:589 fetchmail.c:591
 #, c-format
 msgid "could not open %s to append logs to \n"
 msgstr "nuk munda të hap %s ku të vargëzoj regjistrime \n"
 
-#: fetchmail.c:629
+#: fetchmail.c:630
 #, c-format
 msgid "couldn't time-check %s (error %d)\n"
 msgstr "s'munda të kontrolloj kohën e %s (gabim %d)\n"
 
-#: fetchmail.c:634
+#: fetchmail.c:635
 #, c-format
 msgid "restarting fetchmail (%s changed)\n"
 msgstr "po rinis fetchmail (%s ndryshoi)\n"
 
-#: fetchmail.c:639
+#: fetchmail.c:640
 msgid "attempt to re-exec may fail as directory has not been restored\n"
 msgstr ""
 "përpjekja për rinisje mund të dështojë ngaqë drejtoria nuk është rikthyer\n"
 
-#: fetchmail.c:666
+#: fetchmail.c:667
 msgid "attempt to re-exec fetchmail failed\n"
 msgstr "përpjekja për rinisje të fetchmail-it dështoi\n"
 
-#: fetchmail.c:710
+#: fetchmail.c:711
 #, c-format
 msgid "poll of %s skipped (failed authentication or too many timeouts)\n"
 msgstr ""
 "vjelja te %s u anashkalua (dështim mirëfilltësimi ose shumë mbarime kohe)\n"
 
-#: fetchmail.c:722
+#: fetchmail.c:723
 #, c-format
 msgid "interval not reached, not querying %s\n"
 msgstr "interval që nuk kapet, nuk po kërkoj %s\n"
 
-#: fetchmail.c:760
+#: fetchmail.c:761
 msgid "Query status=0 (SUCCESS)\n"
 msgstr "Gjendje kërkimi=0 (SUKSES)\n"
 
-#: fetchmail.c:762
+#: fetchmail.c:763
 msgid "Query status=1 (NOMAIL)\n"
 msgstr "Gjendje kërkimi=1 (PAPOSTË)\n"
 
-#: fetchmail.c:764
+#: fetchmail.c:765
 msgid "Query status=2 (SOCKET)\n"
 msgstr "Gjendje kërkimi=2 (\"SOCKET\")\n"
 
-#: fetchmail.c:766
+#: fetchmail.c:767
 msgid "Query status=3 (AUTHFAIL)\n"
 msgstr "Gjendje kërkimi=3 (DËSHTMIR)\n"
 
-#: fetchmail.c:768
+#: fetchmail.c:769
 msgid "Query status=4 (PROTOCOL)\n"
 msgstr "Gjendje kërkimi=4 (PROTOKOLL)\n"
 
-#: fetchmail.c:770
+#: fetchmail.c:771
 msgid "Query status=5 (SYNTAX)\n"
 msgstr "Gjendje kërkimi=5 (SYNTAKSË)\n"
 
-#: fetchmail.c:772
+#: fetchmail.c:773
 msgid "Query status=6 (IOERR)\n"
 msgstr "Gjendje kërkimi=6 (GABIO)\n"
 
-#: fetchmail.c:774
+#: fetchmail.c:775
 msgid "Query status=7 (ERROR)\n"
 msgstr "Gjendje kërkimi=7 (GABIM)\n"
 
-#: fetchmail.c:776
+#: fetchmail.c:777
 msgid "Query status=8 (EXCLUDE)\n"
 msgstr "Gjendje kërkimi=8 (PËRJASHTO)\n"
 
-#: fetchmail.c:778
+#: fetchmail.c:779
 msgid "Query status=9 (LOCKBUSY)\n"
 msgstr "Gjendje kërkimi=9 (LOCKBUSY)\n"
 
-#: fetchmail.c:780
+#: fetchmail.c:781
 msgid "Query status=10 (SMTP)\n"
 msgstr "Gjendje kërkimi=10 (SMTP)\n"
 
-#: fetchmail.c:782
+#: fetchmail.c:783
 msgid "Query status=11 (DNS)\n"
 msgstr "Gjendje kërkimi=11 (DNS)\n"
 
-#: fetchmail.c:784
+#: fetchmail.c:785
 msgid "Query status=12 (BSMTP)\n"
 msgstr "Gjendje kërkimi=12 (BSMTP)\n"
 
-#: fetchmail.c:786
+#: fetchmail.c:787
 msgid "Query status=13 (MAXFETCH)\n"
 msgstr "Gjendje kërkimi=13 (MAKSJELL)\n"
 
-#: fetchmail.c:788
+#: fetchmail.c:789
 #, c-format
 msgid "Query status=%d\n"
 msgstr "Gjendje kërkimi=%d\n"
 
-#: fetchmail.c:834
+#: fetchmail.c:835
 msgid "All connections are wedged.  Exiting.\n"
 msgstr "Tërë lidhjet janë bllokur.  Po dal.\n"
 
-#: fetchmail.c:841
+#: fetchmail.c:842
 #, fuzzy, c-format
 msgid "sleeping at %s for %d seconds\n"
 msgstr "gjumë më %s\n"
 
-#: fetchmail.c:865
+#: fetchmail.c:866
 #, c-format
 msgid "awakened by %s\n"
 msgstr "përmendur prej %s\n"
 
-#: fetchmail.c:868
+#: fetchmail.c:869
 #, c-format
 msgid "awakened by signal %d\n"
 msgstr "përmendur prej sinjali %d\n"
 
-#: fetchmail.c:875
+#: fetchmail.c:876
 #, c-format
 msgid "awakened at %s\n"
 msgstr "përmendur më %s\n"
 
-#: fetchmail.c:881
+#: fetchmail.c:882
 #, c-format
 msgid "normal termination, status %d\n"
 msgstr "përfundim normal, gjendje %d\n"
 
-#: fetchmail.c:1033
+#: fetchmail.c:1034
 msgid "couldn't time-check the run-control file\n"
 msgstr "s'munda të kontrolloj kohën për kartelën run-control\n"
 
-#: fetchmail.c:1066
+#: fetchmail.c:1067
 #, c-format
 msgid "Warning: multiple mentions of host %s in config file\n"
 msgstr ""
 "Sinjalizim: përmendje e shumëfishtë e strehës %s në kartelën formësim\n"
 
-#: fetchmail.c:1099
+#: fetchmail.c:1100
 msgid "fetchmail: Error: multiple \"defaults\" records in config file.\n"
 msgstr "fetchmail: Gabim: \"defaults\" të shumëfishtë në kartelën formësim.\n"
 
-#: fetchmail.c:1221
+#: fetchmail.c:1222
 msgid "SSL support is not compiled in.\n"
 msgstr "Nuk është përpiluar mbulimi i SSL-së.\n"
 
-#: fetchmail.c:1228
+#: fetchmail.c:1229
 #, fuzzy
 msgid "KERBEROS v4 support is configured, but not compiled in.\n"
 msgstr "Nuk është përpiluar mbulimi i SSL-së.\n"
 
-#: fetchmail.c:1234
+#: fetchmail.c:1235
 #, fuzzy
 msgid "KERBEROS v5 support is configured, but not compiled in.\n"
 msgstr "Nuk është përpiluar mbulimi i SSL-së.\n"
 
-#: fetchmail.c:1240
+#: fetchmail.c:1241
 #, fuzzy
 msgid "GSSAPI support is configured, but not compiled in.\n"
 msgstr "Nuk është përpiluar mbulimi i SSL-së.\n"
 
-#: fetchmail.c:1270
+#: fetchmail.c:1271
 #, c-format
 msgid ""
 "fetchmail: warning: no DNS available to check multidrop fetches from %s\n"
@@ -953,17 +954,17 @@ msgstr ""
 "fetchmail: sinjalizim: pa DNS të mundshëm nga i cili të kotrollohen prurje "
 "shpërndarjesh të shumëfishta %s\n"
 
-#: fetchmail.c:1281
+#: fetchmail.c:1282
 #, c-format
 msgid "warning: multidrop for %s requires envelope option!\n"
 msgstr ""
 
-#: fetchmail.c:1282
+#: fetchmail.c:1283
 msgid "warning: Do not ask for support if all mail goes to postmaster!\n"
 msgstr ""
 "sinjalizim: Mos kërkoni ndihmë nëse tërë posta i shkon postmaster-it!\n"
 
-#: fetchmail.c:1299
+#: fetchmail.c:1300
 #, c-format
 msgid ""
 "fetchmail: %s configuration invalid, specify positive port number for "
@@ -972,292 +973,292 @@ msgstr ""
 "fetchmail: formësimi i %s i pavlefshëm, jepni numër pozitiv porte për "
 "shërbimin ose portën\n"
 
-#: fetchmail.c:1306
+#: fetchmail.c:1307
 #, c-format
 msgid "fetchmail: %s configuration invalid, RPOP requires a privileged port\n"
 msgstr ""
 "fetchmail: formësimi i %s i pavlefshëm, RPOP lyp një portë të privilegjuar\n"
 
-#: fetchmail.c:1324
+#: fetchmail.c:1325
 #, c-format
 msgid "%s configuration invalid, LMTP can't use default SMTP port\n"
 msgstr ""
 "formësimi i %s i pavlefshëm, LMTP nuk mund të përdorë portën SMTP "
 "parazgjedhje\n"
 
-#: fetchmail.c:1338
+#: fetchmail.c:1339
 #, fuzzy
 msgid "Both fetchall and keep on in daemon or idle mode is a mistake!\n"
 msgstr ""
 "\"fetchall\" e njëkohësisht \"keep on\" gjatë mënyrës demon përbën gabim!\n"
 
-#: fetchmail.c:1363
+#: fetchmail.c:1364
 #, c-format
 msgid "terminated with signal %d\n"
 msgstr "përfunduar me sinjal %d\n"
 
-#: fetchmail.c:1436
+#: fetchmail.c:1437
 #, c-format
 msgid "%s querying %s (protocol %s) at %s: poll started\n"
 msgstr "%s po kërkon %s (protokolli %s) te %s: vjelja filloi\n"
 
-#: fetchmail.c:1461
+#: fetchmail.c:1462
 msgid "POP2 support is not configured.\n"
 msgstr "Nuk është formësuar mbulim për POP2.\n"
 
-#: fetchmail.c:1473
+#: fetchmail.c:1474
 msgid "POP3 support is not configured.\n"
 msgstr "Nuk është formësuar mbulim për POP3.\n"
 
-#: fetchmail.c:1483
+#: fetchmail.c:1484
 msgid "IMAP support is not configured.\n"
 msgstr "Nuk është formësuar mbulim për IMAP.\n"
 
-#: fetchmail.c:1489
+#: fetchmail.c:1490
 msgid "ETRN support is not configured.\n"
 msgstr "Nuk është formësuar mbulim për ETRN.\n"
 
-#: fetchmail.c:1497
+#: fetchmail.c:1498
 msgid "ODMR support is not configured.\n"
 msgstr "Nuk është formësuar mbulim për ODMR.\n"
 
-#: fetchmail.c:1504
+#: fetchmail.c:1505
 msgid "unsupported protocol selected.\n"
 msgstr "përzgjedhur protokoll i pambuluar.\n"
 
-#: fetchmail.c:1514
+#: fetchmail.c:1515
 #, c-format
 msgid "%s querying %s (protocol %s) at %s: poll completed\n"
 msgstr "%s po kërkon %s (protokolli %s) te %s: vjelja u plotësua\n"
 
-#: fetchmail.c:1531
+#: fetchmail.c:1532
 #, c-format
 msgid "Poll interval is %d seconds\n"
 msgstr "Intervali i vjeljes është %d sekonda\n"
 
-#: fetchmail.c:1533
+#: fetchmail.c:1534
 #, c-format
 msgid "Logfile is %s\n"
 msgstr "Jetëgjatësia e regjistrit është %s\n"
 
-#: fetchmail.c:1535
+#: fetchmail.c:1536
 #, c-format
 msgid "Idfile is %s\n"
 msgstr "Idfile është %s\n"
 
-#: fetchmail.c:1538
+#: fetchmail.c:1539
 msgid "Progress messages will be logged via syslog\n"
 msgstr "Mesazhe ecurie do të regjistrohen përmes syslog\n"
 
-#: fetchmail.c:1541
+#: fetchmail.c:1542
 msgid "Fetchmail will masquerade and will not generate Received\n"
 msgstr "Fetchmail do të kryejë maskim dhe nuk do të prodhojë Të Marrë\n"
 
-#: fetchmail.c:1543
+#: fetchmail.c:1544
 msgid "Fetchmail will show progress dots even in logfiles.\n"
 msgstr "Fetchmail-i do të tregojë pika ecurie edhe në kartela regjistrimesh.\n"
 
-#: fetchmail.c:1545
+#: fetchmail.c:1546
 #, c-format
 msgid "Fetchmail will forward misaddressed multidrop messages to %s.\n"
 msgstr ""
 "Fetchmail-i do të përcjellë mesazhe të keqadresuar me shpërndarje të "
 "shumëfishtë te %s.\n"
 
-#: fetchmail.c:1549
+#: fetchmail.c:1550
 msgid "Fetchmail will direct error mail to the postmaster.\n"
 msgstr "Fetchmail-i do të drejtojë gabime poste drejt ustait të postës.\n"
 
-#: fetchmail.c:1551
+#: fetchmail.c:1552
 msgid "Fetchmail will direct error mail to the sender.\n"
 msgstr "Fetchmail-i do të drejtojë gabime poste te dërguesi.\n"
 
-#: fetchmail.c:1558
+#: fetchmail.c:1559
 #, c-format
 msgid "Options for retrieving from %s@%s:\n"
 msgstr "Mundësi për marrje prej %s@%s:\n"
 
-#: fetchmail.c:1562
+#: fetchmail.c:1563
 #, c-format
 msgid "  Mail will be retrieved via %s\n"
 msgstr "  Posta do të merret përmes %s\n"
 
-#: fetchmail.c:1565
+#: fetchmail.c:1566
 #, c-format
 msgid "  Poll of this server will occur every %d interval.\n"
 msgid_plural "  Poll of this server will occur every %d intervals.\n"
 msgstr[0] "  Vjelja e këtij shërbyesi do të ngjasë çdo %d interval.\n"
 msgstr[1] "  Vjelja e këtij shërbyesi do të ngjasë çdo %d intervale.\n"
 
-#: fetchmail.c:1569
+#: fetchmail.c:1570
 #, c-format
 msgid "  True name of server is %s.\n"
 msgstr "  Emri i vërtetë i shërbyesit është %s.\n"
 
-#: fetchmail.c:1572
+#: fetchmail.c:1573
 msgid "  This host will not be queried when no host is specified.\n"
 msgstr "  Kjo strehë nuk do pyetet kur nuk ka strehë të treguar.\n"
 
-#: fetchmail.c:1573
+#: fetchmail.c:1574
 msgid "  This host will be queried when no host is specified.\n"
 msgstr "  Kjo strehë do të pyetet kur nuk ka strehë të treguar.\n"
 
-#: fetchmail.c:1577
+#: fetchmail.c:1578
 msgid "  Password will be prompted for.\n"
 msgstr "  Do të kërkohet fjalëkalim.\n"
 
-#: fetchmail.c:1581
+#: fetchmail.c:1582
 #, c-format
 msgid "  APOP secret = \"%s\".\n"
 msgstr "  Sekret APOP= \"%s\".\n"
 
-#: fetchmail.c:1584
+#: fetchmail.c:1585
 #, c-format
 msgid "  RPOP id = \"%s\".\n"
 msgstr "  Id RPOP = \"%s\".\n"
 
-#: fetchmail.c:1587
+#: fetchmail.c:1588
 #, c-format
 msgid "  Password = \"%s\".\n"
 msgstr "  Fjalëkalim = \"%s\".\n"
 
-#: fetchmail.c:1596
+#: fetchmail.c:1597
 #, c-format
 msgid "  Protocol is KPOP with Kerberos %s authentication"
 msgstr "  Protokolli është KPOP me mirëfilltësim Kerberos %s"
 
-#: fetchmail.c:1599
+#: fetchmail.c:1600
 #, c-format
 msgid "  Protocol is %s"
 msgstr "  Protokoll është %s"
 
-#: fetchmail.c:1601
+#: fetchmail.c:1602
 #, c-format
 msgid " (using service %s)"
 msgstr " (po përdor shërbim %s)"
 
-#: fetchmail.c:1603
+#: fetchmail.c:1604
 msgid " (using default port)"
 msgstr " (po përdor portë parazgjedhje)"
 
-#: fetchmail.c:1605
+#: fetchmail.c:1606
 msgid " (forcing UIDL use)"
 msgstr " (po detyroj përdorim UIDL)"
 
-#: fetchmail.c:1611
+#: fetchmail.c:1612
 msgid "  All available authentication methods will be tried.\n"
 msgstr "  Do të provohen tërë metodat e mundshme për mirëfilltësim.\n"
 
-#: fetchmail.c:1614
+#: fetchmail.c:1615
 msgid "  Password authentication will be forced.\n"
 msgstr "  Do të detyrohet mirëfilltësim me fjalëkalim.\n"
 
-#: fetchmail.c:1617
+#: fetchmail.c:1618
 msgid "  MSN authentication will be forced.\n"
 msgstr "  Do të detyrohet mirëfilltësim MSN.\n"
 
-#: fetchmail.c:1620
+#: fetchmail.c:1621
 msgid "  NTLM authentication will be forced.\n"
 msgstr "  Do të detyrohet mirëfilltësim NTLM.\n"
 
-#: fetchmail.c:1623
+#: fetchmail.c:1624
 msgid "  OTP authentication will be forced.\n"
 msgstr "  Do të detyrohet mirëfilltësim OTP.\n"
 
-#: fetchmail.c:1626
+#: fetchmail.c:1627
 msgid "  CRAM-Md5 authentication will be forced.\n"
 msgstr "  Do të detyrohet mirëfilltësim CRAM-Md5.\n"
 
-#: fetchmail.c:1629
+#: fetchmail.c:1630
 msgid "  GSSAPI authentication will be forced.\n"
 msgstr "  Do të detyrohet mirëfilltësim GSSAPI.\n"
 
-#: fetchmail.c:1632
+#: fetchmail.c:1633
 msgid "  Kerberos V4 authentication will be forced.\n"
 msgstr "  Do të detyrohet mirëfilltësim Kerberos V4.\n"
 
-#: fetchmail.c:1635
+#: fetchmail.c:1636
 msgid "  Kerberos V5 authentication will be forced.\n"
 msgstr "  Do të detyrohet mirëfilltësim Kerberos V5.\n"
 
-#: fetchmail.c:1638
+#: fetchmail.c:1639
 msgid "  End-to-end encryption assumed.\n"
 msgstr "  Nënkuptohet kodim cep-më-cep.\n"
 
-#: fetchmail.c:1642
+#: fetchmail.c:1643
 #, c-format
 msgid "  Mail service principal is: %s\n"
 msgstr "  Parësori i shërbimit postar është: %s\n"
 
-#: fetchmail.c:1645
+#: fetchmail.c:1646
 msgid "  SSL encrypted sessions enabled.\n"
 msgstr "  Mundësuar sesione SSL të koduar.\n"
 
-#: fetchmail.c:1647
+#: fetchmail.c:1648
 #, c-format
 msgid "  SSL protocol: %s.\n"
 msgstr "  Protokoll SSL: %s.\n"
 
-#: fetchmail.c:1649
+#: fetchmail.c:1650
 msgid "  SSL server certificate checking enabled.\n"
 msgstr "  Mundësuar kontroll dëshmie shërbyesi SSL.\n"
 
-#: fetchmail.c:1651
+#: fetchmail.c:1652
 #, c-format
 msgid "  SSL trusted certificate directory: %s\n"
 msgstr "  drejtori dëshmish SSL të besueshme: %s\n"
 
-#: fetchmail.c:1654
+#: fetchmail.c:1655
 #, c-format
 msgid "  SSL key fingerprint (checked against the server key): %s\n"
 msgstr "  shenjë gishtash kyçi SSL (kontrolluar kundrejt kyçi shërbyesi): %s\n"
 
-#: fetchmail.c:1657
+#: fetchmail.c:1658
 #, c-format
 msgid "  Server nonresponse timeout is %d seconds"
 msgstr "  Afati i mospërgjigjes së shërbyesit është %d sekonda"
 
-#: fetchmail.c:1659
+#: fetchmail.c:1660
 msgid " (default).\n"
 msgstr " (parazgjedhje).\n"
 
-#: fetchmail.c:1666
+#: fetchmail.c:1667
 msgid "  Default mailbox selected.\n"
 msgstr "  Kuti postare parazgjedhje e përzgjedhur.\n"
 
-#: fetchmail.c:1671
+#: fetchmail.c:1672
 msgid "  Selected mailboxes are:"
 msgstr "  Kutitë postare të përzgjedhura janë:"
 
-#: fetchmail.c:1677
+#: fetchmail.c:1678
 msgid "  All messages will be retrieved (--all on).\n"
 msgstr "  Do të merren tërë mesazhet (--all on).\n"
 
-#: fetchmail.c:1678
+#: fetchmail.c:1679
 msgid "  Only new messages will be retrieved (--all off).\n"
 msgstr "  Do të merren vetëm mesazhet e rinj (--all off).\n"
 
-#: fetchmail.c:1680
+#: fetchmail.c:1681
 msgid "  Fetched messages will be kept on the server (--keep on).\n"
 msgstr "  Mesazhet e sjellë %s do të mbahen në shërbyes (--keep on).\n"
 
-#: fetchmail.c:1681
+#: fetchmail.c:1682
 msgid "  Fetched messages will not be kept on the server (--keep off).\n"
 msgstr "  Mesazhet e sjellë nuk do të mbahen në shërbyes (--keep off).\n"
 
-#: fetchmail.c:1683
+#: fetchmail.c:1684
 msgid "  Old messages will be flushed before message retrieval (--flush on).\n"
 msgstr ""
 "  Mesazhet e vjetër do të zbrazen para marrjes së mesazheve (--flush on).\n"
 
-#: fetchmail.c:1684
+#: fetchmail.c:1685
 msgid ""
 "  Old messages will not be flushed before message retrieval (--flush off).\n"
 msgstr ""
 "  Mesazhet e vjetër nuk do të zbrazen para marrjes së mesazheve (--flush "
 "off).\n"
 
-#: fetchmail.c:1686
+#: fetchmail.c:1687
 msgid ""
 "  Oversized messages will be flushed before message retrieval (--limitflush "
 "on).\n"
@@ -1265,7 +1266,7 @@ msgstr ""
 "  Mesazhet tej masës do të zbrazen para marrjes së mesazheve (--limitflush "
 "on).\n"
 
-#: fetchmail.c:1687
+#: fetchmail.c:1688
 msgid ""
 "  Oversized messages will not be flushed before message retrieval (--"
 "limitflush off).\n"
@@ -1273,340 +1274,340 @@ msgstr ""
 "  Mesazhet tej masës nuk do të zbrazen para marrjes së mesazheve (--"
 "limitflush off).\n"
 
-#: fetchmail.c:1689
+#: fetchmail.c:1690
 msgid "  Rewrite of server-local addresses is enabled (--norewrite off).\n"
 msgstr ""
 "  Rishkrimi i vendndodhjeve vendore të shërbyesit është veprues (--norewrite "
 "off).\n"
 
-#: fetchmail.c:1690
+#: fetchmail.c:1691
 msgid "  Rewrite of server-local addresses is disabled (--norewrite on).\n"
 msgstr ""
 "  Rishkrimi i vendndodhjeve vendore të shërbyesit është joveprues (--"
 "norewrite on).\n"
 
-#: fetchmail.c:1692
+#: fetchmail.c:1693
 msgid "  Carriage-return stripping is enabled (stripcr on).\n"
 msgstr "  Heqja e \"carriage-return\"-it është vepruese (stripcr on).\n"
 
-#: fetchmail.c:1693
+#: fetchmail.c:1694
 msgid "  Carriage-return stripping is disabled (stripcr off).\n"
 msgstr "  Heqja e \"carriage-return\"-it është jovepruese (stripcr off).\n"
 
-#: fetchmail.c:1695
+#: fetchmail.c:1696
 msgid "  Carriage-return forcing is enabled (forcecr on).\n"
 msgstr "Detyrimi i \"carriage-return\"-it është veprues (forcecr on).\n"
 
-#: fetchmail.c:1696
+#: fetchmail.c:1697
 msgid "  Carriage-return forcing is disabled (forcecr off).\n"
 msgstr "Detyrimi i \"carriage-return\"-it është joveprues (forcecr off).\n"
 
-#: fetchmail.c:1698
+#: fetchmail.c:1699
 msgid ""
 "  Interpretation of Content-Transfer-Encoding is disabled (pass8bits on).\n"
 msgstr ""
 "  Interpretimi i Kodimit të Shpërnguljes së Përmbajtjes është joveprues "
 "(pass8bits on).\n"
 
-#: fetchmail.c:1699
+#: fetchmail.c:1700
 msgid ""
 "  Interpretation of Content-Transfer-Encoding is enabled (pass8bits off).\n"
 msgstr ""
 "  Interpretimi i Kodimit të Shpërnguljes së Përmbajtjes është veprues "
 "(pass8bits off).\n"
 
-#: fetchmail.c:1701
+#: fetchmail.c:1702
 msgid "  MIME decoding is enabled (mimedecode on).\n"
 msgstr "  Çkodimi MIME është veprues (mimedecode on).\n"
 
-#: fetchmail.c:1702
+#: fetchmail.c:1703
 msgid "  MIME decoding is disabled (mimedecode off).\n"
 msgstr "  Çkodimi MIME është joveprues (mimedecode off).\n"
 
-#: fetchmail.c:1704
+#: fetchmail.c:1705
 msgid "  Idle after poll is enabled (idle on).\n"
 msgstr "Plogështia pas vjeljes është vepruese (idle on).\n"
 
-#: fetchmail.c:1705
+#: fetchmail.c:1706
 msgid "  Idle after poll is disabled (idle off).\n"
 msgstr "Plogështia pas vjeljes është jovepruese (idle off).\n"
 
-#: fetchmail.c:1707
+#: fetchmail.c:1708
 msgid "  Nonempty Status lines will be discarded (dropstatus on)\n"
 msgstr ""
 "  Nuk do të merren parasysh rreshta Gjendjeje Joboshe (dropstatus on)\n"
 
-#: fetchmail.c:1708
+#: fetchmail.c:1709
 msgid "  Nonempty Status lines will be kept (dropstatus off)\n"
 msgstr ""
 "  Do të merren parasysh rreshta Gjendjeje Joboshe do të jenë (dropstatus "
 "off)\n"
 
-#: fetchmail.c:1710
+#: fetchmail.c:1711
 msgid "  Delivered-To lines will be discarded (dropdelivered on)\n"
 msgstr "  Rreshtat Nisur Për nuk do të merren parasysh (dropdelivered on)\n"
 
-#: fetchmail.c:1711
+#: fetchmail.c:1712
 msgid "  Delivered-To lines will be kept (dropdelivered off)\n"
 msgstr "  Rreshtat Nisur Për do të merren parasysh (dropdelivered off)\n"
 
-#: fetchmail.c:1715
+#: fetchmail.c:1716
 #, c-format
 msgid "  Message size limit is %d octets (--limit %d).\n"
 msgstr "  Kufiri i madhësisë së mesazheve është %d tetëshe (--limit %d).\n"
 
-#: fetchmail.c:1718
+#: fetchmail.c:1719
 msgid "  No message size limit (--limit 0).\n"
 msgstr "  Pa kufi madhësie mesazhesh (--limit 0).\n"
 
-#: fetchmail.c:1720
+#: fetchmail.c:1721
 #, c-format
 msgid "  Message size warning interval is %d seconds (--warnings %d).\n"
 msgstr ""
 "  Intervali i sinjalizimit të madhësisë së mesazheve është %d sekonda (--"
 "warnings %d).\n"
 
-#: fetchmail.c:1723
+#: fetchmail.c:1724
 msgid "  Size warnings on every poll (--warnings 0).\n"
 msgstr "  Sinjalizim madhësie në çdo vjelje (--warnings 0).\n"
 
-#: fetchmail.c:1726
+#: fetchmail.c:1727
 #, c-format
 msgid "  Received-message limit is %d (--fetchlimit %d).\n"
 msgstr "  Kufiri për mesazhe të marrë është %d (--fetchlimit %d).\n"
 
-#: fetchmail.c:1729
+#: fetchmail.c:1730
 msgid "  No received-message limit (--fetchlimit 0).\n"
 msgstr "  Pa kufi për mesazhe të marrë (--fetchlimit 0).\n"
 
-#: fetchmail.c:1731
+#: fetchmail.c:1732
 #, c-format
 msgid "  Fetch message size limit is %d (--fetchsizelimit %d).\n"
 msgstr "  Kufi madhësie mesazhesh që sillen është %d (--fetchsizelimit %d).\n"
 
-#: fetchmail.c:1734
+#: fetchmail.c:1735
 msgid "  No fetch message size limit (--fetchsizelimit 0).\n"
 msgstr "  Pa kufi madhësie mesazhesh që sillen (--fetchsizelimit 0).\n"
 
-#: fetchmail.c:1738
+#: fetchmail.c:1739
 msgid "  Do binary search of UIDs during each poll (--fastuidl 1).\n"
 msgstr "  Kryej kërkim dyor të UID-ve gjatë çdo vjeljeje (--fastuidl 1).\n"
 
-#: fetchmail.c:1740
+#: fetchmail.c:1741
 #, c-format
 msgid "  Do binary search of UIDs during %d out of %d polls (--fastuidl %d).\n"
 msgstr ""
 "  Kryej kërkim dyor të UID-ve gjatë %d prej %d vjeljeve (--fastuidl %d).\n"
 
-#: fetchmail.c:1743
+#: fetchmail.c:1744
 msgid "   Do linear search of UIDs during each poll (--fastuidl 0).\n"
 msgstr "   Kryej kërkim linear të UID-ve gjatë çdo vjeljeje (--fastuidl 0).\n"
 
-#: fetchmail.c:1745
+#: fetchmail.c:1746
 #, c-format
 msgid "  SMTP message batch limit is %d.\n"
 msgstr "  Kufiri për tufë mesazhesh SMTP është %d.\n"
 
-#: fetchmail.c:1747
+#: fetchmail.c:1748
 msgid "  No SMTP message batch limit (--batchlimit 0).\n"
 msgstr "  Pa kufi për tufë mesazhe SMTP (--batchlimit 0).\n"
 
-#: fetchmail.c:1751
+#: fetchmail.c:1752
 #, c-format
 msgid "  Deletion interval between expunges forced to %d (--expunge %d).\n"
 msgstr ""
 "  Interval fshirjesh ndërmjet shuarjesh detyruar në %d (--expunge %d).\n"
 
-#: fetchmail.c:1753
+#: fetchmail.c:1754
 msgid "  No forced expunges (--expunge 0).\n"
 msgstr "  Pa shuarje të detyruara (--expunge 0).\n"
 
-#: fetchmail.c:1760
+#: fetchmail.c:1761
 msgid "  Domains for which mail will be fetched are:"
 msgstr "  Përkatësitë për të cilat do të jepet postë janë:"
 
-#: fetchmail.c:1765 fetchmail.c:1785
+#: fetchmail.c:1766 fetchmail.c:1786
 msgid " (default)"
 msgstr " (parazgjedhje)"
 
-#: fetchmail.c:1770
+#: fetchmail.c:1771
 #, c-format
 msgid "  Messages will be appended to %s as BSMTP\n"
 msgstr "  Mesazhet do të vargëzohen te %s si BSMTP\n"
 
-#: fetchmail.c:1772
+#: fetchmail.c:1773
 #, c-format
 msgid "  Messages will be delivered with \"%s\".\n"
 msgstr "  Mesazhet do të shpërndahen me \"%s\".\n"
 
-#: fetchmail.c:1779
+#: fetchmail.c:1780
 #, c-format
 msgid "  Messages will be %cMTP-forwarded to:"
 msgstr "  Mesazhet do të përcillen si %cMTP te:"
 
-#: fetchmail.c:1790
+#: fetchmail.c:1791
 #, c-format
 msgid "  Host part of MAIL FROM line will be %s\n"
 msgstr "  Pjesa strehë e rreshtit POSTË PREJ do të jetë %s\n"
 
-#: fetchmail.c:1793
+#: fetchmail.c:1794
 #, c-format
 msgid "  Address to be put in RCPT TO lines shipped to SMTP will be %s\n"
 msgstr ""
 "  Vendndodhja që do vendoset tek rreshtat RCPT TO të dërguar te SMTP do të "
 "jetë %s\n"
 
-#: fetchmail.c:1802
+#: fetchmail.c:1803
 msgid "  Recognized listener spam block responses are:"
 msgstr "  Përgjigje të pranuara blloqesh spam dëgjuesi janë:"
 
-#: fetchmail.c:1808
+#: fetchmail.c:1809
 msgid "  Spam-blocking disabled\n"
 msgstr "  Bllokim spamesh i çaktivizuar\n"
 
-#: fetchmail.c:1811
+#: fetchmail.c:1812
 #, c-format
 msgid "  Server connection will be brought up with \"%s\".\n"
 msgstr "  Lidhja me shërbyesin do të sillet me \"%s\".\n"
 
-#: fetchmail.c:1814
+#: fetchmail.c:1815
 msgid "  No pre-connection command.\n"
 msgstr "  Pa urdhër para-lidhjeje.\n"
 
-#: fetchmail.c:1816
+#: fetchmail.c:1817
 #, c-format
 msgid "  Server connection will be taken down with \"%s\".\n"
 msgstr "  Lidhja me shërbyesin do të lihet me \"%s\".\n"
 
-#: fetchmail.c:1819
+#: fetchmail.c:1820
 msgid "  No post-connection command.\n"
 msgstr "  Pa urdhër pas-lidhjeje.\n"
 
-#: fetchmail.c:1822
+#: fetchmail.c:1823
 msgid "  No localnames declared for this host.\n"
 msgstr "  Pa emra vendorë të deklaruar për këtë strehë.\n"
 
-#: fetchmail.c:1832
+#: fetchmail.c:1833
 msgid "  Multi-drop mode: "
 msgstr "  Mënyrë shpërndarje e shumëfishtë: "
 
-#: fetchmail.c:1834
+#: fetchmail.c:1835
 msgid "  Single-drop mode: "
 msgstr "  Mënyrë shpërndarje njëshe: "
 
-#: fetchmail.c:1836
+#: fetchmail.c:1837
 #, c-format
 msgid "%d local name recognized.\n"
 msgid_plural "%d local names recognized.\n"
 msgstr[0] "%d emër vendor i pranuar.\n"
 msgstr[1] "%d emra vendorë të pranuar.\n"
 
-#: fetchmail.c:1851
+#: fetchmail.c:1852
 msgid "  DNS lookup for multidrop addresses is enabled.\n"
 msgstr ""
 "  Kërkimi DNS për vendndodhje shpërndarjesh të shumëfishta është veprues.\n"
 
-#: fetchmail.c:1852
+#: fetchmail.c:1853
 msgid "  DNS lookup for multidrop addresses is disabled.\n"
 msgstr ""
 "  Kërkimi DNS për vendndodhje shpërndarjesh të shumëfishta është joveprues.\n"
 
-#: fetchmail.c:1856
+#: fetchmail.c:1857
 msgid ""
 "  Server aliases will be compared with multidrop addresses by IP address.\n"
 msgstr ""
 "  Aliase shërbyesish do të krahasohen me vendndodhje shpërndarjesh të "
 "shumëfishta prej vendndodhjes IP.\n"
 
-#: fetchmail.c:1858
+#: fetchmail.c:1859
 msgid "  Server aliases will be compared with multidrop addresses by name.\n"
 msgstr ""
 "  Aliase shërbyesish do të krahasohen me vendndodhje shpërndarjesh të "
 "shumëfishta prej emrit.\n"
 
-#: fetchmail.c:1861
+#: fetchmail.c:1862
 msgid "  Envelope-address routing is disabled\n"
 msgstr "  Përcjellje vendndodhjesh zarf është çaktivizuar\n"
 
-#: fetchmail.c:1864
+#: fetchmail.c:1865
 #, c-format
 msgid "  Envelope header is assumed to be: %s\n"
 msgstr "  Titulli zarf nënkuptohet të jetë: %s\n"
 
-#: fetchmail.c:1867
+#: fetchmail.c:1868
 #, c-format
 msgid "  Number of envelope headers to be skipped over: %d\n"
 msgstr "  Numër titujsh zarf për t'u anashkaluar: %d\n"
 
-#: fetchmail.c:1870
+#: fetchmail.c:1871
 #, c-format
 msgid "  Prefix %s will be removed from user id\n"
 msgstr "  Parashtesa %s do të hiqet prej id-je përdoruesi\n"
 
-#: fetchmail.c:1873
+#: fetchmail.c:1874
 msgid "  No prefix stripping\n"
 msgstr "  Pa heqje parashtese\n"
 
-#: fetchmail.c:1880
+#: fetchmail.c:1881
 msgid "  Predeclared mailserver aliases:"
 msgstr "  Aliase emrash shërbyesi të paradeklaruar:"
 
-#: fetchmail.c:1889
+#: fetchmail.c:1890
 msgid "  Local domains:"
 msgstr "  Përkatësi vendore:"
 
-#: fetchmail.c:1899
+#: fetchmail.c:1900
 #, c-format
 msgid "  Connection must be through interface %s.\n"
 msgstr "  Lidhja duhet të jetë përmes ndërfaqes %s.\n"
 
-#: fetchmail.c:1901
+#: fetchmail.c:1902
 msgid "  No interface requirement specified.\n"
 msgstr "  Pa kusht të përcaktuar rreth ndërfaqes.\n"
 
-#: fetchmail.c:1903
+#: fetchmail.c:1904
 #, c-format
 msgid "  Polling loop will monitor %s.\n"
 msgstr "  Qerthulli i vjeljes do të mbikqyrë %s.\n"
 
-#: fetchmail.c:1905
+#: fetchmail.c:1906
 msgid "  No monitor interface specified.\n"
 msgstr "  Pa ndërfaqe mbikqyrjeje të përcaktuar.\n"
 
-#: fetchmail.c:1909
+#: fetchmail.c:1910
 #, c-format
 msgid "  Server connections will be made via plugin %s (--plugin %s).\n"
 msgstr ""
 "  Lidhjet me shërbyesin do të kryhen përmes shtojcës %s (--plugin %s).\n"
 
-#: fetchmail.c:1911
+#: fetchmail.c:1912
 msgid "  No plugin command specified.\n"
 msgstr "  Pa urdhër shtojce të përcaktuar.\n"
 
-#: fetchmail.c:1913
+#: fetchmail.c:1914
 #, c-format
 msgid "  Listener connections will be made via plugout %s (--plugout %s).\n"
 msgstr ""
 "  Lidhje dëgjuesi do të kryhen përmes shtojce daljeje %s (--plugout %s).\n"
 
-#: fetchmail.c:1915
+#: fetchmail.c:1916
 msgid "  No plugout command specified.\n"
 msgstr "  Pa urdhër shtojce daljeje të përcaktuar.\n"
 
-#: fetchmail.c:1920
+#: fetchmail.c:1921
 msgid "  No UIDs saved from this host.\n"
 msgstr "  Pa UID të ruajtura prej kësaj strehe.\n"
 
-#: fetchmail.c:1929
+#: fetchmail.c:1930
 #, c-format
 msgid "  %d UIDs saved.\n"
 msgstr "  %d UID të ruajtur.\n"
 
-#: fetchmail.c:1937
+#: fetchmail.c:1938
 msgid "  Poll trace information will be added to the Received header.\n"
 msgstr "  Të dhëna gjurmimi vjeljeje do të shtohen te titulli Të Marrë.\n"
 
-#: fetchmail.c:1939
+#: fetchmail.c:1940
 msgid ""
 "  No poll trace information will be added to the Received header.\n"
 ".\n"
@@ -1614,7 +1615,7 @@ msgstr ""
 "  Nuk do të shtohen të dhëna gjurmimi vjeljeje te titulli Të Marrë.\n"
 ".\n"
 
-#: fetchmail.c:1942
+#: fetchmail.c:1943
 #, c-format
 msgid "  Pass-through properties \"%s\".\n"
 msgstr "  Veti kalimi-nëpër \"%s\".\n"
@@ -1779,7 +1780,7 @@ msgstr "kërkimi për mesazhe të pavërejtur dështoi\n"
 msgid "%lu is unseen\n"
 msgstr "%u është i pavërejtur\n"
 
-#: imap.c:897 pop3.c:846
+#: imap.c:897 pop3.c:861
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u është i pari i pavërejtur\n"
@@ -2306,58 +2307,58 @@ msgstr ""
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
 msgstr ""
 
-#: pop3.c:619
+#: pop3.c:633
 msgid "We've run out of allowed authenticators and cannot continue.\n"
 msgstr ""
 
-#: pop3.c:644
+#: pop3.c:647
 msgid "Required APOP timestamp not found in greeting\n"
 msgstr "Nuk u gjet vulë kohore e nevojshme APOP në përshëndetje\n"
 
-#: pop3.c:653
+#: pop3.c:656
 msgid "Timestamp syntax error in greeting\n"
 msgstr "Gabim sintakse vule kohore në përshëndetje\n"
 
-#: pop3.c:679
+#: pop3.c:682
 msgid "Undefined protocol request in POP3_auth\n"
 msgstr "Kërkesë protokolli e papërcaktuar në POP3_auth\n"
 
-#: pop3.c:687
+#: pop3.c:702
 msgid "lock busy!  Is another session active?\n"
 msgstr ""
 
-#: pop3.c:766
+#: pop3.c:781
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr ""
 
-#: pop3.c:789
+#: pop3.c:804
 msgid "Server responded with UID for wrong message.\n"
 msgstr "Shërbyesi u përgjigj me UID për mesazh të gabuar.\n"
 
-#: pop3.c:816 pop3.c:1062
+#: pop3.c:831 pop3.c:1077
 #, fuzzy, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) qe fshirë, por është ende i pranishëm!\n"
 
-#: pop3.c:825 pop3.c:837 pop3.c:1071 pop3.c:1078
+#: pop3.c:840 pop3.c:852 pop3.c:1086 pop3.c:1093
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u është i pavërejtur\n"
 
-#: pop3.c:922
+#: pop3.c:937
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "Mesazhe të futur në një listë te shërbyesi. Nuk mund ta bëj dot këtë.\n"
 
-#: pop3.c:1014
+#: pop3.c:1029
 msgid "protocol error\n"
 msgstr "gabim protokolli\n"
 
-#: pop3.c:1030
+#: pop3.c:1045
 msgid "protocol error while fetching UIDLs\n"
 msgstr "gabim protokolli gjatë sjelljes së UIDL-ve\n"
 
-#: pop3.c:1400
+#: pop3.c:1415
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Mundësia --dosje nuk mbulohet me POP3\n"
 

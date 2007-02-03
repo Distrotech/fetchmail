@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.6\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2007-02-03 00:28+0100\n"
+"POT-Creation-Date: 2007-02-03 01:17+0100\n"
 "PO-Revision-Date: 2007-01-24 23:58+0900\n"
 "Last-Translator: Takeshi Hamasaki <hma@syd.odn.ne.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
@@ -1750,7 +1750,7 @@ msgstr "未読メッセージの検索に失敗しました。\n"
 msgid "%lu is unseen\n"
 msgstr "%lu は未読です。\n"
 
-#: imap.c:897 pop3.c:850
+#: imap.c:897 pop3.c:861
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u は最初の未読メッセージです。\n"
@@ -2286,60 +2286,60 @@ msgstr "CAPA コマンドは TLS では必須です。\n"
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
 msgstr "%s: TLS への適合的アップグレードに失敗、継続可能か試しています。\n"
 
-#: pop3.c:623
+#: pop3.c:633
 msgid "We've run out of allowed authenticators and cannot continue.\n"
 msgstr ""
 "使用を許可されたすべての認証手段を試みましたが、すべて失敗しました。実行を継"
 "続できません。\n"
 
-#: pop3.c:648
+#: pop3.c:647
 msgid "Required APOP timestamp not found in greeting\n"
 msgstr "greeting 中に APOP timestamp が存在しません。\n"
 
-#: pop3.c:657
+#: pop3.c:656
 msgid "Timestamp syntax error in greeting\n"
 msgstr "greeting 中の timestamp が不正です。\n"
 
-#: pop3.c:683
+#: pop3.c:682
 msgid "Undefined protocol request in POP3_auth\n"
 msgstr "POP3_auth 中で定義されていないプロトコルが要求されました。\n"
 
-#: pop3.c:691
+#: pop3.c:702
 msgid "lock busy!  Is another session active?\n"
 msgstr "lock busy 状態です。別の交信が行われていないか確認して下さい。\n"
 
-#: pop3.c:770
+#: pop3.c:781
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "上流サーバからの UIDL 応答に対応できません。\n"
 
-#: pop3.c:793
+#: pop3.c:804
 msgid "Server responded with UID for wrong message.\n"
 msgstr "サーバが誤ったメッセージの UID に応答しました。\n"
 
-#: pop3.c:820 pop3.c:1066
+#: pop3.c:831 pop3.c:1077
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) は削除されましたが、まだ存在しています!\n"
 
-#: pop3.c:829 pop3.c:841 pop3.c:1075 pop3.c:1082
+#: pop3.c:840 pop3.c:852 pop3.c:1086 pop3.c:1093
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u は未読です。\n"
 
-#: pop3.c:926
+#: pop3.c:937
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "サーバリストにメッセージが挿入されています。取り扱うことができません。\n"
 
-#: pop3.c:1018
+#: pop3.c:1029
 msgid "protocol error\n"
 msgstr "プロトコルエラーです。\n"
 
-#: pop3.c:1034
+#: pop3.c:1045
 msgid "protocol error while fetching UIDLs\n"
 msgstr "UIDL を取り込み中にプロトコルエラーが発生しました。\n"
 
-#: pop3.c:1404
+#: pop3.c:1415
 msgid "Option --folder is not supported with POP3\n"
 msgstr "POP3 では --folder オプションは利用できません。\n"
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2007-02-03 00:28+0100\n"
+"POT-Creation-Date: 2007-02-03 01:17+0100\n"
 "PO-Revision-Date: 2006-11-27 04:32+0100\n"
 "Last-Translator: Matthias Andree <matthias.andree>\n"
 "Language-Team: Deutsch <de@li.org>\n"
@@ -1779,7 +1779,7 @@ msgstr "Suche nach ungesehenen Nachrichten fehlgeschlagen\n"
 msgid "%lu is unseen\n"
 msgstr "%lu ist ungesehen\n"
 
-#: imap.c:897 pop3.c:850
+#: imap.c:897 pop3.c:861
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u ist erste ungesehene\n"
@@ -2308,59 +2308,59 @@ msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
 msgstr ""
 "%s: opportunistisches Upgrade auf TLS fehlgeschlagen, versuche Fortsetzung.\n"
 
-#: pop3.c:623
+#: pop3.c:633
 msgid "We've run out of allowed authenticators and cannot continue.\n"
 msgstr ""
 "Keine weiteren Authentifizierungsverfahren verfügbar, Fortsetzung nicht "
 "möglich.\n"
 
-#: pop3.c:648
+#: pop3.c:647
 msgid "Required APOP timestamp not found in greeting\n"
 msgstr "Erforderlicher APOP-Zeitstempel nicht in Begrüßung gefunden\n"
 
-#: pop3.c:657
+#: pop3.c:656
 msgid "Timestamp syntax error in greeting\n"
 msgstr "Zeitstempel-Syntax-Fehler in Begrüßung\n"
 
-#: pop3.c:683
+#: pop3.c:682
 msgid "Undefined protocol request in POP3_auth\n"
 msgstr "Anfrage nach undefiniertem Protokoll in POP3_auth\n"
 
-#: pop3.c:691
+#: pop3.c:702
 msgid "lock busy!  Is another session active?\n"
 msgstr "Lock beschäftigt!  Ist eine weitere Sitzung aktiv?\n"
 
-#: pop3.c:770
+#: pop3.c:781
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "Kann die UIDL-Antwort des Servers nicht verarbeiten.\n"
 
-#: pop3.c:793
+#: pop3.c:804
 msgid "Server responded with UID for wrong message.\n"
 msgstr "Server hat mit UID der falschen Nachricht geantwortet.\n"
 
-#: pop3.c:820 pop3.c:1066
+#: pop3.c:831 pop3.c:1077
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) wurde gelöscht, ist aber immer noch da!\n"
 
-#: pop3.c:829 pop3.c:841 pop3.c:1075 pop3.c:1082
+#: pop3.c:840 pop3.c:852 pop3.c:1086 pop3.c:1093
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u ist ungesehen\n"
 
-#: pop3.c:926
+#: pop3.c:937
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr "Nachrichten in Liste auf Server eingefügt. Kann damit nicht umgehen.\n"
 
-#: pop3.c:1018
+#: pop3.c:1029
 msgid "protocol error\n"
 msgstr "Protokollfehler\n"
 
-#: pop3.c:1034
+#: pop3.c:1045
 msgid "protocol error while fetching UIDLs\n"
 msgstr "Protokollfehler beim Holen der UIDL\n"
 
-#: pop3.c:1404
+#: pop3.c:1415
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Option --folder wird mit POP3 nicht unterstützt\n"
 

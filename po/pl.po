@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.6\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2007-02-03 00:28+0100\n"
+"POT-Creation-Date: 2007-02-03 01:17+0100\n"
 "PO-Revision-Date: 2007-01-13 22:40+0100\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -1778,7 +1778,7 @@ msgstr "poszukiwanie nieprzeczytanych listów nie powiod³o siê\n"
 msgid "%lu is unseen\n"
 msgstr "%lu jest nieprzeczytany\n"
 
-#: imap.c:897 pop3.c:850
+#: imap.c:897 pop3.c:861
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u jest pierwszym nieprzeczytanym\n"
@@ -2322,59 +2322,59 @@ msgstr "Polecenie CAPA jest jednak niezbêdne dla TLS.\n"
 msgid "%s: opportunistic upgrade to TLS failed, trying to continue.\n"
 msgstr "%s: zgodne przej¶cie na TLS nie powiod³o siê, próba kontynuacji.\n"
 
-#: pop3.c:623
+#: pop3.c:633
 msgid "We've run out of allowed authenticators and cannot continue.\n"
 msgstr ""
 "Wyczerpano dozwolone sposoby uwierzytelnienia, nie mo¿na kontynuowaæ.\n"
 
-#: pop3.c:648
+#: pop3.c:647
 msgid "Required APOP timestamp not found in greeting\n"
 msgstr "W powitaniu serwera brakuje wymaganego znacznika czasu APOP\n"
 
-#: pop3.c:657
+#: pop3.c:656
 msgid "Timestamp syntax error in greeting\n"
 msgstr "B³±d sk³adni znacznika czasu w powitaniu\n"
 
-#: pop3.c:683
+#: pop3.c:682
 msgid "Undefined protocol request in POP3_auth\n"
 msgstr "Pro¶ba o nieznany protokó³ w POP3_auth\n"
 
-#: pop3.c:691
+#: pop3.c:702
 msgid "lock busy!  Is another session active?\n"
 msgstr "plik zablokowany! Czy inna sesja nie jest aktywna?\n"
 
-#: pop3.c:770
+#: pop3.c:781
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "Nie mo¿na obs³u¿yæ odpowiedzi UIDL od serwera.\n"
 
-#: pop3.c:793
+#: pop3.c:804
 msgid "Server responded with UID for wrong message.\n"
 msgstr "Serwer odpowiedzia³ z UID-em dla niew³a¶ciwego listu.\n"
 
-#: pop3.c:820 pop3.c:1066
+#: pop3.c:831 pop3.c:1077
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) zosta³ skasowany, ale nadal istnieje!\n"
 
-#: pop3.c:829 pop3.c:841 pop3.c:1075 pop3.c:1082
+#: pop3.c:840 pop3.c:852 pop3.c:1086 pop3.c:1093
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u jest nieprzeczytany\n"
 
-#: pop3.c:926
+#: pop3.c:937
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "Przesy³ki zosta³y dodane do listy na serwerze. Nie mogê tego obs³u¿yæ.\n"
 
-#: pop3.c:1018
+#: pop3.c:1029
 msgid "protocol error\n"
 msgstr "b³±d protoko³u\n"
 
-#: pop3.c:1034
+#: pop3.c:1045
 msgid "protocol error while fetching UIDLs\n"
 msgstr "b³±d protoko³u podczas pobierania UIDL\n"
 
-#: pop3.c:1404
+#: pop3.c:1415
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Opcja --folder nie dzia³a z POP3\n"
 
