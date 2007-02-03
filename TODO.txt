@@ -1,4 +1,4 @@
-6.3.7:
+6.3.8:
 - integrate Isaac Wilcox's test rig
 - look at Tony Earnshaw's .spec file
 - revisit BerliOS patches
