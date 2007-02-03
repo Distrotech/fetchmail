@@ -44,8 +44,10 @@ be removed from a 6.4.0 or newer release.)
 
 fetchmail 6.3.7 (not yet released):
 
-# REGRESSION FIX
-* Fix KPOP, broken with the 6.3.6 security fix. Patch by Miroslav Trmac.
+# FIXES FOR REGRESSIONS IN 6.3.6
+* Fix KPOP. Patch by Miloslav Trmac.
+* Fix repoll when server disconnects after opportunistic TLS failed for POP3.
+  Berlios Bug #10133, reported by Andrej Kacian.
 
 # TRANSLATION UPDATES
 * Japanese (Takeshi Hamasaki), Polish (Jakub Bogusz)

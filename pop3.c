@@ -635,17 +635,6 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	}
 	memset(shroud, 0x55, sizeof(shroud));
 	shroud[0] = '\0';
-#ifdef SSL_ENABLE
-	/* this is for servers which claim to support TLS, but actually
-	 * don't! */
-	if (connection_may_have_tls_errors && ok == PS_SOCKET)
-	{
-	    xfree(ctl->sslproto);
-	    ctl->sslproto = xstrdup("");
-	    /* repoll immediately without TLS */
-	    ok = PS_REPOLL;
-	}
-#endif
 	break;
 
     case P_APOP:
@@ -693,6 +682,18 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	report(stderr, GT_("Undefined protocol request in POP3_auth\n"));
 	ok = PS_ERROR;
     }
+
+#ifdef SSL_ENABLE
+    /* this is for servers which claim to support TLS, but actually
+     * don't! */
+    if (connection_may_have_tls_errors && ok == PS_SOCKET)
+    {
+	xfree(ctl->sslproto);
+	ctl->sslproto = xstrdup("");
+	/* repoll immediately without TLS */
+	ok = PS_REPOLL;
+    }
+#endif
 
     if (ok != 0)
     {
