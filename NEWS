@@ -52,6 +52,10 @@ fetchmail 6.3.7 (not yet released):
 # TRANSLATION UPDATES
 * Japanese (Takeshi Hamasaki), Polish (Jakub Bogusz)
 
+# CHANGES
+* Consider getaddrinfo() on Darwin 9 (Mac OS X 10.5 "Leopard") thread-safe.
+  Reported by Uli Zappe.
+
 # KNOWN BUGS AND WORKAROUNDS:
   (this section floats upwards through the NEWS file so it stays with the
   current release information)

@@ -442,6 +442,7 @@ if test "$ac_cv_search_getaddrinfo" = "none required" ; then
     gai_ts=no
     dnl we have getaddrinfo() - check if the OS is known to have a async-signal-safe implementation
     case $target_os in
+	darwin9*)				gai_ts=yes ;;
 	linux*)					gai_ts=yes ;;
 	freebsd5.5|freebsd6*|freebsd7*)		gai_ts=yes ;;
 	solaris2.8|solaris2.9|solaris2.10)	gai_ts=yes ;;
