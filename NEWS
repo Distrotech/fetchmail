@@ -42,7 +42,7 @@ be removed from a 6.4.0 or newer release.)
 
 --------------------------------------------------------------------------------
 
-fetchmail 6.3.7 (not yet released):
+fetchmail 6.3.7 (released 2007-02-18):
 
 # FIXES FOR REGRESSIONS IN 6.3.6
 * Fix KPOP. Patch by Miloslav Trmac.
