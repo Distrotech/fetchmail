@@ -359,11 +359,13 @@ static void send_size_warnings(struct query *ctl)
 	    size = atoi(current->id);
 	    if (ctl->limitflush)
 		stuff_warning(NULL, ctl,
-			GT_("  %d msg %d octets long deleted by fetchmail."),
+			ngettext("  %d message  %d octets long deleted by fetchmail.",
+			         "  %d messages %d octets long deleted by fetchmail.", nbr),
 			nbr, size);
 	    else
 		stuff_warning(NULL, ctl,
-			GT_("  %d msg %d octets long skipped by fetchmail."),
+			ngettext("  %d message  %d octets long skipped by fetchmail.",
+			         "  %d messages %d octets long skipped by fetchmail.", nbr),
 			nbr, size);
 	}
 	current->val.status.num++;

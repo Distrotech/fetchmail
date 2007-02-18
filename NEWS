@@ -42,19 +42,10 @@ be removed from a 6.4.0 or newer release.)
 
 --------------------------------------------------------------------------------
 
-fetchmail 6.3.7 (released 2007-02-18):
+fetchmail 6.3.8 (not yet released):
 
-# FIXES FOR REGRESSIONS IN 6.3.6
-* Fix KPOP. Patch by Miloslav Trmac.
-* Fix repoll when server disconnects after opportunistic TLS failed for POP3.
-  Berlios Bug #10133 = Gentoo Bug #163782 reported by Andrej Kacian.
-
-# TRANSLATION UPDATES
-* Japanese (Takeshi Hamasaki), Polish (Jakub Bogusz)
-
-# CHANGES
-* Consider getaddrinfo() on Darwin 9 (Mac OS X 10.5 "Leopard") thread-safe.
-  Reported by Uli Zappe.
+# BUG FIXES:
+* Fix pluralization of oversized-message warning mails.
 
 # KNOWN BUGS AND WORKAROUNDS:
   (this section floats upwards through the NEWS file so it stays with the
@@ -72,6 +63,22 @@ fetchmail 6.3.7 (released 2007-02-18):
   fetchmail -s doesn't work with a running daemon
 * some of the logging output is not very helpful
 * some of the documentation is still not up to date
+
+
+
+fetchmail 6.3.7 (released 2007-02-18):
+
+# FIXES FOR REGRESSIONS IN 6.3.6
+* Fix KPOP. Patch by Miloslav Trmac.
+* Fix repoll when server disconnects after opportunistic TLS failed for POP3.
+  Berlios Bug #10133 = Gentoo Bug #163782 reported by Andrej Kacian.
+
+# TRANSLATION UPDATES
+* Japanese (Takeshi Hamasaki), Polish (Jakub Bogusz)
+
+# CHANGES
+* Consider getaddrinfo() on Darwin 9 (Mac OS X 10.5 "Leopard") thread-safe.
+  Reported by Uli Zappe.
 
 
 fetchmail 6.3.6 (released 2007-01-04):
