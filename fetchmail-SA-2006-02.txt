@@ -3,7 +3,7 @@ fetchmail-SA-2006-02: TLS enforcement problem/MITM attack/password exposure
 Topics:		fetchmail cannot enforce TLS
 
 Author:		Matthias Andree
-Version:	1.0
+Version:	1.1
 Announced:	2007-01-04
 Type:		secret information disclosure
 Impact:		fetchmail can expose cleartext password over unsecure link
@@ -19,6 +19,7 @@ Affects:	fetchmail releases <= 6.3.5
 
 Not affected:	fetchmail release candidates 6.3.6-rc4, -rc5
 		fetchmail release 6.3.6
+		fetchmail release 6.3.7
 
 Corrected:	2006-11-26 fetchmail 6.3.6-rc4
 
@@ -29,7 +30,8 @@ Corrected:	2006-11-26 fetchmail 6.3.6-rc4
 2006-11-16	v0.01 internal review draft
 2006-11-26	v0.02 revise failure cases, workaround, add acknowledgments
 2006-11-27	v0.03 add more vulnerabilities
-2006-01-04	v1.0  ready for release
+2007-01-04	v1.0  ready for release
+2007-02-18	v1.1  mention 6.3.7 that fixes two regressions
 
 
 1. Background
@@ -87,7 +89,13 @@ or equivalent in the run control file.  This encrypts the whole session.
 4. Solution
 ===========
 
-Download and install fetchmail 6.3.6 or a newer stable release from
+  The earlier recommendation to install 6.3.6 is hereby updated, since
+  version 6.3.6 introduced two new regressions fixed in 6.3.7: one broke
+  KPOP altogether and one broke the automatic POP3 retries without TLS
+  if a server advertised TLS but then closed the connection and TLS
+  wasn't enforced.
+
+Download and install fetchmail 6.3.7 or a newer stable release from
 fetchmail's project site at
 <http://developer.berlios.de/project/showfiles.php?group_id=1824>.
 
