@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.4-rc1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2007-02-03 01:17+0100\n"
+"POT-Creation-Date: 2007-02-18 19:57+0100\n"
 "PO-Revision-Date: 2006-09-15 11:52+0200\n"
 "Last-Translator: Héctor García <hector@el-mundo.net>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -84,60 +84,64 @@ msgstr ""
 "cuenta %s:"
 
 #: driver.c:362
-#, c-format
-msgid "  %d msg %d octets long deleted by fetchmail."
-msgstr "  %d mensajes de %d octetos de largo borrados por fetchmail."
+#, fuzzy, c-format
+msgid "  %d message  %d octets long deleted by fetchmail."
+msgid_plural "  %d messages %d octets long deleted by fetchmail."
+msgstr[0] "  %d mensajes de %d octetos de largo borrados por fetchmail."
+msgstr[1] "  %d mensajes de %d octetos de largo borrados por fetchmail."
 
-#: driver.c:366
-#, c-format
-msgid "  %d msg %d octets long skipped by fetchmail."
-msgstr "  %d mensajes de %d octetos de largo omitidos por fetchmail."
+#: driver.c:367
+#, fuzzy, c-format
+msgid "  %d message  %d octets long skipped by fetchmail."
+msgid_plural "  %d messages %d octets long skipped by fetchmail."
+msgstr[0] "  %d mensajes de %d octetos de largo omitidos por fetchmail."
+msgstr[1] "  %d mensajes de %d octetos de largo omitidos por fetchmail."
 
-#: driver.c:501
+#: driver.c:503
 #, c-format
 msgid "skipping message %s@%s:%d"
 msgstr "salteando mensaje %s@%s:%d"
 
-#: driver.c:555
+#: driver.c:557
 #, c-format
 msgid "skipping message %s@%s:%d (%d octets)"
 msgstr "salteando mensaje %s@%s:%d (%d octetos)"
 
-#: driver.c:571
+#: driver.c:573
 msgid " (length -1)"
 msgstr " (longitud -1)"
 
-#: driver.c:574
+#: driver.c:576
 msgid " (oversized)"
 msgstr " (demasiado grande)"
 
-#: driver.c:589
+#: driver.c:591
 #, c-format
 msgid "couldn't fetch headers, message %s@%s:%d (%d octets)\n"
 msgstr ""
 "no fue posible recibir los encabezados, mensaje %s@%s:%d (%d octetos)\n"
 
-#: driver.c:606
+#: driver.c:608
 #, c-format
 msgid "reading message %s@%s:%d of %d"
 msgstr "leyendo el mensaje %s@%s:%d de %d"
 
-#: driver.c:611
+#: driver.c:613
 #, c-format
 msgid " (%d octets)"
 msgstr " (%d octetos)"
 
-#: driver.c:612
+#: driver.c:614
 #, c-format
 msgid " (%d header octets)"
 msgstr " (%d octetos en la cabecera) "
 
-#: driver.c:680
+#: driver.c:682
 #, c-format
 msgid " (%d body octets)"
 msgstr " (%d octetos en el cuerpo)"
 
-#: driver.c:741
+#: driver.c:743
 #, c-format
 msgid ""
 "message %s@%s:%d was not the expected length (%d actual != %d expected)\n"
@@ -145,19 +149,19 @@ msgstr ""
 "el mensaje %s@%s:%d no tenía la longitud esperada (%d actual != %d "
 "esperada)\n"
 
-#: driver.c:772
+#: driver.c:774
 msgid " retained\n"
 msgstr " retenido\n"
 
-#: driver.c:782
+#: driver.c:784
 msgid " flushed\n"
 msgstr " eliminado\n"
 
-#: driver.c:799
+#: driver.c:801
 msgid " not flushed\n"
 msgstr " no eliminado\n"
 
-#: driver.c:817
+#: driver.c:819
 #, c-format
 msgid "fetchlimit %d reached; %d message left on server %s account %s\n"
 msgid_plural ""
@@ -169,39 +173,39 @@ msgstr[1] ""
 "límite de %1$d mensajes alcanzado; se dejaron %2$d mensajes en la cuenta %4"
 "$s del servidor %3$s\n"
 
-#: driver.c:874
+#: driver.c:876
 #, c-format
 msgid "timeout after %d seconds waiting to connect to server %s.\n"
 msgstr ""
 "tiempo agotado después de %d segundos de espera para conectarse con el "
 "servidor %s.\n"
 
-#: driver.c:878
+#: driver.c:880
 #, c-format
 msgid "timeout after %d seconds waiting for server %s.\n"
 msgstr "tiempo agotado después de %d segundos de espera por el servidor %s.\n"
 
-#: driver.c:882
+#: driver.c:884
 #, c-format
 msgid "timeout after %d seconds waiting for %s.\n"
 msgstr "tiempo agotado después de %d segundos de espera por %s.\n"
 
-#: driver.c:887
+#: driver.c:889
 #, c-format
 msgid "timeout after %d seconds waiting for listener to respond.\n"
 msgstr ""
 "tiempo agotado después de %d segundos de esperar respuesta del cliente.\n"
 
-#: driver.c:890
+#: driver.c:892
 #, c-format
 msgid "timeout after %d seconds.\n"
 msgstr "tiempo agotado después de %d segundos.\n"
 
-#: driver.c:902
+#: driver.c:904
 msgid "Subject: fetchmail sees repeated timeouts"
 msgstr "Subject: fetchmail ve repetidos excesos del tiempo de espera"
 
-#: driver.c:905
+#: driver.c:907
 #, c-format
 msgid ""
 "Fetchmail saw more than %d timeouts while attempting to get mail from %s@%"
@@ -210,7 +214,7 @@ msgstr ""
 "Fetchmail vio más de %d excesos en el tiempo de espera mientras intentaba "
 "obtener correo de %s@%s.\n"
 
-#: driver.c:909
+#: driver.c:911
 msgid ""
 "This could mean that your mailserver is stuck, or that your SMTP\n"
 "server is wedged, or that your mailbox file on the server has been\n"
@@ -225,73 +229,73 @@ msgstr ""
 "para diagnosticar el problema.\n"
 "Fetchmail no inquirirá esta casilla hasta que lo reinicie.\n"
 
-#: driver.c:934
+#: driver.c:936
 #, c-format
 msgid "pre-connection command failed with status %d\n"
 msgstr "el comando preconexión falló con estado %d\n"
 
-#: driver.c:958
+#: driver.c:960
 #, c-format
 msgid "couldn't find HESIOD pobox for %s\n"
 msgstr "no fue posible encontrar casilla HESIOD para %s\n"
 
-#: driver.c:979
+#: driver.c:981
 msgid "Lead server has no name.\n"
 msgstr "El servidor líder no tiene nombre.\n"
 
-#: driver.c:1003
+#: driver.c:1005
 #, c-format
 msgid "couldn't find canonical DNS name of %s (%s): %s\n"
 msgstr "no fue posible encontrar el nombre DNS canónico de %s (%s): %s\n"
 
-#: driver.c:1050
+#: driver.c:1052
 #, c-format
 msgid "%s connection to %s failed"
 msgstr "Fallo la conexión de %s a %s"
 
-#: driver.c:1066
+#: driver.c:1068
 msgid "Subject: Fetchmail unreachable-server warning."
 msgstr "Subject: aviso de server fuera de alcance de fetchmail."
 
-#: driver.c:1068
+#: driver.c:1070
 #, c-format
 msgid "Fetchmail could not reach the mail server %s:"
 msgstr "Fetchmail no puede alcanzar al servidor de correo %s:"
 
-#: driver.c:1094
+#: driver.c:1096
 msgid "SSL connection failed.\n"
 msgstr "Fallo en la conexión SSL.\n"
 
-#: driver.c:1147
+#: driver.c:1149
 #, c-format
 msgid "Lock-busy error on %s@%s\n"
 msgstr "Error ‘lock-busy’ en %s@%s\n"
 
-#: driver.c:1151
+#: driver.c:1153
 #, c-format
 msgid "Server busy error on %s@%s\n"
 msgstr "Error: servidor ocupado en %s@%s\n"
 
-#: driver.c:1156
+#: driver.c:1158
 #, c-format
 msgid "Authorization failure on %s@%s%s\n"
 msgstr "Fallo de autorización en %s@%s%s\n"
 
-#: driver.c:1159
+#: driver.c:1161
 msgid " (previously authorized)"
 msgstr " (previamente autorizado)"
 
-#: driver.c:1180
+#: driver.c:1182
 #, c-format
 msgid "Subject: fetchmail authentication failed on %s@%s"
 msgstr "Subject: la autenticación de fetchmail falló en %s@%s"
 
-#: driver.c:1184
+#: driver.c:1186
 #, c-format
 msgid "Fetchmail could not get mail from %s@%s.\n"
 msgstr "Fetchmail no pudo obtener correo de %s@%s.\n"
 
-#: driver.c:1188
+#: driver.c:1190
 msgid ""
 "The attempt to get authorization failed.\n"
 "Since we have already succeeded in getting authorization for this\n"
@@ -305,7 +309,7 @@ msgstr ""
 "ocupado) que fetchmail no puede distinguir porque el servido no envió\n"
 "un mensaje de error útil"
 
-#: driver.c:1194
+#: driver.c:1196
 msgid ""
 "\n"
 "However, if you HAVE changed your account details since starting the\n"
@@ -325,7 +329,7 @@ msgstr ""
 "conexión en cada ciclo. No se enviarán más notificaciones hasta que el\n"
 "servicio sea restablecido."
 
-#: driver.c:1204
+#: driver.c:1206
 msgid ""
 "The attempt to get authorization failed.\n"
 "This probably means your password is invalid, but some servers have\n"
@@ -346,168 +350,168 @@ msgstr ""
 "conexión en cada ciclo. No se enviarán más notificaciones hasta que el\n"
 "servicio sea restablecido."
 
-#: driver.c:1220
+#: driver.c:1222
 #, c-format
 msgid "Repoll immediately on %s@%s\n"
 msgstr "Reinquirir inmediatamente %s@%s\n"
 
-#: driver.c:1225
+#: driver.c:1227
 #, c-format
 msgid "Unknown login or authentication error on %s@%s\n"
 msgstr "Error de entrada o de autenticación desconocido en %s@%s\n"
 
-#: driver.c:1249
+#: driver.c:1251
 #, c-format
 msgid "Authorization OK on %s@%s\n"
 msgstr "Autorización exitosa en %s@%s\n"
 
-#: driver.c:1255
+#: driver.c:1257
 #, c-format
 msgid "Subject: fetchmail authentication OK on %s@%s"
 msgstr "Subject: autenticación de fetchmail aprobada en %s@%s"
 
-#: driver.c:1259
+#: driver.c:1261
 #, c-format
 msgid "Fetchmail was able to log into %s@%s.\n"
 msgstr "Fetchmail pudo registrarse en %s@%s.\n"
 
-#: driver.c:1263
+#: driver.c:1265
 msgid "Service has been restored.\n"
 msgstr "El servicio ha sido reestablecido.\n"
 
-#: driver.c:1295
+#: driver.c:1297
 #, c-format
 msgid "selecting or re-polling folder %s\n"
 msgstr "seleccionando o re-inquiriendo la carpeta %s\n"
 
-#: driver.c:1297
+#: driver.c:1299
 msgid "selecting or re-polling default folder\n"
 msgstr "seleccionando o re-inquiriendo la carpeta por defecto\n"
 
-#: driver.c:1309
+#: driver.c:1311
 #, c-format
 msgid "%s at %s (folder %s)"
 msgstr "%s en %s (carpeta %s)"
 
-#: driver.c:1312 rcfile_y.y:381
+#: driver.c:1314 rcfile_y.y:381
 #, c-format
 msgid "%s at %s"
 msgstr "%s en %s"
 
-#: driver.c:1317
+#: driver.c:1319
 #, c-format
 msgid "Polling %s\n"
 msgstr "Inquiriendo %s\n"
 
-#: driver.c:1321
+#: driver.c:1323
 #, c-format
 msgid "%d message (%d %s) for %s"
 msgid_plural "%d messages (%d %s) for %s"
 msgstr[0] "%d mensaje (%d %s) para %s"
 msgstr[1] "%d mensajes (%d %s) para %s"
 
-#: driver.c:1324
+#: driver.c:1326
 msgid "seen"
 msgid_plural "seen"
 msgstr[0] "visto"
 msgstr[1] "vistos"
 
-#: driver.c:1327
+#: driver.c:1329
 #, c-format
 msgid "%d message for %s"
 msgid_plural "%d messages for %s"
 msgstr[0] "%d mensaje para %s"
 msgstr[1] "%d mensajes para %s"
 
-#: driver.c:1334
+#: driver.c:1336
 #, c-format
 msgid " (%d octets).\n"
 msgstr " (%d octetos).\n"
 
-#: driver.c:1340
+#: driver.c:1342
 #, c-format
 msgid "No mail for %s\n"
 msgstr "No hay correo para %s\n"
 
-#: driver.c:1373 imap.c:90
+#: driver.c:1375 imap.c:90
 msgid "bogus message count!"
 msgstr "¡cantidad de mensajes incorrecta!"
 
-#: driver.c:1515
+#: driver.c:1517
 msgid "socket"
 msgstr "socket"
 
-#: driver.c:1518
+#: driver.c:1520
 msgid "missing or bad RFC822 header"
 msgstr "el encabezado RFC822 falta o está arruinado"
 
-#: driver.c:1521
+#: driver.c:1523
 msgid "MDA"
 msgstr "MDA"
 
-#: driver.c:1524
+#: driver.c:1526
 msgid "client/server synchronization"
 msgstr "sincronización cliente/servidor"
 
-#: driver.c:1527
+#: driver.c:1529
 msgid "client/server protocol"
 msgstr "protocolo cliente/servidor"
 
-#: driver.c:1530
+#: driver.c:1532
 msgid "lock busy on server"
 msgstr "bloqueo ocupado en el servidor"
 
-#: driver.c:1533
+#: driver.c:1535
 msgid "SMTP transaction"
 msgstr "Transacción SMTP"
 
-#: driver.c:1536
+#: driver.c:1538
 msgid "DNS lookup"
 msgstr "búsqueda en DNS"
 
-#: driver.c:1539
+#: driver.c:1541
 msgid "undefined"
 msgstr "no definido"
 
-#: driver.c:1545
+#: driver.c:1547
 #, c-format
 msgid "%s error while fetching from %s@%s and delivering to SMTP host %s\n"
 msgstr ""
 "error %s durante la recepción de %s@%s y la entrega al servidor SMTP %s\n"
 
-#: driver.c:1547
+#: driver.c:1549
 msgid "unknown"
 msgstr "desconocido"
 
-#: driver.c:1549
+#: driver.c:1551
 #, c-format
 msgid "%s error while fetching from %s@%s\n"
 msgstr "error %s recibiendo de %s@%s\n"
 
-#: driver.c:1560
+#: driver.c:1562
 #, c-format
 msgid "post-connection command failed with status %d\n"
 msgstr "el comando posconexión falló con estado %d\n"
 
-#: driver.c:1579
+#: driver.c:1581
 msgid "Kerberos V4 support not linked.\n"
 msgstr "Soporte de Kerberos V4 no incluido.\n"
 
-#: driver.c:1587
+#: driver.c:1589
 msgid "Kerberos V5 support not linked.\n"
 msgstr "Soporte de Kerberos V5 no incluido.\n"
 
-#: driver.c:1598
+#: driver.c:1600
 #, c-format
 msgid "Option --flush is not supported with %s\n"
 msgstr "Opción --flush no soportada con %s\n"
 
-#: driver.c:1604
+#: driver.c:1606
 #, c-format
 msgid "Option --all is not supported with %s\n"
 msgstr "Opción --all no soportada con %s\n"
 
-#: driver.c:1613
+#: driver.c:1615
 #, c-format
 msgid "Option --limit is not supported with %s\n"
 msgstr "Opción --limit no soportada con %s\n"
