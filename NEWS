@@ -44,8 +44,10 @@ be removed from a 6.4.0 or newer release.)
 
 fetchmail 6.3.8 (not yet released):
 
-# BUG FIXES:
+# BUG FIXES (LONG-STANDING BUGS):
 * Fix pluralization of oversized-message warning mails.
+* Fetchmail now iterates over the --smtp[host] list when bouncing and not in
+  --lmtp mode. Reported by Christian Kurz, Debian Bug #150137.
 
 # KNOWN BUGS AND WORKAROUNDS:
   (this section floats upwards through the NEWS file so it stays with the
