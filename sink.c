@@ -258,7 +258,6 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
     char daemon_name[15 + HOSTLEN] = "MAILER-DAEMON@";
     char boundary[BUFSIZ], *bounce_to;
     int sock;
-    struct idlist *ish;
     static char *fqdn_of_host = NULL;
     const char *md1 = "MAILER-DAEMON", *md2 = "MAILER-DAEMON@";
 
@@ -277,37 +276,10 @@ static int send_bouncemail(struct query *ctl, struct msgblk *msg,
 					lose the NDN here */
     strlcat(daemon_name, fqdn_of_host, sizeof(daemon_name));
 
-    /* XXX FIXME: we blindly assume that any host on our smtphunt list
-     * and offers SMTP will accept our bounce; however, in global lmtp
-     * mode we'll just try localhost instead. */
     /* we need only SMTP for this purpose */
-    sock = -1;
-    if (ctl->smtphunt && ctl->listener == SMTP_MODE) {
-	for (ish = ctl->smtphunt ; ish; ish = ish->next) {
-	    char *x = xstrdup(ish->id), *y, *port;
-
-	    /* skip over LMTP entries */
-	    if (x[0] == '/') {
-		free(x);
-		continue;
-	    }
-
-	    if ((y = strrchr(x, '/'))) {
-		*y = '\0';
-		port = y + 1;
-	    } else {
-		port = SMTP_PORT;
-	    }
-	    sock = SockOpen(x, port, NULL, &ai1);
-	    free(x);
-	    if (sock != -1)
-		break;
-	}
-    } else {
-	sock = SockOpen("localhost", SMTP_PORT, NULL, &ai1);
-    }
-
-    if (sock == -1)
+    /* XXX FIXME: hardcoding localhost is nonsense if smtphost can be
+     * configured */
+    if ((sock = SockOpen("localhost", SMTP_PORT, NULL, &ai1)) == -1)
 	return(FALSE);
 
     if (SMTP_ok(sock, SMTP_MODE) != SM_OK)
