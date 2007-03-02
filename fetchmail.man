@@ -1062,18 +1062,19 @@ protocol and negotiate TLS via special parameter. The \-\-sslcertck
 command line or sslcertck run control file option should be used to
 force strict certificate checking - see below.
 .PP
-.B \-\-sslcheck recommended:
-When connecting to an SSL or TLS encrypted server, the server presents a certificate
-to the client for validation.  The certificate is checked to verify that
-the common name in the certificate matches the name of the server being
-contacted and that the effective and expiration dates in the certificate
-indicate that it is currently valid.  If any of these checks fail, a warning
-message is printed, but the connection continues.  The server certificate
-does not need to be signed by any specific Certifying Authority and may
-be a "self-signed" certificate. If the \-\-sslcertck command line option
-or sslcertck run control file option is used, fetchmail will instead
-abort if any of these checks fail. Use of the sslcertck or \-\-sslcertck
-option is advised.
+.B \-\-sslcertck
+recommended: When connecting to an SSL or TLS encrypted server, the 
+server presents a certificate to the client for validation.  The 
+certificate is checked to verify that the common name in the certificate 
+matches the name of the server being contacted and that the effective 
+and expiration dates in the certificate indicate that it is currently 
+valid.  If any of these checks fail, a warning message is printed, but 
+the connection continues.  The server certificate does not need to be 
+signed by any specific Certifying Authority and may be a "self-signed" 
+certificate. If the \-\-sslcertck command line option or sslcertck run 
+control file option is used, fetchmail will instead abort if any of 
+these checks fail. Use of the sslcertck or \-\-sslcertck option is 
+advised.
 .PP
 Some SSL encrypted servers may request a client side certificate.  A client
 side public SSL certificate and private SSL key may be specified.  If
