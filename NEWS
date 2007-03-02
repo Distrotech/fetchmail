@@ -48,6 +48,9 @@ fetchmail 6.3.8 (not yet released):
 * Fix pluralization of oversized-message warning mails.
 * Fix manual page: --sslcheck -> --sslcertck, and do not set trailing 
   "recommended:" in bold. Debian Bug #413059, reported by Rafal Czlonka.
+* Repoll immediately if a protocol error happens during the authentication 
+  attempt after a failed opportunistic TLS upgrade. Gentoo Bug #163782 comment 
+  #9, reported by Takuto Matsuu.
 
 # KNOWN BUGS AND WORKAROUNDS:
   (this section floats upwards through the NEWS file so it stays with the

@@ -686,7 +686,8 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 #ifdef SSL_ENABLE
     /* this is for servers which claim to support TLS, but actually
      * don't! */
-    if (connection_may_have_tls_errors && ok == PS_SOCKET)
+    if (connection_may_have_tls_errors
+		    && (ok == PS_SOCKET || ok == PS_PROTOCOL))
     {
 	xfree(ctl->sslproto);
 	ctl->sslproto = xstrdup("");
