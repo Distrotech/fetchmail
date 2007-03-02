@@ -1,16 +1,15 @@
 6.3.8:
 - integrate Isaac Wilcox's test rig
 - look at Tony Earnshaw's .spec file
-- revisit BerliOS patches
-- see if "AUTH SSH" can be made to work for POP3
-- more SMTP/LMTP error detail on message rejections even outside verbose mode.
-  Ian D. Allen, fetchmail-users. Two messages with examples.
-  What goes here? fetchmailrc location, server, port, user, folder, anything else?
+- look at Gentoo patches
 
 6.4:
 - remove dead replacement functions: strdup (Andreas Krennmair), ...
-
-CODE:
+- more SMTP/LMTP error detail on message rejections even outside verbose mode.
+  Ian D. Allen, fetchmail-users. Two messages with examples.
+  What goes here? fetchmailrc location, server, port, user, folder, anything else?
+- see if "AUTH SSH" can be made to work for POP3
+- revisit BerliOS patches
 - check recent list mail
 - check Debian BTS and other bug trackers
 - better logging (log all headers, log forward destination + method)
