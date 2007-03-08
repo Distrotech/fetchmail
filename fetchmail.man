@@ -2495,7 +2495,7 @@ Server busy indication.
 .IP 23
 Internal error.  You should see a message on standard error with
 details.
-.IP 24 - 26, 28, 29
+.IP "24 - 26, 28, 29"
 These are internal codes and should not appear externally.
 .PP
 When
