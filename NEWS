@@ -54,6 +54,12 @@ fetchmail 6.3.8 (not yet released):
 * Fix rendering of the "24 - 26, 28, 29" paragraph in the exit codes section. 
   Reported by Nico Golde.
 
+# DOCUMENTATION:
+* Extend --mda documentation, discourage use of qmail-inject.
+  Based on a patch by Rob MacGregor.
+* Document SOCKS is not run-time configurable. Patch by Rob MacGregor.
+* Use envelope option in multidrop example. Patch by Rob MacGregor.
+
 # KNOWN BUGS AND WORKAROUNDS:
   (this section floats upwards through the NEWS file so it stays with the
   current release information)

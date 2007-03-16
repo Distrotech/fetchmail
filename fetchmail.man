@@ -319,7 +319,7 @@ the calling user will be notified by email if this happens.
 .B \-\-plugin <command>
 (Keyword: plugin) The plugin option allows you to use an external
 program to establish the TCP connection.  This is useful if you want
-to use socks, SSL, ssh, or need some special firewalling setup.  The
+to use SSL, ssh, or need some special firewalling setup.  The
 program will be looked up in $PATH and can optionally be passed the
 hostname and port as arguments using "%h" and "%p" respectively (note
 that the interpolation logic is rather primitive, and these token must
@@ -514,12 +514,16 @@ be comma-separated.
 .TP
 .B \-m <command> | \-\-mda <command>
 (Keyword: mda) You can force mail to be passed to an MDA directly
-(rather than forwarded to port 25) with the \-\-mda or \-m option.  To
+(rather than forwarded to port 25) with the \-\-mda or \-m option.
+
+To
 avoid losing mail, use this option only with MDAs like maildrop or
 MTAs like sendmail that return a nonzero status on disk-full and other
 resource-exhaustion errors; the nonzero status tells fetchmail that
 delivery failed and prevents the message from being deleted off the
-server.  If \fIfetchmail\fR is running as root, it sets its user id to
+server.
+
+If \fIfetchmail\fR is running as root, it sets its user id to
 that of the target user while delivering mail through an MDA.  Some
 possible MDAs are "/usr/sbin/sendmail \-i \-f %F \-\- %T" (\fBNote:\fR
 some several older or vendor sendmail versions mistake \-\- for an
@@ -527,27 +531,43 @@ address, rather than an indicator to mark the end of the option arguments),
 "/usr/bin/deliver" and "/usr/bin/maildrop \-d %T".  Local delivery
 addresses will be inserted into the MDA command wherever you place a
 %T; the mail message's From address will be inserted where you place
-an %F. \fBDO NOT ENCLOSE THE %F OR %T STRING IN SINGLE QUOTES!\fR For
-both %T and %F, fetchmail encloses the addresses in single quotes ('),
-after removing any single quotes they may contain, before the MDA
-command is passed to the shell.  Do \fINOT\fR use an MDA invocation
-like "sendmail \-i \-t" that dispatches on the contents of To/Cc/Bcc, it
-will create mail loops and bring the just wrath of many postmasters
-down upon your head.  Also, do \fInot\fR try to combine multidrop
-mode with an MDA such as maildrop that can only accept one
-address; you will lose mail.
+an %F.
 
-A word of warning: the well-known
+.B "DO NOT ENCLOSE THE %F OR %T STRING IN SINGLE QUOTES!"
+For both %T and %F, fetchmail encloses the addresses in single quotes 
+('), after removing any single quotes they may contain, before the MDA 
+command is passed to the shell.
+
+\fRDo \fINOT\fP use an MDA invocation that dispatches on the contents of 
+To/Cc/Bcc,\fP like "sendmail \-i \-t" or "qmail-inject", it will create 
+mail loops and bring the just wrath of many postmasters down upon your 
+head.  This is one of the most frequent configuration errors!
+
+Also, do \fInot\fR try to combine multidrop mode with an MDA such 
+as maildrop that can only accept one address, unless your upstream 
+stores one copy of the message per recipient and transports the envelope 
+recipient in a header; you will lose mail.  
+
+The well-known
 .BR procmail (1)
 package is very hard to configure properly, it has a very nasty "fall
 through to the next rule" behavior on delivery errors (even temporary
 ones, such as out of disk space if another user's mail daemon copies the
 mailbox around to purge old messages), so your mail will end up in the
 wrong mailbox sooner or later. The proper procmail configuration is
-outside the scope of this document though. Using
+outside the scope of this document. Using
 .BR maildrop (1)
 is usually much easier, and many users find the filter syntax used by
 maildrop easier to understand.
+
+Finally, we strongly advise that you do 
+.B not
+use qmail-inject.  The command line interface is non-standard without 
+providing benefits for typical use, and fetchmail makes no attempts to 
+accomodate qmail-inject's deviations from the standard. Some of 
+qmail-inject's command-line and environment options are actually 
+dangerous and can cause broken threads, non-detected duplicate messages 
+and forwarding loops.
 
 .TP
 .B \-\-lmtp
@@ -1823,6 +1843,10 @@ server less frequently than the basic poll interval.  If you say
 queried every N poll intervals.
 .SS Singledrop vs. Multidrop options
 .PP
+Please ensure you read the section titled
+.B THE USE AND ABUSE OF MULTIDROP MAILBOXES 
+if you intend to use multidrop mode.
+.PP
 The 'is' or 'to' keywords associate the following local (client)
 name(s) (or server-name to client-name mappings separated by =) with
 the mailserver user name in the entry.  If an is/to list has '*' as
@@ -2256,7 +2280,8 @@ user@domain specifications on the left-hand side of a user mapping.
 Here's an example of another kind of multidrop connection:
 
 .nf
-  poll pop.provider.net localdomains loonytoons.org toons.org:
+  poll pop.provider.net localdomains loonytoons.org toons.org
+      envelope X-Envelope-To
         user maildrop with pass secret1 to * here
 .fi
 
@@ -2428,6 +2453,16 @@ DNS aliases of the mailserver (and all MX names pointing at it - note
 this may change in a future version)
 you can declare 'no dns' to suppress DNS lookups entirely and
 \fIonly\fR match against the aka list.
+
+.SH SOCKS
+Support for socks4/5 is a 
+.B compile time 
+configuration option.  Once
+compiled in fetchmail will always use the socks libraries and
+configuration on your system.  There are no configuration
+options internal to fetchmail to control this behaviour, and the socks 
+and socks5 libraries provide no documented interfaces that fetchmail 
+could use to achieve run-time configurability.
 
 .SH EXIT CODES
 To facilitate the use of
