@@ -1,4 +1,9 @@
 6.4:
+- > b) When the envelope header is specified, but it isn't found, a
+  > warning is logged and the mail is forwarded to the postmaster
+  > ("WARNING: Envelope header $HEADER found, cannot identify the
+  > recipient.  Forwarding to the postmaster")
+  Rob MacGregor 2007-03-16 Patch to the man page, fetchmail-devel@
 - integrate Isaac Wilcox's test rig
 - look at Tony Earnshaw's .spec file
 - look at Gentoo patches
