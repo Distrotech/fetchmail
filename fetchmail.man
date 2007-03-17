@@ -2461,14 +2461,21 @@ you can declare 'no dns' to suppress DNS lookups entirely and
 \fIonly\fR match against the aka list.
 
 .SH SOCKS
-Support for socks4/5 is a 
-.B compile time 
-configuration option.  Once
-compiled in fetchmail will always use the socks libraries and
-configuration on your system.  There are no configuration
-options internal to fetchmail to control this behaviour, and the socks 
-and socks5 libraries provide no documented interfaces that fetchmail 
-could use to achieve run-time configurability.
+Support for socks4/5 is a \fBcompile time\fP configuration option. Once
+compiled in, fetchmail will always use the socks libraries and
+configuration on your system, there are no run-time switches in
+fetchmail - but you can still configure SOCKS: you can specify which
+SOCKS configuration file is used in the \fBSOCKS_CONF\fP environment
+variable.
+
+For instance, if you wanted to bypass the SOCKS proxy altogether and
+have fetchmail connect directly, you could just pass
+SOCKS_CONF=/dev/null in the environment, for example (add your usual
+command line options - if any - to the end of this line):
+
+.nf
+env SOCKS_CONF=/dev/null fetchmail
+.fi
 
 .SH EXIT CODES
 To facilitate the use of
@@ -2569,6 +2576,7 @@ lock file to help prevent concurrent runs (root mode, Linux systems).
 lock file to help prevent concurrent runs (root mode, systems without /var/run).
 
 .SH ENVIRONMENT
+.B FETCHMAILUSER:
 If the FETCHMAILUSER variable is set, it is used as the name of the
 calling user (default local name) for purposes such as mailing error
 notifications.  Otherwise, if either the LOGNAME or USER variable is
@@ -2578,6 +2586,7 @@ then that name is used as the default local name.  Otherwise
 session ID (this elaborate logic is designed to handle the case of
 multiple names per userid gracefully).
 
+.B FETCHMAILHOME:
 If the environment variable FETCHMAILHOME is set to a valid and
 existing directory name, fetchmail will read $FETCHMAILHOME/fetchmailrc
 (the dot is missing in this case), $FETCHMAILHOME/.fetchids and
@@ -2585,10 +2594,16 @@ $FETCHMAILHOME/.fetchmail.pid rather than from the user's home
 directory.  The .netrc file is always looked for in the the invoking
 user's home directory regardless of FETCHMAILHOME's setting.
 
+.B HOME_ETC:
 If the HOME_ETC variable is set, fetchmail will read
 $HOME_ETC/.fetchmailrc instead of ~/.fetchmailrc.
 
-If HOME_ETC and FETCHMAILHOME are set, HOME_ETC will be ignored.
+If HOME_ETC and FETCHMAILHOME are both set, HOME_ETC will be ignored.
+
+.B SOCKS_CONF:
+(only if SOCKS support is compiled in) this variable is used by the
+socks library to find out which configuration file it should read. Set
+this to /dev/null to bypass the SOCKS proxy.
 
 .SH SIGNALS
 If a

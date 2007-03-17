@@ -57,7 +57,8 @@ fetchmail 6.3.8 (not yet released):
 # DOCUMENTATION:
 * Extend --mda documentation, discourage use of qmail-inject.
   Based on a patch by Rob MacGregor.
-* Document SOCKS is not run-time configurable. Patch by Rob MacGregor.
+* Document SOCKS configuration facility (SOCKS_CONF environment variable).
+  Thanks to Jochen Hayek, Michael Shuldman and Rob MacGregor.
 * Use envelope option in multidrop example. Patch by Rob MacGregor.
 * Document expected Received: line format when parsing for envelope addressees.
 * Stripped option documentation from sample.rcfile, since this is bound to go

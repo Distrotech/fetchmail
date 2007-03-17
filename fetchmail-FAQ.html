@@ -1971,14 +1971,22 @@ sites.)</p>
 methods</h1>
 <h2><a id="K1" name="K1">K1. How can I use fetchmail with SOCKS?</a></h2>
 
-<p>Giuseppe Guerini added a --with-socks option that supports
-linking with socks library. If you specify the value of this option
-as "yes", the configure script will try to find the Rconnect
+<p>Giuseppe Guerini added a <kbd>--with-socks</kbd> compile-time option
+that supports linking with socks library. If you specify the value of
+this option as "yes", the configure script will try to find the Rconnect
 library and set the makefile up to link it. You can also specify a
 directory containing the Rconnect library.</p>
 
-<p>Alan Schmitt has added a similar --with-socks5 option that may
+<p>Alan Schmitt has added a similar <kbd>--with-socks5</kbd> option that may
 work better if you have a recent version of the SOCKS library.</p>
+
+<p>In either case, fetchmail has no direct configuration hooks, but you
+can specify which socks configuration file the library should read by
+means of the <tt>SOCKS_CONF</tt> environment variable. In order to
+bypass the SOCKS proxy altogether, you could run (adding your usual
+options to the end of this line):</p>
+
+<pre>env SOCKS_CONF=/dev/null fetchmail</pre>
 
 <h2><a id="K2" name="K2">K2. How can I use fetchmail with IPv6 and
 IPsec?</a></h2>
