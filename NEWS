@@ -60,6 +60,11 @@ fetchmail 6.3.8 (not yet released):
 * Document SOCKS is not run-time configurable. Patch by Rob MacGregor.
 * Use envelope option in multidrop example. Patch by Rob MacGregor.
 
+# CONTRIB:
+* Add delete-later and delete-later.README, a script and documentation for
+  a MySQL/Tcl-based client-side "delete-after" feature.
+  Kindly donated by Yoo GmbH, Großvoigtsberg, Germany (Carsten Ralle).
+
 # KNOWN BUGS AND WORKAROUNDS:
   (this section floats upwards through the NEWS file so it stays with the
   current release information)

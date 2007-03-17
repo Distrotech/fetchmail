@@ -197,3 +197,9 @@ pop mail server. (By Richard Harris, improved by Joshua Crawford.)
 A logrotate configuration file developped by Daniel Leidert for Debian,
 when he wanted to use /var/log/fetchmail instead of the usual syslog.
 It probably needs to be adjusted for use on other systems.
+
+### delete-later (added 2007-03-17, --ma)
+
+A MySQL/Tcl/Expect-based client-side script to remove messages at a
+certain age.  See delete-later.README for details.
+(By Carsten Ralle, Yoo GmbH, Germany.)
