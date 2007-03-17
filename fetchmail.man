@@ -822,12 +822,18 @@ In the configuration file, an enhanced syntax is used:
 This option changes the header
 .I fetchmail
 assumes will carry a copy of the mail's envelope address.  Normally
-this is 'X\-Envelope\-To', but as this header is not standard, practice
-varies. See the discussion of multidrop address handling below.  As a
-special case, 'envelope "Received"' enables parsing of sendmail-style
-Received lines.  This is the default, and it should not be necessary
-unless you have globally disabled Received parsing with 'no envelope'
-in the \fI.fetchmailrc\fR file.
+this is 'X\-Envelope\-To'. Other typically found headers to carry envelope
+information are 'X\-Original\-To' and 'Delivered\-To'.  Now, since
+these headers are not standardized, practice varies. See the discussion
+of multidrop address handling below.  As a special case, 'envelope
+"Received"' enables parsing of sendmail-style Received lines.  This is
+the default, but discouraged because it is not fully reliable.
+
+.B Note
+that fetchmail expects the Received-line to be in a specific
+format: It must contain "by \fIhost\fP for \fIaddress\fR", where
+\fIhost\fP must match one of the mailserver names that fetchmail
+recognizes for the account in question.
 .sp
 The optional count argument (only available in the configuration file)
 determines how many header lines of this kind are skipped. A count of 1
@@ -2158,10 +2164,10 @@ won't be returned blindly to the author or to the list itself, but
 rather to the list manager (which is less annoying).
 
 In multidrop mode, destination headers are processed as follows:
-First, fetchmail looks for the Received: header (or whichever one is
-specified by the 'envelope' option) to determine the local
-recipient address. If the mail is addressed to more than one recipient,
-the Received line won't contain any information regarding recipient addresses.
+First, fetchmail looks for the header specified by the 'envelope' option
+in order to determine the local recipient address. If the mail is
+addressed to more than one recipient, the Received line won't contain
+any information regarding recipient addresses.
 
 Then fetchmail looks for the Resent-To:, Resent-Cc:, and Resent-Bcc:
 lines.  If they exist, they should contain the final recipients and
@@ -2604,13 +2610,13 @@ whichever of these is appropriate to wake it up.
 
 .SH BUGS AND KNOWN PROBLEMS
 .PP
+Please check the \fBNEWS\fP file that shipped with fetchmail for more
+known bugs than those listed here.
+.PP
 Fetchmail cannot handle user names that contain blanks after a "@"
 character, for instance "demonstr@ti on". These are rather uncommon and
 only hurt when using UID-based \-\-keep setups, so the 6.3.X versions of
 fetchmail won't be fixed.
-.PP
-Please check the \fBNEWS\fP file that shipped with fetchmail for more
-known bugs than those listed here.
 .PP
 The assumptions that the DNS and in particular the checkalias options
 make are not often sustainable. For instance, it has become uncommon for

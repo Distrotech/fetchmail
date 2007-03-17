@@ -59,6 +59,9 @@ fetchmail 6.3.8 (not yet released):
   Based on a patch by Rob MacGregor.
 * Document SOCKS is not run-time configurable. Patch by Rob MacGregor.
 * Use envelope option in multidrop example. Patch by Rob MacGregor.
+* Document expected Received: line format when parsing for envelope addressees.
+* Stripped option documentation from sample.rcfile, since this is bound to go
+  out of synch with the manual page, which is the only reference on options.
 
 # CONTRIB:
 * Add delete-later and delete-later.README, a script and documentation for
@@ -74,8 +77,6 @@ fetchmail 6.3.8 (not yet released):
   64-bit mode.  Either compile 32-bit code or use GCC to compile 64-bit
   fetchmail.  Note that fetchmail doesn't take advantage of 64-bit code,
   so compiling 32-bit SPARC code should not cause any difficulties.
-* fetchmail expects Received: headers in a particular, but undocumented, format
-  when parsing envelopes.
 * fetchmail does not track pending deletes over crashes
 * the command line interface is a bit narrow-minded sometimes, for instance,
   fetchmail -s doesn't work with a running daemon

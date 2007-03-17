@@ -27,7 +27,6 @@
 - add code to allow safe authentication schemes if TLS fails
 
 DOCUMENTATION:
-- document Received: parsing expectations
 - Add info whether Keywords are global, server or user keywords
 - review sample.rcfile and document it
 - consolidate multidrop documentation
