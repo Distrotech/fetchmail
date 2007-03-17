@@ -28,5 +28,4 @@
 
 DOCUMENTATION:
 - Add info whether Keywords are global, server or user keywords
-- review sample.rcfile and document it
 - consolidate multidrop documentation
