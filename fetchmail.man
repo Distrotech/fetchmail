@@ -237,6 +237,7 @@ Post Office Protocol 2 (legacy, to be removed from future release)
 Post Office Protocol 3
 .IP APOP
 Use POP3 with old-fashioned MD5-challenge authentication.
+Considered not resistant to man-in-the-middle attacks.
 .IP RPOP
 Use POP3 with RPOP authentication.
 .IP KPOP
@@ -978,15 +979,15 @@ will be removed from a future fetchmail version.  This
 facility was vulnerable to spoofing and was withdrawn in RFC1460.
 .PP
 RFC1460 introduced APOP authentication.  In this variant of POP3,
-you register an APOP password on your server host (the program
-to do this with on the server is probably called \fIpopauth\fR(8)).  You
-put the same password in your
-.I ~/.fetchmailrc
-file.  Each time
-.I fetchmail
-logs in, it sends a cryptographically secure hash of your password and
-the server greeting time to the server, which can verify it by
-checking its authorization database.
+you register an APOP password on your server host (on some servers, the
+program to do this is called \fIpopauth\fR(8)).  You put the same
+password in your \fI~/.fetchmailrc\fP file.  Each time \fIfetchmail\fP
+logs in, it sends an MD5 hash of your password and the server greeting
+time to the server, which can verify it by checking its authorization
+database.
+
+\fBNote that APOP is no longer considered resistant against
+man-in-the-middle attacks.\fP
 .SS RETR or TOP
 .I fetchmail
 makes some efforts to make the server believe messages had not been

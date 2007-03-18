@@ -659,6 +659,20 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 	else
 	    *++end = '\0';
 
+	/* SECURITY: 2007-03-17
+	 * Strictly validating the presented challenge for RFC-822
+	 * conformity (it must be a msg-id in terms of that standard) is
+	 * supposed to make attacks against the MD5 implementation
+	 * harder[1]
+	 *
+	 * [1] "Security vulnerability in APOP authentication",
+	 *     Gaëtan Leurent, fetchmail-devel, 2007-03-17 */
+	if (!rfc822_valid_msgid((unsigned char *)start)) {
+	    report(stderr,
+		    GT_("Invalid APOP timestamp.\n"));
+	    return PS_AUTHFAIL;
+	}
+
 	/* copy timestamp and password into digestion buffer */
 	msg = xmalloc((end-start+1) + strlen(ctl->password) + 1);
 	strcpy(msg,start);

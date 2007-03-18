@@ -770,5 +770,8 @@ void fm_freeaddrinfo(struct addrinfo *ai);
 int maybe_tls(struct query *ctl);
 int must_tls(struct query *ctl);
 
+/* prototype from rfc822valid.c */
+int rfc822_valid_msgid(const unsigned char *);
+
 #endif
 /* fetchmail.h ends here */

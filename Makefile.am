@@ -39,7 +39,7 @@ libfm_a_SOURCES=	xmalloc.c base64.c rfc822.c report.c rfc2047e.c \
 			servport.c ntlm.h smbbyteorder.h smbdes.h smbmd4.h \
 			smbencrypt.h smbdes.c smbencrypt.c smbmd4.c smbutil.c \
 			libesmtp/gethostbyname.h libesmtp/gethostbyname.c \
-			smbtypes.h fm_getaddrinfo.c tls.c
+			smbtypes.h fm_getaddrinfo.c tls.c rfc822valid.c
 libfm_a_LIBADD=		$(EXTRAOBJ)
 libfm_a_DEPENDENCIES=	$(EXTRAOBJ)
 LDADD	=		libfm.a @LIBINTL@ $(LIBOBJS)
@@ -100,11 +100,13 @@ if NEED_GETADDRINFO
 fetchmail_SOURCES += libesmtp/getaddrinfo.h libesmtp/getaddrinfo.c
 endif
 
-check_PROGRAMS +=	rfc822 unmime netrc rfc2047e mxget
+check_PROGRAMS +=	rfc822 unmime netrc rfc2047e mxget rfc822valid
 
 rfc2047e_CFLAGS=	-DTEST
 
-rfc822_CFLAGS=	-DMAIN
+rfc822valid_CFLAGS=	-DTEST
+
+rfc822_CFLAGS=		-DMAIN
 
 unmime_SOURCES=	unmime.c
 unmime_CFLAGS=	-DSTANDALONE -DHAVE_CONFIG_H -I$(builddir)
