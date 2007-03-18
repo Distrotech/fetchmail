@@ -55,6 +55,13 @@ fetchmail 6.3.8 (not yet released):
   recovery of the shared secret a matter of hours or minutes; this would then
   enable the attacker to impersonate the client vis-à-vis the server.
 
+  For further details, check
+  * Gaëtan Leurent, "Message Freedom in MD4 and MD5 Collisions: Application
+  to APOP", Fast Software Encryption 2007, Luxembourg. (Proceedings to appear in
+  Springer's Lecture Notes on Computer Science.)
+  * The mailing list discussion thread at
+  <http://lists.berlios.de/pipermail/fetchmail-devel/2007-March/000887.html>
+
 # BUG FIXES:
 * Fix pluralization of oversized-message warning mails.
 * Fix manual page: --sslcheck -> --sslcertck, and do not set trailing 
