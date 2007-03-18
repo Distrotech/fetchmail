@@ -25,6 +25,9 @@
 - when logging to syslog, disable locale?
 - check FAQ O5 - do we really prefer From: over envelope?!?
 - add code to allow safe authentication schemes if TLS fails
+- make APOP an authenticator, integrate with regular auto authentication
+  but stuff it at the end
+- use SASL?
 
 DOCUMENTATION:
 - Add info whether Keywords are global, server or user keywords
