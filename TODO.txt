@@ -1,4 +1,5 @@
 6.4:
+- disable SOCKS by default
 - > b) When the envelope header is specified, but it isn't found, a
   > warning is logged and the mail is forwarded to the postmaster
   > ("WARNING: Envelope header $HEADER found, cannot identify the
