@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.7-rc1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2007-03-17 21:43+0100\n"
+"POT-Creation-Date: 2007-03-18 02:13+0100\n"
 "PO-Revision-Date: 2007-02-06 00:08+0900\n"
 "Last-Translator: Takeshi Hamasaki <hma@syd.odn.ne.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
@@ -1752,7 +1752,7 @@ msgstr "未読メッセージの検索に失敗しました。\n"
 msgid "%lu is unseen\n"
 msgstr "%lu は未読です。\n"
 
-#: imap.c:897 pop3.c:862
+#: imap.c:897 pop3.c:876
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u は最初の未読メッセージです。\n"
@@ -2302,46 +2302,50 @@ msgstr "greeting 中に APOP timestamp が存在しません。\n"
 msgid "Timestamp syntax error in greeting\n"
 msgstr "greeting 中の timestamp が不正です。\n"
 
-#: pop3.c:682
+#: pop3.c:672
+msgid "Invalid APOP timestamp.\n"
+msgstr ""
+
+#: pop3.c:696
 msgid "Undefined protocol request in POP3_auth\n"
 msgstr "POP3_auth 中で定義されていないプロトコルが要求されました。\n"
 
-#: pop3.c:703
+#: pop3.c:717
 msgid "lock busy!  Is another session active?\n"
 msgstr "lock busy 状態です。別の交信が行われていないか確認して下さい。\n"
 
-#: pop3.c:782
+#: pop3.c:796
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "上流サーバからの UIDL 応答に対応できません。\n"
 
-#: pop3.c:805
+#: pop3.c:819
 msgid "Server responded with UID for wrong message.\n"
 msgstr "サーバが誤ったメッセージの UID に応答しました。\n"
 
-#: pop3.c:832 pop3.c:1078
+#: pop3.c:846 pop3.c:1092
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) は削除されましたが、まだ存在しています!\n"
 
-#: pop3.c:841 pop3.c:853 pop3.c:1087 pop3.c:1094
+#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u は未読です。\n"
 
-#: pop3.c:938
+#: pop3.c:952
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "サーバリストにメッセージが挿入されています。取り扱うことができません。\n"
 
-#: pop3.c:1030
+#: pop3.c:1044
 msgid "protocol error\n"
 msgstr "プロトコルエラーです。\n"
 
-#: pop3.c:1046
+#: pop3.c:1060
 msgid "protocol error while fetching UIDLs\n"
 msgstr "UIDL を取り込み中にプロトコルエラーが発生しました。\n"
 
-#: pop3.c:1416
+#: pop3.c:1430
 msgid "Option --folder is not supported with POP3\n"
 msgstr "POP3 では --folder オプションは利用できません。\n"
 

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.6-rc4\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2007-03-17 21:43+0100\n"
+"POT-Creation-Date: 2007-03-18 02:13+0100\n"
 "PO-Revision-Date: 2006-12-01 22:01+1030\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
@@ -1744,7 +1744,7 @@ msgstr "việc tìm kiếm các thư chưa xem bị lỗi\n"
 msgid "%lu is unseen\n"
 msgstr "%lu chưa xem\n"
 
-#: imap.c:897 pop3.c:862
+#: imap.c:897 pop3.c:876
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u là thư đầu chưa xem\n"
@@ -2305,48 +2305,52 @@ msgstr "Không tìm thấy nhãn thời gian APOP cần thiết trong lời chà
 msgid "Timestamp syntax error in greeting\n"
 msgstr "Gặp lỗi cú pháp nhãn thời gian trong lời chào mừng\n"
 
-#: pop3.c:682
+#: pop3.c:672
+msgid "Invalid APOP timestamp.\n"
+msgstr ""
+
+#: pop3.c:696
 msgid "Undefined protocol request in POP3_auth\n"
 msgstr ""
 "Gặp yêu cầu giao thức không được xác định trong « POP3_auth » (xác thực)\n"
 
-#: pop3.c:703
+#: pop3.c:717
 msgid "lock busy!  Is another session active?\n"
 msgstr "khoá bận ! Có phiên chạy khác hoạt động không?\n"
 
-#: pop3.c:782
+#: pop3.c:796
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "Không thể xử lý đáp ứng UIDL từ máy phục vụ nguồn.\n"
 
-#: pop3.c:805
+#: pop3.c:819
 msgid "Server responded with UID for wrong message.\n"
 msgstr "Máy phục vụ đã đáp ứng UID cho thư không đúng.\n"
 
-#: pop3.c:832 pop3.c:1078
+#: pop3.c:846 pop3.c:1092
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (số=%d) đã được xoá bỏ, nhưng còn có.\n"
 
-#: pop3.c:841 pop3.c:853 pop3.c:1087 pop3.c:1094
+#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u chưa xem\n"
 
-#: pop3.c:938
+#: pop3.c:952
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "Gặp thư được chèn vào danh sách trên máy phục vụ. Không thể xử lý trường hợp "
 "này.\n"
 
-#: pop3.c:1030
+#: pop3.c:1044
 msgid "protocol error\n"
 msgstr "lỗi giao thức\n"
 
-#: pop3.c:1046
+#: pop3.c:1060
 msgid "protocol error while fetching UIDLs\n"
 msgstr "gặp lỗi giao thức khi lấy các UIDL\n"
 
-#: pop3.c:1416
+#: pop3.c:1430
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Không hỗ trợ tùy chọn « --folder » (thư mục) với POP3\n"
 

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.5-b1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2007-03-17 21:43+0100\n"
+"POT-Creation-Date: 2007-03-18 02:13+0100\n"
 "PO-Revision-Date: 2006-08-31 19:22+0200\n"
 "Last-Translator: Ernest Adrogué Calveras <eadrogue@gmx.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
@@ -1777,7 +1777,7 @@ msgstr "la recerca de missatges no llegits ha fallat\n"
 msgid "%lu is unseen\n"
 msgstr "%lu és no llegit\n"
 
-#: imap.c:897 pop3.c:862
+#: imap.c:897 pop3.c:876
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u és el primer missatge no llegit\n"
@@ -2332,46 +2332,50 @@ msgstr "No s'ha trobat la marca horària APOP requerida a la salutació\n"
 msgid "Timestamp syntax error in greeting\n"
 msgstr "Error de sintaxi en la marca horària de la salutació\n"
 
-#: pop3.c:682
+#: pop3.c:672
+msgid "Invalid APOP timestamp.\n"
+msgstr ""
+
+#: pop3.c:696
 msgid "Undefined protocol request in POP3_auth\n"
 msgstr "Petició de protocol indefinida a POP3_auth\n"
 
-#: pop3.c:703
+#: pop3.c:717
 msgid "lock busy!  Is another session active?\n"
 msgstr "bloqueig temporal! Hi ha alguna altra sessió activa?\n"
 
-#: pop3.c:782
+#: pop3.c:796
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "No s'ha pogut administrar la resposta UIDL del servidor remot.\n"
 
-#: pop3.c:805
+#: pop3.c:819
 msgid "Server responded with UID for wrong message.\n"
 msgstr "El servidor ha respost amb un UID pel missatge equivocat.\n"
 
-#: pop3.c:832 pop3.c:1078
+#: pop3.c:846 pop3.c:1092
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (núm=%d) s'ha esborrat, però encara està present!\n"
 
-#: pop3.c:841 pop3.c:853 pop3.c:1087 pop3.c:1094
+#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u és no llegit\n"
 
-#: pop3.c:938
+#: pop3.c:952
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr ""
 "Els missatges estan inserits a la llista del servidor. No es pot continuar.\n"
 
-#: pop3.c:1030
+#: pop3.c:1044
 msgid "protocol error\n"
 msgstr "error de protocol\n"
 
-#: pop3.c:1046
+#: pop3.c:1060
 msgid "protocol error while fetching UIDLs\n"
 msgstr "error de protocol quan es rebien els UIDLs\n"
 
-#: pop3.c:1416
+#: pop3.c:1430
 msgid "Option --folder is not supported with POP3\n"
 msgstr "L'opció --folder no està suportada per POP3\n"
 

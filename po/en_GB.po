@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.5\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2007-03-17 21:43+0100\n"
+"POT-Creation-Date: 2007-03-18 02:13+0100\n"
 "PO-Revision-Date: 2006-11-02 06:58-0000\n"
 "Last-Translator: David Lodge <dave@cirt.net>\n"
 "Language-Team: English (British) <en_gb@li.org>\n"
@@ -1716,7 +1716,7 @@ msgstr "search for unseen messages failed\n"
 msgid "%lu is unseen\n"
 msgstr "%lu is unseen\n"
 
-#: imap.c:897 pop3.c:862
+#: imap.c:897 pop3.c:876
 #, c-format
 msgid "%u is first unseen\n"
 msgstr "%u is first unseen\n"
@@ -2244,45 +2244,49 @@ msgstr "Required APOP timestamp not found in greeting\n"
 msgid "Timestamp syntax error in greeting\n"
 msgstr "Timestamp syntax error in greeting\n"
 
-#: pop3.c:682
+#: pop3.c:672
+msgid "Invalid APOP timestamp.\n"
+msgstr "Invalid APOP timestamp.\n"
+
+#: pop3.c:696
 msgid "Undefined protocol request in POP3_auth\n"
 msgstr "Undefined protocol request in POP3_auth\n"
 
-#: pop3.c:703
+#: pop3.c:717
 msgid "lock busy!  Is another session active?\n"
 msgstr "lock busy!  Is another session active?\n"
 
-#: pop3.c:782
+#: pop3.c:796
 msgid "Cannot handle UIDL response from upstream server.\n"
 msgstr "Cannot handle UIDL response from upstream server.\n"
 
-#: pop3.c:805
+#: pop3.c:819
 msgid "Server responded with UID for wrong message.\n"
 msgstr "Server responded with UID for wrong message.\n"
 
-#: pop3.c:832 pop3.c:1078
+#: pop3.c:846 pop3.c:1092
 #, c-format
 msgid "id=%s (num=%d) was deleted, but is still present!\n"
 msgstr "id=%s (num=%d) was deleted, but is still present!\n"
 
-#: pop3.c:841 pop3.c:853 pop3.c:1087 pop3.c:1094
+#: pop3.c:855 pop3.c:867 pop3.c:1101 pop3.c:1108
 #, c-format
 msgid "%u is unseen\n"
 msgstr "%u is unseen\n"
 
-#: pop3.c:938
+#: pop3.c:952
 msgid "Messages inserted into list on server. Cannot handle this.\n"
 msgstr "Messages inserted into list on server. Cannot handle this.\n"
 
-#: pop3.c:1030
+#: pop3.c:1044
 msgid "protocol error\n"
 msgstr "protocol error\n"
 
-#: pop3.c:1046
+#: pop3.c:1060
 msgid "protocol error while fetching UIDLs\n"
 msgstr "protocol error while fetching UIDLs\n"
 
-#: pop3.c:1416
+#: pop3.c:1430
 msgid "Option --folder is not supported with POP3\n"
 msgstr "Option --folder is not supported with POP3\n"
 
