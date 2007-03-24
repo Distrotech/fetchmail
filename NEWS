@@ -72,6 +72,8 @@ fetchmail 6.3.8 (not yet released):
   Fixes comment #9 in Gentoo Bug #163782, reported by Takuto Matsuu.
 * Fix rendering of the "24 - 26, 28, 29" paragraph in the exit codes section. 
   Reported by Nico Golde.
+* If SOCKS support was compiled in, add 'socks' to the feature_options Python
+  list emitted in --configdump. Reported by Rob MacGregor.
 
 # DOCUMENTATION:
 * Extend --mda documentation, discourage use of qmail-inject.
