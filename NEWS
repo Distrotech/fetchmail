@@ -100,6 +100,7 @@ fetchmail 6.3.8 (not yet released):
   current release information)
 * fetchmail does not handle messages without Message-ID header well
   (See sourceforge.net bug #780933)
+* BSMTP is mostly untested and errors can cause corrupt output.
 * Sun Workshop 6 (SPARC) is known to miscompile the configuration file lexer in
   64-bit mode.  Either compile 32-bit code or use GCC to compile 64-bit
   fetchmail.  Note that fetchmail doesn't take advantage of 64-bit code,

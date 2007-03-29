@@ -2703,6 +2703,9 @@ configuration file.
 A backslash as the last character of a configuration file will be
 flagged as a syntax error rather than ignored.
 .PP
+The BSMTP error handling is virtually nonexistent and may leave broken
+messages behind.
+.PP
 Send comments, bug reports, gripes, and the like to the
 fetchmail\-devel list <fetchmail\-devel@lists.berlios.de>.  An HTML FAQ is
 available at the fetchmail home page; surf to
