@@ -708,6 +708,12 @@ static int open_bsmtp_sink(struct query *ctl, struct msgblk *msg,
     else
 	sinkfp = fopen(ctl->bsmtp, "a");
 
+    if (!sinkfp || ferror(sinkfp)) {
+	report(stderr, GT_("BSMTP file open failed: %s\n"), 
+		strerror(errno));
+        return(PS_BSMTP);
+    }
+
     /* see the ap computation under the SMTP branch */
     need_anglebrs = (msg->return_path[0] != '<');
     fprintf(sinkfp,
@@ -747,9 +753,9 @@ static int open_bsmtp_sink(struct query *ctl, struct msgblk *msg,
 
     fputs("DATA\r\n", sinkfp);
 
-    if (ferror(sinkfp))
+    if (fflush(sinkfp) || ferror(sinkfp))
     {
-	report(stderr, GT_("BSMTP file open or preamble write failed\n"));
+	report(stderr, GT_("BSMTP preamble write failed.\n"));
 	return(PS_BSMTP);
     }
 
