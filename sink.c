@@ -686,7 +686,7 @@ int stuffline(struct query *ctl, char *buf)
 
     n = 0;
     if (ctl->mda || ctl->bsmtp) {
-	n = fwrite(buf, last - buf, 1, sinkfp);
+	n = fwrite(buf, 1, last - buf, sinkfp);
 	if (ferror(sinkfp)) n = -1;
     } else if (ctl->smtp_socket != -1)
 	n = SockWrite(ctl->smtp_socket, buf, last - buf);
