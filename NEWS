@@ -75,7 +75,7 @@ fetchmail 6.3.8 (not yet released):
 * If SOCKS support was compiled in, add 'socks' to the feature_options Python
   list emitted in --configdump. Reported by Rob MacGregor.
 * Do not crash with a null pointer dereference when opening the BSMTP file 
-  fails. Improve error checking and reporting. Reported by Reto Schüttel,
+  fails. Improve error checking and reporting. Reported by Reto SchÃ¼ttel,
   Debian Bug#416625. Fix based on a patch by Nico Golde.
 * Make BSMTP output actually work, it would persistently fail with SOCKET error
   after writing the first header.
