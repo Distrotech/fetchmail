@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.5-b1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2007-03-18 02:13+0100\n"
+"POT-Creation-Date: 2007-03-30 09:56+0200\n"
 "PO-Revision-Date: 2006-08-31 19:22+0200\n"
 "Last-Translator: Ernest Adrogué Calveras <eadrogue@gmx.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
@@ -637,13 +637,13 @@ msgstr "L'opció --check no està suportada per ETRN\n"
 #, fuzzy
 msgid ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
-"Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Rob F. Funk, Graham "
+"Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham "
 "Wilson\n"
 "Copyright (C) 2005-2006 Sunil Shetye\n"
 "Copyright (C) 2005-2007 Matthias Andree\n"
 msgstr ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
-"Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Rob F. Funk, Graham "
+"Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham "
 "Wilson\n"
 "Copyright (C) 2005-2006 Matthias Andree, Sunil Shetye\n"
 
@@ -2660,70 +2660,76 @@ msgstr "L'error desat encara és %d\n"
 msgid "%cMTP error: %s\n"
 msgstr "Error %cMTP: %s\n"
 
-#: sink.c:752
-msgid "BSMTP file open or preamble write failed\n"
+#: sink.c:712
+#, fuzzy, c-format
+msgid "BSMTP file open failed: %s\n"
 msgstr "Ha fallat l'obertura del fitxer BSMTP o l'escriptura del preàmbul\n"
 
-#: sink.c:966
+#: sink.c:758
+#, fuzzy
+msgid "BSMTP preamble write failed.\n"
+msgstr "Ha fallat l'obertura del fitxer BSMTP o l'escriptura del preàmbul\n"
+
+#: sink.c:972
 #, c-format
 msgid "%cMTP listener doesn't like recipient address `%s'\n"
 msgstr "El receptor %cMTP no admet l'adreça del destinatari `%s'\n"
 
-#: sink.c:973
+#: sink.c:979
 #, c-format
 msgid "%cMTP listener doesn't really like recipient address `%s'\n"
 msgstr "El receptor %cMTP no admet l'adreça de destinació `%s'\n"
 
-#: sink.c:1019
+#: sink.c:1025
 msgid "no address matches; no postmaster set.\n"
 msgstr "cap adreça coincideix; el postmaster no està definit.\n"
 
-#: sink.c:1031
+#: sink.c:1037
 #, c-format
 msgid "can't even send to %s!\n"
 msgstr "ni tan sols es pot enviar a %s!\n"
 
-#: sink.c:1037
+#: sink.c:1043
 #, c-format
 msgid "no address matches; forwarding to %s.\n"
 msgstr "cap adreça coincideix; reenviant a %s.\n"
 
-#: sink.c:1193
+#: sink.c:1199
 #, c-format
 msgid "about to deliver with: %s\n"
 msgstr "a punt de lliurar amb: %s\n"
 
-#: sink.c:1217
+#: sink.c:1223
 msgid "MDA open failed\n"
 msgstr "no s'ha pogut executar l'MDA\n"
 
-#: sink.c:1254
+#: sink.c:1260
 #, c-format
 msgid "%cMTP connect to %s failed\n"
 msgstr "La connexió %cMTP amb %s ha fallat\n"
 
 # raise
-#: sink.c:1278
+#: sink.c:1284
 #, c-format
 msgid "can't raise the listener; falling back to %s"
 msgstr "no s'ha pogut lliurar via SMTP; recorrent a %s"
 
-#: sink.c:1340
+#: sink.c:1346
 #, c-format
 msgid "Error writing to MDA: %s\n"
 msgstr "Error en escriure a l'MDA: %s\n"
 
-#: sink.c:1343
+#: sink.c:1349
 #, c-format
 msgid "MDA died of signal %d\n"
 msgstr "MDA finalitzat pel senyal %d\n"
 
-#: sink.c:1346
+#: sink.c:1352
 #, c-format
 msgid "MDA returned nonzero status %d\n"
 msgstr "L'MDA ha retornat un estat no nul: %d\n"
 
-#: sink.c:1349
+#: sink.c:1355
 #, c-format
 msgid ""
 "Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
@@ -2731,24 +2737,24 @@ msgstr ""
 "Estrany: La funció pclose de l'MDA a retornat %d i errno %d/%s, no es pot "
 "continuar a %s:%d\n"
 
-#: sink.c:1371
+#: sink.c:1377
 msgid "Message termination or close of BSMTP file failed\n"
 msgstr "Ha fallat la terminació del missatge o el tancament del fitxer BSMTP\n"
 
-#: sink.c:1393
+#: sink.c:1399
 msgid "SMTP listener refused delivery\n"
 msgstr "El receptor SMTP refusa el lliurament\n"
 
-#: sink.c:1423
+#: sink.c:1429
 msgid "LMTP delivery error on EOM\n"
 msgstr "Error de lliurament LMTP a EOM\n"
 
-#: sink.c:1426
+#: sink.c:1432
 #, c-format
 msgid "Unexpected non-503 response to LMTP EOM: %s\n"
 msgstr "Resposta no-503 inesperada al final del missatge LMTP: %s\n"
 
-#: sink.c:1581
+#: sink.c:1587
 msgid ""
 "-- \n"
 "The Fetchmail Daemon"

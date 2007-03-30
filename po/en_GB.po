@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.5\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2007-03-18 02:13+0100\n"
+"POT-Creation-Date: 2007-03-30 09:56+0200\n"
 "PO-Revision-Date: 2006-11-02 06:58-0000\n"
 "Last-Translator: David Lodge <dave@cirt.net>\n"
 "Language-Team: English (British) <en_gb@li.org>\n"
@@ -625,13 +625,13 @@ msgstr "Option --check is not supported with ETRN\n"
 #: fetchmail.c:137
 msgid ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
-"Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Rob F. Funk, Graham "
+"Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham "
 "Wilson\n"
 "Copyright (C) 2005-2006 Sunil Shetye\n"
 "Copyright (C) 2005-2007 Matthias Andree\n"
 msgstr ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
-"Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Rob F. Funk, Graham "
+"Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham "
 "Wilson\n"
 "Copyright (C) 2005-2006 Sunil Shetye\n"
 "Copyright (C) 2005-2007 Matthias Andree\n"
@@ -2570,93 +2570,99 @@ msgstr "Saved error is still %d\n"
 msgid "%cMTP error: %s\n"
 msgstr "%cMTP error: %s\n"
 
-#: sink.c:752
-msgid "BSMTP file open or preamble write failed\n"
+#: sink.c:712
+#, fuzzy, c-format
+msgid "BSMTP file open failed: %s\n"
 msgstr "BSMTP file open or preamble write failed\n"
 
-#: sink.c:966
+#: sink.c:758
+#, fuzzy
+msgid "BSMTP preamble write failed.\n"
+msgstr "BSMTP file open or preamble write failed\n"
+
+#: sink.c:972
 #, c-format
 msgid "%cMTP listener doesn't like recipient address `%s'\n"
 msgstr "%cMTP listener doesn't like recipient address `%s'\n"
 
-#: sink.c:973
+#: sink.c:979
 #, c-format
 msgid "%cMTP listener doesn't really like recipient address `%s'\n"
 msgstr "%cMTP listener doesn't really like recipient address `%s'\n"
 
-#: sink.c:1019
+#: sink.c:1025
 msgid "no address matches; no postmaster set.\n"
 msgstr "no address matches; no postmaster set.\n"
 
-#: sink.c:1031
+#: sink.c:1037
 #, c-format
 msgid "can't even send to %s!\n"
 msgstr "can't even send to %s!\n"
 
-#: sink.c:1037
+#: sink.c:1043
 #, c-format
 msgid "no address matches; forwarding to %s.\n"
 msgstr "no address matches; forwarding to %s.\n"
 
-#: sink.c:1193
+#: sink.c:1199
 #, c-format
 msgid "about to deliver with: %s\n"
 msgstr "about to deliver with: %s\n"
 
-#: sink.c:1217
+#: sink.c:1223
 msgid "MDA open failed\n"
 msgstr "MDA open failed\n"
 
-#: sink.c:1254
+#: sink.c:1260
 #, c-format
 msgid "%cMTP connect to %s failed\n"
 msgstr "%cMTP connect to %s failed\n"
 
-#: sink.c:1278
+#: sink.c:1284
 #, c-format
 msgid "can't raise the listener; falling back to %s"
 msgstr "can't raise the listener; falling back to %s"
 
-#: sink.c:1340
+#: sink.c:1346
 #, c-format
 msgid "Error writing to MDA: %s\n"
 msgstr "Error writing to MDA: %s\n"
 
-#: sink.c:1343
+#: sink.c:1349
 #, c-format
 msgid "MDA died of signal %d\n"
 msgstr "MDA died of signal %d\n"
 
-#: sink.c:1346
+#: sink.c:1352
 #, c-format
 msgid "MDA returned nonzero status %d\n"
 msgstr "MDA returned nonzero status %d\n"
 
-#: sink.c:1349
+#: sink.c:1355
 #, c-format
 msgid ""
 "Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
 msgstr ""
 "Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
 
-#: sink.c:1371
+#: sink.c:1377
 msgid "Message termination or close of BSMTP file failed\n"
 msgstr "Message termination or close of BSMTP file failed\n"
 
-#: sink.c:1393
+#: sink.c:1399
 msgid "SMTP listener refused delivery\n"
 msgstr "SMTP listener refused delivery\n"
 
-#: sink.c:1423
+#: sink.c:1429
 msgid "LMTP delivery error on EOM\n"
 msgstr "LMTP delivery error on EOM\n"
 
-#: sink.c:1426
+#: sink.c:1432
 #, c-format
 msgid "Unexpected non-503 response to LMTP EOM: %s\n"
 msgstr "Unexpected non-503 response to LMTP EOM: %s\n"
 
-#: sink.c:1581
+#: sink.c:1587
 msgid ""
 "-- \n"
 "The Fetchmail Daemon"

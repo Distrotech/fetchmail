@@ -89,6 +89,8 @@ fetchmail 6.3.8 (not yet released):
 * Document expected Received: line format when parsing for envelope addressees.
 * Stripped option documentation from sample.rcfile, since this is bound to go
   out of synch with the manual page, which is the only reference on options.
+* Corrected Robert M. Funk's name that I misspelled. My sincere apologies
+  -- Matthias Andree.
 
 # CONTRIB:
 * Add delete-later and delete-later.README, a script and documentation for

@@ -135,7 +135,7 @@ static RETSIGTYPE donothing(int sig)
 
 static void printcopyright(FILE *fp) {
 	fprintf(fp, GT_("Copyright (C) 2002, 2003 Eric S. Raymond\n"
-		   "Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Rob F. Funk, Graham Wilson\n"
+		   "Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham Wilson\n"
 		   "Copyright (C) 2005-2006 Sunil Shetye\n"
 		   "Copyright (C) 2005-2007 Matthias Andree\n"
 		   ));
