@@ -78,7 +78,8 @@ fetchmail 6.3.8 (not yet released):
   fails. Improve error checking and reporting. Reported by Reto Schüttel,
   Debian Bug#416625. Fix based on a patch by Nico Golde.
 * Make BSMTP output actually work, it would persistently fail with SOCKET error
-  after writing the first header.
+  after writing the first header. Bug independently found and reported in
+  excellent detail by Reto Schüttel, Debian Bug#416812.
 
 # DOCUMENTATION:
 * Extend --mda documentation, discourage use of qmail-inject.
