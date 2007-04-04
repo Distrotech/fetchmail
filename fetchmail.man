@@ -590,12 +590,13 @@ MAILBOXES below apply.
 .SS Resource Limit Control Options
 .TP
 .B \-l <maxbytes> | \-\-limit <maxbytes>
-(Keyword: limit) Takes a maximum octet size argument.  Messages larger
-than this size will not be fetched and will be left on the server (in
-foreground sessions, the progress messages will note that they are
-"oversized").  If the fetch protocol permits (in particular, under
-IMAP or POP3 without the fetchall option) the message will not be
-marked seen.
+(Keyword: limit) Takes a maximum octet size argument, where 0 is the
+default and also the special value designating "no limit".
+If nonzero, messages larger than this size will not be fetched and will
+be left on the server (in foreground sessions, the progress messages
+will note that they are "oversized").  If the fetch protocol permits (in
+particular, under IMAP or POP3 without the fetchall option) the message
+will not be marked seen.
 .sp
 An explicit \-\-limit of 0 overrides any limits set in your
 run control file. This option is intended for those needing to
