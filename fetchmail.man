@@ -1057,7 +1057,7 @@ challenge conforming to RFC1938, \fIfetchmail\fR will use your
 password as a pass phrase to generate the required response. This
 avoids sending secrets over the net unencrypted.
 .PP
-Compuserve's RPA authentication (similar to APOP) is supported. If you
+Compuserve's RPA authentication is supported. If you
 compile in the support, \fIfetchmail\fR will try to perform an RPA pass-phrase
 authentication instead of sending over the password en clair if it
 detects "@compuserve.com" in the hostname.
@@ -2057,7 +2057,7 @@ Legal authentication types are 'any', 'password', 'kerberos',
 (only for POP3), 'ntlm', 'ssh', 'external' (only IMAP).
 The 'password' type specifies
 authentication by normal transmission of a password (the password may be
-plain text or subject to protocol-specific encryption as in APOP);
+plain text or subject to protocol-specific encryption as in CRAM-MD5);
 \&'kerberos' tells \fIfetchmail\fR to try to get a Kerberos ticket at the
 start of each query instead, and send an arbitrary string as the
 password; and 'gssapi' tells fetchmail to use GSSAPI authentication.
@@ -2757,7 +2757,7 @@ RFC 1081, RFC 1225, RFC 1460, RFC 1725, RFC 1734, RFC 1939, RFC 1957,
 RFC 2195, RFC 2449.
 .TP 5
 APOP:
-RFC 1460, RFC 1725, RFC 1939.
+RFC 1939.
 .TP 5
 RPOP:
 RFC 1081, RFC 1225.

@@ -627,11 +627,12 @@ autoprobe facility will detect it and tell you if you have it). If
 you see something in the greeting line that looks like an
 angle-bracket-enclosed Internet address with a numeric left-hand
 part, that's an APOP challenge (it will vary each time you log in).
-You can register a secret on the host (using
-<code>popauth(8)</code> or some program like it). Specify the
+For some hosts, you need to register a secret on the host (using
+<code>popauth(8)</code> or some program like that). Specify the
 secret as your password in your .fetchmailrc; it will be used to
 encrypt the current challenge, and the encrypted form will be sent
-back the the server for verification.</p>
+back the the server for verification. Note that APOP is no longer
+considered secure since March 2007.</p>
 
 <p>Alternatively, you may have Kerberos available. This may require
 you to set up some magic files in your home directory on your
@@ -647,8 +648,8 @@ present by looking for AUTH=KERBEROS_V4 in the CAPABILITY
 response.</p>
 
 <p>If you are fetching mail from a CompuServe POP3 account, you can
-use their RPA authentication (which works much like APOP). See <a
-href="#I1">I1</a> for details. If you are fetching mail from
+use their RPA authentication. See <a href="#I1">I1</a> for details.
+If you are fetching mail from
 Microsoft Exchange using IMAP, you will be able to use NTLM.</p>
 
 <p>Your POP3 server may have the RFC1938 OTP capability to use
