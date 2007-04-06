@@ -42,7 +42,7 @@ be removed from a 6.4.0 or newer release.)
 
 --------------------------------------------------------------------------------
 
-fetchmail 6.3.8 (not yet released):
+fetchmail 6.3.8 (released 2007-04-06):
 
 # SECURITY STRENGTHENING:
 * Make the APOP challenge parser more distrustful and have it reject challenges
