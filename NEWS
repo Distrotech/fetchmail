@@ -48,7 +48,7 @@ fetchmail 6.3.8 (not yet released):
 * Make the APOP challenge parser more distrustful and have it reject challenges
   that do not conform to RFC-822 msg-id format, in the hope to make mounting
   man-in-the-middle attacks (MITM) against APOP a bit more difficult.
-  (CVE-2007-1558)
+  (CVE-2007-1558, reported by Gaëtan Leurent, published 2007-04-02 on Bugtraq)
 
   APOP is claimed insecure by Gaëtan Leurent for MITM scenarios for typical
   setups: based on MD5 collisions, it is purportedly possible to recover the
@@ -82,6 +82,7 @@ fetchmail 6.3.8 (not yet released):
   excellent detail by Reto Schüttel, Debian Bug#416812.
 
 # DOCUMENTATION:
+* Add fetchmail-SA-2007-01.txt
 * Extend --mda documentation, discourage use of qmail-inject.
   Based on a patch by Rob MacGregor.
 * Document SOCKS configuration facility (SOCKS_CONF environment variable).
