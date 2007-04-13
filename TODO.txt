@@ -1,5 +1,10 @@
+soon:
+- mark fetchmail -vvv in the FAQ
+
 6.4:
-- disable SOCKS by default? Add hooks to do that?
+- put more hints to the FAQ (should we call it FGA?) as first support place
+- make sure we print socket error messages such as connection reset by
+  peer to hint users the problem is not in fetchmail
 - > b) When the envelope header is specified, but it isn't found, a
   > warning is logged and the mail is forwarded to the postmaster
   > ("WARNING: Envelope header $HEADER found, cannot identify the
