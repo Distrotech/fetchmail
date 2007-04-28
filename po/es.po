@@ -96,14 +96,14 @@ msgstr ""
 #, c-format
 msgid "  %d message  %d octets long deleted by fetchmail."
 msgid_plural "  %d messages %d octets long deleted by fetchmail."
-msgstr[0] "  %d mensajes de %d octetos de longitud borrados por fetchmail."
+msgstr[0] "  %d mensaje  de %d octetos de longitud borrado  por fetchmail."
 msgstr[1] "  %d mensajes de %d octetos de longitud borrados por fetchmail."
 
 #: driver.c:367
 #, c-format
 msgid "  %d message  %d octets long skipped by fetchmail."
 msgid_plural "  %d messages %d octets long skipped by fetchmail."
-msgstr[0] "  %d mensajes de %d octetos de longitud omitidos por fetchmail."
+msgstr[0] "  %d mensaje  de %d octetos de longitud omitido  por fetchmail."
 msgstr[1] "  %d mensajes de %d octetos de longitud omitidos por fetchmail."
 
 #: driver.c:503
@@ -2717,7 +2717,7 @@ msgstr "Fallo en la escritura del preámbulo BSTMP.\n"
 #: sink.c:972
 #, c-format
 msgid "%cMTP listener doesn't like recipient address `%s'\n"
-msgstr "Al servidor %cMTP no le gusta la dirección del destinatario «%s»"
+msgstr "Al servidor %cMTP no le gusta la dirección del destinatario «%s»\n"
 
 #: sink.c:979
 #, c-format
