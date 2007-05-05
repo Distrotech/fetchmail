@@ -21,13 +21,40 @@ msgstr ""
 "Project-Id-Version: fetchmail 6.3.4-rc1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2007-03-30 09:56+0200\n"
-"PO-Revision-Date: 2007-04-22 16:08+0200\n"
+"PO-Revision-Date: 2007-05-02 00:05+0200\n"
 "Last-Translator: Héctor García <hector@el-mundo.net>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-POFile-SpellExtra: fetchmail HESIOD fetchall NTLM sendauth help\n"
+"X-POFile-SpellExtra: limitflush Wilson EOM sslcert lmtp sysctl RPOP UID\n"
+"X-POFile-SpellExtra: PID tracepolls RETR Path folder antispam IOERR RCPT\n"
+"X-POFile-SpellExtra: Received sslfingerprint APOP smtpaddress FreeBSD kmem\n"
+"X-POFile-SpellExtra: CommonName GSSAPI auth SYNTAX ssl IPv ssh smtphost\n"
+"X-POFile-SpellExtra: rwx LMTP logfile showdots daemon Matthias Encoding\n"
+"X-POFile-SpellExtra: Fetchmail pidfile LDAP NIS uidl multidrop NOMAIL\n"
+"X-POFile-SpellExtra: Subject qmail drop From sslcertpath nodetach KERBEROS\n"
+"X-POFile-SpellExtra: syslog fetchdomains forcecr flush HELO port\n"
+"X-POFile-SpellExtra: dropstatus Shetye TCP inject ODMR Funk norewrite\n"
+"X-POFile-SpellExtra: sslcertck timeout sendmail ESMTP stripcr UIDLs RFC\n"
+"X-POFile-SpellExtra: fetchsizelimit MAIL IMAP SOCKET LOCKBUSY GSS MAXFETCH\n"
+"X-POFile-SpellExtra: SSL QMAILINJECT Unicode errno krb Message bsmtp\n"
+"X-POFile-SpellExtra: Graham Eric EHLO setuid getaddrinfo verbose Copyright\n"
+"X-POFile-SpellExtra: smtpname sslproto Robert mimedecode fastuidl BSMTP\n"
+"X-POFile-SpellExtra: expunge sockets fetchmailrc Status quit SDPS silent\n"
+"X-POFile-SpellExtra: service spam sslkey MDA SIGINT PROXY Transfer\n"
+"X-POFile-SpellExtra: protocol TOP TLS mda SUCCESS NULLMAILERFLAGS PLAIN\n"
+"X-POFile-SpellExtra: qvirtual kerberos envelope ATRN nullmailer DNS otp\n"
+"X-POFile-SpellExtra: off FROM socket getpassword fetchids BSTMP AUTHFAIL\n"
+"X-POFile-SpellExtra: urandom Delivered malloc ETRN UIDs STMP smtp Content\n"
+"X-POFile-SpellExtra: MSN EVPmd COPYING NULL check batchlimit Return\n"
+"X-POFile-SpellExtra: Raymond Kerberos RPA TO EXCLUDE UIDL FAQ Andree KPOP\n"
+"X-POFile-SpellExtra: postmaster execvp PROTOCOL warnings Sunil kvm AUTH\n"
+"X-POFile-SpellExtra: dropdelivered gethostbyname cygwin SMTP NULs nobounce\n"
+"X-POFile-SpellExtra: cMTP nokeep fetchlimit OTP CRAM\n"
+"X-POFile-SpellExtra: Vyase SSLv Vd idle root MD5\n"
 
 #: checkalias.c:174
 #, c-format
@@ -265,7 +292,7 @@ msgstr "Fallo la conexión de %s a %s"
 
 #: driver.c:1068
 msgid "Subject: Fetchmail unreachable-server warning."
-msgstr "Subject: aviso de server fuera de alcance de fetchmail."
+msgstr "Subject: aviso de Fetchmail - servidor inalcanzable."
 
 #: driver.c:1070
 #, c-format
@@ -314,10 +341,11 @@ msgid ""
 "error message."
 msgstr ""
 "Falló el intento de obtener autorización.\n"
-"Debido a que ya hemos tenido éxito al obtener autorización para esta\n"
-"conexión, esto probablemente sea otro modo de fallo (como un servidor\n"
-"ocupado) que fetchmail no puede distinguir porque el servido no envió\n"
-"un mensaje de error útil."
+"Probablemente no sea un fallo de autenticación sino otro tipo de fallo\n"
+"(como por ejemplo, el de un servidor ocupado) ya que se ha tenido éxito \n"
+"en obtener la autorización para esta conexión en ocasiones anteriores.\n"
+"Fetchmail no puede distinguir el fallo exacto porque el servidor\n"
+"no envió un mensaje de error útil."
 
 #: driver.c:1196
 msgid ""
@@ -331,8 +359,8 @@ msgid ""
 "is restored."
 msgstr ""
 "\n"
-"Sin embargo, si cambiaste los detalles de tu cuenta tras haber iniciado\n"
-"el proceso fetchmail, necesitás detener el proceso, cambiar la\n"
+"Sin embargo, si ha cambiado la información de su cuenta tras haber iniciado\n"
+"el proceso fetchmail, deberá detener el proceso, cambiar la\n"
 "configuración de fetchmail y reiniciarlo.\n"
 "\n"
 "El proceso fetchmail continuará ejecutándose e intentando establecer la\n"
@@ -373,7 +401,7 @@ msgstr "Error de entrada o de autenticación desconocido en %s@%s\n"
 #: driver.c:1251
 #, c-format
 msgid "Authorization OK on %s@%s\n"
-msgstr "Autorización exitosa en %s@%s\n"
+msgstr "Autorización con éxito en %s@%s\n"
 
 #: driver.c:1257
 #, c-format
@@ -392,11 +420,11 @@ msgstr "El servicio ha sido reestablecido.\n"
 #: driver.c:1297
 #, c-format
 msgid "selecting or re-polling folder %s\n"
-msgstr "seleccionando o reconsultando la carpeta %s\n"
+msgstr "seleccionando o volviendo a consultar la carpeta %s\n"
 
 #: driver.c:1299
 msgid "selecting or re-polling default folder\n"
-msgstr "seleccionando o reconsultando la carpeta por omisión\n"
+msgstr "seleccionando o volviendo a consultar la carpeta por omisión\n"
 
 #: driver.c:1311
 #, c-format
@@ -501,7 +529,7 @@ msgstr "error %s recibiendo de %s@%s\n"
 #: driver.c:1562
 #, c-format
 msgid "post-connection command failed with status %d\n"
-msgstr "falló la orden de posconexión falló con estado %d\n"
+msgstr "falló la orden de postconexión con estado %d\n"
 
 #: driver.c:1581
 msgid "Kerberos V4 support not linked.\n"
@@ -551,12 +579,12 @@ msgid ""
 "Try \"env NULLMAILER_FLAGS= %s YOUR ARGUMENTS HERE\"\n"
 "%s: Abort.\n"
 msgstr ""
-"%s: La variable de entorno NULLMAILER_FLAGS está configurada.\n"
+"%s: Está configurada la variable de entorno NULLMAILER_FLAGS.\n"
 "Esto es peligroso dado que puede hacer que nullmailer-inject o el\n"
-"envoltorio sendmail de nullmailer pisoteen tus encabezados From:,\n"
+"envoltorio sendmail de nullmailer pisoteen sus encabezados From:,\n"
 "Message-ID: o Return-Path.\n"
 "Prueba «env NULLMAILER_FLAGS= %s TUS ARGUMENTOS AQUÍ»\n"
-"%s: Abort.\n"
+"%s: Abortando.\n"
 
 #: env.c:83
 #, c-format
@@ -587,7 +615,7 @@ msgid ""
 "DO repair your /etc/hosts, DNS, NIS or LDAP instead.\n"
 msgstr ""
 "Intentando continuar con un nombre de máquina no cualificado.\n"
-"¡NO reporte lineas «Received:», HELO/EHLO o problemas similares!\n"
+"¡NO reporte líneas «Received:», HELO/EHLO o problemas similares!\n"
 "En lugar de esto DEBE arreglar su archivo /etc/hosts, DNS, NIS o LDAP.\n"
 
 #: etrn.c:49 odmr.c:60
@@ -674,9 +702,10 @@ msgid ""
 "are welcome to redistribute it under certain conditions. For details,\n"
 "please see the file COPYING in the source or documentation directory.\n"
 msgstr ""
-"Fetchmail viene sin NINGUNA GARANTIA. Esto es software libre, y eres\n"
-"bienvenido a redistribuirlo bajo ciertas condiciones. Para más detalles,\n"
-"por favor lee el archivo COPYING en el directorio de fuentes o "
+"Fetchmail se ofrece sin NINGUNA GARANTÍA. Esto es software libre, y se\n"
+"le agradece que lo redistribuya bajo ciertas condiciones. Para más "
+"detalles,\n"
+"por favor lea el archivo COPYING en las fuentes o en el directorio de \n"
 "documentación.\n"
 
 #: fetchmail.c:176
@@ -817,7 +846,7 @@ msgstr "reiniciando fetchmail (%s cambió)\n"
 #: fetchmail.c:640
 msgid "attempt to re-exec may fail as directory has not been restored\n"
 msgstr ""
-"el intento de re-ejectuar puede fallar dado que no se ha restaurado el "
+"el intento de volver a ejecutar puede fallar dado que no se ha restaurado el "
 "directorio\n"
 
 #: fetchmail.c:667
@@ -1211,7 +1240,7 @@ msgstr "  El principal del servicio de correo es: %s\n"
 
 #: fetchmail.c:1646
 msgid "  SSL encrypted sessions enabled.\n"
-msgstr "  Sesiones encriptadas con SSL activadas.\n"
+msgstr "  Sesiones cifradas con SSL activadas.\n"
 
 #: fetchmail.c:1648
 #, c-format
@@ -1427,7 +1456,7 @@ msgstr ""
 #: fetchmail.c:1744
 msgid "   Do linear search of UIDs during each poll (--fastuidl 0).\n"
 msgstr ""
-"  Utilizar búsqueda lineal de UIDs durante cada conlusta (--fastuidl 0).\n"
+"  Utilizar búsqueda lineal de UIDs durante cada consulta (--fastuidl 0).\n"
 
 #: fetchmail.c:1746
 #, c-format
@@ -1509,7 +1538,7 @@ msgstr "  Se terminará la conexión al servidor con «%s».\n"
 
 #: fetchmail.c:1820
 msgid "  No post-connection command.\n"
-msgstr "  No hay orden posconexión.\n"
+msgstr "  No hay orden de postconexión.\n"
 
 #: fetchmail.c:1823
 msgid "  No localnames declared for this host.\n"
@@ -1594,11 +1623,11 @@ msgstr "  No se especificó alguna interfaz requerida.\n"
 #: fetchmail.c:1904
 #, c-format
 msgid "  Polling loop will monitor %s.\n"
-msgstr "  El bucle de consulta monitoreará %s.\n"
+msgstr "  El bucle de consulta monitorizará %s.\n"
 
 #: fetchmail.c:1906
 msgid "  No monitor interface specified.\n"
-msgstr "  No se especificó una interfaz de monitoreo.\n"
+msgstr "  No se especificó una interfaz de monitorización.\n"
 
 #: fetchmail.c:1910
 #, c-format
@@ -1739,7 +1768,7 @@ msgstr "descansará después de consultar\n"
 #: imap.c:441 pop3.c:505
 #, c-format
 msgid "%s: upgrade to TLS succeeded.\n"
-msgstr "%s: la actualización a TLS tuvo exito.\n"
+msgstr "%s: la actualización a TLS tuvo éxito.\n"
 
 #: imap.c:450 pop3.c:514
 #, c-format
@@ -1818,9 +1847,7 @@ msgstr "%u es el primero que no fue visto\n"
 #: imap.c:988
 msgid ""
 "Warning: ignoring bogus data for message sizes returned by the server.\n"
-msgstr ""
-"Aviso: ignorando información erronea acerca del tamaño de los mensajes, "
-"devuelta por el servidor\n"
+msgstr "la máscara IP de la interfaz es inválida\n"
 
 #: interface.c:256
 msgid "Unable to open kvm interface. Make sure fetchmail is SGID kmem."
@@ -1848,7 +1875,7 @@ msgstr "get_ifinfo: sysctl (lista de interfaces) falló"
 #: interface.c:448
 #, c-format
 msgid "Routing message version %d not understood."
-msgstr "No se entendió el mensaje de ruteo versión %d."
+msgstr "No se entendió el mensaje de encaminamiento versión %d."
 
 #: interface.c:480
 #, c-format
@@ -2008,7 +2035,7 @@ msgstr "No se puede utilizar la opción --check con ODMR\n"
 
 #: opie.c:42
 msgid "server recv fatal\n"
-msgstr "fatal recv del server\n"
+msgstr "fatal recv del servidor\n"
 
 #: opie.c:56
 msgid "Could not decode OTP challenge\n"
@@ -2134,11 +2161,12 @@ msgstr "  -I, --interface   especificación de interfaz requerida\n"
 
 #: options.c:606
 msgid "  -M, --monitor     monitor interface for activity\n"
-msgstr "  -M, --monitor     monitorear interfaz por actividad\n"
+msgstr "  -M, --monitor     monitorizar una interfaz para detectar actividad\n"
 
 #: options.c:609
 msgid "      --ssl         enable ssl encrypted session\n"
-msgstr "      --ssl         activar sesión encriptada con ssl\n"
+msgstr ""
+"      --port        puerto TCP al cual conectarse (obsoleto, use --service)\n"
 
 #: options.c:610
 msgid "      --sslkey      ssl private key file\n"
@@ -2184,7 +2212,8 @@ msgstr ""
 #: options.c:620
 msgid "  -p, --protocol    specify retrieval protocol (see man page)\n"
 msgstr ""
-"  -p, --protocol    especificar el protocolo de recepción (ver página man)\n"
+"  -p, --protocol    especificar el protocolo de recogida (consulte la página "
+"de manual)\n"
 
 #: options.c:621
 msgid "  -U, --uidl        force the use of UIDLs (pop3 only)\n"
@@ -2438,15 +2467,15 @@ msgid ""
 "fetchmail: interface option is only supported under Linux (without IPv6) and "
 "FreeBSD\n"
 msgstr ""
-"fetchmail: sólo puede utilizar la opción de intarfaz en Linux (sin IPv6) y "
-"FreeBSD\n"
+"fetchmail: la opción «interface» sólo está soportada en Linux (sin IPv6) y "
+"en FreeBSD\n"
 
 #: rcfile_y.y:220
 msgid ""
 "fetchmail: monitor option is only supported under Linux (without IPv6) and "
 "FreeBSD\n"
 msgstr ""
-"fetchmail: sólo puede utilizar la opción monitor en Linux (sin IPv6) y "
+"fetchmail: sólo puede utilizar la opción «monitor» en Linux (sin IPv6) y "
 "FreeBSD\n"
 
 #: rcfile_y.y:333
@@ -2617,7 +2646,7 @@ msgstr "Campo del mecanismo incorrecto\n"
 #: rpa.c:530
 #, c-format
 msgid "dec64 error at char %d: %x\n"
-msgstr "Error de dec64 en el caracter %d: %x\n"
+msgstr "Error de dec64 en el carácter %d: %x\n"
 
 #: rpa.c:545
 msgid "Inbound binary data:\n"
@@ -2778,7 +2807,7 @@ msgstr "El MDA devolvió un estado distinto a cero %d\n"
 msgid ""
 "Strange: MDA pclose returned %d and errno %d/%s, cannot handle at %s:%d\n"
 msgstr ""
-"Curioso: pclose en el MDA devolvió %d y errno %d/%s, no se puede manejar en %"
+"Raro: «pclose» en el MDA devolvió %d y errno %d/%s, no se puede manejar en %"
 "s:%d\n"
 
 #: sink.c:1377
@@ -2804,7 +2833,7 @@ msgid ""
 "The Fetchmail Daemon"
 msgstr ""
 "-- \n"
-"El Daemon Fetchmail"
+"El demonio Fetchmail"
 
 #: smtp.c:79
 msgid "ESMTP CRAM-MD5 Authentication...\n"
@@ -2816,7 +2845,7 @@ msgstr "El servidor rechazó la orden AUTH.\n"
 
 #: smtp.c:94 smtp.c:144 smtp.c:154 smtp.c:160
 msgid "Bad base64 reply from server.\n"
-msgstr "Mala respuesta base64 del server.\n"
+msgstr "Mala respuesta base64 del servidor.\n"
 
 #: smtp.c:98
 #, c-format
