@@ -1,5 +1,9 @@
 soon:
 - mark fetchmail -vvv in the FAQ
+- find a solution for the "invalid header" discards message problem
+  (escape headers and stuff reminder into body)
+- use workaround for µClibc issue (extend configure.ac check)
+  https://bugs.gentoo.org/show_bug.cgi?id=134187
 
 6.4:
 - put more hints to the FAQ (should we call it FGA?) as first support place
