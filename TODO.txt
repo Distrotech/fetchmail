@@ -4,6 +4,9 @@ soon:
   (escape headers and stuff reminder into body)
 - use workaround for µClibc issue (extend configure.ac check)
   https://bugs.gentoo.org/show_bug.cgi?id=134187
+- https://bugzilla.novell.com/show_bug.cgi?id=247233
+  (same as http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=421446)
+  might be our fallback of setting sslproto to ""? But what triggers it?
 
 6.4:
 - make the SSL default v3 (rather than v23).
