@@ -1,20 +1,20 @@
 # Vietnamese translation for Fetchmail.
-# Copyright © 2006 Eric S. Raymond
-# Clytie Siddall <clytie@riverland.net.au>, 2006.
+# Copyright © 2007 Eric S. Raymond
+# Clytie Siddall <clytie@riverland.net.au>, 2006-2007.
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: fetchmail 6.3.6-rc4\n"
+"Project-Id-Version: fetchmail 6.3.8\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
 "POT-Creation-Date: 2007-03-30 09:56+0200\n"
-"PO-Revision-Date: 2006-12-01 22:01+1030\n"
+"PO-Revision-Date: 2007-05-28 21:48+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Mac PO Editor 1.0a9\n"
+"X-Generator: LocFactory Editor 1.6.3b1\n"
 
 #: checkalias.c:174
 #, c-format
@@ -76,13 +76,13 @@ msgid "The following oversized messages remain on server %s account %s:"
 msgstr "Những thư quá lớn theo đây còn lại trên máy phục vụ %s tài khoản %s:"
 
 #: driver.c:362
-#, fuzzy, c-format
+#, c-format
 msgid "  %d message  %d octets long deleted by fetchmail."
 msgid_plural "  %d messages %d octets long deleted by fetchmail."
-msgstr[0] "  %d thư độ dài %d octet bị fetchmail xoá bỏ."
+msgstr[0] "  %d thư độ dài %d octet bị fetchmail xoá."
 
 #: driver.c:367
-#, fuzzy, c-format
+#, c-format
 msgid "  %d message  %d octets long skipped by fetchmail."
 msgid_plural "  %d messages %d octets long skipped by fetchmail."
 msgstr[0] "  %d thư độ dài %d octet bị fetchmail bỏ qua."
@@ -617,7 +617,6 @@ msgid "Option --check is not supported with ETRN\n"
 msgstr "Không hỗ trợ tùy chọn « --check » (kiểm tra) đối với ETRN\n"
 
 #: fetchmail.c:137
-#, fuzzy
 msgid ""
 "Copyright (C) 2002, 2003 Eric S. Raymond\n"
 "Copyright (C) 2004 Matthias Andree, Eric S. Raymond, Robert M. Funk, Graham "
@@ -625,10 +624,11 @@ msgid ""
 "Copyright (C) 2005-2006 Sunil Shetye\n"
 "Copyright (C) 2005-2007 Matthias Andree\n"
 msgstr ""
-"Bản quyền © năm 2002, 2003 của Eric S. Raymond\n"
-"Bản quyền © năm 2004 của Matthias Andree, Eric S. Raymond, Robert M. Funk, "
+"Tác quyền © năm 2002, 2003 của Eric S. Raymond\n"
+"Tác quyền © năm 2004 của Matthias Andree, Eric S. Raymond, Robert F. Funk, "
 "Graham Wilson\n"
-"Bản quyền © năm 2005-2006 của Matthias Andree, Sunil Shetye\n"
+"Tác quyền © năm 2005-2006 của Sunil Shetye\n"
+"Tác quyền © năm 2005-2007 của Matthias Andree\n"
 
 #: fetchmail.c:142
 msgid ""
@@ -905,19 +905,18 @@ msgid "SSL support is not compiled in.\n"
 msgstr "Chưa biên dịch cách hỗ trợ SSL.\n"
 
 #: fetchmail.c:1229
-#, fuzzy
 msgid "KERBEROS v4 support is configured, but not compiled in.\n"
-msgstr "Chưa biên dịch cách hỗ trợ SSL.\n"
+msgstr ""
+"Khả năng hỗ trợ KERBEROS v4 đã được cấu hình còn chưa được biên dịch vào.\n"
 
 #: fetchmail.c:1235
-#, fuzzy
 msgid "KERBEROS v5 support is configured, but not compiled in.\n"
-msgstr "Chưa biên dịch cách hỗ trợ SSL.\n"
+msgstr ""
+"Khả năng hỗ trợ KERBEROS v5 đã được cấu hình còn chưa được biên dịch vào.\n"
 
 #: fetchmail.c:1241
-#, fuzzy
 msgid "GSSAPI support is configured, but not compiled in.\n"
-msgstr "Chưa biên dịch cách hỗ trợ SSL.\n"
+msgstr "Khả năng hỗ trợ GSSAPI đã được cấu hình còn chưa được biên dịch vào.\n"
 
 #: fetchmail.c:1271
 #, c-format
@@ -2281,10 +2280,12 @@ msgstr ""
 #: pop3.c:449
 msgid "TLS is mandatory for this session, but server refused CAPA command.\n"
 msgstr ""
+"Bắt buộc phải sử dụng TLS trong phiên chạy này mà trình phục vụ đã từ chối "
+"lệnh CAPA.\n"
 
 #: pop3.c:450
 msgid "The CAPA command is however necessary for TLS.\n"
-msgstr ""
+msgstr "Còn lệnh CAPA cần thiết cho TLS.\n"
 
 #: pop3.c:525
 #, c-format
@@ -2307,7 +2308,7 @@ msgstr "Gặp lỗi cú pháp nhãn thời gian trong lời chào mừng\n"
 
 #: pop3.c:672
 msgid "Invalid APOP timestamp.\n"
-msgstr ""
+msgstr "Nhãn giờ APOP không hợp lệ.\n"
 
 #: pop3.c:696
 msgid "Undefined protocol request in POP3_auth\n"
@@ -2636,14 +2637,13 @@ msgid "%cMTP error: %s\n"
 msgstr "Lỗi  %cMTP: %s\n"
 
 #: sink.c:712
-#, fuzzy, c-format
+#, c-format
 msgid "BSMTP file open failed: %s\n"
-msgstr "Tập tin BSMTP đã mở, hoặc việc ghi lời mở đầu bị lỗi\n"
+msgstr "Việc mở tập tin BSMTP bị lỗi: %s\n"
 
 #: sink.c:758
-#, fuzzy
 msgid "BSMTP preamble write failed.\n"
-msgstr "Tập tin BSMTP đã mở, hoặc việc ghi lời mở đầu bị lỗi\n"
+msgstr "Việc ghi lời mở đầu BSMTP bị lỗi.\n"
 
 #: sink.c:972
 #, c-format
