@@ -47,7 +47,7 @@ fetchmail 6.3.X (not yet released, may become .8.1 or .9):
 # FIXES:
 * The configure script will additionally check for 'dn_skipname', to fix build
   failures with µClibc. The new check still recognizes the resolver libraries on
-  Ubuntu 7.04, openSUSE 10.2, Solaris 8, NetBSD 3.0 and FreeBSD 6.2.
+  Ubuntu 7.04, openSUSE 10.2, Solaris 8, NetBSD 4.0_BETA2 and FreeBSD 6.2.
   Fixes Gentoo bug #134187.
   NOTE: this is a bit of a hack, since we twist the HAVE_RES_SEARCH result, but
   res_search() and dn_skipname() are only used together and scheduled for
