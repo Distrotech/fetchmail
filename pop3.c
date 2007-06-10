@@ -449,7 +449,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 			report(stderr, GT_("TLS is mandatory for this session, but server refused CAPA command.\n"));
 			report(stderr, GT_("The CAPA command is however necessary for TLS.\n"));
 			return ok;
-		    } else {
+		    } else if (maybe_tls(ctl)) {
 			/* defeat opportunistic STLS */
 			xfree(ctl->sslproto);
 			ctl->sslproto = xstrdup("");
@@ -526,7 +526,7 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 		   }
 	       }
 	   }
-	}
+	} /* maybe_tls() */
 #endif /* SSL_ENABLE */
 
 	/*
