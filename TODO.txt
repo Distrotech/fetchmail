@@ -1,5 +1,4 @@
 soon:
-- mark fetchmail -vvv in the FAQ
 - find a solution for the "invalid header" discards message problem
   (escape headers and stuff reminder into body)
 - https://bugzilla.novell.com/show_bug.cgi?id=247233
