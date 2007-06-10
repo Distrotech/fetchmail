@@ -1,11 +1,13 @@
 /*
  * mxget.c -- fetch MX records for given DNS name
  *
- * Copyright 1997 by Eric S. Raymond
+ * Copyright (C) 1996, 1997, 1998, 2000, 2002 by Eric S. Raymond
+ * Copyright (C) 2005, 2006, 2007 by Matthias Andree
  * For license terms, see the file COPYING in this directory.
  */
 
 #include "config.h"
+#include "fetchmail.h"
 #include <stdio.h>
 #ifdef HAVE_RES_SEARCH
 #include <string.h>
