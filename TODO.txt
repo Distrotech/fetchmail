@@ -2,8 +2,6 @@ soon:
 - mark fetchmail -vvv in the FAQ
 - find a solution for the "invalid header" discards message problem
   (escape headers and stuff reminder into body)
-- use workaround for µClibc issue (extend configure.ac check)
-  https://bugs.gentoo.org/show_bug.cgi?id=134187
 - https://bugzilla.novell.com/show_bug.cgi?id=247233
   (same as http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=421446)
   might be our fallback of setting sslproto to ""? But what triggers it?

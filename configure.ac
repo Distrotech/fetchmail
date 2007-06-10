@@ -195,10 +195,10 @@ for lib in '' -lresolv; do
 #include <resolv.h>
 #endif
 extern int res_search();
-]], [[res_search(0, 0, 0, 0, 0);]])],
+]], [[res_search(0, 0, 0, 0, 0); dn_skipname(0,0);]])],
     [AC_MSG_RESULT([found])
      AC_DEFINE(HAVE_RES_SEARCH, [1],
-	       [Define to 1 if you have the 'res_search' function.])
+	       [Define to 1 if you have the 'res_search' and 'dn_skipname' functions.])
      break], [AC_MSG_RESULT([not found])])
      LIBS=$old_LIBS
 done
