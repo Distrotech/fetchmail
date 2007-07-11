@@ -787,7 +787,7 @@ else be /dev/null.
 .TP
 .B \-i <pathname> | \-\-idfile <pathname>
 (Keyword: idfile)
-Specify an alternate name for the .fetchids file used to save POP3
+Specify an alternate name for the .fetchids file used to save message
 UIDs. NOTE: since fetchmail 6.3.0, write access to the directory
 containing the idfile is required, as fetchmail writes a temporary file
 and renames it into the place of the real idfile only if the temporary
@@ -2560,9 +2560,7 @@ that of the last host queried.
 default run control file
 .TP 5
 ~/.fetchids
-default location of file associating hosts with last message IDs seen
-(used only with newer RFC1939-compliant POP3 servers supporting the
-UIDL command).
+default location of file recording last message UIDs seen per host.
 .TP 5
 ~/.fetchmail.pid
 lock file to help prevent concurrent runs (non-root mode).

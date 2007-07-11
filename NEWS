@@ -56,6 +56,10 @@ fetchmail 6.3.9 (not yet released):
   Fixes Debian Bug#421446 (Holger Leskien), Novell Bug #247233 (Jon Nelson).
   Thanks to Matthias Strauß for a configuration to reproduce the issue.
 
+# DOCUMENTATION:
+* The manual page no longer asserts that .fetchids were for exclusive POP3 use, 
+  since it is planned to use it also with IMAP4.
+
 # TRANSLATION UPDATES:
 * Polish (Jakub Bogusz)
 * Japanese (Takeshi Hamasaki)
