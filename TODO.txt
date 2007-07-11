@@ -2,6 +2,7 @@ soon:
 - find a solution for the "invalid header" discards message problem
   (escape headers and stuff reminder into body)
 - http://bugs.debian.org/432618 - no "nossl" option to override defaults
+- https://bugzilla.novell.com/show_bug.cgi?id=246829
 
 6.4:
 - make the SSL default v3 (rather than v23).
