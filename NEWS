@@ -58,7 +58,7 @@ fetchmail 6.3.9 (not yet released):
 
 # DOCUMENTATION:
 * The manual page no longer asserts that .fetchids were for exclusive POP3 use, 
-  since it is planned to use it also with IMAP4.
+  since it is planned to use the file with IMAP4 later.
 
 # TRANSLATION UPDATES:
 * Polish (Jakub Bogusz)
