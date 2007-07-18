@@ -57,6 +57,9 @@ fetchmail 6.3.9 (not yet released):
   Thanks to Matthias Strauß for a configuration to reproduce the issue.
 
 # DOCUMENTATION:
+* Re-add two lines to the manual page that had accidentally become comments 
+  to nroff. One was part of the --sslproto documentation, and one in the 
+  "Awakening the background daemon" section.
 * The manual page no longer asserts that .fetchids were for exclusive POP3 use, 
   since it is planned to use the file with IMAP4 later.
 

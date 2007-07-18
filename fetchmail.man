@@ -411,7 +411,7 @@ server.  This can cause some complications in daemon mode.
 Forces an SSL or TLS protocol. Possible values are '\fBSSL2\fR',
 \&'\fBSSL3\fR', '\fBSSL23\fR', and '\fBTLS1\fR'. Try this if the default
 handshake does not work for your server. Use this option with
-'\fBTLS1\fR' to enforce a TLS connection. To defeat opportunistic TLSv1
+\&'\fBTLS1\fR' to enforce a TLS connection. To defeat opportunistic TLSv1
 negotiation when the server advertises STARTTLS or STLS, use \fB''\fR.
 This option, even if the argument is the empty string, will also
 suppress the diagnostic 'SERVER: opportunistic upgrade to TLS.' message
@@ -1171,7 +1171,7 @@ Normally, calling fetchmail with a daemon in the background sends a
 wake-up signal to the daemon and quits without output. The background
 daemon then starts its next poll cycle immediately.  The wake-up signal,
 SIGUSR1, can also be sent manually. The wake-up action also clears any
-'wedged' flags indicating that connections have wedged due to failed
+\&'wedged' flags indicating that connections have wedged due to failed
 authentication or multiple timeouts.
 .SS Terminating the background daemon
 .PP
