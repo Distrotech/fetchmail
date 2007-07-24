@@ -5,8 +5,13 @@ soon:
 - find a solution for the "invalid header" discards message problem
   (escape headers and stuff reminder into body)
 - https://bugzilla.novell.com/show_bug.cgi?id=246829
+- http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=432618
+  * write a table of combinations of TLS/SSL options
 
 6.4:
+- change SSL/TLS UI incompatibly, making it easier to use
+- allow selection of SSL/TLS Ciphers
+- perhaps switch to libgsasl and libgnutls (which doesn't talk SSLv2)
 - make the SSL default v3 (rather than v23).
 - put more hints to the FAQ (should we call it FGA?) as first support place
 - make sure we print socket error messages such as connection reset by
