@@ -44,13 +44,16 @@ be removed from a 6.4.0 or newer release.)
 
 fetchmail 6.3.9 (not yet released):
 
-# CRITICAL BUG FIX:
-* When fetchmail tries to inject a warning message it created itself, and the
-  message is refused by the SMTP listener, fetchmail dereferences a NULL
-  pointer and crashes. Report and fix by Earl Chew.
+# SECURITY FIX:
+* CVE-2007-XXXX: Denial of service: When fetchmail tries to inject a warning
+  message it created itself, and the message is refused by the SMTP listener,
+  fetchmail dereferences a NULL pointer and crashes. Report & fix by Earl Chew.
+  Note while this is theoretically a remote denial of service attack vector,
+  fetchmail by default talks SMTP to the localhost, so the overall risk is
+  rather low.
   This bug was apparently introduced on 1998-11-27 when the bouncemail facility
-  was modularized by ESR. The bug made then its appearance in fetchmail release
-  4.6.8.
+  was modularized. The bug made then its appearance in fetchmail release 4.6.8.
+  See fetchmail-SA-2007-02.txt.
 
 # BUG FIXES:
 * The configure script will additionally check for 'dn_skipname', to fix build
@@ -65,6 +68,7 @@ fetchmail 6.3.9 (not yet released):
   Thanks to Matthias Strauß for a configuration to reproduce the issue.
 
 # DOCUMENTATION:
+* Add fetchmail-SA-2007-02.txt
 * Re-add two lines to the manual page that had accidentally become comments 
   to nroff. One was part of the --sslproto documentation, and one in the 
   "Awakening the background daemon" section.
