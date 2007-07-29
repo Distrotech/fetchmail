@@ -668,6 +668,10 @@ int main(int argc, char *argv[])
   char *buffer, *buf_p;
   int nl_count, i, bodytype;
 
+  /* quench warnings about unused arguments */
+  (void)argc;
+  (void)argv;
+
 #ifdef DEBUG
   pid_t pid;
   FILE *fd_orig, *fd_conv;
