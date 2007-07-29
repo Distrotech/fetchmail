@@ -44,6 +44,14 @@ be removed from a 6.4.0 or newer release.)
 
 fetchmail 6.3.9 (not yet released):
 
+# CRITICAL BUG FIX:
+* When fetchmail tries to inject a warning message it created itself, and the
+  message is refused by the SMTP listener, fetchmail dereferences a NULL
+  pointer and crashes. Report and fix by Earl Chew.
+  This bug was apparently introduced on 1998-11-27 when the bouncemail facility
+  was modularized by ESR. The bug made then its appearance in fetchmail release
+  4.6.8.
+
 # BUG FIXES:
 * The configure script will additionally check for 'dn_skipname', to fix build
   failures with µClibc. The new check still recognizes the resolver libraries on
