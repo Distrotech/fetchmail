@@ -7,6 +7,8 @@ soon:
 - https://bugzilla.novell.com/show_bug.cgi?id=246829
 - http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=432618
   * write a table of combinations of TLS/SSL options
+- complete SA based on feedback from reporter, with CVE Name and publish
+- add To: header to warning mails (authfail for instance)
 
 6.4:
 - change SSL/TLS UI incompatibly, making it easier to use
