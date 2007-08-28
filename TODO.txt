@@ -7,7 +7,7 @@ soon:
 - https://bugzilla.novell.com/show_bug.cgi?id=246829
 - http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=432618
   * write a table of combinations of TLS/SSL options
-- complete SA based on feedback from reporter, with CVE Name and publish
+- complete SA based on feedback from reporter, publish it after release
 - add To: header to warning mails (authfail for instance)
 - BerliOS Bug #11576, Bug #11797
 
