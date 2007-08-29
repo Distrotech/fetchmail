@@ -12,8 +12,8 @@ CVSS V2 vector: (AV:N/AC:M/Au:N/C:N/I:N/A:C/E:?/RL:O/RC:C)
 		
 Credits:	Earl Chew
 CVE Name:	CVE-2007-4565
-URL:		http://fetchmail.berlios.de/fetchmail-SA-2007-02.txt
-Project URL:	http://fetchmail.berlios.de/
+URL:		http://www.fetchmail.info/fetchmail-SA-2007-02.txt
+Project URL:	http://www.fetchmail.info/
 
 Affects:	fetchmail release < 6.3.9 exclusively
 
@@ -60,9 +60,9 @@ This causes fetchmail to crash and not collect further messages until it
 is restarted.
 
 Risk assessment: low. In default configuration, fetchmail will talk 
-through the loopback interface, that is to the SMTP listener on the same 
+through the loopback interface, that means to the SMTP server on the same 
 computer as it is running on. Otherwise, it will commonly be configured 
-to talk to trusted SMTP servers, so a compromise of misconfiguration of 
+to talk to trusted SMTP servers, so a compromise or misconfiguration of 
 a trusted or the same computer is required to exploit this problem - 
 which usually opens up much easier ways of denying service, or worse.
 
