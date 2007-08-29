@@ -10,6 +10,8 @@ soon:
 - complete SA based on feedback from reporter, publish it after release
 - add To: header to warning mails (authfail for instance)
 - BerliOS Bug #11576, Bug #11797
+- report multiline SMTP errors properly (sample in private mail from 
+  Earl Chew, 2007-07-30T02:28)
 
 6.4:
 - change SSL/TLS UI incompatibly, making it easier to use
