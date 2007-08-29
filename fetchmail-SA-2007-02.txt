@@ -1,4 +1,4 @@
-fetchmail-SA-2007-02: Crash when warning message is rejected
+fetchmail-SA-2007-02: Crash when local warning message is rejected
 
 Topics:		Crash when fetchmail-generated warning message is rejected
 
@@ -15,7 +15,7 @@ Project URL:	http://fetchmail.berlios.de/
 
 Affects:	fetchmail release < 6.3.9
 
-Not affected:	fetchmail release 6.3.9
+Not affected:	fetchmail release 6.3.9 (not yet available)
 
 Corrected:	2007-07-29 fetchmail SVN (rev 5119)
 
