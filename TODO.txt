@@ -19,6 +19,7 @@ soon:
 - Debian Bug#449179, smbutil.c:90: unicodeToString: Assertion `len+1 < sizeof
   buf' failed, from Stepan Golosunov <stepan@golosunov.pp.ru>
 questionable:
+- Convert POP3 UIDs to X-UIDL?
 - fetch IMAP message in one go (fetchmail-devel by Adam Simpkins
   <simpkins@cisco.com> around Nov 2nd)?
 
