@@ -67,6 +67,11 @@ fetchmail 6.3.9 (not yet released):
   Fixes Debian Bug#421446 (Holger Leskien), Novell Bug #247233 (Jon Nelson).
   Thanks to Matthias Strauß for a configuration to reproduce the issue.
 
+# CHANGES:
+* Removed dead FETCHMAIL_DEBUG code from fetchmail.h that was disabled by 
+  default with no switches in configure to enable it. However, the macro would 
+  have been prone to a symlink attack. Found by Nico Golde.
+
 # DOCUMENTATION:
 * Add fetchmail-SA-2007-02.txt
 * Re-add two lines to the manual page that had accidentally become comments 

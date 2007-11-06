@@ -716,18 +716,6 @@ char *strerror (int);
 char *stpcpy(char *, const char*);
 #endif
 
-#ifdef FETCHMAIL_DEBUG
-#define exit(e) do { \
-       FILE *out; \
-       out = fopen("/tmp/fetchmail.log", "a"); \
-       fprintf(out, \
-               "Exiting fetchmail from file %s, line %d with status %d\n", \
-               __FILE__, __LINE__, e); \
-       fclose(out); \
-       _exit(e); \
-       } while(0)
-#endif /* FETCHMAIL_DEBUG */
-
 #ifdef __CYGWIN__
 #define ROOT_UID 18
 #else /* !__CYGWIN__ */
