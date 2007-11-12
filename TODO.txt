@@ -25,6 +25,8 @@ questionable:
   <simpkins@cisco.com> around Nov 2nd)?
 
 6.4:
+- http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=374514
+  "Deleting fetchids file" vs. POP3 - probably unneeded if we use IMAP UIDs.
 - change SSL/TLS UI incompatibly, making it easier to use
 - allow selection of SSL/TLS Ciphers
 - perhaps switch to libgsasl and libgnutls (which doesn't talk SSLv2)
