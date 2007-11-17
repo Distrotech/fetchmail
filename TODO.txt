@@ -25,6 +25,10 @@ questionable:
   <simpkins@cisco.com> around Nov 2nd)?
 
 6.4:
+- feature request by Daniel Goering <g_daniel@gmx.net> on
+  fetchmail-devel 2007-11-15: populate .fetchids from current messages.
+  (it'll probably be useful to limit this to "all but the 10 latest" or
+  "all before date this-and-that")
 - http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=374514
   "Deleting fetchids file" vs. POP3 - probably unneeded if we use IMAP UIDs.
 - change SSL/TLS UI incompatibly, making it easier to use
