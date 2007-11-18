@@ -25,6 +25,9 @@ questionable:
   <simpkins@cisco.com> around Nov 2nd)?
 
 6.4:
+- download only messages whose headers match a filter (by Toby, Usenet
+  Nov 2007 de.comm.software.mailserver
+  Message-ID: <1195033726.123704.296060@k79g2000hse.googlegroups.com>)
 - feature request by Daniel Goering <g_daniel@gmx.net> on
   fetchmail-devel 2007-11-15: populate .fetchids from current messages.
   (it'll probably be useful to limit this to "all but the 10 latest" or
