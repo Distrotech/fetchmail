@@ -23,6 +23,8 @@ questionable:
 - Convert POP3 UIDs to X-UIDL?
 - fetch IMAP message in one go (fetchmail-devel by Adam Simpkins
   <simpkins@cisco.com> around Nov 2nd)?
+- Debian Bug #452907 .fetchmailrc not permitted to be a symlink
+  (restriction not mentioned in manpage, also affects .idfile)
 
 6.4:
 - download only messages whose headers match a filter (by Toby, Usenet
