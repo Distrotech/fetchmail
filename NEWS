@@ -85,6 +85,9 @@ fetchmail 6.3.9 (not yet released):
   was also changed to reflect this. (Peter O'Gorman)
 * m4/gethostbyname_r.m4 does AC_TRY_COMPILE, which unfortunately can pass even
   if there is no gethostbyname_r. Changed to AC_TRY_LINK. (Peter O'Gorman)
+* Revise getnameinfo check to ensure NULL is defined and the result is properly
+  evaluated, to avoid bogus results on for instance FreeBSD and redefinitions of
+  NI_* at compile time. (Matthias Andree).
 * __attribute__ ((unused)) is a gccism, removed from libesmtp/gethostbyname.c.
   (Peter O'Gorman)
 * In KAME/getnameinfo.c it's best to use the correct argument to inet_ntoa.

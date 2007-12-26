@@ -467,10 +467,16 @@ AC_CACHE_CHECK([for getnameinfo],[fm_cv_getnameinfo],[
 #ifdef HAVE_NETDB_H
 #include <netdb.h>
 #endif
+#ifndef NULL
+#define NULL ((void *)0)
+#endif
   ], [getnameinfo(NULL,0, NULL,0, NULL, 0, 0);],
     [ fm_cv_getnameinfo=yes],
     [ fm_cv_getnameinfo=no ])
 ])
+if test $fm_cv_getnameinfo = yes ; then
+    AC_DEFINE(HAVE_GETNAMEINFO,1,[Define to 1 if your system has getnameinfo()])
+fi
 
 AM_CONDITIONAL(NEED_GETADDRINFO, test "$fm_cv_getaddrinfo" != yes)
 AM_CONDITIONAL(NEED_GETNAMEINFO, test "$fm_cv_getnameinfo"   != yes)
