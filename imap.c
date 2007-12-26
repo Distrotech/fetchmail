@@ -1240,6 +1240,10 @@ static int imap_mark_seen(int sock, struct query *ctl, int number)
 /* mark the given message as seen */
 {
     (void)ctl;
+
+    /* expunges change the message numbers */
+    number -= expunged;
+
     return(gen_transact(sock,
 	imap_version == IMAP4
 	? "STORE %d +FLAGS.SILENT (\\Seen)"

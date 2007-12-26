@@ -1,5 +1,4 @@
 soon - MUST:
-- BerliOS Bug #11797, imap_mark_seen doesn't consider expunged messages
 - BerliOS Bug #10972, Fetchmail refetches big messages repeatedly (SMTP listener
   issue)
 - report multiline SMTP errors properly (sample in private mail from 
