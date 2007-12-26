@@ -3,9 +3,7 @@
 SUBDIRS=		m4 po
 AUTOMAKE_OPTIONS=	1.8 foreign no-dist-gzip dist-bzip2
 
-AM_CFLAGS=		@CEFLAGS@
-AM_CPPFLAGS=		@CPFLAGS@ -I$(srcdir)/libesmtp
-AM_LDFLAGS=		@LDEFLAGS@
+AM_CPPFLAGS=		-I$(srcdir)/libesmtp
 ACLOCAL_AMFLAGS=	-I m4 -I m4-local
 AM_YFLAGS=		-d
 BUILT_SOURCES=		rcfile_y.h

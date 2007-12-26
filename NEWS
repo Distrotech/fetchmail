@@ -75,6 +75,21 @@ fetchmail 6.3.9 (not yet released):
   default with no switches in configure to enable it. However, the macro would 
   have been prone to a symlink attack. Found by Nico Golde.
 
+* Include the typedef for int16 in the #ifndef _AIX in smbencrypt.c (Peter
+  O'Gorman)
+* Correct check for u_int32_t in configure.ac (seems to be typedef'ed in
+  namser.h on some platforms.) (Peter O'Gorman)
+* In configure.ac change all CPFLAGS to CPPFLAGS, CEFLAGS to CFLAGS and LDEFLAGS
+  to LDFLAGS otherwise the results of some tests (additional -L and -I flags) do
+  not get used for later tests causing incorrect configure results. Makefile.am
+  was also changed to reflect this. (Peter O'Gorman)
+* m4/gethostbyname_r.m4 does AC_TRY_COMPILE, which unfortunately can pass even
+  if there is no gethostbyname_r. Changed to AC_TRY_LINK. (Peter O'Gorman)
+* __attribute__ ((unused)) is a gccism, removed from libesmtp/gethostbyname.c.
+  (Peter O'Gorman)
+* In KAME/getnameinfo.c it's best to use the correct argument to inet_ntoa.
+  (Peter O'Gorman)
+
 # DOCUMENTATION:
 * Add fetchmail-SA-2007-02.txt
 * Re-add two lines to the manual page that had accidentally become comments 
@@ -88,6 +103,8 @@ fetchmail 6.3.9 (not yet released):
 * Japanese (Takeshi Hamasaki)
 * Spanish (Javier Fernández-Sanguino Peña, Matthias Andree)
 * Vietnamese (Clytie Siddall)
+
+
 
 fetchmail 6.3.8 (released 2007-04-06):
 
