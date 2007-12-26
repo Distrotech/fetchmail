@@ -6,8 +6,6 @@ soon - MUST:
   Earl Chew, 2007-07-30T02:28)
 - publish SA-2007-02 after release
 - Peter O'Gorman 2007-10-31 fetchmail-6.3.8 portability patches [-devel list]
-- Debian Bug #452907 .fetchmailrc not permitted to be a symlink
-  (restriction not mentioned in manpage, also affects .idfile)
 
 soon - SHOULD:
 - BerliOS Bug #11576, thread on fetchmail users "Invalid SSL certificate" by
@@ -18,6 +16,7 @@ soon - SHOULD:
 - add To: header to warning mails (authfail for instance)
 - Debian Bug#449179, smbutil.c:90: unicodeToString: Assertion `len+1 < sizeof
   buf' failed, from Stepan Golosunov <stepan@golosunov.pp.ru>
+- Fix TOCTOU race around prc_filecheck*
 
 soon - MAY:
 - https://bugzilla.novell.com/show_bug.cgi?id=246829 - fetchmail lost some mail

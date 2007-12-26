@@ -404,7 +404,7 @@ int prc_filecheck(const char *pathname,
        process, it must have permissions no greater than 600, and it must not 
        be a symbolic link.  We check these conditions here. */
 
-    if (lstat(pathname, &statbuf) < 0) {
+    if (stat(pathname, &statbuf) < 0) {
 	if (errno == ENOENT) 
 	    return(PS_SUCCESS);
 	else {

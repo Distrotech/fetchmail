@@ -66,6 +66,9 @@ fetchmail 6.3.9 (not yet released):
 * No longer complain about invalid sslproto "" when POP3 CAPA probe fails.
   Fixes Debian Bug#421446 (Holger Leskien), Novell Bug #247233 (Jon Nelson).
   Thanks to Matthias Strauß for a configuration to reproduce the issue.
+* Allow .fetchmailrc and .fetchids to be symlinks, as the manpage does not
+  document they aren't allowed - fixes Debian Bug #452907 (Roger Leigh).
+  TOCTOU race persists.
 
 # CHANGES:
 * Removed dead FETCHMAIL_DEBUG code from fetchmail.h that was disabled by 
