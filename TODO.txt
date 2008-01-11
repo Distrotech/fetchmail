@@ -80,6 +80,7 @@ questionable:
 - add code to allow safe authentication schemes if TLS fails
 - make APOP an authenticator, integrate with regular auto authentication
   but stuff it at the end
+- allow forcing RETR (RETR vs. TOP, fetchmail-users, drbob 2008-01-11)
 - use SASL?
 
 DOCUMENTATION:
