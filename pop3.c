@@ -329,6 +329,12 @@ static int pop3_getauth(int sock, struct query *ctl, char *greeting)
 
     /* Set this up before authentication quits early. */
     set_peek_capable(ctl);
+
+    /* Hack: allow user to force RETR. */
+    if (peek_capable && getenv("FETCHMAIL_POP3_FORCE_RETR")) {
+	peek_capable = 0;
+    }
+
     /*
      * The "Maillennium POP3/PROXY server" deliberately truncates
      * TOP replies after c. 64 or 80 kByte (we have varying reports), so
