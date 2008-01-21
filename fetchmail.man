@@ -310,12 +310,12 @@ The timeout option allows you to set a server-nonresponse
 timeout in seconds.  If a mailserver does not send a greeting message
 or respond to commands for the given number of seconds,
 \fIfetchmail\fR will hang up on it.  Without such a timeout
-\fIfetchmail\fR might hang up indefinitely trying to fetch mail from a
+\fIfetchmail\fR might hang indefinitely trying to fetch mail from a
 down host.  This would be particularly annoying for a \fIfetchmail\fR
-running in background.  There is a default timeout which fetchmail\~\-V
+running in the background.  There is a default timeout which fetchmail\~\-V
 will report.  If a given connection receives too many timeouts in
-succession, fetchmail will consider it wedged and stop retrying,
-the calling user will be notified by email if this happens.
+succession, fetchmail will consider it wedged and stop retrying.
+The calling user will be notified by email if this happens.
 .TP
 .B \-\-plugin <command>
 (Keyword: plugin) The plugin option allows you to use an external

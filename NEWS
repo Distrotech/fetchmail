@@ -106,6 +106,7 @@ fetchmail 6.3.9 (not yet released):
   "Awakening the background daemon" section.
 * The manual page no longer asserts that .fetchids were for exclusive POP3 use, 
   since it is planned to use the file with IMAP4 later.
+* Add grammar fixes from Dan Jacobson to fetchmail.man. Debian Bug #461642.
 
 # TRANSLATION UPDATES:
 * Polish (Jakub Bogusz)
