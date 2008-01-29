@@ -21,6 +21,7 @@ soon - SHOULD:
 soon - MAY:
 - https://bugzilla.novell.com/show_bug.cgi?id=246829 - fetchmail lost some mail
   (5XX error code in contradiction with manual?)
+- Fix Cygwin workaround - can we *easily* get rid of MSG_PEEK altogether?
 
 soon - after 6.3.9:
 - find a solution for the "invalid header" discards message problem
