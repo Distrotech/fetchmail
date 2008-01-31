@@ -80,7 +80,8 @@ fetchmail 6.3.9 (not yet released):
 * Removed dead FETCHMAIL_DEBUG code from fetchmail.h that was disabled by 
   default with no switches in configure to enable it. However, the macro would 
   have been prone to a symlink attack. Found by Nico Golde.
-
+* Removed dead FORCE_STUFFING code from socket.c that was disabled by default
+  with no switches in configure to enable it.
 * Include the typedef for int16 in the #ifndef _AIX in smbencrypt.c (Peter
   O'Gorman)
 * Correct check for u_int32_t in configure.ac (seems to be typedef'ed in
