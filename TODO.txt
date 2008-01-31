@@ -17,11 +17,11 @@ soon - SHOULD:
 - Debian Bug#449179, smbutil.c:90: unicodeToString: Assertion `len+1 < sizeof
   buf' failed, from Stepan Golosunov <stepan@golosunov.pp.ru>
 - Fix TOCTOU race around prc_filecheck*
+- Get rid of peeking in socket.c? MSG_PEEK seems non-portable and racey.
 
 soon - MAY:
 - https://bugzilla.novell.com/show_bug.cgi?id=246829 - fetchmail lost some mail
   (5XX error code in contradiction with manual?)
-- Fix Cygwin workaround - can we *easily* get rid of MSG_PEEK altogether?
 
 soon - after 6.3.9:
 - find a solution for the "invalid header" discards message problem
