@@ -608,6 +608,10 @@ int main(int argc, char **argv)
     /* here's the exclusion lock */
     fm_lock_or_die();
 
+    if (check_only && outlevel >= O_VERBOSE) {
+	report(stdout, GT_("--check mode enabled, not fetching mail\n"));
+    }
+
     /*
      * Query all hosts. If there's only one, the error return will
      * reflect the status of that transaction.

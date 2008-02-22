@@ -6,6 +6,9 @@ soon - MUST:
 - publish SA-2007-02 after release
 
 soon - SHOULD:
+- allow \Deleted without \Seen, rf. 
+  http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=466299
+- document IMAP4 ACL requirements
 - log configured server name on certificate mismatch (perhaps pay
   attention to via entries and stuff like that)
 - BerliOS Bug #11576, thread on fetchmail users "Invalid SSL certificate" by
