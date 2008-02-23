@@ -4,6 +4,8 @@ soon - MUST:
 - report multiline SMTP errors properly (sample in private mail from 
   Earl Chew, 2007-07-30T02:28)
 - publish SA-2007-02 after release
+- Debian Bug #467010, mention in manpage that USER... must be before
+  user options
 
 soon - SHOULD:
 - allow \Deleted without \Seen, rf. 
