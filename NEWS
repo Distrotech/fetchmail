@@ -109,6 +109,14 @@ fetchmail 6.3.9 (not yet released):
 * The manual page no longer asserts that .fetchids were for exclusive POP3 use, 
   since it is planned to use the file with IMAP4 later.
 * Add grammar fixes from Dan Jacobson to fetchmail.man. Debian Bug #461642.
+* The manual page now mentions that user descriptions need to come before user
+  options. Reported by Francensco Pontortì, to fix Debian Bug#467010.
+* The manual page no longer hints that multi-user declarations per server were
+  only useful in daemon mode running as root, to avoid hinting people to doing
+  that.
+* Several manual page rcfile examples now include "ssl".
+* The manual page hints that option arguments beginning with numbers can be
+  enclosed in parentheses.
 
 # TRANSLATION UPDATES:
 * Polish (Jakub Bogusz)

@@ -1496,8 +1496,9 @@ octal 0233 = \ex9B (CSI, control sequence introducer).
 .PP
 Each server entry consists of one of the keywords 'poll' or 'skip',
 followed by a server name, followed by server options, followed by any
-number of user descriptions.  Note: the most common cause of syntax
-errors is mixing up user and server options.
+number of user (or username) descriptions, followed by user options.
+Note: the most common cause of syntax errors is mixing up user and
+server options or putting user options before the user descriptions.
 .PP
 For backward compatibility, the word 'server' is a synonym for 'poll'.
 .PP
@@ -1658,15 +1659,18 @@ Set password for RFC2554 authentication to the ESMTP server.
 T}
 .TE
 
-Here are the legal user options:
+Here are the legal user descriptions and options:
 
 .TS
 l l l lw34.
 Keyword  	Opt	Mode	Function
 _
 user[name]	\-u	\&	T{
-Set remote user name
-(local user name if name followed by 'here')
+This is the user description and must come first after server
+description and after possible server options, and before user options.
+.br
+It sets the remote user name if by itself or followed by 'there', or the
+local user name if followed by 'here'.
 T}
 is      	\&	\&	T{
 Connect local and remote user names
@@ -1814,7 +1818,8 @@ String value is ignored by fetchmail (may be used by extension scripts)
 T}
 .TE
 .PP
-Remember that all user options must \fIfollow\fR all server options.
+All user options must begin with a user description (user or username
+option) and \fIfollow\fR all server descriptions and options.
 .PP
 In the .fetchmailrc file, the 'envelope' string argument may be
 preceded by a whitespace-separated number.  This number, if specified,
@@ -2195,7 +2200,7 @@ Basic format is:
 Example:
 
 .nf
-  poll pop.provider.net protocol pop3 username "jsmith" password "secret1"
+  poll pop.provider.net protocol pop3 username "jsmith" password "secret1" ssl
 .fi
 .PP
 Or, using some abbreviations:
@@ -2224,12 +2229,12 @@ This version is much easier to read and doesn't cost significantly
 more (parsing is done only once, at startup time).
 
 .PP
-If you need to include whitespace in a parameter string, enclose the
-string in double quotes.  Thus:
+If you need to include whitespace in a parameter string or start the
+latter with a number, enclose the string in double quotes.  Thus:
 
 .nf
   poll mail.provider.net with proto pop3:
-        user "jsmith" there has password "u can't krak this"
+        user "jsmith" there has password "4u but u can't krak this"
                     is jws here and wants mda "/bin/mail"
 .fi
 
@@ -2247,8 +2252,7 @@ by individual server descriptions.  So, you could write:
         user "jjsmith" there has password "secret2"
 .fi
 
-It's possible to specify more than one user per server (this is only
-likely to be useful when running fetchmail in daemon mode as root).
+It's possible to specify more than one user per server.
 The 'user' keyword leads off a user description, and every user specification
 in a multi-user entry must include it.  Here's an example:
 
