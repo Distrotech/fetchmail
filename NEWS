@@ -75,6 +75,8 @@ fetchmail 6.3.9 (not yet released):
 * Allow .fetchmailrc and .fetchids to be symlinks, as the manpage does not
   document they aren't allowed - fixes Debian Bug #452907 (Roger Leigh).
   TOCTOU race persists.
+* fetchmailconf quotes mailbox (folder) names when writing the configuration.
+  Fixes BerliOS Bug #13207 (reported + fix suggested by Terry Brown).
 
 # CHANGES:
 * Removed dead FETCHMAIL_DEBUG code from fetchmail.h that was disabled by 

@@ -5,7 +5,7 @@
 # Matthias Andree <matthias.andree@gmx.de>
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.52 $Revision$"
+version = "1.53 $Revision$"
 
 from Tkinter import *
 from Dialog import *
@@ -397,7 +397,7 @@ class User:
 	if self.mailboxes:
 	     res = res + "    folder"
 	     for x in self.mailboxes:
-		res = res + " " + x
+		res = res + ' "%s"' % x
 	     res = res + "\n"
 	for fld in ('smtpaddress', 'preconnect', 'postconnect', 'mda', 'bsmtp', 'properties'):
 	    if getattr(self, fld):
