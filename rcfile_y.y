@@ -76,7 +76,7 @@ extern char * yytext;
 %token NO KEEP FLUSH LIMITFLUSH FETCHALL REWRITE FORCECR STRIPCR PASS8BITS 
 %token DROPSTATUS DROPDELIVERED
 %token DNS SERVICE PORT UIDL INTERVAL MIMEDECODE IDLE CHECKALIAS 
-%token SSL SSLKEY SSLCERT SSLPROTO SSLCERTCK SSLCERTPATH SSLFINGERPRINT
+%token SSL SSLKEY SSLCERT SSLPROTO SSLCERTCK SSLCERTPATH SSLCOMMONNAME SSLFINGERPRINT
 %token PRINCIPAL ESMTPNAME ESMTPPASSWORD
 %token TRACEPOLLS
 
@@ -338,6 +338,7 @@ user_option	: TO localnames HERE
 		| SSLPROTO STRING	{current.sslproto = xstrdup($2);}
 		| SSLCERTCK             {current.sslcertck = FLAG_TRUE;}
 		| SSLCERTPATH STRING    {current.sslcertpath = prependdir($2, rcfiledir);}
+		| SSLCOMMONNAME STRING  {current.sslcommonname = xstrdup($2);}
 		| SSLFINGERPRINT STRING {current.sslfingerprint = xstrdup($2);}
 
 		| NO KEEP		{current.keep        = FLAG_FALSE;}

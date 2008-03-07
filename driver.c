@@ -1088,10 +1088,12 @@ static int do_session(
 	set_timeout(mytimeout);
 
 	/* perform initial SSL handshake on open connection */
-	/* Note:  We pass the realhost name over for certificate
-		verification.  We may want to make this configurable */
-	if (ctl->use_ssl && SSLOpen(mailserver_socket,ctl->sslcert,ctl->sslkey,ctl->sslproto,ctl->sslcertck,
-	    ctl->sslcertpath,ctl->sslfingerprint,realhost,ctl->server.pollname,&ctl->remotename) == -1) 
+	if (ctl->use_ssl &&
+		SSLOpen(mailserver_socket, ctl->sslcert, ctl->sslkey,
+		    ctl->sslproto, ctl->sslcertck, ctl->sslcertpath,
+		    ctl->sslfingerprint, ctl->sslcommonname ?
+		    ctl->sslcommonname : realhost, ctl->server.pollname,
+		    &ctl->remotename) == -1)
 	{
 	    report(stderr, GT_("SSL connection failed.\n"));
 	    err = PS_SOCKET;

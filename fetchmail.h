@@ -355,6 +355,7 @@ struct query
 				  use ssl23 for SSL and opportunistic tls1 for non-SSL connections. */
     char *sslcertpath;		/* Trusted certificate directory for checking the server cert */
     flag sslcertck;		/* Strictly check the server cert. */
+    char *sslcommonname;	/* CommonName to expect from server */
     char *sslfingerprint;	/* Fingerprint to check against */
     char *properties;		/* passthrough properties for extensions */
 

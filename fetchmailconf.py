@@ -5,7 +5,7 @@
 # Matthias Andree <matthias.andree@gmx.de>
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.53 $Revision$"
+version = "1.54 $Revision$"
 
 from Tkinter import *
 from Dialog import *
@@ -258,6 +258,7 @@ class User:
 	self.sslproto = None	# Force SSL?
 	self.sslcertck = 0	# Enable strict SSL cert checking
 	self.sslcertpath = None	# Path to trusted certificates
+	self.sslcommonname = None	# SSL CommonName to expect
 	self.sslfingerprint = None	# SSL key fingerprint to check
 	self.properties = None	# Extension properties
 	User.typemap = (
@@ -297,6 +298,7 @@ class User:
 	    ('sslcert',     'String'),
 	    ('sslcertck',   'Boolean'),
 	    ('sslcertpath', 'String'),
+	    ('sslcommonname', 'String'),
 	    ('sslfingerprint', 'String'),
 	    ('properties',  'String'))
 
@@ -371,6 +373,8 @@ class User:
 	    res = res +  flag2str(self.sslcertck, 'sslcertck')
 	if self.sslcertpath and self.sslcertpath != UserDefaults.sslcertpath:
 	    res = res + " sslcertpath " + `self.sslcertpath`
+	if self.sslcommonname and self.sslcommonname != UserDefaults.sslcommonname:
+	    res = res + " sslcommonname " + `self.sslcommonname`
 	if self.sslfingerprint and self.sslfingerprint != UserDefaults.sslfingerprint:
 	    res = res + " sslfingerprint " + `self.sslfingerprint`
 	if self.expunge != UserDefaults.expunge:
@@ -1000,8 +1004,10 @@ The ssl option enables SSL communication with a mailserver
 supporting Secure Sockets Layer. The sslkey and sslcert options
 declare key and certificate files for use with SSL.
 The sslcertck option enables strict checking of SSL server
-certificates (and sslcertpath gives trusted certificate
-directory). With sslfingerprint, you can specify a finger-
+certificates (and sslcertpath gives the trusted certificate
+directory). The sslcommonname option helps if the server is
+misconfigured and returning "Server CommonName mismatch"
+warnings. With sslfingerprint, you can specify a finger-
 print the server's key is checked against.
 """}
 
@@ -1641,6 +1647,8 @@ class UserEdit(Frame, MyWidget):
 			variable=self.sslcertck).pack(side=TOP, fill=X)
 	    LabeledEntry(sslwin, 'SSL trusted certificate directory:',
 			 self.sslcertpath, '14').pack(side=TOP, fill=X)
+	    LabeledEntry(sslwin, 'SSL CommonName:',
+			 self.sslcommonname, '14').pack(side=TOP, fill=X)
 	    LabeledEntry(sslwin, 'SSL key fingerprint:',
 			 self.sslfingerprint, '14').pack(side=TOP, fill=X)
 	    sslwin.pack(fill=X, anchor=N)
@@ -1942,7 +1950,7 @@ def copy_instance(toclass, fromdict):
     optional = ('interface', 'monitor',
 		'esmtpname', 'esmtppassword',
 		'ssl', 'sslkey', 'sslcert', 'sslproto', 'sslcertck',
-		'sslcertpath', 'sslfingerprint', 'showdots')
+		'sslcertpath', 'sslcommonname', 'sslfingerprint', 'showdots')
     class_sig = setdiff(toclass.__dict__.keys(), optional)
     class_sig.sort()
     dict_keys = setdiff(fromdict.keys(), optional)

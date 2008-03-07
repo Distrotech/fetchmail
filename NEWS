@@ -102,6 +102,9 @@ fetchmail 6.3.9 (not yet released):
 * In KAME/getnameinfo.c it's best to use the correct argument to inet_ntoa.
   (Peter O'Gorman)
 * In verbose mode, log if --check mode is enabled.
+* Add sslcommonname option (rcfile and commandline) as a way to work around
+  misconfigured upstream SSL servers that use the wrong certificate name. It
+  specifies which CommonName fetchmail expects and logs.
 
 # DOCUMENTATION:
 * Add fetchmail-SA-2007-02.txt
