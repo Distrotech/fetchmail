@@ -441,15 +441,15 @@ subdirectory).
 .TP
 .B \-\-sslcommonname <common name>
 (Keyword: sslcommonname)
-Use of this option is discouraged. Before using it, contact your
-upstream and ask for a proper SSL certificate to be used. If the
-upstream is clueless, this option can be used to specify the name
-(CommonName) that fetchmail expects on the server certificate.  A
-correctly configured server will have this set to the hostname by which
-it is reached, and by default fetchmail will expect as much. Use this
-option when the CommonName is set to some other value, to avoid the
-"Server CommonName mismatch" warning, and only if the upstream can't be
-made to use proper certificates.
+Use of this option is discouraged. Before using it, contact the
+administrator of your upstream server and ask for a proper SSL
+certificate to be used. If that cannot be attained, this option can be
+used to specify the name (CommonName) that fetchmail expects on the
+server certificate.  A correctly configured server will have this set to
+the hostname by which it is reached, and by default fetchmail will
+expect as much. Use this option when the CommonName is set to some other
+value, to avoid the "Server CommonName mismatch" warning, and only if
+the upstream server can't be made to use proper certificates.
 .TP
 .B \-\-sslfingerprint <fingerprint>
 (Keyword: sslfingerprint)
