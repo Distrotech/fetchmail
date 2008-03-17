@@ -6,6 +6,9 @@ soon - MUST:
 - publish SA-2007-02 after release
 
 soon - SHOULD:
+- https://bugzilla.novell.com/show_bug.cgi?id=246829 - fetchmail lost some mail
+  (5XX error code in contradiction with manual?)
+  also http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=471283
 - allow \Deleted without \Seen, rf. 
   http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=466299
 - document IMAP4 ACL requirements
@@ -23,8 +26,7 @@ soon - SHOULD:
 - Get rid of peeking in socket.c? MSG_PEEK seems non-portable and racey.
 
 soon - MAY:
-- https://bugzilla.novell.com/show_bug.cgi?id=246829 - fetchmail lost some mail
-  (5XX error code in contradiction with manual?)
+-
 
 soon - after 6.3.9:
 - find a solution for the "invalid header" discards message problem
