@@ -26,7 +26,11 @@ soon - SHOULD:
 - Get rid of peeking in socket.c? MSG_PEEK seems non-portable and racey.
 
 soon - MAY:
--
+- http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=471176
+  => fetchmail: support utf-8 encoding in log file
+  Revisit http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=400719
+  => syslog messages are localised
+  http://lists.debian.org/debian-devel/2006/11/msg01068.html
 
 soon - after 6.3.9:
 - find a solution for the "invalid header" discards message problem
