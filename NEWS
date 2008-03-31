@@ -121,7 +121,9 @@ fetchmail 6.3.9 (not yet released):
   that.
 * Several manual page rcfile examples now include "ssl".
 * The manual page hints that option arguments beginning with numbers can be
-  enclosed in parentheses.
+  enclosed in quotes.
+* The manual page now mentions that the --logfile must already exist before
+  fetchmail is run.
 
 # TRANSLATION UPDATES:
 * Polish (Jakub Bogusz)

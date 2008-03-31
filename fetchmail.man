@@ -1202,7 +1202,12 @@ The
 or
 .B \-\-logfile <filename>
 option (keyword: set logfile) is only effective when fetchmail is
-detached. This option allows you to redirect status messages
+detached. Note that the logfile must exist BEFORE fetchmail is run, you
+can use the
+.BR touch (1)
+command with the filename as its sole argument to create it.
+.br
+This option allows you to redirect status messages
 into a specified logfile (follow the option with the logfile name).  The
 logfile is opened for append, so previous messages aren't deleted.  This
 is primarily useful for debugging configurations. Note that fetchmail
@@ -2086,7 +2091,8 @@ authentication.  These defaults may be overridden by later options.
 There are some global option statements: 'set logfile'
 followed by a string sets the same global specified by \-\-logfile.  A
 command-line \-\-logfile option will override this. Note that \-\-logfile is
-only effective if fetchmail detaches itself from the terminal.  Also,
+only effective if fetchmail detaches itself from the terminal and the
+logfile already exists before fetchmail is run.  Also,
 \&'set daemon' sets the poll interval as \-\-daemon does.  This can be
 overridden by a command-line \-\-daemon option; in particular \-\-daemon\~0
 can be used to force foreground operation. The 'set postmaster'
