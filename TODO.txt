@@ -1,8 +1,6 @@
 soon - MUST:
 - BerliOS Bug #10972, Fetchmail refetches big messages repeatedly (SMTP listener
   issue)
-- report multiline SMTP errors properly (sample in private mail from 
-  Earl Chew, 2007-07-30T02:28)
 - publish SA-2007-02 after release
 
 soon - SHOULD:
@@ -36,6 +34,10 @@ soon - after 6.3.9:
 - find a solution for the "invalid header" discards message problem
   (escape headers and stuff reminder into body)
 - add Message-ID: header and other SHOULD headers to warning mails?
+- report multiline SMTP errors properly (sample in private mail from 
+  Earl Chew, 2007-07-30T02:28)
+  => requires reworking SMTP_ok to actually not only read the last line 
+     of multiline replies, but buffer.
 
 questionable:
 - Convert POP3 UIDs to X-UIDL?
