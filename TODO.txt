@@ -2,6 +2,8 @@ soon - MUST:
 - BerliOS Bug #10972, Fetchmail refetches big messages repeatedly (SMTP listener
   issue)
 - publish SA-2007-02 after release
+- Debian Bug #475239, MIME decoder may break up words (need to quote
+  results)
 
 soon - SHOULD:
 - https://bugzilla.novell.com/show_bug.cgi?id=246829 - fetchmail lost some mail
