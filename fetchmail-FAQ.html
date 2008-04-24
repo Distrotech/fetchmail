@@ -150,6 +150,7 @@ host?.</a><br/>
 <a href="#I7">I7. How can I use fetchmail with SpryNet?</a><br/>
 <a href="#I8">I8. How can I use fetchmail with comcast.net or other
     Maillennium servers?</a><br/>
+<a href="#I9">I9. How can I use fetchmail with GMail/Google Mail?</a><br/>
 
 <h2 id="C_K">How to set up well-known security and authentication
 methods</h2>
@@ -1968,6 +1969,16 @@ officially, POP3 has no notion of seen tracking, but it works for some
 sites.)</p>
 
 <p>Workaround for older versions: use the <tt>fetchall</tt> option.</p>
+
+<h2><a id="I9" name="I9">I9. How can I use fetchmail with GMail/Google Mail?</a></h2>
+
+<p>Google's IMAP servers, as of April 2008, are broken and re-encode
+MIME-encoded headers improperly and are not feature-complete yet. The
+model how their servers organize mail also deviates in significant ways
+from what the POP3 or IMAP protocol 'fathers' conceived. This means all
+sorts of strange effects, for instance, your sent mail may show up in
+the mail that fetchmail fetches. It's best to avoid fetching mail from
+Google until they are using standards-compliant software.</p>
 
 <hr/>
 <h1>How to set up well-known security and authentication
