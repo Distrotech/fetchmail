@@ -115,7 +115,7 @@ fetchmail 6.3.9 (not yet released):
   since it is planned to use the file with IMAP4 later.
 * Add grammar fixes from Dan Jacobson to fetchmail.man. Debian Bug #461642.
 * The manual page now mentions that user descriptions need to come before user
-  options. Reported by Francensco Pontortì, to fix Debian Bug#467010.
+  options. Reported by Francensco Pontortì, to fix Debian Bug #467010.
 * The manual page no longer hints that multi-user declarations per server were
   only useful in daemon mode running as root, to avoid hinting people to doing
   that.
@@ -124,6 +124,8 @@ fetchmail 6.3.9 (not yet released):
   enclosed in quotes.
 * The manual page now mentions that the --logfile must already exist before
   fetchmail is run.
+* The FAQ now recommends (#I9) not to use Google Mail for their disregard to the
+  protocols they claim to support.
 
 # TRANSLATION UPDATES:
 * Polish (Jakub Bogusz)
