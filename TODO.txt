@@ -6,6 +6,9 @@ soon - MUST:
 - Debian Bug #480851, stuck mail from gandi.net (IMAP; Dovecot) http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=480851
 - Replace sscanf/fscanf by functions that do range checking (strtol/strtoul) :-/
   See http://sourceware.org/bugzilla/show_bug.cgi?id=6453
+- Ubuntu Launchpad Bug #64152, fetchmailconf fails if fetchmail compiled
+  without res_search() since "dns" missing in "Server" typemap.
+  https://bugs.launchpad.net/ubuntu/+source/fetchmail/+bug/64152
 
 soon - SHOULD:
 - https://bugzilla.novell.com/show_bug.cgi?id=246829 - fetchmail lost some mail
