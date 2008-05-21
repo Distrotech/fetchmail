@@ -54,6 +54,12 @@ questionable:
   <simpkins@cisco.com> around Nov 2nd)?
 
 6.4:
+- help systematic debugging
+    - by making logging more strict (Postfix's msg_* as example??)
+    - by adding a --loggingtest or something that emits 
+      a set of test log messages at various severity levels, in order to 
+      make sure people get complete logs.
+    - by adding messages where fetchmail stuffed its output.
 - Debian Bug #454291 fetchmail --quit: should check, that pid file 
   really contains pid of fetchmail process (Dmitry Nezhevenko)
   => use fcntl() lock?
