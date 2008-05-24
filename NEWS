@@ -79,6 +79,8 @@ fetchmail 6.3.9 (not yet released):
   Fixes BerliOS Bug #13207 (reported + fix suggested by Terry Brown).
 
 # CHANGES:
+* autoconf 2.60 is now required to build fetchmail; it uses
+  AC_USE_SYSTEM_EXTENSIONS to replace AC_AIX, AC_MINIX, and the like.
 * Removed dead FETCHMAIL_DEBUG code from fetchmail.h that was disabled by 
   default with no switches in configure to enable it. However, the macro would 
   have been prone to a symlink attack. Found by Nico Golde.
