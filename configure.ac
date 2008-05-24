@@ -44,9 +44,14 @@ AC_PROG_RANLIB
 AM_PROG_CC_C_O
 AC_USE_SYSTEM_EXTENSIONS
 
-AC_AIX
 AC_ISC_POSIX
-AC_MINIX
+dnl AC_ISC_POSIX: - XXX FIXME: remove in fetchmail 6.4.
+dnl This macro adds `-lcposix' to output variable `LIBS' if necessary
+dnl for Posix facilities.  Sun dropped support for the obsolete
+dnl INTERACTIVE Systems Corporation Unix on 2006-07-23.  New programs
+dnl need not use this macro.  It is implemented as
+dnl `AC_SEARCH_LIBS([strerror], [cposix])'
+
 AC_HEADER_STDC
 AC_HEADER_TIME
 AC_TYPE_SIZE_T
