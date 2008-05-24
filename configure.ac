@@ -16,7 +16,8 @@ AC_CONFIG_LIBOBJ_DIR([.])
 AC_CANONICAL_TARGET
 
 dnl automake options are in Makefile.am
-AC_PREREQ(2.59)
+AC_PREREQ(2.60)
+dnl 2.60 required for AC_USE_SYSTEM_EXTENSIONS
 AM_INIT_AUTOMAKE
 
 dnl autobuild support, see <http://josefsson.org/autobuild/>
@@ -41,6 +42,8 @@ AC_PROG_INSTALL
 AC_PROG_CPP			dnl Later checks need this.
 AC_PROG_RANLIB
 AM_PROG_CC_C_O
+AC_USE_SYSTEM_EXTENSIONS
+
 AC_AIX
 AC_ISC_POSIX
 AC_MINIX
