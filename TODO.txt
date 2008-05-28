@@ -63,6 +63,7 @@ questionable:
 - Debian Bug #454291 fetchmail --quit: should check, that pid file 
   really contains pid of fetchmail process (Dmitry Nezhevenko)
   => use fcntl() lock?
+- feature to skip first N or all messages upon first download
 - download only messages whose headers match a filter (by Toby, Usenet
   Nov 2007 de.comm.software.mailserver
   Message-ID: <1195033726.123704.296060@k79g2000hse.googlegroups.com>)
