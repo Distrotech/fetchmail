@@ -54,6 +54,8 @@ questionable:
   <simpkins@cisco.com> around Nov 2nd)?
 
 6.4:
+- make UID code more efficient, parsing is O(n^2), should be no worse
+  than O(n log n).
 - help systematic debugging
     - by making logging more strict (Postfix's msg_* as example??)
     - by adding a --loggingtest or something that emits 
