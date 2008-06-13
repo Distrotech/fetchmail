@@ -78,8 +78,8 @@ There are two alternatives, either of them by itself is sufficient:
 a. Apply the patch found in section B of this announcement to
    fetchmail 6.3.8, recompile and reinstall it.
 
-b. Install fetchmail 6.3.9 or newer when it becomes available.  The
-   fetchmail source code is available from
+b. Install fetchmail 6.3.9 or newer after it will have become available.
+   The fetchmail source code is always available from
    <http://developer.berlios.de/project/showfiles.php?group_id=1824>.
 
 
