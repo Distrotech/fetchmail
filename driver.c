@@ -580,6 +580,9 @@ static int fetch_messages(int mailserver_socket, struct query *ctl,
 	}
 	else
 	{
+	  /* XXX FIXME: make this one variable, wholesize and
+	     separatefetchbody query the same variable just with
+	     inverted logic */
 	    flag wholesize = !ctl->server.base_protocol->fetch_body;
 	    flag separatefetchbody = (ctl->server.base_protocol->fetch_body) ? TRUE : FALSE;
 
