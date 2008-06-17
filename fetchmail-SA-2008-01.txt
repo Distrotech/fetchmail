@@ -6,9 +6,9 @@ fetchmail-SA-2008-01: Crash on large log messages in verbose mode
 Topics:		Crash in large log messages in verbose mode.
 
 Author:		Matthias Andree
-Version:	1.0
+Version:	1.1
 Announced:	2008-06-17
-Type:		Dereferencing garbage pointer trigged by outside circumstances
+Type:		Dereferencing garbage pointer triggered by outside circumstances
 Impact:		denial of service possible
 Danger:		low
 CVSS V2 vector: (AV:N/AC:M/Au:N/C:N/I:N/A:C/E:P/RL:O/RC:C)
@@ -35,6 +35,7 @@ References:	<https://bugzilla.novell.com/show_bug.cgi?id=354291>
 2008-06-13 1.0	first draft for MITRE/CVE (visible in SVN,
 		posted to oss-security)
 2008-06-17 1.0	published on http://www.fetchmail.info/
+2008-06-17 1.1	Corrected typo in Type: above (trigged -> triggered)
 
 
 1. Background
@@ -125,21 +126,21 @@ index 31d4e48..2a731ac 100644
 +++ b/report.c
 @@ -238,11 +238,17 @@ report_build (FILE *errfp, message, va_alist)
      rep_ensuresize();
- 
+
  #if defined(VA_START)
 - -    VA_START (args, message);
      for ( ; ; )
      {
 +	/*
-+	 * args has to be initialized before every call of vsnprintf(), 
-+	 * because vsnprintf() invokes va_arg macro and thus args is 
++	 * args has to be initialized before every call of vsnprintf(),
++	 * because vsnprintf() invokes va_arg macro and thus args is
 +	 * undefined after the call.
 +	 */
 +	VA_START(args, message);
  	n = vsnprintf (partial_message + partial_message_size_used, partial_message_size - partial_message_size_used,
  		       message, args);
 +	va_end (args);
- 
+
  	if (n >= 0
  	    && (unsigned)n < partial_message_size - partial_message_size_used)
 @@ -254,7 +260,6 @@ report_build (FILE *errfp, message, va_alist)
@@ -155,7 +156,7 @@ END OF fetchmail-SA-2008-01.txt
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.5 (GNU/Linux)
 
-iD8DBQFIV7WYvmGDOQUufZURAs7/AJ49LCd2q34puZHNe4GxcXnsOtB8DQCg7mth
-BUgZUxZxPInU60c9rNFbOm8=
-=yg6v
+iD8DBQFIV7e+vmGDOQUufZURAiAUAKCG1pBXEdVJPUr4WeIZXAr01jshkwCgvfb8
+6qqG2gZonX24W58gBEQ7Pjw=
+=vwYl
 -----END PGP SIGNATURE-----
