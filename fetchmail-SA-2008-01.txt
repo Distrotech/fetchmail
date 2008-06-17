@@ -4,14 +4,14 @@ Topics:		Crash in large log messages in verbose mode.
 
 Author:		Matthias Andree
 Version:	1.0
-Announced:
+Announced:	2008-06-17
 Type:		Dereferencing garbage pointer trigged by outside circumstances
 Impact:		denial of service possible
 Danger:		low
 CVSS V2 vector: (AV:N/AC:M/Au:N/C:N/I:N/A:C/E:P/RL:O/RC:C)
 
 Credits:	Petr Uzel (fix), Petr Cerny (analysis), Gunter Nau (bug report)
-CVE Name:	XXX
+CVE Name:	CVE-2008-2711
 URL:		http://www.fetchmail.info/fetchmail-SA-2008-01.txt
 Project URL:	http://www.fetchmail.info/
 
@@ -20,15 +20,18 @@ Affects:	fetchmail release < 6.3.9 exclusively
 Not affected:	fetchmail release 6.3.9 and newer
 		systems without varargs (stdargs.h) support.
 
-Corrected:	2008-06-13 fetchmail SVN (rev XXX)
+Corrected:	2008-06-13 fetchmail SVN (rev 5193)
 
 References:	<https://bugzilla.novell.com/show_bug.cgi?id=354291>
 		<http://developer.berlios.de/patch/?func=detailpatch&patch_id=2492&group_id=1824>
 
+
 0. Release history
 ==================
 
-2008-06-13 1.0	first draft for MITRE/CVE (visible in SVN)
+2008-06-13 1.0	first draft for MITRE/CVE (visible in SVN,
+		posted to oss-security)
+2008-06-17 1.0	published on http://www.fetchmail.info/
 
 
 1. Background

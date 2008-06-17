@@ -54,7 +54,7 @@ fetchmail 6.3.9 (not yet released):
   This bug was apparently introduced on 1998-11-27 when the bouncemail facility
   was modularized. The bug then made its appearance in fetchmail release 4.6.8.
   See also fetchmail-SA-2007-02.txt.
-* CVE-2008-XXXX: Denial of service: When fetchmail logs data blobs
+* CVE-2008-2711: Denial of service: When fetchmail logs data blobs
   (for instance, a To: header in -v -v verbose mode) in excess of 2048
   bytes, it will crash, because it hands an uninitialized argument
   pointer (not the format string though) to vsnprintf and reads a
