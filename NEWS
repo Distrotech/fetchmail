@@ -59,8 +59,8 @@ fetchmail 6.3.9 (not yet released):
   bytes, it will crash, because it hands an uninitialized argument
   pointer (not the format string though) to vsnprintf and reads a
   random memory location (it calls va_arg() too often without
-  resetting it with va_start()). Based on a patch by Petr Uzel, fixes
-  Novell Bug #354291.
+  resetting it with va_start()). Based on a patch (BerliOS patch #2492)
+  by Petr Uzel, fixes Novell Bug #354291.
   See also fetchmail-SA-2008-01.txt.
 
 # CRITICAL BUG FIX:
