@@ -1,3 +1,6 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
 fetchmail-SA-2007-01: APOP considered insecure
 
 Topics:		APOP authentication insecure, fetchmail implementation lax
@@ -92,3 +95,10 @@ THIS WORK IS PROVIDED FREE OF CHARGE AND WITHOUT ANY WARRANTIES.
 Use the information herein at your own risk.
 
 END OF fetchmail-SA-2007-01.txt
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.5 (GNU/Linux)
+
+iD8DBQFIV7WXvmGDOQUufZURAg8MAKDewyOyTpRs6HMcNLMA0vXx4glwLQCeOov6
+r9AYJJu51+yAhjox79Tli+I=
+=pGe2
+-----END PGP SIGNATURE-----

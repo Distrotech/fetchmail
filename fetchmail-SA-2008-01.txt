@@ -1,3 +1,6 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
 fetchmail-SA-2008-01: Crash on large log messages in verbose mode
 
 Topics:		Crash in large log messages in verbose mode.
@@ -118,13 +121,13 @@ B. Patch to remedy the problem
 
 diff --git a/report.c b/report.c
 index 31d4e48..2a731ac 100644
---- a/report.c
+- --- a/report.c
 +++ b/report.c
 @@ -238,11 +238,17 @@ report_build (FILE *errfp, message, va_alist)
      rep_ensuresize();
  
  #if defined(VA_START)
--    VA_START (args, message);
+- -    VA_START (args, message);
      for ( ; ; )
      {
 +	/*
@@ -143,9 +146,16 @@ index 31d4e48..2a731ac 100644
  	partial_message_size += 2048;
  	partial_message = REALLOC (partial_message, partial_message_size);
      }
--    va_end (args);
+- -    va_end (args);
  #else
      for ( ; ; )
      {
 
 END OF fetchmail-SA-2008-01.txt
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.5 (GNU/Linux)
+
+iD8DBQFIV7WYvmGDOQUufZURAs7/AJ49LCd2q34puZHNe4GxcXnsOtB8DQCg7mth
+BUgZUxZxPInU60c9rNFbOm8=
+=yg6v
+-----END PGP SIGNATURE-----
