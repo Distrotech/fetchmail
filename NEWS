@@ -117,7 +117,7 @@ fetchmail 6.3.9 (not yet released):
   specifies which CommonName fetchmail expects and logs. (Daniel Richard G.)
 
 # DOCUMENTATION:
-* Add fetchmail-SA-2007-02.txt
+* Add fetchmail-SA-2007-02.txt and fetchmail-SA-2008-01.txt.
 * Re-add two lines to the manual page that had accidentally become comments 
   to nroff. One was part of the --sslproto documentation, and one in the 
   "Awakening the background daemon" section.
