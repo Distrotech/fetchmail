@@ -6,7 +6,7 @@ fetchmail-SA-2008-01: Crash on large log messages in verbose mode
 Topics:		Crash in large log messages in verbose mode.
 
 Author:		Matthias Andree
-Version:	1.1
+Version:	1.2
 Announced:	2008-06-17
 Type:		Dereferencing garbage pointer triggered by outside circumstances
 Impact:		denial of service possible
@@ -18,12 +18,14 @@ CVE Name:	CVE-2008-2711
 URL:		http://www.fetchmail.info/fetchmail-SA-2008-01.txt
 Project URL:	http://www.fetchmail.info/
 
-Affects:	fetchmail release < 6.3.9 exclusively
+Affects:	fetchmail release before and excluding 6.3.9
+		fetchmail release candidate 6.3.9-rc1
 
 Not affected:	fetchmail release 6.3.9 and newer
-		systems without varargs (stdargs.h) support.
+		fetchmail release candidate 6.3.9-rc2 and newer
+		systems without varargs support.
 
-Corrected:	2008-06-13 fetchmail SVN (rev 5193)
+Corrected:	2008-06-24 fetchmail SVN (rev 5205)
 
 References:	<https://bugzilla.novell.com/show_bug.cgi?id=354291>
 		<http://developer.berlios.de/patch/?func=detailpatch&patch_id=2492&group_id=1824>
@@ -36,6 +38,7 @@ References:	<https://bugzilla.novell.com/show_bug.cgi?id=354291>
 		posted to oss-security)
 2008-06-17 1.0	published on http://www.fetchmail.info/
 2008-06-17 1.1	Corrected typo in Type: above (trigged -> triggered)
+2008-06-24 1.2  also fixed issue in report_complete (reported by Petr Uzel)
 
 
 1. Background
@@ -116,34 +119,64 @@ THIS WORK IS PROVIDED FREE OF CHARGE AND WITHOUT ANY WARRANTIES.
 Use the information herein at your own risk.
 
 
-
 B. Patch to remedy the problem
 ==============================
 
+Note that when taking this from a GnuPG clearsigned file, the lines 
+starting with a "-" character are prefixed by another "- " (dash + 
+blank) combination. Either feed this file through GnuPG to strip them, 
+or strip them manually.
+
+Whitespace differences can usually be ignored by invoking "patch -l",
+so try this if the patch does not apply.
+
 diff --git a/report.c b/report.c
-index 31d4e48..2a731ac 100644
+index 31d4e48..320e60b 100644
 - --- a/report.c
 +++ b/report.c
 @@ -238,11 +238,17 @@ report_build (FILE *errfp, message, va_alist)
      rep_ensuresize();
-
+ 
  #if defined(VA_START)
 - -    VA_START (args, message);
      for ( ; ; )
      {
 +	/*
-+	 * args has to be initialized before every call of vsnprintf(),
-+	 * because vsnprintf() invokes va_arg macro and thus args is
++	 * args has to be initialized before every call of vsnprintf(), 
++	 * because vsnprintf() invokes va_arg macro and thus args is 
 +	 * undefined after the call.
 +	 */
 +	VA_START(args, message);
  	n = vsnprintf (partial_message + partial_message_size_used, partial_message_size - partial_message_size_used,
  		       message, args);
 +	va_end (args);
-
+ 
  	if (n >= 0
  	    && (unsigned)n < partial_message_size - partial_message_size_used)
 @@ -254,7 +260,6 @@ report_build (FILE *errfp, message, va_alist)
+ 	partial_message_size += 2048;
+ 	partial_message = REALLOC (partial_message, partial_message_size);
+     }
+- -    va_end (args);
+ #else
+     for ( ; ; )
+     {
+@@ -304,12 +309,13 @@ report_complete (FILE *errfp, message, va_alist)
+     rep_ensuresize();
+ 
+ #if defined(VA_START)
+- -    VA_START (args, message);
+     for ( ; ; )
+     {
++	VA_START(args, message);
+ 	n = vsnprintf (partial_message + partial_message_size_used,
+ 		       partial_message_size - partial_message_size_used,
+ 		       message, args);
++	va_end(args);
+ 
+ 	/* old glibc versions return -1 for truncation */
+ 	if (n >= 0
+@@ -322,7 +328,6 @@ report_complete (FILE *errfp, message, va_alist)
  	partial_message_size += 2048;
  	partial_message = REALLOC (partial_message, partial_message_size);
      }
@@ -156,7 +189,7 @@ END OF fetchmail-SA-2008-01.txt
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.5 (GNU/Linux)
 
-iD8DBQFIV7e+vmGDOQUufZURAiAUAKCG1pBXEdVJPUr4WeIZXAr01jshkwCgvfb8
-6qqG2gZonX24W58gBEQ7Pjw=
-=vwYl
+iD8DBQFIYPBuvmGDOQUufZURAuj8AJ9IbN/UMcML6NLKSI0keQzGVGzZSQCg+UCP
+tUVNigLK8Xz40J2Eg7PD8Xs=
+=HAmn
 -----END PGP SIGNATURE-----

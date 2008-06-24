@@ -309,12 +309,13 @@ report_complete (FILE *errfp, message, va_alist)
     rep_ensuresize();
 
 #if defined(VA_START)
-    VA_START (args, message);
     for ( ; ; )
     {
+	VA_START(args, message);
 	n = vsnprintf (partial_message + partial_message_size_used,
 		       partial_message_size - partial_message_size_used,
 		       message, args);
+	va_end(args);
 
 	/* old glibc versions return -1 for truncation */
 	if (n >= 0
@@ -327,7 +328,6 @@ report_complete (FILE *errfp, message, va_alist)
 	partial_message_size += 2048;
 	partial_message = REALLOC (partial_message, partial_message_size);
     }
-    va_end (args);
 #else
     for ( ; ; )
     {

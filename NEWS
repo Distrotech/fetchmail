@@ -61,6 +61,8 @@ fetchmail 6.3.9 (not yet released):
   random memory location (it calls va_arg() too often without
   resetting it with va_start()). Based on a patch (BerliOS patch #2492)
   by Petr Uzel, fixes Novell Bug #354291.
+  Note 6.3.9-rc1 did not completely fix this issue, so it was redrawn a few 
+  hours after its release.
   See also fetchmail-SA-2008-01.txt.
 * When expunging, mark the right messages as seen to avoid message loss in "keep
   flush" configurations.  Workaround for previous versions: "expunge 0".

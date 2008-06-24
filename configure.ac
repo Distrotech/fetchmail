@@ -8,7 +8,7 @@ dnl Autoconfigure input file for fetchmail
 dnl Process this file with autoconf to produce a configure script.
 dnl
 
-AC_INIT([fetchmail],[6.3.9-rc1],[fetchmail-users@lists.berlios.de])
+AC_INIT([fetchmail],[6.3.9-rc2],[fetchmail-users@lists.berlios.de])
 AC_CONFIG_SRCDIR([fetchmail.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_LIBOBJ_DIR([.])
@@ -61,6 +61,9 @@ AC_CHECK_HEADERS([unistd.h termios.h termio.h sgtty.h stdarg.h \
 	sys/itimer.h fcntl.h sys/fcntl.h memory.h sys/wait.h \
 	arpa/inet.h arpa/nameser.h netinet/in.h net/socket.h netdb.h \
 	sys/select.h sys/socket.h sys/time.h langinfo.h])
+if test _$ac_cv_header_stdarg_h != _yes ; then
+AC_MSG_WARN([stdarg.h is not defined. Unsupported configuration, proceed at your own risk.])
+fi
 AC_CHECK_TYPE(u_int32_t,,
 	AC_DEFINE(u_int32_t,unsigned int,
 		[Define to unsigned int if <sys/types.h> does not define.]),
