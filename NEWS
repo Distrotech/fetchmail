@@ -44,7 +44,7 @@ be removed from a 6.4.0 or newer release.)
 
 fetchmail 6.3.9 (not yet released):
 
-# SECURITY FIX:
+# SECURITY AND CRITICAL BUG FIXES:
 * CVE-2007-4565: Denial of service: When fetchmail tries to inject a warning
   message it created itself, and the message is refused by the SMTP listener,
   fetchmail dereferences a NULL pointer and crashes. Report & fix by Earl Chew.
@@ -62,8 +62,6 @@ fetchmail 6.3.9 (not yet released):
   resetting it with va_start()). Based on a patch (BerliOS patch #2492)
   by Petr Uzel, fixes Novell Bug #354291.
   See also fetchmail-SA-2008-01.txt.
-
-# CRITICAL BUG FIX:
 * When expunging, mark the right messages as seen to avoid message loss in "keep
   flush" configurations.  Workaround for previous versions: "expunge 0".
   Report and patch by Alexander Cherepanov - thanks a lot, Berlios Bug #11797,
