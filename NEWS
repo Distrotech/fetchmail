@@ -115,6 +115,7 @@ fetchmail 6.3.9 (not yet released):
 * Add sslcommonname option (rcfile and commandline) as a way to work around
   misconfigured upstream SSL servers that use the wrong certificate name. It
   specifies which CommonName fetchmail expects and logs. (Daniel Richard G.)
+* Changed CRLF to LF line endings in contrib/delete-later (reporter: Petr Uzel)
 
 # DOCUMENTATION:
 * Add fetchmail-SA-2007-02.txt and fetchmail-SA-2008-01.txt.
