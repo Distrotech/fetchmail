@@ -428,7 +428,7 @@ int prc_filecheck(const char *pathname,
 #endif /* __CYGWIN__ */
     if (statbuf.st_mode & (S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH | S_IXOTH))
     {
-	fprintf(stderr, GT_("File %s must have no more than -rwx--x--- (0710) permissions.\n"), 
+	fprintf(stderr, GT_("File %s must have no more than -rwx------ (0700) permissions.\n"), 
 		pathname);
 	return(PS_IOERR);
     }

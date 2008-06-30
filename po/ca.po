@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.5-b1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2008-06-17 15:06+0200\n"
+"POT-Creation-Date: 2008-06-30 15:43+0200\n"
 "PO-Revision-Date: 2006-08-31 19:22+0200\n"
 "Last-Translator: Ernest Adrogué Calveras <eadrogue@gmx.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
@@ -2432,8 +2432,8 @@ msgstr "El fitxer %s ha de ser un fitxer ordinari.\n"
 
 #: rcfile_y.y:431
 #, c-format
-msgid "File %s must have no more than -rwx--x--- (0710) permissions.\n"
-msgstr "El fitxer %s no pot tenir permisos més que -rwx--x--- (0710).\n"
+msgid "File %s must have no more than -rwx------ (0700) permissions.\n"
+msgstr "El fitxer %s no pot tenir permisos més que -rwx------ (0700).\n"
 
 #: rcfile_y.y:443
 #, c-format

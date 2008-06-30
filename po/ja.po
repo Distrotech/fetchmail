@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.8\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2008-06-17 15:06+0200\n"
+"POT-Creation-Date: 2008-06-30 15:43+0200\n"
 "PO-Revision-Date: 2007-04-28 20:54+0900\n"
 "Last-Translator: Takeshi Hamasaki <hma@syd.odn.ne.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
@@ -2407,8 +2407,8 @@ msgstr ""
 
 #: rcfile_y.y:431
 #, c-format
-msgid "File %s must have no more than -rwx--x--- (0710) permissions.\n"
-msgstr "%s は -rwx--x--- (0710) 以外のパーミッションであってはいけません。\n"
+msgid "File %s must have no more than -rwx------ (0700) permissions.\n"
+msgstr "%s は -rwx------ (0700) 以外のパーミッションであってはいけません。\n"
 
 #: rcfile_y.y:443
 #, c-format

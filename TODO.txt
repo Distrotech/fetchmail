@@ -54,6 +54,8 @@ questionable:
   <simpkins@cisco.com> around Nov 2nd)?
 
 6.4:
+- revisit maximum allowed rcfile permissions, fix inconsistency
+  (silently allowing g+x).
 - make UID code more efficient, parsing is O(n^2), should be no worse
   than O(n log n).
 - help systematic debugging

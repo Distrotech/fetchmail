@@ -137,6 +137,11 @@ fetchmail 6.3.9 (not yet released):
   fetchmail is run.
 * The FAQ now recommends (#I9) not to use Google Mail for their disregard to the
   protocols they claim to support.
+* Documentation and program output now /consistently/ claim that the rcfile must
+  not have more than 0700 (u=rwx,g=,o=) permissions, but fetchmail will still
+  silently accept additional g=x permissions for compatibility with previous
+  6.2.X and 6.3.X versions.
+  Inconsistency (program 0710, manpage 0600) reported by Petr Uzel.
 
 # TRANSLATION UPDATES:
 * Polish (Jakub Bogusz)

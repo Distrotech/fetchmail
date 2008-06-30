@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.8\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2008-06-17 15:06+0200\n"
+"POT-Creation-Date: 2008-06-30 15:43+0200\n"
 "PO-Revision-Date: 2007-05-28 21:48+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
@@ -2409,9 +2409,9 @@ msgstr "Tập tin %s phải là một tập tin chuẩn.\n"
 
 #: rcfile_y.y:431
 #, c-format
-msgid "File %s must have no more than -rwx--x--- (0710) permissions.\n"
+msgid "File %s must have no more than -rwx------ (0700) permissions.\n"
 msgstr ""
-"Không cho phép tập tin %s có quyền hạn lớn hơn « -rws--x--- » (0710).\n"
+"Không cho phép tập tin %s có quyền hạn lớn hơn « -rwx------ » (0700).\n"
 
 #: rcfile_y.y:443
 #, c-format

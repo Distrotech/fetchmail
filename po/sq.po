@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.2.9-rc9\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2008-06-17 15:06+0200\n"
+"POT-Creation-Date: 2008-06-30 15:43+0200\n"
 "PO-Revision-Date: 2005-11-18 22:25+0200\n"
 "Last-Translator: Besnik Bleta <besnik@spymac.com>\n"
 "Language-Team: Albanian <translation-team-sq@lists.sourceforge.net>\n"
@@ -2423,8 +2423,8 @@ msgstr "Kartela %s duhet të jetë një kartelë e rregullt.\n"
 
 #: rcfile_y.y:431
 #, c-format
-msgid "File %s must have no more than -rwx--x--- (0710) permissions.\n"
-msgstr "Kartela %s duhet të ketë jo më shumë se lejet -rwx--x--- (0710).\n"
+msgid "File %s must have no more than -rwx------ (0700) permissions.\n"
+msgstr "Kartela %s duhet të ketë jo më shumë se lejet -rwx------ (0700).\n"
 
 #: rcfile_y.y:443
 #, c-format

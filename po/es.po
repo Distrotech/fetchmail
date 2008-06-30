@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.4-rc1\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2008-06-17 15:06+0200\n"
+"POT-Creation-Date: 2008-06-30 15:43+0200\n"
 "PO-Revision-Date: 2007-05-02 00:05+0200\n"
 "Last-Translator: Héctor García <hector@el-mundo.net>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -2508,8 +2508,8 @@ msgstr "El archivo %s debe ser de tipo normal.\n"
 
 #: rcfile_y.y:431
 #, c-format
-msgid "File %s must have no more than -rwx--x--- (0710) permissions.\n"
-msgstr "El archivo %s no debe tener mas que los permisos -rwx--x--- (0710).\n"
+msgid "File %s must have no more than -rwx------ (0700) permissions.\n"
+msgstr "El archivo %s no debe tener mas que los permisos -rwx------ (0700).\n"
 
 #: rcfile_y.y:443
 #, c-format

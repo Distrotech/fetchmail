@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2008-06-17 15:06+0200\n"
+"POT-Creation-Date: 2008-06-30 15:43+0200\n"
 "PO-Revision-Date: 2006-11-27 04:32+0100\n"
 "Last-Translator: Matthias Andree <matthias.andree>\n"
 "Language-Team: Deutsch <de@li.org>\n"
@@ -2426,8 +2426,8 @@ msgstr "Datei %s muss eine reguläre Datei sein.\n"
 
 #: rcfile_y.y:431
 #, c-format
-msgid "File %s must have no more than -rwx--x--- (0710) permissions.\n"
-msgstr "Datei %s darf nicht mehr Zugriffrechte haben als -rwx--x-- (0710).\n"
+msgid "File %s must have no more than -rwx------ (0700) permissions.\n"
+msgstr "Datei %s darf nicht mehr Zugriffrechte haben als -rwx----- (0700).\n"
 
 #: rcfile_y.y:443
 #, c-format

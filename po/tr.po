@@ -2338,8 +2338,8 @@ msgstr "%s dosyasý normal bir dosya olmalý.\n"
 
 #: rcfile_y.y:428
 #, c-format
-msgid "File %s must have no more than -rwx--x--- (0710) permissions.\n"
-msgstr "Dosyanýn (%s) izinleri -rwx--x--- (0710)'den çok olmamalý.\n"
+msgid "File %s must have no more than -rwx------ (0700) permissions.\n"
+msgstr "Dosyanýn (%s) izinleri -rwx------ (0700)'den çok olmamalý.\n"
 
 #: rcfile_y.y:440
 #, c-format

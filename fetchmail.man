@@ -794,7 +794,7 @@ Specify a non-default name for the
 run control file.  The pathname argument must be either "-" (a single
 dash, meaning to read the configuration from standard input) or a
 filename.  Unless the \-\-version option is also on, a named file
-argument must have permissions no more open than 0600 (u=rw,g=,o=) or
+argument must have permissions no more open than 0700 (u=rwx,g=,o=) or
 else be /dev/null.
 .TP
 .B \-i <pathname> | \-\-idfile <pathname>
@@ -1467,7 +1467,7 @@ When there is a conflict between the command-line arguments and the
 arguments in this file, the command-line arguments take precedence.
 .PP
 To protect the security of your passwords,
-your \fI~/.fetchmailrc\fR may not normally have more than 0600 (u=rw,g=,o=) permissions;
+your \fI~/.fetchmailrc\fR may not normally have more than 0700 (u=rwx,g=,o=) permissions;
 .I fetchmail
 will complain and exit otherwise (this check is suppressed when
 \-\-version is on).

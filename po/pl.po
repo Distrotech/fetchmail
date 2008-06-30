@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fetchmail 6.3.8\n"
 "Report-Msgid-Bugs-To: fetchmail-devel@lists.berlios.de\n"
-"POT-Creation-Date: 2008-06-17 15:06+0200\n"
+"POT-Creation-Date: 2008-06-30 15:43+0200\n"
 "PO-Revision-Date: 2007-04-27 17:28+0200\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -2442,8 +2442,8 @@ msgstr "Plik %s musi byæ zwyk³ym plikiem.\n"
 
 #: rcfile_y.y:431
 #, c-format
-msgid "File %s must have no more than -rwx--x--- (0710) permissions.\n"
-msgstr "Plik %s nie mo¿e mieæ uprawnieñ wiêkszych ni¿ -rwx--x--- (0710).\n"
+msgid "File %s must have no more than -rwx------ (0700) permissions.\n"
+msgstr "Plik %s nie mo¿e mieæ uprawnieñ wiêkszych ni¿ -rwx------ (0700).\n"
 
 #: rcfile_y.y:443
 #, c-format
