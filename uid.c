@@ -612,8 +612,10 @@ void write_saved_lists(struct query *hostlist, const char *idfile)
     /* either nuke the file or write updated last-seen IDs */
     if (!idcount && !scratchlist)
     {
-	if (outlevel >= O_DEBUG)
-	    report(stdout, GT_("Deleting fetchids file.\n"));
+	if (outlevel >= O_DEBUG) {
+	    if (access(idfile, F_OK) == 0)
+		    report(stdout, GT_("Deleting fetchids file.\n"));
+	}
 	if (unlink(idfile) && errno != ENOENT)
 	    report(stderr, GT_("Error deleting %s: %s\n"), idfile, strerror(errno));
     } else {

@@ -85,6 +85,8 @@ fetchmail 6.3.9 (not yet released):
   TOCTOU race persists.
 * fetchmailconf quotes mailbox (folder) names when writing the configuration.
   Fixes BerliOS Bug #13207 (reported + fix suggested by Terry Brown).
+* Only print "Deleting fetchids file" if there actually is one.
+  Fixes Debian Bug#374514, reported by Dan Jacobson.
 
 # CHANGES:
 * autoconf 2.60 is now required to build fetchmail; it uses
