@@ -801,7 +801,7 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char
         int i;
 
 	SSL_load_error_strings();
-	SSLeay_add_ssl_algorithms();
+	SSLeay_add_ssl_algorithms(); /* synonym for SSL_library_init() */
 	
 #ifdef SSL_ENABLE
         if (stat("/dev/random", &randstat)  &&
@@ -850,6 +850,8 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char
 		ERR_print_errors_fp(stderr);
 		return(-1);
 	}
+
+	SSL_CTX_set_options(_ctx[sock], SSL_OP_ALL);
 
 	if (certck) {
 		SSL_CTX_set_verify(_ctx[sock], SSL_VERIFY_PEER, SSL_ck_verify_callback);
@@ -901,9 +903,8 @@ int SSLOpen(int sock, char *mycert, char *mykey, char *myproto, int certck, char
         	SSL_use_RSAPrivateKey_file(_ssl_context[sock], mykey, SSL_FILETYPE_PEM);
 	}
 
-	SSL_set_fd(_ssl_context[sock], sock);
-	
-	if(SSL_connect(_ssl_context[sock]) < 1) {
+	if (SSL_set_fd(_ssl_context[sock], sock) == 0 
+	    || SSL_connect(_ssl_context[sock]) < 1) {
 		ERR_print_errors_fp(stderr);
 		SSL_CTX_free(_ctx[sock]);
 		_ctx[sock] = NULL;
