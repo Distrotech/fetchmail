@@ -87,6 +87,11 @@ endif
 if ODMR_ENABLE
 fetchmail_SOURCES += odmr.c
 endif
+if MAPI_ENABLE
+fetchmail_SOURCES += mapi.c
+fetchmail_SOURCES += openchange-tools.h
+fetchmail_SOURCES += openchange-tools.c
+endif
 if KERBEROS_V4_ENABLE
 fetchmail_SOURCES += kerberos.c
 endif

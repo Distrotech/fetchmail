@@ -357,6 +357,15 @@ AC_ARG_ENABLE(POP2,
 test "$with_POP2" = "yes" && AC_DEFINE(POP2_ENABLE,1,Define if you want POP2 support compiled in)
 AM_CONDITIONAL(POP2_ENABLE, test "$with_POP2" = yes)
 
+###	use option --enable-MAPI to compile in the MAPI support
+AC_ARG_ENABLE(MAPI,
+	[  --enable-MAPI           compile in MAPI protocol support],
+	[with_MAPI=$enableval],
+	[with_MAPI=no])
+test "$with_MAPI" = "yes" && AC_DEFINE(MAPI_ENABLE,1,Define if you want MAPI support compiled in)
+CEFLAGS="$CEFLAGS `pkg-config libmapi --cflags --libs`"
+AM_CONDITIONAL(MAPI_ENABLE, test "$with_MAPI" = yes)
+
 ###	use option --disable-POP3 to omit the POP3 support
 AC_ARG_ENABLE(POP3,
 	[  --disable-POP3          don't compile in POP3 protocol support],

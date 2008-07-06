@@ -34,6 +34,13 @@ struct addrinfo;
 #include <netdb.h>
 #include <stdio.h>
 
+#ifdef MAPI_ENABLE
+#include <libmapi/libmapi.h>
+#include "openchange-tools.h"
+#define MAPI_MAX_HEADER_LINE	32
+#define MAPI_BOUNDARY	"DocE+STaALJfprDB"
+#endif
+
 /* Import Trio if needed */
 #if !defined(HAVE_SNPRINTF) || !defined(HAVE_VSNPRINTF)
 #  include "trio/trio.h"
@@ -53,6 +60,7 @@ char *strstr(const char *, const char *);
 #define		P_IMAP		6
 #define		P_ETRN		7
 #define		P_ODMR		8
+#define		P_MAPI		9
 
 #define		SMTP_PORT	"smtp"
 #define		SMTP_PORT_NUM	25
@@ -105,7 +113,7 @@ char *strstr(const char *, const char *);
 /* per RFC1939 this should be 40, but Microsoft Exchange ignores that limit */
 #define		USERNAMELEN	128	/* max POP3 arg length */
 
-/* clear a netBSD kernel parameter out of the way */ 
+/* clear a netBSD kernel parameter out of the way */
 #undef		MSGBUFSIZE
 
 /*
@@ -133,7 +141,7 @@ char *strstr(const char *, const char *);
 #define		PS_ERROR	7	/* protocol error */
 #define		PS_EXCLUDE	8	/* client-side exclusion error */
 #define		PS_LOCKBUSY	9	/* server responded lock busy */
-#define		PS_SMTP         10      /* SMTP error */
+#define		PS_SMTP         10	/* SMTP error */
 #define		PS_DNS		11	/* fatal DNS error */
 #define		PS_BSMTP	12	/* output batch could not be opened */
 #define		PS_MAXFETCH	13	/* poll ended by fetch limit */
@@ -162,44 +170,39 @@ char *strstr(const char *, const char *);
 #ifndef TRUE
 #define FALSE	0
 #define TRUE	1
-#endif /* TRUE */
-typedef	char	flag;
+#endif				/* TRUE */
+typedef char flag;
 
 /* we need to use zero as a flag-uninitialized value */
 #define FLAG_TRUE	2
 #define FLAG_FALSE	1
 
 /** run control data */
-struct runctl
-{
-    char	*logfile;	/** where to write log information */
-    char	*idfile;	/** where to store UID data */
-    char	*pidfile;	/** where to record the PID of daemon mode processes */
-    char	*postmaster;
-    char	*properties;
-    int		poll_interval;	/** poll interval in seconds (daemon mode, 0 == off) */
-    flag	bouncemail;
-    flag	spambounce;
-    flag	use_syslog;
-    flag	invisible;
-    flag	showdots;
+struct runctl {
+    char *logfile;		/** where to write log information */
+    char *idfile;		/** where to store UID data */
+    char *pidfile;		/** where to record the PID of daemon mode processes */
+    char *postmaster;
+    char *properties;
+    int poll_interval;		/** poll interval in seconds (daemon mode, 0 == off) */
+    flag bouncemail;
+    flag spambounce;
+    flag use_syslog;
+    flag invisible;
+    flag showdots;
 };
 
-struct idlist
-{
+struct idlist {
     char *id;
-    union
-    {
-	struct
-	{
-	    int		num;
-	    flag	mark;		/* UID-index information */
-#define UID_UNSEEN	0		/* hasn't been seen */
-#define UID_SEEN	1		/* seen, but not deleted */
-#define UID_DELETED	2		/* this message has been marked deleted */
-#define UID_EXPUNGED	3		/* this message has been expunged */
-        }
-	status;
+    union {
+	struct {
+	    int num;
+	    flag mark;		/* UID-index information */
+#define UID_UNSEEN	0	/* hasn't been seen */
+#define UID_SEEN	1	/* seen, but not deleted */
+#define UID_DELETED	2	/* this message has been marked deleted */
+#define UID_EXPUNGED	3	/* this message has been expunged */
+	} status;
 	char *id2;
     } val;
     struct idlist *next;
@@ -207,66 +210,65 @@ struct idlist
 
 struct query;
 
-struct method		/* describe methods for protocol state machine */
-{
+struct method {			/* describe methods for protocol state machine */
     const char *name;		/* protocol name */
     const char *service;	/* service port (unencrypted) */
     const char *sslservice;	/* service port (SSL) */
     flag tagged;		/* if true, generate & expect command tags */
     flag delimited;		/* if true, accept "." message delimiter */
-    int (*parse_response)(int, char *);
-				/* response_parsing function */
-    int (*getauth)(int, struct query *, char *);
-				/* authorization fetcher */
-    int (*getrange)(int, struct query *, const char *, int *, int *, int *);
-				/* get message range to fetch */
-    int (*getsizes)(int, int, int *);
-				/* get sizes of messages */
-    int (*getpartialsizes)(int, int, int, int *);
-				/* get sizes of subset of messages */
-    int (*is_old)(int, struct query *, int);
-				/* check for old message */
-    int (*fetch_headers)(int, struct query *, int, int *);
-				/* fetch header from a given message */
-    int (*fetch_body)(int, struct query *, int, int *);
-				/* fetch a given message */
-    int (*trail)(int, struct query *, const char *);
-				/* eat trailer of a message */
-    int (*delete_msg)(int, struct query *, int);
-				/* delete method */
-    int (*mark_seen)(int, struct query *, int);
-				/* mark as seen method */
-    int (*end_mailbox_poll)(int, struct query *);
-				/* end-of-mailbox processing */
-    int (*logout_cmd)(int, struct query *);
-				/* logout command */
+    int (*parse_response) (int, char *);
+    /* response_parsing function */
+    int (*getauth) (int, struct query *, char *);
+    /* authorization fetcher */
+    int (*getrange) (int, struct query *, const char *, int *, int *,
+		     int *);
+    /* get message range to fetch */
+    int (*getsizes) (int, int, int *);
+    /* get sizes of messages */
+    int (*getpartialsizes) (int, int, int, int *);
+    /* get sizes of subset of messages */
+    int (*is_old) (int, struct query *, int);
+    /* check for old message */
+    int (*fetch_headers) (int, struct query *, int, int *);
+    /* fetch header from a given message */
+    int (*fetch_body) (int, struct query *, int, int *);
+    /* fetch a given message */
+    int (*trail) (int, struct query *, const char *);
+    /* eat trailer of a message */
+    int (*delete_msg) (int, struct query *, int);
+    /* delete method */
+    int (*mark_seen) (int, struct query *, int);
+    /* mark as seen method */
+    int (*end_mailbox_poll) (int, struct query *);
+    /* end-of-mailbox processing */
+    int (*logout_cmd) (int, struct query *);
+    /* logout command */
     flag retry;			/* can getrange poll for new messages? */
 };
 
-struct hostdata		/* shared among all user connections to given server */
-{
+struct hostdata {		/* shared among all user connections to given server */
     /* rc file data */
-    char *pollname;			/* poll label of host */
-    char *via;				/* "true" server name if non-NULL */
-    struct idlist *akalist;		/* server name first, then akas */
+    char *pollname;		/* poll label of host */
+    char *via;			/* "true" server name if non-NULL */
+    struct idlist *akalist;	/* server name first, then akas */
     struct idlist *localdomains;	/* list of pass-through domains */
-    int protocol;			/* protocol type */
-    char *service;			/* service name */
-    int interval;			/* # cycles to skip between polls */
-    int authenticate;			/* authentication mode to try */
-    int timeout;			/* inactivity timout in seconds */
-    char *envelope;			/* envelope address list header */
-    int envskip;			/* skip to numbered envelope header */
-    char *qvirtual;			/* prefix removed from local user id */
-    flag skip;				/* suppress poll in implicit mode? */
-    flag dns;				/* do DNS lookup on multidrop? */
-    flag uidl;				/* use RFC1725 UIDLs? */
+    int protocol;		/* protocol type */
+    char *service;		/* service name */
+    int interval;		/* # cycles to skip between polls */
+    int authenticate;		/* authentication mode to try */
+    int timeout;		/* inactivity timout in seconds */
+    char *envelope;		/* envelope address list header */
+    int envskip;		/* skip to numbered envelope header */
+    char *qvirtual;		/* prefix removed from local user id */
+    flag skip;			/* suppress poll in implicit mode? */
+    flag dns;			/* do DNS lookup on multidrop? */
+    flag uidl;			/* use RFC1725 UIDLs? */
 #ifdef SDPS_ENABLE
-    flag sdps;				/* use Demon Internet SDPS *ENV */
-#endif /* SDPS_ENABLE */
-    flag checkalias;			/* resolve aliases by comparing IPs? */
-    flag tracepolls;			/* if TRUE, add poll trace info to Received */
-    char *principal;			/* Kerberos principal for mail service */
+    flag sdps;			/* use Demon Internet SDPS *ENV */
+#endif				/* SDPS_ENABLE */
+    flag checkalias;		/* resolve aliases by comparing IPs? */
+    flag tracepolls;		/* if TRUE, add poll trace info to Received */
+    char *principal;		/* Kerberos principal for mail service */
     char *esmtp_name, *esmtp_password;	/* ESMTP AUTH information */
 
 #if defined(linux) || defined(__FreeBSD__)
@@ -276,22 +278,22 @@ struct hostdata		/* shared among all user connections to given server */
 #ifdef CAN_MONITOR
     char *interface;
     char *monitor;
-    int  monitor_io;
+    int monitor_io;
     struct interface_pair_s *interface_pair;
 #endif
 
-    char *plugin,*plugout;
+    char *plugin, *plugout;
 
     /* computed for internal use */
     const struct method *base_protocol;	/* relevant protocol method table */
-    int poll_count;			/* count of polls so far */
-    char *queryname;			/* name to attempt DNS lookup on */
-    char *truename;			/* "true name" of server host */
-    struct sockaddr *trueaddr;		/* IP address of truename */
-    size_t trueaddr_len;		/* size of trueaddr data */
+    int poll_count;		/* count of polls so far */
+    char *queryname;		/* name to attempt DNS lookup on */
+    char *truename;		/* "true name" of server host */
+    struct sockaddr *trueaddr;	/* IP address of truename */
+    size_t trueaddr_len;	/* size of trueaddr data */
     struct hostdata *lead_server;	/* ptr to lead query for this server */
     int esmtp_options;
-    int workarounds;			/* track which workarounds the user was warned about */
+    int workarounds;		/* track which workarounds the user was warned about */
 };
 
 /*
@@ -299,10 +301,9 @@ struct hostdata		/* shared among all user connections to given server */
  * which we assume to be server-specific, has been printed,
  * so we don't spam our users in daemon mode.
  */
-#define WKA_TOP (1L << 0)		/* Maillennium TOP -> RETR override warning */
+#define WKA_TOP (1L << 0)	/* Maillennium TOP -> RETR override warning */
 
-struct query
-{
+struct query {
     /* mailserver connection controls */
     struct hostdata server;
 
@@ -316,8 +317,8 @@ struct query
     /* per-forwarding-target data */
     struct idlist *smtphunt;	/* list of SMTP hosts to try forwarding to */
     struct idlist *domainlist;	/* domainlist to fetch from */
-    char *smtpaddress;		/* address to force in RCPT TO */ 
-    char *smtpname;             /* full RCPT TO name, including domain */
+    char *smtpaddress;		/* address to force in RCPT TO */
+    char *smtpname;		/* full RCPT TO name, including domain */
     struct idlist *antispam;	/* list of listener's antispam response */
     char *mda;			/* local MDA to pass mail to */
     char *bsmtp;		/* BSMTP output file */
@@ -337,17 +338,17 @@ struct query
     flag forcecr;		/* if TRUE, force CRs before LFs in text */
     flag pass8bits;		/* if TRUE, ignore Content-Transfer-Encoding */
     flag dropstatus;		/* if TRUE, drop Status lines in mail */
-    flag dropdelivered;         /* if TRUE, drop Delivered-To lines in mail */
+    flag dropdelivered;		/* if TRUE, drop Delivered-To lines in mail */
     flag mimedecode;		/* if TRUE, decode MIME-armored messages */
     flag idle;			/* if TRUE, idle after each poll */
-    int	limit;			/* limit size of retrieved messages */
+    int limit;			/* limit size of retrieved messages */
     int warnings;		/* size warning interval */
-    int	fetchlimit;		/* max # msgs to get in single poll */
+    int fetchlimit;		/* max # msgs to get in single poll */
     int fetchsizelimit;		/* max # msg sizes to get in a request */
     int fastuidl;		/* do binary search for new UIDLs? */
     int fastuidlcount;		/* internal count for frequency of binary search */
-    int	batchlimit;		/* max # msgs to pass in single SMTP session */
-    int	expunge;		/* max # msgs to pass between expunges */
+    int batchlimit;		/* max # msgs to pass in single SMTP session */
+    int expunge;		/* max # msgs to pass between expunges */
     flag use_ssl;		/* use SSL encrypted session */
     char *sslkey;		/* optional SSL private key file */
     char *sslcert;		/* optional SSL certificate file */
@@ -357,6 +358,15 @@ struct query
     flag sslcertck;		/* Strictly check the server cert. */
     char *sslfingerprint;	/* Fingerprint to check against */
     char *properties;		/* passthrough properties for extensions */
+#ifdef MAPI_ENABLE
+    char *mapi_workstation;	/* local computer name */
+    char *mapi_domain;	/* Windows domain name */
+    char *mapi_lcid;	/* language to use, specified as a 
+				   code (in hexadecimal) or as a name */
+    char *mapi_ldif;    /* path to the ldif files */
+    char *mapi_profdb;  /* where to store MAPI profiles database */
+    char *mapi_profname;/* MAPI profile name */ 
+#endif
 
     /* internal use -- per-poll state */
     flag active;		/* should we actually poll this server? */
@@ -384,13 +394,12 @@ struct query
     struct query *next;		/* next query control block in chain */
 };
 
-struct msgblk			/* message header parsed for open_sink() */
-{
-    char   		*headers;	/* raw message headers */
-    struct idlist	*recipients;	/* addressees */
-    char		return_path[HOSTLEN + USERNAMELEN + 4]; 
-    int			msglen;
-    int			reallen;
+struct msgblk {			/* message header parsed for open_sink() */
+    char *headers;		/* raw message headers */
+    struct idlist *recipients;	/* addressees */
+    char return_path[HOSTLEN + USERNAMELEN + 4];
+    int msglen;
+    int reallen;
 };
 
 
@@ -427,7 +436,7 @@ extern struct query cmd_opts, *querylist;
 extern void envquery(int, char **);
 
 /* controls the detail level of status/progress messages written to stderr */
-extern int outlevel;    	/* see the O_.* constants above */
+extern int outlevel;		/* see the O_.* constants above */
 extern int yydebug;		/* enable parse debugging */
 
 /* these get computed */
@@ -438,7 +447,7 @@ extern flag peek_capable;	/* can we read msgs without setting seen? */
 extern struct runctl run;	/* global controls for this run */
 extern flag nodetach;		/* if TRUE, don't detach daemon process */
 extern flag quitmode;		/* if --quit was set */
-extern int  quitind;		/* optind after position of last --quit option */
+extern int quitind;		/* optind after position of last --quit option */
 extern flag check_only;		/* if --check was set */
 extern char *rcfile;		/* path name of rc file */
 extern int linelimit;		/* limit # lines retrieved per site */
@@ -450,11 +459,11 @@ extern int pass;		/* number of re-polling pass */
 extern flag configdump;		/* dump control blocks as Python dictionary */
 extern char *fetchmailhost;	/* either "localhost" or an FQDN */
 extern int suppress_tags;	/* suppress tags in tagged protocols? */
-extern char shroud[PASSWORDLEN*2+3];	/* string to shroud in debug output */
+extern char shroud[PASSWORDLEN * 2 + 3];	/* string to shroud in debug output */
 #ifdef SDPS_ENABLE
 extern char *sdps_envfrom;
 extern char *sdps_envto;
-#endif /* SDPS_ENABLE */
+#endif				/* SDPS_ENABLE */
 
 extern const char *iana_charset;	/* IANA assigned charset name */
 
@@ -465,29 +474,26 @@ const char *norm_charmap(const char *name);
 
 /* from /usr/include/sys/cdefs.h */
 #if !defined __GNUC__ || __GNUC__ < 2
-# define __attribute__(xyz)    /* Ignore. */
+# define __attribute__(xyz)	/* Ignore. */
 #endif
 
 /* error.c: Error reporting */
 #if defined(HAVE_STDARG_H)
 void report_init(int foreground);
-void report (FILE *fp, const char *format, ...)
-    __attribute__ ((format (printf, 2, 3)))
-    ;
-void report_build (FILE *fp, const char *format, ...)
-    __attribute__ ((format (printf, 2, 3)))
-    ;
-void report_complete (FILE *fp, const char *format, ...)
-    __attribute__ ((format (printf, 2, 3)))
-    ;
-void report_at_line (FILE *fp, int, const char *, unsigned int, const char *, ...)
-    __attribute__ ((format (printf, 5, 6)))
-    ;
+void report(FILE * fp, const char *format, ...)
+    __attribute__ ((format(printf, 2, 3)));
+void report_build(FILE * fp, const char *format, ...)
+    __attribute__ ((format(printf, 2, 3)));
+void report_complete(FILE * fp, const char *format, ...)
+    __attribute__ ((format(printf, 2, 3)));
+void report_at_line(FILE * fp, int, const char *, unsigned int,
+		    const char *, ...)
+    __attribute__ ((format(printf, 5, 6)));
 #else
-void report ();
-void report_build ();
-void report_complete ();
-void report_at_line ();
+void report();
+void report_build();
+void report_complete();
+void report_at_line();
 #endif
 
 /* driver.c -- main driver loop */
@@ -499,20 +505,16 @@ int do_protocol(struct query *, const struct method *);
 /* transact.c: transaction support */
 void init_transact(const struct method *);
 int readheaders(int sock,
-		       long fetchlen,
-		       long reallen,
-		       struct query *ctl,
-		       int num,
-		       flag *suppress_readbody);
+		long fetchlen,
+		long reallen,
+		struct query *ctl, int num, flag * suppress_readbody);
 int readbody(int sock, struct query *ctl, flag forward, int len);
 #if defined(HAVE_STDARG_H)
-void gen_send(int sock, const char *, ... )
-    __attribute__ ((format (printf, 2, 3)))
-    ;
+void gen_send(int sock, const char *, ...)
+    __attribute__ ((format(printf, 2, 3)));
 int gen_recv(int sock, char *buf, int size);
-int gen_transact(int sock, const char *, ... )
-    __attribute__ ((format (printf, 2, 3)))
-    ;
+int gen_transact(int sock, const char *, ...)
+    __attribute__ ((format(printf, 2, 3)));
 #else
 void gen_send();
 int gen_recv();
@@ -542,7 +544,7 @@ extern int mytimeout;
 /* mark values for name lists */
 #define XMIT_ACCEPT	1	/* accepted; matches local domain or name */
 #define XMIT_REJECT	2	/* rejected; no match */
-#define XMIT_RCPTBAD	3	/* SMTP listener rejected the name */ 
+#define XMIT_RCPTBAD	3	/* SMTP listener rejected the name */
 
 /* idle.c */
 int interruptible_idle(int interval);
@@ -553,14 +555,13 @@ void smtp_close(struct query *, int);
 int smtp_open(struct query *);
 char *rcpt_address(struct query *, const char *, int);
 int stuffline(struct query *, char *);
-int open_sink(struct query*, struct msgblk *, int*, int*);
+int open_sink(struct query *, struct msgblk *, int *, int *);
 void release_sink(struct query *);
 int close_sink(struct query *, struct msgblk *, flag);
 int open_warning_by_mail(struct query *);
 #if defined(HAVE_STDARG_H)
-void stuff_warning(const char *, struct query *, const char *, ... )
-    __attribute__ ((format (printf, 3, 4)))
-    ;
+void stuff_warning(const char *, struct query *, const char *, ...)
+    __attribute__ ((format(printf, 3, 4)));
 #else
 void stuff_warning();
 #endif
@@ -583,9 +584,9 @@ int delete_str(struct idlist **, long);
 struct idlist *str_in_list(struct idlist **, const char *, const flag);
 int str_nr_in_list(struct idlist **, const char *);
 int str_nr_last_in_list(struct idlist **, const char *);
-void str_set_mark( struct idlist **, const char *, const flag);
-int count_list( struct idlist **idl );
-char *str_from_nr_list( struct idlist **idl, long number );
+void str_set_mark(struct idlist **, const char *, const flag);
+int count_list(struct idlist **idl);
+char *str_from_nr_list(struct idlist **idl, long number);
 char *str_find(struct idlist **, long);
 struct idlist *id_find(struct idlist **idl, long);
 char *idpair_find(struct idlist **, const char *);
@@ -610,8 +611,8 @@ int from64tobits(void *, const char *, int maxlen);
 #define MSG_IS_8BIT       0x02
 #define MSG_NEEDS_DECODE  0x80
 extern void UnMimeHeader(char *buf);
-extern int  MimeBodyType(char *hdrs, int WantDecode);
-extern int  UnMimeBodyline(char **buf, flag delimited, flag issoftline);
+extern int MimeBodyType(char *hdrs, int WantDecode);
+extern int UnMimeBodyline(char **buf, flag delimited, flag issoftline);
 
 /* interface.c */
 void interface_init(void);
@@ -626,21 +627,23 @@ int interface_approve(struct hostdata *, flag domonitor);
 #define XMALLOCTYPE char
 #endif
 XMALLOCTYPE *xmalloc(size_t);
-XMALLOCTYPE *xrealloc(/*@null@*/ XMALLOCTYPE *, size_t);
+XMALLOCTYPE *xrealloc( /*@null@ */ XMALLOCTYPE *, size_t);
 #define xfree(p) { if (p) { free(p); } (p) = 0; }
 char *xstrdup(const char *);
 
 /* protocol driver and methods */
-int doPOP2 (struct query *); 
-int doPOP3 (struct query *);
-int doIMAP (struct query *);
-int doETRN (struct query *);
-int doODMR (struct query *);
+int doPOP2(struct query *);
+int doPOP3(struct query *);
+int doIMAP(struct query *);
+int doETRN(struct query *);
+int doODMR(struct query *);
+int doMAPI(struct query *);
 
 /* authentication functions */
 int do_cram_md5(int sock, char *command, struct query *ctl, char *strip);
 int do_rfc1731(int sock, char *command, char *truename);
-int do_gssauth(int sock, char *command, char *service, char *hostname, char *username);
+int do_gssauth(int sock, char *command, char *service, char *hostname,
+	       char *username);
 int do_otp(int sock, char *command, struct query *ctl);
 
 /* miscellanea */
@@ -648,13 +651,13 @@ int do_otp(int sock, char *command, struct query *ctl);
 /* these should be of size PATH_MAX */
 extern char currentwd[1024], rcfiledir[1024];
 
-struct query *hostalloc(struct query *); 
-int parsecmdline (int, char **, struct runctl *, struct query *);
-char *prependdir (const char *, const char *);
-char *MD5Digest (unsigned const char *);
-void hmac_md5 (char *, size_t, char *, size_t, unsigned char *, size_t);
+struct query *hostalloc(struct query *);
+int parsecmdline(int, char **, struct runctl *, struct query *);
+char *prependdir(const char *, const char *);
+char *MD5Digest(unsigned const char *);
+void hmac_md5(char *, size_t, char *, size_t, unsigned char *, size_t);
 int POP3_auth_rpa(char *, char *, int socket);
-typedef RETSIGTYPE (*SIGHANDLERTYPE) (int);
+typedef RETSIGTYPE(*SIGHANDLERTYPE) (int);
 void deal_with_sigchld(void);
 RETSIGTYPE null_signal_handler(int sig);
 SIGHANDLERTYPE set_signal_handler(int sig, SIGHANDLERTYPE handler);
@@ -676,16 +679,17 @@ extern struct addrinfo *ai0, *ai1;
  * - fully qualified hostname if \a required is non-zero.
  * - unqualified or fully qualified hostname if \a required is zero (0).
  */
-char *host_fqdn(int required /** exit with PS_DNS if the name cannot be qualified */);
+char *host_fqdn(int required
+		 /** exit with PS_DNS if the name cannot be qualified */ );
 char *rfc822timestamp(void);
 flag is_a_file(int);
-char *rfc2047e(const char*, const char *);
+char *rfc2047e(const char *, const char *);
 
 void yyerror(const char *);
 int yylex(void);
 
 #ifdef __EMX__
-void itimerthread(void*);
+void itimerthread(void *);
 /* Have to include these first to avoid errors from redefining getcwd
    and chdir.  They're re-include protected in EMX, so it's okay, I
    guess.  */
@@ -695,13 +699,13 @@ void itimerthread(void*);
    find all of our lock files and stuff. */
 #define getcwd _getcwd2
 #define chdir _chdir2
-#endif /* _EMX_ */
+#endif				/* _EMX_ */
 
 #ifdef HAVE_STRERROR
 #  if !defined(strerror) && !defined(HAVE_DECL_STRERROR)	/* On some systems, strerror is a macro */
-char *strerror (int);
+char *strerror(int);
 #  endif
-#endif /* HAVE_STRERROR */
+#endif				/* HAVE_STRERROR */
 
 #define STRING_DISABLED	(char *)-1
 #define STRING_DUMMY	""
@@ -713,7 +717,7 @@ char *strerror (int);
 #endif
 
 #ifndef HAVE_STPCPY
-char *stpcpy(char *, const char*);
+char *stpcpy(char *, const char *);
 #endif
 
 #ifdef FETCHMAIL_DEBUG
@@ -726,13 +730,13 @@ char *stpcpy(char *, const char*);
        fclose(out); \
        _exit(e); \
        } while(0)
-#endif /* FETCHMAIL_DEBUG */
+#endif				/* FETCHMAIL_DEBUG */
 
 #ifdef __CYGWIN__
 #define ROOT_UID 18
-#else /* !__CYGWIN__ */
+#else				/* !__CYGWIN__ */
 #define ROOT_UID 0
-#endif /* __CYGWIN__ */
+#endif				/* __CYGWIN__ */
 
 extern int mailserver_socket_temp;
 extern char *program_name;
@@ -743,12 +747,10 @@ extern char *program_name;
 
 /* strlcpy/strlcat prototypes */
 #ifndef HAVE_STRLCAT
-size_t
-strlcat(char *dst, const char *src, size_t siz);
+size_t strlcat(char *dst, const char *src, size_t siz);
 #endif
 #ifndef HAVE_STRLCPY
-size_t
-strlcpy(char *dst, const char *src, size_t siz);
+size_t strlcpy(char *dst, const char *src, size_t siz);
 #endif
 
 /** Resolve the a TCP service name or a string containing only a decimal
@@ -763,7 +765,8 @@ int servport(const char *service);
 # define NI_DGRAM	16
 #endif
 
-int fm_getaddrinfo(const char *node, const char *serv, const struct addrinfo *hints, struct addrinfo **res);
+int fm_getaddrinfo(const char *node, const char *serv,
+		   const struct addrinfo *hints, struct addrinfo **res);
 void fm_freeaddrinfo(struct addrinfo *ai);
 
 /* prototypes from tls.c */

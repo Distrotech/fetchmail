@@ -154,6 +154,9 @@ void dump_config(struct runctl *runp, struct query *querylist)
 #ifdef POP2_ENABLE
     "'pop2',"
 #endif /* POP2_ENABLE */
+#ifdef MAPI_ENABLE
+    "'mapi',"
+#endif /* MAPI_ENABLE */
 #ifdef POP3_ENABLE
     "'pop3',"
 #endif /* POP3_ENABLE */
@@ -380,6 +383,15 @@ void dump_config(struct runctl *runp, struct query *querylist)
 #endif /* SSL_ENABLE */
 	numdump("expunge", ctl->expunge);
 	stringdump("properties", ctl->properties);
+
+#ifdef MAPI_ENABLE
+	stringdump("mapi_workstation", ctl->mapi_workstation);
+	stringdump("mapi_domain", ctl->mapi_domain);
+	stringdump("mapi_lcid", ctl->mapi_lcid);
+	stringdump("mapi_ldif", ctl->mapi_ldif);
+	stringdump("mapi_profdb", ctl->mapi_profdb);
+	stringdump("mapi_profname", ctl->mapi_profname);
+#endif
 	listdump("smtphunt", ctl->smtphunt);
 	listdump("fetchdomains", ctl->domainlist);
 	stringdump("smtpaddress", ctl->smtpaddress);

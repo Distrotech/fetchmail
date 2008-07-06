@@ -5,7 +5,7 @@
 # Matthias Andree <matthias.andree@gmx.de>
 # Requires Python with Tkinter, and the following OS-dependent services:
 #	posix, posixpath, socket
-version = "1.52 $Revision$"
+version = "1.52 $Revision: 4740 $"
 
 from Tkinter import *
 from Dialog import *

@@ -26,6 +26,10 @@
 #include <sys/cygwin.h>
 #endif /* __CYGWIN__ */
 
+#ifdef MAPI_ENABLE
+#include <libmapi/libmapi.h>
+#endif
+
 #include "fetchmail.h"
 #include "i18n.h"
   
@@ -79,7 +83,8 @@ extern char * yytext;
 %token SSL SSLKEY SSLCERT SSLPROTO SSLCERTCK SSLCERTPATH SSLFINGERPRINT
 %token PRINCIPAL ESMTPNAME ESMTPPASSWORD
 %token TRACEPOLLS
-
+/* MAPI tokens */
+%token MAPI_WORKSTATION MAPI_DOMAIN MAPI_LCID MAPI_LDIF MAPI_PROFDB MAPI_PROFNAME
 %%
 
 rcfile		: /* empty */
@@ -364,6 +369,64 @@ user_option	: TO localnames HERE
 		| EXPUNGE NUMBER	{current.expunge     = NUM_VALUE_IN($2);}
 
 		| PROPERTIES STRING	{current.properties  = xstrdup($2);}
+		/* MAPI options */
+		| MAPI_WORKSTATION STRING {
+#ifdef MAPI_ENABLE
+		current.mapi_workstation = xstrdup($2);
+#else
+		yyerror(GT_("MAPI is supported, but not compiled in"));
+#endif
+		}
+		| MAPI_DOMAIN STRING	{
+#ifdef MAPI_ENABLE
+
+/*-----------------------------------------------------------------------------
+ *  TODO: check mapi_domain is specified since mapi_domain is a required
+ *        option if MAPI is enabled.
+ *-----------------------------------------------------------------------------*/
+		current.mapi_domain = xstrdup($2);
+#else
+		yyerror(GT_("MAPI is supported, but not compiled in"));
+#endif
+		}
+		| MAPI_LCID STRING	{
+#ifdef MAPI_ENABLE
+		current.mapi_lcid = xstrdup($2);
+		if (strncmp(current.mapi_lcid, "0x", 2) != 0) {
+			/* it doesn't look like a hex id, so try to convert it from
+	 		  a string name (like "English_Australian" to a language code
+	 		  ID string (like "0x0c09")
+			 */
+			current.mapi_lcid = sprintf("0x%04x", lcid_lang2lcid(current.mapi_lcid));
+ 		}
+		if (!lcid_valid_locale(strtoul(current.mapi_lcid, 0, 16))) {
+		printf ("Language code not recognised, using default \"en-US\" instead\n");
+    }
+#else
+		yyerror(GT_("MAPI is supported, but not compiled in"));
+#endif
+		}
+		| MAPI_LDIF STRING {
+#ifdef MAPI_ENABLE
+		current.mapi_ldif = xstrdup($2);
+#else
+		yyerror(GT_("MAPI is supported, but not compiled in"));
+#endif
+		}
+		| MAPI_PROFDB STRING {
+#ifdef MAPI_ENABLE
+		current.mapi_profdb = prependdir ($2, rcfiledir);
+#else
+		yyerror(GT_("MAPI is supported, but not compiled in"));
+#endif
+		}
+		| MAPI_PROFNAME STRING {
+#ifdef MAPI_ENABLE
+		current.mapi_profname = xstrdup($2);
+#else
+		yyerror(GT_("MAPI is supported, but not compiled in"));
+#endif
+		}
 		;
 %%
 

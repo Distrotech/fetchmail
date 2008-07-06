@@ -1035,7 +1035,8 @@ static int do_session(
 	/* allow time for the port to be set up if we have a plugin */
 	if (ctl->server.plugin)
 	    (void)sleep(1);
-	if ((mailserver_socket = SockOpen(realhost, 
+	if (ctl->server.protocol != P_MAPI &&
+	    (mailserver_socket = SockOpen(realhost, 
 			     ctl->server.service ? ctl->server.service : ( ctl->use_ssl ? ctl->server.base_protocol->sslservice : ctl->server.base_protocol->service ),
 			     ctl->server.plugin, &ai0)) == -1)
 	{

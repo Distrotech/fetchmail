@@ -412,6 +412,124 @@ int readheaders(int sock,
     int			retain_mail = 0, refuse_mail = 0;
     flag		already_has_return_path = FALSE;
 
+#ifdef MAPI_ENABLE
+    extern TALLOC_CTX *mapi_mem_ctx;
+    extern struct mapi_profile *mapi_profile;
+    extern mapi_object_t   mapi_obj_store;
+    extern mapi_object_t   mapi_obj_inbox;
+    extern mapi_object_t   mapi_obj_table;
+    extern struct SRowSet  mapi_rowset;
+    extern int             mapi_current_number;
+
+    char *mapi_headers[MAPI_MAX_HEADER_LINE] = {0};
+    int mapi_header_lines = 0;
+    enum MAPISTATUS retval;
+    struct SPropTagArray *SPropTagArray = NULL;
+    struct SPropValue *lpProps;
+    struct SRow     aRow;
+    mapi_object_t   obj_message;
+    const char      *msgid;
+    mapi_id_t       *fid;
+    mapi_id_t       *mid;
+    const uint64_t  *delivery_date;
+    const char      *date= NULL;
+    const char      *from= NULL;
+    const char      *to= NULL;
+    const char      *cc= NULL;
+    const char      *bcc= NULL;
+    const char      *subject= NULL;
+    const uint32_t  *has_attach = NULL;
+    int        props_count;
+
+    if (ctl->server.protocol == P_MAPI)
+    {
+        if (mapi_rowset.cRows < num)
+	    return (PS_SOCKET);
+
+        fid = (mapi_id_t *) find_SPropValue_data(&(mapi_rowset.aRow[num - 1]), PR_FID);
+        mid = (mapi_id_t *) find_SPropValue_data(&(mapi_rowset.aRow[num - 1]), PR_MID);
+        mapi_object_init(&obj_message);
+
+        retval = OpenMessage(&mapi_obj_store, *fid, *mid, &obj_message, 0x0);
+        if (retval == MAPI_E_SUCCESS) {
+	    SPropTagArray = set_SPropTagArray(mapi_mem_ctx,
+			    0x09,
+			    PR_MESSAGE_FLAGS,
+			    PR_INTERNET_MESSAGE_ID,
+			    PR_CONVERSATION_TOPIC,
+			    PR_MESSAGE_DELIVERY_TIME,
+			    PR_SENT_REPRESENTING_NAME,
+			    PR_DISPLAY_TO,
+			    PR_DISPLAY_CC,
+			    PR_DISPLAY_BCC,
+			    PR_HASATTACH);
+	    retval = GetProps(&obj_message, SPropTagArray, &lpProps, &props_count);
+	    MAPIFreeBuffer(SPropTagArray);
+	    if (retval != MAPI_E_SUCCESS) {
+	        mapi_object_release(&obj_message);
+	        return (PS_SOCKET);
+	    }
+	}
+	/*
+	 * Build a SRow structure 
+	 */
+	aRow.ulAdrEntryPad = 0;
+	aRow.cValues = props_count;
+	aRow.lpProps = lpProps;
+
+	msgid = (const char *) find_SPropValue_data(&aRow, PR_INTERNET_MESSAGE_ID);
+	if (msgid) {
+	    has_attach = (const uint8_t *) octool_get_propval(&aRow, PR_HASATTACH);
+	    from = (const char *) octool_get_propval(&aRow, PR_SENT_REPRESENTING_NAME);
+	    to = (const char *) octool_get_propval(&aRow, PR_DISPLAY_TO);
+	    cc = (const char *) octool_get_propval(&aRow, PR_DISPLAY_CC);
+	    bcc = (const char *) octool_get_propval(&aRow, PR_DISPLAY_BCC);
+	    if (!to && !cc && !bcc) {
+		talloc_free(lpProps);
+	        mapi_object_release(&obj_message);
+		return (PS_SOCKET);
+	    }
+
+	    delivery_date = (const uint64_t *)octool_get_propval(&aRow, PR_MESSAGE_DELIVERY_TIME);
+	    if (delivery_date) {
+		date = nt_time_string(mapi_mem_ctx, *delivery_date);
+	    } else {
+		date = "None";
+	    }
+	    subject = (const char *) octool_get_propval(&aRow, PR_CONVERSATION_TOPIC);
+
+	     /* :TODO:07/05/08 22:11:45:: try to fold long headers */
+	    mapi_header_lines = 0;
+	    mapi_headers[mapi_header_lines ++] = talloc_asprintf(mapi_mem_ctx, "From \"%s\" %s\n", from, date);
+	    mapi_headers[mapi_header_lines ++] = talloc_asprintf(mapi_mem_ctx, "Date: %s\n", date);
+	    mapi_headers[mapi_header_lines ++] = talloc_asprintf(mapi_mem_ctx, "From: %s\n", from);
+	    if (to)
+	    	mapi_headers[mapi_header_lines ++] = talloc_asprintf(mapi_mem_ctx, "To: %s\n", to);
+	    if (cc)
+		mapi_headers[mapi_header_lines ++] = talloc_asprintf(mapi_mem_ctx, "Cc: %s\n", cc);
+	    if (bcc)
+		mapi_headers[mapi_header_lines ++] = talloc_asprintf(mapi_mem_ctx, "Bcc: %s\n", bcc);
+	    if (subject)
+		mapi_headers[mapi_header_lines ++] = talloc_asprintf(mapi_mem_ctx, "Subject: %s\n", subject);
+	    mapi_headers[mapi_header_lines ++] = talloc_asprintf(mapi_mem_ctx, "Message-ID: %s\n", msgid);
+
+	    if (has_attach && *has_attach)
+		mapi_headers[mapi_header_lines ++] = talloc_asprintf(mapi_mem_ctx,
+				"Content-Type: multipart/mixed; boundary=\"%s\"\n", MAPI_BOUNDARY);
+	    mapi_headers[mapi_header_lines ++] = talloc_asprintf(mapi_mem_ctx, "\n");
+
+	    mapi_headers[mapi_header_lines] = NULL;
+	    mapi_header_lines = 0;
+	}
+	else{
+	    talloc_free(lpProps);
+	    mapi_object_release(&obj_message);
+	    return (PS_SOCKET);
+        }
+        mapi_object_release(&obj_message);
+    }
+#endif			/* MAPI_ENABLE */
+
     sizeticker = 0;
     has_nuls = FALSE;
     msgblk.return_path[0] = '\0';
@@ -450,30 +568,43 @@ int readheaders(int sock,
 	linelen = 0;
 	line[0] = '\0';
 	do {
-	    do {
-		char	*sp, *tp;
+	    if (ctl->server.protocol != P_MAPI)
+	    {
+	        do {
+		    char	*sp, *tp;
 
-		set_timeout(mytimeout);
-		if ((n = SockRead(sock, buf, sizeof(buf)-1)) == -1) {
+		    set_timeout(mytimeout);
+		    if ((n = SockRead(sock, buf, sizeof(buf)-1)) == -1) {
+		        set_timeout(0);
+		        free(line);
+		        return(PS_SOCKET);
+		    }
 		    set_timeout(0);
-		    free(line);
-		    return(PS_SOCKET);
-		}
-		set_timeout(0);
 
-		/*
-		 * Smash out any NULs, they could wreak havoc later on.
-		 * Some network stacks seem to generate these at random,
-		 * especially (according to reports) at the beginning of the
-		 * first read.  NULs are illegal in RFC822 format.
-		 */
-		for (sp = tp = buf; sp < buf + n; sp++)
-		    if (*sp)
-			*tp++ = *sp;
-		*tp = '\0';
-		n = tp - buf;
-	    } while
-		  (n == 0);
+		    /*
+		     * Smash out any NULs, they could wreak havoc later on.
+		     * Some network stacks seem to generate these at random,
+		     * especially (according to reports) at the beginning of the
+		     * first read.  NULs are illegal in RFC822 format.
+		     */
+		    for (sp = tp = buf; sp < buf + n; sp++)
+		        if (*sp)
+			    *tp++ = *sp;
+		    *tp = '\0';
+		    n = tp - buf;
+	        } while
+		      (n == 0);
+	    }
+	    else
+	    {
+#ifdef MAPI_ENABLE
+		strcpy(buf, mapi_headers[mapi_header_lines++]);
+		talloc_free(mapi_headers[mapi_header_lines-1]);
+		n = strlen(buf);
+		if(mapi_headers[mapi_header_lines] == NULL)
+		    remaining = 0;
+#endif
+	    }
 
 	    remaining -= n;
 	    linelen += n;
@@ -585,10 +716,15 @@ int readheaders(int sock,
 		refuse_mail = 1;
 	    }
 
-	    /* check for RFC822 continuations */
-	    set_timeout(mytimeout);
-	    ch = SockPeek(sock);
-	    set_timeout(0);
+	    if (ctl->server.protocol != P_MAPI)
+	    {
+	        /* check for RFC822 continuations */
+	        set_timeout(mytimeout);
+	        ch = SockPeek(sock);
+	        set_timeout(0);
+	    }
+	    else
+		ch == 'a';
 	} while
 	    (ch == ' ' || ch == '\t');	/* continuation to next line? */
 
@@ -1345,6 +1481,103 @@ int readbody(int sock, struct query *ctl, flag forward, int len)
     char buf[MSGBUFSIZE+4];
     char *inbufp = buf;
     flag issoftline = FALSE;
+    
+#ifdef MAPI_ENABLE
+    extern TALLOC_CTX *mapi_mem_ctx;
+    extern struct mapi_profile *mapi_profile;
+    extern mapi_object_t   mapi_obj_store;
+    extern mapi_object_t   mapi_obj_inbox;
+    extern mapi_object_t   mapi_obj_table;
+    extern struct SRowSet  mapi_rowset;
+    extern int             mapi_current_number;
+
+    enum MAPISTATUS retval;
+    struct SPropTagArray *SPropTagArray = NULL;
+    struct SPropValue *lpProps;
+    struct SRow     aRow;
+    mapi_object_t   obj_message;
+    const char      *msgid;
+    mapi_id_t       *fid;
+    mapi_id_t       *mid;
+    const uint32_t  *has_attach = NULL;
+    DATA_BLOB       body;
+    char	    *p_body;
+    char	    *mapi_boundary = NULL;
+    char	    *mapi_body_content_type = NULL;
+    char            *mapi_body_content_type_more = NULL;
+    int             props_count;
+    uint8_t         format;
+
+    if (ctl->server.protocol == P_MAPI)
+    {
+        if (mapi_rowset.cRows < mapi_current_number)
+	    return (PS_SOCKET);
+
+        fid = (mapi_id_t *) find_SPropValue_data(&(mapi_rowset.aRow[mapi_current_number - 1]), PR_FID);
+        mid = (mapi_id_t *) find_SPropValue_data(&(mapi_rowset.aRow[mapi_current_number - 1]), PR_MID);
+        mapi_object_init(&obj_message);
+
+        retval = OpenMessage(&mapi_obj_store, *fid, *mid, &obj_message, 0x0);
+        if (retval == MAPI_E_SUCCESS) {
+	    SPropTagArray = set_SPropTagArray(mapi_mem_ctx,
+			    0x08,
+			    PR_MESSAGE_FLAGS,
+			    PR_INTERNET_MESSAGE_ID,
+			    PR_MSG_EDITOR_FORMAT,
+			    PR_BODY,
+			    PR_BODY_UNICODE,
+			    PR_HTML,
+			    PR_RTF_COMPRESSED,
+			    PR_HASATTACH);
+	    retval = GetProps(&obj_message, SPropTagArray, &lpProps, &props_count);
+	    MAPIFreeBuffer(SPropTagArray);
+	    if (retval != MAPI_E_SUCCESS) {
+	        mapi_object_release(&obj_message);
+	        return (PS_SOCKET);
+	    }
+	}
+	/*
+	 * Build a SRow structure 
+	 */
+	aRow.ulAdrEntryPad = 0;
+	aRow.cValues = props_count;
+	aRow.lpProps = lpProps;
+
+	msgid = (const char *) find_SPropValue_data(&aRow, PR_INTERNET_MESSAGE_ID);
+	if (msgid) {
+	    has_attach = (const uint8_t *) find_SPropValue_data(&aRow, PR_HASATTACH);
+	    retval = octool_get_body(mapi_mem_ctx, &obj_message, &aRow, &body);
+	    /* body */
+	    if (body.length) {
+		if (has_attach && *has_attach) {
+		    mapi_boundary = talloc_asprintf(mapi_mem_ctx, "--%s\n", MAPI_BOUNDARY);
+		}
+		retval = GetBestBody(&obj_message, &format);
+		switch (format) {
+		case olEditorText:
+		    mapi_body_content_type = talloc_asprintf(mapi_mem_ctx, "Content-Type: text/plain; charset=us-ascii\n");
+		    /* Just display UTF8 content inline */
+		    mapi_body_content_type_more = talloc_asprintf(mapi_mem_ctx, "Content-Disposition: inline\n");
+		    break;
+		case olEditorHTML:
+		    mapi_body_content_type = talloc_asprintf(mapi_mem_ctx, "Content-Type: text/html\n");
+		    break;
+		case olEditorRTF:
+		    mapi_body_content_type = talloc_asprintf(mapi_mem_ctx, "Content-Type: text/rtf\n");
+		    mapi_body_content_type_more = talloc_asprintf(mapi_mem_ctx, "--%s\n", MAPI_BOUNDARY);
+		    break;
+		}
+		p_body = body.data;
+	    } 
+	}
+	else{
+	    talloc_free(lpProps);
+	    mapi_object_release(&obj_message);
+	    return (PS_SOCKET);
+        }
+        mapi_object_release(&obj_message);
+    }
+#endif			/* MAPI_ENABLE */
 
     /*
      * Pass through the text lines in the body.
@@ -1358,17 +1591,63 @@ int readbody(int sock, struct query *ctl, flag forward, int len)
      */
     while (protocol->delimited || len > 0)
     {
-	set_timeout(mytimeout);
-	/* XXX FIXME: for undelimited protocols that ship the size, such
-	 * as IMAP, we might want to use the count of remaining characters
-	 * instead of the buffer size -- not for fetchmail 6.3.X though */
-	if ((linelen = SockRead(sock, inbufp, sizeof(buf)-4-(inbufp-buf)))==-1)
+	if(ctl->server.protocol != P_MAPI)
 	{
+	    set_timeout(mytimeout);
+	    /* XXX FIXME: for undelimited protocols that ship the size, such
+	     * as IMAP, we might want to use the count of remaining characters
+	     * instead of the buffer size -- not for fetchmail 6.3.X though */
+	    if ((linelen = SockRead(sock, inbufp, sizeof(buf)-4-(inbufp-buf)))==-1)
+	    {
+	        set_timeout(0);
+	        release_sink(ctl);
+	        return(PS_SOCKET);
+	    }
 	    set_timeout(0);
-	    release_sink(ctl);
-	    return(PS_SOCKET);
 	}
-	set_timeout(0);
+	else
+	{
+#ifdef MAPI_ENABLE
+		//TODO: fetch long email and attachments
+	    if(mapi_boundary != NULL)
+	    {
+		linelen = strlen(mapi_boundary);
+		strcpy(inbufp, mapi_boundary);
+		talloc_free(mapi_boundary);
+		mapi_boundary = NULL;
+	    }
+	    else if(mapi_body_content_type != NULL)
+	    {
+		linelen = strlen(mapi_body_content_type);
+		strcpy(inbufp, mapi_body_content_type);
+		talloc_free(mapi_body_content_type);
+		mapi_body_content_type = NULL;
+	    }
+	    else if(mapi_body_content_type_more != NULL)
+	    {
+		linelen = strlen(mapi_body_content_type_more);
+		strcpy(inbufp, mapi_body_content_type_more);
+		talloc_free(mapi_body_content_type_more);
+		mapi_body_content_type_more = NULL;
+	    }
+	    else if(body.data != NULL)
+	    {
+		linelen = body.length;
+		strncpy(inbufp, body.data, linelen);
+		*(inbufp+linelen) = '\n';
+		linelen ++;
+		talloc_free(body.data);
+		body.data = NULL;
+	    }
+	    else
+	    {
+		linelen = 1;
+		strcpy(inbufp, ".\n");
+		len = 0;
+	    }
+#endif
+	}
+
 
 	/* write the message size dots */
 	if (linelen > 0)
