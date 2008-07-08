@@ -1154,7 +1154,9 @@ specified host and then sleeping for a given polling interval.
 There are several ways to make fetchmail work in daemon mode. On the
 command line, \fB\-\-daemon\ <interval>\fR or \fB\-d\ <interval>\fR
 option runs \fIfetchmail\fR in daemon mode.  You must specify a numeric
-argument which is a polling interval in seconds.
+argument which is a polling interval (time to wait after completing a 
+whole poll cycle with the last server and before starting the next poll 
+cycle with the first server) in seconds.
 .PP
 Example: simply invoking
 .IP
@@ -1162,8 +1164,9 @@ fetchmail \-d 900
 .PP
 will, therefore, poll all the hosts described in your
 .I ~/.fetchmailrc
-file (except those explicitly excluded with the 'skip' verb) once
-every 15 minutes.
+file (except those explicitly excluded with the 'skip' verb) a bit less 
+often than once every 15 minutes (exactly: 15 minutes + time that the 
+poll take)
 .PP
 It is also possible to set a polling interval
 in your \fI~/.fetchmailrc\fR file by saying 'set\ daemon\ <interval>',
@@ -1202,7 +1205,8 @@ The
 or
 .B \-\-logfile <filename>
 option (keyword: set logfile) is only effective when fetchmail is
-detached. Note that the logfile must exist BEFORE fetchmail is run, you
+detached and in daemon mode. Note that the logfile must exist BEFORE 
+fetchmail is run, you
 can use the
 .BR touch (1)
 command with the filename as its sole argument to create it.

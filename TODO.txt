@@ -114,6 +114,7 @@ questionable:
   but stuff it at the end
 - allow forcing RETR (RETR vs. TOP, fetchmail-users, drbob 2008-01-11)
 - use SASL?
+- make logfile more useful (redirect not only in daemon mode)
 
 DOCUMENTATION:
 - Add info whether Keywords are global, server or user keywords

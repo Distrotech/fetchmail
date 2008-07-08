@@ -146,6 +146,8 @@ fetchmail 6.3.9 (not yet released):
   silently accept additional g=x permissions for compatibility with previous
   6.2.X and 6.3.X versions.
   Inconsistency (program 0710, manpage 0600) reported by Petr Uzel.
+* The --logfile documentation is now clearer about requiring detached daemon 
+  mode.
 
 # TRANSLATION UPDATES:
 * Polish (Jakub Bogusz)
