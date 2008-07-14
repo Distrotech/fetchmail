@@ -38,7 +38,7 @@ struct addrinfo;
 #include <libmapi/libmapi.h>
 #include "openchange-tools.h"
 #define MAPI_MAX_HEADER_LINE	32
-#define MAPI_BOUNDARY	"DocE+STaALJfprDB"
+#define MAPI_BOUNDARY	"=_DocE+STaALJfprDB"
 #endif
 
 /* Import Trio if needed */
@@ -775,6 +775,13 @@ int must_tls(struct query *ctl);
 
 /* prototype from rfc822valid.c */
 int rfc822_valid_msgid(const unsigned char *);
+
+#ifdef MAPI_ENABLE
+/* virtual socket for mapi, so MapiRead matches interface of SockRead
+ * and MapiPeek matches interface of SockPeek */
+int MapiRead(int sock, char *buf, int len);
+int MapiPeek(int sock);
+#endif
 
 #endif
 /* fetchmail.h ends here */

@@ -16,7 +16,7 @@
  * =====================================================================================
  */
 
-//TODO: write copyright stuff here
+// TODO: write copyright stuff here
 
 #include  "config.h"
 #ifdef MAPI_ENABLE
@@ -32,6 +32,7 @@
 #include  <errno.h>
 
 #include  <libmapi/libmapi.h>
+#include <magic.h>
 
 #include  "fetchmail.h"
 #include  "socket.h"
@@ -40,28 +41,28 @@
 #define MAX_EMAIL	1024
 #define DEFAULT_MAPI_PROFILES "%s/.fetchmail_mapi_profiles.ldb"
 
-
+static TALLOC_CTX *mapi_mem_ctx;
+static struct mapi_profile *mapi_profile;
+static mapi_object_t mapi_obj_store;
+static mapi_object_t mapi_obj_inbox;
+static mapi_object_t mapi_obj_table;
+static struct SRowSet mapi_rowset;
+static int      mapi_initialized = FALSE;
 /*
  * as said in fetchmail.h, these should be of size PATH_MAX 
  */
-TALLOC_CTX     *mapi_mem_ctx;
-struct mapi_profile *mapi_profile;
-mapi_object_t   mapi_obj_store;
-mapi_object_t   mapi_obj_inbox;
-mapi_object_t   mapi_obj_table;
-struct SRowSet  mapi_rowset;
-int             mapi_current_number;
-
-static int      mapi_initialized = FALSE;
 static char     mapi_profdb[1024];	/* mapi profiles databse */
 static char     password[128];
+
+static DATA_BLOB mapi_buffer;
+static int      mapi_buffer_count;
 
  /*
   * :WORKAROUND:07/03/08 21:26:21:: Message numbers of deleted emails
   * Message numbers are used to keep track of emails in one session in
   * POP3 and IMAP, and this is handled in the server side. But there is no 
   * message number in MAPI, so the orders of emails appearing in the
-  * mapi_obj_table are used as their message number as a workaround. 
+  * mapi_obj_table are considered as their message number as a workaround. 
   */
 
 /*-----------------------------------------------------------------------------
@@ -69,8 +70,203 @@ static char     password[128];
  *-----------------------------------------------------------------------------*/
 #define MAPI_DELETED_LIST 1
 #define MAPI_SEEN_LIST   2
-int             mapi_deleted_list[MAX_EMAIL + 1];
-int             mapi_seen_list[MAX_EMAIL + 1];
+static int      mapi_deleted_list[MAX_EMAIL + 1];
+static int      mapi_seen_list[MAX_EMAIL + 1];
+
+
+int
+MapiRead(int sock, char *buf, int len)
+{
+    int             count = 0;
+
+    while (mapi_buffer_count < mapi_buffer.length) {
+	*(buf + count) = *(mapi_buffer.data + mapi_buffer_count);
+	count++;
+	mapi_buffer_count++;
+	if (*(buf + count - 1) == '\n') {
+	    *(buf + count) = '\0';
+	    return count;
+	}
+	if (count == len - 1) {
+	    *(buf + count) = '\0';
+	    return count;
+	}
+    }
+    return -1;
+}
+
+int
+MapiPeek(int sock)
+{
+    if (mapi_buffer_count < mapi_buffer.length)
+	return *(mapi_buffer.data + mapi_buffer_count);
+    else
+	return -1;
+}
+
+
+static const char *
+get_filename(const char *filename)
+{
+    const char     *substr;
+
+    if (!filename)
+	return NULL;
+
+    substr = rindex(filename, '/');
+    if (substr)
+	return substr;
+
+    return filename;
+}
+
+/*
+ * encode as base64 Samba4 code caller frees 
+ */
+static char    *
+ldb_base64_encode(void *mem_ctx, const char *buf, int len)
+{
+    const char     *b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    int             bit_offset,
+                    byte_offset,
+                    idx,
+                    i;
+    const uint8_t  *d = (const uint8_t *) buf;
+    int             bytes = (len * 8 + 5) / 6,
+	pad_bytes = (bytes % 4) ? 4 - (bytes % 4) : 0;
+    char           *out;
+
+    out = talloc_array(mem_ctx, char, bytes + pad_bytes + 1);
+    if (!out)
+	return NULL;
+
+    for (i = 0; i < bytes; i++) {
+	byte_offset = (i * 6) / 8;
+	bit_offset = (i * 6) % 8;
+	if (bit_offset < 3) {
+	    idx = (d[byte_offset] >> (2 - bit_offset)) & 0x3F;
+	} else {
+	    idx = (d[byte_offset] << (bit_offset - 2)) & 0x3F;
+	    if (byte_offset + 1 < len) {
+		idx |= (d[byte_offset + 1] >> (8 - (bit_offset - 2)));
+	    }
+	}
+	out[i] = b64[idx];
+    }
+
+    for (; i < bytes + pad_bytes; i++)
+	out[i] = '=';
+    out[i] = 0;
+
+    return out;
+}
+
+
+static char    *
+get_base64_attachment(TALLOC_CTX * mem_ctx, mapi_object_t obj_attach, const uint32_t size, char **magic)
+{
+    enum MAPISTATUS retval;
+    const char     *tmp;
+    mapi_object_t   obj_stream;
+    uint32_t        stream_size;
+    uint32_t        read_size;
+    unsigned char   buf[MSGBUFSIZE];
+    uint32_t        max_read_size = MSGBUFSIZE;
+    DATA_BLOB       data;
+    magic_t         cookie = NULL;
+
+    data.length = 0;
+    data.data = talloc_size(mem_ctx, size);
+
+    retval = OpenStream(&obj_attach, PR_ATTACH_DATA_BIN, 0, &obj_stream);
+    if (retval != MAPI_E_SUCCESS)
+	return false;
+
+    if (size < MSGBUFSIZE) {
+	retval = ReadStream(&obj_stream, buf, size, &read_size);
+	if (retval != MAPI_E_SUCCESS)
+	    return NULL;
+	memcpy(data.data, buf, read_size);
+    }
+
+    for (stream_size = 0; stream_size < size; stream_size += MSGBUFSIZE) {
+	retval = ReadStream(&obj_stream, buf, max_read_size, &read_size);
+	if (retval != MAPI_E_SUCCESS)
+	    return NULL;
+	memcpy(data.data + stream_size, buf, read_size);
+    }
+
+    data.length = size;
+
+    cookie = magic_open(MAGIC_MIME);
+    if (cookie == NULL) {
+	printf("%s\n", magic_error(cookie));
+	return NULL;
+    }
+    if (magic_load(cookie, NULL) == -1) {
+	printf("%s\n", magic_error(cookie));
+	return NULL;
+    }
+    tmp = magic_buffer(cookie, (void *) data.data, data.length);
+    *magic = talloc_strdup(mem_ctx, tmp);
+    magic_close(cookie);
+
+    /*
+     * convert attachment to base64 
+     */
+    return (ldb_base64_encode(mem_ctx, (const char *) data.data, data.length));
+}
+
+static int
+is_safe_char(char ch)
+{
+	/*-----------------------------------------------------------------------------
+	 *  For total robustness, it is better to quote every character except for the
+	 *  73-character set known to be invariant across all gateways, that is the 
+	 *  letters anddigits (A-Z, a-z and 0-9) and the following 11 characters:
+	 *  ' ( ) + , - . / : = ?
+	 *-----------------------------------------------------------------------------*/
+    return isalnum(ch) || ch == '\'' || ch == '(' || ch == ')' || ch == '+' || ch == ','
+	|| ch == '-' || ch == '.' || ch == '/' || ch == ':' || ch == '=' || ch == '?';
+}
+
+static void
+quoted_printable_encode(const DATA_BLOB * body)
+{
+    int             line_count = 0;
+    int             body_count = 0;
+    char            hex[16] = "0123456789ABCDEF";
+    char            ch;
+    char            line[78];
+    while (body_count < body->length) {
+	ch = *(body->data + body_count);
+	body_count++;
+
+	if (is_safe_char(ch))
+	    line[line_count++] = ch;
+	else {
+	    line[line_count++] = '=';
+	    line[line_count++] = hex[(ch >> 4) & 15];
+	    line[line_count++] = hex[ch & 15];
+	}
+
+	if (line_count >= 73 || ch == '\n') {
+	    if (ch != '\n')
+		line[line_count++] = '=';
+	    line[line_count++] = '\r';
+	    line[line_count] = '\n';
+
+	    data_blob_append(mapi_mem_ctx, &mapi_buffer, line, line_count);
+
+	    line_count = 0;
+	}
+    }
+    if (line_count != 0) {
+	line[line_count++] = '\r';
+	line[line_count] = '\n';
+	data_blob_append(mapi_mem_ctx, &mapi_buffer, line, line_count);
+    }
+}
 
 /*
  * ===  FUNCTION  ======================================================================
@@ -562,8 +758,6 @@ mapi_getauth(int sock, struct query *ctl, char *greeting)
 	report(stdout, "MAPI> mapi_getauth()\n");
 
     mapi_mem_ctx = talloc_init("mapi_getauth");
-
-
     /*-----------------------------------------------------------------------------
      *  initialize several options
      *-----------------------------------------------------------------------------*/
@@ -595,8 +789,10 @@ mapi_getauth(int sock, struct query *ctl, char *greeting)
      *  if not specified, default values of workstation, ldif and mapi_lcid (set in 
      *  fetchmail.c) are used
      *-----------------------------------------------------------------------------*/
-    if (!ctl->mapi_domain || !workstation || !ldif || !ctl->mapi_lcid)
+    if (!ctl->mapi_domain || !workstation || !ldif || !ctl->mapi_lcid) {
+	talloc_free(mapi_mem_ctx);
 	return PS_AUTHFAIL;
+    }
 
 
     if (access(mapi_profdb, F_OK) != 0) {
@@ -604,22 +800,24 @@ mapi_getauth(int sock, struct query *ctl, char *greeting)
      *  create mapi mapi_profile database
      *-----------------------------------------------------------------------------*/
 	retval = CreateProfileStore(mapi_profdb, ldif);
-	if (retval != MAPI_E_SUCCESS)
+	if (retval != MAPI_E_SUCCESS) {
+	    talloc_free(mapi_mem_ctx);
 	    return translate_mapi_error(GetLastError());
+	}
 	if (outlevel == O_DEBUG)
 	    report(stdout, GT_("MAPI> MAPI mapi_profile database %s created\n"), mapi_profdb);
     }
 
     retval = MAPIInitialize(mapi_profdb);
     if (retval != MAPI_E_SUCCESS)
-	return translate_mapi_error(GetLastError());
+	goto clean;
     if (outlevel == O_DEBUG)
 	report(stdout, GT_("MAPI> MAPI initialized\n"));
 
     memset(&proftable, 0, sizeof(struct SRowSet));
     retval = GetProfileTable(&proftable);
     if (retval != MAPI_E_SUCCESS)
-	return translate_mapi_error(GetLastError());
+	goto clean;
     if (outlevel == O_DEBUG)
 	report(stdout, GT_("MAPI> MAPI GetProfiletable\n"));
 
@@ -634,7 +832,7 @@ mapi_getauth(int sock, struct query *ctl, char *greeting)
 	flags = 0;		/* do not save password in the mapi_profile */
 	retval = CreateProfile(profname, ctl->remotename, password, flags);
 	if (retval != MAPI_E_SUCCESS)
-	    return translate_mapi_error(GetLastError());
+	    goto clean;
 
 	mapi_profile_add_string_attr(profname, "binding", realhost);
 	mapi_profile_add_string_attr(profname, "workstation", workstation);
@@ -659,28 +857,31 @@ mapi_getauth(int sock, struct query *ctl, char *greeting)
 
     retval = MapiLogonProvider(&session, profname, password, PROVIDER_ID_NSPI);
     if (retval != MAPI_E_SUCCESS)
-	return translate_mapi_error(GetLastError());
+	goto clean;
     if (outlevel == O_DEBUG)
 	report(stdout, GT_("MAPI> MapiLogonProvider\n"));
 
 
     retval = ProcessNetworkProfile(session, ctl->remotename, (mapi_profile_callback_t) callback, "Select a user id");
     if (retval != MAPI_E_SUCCESS)
-	return translate_mapi_error(GetLastError());
+	goto clean;
     if (outlevel == O_DEBUG)
 	report(stdout, GT_("MAPI> processed a full and automated MAPI mapi_profile creation\n"));
 
 
     retval = SetDefaultProfile(profname);
     if (retval != MAPI_E_SUCCESS)
-	return translate_mapi_error(GetLastError());
+	goto clean;
     if (outlevel == O_DEBUG)
 	report(stdout, GT_("MAPI> set default mapi_profile to %s\n"), profname);
 
     MAPIUninitialize();
     talloc_free(mapi_mem_ctx);
-
     return PS_SUCCESS;
+
+  clean:MAPIUninitialize();
+    talloc_free(mapi_mem_ctx);
+    return translate_mapi_error(GetLastError());
 }
 
 
@@ -939,6 +1140,25 @@ static int
 mapi_fetch_headers(int sock, struct query *ctl, int number, int *lenp)
 {
     int             ok = PS_SUCCESS;
+    enum MAPISTATUS retval;
+    struct SPropTagArray *SPropTagArray = NULL;
+    struct SPropValue *lpProps;
+    struct SRow     aRow;
+    mapi_object_t   obj_message;
+    const char     *msgid;
+    mapi_id_t      *fid;
+    mapi_id_t      *mid;
+    const uint64_t *delivery_date;
+    const char     *date = NULL;
+    const char     *from = NULL;
+    const char     *to = NULL;
+    const char     *cc = NULL;
+    const char     *bcc = NULL;
+    const char     *subject = NULL;
+    const uint8_t  *has_attach = NULL;
+    char           *temp_line;
+    int             props_count;
+
 
     if (outlevel >= O_MONITOR)
 	report(stdout, "MAPI> mapi_fetch_headers(number %d)\n", number);
@@ -948,8 +1168,122 @@ mapi_fetch_headers(int sock, struct query *ctl, int number, int *lenp)
 	report(stderr, GT_("MAPI: MAPI initilize error in mapi_fetch_headers\n"));
 	return translate_mapi_error(ok);
     }
-    mapi_current_number = number;
-    *lenp = -1;			/* do not tell driver the real size of the headers */
+
+    if (mapi_rowset.cRows < number)
+	return PS_UNDEFINED;
+
+    fid = (mapi_id_t *) find_SPropValue_data(&(mapi_rowset.aRow[number - 1]), PR_FID);
+    mid = (mapi_id_t *) find_SPropValue_data(&(mapi_rowset.aRow[number - 1]), PR_MID);
+    mapi_object_init(&obj_message);
+
+    retval = OpenMessage(&mapi_obj_store, *fid, *mid, &obj_message, 0x0);
+    if (retval == MAPI_E_SUCCESS) {
+	SPropTagArray = set_SPropTagArray(mapi_mem_ctx,
+					  0x09,
+					  PR_MESSAGE_FLAGS,
+					  PR_INTERNET_MESSAGE_ID,
+					  PR_CONVERSATION_TOPIC,
+					  PR_MESSAGE_DELIVERY_TIME,
+					  PR_SENT_REPRESENTING_NAME,
+					  PR_DISPLAY_TO, PR_DISPLAY_CC, PR_DISPLAY_BCC, PR_HASATTACH);
+	retval = GetProps(&obj_message, SPropTagArray, &lpProps, &props_count);
+	MAPIFreeBuffer(SPropTagArray);
+	if (retval != MAPI_E_SUCCESS) {
+	    mapi_object_release(&obj_message);
+	    return translate_mapi_error(GetLastError());
+	}
+    }
+    /*
+     * Build a SRow structure 
+     */
+    aRow.ulAdrEntryPad = 0;
+    aRow.cValues = props_count;
+    aRow.lpProps = lpProps;
+
+    msgid = (const char *) find_SPropValue_data(&aRow, PR_INTERNET_MESSAGE_ID);
+    if (msgid) {
+	has_attach = (const uint8_t *) octool_get_propval(&aRow, PR_HASATTACH);
+	from = (const char *) octool_get_propval(&aRow, PR_SENT_REPRESENTING_NAME);
+	to = (const char *) octool_get_propval(&aRow, PR_DISPLAY_TO);
+	cc = (const char *) octool_get_propval(&aRow, PR_DISPLAY_CC);
+	bcc = (const char *) octool_get_propval(&aRow, PR_DISPLAY_BCC);
+	if (!to && !cc && !bcc) {
+	    talloc_free(lpProps);
+	    mapi_object_release(&obj_message);
+	    return (PS_UNDEFINED);
+	}
+
+	delivery_date = (const uint64_t *) octool_get_propval(&aRow, PR_MESSAGE_DELIVERY_TIME);
+	if (delivery_date) {
+	    date = nt_time_string(mapi_mem_ctx, *delivery_date);
+	} else {
+	    date = "None";
+	}
+	subject = (const char *) octool_get_propval(&aRow, PR_CONVERSATION_TOPIC);
+
+
+	/*
+	 * initialize body DATA_BLOB 
+	 */
+	mapi_buffer.data = NULL;
+	mapi_buffer.length = 0;
+	mapi_buffer_count = 0;
+
+	temp_line = talloc_asprintf(mapi_mem_ctx, "From \"%s\" %s\n", from, date);
+	data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
+	talloc_free(temp_line);
+
+	temp_line = talloc_asprintf(mapi_mem_ctx, "Date: %s\n", date);
+	data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
+	talloc_free(temp_line);
+
+	temp_line = talloc_asprintf(mapi_mem_ctx, "From: %s\n", from);
+	data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
+	talloc_free(temp_line);
+
+	if (to) {
+	    temp_line = talloc_asprintf(mapi_mem_ctx, "To: %s\n", to);
+	    data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
+	    talloc_free(temp_line);
+	}
+
+	if (cc) {
+	    temp_line = talloc_asprintf(mapi_mem_ctx, "Cc: %s\n", cc);
+	    data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
+	    talloc_free(temp_line);
+	}
+
+	if (bcc) {
+	    temp_line = talloc_asprintf(mapi_mem_ctx, "Bcc: %s\n", bcc);
+	    data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
+	    talloc_free(temp_line);
+	}
+
+	if (subject) {
+	    temp_line = talloc_asprintf(mapi_mem_ctx, "Subject: %s\n", subject);
+	    data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
+	    talloc_free(temp_line);
+	}
+
+	temp_line = talloc_asprintf(mapi_mem_ctx, "Message-ID: %s\n", msgid);
+	data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
+	talloc_free(temp_line);
+
+	if (has_attach && *has_attach) {
+	    temp_line = talloc_asprintf(mapi_mem_ctx, "Content-Type: multipart/mixed; boundary=\"%s\"\n", MAPI_BOUNDARY);
+	    data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
+	    talloc_free(temp_line);
+	}
+
+	temp_line = talloc_asprintf(mapi_mem_ctx, "\n");
+	data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
+	talloc_free(temp_line);
+    } else {
+	talloc_free(lpProps);
+	mapi_object_release(&obj_message);
+	return (PS_UNDEFINED);
+    }
+    mapi_object_release(&obj_message);
 
     return ok;
 }
@@ -967,6 +1301,30 @@ static int
 mapi_fetch_body(int sock, struct query *ctl, int number, int *lenp)
 {
     int             ok = PS_SUCCESS;
+    enum MAPISTATUS retval;
+    struct SPropTagArray *SPropTagArray = NULL;
+    struct SPropValue *lpProps;
+    struct SRow     aRow;
+    struct SRow     aRow2;
+    struct SRowSet  rowset_attach;
+    mapi_object_t   obj_message;
+    mapi_object_t   obj_tb_attach;
+    mapi_object_t   obj_attach;
+    const char     *msgid;
+    mapi_id_t      *fid;
+    mapi_id_t      *mid;
+    const uint8_t  *has_attach = NULL;
+    const uint32_t *attach_num = NULL;
+    DATA_BLOB       body;
+    const char     *attach_filename;
+    const uint32_t *attach_size;
+    char           *attachment_data;
+    char           *magic;
+    char           *temp_line;
+    int             props_count;
+    int             attach_count;
+    uint8_t         format;
+
 
     if (outlevel >= O_MONITOR)
 	report(stdout, "MAPI> mapi_fetch_body(number %d)\n", number);
@@ -977,8 +1335,185 @@ mapi_fetch_body(int sock, struct query *ctl, int number, int *lenp)
 	report(stderr, GT_("MAPI: MAPI initilize error in mapi_fetch_body\n"));
 	return translate_mapi_error(ok);
     }
-    mapi_current_number = number;
-    *lenp = -1;			/* do not tell driver the real size of the body */
+    if (mapi_rowset.cRows < number)
+	return (PS_UNDEFINED);
+
+    talloc_free(mapi_buffer.data);
+    mapi_buffer.data = NULL;
+    mapi_buffer.length = 0;
+    mapi_buffer_count = 0;
+
+    fid = (mapi_id_t *) find_SPropValue_data(&(mapi_rowset.aRow[number - 1]), PR_FID);
+    mid = (mapi_id_t *) find_SPropValue_data(&(mapi_rowset.aRow[number - 1]), PR_MID);
+    mapi_object_init(&obj_message);
+
+    retval = OpenMessage(&mapi_obj_store, *fid, *mid, &obj_message, 0x0);
+    if (retval == MAPI_E_SUCCESS) {
+	SPropTagArray = set_SPropTagArray(mapi_mem_ctx,
+					  0x08,
+					  PR_MESSAGE_FLAGS,
+					  PR_INTERNET_MESSAGE_ID,
+					  PR_MSG_EDITOR_FORMAT,
+					  PR_BODY, PR_BODY_UNICODE, PR_HTML, PR_RTF_COMPRESSED, PR_HASATTACH);
+	retval = GetProps(&obj_message, SPropTagArray, &lpProps, &props_count);
+	MAPIFreeBuffer(SPropTagArray);
+	if (retval != MAPI_E_SUCCESS) {
+	    mapi_object_release(&obj_message);
+	    return translate_mapi_error(GetLastError());
+	}
+    }
+    /*
+     * Build a SRow structure 
+     */
+    aRow.ulAdrEntryPad = 0;
+    aRow.cValues = props_count;
+    aRow.lpProps = lpProps;
+
+    msgid = (const char *) find_SPropValue_data(&aRow, PR_INTERNET_MESSAGE_ID);
+    if (msgid) {
+	has_attach = (const uint8_t *) find_SPropValue_data(&aRow, PR_HASATTACH);
+	retval = octool_get_body(mapi_mem_ctx, &obj_message, &aRow, &body);
+	/*
+	 * body 
+	 */
+	if (body.length) {
+	    if (has_attach && *has_attach) {
+		temp_line = talloc_asprintf(mapi_mem_ctx, "--%s\n", MAPI_BOUNDARY);
+		data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
+		talloc_free(temp_line);
+	    }
+	    retval = GetBestBody(&obj_message, &format);
+	    switch (format) {
+	    case olEditorText:
+		temp_line = talloc_asprintf(mapi_mem_ctx, "Content-Type: text/plain; charset=us-ascii\n");
+		data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
+		talloc_free(temp_line);
+
+		temp_line = talloc_asprintf(mapi_mem_ctx, "Content-Transfer-Encoding: quoted-printable\n");
+		data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
+		talloc_free(temp_line);
+		/*
+		 * Just display UTF8 content inline 
+		 */
+		temp_line = talloc_asprintf(mapi_mem_ctx, "Content-Disposition: inline\n");
+		data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
+		talloc_free(temp_line);
+		break;
+	    case olEditorHTML:
+		temp_line = talloc_asprintf(mapi_mem_ctx, "Content-Type: text/html\n");
+		data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
+		talloc_free(temp_line);
+
+		temp_line = talloc_asprintf(mapi_mem_ctx, "Content-Transfer-Encoding: quoted-printable\n");
+		data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
+		talloc_free(temp_line);
+		break;
+	    case olEditorRTF:
+		temp_line = talloc_asprintf(mapi_mem_ctx, "Content-Type: text/rtf\n");
+		data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
+		talloc_free(temp_line);
+
+		temp_line = talloc_asprintf(mapi_mem_ctx, "Content-Transfer-Encoding: quoted-printable\n");
+		data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
+		talloc_free(temp_line);
+
+		temp_line = talloc_asprintf(mapi_mem_ctx, "--%s\n", MAPI_BOUNDARY);
+		data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
+		talloc_free(temp_line);
+		break;
+	    }
+
+	    /*-----------------------------------------------------------------------------
+	     *  encode body.data into quoted printable and append to mapi_buffer
+	     *-----------------------------------------------------------------------------*/
+	    quoted_printable_encode(&body);
+	    talloc_free(body.data);
+
+	    /*-----------------------------------------------------------------------------
+	     *  fetch attachments
+	     *-----------------------------------------------------------------------------*/
+	    if (has_attach && *has_attach) {
+		mapi_object_init(&obj_tb_attach);
+		retval = GetAttachmentTable(&obj_message, &obj_tb_attach);
+		if (retval == MAPI_E_SUCCESS) {
+		    SPropTagArray = set_SPropTagArray(mapi_mem_ctx, 0x1, PR_ATTACH_NUM);
+		    retval = SetColumns(&obj_tb_attach, SPropTagArray);
+		    MAPIFreeBuffer(SPropTagArray);
+		    MAPI_RETVAL_IF(retval, retval, NULL);
+
+		    retval = QueryRows(&obj_tb_attach, 0xa, TBL_ADVANCE, &rowset_attach);
+		    MAPI_RETVAL_IF(retval, retval, NULL);
+
+		    for (attach_count = 0; attach_count < rowset_attach.cRows; attach_count++) {
+			attach_num =
+			    (const uint32_t *) find_SPropValue_data(&(rowset_attach.aRow[attach_count]), PR_ATTACH_NUM);
+			retval = OpenAttach(&obj_message, *attach_num, &obj_attach);
+			if (retval == MAPI_E_SUCCESS) {
+			    SPropTagArray = set_SPropTagArray(mapi_mem_ctx, 0x3,
+							      PR_ATTACH_FILENAME, PR_ATTACH_LONG_FILENAME, PR_ATTACH_SIZE);
+			    lpProps = talloc_zero(mapi_mem_ctx, struct SPropValue);
+			    retval = GetProps(&obj_attach, SPropTagArray, &lpProps, &props_count);
+			    MAPIFreeBuffer(SPropTagArray);
+			    if (retval == MAPI_E_SUCCESS) {
+				aRow2.ulAdrEntryPad = 0;
+				aRow2.cValues = props_count;
+				aRow2.lpProps = lpProps;
+
+				attach_filename = get_filename(octool_get_propval(&aRow2, PR_ATTACH_LONG_FILENAME));
+				if (!attach_filename || (attach_filename && !strcmp(attach_filename, ""))) {
+				    attach_filename = get_filename(octool_get_propval(&aRow2, PR_ATTACH_FILENAME));
+				}
+				attach_size = (const uint32_t *) octool_get_propval(&aRow2, PR_ATTACH_SIZE);
+				attachment_data = get_base64_attachment(mapi_mem_ctx, obj_attach, *attach_size, &magic);
+				if (attachment_data) {
+				    temp_line = talloc_asprintf(mapi_mem_ctx, "\n\n--%s\n", MAPI_BOUNDARY);
+				    data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
+				    talloc_free(temp_line);
+
+				    temp_line =
+					talloc_asprintf(mapi_mem_ctx, "Content-Disposition: attachment; filename=\"%s\"\n",
+							attach_filename);
+				    data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
+				    talloc_free(temp_line);
+
+				    temp_line = talloc_asprintf(mapi_mem_ctx, "Content-Type: \"%s\"\n", magic);
+				    data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
+				    talloc_free(temp_line);
+
+				    temp_line = talloc_asprintf(mapi_mem_ctx, "Content-Transfer-Encoding: base64\n\n");
+				    data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
+				    talloc_free(temp_line);
+
+				    data_blob_append(mapi_mem_ctx, &mapi_buffer, attachment_data, strlen(attachment_data));
+				    talloc_free(attachment_data);
+				}
+			    }
+			    MAPIFreeBuffer(lpProps);
+			}
+		    }
+		    if (has_attach && *has_attach) {
+			temp_line = talloc_asprintf(mapi_mem_ctx, "\n--%s--\n", MAPI_BOUNDARY);
+			data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
+			talloc_free(temp_line);
+		    }
+		}
+
+	    }
+
+
+	    /*-----------------------------------------------------------------------------
+	     *  send the message delimiter
+	     *-----------------------------------------------------------------------------*/
+	    temp_line = talloc_asprintf(mapi_mem_ctx, ".\n", MAPI_BOUNDARY);
+	    data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
+	    talloc_free(temp_line);
+	}
+    } else {
+	talloc_free(lpProps);
+	mapi_object_release(&obj_message);
+	return (PS_UNDEFINED);
+    }
+    mapi_object_release(&obj_message);
 
     return ok;
 }
@@ -988,6 +1523,16 @@ mapi_trail(int sock, struct query *ctl, const char *tag)
 {
     if (outlevel >= O_MONITOR)
 	report(stdout, "MAPI> mapi_trail(tag %s)\n", tag);
+
+
+    /*-----------------------------------------------------------------------------
+     *  clear mapi buffer
+     *-----------------------------------------------------------------------------*/
+    talloc_free(mapi_buffer.data);
+    mapi_buffer.data = NULL;
+    mapi_buffer.length = 0;
+    mapi_buffer_count = 0;
+
     return PS_SUCCESS;
 }
 
@@ -1097,7 +1642,7 @@ static const struct method mapi = {
     NULL,			/* unencrypted port, not used by MAPI */
     NULL,			/* SSL port, not used by MAPI */
     FALSE,			/* this is not a tagged protocol */
-    FALSE,			/* this does not use a message delimiter */
+    TRUE,			/* since it's hard to calculate message size in MAPI, use a message delimiter */
     mapi_ok,			/* parse command response */
     mapi_getauth,		/* get authorization */
     mapi_getrange,		/* query range of messages */
@@ -1116,14 +1661,14 @@ static const struct method mapi = {
 
 int
 doMAPI(struct query *ctl)
-/*
- * retrieve messages using MAPI 
- */
+	/*
+	 * retrieve messages using MAPI 
+	 */
 {
     return (do_protocol(ctl, &mapi));
 }
 #endif				/* case MAPI_ENABLE */
 
-/*
- * mapi.c ends here 
- */
+    /*
+     * mapi.c ends here 
+     */

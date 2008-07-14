@@ -357,7 +357,22 @@ AC_ARG_ENABLE(POP2,
 test "$with_POP2" = "yes" && AC_DEFINE(POP2_ENABLE,1,Define if you want POP2 support compiled in)
 AM_CONDITIONAL(POP2_ENABLE, test "$with_POP2" = yes)
 
+
+###    Check for libmagic
+AC_CHECK_LIB([magic], [magic_open],
+	     [
+               AC_DEFINE(HAVE_LIBMAGIC, 1, [Define if you want to use libmagic])
+ 	       CEFLAGS="$CEFLAGS -lmagic -lz"
+	       enable_libmagic="yes"
+             ],
+	       AC_SUBST(MAGIC_LIBS)
+ 	     [
+               AC_MSG_WARN([libmagic is missing - can't enable MAPI support])
+	       enable_libmagic="no"
+ 	     ])
+
 ###	use option --enable-MAPI to compile in the MAPI support
+if test x"$enable_libmagic" = x"yes"; then
 AC_ARG_ENABLE(MAPI,
 	[  --enable-MAPI           compile in MAPI protocol support],
 	[with_MAPI=$enableval],
@@ -365,6 +380,7 @@ AC_ARG_ENABLE(MAPI,
 test "$with_MAPI" = "yes" && AC_DEFINE(MAPI_ENABLE,1,Define if you want MAPI support compiled in)
 CEFLAGS="$CEFLAGS `pkg-config libmapi --cflags --libs`"
 AM_CONDITIONAL(MAPI_ENABLE, test "$with_MAPI" = yes)
+fi
 
 ###	use option --disable-POP3 to omit the POP3 support
 AC_ARG_ENABLE(POP3,
