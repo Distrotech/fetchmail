@@ -450,62 +450,43 @@ int readheaders(int sock,
 	linelen = 0;
 	line[0] = '\0';
 	do {
-	    if (ctl->server.protocol != P_MAPI)
-	    {
-	        do {
-		    char	*sp, *tp;
+	    do {
+		char	*sp, *tp;
 
-		    set_timeout(mytimeout);
+		set_timeout(mytimeout);
+		if (ctl->server.protocol != P_MAPI)
+		{
 		    if ((n = SockRead(sock, buf, sizeof(buf)-1)) == -1) {
 		        set_timeout(0);
 		        free(line);
 		        return(PS_SOCKET);
 		    }
-		    set_timeout(0);
-
-		    /*
-		     * Smash out any NULs, they could wreak havoc later on.
-		     * Some network stacks seem to generate these at random,
-		     * especially (according to reports) at the beginning of the
-		     * first read.  NULs are illegal in RFC822 format.
-		     */
-		    for (sp = tp = buf; sp < buf + n; sp++)
-		        if (*sp)
-			    *tp++ = *sp;
-		    *tp = '\0';
-		    n = tp - buf;
-	        } while
-		      (n == 0);
-	    }
-	    else
-	    {
+		}
+		else
+		{
 #ifdef MAPI_ENABLE
-	        do {
-		    char	*sp, *tp;
-
-		    set_timeout(mytimeout);
 		    if ((n = MapiRead(sock, buf, sizeof(buf)-1)) == -1) {
 		        set_timeout(0);
 		        free(line);
 		        return(PS_SOCKET);
 		    }
-		    set_timeout(0);
-
-		    /*
-		     * Smash out any NULs, they could wreak havoc later on.
-		     * Some network stacks seem to generate these at random,
-		     * especially (according to reports) at the beginning of the
-		     * first read.  NULs are illegal in RFC822 format.
-		     */
-		    for (sp = tp = buf; sp < buf + n; sp++)
-		        if (*sp)
-			    *tp++ = *sp;
-		    *tp = '\0';
-		    n = tp - buf;
-	        } while
-		      (n == 0);
 #endif
-	    }
+		}
+		set_timeout(0);
+
+		/*
+		 * Smash out any NULs, they could wreak havoc later on.
+		 * Some network stacks seem to generate these at random,
+		 * especially (according to reports) at the beginning of the
+		 * first read.  NULs are illegal in RFC822 format.
+		 */
+		for (sp = tp = buf; sp < buf + n; sp++)
+		    if (*sp)
+			*tp++ = *sp;
+		*tp = '\0';
+		n = tp - buf;
+	    } while
+		  (n == 0);
 
 	    remaining -= n;
 	    linelen += n;
@@ -1402,37 +1383,31 @@ int readbody(int sock, struct query *ctl, flag forward, int len)
      */
     while (protocol->delimited || len > 0)
     {
+	set_timeout(mytimeout);
+	/* XXX FIXME: for undelimited protocols that ship the size, such
+	 * as IMAP, we might want to use the count of remaining characters
+	 * instead of the buffer size -- not for fetchmail 6.3.X though */
 	if(ctl->server.protocol != P_MAPI)
 	{
-	    set_timeout(mytimeout);
-	    /* XXX FIXME: for undelimited protocols that ship the size, such
-	     * as IMAP, we might want to use the count of remaining characters
-	     * instead of the buffer size -- not for fetchmail 6.3.X though */
 	    if ((linelen = SockRead(sock, inbufp, sizeof(buf)-4-(inbufp-buf)))==-1)
 	    {
 	        set_timeout(0);
 	        release_sink(ctl);
 	        return(PS_SOCKET);
 	    }
-	    set_timeout(0);
 	}
 	else
 	{
 #ifdef MAPI_ENABLE
-	    set_timeout(mytimeout);
-	    /* XXX FIXME: for undelimited protocols that ship the size, such
-	     * as IMAP, we might want to use the count of remaining characters
-	     * instead of the buffer size -- not for fetchmail 6.3.X though */
 	    if ((linelen = MapiRead(sock, inbufp, sizeof(buf)-4-(inbufp-buf)))==-1)
 	    {
 	        set_timeout(0);
 	        release_sink(ctl);
 	        return(PS_SOCKET);
 	    }
-	    set_timeout(0);
 #endif
 	}
-
+	set_timeout(0);
 
 	/* write the message size dots */
 	if (linelen > 0)
