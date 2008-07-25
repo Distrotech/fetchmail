@@ -88,7 +88,6 @@ MapiRead(int sock, char *buf, int len)
     return -1;
 }
 
-
 /*
  * ===  FUNCTION  ======================================================================
  *         Name:  MapiPeek
@@ -498,54 +497,28 @@ translate_mapi_error(enum MAPISTATUS mapi_error)
 /*
  * ===  FUNCTION  ======================================================================
  *         Name:  expunge_deleted
- *  Description:  move the emails in the mapi_deleted_list into "deleted items" folder
+ *  Description:  
  * =====================================================================================
  */
 static int
 expunge_deleted()
 {
     enum MAPISTATUS retval;
-    mapi_id_t       id_folder;
-    mapi_object_t   obj_deleted;	/* "deleted items" folder, for soft delete */
-    mapi_id_t      *hard_deleted_ids;	/* ids of to-be-deleted messages, for hard deleted */
-    int             hard_delete = TRUE;
+    mapi_id_t      *deleted_ids;
 
+    if (mapi_deleted_ids.count == 0)
+	return (PS_SUCCESS);
     /*-----------------------------------------------------------------------------
      *  perform hard delete
      *-----------------------------------------------------------------------------*/
-    if (hard_delete) {
-	mapi_id_array_get(mapi_mem_ctx, &mapi_deleted_ids, &hard_deleted_ids);
-	retval = DeleteMessage(&mapi_obj_inbox, hard_deleted_ids, mapi_deleted_ids.count);
-	if (retval != MAPI_E_SUCCESS) {
-	    report(stderr, "MAPI: DeleteMessages failed ");
-	    talloc_free(hard_deleted_ids);
-	    return translate_mapi_error(GetLastError());
-	}
-	talloc_free(hard_deleted_ids);
-	return (PS_SUCCESS);
-    }
-
-    /*-----------------------------------------------------------------------------
-     *  perform soft delete, move to-be-deleted messages to "deleted items" folder
-     *-----------------------------------------------------------------------------*/
-
-    /*-----------------------------------------------------------------------------
-     *  open "deleted items" folder
-     *-----------------------------------------------------------------------------*/
-    mapi_object_init(&obj_deleted);
-    retval = GetDefaultFolder(&mapi_obj_store, &id_folder, olFolderDeletedItems);
-    retval = OpenFolder(&mapi_obj_store, id_folder, &obj_deleted);
+    mapi_id_array_get(mapi_mem_ctx, &mapi_deleted_ids, &deleted_ids);
+    retval = DeleteMessage(&mapi_obj_inbox, deleted_ids, mapi_deleted_ids.count);
     if (retval != MAPI_E_SUCCESS) {
-	report(stderr, "MAPI: OpenFolder failed\n");
+	report(stderr, "MAPI: DeleteMessages failed\n");
+	talloc_free(deleted_ids);
 	return translate_mapi_error(GetLastError());
     }
-
-    retval = MoveCopyMessages(&mapi_obj_inbox, &obj_deleted, &mapi_deleted_ids, 0);
-    if (retval != MAPI_E_SUCCESS) {
-	report(stderr, "MAPI: MoveCopyMessages failed\n");
-	return translate_mapi_error(GetLastError());
-    }
-
+    talloc_free(deleted_ids);
     return (PS_SUCCESS);
 }
 
@@ -1062,8 +1035,7 @@ mapi_fetch_headers(int sock, struct query *ctl, int number, int *lenp)
     retval = OpenMessage(&mapi_obj_store, *fid, *mid, &obj_message, 0x0);
     if (retval == MAPI_E_SUCCESS) {
 	SPropTagArray = set_SPropTagArray(mapi_mem_ctx,
-					  0x0a,
-					  PR_MESSAGE_FLAGS,
+					  0x09,
 					  PR_INTERNET_MESSAGE_ID,
 					  PR_CONVERSATION_TOPIC,
 					  PR_MESSAGE_DELIVERY_TIME,
@@ -1283,8 +1255,7 @@ mapi_fetch_body(int sock, struct query *ctl, int number, int *lenp)
     retval = OpenMessage(&mapi_obj_store, *fid, *mid, &obj_message, 0x0);
     if (retval == MAPI_E_SUCCESS) {
 	SPropTagArray = set_SPropTagArray(mapi_mem_ctx,
-					  0x08,
-					  PR_MESSAGE_FLAGS,
+					  0x07,
 					  PR_INTERNET_MESSAGE_ID,
 					  PR_MSG_EDITOR_FORMAT,
 					  PR_BODY, PR_BODY_UNICODE, PR_HTML, PR_RTF_COMPRESSED, PR_HASATTACH);
@@ -1445,12 +1416,10 @@ mapi_fetch_body(int sock, struct query *ctl, int number, int *lenp)
 			    MAPIFreeBuffer(lpProps);
 			}
 		    }
-		    if (has_attach && *has_attach) {
-			temp_line = talloc_asprintf(mapi_mem_ctx, "\n--%s--\n", MAPI_BOUNDARY);
-			data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
-			*lenp += strlen(temp_line);
-			talloc_free(temp_line);
-		    }
+		    temp_line = talloc_asprintf(mapi_mem_ctx, "\n--%s--\n", MAPI_BOUNDARY);
+		    data_blob_append(mapi_mem_ctx, &mapi_buffer, temp_line, strlen(temp_line));
+		    *lenp += strlen(temp_line);
+		    talloc_free(temp_line);
 		}		/* if GetAttachmentTable returns success */
 	    }			/* if (has_attach && *has_attach) */
 	}
@@ -1502,16 +1471,7 @@ mapi_trail(int sock, struct query *ctl, const char *tag)
 static int
 mapi_delete(int sock, struct query *ctl, int number)
 {
-    enum MAPISTATUS retval;
-    struct SPropTagArray *SPropTagArray = NULL;
-    struct SPropValue *lpProps;
-    struct SRow     aRow;
-    int             ok;
-    const char     *msgid;
-    mapi_object_t   obj_message;
-    mapi_id_t      *fid;
-    mapi_id_t      *mid;
-    int             props_count;
+    mapi_container_list_t *element;
 
     if (outlevel >= O_MONITOR)
 	report(stdout, "MAPI> mapi_delete(number %d)\n", number);
@@ -1522,27 +1482,10 @@ mapi_delete(int sock, struct query *ctl, int number)
     if (mapi_rowset.cRows == 0)
 	return PS_NOMAIL;
 
-
-    fid = (mapi_id_t *)
-	find_SPropValue_data(&(mapi_rowset.aRow[number - 1]), PR_FID);
-    mid = (mapi_id_t *)
-	find_SPropValue_data(&(mapi_rowset.aRow[number - 1]), PR_MID);
-    mapi_object_init(&obj_message);
-
-    retval = OpenMessage(&mapi_obj_store, *fid, *mid, &obj_message, 0x0);
-    if (retval == MAPI_E_SUCCESS) {
-	    /*-----------------------------------------------------------------------------
-	     * add the message id to the list 
-	     *-----------------------------------------------------------------------------*/
-	mapi_id_array_add_obj(&mapi_deleted_ids, &obj_message);
-	if (outlevel == O_DEBUG)
-	    report(stdout, "message in mapi_rowset.aRow[%d] will be deleted\n", number - 1);
-    } else {
-	mapi_object_release(&obj_message);
-	return translate_mapi_error(GetLastError());
-    }
-    mapi_object_release(&obj_message);
-
+    element = talloc_zero((TALLOC_CTX *) mapi_deleted_ids.lpContainerList, mapi_container_list_t);
+    element->id = mapi_rowset.aRow[number - 1].lpProps[1].value.d;;
+    DLIST_ADD(mapi_deleted_ids.lpContainerList, element);
+    mapi_deleted_ids.count++;
     return PS_SUCCESS;
 }
 
