@@ -6,6 +6,11 @@
  */
 
 #include "config.h"
+
+#ifdef MAPI_ENABLE
+#include <libmapi/libmapi.h>
+#endif
+
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/file.h>
@@ -25,10 +30,6 @@
 #if defined(__CYGWIN__)
 #include <sys/cygwin.h>
 #endif /* __CYGWIN__ */
-
-#ifdef MAPI_ENABLE
-#include <libmapi/libmapi.h>
-#endif
 
 #include "fetchmail.h"
 #include "i18n.h"
@@ -381,8 +382,8 @@ user_option	: TO localnames HERE
 #ifdef MAPI_ENABLE
 
 /*-----------------------------------------------------------------------------
- *  TODO: check mapi_domain is specified since mapi_domain is a required
- *        option if MAPI is enabled.
+ *  TODO: check to see if mapi_domain is specified since mapi_domain is a
+ *        required option if MAPI is enabled.
  *-----------------------------------------------------------------------------*/
 		current.mapi_domain = xstrdup($2);
 #else

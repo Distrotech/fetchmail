@@ -34,13 +34,6 @@ struct addrinfo;
 #include <netdb.h>
 #include <stdio.h>
 
-#ifdef MAPI_ENABLE
-#include <libmapi/libmapi.h>
-#include "openchange-tools.h"
-#define MAPI_MAX_HEADER_LINE	32
-#define MAPI_BOUNDARY	"=_DocE+STaALJfprDB"
-#endif
-
 /* Import Trio if needed */
 #if !defined(HAVE_SNPRINTF) || !defined(HAVE_VSNPRINTF)
 #  include "trio/trio.h"
@@ -777,7 +770,7 @@ int must_tls(struct query *ctl);
 int rfc822_valid_msgid(const unsigned char *);
 
 #ifdef MAPI_ENABLE
-/* virtual socket for mapi, so MapiRead matches interface of SockRead
+/* virtual socket for mapi. MapiRead matches interface of SockRead
  * and MapiPeek matches interface of SockPeek */
 int MapiRead(int sock, char *buf, int len);
 int MapiPeek(int sock);

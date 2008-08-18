@@ -10,16 +10,38 @@
  *       Revision:  
  *       Compiler:  
  *
- *         Author:  Yangyan Li (), yangyan.li1986@gmail.com
+ *         Author:  Yangyan Li, yangyan.li1986@gmail.com
  *        Company:  Shenzhen Institute of Advanced Technology, CAS
  *
  * =====================================================================================
  */
 
-// TODO: write copyright stuff here
+/***************************************************************************
+ *   Copyright (C) 2008 by Yangyan Li   *
+ *   yangyan.li1986@gmail.com   *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 3 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
 
 #include  "config.h"
+
 #ifdef MAPI_ENABLE
+#include <libmapi/libmapi.h>
+#include "openchange-tools.h"
+
 #include  <stdio.h>
 #include  <string.h>
 #include  <ctype.h>
@@ -31,19 +53,18 @@
 #endif
 #include  <errno.h>
 
-#include  <libmapi/libmapi.h>
 #include <magic.h>
 
 #include  "fetchmail.h"
-#include  "socket.h"
 #include  "i18n.h"
 
 #define DEFAULT_MAPI_PROFILES "%s/.fetchmail_mapi_profiles.ldb"
+#define MAPI_BOUNDARY	"=_DocE+STaALJfprDB"
 
 static TALLOC_CTX *mapi_mem_ctx;
 static struct mapi_profile *mapi_profile;
 static mapi_object_t mapi_obj_store;
-static mapi_object_t mapi_obj_inbox;
+static mapi_object_t mapi_obj_folder;
 static mapi_object_t mapi_obj_table;
 static mapi_id_array_t mapi_deleted_ids;
 static struct SRowSet mapi_rowset;
@@ -59,6 +80,13 @@ static DATA_BLOB mapi_buffer;
 static int      mapi_buffer_count;
 
 
+
+/*
+ * ===  FUNCTION  ======================================================================
+ *         Name:  MapiWrite
+ *  Description:  write data into mapi_buffer
+ * =====================================================================================
+ */
 #if defined(HAVE_STDARG_H)
 void
 MapiWrite(int *lenp, const char *format, ...)
@@ -120,7 +148,7 @@ MapiRead(int sock, char *buf, int len)
 /*
  * ===  FUNCTION  ======================================================================
  *         Name:  MapiPeek
- *  Description:  match the interface to SockPeek.
+ *  Description:  match the interface of SockPeek.
  * =====================================================================================
  */
 int
@@ -308,11 +336,12 @@ quoted_printable_encode(const DATA_BLOB * body, int *lenp)
     }
 }
 
+
 static void
 mapi_clean()
 {
     mapi_object_release(&mapi_obj_table);
-    mapi_object_release(&mapi_obj_inbox);
+    mapi_object_release(&mapi_obj_folder);
     mapi_object_release(&mapi_obj_store);
     MAPIUninitialize();
     talloc_free(mapi_mem_ctx);
@@ -320,16 +349,86 @@ mapi_clean()
     mapi_initialized = FALSE;
 }
 
+
+/*
+ * ===  FUNCTION  ======================================================================
+ *         Name:  mapi_open_folder
+ *  Description:  open folder that matches the name specified by --folder option
+ *                Note: it only searches in the top level, i.e. it's not recursive 
+ * =====================================================================================
+ */
+static int
+mapi_open_folder(mapi_object_t * obj_container, mapi_object_t * obj_child, const char *folder)
+{
+    enum MAPISTATUS retval;
+    struct SPropTagArray *SPropTagArray;
+    struct SPropValue		*lpProps;
+    struct SRowSet  rowset;
+    mapi_object_t   obj_htable;
+    const char     *name;
+    const uint64_t *fid;
+    uint32_t        index;
+    int             count;
+
+    mapi_object_init(&obj_htable);
+    retval = GetHierarchyTable(obj_container, &obj_htable, 0, &count);
+    if (retval != MAPI_E_SUCCESS)
+	return GetLastError();
+
+    SPropTagArray = set_SPropTagArray(mapi_mem_ctx, 0x2, PR_DISPLAY_NAME, PR_FID);
+    retval = SetColumns(&obj_htable, SPropTagArray);
+    MAPIFreeBuffer(SPropTagArray);
+    if (retval != MAPI_E_SUCCESS)
+	return GetLastError();
+
+    retval = QueryRows(&obj_htable, count, TBL_ADVANCE, &rowset);
+    if (retval != MAPI_E_SUCCESS)
+	return GetLastError();
+
+    if (!rowset.cRows)
+	return MAPI_E_NOT_FOUND;
+
+    for (index = 0; index < rowset.cRows; index++) {
+	fid = (const uint64_t *) find_SPropValue_data(&rowset.aRow[index], PR_FID);
+	name = (const char *) find_SPropValue_data(&rowset.aRow[index], PR_DISPLAY_NAME);
+
+	if (fid && !strcmp(name, folder)) {
+	    retval = OpenFolder(obj_container, *fid, obj_child);
+	    if (retval != MAPI_E_SUCCESS)
+		break;
+
+	    /*-----------------------------------------------------------------------------
+	     *  check the class of the folder, only IPF.Note and IPF.Post are supported
+	     *-----------------------------------------------------------------------------*/
+	    SPropTagArray = set_SPropTagArray(mapi_mem_ctx, 0x1, PR_CONTAINER_CLASS);
+	    retval = GetProps(obj_container, SPropTagArray, &lpProps, &count);
+	    MAPIFreeBuffer(SPropTagArray);
+
+	    if ((lpProps[0].ulPropTag != PR_CONTAINER_CLASS) || (retval != MAPI_E_SUCCESS))
+		break;
+
+	    if (strcmp(lpProps[0].value.lpszA, "IPF.Note") == 0 || strcmp(lpProps[0].value.lpszA, "IPF.Post") == 0)
+		return MAPI_E_SUCCESS;
+	}
+    }
+
+    report(stderr, GT_("MAPI: No folder matches the one specified by --folder option\n"));
+    return MAPI_E_NOT_FOUND;
+}
+
 static int
 mapi_init(const char *folder)
 {
     enum MAPISTATUS retval;
     struct mapi_session *session = NULL;
-    int             ok = MAPI_E_SUCCESS;
+    mapi_object_t   obj_tis;
     mapi_id_t       id_folder;
     struct SPropTagArray *SPropTagArray = NULL;
     const char     *profname;
     uint32_t        count;
+
+    if (mapi_initialized)
+	mapi_clean();
 
     mapi_mem_ctx = talloc_init("fetchmail");
 
@@ -339,9 +438,8 @@ mapi_init(const char *folder)
     retval = MAPIInitialize(mapi_profdb);
     if (retval != MAPI_E_SUCCESS) {
 	report(stderr, GT_("MAPI: MAPIInitialize failed\n"));
-	ok = GetLastError();
 	mapi_clean();
-	return ok;
+	return GetLastError();
     }
 
     /*-----------------------------------------------------------------------------
@@ -350,17 +448,15 @@ mapi_init(const char *folder)
     retval = GetDefaultProfile(&profname);
     if (retval != MAPI_E_SUCCESS) {
 	report(stderr, GT_("MAPI: GetDefaultProfile failed\n"));
-	ok = GetLastError();
 	mapi_clean();
-	return ok;
+	return GetLastError();
     }
 
     retval = MapiLogonEx(&session, profname, password);
     if (retval != MAPI_E_SUCCESS) {
 	report(stderr, GT_("MAPI: MapiLogonEx failed\n"));
-	ok = GetLastError();
 	mapi_clean();
-	return ok;
+	return GetLastError();
     }
     mapi_profile = session->profile;
 
@@ -372,65 +468,82 @@ mapi_init(const char *folder)
     retval = OpenMsgStore(&mapi_obj_store);
     if (retval != MAPI_E_SUCCESS) {
 	report(stderr, GT_("MAPI: OpenMsgStore failed\n"));
-	ok = GetLastError();
 	mapi_clean();
-	return ok;
+	return GetLastError();
     }
 
-    /*-----------------------------------------------------------------------------
-     *  Open folder
-     *  TODO: open folder specified by --folder option
-     *-----------------------------------------------------------------------------*/
+    if (folder != NULL) {
+	/*-----------------------------------------------------------------------------
+         *  open TopInformationStore
+         *-----------------------------------------------------------------------------*/
+	retval = GetDefaultFolder(&mapi_obj_store, &id_folder, olFolderTopInformationStore);
+	if (retval != MAPI_E_SUCCESS) {
+	    report(stderr, GT_("MAPI: GetDefaultFolder-olFolderTopInformationStore failed\n"));
+	    mapi_clean();
+	    return GetLastError();
+	}
 
-    /*-----------------------------------------------------------------------------
-     *  open inbox by default
-     *-----------------------------------------------------------------------------*/
-    retval = GetDefaultFolder(&mapi_obj_store, &id_folder, olFolderInbox);
-    if (retval != MAPI_E_SUCCESS) {
-	report(stderr, GT_("MAPI: OpenMsgStore failed\n"));
-	ok = GetLastError();
-	mapi_clean();
-	return ok;
-    }
+	mapi_object_init(&obj_tis);
+	retval = OpenFolder(&mapi_obj_store, id_folder, &obj_tis);
+	if (retval != MAPI_E_SUCCESS) {
+	    report(stderr, GT_("MAPI: OpenFolder-olFolderTopInformationStore failed\n"));
+	    mapi_clean();
+	    return GetLastError();
+	}
 
-    mapi_object_init(&mapi_obj_inbox);
-    retval = OpenFolder(&mapi_obj_store, id_folder, &mapi_obj_inbox);
-    if (retval != MAPI_E_SUCCESS) {
-	report(stderr, GT_("MAPI: OpenMsgStore failed\n"));
-	ok = GetLastError();
-	mapi_clean();
-	return ok;
+	retval = mapi_open_folder(&obj_tis, &mapi_obj_folder, folder);
+	if (retval != MAPI_E_SUCCESS) {
+	    report(stderr, GT_("MAPI: mapi_open_folder failed\n"));
+	    mapi_clean();
+	    return retval;
+	}
+    } else {
+	/*-----------------------------------------------------------------------------
+         *  open default Inbox
+         *-----------------------------------------------------------------------------*/
+	retval = GetDefaultFolder(&mapi_obj_store, &id_folder, olFolderInbox);
+	if (retval != MAPI_E_SUCCESS) {
+	    report(stderr, GT_("MAPI: GetDefaultFolder-olFolderInbox failed\n"));
+	    mapi_clean();
+	    return GetLastError();
+	}
+
+	mapi_object_init(&mapi_obj_folder);
+	retval = OpenFolder(&mapi_obj_store, id_folder, &mapi_obj_folder);
+	if (retval != MAPI_E_SUCCESS) {
+	    report(stderr, GT_("MAPI: OpenFolder failed\n"));
+	    mapi_clean();
+	    return GetLastError();
+	}
     }
 
     mapi_object_init(&mapi_obj_table);
-    retval = GetContentsTable(&mapi_obj_inbox, &mapi_obj_table, 0, &count);
+    retval = GetContentsTable(&mapi_obj_folder, &mapi_obj_table, 0, &count);
     if (retval != MAPI_E_SUCCESS) {
-	report(stderr, GT_("MAPI: OpenMsgStore failed\n"));
-	ok = GetLastError();
+	report(stderr, GT_("MAPI: GetContentsTable failed\n"));
 	mapi_clean();
-	return ok;
+	return GetLastError();
     }
 
     SPropTagArray = set_SPropTagArray(mapi_mem_ctx, 0x2, PR_FID, PR_MID);
     retval = SetColumns(&mapi_obj_table, SPropTagArray);
     MAPIFreeBuffer(SPropTagArray);
     if (retval != MAPI_E_SUCCESS) {
-	report(stderr, GT_("MAPI: OpenMsgStore failed\n"));
-	ok = GetLastError();
+	report(stderr, GT_("MAPI: SetColumns failed\n"));
 	mapi_clean();
-	return ok;
+	return GetLastError();
     }
 
     retval = QueryRows(&mapi_obj_table, count, TBL_ADVANCE, &mapi_rowset);
     if (retval != MAPI_E_SUCCESS) {
-	ok = GetLastError();
+	report(stderr, GT_("MAPI: QueryRows failed\n"));
 	mapi_clean();
-	return ok;
+	return GetLastError();
     }
 
     mapi_id_array_init(&mapi_deleted_ids);
     mapi_initialized = TRUE;
-    return ok;
+    return MAPI_E_SUCCESS;
 }
 
 /*
@@ -526,7 +639,7 @@ translate_mapi_error(enum MAPISTATUS mapi_error)
 /*
  * ===  FUNCTION  ======================================================================
  *         Name:  expunge_deleted
- *  Description:  
+ *  Description:  perform hard delete
  * =====================================================================================
  */
 static int
@@ -541,12 +654,13 @@ expunge_deleted()
      *  perform hard delete
      *-----------------------------------------------------------------------------*/
     mapi_id_array_get(mapi_mem_ctx, &mapi_deleted_ids, &deleted_ids);
-    retval = DeleteMessage(&mapi_obj_inbox, deleted_ids, mapi_deleted_ids.count);
+    retval = DeleteMessage(&mapi_obj_folder, deleted_ids, mapi_deleted_ids.count);
     if (retval != MAPI_E_SUCCESS) {
 	report(stderr, "MAPI: DeleteMessages failed\n");
 	talloc_free(deleted_ids);
 	return translate_mapi_error(GetLastError());
     }
+
     talloc_free(deleted_ids);
     return (PS_SUCCESS);
 }
@@ -564,7 +678,7 @@ mapi_ok(int sock, char *argbuf)
     if (outlevel >= O_MONITOR)
 	report(stdout, "MAPI> mapi_ok()\n");
 
-    return PS_SUCCESS;
+    return (PS_SUCCESS);
 }
 
 
@@ -780,7 +894,7 @@ static int
 mapi_getrange(int sock, struct query *ctl, const char *folder, int *countp, int *newp, int *bytes)
 {
     enum MAPISTATUS retval;
-    int             ok = PS_SUCCESS;
+    int             flag = PS_SUCCESS;
     struct SPropTagArray *SPropTagArray = NULL;
     struct SPropValue *lpProps;
     struct SRow     aRow;
@@ -802,8 +916,8 @@ mapi_getrange(int sock, struct query *ctl, const char *folder, int *countp, int 
     /*-----------------------------------------------------------------------------
      * initialize mapi here
      *-----------------------------------------------------------------------------*/
-    ok = mapi_init(NULL);
-    if (ok) {
+    flag = mapi_init(folder);
+    if (flag) {
 	report(stderr, GT_("MAPI: MAPI is not initialized\n"));
 	return (PS_UNDEFINED);
     }
@@ -822,11 +936,11 @@ mapi_getrange(int sock, struct query *ctl, const char *folder, int *countp, int 
 	    retval = GetProps(&obj_message, SPropTagArray, &lpProps, &props_count);
 	    MAPIFreeBuffer(SPropTagArray);
 	    if (retval != MAPI_E_SUCCESS) {
-		ok = translate_mapi_error(GetLastError());
+		flag = translate_mapi_error(GetLastError());
 		talloc_free(lpProps);
 		mapi_object_release(&obj_message);
 		mapi_clean();
-		return ok;
+		return flag;
 	    }
 
 	    /*-----------------------------------------------------------------------------
@@ -863,7 +977,7 @@ static int
 mapi_getpartialsizes(int sock, int first, int last, int *sizes)
 {
     enum MAPISTATUS retval;
-    int             ok = PS_SUCCESS;
+    int             flag = PS_SUCCESS;
     struct SPropTagArray *SPropTagArray = NULL;
     struct SPropValue *lpProps;
     struct SRow     aRow;
@@ -897,11 +1011,11 @@ mapi_getpartialsizes(int sock, int first, int last, int *sizes)
 	    retval = GetProps(&obj_message, SPropTagArray, &lpProps, &props_count);
 	    MAPIFreeBuffer(SPropTagArray);
 	    if (retval != MAPI_E_SUCCESS) {
-		ok = translate_mapi_error(GetLastError());
+		flag = translate_mapi_error(GetLastError());
 		talloc_free(lpProps);
 		mapi_object_release(&obj_message);
 		mapi_clean();
-		return ok;
+		return flag;
 	    }
 
 	    /*
@@ -953,7 +1067,6 @@ static int
 mapi_is_old(int sock, struct query *ctl, int number)
 {
     enum MAPISTATUS retval;
-    int             ok;
     int             flag = FALSE;
     struct SPropTagArray *SPropTagArray = NULL;
     struct SPropValue *lpProps;
@@ -1010,6 +1123,13 @@ mapi_is_old(int sock, struct query *ctl, int number)
     return flag;
 }
 
+/*
+ * ===  FUNCTION  ======================================================================
+ *         Name:  smtp_address
+ *  Description:  write the smtp address which is crosponding to the given display name,
+ *                into mapi_buffer
+ * =====================================================================================
+ */
 static void
 smtp_address(int *lenp, const char *name)
 {
@@ -1022,7 +1142,6 @@ smtp_address(int *lenp, const char *name)
     uint8_t         ulFlags;
 
     SPropTagArray = set_SPropTagArray(mapi_mem_ctx, 0x02, PR_DISPLAY_NAME_UNICODE, PR_SMTP_ADDRESS_UNICODE);
-
     count = 0x7;
     ulFlags = TABLE_START;
     do {
@@ -1039,7 +1158,8 @@ smtp_address(int *lenp, const char *name)
 	    for (i = 0; i < SRowSet->cRows; i++) {
 		display_name = (const char *) find_SPropValue_data(&SRowSet->aRow[i], PR_DISPLAY_NAME_UNICODE);
 		if (strcmp(display_name, name) == 0) {
-		    MapiWrite(lenp, " <%s>\n", (const char *) find_SPropValue_data(&SRowSet->aRow[i], PR_SMTP_ADDRESS_UNICODE));
+		    MapiWrite(lenp, " <%s>\n",
+			      (const char *) find_SPropValue_data(&SRowSet->aRow[i], PR_SMTP_ADDRESS_UNICODE));
 		    MAPIFreeBuffer(SRowSet);
 		    MAPIFreeBuffer(SPropTagArray);
 		    return;
@@ -1057,15 +1177,13 @@ smtp_address(int *lenp, const char *name)
 /*
  * ===  FUNCTION  ======================================================================
  *         Name:  mapi_fetch_headers
- *  Description:  request headers of the nth message
- *                set mapi_current_number to number, other work is done by readheaders()
- *                in transact.c
+ *  Description:  request headers of the nth message, write message headers data into
+ *                mapi_buffer
  * =====================================================================================
  */
 static int
 mapi_fetch_headers(int sock, struct query *ctl, int number, int *lenp)
 {
-    int             ok = PS_SUCCESS;
     enum MAPISTATUS retval;
     struct SPropTagArray *SPropTagArray = NULL;
     struct SPropValue *lpProps;
@@ -1133,7 +1251,12 @@ mapi_fetch_headers(int sock, struct query *ctl, int number, int *lenp)
 	to = (const char *) octool_get_propval(&aRow, PR_DISPLAY_TO);
 	cc = (const char *) octool_get_propval(&aRow, PR_DISPLAY_CC);
 	bcc = (const char *) octool_get_propval(&aRow, PR_DISPLAY_BCC);
-	if (!to && !cc && !bcc) {
+
+	/*-----------------------------------------------------------------------------
+	 * octool_get_propval() will not return NULL even if PR_DISPLAY_TO,
+	 * PR_DISPLAY_CC or PR_DISPLAY_TO is null, so have a test on their lengths.
+	 *-----------------------------------------------------------------------------*/
+	if (strlen(to) * strlen(cc) * strlen(bcc)) {
 	    talloc_free(lpProps);
 	    mapi_object_release(&obj_message);
 	    return (PS_UNDEFINED);
@@ -1159,17 +1282,17 @@ mapi_fetch_headers(int sock, struct query *ctl, int number, int *lenp)
 	MapiWrite(lenp, "From: %s", from);
 	smtp_address(lenp, from);
 
-	if (to) {
+	if (strlen(to)) {
 	    MapiWrite(lenp, "To: %s", to);
 	    smtp_address(lenp, to);
 	}
 
-	if (cc) {
+	if (strlen(cc)) {
 	    MapiWrite(lenp, "Cc: %s", cc);
 	    smtp_address(lenp, cc);
 	}
 
-	if (bcc) {
+	if (strlen(bcc)) {
 	    MapiWrite(lenp, "Bcc: %s", bcc);
 	    smtp_address(lenp, bcc);
 	}
@@ -1214,25 +1337,23 @@ mapi_fetch_headers(int sock, struct query *ctl, int number, int *lenp)
     talloc_free(lpProps);
     mapi_object_release(&obj_message);
 
-    return ok;
+    return (PS_SUCCESS);
 }
 
 
 /*
  * ===  FUNCTION  ======================================================================
  *         Name:  mapi_fetch_body
- *  Description:  request body of nth message
- *                set mapi_current_number to number, other work is done by readbody()
- *                in transact.c
+ *  Description:  request body of nth message, write message body data into mapi_buffer
  * =====================================================================================
  */
 static int
 mapi_fetch_body(int sock, struct query *ctl, int number, int *lenp)
 {
-    int             ok = PS_SUCCESS;
     enum MAPISTATUS retval;
     struct SPropTagArray *SPropTagArray = NULL;
-    struct SPropValue *lpProps;
+    struct SPropValue *lpProps = NULL;
+    struct SPropValue *attach_lpProps = NULL;
     struct SRow     aRow;
     struct SRow     aRow2;
     struct SRowSet  rowset_attach;
@@ -1346,10 +1467,16 @@ mapi_fetch_body(int sock, struct query *ctl, int number, int *lenp)
 		    SPropTagArray = set_SPropTagArray(mapi_mem_ctx, 0x1, PR_ATTACH_NUM);
 		    retval = SetColumns(&obj_tb_attach, SPropTagArray);
 		    MAPIFreeBuffer(SPropTagArray);
-		    MAPI_RETVAL_IF(retval, retval, NULL);
+		    if (retval != MAPI_E_SUCCESS) {
+			mapi_object_release(&obj_message);
+			return translate_mapi_error(GetLastError());
+		    }
 
 		    retval = QueryRows(&obj_tb_attach, 0xa, TBL_ADVANCE, &rowset_attach);
-		    MAPI_RETVAL_IF(retval, retval, NULL);
+		    if (retval != MAPI_E_SUCCESS) {
+			mapi_object_release(&obj_message);
+			return translate_mapi_error(GetLastError());
+		    }
 
 		    for (attach_count = 0; attach_count < rowset_attach.cRows; attach_count++) {
 			attach_num =
@@ -1358,13 +1485,12 @@ mapi_fetch_body(int sock, struct query *ctl, int number, int *lenp)
 			if (retval == MAPI_E_SUCCESS) {
 			    SPropTagArray = set_SPropTagArray(mapi_mem_ctx, 0x3,
 							      PR_ATTACH_FILENAME, PR_ATTACH_LONG_FILENAME, PR_ATTACH_SIZE);
-			    lpProps = talloc_zero(mapi_mem_ctx, struct SPropValue);
-			    retval = GetProps(&obj_attach, SPropTagArray, &lpProps, &props_count);
+			    retval = GetProps(&obj_attach, SPropTagArray, &attach_lpProps, &props_count);
 			    MAPIFreeBuffer(SPropTagArray);
 			    if (retval == MAPI_E_SUCCESS) {
 				aRow2.ulAdrEntryPad = 0;
 				aRow2.cValues = props_count;
-				aRow2.lpProps = lpProps;
+				aRow2.lpProps = attach_lpProps;
 
 				attach_filename = get_filename(octool_get_propval(&aRow2, PR_ATTACH_LONG_FILENAME));
 				if (!attach_filename || (attach_filename && !strcmp(attach_filename, ""))) {
@@ -1382,7 +1508,7 @@ mapi_fetch_body(int sock, struct query *ctl, int number, int *lenp)
 				    talloc_free(attachment_data);
 				}
 			    }
-			    MAPIFreeBuffer(lpProps);
+			    talloc_free(attach_lpProps);
 			}
 		    }
 		    MapiWrite(lenp, "\n--%s--\n", MAPI_BOUNDARY);
@@ -1392,17 +1518,25 @@ mapi_fetch_body(int sock, struct query *ctl, int number, int *lenp)
 	/*-----------------------------------------------------------------------------
 	 *  send the message delimiter
 	 *-----------------------------------------------------------------------------*/
-	MapiWrite(lenp, "\n.\n\0", MAPI_BOUNDARY);
+	MapiWrite(lenp, "\n.\n\0");
     } else {
 	talloc_free(lpProps);
 	mapi_object_release(&obj_message);
 	return (PS_UNDEFINED);
     }
+    talloc_free(lpProps);
     mapi_object_release(&obj_message);
 
-    return ok;
+    return (PS_SUCCESS);
 }
 
+/*
+ * ===  FUNCTION  ======================================================================
+ *         Name:  mapi_tail
+ *  Description:  will be invoked after mapi_fetch_body and mapi_fetch_headers to clear
+ *                mapi_buffer.
+ * =====================================================================================
+ */
 static int
 mapi_trail(int sock, struct query *ctl, const char *tag)
 {
@@ -1425,10 +1559,22 @@ mapi_trail(int sock, struct query *ctl, const char *tag)
  *         Name:  mapi_fetch_delete
  *  Description:  set delete flag for given message
  * =====================================================================================
- */ static int
+ */
+static int
 mapi_delete(int sock, struct query *ctl, int number)
 {
     mapi_container_list_t *element;
+    enum MAPISTATUS retval;
+    const char     *profname = NULL;
+    int             flag = PS_UNDEFINED;
+    struct SPropTagArray *SPropTagArray = NULL;
+    struct SPropValue *lpProps;
+    struct SRow     aRow;
+    mapi_object_t   obj_message;
+    const char     *msgid;
+    mapi_id_t      *fid;
+    mapi_id_t      *mid;
+    int             props_count;
 
     if (outlevel >= O_MONITOR)
 	report(stdout, "MAPI> mapi_delete(number %d)\n", number);
@@ -1437,24 +1583,67 @@ mapi_delete(int sock, struct query *ctl, int number)
 	return (PS_UNDEFINED);
 
     if (mapi_rowset.cRows == 0)
-	return PS_NOMAIL;
+	return (PS_NOMAIL);
 
     element = talloc_zero((TALLOC_CTX *) mapi_deleted_ids.lpContainerList, mapi_container_list_t);
-    element->id = mapi_rowset.aRow[number - 1].lpProps[1].value.d;;
+    element->id = mapi_rowset.aRow[number - 1].lpProps[1].value.d;
     DLIST_ADD(mapi_deleted_ids.lpContainerList, element);
     mapi_deleted_ids.count++;
-    return PS_SUCCESS;
+
+    /*-----------------------------------------------------------------------------
+     *  remove id in the profile
+     *-----------------------------------------------------------------------------*/
+    if (!ctl->mapi_profname)
+	profname = ctl->remotename;	/* use the remotename as the profile name */
+    else
+	profname = ctl->mapi_profname;
+
+    fid = (mapi_id_t *) find_SPropValue_data(&(mapi_rowset.aRow[number - 1]), PR_FID);
+    mid = (mapi_id_t *) find_SPropValue_data(&(mapi_rowset.aRow[number - 1]), PR_MID);
+    mapi_object_init(&obj_message);
+
+    retval = OpenMessage(&mapi_obj_store, *fid, *mid, &obj_message, 0x0);
+    if (retval == MAPI_E_SUCCESS) {
+	SPropTagArray = set_SPropTagArray(mapi_mem_ctx, 0x1, PR_INTERNET_MESSAGE_ID);
+	retval = GetProps(&obj_message, SPropTagArray, &lpProps, &props_count);
+	MAPIFreeBuffer(SPropTagArray);
+	if (retval == MAPI_E_SUCCESS) {
+	    /*
+	     * Build a SRow structure 
+	     */
+	    aRow.ulAdrEntryPad = 0;
+	    aRow.cValues = props_count;
+	    aRow.lpProps = lpProps;
+
+	    msgid = (const char *) find_SPropValue_data(&aRow, PR_INTERNET_MESSAGE_ID);
+	    if (msgid) {
+		retval = mapi_profile_delete_string_attr(profname, "Message-ID", msgid);
+		if (retval == MAPI_E_SUCCESS) {
+		    if (outlevel == O_DEBUG)
+			report(stdout, "MAPI> message %d with Message-ID=%s will be deleted\n", number, msgid);
+		    flag = PS_SUCCESS;
+		}
+	    }
+	} else
+	    mapi_clean();
+	talloc_free(lpProps);
+    }
+
+    mapi_object_release(&obj_message);
+    return flag;
 }
+
+
 /*
  * ===  FUNCTION  ======================================================================
  *         Name:  mapi_mark_seen
  *  Description:  make the given message as seen in both client and server sides
  * =====================================================================================
- */ static int
+ */
+static int
 mapi_mark_seen(int sock, struct query *ctl, int number)
 {
     enum MAPISTATUS retval;
-    int             ok;
     int             flag = FALSE;
     struct SPropTagArray *SPropTagArray = NULL;
     struct SPropValue *lpProps;
@@ -1499,6 +1688,16 @@ mapi_mark_seen(int sock, struct query *ctl, int number)
 	    message_flags = *(const long *) find_SPropValue_data(&aRow, PR_MESSAGE_FLAGS);
 	    if (msgid) {
 
+		retval = FindProfileAttr(mapi_profile, "Message-ID", msgid);
+		if (retval == MAPI_E_SUCCESS) {
+		    if (outlevel == O_DEBUG)
+			report(stdout, "MAPI> message %d with Message-ID=%s is already marked as seen\n", number, msgid);
+		    flag = TRUE;
+		    talloc_free(lpProps);
+		    mapi_object_release(&obj_message);
+		    return flag;
+		}
+
 		/*-----------------------------------------------------------------------------
 		 * mark seen in the client side
 		 *-----------------------------------------------------------------------------*/
@@ -1517,9 +1716,11 @@ mapi_mark_seen(int sock, struct query *ctl, int number)
 		 *  mark seen in the server side
 		 *-----------------------------------------------------------------------------*/
 		if (!(message_flags & MSGFLAG_READ)) {
-		    retval = SetMessageReadFlag(&mapi_obj_inbox, &obj_message, MSGFLAG_READ);
+		    retval = SetMessageReadFlag(&mapi_obj_folder, &obj_message, MSGFLAG_READ);
 		    if (retval != MAPI_E_SUCCESS) {
-			// TODO: how to handle this?
+			talloc_free(lpProps);
+			mapi_object_release(&obj_message);
+			return flag;
 		    }
 		}
 	    }
@@ -1533,7 +1734,6 @@ mapi_mark_seen(int sock, struct query *ctl, int number)
 }
 
 
-
 /*
  * ===  FUNCTION  ======================================================================
  *         Name:  mapi_end_mailbox_poll
@@ -1543,29 +1743,39 @@ mapi_mark_seen(int sock, struct query *ctl, int number)
 static int
 mapi_end_mailbox_poll(int sock, struct query *ctl)
 {
-    int             ok = PS_SUCCESS;
+    int             flag = PS_SUCCESS;
     (void) ctl;
 
     if (outlevel >= O_MONITOR)
 	report(stdout, "MAPI> mapi_end_mailbox_poll()\n");
 
-    ok = expunge_deleted();
+    flag = expunge_deleted();
     mapi_id_array_release(&mapi_deleted_ids);
     mapi_clean();
-    mapi_initialized = FALSE;
-    return ok;
+    return flag;
 }
+
+
+/*
+ * ===  FUNCTION  ======================================================================
+ *         Name:  mapi_logout
+ *  Description:  
+ * =====================================================================================
+ */
 static int
 mapi_logout(int sock, struct query *ctl)
 {
-    int             ok = PS_SUCCESS;
     (void) ctl;
 
     if (outlevel >= O_MONITOR)
 	report(stdout, "MAPI> mapi_logout()\n");
 
-    return ok;
+    if (mapi_initialized)
+	mapi_clean();
+
+    return (PS_SUCCESS);
 }
+
 static const struct method mapi = {
     "MAPI",			/* Messaging Application Programming Interface */
     NULL,			/* unencrypted port, not used by MAPI */

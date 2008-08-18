@@ -260,6 +260,12 @@ class User:
 	self.sslcertpath = None	# Path to trusted certificates
 	self.sslfingerprint = None	# SSL key fingerprint to check
 	self.properties = None	# Extension properties
+	self.mapi_workstation = None
+	self.mapi_domain = None
+	self.mapi_lcid = None
+	self.mapi_ldif = None
+	self.mapi_profdb = None
+	self.mapi_profname = None
 	User.typemap = (
 	    ('remote',	    'String'),
 	    # leave out mailboxes and localnames
@@ -298,7 +304,13 @@ class User:
 	    ('sslcertck',   'Boolean'),
 	    ('sslcertpath', 'String'),
 	    ('sslfingerprint', 'String'),
-	    ('properties',  'String'))
+	    ('properties',  'String'),
+	    ('mapi_workstation', 'String'),
+	    ('mapi_domain', 'String'),
+	    ('mapi_lcid', 'String'),
+	    ('mapi_ldif', 'String'),
+	    ('mapi_profdb', 'String'),
+	    ('mapi_profname', 'String'))
 
     def __repr__(self):
 	res = "    "
@@ -431,7 +443,8 @@ defaultports = {"auto":None,
 		"KPOP":"1109",
 		"IMAP":"imap",
 		"ETRN":"smtp",
-		"ODMR":"odmr"}
+		"ODMR":"odmr",
+		"MAPI":"mapi"}
 
 authlist = ("any", "password", "gssapi", "kerberos", "ssh", "otp",
 	    "msn", "ntlm")
@@ -1126,6 +1139,8 @@ class ServerEdit(Frame, MyWidget):
 	    protolist.append("ETRN")
 	if 'odmr' in feature_options:
 	    protolist.append("ODMR")
+	if 'mapi' in feature_options:
+	    protolist.append("MAPI")
 
 	protwin = Frame(leftwin, relief=RAISED, bd=5)
 	Label(protwin, text="Protocol").pack(side=TOP)
