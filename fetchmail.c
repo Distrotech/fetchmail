@@ -1334,6 +1334,27 @@ static int load_params(int argc, char **argv, int optind)
 		ctl->server.timeout = CLIENT_TIMEOUT;
 
 	    /* sanity checks */
+#ifdef	MAPI_ENABLE
+	    if(ctl->server.protocol == P_MAPI) {
+		if(ctl->use_ssl || ctl->sslkey || ctl->sslcert || ctl->sslproto || ctl->sslcertpath || ctl->sslcertck || ctl->sslfingerprint) {
+		    (void) fprintf(stderr,
+				   GT_
+				   ("fetchmail: %s configuration invalid, SSL is not supported in MAPI. \
+fetchmail will run ignoring SSL related options\n"),
+				   ctl->server.pollname);
+		    ctl->use_ssl = FALSE;
+		}
+
+		if(ctl->server.service)
+		{
+		    (void) fprintf(stderr,
+				   GT_
+				   ("fetchmail: %s configuration invalid, service is no use in MAPI.\
+fetchmail will run ignoring --service option\n"),
+				   ctl->server.pollname);
+		}
+	    }
+#endif
 	    if (ctl->server.service) {
 		int port = servport(ctl->server.service);
 		if (port < 0) {

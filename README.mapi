@@ -176,10 +176,3 @@ multiple accounts match the user name.
 2. When function fetch_body is invoked, it buffers the whole email(including 
 it's attachments) into memory, which may take too much memory if the email is
 too large. It's better for MapiRead to read directly from the data stream.
-
-3. When the current protocol is set to MAPI, it's better for fetchmail to
-ignore those unsupport options(such as the SSL related options) and continue
-working.
-
-4. Have not been tested against large amount of emails.
-

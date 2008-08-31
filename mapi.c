@@ -1393,18 +1393,20 @@ mapi_fetch_body(int sock, struct query *ctl, int number, int *lenp)
     mapi_object_init(&obj_message);
 
     retval = OpenMessage(&mapi_obj_store, *fid, *mid, &obj_message, 0x0);
-    if (retval == MAPI_E_SUCCESS) {
-	SPropTagArray = set_SPropTagArray(mapi_mem_ctx,
-					  0x07,
-					  PR_INTERNET_MESSAGE_ID,
-					  PR_MSG_EDITOR_FORMAT,
-					  PR_BODY, PR_BODY_UNICODE, PR_HTML, PR_RTF_COMPRESSED, PR_HASATTACH);
-	retval = GetProps(&obj_message, SPropTagArray, &lpProps, &props_count);
-	MAPIFreeBuffer(SPropTagArray);
-	if (retval != MAPI_E_SUCCESS) {
-	    mapi_object_release(&obj_message);
-	    return translate_mapi_error(GetLastError());
-	}
+    if (retval != MAPI_E_SUCCESS) {
+	mapi_object_release(&obj_message);
+	return translate_mapi_error(GetLastError());
+    }
+    SPropTagArray = set_SPropTagArray(mapi_mem_ctx,
+				      0x07,
+				      PR_INTERNET_MESSAGE_ID,
+				      PR_MSG_EDITOR_FORMAT,
+				      PR_BODY, PR_BODY_UNICODE, PR_HTML, PR_RTF_COMPRESSED, PR_HASATTACH);
+    retval = GetProps(&obj_message, SPropTagArray, &lpProps, &props_count);
+    MAPIFreeBuffer(SPropTagArray);
+    if (retval != MAPI_E_SUCCESS) {
+	mapi_object_release(&obj_message);
+	return translate_mapi_error(GetLastError());
     }
 
     /*-----------------------------------------------------------------------------
@@ -1415,115 +1417,115 @@ mapi_fetch_body(int sock, struct query *ctl, int number, int *lenp)
     aRow.lpProps = lpProps;
 
     msgid = (const char *) find_SPropValue_data(&aRow, PR_INTERNET_MESSAGE_ID);
-    if (msgid) {
-	has_attach = (const uint8_t *) find_SPropValue_data(&aRow, PR_HASATTACH);
-	retval = octool_get_body(mapi_mem_ctx, &obj_message, &aRow, &body);
-
-	/*-----------------------------------------------------------------------------
-	 *  body
-	 *-----------------------------------------------------------------------------*/
-	if (body.length) {
-	    if (has_attach && *has_attach) {
-		MapiWrite(lenp, "--%s\n", MAPI_BOUNDARY);
-
-		/*-----------------------------------------------------------------------------
-		 *  complex structure
-		 *-----------------------------------------------------------------------------*/
-		retval = GetBestBody(&obj_message, &format);
-		switch (format) {
-		case olEditorText:
-		    MapiWrite(lenp, "Content-Type: text/plain; charset=us-ascii\n");
-		    MapiWrite(lenp, "Content-Transfer-Encoding: quoted-printable\n");
-		    /*
-		     * Just display UTF8 content inline 
-		     */
-		    MapiWrite(lenp, "Content-Disposition: inline\n");
-		    break;
-		case olEditorHTML:
-		    MapiWrite(lenp, "Content-Type: text/html\n");
-		    MapiWrite(lenp, "Content-Transfer-Encoding: quoted-printable\n");
-		    break;
-		case olEditorRTF:
-		    MapiWrite(lenp, "Content-Type: text/rtf\n");
-		    MapiWrite(lenp, "Content-Transfer-Encoding: quoted-printable\n");
-		    MapiWrite(lenp, "--%s\n", MAPI_BOUNDARY);
-		    break;
-		}
-	    }
-
-	    /*-----------------------------------------------------------------------------
-	     *  encode body.data into quoted printable and append to mapi_buffer
-	     *-----------------------------------------------------------------------------*/
-	    quoted_printable_encode(&body, lenp);
-	    talloc_free(body.data);
-
-	    /*-----------------------------------------------------------------------------
-	     *  fetch attachments
-	     *-----------------------------------------------------------------------------*/
-	    if (has_attach && *has_attach) {
-		mapi_object_init(&obj_tb_attach);
-		retval = GetAttachmentTable(&obj_message, &obj_tb_attach);
-		if (retval == MAPI_E_SUCCESS) {
-		    SPropTagArray = set_SPropTagArray(mapi_mem_ctx, 0x1, PR_ATTACH_NUM);
-		    retval = SetColumns(&obj_tb_attach, SPropTagArray);
-		    MAPIFreeBuffer(SPropTagArray);
-		    if (retval != MAPI_E_SUCCESS) {
-			mapi_object_release(&obj_message);
-			return translate_mapi_error(GetLastError());
-		    }
-
-		    retval = QueryRows(&obj_tb_attach, 0xa, TBL_ADVANCE, &rowset_attach);
-		    if (retval != MAPI_E_SUCCESS) {
-			mapi_object_release(&obj_message);
-			return translate_mapi_error(GetLastError());
-		    }
-
-		    for (attach_count = 0; attach_count < rowset_attach.cRows; attach_count++) {
-			attach_num =
-			    (const uint32_t *) find_SPropValue_data(&(rowset_attach.aRow[attach_count]), PR_ATTACH_NUM);
-			retval = OpenAttach(&obj_message, *attach_num, &obj_attach);
-			if (retval == MAPI_E_SUCCESS) {
-			    SPropTagArray = set_SPropTagArray(mapi_mem_ctx, 0x3,
-							      PR_ATTACH_FILENAME, PR_ATTACH_LONG_FILENAME, PR_ATTACH_SIZE);
-			    retval = GetProps(&obj_attach, SPropTagArray, &attach_lpProps, &props_count);
-			    MAPIFreeBuffer(SPropTagArray);
-			    if (retval == MAPI_E_SUCCESS) {
-				aRow2.ulAdrEntryPad = 0;
-				aRow2.cValues = props_count;
-				aRow2.lpProps = attach_lpProps;
-
-				attach_filename = get_filename(octool_get_propval(&aRow2, PR_ATTACH_LONG_FILENAME));
-				if (!attach_filename || (attach_filename && !strcmp(attach_filename, ""))) {
-				    attach_filename = get_filename(octool_get_propval(&aRow2, PR_ATTACH_FILENAME));
-				}
-				attach_size = (const uint32_t *) octool_get_propval(&aRow2, PR_ATTACH_SIZE);
-				attachment_data = get_base64_attachment(mapi_mem_ctx, obj_attach, *attach_size, &magic);
-				if (attachment_data) {
-				    MapiWrite(lenp, "\n\n--%s\n", MAPI_BOUNDARY);
-				    MapiWrite(lenp, "Content-Disposition: attachment; filename=\"%s\"\n", attach_filename);
-				    MapiWrite(lenp, "Content-Type: \"%s\"\n", magic);
-				    MapiWrite(lenp, "Content-Transfer-Encoding: base64\n\n");
-				    data_blob_append(mapi_mem_ctx, &mapi_buffer, attachment_data, strlen(attachment_data));
-				    *lenp += strlen(attachment_data);
-				    talloc_free(attachment_data);
-				}
-			    }
-			    talloc_free(attach_lpProps);
-			}
-		    }
-		    MapiWrite(lenp, "\n--%s--\n", MAPI_BOUNDARY);
-		}		/* if GetAttachmentTable returns success */
-	    }			/* if (has_attach && *has_attach) */
-	}
-	/*-----------------------------------------------------------------------------
-	 *  send the message delimiter
-	 *-----------------------------------------------------------------------------*/
-	MapiWrite(lenp, "\n.\n\0");
-    } else {
+    if (!msgid) {
 	talloc_free(lpProps);
 	mapi_object_release(&obj_message);
 	return (PS_UNDEFINED);
     }
+
+    has_attach = (const uint8_t *) find_SPropValue_data(&aRow, PR_HASATTACH);
+    retval = octool_get_body(mapi_mem_ctx, &obj_message, &aRow, &body);
+
+    /*-----------------------------------------------------------------------------
+     *  body
+     *-----------------------------------------------------------------------------*/
+    if (body.length) {
+	if (has_attach && *has_attach) {
+	    MapiWrite(lenp, "--%s\n", MAPI_BOUNDARY);
+
+	    /*-----------------------------------------------------------------------------
+	     *  complex structure
+	     *-----------------------------------------------------------------------------*/
+	    retval = GetBestBody(&obj_message, &format);
+	    switch (format) {
+	    case olEditorText:
+		MapiWrite(lenp, "Content-Type: text/plain; charset=us-ascii\n");
+		MapiWrite(lenp, "Content-Transfer-Encoding: quoted-printable\n");
+		/*
+		 * Just display UTF8 content inline 
+		 */
+		MapiWrite(lenp, "Content-Disposition: inline\n");
+		break;
+	    case olEditorHTML:
+		MapiWrite(lenp, "Content-Type: text/html\n");
+		MapiWrite(lenp, "Content-Transfer-Encoding: quoted-printable\n");
+		break;
+	    case olEditorRTF:
+		MapiWrite(lenp, "Content-Type: text/rtf\n");
+		MapiWrite(lenp, "Content-Transfer-Encoding: quoted-printable\n");
+		MapiWrite(lenp, "--%s\n", MAPI_BOUNDARY);
+		break;
+	    }
+	}
+
+	/*-----------------------------------------------------------------------------
+	 *  encode body.data into quoted printable and append to mapi_buffer
+	 *-----------------------------------------------------------------------------*/
+	quoted_printable_encode(&body, lenp);
+	talloc_free(body.data);
+
+	/*-----------------------------------------------------------------------------
+	 *  fetch attachments
+	 *-----------------------------------------------------------------------------*/
+	if (has_attach && *has_attach) {
+	    mapi_object_init(&obj_tb_attach);
+	    retval = GetAttachmentTable(&obj_message, &obj_tb_attach);
+	    if (retval == MAPI_E_SUCCESS) {
+		SPropTagArray = set_SPropTagArray(mapi_mem_ctx, 0x1, PR_ATTACH_NUM);
+		retval = SetColumns(&obj_tb_attach, SPropTagArray);
+		MAPIFreeBuffer(SPropTagArray);
+		if (retval != MAPI_E_SUCCESS) {
+		    mapi_object_release(&obj_message);
+		    return translate_mapi_error(GetLastError());
+		}
+
+		retval = QueryRows(&obj_tb_attach, 0xa, TBL_ADVANCE, &rowset_attach);
+		if (retval != MAPI_E_SUCCESS) {
+		    mapi_object_release(&obj_message);
+		    return translate_mapi_error(GetLastError());
+		}
+
+		for (attach_count = 0; attach_count < rowset_attach.cRows; attach_count++) {
+		    attach_num = (const uint32_t *) find_SPropValue_data(&(rowset_attach.aRow[attach_count]), PR_ATTACH_NUM);
+		    retval = OpenAttach(&obj_message, *attach_num, &obj_attach);
+		    if (retval == MAPI_E_SUCCESS) {
+			SPropTagArray = set_SPropTagArray(mapi_mem_ctx, 0x3,
+							  PR_ATTACH_FILENAME, PR_ATTACH_LONG_FILENAME, PR_ATTACH_SIZE);
+			retval = GetProps(&obj_attach, SPropTagArray, &attach_lpProps, &props_count);
+			MAPIFreeBuffer(SPropTagArray);
+			if (retval == MAPI_E_SUCCESS) {
+			    aRow2.ulAdrEntryPad = 0;
+			    aRow2.cValues = props_count;
+			    aRow2.lpProps = attach_lpProps;
+
+			    attach_filename = get_filename(octool_get_propval(&aRow2, PR_ATTACH_LONG_FILENAME));
+			    if (!attach_filename || (attach_filename && !strcmp(attach_filename, ""))) {
+				attach_filename = get_filename(octool_get_propval(&aRow2, PR_ATTACH_FILENAME));
+			    }
+			    attach_size = (const uint32_t *) octool_get_propval(&aRow2, PR_ATTACH_SIZE);
+			    attachment_data = get_base64_attachment(mapi_mem_ctx, obj_attach, *attach_size, &magic);
+			    if (attachment_data) {
+				MapiWrite(lenp, "\n\n--%s\n", MAPI_BOUNDARY);
+				MapiWrite(lenp, "Content-Disposition: attachment; filename=\"%s\"\n", attach_filename);
+				MapiWrite(lenp, "Content-Type: \"%s\"\n", magic);
+				MapiWrite(lenp, "Content-Transfer-Encoding: base64\n\n");
+				data_blob_append(mapi_mem_ctx, &mapi_buffer, attachment_data, strlen(attachment_data));
+				*lenp += strlen(attachment_data);
+				talloc_free(attachment_data);
+			    }
+			}
+			talloc_free(attach_lpProps);
+		    }
+		}
+		MapiWrite(lenp, "\n--%s--\n", MAPI_BOUNDARY);
+	    }			/* if GetAttachmentTable returns success */
+	}			/* if (has_attach && *has_attach) */
+    }
+    /*-----------------------------------------------------------------------------
+     *  send the message delimiter
+     *-----------------------------------------------------------------------------*/
+    MapiWrite(lenp, "\n.\n\0");
+
     talloc_free(lpProps);
     mapi_object_release(&obj_message);
 
